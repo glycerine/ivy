@@ -5,12 +5,6 @@
 // and Z3_compute_interpolant from z3_interp.h.
 package smt
 
-/*
-#include <z3.h>
-
-extern void goZ3BridgeErrorHandler(Z3_context c, Z3_error_code e);
-*/
-import "C"
 import (
 	"fmt"
 	"runtime"
@@ -22,7 +16,7 @@ import (
 func (ctx *Z3Context) MkInterpolant(e Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_interpolant(ctx.c, e.c))
+		r = ctx.newExpr(z3_mk_interpolant(ctx.c, e.c))
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -34,11 +28,11 @@ func (ctx *Z3Context) MkInterpolant(e Z3Expr) Z3Expr {
 // for interpolation.
 // Corresponds to Python's context created via Z3_mk_interpolation_context.
 func NewInterpolationZ3Context() *Z3Context {
-	cfg := C.Z3_mk_config()
-	defer C.Z3_del_config(cfg)
-	c := C.Z3_mk_interpolation_context(cfg)
-	C.Z3_set_error_handler(c, (*C.Z3_error_handler)(C.goZ3BridgeErrorHandler))
-	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}
+	cfg := z3_mk_config()
+	defer z3_del_config(cfg)
+	c := z3_mk_interpolation_context(cfg)
+	z3_set_error_handler(c)
+	ctx := &Z3Context{c: c, syms: make(map[string]z3Symbol)}
 	//runtime.SetFinalizer(ctx, func(ctx *Z3Context) {
 	//	ctx.Close()
 	//})
@@ -61,26 +55,26 @@ func (ctx *Z3Context) ComputeInterpolant(pattern Z3Expr) ([]Z3Expr, error) {
 			}
 		}()
 
-		params := C.Z3_mk_params(ctx.c)
-		C.Z3_params_inc_ref(ctx.c, params)
-		defer C.Z3_params_dec_ref(ctx.c, params)
+		params := z3_mk_params(ctx.c)
+		z3Params_inc_ref(ctx.c, params)
+		defer z3Params_dec_ref(ctx.c, params)
 
-		var interp C.Z3_ast_vector
-		var model C.Z3_model
+		var interp z3ASTVector
+		var model z3Model
 
-		res := C.Z3_compute_interpolant(ctx.c, pattern.c, params, &interp, &model)
+		res := z3_compute_interpolant(ctx.c, pattern.c, params, &interp, &model)
 
-		if res == C.Z3_L_FALSE {
+		if res == z3_L_FALSE {
 			// UNSAT — extract interpolants from the ast_vector
-			C.Z3_ast_vector_inc_ref(ctx.c, interp)
-			n := int(C.Z3_ast_vector_size(ctx.c, interp))
+			z3ASTVector_inc_ref(ctx.c, interp)
+			n := int(z3ASTVector_size(ctx.c, interp))
 			result = make([]Z3Expr, n)
 			for i := 0; i < n; i++ {
-				ast := C.Z3_ast_vector_get(ctx.c, interp, C.uint(i))
+				ast := z3ASTVector_get(ctx.c, interp, uint32(i))
 				result[i] = ctx.newExpr(ast)
 			}
-			C.Z3_ast_vector_dec_ref(ctx.c, interp)
-		} else if res == C.Z3_L_TRUE {
+			z3ASTVector_dec_ref(ctx.c, interp)
+		} else if res == z3_L_TRUE {
 			resErr = fmt.Errorf("interpolation: formula is satisfiable")
 		} else {
 			resErr = fmt.Errorf("interpolation: result unknown")

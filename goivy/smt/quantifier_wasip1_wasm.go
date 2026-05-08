@@ -1,32 +1,11 @@
 //go:build wasip1
 
-// This file provides a focused Z3 wrapper for
-// translating Ivy logic nodes to
-// Z3 expressions and checking satisfiability.
-//
-// This package wraps the Z3 C API directly via CGo
-// rather than depending on
-// go-z3, because go-z3 lacks quantifier support
-// (ForAll/Exists) which is
-// essential for Ivy's first-order logic.
+// This file provides the wasip1 implementation of the same Go-facing Z3
+// wrapper exposed by quantifier.go. It intentionally keeps the exported
+// names and method shapes identical to the native cgo implementation; only
+// the private representation changes from C pointers to opaque handles that
+// are serviced by JavaScript imports.
 package smt
-
-/*
-#cgo CFLAGS: -I${SRCDIR}/../z3vendor/z3/src/api
-#cgo LDFLAGS: ${SRCDIR}/../z3vendor/native_lib/libz3.a
-
-// Use libstdc++ on Linux
-#cgo linux LDFLAGS: -lstdc++ -lm -lgomp
-
-// Use libc++ on macOS (Darwin)
-#cgo darwin LDFLAGS: -lc++
-
-#include <z3.h>
-#include <stdlib.h>
-
-extern void goZ3BridgeErrorHandler(Z3_context c, Z3_error_code e);
-*/
-import "C"
 
 import (
 	"fmt"
@@ -36,13 +15,100 @@ import (
 	"unsafe"
 )
 
+type z3Config = uint32
+type z3Context = uint32
+type z3Symbol = uint32
+type z3Sort = uint32
+type z3AST = uint32
+type z3App = uint32
+type z3FuncDecl = uint32
+type z3Solver = uint32
+type z3Model = uint32
+type z3Params = uint32
+type z3ASTVector = uint32
+type z3StringHandle = uint32
+
+const (
+	z3_L_FALSE = -1
+	z3_L_UNDEF = 0
+	z3_L_TRUE  = 1
+
+	z3_UNINTERPRETED_SORT = 0
+	z3_BOOL_SORT          = 1
+	z3_INT_SORT           = 2
+	z3_REAL_SORT          = 3
+	z3_BV_SORT            = 4
+	z3_ARRAY_SORT         = 5
+	z3_SEQ_SORT           = 11
+
+	z3_NUMERAL_AST    = 0
+	z3_APP_AST        = 1
+	z3_VAR_AST        = 2
+	z3_QUANTIFIER_AST = 3
+
+	z3_OP_TRUE          = 256
+	z3_OP_FALSE         = 257
+	z3_OP_EQ            = 258
+	z3_OP_ITE           = 260
+	z3_OP_AND           = 261
+	z3_OP_OR            = 262
+	z3_OP_IFF           = 263
+	z3_OP_NOT           = 265
+	z3_OP_UNINTERPRETED = 2354
+)
+
+func boolToUint32(v bool) uint32 {
+	if v {
+		return 1
+	}
+	return 0
+}
+
+func stringBytes(s string) (*byte, uint32) {
+	if len(s) == 0 {
+		return nil, 0
+	}
+	return unsafe.StringData(s), uint32(len(s))
+}
+
+func z3_mk_string_symbol_go(s string) z3Symbol {
+	p, n := stringBytes(s)
+	return z3_mk_string_symbol(p, n)
+}
+
+func z3_mk_string_go(ctx z3Context, s string) z3AST {
+	p, n := stringBytes(s)
+	return z3_mk_string(ctx, p, n)
+}
+
+func z3_set_param_value_go(cfg z3Config, key, value string) {
+	kp, kn := stringBytes(key)
+	vp, vn := stringBytes(value)
+	z3_set_param_value(cfg, kp, kn, vp, vn)
+}
+
+func z3String(h z3StringHandle) string {
+	if h == 0 {
+		return ""
+	}
+	n := z3_string_len(h)
+	if n == 0 {
+		z3_string_release(h)
+		return ""
+	}
+	buf := make([]byte, n)
+	z3_string_copy(h, &buf[0], n)
+	z3_string_release(h)
+	return string(buf)
+}
+
 // --- Z3Context ---
 
 // Z3Context wraps a Z3 context.
 type Z3Context struct {
-	c      C.Z3_context
+	c      z3Context
 	mu     sync.Mutex
-	syms   map[string]C.Z3_symbol
+	syms   map[string]z3Symbol
 	closed bool
 
 	// z3CheckCounter provides a per Z3Context
@@ -54,42 +120,31 @@ type Z3Context struct {
 	z3Merkle string // MerkleState
 }
 
-//export goZ3BridgeErrorHandler
-func goZ3BridgeErrorHandler(ctx C.Z3_context, e C.Z3_error_code) {
-
-	if e == C.Z3_OK {
-		// what are we even doing here then...
-		return
-	}
-	msg := C.Z3_get_error_msg(ctx, e)
-	panic("z3 bridge panic on error: " + C.GoString(msg))
-}
-
 // NewZ3Context creates a new Z3 context.
 // Z3 contexts are not thread-safe: each context (and all objects created
 // within it) must be used from a single OS thread. In Go, use
 // runtime.LockOSThread() to pin the goroutine to its thread before
 // creating a context and performing Z3 operations.
 func NewZ3Context() *Z3Context {
-	cfg := C.Z3_mk_config()
-	defer C.Z3_del_config(cfg)
+	cfg := z3_mk_config()
+	defer z3_del_config(cfg)
 
 	// if doing interpolation, you need to also:
-	// C.Z3_set_param_value(cfg, "PROOF", "true")
-	// C.Z3_set_param_value(cfg, "MODEL", "true")
+	// z3_set_param_value_go(cfg, "PROOF", "true")
+	// z3_set_param_value_go(cfg, "MODEL", "true")
 	// which is precisely what
-	// C.Z3_mk_interpolation_context(cfg)
+	// z3_mk_interpolation_context(cfg)
 	// does for you automatically.
 	// See https://z3prover.github.io/api/html/group__capi.html#ga893d6f1df01056553b7ca1ba3a4e848c
 
 	// _rc means with reference counting turned on...
 	// "Just ensure you actually call Z3_inc_ref and Z3_dec_ref
 	// on the objects you create, or you will leak memory inside the C heap."
-	c := C.Z3_mk_context_rc(cfg)
+	c := z3_mk_context_rc(cfg)
 
-	C.Z3_set_error_handler(c, (*C.Z3_error_handler)(C.goZ3BridgeErrorHandler))
+	z3_set_error_handler(c)
 
-	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}
+	ctx := &Z3Context{c: c, syms: make(map[string]z3Symbol)}
 
 	// caller should prefer to arrange to "defer ctx.Close()"
 	return ctx
@@ -102,7 +157,7 @@ func (ctx *Z3Context) Close() error {
 		return nil
 	}
 	ctx.closed = true
-	C.Z3_del_context(ctx.c)
+	z3_del_context(ctx.c)
 	return nil
 }
 
@@ -113,13 +168,11 @@ func (ctx *Z3Context) do(f func()) {
 	f()
 }
 
-func (ctx *Z3Context) symbol(name string) C.Z3_symbol {
+func (ctx *Z3Context) symbol(name string) z3Symbol {
 	if sym, ok := ctx.syms[name]; ok {
 		return sym
 	}
-	cname := C.CString(name)
-	defer C.free(unsafe.Pointer(cname))
-	sym := C.Z3_mk_string_symbol(ctx.c, cname)
+	sym := z3_mk_string_symbol_go(name)
 	ctx.syms[name] = sym
 	return sym
 }
@@ -129,15 +182,15 @@ func (ctx *Z3Context) symbol(name string) C.Z3_symbol {
 // Sort wraps a Z3 sort (type).
 type Z3Sort struct {
 	ctx *Z3Context
-	c   C.Z3_sort
+	c   z3Sort
 }
 
 // String returns the name of the Z3 sort.
 func (s *Z3Sort) String() string {
 	var res string
 	s.ctx.do(func() {
-		sym := C.Z3_get_sort_name(s.ctx.c, s.c)
-		res = C.GoString(C.Z3_get_symbol_string(s.ctx.c, sym))
+		sym := z3_get_sort_name(s.ctx.c, s.c)
+		res = z3String(z3_get_symbol_string(s.ctx.c, sym))
 	})
 	runtime.KeepAlive(s)
 	return res
@@ -149,19 +202,19 @@ func (s *Z3Sort) GetId() uint {
 	//xtracer.Trace("ivy_solver.py:781 get_id() ENTER")
 	var id uint
 	s.ctx.do(func() {
-		ast := C.Z3_sort_to_ast(s.ctx.c, s.c) // python's x.as_ast() does this internally.
-		id = uint(C.Z3_get_ast_id(s.ctx.c, ast))
+		ast := z3Sort_to_ast(s.ctx.c, s.c) // python's x.as_ast() does this internally.
+		id = uint(z3_get_ast_id(s.ctx.c, ast))
 	})
 	runtime.KeepAlive(s)
 	return id
 }
 
 // incRefSort must be called with ctx lock held.
-func (ctx *Z3Context) incRefSort(c C.Z3_sort) {
-	C.Z3_inc_ref(ctx.c, C.Z3_sort_to_ast(ctx.c, c))
+func (ctx *Z3Context) incRefSort(c z3Sort) {
+	z3_inc_ref(ctx.c, z3Sort_to_ast(ctx.c, c))
 }
 
-func (ctx *Z3Context) newSort(c C.Z3_sort) Z3Sort {
+func (ctx *Z3Context) newSort(c z3Sort) Z3Sort {
 	// Called with lock held — do raw ref counting
 	ctx.incRefSort(c)
 	s := Z3Sort{ctx: ctx, c: c}
@@ -172,7 +225,7 @@ func (ctx *Z3Context) newSort(c C.Z3_sort) Z3Sort {
 func (ctx *Z3Context) BoolSort() Z3Sort {
 	var s Z3Sort
 	ctx.do(func() {
-		s = ctx.newSort(C.Z3_mk_bool_sort(ctx.c))
+		s = ctx.newSort(z3_mk_bool_sort(ctx.c))
 	})
 	return s
 }
@@ -182,7 +235,7 @@ func (ctx *Z3Context) UninterpretedSort(name string) Z3Sort {
 	sym := ctx.symbol(name)
 	var s Z3Sort
 	ctx.do(func() {
-		s = ctx.newSort(C.Z3_mk_uninterpreted_sort(ctx.c, sym))
+		s = ctx.newSort(z3_mk_uninterpreted_sort(ctx.c, sym))
 	})
 	return s
 }
@@ -191,7 +244,7 @@ func (ctx *Z3Context) UninterpretedSort(name string) Z3Sort {
 func (ctx *Z3Context) IntSort() Z3Sort {
 	var s Z3Sort
 	ctx.do(func() {
-		s = ctx.newSort(C.Z3_mk_int_sort(ctx.c))
+		s = ctx.newSort(z3_mk_int_sort(ctx.c))
 	})
 	return s
 }
@@ -200,7 +253,7 @@ func (ctx *Z3Context) IntSort() Z3Sort {
 func (ctx *Z3Context) RealSort() Z3Sort {
 	var s Z3Sort
 	ctx.do(func() {
-		s = ctx.newSort(C.Z3_mk_real_sort(ctx.c))
+		s = ctx.newSort(z3_mk_real_sort(ctx.c))
 	})
 	return s
 }
@@ -210,12 +263,12 @@ func (ctx *Z3Context) RealSort() Z3Sort {
 // Expr wraps a Z3 expression (symbolic value).
 type Z3Expr struct {
 	ctx *Z3Context
-	c   C.Z3_ast
+	c   z3AST
 }
 
 // newExpr creates an Expr from a C Z3_ast. Must be called with ctx lock held.
-func (ctx *Z3Context) newExpr(c C.Z3_ast) Z3Expr {
-	C.Z3_inc_ref(ctx.c, c)
+func (ctx *Z3Context) newExpr(c z3AST) Z3Expr {
+	z3_inc_ref(ctx.c, c)
 	e := Z3Expr{ctx: ctx, c: c}
 	return e
 }
@@ -224,7 +277,7 @@ func (ctx *Z3Context) newExpr(c C.Z3_ast) Z3Expr {
 func (e *Z3Expr) String() string {
 	var res string
 	e.ctx.do(func() {
-		res = C.GoString(C.Z3_ast_to_string(e.ctx.c, e.c))
+		res = z3String(z3AST_to_string(e.ctx.c, e.c))
 	})
 	runtime.KeepAlive(e)
 	return res
@@ -235,7 +288,7 @@ func (ctx *Z3Context) Const(name string, sort Z3Sort) Z3Expr {
 	sym := ctx.symbol(name)
 	var e Z3Expr
 	ctx.do(func() {
-		e = ctx.newExpr(C.Z3_mk_const(ctx.c, sym, sort.c))
+		e = ctx.newExpr(z3_mk_const(ctx.c, sym, sort.c))
 	})
 	runtime.KeepAlive(sort)
 	return e
@@ -246,9 +299,9 @@ func (ctx *Z3Context) BoolVal(val bool) Z3Expr {
 	var e Z3Expr
 	ctx.do(func() {
 		if val {
-			e = ctx.newExpr(C.Z3_mk_true(ctx.c))
+			e = ctx.newExpr(z3_mk_true(ctx.c))
 		} else {
-			e = ctx.newExpr(C.Z3_mk_false(ctx.c))
+			e = ctx.newExpr(z3_mk_false(ctx.c))
 		}
 	})
 	return e
@@ -258,8 +311,8 @@ func (ctx *Z3Context) BoolVal(val bool) Z3Expr {
 func (ctx *Z3Context) IntVal(val int64) Z3Expr {
 	var e Z3Expr
 	ctx.do(func() {
-		sort := C.Z3_mk_int_sort(ctx.c)
-		e = ctx.newExpr(C.Z3_mk_int64(ctx.c, C.int64_t(val), sort))
+		sort := z3_mk_int_sort(ctx.c)
+		e = ctx.newExpr(z3_mk_int64(ctx.c, val, sort))
 	})
 	return e
 }
@@ -269,16 +322,16 @@ func (ctx *Z3Context) IntVal(val int64) Z3Expr {
 // FuncDecl wraps a Z3 function declaration.
 type FuncDecl struct {
 	ctx *Z3Context
-	c   C.Z3_func_decl
+	c   z3FuncDecl
 }
 
 // newFuncDecl creates a FuncDecl. Must be called with ctx lock held.
-func (ctx *Z3Context) newFuncDecl(c C.Z3_func_decl) FuncDecl {
-	C.Z3_inc_ref(ctx.c, C.Z3_func_decl_to_ast(ctx.c, c))
+func (ctx *Z3Context) newFuncDecl(c z3FuncDecl) FuncDecl {
+	z3_inc_ref(ctx.c, z3FuncDecl_to_ast(ctx.c, c))
 	fd := FuncDecl{ctx: ctx, c: c}
 	//runtime.SetFinalizer(&fd, func(fd *FuncDecl) {
 	//	fd.ctx.do(func() {
-	//		C.Z3_dec_ref(fd.ctx.c, C.Z3_func_decl_to_ast(fd.ctx.c, fd.c))
+	//		z3_dec_ref(fd.ctx.c, z3FuncDecl_to_ast(fd.ctx.c, fd.c))
 	//	})
 	//})
 	return fd
@@ -287,17 +340,17 @@ func (ctx *Z3Context) newFuncDecl(c C.Z3_func_decl) FuncDecl {
 // Function creates an uninterpreted function declaration.
 func (ctx *Z3Context) Function(name string, domain []Z3Sort, range_ Z3Sort) FuncDecl {
 	sym := ctx.symbol(name)
-	cdomain := make([]C.Z3_sort, len(domain))
+	cdomain := make([]z3Sort, len(domain))
 	for i, s := range domain {
 		cdomain[i] = s.c
 	}
 	var fd FuncDecl
 	ctx.do(func() {
-		var cdp *C.Z3_sort
+		var cdp *z3Sort
 		if len(cdomain) > 0 {
 			cdp = &cdomain[0]
 		}
-		fd = ctx.newFuncDecl(C.Z3_mk_func_decl(ctx.c, sym, C.uint(len(cdomain)), cdp, range_.c))
+		fd = ctx.newFuncDecl(z3_mk_func_decl(ctx.c, sym, uint32(len(cdomain)), cdp, range_.c))
 	})
 	runtime.KeepAlive(domain)
 	runtime.KeepAlive(range_)
@@ -310,7 +363,7 @@ func (ctx *Z3Context) Function(name string, domain []Z3Sort, range_ Z3Sort) Func
 func (fd *FuncDecl) AsExpr() Z3Expr {
 	var e Z3Expr
 	fd.ctx.do(func() {
-		e = fd.ctx.newExpr(C.Z3_func_decl_to_ast(fd.ctx.c, fd.c))
+		e = fd.ctx.newExpr(z3FuncDecl_to_ast(fd.ctx.c, fd.c))
 	})
 	runtime.KeepAlive(fd)
 	return e
@@ -318,17 +371,17 @@ func (fd *FuncDecl) AsExpr() Z3Expr {
 
 // Apply applies the function declaration to arguments, returning an expression.
 func (fd *FuncDecl) Apply(args ...Z3Expr) Z3Expr {
-	cargs := make([]C.Z3_ast, len(args))
+	cargs := make([]z3AST, len(args))
 	for i, a := range args {
 		cargs[i] = a.c
 	}
 	var e Z3Expr
 	fd.ctx.do(func() {
-		var cap *C.Z3_ast
+		var cap *z3AST
 		if len(cargs) > 0 {
 			cap = &cargs[0]
 		}
-		e = fd.ctx.newExpr(C.Z3_mk_app(fd.ctx.c, fd.c, C.uint(len(cargs)), cap))
+		e = fd.ctx.newExpr(z3_mk_app(fd.ctx.c, fd.c, uint32(len(cargs)), cap))
 	})
 	runtime.KeepAlive(fd)
 	runtime.KeepAlive(args)
@@ -341,7 +394,7 @@ func (fd *FuncDecl) Apply(args ...Z3Expr) Z3Expr {
 func (ctx *Z3Context) Not(e Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_not(ctx.c, e.c))
+		r = ctx.newExpr(z3_mk_not(ctx.c, e.c))
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -352,13 +405,13 @@ func (ctx *Z3Context) And(args ...Z3Expr) Z3Expr {
 	if len(args) == 0 {
 		return ctx.BoolVal(true)
 	}
-	cargs := make([]C.Z3_ast, len(args))
+	cargs := make([]z3AST, len(args))
 	for i, a := range args {
 		cargs[i] = a.c
 	}
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_and(ctx.c, C.uint(len(cargs)), &cargs[0]))
+		r = ctx.newExpr(z3_mk_and(ctx.c, uint32(len(cargs)), &cargs[0]))
 	})
 	runtime.KeepAlive(args)
 	return r
@@ -369,13 +422,13 @@ func (ctx *Z3Context) Or(args ...Z3Expr) Z3Expr {
 	if len(args) == 0 {
 		return ctx.BoolVal(false)
 	}
-	cargs := make([]C.Z3_ast, len(args))
+	cargs := make([]z3AST, len(args))
 	for i, a := range args {
 		cargs[i] = a.c
 	}
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_or(ctx.c, C.uint(len(cargs)), &cargs[0]))
+		r = ctx.newExpr(z3_mk_or(ctx.c, uint32(len(cargs)), &cargs[0]))
 	})
 	runtime.KeepAlive(args)
 	return r
@@ -385,7 +438,7 @@ func (ctx *Z3Context) Or(args ...Z3Expr) Z3Expr {
 func (ctx *Z3Context) Implies(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_implies(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_implies(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -396,7 +449,7 @@ func (ctx *Z3Context) Implies(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Iff(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_iff(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_iff(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -407,7 +460,7 @@ func (ctx *Z3Context) Iff(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Eq(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_eq(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_eq(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -418,7 +471,7 @@ func (ctx *Z3Context) Eq(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Ite(cond, then_, else_ Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_ite(ctx.c, cond.c, then_.c, else_.c))
+		r = ctx.newExpr(z3_mk_ite(ctx.c, cond.c, then_.c, else_.c))
 	})
 	runtime.KeepAlive(cond)
 	runtime.KeepAlive(then_)
@@ -432,8 +485,8 @@ func (ctx *Z3Context) Ite(cond, then_, else_ Z3Expr) Z3Expr {
 func (ctx *Z3Context) Add(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		args := [2]C.Z3_ast{e1.c, e2.c}
-		r = ctx.newExpr(C.Z3_mk_add(ctx.c, 2, &args[0]))
+		args := [2]z3AST{e1.c, e2.c}
+		r = ctx.newExpr(z3_mk_add(ctx.c, 2, &args[0]))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -444,8 +497,8 @@ func (ctx *Z3Context) Add(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Sub(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		args := [2]C.Z3_ast{e1.c, e2.c}
-		r = ctx.newExpr(C.Z3_mk_sub(ctx.c, 2, &args[0]))
+		args := [2]z3AST{e1.c, e2.c}
+		r = ctx.newExpr(z3_mk_sub(ctx.c, 2, &args[0]))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -456,8 +509,8 @@ func (ctx *Z3Context) Sub(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Mul(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		args := [2]C.Z3_ast{e1.c, e2.c}
-		r = ctx.newExpr(C.Z3_mk_mul(ctx.c, 2, &args[0]))
+		args := [2]z3AST{e1.c, e2.c}
+		r = ctx.newExpr(z3_mk_mul(ctx.c, 2, &args[0]))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -468,7 +521,7 @@ func (ctx *Z3Context) Mul(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Div(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_div(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_div(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -479,7 +532,7 @@ func (ctx *Z3Context) Div(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Gt(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_gt(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_gt(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -490,7 +543,7 @@ func (ctx *Z3Context) Gt(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Lt(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_lt(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_lt(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -501,7 +554,7 @@ func (ctx *Z3Context) Lt(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Ge(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_ge(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_ge(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -512,7 +565,7 @@ func (ctx *Z3Context) Ge(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Le(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_le(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_le(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -526,40 +579,36 @@ func (ctx *Z3Context) EnumSort(name string, elements []string) (Z3Sort, []Z3Expr
 	var s Z3Sort
 	consts := make([]Z3Expr, len(elements))
 	ctx.do(func() {
-		cName := C.CString(name)
-		defer C.free(unsafe.Pointer(cName))
-		sym := C.Z3_mk_string_symbol(ctx.c, cName)
+		sym := z3_mk_string_symbol_go(name)
 
-		n := C.unsigned(len(elements))
-		cElems := make([]C.Z3_symbol, len(elements))
+		n := uint32(len(elements))
+		cElems := make([]z3Symbol, len(elements))
 		for i, e := range elements {
-			ce := C.CString(e)
-			cElems[i] = C.Z3_mk_string_symbol(ctx.c, ce)
-			C.free(unsafe.Pointer(ce))
+			cElems[i] = z3_mk_string_symbol_go(e)
 		}
 
-		cConsts := make([]C.Z3_func_decl, len(elements))
-		cTesters := make([]C.Z3_func_decl, len(elements))
+		cConsts := make([]z3FuncDecl, len(elements))
+		cTesters := make([]z3FuncDecl, len(elements))
 
-		var elemsPtr *C.Z3_symbol
+		var elemsPtr *z3Symbol
 		if len(cElems) > 0 {
 			elemsPtr = &cElems[0]
 		}
-		var constsPtr *C.Z3_func_decl
+		var constsPtr *z3FuncDecl
 		if len(cConsts) > 0 {
 			constsPtr = &cConsts[0]
 		}
-		var testersPtr *C.Z3_func_decl
+		var testersPtr *z3FuncDecl
 		if len(cTesters) > 0 {
 			testersPtr = &cTesters[0]
 		}
 
-		zs := C.Z3_mk_enumeration_sort(ctx.c, sym, n, elemsPtr, constsPtr, testersPtr)
+		zs := z3_mk_enumeration_sort(ctx.c, sym, n, elemsPtr, constsPtr, testersPtr)
 		s = ctx.newSort(zs)
 
 		// Extract constructor constants
 		for i := range elements {
-			app := C.Z3_mk_app(ctx.c, cConsts[i], 0, nil)
+			app := z3_mk_app(ctx.c, cConsts[i], 0, nil)
 			consts[i] = ctx.newExpr(app)
 		}
 	})
@@ -571,7 +620,7 @@ func (ctx *Z3Context) EnumSort(name string, elements []string) (Z3Sort, []Z3Expr
 func (ctx *Z3Context) StringSort() Z3Sort {
 	var s Z3Sort
 	ctx.do(func() {
-		s = ctx.newSort(C.Z3_mk_string_sort(ctx.c))
+		s = ctx.newSort(z3_mk_string_sort(ctx.c))
 	})
 	return s
 }
@@ -579,11 +628,9 @@ func (ctx *Z3Context) StringSort() Z3Sort {
 // StringVal creates a Z3 string constant.
 // Corresponds to Python's z3.StringVal(s).
 func (ctx *Z3Context) StringVal(s string) Z3Expr {
-	cs := C.CString(s)
-	defer C.free(unsafe.Pointer(cs))
 	var e Z3Expr
 	ctx.do(func() {
-		e = ctx.newExpr(C.Z3_mk_string(ctx.c, cs))
+		e = ctx.newExpr(z3_mk_string_go(ctx.c, s))
 	})
 	return e
 }
@@ -594,7 +641,7 @@ func (ctx *Z3Context) StringVal(s string) Z3Expr {
 func (ctx *Z3Context) BvSort(width int) Z3Sort {
 	var s Z3Sort
 	ctx.do(func() {
-		s = ctx.newSort(C.Z3_mk_bv_sort(ctx.c, C.unsigned(width)))
+		s = ctx.newSort(z3_mk_bv_sort(ctx.c, uint32(width)))
 	})
 	return s
 }
@@ -603,8 +650,8 @@ func (ctx *Z3Context) BvSort(width int) Z3Sort {
 func (ctx *Z3Context) BvVal(val int64, width int) Z3Expr {
 	var e Z3Expr
 	ctx.do(func() {
-		sort := C.Z3_mk_bv_sort(ctx.c, C.unsigned(width))
-		e = ctx.newExpr(C.Z3_mk_int64(ctx.c, C.int64_t(val), sort))
+		sort := z3_mk_bv_sort(ctx.c, uint32(width))
+		e = ctx.newExpr(z3_mk_int64(ctx.c, val, sort))
 	})
 	return e
 }
@@ -613,7 +660,7 @@ func (ctx *Z3Context) BvVal(val int64, width int) Z3Expr {
 func (ctx *Z3Context) BvAnd(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvand(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvand(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -624,7 +671,7 @@ func (ctx *Z3Context) BvAnd(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvOr(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvor(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvor(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -635,7 +682,7 @@ func (ctx *Z3Context) BvOr(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvNot(e Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvnot(ctx.c, e.c))
+		r = ctx.newExpr(z3_mk_bvnot(ctx.c, e.c))
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -645,7 +692,7 @@ func (ctx *Z3Context) BvNot(e Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvAdd(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvadd(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvadd(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -656,7 +703,7 @@ func (ctx *Z3Context) BvAdd(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvSub(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvsub(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvsub(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -667,7 +714,7 @@ func (ctx *Z3Context) BvSub(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvMul(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvmul(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvmul(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -678,7 +725,7 @@ func (ctx *Z3Context) BvMul(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvUdiv(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvudiv(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvudiv(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -689,7 +736,7 @@ func (ctx *Z3Context) BvUdiv(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvShl(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvshl(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvshl(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -700,7 +747,7 @@ func (ctx *Z3Context) BvShl(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvLshr(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvlshr(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvlshr(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -711,7 +758,7 @@ func (ctx *Z3Context) BvLshr(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvAshr(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvashr(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvashr(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -722,7 +769,7 @@ func (ctx *Z3Context) BvAshr(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvXor(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvxor(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvxor(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -733,7 +780,7 @@ func (ctx *Z3Context) BvXor(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Concat(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_concat(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_concat(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -744,7 +791,7 @@ func (ctx *Z3Context) Concat(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Extract(hi, lo int, e Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_extract(ctx.c, C.unsigned(hi), C.unsigned(lo), e.c))
+		r = ctx.newExpr(z3_mk_extract(ctx.c, uint32(hi), uint32(lo), e.c))
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -754,11 +801,7 @@ func (ctx *Z3Context) Extract(hi, lo int, e Z3Expr) Z3Expr {
 func (ctx *Z3Context) Bv2Int(e Z3Expr, isSigned bool) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		var s C.bool
-		if isSigned {
-			s = C.bool(true)
-		}
-		r = ctx.newExpr(C.Z3_mk_bv2int(ctx.c, e.c, s))
+		r = ctx.newExpr(z3_mk_bv2int(ctx.c, e.c, boolToUint32(isSigned)))
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -768,7 +811,7 @@ func (ctx *Z3Context) Bv2Int(e Z3Expr, isSigned bool) Z3Expr {
 func (ctx *Z3Context) Int2Bv(width int, e Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_int2bv(ctx.c, C.unsigned(width), e.c))
+		r = ctx.newExpr(z3_mk_int2bv(ctx.c, uint32(width), e.c))
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -778,7 +821,7 @@ func (ctx *Z3Context) Int2Bv(width int, e Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvUlt(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvult(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvult(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -789,7 +832,7 @@ func (ctx *Z3Context) BvUlt(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvUle(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvule(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvule(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -800,7 +843,7 @@ func (ctx *Z3Context) BvUle(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvUgt(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvugt(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvugt(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -811,7 +854,7 @@ func (ctx *Z3Context) BvUgt(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) BvUge(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_bvuge(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(z3_mk_bvuge(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -827,7 +870,7 @@ func (ctx *Z3Context) IsBvExpr(e Z3Expr) bool {
 func (ctx *Z3Context) IsBvSort(s Z3Sort) bool {
 	var r bool
 	ctx.do(func() {
-		r = C.Z3_get_sort_kind(ctx.c, s.c) == C.Z3_BV_SORT
+		r = z3_get_sort_kind(ctx.c, s.c) == z3_BV_SORT
 	})
 	return r
 }
@@ -836,7 +879,7 @@ func (ctx *Z3Context) IsBvSort(s Z3Sort) bool {
 func (ctx *Z3Context) BvSortSize(s Z3Sort) int {
 	var r int
 	ctx.do(func() {
-		r = int(C.Z3_get_bv_sort_size(ctx.c, s.c))
+		r = int(z3_get_bv_sort_size(ctx.c, s.c))
 	})
 	return r
 }
@@ -849,16 +892,16 @@ func (ctx *Z3Context) ForAll(bound []Z3Expr, body Z3Expr) Z3Expr {
 	if len(bound) == 0 {
 		return body
 	}
-	cbound := make([]C.Z3_app, len(bound))
+	cbound := make([]z3App, len(bound))
 	for i, b := range bound {
-		cbound[i] = C.Z3_to_app(ctx.c, b.c)
+		cbound[i] = z3_to_app(ctx.c, b.c)
 	}
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_forall_const(
+		r = ctx.newExpr(z3_mk_forall_const(
 			ctx.c,
 			0, // weight
-			C.uint(len(cbound)),
+			uint32(len(cbound)),
 			&cbound[0],
 			0,   // num_patterns
 			nil, // patterns
@@ -875,16 +918,16 @@ func (ctx *Z3Context) Exists(bound []Z3Expr, body Z3Expr) Z3Expr {
 	if len(bound) == 0 {
 		return body
 	}
-	cbound := make([]C.Z3_app, len(bound))
+	cbound := make([]z3App, len(bound))
 	for i, b := range bound {
-		cbound[i] = C.Z3_to_app(ctx.c, b.c)
+		cbound[i] = z3_to_app(ctx.c, b.c)
 	}
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_exists_const(
+		r = ctx.newExpr(z3_mk_exists_const(
 			ctx.c,
 			0, // weight
-			C.uint(len(cbound)),
+			uint32(len(cbound)),
 			&cbound[0],
 			0,   // num_patterns
 			nil, // patterns
@@ -921,20 +964,20 @@ func (r Z3CheckResult) String() string {
 // Z3Solver wraps a Z3 solver.
 type Z3Solver struct {
 	ctx *Z3Context
-	c   C.Z3_solver
+	c   z3Solver
 }
 
 // NewZ3Solver creates a new solver.
 func (ctx *Z3Context) NewZ3Solver() *Z3Solver {
 	var s *Z3Solver
 	ctx.do(func() {
-		cs := C.Z3_mk_solver(ctx.c)
-		C.Z3_solver_inc_ref(ctx.c, cs)
+		cs := z3_mk_solver(ctx.c)
+		z3Solver_inc_ref(ctx.c, cs)
 		s = &Z3Solver{ctx: ctx, c: cs}
 	})
 	//runtime.SetFinalizer(s, func(s *Z3Solver) {
 	//	s.ctx.do(func() {
-	//		C.Z3_solver_dec_ref(s.ctx.c, s.c)
+	//		z3Solver_dec_ref(s.ctx.c, s.c)
 	//	})
 	//})
 	return s
@@ -943,7 +986,7 @@ func (ctx *Z3Context) NewZ3Solver() *Z3Solver {
 // Assert adds a constraint to the solver.
 func (s *Z3Solver) Assert(e Z3Expr) {
 	s.ctx.do(func() {
-		C.Z3_solver_assert(s.ctx.c, s.c, e.c)
+		z3Solver_assert(s.ctx.c, s.c, e.c)
 	})
 	runtime.KeepAlive(e)
 }
@@ -952,7 +995,7 @@ func (s *Z3Solver) Assert(e Z3Expr) {
 func (s *Z3Solver) Check() Z3CheckResult {
 	var r Z3CheckResult
 	s.ctx.do(func() {
-		res := C.Z3_solver_check(s.ctx.c, s.c)
+		res := z3Solver_check(s.ctx.c, s.c)
 		r = Z3CheckResult(res)
 	})
 	runtime.KeepAlive(s)
@@ -963,21 +1006,21 @@ func (s *Z3Solver) Check() Z3CheckResult {
 // Push creates a backtracking point.
 func (s *Z3Solver) Push() {
 	s.ctx.do(func() {
-		C.Z3_solver_push(s.ctx.c, s.c)
+		z3Solver_push(s.ctx.c, s.c)
 	})
 }
 
 // Pop removes constraints added since the last Push.
 func (s *Z3Solver) Pop() {
 	s.ctx.do(func() {
-		C.Z3_solver_pop(s.ctx.c, s.c, 1)
+		z3Solver_pop(s.ctx.c, s.c, 1)
 	})
 }
 
 // Reset removes all assertions from the solver.
 func (s *Z3Solver) Reset() {
 	s.ctx.do(func() {
-		C.Z3_solver_reset(s.ctx.c, s.c)
+		z3Solver_reset(s.ctx.c, s.c)
 	})
 }
 
@@ -985,7 +1028,7 @@ func (s *Z3Solver) Reset() {
 func (s *Z3Solver) String() string {
 	var res string
 	s.ctx.do(func() {
-		res = C.GoString(C.Z3_solver_to_string(s.ctx.c, s.c))
+		res = z3String(z3Solver_to_string(s.ctx.c, s.c))
 	})
 	runtime.KeepAlive(s)
 	return res
@@ -996,23 +1039,23 @@ func (s *Z3Solver) String() string {
 // Model wraps a Z3 model (satisfying assignment).
 type Model struct {
 	ctx *Z3Context
-	c   C.Z3_model
+	c   z3Model
 }
 
 // Model returns the model from the last successful Check.
 func (s *Z3Solver) Model() *Model {
 	var m *Model
 	s.ctx.do(func() {
-		cm := C.Z3_solver_get_model(s.ctx.c, s.c)
-		if cm != nil {
-			C.Z3_model_inc_ref(s.ctx.c, cm)
+		cm := z3Solver_get_model(s.ctx.c, s.c)
+		if cm != 0 {
+			z3Model_inc_ref(s.ctx.c, cm)
 			m = &Model{ctx: s.ctx, c: cm}
 		}
 	})
 	if m != nil {
 		//runtime.SetFinalizer(m, func(m *Model) {
 		//	m.ctx.do(func() {
-		//		C.Z3_model_dec_ref(m.ctx.c, m.c)
+		//		z3Model_dec_ref(m.ctx.c, m.c)
 		//	})
 		//})
 	}
@@ -1026,8 +1069,8 @@ func (m *Model) Eval(e Z3Expr, completion bool) (Z3Expr, bool) {
 	var result Z3Expr
 	var ok bool
 	m.ctx.do(func() {
-		var cresult C.Z3_ast
-		if bool(C.Z3_model_eval(m.ctx.c, m.c, e.c, C.bool(completion), &cresult)) {
+		var cresult z3AST
+		if z3Model_eval(m.ctx.c, m.c, e.c, boolToUint32(completion), &cresult) != 0 {
 			result = m.ctx.newExpr(cresult)
 			ok = true
 		}
@@ -1041,9 +1084,9 @@ func (m *Model) Eval(e Z3Expr, completion bool) (Z3Expr, bool) {
 func (m *Model) Sorts() []Z3Sort {
 	var result []Z3Sort
 	m.ctx.do(func() {
-		n := int(C.Z3_model_get_num_sorts(m.ctx.c, m.c))
+		n := int(z3Model_get_num_sorts(m.ctx.c, m.c))
 		for i := 0; i < n; i++ {
-			cs := C.Z3_model_get_sort(m.ctx.c, m.c, C.uint(i))
+			cs := z3Model_get_sort(m.ctx.c, m.c, uint32(i))
 			result = append(result, m.ctx.newSort(cs))
 		}
 	})
@@ -1055,15 +1098,15 @@ func (m *Model) Sorts() []Z3Sort {
 func (m *Model) SortUniverse(s Z3Sort) []Z3Expr {
 	var result []Z3Expr
 	m.ctx.do(func() {
-		av := C.Z3_model_get_sort_universe(m.ctx.c, m.c, s.c)
-		if av != nil {
-			C.Z3_ast_vector_inc_ref(m.ctx.c, av)
-			n := int(C.Z3_ast_vector_size(m.ctx.c, av))
+		av := z3Model_get_sort_universe(m.ctx.c, m.c, s.c)
+		if av != 0 {
+			z3ASTVector_inc_ref(m.ctx.c, av)
+			n := int(z3ASTVector_size(m.ctx.c, av))
 			for i := 0; i < n; i++ {
-				ce := C.Z3_ast_vector_get(m.ctx.c, av, C.uint(i))
+				ce := z3ASTVector_get(m.ctx.c, av, uint32(i))
 				result = append(result, m.ctx.newExpr(ce))
 			}
-			C.Z3_ast_vector_dec_ref(m.ctx.c, av)
+			z3ASTVector_dec_ref(m.ctx.c, av)
 		}
 	})
 	runtime.KeepAlive(m)
@@ -1075,7 +1118,7 @@ func (m *Model) SortUniverse(s Z3Sort) []Z3Expr {
 func (m *Model) String() string {
 	var res string
 	m.ctx.do(func() {
-		res = C.GoString(C.Z3_model_to_string(m.ctx.c, m.c))
+		res = z3String(z3Model_to_string(m.ctx.c, m.c))
 	})
 	runtime.KeepAlive(m)
 	return res
@@ -1086,17 +1129,17 @@ func (m *Model) String() string {
 // CheckAssumptions checks satisfiability under a set of assumptions.
 // The assumptions are temporary — they are not added to the solver's assertion stack.
 func (s *Z3Solver) CheckAssumptions(assumptions []Z3Expr) Z3CheckResult {
-	cassumptions := make([]C.Z3_ast, len(assumptions))
+	cassumptions := make([]z3AST, len(assumptions))
 	for i, a := range assumptions {
 		cassumptions[i] = a.c
 	}
 	var r Z3CheckResult
 	s.ctx.do(func() {
-		var cap *C.Z3_ast
+		var cap *z3AST
 		if len(cassumptions) > 0 {
 			cap = &cassumptions[0]
 		}
-		res := C.Z3_solver_check_assumptions(s.ctx.c, s.c, C.uint(len(cassumptions)), cap)
+		res := z3Solver_check_assumptions(s.ctx.c, s.c, uint32(len(cassumptions)), cap)
 		r = Z3CheckResult(res)
 	})
 	runtime.KeepAlive(s)
@@ -1109,15 +1152,15 @@ func (s *Z3Solver) CheckAssumptions(assumptions []Z3Expr) Z3CheckResult {
 func (s *Z3Solver) UnsatCore() []Z3Expr {
 	var result []Z3Expr
 	s.ctx.do(func() {
-		vec := C.Z3_solver_get_unsat_core(s.ctx.c, s.c)
-		C.Z3_ast_vector_inc_ref(s.ctx.c, vec)
-		n := int(C.Z3_ast_vector_size(s.ctx.c, vec))
+		vec := z3Solver_get_unsat_core(s.ctx.c, s.c)
+		z3ASTVector_inc_ref(s.ctx.c, vec)
+		n := int(z3ASTVector_size(s.ctx.c, vec))
 		result = make([]Z3Expr, n)
 		for i := 0; i < n; i++ {
-			ast := C.Z3_ast_vector_get(s.ctx.c, vec, C.uint(i))
+			ast := z3ASTVector_get(s.ctx.c, vec, uint32(i))
 			result[i] = s.ctx.newExpr(ast)
 		}
-		C.Z3_ast_vector_dec_ref(s.ctx.c, vec)
+		z3ASTVector_dec_ref(s.ctx.c, vec)
 	})
 	runtime.KeepAlive(s)
 	return result
@@ -1127,16 +1170,14 @@ func (s *Z3Solver) UnsatCore() []Z3Expr {
 func NewZ3SolverForLogic(ctx *Z3Context, logic string) *Z3Solver {
 	var s *Z3Solver
 	ctx.do(func() {
-		clogic := C.CString(logic)
-		defer C.free(unsafe.Pointer(clogic))
-		sym := C.Z3_mk_string_symbol(ctx.c, clogic)
-		cs := C.Z3_mk_solver_for_logic(ctx.c, sym)
-		C.Z3_solver_inc_ref(ctx.c, cs)
+		sym := z3_mk_string_symbol_go(logic)
+		cs := z3_mk_solver_for_logic(ctx.c, sym)
+		z3Solver_inc_ref(ctx.c, cs)
 		s = &Z3Solver{ctx: ctx, c: cs}
 	})
 	//runtime.SetFinalizer(s, func(s *Z3Solver) {
 	//	s.ctx.do(func() {
-	//		C.Z3_solver_dec_ref(s.ctx.c, s.c)
+	//		z3Solver_dec_ref(s.ctx.c, s.c)
 	//	})
 	//})
 	return s
@@ -1146,7 +1187,7 @@ func NewZ3SolverForLogic(ctx *Z3Context, logic string) *Z3Solver {
 func (e *Z3Expr) Equal(other Z3Expr) bool {
 	var result bool
 	e.ctx.do(func() {
-		result = bool(C.Z3_is_eq_ast(e.ctx.c, e.c, other.c))
+		result = z3_is_eq_ast(e.ctx.c, e.c, other.c) != 0
 	})
 	runtime.KeepAlive(e)
 	runtime.KeepAlive(other)
@@ -1157,7 +1198,7 @@ func (e *Z3Expr) Equal(other Z3Expr) bool {
 func (e *Z3Expr) IsTrue() bool {
 	var result bool
 	e.ctx.do(func() {
-		result = C.Z3_get_bool_value(e.ctx.c, e.c) == C.Z3_L_TRUE
+		result = z3_get_bool_value(e.ctx.c, e.c) == z3_L_TRUE
 	})
 	runtime.KeepAlive(e)
 	return result
@@ -1167,7 +1208,7 @@ func (e *Z3Expr) IsTrue() bool {
 func (e *Z3Expr) IsFalse() bool {
 	var result bool
 	e.ctx.do(func() {
-		result = C.Z3_get_bool_value(e.ctx.c, e.c) == C.Z3_L_FALSE
+		result = z3_get_bool_value(e.ctx.c, e.c) == z3_L_FALSE
 	})
 	runtime.KeepAlive(e)
 	return result
@@ -1178,20 +1219,20 @@ func (ctx *Z3Context) Substitute(e Z3Expr, from, to []Z3Expr) Z3Expr {
 	if len(from) != len(to) {
 		panic("z3bridge: Substitute: from and to must have the same length")
 	}
-	cfrom := make([]C.Z3_ast, len(from))
-	cto := make([]C.Z3_ast, len(to))
+	cfrom := make([]z3AST, len(from))
+	cto := make([]z3AST, len(to))
 	for i := range from {
 		cfrom[i] = from[i].c
 		cto[i] = to[i].c
 	}
 	var r Z3Expr
 	ctx.do(func() {
-		var cfp, ctp *C.Z3_ast
+		var cfp, ctp *z3AST
 		if len(cfrom) > 0 {
 			cfp = &cfrom[0]
 			ctp = &cto[0]
 		}
-		r = ctx.newExpr(C.Z3_substitute(ctx.c, e.c, C.uint(len(cfrom)), cfp, ctp))
+		r = ctx.newExpr(z3_substitute(ctx.c, e.c, uint32(len(cfrom)), cfp, ctp))
 	})
 	runtime.KeepAlive(e)
 	runtime.KeepAlive(from)
@@ -1203,35 +1244,30 @@ func (ctx *Z3Context) Substitute(e Z3Expr, from, to []Z3Expr) Z3Expr {
 // ("true"/"false") if possible, then as an unsigned integer, otherwise as a symbol.
 func (s *Z3Solver) SetParam(key, value string) {
 	s.ctx.do(func() {
-		ckey := C.CString(key)
-		defer C.free(unsafe.Pointer(ckey))
+		params := z3_mk_params(s.ctx.c)
+		z3Params_inc_ref(s.ctx.c, params)
 
-		params := C.Z3_mk_params(s.ctx.c)
-		C.Z3_params_inc_ref(s.ctx.c, params)
-
-		keySym := C.Z3_mk_string_symbol(s.ctx.c, ckey)
+		keySym := z3_mk_string_symbol_go(key)
 
 		switch value {
 		case "true":
-			C.Z3_params_set_bool(s.ctx.c, params, keySym, C.bool(true))
+			z3Params_set_bool(s.ctx.c, params, keySym, 1)
 		case "false":
-			C.Z3_params_set_bool(s.ctx.c, params, keySym, C.bool(false))
+			z3Params_set_bool(s.ctx.c, params, keySym, 0)
 		default:
 			// Try to parse as uint, otherwise set as symbol.
 			var uval uint64
 			n, _ := fmt.Sscanf(value, "%d", &uval)
 			if n == 1 {
-				C.Z3_params_set_uint(s.ctx.c, params, keySym, C.uint(uval))
+				z3Params_set_uint(s.ctx.c, params, keySym, uint32(uval))
 			} else {
-				cval := C.CString(value)
-				defer C.free(unsafe.Pointer(cval))
-				valSym := C.Z3_mk_string_symbol(s.ctx.c, cval)
-				C.Z3_params_set_symbol(s.ctx.c, params, keySym, valSym)
+				valSym := z3_mk_string_symbol_go(value)
+				z3Params_set_symbol(s.ctx.c, params, keySym, valSym)
 			}
 		}
 
-		C.Z3_solver_set_params(s.ctx.c, s.c, params)
-		C.Z3_params_dec_ref(s.ctx.c, params)
+		z3Solver_set_params(s.ctx.c, s.c, params)
+		z3Params_dec_ref(s.ctx.c, params)
 	})
 }
 
@@ -1241,3 +1277,405 @@ type ErrMsg struct {
 }
 
 func (e *ErrMsg) Error() string { return fmt.Sprintf("z3: %s", e.Msg) }
+
+// String handles are owned by the JavaScript host. The host copies bytes out of
+// Z3 wasm and exposes them here as a tiny length/copy/release protocol.
+//
+//go:wasmimport smt_z3 Z3_string_len
+func z3_string_len(h z3StringHandle) uint32
+
+//go:wasmimport smt_z3 Z3_string_copy
+func z3_string_copy(h z3StringHandle, dst *byte, n uint32)
+
+//go:wasmimport smt_z3 Z3_string_release
+func z3_string_release(h z3StringHandle)
+
+//go:wasmimport smt_z3 Z3_mk_config
+func z3_mk_config() z3Config
+
+//go:wasmimport smt_z3 Z3_del_config
+func z3_del_config(cfg z3Config)
+
+//go:wasmimport smt_z3 Z3_set_param_value_bytes
+func z3_set_param_value(cfg z3Config, key *byte, keyLen uint32, value *byte, valueLen uint32)
+
+//go:wasmimport smt_z3 Z3_mk_context_rc
+func z3_mk_context_rc(cfg z3Config) z3Context
+
+//go:wasmimport smt_z3 Z3_mk_interpolation_context
+func z3_mk_interpolation_context(cfg z3Config) z3Context
+
+//go:wasmimport smt_z3 Z3_set_error_handler
+func z3_set_error_handler(ctx z3Context)
+
+//go:wasmimport smt_z3 Z3_del_context
+func z3_del_context(ctx z3Context)
+
+//go:wasmimport smt_z3 Z3_inc_ref
+func z3_inc_ref(ctx z3Context, ast z3AST)
+
+//go:wasmimport smt_z3 Z3_dec_ref
+func z3_dec_ref(ctx z3Context, ast z3AST)
+
+//go:wasmimport smt_z3 Z3_mk_string_symbol_bytes
+func z3_mk_string_symbol(name *byte, n uint32) z3Symbol
+
+//go:wasmimport smt_z3 Z3_get_symbol_string
+func z3_get_symbol_string(ctx z3Context, sym z3Symbol) z3StringHandle
+
+//go:wasmimport smt_z3 Z3_mk_bool_sort
+func z3_mk_bool_sort(ctx z3Context) z3Sort
+
+//go:wasmimport smt_z3 Z3_mk_uninterpreted_sort
+func z3_mk_uninterpreted_sort(ctx z3Context, sym z3Symbol) z3Sort
+
+//go:wasmimport smt_z3 Z3_mk_int_sort
+func z3_mk_int_sort(ctx z3Context) z3Sort
+
+//go:wasmimport smt_z3 Z3_mk_real_sort
+func z3_mk_real_sort(ctx z3Context) z3Sort
+
+//go:wasmimport smt_z3 Z3_mk_bv_sort
+func z3_mk_bv_sort(ctx z3Context, width uint32) z3Sort
+
+//go:wasmimport smt_z3 Z3_mk_string_sort
+func z3_mk_string_sort(ctx z3Context) z3Sort
+
+//go:wasmimport smt_z3 Z3_mk_array_sort
+func z3_mk_array_sort(ctx z3Context, domain z3Sort, rng z3Sort) z3Sort
+
+//go:wasmimport smt_z3 Z3_get_array_sort_domain
+func z3_get_array_sort_domain(ctx z3Context, sort z3Sort) z3Sort
+
+//go:wasmimport smt_z3 Z3_get_array_sort_range
+func z3_get_array_sort_range(ctx z3Context, sort z3Sort) z3Sort
+
+//go:wasmimport smt_z3 Z3_get_sort_name
+func z3_get_sort_name(ctx z3Context, sort z3Sort) z3Symbol
+
+//go:wasmimport smt_z3 Z3_sort_to_ast
+func z3Sort_to_ast(ctx z3Context, sort z3Sort) z3AST
+
+//go:wasmimport smt_z3 Z3_get_sort_kind
+func z3_get_sort_kind(ctx z3Context, sort z3Sort) int32
+
+//go:wasmimport smt_z3 Z3_get_bv_sort_size
+func z3_get_bv_sort_size(ctx z3Context, sort z3Sort) uint32
+
+//go:wasmimport smt_z3 Z3_is_eq_sort
+func z3_is_eq_sort(ctx z3Context, a z3Sort, b z3Sort) uint32
+
+//go:wasmimport smt_z3 Z3_mk_true
+func z3_mk_true(ctx z3Context) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_false
+func z3_mk_false(ctx z3Context) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_const
+func z3_mk_const(ctx z3Context, sym z3Symbol, sort z3Sort) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_int64
+func z3_mk_int64(ctx z3Context, val int64, sort z3Sort) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_string_bytes
+func z3_mk_string(ctx z3Context, value *byte, n uint32) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_not
+func z3_mk_not(ctx z3Context, expr z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_and
+func z3_mk_and(ctx z3Context, n uint32, args *z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_or
+func z3_mk_or(ctx z3Context, n uint32, args *z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_implies
+func z3_mk_implies(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_iff
+func z3_mk_iff(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_eq
+func z3_mk_eq(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_ite
+func z3_mk_ite(ctx z3Context, cond z3AST, thenExpr z3AST, elseExpr z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_add
+func z3_mk_add(ctx z3Context, n uint32, args *z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_sub
+func z3_mk_sub(ctx z3Context, n uint32, args *z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_mul
+func z3_mk_mul(ctx z3Context, n uint32, args *z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_div
+func z3_mk_div(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_gt
+func z3_mk_gt(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_lt
+func z3_mk_lt(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_ge
+func z3_mk_ge(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_le
+func z3_mk_le(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvand
+func z3_mk_bvand(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvor
+func z3_mk_bvor(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvnot
+func z3_mk_bvnot(ctx z3Context, expr z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvadd
+func z3_mk_bvadd(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvsub
+func z3_mk_bvsub(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvmul
+func z3_mk_bvmul(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvudiv
+func z3_mk_bvudiv(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvshl
+func z3_mk_bvshl(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvlshr
+func z3_mk_bvlshr(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvashr
+func z3_mk_bvashr(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvxor
+func z3_mk_bvxor(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_concat
+func z3_mk_concat(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_extract
+func z3_mk_extract(ctx z3Context, hi uint32, lo uint32, expr z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bv2int
+func z3_mk_bv2int(ctx z3Context, expr z3AST, isSigned uint32) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_int2bv
+func z3_mk_int2bv(ctx z3Context, width uint32, expr z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvult
+func z3_mk_bvult(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvule
+func z3_mk_bvule(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvugt
+func z3_mk_bvugt(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvuge
+func z3_mk_bvuge(ctx z3Context, a z3AST, b z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_select
+func z3_mk_select(ctx z3Context, array z3AST, index z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_store
+func z3_mk_store(ctx z3Context, array z3AST, index z3AST, value z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_const_array
+func z3_mk_const_array(ctx z3Context, domain z3Sort, value z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_func_decl
+func z3_mk_func_decl(ctx z3Context, sym z3Symbol, domainN uint32, domain *z3Sort, rangeSort z3Sort) z3FuncDecl
+
+//go:wasmimport smt_z3 Z3_func_decl_to_ast
+func z3FuncDecl_to_ast(ctx z3Context, fd z3FuncDecl) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_app
+func z3_mk_app(ctx z3Context, fd z3FuncDecl, n uint32, args *z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_enumeration_sort
+func z3_mk_enumeration_sort(ctx z3Context, name z3Symbol, n uint32, elems *z3Symbol, consts *z3FuncDecl, testers *z3FuncDecl) z3Sort
+
+//go:wasmimport smt_z3 Z3_to_app
+func z3_to_app(ctx z3Context, ast z3AST) z3App
+
+//go:wasmimport smt_z3 Z3_mk_forall_const
+func z3_mk_forall_const(ctx z3Context, weight uint32, n uint32, bound *z3App, numPatterns uint32, patterns unsafe.Pointer, body z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_exists_const
+func z3_mk_exists_const(ctx z3Context, weight uint32, n uint32, bound *z3App, numPatterns uint32, patterns unsafe.Pointer, body z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_substitute
+func z3_substitute(ctx z3Context, expr z3AST, n uint32, from *z3AST, to *z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_ast_to_string
+func z3AST_to_string(ctx z3Context, ast z3AST) z3StringHandle
+
+//go:wasmimport smt_z3 Z3_get_ast_id
+func z3_get_ast_id(ctx z3Context, ast z3AST) uint32
+
+//go:wasmimport smt_z3 Z3_get_ast_kind
+func z3_get_ast_kind(ctx z3Context, ast z3AST) int32
+
+//go:wasmimport smt_z3 Z3_get_bool_value
+func z3_get_bool_value(ctx z3Context, ast z3AST) int32
+
+//go:wasmimport smt_z3 Z3_is_eq_ast
+func z3_is_eq_ast(ctx z3Context, a z3AST, b z3AST) uint32
+
+//go:wasmimport smt_z3 Z3_get_index_value
+func z3_get_index_value(ctx z3Context, ast z3AST) uint32
+
+//go:wasmimport smt_z3 Z3_get_numeral_string
+func z3_get_numeral_string(ctx z3Context, ast z3AST) z3StringHandle
+
+//go:wasmimport smt_z3 Z3_get_sort
+func z3_get_sort(ctx z3Context, ast z3AST) z3Sort
+
+//go:wasmimport smt_z3 Z3_get_app_num_args
+func z3_get_app_num_args(ctx z3Context, app z3App) uint32
+
+//go:wasmimport smt_z3 Z3_get_app_arg
+func z3_get_app_arg(ctx z3Context, app z3App, i uint32) z3AST
+
+//go:wasmimport smt_z3 Z3_get_app_decl
+func z3_get_app_decl(ctx z3Context, app z3App) z3FuncDecl
+
+//go:wasmimport smt_z3 Z3_get_decl_name
+func z3_get_decl_name(ctx z3Context, fd z3FuncDecl) z3Symbol
+
+//go:wasmimport smt_z3 Z3_get_decl_kind
+func z3_get_decl_kind(ctx z3Context, fd z3FuncDecl) int32
+
+//go:wasmimport smt_z3 Z3_get_arity
+func z3_get_arity(ctx z3Context, fd z3FuncDecl) uint32
+
+//go:wasmimport smt_z3 Z3_get_domain
+func z3_get_domain(ctx z3Context, fd z3FuncDecl, i uint32) z3Sort
+
+//go:wasmimport smt_z3 Z3_get_range
+func z3_get_range(ctx z3Context, fd z3FuncDecl) z3Sort
+
+//go:wasmimport smt_z3 Z3_is_quantifier_forall
+func z3_is_quantifier_forall(ctx z3Context, ast z3AST) uint32
+
+//go:wasmimport smt_z3 Z3_get_quantifier_num_bound
+func z3_get_quantifier_num_bound(ctx z3Context, ast z3AST) uint32
+
+//go:wasmimport smt_z3 Z3_get_quantifier_bound_name
+func z3_get_quantifier_bound_name(ctx z3Context, ast z3AST, i uint32) z3Symbol
+
+//go:wasmimport smt_z3 Z3_get_quantifier_bound_sort
+func z3_get_quantifier_bound_sort(ctx z3Context, ast z3AST, i uint32) z3Sort
+
+//go:wasmimport smt_z3 Z3_get_quantifier_body
+func z3_get_quantifier_body(ctx z3Context, ast z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_solver
+func z3_mk_solver(ctx z3Context) z3Solver
+
+//go:wasmimport smt_z3 Z3_mk_solver_for_logic
+func z3_mk_solver_for_logic(ctx z3Context, logic z3Symbol) z3Solver
+
+//go:wasmimport smt_z3 Z3_solver_inc_ref
+func z3Solver_inc_ref(ctx z3Context, solver z3Solver)
+
+//go:wasmimport smt_z3 Z3_solver_dec_ref
+func z3Solver_dec_ref(ctx z3Context, solver z3Solver)
+
+//go:wasmimport smt_z3 Z3_solver_assert
+func z3Solver_assert(ctx z3Context, solver z3Solver, expr z3AST)
+
+//go:wasmimport smt_z3 Z3_solver_check
+func z3Solver_check(ctx z3Context, solver z3Solver) int32
+
+//go:wasmimport smt_z3 Z3_solver_push
+func z3Solver_push(ctx z3Context, solver z3Solver)
+
+//go:wasmimport smt_z3 Z3_solver_pop
+func z3Solver_pop(ctx z3Context, solver z3Solver, n uint32)
+
+//go:wasmimport smt_z3 Z3_solver_reset
+func z3Solver_reset(ctx z3Context, solver z3Solver)
+
+//go:wasmimport smt_z3 Z3_solver_to_string
+func z3Solver_to_string(ctx z3Context, solver z3Solver) z3StringHandle
+
+//go:wasmimport smt_z3 Z3_solver_get_assertions
+func z3Solver_get_assertions(ctx z3Context, solver z3Solver) z3ASTVector
+
+//go:wasmimport smt_z3 Z3_solver_get_model
+func z3Solver_get_model(ctx z3Context, solver z3Solver) z3Model
+
+//go:wasmimport smt_z3 Z3_solver_check_assumptions
+func z3Solver_check_assumptions(ctx z3Context, solver z3Solver, n uint32, assumptions *z3AST) int32
+
+//go:wasmimport smt_z3 Z3_solver_get_unsat_core
+func z3Solver_get_unsat_core(ctx z3Context, solver z3Solver) z3ASTVector
+
+//go:wasmimport smt_z3 Z3_solver_set_params
+func z3Solver_set_params(ctx z3Context, solver z3Solver, params z3Params)
+
+//go:wasmimport smt_z3 Z3_ast_vector_inc_ref
+func z3ASTVector_inc_ref(ctx z3Context, vec z3ASTVector)
+
+//go:wasmimport smt_z3 Z3_ast_vector_dec_ref
+func z3ASTVector_dec_ref(ctx z3Context, vec z3ASTVector)
+
+//go:wasmimport smt_z3 Z3_ast_vector_size
+func z3ASTVector_size(ctx z3Context, vec z3ASTVector) uint32
+
+//go:wasmimport smt_z3 Z3_ast_vector_get
+func z3ASTVector_get(ctx z3Context, vec z3ASTVector, i uint32) z3AST
+
+//go:wasmimport smt_z3 Z3_model_inc_ref
+func z3Model_inc_ref(ctx z3Context, model z3Model)
+
+//go:wasmimport smt_z3 Z3_model_dec_ref
+func z3Model_dec_ref(ctx z3Context, model z3Model)
+
+//go:wasmimport smt_z3 Z3_model_eval
+func z3Model_eval(ctx z3Context, model z3Model, expr z3AST, completion uint32, result *z3AST) uint32
+
+//go:wasmimport smt_z3 Z3_model_get_num_sorts
+func z3Model_get_num_sorts(ctx z3Context, model z3Model) uint32
+
+//go:wasmimport smt_z3 Z3_model_get_sort
+func z3Model_get_sort(ctx z3Context, model z3Model, i uint32) z3Sort
+
+//go:wasmimport smt_z3 Z3_model_get_sort_universe
+func z3Model_get_sort_universe(ctx z3Context, model z3Model, sort z3Sort) z3ASTVector
+
+//go:wasmimport smt_z3 Z3_model_to_string
+func z3Model_to_string(ctx z3Context, model z3Model) z3StringHandle
+
+//go:wasmimport smt_z3 Z3_mk_params
+func z3_mk_params(ctx z3Context) z3Params
+
+//go:wasmimport smt_z3 Z3_params_inc_ref
+func z3Params_inc_ref(ctx z3Context, params z3Params)
+
+//go:wasmimport smt_z3 Z3_params_dec_ref
+func z3Params_dec_ref(ctx z3Context, params z3Params)
+
+//go:wasmimport smt_z3 Z3_params_set_bool
+func z3Params_set_bool(ctx z3Context, params z3Params, key z3Symbol, value uint32)
+
+//go:wasmimport smt_z3 Z3_params_set_uint
+func z3Params_set_uint(ctx z3Context, params z3Params, key z3Symbol, value uint32)
+
+//go:wasmimport smt_z3 Z3_params_set_symbol
+func z3Params_set_symbol(ctx z3Context, params z3Params, key z3Symbol, value z3Symbol)
+
+//go:wasmimport smt_z3 Z3_mk_interpolant
+func z3_mk_interpolant(ctx z3Context, expr z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_compute_interpolant
+func z3_compute_interpolant(ctx z3Context, pattern z3AST, params z3Params, interp *z3ASTVector, model *z3Model) int32

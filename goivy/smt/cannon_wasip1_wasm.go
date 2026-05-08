@@ -57,11 +57,6 @@
 // the EXACT same byte string for the same logical solver state.
 package smt
 
-/*
-#include <z3.h>
-*/
-import "C"
-
 import (
 	"fmt"
 	"runtime"
@@ -77,15 +72,15 @@ func (s *Z3Solver) CanonZ3Assertions() string {
 	var res string
 	s.ctx.do(func() {
 		// Get assertions as an AST vector.
-		vec := C.Z3_solver_get_assertions(s.ctx.c, s.c)
-		C.Z3_ast_vector_inc_ref(s.ctx.c, vec)
-		defer C.Z3_ast_vector_dec_ref(s.ctx.c, vec)
+		vec := z3Solver_get_assertions(s.ctx.c, s.c)
+		z3ASTVector_inc_ref(s.ctx.c, vec)
+		defer z3ASTVector_dec_ref(s.ctx.c, vec)
 
-		n := int(C.Z3_ast_vector_size(s.ctx.c, vec))
+		n := int(z3ASTVector_size(s.ctx.c, vec))
 		var sb strings.Builder
 		sb.WriteString("(asserts")
 		for i := 0; i < n; i++ {
-			ast := C.Z3_ast_vector_get(s.ctx.c, vec, C.uint(i))
+			ast := z3ASTVector_get(s.ctx.c, vec, uint32(i))
 			sb.WriteByte(' ')
 			canonZ3ExprUnlocked(s.ctx.c, ast, nil, &sb)
 		}
@@ -105,33 +100,33 @@ func (s *Z3Solver) CanonZ3Assertions() string {
 // enclosing quantifier (innermost LAST). Each entry is the AST-order
 // list of names for that quantifier (NOT the sorted-canon order); de
 // Bruijn lookups must use the AST order.
-func canonZ3ExprUnlocked(c C.Z3_context, ast C.Z3_ast, binders [][]string, sb *strings.Builder) {
-	kind := C.Z3_get_ast_kind(c, ast)
+func canonZ3ExprUnlocked(c z3Context, ast z3AST, binders [][]string, sb *strings.Builder) {
+	kind := z3_get_ast_kind(c, ast)
 	switch kind {
-	case C.Z3_NUMERAL_AST:
+	case z3_NUMERAL_AST:
 		sb.WriteString("(n ")
-		cstr := C.Z3_get_numeral_string(c, ast)
-		sb.WriteString(C.GoString(cstr))
+		cstr := z3_get_numeral_string(c, ast)
+		sb.WriteString(z3String(cstr))
 		sb.WriteByte(')')
 
-	case C.Z3_VAR_AST:
-		idx := int(C.Z3_get_index_value(c, ast))
+	case z3_VAR_AST:
+		idx := int(z3_get_index_value(c, ast))
 		name := lookupBinderName(binders, idx)
 		sb.WriteString("(v ")
 		sb.WriteString(name)
 		sb.WriteByte(')')
 
-	case C.Z3_APP_AST:
-		app := C.Z3_to_app(c, ast)
-		decl := C.Z3_get_app_decl(c, app)
-		sym := C.Z3_get_decl_name(c, decl)
-		name := C.GoString(C.Z3_get_symbol_string(c, sym))
-		nargs := int(C.Z3_get_app_num_args(c, app))
+	case z3_APP_AST:
+		app := z3_to_app(c, ast)
+		decl := z3_get_app_decl(c, app)
+		sym := z3_get_decl_name(c, decl)
+		name := z3String(z3_get_symbol_string(c, sym))
+		nargs := int(z3_get_app_num_args(c, app))
 		if nargs == 0 {
 			sb.WriteString("(c ")
 			sb.WriteString(name)
 			sb.WriteByte(' ')
-			srt := C.Z3_get_sort(c, ast)
+			srt := z3_get_sort(c, ast)
 			canonZ3SortUnlocked(c, srt, sb)
 			sb.WriteByte(')')
 		} else {
@@ -139,14 +134,14 @@ func canonZ3ExprUnlocked(c C.Z3_context, ast C.Z3_ast, binders [][]string, sb *s
 			sb.WriteString(name)
 			for i := 0; i < nargs; i++ {
 				sb.WriteByte(' ')
-				arg := C.Z3_get_app_arg(c, app, C.uint(i))
+				arg := z3_get_app_arg(c, app, uint32(i))
 				canonZ3ExprUnlocked(c, arg, binders, sb)
 			}
 			sb.WriteByte(')')
 		}
 
-	case C.Z3_QUANTIFIER_AST:
-		nbound := int(C.Z3_get_quantifier_num_bound(c, ast))
+	case z3_QUANTIFIER_AST:
+		nbound := int(z3_get_quantifier_num_bound(c, ast))
 
 		// Collect AST-order names and sort names. The AST-order names
 		// are needed to push onto the binder stack for body lookups
@@ -157,17 +152,17 @@ func canonZ3ExprUnlocked(c C.Z3_context, ast C.Z3_ast, binders [][]string, sb *s
 		type bvPair struct{ name, sort string }
 		pairs := make([]bvPair, nbound)
 		for i := 0; i < nbound; i++ {
-			nameSym := C.Z3_get_quantifier_bound_name(c, ast, C.uint(i))
-			astNames[i] = C.GoString(C.Z3_get_symbol_string(c, nameSym))
-			bsort := C.Z3_get_quantifier_bound_sort(c, ast, C.uint(i))
-			sortNameSym := C.Z3_get_sort_name(c, bsort)
-			pairs[i] = bvPair{astNames[i], C.GoString(C.Z3_get_symbol_string(c, sortNameSym))}
+			nameSym := z3_get_quantifier_bound_name(c, ast, uint32(i))
+			astNames[i] = z3String(z3_get_symbol_string(c, nameSym))
+			bsort := z3_get_quantifier_bound_sort(c, ast, uint32(i))
+			sortNameSym := z3_get_sort_name(c, bsort)
+			pairs[i] = bvPair{astNames[i], z3String(z3_get_symbol_string(c, sortNameSym))}
 		}
 		sort.Slice(pairs, func(i, j int) bool {
 			return pairs[i].name < pairs[j].name
 		})
 
-		if bool(C.Z3_is_quantifier_forall(c, ast)) {
+		if z3_is_quantifier_forall(c, ast) != 0 {
 			sb.WriteString("(forall (")
 		} else {
 			sb.WriteString("(exists (")
@@ -185,7 +180,7 @@ func canonZ3ExprUnlocked(c C.Z3_context, ast C.Z3_ast, binders [][]string, sb *s
 		sb.WriteString(") ")
 
 		// Push the AST-order names so body var lookups resolve correctly.
-		body := C.Z3_get_quantifier_body(c, ast)
+		body := z3_get_quantifier_body(c, ast)
 		newBinders := append(binders, astNames)
 		canonZ3ExprUnlocked(c, body, newBinders, sb)
 		sb.WriteByte(')')
@@ -197,9 +192,9 @@ func canonZ3ExprUnlocked(c C.Z3_context, ast C.Z3_ast, binders [][]string, sb *s
 
 // canonZ3SortUnlocked writes the canonical name of a Z3 sort to sb.
 // MUST be called with the Z3 context lock held.
-func canonZ3SortUnlocked(c C.Z3_context, s C.Z3_sort, sb *strings.Builder) {
-	sym := C.Z3_get_sort_name(c, s)
-	name := C.GoString(C.Z3_get_symbol_string(c, sym))
+func canonZ3SortUnlocked(c z3Context, s z3Sort, sb *strings.Builder) {
+	sym := z3_get_sort_name(c, s)
+	name := z3String(z3_get_symbol_string(c, sym))
 	sb.WriteString(name)
 }
 

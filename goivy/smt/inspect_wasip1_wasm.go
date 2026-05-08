@@ -4,10 +4,6 @@
 // converting Z3 expressions back to Ivy formulas.
 package smt
 
-/*
-#include <z3.h>
-*/
-import "C"
 import "runtime"
 
 // --- Sort introspection ---
@@ -16,20 +12,20 @@ import "runtime"
 type SortKind int
 
 const (
-	SortBool          SortKind = C.Z3_BOOL_SORT
-	SortInt           SortKind = C.Z3_INT_SORT
-	SortReal          SortKind = C.Z3_REAL_SORT
-	SortBV            SortKind = C.Z3_BV_SORT
-	SortArray         SortKind = C.Z3_ARRAY_SORT
-	SortUninterpreted SortKind = C.Z3_UNINTERPRETED_SORT
-	SortSeq           SortKind = C.Z3_SEQ_SORT // for string sorts
+	SortBool          SortKind = z3_BOOL_SORT
+	SortInt           SortKind = z3_INT_SORT
+	SortReal          SortKind = z3_REAL_SORT
+	SortBV            SortKind = z3_BV_SORT
+	SortArray         SortKind = z3_ARRAY_SORT
+	SortUninterpreted SortKind = z3_UNINTERPRETED_SORT
+	SortSeq           SortKind = z3_SEQ_SORT // for string sorts
 )
 
 // Kind returns the kind of this sort.
 func (s Z3Sort) Kind() SortKind {
 	var k SortKind
 	s.ctx.do(func() {
-		k = SortKind(C.Z3_get_sort_kind(s.ctx.c, s.c))
+		k = SortKind(z3_get_sort_kind(s.ctx.c, s.c))
 	})
 	runtime.KeepAlive(s)
 	return k
@@ -39,7 +35,7 @@ func (s Z3Sort) Kind() SortKind {
 func (s Z3Sort) Equal(other Z3Sort) bool {
 	var r bool
 	s.ctx.do(func() {
-		r = bool(C.Z3_is_eq_sort(s.ctx.c, s.c, other.c))
+		r = z3_is_eq_sort(s.ctx.c, s.c, other.c) != 0
 	})
 	runtime.KeepAlive(s)
 	runtime.KeepAlive(other)
@@ -52,23 +48,23 @@ func (s Z3Sort) Equal(other Z3Sort) bool {
 type DeclKind int
 
 const (
-	DeclAnd   DeclKind = C.Z3_OP_AND
-	DeclOr    DeclKind = C.Z3_OP_OR
-	DeclNot   DeclKind = C.Z3_OP_NOT
-	DeclEq    DeclKind = C.Z3_OP_EQ
-	DeclITE   DeclKind = C.Z3_OP_ITE
-	DeclTrue  DeclKind = C.Z3_OP_TRUE
-	DeclFalse DeclKind = C.Z3_OP_FALSE
-	DeclIff   DeclKind = C.Z3_OP_IFF
+	DeclAnd   DeclKind = z3_OP_AND
+	DeclOr    DeclKind = z3_OP_OR
+	DeclNot   DeclKind = z3_OP_NOT
+	DeclEq    DeclKind = z3_OP_EQ
+	DeclITE   DeclKind = z3_OP_ITE
+	DeclTrue  DeclKind = z3_OP_TRUE
+	DeclFalse DeclKind = z3_OP_FALSE
+	DeclIff   DeclKind = z3_OP_IFF
 
-	DeclUninterpreted DeclKind = C.Z3_OP_UNINTERPRETED
+	DeclUninterpreted DeclKind = z3_OP_UNINTERPRETED
 )
 
 // IsApp returns true if the expression is a function application (including constants).
 func (e Z3Expr) IsApp() bool {
 	var r bool
 	e.ctx.do(func() {
-		r = C.Z3_get_ast_kind(e.ctx.c, e.c) == C.Z3_APP_AST
+		r = z3_get_ast_kind(e.ctx.c, e.c) == z3_APP_AST
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -78,7 +74,7 @@ func (e Z3Expr) IsApp() bool {
 func (e Z3Expr) IsQuantifier() bool {
 	var r bool
 	e.ctx.do(func() {
-		r = C.Z3_get_ast_kind(e.ctx.c, e.c) == C.Z3_QUANTIFIER_AST
+		r = z3_get_ast_kind(e.ctx.c, e.c) == z3_QUANTIFIER_AST
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -88,7 +84,7 @@ func (e Z3Expr) IsQuantifier() bool {
 func (e Z3Expr) IsVar() bool {
 	var r bool
 	e.ctx.do(func() {
-		r = C.Z3_get_ast_kind(e.ctx.c, e.c) == C.Z3_VAR_AST
+		r = z3_get_ast_kind(e.ctx.c, e.c) == z3_VAR_AST
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -101,7 +97,7 @@ func (e Z3Expr) IsVar() bool {
 func (e Z3Expr) GetId() uint {
 	var id uint
 	e.ctx.do(func() {
-		id = uint(C.Z3_get_ast_id(e.ctx.c, e.c))
+		id = uint(z3_get_ast_id(e.ctx.c, e.c))
 	})
 	runtime.KeepAlive(e)
 	return id
@@ -111,7 +107,7 @@ func (e Z3Expr) GetId() uint {
 func (e Z3Expr) IsNumeral() bool {
 	var r bool
 	e.ctx.do(func() {
-		r = C.Z3_get_ast_kind(e.ctx.c, e.c) == C.Z3_NUMERAL_AST
+		r = z3_get_ast_kind(e.ctx.c, e.c) == z3_NUMERAL_AST
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -122,7 +118,7 @@ func (e Z3Expr) IsNumeral() bool {
 func (e Z3Expr) VarIndex() int {
 	var idx int
 	e.ctx.do(func() {
-		idx = int(C.Z3_get_index_value(e.ctx.c, e.c))
+		idx = int(z3_get_index_value(e.ctx.c, e.c))
 	})
 	runtime.KeepAlive(e)
 	return idx
@@ -133,8 +129,8 @@ func (e Z3Expr) VarIndex() int {
 func (e Z3Expr) NumArgs() int {
 	var n int
 	e.ctx.do(func() {
-		app := C.Z3_to_app(e.ctx.c, e.c)
-		n = int(C.Z3_get_app_num_args(e.ctx.c, app))
+		app := z3_to_app(e.ctx.c, e.c)
+		n = int(z3_get_app_num_args(e.ctx.c, app))
 	})
 	runtime.KeepAlive(e)
 	return n
@@ -145,8 +141,8 @@ func (e Z3Expr) NumArgs() int {
 func (e Z3Expr) Arg(i int) Z3Expr {
 	var r Z3Expr
 	e.ctx.do(func() {
-		app := C.Z3_to_app(e.ctx.c, e.c)
-		r = e.ctx.newExpr(C.Z3_get_app_arg(e.ctx.c, app, C.uint(i)))
+		app := z3_to_app(e.ctx.c, e.c)
+		r = e.ctx.newExpr(z3_get_app_arg(e.ctx.c, app, uint32(i)))
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -157,8 +153,8 @@ func (e Z3Expr) Arg(i int) Z3Expr {
 func (e Z3Expr) Decl() FuncDecl {
 	var fd FuncDecl
 	e.ctx.do(func() {
-		app := C.Z3_to_app(e.ctx.c, e.c)
-		fd = e.ctx.newFuncDecl(C.Z3_get_app_decl(e.ctx.c, app))
+		app := z3_to_app(e.ctx.c, e.c)
+		fd = e.ctx.newFuncDecl(z3_get_app_decl(e.ctx.c, app))
 	})
 	runtime.KeepAlive(e)
 	return fd
@@ -168,7 +164,7 @@ func (e Z3Expr) Decl() FuncDecl {
 func (e Z3Expr) ExprSort() Z3Sort {
 	var s Z3Sort
 	e.ctx.do(func() {
-		s = e.ctx.newSort(C.Z3_get_sort(e.ctx.c, e.c))
+		s = e.ctx.newSort(z3_get_sort(e.ctx.c, e.c))
 	})
 	runtime.KeepAlive(e)
 	return s
@@ -180,8 +176,8 @@ func (e Z3Expr) ExprSort() Z3Sort {
 func (fd FuncDecl) Name() string {
 	var name string
 	fd.ctx.do(func() {
-		sym := C.Z3_get_decl_name(fd.ctx.c, fd.c)
-		name = C.GoString(C.Z3_get_symbol_string(fd.ctx.c, sym))
+		sym := z3_get_decl_name(fd.ctx.c, fd.c)
+		name = z3String(z3_get_symbol_string(fd.ctx.c, sym))
 	})
 	runtime.KeepAlive(fd)
 	return name
@@ -191,7 +187,7 @@ func (fd FuncDecl) Name() string {
 func (fd FuncDecl) Arity() int {
 	var n int
 	fd.ctx.do(func() {
-		n = int(C.Z3_get_arity(fd.ctx.c, fd.c))
+		n = int(z3_get_arity(fd.ctx.c, fd.c))
 	})
 	runtime.KeepAlive(fd)
 	return n
@@ -201,7 +197,7 @@ func (fd FuncDecl) Arity() int {
 func (fd FuncDecl) DomainSort(i int) Z3Sort {
 	var s Z3Sort
 	fd.ctx.do(func() {
-		s = fd.ctx.newSort(C.Z3_get_domain(fd.ctx.c, fd.c, C.uint(i)))
+		s = fd.ctx.newSort(z3_get_domain(fd.ctx.c, fd.c, uint32(i)))
 	})
 	runtime.KeepAlive(fd)
 	return s
@@ -211,7 +207,7 @@ func (fd FuncDecl) DomainSort(i int) Z3Sort {
 func (fd FuncDecl) RangeSort() Z3Sort {
 	var s Z3Sort
 	fd.ctx.do(func() {
-		s = fd.ctx.newSort(C.Z3_get_range(fd.ctx.c, fd.c))
+		s = fd.ctx.newSort(z3_get_range(fd.ctx.c, fd.c))
 	})
 	runtime.KeepAlive(fd)
 	return s
@@ -221,7 +217,7 @@ func (fd FuncDecl) RangeSort() Z3Sort {
 func (fd FuncDecl) Kind() DeclKind {
 	var k DeclKind
 	fd.ctx.do(func() {
-		k = DeclKind(C.Z3_get_decl_kind(fd.ctx.c, fd.c))
+		k = DeclKind(z3_get_decl_kind(fd.ctx.c, fd.c))
 	})
 	runtime.KeepAlive(fd)
 	return k
@@ -234,7 +230,7 @@ func (fd FuncDecl) Kind() DeclKind {
 func (e Z3Expr) IsForAll() bool {
 	var r bool
 	e.ctx.do(func() {
-		r = bool(C.Z3_is_quantifier_forall(e.ctx.c, e.c))
+		r = z3_is_quantifier_forall(e.ctx.c, e.c) != 0
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -245,7 +241,7 @@ func (e Z3Expr) IsForAll() bool {
 func (e Z3Expr) QuantNumVars() int {
 	var n int
 	e.ctx.do(func() {
-		n = int(C.Z3_get_quantifier_num_bound(e.ctx.c, e.c))
+		n = int(z3_get_quantifier_num_bound(e.ctx.c, e.c))
 	})
 	runtime.KeepAlive(e)
 	return n
@@ -256,8 +252,8 @@ func (e Z3Expr) QuantNumVars() int {
 func (e Z3Expr) QuantVarName(i int) string {
 	var name string
 	e.ctx.do(func() {
-		sym := C.Z3_get_quantifier_bound_name(e.ctx.c, e.c, C.uint(i))
-		name = C.GoString(C.Z3_get_symbol_string(e.ctx.c, sym))
+		sym := z3_get_quantifier_bound_name(e.ctx.c, e.c, uint32(i))
+		name = z3String(z3_get_symbol_string(e.ctx.c, sym))
 	})
 	runtime.KeepAlive(e)
 	return name
@@ -268,7 +264,7 @@ func (e Z3Expr) QuantVarName(i int) string {
 func (e Z3Expr) QuantVarSort(i int) Z3Sort {
 	var s Z3Sort
 	e.ctx.do(func() {
-		s = e.ctx.newSort(C.Z3_get_quantifier_bound_sort(e.ctx.c, e.c, C.uint(i)))
+		s = e.ctx.newSort(z3_get_quantifier_bound_sort(e.ctx.c, e.c, uint32(i)))
 	})
 	runtime.KeepAlive(e)
 	return s
@@ -279,7 +275,7 @@ func (e Z3Expr) QuantVarSort(i int) Z3Sort {
 func (e Z3Expr) QuantBody() Z3Expr {
 	var r Z3Expr
 	e.ctx.do(func() {
-		r = e.ctx.newExpr(C.Z3_get_quantifier_body(e.ctx.c, e.c))
+		r = e.ctx.newExpr(z3_get_quantifier_body(e.ctx.c, e.c))
 	})
 	runtime.KeepAlive(e)
 	return r
