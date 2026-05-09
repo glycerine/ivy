@@ -5,18 +5,29 @@ package xtracer
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"runtime"
 	"runtime/pprof"
+	"strconv"
+	"strings"
+	"sync"
 	"unsafe"
 )
 
-const heapProfileXTraceIndex int64 = 150_000
+const defaultGCHeapLimit = uint64(512 << 20)
+
+var (
+	profileConfigOnce sync.Once
+	profileIndexes    map[int64]struct{}
+	gcHeapLimit       uint64
+)
 
 //go:wasmimport goldweb xtrace_heap_profile
 func goldwebXTraceHeapProfile(xtraceIndex uint32, ptr uint32, len uint32)
 
 func maybeWriteHeapProfile(traceIndex int64) {
-	if traceIndex != heapProfileXTraceIndex {
+	profileConfigOnce.Do(loadProfileConfig)
+	if _, ok := profileIndexes[traceIndex]; !ok {
 		return
 	}
 
@@ -40,4 +51,106 @@ func maybeWriteHeapProfile(traceIndex int64) {
 	}
 	goldwebXTraceHeapProfile(uint32(traceIndex), uint32(uintptr(unsafe.Pointer(&data[0]))), uint32(len(data)))
 	runtime.KeepAlive(data)
+}
+
+func maybePaceGC(traceIndex int64, stats *runtime.MemStats) {
+	profileConfigOnce.Do(loadProfileConfig)
+	if gcHeapLimit == 0 || stats == nil || stats.HeapAlloc <= gcHeapLimit {
+		return
+	}
+
+	beforeAlloc := stats.HeapAlloc
+	beforeInuse := stats.HeapInuse
+	runtime.GC()
+
+	var after runtime.MemStats
+	runtime.ReadMemStats(&after)
+	fmt.Printf("[at trace %v] wasm.gc HeapAlloc = %0.3f MB -> %0.3f MB; HeapInuse = %0.3f MB -> %0.3f MB; limit = %0.3f MB\n",
+		traceIndex,
+		float64(beforeAlloc)/(1<<20),
+		float64(after.HeapAlloc)/(1<<20),
+		float64(beforeInuse)/(1<<20),
+		float64(after.HeapInuse)/(1<<20),
+		float64(gcHeapLimit)/(1<<20))
+}
+
+func loadProfileConfig() {
+	profileIndexes = map[int64]struct{}{
+		125_000: {},
+		150_000: {},
+		166_000: {},
+		175_000: {},
+	}
+	if raw := strings.TrimSpace(os.Getenv("GOIVY_WASM_XTRACE_HEAPPROFILES")); raw != "" {
+		profileIndexes = parseProfileIndexes(raw)
+	}
+
+	gcHeapLimit = defaultGCHeapLimit
+	if raw := strings.TrimSpace(os.Getenv("GOIVY_WASM_XTRACE_GC_HEAP_LIMIT")); raw != "" {
+		limit, err := parseByteLimit(raw)
+		if err != nil {
+			fmt.Printf("[xtracer] ignoring bad GOIVY_WASM_XTRACE_GC_HEAP_LIMIT=%q: %v\n", raw, err)
+		} else {
+			gcHeapLimit = limit
+		}
+	}
+}
+
+func parseProfileIndexes(raw string) map[int64]struct{} {
+	indexes := make(map[int64]struct{})
+	for _, field := range strings.Split(raw, ",") {
+		field = strings.TrimSpace(field)
+		if field == "" {
+			continue
+		}
+		if field == "0" || strings.EqualFold(field, "off") || strings.EqualFold(field, "none") {
+			return indexes
+		}
+		index, err := strconv.ParseInt(field, 10, 64)
+		if err != nil || index < 0 {
+			fmt.Printf("[xtracer] ignoring bad GOIVY_WASM_XTRACE_HEAPPROFILES entry %q\n", field)
+			continue
+		}
+		indexes[index] = struct{}{}
+	}
+	return indexes
+}
+
+func parseByteLimit(raw string) (uint64, error) {
+	s := strings.TrimSpace(strings.ToLower(raw))
+	if s == "" {
+		return 0, fmt.Errorf("empty limit")
+	}
+
+	multiplier := uint64(1)
+	for _, suffix := range []struct {
+		text       string
+		multiplier uint64
+	}{
+		{"gib", 1 << 30},
+		{"gb", 1000 * 1000 * 1000},
+		{"mib", 1 << 20},
+		{"mb", 1000 * 1000},
+		{"kib", 1 << 10},
+		{"kb", 1000},
+		{"b", 1},
+	} {
+		if strings.HasSuffix(s, suffix.text) {
+			multiplier = suffix.multiplier
+			s = strings.TrimSpace(strings.TrimSuffix(s, suffix.text))
+			break
+		}
+	}
+
+	value, err := strconv.ParseUint(s, 10, 64)
+	if err != nil {
+		return 0, err
+	}
+	if value == 0 {
+		return 0, nil
+	}
+	if value > ^uint64(0)/multiplier {
+		return 0, fmt.Errorf("limit overflows uint64")
+	}
+	return value * multiplier, nil
 }
