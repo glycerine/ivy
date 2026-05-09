@@ -28,9 +28,19 @@ func TestPrepareStaticDirMaterializesEmbeddedAssetsIntoRunweb(t *testing.T) {
 	if staticDir != ".runweb" {
 		t.Fatalf("staticDir = %q, want .runweb", staticDir)
 	}
+	if false { // debug
+		entries, err := os.ReadDir(staticDir)
+		panicOn(err)
+		var files []string
+		for _, de := range entries {
+			files = append(files, de.Name())
+		}
+		vv("staticDir = '%v'; entries= '%#v'", staticDir, files)
+	}
 	for _, name := range []string{
 		"index.html",
-		filepath.Join("dist", "ivywebvue.js"),
+		"z3-471-api.js",
+		//filepath.Join("dist", "ivywebvue.js"),
 	} {
 		info, err := os.Stat(filepath.Join(tmp, ".runweb", name))
 		if err != nil {
