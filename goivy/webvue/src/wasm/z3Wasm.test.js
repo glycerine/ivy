@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 const testDir = path.dirname(fileURLToPath(import.meta.url));
@@ -10,6 +10,7 @@ const staticDir = path.join(webvueDir, 'static');
 const z3GluePath = path.join(staticDir, 'z3-471-api.js');
 const z3WasmPath = path.join(staticDir, 'z3-471-api.wasm');
 const z3ExportListPath = path.join(staticDir, 'z3-wasm-exported-functions.json');
+const smtZ3ImportsURL = pathToFileURL(path.join(webvueDir, 'src/workers/smtZ3Imports.js')).href;
 
 const wasmModuleNameExpectedByGlue = 'z3-api.wasm';
 const legacyInterpolationExports = [
@@ -211,6 +212,41 @@ describe('Z3 wasm artifact', () => {
     expectNodeScriptToPass(result);
     expect(result.stdout).toContain('solver check -1');
     expect(result.stdout).toContain('(assert');
+  }, 30000);
+
+  it('accepts BigInt int64 values through the smt Z3 import bridge', () => {
+    const result = runNodeWithWasmExceptionHandling(z3NodeScript(`
+      const { createSmtZ3Imports } = await import(${JSON.stringify(smtZ3ImportsURL)});
+      const cfg = z3._Z3_mk_config();
+      const ctx = z3._Z3_mk_context_rc(cfg);
+      z3._Z3_del_config(cfg);
+
+      try {
+        const bridge = createSmtZ3Imports({ z3, getGoMemory: () => null });
+        const intSort = bridge.Z3_mk_int_sort(ctx);
+        const cases = [
+          [1n, '1'],
+          [-1n, '(- 1)'],
+          [2147483648n, '2147483648'],
+          [-2147483649n, '(- 2147483649)'],
+        ];
+
+        for (const [value, expected] of cases) {
+          const ast = bridge.Z3_mk_int64(ctx, value, intSort);
+          const text = z3.UTF8ToString(z3._Z3_ast_to_string(ctx, ast));
+          if (text !== expected) {
+            throw new Error('Z3_mk_int64(' + value + ') rendered as ' + text + ', expected ' + expected);
+          }
+        }
+
+        console.log('smt bigint int64 bridge ok');
+      } finally {
+        z3._Z3_del_context(ctx);
+      }
+    `));
+
+    expectNodeScriptToPass(result);
+    expect(result.stdout).toContain('smt bigint int64 bridge ok');
   }, 30000);
 
   it('computes a legacy interpolation result through the JavaScript glue', () => {

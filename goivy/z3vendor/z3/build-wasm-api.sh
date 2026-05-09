@@ -21,6 +21,7 @@ fi
   -Lbuild \
   src/api/js/ivy_z3_wasm_syscalls.cc \
   build/libz3.a \
+  -sWASM_BIGINT=1 \
   -sEXPORTED_FUNCTIONS="$EXPORTED_FUNCS" \
   -sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","UTF8ToString","stringToUTF8","addFunction","removeFunction"]' \
   -sALLOW_MEMORY_GROWTH=1 \
