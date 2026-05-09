@@ -14,6 +14,10 @@ import (
 	"unsafe"
 )
 
+// note that the following goldweb.heap_profile callback is
+// implemented inside the embedded worker JS
+// in goldweb.go (line 1787).
+
 //go:wasmimport goldweb heap_profile
 func goldwebHeapProfile(elapsedSeconds uint32, ptr uint32, len uint32)
 

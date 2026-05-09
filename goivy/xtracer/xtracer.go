@@ -62,8 +62,9 @@ func trace(format string, args ...interface{}) {
 
 	if globalXtraceCounter%1000 == 0 {
 		runtime.ReadMemStats(mems)
-		fmt.Printf("[at trace %v] mems.HeapAlloc = %v; HeapInuse = %v\n", globalXtraceCounter, mems.HeapAlloc, mems.HeapInuse)
+		fmt.Printf("[at trace %v] mems.HeapAlloc = %0.3f MB; HeapInuse = %0.3f MB\n", globalXtraceCounter, float64(mems.HeapAlloc)/(1<<20), float64(mems.HeapInuse)/(1<<20))
 	}
+	maybeWriteHeapProfile(globalXtraceCounter)
 	globalXtraceCounter++
 
 	// replace true/false with True/False to match python

@@ -15,8 +15,9 @@ package main
 //   - goivy_check_free(ptr uint32, n uint32)
 //   - goivy_check_run(specPtr, specLen, metaPtr, metaLen uint32) int32
 //
-// It may also import goldweb.heap_profile(elapsedSeconds, ptr, len) to ship
-// runtime/pprof heap profiles back to this server during long conformance runs.
+// It may also import goldweb.heap_profile(elapsedSeconds, ptr, len) or
+// goldweb.xtrace_heap_profile(xtraceIndex, ptr, len) to ship runtime/pprof heap
+// profiles back to this server during long conformance runs.
 //
 // meta is JSON: {"filename":"browser_input.ivy","params":{"isolate":"x"}}.
 // The command writes its normal output to stdout/stderr; goldweb does not use a
@@ -146,7 +147,7 @@ type job struct {
 	pySpool        *lineSpool
 	browserSpool   *lineSpool
 	browserBuf     streamLineBuffer
-	profiles       map[int]*profileAssembly
+	profiles       map[string]*profileAssembly
 	compareDone    chan struct{}
 	browserLogPath string
 	pyLogPath      string
@@ -176,7 +177,7 @@ type streamLineBuffer struct {
 }
 
 type profileAssembly struct {
-	elapsedSec  int
+	label       string
 	profileSize int
 	chunks      [][]byte
 	received    int
@@ -723,24 +724,24 @@ func (j *job) addHeapProfileChunk(msg wsEnvelope) error {
 	if msg.ChunkIndex < 0 || msg.ChunkIndex >= msg.ChunkCount {
 		return fmt.Errorf("invalid chunk_index=%d chunk_count=%d", msg.ChunkIndex, msg.ChunkCount)
 	}
+	label := heapProfileLabel(msg)
 	chunk, err := base64.StdEncoding.DecodeString(msg.Data)
 	if err != nil {
-		return fmt.Errorf("decode chunk %d/%d at %ds: %w", msg.ChunkIndex+1, msg.ChunkCount, msg.ElapsedSec, err)
+		return fmt.Errorf("decode chunk %d/%d for %s: %w", msg.ChunkIndex+1, msg.ChunkCount, label, err)
 	}
-
 	var profile []byte
 	j.mu.Lock()
 	if j.profiles == nil {
-		j.profiles = make(map[int]*profileAssembly)
+		j.profiles = make(map[string]*profileAssembly)
 	}
-	assembly := j.profiles[msg.ElapsedSec]
+	assembly := j.profiles[label]
 	if assembly == nil || len(assembly.chunks) != msg.ChunkCount || assembly.profileSize != msg.ProfileSize {
 		assembly = &profileAssembly{
-			elapsedSec:  msg.ElapsedSec,
+			label:       label,
 			profileSize: msg.ProfileSize,
 			chunks:      make([][]byte, msg.ChunkCount),
 		}
-		j.profiles[msg.ElapsedSec] = assembly
+		j.profiles[label] = assembly
 	}
 	if assembly.chunks[msg.ChunkIndex] == nil {
 		assembly.received++
@@ -755,7 +756,7 @@ func (j *job) addHeapProfileChunk(msg wsEnvelope) error {
 		for _, part := range assembly.chunks {
 			profile = append(profile, part...)
 		}
-		delete(j.profiles, msg.ElapsedSec)
+		delete(j.profiles, label)
 	}
 	j.mu.Unlock()
 
@@ -763,9 +764,9 @@ func (j *job) addHeapProfileChunk(msg wsEnvelope) error {
 		return nil
 	}
 	if msg.ProfileSize >= 0 && len(profile) != msg.ProfileSize {
-		return fmt.Errorf("assembled profile at %ds has %d bytes, expected %d", msg.ElapsedSec, len(profile), msg.ProfileSize)
+		return fmt.Errorf("assembled profile %s has %d bytes, expected %d", label, len(profile), msg.ProfileSize)
 	}
-	path, err := webMemprofPath(msg.ElapsedSec)
+	path, err := webMemprofPath(label)
 	if err != nil {
 		return err
 	}
@@ -776,15 +777,36 @@ func (j *job) addHeapProfileChunk(msg wsEnvelope) error {
 	return nil
 }
 
-func webMemprofPath(elapsedSec int) (string, error) {
+func heapProfileLabel(msg wsEnvelope) string {
+	if msg.XTraceIndex != nil {
+		xtraceIndex := *msg.XTraceIndex
+		if xtraceIndex < 0 {
+			xtraceIndex = 0
+		}
+		return fmt.Sprintf("xtrace%d", xtraceIndex)
+	}
+	elapsedSec := msg.ElapsedSec
+	if elapsedSec < 0 {
+		elapsedSec = 0
+	}
+	return fmt.Sprintf("%d", elapsedSec)
+}
+
+func webMemprofPath(label string) (string, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return "", err
 	}
-	if elapsedSec < 0 {
-		elapsedSec = 0
+	label = strings.Map(func(r rune) rune {
+		if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '_' || r == '-' {
+			return r
+		}
+		return '_'
+	}, label)
+	if label == "" {
+		label = "0"
 	}
-	return filepath.Join(cwd, fmt.Sprintf("web.memprof.%d", elapsedSec)), nil
+	return filepath.Join(cwd, "web.memprof."+label), nil
 }
 
 func newLineSpool(side, path string) (*lineSpool, error) {
@@ -1655,7 +1677,7 @@ function bytesToBase64(bytes) {
   return btoa(binary);
 }
 
-function postHeapProfile(memory, elapsedSeconds, ptr, len) {
+function postHeapProfile(memory, elapsedSeconds, ptr, len, xtraceIndex) {
   if (!memory) {
     throw new Error('goldweb.heap_profile called before Go wasm memory was available');
   }
@@ -1671,14 +1693,18 @@ function postHeapProfile(memory, elapsedSeconds, ptr, len) {
   for (let i = 0; i < chunkCount; i += 1) {
     const start = i * chunkSize;
     const end = Math.min(start + chunkSize, copy.length);
-    self.postMessage({
+    const message = {
       type: 'heap_profile',
       elapsed_seconds: elapsedSeconds >>> 0,
       chunk_index: i,
       chunk_count: chunkCount,
       profile_size: copy.length,
       data: bytesToBase64(copy.subarray(start, end))
-    });
+    };
+    if (Number.isInteger(xtraceIndex)) {
+      message.xtrace_index = xtraceIndex;
+    }
+    self.postMessage(message);
   }
 }
 
@@ -1788,6 +1814,9 @@ self.onmessage = async (event) => {
       goldweb: {
         heap_profile(elapsedSeconds, ptr, len) {
           postHeapProfile(wasmMemory, elapsedSeconds, ptr, len);
+        },
+        xtrace_heap_profile(xtraceIndex, ptr, len) {
+          postHeapProfile(wasmMemory, 0, ptr, len, xtraceIndex);
         },
       },
       smt_z3: z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory }),
@@ -2173,7 +2202,10 @@ function runGoivyCheck(ws, command) {
       showStream(msg.fd, msg.data);
     }
     if (msg.type === 'heap_profile' && msg.chunk_index === msg.chunk_count - 1) {
-      log('sent heap profile t=' + msg.elapsed_seconds + 's bytes=' + msg.profile_size + ' chunks=' + msg.chunk_count);
+      const where = Number.isInteger(msg.xtrace_index)
+        ? 'xtrace=' + msg.xtrace_index
+        : 't=' + msg.elapsed_seconds + 's';
+      log('sent heap profile ' + where + ' bytes=' + msg.profile_size + ' chunks=' + msg.chunk_count);
     }
     if (msg.type === 'error') {
       appendVisibleLog('[worker error] ' + (msg.error || 'unknown worker error') + '\n', true);
