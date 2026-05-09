@@ -46,11 +46,12 @@ import (
 )
 
 const (
-	writeWait    = 10 * time.Minute
-	pongWait     = 60 * time.Second
-	pingPeriod   = 30 * time.Second
-	readLimit    = 64 << 20
-	sendQueueLen = 8192
+	writeWait       = 10 * time.Minute
+	pongWait        = 60 * time.Second
+	pingPeriod      = 30 * time.Second
+	readLimit       = 64 << 20
+	sendQueueLen    = 8192
+	spoolFlushBytes = 256 << 10
 )
 
 var wsUpgrader = websocket.Upgrader{
@@ -133,12 +134,10 @@ type job struct {
 	app        *app
 	client     *wsClient
 
-	pyLines        chan lineEvent
-	browserLines   chan lineEvent
+	pySpool        *lineSpool
+	browserSpool   *lineSpool
 	browserBuf     streamLineBuffer
 	compareDone    chan struct{}
-	browserLog     *os.File
-	pyLog          *os.File
 	browserLogPath string
 	pyLogPath      string
 
@@ -152,6 +151,7 @@ type job struct {
 	tail         []string
 	cancelPy     context.CancelFunc
 	closeBrowser sync.Once
+	closePython  sync.Once
 }
 
 type lineEvent struct {
@@ -162,6 +162,23 @@ type lineEvent struct {
 type streamLineBuffer struct {
 	partial string
 	fd      int
+}
+
+type lineSpool struct {
+	side      string
+	path      string
+	writeFile *os.File
+	readFile  *os.File
+	writer    *bufio.Writer
+	reader    *bufio.Reader
+
+	mu        sync.Mutex
+	cond      *sync.Cond
+	seq       int64
+	unflushed int
+	done      bool
+	closed    bool
+	err       error
 }
 
 type jobSnapshot struct {
@@ -617,17 +634,15 @@ func (a *app) handleJob(w http.ResponseWriter, r *http.Request) {
 
 func newJob(a *app, c *wsClient, req goivyCheckRequest) *job {
 	return &job{
-		id:           newID(),
-		filename:     req.Filename,
-		sourcePath:   req.SourcePath,
-		spec:         req.Spec,
-		params:       cloneStringMap(req.Params),
-		app:          a,
-		client:       c,
-		pyLines:      make(chan lineEvent, 8192),
-		browserLines: make(chan lineEvent, 8192),
-		compareDone:  make(chan struct{}),
-		status:       "running",
+		id:          newID(),
+		filename:    req.Filename,
+		sourcePath:  req.SourcePath,
+		spec:        req.Spec,
+		params:      cloneStringMap(req.Params),
+		app:         a,
+		client:      c,
+		compareDone: make(chan struct{}),
+		status:      "running",
 	}
 }
 
@@ -639,18 +654,18 @@ func (j *job) openXTraceLogs() error {
 
 	browserPath := filepath.Join(cwd, "browser.xtrace.log")
 	pyPath := filepath.Join(cwd, "py.xtrace.log")
-	browserLog, err := os.Create(browserPath)
+	browserSpool, err := newLineSpool("browser", browserPath)
 	if err != nil {
-		return fmt.Errorf("create %s: %w", browserPath, err)
+		return err
 	}
-	pyLog, err := os.Create(pyPath)
+	pySpool, err := newLineSpool("python", pyPath)
 	if err != nil {
-		_ = browserLog.Close()
-		return fmt.Errorf("create %s: %w", pyPath, err)
+		_ = browserSpool.close()
+		return err
 	}
 
-	j.browserLog = browserLog
-	j.pyLog = pyLog
+	j.browserSpool = browserSpool
+	j.pySpool = pySpool
 	j.browserLogPath = browserPath
 	j.pyLogPath = pyPath
 	log.Printf("writing browser XTRACE log to %s", browserPath)
@@ -659,27 +674,183 @@ func (j *job) openXTraceLogs() error {
 }
 
 func (j *job) closeXTraceLogs() {
-	if j.browserLog != nil {
-		if err := j.browserLog.Close(); err != nil {
+	if j.browserSpool != nil {
+		if err := j.browserSpool.close(); err != nil {
 			log.Printf("close %s: %v", j.browserLogPath, err)
 		}
-		j.browserLog = nil
+		j.browserSpool = nil
 	}
-	if j.pyLog != nil {
-		if err := j.pyLog.Close(); err != nil {
+	if j.pySpool != nil {
+		if err := j.pySpool.close(); err != nil {
 			log.Printf("close %s: %v", j.pyLogPath, err)
 		}
-		j.pyLog = nil
+		j.pySpool = nil
 	}
 }
 
+func newLineSpool(side, path string) (*lineSpool, error) {
+	writeFile, err := os.Create(path)
+	if err != nil {
+		return nil, fmt.Errorf("create %s: %w", path, err)
+	}
+	readFile, err := os.Open(path)
+	if err != nil {
+		_ = writeFile.Close()
+		return nil, fmt.Errorf("open %s for comparison: %w", path, err)
+	}
+	spool := &lineSpool{
+		side:      side,
+		path:      path,
+		writeFile: writeFile,
+		readFile:  readFile,
+		writer:    bufio.NewWriterSize(writeFile, spoolFlushBytes),
+		reader:    bufio.NewReaderSize(readFile, spoolFlushBytes),
+	}
+	spool.cond = sync.NewCond(&spool.mu)
+	return spool, nil
+}
+
+func (s *lineSpool) addLine(line string) error {
+	if s == nil {
+		return errors.New("nil line spool")
+	}
+	line = xtracer.NormalizeLine(line)
+	if !strings.HasSuffix(line, "\n") {
+		line += "\n"
+	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.closed || s.done {
+		return nil
+	}
+	if s.err != nil {
+		return s.err
+	}
+	n, err := s.writer.WriteString(line)
+	s.unflushed += n
+	if err != nil {
+		s.err = err
+		s.seq++
+		s.cond.Broadcast()
+		return err
+	}
+	if s.unflushed >= spoolFlushBytes {
+		return s.flushLocked()
+	}
+	return nil
+}
+
+func (s *lineSpool) markDone() {
+	if s == nil {
+		return
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.closed || s.done {
+		return
+	}
+	_ = s.flushLocked()
+	s.done = true
+	s.seq++
+	s.cond.Broadcast()
+}
+
+func (s *lineSpool) nextLine() (string, bool, error) {
+	if s == nil {
+		return "", false, errors.New("nil line spool")
+	}
+	for {
+		s.mu.Lock()
+		seen := s.seq
+		err := s.err
+		done := s.done
+		s.mu.Unlock()
+		if err != nil {
+			return "", false, err
+		}
+
+		line, readErr := s.reader.ReadString('\n')
+		if readErr == nil {
+			return line, true, nil
+		}
+		if !errors.Is(readErr, io.EOF) {
+			return "", false, readErr
+		}
+		if line != "" {
+			return line, true, nil
+		}
+		if done {
+			return "", false, nil
+		}
+
+		s.mu.Lock()
+		for !s.done && s.err == nil && s.seq == seen {
+			s.cond.Wait()
+		}
+		s.mu.Unlock()
+	}
+}
+
+func (s *lineSpool) close() error {
+	if s == nil {
+		return nil
+	}
+	s.mu.Lock()
+	if !s.done {
+		_ = s.flushLocked()
+		s.done = true
+		s.seq++
+		s.cond.Broadcast()
+	}
+	if s.closed {
+		err := s.err
+		s.mu.Unlock()
+		return err
+	}
+	s.closed = true
+	writeFile := s.writeFile
+	readFile := s.readFile
+	err := s.err
+	s.mu.Unlock()
+
+	if writeFile != nil {
+		if closeErr := writeFile.Close(); err == nil && closeErr != nil {
+			err = closeErr
+		}
+	}
+	if readFile != nil {
+		if closeErr := readFile.Close(); err == nil && closeErr != nil {
+			err = closeErr
+		}
+	}
+	return err
+}
+
+func (s *lineSpool) flushLocked() error {
+	if s.unflushed == 0 && s.err == nil {
+		return nil
+	}
+	if err := s.writer.Flush(); err != nil {
+		s.err = err
+		s.seq++
+		s.cond.Broadcast()
+		return err
+	}
+	s.unflushed = 0
+	s.seq++
+	s.cond.Broadcast()
+	return nil
+}
+
 func (j *job) runPythonIvyCheck() {
+	defer j.setPythonDone()
+
 	path := j.sourcePath
 	if path == "" {
 		tmp, err := os.MkdirTemp("", "goldweb-ivy-*")
 		if err != nil {
 			j.fail("create temp dir: " + err.Error())
-			close(j.pyLines)
 			return
 		}
 		defer os.RemoveAll(tmp)
@@ -691,7 +862,6 @@ func (j *job) runPythonIvyCheck() {
 		path = filepath.Join(tmp, filename)
 		if err := os.WriteFile(path, []byte(j.spec), 0o600); err != nil {
 			j.fail("write temp spec: " + err.Error())
-			close(j.pyLines)
 			return
 		}
 	}
@@ -714,7 +884,6 @@ func (j *job) runPythonIvyCheck() {
 	if err := cmd.Start(); err != nil {
 		j.fail("start python ivy_check: " + err.Error())
 		_ = pw.Close()
-		close(j.pyLines)
 		return
 	}
 
@@ -729,20 +898,19 @@ func (j *job) runPythonIvyCheck() {
 	scanner := bufio.NewScanner(pr)
 	scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
 	for scanner.Scan() {
-		j.pyLines <- lineEvent{FD: 1, Line: scanner.Text() + "\n"}
+		j.addPythonData(scanner.Text() + "\n")
 	}
 	if err := scanner.Err(); err != nil {
 		j.setPythonErr("scan python output: " + err.Error())
 	}
-	close(j.pyLines)
 }
 
 func (j *job) compareLoop() {
 	defer j.closeXTraceLogs()
 	defer close(j.compareDone)
 	for {
-		browser, browserOK := j.nextXTrace("browser", j.browserLines)
-		python, pythonOK := j.nextXTrace("python", j.pyLines)
+		browser, browserOK := j.nextXTrace("browser", j.browserSpool)
+		python, pythonOK := j.nextXTrace("python", j.pySpool)
 
 		switch {
 		case !browserOK && !pythonOK:
@@ -766,46 +934,40 @@ func (j *job) compareLoop() {
 	}
 }
 
-func (j *job) nextXTrace(side string, ch <-chan lineEvent) (string, bool) {
-	for ev := range ch {
-		line := xtracer.NormalizeLine(ev.Line)
-		j.writeXTraceLogLine(side, line)
+func (j *job) nextXTrace(side string, spool *lineSpool) (string, bool) {
+	if spool == nil {
+		j.fail("missing " + side + " XTRACE spool")
+		return "", false
+	}
+	for {
+		line, ok, err := spool.nextLine()
+		if err != nil {
+			j.fail(fmt.Sprintf("read %s XTRACE spool: %v", side, err))
+			return "", false
+		}
+		if !ok {
+			return "", false
+		}
 		j.remember(side, line)
 		if strings.HasPrefix(line, "XTRACE:") {
 			return line, true
 		}
-	}
-	return "", false
-}
-
-func (j *job) writeXTraceLogLine(side, line string) {
-	var f *os.File
-	var path string
-	switch side {
-	case "browser":
-		f = j.browserLog
-		path = j.browserLogPath
-	case "python":
-		f = j.pyLog
-		path = j.pyLogPath
-	default:
-		return
-	}
-	if f == nil {
-		return
-	}
-	if !strings.HasSuffix(line, "\n") {
-		line += "\n"
-	}
-	if _, err := io.WriteString(f, line); err != nil {
-		j.fail(fmt.Sprintf("write %s: %v", path, err))
 	}
 }
 
 func (j *job) addBrowserData(fd int, data string) {
 	lines := j.browserBuf.add(fd, data)
 	for _, line := range lines {
-		j.browserLines <- line
+		if err := j.browserSpool.addLine(line.Line); err != nil {
+			j.fail(fmt.Sprintf("write %s: %v", j.browserLogPath, err))
+			return
+		}
+	}
+}
+
+func (j *job) addPythonData(data string) {
+	if err := j.pySpool.addLine(data); err != nil {
+		j.fail(fmt.Sprintf("write %s: %v", j.pyLogPath, err))
 	}
 }
 
@@ -815,10 +977,23 @@ func (j *job) setBrowserDone(code int) {
 	j.mu.Unlock()
 	lines := j.browserBuf.flush()
 	for _, line := range lines {
-		j.browserLines <- line
+		if err := j.browserSpool.addLine(line.Line); err != nil {
+			j.fail(fmt.Sprintf("write %s: %v", j.browserLogPath, err))
+			break
+		}
 	}
 	j.closeBrowser.Do(func() {
-		close(j.browserLines)
+		if j.browserSpool != nil {
+			j.browserSpool.markDone()
+		}
+	})
+}
+
+func (j *job) setPythonDone() {
+	j.closePython.Do(func() {
+		if j.pySpool != nil {
+			j.pySpool.markDone()
+		}
 	})
 }
 
