@@ -171,6 +171,7 @@ describe('Z3 wasm artifact', () => {
       '_Z3_params_dec_ref',
       '_Z3_solver_set_params',
       '_Z3_get_error_code',
+      '_Z3_set_error_handler',
       '_Z3_get_error_msg',
       '_Z3_get_parser_error',
       '_Z3_parse_smtlib2_string',

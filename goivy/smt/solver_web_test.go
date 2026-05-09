@@ -56,6 +56,24 @@ func smtSolverUninterpretedSortNameOK() int32 {
 }
 `
 
+const z3ErrorBoundaryWasip1Source = `//go:build wasip1
+
+package main
+
+import "github.com/glycerine/ivy/goivy/smt"
+
+func main() {}
+
+//go:wasmexport smt_z3_invalid_bv_sort_returns_to_caller
+func smtZ3InvalidBVSortReturnsToCaller() int32 {
+	ctx := smt.NewZ3Context()
+	defer ctx.Close()
+
+	_ = ctx.BvSort(0)
+	return 1
+}
+`
+
 func TestSolverBoolRoundTrip(t *testing.T) {
 	_, file, _, ok := runtime.Caller(0)
 	if !ok {
@@ -73,6 +91,28 @@ func TestSolverBoolRoundTrip(t *testing.T) {
 	roundTripWasm := buildWasip1MainSource(t, goivyDir, staticDir, "solver-bool-round-trip", solverBoolRoundTripWasip1Source)
 
 	runCommand(t, webvueDir, []string{"SMT_SOLVER_ROUND_TRIP_WASM=" + roundTripWasm},
+		filepath.Join(".", "node_modules", ".bin", playwrightBin()),
+		"test", "--config", "playwright.config.mjs", "tests/smtSolverRoundTrip.browser.spec.js",
+	)
+}
+
+func TestZ3ErrorCallbackBoundary(t *testing.T) {
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("could not resolve smt test path")
+	}
+	goivyDir := filepath.Dir(filepath.Dir(file))
+	webvueDir := filepath.Join(goivyDir, "webvue")
+	staticDir := filepath.Join(webvueDir, "static")
+
+	requireFile(t, filepath.Join(staticDir, "z3-471-api.js"), "run make z3-wasm-api")
+	requireFile(t, filepath.Join(staticDir, "z3-471-api.wasm"), "run make z3-wasm-api")
+	requireFile(t, filepath.Join(webvueDir, "src", "workers", "smtZ3Imports.js"), "missing browser Z3 import host")
+	requireFile(t, filepath.Join(webvueDir, "node_modules", ".bin", playwrightBin()), "run make webvue-setup")
+
+	wasm := buildWasip1MainSource(t, goivyDir, staticDir, "z3-error-boundary", z3ErrorBoundaryWasip1Source)
+
+	runCommand(t, webvueDir, []string{"SMT_ERROR_BOUNDARY_WASM=" + wasm},
 		filepath.Join(".", "node_modules", ".bin", playwrightBin()),
 		"test", "--config", "playwright.config.mjs", "tests/smtSolverRoundTrip.browser.spec.js",
 	)

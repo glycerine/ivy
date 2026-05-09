@@ -87,6 +87,49 @@ function makeStringTable() {
   };
 }
 
+function makeErrorTracker(z3, z3String) {
+  let callbackPtr = 0;
+  const events = [];
+
+  function ensureCallback() {
+    if (callbackPtr) {
+      return callbackPtr;
+    }
+    if (typeof z3.addFunction !== 'function') {
+      throw new Error('Z3 wasm glue does not export addFunction for Z3_set_error_handler');
+    }
+
+    callbackPtr = z3.addFunction((ctx, code) => {
+      const event = { ctx: ctx >>> 0, code: code | 0, message: '' };
+      try {
+        if (typeof z3._Z3_get_error_msg === 'function') {
+          event.message = z3String(z3._Z3_get_error_msg(ctx, code));
+        }
+      } catch {
+        event.message = '';
+      }
+      events.push(event);
+    }, 'vii');
+
+    return callbackPtr;
+  }
+
+  return {
+    install(ctx) {
+      if (typeof z3._Z3_set_error_handler !== 'function') {
+        throw new Error('Z3 wasm does not export Z3_set_error_handler');
+      }
+      z3._Z3_set_error_handler(ctx, ensureCallback());
+    },
+    clear() {
+      events.length = 0;
+    },
+    events() {
+      return events.map((event) => ({ ...event }));
+    },
+  };
+}
+
 export function createSmtZ3Imports({ z3, getGoMemory }) {
   const strings = makeStringTable();
 
@@ -100,6 +143,8 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
   function z3StringHandle(handle) {
     return strings.add(z3String(handle));
   }
+
+  const errors = makeErrorTracker(z3, z3String);
 
   function symbolFromGoBytes(ctx, ptr, len) {
     return withZ3CString(z3, goString(getGoMemory, ptr, len), (z3Ptr) => (
@@ -223,7 +268,9 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     Z3_set_param_value_bytes: paramValueFromGoBytes,
     Z3_mk_context_rc(cfg) { return z3._Z3_mk_context_rc(cfg) >>> 0; },
     Z3_mk_interpolation_context(cfg) { return z3._Z3_mk_interpolation_context(cfg) >>> 0; },
-    Z3_set_error_handler() {},
+    Z3_set_error_handler(ctx) { errors.install(ctx); },
+    __z3ClearErrors() { errors.clear(); },
+    __z3ErrorEvents() { return errors.events(); },
     Z3_del_context(ctx) { z3._Z3_del_context(ctx); },
     Z3_inc_ref(ctx, ast) { z3._Z3_inc_ref(ctx, ast); },
     Z3_dec_ref(ctx, ast) { z3._Z3_dec_ref(ctx, ast); },
