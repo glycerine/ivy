@@ -10,7 +10,6 @@ package smt
 import (
 	"fmt"
 	"runtime"
-	"unsafe"
 )
 
 type z3Config = uint32
@@ -64,27 +63,39 @@ func boolToUint32(v bool) uint32 {
 	return 0
 }
 
-func stringBytes(s string) (*byte, uint32) {
-	if len(s) == 0 {
-		return nil, 0
-	}
-	return unsafe.StringData(s), uint32(len(s))
-}
-
 func z3_mk_string_symbol_go(ctx z3Context, s string) z3Symbol {
-	p, n := stringBytes(s)
-	return z3_mk_string_symbol(ctx, p, n)
+	b := []byte(s)
+	if len(b) == 0 {
+		return z3_mk_string_symbol(ctx, nil, 0)
+	}
+	r := z3_mk_string_symbol(ctx, &b[0], uint32(len(b)))
+	runtime.KeepAlive(b)
+	return r
 }
 
 func z3_mk_string_go(ctx z3Context, s string) z3AST {
-	p, n := stringBytes(s)
-	return z3_mk_string(ctx, p, n)
+	b := []byte(s)
+	if len(b) == 0 {
+		return z3_mk_string(ctx, nil, 0)
+	}
+	r := z3_mk_string(ctx, &b[0], uint32(len(b)))
+	runtime.KeepAlive(b)
+	return r
 }
 
 func z3_set_param_value_go(cfg z3Config, key, value string) {
-	kp, kn := stringBytes(key)
-	vp, vn := stringBytes(value)
-	z3_set_param_value(cfg, kp, kn, vp, vn)
+	k := []byte(key)
+	v := []byte(value)
+	var kp, vp *byte
+	if len(k) > 0 {
+		kp = &k[0]
+	}
+	if len(v) > 0 {
+		vp = &v[0]
+	}
+	z3_set_param_value(cfg, kp, uint32(len(k)), vp, uint32(len(v)))
+	runtime.KeepAlive(k)
+	runtime.KeepAlive(v)
 }
 
 func z3String(h z3StringHandle) string {
@@ -906,8 +917,8 @@ func (ctx *Z3Context) ForAll(bound []Z3Expr, body Z3Expr) Z3Expr {
 		0, // weight
 		uint32(len(cbound)),
 		&cbound[0],
-		0,   // num_patterns
-		nil, // patterns
+		0, // num_patterns
+		0, // patterns
 		body.c,
 	))
 
@@ -932,8 +943,8 @@ func (ctx *Z3Context) Exists(bound []Z3Expr, body Z3Expr) Z3Expr {
 		0, // weight
 		uint32(len(cbound)),
 		&cbound[0],
-		0,   // num_patterns
-		nil, // patterns
+		0, // num_patterns
+		0, // patterns
 		body.c,
 	))
 
@@ -1503,10 +1514,10 @@ func z3_mk_enumeration_sort(ctx z3Context, name z3Symbol, n uint32, elems *z3Sym
 func z3_to_app(ctx z3Context, ast z3AST) z3App
 
 //go:wasmimport smt_z3 Z3_mk_forall_const
-func z3_mk_forall_const(ctx z3Context, weight uint32, n uint32, bound *z3App, numPatterns uint32, patterns unsafe.Pointer, body z3AST) z3AST
+func z3_mk_forall_const(ctx z3Context, weight uint32, n uint32, bound *z3App, numPatterns uint32, patterns uint32, body z3AST) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_exists_const
-func z3_mk_exists_const(ctx z3Context, weight uint32, n uint32, bound *z3App, numPatterns uint32, patterns unsafe.Pointer, body z3AST) z3AST
+func z3_mk_exists_const(ctx z3Context, weight uint32, n uint32, bound *z3App, numPatterns uint32, patterns uint32, body z3AST) z3AST
 
 //go:wasmimport smt_z3 Z3_substitute
 func z3_substitute(ctx z3Context, expr z3AST, n uint32, from *z3AST, to *z3AST) z3AST

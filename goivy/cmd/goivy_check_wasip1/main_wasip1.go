@@ -16,7 +16,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"unsafe"
 
 	goivy "github.com/glycerine/ivy/goivy"
 )
@@ -26,37 +25,48 @@ type checkMeta struct {
 	Params   map[string]string `json:"params"`
 }
 
-var allocations = make(map[uint32][]byte)
+type checkInput struct {
+	spec []byte
+	meta []byte
+}
+
+var pendingInput checkInput
 var tuneRuntimeOnce sync.Once
 
 const (
 	defaultWasmMemoryLimitBytes = int64(3 << 30)
 	defaultWasmGCPercent        = 50
+	maxCheckInputBytes          = uint32(256 << 20)
 )
 
 func main() {
 	tuneRuntimeOnce.Do(tuneRuntime)
 }
 
-//go:wasmexport goivy_check_alloc
-func goivyCheckAlloc(n uint32) uint32 {
-	if n == 0 {
-		return 0
+//go:wasmexport goivy_check_prepare
+func goivyCheckPrepare(specLen, metaLen uint32) int32 {
+	if specLen > maxCheckInputBytes || metaLen > maxCheckInputBytes {
+		return 1
 	}
-	buf := make([]byte, n)
-	ptr := uint32(uintptr(unsafe.Pointer(&buf[0])))
-	allocations[ptr] = buf
-	return ptr
+	pendingInput = checkInput{
+		spec: make([]byte, specLen),
+		meta: make([]byte, metaLen),
+	}
+	return 0
 }
 
-//go:wasmexport goivy_check_free
-func goivyCheckFree(ptr uint32, n uint32) {
-	_ = n
-	delete(allocations, ptr)
+//go:wasmexport goivy_check_write_spec
+func goivyCheckWriteSpec(offset, word, n uint32) int32 {
+	return writePackedBytes(pendingInput.spec, offset, word, n)
+}
+
+//go:wasmexport goivy_check_write_meta
+func goivyCheckWriteMeta(offset, word, n uint32) int32 {
+	return writePackedBytes(pendingInput.meta, offset, word, n)
 }
 
 //go:wasmexport goivy_check_run
-func goivyCheckRun(specPtr, specLen, metaPtr, metaLen uint32) (code int32) {
+func goivyCheckRun() (code int32) {
 	tuneRuntimeOnce.Do(tuneRuntime)
 	stopHeapProfiler := startHeapProfiler()
 	defer stopHeapProfiler()
@@ -68,8 +78,10 @@ func goivyCheckRun(specPtr, specLen, metaPtr, metaLen uint32) (code int32) {
 		}
 	}()
 
-	spec := wasmString(specPtr, specLen)
-	metaRaw := wasmString(metaPtr, metaLen)
+	spec := string(pendingInput.spec)
+	metaRaw := string(pendingInput.meta)
+	pendingInput = checkInput{}
+
 	meta := checkMeta{Filename: "browser_input.ivy"}
 	if metaRaw != "" {
 		if err := json.Unmarshal([]byte(metaRaw), &meta); err != nil {
@@ -92,6 +104,19 @@ func goivyCheckRun(specPtr, specLen, metaPtr, metaLen uint32) (code int32) {
 	if err := goivy.StartSourceWithConfig(meta.Filename, spec, cfg); err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		return 1
+	}
+	return 0
+}
+
+func writePackedBytes(dst []byte, offset, word, n uint32) int32 {
+	if n > 4 {
+		return 1
+	}
+	if offset > uint32(len(dst)) || n > uint32(len(dst))-offset {
+		return 1
+	}
+	for i := uint32(0); i < n; i++ {
+		dst[offset+i] = byte(word >> (8 * i))
 	}
 	return 0
 }
@@ -160,12 +185,4 @@ func parseByteLimit(raw string) (int64, error) {
 		return 0, fmt.Errorf("limit overflows int64")
 	}
 	return value * multiplier, nil
-}
-
-func wasmString(ptr, n uint32) string {
-	if ptr == 0 || n == 0 {
-		return ""
-	}
-	bytes := unsafe.Slice((*byte)(unsafe.Pointer(uintptr(ptr))), int(n))
-	return string(bytes)
 }

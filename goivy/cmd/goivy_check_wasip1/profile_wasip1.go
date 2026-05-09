@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"unsafe"
 )
 
 // note that the following goldweb.heap_profile callback is
@@ -19,7 +18,7 @@ import (
 // in goldweb.go (line 1787).
 
 //go:wasmimport goldweb heap_profile
-func goldwebHeapProfile(elapsedSeconds uint32, ptr uint32, len uint32)
+func goldwebHeapProfile(elapsedSeconds uint32, ptr *byte, len uint32)
 
 const defaultHeapProfileInterval = 10 * time.Second
 
@@ -99,9 +98,9 @@ func writeHeapProfile(elapsedSeconds uint32) {
 	fmt.Fprintf(os.Stderr, "[goivy wasm] heap_profile elapsed=%ds bytes=%d heap_alloc=%d heap_inuse=%d heap_sys=%d next_gc=%d num_gc=%d\n",
 		elapsedSeconds, len(data), stats.HeapAlloc, stats.HeapInuse, stats.HeapSys, stats.NextGC, stats.NumGC)
 	if len(data) == 0 {
-		goldwebHeapProfile(elapsedSeconds, 0, 0)
+		goldwebHeapProfile(elapsedSeconds, nil, 0)
 		return
 	}
-	goldwebHeapProfile(elapsedSeconds, uint32(uintptr(unsafe.Pointer(&data[0]))), uint32(len(data)))
+	goldwebHeapProfile(elapsedSeconds, &data[0], uint32(len(data)))
 	runtime.KeepAlive(data)
 }

@@ -11,9 +11,10 @@ package main
 // The Go Ivy wasm command boundary is deliberately small and not the
 // cmd/goivy_check CLI. The CLI is only documentation for parameter semantics.
 // The browser wasm module is expected to export:
-//   - goivy_check_alloc(n uint32) uint32
-//   - goivy_check_free(ptr uint32, n uint32)
-//   - goivy_check_run(specPtr, specLen, metaPtr, metaLen uint32) int32
+//   - goivy_check_prepare(specLen, metaLen uint32) int32
+//   - goivy_check_write_spec(offset, packedBytes, n uint32) int32
+//   - goivy_check_write_meta(offset, packedBytes, n uint32) int32
+//   - goivy_check_run() int32
 //
 // It may also import goldweb.heap_profile(elapsedSeconds, ptr, len) or
 // goldweb.xtrace_heap_profile(xtraceIndex, ptr, len) to ship runtime/pprof heap
@@ -1661,11 +1662,21 @@ function requireExport(exports, name) {
   return fn;
 }
 
-function writeBytes(exports, memory, bytes) {
-  const alloc = requireExport(exports, 'goivy_check_alloc');
-  const ptr = alloc(bytes.length) >>> 0;
-  new Uint8Array(memory.buffer, ptr, bytes.length).set(bytes);
-  return ptr;
+function writeBytesToGo(exports, exportName, bytes) {
+  const write = requireExport(exports, exportName);
+  let offset = 0;
+  while (offset < bytes.length) {
+    const n = Math.min(4, bytes.length - offset);
+    let word = 0;
+    for (let i = 0; i < n; i += 1) {
+      word |= bytes[offset + i] << (8 * i);
+    }
+    const code = write(offset >>> 0, word >>> 0, n >>> 0) | 0;
+    if (code !== 0) {
+      throw new Error(exportName + ' rejected bytes at offset ' + offset + ' with code ' + code);
+    }
+    offset += n;
+  }
 }
 
 function bytesToBase64(bytes) {
@@ -1687,6 +1698,7 @@ function postHeapProfile(memory, elapsedSeconds, ptr, len, xtraceIndex) {
   if (n > 0) {
     copy.set(new Uint8Array(memory.buffer, offset, n));
   }
+  memory = null; // don't let it linger on our stack.
 
   const chunkSize = 768 * 1024;
   const chunkCount = Math.max(1, Math.ceil(copy.length / chunkSize));
@@ -1840,24 +1852,20 @@ self.onmessage = async (event) => {
       throw new Error('Go Ivy wasm _start exited with code ' + startCode);
     }
 
+    const prepare = requireExport(instance.exports, 'goivy_check_prepare');
     const run = requireExport(instance.exports, 'goivy_check_run');
-    const free = instance.exports.goivy_check_free;
     const specBytes = textEncoder.encode(command.spec || '');
     const metaBytes = textEncoder.encode(JSON.stringify({
       filename: command.filename || 'browser_input.ivy',
       params: command.params || {}
     }));
-    const specPtr = writeBytes(instance.exports, wasmMemory, specBytes);
-    const metaPtr = writeBytes(instance.exports, wasmMemory, metaBytes);
-    let code = 0;
-    try {
-      code = run(specPtr, specBytes.length, metaPtr, metaBytes.length) | 0;
-    } finally {
-      if (typeof free === 'function') {
-        free(specPtr, specBytes.length);
-        free(metaPtr, metaBytes.length);
-      }
+    const prepareCode = prepare(specBytes.length >>> 0, metaBytes.length >>> 0) | 0;
+    if (prepareCode !== 0) {
+      throw new Error('goivy_check_prepare failed with code ' + prepareCode);
     }
+    writeBytesToGo(instance.exports, 'goivy_check_write_spec', specBytes);
+    writeBytesToGo(instance.exports, 'goivy_check_write_meta', metaBytes);
+    const code = run() | 0;
     self.postMessage({ type: 'done', code });
   } catch (error) {
     self.postMessage({

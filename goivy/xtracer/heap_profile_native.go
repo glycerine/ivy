@@ -4,11 +4,6 @@ package xtracer
 
 import "runtime"
 
-func maybeWriteHeapProfile(traceIndex int64) {
-	_ = traceIndex
-}
+func maybeWriteHeapProfile(traceIndex int64) {}
 
-func maybePaceGC(traceIndex int64, stats *runtime.MemStats) {
-	_ = traceIndex
-	_ = stats
-}
+func maybePaceGC(traceIndex int64, stats *runtime.MemStats) {}
