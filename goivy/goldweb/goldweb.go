@@ -46,12 +46,13 @@ import (
 )
 
 const (
-	writeWait       = 10 * time.Minute
-	pongWait        = 60 * time.Second
-	pingPeriod      = 30 * time.Second
-	readLimit       = 64 << 20
-	sendQueueLen    = 8192
-	spoolFlushBytes = 256 << 10
+	writeWait          = 10 * time.Minute
+	pongWait           = 60 * time.Second
+	pingPeriod         = 30 * time.Second
+	readLimit          = 64 << 20
+	sendQueueLen       = 8192
+	spoolFlushBytes    = 256 << 10
+	spoolFlushInterval = 5 * time.Second
 )
 
 var wsUpgrader = websocket.Upgrader{
@@ -172,14 +173,17 @@ type lineSpool struct {
 	readFile  *os.File
 	writer    *bufio.Writer
 	reader    *bufio.Reader
+	flushStop chan struct{}
+	flushDone chan struct{}
 
-	mu        sync.Mutex
-	cond      *sync.Cond
-	seq       int64
-	unflushed int
-	done      bool
-	closed    bool
-	err       error
+	mu            sync.Mutex
+	cond          *sync.Cond
+	flushStopOnce sync.Once
+	seq           int64
+	unflushed     int
+	done          bool
+	closed        bool
+	err           error
 }
 
 type jobSnapshot struct {
@@ -688,6 +692,10 @@ func (j *job) closeXTraceLogs() {
 }
 
 func newLineSpool(side, path string) (*lineSpool, error) {
+	return newLineSpoolWithFlushInterval(side, path, spoolFlushInterval)
+}
+
+func newLineSpoolWithFlushInterval(side, path string, flushInterval time.Duration) (*lineSpool, error) {
 	writeFile, err := os.Create(path)
 	if err != nil {
 		return nil, fmt.Errorf("create %s: %w", path, err)
@@ -704,9 +712,33 @@ func newLineSpool(side, path string) (*lineSpool, error) {
 		readFile:  readFile,
 		writer:    bufio.NewWriterSize(writeFile, spoolFlushBytes),
 		reader:    bufio.NewReaderSize(readFile, spoolFlushBytes),
+		flushStop: make(chan struct{}),
+		flushDone: make(chan struct{}),
 	}
 	spool.cond = sync.NewCond(&spool.mu)
+	if flushInterval > 0 {
+		go spool.flushPeriodically(flushInterval)
+	} else {
+		close(spool.flushDone)
+	}
 	return spool, nil
+}
+
+func (s *lineSpool) flushPeriodically(interval time.Duration) {
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+	defer close(s.flushDone)
+
+	for {
+		select {
+		case <-ticker.C:
+			if err := s.flush(); err != nil {
+				log.Printf("periodic flush %s: %v", s.path, err)
+			}
+		case <-s.flushStop:
+			return
+		}
+	}
 }
 
 func (s *lineSpool) addLine(line string) error {
@@ -795,6 +827,7 @@ func (s *lineSpool) close() error {
 	if s == nil {
 		return nil
 	}
+	s.stopPeriodicFlush()
 	s.mu.Lock()
 	if !s.done {
 		_ = s.flushLocked()
@@ -824,6 +857,28 @@ func (s *lineSpool) close() error {
 		}
 	}
 	return err
+}
+
+func (s *lineSpool) stopPeriodicFlush() {
+	if s.flushStop == nil {
+		return
+	}
+	s.flushStopOnce.Do(func() {
+		close(s.flushStop)
+		<-s.flushDone
+	})
+}
+
+func (s *lineSpool) flush() error {
+	if s == nil {
+		return nil
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.closed || s.done {
+		return s.err
+	}
+	return s.flushLocked()
 }
 
 func (s *lineSpool) flushLocked() error {
@@ -1700,6 +1755,30 @@ function terminateAllJobs() {
   }
 }
 
+function scrollToStartOfLog() {
+  streamLogEl.scrollTop = 0;
+}
+
+function scrollToEndOfLog() {
+  streamLogEl.scrollTop = streamLogEl.scrollHeight;
+}
+
+function checkKey(event) {
+  if (!event.shiftKey) {
+    return;
+  }
+  switch (event.key) {
+    case 'ArrowUp':
+      event.preventDefault();
+      scrollToStartOfLog();
+      break;
+    case 'ArrowDown':
+      event.preventDefault();
+      scrollToEndOfLog();
+      break;
+  }
+}
+
 function reloadForServerVersion(version) {
   terminateAllJobs();
   const nextVersion = encodeURIComponent(version || String(Date.now()));
@@ -1767,6 +1846,8 @@ stopJobEl.addEventListener('click', () => {
   }
   log((stopped ? 'stop requested for ' : 'stop requested for already-finished ') + id);
 });
+
+document.addEventListener('keydown', checkKey);
 
 function connect() {
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
