@@ -310,6 +310,7 @@ func (a *app) listenAndServe() error {
 	mux.HandleFunc("/ivy-include-tree.json", a.serveIncludeTree)
 	mux.HandleFunc("/z3-471-api.js", serveFile(filepath.Join(a.staticDir, "z3-471-api.js"), "text/javascript; charset=utf-8"))
 	mux.HandleFunc("/z3-471-api.wasm", serveFile(filepath.Join(a.staticDir, "z3-471-api.wasm"), "application/wasm"))
+	mux.HandleFunc("/wasm_exec-go1.25.6.js", serveFile(filepath.Join(a.staticDir, "wasm_exec-go1.25.6.js"), "text/javascript; charset=utf-8"))
 	mux.HandleFunc("/src/workers/smtZ3Imports.js", serveFile(filepath.Join(a.workerDir, "smtZ3Imports.js"), "text/javascript; charset=utf-8"))
 	mux.HandleFunc("/src/workers/goivyWasiP1.js", serveFile(filepath.Join(a.workerDir, "goivyWasiP1.js"), "text/javascript; charset=utf-8"))
 

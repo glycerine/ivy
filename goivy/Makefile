@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb FORCE
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb FORCE
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -24,6 +24,9 @@ Z3_WASM_PRE_EXNREF   := $(Z3_VENDOR_BUILD)/z3-api.pre-exnref.wasm
 Z3_WASM_EXNREF       := $(Z3_VENDOR_BUILD)/z3-api.exnref.wasm
 Z3_WEBVUE_WASM       := $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).wasm
 Z3_WEBVUE_JS         := $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).js
+GO_WASM_EXEC_VERSION := go1.25.6
+GO_WASM_EXEC_JS_SRC  := /usr/local/go/lib/wasm/wasm_exec.js
+GO_WASM_EXEC_JS      := $(Z3_WEBVUE_STATIC)/wasm_exec-$(GO_WASM_EXEC_VERSION).js
 TINYGO               ?= /usr/local/bin/tinygo
 TINYGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-tinygo-wasip1-probe.wasm
 BIGGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-biggo-wasip1-probe.wasm
@@ -181,6 +184,11 @@ $(Z3_WEBVUE_JS): $(Z3_WASM_API_STAMP)
 z3-wasm-api: $(Z3_WEBVUE_WASM) $(Z3_WEBVUE_JS)
 
 z3-wasm-api-wazero: z3-wasm-api
+
+$(GO_WASM_EXEC_JS): $(GO_WASM_EXEC_JS_SRC)
+	cp -p $(GO_WASM_EXEC_JS_SRC) $(GO_WASM_EXEC_JS)
+
+vendor-go-wasm-exec-js: $(GO_WASM_EXEC_JS)
 
 test-z3-wasm-wazero: z3-wasm-api-wazero
 	go test ./z3wasm -run TestZ3WasmArtifactCompilesWithWazeroExceptionHandling -count=1
