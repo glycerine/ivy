@@ -918,6 +918,20 @@ const indexHTML = `<!doctype html>
       justify-content: space-between;
       padding: 0.45rem 0.6rem;
     }
+    .log-actions {
+      align-items: center;
+      display: flex;
+      gap: 0.6rem;
+    }
+    button {
+      background: #ffffff;
+      border: 1px solid #9fb3c8;
+      color: #102a43;
+      cursor: pointer;
+      font: inherit;
+      padding: 0.2rem 0.5rem;
+    }
+    button:active { background: #d9e2ec; }
     .log-head strong { font-size: 0.9rem; }
     .log-head span { color: #52606d; font-size: 0.8rem; }
     #stream-log {
@@ -930,10 +944,12 @@ const indexHTML = `<!doctype html>
       font-size: 0.82rem;
       height: 64vh;
       line-height: 1.35;
+      margin: 0;
       outline: none;
+      overflow: auto;
       padding: 0.75rem;
-      resize: vertical;
       white-space: pre;
+      user-select: text;
       width: 100%;
     }
     #line-number {
@@ -955,9 +971,12 @@ const indexHTML = `<!doctype html>
   <div class="log-shell">
     <div class="log-head">
       <strong>Browser stdout/stderr sent to goldweb</strong>
-      <span>rolling local window; full stream goes over the websocket</span>
+      <div class="log-actions">
+        <button id="copy-log" type="button">Copy visible log</button>
+        <span>rolling local window; full stream goes over the websocket</span>
+      </div>
     </div>
-    <textarea id="stream-log" readonly spellcheck="false"></textarea>
+    <pre id="stream-log" tabindex="0"></pre>
     <div id="line-number">last line number : 0</div>
   </div>
 
@@ -1122,6 +1141,12 @@ self.onmessage = async (event) => {
       throw new Error('z3-471-api.js did not expose initZ3');
     }
     z3 = await initZ3({
+      print(text) {
+        self.postMessage({ type: 'stream', fd: 1, data: String(text) + '\n' });
+      },
+      printErr(text) {
+        self.postMessage({ type: 'stream', fd: 2, data: String(text) + '\n' });
+      },
       locateFile(file) {
         if (file === 'z3-api.wasm') {
           return assetBaseURL + '/z3-471-api.wasm';
@@ -1195,6 +1220,7 @@ const stdoutBytesEl = document.getElementById('stdout-bytes');
 const stderrBytesEl = document.getElementById('stderr-bytes');
 const xtraceCountEl = document.getElementById('xtrace-count');
 const streamLogEl = document.getElementById('stream-log');
+const copyLogEl = document.getElementById('copy-log');
 const lineNumberEl = document.getElementById('line-number');
 const workerSource = document.getElementById('worker-source').textContent;
 const workers = new Map();
@@ -1211,9 +1237,9 @@ function log(message) {
 }
 
 function appendVisibleLog(text) {
-  streamLogEl.value += text;
-  if (streamLogEl.value.length > maxVisibleLogBytes) {
-    streamLogEl.value = streamLogEl.value.slice(streamLogEl.value.length - maxVisibleLogBytes);
+  streamLogEl.textContent += text;
+  if (streamLogEl.textContent.length > maxVisibleLogBytes) {
+    streamLogEl.textContent = streamLogEl.textContent.slice(streamLogEl.textContent.length - maxVisibleLogBytes);
   }
   streamLogEl.scrollTop = streamLogEl.scrollHeight;
 }
@@ -1255,6 +1281,20 @@ function showStream(fd, data) {
   }
   updateCounters();
 }
+
+copyLogEl.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(streamLogEl.textContent);
+    log('copied visible log');
+  } catch (error) {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(streamLogEl);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    log('clipboard write failed; selected visible log instead');
+  }
+});
 
 function connect() {
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -1308,7 +1348,7 @@ function runGoivyCheck(ws, command) {
   xtraceCount = 0;
   visibleLineNumber = 0;
   uiLineBuffers.clear();
-  streamLogEl.value = '';
+  streamLogEl.textContent = '';
   updateCounters();
   log('starting goivy_check job ' + command.id + ' filename=' + command.filename);
   const url = URL.createObjectURL(new Blob([workerSource], { type: 'text/javascript' }));
@@ -1321,15 +1361,27 @@ function runGoivyCheck(ws, command) {
     if (msg.type === 'stream') {
       showStream(msg.fd, msg.data);
     }
+    if (msg.type === 'error') {
+      appendVisibleLog('[worker error] ' + (msg.error || 'unknown worker error') + '\n');
+      visibleLineNumber += 1;
+      updateCounters();
+    }
     if (msg.type === 'done' || msg.type === 'error') {
       workers.delete(command.id);
       URL.revokeObjectURL(url);
       worker.terminate();
-      log('finished ' + command.id + ' type=' + msg.type);
+      if (msg.type === 'done') {
+        log('finished ' + command.id + ' code=' + msg.code);
+      } else {
+        log('finished ' + command.id + ' type=error');
+      }
     }
   };
 
   worker.onerror = (error) => {
+    appendVisibleLog('[worker onerror] ' + (error.message || String(error)) + '\n');
+    visibleLineNumber += 1;
+    updateCounters();
     ws.send(JSON.stringify({
       type: 'error',
       id: command.id,
