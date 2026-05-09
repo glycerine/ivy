@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 )
@@ -45,5 +47,46 @@ func TestLineSpoolBuffersUntilDone(t *testing.T) {
 		}
 	case <-time.After(time.Second):
 		t.Fatal("timed out waiting for done flush")
+	}
+}
+
+func TestJobMismatchStopsProducersWithXTraceIndex(t *testing.T) {
+	client := &wsClient{
+		send: make(chan []byte, 1),
+		done: make(chan struct{}),
+	}
+	j := &job{
+		id:          "job-1",
+		client:      client,
+		status:      "running",
+		xtraceCount: 7,
+	}
+
+	j.mismatch("xtrace divergence", "XTRACE: browser", "XTRACE: python")
+
+	select {
+	case data := <-client.send:
+		var env wsEnvelope
+		if err := json.Unmarshal(data, &env); err != nil {
+			t.Fatal(err)
+		}
+		if env.Type != "cancel" {
+			t.Fatalf("cancel Type = %q", env.Type)
+		}
+		if env.ID != "job-1" {
+			t.Fatalf("cancel ID = %q", env.ID)
+		}
+		if env.XTraceIndex == nil || *env.XTraceIndex != 7 {
+			t.Fatalf("XTraceIndex = %v, want 7", env.XTraceIndex)
+		}
+		if !strings.Contains(env.Message, "XTRACE index 7") {
+			t.Fatalf("cancel message = %q", env.Message)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("timed out waiting for browser cancel")
+	}
+
+	if j.status != "mismatch" {
+		t.Fatalf("status = %q, want mismatch", j.status)
 	}
 }

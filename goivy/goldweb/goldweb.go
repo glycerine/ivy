@@ -152,6 +152,7 @@ type job struct {
 	cancelPy     context.CancelFunc
 	closeBrowser sync.Once
 	closePython  sync.Once
+	stopOnce     sync.Once
 }
 
 type lineEvent struct {
@@ -678,13 +679,11 @@ func (j *job) closeXTraceLogs() {
 		if err := j.browserSpool.close(); err != nil {
 			log.Printf("close %s: %v", j.browserLogPath, err)
 		}
-		j.browserSpool = nil
 	}
 	if j.pySpool != nil {
 		if err := j.pySpool.close(); err != nil {
 			log.Printf("close %s: %v", j.pyLogPath, err)
 		}
-		j.pySpool = nil
 	}
 }
 
@@ -1034,6 +1033,21 @@ func (j *job) cancel(reason string) {
 	j.setBrowserDone(-1)
 }
 
+func (j *job) stopProducers(message string, xtraceIndex *int) {
+	j.stopOnce.Do(func() {
+		j.cancelPython()
+		if j.client == nil {
+			return
+		}
+		_ = j.client.sendJSON(wsEnvelope{
+			Type:        "cancel",
+			ID:          j.id,
+			Message:     message,
+			XTraceIndex: copyIntPtr(xtraceIndex),
+		})
+	})
+}
+
 func (j *job) fail(msg string) {
 	j.mu.Lock()
 	if j.status == "running" {
@@ -1066,6 +1080,7 @@ func (j *job) finishMatched() {
 func (j *job) mismatch(reason, browser, python string) {
 	var message string
 	var mismatchAt int
+	var shouldStop bool
 	j.mu.Lock()
 	if j.status == "running" {
 		mismatchAt = j.xtraceCount
@@ -1073,6 +1088,7 @@ func (j *job) mismatch(reason, browser, python string) {
 		j.status = "mismatch"
 		j.message = fmt.Sprintf("%s at XTRACE index %d after %d matching XTRACE lines\nbrowser: %.500s\npython : %.500s", reason, mismatchAt, j.xtraceCount, strings.TrimSpace(browser), strings.TrimSpace(python))
 		message = j.message
+		shouldStop = true
 	} else {
 		message = j.message
 		if j.mismatchAt != nil {
@@ -1082,8 +1098,9 @@ func (j *job) mismatch(reason, browser, python string) {
 		}
 	}
 	j.mu.Unlock()
-	j.cancelPython()
-	_ = j.client.sendJSON(wsEnvelope{Type: "cancel", ID: j.id, Message: message, XTraceIndex: &mismatchAt})
+	if shouldStop {
+		j.stopProducers(message, &mismatchAt)
+	}
 }
 
 func (j *job) remember(side, line string) {
@@ -1789,7 +1806,8 @@ function connect() {
     if (msg.type === 'cancel') {
       const stopped = terminateJob(msg.id);
       if (stopped) {
-        log('cancelled ' + msg.id + ': ' + (msg.message || ''));
+        const at = Number.isInteger(msg.xtrace_index) ? ' at XTRACE index ' + msg.xtrace_index : '';
+        log('cancelled ' + msg.id + at + ': ' + (msg.message || ''));
       }
       return;
     }
