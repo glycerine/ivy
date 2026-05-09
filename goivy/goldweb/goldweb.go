@@ -933,8 +933,17 @@ const indexHTML = `<!doctype html>
     .metric {
       background: #eef2f7;
       border: 1px solid #d9e2ec;
+      display: inline-flex;
+      gap: 0.35rem;
       padding: 0.2rem 0.45rem;
     }
+    .metric > span {
+      display: inline-block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-variant-numeric: tabular-nums;
+      min-width: 15ch;
+    }
+    .metric #job-id { min-width: 24ch; }
     .log-shell {
       border: 1px solid #bcccdc;
     }
@@ -1146,11 +1155,15 @@ function log(message) {
 }
 
 function appendVisibleLog(text) {
+  const distanceFromBottom = streamLogEl.scrollHeight - streamLogEl.scrollTop - streamLogEl.clientHeight;
+  const shouldTail = distanceFromBottom < 8;
   streamLogEl.textContent += text;
   if (streamLogEl.textContent.length > maxVisibleLogBytes) {
     streamLogEl.textContent = streamLogEl.textContent.slice(streamLogEl.textContent.length - maxVisibleLogBytes);
   }
-  streamLogEl.scrollTop = streamLogEl.scrollHeight;
+  if (shouldTail) {
+    streamLogEl.scrollTop = streamLogEl.scrollHeight;
+  }
 }
 
 function updateCounters() {
