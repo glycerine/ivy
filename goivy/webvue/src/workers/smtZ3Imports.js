@@ -34,7 +34,10 @@ function makeStringTable() {
 
   return {
     add(value) {
-      const bytes = textEncoder.encode(value);
+      return this.addBytes(textEncoder.encode(value));
+    },
+    addBytes(value) {
+      const bytes = new Uint8Array(value);
       const handle = next;
       next += 1;
       byHandle.set(handle, bytes);
@@ -47,6 +50,25 @@ function makeStringTable() {
       byHandle.delete(handle >>> 0);
     },
   };
+}
+
+function z3CStringBytes(z3, handle) {
+  const ptr = handle >>> 0;
+  if (!ptr) {
+    return new Uint8Array(0);
+  }
+  const heap = z3.HEAPU8;
+  if (!heap || ptr >= heap.length) {
+    throw new Error('Z3 returned string pointer outside wasm heap: ' + ptr);
+  }
+  let end = ptr;
+  while (end < heap.length && heap[end] !== 0) {
+    end += 1;
+  }
+  if (end >= heap.length) {
+    throw new Error('Z3 returned unterminated string pointer: ' + ptr);
+  }
+  return new Uint8Array(heap.subarray(ptr, end));
 }
 
 function makeScratchTable() {
@@ -112,7 +134,7 @@ function makeScratchTable() {
   };
 }
 
-function makeErrorTracker(z3, z3String) {
+function makeErrorTracker(z3, z3StringText) {
   let callbackPtr = 0;
   const events = [];
 
@@ -128,7 +150,7 @@ function makeErrorTracker(z3, z3String) {
       const event = { ctx: ctx >>> 0, code: code | 0, message: '' };
       try {
         if (typeof z3._Z3_get_error_msg === 'function') {
-          event.message = z3String(z3._Z3_get_error_msg(ctx, code));
+          event.message = z3StringText(z3._Z3_get_error_msg(ctx, code));
         }
       } catch {
         event.message = '';
@@ -163,18 +185,15 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
   let lastEnumTesters = [];
   void getGoMemory;
 
-  function z3String(handle) {
-    if (!handle) {
-      return '';
-    }
-    return z3.UTF8ToString(handle);
+  function z3StringText(handle) {
+    return textDecoder.decode(z3CStringBytes(z3, handle));
   }
 
   function z3StringHandle(handle) {
-    return strings.add(z3String(handle));
+    return strings.addBytes(z3CStringBytes(z3, handle));
   }
 
-  const errors = makeErrorTracker(z3, z3String);
+  const errors = makeErrorTracker(z3, z3StringText);
 
   function symbolFromScratch(ctx, handle, len) {
     return withZ3CString(z3, textDecoder.decode(scratch.takeBytes(handle, len)), (z3Ptr) => (
