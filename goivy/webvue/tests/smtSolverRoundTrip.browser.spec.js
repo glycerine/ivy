@@ -202,11 +202,13 @@ test('Big Go WASI smt package solves a tiny query through Z3 wasm in a worker', 
     'smt_solver_sat_true',
     'smt_solver_unsat_true_and_not_true',
     'smt_solver_uninterpreted_sort_name_ok',
+    'smt_solver_canon_preserves_enum_quantifier_and_false',
   ]);
 
   expect(result.results.smt_solver_sat_true).toBe(1);
   expect(result.results.smt_solver_unsat_true_and_not_true).toBe(-1);
   expect(result.results.smt_solver_uninterpreted_sort_name_ok).toBe(1);
+  expect(result.results.smt_solver_canon_preserves_enum_quantifier_and_false).toBe(1);
 });
 
 test('Big Go WASI smt package records Z3 errors through the browser callback boundary', async ({ page }) => {

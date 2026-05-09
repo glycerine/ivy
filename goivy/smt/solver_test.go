@@ -2,7 +2,10 @@
 
 package smt
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestSolverBoolRoundTrip(t *testing.T) {
 	ctx := NewZ3Context()
@@ -25,6 +28,31 @@ func TestSolverBoolRoundTrip(t *testing.T) {
 	sort := ctx.UninterpretedSort("Thing")
 	if got := sort.String(); got != "Thing" {
 		t.Fatalf("uninterpreted sort name = %q, want %q", got, "Thing")
+	}
+}
+
+func TestCanonPreservesEnumQuantifierAndFalse(t *testing.T) {
+	ctx := NewZ3Context()
+	defer ctx.Close()
+
+	opSort, opVals := ctx.EnumSort("op_type", []string{"nop", "write", "read"})
+	lclockSort := ctx.UninterpretedSort("lclock")
+	req := ctx.Function("ref.evs.req", []Z3Sort{lclockSort}, opSort)
+	tick := ctx.Const("T", lclockSort)
+
+	solver := ctx.NewZ3Solver()
+	solver.Assert(ctx.ForAll([]Z3Expr{tick}, ctx.Eq(req.Apply(tick), opVals[2])))
+	solver.Assert(ctx.BoolVal(false))
+
+	canon := solver.CanonZ3Assertions()
+	if strings.Contains(canon, "unknown_kind=") {
+		t.Fatalf("canon contains unknown AST kind: %s", canon)
+	}
+	if !strings.Contains(canon, "(a = (a ref.evs.req (v T)) (c read op_type))") {
+		t.Fatalf("canon missing enum equality: %s", canon)
+	}
+	if !strings.Contains(canon, "(c false Bool)") {
+		t.Fatalf("canon missing false constant: %s", canon)
 	}
 }
 
