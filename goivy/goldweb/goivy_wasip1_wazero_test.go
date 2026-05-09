@@ -90,7 +90,14 @@ func TestGoIvyCheckWasip1UnderWazero(t *testing.T) {
 	if err := instantiateZ3Stubs(ctx, rt, compiled); err != nil {
 		t.Fatalf("instantiate smt_z3 stubs: %v", err)
 	}
-	wasi_snapshot_preview1.MustInstantiate(ctx, rt)
+	wasiBuilder := rt.NewHostModuleBuilder(wasi_snapshot_preview1.ModuleName)
+	wasi_snapshot_preview1.NewFunctionExporter().ExportFunctions(wasiBuilder)
+	wasiBuilder.NewFunctionBuilder().
+		WithFunc(func(context.Context, api.Module, uint32) {}).
+		Export("proc_exit")
+	if _, err := wasiBuilder.Instantiate(ctx); err != nil {
+		t.Fatalf("instantiate WASI host module: %v", err)
+	}
 
 	mod, err := rt.InstantiateModule(ctx, compiled, wazero.NewModuleConfig().
 		WithName("goivy_check_wasip1").
@@ -100,8 +107,7 @@ func TestGoIvyCheckWasip1UnderWazero(t *testing.T) {
 		WithEnv("GOIVY_WASM_XTRACE_GC_HEAP_LIMIT", "0").
 		WithFSConfig(wazero.NewFSConfig().WithReadOnlyDirMount(includeDir, "include")).
 		WithStdout(stdout).
-		WithStderr(stderr).
-		WithStartFunctions())
+		WithStderr(stderr))
 	if err != nil {
 		t.Fatalf("instantiate wasm: %v", err)
 	}
@@ -129,6 +135,87 @@ func TestGoIvyCheckWasip1UnderWazero(t *testing.T) {
 	}
 	if got := uint32(results[0]); got != 0 {
 		t.Fatalf("goivy_check_run returned %d", got)
+	}
+}
+
+// TestGoIvyCheckCLIWasip1UnderWazero runs the normal goivy_check CLI compiled
+// to wasip1 under wazero. Unlike the browser exported-function artifact, the
+// CLI naturally does all work during _start, so wazero's proc_exit semantics are
+// useful instead of getting in the way.
+//
+// Example:
+//
+//	GOIVY_WAZERO_CLI_WASM=/private/tmp/goivy-check-cli-wasip1.wasm \
+//	GOIVY_WAZERO_CLI_SPEC=/Users/jaten/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy \
+//	go test ./goldweb -run TestGoIvyCheckCLIWasip1UnderWazero -count=1 -v
+func TestGoIvyCheckCLIWasip1UnderWazero(t *testing.T) {
+	specPath := os.Getenv("GOIVY_WAZERO_CLI_SPEC")
+	wasmPath := os.Getenv("GOIVY_WAZERO_CLI_WASM")
+	if specPath == "" || wasmPath == "" {
+		t.Skip("set GOIVY_WAZERO_CLI_SPEC and GOIVY_WAZERO_CLI_WASM to run the CLI wasip1 artifact under wazero")
+	}
+
+	root := filepath.Clean("..")
+	includeDir := os.Getenv("GOIVY_WAZERO_INCLUDE")
+	if includeDir == "" {
+		includeDir = defaultIncludeDir(root)
+	}
+	stdoutPath := os.Getenv("GOIVY_WAZERO_CLI_STDOUT")
+	if stdoutPath == "" {
+		stdoutPath = filepath.Join(root, "wazero.cli.xtrace.log")
+	}
+	stderrPath := os.Getenv("GOIVY_WAZERO_CLI_STDERR")
+	if stderrPath == "" {
+		stderrPath = filepath.Join(root, "wazero.cli.stderr.log")
+	}
+
+	wasmBytes, err := os.ReadFile(wasmPath)
+	if err != nil {
+		t.Fatalf("read wasm: %v", err)
+	}
+	stdout, err := os.Create(stdoutPath)
+	if err != nil {
+		t.Fatalf("create stdout log: %v", err)
+	}
+	defer stdout.Close()
+	stderr, err := os.Create(stderrPath)
+	if err != nil {
+		t.Fatalf("create stderr log: %v", err)
+	}
+	defer stderr.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+
+	rt := wazero.NewRuntime(ctx)
+	defer rt.Close(ctx)
+
+	compiled, err := rt.CompileModule(ctx, wasmBytes)
+	if err != nil {
+		t.Fatalf("compile wasm: %v", err)
+	}
+	defer compiled.Close(ctx)
+
+	if err := instantiateZ3Stubs(ctx, rt, compiled); err != nil {
+		t.Fatalf("instantiate smt_z3 stubs: %v", err)
+	}
+	wasi_snapshot_preview1.MustInstantiate(ctx, rt)
+
+	start := time.Now()
+	_, err = rt.InstantiateModule(ctx, compiled, wazero.NewModuleConfig().
+		WithName("goivy_check_cli_wasip1").
+		WithArgs("goivy_check", specPath).
+		WithEnv("GOIVY_INCLUDE", includeDir).
+		WithEnv("GOIVY_WASM_HEAPPROFILE_INTERVAL", "0").
+		WithEnv("GOIVY_WASM_XTRACE_GC_HEAP_LIMIT", "0").
+		WithFSConfig(wazero.NewFSConfig().
+			WithReadOnlyDirMount("/Users/jaten/ivy", "/Users/jaten/ivy").
+			WithReadOnlyDirMount(includeDir, includeDir)).
+		WithStdout(stdout).
+		WithStderr(stderr))
+	t.Logf("cli _start elapsed=%s stdout=%s stderr=%s", time.Since(start), stdoutPath, stderrPath)
+	if err != nil {
+		t.Fatalf("instantiate/run CLI wasm: %v", err)
 	}
 }
 
