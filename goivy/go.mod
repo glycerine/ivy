@@ -10,6 +10,7 @@ require (
 	github.com/glycerine/rate v0.0.1
 	github.com/glycerine/rbtree v0.2.1
 	github.com/goccy/go-yaml v1.19.2
+	github.com/gorilla/websocket v1.5.3
 	github.com/mailgun/mailgun-go/v4 v4.23.0
 	github.com/tetratelabs/wazero v1.11.1-0.20260428013916-2bbd517b7633
 )
@@ -20,9 +21,6 @@ require (
 	4d63.com/embedfiles v0.0.0-20190311033909-995e0740726f // indirect
 	github.com/glycerine/one_tree_rwmut v1.0.0 // indirect
 	github.com/go-chi/chi/v5 v5.2.1 // indirect
-	github.com/gorilla/mux v1.8.1 // indirect
-	github.com/gorilla/securecookie v1.1.2 // indirect
-	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/pgx/v5 v5.9.2 // indirect
