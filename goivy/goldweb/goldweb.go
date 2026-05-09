@@ -1827,6 +1827,14 @@ async function loadIncludeTree(wasiShim, assetBaseURL, version) {
   };
 }
 
+function makeNonPreopenStdout(wasiShim, write) {
+  return new class extends wasiShim.ConsoleStdout {
+    fd_prestat_get() {
+      return { ret: wasiShim.wasi.ERRNO_NOTDIR, prestat: null };
+    }
+  }(write);
+}
+
 self.onmessage = async (event) => {
   const command = event.data;
   let z3;
@@ -1878,7 +1886,7 @@ self.onmessage = async (event) => {
         new wasiShim.ConsoleStdout(emitStdout),
         new wasiShim.ConsoleStdout(emitStderr),
         new wasiShim.PreopenDirectory(includeTree.root, includeTree.directory.contents),
-        new wasiShim.ConsoleStdout(emitHeapProfile),
+        makeNonPreopenStdout(wasiShim, emitHeapProfile),
       ],
     );
 

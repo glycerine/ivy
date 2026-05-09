@@ -68,8 +68,8 @@ func goivyCheckWriteMeta(offset, word, n uint32) int32 {
 //go:wasmexport goivy_check_run
 func goivyCheckRun() (code int32) {
 	tuneRuntimeOnce.Do(tuneRuntime)
-	stopHeapProfiler := startHeapProfiler()
-	defer stopHeapProfiler()
+	//stopHeapProfiler := startHeapProfiler()
+	//defer stopHeapProfiler()
 
 	defer func() {
 		if r := recover(); r != nil {
