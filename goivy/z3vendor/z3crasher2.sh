@@ -23,8 +23,9 @@ fi
 
 emsdk_env="${EMSDK_ENV:-/Users/jaten/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh}"
 em_cache="${EM_CACHE:-/private/tmp/ivy-emscripten-cache}"
+z3_stack_size="${Z3CRASHER_STACK_SIZE:-83886080}"
 debug_flags="${Z3CRASHER_DEBUG_FLAGS:--g2 --profiling-funcs}"
-default_link_flags="-std=c++17 -fwasm-exceptions ${debug_flags} -sALLOW_MEMORY_GROWTH=1 -sALLOW_TABLE_GROWTH=1 -sEXIT_RUNTIME=1 -sSTACK_SIZE=20MB -sINITIAL_MEMORY=256MB"
+default_link_flags="-std=c++17 -fwasm-exceptions ${debug_flags} -sALLOW_MEMORY_GROWTH=1 -sALLOW_TABLE_GROWTH=1 -sEXIT_RUNTIME=1 -sSTACK_SIZE=${z3_stack_size} -sTOTAL_STACK=${z3_stack_size} -sINITIAL_MEMORY=256MB"
 link_flags="${Z3CRASHER_LINK_FLAGS:-${default_link_flags}}"
 
 if ! command -v node >/dev/null 2>&1; then

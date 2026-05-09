@@ -20,6 +20,7 @@ fi
 
 emsdk_env="${EMSDK_ENV:-/Users/jaten/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh}"
 em_cache="${EM_CACHE:-/private/tmp/ivy-emscripten-cache}"
+z3_stack_size="${Z3CRASHER_STACK_SIZE:-83886080}"
 
 if ! command -v node >/dev/null 2>&1; then
   echo "node not found on PATH" >&2
@@ -46,8 +47,12 @@ if [[ ! -f "${runner}" || ! -f "${wasm}" || "${Z3CRASHER_REBUILD:-0}" == "1" ]];
     if [[ ${first_status} -ne 0 ]]; then
       echo "[z3crasher] initial make exited ${first_status}; relinking with wasm EH flags"
     fi
+    relink_make_args=(test-z3 -j1)
+    if [[ "${Z3CRASHER_REBUILD:-0}" == "1" ]]; then
+      relink_make_args=(-W test/main.o "${relink_make_args[@]}")
+    fi
     EMSDK_QUIET=1 bash -lc \
-      "source \"${emsdk_env}\" && EM_CACHE=\"${em_cache}\" make test-z3 -j1 LINK_FLAGS=\"-fwasm-exceptions -sALLOW_MEMORY_GROWTH=1 -sALLOW_TABLE_GROWTH=1 -sEXIT_RUNTIME=1 -sSTACK_SIZE=20MB -sINITIAL_MEMORY=256MB\" LINK_EXTRA_FLAGS=\"\""
+      "source \"${emsdk_env}\" && EM_CACHE=\"${em_cache}\" make ${relink_make_args[*]} LINK_FLAGS=\"-fwasm-exceptions -sALLOW_MEMORY_GROWTH=1 -sALLOW_TABLE_GROWTH=1 -sEXIT_RUNTIME=1 -sSTACK_SIZE=${z3_stack_size} -sTOTAL_STACK=${z3_stack_size} -sINITIAL_MEMORY=256MB\" LINK_EXTRA_FLAGS=\"\""
   )
 fi
 
