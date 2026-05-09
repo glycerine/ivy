@@ -142,7 +142,7 @@ $(Z3_WASM_LIB):
 
 z3-wasm-lib-wasm-eh: $(Z3_WASM_LIB)
 
-$(Z3_WASM_API_STAMP): $(Z3_WASM_LIB) $(Z3_WEBVUE_EXPORTS) $(Z3_VENDOR_DIR)/build-wasm-api.sh
+$(Z3_WASM_API_STAMP): $(Z3_WASM_LIB) $(Z3_WEBVUE_EXPORTS) $(Z3_VENDOR_DIR)/build-wasm-api.sh $(Z3_VENDOR_JS_API)/ivy_z3_wasm_syscalls.cc
 	cd $(Z3_VENDOR_DIR) && \
 		EMSDK_QUIET=1 source "$(EMSDK_ENV)" && \
 		EM_CACHE="$(EM_CACHE)" EMCC="$(EMCC)" ./build-wasm-api.sh

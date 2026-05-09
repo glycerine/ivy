@@ -56,6 +56,35 @@ test.afterAll(async () => {
   });
 });
 
+test('Z3 wasm reports prlimit64 syscall details without the generic unsupported warning', async ({ page }) => {
+  await page.goto(baseURL);
+  await page.addScriptTag({ url: `${baseURL}/z3-471-api.js` });
+
+  const stderr = await page.evaluate(async () => {
+    const stderrLines = [];
+    await window.initZ3({
+      printErr(text) {
+        stderrLines.push(String(text));
+      },
+      locateFile(file) {
+        if (file === 'z3-api.wasm') {
+          return '/z3-471-api.wasm';
+        }
+        return file;
+      },
+    });
+    return stderrLines;
+  });
+
+  const joined = stderr.join('\n');
+  expect(joined).toContain('[z3 syscall] prlimit64(');
+  expect(joined).toContain('resource=RLIMIT_STACK(3)');
+  expect(joined).toContain('newLimitPtr=0x');
+  expect(joined).toContain('{cur=18446744073709551615,max=18446744073709551615}');
+  expect(joined).toContain('oldLimitPtr=0x0');
+  expect(joined).not.toContain('unsupported syscall: __syscall_prlimit64');
+});
+
 test('Z3 wasm computes a legacy interpolant in a browser runtime', async ({ page }) => {
   await page.goto(baseURL);
   await page.addScriptTag({ url: `${baseURL}/z3-471-api.js` });

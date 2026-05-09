@@ -19,6 +19,7 @@ fi
   -D_MP_INTERNAL \
   -Isrc/api \
   -Lbuild \
+  src/api/js/ivy_z3_wasm_syscalls.cc \
   build/libz3.a \
   -sEXPORTED_FUNCTIONS="$EXPORTED_FUNCS" \
   -sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","UTF8ToString","stringToUTF8","addFunction","removeFunction"]' \

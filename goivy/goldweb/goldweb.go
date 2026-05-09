@@ -87,18 +87,19 @@ type wsClient struct {
 }
 
 type wsEnvelope struct {
-	Type     string            `json:"type"`
-	ID       string            `json:"id,omitempty"`
-	Command  string            `json:"command,omitempty"`
-	Filename string            `json:"filename,omitempty"`
-	Spec     string            `json:"spec,omitempty"`
-	Params   map[string]string `json:"params,omitempty"`
-	FD       int               `json:"fd,omitempty"`
-	Data     string            `json:"data,omitempty"`
-	Code     int               `json:"code,omitempty"`
-	Error    string            `json:"error,omitempty"`
-	Status   string            `json:"status,omitempty"`
-	Message  string            `json:"message,omitempty"`
+	Type        string            `json:"type"`
+	ID          string            `json:"id,omitempty"`
+	Command     string            `json:"command,omitempty"`
+	Filename    string            `json:"filename,omitempty"`
+	Spec        string            `json:"spec,omitempty"`
+	Params      map[string]string `json:"params,omitempty"`
+	FD          int               `json:"fd,omitempty"`
+	Data        string            `json:"data,omitempty"`
+	Code        int               `json:"code,omitempty"`
+	Error       string            `json:"error,omitempty"`
+	Status      string            `json:"status,omitempty"`
+	Message     string            `json:"message,omitempty"`
+	XTraceIndex *int              `json:"xtrace_index,omitempty"`
 }
 
 type goivyCheckRequest struct {
@@ -126,6 +127,7 @@ type job struct {
 	status       string
 	message      string
 	xtraceCount  int
+	mismatchAt   *int
 	browserCode  int
 	pyErr        string
 	tail         []string
@@ -150,6 +152,7 @@ type jobSnapshot struct {
 	Status      string            `json:"status"`
 	Message     string            `json:"message,omitempty"`
 	XTraceCount int               `json:"xtrace_count"`
+	MismatchAt  *int              `json:"mismatch_at,omitempty"`
 	BrowserCode int               `json:"browser_code,omitempty"`
 	PythonError string            `json:"python_error,omitempty"`
 	Tail        []string          `json:"tail,omitempty"`
@@ -672,14 +675,26 @@ func (j *job) finishMatched() {
 }
 
 func (j *job) mismatch(reason, browser, python string) {
+	var message string
+	var mismatchAt int
 	j.mu.Lock()
 	if j.status == "running" {
+		mismatchAt = j.xtraceCount
+		j.mismatchAt = &mismatchAt
 		j.status = "mismatch"
-		j.message = fmt.Sprintf("%s after %d matching XTRACE lines\nbrowser: %.500s\npython : %.500s", reason, j.xtraceCount, strings.TrimSpace(browser), strings.TrimSpace(python))
+		j.message = fmt.Sprintf("%s at XTRACE index %d after %d matching XTRACE lines\nbrowser: %.500s\npython : %.500s", reason, mismatchAt, j.xtraceCount, strings.TrimSpace(browser), strings.TrimSpace(python))
+		message = j.message
+	} else {
+		message = j.message
+		if j.mismatchAt != nil {
+			mismatchAt = *j.mismatchAt
+		} else {
+			mismatchAt = j.xtraceCount
+		}
 	}
 	j.mu.Unlock()
 	j.cancelPython()
-	_ = j.client.sendJSON(wsEnvelope{Type: "cancel", ID: j.id, Message: reason})
+	_ = j.client.sendJSON(wsEnvelope{Type: "cancel", ID: j.id, Message: message, XTraceIndex: &mismatchAt})
 }
 
 func (j *job) remember(side, line string) {
@@ -703,6 +718,7 @@ func (j *job) snapshot() jobSnapshot {
 		Status:      j.status,
 		Message:     j.message,
 		XTraceCount: j.xtraceCount,
+		MismatchAt:  copyIntPtr(j.mismatchAt),
 		BrowserCode: j.browserCode,
 		PythonError: j.pyErr,
 		Tail:        append([]string(nil), j.tail...),
@@ -850,6 +866,14 @@ func cloneStringMap(in map[string]string) map[string]string {
 		out[k] = v
 	}
 	return out
+}
+
+func copyIntPtr(in *int) *int {
+	if in == nil {
+		return nil
+	}
+	out := *in
+	return &out
 }
 
 func newID() string {
