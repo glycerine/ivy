@@ -371,4 +371,6 @@ cleardb:
 goldweb:
 	rm -f ~/go/bin/goldweb
 	cd goldweb && go install
+	if [ -f py.xtrace.log ]; then mv py.xtrace.log py.xtrace.log.prev; fi
+	if [ -f browser.xtrace.log ]; then mv browser.xtrace.log browser.xtrace.log.prev; fi
 	goldweb ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
