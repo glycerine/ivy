@@ -2699,3 +2699,12 @@ With the golden-2hr and atg, we migrated to Vue 3 for the webui.
 See the vue branch.
 -------
 wasi shim hardening pass done.
+
+faster branch passed golden-2hr test
+
+(goivy-venv) jaten@jbook ~/ivy/goivy (faster) $ git log|head -4
+commit fc69a23e5903440a77b57146202d9a22ae2ae918
+Author: Jason E. Aten, Ph.D. <jason@devnull>
+Date:   Sat May 9 14:47:26 2026 -0300
+
+(goivy-venv) jaten@jbook ~/ivy/goivy (faster) $ 
