@@ -181,10 +181,26 @@ async function main() {
     throw new Error('Go Ivy js/wasm did not publish goivyCheckRun');
   }
 
-  const code = globalThis.goivyCheckRun(spec, JSON.stringify({
-    filename: cfg.specPath,
-    params: cfg.params || {},
-  })) | 0;
+  const baseParams = cfg.params || {};
+  const isolates = Array.isArray(cfg.isolates) ? cfg.isolates : [];
+  let code = 0;
+
+  if (isolates.length === 0) {
+    code = globalThis.goivyCheckRun(spec, JSON.stringify({
+      filename: cfg.specPath,
+      params: baseParams,
+    })) | 0;
+  } else {
+    for (const isolate of isolates) {
+      code = globalThis.goivyCheckRun(spec, JSON.stringify({
+        filename: cfg.specPath,
+        params: { ...baseParams, isolate },
+      })) | 0;
+      if (code !== 0) {
+        break;
+      }
+    }
+  }
 
   await flushWritable(nodeProcess.stdout);
   await flushWritable(nodeProcess.stderr);

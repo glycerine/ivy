@@ -40,6 +40,7 @@ type config struct {
 	NodeFS      string            `json:"nodeFS"`
 	SpecPath    string            `json:"specPath"`
 	Params      map[string]string `json:"params"`
+	Isolates    []string          `json:"isolates,omitempty"`
 	MemoryLimit string            `json:"memoryLimit"`
 	GOGC        string            `json:"gogc"`
 }
@@ -68,7 +69,7 @@ func main() {
 	flag.Var(&explicitParams, "param", "Ivy checker parameter key=value; may be repeated")
 	flag.Parse()
 
-	params, specPath, err := parseArgs(flag.Args(), explicitParams)
+	params, isolates, specPath, err := parseArgs(flag.Args(), explicitParams)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
@@ -85,6 +86,7 @@ func main() {
 		NodeFS:      cleanAbs(*nodeFS),
 		SpecPath:    cleanAbs(specPath),
 		Params:      params,
+		Isolates:    isolates,
 		MemoryLimit: *memoryLimit,
 		GOGC:        *gogc,
 	}
@@ -136,31 +138,43 @@ func main() {
 	}
 }
 
-func parseArgs(args []string, explicitParams []string) (map[string]string, string, error) {
+func parseArgs(args []string, explicitParams []string) (map[string]string, []string, string, error) {
 	params := make(map[string]string)
-	for _, raw := range explicitParams {
+	var isolates []string
+	addParam := func(raw string) error {
 		k, v, ok := strings.Cut(raw, "=")
 		if !ok || k == "" {
-			return nil, "", fmt.Errorf("bad -param %q; want key=value", raw)
+			return fmt.Errorf("bad parameter %q; want key=value", raw)
 		}
 		params[k] = v
+		if k == "isolate" {
+			isolates = append(isolates, v)
+		}
+		return nil
+	}
+	for _, raw := range explicitParams {
+		if err := addParam(raw); err != nil {
+			return nil, nil, "", fmt.Errorf("bad -param %q; want key=value", raw)
+		}
 	}
 
 	var specPath string
 	for _, arg := range args {
-		if k, v, ok := strings.Cut(arg, "="); ok && k != "" && specPath == "" {
-			params[k] = v
+		if strings.Contains(arg, "=") && specPath == "" {
+			if err := addParam(arg); err != nil {
+				return nil, nil, "", err
+			}
 			continue
 		}
 		if specPath != "" {
-			return nil, "", fmt.Errorf("unexpected extra argument %q; want key=value params followed by one .ivy file", arg)
+			return nil, nil, "", fmt.Errorf("unexpected extra argument %q; want key=value params followed by one .ivy file", arg)
 		}
 		specPath = arg
 	}
 	if specPath == "" {
-		return nil, "", errors.New("usage: nodegold [flags] [key=value ...] file.ivy")
+		return nil, nil, "", errors.New("usage: nodegold [flags] [key=value ...] file.ivy")
 	}
-	return params, specPath, nil
+	return params, isolates, specPath, nil
 }
 
 func validateConfig(cfg config, script string) error {
