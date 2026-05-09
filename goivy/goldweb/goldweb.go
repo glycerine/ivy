@@ -29,6 +29,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -66,6 +67,7 @@ type app struct {
 	webvueDir  string
 	staticDir  string
 	workerDir  string
+	includeDir string
 	goivyWasm  string
 	ivyCheck   string
 	httpServer *http.Server
@@ -107,6 +109,16 @@ type goivyCheckRequest struct {
 	Spec       string            `json:"spec"`
 	Params     map[string]string `json:"params"`
 	SourcePath string            `json:"-"`
+}
+
+type includeTree struct {
+	Root  string        `json:"root"`
+	Files []includeFile `json:"files"`
+}
+
+type includeFile struct {
+	Path string `json:"path"`
+	Data string `json:"data"`
 }
 
 type job struct {
@@ -168,6 +180,7 @@ func main() {
 	rootDefault := defaultGoivyRoot()
 	listen := flag.String("listen", "127.0.0.1:8998", "address for the goldweb HTTP/WebSocket server")
 	root := flag.String("root", rootDefault, "goivy source root")
+	includeDir := flag.String("include-dir", defaultIncludeDir(rootDefault), "Ivy standard-library include directory to mirror into the browser WASI filesystem")
 	goivyWasm := flag.String("goivy-wasm", filepath.Join(rootDefault, "webvue", "static", "goivy-check-wasip1.wasm"), "Go Ivy wasip1 wasm file to serve at /goivy-check.wasm")
 	ivyCheck := flag.String("ivy-check", "ivy_check", "Python ivy_check executable")
 	flag.Parse()
@@ -181,14 +194,15 @@ func main() {
 		startupReq = req
 	}
 
-	a := newApp(*listen, *root, *goivyWasm, *ivyCheck, startupReq)
+	a := newApp(*listen, *root, *includeDir, *goivyWasm, *ivyCheck, startupReq)
 	if err := a.listenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Fatal(err)
 	}
 }
 
-func newApp(listen, root, goivyWasm, ivyCheck string, startupReq *goivyCheckRequest) *app {
+func newApp(listen, root, includeDir, goivyWasm, ivyCheck string, startupReq *goivyCheckRequest) *app {
 	root = filepath.Clean(root)
+	includeDir = filepath.Clean(includeDir)
 	webvueDir := filepath.Join(root, "webvue")
 	return &app{
 		listen:     listen,
@@ -196,6 +210,7 @@ func newApp(listen, root, goivyWasm, ivyCheck string, startupReq *goivyCheckRequ
 		webvueDir:  webvueDir,
 		staticDir:  filepath.Join(webvueDir, "static"),
 		workerDir:  filepath.Join(webvueDir, "src", "workers"),
+		includeDir: includeDir,
 		goivyWasm:  goivyWasm,
 		ivyCheck:   ivyCheck,
 		clients:    make(map[*wsClient]bool),
@@ -248,6 +263,7 @@ func (a *app) listenAndServe() error {
 	mux.HandleFunc("/goivy_check", a.handleGoivyCheck)
 	mux.HandleFunc("/jobs/", a.handleJob)
 	mux.HandleFunc("/goivy-check.wasm", serveFile(a.goivyWasm, "application/wasm"))
+	mux.HandleFunc("/ivy-include-tree.json", a.serveIncludeTree)
 	mux.HandleFunc("/z3-471-api.js", serveFile(filepath.Join(a.staticDir, "z3-471-api.js"), "text/javascript; charset=utf-8"))
 	mux.HandleFunc("/z3-471-api.wasm", serveFile(filepath.Join(a.staticDir, "z3-471-api.wasm"), "application/wasm"))
 	mux.HandleFunc("/src/workers/smtZ3Imports.js", serveFile(filepath.Join(a.workerDir, "smtZ3Imports.js"), "text/javascript; charset=utf-8"))
@@ -263,6 +279,7 @@ func (a *app) listenAndServe() error {
 	}
 	log.Printf("goldweb listening on http://%s", a.listen)
 	log.Printf("POST JSON to http://%s/goivy_check to start a browser-backed check", a.listen)
+	log.Printf("serving Ivy include tree from %s as browser path include/", a.includeDir)
 	if a.startupReq != nil {
 		log.Printf("will submit %s to the first browser websocket client", a.startupReq.Filename)
 	}
@@ -293,6 +310,71 @@ func serveFile(path, contentType string) http.HandlerFunc {
 		w.Header().Set("Cache-Control", "no-store")
 		http.ServeFile(w, r, path)
 	}
+}
+
+func (a *app) serveIncludeTree(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	tree, err := readIncludeTree(a.includeDir)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("Cache-Control", "no-store")
+	if r.Method == http.MethodHead {
+		return
+	}
+	_ = json.NewEncoder(w).Encode(tree)
+}
+
+func readIncludeTree(root string) (*includeTree, error) {
+	absRoot, err := filepath.Abs(root)
+	if err != nil {
+		return nil, err
+	}
+	info, err := os.Stat(absRoot)
+	if err != nil {
+		return nil, fmt.Errorf("stat Ivy include dir %s: %w", absRoot, err)
+	}
+	if !info.IsDir() {
+		return nil, fmt.Errorf("Ivy include path is not a directory: %s", absRoot)
+	}
+
+	tree := &includeTree{Root: absRoot}
+	err = filepath.WalkDir(absRoot, func(path string, d fs.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if d.IsDir() {
+			return nil
+		}
+		if !d.Type().IsRegular() {
+			return nil
+		}
+		rel, err := filepath.Rel(absRoot, path)
+		if err != nil {
+			return err
+		}
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		tree.Files = append(tree.Files, includeFile{
+			Path: filepath.ToSlash(rel),
+			Data: string(data),
+		})
+		return nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("read Ivy include tree %s: %w", absRoot, err)
+	}
+	sort.Slice(tree.Files, func(i, j int) bool {
+		return tree.Files[i].Path < tree.Files[j].Path
+	})
+	return tree, nil
 }
 
 func (a *app) serveWS(w http.ResponseWriter, r *http.Request) {
@@ -963,6 +1045,27 @@ func newID() string {
 	return hex.EncodeToString(buf[:])
 }
 
+func defaultIncludeDir(root string) string {
+	parent := filepath.Dir(filepath.Clean(root))
+	candidates := []string{
+		filepath.Join(parent, "ivy-lang-examples", "ivy", "include"),
+		filepath.Join(parent, "pyivy", "ivy", "ivy", "include"),
+		filepath.Join(root, "ivy-lang-examples", "ivy", "include"),
+	}
+	if home := os.Getenv("HOME"); home != "" {
+		candidates = append(candidates,
+			filepath.Join(home, "ivy", "ivy-lang-examples", "ivy", "include"),
+			filepath.Join(home, "ivy", "pyivy", "ivy", "ivy", "include"),
+		)
+	}
+	for _, candidate := range candidates {
+		if info, err := os.Stat(candidate); err == nil && info.IsDir() {
+			return candidate
+		}
+	}
+	return filepath.Join(parent, "ivy-lang-examples", "ivy", "include")
+}
+
 func defaultGoivyRoot() string {
 	if wd, err := os.Getwd(); err == nil {
 		if looksLikeGoivyRoot(wd) {
@@ -1114,6 +1217,53 @@ function writeBytes(exports, memory, bytes) {
   return ptr;
 }
 
+function includeDirectoryFromTree(wasiShim, tree) {
+  const root = { dirs: new Map(), files: new Map() };
+
+  function childDir(parent, name) {
+    let dir = parent.dirs.get(name);
+    if (!dir) {
+      dir = { dirs: new Map(), files: new Map() };
+      parent.dirs.set(name, dir);
+    }
+    return dir;
+  }
+
+  for (const file of tree.files || []) {
+    const parts = String(file.path || '').split('/').filter(Boolean);
+    if (!parts.length) {
+      continue;
+    }
+    const filename = parts.pop();
+    let dir = root;
+    for (const part of parts) {
+      dir = childDir(dir, part);
+    }
+    dir.files.set(filename, textEncoder.encode(String(file.data || '')));
+  }
+
+  function materialize(dir) {
+    const entries = [];
+    for (const [name, child] of Array.from(dir.dirs.entries()).sort()) {
+      entries.push([name, materialize(child)]);
+    }
+    for (const [name, bytes] of Array.from(dir.files.entries()).sort()) {
+      entries.push([name, new wasiShim.File(bytes, { readonly: true })]);
+    }
+    return new wasiShim.Directory(entries);
+  }
+
+  return materialize(root);
+}
+
+async function loadIncludeDirectory(wasiShim, assetBaseURL) {
+  const response = await fetch(assetBaseURL + '/ivy-include-tree.json', { cache: 'no-store' });
+  if (!response.ok) {
+    throw new Error('could not fetch /ivy-include-tree.json: HTTP ' + response.status);
+  }
+  return includeDirectoryFromTree(wasiShim, await response.json());
+}
+
 self.onmessage = async (event) => {
   const command = event.data;
   let z3;
@@ -1148,6 +1298,7 @@ self.onmessage = async (event) => {
     const emitStderr = (data) => {
       self.postMessage({ type: 'stream', fd: 2, data: stderrDecoder.decode(data, { stream: true }) });
     };
+    const includeDir = await loadIncludeDirectory(wasiShim, assetBaseURL);
     const wasi = new wasiShim.WASI(
       ['goivy_check_wasip1'],
       [],
@@ -1155,7 +1306,7 @@ self.onmessage = async (event) => {
         new wasiShim.OpenFile(new wasiShim.File(new Uint8Array())),
         new wasiShim.ConsoleStdout(emitStdout),
         new wasiShim.ConsoleStdout(emitStderr),
-        new wasiShim.PreopenDirectory('.', []),
+        new wasiShim.PreopenDirectory('.', [['include', includeDir]]),
       ],
     );
 
