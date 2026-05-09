@@ -118,10 +118,14 @@ type job struct {
 	app        *app
 	client     *wsClient
 
-	pyLines      chan lineEvent
-	browserLines chan lineEvent
-	browserBuf   streamLineBuffer
-	compareDone  chan struct{}
+	pyLines        chan lineEvent
+	browserLines   chan lineEvent
+	browserBuf     streamLineBuffer
+	compareDone    chan struct{}
+	browserLog     *os.File
+	pyLog          *os.File
+	browserLogPath string
+	pyLogPath      string
 
 	mu           sync.Mutex
 	status       string
@@ -155,6 +159,8 @@ type jobSnapshot struct {
 	MismatchAt  *int              `json:"mismatch_at,omitempty"`
 	BrowserCode int               `json:"browser_code,omitempty"`
 	PythonError string            `json:"python_error,omitempty"`
+	BrowserLog  string            `json:"browser_log,omitempty"`
+	PythonLog   string            `json:"python_log,omitempty"`
 	Tail        []string          `json:"tail,omitempty"`
 }
 
@@ -450,6 +456,9 @@ func (a *app) startGoivyCheck(c *wsClient, req goivyCheckRequest) (*job, error) 
 	}
 
 	j := newJob(a, c, req)
+	if err := j.openXTraceLogs(); err != nil {
+		return nil, err
+	}
 	a.addJob(j)
 	go j.compareLoop()
 	go j.runPythonIvyCheck()
@@ -496,6 +505,48 @@ func newJob(a *app, c *wsClient, req goivyCheckRequest) *job {
 		browserLines: make(chan lineEvent, 8192),
 		compareDone:  make(chan struct{}),
 		status:       "running",
+	}
+}
+
+func (j *job) openXTraceLogs() error {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	browserPath := filepath.Join(cwd, "browser.xtrace.log")
+	pyPath := filepath.Join(cwd, "py.xtrace.log")
+	browserLog, err := os.Create(browserPath)
+	if err != nil {
+		return fmt.Errorf("create %s: %w", browserPath, err)
+	}
+	pyLog, err := os.Create(pyPath)
+	if err != nil {
+		_ = browserLog.Close()
+		return fmt.Errorf("create %s: %w", pyPath, err)
+	}
+
+	j.browserLog = browserLog
+	j.pyLog = pyLog
+	j.browserLogPath = browserPath
+	j.pyLogPath = pyPath
+	log.Printf("writing browser XTRACE log to %s", browserPath)
+	log.Printf("writing python XTRACE log to %s", pyPath)
+	return nil
+}
+
+func (j *job) closeXTraceLogs() {
+	if j.browserLog != nil {
+		if err := j.browserLog.Close(); err != nil {
+			log.Printf("close %s: %v", j.browserLogPath, err)
+		}
+		j.browserLog = nil
+	}
+	if j.pyLog != nil {
+		if err := j.pyLog.Close(); err != nil {
+			log.Printf("close %s: %v", j.pyLogPath, err)
+		}
+		j.pyLog = nil
 	}
 }
 
@@ -564,6 +615,7 @@ func (j *job) runPythonIvyCheck() {
 }
 
 func (j *job) compareLoop() {
+	defer j.closeXTraceLogs()
 	defer close(j.compareDone)
 	for {
 		browser, browserOK := j.nextXTrace("browser", j.browserLines)
@@ -594,12 +646,37 @@ func (j *job) compareLoop() {
 func (j *job) nextXTrace(side string, ch <-chan lineEvent) (string, bool) {
 	for ev := range ch {
 		line := xtracer.NormalizeLine(ev.Line)
+		j.writeXTraceLogLine(side, line)
 		j.remember(side, line)
 		if strings.HasPrefix(line, "XTRACE:") {
 			return line, true
 		}
 	}
 	return "", false
+}
+
+func (j *job) writeXTraceLogLine(side, line string) {
+	var f *os.File
+	var path string
+	switch side {
+	case "browser":
+		f = j.browserLog
+		path = j.browserLogPath
+	case "python":
+		f = j.pyLog
+		path = j.pyLogPath
+	default:
+		return
+	}
+	if f == nil {
+		return
+	}
+	if !strings.HasSuffix(line, "\n") {
+		line += "\n"
+	}
+	if _, err := io.WriteString(f, line); err != nil {
+		j.fail(fmt.Sprintf("write %s: %v", path, err))
+	}
 }
 
 func (j *job) addBrowserData(fd int, data string) {
@@ -721,6 +798,8 @@ func (j *job) snapshot() jobSnapshot {
 		MismatchAt:  copyIntPtr(j.mismatchAt),
 		BrowserCode: j.browserCode,
 		PythonError: j.pyErr,
+		BrowserLog:  j.browserLogPath,
+		PythonLog:   j.pyLogPath,
 		Tail:        append([]string(nil), j.tail...),
 	}
 }
