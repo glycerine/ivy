@@ -2,6 +2,12 @@
 
 package main
 
+// This is not a second goivy_check CLI and not an additional Go Ivy runtime.
+// Big Go needs a package main as the build root for an exporting wasip1 module;
+// this tiny adapter is that root. The produced artifact is the single browser
+// Go Ivy wasm blob that goldweb loads, containing goivy plus these exported
+// in-memory command functions.
+
 import (
 	"encoding/json"
 	"fmt"

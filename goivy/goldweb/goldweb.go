@@ -320,6 +320,18 @@ func (a *app) handleWSMessage(c *wsClient, data []byte) {
 }
 
 func (a *app) handleGoivyCheck(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		writeJSON(w, http.StatusOK, map[string]interface{}{
+			"status":  "ready",
+			"message": "POST a JSON body to start a browser-backed goivy_check run.",
+			"example": goivyCheckRequest{
+				Filename: "browser_input.ivy",
+				Spec:     "#lang ivy1.7\n",
+				Params:   map[string]string{"isolate": "name"},
+			},
+		})
+		return
+	}
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
