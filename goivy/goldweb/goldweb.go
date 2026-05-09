@@ -483,6 +483,18 @@ func (a *app) handleWSMessage(c *wsClient, data []byte) {
 		}
 		j.fail("browser error: " + msg.Error)
 		j.setBrowserDone(msg.Code)
+	case "cancel":
+		j := a.lookupJob(msg.ID)
+		if j == nil {
+			log.Printf("cancel for unknown job %q", msg.ID)
+			return
+		}
+		reason := msg.Message
+		if reason == "" {
+			reason = "browser requested stop"
+		}
+		log.Printf("browser requested cancel for job %s: %s", msg.ID, reason)
+		j.cancel(reason)
 	default:
 		log.Printf("unknown websocket message type %q", msg.Type)
 	}
@@ -802,6 +814,20 @@ func (j *job) cancelPython() {
 	if cancel != nil {
 		cancel()
 	}
+}
+
+func (j *job) cancel(reason string) {
+	if reason == "" {
+		reason = "cancelled"
+	}
+	j.mu.Lock()
+	if j.status == "running" {
+		j.status = "cancelled"
+		j.message = reason
+	}
+	j.mu.Unlock()
+	j.cancelPython()
+	j.setBrowserDone(-1)
 }
 
 func (j *job) fail(msg string) {
@@ -1151,6 +1177,10 @@ const indexHTML = `<!doctype html>
       padding: 0.2rem 0.5rem;
     }
     button:active { background: #d9e2ec; }
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
     .log-head strong { font-size: 0.9rem; }
     .log-head span { color: #52606d; font-size: 0.8rem; }
     #stream-log {
@@ -1192,6 +1222,7 @@ const indexHTML = `<!doctype html>
       <strong>Browser stdout/stderr sent to goldweb</strong>
       <div class="log-actions">
         <button id="copy-log" type="button">Copy visible log</button>
+        <button id="stop-job" type="button" disabled>Stop job</button>
         <span>rolling local window; full stream goes over the websocket</span>
       </div>
     </div>
@@ -1369,6 +1400,7 @@ const stderrBytesEl = document.getElementById('stderr-bytes');
 const xtraceCountEl = document.getElementById('xtrace-count');
 const streamLogEl = document.getElementById('stream-log');
 const copyLogEl = document.getElementById('copy-log');
+const stopJobEl = document.getElementById('stop-job');
 const lineNumberEl = document.getElementById('line-number');
 const workerSource = document.getElementById('worker-source').textContent;
 const workers = new Map();
@@ -1379,6 +1411,8 @@ let stdoutBytes = 0;
 let stderrBytes = 0;
 let xtraceCount = 0;
 let visibleLineNumber = 0;
+let activeJobID = '';
+let activeWS = null;
 
 function log(message) {
   appendVisibleLog('[goldweb] ' + message + '\n');
@@ -1401,6 +1435,37 @@ function updateCounters() {
   stderrBytesEl.textContent = String(stderrBytes);
   xtraceCountEl.textContent = String(xtraceCount);
   lineNumberEl.textContent = 'last line number: ' + visibleLineNumber;
+}
+
+function setActiveJob(id, ws) {
+  activeJobID = id || '';
+  activeWS = activeJobID ? ws : null;
+  stopJobEl.disabled = activeJobID === '';
+}
+
+function clearActiveJob(id) {
+  if (!id || activeJobID === id) {
+    setActiveJob('', null);
+  }
+}
+
+function terminateJob(id) {
+  const running = workers.get(id);
+  if (!running) {
+    clearActiveJob(id);
+    return false;
+  }
+  running.worker.terminate();
+  URL.revokeObjectURL(running.url);
+  workers.delete(id);
+  clearActiveJob(id);
+  return true;
+}
+
+function terminateAllJobs() {
+  for (const id of Array.from(workers.keys())) {
+    terminateJob(id);
+  }
 }
 
 function showStream(fd, data) {
@@ -1448,6 +1513,23 @@ copyLogEl.addEventListener('click', async () => {
   }
 });
 
+stopJobEl.addEventListener('click', () => {
+  const id = activeJobID;
+  const ws = activeWS;
+  if (!id) {
+    return;
+  }
+  const stopped = terminateJob(id);
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({
+      type: 'cancel',
+      id,
+      message: 'browser stop button'
+    }));
+  }
+  log((stopped ? 'stop requested for ' : 'stop requested for already-finished ') + id);
+});
+
 function connect() {
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
   const ws = new WebSocket(proto + '//' + location.host + '/ws');
@@ -1459,10 +1541,7 @@ function connect() {
 
   ws.onclose = () => {
     statusEl.textContent = 'disconnected; retrying';
-    for (const worker of workers.values()) {
-      worker.terminate();
-    }
-    workers.clear();
+    terminateAllJobs();
     setTimeout(connect, 1000);
   };
 
@@ -1477,10 +1556,8 @@ function connect() {
       return;
     }
     if (msg.type === 'cancel') {
-      const worker = workers.get(msg.id);
-      if (worker) {
-        worker.terminate();
-        workers.delete(msg.id);
+      const stopped = terminateJob(msg.id);
+      if (stopped) {
         log('cancelled ' + msg.id + ': ' + (msg.message || ''));
       }
       return;
@@ -1505,7 +1582,8 @@ function runGoivyCheck(ws, command) {
   log('starting goivy_check job ' + command.id + ' filename=' + command.filename);
   const url = URL.createObjectURL(new Blob([workerSource], { type: 'text/javascript' }));
   const worker = new Worker(url);
-  workers.set(command.id, worker);
+  workers.set(command.id, { worker, url });
+  setActiveJob(command.id, ws);
 
   worker.onmessage = (event) => {
     const msg = Object.assign({ id: command.id }, event.data);
@@ -1519,9 +1597,7 @@ function runGoivyCheck(ws, command) {
       updateCounters();
     }
     if (msg.type === 'done' || msg.type === 'error') {
-      workers.delete(command.id);
-      URL.revokeObjectURL(url);
-      worker.terminate();
+      terminateJob(command.id);
       if (msg.type === 'done') {
         log('finished ' + command.id + ' code=' + msg.code);
       } else {
@@ -1539,9 +1615,7 @@ function runGoivyCheck(ws, command) {
       id: command.id,
       error: error.message || String(error)
     }));
-    workers.delete(command.id);
-    URL.revokeObjectURL(url);
-    worker.terminate();
+    terminateJob(command.id);
   };
 
   worker.postMessage(command);
