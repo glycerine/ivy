@@ -402,4 +402,4 @@ cleardb:
 goldweb: goivy-check-js-wasm vendor-go-wasm-exec-js
 	if [ -f py.xtrace.log ]; then mv py.xtrace.log py.xtrace.log.prev; fi
 	if [ -f browser.xtrace.log ]; then mv browser.xtrace.log browser.xtrace.log.prev; fi
-	go run ./goldweb -goivy-runtime js -goivy-wasm $(CURDIR)/$(GOIVY_CHECK_JS_WASM) ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+	go run ./goldweb -goivy-runtime js -goivy-wasm $(CURDIR)/$(GOIVY_CHECK_JS_WASM) ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.goldweb
