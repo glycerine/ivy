@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build tr trt vs golden setup this bootstrap goldweb FORCE
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb FORCE
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -29,6 +29,15 @@ TINYGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-tinygo-wasip1-probe.wasm
 BIGGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-biggo-wasip1-probe.wasm
 GOIVY_CHECK_WASIP1_WASM := $(Z3_WEBVUE_STATIC)/goivy-check-wasip1.wasm
 SMT_WASIP1_ROUNDTRIP_WASM := $(Z3_WEBVUE_STATIC)/smt-wasip1-roundtrip.wasm
+WAZ_MEM_SPEC ?= $(HOME)/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+WAZ_MEM_WASM ?= $(GOIVY_CHECK_WASIP1_WASM)
+WAZ_MEM_STDOUT ?= $(CURDIR)/wazero.browser.xtrace.log
+WAZ_MEM_STDERR ?= $(CURDIR)/wazero.browser.stderr.log
+WAZ_MEM_GC_HEAP_LIMIT ?=
+WAZ_CLI_MEM_WASM ?= /private/tmp/goivy-check-cli-wasip1.wasm
+WAZ_CLI_MEM_STDOUT ?= $(CURDIR)/wazero.cli.xtrace.log
+WAZ_CLI_MEM_STDERR ?= $(CURDIR)/wazero.cli.stderr.log
+WAZ_CLI_MEM_GC_HEAP_LIMIT ?=
 EMSDK_ROOT          ?= /Users/jaten/go/src/github.com/emscripten-core/emsdk
 EMSDK_ENV           ?= $(EMSDK_ROOT)/emsdk_env.sh
 EMCC                ?= $(EMSDK_ROOT)/upstream/emscripten/emcc
@@ -198,7 +207,7 @@ biggo-ivy-wasip1-probe-wasm: $(BIGGO_IVY_WASIP1_PROBE_WASM)
 FORCE:
 
 $(GOIVY_CHECK_WASIP1_WASM): FORCE
-	GOOS=wasip1 GOARCH=wasm go build -a -o $(GOIVY_CHECK_WASIP1_WASM) ./cmd/goivy_check_wasip1
+	GOOS=wasip1 GOARCH=wasm go build -a -buildmode=c-shared -o $(GOIVY_CHECK_WASIP1_WASM) ./cmd/goivy_check_wasip1
 
 goivy-check-wasip1-wasm: $(GOIVY_CHECK_WASIP1_WASM)
 
@@ -219,6 +228,13 @@ test-smt-wasip1-browser:
 
 test-smt-wasip1-browser-build: z3-wasm-api $(WEBVUE_PLAYWRIGHT_BIN)
 	go test -tags web ./smt -run TestSolverBoolRoundTrip -count=1 -v
+
+waz-mem-test: goivy-check-wasip1-wasm
+	GOIVY_WAZERO_WASM=$(WAZ_MEM_WASM) GOIVY_WAZERO_SPEC=$(WAZ_MEM_SPEC) GOIVY_WAZERO_STDOUT=$(WAZ_MEM_STDOUT) GOIVY_WAZERO_STDERR=$(WAZ_MEM_STDERR) GOIVY_WAZERO_GC_HEAP_LIMIT="$(WAZ_MEM_GC_HEAP_LIMIT)" go test ./goldweb -run TestGoIvyCheckWasip1UnderWazero -count=1 -v
+
+waz-cli-mem-test:
+	GOOS=wasip1 GOARCH=wasm go build -a -o $(WAZ_CLI_MEM_WASM) ./cmd/goivy_check
+	GOIVY_WAZERO_CLI_WASM=$(WAZ_CLI_MEM_WASM) GOIVY_WAZERO_CLI_SPEC=$(WAZ_MEM_SPEC) GOIVY_WAZERO_CLI_STDOUT=$(WAZ_CLI_MEM_STDOUT) GOIVY_WAZERO_CLI_STDERR=$(WAZ_CLI_MEM_STDERR) GOIVY_WAZERO_CLI_GC_HEAP_LIMIT="$(WAZ_CLI_MEM_GC_HEAP_LIMIT)" go test ./goldweb -run TestGoIvyCheckCLIWasip1UnderWazero -count=1 -v
 
 Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 

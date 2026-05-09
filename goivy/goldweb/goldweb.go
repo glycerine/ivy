@@ -1908,9 +1908,15 @@ self.onmessage = async (event) => {
       throw new Error('Go Ivy wasm does not export memory');
     }
 
-    const startCode = wasi.start(instance);
-    if (startCode !== 0) {
-      throw new Error('Go Ivy wasm _start exited with code ' + startCode);
+    if (typeof instance.exports._initialize === 'function') {
+      wasi.initialize(instance);
+    } else if (typeof instance.exports._start === 'function') {
+      const startCode = wasi.start(instance);
+      if (startCode !== 0) {
+        throw new Error('Go Ivy wasm _start exited with code ' + startCode);
+      }
+    } else {
+      throw new Error('Go Ivy wasm exports neither _initialize nor _start');
     }
 
     const prepare = requireExport(instance.exports, 'goivy_check_prepare');

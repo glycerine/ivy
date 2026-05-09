@@ -90,28 +90,31 @@ func TestGoIvyCheckWasip1UnderWazero(t *testing.T) {
 	if err := instantiateZ3Stubs(ctx, rt, compiled); err != nil {
 		t.Fatalf("instantiate smt_z3 stubs: %v", err)
 	}
-	wasiBuilder := rt.NewHostModuleBuilder(wasi_snapshot_preview1.ModuleName)
-	wasi_snapshot_preview1.NewFunctionExporter().ExportFunctions(wasiBuilder)
-	wasiBuilder.NewFunctionBuilder().
-		WithFunc(func(context.Context, api.Module, uint32) {}).
-		Export("proc_exit")
-	if _, err := wasiBuilder.Instantiate(ctx); err != nil {
-		t.Fatalf("instantiate WASI host module: %v", err)
-	}
+	wasi_snapshot_preview1.MustInstantiate(ctx, rt)
 
-	mod, err := rt.InstantiateModule(ctx, compiled, wazero.NewModuleConfig().
+	moduleConfig := wazero.NewModuleConfig().
 		WithName("goivy_check_wasip1").
 		WithArgs("goivy_check_wasip1").
 		WithEnv("GOIVY_INCLUDE", "include").
 		WithEnv("GOIVY_WASM_HEAPPROFILE_INTERVAL", "0").
-		WithEnv("GOIVY_WASM_XTRACE_GC_HEAP_LIMIT", "0").
 		WithFSConfig(wazero.NewFSConfig().WithReadOnlyDirMount(includeDir, "include")).
 		WithStdout(stdout).
-		WithStderr(stderr))
+		WithStderr(stderr)
+	if gcHeapLimit := os.Getenv("GOIVY_WAZERO_GC_HEAP_LIMIT"); gcHeapLimit != "" {
+		moduleConfig = moduleConfig.WithEnv("GOIVY_WASM_XTRACE_GC_HEAP_LIMIT", gcHeapLimit)
+	}
+	mod, err := rt.InstantiateModule(ctx, compiled, moduleConfig)
 	if err != nil {
 		t.Fatalf("instantiate wasm: %v", err)
 	}
 	defer mod.Close(ctx)
+	initialize := mod.ExportedFunction("_initialize")
+	if initialize == nil {
+		t.Fatalf("%s is not a wasip1 reactor: missing _initialize; rebuild with -buildmode=c-shared", wasmPath)
+	}
+	if _, err := initialize.Call(ctx); err != nil {
+		t.Fatalf("_initialize trapped: %v", err)
+	}
 
 	meta, err := json.Marshal(wazeroCheckMeta{
 		Filename: specPath,
@@ -202,17 +205,20 @@ func TestGoIvyCheckCLIWasip1UnderWazero(t *testing.T) {
 	wasi_snapshot_preview1.MustInstantiate(ctx, rt)
 
 	start := time.Now()
-	_, err = rt.InstantiateModule(ctx, compiled, wazero.NewModuleConfig().
+	moduleConfig := wazero.NewModuleConfig().
 		WithName("goivy_check_cli_wasip1").
 		WithArgs("goivy_check", specPath).
 		WithEnv("GOIVY_INCLUDE", includeDir).
 		WithEnv("GOIVY_WASM_HEAPPROFILE_INTERVAL", "0").
-		WithEnv("GOIVY_WASM_XTRACE_GC_HEAP_LIMIT", "0").
 		WithFSConfig(wazero.NewFSConfig().
 			WithReadOnlyDirMount("/Users/jaten/ivy", "/Users/jaten/ivy").
 			WithReadOnlyDirMount(includeDir, includeDir)).
 		WithStdout(stdout).
-		WithStderr(stderr))
+		WithStderr(stderr)
+	if gcHeapLimit := os.Getenv("GOIVY_WAZERO_CLI_GC_HEAP_LIMIT"); gcHeapLimit != "" {
+		moduleConfig = moduleConfig.WithEnv("GOIVY_WASM_XTRACE_GC_HEAP_LIMIT", gcHeapLimit)
+	}
+	_, err = rt.InstantiateModule(ctx, compiled, moduleConfig)
 	t.Logf("cli _start elapsed=%s stdout=%s stderr=%s", time.Since(start), stdoutPath, stderrPath)
 	if err != nil {
 		t.Fatalf("instantiate/run CLI wasm: %v", err)
