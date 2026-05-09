@@ -21,8 +21,9 @@ fi
   -Lbuild \
   build/libz3.a \
   -sEXPORTED_FUNCTIONS="$EXPORTED_FUNCS" \
-  -sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","UTF8ToString","stringToUTF8"]' \
+  -sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","UTF8ToString","stringToUTF8","addFunction","removeFunction"]' \
   -sALLOW_MEMORY_GROWTH=1 \
+  -sALLOW_TABLE_GROWTH=1 \
   -sMODULARIZE=1 \
   -sEXPORT_NAME="initZ3" \
   -o "build/$Z3_API_BASENAME.js"

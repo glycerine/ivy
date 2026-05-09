@@ -3,6 +3,7 @@ import { functions } from './parse-api';
 const extras = [
   '_malloc',
   '_free',
+  '_Z3_set_error_handler',
 ];
 
 const legacyInterpolationExports = [
