@@ -942,9 +942,7 @@ func (ctx *Z3Context) NewZ3Solver() *Z3Solver {
 	var s *Z3Solver
 	ctx.do(func() {
 		cs := C.Z3_mk_solver(ctx.c)
-		ctx.checkError("solver")
 		C.Z3_solver_inc_ref(ctx.c, cs)
-		ctx.checkError("solver inc_ref")
 		s = &Z3Solver{ctx: ctx, c: cs}
 	})
 	//runtime.SetFinalizer(s, func(s *Z3Solver) {
@@ -959,7 +957,6 @@ func (ctx *Z3Context) NewZ3Solver() *Z3Solver {
 func (s *Z3Solver) Assert(e Z3Expr) {
 	s.ctx.do(func() {
 		C.Z3_solver_assert(s.ctx.c, s.c, e.c)
-		s.ctx.checkError("solver assert")
 	})
 	runtime.KeepAlive(e)
 }
@@ -969,7 +966,6 @@ func (s *Z3Solver) Check() Z3CheckResult {
 	var r Z3CheckResult
 	s.ctx.do(func() {
 		res := C.Z3_solver_check(s.ctx.c, s.c)
-		s.ctx.checkError("solver check")
 		r = Z3CheckResult(res)
 	})
 	runtime.KeepAlive(s)
