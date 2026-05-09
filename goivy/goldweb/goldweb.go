@@ -1716,7 +1716,11 @@ const workerSource = document.getElementById('worker-source').textContent;
 const workers = new Map();
 const uiLineBuffers = new Map();
 const uiTextEncoder = new TextEncoder();
-const maxVisibleLogLines = 8000;
+const preserveFirstStreamLines = 30;
+const maxRollingVisibleLogLines = 8000;
+const lineNumberWidth = 10;
+const unnumberedPrefix = ' '.repeat(lineNumberWidth);
+const preservedVisibleLogLines = [];
 const visibleLogLines = [];
 const pendingVisibleLogLines = [];
 let stdoutBytes = 0;
@@ -1728,9 +1732,21 @@ let activeWS = null;
 let displaySkip = 0;
 let displaySkipCountdown = 0;
 let visibleLogRenderScheduled = false;
+let visibleLogDirty = false;
 
 function log(message) {
   appendVisibleLog('[goldweb] ' + message + '\n', true);
+}
+
+function formatVisibleLogLine(text, lineNumber) {
+  const prefix = Number.isInteger(lineNumber)
+    ? String(lineNumber).padStart(lineNumberWidth, ' ')
+    : unnumberedPrefix;
+  return prefix + ' ' + text;
+}
+
+function splitVisibleLogText(text) {
+  return String(text).match(/[^\n]*\n|[^\n]+/g) || [];
 }
 
 function shouldDisplayOutputLine() {
@@ -1745,11 +1761,21 @@ function shouldDisplayOutputLine() {
   return false;
 }
 
-function appendVisibleLog(text, force) {
-  if (!force && !shouldDisplayOutputLine()) {
+function appendVisibleLog(text, force, lineNumber) {
+  const pieces = splitVisibleLogText(text);
+  const preserve = Number.isInteger(lineNumber) && lineNumber < preserveFirstStreamLines;
+  if (!force && !preserve && !shouldDisplayOutputLine()) {
     return;
   }
-  pendingVisibleLogLines.push(text);
+  for (const piece of pieces) {
+    const formatted = formatVisibleLogLine(piece, lineNumber);
+    if (preserve) {
+      preservedVisibleLogLines.push(formatted);
+    } else {
+      pendingVisibleLogLines.push(formatted);
+    }
+  }
+  visibleLogDirty = true;
   scheduleVisibleLogRender();
 }
 
@@ -1765,7 +1791,7 @@ function scheduleVisibleLogRender() {
 }
 
 function renderVisibleLog(forceTail) {
-  if (!pendingVisibleLogLines.length) {
+  if (!pendingVisibleLogLines.length && !visibleLogDirty) {
     return;
   }
   const distanceFromBottom = streamLogEl.scrollHeight - streamLogEl.scrollTop - streamLogEl.clientHeight;
@@ -1774,13 +1800,14 @@ function renderVisibleLog(forceTail) {
     visibleLogLines.push(line);
   }
   pendingVisibleLogLines.length = 0;
-  if (visibleLogLines.length > maxVisibleLogLines) {
-    visibleLogLines.splice(0, visibleLogLines.length - maxVisibleLogLines);
+  if (visibleLogLines.length > maxRollingVisibleLogLines) {
+    visibleLogLines.splice(0, visibleLogLines.length - maxRollingVisibleLogLines);
   }
-  streamLogEl.textContent = visibleLogLines.join('');
+  streamLogEl.textContent = preservedVisibleLogLines.concat(visibleLogLines).join('');
   if (shouldTail) {
     streamLogEl.scrollTop = streamLogEl.scrollHeight;
   }
+  visibleLogDirty = false;
 }
 
 function flushVisibleLog(forceTail) {
@@ -1791,7 +1818,7 @@ function updateCounters() {
   stdoutBytesEl.textContent = String(stdoutBytes);
   stderrBytesEl.textContent = String(stderrBytes);
   xtraceCountEl.textContent = String(xtraceCount);
-  lineNumberEl.textContent = 'last line number: ' + visibleLineNumber;
+  lineNumberEl.textContent = 'last line number: ' + (visibleLineNumber > 0 ? visibleLineNumber - 1 : -1);
 }
 
 function setActiveJob(id, ws) {
@@ -1874,14 +1901,14 @@ function showStream(fd, data) {
     if (line.startsWith('XTRACE:')) {
       xtraceCount += 1;
     }
-    appendVisibleLog('[' + label + '] ' + line, false);
+    appendVisibleLog('[' + label + '] ' + line, false, visibleLineNumber);
     visibleLineNumber += 1;
     pending = pending.slice(idx + 1);
     idx = pending.indexOf('\n');
   }
   uiLineBuffers.set(key, pending);
   if (pending.length > 4096) {
-    appendVisibleLog('[' + label + '] ' + pending + '\n', false);
+    appendVisibleLog('[' + label + '] ' + pending + '\n', false, visibleLineNumber);
     visibleLineNumber += 1;
     uiLineBuffers.set(key, '');
   }
@@ -1986,8 +2013,10 @@ function runGoivyCheck(ws, command) {
   xtraceCount = 0;
   visibleLineNumber = 0;
   uiLineBuffers.clear();
+  preservedVisibleLogLines.length = 0;
   visibleLogLines.length = 0;
   pendingVisibleLogLines.length = 0;
+  visibleLogDirty = false;
   displaySkipCountdown = 0;
   streamLogEl.textContent = '';
   updateCounters();
@@ -2005,7 +2034,6 @@ function runGoivyCheck(ws, command) {
     }
     if (msg.type === 'error') {
       appendVisibleLog('[worker error] ' + (msg.error || 'unknown worker error') + '\n', true);
-      visibleLineNumber += 1;
       updateCounters();
     }
     if (msg.type === 'done' || msg.type === 'error') {
@@ -2020,7 +2048,6 @@ function runGoivyCheck(ws, command) {
 
   worker.onerror = (error) => {
     appendVisibleLog('[worker onerror] ' + (error.message || String(error)) + '\n', true);
-    visibleLineNumber += 1;
     updateCounters();
     ws.send(JSON.stringify({
       type: 'error',
