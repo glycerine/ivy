@@ -1444,6 +1444,22 @@ const indexHTML = `<!doctype html>
       display: flex;
       gap: 0.6rem;
     }
+    .display-control {
+      align-items: center;
+      color: #52606d;
+      display: inline-flex;
+      font-size: 0.8rem;
+      gap: 0.35rem;
+    }
+    #display-skip { width: 10rem; }
+    #display-skip-value {
+      color: #102a43;
+      display: inline-block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-variant-numeric: tabular-nums;
+      min-width: 4ch;
+      text-align: right;
+    }
     button {
       background: #ffffff;
       border: 1px solid #9fb3c8;
@@ -1499,6 +1515,11 @@ const indexHTML = `<!doctype html>
       <div class="log-actions">
         <button id="copy-log" type="button">Copy visible log</button>
         <button id="stop-job" type="button" disabled>Stop job</button>
+        <label class="display-control" title="Show one output line, then skip this many output lines">
+          <span>skip</span>
+          <input id="display-skip" type="range" min="0" max="1000" step="1" value="0">
+          <output id="display-skip-value" for="display-skip">0</output>
+        </label>
         <span>rolling local window; full stream goes over the websocket</span>
       </div>
     </div>
@@ -1688,33 +1709,82 @@ const xtraceCountEl = document.getElementById('xtrace-count');
 const streamLogEl = document.getElementById('stream-log');
 const copyLogEl = document.getElementById('copy-log');
 const stopJobEl = document.getElementById('stop-job');
+const displaySkipEl = document.getElementById('display-skip');
+const displaySkipValueEl = document.getElementById('display-skip-value');
 const lineNumberEl = document.getElementById('line-number');
 const workerSource = document.getElementById('worker-source').textContent;
 const workers = new Map();
 const uiLineBuffers = new Map();
 const uiTextEncoder = new TextEncoder();
-const maxVisibleLogBytes = 1024 * 1024;
+const maxVisibleLogLines = 8000;
+const visibleLogLines = [];
+const pendingVisibleLogLines = [];
 let stdoutBytes = 0;
 let stderrBytes = 0;
 let xtraceCount = 0;
 let visibleLineNumber = 0;
 let activeJobID = '';
 let activeWS = null;
+let displaySkip = 0;
+let displaySkipCountdown = 0;
+let visibleLogRenderScheduled = false;
 
 function log(message) {
-  appendVisibleLog('[goldweb] ' + message + '\n');
+  appendVisibleLog('[goldweb] ' + message + '\n', true);
 }
 
-function appendVisibleLog(text) {
-  const distanceFromBottom = streamLogEl.scrollHeight - streamLogEl.scrollTop - streamLogEl.clientHeight;
-  const shouldTail = distanceFromBottom < 8;
-  streamLogEl.textContent += text;
-  if (streamLogEl.textContent.length > maxVisibleLogBytes) {
-    streamLogEl.textContent = streamLogEl.textContent.slice(streamLogEl.textContent.length - maxVisibleLogBytes);
+function shouldDisplayOutputLine() {
+  if (displaySkip <= 0) {
+    return true;
   }
+  if (displaySkipCountdown <= 0) {
+    displaySkipCountdown = displaySkip;
+    return true;
+  }
+  displaySkipCountdown -= 1;
+  return false;
+}
+
+function appendVisibleLog(text, force) {
+  if (!force && !shouldDisplayOutputLine()) {
+    return;
+  }
+  pendingVisibleLogLines.push(text);
+  scheduleVisibleLogRender();
+}
+
+function scheduleVisibleLogRender() {
+  if (visibleLogRenderScheduled) {
+    return;
+  }
+  visibleLogRenderScheduled = true;
+  requestAnimationFrame(() => {
+    visibleLogRenderScheduled = false;
+    renderVisibleLog(false);
+  });
+}
+
+function renderVisibleLog(forceTail) {
+  if (!pendingVisibleLogLines.length) {
+    return;
+  }
+  const distanceFromBottom = streamLogEl.scrollHeight - streamLogEl.scrollTop - streamLogEl.clientHeight;
+  const shouldTail = forceTail || distanceFromBottom < 8;
+  for (const line of pendingVisibleLogLines) {
+    visibleLogLines.push(line);
+  }
+  pendingVisibleLogLines.length = 0;
+  if (visibleLogLines.length > maxVisibleLogLines) {
+    visibleLogLines.splice(0, visibleLogLines.length - maxVisibleLogLines);
+  }
+  streamLogEl.textContent = visibleLogLines.join('');
   if (shouldTail) {
     streamLogEl.scrollTop = streamLogEl.scrollHeight;
   }
+}
+
+function flushVisibleLog(forceTail) {
+  renderVisibleLog(forceTail);
 }
 
 function updateCounters() {
@@ -1756,10 +1826,12 @@ function terminateAllJobs() {
 }
 
 function scrollToStartOfLog() {
+  flushVisibleLog(false);
   streamLogEl.scrollTop = 0;
 }
 
 function scrollToEndOfLog() {
+  flushVisibleLog(true);
   streamLogEl.scrollTop = streamLogEl.scrollHeight;
 }
 
@@ -1802,14 +1874,14 @@ function showStream(fd, data) {
     if (line.startsWith('XTRACE:')) {
       xtraceCount += 1;
     }
-    appendVisibleLog('[' + label + '] ' + line);
+    appendVisibleLog('[' + label + '] ' + line, false);
     visibleLineNumber += 1;
     pending = pending.slice(idx + 1);
     idx = pending.indexOf('\n');
   }
   uiLineBuffers.set(key, pending);
   if (pending.length > 4096) {
-    appendVisibleLog('[' + label + '] ' + pending + '\n');
+    appendVisibleLog('[' + label + '] ' + pending + '\n', false);
     visibleLineNumber += 1;
     uiLineBuffers.set(key, '');
   }
@@ -1817,6 +1889,7 @@ function showStream(fd, data) {
 }
 
 copyLogEl.addEventListener('click', async () => {
+  flushVisibleLog(false);
   try {
     await navigator.clipboard.writeText(streamLogEl.textContent);
     log('copied visible log');
@@ -1828,6 +1901,12 @@ copyLogEl.addEventListener('click', async () => {
     selection.addRange(range);
     log('clipboard write failed; selected visible log instead');
   }
+});
+
+displaySkipEl.addEventListener('input', () => {
+  displaySkip = Number(displaySkipEl.value) || 0;
+  displaySkipCountdown = 0;
+  displaySkipValueEl.textContent = String(displaySkip);
 });
 
 stopJobEl.addEventListener('click', () => {
@@ -1907,6 +1986,9 @@ function runGoivyCheck(ws, command) {
   xtraceCount = 0;
   visibleLineNumber = 0;
   uiLineBuffers.clear();
+  visibleLogLines.length = 0;
+  pendingVisibleLogLines.length = 0;
+  displaySkipCountdown = 0;
   streamLogEl.textContent = '';
   updateCounters();
   log('starting goivy_check job ' + command.id + ' filename=' + command.filename);
@@ -1922,7 +2004,7 @@ function runGoivyCheck(ws, command) {
       showStream(msg.fd, msg.data);
     }
     if (msg.type === 'error') {
-      appendVisibleLog('[worker error] ' + (msg.error || 'unknown worker error') + '\n');
+      appendVisibleLog('[worker error] ' + (msg.error || 'unknown worker error') + '\n', true);
       visibleLineNumber += 1;
       updateCounters();
     }
@@ -1937,7 +2019,7 @@ function runGoivyCheck(ws, command) {
   };
 
   worker.onerror = (error) => {
-    appendVisibleLog('[worker onerror] ' + (error.message || String(error)) + '\n');
+    appendVisibleLog('[worker onerror] ' + (error.message || String(error)) + '\n', true);
     visibleLineNumber += 1;
     updateCounters();
     ws.send(JSON.stringify({
