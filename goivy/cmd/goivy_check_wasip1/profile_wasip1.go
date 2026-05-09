@@ -13,14 +13,9 @@ import (
 	"time"
 )
 
-// note that the following goldweb.heap_profile callback is
-// implemented inside the embedded worker JS
-// in goldweb.go (line 1787).
-
-//go:wasmimport goldweb heap_profile
-func goldwebHeapProfile(elapsedSeconds uint32, ptr *byte, len uint32)
-
 const defaultHeapProfileInterval = 10 * time.Second
+const heapProfileFD = uintptr(4)
+const heapProfileHeaderMagic = "GOLDWEB_HEAP_PROFILE_V1"
 
 func startHeapProfiler() func() {
 	interval := heapProfileInterval()
@@ -97,10 +92,22 @@ func writeHeapProfile(elapsedSeconds uint32) {
 	data := buf.Bytes()
 	fmt.Fprintf(os.Stderr, "[goivy wasm] heap_profile elapsed=%ds bytes=%d heap_alloc=%d heap_inuse=%d heap_sys=%d next_gc=%d num_gc=%d\n",
 		elapsedSeconds, len(data), stats.HeapAlloc, stats.HeapInuse, stats.HeapSys, stats.NextGC, stats.NumGC)
-	if len(data) == 0 {
-		goldwebHeapProfile(elapsedSeconds, nil, 0)
+	writeHeapProfileBytes(0, elapsedSeconds, data)
+}
+
+func writeHeapProfileBytes(kind uint32, value uint32, data []byte) {
+	f := os.NewFile(heapProfileFD, "goldweb-heap-profile")
+	if f == nil {
+		fmt.Fprintf(os.Stderr, "[goivy wasm] heap_profile fd %d unavailable\n", heapProfileFD)
 		return
 	}
-	goldwebHeapProfile(elapsedSeconds, &data[0], uint32(len(data)))
-	runtime.KeepAlive(data)
+	if _, err := fmt.Fprintf(f, "%s %d %d %d\n", heapProfileHeaderMagic, kind, value, len(data)); err != nil {
+		fmt.Fprintf(os.Stderr, "[goivy wasm] write heap profile header: %v\n", err)
+		return
+	}
+	if len(data) > 0 {
+		if _, err := f.Write(data); err != nil {
+			fmt.Fprintf(os.Stderr, "[goivy wasm] write heap profile body: %v\n", err)
+		}
+	}
 }

@@ -202,12 +202,11 @@ $(GOIVY_CHECK_WASIP1_WASM): FORCE
 
 goivy-check-wasip1-wasm: $(GOIVY_CHECK_WASIP1_WASM)
 
-z3-wasip1-browser-artifacts: z3-wasm-api tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm
+z3-wasip1-browser-artifacts: z3-wasm-api biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm
 
 test-z3-wasip1-browser:
 	@test -f $(Z3_WEBVUE_JS) || { echo "missing $(Z3_WEBVUE_JS); run make z3-wasm-api"; exit 1; }
 	@test -f $(Z3_WEBVUE_WASM) || { echo "missing $(Z3_WEBVUE_WASM); run make z3-wasm-api"; exit 1; }
-	@test -f $(TINYGO_IVY_WASIP1_PROBE_WASM) || { echo "missing $(TINYGO_IVY_WASIP1_PROBE_WASM); run make tinygo-ivy-wasip1-probe-wasm"; exit 1; }
 	@test -f $(BIGGO_IVY_WASIP1_PROBE_WASM) || { echo "missing $(BIGGO_IVY_WASIP1_PROBE_WASM); run make biggo-ivy-wasip1-probe-wasm"; exit 1; }
 	@test -x $(WEBVUE_PLAYWRIGHT_BIN) || { echo "missing $(WEBVUE_PLAYWRIGHT_BIN); run make webvue-setup"; exit 1; }
 	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/wasip1Z3Worker.browser.spec.js

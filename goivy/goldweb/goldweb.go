@@ -16,9 +16,9 @@ package main
 //   - goivy_check_write_meta(offset, packedBytes, n uint32) int32
 //   - goivy_check_run() int32
 //
-// It may also import goldweb.heap_profile(elapsedSeconds, ptr, len) or
-// goldweb.xtrace_heap_profile(xtraceIndex, ptr, len) to ship runtime/pprof heap
-// profiles back to this server during long conformance runs.
+// It may also write framed runtime/pprof heap profiles to WASI fd 4. This
+// keeps profile bytes out of stdout/stderr and avoids sharing Go heap pointers
+// with JavaScript.
 //
 // meta is JSON: {"filename":"browser_input.ivy","params":{"isolate":"x"}}.
 // The command writes its normal output to stdout/stderr; goldweb does not use a
@@ -1688,36 +1688,92 @@ function bytesToBase64(bytes) {
   return btoa(binary);
 }
 
-function postHeapProfile(memory, elapsedSeconds, ptr, len, xtraceIndex) {
-  if (!memory) {
-    throw new Error('goldweb.heap_profile called before Go wasm memory was available');
-  }
-  const n = len >>> 0;
-  const offset = ptr >>> 0;
-  const copy = new Uint8Array(n);
-  if (n > 0) {
-    copy.set(new Uint8Array(memory.buffer, offset, n));
-  }
-  memory = null; // don't let it linger on our stack.
-
+function postHeapProfileBytes(kind, value, bytes) {
   const chunkSize = 768 * 1024;
-  const chunkCount = Math.max(1, Math.ceil(copy.length / chunkSize));
+  const chunkCount = Math.max(1, Math.ceil(bytes.length / chunkSize));
   for (let i = 0; i < chunkCount; i += 1) {
     const start = i * chunkSize;
-    const end = Math.min(start + chunkSize, copy.length);
+    const end = Math.min(start + chunkSize, bytes.length);
     const message = {
       type: 'heap_profile',
-      elapsed_seconds: elapsedSeconds >>> 0,
+      elapsed_seconds: kind === 0 ? value >>> 0 : 0,
       chunk_index: i,
       chunk_count: chunkCount,
-      profile_size: copy.length,
-      data: bytesToBase64(copy.subarray(start, end))
+      profile_size: bytes.length,
+      data: bytesToBase64(bytes.subarray(start, end))
     };
-    if (Number.isInteger(xtraceIndex)) {
-      message.xtrace_index = xtraceIndex;
+    if (kind === 1) {
+      message.xtrace_index = value >>> 0;
     }
     self.postMessage(message);
   }
+}
+
+function concatBytes(a, b) {
+  if (!a || a.length === 0) {
+    return new Uint8Array(b);
+  }
+  if (!b || b.length === 0) {
+    return a;
+  }
+  const out = new Uint8Array(a.length + b.length);
+  out.set(a, 0);
+  out.set(b, a.length);
+  return out;
+}
+
+function makeHeapProfileFDParser() {
+  const magic = 'GOLDWEB_HEAP_PROFILE_V1';
+  const decoder = new TextDecoder('utf-8', { fatal: false });
+  let buffer = new Uint8Array(0);
+  let current = null;
+
+  function consumePrefix(n) {
+    buffer = buffer.subarray(n);
+  }
+
+  function parseHeader() {
+    const newline = buffer.indexOf(10);
+    if (newline < 0) {
+      return false;
+    }
+    const line = decoder.decode(buffer.subarray(0, newline));
+    consumePrefix(newline + 1);
+    const parts = line.trim().split(/\s+/);
+    if (parts.length !== 4 || parts[0] !== magic) {
+      throw new Error('bad heap profile fd4 header: ' + line);
+    }
+    const kind = Number(parts[1]);
+    const value = Number(parts[2]);
+    const size = Number(parts[3]);
+    if (!Number.isSafeInteger(kind) || !Number.isSafeInteger(value) || !Number.isSafeInteger(size) || size < 0) {
+      throw new Error('bad heap profile fd4 numeric header: ' + line);
+    }
+    current = { kind, value, size };
+    return true;
+  }
+
+  function pump() {
+    for (;;) {
+      if (!current && !parseHeader()) {
+        return;
+      }
+      if (buffer.length < current.size) {
+        return;
+      }
+      const body = new Uint8Array(buffer.subarray(0, current.size));
+      consumePrefix(current.size);
+      postHeapProfileBytes(current.kind, current.value, body);
+      current = null;
+    }
+  }
+
+  return {
+    write(data) {
+      buffer = concatBytes(buffer, data);
+      pump();
+    },
+  };
 }
 
 function includeDirectoryFromTree(wasiShim, tree) {
@@ -1800,11 +1856,15 @@ self.onmessage = async (event) => {
 
     const stdoutDecoder = new TextDecoder('utf-8', { fatal: false });
     const stderrDecoder = new TextDecoder('utf-8', { fatal: false });
+    const heapProfileFD = makeHeapProfileFDParser();
     const emitStdout = (data) => {
       self.postMessage({ type: 'stream', fd: 1, data: stdoutDecoder.decode(data, { stream: true }) });
     };
     const emitStderr = (data) => {
       self.postMessage({ type: 'stream', fd: 2, data: stderrDecoder.decode(data, { stream: true }) });
+    };
+    const emitHeapProfile = (data) => {
+      heapProfileFD.write(data);
     };
     const includeTree = await loadIncludeTree(wasiShim, assetBaseURL, commandAssetVersion);
     const wasi = new wasiShim.WASI(
@@ -1818,19 +1878,12 @@ self.onmessage = async (event) => {
         new wasiShim.ConsoleStdout(emitStdout),
         new wasiShim.ConsoleStdout(emitStderr),
         new wasiShim.PreopenDirectory(includeTree.root, includeTree.directory.contents),
+        new wasiShim.ConsoleStdout(emitHeapProfile),
       ],
     );
 
     let wasmMemory;
     const imports = {
-      goldweb: {
-        heap_profile(elapsedSeconds, ptr, len) {
-          postHeapProfile(wasmMemory, elapsedSeconds, ptr, len);
-        },
-        xtrace_heap_profile(xtraceIndex, ptr, len) {
-          postHeapProfile(wasmMemory, 0, ptr, len, xtraceIndex);
-        },
-      },
       smt_z3: z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory }),
       wasi_snapshot_preview1: wasi.wasiImport,
     };

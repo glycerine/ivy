@@ -14,15 +14,14 @@ import (
 )
 
 const defaultGCHeapLimit = uint64(512 << 20)
+const heapProfileFD = uintptr(4)
+const heapProfileHeaderMagic = "GOLDWEB_HEAP_PROFILE_V1"
 
 var (
 	profileConfigOnce sync.Once
 	profileIndexes    map[int64]struct{}
 	gcHeapLimit       uint64
 )
-
-//go:wasmimport goldweb xtrace_heap_profile
-func goldwebXTraceHeapProfile(xtraceIndex uint32, ptr *byte, len uint32)
 
 func maybeWriteHeapProfile(traceIndex int64) {
 	profileConfigOnce.Do(loadProfileConfig)
@@ -44,12 +43,24 @@ func maybeWriteHeapProfile(traceIndex int64) {
 	data := buf.Bytes()
 	fmt.Printf("[at trace %v] memprof bytes = %d; HeapAlloc = %0.3f MB; HeapInuse = %0.3f MB\n",
 		traceIndex, len(data), float64(stats.HeapAlloc)/(1<<20), float64(stats.HeapInuse)/(1<<20))
-	if len(data) == 0 {
-		goldwebXTraceHeapProfile(uint32(traceIndex), nil, 0)
+	writeHeapProfileBytes(uint32(traceIndex), data)
+}
+
+func writeHeapProfileBytes(traceIndex uint32, data []byte) {
+	f := os.NewFile(heapProfileFD, "goldweb-heap-profile")
+	if f == nil {
+		fmt.Printf("[xtracer] heap profile fd %d unavailable\n", heapProfileFD)
 		return
 	}
-	goldwebXTraceHeapProfile(uint32(traceIndex), &data[0], uint32(len(data)))
-	runtime.KeepAlive(data)
+	if _, err := fmt.Fprintf(f, "%s %d %d %d\n", heapProfileHeaderMagic, 1, traceIndex, len(data)); err != nil {
+		fmt.Printf("[xtracer] write heap profile header: %v\n", err)
+		return
+	}
+	if len(data) > 0 {
+		if _, err := f.Write(data); err != nil {
+			fmt.Printf("[xtracer] write heap profile body: %v\n", err)
+		}
+	}
 }
 
 func maybePaceGC(traceIndex int64, stats *runtime.MemStats) {

@@ -1,25 +1,5 @@
-const textDecoder = new TextDecoder();
 const textEncoder = new TextEncoder();
-
-function requireGoMemory(goMemory) {
-  const memory = typeof goMemory === 'function' ? goMemory() : goMemory;
-  if (!memory) {
-    throw new Error('smt_z3 import used before Go wasm memory was available');
-  }
-  return memory;
-}
-
-function goBytes(goMemory, ptr, len) {
-  if ((len >>> 0) === 0) {
-    return new Uint8Array(0);
-  }
-  const memory = requireGoMemory(goMemory);
-  return new Uint8Array(memory.buffer, ptr >>> 0, len >>> 0);
-}
-
-function goString(goMemory, ptr, len) {
-  return textDecoder.decode(goBytes(goMemory, ptr, len));
-}
+const textDecoder = new TextDecoder();
 
 function withZ3CString(z3, value, fn) {
   const bytes = textEncoder.encode(value);
@@ -48,24 +28,6 @@ function withZ3HandleArray(z3, handles, fn) {
   }
 }
 
-function readGoHandleArray(goMemory, ptr, len) {
-  if ((len >>> 0) === 0) {
-    return [];
-  }
-  const memory = requireGoMemory(goMemory);
-  const dataView = new DataView(memory.buffer);
-  const handles = new Array(len >>> 0);
-  for (let i = 0; i < handles.length; i += 1) {
-    handles[i] = dataView.getUint32((ptr >>> 0) + i * 4, true) >>> 0;
-  }
-  return handles;
-}
-
-function writeGoU32(goMemory, ptr, value) {
-  const memory = requireGoMemory(goMemory);
-  new DataView(memory.buffer).setUint32(ptr >>> 0, value >>> 0, true);
-}
-
 function makeStringTable() {
   let next = 1;
   const byHandle = new Map();
@@ -83,6 +45,69 @@ function makeStringTable() {
     },
     release(handle) {
       byHandle.delete(handle >>> 0);
+    },
+  };
+}
+
+function makeScratchTable() {
+  let next = 1;
+  const byHandle = new Map();
+
+  function add(kind, data) {
+    const handle = next;
+    next += 1;
+    byHandle.set(handle, { kind, data });
+    return handle;
+  }
+
+  function take(handle, kind) {
+    const key = handle >>> 0;
+    const entry = byHandle.get(key);
+    if (!entry) {
+      if (kind === 'bytes') {
+        return new Uint8Array(0);
+      }
+      return new Uint32Array(0);
+    }
+    byHandle.delete(key);
+    if (entry.kind !== kind) {
+      throw new Error(`scratch handle ${key} is ${entry.kind}, not ${kind}`);
+    }
+    return entry.data;
+  }
+
+  return {
+    beginBytes(size) {
+      return add('bytes', new Uint8Array(size >>> 0));
+    },
+    writeBytes(handle, offset, word, n) {
+      const entry = byHandle.get(handle >>> 0);
+      if (!entry || entry.kind !== 'bytes') {
+        throw new Error('bad byte scratch handle ' + handle);
+      }
+      const start = offset >>> 0;
+      const count = n >>> 0;
+      for (let i = 0; i < count; i += 1) {
+        entry.data[start + i] = (word >>> (8 * i)) & 0xff;
+      }
+    },
+    beginU32(size) {
+      return add('u32', new Uint32Array(size >>> 0));
+    },
+    writeU32(handle, index, value) {
+      const entry = byHandle.get(handle >>> 0);
+      if (!entry || entry.kind !== 'u32') {
+        throw new Error('bad u32 scratch handle ' + handle);
+      }
+      entry.data[index >>> 0] = value >>> 0;
+    },
+    takeBytes(handle, len) {
+      const data = take(handle, 'bytes');
+      return data.subarray(0, len >>> 0);
+    },
+    takeU32(handle, len) {
+      const data = take(handle, 'u32');
+      return Array.from(data.subarray(0, len >>> 0), (v) => v >>> 0);
     },
   };
 }
@@ -132,6 +157,11 @@ function makeErrorTracker(z3, z3String) {
 
 export function createSmtZ3Imports({ z3, getGoMemory }) {
   const strings = makeStringTable();
+  const scratch = makeScratchTable();
+  let lastU32Results = [];
+  let lastEnumConsts = [];
+  let lastEnumTesters = [];
+  void getGoMemory;
 
   function z3String(handle) {
     if (!handle) {
@@ -146,21 +176,21 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
 
   const errors = makeErrorTracker(z3, z3String);
 
-  function symbolFromGoBytes(ctx, ptr, len) {
-    return withZ3CString(z3, goString(getGoMemory, ptr, len), (z3Ptr) => (
+  function symbolFromScratch(ctx, handle, len) {
+    return withZ3CString(z3, textDecoder.decode(scratch.takeBytes(handle, len)), (z3Ptr) => (
       z3._Z3_mk_string_symbol(ctx, z3Ptr) >>> 0
     ));
   }
 
-  function z3StringAstFromGoBytes(ctx, ptr, len) {
-    return withZ3CString(z3, goString(getGoMemory, ptr, len), (z3Ptr) => (
+  function z3StringAstFromScratch(ctx, handle, len) {
+    return withZ3CString(z3, textDecoder.decode(scratch.takeBytes(handle, len)), (z3Ptr) => (
       z3._Z3_mk_string(ctx, z3Ptr) >>> 0
     ));
   }
 
-  function paramValueFromGoBytes(cfg, keyPtr, keyLen, valuePtr, valueLen) {
-    const key = goString(getGoMemory, keyPtr, keyLen);
-    const value = goString(getGoMemory, valuePtr, valueLen);
+  function paramValueFromScratch(cfg, keyHandle, keyLen, valueHandle, valueLen) {
+    const key = textDecoder.decode(scratch.takeBytes(keyHandle, keyLen));
+    const value = textDecoder.decode(scratch.takeBytes(valueHandle, valueLen));
     withZ3CString(z3, key, (z3Key) => {
       withZ3CString(z3, value, (z3Value) => {
         z3._Z3_set_param_value(cfg, z3Key, z3Value);
@@ -168,35 +198,37 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     });
   }
 
-  function mkNAry(name, ctx, len, ptr) {
-    const handles = readGoHandleArray(getGoMemory, ptr, len);
+  function mkNAry(name, ctx, len, handle) {
+    const handles = scratch.takeU32(handle, len);
     return withZ3HandleArray(z3, handles, (z3Ptr) => z3[`_${name}`](ctx, len >>> 0, z3Ptr) >>> 0);
   }
 
-  function mkFuncDecl(ctx, sym, domainLen, domainPtr, rangeSort) {
-    const domain = readGoHandleArray(getGoMemory, domainPtr, domainLen);
+  function mkFuncDecl(ctx, sym, domainLen, domainHandle, rangeSort) {
+    const domain = scratch.takeU32(domainHandle, domainLen);
     return withZ3HandleArray(z3, domain, (z3Ptr) => (
       z3._Z3_mk_func_decl(ctx, sym, domain.length, z3Ptr, rangeSort) >>> 0
     ));
   }
 
-  function mkApp(ctx, funcDecl, argLen, argPtr) {
-    const args = readGoHandleArray(getGoMemory, argPtr, argLen);
+  function mkApp(ctx, funcDecl, argLen, argHandle) {
+    const args = scratch.takeU32(argHandle, argLen);
     return withZ3HandleArray(z3, args, (z3Ptr) => (
       z3._Z3_mk_app(ctx, funcDecl, args.length, z3Ptr) >>> 0
     ));
   }
 
-  function mkEnumerationSort(ctx, name, len, elemsPtr, constsPtr, testersPtr) {
-    const elems = readGoHandleArray(getGoMemory, elemsPtr, len);
+  function mkEnumerationSort(ctx, name, len, elemsHandle) {
+    const elems = scratch.takeU32(elemsHandle, len);
     return withZ3HandleArray(z3, elems, (z3ElemsPtr) => {
       const constsZ3Ptr = z3._malloc((len >>> 0) * 4);
       const testersZ3Ptr = z3._malloc((len >>> 0) * 4);
       try {
         const sort = z3._Z3_mk_enumeration_sort(ctx, name, len, z3ElemsPtr, constsZ3Ptr, testersZ3Ptr) >>> 0;
+        lastEnumConsts = [];
+        lastEnumTesters = [];
         for (let i = 0; i < (len >>> 0); i += 1) {
-          writeGoU32(getGoMemory, (constsPtr >>> 0) + i * 4, z3.HEAPU32[(constsZ3Ptr >>> 2) + i]);
-          writeGoU32(getGoMemory, (testersPtr >>> 0) + i * 4, z3.HEAPU32[(testersZ3Ptr >>> 2) + i]);
+          lastEnumConsts.push(z3.HEAPU32[(constsZ3Ptr >>> 2) + i] >>> 0);
+          lastEnumTesters.push(z3.HEAPU32[(testersZ3Ptr >>> 2) + i] >>> 0);
         }
         return sort;
       } finally {
@@ -206,17 +238,17 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     });
   }
 
-  function mkQuantifierConst(name, ctx, weight, len, boundPtr, numPatterns, patternsPtr, body) {
-    const bound = readGoHandleArray(getGoMemory, boundPtr, len);
+  function mkQuantifierConst(name, ctx, weight, len, boundHandle, numPatterns, patternsHandle, body) {
+    const bound = scratch.takeU32(boundHandle, len);
     return withZ3HandleArray(z3, bound, (z3BoundPtr) => {
-      void patternsPtr;
+      void patternsHandle;
       return z3[`_${name}`](ctx, weight, bound.length, z3BoundPtr, numPatterns, 0, body) >>> 0;
     });
   }
 
-  function substitute(ctx, expr, len, fromPtr, toPtr) {
-    const from = readGoHandleArray(getGoMemory, fromPtr, len);
-    const to = readGoHandleArray(getGoMemory, toPtr, len);
+  function substitute(ctx, expr, len, fromHandle, toHandle) {
+    const from = scratch.takeU32(fromHandle, len);
+    const to = scratch.takeU32(toHandle, len);
     return withZ3HandleArray(z3, from, (z3FromPtr) => (
       withZ3HandleArray(z3, to, (z3ToPtr) => (
         z3._Z3_substitute(ctx, expr, from.length, z3FromPtr, z3ToPtr) >>> 0
@@ -224,31 +256,33 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     ));
   }
 
-  function checkAssumptions(ctx, solver, len, assumptionsPtr) {
-    const assumptions = readGoHandleArray(getGoMemory, assumptionsPtr, len);
+  function checkAssumptions(ctx, solver, len, assumptionsHandle) {
+    const assumptions = scratch.takeU32(assumptionsHandle, len);
     return withZ3HandleArray(z3, assumptions, (z3Ptr) => (
       z3._Z3_solver_check_assumptions(ctx, solver, assumptions.length, z3Ptr) | 0
     ));
   }
 
-  function modelEval(ctx, model, expr, completion, resultPtr) {
+  function modelEval(ctx, model, expr, completion) {
     const outPtr = z3._malloc(4);
     try {
       const ok = z3._Z3_model_eval(ctx, model, expr, completion ? 1 : 0, outPtr) ? 1 : 0;
-      writeGoU32(getGoMemory, resultPtr, z3.HEAPU32[outPtr >>> 2]);
+      lastU32Results = [z3.HEAPU32[outPtr >>> 2] >>> 0];
       return ok;
     } finally {
       z3._free(outPtr);
     }
   }
 
-  function computeInterpolant(ctx, pattern, params, interpPtr, modelPtr) {
+  function computeInterpolant(ctx, pattern, params) {
     const interpOutPtr = z3._malloc(4);
     const modelOutPtr = z3._malloc(4);
     try {
       const result = z3._Z3_compute_interpolant(ctx, pattern, params, interpOutPtr, modelOutPtr) | 0;
-      writeGoU32(getGoMemory, interpPtr, z3.HEAPU32[interpOutPtr >>> 2]);
-      writeGoU32(getGoMemory, modelPtr, z3.HEAPU32[modelOutPtr >>> 2]);
+      lastU32Results = [
+        z3.HEAPU32[interpOutPtr >>> 2] >>> 0,
+        z3.HEAPU32[modelOutPtr >>> 2] >>> 0,
+      ];
       return result;
     } finally {
       z3._free(interpOutPtr);
@@ -257,15 +291,27 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
   }
 
   return {
+    __scratch_bytes_begin(size) { return scratch.beginBytes(size); },
+    __scratch_bytes_write(handle, offset, word, n) { scratch.writeBytes(handle, offset, word, n); },
+    __scratch_u32_begin(size) { return scratch.beginU32(size); },
+    __scratch_u32_write(handle, index, value) { scratch.writeU32(handle, index, value); },
+    __last_u32_result(index) { return lastU32Results[index >>> 0] >>> 0; },
+    __last_enum_const(index) { return lastEnumConsts[index >>> 0] >>> 0; },
+    __last_enum_tester(index) { return lastEnumTesters[index >>> 0] >>> 0; },
     Z3_string_len(handle) { return strings.bytes(handle).length >>> 0; },
-    Z3_string_copy(handle, dst, len) {
-      const bytes = strings.bytes(handle).subarray(0, len >>> 0);
-      goBytes(getGoMemory, dst, bytes.length).set(bytes);
+    Z3_string_word(handle, offset) {
+      const bytes = strings.bytes(handle);
+      const start = offset >>> 0;
+      let word = 0;
+      for (let i = 0; i < 4 && start + i < bytes.length; i += 1) {
+        word |= bytes[start + i] << (8 * i);
+      }
+      return word >>> 0;
     },
     Z3_string_release(handle) { strings.release(handle); },
     Z3_mk_config() { return z3._Z3_mk_config() >>> 0; },
     Z3_del_config(cfg) { z3._Z3_del_config(cfg); },
-    Z3_set_param_value_bytes: paramValueFromGoBytes,
+    Z3_set_param_value_bytes: paramValueFromScratch,
     Z3_mk_context_rc(cfg) { return z3._Z3_mk_context_rc(cfg) >>> 0; },
     Z3_mk_interpolation_context(cfg) { return z3._Z3_mk_interpolation_context(cfg) >>> 0; },
     Z3_set_error_handler(ctx) { errors.install(ctx); },
@@ -276,7 +322,7 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     Z3_del_context(ctx) { z3._Z3_del_context(ctx); },
     Z3_inc_ref(ctx, ast) { z3._Z3_inc_ref(ctx, ast); },
     Z3_dec_ref(ctx, ast) { z3._Z3_dec_ref(ctx, ast); },
-    Z3_mk_string_symbol_bytes: symbolFromGoBytes,
+    Z3_mk_string_symbol_bytes: symbolFromScratch,
     Z3_get_symbol_string(ctx, sym) { return z3StringHandle(z3._Z3_get_symbol_string(ctx, sym)); },
     Z3_mk_bool_sort(ctx) { return z3._Z3_mk_bool_sort(ctx) >>> 0; },
     Z3_mk_uninterpreted_sort(ctx, sym) { return z3._Z3_mk_uninterpreted_sort(ctx, sym) >>> 0; },
@@ -296,7 +342,7 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     Z3_mk_false(ctx) { return z3._Z3_mk_false(ctx) >>> 0; },
     Z3_mk_const(ctx, sym, sort) { return z3._Z3_mk_const(ctx, sym, sort) >>> 0; },
     Z3_mk_int64(ctx, value, sort) { return z3._Z3_mk_int64(ctx, value, sort) >>> 0; },
-    Z3_mk_string_bytes: z3StringAstFromGoBytes,
+    Z3_mk_string_bytes: z3StringAstFromScratch,
     Z3_mk_not(ctx, expr) { return z3._Z3_mk_not(ctx, expr) >>> 0; },
     Z3_mk_and(ctx, len, ptr) { return mkNAry('Z3_mk_and', ctx, len, ptr); },
     Z3_mk_or(ctx, len, ptr) { return mkNAry('Z3_mk_or', ctx, len, ptr); },

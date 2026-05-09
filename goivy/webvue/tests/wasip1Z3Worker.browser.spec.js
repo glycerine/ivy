@@ -81,7 +81,7 @@ test.afterAll(async () => {
   });
 });
 
-test('TinyGo and Big Go WASI Ivy wasm call Z3 wasm through JavaScript in a worker', async ({ page }) => {
+test('Big Go WASI Ivy wasm calls Z3 wasm through JavaScript in a worker', async ({ page }) => {
   await page.goto(baseURL);
 
   const results = await page.evaluate(async ({ roundTripCount }) => {
@@ -218,7 +218,6 @@ test('TinyGo and Big Go WASI Ivy wasm call Z3 wasm through JavaScript in a worke
           z3._Z3_del_config(cfg);
 
           const probes = [
-            { compiler: 'tinygo', file: 'ivy-tinygo-wasip1-probe.wasm' },
             { compiler: 'biggo', file: 'ivy-biggo-wasip1-probe.wasm' },
           ];
 
@@ -272,7 +271,7 @@ test('TinyGo and Big Go WASI Ivy wasm call Z3 wasm through JavaScript in a worke
     }
   }, { roundTripCount });
 
-  expect(results.map((result) => result.compiler)).toEqual(['tinygo', 'biggo']);
+  expect(results.map((result) => result.compiler)).toEqual(['biggo']);
 
   for (const result of results) {
     expect(result.boolSortCalls).toBeGreaterThan(0);

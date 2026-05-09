@@ -24,6 +24,7 @@ type z3Model = uint32
 type z3Params = uint32
 type z3ASTVector = uint32
 type z3StringHandle = uint32
+type z3Scratch = uint32
 
 const (
 	z3_OK = 0
@@ -63,39 +64,53 @@ func boolToUint32(v bool) uint32 {
 	return 0
 }
 
+func packedWord(data []byte, offset uint32) (uint32, uint32) {
+	if offset >= uint32(len(data)) {
+		return 0, 0
+	}
+	n := uint32(len(data)) - offset
+	if n > 4 {
+		n = 4
+	}
+	var word uint32
+	for i := uint32(0); i < n; i++ {
+		word |= uint32(data[offset+i]) << (8 * i)
+	}
+	return word, n
+}
+
+func scratchBytes(data []byte) z3Scratch {
+	h := smtScratchBytesBegin(uint32(len(data)))
+	for offset := uint32(0); offset < uint32(len(data)); {
+		word, n := packedWord(data, offset)
+		smtScratchBytesWrite(h, offset, word, n)
+		offset += n
+	}
+	return h
+}
+
+func scratchU32(values []uint32) z3Scratch {
+	h := smtScratchU32Begin(uint32(len(values)))
+	for i, v := range values {
+		smtScratchU32Write(h, uint32(i), v)
+	}
+	return h
+}
+
 func z3_mk_string_symbol_go(ctx z3Context, s string) z3Symbol {
 	b := []byte(s)
-	if len(b) == 0 {
-		return z3_mk_string_symbol(ctx, nil, 0)
-	}
-	r := z3_mk_string_symbol(ctx, &b[0], uint32(len(b)))
-	runtime.KeepAlive(b)
-	return r
+	return z3_mk_string_symbol(ctx, scratchBytes(b), uint32(len(b)))
 }
 
 func z3_mk_string_go(ctx z3Context, s string) z3AST {
 	b := []byte(s)
-	if len(b) == 0 {
-		return z3_mk_string(ctx, nil, 0)
-	}
-	r := z3_mk_string(ctx, &b[0], uint32(len(b)))
-	runtime.KeepAlive(b)
-	return r
+	return z3_mk_string(ctx, scratchBytes(b), uint32(len(b)))
 }
 
 func z3_set_param_value_go(cfg z3Config, key, value string) {
 	k := []byte(key)
 	v := []byte(value)
-	var kp, vp *byte
-	if len(k) > 0 {
-		kp = &k[0]
-	}
-	if len(v) > 0 {
-		vp = &v[0]
-	}
-	z3_set_param_value(cfg, kp, uint32(len(k)), vp, uint32(len(v)))
-	runtime.KeepAlive(k)
-	runtime.KeepAlive(v)
+	z3_set_param_value(cfg, scratchBytes(k), uint32(len(k)), scratchBytes(v), uint32(len(v)))
 }
 
 func z3String(h z3StringHandle) string {
@@ -108,7 +123,12 @@ func z3String(h z3StringHandle) string {
 		return ""
 	}
 	buf := make([]byte, n)
-	z3_string_copy(h, &buf[0], n)
+	for offset := uint32(0); offset < n; offset += 4 {
+		word := z3_string_word(h, offset)
+		for i := uint32(0); i < 4 && offset+i < n; i++ {
+			buf[offset+i] = byte(word >> (8 * i))
+		}
+	}
 	z3_string_release(h)
 	return string(buf)
 }
@@ -360,11 +380,7 @@ func (ctx *Z3Context) Function(name string, domain []Z3Sort, range_ Z3Sort) Func
 	}
 	var fd FuncDecl
 
-	var cdp *z3Sort
-	if len(cdomain) > 0 {
-		cdp = &cdomain[0]
-	}
-	fd = ctx.newFuncDecl(z3_mk_func_decl(ctx.c, sym, uint32(len(cdomain)), cdp, range_.c))
+	fd = ctx.newFuncDecl(z3_mk_func_decl(ctx.c, sym, uint32(len(cdomain)), scratchU32(cdomain), range_.c))
 
 	runtime.KeepAlive(domain)
 	runtime.KeepAlive(range_)
@@ -391,11 +407,7 @@ func (fd *FuncDecl) Apply(args ...Z3Expr) Z3Expr {
 	}
 	var e Z3Expr
 
-	var cap *z3AST
-	if len(cargs) > 0 {
-		cap = &cargs[0]
-	}
-	e = fd.ctx.newExpr(z3_mk_app(fd.ctx.c, fd.c, uint32(len(cargs)), cap))
+	e = fd.ctx.newExpr(z3_mk_app(fd.ctx.c, fd.c, uint32(len(cargs)), scratchU32(cargs)))
 
 	runtime.KeepAlive(fd)
 	runtime.KeepAlive(args)
@@ -425,7 +437,7 @@ func (ctx *Z3Context) And(args ...Z3Expr) Z3Expr {
 	}
 	var r Z3Expr
 
-	r = ctx.newExpr(z3_mk_and(ctx.c, uint32(len(cargs)), &cargs[0]))
+	r = ctx.newExpr(z3_mk_and(ctx.c, uint32(len(cargs)), scratchU32(cargs)))
 
 	runtime.KeepAlive(args)
 	return r
@@ -442,7 +454,7 @@ func (ctx *Z3Context) Or(args ...Z3Expr) Z3Expr {
 	}
 	var r Z3Expr
 
-	r = ctx.newExpr(z3_mk_or(ctx.c, uint32(len(cargs)), &cargs[0]))
+	r = ctx.newExpr(z3_mk_or(ctx.c, uint32(len(cargs)), scratchU32(cargs)))
 
 	runtime.KeepAlive(args)
 	return r
@@ -499,8 +511,8 @@ func (ctx *Z3Context) Ite(cond, then_, else_ Z3Expr) Z3Expr {
 func (ctx *Z3Context) Add(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 
-	args := [2]z3AST{e1.c, e2.c}
-	r = ctx.newExpr(z3_mk_add(ctx.c, 2, &args[0]))
+	args := []uint32{e1.c, e2.c}
+	r = ctx.newExpr(z3_mk_add(ctx.c, 2, scratchU32(args)))
 
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -511,8 +523,8 @@ func (ctx *Z3Context) Add(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Sub(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 
-	args := [2]z3AST{e1.c, e2.c}
-	r = ctx.newExpr(z3_mk_sub(ctx.c, 2, &args[0]))
+	args := []uint32{e1.c, e2.c}
+	r = ctx.newExpr(z3_mk_sub(ctx.c, 2, scratchU32(args)))
 
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -523,8 +535,8 @@ func (ctx *Z3Context) Sub(e1, e2 Z3Expr) Z3Expr {
 func (ctx *Z3Context) Mul(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
 
-	args := [2]z3AST{e1.c, e2.c}
-	r = ctx.newExpr(z3_mk_mul(ctx.c, 2, &args[0]))
+	args := []uint32{e1.c, e2.c}
+	r = ctx.newExpr(z3_mk_mul(ctx.c, 2, scratchU32(args)))
 
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -604,25 +616,16 @@ func (ctx *Z3Context) EnumSort(name string, elements []string) (Z3Sort, []Z3Expr
 	cConsts := make([]z3FuncDecl, len(elements))
 	cTesters := make([]z3FuncDecl, len(elements))
 
-	var elemsPtr *z3Symbol
-	if len(cElems) > 0 {
-		elemsPtr = &cElems[0]
+	zs := z3_mk_enumeration_sort(ctx.c, sym, n, scratchU32(cElems))
+	for i := range elements {
+		cConsts[i] = z3_last_enum_const(uint32(i))
+		cTesters[i] = z3_last_enum_tester(uint32(i))
 	}
-	var constsPtr *z3FuncDecl
-	if len(cConsts) > 0 {
-		constsPtr = &cConsts[0]
-	}
-	var testersPtr *z3FuncDecl
-	if len(cTesters) > 0 {
-		testersPtr = &cTesters[0]
-	}
-
-	zs := z3_mk_enumeration_sort(ctx.c, sym, n, elemsPtr, constsPtr, testersPtr)
 	s = ctx.newSort(zs)
 
 	// Extract constructor constants
 	for i := range elements {
-		app := z3_mk_app(ctx.c, cConsts[i], 0, nil)
+		app := z3_mk_app(ctx.c, cConsts[i], 0, 0)
 		consts[i] = ctx.newExpr(app)
 	}
 
@@ -916,7 +919,7 @@ func (ctx *Z3Context) ForAll(bound []Z3Expr, body Z3Expr) Z3Expr {
 		ctx.c,
 		0, // weight
 		uint32(len(cbound)),
-		&cbound[0],
+		scratchU32(cbound),
 		0, // num_patterns
 		0, // patterns
 		body.c,
@@ -942,7 +945,7 @@ func (ctx *Z3Context) Exists(bound []Z3Expr, body Z3Expr) Z3Expr {
 		ctx.c,
 		0, // weight
 		uint32(len(cbound)),
-		&cbound[0],
+		scratchU32(cbound),
 		0, // num_patterns
 		0, // patterns
 		body.c,
@@ -1079,8 +1082,8 @@ func (m *Model) Eval(e Z3Expr, completion bool) (Z3Expr, bool) {
 	var result Z3Expr
 	var ok bool
 
-	var cresult z3AST
-	if z3Model_eval(m.ctx.c, m.c, e.c, boolToUint32(completion), &cresult) != 0 {
+	if z3Model_eval(m.ctx.c, m.c, e.c, boolToUint32(completion)) != 0 {
+		cresult := z3_last_u32_result(0)
 		result = m.ctx.newExpr(cresult)
 		ok = true
 	}
@@ -1145,11 +1148,7 @@ func (s *Z3Solver) CheckAssumptions(assumptions []Z3Expr) Z3CheckResult {
 	}
 	var r Z3CheckResult
 
-	var cap *z3AST
-	if len(cassumptions) > 0 {
-		cap = &cassumptions[0]
-	}
-	res := z3Solver_check_assumptions(s.ctx.c, s.c, uint32(len(cassumptions)), cap)
+	res := z3Solver_check_assumptions(s.ctx.c, s.c, uint32(len(cassumptions)), scratchU32(cassumptions))
 	r = Z3CheckResult(res)
 
 	runtime.KeepAlive(s)
@@ -1235,12 +1234,7 @@ func (ctx *Z3Context) Substitute(e Z3Expr, from, to []Z3Expr) Z3Expr {
 	}
 	var r Z3Expr
 
-	var cfp, ctp *z3AST
-	if len(cfrom) > 0 {
-		cfp = &cfrom[0]
-		ctp = &cto[0]
-	}
-	r = ctx.newExpr(z3_substitute(ctx.c, e.c, uint32(len(cfrom)), cfp, ctp))
+	r = ctx.newExpr(z3_substitute(ctx.c, e.c, uint32(len(cfrom)), scratchU32(cfrom), scratchU32(cto)))
 
 	runtime.KeepAlive(e)
 	runtime.KeepAlive(from)
@@ -1280,13 +1274,42 @@ func (s *Z3Solver) SetParam(key, value string) {
 }
 
 // String handles are owned by the JavaScript host. The host copies bytes out of
-// Z3 wasm and exposes them here as a tiny length/copy/release protocol.
+// Z3 wasm and exposes them here as a tiny length/word/release protocol. No Go
+// heap pointer crosses this wasm import boundary.
+//
+// Scratch handles are also owned by the JavaScript host. Go fills them with
+// scalar calls, then passes the handle to a Z3 API shim that consumes it.
+//
+//go:wasmimport smt_z3 __scratch_bytes_begin
+func smtScratchBytesBegin(n uint32) z3Scratch
+
+//go:wasmimport smt_z3 __scratch_bytes_write
+func smtScratchBytesWrite(h z3Scratch, offset uint32, word uint32, n uint32)
+
+//go:wasmimport smt_z3 __scratch_u32_begin
+func smtScratchU32Begin(n uint32) z3Scratch
+
+//go:wasmimport smt_z3 __scratch_u32_write
+func smtScratchU32Write(h z3Scratch, index uint32, value uint32)
+
+//
+//go:wasmimport smt_z3 __last_u32_result
+func z3_last_u32_result(index uint32) uint32
+
+//
+//go:wasmimport smt_z3 __last_enum_const
+func z3_last_enum_const(index uint32) z3FuncDecl
+
+//
+//go:wasmimport smt_z3 __last_enum_tester
+func z3_last_enum_tester(index uint32) z3FuncDecl
+
 //
 //go:wasmimport smt_z3 Z3_string_len
 func z3_string_len(h z3StringHandle) uint32
 
-//go:wasmimport smt_z3 Z3_string_copy
-func z3_string_copy(h z3StringHandle, dst *byte, n uint32)
+//go:wasmimport smt_z3 Z3_string_word
+func z3_string_word(h z3StringHandle, offset uint32) uint32
 
 //go:wasmimport smt_z3 Z3_string_release
 func z3_string_release(h z3StringHandle)
@@ -1298,7 +1321,7 @@ func z3_mk_config() z3Config
 func z3_del_config(cfg z3Config)
 
 //go:wasmimport smt_z3 Z3_set_param_value_bytes
-func z3_set_param_value(cfg z3Config, key *byte, keyLen uint32, value *byte, valueLen uint32)
+func z3_set_param_value(cfg z3Config, key z3Scratch, keyLen uint32, value z3Scratch, valueLen uint32)
 
 //go:wasmimport smt_z3 Z3_mk_context_rc
 func z3_mk_context_rc(cfg z3Config) z3Context
@@ -1325,7 +1348,7 @@ func z3_inc_ref(ctx z3Context, ast z3AST)
 func z3_dec_ref(ctx z3Context, ast z3AST)
 
 //go:wasmimport smt_z3 Z3_mk_string_symbol_bytes
-func z3_mk_string_symbol(ctx z3Context, name *byte, n uint32) z3Symbol
+func z3_mk_string_symbol(ctx z3Context, name z3Scratch, n uint32) z3Symbol
 
 //go:wasmimport smt_z3 Z3_get_symbol_string
 func z3_get_symbol_string(ctx z3Context, sym z3Symbol) z3StringHandle
@@ -1385,16 +1408,16 @@ func z3_mk_const(ctx z3Context, sym z3Symbol, sort z3Sort) z3AST
 func z3_mk_int64(ctx z3Context, val int64, sort z3Sort) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_string_bytes
-func z3_mk_string(ctx z3Context, value *byte, n uint32) z3AST
+func z3_mk_string(ctx z3Context, value z3Scratch, n uint32) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_not
 func z3_mk_not(ctx z3Context, expr z3AST) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_and
-func z3_mk_and(ctx z3Context, n uint32, args *z3AST) z3AST
+func z3_mk_and(ctx z3Context, n uint32, args z3Scratch) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_or
-func z3_mk_or(ctx z3Context, n uint32, args *z3AST) z3AST
+func z3_mk_or(ctx z3Context, n uint32, args z3Scratch) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_implies
 func z3_mk_implies(ctx z3Context, a z3AST, b z3AST) z3AST
@@ -1409,13 +1432,13 @@ func z3_mk_eq(ctx z3Context, a z3AST, b z3AST) z3AST
 func z3_mk_ite(ctx z3Context, cond z3AST, thenExpr z3AST, elseExpr z3AST) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_add
-func z3_mk_add(ctx z3Context, n uint32, args *z3AST) z3AST
+func z3_mk_add(ctx z3Context, n uint32, args z3Scratch) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_sub
-func z3_mk_sub(ctx z3Context, n uint32, args *z3AST) z3AST
+func z3_mk_sub(ctx z3Context, n uint32, args z3Scratch) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_mul
-func z3_mk_mul(ctx z3Context, n uint32, args *z3AST) z3AST
+func z3_mk_mul(ctx z3Context, n uint32, args z3Scratch) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_div
 func z3_mk_div(ctx z3Context, a z3AST, b z3AST) z3AST
@@ -1499,28 +1522,28 @@ func z3_mk_store(ctx z3Context, array z3AST, index z3AST, value z3AST) z3AST
 func z3_mk_const_array(ctx z3Context, domain z3Sort, value z3AST) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_func_decl
-func z3_mk_func_decl(ctx z3Context, sym z3Symbol, domainN uint32, domain *z3Sort, rangeSort z3Sort) z3FuncDecl
+func z3_mk_func_decl(ctx z3Context, sym z3Symbol, domainN uint32, domain z3Scratch, rangeSort z3Sort) z3FuncDecl
 
 //go:wasmimport smt_z3 Z3_func_decl_to_ast
 func z3FuncDecl_to_ast(ctx z3Context, fd z3FuncDecl) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_app
-func z3_mk_app(ctx z3Context, fd z3FuncDecl, n uint32, args *z3AST) z3AST
+func z3_mk_app(ctx z3Context, fd z3FuncDecl, n uint32, args z3Scratch) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_enumeration_sort
-func z3_mk_enumeration_sort(ctx z3Context, name z3Symbol, n uint32, elems *z3Symbol, consts *z3FuncDecl, testers *z3FuncDecl) z3Sort
+func z3_mk_enumeration_sort(ctx z3Context, name z3Symbol, n uint32, elems z3Scratch) z3Sort
 
 //go:wasmimport smt_z3 Z3_to_app
 func z3_to_app(ctx z3Context, ast z3AST) z3App
 
 //go:wasmimport smt_z3 Z3_mk_forall_const
-func z3_mk_forall_const(ctx z3Context, weight uint32, n uint32, bound *z3App, numPatterns uint32, patterns uint32, body z3AST) z3AST
+func z3_mk_forall_const(ctx z3Context, weight uint32, n uint32, bound z3Scratch, numPatterns uint32, patterns z3Scratch, body z3AST) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_exists_const
-func z3_mk_exists_const(ctx z3Context, weight uint32, n uint32, bound *z3App, numPatterns uint32, patterns uint32, body z3AST) z3AST
+func z3_mk_exists_const(ctx z3Context, weight uint32, n uint32, bound z3Scratch, numPatterns uint32, patterns z3Scratch, body z3AST) z3AST
 
 //go:wasmimport smt_z3 Z3_substitute
-func z3_substitute(ctx z3Context, expr z3AST, n uint32, from *z3AST, to *z3AST) z3AST
+func z3_substitute(ctx z3Context, expr z3AST, n uint32, from z3Scratch, to z3Scratch) z3AST
 
 //go:wasmimport smt_z3 Z3_ast_to_string
 func z3AST_to_string(ctx z3Context, ast z3AST) z3StringHandle
@@ -1622,7 +1645,7 @@ func z3Solver_get_assertions(ctx z3Context, solver z3Solver) z3ASTVector
 func z3Solver_get_model(ctx z3Context, solver z3Solver) z3Model
 
 //go:wasmimport smt_z3 Z3_solver_check_assumptions
-func z3Solver_check_assumptions(ctx z3Context, solver z3Solver, n uint32, assumptions *z3AST) int32
+func z3Solver_check_assumptions(ctx z3Context, solver z3Solver, n uint32, assumptions z3Scratch) int32
 
 //go:wasmimport smt_z3 Z3_solver_get_unsat_core
 func z3Solver_get_unsat_core(ctx z3Context, solver z3Solver) z3ASTVector
@@ -1649,7 +1672,7 @@ func z3Model_inc_ref(ctx z3Context, model z3Model)
 func z3Model_dec_ref(ctx z3Context, model z3Model)
 
 //go:wasmimport smt_z3 Z3_model_eval
-func z3Model_eval(ctx z3Context, model z3Model, expr z3AST, completion uint32, result *z3AST) uint32
+func z3Model_eval(ctx z3Context, model z3Model, expr z3AST, completion uint32) uint32
 
 //go:wasmimport smt_z3 Z3_model_get_num_sorts
 func z3Model_get_num_sorts(ctx z3Context, model z3Model) uint32
@@ -1685,4 +1708,4 @@ func z3Params_set_symbol(ctx z3Context, params z3Params, key z3Symbol, value z3S
 func z3_mk_interpolant(ctx z3Context, expr z3AST) z3AST
 
 //go:wasmimport smt_z3 Z3_compute_interpolant
-func z3_compute_interpolant(ctx z3Context, pattern z3AST, params z3Params, interp *z3ASTVector, model *z3Model) int32
+func z3_compute_interpolant(ctx z3Context, pattern z3AST, params z3Params) int32

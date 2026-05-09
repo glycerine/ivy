@@ -59,9 +59,9 @@ func (ctx *Z3Context) ComputeInterpolant(pattern Z3Expr) ([]Z3Expr, error) {
 	defer z3Params_dec_ref(ctx.c, params)
 
 	var interp z3ASTVector
-	var model z3Model
 
-	res := z3_compute_interpolant(ctx.c, pattern.c, params, &interp, &model)
+	res := z3_compute_interpolant(ctx.c, pattern.c, params)
+	interp = z3ASTVector(z3_last_u32_result(0))
 
 	if res == z3_L_FALSE {
 		// UNSAT — extract interpolants from the ast_vector
