@@ -1,4 +1,4 @@
-//go:build !xtracer_off
+//go:build !xtracer_off && !wasip1
 
 package xtracer
 
