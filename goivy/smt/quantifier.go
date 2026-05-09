@@ -56,13 +56,9 @@ type Z3Context struct {
 
 //export goZ3BridgeErrorHandler
 func goZ3BridgeErrorHandler(ctx C.Z3_context, e C.Z3_error_code) {
-
-	if e == C.Z3_OK {
-		// what are we even doing here then...
-		return
-	}
-	msg := C.Z3_get_error_msg(ctx, e)
-	panic("z3 bridge panic on error: " + C.GoString(msg))
+	// Z3 invokes this synchronously while still inside its C API frame. Do not
+	// panic here; smt checks the context error code after the Z3 call returns and
+	// raises errors from normal Go control flow.
 }
 
 // NewZ3Context creates a new Z3 context.
@@ -111,6 +107,17 @@ func (ctx *Z3Context) do(f func()) {
 	ctx.mu.Lock()
 	defer ctx.mu.Unlock()
 	f()
+}
+
+// checkError raises a Z3 API error from normal Go control flow. It must be
+// called while ctx.mu is already held.
+func (ctx *Z3Context) checkError(op string) {
+	code := C.Z3_get_error_code(ctx.c)
+	if code == C.Z3_OK {
+		return
+	}
+	msg := C.GoString(C.Z3_get_error_msg(ctx.c, code))
+	panic(&ErrMsg{Op: op, Code: int(code), Msg: msg})
 }
 
 func (ctx *Z3Context) symbol(name string) C.Z3_symbol {
@@ -163,7 +170,9 @@ func (ctx *Z3Context) incRefSort(c C.Z3_sort) {
 
 func (ctx *Z3Context) newSort(c C.Z3_sort) Z3Sort {
 	// Called with lock held — do raw ref counting
+	ctx.checkError("sort")
 	ctx.incRefSort(c)
+	ctx.checkError("sort inc_ref")
 	s := Z3Sort{ctx: ctx, c: c}
 	return s
 }
@@ -215,7 +224,9 @@ type Z3Expr struct {
 
 // newExpr creates an Expr from a C Z3_ast. Must be called with ctx lock held.
 func (ctx *Z3Context) newExpr(c C.Z3_ast) Z3Expr {
+	ctx.checkError("expr")
 	C.Z3_inc_ref(ctx.c, c)
+	ctx.checkError("expr inc_ref")
 	e := Z3Expr{ctx: ctx, c: c}
 	return e
 }
@@ -274,7 +285,9 @@ type FuncDecl struct {
 
 // newFuncDecl creates a FuncDecl. Must be called with ctx lock held.
 func (ctx *Z3Context) newFuncDecl(c C.Z3_func_decl) FuncDecl {
+	ctx.checkError("func decl")
 	C.Z3_inc_ref(ctx.c, C.Z3_func_decl_to_ast(ctx.c, c))
+	ctx.checkError("func decl inc_ref")
 	fd := FuncDecl{ctx: ctx, c: c}
 	//runtime.SetFinalizer(&fd, func(fd *FuncDecl) {
 	//	fd.ctx.do(func() {
@@ -1234,10 +1247,3 @@ func (s *Z3Solver) SetParam(key, value string) {
 		C.Z3_params_dec_ref(s.ctx.c, params)
 	})
 }
-
-// ErrMsg is returned for Z3 errors that are caught.
-type ErrMsg struct {
-	Msg string
-}
-
-func (e *ErrMsg) Error() string { return fmt.Sprintf("z3: %s", e.Msg) }

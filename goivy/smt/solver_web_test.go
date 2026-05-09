@@ -65,12 +65,20 @@ import "github.com/glycerine/ivy/goivy/smt"
 func main() {}
 
 //go:wasmexport smt_z3_invalid_bv_sort_returns_to_caller
-func smtZ3InvalidBVSortReturnsToCaller() int32 {
+func smtZ3InvalidBVSortReturnsToCaller() (recovered int32) {
 	ctx := smt.NewZ3Context()
 	defer ctx.Close()
 
+	defer func() {
+		if r := recover(); r != nil {
+			if _, ok := r.(*smt.ErrMsg); ok {
+				recovered = 1
+			}
+		}
+	}()
+
 	_ = ctx.BvSort(0)
-	return 1
+	return 0
 }
 `
 

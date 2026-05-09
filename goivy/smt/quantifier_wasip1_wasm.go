@@ -27,6 +27,8 @@ type z3ASTVector = uint32
 type z3StringHandle = uint32
 
 const (
+	z3_OK = 0
+
 	z3_L_FALSE = -1
 	z3_L_UNDEF = 0
 	z3_L_TRUE  = 1
@@ -163,6 +165,18 @@ func (ctx *Z3Context) symbol(name string) z3Symbol {
 	return sym
 }
 
+// checkError raises a Z3 API error from normal Go control flow. The registered
+// browser-side handler records the callback; this method is the Go-facing error
+// boundary.
+func (ctx *Z3Context) checkError(op string) {
+	code := z3_get_error_code(ctx.c)
+	if code == z3_OK {
+		return
+	}
+	msg := z3String(z3_get_error_msg(ctx.c, code))
+	panic(&ErrMsg{Op: op, Code: int(code), Msg: msg})
+}
+
 // --- Sort ---
 
 // Sort wraps a Z3 sort (type).
@@ -201,7 +215,9 @@ func (ctx *Z3Context) incRefSort(c z3Sort) {
 }
 
 func (ctx *Z3Context) newSort(c z3Sort) Z3Sort {
+	ctx.checkError("sort")
 	ctx.incRefSort(c)
+	ctx.checkError("sort inc_ref")
 	s := Z3Sort{ctx: ctx, c: c}
 	return s
 }
@@ -253,7 +269,9 @@ type Z3Expr struct {
 
 // newExpr creates an Expr from a Z3 AST handle.
 func (ctx *Z3Context) newExpr(c z3AST) Z3Expr {
+	ctx.checkError("expr")
 	z3_inc_ref(ctx.c, c)
+	ctx.checkError("expr inc_ref")
 	e := Z3Expr{ctx: ctx, c: c}
 	return e
 }
@@ -312,7 +330,9 @@ type FuncDecl struct {
 
 // newFuncDecl creates a FuncDecl.
 func (ctx *Z3Context) newFuncDecl(c z3FuncDecl) FuncDecl {
+	ctx.checkError("func decl")
 	z3_inc_ref(ctx.c, z3FuncDecl_to_ast(ctx.c, c))
+	ctx.checkError("func decl inc_ref")
 	fd := FuncDecl{ctx: ctx, c: c}
 	//runtime.SetFinalizer(&fd, func(fd *FuncDecl) {
 	//	z3_dec_ref(fd.ctx.c, z3FuncDecl_to_ast(fd.ctx.c, fd.c))
@@ -1248,13 +1268,6 @@ func (s *Z3Solver) SetParam(key, value string) {
 
 }
 
-// ErrMsg is returned for Z3 errors that are caught.
-type ErrMsg struct {
-	Msg string
-}
-
-func (e *ErrMsg) Error() string { return fmt.Sprintf("z3: %s", e.Msg) }
-
 // String handles are owned by the JavaScript host. The host copies bytes out of
 // Z3 wasm and exposes them here as a tiny length/copy/release protocol.
 //
@@ -1284,6 +1297,12 @@ func z3_mk_interpolation_context(cfg z3Config) z3Context
 
 //go:wasmimport smt_z3 Z3_set_error_handler
 func z3_set_error_handler(ctx z3Context)
+
+//go:wasmimport smt_z3 Z3_get_error_code
+func z3_get_error_code(ctx z3Context) int32
+
+//go:wasmimport smt_z3 Z3_get_error_msg
+func z3_get_error_msg(ctx z3Context, code int32) z3StringHandle
 
 //go:wasmimport smt_z3 Z3_del_context
 func z3_del_context(ctx z3Context)

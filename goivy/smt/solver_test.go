@@ -27,3 +27,27 @@ func TestSolverBoolRoundTrip(t *testing.T) {
 		t.Fatalf("uninterpreted sort name = %q, want %q", got, "Thing")
 	}
 }
+
+func TestZ3ErrorCallbackBoundary(t *testing.T) {
+	ctx := NewZ3Context()
+	defer ctx.Close()
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Fatal("BvSort(0) did not report a Z3 error")
+		}
+		err, ok := r.(*ErrMsg)
+		if !ok {
+			t.Fatalf("recovered %T, want *ErrMsg", r)
+		}
+		if err.Code == 0 {
+			t.Fatalf("error code = %d, want a Z3 error", err.Code)
+		}
+		if err.Msg == "" {
+			t.Fatal("empty Z3 error message")
+		}
+	}()
+
+	_ = ctx.BvSort(0)
+}
