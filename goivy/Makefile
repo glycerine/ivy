@@ -184,12 +184,12 @@ test-z3-wasm-browser: z3-wasm-api $(WEBVUE_PLAYWRIGHT_BIN)
 # Ivy-Go browser/local-worker builds are wasip1-only. Do not add wasm-unknown
 # or raw wasm build-tag variants; GOARCH=wasm is only the machine architecture
 # under GOOS=wasip1.
-$(TINYGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/exports_tinygo.go z3bridge_tinygo_host_import.go z3bridge_tinygo_stub.go
+$(TINYGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/exports_tinygo.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
 	$(TINYGO) build -tags xtracer_off -target wasip1 -buildmode=c-shared -scheduler=none -panic=trap -gc=leaking -no-debug -o $(TINYGO_IVY_WASIP1_PROBE_WASM) ./tinygo_probe
 
 tinygo-ivy-wasip1-probe-wasm: $(TINYGO_IVY_WASIP1_PROBE_WASM)
 
-$(BIGGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/exports_wasip1.go z3bridge_tinygo_host_import.go z3bridge_tinygo_stub.go
+$(BIGGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/exports_wasip1.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
 	GOOS=wasip1 GOARCH=wasm go build -tags xtracer_off -o $(BIGGO_IVY_WASIP1_PROBE_WASM) ./tinygo_probe
 
 biggo-ivy-wasip1-probe-wasm: $(BIGGO_IVY_WASIP1_PROBE_WASM)

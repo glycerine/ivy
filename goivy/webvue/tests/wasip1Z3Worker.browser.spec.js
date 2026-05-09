@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const webvueDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const srcDir = path.join(webvueDir, 'src');
 const staticDir = path.join(webvueDir, 'static');
 
 const contentTypes = new Map([
@@ -23,13 +24,26 @@ test.beforeAll(async () => {
   server = http.createServer(async (request, response) => {
     try {
       const url = new URL(request.url ?? '/', 'http://127.0.0.1');
-      const pathname = url.pathname === '/' ? '/index.html' : url.pathname;
-      const filePath = path.normalize(path.join(staticDir, pathname));
+      let filePath;
 
-      if (!filePath.startsWith(staticDir + path.sep)) {
-        response.writeHead(403);
-        response.end('forbidden');
-        return;
+      if (url.pathname === '/') {
+        filePath = path.join(staticDir, 'index.html');
+      } else if (url.pathname.startsWith('/src/')) {
+        filePath = path.normalize(path.join(webvueDir, url.pathname));
+
+        if (!filePath.startsWith(srcDir + path.sep)) {
+          response.writeHead(403);
+          response.end('forbidden');
+          return;
+        }
+      } else {
+        filePath = path.normalize(path.join(staticDir, url.pathname));
+
+        if (!filePath.startsWith(staticDir + path.sep)) {
+          response.writeHead(403);
+          response.end('forbidden');
+          return;
+        }
       }
 
       const data = await fs.readFile(filePath);
@@ -223,12 +237,23 @@ test('TinyGo and Big Go WASI Ivy wasm call Z3 wasm through JavaScript in a worke
         let wasmMemory;
         let boolSortCalls = 0;
         let lastSortId = 0;
+        const { createSmtZ3Imports } = await import(assetBaseURL + '/src/workers/smtZ3Imports.js');
+
+        function recordBoolSort(z3ctx, sort) {
+          boolSortCalls += 1;
+          lastSortId = z3._Z3_get_sort_id(z3ctx, sort) >>> 0;
+          return sort >>> 0;
+        }
+
+        const smtZ3Imports = createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory });
+        const smtMkBoolSort = smtZ3Imports.Z3_mk_bool_sort;
+        smtZ3Imports.Z3_mk_bool_sort = (z3ctx) => recordBoolSort(z3ctx, smtMkBoolSort(z3ctx));
+
         const imports = {
+          smt_z3: smtZ3Imports,
           goivy_z3: {
             bool_sort() {
-              boolSortCalls += 1;
-              const sort = z3._Z3_mk_bool_sort(ctx);
-              lastSortId = z3._Z3_get_sort_id(ctx, sort) >>> 0;
+              recordBoolSort(ctx, z3._Z3_mk_bool_sort(ctx));
               return lastSortId;
             },
           },
