@@ -89,25 +89,12 @@ test('Big Go WASI Ivy wasm calls Z3 wasm through JavaScript in a worker', async 
     const workerSource = `
       const assetBaseURL = ${JSON.stringify(assetBaseURL)};
 
-      function createWasi(wasiShim, argv0) {
-        return new wasiShim.WASI(
-          [argv0],
-          [],
-          [
-            new wasiShim.OpenFile(new wasiShim.File(new Uint8Array())),
-            new wasiShim.ConsoleStdout(() => {}),
-            new wasiShim.ConsoleStdout(() => {}),
-            new wasiShim.PreopenDirectory('.', []),
-          ],
-        );
-      }
-
       async function instantiateProbe(z3, ctx, probe) {
         let wasmMemory;
         let boolSortCalls = 0;
         let lastSortId = 0;
         const { createSmtZ3Imports } = await import(assetBaseURL + '/src/workers/smtZ3Imports.js');
-        const wasiShim = await import(assetBaseURL + '/node_modules/@bjorn3/browser_wasi_shim/dist/index.js');
+        const { createGoIvyWasiP1 } = await import(assetBaseURL + '/src/workers/goivyWasiP1.js');
 
         function recordBoolSort(z3ctx, sort) {
           boolSortCalls += 1;
@@ -118,7 +105,13 @@ test('Big Go WASI Ivy wasm calls Z3 wasm through JavaScript in a worker', async 
         const smtZ3Imports = createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory });
         const smtMkBoolSort = smtZ3Imports.Z3_mk_bool_sort;
         smtZ3Imports.Z3_mk_bool_sort = (z3ctx) => recordBoolSort(z3ctx, smtMkBoolSort(z3ctx));
-        const wasi = createWasi(wasiShim, probe.file);
+        const wasi = createGoIvyWasiP1({
+          args: [probe.file],
+          includeRoot: '.',
+          includeTree: { root: '.', files: [] },
+          stdout() {},
+          stderr() {},
+        });
 
         const imports = {
           smt_z3: smtZ3Imports,

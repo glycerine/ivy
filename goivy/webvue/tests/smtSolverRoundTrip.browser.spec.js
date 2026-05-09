@@ -90,25 +90,12 @@ async function runSmtWasip1Fixture(page, wasmFile, exportNames) {
       const wasmFile = ${JSON.stringify(wasmFile)};
       const exportNames = ${JSON.stringify(exportNames)};
 
-      function createWasi(wasiShim) {
-        return new wasiShim.WASI(
-          [wasmFile],
-          [],
-          [
-            new wasiShim.OpenFile(new wasiShim.File(new Uint8Array())),
-            new wasiShim.ConsoleStdout(() => {}),
-            new wasiShim.ConsoleStdout(() => {}),
-            new wasiShim.PreopenDirectory('.', []),
-          ],
-        );
-      }
-
       self.onmessage = async () => {
         let z3;
 
         try {
           const { createSmtZ3Imports } = await import(assetBaseURL + '/src/workers/smtZ3Imports.js');
-          const wasiShim = await import(assetBaseURL + '/node_modules/@bjorn3/browser_wasi_shim/dist/index.js');
+          const { createGoIvyWasiP1 } = await import(assetBaseURL + '/src/workers/goivyWasiP1.js');
 
           importScripts(assetBaseURL + '/z3-471-api.js');
           if (typeof initZ3 !== 'function') {
@@ -125,7 +112,13 @@ async function runSmtWasip1Fixture(page, wasmFile, exportNames) {
           });
 
           let wasmMemory;
-          const wasi = createWasi(wasiShim);
+          const wasi = createGoIvyWasiP1({
+            args: [wasmFile],
+            includeRoot: '.',
+            includeTree: { root: '.', files: [] },
+            stdout() {},
+            stderr() {},
+          });
           const imports = {
             smt_z3: createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory }),
             wasi_snapshot_preview1: wasi.wasiImport,

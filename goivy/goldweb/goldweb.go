@@ -311,10 +311,7 @@ func (a *app) listenAndServe() error {
 	mux.HandleFunc("/z3-471-api.js", serveFile(filepath.Join(a.staticDir, "z3-471-api.js"), "text/javascript; charset=utf-8"))
 	mux.HandleFunc("/z3-471-api.wasm", serveFile(filepath.Join(a.staticDir, "z3-471-api.wasm"), "application/wasm"))
 	mux.HandleFunc("/src/workers/smtZ3Imports.js", serveFile(filepath.Join(a.workerDir, "smtZ3Imports.js"), "text/javascript; charset=utf-8"))
-	mux.Handle("/node_modules/@bjorn3/browser_wasi_shim/", noStore(http.StripPrefix(
-		"/node_modules/@bjorn3/browser_wasi_shim/",
-		http.FileServer(http.Dir(filepath.Join(a.webvueDir, "node_modules", "@bjorn3", "browser_wasi_shim"))),
-	)))
+	mux.HandleFunc("/src/workers/goivyWasiP1.js", serveFile(filepath.Join(a.workerDir, "goivyWasiP1.js"), "text/javascript; charset=utf-8"))
 
 	a.httpServer = &http.Server{
 		Addr:              a.listen,
@@ -356,13 +353,6 @@ func serveFile(path, contentType string) http.HandlerFunc {
 		setNoStore(w)
 		http.ServeFile(w, r, path)
 	}
-}
-
-func noStore(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		setNoStore(w)
-		next.ServeHTTP(w, r)
-	})
 }
 
 func setNoStore(w http.ResponseWriter) {
@@ -1776,63 +1766,12 @@ function makeHeapProfileFDParser() {
   };
 }
 
-function includeDirectoryFromTree(wasiShim, tree) {
-  const root = { dirs: new Map(), files: new Map() };
-
-  function childDir(parent, name) {
-    let dir = parent.dirs.get(name);
-    if (!dir) {
-      dir = { dirs: new Map(), files: new Map() };
-      parent.dirs.set(name, dir);
-    }
-    return dir;
-  }
-
-  for (const file of tree.files || []) {
-    const parts = String(file.path || '').split('/').filter(Boolean);
-    if (!parts.length) {
-      continue;
-    }
-    const filename = parts.pop();
-    let dir = root;
-    for (const part of parts) {
-      dir = childDir(dir, part);
-    }
-    dir.files.set(filename, textEncoder.encode(String(file.data || '')));
-  }
-
-  function materialize(dir) {
-    const entries = [];
-    for (const [name, child] of Array.from(dir.dirs.entries()).sort()) {
-      entries.push([name, materialize(child)]);
-    }
-    for (const [name, bytes] of Array.from(dir.files.entries()).sort()) {
-      entries.push([name, new wasiShim.File(bytes, { readonly: true })]);
-    }
-    return new wasiShim.Directory(entries);
-  }
-
-  return materialize(root);
-}
-
-async function loadIncludeTree(wasiShim, assetBaseURL, version) {
+async function loadIncludeTree(assetBaseURL, version) {
   const response = await fetch(assetURL(assetBaseURL, '/ivy-include-tree.json', version), { cache: 'no-store' });
   if (!response.ok) {
     throw new Error('could not fetch /ivy-include-tree.json: HTTP ' + response.status);
   }
-  const tree = await response.json();
-  return {
-    root: String(tree.root || 'include'),
-    directory: includeDirectoryFromTree(wasiShim, tree)
-  };
-}
-
-function makeNonPreopenStdout(wasiShim, write) {
-  return new class extends wasiShim.ConsoleStdout {
-    fd_prestat_get() {
-      return { ret: wasiShim.wasi.ERRNO_NOTDIR, prestat: null };
-    }
-  }(write);
+  return response.json();
 }
 
 self.onmessage = async (event) => {
@@ -1842,7 +1781,7 @@ self.onmessage = async (event) => {
     const assetBaseURL = self.location.origin;
     const commandAssetVersion = goldwebAssetVersion + '-' + String(command.id || Date.now());
     const z3Imports = await import(assetURL(assetBaseURL, '/src/workers/smtZ3Imports.js', commandAssetVersion));
-    const wasiShim = await import(assetURL(assetBaseURL, '/node_modules/@bjorn3/browser_wasi_shim/dist/index.js', commandAssetVersion));
+    const wasiHost = await import(assetURL(assetBaseURL, '/src/workers/goivyWasiP1.js', commandAssetVersion));
     importScripts(assetURL(assetBaseURL, '/z3-471-api.js', commandAssetVersion));
     if (typeof initZ3 !== 'function') {
       throw new Error('z3-471-api.js did not expose initZ3');
@@ -1874,21 +1813,23 @@ self.onmessage = async (event) => {
     const emitHeapProfile = (data) => {
       heapProfileFD.write(data);
     };
-    const includeTree = await loadIncludeTree(wasiShim, assetBaseURL, commandAssetVersion);
-    const wasi = new wasiShim.WASI(
-      ['goivy_check_wasip1'],
-      [
-        'GOIVY_INCLUDE=' + includeTree.root,
+    const includeTree = await loadIncludeTree(assetBaseURL, commandAssetVersion);
+    const includeRoot = String(includeTree.root || 'include');
+    const wasi = wasiHost.createGoIvyWasiP1({
+      args: ['goivy_check_wasip1'],
+      env: [
+        'GOIVY_INCLUDE=' + includeRoot,
         'GOIVY_WASM_HEAPPROFILE_INTERVAL=10',
       ],
-      [
-        new wasiShim.OpenFile(new wasiShim.File(new Uint8Array())),
-        new wasiShim.ConsoleStdout(emitStdout),
-        new wasiShim.ConsoleStdout(emitStderr),
-        new wasiShim.PreopenDirectory(includeTree.root, includeTree.directory.contents),
-        makeNonPreopenStdout(wasiShim, emitHeapProfile),
-      ],
-    );
+      includeRoot,
+      includeTree,
+      stdout: emitStdout,
+      stderr: emitStderr,
+      heapProfile: emitHeapProfile,
+      debug(text) {
+        self.postMessage({ type: 'stream', fd: 2, data: String(text) + '\n' });
+      },
+    });
 
     let wasmMemory;
     const imports = {
