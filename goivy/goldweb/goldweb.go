@@ -1966,6 +1966,18 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function makeZ3ErrorLogger(streams) {
+  let count = 0;
+  return (event) => {
+    count += 1;
+    if (count <= 50) {
+      streams.emitStderr(textEncoder.encode('[z3 error] code=' + event.code + ' message=' + event.message + '\n'));
+    } else if (count === 51) {
+      streams.emitStderr(textEncoder.encode('[z3 error] suppressing further Z3 error callback logs\n'));
+    }
+  };
+}
+
 async function runWasip1GoivyCheck(command, assetBaseURL, commandAssetVersion, z3Imports, z3, includeTree, streams) {
   const wasiHost = await import(assetURL(assetBaseURL, '/src/workers/goivyWasiP1.js', commandAssetVersion));
   const includeRoot = String(includeTree.root || 'include');
@@ -1986,8 +1998,9 @@ async function runWasip1GoivyCheck(command, assetBaseURL, commandAssetVersion, z
   });
 
   let wasmMemory;
+  const z3ErrorLogger = makeZ3ErrorLogger(streams);
   const imports = {
-    smt_z3: z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory }),
+    smt_z3: z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory, onError: z3ErrorLogger }),
     wasi_snapshot_preview1: wasi.wasiImport,
   };
 
@@ -2061,7 +2074,8 @@ async function runJSGoivyCheck(command, assetBaseURL, commandAssetVersion, z3Imp
       self.postMessage({ type: 'stream', fd: 2, data: '[go js/wasm] exit code ' + code + '\n' });
     }
   };
-  go.importObject.smt_z3 = z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory });
+  const z3ErrorLogger = makeZ3ErrorLogger(streams);
+  go.importObject.smt_z3 = z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory, onError: z3ErrorLogger });
 
   const response = await fetch(assetURL(assetBaseURL, '/goivy-check.wasm', commandAssetVersion), { cache: 'no-store' });
   if (!response.ok) {

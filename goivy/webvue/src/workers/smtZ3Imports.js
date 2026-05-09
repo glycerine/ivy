@@ -134,7 +134,7 @@ function makeScratchTable() {
   };
 }
 
-function makeErrorTracker(z3, z3StringText) {
+function makeErrorTracker(z3, z3StringText, onError) {
   let callbackPtr = 0;
   const events = [];
 
@@ -156,6 +156,13 @@ function makeErrorTracker(z3, z3StringText) {
         event.message = '';
       }
       events.push(event);
+      if (typeof onError === 'function') {
+        try {
+          onError({ ...event });
+        } catch {
+          // Error reporting must never become the Z3 error behavior.
+        }
+      }
     }, 'vii');
 
     return callbackPtr;
@@ -177,7 +184,7 @@ function makeErrorTracker(z3, z3StringText) {
   };
 }
 
-export function createSmtZ3Imports({ z3, getGoMemory }) {
+export function createSmtZ3Imports({ z3, getGoMemory, onError }) {
   const strings = makeStringTable();
   const scratch = makeScratchTable();
   let lastU32Results = [];
@@ -193,7 +200,7 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     return strings.addBytes(z3CStringBytes(z3, handle));
   }
 
-  const errors = makeErrorTracker(z3, z3StringText);
+  const errors = makeErrorTracker(z3, z3StringText, onError);
 
   function symbolFromScratch(ctx, handle, len) {
     return withZ3CString(z3, textDecoder.decode(scratch.takeBytes(handle, len)), (z3Ptr) => (

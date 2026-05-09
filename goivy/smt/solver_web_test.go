@@ -82,6 +82,75 @@ func smtSolverCanonPreservesEnumQuantifierAndFalse() int32 {
 	}
 	return 1
 }
+
+//go:wasmexport smt_solver_canon_preserves_enum_function_copy
+func smtSolverCanonPreservesEnumFunctionCopy() int32 {
+	ctx := smt.NewZ3Context()
+	defer ctx.Close()
+
+	opSort, opVals := ctx.EnumSort("op_type", []string{"nop", "write", "read", "rrsp", "wr_cmp"})
+	lclockSort := ctx.UninterpretedSort("lclock")
+	req := ctx.Function("ref.evs.req", []smt.Z3Sort{lclockSort}, opSort)
+	oldReq := ctx.Function("__ref.evs.req", []smt.Z3Sort{lclockSort}, opSort)
+	tick := ctx.Const("V0:lclock", lclockSort)
+
+	solver := ctx.NewZ3Solver()
+	solver.Assert(ctx.ForAll([]smt.Z3Expr{tick}, ctx.Eq(req.Apply(tick), oldReq.Apply(tick))))
+	solver.Assert(ctx.ForAll([]smt.Z3Expr{tick}, ctx.Eq(req.Apply(tick), ctx.Ite(ctx.BoolVal(true), oldReq.Apply(tick), opVals[0]))))
+
+	canon := solver.CanonZ3Assertions()
+	if strings.Contains(canon, "unknown_kind=") {
+		return 0
+	}
+	if !strings.Contains(canon, "(a = (a ref.evs.req (v V0:lclock)) (a __ref.evs.req (v V0:lclock)))") {
+		return 0
+	}
+	if !strings.Contains(canon, "(a if (c true Bool) (a __ref.evs.req (v V0:lclock)) (c nop op_type))") {
+		return 0
+	}
+	return 1
+}
+
+//go:wasmexport smt_solver_canon_preserves_multi_bound_enum_premise
+func smtSolverCanonPreservesMultiBoundEnumPremise() int32 {
+	ctx := smt.NewZ3Context()
+	defer ctx.Close()
+
+	opSort, opVals := ctx.EnumSort("op_type", []string{"nop", "write", "read", "rrsp", "wr_cmp"})
+	locSort, locVals := ctx.EnumSort("loc_type", []string{"init_l", "cf_mem_l", "cf_pio_l", "cf_cmp_l", "if_l", "memc_l", "dramc_l", "arm_l"})
+	lclockSort := ctx.UninterpretedSort("lclock")
+	tarCFClockSort := ctx.UninterpretedSort("tar_cf_clock")
+
+	req := ctx.Function("__ref.evs.req", []smt.Z3Sort{lclockSort}, opSort)
+	lReq := ctx.Function("__ref.evs.l_req", []smt.Z3Sort{lclockSort}, locSort)
+	arrMin := ctx.Const("cfabric.t_rd_arr_min", tarCFClockSort)
+	tick := ctx.Const("T:lclock", lclockSort)
+	tarr := ctx.Const("Tarr:tar_cf_clock", tarCFClockSort)
+
+	body := ctx.Implies(
+		ctx.And(
+			ctx.Eq(arrMin, tarr),
+			ctx.Eq(req.Apply(tick), opVals[2]),
+			ctx.Eq(lReq.Apply(tick), locVals[1]),
+		),
+		ctx.Eq(arrMin, tarr),
+	)
+
+	solver := ctx.NewZ3Solver()
+	solver.Assert(ctx.ForAll([]smt.Z3Expr{tick, tarr}, body))
+
+	canon := solver.CanonZ3Assertions()
+	if strings.Contains(canon, "unknown_kind=") {
+		return 0
+	}
+	if !strings.Contains(canon, "(a = (a __ref.evs.req (v T:lclock)) (c read op_type))") {
+		return 0
+	}
+	if !strings.Contains(canon, "(a = (a __ref.evs.l_req (v T:lclock)) (c cf_mem_l loc_type))") {
+		return 0
+	}
+	return 1
+}
 `
 
 const solverBoolRoundTripJSSource = `//go:build js && wasm
@@ -114,6 +183,8 @@ func runSolverRoundTrip() map[string]any {
 		"unsatTrueAndNotTrue":               0,
 		"uninterpretedSortNameOK":           0,
 		"canonPreservesEnumQuantifierFalse": 0,
+		"canonPreservesEnumFunctionCopy":    0,
+		"canonPreservesMultiBoundPremise":   0,
 		"canon":                             "",
 		"panic":                             "",
 	}
@@ -154,6 +225,45 @@ func runSolverRoundTrip() map[string]any {
 		strings.Contains(canon, "(a = (a ref.evs.req (v T)) (c read op_type))") &&
 		strings.Contains(canon, "(c false Bool)") {
 		result["canonPreservesEnumQuantifierFalse"] = 1
+	}
+
+	opSortCopy, opValsCopy := ctx.EnumSort("op_type_copy", []string{"nop", "write", "read", "rrsp", "wr_cmp"})
+	lclockSortCopy := ctx.UninterpretedSort("lclock_copy")
+	reqCopy := ctx.Function("ref.evs.req.copy", []smt.Z3Sort{lclockSortCopy}, opSortCopy)
+	oldReqCopy := ctx.Function("__ref.evs.req.copy", []smt.Z3Sort{lclockSortCopy}, opSortCopy)
+	tickCopy := ctx.Const("V0:lclock", lclockSortCopy)
+	copySolver := ctx.NewZ3Solver()
+	copySolver.Assert(ctx.ForAll([]smt.Z3Expr{tickCopy}, ctx.Eq(reqCopy.Apply(tickCopy), oldReqCopy.Apply(tickCopy))))
+	copySolver.Assert(ctx.ForAll([]smt.Z3Expr{tickCopy}, ctx.Eq(reqCopy.Apply(tickCopy), ctx.Ite(ctx.BoolVal(true), oldReqCopy.Apply(tickCopy), opValsCopy[0]))))
+	copyCanon := copySolver.CanonZ3Assertions()
+	if !strings.Contains(copyCanon, "unknown_kind=") &&
+		strings.Contains(copyCanon, "(a = (a ref.evs.req.copy (v V0:lclock)) (a __ref.evs.req.copy (v V0:lclock)))") &&
+		strings.Contains(copyCanon, "(a if (c true Bool) (a __ref.evs.req.copy (v V0:lclock)) (c nop op_type_copy))") {
+		result["canonPreservesEnumFunctionCopy"] = 1
+	}
+
+	locSort, locVals := ctx.EnumSort("loc_type", []string{"init_l", "cf_mem_l", "cf_pio_l", "cf_cmp_l", "if_l", "memc_l", "dramc_l", "arm_l"})
+	tarCFClockSort := ctx.UninterpretedSort("tar_cf_clock")
+	reqPremise := ctx.Function("__ref.evs.req", []smt.Z3Sort{lclockSort}, opSort)
+	lReqPremise := ctx.Function("__ref.evs.l_req", []smt.Z3Sort{lclockSort}, locSort)
+	arrMin := ctx.Const("cfabric.t_rd_arr_min", tarCFClockSort)
+	tickPremise := ctx.Const("T:lclock", lclockSort)
+	tarr := ctx.Const("Tarr:tar_cf_clock", tarCFClockSort)
+	premiseBody := ctx.Implies(
+		ctx.And(
+			ctx.Eq(arrMin, tarr),
+			ctx.Eq(reqPremise.Apply(tickPremise), opVals[2]),
+			ctx.Eq(lReqPremise.Apply(tickPremise), locVals[1]),
+		),
+		ctx.Eq(arrMin, tarr),
+	)
+	premiseSolver := ctx.NewZ3Solver()
+	premiseSolver.Assert(ctx.ForAll([]smt.Z3Expr{tickPremise, tarr}, premiseBody))
+	premiseCanon := premiseSolver.CanonZ3Assertions()
+	if !strings.Contains(premiseCanon, "unknown_kind=") &&
+		strings.Contains(premiseCanon, "(a = (a __ref.evs.req (v T:lclock)) (c read op_type))") &&
+		strings.Contains(premiseCanon, "(a = (a __ref.evs.l_req (v T:lclock)) (c cf_mem_l loc_type))") {
+		result["canonPreservesMultiBoundPremise"] = 1
 	}
 
 	return result
