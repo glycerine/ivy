@@ -70,6 +70,7 @@ type app struct {
 	includeDir string
 	goivyWasm  string
 	ivyCheck   string
+	version    string
 	httpServer *http.Server
 
 	mu      sync.Mutex
@@ -83,6 +84,7 @@ type app struct {
 type wsClient struct {
 	app    *app
 	conn   *websocket.Conn
+	version string
 	send   chan []byte
 	done   chan struct{}
 	closed sync.Once
@@ -101,6 +103,7 @@ type wsEnvelope struct {
 	Error       string            `json:"error,omitempty"`
 	Status      string            `json:"status,omitempty"`
 	Message     string            `json:"message,omitempty"`
+	Version     string            `json:"version,omitempty"`
 	XTraceIndex *int              `json:"xtrace_index,omitempty"`
 }
 
@@ -213,6 +216,7 @@ func newApp(listen, root, includeDir, goivyWasm, ivyCheck string, startupReq *go
 		includeDir: includeDir,
 		goivyWasm:  goivyWasm,
 		ivyCheck:   ivyCheck,
+		version:    newID(),
 		clients:    make(map[*wsClient]bool),
 		jobs:       make(map[string]*job),
 		startupReq: startupReq,
@@ -267,10 +271,10 @@ func (a *app) listenAndServe() error {
 	mux.HandleFunc("/z3-471-api.js", serveFile(filepath.Join(a.staticDir, "z3-471-api.js"), "text/javascript; charset=utf-8"))
 	mux.HandleFunc("/z3-471-api.wasm", serveFile(filepath.Join(a.staticDir, "z3-471-api.wasm"), "application/wasm"))
 	mux.HandleFunc("/src/workers/smtZ3Imports.js", serveFile(filepath.Join(a.workerDir, "smtZ3Imports.js"), "text/javascript; charset=utf-8"))
-	mux.Handle("/node_modules/@bjorn3/browser_wasi_shim/", http.StripPrefix(
+	mux.Handle("/node_modules/@bjorn3/browser_wasi_shim/", noStore(http.StripPrefix(
 		"/node_modules/@bjorn3/browser_wasi_shim/",
 		http.FileServer(http.Dir(filepath.Join(a.webvueDir, "node_modules", "@bjorn3", "browser_wasi_shim"))),
-	))
+	)))
 
 	a.httpServer = &http.Server{
 		Addr:              a.listen,
@@ -278,8 +282,9 @@ func (a *app) listenAndServe() error {
 		ReadHeaderTimeout: 10 * time.Second,
 	}
 	log.Printf("goldweb listening on http://%s", a.listen)
+	log.Printf("goldweb browser asset version %s", a.version)
 	log.Printf("POST JSON to http://%s/goivy_check to start a browser-backed check", a.listen)
-	log.Printf("serving Ivy include tree from %s as browser path include/", a.includeDir)
+	log.Printf("serving Ivy include tree from %s as the same browser WASI path", a.includeDir)
 	if a.startupReq != nil {
 		log.Printf("will submit %s to the first browser websocket client", a.startupReq.Filename)
 	}
@@ -292,8 +297,9 @@ func (a *app) serveIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Header().Set("Cache-Control", "no-store")
-	_, _ = io.WriteString(w, indexHTML)
+	setNoStore(w)
+	html := strings.ReplaceAll(indexHTML, "__GOLDWEB_ASSET_VERSION__", a.version)
+	_, _ = io.WriteString(w, html)
 }
 
 func serveFile(path, contentType string) http.HandlerFunc {
@@ -307,9 +313,22 @@ func serveFile(path, contentType string) http.HandlerFunc {
 			return
 		}
 		w.Header().Set("Content-Type", contentType)
-		w.Header().Set("Cache-Control", "no-store")
+		setNoStore(w)
 		http.ServeFile(w, r, path)
 	}
+}
+
+func noStore(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		setNoStore(w)
+		next.ServeHTTP(w, r)
+	})
+}
+
+func setNoStore(w http.ResponseWriter) {
+	w.Header().Set("Cache-Control", "no-store, max-age=0, must-revalidate")
+	w.Header().Set("Pragma", "no-cache")
+	w.Header().Set("Expires", "0")
 }
 
 func (a *app) serveIncludeTree(w http.ResponseWriter, r *http.Request) {
@@ -384,10 +403,11 @@ func (a *app) serveWS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	c := &wsClient{
-		app:  a,
-		conn: conn,
-		send: make(chan []byte, sendQueueLen),
-		done: make(chan struct{}),
+		app:     a,
+		conn:    conn,
+		version: r.URL.Query().Get("v"),
+		send:    make(chan []byte, sendQueueLen),
+		done:    make(chan struct{}),
 	}
 	a.register(c)
 	go c.writePump()
@@ -400,7 +420,14 @@ func (a *app) register(c *wsClient) {
 	n := len(a.clients)
 	a.mu.Unlock()
 	log.Printf("browser websocket connected: %s; clients=%d", c.conn.RemoteAddr(), n)
-	_ = c.sendJSON(wsEnvelope{Type: "hello", Status: "ready", Message: "goldweb connected"})
+	if c.version != a.version {
+		msg := fmt.Sprintf("stale goldweb page version %q; server is %q; reload required", c.version, a.version)
+		_ = c.sendJSON(wsEnvelope{Type: "hello", Status: "stale", Message: msg, Version: a.version})
+		_ = c.sendJSON(wsEnvelope{Type: "reload", Status: "stale", Message: msg, Version: a.version})
+		log.Printf("%s", msg)
+		return
+	}
+	_ = c.sendJSON(wsEnvelope{Type: "hello", Status: "ready", Message: "goldweb connected", Version: a.version})
 	a.maybeStartStartupJob(c)
 }
 
@@ -1232,6 +1259,11 @@ const indexHTML = `<!doctype html>
 
   <script type="text/plain" id="worker-source">
 const textEncoder = new TextEncoder();
+const goldwebAssetVersion = '__GOLDWEB_ASSET_VERSION__';
+
+function assetURL(assetBaseURL, path, version) {
+  return assetBaseURL + path + '?v=' + encodeURIComponent(version || goldwebAssetVersion);
+}
 
 function requireExport(exports, name) {
   const fn = exports[name];
@@ -1287,12 +1319,16 @@ function includeDirectoryFromTree(wasiShim, tree) {
   return materialize(root);
 }
 
-async function loadIncludeDirectory(wasiShim, assetBaseURL) {
-  const response = await fetch(assetBaseURL + '/ivy-include-tree.json', { cache: 'no-store' });
+async function loadIncludeTree(wasiShim, assetBaseURL, version) {
+  const response = await fetch(assetURL(assetBaseURL, '/ivy-include-tree.json', version), { cache: 'no-store' });
   if (!response.ok) {
     throw new Error('could not fetch /ivy-include-tree.json: HTTP ' + response.status);
   }
-  return includeDirectoryFromTree(wasiShim, await response.json());
+  const tree = await response.json();
+  return {
+    root: String(tree.root || 'include'),
+    directory: includeDirectoryFromTree(wasiShim, tree)
+  };
 }
 
 self.onmessage = async (event) => {
@@ -1300,9 +1336,10 @@ self.onmessage = async (event) => {
   let z3;
   try {
     const assetBaseURL = self.location.origin;
-    const z3Imports = await import(assetBaseURL + '/src/workers/smtZ3Imports.js');
-    const wasiShim = await import(assetBaseURL + '/node_modules/@bjorn3/browser_wasi_shim/dist/index.js');
-    importScripts(assetBaseURL + '/z3-471-api.js');
+    const commandAssetVersion = goldwebAssetVersion + '-' + String(command.id || Date.now());
+    const z3Imports = await import(assetURL(assetBaseURL, '/src/workers/smtZ3Imports.js', commandAssetVersion));
+    const wasiShim = await import(assetURL(assetBaseURL, '/node_modules/@bjorn3/browser_wasi_shim/dist/index.js', commandAssetVersion));
+    importScripts(assetURL(assetBaseURL, '/z3-471-api.js', commandAssetVersion));
     if (typeof initZ3 !== 'function') {
       throw new Error('z3-471-api.js did not expose initZ3');
     }
@@ -1315,9 +1352,9 @@ self.onmessage = async (event) => {
       },
       locateFile(file) {
         if (file === 'z3-api.wasm') {
-          return assetBaseURL + '/z3-471-api.wasm';
+          return assetURL(assetBaseURL, '/z3-471-api.wasm', commandAssetVersion);
         }
-        return assetBaseURL + '/' + file;
+        return assetURL(assetBaseURL, '/' + file, commandAssetVersion);
       }
     });
 
@@ -1329,15 +1366,15 @@ self.onmessage = async (event) => {
     const emitStderr = (data) => {
       self.postMessage({ type: 'stream', fd: 2, data: stderrDecoder.decode(data, { stream: true }) });
     };
-    const includeDir = await loadIncludeDirectory(wasiShim, assetBaseURL);
+    const includeTree = await loadIncludeTree(wasiShim, assetBaseURL, commandAssetVersion);
     const wasi = new wasiShim.WASI(
       ['goivy_check_wasip1'],
-      [],
+      ['GOIVY_INCLUDE=' + includeTree.root],
       [
         new wasiShim.OpenFile(new wasiShim.File(new Uint8Array())),
         new wasiShim.ConsoleStdout(emitStdout),
         new wasiShim.ConsoleStdout(emitStderr),
-        new wasiShim.PreopenDirectory('.', [['include', includeDir]]),
+        new wasiShim.PreopenDirectory(includeTree.root, includeTree.directory.contents),
       ],
     );
 
@@ -1347,7 +1384,7 @@ self.onmessage = async (event) => {
       wasi_snapshot_preview1: wasi.wasiImport,
     };
 
-    const response = await fetch(assetBaseURL + '/goivy-check.wasm', { cache: 'no-store' });
+    const response = await fetch(assetURL(assetBaseURL, '/goivy-check.wasm', commandAssetVersion), { cache: 'no-store' });
     if (!response.ok) {
       throw new Error('could not fetch /goivy-check.wasm: HTTP ' + response.status);
     }
@@ -1393,6 +1430,7 @@ self.onmessage = async (event) => {
   </script>
 
   <script>
+const pageVersion = '__GOLDWEB_ASSET_VERSION__';
 const statusEl = document.getElementById('status');
 const jobIdEl = document.getElementById('job-id');
 const stdoutBytesEl = document.getElementById('stdout-bytes');
@@ -1468,6 +1506,12 @@ function terminateAllJobs() {
   }
 }
 
+function reloadForServerVersion(version) {
+  terminateAllJobs();
+  const nextVersion = encodeURIComponent(version || String(Date.now()));
+  location.replace('/?v=' + nextVersion);
+}
+
 function showStream(fd, data) {
   const nbytes = uiTextEncoder.encode(data).length;
   if (fd === 2) {
@@ -1532,7 +1576,7 @@ stopJobEl.addEventListener('click', () => {
 
 function connect() {
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const ws = new WebSocket(proto + '//' + location.host + '/ws');
+  const ws = new WebSocket(proto + '//' + location.host + '/ws?v=' + encodeURIComponent(pageVersion));
 
   ws.onopen = () => {
     statusEl.textContent = 'connected; waiting for goldweb commands';
@@ -1552,7 +1596,17 @@ function connect() {
   ws.onmessage = (event) => {
     const msg = JSON.parse(event.data);
     if (msg.type === 'hello') {
+      if (msg.version && msg.version !== pageVersion) {
+        log(msg.message || 'server has a newer goldweb page; reloading');
+        reloadForServerVersion(msg.version);
+        return;
+      }
       log(msg.message || 'hello');
+      return;
+    }
+    if (msg.type === 'reload') {
+      log(msg.message || 'server requested reload');
+      reloadForServerVersion(msg.version);
       return;
     }
     if (msg.type === 'cancel') {
