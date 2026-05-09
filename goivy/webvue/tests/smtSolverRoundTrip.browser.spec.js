@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const webvueDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const nodeModulesDir = path.join(webvueDir, 'node_modules');
 const srcDir = path.join(webvueDir, 'src');
 const staticDir = path.join(webvueDir, 'static');
 const solverWasmFile = process.env.SMT_SOLVER_ROUND_TRIP_WASM;
@@ -27,6 +28,14 @@ test.beforeAll(async () => {
 
       if (url.pathname === '/') {
         filePath = path.join(staticDir, 'index.html');
+      } else if (url.pathname.startsWith('/node_modules/')) {
+        filePath = path.normalize(path.join(webvueDir, url.pathname));
+
+        if (!filePath.startsWith(nodeModulesDir + path.sep)) {
+          response.writeHead(403);
+          response.end('forbidden');
+          return;
+        }
       } else if (url.pathname.startsWith('/src/')) {
         filePath = path.normalize(path.join(webvueDir, url.pathname));
 
@@ -81,138 +90,17 @@ async function runSmtWasip1Fixture(page, wasmFile, exportNames) {
       const wasmFile = ${JSON.stringify(wasmFile)};
       const exportNames = ${JSON.stringify(exportNames)};
 
-      class WasiExit extends Error {
-        constructor(code) {
-          super('WASI exit ' + code);
-          this.name = 'WasiExit';
-          this.code = code >>> 0;
-        }
-      }
-
-      function createWasiImports(getMemory) {
-        const errnoSuccess = 0;
-        const errnoBadf = 8;
-        const textDecoder = new TextDecoder();
-
-        function memoryBytes() {
-          const memory = getMemory();
-          if (!memory) {
-            throw new Error('WASI import used before wasm memory was available');
-          }
-          return new Uint8Array(memory.buffer);
-        }
-
-        function memoryView() {
-          const memory = getMemory();
-          if (!memory) {
-            throw new Error('WASI import used before wasm memory was available');
-          }
-          return new DataView(memory.buffer);
-        }
-
-        function writeU32(ptr, value) {
-          memoryView().setUint32(ptr >>> 0, value >>> 0, true);
-        }
-
-        function writeU64(ptr, value) {
-          memoryView().setBigUint64(ptr >>> 0, BigInt(value), true);
-        }
-
-        function zero(ptr, length) {
-          memoryBytes().fill(0, ptr >>> 0, (ptr >>> 0) + (length >>> 0));
-        }
-
-        function copyRandom(ptr, length) {
-          const heap = memoryBytes();
-          let offset = ptr >>> 0;
-          let remaining = length >>> 0;
-          while (remaining > 0) {
-            const chunkLength = Math.min(remaining, 65536);
-            crypto.getRandomValues(heap.subarray(offset, offset + chunkLength));
-            offset += chunkLength;
-            remaining -= chunkLength;
-          }
-        }
-
-        return {
-          args_get() { return errnoSuccess; },
-          args_sizes_get(argcPtr, argvBufSizePtr) {
-            writeU32(argcPtr, 0);
-            writeU32(argvBufSizePtr, 0);
-            return errnoSuccess;
-          },
-          clock_time_get(clockId, precision, timePtr) {
-            void clockId;
-            void precision;
-            writeU64(timePtr, BigInt(Date.now()) * 1000000n);
-            return errnoSuccess;
-          },
-          environ_get() { return errnoSuccess; },
-          environ_sizes_get(countPtr, bufSizePtr) {
-            writeU32(countPtr, 0);
-            writeU32(bufSizePtr, 0);
-            return errnoSuccess;
-          },
-          fd_close() { return errnoSuccess; },
-          fd_fdstat_get(fd, statPtr) {
-            void fd;
-            zero(statPtr, 24);
-            return errnoSuccess;
-          },
-          fd_fdstat_set_flags() { return errnoSuccess; },
-          fd_prestat_dir_name() { return errnoBadf; },
-          fd_prestat_get() { return errnoBadf; },
-          fd_read(fd, iovsPtr, iovsLen, nreadPtr) {
-            void fd;
-            void iovsPtr;
-            void iovsLen;
-            writeU32(nreadPtr, 0);
-            return errnoSuccess;
-          },
-          fd_seek(fd, offset, whence, newOffsetPtr) {
-            void fd;
-            void offset;
-            void whence;
-            writeU64(newOffsetPtr, 0n);
-            return errnoSuccess;
-          },
-          fd_write(fd, iovsPtr, iovsLen, nwrittenPtr) {
-            const dataView = memoryView();
-            const heap = memoryBytes();
-            let written = 0;
-            let output = '';
-
-            for (let i = 0; i < iovsLen; i += 1) {
-              const iov = (iovsPtr >>> 0) + i * 8;
-              const ptr = dataView.getUint32(iov, true);
-              const len = dataView.getUint32(iov + 4, true);
-              written += len;
-              if (fd === 1 || fd === 2) {
-                output += textDecoder.decode(heap.subarray(ptr, ptr + len));
-              }
-            }
-
-            if (output.length) {
-              console[fd === 2 ? 'error' : 'log'](output.replace(/\\n$/, ''));
-            }
-            writeU32(nwrittenPtr, written);
-            return errnoSuccess;
-          },
-          path_open() { return errnoBadf; },
-          poll_oneoff(inPtr, outPtr, nsubscriptions, neventsPtr) {
-            void inPtr;
-            void outPtr;
-            void nsubscriptions;
-            writeU32(neventsPtr, 0);
-            return errnoSuccess;
-          },
-          proc_exit(code) { throw new WasiExit(code); },
-          random_get(bufPtr, bufLen) {
-            copyRandom(bufPtr, bufLen);
-            return errnoSuccess;
-          },
-          sched_yield() { return errnoSuccess; },
-        };
+      function createWasi(wasiShim) {
+        return new wasiShim.WASI(
+          [wasmFile],
+          [],
+          [
+            new wasiShim.OpenFile(new wasiShim.File(new Uint8Array())),
+            new wasiShim.ConsoleStdout(() => {}),
+            new wasiShim.ConsoleStdout(() => {}),
+            new wasiShim.PreopenDirectory('.', []),
+          ],
+        );
       }
 
       self.onmessage = async () => {
@@ -220,6 +108,7 @@ async function runSmtWasip1Fixture(page, wasmFile, exportNames) {
 
         try {
           const { createSmtZ3Imports } = await import(assetBaseURL + '/src/workers/smtZ3Imports.js');
+          const wasiShim = await import(assetBaseURL + '/node_modules/@bjorn3/browser_wasi_shim/dist/index.js');
 
           importScripts(assetBaseURL + '/z3-471-api.js');
           if (typeof initZ3 !== 'function') {
@@ -236,9 +125,10 @@ async function runSmtWasip1Fixture(page, wasmFile, exportNames) {
           });
 
           let wasmMemory;
+          const wasi = createWasi(wasiShim);
           const imports = {
             smt_z3: createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory }),
-            wasi_snapshot_preview1: createWasiImports(() => wasmMemory),
+            wasi_snapshot_preview1: wasi.wasiImport,
           };
 
           const response = await fetch(assetBaseURL + '/' + wasmFile, { cache: 'no-store' });
@@ -250,12 +140,9 @@ async function runSmtWasip1Fixture(page, wasmFile, exportNames) {
           const { instance } = await WebAssembly.instantiate(bytes, imports);
           wasmMemory = instance.exports.memory;
 
-          try {
-            instance.exports._start();
-          } catch (error) {
-            if (!(error instanceof WasiExit) || error.code !== 0) {
-              throw error;
-            }
+          const startCode = wasi.start(instance);
+          if (startCode !== 0) {
+            throw new Error(wasmFile + ' _start exited with code ' + startCode);
           }
 
           imports.smt_z3.__z3ClearErrors();

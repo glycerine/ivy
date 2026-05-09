@@ -242,6 +242,10 @@ func (a *app) listenAndServe() error {
 	mux.HandleFunc("/z3-471-api.js", serveFile(filepath.Join(a.staticDir, "z3-471-api.js"), "text/javascript; charset=utf-8"))
 	mux.HandleFunc("/z3-471-api.wasm", serveFile(filepath.Join(a.staticDir, "z3-471-api.wasm"), "application/wasm"))
 	mux.HandleFunc("/src/workers/smtZ3Imports.js", serveFile(filepath.Join(a.workerDir, "smtZ3Imports.js"), "text/javascript; charset=utf-8"))
+	mux.Handle("/node_modules/@bjorn3/browser_wasi_shim/", http.StripPrefix(
+		"/node_modules/@bjorn3/browser_wasi_shim/",
+		http.FileServer(http.Dir(filepath.Join(a.webvueDir, "node_modules", "@bjorn3", "browser_wasi_shim"))),
+	))
 
 	a.httpServer = &http.Server{
 		Addr:              a.listen,
@@ -981,139 +985,7 @@ const indexHTML = `<!doctype html>
   </div>
 
   <script type="text/plain" id="worker-source">
-const textDecoder = new TextDecoder();
 const textEncoder = new TextEncoder();
-
-class WasiExit extends Error {
-  constructor(code) {
-    super('WASI exit ' + code);
-    this.name = 'WasiExit';
-    this.code = code >>> 0;
-  }
-}
-
-function createWasiImports(getMemory, emit) {
-  const errnoSuccess = 0;
-  const errnoBadf = 8;
-
-  function memoryBytes() {
-    const memory = getMemory();
-    if (!memory) {
-      throw new Error('WASI import used before wasm memory was available');
-    }
-    return new Uint8Array(memory.buffer);
-  }
-
-  function memoryView() {
-    const memory = getMemory();
-    if (!memory) {
-      throw new Error('WASI import used before wasm memory was available');
-    }
-    return new DataView(memory.buffer);
-  }
-
-  function writeU32(ptr, value) {
-    memoryView().setUint32(ptr >>> 0, value >>> 0, true);
-  }
-
-  function writeU64(ptr, value) {
-    memoryView().setBigUint64(ptr >>> 0, BigInt(value), true);
-  }
-
-  function zero(ptr, length) {
-    memoryBytes().fill(0, ptr >>> 0, (ptr >>> 0) + (length >>> 0));
-  }
-
-  function copyRandom(ptr, length) {
-    const heap = memoryBytes();
-    let offset = ptr >>> 0;
-    let remaining = length >>> 0;
-    while (remaining > 0) {
-      const chunkLength = Math.min(remaining, 65536);
-      crypto.getRandomValues(heap.subarray(offset, offset + chunkLength));
-      offset += chunkLength;
-      remaining -= chunkLength;
-    }
-  }
-
-  return {
-    args_get() { return errnoSuccess; },
-    args_sizes_get(argcPtr, argvBufSizePtr) {
-      writeU32(argcPtr, 0);
-      writeU32(argvBufSizePtr, 0);
-      return errnoSuccess;
-    },
-    clock_time_get(clockId, precision, timePtr) {
-      void clockId;
-      void precision;
-      writeU64(timePtr, BigInt(Date.now()) * 1000000n);
-      return errnoSuccess;
-    },
-    environ_get() { return errnoSuccess; },
-    environ_sizes_get(countPtr, bufSizePtr) {
-      writeU32(countPtr, 0);
-      writeU32(bufSizePtr, 0);
-      return errnoSuccess;
-    },
-    fd_close() { return errnoSuccess; },
-    fd_fdstat_get(fd, statPtr) {
-      void fd;
-      zero(statPtr, 24);
-      return errnoSuccess;
-    },
-    fd_fdstat_set_flags() { return errnoSuccess; },
-    fd_prestat_dir_name() { return errnoBadf; },
-    fd_prestat_get() { return errnoBadf; },
-    fd_read(fd, iovsPtr, iovsLen, nreadPtr) {
-      void fd;
-      void iovsPtr;
-      void iovsLen;
-      writeU32(nreadPtr, 0);
-      return errnoSuccess;
-    },
-    fd_seek(fd, offset, whence, newOffsetPtr) {
-      void fd;
-      void offset;
-      void whence;
-      writeU64(newOffsetPtr, 0n);
-      return errnoSuccess;
-    },
-    fd_write(fd, iovsPtr, iovsLen, nwrittenPtr) {
-      const view = memoryView();
-      const heap = memoryBytes();
-      let written = 0;
-      let output = '';
-      for (let i = 0; i < iovsLen; i += 1) {
-        const iov = (iovsPtr >>> 0) + i * 8;
-        const ptr = view.getUint32(iov, true);
-        const len = view.getUint32(iov + 4, true);
-        written += len;
-        if (fd === 1 || fd === 2) {
-          output += textDecoder.decode(heap.subarray(ptr, ptr + len));
-        }
-      }
-      if (output.length) {
-        emit(fd, output);
-      }
-      writeU32(nwrittenPtr, written);
-      return errnoSuccess;
-    },
-    path_open() { return errnoBadf; },
-    poll_oneoff(inPtr, outPtr, nsubscriptions, neventsPtr) {
-      void inPtr;
-      void outPtr;
-      void nsubscriptions;
-      writeU32(neventsPtr, 0);
-      return errnoSuccess;
-    },
-    proc_exit(code) { throw new WasiExit(code); },
-    random_get(bufPtr, bufLen) {
-      copyRandom(bufPtr, bufLen);
-      return errnoSuccess;
-    },
-    sched_yield() { return errnoSuccess; }
-  };
-}
 
 function requireExport(exports, name) {
   const fn = exports[name];
@@ -1136,6 +1008,7 @@ self.onmessage = async (event) => {
   try {
     const assetBaseURL = self.location.origin;
     const z3Imports = await import(assetBaseURL + '/src/workers/smtZ3Imports.js');
+    const wasiShim = await import(assetBaseURL + '/node_modules/@bjorn3/browser_wasi_shim/dist/index.js');
     importScripts(assetBaseURL + '/z3-471-api.js');
     if (typeof initZ3 !== 'function') {
       throw new Error('z3-471-api.js did not expose initZ3');
@@ -1155,12 +1028,29 @@ self.onmessage = async (event) => {
       }
     });
 
+    const stdoutDecoder = new TextDecoder('utf-8', { fatal: false });
+    const stderrDecoder = new TextDecoder('utf-8', { fatal: false });
+    const emitStdout = (data) => {
+      self.postMessage({ type: 'stream', fd: 1, data: stdoutDecoder.decode(data, { stream: true }) });
+    };
+    const emitStderr = (data) => {
+      self.postMessage({ type: 'stream', fd: 2, data: stderrDecoder.decode(data, { stream: true }) });
+    };
+    const wasi = new wasiShim.WASI(
+      ['goivy_check_wasip1'],
+      [],
+      [
+        new wasiShim.OpenFile(new wasiShim.File(new Uint8Array())),
+        new wasiShim.ConsoleStdout(emitStdout),
+        new wasiShim.ConsoleStdout(emitStderr),
+        new wasiShim.PreopenDirectory('.', []),
+      ],
+    );
+
     let wasmMemory;
     const imports = {
       smt_z3: z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory }),
-      wasi_snapshot_preview1: createWasiImports(() => wasmMemory, (fd, data) => {
-        self.postMessage({ type: 'stream', fd, data });
-      })
+      wasi_snapshot_preview1: wasi.wasiImport,
     };
 
     const response = await fetch(assetBaseURL + '/goivy-check.wasm', { cache: 'no-store' });
@@ -1175,14 +1065,9 @@ self.onmessage = async (event) => {
       throw new Error('Go Ivy wasm does not export memory');
     }
 
-    try {
-      if (typeof instance.exports._start === 'function') {
-        instance.exports._start();
-      }
-    } catch (error) {
-      if (!(error instanceof WasiExit) || error.code !== 0) {
-        throw error;
-      }
+    const startCode = wasi.start(instance);
+    if (startCode !== 0) {
+      throw new Error('Go Ivy wasm _start exited with code ' + startCode);
     }
 
     const run = requireExport(instance.exports, 'goivy_check_run');
