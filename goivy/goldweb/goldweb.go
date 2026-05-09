@@ -15,6 +15,9 @@ package main
 //   - goivy_check_free(ptr uint32, n uint32)
 //   - goivy_check_run(specPtr, specLen, metaPtr, metaLen uint32) int32
 //
+// It may also import goldweb.heap_profile(elapsedSeconds, ptr, len) to ship
+// runtime/pprof heap profiles back to this server during long conformance runs.
+//
 // meta is JSON: {"filename":"browser_input.ivy","params":{"isolate":"x"}}.
 // The command writes its normal output to stdout/stderr; goldweb does not use a
 // special trace callback.
@@ -23,6 +26,7 @@ import (
 	"bufio"
 	"context"
 	"crypto/rand"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
@@ -101,6 +105,10 @@ type wsEnvelope struct {
 	Params      map[string]string `json:"params,omitempty"`
 	FD          int               `json:"fd,omitempty"`
 	Data        string            `json:"data,omitempty"`
+	ElapsedSec  int               `json:"elapsed_seconds,omitempty"`
+	ChunkIndex  int               `json:"chunk_index,omitempty"`
+	ChunkCount  int               `json:"chunk_count,omitempty"`
+	ProfileSize int               `json:"profile_size,omitempty"`
 	Code        int               `json:"code,omitempty"`
 	Error       string            `json:"error,omitempty"`
 	Status      string            `json:"status,omitempty"`
@@ -138,6 +146,7 @@ type job struct {
 	pySpool        *lineSpool
 	browserSpool   *lineSpool
 	browserBuf     streamLineBuffer
+	profiles       map[int]*profileAssembly
 	compareDone    chan struct{}
 	browserLogPath string
 	pyLogPath      string
@@ -164,6 +173,13 @@ type lineEvent struct {
 type streamLineBuffer struct {
 	partial string
 	fd      int
+}
+
+type profileAssembly struct {
+	elapsedSec  int
+	profileSize int
+	chunks      [][]byte
+	received    int
 }
 
 type lineSpool struct {
@@ -519,6 +535,15 @@ func (a *app) handleWSMessage(c *wsClient, data []byte) {
 			return
 		}
 		j.addBrowserData(msg.FD, msg.Data)
+	case "heap_profile":
+		j := a.lookupJob(msg.ID)
+		if j == nil {
+			log.Printf("heap profile for unknown job %q", msg.ID)
+			return
+		}
+		if err := j.addHeapProfileChunk(msg); err != nil {
+			log.Printf("heap profile for job %s: %v", msg.ID, err)
+		}
 	case "done":
 		j := a.lookupJob(msg.ID)
 		if j == nil {
@@ -689,6 +714,77 @@ func (j *job) closeXTraceLogs() {
 			log.Printf("close %s: %v", j.pyLogPath, err)
 		}
 	}
+}
+
+func (j *job) addHeapProfileChunk(msg wsEnvelope) error {
+	if msg.ChunkCount <= 0 {
+		return fmt.Errorf("invalid chunk_count=%d", msg.ChunkCount)
+	}
+	if msg.ChunkIndex < 0 || msg.ChunkIndex >= msg.ChunkCount {
+		return fmt.Errorf("invalid chunk_index=%d chunk_count=%d", msg.ChunkIndex, msg.ChunkCount)
+	}
+	chunk, err := base64.StdEncoding.DecodeString(msg.Data)
+	if err != nil {
+		return fmt.Errorf("decode chunk %d/%d at %ds: %w", msg.ChunkIndex+1, msg.ChunkCount, msg.ElapsedSec, err)
+	}
+
+	var profile []byte
+	j.mu.Lock()
+	if j.profiles == nil {
+		j.profiles = make(map[int]*profileAssembly)
+	}
+	assembly := j.profiles[msg.ElapsedSec]
+	if assembly == nil || len(assembly.chunks) != msg.ChunkCount || assembly.profileSize != msg.ProfileSize {
+		assembly = &profileAssembly{
+			elapsedSec:  msg.ElapsedSec,
+			profileSize: msg.ProfileSize,
+			chunks:      make([][]byte, msg.ChunkCount),
+		}
+		j.profiles[msg.ElapsedSec] = assembly
+	}
+	if assembly.chunks[msg.ChunkIndex] == nil {
+		assembly.received++
+	}
+	assembly.chunks[msg.ChunkIndex] = chunk
+	if assembly.received == len(assembly.chunks) {
+		total := 0
+		for _, part := range assembly.chunks {
+			total += len(part)
+		}
+		profile = make([]byte, 0, total)
+		for _, part := range assembly.chunks {
+			profile = append(profile, part...)
+		}
+		delete(j.profiles, msg.ElapsedSec)
+	}
+	j.mu.Unlock()
+
+	if profile == nil {
+		return nil
+	}
+	if msg.ProfileSize >= 0 && len(profile) != msg.ProfileSize {
+		return fmt.Errorf("assembled profile at %ds has %d bytes, expected %d", msg.ElapsedSec, len(profile), msg.ProfileSize)
+	}
+	path, err := webMemprofPath(msg.ElapsedSec)
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile(path, profile, 0o600); err != nil {
+		return fmt.Errorf("write %s: %w", path, err)
+	}
+	log.Printf("wrote browser heap profile %s (%d bytes, %d chunks)", path, len(profile), msg.ChunkCount)
+	return nil
+}
+
+func webMemprofPath(elapsedSec int) (string, error) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+	if elapsedSec < 0 {
+		elapsedSec = 0
+	}
+	return filepath.Join(cwd, fmt.Sprintf("web.memprof.%d", elapsedSec)), nil
 }
 
 func newLineSpool(side, path string) (*lineSpool, error) {
@@ -1550,6 +1646,42 @@ function writeBytes(exports, memory, bytes) {
   return ptr;
 }
 
+function bytesToBase64(bytes) {
+  let binary = '';
+  const blockSize = 0x8000;
+  for (let offset = 0; offset < bytes.length; offset += blockSize) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(offset, offset + blockSize));
+  }
+  return btoa(binary);
+}
+
+function postHeapProfile(memory, elapsedSeconds, ptr, len) {
+  if (!memory) {
+    throw new Error('goldweb.heap_profile called before Go wasm memory was available');
+  }
+  const n = len >>> 0;
+  const offset = ptr >>> 0;
+  const copy = new Uint8Array(n);
+  if (n > 0) {
+    copy.set(new Uint8Array(memory.buffer, offset, n));
+  }
+
+  const chunkSize = 768 * 1024;
+  const chunkCount = Math.max(1, Math.ceil(copy.length / chunkSize));
+  for (let i = 0; i < chunkCount; i += 1) {
+    const start = i * chunkSize;
+    const end = Math.min(start + chunkSize, copy.length);
+    self.postMessage({
+      type: 'heap_profile',
+      elapsed_seconds: elapsedSeconds >>> 0,
+      chunk_index: i,
+      chunk_count: chunkCount,
+      profile_size: copy.length,
+      data: bytesToBase64(copy.subarray(start, end))
+    });
+  }
+}
+
 function includeDirectoryFromTree(wasiShim, tree) {
   const root = { dirs: new Map(), files: new Map() };
 
@@ -1639,7 +1771,10 @@ self.onmessage = async (event) => {
     const includeTree = await loadIncludeTree(wasiShim, assetBaseURL, commandAssetVersion);
     const wasi = new wasiShim.WASI(
       ['goivy_check_wasip1'],
-      ['GOIVY_INCLUDE=' + includeTree.root],
+      [
+        'GOIVY_INCLUDE=' + includeTree.root,
+        'GOIVY_WASM_HEAPPROFILE_INTERVAL=10',
+      ],
       [
         new wasiShim.OpenFile(new wasiShim.File(new Uint8Array())),
         new wasiShim.ConsoleStdout(emitStdout),
@@ -1650,6 +1785,11 @@ self.onmessage = async (event) => {
 
     let wasmMemory;
     const imports = {
+      goldweb: {
+        heap_profile(elapsedSeconds, ptr, len) {
+          postHeapProfile(wasmMemory, elapsedSeconds, ptr, len);
+        },
+      },
       smt_z3: z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory }),
       wasi_snapshot_preview1: wasi.wasiImport,
     };
@@ -2031,6 +2171,9 @@ function runGoivyCheck(ws, command) {
     ws.send(JSON.stringify(msg));
     if (msg.type === 'stream') {
       showStream(msg.fd, msg.data);
+    }
+    if (msg.type === 'heap_profile' && msg.chunk_index === msg.chunk_count - 1) {
+      log('sent heap profile t=' + msg.elapsed_seconds + 's bytes=' + msg.profile_size + ' chunks=' + msg.chunk_count);
     }
     if (msg.type === 'error') {
       appendVisibleLog('[worker error] ' + (msg.error || 'unknown worker error') + '\n', true);

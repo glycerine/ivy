@@ -58,6 +58,8 @@ func goivyCheckFree(ptr uint32, n uint32) {
 //go:wasmexport goivy_check_run
 func goivyCheckRun(specPtr, specLen, metaPtr, metaLen uint32) (code int32) {
 	tuneRuntimeOnce.Do(tuneRuntime)
+	stopHeapProfiler := startHeapProfiler()
+	defer stopHeapProfiler()
 
 	defer func() {
 		if r := recover(); r != nil {

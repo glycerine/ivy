@@ -50,12 +50,22 @@ func Trace(format string, args ...interface{}) {
 	trace(format, args...)
 }
 
+var globalXtraceCounter int64
+var mems = &runtime.MemStats{}
+
 // Trace prints an execution trace line to stdout.
 // Format: "XTRACE: " + fmt.Sprintf(format, args...) + "\n"
 func trace(format string, args ...interface{}) {
 	if suppressed {
 		return
 	}
+
+	if globalXtraceCounter%1000 == 0 {
+		runtime.ReadMemStats(mems)
+		fmt.Printf("[at trace %v] mems.HeapAlloc = %v; HeapInuse = %v\n", globalXtraceCounter, mems.HeapAlloc, mems.HeapInuse)
+	}
+	globalXtraceCounter++
+
 	// replace true/false with True/False to match python
 	// and avoid spurious diffs.
 	for i, a := range args {
