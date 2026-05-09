@@ -95,9 +95,12 @@ func TestGoIvyCheckWasip1UnderWazero(t *testing.T) {
 	moduleConfig := wazero.NewModuleConfig().
 		WithName("goivy_check_wasip1").
 		WithArgs("goivy_check_wasip1").
-		WithEnv("GOIVY_INCLUDE", "include").
+		// Match goldweb's browser host: the include tree is preopened at the
+		// same absolute path reported by GOIVY_INCLUDE, while the primary spec
+		// itself is passed in memory through goivy_check_write_spec.
+		WithEnv("GOIVY_INCLUDE", includeDir).
 		WithEnv("GOIVY_WASM_HEAPPROFILE_INTERVAL", "0").
-		WithFSConfig(wazero.NewFSConfig().WithReadOnlyDirMount(includeDir, "include")).
+		WithFSConfig(wazero.NewFSConfig().WithReadOnlyDirMount(includeDir, includeDir)).
 		WithStdout(stdout).
 		WithStderr(stderr)
 	if gcHeapLimit := os.Getenv("GOIVY_WAZERO_GC_HEAP_LIMIT"); gcHeapLimit != "" {
