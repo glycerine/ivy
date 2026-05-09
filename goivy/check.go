@@ -1243,6 +1243,44 @@ func Start(args []string, cfg *Config) error {
 		return fmt.Errorf("%s", Usage())
 	}
 
+	return startLoaded(args[0], cfg, func(mod *Module) error {
+		// Python: ivy_init.source_file(sys.argv[1], ivy_init.open_read(sys.argv[1]), create_isolate=False)
+		return SourceFile(args[0], mod, mod.Sig, map[string]interface{}{
+			"create_isolate": false,
+		})
+	})
+}
+
+// StartSourceWithConfig is the browser/goldweb counterpart of Start. It runs
+// the goivy_check pipeline against an in-memory .ivy source string while using
+// filename for traces and diagnostics. This keeps cmd/goivy_check out of the
+// wasm build while preserving its command semantics.
+func StartSourceWithConfig(filename, source string, cfg *Config) error {
+	if cfg == nil {
+		cfg = NewConfig()
+	}
+	if filename == "" {
+		filename = "browser_input.ivy"
+	}
+	if !strings.HasSuffix(filename, ".ivy") {
+		return fmt.Errorf("%s", Usage())
+	}
+
+	truthStr := "True"
+	if !cfg.SolverOpts.MacroFinder {
+		truthStr = "False"
+	}
+	xtracer.Trace("ivy_solver.py:45 set_macro_finder() ENTER truth=%s", truthStr)
+	xtracer.Trace("check.start ENTER file=%s", filename)
+
+	return startLoaded(filename, cfg, func(mod *Module) error {
+		return SourceString(filename, source, mod, mod.Sig, map[string]interface{}{
+			"create_isolate": false,
+		})
+	})
+}
+
+func startLoaded(filename string, cfg *Config, load func(mod *Module) error) error {
 	// Python ivy_check.py:1028-1029: some_bounded = False at start() entry.
 	// Reset the flag in case the caller is reusing a Config across runs.
 	cfg.SomeBounded = false
@@ -1253,13 +1291,10 @@ func Start(args []string, cfg *Config) error {
 	RegisterTactics(mod.Cfg.ProofCfg, mod)
 
 	if mod.Cfg.OptIvyStats {
-		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", args[0])
+		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", filename)
 	}
 
-	// Python: ivy_init.source_file(sys.argv[1], ivy_init.open_read(sys.argv[1]), create_isolate=False)
-	if err := SourceFile(args[0], mod, mod.Sig, map[string]interface{}{
-		"create_isolate": false,
-	}); err != nil {
+	if err := load(mod); err != nil {
 		return err
 	}
 

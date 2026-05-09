@@ -105,7 +105,7 @@ func main() {
 	cfg := goivy.NewConfig()
 	cfg.IncludePathStdlib = cmdCfg.IncludePathStdlib
 
-	if err := applyParams(cfg, params); err != nil {
+	if err := goivy.ApplyIvyCheckParams(cfg, params); err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
@@ -113,60 +113,4 @@ func main() {
 	// Delegate to check.StartWithConfig which implements Python's
 	// ivy_check.main() -> start() -> check_module() pipeline.
 	os.Exit(goivy.MainWithConfig(args, cfg))
-}
-
-// applyParams maps CLI key=value pairs to Config struct fields.
-// This mirrors how Python's Parameter objects are set via ivy_init.read_params()
-// and then accessed in ivy_check.py via diagnose.get(), coverage.get(), etc.
-func applyParams(cfg *goivy.Config, params map[string]string) error {
-	for key, val := range params {
-		switch key {
-		case "diagnose":
-			cfg.Diagnose = parseBool(val)
-		case "coverage":
-			cfg.Coverage = parseBool(val)
-		case "action":
-			cfg.CheckedAction = val
-		case "trusted":
-			cfg.OptTrusted = parseBool(val)
-		case "mc":
-			cfg.OptMC = parseBool(val)
-		case "trace":
-			cfg.OptTrace = parseBool(val)
-		case "separate":
-			cfg.OptSeparate = parseBool(val)
-			cfg.OptSeparateSet = true
-		case "isolate":
-			cfg.Isolate = val
-		case "summary":
-			cfg.OptSummary = parseBool(val)
-		case "unprovable":
-			cfg.OnlyCheckUnprovable = parseBool(val)
-		case "unchecked_properties":
-			cfg.OptUncheckedProps = val
-		case "ivy_stats":
-			cfg.OptIvyStats = parseBool(val)
-		case "prioritize":
-			cfg.PriorityActions = val
-		case "no_check_guarantees":
-			cfg.NoCheckGuarantees = parseBool(val)
-		case "profile":
-			cfg.Profiling = parseBool(val)
-		case "macro_finder":
-			cfg.SolverOpts.MacroFinder = parseBool(val)
-		case "complete":
-			cfg.CompleteLogic = val
-		case "checked_assert":
-			cfg.CheckLineno = val
-		case "parser":
-			panic("parser is no longer a choice; we only have the one now.")
-		default:
-			return fmt.Errorf("unknown parameter: %s", key)
-		}
-	}
-	return nil
-}
-
-func parseBool(s string) bool {
-	return s == "true" || s == "1" || s == "yes"
 }

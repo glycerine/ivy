@@ -142,6 +142,63 @@ func ReadModuleFromString(source string, cfg *Config) (*ParseResult, error) {
 	return result, nil
 }
 
+// ReadModuleFromNamedString parses an Ivy source string while preserving the
+// caller supplied filename for traces and diagnostics. This is the browser
+// counterpart of ReadModule: goldweb sends a spec string, but conformance still
+// needs stable file names in xtrace output.
+func ReadModuleFromNamedString(filename, source string, nested bool, cfg *Config) (*ParseResult, error) {
+	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
+
+	header, rest, hasRest := strings.Cut(source, "\n")
+	header = strings.TrimSpace(header)
+	if header == "" {
+		return nil, fmt.Errorf("empty file: %s", filename)
+	}
+
+	var sb strings.Builder
+	sb.WriteByte('\n') // preserve line numbers, matching ReadModule.
+	if hasRest {
+		sb.WriteString(rest)
+	}
+	s := sb.String()
+
+	if strings.HasPrefix(header, "#lang ivy") {
+		versionStr := strings.TrimSpace(header[len("#lang ivy"):])
+		if versionStr != "" {
+			oldVersion := cfg.IuCfg.GetStringVersion()
+			SetStringVersionOn(cfg.IuCfg, versionStr)
+			if versionStr != oldVersion {
+				if nested {
+					return nil, fmt.Errorf("#lang ivy%s expected in included file", oldVersion)
+				}
+			}
+		}
+		version := parseIvyVersion(cfg.IuCfg.GetStringVersion())
+		importer := func(name string) (*ParseResult, error) {
+			return ImportModule(name, cfg)
+		}
+		opts := []ParseOption{
+			WithImporter(importer),
+			WithIncluded(cfg.GlobalIncluded),
+			WithFilename(filename),
+		}
+		if cfg != nil && cfg.AstCfg != nil {
+			opts = append(opts, WithAstConfig(cfg.AstCfg))
+		}
+		if nested {
+			opts = append(opts, WithNested())
+		}
+		result, parseErr := Parse(s, version, opts...)
+		if parseErr != nil {
+			return nil, fmt.Errorf("parse error in %s: %w", filename, parseErr)
+		}
+		xtracer.Trace("init.ReadModule EXIT file=%s decls=%d", filename, len(result.Decls))
+		return result, nil
+	}
+
+	return nil, fmt.Errorf("file must begin with \"#lang ivyN.N\"")
+}
+
 // ImportModule reads and parses a module by name, looking first in the
 // current directory and then in the standard include directory.
 // Corresponds to Python's import_module (lines 2298-2310).
@@ -203,6 +260,43 @@ func SourceFile(filename string, mod *Module, sig *Sig, kwargs map[string]interf
 
 		// Set module name from filename (strip extension)
 		// Python: ivy_module.module.name = fn[:fn.rindex('.')]
+		ext := filepath.Ext(filename)
+		if ext != "" {
+			mod.Name = filename[:len(filename)-len(ext)]
+		} else {
+			mod.Name = filename
+		}
+	})
+	return outerErr
+}
+
+// SourceString compiles an Ivy source string under filename. It mirrors
+// SourceFile closely enough that goivy_check conformance traces can compare a
+// browser-supplied in-memory spec with Python ivy_check's file-backed run.
+func SourceString(filename, source string, mod *Module, sig *Sig, kwargs map[string]interface{}) error {
+	xtracer.Trace("init.SourceFile ENTER file=%s", filename)
+	defer func() { xtracer.Trace("init.SourceFile EXIT file=%s", filename) }()
+
+	var outerErr error
+	mod.Cfg.IuCfg.WithSourceFile(filename, func() {
+		resetIncluded(mod.Cfg)
+		result, err := ReadModuleFromNamedString(filename, source, false, mod.Cfg)
+		if err != nil {
+			outerErr = err
+			return
+		}
+
+		createIsolate := true
+		if v, ok := kwargs["create_isolate"]; ok {
+			if b, ok := v.(bool); ok {
+				createIsolate = b
+			}
+		}
+		if err := IvyCompile(result.Decls, mod, createIsolate); err != nil {
+			outerErr = err
+			return
+		}
+
 		ext := filepath.Ext(filename)
 		if ext != "" {
 			mod.Name = filename[:len(filename)-len(ext)]

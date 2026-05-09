@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build tr trt vs golden setup this bootstrap
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build tr trt vs golden setup this bootstrap
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -27,6 +27,7 @@ Z3_WEBVUE_JS         := $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).js
 TINYGO               ?= /usr/local/bin/tinygo
 TINYGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-tinygo-wasip1-probe.wasm
 BIGGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-biggo-wasip1-probe.wasm
+GOIVY_CHECK_WASIP1_WASM := $(Z3_WEBVUE_STATIC)/goivy-check-wasip1.wasm
 SMT_WASIP1_ROUNDTRIP_WASM := $(Z3_WEBVUE_STATIC)/smt-wasip1-roundtrip.wasm
 EMSDK_ROOT          ?= /Users/jaten/go/src/github.com/emscripten-core/emsdk
 EMSDK_ENV           ?= $(EMSDK_ROOT)/emsdk_env.sh
@@ -194,7 +195,12 @@ $(BIGGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/expor
 
 biggo-ivy-wasip1-probe-wasm: $(BIGGO_IVY_WASIP1_PROBE_WASM)
 
-z3-wasip1-browser-artifacts: z3-wasm-api tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm
+$(GOIVY_CHECK_WASIP1_WASM): Makefile cmd/goivy_check_wasip1/main_wasip1.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
+	GOOS=wasip1 GOARCH=wasm go build -o $(GOIVY_CHECK_WASIP1_WASM) ./cmd/goivy_check_wasip1
+
+goivy-check-wasip1-wasm: $(GOIVY_CHECK_WASIP1_WASM)
+
+z3-wasip1-browser-artifacts: z3-wasm-api tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm
 
 test-z3-wasip1-browser:
 	@test -f $(Z3_WEBVUE_JS) || { echo "missing $(Z3_WEBVUE_JS); run make z3-wasm-api"; exit 1; }
