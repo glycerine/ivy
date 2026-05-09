@@ -793,15 +793,79 @@ const indexHTML = `<!doctype html>
   <meta charset="utf-8">
   <title>goldweb</title>
   <style>
-    body { font-family: system-ui, sans-serif; margin: 2rem; max-width: 70rem; }
+    body {
+      color: #1f2933;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 2rem;
+      max-width: 78rem;
+    }
+    h1 { font-size: 1.5rem; margin: 0 0 0.5rem; }
+    .topline {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
     #status { font-weight: 700; }
-    pre { border: 1px solid #ddd; padding: 1rem; min-height: 20rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .metric {
+      background: #eef2f7;
+      border: 1px solid #d9e2ec;
+      padding: 0.2rem 0.45rem;
+    }
+    .log-shell {
+      border: 1px solid #bcccdc;
+    }
+    .log-head {
+      align-items: center;
+      background: #f0f4f8;
+      border-bottom: 1px solid #bcccdc;
+      display: flex;
+      justify-content: space-between;
+      padding: 0.45rem 0.6rem;
+    }
+    .log-head strong { font-size: 0.9rem; }
+    .log-head span { color: #52606d; font-size: 0.8rem; }
+    #stream-log {
+      background: #102a43;
+      border: 0;
+      box-sizing: border-box;
+      color: #f0f4f8;
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.82rem;
+      height: 64vh;
+      line-height: 1.35;
+      outline: none;
+      padding: 0.75rem;
+      resize: vertical;
+      white-space: pre;
+      width: 100%;
+    }
+    #line-number {
+      color: #52606d;
+      font-size: 0.9rem;
+      padding: 0.45rem 0.6rem;
+    }
   </style>
 </head>
 <body>
   <h1>goldweb</h1>
-  <p id="status">connecting</p>
-  <pre id="log"></pre>
+  <div class="topline">
+    <span id="status">connecting</span>
+    <span class="metric">job <span id="job-id">none</span></span>
+    <span class="metric">stdout <span id="stdout-bytes">0</span>B</span>
+    <span class="metric">stderr <span id="stderr-bytes">0</span>B</span>
+    <span class="metric">XTRACE <span id="xtrace-count">0</span></span>
+  </div>
+  <div class="log-shell">
+    <div class="log-head">
+      <strong>Browser stdout/stderr sent to goldweb</strong>
+      <span>rolling local window; full stream goes over the websocket</span>
+    </div>
+    <textarea id="stream-log" readonly spellcheck="false"></textarea>
+    <div id="line-number">last line number : 0</div>
+  </div>
 
   <script type="text/plain" id="worker-source">
 const textDecoder = new TextDecoder();
@@ -1032,13 +1096,70 @@ self.onmessage = async (event) => {
 
   <script>
 const statusEl = document.getElementById('status');
-const logEl = document.getElementById('log');
+const jobIdEl = document.getElementById('job-id');
+const stdoutBytesEl = document.getElementById('stdout-bytes');
+const stderrBytesEl = document.getElementById('stderr-bytes');
+const xtraceCountEl = document.getElementById('xtrace-count');
+const streamLogEl = document.getElementById('stream-log');
+const lineNumberEl = document.getElementById('line-number');
 const workerSource = document.getElementById('worker-source').textContent;
 const workers = new Map();
+const uiLineBuffers = new Map();
+const uiTextEncoder = new TextEncoder();
+const maxVisibleLogBytes = 1024 * 1024;
+let stdoutBytes = 0;
+let stderrBytes = 0;
+let xtraceCount = 0;
+let visibleLineNumber = 0;
 
 function log(message) {
-  logEl.textContent += message + '\n';
-  logEl.scrollTop = logEl.scrollHeight;
+  appendVisibleLog('[goldweb] ' + message + '\n');
+}
+
+function appendVisibleLog(text) {
+  streamLogEl.value += text;
+  if (streamLogEl.value.length > maxVisibleLogBytes) {
+    streamLogEl.value = streamLogEl.value.slice(streamLogEl.value.length - maxVisibleLogBytes);
+  }
+  streamLogEl.scrollTop = streamLogEl.scrollHeight;
+}
+
+function updateCounters() {
+  stdoutBytesEl.textContent = String(stdoutBytes);
+  stderrBytesEl.textContent = String(stderrBytes);
+  xtraceCountEl.textContent = String(xtraceCount);
+  lineNumberEl.textContent = 'last line number: ' + visibleLineNumber;
+}
+
+function showStream(fd, data) {
+  const nbytes = uiTextEncoder.encode(data).length;
+  if (fd === 2) {
+    stderrBytes += nbytes;
+  } else {
+    stdoutBytes += nbytes;
+  }
+
+  const label = fd === 2 ? 'stderr' : 'stdout';
+  const key = String(fd);
+  let pending = (uiLineBuffers.get(key) || '') + data;
+  let idx = pending.indexOf('\n');
+  while (idx >= 0) {
+    const line = pending.slice(0, idx + 1);
+    if (line.startsWith('XTRACE:')) {
+      xtraceCount += 1;
+    }
+    appendVisibleLog('[' + label + '] ' + line);
+    visibleLineNumber += 1;
+    pending = pending.slice(idx + 1);
+    idx = pending.indexOf('\n');
+  }
+  uiLineBuffers.set(key, pending);
+  if (pending.length > 4096) {
+    appendVisibleLog('[' + label + '] ' + pending + '\n');
+    visibleLineNumber += 1;
+    uiLineBuffers.set(key, '');
+  }
+  updateCounters();
 }
 
 function connect() {
@@ -1087,6 +1208,14 @@ function connect() {
 }
 
 function runGoivyCheck(ws, command) {
+  jobIdEl.textContent = command.id;
+  stdoutBytes = 0;
+  stderrBytes = 0;
+  xtraceCount = 0;
+  visibleLineNumber = 0;
+  uiLineBuffers.clear();
+  streamLogEl.value = '';
+  updateCounters();
   log('starting goivy_check job ' + command.id + ' filename=' + command.filename);
   const url = URL.createObjectURL(new Blob([workerSource], { type: 'text/javascript' }));
   const worker = new Worker(url);
@@ -1096,7 +1225,7 @@ function runGoivyCheck(ws, command) {
     const msg = Object.assign({ id: command.id }, event.data);
     ws.send(JSON.stringify(msg));
     if (msg.type === 'stream') {
-      log((msg.fd === 2 ? 'stderr: ' : 'stdout: ') + msg.data.replace(/\n$/, ''));
+      showStream(msg.fd, msg.data);
     }
     if (msg.type === 'done' || msg.type === 'error') {
       workers.delete(command.id);
