@@ -37,3 +37,4 @@ webvue/static/dist/
 .runweb/
 .cache
 webvue/test-results/
+webvue/static/goivy-check-wasip1.wasm
