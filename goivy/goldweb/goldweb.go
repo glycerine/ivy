@@ -73,6 +73,9 @@ type app struct {
 	mu      sync.Mutex
 	clients map[*wsClient]bool
 	jobs    map[string]*job
+
+	startupReq     *goivyCheckRequest
+	startupStarted bool
 }
 
 type wsClient struct {
@@ -99,18 +102,20 @@ type wsEnvelope struct {
 }
 
 type goivyCheckRequest struct {
-	Filename string            `json:"filename"`
-	Spec     string            `json:"spec"`
-	Params   map[string]string `json:"params"`
+	Filename   string            `json:"filename"`
+	Spec       string            `json:"spec"`
+	Params     map[string]string `json:"params"`
+	SourcePath string            `json:"-"`
 }
 
 type job struct {
-	id       string
-	filename string
-	spec     string
-	params   map[string]string
-	app      *app
-	client   *wsClient
+	id         string
+	filename   string
+	sourcePath string
+	spec       string
+	params     map[string]string
+	app        *app
+	client     *wsClient
 
 	pyLines      chan lineEvent
 	browserLines chan lineEvent
@@ -158,26 +163,73 @@ func main() {
 	ivyCheck := flag.String("ivy-check", "ivy_check", "Python ivy_check executable")
 	flag.Parse()
 
-	a := newApp(*listen, *root, *goivyWasm, *ivyCheck)
+	var startupReq *goivyCheckRequest
+	if flag.NArg() > 0 {
+		req, err := goivyCheckRequestFromPath(flag.Arg(0))
+		if err != nil {
+			log.Fatal(err)
+		}
+		startupReq = req
+	}
+
+	a := newApp(*listen, *root, *goivyWasm, *ivyCheck, startupReq)
 	if err := a.listenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Fatal(err)
 	}
 }
 
-func newApp(listen, root, goivyWasm, ivyCheck string) *app {
+func newApp(listen, root, goivyWasm, ivyCheck string, startupReq *goivyCheckRequest) *app {
 	root = filepath.Clean(root)
 	webvueDir := filepath.Join(root, "webvue")
 	return &app{
-		listen:    listen,
-		goivyRoot: root,
-		webvueDir: webvueDir,
-		staticDir: filepath.Join(webvueDir, "static"),
-		workerDir: filepath.Join(webvueDir, "src", "workers"),
-		goivyWasm: goivyWasm,
-		ivyCheck:  ivyCheck,
-		clients:   make(map[*wsClient]bool),
-		jobs:      make(map[string]*job),
+		listen:     listen,
+		goivyRoot:  root,
+		webvueDir:  webvueDir,
+		staticDir:  filepath.Join(webvueDir, "static"),
+		workerDir:  filepath.Join(webvueDir, "src", "workers"),
+		goivyWasm:  goivyWasm,
+		ivyCheck:   ivyCheck,
+		clients:    make(map[*wsClient]bool),
+		jobs:       make(map[string]*job),
+		startupReq: startupReq,
 	}
+}
+
+func goivyCheckRequestFromPath(path string) (*goivyCheckRequest, error) {
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return nil, err
+	}
+	data, err := os.ReadFile(abs)
+	if err != nil {
+		return nil, err
+	}
+	req := &goivyCheckRequest{
+		Filename:   abs,
+		SourcePath: abs,
+		Spec:       string(data),
+		Params:     make(map[string]string),
+	}
+	if err := normalizeGoivyCheckRequest(req); err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+func normalizeGoivyCheckRequest(req *goivyCheckRequest) error {
+	if strings.TrimSpace(req.Spec) == "" {
+		return errors.New("missing spec")
+	}
+	if req.Filename == "" {
+		req.Filename = "browser_input.ivy"
+	}
+	if !strings.HasSuffix(req.Filename, ".ivy") {
+		req.Filename += ".ivy"
+	}
+	if req.Params == nil {
+		req.Params = make(map[string]string)
+	}
+	return nil
 }
 
 func (a *app) listenAndServe() error {
@@ -198,6 +250,9 @@ func (a *app) listenAndServe() error {
 	}
 	log.Printf("goldweb listening on http://%s", a.listen)
 	log.Printf("POST JSON to http://%s/goivy_check to start a browser-backed check", a.listen)
+	if a.startupReq != nil {
+		log.Printf("will submit %s to the first browser websocket client", a.startupReq.Filename)
+	}
 	return a.httpServer.ListenAndServe()
 }
 
@@ -251,6 +306,7 @@ func (a *app) register(c *wsClient) {
 	a.mu.Unlock()
 	log.Printf("browser websocket connected: %s; clients=%d", c.conn.RemoteAddr(), n)
 	_ = c.sendJSON(wsEnvelope{Type: "hello", Status: "ready", Message: "goldweb connected"})
+	a.maybeStartStartupJob(c)
 }
 
 func (a *app) unregister(c *wsClient) {
@@ -281,6 +337,24 @@ func (a *app) lookupJob(id string) *job {
 	a.mu.Lock()
 	defer a.mu.Unlock()
 	return a.jobs[id]
+}
+
+func (a *app) maybeStartStartupJob(c *wsClient) {
+	a.mu.Lock()
+	if a.startupReq == nil || a.startupStarted {
+		a.mu.Unlock()
+		return
+	}
+	req := *a.startupReq
+	a.startupStarted = true
+	a.mu.Unlock()
+
+	j, err := a.startGoivyCheck(c, req)
+	if err != nil {
+		log.Printf("could not start initial goivy_check for %s: %v", req.Filename, err)
+		return
+	}
+	log.Printf("submitted initial goivy_check job %s for %s", j.id, j.filename)
 }
 
 func (a *app) handleWSMessage(c *wsClient, data []byte) {
@@ -343,24 +417,29 @@ func (a *app) handleGoivyCheck(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad JSON request: "+err.Error(), http.StatusBadRequest)
 		return
 	}
-	if strings.TrimSpace(req.Spec) == "" {
-		http.Error(w, "missing spec", http.StatusBadRequest)
+	if err := normalizeGoivyCheckRequest(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
-	}
-	if req.Filename == "" {
-		req.Filename = "browser_input.ivy"
-	}
-	if !strings.HasSuffix(req.Filename, ".ivy") {
-		req.Filename += ".ivy"
-	}
-	if req.Params == nil {
-		req.Params = make(map[string]string)
 	}
 
 	c := a.firstClient()
 	if c == nil {
 		http.Error(w, "no browser websocket client connected; open / first", http.StatusServiceUnavailable)
 		return
+	}
+
+	j, err := a.startGoivyCheck(c, req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusServiceUnavailable)
+		return
+	}
+
+	writeJSON(w, http.StatusAccepted, j.snapshot())
+}
+
+func (a *app) startGoivyCheck(c *wsClient, req goivyCheckRequest) (*job, error) {
+	if err := normalizeGoivyCheckRequest(&req); err != nil {
+		return nil, err
 	}
 
 	j := newJob(a, c, req)
@@ -377,11 +456,10 @@ func (a *app) handleGoivyCheck(w http.ResponseWriter, r *http.Request) {
 		Params:   j.params,
 	}); err != nil {
 		j.fail("send browser command: " + err.Error())
-		http.Error(w, err.Error(), http.StatusServiceUnavailable)
-		return
+		return nil, err
 	}
 
-	writeJSON(w, http.StatusAccepted, j.snapshot())
+	return j, nil
 }
 
 func (a *app) handleJob(w http.ResponseWriter, r *http.Request) {
@@ -402,6 +480,7 @@ func newJob(a *app, c *wsClient, req goivyCheckRequest) *job {
 	return &job{
 		id:           newID(),
 		filename:     req.Filename,
+		sourcePath:   req.SourcePath,
 		spec:         req.Spec,
 		params:       cloneStringMap(req.Params),
 		app:          a,
@@ -414,23 +493,26 @@ func newJob(a *app, c *wsClient, req goivyCheckRequest) *job {
 }
 
 func (j *job) runPythonIvyCheck() {
-	tmp, err := os.MkdirTemp("", "goldweb-ivy-*")
-	if err != nil {
-		j.fail("create temp dir: " + err.Error())
-		close(j.pyLines)
-		return
-	}
-	defer os.RemoveAll(tmp)
+	path := j.sourcePath
+	if path == "" {
+		tmp, err := os.MkdirTemp("", "goldweb-ivy-*")
+		if err != nil {
+			j.fail("create temp dir: " + err.Error())
+			close(j.pyLines)
+			return
+		}
+		defer os.RemoveAll(tmp)
 
-	filename := filepath.Base(j.filename)
-	if filename == "." || filename == string(filepath.Separator) {
-		filename = "browser_input.ivy"
-	}
-	path := filepath.Join(tmp, filename)
-	if err := os.WriteFile(path, []byte(j.spec), 0o600); err != nil {
-		j.fail("write temp spec: " + err.Error())
-		close(j.pyLines)
-		return
+		filename := filepath.Base(j.filename)
+		if filename == "." || filename == string(filepath.Separator) {
+			filename = "browser_input.ivy"
+		}
+		path = filepath.Join(tmp, filename)
+		if err := os.WriteFile(path, []byte(j.spec), 0o600); err != nil {
+			j.fail("write temp spec: " + err.Error())
+			close(j.pyLines)
+			return
+		}
 	}
 
 	args := paramsAsArgs(j.params)
