@@ -8,12 +8,14 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 z3_dir="${script_dir}/z3"
-build_dir="${z3_dir}/wasm.build"
+build_dir="${Z3CRASHER_BUILD_DIR:-${z3_dir}/wasm.build}"
 runner="${build_dir}/test-z3-model-retrieval"
 wasm="${build_dir}/test-z3-model-retrieval.wasm"
 log="${Z3CRASHER_LOG:-${script_dir}/z3crasher.log}"
 focused_main="${build_dir}/test/model_retrieval_main.cpp"
 focused_main_obj="${build_dir}/test/model_retrieval_main.o"
+throw_wrap="${build_dir}/test/throw_wrap.cpp"
+throw_wrap_obj="${build_dir}/test/throw_wrap.o"
 link_stamp="${runner}.link-flags"
 
 venv_bin="${GOIVY_VENV_BIN:-/Users/jaten/ivy/pyivy/goivy-venv/bin}"
@@ -25,7 +27,7 @@ emsdk_env="${EMSDK_ENV:-/Users/jaten/go/src/github.com/emscripten-core/emsdk/ems
 em_cache="${EM_CACHE:-/private/tmp/ivy-emscripten-cache}"
 z3_stack_size="${Z3CRASHER_STACK_SIZE:-83886080}"
 debug_flags="${Z3CRASHER_DEBUG_FLAGS:--g2 --profiling-funcs}"
-default_link_flags="-std=c++17 -fwasm-exceptions ${debug_flags} -sALLOW_MEMORY_GROWTH=1 -sALLOW_TABLE_GROWTH=1 -sEXIT_RUNTIME=1 -sSTACK_SIZE=${z3_stack_size} -sTOTAL_STACK=${z3_stack_size} -sINITIAL_MEMORY=256MB"
+default_link_flags="-std=c++17 -fwasm-exceptions ${debug_flags} -Wl,--wrap=__cxa_throw -sALLOW_MEMORY_GROWTH=1 -sALLOW_TABLE_GROWTH=1 -sEXIT_RUNTIME=1 -sSTACK_SIZE=${z3_stack_size} -sTOTAL_STACK=${z3_stack_size} -sINITIAL_MEMORY=256MB"
 link_flags="${Z3CRASHER_LINK_FLAGS:-${default_link_flags}}"
 
 if ! command -v node >/dev/null 2>&1; then
@@ -71,13 +73,27 @@ int main() {
     }
 }
 CPP
+    cat > "${throw_wrap}" <<'CPP'
+#include <stdio.h>
+
+extern "C" __attribute__((noreturn)) void __real___cxa_throw(void* thrown_exception, void* tinfo, void (*dest)(void*));
+
+extern "C" __attribute__((noreturn)) void __wrap___cxa_throw(void* thrown_exception, void* tinfo, void (*dest)(void*)) {
+    fprintf(stderr, "__cxa_throw called\n");
+    fflush(stderr);
+    __real___cxa_throw(thrown_exception, tinfo, dest);
+    __builtin_unreachable();
+}
+CPP
 
     EMSDK_QUIET=1 bash -lc \
       "source \"${emsdk_env}\" && EM_CACHE=\"${em_cache}\" make test/model_retrieval.o libz3.a -j${Z3CRASHER_JOBS:-8}"
     EMSDK_QUIET=1 bash -lc \
       "source \"${emsdk_env}\" && EM_CACHE=\"${em_cache}\" em++ -std=c++17 -fwasm-exceptions -D_NO_OMP_ -D_MP_INTERNAL -I../src -I../src/test -I../src/util -c \"${focused_main}\" -o \"${focused_main_obj}\""
     EMSDK_QUIET=1 bash -lc \
-      "source \"${emsdk_env}\" && EM_CACHE=\"${em_cache}\" em++ ${link_flags} -o \"${runner}\" \"${focused_main_obj}\" test/model_retrieval.o libz3.a"
+      "source \"${emsdk_env}\" && EM_CACHE=\"${em_cache}\" em++ -std=c++17 -fwasm-exceptions -c \"${throw_wrap}\" -o \"${throw_wrap_obj}\""
+    EMSDK_QUIET=1 bash -lc \
+      "source \"${emsdk_env}\" && EM_CACHE=\"${em_cache}\" em++ ${link_flags} -o \"${runner}\" \"${focused_main_obj}\" \"${throw_wrap_obj}\" test/model_retrieval.o libz3.a"
     printf '%s\n' "${link_flags}" > "${link_stamp}"
   )
 fi

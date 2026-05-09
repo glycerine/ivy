@@ -3,10 +3,14 @@
 # must use older stable emcc and not homebrew default 4.0.7. we had better luck with 3.1.50
 emcc --version | grep 3.1.50
 
-## can try this to address "FP math:        UNKNOWN"
-## FPMATH_ENABLED=False AR=emar CXX=em++ CC=emcc CXXFLAGS="-Wno-deprecated-declarations" CFLAGS="-Wno-deprecated-declarations" python3 scripts/mk_make.py --staticlib  --nofp
+# mk_make.py infers _AMD64_ from the native host. Emscripten targets wasm32, so
+# wasm builds must explicitly undefine it without changing native builds.
+wasm_cflags="-Wno-deprecated-declarations -fwasm-exceptions -U_AMD64_"
 
-AR=emar CXX=em++ CC=emcc CXXFLAGS="-Wno-deprecated-declarations" CFLAGS="-Wno-deprecated-declarations" python3 scripts/mk_make.py --staticlib
+## can try this to address "FP math:        UNKNOWN"
+## FPMATH_ENABLED=False AR=emar CXX=em++ CC=emcc CXXFLAGS="${wasm_cflags}" CFLAGS="${wasm_cflags}" python3 scripts/mk_make.py --staticlib  --nofp
+
+AR=emar CXX=em++ CC=emcc CXXFLAGS="${wasm_cflags}" CFLAGS="${wasm_cflags}" python3 scripts/mk_make.py --staticlib
 
 cd build
 emmake make -j8

@@ -15,7 +15,9 @@ const SWAP_OPTS: SpawnOptions = {
   stdio: 'inherit',
   env: {
     ...process.env,
-    CXXFLAGS: '-pthread -s USE_PTHREADS=1 -s DISABLE_EXCEPTION_CATCHING=0',
+    // mk_make.py infers _AMD64_ from the native host, but Emscripten targets wasm32.
+    CXXFLAGS: '-pthread -s USE_PTHREADS=1 -s DISABLE_EXCEPTION_CATCHING=0 -U_AMD64_',
+    CFLAGS: '-U_AMD64_',
     LDFLAGS: '-s WASM_BIGINT -s -pthread -s USE_PTHREADS=1',
     FPMATH_ENABLED: 'False', // Until Safari supports WASM SSE, we have to disable fast FP support
     // TODO(ritave): Setting EM_CACHE breaks compiling on M1 MacBook

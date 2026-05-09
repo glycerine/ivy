@@ -48,6 +48,9 @@ EMCC                ?= $(EMSDK_ROOT)/upstream/emscripten/emcc
 WASM_OPT            ?= /usr/local/bin/wasm-opt
 Z3_WASM_JOBS        ?= 8
 EM_CACHE            ?= /private/tmp/ivy-emscripten-cache
+# Z3 4.7.1's generator infers _AMD64_ from the host machine, but Emscripten
+# targets wasm32 here. Native builds must keep their normal 64-bit settings.
+Z3_WASM_CC_FLAGS    := -Wno-deprecated-declarations -fwasm-exceptions -U_AMD64_
 Z3_JS_EXPORT_HEADERS := $(addprefix $(Z3_VENDOR_DIR)/src/api/, \
 	z3_api.h z3_algebraic.h z3_ast_containers.h z3_fixedpoint.h \
 	z3_fpa.h z3_optimization.h z3_polynomial.h z3_rcf.h z3_spacer.h \
@@ -146,8 +149,8 @@ $(Z3_WASM_LIB):
 	cd $(Z3_VENDOR_DIR) && \
 		EMSDK_QUIET=1 source "$(EMSDK_ENV)" && \
 		EM_CACHE="$(EM_CACHE)" AR=emar CXX=em++ CC=emcc \
-		CXXFLAGS="-Wno-deprecated-declarations -fwasm-exceptions" \
-		CFLAGS="-Wno-deprecated-declarations" \
+		CXXFLAGS="$(Z3_WASM_CC_FLAGS)" \
+		CFLAGS="$(Z3_WASM_CC_FLAGS)" \
 		python3 scripts/mk_make.py --staticlib
 	cd $(Z3_VENDOR_BUILD) && \
 		EMSDK_QUIET=1 source "$(EMSDK_ENV)" && \

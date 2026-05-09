@@ -908,6 +908,9 @@ def is_CXX_clangpp():
         return is_clang_in_gpp_form(CXX)
     return is_compiler(CXX, 'clang++')
 
+def is_CXX_emscripten():
+    return CXX is not None and (is_compiler(CXX, 'em++') or is_compiler(CXX, 'emcc'))
+
 def get_cpp_files(path):
     return filter(lambda f: f.endswith('.cpp'), os.listdir(path))
 
@@ -2547,7 +2550,10 @@ def mk_config():
         if is64():
             if not sysname.startswith('CYGWIN') and not sysname.startswith('MSYS') and not sysname.startswith('MINGW'):
                 CXXFLAGS     = '%s -fPIC' % CXXFLAGS
-            CPPFLAGS     = '%s -D_AMD64_' % CPPFLAGS
+            # Emscripten runs on a native 64-bit host but emits wasm32. Defining
+            # _AMD64_ changes Z3 pointer/alignment layouts and corrupts wasm.
+            if not is_CXX_emscripten():
+                CPPFLAGS     = '%s -D_AMD64_' % CPPFLAGS
             if sysname == 'Linux':
                 CPPFLAGS = '%s -D_USE_THREAD_LOCAL' % CPPFLAGS
         elif not LINUX_X64:

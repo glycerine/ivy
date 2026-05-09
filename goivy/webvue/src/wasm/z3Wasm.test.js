@@ -274,7 +274,7 @@ describe('Z3 wasm artifact', () => {
     expect(result.stdout).toContain('interpolation compute ok -1 1');
   }, 30000);
 
-  it('documents that the current build cannot safely use the SMT-LIB2 parser path yet', () => {
+  it('runs a minimal SMT-LIB2 parser path without corrupting wasm memory', () => {
     const result = runNodeWithWasmExceptionHandling(z3NodeScript(`
         const cfg = z3._Z3_mk_config();
         const ctx = z3._Z3_mk_context_rc(cfg);
@@ -283,13 +283,18 @@ describe('Z3 wasm artifact', () => {
         z3._Z3_solver_inc_ref(ctx, solver);
         const text = '(set-logic QF_UF)\\n(declare-const p Bool)\\n(assert p)\\n(assert (not p))\\n';
         const ptr = z3._malloc(Buffer.byteLength(text, 'utf8') + 1);
-        z3.stringToUTF8(text, ptr, Buffer.byteLength(text, 'utf8') + 1);
-        z3._Z3_solver_from_string(ctx, solver, ptr);
-        console.log('solver from string check', z3._Z3_solver_check(ctx, solver));
+        try {
+          z3.stringToUTF8(text, ptr, Buffer.byteLength(text, 'utf8') + 1);
+          z3._Z3_solver_from_string(ctx, solver, ptr);
+          console.log('solver from string check', z3._Z3_solver_check(ctx, solver));
+        } finally {
+          z3._free(ptr);
+          z3._Z3_solver_dec_ref(ctx, solver);
+          z3._Z3_del_context(ctx);
+        }
     `));
 
-    expect(result.error).toBeUndefined();
-    expect(result.status).not.toBe(0);
-    expect(`${result.stderr}\n${result.stdout}`).toMatch(/memory access out of bounds|RuntimeError/);
+    expectNodeScriptToPass(result);
+    expect(result.stdout).toContain('solver from string check -1');
   }, 30000);
 });
