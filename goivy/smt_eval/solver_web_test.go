@@ -23,24 +23,36 @@ func main() {}
 
 //go:wasmexport smt_solver_sat_true
 func smtSolverSatTrue() int32 {
-	ctx := smt.NewContext()
+	ctx := smt.NewZ3Context()
 	defer ctx.Close()
 
-	solver := ctx.NewSolver()
+	solver := ctx.NewZ3Solver()
 	solver.Assert(ctx.BoolVal(true))
 	return int32(solver.Check())
 }
 
 //go:wasmexport smt_solver_unsat_true_and_not_true
 func smtSolverUnsatTrueAndNotTrue() int32 {
-	ctx := smt.NewContext()
+	ctx := smt.NewZ3Context()
 	defer ctx.Close()
 
 	truth := ctx.BoolVal(true)
-	solver := ctx.NewSolver()
+	solver := ctx.NewZ3Solver()
 	solver.Assert(truth)
 	solver.Assert(ctx.Not(truth))
 	return int32(solver.Check())
+}
+
+//go:wasmexport smt_solver_uninterpreted_sort_name_ok
+func smtSolverUninterpretedSortNameOK() int32 {
+	ctx := smt.NewZ3Context()
+	defer ctx.Close()
+
+	sort := ctx.UninterpretedSort("Thing")
+	if sort.String() != "Thing" {
+		return 0
+	}
+	return 1
 }
 `
 
@@ -55,6 +67,7 @@ func TestSolverBoolRoundTrip(t *testing.T) {
 
 	requireFile(t, filepath.Join(staticDir, "z3-471-api.js"), "run make z3-wasm-api")
 	requireFile(t, filepath.Join(staticDir, "z3-471-api.wasm"), "run make z3-wasm-api")
+	requireFile(t, filepath.Join(webvueDir, "src", "workers", "smtZ3Imports.js"), "missing browser Z3 import host")
 	requireFile(t, filepath.Join(webvueDir, "node_modules", ".bin", playwrightBin()), "run make webvue-setup")
 
 	roundTripWasm := buildWasip1MainSource(t, goivyDir, staticDir, "solver-bool-round-trip", solverBoolRoundTripWasip1Source)
