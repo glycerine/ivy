@@ -1,4 +1,4 @@
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build tr trt vs golden setup this bootstrap goldweb
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build tr trt vs golden setup this bootstrap goldweb FORCE
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -195,8 +195,10 @@ $(BIGGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/expor
 
 biggo-ivy-wasip1-probe-wasm: $(BIGGO_IVY_WASIP1_PROBE_WASM)
 
-$(GOIVY_CHECK_WASIP1_WASM): Makefile cmd/goivy_check_wasip1/main_wasip1.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
-	GOOS=wasip1 GOARCH=wasm go build -o $(GOIVY_CHECK_WASIP1_WASM) ./cmd/goivy_check_wasip1
+FORCE:
+
+$(GOIVY_CHECK_WASIP1_WASM): FORCE
+	GOOS=wasip1 GOARCH=wasm go build -a -o $(GOIVY_CHECK_WASIP1_WASM) ./cmd/goivy_check_wasip1
 
 goivy-check-wasip1-wasm: $(GOIVY_CHECK_WASIP1_WASM)
 
@@ -368,7 +370,7 @@ cleardb:
 	psql -c "drop database IF EXISTS ivyvue"
 	make bootstrap
 
-goldweb:
+goldweb: goivy-check-wasip1-wasm
 	rm -f ~/go/bin/goldweb
 	cd goldweb && go install
 	if [ -f py.xtrace.log ]; then mv py.xtrace.log py.xtrace.log.prev; fi
