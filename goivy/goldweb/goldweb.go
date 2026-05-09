@@ -82,12 +82,12 @@ type app struct {
 }
 
 type wsClient struct {
-	app    *app
-	conn   *websocket.Conn
+	app     *app
+	conn    *websocket.Conn
 	version string
-	send   chan []byte
-	done   chan struct{}
-	closed sync.Once
+	send    chan []byte
+	done    chan struct{}
+	closed  sync.Once
 }
 
 type wsEnvelope struct {
@@ -444,7 +444,9 @@ func (a *app) firstClient() *wsClient {
 	a.mu.Lock()
 	defer a.mu.Unlock()
 	for c := range a.clients {
-		return c
+		if c.version == a.version {
+			return c
+		}
 	}
 	return nil
 }
@@ -558,7 +560,7 @@ func (a *app) handleGoivyCheck(w http.ResponseWriter, r *http.Request) {
 
 	c := a.firstClient()
 	if c == nil {
-		http.Error(w, "no browser websocket client connected; open / first", http.StatusServiceUnavailable)
+		http.Error(w, "no current-version browser websocket client connected; open / first", http.StatusServiceUnavailable)
 		return
 	}
 
