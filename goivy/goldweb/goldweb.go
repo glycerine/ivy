@@ -56,13 +56,16 @@ import (
 )
 
 const (
-	writeWait          = 10 * time.Minute
-	pongWait           = 60 * time.Second
-	pingPeriod         = 30 * time.Second
-	readLimit          = 64 << 20
-	sendQueueLen       = 8192
-	spoolFlushBytes    = 256 << 10
-	spoolFlushInterval = 5 * time.Second
+	writeWait            = 10 * time.Minute
+	pongWait             = 60 * time.Second
+	pingPeriod           = 30 * time.Second
+	readLimit            = 64 << 20
+	sendQueueLen         = 8192
+	spoolFlushBytes      = 256 << 10
+	spoolFlushInterval   = 5 * time.Second
+	keepall              = false
+	diagnosticTailLines  = 300
+	maxQueuedXTraceLines = 100000
 )
 
 var wsUpgrader = websocket.Upgrader{
@@ -72,6 +75,8 @@ var wsUpgrader = websocket.Upgrader{
 		return true
 	},
 }
+
+var sideOutput io.Writer = os.Stdout
 
 type app struct {
 	listen       string
@@ -159,18 +164,22 @@ type job struct {
 	browserLogPath string
 	pyLogPath      string
 
-	mu           sync.Mutex
-	status       string
-	message      string
-	xtraceCount  int
-	mismatchAt   *int
-	browserCode  int
-	pyErr        string
-	tail         []string
-	cancelPy     context.CancelFunc
-	closeBrowser sync.Once
-	closePython  sync.Once
-	stopOnce     sync.Once
+	mu                sync.Mutex
+	status            string
+	message           string
+	xtraceCount       int
+	mismatchAt        *int
+	browserSeenXTrace int
+	pySeenXTrace      int
+	browserCode       int
+	pyErr             string
+	tail              []string
+	browserTail       []string
+	pyTail            []string
+	cancelPy          context.CancelFunc
+	closeBrowser      sync.Once
+	closePython       sync.Once
+	stopOnce          sync.Once
 }
 
 type lineEvent struct {
@@ -193,10 +202,9 @@ type profileAssembly struct {
 type lineSpool struct {
 	side      string
 	path      string
+	keepAll   bool
 	writeFile *os.File
-	readFile  *os.File
 	writer    *bufio.Writer
-	reader    *bufio.Reader
 	flushStop chan struct{}
 	flushDone chan struct{}
 
@@ -205,6 +213,8 @@ type lineSpool struct {
 	flushStopOnce sync.Once
 	seq           int64
 	unflushed     int
+	queue         []string
+	head          int
 	done          bool
 	closed        bool
 	err           error
@@ -711,8 +721,12 @@ func (j *job) openXTraceLogs() error {
 	j.pySpool = pySpool
 	j.browserLogPath = browserPath
 	j.pyLogPath = pyPath
-	log.Printf("writing browser XTRACE log to %s", browserPath)
-	log.Printf("writing python XTRACE log to %s", pyPath)
+	if keepall {
+		log.Printf("writing full browser XTRACE log to %s", browserPath)
+		log.Printf("writing full python XTRACE log to %s", pyPath)
+	} else {
+		log.Printf("keeping last %d diagnostic lines in memory; tails will be written to %s and %s on divergence", diagnosticTailLines, browserPath, pyPath)
+	}
 	return nil
 }
 
@@ -826,27 +840,25 @@ func newLineSpool(side, path string) (*lineSpool, error) {
 }
 
 func newLineSpoolWithFlushInterval(side, path string, flushInterval time.Duration) (*lineSpool, error) {
-	writeFile, err := os.Create(path)
-	if err != nil {
-		return nil, fmt.Errorf("create %s: %w", path, err)
-	}
-	readFile, err := os.Open(path)
-	if err != nil {
-		_ = writeFile.Close()
-		return nil, fmt.Errorf("open %s for comparison: %w", path, err)
-	}
 	spool := &lineSpool{
 		side:      side,
 		path:      path,
-		writeFile: writeFile,
-		readFile:  readFile,
-		writer:    bufio.NewWriterSize(writeFile, spoolFlushBytes),
-		reader:    bufio.NewReaderSize(readFile, spoolFlushBytes),
+		keepAll:   keepall,
 		flushStop: make(chan struct{}),
 		flushDone: make(chan struct{}),
 	}
 	spool.cond = sync.NewCond(&spool.mu)
-	if flushInterval > 0 {
+
+	if keepall {
+		writeFile, err := os.Create(path)
+		if err != nil {
+			return nil, fmt.Errorf("create %s: %w", path, err)
+		}
+		spool.writeFile = writeFile
+		spool.writer = bufio.NewWriterSize(writeFile, spoolFlushBytes)
+	}
+
+	if keepall && flushInterval > 0 {
 		go spool.flushPeriodically(flushInterval)
 	} else {
 		close(spool.flushDone)
@@ -888,17 +900,38 @@ func (s *lineSpool) addLine(line string) error {
 	if s.err != nil {
 		return s.err
 	}
-	n, err := s.writer.WriteString(line)
-	s.unflushed += n
-	if err != nil {
-		s.err = err
-		s.seq++
-		s.cond.Broadcast()
-		return err
+	if s.keepAll {
+		n, err := s.writer.WriteString(line)
+		s.unflushed += n
+		if err != nil {
+			s.err = err
+			s.seq++
+			s.cond.Broadcast()
+			return err
+		}
+		if s.unflushed >= spoolFlushBytes {
+			if err := s.flushLocked(); err != nil {
+				return err
+			}
+		}
 	}
-	if s.unflushed >= spoolFlushBytes {
-		return s.flushLocked()
+
+	if !strings.HasPrefix(line, "XTRACE:") {
+		return nil
 	}
+
+	for s.queueLenLocked() >= maxQueuedXTraceLines && !s.closed && !s.done && s.err == nil {
+		s.cond.Wait()
+	}
+	if s.closed || s.done {
+		return nil
+	}
+	if s.err != nil {
+		return s.err
+	}
+	s.queue = append(s.queue, line)
+	s.seq++
+	s.cond.Broadcast()
 	return nil
 }
 
@@ -923,30 +956,26 @@ func (s *lineSpool) nextLine() (string, bool, error) {
 	}
 	for {
 		s.mu.Lock()
-		seen := s.seq
-		err := s.err
-		done := s.done
-		s.mu.Unlock()
-		if err != nil {
+		if s.err != nil {
+			err := s.err
+			s.mu.Unlock()
 			return "", false, err
 		}
-
-		line, readErr := s.reader.ReadString('\n')
-		if readErr == nil {
+		if s.queueLenLocked() > 0 {
+			line := s.queue[s.head]
+			s.queue[s.head] = ""
+			s.head++
+			s.compactQueueLocked()
+			s.seq++
+			s.cond.Broadcast()
+			s.mu.Unlock()
 			return line, true, nil
 		}
-		if !errors.Is(readErr, io.EOF) {
-			return "", false, readErr
-		}
-		if line != "" {
-			return line, true, nil
-		}
-		if done {
+		if s.done {
+			s.mu.Unlock()
 			return "", false, nil
 		}
-
-		s.mu.Lock()
-		for !s.done && s.err == nil && s.seq == seen {
+		for !s.done && s.err == nil && s.queueLenLocked() == 0 {
 			s.cond.Wait()
 		}
 		s.mu.Unlock()
@@ -972,17 +1001,11 @@ func (s *lineSpool) close() error {
 	}
 	s.closed = true
 	writeFile := s.writeFile
-	readFile := s.readFile
 	err := s.err
 	s.mu.Unlock()
 
 	if writeFile != nil {
 		if closeErr := writeFile.Close(); err == nil && closeErr != nil {
-			err = closeErr
-		}
-	}
-	if readFile != nil {
-		if closeErr := readFile.Close(); err == nil && closeErr != nil {
 			err = closeErr
 		}
 	}
@@ -1012,6 +1035,9 @@ func (s *lineSpool) flush() error {
 }
 
 func (s *lineSpool) flushLocked() error {
+	if !s.keepAll || s.writer == nil {
+		return s.err
+	}
 	if s.unflushed == 0 && s.err == nil {
 		return nil
 	}
@@ -1025,6 +1051,25 @@ func (s *lineSpool) flushLocked() error {
 	s.seq++
 	s.cond.Broadcast()
 	return nil
+}
+
+func (s *lineSpool) queueLenLocked() int {
+	return len(s.queue) - s.head
+}
+
+func (s *lineSpool) compactQueueLocked() {
+	if s.head == 0 {
+		return
+	}
+	if s.head < 1024 && s.head*2 < len(s.queue) {
+		return
+	}
+	copy(s.queue, s.queue[s.head:])
+	for i := len(s.queue) - s.head; i < len(s.queue); i++ {
+		s.queue[i] = ""
+	}
+	s.queue = s.queue[:len(s.queue)-s.head]
+	s.head = 0
 }
 
 func (j *job) runPythonIvyCheck() {
@@ -1142,7 +1187,7 @@ func (j *job) nextXTrace(side string, spool *lineSpool) (string, bool) {
 func (j *job) addBrowserData(fd int, data string) {
 	lines := j.browserBuf.add(fd, data)
 	for _, line := range lines {
-		if err := j.browserSpool.addLine(line.Line); err != nil {
+		if err := j.addObservedLine("browser", line.Line, j.browserSpool); err != nil {
 			j.fail(fmt.Sprintf("write %s: %v", j.browserLogPath, err))
 			return
 		}
@@ -1150,7 +1195,7 @@ func (j *job) addBrowserData(fd int, data string) {
 }
 
 func (j *job) addPythonData(data string) {
-	if err := j.pySpool.addLine(data); err != nil {
+	if err := j.addObservedLine("python", data, j.pySpool); err != nil {
 		j.fail(fmt.Sprintf("write %s: %v", j.pyLogPath, err))
 	}
 }
@@ -1161,7 +1206,7 @@ func (j *job) setBrowserDone(code int) {
 	j.mu.Unlock()
 	lines := j.browserBuf.flush()
 	for _, line := range lines {
-		if err := j.browserSpool.addLine(line.Line); err != nil {
+		if err := j.addObservedLine("browser", line.Line, j.browserSpool); err != nil {
 			j.fail(fmt.Sprintf("write %s: %v", j.browserLogPath, err))
 			break
 		}
@@ -1171,6 +1216,64 @@ func (j *job) setBrowserDone(code int) {
 			j.browserSpool.markDone()
 		}
 	})
+}
+
+func (j *job) addObservedLine(side, line string, spool *lineSpool) error {
+	line = xtracer.NormalizeLine(line)
+	if !strings.HasSuffix(line, "\n") {
+		line += "\n"
+	}
+
+	if strings.HasPrefix(line, "XTRACE:") {
+		if err := spool.addLine(line); err != nil {
+			return err
+		}
+		j.noteXTraceArrived(side)
+		return nil
+	}
+
+	annotated := j.annotateSideLine(side, line)
+	fmt.Fprint(sideOutput, annotated)
+	j.rememberAnnotated(side, annotated)
+	return spool.addLine(annotated)
+}
+
+func (j *job) noteXTraceArrived(side string) {
+	j.mu.Lock()
+	defer j.mu.Unlock()
+	switch side {
+	case "browser":
+		j.browserSeenXTrace++
+	case "python":
+		j.pySeenXTrace++
+	}
+}
+
+func (j *job) annotateSideLine(side, line string) string {
+	j.mu.Lock()
+	var after int
+	switch side {
+	case "browser":
+		after = j.browserSeenXTrace - 1
+	case "python":
+		after = j.pySeenXTrace - 1
+	default:
+		after = j.xtraceCount - 1
+	}
+	j.mu.Unlock()
+
+	return fmt.Sprintf("~%s[after i=%d]: %s", sideTag(side), after, line)
+}
+
+func sideTag(side string) string {
+	switch side {
+	case "browser":
+		return "br"
+	case "python":
+		return "py"
+	default:
+		return side
+	}
 }
 
 func (j *job) setPythonDone() {
@@ -1284,6 +1387,7 @@ func (j *job) mismatch(reason, browser, python string) {
 	}
 	j.mu.Unlock()
 	if shouldStop {
+		j.dumpDiagnosticTail()
 		j.stopProducers(message, &mismatchAt)
 	}
 }
@@ -1291,12 +1395,75 @@ func (j *job) mismatch(reason, browser, python string) {
 func (j *job) remember(side, line string) {
 	j.mu.Lock()
 	defer j.mu.Unlock()
-	entry := fmt.Sprintf("%s: %s", side, strings.TrimRight(line, "\n"))
-	j.tail = append(j.tail, entry)
-	if len(j.tail) > 200 {
-		copy(j.tail, j.tail[len(j.tail)-200:])
-		j.tail = j.tail[:200]
+	entry := fmt.Sprintf("%s: %s", sideTag(side), strings.TrimRight(line, "\n"))
+	j.tail = appendStringTail(j.tail, entry, diagnosticTailLines)
+	switch side {
+	case "browser":
+		j.browserTail = appendStringTail(j.browserTail, line, diagnosticTailLines)
+	case "python":
+		j.pyTail = appendStringTail(j.pyTail, line, diagnosticTailLines)
 	}
+}
+
+func (j *job) rememberAnnotated(side, line string) {
+	j.mu.Lock()
+	defer j.mu.Unlock()
+	entry := strings.TrimRight(line, "\n")
+	j.tail = appendStringTail(j.tail, entry, diagnosticTailLines)
+	switch side {
+	case "browser":
+		j.browserTail = appendStringTail(j.browserTail, line, diagnosticTailLines)
+	case "python":
+		j.pyTail = appendStringTail(j.pyTail, line, diagnosticTailLines)
+	}
+}
+
+func appendStringTail(tail []string, line string, limit int) []string {
+	tail = append(tail, line)
+	if len(tail) <= limit {
+		return tail
+	}
+	copy(tail, tail[len(tail)-limit:])
+	return tail[:limit]
+}
+
+func (j *job) dumpDiagnosticTail() {
+	if keepall {
+		return
+	}
+
+	j.mu.Lock()
+	browserTail := append([]string(nil), j.browserTail...)
+	pyTail := append([]string(nil), j.pyTail...)
+	browserPath := j.browserLogPath
+	pyPath := j.pyLogPath
+	j.mu.Unlock()
+
+	if err := writeTailLog(browserPath, browserTail); err != nil {
+		log.Printf("write browser diagnostic tail %s: %v", browserPath, err)
+	} else {
+		log.Printf("wrote browser diagnostic tail to %s (%d lines)", browserPath, len(browserTail))
+	}
+	if err := writeTailLog(pyPath, pyTail); err != nil {
+		log.Printf("write python diagnostic tail %s: %v", pyPath, err)
+	} else {
+		log.Printf("wrote python diagnostic tail to %s (%d lines)", pyPath, len(pyTail))
+	}
+}
+
+func writeTailLog(path string, lines []string) error {
+	if path == "" {
+		return errors.New("empty tail log path")
+	}
+	var b strings.Builder
+	fmt.Fprintf(&b, "# goldweb diagnostic tail: last %d retained lines; non-XTRACE lines are annotated as ~br/~py\n", len(lines))
+	for _, line := range lines {
+		b.WriteString(line)
+		if !strings.HasSuffix(line, "\n") {
+			b.WriteByte('\n')
+		}
+	}
+	return os.WriteFile(path, []byte(b.String()), 0o600)
 }
 
 func (j *job) snapshot() jobSnapshot {
