@@ -40,3 +40,4 @@ webvue/test-results/
 webvue/static/goivy-check-wasip1.wasm
 browser.xtrace.log
 py.xtrace.log
+webvue/static/goivy-check-js.wasm
