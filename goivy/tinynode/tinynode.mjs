@@ -13,11 +13,11 @@ const startedAt = performance.now();
 
 function diag(message) {
   const elapsedMs = Math.round(performance.now() - startedAt);
-  fs.writeSync(2, `[nodegold.mjs +${elapsedMs}ms] ${message}\n`);
+  fs.writeSync(2, `[tinynode.mjs +${elapsedMs}ms] ${message}\n`);
 }
 
 function usage() {
-  console.error('usage: node nodegold.mjs config.json');
+  console.error('usage: node tinynode.mjs config.json');
 }
 
 function readJSON(file) {
@@ -140,7 +140,7 @@ async function main() {
       writeLineFD(2, text);
     },
     locateFile(file) {
-      if (file === 'z3-api.wasm') {
+      if (file === 'z3-471-api.wasm') {
         return cfg.z3Wasm;
       }
       return path.join(path.dirname(cfg.z3JS), file);
