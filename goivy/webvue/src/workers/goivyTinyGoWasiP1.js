@@ -1524,6 +1524,10 @@ export function createGoIvyTinyGoWasiP1(options) {
       fsScratchWrite(h, offset, word, n);
     },
 
+    __scratch_bytes_release(h) {
+      fsScratch.delete(h);
+    },
+
     read_file(pathHandle, pathLen) {
       return fsReadPath(fsScratchString(pathHandle, pathLen));
     },

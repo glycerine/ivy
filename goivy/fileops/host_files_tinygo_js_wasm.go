@@ -64,6 +64,7 @@ func hostErr(op, name string, errno int32) error {
 
 func ReadFile(name string) ([]byte, error) {
 	path, pathLen := pathScratch(name)
+	defer goivyFSScratchBytesRelease(path)
 	h := goivyFSReadFile(path, pathLen)
 	if h == 0 {
 		return nil, hostErr("read", name, goivyFSLastErrno())
@@ -73,7 +74,9 @@ func ReadFile(name string) ([]byte, error) {
 
 func WriteFile(name string, data []byte) error {
 	path, pathLen := pathScratch(name)
+	defer goivyFSScratchBytesRelease(path)
 	payload := scratchBytes(data)
+	defer goivyFSScratchBytesRelease(payload)
 	if errno := goivyFSWriteFile(path, pathLen, payload, uint32(len(data))); errno != 0 {
 		return hostErr("write", name, errno)
 	}
@@ -82,6 +85,7 @@ func WriteFile(name string, data []byte) error {
 
 func Stat(name string) (FileStat, error) {
 	path, pathLen := pathScratch(name)
+	defer goivyFSScratchBytesRelease(path)
 	if errno := goivyFSStat(path, pathLen); errno != 0 {
 		return FileStat{}, hostErr("stat", name, errno)
 	}
@@ -97,6 +101,9 @@ func goivyFSScratchBytesBegin(n uint32) fsScratch
 
 //go:wasmimport goivy_fs __scratch_bytes_write
 func goivyFSScratchBytesWrite(h fsScratch, offset uint32, word uint32, n uint32)
+
+//go:wasmimport goivy_fs __scratch_bytes_release
+func goivyFSScratchBytesRelease(h fsScratch)
 
 //go:wasmimport goivy_fs read_file
 func goivyFSReadFile(path fsScratch, pathLen uint32) fsBytesHandle
