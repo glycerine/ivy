@@ -75,6 +75,14 @@ function writeAll(stream, bytes) {
   stream.write(bytesToBuffer(bytes));
 }
 
+function writeAllFD(fd, bytes) {
+  fs.writeSync(fd, bytesToBuffer(bytes));
+}
+
+function writeLineFD(fd, text) {
+  fs.writeSync(fd, String(text) + '\n');
+}
+
 async function flushWritable(stream) {
   await new Promise((resolve, reject) => {
     stream.write('', (err) => {
@@ -126,10 +134,10 @@ async function main() {
   diag(`instantiating Z3 wasm ${cfg.z3Wasm}`);
   const z3 = await initZ3({
     print(text) {
-      nodeProcess.stdout.write(String(text) + '\n');
+      writeLineFD(1, text);
     },
     printErr(text) {
-      nodeProcess.stderr.write(String(text) + '\n');
+      writeLineFD(2, text);
     },
     locateFile(file) {
       if (file === 'z3-api.wasm') {
@@ -147,8 +155,8 @@ async function main() {
   nodeFS.installGoIvyNodeFS({
     includeRoot,
     includeTree,
-    stdout: (data) => writeAll(nodeProcess.stdout, data),
-    stderr: (data) => writeAll(nodeProcess.stderr, data),
+    stdout: (data) => writeAllFD(1, data),
+    stderr: (data) => writeAllFD(2, data),
   });
   diag('installed Go wasm Node fs host');
 

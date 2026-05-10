@@ -76,6 +76,31 @@ func (p *bufferedLinePipe) closeWriter() {
 	close(p.lines)
 }
 
+func attachCombinedOutputPipe(cmd *exec.Cmd) (*os.File, *os.File, error) {
+	pr, pw, err := os.Pipe()
+	if err != nil {
+		return nil, nil, err
+	}
+	cmd.Stdout = pw
+	cmd.Stderr = pw
+	return pr, pw, nil
+}
+
+func forwardGoldenProcessLine(repo, label string, w io.Writer, xtraceCount *int64, raw string) error {
+	line := normalizeLine(repo, raw)
+	if strings.HasPrefix(line, "XTRACE:") {
+		if _, err := fmt.Fprintf(w, "%s\n", line); err != nil {
+			return err
+		}
+		*xtraceCount++
+		return nil
+	}
+	if showNonXtraceLines {
+		fmt.Printf("~%s[after i=%d]: %s\n", label, *xtraceCount-1, line)
+	}
+	return nil
+}
+
 // examplesDir returns the absolute path to the ivy-lang-examples/ directory.
 func examplesDir() string {
 	_, file, _, _ := runtime.Caller(0)
@@ -528,7 +553,7 @@ func Test2hrOrdLive(t *testing.T) {
 func Test2hrNodeGoldenOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	//args := []string{"isolate=cf_live"}
-	verbose := true
+	verbose := false
 	GoldenPathCompareIvyCheck(t, verbose, true, path, nil, true)
 }
 
@@ -954,36 +979,43 @@ func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadClos
 		w = io.MultiWriter(pr, f)
 	}
 
-	// We need to normalize lines before writing to w, so pipe
-	// the command's raw output through a filter goroutine.
-	cmdPr, cmdPw := io.Pipe()
-
 	args = append(args, ivyFile)
 	cmd := exec.Command("ivy_check", args...)
 	cmd.Dir = ivyRoot
-	cmd.Stdout = cmdPw
-	cmd.Stderr = cmdPw
 	// Put the child in its own process group so we can kill all
 	// its descendants (including any grandchildren) on cleanup.
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
+	// Use a real OS pipe here, not io.Pipe. If Stdout/Stderr are not *os.File,
+	// os/exec inserts hidden copy goroutines before our scanner. A real pipe
+	// gives children and grandchildren one inherited fd path back to this test.
+	cmdPr, cmdPw, err := attachCombinedOutputPipe(cmd)
+	if err != nil {
+		t.Fatalf("failed to create ivy_check output pipe: %v", err)
+	}
 	if err := cmd.Start(); err != nil {
+		cmdPr.Close()
+		cmdPw.Close()
 		t.Fatalf("failed to start: %v", err)
 	}
+	cmdPw.Close()
 
 	go func() {
 		err := cmd.Wait()
-		vv("ivy_check command has finished. closing cmdPw so the scanner will finish its loop. err='%v'", err)
-		cmdPw.Close()
+		vv("ivy_check command has finished. err='%v'", err)
 	}()
 
 	// Filter goroutine: read raw lines, normalize, write to w.
 	go func() {
+		defer cmdPr.Close()
 		scanner := bufio.NewScanner(cmdPr)
 		scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
+		var xtraceCount int64
 		for scanner.Scan() {
-			line := normalizeLine(repo, scanner.Text())
-			fmt.Fprintf(w, "%s\n", line)
+			if err := forwardGoldenProcessLine(repo, "py", w, &xtraceCount, scanner.Text()); err != nil {
+				vv("ivy_check scanner could not forward line: %v", err)
+				break
+			}
 		}
 		serr := scanner.Err()
 		vv("ivy_check scanner has finished. scanner.Err()='%v'", serr)
@@ -1059,35 +1091,41 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 		w = io.MultiWriter(pr, f)
 	}
 
-	// We need to normalize lines before writing to w, so pipe
-	// the command's raw output through a filter goroutine.
-	cmdPr, cmdPw := io.Pipe()
-
 	args = append(args, ivyFile)
 	exe := target // "goivy_check_xtrace"
 	cmd = exec.Command(exe, args...)
 	cmd.Dir = goivyRoot
-	cmd.Stdout = cmdPw
-	cmd.Stderr = cmdPw
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
+	// Use a real OS pipe here, not io.Pipe. If Stdout/Stderr are not *os.File,
+	// os/exec inserts hidden copy goroutines before our scanner.
+	cmdPr, cmdPw, err := attachCombinedOutputPipe(cmd)
+	if err != nil {
+		t.Fatalf("failed to create goivy_check_xtrace output pipe: %v", err)
+	}
 	if err := cmd.Start(); err != nil {
+		cmdPr.Close()
+		cmdPw.Close()
 		t.Fatalf("failed to start '%v': %v", exe, err)
 	}
+	cmdPw.Close()
 
 	go func() {
 		err := cmd.Wait()
-		vv("goivy_check_xtrace command has finished. closing cmdPw so the scanner will finish its loop. err='%v'", err)
-		cmdPw.Close()
+		vv("goivy_check_xtrace command has finished. err='%v'", err)
 	}()
 
 	// Filter goroutine: read raw lines, normalize, write to w.
 	go func() {
+		defer cmdPr.Close()
 		scanner := bufio.NewScanner(cmdPr)
 		scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
+		var xtraceCount int64
 		for scanner.Scan() {
-			line := normalizeLine(repo, scanner.Text())
-			fmt.Fprintf(w, "%s\n", line)
+			if err := forwardGoldenProcessLine(repo, "go", w, &xtraceCount, scanner.Text()); err != nil {
+				vv("goivy_check_xtrace scanner could not forward line: %v", err)
+				break
+			}
 		}
 		serr := scanner.Err()
 		vv("goivy_check_xtrace scanner has finished. scanner.Err()='%v'", serr)
@@ -1176,37 +1214,44 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		w = io.MultiWriter(pr, f)
 	}
 
-	// We need to normalize lines before writing to w, so pipe
-	// the command's raw output through a filter goroutine.
-	cmdPr, cmdPw := io.Pipe()
-
 	args = append([]string{"-goivy-wasm", goivyWasm}, args...)
 	args = append(args, ivyFile)
 	exe := target // "nodegold"
 	cmd = exec.Command(exe, args...)
 	cmd.Dir = goivyRoot
-	cmd.Stdout = cmdPw
-	cmd.Stderr = cmdPw
-	// does leaving this off help kill node when test is stopped?
-	//cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
+	// Use a real OS pipe here, not io.Pipe. This is especially important for
+	// nodegold: the node process is a grandchild, and it should inherit a real
+	// stdout/stderr fd from nodegold rather than writing through an os/exec
+	// copy goroutine layered on top of an io.Pipe.
+	cmdPr, cmdPw, err := attachCombinedOutputPipe(cmd)
+	if err != nil {
+		t.Fatalf("failed to create nodegold output pipe: %v", err)
+	}
 	if err := cmd.Start(); err != nil {
+		cmdPr.Close()
+		cmdPw.Close()
 		t.Fatalf("failed to start '%v': %v", exe, err)
 	}
+	cmdPw.Close()
 
 	go func() {
 		err := cmd.Wait()
-		vv("nodegold command has finished. closing cmdPw so the scanner will finish its loop. err='%v'", err)
-		cmdPw.Close()
+		vv("nodegold command has finished. err='%v'", err)
 	}()
 
 	// Filter goroutine: read raw lines, normalize, write to w.
 	go func() {
+		defer cmdPr.Close()
 		scanner := bufio.NewScanner(cmdPr)
 		scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
+		var xtraceCount int64
 		for scanner.Scan() {
-			line := normalizeLine(repo, scanner.Text())
-			fmt.Fprintf(w, "%s\n", line)
+			if err := forwardGoldenProcessLine(repo, "go", w, &xtraceCount, scanner.Text()); err != nil {
+				vv("nodegold scanner could not forward line: %v", err)
+				break
+			}
 		}
 		serr := scanner.Err()
 		vv("nodegold scanner has finished. scanner.Err()='%v'", serr)
