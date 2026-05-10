@@ -10,6 +10,7 @@ import (
 
 var readPath string
 var writePath string
+var dirPath string
 
 func main() {
 	if len(os.Args) == 3 {
@@ -67,6 +68,27 @@ func main() {
 	if !bytes.Equal(written, payload) {
 		fmt.Fprintln(os.Stderr, "written payload mismatch")
 		os.Exit(1)
+	}
+	if dirPath != "" {
+		entries, err := fileops.ReadDir(dirPath)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "readdir: %v\n", err)
+			os.Exit(1)
+		}
+		foundRead := false
+		foundWrite := false
+		for _, entry := range entries {
+			if entry.Name == "input.ivy" && !entry.IsDir {
+				foundRead = true
+			}
+			if entry.Name == "output.ivy" && !entry.IsDir {
+				foundWrite = true
+			}
+		}
+		if !foundRead || !foundWrite {
+			fmt.Fprintf(os.Stderr, "readdir missing files: input=%v output=%v\n", foundRead, foundWrite)
+			os.Exit(1)
+		}
 	}
 
 	fmt.Printf("OK read=%d wrote=%d\n", len(data), len(payload))

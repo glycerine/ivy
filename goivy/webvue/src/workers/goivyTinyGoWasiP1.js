@@ -631,22 +631,7 @@ export function createGoIvyTinyGoWasiP1(options) {
     return lookup(root, rel);
   }
 
-  function fsStatPath(pathName) {
-    if (nodeFs && nodePath) {
-      const resolved = resolveHostDirectPath(pathName);
-      if (resolved.ret !== ERRNO_SUCCESS) {
-        return resolved.ret;
-      }
-      try {
-        const stats = nodeFs.statSync(resolved.path);
-        fsLastSize = BigInt(stats.size || 0);
-        fsLastIsDir = stats.isDirectory() ? 1 : 0;
-        return ERRNO_SUCCESS;
-      } catch (error) {
-        return errnoFromNodeError(error);
-      }
-    }
-
+  function statVirtualPath(pathName) {
     const result = resolveVirtualPath(pathName);
     if (result.ret !== ERRNO_SUCCESS) {
       return result.ret;
@@ -656,23 +641,7 @@ export function createGoIvyTinyGoWasiP1(options) {
     return ERRNO_SUCCESS;
   }
 
-  function fsReadPath(pathName) {
-    if (nodeFs && nodePath) {
-      const resolved = resolveHostDirectPath(pathName);
-      if (resolved.ret !== ERRNO_SUCCESS) {
-        fsLastErrno = resolved.ret;
-        return 0;
-      }
-      try {
-        const data = nodeFs.readFileSync(resolved.path);
-        fsLastErrno = ERRNO_SUCCESS;
-        return fsBytesHandle(data);
-      } catch (error) {
-        fsLastErrno = errnoFromNodeError(error);
-        return 0;
-      }
-    }
-
+  function readVirtualPath(pathName) {
     const result = resolveVirtualPath(pathName);
     if (result.ret !== ERRNO_SUCCESS) {
       fsLastErrno = result.ret;
@@ -684,6 +653,102 @@ export function createGoIvyTinyGoWasiP1(options) {
     }
     fsLastErrno = ERRNO_SUCCESS;
     return fsBytesHandle(result.node.data);
+  }
+
+  function encodeDirEntries(entries) {
+    let text = '';
+    for (const entry of entries) {
+      text += (entry.isDir ? 'd' : 'f') + '\t' + entry.name + '\n';
+    }
+    return textEncoder.encode(text);
+  }
+
+  function readDirVirtualPath(pathName) {
+    const result = resolveVirtualPath(pathName);
+    if (result.ret !== ERRNO_SUCCESS) {
+      fsLastErrno = result.ret;
+      return 0;
+    }
+    if (result.node.kind !== 'dir') {
+      fsLastErrno = ERRNO_NOTDIR;
+      return 0;
+    }
+    const entries = Array.from(result.node.children.values())
+      .map((node) => ({ name: node.name, isDir: node.kind === 'dir' }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    fsLastErrno = ERRNO_SUCCESS;
+    return fsBytesHandle(encodeDirEntries(entries));
+  }
+
+  function fsStatPath(pathName) {
+    if (nodeFs && nodePath) {
+      const resolved = resolveHostDirectPath(pathName);
+      if (resolved.ret !== ERRNO_SUCCESS) {
+        return statVirtualPath(pathName);
+      }
+      try {
+        const stats = nodeFs.statSync(resolved.path);
+        fsLastSize = BigInt(stats.size || 0);
+        fsLastIsDir = stats.isDirectory() ? 1 : 0;
+        return ERRNO_SUCCESS;
+      } catch (error) {
+        const ret = errnoFromNodeError(error);
+        if (ret === ERRNO_NOENT || ret === ERRNO_NOTDIR) {
+          return statVirtualPath(pathName);
+        }
+        return ret;
+      }
+    }
+
+    return statVirtualPath(pathName);
+  }
+
+  function fsReadPath(pathName) {
+    if (nodeFs && nodePath) {
+      const resolved = resolveHostDirectPath(pathName);
+      if (resolved.ret !== ERRNO_SUCCESS) {
+        return readVirtualPath(pathName);
+      }
+      try {
+        const data = nodeFs.readFileSync(resolved.path);
+        fsLastErrno = ERRNO_SUCCESS;
+        return fsBytesHandle(data);
+      } catch (error) {
+        const ret = errnoFromNodeError(error);
+        if (ret === ERRNO_NOENT || ret === ERRNO_NOTDIR) {
+          return readVirtualPath(pathName);
+        }
+        fsLastErrno = ret;
+        return 0;
+      }
+    }
+
+    return readVirtualPath(pathName);
+  }
+
+  function fsReadDirPath(pathName) {
+    if (nodeFs && nodePath) {
+      const resolved = resolveHostDirectPath(pathName);
+      if (resolved.ret !== ERRNO_SUCCESS) {
+        return readDirVirtualPath(pathName);
+      }
+      try {
+        const entries = nodeFs.readdirSync(resolved.path, { withFileTypes: true })
+          .map((entry) => ({ name: entry.name, isDir: entry.isDirectory() }))
+          .sort((a, b) => a.name.localeCompare(b.name));
+        fsLastErrno = ERRNO_SUCCESS;
+        return fsBytesHandle(encodeDirEntries(entries));
+      } catch (error) {
+        const ret = errnoFromNodeError(error);
+        if (ret === ERRNO_NOENT || ret === ERRNO_NOTDIR) {
+          return readDirVirtualPath(pathName);
+        }
+        fsLastErrno = ret;
+        return 0;
+      }
+    }
+
+    return readDirVirtualPath(pathName);
   }
 
   function fsWritePath(pathName, data) {
@@ -1530,6 +1595,10 @@ export function createGoIvyTinyGoWasiP1(options) {
 
     read_file(pathHandle, pathLen) {
       return fsReadPath(fsScratchString(pathHandle, pathLen));
+    },
+
+    read_dir(pathHandle, pathLen) {
+      return fsReadDirPath(fsScratchString(pathHandle, pathLen));
     },
 
     write_file(pathHandle, pathLen, dataHandle, dataLen) {

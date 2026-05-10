@@ -195,6 +195,8 @@ describe('goivy TinyGo WASI preview1 host', () => {
     fs.writeFileSync(readPath, 'host fs payload');
 
     const { wasi, mem } = newHarness({
+      includeRoot: '/goivy-virtual-include',
+      includeTree: { files: [{ path: '1.8/order.ivy', data: '#lang ivy1.8\ninclude payload' }] },
       nodeFilesystem: fs,
       nodePath: path,
       hostPreopenPath: '/',
@@ -215,6 +217,23 @@ describe('goivy TinyGo WASI preview1 host', () => {
     expect(fs.readFileSync(writePath, 'utf8')).toBe('host fs write payload');
     expect(wasi.goivyFsImport.stat(outPathScratch.h, outPathScratch.len)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
     expect(wasi.goivyFsImport.last_size_lo()).toBe('host fs write payload'.length);
+
+    const dirScratch = scratchBytes(wasi, mem, dir);
+    const dirHandleID = wasi.goivyFsImport.read_dir(dirScratch.h, dirScratch.len);
+    expect(dirHandleID).not.toBe(0);
+    expect(dec.decode(readBytesHandle(wasi, dirHandleID))).toContain('f\tinput.ivy\n');
+
+    const includeRootScratch = scratchBytes(wasi, mem, '/goivy-virtual-include');
+    const includeRootHandleID = wasi.goivyFsImport.read_dir(includeRootScratch.h, includeRootScratch.len);
+    expect(includeRootHandleID).not.toBe(0);
+    expect(dec.decode(readBytesHandle(wasi, includeRootHandleID))).toContain('d\t1.8\n');
+
+    const includeScratch = scratchBytes(wasi, mem, '/goivy-virtual-include/1.8/order.ivy');
+    expect(wasi.goivyFsImport.stat(includeScratch.h, includeScratch.len)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    expect(wasi.goivyFsImport.last_size_lo()).toBe('#lang ivy1.8\ninclude payload'.length);
+    const includeHandleID = wasi.goivyFsImport.read_file(includeScratch.h, includeScratch.len);
+    expect(includeHandleID).not.toBe(0);
+    expect(dec.decode(readBytesHandle(wasi, includeHandleID))).toBe('#lang ivy1.8\ninclude payload');
   });
 
   test('TinyGo wasm probe can stat, read, and write through goivy_fs', async () => {
@@ -237,7 +256,7 @@ describe('goivy TinyGo WASI preview1 host', () => {
       '-gc=precise',
       '-no-debug',
       '-ldflags',
-      `-X main.readPath=${readPath} -X main.writePath=${writePath}`,
+      `-X main.readPath=${readPath} -X main.writePath=${writePath} -X main.dirPath=${dir}`,
       '-o',
       wasmPath,
       './cmd/tinyfsprobe',
