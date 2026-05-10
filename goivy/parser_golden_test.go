@@ -388,6 +388,10 @@ func TestGoldenLALR(t *testing.T) {
 // Normalize file paths so that different install locations
 // (e.g. ~/goivy/... vs ~/pyivy/ivy/...) don't cause false diffs.
 func normalizeLine(repo, line string) string {
+	slashDir := func(path string) string {
+		return strings.TrimRight(filepath.ToSlash(filepath.Clean(path)), "/") + "/"
+	}
+
 	// Strip known path prefixes for include files
 	gopath := os.Getenv("GOPATH")
 	home := os.Getenv("HOME")
@@ -395,34 +399,44 @@ func normalizeLine(repo, line string) string {
 		gopath = filepath.Join(home, "go")
 	}
 	for _, prefix := range []string{
-		home + "/ivy/ivy-lang-examples/ivy/include/",
-		filepath.Join(repo, "/ivy-lang-examples/ivy/include/"),
-		home + "/ivy/pyivy/ivy/ivy/include/",
-		gopath + "/src/github.com/glycerine/ivy/ivy-lang-examples/ivy/include/",
+		slashDir(filepath.Join(home, "ivy/ivy-lang-examples/ivy/include")),
+		slashDir(filepath.Join(repo, "ivy-lang-examples/ivy/include")),
+		slashDir(filepath.Join(home, "ivy/pyivy/ivy/ivy/include")),
+		slashDir(filepath.Join(gopath, "src/github.com/glycerine/ivy/ivy-lang-examples/ivy/include")),
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
 		}
 	}
 	for _, prefix := range []string{
-		home + "/ivy/ivy-lang-examples/",
-		filepath.Join(repo, "/ivy-lang-examples/"),
-		filepath.Join(gopath, "/src/github.com/glycerine/ivy/ivy-lang-examples/"),
+		slashDir(filepath.Join(home, "ivy/ivy-lang-examples")),
+		slashDir(filepath.Join(repo, "ivy-lang-examples")),
+		slashDir(filepath.Join(gopath, "src/github.com/glycerine/ivy/ivy-lang-examples")),
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_EXAMPLES>/")
 		}
 	}
 	for _, prefix := range []string{
-		home + "/ivy/pyivy/ivy/ivy/include/",
-		filepath.Join(repo, "/ivy/pyivy/ivy/ivy/include/"),
-		filepath.Join(gopath, "/src/github.com/glycerine/ivy/pyivy/ivy/ivy/include/"),
+		slashDir(filepath.Join(home, "ivy/pyivy/ivy/ivy/include")),
+		slashDir(filepath.Join(repo, "ivy/pyivy/ivy/ivy/include")),
+		slashDir(filepath.Join(gopath, "src/github.com/glycerine/ivy/pyivy/ivy/ivy/include")),
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
 		}
 	}
 	return line
+}
+
+func TestNormalizeLineRepoExamplesPathKeepsSingleSlash(t *testing.T) {
+	repo := "/tmp/ivy"
+	line := "XTRACE: check.start ENTER file=/tmp/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+	got := normalizeLine(repo, line)
+	want := "XTRACE: check.start ENTER file=<IVY_EXAMPLES>/doc/examples/apple/ord_live.ivy"
+	if got != want {
+		t.Fatalf("normalizeLine mismatch:\n got: %q\nwant: %q", got, want)
+	}
 }
 
 func mustGetRepoDir(t *testing.T) (dir string) {
@@ -1040,6 +1054,18 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	goivyRoot := filepath.Dir(thisFile)
 
 	nodegoldCmdDir := filepath.Join(goivyRoot, "nodegold")
+	goivyWasm := filepath.Join(goivyRoot, "webvue", "static", "goivy-check-js.wasm")
+	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
+
+	wasmFullCmd := fmt.Sprintf("cd %v && GOOS=js GOARCH=wasm %v build -o %v ./cmd/goivy_check_jswasm", goivyRoot, goBinary, goivyWasm)
+	fmt.Printf("build goivy-check-js.wasm so nodegold has an up-to-date payload: '%v'\n", wasmFullCmd)
+	cmd := exec.Command(goBinary, "build", "-o", goivyWasm, "./cmd/goivy_check_jswasm")
+	cmd.Dir = goivyRoot
+	cmd.Env = append(os.Environ(), "GOOS=js", "GOARCH=wasm")
+	if out, err := cmd.CombinedOutput(); err != nil {
+		panicf("could not run '%v'; error: '%v'; output:\n%s", wasmFullCmd, err, out)
+	}
+	fmt.Printf("done refreshing goivy-check-js.wasm\n\n")
 
 	// we will compile nodegold now to make
 	// sure it is up-to-date, and place it into the gobin directory.
@@ -1063,10 +1089,9 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		}
 	}
 	target := filepath.Join(gobin, "nodegold")
-	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
 	doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", nodegoldCmdDir, goBinary, target)
 	fmt.Printf("build nodegold so we know it is up to date: '%v'\n", doFullCmd)
-	cmd := exec.Command(goBinary, "build", "-o", target)
+	cmd = exec.Command(goBinary, "build", "-o", target)
 	cmd.Dir = nodegoldCmdDir
 	err = cmd.Run()
 	if err != nil {
@@ -1095,6 +1120,7 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	// the command's raw output through a filter goroutine.
 	cmdPr, cmdPw := io.Pipe()
 
+	args = append([]string{"-goivy-wasm", goivyWasm}, args...)
 	args = append(args, ivyFile)
 	exe := target // "nodegold"
 	cmd = exec.Command(exe, args...)

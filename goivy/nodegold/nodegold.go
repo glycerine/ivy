@@ -103,6 +103,7 @@ func main() {
 	if !*keepTemp {
 		defer os.RemoveAll(tmpDir)
 	}
+
 	configPath := filepath.Join(tmpDir, "config.json")
 	data, err := json.MarshalIndent(cfg, "", "  ")
 	if err != nil {
@@ -116,6 +117,7 @@ func main() {
 	if *keepTemp {
 		fmt.Fprintf(os.Stderr, "nodegold: kept config %s\n", configPath)
 	}
+	fmt.Printf("nodegold.go:120 wrote config.json to temp dir: '%v'; our script: '%v'\n", tmpDir, *script)
 
 	args := append([]string{}, nodeFlags...)
 	if len(nodeFlags) == 0 && nodeSupportsFlag(*node, "--experimental-wasm-exnref") {

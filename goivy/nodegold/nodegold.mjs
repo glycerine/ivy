@@ -9,6 +9,12 @@ import { pathToFileURL } from 'node:url';
 
 const nodeProcess = globalThis.process;
 const require = createRequire(import.meta.url);
+const startedAt = performance.now();
+
+function diag(message) {
+  const elapsedMs = Math.round(performance.now() - startedAt);
+  fs.writeSync(2, `[nodegold.mjs +${elapsedMs}ms] ${message}\n`);
+}
 
 function usage() {
   console.error('usage: node nodegold.mjs config.json');
@@ -102,14 +108,22 @@ async function main() {
     return 2;
   }
 
+  diag(`reading config ${nodeProcess.argv[2]}`);
   const cfg = readJSON(nodeProcess.argv[2]);
+  diag(`reading spec ${cfg.specPath}`);
   const spec = fs.readFileSync(cfg.specPath, 'utf8');
+  diag(`read spec bytes=${Buffer.byteLength(spec, 'utf8')}`);
+  diag(`reading include tree ${cfg.includeDir}`);
   const includeTree = readIncludeTree(cfg.includeDir);
   const includeRoot = String(includeTree.root || cfg.includeDir);
+  diag(`read include files=${includeTree.files.length} root=${includeRoot}`);
 
   installHostGlobals();
+  diag('installed host globals');
 
+  diag(`loading Z3 glue ${cfg.z3JS}`);
   const initZ3 = loadZ3Glue(cfg.z3JS);
+  diag(`instantiating Z3 wasm ${cfg.z3Wasm}`);
   const z3 = await initZ3({
     print(text) {
       nodeProcess.stdout.write(String(text) + '\n');
@@ -124,8 +138,11 @@ async function main() {
       return path.join(path.dirname(cfg.z3JS), file);
     },
   });
+  diag('Z3 wasm ready');
 
+  diag(`importing smt bridge ${cfg.smtImports}`);
   const z3Imports = await import(fileURL(cfg.smtImports));
+  diag(`importing node fs host ${cfg.nodeFS}`);
   const nodeFS = await import(fileURL(cfg.nodeFS));
   nodeFS.installGoIvyNodeFS({
     includeRoot,
@@ -133,12 +150,15 @@ async function main() {
     stdout: (data) => writeAll(nodeProcess.stdout, data),
     stderr: (data) => writeAll(nodeProcess.stderr, data),
   });
+  diag('installed Go wasm Node fs host');
 
+  diag(`loading wasm_exec ${cfg.wasmExec}`);
   const wasmExecSource = fs.readFileSync(cfg.wasmExec, 'utf8');
   new Function(wasmExecSource + '\n//# sourceURL=' + cfg.wasmExec)();
   if (typeof globalThis.Go !== 'function') {
     throw new Error(cfg.wasmExec + ' did not expose globalThis.Go');
   }
+  diag('wasm_exec loaded');
 
   let wasmMemory;
   let goRunError = null;
@@ -156,21 +176,28 @@ async function main() {
   };
   go.importObject.smt_z3 = z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory });
 
+  diag(`reading Go Ivy wasm ${cfg.goivyWasm}`);
   const wasmBytes = fs.readFileSync(cfg.goivyWasm);
+  diag(`instantiating Go Ivy wasm bytes=${wasmBytes.length}`);
   const result = await WebAssembly.instantiate(wasmBytes, go.importObject);
   const instance = result.instance;
   wasmMemory = instance.exports.mem;
   if (!wasmMemory) {
     throw new Error('Go Ivy js/wasm does not export mem');
   }
+  diag('Go Ivy wasm instantiated; starting Go runtime');
 
   go.run(instance).catch((error) => {
     goRunError = error;
   });
+  diag('Go runtime started; waiting for goivyCheckReady');
 
   for (let i = 0; i < 2000 && !globalThis.goivyCheckReady; i += 1) {
     if (goRunError) {
       throw goRunError;
+    }
+    if (i > 0 && i % 100 === 0) {
+      diag(`still waiting for goivyCheckReady after ${i * 5}ms`);
     }
     await new Promise((resolve) => setTimeout(resolve, 5));
   }
@@ -180,22 +207,28 @@ async function main() {
   if (typeof globalThis.goivyCheckRun !== 'function' || !globalThis.goivyCheckReady) {
     throw new Error('Go Ivy js/wasm did not publish goivyCheckRun');
   }
+  diag('goivyCheckReady published');
 
   const baseParams = cfg.params || {};
   const isolates = Array.isArray(cfg.isolates) ? cfg.isolates : [];
   let code = 0;
+  diag(`starting goivyCheckRun filename=${cfg.specPath} params=${JSON.stringify(baseParams)} isolates=${JSON.stringify(isolates)}`);
 
   if (isolates.length === 0) {
+    diag('calling goivyCheckRun once');
     code = globalThis.goivyCheckRun(spec, JSON.stringify({
       filename: cfg.specPath,
       params: baseParams,
     })) | 0;
+    diag(`goivyCheckRun returned code=${code}`);
   } else {
     for (const isolate of isolates) {
+      diag(`calling goivyCheckRun isolate=${isolate}`);
       code = globalThis.goivyCheckRun(spec, JSON.stringify({
         filename: cfg.specPath,
         params: { ...baseParams, isolate },
       })) | 0;
+      diag(`goivyCheckRun isolate=${isolate} returned code=${code}`);
       if (code !== 0) {
         break;
       }
