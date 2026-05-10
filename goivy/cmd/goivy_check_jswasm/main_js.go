@@ -5,6 +5,11 @@ package main
 // This package is the js/wasm browser entrypoint for goldweb. It must be
 // hosted with the exact Go-team wasm_exec.js matching the Go compiler version
 // that built it; goldweb serves the vendored wasm_exec-go1.25.6.js copy.
+//
+// Update/correction: now works under tinygo too, with the
+// checkMetaNULPrefix = "goivy-meta-v1\x00" parseCheckMeta()
+// helper inline to handle a TinyGo NUL-delimited path when
+// the metadata string starts with that exact prefix.
 
 import (
 	"encoding/json"
