@@ -1295,7 +1295,7 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	tinynodeCmdDir := filepath.Join(goivyRoot, "cmd", "tinynode")
 	goivyWasm := filepath.Join(goivyRoot, "webvue", "static", "goivy-check-tinygo-js.wasm")
 	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
-	tinygoBinary := filepath.Join("usr", "local", "bin", "tinygo")
+	tinygoBinary := filepath.Join("/usr", "local", "bin", "tinygo")
 	tinygoFlags := []string{"-panic=trap", "-gc=precise", "-no-debug"}
 
 	// GOOS=js GOARCH=wasm /usr/local/bin/tinygo build -panic=trap -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
