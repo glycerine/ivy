@@ -22,6 +22,11 @@ type IvyUtilsConfig struct {
 	// StdIncludeDir caches the standard include directory path.
 	StdIncludeDir string
 
+	// IncludeBaseDir optionally pins the base include directory. This is used
+	// by hosted wasm runtimes, where os.Getenv/os.ReadDir are not the right
+	// boundary for discovering Ivy's standard library.
+	IncludeBaseDir string
+
 	// RuntimeCaller is a hook for runtime.Caller (allows testing).
 	RuntimeCaller func(skip int) (uintptr, string, int, bool)
 

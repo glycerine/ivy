@@ -83,8 +83,8 @@ function writeLineFD(fd, text) {
   fs.writeSync(fd, String(text) + '\n');
 }
 
-function encodeTinyGoMetadata(filename, params = {}) {
-  const parts = ['goivy-meta-v1', 'filename', filename];
+function encodeTinyGoMetadata(filename, includeRoot, params = {}) {
+  const parts = ['goivy-meta-v1', 'filename', filename, 'include_root', includeRoot];
   for (const [key, value] of Object.entries(params)) {
     parts.push('param', key, String(value));
   }
@@ -256,12 +256,12 @@ async function main() {
 
   if (isolates.length === 0) {
     diag('calling goivyCheckRun once');
-    code = globalThis.goivyCheckRun(spec, encodeTinyGoMetadata(cfg.specPath, baseParams)) | 0;
+    code = globalThis.goivyCheckRun(spec, encodeTinyGoMetadata(cfg.specPath, includeRoot, baseParams)) | 0;
     diag(`goivyCheckRun returned code=${code}`);
   } else {
     for (const isolate of isolates) {
       diag(`calling goivyCheckRun isolate=${isolate}`);
-      code = globalThis.goivyCheckRun(spec, encodeTinyGoMetadata(cfg.specPath, { ...baseParams, isolate })) | 0;
+      code = globalThis.goivyCheckRun(spec, encodeTinyGoMetadata(cfg.specPath, includeRoot, { ...baseParams, isolate })) | 0;
       diag(`goivyCheckRun isolate=${isolate} returned code=${code}`);
       if (code !== 0) {
         break;

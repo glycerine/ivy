@@ -24,8 +24,9 @@ import (
 )
 
 type checkMeta struct {
-	Filename string            `json:"filename"`
-	Params   map[string]string `json:"params"`
+	Filename    string            `json:"filename"`
+	IncludeRoot string            `json:"includeRoot"`
+	Params      map[string]string `json:"params"`
 }
 
 const checkMetaNULPrefix = "goivy-meta-v1\x00"
@@ -83,6 +84,9 @@ func runGoivyCheck(spec, metaRaw string) (code int32) {
 	}
 
 	cfg := goivy.NewConfig()
+	if meta.IncludeRoot != "" {
+		cfg.IuCfg.IncludeBaseDir = meta.IncludeRoot
+	}
 	if err := goivy.ApplyIvyCheckParams(cfg, meta.Params); err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		return 1
@@ -106,6 +110,12 @@ func parseCheckMeta(raw string, meta *checkMeta) error {
 					return fmt.Errorf("missing filename value")
 				}
 				meta.Filename = parts[i+1]
+				i += 2
+			case "include_root":
+				if i+1 >= len(parts) {
+					return fmt.Errorf("missing include_root value")
+				}
+				meta.IncludeRoot = parts[i+1]
 				i += 2
 			case "param":
 				if i+2 >= len(parts) {

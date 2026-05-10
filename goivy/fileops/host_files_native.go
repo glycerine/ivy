@@ -9,6 +9,11 @@ type FileStat struct {
 	IsDir bool
 }
 
+type DirEntry struct {
+	Name  string
+	IsDir bool
+}
+
 func ReadFile(name string) ([]byte, error) {
 	return os.ReadFile(name)
 }
@@ -26,4 +31,19 @@ func Stat(name string) (FileStat, error) {
 		Size:  info.Size(),
 		IsDir: info.IsDir(),
 	}, nil
+}
+
+func ReadDir(name string) ([]DirEntry, error) {
+	entries, err := os.ReadDir(name)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]DirEntry, 0, len(entries))
+	for _, entry := range entries {
+		out = append(out, DirEntry{
+			Name:  entry.Name(),
+			IsDir: entry.IsDir(),
+		})
+	}
+	return out, nil
 }

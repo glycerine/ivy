@@ -2,10 +2,18 @@
 
 package fileops
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type FileStat struct {
 	Size  int64
+	IsDir bool
+}
+
+type DirEntry struct {
+	Name  string
 	IsDir bool
 }
 
@@ -96,6 +104,31 @@ func Stat(name string) (FileStat, error) {
 	}, nil
 }
 
+func ReadDir(name string) ([]DirEntry, error) {
+	path, pathLen := pathScratch(name)
+	defer goivyFSScratchBytesRelease(path)
+	h := goivyFSReadDir(path, pathLen)
+	if h == 0 {
+		return nil, hostErr("readdir", name, goivyFSLastErrno())
+	}
+	raw := string(readHostBytes(h))
+	var out []DirEntry
+	for _, line := range strings.Split(raw, "\n") {
+		if line == "" {
+			continue
+		}
+		kind, entryName, ok := strings.Cut(line, "\t")
+		if !ok || entryName == "" {
+			return nil, fmt.Errorf("readdir %s: bad host entry %q", name, line)
+		}
+		out = append(out, DirEntry{
+			Name:  entryName,
+			IsDir: kind == "d",
+		})
+	}
+	return out, nil
+}
+
 //go:wasmimport goivy_fs __scratch_bytes_begin
 func goivyFSScratchBytesBegin(n uint32) fsScratch
 
@@ -113,6 +146,9 @@ func goivyFSWriteFile(path fsScratch, pathLen uint32, data fsScratch, dataLen ui
 
 //go:wasmimport goivy_fs stat
 func goivyFSStat(path fsScratch, pathLen uint32) int32
+
+//go:wasmimport goivy_fs read_dir
+func goivyFSReadDir(path fsScratch, pathLen uint32) fsBytesHandle
 
 //go:wasmimport goivy_fs bytes_len
 func goivyFSBytesLen(h fsBytesHandle) uint32

@@ -8,6 +8,8 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/glycerine/ivy/goivy/fileops"
 )
 
 // ComposeNames joins names with cfg.ComposeCharacter, skipping "this".
@@ -124,12 +126,15 @@ func (cfg *IvyUtilsConfig) GetStdIncludeDir() string {
 	if cfg.StdIncludeDir != "" {
 		return cfg.StdIncludeDir
 	}
-	incBaseDir := getIncludeBaseDir()
+	incBaseDir := cfg.IncludeBaseDir
+	if incBaseDir == "" {
+		incBaseDir = getIncludeBaseDir()
+	}
 
-	entries, err := os.ReadDir(incBaseDir)
+	entries, err := fileops.ReadDir(incBaseDir)
 	if err != nil {
 		// Fallback: if the base dir doesn't exist, try plain "include"
-		if info, statErr := os.Stat("include"); statErr == nil && info.IsDir() {
+		if info, statErr := fileops.Stat("include"); statErr == nil && info.IsDir {
 			cfg.StdIncludeDir = "include"
 			return cfg.StdIncludeDir
 		}
@@ -138,8 +143,8 @@ func (cfg *IvyUtilsConfig) GetStdIncludeDir() string {
 
 	var bestDir string
 	for _, entry := range entries {
-		d := entry.Name()
-		if !entry.IsDir() {
+		d := entry.Name
+		if !entry.IsDir {
 			continue
 		}
 		if !incDirPat.MatchString(d) {
