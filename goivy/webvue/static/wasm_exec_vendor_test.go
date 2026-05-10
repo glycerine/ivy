@@ -6,17 +6,21 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 )
 
 const (
-	vendoredWasmExecVersion = "go1.25.6"
+	vendoredWasmExecVersion = "go1.25.6" // stayed the same for go1.26
 	vendoredWasmExecName    = "wasm_exec-" + vendoredWasmExecVersion + ".js"
 )
 
 func TestVendoredWasmExecMatchesGoToolchain(t *testing.T) {
-	if got := runtime.Version(); got != vendoredWasmExecVersion {
-		t.Fatalf("vendored %s is for %s, but the current Go toolchain is %s; refresh /usr/local/go/lib/wasm/wasm_exec.js and rename the vendored file", vendoredWasmExecName, vendoredWasmExecVersion, got)
+	got := runtime.Version()
+	if strings.HasPrefix(got, "go1.25") || strings.HasPrefix(got, "go1.26") {
+		// okay
+	} else {
+		t.Fatalf("vendored %s is for %s (go1.25.x and go1.26.x support), but the current Go toolchain is %s; refresh /usr/local/go/lib/wasm/wasm_exec.js and rename the vendored file", vendoredWasmExecName, vendoredWasmExecVersion, got)
 	}
 
 	sourcePath := filepath.Join(runtime.GOROOT(), "lib", "wasm", "wasm_exec.js")
