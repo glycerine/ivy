@@ -1127,7 +1127,8 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	cmd.Dir = goivyRoot
 	cmd.Stdout = cmdPw
 	cmd.Stderr = cmdPw
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	// does leaving this off help kill node when test is stopped?
+	//cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
 	if err := cmd.Start(); err != nil {
 		t.Fatalf("failed to start '%v': %v", exe, err)
