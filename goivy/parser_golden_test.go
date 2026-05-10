@@ -540,31 +540,38 @@ func mustGetRepoDir(t *testing.T) (dir string) {
 func TestOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args, false)
+	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
 }
 
 // takes two hours to check all isolates.
 func Test2hrOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	//args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, false, true, path, nil, false)
+	GoldenPathCompareIvyCheck(t, false, true, path, nil, "")
 }
 
 func Test2hrNodeGoldenOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	//args := []string{"isolate=cf_live"}
 	verbose := false
-	GoldenPathCompareIvyCheck(t, verbose, true, path, nil, true)
+	GoldenPathCompareIvyCheck(t, verbose, true, path, nil, "bigGo")
+}
+
+func Test2hrTinyNodeOrdLive(t *testing.T) {
+	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+	//args := []string{"isolate=cf_live"}
+	verbose := false
+	GoldenPathCompareIvyCheck(t, verbose, true, path, nil, "tinyGo")
 }
 
 func TestIvyTlbModel(t *testing.T) {
 	path := "ivy-lang-examples/examples/liveness/tlb.ivy"
-	GoldenPathCompareIvyCheck(t, false, true, path, nil, false)
+	GoldenPathCompareIvyCheck(t, false, true, path, nil, "")
 }
 
 func TestIvy_1dot1_tilelink1_model(t *testing.T) {
 	path := "ivy-lang-examples/examples/tilelink/tilelink1.ivy"
-	GoldenPathCompareIvyCheck(t, false, true, path, nil, false)
+	GoldenPathCompareIvyCheck(t, false, true, path, nil, "")
 }
 
 // TestVerboseOrdLive is the same as TestOrdLive but prints every
@@ -572,7 +579,7 @@ func TestIvy_1dot1_tilelink1_model(t *testing.T) {
 func TestVerboseOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, true, true, path, args, false)
+	GoldenPathCompareIvyCheck(t, true, true, path, args, "")
 }
 
 // This isolate is the 9th one in. Seen at XTRACE 28_234_303
@@ -581,21 +588,21 @@ func TestVerboseOrdLive(t *testing.T) {
 func TestRfnAbsIso(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=rfn.abs.iso"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args, false)
+	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
 }
 
 // see "isolate sys_live = " in ivy-lang-examples/doc/examples/apple/ord_live.ivy
 func TestSysLiveIso(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=sys_live"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args, false)
+	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
 }
 
 // see "isolate this" in ivy-lang-examples/doc/examples/apple/ord_live.ivy
 func TestThisIso(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=this"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args, false)
+	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
 }
 
 // TestVerboseNonstopOrdLive does not stop
@@ -604,16 +611,16 @@ func TestThisIso(t *testing.T) {
 func TestVerboseNonstopOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, true, false, path, args, false)
+	GoldenPathCompareIvyCheck(t, true, false, path, args, "")
 }
 
-func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string, args []string, useNodeGoldNotGoNative bool) {
+func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string, args []string, useNode string) {
 	off := os.Getenv("XTRACE_OFF")
 	if off != "" {
 		t.Skip("skip again the golden test(s) when XTRACE_OFF.")
 		return // off to check everything else under make test.
 	}
-	vv("top of GoldenPathCompareIvyCheck(repoRelPath='%v'); useNodeGoldNotGoNative=%v", repoRelPath, useNodeGoldNotGoNative)
+	vv("top of GoldenPathCompareIvyCheck(repoRelPath='%v'); useNode=%v", repoRelPath, useNode)
 
 	repo := mustGetRepoDir(t)
 	path := filepath.Join(repo, repoRelPath)
@@ -637,13 +644,19 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 	var goProc *os.Process
 	var goErr error
 
-	if useNodeGoldNotGoNative {
+	switch useNode {
+	case "bigGo":
 		// The nodegold helper may rebuild the js/wasm payload before it starts
 		// producing xtrace. Start it before Python so Python does not fill and
 		// block behind an unread pipe during that preparation window.
 		goivyPipe, goProc, goErr = nodegold_ivy_check_xtrace(t, args, path, repo)
 		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo)
-	} else {
+
+	case "tinyGo":
+		goivyPipe, goProc, goErr = tinynode_ivy_check_xtrace(t, args, path, repo)
+		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo)
+
+	default: // natvie Go
 		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo)
 		goivyPipe, goProc, goErr = goivy_check_xtrace(t, args, path, repo)
 	}
@@ -1141,7 +1154,7 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 	return pr, cmd.Process, nil
 }
 
-// when useNodeGoldNotGoNative == true we should use:
+// when useNode == "bigGo" we should use:
 //
 // nodegold_ivy_check_xtrace re-makes and then runs nodegold
 // It streams output back on r, a pipe, asynchronously.
@@ -1255,6 +1268,139 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		}
 		serr := scanner.Err()
 		vv("nodegold scanner has finished. scanner.Err()='%v'", serr)
+		if serr != nil {
+			panicf("scanner.Err() was not nil, very bad!: %v", serr)
+		}
+		pr.closeWriter() // must close write end so reader sees EOF
+		if f != nil {
+			f.Close()
+		}
+	}()
+
+	return pr, cmd.Process, nil
+}
+
+//
+
+// when useNode == "tinyGo" we should use:
+//
+// tinynode_ivy_check_xtrace re-makes and then runs tinynode
+// It streams output back on r, a pipe, asynchronously.
+func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
+
+	_, thisFile, _, _ := runtime.Caller(0)
+	// parent dir.
+	goivyRoot := filepath.Dir(thisFile)
+
+	tinynodeCmdDir := filepath.Join(goivyRoot, "cmd", "tinynode")
+	goivyWasm := filepath.Join(goivyRoot, "webvue", "static", "goivy-check-tinygo-js.wasm")
+	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
+	tinygoBinary := filepath.Join("usr", "local", "bin", "tinygo")
+	tinygoFlags := []string{"-panic=trap", "-gc=precise", "-no-debug"}
+
+	// GOOS=js GOARCH=wasm /usr/local/bin/tinygo build -panic=trap -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
+	wasmFullCmd := fmt.Sprintf("cd %v && GOOS=js GOARCH=wasm %v build %v -o %v ./cmd/goivy_check_jswasm", goivyRoot, tinygoBinary, strings.Join(tinygoFlags, " "), goivyWasm)
+	fmt.Printf("build goivy-check-tinygo-js.wasm so tinynode has an up-to-date payload: '%v'\n", wasmFullCmd)
+	args2 := append([]string{"build"}, tinygoFlags...)
+	args2 = append(args, "-o", goivyWasm, "./cmd/goivy_check_jswasm")
+	cmd := exec.Command(tinygoBinary, args2...)
+	cmd.Dir = goivyRoot
+	cmd.Env = append(os.Environ(), "GOOS=js", "GOARCH=wasm")
+	if out, err := cmd.CombinedOutput(); err != nil {
+		panicf("could not run '%v'; error: '%v'; output:\n%s", wasmFullCmd, err, out)
+	}
+	fmt.Printf("done refreshing %v\n\n", goivyWasm)
+
+	// we will compile tinynode now to make
+	// sure it is up-to-date, and place it into the gobin directory.
+	gobin := os.Getenv("GOBIN")
+	// fallback places; if GOBIN is not set.
+	home := os.Getenv("HOME")
+	gopath := os.Getenv("GOPATH")
+	if gobin == "" {
+		switch {
+		case gopath != "":
+			gobin = filepath.Join(gopath, "bin")
+		case home != "":
+			gobin = filepath.Join(home, "go", "bin")
+			if dirExists(gobin) {
+				break
+			}
+			fallthrough
+		default:
+			// write to root of repo as last resort.
+			gobin = repo
+		}
+	}
+	target := filepath.Join(gobin, "tinynode")
+	doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", tinynodeCmdDir, goBinary, target)
+	fmt.Printf("build tinynode so we know it is up to date: '%v'\n", doFullCmd)
+	cmd = exec.Command(goBinary, "build", "-o", target)
+	cmd.Dir = tinynodeCmdDir
+	err = cmd.Run()
+	if err != nil {
+		panicf("could not run '%v' (see also 'make tr') to build tinynode; error: '%v'", doFullCmd, err)
+	}
+	fmt.Printf("done refreshing tinynode\n\n")
+
+	pr := newBufferedLinePipe(goldenProcessLineBuffer)
+	if err != nil {
+		panic(err)
+	}
+
+	var w io.Writer = pr
+	var f *os.File
+	if writeFullLogFile {
+		outPath := filepath.Join(fullXtraceToDir, "out.tinynode.xtrace")
+		var ferr error
+		f, ferr = os.Create(outPath)
+		if ferr != nil {
+			t.Fatalf("failed to create %s: %v", outPath, ferr)
+		}
+		w = io.MultiWriter(pr, f)
+	}
+
+	args = append([]string{"-goivy-wasm", goivyWasm}, args...)
+	args = append(args, ivyFile)
+	exe := target // "tinynode"
+	cmd = exec.Command(exe, args...)
+	cmd.Dir = goivyRoot
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+
+	// Use a real OS pipe here, not io.Pipe. This is especially important for
+	// tinynode: the node process is a grandchild, and it should inherit a real
+	// stdout/stderr fd from tinynode rather than writing through an os/exec
+	// copy goroutine layered on top of an io.Pipe.
+	cmdPr, cmdPw, err := attachCombinedOutputPipe(cmd)
+	if err != nil {
+		t.Fatalf("failed to create tinynode output pipe: %v", err)
+	}
+	if err := cmd.Start(); err != nil {
+		cmdPr.Close()
+		cmdPw.Close()
+		t.Fatalf("failed to start '%v': %v", exe, err)
+	}
+	cmdPw.Close()
+
+	go func() {
+		err := cmd.Wait()
+		vv("tinynode command has finished. err='%v'", err)
+	}()
+
+	// Filter goroutine: read raw lines, normalize, write to w.
+	go func() {
+		defer cmdPr.Close()
+		scanner := bufio.NewScanner(cmdPr)
+		scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
+		var xtraceCount int64
+		for scanner.Scan() {
+			if err := forwardGoldenProcessLine(repo, "go", w, &xtraceCount, scanner.Text()); err != nil {
+				vv("tinynode scanner could not forward line: %v", err)
+				break
+			}
+		}
+		serr := scanner.Err()
+		vv("tinynode scanner has finished. scanner.Err()='%v'", serr)
 		if serr != nil {
 			panicf("scanner.Err() was not nil, very bad!: %v", serr)
 		}

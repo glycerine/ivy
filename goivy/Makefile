@@ -406,3 +406,8 @@ webvue/static/goivy-check-tinygo-js.wasm: FORCE
 tinynode:
 	go install ./cmd/tinynode
 	time ~/go/bin/tinynode -goivy-wasm $(CURDIR)/webvue/static/goivy-check-tinygo-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.tinynode.zst
+
+tinynode-golden-2hr:
+	if [ -f log.tinynode.golden.2hr ]; then mv log.tinynode.golden.2hr log.tinynode.golden.2hr.prev; fi
+	go test -v -timeout=0 -count=1 -run Test2hrTinyNodeOrdLive &> log.tinynode.golden.2hr
+
