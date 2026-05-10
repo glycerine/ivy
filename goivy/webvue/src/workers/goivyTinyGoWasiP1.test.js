@@ -236,6 +236,8 @@ describe('goivy TinyGo WASI preview1 host', () => {
       '-panic=trap',
       '-gc=precise',
       '-no-debug',
+      '-ldflags',
+      `-X main.readPath=${readPath} -X main.writePath=${writePath}`,
       '-o',
       wasmPath,
       './cmd/tinyfsprobe',

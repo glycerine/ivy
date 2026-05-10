@@ -8,13 +8,18 @@ import (
 	"github.com/glycerine/ivy/goivy/fileops"
 )
 
+var readPath string
+var writePath string
+
 func main() {
-	if len(os.Args) != 3 {
+	if len(os.Args) == 3 {
+		readPath = os.Args[1]
+		writePath = os.Args[2]
+	}
+	if readPath == "" || writePath == "" {
 		fmt.Fprintln(os.Stderr, "usage: tinyfsprobe read-path write-path")
 		os.Exit(2)
 	}
-	readPath := os.Args[1]
-	writePath := os.Args[2]
 
 	readStat, err := fileops.Stat(readPath)
 	if err != nil {
