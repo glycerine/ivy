@@ -207,11 +207,11 @@ func ImportModule(name string, cfg *Config) (res *ParseResult, err error) {
 	defer func() { xtracer.Trace("init.ImportModule EXIT name=%s", name) }()
 
 	fname := name + ".ivy"
-	if _, err := os.Stat(fname); err != nil {
+	if !ivyReadableFileExists(fname) {
 		// Try standard include directory
 		stdDir := cfg.IuCfg.GetStdIncludeDir()
 		fname = filepath.Join(stdDir, fname)
-		if _, err := os.Stat(fname); err != nil {
+		if !ivyReadableFileExists(fname) {
 			return nil, fmt.Errorf("module %s not found in current directory or module path", name)
 		}
 	}

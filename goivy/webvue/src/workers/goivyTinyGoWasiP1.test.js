@@ -43,7 +43,15 @@ function putIovec(view, ptr, dataPtr, len) {
 
 describe('goivy TinyGo WASI preview1 host', () => {
   test('keeps browser mode limited to the in-memory include preopen', () => {
-    const { wasi } = newHarness();
+    const { wasi, mem, view } = newHarness({
+      includeRoot: '/include',
+      includeTree: { files: [{ path: 'order.ivy', data: '#lang ivy1.8\n' }] },
+    });
+
+    const len = putString(mem, 1024, 'order.ivy');
+    expect(wasi.wasiImport.path_filestat_get(3, 0, 1024, len, 2048)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    expect(view.getUint8(2048 + 16)).toBe(4);
+    expect(Number(view.getBigUint64(2048 + 32, true))).toBe('#lang ivy1.8\n'.length);
     expect(wasi.wasiImport.fd_prestat_get(4, 1024)).toBe(GOIVY_WASI_ERRNO.BADF);
   });
 
@@ -66,6 +74,9 @@ describe('goivy TinyGo WASI preview1 host', () => {
     let ret = wasi.wasiImport.path_open(4, 0, 1024, len, 0, 2n, 0n, 0, 2048);
     expect(ret).toBe(GOIVY_WASI_ERRNO.SUCCESS);
     const readFd = view.getUint32(2048, true);
+    expect(wasi.wasiImport.fd_filestat_get(readFd, 6000)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    expect(view.getUint8(6000 + 16)).toBe(4);
+    expect(Number(view.getBigUint64(6000 + 32, true))).toBe('hello tinygo wasi fs'.length);
 
     putIovec(view, 3000, 4000, 64);
     ret = wasi.wasiImport.fd_read(readFd, 3000, 1, 5000);
@@ -76,6 +87,7 @@ describe('goivy TinyGo WASI preview1 host', () => {
 
     rel = writePath.slice(1);
     len = putString(mem, 1100, rel);
+    expect(wasi.wasiImport.path_filestat_get(4, 0, 1100, len, 6000)).toBe(GOIVY_WASI_ERRNO.NOENT);
     const oflagsCreateTrunc = 1 | 8;
     const rightsFdWrite = 1n << 6n;
     ret = wasi.wasiImport.path_open(4, 0, 1100, len, oflagsCreateTrunc, rightsFdWrite, 0n, 0, 2048);
@@ -89,5 +101,7 @@ describe('goivy TinyGo WASI preview1 host', () => {
     expect(ret).toBe(GOIVY_WASI_ERRNO.SUCCESS);
     expect(wasi.wasiImport.fd_close(writeFd)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
     expect(fs.readFileSync(writePath, 'utf8')).toBe('written through wasi');
+    expect(wasi.wasiImport.path_filestat_get(4, 0, 1100, len, 6000)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    expect(Number(view.getBigUint64(6000 + 32, true))).toBe('written through wasi'.length);
   });
 });
