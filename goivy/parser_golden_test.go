@@ -1302,7 +1302,7 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	wasmFullCmd := fmt.Sprintf("cd %v && GOOS=js GOARCH=wasm %v build %v -o %v ./cmd/goivy_check_jswasm", goivyRoot, tinygoBinary, strings.Join(tinygoFlags, " "), goivyWasm)
 	fmt.Printf("build goivy-check-tinygo-js.wasm so tinynode has an up-to-date payload: '%v'\n", wasmFullCmd)
 	args2 := append([]string{"build"}, tinygoFlags...)
-	args2 = append(args, "-o", goivyWasm, "./cmd/goivy_check_jswasm")
+	args2 = append(args2, "-o", goivyWasm, "./cmd/goivy_check_jswasm")
 	cmd := exec.Command(tinygoBinary, args2...)
 	cmd.Dir = goivyRoot
 	cmd.Env = append(os.Environ(), "GOOS=js", "GOARCH=wasm")
