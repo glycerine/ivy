@@ -423,3 +423,8 @@ nodegold: goivy-check-js-wasm vendor-go-wasm-exec-js
 nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 	go install ./nodegold
 	time ~/go/bin/nodegold -goivy-wasm $(CURDIR)/$(GOIVY_CHECK_JS_WASM) ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
+
+# wasm-opt is from the binaryen project
+install-wasm-opt:
+	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make && sudo make install
+
