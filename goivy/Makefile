@@ -33,12 +33,14 @@ BIGGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-biggo-wasip1-probe.wasm
 GOIVY_CHECK_WASIP1_WASM := $(Z3_WEBVUE_STATIC)/goivy-check-wasip1.wasm
 GOIVY_CHECK_JS_WASM := $(Z3_WEBVUE_STATIC)/goivy-check-js.wasm
 SMT_WASIP1_ROUNDTRIP_WASM := $(Z3_WEBVUE_STATIC)/smt-wasip1-roundtrip.wasm
+HOST_TMPDIR ?= $(if $(TMPDIR),$(TMPDIR),/tmp)
+HOST_TMPDIR := $(patsubst %/,%,$(HOST_TMPDIR))
 WAZ_MEM_SPEC ?= $(HOME)/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 WAZ_MEM_WASM ?= $(CURDIR)/$(GOIVY_CHECK_WASIP1_WASM)
 WAZ_MEM_STDOUT ?= $(CURDIR)/wazero.browser.xtrace.log
 WAZ_MEM_STDERR ?= $(CURDIR)/wazero.browser.stderr.log
 WAZ_MEM_GC_HEAP_LIMIT ?=
-WAZ_CLI_MEM_WASM ?= /private/tmp/goivy-check-cli-wasip1.wasm
+WAZ_CLI_MEM_WASM ?= $(HOST_TMPDIR)/goivy-check-cli-wasip1.wasm
 WAZ_CLI_MEM_STDOUT ?= $(CURDIR)/wazero.cli.xtrace.log
 WAZ_CLI_MEM_STDERR ?= $(CURDIR)/wazero.cli.stderr.log
 WAZ_CLI_MEM_GC_HEAP_LIMIT ?=
@@ -47,7 +49,7 @@ EMSDK_ENV           ?= $(EMSDK_ROOT)/emsdk_env.sh
 EMCC                ?= $(EMSDK_ROOT)/upstream/emscripten/emcc
 WASM_OPT            ?= /usr/local/bin/wasm-opt
 Z3_WASM_JOBS        ?= 8
-EM_CACHE            ?= /private/tmp/ivy-emscripten-cache
+EM_CACHE            ?= $(HOST_TMPDIR)/ivy-emscripten-cache
 # Z3 4.7.1's generator infers _AMD64_ from the host machine, but Emscripten
 # targets wasm32 here. Native builds must keep their normal 64-bit settings.
 Z3_WASM_CC_FLAGS    := -Wno-deprecated-declarations -fwasm-exceptions -U_AMD64_
