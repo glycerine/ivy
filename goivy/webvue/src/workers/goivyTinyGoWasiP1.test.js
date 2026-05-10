@@ -60,7 +60,7 @@ function scratchBytes(wasi, mem, text, ptr = 1024) {
   return { h, len };
 }
 
-function readHandle(wasi, h) {
+function readBytesHandle(wasi, h) {
   const len = wasi.goivyFsImport.bytes_len(h);
   const out = new Uint8Array(len);
   for (let offset = 0; offset < len; offset += 4) {
@@ -205,9 +205,9 @@ describe('goivy TinyGo WASI preview1 host', () => {
     expect(wasi.goivyFsImport.stat(pathScratch.h, pathScratch.len)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
     expect(wasi.goivyFsImport.last_is_dir()).toBe(0);
     expect(wasi.goivyFsImport.last_size_lo()).toBe('host fs payload'.length);
-    const readHandle = wasi.goivyFsImport.read_file(pathScratch.h, pathScratch.len);
-    expect(readHandle).not.toBe(0);
-    expect(dec.decode(readHandle === 0 ? new Uint8Array(0) : readHandle(wasi, readHandle))).toBe('host fs payload');
+    const readHandleID = wasi.goivyFsImport.read_file(pathScratch.h, pathScratch.len);
+    expect(readHandleID).not.toBe(0);
+    expect(dec.decode(readHandleID === 0 ? new Uint8Array(0) : readBytesHandle(wasi, readHandleID))).toBe('host fs payload');
 
     const outPathScratch = scratchBytes(wasi, mem, writePath);
     const payloadScratch = scratchBytes(wasi, mem, 'host fs write payload');
