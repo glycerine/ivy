@@ -140,9 +140,11 @@ async function main() {
       writeLineFD(2, text);
     },
     locateFile(file) {
-      if (file === 'z3-471-api.wasm') {
+      if (file === 'z3-api.wasm') {
+        diag(`found: ${file}, returning as cfg.z3Wasm ${cfg.z3Wasm}`);
         return cfg.z3Wasm;
       }
+      diag(`did not find: ${file}, guessing ${path.dirname(cfg.z3JS)}/${file}`); // seen
       return path.join(path.dirname(cfg.z3JS), file);
     },
   });
