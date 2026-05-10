@@ -412,4 +412,8 @@ goldweb: goivy-check-js-wasm vendor-go-wasm-exec-js
 	go run ./goldweb -goivy-runtime js -goivy-wasm $(CURDIR)/$(GOIVY_CHECK_JS_WASM) ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.goldweb
 
 nodegold: goivy-check-js-wasm vendor-go-wasm-exec-js
-	time go run ./nodegold -goivy-wasm $(CURDIR)/$(GOIVY_CHECK_JS_WASM) ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy 2>&1 | zstd -c &> log.nodegold.zst
+	time go run ./nodegold -goivy-wasm $(CURDIR)/$(GOIVY_CHECK_JS_WASM) ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
+
+nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
+	go install ./nodegold
+	time ~/go/bin/nodegold -goivy-wasm $(CURDIR)/$(GOIVY_CHECK_JS_WASM) ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
