@@ -15,11 +15,66 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync"
 	"syscall"
 	"testing"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
+
+const goldenProcessLineBuffer = 4096
+
+type bufferedLinePipe struct {
+	lines chan []byte
+	done  chan struct{}
+	once  sync.Once
+	buf   []byte
+}
+
+func newBufferedLinePipe(capacity int) *bufferedLinePipe {
+	return &bufferedLinePipe{
+		lines: make(chan []byte, capacity),
+		done:  make(chan struct{}),
+	}
+}
+
+func (p *bufferedLinePipe) Read(dst []byte) (int, error) {
+	for len(p.buf) == 0 {
+		select {
+		case line, ok := <-p.lines:
+			if !ok {
+				return 0, io.EOF
+			}
+			p.buf = line
+		case <-p.done:
+			return 0, io.EOF
+		}
+	}
+	n := copy(dst, p.buf)
+	p.buf = p.buf[n:]
+	return n, nil
+}
+
+func (p *bufferedLinePipe) Write(src []byte) (int, error) {
+	line := append([]byte(nil), src...)
+	select {
+	case p.lines <- line:
+		return len(src), nil
+	case <-p.done:
+		return 0, io.ErrClosedPipe
+	}
+}
+
+func (p *bufferedLinePipe) Close() error {
+	p.once.Do(func() {
+		close(p.done)
+	})
+	return nil
+}
+
+func (p *bufferedLinePipe) closeWriter() {
+	close(p.lines)
+}
 
 // examplesDir returns the absolute path to the ivy-lang-examples/ directory.
 func examplesDir() string {
@@ -473,7 +528,8 @@ func Test2hrOrdLive(t *testing.T) {
 func Test2hrNodeGoldenOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	//args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, false, true, path, nil, true)
+	verbose := true
+	GoldenPathCompareIvyCheck(t, verbose, true, path, nil, true)
 }
 
 func TestIvyTlbModel(t *testing.T) {
@@ -549,8 +605,24 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 
 	//args := []string{"isolate=cf_live"}
 
-	// Get Python AST
-	ivyPipe, pyProc, pyErr := ivy_check(t, args, path, repo)
+	var ivyPipe io.ReadCloser
+	var pyProc *os.Process
+	var pyErr error
+	var goivyPipe io.ReadCloser
+	var goProc *os.Process
+	var goErr error
+
+	if useNodeGoldNotGoNative {
+		// The nodegold helper may rebuild the js/wasm payload before it starts
+		// producing xtrace. Start it before Python so Python does not fill and
+		// block behind an unread pipe during that preparation window.
+		goivyPipe, goProc, goErr = nodegold_ivy_check_xtrace(t, args, path, repo)
+		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo)
+	} else {
+		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo)
+		goivyPipe, goProc, goErr = goivy_check_xtrace(t, args, path, repo)
+	}
+
 	if pyErr != nil {
 		t.Fatalf("%v had Python error: %v", path, pyErr)
 		panic(pyErr)
@@ -561,18 +633,6 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 	}
 	defer ivyPipe.Close()
 	ivyR := bufio.NewReader(ivyPipe)
-
-	// Get Go AST, + parse xtrace
-
-	var goivyPipe io.ReadCloser
-	var goProc *os.Process
-	var goErr error
-
-	if useNodeGoldNotGoNative {
-		goivyPipe, goProc, goErr = nodegold_ivy_check_xtrace(t, args, path, repo)
-	} else {
-		goivyPipe, goProc, goErr = goivy_check_xtrace(t, args, path, repo)
-	}
 
 	if goErr != nil {
 		t.Fatalf("path='%v': Go parse error: %v", path, goErr)
@@ -877,12 +937,12 @@ func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadClos
 		ivyRoot = ivyHomeDir
 	}
 	//vv("ivyRoot = '%v'", ivyRoot) // /Users/jaten/go/src/github.com/glycerine
-	pr, pw := io.Pipe()
+	pr := newBufferedLinePipe(goldenProcessLineBuffer)
 	if err != nil {
 		panic(err)
 	}
 
-	var w io.Writer = pw
+	var w io.Writer = pr
 	var f *os.File
 	if writeFullLogFile {
 		outPath := filepath.Join(fullXtraceToDir, "out.py.xtrace")
@@ -891,7 +951,7 @@ func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadClos
 		if ferr != nil {
 			t.Fatalf("failed to create %s: %v", outPath, ferr)
 		}
-		w = io.MultiWriter(pw, f)
+		w = io.MultiWriter(pr, f)
 	}
 
 	// We need to normalize lines before writing to w, so pipe
@@ -930,7 +990,7 @@ func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadClos
 		if serr != nil {
 			panicf("scanner.Err() was not nil, very bad!: %v", serr)
 		}
-		pw.Close() // must close write end so reader sees EOF
+		pr.closeWriter() // must close write end so reader sees EOF
 		if f != nil {
 			f.Close()
 		}
@@ -982,12 +1042,12 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 	}
 	fmt.Printf("done refreshing goivy_check_xtrace\n\n")
 
-	pr, pw := io.Pipe()
+	pr := newBufferedLinePipe(goldenProcessLineBuffer)
 	if err != nil {
 		panic(err)
 	}
 
-	var w io.Writer = pw
+	var w io.Writer = pr
 	var f *os.File
 	if writeFullLogFile {
 		outPath := filepath.Join(fullXtraceToDir, "out.go.xtrace")
@@ -996,7 +1056,7 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 		if ferr != nil {
 			t.Fatalf("failed to create %s: %v", outPath, ferr)
 		}
-		w = io.MultiWriter(pw, f)
+		w = io.MultiWriter(pr, f)
 	}
 
 	// We need to normalize lines before writing to w, so pipe
@@ -1034,7 +1094,7 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 		if serr != nil {
 			panicf("scanner.Err() was not nil, very bad!: %v", serr)
 		}
-		pw.Close() // must close write end so reader sees EOF
+		pr.closeWriter() // must close write end so reader sees EOF
 		if f != nil {
 			f.Close()
 		}
@@ -1099,12 +1159,12 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	}
 	fmt.Printf("done refreshing nodegold\n\n")
 
-	pr, pw := io.Pipe()
+	pr := newBufferedLinePipe(goldenProcessLineBuffer)
 	if err != nil {
 		panic(err)
 	}
 
-	var w io.Writer = pw
+	var w io.Writer = pr
 	var f *os.File
 	if writeFullLogFile {
 		outPath := filepath.Join(fullXtraceToDir, "out.nodegold.xtrace")
@@ -1113,7 +1173,7 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		if ferr != nil {
 			t.Fatalf("failed to create %s: %v", outPath, ferr)
 		}
-		w = io.MultiWriter(pw, f)
+		w = io.MultiWriter(pr, f)
 	}
 
 	// We need to normalize lines before writing to w, so pipe
@@ -1153,7 +1213,7 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		if serr != nil {
 			panicf("scanner.Err() was not nil, very bad!: %v", serr)
 		}
-		pw.Close() // must close write end so reader sees EOF
+		pr.closeWriter() // must close write end so reader sees EOF
 		if f != nil {
 			f.Close()
 		}
