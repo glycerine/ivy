@@ -555,7 +555,7 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 	var goErr error
 
 	if useNodeGoldNotGoNative {
-		goivyPipe, goProc, goErr = goldnode_ivy_check_xtrace(t, args, path, repo)
+		goivyPipe, goProc, goErr = nodegold_ivy_check_xtrace(t, args, path, repo)
 	} else {
 		goivyPipe, goProc, goErr = goivy_check_xtrace(t, args, path, repo)
 	}
@@ -1031,17 +1031,17 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 
 // when useNodeGoldNotGoNative == true we should use:
 //
-// goldnode_ivy_check_xtrace re-makes and then runs goldnode
+// nodegold_ivy_check_xtrace re-makes and then runs nodegold
 // It streams output back on r, a pipe, asynchronously.
-func goldnode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
+func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
 
 	_, thisFile, _, _ := runtime.Caller(0)
 	// parent dir.
 	goivyRoot := filepath.Dir(thisFile)
 
-	goldNodeCmdDir := filepath.Join(goivyRoot, "goldnode")
+	nodegoldCmdDir := filepath.Join(goivyRoot, "nodegold")
 
-	// we will compile goldnode now to make
+	// we will compile nodegold now to make
 	// sure it is up-to-date, and place it into the gobin directory.
 	gobin := os.Getenv("GOBIN")
 	// fallback places; if GOBIN is not set.
@@ -1062,17 +1062,17 @@ func goldnode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 			gobin = repo
 		}
 	}
-	target := filepath.Join(gobin, "goldnode")
+	target := filepath.Join(gobin, "nodegold")
 	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
-	doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", goldNodeCmdDir, goBinary, target)
-	fmt.Printf("build goldnode so we know it is up to date: '%v'\n", doFullCmd)
+	doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", nodegoldCmdDir, goBinary, target)
+	fmt.Printf("build nodegold so we know it is up to date: '%v'\n", doFullCmd)
 	cmd := exec.Command(goBinary, "build", "-o", target)
-	cmd.Dir = goldNodeCmdDir
+	cmd.Dir = nodegoldCmdDir
 	err = cmd.Run()
 	if err != nil {
-		panicf("could not run '%v' (see also 'make tr') to build goldnode; error: '%v'", doFullCmd, err)
+		panicf("could not run '%v' (see also 'make tr') to build nodegold; error: '%v'", doFullCmd, err)
 	}
-	fmt.Printf("done refreshing goldnode\n\n")
+	fmt.Printf("done refreshing nodegold\n\n")
 
 	pr, pw := io.Pipe()
 	if err != nil {
@@ -1096,7 +1096,7 @@ func goldnode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	cmdPr, cmdPw := io.Pipe()
 
 	args = append(args, ivyFile)
-	exe := target // "goldnode"
+	exe := target // "nodegold"
 	cmd = exec.Command(exe, args...)
 	cmd.Dir = goivyRoot
 	cmd.Stdout = cmdPw
@@ -1109,7 +1109,7 @@ func goldnode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 
 	go func() {
 		err := cmd.Wait()
-		vv("goldnode command has finished. closing cmdPw so the scanner will finish its loop. err='%v'", err)
+		vv("nodegold command has finished. closing cmdPw so the scanner will finish its loop. err='%v'", err)
 		cmdPw.Close()
 	}()
 
@@ -1122,7 +1122,7 @@ func goldnode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 			fmt.Fprintf(w, "%s\n", line)
 		}
 		serr := scanner.Err()
-		vv("goldnode scanner has finished. scanner.Err()='%v'", serr)
+		vv("nodegold scanner has finished. scanner.Err()='%v'", serr)
 		if serr != nil {
 			panicf("scanner.Err() was not nil, very bad!: %v", serr)
 		}
