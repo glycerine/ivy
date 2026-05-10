@@ -42,7 +42,7 @@ WAZ_CLI_MEM_WASM ?= /private/tmp/goivy-check-cli-wasip1.wasm
 WAZ_CLI_MEM_STDOUT ?= $(CURDIR)/wazero.cli.xtrace.log
 WAZ_CLI_MEM_STDERR ?= $(CURDIR)/wazero.cli.stderr.log
 WAZ_CLI_MEM_GC_HEAP_LIMIT ?=
-EMSDK_ROOT          ?= /Users/jaten/go/src/github.com/emscripten-core/emsdk
+EMSDK_ROOT          ?= $(HOME)/go/src/github.com/emscripten-core/emsdk
 EMSDK_ENV           ?= $(EMSDK_ROOT)/emsdk_env.sh
 EMCC                ?= $(EMSDK_ROOT)/upstream/emscripten/emcc
 WASM_OPT            ?= /usr/local/bin/wasm-opt
@@ -106,10 +106,10 @@ tilelink: # an ivy v1.1 .ivy file: ivy/ivy-lang-examples/examples/tilelink/tilel
 	go test -v -timeout=0 -count=1 -run TestIvy_1dot1_tilelink1_model &> log.tilelink
 
 ord: # xtraced 
-	~/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+	~/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live $(HOME)/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
 ordo: # not xtraced
-	time python3 -O ~/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+	time python3 -O ~/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live $(HOME)/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
 
 
@@ -308,7 +308,7 @@ tr: # xtracer builds:
 	cd cmd/ivyweb && go build -o ${GOBIN}/ivyweb_xtrace
 
 trt: build tr  # xtracer test
-	XTRACE_OFF=1 time goivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.go.trt.ord_live.standalone
+	XTRACE_OFF=1 time goivy_check isolate=cf_live $(HOME)/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.go.trt.ord_live.standalone
 
 dylib_build: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go install ./cmd/ivyweb
@@ -395,8 +395,8 @@ vs:
 	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
 	if [ -f log.red ]; then mv log.red log.red.prev; fi
 	-go test -v -run TestOrdLive &> log.red
-	-/Users/jaten/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy 2>&1 | awk 'NR <= 300000 { print } NR == 300000 { exit }' &> py.ord.out
-	-goivy_check_xtrace  isolate=cf_live /Users/jaten/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.gox
+	-$(HOME)/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live $(HOME)/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy 2>&1 | awk 'NR <= 300000 { print } NR == 300000 { exit }' &> py.ord.out
+	-goivy_check_xtrace  isolate=cf_live $(HOME)/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.gox
 	-diff py.ord.out log.gox > diffs
 
 setup: # install abc and aigtoaig binaries that we shell out to.
