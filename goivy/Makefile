@@ -151,7 +151,9 @@ $(Z3_WEBVUE_EXPORTS): $(Z3_WASM_EXPORTS)
 
 z3-wasm-exports: $(Z3_WEBVUE_EXPORTS)
 
-$(Z3_WASM_LIB):
+# builds: libz3.a(wasm despite the .a re-use); and in turn,
+# the build-wasm-api.sh script turns that into: z3-api.wasm and z3-api.js
+$(Z3_WASM_LIB): 
 	cd $(Z3_VENDOR_DIR) && \
 		EMSDK_QUIET=1 source "$(EMSDK_ENV)" && \
 		EM_CACHE="$(EM_CACHE)" AR=emar CXX=em++ CC=emcc \
@@ -185,9 +187,11 @@ $(Z3_WASM_EXNREF): $(Z3_WASM_API_STAMP)
 		--enable-nontrapping-float-to-int \
 		-o $(Z3_WASM_EXNREF) $(Z3_WASM_PRE_EXNREF)
 
+# builds ivy/goivy/webvue/static/z3-471-api.wasm
 $(Z3_WEBVUE_WASM): $(Z3_WASM_EXNREF)
 	cp -p $(Z3_WASM_EXNREF) $(Z3_WEBVUE_WASM)
 
+# builds ivy/goivy/webvue/static/z3-471-api.js
 $(Z3_WEBVUE_JS): $(Z3_WASM_API_STAMP)
 	cp -p $(Z3_VENDOR_BUILD)/z3-api.js $(Z3_WEBVUE_JS)
 
