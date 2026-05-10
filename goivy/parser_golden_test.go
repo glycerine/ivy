@@ -446,24 +446,30 @@ func mustGetRepoDir(t *testing.T) (dir string) {
 func TestOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args)
+	GoldenPathCompareIvyCheck(t, false, true, path, args, false)
 }
 
 // takes two hours to check all isolates.
 func Test2hrOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	//args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, false, true, path, nil)
+	GoldenPathCompareIvyCheck(t, false, true, path, nil, false)
+}
+
+func Test2hrNodeGoldenOrdLive(t *testing.T) {
+	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+	//args := []string{"isolate=cf_live"}
+	GoldenPathCompareIvyCheck(t, false, true, path, nil, true)
 }
 
 func TestIvyTlbModel(t *testing.T) {
 	path := "ivy-lang-examples/examples/liveness/tlb.ivy"
-	GoldenPathCompareIvyCheck(t, false, true, path, nil)
+	GoldenPathCompareIvyCheck(t, false, true, path, nil, false)
 }
 
 func TestIvy_1dot1_tilelink1_model(t *testing.T) {
 	path := "ivy-lang-examples/examples/tilelink/tilelink1.ivy"
-	GoldenPathCompareIvyCheck(t, false, true, path, nil)
+	GoldenPathCompareIvyCheck(t, false, true, path, nil, false)
 }
 
 // TestVerboseOrdLive is the same as TestOrdLive but prints every
@@ -471,7 +477,7 @@ func TestIvy_1dot1_tilelink1_model(t *testing.T) {
 func TestVerboseOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, true, true, path, args)
+	GoldenPathCompareIvyCheck(t, true, true, path, args, false)
 }
 
 // This isolate is the 9th one in. Seen at XTRACE 28_234_303
@@ -480,21 +486,21 @@ func TestVerboseOrdLive(t *testing.T) {
 func TestRfnAbsIso(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=rfn.abs.iso"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args)
+	GoldenPathCompareIvyCheck(t, false, true, path, args, false)
 }
 
 // see "isolate sys_live = " in ivy-lang-examples/doc/examples/apple/ord_live.ivy
 func TestSysLiveIso(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=sys_live"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args)
+	GoldenPathCompareIvyCheck(t, false, true, path, args, false)
 }
 
 // see "isolate this" in ivy-lang-examples/doc/examples/apple/ord_live.ivy
 func TestThisIso(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=this"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args)
+	GoldenPathCompareIvyCheck(t, false, true, path, args, false)
 }
 
 // TestVerboseNonstopOrdLive does not stop
@@ -503,16 +509,16 @@ func TestThisIso(t *testing.T) {
 func TestVerboseNonstopOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, true, false, path, args)
+	GoldenPathCompareIvyCheck(t, true, false, path, args, false)
 }
 
-func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string, args []string) {
+func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string, args []string, useNodeGoldNotGoNative bool) {
 	off := os.Getenv("XTRACE_OFF")
 	if off != "" {
 		t.Skip("skip again the golden test(s) when XTRACE_OFF.")
 		return // off to check everything else under make test.
 	}
-	vv("top of GoldenPathCompareIvyCheck(repoRelPath='%v')", repoRelPath)
+	vv("top of GoldenPathCompareIvyCheck(repoRelPath='%v'); useNodeGoldNotGoNative=%v", repoRelPath, useNodeGoldNotGoNative)
 
 	repo := mustGetRepoDir(t)
 	path := filepath.Join(repo, repoRelPath)
@@ -544,7 +550,16 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 
 	// Get Go AST, + parse xtrace
 
-	goivyPipe, goProc, goErr := goivy_check_xtrace(t, args, path, repo)
+	var goivyPipe io.ReadCloser
+	var goProc *os.Process
+	var goErr error
+
+	if useNodeGoldNotGoNative {
+		goivyPipe, goProc, goErr = goldnode_ivy_check_xtrace(t, args, path, repo)
+	} else {
+		goivyPipe, goProc, goErr = goivy_check_xtrace(t, args, path, repo)
+	}
+
 	if goErr != nil {
 		t.Fatalf("path='%v': Go parse error: %v", path, goErr)
 		return
@@ -1002,6 +1017,112 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 		}
 		serr := scanner.Err()
 		vv("goivy_check_xtrace scanner has finished. scanner.Err()='%v'", serr)
+		if serr != nil {
+			panicf("scanner.Err() was not nil, very bad!: %v", serr)
+		}
+		pw.Close() // must close write end so reader sees EOF
+		if f != nil {
+			f.Close()
+		}
+	}()
+
+	return pr, cmd.Process, nil
+}
+
+// when useNodeGoldNotGoNative == true we should use:
+//
+// goldnode_ivy_check_xtrace re-makes and then runs goldnode
+// It streams output back on r, a pipe, asynchronously.
+func goldnode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
+
+	_, thisFile, _, _ := runtime.Caller(0)
+	// parent dir.
+	goivyRoot := filepath.Dir(thisFile)
+
+	goldNodeCmdDir := filepath.Join(goivyRoot, "goldnode")
+
+	// we will compile goldnode now to make
+	// sure it is up-to-date, and place it into the gobin directory.
+	gobin := os.Getenv("GOBIN")
+	// fallback places; if GOBIN is not set.
+	home := os.Getenv("HOME")
+	gopath := os.Getenv("GOPATH")
+	if gobin == "" {
+		switch {
+		case gopath != "":
+			gobin = filepath.Join(gopath, "bin")
+		case home != "":
+			gobin = filepath.Join(home, "go", "bin")
+			if dirExists(gobin) {
+				break
+			}
+			fallthrough
+		default:
+			// write to root of repo as last resort.
+			gobin = repo
+		}
+	}
+	target := filepath.Join(gobin, "goldnode")
+	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
+	doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", goldNodeCmdDir, goBinary, target)
+	fmt.Printf("build goldnode so we know it is up to date: '%v'\n", doFullCmd)
+	cmd := exec.Command(goBinary, "build", "-o", target)
+	cmd.Dir = goldNodeCmdDir
+	err = cmd.Run()
+	if err != nil {
+		panicf("could not run '%v' (see also 'make tr') to build goldnode; error: '%v'", doFullCmd, err)
+	}
+	fmt.Printf("done refreshing goldnode\n\n")
+
+	pr, pw := io.Pipe()
+	if err != nil {
+		panic(err)
+	}
+
+	var w io.Writer = pw
+	var f *os.File
+	if writeFullLogFile {
+		outPath := filepath.Join(fullXtraceToDir, "out.nodegold.xtrace")
+		var ferr error
+		f, ferr = os.Create(outPath)
+		if ferr != nil {
+			t.Fatalf("failed to create %s: %v", outPath, ferr)
+		}
+		w = io.MultiWriter(pw, f)
+	}
+
+	// We need to normalize lines before writing to w, so pipe
+	// the command's raw output through a filter goroutine.
+	cmdPr, cmdPw := io.Pipe()
+
+	args = append(args, ivyFile)
+	exe := target // "goldnode"
+	cmd = exec.Command(exe, args...)
+	cmd.Dir = goivyRoot
+	cmd.Stdout = cmdPw
+	cmd.Stderr = cmdPw
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+
+	if err := cmd.Start(); err != nil {
+		t.Fatalf("failed to start '%v': %v", exe, err)
+	}
+
+	go func() {
+		err := cmd.Wait()
+		vv("goldnode command has finished. closing cmdPw so the scanner will finish its loop. err='%v'", err)
+		cmdPw.Close()
+	}()
+
+	// Filter goroutine: read raw lines, normalize, write to w.
+	go func() {
+		scanner := bufio.NewScanner(cmdPr)
+		scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
+		for scanner.Scan() {
+			line := normalizeLine(repo, scanner.Text())
+			fmt.Fprintf(w, "%s\n", line)
+		}
+		serr := scanner.Err()
+		vv("goldnode scanner has finished. scanner.Err()='%v'", serr)
 		if serr != nil {
 			panicf("scanner.Err() was not nil, very bad!: %v", serr)
 		}
