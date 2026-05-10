@@ -1,6 +1,6 @@
 package main
 
-// tinynode runs the browser-oriented Go Ivy js/wasm build under Node.js.
+// tinynode runs the tinygo js/wasm build of goivy under Node.js.
 //
 // It is a command-line producer of the wasm Go Ivy stdout/stderr stream, so
 // tests can compare it against python ivy in parser_golden_test.go.
