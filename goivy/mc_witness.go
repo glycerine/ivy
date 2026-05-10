@@ -2,7 +2,9 @@ package goivy
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
@@ -31,8 +33,15 @@ func ParseWitnessFile(filename string) (*WitnessTrace, error) {
 		return nil, fmt.Errorf("cannot open witness file: %w", err)
 	}
 	defer f.Close()
+	return ParseWitness(f)
+}
 
-	scanner := bufio.NewScanner(f)
+func ParseWitnessBytes(data []byte) (*WitnessTrace, error) {
+	return ParseWitness(bytes.NewReader(data))
+}
+
+func ParseWitness(r io.Reader) (*WitnessTrace, error) {
+	scanner := bufio.NewScanner(r)
 	if !scanner.Scan() {
 		return nil, fmt.Errorf("witness file is empty")
 	}

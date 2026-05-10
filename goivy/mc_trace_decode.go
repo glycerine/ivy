@@ -2,7 +2,9 @@ package goivy
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
@@ -382,8 +384,15 @@ func AigerWitnessToIvyTrace2(
 		return nil, fmt.Errorf("cannot open witness file: %w", err)
 	}
 	defer f.Close()
+	return AigerWitnessToIvyTrace2Reader(result, f, mod)
+}
 
-	scanner := bufio.NewScanner(f)
+func AigerWitnessToIvyTrace2Bytes(result *ToAigerResult, witness []byte, mod *Module) (*AigerMatchHandler2, error) {
+	return AigerWitnessToIvyTrace2Reader(result, bytes.NewReader(witness), mod)
+}
+
+func AigerWitnessToIvyTrace2Reader(result *ToAigerResult, r io.Reader, mod *Module) (*AigerMatchHandler2, error) {
+	scanner := bufio.NewScanner(r)
 	if !scanner.Scan() {
 		return nil, fmt.Errorf("witness file is empty")
 	}

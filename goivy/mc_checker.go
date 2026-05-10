@@ -1,40 +1,44 @@
 package goivy
 
 import (
-	"bytes"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
+	"github.com/glycerine/ivy/goivy/fileops"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
-// ModelChecker is the interface for hardware model checkers.
+// CheckResult holds the result of a model checking run.
+type MCCheckResult struct {
+	Proved       bool                // true if property holds
+	Trace        *WitnessTrace       // raw witness (non-nil if counterexample found)
+	DecodedTrace *AigerMatchHandler2 // decoded Ivy trace (non-nil if counterexample decoded)
+	Error        error               // non-nil if model checker failed
+}
+
+// ModelChecker describes an external hardware model checker.
 type ModelChecker interface {
 	// Cmd returns the command to run the model checker.
-	// aigfilename: path to the AIG file
-	// outfilename: path for the witness output
+	// aigfilename is the path to the AIG/AAG file; outfilename receives a witness.
 	Cmd(aigfilename, outfilename string) []string
 
-	// Scrape examines the model checker output and returns true if
-	// the property was proved (no counterexample).
+	// Scrape examines model checker stdout and returns true when the property
+	// was proved and no counterexample witness is expected.
 	Scrape(alltext string) bool
 }
 
 // ABCModelChecker implements ModelChecker using the ABC tool.
 type ABCModelChecker struct {
 	// ABCPath overrides the default ABC binary path.
-	// If empty, the default path is used.
 	ABCPath string
 }
 
 // Cmd returns the ABC command line for model checking.
-func (mc *ABCModelChecker) Cmd(aigfilename, outfilename string) []string {
-	abcPath := mc.ABCPath
+func (c *ABCModelChecker) Cmd(aigfilename, outfilename string) []string {
+	abcPath := c.ABCPath
 	if abcPath == "" {
-		// Default: look for abc next to the executable
 		exePath, err := os.Executable()
 		if err == nil {
 			abcPath = filepath.Join(filepath.Dir(exePath), "abc")
@@ -47,77 +51,35 @@ func (mc *ABCModelChecker) Cmd(aigfilename, outfilename string) []string {
 }
 
 // Scrape checks whether ABC's output indicates the property was proved.
-func (mc *ABCModelChecker) Scrape(alltext string) bool {
+func (c *ABCModelChecker) Scrape(alltext string) bool {
 	return strings.Contains(alltext, "Property proved")
 }
 
-// CheckResult holds the result of a model checking run.
-type MCCheckResult struct {
-	Proved       bool                // true if property holds
-	Trace        *WitnessTrace       // raw witness (non-nil if counterexample found)
-	DecodedTrace *AigerMatchHandler2 // decoded Ivy trace (non-nil if counterexample decoded)
-	Error        error               // non-nil if model checker failed
-}
-
 // RunABC runs ABC on the given AIGER string and returns the result.
-func RunABC(aigerStr string, mc ModelChecker, mod *Module) (*MCCheckResult, error) {
-	if mc == nil {
-		mc = &ABCModelChecker{}
+func RunABC(aigerStr string, checker ModelChecker, mod *Module) (*MCCheckResult, error) {
+	if checker == nil {
+		checker = &ABCModelChecker{}
 	}
-
-	// Write AIGER to temp file
-	tmpFile, err := os.CreateTemp("", "ivy_mc_*.aag")
+	result, err := fileops.RunAigerModelChecker(aigerStr, checker.Cmd, checker.Scrape)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create temp file: %w", err)
+		return nil, err
 	}
-	aagName := tmpFile.Name()
-	defer os.Remove(aagName)
-
-	if _, err := tmpFile.WriteString(aigerStr); err != nil {
-		tmpFile.Close()
-		return nil, fmt.Errorf("failed to write AIGER: %w", err)
-	}
-	tmpFile.Close()
-
-	// Convert AAG to AIG (if aigtoaig is available)
-	aigName := strings.TrimSuffix(aagName, ".aag") + ".aig"
-	defer os.Remove(aigName)
-
-	aigtoaigPath := "aigtoaig" // assume on PATH
-	ret := exec.Command(aigtoaigPath, aagName, aigName)
-	if err := ret.Run(); err != nil {
-		// If aigtoaig fails, try using the AAG file directly
-		aigName = aagName
+	if result == nil {
+		return nil, fmt.Errorf("model checker returned nil result")
 	}
 
-	// Run model checker
-	outName := strings.TrimSuffix(aagName, ".aag") + ".out"
-	defer os.Remove(outName)
-
-	cmd := mc.Cmd(aigName, outName)
-	if len(cmd) == 0 {
-		return nil, fmt.Errorf("empty model checker command")
-	}
-
-	p := exec.Command(cmd[0], cmd[1:]...)
-	var stdout bytes.Buffer
-	p.Stdout = &stdout
-
-	if err := p.Run(); err != nil {
-		return &MCCheckResult{Error: fmt.Errorf("model checker failed: %w", err)}, nil
-	}
-
-	alltext := stdout.String()
 	if mod != nil && mod.Cfg.MCVerbose {
-		fmt.Println(alltext)
+		fmt.Println(result.Output)
 	}
 
-	if mc.Scrape(alltext) {
+	if result.Error != nil {
+		return &MCCheckResult{Error: fmt.Errorf("model checker failed: %w", result.Error)}, nil
+	}
+	if result.Proved {
 		return &MCCheckResult{Proved: true}, nil
 	}
 
-	// Parse witness
-	trace, err := ParseWitnessFile(outName)
+	trace, err := ParseWitnessBytes(result.Witness)
 	if err != nil {
 		return &MCCheckResult{Error: fmt.Errorf("failed to parse witness: %w", err)}, nil
 	}
@@ -171,68 +133,41 @@ func MCCheckIsolate(mod *Module, method string) (*MCCheckResult, error) {
 	aigerStr := result.Aiger.String()
 	xtracer.Trace("mc.CheckIsolate postToAiger aigerLen=%d", len(aigerStr))
 
-	// Write AIGER to temp file
-	tmpFile, err := os.CreateTemp("", "ivy_mc_*.aag")
-	if err != nil {
-		return nil, fmt.Errorf("failed to create temp file: %w", err)
-	}
-	aagName := tmpFile.Name()
-	defer os.Remove(aagName)
-
-	if _, err := tmpFile.WriteString(aigerStr); err != nil {
-		tmpFile.Close()
-		return nil, fmt.Errorf("failed to write AIGER: %w", err)
-	}
-	tmpFile.Close()
-
-	// Convert AAG to AIG
-	aigName := strings.TrimSuffix(aagName, ".aag") + ".aig"
-	defer os.Remove(aigName)
-
-	aigtoaigPath := "aigtoaig"
 	if mod.Cfg.MCVerbose {
-		fmt.Printf("aigtoaig_path:%s\n", aigtoaigPath)
+		fmt.Printf("aigtoaig_path:%s\n", "aigtoaig")
 	}
-	ret := exec.Command(aigtoaigPath, aagName, aigName)
-	if err := ret.Run(); err != nil {
-		aigName = aagName
-	}
-
-	// Run model checker
-	outName := strings.TrimSuffix(aagName, ".aag") + ".out"
-	defer os.Remove(outName)
 
 	checker := &ABCModelChecker{}
-	cmd := checker.Cmd(aigName, outName)
-	p := exec.Command(cmd[0], cmd[1:]...)
-	var stdout bytes.Buffer
-	p.Stdout = &stdout
-
-	if err := p.Run(); err != nil {
+	mcResult, err := fileops.RunAigerModelChecker(aigerStr, checker.Cmd, checker.Scrape)
+	if err != nil {
+		xtracer.Trace("mc.CheckIsolate EXIT proved=false err=%v", err)
+		return nil, err
+	}
+	if mcResult == nil {
+		err := fmt.Errorf("model checker returned nil result")
+		xtracer.Trace("mc.CheckIsolate EXIT proved=false err=%v", err)
+		return nil, err
+	}
+	if mcResult.Error != nil {
 		xtracer.Trace("mc.CheckIsolate EXIT proved=false err=model checker failed")
-		return nil, fmt.Errorf("failed to run model checker: %w", err)
+		return nil, fmt.Errorf("failed to run model checker: %w", mcResult.Error)
 	}
 
-	alltext := stdout.String()
 	if mod.Cfg.MCVerbose {
 		fmt.Println("\nModel checker output:")
 		fmt.Println(strings.Repeat("-", 80))
-		fmt.Print(alltext)
+		fmt.Print(mcResult.Output)
 		fmt.Println(strings.Repeat("-", 80))
 	}
 
-	if p.ProcessState != nil && !p.ProcessState.Success() {
-		return nil, fmt.Errorf("model checker returned non-zero status")
-	}
-
-	if checker.Scrape(alltext) {
+	if mcResult.Proved {
 		xtracer.Trace("mc.CheckIsolate EXIT proved=true err=<nil>")
 		return &MCCheckResult{Proved: true}, nil
 	}
 
 	// Counterexample found — decode the witness into an Ivy trace
 	xtracer.Trace("mc.CheckIsolate EXIT proved=false err=<nil>")
-	decodedTrace, err := AigerWitnessToIvyTrace2(result, outName, mod)
+	decodedTrace, err := AigerWitnessToIvyTrace2Bytes(result, mcResult.Witness, mod)
 	if err != nil {
 		return &MCCheckResult{Error: fmt.Errorf("trace decode failed: %w", err)}, nil
 	}

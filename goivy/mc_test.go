@@ -1209,8 +1209,8 @@ func TestMatchHandlerBase(t *testing.T) {
 // ============================================================
 
 func TestABCModelCheckerCmd(t *testing.T) {
-	mc := &ABCModelChecker{ABCPath: "/usr/local/bin/abc"}
-	cmd := mc.Cmd("test.aig", "test.out")
+	checker := &ABCModelChecker{ABCPath: "/usr/local/bin/abc"}
+	cmd := checker.Cmd("test.aig", "test.out")
 	if cmd[0] != "/usr/local/bin/abc" {
 		t.Errorf("expected abc path, got %s", cmd[0])
 	}
@@ -1220,11 +1220,11 @@ func TestABCModelCheckerCmd(t *testing.T) {
 }
 
 func TestABCModelCheckerScrape(t *testing.T) {
-	mc := &ABCModelChecker{}
-	if !mc.Scrape("Property proved\n") {
+	checker := &ABCModelChecker{}
+	if !checker.Scrape("Property proved\n") {
 		t.Error("should detect 'Property proved'")
 	}
-	if mc.Scrape("Counterexample found\n") {
+	if checker.Scrape("Counterexample found\n") {
 		t.Error("should not detect property proved in counterexample output")
 	}
 }
