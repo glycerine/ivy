@@ -37,6 +37,7 @@ type config struct {
 	Z3Wasm      string            `json:"z3Wasm"`
 	SMTImports  string            `json:"smtImports"`
 	NodeFS      string            `json:"nodeFS"`
+	TinyGoWASI  string            `json:"tinyGoWASI"`
 	SpecPath    string            `json:"specPath"`
 	Params      map[string]string `json:"params"`
 	Isolates    []string          `json:"isolates,omitempty"`
@@ -60,6 +61,7 @@ func main() {
 	z3Wasm := flag.String("z3-wasm", filepath.Join(staticDefault, "z3-471-api.wasm"), "Z3 wasm file")
 	smtImports := flag.String("smt-imports", filepath.Join(workerDefault, "smtZ3Imports.js"), "smt_z3 import bridge module")
 	nodeFS := flag.String("node-fs", filepath.Join(workerDefault, "goivyNodeFS.js"), "Go wasm fs/process/path host module")
+	tinyGoWASI := flag.String("tinygo-wasi", filepath.Join(workerDefault, "goivyTinyGoWasiP1.js"), "TinyGo wasi_snapshot_preview1 host module")
 	memoryLimit := flag.String("memory-limit", "3GiB", "GOIVY_WASM_MEMORY_LIMIT for the Go wasm runtime")
 	gogc := flag.String("gogc", "50", "GOIVY_WASM_GOGC for the Go wasm runtime")
 	keepTemp := flag.Bool("keep-temp", false, "keep the generated tinynode config file")
@@ -84,6 +86,7 @@ func main() {
 		Z3Wasm:      cleanAbs(*z3Wasm),
 		SMTImports:  cleanAbs(*smtImports),
 		NodeFS:      cleanAbs(*nodeFS),
+		TinyGoWASI:  cleanAbs(*tinyGoWASI),
 		SpecPath:    cleanAbs(specPath),
 		Params:      params,
 		Isolates:    isolates,
@@ -190,6 +193,7 @@ func validateConfig(cfg config, script string) error {
 		"-z3-wasm":     cfg.Z3Wasm,
 		"-smt-imports": cfg.SMTImports,
 		"-node-fs":     cfg.NodeFS,
+		"-tinygo-wasi": cfg.TinyGoWASI,
 		"file.ivy":     cfg.SpecPath,
 	} {
 		if _, err := os.Stat(path); err != nil {

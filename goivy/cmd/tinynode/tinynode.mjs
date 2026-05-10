@@ -83,6 +83,14 @@ function writeLineFD(fd, text) {
   fs.writeSync(fd, String(text) + '\n');
 }
 
+function encodeTinyGoMetadata(filename, params = {}) {
+  const parts = ['goivy-meta-v1', 'filename', filename];
+  for (const [key, value] of Object.entries(params)) {
+    parts.push('param', key, String(value));
+  }
+  return parts.join('\0');
+}
+
 async function flushWritable(stream) {
   await new Promise((resolve, reject) => {
     stream.write('', (err) => {
@@ -154,6 +162,8 @@ async function main() {
   const z3Imports = await import(fileURL(cfg.smtImports));
   diag(`importing node fs host ${cfg.nodeFS}`);
   const nodeFS = await import(fileURL(cfg.nodeFS));
+  diag(`importing TinyGo WASI host ${cfg.tinyGoWASI}`);
+  const tinyGoWasiModule = await import(fileURL(cfg.tinyGoWASI));
   nodeFS.installGoIvyNodeFS({
     includeRoot,
     includeTree,
@@ -184,6 +194,17 @@ async function main() {
       nodeProcess.stderr.write('[go js/wasm] exit code ' + code + '\n');
     }
   };
+  const tinyGoWasi = tinyGoWasiModule.createGoIvyTinyGoWasiP1({
+    args: go.argv,
+    env: Object.entries(go.env || {}).map(([key, value]) => `${key}=${value}`),
+    includeRoot,
+    includeTree,
+    stdout: (data) => writeAllFD(1, data),
+    stderr: (data) => writeAllFD(2, data),
+    procExit: go.importObject.wasi_snapshot_preview1.proc_exit,
+    debug: (text) => diag(text),
+  });
+  go.importObject.wasi_snapshot_preview1 = tinyGoWasi.wasiImport;
   go.importObject.smt_z3 = z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory });
 
   diag(`reading Go Ivy wasm ${cfg.goivyWasm}`);
@@ -191,9 +212,13 @@ async function main() {
   diag(`instantiating Go Ivy wasm bytes=${wasmBytes.length}`);
   const result = await WebAssembly.instantiate(wasmBytes, go.importObject);
   const instance = result.instance;
+  tinyGoWasi.setInstance(instance);
   wasmMemory = instance.exports.mem;
+  if (!wasmMemory && instance.exports.memory) {
+    wasmMemory = instance.exports.memory;
+  }
   if (!wasmMemory) {
-    throw new Error('Go Ivy js/wasm does not export mem');
+    throw new Error('Go Ivy js/wasm does not export mem or memory');
   }
   diag('Go Ivy wasm instantiated; starting Go runtime');
 
@@ -226,18 +251,12 @@ async function main() {
 
   if (isolates.length === 0) {
     diag('calling goivyCheckRun once');
-    code = globalThis.goivyCheckRun(spec, JSON.stringify({
-      filename: cfg.specPath,
-      params: baseParams,
-    })) | 0;
+    code = globalThis.goivyCheckRun(spec, encodeTinyGoMetadata(cfg.specPath, baseParams)) | 0;
     diag(`goivyCheckRun returned code=${code}`);
   } else {
     for (const isolate of isolates) {
       diag(`calling goivyCheckRun isolate=${isolate}`);
-      code = globalThis.goivyCheckRun(spec, JSON.stringify({
-        filename: cfg.specPath,
-        params: { ...baseParams, isolate },
-      })) | 0;
+      code = globalThis.goivyCheckRun(spec, encodeTinyGoMetadata(cfg.specPath, { ...baseParams, isolate })) | 0;
       diag(`goivyCheckRun isolate=${isolate} returned code=${code}`);
       if (code !== 0) {
         break;
