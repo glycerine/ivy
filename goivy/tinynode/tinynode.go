@@ -1,6 +1,6 @@
 package main
 
-// nodegold runs the browser-oriented Go Ivy js/wasm build under Node.js.
+// tinynode runs the browser-oriented Go Ivy js/wasm build under Node.js.
 //
 // It is a command-line producer of the wasm Go Ivy stdout/stderr stream, so
 // tests can compare it against python ivy in parser_golden_test.go.
@@ -50,18 +50,18 @@ func main() {
 	workerDefault := filepath.Join(rootDefault, "webvue", "src", "workers")
 
 	node := flag.String("node", "node", "Node.js executable")
-	script := flag.String("script", filepath.Join(rootDefault, "nodegold", "nodegold.mjs"), "Node.js harness script")
+	script := flag.String("script", filepath.Join(rootDefault, "tinynode", "tinynode.mjs"), "Node.js harness script")
 	root := flag.String("root", rootDefault, "goivy source root")
 	includeDir := flag.String("include-dir", defaultIncludeDir(rootDefault), "Ivy standard-library include directory")
-	goivyWasm := flag.String("goivy-wasm", filepath.Join(staticDefault, "goivy-check-js.wasm"), "Go Ivy js/wasm file")
-	wasmExec := flag.String("wasm-exec", filepath.Join(staticDefault, "wasm_exec-go1.25.6.js"), "Go-team wasm_exec.js matching the Go compiler")
+	goivyWasm := flag.String("goivy-wasm", filepath.Join(staticDefault, "goivy-check-tinygo-js.wasm"), "Go Ivy js/wasm file")
+	wasmExec := flag.String("wasm-exec", filepath.Join(staticDefault, "wasm_exec_tinygo_0.40.1.js"), "wasm_exec.js matching the tinygo compiler/version")
 	z3JS := flag.String("z3-js", filepath.Join(staticDefault, "z3-471-api.js"), "Z3 JavaScript glue")
 	z3Wasm := flag.String("z3-wasm", filepath.Join(staticDefault, "z3-471-api.wasm"), "Z3 wasm file")
 	smtImports := flag.String("smt-imports", filepath.Join(workerDefault, "smtZ3Imports.js"), "smt_z3 import bridge module")
 	nodeFS := flag.String("node-fs", filepath.Join(workerDefault, "goivyNodeFS.js"), "Go wasm fs/process/path host module")
 	memoryLimit := flag.String("memory-limit", "3GiB", "GOIVY_WASM_MEMORY_LIMIT for the Go wasm runtime")
 	gogc := flag.String("gogc", "50", "GOIVY_WASM_GOGC for the Go wasm runtime")
-	keepTemp := flag.Bool("keep-temp", false, "keep the generated nodegold config file")
+	keepTemp := flag.Bool("keep-temp", false, "keep the generated tinynode config file")
 	var nodeFlags stringList
 	var explicitParams stringList
 	flag.Var(&nodeFlags, "node-flag", "extra flag passed to Node.js; may be repeated")
@@ -94,9 +94,9 @@ func main() {
 		os.Exit(2)
 	}
 
-	tmpDir, err := os.MkdirTemp("", "nodegold-*")
+	tmpDir, err := os.MkdirTemp("", "tinynode-*")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "nodegold: create temp dir: %v\n", err)
+		fmt.Fprintf(os.Stderr, "tinynode: create temp dir: %v\n", err)
 		os.Exit(1)
 	}
 	if !*keepTemp {
@@ -106,17 +106,17 @@ func main() {
 	configPath := filepath.Join(tmpDir, "config.json")
 	data, err := json.MarshalIndent(cfg, "", "  ")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "nodegold: encode config: %v\n", err)
+		fmt.Fprintf(os.Stderr, "tinynode: encode config: %v\n", err)
 		os.Exit(1)
 	}
 	if err := os.WriteFile(configPath, data, 0o600); err != nil {
-		fmt.Fprintf(os.Stderr, "nodegold: write config: %v\n", err)
+		fmt.Fprintf(os.Stderr, "tinynode: write config: %v\n", err)
 		os.Exit(1)
 	}
 	if *keepTemp {
-		fmt.Fprintf(os.Stderr, "nodegold: kept config %s\n", configPath)
+		fmt.Fprintf(os.Stderr, "tinynode: kept config %s\n", configPath)
 	}
-	fmt.Printf("nodegold.go:120 wrote config.json to temp dir: '%v'; our script: '%v'\n", tmpDir, *script)
+	fmt.Printf("tinynode.go:120 wrote config.json to temp dir: '%v'; our script: '%v'\n", tmpDir, *script)
 
 	args := append([]string{}, nodeFlags...)
 	if len(nodeFlags) == 0 && nodeSupportsFlag(*node, "--experimental-wasm-exnref") {
@@ -134,7 +134,7 @@ func main() {
 		if errors.As(err, &exitErr) {
 			os.Exit(exitErr.ExitCode())
 		}
-		fmt.Fprintf(os.Stderr, "nodegold: run node: %v\n", err)
+		fmt.Fprintf(os.Stderr, "tinynode: run node: %v\n", err)
 		os.Exit(1)
 	}
 }
@@ -173,7 +173,7 @@ func parseArgs(args []string, explicitParams []string) (map[string]string, []str
 		specPath = arg
 	}
 	if specPath == "" {
-		return nil, nil, "", errors.New("usage: nodegold [flags] [key=value ...] file.ivy")
+		return nil, nil, "", errors.New("usage: tinynode [flags] [key=value ...] file.ivy")
 	}
 	return params, isolates, specPath, nil
 }
@@ -192,7 +192,7 @@ func validateConfig(cfg config, script string) error {
 		"file.ivy":     cfg.SpecPath,
 	} {
 		if _, err := os.Stat(path); err != nil {
-			return fmt.Errorf("nodegold: %s %s: %w", label, path, err)
+			return fmt.Errorf("tinynode: %s %s: %w", label, path, err)
 		}
 	}
 	return nil
@@ -250,7 +250,7 @@ func defaultGoivyRoot() string {
 	}
 	if _, file, _, ok := runtime.Caller(0); ok {
 		dir := filepath.Dir(file)
-		if filepath.Base(dir) == "nodegold" && looksLikeGoivyRoot(filepath.Dir(dir)) {
+		if filepath.Base(dir) == "tinynode" && looksLikeGoivyRoot(filepath.Dir(dir)) {
 			return filepath.Dir(dir)
 		}
 	}
