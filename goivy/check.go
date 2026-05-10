@@ -1277,6 +1277,10 @@ func StartSourceWithConfig(filename, source string, cfg *Config) error {
 	xtracer.Trace("ivy_solver.py:45 set_macro_finder() ENTER truth=%s", truthStr)
 	xtracer.Trace("check.start ENTER file=%s", filename)
 
+	xoff := os.Getenv("XTRACE_OFF")
+	fmt.Printf("check.go:1281 on stdout after 1st two xtraces in StartSourceWithConfig(). xtracer.Enabled=%v; xoff='%v'\n", xtracer.Enabled, xoff)
+	fmt.Fprintf(os.Stderr, "check.go:1282 on stderr after 1st two xtraces in StartSourceWithConfig(). xtracer.Enabled=%v\n", xtracer.Enabled)
+
 	return startLoaded(filename, cfg, func(mod *Module) error {
 		return SourceString(filename, source, mod, mod.Sig, map[string]interface{}{
 			"create_isolate": false,
