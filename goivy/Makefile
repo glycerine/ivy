@@ -2,6 +2,9 @@
 
 # Makefile for goivy (Go port of Ivy)
 #
+# NOTE: keep all targets and paths explicit. Do not abstract 
+# into variables. That hurts read-ability and navigation.
+#
 # The Go Z3 bridge links against the same Z3 4.7.1 fork that Python Ivy uses.
 WAZ_MEM_GC_HEAP_LIMIT ?=
 WAZ_CLI_MEM_GC_HEAP_LIMIT ?=
@@ -11,7 +14,6 @@ Z3_WASM_JOBS        ?= 8
 Z3_WASM_CC_FLAGS    := -Wno-deprecated-declarations -fwasm-exceptions -U_AMD64_
 
 all: build
-	#ivyweb
 
 # for bashisms like &>
 SHELL := /bin/bash
@@ -86,7 +88,8 @@ z3ivy/lib/libz3.dylib: $(HOME)/pyivy/ivy/submodules/z3/build/libz3.dylib
 z3-build:
 	@if [ ! -f $(HOME)/pyivy/ivy/submodules/z3/build/libz3.dylib ]; then \
 		echo "Building Z3 fork from $(HOME)/pyivy/ivy/submodules/z3..."; \
-		cd $(HOME)/pyivy/ivy/submodules/z3 && python3 scripts/mk_make.py --python --prefix=$(HOME)/pyivy/ivy; \
+		cd $(HOME)/pyivy/ivy/submodules/z3 && \
+                python3 scripts/mk_make.py --python --prefix=$(HOME)/pyivy/ivy; \
 		cd $(HOME)/pyivy/ivy/submodules/z3/build && $(MAKE) -j4; \
 	else \
 		echo "Z3 fork already built at $(HOME)/pyivy/ivy/submodules/z3/build/libz3.dylib"; \
@@ -160,9 +163,6 @@ test-z3-wasm-js: z3-wasm-api webvue/node_modules/.bin/vitest
 test-z3-wasm-browser: z3-wasm-api webvue/node_modules/.bin/playwright
 	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/z3Wasm.browser.spec.js
 
-# Ivy-Go browser/local-worker builds are wasip1-only. Do not add wasm-unknown
-# or raw wasm build-tag variants; GOARCH=wasm is only the machine architecture
-# under GOOS=wasip1.
 webvue/static/ivy-tinygo-wasip1-probe.wasm: Makefile tinygo_probe/main.go tinygo_probe/exports_tinygo.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
 	/usr/local/bin/tinygo build -tags xtracer_off -target wasip1 -buildmode=c-shared -scheduler=none -panic=trap -gc=leaking -no-debug -o webvue/static/ivy-tinygo-wasip1-probe.wasm ./tinygo_probe
 
@@ -203,12 +203,25 @@ test-smt-wasip1-browser:
 test-smt-wasip1-browser-build: z3-wasm-api webvue/node_modules/.bin/playwright
 	go test -tags web ./smt -run TestSolverBoolRoundTrip -count=1 -v
 
+# the env vars communicate to goldweb/goivy_wasip1_wazero_test.go
+# note that CURDIR is a make built-in for the absolute path to cwd.
 waz-mem-test: goivy-check-wasip1-wasm
-	GOIVY_WAZERO_WASM=$(CURDIR)/webvue/static/goivy-check-wasip1.wasm GOIVY_WAZERO_SPEC=$(HOME)/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy GOIVY_WAZERO_STDOUT=$(CURDIR)/wazero.browser.xtrace.log GOIVY_WAZERO_STDERR=$(CURDIR)/wazero.browser.stderr.log GOIVY_WAZERO_GC_HEAP_LIMIT="$(WAZ_MEM_GC_HEAP_LIMIT)" go test ./goldweb -run TestGoIvyCheckWasip1UnderWazero -count=1 -v
+	GOIVY_WAZERO_WASM=$(CURDIR)/webvue/static/goivy-check-wasip1.wasm \
+	GOIVY_WAZERO_SPEC=$(HOME)/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy \
+	GOIVY_WAZERO_STDOUT=$(CURDIR)/wazero.browser.xtrace.log \
+	GOIVY_WAZERO_STDERR=$(CURDIR)/wazero.browser.stderr.log \
+	GOIVY_WAZERO_GC_HEAP_LIMIT="$(WAZ_MEM_GC_HEAP_LIMIT)" \
+	go test ./goldweb -run TestGoIvyCheckWasip1UnderWazero -count=1 -v
 
 waz-cli-mem-test:
-	GOOS=wasip1 GOARCH=wasm go build -a -o /tmp/goivy-check-cli-wasip1.wasm ./cmd/goivy_check
-	GOIVY_WAZERO_CLI_WASM=/tmp/goivy-check-cli-wasip1.wasm GOIVY_WAZERO_CLI_SPEC=$(HOME)/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy GOIVY_WAZERO_CLI_STDOUT=$(CURDIR)/wazero.cli.xtrace.log GOIVY_WAZERO_CLI_STDERR=$(CURDIR)/wazero.cli.stderr.log GOIVY_WAZERO_CLI_GC_HEAP_LIMIT="$(WAZ_CLI_MEM_GC_HEAP_LIMIT)" go test ./goldweb -run TestGoIvyCheckCLIWasip1UnderWazero -count=1 -v
+	GOOS=wasip1 GOARCH=wasm go build -a -o /tmp/goivy-check-cli-wasip1.wasm \
+	./cmd/goivy_check
+	GOIVY_WAZERO_CLI_WASM=/tmp/goivy-check-cli-wasip1.wasm \
+	GOIVY_WAZERO_CLI_SPEC=$(HOME)/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy \
+	GOIVY_WAZERO_CLI_STDOUT=$(CURDIR)/wazero.cli.xtrace.log \
+	GOIVY_WAZERO_CLI_STDERR=$(CURDIR)/wazero.cli.stderr.log \
+	GOIVY_WAZERO_CLI_GC_HEAP_LIMIT="$(WAZ_CLI_MEM_GC_HEAP_LIMIT)" \
+	go test ./goldweb -run TestGoIvyCheckCLIWasip1UnderWazero -count=1 -v
 
 build: # grammer_gen
 	go install  -tags xtracer_off ./cmd/ivyweb
