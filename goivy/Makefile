@@ -379,7 +379,16 @@ install-wasm-opt:
 .PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm goivy-check-js-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb nodegold FORCE tinynode
 
 webvue/static/goivy-check-tinygo-js.wasm: FORCE
-	GOOS=js GOARCH=wasm tinygo build -panic=trap  -scheduler=none -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
+	GOOS=js GOARCH=wasm tinygo build -panic=trap -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
+
+# with -scheduler=none, "make tinynode" crashes with
+# [tinynode.mjs +141ms] calling goivyCheckRun once
+# TypeError: this._inst.exports.resume is not a function
+#    at global.Go._resume (/Users/jaten/ivy/goivy/webvue/static/wasm_exec_tinygo_0.40.1.js:514:24)
+#    at eval (/Users/jaten/ivy/goivy/webvue/static/wasm_exec_tinygo_0.40.1.js:528:8)
+#    at main (file:///Users/jaten/go/src/github.com/glycerine/ivy/goivy/cmd/tinynode/tinynode.mjs:254:23)
+
+#GOOS=js GOARCH=wasm tinygo build -panic=trap  -scheduler=none -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
 
 # 3.4MB GOOS=js GOARCH=wasm tinygo build -panic=trap  -scheduler=none -gc=boehm -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
 
