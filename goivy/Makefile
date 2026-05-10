@@ -3,65 +3,12 @@
 # Makefile for goivy (Go port of Ivy)
 #
 # The Go Z3 bridge links against the same Z3 4.7.1 fork that Python Ivy uses.
-# Set PYIVY_ROOT to the Python Ivy source tree root if it's not at ~/pyivy/ivy.
-
-PYIVY_ROOT ?= $(HOME)/pyivy/ivy
-Z3_SRC     := $(PYIVY_ROOT)/submodules/z3
-Z3_BUILD   := $(Z3_SRC)/build
-Z3_API     := $(Z3_SRC)/src/api
-Z3IVY      := z3ivy
-
-Z3_VENDOR_DIR        := z3vendor/z3
-Z3_VENDOR_BUILD      := $(Z3_VENDOR_DIR)/build
-Z3_VENDOR_JS_API     := $(Z3_VENDOR_DIR)/src/api/js
-Z3_WEBVUE_STATIC     := webvue/static
-Z3_WEBVUE_API_BASE   := z3-471-api
-Z3_WASM_EXPORTS      := $(Z3_VENDOR_JS_API)/exported-functions.json
-Z3_WEBVUE_EXPORTS    := $(Z3_WEBVUE_STATIC)/z3-wasm-exported-functions.json
-Z3_WASM_LIB          := $(Z3_VENDOR_BUILD)/libz3.a
-Z3_WASM_API_STAMP    := $(Z3_VENDOR_BUILD)/.z3-api-wasm-eh.stamp
-Z3_WASM_PRE_EXNREF   := $(Z3_VENDOR_BUILD)/z3-api.pre-exnref.wasm
-Z3_WASM_EXNREF       := $(Z3_VENDOR_BUILD)/z3-api.exnref.wasm
-Z3_WEBVUE_WASM       := $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).wasm
-Z3_WEBVUE_JS         := $(Z3_WEBVUE_STATIC)/$(Z3_WEBVUE_API_BASE).js
-GO_WASM_EXEC_VERSION := go1.25.6
-GO_WASM_EXEC_JS_SRC  := /usr/local/go/lib/wasm/wasm_exec.js
-GO_WASM_EXEC_JS      := $(Z3_WEBVUE_STATIC)/wasm_exec-$(GO_WASM_EXEC_VERSION).js
-TINYGO               ?= /usr/local/bin/tinygo
-TINYGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-tinygo-wasip1-probe.wasm
-BIGGO_IVY_WASIP1_PROBE_WASM := $(Z3_WEBVUE_STATIC)/ivy-biggo-wasip1-probe.wasm
-GOIVY_CHECK_WASIP1_WASM := $(Z3_WEBVUE_STATIC)/goivy-check-wasip1.wasm
-GOIVY_CHECK_JS_WASM := $(Z3_WEBVUE_STATIC)/goivy-check-js.wasm
-SMT_WASIP1_ROUNDTRIP_WASM := $(Z3_WEBVUE_STATIC)/smt-wasip1-roundtrip.wasm
-HOST_TMPDIR ?= $(if $(TMPDIR),$(TMPDIR),/tmp)
-HOST_TMPDIR := $(patsubst %/,%,$(HOST_TMPDIR))
-WAZ_MEM_SPEC ?= $(HOME)/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
-WAZ_MEM_WASM ?= $(CURDIR)/$(GOIVY_CHECK_WASIP1_WASM)
-WAZ_MEM_STDOUT ?= $(CURDIR)/wazero.browser.xtrace.log
-WAZ_MEM_STDERR ?= $(CURDIR)/wazero.browser.stderr.log
 WAZ_MEM_GC_HEAP_LIMIT ?=
-WAZ_CLI_MEM_WASM ?= $(HOST_TMPDIR)/goivy-check-cli-wasip1.wasm
-WAZ_CLI_MEM_STDOUT ?= $(CURDIR)/wazero.cli.xtrace.log
-WAZ_CLI_MEM_STDERR ?= $(CURDIR)/wazero.cli.stderr.log
 WAZ_CLI_MEM_GC_HEAP_LIMIT ?=
-EMSDK_ROOT          ?= $(HOME)/go/src/github.com/emscripten-core/emsdk
-EMSDK_ENV           ?= $(EMSDK_ROOT)/emsdk_env.sh
-EMCC                ?= $(EMSDK_ROOT)/upstream/emscripten/emcc
-WASM_OPT            ?= /usr/local/bin/wasm-opt
 Z3_WASM_JOBS        ?= 8
-EM_CACHE            ?= $(HOST_TMPDIR)/ivy-emscripten-cache
 # Z3 4.7.1's generator infers _AMD64_ from the host machine, but Emscripten
 # targets wasm32 here. Native builds must keep their normal 64-bit settings.
 Z3_WASM_CC_FLAGS    := -Wno-deprecated-declarations -fwasm-exceptions -U_AMD64_
-Z3_JS_EXPORT_HEADERS := $(addprefix $(Z3_VENDOR_DIR)/src/api/, \
-	z3_api.h z3_algebraic.h z3_ast_containers.h z3_fixedpoint.h \
-	z3_fpa.h z3_optimization.h z3_polynomial.h z3_rcf.h z3_spacer.h \
-	z3_interp.h)
-
-# Headers needed by the Go CGO bridge.
-Z3_HEADERS := z3.h z3_api.h z3_macros.h z3_v1.h z3_algebraic.h \
-              z3_ast_containers.h z3_fixedpoint.h z3_fpa.h z3_interp.h \
-              z3_optimization.h z3_polynomial.h z3_rcf.h z3_spacer.h
 
 all: build
 	#ivyweb
@@ -116,7 +63,7 @@ ordo: # not xtraced
 
 
 # Create z3ivy/ with symlinks to the Ivy Z3 fork's headers and library.
-#z3ivy: $(Z3IVY)/lib/libz3.dylib
+#z3ivy: z3ivy/lib/libz3.dylib
 
 get_goyacc:
 	go install golang.org/x/tools/cmd/goyacc@latest
@@ -125,58 +72,60 @@ get_goyacc:
 z3ivy: z3vendor/native_lib/libz3.a #z3vendor/z3/build/libz3.a
 	echo "must manually build static libz3.a using z3vendor/z3/compile.sh and z3vendor/z3/compile-wasm.sh"
 
-$(Z3IVY)/lib/libz3.dylib: $(Z3_BUILD)/libz3.dylib
-	@mkdir -p $(Z3IVY)/include $(Z3IVY)/lib
-	@for h in $(Z3_HEADERS); do \
-		ln -sf $(Z3_API)/$$h $(Z3IVY)/include/$$h; \
+z3ivy/lib/libz3.dylib: $(HOME)/pyivy/ivy/submodules/z3/build/libz3.dylib
+	@mkdir -p z3ivy/include z3ivy/lib
+	@for h in z3.h z3_api.h z3_macros.h z3_v1.h z3_algebraic.h \
+		z3_ast_containers.h z3_fixedpoint.h z3_fpa.h z3_interp.h \
+		z3_optimization.h z3_polynomial.h z3_rcf.h z3_spacer.h; do \
+		ln -sf $(HOME)/pyivy/ivy/submodules/z3/src/api/$$h z3ivy/include/$$h; \
 	done
-	@ln -sf $(Z3_BUILD)/libz3.dylib $(Z3IVY)/lib/libz3.dylib
-	@echo "z3ivy: linked to Z3 4.7.1 fork at $(Z3_SRC)"
+	@ln -sf $(HOME)/pyivy/ivy/submodules/z3/build/libz3.dylib z3ivy/lib/libz3.dylib
+	@echo "z3ivy: linked to Z3 4.7.1 fork at $(HOME)/pyivy/ivy/submodules/z3"
 
 # Build the Z3 fork from the submodule (only needed if not already built).
 z3-build:
-	@if [ ! -f $(Z3_BUILD)/libz3.dylib ]; then \
-		echo "Building Z3 fork from $(Z3_SRC)..."; \
-		cd $(Z3_SRC) && python3 scripts/mk_make.py --python --prefix=$(PYIVY_ROOT); \
-		cd $(Z3_BUILD) && $(MAKE) -j4; \
+	@if [ ! -f $(HOME)/pyivy/ivy/submodules/z3/build/libz3.dylib ]; then \
+		echo "Building Z3 fork from $(HOME)/pyivy/ivy/submodules/z3..."; \
+		cd $(HOME)/pyivy/ivy/submodules/z3 && python3 scripts/mk_make.py --python --prefix=$(HOME)/pyivy/ivy; \
+		cd $(HOME)/pyivy/ivy/submodules/z3/build && $(MAKE) -j4; \
 	else \
-		echo "Z3 fork already built at $(Z3_BUILD)/libz3.dylib"; \
+		echo "Z3 fork already built at $(HOME)/pyivy/ivy/submodules/z3/build/libz3.dylib"; \
 	fi
 
-$(Z3_WASM_EXPORTS): $(Z3_VENDOR_JS_API)/scripts/get-exports.ts $(Z3_VENDOR_JS_API)/scripts/parse-api.ts $(Z3_JS_EXPORT_HEADERS)
-	cd $(Z3_VENDOR_JS_API) && ./node_modules/.bin/ts-node --transpileOnly scripts/get-exports.ts > exported-functions.json
+z3vendor/z3/src/api/js/exported-functions.json: z3vendor/z3/src/api/js/scripts/get-exports.ts z3vendor/z3/src/api/js/scripts/parse-api.ts z3vendor/z3/src/api/z3_api.h z3vendor/z3/src/api/z3_algebraic.h z3vendor/z3/src/api/z3_ast_containers.h z3vendor/z3/src/api/z3_fixedpoint.h z3vendor/z3/src/api/z3_fpa.h z3vendor/z3/src/api/z3_optimization.h z3vendor/z3/src/api/z3_polynomial.h z3vendor/z3/src/api/z3_rcf.h z3vendor/z3/src/api/z3_spacer.h z3vendor/z3/src/api/z3_interp.h
+	cd z3vendor/z3/src/api/js && ./node_modules/.bin/ts-node --transpileOnly scripts/get-exports.ts > exported-functions.json
 
-$(Z3_WEBVUE_EXPORTS): $(Z3_WASM_EXPORTS)
-	cp -p $(Z3_WASM_EXPORTS) $(Z3_WEBVUE_EXPORTS)
+webvue/static/z3-wasm-exported-functions.json: z3vendor/z3/src/api/js/exported-functions.json
+	cp -p z3vendor/z3/src/api/js/exported-functions.json webvue/static/z3-wasm-exported-functions.json
 
-z3-wasm-exports: $(Z3_WEBVUE_EXPORTS)
+z3-wasm-exports: webvue/static/z3-wasm-exported-functions.json
 
 # builds: libz3.a(wasm despite the .a re-use); and in turn,
 # the build-wasm-api.sh script turns that into: z3-api.wasm and z3-api.js
-$(Z3_WASM_LIB): 
-	cd $(Z3_VENDOR_DIR) && \
-		EMSDK_QUIET=1 source "$(EMSDK_ENV)" && \
-		EM_CACHE="$(EM_CACHE)" AR=emar CXX=em++ CC=emcc \
+z3vendor/z3/build/libz3.a:
+	cd z3vendor/z3 && \
+		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
+		EM_CACHE="/tmp/ivy-emscripten-cache" AR=emar CXX=em++ CC=emcc \
 		CXXFLAGS="$(Z3_WASM_CC_FLAGS)" \
 		CFLAGS="$(Z3_WASM_CC_FLAGS)" \
 		python3 scripts/mk_make.py --staticlib
-	cd $(Z3_VENDOR_BUILD) && \
-		EMSDK_QUIET=1 source "$(EMSDK_ENV)" && \
-		EM_CACHE="$(EM_CACHE)" emmake $(MAKE) -j$(Z3_WASM_JOBS) libz3.a
+	cd z3vendor/z3/build && \
+		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
+		EM_CACHE="/tmp/ivy-emscripten-cache" emmake $(MAKE) -j$(Z3_WASM_JOBS) libz3.a
 
-z3-wasm-lib-wasm-eh: $(Z3_WASM_LIB)
+z3-wasm-lib-wasm-eh: z3vendor/z3/build/libz3.a
 
-$(Z3_WASM_API_STAMP): $(Z3_WASM_LIB) $(Z3_WEBVUE_EXPORTS) $(Z3_VENDOR_DIR)/build-wasm-api.sh $(Z3_VENDOR_JS_API)/ivy_z3_wasm_syscalls.cc
-	cd $(Z3_VENDOR_DIR) && \
-		EMSDK_QUIET=1 source "$(EMSDK_ENV)" && \
-		EM_CACHE="$(EM_CACHE)" EMCC="$(EMCC)" ./build-wasm-api.sh
-	touch $(Z3_WASM_API_STAMP)
+z3vendor/z3/build/.z3-api-wasm-eh.stamp: z3vendor/z3/build/libz3.a webvue/static/z3-wasm-exported-functions.json z3vendor/z3/build-wasm-api.sh z3vendor/z3/src/api/js/ivy_z3_wasm_syscalls.cc
+	cd z3vendor/z3 && \
+		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
+		EM_CACHE="/tmp/ivy-emscripten-cache" EMCC="$(HOME)/go/src/github.com/emscripten-core/emsdk/upstream/emscripten/emcc" ./build-wasm-api.sh
+	touch z3vendor/z3/build/.z3-api-wasm-eh.stamp
 
-z3-wasm-api-link: $(Z3_WASM_API_STAMP)
+z3-wasm-api-link: z3vendor/z3/build/.z3-api-wasm-eh.stamp
 
-$(Z3_WASM_EXNREF): $(Z3_WASM_API_STAMP)
-	cp -p $(Z3_VENDOR_BUILD)/z3-api.wasm $(Z3_WASM_PRE_EXNREF)
-	$(WASM_OPT) --translate-to-exnref \
+z3vendor/z3/build/z3-api.exnref.wasm: z3vendor/z3/build/.z3-api-wasm-eh.stamp
+	cp -p z3vendor/z3/build/z3-api.wasm z3vendor/z3/build/z3-api.pre-exnref.wasm
+	/usr/local/bin/wasm-opt --translate-to-exnref \
 		--enable-exception-handling \
 		--enable-reference-types \
 		--enable-bulk-memory \
@@ -185,85 +134,81 @@ $(Z3_WASM_EXNREF): $(Z3_WASM_API_STAMP)
 		--enable-mutable-globals \
 		--enable-sign-ext \
 		--enable-nontrapping-float-to-int \
-		-o $(Z3_WASM_EXNREF) $(Z3_WASM_PRE_EXNREF)
+		-o z3vendor/z3/build/z3-api.exnref.wasm z3vendor/z3/build/z3-api.pre-exnref.wasm
 
-# builds ivy/goivy/webvue/static/z3-471-api.wasm
-$(Z3_WEBVUE_WASM): $(Z3_WASM_EXNREF)
-	cp -p $(Z3_WASM_EXNREF) $(Z3_WEBVUE_WASM)
+webvue/static/z3-471-api.wasm: z3vendor/z3/build/z3-api.exnref.wasm
+	cp -p z3vendor/z3/build/z3-api.exnref.wasm webvue/static/z3-471-api.wasm
 
-# builds ivy/goivy/webvue/static/z3-471-api.js
-$(Z3_WEBVUE_JS): $(Z3_WASM_API_STAMP)
-	cp -p $(Z3_VENDOR_BUILD)/z3-api.js $(Z3_WEBVUE_JS)
+webvue/static/z3-471-api.js: z3vendor/z3/build/.z3-api-wasm-eh.stamp
+	cp -p z3vendor/z3/build/z3-api.js webvue/static/z3-471-api.js
 
-z3-wasm-api: $(Z3_WEBVUE_WASM) $(Z3_WEBVUE_JS)
+z3-wasm-api: webvue/static/z3-471-api.wasm webvue/static/z3-471-api.js
 
 z3-wasm-api-wazero: z3-wasm-api
 
-$(GO_WASM_EXEC_JS): $(GO_WASM_EXEC_JS_SRC)
-	cp -p $(GO_WASM_EXEC_JS_SRC) $(GO_WASM_EXEC_JS)
+webvue/static/wasm_exec-go1.25.6.js: /usr/local/go/lib/wasm/wasm_exec.js
+	cp -p /usr/local/go/lib/wasm/wasm_exec.js webvue/static/wasm_exec-go1.25.6.js
 
-vendor-go-wasm-exec-js: $(GO_WASM_EXEC_JS)
+vendor-go-wasm-exec-js: webvue/static/wasm_exec-go1.25.6.js
 
 test-z3-wasm-wazero: z3-wasm-api-wazero
 	go test ./z3wasm -run TestZ3WasmArtifactCompilesWithWazeroExceptionHandling -count=1
 
-test-z3-wasm-js: z3-wasm-api $(WEBVUE_VITEST_BIN)
+test-z3-wasm-js: z3-wasm-api webvue/node_modules/.bin/vitest
 	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs src/wasm/z3Wasm.test.js
 
-test-z3-wasm-browser: z3-wasm-api $(WEBVUE_PLAYWRIGHT_BIN)
+test-z3-wasm-browser: z3-wasm-api webvue/node_modules/.bin/playwright
 	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/z3Wasm.browser.spec.js
 
 # Ivy-Go browser/local-worker builds are wasip1-only. Do not add wasm-unknown
 # or raw wasm build-tag variants; GOARCH=wasm is only the machine architecture
 # under GOOS=wasip1.
-$(TINYGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/exports_tinygo.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
-	$(TINYGO) build -tags xtracer_off -target wasip1 -buildmode=c-shared -scheduler=none -panic=trap -gc=leaking -no-debug -o $(TINYGO_IVY_WASIP1_PROBE_WASM) ./tinygo_probe
+webvue/static/ivy-tinygo-wasip1-probe.wasm: Makefile tinygo_probe/main.go tinygo_probe/exports_tinygo.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
+	/usr/local/bin/tinygo build -tags xtracer_off -target wasip1 -buildmode=c-shared -scheduler=none -panic=trap -gc=leaking -no-debug -o webvue/static/ivy-tinygo-wasip1-probe.wasm ./tinygo_probe
 
-tinygo-ivy-wasip1-probe-wasm: $(TINYGO_IVY_WASIP1_PROBE_WASM)
+tinygo-ivy-wasip1-probe-wasm: webvue/static/ivy-tinygo-wasip1-probe.wasm
 
-$(BIGGO_IVY_WASIP1_PROBE_WASM): Makefile tinygo_probe/main.go tinygo_probe/exports_wasip1.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
-	GOOS=wasip1 GOARCH=wasm go build -tags xtracer_off -o $(BIGGO_IVY_WASIP1_PROBE_WASM) ./tinygo_probe
+webvue/static/ivy-biggo-wasip1-probe.wasm: Makefile tinygo_probe/main.go tinygo_probe/exports_wasip1.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
+	GOOS=wasip1 GOARCH=wasm go build -tags xtracer_off -o webvue/static/ivy-biggo-wasip1-probe.wasm ./tinygo_probe
 
-biggo-ivy-wasip1-probe-wasm: $(BIGGO_IVY_WASIP1_PROBE_WASM)
+biggo-ivy-wasip1-probe-wasm: webvue/static/ivy-biggo-wasip1-probe.wasm
 
 FORCE:
 
-$(GOIVY_CHECK_WASIP1_WASM): FORCE
-	GOOS=wasip1 GOARCH=wasm go build -a -buildmode=c-shared -o $(GOIVY_CHECK_WASIP1_WASM) ./cmd/goivy_check_wasip1
+webvue/static/goivy-check-wasip1.wasm: FORCE
+	GOOS=wasip1 GOARCH=wasm go build -a -buildmode=c-shared -o webvue/static/goivy-check-wasip1.wasm ./cmd/goivy_check_wasip1
 
-goivy-check-wasip1-wasm: $(GOIVY_CHECK_WASIP1_WASM)
+goivy-check-wasip1-wasm: webvue/static/goivy-check-wasip1.wasm
 
-$(GOIVY_CHECK_JS_WASM): FORCE
-	GOOS=js GOARCH=wasm go build -a -o $(GOIVY_CHECK_JS_WASM) ./cmd/goivy_check_jswasm
+webvue/static/goivy-check-js.wasm: FORCE
+	GOOS=js GOARCH=wasm go build -a -o webvue/static/goivy-check-js.wasm ./cmd/goivy_check_jswasm
 
-goivy-check-js-wasm: $(GOIVY_CHECK_JS_WASM)
+goivy-check-js-wasm: webvue/static/goivy-check-js.wasm
 
 z3-wasip1-browser-artifacts: z3-wasm-api biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm
 
 test-z3-wasip1-browser:
-	@test -f $(Z3_WEBVUE_JS) || { echo "missing $(Z3_WEBVUE_JS); run make z3-wasm-api"; exit 1; }
-	@test -f $(Z3_WEBVUE_WASM) || { echo "missing $(Z3_WEBVUE_WASM); run make z3-wasm-api"; exit 1; }
-	@test -f $(BIGGO_IVY_WASIP1_PROBE_WASM) || { echo "missing $(BIGGO_IVY_WASIP1_PROBE_WASM); run make biggo-ivy-wasip1-probe-wasm"; exit 1; }
-	@test -x $(WEBVUE_PLAYWRIGHT_BIN) || { echo "missing $(WEBVUE_PLAYWRIGHT_BIN); run make webvue-setup"; exit 1; }
+	@test -f webvue/static/z3-471-api.js || { echo "missing webvue/static/z3-471-api.js; run make z3-wasm-api"; exit 1; }
+	@test -f webvue/static/z3-471-api.wasm || { echo "missing webvue/static/z3-471-api.wasm; run make z3-wasm-api"; exit 1; }
+	@test -f webvue/static/ivy-biggo-wasip1-probe.wasm || { echo "missing webvue/static/ivy-biggo-wasip1-probe.wasm; run make biggo-ivy-wasip1-probe-wasm"; exit 1; }
+	@test -x webvue/node_modules/.bin/playwright || { echo "missing webvue/node_modules/.bin/playwright; run make webvue-setup"; exit 1; }
 	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/wasip1Z3Worker.browser.spec.js
 
-test-z3-wasip1-browser-build: z3-wasip1-browser-artifacts $(WEBVUE_PLAYWRIGHT_BIN)
+test-z3-wasip1-browser-build: z3-wasip1-browser-artifacts webvue/node_modules/.bin/playwright
 	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/wasip1Z3Worker.browser.spec.js
 
 test-smt-wasip1-browser:
 	go test -tags web ./smt -run TestSolverBoolRoundTrip -count=1 -v
 
-test-smt-wasip1-browser-build: z3-wasm-api $(WEBVUE_PLAYWRIGHT_BIN)
+test-smt-wasip1-browser-build: z3-wasm-api webvue/node_modules/.bin/playwright
 	go test -tags web ./smt -run TestSolverBoolRoundTrip -count=1 -v
 
 waz-mem-test: goivy-check-wasip1-wasm
-	GOIVY_WAZERO_WASM=$(WAZ_MEM_WASM) GOIVY_WAZERO_SPEC=$(WAZ_MEM_SPEC) GOIVY_WAZERO_STDOUT=$(WAZ_MEM_STDOUT) GOIVY_WAZERO_STDERR=$(WAZ_MEM_STDERR) GOIVY_WAZERO_GC_HEAP_LIMIT="$(WAZ_MEM_GC_HEAP_LIMIT)" go test ./goldweb -run TestGoIvyCheckWasip1UnderWazero -count=1 -v
+	GOIVY_WAZERO_WASM=$(CURDIR)/webvue/static/goivy-check-wasip1.wasm GOIVY_WAZERO_SPEC=$(HOME)/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy GOIVY_WAZERO_STDOUT=$(CURDIR)/wazero.browser.xtrace.log GOIVY_WAZERO_STDERR=$(CURDIR)/wazero.browser.stderr.log GOIVY_WAZERO_GC_HEAP_LIMIT="$(WAZ_MEM_GC_HEAP_LIMIT)" go test ./goldweb -run TestGoIvyCheckWasip1UnderWazero -count=1 -v
 
 waz-cli-mem-test:
-	GOOS=wasip1 GOARCH=wasm go build -a -o $(WAZ_CLI_MEM_WASM) ./cmd/goivy_check
-	GOIVY_WAZERO_CLI_WASM=$(WAZ_CLI_MEM_WASM) GOIVY_WAZERO_CLI_SPEC=$(WAZ_MEM_SPEC) GOIVY_WAZERO_CLI_STDOUT=$(WAZ_CLI_MEM_STDOUT) GOIVY_WAZERO_CLI_STDERR=$(WAZ_CLI_MEM_STDERR) GOIVY_WAZERO_CLI_GC_HEAP_LIMIT="$(WAZ_CLI_MEM_GC_HEAP_LIMIT)" go test ./goldweb -run TestGoIvyCheckCLIWasip1UnderWazero -count=1 -v
-
-Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
+	GOOS=wasip1 GOARCH=wasm go build -a -o /tmp/goivy-check-cli-wasip1.wasm ./cmd/goivy_check
+	GOIVY_WAZERO_CLI_WASM=/tmp/goivy-check-cli-wasip1.wasm GOIVY_WAZERO_CLI_SPEC=$(HOME)/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy GOIVY_WAZERO_CLI_STDOUT=$(CURDIR)/wazero.cli.xtrace.log GOIVY_WAZERO_CLI_STDERR=$(CURDIR)/wazero.cli.stderr.log GOIVY_WAZERO_CLI_GC_HEAP_LIMIT="$(WAZ_CLI_MEM_GC_HEAP_LIMIT)" go test ./goldweb -run TestGoIvyCheckCLIWasip1UnderWazero -count=1 -v
 
 build: # grammer_gen
 	go install  -tags xtracer_off ./cmd/ivyweb
@@ -281,91 +226,77 @@ grammar_gen: # be sure .y -> .go up to date
 	cd evparser && go generate # ev_grammar.y
 
 
-GOBIN ?= $(HOME)/go/bin
-NODE_MODULES_DIR := webui/node_modules
-VITEST_BIN := $(NODE_MODULES_DIR)/.bin/vitest
-PLAYWRIGHT_BIN := $(NODE_MODULES_DIR)/.bin/playwright
-WEBUI_NODE_MODULES_STAMP := $(NODE_MODULES_DIR)/.package-lock.stamp
-CONTROL_NODE_MODULES_DIR := control/node_modules
-CONTROL_PLAYWRIGHT_BIN := $(CONTROL_NODE_MODULES_DIR)/.bin/playwright
-WEBVUE_NODE_MODULES_DIR := webvue/node_modules
-WEBVUE_VITEST_BIN := $(WEBVUE_NODE_MODULES_DIR)/.bin/vitest
-WEBVUE_VITE_BIN := $(WEBVUE_NODE_MODULES_DIR)/.bin/vite
-WEBVUE_PLAYWRIGHT_BIN := $(WEBVUE_NODE_MODULES_DIR)/.bin/playwright
-WEBVUE_NODE_MODULES_STAMP := $(WEBVUE_NODE_MODULES_DIR)/.package-lock.stamp
-
 PSQL ?= psql
-CONTROL_PG_DIR := control/admin/postgres
 PG_BOOTSTRAP_DSN ?= postgres://jaten:jaten@127.0.0.1:5432/postgres?sslmode=disable
 IVYVUE_BOOTSTRAP_DSN ?= postgres://jaten:jaten@127.0.0.1:5432/ivyvue?sslmode=disable
 IVYVUE_MIGRATION_DSN ?= postgres://ivyvue_migrator:ivyvue_migrator_dev@127.0.0.1:5432/ivyvue?sslmode=disable
 
 bootstrap:
 	@command -v $(PSQL) >/dev/null || { echo "psql not found; install PostgreSQL client tools first"; exit 1; }
-	$(PSQL) '$(PG_BOOTSTRAP_DSN)' -v ON_ERROR_STOP=1 -f $(CONTROL_PG_DIR)/00_bootstrap_databases.sql
-	$(PSQL) '$(IVYVUE_BOOTSTRAP_DSN)' -v ON_ERROR_STOP=1 -f $(CONTROL_PG_DIR)/01_ivyvue_roles_and_schemas.sql
-	$(PSQL) '$(IVYVUE_MIGRATION_DSN)' -v ON_ERROR_STOP=1 -f $(CONTROL_PG_DIR)/02_control_schema.sql
-	$(PSQL) '$(IVYVUE_MIGRATION_DSN)' -v ON_ERROR_STOP=1 -f $(CONTROL_PG_DIR)/03_rls_template.sql
-	$(PSQL) '$(IVYVUE_BOOTSTRAP_DSN)' -v ON_ERROR_STOP=1 -f $(CONTROL_PG_DIR)/04_verify_bootstrap.sql
+	$(PSQL) '$(PG_BOOTSTRAP_DSN)' -v ON_ERROR_STOP=1 -f control/admin/postgres/00_bootstrap_databases.sql
+	$(PSQL) '$(IVYVUE_BOOTSTRAP_DSN)' -v ON_ERROR_STOP=1 -f control/admin/postgres/01_ivyvue_roles_and_schemas.sql
+	$(PSQL) '$(IVYVUE_MIGRATION_DSN)' -v ON_ERROR_STOP=1 -f control/admin/postgres/02_control_schema.sql
+	$(PSQL) '$(IVYVUE_MIGRATION_DSN)' -v ON_ERROR_STOP=1 -f control/admin/postgres/03_rls_template.sql
+	$(PSQL) '$(IVYVUE_BOOTSTRAP_DSN)' -v ON_ERROR_STOP=1 -f control/admin/postgres/04_verify_bootstrap.sql
 	@echo "bootstrap complete: ivyvue PostgreSQL database is ready for local servers/tests"
 
 tr: # xtracer builds:
-	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
-	cd cmd/ivyweb && go build -o ${GOBIN}/ivyweb_xtrace
+	cd cmd/goivy_check && go build -o $(HOME)/go/bin/goivy_check_xtrace
+	cd cmd/ivyweb && go build -o $(HOME)/go/bin/ivyweb_xtrace
 
 trt: build tr  # xtracer test
 	XTRACE_OFF=1 time goivy_check isolate=cf_live $(HOME)/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.go.trt.ord_live.standalone
 
 dylib_build: z3ivy
-	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go install ./cmd/ivyweb
+	DYLD_LIBRARY_PATH=$(CURDIR)/z3ivy/lib:$$DYLD_LIBRARY_PATH go install ./cmd/ivyweb
 
 dylib_test: z3ivy
-	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test ./... -count=1 # -tags web
+	DYLD_LIBRARY_PATH=$(CURDIR)/z3ivy/lib:$$DYLD_LIBRARY_PATH go test ./... -count=1 # -tags web
 
 test:
 	XTRACE_OFF=1 go test ./... -count=1 # -tags web
 
-$(WEBUI_NODE_MODULES_STAMP): webui/package.json webui/package-lock.json
+webui/node_modules/.package-lock.stamp: webui/package.json webui/package-lock.json
 	cd webui && npm ci
-	touch $(WEBUI_NODE_MODULES_STAMP)
+	touch webui/node_modules/.package-lock.stamp
 
-$(VITEST_BIN) $(PLAYWRIGHT_BIN): $(WEBUI_NODE_MODULES_STAMP)
+webui/node_modules/.bin/vitest webui/node_modules/.bin/playwright: webui/node_modules/.package-lock.stamp
 
-vitest-setup: $(VITEST_BIN) $(PLAYWRIGHT_BIN)
+vitest-setup: webui/node_modules/.bin/vitest webui/node_modules/.bin/playwright
 
-$(CONTROL_PLAYWRIGHT_BIN): control/package.json control/package-lock.json
+control/node_modules/.bin/playwright: control/package.json control/package-lock.json
 	cd control && npm ci
 
-control-browser-setup: $(CONTROL_PLAYWRIGHT_BIN)
+control-browser-setup: control/node_modules/.bin/playwright
 
-$(WEBVUE_NODE_MODULES_STAMP): webvue/package.json webvue/package-lock.json
+webvue/node_modules/.package-lock.stamp: webvue/package.json webvue/package-lock.json
 	cd webvue && npm ci
-	touch $(WEBVUE_NODE_MODULES_STAMP)
+	touch webvue/node_modules/.package-lock.stamp
 
-$(WEBVUE_VITEST_BIN) $(WEBVUE_VITE_BIN) $(WEBVUE_PLAYWRIGHT_BIN): $(WEBVUE_NODE_MODULES_STAMP)
+webvue/node_modules/.bin/vitest webvue/node_modules/.bin/vite webvue/node_modules/.bin/playwright: webvue/node_modules/.package-lock.stamp
 
-webvue-setup: $(WEBVUE_VITEST_BIN) $(WEBVUE_VITE_BIN) $(WEBVUE_PLAYWRIGHT_BIN)
+webvue-setup: webvue/node_modules/.bin/vitest webvue/node_modules/.bin/vite webvue/node_modules/.bin/playwright
 
-test-vue: $(WEBVUE_VITEST_BIN)
+test-vue: webvue/node_modules/.bin/vitest
 	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs
 
-build-vue: $(WEBVUE_VITE_BIN)
+build-vue: webvue/node_modules/.bin/vite
 	cd webvue && ./node_modules/.bin/vite build --config vite.config.mjs
 
-test-js: $(VITEST_BIN)
+test-js: webui/node_modules/.bin/vitest
 	cd webui && npm run test:webui:js
 
-test-js-watch: $(VITEST_BIN)
+test-js-watch: webui/node_modules/.bin/vitest
 	cd webui && npm run test:webui:js:watch
 
-test-browser: $(PLAYWRIGHT_BIN)
+test-browser: webui/node_modules/.bin/playwright
 	cd webui && npm run test:webui:browser
 
-test-control-browser: $(CONTROL_PLAYWRIGHT_BIN)
+test-control-browser: control/node_modules/.bin/playwright
 	cd control && npm run test:browser
 
 dylib_test-web: z3ivy
-	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
+	DYLD_LIBRARY_PATH=$(CURDIR)/z3ivy/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
 
 test-web:
 	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
@@ -378,10 +309,10 @@ unimerge-audit-strict:
 
 # Run conformance tests (requires Python Ivy + Z3 sidecar).
 test-conform: z3ivy
-	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test ./webui/ -run TestConform -v -count=1 -timeout 120s
+	DYLD_LIBRARY_PATH=$(CURDIR)/z3ivy/lib:$$DYLD_LIBRARY_PATH go test ./webui/ -run TestConform -v -count=1 -timeout 120s
 
 clean:
-	rm -rf $(Z3IVY)
+	rm -rf z3ivy
 	go clean ./...
 
 fuzz:
@@ -398,7 +329,7 @@ fuzz:
 	done
 
 vs:
-	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
+	cd cmd/goivy_check && go build -o $(HOME)/go/bin/goivy_check_xtrace
 	if [ -f log.red ]; then mv log.red log.red.prev; fi
 	-go test -v -run TestOrdLive &> log.red
 	-$(HOME)/ivy/pyivy/goivy-venv/bin/ivy_check isolate=cf_live $(HOME)/go/src/github.com/glycerine/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy 2>&1 | awk 'NR <= 300000 { print } NR == 300000 { exit }' &> py.ord.out
@@ -415,14 +346,14 @@ cleardb:
 goldweb: goivy-check-js-wasm vendor-go-wasm-exec-js
 	if [ -f py.xtrace.log ]; then mv py.xtrace.log py.xtrace.log.prev; fi
 	if [ -f browser.xtrace.log ]; then mv browser.xtrace.log browser.xtrace.log.prev; fi
-	go run ./goldweb -goivy-runtime js -goivy-wasm $(CURDIR)/$(GOIVY_CHECK_JS_WASM) ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.goldweb
+	go run ./goldweb -goivy-runtime js -goivy-wasm $(CURDIR)/webvue/static/goivy-check-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.goldweb
 
 nodegold: goivy-check-js-wasm vendor-go-wasm-exec-js
-	time go run ./nodegold -goivy-wasm $(CURDIR)/$(GOIVY_CHECK_JS_WASM) ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
+	time go run ./nodegold -goivy-wasm $(CURDIR)/webvue/static/goivy-check-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
 
 nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 	go install ./nodegold
-	time ~/go/bin/nodegold -goivy-wasm $(CURDIR)/$(GOIVY_CHECK_JS_WASM) ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
+	time ~/go/bin/nodegold -goivy-wasm $(CURDIR)/webvue/static/goivy-check-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
 
 # wasm-opt is from the binaryen project.
 # we need a recent build for the flag we use,
@@ -433,4 +364,3 @@ nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 # souce is just a little after anyway).
 install-wasm-opt:
 	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make -j8 && sudo make install
-
