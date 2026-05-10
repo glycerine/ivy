@@ -15,6 +15,7 @@ fi
   "${EMCC_CACHE_ARGS[@]}" \
   -std=c++17 \
   -fwasm-exceptions \
+  -U_AMD64_ \
   -D_NO_OMP_ \
   -D_MP_INTERNAL \
   -Isrc/api \
