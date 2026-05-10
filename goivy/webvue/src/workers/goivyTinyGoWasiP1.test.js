@@ -1,103 +1,93 @@
-import { describe, expect, it } from 'vitest';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { afterEach, describe, expect, test } from 'vitest';
+
 import { createGoIvyTinyGoWasiP1, GOIVY_WASI_ERRNO } from './goivyTinyGoWasiP1.js';
 
-const textEncoder = new TextEncoder();
-const textDecoder = new TextDecoder('utf-8', { fatal: false });
+const enc = new TextEncoder();
+const dec = new TextDecoder();
 
-function makeHarness() {
+let tmpDirs = [];
+
+afterEach(() => {
+  for (const dir of tmpDirs) {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+  tmpDirs = [];
+});
+
+function newHarness(options = {}) {
   const memory = new WebAssembly.Memory({ initial: 1 });
-  const stdout = [];
-  const stderr = [];
-  const includeTree = {
-    root: '/virtual/ivy/include',
-    files: [
-      { path: '1.8/order.ivy', data: 'module order = {}\n' },
-      { path: 'a.txt', data: 'alpha' },
-    ],
-  };
   const wasi = createGoIvyTinyGoWasiP1({
-    args: ['goivy_check_jswasm'],
-    env: ['GOIVY_INCLUDE=' + includeTree.root],
-    includeRoot: includeTree.root,
-    includeTree,
-    stdout(data) { stdout.push(new Uint8Array(data)); },
-    stderr(data) { stderr.push(new Uint8Array(data)); },
+    includeRoot: '/include',
+    includeTree: { files: [] },
+    ...options,
   });
   wasi.setInstance({ exports: { memory } });
-  return { memory, wasi: wasi.wasiImport, stdout, stderr, includeTree };
+  const mem = new Uint8Array(memory.buffer);
+  const view = new DataView(memory.buffer);
+  return { wasi, mem, view };
 }
 
-function view(h) {
-  return new DataView(h.memory.buffer);
-}
-
-function bytes(h) {
-  return new Uint8Array(h.memory.buffer);
-}
-
-function readU32(h, ptr) {
-  return view(h).getUint32(ptr, true);
-}
-
-function writeString(h, ptr, value) {
-  const data = textEncoder.encode(value);
-  bytes(h).set(data, ptr);
+function putString(mem, ptr, text) {
+  const data = enc.encode(text);
+  mem.set(data, ptr);
   return data.byteLength;
 }
 
-function readString(h, ptr, len) {
-  return textDecoder.decode(bytes(h).subarray(ptr, ptr + len));
+function putIovec(view, ptr, dataPtr, len) {
+  view.setUint32(ptr, dataPtr, true);
+  view.setUint32(ptr + 4, len, true);
 }
 
-function writeIovecs(h, ptr, iovecs) {
-  const v = view(h);
-  for (let i = 0; i < iovecs.length; i += 1) {
-    v.setUint32(ptr + i * 8, iovecs[i].ptr, true);
-    v.setUint32(ptr + i * 8 + 4, iovecs[i].len, true);
-  }
-}
-
-describe('goivy TinyGo WASI preview1 shim', () => {
-  it('exports only the WASI functions imported by the TinyGo goivy artifact', () => {
-    const h = makeHarness();
-    expect(Object.keys(h.wasi).sort()).toEqual([
-      'fd_close',
-      'fd_fdstat_get',
-      'fd_prestat_dir_name',
-      'fd_prestat_get',
-      'fd_read',
-      'fd_seek',
-      'fd_write',
-      'path_open',
-      'proc_exit',
-      'random_get',
-    ]);
+describe('goivy TinyGo WASI preview1 host', () => {
+  test('keeps browser mode limited to the in-memory include preopen', () => {
+    const { wasi } = newHarness();
+    expect(wasi.wasiImport.fd_prestat_get(4, 1024)).toBe(GOIVY_WASI_ERRNO.BADF);
   });
 
-  it('lets wasi-libc discover exactly one preopen before fd 4 returns BADF', () => {
-    const h = makeHarness();
-    const rootLen = textEncoder.encode(h.includeTree.root).byteLength;
+  test('can read and write host files when tinynode passes Node fs hooks', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'goivy-tinygo-wasi-'));
+    tmpDirs.push(dir);
+    const readPath = path.join(dir, 'read.ivy');
+    const writePath = path.join(dir, 'write.log');
+    fs.writeFileSync(readPath, 'hello tinygo wasi fs');
 
-    expect(h.wasi.fd_prestat_get(3, 0)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
-    expect(readU32(h, 4)).toBe(rootLen);
-    expect(h.wasi.fd_prestat_dir_name(3, 16, rootLen)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
-    expect(readString(h, 16, rootLen)).toBe(h.includeTree.root);
-    expect(h.wasi.fd_prestat_get(4, 64)).toBe(GOIVY_WASI_ERRNO.BADF);
-  });
+    const { wasi, mem, view } = newHarness({
+      nodeFilesystem: fs,
+      nodePath: path,
+      hostPreopenPath: '/',
+      hostPreopenName: '/',
+    });
 
-  it('opens and reads include files through wasi-libc path_open/fd_read', () => {
-    const h = makeHarness();
-    const pathPtr = 64;
-    const openedFdPtr = 128;
-    const pathLen = writeString(h, pathPtr, 'a.txt');
+    let rel = readPath.slice(1);
+    let len = putString(mem, 1024, rel);
+    let ret = wasi.wasiImport.path_open(4, 0, 1024, len, 0, 2n, 0n, 0, 2048);
+    expect(ret).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    const readFd = view.getUint32(2048, true);
 
-    expect(h.wasi.path_open(3, 0, pathPtr, pathLen, 0, 0n, 0n, 0, openedFdPtr)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
-    const fd = readU32(h, openedFdPtr);
-    expect(fd).toBe(4);
+    putIovec(view, 3000, 4000, 64);
+    ret = wasi.wasiImport.fd_read(readFd, 3000, 1, 5000);
+    expect(ret).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    const nread = view.getUint32(5000, true);
+    expect(dec.decode(mem.subarray(4000, 4000 + nread))).toBe('hello tinygo wasi fs');
+    expect(wasi.wasiImport.fd_close(readFd)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
 
-    writeIovecs(h, 160, [{ ptr: 192, len: 8 }]);
-    expect(h.wasi.fd_read(fd, 160, 1, 184)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
-    expect(readU32(h, 184)).toBe(5);
-    expect(readString(h, 192, 5)).toBe('alpha');
+    rel = writePath.slice(1);
+    len = putString(mem, 1100, rel);
+    const oflagsCreateTrunc = 1 | 8;
+    const rightsFdWrite = 1n << 6n;
+    ret = wasi.wasiImport.path_open(4, 0, 1100, len, oflagsCreateTrunc, rightsFdWrite, 0n, 0, 2048);
+    expect(ret).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    const writeFd = view.getUint32(2048, true);
+
+    const data = enc.encode('written through wasi');
+    mem.set(data, 4100);
+    putIovec(view, 3100, 4100, data.byteLength);
+    ret = wasi.wasiImport.fd_write(writeFd, 3100, 1, 5100);
+    expect(ret).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    expect(wasi.wasiImport.fd_close(writeFd)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    expect(fs.readFileSync(writePath, 'utf8')).toBe('written through wasi');
   });
 });

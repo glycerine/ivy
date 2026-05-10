@@ -3,8 +3,8 @@
 // TinyGo's wasm_exec.js provides a partial wasi_snapshot_preview1 object, but
 // Go Ivy's full TinyGo build also imports wasi-libc file APIs such as
 // fd_prestat_get, fd_read, and path_open. Keep this shim separate from
-// goivyWasiP1.js because TinyGo's wasi-libc preopen scan expects fd 4 to return
-// BADF immediately after the fd 3 include-directory preopen.
+// goivyWasiP1.js: browser callers get the in-memory include tree only, while
+// tinynode can opt into an additional Node-backed preopen for oracle testing.
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder('utf-8', { fatal: false });
 
@@ -14,6 +14,7 @@ const ERRNO_EXIST = 20;
 const ERRNO_FAULT = 21;
 const ERRNO_INVAL = 28;
 const ERRNO_ISDIR = 31;
+const ERRNO_IO = 29;
 const ERRNO_NAMETOOLONG = 37;
 const ERRNO_NOENT = 44;
 const ERRNO_NOSYS = 52;
@@ -31,6 +32,7 @@ export const GOIVY_WASI_ERRNO = Object.freeze({
   FAULT: ERRNO_FAULT,
   INVAL: ERRNO_INVAL,
   ISDIR: ERRNO_ISDIR,
+  IO: ERRNO_IO,
   NAMETOOLONG: ERRNO_NAMETOOLONG,
   NOENT: ERRNO_NOENT,
   NOSYS: ERRNO_NOSYS,
@@ -75,6 +77,9 @@ const RIGHTS_PATH_UNLINK_FILE = 1n << 26n;
 const RIGHTS_STDOUT = RIGHTS_FD_WRITE | RIGHTS_FD_FDSTAT_SET_FLAGS | RIGHTS_FD_FILESTAT_GET;
 const RIGHTS_FILE_READONLY = RIGHTS_FD_READ | RIGHTS_FD_SEEK | RIGHTS_FD_TELL |
   RIGHTS_FD_FDSTAT_SET_FLAGS | RIGHTS_FD_FILESTAT_GET;
+const RIGHTS_FILE_WRITEONLY = RIGHTS_FD_WRITE | RIGHTS_FD_SEEK | RIGHTS_FD_TELL |
+  RIGHTS_FD_FDSTAT_SET_FLAGS | RIGHTS_FD_FILESTAT_GET;
+const RIGHTS_FILE_READWRITE = RIGHTS_FILE_READONLY | RIGHTS_FILE_WRITEONLY;
 const RIGHTS_DIR_READONLY = RIGHTS_FD_SEEK | RIGHTS_FD_FDSTAT_SET_FLAGS |
   RIGHTS_PATH_OPEN | RIGHTS_FD_READDIR | RIGHTS_PATH_FILESTAT_GET |
   RIGHTS_FD_FILESTAT_GET | RIGHTS_PATH_REMOVE_DIRECTORY | RIGHTS_PATH_UNLINK_FILE;
@@ -124,21 +129,32 @@ class OpenFd {
     this.write = options.write || null;
     this.stdinData = options.stdinData || new Uint8Array(0);
     this.stdinPos = 0;
+    this.hostPath = options.hostPath || '';
+    this.hostFd = options.hostFd ?? null;
+    this.canRead = options.canRead !== false;
+    this.canWrite = options.canWrite === true;
   }
 
   get filetype() {
     if (this.kind === 'stdio') {
       return FILETYPE_CHARACTER_DEVICE;
     }
+    if (this.kind === 'host-dir') {
+      return FILETYPE_DIRECTORY;
+    }
+    if (this.kind === 'host-file') {
+      return FILETYPE_REGULAR_FILE;
+    }
     return this.node ? this.node.filetype : FILETYPE_CHARACTER_DEVICE;
   }
 
   get readable() {
-    return this.kind === 'file' || this.kind === 'dir' || this.kind === 'stdin';
+    return this.kind === 'file' || this.kind === 'dir' || this.kind === 'stdin' ||
+      (this.kind === 'host-file' && this.canRead) || this.kind === 'host-dir';
   }
 
   get writable() {
-    return this.kind === 'stdio';
+    return this.kind === 'stdio' || (this.kind === 'host-file' && this.canWrite);
   }
 
   rightsBase() {
@@ -147,6 +163,18 @@ class OpenFd {
     }
     if (this.kind === 'stdin') {
       return RIGHTS_FD_READ | RIGHTS_FD_FDSTAT_SET_FLAGS | RIGHTS_FD_FILESTAT_GET;
+    }
+    if (this.kind === 'host-dir') {
+      return RIGHTS_DIR_READONLY;
+    }
+    if (this.kind === 'host-file') {
+      if (this.canRead && this.canWrite) {
+        return RIGHTS_FILE_READWRITE;
+      }
+      if (this.canWrite) {
+        return RIGHTS_FILE_WRITEONLY;
+      }
+      return RIGHTS_FILE_READONLY;
     }
     if (this.node && this.node.kind === 'dir') {
       return RIGHTS_DIR_READONLY;
@@ -240,6 +268,74 @@ function lookup(root, path, allowMissingLeaf = false) {
     return { ret: ERRNO_NOTDIR, node: null, parent: null, leaf: '' };
   }
   return { ret: ERRNO_SUCCESS, node, parent: node.parent, leaf: node.name };
+}
+
+function errnoFromNodeError(error) {
+  switch (error && error.code) {
+    case 'EACCES':
+    case 'EPERM':
+      return ERRNO_PERM;
+    case 'EBADF':
+      return ERRNO_BADF;
+    case 'EEXIST':
+      return ERRNO_EXIST;
+    case 'EISDIR':
+      return ERRNO_ISDIR;
+    case 'EINVAL':
+      return ERRNO_INVAL;
+    case 'ENOENT':
+      return ERRNO_NOENT;
+    case 'ENOTDIR':
+      return ERRNO_NOTDIR;
+    case 'ENOTEMPTY':
+      return ERRNO_NOTEMPTY;
+    case 'EROFS':
+      return ERRNO_ROFS;
+    default:
+      return ERRNO_IO;
+  }
+}
+
+function hostFiletype(stats) {
+  if (stats && typeof stats.isDirectory === 'function' && stats.isDirectory()) {
+    return FILETYPE_DIRECTORY;
+  }
+  return FILETYPE_REGULAR_FILE;
+}
+
+function hostFilestat(nodeFs, hostPath) {
+  const stats = nodeFs.statSync(hostPath);
+  return {
+    filetype: hostFiletype(stats),
+    ino: BigInt(stats.ino || 0),
+    size: BigInt(stats.size || 0),
+  };
+}
+
+function isHostPathInside(nodePath, root, candidate) {
+  const rel = nodePath.relative(root, candidate);
+  return rel === '' || (rel && !rel.startsWith('..') && !nodePath.isAbsolute(rel));
+}
+
+function resolveHostPath(openFd, wasiPath, nodePath) {
+  const normalized = normalizePath(wasiPath);
+  if (normalized.ret !== ERRNO_SUCCESS) {
+    return { ret: normalized.ret, path: '' };
+  }
+  const resolved = nodePath.resolve(openFd.hostPath, ...normalized.parts);
+  const root = nodePath.resolve(openFd.hostPath);
+  if (!isHostPathInside(nodePath, root, resolved)) {
+    return { ret: ERRNO_PERM, path: '' };
+  }
+  return { ret: ERRNO_SUCCESS, path: resolved, wantsDir: normalized.wantsDir };
+}
+
+function safeNumber(value, syscall, what) {
+  const n = Number(value);
+  if (!Number.isSafeInteger(n) || n < 0) {
+    throw new WasiTrap(syscall, what + ' is not a safe non-negative number: ' + String(value));
+  }
+  return n;
 }
 
 function asU32(value) {
@@ -343,11 +439,20 @@ const TINYGO_WASI_IMPORTS = [
   'fd_write',
   'fd_close',
   'fd_fdstat_get',
+  'fd_fdstat_set_flags',
+  'fd_filestat_get',
   'fd_prestat_get',
   'fd_prestat_dir_name',
   'fd_read',
+  'fd_readdir',
   'fd_seek',
+  'fd_tell',
   'path_open',
+  'path_filestat_get',
+  'path_create_directory',
+  'path_remove_directory',
+  'path_unlink_file',
+  'path_rename',
   'random_get',
 ];
 
@@ -368,6 +473,12 @@ export function createGoIvyTinyGoWasiP1(options) {
   const stdout = options.stdout || (() => {});
   const stderr = options.stderr || (() => {});
   const debug = options.debug || (() => {});
+  const nodeFs = options.nodeFilesystem || null;
+  const nodePath = options.nodePath || null;
+  const hostPreopenPath = nodeFs && nodePath
+    ? nodePath.resolve(String(options.hostPreopenPath || '/'))
+    : '';
+  const hostPreopenName = String(options.hostPreopenName || hostPreopenPath || '/');
   const procExit = options.procExit || ((code) => {
     throw new GoIvyTinyGoWasiProcExit(code);
   });
@@ -379,6 +490,9 @@ export function createGoIvyTinyGoWasiP1(options) {
     new OpenFd('stdio', { write: stderr }),
     new OpenFd('dir', { node: root, preopenName: includeRootName }),
   ];
+  if (nodeFs && nodePath) {
+    fds.push(new OpenFd('host-dir', { hostPath: hostPreopenPath, preopenName: hostPreopenName }));
+  }
 
   function memory() {
     const mem = instance && instance.exports && instance.exports.memory;
@@ -433,6 +547,135 @@ export function createGoIvyTinyGoWasiP1(options) {
     }
     fds.push(openFd);
     return fds.length - 1;
+  }
+
+  function hostOpenFlags(oflags, rightsBase, fdFlags, existed) {
+    const rights = u64(rightsBase);
+    const wantsRead = (rights & RIGHTS_FD_READ) !== 0n;
+    const wantsWrite = (rights & RIGHTS_FD_WRITE) !== 0n ||
+      (oflags & (OFLAGS_CREAT | OFLAGS_TRUNC)) !== 0 ||
+      (fdFlags & FDFLAGS_APPEND) !== 0;
+    const create = (oflags & OFLAGS_CREAT) !== 0;
+    const excl = (oflags & OFLAGS_EXCL) !== 0;
+    const trunc = (oflags & OFLAGS_TRUNC) !== 0;
+    const append = (fdFlags & FDFLAGS_APPEND) !== 0;
+
+    if (!wantsWrite) {
+      return { flags: 'r', canRead: true, canWrite: false, truncateAfterOpen: false };
+    }
+    if (!create && !existed) {
+      return { ret: ERRNO_NOENT };
+    }
+    if (create && excl && existed) {
+      return { ret: ERRNO_EXIST };
+    }
+    if (append) {
+      return { flags: wantsRead ? (excl ? 'ax+' : 'a+') : (excl ? 'ax' : 'a'), canRead: wantsRead, canWrite: true, truncateAfterOpen: false };
+    }
+    if (trunc) {
+      if (create) {
+        return { flags: wantsRead ? (excl ? 'wx+' : 'w+') : (excl ? 'wx' : 'w'), canRead: wantsRead, canWrite: true, truncateAfterOpen: false };
+      }
+      return { flags: 'r+', canRead: true, canWrite: true, truncateAfterOpen: true };
+    }
+    if (create && !existed) {
+      return { flags: wantsRead ? (excl ? 'wx+' : 'w+') : (excl ? 'wx' : 'w'), canRead: wantsRead, canWrite: true, truncateAfterOpen: false };
+    }
+    return { flags: wantsRead ? 'r+' : 'r+', canRead: true, canWrite: true, truncateAfterOpen: false };
+  }
+
+  function pathOpenHost(f, pathName, oflags, rightsBase, fdFlags, openedFdPtr) {
+    if (!nodeFs || !nodePath) {
+      return ERRNO_BADF;
+    }
+    if ((oflags & OFLAGS_DIRECTORY) !== 0 && (oflags & OFLAGS_CREAT) !== 0) {
+      return ERRNO_INVAL;
+    }
+    const resolved = resolveHostPath(f, pathName, nodePath);
+    if (resolved.ret !== ERRNO_SUCCESS) {
+      return resolved.ret;
+    }
+
+    let stats = null;
+    let existed = false;
+    try {
+      stats = nodeFs.statSync(resolved.path);
+      existed = true;
+    } catch (error) {
+      const ret = errnoFromNodeError(error);
+      if (ret !== ERRNO_NOENT) {
+        return ret;
+      }
+    }
+
+    const wantsDirectory = (oflags & OFLAGS_DIRECTORY) !== 0 || resolved.wantsDir;
+    if (wantsDirectory) {
+      if (!existed) {
+        return ERRNO_NOENT;
+      }
+      if (!stats.isDirectory()) {
+        return ERRNO_NOTDIR;
+      }
+      checkedEnd(openedFdPtr, 4, view().byteLength, 'path_open', 'opened fd result');
+      const newFd = pushFd(new OpenFd('host-dir', { hostPath: resolved.path, flags: fdFlags >>> 0 }));
+      writeU32(openedFdPtr, newFd, 'path_open');
+      return ERRNO_SUCCESS;
+    }
+
+    if (existed && stats.isDirectory()) {
+      return ERRNO_ISDIR;
+    }
+
+    const openPlan = hostOpenFlags(oflags, rightsBase, fdFlags, existed);
+    if (openPlan.ret) {
+      return openPlan.ret;
+    }
+
+    let hostFd;
+    try {
+      hostFd = nodeFs.openSync(resolved.path, openPlan.flags, 0o666);
+      if (openPlan.truncateAfterOpen) {
+        nodeFs.ftruncateSync(hostFd, 0);
+      }
+    } catch (error) {
+      return errnoFromNodeError(error);
+    }
+
+    checkedEnd(openedFdPtr, 4, view().byteLength, 'path_open', 'opened fd result');
+    const opened = new OpenFd('host-file', {
+      hostPath: resolved.path,
+      hostFd,
+      flags: fdFlags >>> 0,
+      canRead: openPlan.canRead,
+      canWrite: openPlan.canWrite,
+    });
+    if ((fdFlags & FDFLAGS_APPEND) !== 0) {
+      try {
+        opened.pos = BigInt(nodeFs.fstatSync(hostFd).size || 0);
+      } catch (error) {
+        nodeFs.closeSync(hostFd);
+        return errnoFromNodeError(error);
+      }
+    }
+    const newFd = pushFd(opened);
+    writeU32(openedFdPtr, newFd, 'path_open');
+    return ERRNO_SUCCESS;
+  }
+
+  function hostRelativePathStat(f, pathName, syscall) {
+    if (!nodeFs || !nodePath) {
+      return { ret: ERRNO_BADF, info: null };
+    }
+    const resolved = resolveHostPath(f, pathName, nodePath);
+    if (resolved.ret !== ERRNO_SUCCESS) {
+      return { ret: resolved.ret, info: null };
+    }
+    try {
+      return { ret: ERRNO_SUCCESS, info: hostFilestat(nodeFs, resolved.path), path: resolved.path };
+    } catch (error) {
+      debug('[goldweb wasi] ' + syscall + ' failed path=' + resolved.path + ' error=' + (error && error.message ? error.message : String(error)));
+      return { ret: errnoFromNodeError(error), info: null };
+    }
   }
 
   function unsupported(name, argsLike) {
@@ -505,10 +748,19 @@ export function createGoIvyTinyGoWasiP1(options) {
     },
 
     fd_close(fdnum) {
-      if (!fd(fdnum)) {
+      const f = fd(fdnum);
+      if (!f) {
         return ERRNO_BADF;
       }
       if (fdnum >= 4) {
+        if (f.kind === 'host-file' && f.hostFd !== null && nodeFs) {
+          try {
+            nodeFs.closeSync(f.hostFd);
+          } catch (error) {
+            fds[fdnum] = null;
+            return errnoFromNodeError(error);
+          }
+        }
         fds[fdnum] = null;
       }
       return ERRNO_SUCCESS;
@@ -541,6 +793,17 @@ export function createGoIvyTinyGoWasiP1(options) {
       }
       const v = view();
       checkedEnd(statPtr, 64, v.byteLength, 'fd_filestat_get', 'filestat');
+      if (f.kind === 'host-file' || f.kind === 'host-dir') {
+        if (!nodeFs) {
+          return ERRNO_BADF;
+        }
+        try {
+          writeFilestat(v, asU32(statPtr), hostFilestat(nodeFs, f.hostPath));
+          return ERRNO_SUCCESS;
+        } catch (error) {
+          return errnoFromNodeError(error);
+        }
+      }
       writeFilestat(v, asU32(statPtr), f.node);
       return ERRNO_SUCCESS;
     },
@@ -582,7 +845,7 @@ export function createGoIvyTinyGoWasiP1(options) {
       if (!f) {
         return ERRNO_BADF;
       }
-      if (f.kind !== 'file' && f.kind !== 'stdin') {
+      if (f.kind !== 'file' && f.kind !== 'stdin' && f.kind !== 'host-file') {
         writeU32(nreadPtr, 0, 'fd_read');
         return ERRNO_BADF;
       }
@@ -596,6 +859,24 @@ export function createGoIvyTinyGoWasiP1(options) {
         if (f.kind === 'stdin') {
           src = f.stdinData.subarray(f.stdinPos, f.stdinPos + iovec.len);
           f.stdinPos += src.byteLength;
+        } else if (f.kind === 'host-file') {
+          if (!nodeFs || !f.canRead) {
+            writeU32(nreadPtr, total, 'fd_read');
+            return ERRNO_BADF;
+          }
+          let n;
+          try {
+            n = nodeFs.readSync(f.hostFd, mem, iovec.ptr, iovec.len, safeNumber(f.pos, 'fd_read', 'file offset'));
+          } catch (error) {
+            writeU32(nreadPtr, total, 'fd_read');
+            return total > 0 ? ERRNO_SUCCESS : errnoFromNodeError(error);
+          }
+          f.pos += BigInt(n);
+          total += n;
+          if (n !== iovec.len) {
+            break;
+          }
+          continue;
         } else {
           const start = Number(f.pos);
           src = f.node.data.subarray(start, start + iovec.len);
@@ -615,6 +896,62 @@ export function createGoIvyTinyGoWasiP1(options) {
       const f = fd(fdnum);
       if (!f) {
         return ERRNO_BADF;
+      }
+      if (f.kind === 'host-dir') {
+        if (!nodeFs) {
+          writeU32(bufusedPtr, 0, 'fd_readdir');
+          return ERRNO_BADF;
+        }
+        if (asU32(bufLen) < 24) {
+          return ERRNO_INVAL;
+        }
+        const mem = bytes();
+        const v = view();
+        bufPtr = asU32(bufPtr);
+        bufLen = asU32(bufLen);
+        checkedEnd(bufPtr, bufLen, mem.byteLength, 'fd_readdir', 'dirent buffer');
+
+        let entries;
+        try {
+          entries = [
+            { name: '.', ino: 1n, type: FILETYPE_DIRECTORY },
+            { name: '..', ino: 1n, type: FILETYPE_DIRECTORY },
+          ].concat(nodeFs.readdirSync(f.hostPath, { withFileTypes: true })
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((entry, index) => ({
+              name: entry.name,
+              ino: BigInt(index + 3),
+              type: entry.isDirectory() ? FILETYPE_DIRECTORY : FILETYPE_REGULAR_FILE,
+            })));
+        } catch (error) {
+          writeU32(bufusedPtr, 0, 'fd_readdir');
+          return errnoFromNodeError(error);
+        }
+
+        let used = 0;
+        let index = Number(cookie);
+        if (!Number.isSafeInteger(index) || index < 0 || index > entries.length) {
+          return ERRNO_NOENT;
+        }
+        while (index < entries.length && used < bufLen) {
+          const entry = entries[index];
+          const nameBytes = textEncoder.encode(entry.name);
+          const recordLen = 24 + nameBytes.byteLength;
+          const remaining = bufLen - used;
+          if (recordLen > remaining) {
+            if (remaining >= 24) {
+              writeDirent(v, bufPtr + used, BigInt(index + 1), entry.ino, nameBytes, entry.type);
+            }
+            used = bufLen;
+            break;
+          }
+          writeDirent(v, bufPtr + used, BigInt(index + 1), entry.ino, nameBytes, entry.type);
+          mem.set(nameBytes, bufPtr + used + 24);
+          used += recordLen;
+          index += 1;
+        }
+        writeU32(bufusedPtr, used, 'fd_readdir');
+        return ERRNO_SUCCESS;
       }
       if (!f.node || f.node.kind !== 'dir') {
         writeU32(bufusedPtr, 0, 'fd_readdir');
@@ -669,10 +1006,10 @@ export function createGoIvyTinyGoWasiP1(options) {
         writeU64(newOffsetPtr, 0n, 'fd_seek');
         return ERRNO_BADF;
       }
-      if (f.kind === 'dir') {
+      if (f.kind === 'dir' || f.kind === 'host-dir') {
         return ERRNO_ISDIR;
       }
-      if (f.kind !== 'file' && f.kind !== 'stdin') {
+      if (f.kind !== 'file' && f.kind !== 'stdin' && f.kind !== 'host-file') {
         writeU64(newOffsetPtr, 0n, 'fd_seek');
         return ERRNO_BADF;
       }
@@ -683,6 +1020,13 @@ export function createGoIvyTinyGoWasiP1(options) {
         next = f.pos + i64(offset);
       } else if (whence === WHENCE_END && f.kind === 'file') {
         next = BigInt(f.node.data.byteLength) + i64(offset);
+      } else if (whence === WHENCE_END && f.kind === 'host-file') {
+        try {
+          next = BigInt(nodeFs.fstatSync(f.hostFd).size || 0) + i64(offset);
+        } catch (error) {
+          writeU64(newOffsetPtr, f.pos, 'fd_seek');
+          return errnoFromNodeError(error);
+        }
       } else {
         writeU64(newOffsetPtr, f.pos, 'fd_seek');
         return ERRNO_INVAL;
@@ -708,9 +1052,28 @@ export function createGoIvyTinyGoWasiP1(options) {
       let total = 0;
       for (const iovec of iovecs) {
         checkedEnd(iovec.ptr, iovec.len, mem.byteLength, 'fd_write', 'iovec buffer');
-        const data = mem.slice(iovec.ptr, iovec.ptr + iovec.len);
-        f.write(data);
-        total += data.byteLength;
+        if (f.kind === 'host-file') {
+          try {
+            const position = (f.flags & FDFLAGS_APPEND) !== 0 ? null : safeNumber(f.pos, 'fd_write', 'file offset');
+            const n = nodeFs.writeSync(f.hostFd, mem, iovec.ptr, iovec.len, position);
+            total += n;
+            if (position === null) {
+              f.pos = BigInt(nodeFs.fstatSync(f.hostFd).size || 0);
+            } else {
+              f.pos += BigInt(n);
+            }
+            if (n !== iovec.len) {
+              break;
+            }
+          } catch (error) {
+            writeU32(nwrittenPtr, total, 'fd_write');
+            return total > 0 ? ERRNO_SUCCESS : errnoFromNodeError(error);
+          }
+        } else {
+          const data = mem.slice(iovec.ptr, iovec.ptr + iovec.len);
+          f.write(data);
+          total += data.byteLength;
+        }
       }
       writeU32(nwrittenPtr, total, 'fd_write');
       return ERRNO_SUCCESS;
@@ -719,10 +1082,23 @@ export function createGoIvyTinyGoWasiP1(options) {
     path_filestat_get(fdnum, flags, pathPtr, pathLen, statPtr) {
       void flags;
       const f = fd(fdnum);
-      if (!f || !f.node || f.node.kind !== 'dir') {
+      if (!f) {
         return ERRNO_BADF;
       }
       const path = readString(pathPtr, pathLen, 'path_filestat_get');
+      if (f.kind === 'host-dir') {
+        const result = hostRelativePathStat(f, path, 'path_filestat_get');
+        if (result.ret !== ERRNO_SUCCESS) {
+          return result.ret;
+        }
+        const v = view();
+        checkedEnd(statPtr, 64, v.byteLength, 'path_filestat_get', 'filestat');
+        writeFilestat(v, asU32(statPtr), result.info);
+        return ERRNO_SUCCESS;
+      }
+      if (!f.node || f.node.kind !== 'dir') {
+        return ERRNO_BADF;
+      }
       const result = lookup(f.node, path);
       if (result.ret !== ERRNO_SUCCESS) {
         return result.ret;
@@ -738,12 +1114,18 @@ export function createGoIvyTinyGoWasiP1(options) {
       void rightsBase;
       void rightsInheriting;
       const f = fd(fdnum);
-      if (!f || !f.node || f.node.kind !== 'dir') {
+      if (!f) {
         return ERRNO_BADF;
       }
       const path = readString(pathPtr, pathLen, 'path_open');
       if (asU32(pathLen) === 0) {
         return ERRNO_INVAL;
+      }
+      if (f.kind === 'host-dir') {
+        return pathOpenHost(f, path, oflags, rightsBase, fdFlags, openedFdPtr);
+      }
+      if (!f.node || f.node.kind !== 'dir') {
+        return ERRNO_BADF;
       }
       if ((oflags & OFLAGS_DIRECTORY) !== 0 && (oflags & OFLAGS_CREAT) !== 0) {
         return ERRNO_INVAL;
@@ -779,10 +1161,25 @@ export function createGoIvyTinyGoWasiP1(options) {
 
     path_remove_directory(fdnum, pathPtr, pathLen) {
       const f = fd(fdnum);
-      if (!f || !f.node || f.node.kind !== 'dir') {
+      if (!f) {
         return ERRNO_BADF;
       }
       const path = readString(pathPtr, pathLen, 'path_remove_directory');
+      if (f.kind === 'host-dir') {
+        const resolved = resolveHostPath(f, path, nodePath);
+        if (resolved.ret !== ERRNO_SUCCESS) {
+          return resolved.ret;
+        }
+        try {
+          nodeFs.rmdirSync(resolved.path);
+          return ERRNO_SUCCESS;
+        } catch (error) {
+          return errnoFromNodeError(error);
+        }
+      }
+      if (!f.node || f.node.kind !== 'dir') {
+        return ERRNO_BADF;
+      }
       const result = lookup(f.node, path);
       if (result.ret !== ERRNO_SUCCESS) {
         return result.ret;
@@ -798,10 +1195,29 @@ export function createGoIvyTinyGoWasiP1(options) {
 
     path_unlink_file(fdnum, pathPtr, pathLen) {
       const f = fd(fdnum);
-      if (!f || !f.node || f.node.kind !== 'dir') {
+      if (!f) {
         return ERRNO_BADF;
       }
       const path = readString(pathPtr, pathLen, 'path_unlink_file');
+      if (f.kind === 'host-dir') {
+        const resolved = resolveHostPath(f, path, nodePath);
+        if (resolved.ret !== ERRNO_SUCCESS) {
+          return resolved.ret;
+        }
+        try {
+          const stats = nodeFs.statSync(resolved.path);
+          if (stats.isDirectory()) {
+            return ERRNO_ISDIR;
+          }
+          nodeFs.unlinkSync(resolved.path);
+          return ERRNO_SUCCESS;
+        } catch (error) {
+          return errnoFromNodeError(error);
+        }
+      }
+      if (!f.node || f.node.kind !== 'dir') {
+        return ERRNO_BADF;
+      }
       const result = lookup(f.node, path);
       if (result.ret !== ERRNO_SUCCESS) {
         return result.ret;
@@ -887,11 +1303,55 @@ export function createGoIvyTinyGoWasiP1(options) {
       writeU64(offsetPtr, f.pos || 0n, 'fd_tell');
       return ERRNO_SUCCESS;
     },
-    path_create_directory() { return ERRNO_ROFS; },
+    path_create_directory(fdnum, pathPtr, pathLen) {
+      const f = fd(fdnum);
+      if (!f) {
+        return ERRNO_BADF;
+      }
+      if (f.kind !== 'host-dir') {
+        return ERRNO_ROFS;
+      }
+      const path = readString(pathPtr, pathLen, 'path_create_directory');
+      const resolved = resolveHostPath(f, path, nodePath);
+      if (resolved.ret !== ERRNO_SUCCESS) {
+        return resolved.ret;
+      }
+      try {
+        nodeFs.mkdirSync(resolved.path);
+        return ERRNO_SUCCESS;
+      } catch (error) {
+        return errnoFromNodeError(error);
+      }
+    },
     path_filestat_set_times() { return ERRNO_ROFS; },
     path_link() { return ERRNO_ROFS; },
     path_readlink() { return ERRNO_INVAL; },
-    path_rename() { return ERRNO_ROFS; },
+    path_rename(oldFdnum, oldPathPtr, oldPathLen, newFdnum, newPathPtr, newPathLen) {
+      const oldFd = fd(oldFdnum);
+      const newFd = fd(newFdnum);
+      if (!oldFd || !newFd) {
+        return ERRNO_BADF;
+      }
+      if (oldFd.kind !== 'host-dir' || newFd.kind !== 'host-dir') {
+        return ERRNO_ROFS;
+      }
+      const oldPath = readString(oldPathPtr, oldPathLen, 'path_rename');
+      const newPath = readString(newPathPtr, newPathLen, 'path_rename');
+      const oldResolved = resolveHostPath(oldFd, oldPath, nodePath);
+      if (oldResolved.ret !== ERRNO_SUCCESS) {
+        return oldResolved.ret;
+      }
+      const newResolved = resolveHostPath(newFd, newPath, nodePath);
+      if (newResolved.ret !== ERRNO_SUCCESS) {
+        return newResolved.ret;
+      }
+      try {
+        nodeFs.renameSync(oldResolved.path, newResolved.path);
+        return ERRNO_SUCCESS;
+      } catch (error) {
+        return errnoFromNodeError(error);
+      }
+    },
     path_symlink() { return ERRNO_ROFS; },
     proc_raise(sig) {
       throw new Error('WASI proc_raise signal ' + sig);

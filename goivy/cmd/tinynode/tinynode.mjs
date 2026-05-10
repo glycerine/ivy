@@ -202,6 +202,10 @@ async function main() {
     stdout: (data) => writeAllFD(1, data),
     stderr: (data) => writeAllFD(2, data),
     procExit: go.importObject.wasi_snapshot_preview1.proc_exit,
+    nodeFilesystem: fs,
+    nodePath: path,
+    hostPreopenPath: '/',
+    hostPreopenName: '/',
     debug: (text) => diag(text),
   });
   go.importObject.wasi_snapshot_preview1 = tinyGoWasi.wasiImport;
