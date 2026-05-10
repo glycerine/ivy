@@ -376,10 +376,14 @@ nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 install-wasm-opt:
 	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make -j8 && sudo make install
 
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm goivy-check-js-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb nodegold FORCE
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm goivy-check-js-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb nodegold FORCE tinynode
 
 webvue/static/goivy-check-tinygo-js.wasm: FORCE
 	/usr/local/bin/tinygo build -target wasm -buildmode=c-shared -scheduler=none -panic=trap -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
 
 # with xtracer_off
 #/usr/local/bin/tinygo build -tags xtracer_off -target wasm -buildmode=c-shared -scheduler=none -panic=trap -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
+
+tinynode:
+	go install ./cmd/tinynode
+	time ~/go/bin/tinynode -goivy-wasm $(CURDIR)/webvue/static/goivy-check-tinygo-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.tinynode.zst

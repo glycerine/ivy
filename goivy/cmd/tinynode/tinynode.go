@@ -46,11 +46,12 @@ type config struct {
 
 func main() {
 	rootDefault := defaultGoivyRoot()
+	tinynodeCmdDir := filepath.Join(rootDefault, "cmd", "tinynode")
 	staticDefault := filepath.Join(rootDefault, "webvue", "static")
 	workerDefault := filepath.Join(rootDefault, "webvue", "src", "workers")
 
 	node := flag.String("node", "node", "Node.js executable")
-	script := flag.String("script", filepath.Join(rootDefault, "tinynode", "tinynode.mjs"), "Node.js harness script")
+	script := flag.String("script", filepath.Join(tinynodeCmdDir, "tinynode.mjs"), "Node.js harness script")
 	root := flag.String("root", rootDefault, "goivy source root")
 	includeDir := flag.String("include-dir", defaultIncludeDir(rootDefault), "Ivy standard-library include directory")
 	goivyWasm := flag.String("goivy-wasm", filepath.Join(staticDefault, "goivy-check-tinygo-js.wasm"), "Go Ivy js/wasm file")
