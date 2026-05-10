@@ -1,5 +1,3 @@
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm goivy-check-js-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb nodegold FORCE
-
 # Makefile for goivy (Go port of Ivy)
 #
 # NOTE: keep all targets and paths explicit. Do not abstract 
@@ -163,7 +161,7 @@ test-z3-wasm-js: z3-wasm-api webvue/node_modules/.bin/vitest
 test-z3-wasm-browser: z3-wasm-api webvue/node_modules/.bin/playwright
 	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/z3Wasm.browser.spec.js
 
-webvue/static/ivy-tinygo-wasip1-probe.wasm: Makefile tinygo_probe/main.go tinygo_probe/exports_tinygo.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
+webvue/static/ivy-tinygo-wasip1-probe.wasm: tinygo_probe/main.go tinygo_probe/exports_tinygo.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
 	/usr/local/bin/tinygo build -tags xtracer_off -target wasip1 -buildmode=c-shared -scheduler=none -panic=trap -gc=leaking -no-debug -o webvue/static/ivy-tinygo-wasip1-probe.wasm ./tinygo_probe
 
 tinygo-ivy-wasip1-probe-wasm: webvue/static/ivy-tinygo-wasip1-probe.wasm
@@ -377,3 +375,8 @@ nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 # souce is just a little after anyway).
 install-wasm-opt:
 	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make -j8 && sudo make install
+
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm goivy-check-js-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb nodegold FORCE
+
+webvue/static/goivy-tinygo-js.wasm: FORCE
+	/usr/local/bin/tinygo build -tags xtracer_off -target wasm -buildmode=c-shared -scheduler=none -panic=trap -gc=precise -no-debug -o webvue/static/goivy-tinygo-js.wasm ./cmd/goivy_check_jswasm/
