@@ -209,6 +209,7 @@ async function main() {
     debug: (text) => diag(text),
   });
   go.importObject.wasi_snapshot_preview1 = tinyGoWasi.wasiImport;
+  go.importObject.goivy_fs = tinyGoWasi.goivyFsImport;
   go.importObject.smt_z3 = z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory });
 
   diag(`reading Go Ivy wasm ${cfg.goivyWasm}`);

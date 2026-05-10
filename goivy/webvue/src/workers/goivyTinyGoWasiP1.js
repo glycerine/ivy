@@ -338,6 +338,17 @@ function safeNumber(value, syscall, what) {
   return n;
 }
 
+function pathInsidePrefix(pathName, prefix) {
+  if (pathName === prefix) {
+    return '';
+  }
+  const slashPrefix = prefix.endsWith('/') ? prefix : prefix + '/';
+  if (pathName.startsWith(slashPrefix)) {
+    return pathName.slice(slashPrefix.length);
+  }
+  return null;
+}
+
 function asU32(value) {
   return Number(value) >>> 0;
 }
@@ -484,6 +495,13 @@ export function createGoIvyTinyGoWasiP1(options) {
   });
 
   let instance = null;
+  let fsScratchNext = 1;
+  const fsScratch = new Map();
+  let fsBytesNext = 1;
+  const fsBytes = new Map();
+  let fsLastErrno = ERRNO_SUCCESS;
+  let fsLastSize = 0n;
+  let fsLastIsDir = 0;
   const fds = [
     new OpenFd('stdin', { stdinData: stdinBytes }),
     new OpenFd('stdio', { write: stdout }),
@@ -547,6 +565,141 @@ export function createGoIvyTinyGoWasiP1(options) {
     }
     fds.push(openFd);
     return fds.length - 1;
+  }
+
+  function fsScratchBegin(n) {
+    const h = fsScratchNext++;
+    fsScratch.set(h, new Uint8Array(asU32(n)));
+    return h;
+  }
+
+  function fsScratchWrite(h, offset, word, n) {
+    const data = fsScratch.get(h);
+    if (!data) {
+      return;
+    }
+    offset = asU32(offset);
+    n = asU32(n);
+    for (let i = 0; i < n && offset + i < data.byteLength; i += 1) {
+      data[offset + i] = (word >>> (8 * i)) & 0xff;
+    }
+  }
+
+  function fsScratchBytes(h, n) {
+    const data = fsScratch.get(h);
+    if (!data) {
+      fsLastErrno = ERRNO_BADF;
+      return null;
+    }
+    return data.subarray(0, Math.min(asU32(n), data.byteLength));
+  }
+
+  function fsScratchString(h, n) {
+    const data = fsScratchBytes(h, n);
+    if (!data) {
+      return '';
+    }
+    return textDecoder.decode(data);
+  }
+
+  function fsBytesHandle(data) {
+    const h = fsBytesNext++;
+    fsBytes.set(h, new Uint8Array(data));
+    return h;
+  }
+
+  function resolveHostDirectPath(pathName) {
+    if (!nodeFs || !nodePath) {
+      return { ret: ERRNO_BADF, path: '' };
+    }
+    const rootPath = nodePath.resolve(hostPreopenPath || '/');
+    const candidate = nodePath.resolve(pathName.startsWith('/') ? pathName : nodePath.join(rootPath, pathName));
+    if (!isHostPathInside(nodePath, rootPath, candidate)) {
+      return { ret: ERRNO_PERM, path: '' };
+    }
+    return { ret: ERRNO_SUCCESS, path: candidate };
+  }
+
+  function resolveVirtualPath(pathName) {
+    let rel = pathInsidePrefix(pathName, includeRootName);
+    if (rel === null) {
+      if (pathName.startsWith('/')) {
+        return { ret: ERRNO_NOENT, node: null };
+      }
+      rel = pathName;
+    }
+    return lookup(root, rel);
+  }
+
+  function fsStatPath(pathName) {
+    if (nodeFs && nodePath) {
+      const resolved = resolveHostDirectPath(pathName);
+      if (resolved.ret !== ERRNO_SUCCESS) {
+        return resolved.ret;
+      }
+      try {
+        const stats = nodeFs.statSync(resolved.path);
+        fsLastSize = BigInt(stats.size || 0);
+        fsLastIsDir = stats.isDirectory() ? 1 : 0;
+        return ERRNO_SUCCESS;
+      } catch (error) {
+        return errnoFromNodeError(error);
+      }
+    }
+
+    const result = resolveVirtualPath(pathName);
+    if (result.ret !== ERRNO_SUCCESS) {
+      return result.ret;
+    }
+    fsLastSize = BigInt(result.node.size || 0);
+    fsLastIsDir = result.node.kind === 'dir' ? 1 : 0;
+    return ERRNO_SUCCESS;
+  }
+
+  function fsReadPath(pathName) {
+    if (nodeFs && nodePath) {
+      const resolved = resolveHostDirectPath(pathName);
+      if (resolved.ret !== ERRNO_SUCCESS) {
+        fsLastErrno = resolved.ret;
+        return 0;
+      }
+      try {
+        const data = nodeFs.readFileSync(resolved.path);
+        fsLastErrno = ERRNO_SUCCESS;
+        return fsBytesHandle(data);
+      } catch (error) {
+        fsLastErrno = errnoFromNodeError(error);
+        return 0;
+      }
+    }
+
+    const result = resolveVirtualPath(pathName);
+    if (result.ret !== ERRNO_SUCCESS) {
+      fsLastErrno = result.ret;
+      return 0;
+    }
+    if (result.node.kind !== 'file') {
+      fsLastErrno = ERRNO_ISDIR;
+      return 0;
+    }
+    fsLastErrno = ERRNO_SUCCESS;
+    return fsBytesHandle(result.node.data);
+  }
+
+  function fsWritePath(pathName, data) {
+    if (!nodeFs || !nodePath) {
+      return ERRNO_ROFS;
+    }
+    const resolved = resolveHostDirectPath(pathName);
+    if (resolved.ret !== ERRNO_SUCCESS) {
+      return resolved.ret;
+    }
+    try {
+      nodeFs.writeFileSync(resolved.path, data);
+      return ERRNO_SUCCESS;
+    } catch (error) {
+      return errnoFromNodeError(error);
+    }
   }
 
   function hostOpenFlags(oflags, rightsBase, fdFlags, existed) {
@@ -1362,8 +1515,75 @@ export function createGoIvyTinyGoWasiP1(options) {
     sock_shutdown() { return ERRNO_NOSYS; },
   };
 
+  const goivyFsImport = {
+    __scratch_bytes_begin(n) {
+      return fsScratchBegin(n);
+    },
+
+    __scratch_bytes_write(h, offset, word, n) {
+      fsScratchWrite(h, offset, word, n);
+    },
+
+    read_file(pathHandle, pathLen) {
+      return fsReadPath(fsScratchString(pathHandle, pathLen));
+    },
+
+    write_file(pathHandle, pathLen, dataHandle, dataLen) {
+      const data = fsScratchBytes(dataHandle, dataLen);
+      if (!data) {
+        return fsLastErrno;
+      }
+      return fsWritePath(fsScratchString(pathHandle, pathLen), data);
+    },
+
+    stat(pathHandle, pathLen) {
+      const ret = fsStatPath(fsScratchString(pathHandle, pathLen));
+      fsLastErrno = ret;
+      return ret;
+    },
+
+    bytes_len(h) {
+      const data = fsBytes.get(h);
+      return data ? data.byteLength : 0;
+    },
+
+    bytes_word(h, offset) {
+      const data = fsBytes.get(h);
+      if (!data) {
+        return 0;
+      }
+      offset = asU32(offset);
+      let word = 0;
+      for (let i = 0; i < 4 && offset + i < data.byteLength; i += 1) {
+        word |= data[offset + i] << (8 * i);
+      }
+      return word >>> 0;
+    },
+
+    bytes_release(h) {
+      fsBytes.delete(h);
+    },
+
+    last_errno() {
+      return fsLastErrno;
+    },
+
+    last_size_lo() {
+      return Number(fsLastSize & 0xffffffffn) >>> 0;
+    },
+
+    last_size_hi() {
+      return Number((fsLastSize >> 32n) & 0xffffffffn) >>> 0;
+    },
+
+    last_is_dir() {
+      return fsLastIsDir >>> 0;
+    },
+  };
+
   return {
     wasiImport: trapSafeWasiImports(tinyGoImportsOnly(wasiImport), debug),
+    goivyFsImport,
     setInstance(wasmInstance) {
       instance = wasmInstance;
     },

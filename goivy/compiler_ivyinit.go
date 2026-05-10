@@ -9,12 +9,11 @@
 package goivy
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/glycerine/ivy/goivy/fileops"
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -51,33 +50,22 @@ func ReadParams(args []string, reg *ParameterRegistry) ([]string, error) {
 // Corresponds to Python's read_module (lines 2267-2296).
 func ReadModule(filename string, nested bool, cfg *Config) (*ParseResult, error) {
 	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
-	f, err := os.Open(filename)
+	data, err := fileops.ReadFile(filename)
 	if err != nil {
 		return nil, fmt.Errorf("not found: %s", filename)
 	}
-	defer f.Close()
 
-	reader := bufio.NewReader(f)
-
-	// Read first line (header)
-	header, err := reader.ReadString('\n')
-	if err != nil && len(header) == 0 {
+	source := string(data)
+	header, rest, hasRest := strings.Cut(source, "\n")
+	header = strings.TrimSpace(header)
+	if header == "" {
 		return nil, fmt.Errorf("empty file: %s", filename)
 	}
-	header = strings.TrimSpace(header)
 
-	// Read rest of file
 	var sb strings.Builder
 	sb.WriteByte('\n') // newline at beginning to preserve line numbers (matches Python)
-	buf := make([]byte, 4096)
-	for {
-		n, readErr := reader.Read(buf)
-		if n > 0 {
-			sb.Write(buf[:n])
-		}
-		if readErr != nil {
-			break
-		}
+	if hasRest {
+		sb.WriteString(rest)
 	}
 	s := sb.String()
 
