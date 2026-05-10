@@ -424,7 +424,13 @@ nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 	go install ./nodegold
 	time ~/go/bin/nodegold -goivy-wasm $(CURDIR)/$(GOIVY_CHECK_JS_WASM) ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
 
-# wasm-opt is from the binaryen project
+# wasm-opt is from the binaryen project.
+# we need a recent build for the flag we use,
+# wasm-opt --translate-to-exnref
+# and ubuntu 24.04's binaryen package is an old
+# version 108. It lacks the flag. Hence a source build:
+# (but homebrew on macOS did have version 129 which
+# souce is just a little after anyway).
 install-wasm-opt:
-	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make && sudo make install
+	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make -j8 && sudo make install
 
