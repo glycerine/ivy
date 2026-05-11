@@ -1,8 +1,6 @@
 package goivy
 
 import (
-	"fmt"
-
 	"github.com/glycerine/ivy/goivy/fileops"
 )
 
