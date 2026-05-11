@@ -1300,6 +1300,10 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		"-panic=print",
 		"-gc=precise",
 		"-no-debug",
+		// default goroutine stack is 64KB. this is too small. we overflow it.
+		// This is also called the "asyncify task stack" size.
+		// This is distinct from the stack-size=2MB in the linker flags.
+		"-stack-size=64MB",
 		`-ldflags`,
 		`-extldflags="--initial-memory=2147483648 --stack-first -z stack-size=2097152"`,
 	}
