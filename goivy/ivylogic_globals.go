@@ -1,9 +1,5 @@
 package goivy
 
-import (
-	"github.com/glycerine/ivy/goivy/xtracer"
-)
-
 // IsDefaultSort returns true if s is the default sort of the given signature.
 func IsDefaultSort(sig *Sig, s Sort) bool {
 	if sig == nil || sig.DefaultSort == nil {

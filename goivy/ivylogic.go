@@ -1,10 +1,6 @@
 package goivy
 
-import (
-	"fmt"
-
-	"github.com/glycerine/ivy/goivy/xtracer"
-)
+import "fmt"
 
 // SortName extracts the name from a sort.
 func IvySortName(s Sort) string {
