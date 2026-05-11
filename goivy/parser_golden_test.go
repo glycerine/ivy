@@ -1313,7 +1313,19 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		// tinygo build -stack-size=16MB: TinyGo goroutine/task stack.
 		// wasm-ld -z stack-size=2097152: linker-defined wasm stack / __stack_pointer."
 		//
-		// ...so we make it big:
+		// Critical Files
+		//
+		// ~/go/src/github.com/tinygo-org/tinygo/targets/wasm.json:13
+		// Purpose: Confirms 64 KB default
+		// ────────────────────────────────────────
+		// ~/go/src/github.com/tinygo-org/tinygo/src/internal/task/task_asyncify.
+		// go:65-82
+		// Purpose: The shared-buffer layout
+		// ────────────────────────────────────────
+		// ~/go/src/github.com/tinygo-org/tinygo/compileopts/config.go:218-224
+		// Purpose: How -stack-size overrides the default
+		//
+		// ...so we make it big, whiched fixed the nil pointer deref we saw:
 		"-stack-size=64MB",
 
 		`-ldflags`,
