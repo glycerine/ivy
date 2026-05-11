@@ -1296,13 +1296,16 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	goivyWasm := filepath.Join(goivyRoot, "webvue", "static", "goivy-check-tinygo-js.wasm")
 	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
 	tinygoBinary := filepath.Join("/usr", "local", "bin", "tinygo")
-	tinygoFlags := []string{"-panic=trap", "-gc=precise", "-no-debug", `-ldflags="-extldflags='--initial-memory=4294967296 --stack-first -z stack-size=2097152'"`}
+	tinygoFlags := []string{"-panic=print", "-gc=precise", "-no-debug", `-ldflags=-extldflags=--initial-memory=4294967296 --stack-first -z stack-size=2097152`}
 
 	// GOOS=js GOARCH=wasm /usr/local/bin/tinygo build -panic=trap -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-	wasmFullCmd := fmt.Sprintf("cd %v && GOOS=js GOARCH=wasm %v build %v -o %v ./cmd/goivy_check_jswasm", goivyRoot, tinygoBinary, strings.Join(tinygoFlags, " "), goivyWasm)
-	fmt.Printf("build goivy-check-tinygo-js.wasm so tinynode has an up-to-date payload: '%v'\n", wasmFullCmd)
+
 	args2 := append([]string{"build"}, tinygoFlags...)
 	args2 = append(args2, "-o", goivyWasm, "./cmd/goivy_check_jswasm")
+
+	wasmFullCmd := fmt.Sprintf("cd %v && GOOS=js GOARCH=wasm %v build %v", goivyRoot, tinygoBinary, strings.Join(args2, " "))
+	fmt.Printf("build goivy-check-tinygo-js.wasm so tinynode has an up-to-date payload: '%v'\n", wasmFullCmd)
+
 	cmd := exec.Command(tinygoBinary, args2...)
 	cmd.Dir = goivyRoot
 	cmd.Env = append(os.Environ(), "GOOS=js", "GOARCH=wasm")

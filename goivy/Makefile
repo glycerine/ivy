@@ -379,8 +379,8 @@ install-wasm-opt:
 .PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm goivy-check-js-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb nodegold FORCE tinynode
 
 webvue/static/goivy-check-tinygo-js.wasm: FORCE
-	# 2 GB memory reservation. note that 3 GB is silently rejected and only 1 MB, far too small, substituted. KEEP parser_golden_test.go tinynode_ivy_check_xtrace() rebuild in sync with the below!
-	GOOS=js GOARCH=wasm tinygo build -panic=trap -gc=precise -no-debug -ldflags="-extldflags='--initial-memory=4294967296 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
+	# KEEP parser_golden_test.go:1299 tinynode_ivy_check_xtrace() rebuild in sync with the below!
+	GOOS=js GOARCH=wasm tinygo build -panic=print -gc=precise -no-debug -ldflags="-extldflags='--initial-memory=4294967296 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
 
 #GOOS=js GOARCH=wasm tinygo build -panic=trap -gc=precise -no-debug -ldflags="-extldflags=--initial-memory=67108864" -ldflags="-extldflags=-linkerscript-stack-size=2097152" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
 
