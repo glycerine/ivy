@@ -1702,7 +1702,15 @@ func (t *TemporalModels) String() string {
 	return fmt.Sprint(t.Model) + " |= " + fmt.Sprint(t.Fmla)
 }
 func (t *TemporalModels) Canon() Canonical {
-	return Canonical(fmt.Sprintf("(temporalModels%v model:%v fmla:%v)", t.Base.canonFields(), nodeCanon(t.Model), nodeCanon(t.Fmla)))
+	var b strings.Builder
+	b.WriteString("(temporalModels")
+	b.WriteString(t.Base.canonFields())
+	b.WriteString(" model:")
+	b.WriteString(string(nodeCanon(t.Model)))
+	b.WriteString(" fmla:")
+	b.WriteString(string(nodeCanon(t.Fmla)))
+	b.WriteByte(')')
+	return Canonical(b.String())
 }
 
 func (cfg *AstConfig) NewTemporalModels(model, fmla Node) *TemporalModels {

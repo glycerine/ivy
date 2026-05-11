@@ -12,6 +12,7 @@ package goivy
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -166,14 +167,24 @@ func constSliceCanon(cs []*Const) string {
 
 // stringSliceCanon returns canonical form for []string.
 func temporalStringSliceCanon(ss []string) string {
+	var b strings.Builder
+	appendTemporalStringSliceCanon(&b, ss)
+	return b.String()
+}
+
+func appendTemporalStringSliceCanon(b *strings.Builder, ss []string) {
 	if len(ss) == 0 {
-		return "[]"
+		b.WriteString("[]")
+		return
 	}
-	parts := make([]string, len(ss))
+	b.WriteByte('[')
 	for i, s := range ss {
-		parts[i] = fmt.Sprintf("%q", s)
+		if i > 0 {
+			b.WriteByte(' ')
+		}
+		b.WriteString(strconv.Quote(s))
 	}
-	return "[" + strings.Join(parts, " ") + "]"
+	b.WriteByte(']')
 }
 
 // NormalProgram represents a normal program consisting of bindings, an
@@ -275,66 +286,103 @@ func (np *NormalProgram) Formulas() []interface{} {
 // Canon returns a canonical s-expression for the normal program.
 // Postconds map keys are sorted to keep output deterministic.
 func (np *NormalProgram) Canon() Canonical {
-	var lf string
+	var b strings.Builder
+	b.WriteString("(normalProgram")
 	if np.HasLoc {
-		lf = fmt.Sprintf(" lineno:%d", np.Loc.Line)
+		fmt.Fprintf(&b, " lineno:%d", np.Loc.Line)
 	}
-	init := "nil"
+	b.WriteString(" bindings:")
+	appendBindingSliceCanon(&b, np.Bindings)
+	b.WriteString(" init:")
 	if np.Init != nil {
-		init = string(np.Init.Canon())
+		b.WriteString(string(np.Init.Canon()))
+	} else {
+		b.WriteString("nil")
 	}
-	return Canonical(fmt.Sprintf(
-		"(normalProgram%s bindings:%s init:%s invars:%s asms:%s calls:%s postconds:%s)",
-		lf,
-		bindingSliceCanon(np.Bindings),
-		init,
-		lfSliceCanon(np.Invars),
-		lfSliceCanon(np.Asms),
-		temporalStringSliceCanon(np.Calls),
-		postcondsHashCanon(np.Postconds),
-	))
+	b.WriteString(" invars:")
+	appendLFSliceCanon(&b, np.Invars)
+	b.WriteString(" asms:")
+	appendLFSliceCanon(&b, np.Asms)
+	b.WriteString(" calls:")
+	appendTemporalStringSliceCanon(&b, np.Calls)
+	b.WriteString(" postconds:")
+	appendPostcondsHashCanon(&b, np.Postconds)
+	b.WriteByte(')')
+	return Canonical(b.String())
 }
 
 // bindingSliceCanon canonicalizes []*ActionTermBinding.
 func bindingSliceCanon(bs []*ActionTermBinding) string {
+	var b strings.Builder
+	appendBindingSliceCanon(&b, bs)
+	return b.String()
+}
+
+func appendBindingSliceCanon(b *strings.Builder, bs []*ActionTermBinding) {
 	if len(bs) == 0 {
-		return "[]"
+		b.WriteString("[]")
+		return
 	}
-	parts := make([]string, len(bs))
-	for i, b := range bs {
-		parts[i] = string(b.Canon())
+	b.WriteByte('[')
+	for i, binding := range bs {
+		if i > 0 {
+			b.WriteByte(' ')
+		}
+		b.WriteString(string(binding.Canon()))
 	}
-	return "[" + strings.Join(parts, " ") + "]"
+	b.WriteByte(']')
 }
 
 // lfSliceCanon canonicalizes []*ast.LabeledFormula.
 func lfSliceCanon(lfs []*LabeledFormula) string {
+	var b strings.Builder
+	appendLFSliceCanon(&b, lfs)
+	return b.String()
+}
+
+func appendLFSliceCanon(b *strings.Builder, lfs []*LabeledFormula) {
 	if len(lfs) == 0 {
-		return "[]"
+		b.WriteString("[]")
+		return
 	}
-	parts := make([]string, len(lfs))
+	b.WriteByte('[')
 	for i, lf := range lfs {
-		parts[i] = string(lf.Canon())
+		if i > 0 {
+			b.WriteByte(' ')
+		}
+		b.WriteString(string(lf.Canon()))
 	}
-	return "[" + strings.Join(parts, " ") + "]"
+	b.WriteByte(']')
 }
 
 // postcondsHashCanon canonicalizes map[string][]*ast.LabeledFormula
 // as "(hash "k1":[...] "k2":[...])" with keys sorted lexicographically.
 func postcondsHashCanon(m map[string][]*LabeledFormula) string {
+	var b strings.Builder
+	appendPostcondsHashCanon(&b, m)
+	return b.String()
+}
+
+func appendPostcondsHashCanon(b *strings.Builder, m map[string][]*LabeledFormula) {
 	if len(m) == 0 {
-		return "(hash)"
+		b.WriteString("(hash)")
+		return
 	}
 	keys := make([]string, 0, len(m))
 	for k := range m {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
-	parts := make([]string, 0, len(keys))
-	for _, k := range keys {
-		parts = append(parts, fmt.Sprintf("%q:%s", k, lfSliceCanon(m[k])))
+	b.WriteString("(hash ")
+	for i, k := range keys {
+		if i > 0 {
+			b.WriteByte(' ')
+		}
+		b.WriteString(strconv.Quote(k))
+		b.WriteByte(':')
+		appendLFSliceCanon(b, m[k])
 	}
-	return "(hash " + strings.Join(parts, " ") + ")"
+	b.WriteByte(')')
 }
 
 // String returns a human-readable representation of the normal program.
