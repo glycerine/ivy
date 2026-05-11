@@ -16,6 +16,10 @@ import (
 // diagnostics. It keeps the same bytes as Canon(), but it does not require the
 // whole tree to be assembled into one giant string before output can begin.
 func WriteCanon(w io.Writer, v interface{}) {
+	if isNil(v) {
+		writeString(w, "nil")
+		return
+	}
 	switch x := v.(type) {
 	case nil:
 		writeString(w, "nil")
