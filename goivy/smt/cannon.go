@@ -1,4 +1,4 @@
-//go:build !tinygo && !wasip1 && !js
+//go:build !wasip1 && !js
 
 // canon_z3.go provides a hand-rolled deterministic s-expression printer
 // for Z3 ASTs. The output is byte-identical between Go and Python (pyivy)

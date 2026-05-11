@@ -1,4 +1,4 @@
-//go:build !tinygo && !wasip1 && !js
+//go:build !wasip1 && !js
 
 // array.go provides Z3 array theory operations: ArraySort, Select, Store,
 // ConstArray, and array sort introspection.

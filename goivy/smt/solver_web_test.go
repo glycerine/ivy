@@ -1,4 +1,4 @@
-//go:build web && !tinygo && !wasip1 && (darwin || linux || windows)
+//go:build web && !wasip1 && (darwin || linux || windows)
 
 package smt
 
