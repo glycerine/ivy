@@ -1313,16 +1313,19 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	args2 := append([]string{"build"}, tinygoFlags...)
 	args2 = append(args2, "-o", goivyWasm, "./cmd/goivy_check_jswasm")
 
-	wasmFullCmd := fmt.Sprintf("cd %v && GOOS=js GOARCH=wasm %v build %v", goivyRoot, tinygoBinary, strings.Join(args2, " "))
-	fmt.Printf("build goivy-check-tinygo-js.wasm so tinynode has an up-to-date payload: '%v'\n", wasmFullCmd)
+	const forceRefreshWasm = true
+	if forceRefreshWasm {
+		wasmFullCmd := fmt.Sprintf("cd %v && GOOS=js GOARCH=wasm %v build %v", goivyRoot, tinygoBinary, strings.Join(args2, " "))
+		fmt.Printf("build goivy-check-tinygo-js.wasm so tinynode has an up-to-date payload: '%v'\n", wasmFullCmd)
 
-	cmd := exec.Command(tinygoBinary, args2...)
-	cmd.Dir = goivyRoot
-	cmd.Env = append(os.Environ(), "GOOS=js", "GOARCH=wasm")
-	if out, err := cmd.CombinedOutput(); err != nil {
-		panicf("could not run '%v'; error: '%v'; output:\n%s", wasmFullCmd, err, out)
+		cmd := exec.Command(tinygoBinary, args2...)
+		cmd.Dir = goivyRoot
+		cmd.Env = append(os.Environ(), "GOOS=js", "GOARCH=wasm")
+		if out, err := cmd.CombinedOutput(); err != nil {
+			panicf("could not run '%v'; error: '%v'; output:\n%s", wasmFullCmd, err, out)
+		}
+		fmt.Printf("done refreshing %v\n\n", goivyWasm)
 	}
-	fmt.Printf("done refreshing %v\n\n", goivyWasm)
 
 	// we will compile tinynode now to make
 	// sure it is up-to-date, and place it into the gobin directory.
