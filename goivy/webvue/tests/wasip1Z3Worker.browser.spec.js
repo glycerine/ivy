@@ -138,11 +138,6 @@ test('Big Go WASI Ivy wasm calls Z3 wasm through JavaScript in a worker', async 
         let startExitCode = null;
         let startReturned = false;
 
-        // note: tinygo is removed from the codebase.
-        //if (probe.compiler === 'tinygo' && hasInitialize) {
-        //  wasi.initialize(instance);
-        //} else 
-
         if (probe.compiler === 'biggo') {
           startExitCode = wasi.start(instance);
           startReturned = true;

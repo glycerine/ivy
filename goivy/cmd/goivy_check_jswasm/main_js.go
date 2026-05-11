@@ -5,16 +5,6 @@ package main
 // This package is the js/wasm browser entrypoint for goldweb. It must be
 // hosted with the exact Go-team wasm_exec.js matching the Go compiler version
 // that built it; goldweb serves the vendored wasm_exec-go1.25.6.js copy.
-//
-// Update/correction: now works under tinygo too, with the
-// checkMetaNULPrefix = "goivy-meta-v1\x00" parseCheckMeta()
-// helper inline to handle a tinygo NUL-delimited path when
-// the metadata string starts with that exact prefix.
-//
-// Update to the update: we no longer support tinygo at all.
-// Its garbage collection does not work, it always OOMs (runs out
-// of memory). And its js/wasm/wasip1 is a wonky hybrid with
-// no good/reliable implementation available. We tore it out.
 
 import (
 	"encoding/json"
@@ -33,8 +23,6 @@ type checkMeta struct {
 	IncludeRoot string            `json:"includeRoot"`
 	Params      map[string]string `json:"params"`
 }
-
-const checkMetaNULPrefix = "goivy-meta-v1\x00"
 
 const (
 	defaultWasmMemoryLimitBytes = int64(3 << 30)
@@ -76,7 +64,7 @@ func runGoivyCheck(spec, metaRaw string) (code int32) {
 
 	meta := checkMeta{Filename: "browser_input.ivy"}
 	if metaRaw != "" {
-		if err := parseCheckMeta(metaRaw, &meta); err != nil {
+		if err := json.Unmarshal([]byte(metaRaw), &meta); err != nil {
 			fmt.Fprintf(os.Stderr, "error: bad goivy_check metadata: %v\n", err)
 			return 1
 		}
@@ -101,43 +89,6 @@ func runGoivyCheck(spec, metaRaw string) (code int32) {
 		return 1
 	}
 	return 0
-}
-
-func parseCheckMeta(raw string, meta *checkMeta) error {
-	if strings.HasPrefix(raw, checkMetaNULPrefix) {
-		parts := strings.Split(strings.TrimPrefix(raw, checkMetaNULPrefix), "\x00")
-		for i := 0; i < len(parts); {
-			switch parts[i] {
-			case "":
-				i++
-			case "filename":
-				if i+1 >= len(parts) {
-					return fmt.Errorf("missing filename value")
-				}
-				meta.Filename = parts[i+1]
-				i += 2
-			case "include_root":
-				if i+1 >= len(parts) {
-					return fmt.Errorf("missing include_root value")
-				}
-				meta.IncludeRoot = parts[i+1]
-				i += 2
-			case "param":
-				if i+2 >= len(parts) {
-					return fmt.Errorf("missing param key/value")
-				}
-				if meta.Params == nil {
-					meta.Params = make(map[string]string)
-				}
-				meta.Params[parts[i+1]] = parts[i+2]
-				i += 3
-			default:
-				return fmt.Errorf("unknown metadata field %q", parts[i])
-			}
-		}
-		return nil
-	}
-	return json.Unmarshal([]byte(raw), meta)
 }
 
 func tuneRuntime() {
