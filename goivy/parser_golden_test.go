@@ -1335,7 +1335,7 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		"-stack-size=64MB",
 
 		`-ldflags`,
-		`-extldflags="--initial-memory=2147483648 --stack-first -z stack-size=2097152"`,
+		`-extldflags="--initial-memory=3758096384 --stack-first -z stack-size=2097152"`,
 	}
 
 	// GOOS=js GOARCH=wasm /usr/local/bin/tinygo build -panic=trap -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
