@@ -62,15 +62,23 @@ const EVENTTYPE_FD_READ = 1;
 const EVENTTYPE_FD_WRITE = 2;
 const SUBCLOCKFLAGS_SUBSCRIPTION_CLOCK_ABSTIME = 1 << 0;
 
+const RIGHTS_FD_DATASYNC = 1n << 0n;
 const RIGHTS_FD_READ = 1n << 1n;
 const RIGHTS_FD_SEEK = 1n << 2n;
 const RIGHTS_FD_FDSTAT_SET_FLAGS = 1n << 3n;
+const RIGHTS_FD_SYNC = 1n << 4n;
 const RIGHTS_FD_TELL = 1n << 5n;
 const RIGHTS_FD_WRITE = 1n << 6n;
+const RIGHTS_FD_ALLOCATE = 1n << 8n;
+const RIGHTS_PATH_CREATE_DIRECTORY = 1n << 9n;
+const RIGHTS_PATH_CREATE_FILE = 1n << 10n;
 const RIGHTS_PATH_OPEN = 1n << 13n;
 const RIGHTS_FD_READDIR = 1n << 14n;
+const RIGHTS_PATH_RENAME_SOURCE = 1n << 16n;
+const RIGHTS_PATH_RENAME_TARGET = 1n << 17n;
 const RIGHTS_PATH_FILESTAT_GET = 1n << 18n;
 const RIGHTS_FD_FILESTAT_GET = 1n << 21n;
+const RIGHTS_FD_FILESTAT_SET_SIZE = 1n << 22n;
 const RIGHTS_PATH_REMOVE_DIRECTORY = 1n << 25n;
 const RIGHTS_PATH_UNLINK_FILE = 1n << 26n;
 
@@ -78,11 +86,16 @@ const RIGHTS_STDOUT = RIGHTS_FD_WRITE | RIGHTS_FD_FDSTAT_SET_FLAGS | RIGHTS_FD_F
 const RIGHTS_FILE_READONLY = RIGHTS_FD_READ | RIGHTS_FD_SEEK | RIGHTS_FD_TELL |
   RIGHTS_FD_FDSTAT_SET_FLAGS | RIGHTS_FD_FILESTAT_GET;
 const RIGHTS_FILE_WRITEONLY = RIGHTS_FD_WRITE | RIGHTS_FD_SEEK | RIGHTS_FD_TELL |
-  RIGHTS_FD_FDSTAT_SET_FLAGS | RIGHTS_FD_FILESTAT_GET;
+  RIGHTS_FD_DATASYNC | RIGHTS_FD_SYNC | RIGHTS_FD_ALLOCATE |
+  RIGHTS_FD_FDSTAT_SET_FLAGS | RIGHTS_FD_FILESTAT_GET | RIGHTS_FD_FILESTAT_SET_SIZE;
 const RIGHTS_FILE_READWRITE = RIGHTS_FILE_READONLY | RIGHTS_FILE_WRITEONLY;
 const RIGHTS_DIR_READONLY = RIGHTS_FD_SEEK | RIGHTS_FD_FDSTAT_SET_FLAGS |
   RIGHTS_PATH_OPEN | RIGHTS_FD_READDIR | RIGHTS_PATH_FILESTAT_GET |
   RIGHTS_FD_FILESTAT_GET | RIGHTS_PATH_REMOVE_DIRECTORY | RIGHTS_PATH_UNLINK_FILE;
+const RIGHTS_DIR_READWRITE = RIGHTS_DIR_READONLY | RIGHTS_PATH_CREATE_DIRECTORY |
+  RIGHTS_PATH_CREATE_FILE | RIGHTS_PATH_RENAME_SOURCE | RIGHTS_PATH_RENAME_TARGET;
+const RIGHTS_DIR_INHERITING_READONLY = RIGHTS_FILE_READONLY | RIGHTS_DIR_READONLY;
+const RIGHTS_DIR_INHERITING_READWRITE = RIGHTS_FILE_READWRITE | RIGHTS_DIR_READWRITE;
 
 export class GoIvyTinyGoWasiProcExit extends Error {
   constructor(code) {
@@ -180,6 +193,16 @@ class OpenFd {
       return RIGHTS_DIR_READONLY;
     }
     return RIGHTS_FILE_READONLY;
+  }
+
+  rightsInheriting() {
+    if (this.kind === 'host-dir') {
+      return RIGHTS_DIR_INHERITING_READWRITE;
+    }
+    if (this.node && this.node.kind === 'dir') {
+      return RIGHTS_DIR_INHERITING_READONLY;
+    }
+    return 0n;
   }
 }
 
@@ -991,7 +1014,7 @@ export function createGoIvyTinyGoWasiP1(options) {
       }
       const v = view();
       checkedEnd(statPtr, 24, v.byteLength, 'fd_fdstat_get', 'fdstat');
-      writeFdstat(v, asU32(statPtr), f.filetype, f.flags, f.rightsBase(), f.rightsBase());
+      writeFdstat(v, asU32(statPtr), f.filetype, f.flags, f.rightsBase(), f.rightsInheriting());
       return ERRNO_SUCCESS;
     },
 
@@ -1051,10 +1074,10 @@ export function createGoIvyTinyGoWasiP1(options) {
         return ERRNO_NOTDIR;
       }
       const nameBytes = textEncoder.encode(f.preopenName);
-      if (nameBytes.byteLength < pathLen) {
+      if (asU32(pathLen) < nameBytes.byteLength) {
         return ERRNO_NAMETOOLONG;
       }
-      writeBytes(pathPtr, nameBytes.subarray(0, asU32(pathLen)), 'fd_prestat_dir_name');
+      writeBytes(pathPtr, nameBytes, 'fd_prestat_dir_name');
       return ERRNO_SUCCESS;
     },
 

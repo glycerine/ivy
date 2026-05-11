@@ -11,6 +11,9 @@ const enc = new TextEncoder();
 const dec = new TextDecoder();
 const webvueDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const goivyRoot = path.resolve(webvueDir, '..');
+const RIGHTS_FD_READ = 1n << 1n;
+const RIGHTS_FD_WRITE = 1n << 6n;
+const RIGHTS_PATH_OPEN = 1n << 13n;
 
 let tmpDirs = [];
 
@@ -134,6 +137,22 @@ describe('goivy TinyGo WASI preview1 host', () => {
     expect(wasi.wasiImport.path_filestat_get(3, 0, 1024, len, 2048)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
     expect(view.getUint8(2048 + 16)).toBe(4);
     expect(Number(view.getBigUint64(2048 + 32, true))).toBe('#lang ivy1.8\n'.length);
+
+    expect(wasi.wasiImport.fd_prestat_get(3, 3000)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    const preopenNameLen = view.getUint32(3004, true);
+    expect(preopenNameLen).toBe('/include'.length);
+    expect(wasi.wasiImport.fd_prestat_dir_name(3, 3100, 64)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    expect(dec.decode(mem.subarray(3100, 3100 + preopenNameLen))).toBe('/include');
+    expect(wasi.wasiImport.fd_prestat_dir_name(3, 3200, preopenNameLen - 1)).toBe(GOIVY_WASI_ERRNO.NAMETOOLONG);
+
+    expect(wasi.wasiImport.fd_fdstat_get(3, 3300)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    const baseRights = view.getBigUint64(3300 + 8, true);
+    const inheritingRights = view.getBigUint64(3300 + 16, true);
+    expect(baseRights & RIGHTS_PATH_OPEN).toBe(RIGHTS_PATH_OPEN);
+    expect(baseRights & RIGHTS_FD_READ).toBe(0n);
+    expect(inheritingRights & RIGHTS_FD_READ).toBe(RIGHTS_FD_READ);
+    expect(inheritingRights & RIGHTS_FD_WRITE).toBe(0n);
+
     expect(wasi.wasiImport.fd_prestat_get(4, 1024)).toBe(GOIVY_WASI_ERRNO.BADF);
   });
 
@@ -151,9 +170,17 @@ describe('goivy TinyGo WASI preview1 host', () => {
       hostPreopenName: '/',
     });
 
+    expect(wasi.wasiImport.fd_fdstat_get(4, 7000)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
+    const hostBaseRights = view.getBigUint64(7000 + 8, true);
+    const hostInheritingRights = view.getBigUint64(7000 + 16, true);
+    expect(hostBaseRights & RIGHTS_PATH_OPEN).toBe(RIGHTS_PATH_OPEN);
+    expect(hostBaseRights & RIGHTS_FD_READ).toBe(0n);
+    expect(hostInheritingRights & RIGHTS_FD_READ).toBe(RIGHTS_FD_READ);
+    expect(hostInheritingRights & RIGHTS_FD_WRITE).toBe(RIGHTS_FD_WRITE);
+
     let rel = readPath.slice(1);
     let len = putString(mem, 1024, rel);
-    let ret = wasi.wasiImport.path_open(4, 0, 1024, len, 0, 2n, 0n, 0, 2048);
+    let ret = wasi.wasiImport.path_open(4, 0, 1024, len, 0, hostInheritingRights & RIGHTS_FD_READ, hostInheritingRights, 0, 2048);
     expect(ret).toBe(GOIVY_WASI_ERRNO.SUCCESS);
     const readFd = view.getUint32(2048, true);
     expect(wasi.wasiImport.fd_filestat_get(readFd, 6000)).toBe(GOIVY_WASI_ERRNO.SUCCESS);
@@ -171,8 +198,7 @@ describe('goivy TinyGo WASI preview1 host', () => {
     len = putString(mem, 1100, rel);
     expect(wasi.wasiImport.path_filestat_get(4, 0, 1100, len, 6000)).toBe(GOIVY_WASI_ERRNO.NOENT);
     const oflagsCreateTrunc = 1 | 8;
-    const rightsFdWrite = 1n << 6n;
-    ret = wasi.wasiImport.path_open(4, 0, 1100, len, oflagsCreateTrunc, rightsFdWrite, 0n, 0, 2048);
+    ret = wasi.wasiImport.path_open(4, 0, 1100, len, oflagsCreateTrunc, hostInheritingRights & RIGHTS_FD_WRITE, hostInheritingRights, 0, 2048);
     expect(ret).toBe(GOIVY_WASI_ERRNO.SUCCESS);
     const writeFd = view.getUint32(2048, true);
 
