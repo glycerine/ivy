@@ -1300,10 +1300,22 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		"-panic=print",
 		"-gc=precise",
 		"-no-debug",
-		// default goroutine stack is 64KB. this is too small. we overflow it.
+
+		// TinyGo's default goroutine stack is 64KB. This is too small.
+		// We overflow it almost immediately printing s-expressions.
 		// This is also called the "asyncify task stack" size.
 		// This is distinct from the stack-size=2MB in the linker flags.
+		//
+		// commentary:
+		// "The confusing part is that both names say “stack size”,
+		// but they belong to different layers:
+		//
+		// tinygo build -stack-size=16MB: TinyGo goroutine/task stack.
+		// wasm-ld -z stack-size=2097152: linker-defined wasm stack / __stack_pointer."
+		//
+		// ...so we make it big:
 		"-stack-size=64MB",
+
 		`-ldflags`,
 		`-extldflags="--initial-memory=2147483648 --stack-first -z stack-size=2097152"`,
 	}
@@ -1313,7 +1325,8 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	args2 := append([]string{"build"}, tinygoFlags...)
 	args2 = append(args2, "-o", goivyWasm, "./cmd/goivy_check_jswasm")
 
-	const forceRefreshWasm = true
+	//const forceRefreshWasm = true
+	const forceRefreshWasm = false
 	if forceRefreshWasm {
 		wasmFullCmd := fmt.Sprintf("cd %v && GOOS=js GOARCH=wasm %v build %v", goivyRoot, tinygoBinary, strings.Join(args2, " "))
 		fmt.Printf("build goivy-check-tinygo-js.wasm so tinynode has an up-to-date payload: '%v'\n", wasmFullCmd)
@@ -1351,7 +1364,7 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	target := filepath.Join(gobin, "tinynode")
 	doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", tinynodeCmdDir, goBinary, target)
 	fmt.Printf("build tinynode so we know it is up to date: '%v'\n", doFullCmd)
-	cmd = exec.Command(goBinary, "build", "-o", target)
+	cmd := exec.Command(goBinary, "build", "-o", target)
 	cmd.Dir = tinynodeCmdDir
 	err = cmd.Run()
 	if err != nil {
