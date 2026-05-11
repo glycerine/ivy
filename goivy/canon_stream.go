@@ -608,7 +608,7 @@ func writeAstNodeCanon(w io.Writer, n Node) {
 		writeString(w, "(app")
 		writeString(w, x.Base.canonFields())
 		writeString(w, " rep:")
-		writeNodeCanon(w, x.Rep)
+		writeAppRepCanon(w, x.Rep)
 		writeString(w, " terms:")
 		writeNodeSliceCanon(w, x.Terms)
 		writeString(w, " aSort:")
@@ -735,6 +735,14 @@ func writeAstNodeCanon(w io.Writer, n Node) {
 	default:
 		writeString(w, string(n.Canon()))
 	}
+}
+
+func writeAppRepCanon(w io.Writer, n Node) {
+	if sym, ok := n.(*Symbol); ok {
+		writeString(w, sym.Rep)
+		return
+	}
+	writeNodeCanon(w, n)
 }
 
 func writeVariableCanon(w io.Writer, v *Variable) {
