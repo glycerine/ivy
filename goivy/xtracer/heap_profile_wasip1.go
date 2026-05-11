@@ -1,4 +1,4 @@
-//go:build !xtracer_off && wasip1
+//go:build !xtracer_off && (wasm || wasip1)
 
 package xtracer
 
