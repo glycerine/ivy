@@ -1305,7 +1305,9 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	tinygoFlags := []string{
 		"-panic=print",
 		//"-gc=precise", // oom errors
-		"-gc=boehm", // so try this instead
+		//"-gc=boehm", // so try this instead
+		// trying the default 'no gc=' setting.
+
 		"-no-debug",
 
 		// TinyGo's default goroutine stack is 64KB. This is too small.
