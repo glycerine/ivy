@@ -348,7 +348,7 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 	// Diagnostic: dump all axioms via Canon() for golden comparison
 	xtracer.Trace("l2s.l2sTacticInt axiomDump nAxioms=%d", len(pc.GetAxioms()))
 	for idx, ax := range pc.GetAxioms() {
-		xtracer.Trace("l2s.l2sTacticInt axiomDump[%d] HASH canon=%v", idx, ax.Canon())
+		xtraceParts("l2s.l2sTacticInt axiomDump[", idx, "] HASH canon=", canonPart(ax))
 	}
 
 	// Diagnostic: dump metadata for each axiom to diagnose assumed_gprops filtering
@@ -371,7 +371,7 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 					if g, ok := f.(*LogicGlobally); ok {
 						assumedGprops = append(assumedGprops, ax)
 						cloned := ax.Clone([]Node{ax.Label, g.Body}).(*LabeledFormula)
-						xtracer.Trace("l2s.l2sTacticInt assumedGprop HASH canon=%v", cloned.Canon())
+						xtraceParts("l2s.l2sTacticInt assumedGprop HASH canon=", canonPart(cloned))
 						model.Asms = append(model.Asms, cloned)
 					}
 				}
@@ -436,7 +436,7 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 		//         labeled = label_temporal(compiled, proof_label)
 		//         invars.append(labeled)
 		for idx, inv := range tacticInvars {
-			xtracer.Trace("l2s.l2sTacticInt compileInvar[%d] pre-compile HASH canon=%v", idx, inv.Canon())
+			xtraceParts("l2s.l2sTacticInt compileInvar[", idx, "] pre-compile HASH canon=", canonPart(inv))
 			vocab := GoalVocab(goal)
 			compiledLF := CompileExprVocabExtLF(inv, vocab, m)
 			if compiledLF == nil {
@@ -444,7 +444,7 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 				continue
 			}
 			labeled := LabelTemporalNode(compiledLF, proofLabel).(*LabeledFormula)
-			xtracer.Trace("l2s.l2sTacticInt compileInvar[%d] post-compile HASH canon=%v", idx, labeled.Canon())
+			xtraceParts("l2s.l2sTacticInt compileInvar[", idx, "] post-compile HASH canon=", canonPart(labeled))
 			invars = append(invars, labeled)
 		}
 	} else {
@@ -541,15 +541,15 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 		}
 		for i, inv := range model.Invars {
 			ResetRtrDepth()
-			xtracer.Trace("l2s.modPass clone invar[%d] ENTER HASH canon=%v", i, inv.Canon())
+			xtraceParts("l2s.modPass clone invar[", i, "] ENTER HASH canon=", canonPart(inv))
 			model.Invars[i] = transform(inv).(*LabeledFormula)
-			xtracer.Trace("l2s.modPass clone invar[%d] EXIT HASH canon=%v", i, model.Invars[i].Canon())
+			xtraceParts("l2s.modPass clone invar[", i, "] EXIT HASH canon=", canonPart(model.Invars[i]))
 		}
 		for i, asm := range model.Asms {
 			ResetRtrDepth()
-			xtracer.Trace("l2s.modPass clone asm[%d] ENTER HASH canon=%v", i, asm.Canon())
+			xtraceParts("l2s.modPass clone asm[", i, "] ENTER HASH canon=", canonPart(asm))
 			model.Asms[i] = transform(asm).(*LabeledFormula)
-			xtracer.Trace("l2s.modPass clone asm[%d] EXIT HASH canon=%v", i, model.Asms[i].Canon())
+			xtraceParts("l2s.modPass clone asm[", i, "] EXIT HASH canon=", canonPart(model.Asms[i]))
 		}
 		for i, b := range model.Bindings {
 			ResetRtrDepth()
@@ -573,9 +573,9 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 				continue
 			}
 			ResetRtrDepth()
-			xtracer.Trace("l2s.modPass clone prem[%d] ENTER HASH canon=%v", i, lf.Canon())
+			xtraceParts("l2s.modPass clone prem[", i, "] ENTER HASH canon=", canonPart(lf))
 			prems[i] = transform(lf).(*LabeledFormula)
-			xtracer.Trace("l2s.modPass clone prem[%d] EXIT HASH canon=%v", i, prems[i].(*LabeledFormula).Canon())
+			xtraceParts("l2s.modPass clone prem[", i, "] EXIT HASH canon=", canonPart(prems[i].(*LabeledFormula)))
 		}
 		if xtracer.Enabled {
 			nPropPrems := 0

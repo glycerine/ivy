@@ -388,14 +388,14 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 				transformName, len(model.Invars), len(model.Asms), len(model.Bindings), len(prems), nPropPrems, len(postconds))
 		}
 		for i, inv := range model.Invars {
-			xtracer.Trace("ranking.modPass clone invar[%d] ENTER HASH canon=%v", i, inv.Canon())
+			xtraceParts("ranking.modPass clone invar[", i, "] ENTER HASH canon=", canonPart(inv))
 			model.Invars[i] = transform(inv).(*LabeledFormula)
-			xtracer.Trace("ranking.modPass clone invar[%d] EXIT HASH canon=%v", i, model.Invars[i].Canon())
+			xtraceParts("ranking.modPass clone invar[", i, "] EXIT HASH canon=", canonPart(model.Invars[i]))
 		}
 		for i, asm := range model.Asms {
-			xtracer.Trace("ranking.modPass clone asm[%d] ENTER HASH canon=%v", i, asm.Canon())
+			xtraceParts("ranking.modPass clone asm[", i, "] ENTER HASH canon=", canonPart(asm))
 			model.Asms[i] = transform(asm).(*LabeledFormula)
-			xtracer.Trace("ranking.modPass clone asm[%d] EXIT HASH canon=%v", i, model.Asms[i].Canon())
+			xtraceParts("ranking.modPass clone asm[", i, "] EXIT HASH canon=", canonPart(model.Asms[i]))
 		}
 		for i, b := range model.Bindings {
 			xtracer.Trace("ranking.modPass clone binding[%d] ENTER name=%s", i, b.Name)
@@ -416,15 +416,15 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 			if !ok || !GoalIsProperty(lf) {
 				continue
 			}
-			xtracer.Trace("ranking.modPass clone prem[%d] ENTER HASH canon=%v", i, lf.Canon())
+			xtraceParts("ranking.modPass clone prem[", i, "] ENTER HASH canon=", canonPart(lf))
 			prems[i] = transform(lf).(*LabeledFormula)
-			xtracer.Trace("ranking.modPass clone prem[%d] EXIT HASH canon=%v", i, prems[i].(*LabeledFormula).Canon())
+			xtraceParts("ranking.modPass clone prem[", i, "] EXIT HASH canon=", canonPart(prems[i].(*LabeledFormula)))
 		}
 		// Ranking-specific: also transform postconds
 		for i, pc := range postconds {
-			xtracer.Trace("ranking.modPass clone postcond[%d] ENTER HASH canon=%v", i, pc.Canon())
+			xtraceParts("ranking.modPass clone postcond[", i, "] ENTER HASH canon=", canonPart(pc))
 			postconds[i] = transform(pc).(*LabeledFormula)
-			xtracer.Trace("ranking.modPass clone postcond[%d] EXIT HASH canon=%v", i, postconds[i].Canon())
+			xtraceParts("ranking.modPass clone postcond[", i, "] EXIT HASH canon=", canonPart(postconds[i]))
 		}
 		if xtracer.Enabled {
 			nPropPrems := 0

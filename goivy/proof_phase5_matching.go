@@ -77,11 +77,10 @@ func CompileExprVocab(expr Node, vocab *Vocab, mod *Module) Expr {
 		for _, v := range vocab.Variables {
 			vocabStrs = append(vocabStrs, fmt.Sprintf("%s:%s", v.Name, v.VSort))
 		}
-		xtracer.Trace("proof.CompileExprVocab EXIT sortInferErr=%v vocabVars=[%s] HASH canon=%v",
-			err, strings.Join(vocabStrs, ","), compiled.Canon())
+		xtraceParts("proof.CompileExprVocab EXIT sortInferErr=", err, " vocabVars=[", strings.Join(vocabStrs, ","), "] HASH canon=", canonPart(compiled))
 		return compiled // return without sort inference on error
 	}
-	xtracer.Trace("proof.CompileExprVocab EXIT HASH canon=%v", inferred[0].Canon())
+	xtraceParts("proof.CompileExprVocab EXIT HASH canon=", canonPart(inferred[0]))
 	return inferred[0]
 }
 
@@ -1020,7 +1019,7 @@ func ApplyMatchAlt(match map[NodeKey]Expr, fmla Expr, env map[NodeKey]bool) Expr
 	}
 	result := applyMatchAltRec(match, fmla, env)
 	if result != nil {
-		xtracer.Trace("proof.ApplyMatchAlt EXIT HASH canon=%v", result.Canon())
+		xtraceParts("proof.ApplyMatchAlt EXIT HASH canon=", canonPart(result))
 	} else {
 		xtracer.Trace("proof.ApplyMatchAlt EXIT resultNil")
 	}
@@ -1510,7 +1509,7 @@ func ApplyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFor
 		newConc = rawConc
 	}
 	result := CloneGoalPreserveID(cfg, goal, newPrems, newConc)
-	xtracer.Trace("proof.ApplyMatchGoalNode EXIT HASH canon=%v", result.Canon())
+	xtraceParts("proof.ApplyMatchGoalNode EXIT HASH canon=", canonPart(result))
 	return result
 }
 
@@ -1592,7 +1591,7 @@ func ApplyMatchGoalNodeNonAlt(cfg *AstConfig, match map[NodeKey]Expr, goal *Labe
 		newConc = rawConc
 	}
 	result := CloneGoalPreserveID(cfg, goal, newPrems, newConc)
-	xtracer.Trace("proof.ApplyMatchGoalNodeNonAlt EXIT HASH canon=%v", result.Canon())
+	xtraceParts("proof.ApplyMatchGoalNodeNonAlt EXIT HASH canon=", canonPart(result))
 	return result
 }
 
@@ -1623,7 +1622,7 @@ func CompileWitnessList(proof Node, goal *LabeledFormula, mod *Module) []Expr {
 	for i, arg := range proof.Args() {
 		compiled := CompileExprVocab(arg, vocab, mod)
 		if compiled != nil {
-			xtracer.Trace("proof.CompileWitnessList arg=%d HASH canon=%v", i, compiled.Canon())
+			xtraceParts("proof.CompileWitnessList arg=", i, " HASH canon=", canonPart(compiled))
 			result = append(result, compiled)
 		} else {
 			xtracer.Trace("proof.CompileWitnessList arg=%d compiledNil", i)

@@ -81,7 +81,7 @@ func (pc *ProofChecker) letTactic(decls []*LabeledFormula, proof *LetTactic) ([]
 
 	result := []*LabeledFormula{subgoal}
 	result = append(result, decls[1:]...)
-	xtracer.Trace("proof.letTactic EXIT HASH canon=%v", subgoal.Canon())
+	xtraceParts("proof.letTactic EXIT HASH canon=", canonPart(subgoal))
 	return result, nil
 }
 
@@ -189,7 +189,7 @@ func (pc *ProofChecker) assumeTactic(decls []*LabeledFormula, proof *AssumeTacti
 	}
 	rawConc = newConc
 	if concExpr, ok := rawConc.(Expr); ok {
-		xtracer.Trace("proof.assumeTactic postWitnessAst schema=%s HASH canon=%v", schemaName, concExpr.Canon())
+		xtraceParts("proof.assumeTactic postWitnessAst schema=", schemaName, " HASH canon=", canonPart(concExpr))
 	} else {
 		xtracer.Trace("proof.assumeTactic postWitnessAst schema=%s concType=%s", schemaName, TypeName(rawConc))
 	}
@@ -228,7 +228,7 @@ func (pc *ProofChecker) assumeTactic(decls []*LabeledFormula, proof *AssumeTacti
 	newGoal := GoalAddPrem(pc.astCfg(), decl, prem, proof.GetLineno())
 	result := []*LabeledFormula{newGoal}
 	result = append(result, decls[1:]...)
-	xtracer.Trace("proof.assumeTactic EXIT schema=%s HASH canon=%v", schemaName, newGoal.Canon())
+	xtraceParts("proof.assumeTactic EXIT schema=", schemaName, " HASH canon=", canonPart(newGoal))
 	return result, nil
 }
 
@@ -395,7 +395,7 @@ func (pc *ProofChecker) unfoldTactic(decls []*LabeledFormula, proof *UnfoldTacti
 	}
 
 	// Python: return [decl] + decls[1:]
-	xtracer.Trace("proof.unfoldTactic EXIT HASH canon=%v", goal.Canon())
+	xtraceParts("proof.unfoldTactic EXIT HASH canon=", canonPart(goal))
 	return append([]*LabeledFormula{goal}, decls[1:]...), nil
 }
 
@@ -710,7 +710,7 @@ func (pc *ProofChecker) functionTactic(decls []*LabeledFormula, proof *FunctionT
 	}
 
 	// Python: return [goal] + decls[1:]
-	xtracer.Trace("proof.functionTactic EXIT HASH canon=%v", goal.Canon())
+	xtraceParts("proof.functionTactic EXIT HASH canon=", canonPart(goal))
 	return append([]*LabeledFormula{goal}, decls[1:]...), nil
 }
 
@@ -729,7 +729,7 @@ func (pc *ProofChecker) witnessTactic(decls []*LabeledFormula, proof *WitnessTac
 		return nil, &ProofError{Msg: "witness tactic: goal has no conclusion"}
 	}
 	if gc := GoalConc(goal); gc != nil {
-		xtracer.Trace("proof.witnessTactic preConc HASH canon=%v", gc.Canon())
+		xtraceParts("proof.witnessTactic preConc HASH canon=", canonPart(gc))
 	}
 
 	// Python: if ia.has_temporal(proof) and not goal_is_temporal(goal): raise error
@@ -758,7 +758,7 @@ func (pc *ProofChecker) witnessTactic(decls []*LabeledFormula, proof *WitnessTac
 			return nil, &ProofError{Msg: "left-hand side of witness must be a variable"}
 		}
 		witness[Key(v)] = defn.Rhs
-		xtracer.Trace("proof.witnessTactic witnessPair key=%s rhs HASH canon=%v", string(Key(v)), defn.Rhs.Canon())
+		xtraceParts("proof.witnessTactic witnessPair key=", string(Key(v)), " rhs HASH canon=", canonPart(defn.Rhs))
 	}
 
 	if len(witness) == 0 {
@@ -776,13 +776,13 @@ func (pc *ProofChecker) witnessTactic(decls []*LabeledFormula, proof *WitnessTac
 		return nil, &ProofError{Msg: fmt.Sprintf("witness tactic: %v", err)}
 	}
 	if newConc != nil {
-		xtracer.Trace("proof.witnessTactic postWitnessAst HASH canon=%v", newConc.Canon())
+		xtraceParts("proof.witnessTactic postWitnessAst HASH canon=", canonPart(newConc))
 	}
 
 	// Python: prems = goal_prems(decl); return [clone_goal(decl,prems,conc)] + decls[1:]
 	prems := GoalPrems(goal)
 	newGoal := CloneGoal(pc.astCfg(), goal, prems, newConc)
-	xtracer.Trace("proof.witnessTactic EXIT HASH canon=%v", newGoal.Canon())
+	xtraceParts("proof.witnessTactic EXIT HASH canon=", canonPart(newGoal))
 	return append([]*LabeledFormula{newGoal}, decls[1:]...), nil
 }
 

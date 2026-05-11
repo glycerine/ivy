@@ -146,10 +146,10 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *NormalProgr
 	}
 
 	modPass("ReplaceTemporals", cfg.ReplaceTemporals)
-	xtracer.Trace("l2s.SharedStep1 TOPLEVEL_NotLf_START fmla HASH canon=%s", cfg.Fmla.Canon())
+	xtraceParts("l2s.SharedStep1 TOPLEVEL_NotLf_START fmla HASH canon=", canonPart(cfg.Fmla))
 	ResetRtrDepth()
 	cfg.NotLf = cfg.ReplaceTemporals(&LogicNot{Body: cfg.Fmla}).(Expr)
-	xtracer.Trace("l2s.SharedStep1 notLf HASH canon=%s", cfg.NotLf.Canon())
+	xtraceParts("l2s.SharedStep1 notLf HASH canon=", canonPart(cfg.NotLf))
 
 	// Normalize named binders
 	modPass("NormalizeNamedBinders", func(n Node) Node {
@@ -177,7 +177,7 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *NormalPr
 	}
 	for srcIdx, src := range sources {
 		for _, b := range NamedBindersAst(src) {
-			xtracer.Trace("l2s.SharedStep3 collecting binder name=%s fromSource=%d nVars=%d HASH canon=%s", b.Name, srcIdx, len(b.Variables), b.Body.Canon())
+			xtraceParts("l2s.SharedStep3 collecting binder name=", b.Name, " fromSource=", srcIdx, " nVars=", len(b.Variables), " HASH canon=", canonPart(b.Body))
 			cfg.NamedBindersConjs[b.Name] = append(cfg.NamedBindersConjs[b.Name],
 				VarBodyPair{b.Variables, b.Body})
 		}
@@ -280,10 +280,10 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *NormalPr
 	cfg.ToWait = cfg.NamedBindersConjs["l2s_w"]
 	cfg.ToSave = cfg.NamedBindersConjs["l2s_s"]
 	for i, vb := range cfg.ToWait {
-		xtracer.Trace("l2s.SharedStep3 toWait[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+		xtraceParts("l2s.SharedStep3 toWait[", i, "] nVars=", len(vb.Vars), " HASH canon=", canonPart(vb.Body))
 	}
 	for i, vb := range cfg.ToSave {
-		xtracer.Trace("l2s.SharedStep3 toSave[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+		xtraceParts("l2s.SharedStep3 toSave[", i, "] nVars=", len(vb.Vars), " HASH canon=", canonPart(vb.Body))
 	}
 }
 
@@ -293,7 +293,7 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 	// save_state actions
 	cfg.SaveState = nil
 	for i, vb := range cfg.ToSave {
-		xtracer.Trace("l2s.SharedBuildSaveAndWait saveState[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+		xtraceParts("l2s.SharedBuildSaveAndWait saveState[", i, "] nVars=", len(vb.Vars), " HASH canon=", canonPart(vb.Body))
 		lhs := applyNB(l2sS(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
 		cfg.SaveState = append(cfg.SaveState, setLineno(NewAssignAction(lhs, vb.Body), cfg.Lineno))
 	}
@@ -302,14 +302,14 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 	cfg.DoneWaiting = nil
 	for i, vb := range cfg.ToWait {
 		inner := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
-		xtracer.Trace("l2s.SharedBuildSaveAndWait doneWaiting[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), inner.Canon())
+		xtraceParts("l2s.SharedBuildSaveAndWait doneWaiting[", i, "] nVars=", len(vb.Vars), " HASH canon=", canonPart(inner))
 		cfg.DoneWaiting = append(cfg.DoneWaiting, forall(vb.Vars, &LogicNot{Body: inner}))
 	}
 
 	// reset_w actions
 	cfg.ResetW = nil
 	for i, vb := range cfg.ToWait {
-		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] nVars=%d body HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+		xtraceParts("l2s.SharedBuildSaveAndWait resetW[", i, "] nVars=", len(vb.Vars), " body HASH canon=", canonPart(vb.Body))
 		lhs := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
 		var conjuncts []Expr
 		for _, v := range vb.Vars {
@@ -319,12 +319,12 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 		}
 		conjuncts = append(conjuncts, &LogicNot{Body: vb.Body})
 		negatedBody := Negate(vb.Body)
-		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] negatedBody HASH canon=%s", i, negatedBody.Canon())
+		xtraceParts("l2s.SharedBuildSaveAndWait resetW[", i, "] negatedBody HASH canon=", canonPart(negatedBody))
 		preReplaceInput := &LogicNot{Body: &LogicGlobally{Environ: strPtr(cfg.ProofLabel), Body: negatedBody}}
-		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] preReplace HASH canon=%s", i, preReplaceInput.Canon())
+		xtraceParts("l2s.SharedBuildSaveAndWait resetW[", i, "] preReplace HASH canon=", canonPart(preReplaceInput))
 		ResetRtrDepth()
 		negGlob := cfg.ReplaceTemporals(preReplaceInput).(Expr)
-		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] postReplace HASH canon=%s", i, negGlob.Canon())
+		xtraceParts("l2s.SharedBuildSaveAndWait resetW[", i, "] postReplace HASH canon=", canonPart(negGlob))
 		conjuncts = append(conjuncts, negGlob)
 		cfg.ResetW = append(cfg.ResetW, setLineno(NewAssignAction(lhs, checkMakeAnd(conjuncts...)), cfg.Lineno))
 	}
@@ -349,7 +349,7 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 
 	// assume_g_axioms
 	for i, triple := range toG {
-		xtracer.Trace("l2s.SharedStep6 toG[%d] nVars=%d HASH canon=%s", i, len(triple.Vars), triple.Body.Canon())
+		xtraceParts("l2s.SharedStep6 toG[", i, "] nVars=", len(triple.Vars), " HASH canon=", canonPart(triple.Body))
 	}
 	cfg.AssumeGAxioms = nil
 	for _, triple := range toG {
@@ -415,7 +415,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 		for sym := range SymbolsIluAst(triple.Body) {
 			if c, ok := sym.(*Const); ok {
 				k := c.Sexp()
-				xtracer.Trace("l2s.SharedStep7 symprops triple[%d] sym[%d]=%s HASH canon=%s", displayTi, si, c.Name, triple.Body.Canon())
+				xtraceParts("l2s.SharedStep7 symprops triple[", displayTi, "] sym[", si, "]=", c.Name, " HASH canon=", canonPart(triple.Body))
 				symprops[k] = append(symprops[k], prop)
 
 				si++
@@ -432,7 +432,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 			if c, ok := sym.(*Const); ok {
 				k := c.Sexp()
 				if xtracer.Enabled {
-					xtracer.Trace("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, when.Body.Canon())
+					xtraceParts("l2s.SharedStep7 symwhens when[", wi, "] sym[", si, "]=", c.Name, " HASH canon=", canonPart(when.Body))
 					fmt.Printf("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s\n", wi, si, c.Name, when.Body.Canon())
 				}
 				symwhens[k] = append(symwhens[k], when)
@@ -449,7 +449,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 		for sym := range SymbolsIluAst(vb.Body) {
 			if c, ok := sym.(*Const); ok {
 				k := c.Sexp()
-				xtracer.Trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, vb.Body.Canon())
+				xtraceParts("l2s.SharedStep7 symwaits toWait[", wi, "] sym[", si, "]=", c.Name, " HASH canon=", canonPart(vb.Body))
 				symwaits[k] = append(symwaits[k], wait)
 
 				si++
@@ -578,7 +578,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 		sortedWaits := sortNamedBinderMap(waits)
 		xtracer.Trace("l2s.SharedStep7 waitEventsFunc nWaits=%d", len(sortedWaits))
 		for wi, wait := range sortedWaits {
-			xtracer.Trace("l2s.SharedStep7 waitEventsFunc wait[%d] HASH canon=%s", wi, wait.Canon())
+			xtraceParts("l2s.SharedStep7 waitEventsFunc wait[", wi, "] HASH canon=", canonPart(wait))
 			vs, t := wait.Variables, wait.Body
 			waitApp := applyNB(wait, checkVarsToNodes(vs)...)
 			rhs := &LogicAnd{Terms: []Expr{
@@ -965,7 +965,7 @@ func BuildDefnDeps(mod *Module, goalPrems ...Node) map[NodeKey][]NodeKey {
 	for di, e := range allDefnExprs {
 		// Python ivy_l2s.py:181: fml = ilg.drop_universals(defn.formula)
 		e = IvyDropUniversals(e)
-		xtracer.Trace("l2s.BuildDefnDeps modDefn[%d] HASH canon=%s", di, e.Canon())
+		xtraceParts("l2s.BuildDefnDeps modDefn[", di, "] HASH canon=", canonPart(e))
 		addEq(e)
 	}
 	// Trace the resulting defnDeps map

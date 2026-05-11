@@ -12,7 +12,7 @@ import (
 // existential prenex form.
 // If prenex is false, don't convert to prenex form.
 func SkolemizeGoal(cfg *AstConfig, goal *LabeledFormula, prenex bool) *LabeledFormula {
-	xtracer.Trace("proof.SkolemizeGoal ENTER prenex=%v label=%s HASH canon=%v", prenex, goal.LabelForTrace(), goal.Canon())
+	xtraceParts("proof.SkolemizeGoal ENTER prenex=", prenex, " label=", goal.LabelForTrace(), " HASH canon=", canonPart(goal))
 	vocab := GoalVocab(goal)
 	usedNames := make(map[string]struct{})
 	for _, s := range vocab.Symbols {
@@ -81,7 +81,7 @@ func SkolemizeGoal(cfg *AstConfig, goal *LabeledFormula, prenex bool) *LabeledFo
 	}
 	newPrems = append(newPrems, GoalPrems(goal)...)
 	result := CloneGoal(cfg, goal, newPrems, GoalConc(goal))
-	xtracer.Trace("proof.SkolemizeGoal EXIT nskfuns=%d HASH canon=%v", len(skfuns), result.Canon())
+	xtraceParts("proof.SkolemizeGoal EXIT nskfuns=", len(skfuns), " HASH canon=", canonPart(result))
 	return result
 }
 
@@ -332,7 +332,7 @@ func varSubstGoal(cfg *AstConfig, goal *LabeledFormula, subs map[NodeKey]Expr) *
 		return result
 	})
 	result := CloneGoal(cfg, goal, newPrems, newConc)
-	xtracer.Trace("proof.varSubstGoal EXIT HASH canon=%v", result.Canon())
+	xtraceParts("proof.varSubstGoal EXIT HASH canon=", canonPart(result))
 	return result
 }
 

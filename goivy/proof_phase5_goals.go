@@ -799,7 +799,7 @@ func GoalApplyToPrem(cfg *AstConfig, goal *LabeledFormula, premName string, fn f
 				copy(newPrems, prems)
 				newPrems[i] = fn(lf)
 				result := CloneGoal(cfg, goal, newPrems, GoalConc(goal))
-				xtracer.Trace("proof.GoalApplyToPrem EXIT HASH canon=%v", result.Canon())
+				xtraceParts("proof.GoalApplyToPrem EXIT HASH canon=", canonPart(result))
 				return result
 			}
 		}
@@ -884,7 +884,7 @@ func CloseUnmatched(cfg *AstConfig, goal *LabeledFormula, match map[NodeKey]Expr
 		finalConc = rawConc
 	}
 	result := CloneGoal(cfg, goal, GoalPrems(goal), finalConc)
-	xtracer.Trace("proof.CloseUnmatched EXIT ntoClose=%d HASH canon=%v", len(toClose), result.Canon())
+	xtraceParts("proof.CloseUnmatched EXIT ntoClose=", len(toClose), " HASH canon=", canonPart(result))
 	return result
 }
 

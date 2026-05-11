@@ -64,7 +64,7 @@ func (a *LogicSequence) GetAstConfig() *AstConfig { return nil }
 func (a *LogicSequence) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(sequence%v stmts:%v)", a.CanonFields(), sliceSexp(a.Elems)))
 }
-func (a *LogicSequence) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicSequence) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 2. AssumeAction
@@ -98,7 +98,7 @@ func (a *LogicAssumeAction) Sexp() NodeKey {
 	}
 	return NodeKey(fmt.Sprintf("(assumeAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicAssumeAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicAssumeAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 3. AssertAction
@@ -139,7 +139,7 @@ func (a *LogicAssertAction) Sexp() NodeKey {
 	}
 	return NodeKey(fmt.Sprintf("(assertAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicAssertAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicAssertAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 4. RequiresAction
@@ -183,7 +183,7 @@ func (a *LogicRequiresAction) Sexp() NodeKey {
 	}
 	return NodeKey(fmt.Sprintf("(requiresAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicRequiresAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicRequiresAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 5. EnsuresAction
@@ -227,7 +227,7 @@ func (a *LogicEnsuresAction) Sexp() NodeKey {
 	}
 	return NodeKey(fmt.Sprintf("(ensuresAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicEnsuresAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicEnsuresAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 6. AssignAction
@@ -270,7 +270,7 @@ func (a *LogicAssignAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicAssignAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(assignAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicAssignAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicAssignAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 7. HavocAction
@@ -304,7 +304,7 @@ func (a *LogicHavocAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicHavocAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(havocAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicHavocAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicHavocAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 8. SetAction
@@ -321,7 +321,7 @@ func (a *LogicSetAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicSetAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(setAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicSetAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicSetAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 9. IfAction
@@ -375,7 +375,7 @@ func (a *LogicIfAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicIfAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(ifAction%v cond:%v then:%v else:%v)", a.CanonFields(), actionsExprSexp(a.Cond), actionsExprSexp(a.ThenBody), actionsExprSexp(a.ElseBody)))
 }
-func (a *LogicIfAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicIfAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 10. WhileAction
@@ -425,7 +425,7 @@ func (a *LogicWhileAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicWhileAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(whileAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicWhileAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicWhileAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 11. ChoiceAction
@@ -442,7 +442,7 @@ func (a *LogicChoiceAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicChoiceAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(choiceAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
 }
-func (a *LogicChoiceAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicChoiceAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 12. CallAction
@@ -530,7 +530,7 @@ func (a *LogicCallAction) Sexp() NodeKey {
 	}
 	return NodeKey(fmt.Sprintf("(callAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
 }
-func (a *LogicCallAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicCallAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 13. LocalAction
@@ -547,7 +547,7 @@ func (a *LogicLocalAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicLocalAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(localAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
 }
-func (a *LogicLocalAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicLocalAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 14. LetAction
@@ -564,7 +564,7 @@ func (a *LogicLetAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicLetAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(letAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicLetAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicLetAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 15. BindOldsAction
@@ -581,7 +581,7 @@ func (a *LogicBindOldsAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicBindOldsAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(bindOldsAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicBindOldsAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicBindOldsAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 16. NativeAction
@@ -598,7 +598,7 @@ func (a *LogicNativeAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicNativeAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(nativeAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicNativeAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicNativeAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 17. CrashAction
@@ -615,7 +615,7 @@ func (a *LogicCrashAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicCrashAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(crashAction%v declArgs:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicCrashAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicCrashAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 18. ThunkAction
@@ -632,7 +632,7 @@ func (a *LogicThunkAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicThunkAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(thunkAction%v children:%v)", a.CanonFields(), sliceSexp(a.Elems)))
 }
-func (a *LogicThunkAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicThunkAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 19. EnvAction
@@ -649,7 +649,7 @@ func (a *LogicEnvAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicEnvAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(envAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
 }
-func (a *LogicEnvAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicEnvAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 20. ReturnAction
@@ -664,7 +664,7 @@ func (a *ReturnAction) NodeSort() Sort           { return ActionS }
 func (a *ReturnAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *ReturnAction) GetAstConfig() *AstConfig { return nil }
 func (a *ReturnAction) Sexp() NodeKey            { return "(returnAction)" }
-func (a *ReturnAction) Canon() Canonical         { return Canonical(a.Sexp()) }
+func (a *ReturnAction) Canon() Canonical         { return actionCanon(a) }
 
 // =========================================================================
 // 21. IgnoreAction
@@ -679,7 +679,7 @@ func (a *IgnoreAction) NodeSort() Sort           { return ActionS }
 func (a *IgnoreAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *IgnoreAction) GetAstConfig() *AstConfig { return nil }
 func (a *IgnoreAction) Sexp() NodeKey            { return "(ignoreAction)" }
-func (a *IgnoreAction) Canon() Canonical         { return Canonical(a.Sexp()) }
+func (a *IgnoreAction) Canon() Canonical         { return actionCanon(a) }
 
 // =========================================================================
 // 22. SubgoalAction
@@ -723,7 +723,7 @@ func (a *LogicSubgoalAction) Sexp() NodeKey {
 	}
 	return NodeKey(fmt.Sprintf("(subgoalAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicSubgoalAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicSubgoalAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 23. AssignFieldAction
@@ -740,7 +740,7 @@ func (a *LogicAssignFieldAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicAssignFieldAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(assignFieldAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicAssignFieldAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicAssignFieldAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 24. NullFieldAction
@@ -757,7 +757,7 @@ func (a *LogicNullFieldAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicNullFieldAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(nullFieldAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicNullFieldAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicNullFieldAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 25. CopyFieldAction
@@ -774,7 +774,7 @@ func (a *LogicCopyFieldAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicCopyFieldAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(copyFieldAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicCopyFieldAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicCopyFieldAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 26. Ranking
@@ -791,7 +791,7 @@ func (a *LogicRanking) GetAstConfig() *AstConfig { return nil }
 func (a *LogicRanking) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(ranking%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicRanking) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicRanking) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 27. PatternBasedUpdate
@@ -806,7 +806,7 @@ func (a *LogicPatternBasedUpdate) NodeSort() Sort           { return ActionS }
 func (a *LogicPatternBasedUpdate) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicPatternBasedUpdate) GetAstConfig() *AstConfig { return nil }
 func (a *LogicPatternBasedUpdate) Sexp() NodeKey            { return "(patternBasedUpdate)" }
-func (a *LogicPatternBasedUpdate) Canon() Canonical         { return Canonical(a.Sexp()) }
+func (a *LogicPatternBasedUpdate) Canon() Canonical         { return actionCanon(a) }
 
 // =========================================================================
 // 28. NamedUpdate
@@ -825,7 +825,7 @@ func (a *NamedUpdate) Sexp() NodeKey {
 	// Match Python's format: (NamedUpdate sym:"<name>")
 	return NodeKey(fmt.Sprintf("(NamedUpdate sym:\"%s\")", a.UpdateName))
 }
-func (a *NamedUpdate) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *NamedUpdate) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 29. InstantiateAction
@@ -842,7 +842,7 @@ func (a *LogicInstantiateAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicInstantiateAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(instantiateAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicInstantiateAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicInstantiateAction) Canon() Canonical { return actionCanon(a) }
 
 // =========================================================================
 // 30. DebugAction
@@ -859,4 +859,4 @@ func (a *LogicDebugAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicDebugAction) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(debugAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
-func (a *LogicDebugAction) Canon() Canonical { return Canonical(a.Sexp()) }
+func (a *LogicDebugAction) Canon() Canonical { return actionCanon(a) }

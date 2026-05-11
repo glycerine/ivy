@@ -2,6 +2,7 @@ package goivy
 
 import (
 	"fmt"
+	"io"
 )
 
 // Canon() implementations for all declaration types defined in decl.go.
@@ -9,15 +10,7 @@ import (
 // --- LabeledFormula ---
 
 func (lf *LabeledFormula) Canon() Canonical {
-	// python vs go different id, so show :0 for now. no lineno either
-	//return iu.Canonical(fmt.Sprintf("(labeledFormula%v label:%v formula:%v id:%d lineno:%d temporal:%v explicit:%v isDefinition:%v assumed:%v unprovable:%v)",
-	return Canonical(fmt.Sprintf("(labeledFormula label:%v formula:%v id:%d temporal:%v explicit:%v isDefinition:%v assumed:%v unprovable:%v)",
-		//lf.Base.canonFields(),
-		nodeCanon(lf.Label), nodeCanon(lf.Formula),
-		lf.ID,
-		//lf.Lineno,
-		//0, // faked out zero lineno
-		boolPtrCanon(lf.Temporal), lf.Explicit, lf.IsDefinition, lf.Assumed, lf.Unprovable))
+	return canonString(func(w io.Writer) { writeLabeledFormulaCanon(w, lf) })
 }
 
 // --- DeclBase-only types (no extra fields beyond DeclBase) ---

@@ -749,8 +749,8 @@ func ComposeUpdates(u1 *Update, axioms *Clauses, u2 *Update) *Update {
 
 	if xtracer.Enabled {
 		xtracer.Trace("transrel.ComposeUpdates result nTRfmlas=%d nTRdefs=%d nPREfmlas=%d nPREdefs=%d", len(newTR.Fmlas), len(newTR.Defs), len(newPre.Fmlas), len(newPre.Defs))
-		xtracer.Trace("transrel.ComposeUpdates result HASH canon= TR=%s", newTR.Canon())
-		xtracer.Trace("transrel.ComposeUpdates result HASH canon= Pre=%s", newPre.Canon())
+		xtraceParts("transrel.ComposeUpdates result HASH canon= TR=", canonPart(newTR))
+		xtraceParts("transrel.ComposeUpdates result HASH canon= Pre=", canonPart(newPre))
 	}
 
 	return &Update{
@@ -886,10 +886,10 @@ func iteUpdate(cond Expr, u1, u2 *Update, op func(*Const) *Const, axioms *Clause
 	p2 := AndClausesTyped(u2.Pre, df21)
 
 	if xtracer.Enabled {
-		xtracer.Trace("transrel.iteUpdate df12 HASH canon= %s", df12.Canon())
-		xtracer.Trace("transrel.iteUpdate df21 HASH canon= %s", df21.Canon())
-		xtracer.Trace("transrel.iteUpdate c1 HASH canon= %s", c1.Canon())
-		xtracer.Trace("transrel.iteUpdate c2 HASH canon= %s", c2.Canon())
+		xtraceParts("transrel.iteUpdate df12 HASH canon= ", canonPart(df12))
+		xtraceParts("transrel.iteUpdate df21 HASH canon= ", canonPart(df21))
+		xtraceParts("transrel.iteUpdate c1 HASH canon= ", canonPart(c1))
+		xtraceParts("transrel.iteUpdate c2 HASH canon= ", canonPart(c2))
 	}
 
 	modAll := u1.ModifiedAll || u2.ModifiedAll
@@ -987,8 +987,8 @@ func Hide(inputSyms []*Const, u *Update) *Update {
 
 	if xtracer.Enabled {
 		xtracer.Trace("transrel.Hide result nTRdefs=%d nPREdefs=%d", len(newTR.Defs), len(newPre.Defs))
-		xtracer.Trace("transrel.Hide result HASH canon= newTR=%s", newTR.Canon())
-		xtracer.Trace("transrel.Hide result HASH canon= newPre=%s", newPre.Canon())
+		xtraceParts("transrel.Hide result HASH canon= newTR=", canonPart(newTR))
+		xtraceParts("transrel.Hide result HASH canon= newPre=", canonPart(newPre))
 	}
 
 	return &Update{
@@ -1972,7 +1972,7 @@ func FrameDefConst(sym *Const, op func(*Const) *Const) *IvyDefinition {
 	rhs := SymInst(sym)
 	def := NewIvyDefinition(lhs, rhs)
 	if xtracer.Enabled {
-		xtracer.Trace("transrel.FrameDefConst HASH canon= sym=%v sort=%v lhsSort=%v def=%v", sym.Name, sym.CSort, lhs.NodeSort(), def.Canon())
+		xtraceParts("transrel.FrameDefConst HASH canon= sym=", sym.Name, " sort=", sym.CSort, " lhsSort=", lhs.NodeSort(), " def=", canonPart(def))
 	}
 	return def
 }

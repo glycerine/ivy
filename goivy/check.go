@@ -261,7 +261,7 @@ func CheckTemporals(mod *Module) error {
 	// Diagnostic: dump axioms fed to the temporal proof checker
 	xtracer.Trace("check.CheckTemporals axiomDump nAxioms=%d nLabeledAxioms=%d nAssumedInvs=%d", len(pcAxioms), len(mod.LabeledAxioms), len(mod.AssumedInvs))
 	for idx, ax := range pcAxioms {
-		xtracer.Trace("check.CheckTemporals axiomDump[%d] HASH canon=%v", idx, ax.Canon())
+		xtraceParts("check.CheckTemporals axiomDump[", idx, "] HASH canon=", canonPart(ax))
 	}
 
 	pc := NewProofChecker(mod.Cfg.ProofCfg, mod, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))

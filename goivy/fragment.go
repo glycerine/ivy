@@ -823,7 +823,7 @@ func CheckFEU(
 				i, a.from.ID, fromRoot, a.to.ID, toRoot, fragmentExprSexp(a.fmla), a.argIdx) // a.lineno,
 		}
 
-		xtracer.Trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s", c.Canon())
+		xtraceParts("fragment/fragment.go CheckFEU after createStratMap HASH canon= ", canonPart(c))
 	}
 
 	// Check for cycles — always call reportCycle to match Python's
@@ -1022,15 +1022,15 @@ func CheckFragment(m *Module, precondsOnly bool) error {
 	if xtracer.Enabled {
 		xtracer.Trace("fragment.CheckFragment HASH canon= assumes count=%d", len(assumes))
 		for i, a := range assumes {
-			xtracer.Trace("fragment.CheckFragment HASH canon= assume[%d]=%s", i, a.fmla.Canon())
+			xtraceParts("fragment.CheckFragment HASH canon= assume[", i, "]=", canonPart(a.fmla))
 		}
 		xtracer.Trace("fragment.CheckFragment HASH canon= asserts count=%d", len(asserts))
 		for i, a := range asserts {
-			xtracer.Trace("fragment.CheckFragment HASH canon= assert[%d]=%s", i, a.fmla.Canon())
+			xtraceParts("fragment.CheckFragment HASH canon= assert[", i, "]=", canonPart(a.fmla))
 		}
 		xtracer.Trace("fragment.CheckFragment HASH canon= macros count=%d", len(macros))
 		for i, a := range macros {
-			xtracer.Trace("fragment.CheckFragment HASH canon= macro[%d]=%s", i, a.fmla.Canon())
+			xtraceParts("fragment.CheckFragment HASH canon= macro[", i, "]=", canonPart(a.fmla))
 		}
 	}
 

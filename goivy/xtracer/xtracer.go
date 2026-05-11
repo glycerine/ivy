@@ -16,6 +16,7 @@ package xtracer
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"path"
 	"runtime"
@@ -52,6 +53,7 @@ func Trace(format string, args ...interface{}) {
 
 var globalXtraceCounter int64
 var mems = &runtime.MemStats{}
+var output io.Writer = os.Stdout
 
 // Trace prints an execution trace line to stdout.
 // Format: "XTRACE: " + fmt.Sprintf(format, args...) + "\n"
@@ -59,15 +61,7 @@ func trace(format string, args ...interface{}) {
 	if suppressed {
 		return
 	}
-	if false {
-		if globalXtraceCounter%1000 == 0 {
-			runtime.ReadMemStats(mems)
-			fmt.Printf("[at trace %v] mems.HeapAlloc = %0.3f MB; HeapInuse = %0.3f MB\n", globalXtraceCounter, float64(mems.HeapAlloc)/(1<<20), float64(mems.HeapInuse)/(1<<20))
-			maybePaceGC(globalXtraceCounter, mems)
-		}
-		//maybeWriteHeapProfile(globalXtraceCounter)
-		globalXtraceCounter++
-	}
+	tracePreamble()
 
 	// replace true/false with True/False to match python
 	// and avoid spurious diffs.
@@ -90,7 +84,34 @@ func trace(format string, args ...interface{}) {
 			format = splt[0] + "\n" + fileLine(3) + ":" + splt[1]
 		}
 	}
-	fmt.Printf("XTRACE: "+format+"\n", args...)
+	fmt.Fprintf(output, "XTRACE: "+format+"\n", args...)
+}
+
+// TraceWriter prints one execution trace line by writing directly to stdout.
+// The callback must write only the text after "XTRACE: " and before the final
+// newline. This is the low-allocation path for large canonicalized structures:
+// callers stream fields in canonical order instead of materializing a giant
+// string before Trace sees it.
+func TraceWriter(write func(io.Writer)) {
+	if suppressed {
+		return
+	}
+	tracePreamble()
+	io.WriteString(output, "XTRACE: ")
+	write(output)
+	io.WriteString(output, "\n")
+}
+
+func tracePreamble() {
+	if false {
+		if globalXtraceCounter%1000 == 0 {
+			runtime.ReadMemStats(mems)
+			fmt.Fprintf(output, "[at trace %v] mems.HeapAlloc = %0.3f MB; HeapInuse = %0.3f MB\n", globalXtraceCounter, float64(mems.HeapAlloc)/(1<<20), float64(mems.HeapInuse)/(1<<20))
+			maybePaceGC(globalXtraceCounter, mems)
+		}
+		//maybeWriteHeapProfile(globalXtraceCounter)
+		globalXtraceCounter++
+	}
 }
 
 func fileLine(depth int) string {

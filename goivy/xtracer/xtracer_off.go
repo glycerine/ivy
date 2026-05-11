@@ -4,6 +4,8 @@
 // The compiler inlines empty functions, so there is zero runtime cost.
 package xtracer
 
+import "io"
+
 // Enabled is false when xtracer is disabled via build tag.
 const Enabled = false
 
@@ -15,5 +17,8 @@ func Trace(format string, args ...interface{}) {}
 
 // Trace1 is a no-op when xtracer is disabled.
 func Trace1(format string, args ...interface{}) {}
+
+// TraceWriter is a no-op when xtracer is disabled.
+func TraceWriter(write func(io.Writer)) {}
 
 func NormalizeLine(line string) string { return line }

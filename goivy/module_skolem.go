@@ -267,10 +267,10 @@ func WitnessAst(pos bool, vs []*LogicVariable, witnesses map[NodeKey]Expr, fmla 
 				body = witnessExpr(bodyNode, body)
 				if len(newVars) > 0 {
 					result := CloneBinder(expr, newVars, body)
-					xtracer.Trace("ilu.witnessAst EXIT type=Quantifier nnewVars=%d HASH canon=%v", len(newVars), result.Canon())
+					xtraceParts("ilu.witnessAst EXIT type=Quantifier nnewVars=", len(newVars), " HASH canon=", canonPart(result))
 					return result, nil
 				}
-				xtracer.Trace("ilu.witnessAst EXIT type=Quantifier allSubstituted HASH canon=%v", body.Canon())
+				xtraceParts("ilu.witnessAst EXIT type=Quantifier allSubstituted HASH canon=", canonPart(body))
 				return body, nil
 			}
 		}
@@ -283,7 +283,7 @@ func WitnessAst(pos bool, vs []*LogicVariable, witnesses map[NodeKey]Expr, fmla 
 				return nil, err
 			}
 			result := CloneNode(expr, []Expr{witnessExpr(newArg, args[0])})
-			xtracer.Trace("ilu.witnessAst EXIT type=Not HASH canon=%v", result.Canon())
+			xtraceParts("ilu.witnessAst EXIT type=Not HASH canon=", canonPart(result))
 			return result, nil
 		}
 
@@ -302,7 +302,7 @@ func WitnessAst(pos bool, vs []*LogicVariable, witnesses map[NodeKey]Expr, fmla 
 				witnessExpr(newLhs, args[0]),
 				witnessExpr(newRhs, args[1]),
 			})
-			xtracer.Trace("ilu.witnessAst EXIT type=Implies HASH canon=%v", result.Canon())
+			xtraceParts("ilu.witnessAst EXIT type=Implies HASH canon=", canonPart(result))
 			return result, nil
 		}
 	}
@@ -322,7 +322,7 @@ func WitnessAst(pos bool, vs []*LogicVariable, witnesses map[NodeKey]Expr, fmla 
 		newArgs[i] = newArg
 	}
 	result := fmla.Clone(newArgs)
-	xtracer.Trace("ilu.witnessAst EXIT type=generic exprType=%s HASH canon=%v", TypeName(fmla), result.Canon())
+	xtraceParts("ilu.witnessAst EXIT type=generic exprType=", TypeName(fmla), " HASH canon=", canonPart(result))
 	return result, nil
 }
 

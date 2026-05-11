@@ -80,7 +80,7 @@ func NewProofChecker(cfg *ProofConfig, mod *Module, axioms, definitions []*Label
 	if schemata != nil {
 		for name, s := range schemata.All() {
 			norm := NormalizeGoal(pc.AstCfg, s)
-			xtracer.Trace("proof.ProofChecker.__init__.fromMod schemata.insert key='%s' value=%s", name, norm.Canon())
+			xtraceParts("proof.ProofChecker.__init__.fromMod schemata.insert key='", name, "' value=", canonPart(norm))
 			pc.Schemata.Set(name, norm)
 		}
 	}
@@ -90,7 +90,7 @@ func NewProofChecker(cfg *ProofConfig, mod *Module, axioms, definitions []*Label
 	//                 self.schemata[ax.name] = ax
 	for _, ax := range axioms {
 		if ax.Label != nil {
-			xtracer.Trace("proof.ProofChecker.__init__.axiom schemata.insert key='%s' value=%s", ax.LabelName(), ax.Canon())
+			xtraceParts("proof.ProofChecker.__init__.axiom schemata.insert key='", ax.LabelName(), "' value=", canonPart(ax))
 			pc.Schemata.Set(ax.LabelName(), ax)
 		}
 	}
@@ -152,7 +152,7 @@ func (pc *ProofChecker) AdmitAxiom(ax *LabeledFormula) {
 	norm := NormalizeGoal(pc.AstCfg, ax)
 	pc.Axioms = append(pc.Axioms, norm)
 	if ax.Label != nil {
-		xtracer.Trace("proof.ProofChecker.admit_axiom schemata.insert key='%s' value=%s", ax.LabelName(), ax.Canon())
+		xtraceParts("proof.ProofChecker.admit_axiom schemata.insert key='", ax.LabelName(), "' value=", canonPart(ax))
 		pc.Schemata.Set(ax.LabelName(), ax)
 	}
 }
@@ -168,11 +168,11 @@ func (pc *ProofChecker) AdmitAxiom(ax *LabeledFormula) {
 func (pc *ProofChecker) LookupSchema(name string, goal *LabeledFormula, errNode interface{}, close bool) (*LabeledFormula, error) {
 	xtracer.Trace("proof.LookupSchema ENTER schemaName=%s close=%v", name, close)
 	if s, ok := pc.Schemata.Get2(name); ok {
-		xtracer.Trace("proof.ProofChecker.LookupSchema schemata.lookup key='%s' found=true value=%s", name, s.Canon())
+		xtraceParts("proof.ProofChecker.LookupSchema schemata.lookup key='", name, "' found=true value=", canonPart(s))
 		if err := CheckSchemaCapture(s, goal); err != nil {
 			return nil, err
 		}
-		xtracer.Trace("proof.LookupSchema EXIT HASH canon=%s", s.Canon())
+		xtraceParts("proof.LookupSchema EXIT HASH canon=", canonPart(s))
 		return s, nil
 	}
 	xtracer.Trace("proof.ProofChecker.LookupSchema schemata.lookup key='%s' found=false", name)
@@ -188,20 +188,20 @@ func (pc *ProofChecker) LookupSchema(name string, goal *LabeledFormula, errNode 
 			if err := CheckSchemaCapture(schema, goal); err != nil {
 				return nil, err
 			}
-			xtracer.Trace("proof.LookupSchema EXIT HASH canon=%s", schema.Canon())
+			xtraceParts("proof.LookupSchema EXIT HASH canon=", canonPart(schema))
 			return schema, nil
 		}
 		// Not a *lg.Definition — return as-is
 		if err := CheckSchemaCapture(d, goal); err != nil {
 			return nil, err
 		}
-		xtracer.Trace("proof.LookupSchema EXIT HASH canon=%s", d.Canon())
+		xtraceParts("proof.LookupSchema EXIT HASH canon=", canonPart(d))
 		return d, nil
 	}
 	// Check goal premises
 	for _, pg := range GoalPremGoals(goal) {
 		if pg.LabelName() == name {
-			xtracer.Trace("proof.LookupSchema EXIT HASH canon=%s", pg.Canon())
+			xtraceParts("proof.LookupSchema EXIT HASH canon=", canonPart(pg))
 			return pg, nil
 		}
 	}
@@ -361,7 +361,7 @@ func (pc *ProofChecker) ApplyProof(goals []*LabeledFormula, proof Node) ([]*Labe
 //  4. detect_nonce_symbols
 //  5. extract subgoals
 func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantiation) ([]*LabeledFormula, error) {
-	xtracer.Trace("proof.MatchSchema ENTER goalLabel=%s HASH canon=%v", goal.LabelForTrace(), goal.Canon())
+	xtraceParts("proof.MatchSchema ENTER goalLabel=", goal.LabelForTrace(), " HASH canon=", canonPart(goal))
 	goalConc := GoalConc(goal)
 	if goalConc == nil {
 		xtracer.Trace("proof.MatchSchema EXIT err=noConclusion")
@@ -559,7 +559,7 @@ func (pc *ProofChecker) AdmitProposition(prop *LabeledFormula, proof Node, exist
 		return nil, err
 	}
 	pc.Axioms = append(pc.Axioms, prop)
-	xtracer.Trace("proof.ProofChecker.admit_proposition schemata.insert key='%s' value=%s", prop.LabelName(), prop.Canon())
+	xtraceParts("proof.ProofChecker.admit_proposition schemata.insert key='", prop.LabelName(), "' value=", canonPart(prop))
 	pc.Schemata.Set(prop.LabelName(), prop)
 	vocab := GoalVocab(prop)
 	for _, sym := range vocab.Symbols {
@@ -599,7 +599,7 @@ func (pc *ProofChecker) SetLastAxiom(prop *LabeledFormula) {
 
 // SetSchema updates a schema entry by name.
 func (pc *ProofChecker) SetSchema(name string, prop *LabeledFormula) {
-	xtracer.Trace("proof.ProofChecker.SetSchema schemata.insert key='%s' value=%s", name, prop.Canon())
+	xtraceParts("proof.ProofChecker.SetSchema schemata.insert key='", name, "' value=", canonPart(prop))
 	pc.Schemata.Set(name, prop)
 }
 
@@ -748,7 +748,7 @@ func ApplyMatchGoal(cfg *AstConfig, match map[string]string, goal *LabeledFormul
 		}
 	}
 	result := goal.Clone([]Node{goal.Label, fmla}).(*LabeledFormula)
-	xtracer.Trace("proof.ApplyMatchGoal EXIT HASH canon=%v", result.Canon())
+	xtraceParts("proof.ApplyMatchGoal EXIT HASH canon=", canonPart(result))
 	return result
 }
 

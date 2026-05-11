@@ -447,14 +447,14 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 			xtracer.Trace("check.guarantee_phase actname=%s skip:not-Action", actname)
 			continue
 		}
-		xtracer.Trace("check.guarantee_phase HASH actname=%s canon=%s", actname, act.Canon())
+		xtraceParts("check.guarantee_phase HASH actname=", actname, " canon=", canonPart(act))
 		var guarantees []ActionsAction
 		subCount := 0
 		for _, sub := range act.IterSubactions() {
 			subCount++
 			isAssert := IsAssertLike(sub)
 			_, isRanking := sub.(*LogicRanking)
-			xtracer.Trace("check.guarantee_phase sub HASH actname=%s kind=%s isAssert=%v isRanking=%v canon=%s", actname, ActionTypeName(sub), isAssert, isRanking, sub.Canon())
+			xtraceParts("check.guarantee_phase sub HASH actname=", actname, " kind=", ActionTypeName(sub), " isAssert=", isAssert, " isRanking=", isRanking, " canon=", canonPart(sub))
 			if isAssert || isRanking {
 				guarantees = append(guarantees, sub)
 			}
@@ -474,7 +474,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 			var filtered []ActionsAction
 			for _, sub := range guarantees {
 				pass := IsGuaranteeModUnprovable(mod.Cfg, sub)
-				xtracer.Trace("check.guarantee_phase unprov_filter HASH actname=%s pass=%v canon=%s", actname, pass, sub.Canon())
+				xtraceParts("check.guarantee_phase unprov_filter HASH actname=", actname, " pass=", pass, " canon=", canonPart(sub))
 				if pass {
 					filtered = append(filtered, sub)
 				}

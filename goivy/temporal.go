@@ -11,6 +11,7 @@ package goivy
 
 import (
 	"fmt"
+	"io"
 	"sort"
 	"strconv"
 	"strings"
@@ -85,13 +86,7 @@ func (at *ActionTerm) Clone(args []Node) Node {
 
 // Canon returns a canonical s-expression with all fields.
 func (at *ActionTerm) Canon() Canonical {
-	var lf string
-	if at.HasLoc {
-		lf = fmt.Sprintf(" lineno:%d", at.Loc.Line)
-	}
-	return Canonical(fmt.Sprintf("(actionTerm%s inputs:%s outputs:%s labels:%s stmt:%s)",
-		lf, constSliceCanon(at.Inputs), constSliceCanon(at.Outputs),
-		temporalStringSliceCanon(at.Labels), at.Stmt.Canon()))
+	return canonString(func(w io.Writer) { writeActionTermCanon(w, at) })
 }
 
 // ActionTermBinding binds an action term to a name.
@@ -143,12 +138,7 @@ func (b *ActionTermBinding) Clone(args []Node) Node {
 
 // Canon returns a canonical s-expression with all fields.
 func (b *ActionTermBinding) Canon() Canonical {
-	var lf string
-	if b.HasLoc {
-		lf = fmt.Sprintf(" lineno:%d", b.Loc.Line)
-	}
-	return Canonical(fmt.Sprintf("(actionTermBinding%s name:%q action:%s)",
-		lf, b.Name, b.Action.Canon()))
+	return canonString(func(w io.Writer) { writeActionTermBindingCanon(w, b) })
 }
 
 // --- canon helpers ---
@@ -286,29 +276,7 @@ func (np *NormalProgram) Formulas() []interface{} {
 // Canon returns a canonical s-expression for the normal program.
 // Postconds map keys are sorted to keep output deterministic.
 func (np *NormalProgram) Canon() Canonical {
-	var b strings.Builder
-	b.WriteString("(normalProgram")
-	if np.HasLoc {
-		fmt.Fprintf(&b, " lineno:%d", np.Loc.Line)
-	}
-	b.WriteString(" bindings:")
-	appendBindingSliceCanon(&b, np.Bindings)
-	b.WriteString(" init:")
-	if np.Init != nil {
-		b.WriteString(string(np.Init.Canon()))
-	} else {
-		b.WriteString("nil")
-	}
-	b.WriteString(" invars:")
-	appendLFSliceCanon(&b, np.Invars)
-	b.WriteString(" asms:")
-	appendLFSliceCanon(&b, np.Asms)
-	b.WriteString(" calls:")
-	appendTemporalStringSliceCanon(&b, np.Calls)
-	b.WriteString(" postconds:")
-	appendPostcondsHashCanon(&b, np.Postconds)
-	b.WriteByte(')')
-	return Canonical(b.String())
+	return canonString(func(w io.Writer) { writeNormalProgramCanon(w, np) })
 }
 
 // bindingSliceCanon canonicalizes []*ActionTermBinding.

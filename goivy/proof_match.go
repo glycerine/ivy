@@ -379,7 +379,7 @@ func ApplyMatch(match map[NodeKey]Expr, fmla Expr) Expr {
 	fmla = AlphaAvoidMap(fmla, freeVars)
 	result := applyMatchRec(match, fmla)
 	if result != nil {
-		xtracer.Trace("proof.ApplyMatch EXIT HASH canon=%v", result.Canon())
+		xtraceParts("proof.ApplyMatch EXIT HASH canon=", canonPart(result))
 	} else {
 		xtracer.Trace("proof.ApplyMatch EXIT resultNil")
 	}

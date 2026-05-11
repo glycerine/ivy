@@ -425,7 +425,7 @@ func BooleanConstant(val bool) Expr {
 //
 // Corresponds to Python close_epr in ivy_logic_utils.py.
 func CloseEPR(fmla Expr) Expr {
-	xtracer.Trace("logicutil.CloseEPR HASH canon= fmla=%s", fmla.Canon())
+	xtraceParts("logicutil.CloseEPR HASH canon= fmla=", canonPart(fmla))
 	if and, ok := fmla.(*LogicAnd); ok {
 		terms := make([]Expr, len(and.Terms))
 		for i, t := range and.Terms {
@@ -856,7 +856,7 @@ func NormalizeFreeVariablesTuple(asts ...Expr) ([]*LogicVariable, []*LogicVariab
 // If names is nil, all named binders are normalized; otherwise only those
 // whose name is in the names set.
 func NormalizeNamedBinders(n Node, names map[string]bool) Node {
-	xtracer.Trace("ilu.normalizeNamedBinders ENTER type=%s HASH canon=%s", ShortTypeName(n), n.Canon())
+	xtraceParts("ilu.normalizeNamedBinders ENTER type=", ShortTypeName(n), " HASH canon=", canonPart(n))
 	if _, ok := n.(*Const); ok {
 		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s const", ShortTypeName(n))
 		return n
@@ -880,7 +880,7 @@ func NormalizeNamedBinders(n Node, names map[string]bool) Node {
 			body := NormalizeNamedBinders(nb.Body, names).(Expr)
 			body = SubstituteByName(body, subs)
 			result := &LogicNamedBinder{Name: nb.Name, Variables: nvs, Environ: nb.Environ, Body: body}
-			xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s binder HASH canon=%s", ShortTypeName(result), result.Canon())
+			xtraceParts("ilu.normalizeNamedBinders EXIT type=", ShortTypeName(result), " binder HASH canon=", canonPart(result))
 			return result
 		}
 	}
@@ -893,7 +893,7 @@ func NormalizeNamedBinders(n Node, names map[string]bool) Node {
 		}
 		newFunc := NormalizeNamedBinders(app.Func, names).(Expr)
 		result := MustApply(newFunc, newTerms...)
-		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s app HASH canon=%s", ShortTypeName(result), result.Canon())
+		xtraceParts("ilu.normalizeNamedBinders EXIT type=", ShortTypeName(result), " app HASH canon=", canonPart(result))
 		return result
 	}
 	// General case: recurse into children and always clone (matching Python).
@@ -903,7 +903,7 @@ func NormalizeNamedBinders(n Node, names map[string]bool) Node {
 		newChildren[i] = NormalizeNamedBinders(c, names)
 	}
 	result := n.Clone(newChildren)
-	xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s cloned HASH canon=%s", ShortTypeName(result), result.Canon())
+	xtraceParts("ilu.normalizeNamedBinders EXIT type=", ShortTypeName(result), " cloned HASH canon=", canonPart(result))
 	return result
 }
 
@@ -960,37 +960,37 @@ func ResetRtrDepth() { rtrDepth = 0 }
 func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node {
 	rtrDepth++
 	myDepth := rtrDepth
-	xtracer.Trace("ilu.replaceTemporalsRec ENTER depth=%d type=%s HASH canon=%s", myDepth, ShortTypeName(n), n.Canon())
+	xtraceParts("ilu.replaceTemporalsRec ENTER depth=", myDepth, " type=", ShortTypeName(n), " HASH canon=", canonPart(n))
 
 	// Python outer if/elif: Globally, Eventually, WhenOperator (lines 302-319)
 	switch t := n.(type) {
 	case *LogicGlobally:
-		xtracer.Trace("ilu.replaceTemporalsRec GLOBALLY_BODY HASH canon=%s", t.Body.Canon())
+		xtraceParts("ilu.replaceTemporalsRec GLOBALLY_BODY HASH canon=", canonPart(t.Body))
 		body := replaceTemporalsRec(t.Body, g, when).(Expr)
 		vs, nvs, body := LogicUtilNormalizeFreeVariables(body)
 		nb := g(nvs, body, t.Environ)
 		result := applyNamedBinder(nb, logicutilVarsToNodes(vs))
-		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s globally HASH canon=%s", ShortTypeName(result), result.Canon())
+		xtraceParts("ilu.replaceTemporalsRec EXIT type=", ShortTypeName(result), " globally HASH canon=", canonPart(result))
 		return result
 
 	case *LogicEventually:
 		notBody := &LogicNot{Body: t.Body}
 		glob := &LogicGlobally{Environ: t.Environ, Body: notBody}
-		xtracer.Trace("ilu.replaceTemporalsRec EVENTUALLY_DESUGAR HASH canon=%s", (&LogicNot{Body: glob}).Canon())
+		xtraceParts("ilu.replaceTemporalsRec EVENTUALLY_DESUGAR HASH canon=", canonPart(&LogicNot{Body: glob}))
 		result := replaceTemporalsRec(&LogicNot{Body: glob}, g, when)
-		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s eventually HASH canon=%s", ShortTypeName(result), result.Canon())
+		xtraceParts("ilu.replaceTemporalsRec EXIT type=", ShortTypeName(result), " eventually HASH canon=", canonPart(result))
 		return result
 
 	case *LogicWhenOperator:
-		xtracer.Trace("ilu.replaceTemporalsRec WHEN_T1 HASH canon=%s", t.T1.Canon())
+		xtraceParts("ilu.replaceTemporalsRec WHEN_T1 HASH canon=", canonPart(t.T1))
 		val := replaceTemporalsRec(t.T1, g, when).(Expr)
-		xtracer.Trace("ilu.replaceTemporalsRec WHEN_T2 HASH canon=%s", t.T2.Canon())
+		xtraceParts("ilu.replaceTemporalsRec WHEN_T2 HASH canon=", canonPart(t.T2))
 		cond := replaceTemporalsRec(t.T2, g, when).(Expr)
 		body := &Cond{CSort: val.NodeSort(), T1: cond, T2: val}
 		vs, nvs, nbody := LogicUtilNormalizeFreeVariables(body)
 		nb := when(t.Name, nvs, nbody)
 		result := applyNamedBinder(nb, logicutilVarsToNodes(vs))
-		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s when HASH canon=%s", ShortTypeName(result), result.Canon())
+		xtraceParts("ilu.replaceTemporalsRec EXIT type=", ShortTypeName(result), " when HASH canon=", canonPart(result))
 		return result
 	}
 
@@ -1001,7 +1001,7 @@ func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node
 	children := n.Args()
 	newChildren := make([]Node, len(children))
 	for i, c := range children {
-		xtracer.Trace("ilu.replaceTemporalsRec CHILD parent=%s childIdx=%d nChildren=%d childType=%s HASH canon=%s", ShortTypeName(n), i, len(children), ShortTypeName(c), c.Canon())
+		xtraceParts("ilu.replaceTemporalsRec CHILD parent=", ShortTypeName(n), " childIdx=", i, " nChildren=", len(children), " childType=", ShortTypeName(c), " HASH canon=", canonPart(c))
 		newChildren[i] = replaceTemporalsRec(c, g, when)
 	}
 
@@ -1010,7 +1010,7 @@ func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node
 		// Python line 324: l2s_init sub-case
 		if nb, ok := t.Func.(*LogicNamedBinder); ok && nb.Name == "l2s_init" {
 			// Python line 325: recurse body AFTER terms (terms already done above)
-			xtracer.Trace("ilu.replaceTemporalsRec L2S_INIT_BODY HASH canon=%s", nb.Body.Canon())
+			xtraceParts("ilu.replaceTemporalsRec L2S_INIT_BODY HASH canon=", canonPart(nb.Body))
 			body := replaceTemporalsRec(nb.Body, g, when).(Expr)
 			newArgs := logicutilNodesToExprs(newChildren)
 			if notBody, ok := body.(*LogicNot); ok {
@@ -1018,28 +1018,28 @@ func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node
 				clonedNB := nb.Clone([]Node{notBody.Body}).(Expr)
 				inner := MustApply(clonedNB, newArgs...)
 				result := &LogicNot{Body: inner}
-				xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s l2s_init_not HASH canon=%s", ShortTypeName(result), result.Canon())
+				xtraceParts("ilu.replaceTemporalsRec EXIT type=", ShortTypeName(result), " l2s_init_not HASH canon=", canonPart(result))
 				return result
 			}
 			// Python line 331: lg.Apply(ast.func.clone([body]), *args)
 			clonedNB := nb.Clone([]Node{body}).(Expr)
 			result := MustApply(clonedNB, newArgs...)
-			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s l2s_init HASH canon=%s", ShortTypeName(result), result.Canon())
+			xtraceParts("ilu.replaceTemporalsRec EXIT type=", ShortTypeName(result), " l2s_init HASH canon=", canonPart(result))
 			return result
 		}
 		// Python line 334: general Apply — recurse func AFTER terms
-		xtracer.Trace("ilu.replaceTemporalsRec APPLY_FUNC funcType=%s HASH canon=%s", ShortTypeName(t.Func), t.Func.Canon())
+		xtraceParts("ilu.replaceTemporalsRec APPLY_FUNC funcType=", ShortTypeName(t.Func), " HASH canon=", canonPart(t.Func))
 		newFunc := replaceTemporalsRec(t.Func, g, when).(Expr)
 		newArgs := logicutilNodesToExprs(newChildren)
 		result := MustApply(newFunc, newArgs...)
-		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s app HASH canon=%s", ShortTypeName(result), result.Canon())
+		xtraceParts("ilu.replaceTemporalsRec EXIT type=", ShortTypeName(result), " app HASH canon=", canonPart(result))
 		return result
 	}
 
 	// Step 2b: Not double negation (Python line 338)
 	if _, ok := n.(*LogicNot); ok && len(newChildren) > 0 {
 		if inner, ok := newChildren[0].(*LogicNot); ok {
-			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s doubleNeg HASH canon=%s", ShortTypeName(inner.Body), inner.Body.Canon())
+			xtraceParts("ilu.replaceTemporalsRec EXIT type=", ShortTypeName(inner.Body), " doubleNeg HASH canon=", canonPart(inner.Body))
 			return inner.Body
 		}
 	}
@@ -1050,7 +1050,7 @@ func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node
 			// Python line 343: lg.Not(ast.clone([args[0].args[0]]))
 			cloned := n.Clone([]Node{notChild.Body})
 			result := &LogicNot{Body: cloned.(Expr)}
-			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s nb_init_not HASH canon=%s", ShortTypeName(result), result.Canon())
+			xtraceParts("ilu.replaceTemporalsRec EXIT type=", ShortTypeName(result), " nb_init_not HASH canon=", canonPart(result))
 			return result
 		}
 	}
@@ -1058,7 +1058,7 @@ func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node
 	// Step 2d: Default clone (Python line 346)
 	xtracer.Trace("ilu.replaceTemporalsRec CLONE depth=%d type=%s nChildren=%d", myDepth, ShortTypeName(n), len(newChildren))
 	result := n.Clone(newChildren)
-	xtracer.Trace("ilu.replaceTemporalsRec EXIT depth=%d type=%s cloned HASH canon=%s", myDepth, ShortTypeName(result), result.Canon())
+	xtraceParts("ilu.replaceTemporalsRec EXIT depth=", myDepth, " type=", ShortTypeName(result), " cloned HASH canon=", canonPart(result))
 	return result
 }
 
@@ -1134,14 +1134,14 @@ func reduceNamedBindersRec(ast Expr, g GloballyBinderFunc) Expr {
 // `if ast in subs` which is struct-eq via NamedBinder.__hash__/__eq__.
 // Named binders inside other named binders are NOT replaced.
 func ReplaceNamedBindersAst(n Node, subs map[string]Expr) Node {
-	xtracer.Trace("ilu.replaceNamedBindersAst ENTER type=%s HASH canon=%s", ShortTypeName(n), n.Canon())
+	xtraceParts("ilu.replaceNamedBindersAst ENTER type=", ShortTypeName(n), " HASH canon=", canonPart(n))
 	if nb, ok := n.(*LogicNamedBinder); ok {
 		key := string(nb.Sexp())
 		if rep, found := subs[key]; found {
-			xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=True HASH canon=%s", ShortTypeName(n), rep.Canon())
+			xtraceParts("ilu.replaceNamedBindersAst EXIT type=", ShortTypeName(n), " found=True HASH canon=", canonPart(rep))
 			return rep
 		}
-		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=False HASH canon=%s", ShortTypeName(n), n.Canon())
+		xtraceParts("ilu.replaceNamedBindersAst EXIT type=", ShortTypeName(n), " found=False HASH canon=", canonPart(n))
 		return n
 	}
 	// python: is_app returns True for *logic.Apply and *logic.Const as
@@ -1160,7 +1160,7 @@ func ReplaceNamedBindersAst(n Node, subs map[string]Expr) Node {
 			}
 		}
 		result := MustApply(newFunc, newTerms...)
-		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s app HASH canon=%s", ShortTypeName(result), result.Canon())
+		xtraceParts("ilu.replaceNamedBindersAst EXIT type=", ShortTypeName(result), " app HASH canon=", canonPart(result))
 		return result
 	}
 	if cnst, ok := n.(*Const); ok {
@@ -1171,8 +1171,7 @@ func ReplaceNamedBindersAst(n Node, subs map[string]Expr) Node {
 		if _, ok := cnst.CSort.(*LogicFunctionSort); ok {
 			result = MustApply(cnst)
 		}
-		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s app HASH canon=%s",
-			ShortTypeName(result), result.Canon())
+		xtraceParts("ilu.replaceNamedBindersAst EXIT type=", ShortTypeName(result), " app HASH canon=", canonPart(result))
 		return result
 	}
 	// Python: args = [replace_named_binders_ast(x, subs) for x in ast.args]
@@ -1183,7 +1182,7 @@ func ReplaceNamedBindersAst(n Node, subs map[string]Expr) Node {
 		newChildren[i] = ReplaceNamedBindersAst(c, subs)
 	}
 	result := n.Clone(newChildren)
-	xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s cloned HASH canon=%s", ShortTypeName(result), result.Canon())
+	xtraceParts("ilu.replaceNamedBindersAst EXIT type=", ShortTypeName(result), " cloned HASH canon=", canonPart(result))
 	return result
 }
 

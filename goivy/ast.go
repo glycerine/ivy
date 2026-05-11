@@ -5,6 +5,7 @@ package goivy
 
 import (
 	"fmt"
+	"io"
 	"strconv"
 	"strings"
 
@@ -246,18 +247,8 @@ func sortCanon(n Node) Canonical {
 
 // SliceCanon returns the canonical form of a []Node slice.
 func SliceCanon(nodes []Node) string {
-	if len(nodes) == 0 {
-		return "[]"
-	}
 	var sb strings.Builder
-	sb.WriteByte('[')
-	for i, n := range nodes {
-		if i > 0 {
-			sb.WriteByte(' ')
-		}
-		sb.WriteString(string(nodeCanon(n)))
-	}
-	sb.WriteByte(']')
+	writeNodeSliceCanon(&sb, nodes)
 	return sb.String()
 }
 
@@ -1702,15 +1693,7 @@ func (t *TemporalModels) String() string {
 	return fmt.Sprint(t.Model) + " |= " + fmt.Sprint(t.Fmla)
 }
 func (t *TemporalModels) Canon() Canonical {
-	var b strings.Builder
-	b.WriteString("(temporalModels")
-	b.WriteString(t.Base.canonFields())
-	b.WriteString(" model:")
-	b.WriteString(string(nodeCanon(t.Model)))
-	b.WriteString(" fmla:")
-	b.WriteString(string(nodeCanon(t.Fmla)))
-	b.WriteByte(')')
-	return Canonical(b.String())
+	return canonString(func(w io.Writer) { writeTemporalModelsCanon(w, t) })
 }
 
 func (cfg *AstConfig) NewTemporalModels(model, fmla Node) *TemporalModels {

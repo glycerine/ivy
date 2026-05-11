@@ -76,11 +76,11 @@ func ApplyToConc(conc Node, fn func(Expr) Expr) Node {
 		xtracer.Trace("proof.ApplyToConc ENTER concNil=true")
 		return conc
 	}
-	xtracer.Trace("proof.ApplyToConc ENTER type=%s HASH canon=%v", TypeName(conc), conc.Canon())
+	xtraceParts("proof.ApplyToConc ENTER type=", TypeName(conc), " HASH canon=", canonPart(conc))
 	if tm, ok := conc.(*TemporalModels); ok {
 		if innerExpr, ok := tm.Fmla.(Expr); ok {
 			result := tm.Clone([]Node{fn(innerExpr)})
-			xtracer.Trace("proof.ApplyToConc EXIT type=TemporalModels HASH canon=%v", result.Canon())
+			xtraceParts("proof.ApplyToConc EXIT type=TemporalModels HASH canon=", canonPart(result))
 			return result
 		}
 		xtracer.Trace("proof.ApplyToConc EXIT type=TemporalModels passthrough")
@@ -89,7 +89,7 @@ func ApplyToConc(conc Node, fn func(Expr) Expr) Node {
 	if expr, ok := conc.(Expr); ok {
 		result := fn(expr)
 		if result != nil {
-			xtracer.Trace("proof.ApplyToConc EXIT type=Expr HASH canon=%v", result.Canon())
+			xtraceParts("proof.ApplyToConc EXIT type=Expr HASH canon=", canonPart(result))
 		} else {
 			xtracer.Trace("proof.ApplyToConc EXIT type=Expr result=nil")
 		}
@@ -135,11 +135,11 @@ func WrapImplies(cfg *AstConfig, cond Expr, formula Node) Node {
 	xtracer.Trace("proof.WrapImplies ENTER formulaType=%s", TypeName(formula))
 	if e, ok := formula.(Expr); ok {
 		result := &LogicImplies{T1: cond, T2: e}
-		xtracer.Trace("proof.WrapImplies EXIT type=lgImplies HASH canon=%v", result.Canon())
+		xtraceParts("proof.WrapImplies EXIT type=lgImplies HASH canon=", canonPart(result))
 		return result
 	}
 	result := cfg.NewImplies(cond, formula)
-	xtracer.Trace("proof.WrapImplies EXIT type=astImplies HASH canon=%v", result.Canon())
+	xtraceParts("proof.WrapImplies EXIT type=astImplies HASH canon=", canonPart(result))
 	return result
 }
 
@@ -151,7 +151,7 @@ func WrapImplies(cfg *AstConfig, cond Expr, formula Node) Node {
 func GoalApplyToConc(cfg *AstConfig, goal *LabeledFormula, fn func(Node) Node) *LabeledFormula {
 	xtracer.Trace("proof.GoalApplyToConc ENTER label=%s", goal.LabelForTrace())
 	result := CloneGoal(cfg, goal, GoalPrems(goal), fn(GoalConc(goal)))
-	xtracer.Trace("proof.GoalApplyToConc EXIT HASH canon=%v", result.Canon())
+	xtraceParts("proof.GoalApplyToConc EXIT HASH canon=", canonPart(result))
 	return result
 }
 
@@ -273,7 +273,7 @@ func normalizeGoalAny(cfg *AstConfig, x Node) Node {
 	// does not call apply_to_conc.
 	newConc := normalizeOpsConc(GoalConc(g))
 	result := CloneGoal(cfg, g, normPrems, newConc)
-	xtracer.Trace("proof.NormalizeGoal EXIT HASH canon=%v", result.Canon())
+	xtraceParts("proof.NormalizeGoal EXIT HASH canon=", canonPart(result))
 	return result
 }
 
@@ -543,7 +543,7 @@ func GoalSubst(cfg *AstConfig, g1, g2 *LabeledFormula, loc Location) (*LabeledFo
 	}
 	prems := append(GoalPrems(g1), GoalPrems(g2)...)
 	result := MakeGoal(cfg, loc, g2.Label, prems, GoalConc(g2))
-	xtracer.Trace("proof.GoalSubst EXIT HASH canon=%v", result.Canon())
+	xtraceParts("proof.GoalSubst EXIT HASH canon=", canonPart(result))
 	return result, nil
 }
 
@@ -552,7 +552,7 @@ func GoalAddPrem(cfg *AstConfig, goal *LabeledFormula, prem Node, loc Location) 
 	xtracer.Trace("proof.GoalAddPrem ENTER goalLabel=%s premType=%s", goal.LabelForTrace(), TypeName(prem))
 	prems := append(GoalPrems(goal), prem)
 	result := MakeGoal(cfg, loc, goal.Label, prems, GoalConc(goal))
-	xtracer.Trace("proof.GoalAddPrem EXIT HASH canon=%v", result.Canon())
+	xtraceParts("proof.GoalAddPrem EXIT HASH canon=", canonPart(result))
 	return result
 }
 
@@ -847,7 +847,7 @@ func compileExprVocabLF(lf *LabeledFormula, vocab *Vocab, mod *Module) (*Labeled
 	}
 
 	// Python compile_expr_vocab emits EXIT HASH canon=... right before return.
-	xtracer.Trace("proof.CompileExprVocab EXIT HASH canon=%v", compiled.Canon())
+	xtraceParts("proof.CompileExprVocab EXIT HASH canon=", canonPart(compiled))
 	return compiled, nil
 }
 

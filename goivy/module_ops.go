@@ -327,7 +327,7 @@ func orClausesIntWithVs(rn *UniqueRenamer, args []*Clauses) (*Clauses, []Expr, [
 
 	result := NewClauses(fmlas, defs, nil)
 	if xtracer.Enabled {
-		xtracer.Trace("ops.orClausesInt EXIT HASH canon= %s", result.Canon())
+		xtraceParts("ops.orClausesInt EXIT HASH canon= ", canonPart(result))
 	}
 	return result, vs, args
 }
@@ -411,7 +411,7 @@ func iteClausesInt(rn *UniqueRenamer, cond Expr, args []*Clauses) *Clauses {
 	}
 	result := NewClauses(fmlas, defs, annot)
 	if xtracer.Enabled {
-		xtracer.Trace("ops.iteClausesInt EXIT HASH canon= %s", result.Canon())
+		xtraceParts("ops.iteClausesInt EXIT HASH canon= ", canonPart(result))
 	}
 	return result
 }
@@ -480,7 +480,7 @@ func dualClauses(clauses *Clauses, skolemizer Skolemizer, instantiator func([]Ex
 // .    return drop_universals(formula)
 func clausesToFormula(c *Clauses) Expr {
 	formula := c.ToFormula()
-	xtracer.Trace("ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = %v", formula.Canon())
+	xtraceParts("ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = ", canonPart(formula))
 	return dropUniversals(formula)
 }
 
