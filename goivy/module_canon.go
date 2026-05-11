@@ -75,10 +75,10 @@ func (m *Module) CanonSnapshot(label string) {
 
 	// Group 6: InitCond and Theory
 	if m.InitCond != nil {
-		xtracer.Trace("module.CanonSnapshot %s initCond=%s", label, string(m.InitCond.Canon()))
+		xtraceParts("module.CanonSnapshot ", label, " initCond=", canonPart(m.InitCond))
 	}
 	if m.Theory != nil {
-		xtracer.Trace("module.CanonSnapshot %s theory=%s", label, string(m.Theory.Canon()))
+		xtraceParts("module.CanonSnapshot ", label, " theory=", canonPart(m.Theory))
 	}
 
 	// Group 7: Actions

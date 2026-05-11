@@ -1353,7 +1353,7 @@ func (c *Compiler) CompileSchemaBody(body *SchemaBody) (*SchemaBody, error) {
 func (c *Compiler) LookupSchema(name string) (interface{}, error) {
 	if s, ok := c.Module.Schemata.Get2(name); ok {
 		if cz, canOk := s.(Canonizer); canOk {
-			xtracer.Trace("compiler.LookupSchema schemata.lookup key='%s' found=true value=%s", name, cz.Canon())
+			xtraceParts("compiler.LookupSchema schemata.lookup key='", name, "' found=true value=", canonPart(cz))
 		} else {
 			xtracer.Trace("compiler.LookupSchema schemata.lookup key='%s' found=true value=%v", name, s)
 		}
@@ -2352,7 +2352,7 @@ func CheckProperties(mod *Module) error {
 					if mod.Schemata == nil {
 						mod.Schemata = NewInsMap[string, Node]()
 					}
-					xtracer.Trace("compiler.CheckProperties.classify.noSubgoals schemata.insert key='%s' value=%s", name, prop.Canon())
+					xtraceParts("compiler.CheckProperties.classify.noSubgoals schemata.insert key='", name, "' value=", canonPart(prop))
 					mod.Schemata.Set(name, prop)
 				}
 			} else {
@@ -2384,7 +2384,7 @@ func CheckProperties(mod *Module) error {
 					if mod.Schemata == nil {
 						mod.Schemata = NewInsMap[string, Node]()
 					}
-					xtracer.Trace("compiler.CheckProperties.classify.subgoals schemata.insert key='%s' value=%s", name, prop.Canon())
+					xtraceParts("compiler.CheckProperties.classify.subgoals schemata.insert key='", name, "' value=", canonPart(prop))
 					mod.Schemata.Set(name, prop)
 				}
 			}

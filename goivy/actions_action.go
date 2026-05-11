@@ -2431,7 +2431,7 @@ func (a *LogicInstantiateAction) IntUpdate(ctx *UpdateContext) *Update {
 	schema, schemaOk := ctx.Domain.Schemata.Get2(instName)
 	if schemaOk {
 		if cz, canOk := schema.(Canonizer); canOk {
-			xtracer.Trace("actions.InstantiateAction.IntUpdate schemata.lookup key='%s' found=true value=%s", instName, cz.Canon())
+			xtraceParts("actions.InstantiateAction.IntUpdate schemata.lookup key='", instName, "' found=true value=", canonPart(cz))
 		} else {
 			xtracer.Trace("actions.InstantiateAction.IntUpdate schemata.lookup key='%s' found=true value=%v", instName, schema)
 		}

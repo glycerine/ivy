@@ -1239,7 +1239,7 @@ func CreateConstructorSchemata(mod *Module) error {
 
 		// goal = LabeledFormula(name, sch)
 		goal := cfg.NewLabeledFormula(schemaName, sch)
-		xtracer.Trace("compiler.CreateConstructorSchemata schemata.insert key='%s' value=%s", schemaName.Relname(), goal.Canon())
+		xtraceParts("compiler.CreateConstructorSchemata schemata.insert key='", schemaName.Relname(), "' value=", canonPart(goal))
 		mod.Schemata.Set(schemaName.Relname(), goal)
 
 		// Part B: per-constructor schema
@@ -1322,7 +1322,7 @@ func CreateConstructorSchemata(mod *Module) error {
 
 			// goal = LabeledFormula(name, sch)
 			consGoal := cfg.NewLabeledFormula(consSchemaName, consSch)
-			xtracer.Trace("compiler.CreateConstructorSchemata.nested schemata.insert key='%s' value=%s", consSchemaName.Relname(), consGoal.Canon())
+			xtraceParts("compiler.CreateConstructorSchemata.nested schemata.insert key='", consSchemaName.Relname(), "' value=", canonPart(consGoal))
 			mod.Schemata.Set(consSchemaName.Relname(), consGoal)
 		}
 	}

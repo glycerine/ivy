@@ -404,18 +404,18 @@ func GetSortTerm(term Expr) Sort {
 // Corresponds to Python's default_sort (ivy_logic.py:1129-1137).
 func GetDefaultSort(sig *Sig) (Sort, error) {
 	if sig.DefaultSort != nil {
-		xtracer.Trace("ivylogic.GetDefaultSort CACHED HASH canon=%s", sig.Canon())
+		xtraceParts("ivylogic.GetDefaultSort CACHED HASH canon=", canonPart(sig))
 		return sig.DefaultSort, nil
 	}
 	if sig.IuCfg != nil && !VersionLE(sig.IuCfg.LanguageVersion, "1.2") {
-		xtracer.Trace("ivylogic.GetDefaultSort VERSION_BLOCK HASH canon=%s", sig.Canon())
+		xtraceParts("ivylogic.GetDefaultSort VERSION_BLOCK HASH canon=", canonPart(sig))
 		return nil, &IvyError{Msg: "unspecified type"}
 	}
 	// Create default sort 'S' and add it to the signature
 	ds := &UninterpretedSort{Name: "S"}
 	sig.Sorts.Set("S", ds)
 	sig.DefaultSort = ds
-	xtracer.Trace("ivylogic.GetDefaultSort CREATED_S HASH canon=%s", sig.Canon())
+	xtraceParts("ivylogic.GetDefaultSort CREATED_S HASH canon=", canonPart(sig))
 	return ds, nil
 }
 

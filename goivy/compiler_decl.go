@@ -546,7 +546,7 @@ func (d *DomainSetup) Axiom(node Node) error {
 	if _, ok := cax.Formula.(*SchemaBody); ok {
 		labelName := cax.LabelName()
 		if labelName != "" {
-			xtracer.Trace("compiler.DomainSetup.axiom schemata.insert key='%s' value=%s", labelName, cax.Canon())
+			xtraceParts("compiler.DomainSetup.axiom schemata.insert key='", labelName, "' value=", canonPart(cax))
 			d.Compiler.Module.Schemata.Set(labelName, cax)
 		}
 	} else {
@@ -1334,10 +1334,10 @@ func (d *DomainSetup) Schema(node Node) error {
 			label := cfg.NewAtom(defName)
 			clf := cfg.NewLabeledFormula(label, compiled)
 			clf.SetLineno(schema.GetLineno())
-			xtracer.Trace("compiler.DomainSetup.schema.body schemata.insert key='%s' value=%s", label.Rep, clf.Canon())
+			xtraceParts("compiler.DomainSetup.schema.body schemata.insert key='", label.Rep, "' value=", canonPart(clf))
 			d.Compiler.Module.Schemata.Set(label.Rep, clf)
 		} else {
-			xtracer.Trace("compiler.DomainSetup.schema.nonBody schemata.insert key='%s' value=%s", schema.Defines(), schema.Canon())
+			xtraceParts("compiler.DomainSetup.schema.nonBody schemata.insert key='", schema.Defines(), "' value=", canonPart(schema))
 			d.Compiler.Module.Schemata.Set(schema.Defines(), schema)
 		}
 		return nil
@@ -1368,7 +1368,7 @@ func (d *DomainSetup) Instantiate(node Node) error {
 	schema, ok := d.Compiler.Module.Schemata.Get2(instName) // Schemata *iu.InsMap[string, ast.Node]
 	if ok {
 		if c, canOk := schema.(Canonizer); canOk {
-			xtracer.Trace("compiler.DomainSetup.instantiate schemata.lookup key='%s' found=true value=%s", instName, c.Canon())
+			xtraceParts("compiler.DomainSetup.instantiate schemata.lookup key='", instName, "' found=true value=", canonPart(c))
 		} else {
 			xtracer.Trace("compiler.DomainSetup.instantiate schemata.lookup key='%s' found=true value=%v", instName, schema) // fallback. should not need?
 		}
