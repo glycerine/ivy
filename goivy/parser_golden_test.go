@@ -1305,8 +1305,12 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	tinygoFlags := []string{
 		"-panic=print",
 		//"-gc=precise", // oom errors
-		//"-gc=boehm", // so try this instead
-		// trying the default 'no gc=' setting.
+		// trying the default 'no gc=' setting. ooms.
+
+		"-gc=boehm", // so try this instead
+
+		// https://github.com/wasilibs/nottinygc needs this:
+		//"-scheduler=none",
 
 		"-no-debug",
 

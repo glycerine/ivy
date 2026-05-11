@@ -380,10 +380,11 @@ install-wasm-opt:
 
 webvue/static/goivy-check-tinygo-js.wasm: FORCE
 	# KEEP parser_golden_test.go:1299 tinynode_ivy_check_xtrace() rebuild in sync with the below!
-	# try the default 'no gc=' setting.
-	GOOS=js GOARCH=wasm tinygo build -panic=print -no-debug -stack-size=64MB -ldflags="-extldflags='--initial-memory=1073741824 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
+	GOOS=js GOARCH=wasm tinygo build -panic=print -gc=boehm -no-debug -stack-size=64MB -ldflags="-extldflags='--initial-memory=1073741824 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
 
-#GOOS=js GOARCH=wasm tinygo build -panic=print -gc=boehm -no-debug -stack-size=64MB -ldflags="-extldflags='--initial-memory=1073741824 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
+	# try the default 'no gc=' setting. still ooms.
+# oom GOOS=js GOARCH=wasm tinygo build -panic=print -no-debug -stack-size=64MB -ldflags="-extldflags='--initial-memory=1073741824 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
+
 
 # oom errors: GOOS=js GOARCH=wasm tinygo build -panic=print -gc=precise -no-debug -stack-size=64MB -ldflags="-extldflags='--initial-memory=1073741824 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
 
