@@ -8,7 +8,7 @@ package main
 //
 // Update/correction: now works under tinygo too, with the
 // checkMetaNULPrefix = "goivy-meta-v1\x00" parseCheckMeta()
-// helper inline to handle a TinyGo NUL-delimited path when
+// helper inline to handle a tinygo NUL-delimited path when
 // the metadata string starts with that exact prefix.
 //
 // Update to the update: we no longer support tinygo at all.
