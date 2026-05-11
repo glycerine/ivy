@@ -62,8 +62,10 @@ func trace(format string, args ...interface{}) {
 
 	// experiment for tinygo wasm, which OOMs before 1mm xtrace points...
 	// try manual GC.
-	runtime.GC() // TODO remove!
+	if globalXtraceCounter%20 == 0 {
 
+		runtime.GC() // TODO remove!
+	}
 	if false {
 		if globalXtraceCounter%1000 == 0 {
 			runtime.ReadMemStats(mems)
@@ -71,8 +73,8 @@ func trace(format string, args ...interface{}) {
 			maybePaceGC(globalXtraceCounter, mems)
 		}
 		//maybeWriteHeapProfile(globalXtraceCounter)
-		globalXtraceCounter++
 	}
+	globalXtraceCounter++
 
 	// replace true/false with True/False to match python
 	// and avoid spurious diffs.
