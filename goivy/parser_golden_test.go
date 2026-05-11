@@ -1304,7 +1304,8 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	// to confirm memory size (but sadly does not show: asyncify task stack size)
 	tinygoFlags := []string{
 		"-panic=print",
-		"-gc=precise",
+		//"-gc=precise", // oom errors
+		"-gc=boehm", // so try this instead
 		"-no-debug",
 
 		// TinyGo's default goroutine stack is 64KB. This is too small.
