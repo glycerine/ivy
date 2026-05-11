@@ -1296,6 +1296,12 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	goivyWasm := filepath.Join(goivyRoot, "webvue", "static", "goivy-check-tinygo-js.wasm")
 	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
 	tinygoBinary := filepath.Join("/usr", "local", "bin", "tinygo")
+
+	// NOTE: KEEP these flags in sync with the Makefile:381 target to build
+	// webvue/static/goivy-check-tinygo-js.wasm
+	// or else we will confuse ourselves.
+	// Use wasm-objdump -x webvue/static/goivy-check-tinygo-js.wasm | grep -A 3 "Memory"
+	// to confirm memory size (but sadly does not show: asyncify task stack size)
 	tinygoFlags := []string{
 		"-panic=print",
 		"-gc=precise",
@@ -1337,8 +1343,8 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	args2 := append([]string{"build"}, tinygoFlags...)
 	args2 = append(args2, "-o", goivyWasm, "./cmd/goivy_check_jswasm")
 
-	//const forceRefreshWasm = true
-	const forceRefreshWasm = false
+	const forceRefreshWasm = true
+	//const forceRefreshWasm = false
 	if forceRefreshWasm {
 		wasmFullCmd := fmt.Sprintf("cd %v && GOOS=js GOARCH=wasm %v build %v", goivyRoot, tinygoBinary, strings.Join(args2, " "))
 		fmt.Printf("build goivy-check-tinygo-js.wasm so tinynode has an up-to-date payload: '%v'\n", wasmFullCmd)
