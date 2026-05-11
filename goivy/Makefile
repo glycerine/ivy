@@ -380,7 +380,7 @@ install-wasm-opt:
 
 webvue/static/goivy-check-tinygo-js.wasm: FORCE
 	# 3 GB memory reservation
-	GOOS=js GOARCH=wasm tinygo build -panic=trap -gc=precise -no-debug -ldflags="-extldflags='--initial-memory=3221225472 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
+	GOOS=js GOARCH=wasm tinygo build -panic=trap -gc=precise -no-debug -ldflags="-extldflags='--initial-memory=2147483648 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
 
 #GOOS=js GOARCH=wasm tinygo build -panic=trap -gc=precise -no-debug -ldflags="-extldflags=--initial-memory=67108864" -ldflags="-extldflags=-linkerscript-stack-size=2097152" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
 
