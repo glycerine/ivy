@@ -1307,7 +1307,7 @@ func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		//"-gc=precise", // oom errors
 		// trying the default 'no gc=' setting. ooms.
 
-		"-gc=boehm", // so try this instead
+		"-gc=boehm", // so try this instead (got 3x farther... then oomed at i=997925)
 
 		// https://github.com/wasilibs/nottinygc needs this:
 		//"-scheduler=none",
