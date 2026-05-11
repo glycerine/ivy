@@ -223,7 +223,7 @@ func goroNumber() int {
 	buf = buf[:nw]
 
 	if nw < 11 { // len("goroutine ")+1
-		// tinygo returns 0 from runtime.Stack,
+		// some runtime impl may return 0 from runtime.Stack,
 		// so don't index out of bounds. Just bail.
 		return 0 // unknown
 	}

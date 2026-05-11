@@ -161,13 +161,6 @@ test-z3-wasm-js: z3-wasm-api webvue/node_modules/.bin/vitest
 test-z3-wasm-browser: z3-wasm-api webvue/node_modules/.bin/playwright
 	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/z3Wasm.browser.spec.js
 
-webvue/static/ivy-tinygo-wasip1-probe.wasm: tinygo_probe/main.go tinygo_probe/exports_tinygo.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
-	/usr/local/bin/tinygo build -tags xtracer_off -target wasip1 -buildmode=c-shared -scheduler=none -panic=trap -gc=leaking -no-debug -o webvue/static/ivy-tinygo-wasip1-probe.wasm ./tinygo_probe
-
-tinygo-ivy-wasip1-probe-wasm: webvue/static/ivy-tinygo-wasip1-probe.wasm
-
-webvue/static/ivy-biggo-wasip1-probe.wasm: Makefile tinygo_probe/main.go tinygo_probe/exports_wasip1.go smt/array_wasip1_wasm.go smt/cannon_wasip1_wasm.go smt/inspect_wasip1_wasm.go smt/interp_wasip1_wasm.go smt/quantifier_wasip1_wasm.go
-	GOOS=wasip1 GOARCH=wasm go build -tags xtracer_off -o webvue/static/ivy-biggo-wasip1-probe.wasm ./tinygo_probe
 
 biggo-ivy-wasip1-probe-wasm: webvue/static/ivy-biggo-wasip1-probe.wasm
 
@@ -376,47 +369,5 @@ nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 install-wasm-opt:
 	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make -j8 && sudo make install
 
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js tinygo-ivy-wasip1-probe-wasm biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm goivy-check-js-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb nodegold FORCE tinynode
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm goivy-check-js-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb nodegold FORCE
 
-webvue/static/goivy-check-tinygo-js.wasm: FORCE
-	# KEEP parser_golden_test.go:1299 tinynode_ivy_check_xtrace() rebuild in sync with the below!
-	GOOS=js GOARCH=wasm tinygo build -panic=print -gc=boehm -no-debug -stack-size=64MB -ldflags="-extldflags='--initial-memory=1073741824 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-	# try the default 'no gc=' setting. still ooms.
-# oom GOOS=js GOARCH=wasm tinygo build -panic=print -no-debug -stack-size=64MB -ldflags="-extldflags='--initial-memory=1073741824 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-
-# oom errors: GOOS=js GOARCH=wasm tinygo build -panic=print -gc=precise -no-debug -stack-size=64MB -ldflags="-extldflags='--initial-memory=1073741824 --stack-first -z stack-size=2097152'" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-#GOOS=js GOARCH=wasm tinygo build -panic=trap -gc=precise -no-debug -ldflags="-extldflags=--initial-memory=67108864" -ldflags="-extldflags=-linkerscript-stack-size=2097152" -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-
-# with -scheduler=none, "make tinynode" crashes with
-# [tinynode.mjs +141ms] calling goivyCheckRun once
-# TypeError: this._inst.exports.resume is not a function
-#    at global.Go._resume (/Users/jaten/ivy/goivy/webvue/static/wasm_exec_tinygo_0.40.1.js:514:24)
-#    at eval (/Users/jaten/ivy/goivy/webvue/static/wasm_exec_tinygo_0.40.1.js:528:8)
-#    at main (file:///Users/jaten/go/src/github.com/glycerine/ivy/goivy/cmd/tinynode/tinynode.mjs:254:23)
-
-#GOOS=js GOARCH=wasm tinygo build -panic=trap  -scheduler=none -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-# 3.4MB GOOS=js GOARCH=wasm tinygo build -panic=trap  -scheduler=none -gc=boehm -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-# 3.4MB GOOS=js GOARCH=wasm tinygo build -panic=trap  -scheduler=none -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-# 3.4MB: GOOS=js GOARCH=wasm tinygo build -panic=trap  -scheduler=none -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-#GOOS=js GOARCH=wasm /usr/local/bin/tinygo build -panic=trap -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-#/usr/local/bin/tinygo build -target wasm -buildmode=c-shared -scheduler=none -panic=trap -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-# with xtracer_off
-#/usr/local/bin/tinygo build -tags xtracer_off -target wasm -buildmode=c-shared -scheduler=none -panic=trap -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-tinynode:
-	go install ./cmd/tinynode
-	time ~/go/bin/tinynode -goivy-wasm $(CURDIR)/webvue/static/goivy-check-tinygo-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.tinynode.zst
-
-tinynode-golden-2hr:
-	if [ -f log.tinynode.golden.2hr ]; then mv log.tinynode.golden.2hr log.tinynode.golden.2hr.prev; fi
-	go test -v -timeout=0 -count=1 -run Test2hrTinyNodeOrdLive &> log.tinynode.golden.2hr

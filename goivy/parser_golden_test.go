@@ -557,13 +557,6 @@ func Test2hrNodeGoldenOrdLive(t *testing.T) {
 	GoldenPathCompareIvyCheck(t, verbose, true, path, nil, "bigGo")
 }
 
-func Test2hrTinyNodeOrdLive(t *testing.T) {
-	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
-	//args := []string{"isolate=cf_live"}
-	verbose := false
-	GoldenPathCompareIvyCheck(t, verbose, true, path, nil, "tinyGo")
-}
-
 func TestIvyTlbModel(t *testing.T) {
 	path := "ivy-lang-examples/examples/liveness/tlb.ivy"
 	GoldenPathCompareIvyCheck(t, false, true, path, nil, "")
@@ -645,18 +638,14 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 	var goErr error
 
 	switch useNode {
-	case "bigGo":
+	case "bigGo": // js/wasm
 		// The nodegold helper may rebuild the js/wasm payload before it starts
 		// producing xtrace. Start it before Python so Python does not fill and
 		// block behind an unread pipe during that preparation window.
 		goivyPipe, goProc, goErr = nodegold_ivy_check_xtrace(t, args, path, repo)
 		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo)
 
-	case "tinyGo":
-		goivyPipe, goProc, goErr = tinynode_ivy_check_xtrace(t, args, path, repo)
-		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo)
-
-	default: // natvie Go
+	default: // native Go
 		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo)
 		goivyPipe, goProc, goErr = goivy_check_xtrace(t, args, path, repo)
 	}
@@ -1268,193 +1257,6 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		}
 		serr := scanner.Err()
 		vv("nodegold scanner has finished. scanner.Err()='%v'", serr)
-		if serr != nil {
-			panicf("scanner.Err() was not nil, very bad!: %v", serr)
-		}
-		pr.closeWriter() // must close write end so reader sees EOF
-		if f != nil {
-			f.Close()
-		}
-	}()
-
-	return pr, cmd.Process, nil
-}
-
-//
-
-// when useNode == "tinyGo" we should use:
-//
-// tinynode_ivy_check_xtrace re-makes and then runs tinynode
-// It streams output back on r, a pipe, asynchronously.
-func tinynode_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
-
-	_, thisFile, _, _ := runtime.Caller(0)
-	// parent dir.
-	goivyRoot := filepath.Dir(thisFile)
-
-	tinynodeCmdDir := filepath.Join(goivyRoot, "cmd", "tinynode")
-	goivyWasm := filepath.Join(goivyRoot, "webvue", "static", "goivy-check-tinygo-js.wasm")
-	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
-	tinygoBinary := filepath.Join("/usr", "local", "bin", "tinygo")
-
-	// NOTE: KEEP these flags in sync with the Makefile:381 target to build
-	// webvue/static/goivy-check-tinygo-js.wasm
-	// or else we will confuse ourselves.
-	// Use wasm-objdump -x webvue/static/goivy-check-tinygo-js.wasm | grep -A 3 "Memory"
-	// to confirm memory size (but sadly does not show: asyncify task stack size)
-	tinygoFlags := []string{
-		"-panic=print",
-		//"-gc=precise", // oom errors
-		// trying the default 'no gc=' setting. ooms.
-
-		"-gc=boehm", // so try this instead (got 3x farther... then oomed at i=997925)
-
-		// https://github.com/wasilibs/nottinygc needs this:
-		//"-scheduler=none",
-
-		"-no-debug",
-
-		// TinyGo's default goroutine stack is 64KB. This is too small.
-		// We overflow it almost immediately printing s-expressions.
-		// This is also called the "asyncify task stack" size.
-		// This is distinct from the stack-size=2MB in the linker flags.
-		//
-		// commentary:
-		// "The confusing part is that both names say “stack size”,
-		// but they belong to different layers:
-		//
-		// tinygo build -stack-size=16MB: TinyGo goroutine/task stack.
-		// wasm-ld -z stack-size=2097152: linker-defined wasm stack / __stack_pointer."
-		//
-		// Critical Files
-		//
-		// ~/go/src/github.com/tinygo-org/tinygo/targets/wasm.json:13
-		// Purpose: Confirms 64 KB default
-		// ────────────────────────────────────────
-		// ~/go/src/github.com/tinygo-org/tinygo/src/internal/task/task_asyncify.
-		// go:65-82
-		// Purpose: The shared-buffer layout
-		// ────────────────────────────────────────
-		// ~/go/src/github.com/tinygo-org/tinygo/compileopts/config.go:218-224
-		// Purpose: How -stack-size overrides the default
-		//
-		// ...so we make it big, whiched fixed the nil pointer deref we saw:
-		"-stack-size=64MB",
-
-		`-ldflags`,
-		`-extldflags="--initial-memory=1073741824 --stack-first -z stack-size=2097152"`,
-	}
-
-	// GOOS=js GOARCH=wasm /usr/local/bin/tinygo build -panic=trap -gc=precise -no-debug -o webvue/static/goivy-check-tinygo-js.wasm ./cmd/goivy_check_jswasm/
-
-	args2 := append([]string{"build"}, tinygoFlags...)
-	args2 = append(args2, "-o", goivyWasm, "./cmd/goivy_check_jswasm")
-
-	const forceRefreshWasm = true
-	//const forceRefreshWasm = false
-	if forceRefreshWasm {
-		wasmFullCmd := fmt.Sprintf("cd %v && GOOS=js GOARCH=wasm %v build %v", goivyRoot, tinygoBinary, strings.Join(args2, " "))
-		fmt.Printf("build goivy-check-tinygo-js.wasm so tinynode has an up-to-date payload: '%v'\n", wasmFullCmd)
-
-		cmd := exec.Command(tinygoBinary, args2...)
-		cmd.Dir = goivyRoot
-		cmd.Env = append(os.Environ(), "GOOS=js", "GOARCH=wasm")
-		if out, err := cmd.CombinedOutput(); err != nil {
-			panicf("could not run '%v'; error: '%v'; output:\n%s", wasmFullCmd, err, out)
-		}
-		fmt.Printf("done refreshing %v\n\n", goivyWasm)
-	}
-
-	// we will compile tinynode now to make
-	// sure it is up-to-date, and place it into the gobin directory.
-	gobin := os.Getenv("GOBIN")
-	// fallback places; if GOBIN is not set.
-	home := os.Getenv("HOME")
-	gopath := os.Getenv("GOPATH")
-	if gobin == "" {
-		switch {
-		case gopath != "":
-			gobin = filepath.Join(gopath, "bin")
-		case home != "":
-			gobin = filepath.Join(home, "go", "bin")
-			if dirExists(gobin) {
-				break
-			}
-			fallthrough
-		default:
-			// write to root of repo as last resort.
-			gobin = repo
-		}
-	}
-	target := filepath.Join(gobin, "tinynode")
-	doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", tinynodeCmdDir, goBinary, target)
-	fmt.Printf("build tinynode so we know it is up to date: '%v'\n", doFullCmd)
-	cmd := exec.Command(goBinary, "build", "-o", target)
-	cmd.Dir = tinynodeCmdDir
-	err = cmd.Run()
-	if err != nil {
-		panicf("could not run '%v' (see also 'make tr') to build tinynode; error: '%v'", doFullCmd, err)
-	}
-	fmt.Printf("done refreshing tinynode\n\n")
-
-	pr := newBufferedLinePipe(goldenProcessLineBuffer)
-	if err != nil {
-		panic(err)
-	}
-
-	var w io.Writer = pr
-	var f *os.File
-	if writeFullLogFile {
-		outPath := filepath.Join(fullXtraceToDir, "out.tinynode.xtrace")
-		var ferr error
-		f, ferr = os.Create(outPath)
-		if ferr != nil {
-			t.Fatalf("failed to create %s: %v", outPath, ferr)
-		}
-		w = io.MultiWriter(pr, f)
-	}
-
-	args = append([]string{"-goivy-wasm", goivyWasm}, args...)
-	args = append(args, ivyFile)
-	exe := target // "tinynode"
-	cmd = exec.Command(exe, args...)
-	cmd.Dir = goivyRoot
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
-
-	// Use a real OS pipe here, not io.Pipe. This is especially important for
-	// tinynode: the node process is a grandchild, and it should inherit a real
-	// stdout/stderr fd from tinynode rather than writing through an os/exec
-	// copy goroutine layered on top of an io.Pipe.
-	cmdPr, cmdPw, err := attachCombinedOutputPipe(cmd)
-	if err != nil {
-		t.Fatalf("failed to create tinynode output pipe: %v", err)
-	}
-	if err := cmd.Start(); err != nil {
-		cmdPr.Close()
-		cmdPw.Close()
-		t.Fatalf("failed to start '%v': %v", exe, err)
-	}
-	cmdPw.Close()
-
-	go func() {
-		err := cmd.Wait()
-		vv("tinynode command has finished. err='%v'", err)
-	}()
-
-	// Filter goroutine: read raw lines, normalize, write to w.
-	go func() {
-		defer cmdPr.Close()
-		scanner := bufio.NewScanner(cmdPr)
-		scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
-		var xtraceCount int64
-		for scanner.Scan() {
-			if err := forwardGoldenProcessLine(repo, "go", w, &xtraceCount, scanner.Text()); err != nil {
-				vv("tinynode scanner could not forward line: %v", err)
-				break
-			}
-		}
-		serr := scanner.Err()
-		vv("tinynode scanner has finished. scanner.Err()='%v'", serr)
 		if serr != nil {
 			panicf("scanner.Err() was not nil, very bad!: %v", serr)
 		}
