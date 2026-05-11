@@ -10,6 +10,11 @@ package main
 // checkMetaNULPrefix = "goivy-meta-v1\x00" parseCheckMeta()
 // helper inline to handle a TinyGo NUL-delimited path when
 // the metadata string starts with that exact prefix.
+//
+// Update to the update: we no longer support tinygo at all.
+// Its garbage collection does not work, it always OOMs (runs out
+// of memory). And its js/wasm/wasip1 is a wonky hybrid with
+// no good/reliable implementation available. We tore it out.
 
 import (
 	"encoding/json"

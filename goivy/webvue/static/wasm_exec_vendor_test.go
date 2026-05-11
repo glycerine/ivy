@@ -15,9 +15,7 @@ const (
 	vendoredWasmExecName    = "wasm_exec-" + vendoredWasmExecVersion + ".js"
 )
 
-// note: this is a "Big" Go (standard toolchain) test, not for tinygo
-// which has a different "wasm_exec.js" system glue file vendored
-// in webvue/static/wasm_exec_tinygo_0.40.1.js
+// note: this is a "Big" Go (standard toolchain) test.
 func TestVendoredWasmExecMatchesGoToolchain(t *testing.T) {
 	got := runtime.Version()
 	if strings.HasPrefix(got, "go1.25") || strings.HasPrefix(got, "go1.26") {
