@@ -60,7 +60,7 @@ func trace(format string, args ...interface{}) {
 		return
 	}
 
-	if true {
+	if false {
 		if globalXtraceCounter%50 == 0 {
 			runtime.ReadMemStats(mems)
 			fmt.Printf("[at trace %v] mems.HeapAlloc = %0.3f MB; HeapInuse = %0.3f MB\n", globalXtraceCounter, float64(mems.HeapAlloc)/(1<<20), float64(mems.HeapInuse)/(1<<20))
