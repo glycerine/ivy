@@ -9,9 +9,11 @@ import type {
 	VerificationJob
 } from '$lib/types';
 import type { createConceptsState } from '$lib/state/concepts.svelte';
+import type { createChecksState } from '$lib/state/checks.svelte';
 import type { createEnginesState } from '$lib/state/engines.svelte';
 import type { createGraphsState } from '$lib/state/graphs.svelte';
 import type { createJobsState } from '$lib/state/jobs.svelte';
+import type { createStateRelationsState } from '$lib/state/stateRelations.svelte';
 import type { createWorkspaceState } from '$lib/state/workspace.svelte';
 
 export type EngineServiceStores = {
@@ -20,6 +22,8 @@ export type EngineServiceStores = {
 	jobs: ReturnType<typeof createJobsState>;
 	graphs: ReturnType<typeof createGraphsState>;
 	concepts: ReturnType<typeof createConceptsState>;
+	checks?: ReturnType<typeof createChecksState>;
+	stateRelations?: ReturnType<typeof createStateRelationsState>;
 };
 
 export type EngineServiceOptions = {
@@ -103,11 +107,18 @@ export class EngineService {
 			case 'job-failed':
 				this.options.stores.jobs.fail(event.jobId, event.error);
 				break;
+			case 'check-updated':
+				this.options.stores.checks?.upsert(event.result);
+				break;
 			case 'graph-updated':
 				this.options.stores.graphs.upsert(event.snapshot);
 				break;
 			case 'concept-updated':
 				this.options.stores.concepts.upsert(event.concept);
+				this.options.stores.stateRelations?.updateFromConcept(event.concept);
+				break;
+			case 'toggles-updated':
+				this.options.stores.stateRelations?.updateFromToggles(event.sheetId, event.toggles);
 				break;
 			case 'diagnostic':
 				this.diagnostics = [...this.diagnostics, event];

@@ -1,18 +1,23 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { FakeEngine } from '$lib/engines';
+	import { BrowserWasmEngine, FakeEngine, HostedWebuiEngine } from '$lib/engines';
 	import GraphSnapshotView from '$lib/graphs/GraphSnapshotView.svelte';
 	import { createEngineService } from '$lib/services';
 	import { nowIso } from '$lib/time';
 	import {
 		createConceptsState,
+		createChecksState,
 		createEnginesState,
 		createGraphsState,
 		createJobsState,
+		createStateRelationsState,
 		createModelsState,
 		createWorkspaceState
 	} from '$lib/state';
 	import type { GraphNode, GraphSnapshot, ModelDocument, NodeAction, Project } from '$lib/types';
+	import type { IvyEngine } from '$lib/types';
+
+	type EngineChoice = 'fake' | 'hosted-webui' | 'browser-wasm';
 
 	const createdAt = '2026-05-12T00:00:00.000Z';
 
@@ -79,18 +84,19 @@ export disconnect
 		engines: createEnginesState(),
 		jobs: createJobsState(),
 		graphs: createGraphsState(),
-		concepts: createConceptsState()
+		concepts: createConceptsState(),
+		checks: createChecksState(),
+		stateRelations: createStateRelationsState()
 	};
 	const models = createModelsState();
 	models.upsert(initialModel);
-
-	const engine = new FakeEngine({ now: nowIso });
-	const service = createEngineService({ engine, stores });
 
 	let editorText = $state(initialModel.text);
 	let selectedNodeId = $state<string | null>(null);
 	let selectedGraphId = $state<string | null>(null);
 	let statusMessage = $state('Starting local fake engine');
+	let engineChoice = $state<EngineChoice>('fake');
+	let service = createEngineService({ engine: createEngine('fake'), stores });
 
 	const activeModel = $derived(models.table.byId[initialModel.id]);
 	const jobs = $derived(stores.jobs.table.order.map((id) => stores.jobs.table.byId[id]));
@@ -103,16 +109,43 @@ export disconnect
 		const conceptId = stores.concepts.table.order.at(-1);
 		return conceptId ? stores.concepts.table.byId[conceptId] : null;
 	});
+	const latestCheck = $derived.by(() => {
+		const sessionId = stores.workspace.current.activeSessionId;
+		return sessionId ? stores.checks.latestForSession(sessionId) : null;
+	});
 	const lineNumbers = $derived(editorText.split('\n').map((_, index) => index + 1));
 
 	onMount(() => {
-		void (async () => {
-			const session = await service.startSession(project.id);
-			await service.loadModel(initialModel);
-			statusMessage = `Local engine ready: ${session.id}`;
-			selectedGraphId = stores.graphs.table.order.at(-1) ?? null;
-		})();
+		void activateEngine(engineChoice);
 	});
+
+	function createEngine(choice: EngineChoice): IvyEngine {
+		if (choice === 'hosted-webui') {
+			return new HostedWebuiEngine({
+				baseUrl: import.meta.env.VITE_IVY_ENGINE_BASE_URL ?? '',
+				now: nowIso
+			});
+		}
+		if (choice === 'browser-wasm') {
+			return new BrowserWasmEngine();
+		}
+		return new FakeEngine({ now: nowIso });
+	}
+
+	async function activateEngine(choice: EngineChoice) {
+		engineChoice = choice;
+		statusMessage = `Starting ${choice}`;
+		await service.closeSession();
+		service = createEngineService({ engine: createEngine(choice), stores });
+		try {
+			const session = await service.startSession(project.id);
+			await service.loadModel({ ...activeModel, text: editorText });
+			statusMessage = `${choice} ready: ${session.id}`;
+			selectedGraphId = stores.graphs.table.order.at(-1) ?? null;
+		} catch (error) {
+			statusMessage = error instanceof Error ? error.message : `Failed to start ${choice}`;
+		}
+	}
 
 	function updateEditor(text: string) {
 		editorText = text;
@@ -121,6 +154,14 @@ export disconnect
 
 	async function runCommand(commandId: string, target?: { kind: GraphSnapshot['kind']; graphId?: string; nodeId?: string; obj?: string }) {
 		statusMessage = `Running ${commandId}`;
+		if (commandId.startsWith('check.')) {
+			await service.loadModel({
+				...activeModel,
+				text: editorText,
+				engineRevision: activeModel.engineRevision + 1,
+				updatedAt: nowIso()
+			});
+		}
 		const job = await service.runCommand({
 			id: `intent-${crypto.randomUUID()}`,
 			commandId,
@@ -157,6 +198,16 @@ export disconnect
 			<option>Induction</option>
 			<option>Bounded</option>
 			<option>Concrete</option>
+		</select>
+		<select
+			aria-label="Engine"
+			class="engine-select"
+			value={engineChoice}
+			onchange={(event) => void activateEngine(event.currentTarget.value as EngineChoice)}
+		>
+			<option value="fake">Fake engine</option>
+			<option value="hosted-webui">Hosted webui</option>
+			<option value="browser-wasm">Browser wasm</option>
 		</select>
 		<div class="toolbar" aria-label="Workspace commands">
 			<button type="button" class="primary" data-testid="run-induction" onclick={() => void runCommand('check.induction')}>
@@ -267,8 +318,18 @@ export disconnect
 			</div>
 			<div class="details-body" data-testid="details-pane">
 				<p>Verification Result</p>
-				<p>FAILED [Z3: yes]: The following conjecture is not relatively inductive:</p>
-				<p>~(X:client ~= Z &amp; link(X,Y) &amp; link(Z,Y))</p>
+				{#if latestCheck}
+					<p>{latestCheck.result.toUpperCase()} [Z3: {latestCheck.z3Contacted ? 'yes' : 'no'}]: {latestCheck.message}</p>
+					{#if latestCheck.failedConjecture}
+						<p>{latestCheck.failedConjecture}</p>
+					{/if}
+					{#if latestCheck.counterexampleTrace}
+						<p>{latestCheck.counterexampleTrace}</p>
+					{/if}
+				{:else}
+					<p>FAILED [Z3: yes]: The following conjecture is not relatively inductive:</p>
+					<p>~(X:client ~= Z &amp; link(X,Y) &amp; link(Z,Y))</p>
+				{/if}
 				{#if selectedNode}
 					<h2>{selectedNode.label}</h2>
 					<p>{selectedNode.obj}</p>
@@ -286,7 +347,13 @@ export disconnect
 		</section>
 
 		<footer class="statusbar" data-testid="status-strip">
-			<span>Check FAILED (induction) [Z3: yes] - counterexample found</span>
+			<span>
+				{#if latestCheck}
+					Check {latestCheck.result.toUpperCase()} ({latestCheck.mode}) [Z3: {latestCheck.z3Contacted ? 'yes' : 'no'}] - {latestCheck.message}
+				{:else}
+					Check FAILED (induction) [Z3: yes] - counterexample found
+				{/if}
+			</span>
 			<span>Session: {stores.workspace.current.activeSessionId ?? statusMessage}</span>
 		</footer>
 	</section>
@@ -374,6 +441,10 @@ export disconnect
 
 	.mode-select {
 		width: 118px;
+	}
+
+	.engine-select {
+		width: 136px;
 	}
 
 	.tutorial-button {

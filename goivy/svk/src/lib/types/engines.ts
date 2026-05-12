@@ -1,8 +1,8 @@
 import type { Id, Revision } from './ids';
 import type { CommandIntent } from './commands';
-import type { ConceptState } from './concepts';
+import type { ConceptState, ConceptToggles } from './concepts';
 import type { GraphSnapshot } from './graphs';
-import type { VerificationJob } from './jobs';
+import type { CheckResult, VerificationJob } from './jobs';
 import type { ModelDocument } from './models';
 
 export type EngineKind = 'browser-js-wasm' | 'hosted-go' | 'fake';
@@ -36,8 +36,10 @@ export type EngineEvent =
 	| { type: 'job-progress'; jobId: Id; progress: VerificationJob['progress'] }
 	| { type: 'job-succeeded'; jobId: Id; result: unknown }
 	| { type: 'job-failed'; jobId: Id; error: string }
+	| { type: 'check-updated'; result: CheckResult }
 	| { type: 'graph-updated'; snapshot: GraphSnapshot }
 	| { type: 'concept-updated'; concept: ConceptState }
+	| { type: 'toggles-updated'; sheetId: Id; toggles: ConceptToggles }
 	| { type: 'diagnostic'; severity: DiagnosticSeverity; message: string };
 
 export type SnapshotRequest = {

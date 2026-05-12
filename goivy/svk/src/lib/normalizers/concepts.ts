@@ -16,6 +16,7 @@ export function normalizeConceptPayload(payload: unknown, options: ConceptNormal
 		sheetId: options.sheetId,
 		concepts,
 		sortNodes: asStringArray(data.nodes),
+		relations: asStringArray(data.relations),
 		relationEdges: asStringArray(data.edges),
 		nodeLabels: asStringArray(data.node_labels),
 		abstractValue: normalizeBooleanRecord(data.abstract_value),

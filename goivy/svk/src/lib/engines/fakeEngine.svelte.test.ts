@@ -1,8 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { FakeEngine } from './fakeEngine';
-import { createConceptsState, createEnginesState, createGraphsState, createJobsState, createWorkspaceState } from '$lib/state';
+import {
+	createChecksState,
+	createConceptsState,
+	createEnginesState,
+	createGraphsState,
+	createJobsState,
+	createStateRelationsState,
+	createWorkspaceState
+} from '$lib/state';
 import { createEngineService } from '$lib/services';
-import type { ModelDocument } from '$lib/types';
+import type { CheckResult, ModelDocument } from '$lib/types';
 
 const createdAt = '2026-05-12T00:00:00.000Z';
 
@@ -16,6 +24,17 @@ const model: ModelDocument = {
 	engineRevision: 7,
 	createdAt,
 	updatedAt: createdAt
+};
+
+const checkResult: CheckResult = {
+	id: 'check-1',
+	jobId: 'job-1',
+	sessionId: 'session-1',
+	mode: 'induction',
+	z3Contacted: true,
+	result: 'fail',
+	message: 'counterexample found',
+	createdAt
 };
 
 function makeEngine() {
@@ -35,7 +54,9 @@ function makeStores() {
 		engines: createEnginesState(),
 		jobs: createJobsState(),
 		graphs: createGraphsState(),
-		concepts: createConceptsState()
+		concepts: createConceptsState(),
+		checks: createChecksState(),
+		stateRelations: createStateRelationsState()
 	};
 }
 
@@ -75,6 +96,7 @@ describe('FakeEngine', () => {
 		});
 		expect(stores.graphs.table.order).toHaveLength(1);
 		expect(stores.concepts.table.order).toHaveLength(1);
+		expect(stores.stateRelations.current.rows.map((row) => row.name)).toContain('reachable');
 	});
 
 	it('reduces command graph updates into graph state', async () => {
@@ -115,5 +137,25 @@ describe('FakeEngine', () => {
 			status: 'failed',
 			error: 'fake command failed'
 		});
+	});
+
+	it('reduces check and toggle engine events without backend-specific payloads', async () => {
+		expect.hasAssertions();
+
+		const stores = makeStores();
+		const service = createEngineService({ engine: makeEngine(), stores });
+
+		service.reduceEvent({ type: 'check-updated', result: checkResult });
+		service.reduceEvent({
+			type: 'toggles-updated',
+			sheetId: 'sheet-1',
+			toggles: {
+				edges: { link: { edge_unknown: true } },
+				labels: { '=@X': { node_maybe: true } }
+			}
+		});
+
+		expect(stores.checks.latestForSession('session-1')).toMatchObject({ result: 'fail' });
+		expect(stores.stateRelations.current.rows.map((row) => row.name)).toEqual(['link', '=@X']);
 	});
 });

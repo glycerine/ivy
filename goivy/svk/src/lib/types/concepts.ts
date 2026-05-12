@@ -22,6 +22,7 @@ export type ConceptState = {
 	sheetId: Id;
 	concepts: Record<string, Concept>;
 	sortNodes: string[];
+	relations?: string[];
 	relationEdges: string[];
 	nodeLabels: string[];
 	abstractValue: Record<string, boolean>;
