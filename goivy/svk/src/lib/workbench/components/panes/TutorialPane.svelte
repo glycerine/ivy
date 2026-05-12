@@ -31,7 +31,7 @@
 
 	function handleUrlKeydown(event: KeyboardEvent) {
 		if (event.key === 'Enter') {
-			onNavigate(event.currentTarget.value);
+			onNavigate((event.currentTarget as HTMLInputElement | null)?.value ?? '');
 		}
 	}
 </script>
