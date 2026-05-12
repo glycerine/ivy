@@ -9,3 +9,4 @@ export * from './jobs';
 export * from './models';
 export * from './projects';
 export * from './sync';
+export * from './workspace';
