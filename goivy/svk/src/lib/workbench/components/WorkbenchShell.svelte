@@ -27,7 +27,6 @@
 		activeModel: ModelDocument;
 		editorText: string;
 		editorKeymap: 'sublime' | 'emacs' | 'vim';
-		hasActiveSession: boolean;
 		sessionLabel: string;
 		statusMessage: string;
 		statusLevel: '' | 'info' | 'success' | 'warning' | 'error';
@@ -54,7 +53,6 @@
 		activeModel,
 		editorText,
 		editorKeymap,
-		hasActiveSession,
 		sessionLabel,
 		statusMessage,
 		statusLevel,
@@ -80,7 +78,6 @@
 	<Menubar
 		{engineChoice}
 		{mode}
-		{hasActiveSession}
 		{onActivateEngine}
 		{onSetMode}
 		{onRunCommand}
