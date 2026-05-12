@@ -10,19 +10,9 @@ package main
 //
 // The Go Ivy wasm command boundary is deliberately small and not the
 // cmd/goivy_check CLI. The CLI is only documentation for parameter semantics.
-// The wasip1 browser wasm module is expected to export:
-//   - goivy_check_prepare(specLen, metaLen uint32) int32
-//   - goivy_check_write_spec(offset, packedBytes, n uint32) int32
-//   - goivy_check_write_meta(offset, packedBytes, n uint32) int32
-//   - goivy_check_run() int32
-//
 // The js/wasm browser wasm module is hosted by the Go toolchain's exact
 // wasm_exec.js for the active Go version and publishes goivyCheckRun(spec,
 // metaJSON) into the worker global.
-//
-// It may also write framed runtime/pprof heap profiles to WASI fd 4. This
-// keeps profile bytes out of stdout/stderr and avoids sharing Go heap pointers
-// with JavaScript.
 //
 // meta is JSON: {"filename":"browser_input.ivy","params":{"isolate":"x"}}.
 // The command writes its normal output to stdout/stderr; goldweb does not use a
@@ -239,15 +229,15 @@ func main() {
 	rootDefault := defaultGoivyRoot()
 	listen := flag.String("listen", "127.0.0.1:8998", "address for the goldweb HTTP/WebSocket server")
 	root := flag.String("root", rootDefault, "goivy source root")
-	includeDir := flag.String("include-dir", defaultIncludeDir(rootDefault), "Ivy standard-library include directory to mirror into the browser WASI filesystem")
-	goivyWasm := flag.String("goivy-wasm", filepath.Join(rootDefault, "webvue", "static", "goivy-check-wasip1.wasm"), "Go Ivy wasm file to serve at /goivy-check.wasm")
-	goivyRuntime := flag.String("goivy-runtime", "wasip1", "Go Ivy browser wasm runtime: wasip1 or js")
+	includeDir := flag.String("include-dir", defaultIncludeDir(rootDefault), "Ivy standard-library include directory to mirror into the browser filesystem")
+	goivyWasm := flag.String("goivy-wasm", filepath.Join(rootDefault, "webvue", "static", "goivy-check-js.wasm"), "Go Ivy js/wasm file to serve at /goivy-check.wasm")
+	goivyRuntime := flag.String("goivy-runtime", "js", "Go Ivy browser wasm runtime: js")
 	ivyCheck := flag.String("ivy-check", "ivy_check", "Python ivy_check executable")
 	flag.Parse()
 	switch strings.TrimSpace(strings.ToLower(*goivyRuntime)) {
-	case "wasip1", "js":
+	case "js":
 	default:
-		log.Fatalf("invalid -goivy-runtime %q; want wasip1 or js", *goivyRuntime)
+		log.Fatalf("invalid -goivy-runtime %q; want js", *goivyRuntime)
 	}
 
 	var startupReq *goivyCheckRequest
@@ -270,7 +260,7 @@ func newApp(listen, root, includeDir, goivyWasm, goivyRuntime, ivyCheck string, 
 	includeDir = filepath.Clean(includeDir)
 	goivyRuntime = strings.TrimSpace(strings.ToLower(goivyRuntime))
 	if goivyRuntime == "" {
-		goivyRuntime = "wasip1"
+		goivyRuntime = "js"
 	}
 	webvueDir := filepath.Join(root, "webvue")
 	return &app{
@@ -339,7 +329,6 @@ func (a *app) listenAndServe() error {
 	mux.HandleFunc("/z3-471-api.wasm", serveFile(filepath.Join(a.staticDir, "z3-471-api.wasm"), "application/wasm"))
 	mux.HandleFunc("/wasm_exec-go1.25.6.js", serveFile(filepath.Join(a.staticDir, "wasm_exec-go1.25.6.js"), "text/javascript; charset=utf-8"))
 	mux.HandleFunc("/src/workers/smtZ3Imports.js", serveFile(filepath.Join(a.workerDir, "smtZ3Imports.js"), "text/javascript; charset=utf-8"))
-	mux.HandleFunc("/src/workers/goivyWasiP1.js", serveFile(filepath.Join(a.workerDir, "goivyWasiP1.js"), "text/javascript; charset=utf-8"))
 	mux.HandleFunc("/src/workers/goivyNodeFS.js", serveFile(filepath.Join(a.workerDir, "goivyNodeFS.js"), "text/javascript; charset=utf-8"))
 
 	a.httpServer = &http.Server{
@@ -1825,36 +1814,10 @@ const indexHTML = `<!doctype html>
   </div>
 
   <script type="text/plain" id="worker-source">
-const textEncoder = new TextEncoder();
 const goldwebAssetVersion = '__GOLDWEB_ASSET_VERSION__';
 
 function assetURL(assetBaseURL, path, version) {
   return assetBaseURL + path + '?v=' + encodeURIComponent(version || goldwebAssetVersion);
-}
-
-function requireExport(exports, name) {
-  const fn = exports[name];
-  if (typeof fn !== 'function') {
-    throw new Error('Go Ivy wasm is missing export ' + name);
-  }
-  return fn;
-}
-
-function writeBytesToGo(exports, exportName, bytes) {
-  const write = requireExport(exports, exportName);
-  let offset = 0;
-  while (offset < bytes.length) {
-    const n = Math.min(4, bytes.length - offset);
-    let word = 0;
-    for (let i = 0; i < n; i += 1) {
-      word |= bytes[offset + i] << (8 * i);
-    }
-    const code = write(offset >>> 0, word >>> 0, n >>> 0) | 0;
-    if (code !== 0) {
-      throw new Error(exportName + ' rejected bytes at offset ' + offset + ' with code ' + code);
-    }
-    offset += n;
-  }
 }
 
 function bytesToBase64(bytes) {
@@ -1966,70 +1929,6 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function runWasip1GoivyCheck(command, assetBaseURL, commandAssetVersion, z3Imports, z3, includeTree, streams) {
-  const wasiHost = await import(assetURL(assetBaseURL, '/src/workers/goivyWasiP1.js', commandAssetVersion));
-  const includeRoot = String(includeTree.root || 'include');
-  const wasi = wasiHost.createGoIvyWasiP1({
-    args: ['goivy_check_wasip1'],
-    env: [
-      'GOIVY_INCLUDE=' + includeRoot,
-      'GOIVY_WASM_HEAPPROFILE_INTERVAL=10',
-    ],
-    includeRoot,
-    includeTree,
-    stdout: streams.emitStdout,
-    stderr: streams.emitStderr,
-    heapProfile: streams.emitHeapProfile,
-    debug(text) {
-      self.postMessage({ type: 'stream', fd: 2, data: String(text) + '\n' });
-    },
-  });
-
-  let wasmMemory;
-  const imports = {
-    smt_z3: z3Imports.createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory }),
-    wasi_snapshot_preview1: wasi.wasiImport,
-  };
-
-  const response = await fetch(assetURL(assetBaseURL, '/goivy-check.wasm', commandAssetVersion), { cache: 'no-store' });
-  if (!response.ok) {
-    throw new Error('could not fetch /goivy-check.wasm: HTTP ' + response.status);
-  }
-  const bytes = await response.arrayBuffer();
-  const result = await WebAssembly.instantiate(bytes, imports);
-  const instance = result.instance;
-  wasmMemory = instance.exports.memory;
-  if (!wasmMemory) {
-    throw new Error('Go Ivy wasip1 wasm does not export memory');
-  }
-
-  if (typeof instance.exports._initialize === 'function') {
-    wasi.initialize(instance);
-  } else if (typeof instance.exports._start === 'function') {
-    const startCode = wasi.start(instance);
-    if (startCode !== 0) {
-      throw new Error('Go Ivy wasip1 wasm _start exited with code ' + startCode);
-    }
-  } else {
-    throw new Error('Go Ivy wasip1 wasm exports neither _initialize nor _start');
-  }
-
-  const prepare = requireExport(instance.exports, 'goivy_check_prepare');
-  const run = requireExport(instance.exports, 'goivy_check_run');
-  const specBytes = textEncoder.encode(command.spec || '');
-  const metaBytes = textEncoder.encode(JSON.stringify({
-    filename: command.filename || 'browser_input.ivy',
-    params: command.params || {}
-  }));
-  const prepareCode = prepare(specBytes.length >>> 0, metaBytes.length >>> 0) | 0;
-  if (prepareCode !== 0) {
-    throw new Error('goivy_check_prepare failed with code ' + prepareCode);
-  }
-  writeBytesToGo(instance.exports, 'goivy_check_write_spec', specBytes);
-  writeBytesToGo(instance.exports, 'goivy_check_write_meta', metaBytes);
-  return run() | 0;
-}
-
 async function runJSGoivyCheck(command, assetBaseURL, commandAssetVersion, z3Imports, z3, includeTree, streams) {
   const nodeFS = await import(assetURL(assetBaseURL, '/src/workers/goivyNodeFS.js', commandAssetVersion));
   const includeRoot = String(includeTree.root || 'include');
@@ -2138,10 +2037,11 @@ self.onmessage = async (event) => {
     };
     const includeTree = await loadIncludeTree(assetBaseURL, commandAssetVersion);
     const streams = { emitStdout, emitStderr, emitHeapProfile };
-    const runtime = String(command.runtime || 'wasip1').toLowerCase();
-    const code = runtime === 'js'
-      ? await runJSGoivyCheck(command, assetBaseURL, commandAssetVersion, z3Imports, z3, includeTree, streams)
-      : await runWasip1GoivyCheck(command, assetBaseURL, commandAssetVersion, z3Imports, z3, includeTree, streams);
+    const runtime = String(command.runtime || 'js').toLowerCase();
+    if (runtime !== 'js') {
+      throw new Error('unsupported Go Ivy browser wasm runtime: ' + runtime);
+    }
+    const code = await runJSGoivyCheck(command, assetBaseURL, commandAssetVersion, z3Imports, z3, includeTree, streams);
     self.postMessage({ type: 'done', code });
   } catch (error) {
     self.postMessage({
@@ -2473,7 +2373,7 @@ function runGoivyCheck(ws, command) {
   displaySkipCountdown = 0;
   streamLogEl.textContent = '';
   updateCounters();
-  log('starting goivy_check job ' + command.id + ' runtime=' + (command.runtime || 'wasip1') + ' filename=' + command.filename);
+  log('starting goivy_check job ' + command.id + ' runtime=' + (command.runtime || 'js') + ' filename=' + command.filename);
   const url = URL.createObjectURL(new Blob([workerSource], { type: 'text/javascript' }));
   const worker = new Worker(url);
   workers.set(command.id, { worker, url });

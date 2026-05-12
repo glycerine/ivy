@@ -1,6 +1,6 @@
 //go:build js && wasm
 
-// This file provides the wasip1 implementation of the same Go-facing Z3
+// This file provides the js/wasm implementation of the same Go-facing Z3
 // wrapper exposed by quantifier.go. It intentionally keeps the exported
 // names and method shapes identical to the native cgo implementation; only
 // the private representation changes from C pointers to opaque handles that
@@ -151,7 +151,7 @@ type Z3Context struct {
 }
 
 // NewZ3Context creates a new Z3 context.
-// The wasip1/browser bridge runs this Z3 context behind a single worker
+// The js/wasm browser bridge runs this Z3 context behind a single worker
 // execution lane, so there is no Go-side mutex or OS-thread pinning here.
 func NewZ3Context() *Z3Context {
 	cfg := z3_mk_config()

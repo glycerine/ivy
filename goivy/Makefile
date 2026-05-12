@@ -162,57 +162,12 @@ test-z3-wasm-browser: z3-wasm-api webvue/node_modules/.bin/playwright
 	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/z3Wasm.browser.spec.js
 
 
-biggo-ivy-wasip1-probe-wasm: webvue/static/ivy-biggo-wasip1-probe.wasm
-
 FORCE:
-
-webvue/static/goivy-check-wasip1.wasm: FORCE
-	GOOS=wasip1 GOARCH=wasm go build -a -buildmode=c-shared -o webvue/static/goivy-check-wasip1.wasm ./cmd/goivy_check_wasip1
-
-goivy-check-wasip1-wasm: webvue/static/goivy-check-wasip1.wasm
 
 webvue/static/goivy-check-js.wasm: FORCE
 	GOOS=js GOARCH=wasm go build -a -o webvue/static/goivy-check-js.wasm ./cmd/goivy_check_jswasm
 
 goivy-check-js-wasm: webvue/static/goivy-check-js.wasm
-
-z3-wasip1-browser-artifacts: z3-wasm-api biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm
-
-test-z3-wasip1-browser:
-	@test -f webvue/static/z3-471-api.js || { echo "missing webvue/static/z3-471-api.js; run make z3-wasm-api"; exit 1; }
-	@test -f webvue/static/z3-471-api.wasm || { echo "missing webvue/static/z3-471-api.wasm; run make z3-wasm-api"; exit 1; }
-	@test -f webvue/static/ivy-biggo-wasip1-probe.wasm || { echo "missing webvue/static/ivy-biggo-wasip1-probe.wasm; run make biggo-ivy-wasip1-probe-wasm"; exit 1; }
-	@test -x webvue/node_modules/.bin/playwright || { echo "missing webvue/node_modules/.bin/playwright; run make webvue-setup"; exit 1; }
-	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/wasip1Z3Worker.browser.spec.js
-
-test-z3-wasip1-browser-build: z3-wasip1-browser-artifacts webvue/node_modules/.bin/playwright
-	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/wasip1Z3Worker.browser.spec.js
-
-test-smt-wasip1-browser:
-	go test -tags web ./smt -run TestSolverBoolRoundTrip -count=1 -v
-
-test-smt-wasip1-browser-build: z3-wasm-api webvue/node_modules/.bin/playwright
-	go test -tags web ./smt -run TestSolverBoolRoundTrip -count=1 -v
-
-# the env vars communicate to goldweb/goivy_wasip1_wazero_test.go
-# note that CURDIR is a make built-in for the absolute path to cwd.
-waz-mem-test: goivy-check-wasip1-wasm
-	GOIVY_WAZERO_WASM=$(CURDIR)/webvue/static/goivy-check-wasip1.wasm \
-	GOIVY_WAZERO_SPEC=$(HOME)/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy \
-	GOIVY_WAZERO_STDOUT=$(CURDIR)/wazero.browser.xtrace.log \
-	GOIVY_WAZERO_STDERR=$(CURDIR)/wazero.browser.stderr.log \
-	GOIVY_WAZERO_GC_HEAP_LIMIT="$(WAZ_MEM_GC_HEAP_LIMIT)" \
-	go test ./goldweb -run TestGoIvyCheckWasip1UnderWazero -count=1 -v
-
-waz-cli-mem-test:
-	GOOS=wasip1 GOARCH=wasm go build -a -o /tmp/goivy-check-cli-wasip1.wasm \
-	./cmd/goivy_check
-	GOIVY_WAZERO_CLI_WASM=/tmp/goivy-check-cli-wasip1.wasm \
-	GOIVY_WAZERO_CLI_SPEC=$(HOME)/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy \
-	GOIVY_WAZERO_CLI_STDOUT=$(CURDIR)/wazero.cli.xtrace.log \
-	GOIVY_WAZERO_CLI_STDERR=$(CURDIR)/wazero.cli.stderr.log \
-	GOIVY_WAZERO_CLI_GC_HEAP_LIMIT="$(WAZ_CLI_MEM_GC_HEAP_LIMIT)" \
-	go test ./goldweb -run TestGoIvyCheckCLIWasip1UnderWazero -count=1 -v
 
 build: # grammer_gen
 	go install  -tags xtracer_off ./cmd/ivyweb
@@ -369,5 +324,4 @@ nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 install-wasm-opt:
 	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make -j8 && sudo make install
 
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js biggo-ivy-wasip1-probe-wasm goivy-check-wasip1-wasm goivy-check-js-wasm z3-wasip1-browser-artifacts test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser test-z3-wasip1-browser test-z3-wasip1-browser-build test-smt-wasip1-browser test-smt-wasip1-browser-build waz-mem-test waz-cli-mem-test tr trt vs golden setup this bootstrap goldweb nodegold FORCE
-
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE

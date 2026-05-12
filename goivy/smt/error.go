@@ -15,7 +15,7 @@ import "fmt"
 // flow when the existing API shape has
 // no error return.
 //
-// In the browser/wasip1 backend, the registered
+// In the browser js/wasm backend, the registered
 // Z3 error handler is installed by
 // webvue/src/workers/smtZ3Imports.js because Z3 wasm
 // needs a function-table callback supplied by
