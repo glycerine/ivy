@@ -1,5 +1,6 @@
 import type { EntityTable, Id, VerificationJob, VerificationJobStatus } from '$lib/types';
 import { emptyEntityTable } from '$lib/types';
+import { nowIso } from '$lib/time';
 
 export function createJobsState(initial: EntityTable<VerificationJob> = emptyEntityTable<VerificationJob>()) {
 	const table = $state<EntityTable<VerificationJob>>(structuredClone(initial));
@@ -19,7 +20,7 @@ export function createJobsState(initial: EntityTable<VerificationJob> = emptyEnt
 			table.byId[job.id] = job;
 			bump();
 		},
-		setProgress(jobId: Id, progress: VerificationJob['progress'], updatedAt = new Date().toISOString()) {
+		setProgress(jobId: Id, progress: VerificationJob['progress'], updatedAt = nowIso()) {
 			const job = table.byId[jobId];
 			if (!job) {
 				return;
@@ -28,7 +29,7 @@ export function createJobsState(initial: EntityTable<VerificationJob> = emptyEnt
 			job.updatedAt = updatedAt;
 			bump();
 		},
-		transition(jobId: Id, status: VerificationJobStatus, updatedAt = new Date().toISOString()) {
+		transition(jobId: Id, status: VerificationJobStatus, updatedAt = nowIso()) {
 			const job = table.byId[jobId];
 			if (!job) {
 				return;
@@ -43,7 +44,7 @@ export function createJobsState(initial: EntityTable<VerificationJob> = emptyEnt
 			}
 			bump();
 		},
-		fail(jobId: Id, error: string, updatedAt = new Date().toISOString()) {
+		fail(jobId: Id, error: string, updatedAt = nowIso()) {
 			const job = table.byId[jobId];
 			if (!job) {
 				return;

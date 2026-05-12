@@ -1,5 +1,6 @@
 import type { EngineSession, EntityTable, Id } from '$lib/types';
 import { emptyEntityTable } from '$lib/types';
+import { nowIso } from '$lib/time';
 
 export function createEnginesState(initial: EntityTable<EngineSession> = emptyEntityTable<EngineSession>()) {
 	const table = $state<EntityTable<EngineSession>>(structuredClone(initial));
@@ -19,7 +20,7 @@ export function createEnginesState(initial: EntityTable<EngineSession> = emptyEn
 			table.byId[session.id] = session;
 			bump();
 		},
-		setStatus(id: Id, status: EngineSession['status'], error?: string, updatedAt = new Date().toISOString()) {
+		setStatus(id: Id, status: EngineSession['status'], error?: string, updatedAt = nowIso()) {
 			const session = table.byId[id];
 			if (!session) {
 				return;

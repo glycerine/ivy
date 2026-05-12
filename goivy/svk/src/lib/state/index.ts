@@ -1,3 +1,5 @@
+export * from './auth.svelte';
+export * from './projects.svelte';
 export * from './concepts.svelte';
 export * from './engines.svelte';
 export * from './graphs.svelte';

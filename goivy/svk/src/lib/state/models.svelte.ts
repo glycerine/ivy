@@ -1,5 +1,6 @@
 import type { EntityTable, Id, ModelDocument } from '$lib/types';
 import { emptyEntityTable } from '$lib/types';
+import { nowIso } from '$lib/time';
 
 export function createModelsState(initial: EntityTable<ModelDocument> = emptyEntityTable<ModelDocument>()) {
 	const table = $state<EntityTable<ModelDocument>>(structuredClone(initial));
@@ -22,7 +23,7 @@ export function createModelsState(initial: EntityTable<ModelDocument> = emptyEnt
 			table.byId[model.id] = model;
 			bump();
 		},
-		updateText(id: Id, text: string, updatedAt = new Date().toISOString()) {
+		updateText(id: Id, text: string, updatedAt = nowIso()) {
 			const model = table.byId[id];
 			if (!model) {
 				return;
@@ -33,7 +34,7 @@ export function createModelsState(initial: EntityTable<ModelDocument> = emptyEnt
 			model.parseRevision += 1;
 			bump();
 		},
-		markSaved(id: Id, textHash: string, updatedAt = new Date().toISOString()) {
+		markSaved(id: Id, textHash: string, updatedAt = nowIso()) {
 			const model = table.byId[id];
 			if (!model) {
 				return;

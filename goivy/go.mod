@@ -19,8 +19,17 @@ require (
 
 require (
 	4d63.com/embedfiles v0.0.0-20190311033909-995e0740726f // indirect
+	filippo.io/edwards25519 v1.0.0 // indirect
+	filippo.io/nistec v0.0.2 // indirect
+	github.com/bytemare/crypto v0.4.3 // indirect
+	github.com/bytemare/hash v0.1.5 // indirect
+	github.com/bytemare/hash2curve v0.1.3 // indirect
+	github.com/bytemare/ksf v0.1.0 // indirect
+	github.com/bytemare/opaque v0.10.0 // indirect
 	github.com/glycerine/one_tree_rwmut v1.0.0 // indirect
 	github.com/go-chi/chi/v5 v5.2.1 // indirect
+	github.com/go-webauthn/webauthn v0.17.2 // indirect
+	github.com/gtank/ristretto255 v0.1.2 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/pgx/v5 v5.9.2 // indirect
@@ -30,7 +39,8 @@ require (
 	github.com/mailgun/errors v0.4.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	golang.org/x/sync v0.17.0 // indirect
+	golang.org/x/crypto v0.50.0 // indirect
+	golang.org/x/sync v0.20.0 // indirect
 	golang.org/x/sys v0.43.0 // indirect
-	golang.org/x/text v0.29.0 // indirect
+	golang.org/x/text v0.36.0 // indirect
 )
