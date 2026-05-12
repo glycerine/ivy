@@ -14,7 +14,9 @@
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run && npm run test:e2e",
 		"test:e2e": "playwright install && playwright test",
-		"lint": "eslint ."
+		"lint": "eslint .",
+		"parity:audit": "node scripts/parity-audit.mjs",
+		"unfinished:audit": "node scripts/unfinished-audit.mjs"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.4",

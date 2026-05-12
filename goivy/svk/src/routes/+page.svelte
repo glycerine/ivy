@@ -94,7 +94,7 @@ export disconnect
 	let editorText = $state(initialModel.text);
 	let selectedNodeId = $state<string | null>(null);
 	let selectedGraphId = $state<string | null>(null);
-	let statusMessage = $state('Starting local fake engine');
+	let statusMessage = $state('Starting local test engine');
 	let engineChoice = $state<EngineChoice>('fake');
 	let service = createEngineService({ engine: createEngine('fake'), stores });
 
@@ -205,7 +205,7 @@ export disconnect
 			value={engineChoice}
 			onchange={(event) => void activateEngine(event.currentTarget.value as EngineChoice)}
 		>
-			<option value="fake">Fake engine</option>
+			<option value="fake">Local test engine</option>
 			<option value="hosted-webui">Hosted webui</option>
 			<option value="browser-wasm">Browser wasm</option>
 		</select>
@@ -351,7 +351,7 @@ export disconnect
 				{#if latestCheck}
 					Check {latestCheck.result.toUpperCase()} ({latestCheck.mode}) [Z3: {latestCheck.z3Contacted ? 'yes' : 'no'}] - {latestCheck.message}
 				{:else}
-					Check FAILED (induction) [Z3: yes] - counterexample found
+					No check has run in this session.
 				{/if}
 			</span>
 			<span>Session: {stores.workspace.current.activeSessionId ?? statusMessage}</span>

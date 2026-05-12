@@ -3,7 +3,7 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 async function openWorkspace(page: Page) {
 	await page.goto('/');
 	await expect(page.getByRole('main')).toContainText('Editing: client_server_example.ivy');
-	await expect(page.getByTestId('status-strip')).toContainText('Check FAILED');
+	await expect(page.getByTestId('status-strip')).toContainText('No check has run in this session.');
 }
 
 async function expectNoOverlap(a: Locator, b: Locator) {
