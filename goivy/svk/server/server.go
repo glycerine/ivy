@@ -117,6 +117,7 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("POST /api/engine/session/{session}/command", s.engineRunCommand)
 	s.mux.HandleFunc("GET /api/engine/session/{session}/snapshot", s.engineSnapshot)
 	s.mux.HandleFunc("GET /app", s.app)
+	s.mux.HandleFunc("GET /app/", s.app)
 	s.mux.HandleFunc("GET /app/boot.js", s.appBoot)
 	if s.cfg.StaticDir != "" {
 		static := http.FileServer(http.Dir(s.cfg.StaticDir))

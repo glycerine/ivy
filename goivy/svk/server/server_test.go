@@ -123,6 +123,26 @@ func TestDevModeAppAutoAuthenticatesAndServesStaticShell(t *testing.T) {
 	}
 }
 
+func TestDevModeAppTrailingSlashServesStaticShell(t *testing.T) {
+	dir := writeFakeSvelteBuild(t)
+	handler := newTestServer(t, Config{DevMode: true, StaticDir: dir})
+
+	res := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/app/", nil)
+	handler.ServeHTTP(res, req)
+
+	if res.Code != http.StatusOK {
+		t.Fatalf("status = %d", res.Code)
+	}
+	body := res.Body.String()
+	if strings.Contains(body, "Verify Ivy systems locally or with a hosted solver.") {
+		t.Fatalf("trailing slash routed to marketing page: %s", body)
+	}
+	if !strings.Contains(body, `/app/boot.js`) {
+		t.Fatalf("app shell did not include boot script: %s", body)
+	}
+}
+
 func TestAuthenticatedAppRefreshesMissingCSRFCookie(t *testing.T) {
 	dir := writeFakeSvelteBuild(t)
 	handler := newTestServer(t, Config{DevMode: true, StaticDir: dir})
