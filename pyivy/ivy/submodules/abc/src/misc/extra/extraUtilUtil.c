@@ -373,7 +373,7 @@ abctime Extra_CpuTime()
   SeeAlso     []
 
 ***********************************************************************/
-#if defined(NT) || defined(NT64) || defined(WIN32)
+#if defined(NT) || defined(NT64) || defined(WIN32) || defined(__EMSCRIPTEN__)
 double Extra_CpuTimeDouble()
 {
     return 1.0*Abc_Clock()/CLOCKS_PER_SEC;
@@ -418,4 +418,3 @@ void Extra_MemTest()
 
 
 ABC_NAMESPACE_IMPL_END
-

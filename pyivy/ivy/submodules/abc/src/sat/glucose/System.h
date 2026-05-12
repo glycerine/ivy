@@ -44,7 +44,7 @@ ABC_NAMESPACE_CXX_HEADER_END
 //-------------------------------------------------------------------------------------------------
 // Implementation of inline functions:
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__EMSCRIPTEN__)
 #include <time.h>
 
 ABC_NAMESPACE_CXX_HEADER_START
