@@ -1,11 +1,16 @@
 EMCC ?= emcc
 EMXX ?= em++
 EMAR ?= emar
+export EM_CACHE ?= /tmp/ivy-emscripten-cache
 ABC_WASM_NODE ?= node
 ABC_WASM_AIGTOAIG ?= ../../ivy/bin/aigtoaig
 ABC_NATIVE ?= ./abc
 ABC_WASM_FUZZ_CASES ?= 25
 ABC_WASM_FUZZ_SEED ?= 1
+ABC_WASM_FUZZ_SEEDS ?= 1 2 3 4 5 6
+ABC_WASM_FUZZ_SECONDS_PER_SEED ?= 600
+ABC_WASM_FUZZ_PROGRESS_EVERY ?= 50
+ABC_WASM_FUZZ_LOG ?= fuzz.wasm.abc.log
 
 CC := $(EMCC)
 CXX := $(EMXX)
@@ -116,7 +121,7 @@ LDFLAGS += $(ABC_WASM_EXTRA_LDFLAGS)
 
 SRC :=
 
-.PHONY: all default wasm test test-aiger-compare clean print-vars
+.PHONY: all default wasm test test-aiger-compare fuzz-abc-one-hour clean print-vars
 
 include $(patsubst %, $(ABCSRC)/%/module.make, $(MODULES))
 
@@ -138,6 +143,14 @@ test: $(JS_TARGET) wasm-smoke-test.js
 test-aiger-compare: $(JS_TARGET) wasm-aiger-compare.js
 	@echo "$(MSG_PREFIX)\`\` Comparing native and wasm AIGER:" $(ABC_WASM_FUZZ_CASES) "cases, seed" $(ABC_WASM_FUZZ_SEED)
 	$(VERBOSE)$(ABC_WASM_NODE) wasm-aiger-compare.js --module ./$(JS_TARGET) --abc "$(ABC_NATIVE)" --aigtoaig "$(ABC_WASM_AIGTOAIG)" --cases "$(ABC_WASM_FUZZ_CASES)" --seed "$(ABC_WASM_FUZZ_SEED)"
+
+fuzz-abc-one-hour: $(JS_TARGET) wasm-aiger-compare.js
+	@echo "$(MSG_PREFIX)\`\` Fuzzing native and wasm AIGER:" $(ABC_WASM_FUZZ_SECONDS_PER_SEED) "seconds per seed; seeds" $(ABC_WASM_FUZZ_SEEDS)
+	$(VERBOSE): > "$(ABC_WASM_FUZZ_LOG)"
+	$(VERBOSE)for seed in $(ABC_WASM_FUZZ_SEEDS); do \
+		echo "$(MSG_PREFIX)\`\` Fuzz seed $$seed for $(ABC_WASM_FUZZ_SECONDS_PER_SEED) seconds"; \
+		$(ABC_WASM_NODE) wasm-aiger-compare.js --module ./$(JS_TARGET) --abc "$(ABC_NATIVE)" --aigtoaig "$(ABC_WASM_AIGTOAIG)" --seed "$$seed" --seconds "$(ABC_WASM_FUZZ_SECONDS_PER_SEED)" --progress-every "$(ABC_WASM_FUZZ_PROGRESS_EVERY)" --log "$(ABC_WASM_FUZZ_LOG)" || exit $$?; \
+	done
 
 $(WASM_TARGET): $(JS_TARGET)
 	@test -f $@
@@ -176,6 +189,10 @@ print-vars:
 	@echo "ABC_NATIVE=$(ABC_NATIVE)"
 	@echo "ABC_WASM_FUZZ_CASES=$(ABC_WASM_FUZZ_CASES)"
 	@echo "ABC_WASM_FUZZ_SEED=$(ABC_WASM_FUZZ_SEED)"
+	@echo "ABC_WASM_FUZZ_SEEDS=$(ABC_WASM_FUZZ_SEEDS)"
+	@echo "ABC_WASM_FUZZ_SECONDS_PER_SEED=$(ABC_WASM_FUZZ_SECONDS_PER_SEED)"
+	@echo "ABC_WASM_FUZZ_PROGRESS_EVERY=$(ABC_WASM_FUZZ_PROGRESS_EVERY)"
+	@echo "ABC_WASM_FUZZ_LOG=$(ABC_WASM_FUZZ_LOG)"
 	@echo "CFLAGS=$(CFLAGS)"
 	@echo "CXXFLAGS=$(CXXFLAGS)"
 	@echo "LDFLAGS=$(LDFLAGS)"

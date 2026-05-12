@@ -19,6 +19,10 @@ const nativeAbcPath = path.resolve(argValue("--abc", "./abc"));
 const aigtoaigPath = path.resolve(argValue("--aigtoaig", "../../ivy/bin/aigtoaig"));
 const caseCount = Number(argValue("--cases", "25"));
 const seed = Number(argValue("--seed", "1"));
+const seconds = Number(argValue("--seconds", "0"));
+const progressEvery = Number(argValue("--progress-every", "50"));
+const logPathArg = argValue("--log", "");
+const logPath = logPathArg ? path.resolve(logPathArg) : "";
 
 const initAbc = require(modulePath);
 const abcRc = fs.readFileSync(path.resolve("abc.rc"), "utf8");
@@ -90,20 +94,53 @@ function normalizeCex(text) {
   return text == null ? null : text.replace(/\s+$/g, "");
 }
 
+function logWrite(text) {
+  if (logPath) fs.appendFileSync(logPath, text, "utf8");
+}
+
+function section(title, body) {
+  return `=== ${title} ===\n${body == null || body === "" ? "(empty)\n" : `${body.replace(/\s+$/g, "")}\n`}`;
+}
+
+function writeCaseLog(caseInfo) {
+  logWrite([
+    `=== case ${caseInfo.name} seed ${caseInfo.seed} index ${caseInfo.index} ===`,
+    `case directory: ${caseInfo.dir}`,
+    `native command: ${caseInfo.nativeCommand}`,
+    "wasm command: read_aiger /case.aig; pdr; write_aiger_cex /case.out",
+    section("input", caseInfo.aagText),
+    section("input aig path", caseInfo.aigPath),
+    section("input aig base64", caseInfo.aigBase64),
+    section("native status", caseInfo.nativeResult.status),
+    section("native stdout", caseInfo.nativeResult.stdout),
+    section("native stderr", caseInfo.nativeResult.stderr),
+    section("native cex", caseInfo.nativeResult.cex),
+    section("wasm status", caseInfo.wasmResult.status),
+    section("wasm stdout", caseInfo.wasmResult.stdout),
+    section("wasm stderr", caseInfo.wasmResult.stderr),
+    section("wasm cex", caseInfo.wasmResult.cex),
+    "",
+  ].join("\n"));
+}
+
 function runNative(aigPath, outPath) {
   const command = `read_aiger ${aigPath}; pdr; write_aiger_cex ${outPath}`;
-  try {
-    const stdout = childProcess.execFileSync(nativeAbcPath, ["-c", command], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-    });
-    const cex = fs.existsSync(outPath) ? fs.readFileSync(outPath, "utf8") : null;
-    return { status: classify(stdout, cex), text: stdout, cex: normalizeCex(cex) };
-  } catch (error) {
-    const stdout = error.stdout ? String(error.stdout) : "";
-    const stderr = error.stderr ? String(error.stderr) : "";
-    return { status: "error", text: `${stdout}\n${stderr}`, cex: null };
-  }
+  const result = childProcess.spawnSync(nativeAbcPath, ["-c", command], {
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  const stdout = result.stdout ? String(result.stdout) : "";
+  const stderr = result.stderr ? String(result.stderr) : "";
+  const cex = fs.existsSync(outPath) ? fs.readFileSync(outPath, "utf8") : null;
+  const status = result.status === 0 && !result.error ? classify(`${stdout}\n${stderr}`, cex) : "error";
+  return {
+    command,
+    status,
+    stdout,
+    stderr: result.error ? `${stderr}\n${result.error.stack || result.error}` : stderr,
+    text: `${stdout}\n${stderr}`,
+    cex: normalizeCex(cex),
+  };
 }
 
 async function runWasm(aigPath) {
@@ -122,10 +159,17 @@ async function runWasm(aigPath) {
       ? Module.FS.readFile("/case.out", { encoding: "utf8" })
       : null;
     const text = `${out.join("\n")}\n${err.join("\n")}`;
-    return { status: classify(text, cex), text, cex: normalizeCex(cex) };
+    return {
+      status: classify(text, cex),
+      stdout: out.join("\n"),
+      stderr: err.join("\n"),
+      text,
+      cex: normalizeCex(cex),
+    };
   } catch (error) {
-    const text = `${out.join("\n")}\n${err.join("\n")}\n${error && error.stack ? error.stack : error}`;
-    return { status: "error", text, cex: null };
+    const stderr = `${err.join("\n")}\n${error && error.stack ? error.stack : error}`;
+    const text = `${out.join("\n")}\n${stderr}`;
+    return { status: "error", stdout: out.join("\n"), stderr, text, cex: null };
   }
 }
 
@@ -136,14 +180,48 @@ async function runWasm(aigPath) {
   if (!Number.isInteger(seed)) {
     throw new Error(`--seed must be an integer, got ${seed}`);
   }
+  if (!Number.isFinite(seconds) || seconds < 0) {
+    throw new Error(`--seconds must be a non-negative number, got ${seconds}`);
+  }
+  if (!Number.isInteger(progressEvery) || progressEvery < 1) {
+    throw new Error(`--progress-every must be a positive integer, got ${progressEvery}`);
+  }
 
   const rng = makeRng(seed);
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "abc-aiger-compare-"));
-  for (let i = 0; i < caseCount; i++) {
+  const startTime = Date.now();
+  const deadline = seconds > 0 ? Date.now() + seconds * 1000 : 0;
+  let i = 0;
+  logWrite([
+    `=== run seed ${seed} ===`,
+    `started: ${new Date(startTime).toISOString()}`,
+    `mode: ${seconds > 0 ? `${seconds}s` : `${caseCount} cases`}`,
+    `case directory: ${dir}`,
+    "",
+  ].join("\n"));
+  console.log(seconds > 0
+    ? `abc native/wasm AIGER compare started (seed ${seed}, ${seconds}s, dir ${dir}${logPath ? `, log ${logPath}` : ""})`
+    : `abc native/wasm AIGER compare started (${caseCount} cases, seed ${seed}, dir ${dir}${logPath ? `, log ${logPath}` : ""})`);
+
+  while (seconds > 0 ? Date.now() < deadline : i < caseCount) {
     const name = `case-${String(i).padStart(4, "0")}`;
-    const aigPath = convertAagToAig(generateAag(rng, i), dir, name);
+    const aagText = generateAag(rng, i);
+    const aigPath = convertAagToAig(aagText, dir, name);
+    const aigBase64 = fs.readFileSync(aigPath).toString("base64");
     const nativeResult = runNative(aigPath, path.join(dir, `${name}.native.out`));
     const wasmResult = await runWasm(aigPath);
+    writeCaseLog({
+      name,
+      seed,
+      index: i,
+      dir,
+      aagText,
+      aigPath,
+      aigBase64,
+      nativeCommand: nativeResult.command,
+      nativeResult,
+      wasmResult,
+    });
 
     if (nativeResult.status !== wasmResult.status) {
       throw new Error([
@@ -165,9 +243,16 @@ async function runWasm(aigPath) {
         wasmResult.cex,
       ].join("\n"));
     }
+    i++;
+    if (i % progressEvery === 0) {
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+      console.log(`abc native/wasm AIGER compare progress: seed ${seed}, ${i} cases, ${elapsed}s`);
+    }
   }
 
-  console.log(`abc native/wasm AIGER compare passed (${caseCount} cases, seed ${seed})`);
+  console.log(seconds > 0
+    ? `abc native/wasm AIGER compare passed (${i} cases, seed ${seed}, ${seconds}s budget)`
+    : `abc native/wasm AIGER compare passed (${i} cases, seed ${seed})`);
 })().catch((error) => {
   console.error(error && error.stack ? error.stack : error);
   process.exit(1);
