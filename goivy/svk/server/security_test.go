@@ -49,6 +49,25 @@ func TestOriginMismatchRejected(t *testing.T) {
 	}
 }
 
+func TestCSPAllowsSvelteStyleAttributesButNotInlineScripts(t *testing.T) {
+	rec := httptest.NewRecorder()
+	securityHeaders(rec)
+	csp := rec.Header().Get("content-security-policy")
+	for _, want := range []string{
+		"script-src 'self' 'wasm-unsafe-eval'",
+		"style-src-elem 'self'",
+		"style-src-attr 'unsafe-inline'",
+		"frame-ancestors 'none'",
+	} {
+		if !strings.Contains(csp, want) {
+			t.Fatalf("CSP missing %q: %s", want, csp)
+		}
+	}
+	if strings.Contains(csp, "script-src 'self' 'unsafe-inline'") {
+		t.Fatalf("CSP allows inline scripts: %s", csp)
+	}
+}
+
 func TestSessionCookieRotatesAfterLogin(t *testing.T) {
 	srv, err := New(Config{DevMode: true})
 	if err != nil {

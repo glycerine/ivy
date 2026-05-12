@@ -212,7 +212,7 @@ func (s *Server) appBoot(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("content-type", "text/javascript; charset=utf-8")
 	var b strings.Builder
-	b.WriteString(`const element = document.currentScript.parentElement;`)
+	b.WriteString(`const element = document.getElementById("svelte");`)
 	b.WriteString(`globalThis.__sveltekit_`)
 	b.WriteString(hash)
 	b.WriteString(` = { base: "/app", assets: "" };`)
@@ -352,7 +352,7 @@ func securityHeaders(w http.ResponseWriter) {
 	w.Header().Set("x-content-type-options", "nosniff")
 	w.Header().Set("x-frame-options", "DENY")
 	w.Header().Set("referrer-policy", "same-origin")
-	w.Header().Set("content-security-policy", "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; connect-src 'self'; worker-src 'self' blob:; img-src 'self' data:; form-action 'self'; base-uri 'self'; frame-ancestors 'none'")
+	w.Header().Set("content-security-policy", "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; style-src-elem 'self'; style-src-attr 'unsafe-inline'; connect-src 'self'; worker-src 'self' blob:; img-src 'self' data:; form-action 'self'; base-uri 'self'; frame-ancestors 'none'")
 }
 
 var pageTemplate = template.Must(template.New("page").Parse(`<!doctype html>

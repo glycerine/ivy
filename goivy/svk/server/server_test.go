@@ -175,6 +175,7 @@ func TestGeneratedSvelteBootScriptUsesBuiltEntriesAndAppBase(t *testing.T) {
 	}
 	body := res.Body.String()
 	for _, want := range []string{
+		`const element = document.getElementById("svelte");`,
 		`globalThis.__sveltekit_abc123 = { base: "/app", assets: "" };`,
 		`import("/_app/immutable/entry/start.test.js")`,
 		`import("/_app/immutable/entry/app.test.js")`,
