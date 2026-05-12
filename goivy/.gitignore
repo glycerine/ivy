@@ -41,3 +41,4 @@ webvue/static/goivy-check-wasip1.wasm
 browser.xtrace.log
 py.xtrace.log
 webvue/static/goivy-check-js.wasm
+webvue/static/z3-471-api.wasm
