@@ -7,7 +7,7 @@ ABC_DIR="$SCRIPT_DIR/abc"
 : "${EMSDK:=$HOME/go/src/github.com/emscripten-core/emsdk}"
 : "${EM_CACHE:=/tmp/ivy-emscripten-cache}"
 : "${ABC_WASM_JOBS:=}"
-: "${ABC_WASM_LOG:=/private/tmp/abc-wasm-build-$(date +%Y%m%d-%H%M%S).log}"
+: "${ABC_WASM_LOG:=/tmp/abc-wasm-build-$(date +%Y%m%d-%H%M%S).log}"
 
 if [[ -f "$EMSDK/emsdk_env.sh" ]]; then
   EMSDK_QUIET=1 source "$EMSDK/emsdk_env.sh"
