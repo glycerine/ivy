@@ -176,16 +176,10 @@ server mode and browser wasm mode.
 
 ### Proposed Go Shape
 
-Add a package under one of these names after checking import cycles:
+Add a package
 
 ```text
 goivy/webengine/
-```
-
-or:
-
-```text
-goivy/webui/enginecore/
 ```
 
 The package owns Go-native methods that return typed Go structs, not raw HTTP
@@ -896,4 +890,3 @@ Plan001 is complete when:
   APIs.
 - Unit, Go, and Playwright tests cover every stage enough that future work does
   not wedge under a huge untested UI/controller migration.
-
