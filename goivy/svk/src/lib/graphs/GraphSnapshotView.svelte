@@ -123,10 +123,7 @@
 		min-height: 0;
 		height: 100%;
 		overflow: hidden;
-		background:
-			linear-gradient(#edf1f5 1px, transparent 1px),
-			linear-gradient(90deg, #edf1f5 1px, transparent 1px);
-		background-size: 28px 28px;
+		background: #11101d;
 	}
 
 	.cy-container {
@@ -143,20 +140,22 @@
 	.graph-node-hit {
 		position: absolute;
 		transform: translate(-50%, -50%);
-		border: 2px solid #2f6f87;
-		background: rgba(233, 247, 246, 0.92);
-		color: #15363f;
+		border: 0;
+		background: #858585;
+		color: #ffffff;
 		border-radius: 999px;
-		min-width: 108px;
-		min-height: 42px;
+		min-width: 124px;
+		min-height: 124px;
 		padding: 0 12px;
 		cursor: pointer;
 		pointer-events: auto;
+		font-size: 2rem;
+		box-shadow: none;
 	}
 
 	.graph-node-hit.selected {
-		border-color: #7a4f11;
-		background: rgba(255, 241, 214, 0.96);
+		outline: 3px solid #d7d7d7;
+		background: #858585;
 	}
 
 	.graph-actions {
@@ -166,18 +165,26 @@
 		display: flex;
 		gap: 8px;
 		padding: 8px;
-		border: 1px solid #bbc6d4;
-		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.94);
+		border: 1px solid #393b44;
+		border-radius: 4px;
+		background: rgba(24, 26, 28, 0.94);
 	}
 
 	.graph-actions button {
-		border: 1px solid #bbc6d4;
-		background: #ffffff;
-		color: #17202a;
-		border-radius: 6px;
+		border: 1px solid #424550;
+		background: #24262b;
+		color: #d8d8df;
+		border-radius: 3px;
 		min-height: 30px;
 		padding: 0 10px;
 		cursor: pointer;
+	}
+
+	@media (max-height: 720px) {
+		.graph-node-hit {
+			min-width: 92px;
+			min-height: 92px;
+			font-size: 1.5rem;
+		}
 	}
 </style>

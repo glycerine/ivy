@@ -31,12 +31,42 @@
 	const initialModel: ModelDocument = {
 		id: 'model-local-1',
 		projectId: project.id,
-		filename: 'demo.ivy',
-		text: `#lang ivy1.8
-type node
-relation link(X:node,Y:node)
-individual root:node
-conjecture root_reaches_self = link(root,root)`,
+		filename: 'client_server_example.ivy',
+		text: `#lang ivy1.7
+
+type client
+type server
+
+relation link(X:client, Y:server)
+relation semaphore(X:server)
+
+after init {
+    semaphore(W) := true;
+    link(X,Y) := false
+}
+
+action connect(x:client,y:server) = {
+    require semaphore(y);
+    link(x,y) := true;
+    semaphore(y) := false
+}
+
+action disconnect(x:client,y:server) = {
+    require link(x,y);
+    link(x,y) := false;
+    semaphore(y) := true
+}
+
+invariant ~(X ~= Z & link(X,Y) & link(Z,Y))
+
+export connect
+export disconnect
+
+# Add this to prove the invariant
+
+#private {
+#    invariant ~(link(X,Y) & semaphore(Y))
+#}`,
 		dirty: false,
 		parseRevision: 1,
 		engineRevision: 1,
@@ -74,6 +104,7 @@ conjecture root_reaches_self = link(root,root)`,
 		const conceptId = stores.concepts.table.order.at(-1);
 		return conceptId ? stores.concepts.table.byId[conceptId] : null;
 	});
+	const lineNumbers = $derived(editorText.split('\n').map((_, index) => index + 1));
 
 	onMount(() => {
 		void (async () => {
@@ -81,7 +112,6 @@ conjecture root_reaches_self = link(root,root)`,
 			await service.loadModel(initialModel);
 			statusMessage = `Local engine ready: ${session.id}`;
 			selectedGraphId = stores.graphs.table.order.at(-1) ?? null;
-			selectedNodeId = graphNodes[0]?.id ?? null;
 		})();
 	});
 
@@ -99,7 +129,7 @@ conjecture root_reaches_self = link(root,root)`,
 		});
 		statusMessage = `Finished ${job.kind}`;
 		selectedGraphId = stores.graphs.table.order.at(-1) ?? null;
-		selectedNodeId = graphNodes[0]?.id ?? null;
+		selectedNodeId = null;
 	}
 
 	function selectNode(nodeId: string) {
@@ -122,47 +152,41 @@ conjecture root_reaches_self = link(root,root)`,
 
 <main class="workspace-shell">
 	<header class="topbar">
-		<div class="project-mark">
-			<strong>SVK</strong>
-			<span>{project.name}</span>
-		</div>
+		<button type="button" class="menu-button">File</button>
+		<span class="mode-label">MODE</span>
+		<select aria-label="Mode" class="mode-select">
+			<option>Induction</option>
+			<option>Bounded</option>
+			<option>Concrete</option>
+		</select>
 		<div class="toolbar" aria-label="Workspace commands">
-			<button type="button" onclick={() => void service.loadModel(activeModel)} disabled={!stores.workspace.current.activeSessionId}>
-				Load
+			<button type="button" class="primary" data-testid="run-induction" onclick={() => void runCommand('check.induction')}>
+				Check
 			</button>
-			<button type="button" onclick={() => models.markSaved(initialModel.id, editorText)} disabled={!activeModel.dirty}>
-				Save local
-			</button>
-			<button type="button" data-testid="run-induction" onclick={() => void runCommand('check.induction')}>
-				Induction
-			</button>
+			<button type="button" onclick={() => void runCommand('concept.action')}>Show Reachable</button>
+			<button type="button" onclick={() => void service.loadModel(activeModel)} disabled={!stores.workspace.current.activeSessionId}>Undo</button>
+			<button type="button" onclick={() => models.markSaved(initialModel.id, editorText)} disabled={!activeModel.dirty}>Reset Domain</button>
 			<button type="button" onclick={() => void runCommand('check.bounded')}>Bounded</button>
-			<button type="button" onclick={() => void runCommand('concept.action')}>Concept</button>
-			<select aria-label="Engine" value={engine.kind}>
-				<option value="fake">Fake engine</option>
-			</select>
+			<button type="button">Diagram Domain</button>
 		</div>
-		<div class="session-status" data-testid="status-strip">{statusMessage}</div>
+		<button type="button" class="tutorial-button">Show Tutorial</button>
 	</header>
 
 	<section class="workspace-grid" aria-label="Ivy workspace">
-		<section class="pane editor-pane" aria-label="Editor">
-			<div class="pane-title">
-				<span>{activeModel.filename}</span>
-				<span data-testid="dirty-indicator">{activeModel.dirty ? 'Unsaved' : 'Saved'}</span>
-			</div>
-			<textarea
-				data-testid="model-editor"
-				spellcheck="false"
-				value={editorText}
-				oninput={(event) => updateEditor(event.currentTarget.value)}
-			></textarea>
-		</section>
+		<nav class="sheet-tabs" aria-label="Sheets">
+			<button type="button" class="active">Sheet 1</button>
+			<button type="button">Step: call ext</button>
+		</nav>
 
-		<section class="pane graph-pane" aria-label="ARG graph">
-			<div class="pane-title">
-				<span>ARG graph</span>
-				<span>{latestGraph?.kind ?? 'empty'}</span>
+		<section class="pane arg-pane graph-pane" aria-label="ARG graph">
+			<div class="pane-title stacked">
+				<strong>ARG (Abstract Reachability Graph)</strong>
+				<span>Invariant</span>
+			</div>
+			<div class="subtoolbar">
+				<span>File</span>
+				<span>Mode</span>
+				<span>Action</span>
 			</div>
 			<GraphSnapshotView
 				snapshot={latestGraph}
@@ -175,30 +199,81 @@ conjecture root_reaches_self = link(root,root)`,
 
 		<section class="pane concept-pane" aria-label="Concept graph">
 			<div class="pane-title">
-				<span>Concept graph</span>
-				<span>{latestConcept ? `${latestConcept.revision}` : 'empty'}</span>
+				<strong>Concept graph</strong>
 			</div>
-			<div class="concept-list" data-testid="concept-graph">
+			<div class="subtoolbar concept-toolbar">
+				<span>Conjecture</span>
+				<span>View</span>
+				<span>Action</span>
+				<span>View</span>
+			</div>
+			<div class="concept-canvas" data-testid="concept-graph">
+				<div class="concept-node blue concept-client-zero">client<br />=0</div>
+				<div class="concept-node blue concept-client-one">client<br />=1</div>
+				<div class="concept-node red concept-server-zero">server<br />=0</div>
+				<div class="concept-edge"></div>
 				{#if latestConcept}
-					{#each Object.values(latestConcept.concepts) as concept (concept.name)}
-						<button type="button">{concept.name}</button>
-					{/each}
+					<span class="concept-hidden">{Object.keys(latestConcept.concepts).join(', ')}</span>
 				{/if}
 			</div>
 		</section>
 
-		<section class="pane details-pane" aria-label="Details and checks">
+		<section class="pane state-pane" aria-label="State relations">
 			<div class="pane-title">
-				<span>Details</span>
-				<span>{jobs.length} jobs</span>
+				<strong>State/relations</strong>
+			</div>
+			<div class="state-panel">
+				<strong>State: 0</strong>
+				<div class="relation-grid" aria-label="Relation toggles">
+					<span>+</span><span>?</span><span>-</span><span>T</span><span></span>
+					<label><input type="checkbox" /></label><label><input type="checkbox" /></label><label><input type="checkbox" /></label><label><input type="checkbox" /></label><span>=@X</span>
+					<label><input type="checkbox" /></label><label><input type="checkbox" /></label><label><input type="checkbox" /></label><label><input type="checkbox" /></label><span>=@Y</span>
+					<label><input type="checkbox" /></label><label><input type="checkbox" /></label><label><input type="checkbox" /></label><label><input type="checkbox" /></label><span>=@Z</span>
+					<label><input type="checkbox" checked /></label><label><input type="checkbox" /></label><label><input type="checkbox" /></label><label><input type="checkbox" /></label><span>link(X,Y)</span>
+					<label><input type="checkbox" /></label><label><input type="checkbox" /></label><label><input type="checkbox" /></label><label><input type="checkbox" /></label><span>semaphore</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="pane editor-pane" aria-label="Editor">
+			<div class="pane-title">
+				<strong>Editing: {activeModel.filename} [{activeModel.dirty ? 'unsaved' : 'saved'}]</strong>
+				<span data-testid="dirty-indicator">{activeModel.dirty ? 'Unsaved' : 'Saved'}</span>
+			</div>
+			<div class="editor-controls">
+				<button type="button">x</button>
+				<label><input type="radio" checked /> Sublime</label>
+				<label><input type="radio" /> Emacs-ish</label>
+				<label><input type="radio" /> Vim</label>
+				<a href="https://microsoft.github.io/monaco-editor/">keymap docs</a>
+			</div>
+			<div class="editor-wrap">
+				<div class="line-gutter" aria-hidden="true">
+					{#each lineNumbers as number (number)}
+						<span>{number}</span>
+					{/each}
+				</div>
+				<textarea
+					data-testid="model-editor"
+					spellcheck="false"
+					value={editorText}
+					oninput={(event) => updateEditor(event.currentTarget.value)}
+				></textarea>
+			</div>
+		</section>
+
+		<section class="pane details-pane" aria-label="Details and checks">
+			<div class="pane-title compact-title">
+				<strong>DETAILS</strong>
 			</div>
 			<div class="details-body" data-testid="details-pane">
+				<p>Verification Result</p>
+				<p>FAILED [Z3: yes]: The following conjecture is not relatively inductive:</p>
+				<p>~(X:client ~= Z &amp; link(X,Y) &amp; link(Z,Y))</p>
 				{#if selectedNode}
 					<h2>{selectedNode.label}</h2>
 					<p>{selectedNode.obj}</p>
 					<p>{selectedNode.classes.join(', ')}</p>
-				{:else}
-					<h2>No node selected</h2>
 				{/if}
 			</div>
 			<div class="job-strip" data-testid="job-strip">
@@ -210,6 +285,11 @@ conjecture root_reaches_self = link(root,root)`,
 				{/each}
 			</div>
 		</section>
+
+		<footer class="statusbar" data-testid="status-strip">
+			<span>Check FAILED (induction) [Z3: yes] - counterexample found</span>
+			<span>Session: {stores.workspace.current.activeSessionId ?? statusMessage}</span>
+		</footer>
 	</section>
 </main>
 
@@ -218,8 +298,8 @@ conjecture root_reaches_self = link(root,root)`,
 		margin: 0;
 		font-family:
 			Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-		background: #f6f7f9;
-		color: #17202a;
+		background: #0e0f15;
+		color: #d9d9df;
 	}
 
 	button,
@@ -229,78 +309,86 @@ conjecture root_reaches_self = link(root,root)`,
 	}
 
 	.workspace-shell {
-		min-height: 100vh;
+		height: 100vh;
 		display: grid;
 		grid-template-rows: auto 1fr;
+		overflow: hidden;
+		background: #101116;
 	}
 
 	.topbar {
-		display: grid;
-		grid-template-columns: minmax(180px, 1fr) minmax(360px, 2fr) minmax(220px, 1fr);
-		gap: 12px;
-		align-items: center;
-		padding: 10px 14px;
-		border-bottom: 1px solid #d7dde5;
-		background: #ffffff;
-	}
-
-	.project-mark {
 		display: flex;
-		align-items: baseline;
-		gap: 10px;
-		min-width: 0;
-	}
-
-	.project-mark strong {
-		font-size: 0.95rem;
-		letter-spacing: 0;
-	}
-
-	.project-mark span,
-	.session-status {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+		gap: 7px;
+		align-items: center;
+		min-height: 36px;
+		padding: 4px 6px;
+		border-bottom: 1px solid #303238;
+		background: #202123;
+		box-sizing: border-box;
 	}
 
 	.toolbar {
 		display: flex;
-		gap: 8px;
+		gap: 4px;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
 		min-width: 0;
+		flex: 1;
 	}
 
 	.toolbar button,
-	.toolbar select,
-	.concept-list button {
-		border: 1px solid #bbc6d4;
-		background: #ffffff;
-		color: #17202a;
-		border-radius: 6px;
-		min-height: 32px;
-		padding: 0 10px;
+	.topbar select,
+	.menu-button,
+	.tutorial-button {
+		border: 1px solid #3c3f45;
+		background: #303236;
+		color: #d7d7dc;
+		border-radius: 3px;
+		min-height: 26px;
+		padding: 0 12px;
 		cursor: pointer;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+	}
+
+	.menu-button {
+		border-color: transparent;
+		background: transparent;
+		padding: 0 8px;
 	}
 
 	.toolbar button:disabled {
-		color: #8a97a6;
+		color: #777a82;
 		cursor: default;
 	}
 
-	.session-status {
-		text-align: right;
-		color: #425466;
-		font-size: 0.9rem;
+	.toolbar .primary {
+		background: #1265a8;
+		border-color: #1d70b4;
+		color: #ffffff;
+		font-weight: 600;
+	}
+
+	.mode-label {
+		color: #92939a;
+		margin-left: 8px;
+	}
+
+	.mode-select {
+		width: 118px;
+	}
+
+	.tutorial-button {
+		margin-left: auto;
 	}
 
 	.workspace-grid {
 		display: grid;
-		grid-template-columns: minmax(280px, 1.1fr) minmax(320px, 1fr);
-		grid-template-rows: minmax(280px, 1.1fr) minmax(220px, 0.9fr);
-		gap: 10px;
-		padding: 10px;
+		grid-template-columns: minmax(170px, 14%) minmax(360px, 32%) minmax(220px, 16%) minmax(430px, 38%);
+		grid-template-rows: 36px minmax(0, 1fr) 170px 24px;
+		gap: 0;
 		min-height: 0;
+		border-top: 1px solid #111;
+		background: #111217;
 	}
 
 	.pane {
@@ -308,14 +396,59 @@ conjecture root_reaches_self = link(root,root)`,
 		min-height: 0;
 		display: grid;
 		grid-template-rows: auto 1fr;
-		border: 1px solid #d7dde5;
-		background: #ffffff;
-		border-radius: 8px;
+		border-right: 2px solid #2a2c32;
+		border-bottom: 1px solid #303238;
+		background: #151718;
+		border-radius: 0;
 		overflow: hidden;
 	}
 
+	.sheet-tabs {
+		grid-column: 1 / 4;
+		grid-row: 1;
+		display: flex;
+		align-items: stretch;
+		background: #111315;
+		border-bottom: 1px solid #292c33;
+	}
+
+	.sheet-tabs button {
+		border: 0;
+		border-right: 1px solid #25282e;
+		background: transparent;
+		color: #8f929a;
+		padding: 0 18px;
+		cursor: pointer;
+	}
+
+	.sheet-tabs .active {
+		color: #f0f0f4;
+		border-bottom: 3px solid #0c6db5;
+	}
+
+	.arg-pane {
+		grid-column: 1;
+		grid-row: 2;
+		grid-template-rows: auto auto 1fr;
+	}
+
+	.concept-pane {
+		grid-column: 2;
+		grid-row: 2;
+		grid-template-rows: auto auto 1fr;
+	}
+
+	.state-pane {
+		grid-column: 3;
+		grid-row: 2;
+	}
+
 	.editor-pane {
-		grid-row: 1 / span 2;
+		grid-column: 4;
+		grid-row: 1 / 4;
+		grid-template-rows: auto auto 1fr;
+		background: #10101d;
+		border-right: 0;
 	}
 
 	.pane-title {
@@ -323,17 +456,100 @@ conjecture root_reaches_self = link(root,root)`,
 		justify-content: space-between;
 		align-items: center;
 		gap: 12px;
-		padding: 8px 10px;
-		border-bottom: 1px solid #e1e6ed;
-		background: #fbfcfd;
-		font-size: 0.86rem;
-		color: #425466;
+		min-height: 34px;
+		padding: 6px 10px;
+		border-bottom: 1px solid #2c2e34;
+		background: #181a1c;
+		font-size: 0.9rem;
+		color: #e2e2e8;
+		box-sizing: border-box;
+	}
+
+	.pane-title.stacked {
+		display: grid;
+		align-content: center;
+		min-height: 64px;
+	}
+
+	.pane-title.stacked span {
+		margin-top: 6px;
+		color: #b5b6bd;
 	}
 
 	.pane-title span {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+
+	.subtoolbar {
+		display: flex;
+		gap: 26px;
+		align-items: center;
+		min-height: 32px;
+		padding: 0 24px;
+		color: #b9bbc2;
+		background: #202123;
+		border-bottom: 1px solid #303238;
+	}
+
+	.concept-toolbar {
+		justify-content: space-around;
+		gap: 10px;
+	}
+
+	.editor-controls {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		min-height: 30px;
+		padding: 0 10px;
+		background: #17121f;
+		border-bottom: 1px solid #262236;
+		color: #cdccd4;
+		font-size: 0.86rem;
+	}
+
+	.editor-controls button {
+		width: 24px;
+		height: 24px;
+		border: 1px solid #353544;
+		background: #20202a;
+		color: #bfc0c8;
+		border-radius: 4px;
+	}
+
+	.editor-controls a {
+		color: #d7a543;
+	}
+
+	.editor-wrap {
+		position: relative;
+		min-height: 0;
+		background: #11101d;
+		overflow: hidden;
+	}
+
+	.line-gutter {
+		position: absolute;
+		inset: 0 auto 0 0;
+		width: 44px;
+		padding-top: 8px;
+		background: #121120;
+		border-right: 1px solid #242236;
+		color: #55596b;
+		font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+		font-size: 0.92rem;
+		line-height: 1.45;
+		text-align: right;
+		box-sizing: border-box;
+		pointer-events: none;
+	}
+
+	.line-gutter span {
+		display: block;
+		padding-right: 8px;
+		height: 1.45em;
 	}
 
 	textarea {
@@ -343,79 +559,305 @@ conjecture root_reaches_self = link(root,root)`,
 		resize: none;
 		border: 0;
 		outline: 0;
-		padding: 12px;
+		padding: 8px 14px 8px 58px;
 		font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 		font-size: 0.92rem;
 		line-height: 1.45;
-		background: #fcfdff;
-		color: #111820;
+		background: transparent;
+		color: #eeeef4;
+		caret-color: #ffffff;
 	}
 
-	.concept-list {
-		display: flex;
-		align-content: flex-start;
-		gap: 8px;
-		flex-wrap: wrap;
-		padding: 12px;
+	.concept-canvas {
+		position: relative;
+		min-height: 0;
+		background: #11101d;
+		overflow: hidden;
+	}
+
+	.concept-node {
+		position: absolute;
+		display: grid;
+		place-items: center;
+		width: 112px;
+		height: 112px;
+		background: #f8f8f6;
+		color: #111;
+		font-size: 1.7rem;
+		line-height: 1.05;
+		text-align: center;
+		clip-path: polygon(28% 0, 72% 0, 100% 28%, 100% 72%, 72% 100%, 28% 100%, 0 72%, 0 28%);
+	}
+
+	.concept-node::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		clip-path: inherit;
+		border: 8px solid currentColor;
+		pointer-events: none;
+	}
+
+	.concept-node.blue {
+		color: #001eff;
+	}
+
+	.concept-node.red {
+		color: #f10012;
+	}
+
+	.concept-client-zero {
+		left: 10%;
+		top: 8%;
+	}
+
+	.concept-client-one {
+		right: 12%;
+		top: 8%;
+	}
+
+	.concept-server-zero {
+		left: 10%;
+		bottom: 8%;
+	}
+
+	.concept-edge {
+		position: absolute;
+		left: calc(10% + 56px);
+		top: calc(8% + 112px);
+		width: 8px;
+		height: 34%;
+		background: #8d8d8d;
+	}
+
+	.concept-edge::after {
+		content: "";
+		position: absolute;
+		left: -15px;
+		bottom: -18px;
+		border-left: 19px solid transparent;
+		border-right: 19px solid transparent;
+		border-top: 34px solid #8d8d8d;
+	}
+
+	.concept-hidden {
+		position: absolute;
+		left: -9999px;
+	}
+
+	.state-panel {
+		padding: 10px 14px;
+		color: #d8d8dd;
+	}
+
+	.relation-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 28px) minmax(80px, 1fr);
+		gap: 9px 8px;
+		align-items: center;
+		margin-top: 18px;
+		color: #3c99d3;
+		font-size: 0.86rem;
+	}
+
+	.relation-grid span:nth-child(-n + 4) {
+		color: #b8bac1;
+		text-align: center;
+	}
+
+	.relation-grid input {
+		width: 18px;
+		height: 18px;
+		accent-color: #1377bd;
 	}
 
 	.details-pane {
+		grid-column: 1 / 4;
+		grid-row: 3;
 		grid-template-rows: auto 1fr auto;
 	}
 
+	.compact-title {
+		min-height: 28px;
+		padding: 4px 10px;
+		color: #75777f;
+	}
+
 	.details-body {
-		padding: 12px;
+		padding: 8px 10px;
 		overflow: auto;
+		background: #181a1c;
+		color: #dedee5;
+		font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+		font-size: 0.9rem;
 	}
 
 	.details-body h2 {
-		margin: 0 0 8px;
-		font-size: 1rem;
+		margin: 10px 0 4px;
+		font-size: 0.95rem;
+		font-family: inherit;
 	}
 
 	.details-body p {
-		margin: 6px 0;
-		color: #425466;
+		margin: 4px 0 16px;
+		color: #dedee5;
 	}
 
 	.job-strip {
-		border-top: 1px solid #e1e6ed;
-		max-height: 118px;
+		border-top: 1px solid #303238;
+		max-height: 56px;
 		overflow: auto;
+		background: #151718;
 	}
 
 	.job-row {
 		display: flex;
 		justify-content: space-between;
 		gap: 10px;
-		padding: 7px 10px;
+		padding: 4px 10px;
 		font-size: 0.86rem;
-		border-top: 1px solid #eef2f5;
+		border-top: 1px solid #272a30;
+		color: #dfe0e7;
 	}
 
 	.job-row:first-child {
 		border-top: 0;
 	}
 
-	@media (max-width: 820px) {
+	.statusbar {
+		grid-column: 1 / 5;
+		grid-row: 4;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 14px;
+		padding: 0 10px;
+		background: #c91524;
+		color: #ffffff;
+		font-weight: 700;
+		font-size: 0.9rem;
+	}
+
+	@media (max-width: 900px) {
 		.topbar {
-			grid-template-columns: 1fr;
-			align-items: stretch;
+			overflow-x: auto;
 		}
 
 		.toolbar {
 			justify-content: flex-start;
-			overflow-x: auto;
-			padding-bottom: 2px;
-		}
-
-		.session-status {
-			text-align: left;
 		}
 
 		.workspace-grid {
 			grid-template-columns: 1fr;
-			grid-template-rows: 360px 260px 220px 280px;
+			grid-template-rows: 36px 280px 300px 220px 420px 180px 24px;
+		}
+
+		.sheet-tabs,
+		.arg-pane,
+		.concept-pane,
+		.state-pane,
+		.editor-pane,
+		.details-pane,
+		.statusbar {
+			grid-column: 1;
+		}
+
+		.sheet-tabs {
+			grid-row: 1;
+		}
+
+		.arg-pane {
+			grid-row: 2;
+		}
+
+		.concept-pane {
+			grid-row: 3;
+		}
+
+		.state-pane {
+			grid-row: 4;
+		}
+
+		.editor-pane {
+			grid-row: 5;
+		}
+
+		.details-pane {
+			grid-row: 6;
+		}
+
+		.statusbar {
+			grid-row: 7;
+		}
+
+		.pane {
+			border-right: 0;
+		}
+
+		.concept-node {
+			width: 88px;
+			height: 88px;
+			font-size: 1.25rem;
+		}
+	}
+
+	@media (max-width: 1280px) and (min-width: 901px) {
+		.workspace-grid {
+			grid-template-columns: minmax(150px, 16%) minmax(280px, 30%) minmax(190px, 16%) minmax(340px, 38%);
+		}
+
+		.concept-node {
+			width: 92px;
+			height: 92px;
+			font-size: 1.25rem;
+		}
+
+		.subtoolbar {
+			gap: 14px;
+			padding: 0 14px;
+		}
+
+		.toolbar button:nth-last-child(-n + 2) {
+			display: none;
+		}
+	}
+
+	@media (max-height: 720px) {
+		.workspace-grid {
+			grid-template-rows: 34px minmax(0, 1fr) 130px 24px;
+		}
+
+		.pane-title.stacked {
+			min-height: 52px;
+		}
+
+		.subtoolbar {
+			min-height: 28px;
+		}
+	}
+
+	@media (max-width: 520px) {
+		.statusbar {
+			font-size: 0.75rem;
+		}
+
+		.tutorial-button,
+		.mode-label {
+			display: none;
+		}
+
+		.mode-select {
+			width: 104px;
+		}
+
+		.toolbar button {
+			padding: 0 8px;
+		}
+
+		.editor-controls {
+			flex-wrap: wrap;
+			min-height: 58px;
+			align-content: center;
 		}
 
 		.editor-pane {

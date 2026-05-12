@@ -185,26 +185,45 @@ export class FakeEngine implements IvyEngine {
 	}
 
 	private createGraphSnapshot(kind: GraphSnapshot['kind'], sheetId: Id, sourceRevision: number): GraphSnapshot {
-		const nodeId = this.createId('node');
+		const firstNodeId = this.createId('node');
+		const secondNodeId = this.createId('node');
+		const edgeId = this.createId('edge');
 		return {
 			id: this.createId('graph'),
 			sheetId,
 			kind,
 			sourceRevision,
 			nodes: {
-				[nodeId]: {
-					id: nodeId,
+				[firstNodeId]: {
+					id: firstNodeId,
 					obj: 'fake.node',
-					label: 'Fake node',
+					label: '0',
+					classes: ['fake'],
+					shape: 'ellipse',
+					actions: [{ label: 'Expand', action: 'arg.expand', args: { depth: 1 } }]
+				},
+				[secondNodeId]: {
+					id: secondNodeId,
+					obj: 'fake.node.next',
+					label: '1',
 					classes: ['fake'],
 					shape: 'ellipse',
 					actions: [{ label: 'Expand', action: 'arg.expand', args: { depth: 1 } }]
 				}
 			},
-			edges: {},
-			nodeOrder: [nodeId],
-			edgeOrder: [],
-			layout: { [nodeId]: { x: 160, y: 130 } },
+			edges: {
+				[edgeId]: {
+					id: edgeId,
+					obj: 'fake.edge',
+					source: firstNodeId,
+					target: secondNodeId,
+					label: 'call ext',
+					classes: ['fake']
+				}
+			},
+			nodeOrder: [firstNodeId, secondNodeId],
+			edgeOrder: [edgeId],
+			layout: { [firstNodeId]: { x: 120, y: 130 }, [secondNodeId]: { x: 120, y: 320 } },
 			styleRevision: 1,
 			createdAt: this.now()
 		};
