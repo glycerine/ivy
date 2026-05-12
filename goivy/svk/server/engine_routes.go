@@ -113,6 +113,9 @@ func (s *Server) engineNewSession(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "invalid json", http.StatusBadRequest)
 		return
 	}
+	if s.cfg.DevMode && strings.HasPrefix(req.ProjectID, "project-local-") && s.projects.RoleForUser(userID, req.ProjectID) == "" {
+		s.projects.GrantUser(userID, req.ProjectID, RoleOwner)
+	}
 	if s.projects.RoleForUser(userID, req.ProjectID) == "" {
 		http.Error(w, "forbidden", http.StatusForbidden)
 		return
@@ -229,7 +232,7 @@ func (s *Server) engineSessionResponse(sessionID, projectID string) engineSessio
 			Offline:        false,
 			PersistentJobs: false,
 			CancelJob:      false,
-			EventStream:    true,
+			EventStream:    false,
 			ParallelJobs:   false,
 		},
 		CreatedAt: "2026-05-12T00:00:00.000Z",

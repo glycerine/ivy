@@ -42,7 +42,7 @@ const conceptPayload = {
 	abstract_value: {}
 };
 
-class FakeEventSource implements WebuiEventSourceLike {
+class StubEventSource implements WebuiEventSourceLike {
 	onmessage: ((event: MessageEvent<string>) => void) | null = null;
 	onerror: ((event: Event) => void) | null = null;
 	closed = false;
@@ -76,7 +76,7 @@ describe('HostedWebuiEngine', () => {
 			baseUrl: 'http://webui.test',
 			createId: (prefix) => `${prefix}-1`,
 			now: () => createdAt,
-			createEventSource: () => new FakeEventSource(),
+			createEventSource: () => new StubEventSource(),
 			fetcher: async (input, init) => {
 				requests.push({ url: String(input), method: init?.method ?? 'GET', body: init?.body });
 				if (String(input).endsWith('/api/session/new')) {
@@ -120,7 +120,7 @@ describe('HostedWebuiEngine', () => {
 		const engine = new HostedWebuiEngine({
 			createId: (prefix) => `${prefix}-${postedBodies.length + 1}`,
 			now: () => createdAt,
-			createEventSource: () => new FakeEventSource(),
+			createEventSource: () => new StubEventSource(),
 			fetcher: async (input, init) => {
 				if (String(input).endsWith('/api/session/new')) {
 					return jsonResponse({ session_id: 's1' });
@@ -172,7 +172,7 @@ describe('HostedWebuiEngine', () => {
 	it('translates webui SSE lifecycle events without leaking raw event types', async () => {
 		expect.hasAssertions();
 
-		const source = new FakeEventSource();
+		const source = new StubEventSource();
 		const engine = new HostedWebuiEngine({
 			createId: (prefix) => `${prefix}-1`,
 			now: () => createdAt,

@@ -19,7 +19,7 @@ const concept: ConceptState = {
 
 const engine: EngineSession = {
 	id: 'engine-1',
-	kind: 'fake',
+	kind: 'hosted-go',
 	status: 'ready',
 	projectId: 'project-1',
 	capabilities: {

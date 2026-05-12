@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { BrowserWasmEngine, FakeEngine, HostedWebuiEngine } from '$lib/engines';
+	import { BrowserWasmEngine, HostedGoEngine, HostedWebuiEngine } from '$lib/engines';
 	import { createEngineService } from '$lib/services';
 	import { nowIso } from '$lib/time';
 	import WorkbenchShell from '$lib/workbench/components/WorkbenchShell.svelte';
@@ -21,7 +21,7 @@
 	import type { EdgeDisplayClass, GraphNode, GraphSnapshot, ModelDocument, NodeAction, NodeLabelDisplayClass, Project } from '$lib/types';
 	import type { IvyEngine } from '$lib/types';
 
-	type EngineChoice = 'fake' | 'hosted-webui' | 'browser-wasm';
+	type EngineChoice = 'hosted-go' | 'hosted-webui' | 'browser-wasm';
 
 	const createdAt = '2026-05-12T00:00:00.000Z';
 
@@ -100,8 +100,8 @@ export disconnect
 	let editorText = $state(initialModel.text);
 	let selectedNodeId = $state<string | null>(null);
 	let selectedGraphId = $state<string | null>(null);
-	let engineChoice = $state<EngineChoice>('fake');
-	let service = createEngineService({ engine: createEngine('fake'), stores });
+	let engineChoice = $state<EngineChoice>('hosted-go');
+	let service = createEngineService({ engine: createEngine('hosted-go'), stores });
 
 	const activeModel = $derived(models.table.byId[initialModel.id]);
 	const jobs = $derived(stores.jobs.table.order.map((id) => stores.jobs.table.byId[id]));
@@ -123,6 +123,11 @@ export disconnect
 	});
 
 	function createEngine(choice: EngineChoice): IvyEngine {
+		if (choice === 'hosted-go') {
+			return new HostedGoEngine({
+				baseUrl: import.meta.env.VITE_IVY_ENGINE_BASE_URL ?? ''
+			});
+		}
 		if (choice === 'hosted-webui') {
 			return new HostedWebuiEngine({
 				baseUrl: import.meta.env.VITE_IVY_ENGINE_BASE_URL ?? '',
@@ -132,7 +137,9 @@ export disconnect
 		if (choice === 'browser-wasm') {
 			return new BrowserWasmEngine();
 		}
-		return new FakeEngine({ now: nowIso });
+		return new HostedGoEngine({
+			baseUrl: import.meta.env.VITE_IVY_ENGINE_BASE_URL ?? ''
+		});
 	}
 
 	async function activateEngine(choice: EngineChoice) {

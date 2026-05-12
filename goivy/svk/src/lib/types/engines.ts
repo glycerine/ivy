@@ -5,7 +5,7 @@ import type { GraphSnapshot } from './graphs';
 import type { CheckResult, VerificationJob } from './jobs';
 import type { ModelDocument } from './models';
 
-export type EngineKind = 'browser-js-wasm' | 'hosted-go' | 'fake';
+export type EngineKind = 'browser-js-wasm' | 'hosted-go';
 
 export type EngineCapabilities = {
 	offline: boolean;

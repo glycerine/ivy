@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { FILE_MENU } from '$lib/workbench/commands/menuDefinitions';
 
-	type EngineChoice = 'fake' | 'hosted-webui' | 'browser-wasm';
+	type EngineChoice = 'hosted-go' | 'hosted-webui' | 'browser-wasm';
 
 	type Props = {
 		engineChoice: EngineChoice;
@@ -48,9 +48,9 @@
 		value={engineChoice}
 		onchange={(event) => void onActivateEngine(event.currentTarget.value as EngineChoice)}
 	>
-		<option value="fake">Local test engine</option>
-		<option value="hosted-webui">Hosted webui</option>
+		<option value="hosted-go">Native Go engine</option>
 		<option value="browser-wasm">Browser wasm</option>
+		<option value="hosted-webui">Legacy webui server</option>
 	</select>
 	<div class="toolbar" aria-label="Workspace commands">
 		<button type="button" class="primary" data-testid="run-induction" onclick={() => void onRunCommand('check.induction')}>

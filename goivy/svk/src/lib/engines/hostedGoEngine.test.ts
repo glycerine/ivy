@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { HostedGoEngine, type EventSourceLike } from './hostedGoEngine';
+import { HostedGoEngine } from './hostedGoEngine';
 import type { EngineEvent, EngineSession, ModelDocument, VerificationJob } from '$lib/types';
 
 const createdAt = '2026-05-12T00:00:00.000Z';
@@ -45,24 +45,6 @@ const job: VerificationJob = {
 	updatedAt: createdAt
 };
 
-class FakeEventSource implements EventSourceLike {
-	onmessage: ((event: MessageEvent<string>) => void) | null = null;
-	onerror: ((event: Event) => void) | null = null;
-	closed = false;
-
-	close(): void {
-		this.closed = true;
-	}
-
-	emit(event: EngineEvent) {
-		this.onmessage?.({ data: JSON.stringify(event) } as MessageEvent<string>);
-	}
-
-	fail() {
-		this.onerror?.(new Event('error'));
-	}
-}
-
 function jsonResponse(value: unknown, status = 200) {
 	return new Response(JSON.stringify(value), {
 		status,
@@ -85,6 +67,9 @@ describe('HostedGoEngine', () => {
 				if (String(input).endsWith('/load')) {
 					return jsonResponse({ job });
 				}
+				if (String(input).endsWith('/snapshot')) {
+					return jsonResponse({ arg: { elements: [] }, concept: { concepts: {} } });
+				}
 				return jsonResponse({});
 			}
 		});
@@ -93,30 +78,36 @@ describe('HostedGoEngine', () => {
 		await expect(engine.loadModel('session-1', model)).resolves.toMatchObject({ id: 'job-1' });
 		expect(requests).toEqual([
 			'POST https://example.test/api/engine/session',
-			'POST https://example.test/api/engine/session/session-1/load'
+			'POST https://example.test/api/engine/session/session-1/load',
+			'GET https://example.test/api/engine/session/session-1/snapshot'
 		]);
 	});
 
-	it('routes SSE messages and reports stream disconnect diagnostics', () => {
+	it('emits local lifecycle events from native HTTP operations', async () => {
 		expect.hasAssertions();
 
-		const source = new FakeEventSource();
 		const engine = new HostedGoEngine({
-			createEventSource: () => source,
-			fetcher: async () => jsonResponse({})
+			fetcher: async (input) => {
+				if (String(input).endsWith('/load')) {
+					return jsonResponse({ job });
+				}
+				return jsonResponse({ arg: { elements: [] }, concept: { concepts: {} } });
+			}
 		});
 		const events: EngineEvent[] = [];
 		const unsubscribe = engine.subscribe('session-1', (event) => events.push(event));
 
-		source.emit({ type: 'job-created', job });
-		source.fail();
+		await engine.loadModel('session-1', model);
 		unsubscribe();
 
-		expect(events).toEqual([
-			{ type: 'job-created', job },
-			{ type: 'diagnostic', severity: 'warning', message: 'Hosted engine event stream disconnected' }
+		expect(events.map((event) => event.type)).toEqual([
+			'job-created',
+			'job-progress',
+			'graph-updated',
+			'concept-updated',
+			'toggles-updated',
+			'job-succeeded'
 		]);
-		expect(source.closed).toBe(true);
 	});
 
 	it('maps hosted HTTP errors to rejected engine operations', async () => {

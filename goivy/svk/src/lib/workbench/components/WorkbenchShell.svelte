@@ -18,7 +18,7 @@
 	import SheetArea from './panes/SheetArea.svelte';
 	import TutorialPane from './panes/TutorialPane.svelte';
 
-	type EngineChoice = 'fake' | 'hosted-webui' | 'browser-wasm';
+	type EngineChoice = 'hosted-go' | 'hosted-webui' | 'browser-wasm';
 
 	type Props = {
 		engineChoice: EngineChoice;

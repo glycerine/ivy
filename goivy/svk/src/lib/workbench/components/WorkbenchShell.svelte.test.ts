@@ -23,7 +23,7 @@ type ShellProps = ComponentProps<typeof WorkbenchShell>;
 
 function renderShell(overrides: Partial<ShellProps> = {}) {
 	return render(WorkbenchShell, {
-		engineChoice: 'fake',
+		engineChoice: 'hosted-go',
 		activeModel: model,
 		editorText: model.text,
 		editorKeymap: 'sublime',
