@@ -28,7 +28,6 @@ function renderShell(overrides: Partial<ShellProps> = {}) {
 		activeModel: model,
 		editorText: model.text,
 		editorKeymap: 'sublime',
-		hasActiveSession: true,
 		sessionLabel: 'session-1',
 		statusMessage: 'Ready',
 		statusLevel: '',

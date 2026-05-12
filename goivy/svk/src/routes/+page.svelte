@@ -300,7 +300,6 @@ export disconnect
 	{activeModel}
 	{editorText}
 	editorKeymap={editorUi.current.keymap}
-	hasActiveSession={Boolean(stores.workspace.current.activeSessionId)}
 	sessionLabel={sessionUi.current.sessionDisplay || stores.workspace.current.activeSessionId || 'none'}
 	statusMessage={sessionUi.current.status}
 	statusLevel={sessionUi.current.statusLevel}
