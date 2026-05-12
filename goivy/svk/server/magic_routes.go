@@ -31,7 +31,7 @@ func (s *Server) magicConsume(w http.ResponseWriter, r *http.Request) {
 	_ = email
 	http.SetCookie(w, &http.Cookie{
 		Name:     sessionCookieName,
-		Value:    "magic-session",
+		Value:    randomURLToken(),
 		Path:     "/",
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,

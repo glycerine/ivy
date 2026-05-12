@@ -93,7 +93,7 @@ func (s *Server) opaqueLoginFinish(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &http.Cookie{
 		Name:     sessionCookieName,
-		Value:    "opaque-session",
+		Value:    randomURLToken(),
 		Path:     "/",
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,

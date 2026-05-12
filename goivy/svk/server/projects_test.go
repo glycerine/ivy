@@ -62,6 +62,8 @@ func TestProjectAPIsRequireAuthAndCreateProject(t *testing.T) {
 	rec = httptest.NewRecorder()
 	req = httptest.NewRequest(http.MethodPost, "/api/projects", strings.NewReader(`{"name":"New","slug":"new"}`))
 	req.AddCookie(&http.Cookie{Name: sessionCookieName, Value: "user:user-1"})
+	req.AddCookie(&http.Cookie{Name: "ivysvk_csrf", Value: "csrf"})
+	req.Header.Set("x-csrf-token", "csrf")
 	srv.ServeHTTP(rec, req)
 	if rec.Code != http.StatusOK {
 		t.Fatalf("status = %d body=%s", rec.Code, rec.Body.String())

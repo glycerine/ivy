@@ -50,7 +50,7 @@ func (s *Server) passkeyLoginFinish(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &http.Cookie{
 		Name:     sessionCookieName,
-		Value:    "passkey-session",
+		Value:    randomURLToken(),
 		Path:     "/",
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,

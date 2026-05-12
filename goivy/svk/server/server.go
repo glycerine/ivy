@@ -3,6 +3,7 @@ package server
 import (
 	"html/template"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 
@@ -53,7 +54,32 @@ func New(cfg Config) (*Server, error) {
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	securityHeaders(w)
+	if !s.validStateChangingRequest(w, r) {
+		return
+	}
 	s.mux.ServeHTTP(w, r)
+}
+
+func (s *Server) validStateChangingRequest(w http.ResponseWriter, r *http.Request) bool {
+	if r.Method == http.MethodGet || r.Method == http.MethodHead || r.Method == http.MethodOptions {
+		return true
+	}
+	if len(r.URL.Path) < 5 || r.URL.Path[:5] != "/api/" {
+		return true
+	}
+	if origin := r.Header.Get("origin"); origin != "" && s.cfg.PublicBaseURL != "" {
+		base, err := url.Parse(s.cfg.PublicBaseURL)
+		if err != nil || origin != base.Scheme+"://"+base.Host {
+			http.Error(w, "origin mismatch", http.StatusForbidden)
+			return false
+		}
+	}
+	csrfCookie, err := r.Cookie("ivysvk_csrf")
+	if err != nil || csrfCookie.Value == "" || r.Header.Get("x-csrf-token") != csrfCookie.Value {
+		http.Error(w, "csrf token required", http.StatusForbidden)
+		return false
+	}
+	return true
 }
 
 func (s *Server) routes() {

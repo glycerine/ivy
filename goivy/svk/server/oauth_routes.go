@@ -43,7 +43,7 @@ func (s *Server) oauthCallback(w http.ResponseWriter, r *http.Request) {
 	_ = result
 	http.SetCookie(w, &http.Cookie{
 		Name:     sessionCookieName,
-		Value:    "oauth-session",
+		Value:    randomURLToken(),
 		Path:     "/",
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
