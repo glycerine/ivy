@@ -34,17 +34,18 @@ engine adapters. No global app-controller object.
 - Users can be standalone or members of many teams.
 - Projects can be shared in a GitHub-like ownership/collaboration model.
 - OAuth identities are not automatically linked by email.
-- Linking Google, Apple, GitHub, password, passkey, or email login identities
+- Linking Google, Apple, GitHub, OPAQUE password, passkey, or email login identities
   requires an explicit signed-in linking flow.
-- Plain passwords are supported for devs and regular users, but raw passwords
-  are never stored.
-- Passwords use modern password hashing, initially Argon2id.
+- Password login is supported for devs and regular users through OPAQUE, so the
+  server never sees the user's raw password.
+- OPAQUE uses `github.com/bytemare/opaque` on the Go server side and
+  `@cloudflare/opaque-ts` on the Svelte client side.
 - Sessions use secure opaque cookies backed by Postgres.
 - Go serves public marketing/login pages.
 - Go serves the built SvelteKit app bundle after login.
 - Email login and account recovery use Mailgun.
 - Passkeys are designed into the schema now, but can be implemented after
-  OAuth/password/session foundations are stable.
+  OAuth/OPAQUE/session foundations are stable.
 - Offline app use must work for a previously logged-in user on a plane.
 
 ## Non-Goals For This First Architecture Pass
@@ -69,7 +70,7 @@ Go HTTP server
   public marketing/login pages
   auth endpoints
   OAuth callback endpoints
-  password/passkey/magic-link endpoints
+  OPAQUE password/passkey/magic-link endpoints
   project/account/team APIs
   native hosted Ivy engine API
   static serving of private SvelteKit bundle
@@ -205,7 +206,7 @@ goivy/svk/server/
   mail/
   oauth/
   passkeys/
-  passwords/
+  opaque/
   projects/
   sessions/
   staticapp/
@@ -274,8 +275,8 @@ export type AuthState = {
 };
 ```
 
-The Svelte app should not store OAuth tokens, password hashes, magic-link
-tokens, or passkey private material.
+The Svelte app should not store OAuth tokens, raw passwords, OPAQUE export keys,
+magic-link tokens, or passkey private material.
 
 ### Account, Team, Project
 
@@ -709,7 +710,7 @@ The Go server owns:
 
 - marketing pages
 - login pages
-- password auth
+- OPAQUE password auth
 - OAuth start/callback
 - passkey registration/login
 - magic email login/recovery
@@ -744,8 +745,10 @@ Use Go templates. Public pages should not load the private Svelte app bundle.
 
 ```text
 GET  /auth/me
-POST /auth/password/signup
-POST /auth/password/login
+POST /auth/opaque/register/start
+POST /auth/opaque/register/finish
+POST /auth/opaque/login/start
+POST /auth/opaque/login/finish
 POST /auth/logout
 
 GET  /auth/oauth/google/start
@@ -853,20 +856,31 @@ form-action 'self';
 The `'unsafe-inline'` style allowance may be needed for Svelte/Cytoscape during
 early implementation. Do not allow inline scripts.
 
-### Passwords
+### OPAQUE Password Login
 
-Password credential table stores:
+Password login must use OPAQUE. The browser may ask the user for a password,
+but the Go server must never receive the raw password and must never store a
+password hash derived from a submitted raw password.
+
+Libraries:
+
+- Go server: `github.com/bytemare/opaque`
+- Svelte client: `@cloudflare/opaque-ts`
+
+OPAQUE credential table stores:
 
 - user ID
-- Argon2id parameters
-- salt
-- password hash
+- OPAQUE server registration record / envelope material required by the chosen
+  Go library
+- OPAQUE server public key identifier / credential version
 - created time
 - updated time
 - disabled time
 
-Use constant-time comparison. Add basic login rate limiting by account/email and
-source IP.
+The OPAQUE server setup secret must come from server configuration and must not
+be checked into the repository. Add basic login rate limiting by account/email
+and source IP. Treat OPAQUE registration and login messages as protocol
+messages, not passwords.
 
 ### OAuth
 
@@ -887,7 +901,7 @@ OAuth identity table:
 - last login time
 
 Do not auto-link identities by email. If a user tries Google and an existing
-password user has the same email, show an account-exists flow:
+OPAQUE password user has the same email, show an account-exists flow:
 
 1. Ask the user to sign in with an existing method.
 2. After signed in, let them explicitly link the provider.
@@ -943,7 +957,7 @@ Core control tables:
 ```text
 control.users
 control.user_emails
-control.password_credentials
+control.opaque_credentials
 control.oauth_identities
 control.passkey_credentials
 control.email_tokens
@@ -1463,24 +1477,30 @@ Exit criteria:
 
 - Local dev can create a working DB without ad hoc SQL.
 
-### Phase 12: Password Auth
+### Phase 12: OPAQUE Password Auth
 
 Tasks:
 
-- Implement Argon2id hashing.
-- Add signup/login/logout handlers.
-- First signup/login creates personal account/project if needed.
+- Add `@cloudflare/opaque-ts` to the Svelte client.
+- Add `github.com/bytemare/opaque` to the Go server.
+- Implement OPAQUE server setup/key management.
+- Add registration start/finish handlers.
+- Add login start/finish handlers.
+- Add logout handler.
+- First OPAQUE registration/login creates personal account/project if needed.
 - Add rate limiting.
 - Add generic error responses.
 - Add session cookie issue/revoke.
 
 Go tests:
 
-- password hash verifies correct password
-- wrong password rejected
-- raw password never stored
-- signup creates user
-- first login creates personal account/project
+- registration stores OPAQUE credential material, not a password hash
+- login succeeds through a valid OPAQUE exchange
+- wrong password fails through OPAQUE without exposing which step was wrong
+- raw password never appears in server request structs, logs, or database rows
+- OPAQUE server setup secret is required outside dev/test mode
+- registration creates user
+- first registration/login creates personal account/project
 - logout revokes session
 - session cookie is HttpOnly/SameSite
 - mutating endpoint without CSRF rejected
@@ -1488,14 +1508,15 @@ Go tests:
 
 Playwright tests:
 
-- signup flow reaches app
-- login flow reaches app
+- OPAQUE signup flow reaches app
+- OPAQUE login flow reaches app
 - logout returns to login
 - reload preserves session
 
 Exit criteria:
 
-- Regular password login works safely.
+- Password login works through OPAQUE, and the server never sees the user's raw
+  password.
 
 ### Phase 13: Mailgun Magic Email
 
@@ -1551,7 +1572,7 @@ Playwright tests:
 
 - mocked Google login creates account
 - mocked GitHub same-email flow asks for explicit linking
-- explicit linking flow succeeds after password login
+- explicit linking flow succeeds after OPAQUE password login
 
 Exit criteria:
 
@@ -1708,7 +1729,8 @@ Go tests:
 - session fixation prevented by rotation after login
 - expired session rejected
 - revoked session rejected
-- password hash parameters present
+- OPAQUE credential records contain protocol material but no raw password or
+  conventional password hash
 - OAuth invalid state rejected
 - magic token replay rejected
 - project RLS denies cross-project access
@@ -1758,7 +1780,7 @@ IVYSVK_TEST_DB_DSN='postgres://...' go test ./svk/server/... -run Integration
 The first serious milestone is not "all features ported." It is:
 
 - Go auth server runs.
-- Password login works.
+- OPAQUE password login works.
 - First login creates user/account/project.
 - Go serves the private SvelteKit app.
 - Svelte app starts online and offline after prior login.
