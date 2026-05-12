@@ -154,6 +154,12 @@ func (s *ProjectStore) AccessibleProjects(userID string) []ProjectRecord {
 	return out
 }
 
+func (s *ProjectStore) RoleForUser(userID, projectID string) ProjectRole {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.accessibleRolesLocked(userID)[projectID]
+}
+
 func (s *ProjectStore) SaveModel(userID, projectID, text string) error {
 	_, err := s.SaveModelRevision(userID, projectID, "default.ivy", text, 0)
 	return err

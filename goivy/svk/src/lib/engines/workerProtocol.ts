@@ -4,6 +4,8 @@ import type {
 	EngineSession,
 	Id,
 	ModelDocument,
+	SnapshotBundle,
+	SnapshotRequest,
 	VerificationJob
 } from '$lib/types';
 
@@ -12,12 +14,14 @@ export type WorkerRequest =
 	| { type: 'new-session'; requestId: Id; projectId: Id }
 	| { type: 'load-model'; requestId: Id; sessionId: Id; model: ModelDocument }
 	| { type: 'run-command'; requestId: Id; intent: CommandIntent }
+	| { type: 'get-snapshot'; requestId: Id; sessionId: Id; request: SnapshotRequest }
 	| { type: 'cancel-job'; requestId: Id; jobId: Id };
 
 export type WorkerResponse =
 	| { type: 'ready'; requestId: Id }
 	| { type: 'session'; requestId: Id; session: EngineSession }
 	| { type: 'job'; requestId: Id; job: VerificationJob }
+	| { type: 'snapshot'; requestId: Id; bundle: SnapshotBundle }
 	| { type: 'cancelled'; requestId: Id; jobId: Id }
 	| { type: 'error'; requestId?: Id; error: string }
 	| { type: 'event'; sessionId: Id; event: EngineEvent };

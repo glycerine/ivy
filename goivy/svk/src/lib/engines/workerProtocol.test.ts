@@ -56,6 +56,10 @@ class ScriptedWorker implements WorkerLike {
 				sessionId: request.sessionId,
 				event: { type: 'job-succeeded', jobId: job.id, result: { ok: true } }
 			});
+			return;
+		}
+		if (request.type === 'get-snapshot') {
+			this.emit({ type: 'snapshot', requestId: request.requestId, bundle: { graphs: [], concepts: [] } });
 		}
 	}
 
@@ -134,9 +138,11 @@ describe('worker protocol', () => {
 		const events: string[] = [];
 		engine.subscribe(session.id, (event) => events.push(event.type));
 		const job = await engine.loadModel(session.id, model);
+		const snapshot = await engine.getSnapshot(session.id, {});
 
 		expect(job.kind).toBe('load');
-		expect(worker.requests.map((request) => request.type)).toEqual(['init', 'new-session', 'load-model']);
+		expect(snapshot).toEqual({ graphs: [], concepts: [] });
+		expect(worker.requests.map((request) => request.type)).toEqual(['init', 'new-session', 'load-model', 'get-snapshot']);
 		expect(events).toEqual(['job-succeeded']);
 	});
 

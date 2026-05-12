@@ -80,7 +80,8 @@ func (e *Engine) NewSession(ctx context.Context) (SessionInfo, error) {
 	var raw struct {
 		SessionID string `json:"session_id"`
 	}
-	if err := decode(e.backend.NewSession(e.cfg), &raw); err != nil {
+	data, backendErr := e.backend.NewSession(e.cfg)
+	if err := decode(data, backendErr, &raw); err != nil {
 		return SessionInfo{}, err
 	}
 	if raw.SessionID == "" {
@@ -94,7 +95,8 @@ func (e *Engine) LoadModel(ctx context.Context, sessionID, filename string, cont
 		return LoadResult{}, err
 	}
 	var result LoadResult
-	if err := decode(e.backend.Load(sessionID, filename, content), &result); err != nil {
+	data, backendErr := e.backend.Load(sessionID, filename, content)
+	if err := decode(data, backendErr, &result); err != nil {
 		return LoadResult{}, err
 	}
 	return result, nil
@@ -109,7 +111,8 @@ func (e *Engine) Check(ctx context.Context, sessionID string, req CheckRequest) 
 		mode = "pdr"
 	}
 	var result CheckResult
-	if err := decode(e.backend.Check(sessionID, mode, webui.CheckOptions{Bound: req.Bound}), &result); err != nil {
+	data, backendErr := e.backend.Check(sessionID, mode, webui.CheckOptions{Bound: req.Bound})
+	if err := decode(data, backendErr, &result); err != nil {
 		return CheckResult{}, err
 	}
 	return result, nil

@@ -9,18 +9,21 @@ import (
 
 	"github.com/glycerine/ivy/goivy/svk/server/mail"
 	"github.com/glycerine/ivy/goivy/svk/server/opaqueauth"
+	"github.com/glycerine/ivy/goivy/webengine"
 )
 
 const sessionCookieName = "ivysvk_session"
 
 type Server struct {
-	cfg      Config
-	mux      *http.ServeMux
-	opaque   *opaqueauth.Service
-	magic    *MagicService
-	oauth    *OAuthService
-	passkeys *PasskeyService
-	projects *ProjectStore
+	cfg            Config
+	mux            *http.ServeMux
+	opaque         *opaqueauth.Service
+	magic          *MagicService
+	oauth          *OAuthService
+	passkeys       *PasskeyService
+	projects       *ProjectStore
+	engine         *webengine.Engine
+	engineSessions *EngineSessionStore
 }
 
 func New(cfg Config) (*Server, error) {
@@ -40,13 +43,15 @@ func New(cfg Config) (*Server, error) {
 		return nil, err
 	}
 	s := &Server{
-		cfg:      cfg,
-		mux:      http.NewServeMux(),
-		opaque:   opaqueService,
-		magic:    NewMagicService(sender, cfg.PublicBaseURL),
-		oauth:    NewOAuthService(),
-		passkeys: passkeys,
-		projects: NewProjectStore(),
+		cfg:            cfg,
+		mux:            http.NewServeMux(),
+		opaque:         opaqueService,
+		magic:          NewMagicService(sender, cfg.PublicBaseURL),
+		oauth:          NewOAuthService(),
+		passkeys:       passkeys,
+		projects:       NewProjectStore(),
+		engine:         webengine.New(nil),
+		engineSessions: NewEngineSessionStore(),
 	}
 	s.routes()
 	return s, nil
@@ -102,6 +107,10 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("GET /api/projects", s.listProjects)
 	s.mux.HandleFunc("POST /api/projects", s.createProject)
 	s.mux.HandleFunc("POST /api/projects/{project}/models", s.saveProjectModel)
+	s.mux.HandleFunc("POST /api/engine/session", s.engineNewSession)
+	s.mux.HandleFunc("POST /api/engine/session/{session}/load", s.engineLoadModel)
+	s.mux.HandleFunc("POST /api/engine/session/{session}/command", s.engineRunCommand)
+	s.mux.HandleFunc("GET /api/engine/session/{session}/snapshot", s.engineSnapshot)
 	s.mux.HandleFunc("GET /app", s.app)
 	if s.cfg.StaticDir != "" {
 		assets := http.StripPrefix("/assets/", http.FileServer(http.Dir(filepath.Join(s.cfg.StaticDir, "assets"))))

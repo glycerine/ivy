@@ -95,9 +95,12 @@ export class BrowserWasmEngine implements IvyEngine {
 	}
 
 	async getSnapshot(sessionId: Id, request: SnapshotRequest): Promise<SnapshotBundle> {
-		void sessionId;
-		void request;
-		return {};
+		await this.init();
+		const response = await this.send({ type: 'get-snapshot', requestId: this.createId(), sessionId, request });
+		if (response.type !== 'snapshot') {
+			throw new Error(`Expected snapshot response, got ${response.type}`);
+		}
+		return response.bundle;
 	}
 
 	subscribe(sessionId: Id, onEvent: (event: EngineEvent) => void): Unsubscribe {
