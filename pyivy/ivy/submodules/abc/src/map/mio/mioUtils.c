@@ -1636,7 +1636,7 @@ void Mio_LibraryHashGates( Mio_Library_t * pLib )
         }
     if ( pLib->tName2Gate )
         st__free_table( pLib->tName2Gate );
-    pLib->tName2Gate = st__init_table(strcmp, st__strhash);
+    pLib->tName2Gate = st__init_table(st__strcmp, st__strhash);
     Mio_LibraryForEachGate( pLib, pGate )
         st__insert( pLib->tName2Gate, pGate->pName, (char *)pGate );
 }
@@ -1842,4 +1842,3 @@ void Mio_LibraryMatches2Fetch( Mio_Library_t * pLib, Vec_Ptr_t ** pvNames, Vec_W
 
 
 ABC_NAMESPACE_IMPL_END
-

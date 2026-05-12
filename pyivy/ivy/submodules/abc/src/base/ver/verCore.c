@@ -588,7 +588,7 @@ int Ver_ParseInsertsSuffix( Ver_Man_t * pMan, char * pWord, int nMsb, int nLsb )
 {
     unsigned Value;
     if ( pMan->tName2Suffix == NULL )
-        pMan->tName2Suffix = st__init_table( strcmp, st__strhash );
+        pMan->tName2Suffix = st__init_table( st__strcmp, st__strhash );
     if ( st__is_member( pMan->tName2Suffix, pWord ) )
         return 1;
     assert( nMsb >= 0 && nMsb < 128 );
@@ -3036,4 +3036,3 @@ Abc_Obj_t * Ver_ParseCreateInv( Abc_Ntk_t * pNtk, Abc_Obj_t * pNet )
 
 
 ABC_NAMESPACE_IMPL_END
-

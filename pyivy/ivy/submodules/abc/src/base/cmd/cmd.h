@@ -39,6 +39,17 @@ ABC_NAMESPACE_HEADER_START
 typedef struct MvCommand    Abc_Command;  // one command
 typedef struct MvAlias      Abc_Alias;    // one alias
 
+typedef enum Cmd_CommandId_t_
+{
+    CMD_COMMAND_UNKNOWN = 0,
+    CMD_COMMAND_ALIAS,
+    CMD_COMMAND_SOURCE,
+    CMD_COMMAND_SET,
+    CMD_COMMAND_READ_BLIF,
+    CMD_COMMAND_STRASH,
+    CMD_COMMAND_PRINT_STATS
+} Cmd_CommandId_t;
+
 ////////////////////////////////////////////////////////////////////////
 ///                       MACRO DEFINITIONS                          ///
 ////////////////////////////////////////////////////////////////////////
@@ -78,4 +89,3 @@ ABC_NAMESPACE_HEADER_END
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-

@@ -61,7 +61,7 @@ Mio_Library_t * Mio_LibraryRead( char * FileName, char * pBuffer, char * Exclude
 
     if ( ExcludeFile )
     {
-        tExcludeGate = st__init_table(strcmp, st__strhash);
+        tExcludeGate = st__init_table(st__strcmp, st__strhash);
         if ( (num = Mio_LibraryReadExclude( ExcludeFile, tExcludeGate )) == -1 )
         {
             st__free_table( tExcludeGate );
@@ -158,7 +158,7 @@ Mio_Library_t * Mio_LibraryReadBuffer( char * pBuffer, int fExtendedFormat, st__
 
     // allocate the genlib structure
     pLib = ABC_CALLOC( Mio_Library_t, 1 );
-    pLib->tName2Gate = st__init_table(strcmp, st__strhash);
+    pLib->tName2Gate = st__init_table(st__strcmp, st__strhash);
     pLib->pMmFlex = Mem_FlexStart();
     pLib->vCube = Vec_StrAlloc( 100 );
 
@@ -777,4 +777,3 @@ void Io_ReadFileRemoveComments( char * pBuffer, int * pnDots, int * pnLines )
 
 
 ABC_NAMESPACE_IMPL_END
-

@@ -24,10 +24,22 @@
 
 ABC_NAMESPACE_IMPL_START
 
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
+Cmd_CommandId_t Cmd_CommandNameToId( const char * sName )
+{
+    if ( !strcmp( sName, "alias" ) )
+        return CMD_COMMAND_ALIAS;
+    if ( !strcmp( sName, "source" ) )
+        return CMD_COMMAND_SOURCE;
+    if ( !strcmp( sName, "set" ) )
+        return CMD_COMMAND_SET;
+    if ( !strcmp( sName, "read_blif" ) )
+        return CMD_COMMAND_READ_BLIF;
+    if ( !strcmp( sName, "strash" ) )
+        return CMD_COMMAND_STRASH;
+    if ( !strcmp( sName, "print_stats" ) )
+        return CMD_COMMAND_PRINT_STATS;
+    return CMD_COMMAND_UNKNOWN;
+}
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
@@ -79,6 +91,7 @@ void Cmd_CommandAdd( Abc_Frame_t * pAbc, const char * sGroup, const char * sName
     pCommand = ABC_ALLOC( Abc_Command, 1 );
     pCommand->sName   = Extra_UtilStrsav( sName );
     pCommand->sGroup  = Extra_UtilStrsav( sGroup );
+    pCommand->Id      = Cmd_CommandNameToId( sName );
     pCommand->pFunc   = pFunc;
     pCommand->fChange = fChanges;
     fStatus = st__insert( pAbc->tCommands, pCommand->sName, (char *)pCommand );
@@ -220,4 +233,3 @@ int Cmd_CommandExecute( Abc_Frame_t * pAbc, const char * sCommand )
 
 
 ABC_NAMESPACE_IMPL_END
-

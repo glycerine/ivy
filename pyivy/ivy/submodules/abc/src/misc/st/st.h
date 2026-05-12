@@ -89,6 +89,7 @@ extern int st__delete ( st__table *, const char **, char **);
 extern int st__delete_int ( st__table *, long *, char **);
 extern int st__foreach ( st__table *, st__PFSR, char *);
 extern int st__strhash (const char *, int);
+extern int st__strcmp (const char *, const char *);
 extern int st__numhash (const char *, int);
 extern int st__ptrhash (const char *, int);
 extern int st__numcmp (const char *, const char *);

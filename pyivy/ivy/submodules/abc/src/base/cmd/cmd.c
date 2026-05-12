@@ -79,9 +79,9 @@ extern int Cmd_CommandAbcLoadPlugIn( Abc_Frame_t * pAbc, int argc, char ** argv 
 ******************************************************************************/
 void Cmd_Init( Abc_Frame_t * pAbc )
 {
-    pAbc->tCommands = st__init_table(strcmp, st__strhash);
-    pAbc->tAliases  = st__init_table(strcmp, st__strhash);
-    pAbc->tFlags    = st__init_table(strcmp, st__strhash);
+    pAbc->tCommands = st__init_table(NULL, NULL);
+    pAbc->tAliases  = st__init_table(NULL, NULL);
+    pAbc->tFlags    = st__init_table(NULL, NULL);
     pAbc->aHistory  = Vec_PtrAlloc( 100 );
     Cmd_HistoryRead( pAbc );
 
@@ -114,6 +114,24 @@ void Cmd_Init( Abc_Frame_t * pAbc )
     Cmd_CommandAdd( pAbc, "Various", "autotuner",   CmdCommandAutoTuner,       0 );
 
     Cmd_CommandAdd( pAbc, "Various", "load_plugin", Cmd_CommandAbcLoadPlugIn,  0 );
+}
+
+int CmdCommandDispatchBasicById( Cmd_CommandId_t Id, Abc_Frame_t * pAbc, int argc, char ** argv, int * pResult )
+{
+    switch ( Id )
+    {
+    case CMD_COMMAND_ALIAS:
+        *pResult = CmdCommandAlias( pAbc, argc, argv );
+        return 1;
+    case CMD_COMMAND_SOURCE:
+        *pResult = CmdCommandSource( pAbc, argc, argv );
+        return 1;
+    case CMD_COMMAND_SET:
+        *pResult = CmdCommandSetVariable( pAbc, argc, argv );
+        return 1;
+    default:
+        return 0;
+    }
 }
 
 /**Function********************************************************************

@@ -21,13 +21,19 @@ ABC_NAMESPACE_IMPL_START
 //#define st__PTRHASH(x,size) ((int)((ABC_PTRUINT_T)(x)>>2)%size)  // 64-bit bug fix 9/17/2007
 #define st__PTRHASH(x,size) ((int)(((ABC_PTRUINT_T)(x)>>2)%size))
 #define EQUAL(func, x, y) \
-    ((((func) == st__numcmp) || ((func) == st__ptrcmp)) ?\
-      (st__NUMCMP((x),(y)) == 0) : ((*func)((x), (y)) == 0))
+    ((func) == NULL ?\
+      (strcmp((x), (y)) == 0) :\
+     (((func) == st__numcmp) || ((func) == st__ptrcmp)) ?\
+      (st__NUMCMP((x),(y)) == 0) :\
+     ((func) == st__strcmp) ?\
+      (strcmp((x), (y)) == 0) : ((*func)((x), (y)) == 0))
 
 
 #define do_hash(key, table)\
-    ((table->hash == st__ptrhash) ? st__PTRHASH((key),(table)->num_bins) :\
+    ((table->hash == NULL) ? st__strhash((key), (table)->num_bins) :\
+     (table->hash == st__ptrhash) ? st__PTRHASH((key),(table)->num_bins) :\
      (table->hash == st__numhash) ? st__NUMHASH((key), (table)->num_bins) :\
+     (table->hash == st__strhash) ? st__strhash((key), (table)->num_bins) :\
      (*table->hash)((key), (table)->num_bins))
 
 static int rehash( st__table *table);
@@ -446,6 +452,12 @@ int
 }
 
 int
+ st__strcmp(const char *x, const char *y)
+{
+    return strcmp(x, y);
+}
+
+int
  st__strhash(const char *string, int modulus)
 {
     unsigned char * ustring = (unsigned char *)string;
@@ -558,4 +570,3 @@ void
 }
 
 ABC_NAMESPACE_IMPL_END
-

@@ -1313,6 +1313,21 @@ void Abc_Init( Abc_Frame_t * pAbc )
 //        Sdm_ManRead();
 }
 
+int AbcCommandDispatchById( Cmd_CommandId_t Id, Abc_Frame_t * pAbc, int argc, char ** argv, int * pResult )
+{
+    switch ( Id )
+    {
+    case CMD_COMMAND_STRASH:
+        *pResult = Abc_CommandStrash( pAbc, argc, argv );
+        return 1;
+    case CMD_COMMAND_PRINT_STATS:
+        *pResult = Abc_CommandPrintStats( pAbc, argc, argv );
+        return 1;
+    default:
+        return 0;
+    }
+}
+
 /**Function*************************************************************
 
   Synopsis    []
@@ -33356,7 +33371,7 @@ usage:
 ***********************************************************************/
 int Abc_CommandAbc9SimRsb( Abc_Frame_t * pAbc, int argc, char ** argv )
 {
-    extern void Gia_ManSimRsb( Gia_Man_t * p, int nCands, int fVerbose );
+    extern int Gia_ManSimRsb( Gia_Man_t * p, int nCands, int fVerbose );
     int c, nCands = 32, fVerbose = 0;
     Extra_UtilGetoptReset();
     while ( ( c = Extra_UtilGetopt( argc, argv, "Nvh" ) ) != EOF )

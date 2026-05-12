@@ -282,7 +282,7 @@ int Map_LibraryReadTree2( Map_SuperLib_t * pLib, char * pFileName, char * pExclu
     {
         pAbc = Abc_FrameGetGlobalFrame();
         
-        tExcludeGate = st__init_table(strcmp, st__strhash);
+        tExcludeGate = st__init_table(st__strcmp, st__strhash);
         if ( (num = Mio_LibraryReadExclude( pExcludeFile, tExcludeGate )) == -1 )
         {
             st__free_table( tExcludeGate );
@@ -545,7 +545,7 @@ int Map_LibraryReadTree( Map_SuperLib_t * pLib, Mio_Library_t * pGenlib, char * 
     {
         pAbc = Abc_FrameGetGlobalFrame();
         
-        tExcludeGate = st__init_table(strcmp, st__strhash);
+        tExcludeGate = st__init_table(st__strcmp, st__strhash);
         if ( (num = Mio_LibraryReadExclude( pExcludeFile, tExcludeGate )) == -1 )
         {
             st__free_table( tExcludeGate );
@@ -1039,4 +1039,3 @@ void Map_LibraryPrintTree( Map_SuperLib_t * pLib )
 
 
 ABC_NAMESPACE_IMPL_END
-

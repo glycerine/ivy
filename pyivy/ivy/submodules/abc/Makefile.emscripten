@@ -1,0 +1,177 @@
+EMCC ?= emcc
+EMXX ?= em++
+EMAR ?= emar
+ABC_WASM_NODE ?= node
+
+CC := $(EMCC)
+CXX := $(EMXX)
+AR := $(EMAR)
+LD := $(CXX)
+
+MSG_PREFIX ?= [abc-wasm] 
+ABCSRC := .
+PROG := abc
+BUILD_DIR ?= build/wasm
+JS_TARGET ?= $(BUILD_DIR)/$(PROG).js
+WASM_TARGET ?= $(BUILD_DIR)/$(PROG).wasm
+ABC_WASM_INITIAL_MEMORY ?= 1073741824
+ABC_WASM_STACK_SIZE ?= 5242880
+
+MODULES := \
+	$(wildcard src/ext*) \
+	src/base/abc src/base/abci src/base/cmd src/base/io src/base/main src/base/exor \
+	src/base/ver src/base/wlc src/base/wln src/base/acb src/base/bac src/base/cba src/base/pla src/base/test \
+	src/map/mapper src/map/mio src/map/super src/map/if \
+	src/map/amap src/map/cov src/map/scl src/map/mpm \
+	src/misc/extra src/misc/mvc src/misc/st src/misc/util src/misc/nm \
+	src/misc/vec src/misc/hash src/misc/tim src/misc/bzlib src/misc/zlib \
+	src/misc/mem src/misc/bar src/misc/bbl src/misc/parse \
+	src/opt/cut src/opt/fxu src/opt/fxch src/opt/rwr src/opt/mfs src/opt/sim \
+	src/opt/ret src/opt/fret src/opt/res src/opt/lpk src/opt/nwk src/opt/rwt \
+	src/opt/cgt src/opt/csw src/opt/dar src/opt/dau src/opt/dsc src/opt/sfm src/opt/sbd \
+	src/sat/bsat src/sat/xsat src/sat/satoko src/sat/csat src/sat/msat src/sat/psat src/sat/cnf src/sat/bmc src/sat/glucose src/sat/glucose2 \
+	src/bool/bdc src/bool/deco src/bool/dec src/bool/kit src/bool/lucky \
+	src/bool/rsb src/bool/rpo \
+	src/proof/pdr src/proof/abs src/proof/live src/proof/ssc src/proof/int \
+	src/proof/cec src/proof/acec src/proof/dch src/proof/fraig src/proof/fra src/proof/ssw \
+	src/aig/aig src/aig/saig src/aig/gia src/aig/ioa src/aig/ivy src/aig/hop \
+	src/aig/miniaig
+
+ABC_USE_NO_READLINE ?= 1
+ABC_USE_NO_PTHREADS ?= 1
+
+INCLUDES := -I$(ABCSRC)/src
+ARCHFLAGS ?= -DABC_USE_STDINT_H=1
+OPTFLAGS ?= -O3 -g0
+
+WASM_COMPILE_FLAGS ?= -fwasm-exceptions -U_AMD64_
+WASM_LINK_FLAGS ?= $(WASM_COMPILE_FLAGS) -sWASM_BIGINT=1
+
+CFLAGS := -Wall -Wno-unused-function -Wno-write-strings -Wno-sign-compare \
+	-Wno-unused-but-set-variable $(ARCHFLAGS) $(WASM_COMPILE_FLAGS)
+
+ifdef ABC_USE_NAMESPACE
+  CFLAGS += -DABC_NAMESPACE=$(ABC_USE_NAMESPACE)
+  CC := $(CXX)
+  $(info $(MSG_PREFIX)Compiling in namespace $(ABC_NAMESPACE))
+endif
+
+ifndef ABC_USE_NO_CUDD
+  CFLAGS += -DABC_USE_CUDD=1
+  MODULES += src/bdd/cudd src/bdd/extrab src/bdd/dsd src/bdd/epd src/bdd/mtr src/bdd/reo src/bdd/cas src/bdd/bbr src/bdd/llb
+  $(info $(MSG_PREFIX)Compiling with CUDD)
+endif
+
+ifndef ABC_USE_NO_READLINE
+  CFLAGS += -DABC_USE_READLINE $(ABC_READLINE_INCLUDES)
+  ABC_OPTIONAL_LIBS += $(ABC_READLINE_LIBRARIES)
+  $(info $(MSG_PREFIX)Using libreadline)
+endif
+
+ifndef ABC_USE_NO_PTHREADS
+  CFLAGS += -DABC_USE_PTHREADS
+  ABC_OPTIONAL_LDFLAGS += -pthread -sUSE_PTHREADS=1
+  $(info $(MSG_PREFIX)Using pthreads)
+endif
+
+ifdef ABC_USE_PIC
+  CFLAGS += -fPIC
+  ABC_OPTIONAL_LIBS += -fPIC
+  $(info $(MSG_PREFIX)Compiling position independent code)
+endif
+
+ifdef ABC_MAKE_VERBOSE
+  VERBOSE =
+else
+  VERBOSE = @
+endif
+
+LIBS := -lm $(ABC_OPTIONAL_LIBS)
+CXXFLAGS := $(CFLAGS)
+
+ABC_EXPORTED_FUNCTIONS ?= '["_main","_malloc","_free"]'
+ABC_EXPORTED_RUNTIME_METHODS ?= '["callMain","ccall","cwrap","FS","UTF8ToString","stringToUTF8"]'
+
+LDFLAGS := $(WASM_LINK_FLAGS) \
+	-sEXPORTED_FUNCTIONS=$(ABC_EXPORTED_FUNCTIONS) \
+	-sEXPORTED_RUNTIME_METHODS=$(ABC_EXPORTED_RUNTIME_METHODS) \
+	-sALLOW_MEMORY_GROWTH=1 \
+	-sALLOW_TABLE_GROWTH=1 \
+	-sEMULATE_FUNCTION_POINTER_CASTS=1 \
+	-sFORCE_FILESYSTEM=1 \
+	-sMODULARIZE=1 \
+	-sEXPORT_NAME="initAbc" \
+	-sINITIAL_MEMORY=$(ABC_WASM_INITIAL_MEMORY) \
+	-sSTACK_SIZE=$(ABC_WASM_STACK_SIZE) \
+	-Wl,--stack-first \
+	$(ABC_OPTIONAL_LDFLAGS)
+
+CFLAGS += $(ABC_WASM_EXTRA_CFLAGS)
+CXXFLAGS += $(ABC_WASM_EXTRA_CXXFLAGS)
+LDFLAGS += $(ABC_WASM_EXTRA_LDFLAGS)
+
+SRC :=
+
+.PHONY: all default wasm test clean print-vars
+
+include $(patsubst %, $(ABCSRC)/%/module.make, $(MODULES))
+
+OBJ := \
+	$(patsubst %.cc, $(BUILD_DIR)/%.o, $(filter %.cc, $(SRC))) \
+	$(patsubst %.cpp, $(BUILD_DIR)/%.o, $(filter %.cpp, $(SRC))) \
+	$(patsubst %.c,  $(BUILD_DIR)/%.o, $(filter %.c,  $(SRC)))
+
+DEP := $(OBJ:.o=.d)
+
+all: $(JS_TARGET)
+default: $(JS_TARGET)
+wasm: $(WASM_TARGET)
+
+test: $(JS_TARGET)
+	@echo "$(MSG_PREFIX)\`\` Testing:" $(notdir $(JS_TARGET))
+	$(VERBOSE)$(ABC_WASM_NODE) -e 'const fs = require("fs"); const initAbc = require("./$(JS_TARGET)"); const out = []; const err = []; const blif = ".model smoke\n.inputs a b\n.outputs y\n.names a b y\n11 1\n.end\n"; initAbc({ noInitialRun: true, print: (s) => out.push(s), printErr: (s) => err.push(s) }).then((Module) => { Module.FS.writeFile("/smoke.blif", blif); Module.FS.writeFile("/abc.rc", fs.readFileSync("abc.rc", "utf8")); Module.callMain(["-c", "read_blif /smoke.blif; strash; print_stats"]); const text = out.join("\n") + "\n" + err.join("\n"); if (!text.includes("i/o =    2/    1") || !text.includes("and =      1")) { console.error(text); process.exit(1); } console.log("abc wasm smoke test passed"); }).catch((e) => { console.error(e && e.stack || e); process.exit(1); });'
+
+$(WASM_TARGET): $(JS_TARGET)
+	@test -f $@
+
+$(BUILD_DIR)/%.o: %.c
+	@echo "$(MSG_PREFIX)\`\` Compiling:" $<
+	$(VERBOSE)mkdir -p $(dir $@)
+	$(VERBOSE)$(CC) -c $(OPTFLAGS) -MMD -MP $(INCLUDES) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.o: %.cc
+	@echo "$(MSG_PREFIX)\`\` Compiling:" $<
+	$(VERBOSE)mkdir -p $(dir $@)
+	$(VERBOSE)$(CXX) -c $(OPTFLAGS) -MMD -MP $(INCLUDES) $(CXXFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.o: %.cpp
+	@echo "$(MSG_PREFIX)\`\` Compiling:" $<
+	$(VERBOSE)mkdir -p $(dir $@)
+	$(VERBOSE)$(CXX) -c $(OPTFLAGS) -MMD -MP $(INCLUDES) $(CXXFLAGS) $< -o $@
+
+$(JS_TARGET): $(OBJ) Makefile.emscripten
+	@echo "$(MSG_PREFIX)\`\` Linking:" $(notdir $(JS_TARGET)) "and" $(notdir $(WASM_TARGET))
+	$(VERBOSE)mkdir -p $(dir $@)
+	$(VERBOSE)$(LD) -o $@ $(filter %.o,$^) $(LDFLAGS) $(LIBS)
+
+clean:
+	@echo "$(MSG_PREFIX)\`\` Cleaning wasm build..."
+	$(VERBOSE)rm -rf $(BUILD_DIR)
+
+print-vars:
+	@echo "CC=$(CC)"
+	@echo "CXX=$(CXX)"
+	@echo "AR=$(AR)"
+	@echo "LD=$(LD)"
+	@echo "ABC_WASM_NODE=$(ABC_WASM_NODE)"
+	@echo "CFLAGS=$(CFLAGS)"
+	@echo "CXXFLAGS=$(CXXFLAGS)"
+	@echo "LDFLAGS=$(LDFLAGS)"
+	@echo "JS_TARGET=$(JS_TARGET)"
+	@echo "WASM_TARGET=$(WASM_TARGET)"
+	@echo "ABC_WASM_INITIAL_MEMORY=$(ABC_WASM_INITIAL_MEMORY)"
+	@echo "ABC_WASM_STACK_SIZE=$(ABC_WASM_STACK_SIZE)"
+
+ifndef ABC_MAKE_NO_DEPS
+-include $(DEP)
+endif

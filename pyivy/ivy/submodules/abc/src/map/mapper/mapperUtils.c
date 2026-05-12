@@ -615,7 +615,7 @@ int Map_MappingCountDoubles( Map_Man_t * pMan, Map_NodeVec_t * vNodes )
     Map_Super_t * pSuper;
     st__table * tTable;
     int i, nInputs, v;
-    tTable = st__init_table(strcmp, st__strhash);
+    tTable = st__init_table(st__strcmp, st__strhash);
     for ( i = 0; i < pMan->pSuperLib->nSupersAll; i++ )
     {
         pSuper = pMan->pSuperLib->ppSupers[i];
@@ -895,4 +895,3 @@ int Map_MappingCountUsedNodes( Map_Man_t * pMan, int fChoices )
 
 
 ABC_NAMESPACE_IMPL_END
-

@@ -48,7 +48,7 @@ Abc_Des_t * Abc_DesCreate( char * pName )
     p = ABC_ALLOC( Abc_Des_t, 1 );
     memset( p, 0, sizeof(Abc_Des_t) );
     p->pName    = Abc_UtilStrsav( pName );
-    p->tModules = st__init_table( strcmp, st__strhash );
+    p->tModules = st__init_table( st__strcmp, st__strhash );
     p->vTops    = Vec_PtrAlloc( 100 );
     p->vModules = Vec_PtrAlloc( 100 );
     p->pManFunc = Hop_ManStart();
@@ -397,4 +397,3 @@ void Abc_NodeStrashUsingNetwork( Abc_Ntk_t * pNtkAig, Abc_Obj_t * pBox )
 
 
 ABC_NAMESPACE_IMPL_END
-

@@ -44,6 +44,7 @@ struct MvCommand
 {
     char *        sName;       // the command name  
     char *        sGroup;      // the group name  
+    Cmd_CommandId_t          Id;          // the stable command ID
     Cmd_CommandFuncType        pFunc;       // the function to execute the command
     int           fChange;     // set to 1 to mark that the network is changed
 };
@@ -69,7 +70,11 @@ extern void       CmdCommandAliasPrint( Abc_Frame_t * pAbc, Abc_Alias * pAlias )
 extern char *     CmdCommandAliasLookup( Abc_Frame_t * pAbc, char * sCommand );
 extern void       CmdCommandAliasFree( Abc_Alias * p );
 /*=== cmdUtils.c =======================================================*/
+extern Cmd_CommandId_t Cmd_CommandNameToId( const char * sName );
 extern int        CmdCommandDispatch( Abc_Frame_t * pAbc, int * argc, char *** argv );
+extern int        CmdCommandDispatchBasicById( Cmd_CommandId_t Id, Abc_Frame_t * pAbc, int argc, char ** argv, int * pResult );
+extern int        IoCommandDispatchById( Cmd_CommandId_t Id, Abc_Frame_t * pAbc, int argc, char ** argv, int * pResult );
+extern int        AbcCommandDispatchById( Cmd_CommandId_t Id, Abc_Frame_t * pAbc, int argc, char ** argv, int * pResult );
 extern const char *     CmdSplitLine( Abc_Frame_t * pAbc, const char * sCommand, int * argc, char *** argv );
 extern int        CmdApplyAlias( Abc_Frame_t * pAbc, int * argc, char *** argv, int * loop );
 extern char *     CmdHistorySubstitution( Abc_Frame_t * pAbc, char * line, int * changed );
@@ -89,4 +94,3 @@ extern void       CmdPrintTable( st__table * tTable, int fAliases );
 ABC_NAMESPACE_HEADER_END
 
 #endif
-

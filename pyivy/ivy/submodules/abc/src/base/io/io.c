@@ -157,6 +157,18 @@ void Io_Init( Abc_Frame_t * pAbc )
     Cmd_CommandAdd( pAbc, "I/O", "write_json",    IoCommandWriteJson,    0 );
 }
 
+int IoCommandDispatchById( Cmd_CommandId_t Id, Abc_Frame_t * pAbc, int argc, char ** argv, int * pResult )
+{
+    switch ( Id )
+    {
+    case CMD_COMMAND_READ_BLIF:
+        *pResult = IoCommandReadBlif( pAbc, argc, argv );
+        return 1;
+    default:
+        return 0;
+    }
+}
+
 /**Function*************************************************************
 
   Synopsis    []
@@ -3461,4 +3473,3 @@ usage:
 
 
 ABC_NAMESPACE_IMPL_END
-

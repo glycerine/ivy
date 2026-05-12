@@ -97,7 +97,7 @@ int CmdCommandDispatch( Abc_Frame_t * pAbc, int * pargc, char *** pargv )
     char ** argv2;
 
     Abc_Ntk_t * pNetCopy;
-    int (*pFunc) ( Abc_Frame_t *, int, char ** );
+    Cmd_CommandFuncType pFunc;
     Abc_Command * pCommand;
     char * value;
     int fError;
@@ -149,9 +149,22 @@ int CmdCommandDispatch( Abc_Frame_t * pAbc, int * pargc, char *** pargv )
 
     // execute the command
     clk = Extra_CpuTimeDouble();
-    pFunc = (int (*)(Abc_Frame_t *, int, char **))pCommand->pFunc;
+#ifdef __EMSCRIPTEN__
+    Cmd_CommandId_t CommandId;
+    CommandId = Cmd_CommandNameToId( argv[0] );
+    if ( CmdCommandDispatchBasicById( CommandId, pAbc, argc, argv, &fError ) ||
+         IoCommandDispatchById( CommandId, pAbc, argc, argv, &fError ) ||
+         AbcCommandDispatchById( CommandId, pAbc, argc, argv, &fError ) )
+    {
+        pAbc->TimeCommand += Extra_CpuTimeDouble() - clk;
+    }
+    else
+#endif
+    {
+    pFunc = pCommand->pFunc;
     fError = (*pFunc)( pAbc, argc, argv );
     pAbc->TimeCommand += Extra_CpuTimeDouble() - clk;
+    }
 
     // automatic execution of arbitrary command after each command 
     // usually this is a passive command ... 
@@ -753,4 +766,3 @@ void CmdPrintTable( st__table * tTable, int fAliases )
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 ABC_NAMESPACE_IMPL_END
-
