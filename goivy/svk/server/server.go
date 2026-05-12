@@ -13,11 +13,13 @@ import (
 const sessionCookieName = "ivysvk_session"
 
 type Server struct {
-	cfg    Config
-	mux    *http.ServeMux
-	opaque *opaqueauth.Service
-	magic  *MagicService
-	oauth  *OAuthService
+	cfg      Config
+	mux      *http.ServeMux
+	opaque   *opaqueauth.Service
+	magic    *MagicService
+	oauth    *OAuthService
+	passkeys *PasskeyService
+	projects *ProjectStore
 }
 
 func New(cfg Config) (*Server, error) {
@@ -32,12 +34,18 @@ func New(cfg Config) (*Server, error) {
 	if cfg.MailgunDomain != "" && cfg.MailgunAPIKey != "" {
 		sender = mail.NewMailgunSender(cfg.MailgunDomain, cfg.MailgunAPIKey, "SVK <login@"+cfg.MailgunDomain+">")
 	}
+	passkeys, err := NewPasskeyService("localhost", envDefault("IVYSVK_PUBLIC_BASE_URL", "http://localhost:8080"))
+	if err != nil {
+		return nil, err
+	}
 	s := &Server{
-		cfg:    cfg,
-		mux:    http.NewServeMux(),
-		opaque: opaqueService,
-		magic:  NewMagicService(sender, cfg.PublicBaseURL),
-		oauth:  NewOAuthService(),
+		cfg:      cfg,
+		mux:      http.NewServeMux(),
+		opaque:   opaqueService,
+		magic:    NewMagicService(sender, cfg.PublicBaseURL),
+		oauth:    NewOAuthService(),
+		passkeys: passkeys,
+		projects: NewProjectStore(),
 	}
 	s.routes()
 	return s, nil
@@ -61,6 +69,13 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("GET /auth/magic/consume", s.magicConsume)
 	s.mux.HandleFunc("GET /auth/oauth/{provider}/start", s.oauthStart)
 	s.mux.HandleFunc("GET /auth/oauth/{provider}/callback", s.oauthCallback)
+	s.mux.HandleFunc("POST /auth/passkey/register/options", s.passkeyRegistrationOptions)
+	s.mux.HandleFunc("POST /auth/passkey/register/finish", s.passkeyRegistrationFinish)
+	s.mux.HandleFunc("POST /auth/passkey/login/options", s.passkeyLoginOptions)
+	s.mux.HandleFunc("POST /auth/passkey/login/finish", s.passkeyLoginFinish)
+	s.mux.HandleFunc("GET /api/projects", s.listProjects)
+	s.mux.HandleFunc("POST /api/projects", s.createProject)
+	s.mux.HandleFunc("POST /api/projects/{project}/models", s.saveProjectModel)
 	s.mux.HandleFunc("GET /app", s.app)
 	if s.cfg.StaticDir != "" {
 		assets := http.StripPrefix("/assets/", http.FileServer(http.Dir(filepath.Join(s.cfg.StaticDir, "assets"))))
