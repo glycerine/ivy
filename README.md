@@ -2602,109 +2602,18 @@ Estimated People Required 26.621735
 
 # make golden: green. all matching now.
 
-once we stopped the newlines diverging and XTRACE swallowing.
-
-b/c the python takes 5m37sec to finish when not in lock step, and the Go only 41 sec.
-So we are probably just waiting for the python to finish.
 ~~~
-
-make tlb is green with
-~~~
-golden_test.go:975 [goID 83] 2026-04-19 19:20:04.988631221 +0000 UTC goivy_check_xtrace scanner has finished. scanner.Err()='<nil>'
-~go[after i=1859709]: error: check/isolate_check.go:1126: failed checks: 2
-Go stopping (i=1859710) on goivy_check_xtrace error EOF
-~py[after i=1859709]:
-~py[after i=1859709]: error: failed checks: 2
-
-golden_test.go:857 [goID 7] 2026-04-19 19:20:05.106450977 +0000 UTC ivy_check command has finished. closing cmdPw so the scanner will finish its loop. err='exit status 1'
-
-golden_test.go:870 [goID 8] 2026-04-19 19:20:05.106501773 +0000 UTC ivy_check scanner has finished. scanner.Err()='<nil>'
-python stopping on (i=1859710) ivy_check error EOF
-both sides are done. (after i=1859710)
---- PASS: TestIvyTlbModel (3665.76s)
-PASS
-ok      github.com/glycerine/ivy/goivy/parser   3665.789s
-~~~
-
-~~~
-make golden-2hr latest fix is for divergence at XTRACE 28_253_287
-~~~
-
 green "make golden"
 green "make rfn"
 green "make tlb" takes just over an hour to run.
 green "make golden-2hr": finished after 37_019_447 in about 4 hours 12 minutes. (4.2 hours)
 
+green "make node-golden-2hr" in the sense that we match up until
+the shell out to aigtoaiger and abc hardware C++ verification 
+package is invoked. Inside node in js/wasm we "don't have
+the filesystem" because we are built for the browser which 
+will not have filesystem access. Hence we stop here after 28 mm matches:
+
+28273212  go : XTRACE: mc.CheckIsolate EXIT proved=false err=filesystem is not available in browser
+         py : XTRACE: mc.CheckIsolate EXIT proved=true err=<nil>
 ~~~
-make golden-2hr
-...
-~py[after i=36993110]: DIAG CallAction.int_update callee=ext:tar_clock.next
-~go[after i=36995285]: 
-~go[after i=36995285]: update.go:1887 [goID 1] 2026-05-03 00:40:28.969682759 +0000 UTC DIAG CallAction.IntUpdate callee='ext:memc.memc_cpl_hook'
-~py[after i=36995285]: DIAG CallAction.int_update callee=ext:memc.memc_cpl_hook
-~go[after i=37008967]: PASS
-~py[after i=37008967]: PASS
-~go[after i=37009178]:         in action idle when called from the environment,the environment:
-~py[after i=37009178]:         in action idle when called from the environment,the environment:
-~go[after i=37009179]:             <IVY_EXAMPLES>/doc/examples/apple/ord_live.ivy: line 2100: guarantee ...
-~py[after i=37009179]:             <IVY_EXAMPLES>/doc/examples/apple/ord_live.ivy: line 2100: guarantee ...
-~go[after i=37016852]: PASS
-~py[after i=37016852]: PASS
-~go[after i=37019444]: 
-~py[after i=37019444]: 
-~go[after i=37019445]: OK
-
-golden_test.go:889 [goID 9] 2026-05-03 00:40:47.403611363 +0000 UTC ivy_check command has finished. closing cmdPw so the scanner will finish its loop. err='<nil>'
-
-golden_test.go:993 [goID 66] 2026-05-03 00:40:47.631757660 +0000 UTC goivy_check_xtrace command has finished. closing cmdPw so the scanner will finish its loop. err='<nil>'
-
-golden_test.go:1006 [goID 67] 2026-05-03 00:40:47.631802325 +0000 UTC goivy_check_xtrace scanner has finished. scanner.Err()='<nil>'
-Go stopping (i=37019447) on goivy_check_xtrace error EOF
-
-golden_test.go:902 [goID 10] 2026-05-03 00:40:47.631844074 +0000 UTC ivy_check scanner has finished. scanner.Err()='<nil>'
-~py[after i=37019446]: OK
-python stopping on (i=37019447) ivy_check error EOF
-both sides are done. (after i=37019447)
---- PASS: Test2hrOrdLive (15107.71s)
-PASS
-ok  	github.com/glycerine/ivy/goivy/parser	15107.728s
-(goivy-venv) jaten@rog ~/ivy/goivy (master) $
-~~~
-
-how big is the full ord_live.py runs; something like this (but we have
-added more xtracer calls in the meantime):
-~~~
-(goivy-venv) jaten@aorus ~/ivy/goivy (master) $ tail alone.python.ord_live.out
-XTRACE: proof.GoalVocab ENTER label=rfn2.abs.lt6
-XTRACE: proof.GoalVocab EXIT nsorts=2 nsymbols=4 nvariables=4
-XTRACE: proof.GoalVocab ENTER label=rfn2.abs.succ_minus
-XTRACE: proof.GoalVocab EXIT nsorts=0 nsymbols=2 nvariables=6
-XTRACE: check.CheckIsolate EXIT
-XTRACE: check.CheckIsolate EXIT
-
-XTRACE: check.CheckModule EXIT
-XTRACE: check.start EXIT
-OK
-
-(goivy-venv) jaten@aorus ~/ivy/goivy (master) $ wc -l alone.python.ord_live.out
-37140931 alone.python.ord_live.out
-(goivy-venv) jaten@aorus ~/ivy/goivy (master) $ grep XTRACE alone.python.ord_live.out|wc -l
- 37005934
- (goivy-venv) jaten@aorus ~/ivy/goivy (master) $
-~~~ 
-
-atg after collapse of most into one package. golden 2 hrs looks good.
-
-With the golden-2hr and atg, we migrated to Vue 3 for the webui. 
-See the vue branch.
--------
-wasi shim hardening pass done.
-
-faster branch passed golden-2hr test
-
-(goivy-venv) jaten@jbook ~/ivy/goivy (faster) $ git log|head -4
-commit fc69a23e5903440a77b57146202d9a22ae2ae918
-Author: Jason E. Aten, Ph.D. <jason@devnull>
-Date:   Sat May 9 14:47:26 2026 -0300
-
-(goivy-venv) jaten@jbook ~/ivy/goivy (faster) $ 
