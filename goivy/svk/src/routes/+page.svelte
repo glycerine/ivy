@@ -103,6 +103,7 @@ export disconnect
 	let engineChoice = $state<EngineChoice>('hosted-go');
 	let service = createEngineService({ engine: createEngine('hosted-go'), stores });
 	let activationSerial = 0;
+	let activationFailureMessage = '';
 
 	const activeModel = $derived(models.table.byId[initialModel.id]);
 	const jobs = $derived(stores.jobs.table.order.map((id) => stores.jobs.table.byId[id]));
@@ -163,6 +164,7 @@ export disconnect
 	async function activateEngine(choice: EngineChoice) {
 		const serial = ++activationSerial;
 		const oldService = service;
+		activationFailureMessage = '';
 		engineChoice = choice;
 		sessionUi.setStatus(`Starting ${choice}`, 'info');
 		sessionUi.showLoading(`Starting ${choice}`);
@@ -188,7 +190,8 @@ export disconnect
 			if (serial !== activationSerial) {
 				return;
 			}
-			sessionUi.setStatus(error instanceof Error ? error.message : `Failed to start ${choice}`, 'error');
+			activationFailureMessage = error instanceof Error ? error.message : `Failed to start ${choice}`;
+			sessionUi.setStatus(activationFailureMessage, 'error');
 		} finally {
 			if (serial === activationSerial) {
 				sessionUi.hideLoading();
@@ -213,7 +216,9 @@ export disconnect
 				await activateEngine(engineChoice);
 			}
 			if (!stores.workspace.current.activeSessionId) {
-				sessionUi.setStatus('No active engine session', 'error');
+				if (!activationFailureMessage) {
+					sessionUi.setStatus('No active engine session', 'error');
+				}
 				return;
 			}
 			sessionUi.setStatus(`Running ${engineCommandId}`, 'info');

@@ -49,6 +49,23 @@ func TestOriginMismatchRejected(t *testing.T) {
 	}
 }
 
+func TestOriginMatchingRequestHostAcceptedWhenPublicBaseURLDiffers(t *testing.T) {
+	srv, err := New(Config{DevMode: true, PublicBaseURL: "http://127.0.0.1:8080"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodPost, "http://localhost:8080/api/projects", strings.NewReader(`{"name":"Local","slug":"local"}`))
+	req.AddCookie(&http.Cookie{Name: sessionCookieName, Value: "user:user-1"})
+	req.AddCookie(&http.Cookie{Name: "ivysvk_csrf", Value: "csrf"})
+	req.Header.Set("x-csrf-token", "csrf")
+	req.Header.Set("origin", "http://localhost:8080")
+	srv.ServeHTTP(rec, req)
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d body=%s", rec.Code, rec.Body.String())
+	}
+}
+
 func TestCSPAllowsSvelteStyleAttributesButNotInlineScripts(t *testing.T) {
 	rec := httptest.NewRecorder()
 	securityHeaders(rec)

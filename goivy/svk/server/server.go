@@ -76,12 +76,9 @@ func (s *Server) validStateChangingRequest(w http.ResponseWriter, r *http.Reques
 	if len(r.URL.Path) < 5 || r.URL.Path[:5] != "/api/" {
 		return true
 	}
-	if origin := r.Header.Get("origin"); origin != "" && s.cfg.PublicBaseURL != "" {
-		base, err := url.Parse(s.cfg.PublicBaseURL)
-		if err != nil || origin != base.Scheme+"://"+base.Host {
-			http.Error(w, "origin mismatch", http.StatusForbidden)
-			return false
-		}
+	if origin := r.Header.Get("origin"); origin != "" && !s.originAllowed(r, origin) {
+		http.Error(w, "origin mismatch", http.StatusForbidden)
+		return false
 	}
 	csrfCookie, err := r.Cookie(csrfCookieName)
 	if err != nil || csrfCookie.Value == "" || r.Header.Get("x-csrf-token") != csrfCookie.Value {
@@ -89,6 +86,27 @@ func (s *Server) validStateChangingRequest(w http.ResponseWriter, r *http.Reques
 		return false
 	}
 	return true
+}
+
+func (s *Server) originAllowed(r *http.Request, origin string) bool {
+	if s.cfg.PublicBaseURL != "" {
+		base, err := url.Parse(s.cfg.PublicBaseURL)
+		if err == nil && origin == base.Scheme+"://"+base.Host {
+			return true
+		}
+	}
+	return origin == requestOrigin(r)
+}
+
+func requestOrigin(r *http.Request) string {
+	scheme := "http"
+	if r.TLS != nil {
+		scheme = "https"
+	}
+	if r.Host == "" {
+		return ""
+	}
+	return scheme + "://" + r.Host
 }
 
 func (s *Server) routes() {

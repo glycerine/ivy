@@ -208,8 +208,15 @@ async function readJsonResponse<T>(response: Response): Promise<T> {
 	if (!response.ok) {
 		let message = `Hosted engine request failed with ${response.status}`;
 		try {
-			const payload = (await response.json()) as { error?: string };
-			message = payload.error ?? message;
+			if ((response.headers.get('content-type') ?? '').includes('application/json')) {
+				const payload = (await response.json()) as { error?: string };
+				message = payload.error ?? message;
+			} else {
+				const text = (await response.text()).trim();
+				if (text) {
+					message = text;
+				}
+			}
 		} catch {
 			// Keep the status-based message when the body is not JSON.
 		}

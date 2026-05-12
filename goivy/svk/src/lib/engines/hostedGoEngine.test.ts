@@ -119,4 +119,18 @@ describe('HostedGoEngine', () => {
 
 		await expect(engine.newSession('project-1')).rejects.toThrow('unauthorized');
 	});
+
+	it('preserves plain-text hosted HTTP errors', async () => {
+		expect.hasAssertions();
+
+		const engine = new HostedGoEngine({
+			fetcher: async () =>
+				new Response('origin mismatch\n', {
+					status: 403,
+					headers: { 'content-type': 'text/plain; charset=utf-8' }
+				})
+		});
+
+		await expect(engine.newSession('project-1')).rejects.toThrow('origin mismatch');
+	});
 });
