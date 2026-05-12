@@ -48,14 +48,7 @@ func (s *Server) passkeyLoginFinish(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "passkey login failed", http.StatusUnauthorized)
 		return
 	}
-	http.SetCookie(w, &http.Cookie{
-		Name:     sessionCookieName,
-		Value:    randomURLToken(),
-		Path:     "/",
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-		Secure:   !s.cfg.DevMode,
-	})
+	s.setSessionCookies(w, r, "")
 	writeOpaqueJSON(w, map[string]bool{"ok": true})
 }
 

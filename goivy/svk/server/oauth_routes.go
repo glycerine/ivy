@@ -41,13 +41,6 @@ func (s *Server) oauthCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	_ = result
-	http.SetCookie(w, &http.Cookie{
-		Name:     sessionCookieName,
-		Value:    randomURLToken(),
-		Path:     "/",
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-		Secure:   !s.cfg.DevMode,
-	})
+	s.setSessionCookies(w, r, "")
 	http.Redirect(w, r, "/app", http.StatusFound)
 }

@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 )
 
 type magicRequest struct {
@@ -13,11 +14,24 @@ type magicRequest struct {
 func (s *Server) magicRequest(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var req magicRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "invalid json", http.StatusBadRequest)
-		return
+	if strings.HasPrefix(r.Header.Get("content-type"), "application/x-www-form-urlencoded") {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "invalid form", http.StatusBadRequest)
+			return
+		}
+		req.Email = r.Form.Get("email")
+		req.Purpose = r.Form.Get("purpose")
+	} else {
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "invalid json", http.StatusBadRequest)
+			return
+		}
 	}
 	_ = s.magic.Request(r.Context(), req.Email, req.Purpose)
+	if strings.HasPrefix(r.Header.Get("content-type"), "application/x-www-form-urlencoded") {
+		renderPage(w, "Check your email", "If the address can receive SVK login email, a magic link is on the way.")
+		return
+	}
 	w.Header().Set("content-type", "application/json")
 	_, _ = w.Write([]byte(`{"ok":true}`))
 }
@@ -29,13 +43,6 @@ func (s *Server) magicConsume(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	_ = email
-	http.SetCookie(w, &http.Cookie{
-		Name:     sessionCookieName,
-		Value:    randomURLToken(),
-		Path:     "/",
-		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
-		Secure:   !s.cfg.DevMode,
-	})
+	s.setSessionCookies(w, r, "")
 	http.Redirect(w, r, "/app", http.StatusFound)
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -26,7 +27,7 @@ func LoadConfigFromEnv() (Config, error) {
 		MailgunDomain: os.Getenv("IVYSVK_MAILGUN_DOMAIN"),
 		MailgunAPIKey: os.Getenv("IVYSVK_MAILGUN_API_KEY"),
 		CookieSecret:  os.Getenv("IVYSVK_COOKIE_SECRET"),
-		StaticDir:     envDefault("IVYSVK_STATIC_DIR", "svk/build"),
+		StaticDir:     envDefaultFunc("IVYSVK_STATIC_DIR", defaultStaticDir),
 	}
 	cfg.DevMode, _ = strconv.ParseBool(envDefault("IVYSVK_DEV", "false"))
 	return cfg, cfg.Validate()
@@ -61,4 +62,25 @@ func envDefault(key, fallback string) string {
 		return value
 	}
 	return fallback
+}
+
+func envDefaultFunc(key string, fallback func() string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return fallback()
+}
+
+func defaultStaticDir() string {
+	for _, candidate := range []string{
+		filepath.Join("svk", ".svelte-kit", "output", "client"),
+		filepath.Join("goivy", "svk", ".svelte-kit", "output", "client"),
+		filepath.Join("svk", "build"),
+		filepath.Join("goivy", "svk", "build"),
+	} {
+		if info, err := os.Stat(candidate); err == nil && info.IsDir() {
+			return candidate
+		}
+	}
+	return filepath.Join("svk", ".svelte-kit", "output", "client")
 }
