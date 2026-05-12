@@ -124,7 +124,7 @@
 	}
 </script>
 
-<div class="graph-view" data-testid={testId}>
+<div class="graph-view" class:concept-graph={snapshot?.kind === 'concept'} data-testid={testId}>
 	<div class="cy-container" bind:this={container} aria-hidden="true"></div>
 	<svg class="graph-edge-layer" aria-hidden="true">
 		<defs>
@@ -154,6 +154,9 @@
 			</button>
 		{/each}
 	</div>
+	{#if !snapshot}
+		<div class="empty-graph-state">No graph loaded</div>
+	{/if}
 	{#if selectedNode?.actions?.length}
 		<div class="graph-actions" data-testid="graph-actions">
 			{#each selectedNode.actions as action (action.label)}
@@ -234,6 +237,18 @@
 		background: #858585;
 	}
 
+	.concept-graph .graph-node-hit {
+		border-radius: 0;
+		clip-path: polygon(28% 0, 72% 0, 100% 28%, 100% 72%, 72% 100%, 28% 100%, 0 72%, 0 28%);
+		background: #f8f8f6;
+		color: #111111;
+		box-shadow: inset 0 0 0 8px #001eff;
+	}
+
+	.concept-graph .graph-node-hit.selected {
+		outline: 3px solid #ffffff;
+	}
+
 	.graph-actions {
 		position: absolute;
 		right: 10px;
@@ -245,6 +260,16 @@
 		border-radius: 4px;
 		background: rgba(24, 26, 28, 0.94);
 		z-index: 3;
+	}
+
+	.empty-graph-state {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		color: #777a84;
+		font-size: 0.9rem;
+		z-index: 2;
 	}
 
 	.graph-actions button {

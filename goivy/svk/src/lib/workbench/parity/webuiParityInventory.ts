@@ -24,21 +24,24 @@ export const WEBUI_PARITY_ITEMS = [
 		kind: 'component',
 		label: 'Workspace shell',
 		source: 'goivy/webui/frontend/src/components/WorkspaceShell.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/WorkbenchShell.svelte'
 	},
 	{
 		id: 'component.menubar',
 		kind: 'component',
 		label: 'Menubar',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/Menubar.svelte'
 	},
 	{
 		id: 'component.status-bar',
 		kind: 'component',
 		label: 'Status bar',
 		source: 'goivy/webui/frontend/src/components/StatusBar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/StatusBar.svelte'
 	},
 	{
 		id: 'component.sheet-area',
@@ -52,140 +55,160 @@ export const WEBUI_PARITY_ITEMS = [
 		kind: 'component',
 		label: 'Tab bar',
 		source: 'goivy/webui/frontend/src/components/panes/TabBar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/TabBar.svelte'
 	},
 	{
 		id: 'component.arg-pane',
 		kind: 'component',
 		label: 'ARG pane',
 		source: 'goivy/webui/frontend/src/components/panes/ArgPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/ArgPane.svelte'
 	},
 	{
 		id: 'component.concept-pane',
 		kind: 'component',
 		label: 'Concept pane',
 		source: 'goivy/webui/frontend/src/components/panes/ConceptPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/ConceptPane.svelte'
 	},
 	{
 		id: 'component.state-relations-pane',
 		kind: 'component',
 		label: 'State relations pane',
 		source: 'goivy/webui/frontend/src/components/panes/StateRelationsPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/StateRelationsPane.svelte'
 	},
 	{
 		id: 'component.details-pane',
 		kind: 'component',
 		label: 'Details pane',
 		source: 'goivy/webui/frontend/src/components/panes/DetailsPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/DetailsPane.svelte'
 	},
 	{
 		id: 'component.editor-pane',
 		kind: 'component',
 		label: 'Editor pane',
 		source: 'goivy/webui/frontend/src/components/panes/EditorPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/EditorPane.svelte'
 	},
 	{
 		id: 'component.event-trace-sheet',
 		kind: 'component',
 		label: 'Event trace sheet',
 		source: 'goivy/webui/frontend/src/components/panes/EventTraceSheet.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/EventTraceSheet.svelte'
 	},
 	{
 		id: 'component.tutorial-pane',
 		kind: 'component',
 		label: 'Tutorial pane',
 		source: 'goivy/webui/frontend/src/components/panes/TutorialPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/TutorialPane.svelte'
 	},
 	{
 		id: 'component.dialog-host',
 		kind: 'component',
 		label: 'Dialog host',
 		source: 'goivy/webui/frontend/src/components/DialogHost.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/overlays/DialogHost.svelte'
 	},
 	{
 		id: 'component.context-menu-host',
 		kind: 'component',
 		label: 'Context menu host',
 		source: 'goivy/webui/frontend/src/components/ContextMenuHost.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/overlays/ContextMenuHost.svelte'
 	},
 	{
 		id: 'component.toast-host',
 		kind: 'component',
 		label: 'Toast host',
 		source: 'goivy/webui/frontend/src/components/ToastHost.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/overlays/ToastHost.svelte'
 	},
 	{
 		id: 'component.session-overlay-host',
 		kind: 'component',
 		label: 'Session overlay host',
 		source: 'goivy/webui/frontend/src/components/SessionOverlayHost.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/overlays/SessionOverlayHost.svelte'
 	},
 	{
 		id: 'component.file-input-host',
 		kind: 'component',
 		label: 'File input host',
 		source: 'goivy/webui/frontend/src/components/FileInputHost.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/overlays/FileInputHost.svelte'
 	},
 	{
 		id: 'menu.file.load',
 		kind: 'menu',
 		label: 'File / Load',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.file.open-event-trace',
 		kind: 'menu',
 		label: 'File / Open Event Trace',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.file.save-as',
 		kind: 'menu',
 		label: 'File / Save as',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.file.download-current-model',
 		kind: 'menu',
 		label: 'File / Download current model',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.file.save-analysis-state',
 		kind: 'menu',
 		label: 'File / Save Analysis State',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.file.load-analysis-state',
 		kind: 'menu',
 		label: 'File / Load Analysis State',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.file.save-invariant',
 		kind: 'menu',
 		label: 'File / Save Invariant',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.file.recent-files',
@@ -199,91 +222,104 @@ export const WEBUI_PARITY_ITEMS = [
 		kind: 'menu',
 		label: 'File / New Model',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.toolbar.check',
 		kind: 'menu',
 		label: 'Toolbar / Check',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/Menubar.svelte'
 	},
 	{
 		id: 'menu.toolbar.show-reachable',
 		kind: 'menu',
 		label: 'Toolbar / Show Reachable',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/Menubar.svelte'
 	},
 	{
 		id: 'menu.toolbar.undo',
 		kind: 'menu',
 		label: 'Toolbar / Undo',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/Menubar.svelte'
 	},
 	{
 		id: 'menu.toolbar.reset-domain',
 		kind: 'menu',
 		label: 'Toolbar / Reset Domain',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/Menubar.svelte'
 	},
 	{
 		id: 'menu.toolbar.diagram-domain',
 		kind: 'menu',
 		label: 'Toolbar / Diagram Domain',
 		source: 'goivy/webui/frontend/src/components/Menubar.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/Menubar.svelte'
 	},
 	{
 		id: 'menu.arg.check-induction',
 		kind: 'menu',
 		label: 'ARG Invariant / Check induction',
 		source: 'goivy/webui/frontend/src/components/panes/ArgPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.arg.bounded-check',
 		kind: 'menu',
 		label: 'ARG Invariant / Bounded check',
 		source: 'goivy/webui/frontend/src/components/panes/ArgPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.arg.diagram',
 		kind: 'menu',
 		label: 'ARG Invariant / Diagram',
 		source: 'goivy/webui/frontend/src/components/panes/ArgPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.arg.weaken',
 		kind: 'menu',
 		label: 'ARG Invariant / Weaken',
 		source: 'goivy/webui/frontend/src/components/panes/ArgPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.arg.save-abstraction',
 		kind: 'menu',
 		label: 'ARG Invariant / Save Abstraction',
 		source: 'goivy/webui/frontend/src/components/panes/ArgPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.concept.conjecture',
 		kind: 'menu',
 		label: 'Concept / Conjecture actions',
 		source: 'goivy/webui/frontend/src/components/panes/ConceptPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.concept.add-relation',
 		kind: 'menu',
 		label: 'Concept View / Add relation',
 		source: 'goivy/webui/frontend/src/components/panes/ConceptPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/menuDefinitions.ts'
 	},
 	{
 		id: 'menu.event-trace.controls',
@@ -304,7 +340,8 @@ export const WEBUI_PARITY_ITEMS = [
 		kind: 'command',
 		label: 'Command registry',
 		source: 'goivy/webui/frontend/src/services/commandRegistry.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/commandRegistry.ts'
 	},
 	{
 		id: 'command.file',
@@ -353,35 +390,40 @@ export const WEBUI_PARITY_ITEMS = [
 		kind: 'store',
 		label: 'Session store',
 		source: 'goivy/webui/frontend/src/stores/sessionStore.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/state/uiStores.svelte.ts'
 	},
 	{
 		id: 'store.layout',
 		kind: 'store',
 		label: 'Layout store',
 		source: 'goivy/webui/frontend/src/stores/layoutStore.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/state/uiStores.svelte.ts'
 	},
 	{
 		id: 'store.editor',
 		kind: 'store',
 		label: 'Editor store',
 		source: 'goivy/webui/frontend/src/stores/editorStore.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/state/uiStores.svelte.ts'
 	},
 	{
 		id: 'store.details',
 		kind: 'store',
 		label: 'Details store',
 		source: 'goivy/webui/frontend/src/stores/detailsStore.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/state/uiStores.svelte.ts'
 	},
 	{
 		id: 'store.event-trace',
 		kind: 'store',
 		label: 'Event trace store',
 		source: 'goivy/webui/frontend/src/stores/eventTraceStore.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/state/uiStores.svelte.ts'
 	},
 	{
 		id: 'service.engine-neutrality',

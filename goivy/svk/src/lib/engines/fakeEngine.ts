@@ -1,5 +1,6 @@
 import type {
 	CommandIntent,
+	CheckResult,
 	ConceptState,
 	EngineEvent,
 	EngineSession,
@@ -114,6 +115,9 @@ export class FakeEngine implements IvyEngine {
 		this.emitJobLifecycle(intent.sessionId, job, {
 			graph: this.createGraphSnapshot(intent.target?.kind ?? 'arg', intent.target?.graphId ?? 'sheet-arg', revision)
 		});
+		if (intent.commandId.startsWith('check.')) {
+			this.emit(intent.sessionId, { type: 'check-updated', result: this.createCheckResult(intent.sessionId, job, intent.commandId) });
+		}
 		return job;
 	}
 
@@ -252,6 +256,19 @@ export class FakeEngine implements IvyEngine {
 		};
 	}
 
+	private createCheckResult(sessionId: Id, job: VerificationJob, commandId: string): CheckResult {
+		return {
+			id: this.createId('check'),
+			jobId: job.id,
+			sessionId,
+			mode: fakeCheckMode(commandId),
+			z3Contacted: true,
+			result: 'pass',
+			message: 'no counterexample found',
+			createdAt: this.now()
+		};
+	}
+
 	private emit(sessionId: Id, event: EngineEvent) {
 		for (const listener of this.listeners.get(sessionId) ?? []) {
 			listener(event);
@@ -277,5 +294,18 @@ function commandToJobKind(commandId: string): VerificationJobKind {
 			return 'event-action';
 		default:
 			return 'arg-action';
+	}
+}
+
+function fakeCheckMode(commandId: string): CheckResult['mode'] {
+	switch (commandId) {
+		case 'check.bounded':
+			return 'bounded';
+		case 'check.pdr':
+			return 'pdr';
+		case 'check.concrete':
+			return 'concrete';
+		default:
+			return 'induction';
 	}
 }

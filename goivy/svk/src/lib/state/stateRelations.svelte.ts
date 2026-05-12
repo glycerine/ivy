@@ -60,6 +60,16 @@ export function createStateRelationsState(initialRows: StateRelationRow[] = []) 
 		},
 		rowsForSheet(sheetId: Id) {
 			return current.rows.filter((row) => row.sheetId === sheetId);
+		},
+		toggle(rowId: string, key: EdgeDisplayClass | NodeLabelDisplayClass, checked: boolean) {
+			const row = current.rows.find((candidate) => candidate.id === rowId);
+			const column = row?.columns.find((candidate) => candidate.key === key);
+			if (!column) {
+				return false;
+			}
+			column.checked = checked;
+			bump();
+			return true;
 		}
 	};
 }
@@ -119,4 +129,3 @@ function labelRow(
 function sortedUnique(values: string[]) {
 	return Array.from(new Set(values.filter(Boolean))).sort();
 }
-

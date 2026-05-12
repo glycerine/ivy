@@ -104,7 +104,7 @@ describe('FakeEngine', () => {
 
 		const stores = makeStores();
 		const service = createEngineService({ engine: makeEngine(), stores });
-		await service.startSession('project-1');
+		const session = await service.startSession('project-1');
 		await service.loadModel(model);
 		const job = await service.runCommand({
 			id: 'intent-1',
@@ -115,6 +115,12 @@ describe('FakeEngine', () => {
 		expect(stores.jobs.table.byId[job.id]).toMatchObject({
 			kind: 'check-induction',
 			status: 'succeeded'
+		});
+		expect(stores.checks?.latestForSession(session.id)).toMatchObject({
+			jobId: job.id,
+			mode: 'induction',
+			result: 'pass',
+			message: 'no counterexample found'
 		});
 		const latestGraph = stores.graphs.table.byId[stores.graphs.table.order.at(-1) ?? ''];
 		expect(latestGraph).toMatchObject({ kind: 'proof', sheetId: 'proof-sheet' });

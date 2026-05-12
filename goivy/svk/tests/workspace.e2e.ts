@@ -3,7 +3,7 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 async function openWorkspace(page: Page) {
 	await page.goto('/');
 	await expect(page.getByRole('main')).toContainText('Editing: client_server_example.ivy');
-	await expect(page.getByTestId('status-strip')).toContainText('No check has run in this session.');
+	await expect(page.getByTestId('status-strip')).toContainText('ready');
 }
 
 async function expectNoOverlap(a: Locator, b: Locator) {
@@ -47,6 +47,7 @@ test('fake induction command creates a completed job row', async ({ page }) => {
 
 	await expect(page.getByTestId('job-strip')).toContainText('check-induction');
 	await expect(page.getByTestId('job-strip')).toContainText('succeeded');
+	await expect(page.getByTestId('status-strip')).toContainText('Check PASS');
 });
 
 test('fake graph renders selectable nodes and updates details', async ({ page }) => {

@@ -66,5 +66,21 @@ describe('state relation rows', () => {
 
 		expect(rows.map((row) => row.id)).toEqual(['sheet-1:edge:link(X,Y)', 'sheet-1:label:=@X']);
 	});
-});
 
+	it('toggles an existing relation column in place', () => {
+		expect.hasAssertions();
+		const state = createStateRelationsState([
+			{
+				id: 'sheet-1:edge:link',
+				sheetId: 'sheet-1',
+				kind: 'edge',
+				name: 'link',
+				columns: [{ key: 'all_to_all', label: '+', checked: false }]
+			}
+		]);
+
+		expect(state.toggle('sheet-1:edge:link', 'all_to_all', true)).toBe(true);
+		expect(state.current.rows[0]?.columns[0]?.checked).toBe(true);
+		expect(state.toggle('missing', 'all_to_all', true)).toBe(false);
+	});
+});
