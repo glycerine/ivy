@@ -98,7 +98,6 @@ export disconnect
 		const graphId = selectedGraphId ?? stores.graphs.table.order.at(-1);
 		return graphId ? stores.graphs.table.byId[graphId] : null;
 	});
-	const graphNodes = $derived<GraphNode[]>(latestGraph ? latestGraph.nodeOrder.map((id) => latestGraph.nodes[id]) : []);
 	const selectedNode = $derived(selectedNodeId && latestGraph ? latestGraph.nodes[selectedNodeId] : null);
 	const latestConcept = $derived.by(() => {
 		const conceptId = stores.concepts.table.order.at(-1);
@@ -583,6 +582,7 @@ export disconnect
 		height: 112px;
 		background: #f8f8f6;
 		color: #111;
+		--concept-border: #001eff;
 		font-size: 1.7rem;
 		line-height: 1.05;
 		text-align: center;
@@ -594,16 +594,16 @@ export disconnect
 		position: absolute;
 		inset: 0;
 		clip-path: inherit;
-		border: 8px solid currentColor;
+		border: 8px solid var(--concept-border);
 		pointer-events: none;
 	}
 
 	.concept-node.blue {
-		color: #001eff;
+		--concept-border: #001eff;
 	}
 
 	.concept-node.red {
-		color: #f10012;
+		--concept-border: #f10012;
 	}
 
 	.concept-client-zero {

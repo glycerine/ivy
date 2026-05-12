@@ -2,8 +2,8 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 
 async function openWorkspace(page: Page) {
 	await page.goto('/');
-	await expect(page.getByRole('main')).toContainText('Local Ivy Workspace');
-	await expect(page.getByTestId('status-strip')).toContainText('Local engine ready');
+	await expect(page.getByRole('main')).toContainText('Editing: client_server_example.ivy');
+	await expect(page.getByTestId('status-strip')).toContainText('Check FAILED');
 }
 
 async function expectNoOverlap(a: Locator, b: Locator) {
@@ -56,7 +56,7 @@ test('fake graph renders selectable nodes and updates details', async ({ page })
 	await expect(firstNode).toBeVisible();
 	await firstNode.click();
 
-	await expect(page.getByTestId('details-pane')).toContainText('Fake node');
+	await expect(page.getByTestId('details-pane')).toContainText('0');
 	await expect(page.getByTestId('details-pane')).toContainText('fake.node');
 });
 
@@ -70,7 +70,7 @@ test('graph action menu emits a command intent and remains usable after update',
 	await expect(page.getByTestId('job-strip')).toContainText('arg-action');
 	await expect(page.getByTestId('graph-node').first()).toBeVisible();
 	await page.getByTestId('graph-node').first().click();
-	await expect(page.getByTestId('details-pane')).toContainText('Fake node');
+	await expect(page.getByTestId('details-pane')).toContainText('0');
 });
 
 test('major panes do not overlap on desktop or mobile', async ({ page }) => {

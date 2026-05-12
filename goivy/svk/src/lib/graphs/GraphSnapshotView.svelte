@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import type cytoscape from 'cytoscape';
-	import type { GraphNode, GraphSnapshot, NodeAction } from '$lib/types';
+	import type { GraphEdge, GraphNode, GraphSnapshot, NodeAction } from '$lib/types';
 	import { graphSnapshotToCytoscapeElements } from './cytoscapeElements';
 	import { syncCytoscapeSnapshot } from './cytoscapeSync';
 	import { graphStyleFor } from './graphStyles';
@@ -27,7 +27,9 @@
 	let cy = $state<cytoscape.Core | null>(null);
 
 	const nodes = $derived(snapshot ? snapshot.nodeOrder.map((id) => snapshot.nodes[id]) : []);
+	const edges = $derived(snapshot ? snapshot.edgeOrder.map((id) => snapshot.edges[id]) : []);
 	const selectedNode = $derived(snapshot && selectedNodeId ? snapshot.nodes[selectedNodeId] : null);
+	const arrowId = $derived(`${testId}-arrowhead`);
 
 	onMount(() => {
 		if (!browser || !container || !snapshot) {
@@ -87,6 +89,36 @@
 		return `left:${x}px;top:${y}px`;
 	}
 
+	function nodeCenter(nodeId: string) {
+		const index = snapshot?.nodeOrder.indexOf(nodeId) ?? -1;
+		const node = snapshot?.nodes[nodeId];
+		const layout = snapshot?.layout?.[nodeId];
+		return {
+			x: layout?.x ?? 120 + Math.max(index, 0) * 140,
+			y: layout?.y ?? 110 + (Math.max(index, 0) % 2) * 72,
+			node
+		};
+	}
+
+	function edgeLine(edge: GraphEdge) {
+		const source = nodeCenter(edge.source);
+		const target = nodeCenter(edge.target);
+		const radius = 58;
+		const dx = target.x - source.x;
+		const dy = target.y - source.y;
+		const distance = Math.max(Math.hypot(dx, dy), 1);
+		const unitX = dx / distance;
+		const unitY = dy / distance;
+		return {
+			x1: source.x + unitX * radius,
+			y1: source.y + unitY * radius,
+			x2: target.x - unitX * radius,
+			y2: target.y - unitY * radius,
+			labelX: (source.x + target.x) / 2 - unitY * 24,
+			labelY: (source.y + target.y) / 2 + unitX * 24
+		};
+	}
+
 	function selectNode(node: GraphNode) {
 		onSelect?.(node);
 	}
@@ -94,6 +126,20 @@
 
 <div class="graph-view" data-testid={testId}>
 	<div class="cy-container" bind:this={container} aria-hidden="true"></div>
+	<svg class="graph-edge-layer" aria-hidden="true">
+		<defs>
+			<marker id={arrowId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+				<path d="M 0 0 L 10 5 L 0 10 z"></path>
+			</marker>
+		</defs>
+		{#each edges as edge (edge.id)}
+			{@const line = edgeLine(edge)}
+			<line x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} marker-end={`url(#${arrowId})`}></line>
+			{#if edge.label}
+				<text x={line.labelX} y={line.labelY}>{edge.label}</text>
+			{/if}
+		{/each}
+	</svg>
 	<div class="graph-hit-layer" aria-label="Graph nodes">
 		{#each nodes as node, index (node.id)}
 			<button
@@ -129,12 +175,42 @@
 	.cy-container {
 		position: absolute;
 		inset: 0;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.graph-edge-layer {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+		pointer-events: none;
+		z-index: 1;
+	}
+
+	.graph-edge-layer line {
+		stroke: #8d8d8d;
+		stroke-width: 9;
+	}
+
+	.graph-edge-layer path {
+		fill: #8d8d8d;
+	}
+
+	.graph-edge-layer text {
+		fill: #c7c7cf;
+		font-size: 1.35rem;
+		font-family:
+			Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		text-anchor: middle;
 	}
 
 	.graph-hit-layer {
 		position: absolute;
 		inset: 0;
 		pointer-events: none;
+		z-index: 2;
 	}
 
 	.graph-node-hit {
@@ -144,12 +220,12 @@
 		background: #858585;
 		color: #ffffff;
 		border-radius: 999px;
-		min-width: 124px;
-		min-height: 124px;
+		min-width: 112px;
+		min-height: 112px;
 		padding: 0 12px;
 		cursor: pointer;
 		pointer-events: auto;
-		font-size: 2rem;
+		font-size: 1.8rem;
 		box-shadow: none;
 	}
 
@@ -168,6 +244,7 @@
 		border: 1px solid #393b44;
 		border-radius: 4px;
 		background: rgba(24, 26, 28, 0.94);
+		z-index: 3;
 	}
 
 	.graph-actions button {

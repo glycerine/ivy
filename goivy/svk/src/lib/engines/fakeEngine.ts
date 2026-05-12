@@ -223,7 +223,7 @@ export class FakeEngine implements IvyEngine {
 			},
 			nodeOrder: [firstNodeId, secondNodeId],
 			edgeOrder: [edgeId],
-			layout: { [firstNodeId]: { x: 120, y: 130 }, [secondNodeId]: { x: 120, y: 320 } },
+			layout: { [firstNodeId]: { x: 120, y: 110 }, [secondNodeId]: { x: 120, y: 286 } },
 			styleRevision: 1,
 			createdAt: this.now()
 		};
