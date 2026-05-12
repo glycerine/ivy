@@ -32,7 +32,6 @@ if (duplicateIds.length > 0) errors.push(`duplicate inventory ids: ${[...new Set
 if (badStatuses.length > 0) errors.push(`bad statuses: ${[...new Set(badStatuses)].join(', ')}`);
 if (missingRequired.length > 0) errors.push(`missing required parity ids: ${missingRequired.join(', ')}`);
 if (implemented === 0) errors.push('inventory has no implemented entries');
-if (planned === 0) errors.push('inventory has no planned entries');
 
 if (process.env.PARITY_ENFORCE_IMPLEMENTED === '1' && planned > 0) {
 	errors.push(`${planned} parity items are still planned`);

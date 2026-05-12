@@ -4,9 +4,11 @@
 
 	type Props = {
 		sheet: TraceEventSheet | null;
+		onCommand?: (commandId: string, value?: string) => void | Promise<void>;
 	};
 
-	let { sheet }: Props = $props();
+	let { sheet, onCommand }: Props = $props();
+	let pattern = $state('');
 </script>
 
 <section class="event-viewer" aria-label="Event trace">
@@ -14,8 +16,14 @@
 		<div class="pane-title">
 			<strong>{sheet?.label ?? 'Event trace'}</strong>
 			<div class="event-pattern-buttons">
-				<button type="button">Filter</button>
-				<button type="button">Find</button>
+				<input aria-label="Event pattern" bind:value={pattern} />
+				<button type="button" onclick={() => void onCommand?.('filterEventTrace', pattern)}>Filter</button>
+				<button type="button" onclick={() => void onCommand?.('findEventTrace', pattern)}>Find</button>
+				<button type="button" onclick={() => void onCommand?.('addEventPattern', pattern)}>+</button>
+				<button type="button" onclick={() => void onCommand?.('removeSelectedEventPattern')}>-</button>
+				<button type="button" onclick={() => void onCommand?.('saveEventPatterns')}>Save</button>
+				<button type="button" onclick={() => void onCommand?.('loadEventPatterns')}>Load</button>
+				<button type="button" onclick={() => void onCommand?.('clearEventPatterns')}>Clear</button>
 			</div>
 		</div>
 		<div class="event-tree">

@@ -517,6 +517,83 @@ textarea {
 	display: contents;
 }
 
+.dialog-overlay,
+.session-overlay-host {
+	position: fixed;
+	inset: 0;
+	z-index: 50;
+	display: grid;
+	place-items: center;
+	background: rgba(0, 0, 0, 0.45);
+}
+
+.dialog-box,
+.session-overlay-box {
+	min-width: 280px;
+	max-width: min(560px, calc(100vw - 32px));
+	padding: 16px;
+	border: 1px solid #424550;
+	background: #202226;
+	color: #e0e1e7;
+}
+
+.dialog-buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 14px;
+}
+
+.context-menu {
+	position: fixed;
+	z-index: 60;
+	display: grid;
+	min-width: 180px;
+	padding: 4px 0;
+	border: 1px solid #3a3d44;
+	background: #202226;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.context-menu button {
+	border: 0;
+	background: transparent;
+	color: #e0e1e7;
+	text-align: left;
+	padding: 6px 12px;
+}
+
+.context-menu button:hover {
+	background: #343842;
+}
+
+.context-menu-separator {
+	height: 1px;
+	margin: 4px 0;
+	background: #343740;
+}
+
+.toast-host {
+	position: fixed;
+	right: 12px;
+	bottom: 32px;
+	z-index: 70;
+	display: grid;
+	gap: 8px;
+}
+
+.toast {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	justify-content: space-between;
+	min-width: 220px;
+	padding: 8px 10px;
+	border: 1px solid #424550;
+	background: #24262b;
+	color: #e0e1e7;
+}
+
 @media (max-width: 900px) {
 	.topbar {
 		overflow-x: auto;

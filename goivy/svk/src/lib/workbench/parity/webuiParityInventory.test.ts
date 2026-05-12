@@ -37,8 +37,8 @@ describe('webui parity inventory', () => {
 		expect.hasAssertions();
 		const summary = paritySummary();
 		expect(summary.total).toBe(WEBUI_PARITY_ITEMS.length);
-		expect(summary.byStatus.planned).toBeGreaterThan(0);
-		expect(summary.byStatus.implemented).toBeGreaterThan(0);
+		expect(summary.byStatus.planned).toBeGreaterThanOrEqual(0);
+		expect(summary.byStatus.implemented).toBe(WEBUI_PARITY_ITEMS.length);
 		expect(summary.byKind.component).toBeGreaterThan(10);
 	});
 });

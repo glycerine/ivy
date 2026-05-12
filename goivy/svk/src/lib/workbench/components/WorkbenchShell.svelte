@@ -10,18 +10,12 @@
 	} from '$lib/types';
 	import type { StateRelationRow } from '$lib/state/stateRelations.svelte';
 	import Menubar from './Menubar.svelte';
-	import StatusBar from './StatusBar.svelte';
 	import ContextMenuHost from './overlays/ContextMenuHost.svelte';
 	import DialogHost from './overlays/DialogHost.svelte';
 	import FileInputHost from './overlays/FileInputHost.svelte';
 	import SessionOverlayHost from './overlays/SessionOverlayHost.svelte';
 	import ToastHost from './overlays/ToastHost.svelte';
-	import ArgPane from './panes/ArgPane.svelte';
-	import ConceptPane from './panes/ConceptPane.svelte';
-	import DetailsPane from './panes/DetailsPane.svelte';
-	import EditorPane from './panes/EditorPane.svelte';
-	import StateRelationsPane from './panes/StateRelationsPane.svelte';
-	import TabBar from './panes/TabBar.svelte';
+	import SheetArea from './panes/SheetArea.svelte';
 	import TutorialPane from './panes/TutorialPane.svelte';
 
 	type EngineChoice = 'fake' | 'hosted-webui' | 'browser-wasm';
@@ -92,15 +86,27 @@
 		{onMarkSaved}
 	/>
 
-	<section class="workspace-grid" aria-label="Ivy workspace">
-		<TabBar />
-		<ArgPane {latestGraph} {selectedNodeId} {onSelectNode} onNodeAction={onNodeAction} {onRunCommand} />
-		<ConceptPane {latestConcept} {onRunCommand} />
-		<StateRelationsPane stateLabel="0" rows={stateRelationRows} onToggle={onToggleRelation} />
-		<EditorPane {activeModel} {editorText} keymap={editorKeymap} onUpdateEditor={onUpdateEditor} onSetKeymap={onSetEditorKeymap} />
-		<DetailsPane {latestCheck} {selectedNode} {jobs} />
-		<StatusBar {latestCheck} {sessionLabel} message={statusMessage} level={statusLevel} />
-	</section>
+	<SheetArea
+		{activeModel}
+		{editorText}
+		{editorKeymap}
+		{sessionLabel}
+		{statusMessage}
+		{statusLevel}
+		{latestGraph}
+		{latestConcept}
+		{latestCheck}
+		{selectedNode}
+		{selectedNodeId}
+		{jobs}
+		{stateRelationRows}
+		{onRunCommand}
+		{onUpdateEditor}
+		{onSetEditorKeymap}
+		{onSelectNode}
+		{onNodeAction}
+		{onToggleRelation}
+	/>
 
 	<TutorialPane />
 	<DialogHost />

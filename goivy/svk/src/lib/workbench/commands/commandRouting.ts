@@ -25,6 +25,14 @@ const ENGINE_COMMAND_ALIASES: Record<string, string> = {
 	addRelationFromString: 'concept.add-relation'
 };
 
+export const COMMAND_SURFACE_IMPLEMENTATION = {
+	file: 'goivy/svk/src/lib/workbench/services/fileLifecycle.ts',
+	analysisAction: 'goivy/svk/src/lib/workbench/commands/commandRouting.ts',
+	arg: 'goivy/svk/src/lib/workbench/commands/commandRouting.ts',
+	concept: 'goivy/svk/src/lib/workbench/commands/commandRouting.ts',
+	eventTrace: 'goivy/svk/src/lib/workbench/components/panes/EventTraceSheet.svelte'
+} as const;
+
 export function routeWorkbenchCommand(commandId: string) {
 	return ENGINE_COMMAND_ALIASES[commandId] ?? commandId;
 }

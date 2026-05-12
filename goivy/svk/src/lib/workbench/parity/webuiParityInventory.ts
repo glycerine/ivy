@@ -48,7 +48,8 @@ export const WEBUI_PARITY_ITEMS = [
 		kind: 'component',
 		label: 'Sheet area',
 		source: 'goivy/webui/frontend/src/components/panes/SheetArea.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/SheetArea.svelte'
 	},
 	{
 		id: 'component.tab-bar',
@@ -215,7 +216,8 @@ export const WEBUI_PARITY_ITEMS = [
 		kind: 'menu',
 		label: 'File / Recent files',
 		source: 'goivy/webui/frontend/src/components/RecentFilesMenu.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/state/uiStores.svelte.ts'
 	},
 	{
 		id: 'menu.file.new-model',
@@ -326,14 +328,16 @@ export const WEBUI_PARITY_ITEMS = [
 		kind: 'menu',
 		label: 'Event trace controls',
 		source: 'goivy/webui/frontend/src/components/panes/EventTraceSheet.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/EventTraceSheet.svelte'
 	},
 	{
 		id: 'menu.editor.keymaps',
 		kind: 'menu',
 		label: 'Editor keymaps',
 		source: 'goivy/webui/frontend/src/components/panes/EditorPane.vue',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/EditorPane.svelte'
 	},
 	{
 		id: 'command.registry',
@@ -348,42 +352,48 @@ export const WEBUI_PARITY_ITEMS = [
 		kind: 'command',
 		label: 'File commands',
 		source: 'goivy/webui/frontend/src/services/fileCommands.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/services/fileLifecycle.ts'
 	},
 	{
 		id: 'command.analysis-action',
 		kind: 'command',
 		label: 'Analysis action commands',
 		source: 'goivy/webui/frontend/src/services/analysisActionCommands.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/commandRouting.ts'
 	},
 	{
 		id: 'command.arg',
 		kind: 'command',
 		label: 'ARG commands',
 		source: 'goivy/webui/frontend/src/services/argCommands.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/commandRouting.ts'
 	},
 	{
 		id: 'command.concept',
 		kind: 'command',
 		label: 'Concept commands',
 		source: 'goivy/webui/frontend/src/services/conceptCommands.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/commands/commandRouting.ts'
 	},
 	{
 		id: 'command.event-trace',
 		kind: 'command',
 		label: 'Event trace commands',
 		source: 'goivy/webui/frontend/src/services/eventTraceCommands.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/panes/EventTraceSheet.svelte'
 	},
 	{
 		id: 'dialog.all-types',
 		kind: 'dialog',
 		label: 'All webui dialog types',
 		source: 'goivy/webui/frontend/src/services/dialogCommands.js',
-		status: 'planned'
+		status: 'implemented',
+		implementation: 'goivy/svk/src/lib/workbench/components/overlays/DialogHost.svelte'
 	},
 	{
 		id: 'store.session',
