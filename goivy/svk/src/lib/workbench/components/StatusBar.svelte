@@ -9,9 +9,24 @@
 	};
 
 	let { latestCheck, sessionLabel, message, level = '' }: Props = $props();
+	const effectiveLevel = $derived(latestCheck ? checkLevel(latestCheck.result) : level);
+
+	function checkLevel(result: CheckResult['result']) {
+		if (result === 'pass') {
+			return 'success';
+		}
+		return 'error';
+	}
 </script>
 
-<footer class="statusbar" class:info={level === 'info'} class:success={level === 'success'} class:warning={level === 'warning'} class:error={level === 'error'} data-testid="status-strip">
+<footer
+	class="statusbar"
+	class:info={effectiveLevel === 'info'}
+	class:success={effectiveLevel === 'success'}
+	class:warning={effectiveLevel === 'warning'}
+	class:error={effectiveLevel === 'error'}
+	data-testid="status-strip"
+>
 	<span>
 		{#if latestCheck}
 			Check {latestCheck.result.toUpperCase()} ({latestCheck.mode}) [Z3: {latestCheck.z3Contacted ? 'yes' : 'no'}] - {latestCheck.message}

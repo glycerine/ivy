@@ -7,17 +7,23 @@
 	type Props = {
 		engineChoice: EngineChoice;
 		mode: SessionMode;
+		tutorialVisible: boolean;
+		tutorialButtonFlashing: boolean;
 		onActivateEngine: (choice: EngineChoice) => void | Promise<void>;
 		onSetMode: (mode: SessionMode) => void;
 		onRunCommand: (commandId: string) => void | Promise<void>;
+		onToggleTutorial: () => void;
 	};
 
 	let {
 		engineChoice,
 		mode,
+		tutorialVisible,
+		tutorialButtonFlashing,
 		onActivateEngine,
 		onSetMode,
-		onRunCommand
+		onRunCommand,
+		onToggleTutorial
 	}: Props = $props();
 </script>
 
@@ -60,5 +66,11 @@
 		<button type="button" onclick={() => void onRunCommand('resetDomain')}>Reset Domain</button>
 		<button type="button" onclick={() => void onRunCommand('diagramDomain')}>Diagram Domain</button>
 	</div>
-	<button type="button" class="tutorial-button">Show Tutorial</button>
+	<button
+		type="button"
+		class="tutorial-button"
+		class:btn-flash={tutorialButtonFlashing}
+		data-testid="toggle-tutorial"
+		onclick={onToggleTutorial}
+	>{tutorialVisible ? 'Hide Tutorial' : 'Show Tutorial'}</button>
 </header>

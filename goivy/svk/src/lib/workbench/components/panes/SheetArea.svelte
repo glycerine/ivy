@@ -20,6 +20,7 @@
 	type Props = {
 		activeModel: ModelDocument;
 		editorText: string;
+		editorSaveState: 'idle' | 'saving' | 'saved';
 		editorKeymap: 'sublime' | 'emacs' | 'vim';
 		sessionLabel: string;
 		statusMessage: string;
@@ -42,6 +43,7 @@
 	let {
 		activeModel,
 		editorText,
+		editorSaveState,
 		editorKeymap,
 		sessionLabel,
 		statusMessage,
@@ -184,7 +186,14 @@
 		data-testid="state-editor-splitter"
 		onpointerdown={(event) => startColumnResize('state-editor', event)}
 	></div>
-	<EditorPane {activeModel} {editorText} keymap={editorKeymap} onUpdateEditor={onUpdateEditor} onSetKeymap={onSetEditorKeymap} />
+	<EditorPane
+		{activeModel}
+		{editorText}
+		saveState={editorSaveState}
+		keymap={editorKeymap}
+		onUpdateEditor={onUpdateEditor}
+		onSetKeymap={onSetEditorKeymap}
+	/>
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 	<div
 		class="splitter horizontal details-splitter"

@@ -4,19 +4,28 @@
 	type Props = {
 		activeModel: ModelDocument;
 		editorText: string;
+		saveState: 'idle' | 'saving' | 'saved';
 		keymap: 'sublime' | 'emacs' | 'vim';
 		onUpdateEditor: (text: string) => void;
 		onSetKeymap: (keymap: 'sublime' | 'emacs' | 'vim') => void;
 	};
 
-	let { activeModel, editorText, keymap, onUpdateEditor, onSetKeymap }: Props = $props();
+	let { activeModel, editorText, saveState, keymap, onUpdateEditor, onSetKeymap }: Props = $props();
 	const lineNumbers = $derived(editorText.split('\n').map((_, index) => index + 1));
+	const editorLabel = $derived(editorTitle(activeModel.filename, activeModel.dirty, saveState));
+
+	function editorTitle(filename: string, dirty: boolean, state: 'idle' | 'saving' | 'saved') {
+		if (state === 'saving') {
+			return `${filename} [saving...]`;
+		}
+		return dirty ? `** ${filename}` : `${filename} [saved]`;
+	}
 </script>
 
 <section class="pane editor-pane" aria-label="Editor">
 	<div class="pane-title">
-		<strong>Editing: {activeModel.filename} [{activeModel.dirty ? 'unsaved' : 'saved'}]</strong>
-		<span data-testid="dirty-indicator">{activeModel.dirty ? 'Unsaved' : 'Saved'}</span>
+		<strong>Editing: <span data-testid="editor-label">{editorLabel}</span></strong>
+		<span data-testid="dirty-indicator">{saveState === 'saving' ? 'Saving' : activeModel.dirty ? 'Unsaved' : 'Saved'}</span>
 	</div>
 	<div class="editor-controls">
 		<button type="button">x</button>
@@ -38,5 +47,8 @@
 			value={editorText}
 			oninput={(event) => onUpdateEditor(event.currentTarget.value)}
 		></textarea>
+		{#if saveState === 'saving'}
+			<div class="ivy-save-editor-sheen" data-testid="save-editor-sheen" aria-hidden="true"></div>
+		{/if}
 	</div>
 </section>
