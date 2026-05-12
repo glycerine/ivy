@@ -1,10 +1,8 @@
-import { IvyHttpClient } from '../api/ivyHttpClient.js';
-import { HostedGoEngine, IvyApiAdapter } from '../engines/index.js';
+import { HostedGoIvyApiAdapter } from '../engines/index.js';
 
-export class IvyAPIShim extends IvyApiAdapter {
+export class IvyAPIShim extends HostedGoIvyApiAdapter {
   constructor(baseURL = '') {
-    const client = new IvyHttpClient({ baseURL });
-    super(new HostedGoEngine({ client }));
+    super({ baseURL });
     this.baseURL = baseURL || '';
   }
 }

@@ -41,4 +41,7 @@ Command names should be stable, dotted strings when they describe a domain actio
 
 ## Engine Interface
 
-The active engine is selected through `engineStore`. The hosted Go engine is the default. Alternate engines, including a future Wanix-backed in-browser engine, should implement the same engine methods consumed by `LegacyApiAdapter` and be installed through `window.__IVY_ENGINE__` or `window.__IVY_ENGINE_KIND__` before Vue boot.
+The active Ivy API is selected through `engineStore` for compatibility with
+older store names. The hosted Go API adapter is the default. Future local-first
+engines should implement the same consumer-facing `IvyApiAdapter` contract and
+may be installed through `window.__IVY_ENGINE__` before Vue boot.

@@ -1,7 +1,6 @@
 import { h, nextTick, render } from 'vue';
 import AnalysisSheetShell from './components/panes/AnalysisSheetShell.vue';
 import { initializeCodeMirrorEditor } from './codeMirrorEditor.js';
-import { IvyApiAdapter } from './engines/index.js';
 import {
   useContextMenuStore,
   useDetailsStore,
@@ -61,7 +60,7 @@ export function createIvyVueBridge({
 
   return {
     createIvyApi() {
-      return new IvyApiAdapter(engineStore.engine);
+      return engineStore.engine;
     },
     getEngine() {
       return engineStore.engine;
@@ -311,9 +310,6 @@ export function configureEngineFromRuntime({ pinia, win = globalThis.window } = 
   if (win.__IVY_ENGINE__) {
     const kind = win.__IVY_ENGINE_KIND__ || win.__IVY_ENGINE__.kind || 'custom';
     return engineStore.setEngine(kind, win.__IVY_ENGINE__);
-  }
-  if (win.__IVY_ENGINE_KIND__ === 'wanix') {
-    return engineStore.useWanix();
   }
   return engineStore.engine;
 }

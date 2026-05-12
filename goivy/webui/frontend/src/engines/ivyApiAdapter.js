@@ -1,202 +1,163 @@
-function jsonPost(body = {}) {
-  return {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  };
-}
+const DEFAULT_CAPABILITIES = Object.freeze({
+  offline: false,
+  persistentJobs: false,
+  cancelJob: false,
+  eventStream: false,
+  parallelJobs: false,
+});
 
 export class IvyApiAdapter {
-  constructor(engine) {
-    this.engine = engine;
+  constructor() {
+    this.kind = this.kind || 'ivy-api';
+    this.capabilities = this.capabilities || { ...DEFAULT_CAPABILITIES };
     this.onConnectionLost = null;
-    this._sseRetries = 0;
-    this._sseMaxRetries = 5;
-    this._sseClosed = true;
-    this._sseTimer = null;
-    this._sseOnEvent = null;
     this._unsubscribe = null;
   }
 
-  get sessionId() {
-    return this.engine.sessionId;
-  }
-
-  set sessionId(value) {
-    this.engine.sessionId = value;
-  }
-
-  get eventSource() {
-    return this.engine.eventSource;
-  }
-
-  set eventSource(value) {
-    this.engine.eventSource = value;
-  }
-
   async createSession() {
-    return this.engine.createSession();
+    this._notImplemented('createSession');
   }
 
-  async loadFile(file) {
-    return this.engine.loadModel({ file });
+  async loadModel(_model) {
+    this._notImplemented('loadModel');
   }
 
-  async reloadContent(content, filename) {
-    return this.engine.loadModel({ content, filename: filename || 'model.ivy' });
+  async runCommand(_intent) {
+    this._notImplemented('runCommand');
   }
 
-  async getARG() {
-    return this.engine.getArg();
+  async getSnapshot(_request = {}) {
+    this._notImplemented('getSnapshot');
   }
 
-  async getMenus() {
-    return this.engine.getMenus();
+  subscribe(_onEvent, _onError) {
+    this._notImplemented('subscribe');
   }
 
-  async getConceptGraph(nodeId, sheetId) {
-    return this.engine.getConcept({ nodeId, sheetId });
-  }
-
-  async getProofGraph() {
-    return this.engine.requestSession('/proof');
-  }
-
-  async executeAction(action, args) {
-    return this.engine.runAction({ action, args: args || {} });
-  }
-
-  async splitConcept(concept, splitBy) {
-    return this.engine.requestSession('/concept/split', jsonPost({ concept, split_by: splitBy }));
-  }
-
-  async supposeEmpty(concept) {
-    return this.engine.requestSession('/concept/empty', jsonPost({ concept }));
-  }
-
-  async removeConcept(concept) {
-    return this.engine.requestSession('/concept/remove', jsonPost({ concept }));
-  }
-
-  async undo() {
-    return this.engine.requestSession('/concept/undo', { method: 'POST' });
-  }
-
-  async materializeNode(concept) {
-    return this.engine.requestSession('/concept/materialize', jsonPost({ concept, type: 'node' }));
-  }
-
-  async materializeEdge(relation, source, target, positive) {
-    return this.engine.requestSession('/concept/materialize', jsonPost({
-      relation,
-      source,
-      target,
-      type: 'edge',
-      positive,
-    }));
-  }
-
-  async addProjection(name, concept) {
-    return this.engine.requestSession('/concept/projection', jsonPost({ name, concept }));
-  }
-
-  async runCheck(mode, options = {}) {
-    return this.engine.check({ mode, ...options });
-  }
-
-  async resetDomain() {
-    return this.engine.requestSession('/concept/reset', { method: 'POST' });
-  }
-
-  async diagramDomain() {
-    return this.engine.requestSession('/concept/diagram', { method: 'POST' });
-  }
-
-  async getToggles() {
-    return this.engine.getToggles();
-  }
-
-  async setToggles(toggles) {
-    return this.engine.setToggles(toggles);
-  }
-
-  async argNodeAction(nodeId, action, args) {
-    return this.engine.runArgAction({ node: nodeId, action, args: args || {} });
-  }
-
-  async proofGoalAction(goalId, action) {
-    return this.engine.requestSession('/proof/action', jsonPost({ goal: goalId, action }));
+  async cancelJob(_jobId) {
+    this._notImplemented('cancelJob');
   }
 
   async saveSession() {
-    const response = await this.engine.fetchSession('/save');
-    if (!response.ok) {
-      throw new Error(`Save failed: ${response.statusText || response.status || 'unknown error'}`);
-    }
-    return response.blob();
+    this._notImplemented('saveSession');
+  }
+
+  async loadFile(file) {
+    return this.loadModel({ file });
+  }
+
+  async reloadContent(content, filename) {
+    return this.loadModel({ content, filename: filename || 'model.ivy' });
+  }
+
+  async getARG(options = {}) {
+    const snapshot = await this.getSnapshot({ arg: options || {} });
+    return snapshot && snapshot.arg;
+  }
+
+  async getMenus() {
+    const snapshot = await this.getSnapshot({ menus: true });
+    return snapshot && snapshot.menus;
+  }
+
+  async getConceptGraph(nodeId, sheetId) {
+    const snapshot = await this.getSnapshot({ concept: { nodeId, sheetId } });
+    return snapshot && snapshot.concept;
+  }
+
+  async getProofGraph() {
+    const snapshot = await this.getSnapshot({ proof: true });
+    return snapshot && snapshot.proof;
+  }
+
+  async executeAction(action, args) {
+    return this.runCommand({ commandId: action, args: args || {} });
+  }
+
+  async splitConcept(concept, splitBy) {
+    return this.runCommand({ commandId: 'concept.split', args: { concept, splitBy } });
+  }
+
+  async supposeEmpty(concept) {
+    return this.runCommand({ commandId: 'concept.empty', args: { concept } });
+  }
+
+  async removeConcept(concept) {
+    return this.runCommand({ commandId: 'concept.remove', args: { concept } });
+  }
+
+  async undo() {
+    return this.runCommand({ commandId: 'concept.undo', args: {} });
+  }
+
+  async materializeNode(concept) {
+    return this.runCommand({ commandId: 'concept.materializeNode', args: { concept } });
+  }
+
+  async materializeEdge(relation, source, target, positive) {
+    return this.runCommand({
+      commandId: 'concept.materializeEdge',
+      args: { relation, source, target, positive },
+    });
+  }
+
+  async addProjection(name, concept) {
+    return this.runCommand({ commandId: 'concept.projection', args: { name, concept } });
+  }
+
+  async runCheck(mode, options = {}) {
+    return this.runCommand({ commandId: `check.${mode || 'pdr'}`, args: { ...options, mode: mode || 'pdr' } });
+  }
+
+  async resetDomain() {
+    return this.runCommand({ commandId: 'concept.reset', args: {} });
+  }
+
+  async diagramDomain() {
+    return this.runCommand({ commandId: 'concept.diagram', args: {} });
+  }
+
+  async getToggles() {
+    const snapshot = await this.getSnapshot({ toggles: true });
+    return snapshot && snapshot.toggles;
+  }
+
+  async setToggles(toggles) {
+    return this.runCommand({ commandId: 'toggles.set', args: toggles || {} });
+  }
+
+  async argNodeAction(nodeId, action, args) {
+    return this.runCommand({
+      commandId: action,
+      target: { kind: 'arg', nodeId },
+      args: args || {},
+    });
+  }
+
+  async proofGoalAction(goalId, action) {
+    return this.runCommand({
+      commandId: 'proof.action',
+      target: { kind: 'proof', goalId },
+      args: { action },
+    });
   }
 
   connectEvents(onEvent) {
     this.disconnectEvents();
-    if (typeof this.engine.eventSourceFactory !== 'function' || typeof this.engine.sessionPath !== 'function') {
-      this._unsubscribe = this.engine.subscribeEvents(onEvent, () => {
-        if (this.onConnectionLost) this.onConnectionLost();
-      });
-      return;
-    }
-    this._sseRetries = 0;
-    this._sseClosed = false;
-    this._sseOnEvent = onEvent;
-    this._sseConnect();
-  }
-
-  _sseConnect() {
-    if (this._sseClosed || !this.sessionId) return;
-    const source = this.engine.eventSourceFactory(this.engine.sessionPath('/events'));
-    this.eventSource = source;
-
-    source.onopen = () => {
-      this._sseRetries = 0;
-    };
-
-    source.onmessage = (event) => {
-      try {
-        if (this._sseOnEvent) this._sseOnEvent(JSON.parse(event.data));
-      } catch (err) {
-        console.error('Failed to parse SSE event:', err, event.data);
-      }
-    };
-
-    source.onerror = () => {
-      source.close();
-      if (this._sseClosed) return;
-      this._sseRetries += 1;
-      if (this._sseRetries > this._sseMaxRetries) {
-        console.error('SSE: max retries exceeded, giving up');
-        if (this.onConnectionLost) this.onConnectionLost();
-        return;
-      }
-      const delay = Math.min(1000 * Math.pow(2, this._sseRetries - 1), 16000);
-      console.warn(`SSE: reconnect attempt ${this._sseRetries}/${this._sseMaxRetries} in ${delay}ms`);
-      this._sseTimer = window.setTimeout(() => {
-        this._sseConnect();
-      }, delay);
-    };
+    this._unsubscribe = this.subscribe(onEvent, () => {
+      if (this.onConnectionLost) this.onConnectionLost();
+    });
+    return this._unsubscribe;
   }
 
   disconnectEvents() {
-    this._sseClosed = true;
     if (this._unsubscribe) {
       this._unsubscribe();
       this._unsubscribe = null;
     }
-    if (this._sseTimer) {
-      window.clearTimeout(this._sseTimer);
-      this._sseTimer = null;
-    }
-    if (this.eventSource && typeof this.eventSource.close === 'function') {
-      this.eventSource.close();
-    }
-    this.eventSource = null;
+  }
+
+  _notImplemented(method) {
+    throw new Error(`${this.constructor.name}.${method} is not implemented`);
   }
 }

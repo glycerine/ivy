@@ -59,10 +59,10 @@ export const useSessionStore = defineStore('session', {
         this.unsubscribeEvents();
         this.unsubscribeEvents = null;
       }
-      this.unsubscribeEvents = engine.subscribeEvents(
+      this.unsubscribeEvents = engine.connectEvents(
         (event) => this.events.push(event),
-        () => this.setStatus('Server connection lost', 'error'),
       );
+      engine.onConnectionLost = () => this.setStatus('Server connection lost', 'error');
       return this.unsubscribeEvents;
     },
     closeEvents() {

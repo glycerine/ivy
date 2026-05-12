@@ -11,7 +11,7 @@ describe('sessionStore', () => {
   it('creates sessions through the selected engine', async () => {
     const fakeEngine = {
       createSession: vi.fn(async () => 'sid-1'),
-      subscribeEvents: vi.fn(),
+      connectEvents: vi.fn(),
     };
     useEngineStore().setEngine('fake', fakeEngine);
 

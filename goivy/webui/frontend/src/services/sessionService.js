@@ -1,5 +1,3 @@
-import { IvyApiAdapter } from '../engines/index.js';
-
 export function currentIvyBridge(win = globalThis.window) {
   return win && win.__ivyVueBridge;
 }
@@ -19,7 +17,7 @@ export function createIvyApi({
     return fallbackApiFactory();
   }
   if (bridge && typeof bridge.getEngine === 'function') {
-    return new IvyApiAdapter(bridge.getEngine());
+    return bridge.getEngine();
   }
   throw new Error('No Ivy API factory is available');
 }

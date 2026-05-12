@@ -28,12 +28,12 @@ export const useGraphStore = defineStore('graph', {
       };
     },
     async refreshArg(sheetId = this.activeSheetId) {
-      const data = await useEngineStore().engine.getArg({ sheetId });
+      const data = await useEngineStore().engine.getARG({ sheetId });
       this.argBySheet = { ...this.argBySheet, [sheetId]: data };
       return data;
     },
     async refreshConcept({ sheetId = this.activeSheetId, stateId } = {}) {
-      const data = await useEngineStore().engine.getConcept({ sheetId, stateId });
+      const data = await useEngineStore().engine.getConceptGraph(stateId, sheetId);
       this.conceptBySheet = { ...this.conceptBySheet, [sheetId]: data };
       return data;
     },

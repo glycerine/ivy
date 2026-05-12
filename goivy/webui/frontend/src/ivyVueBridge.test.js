@@ -138,14 +138,14 @@ describe('ivyVueBridge', () => {
     delete window.__IVY_ENGINE_KIND__;
   });
 
-  it('can switch to the Wanix placeholder engine through runtime configuration', () => {
+  it('ignores the removed Wanix placeholder engine runtime kind', () => {
     const { app, pinia } = makeBridge();
     window.__IVY_ENGINE_KIND__ = 'wanix';
 
     const bridge = installIvyVueBridge({ app, pinia });
 
-    expect(useEngineStore(pinia).kind).toBe('wanix');
-    expect(bridge.getEngine().kind).toBe('wanix');
+    expect(useEngineStore(pinia).kind).toBe('hosted-go');
+    expect(bridge.getEngine().kind).toBe('hosted-go');
 
     delete window.__IVY_ENGINE_KIND__;
   });
