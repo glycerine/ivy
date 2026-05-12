@@ -1,5 +1,7 @@
 # Tcl GUI Behavior Inventory
 
+Codex version.
+
 This inventory is based on a source-reading pass over the Python Ivy UI code under `~/ivy/pyivy/ivy/ivy`, with the likely-UI file list used as the starting spine and the remaining `.py` files checked for UI entry points, display behavior, callbacks, launch behavior, and UI-adjacent helpers. The most relevant Tcl/Tk implementation files are `tk_ui.py`, `tk_graph_ui.py`, `tk_cy.py`, `ivy_ui.py`, `ivy_ui_cti.py`, `ivy_graph_ui.py`, `ivy_ui_util.py`, `ivy_ev_viewer.py`, `ivy_init.py`, `ivy_check.py`, `ivy_art.py`, `ivy_graph.py`, `dot_layout.py`, `cy_elements.py`, `cy_render.py`, and the older IPython widget UI files that document parallel behavior.
 
 ## Launch, Mode, And Top-Level Window Behavior
