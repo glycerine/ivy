@@ -46,8 +46,11 @@ typedef enum Cmd_CommandId_t_
     CMD_COMMAND_SOURCE,
     CMD_COMMAND_SET,
     CMD_COMMAND_READ_BLIF,
+    CMD_COMMAND_READ_AIGER,
     CMD_COMMAND_STRASH,
-    CMD_COMMAND_PRINT_STATS
+    CMD_COMMAND_PRINT_STATS,
+    CMD_COMMAND_PDR,
+    CMD_COMMAND_WRITE_AIGER_CEX
 } Cmd_CommandId_t;
 
 ////////////////////////////////////////////////////////////////////////

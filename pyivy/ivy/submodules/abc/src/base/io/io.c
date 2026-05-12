@@ -164,6 +164,12 @@ int IoCommandDispatchById( Cmd_CommandId_t Id, Abc_Frame_t * pAbc, int argc, cha
     case CMD_COMMAND_READ_BLIF:
         *pResult = IoCommandReadBlif( pAbc, argc, argv );
         return 1;
+    case CMD_COMMAND_READ_AIGER:
+        *pResult = IoCommandReadAiger( pAbc, argc, argv );
+        return 1;
+    case CMD_COMMAND_WRITE_AIGER_CEX:
+        *pResult = IoCommandWriteAigerCex( pAbc, argc, argv );
+        return 1;
     default:
         return 0;
     }

@@ -1323,6 +1323,9 @@ int AbcCommandDispatchById( Cmd_CommandId_t Id, Abc_Frame_t * pAbc, int argc, ch
     case CMD_COMMAND_PRINT_STATS:
         *pResult = Abc_CommandPrintStats( pAbc, argc, argv );
         return 1;
+    case CMD_COMMAND_PDR:
+        *pResult = Abc_CommandPdr( pAbc, argc, argv );
+        return 1;
     default:
         return 0;
     }

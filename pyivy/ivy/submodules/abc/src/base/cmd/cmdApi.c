@@ -34,10 +34,16 @@ Cmd_CommandId_t Cmd_CommandNameToId( const char * sName )
         return CMD_COMMAND_SET;
     if ( !strcmp( sName, "read_blif" ) )
         return CMD_COMMAND_READ_BLIF;
+    if ( !strcmp( sName, "read_aiger" ) )
+        return CMD_COMMAND_READ_AIGER;
     if ( !strcmp( sName, "strash" ) )
         return CMD_COMMAND_STRASH;
     if ( !strcmp( sName, "print_stats" ) )
         return CMD_COMMAND_PRINT_STATS;
+    if ( !strcmp( sName, "pdr" ) )
+        return CMD_COMMAND_PDR;
+    if ( !strcmp( sName, "write_aiger_cex" ) )
+        return CMD_COMMAND_WRITE_AIGER_CEX;
     return CMD_COMMAND_UNKNOWN;
 }
 

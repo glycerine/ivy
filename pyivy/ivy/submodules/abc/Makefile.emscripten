@@ -2,6 +2,10 @@ EMCC ?= emcc
 EMXX ?= em++
 EMAR ?= emar
 ABC_WASM_NODE ?= node
+ABC_WASM_AIGTOAIG ?= ../../ivy/bin/aigtoaig
+ABC_NATIVE ?= ./abc
+ABC_WASM_FUZZ_CASES ?= 25
+ABC_WASM_FUZZ_SEED ?= 1
 
 CC := $(EMCC)
 CXX := $(EMXX)
@@ -112,7 +116,7 @@ LDFLAGS += $(ABC_WASM_EXTRA_LDFLAGS)
 
 SRC :=
 
-.PHONY: all default wasm test clean print-vars
+.PHONY: all default wasm test test-aiger-compare clean print-vars
 
 include $(patsubst %, $(ABCSRC)/%/module.make, $(MODULES))
 
@@ -127,9 +131,13 @@ all: $(JS_TARGET)
 default: $(JS_TARGET)
 wasm: $(WASM_TARGET)
 
-test: $(JS_TARGET)
+test: $(JS_TARGET) wasm-smoke-test.js
 	@echo "$(MSG_PREFIX)\`\` Testing:" $(notdir $(JS_TARGET))
-	$(VERBOSE)$(ABC_WASM_NODE) -e 'const fs = require("fs"); const initAbc = require("./$(JS_TARGET)"); const out = []; const err = []; const blif = ".model smoke\n.inputs a b\n.outputs y\n.names a b y\n11 1\n.end\n"; initAbc({ noInitialRun: true, print: (s) => out.push(s), printErr: (s) => err.push(s) }).then((Module) => { Module.FS.writeFile("/smoke.blif", blif); Module.FS.writeFile("/abc.rc", fs.readFileSync("abc.rc", "utf8")); Module.callMain(["-c", "read_blif /smoke.blif; strash; print_stats"]); const text = out.join("\n") + "\n" + err.join("\n"); if (!text.includes("i/o =    2/    1") || !text.includes("and =      1")) { console.error(text); process.exit(1); } console.log("abc wasm smoke test passed"); }).catch((e) => { console.error(e && e.stack || e); process.exit(1); });'
+	$(VERBOSE)$(ABC_WASM_NODE) wasm-smoke-test.js --module ./$(JS_TARGET) --aigtoaig "$(ABC_WASM_AIGTOAIG)"
+
+test-aiger-compare: $(JS_TARGET) wasm-aiger-compare.js
+	@echo "$(MSG_PREFIX)\`\` Comparing native and wasm AIGER:" $(ABC_WASM_FUZZ_CASES) "cases, seed" $(ABC_WASM_FUZZ_SEED)
+	$(VERBOSE)$(ABC_WASM_NODE) wasm-aiger-compare.js --module ./$(JS_TARGET) --abc "$(ABC_NATIVE)" --aigtoaig "$(ABC_WASM_AIGTOAIG)" --cases "$(ABC_WASM_FUZZ_CASES)" --seed "$(ABC_WASM_FUZZ_SEED)"
 
 $(WASM_TARGET): $(JS_TARGET)
 	@test -f $@
@@ -164,6 +172,10 @@ print-vars:
 	@echo "AR=$(AR)"
 	@echo "LD=$(LD)"
 	@echo "ABC_WASM_NODE=$(ABC_WASM_NODE)"
+	@echo "ABC_WASM_AIGTOAIG=$(ABC_WASM_AIGTOAIG)"
+	@echo "ABC_NATIVE=$(ABC_NATIVE)"
+	@echo "ABC_WASM_FUZZ_CASES=$(ABC_WASM_FUZZ_CASES)"
+	@echo "ABC_WASM_FUZZ_SEED=$(ABC_WASM_FUZZ_SEED)"
 	@echo "CFLAGS=$(CFLAGS)"
 	@echo "CXXFLAGS=$(CXXFLAGS)"
 	@echo "LDFLAGS=$(LDFLAGS)"

@@ -7,6 +7,7 @@ ABC_DIR="$SCRIPT_DIR/abc"
 : "${EMSDK:=$HOME/go/src/github.com/emscripten-core/emsdk}"
 : "${EM_CACHE:=/tmp/ivy-emscripten-cache}"
 : "${ABC_WASM_JOBS:=}"
+: "${ABC_WASM_LOG:=/private/tmp/abc-wasm-build-$(date +%Y%m%d-%H%M%S).log}"
 
 if [[ -f "$EMSDK/emsdk_env.sh" ]]; then
   EMSDK_QUIET=1 source "$EMSDK/emsdk_env.sh"
@@ -27,14 +28,24 @@ mkdir -p "$EM_CACHE"
 
 cd "$ABC_DIR"
 
+echo "Build log: $ABC_WASM_LOG"
+set +e
 EM_CACHE="$EM_CACHE" \
 EMCC="$EMCC" \
 EMXX="$EMXX" \
 EMAR="$EMAR" \
-emmake make -f Makefile.emscripten -j"$ABC_WASM_JOBS" "$@"
+emmake make -f Makefile.emscripten -j"$ABC_WASM_JOBS" "$@" 2>&1 | tee "$ABC_WASM_LOG"
+make_status=${PIPESTATUS[0]}
+set -e
+
+if [[ "$make_status" -ne 0 ]]; then
+  echo "Build log: $ABC_WASM_LOG"
+  exit "$make_status"
+fi
 
 if [[ -f "$ABC_DIR/build/wasm/abc.js" && -f "$ABC_DIR/build/wasm/abc.wasm" ]]; then
   echo "Built $ABC_DIR/build/wasm/abc.js and $ABC_DIR/build/wasm/abc.wasm"
 else
   echo "Finished make -f Makefile.emscripten $*"
 fi
+echo "Build log: $ABC_WASM_LOG"
