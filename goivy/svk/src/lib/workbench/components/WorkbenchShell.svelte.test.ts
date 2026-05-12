@@ -24,6 +24,7 @@ type ShellProps = ComponentProps<typeof WorkbenchShell>;
 function renderShell(overrides: Partial<ShellProps> = {}) {
 	return render(WorkbenchShell, {
 		engineChoice: 'hosted-go',
+		mode: 'pdr',
 		activeModel: model,
 		editorText: model.text,
 		editorKeymap: 'sublime',
@@ -39,9 +40,8 @@ function renderShell(overrides: Partial<ShellProps> = {}) {
 		jobs: [],
 		stateRelationRows: [],
 		onActivateEngine: vi.fn(),
+		onSetMode: vi.fn(),
 		onRunCommand: vi.fn(),
-		onReloadModel: vi.fn(),
-		onMarkSaved: vi.fn(),
 		onUpdateEditor: vi.fn(),
 		onSetEditorKeymap: vi.fn(),
 		onSelectNode: vi.fn(),
@@ -59,10 +59,10 @@ describe('WorkbenchShell', () => {
 
 		await expect.element(page.getByRole('main')).toBeInTheDocument();
 		await expect.element(page.getByLabelText('ARG graph')).toBeVisible();
-		await expect.element(page.getByLabelText('Concept graph')).toBeVisible();
-		await expect.element(page.getByLabelText('State relations')).toBeVisible();
-		await expect.element(page.getByLabelText('Editor')).toBeVisible();
-		await expect.element(page.getByLabelText('Details and checks')).toBeVisible();
+		await expect.element(page.getByLabelText('Concept graph', { exact: true })).toBeVisible();
+		await expect.element(page.getByLabelText('State relations', { exact: true })).toBeVisible();
+		await expect.element(page.getByLabelText('Editor', { exact: true })).toBeVisible();
+		await expect.element(page.getByLabelText('Details and checks', { exact: true })).toBeVisible();
 		await expect.element(page.getByText('No graph loaded').first()).toBeInTheDocument();
 		await expect.element(page.getByText('No relations loaded')).toBeInTheDocument();
 		await expect.element(page.getByText('No verification result yet.')).toBeInTheDocument();
@@ -80,6 +80,34 @@ describe('WorkbenchShell', () => {
 		await expect.element(page.getByText('Bounded check')).toBeInTheDocument();
 		await expect.element(page.getByText('PDR step')).toBeInTheDocument();
 		await expect.element(page.getByText('Add relation')).toBeInTheDocument();
+	});
+
+	it('exposes webui mode choices and dispatches selected-mode checks', async () => {
+		expect.hasAssertions();
+		const onSetMode = vi.fn();
+		const onRunCommand = vi.fn();
+
+		renderShell({ mode: 'pdr', onSetMode, onRunCommand });
+
+		const mode = page.getByLabelText('Mode');
+		await expect.element(mode).toHaveValue('pdr');
+		await expect.element(page.getByRole('option', { name: 'PDR' })).toBeInTheDocument();
+		await mode.selectOptions('bounded');
+		expect(onSetMode).toHaveBeenCalledWith('bounded');
+
+		await page.getByTestId('run-check').click();
+		expect(onRunCommand).toHaveBeenCalledWith('runCheck');
+	});
+
+	it('renders draggable splitters for the webui workbench panes', async () => {
+		expect.hasAssertions();
+
+		renderShell();
+
+		await expect.element(page.getByTestId('arg-concept-splitter')).toBeInTheDocument();
+		await expect.element(page.getByTestId('concept-state-splitter')).toBeInTheDocument();
+		await expect.element(page.getByTestId('state-editor-splitter')).toBeInTheDocument();
+		await expect.element(page.getByTestId('details-splitter')).toBeInTheDocument();
 	});
 
 	it('routes editor edits through the shell callback', async () => {

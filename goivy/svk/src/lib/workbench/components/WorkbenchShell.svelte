@@ -9,6 +9,7 @@
 		VerificationJob
 	} from '$lib/types';
 	import type { StateRelationRow } from '$lib/state/stateRelations.svelte';
+	import type { SessionMode } from '$lib/workbench/state';
 	import Menubar from './Menubar.svelte';
 	import ContextMenuHost from './overlays/ContextMenuHost.svelte';
 	import DialogHost from './overlays/DialogHost.svelte';
@@ -22,6 +23,7 @@
 
 	type Props = {
 		engineChoice: EngineChoice;
+		mode: SessionMode;
 		activeModel: ModelDocument;
 		editorText: string;
 		editorKeymap: 'sublime' | 'emacs' | 'vim';
@@ -37,9 +39,8 @@
 		jobs: VerificationJob[];
 		stateRelationRows: StateRelationRow[];
 		onActivateEngine: (choice: EngineChoice) => void | Promise<void>;
+		onSetMode: (mode: SessionMode) => void;
 		onRunCommand: (commandId: string) => void | Promise<void>;
-		onReloadModel: () => void | Promise<void>;
-		onMarkSaved: () => void;
 		onUpdateEditor: (text: string) => void;
 		onSetEditorKeymap: (keymap: 'sublime' | 'emacs' | 'vim') => void;
 		onSelectNode: (nodeId: string) => void;
@@ -49,6 +50,7 @@
 
 	let {
 		engineChoice,
+		mode,
 		activeModel,
 		editorText,
 		editorKeymap,
@@ -64,9 +66,8 @@
 		jobs,
 		stateRelationRows,
 		onActivateEngine,
+		onSetMode,
 		onRunCommand,
-		onReloadModel,
-		onMarkSaved,
 		onUpdateEditor,
 		onSetEditorKeymap,
 		onSelectNode,
@@ -78,12 +79,11 @@
 <main class="workspace-shell">
 	<Menubar
 		{engineChoice}
+		{mode}
 		{hasActiveSession}
-		dirty={activeModel.dirty}
 		{onActivateEngine}
+		{onSetMode}
 		{onRunCommand}
-		{onReloadModel}
-		{onMarkSaved}
 	/>
 
 	<SheetArea

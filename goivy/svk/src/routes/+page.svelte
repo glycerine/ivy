@@ -5,7 +5,7 @@
 	import { nowIso } from '$lib/time';
 	import WorkbenchShell from '$lib/workbench/components/WorkbenchShell.svelte';
 	import { routeWorkbenchCommand } from '$lib/workbench/commands/commandRouting';
-	import { createEditorUiState, createSessionUiState, type EditorKeymap } from '$lib/workbench/state';
+	import { createEditorUiState, createSessionUiState, type EditorKeymap, type SessionMode } from '$lib/workbench/state';
 	import { downloadTextFile, modelDownloadFilename } from '$lib/workbench/services/fileLifecycle';
 	import '$lib/workbench/workbench.css';
 	import {
@@ -102,6 +102,7 @@ export disconnect
 	let selectedGraphId = $state<string | null>(null);
 	let engineChoice = $state<EngineChoice>('hosted-go');
 	let service = createEngineService({ engine: createEngine('hosted-go'), stores });
+	let activationSerial = 0;
 
 	const activeModel = $derived(models.table.byId[initialModel.id]);
 	const jobs = $derived(stores.jobs.table.order.map((id) => stores.jobs.table.byId[id]));
@@ -120,6 +121,23 @@ export disconnect
 	});
 	onMount(() => {
 		void activateEngine(engineChoice);
+		const keydown = (event: KeyboardEvent) => {
+			const commandKey = event.metaKey || event.ctrlKey;
+			if (!commandKey || event.shiftKey || event.altKey) {
+				return;
+			}
+			if (event.key.toLowerCase() === 's') {
+				event.preventDefault();
+				void runCommand('file.save');
+				return;
+			}
+			if (event.key.toLowerCase() === 'z') {
+				event.preventDefault();
+				void runCommand('doUndo');
+			}
+		};
+		window.addEventListener('keydown', keydown);
+		return () => window.removeEventListener('keydown', keydown);
 	});
 
 	function createEngine(choice: EngineChoice): IvyEngine {
@@ -143,21 +161,38 @@ export disconnect
 	}
 
 	async function activateEngine(choice: EngineChoice) {
+		const serial = ++activationSerial;
+		const oldService = service;
 		engineChoice = choice;
 		sessionUi.setStatus(`Starting ${choice}`, 'info');
 		sessionUi.showLoading(`Starting ${choice}`);
-		await service.closeSession();
-		service = createEngineService({ engine: createEngine(choice), stores });
+		await oldService.closeSession();
+		if (serial !== activationSerial) {
+			return;
+		}
+		const nextService = createEngineService({ engine: createEngine(choice), stores });
+		service = nextService;
 		try {
-			const session = await service.startSession(project.id);
+			const session = await nextService.startSession(project.id);
+			if (serial !== activationSerial) {
+				return;
+			}
 			sessionUi.setSessionId(session.id);
-			await service.loadModel({ ...activeModel, text: editorText });
+			await nextService.loadModel({ ...activeModel, text: editorText });
+			if (serial !== activationSerial) {
+				return;
+			}
 			sessionUi.setStatus(`${choice} ready`, 'success');
 			selectedGraphId = stores.graphs.table.order.at(-1) ?? null;
 		} catch (error) {
+			if (serial !== activationSerial) {
+				return;
+			}
 			sessionUi.setStatus(error instanceof Error ? error.message : `Failed to start ${choice}`, 'error');
 		} finally {
-			sessionUi.hideLoading();
+			if (serial === activationSerial) {
+				sessionUi.hideLoading();
+			}
 		}
 	}
 
@@ -171,24 +206,36 @@ export disconnect
 		if (runFileCommand(commandId)) {
 			return;
 		}
-		const engineCommandId = routeWorkbenchCommand(commandId);
-		sessionUi.setStatus(`Running ${engineCommandId}`, 'info');
-		if (engineCommandId.startsWith('check.')) {
-			await service.loadModel({
-				...activeModel,
-				text: editorText,
-				engineRevision: activeModel.engineRevision + 1,
-				updatedAt: nowIso()
+		const engineCommandId = commandId === 'runCheck' ? `check.${sessionUi.current.mode}` : routeWorkbenchCommand(commandId);
+		try {
+			if (!stores.workspace.current.activeSessionId) {
+				sessionUi.setStatus('Starting engine session...', 'info');
+				await activateEngine(engineChoice);
+			}
+			if (!stores.workspace.current.activeSessionId) {
+				sessionUi.setStatus('No active engine session', 'error');
+				return;
+			}
+			sessionUi.setStatus(`Running ${engineCommandId}`, 'info');
+			if (engineCommandId.startsWith('check.')) {
+				await service.loadModel({
+					...activeModel,
+					text: editorText,
+					engineRevision: activeModel.engineRevision + 1,
+					updatedAt: nowIso()
+				});
+			}
+			const job = await service.runCommand({
+				id: `intent-${crypto.randomUUID()}`,
+				commandId: engineCommandId,
+				target: target ?? { kind: engineCommandId === 'concept.action' ? 'concept' : 'arg' }
 			});
+			sessionUi.setStatus(`Finished ${job.kind}`, 'success');
+			selectedGraphId = stores.graphs.table.order.at(-1) ?? null;
+			selectedNodeId = null;
+		} catch (error) {
+			sessionUi.setStatus(error instanceof Error ? error.message : `Failed to run ${engineCommandId}`, 'error');
 		}
-		const job = await service.runCommand({
-			id: `intent-${crypto.randomUUID()}`,
-			commandId: engineCommandId,
-			target: target ?? { kind: engineCommandId === 'concept.action' ? 'concept' : 'arg' }
-		});
-		sessionUi.setStatus(`Finished ${job.kind}`, 'success');
-		selectedGraphId = stores.graphs.table.order.at(-1) ?? null;
-		selectedNodeId = null;
 	}
 
 	function runFileCommand(commandId: string) {
@@ -219,6 +266,11 @@ export disconnect
 		sessionUi.setStatus(`Editor keymap: ${keymap}`, 'success');
 	}
 
+	function setMode(mode: SessionMode) {
+		sessionUi.setMode(mode);
+		sessionUi.setStatus(`Mode: ${mode}`, 'success');
+	}
+
 	function toggleRelation(rowId: string, displayClass: string, checked: boolean) {
 		const toggled = stores.stateRelations.toggle(rowId, displayClass as EdgeDisplayClass | NodeLabelDisplayClass, checked);
 		sessionUi.setStatus(toggled ? `Updated relation visibility: ${rowId}` : `Relation toggle unavailable: ${rowId}`, toggled ? 'success' : 'warning');
@@ -244,6 +296,7 @@ export disconnect
 
 <WorkbenchShell
 	{engineChoice}
+	mode={sessionUi.current.mode}
 	{activeModel}
 	{editorText}
 	editorKeymap={editorUi.current.keymap}
@@ -259,14 +312,8 @@ export disconnect
 	{jobs}
 	stateRelationRows={stores.stateRelations.current.rows}
 	onActivateEngine={activateEngine}
+	onSetMode={setMode}
 	onRunCommand={runCommand}
-	onReloadModel={() => {
-		void service.loadModel(activeModel);
-	}}
-	onMarkSaved={() => {
-		editorUi.markSaved(editorText);
-		models.markSaved(initialModel.id, editorText);
-	}}
 	onUpdateEditor={updateEditor}
 	onSetEditorKeymap={setEditorKeymap}
 	onSelectNode={selectNode}

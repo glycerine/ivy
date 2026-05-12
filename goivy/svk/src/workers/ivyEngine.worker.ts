@@ -288,6 +288,8 @@ function commandToJobKind(commandId: string): VerificationJobKind {
 			return 'check-pdr';
 		case 'check.concrete':
 			return 'check-concrete';
+		case 'check.abstract':
+			return 'check-abstract';
 		default:
 			return 'arg-action';
 	}
@@ -303,6 +305,8 @@ function checkMode(commandId: string) {
 			return 'pdr';
 		case 'check.concrete':
 			return 'concrete';
+		case 'check.abstract':
+			return 'abstract';
 		default:
 			return 'pdr';
 	}

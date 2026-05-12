@@ -265,6 +265,8 @@ func commandJobKind(commandID string) string {
 		return "check-pdr"
 	case "check.concrete":
 		return "check-concrete"
+	case "check.abstract":
+		return "check-abstract"
 	default:
 		return "arg-action"
 	}

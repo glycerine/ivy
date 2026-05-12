@@ -6,6 +6,7 @@ export type VerificationJobKind =
 	| 'check-bounded'
 	| 'check-pdr'
 	| 'check-concrete'
+	| 'check-abstract'
 	| 'arg-action'
 	| 'concept-action'
 	| 'proof-action'
@@ -35,7 +36,7 @@ export type VerificationJob = {
 	updatedAt: string;
 };
 
-export type CheckMode = 'induction' | 'bounded' | 'pdr' | 'concrete';
+export type CheckMode = 'induction' | 'bounded' | 'pdr' | 'concrete' | 'abstract';
 
 export type CheckResult = {
 	id: Id;

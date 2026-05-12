@@ -1,26 +1,25 @@
 <script lang="ts">
 	import { FILE_MENU } from '$lib/workbench/commands/menuDefinitions';
+	import type { SessionMode } from '$lib/workbench/state';
 
 	type EngineChoice = 'hosted-go' | 'hosted-webui' | 'browser-wasm';
 
 	type Props = {
 		engineChoice: EngineChoice;
+		mode: SessionMode;
 		hasActiveSession: boolean;
-		dirty: boolean;
 		onActivateEngine: (choice: EngineChoice) => void | Promise<void>;
+		onSetMode: (mode: SessionMode) => void;
 		onRunCommand: (commandId: string) => void | Promise<void>;
-		onReloadModel: () => void | Promise<void>;
-		onMarkSaved: () => void;
 	};
 
 	let {
 		engineChoice,
+		mode,
 		hasActiveSession,
-		dirty,
 		onActivateEngine,
-		onRunCommand,
-		onReloadModel,
-		onMarkSaved
+		onSetMode,
+		onRunCommand
 	}: Props = $props();
 </script>
 
@@ -37,10 +36,12 @@
 		</div>
 	</div>
 	<span class="mode-label">MODE</span>
-	<select aria-label="Mode" class="mode-select">
-		<option>Induction</option>
-		<option>Bounded</option>
-		<option>Concrete</option>
+	<select aria-label="Mode" class="mode-select" value={mode} onchange={(event) => onSetMode(event.currentTarget.value as SessionMode)}>
+		<option value="induction">Induction</option>
+		<option value="pdr">PDR</option>
+		<option value="concrete">Concrete</option>
+		<option value="abstract">Abstract</option>
+		<option value="bounded">Bounded</option>
 	</select>
 	<select
 		aria-label="Engine"
@@ -53,14 +54,13 @@
 		<option value="hosted-webui">Legacy webui server</option>
 	</select>
 	<div class="toolbar" aria-label="Workspace commands">
-		<button type="button" class="primary" data-testid="run-induction" onclick={() => void onRunCommand('check.induction')}>
+		<button type="button" class="primary" data-testid="run-check" onclick={() => void onRunCommand('runCheck')} disabled={!hasActiveSession}>
 			Check
 		</button>
-		<button type="button" onclick={() => void onRunCommand('concept.action')}>Show Reachable</button>
-		<button type="button" onclick={() => void onReloadModel()} disabled={!hasActiveSession}>Undo</button>
-		<button type="button" onclick={onMarkSaved} disabled={!dirty}>Reset Domain</button>
-		<button type="button" onclick={() => void onRunCommand('check.bounded')}>Bounded</button>
-		<button type="button">Diagram Domain</button>
+		<button type="button" onclick={() => void onRunCommand('showReachableStates')} disabled={!hasActiveSession}>Show Reachable</button>
+		<button type="button" onclick={() => void onRunCommand('doUndo')} disabled={!hasActiveSession}>Undo</button>
+		<button type="button" onclick={() => void onRunCommand('resetDomain')} disabled={!hasActiveSession}>Reset Domain</button>
+		<button type="button" onclick={() => void onRunCommand('diagramDomain')} disabled={!hasActiveSession}>Diagram Domain</button>
 	</div>
 	<button type="button" class="tutorial-button">Show Tutorial</button>
 </header>

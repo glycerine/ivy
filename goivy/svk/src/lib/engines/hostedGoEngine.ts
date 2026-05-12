@@ -187,7 +187,7 @@ export class HostedGoEngine implements IvyEngine {
 
 function checkModeFromCommand(commandId: string): CheckMode {
 	const raw = commandId.replace(/^check\./, '');
-	if (raw === 'bounded' || raw === 'pdr' || raw === 'concrete') {
+	if (raw === 'bounded' || raw === 'pdr' || raw === 'concrete' || raw === 'abstract') {
 		return raw;
 	}
 	return 'induction';

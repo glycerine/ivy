@@ -26,10 +26,10 @@ async function expectNoOverlap(a: Locator, b: Locator) {
 test('first screen is the authenticated workspace shell', async ({ page }) => {
 	await openWorkspace(page);
 
-	await expect(page.getByLabel('Editor')).toBeVisible();
-	await expect(page.getByLabel('ARG graph')).toBeVisible();
-	await expect(page.getByLabel('Concept graph')).toBeVisible();
-	await expect(page.getByLabel('Details and checks')).toBeVisible();
+	await expect(page.getByLabel('Editor', { exact: true })).toBeVisible();
+	await expect(page.getByLabel('ARG graph', { exact: true })).toBeVisible();
+	await expect(page.getByLabel('Concept graph', { exact: true })).toBeVisible();
+	await expect(page.getByLabel('Details and checks', { exact: true })).toBeVisible();
 });
 
 test('editor accepts text and updates the dirty indicator', async ({ page }) => {
@@ -44,7 +44,8 @@ test('editor accepts text and updates the dirty indicator', async ({ page }) => 
 test('browser wasm induction command reports a real solver result', async ({ page }) => {
 	await openWorkspace(page);
 
-	await page.getByTestId('run-induction').click();
+	await page.getByLabel('Mode').selectOption('induction');
+	await page.getByTestId('run-check').click();
 
 	await expect(page.getByTestId('job-strip')).toContainText('check-induction');
 	await expect(page.getByTestId('job-strip')).toContainText('succeeded');
@@ -53,14 +54,16 @@ test('browser wasm induction command reports a real solver result', async ({ pag
 
 test('real engine result populates details with solver output', async ({ page }) => {
 	await openWorkspace(page);
-	await page.getByTestId('run-induction').click();
+	await page.getByLabel('Mode').selectOption('induction');
+	await page.getByTestId('run-check').click();
 
 	await expect(page.getByTestId('details-pane')).toContainText('Verification Result');
 });
 
 test('engine selection remains usable after a real command', async ({ page }) => {
 	await openWorkspace(page);
-	await page.getByTestId('run-induction').click();
+	await page.getByLabel('Mode').selectOption('induction');
+	await page.getByTestId('run-check').click();
 	await expect(page.getByTestId('job-strip')).toContainText('check-induction');
 
 	await page.getByLabel('Engine').selectOption('browser-wasm');
@@ -70,11 +73,11 @@ test('engine selection remains usable after a real command', async ({ page }) =>
 test('major panes do not overlap on desktop or mobile', async ({ page }) => {
 	await page.setViewportSize({ width: 1280, height: 820 });
 	await openWorkspace(page);
-	await expectNoOverlap(page.getByLabel('Editor'), page.getByLabel('ARG graph'));
-	await expectNoOverlap(page.getByLabel('Editor'), page.getByLabel('Details and checks'));
+	await expectNoOverlap(page.getByLabel('Editor', { exact: true }), page.getByLabel('ARG graph', { exact: true }));
+	await expectNoOverlap(page.getByLabel('Editor', { exact: true }), page.getByLabel('Details and checks', { exact: true }));
 
 	await page.setViewportSize({ width: 390, height: 820 });
 	await openWorkspace(page);
-	await expectNoOverlap(page.getByLabel('Editor'), page.getByLabel('ARG graph'));
-	await expectNoOverlap(page.getByLabel('Concept graph'), page.getByLabel('Details and checks'));
+	await expectNoOverlap(page.getByLabel('Editor', { exact: true }), page.getByLabel('ARG graph', { exact: true }));
+	await expectNoOverlap(page.getByLabel('Concept graph', { exact: true }), page.getByLabel('Details and checks', { exact: true }));
 });

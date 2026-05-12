@@ -123,6 +123,23 @@ func TestDevModeAppAutoAuthenticatesAndServesStaticShell(t *testing.T) {
 	}
 }
 
+func TestAuthenticatedAppRefreshesMissingCSRFCookie(t *testing.T) {
+	dir := writeFakeSvelteBuild(t)
+	handler := newTestServer(t, Config{DevMode: true, StaticDir: dir})
+
+	res := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/app", nil)
+	req.AddCookie(&http.Cookie{Name: sessionCookieName, Value: "user:dev-user"})
+	handler.ServeHTTP(res, req)
+
+	if res.Code != http.StatusOK {
+		t.Fatalf("status = %d", res.Code)
+	}
+	if !hasCookie(res.Result().Cookies(), csrfCookieName) {
+		t.Fatalf("missing refreshed csrf cookie: %#v", res.Result().Cookies())
+	}
+}
+
 func TestDevLoginCreatesSessionAndRedirectsToApp(t *testing.T) {
 	handler := newTestServer(t, Config{DevMode: true})
 

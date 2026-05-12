@@ -196,6 +196,9 @@ export class HostedWebuiEngine implements IvyEngine {
 			case 'check.concrete':
 				await this.runCheck(sessionId, job, 'concrete');
 				break;
+			case 'check.abstract':
+				await this.runCheck(sessionId, job, 'abstract');
+				break;
 			case 'concept.reset':
 				await this.postJson(`/api/session/${encodeURIComponent(sessionId)}/concept/reset`);
 				await this.refreshSnapshots(sessionId, job.modelRevision);
@@ -412,6 +415,8 @@ function commandToJobKind(commandId: string): VerificationJobKind {
 			return 'check-pdr';
 		case 'check.concrete':
 			return 'check-concrete';
+		case 'check.abstract':
+			return 'check-abstract';
 		case 'concept.reset':
 		case 'concept.diagram':
 		case 'concept.action':

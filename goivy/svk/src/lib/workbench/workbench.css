@@ -158,8 +158,10 @@ input {
 
 .workspace-grid {
 	display: grid;
-	grid-template-columns: minmax(170px, 14%) minmax(360px, 32%) minmax(220px, 16%) minmax(430px, 38%);
-	grid-template-rows: 36px minmax(0, 1fr) 170px 24px;
+	grid-template-columns:
+		minmax(170px, var(--arg-col, 14%)) 6px minmax(360px, var(--concept-col, 32%)) 6px
+		minmax(220px, var(--state-col, 16%)) 6px minmax(430px, var(--editor-col, 38%));
+	grid-template-rows: 36px minmax(0, 1fr) 6px var(--details-row, 170px) 24px;
 	gap: 0;
 	min-height: 0;
 	border-top: 1px solid #111;
@@ -179,7 +181,7 @@ input {
 }
 
 .sheet-tabs {
-	grid-column: 1 / 4;
+	grid-column: 1 / 6;
 	grid-row: 1;
 	display: flex;
 	align-items: stretch;
@@ -208,22 +210,63 @@ input {
 }
 
 .concept-pane {
-	grid-column: 2;
+	grid-column: 3;
 	grid-row: 2;
 	grid-template-rows: auto auto 1fr;
 }
 
 .state-pane {
-	grid-column: 3;
+	grid-column: 5;
 	grid-row: 2;
 }
 
 .editor-pane {
-	grid-column: 4;
-	grid-row: 1 / 4;
+	grid-column: 7;
+	grid-row: 1 / 5;
 	grid-template-rows: auto auto 1fr;
 	background: #10101d;
 	border-right: 0;
+}
+
+.splitter {
+	appearance: none;
+	background: #1f2228;
+	border: 0;
+	border-radius: 0;
+	padding: 0;
+	z-index: 8;
+	touch-action: none;
+}
+
+.splitter:hover,
+.splitter:focus-visible {
+	background: #3a4655;
+	outline: 1px solid #4e9eed;
+	outline-offset: -1px;
+}
+
+.splitter.vertical {
+	cursor: col-resize;
+	grid-row: 2;
+}
+
+.splitter.horizontal {
+	cursor: row-resize;
+	grid-column: 1 / 6;
+	grid-row: 3;
+}
+
+.arg-concept-splitter {
+	grid-column: 2;
+}
+
+.concept-state-splitter {
+	grid-column: 4;
+}
+
+.state-editor-splitter {
+	grid-column: 6;
+	grid-row: 1 / 5;
 }
 
 .pane-title {
@@ -411,8 +454,8 @@ textarea {
 }
 
 .details-pane {
-	grid-column: 1 / 4;
-	grid-row: 3;
+	grid-column: 1 / 6;
+	grid-row: 4;
 	grid-template-rows: auto 1fr auto;
 }
 
@@ -480,8 +523,8 @@ textarea {
 }
 
 .statusbar {
-	grid-column: 1 / 5;
-	grid-row: 4;
+	grid-column: 1 / 8;
+	grid-row: 5;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -608,6 +651,10 @@ textarea {
 		grid-template-rows: 36px 280px 300px 220px 420px 180px 24px;
 	}
 
+	.splitter {
+		display: none;
+	}
+
 	.sheet-tabs,
 	.arg-pane,
 	.concept-pane,
@@ -653,7 +700,9 @@ textarea {
 
 @media (max-width: 1280px) and (min-width: 901px) {
 	.workspace-grid {
-		grid-template-columns: minmax(150px, 16%) minmax(280px, 30%) minmax(190px, 16%) minmax(340px, 38%);
+		grid-template-columns:
+			minmax(150px, var(--arg-col, 16%)) 6px minmax(280px, var(--concept-col, 30%)) 6px
+			minmax(190px, var(--state-col, 16%)) 6px minmax(340px, var(--editor-col, 38%));
 	}
 
 	.subtoolbar {
@@ -668,7 +717,7 @@ textarea {
 
 @media (max-height: 720px) {
 	.workspace-grid {
-		grid-template-rows: 34px minmax(0, 1fr) 130px 24px;
+		grid-template-rows: 34px minmax(0, 1fr) 6px var(--details-row, 130px) 24px;
 	}
 
 	.pane-title.stacked {

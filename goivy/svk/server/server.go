@@ -181,6 +181,8 @@ func (s *Server) app(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/login", http.StatusFound)
 			return
 		}
+	} else {
+		s.ensureCSRFCookie(w, r)
 	}
 
 	index := filepath.Join(s.cfg.StaticDir, "index.html")
