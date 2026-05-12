@@ -50,6 +50,19 @@ test('mode Check uses PDR and Ctrl-S saves the editor', async ({ page }) => {
 	await expect(page.getByTestId('job-strip')).toContainText('check-pdr');
 });
 
+test('tutorial button opens the webui tutorial pane', async ({ page }) => {
+	await page.goto('/');
+	await page.getByTestId('toggle-tutorial').click();
+
+	await expect(page.getByLabel('Tutorial', { exact: true })).toBeVisible();
+	await expect(page.getByLabel('Tutorial URL')).toHaveValue('/static/tutorial/kenmcmil.github.io/ivy/language.html');
+	await expect(page.getByTestId('toggle-tutorial')).toHaveText('Hide Tutorial');
+
+	await page.getByTitle('Close tutorial').click();
+	await expect(page.getByLabel('Tutorial', { exact: true })).toHaveCount(0);
+	await expect(page.getByTestId('toggle-tutorial')).toHaveText('Show Tutorial');
+});
+
 async function dragSplitter(page: import('@playwright/test').Page, testId: string, dx: number, dy: number) {
 	const box = await boundingBox(page.getByTestId(testId));
 	await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);

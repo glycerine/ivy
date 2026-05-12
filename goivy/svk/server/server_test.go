@@ -239,6 +239,24 @@ func TestStaticBuiltAssetsAreServed(t *testing.T) {
 	}
 }
 
+func TestWebuiTutorialStaticAssetsAreServed(t *testing.T) {
+	handler := newTestServer(t, Config{DevMode: true})
+
+	res := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/static/tutorial/kenmcmil.github.io/ivy/language.html", nil)
+	handler.ServeHTTP(res, req)
+
+	if res.Code != http.StatusOK {
+		t.Fatalf("status = %d", res.Code)
+	}
+	if !strings.Contains(res.Body.String(), "Ivy") {
+		t.Fatalf("tutorial body did not look like Ivy tutorial HTML")
+	}
+	if got := res.Header().Get("cache-control"); !strings.Contains(got, "immutable") {
+		t.Fatalf("cache-control = %q", got)
+	}
+}
+
 func newTestServer(t *testing.T, cfg Config) http.Handler {
 	t.Helper()
 	s, err := New(cfg)

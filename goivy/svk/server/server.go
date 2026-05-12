@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/svk/server/mail"
@@ -109,6 +110,39 @@ func requestOrigin(r *http.Request) string {
 	return scheme + "://" + r.Host
 }
 
+func staticWithTutorialCache(dir string) http.Handler {
+	files := http.StripPrefix("/static/", http.FileServer(http.Dir(dir)))
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/static/tutorial/") {
+			w.Header().Set("cache-control", "public, max-age=31536000, immutable")
+		} else {
+			w.Header().Set("cache-control", "no-cache, no-store, must-revalidate")
+		}
+		files.ServeHTTP(w, r)
+	})
+}
+
+func webuiStaticDir() string {
+	if _, srcFile, _, ok := runtime.Caller(0); ok {
+		dir := filepath.Join(filepath.Dir(srcFile), "..", "..", "webui", "static")
+		if info, err := os.Stat(dir); err == nil && info.IsDir() {
+			return dir
+		}
+	}
+	if wd, err := os.Getwd(); err == nil {
+		for _, candidate := range []string{
+			filepath.Join(wd, "webui", "static"),
+			filepath.Join(wd, "goivy", "webui", "static"),
+			filepath.Join(wd, "..", "webui", "static"),
+		} {
+			if info, err := os.Stat(candidate); err == nil && info.IsDir() {
+				return candidate
+			}
+		}
+	}
+	return ""
+}
+
 func (s *Server) routes() {
 	s.mux.HandleFunc("GET /healthz", s.health)
 	s.mux.HandleFunc("GET /", s.marketing)
@@ -144,6 +178,9 @@ func (s *Server) routes() {
 		s.mux.Handle("GET /assets/", static)
 		s.mux.Handle("GET /service-worker.js", static)
 		s.mux.Handle("GET /robots.txt", static)
+	}
+	if dir := webuiStaticDir(); dir != "" {
+		s.mux.Handle("GET /static/", staticWithTutorialCache(dir))
 	}
 }
 

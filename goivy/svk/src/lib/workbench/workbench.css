@@ -25,6 +25,13 @@ input {
 	background: #101116;
 }
 
+.workbench-body {
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
 .topbar {
 	display: flex;
 	gap: 7px;
@@ -156,7 +163,25 @@ input {
 	margin-left: auto;
 }
 
+.btn-flash {
+	animation: btn-flash-anim 1.2s ease;
+}
+
+@keyframes btn-flash-anim {
+	0%,
+	50% {
+		background: #c8c8c8;
+		color: #1e1e1e;
+	}
+
+	100% {
+		background: #303236;
+		color: #d7d7dc;
+	}
+}
+
 .workspace-grid {
+	flex: 1 1 auto;
 	display: grid;
 	grid-template-columns:
 		minmax(170px, var(--arg-col, 14%)) 6px minmax(360px, var(--concept-col, 32%)) 6px
@@ -346,6 +371,14 @@ input {
 	min-height: 0;
 	background: #11101d;
 	overflow: hidden;
+}
+
+.ivy-save-editor-sheen {
+	position: absolute;
+	inset: 0;
+	z-index: 20;
+	pointer-events: none;
+	background: rgba(128, 128, 128, 0.22);
 }
 
 .line-gutter {
@@ -550,6 +583,78 @@ textarea {
 
 .statusbar.error {
 	background: #a41624;
+}
+
+.tutorial-divider {
+	flex: 0 0 4px;
+	background: #3c3c3c;
+	cursor: row-resize;
+}
+
+#tutorial-container {
+	flex: 0 0 38%;
+	min-height: 80px;
+	max-height: 48vh;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	border-top: 1px solid #303238;
+	background: #181a1c;
+}
+
+.tutorial-url-bar {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	min-height: 30px;
+	padding: 2px 4px;
+	background: #202123;
+	border-bottom: 1px solid #303238;
+}
+
+.tutorial-url-input {
+	flex: 1;
+	min-width: 0;
+	font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+	font-size: 0.82rem;
+	background: #11101d;
+	color: #d7d7dc;
+	border: 1px solid #3c3f45;
+	border-radius: 3px;
+	padding: 2px 6px;
+	outline: none;
+}
+
+.tutorial-url-input:focus {
+	border-color: #0c6db5;
+}
+
+.tutorial-nav-btn,
+.tutorial-close-btn {
+	border: 1px solid #3c3f45;
+	background: #303236;
+	color: #d7d7dc;
+	border-radius: 3px;
+	min-height: 24px;
+	padding: 0 8px;
+	cursor: pointer;
+}
+
+.tutorial-nav-btn:disabled {
+	color: #626773;
+	cursor: default;
+}
+
+.tutorial-close-btn:hover {
+	color: #ff7b86;
+	border-color: #a41624;
+}
+
+.tutorial-iframe {
+	flex: 1;
+	width: 100%;
+	border: 0;
+	background: #ffffff;
 }
 
 .dialog-host,

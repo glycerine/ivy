@@ -5,7 +5,7 @@
 	import { nowIso } from '$lib/time';
 	import WorkbenchShell from '$lib/workbench/components/WorkbenchShell.svelte';
 	import { routeWorkbenchCommand } from '$lib/workbench/commands/commandRouting';
-	import { createEditorUiState, createSessionUiState, type EditorKeymap, type SessionMode } from '$lib/workbench/state';
+	import { createEditorUiState, createLayoutUiState, createSessionUiState, type EditorKeymap, type SessionMode } from '$lib/workbench/state';
 	import { downloadTextFile, modelDownloadFilename } from '$lib/workbench/services/fileLifecycle';
 	import '$lib/workbench/workbench.css';
 	import {
@@ -96,6 +96,7 @@ export disconnect
 	models.upsert(initialModel);
 	const sessionUi = createSessionUiState();
 	const editorUi = createEditorUiState({ path: initialModel.filename, content: initialModel.text });
+	const layoutUi = createLayoutUiState();
 
 	let editorText = $state(initialModel.text);
 	let selectedNodeId = $state<string | null>(null);
@@ -104,6 +105,7 @@ export disconnect
 	let service = createEngineService({ engine: createEngine('hosted-go'), stores });
 	let activationSerial = 0;
 	let activationFailureMessage = '';
+	let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
 	const activeModel = $derived(models.table.byId[initialModel.id]);
 	const jobs = $derived(stores.jobs.table.order.map((id) => stores.jobs.table.byId[id]));
@@ -138,7 +140,12 @@ export disconnect
 			}
 		};
 		window.addEventListener('keydown', keydown);
-		return () => window.removeEventListener('keydown', keydown);
+		return () => {
+			window.removeEventListener('keydown', keydown);
+			if (saveTimer) {
+				clearTimeout(saveTimer);
+			}
+		};
 	});
 
 	function createEngine(choice: EngineChoice): IvyEngine {
@@ -250,9 +257,7 @@ export disconnect
 			return true;
 		}
 		if (commandId === 'file.saveAs' || commandId === 'file.save') {
-			editorUi.markSaved(editorText);
-			models.markSaved(initialModel.id, editorText);
-			sessionUi.setStatus(`Saved: ${activeModel.filename}`, 'success');
+			showSaveProgress(editorText);
 			return true;
 		}
 		if (commandId === 'file.new') {
@@ -266,6 +271,23 @@ export disconnect
 		return false;
 	}
 
+	function showSaveProgress(content: string) {
+		if (saveTimer) {
+			clearTimeout(saveTimer);
+		}
+		editorUi.markSaving();
+		sessionUi.setStatus(`Saving: ${activeModel.filename}`, 'info');
+		saveTimer = setTimeout(() => {
+			editorUi.markSaved(content);
+			models.markSaved(initialModel.id, content);
+			if (editorText !== content) {
+				models.updateText(initialModel.id, editorText);
+			}
+			sessionUi.setStatus(`Saved: ${activeModel.filename}`, 'success');
+			saveTimer = null;
+		}, 220);
+	}
+
 	function setEditorKeymap(keymap: EditorKeymap) {
 		editorUi.setKeymap(keymap);
 		sessionUi.setStatus(`Editor keymap: ${keymap}`, 'success');
@@ -274,6 +296,15 @@ export disconnect
 	function setMode(mode: SessionMode) {
 		sessionUi.setMode(mode);
 		sessionUi.setStatus(`Mode: ${mode}`, 'success');
+	}
+
+	function toggleTutorial() {
+		layoutUi.setTutorialVisible(!layoutUi.current.tutorialVisible);
+	}
+
+	function closeTutorial() {
+		layoutUi.setTutorialVisible(false);
+		layoutUi.flashTutorialButton();
 	}
 
 	function toggleRelation(rowId: string, displayClass: string, checked: boolean) {
@@ -304,7 +335,15 @@ export disconnect
 	mode={sessionUi.current.mode}
 	{activeModel}
 	{editorText}
+	editorSaveState={editorUi.current.saveState}
 	editorKeymap={editorUi.current.keymap}
+	tutorialVisible={layoutUi.current.tutorialVisible}
+	tutorialUrl={layoutUi.current.tutorialUrl}
+	tutorialInput={layoutUi.current.tutorialInput}
+	tutorialCanGoBack={layoutUi.canGoBack}
+	tutorialCanGoForward={layoutUi.canGoForward}
+	tutorialFrameKey={layoutUi.current.tutorialFrameKey}
+	tutorialButtonFlashing={layoutUi.current.tutorialButtonFlashing}
 	sessionLabel={sessionUi.current.sessionDisplay || stores.workspace.current.activeSessionId || 'none'}
 	statusMessage={sessionUi.current.status}
 	statusLevel={sessionUi.current.statusLevel}
@@ -317,6 +356,13 @@ export disconnect
 	stateRelationRows={stores.stateRelations.current.rows}
 	onActivateEngine={activateEngine}
 	onSetMode={setMode}
+	onToggleTutorial={toggleTutorial}
+	onSetTutorialInput={layoutUi.setTutorialInput}
+	onNavigateTutorial={layoutUi.navigateTutorial}
+	onTutorialBack={layoutUi.goTutorialBack}
+	onTutorialForward={layoutUi.goTutorialForward}
+	onTutorialReload={layoutUi.reloadTutorial}
+	onCloseTutorial={closeTutorial}
 	onRunCommand={runCommand}
 	onUpdateEditor={updateEditor}
 	onSetEditorKeymap={setEditorKeymap}

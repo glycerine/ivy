@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import type { ComponentProps } from 'svelte';
 import WorkbenchShell from './WorkbenchShell.svelte';
-import type { ModelDocument } from '$lib/types';
+import type { CheckResult, ModelDocument } from '$lib/types';
 
 const createdAt = '2026-05-12T00:00:00.000Z';
 
@@ -27,7 +27,15 @@ function renderShell(overrides: Partial<ShellProps> = {}) {
 		mode: 'pdr',
 		activeModel: model,
 		editorText: model.text,
+		editorSaveState: 'idle',
 		editorKeymap: 'sublime',
+		tutorialVisible: false,
+		tutorialUrl: '/static/tutorial/kenmcmil.github.io/ivy/language.html',
+		tutorialInput: '/static/tutorial/kenmcmil.github.io/ivy/language.html',
+		tutorialCanGoBack: false,
+		tutorialCanGoForward: false,
+		tutorialFrameKey: 0,
+		tutorialButtonFlashing: false,
 		sessionLabel: 'session-1',
 		statusMessage: 'Ready',
 		statusLevel: '',
@@ -40,6 +48,13 @@ function renderShell(overrides: Partial<ShellProps> = {}) {
 		stateRelationRows: [],
 		onActivateEngine: vi.fn(),
 		onSetMode: vi.fn(),
+		onToggleTutorial: vi.fn(),
+		onSetTutorialInput: vi.fn(),
+		onNavigateTutorial: vi.fn(),
+		onTutorialBack: vi.fn(),
+		onTutorialForward: vi.fn(),
+		onTutorialReload: vi.fn(),
+		onCloseTutorial: vi.fn(),
 		onRunCommand: vi.fn(),
 		onUpdateEditor: vi.fn(),
 		onSetEditorKeymap: vi.fn(),
@@ -49,6 +64,17 @@ function renderShell(overrides: Partial<ShellProps> = {}) {
 		...overrides
 	});
 }
+
+const failingCheck: CheckResult = {
+	id: 'check-1',
+	jobId: 'job-1',
+	sessionId: 'session-1',
+	mode: 'induction',
+	z3Contacted: true,
+	result: 'fail',
+	message: 'The following conjecture is not relatively inductive:',
+	createdAt
+};
 
 describe('WorkbenchShell', () => {
 	it('renders the old workbench pane structure with empty data states', async () => {
@@ -107,6 +133,40 @@ describe('WorkbenchShell', () => {
 		await expect.element(page.getByTestId('concept-state-splitter')).toBeInTheDocument();
 		await expect.element(page.getByTestId('state-editor-splitter')).toBeInTheDocument();
 		await expect.element(page.getByTestId('details-splitter')).toBeInTheDocument();
+	});
+
+	it('colors verification failures as status errors', async () => {
+		expect.hasAssertions();
+
+		renderShell({ latestCheck: failingCheck, statusLevel: 'success' });
+
+		await expect.element(page.getByTestId('status-strip')).toHaveClass(/error/);
+		await expect.element(page.getByTestId('status-strip')).toHaveTextContent('Check FAIL (induction)');
+	});
+
+	it('renders the webui save sheen while the editor is saving', async () => {
+		expect.hasAssertions();
+
+		renderShell({ editorSaveState: 'saving' });
+
+		await expect.element(page.getByTestId('editor-label')).toHaveTextContent('client_server_example.ivy [saving...]');
+		await expect.element(page.getByTestId('save-editor-sheen')).toBeInTheDocument();
+	});
+
+	it('shows and wires the tutorial pane from the menubar toggle', async () => {
+		expect.hasAssertions();
+		const onToggleTutorial = vi.fn();
+		const onCloseTutorial = vi.fn();
+
+		renderShell({ tutorialVisible: true, onToggleTutorial, onCloseTutorial });
+
+		await expect.element(page.getByTestId('toggle-tutorial')).toHaveTextContent('Hide Tutorial');
+		await expect.element(page.getByLabelText('Tutorial', { exact: true })).toBeVisible();
+		await expect.element(page.getByLabelText('Tutorial URL')).toHaveValue('/static/tutorial/kenmcmil.github.io/ivy/language.html');
+		await page.getByTestId('toggle-tutorial').click();
+		expect(onToggleTutorial).toHaveBeenCalled();
+		await page.getByTitle('Close tutorial').click();
+		expect(onCloseTutorial).toHaveBeenCalled();
 	});
 
 	it('routes editor edits through the shell callback', async () => {

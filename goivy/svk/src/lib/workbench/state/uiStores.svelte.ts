@@ -149,8 +149,11 @@ export function createLayoutUiState() {
 	const current = $state({
 		tutorialVisible: false,
 		tutorialUrl: '/static/tutorial/kenmcmil.github.io/ivy/language.html',
+		tutorialInput: '/static/tutorial/kenmcmil.github.io/ivy/language.html',
 		tutorialHistory: ['/static/tutorial/kenmcmil.github.io/ivy/language.html'],
 		tutorialHistoryIndex: 0,
+		tutorialFrameKey: 0,
+		tutorialButtonFlashing: false,
 		argPanelWidth: 0,
 		statePanelWidth: 0,
 		detailsHeight: 0,
@@ -171,22 +174,39 @@ export function createLayoutUiState() {
 		setTutorialVisible(visible: boolean) {
 			current.tutorialVisible = visible;
 		},
+		flashTutorialButton(durationMs = 1200) {
+			current.tutorialButtonFlashing = true;
+			setTimeout(() => {
+				current.tutorialButtonFlashing = false;
+			}, durationMs);
+		},
+		setTutorialInput(value: string) {
+			current.tutorialInput = value;
+		},
 		navigateTutorial(url: string) {
 			if (!url) return;
 			current.tutorialHistory = current.tutorialHistory.slice(0, current.tutorialHistoryIndex + 1);
 			current.tutorialHistory.push(url);
 			current.tutorialHistoryIndex = current.tutorialHistory.length - 1;
 			current.tutorialUrl = url;
+			current.tutorialInput = url;
 		},
 		goTutorialBack() {
 			if (current.tutorialHistoryIndex <= 0) return;
 			current.tutorialHistoryIndex -= 1;
 			current.tutorialUrl = current.tutorialHistory[current.tutorialHistoryIndex] ?? current.tutorialUrl;
+			current.tutorialInput = current.tutorialUrl;
+			current.tutorialFrameKey += 1;
 		},
 		goTutorialForward() {
 			if (current.tutorialHistoryIndex >= current.tutorialHistory.length - 1) return;
 			current.tutorialHistoryIndex += 1;
 			current.tutorialUrl = current.tutorialHistory[current.tutorialHistoryIndex] ?? current.tutorialUrl;
+			current.tutorialInput = current.tutorialUrl;
+			current.tutorialFrameKey += 1;
+		},
+		reloadTutorial() {
+			current.tutorialFrameKey += 1;
 		},
 		setPanelSize(panel: 'arg' | 'state' | 'details' | 'editor' | 'tutorial', size: number) {
 			const clamped = Math.max(0, Math.trunc(size));

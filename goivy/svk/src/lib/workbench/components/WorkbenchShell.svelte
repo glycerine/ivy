@@ -26,7 +26,15 @@
 		mode: SessionMode;
 		activeModel: ModelDocument;
 		editorText: string;
+		editorSaveState: 'idle' | 'saving' | 'saved';
 		editorKeymap: 'sublime' | 'emacs' | 'vim';
+		tutorialVisible: boolean;
+		tutorialUrl: string;
+		tutorialInput: string;
+		tutorialCanGoBack: boolean;
+		tutorialCanGoForward: boolean;
+		tutorialFrameKey: number;
+		tutorialButtonFlashing: boolean;
 		sessionLabel: string;
 		statusMessage: string;
 		statusLevel: '' | 'info' | 'success' | 'warning' | 'error';
@@ -39,6 +47,13 @@
 		stateRelationRows: StateRelationRow[];
 		onActivateEngine: (choice: EngineChoice) => void | Promise<void>;
 		onSetMode: (mode: SessionMode) => void;
+		onToggleTutorial: () => void;
+		onSetTutorialInput: (value: string) => void;
+		onNavigateTutorial: (url: string) => void;
+		onTutorialBack: () => void;
+		onTutorialForward: () => void;
+		onTutorialReload: () => void;
+		onCloseTutorial: () => void;
 		onRunCommand: (commandId: string) => void | Promise<void>;
 		onUpdateEditor: (text: string) => void;
 		onSetEditorKeymap: (keymap: 'sublime' | 'emacs' | 'vim') => void;
@@ -52,7 +67,15 @@
 		mode,
 		activeModel,
 		editorText,
+		editorSaveState,
 		editorKeymap,
+		tutorialVisible,
+		tutorialUrl,
+		tutorialInput,
+		tutorialCanGoBack,
+		tutorialCanGoForward,
+		tutorialFrameKey,
+		tutorialButtonFlashing,
 		sessionLabel,
 		statusMessage,
 		statusLevel,
@@ -65,6 +88,13 @@
 		stateRelationRows,
 		onActivateEngine,
 		onSetMode,
+		onToggleTutorial,
+		onSetTutorialInput,
+		onNavigateTutorial,
+		onTutorialBack,
+		onTutorialForward,
+		onTutorialReload,
+		onCloseTutorial,
 		onRunCommand,
 		onUpdateEditor,
 		onSetEditorKeymap,
@@ -78,34 +108,56 @@
 	<Menubar
 		{engineChoice}
 		{mode}
+		{tutorialVisible}
+		{tutorialButtonFlashing}
 		{onActivateEngine}
 		{onSetMode}
+		{onToggleTutorial}
 		{onRunCommand}
 	/>
 
-	<SheetArea
-		{activeModel}
-		{editorText}
-		{editorKeymap}
-		{sessionLabel}
-		{statusMessage}
-		{statusLevel}
-		{latestGraph}
-		{latestConcept}
-		{latestCheck}
-		{selectedNode}
-		{selectedNodeId}
-		{jobs}
-		{stateRelationRows}
-		{onRunCommand}
-		{onUpdateEditor}
-		{onSetEditorKeymap}
-		{onSelectNode}
-		{onNodeAction}
-		{onToggleRelation}
-	/>
+	<div class="workbench-body">
+		<SheetArea
+			{activeModel}
+			{editorText}
+			{editorSaveState}
+			{editorKeymap}
+			{sessionLabel}
+			{statusMessage}
+			{statusLevel}
+			{latestGraph}
+			{latestConcept}
+			{latestCheck}
+			{selectedNode}
+			{selectedNodeId}
+			{jobs}
+			{stateRelationRows}
+			{onRunCommand}
+			{onUpdateEditor}
+			{onSetEditorKeymap}
+			{onSelectNode}
+			{onNodeAction}
+			{onToggleRelation}
+		/>
 
-	<TutorialPane />
+		{#if tutorialVisible}
+			<div class="tutorial-divider"></div>
+		{/if}
+		<TutorialPane
+			visible={tutorialVisible}
+			url={tutorialUrl}
+			input={tutorialInput}
+			canGoBack={tutorialCanGoBack}
+			canGoForward={tutorialCanGoForward}
+			frameKey={tutorialFrameKey}
+			onSetInput={onSetTutorialInput}
+			onNavigate={onNavigateTutorial}
+			onBack={onTutorialBack}
+			onForward={onTutorialForward}
+			onReload={onTutorialReload}
+			onClose={onCloseTutorial}
+		/>
+	</div>
 	<DialogHost />
 	<ContextMenuHost />
 	<ToastHost />
