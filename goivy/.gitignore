@@ -42,3 +42,7 @@ browser.xtrace.log
 py.xtrace.log
 webvue/static/goivy-check-js.wasm
 webvue/static/z3-471-api.wasm
+svk/static/wasm/z3-471-api.wasm
+svk/static/wasm/goivy-check-js.wasm
+svk/static/wasm/goivy-webengine.wasm
+
