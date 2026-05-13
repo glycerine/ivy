@@ -175,10 +175,12 @@ export async function loadModelFile(app, file, persist, { win = globalThis.windo
     await app.api.loadFile(file);
     const argData = await app.api.getARG();
     if (argData && argData.elements) {
+      if (app.acceptArgSnapshot) app.acceptArgSnapshot(app.activeSheetId || 'sheet-1', argData);
       app.argGraph.update(argData.elements, argData.positions);
     }
     const conceptData = await app.api.getConceptGraph();
     if (conceptData && conceptData.elements) {
+      if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(app.activeSheetId || 'sheet-1', conceptData);
       app.conceptGraph.update(conceptData.elements, conceptData.positions);
     }
     app._persistedConceptRelations = conceptData;

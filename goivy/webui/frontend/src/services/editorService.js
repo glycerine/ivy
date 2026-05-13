@@ -20,6 +20,9 @@ export function updateEditorLabel(app, {
   updateReopenLastFileButton,
 } = {}) {
   const name = editorName(app);
+  if (app && app.uiDataModel && typeof app.uiDataModel.setFile === 'function') {
+    app.uiDataModel.setFile(app._persistedFileName || '', app._persistedFilePath || app._persistedFileName || '');
+  }
   const current = editorContent(app);
   const saved = (app && app._savedFileContent) || '';
   const dirty = current !== saved;

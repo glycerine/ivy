@@ -151,12 +151,7 @@ func (gbe *GoBackend) GetARG(sessionID string) (by []byte, err error) {
 		if err != nil {
 			return nil
 		}
-		cy := RenderAnalysisUIARG(sess.AGUI)
-		// Ensure empty elements is [] not null to match Python.
-		if cy.Elements == nil {
-			cy.Elements = []WebUICyElement{}
-		}
-		by, err = canonicalJSON(cy)
+		by, err = canonicalJSON(AnalysisUIARGPayload(sess.AGUI))
 		return nil
 	})
 	return
@@ -254,18 +249,31 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 		}
 
 		response := map[string]interface{}{
-			"abstract_value": abstractValue,
-			"edges":          edges,
-			"edge_sorts":     edgeSorts,
-			"elements":       cy.Elements,
-			"facts":          facts,
-			"label_sorts":    labelSorts,
-			"node_labels":    nodeLabels,
-			"nodes":          nodes,
-			"relations":      relations,
-			"selected_node":  selectedNode,
-			"state_label":    stateLabel,
-			"toggles":        checks,
+			"abstract_value":              abstractValue,
+			"concept_domain":              nil,
+			"concept_interactive_session": conceptInteractiveSessionPayload(sess.ConceptSess),
+			"concept_session":             sess.SimpleSess,
+			"display_checkboxes":          checks,
+			"edges":                       edges,
+			"edge_sorts":                  edgeSorts,
+			"elements":                    cy.Elements,
+			"facts":                       facts,
+			"graph":                       conceptGraphPayload(nil, nil),
+			"graph_stack":                 conceptGraphStackPayload(nil),
+			"label_sorts":                 labelSorts,
+			"node_labels":                 nodeLabels,
+			"nodes":                       nodes,
+			"relations":                   relations,
+			"selected_node":               selectedNode,
+			"state_label":                 stateLabel,
+			"toggles":                     checks,
+		}
+		if sess.SimpleSess != nil {
+			response["concept_domain"] = sess.SimpleSess.Domain
+		}
+		if widget != nil && widget.G() != nil {
+			response["graph"] = conceptGraphPayload(widget.G(), widget.GraphStack)
+			response["graph_stack"] = conceptGraphStackPayload(widget.GraphStack)
 		}
 		if sheetID != "" {
 			response["sheet_id"] = sheetID
@@ -549,8 +557,7 @@ func (gbe *GoBackend) Check(sessionID, mode string, options CheckOptions) (by []
 			m["z3_contacted"] = cr.Z3Contacted
 		}
 		if !gbe.cfg.WebUIConformCheck && cr.Result == "fail" && sess.AGUI != nil && sess.AGUI.AG != nil && len(sess.AGUI.AG.States) > 0 {
-			cy := RenderAnalysisUIARG(sess.AGUI)
-			m["trace_arg"] = map[string]interface{}{"elements": cy.Elements}
+			m["trace_arg"] = AnalysisUIARGPayload(sess.AGUI)
 		}
 		if !gbe.cfg.WebUIConformCheck {
 			if cr.CounterexampleTrace != "" {

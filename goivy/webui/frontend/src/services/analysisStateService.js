@@ -222,9 +222,11 @@ export async function loadAnalysisStateObject(app, state, persist) {
     }
     if (sheet.id === 'sheet-1') {
       if (sheet.arg && sheet.arg.elements && app.argGraph) {
+        if (app.acceptArgSnapshot) app.acceptArgSnapshot(sheet.id, sheet.arg);
         app.argGraph.update(sheet.arg.elements, sheet.arg.positions || undefined);
       }
       if (sheet.concept && sheet.concept.elements && app.conceptGraph) {
+        if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(sheet.id, sheet.concept);
         app.conceptGraph.update(sheet.concept.elements, sheet.concept.positions || undefined);
       }
       if (app.sheets && app.sheets['sheet-1']) {
@@ -235,6 +237,7 @@ export async function loadAnalysisStateObject(app, state, persist) {
       app.openARGSheet(sheet.label || sheet.id, sheet.arg, sheet.id);
       const opened = app.sheets && app.sheets[sheet.id];
       if (opened && opened.conceptGraph && sheet.concept && sheet.concept.elements) {
+        if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(sheet.id, sheet.concept);
         opened.conceptGraph.update(sheet.concept.elements, sheet.concept.positions || undefined);
       }
       if (opened) {

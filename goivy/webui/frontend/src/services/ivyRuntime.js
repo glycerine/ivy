@@ -27,6 +27,7 @@ import {
     updateEditorLabel as updateEditorLabelViaService,
 } from './editorService.js';
 import { initializeCodeMirrorEditor } from '../codeMirrorEditor.js';
+import { UIDataModel } from '../models/uiDataModel.ts';
 import {
     chooseAndLoadModelFile as chooseAndLoadModelFileViaService,
     closeCurrentFile as closeCurrentFileViaService,
@@ -180,6 +181,7 @@ class IvyRuntime {
         this.controls = new runtimeDeps.IvyControls(this.api);
         this.argGraph = null;
         this.conceptGraph = null;
+        this.uiDataModel = new UIDataModel();
         this.sheets = {};
         this.activeSheetId = 'sheet-1';
         this.selectedArgNode = null;
@@ -241,6 +243,9 @@ class IvyRuntime {
         // These can differ because the server ID increments on restart while
         // the persisted ID is stable across reloads.
         this.updateSessionDisplay(runtimeDeps.IvyPersist.getSessionIdFromURL() || this.api.sessionId);
+        this.uiDataModel.setSessionMetadata({
+            id: runtimeDeps.IvyPersist.getSessionIdFromURL() || this.api.sessionId || '',
+        });
 
         // Create Cytoscape graph instances
         this.argGraph = new runtimeDeps.IvyGraph('arg-graph', runtimeDeps.ARG_STYLE);
@@ -568,6 +573,16 @@ class IvyRuntime {
 
     registerSheet(sheetId, argGraph, conceptGraph) {
         registerSheetViaService(this, sheetId, argGraph, conceptGraph);
+    }
+
+    acceptArgSnapshot(sheetId, payload) {
+        if (!this.uiDataModel) return null;
+        return this.uiDataModel.acceptArgSnapshot(sheetId || this.activeSheetId || 'sheet-1', payload || {});
+    }
+
+    acceptConceptSnapshot(sheetId, payload) {
+        if (!this.uiDataModel) return null;
+        return this.uiDataModel.acceptConceptSnapshot(sheetId || this.activeSheetId || 'sheet-1', payload || {});
     }
 
     isVisualOnlySheet(sheetId) {
@@ -1305,6 +1320,7 @@ class IvyRuntime {
 
     openARGSheet(label, argData, preferredSheetId) {
         var sheetId = this.addSheet(label, preferredSheetId);
+        this.acceptArgSnapshot(sheetId, argData || {});
         var sheetState = this.sheets && this.sheets[sheetId];
         if (sheetState && sheetState.argGraph && argData && argData.elements) {
             sheetState.argGraph.update(argData.elements, argData.positions);
@@ -1730,6 +1746,9 @@ class IvyRuntime {
         if (this.sheets) {
             delete this.sheets[sheetId];
         }
+        if (this.uiDataModel) {
+            this.uiDataModel.removeSheet(sheetId);
+        }
 
         // If the closed tab was active, switch to Sheet 1
         if (wasActive) {
@@ -2106,6 +2125,9 @@ class IvyRuntime {
         if (sheet) {
             sheet.selectedArgNode = nodeData.id;
         }
+        if (this.uiDataModel) {
+            this.uiDataModel.setSelectedArgNode(sheetId, nodeData.id);
+        }
         if (argGraph && typeof argGraph.highlightNode === 'function') {
             argGraph.highlightNode(nodeData.id);
         }
@@ -2120,6 +2142,7 @@ class IvyRuntime {
         try {
             var result = await this.api.getConceptGraph(nodeData.obj || nodeData.id, sheetId);
             if (result && result.elements) {
+                this.acceptConceptSnapshot(sheetId, result);
                 conceptGraph.update(result.elements, result.positions);
             }
             // Build toggles if toggle info is provided
@@ -4426,11 +4449,13 @@ class IvyRuntime {
             // Refresh ARG
             var argData = await this.api.getARG();
             if (argData && argData.elements) {
+                this.acceptArgSnapshot(this.activeSheetId || 'sheet-1', argData);
                 this.argGraph.update(argData.elements, argData.positions);
             }
             // Refresh concept graph and populate state checkbox pane
             var conceptData = await this.api.getConceptGraph();
             if (conceptData && conceptData.elements) {
+                this.acceptConceptSnapshot(this.activeSheetId || 'sheet-1', conceptData);
                 this.conceptGraph.update(conceptData.elements, conceptData.positions);
             }
             this.populateStateCheckboxes(conceptData);

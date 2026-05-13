@@ -517,9 +517,13 @@ func (s *Session) ensureConceptChecksForSheetLocked(sheetID string) *DisplayChec
 func conceptGraphActionPayload(w *GraphWidget) map[string]interface{} {
 	if w == nil || w.G() == nil {
 		return map[string]interface{}{
-			"elements": []WebUICyElement{},
-			"facts":    []FactSelection{},
-			"toggles":  NewDisplayCheckboxes().Snapshot(),
+			"concept_domain":  NewConceptDomain(),
+			"concept_session": NewConceptSession(),
+			"elements":        []WebUICyElement{},
+			"facts":           []FactSelection{},
+			"graph":           conceptGraphPayload(nil, nil),
+			"graph_stack":     conceptGraphStackPayload(nil),
+			"toggles":         NewDisplayCheckboxes().Snapshot(),
 		}
 	}
 	cy := RenderConceptGraph(w.G().ConceptSess, w.G().Checks)
@@ -527,10 +531,83 @@ func conceptGraphActionPayload(w *GraphWidget) map[string]interface{} {
 		cy.Elements = []WebUICyElement{}
 	}
 	return map[string]interface{}{
-		"elements": cy.Elements,
-		"facts":    w.ConstraintFacts(),
-		"toggles":  w.G().Checks.Snapshot(),
+		"concept_domain":  w.G().ConceptSess.Domain,
+		"concept_session": w.G().ConceptSess,
+		"elements":        cy.Elements,
+		"facts":           w.ConstraintFacts(),
+		"graph":           conceptGraphPayload(w.G(), w.GraphStack),
+		"graph_stack":     conceptGraphStackPayload(w.GraphStack),
+		"toggles":         w.G().Checks.Snapshot(),
 	}
+}
+
+func conceptGraphPayload(g *Graph, stack *GraphStack) map[string]interface{} {
+	if g == nil {
+		return map[string]interface{}{
+			"sorts":             []string{},
+			"concept_session":   NewConceptSession(),
+			"display_checkboxes": NewDisplayCheckboxes().Snapshot(),
+			"graph_stack":       conceptGraphStackPayload(stack),
+		}
+	}
+	return map[string]interface{}{
+		"attributes":         append([]string{}, g.Attributes...),
+		"concept_session":    g.ConceptSess,
+		"concrete":           g.Concrete,
+		"display_checkboxes":  g.Checks.Snapshot(),
+		"graph_stack":        conceptGraphStackPayload(stack),
+		"new_relations":      append([]string{}, g.NewRelations...),
+		"reverse_result":     append([]string{}, g.ReverseResult...),
+		"sorts":              append([]string{}, g.Sorts...),
+		"state":              g.State,
+	}
+}
+
+func conceptGraphStackPayload(stack *GraphStack) map[string]interface{} {
+	if stack == nil {
+		return map[string]interface{}{
+			"can_redo":   false,
+			"can_undo":   false,
+			"redo_depth": 0,
+			"undo_depth": 0,
+		}
+	}
+	return map[string]interface{}{
+		"can_redo":   stack.CanRedo(),
+		"can_undo":   stack.CanUndo(),
+		"redo_depth": len(stack.RedoStack),
+		"undo_depth": len(stack.UndoStack),
+	}
+}
+
+func conceptInteractiveSessionPayload(s *ConceptInteractiveSession) map[string]interface{} {
+	if s == nil {
+		return map[string]interface{}{
+			"abstract_value":      []TagValue{},
+			"goal_constraints":    []string{},
+			"redo_depth":          0,
+			"suppose_constraints": []string{},
+			"undo_depth":          0,
+		}
+	}
+	return map[string]interface{}{
+		"abstract_value":      append([]TagValue{}, s.AbstractValue...),
+		"domain":              s.Domain,
+		"goal_constraints":    exprStrings(s.GoalConstraints),
+		"info":                s.Info,
+		"redo_depth":          len(s.RedoStack),
+		"state":               fmt.Sprint(s.State),
+		"suppose_constraints": exprStrings(s.SupposeConstraints),
+		"undo_depth":          len(s.UndoStack),
+	}
+}
+
+func exprStrings(exprs []goivy.Expr) []string {
+	out := make([]string, 0, len(exprs))
+	for _, expr := range exprs {
+		out = append(out, fmt.Sprint(expr))
+	}
+	return out
 }
 
 func conceptGraphGoalClauses(w *GraphWidget, parentState *goivy.State) (*goivy.Clauses, error) {
@@ -1372,9 +1449,8 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			s.ReachableUI = s.newAnalysisGraphUIForGraphLocked(ag)
 		}
 		sheetID := s.registerAnalysisSheetLocked(s.ReachableUI)
-		cy := RenderAnalysisUIARG(s.ReachableUI)
 		result["sheet_id"] = sheetID
-		result["arg"] = map[string]interface{}{"elements": cy.Elements}
+		result["arg"] = AnalysisUIARGPayload(s.ReachableUI)
 
 	// --- Verification operations (check/art packages) ---
 	case "pdr_step":
@@ -1540,7 +1616,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				subSheetID := s.registerAnalysisSheetLocked(subUI)
 				result["reachable"] = true
 				result["sheet_id"] = subSheetID
-				result["arg"] = map[string]interface{}{"elements": RenderAnalysisUIARG(subUI).Elements}
+				result["arg"] = AnalysisUIARGPayload(subUI)
 				break
 			}
 
@@ -2023,8 +2099,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 				err = extErr
 			} else {
 				result["extension"] = label
-				cy := RenderAnalysisUIARG(ui)
-				result["arg"] = map[string]interface{}{"elements": cy.Elements}
+				result["arg"] = AnalysisUIARGPayload(ui)
 			}
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Extended from node " + nodeID}})
@@ -2048,9 +2123,8 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 			err = execErr
 			break
 		}
-		cy := RenderAnalysisUIARG(ui)
 		result["executed_action"] = actionName
-		result["arg"] = map[string]interface{}{"elements": cy.Elements}
+		result["arg"] = AnalysisUIARGPayload(ui)
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Executed " + actionName + " at node " + nodeID}})
 	case "mark", "mark_node":
 		stateIdx := -1
@@ -2150,8 +2224,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		if uiErr != nil {
 			err = uiErr
 		} else {
-			cy := RenderAnalysisUIARG(ui)
-			result["arg"] = map[string]interface{}{"elements": cy.Elements}
+			result["arg"] = AnalysisUIARGPayload(ui)
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Recalculated at " + nodeID}})
 	case "decompose", "decompose_edge":
@@ -2174,8 +2247,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 				subSheetID := s.registerAnalysisSheetLocked(subUI)
 				result["decomposed"] = true
 				result["sheet_id"] = subSheetID
-				cy := RenderAnalysisUIARG(subUI)
-				result["sub_arg"] = map[string]interface{}{"elements": cy.Elements}
+				result["sub_arg"] = AnalysisUIARGPayload(subUI)
 			}
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Decomposed at " + nodeID}})
@@ -2373,11 +2445,14 @@ func (s *Session) sortedAnalysisSheetIDsLocked() []string {
 
 func (s *Session) analysisSheetStateLocked(sheetID, label string, ui *AnalysisGraphUI) map[string]interface{} {
 	argElements := []WebUICyElement{}
+	argState := NewWebUIAnalysisGraphState()
 	if ui != nil && ui.AG != nil {
+		argState = AnalysisUIARGState(ui)
 		if cy := RenderAnalysisUIARG(ui); cy != nil {
 			argElements = cy.Elements
 		}
 	} else if sheetID == rootSheetID && s.Graph != nil {
+		argState = s.Graph
 		if cy := RenderWebUIARG(s.Graph); cy != nil {
 			argElements = cy.Elements
 		}
@@ -2401,8 +2476,9 @@ func (s *Session) analysisSheetStateLocked(sheetID, label string, ui *AnalysisGr
 		"label":           label,
 		"selectedArgNode": nil,
 		"arg": map[string]interface{}{
-			"elements":  argElements,
-			"positions": nil,
+			"analysis_graph_state": argState,
+			"elements":             argElements,
+			"positions":            nil,
 		},
 		"concept": map[string]interface{}{
 			"elements":  conceptElements,

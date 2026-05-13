@@ -56,6 +56,7 @@ export function switchSheet(app, sheetId, {
   if (sheet) sheet.classList.add('active');
   if (app.sheets && app.sheets[sheetId]) {
     app.activeSheetId = sheetId;
+    if (app.uiDataModel) app.uiDataModel.setActiveSheet(sheetId);
     if (app.sheets[sheetId].type !== 'events') {
       app.argGraph = app.sheets[sheetId].argGraph;
       app.conceptGraph = app.sheets[sheetId].conceptGraph;

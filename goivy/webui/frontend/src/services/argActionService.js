@@ -43,9 +43,11 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
     const argGraph = (sheet && sheet.argGraph) || app.argGraph;
     const conceptGraph = (sheet && sheet.conceptGraph) || app.conceptGraph;
     if (result && result.arg) {
+      if (app.acceptArgSnapshot) app.acceptArgSnapshot(targetSheetId, result.arg);
       argGraph.update(result.arg.elements, result.arg.positions);
     }
     if (result && result.concept) {
+      if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(targetSheetId, result.concept);
       conceptGraph.update(result.concept.elements, result.concept.positions);
     }
     app.controls.setStatus(`Action complete: ${actionName}`, 'success');
@@ -73,6 +75,7 @@ export async function executeArgEdgeAction(app, edgeData, actionName, sheetId) {
     if (result && result.arg) {
       const sheet = app.sheets && app.sheets[targetSheetId];
       const argGraph = (sheet && sheet.argGraph) || app.argGraph;
+      if (app.acceptArgSnapshot) app.acceptArgSnapshot(targetSheetId, result.arg);
       argGraph.update(result.arg.elements, result.arg.positions);
     }
     if (result && result.source && actionName === 'view_source') {

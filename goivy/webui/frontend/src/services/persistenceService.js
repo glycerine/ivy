@@ -281,10 +281,12 @@ export function createIvyPersist(winArg = globalThis.window) {
         if (parseOk) {
           const argData = await app.api.getARG();
           if (argData && argData.elements) {
+            if (app.acceptArgSnapshot) app.acceptArgSnapshot(app.activeSheetId || 'sheet-1', argData);
             app.argGraph.update(argData.elements, argData.positions);
           }
           conceptData = await app.api.getConceptGraph();
           if (conceptData && conceptData.elements) {
+            if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(app.activeSheetId || 'sheet-1', conceptData);
             app.conceptGraph.update(conceptData.elements, conceptData.positions);
           }
           app._persistedConceptRelations = conceptData;

@@ -62,6 +62,9 @@ export function populateStateCheckboxes(app, conceptData, {
   doc = globalThis.document,
 } = {}) {
   app._lastConceptData = conceptData;
+  if (app.acceptConceptSnapshot) {
+    app.acceptConceptSnapshot((conceptData && conceptData.sheet_id) || app.activeSheetId || 'sheet-1', conceptData || {});
+  }
   const tbody = doc && doc.getElementById('state-checkbox-body');
   hydrateBackendToggleState(app, conceptData);
   const rows = stateRelationRows(app, conceptData);

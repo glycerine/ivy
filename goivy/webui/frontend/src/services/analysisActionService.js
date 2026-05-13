@@ -31,6 +31,7 @@ export async function refreshConceptGraph(app) {
   try {
     const result = await app.api.getConceptGraph(app.selectedArgNode);
     if (result && result.elements) {
+      if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(app.activeSheetId || 'sheet-1', result);
       app.conceptGraph.update(result.elements, result.positions);
     }
     if (result) {

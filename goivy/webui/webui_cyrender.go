@@ -57,6 +57,34 @@ func RenderAnalysisUIARG(ui *AnalysisGraphUI) *WebUICyElements {
 	return cy
 }
 
+func AnalysisUIARGState(ui *AnalysisGraphUI) *WebUIAnalysisGraphState {
+	if ui == nil || ui.AG == nil {
+		return NewWebUIAnalysisGraphState()
+	}
+	return ArtToGraphState(ui.AG)
+}
+
+func WebUIARGPayload(state *WebUIAnalysisGraphState, cy *WebUICyElements) map[string]interface{} {
+	if state == nil {
+		state = NewWebUIAnalysisGraphState()
+	}
+	if cy == nil {
+		cy = RenderWebUIARG(state)
+	}
+	if cy.Elements == nil {
+		cy.Elements = []WebUICyElement{}
+	}
+	return map[string]interface{}{
+		"analysis_graph_state": state,
+		"elements":             cy.Elements,
+		"positions":            nil,
+	}
+}
+
+func AnalysisUIARGPayload(ui *AnalysisGraphUI) map[string]interface{} {
+	return WebUIARGPayload(AnalysisUIARGState(ui), RenderAnalysisUIARG(ui))
+}
+
 // -----------------------------------------------------------------------
 // Proof goal rendering — stays in webui (only used by webui).
 // -----------------------------------------------------------------------

@@ -169,31 +169,31 @@ func (g *CyElements) AddEdge(obj, sourceObj, targetObj, label string, classes []
 
 // AnalysisGraphState holds the ARG data needed for rendering.
 type AnalysisGraphState struct {
-	States      []ARGNode
-	Transitions []ARGTransition
-	Covering    []ARGCover
+	States      []ARGNode       `json:"states"`
+	Transitions []ARGTransition `json:"transitions"`
+	Covering    []ARGCover      `json:"covering"`
 }
 
 // ARGNode is a lightweight representation of an ARG state for rendering.
 type ARGNode struct {
-	ID       int
-	Label    string
-	IsBottom bool
-	Info     string
+	ID       int    `json:"id"`
+	Label    string `json:"label"`
+	IsBottom bool   `json:"is_bottom"`
+	Info     string `json:"info"`
 }
 
 // ARGTransition is a lightweight transition for rendering.
 type ARGTransition struct {
-	SourceID int
-	TargetID int
-	Label    string
-	IsJoin   bool
+	SourceID int    `json:"source_id"`
+	TargetID int    `json:"target_id"`
+	Label    string `json:"label"`
+	IsJoin   bool   `json:"is_join"`
 }
 
 // ARGCover is a lightweight cover relation for rendering.
 type ARGCover struct {
-	CoveredID  int
-	CoveringID int
+	CoveredID  int `json:"covered_id"`
+	CoveringID int `json:"covering_id"`
 }
 
 // NewAnalysisGraphState creates an empty ARG state.
