@@ -84,11 +84,13 @@ html, body {
 
 .icon-menu-btn {
     width: 28px;
-    height: 24px;
-    padding: 0;
-    font-size: 15px;
-    line-height: 20px;
-    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 20px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .menu-btn.active {
