@@ -45,6 +45,9 @@ describe('ivyRuntime compatibility behavior', () => {
     const runtime = makeRuntime();
 
     runtime._setupJobControlHandlers();
+    expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-browser')).toBe(true);
+    expect(document.getElementById('btn-toggle-job-control').getAttribute('data-job-submission-mode')).toBe('browser');
+
     document.getElementById('btn-toggle-job-control').click();
 
     expect(document.getElementById('job-control-page').classList.contains('open')).toBe(true);
@@ -54,10 +57,16 @@ describe('ivyRuntime compatibility behavior', () => {
     document.getElementById('job-submission-toggle').click();
     expect(runtime.jobSubmissionMode).toBe('remote');
     expect(document.getElementById('job-submission-toggle').classList.contains('is-remote')).toBe(true);
+    expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-browser')).toBe(false);
+    expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-remote')).toBe(true);
+    expect(document.getElementById('btn-toggle-job-control').getAttribute('data-job-submission-mode')).toBe('remote');
 
     document.getElementById('job-submission-toggle').click();
     expect(runtime.jobSubmissionMode).toBe('browser');
     expect(document.getElementById('job-submission-toggle').classList.contains('is-browser')).toBe(true);
+    expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-browser')).toBe(true);
+    expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-remote')).toBe(false);
+    expect(document.getElementById('btn-toggle-job-control').getAttribute('data-job-submission-mode')).toBe('browser');
 
     document.getElementById('job-control-close').click();
     expect(document.getElementById('job-control-page').classList.contains('open')).toBe(false);

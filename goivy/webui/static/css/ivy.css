@@ -110,6 +110,44 @@ html, body {
     color: #fff;
 }
 
+.icon-menu-btn.job-submission-browser {
+    background-color: #f3c744;
+    border-color: #ffd85c;
+    color: #1e1e1e;
+}
+
+.icon-menu-btn.job-submission-browser:hover {
+    background-color: #ffd85c;
+    border-color: #ffe58a;
+    color: #111;
+}
+
+.icon-menu-btn.job-submission-browser:active,
+.icon-menu-btn.job-submission-browser.active {
+    background-color: #d9ad22;
+    border-color: #f0c33b;
+    color: #111;
+}
+
+.icon-menu-btn.job-submission-remote {
+    background-color: #1e6bff;
+    border-color: #4e8edb;
+    color: #fff;
+}
+
+.icon-menu-btn.job-submission-remote:hover {
+    background-color: #2f78ff;
+    border-color: #6ca3eb;
+    color: #fff;
+}
+
+.icon-menu-btn.job-submission-remote:active,
+.icon-menu-btn.job-submission-remote.active {
+    background-color: #1b5edc;
+    border-color: #4e8edb;
+    color: #fff;
+}
+
 /* Flash animation for "Show Tutorial" button when tutorial is closed via X */
 .btn-flash {
     animation: btn-flash-anim 1.2s ease;
@@ -612,9 +650,18 @@ html, body {
     overflow: hidden;
 }
 
-.job-mode-toggle.is-browser,
 .job-mode-toggle.is-remote {
     background: #1e6bff;
+}
+
+.job-mode-toggle.is-browser {
+    background: #f3c744;
+    border-color: #ffd85c;
+    color: #111;
+}
+
+.job-mode-toggle.is-remote {
+    color: #fff;
 }
 
 .job-mode-option {
