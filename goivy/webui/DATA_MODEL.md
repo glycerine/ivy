@@ -258,11 +258,20 @@ dispatch to them and store the result per-sheet.
 
 **Accepted as by-design** (no code change needed):
 
-3. **`AnalysisGraph` / `AnalysisTransition` not on wire.**  Go's `AnalysisGraph` has
-   circular references (`Pred`, `JoinOf`, `Unders` on `State`) and no JSON tags.  The
-   lightweight render intermediates (`AnalysisGraphState`) are sufficient for all GUI
-   behaviors in PLAN378.  TypeScript classes are pre-built for future CTI use only;
-   always use `ARGSnapshot.analysisGraphState` for current GUI work.
+3. **Full CTI graph is now on the wire via two new endpoints** — **Implemented.**
+   `GET /api/session/{id}/arg?full=true` returns `FullARGNode` entries with `clauses`,
+   `action_name`, and `universe` per state.
+   `GET /api/session/{id}/arg/cti` returns the CTI analysis graph with those same
+   full nodes plus `have_cti` (bool) and `current_conjecture` (string).
+   TypeScript: `ARGSnapshot.fullAnalysisGraphState` (type `FullAnalysisGraphState`)
+   is always populated from the same `analysis_graph_state` sub-key; `CTISnapshot`
+   extends `ARGSnapshot` with `haveCti` and `currentConjecture`.
+   All new Go endpoints go through the `IvyApiAdapter` choke point:
+   `IvyApiAdapter.getCTIARG()` → `getSnapshot({ctiArg:{}})`; 
+   `HostedGoIvyApiAdapter.getArgSnapshot({full:true})` adds `?full=true` to the ARG URL.
+   Locked by `TestFullARGPayloadStructure`, `TestCTIARGPayloadShape`, `TestFullARGNodeUniverse*`
+   (Go) and 7 new TypeScript tests in `uiDataModel.test.ts`.
+   `UIDataModel.acceptCtiSnapshot()` stores the result in `SheetModel.cti`.
 
 4. **`abstract_value` at top level is node-label keys only.**  This is by design: the
    top-level `abstract_value` feeds the node-label checkbox panel (node_label| keys);
@@ -296,9 +305,11 @@ on this data model and need to be ported to Go/TypeScript:
   `analysisGraphState.states`.
 
 - **Safety status coloring** — Each `ARGNode.isBottom` flag marks an unsafe/bottom
-  state.  TypeScript `ARGNode.isBottom` is correctly wired.  When `State.safe` is
-  populated (it is set during bounded-safety checking) the `safe` flag on `State`
-  allows additional color coding but is not yet on the wire.
+  state.  TypeScript `ARGNode.isBottom` is correctly wired.  For full formula data,
+  use `getARG({full:true})` (via `IvyApiAdapter`) to get `FullARGNode` entries with
+  `clauses`, `actionName`, and `universe` populated.  `ARGSnapshot.fullAnalysisGraphState`
+  is parsed from the same response key; `analysisGraphState` (lightweight) is always
+  present alongside it.
 
 - **Covering arcs** — `ARGCover.coveredId` / `CoveringId` pairs are on the wire.
   Render them as dashed/dotted edges in Cytoscape distinct from transition edges.
@@ -334,12 +345,14 @@ on this data model and need to be ported to Go/TypeScript:
   `ConceptDomain.concepts` gains two new entries (name+"+" and name+"-").  Requires
   a full `GetConcept` refresh; `snapshot.domain.concepts` is the authoritative source.
 
-- **CTI (counterexample inspection)** — When a BMC counterexample exists, the current
-  state's formula and universe are attached to `State.expr` and `State.universe`.
-  These are currently `unknown` (unstructured JSON); once Go serializes them,
-  TypeScript can display the model in the CTI panel.  The `ConceptInteractiveSession.state`
-  string is the current abstract state formula (already on the wire as a formatted
-  string).
+- **CTI (counterexample inspection)** — Call `getCTIARG()` (via `IvyApiAdapter`) to
+  fetch the CTI analysis graph.  `CTISnapshot.haveCti` is the gate; when true,
+  `CTISnapshot.fullAnalysisGraphState.states[i].clauses` has the abstract-state formula,
+  `.actionName` has the triggering action, and `.universe` (if non-null) has the BMC
+  concrete universe (`Record<string, string[]>`, sort → element names).
+  `CTISnapshot.currentConjecture` is the conjecture currently being checked.
+  The `ConceptInteractiveSession.state` string is the current abstract state formula
+  (already on the wire as a formatted string).
 
 - **Facts / active-facts panel** — `ConceptSnapshot.facts` is the list of
   `FactSelection` objects (active suppose-constraints shown as checkboxes in the
