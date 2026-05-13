@@ -544,17 +544,17 @@ func conceptGraphActionPayload(w *GraphWidget) map[string]interface{} {
 func conceptGraphPayload(g *Graph, stack *GraphStack) map[string]interface{} {
 	if g == nil {
 		return map[string]interface{}{
-			"sorts":             []string{},
-			"concept_session":   NewConceptSession(),
+			"sorts":              []string{},
+			"concept_session":    NewConceptSession(),
 			"display_checkboxes": NewDisplayCheckboxes().Snapshot(),
-			"graph_stack":       conceptGraphStackPayload(stack),
+			"graph_stack":        conceptGraphStackPayload(stack),
 		}
 	}
 	return map[string]interface{}{
 		"attributes":         append([]string{}, g.Attributes...),
 		"concept_session":    g.ConceptSess,
 		"concrete":           g.Concrete,
-		"display_checkboxes":  g.Checks.Snapshot(),
+		"display_checkboxes": g.Checks.Snapshot(),
 		"graph_stack":        conceptGraphStackPayload(stack),
 		"new_relations":      append([]string{}, g.NewRelations...),
 		"reverse_result":     append([]string{}, g.ReverseResult...),
