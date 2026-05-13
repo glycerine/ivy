@@ -53,7 +53,6 @@ import {
 import {
     currentSheet as currentSheetViaService,
     graphElementsSnapshot as graphElementsSnapshotViaService,
-    installGraphStoreHook as installGraphStoreHookViaService,
     refreshGraphsAndEditorLayout,
     refreshLayoutAfterVuePatch,
     registerSheet as registerSheetViaService,
@@ -602,10 +601,6 @@ class IvyRuntime {
 
     registerSheet(sheetId, argGraph, conceptGraph) {
         registerSheetViaService(this, sheetId, argGraph, conceptGraph);
-    }
-
-    installGraphStoreHook(sheetId, kind, graph) {
-        installGraphStoreHookViaService(sheetId, kind, graph);
     }
 
     isVisualOnlySheet(sheetId) {
@@ -1253,9 +1248,6 @@ class IvyRuntime {
         // Resize graphs in the newly visible sheet
         if (this.argGraph) this.argGraph.resize();
         if (this.conceptGraph) this.conceptGraph.resize();
-        if (bridge && typeof bridge.setActiveGraphSheet === 'function') {
-            bridge.setActiveGraphSheet(sheetId);
-        }
     }
 
     /**
@@ -2309,9 +2301,6 @@ class IvyRuntime {
         this.selectedArgNode = nodeData.id;
         if (sheet) {
             sheet.selectedArgNode = nodeData.id;
-        }
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.selectArgNode === 'function') {
-            window.__ivyVueBridge.selectArgNode(sheetId, nodeData.id);
         }
         if (argGraph && typeof argGraph.highlightNode === 'function') {
             argGraph.highlightNode(nodeData.id);

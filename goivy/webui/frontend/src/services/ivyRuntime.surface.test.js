@@ -73,7 +73,6 @@ describe('ivyRuntime public surface', () => {
       'hideSaveAsExplanationNotice',
       'init',
       'installConceptGraphVisibilityHook',
-      'installGraphStoreHook',
       'integerDialog',
       'isValidSheetId',
       'isVisualOnlySheet',

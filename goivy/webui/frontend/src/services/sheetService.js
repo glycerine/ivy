@@ -72,7 +72,4 @@ export function switchSheet(app, sheetId, {
   }
   if (app.argGraph) app.argGraph.resize();
   if (app.conceptGraph) app.conceptGraph.resize();
-  if (bridge && typeof bridge.setActiveGraphSheet === 'function') {
-    bridge.setActiveGraphSheet(sheetId);
-  }
 }

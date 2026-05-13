@@ -1,7 +1,6 @@
 import { registerMethodCommands, requiredMethods } from './commandRegistrationHelpers.js';
 
 export const GRAPH_COMMANDS = [
-  'installGraphStoreHook',
   'installConceptGraphVisibilityHook',
   'attachGraphEventHandlers',
   'graphElementsSnapshot',

@@ -9,7 +9,6 @@ import {
   useEditorStore,
   useEngineStore,
   useEventTraceStore,
-  useGraphStore,
   useLayoutStore,
   useMenuDescriptorStore,
   useRecentFilesStore,
@@ -52,7 +51,6 @@ export function createIvyVueBridge({
   const stateRelationsStore = useStateRelationsStore(pinia);
   const menuDescriptorStore = useMenuDescriptorStore(pinia);
   const sheetStore = useSheetStore(pinia);
-  const graphStore = useGraphStore(pinia);
   const recentFilesStore = useRecentFilesStore(pinia);
   const eventTraceStore = useEventTraceStore(pinia);
   const layoutStore = useLayoutStore(pinia);
@@ -222,15 +220,6 @@ export function createIvyVueBridge({
     },
     getSheetTabLabel(sheetId) {
       return sheetStore.labelFor(sheetId);
-    },
-    setActiveGraphSheet(sheetId) {
-      graphStore.setActiveSheet(sheetId);
-    },
-    updateGraphSnapshot(sheetId, kind, snapshot) {
-      graphStore.applyGraphSnapshot(sheetId, kind, snapshot);
-    },
-    selectArgNode(sheetId, nodeId) {
-      graphStore.selectArgNode(nodeId, sheetId);
     },
     showDialog(config) {
       return dialogStore.open(config);

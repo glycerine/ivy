@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   currentSheet,
   graphElementsSnapshot,
-  installGraphStoreHook,
   refreshLayoutAfterVuePatch,
   refreshGraphsAndEditorLayout,
   registerSheet,
@@ -14,7 +13,6 @@ describe('graphService', () => {
       sheets: {},
       activeSheetId: 'sheet-1',
       installConceptGraphVisibilityHook: vi.fn(),
-      installGraphStoreHook: vi.fn(),
     };
     const argGraph = {};
     const conceptGraph = {};
@@ -29,25 +27,7 @@ describe('graphService', () => {
       selectedArgNode: null,
       visualOnly: false,
     });
-    expect(app.installGraphStoreHook).toHaveBeenCalledWith('sheet-1', 'arg', argGraph);
-    expect(app.installGraphStoreHook).toHaveBeenCalledWith('sheet-1', 'concept', conceptGraph);
-  });
-
-  it('hooks graph updates into the Vue graph store bridge', () => {
-    const graph = {
-      update: vi.fn(() => 'updated'),
-    };
-    const bridge = {
-      updateGraphSnapshot: vi.fn(),
-    };
-
-    installGraphStoreHook('sheet-2', 'concept', graph, { bridge });
-
-    expect(graph.update([{ data: { id: 'n' } }], { n: { x: 1, y: 2 } })).toBe('updated');
-    expect(bridge.updateGraphSnapshot).toHaveBeenCalledWith('sheet-2', 'concept', {
-      elements: [{ data: { id: 'n' } }],
-      positions: { n: { x: 1, y: 2 } },
-    });
+    expect(app.installConceptGraphVisibilityHook).toHaveBeenCalledWith(conceptGraph);
   });
 
   it('creates graph element snapshots and refreshes visible graph layouts', () => {
