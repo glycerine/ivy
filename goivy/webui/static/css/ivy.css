@@ -501,7 +501,7 @@ html, body {
     top: 36px;
     left: 0;
     right: 0;
-    bottom: 22px;
+    bottom: 0;
     z-index: 850;
     background: rgba(18, 18, 18, 0.96);
     border-top: 1px solid transparent;
@@ -566,12 +566,16 @@ html, body {
     flex: 1;
     padding: 18px;
     overflow: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
 }
 
 .job-control-row {
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-left: auto;
 }
 
 .job-control-label {

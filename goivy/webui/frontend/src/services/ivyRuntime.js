@@ -903,7 +903,6 @@ class IvyRuntime {
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 self.closeAllDropdowns();
-                self._setJobControlOpen(false);
             }
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                 e.preventDefault();

@@ -324,9 +324,13 @@ nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 install-wasm-opt:
 	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make -j8 && sudo make install
 
-
 prod:
-	cd svk && npm run build:wasm && npm run build # build the bundle
+	cd webui && npm run build:webui
+	go install -tags xtracer_off ./cmd/ivyweb
+	ivyweb
+
+prod_old:
+	#cd svk && npm run build:wasm && npm run build # build the bundle
 	go install -tags xtracer_off ./cmd/ivysvk
 	IVYSVK_DEV=true IVYSVK_STATIC_DIR=$(CURDIR)/svk/.svelte-kit/output/client IVYSVK_PUBLIC_BASE_URL=http://127.0.0.1:8080 ivysvk
 
