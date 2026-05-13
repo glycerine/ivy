@@ -259,6 +259,7 @@ dylib_test-web: z3ivy
 
 test-web:
 	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
+	cd ~/ivy/goivy/webui && npm --prefix frontend run test
 
 unimerge-audit:
 	go run ./cmd/unimerge_audit -details -max 120
