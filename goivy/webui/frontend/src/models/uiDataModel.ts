@@ -92,6 +92,8 @@ export class State extends RawBackedModel<unknown> {
   readonly clauses: unknown;
   readonly safe: boolean | undefined;
   readonly label: string;
+  readonly expr: unknown;
+  readonly universe: unknown;
 
   constructor(raw: unknown = {}) {
     super(raw);
@@ -100,6 +102,8 @@ export class State extends RawBackedModel<unknown> {
     const safe = pick(raw, 'safe', 'Safe');
     this.safe = typeof safe === 'boolean' ? safe : undefined;
     this.label = stringValue(pick(raw, 'label', 'Label'));
+    this.expr = pick(raw, 'expr', 'Expr');
+    this.universe = pick(raw, 'universe', 'Universe');
   }
 }
 
@@ -222,14 +226,12 @@ export class CyElement extends RawBackedModel<unknown> {
 
 export class CyElements extends RawBackedModel<unknown> {
   readonly elements: CyElement[];
-  readonly nodeId: RawRecord;
-  readonly edgeId: RawRecord;
 
   constructor(raw: unknown = {}) {
     super(raw);
     this.elements = typedArray(pick(raw, 'elements', 'Elements'), CyElement);
-    this.nodeId = cloneRecord(pick(raw, 'node_id', 'nodeId', 'NodeID'));
-    this.edgeId = cloneRecord(pick(raw, 'edge_id', 'edgeId', 'EdgeID'));
+    // NodeID and EdgeID are tagged json:"-" in Go and never appear on the wire.
+    // Use element.data['id'] and element.data['obj'] for lookups instead.
   }
 }
 
@@ -336,19 +338,30 @@ export class ConceptDomain extends RawBackedModel<unknown> {
 export class ConceptSession extends RawBackedModel<unknown> {
   readonly domain: ConceptDomain;
   readonly abstractValue: Record<string, boolean>;
-  readonly undoDepth: number;
-  readonly redoDepth: number;
 
   constructor(raw: unknown = {}) {
     super(raw);
     this.domain = new ConceptDomain(pick(raw, 'domain', 'Domain') ?? {});
     this.abstractValue = boolMap(pick(raw, 'abstract_value', 'abstractValue', 'AbstractValue'));
-    this.undoDepth = intValue(pick(raw, 'undo_depth', 'undoDepth'));
-    this.redoDepth = intValue(pick(raw, 'redo_depth', 'redoDepth'));
+    // undoDepth/redoDepth are only present in ConceptInteractiveSession wire format.
   }
 }
 
+function tagValueArrayToMap(arr: unknown[]): Record<string, boolean> {
+  const out: Record<string, boolean> = {};
+  for (const item of arr) {
+    if (!isRecord(item)) continue;
+    const tag = item['Tag'] ?? item['tag'];
+    const val = item['Value'] ?? item['value'];
+    if (Array.isArray(tag) && typeof val === 'boolean')
+      out[(tag as string[]).join('|')] = val;
+  }
+  return out;
+}
+
 export class ConceptInteractiveSession extends ConceptSession {
+  readonly undoDepth: number;
+  readonly redoDepth: number;
   readonly state: string;
   readonly axioms: string;
   readonly goalConstraints: string[];
@@ -358,6 +371,17 @@ export class ConceptInteractiveSession extends ConceptSession {
 
   constructor(raw: unknown = {}) {
     super(raw);
+    // Go sends abstract_value as []TagValue (array of {Tag: string[], Value: bool}),
+    // not as map[string]bool. Convert to Record<string,bool> keyed by "|"-joined tag.
+    // The domain field inherited from ConceptSession will be empty because Go sends
+    // CDConceptDomain (PascalCase, complex structure) rather than ConceptDomain format.
+    // Use snapshot.domain (from concept_domain key) for the concept domain instead.
+    const avRaw = pick(raw, 'abstract_value', 'abstractValue', 'AbstractValue');
+    if (Array.isArray(avRaw)) {
+      (this as any).abstractValue = tagValueArrayToMap(avRaw);
+    }
+    this.undoDepth = intValue(pick(raw, 'undo_depth', 'undoDepth'));
+    this.redoDepth = intValue(pick(raw, 'redo_depth', 'redoDepth'));
     this.state = stringValue(pick(raw, 'state', 'State'));
     this.axioms = stringValue(pick(raw, 'axioms', 'Axioms'));
     this.goalConstraints = stringArray(pick(raw, 'goal_constraints', 'goalConstraints', 'GoalConstraints'));
@@ -372,9 +396,6 @@ export class GraphStack extends RawBackedModel<unknown> {
   readonly canRedo: boolean;
   readonly undoDepth: number;
   readonly redoDepth: number;
-  readonly current: unknown;
-  readonly undoStack: unknown[];
-  readonly redoStack: unknown[];
 
   constructor(raw: unknown = {}) {
     super(raw);
@@ -382,9 +403,7 @@ export class GraphStack extends RawBackedModel<unknown> {
     this.canRedo = boolValue(pick(raw, 'can_redo', 'canRedo'));
     this.undoDepth = intValue(pick(raw, 'undo_depth', 'undoDepth'));
     this.redoDepth = intValue(pick(raw, 'redo_depth', 'redoDepth'));
-    this.current = pick(raw, 'current', 'Current') ?? null;
-    this.undoStack = rawArray(pick(raw, 'undo_stack', 'undoStack', 'UndoStack'));
-    this.redoStack = rawArray(pick(raw, 'redo_stack', 'redoStack', 'RedoStack'));
+    // current/undoStack/redoStack are not emitted by conceptGraphStackPayload().
   }
 }
 
@@ -418,13 +437,14 @@ export class ConceptGraphModel extends RawBackedModel<unknown> {
 export class ARGSnapshot extends RawBackedModel<unknown> {
   readonly render: CyElements;
   readonly analysisGraphState: AnalysisGraphState;
-  readonly analysisGraph: AnalysisGraph;
 
   constructor(raw: unknown = {}) {
     super(raw);
+    // ARG payload is flat: {elements:[…], analysis_graph_state:{…}, positions:null}.
+    // CyElements reads 'elements' from the raw root; AnalysisGraphState from sub-key.
     this.render = new CyElements(raw);
     this.analysisGraphState = new AnalysisGraphState(pick(raw, 'analysis_graph_state', 'analysisGraphState') ?? {});
-    this.analysisGraph = new AnalysisGraph(pick(raw, 'analysis_graph', 'analysisGraph') ?? {});
+    // Note: no 'analysis_graph' key exists in the Go wire format.
   }
 }
 
