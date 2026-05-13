@@ -325,7 +325,8 @@ install-wasm-opt:
 	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make -j8 && sudo make install
 
 prod:
-	cd webui && npm run build:webui
+	cd webui && npm run typecheck:webui # run tsc compiler
+	cd webui && npm run build:webui     # Vite bundle out: webui/static/dist/ivyweb.js
 	go install -tags xtracer_off ./cmd/ivyweb
 	ivyweb
 
