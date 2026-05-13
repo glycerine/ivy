@@ -28,8 +28,206 @@
     <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
 </head>
 <body>
-    <div id="ivy-vue-root"></div>
-    <script>window.__IVY_VUE_OWNS_BOOT__ = true;</script>
+    <div id="menubar">
+        <div class="menu-group">
+            <div class="dropdown">
+                <span class="panel-menu" data-dropdown="file-menu">File</span>
+                <div id="file-menu" class="dropdown-content">
+                    <a href="#" id="file-load">Load...</a>
+                    <a href="#" id="file-open-event-trace">Open Event Trace...</a>
+                    <a href="#" id="file-save-as">Save as...</a>
+                    <a href="#" id="file-download">Download current model</a>
+                    <a href="#" id="file-save-analysis-state">Save Analysis State...</a>
+                    <a href="#" id="file-load-analysis-state">Load Analysis State...</a>
+                    <a href="#" id="file-save-invariant">Save Invariant...</a>
+                    <div class="dropdown-sep"></div>
+                    <div id="file-recent-list"></div>
+                    <div class="dropdown-sep"></div>
+                    <div class="menu-spacer"></div>
+                    <a href="#" id="file-new">New Model</a>
+                </div>
+            </div>
+        </div>
+        <div class="menu-group">
+            <span class="menu-label">Mode</span>
+            <select id="mode-select">
+                <option value="induction">Induction</option>
+                <option value="pdr" selected>PDR</option>
+                <option value="concrete">Concrete</option>
+                <option value="abstract">Abstract</option>
+                <option value="bounded">Bounded</option>
+            </select>
+        </div>
+        <div class="menu-group">
+            <button id="btn-check" class="menu-btn action-btn">Check</button>
+            <button id="btn-show-reachable" class="menu-btn">Show Reachable</button>
+            <button id="btn-undo" class="menu-btn">Undo</button>
+            <button id="btn-reset-domain" class="menu-btn">Reset Domain</button>
+            <button id="btn-diagram-domain" class="menu-btn">Diagram Domain</button>
+            <span id="loaded-file" class="loaded-file"></span>
+        </div>
+        <div class="menu-group menu-right">
+            <button id="btn-toggle-tutorial" class="menu-btn">Hide Tutorial</button>
+        </div>
+    </div>
+
+    <div id="outer-container">
+        <div id="top-row">
+            <div id="sheet-area">
+                <div id="tab-bar">
+                    <button class="sheet-tab active" data-sheet="sheet-1"><span>Sheet 1</span></button>
+                </div>
+                <div id="sheet-1" class="sheet-content active">
+                    <div class="sheet-columns">
+                        <div class="sheet-left">
+                            <div class="sheet-main">
+                                <div id="arg-panel" class="panel">
+                                    <div class="panel-header">
+                                        <strong class="column-title">ARG (Abstract Reachability Graph)</strong>
+                                        <div class="panel-header-actions">
+                                            <div class="dropdown">
+                                                <span class="panel-menu" data-dropdown="arg-inv-menu">Invariant</span>
+                                                <div id="arg-inv-menu" class="dropdown-content">
+                                                    <a href="#" id="arg-check-induction">Check induction</a>
+                                                    <a href="#" id="arg-bounded-check">Bounded check</a>
+                                                    <a href="#" id="arg-diagram">Diagram</a>
+                                                    <a href="#" id="arg-weaken">Weaken</a>
+                                                    <div class="dropdown-sep"></div>
+                                                    <a href="#" id="arg-save-invariant">Save Invariant...</a>
+                                                    <a href="#" id="arg-save-abs">Save Abstraction...</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="arg-graph" class="graph-container"></div>
+                                </div>
+                                <div id="divider" class="divider"></div>
+                                <div id="concept-panel" class="panel">
+                                    <div class="panel-header">
+                                        <strong class="column-title">Concept graph</strong>
+                                        <div class="panel-header-actions">
+                                            <div class="dropdown">
+                                                <span class="panel-menu" data-dropdown="conj-menu">Conjecture</span>
+                                                <div id="conj-menu" class="dropdown-content">
+                                                    <a href="#" id="conj-undo">Undo</a>
+                                                    <a href="#" id="conj-redo">Redo</a>
+                                                    <div class="dropdown-sep"></div>
+                                                    <a href="#" id="conj-pdr-step">PDR step</a>
+                                                    <a href="#" id="conj-concrete">Concrete</a>
+                                                    <a href="#" id="conj-gather">Gather</a>
+                                                    <a href="#" id="conj-cti-gather">CTI Gather</a>
+                                                    <a href="#" id="conj-cti-minimize">Minimize</a>
+                                                    <a href="#" id="conj-cti-check-sufficient">Check sufficient</a>
+                                                    <a href="#" id="conj-cti-check-inductive">Check relative induction</a>
+                                                    <a href="#" id="conj-cti-strengthen">Strengthen</a>
+                                                    <a href="#" id="conj-reverse">Reverse</a>
+                                                    <a href="#" id="conj-path-reach">Path reach</a>
+                                                    <a href="#" id="conj-reach">Reach</a>
+                                                    <a href="#" id="conj-conjecture">Conjecture</a>
+                                                    <a href="#" id="conj-backtrack">Backtrack</a>
+                                                    <div class="dropdown-sep"></div>
+                                                    <a href="#" id="conj-recalculate">Recalculate</a>
+                                                    <a href="#" id="conj-diagram">Diagram</a>
+                                                    <a href="#" id="conj-remember">Remember</a>
+                                                    <a href="#" id="conj-export">Export</a>
+                                                </div>
+                                            </div>
+                                            <div class="dropdown">
+                                                <span class="panel-menu" data-dropdown="view-menu">View</span>
+                                                <div id="view-menu" class="dropdown-content">
+                                                    <a href="#" id="view-add-relation">Add relation</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="concept-graph" class="graph-container"></div>
+                                </div>
+                            </div>
+
+                            <div id="info-panel" class="info-panel">
+                                <div id="info-header" class="info-header" title="Drag to resize Details">Details</div>
+                                <div id="info-content">Select a node or edge to see details</div>
+                            </div>
+                        </div>
+
+                        <div id="divider2" class="divider"></div>
+                        <div id="state-panel" class="panel">
+                            <div class="panel-header">
+                                <strong class="column-title">State/relations</strong>
+                                <div class="panel-header-actions">
+                                    <span id="state-label">State: 0</span>
+                                </div>
+                            </div>
+                            <div id="state-controls">
+                                <table id="state-checkbox-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="chk-col">+</th>
+                                            <th class="chk-col">?</th>
+                                            <th class="chk-col">-</th>
+                                            <th class="chk-col">T</th>
+                                            <th class="name-col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="state-checkbox-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="divider3" class="divider"></div>
+            <div id="editor-panel">
+                <div class="panel-header">
+                    <div class="editor-title-row">
+                        <strong class="column-title">Editing:</strong>
+                        <span id="model-editor-label" class="editor-path" title="Editing: (unsaved file)">(unsaved file)</span>
+                    </div>
+                    <div class="panel-header-actions">
+                        <button id="file-close-current" class="editor-close-btn" title="Close current file">x</button>
+                        <button id="file-reopen-last" class="reopen-last-btn" style="display: none;">Re-open last file</button>
+                        <span class="keymap-radios">
+                            <label><input type="radio" name="keymap" value="sublime" checked> Sublime</label>
+                            <label><input type="radio" name="keymap" value="emacs"> Emacs-ish</label>
+                            <label><input type="radio" name="keymap" value="vim"> Vim</label>
+                            <a class="keymap-docs-link" href="https://codemirror.net/5/doc/manual.html#keymaps" target="_blank" rel="noopener noreferrer">keymap docs</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="editor-text-shell">
+                    <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..."></textarea>
+                </div>
+            </div>
+        </div>
+        <div id="divider-h" class="divider-horizontal"></div>
+        <div id="tutorial-container">
+            <div class="panel-header tutorial-url-bar">
+                <button id="tutorial-back" class="tutorial-nav-btn" title="Back" disabled>&#9664;</button>
+                <button id="tutorial-fwd" class="tutorial-nav-btn" title="Forward" disabled>&#9654;</button>
+                <button id="tutorial-reload" class="tutorial-nav-btn" title="Reload">&#8635;</button>
+                <input id="tutorial-url" type="text" class="tutorial-url-input" value="/static/tutorial/kenmcmil.github.io/ivy/language.html" spellcheck="false">
+                <button id="tutorial-close" class="tutorial-close-btn" title="Close tutorial">&times;</button>
+            </div>
+            <iframe id="tutorial-iframe" class="tutorial-iframe" src="/static/tutorial/kenmcmil.github.io/ivy/language.html"></iframe>
+        </div>
+    </div>
+
+    <div id="context-menu" class="context-menu" style="display: none;"></div>
+    <div id="save-as-explain-notice" class="save-as-explain-notice" style="display: none;">
+        The browser security model requires re-confirmation of the save path on disk when IvyWeb cannot locate an IndexedDB cached file handle.
+    </div>
+    <div id="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <div id="loading-message">Loading...</div>
+    </div>
+    <div class="ivy-toast-stack" aria-live="polite"></div>
+    <div id="statusbar">
+        <span class="status-message">Ready</span>
+        <span id="session-id" class="session-id"></span>
+    </div>
+    <input type="file" id="file-input" class="hidden-file-input" accept=".ivy">
+    <input type="file" id="event-file-input" class="hidden-file-input" accept=".iev,.pats,.txt">
+    <input type="file" id="analysis-state-file-input" class="hidden-file-input" accept=".json,.ivyweb.json">
     <script type="module" src="/static/dist/ivyweb.js"></script>
 </body>
 </html>

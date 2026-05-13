@@ -17,12 +17,10 @@ describe('recentFileService', () => {
     expect(items[1].label).toContain('...nt.ivy');
   });
 
-  it('feeds the Vue recent-files store through the bridge', () => {
+  it('renders recent files into the DOM and opens the selected session', () => {
+    document.body.innerHTML = '<div id="file-recent-list"></div>';
     const app = {
       loadRecentSession: vi.fn(),
-    };
-    const bridge = {
-      updateRecentFiles: vi.fn(),
     };
     const persist = {
       listSessions: vi.fn(() => [
@@ -31,13 +29,11 @@ describe('recentFileService', () => {
       truncatePath: vi.fn((path) => path),
     };
 
-    populateRecentFiles(app, persist, { bridge });
+    populateRecentFiles(app, persist, { doc: document });
 
-    expect(bridge.updateRecentFiles).toHaveBeenCalledWith(
-      [{ id: 's1', label: 'client.ivy', title: '' }],
-      expect.any(Function),
-    );
-    bridge.updateRecentFiles.mock.calls[0][1]('s1');
+    const item = document.querySelector('[data-session-id="s1"]');
+    expect(item.textContent).toBe('client.ivy');
+    item.click();
     expect(app.loadRecentSession).toHaveBeenCalledWith('s1');
   });
 });

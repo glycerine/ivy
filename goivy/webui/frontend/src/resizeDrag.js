@@ -1,4 +1,3 @@
-import { nextTick } from 'vue';
 import { currentAppServices } from './services/appServices.js';
 
 function refreshNow() {
@@ -7,7 +6,6 @@ function refreshNow() {
 
 export function scheduleLayoutRefresh() {
   refreshNow();
-  nextTick(refreshNow);
   const win = globalThis.window;
   if (win && typeof win.requestAnimationFrame === 'function') {
     win.requestAnimationFrame(refreshNow);

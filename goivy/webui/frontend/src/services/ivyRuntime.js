@@ -54,7 +54,7 @@ import {
     currentSheet as currentSheetViaService,
     graphElementsSnapshot as graphElementsSnapshotViaService,
     refreshGraphsAndEditorLayout,
-    refreshLayoutAfterVuePatch,
+    refreshLayoutAfterPatch,
     registerSheet as registerSheetViaService,
 } from './graphService.js';
 import {
@@ -153,16 +153,6 @@ import {
     splitConcept as splitConceptViaService,
     supposeEmpty as supposeEmptyViaService,
 } from './conceptActionService.js';
-import {
-    buttonListDialog as buttonListDialogViaService,
-    entryDialog as entryDialogViaService,
-    integerDialog as integerDialogViaService,
-    listboxDialog as listboxDialogViaService,
-    okCancelDialog as okCancelDialogViaService,
-    okDialog as okDialogViaService,
-    textDialog as textDialogViaService,
-} from './dialogService.js';
-
 const defaultRuntimeDependencies = {
     IvyAPI: DefaultIvyAPI,
     IvyControls: DefaultIvyControls,
@@ -268,15 +258,11 @@ class IvyRuntime {
         this.setupEventHandlers();
         await this.loadMenuDescriptors();
         this.setupTabs();
-        if (!(window.__ivyVueBridge &&
-            typeof window.__ivyVueBridge.layoutResizersHandled === 'function' &&
-            window.__ivyVueBridge.layoutResizersHandled())) {
-            this.setupResizer();
-            this.setupResizer2();
-            this.setupResizer3();
-            this.setupResizerH();
-            this.setupDetailsResizer();
-        }
+        this.setupResizer();
+        this.setupResizer2();
+        this.setupResizer3();
+        this.setupResizerH();
+        this.setupDetailsResizer();
         this.setupTutorialUrlBar();
         this.setupKeyboardShortcuts();
 
@@ -291,9 +277,7 @@ class IvyRuntime {
         // Initialize CodeMirror on the model editor textarea.
         // Must happen BEFORE restore so setEditorContent() can call cmEditor.setValue().
         var modelEditor = document.getElementById('model-editor');
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.initializeEditor === 'function') {
-            this.cmEditor = window.__ivyVueBridge.initializeEditor(this);
-        } else if (modelEditor) {
+        if (modelEditor) {
             var codeMirror = runtimeDeps.CodeMirror || window.CodeMirror;
             this.cmEditor = initializeCodeMirrorEditor({
                 runtime: this,
@@ -346,13 +330,20 @@ class IvyRuntime {
         updateSessionDisplayViaService(sessionId);
     }
 
-    _setVueLayoutSize(method, value) {
-        var bridge = window.__ivyVueBridge;
-        if (bridge && typeof bridge[method] === 'function') {
-            bridge[method](value);
-            return true;
+    _setLayoutSize(method, value) {
+        var target = null;
+        if (method === 'setArgPanelWidth') target = document.getElementById('arg-panel');
+        if (method === 'setStatePanelWidth') target = document.getElementById('state-panel');
+        if (method === 'setEditorWidth') target = document.getElementById('editor-panel');
+        if (method === 'setTutorialHeight') target = document.getElementById('tutorial-container');
+        if (method === 'setDetailsHeight') target = document.getElementById('info-panel');
+        if (!target) return false;
+        var size = Math.max(0, Number(value) || 0);
+        target.style.flex = '0 0 ' + size + 'px';
+        if (method === 'setTutorialHeight' || method === 'setDetailsHeight') {
+            target.style.height = size + 'px';
         }
-        return false;
+        return true;
     }
 
     setEditorContent(content) {
@@ -451,20 +442,16 @@ class IvyRuntime {
     }
 
     showExternalChangeDialog() {
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
-            return window.__ivyVueBridge.showDialog({
-                type: 'buttons',
-                title: 'File changed on disk',
-                message: 'The file "' + (this._persistedFileName || 'model') + '" has changed outside IvyWeb. Choose how to handle the current editor buffer.',
-                escapeValue: 'do-nothing',
-                buttons: [
-                    { label: 'Do nothing', value: 'do-nothing' },
-                    { label: 'Revert to on-disk version', value: 'reload' },
-                    { label: 'Merge disk version into edit buffer', value: 'merge' },
-                    { label: 'Overwrite on-disk with edited buffer', value: 'overwrite', danger: true },
-                ],
-            });
-        }
+        return this.buttonListDialog(
+            'File changed on disk',
+            'The file "' + (this._persistedFileName || 'model') + '" has changed outside IvyWeb. Choose how to handle the current editor buffer.',
+            [
+                { label: 'Do nothing', value: 'do-nothing' },
+                { label: 'Revert to on-disk version', value: 'reload' },
+                { label: 'Merge disk version into edit buffer', value: 'merge' },
+                { label: 'Overwrite on-disk with edited buffer', value: 'overwrite', danger: true },
+            ],
+        );
         var self = this;
         return new Promise(function (resolve) {
             var overlay = document.getElementById('external-change-dialog-overlay');
@@ -509,19 +496,15 @@ class IvyRuntime {
     }
 
     showDirtyCloseDialog() {
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
-            return window.__ivyVueBridge.showDialog({
-                type: 'buttons',
-                title: 'File has changed',
-                message: 'File "' + (this._persistedFileName || 'model') + '" has changed. Save before closing?',
-                escapeValue: 'cancel',
-                buttons: [
-                    { label: 'Cancel the close', value: 'cancel' },
-                    { label: 'Save', value: 'save' },
-                    { label: 'Discard Edits', value: 'discard', danger: true },
-                ],
-            });
-        }
+        return this.buttonListDialog(
+            'File has changed',
+            'File "' + (this._persistedFileName || 'model') + '" has changed. Save before closing?',
+            [
+                { label: 'Cancel the close', value: 'cancel' },
+                { label: 'Save', value: 'save' },
+                { label: 'Discard Edits', value: 'discard', danger: true },
+            ],
+        );
         var self = this;
         return new Promise(function (resolve) {
             var overlay = document.getElementById('dirty-close-dialog-overlay');
@@ -562,10 +545,6 @@ class IvyRuntime {
     }
 
     showSaveAsExplanationNotice() {
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setSaveAsNoticeVisible === 'function') {
-            window.__ivyVueBridge.setSaveAsNoticeVisible(true);
-            return;
-        }
         var notice = document.getElementById('save-as-explain-notice');
         if (notice) {
             notice.style.display = 'block';
@@ -573,10 +552,6 @@ class IvyRuntime {
     }
 
     hideSaveAsExplanationNotice() {
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setSaveAsNoticeVisible === 'function') {
-            window.__ivyVueBridge.setSaveAsNoticeVisible(false);
-            return;
-        }
         var notice = document.getElementById('save-as-explain-notice');
         if (notice) {
             notice.style.display = 'none';
@@ -623,23 +598,18 @@ class IvyRuntime {
     attachGraphEventHandlers(argGraph, conceptGraph, sheetId) {
         var self = this;
         sheetId = sheetId || this.activeSheetId || 'sheet-1';
-        var vueSuppressesNativeGraphMenu = window.__ivyVueBridge &&
-            typeof window.__ivyVueBridge.graphContextMenuSuppressionHandled === 'function' &&
-            window.__ivyVueBridge.graphContextMenuSuppressionHandled();
-        if (!vueSuppressesNativeGraphMenu) {
-            if (argGraph && argGraph.containerId) {
-                var argEl = document.getElementById(argGraph.containerId);
-                if (argEl && !argEl._ivyContextSuppressed) {
-                    argEl.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-                    argEl._ivyContextSuppressed = true;
-                }
+        if (argGraph && argGraph.containerId) {
+            var argEl = document.getElementById(argGraph.containerId);
+            if (argEl && !argEl._ivyContextSuppressed) {
+                argEl.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+                argEl._ivyContextSuppressed = true;
             }
-            if (conceptGraph && conceptGraph.containerId) {
-                var conceptEl = document.getElementById(conceptGraph.containerId);
-                if (conceptEl && !conceptEl._ivyContextSuppressed) {
-                    conceptEl.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-                    conceptEl._ivyContextSuppressed = true;
-                }
+        }
+        if (conceptGraph && conceptGraph.containerId) {
+            var conceptEl = document.getElementById(conceptGraph.containerId);
+            if (conceptEl && !conceptEl._ivyContextSuppressed) {
+                conceptEl.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+                conceptEl._ivyContextSuppressed = true;
             }
         }
 
@@ -747,21 +717,15 @@ class IvyRuntime {
         var fileInput = document.getElementById('file-input');
         var eventFileInput = document.getElementById('event-file-input');
         var analysisStateFileInput = document.getElementById('analysis-state-file-input');
-        var vueHandlesStaticCommands = window.__ivyVueBridge &&
-            typeof window.__ivyVueBridge.staticCommandHandlersHandled === 'function' &&
-            window.__ivyVueBridge.staticCommandHandlersHandled();
-        var vueHandlesFileInputs = window.__ivyVueBridge &&
-            typeof window.__ivyVueBridge.fileInputHandlersHandled === 'function' &&
-            window.__ivyVueBridge.fileInputHandlersHandled();
 
-        if (!vueHandlesFileInputs && fileInput) fileInput.addEventListener('change', function () {
+        if (fileInput) fileInput.addEventListener('change', function () {
             if (fileInput.files && fileInput.files.length > 0) {
                 self.loadFile(fileInput.files[0]);
                 fileInput.value = ''; // reset for re-selection of same file
             }
         });
 
-        if (!vueHandlesFileInputs && eventFileInput) {
+        if (eventFileInput) {
             eventFileInput.addEventListener('change', function () {
                 if (eventFileInput.files && eventFileInput.files.length > 0) {
                     self.loadEventTraceFile(eventFileInput.files[0]);
@@ -770,7 +734,7 @@ class IvyRuntime {
             });
         }
 
-        if (!vueHandlesFileInputs && analysisStateFileInput) {
+        if (analysisStateFileInput) {
             analysisStateFileInput.addEventListener('change', async function () {
                 if (analysisStateFileInput.files && analysisStateFileInput.files.length > 0) {
                     try {
@@ -783,27 +747,26 @@ class IvyRuntime {
             });
         }
 
-        if (!vueHandlesStaticCommands) {
-            // File > Load...
-            // Use showOpenFilePicker when available so we get a writable FileSystemFileHandle,
-            // enabling Ctrl+S to save directly without re-prompting. Fall back to <input> otherwise.
-            var loadModel = document.getElementById('file-load');
-            if (loadModel) loadModel.addEventListener('click', function (e) {
+        // File > Load...
+        // Use showOpenFilePicker when available so we get a writable FileSystemFileHandle,
+        // enabling Ctrl+S to save directly without re-prompting. Fall back to <input> otherwise.
+        var loadModel = document.getElementById('file-load');
+        if (loadModel) loadModel.addEventListener('click', function (e) {
+            e.preventDefault();
+            self.flashAndClose(this, async function () {
+                await self.chooseAndLoadModelFile();
+            });
+        });
+
+        var eventTraceOpen = document.getElementById('file-open-event-trace');
+        if (eventTraceOpen && eventFileInput) {
+            eventTraceOpen.addEventListener('click', function (e) {
                 e.preventDefault();
                 self.flashAndClose(this, async function () {
-                    await self.chooseAndLoadModelFile();
+                    await self.chooseAndLoadEventTraceFile();
                 });
             });
-
-            var eventTraceOpen = document.getElementById('file-open-event-trace');
-            if (eventTraceOpen && eventFileInput) {
-                eventTraceOpen.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    self.flashAndClose(this, async function () {
-                        await self.chooseAndLoadEventTraceFile();
-                    });
-                });
-            }
+        }
 
             // File > Save as... (uses File System Access API to write to a chosen path)
             var saveAs = document.getElementById('file-save-as');
@@ -925,30 +888,25 @@ class IvyRuntime {
             this.bindMenuAction('conj-remember', function () { self.rememberGraph(); });
             this.bindMenuAction('conj-export', function () { self.exportConjecture(); });
             this.bindMenuAction('view-add-relation', function () { self.addRelationFromString(); });
-        }
 
-        if (!(window.__ivyVueBridge &&
-            typeof window.__ivyVueBridge.globalInteractionsHandled === 'function' &&
-            window.__ivyVueBridge.globalInteractionsHandled())) {
-            // --- Click anywhere to dismiss context menu and dropdowns ---
-            document.addEventListener('click', function (e) {
-                self.controls.hideContextMenu();
-                if (!e.target.closest('.dropdown')) {
-                    self.closeAllDropdowns();
-                }
-            });
+        // --- Click anywhere to dismiss context menu and dropdowns ---
+        document.addEventListener('click', function (e) {
+            self.controls.hideContextMenu();
+            if (!e.target.closest('.dropdown')) {
+                self.closeAllDropdowns();
+            }
+        });
 
-            // --- Escape key closes open dropdowns; Ctrl+S saves ---
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    self.closeAllDropdowns();
-                }
-                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                    e.preventDefault();
-                    self.save();
-                }
-            });
-        }
+        // --- Escape key closes open dropdowns; Ctrl+S saves ---
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                self.closeAllDropdowns();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                self.save();
+            }
+        });
 
         this.attachGraphEventHandlers(this.argGraph, this.conceptGraph, 'sheet-1');
     }
@@ -997,7 +955,7 @@ class IvyRuntime {
             var newWidth = startWidth + dx;
             var containerWidth = activeContainer ? activeContainer.offsetWidth : 800;
             newWidth = Math.max(150, Math.min(newWidth, containerWidth - 200));
-            if (!(activePanel.id === 'arg-panel' && self._setVueLayoutSize('setArgPanelWidth', newWidth))) {
+            if (!(activePanel.id === 'arg-panel' && self._setLayoutSize('setArgPanelWidth', newWidth))) {
                 activePanel.style.flex = '0 0 ' + newWidth + 'px';
             }
             if (self.argGraph) self.argGraph.resize();
@@ -1054,7 +1012,7 @@ class IvyRuntime {
             var newWidth = startWidth + dx;
             var maxW = topRow ? topRow.offsetWidth - 300 : 800;
             newWidth = Math.max(200, Math.min(newWidth, maxW));
-            if (!self._setVueLayoutSize('setStatePanelWidth', newWidth)) {
+            if (!self._setLayoutSize('setStatePanelWidth', newWidth)) {
                 rightSection.style.flex = '0 0 ' + newWidth + 'px';
             }
             self.argGraph.resize();
@@ -1112,7 +1070,7 @@ class IvyRuntime {
             var dividerWidth = divider3.offsetWidth || 4;
             var maxW = Math.max(minEditorWidth, topRow.offsetWidth - dividerWidth - minSheetAreaWidth);
             newWidth = Math.max(minEditorWidth, Math.min(newWidth, maxW));
-            if (!self._setVueLayoutSize('setEditorWidth', newWidth)) {
+            if (!self._setLayoutSize('setEditorWidth', newWidth)) {
                 editorPanel.style.flex = '0 0 ' + newWidth + 'px';
             }
             if (self.argGraph) self.argGraph.resize();
@@ -1244,33 +1202,27 @@ class IvyRuntime {
         tabBar.appendChild(tabBtn);
 
         // Create sheet content (clone structure from sheet-1)
-        var newSheet = null;
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.createAnalysisSheetShell === 'function') {
-            newSheet = window.__ivyVueBridge.createAnalysisSheetShell({ id: sheetId, counter: this._sheetCounter });
+        var template = document.getElementById('sheet-1');
+        var newSheet = template.cloneNode(true);
+        newSheet.id = sheetId;
+        newSheet.classList.remove('active');
+        // Clear graph containers (they'll be initialized fresh)
+        var fallbackGraphs = newSheet.querySelectorAll('.graph-container');
+        for (var g = 0; g < fallbackGraphs.length; g++) {
+            fallbackGraphs[g].innerHTML = '';
+            fallbackGraphs[g].id = fallbackGraphs[g].id + '-' + this._sheetCounter;
         }
-        if (!newSheet) {
-            var template = document.getElementById('sheet-1');
-            newSheet = template.cloneNode(true);
-            newSheet.id = sheetId;
-            newSheet.classList.remove('active');
-            // Clear graph containers (they'll be initialized fresh)
-            var fallbackGraphs = newSheet.querySelectorAll('.graph-container');
-            for (var g = 0; g < fallbackGraphs.length; g++) {
-                fallbackGraphs[g].innerHTML = '';
-                fallbackGraphs[g].id = fallbackGraphs[g].id + '-' + this._sheetCounter;
-            }
-            // Clear info panel
-            var info = newSheet.querySelector('#info-content');
-            if (info) {
-                info.id = 'info-content-' + this._sheetCounter;
-                info.textContent = 'Select a node or edge to see details';
-            }
-            var infoHeader = newSheet.querySelector('#info-header');
-            if (infoHeader) infoHeader.id = 'info-header-' + this._sheetCounter;
-            // Insert before the tutorial container
-            var sheetArea = document.getElementById('sheet-area');
-            sheetArea.appendChild(newSheet);
+        // Clear info panel
+        var info = newSheet.querySelector('#info-content');
+        if (info) {
+            info.id = 'info-content-' + this._sheetCounter;
+            info.textContent = 'Select a node or edge to see details';
         }
+        var infoHeader = newSheet.querySelector('#info-header');
+        if (infoHeader) infoHeader.id = 'info-header-' + this._sheetCounter;
+        // Insert before the tutorial container
+        var sheetArea = document.getElementById('sheet-area');
+        sheetArea.appendChild(newSheet);
 
         var graphs = newSheet.querySelectorAll('.graph-container');
         var graphIds = [];
@@ -1713,12 +1665,8 @@ class IvyRuntime {
         var tab = this.sheetTab(sheetId);
         var sheet = document.getElementById(sheetId);
         var wasActive = this.activeSheetId === sheetId || (tab && tab.classList.contains('active'));
-        var bridge = window.__ivyVueBridge;
 
         if (tab) tab.remove();
-        if (bridge && typeof bridge.removeRenderedSheet === 'function') {
-            bridge.removeRenderedSheet(sheetId);
-        }
         if (sheet) sheet.remove();
         if (this.sheets) {
             delete this.sheets[sheetId];
@@ -1731,30 +1679,6 @@ class IvyRuntime {
     }
 
     toggleTutorial(flash) {
-        var bridge = window.__ivyVueBridge;
-        if (bridge && typeof bridge.setTutorialVisible === 'function') {
-            var tutorialForState = document.getElementById('tutorial-container');
-            var visible = tutorialForState ? tutorialForState.style.display !== 'none' : true;
-            if (typeof bridge.isTutorialVisible === 'function') {
-                visible = !!bridge.isTutorialVisible();
-            }
-            var nextVisible = !visible;
-            bridge.setTutorialVisible(nextVisible);
-            if (!nextVisible && flash) {
-                if (typeof bridge.flashTutorialButton === 'function') {
-                    bridge.flashTutorialButton(1200);
-                } else {
-                    var vueFallbackButton = document.getElementById('btn-toggle-tutorial');
-                    if (vueFallbackButton) {
-                        vueFallbackButton.classList.add('btn-flash');
-                        setTimeout(function () { vueFallbackButton.classList.remove('btn-flash'); }, 1200);
-                    }
-                }
-            }
-            this._refreshLayoutAfterVuePatch();
-            return;
-        }
-
         var tutorial = document.getElementById('tutorial-container');
         var dividerH = document.getElementById('divider-h');
         var btn = document.getElementById('btn-toggle-tutorial');
@@ -1786,8 +1710,8 @@ class IvyRuntime {
         refreshGraphsAndEditorLayout(this);
     }
 
-    _refreshLayoutAfterVuePatch() {
-        refreshLayoutAfterVuePatch(this);
+    _refreshLayoutAfterPatch() {
+        refreshLayoutAfterPatch(this);
     }
 
     setupResizerH() {
@@ -1819,7 +1743,7 @@ class IvyRuntime {
             var newHeight = startHeight + dy;
             var maxH = outerContainer ? outerContainer.offsetHeight - 100 : 600;
             newHeight = Math.max(80, Math.min(newHeight, maxH));
-            if (!self._setVueLayoutSize('setTutorialHeight', newHeight)) {
+            if (!self._setLayoutSize('setTutorialHeight', newHeight)) {
                 tutorial.style.flex = '0 0 ' + newHeight + 'px';
             }
             self.argGraph.resize();
@@ -1883,7 +1807,7 @@ class IvyRuntime {
             if (activeSheetMain) {
                 activeSheetMain.style.minHeight = minMainHeight + 'px';
             }
-            if (!(activePanel.id === 'info-panel' && self._setVueLayoutSize('setDetailsHeight', newHeight))) {
+            if (!(activePanel.id === 'info-panel' && self._setLayoutSize('setDetailsHeight', newHeight))) {
                 activePanel.style.flex = '0 0 ' + newHeight + 'px';
                 activePanel.style.height = newHeight + 'px';
             }
@@ -1924,11 +1848,6 @@ class IvyRuntime {
     }
 
     setupTutorialUrlBar() {
-        if (window.__ivyVueBridge &&
-            typeof window.__ivyVueBridge.tutorialUrlBarHandled === 'function' &&
-            window.__ivyVueBridge.tutorialUrlBarHandled()) {
-            return;
-        }
         var urlInput = document.getElementById('tutorial-url');
         var iframe = document.getElementById('tutorial-iframe');
         var backBtn = document.getElementById('tutorial-back');
@@ -2092,11 +2011,6 @@ class IvyRuntime {
      * Set up keyboard shortcuts.
      */
     setupKeyboardShortcuts() {
-        if (window.__ivyVueBridge &&
-            typeof window.__ivyVueBridge.globalInteractionsHandled === 'function' &&
-            window.__ivyVueBridge.globalInteractionsHandled()) {
-            return;
-        }
         var self = this;
         document.addEventListener('keydown', function (e) {
             // Ctrl+Z or Cmd+Z: Undo
@@ -2933,18 +2847,11 @@ class IvyRuntime {
     }
 
     getMode() {
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getMode === 'function') {
-            return window.__ivyVueBridge.getMode() || 'pdr';
-        }
         var modeEl = document.getElementById('mode-select');
         return modeEl ? modeEl.value : 'pdr';
     }
 
     setMode(mode) {
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setMode === 'function') {
-            window.__ivyVueBridge.setMode(mode);
-            return;
-        }
         var modeEl = document.getElementById('mode-select');
         if (modeEl && mode) modeEl.value = mode;
     }
@@ -3582,10 +3489,6 @@ class IvyRuntime {
      */
     closeAllDropdowns() {
         return closeAllDropdownsViaService();
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.closeDropdownMenus === 'function') {
-            window.__ivyVueBridge.closeDropdownMenus();
-            return;
-        }
         var all = document.querySelectorAll('.dropdown.open');
         for (var j = 0; j < all.length; j++) {
             all[j].classList.remove('open');
@@ -3598,15 +3501,6 @@ class IvyRuntime {
     flashAndClose(el, callback) {
         return flashAndCloseViaService(this, el, callback);
         var self = this;
-        var bridge = window.__ivyVueBridge;
-        if (bridge && typeof bridge.flashMenuItem === 'function' && el && el.id) {
-            bridge.flashMenuItem(el.id, 50);
-            setTimeout(function () {
-                self.closeAllDropdowns();
-                if (callback) callback();
-            }, 50);
-            return;
-        }
         el.classList.add('menu-flash');
         setTimeout(function () {
             el.classList.remove('menu-flash');
@@ -3640,13 +3534,6 @@ class IvyRuntime {
     }
 
     renderMenuRegion(region, menus) {
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateMenuRegion === 'function') {
-            var self = this;
-            window.__ivyVueBridge.updateMenuRegion(region, menus || [], function (item) {
-                return self.dispatchMenuDescriptorAction(region, item);
-            });
-            return;
-        }
         var panel = region === 'arg' ? document.getElementById('arg-panel') : document.getElementById('concept-panel');
         if (!panel) return;
         var header = panel.querySelector('.panel-header');
@@ -3882,11 +3769,6 @@ class IvyRuntime {
     }
 
     okDialog(title, message) {
-        var bridgedOk = okDialogViaService(title, message);
-        if (bridgedOk !== undefined) return bridgedOk;
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
-            return window.__ivyVueBridge.showDialog({ type: 'ok', title: title, message: message });
-        }
         var self = this;
         return new Promise(function (resolve) {
             var dialog = self._createDialog(title, message);
@@ -3900,11 +3782,6 @@ class IvyRuntime {
     }
 
     okCancelDialog(title, message) {
-        var bridgedOkCancel = okCancelDialogViaService(title, message);
-        if (bridgedOkCancel !== undefined) return bridgedOkCancel;
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
-            return window.__ivyVueBridge.showDialog({ type: 'okCancel', title: title, message: message });
-        }
         var self = this;
         return new Promise(function (resolve) {
             var dialog = self._createDialog(title, message);
@@ -3921,17 +3798,6 @@ class IvyRuntime {
     }
 
     textDialog(title, message, text, options) {
-        var bridgedText = textDialogViaService(title, message, text, options);
-        if (bridgedText !== undefined) return bridgedText;
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
-            return window.__ivyVueBridge.showDialog({
-                type: 'text',
-                title: title,
-                message: message,
-                text: text,
-                options: options || {},
-            });
-        }
         var self = this;
         var opts = options || {};
         return new Promise(function (resolve) {
@@ -3969,17 +3835,6 @@ class IvyRuntime {
     }
 
     entryDialog(title, message, initialValue, options) {
-        var bridgedEntry = entryDialogViaService(title, message, initialValue, options);
-        if (bridgedEntry !== undefined) return bridgedEntry;
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
-            return window.__ivyVueBridge.showDialog({
-                type: 'entry',
-                title: title,
-                message: message,
-                initialValue: initialValue,
-                options: options || {},
-            });
-        }
         var self = this;
         var opts = options || {};
         return new Promise(function (resolve) {
@@ -4008,17 +3863,6 @@ class IvyRuntime {
     }
 
     integerDialog(title, message, initialValue, options) {
-        var bridgedInteger = integerDialogViaService(title, message, initialValue, options);
-        if (bridgedInteger !== undefined) return bridgedInteger;
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
-            return window.__ivyVueBridge.showDialog({
-                type: 'integer',
-                title: title,
-                message: message,
-                initialValue: initialValue,
-                options: options || {},
-            });
-        }
         var self = this;
         var opts = options || {};
         return new Promise(function (resolve) {
@@ -4063,17 +3907,6 @@ class IvyRuntime {
     }
 
     listboxDialog(title, message, items, options) {
-        var bridgedListbox = listboxDialogViaService(title, message, items, options);
-        if (bridgedListbox !== undefined) return bridgedListbox;
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
-            return window.__ivyVueBridge.showDialog({
-                type: 'listbox',
-                title: title,
-                message: message,
-                items: items || [],
-                options: options || {},
-            });
-        }
         var self = this;
         var opts = options || {};
         var entries = (items || []).map(function (item) {
@@ -4123,16 +3956,6 @@ class IvyRuntime {
     }
 
     buttonListDialog(title, message, buttons) {
-        var bridgedButtons = buttonListDialogViaService(title, message, buttons);
-        if (bridgedButtons !== undefined) return bridgedButtons;
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showDialog === 'function') {
-            return window.__ivyVueBridge.showDialog({
-                type: 'buttons',
-                title: title,
-                message: message,
-                buttons: buttons || [],
-            });
-        }
         var self = this;
         var entries = buttons || [];
         return new Promise(function (resolve) {
@@ -4564,9 +4387,6 @@ class IvyRuntime {
      */
     _showToast(message, level, options) {
         options = options || {};
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.showToast === 'function') {
-            return window.__ivyVueBridge.showToast(message, level, options);
-        }
         var toast = document.createElement('div');
         toast.className = 'ivy-toast ivy-toast-floating ivy-toast-' + (level || 'info');
         if (options.className) {

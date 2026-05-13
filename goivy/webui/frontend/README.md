@@ -1,20 +1,20 @@
 # Ivy Web UI Frontend
 
-The frontend is a Vue 3 + Pinia application that is bundled by Vite and served by the Go web server. Vite is used for manual builds only; there is no Vite dev server or proxy in the runtime workflow.
+The frontend is a controller-owned DOM application that is bundled by Vite and served by the Go web server. Vite is used for manual builds only; there is no Vite dev server or proxy in the runtime workflow.
 
 ## Workflow
 
 - Build bundle: `npm --prefix goivy/webui run build:webui`
-- Vue/unit tests: `npm --prefix goivy/webui run test:webui:js`
-- Watch Vue/unit tests: `npm --prefix goivy/webui run test:webui:js:watch`
+- Unit tests: `npm --prefix goivy/webui run test:webui:js`
+- Watch unit tests: `npm --prefix goivy/webui run test:webui:js:watch`
 - Browser tests: `npm --prefix goivy/webui run test:webui:browser`
 
 The Go server serves `goivy/webui/static/index.html` and the built files under `goivy/webui/static/dist`.
 
 ## Ownership Model
 
-- Vue components render UI state and emit user intent.
-- Pinia stores hold user-visible state such as editor labels, layout sizes, dialogs, details, graph snapshots, sheets, event traces, and session status.
+- `IvyRuntime` is the coordinator and owns user-visible UI state.
+- Static DOM elements in `goivy/webui/static/index.html` expose the controls, panes, dialogs, and graph containers that the runtime binds.
 - Services under `src/services` own side effects and non-rendering workflow logic:
   - `commandRegistry.js`: command registration and dispatch.
   - `uiCommandService.js`: event-safe UI command helpers used by components.
@@ -33,7 +33,7 @@ The Go server serves `goivy/webui/static/index.html` and the built files under `
 
 ## Compatibility Surface
 
-`legacyAppController.js` is being reduced to a compatibility facade while services take ownership of behavior. `window.ivyApp` still exists for explicit browser diagnostics and compatibility tests under `frontend/src/legacy*.test.js`, but Vue components should call services/commands instead of reaching for globals.
+`legacyAppController.js` is being reduced to a compatibility facade while services take ownership of behavior. `window.ivyApp` still exists for explicit browser diagnostics and compatibility tests under `frontend/src/legacy*.test.js`.
 
 The old `goivy/webui/js_test` harness has been retired. New frontend tests should live beside the code they exercise under `goivy/webui/frontend/src`.
 
@@ -41,7 +41,6 @@ Command names should be stable, dotted strings when they describe a domain actio
 
 ## Engine Interface
 
-The active Ivy API is selected through `engineStore` for compatibility with
-older store names. The hosted Go API adapter is the default. Future local-first
+The active Ivy API defaults to the hosted Go API adapter. Future local-first
 engines should implement the same consumer-facing `IvyApiAdapter` contract and
-may be installed through `window.__IVY_ENGINE__` before Vue boot.
+may be installed through `window.__IVY_ENGINE__` before app boot.

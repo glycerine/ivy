@@ -18,26 +18,12 @@ function makeRuntime() {
 
 afterEach(() => {
   resetIvyRuntimeDependencies();
-  delete window.__ivyVueBridge;
   document.body.innerHTML = '';
   vi.useRealTimers();
 });
 
 describe('ivyRuntime compatibility behavior', () => {
-  it('routes toast notifications through the Vue bridge when available', () => {
-    const runtime = makeRuntime();
-    window.__ivyVueBridge = {
-      showToast: vi.fn(() => 7),
-    };
-
-    const result = runtime._showToast('Connection lost', 'error', { persistent: true });
-
-    expect(result).toBe(7);
-    expect(window.__ivyVueBridge.showToast).toHaveBeenCalledWith('Connection lost', 'error', { persistent: true });
-    expect(document.querySelector('.ivy-toast')).toBeNull();
-  });
-
-  it('keeps a direct DOM toast fallback for non-Vue compatibility harnesses', () => {
+  it('shows a direct DOM toast notification', () => {
     const runtime = makeRuntime();
 
     runtime._showToast('Connection lost', 'error', { persistent: true, className: 'custom-toast' });

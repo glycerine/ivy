@@ -1,10 +1,4 @@
 import { expect, test } from '@playwright/test';
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const webuiDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const componentDir = path.join(webuiDir, 'frontend', 'src', 'components');
 
 async function openIvy(page) {
   const consoleErrors = [];
@@ -90,30 +84,6 @@ test('page loads', async ({ page }) => {
   await expect(page.locator('#arg-panel')).toBeVisible();
   await expect(page.locator('#concept-panel')).toBeVisible();
   expect(consoleErrors).toEqual([]);
-});
-
-test('Vue components do not reach directly for window.ivyApp', async () => {
-  async function walk(dir) {
-    const out = [];
-    for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        out.push(...await walk(full));
-      } else if (entry.isFile() && entry.name.endsWith('.vue')) {
-        out.push(full);
-      }
-    }
-    return out;
-  }
-
-  const offenders = [];
-  for (const file of await walk(componentDir)) {
-    const text = await fs.readFile(file, 'utf8');
-    if (/\b(?:window|globalThis\.window)\.ivyApp\b/.test(text)) {
-      offenders.push(path.relative(webuiDir, file));
-    }
-  }
-  expect(offenders).toEqual([]);
 });
 
 test('title contains Ivy', async ({ page }) => {
@@ -505,7 +475,7 @@ test('sheet graph instances are owned independently when switching tabs', async 
   expect(result.secondLabels).toEqual(['second']);
 });
 
-test('event trace sheets render through the Vue bridge', async ({ page }) => {
+test('event trace sheets render through the controller', async ({ page }) => {
   await openIvy(page);
 
   await page.evaluate(() => {
@@ -526,7 +496,7 @@ test('event trace sheets render through the Vue bridge', async ({ page }) => {
   await expect(page.locator('#events-1 [data-event-address="0/0"]')).toContainText('child(a)');
 
   await page.locator('#events-1 .event-pattern-list').selectOption('root(a)');
-  const selectedPattern = await page.evaluate(() => window.__ivyVueBridge.getSelectedEventPattern('events-1'));
+  const selectedPattern = await page.evaluate(() => window.__ivyDiagnostics.runtime().selectedEventPattern('events-1'));
   expect(selectedPattern).toBe('root(a)');
 });
 
@@ -745,11 +715,11 @@ test('right-click context menu path does not crash', async ({ page }) => {
   expect(await page.evaluate(() => window.__ivyInitError || '')).toBe('');
 });
 
-test('Vue context menu stays inside the viewport', async ({ page }) => {
+test('controller context menu stays inside the viewport', async ({ page }) => {
   await openIvy(page);
 
   await page.evaluate(() => {
-    window.__ivyVueBridge.showContextMenu(window.innerWidth - 4, window.innerHeight - 4, [
+    window.__ivyDiagnostics.runtime().controls.showContextMenu(window.innerWidth - 4, window.innerHeight - 4, [
       { name: 'Near edge action', id: 'near-edge-action', callback: () => {} },
     ]);
   });
@@ -843,7 +813,7 @@ test('concept graph right-click menu path does not crash', async ({ page }) => {
   expect(await page.evaluate(() => window.__ivyInitError || '')).toBe('');
 });
 
-test('Vue diagnostics bridge is loaded', async ({ page }) => {
+test('diagnostics bridge is loaded', async ({ page }) => {
   await openIvy(page);
 
   const globals = await page.evaluate(() => ({
@@ -858,7 +828,7 @@ test('Vue diagnostics bridge is loaded', async ({ page }) => {
   });
 });
 
-test('Vue bundle owns the Ivy runtime script path', async ({ page }) => {
+test('Vite bundle owns the Ivy runtime script path', async ({ page }) => {
   await openIvy(page);
 
   const legacyScripts = await page.evaluate(() => {

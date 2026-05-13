@@ -1,18 +1,7 @@
 export function populateConstraintFacts(app, conceptData, {
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
   doc = globalThis.document,
 } = {}) {
   const facts = conceptData && Array.isArray(conceptData.facts) ? conceptData.facts : [];
-  if (bridge && typeof bridge.updateConstraintFacts === 'function') {
-    bridge.updateConstraintFacts(facts, async (index, selected) => {
-      await app.api.executeAction('set_fact_selection', {
-        index,
-        selected,
-      });
-    });
-    return;
-  }
-
   const info = doc && doc.getElementById('info-content');
   if (!info) return;
   info.innerHTML = '';

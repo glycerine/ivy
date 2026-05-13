@@ -31,22 +31,14 @@ export function recentFileItems(sessions, truncatePath) {
 }
 
 export function populateRecentFiles(app, persist, {
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
   doc = globalThis.document,
 } = {}) {
-  const vueRecentFiles = bridge && typeof bridge.updateRecentFiles === 'function';
-  const container = vueRecentFiles ? null : doc && doc.getElementById('file-recent-list');
-  if (!vueRecentFiles && !container) return;
-  if (!vueRecentFiles) {
-    container.innerHTML = '';
-  }
+  const container = doc && doc.getElementById('file-recent-list');
+  if (!container) return;
+  container.innerHTML = '';
 
   const sessions = persist.listSessions();
   if (sessions.length === 0) {
-    if (vueRecentFiles) {
-      bridge.updateRecentFiles([], null);
-      return;
-    }
     const empty = doc.createElement('a');
     empty.href = '#';
     empty.textContent = '(no recent files)';
@@ -57,21 +49,19 @@ export function populateRecentFiles(app, persist, {
   }
 
   const items = recentFileItems(sessions, persist.truncatePath);
-  if (vueRecentFiles) {
-    bridge.updateRecentFiles(items.map(({ id, label, title }) => ({ id, label, title })), (id) => {
-      app.loadRecentSession(id);
-    });
-    return;
-  }
-
   for (const item of items) {
     const link = doc.createElement('a');
     link.href = '#';
     link.textContent = item.label;
+    link.setAttribute('data-session-id', item.id);
     if (item.title) link.title = item.title;
     link.addEventListener('click', function (event) {
       event.preventDefault();
-      app.flashAndClose(this, () => app.loadRecentSession(item.id));
+      if (typeof app.flashAndClose === 'function') {
+        app.flashAndClose(this, () => app.loadRecentSession(item.id));
+      } else {
+        app.loadRecentSession(item.id);
+      }
     });
     container.appendChild(link);
   }

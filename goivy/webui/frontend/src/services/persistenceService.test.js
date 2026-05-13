@@ -4,7 +4,6 @@ import { createIvyPersist } from './persistenceService.js';
 afterEach(() => {
   localStorage.clear();
   window.history.replaceState(null, '', '/');
-  delete window.__ivyVueBridge;
 });
 
 function makeApp(overrides = {}) {
@@ -30,11 +29,8 @@ function makeApp(overrides = {}) {
 }
 
 describe('persistenceService', () => {
-  it('saves and lists sessions through the Vue-bundled IvyPersist shim', () => {
-    document.body.innerHTML = '<table><tbody id="state-checkbox-body"><tr><td><input type="checkbox" name="link" value="all_to_all" checked></td></tr></tbody></table>';
-    window.__ivyVueBridge = {
-      getMode: vi.fn(() => 'bounded'),
-    };
+  it('saves and lists sessions from controller-owned DOM state', () => {
+    document.body.innerHTML = '<select id="mode-select"><option value="bounded" selected>bounded</option></select><table><tbody id="state-checkbox-body"><tr><td><input type="checkbox" name="link" value="all_to_all" checked></td></tr></tbody></table>';
     const persist = createIvyPersist(window);
 
     persist.save(makeApp());
@@ -91,21 +87,17 @@ describe('persistenceService', () => {
     ]);
   });
 
-  it('routes restored mode and loaded file into the bridge while relation toggles use DOM', () => {
-    document.body.innerHTML = '<table><tbody id="state-checkbox-body"><tr><td><input type="checkbox" name="link" value="edge_unknown"></td></tr></tbody></table>';
-    window.__ivyVueBridge = {
-      setMode: vi.fn(),
-      setLoadedFile: vi.fn(),
-    };
+  it('restores mode, loaded file, and relation toggles into DOM state', () => {
+    document.body.innerHTML = '<select id="mode-select"><option value="pdr">pdr</option></select><span id="loaded-file"></span><table><tbody id="state-checkbox-body"><tr><td><input type="checkbox" name="link" value="edge_unknown"></td></tr></tbody></table>';
     const persist = createIvyPersist(window);
 
     persist._setMode('pdr');
     persist._setToggles({ 'link|edge_unknown': true });
     persist.setFileName('client.ivy', '/tmp/client.ivy');
 
-    expect(window.__ivyVueBridge.setMode).toHaveBeenCalledWith('pdr');
+    expect(document.getElementById('mode-select').value).toBe('pdr');
     expect(document.querySelector('input[name="link"][value="edge_unknown"]').checked).toBe(true);
-    expect(window.__ivyVueBridge.setLoadedFile).toHaveBeenCalledWith('client.ivy', '/tmp/client.ivy');
+    expect(document.getElementById('loaded-file').textContent).toBe('/tmp/client.ivy');
   });
 
   it('keeps URL session and path truncation behavior compatible with the old runtime', () => {

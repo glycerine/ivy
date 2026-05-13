@@ -26,20 +26,12 @@ export function refreshGraphsAndEditorLayout(app) {
   app._refreshEditorLayout();
 }
 
-export function refreshLayoutAfterVuePatch(app, {
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
+export function refreshLayoutAfterPatch(app, {
   win = globalThis.window,
 } = {}) {
   const refresh = () => {
     app._refreshGraphsAndEditorLayout();
   };
-  if (bridge && typeof bridge.afterLayoutSettled === 'function') {
-    bridge.afterLayoutSettled(() => {
-      refresh();
-      win.setTimeout(refresh, 60);
-    });
-    return;
-  }
   if (win && typeof win.requestAnimationFrame === 'function') {
     win.requestAnimationFrame(() => {
       win.requestAnimationFrame(refresh);

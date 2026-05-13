@@ -11,7 +11,7 @@ afterEach(() => {
 });
 
 describe('appServices', () => {
-  it('starts the current runtime after Vue has produced its DOM', async () => {
+  it('starts the current runtime once the static DOM shell is ready', async () => {
     const runtimeApp = { _refreshGraphsAndEditorLayout: vi.fn() };
     const startRuntime = vi.fn(() => runtimeApp);
     const stopRuntime = vi.fn();
@@ -32,7 +32,7 @@ describe('appServices', () => {
     expect(stopRuntime).toHaveBeenCalledWith(runtimeApp);
   });
 
-  it('provides an installable singleton for the Vue shell', () => {
+  it('provides an installable singleton for the app shell', () => {
     const services = createAppServices({ startRuntime: () => undefined, registerCommands: null });
 
     expect(installAppServices(services)).toBe(services);

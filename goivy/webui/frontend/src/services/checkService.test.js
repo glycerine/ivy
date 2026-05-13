@@ -38,20 +38,18 @@ describe('checkService', () => {
     expect(app.argGraph.update).toHaveBeenCalledWith([1], {});
   });
 
-  it('wires the view-trace action through Vue when available', () => {
+  it('adds a direct DOM view-trace action', () => {
+    document.body.innerHTML = '<div id="info-content"></div>';
     const app = {
       openARGSheet: vi.fn(),
-    };
-    const bridge = {
-      setCheckTraceAction: vi.fn(),
     };
     const result = {
       trace_arg: { elements: [] },
       trace_sheet_id: 'trace-1',
     };
 
-    addCheckResultViewActions(app, result, { bridge });
-    bridge.setCheckTraceAction.mock.calls[0][0]();
+    addCheckResultViewActions(app, result, { doc: document });
+    document.querySelector('[data-check-view-trace]').click();
 
     expect(app.openARGSheet).toHaveBeenCalledWith('Error trace', result.trace_arg, 'trace-1');
   });

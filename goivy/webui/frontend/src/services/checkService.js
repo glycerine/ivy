@@ -92,7 +92,6 @@ export function showCheckResult(app, result) {
 }
 
 export function addCheckResultViewActions(app, result, {
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
   doc = globalThis.document,
 } = {}) {
   if (!result || !result.trace_arg) return;
@@ -100,10 +99,6 @@ export function addCheckResultViewActions(app, result, {
     app.openARGSheet('Error trace', result.trace_arg, result.trace_sheet_id);
   };
 
-  if (bridge && typeof bridge.setCheckTraceAction === 'function') {
-    bridge.setCheckTraceAction(openTrace);
-    return;
-  }
   if (doc.querySelector('[data-check-view-trace]')) return;
   const info = doc.getElementById('info-content');
   if (!info) return;

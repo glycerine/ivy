@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   currentSheet,
   graphElementsSnapshot,
-  refreshLayoutAfterVuePatch,
+  refreshLayoutAfterPatch,
   refreshGraphsAndEditorLayout,
   registerSheet,
 } from './graphService.js';
@@ -46,28 +46,17 @@ describe('graphService', () => {
     expect(app._refreshEditorLayout).toHaveBeenCalled();
   });
 
-  it('defers graph/editor layout refreshes until the Vue bridge reports settled layout', () => {
-    let settledCallback;
-    const bridge = {
-      afterLayoutSettled: vi.fn((callback) => {
-        settledCallback = callback;
-      }),
-    };
+  it('defers graph/editor layout refreshes until animation frames settle', () => {
     const win = {
-      setTimeout: vi.fn((callback) => callback()),
+      requestAnimationFrame: vi.fn((callback) => callback()),
     };
     const app = {
       _refreshGraphsAndEditorLayout: vi.fn(),
     };
 
-    refreshLayoutAfterVuePatch(app, { bridge, win });
+    refreshLayoutAfterPatch(app, { win });
 
-    expect(bridge.afterLayoutSettled).toHaveBeenCalled();
-    expect(app._refreshGraphsAndEditorLayout).not.toHaveBeenCalled();
-
-    settledCallback();
-
-    expect(app._refreshGraphsAndEditorLayout).toHaveBeenCalledTimes(2);
-    expect(win.setTimeout).toHaveBeenCalledWith(expect.any(Function), 60);
+    expect(win.requestAnimationFrame).toHaveBeenCalledTimes(2);
+    expect(app._refreshGraphsAndEditorLayout).toHaveBeenCalledTimes(1);
   });
 });

@@ -16,9 +16,8 @@ function publicRuntimeMethods() {
 
 describe('ivyRuntime public surface', () => {
   // This is a runtime debt inventory, not the desired command surface.
-  // As service/store/component tests replace runtime-oriented coverage, this
-  // list should shrink. Production Vue components should use services or the
-  // command registry instead of instantiating IvyRuntime.
+  // As service and command tests replace runtime-oriented coverage, this
+  // list should shrink.
   it('inventories the public methods still exposed by the runtime coordinator', () => {
     expect(publicRuntimeMethods()).toEqual([
       'activeEventSheet',

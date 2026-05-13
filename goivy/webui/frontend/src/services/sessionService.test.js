@@ -8,29 +8,22 @@ import {
 
 afterEach(() => {
   vi.restoreAllMocks();
+  delete window.__IVY_ENGINE__;
 });
 
 describe('sessionService', () => {
-  it('creates the Ivy API through the Vue bridge when available', () => {
+  it('uses the injected browser engine when available', () => {
     const api = { sessionId: 's1' };
-    const bridge = {
-      createIvyApi: vi.fn(() => api),
-    };
+    window.__IVY_ENGINE__ = api;
 
-    expect(createIvyApi({ bridge })).toBe(api);
-    expect(bridge.createIvyApi).toHaveBeenCalledTimes(1);
+    expect(createIvyApi()).toBe(api);
+    delete window.__IVY_ENGINE__;
   });
 
   it('falls back to the provided Ivy API factory', () => {
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
     const api = { sessionId: 'fallback' };
-    const bridge = {
-      createIvyApi: vi.fn(() => {
-        throw new Error('offline');
-      }),
-    };
 
-    expect(createIvyApi({ bridge, fallbackApiFactory: () => api })).toBe(api);
+    expect(createIvyApi({ fallbackApiFactory: () => api })).toBe(api);
   });
 
   it('creates sessions and reports failures through controls', async () => {
@@ -52,17 +45,11 @@ describe('sessionService', () => {
     expect(controls.setStatus).toHaveBeenCalledWith('Failed to create session: boom', 'error');
   });
 
-  it('updates the session display through the bridge or DOM fallback', () => {
-    const bridge = {
-      setSessionId: vi.fn(),
-    };
-    expect(updateSessionDisplay('abc', { bridge })).toBe(true);
-    expect(bridge.setSessionId).toHaveBeenCalledWith('abc');
-
+  it('updates the session display in the DOM', () => {
     const el = document.createElement('div');
     el.id = 'session-id';
     document.body.appendChild(el);
-    expect(updateSessionDisplay('xyz', { bridge: null, doc: document })).toBe(true);
+    expect(updateSessionDisplay('xyz', { doc: document })).toBe(true);
     expect(el.textContent).toBe('Session: xyz');
     el.remove();
   });

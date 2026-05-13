@@ -6,10 +6,6 @@ function getWindow(win) {
   return win || globalThis.window;
 }
 
-function getBridge(win) {
-  return win && win.__ivyVueBridge;
-}
-
 function getLocalStorage(win) {
   return win && win.localStorage;
 }
@@ -348,20 +344,11 @@ export function createIvyPersist(winArg = globalThis.window) {
     },
 
     _getMode() {
-      const bridge = getBridge(win);
-      if (bridge && typeof bridge.getMode === 'function') {
-        return bridge.getMode() || 'pdr';
-      }
       const select = doc && doc.getElementById('mode-select');
       return select ? select.value : 'pdr';
     },
 
     _setMode(mode) {
-      const bridge = getBridge(win);
-      if (bridge && typeof bridge.setMode === 'function') {
-        bridge.setMode(mode);
-        return;
-      }
       const select = doc && doc.getElementById('mode-select');
       if (select && mode) select.value = mode;
     },
@@ -442,11 +429,6 @@ export function createIvyPersist(winArg = globalThis.window) {
     },
 
     setFileName(fileName, filePath) {
-      const bridge = getBridge(win);
-      if (bridge && typeof bridge.setLoadedFile === 'function') {
-        bridge.setLoadedFile(fileName || '', filePath || '');
-        return;
-      }
       const el = doc && doc.getElementById('loaded-file');
       if (el) {
         const display = filePath || fileName || '';

@@ -1,4 +1,3 @@
-import { nextTick } from 'vue';
 import { startIvyRuntime, stopIvyRuntime } from './ivyRuntime.js';
 import { registerAppCommands } from './appCommands.js';
 
@@ -15,7 +14,6 @@ export function createAppServices({
 
   return {
     async start() {
-      await nextTick();
       if (started) return runtimeApp;
       started = true;
       if (typeof startRuntime === 'function') {

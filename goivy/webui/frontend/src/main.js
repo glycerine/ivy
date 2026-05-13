@@ -1,23 +1,21 @@
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
-import App from './App.vue';
-import { installIvyVueBridge } from './ivyVueBridge.js';
 import { createAppServices, installAppServices } from './services/appServices.js';
 import { installIvyDiagnostics } from './services/diagnosticsService.js';
 
 async function bootstrap() {
-  const app = createApp(App);
-  const pinia = createPinia();
-  app.use(pinia);
-
-  installIvyVueBridge({ app, pinia });
   const services = installAppServices(createAppServices());
   installIvyDiagnostics({ services });
-
-  app.mount('#ivy-vue-root');
+  await services.start();
 }
 
-bootstrap().catch((err) => {
-  window.__ivyInitError = err && err.message ? err.message : String(err);
-  console.error('Failed to boot Ivy Vue app:', err);
-});
+function bootWhenReady() {
+  bootstrap().catch((err) => {
+    window.__ivyInitError = err && err.message ? err.message : String(err);
+    console.error('Failed to boot Ivy app:', err);
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootWhenReady, { once: true });
+} else {
+  bootWhenReady();
+}
