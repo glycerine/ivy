@@ -50,7 +50,7 @@ func TestARGPayloadStructure(t *testing.T) {
 	data := mustCanonicalJSON(t, payload)
 	keys := unmarshalKeys(t, data)
 
-	required := []string{"analysis_graph_state", "elements", "positions"}
+	required := []string{"analysis_graph_state", "elements"}
 	for _, k := range required {
 		if _, ok := keys[k]; !ok {
 			t.Errorf("ARG payload missing key %q", k)

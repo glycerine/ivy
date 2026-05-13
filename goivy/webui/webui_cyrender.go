@@ -74,11 +74,15 @@ func WebUIARGPayload(state *WebUIAnalysisGraphState, cy *WebUICyElements) map[st
 	if cy.Elements == nil {
 		cy.Elements = []WebUICyElement{}
 	}
-	return map[string]interface{}{
-		"analysis_graph_state": state,
-		"elements":             cy.Elements,
-		"positions":            nil,
+	payload := map[string]interface{}{
+		"elements": cy.Elements,
 	}
+	// Only include analysis_graph_state when the ARG has content, so that the
+	// Go response matches Python's minimal {"elements":[]} for an empty graph.
+	if len(state.States) > 0 || len(state.Transitions) > 0 || len(state.Covering) > 0 {
+		payload["analysis_graph_state"] = state
+	}
+	return payload
 }
 
 func AnalysisUIARGPayload(ui *AnalysisGraphUI) map[string]interface{} {
