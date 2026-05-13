@@ -67,6 +67,7 @@
             <span id="loaded-file" class="loaded-file"></span>
         </div>
         <div class="menu-group menu-right">
+            <button id="btn-toggle-job-control" class="menu-btn icon-menu-btn" title="Settings" aria-label="Settings">&#9881;</button>
             <button id="btn-toggle-tutorial" class="menu-btn">Hide Tutorial</button>
         </div>
     </div>
@@ -211,6 +212,25 @@
             <iframe id="tutorial-iframe" class="tutorial-iframe" src="/static/tutorial/kenmcmil.github.io/ivy/language.html"></iframe>
         </div>
     </div>
+
+    <section id="job-control-page" class="job-control-page" aria-hidden="true">
+        <div class="job-control-shell">
+            <div class="job-control-header">
+                <strong>Job Control</strong>
+                <button id="job-control-close" class="job-control-close" title="Close job control">x</button>
+            </div>
+            <div class="job-control-body">
+                <div class="job-control-row">
+                    <span class="job-control-label">Submission</span>
+                    <button id="job-submission-toggle" class="job-mode-toggle is-browser" type="button" aria-pressed="false" data-mode="browser">
+                        <span class="job-mode-option job-mode-browser">browser</span>
+                        <span class="job-mode-option job-mode-remote">remote</span>
+                        <span class="job-mode-knob" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <div id="context-menu" class="context-menu" style="display: none;"></div>
     <div id="save-as-explain-notice" class="save-as-explain-notice" style="display: none;">

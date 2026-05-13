@@ -856,6 +856,8 @@ class IvyRuntime {
                 self.toggleTutorial();
             });
 
+            this._setupJobControlHandlers();
+
             // --- Dropdown Menus (panel header) ---
             this.setupDropdownMenus();
 
@@ -901,6 +903,7 @@ class IvyRuntime {
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 self.closeAllDropdowns();
+                self._setJobControlOpen(false);
             }
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                 e.preventDefault();
@@ -909,6 +912,63 @@ class IvyRuntime {
         });
 
         this.attachGraphEventHandlers(this.argGraph, this.conceptGraph, 'sheet-1');
+    }
+
+    _setupJobControlHandlers() {
+        var self = this;
+        var toggleButton = document.getElementById('btn-toggle-job-control');
+        var closeButton = document.getElementById('job-control-close');
+        var modeToggle = document.getElementById('job-submission-toggle');
+        if (toggleButton && !toggleButton._ivyJobControlBound) {
+            toggleButton.addEventListener('click', function () {
+                self._toggleJobControlPage();
+            });
+            toggleButton._ivyJobControlBound = true;
+        }
+        if (closeButton && !closeButton._ivyJobControlBound) {
+            closeButton.addEventListener('click', function () {
+                self._setJobControlOpen(false);
+            });
+            closeButton._ivyJobControlBound = true;
+        }
+        if (modeToggle && !modeToggle._ivyJobControlBound) {
+            modeToggle.addEventListener('click', function () {
+                var nextMode = modeToggle.getAttribute('data-mode') === 'remote' ? 'browser' : 'remote';
+                self._setJobSubmissionMode(nextMode);
+            });
+            modeToggle._ivyJobControlBound = true;
+        }
+        this._setJobSubmissionMode(this.jobSubmissionMode || 'browser');
+    }
+
+    _toggleJobControlPage() {
+        var page = document.getElementById('job-control-page');
+        this._setJobControlOpen(!(page && page.classList.contains('open')));
+    }
+
+    _setJobControlOpen(open) {
+        var page = document.getElementById('job-control-page');
+        var button = document.getElementById('btn-toggle-job-control');
+        if (!page) return;
+        page.classList.toggle('open', !!open);
+        page.setAttribute('aria-hidden', open ? 'false' : 'true');
+        if (button) {
+            button.classList.toggle('active', !!open);
+            button.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+    }
+
+    _setJobSubmissionMode(mode) {
+        var normalized = mode === 'remote' ? 'remote' : 'browser';
+        this.jobSubmissionMode = normalized;
+        var toggle = document.getElementById('job-submission-toggle');
+        if (!toggle) return normalized;
+        toggle.setAttribute('data-mode', normalized);
+        toggle.setAttribute('aria-pressed', normalized === 'remote' ? 'true' : 'false');
+        toggle.classList.toggle('is-browser', normalized === 'browser');
+        toggle.classList.toggle('is-remote', normalized === 'remote');
+        toggle.title = 'Job submission: ' + normalized;
+        return normalized;
     }
 
     /**
