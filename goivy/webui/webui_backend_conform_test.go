@@ -305,8 +305,8 @@ func TestConformARG(t *testing.T) {
 	goBE.Load(goSID, "test.ivy", []byte(ivySample))
 	pyBE.Load(pySID, "test.ivy", []byte(ivySample))
 
-	goARG, goErr := goBE.GetARG(goSID)
-	pyARG, pyErr := pyBE.GetARG(pySID)
+	goARG, goErr := goBE.GetARG(goSID, false)
+	pyARG, pyErr := pyBE.GetARG(pySID, false)
 
 	if goErr != nil {
 		t.Fatalf("Go ARG error: %v", goErr)
