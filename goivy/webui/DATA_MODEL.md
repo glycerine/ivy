@@ -256,8 +256,6 @@ dispatch to them and store the result per-sheet.
    (empty but non-nil) before the `SimpleSess` guard, eliminating the `nil` JSON value.
    Locked by `TestConceptDomainNeverNull`.
 
-**Accepted as by-design** (no code change needed):
-
 3. **Full CTI graph is now on the wire via two new endpoints** — **Implemented.**
    `GET /api/session/{id}/arg?full=true` returns `FullARGNode` entries with `clauses`,
    `action_name`, and `universe` per state.
@@ -272,6 +270,8 @@ dispatch to them and store the result per-sheet.
    Locked by `TestFullARGPayloadStructure`, `TestCTIARGPayloadShape`, `TestFullARGNodeUniverse*`
    (Go) and 7 new TypeScript tests in `uiDataModel.test.ts`.
    `UIDataModel.acceptCtiSnapshot()` stores the result in `SheetModel.cti`.
+
+**Accepted as by-design** (no code change needed):
 
 4. **`abstract_value` at top level is node-label keys only.**  This is by design: the
    top-level `abstract_value` feeds the node-label checkbox panel (node_label| keys);
