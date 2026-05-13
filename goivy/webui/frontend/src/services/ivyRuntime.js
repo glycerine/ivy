@@ -390,9 +390,6 @@ class IvyRuntime {
     }
 
     _showSaveEditorSheen() {
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.editorSaveSheenHandled === 'function' && window.__ivyVueBridge.editorSaveSheenHandled()) {
-            return { vueHandled: true };
-        }
         var target = this._editorTextElement();
         if (!target || typeof target.getBoundingClientRect !== 'function') return null;
         var rect = target.getBoundingClientRect();
@@ -1207,37 +1204,6 @@ class IvyRuntime {
      */
     switchSheet(sheetId) {
         return switchSheetViaService(this, sheetId);
-        var bridge = window.__ivyVueBridge;
-        var vueTabs = bridge && typeof bridge.activateSheetTab === 'function';
-        if (vueTabs) {
-            bridge.activateSheetTab(sheetId);
-        }
-
-        // Deactivate all tabs and sheets
-        var tabs = vueTabs ? [] : document.querySelectorAll('.sheet-tab');
-        var sheets = document.querySelectorAll('.sheet-content');
-        for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
-        for (var i = 0; i < sheets.length; i++) {
-            if (!vueTabs || sheets[i].__ivyVueRenderedSheet) {
-                sheets[i].classList.remove('active');
-            }
-        }
-        // Activate the target
-        var tab = this.sheetTab(sheetId);
-        var sheet = document.getElementById(sheetId);
-        if (tab && !vueTabs) tab.classList.add('active');
-        if (sheet && (!vueTabs || sheet.__ivyVueRenderedSheet)) sheet.classList.add('active');
-        if (this.sheets && this.sheets[sheetId]) {
-            this.activeSheetId = sheetId;
-            if (this.sheets[sheetId].type !== 'events') {
-                this.argGraph = this.sheets[sheetId].argGraph;
-                this.conceptGraph = this.sheets[sheetId].conceptGraph;
-                this.selectedArgNode = this.sheets[sheetId].selectedArgNode;
-            }
-        }
-        // Resize graphs in the newly visible sheet
-        if (this.argGraph) this.argGraph.resize();
-        if (this.conceptGraph) this.conceptGraph.resize();
     }
 
     /**
@@ -1263,24 +1229,19 @@ class IvyRuntime {
         }
         label = label || ('Sheet ' + this._sheetCounter);
 
-        // Create tab button with close X (Sheet 1 never has X)
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.upsertSheetTab === 'function') {
-            window.__ivyVueBridge.upsertSheetTab({ id: sheetId, label: label, closable: true, type: 'analysis' });
-        } else {
-            var tabBar = document.getElementById('tab-bar');
-            var tabBtn = document.createElement('button');
-            tabBtn.className = 'sheet-tab';
-            tabBtn.setAttribute('data-sheet', sheetId);
-            var labelSpan = document.createElement('span');
-            labelSpan.textContent = label;
-            tabBtn.appendChild(labelSpan);
-            var closeBtn = document.createElement('span');
-            closeBtn.className = 'tab-close';
-            closeBtn.textContent = '\u00D7'; // ×
-            closeBtn.title = 'Close tab';
-            tabBtn.appendChild(closeBtn);
-            tabBar.appendChild(tabBtn);
-        }
+        var tabBar = document.getElementById('tab-bar');
+        var tabBtn = document.createElement('button');
+        tabBtn.className = 'sheet-tab';
+        tabBtn.setAttribute('data-sheet', sheetId);
+        var labelSpan = document.createElement('span');
+        labelSpan.textContent = label;
+        tabBtn.appendChild(labelSpan);
+        var closeBtn = document.createElement('span');
+        closeBtn.className = 'tab-close';
+        closeBtn.textContent = '\u00D7'; // ×
+        closeBtn.title = 'Close tab';
+        tabBtn.appendChild(closeBtn);
+        tabBar.appendChild(tabBtn);
 
         // Create sheet content (clone structure from sheet-1)
         var newSheet = null;
@@ -1354,35 +1315,30 @@ class IvyRuntime {
         var existingTab = this.sheetTab(sheetId);
         var existingSheet = document.getElementById(sheetId);
         var tabLabel = label || data.label || 'Events';
-        var vueEventSheets = window.__ivyVueBridge && typeof window.__ivyVueBridge.upsertEventTraceSheet === 'function';
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.upsertSheetTab === 'function') {
-            window.__ivyVueBridge.upsertSheetTab({ id: sheetId, label: tabLabel, closable: true, type: 'events' });
+        var tabBar = document.getElementById('tab-bar');
+        if (!tabBar) return '';
+        if (!existingTab) {
+            var tabBtn = document.createElement('button');
+            tabBtn.className = 'sheet-tab';
+            tabBtn.setAttribute('data-sheet', sheetId);
+            var labelSpan = document.createElement('span');
+            labelSpan.textContent = tabLabel;
+            tabBtn.appendChild(labelSpan);
+            var closeBtn = document.createElement('span');
+            closeBtn.className = 'tab-close';
+            closeBtn.textContent = '\u00D7';
+            closeBtn.title = 'Close tab';
+            tabBtn.appendChild(closeBtn);
+            tabBar.appendChild(tabBtn);
         } else {
-            var tabBar = document.getElementById('tab-bar');
-            if (!tabBar) return '';
-            if (!existingTab) {
-                var tabBtn = document.createElement('button');
-                tabBtn.className = 'sheet-tab';
-                tabBtn.setAttribute('data-sheet', sheetId);
-                var labelSpan = document.createElement('span');
-                labelSpan.textContent = tabLabel;
-                tabBtn.appendChild(labelSpan);
-                var closeBtn = document.createElement('span');
-                closeBtn.className = 'tab-close';
-                closeBtn.textContent = '\u00D7';
-                closeBtn.title = 'Close tab';
-                tabBtn.appendChild(closeBtn);
-                tabBar.appendChild(tabBtn);
-            } else {
-                var existingLabel = existingTab.querySelector('span');
-                if (existingLabel) {
-                    existingLabel.textContent = tabLabel;
-                }
+            var existingLabel = existingTab.querySelector('span');
+            if (existingLabel) {
+                existingLabel.textContent = tabLabel;
             }
         }
 
         var sheet = existingSheet;
-        if (!sheet && !vueEventSheets) {
+        if (!sheet) {
             sheet = document.createElement('div');
             sheet.id = sheetId;
             sheet.className = 'sheet-content event-sheet';
@@ -1396,17 +1352,7 @@ class IvyRuntime {
             patterns: patterns.slice(),
             selectedEventAddress: data.selected_address || null,
         };
-        if (vueEventSheets) {
-            window.__ivyVueBridge.upsertEventTraceSheet({
-                id: sheetId,
-                label: tabLabel,
-                events: events,
-                patterns: patterns,
-                selectedEventAddress: data.selected_address || null,
-            });
-        } else {
-            this.renderEventTraceSheet(sheetId);
-        }
+        this.renderEventTraceSheet(sheetId);
         this.switchSheet(sheetId);
         this.controls.setStatus('Opened: ' + (label || data.label || 'Events'));
         return sheetId;
@@ -1587,34 +1533,6 @@ class IvyRuntime {
 
     toggleEventTraceNode(sheetId, address) {
         return toggleEventTraceNodeViaService(this, sheetId, address);
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.setEventTraceExpanded === 'function') {
-            var expanded = false;
-            if (typeof window.__ivyVueBridge.isEventTraceExpanded === 'function') {
-                expanded = !!window.__ivyVueBridge.isEventTraceExpanded(sheetId, address);
-            }
-            window.__ivyVueBridge.setEventTraceExpanded(sheetId, address, !expanded);
-            return;
-        }
-        var row = this.eventTraceRow(sheetId, address);
-        var li = row ? row.closest('.event-tree-node') : null;
-        var sheetState = this.sheets && this.sheets[sheetId];
-        if (!li || !sheetState) return;
-        var existing = li.querySelector(':scope > ul.event-tree-list');
-        var toggle = row.querySelector('.event-toggle');
-        if (existing) {
-            existing.remove();
-            if (toggle) toggle.textContent = '+';
-            return;
-        }
-        var ev = this.lookupEventTrace(sheetState.events, address);
-        if (!ev || !ev.subs || ev.subs.length === 0) return;
-        var list = document.createElement('ul');
-        list.className = 'event-tree-list';
-        for (var i = 0; i < ev.subs.length; i++) {
-            list.appendChild(this.renderEventTreeNode(ev.subs[i], sheetId, address + '/' + i));
-        }
-        li.appendChild(list);
-        if (toggle) toggle.textContent = '-';
     }
 
     lookupEventTrace(events, address) {
@@ -1647,25 +1565,6 @@ class IvyRuntime {
 
     selectEventTraceRow(sheetId, address) {
         return selectEventTraceRowViaService(this, sheetId, address);
-        var sheetState = this.sheets && this.sheets[sheetId];
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.selectEventTraceRow === 'function') {
-            if (sheetState) sheetState.selectedEventAddress = address;
-            window.__ivyVueBridge.selectEventTraceRow(sheetId, address);
-            return;
-        }
-        this.uncoverEventTraceAddress(sheetId, address);
-        var sheet = document.getElementById(sheetId);
-        if (!sheetState || !sheet) return;
-        var rows = sheet.querySelectorAll('.event-row.selected');
-        for (var i = 0; i < rows.length; i++) rows[i].classList.remove('selected');
-        var row = this.eventTraceRow(sheetId, address);
-        if (row) {
-            row.classList.add('selected');
-            if (typeof row.scrollIntoView === 'function') {
-                row.scrollIntoView({ block: 'nearest' });
-            }
-        }
-        sheetState.selectedEventAddress = address;
     }
 
     activeEventSheet() {
@@ -1733,39 +1632,10 @@ class IvyRuntime {
 
     applyEventPatternResult(sheetId, result, fallbackPatterns) {
         return applyEventPatternResultViaService(this, sheetId, result, fallbackPatterns);
-        var sheet = this.sheets && this.sheets[sheetId];
-        if (!sheet) return;
-        if (result && Array.isArray(result.patterns)) {
-            sheet.patterns = result.patterns.slice();
-        } else if (fallbackPatterns) {
-            sheet.patterns = fallbackPatterns.slice();
-        }
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateEventPatterns === 'function') {
-            window.__ivyVueBridge.updateEventPatterns(sheetId, sheet.patterns || []);
-            return;
-        }
-        this.renderEventPatternList(sheetId);
     }
 
     renderEventPatternList(sheetId) {
         return renderEventPatternListViaService(this, sheetId);
-        var sheet = document.getElementById(sheetId);
-        var sheetState = this.sheets && this.sheets[sheetId];
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.updateEventPatterns === 'function') {
-            if (sheetState) {
-                window.__ivyVueBridge.updateEventPatterns(sheetId, sheetState.patterns || []);
-            }
-            return;
-        }
-        var select = sheet ? sheet.querySelector('.event-pattern-list') : null;
-        if (!select || !sheetState) return;
-        select.innerHTML = '';
-        for (var i = 0; i < (sheetState.patterns || []).length; i++) {
-            var option = document.createElement('option');
-            option.value = sheetState.patterns[i];
-            option.textContent = sheetState.patterns[i];
-            select.appendChild(option);
-        }
     }
 
     selectedEventPattern(sheetId) {
@@ -1793,23 +1663,6 @@ class IvyRuntime {
 
     async removeSelectedEventPattern(sheetId) {
         return removeSelectedEventPatternViaService(this, sheetId);
-        var sheet = this.sheets && this.sheets[sheetId];
-        var sheetEl = document.getElementById(sheetId);
-        var select = sheetEl ? sheetEl.querySelector('.event-pattern-list') : null;
-        var idx = -1;
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getSelectedEventPatternIndex === 'function') {
-            idx = window.__ivyVueBridge.getSelectedEventPatternIndex(sheetId);
-        } else if (select) {
-            idx = select.selectedIndex;
-        }
-        if (!sheet || idx < 0) return;
-        if (this.api && this.api.executeAction && !sheet.visualOnly) {
-            var result = await this.api.executeAction('events_remove_pattern', { sheet_id: sheetId, index: idx });
-            this.applyEventPatternResult(sheetId, result);
-            return;
-        }
-        sheet.patterns.splice(idx, 1);
-        this.renderEventPatternList(sheetId);
     }
 
     async clearEventPatterns(sheetId) {
@@ -1866,21 +1719,15 @@ class IvyRuntime {
         var tab = this.sheetTab(sheetId);
         var sheet = document.getElementById(sheetId);
         var wasActive = this.activeSheetId === sheetId || (tab && tab.classList.contains('active'));
-        var sheetState = this.sheets && this.sheets[sheetId];
         var bridge = window.__ivyVueBridge;
-        var vueTabs = bridge && typeof bridge.removeSheetTab === 'function';
-        var vueOwnsSheetDom = vueTabs && sheetState && sheetState.type === 'events';
 
-        if (tab && !vueTabs) tab.remove();
+        if (tab) tab.remove();
         if (bridge && typeof bridge.removeRenderedSheet === 'function') {
             bridge.removeRenderedSheet(sheetId);
         }
-        if (sheet && !vueOwnsSheetDom) sheet.remove();
+        if (sheet) sheet.remove();
         if (this.sheets) {
             delete this.sheets[sheetId];
-        }
-        if (vueTabs) {
-            bridge.removeSheetTab(sheetId);
         }
 
         // If the closed tab was active, switch to Sheet 1
