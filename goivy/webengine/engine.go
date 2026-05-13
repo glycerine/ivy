@@ -122,7 +122,7 @@ func (e *Engine) ARG(ctx context.Context, sessionID string) (Payload, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
-	return decodePayload(e.backend.GetARG(sessionID))
+	return decodePayload(e.backend.GetARG(sessionID, false))
 }
 
 func (e *Engine) Concept(ctx context.Context, sessionID string, req ConceptRequest) (Payload, error) {

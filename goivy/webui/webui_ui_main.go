@@ -234,6 +234,71 @@ func argNodeInfo(st *goivy.State) string {
 	return fmt.Sprintf("State %d", st.ID)
 }
 
+// ArtToFullGraphState converts an AnalysisGraph to FullAnalysisGraphState,
+// including formula strings and universe data for CTI inspection.
+func ArtToFullGraphState(ag *goivy.AnalysisGraph) *goivy.FullAnalysisGraphState {
+	gs := goivy.NewFullAnalysisGraphState()
+	for _, st := range ag.States {
+		label := st.Label
+		if label == "" {
+			label = fmt.Sprintf("%d", st.ID)
+		}
+		gs.States = append(gs.States, goivy.FullARGNode{
+			ID:         st.ID,
+			Label:      label,
+			IsBottom:   st.IsBottom(),
+			Info:       argNodeInfo(st),
+			Clauses:    argNodeClauses(st),
+			ActionName: st.ActionName,
+			Universe:   argNodeUniverse(st),
+		})
+	}
+	for _, t := range ag.Transitions {
+		gs.Transitions = append(gs.Transitions, goivy.ARGTransition{
+			SourceID: t.Pre.ID,
+			TargetID: t.Post.ID,
+			Label:    t.Label,
+		})
+	}
+	for _, c := range ag.Covering {
+		gs.Covering = append(gs.Covering, goivy.ARGCover{
+			CoveredID:  c.Covered.ID,
+			CoveringID: c.Covering.ID,
+		})
+	}
+	return gs
+}
+
+func argNodeClauses(st *goivy.State) string {
+	if st.Clauses == nil {
+		return ""
+	}
+	if f := st.Clauses.ToOpenFormula(); f != nil {
+		return fmt.Sprint(f)
+	}
+	return st.Clauses.String()
+}
+
+func argNodeUniverse(st *goivy.State) map[string][]string {
+	if st.Universe == nil {
+		return nil
+	}
+	switch u := st.Universe.(type) {
+	case map[string][]goivy.Expr:
+		out := make(map[string][]string, len(u))
+		for sort, exprs := range u {
+			strs := make([]string, len(exprs))
+			for i, e := range exprs {
+				strs[i] = fmt.Sprint(e)
+			}
+			out[sort] = strs
+		}
+		return out
+	default:
+		return nil
+	}
+}
+
 // defEquationLabel extracts a display label from a state equation (ast.Definition).
 // Python: state_equation_label(a) — reads a.args[0] (action name) and a.args[1].rep.
 func defEquationLabel(eq *goivy.Definition) string {

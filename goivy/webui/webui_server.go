@@ -190,6 +190,8 @@ func (s *Server) handleAPI(w http.ResponseWriter, r *http.Request) {
 		s.apiConceptProjection(w, r, sid)
 	case "arg/action":
 		s.apiArgAction(w, r, sid)
+	case "arg/cti":
+		s.apiCTIARG(w, r, sid)
 	case "proof/action":
 		s.apiProofAction(w, r, sid)
 	case "save":

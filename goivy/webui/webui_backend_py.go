@@ -265,8 +265,16 @@ func (b *PyBackend) Action(sessionID, action string, args map[string]interface{}
 	})
 }
 
-func (b *PyBackend) GetARG(sessionID string) ([]byte, error) {
-	return b.get("/session/" + sessionID + "/arg")
+func (b *PyBackend) GetARG(sessionID string, full bool) ([]byte, error) {
+	suffix := "/session/" + sessionID + "/arg"
+	if full {
+		suffix += "?full=true"
+	}
+	return b.get(suffix)
+}
+
+func (b *PyBackend) GetCTIARG(sessionID string) ([]byte, error) {
+	return b.get("/session/" + sessionID + "/arg/cti")
 }
 
 func (b *PyBackend) GetConcept(sessionID, sheetID, nodeID string) ([]byte, error) {

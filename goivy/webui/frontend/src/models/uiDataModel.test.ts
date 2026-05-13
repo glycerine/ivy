@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
   ARGSnapshot,
+  CTISnapshot,
   ConceptInteractiveSession,
   ConceptSession,
   ConceptSnapshot,
   CyElement,
   CyElements,
   FactSelection,
+  FullARGNode,
+  FullAnalysisGraphState,
   GraphStack,
   State,
   UIDataModel,
@@ -416,5 +419,84 @@ describe('UIDataModel — wire format coverage', () => {
   it('ConceptSnapshot.facts is empty array when facts absent', () => {
     const snap = new ConceptSnapshot({});
     expect(snap.facts).toEqual([]);
+  });
+
+  it('FullARGNode: clauses, action_name, universe parsed', () => {
+    const n = new FullARGNode({
+      id: 3,
+      label: '3',
+      is_bottom: false,
+      info: 'some info',
+      clauses: 'pre(x) & inv(y)',
+      action_name: 'send',
+      universe: { node: ['n0', 'n1'], data: ['d0'] },
+    });
+    expect(n.id).toBe(3);
+    expect(n.clauses).toBe('pre(x) & inv(y)');
+    expect(n.actionName).toBe('send');
+    expect(n.universe).toEqual({ node: ['n0', 'n1'], data: ['d0'] });
+  });
+
+  it('FullARGNode: universe is null when absent', () => {
+    const n = new FullARGNode({ id: 0, label: '0', clauses: '', action_name: '' });
+    expect(n.universe).toBeNull();
+  });
+
+  it('FullARGNode: universe Record<string,string[]> when present', () => {
+    const n = new FullARGNode({ universe: { sort: ['a', 'b'] } });
+    expect(n.universe).not.toBeNull();
+    expect(n.universe!['sort']).toEqual(['a', 'b']);
+  });
+
+  it('FullAnalysisGraphState: reuses ARGTransition and ARGCover', () => {
+    const fs = new FullAnalysisGraphState({
+      states: [{ id: 0, label: '0', is_bottom: false, info: '', clauses: '', action_name: '' }],
+      transitions: [{ source_id: 0, target_id: 1, label: 'step', is_join: false }],
+      covering: [{ covered_id: 2, covering_id: 0 }],
+    });
+    expect(fs.states[0]).toBeInstanceOf(FullARGNode);
+    expect(fs.transitions[0].sourceId).toBe(0);
+    expect(fs.covering[0].coveredId).toBe(2);
+  });
+
+  it('ARGSnapshot: fullAnalysisGraphState populated alongside analysisGraphState', () => {
+    const snap = new ARGSnapshot({
+      elements: [],
+      analysis_graph_state: {
+        states: [{ id: 7, label: '7', is_bottom: true, info: 'x', clauses: 'false', action_name: 'act' }],
+        transitions: [],
+        covering: [],
+      },
+    });
+    expect(snap.analysisGraphState.states[0].id).toBe(7);
+    expect(snap.fullAnalysisGraphState.states[0]).toBeInstanceOf(FullARGNode);
+    expect(snap.fullAnalysisGraphState.states[0].clauses).toBe('false');
+    expect(snap.fullAnalysisGraphState.states[0].actionName).toBe('act');
+  });
+
+  it('CTISnapshot: haveCti and currentConjecture parsed', () => {
+    const snap = new CTISnapshot({
+      elements: [],
+      have_cti: true,
+      current_conjecture: 'forall X. inv(X)',
+    });
+    expect(snap.haveCti).toBe(true);
+    expect(snap.currentConjecture).toBe('forall X. inv(X)');
+  });
+
+  it('CTISnapshot: extends ARGSnapshot — render elements present', () => {
+    const snap = new CTISnapshot({
+      elements: [{ group: 'nodes', data: { id: 'n0' } }],
+      have_cti: false,
+      current_conjecture: '',
+      analysis_graph_state: {
+        states: [{ id: 0, label: '0', is_bottom: false, info: '', clauses: '', action_name: '' }],
+        transitions: [],
+        covering: [],
+      },
+    });
+    expect(snap.render.elements).toHaveLength(1);
+    expect(snap.fullAnalysisGraphState.states[0]).toBeInstanceOf(FullARGNode);
+    expect(snap.haveCti).toBe(false);
   });
 });

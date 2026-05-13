@@ -144,14 +144,48 @@ func (gbe *GoBackend) Action(sessionID, action string, args map[string]interface
 	return
 }
 
-func (gbe *GoBackend) GetARG(sessionID string) (by []byte, err error) {
+func (gbe *GoBackend) GetARG(sessionID string, full bool) (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
 		var sess *Session
 		sess, err = b.getSession(sessionID)
 		if err != nil {
 			return nil
 		}
-		by, err = canonicalJSON(AnalysisUIARGPayload(sess.AGUI))
+		if full {
+			by, err = canonicalJSON(FullAnalysisUIARGPayload(sess.AGUI))
+		} else {
+			by, err = canonicalJSON(AnalysisUIARGPayload(sess.AGUI))
+		}
+		return nil
+	})
+	return
+}
+
+func (gbe *GoBackend) GetCTIARG(sessionID string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		haveCTI := sess.CTIUI != nil && sess.CTIUI.HaveCTI
+		conjectureStr := ""
+		if sess.CTIUI != nil && sess.CTIUI.CurrentConjecture != nil {
+			if f := sess.CTIUI.CurrentConjecture.ToOpenFormula(); f != nil {
+				conjectureStr = fmt.Sprint(f)
+			} else {
+				conjectureStr = sess.CTIUI.CurrentConjecture.String()
+			}
+		}
+		var argPayload map[string]interface{}
+		if sess.CTIUI != nil && sess.CTIUI.AnalysisGraphUI != nil {
+			argPayload = FullAnalysisUIARGPayload(sess.CTIUI.AnalysisGraphUI)
+		} else {
+			argPayload = FullARGPayload(goivy.NewFullAnalysisGraphState(), nil)
+		}
+		argPayload["have_cti"] = haveCTI
+		argPayload["current_conjecture"] = conjectureStr
+		by, err = canonicalJSON(argPayload)
 		return nil
 	})
 	return

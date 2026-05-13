@@ -201,6 +201,35 @@ func NewAnalysisGraphState() *AnalysisGraphState {
 	return &AnalysisGraphState{}
 }
 
+// FullARGNode extends ARGNode with formula and universe data for CTI inspection.
+// Universe is omitted from JSON when nil (no BMC has run).
+type FullARGNode struct {
+	ID         int                 `json:"id"`
+	Label      string              `json:"label"`
+	IsBottom   bool                `json:"is_bottom"`
+	Info       string              `json:"info"`
+	Clauses    string              `json:"clauses"`
+	ActionName string              `json:"action_name"`
+	Universe   map[string][]string `json:"universe,omitempty"`
+}
+
+// FullAnalysisGraphState is a superset of AnalysisGraphState where each node
+// carries formula and universe data for CTI inspection.
+type FullAnalysisGraphState struct {
+	States      []FullARGNode   `json:"states"`
+	Transitions []ARGTransition `json:"transitions"`
+	Covering    []ARGCover      `json:"covering"`
+}
+
+// NewFullAnalysisGraphState creates an empty full ARG state.
+func NewFullAnalysisGraphState() *FullAnalysisGraphState {
+	return &FullAnalysisGraphState{
+		States:      []FullARGNode{},
+		Transitions: []ARGTransition{},
+		Covering:    []ARGCover{},
+	}
+}
+
 func displayARGEdgeLabel(label string) string {
 	label = strings.ReplaceAll(label, "-[", "{")
 	label = strings.ReplaceAll(label, "]-", "}")

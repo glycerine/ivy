@@ -167,6 +167,10 @@ export class HostedGoIvyApiAdapter extends IvyApiAdapter {
       snapshot.arg = await this.getArgSnapshot(argRequest);
     }
 
+    if (request.ctiArg) {
+      snapshot.ctiArg = await this.getCTIArgSnapshot();
+    }
+
     if (includeDefault || request.concept) {
       const conceptRequest = typeof request.concept === 'object' ? request.concept : {};
       snapshot.concept = await this.getConceptSnapshot(conceptRequest);
@@ -187,9 +191,16 @@ export class HostedGoIvyApiAdapter extends IvyApiAdapter {
     return snapshot;
   }
 
-  async getArgSnapshot({ sheetId }: AnyRecord = {}): Promise<any> {
-    const suffix = sheetId ? `/arg?sheet=${encodeURIComponent(sheetId)}` : '/arg';
-    return this.client.request(this.sessionPath(suffix));
+  async getArgSnapshot({ sheetId, full }: AnyRecord = {}): Promise<any> {
+    const params = new URLSearchParams();
+    if (sheetId) params.set('sheet', sheetId);
+    if (full) params.set('full', 'true');
+    const query = params.toString();
+    return this.client.request(this.sessionPath(`/arg${query ? `?${query}` : ''}`));
+  }
+
+  async getCTIArgSnapshot(): Promise<any> {
+    return this.client.request(this.sessionPath('/arg/cti'));
   }
 
   async getConceptSnapshot(request: AnyRecord = {}): Promise<any> {

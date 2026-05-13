@@ -89,6 +89,37 @@ func AnalysisUIARGPayload(ui *AnalysisGraphUI) map[string]interface{} {
 	return WebUIARGPayload(AnalysisUIARGState(ui), RenderAnalysisUIARG(ui))
 }
 
+// FullARGPayload builds the wire payload for a FullAnalysisGraphState.
+// Same shape as WebUIARGPayload but uses FullAnalysisGraphState (clauses, action_name, universe per node).
+func FullARGPayload(state *goivy.FullAnalysisGraphState, cy *WebUICyElements) map[string]interface{} {
+	if state == nil {
+		state = goivy.NewFullAnalysisGraphState()
+	}
+	if cy == nil {
+		cy = &WebUICyElements{}
+	}
+	if cy.Elements == nil {
+		cy.Elements = []WebUICyElement{}
+	}
+	payload := map[string]interface{}{
+		"elements": cy.Elements,
+	}
+	if len(state.States) > 0 || len(state.Transitions) > 0 || len(state.Covering) > 0 {
+		payload["analysis_graph_state"] = state
+	}
+	return payload
+}
+
+// FullAnalysisUIARGPayload builds the full wire payload from an AnalysisGraphUI.
+func FullAnalysisUIARGPayload(ui *AnalysisGraphUI) map[string]interface{} {
+	if ui == nil || ui.AG == nil {
+		return FullARGPayload(goivy.NewFullAnalysisGraphState(), nil)
+	}
+	state := ArtToFullGraphState(ui.AG)
+	cy := RenderAnalysisUIARG(ui)
+	return FullARGPayload(state, cy)
+}
+
 // -----------------------------------------------------------------------
 // Proof goal rendering — stays in webui (only used by webui).
 // -----------------------------------------------------------------------

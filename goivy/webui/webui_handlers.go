@@ -109,12 +109,28 @@ func (s *Server) apiAction(w http.ResponseWriter, r *http.Request, sessionID str
 }
 
 // apiARG handles GET /api/session/{id}/arg.
+// Pass ?full=true to receive FullARGNode entries (clauses, action_name, universe).
 func (s *Server) apiARG(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodGet {
 		writeErr(w, http.StatusMethodNotAllowed, "GET required")
 		return
 	}
-	data, err := s.backend.GetARG(sessionID)
+	full := r.URL.Query().Get("full") == "true"
+	data, err := s.backend.GetARG(sessionID, full)
+	if err != nil {
+		writeBackendErr(w, err)
+		return
+	}
+	writeBackend(w, data)
+}
+
+// apiCTIARG handles GET /api/session/{id}/arg/cti.
+func (s *Server) apiCTIARG(w http.ResponseWriter, r *http.Request, sessionID string) {
+	if r.Method != http.MethodGet {
+		writeErr(w, http.StatusMethodNotAllowed, "GET required")
+		return
+	}
+	data, err := s.backend.GetCTIARG(sessionID)
 	if err != nil {
 		writeBackendErr(w, err)
 		return

@@ -55,6 +55,15 @@ function typedArray<T>(value: unknown, Type: Constructor<T>): T[] {
   return rawArray(value).map((item) => new Type(item));
 }
 
+function stringArrayMap(value: unknown): Record<string, string[]> {
+  const obj = rawRecord(value);
+  const out: Record<string, string[]> = {};
+  for (const key of Object.keys(obj)) {
+    out[key] = stringArray(obj[key]);
+  }
+  return out;
+}
+
 function boolMap(value: unknown): Record<string, boolean> {
   const obj = rawRecord(value);
   const out: Record<string, boolean> = {};
@@ -171,6 +180,32 @@ export class ARGNode extends RawBackedModel<unknown> {
   }
 }
 
+// FullARGNode is a superset of ARGNode — sent when ?full=true is requested.
+// clauses: clean formula string (ToOpenFormula().String()).
+// actionName: the action that produced this state ("" for initial state).
+// universe: sort → concrete element strings from BMC model (null if no BMC run).
+export class FullARGNode extends RawBackedModel<unknown> {
+  readonly id: number;
+  readonly label: string;
+  readonly isBottom: boolean;
+  readonly info: string;
+  readonly clauses: string;
+  readonly actionName: string;
+  readonly universe: Record<string, string[]> | null;
+
+  constructor(raw: unknown = {}) {
+    super(raw);
+    this.id = intValue(pick(raw, 'id', 'ID'), -1);
+    this.label = stringValue(pick(raw, 'label', 'Label'));
+    this.isBottom = boolValue(pick(raw, 'is_bottom', 'isBottom', 'IsBottom'));
+    this.info = stringValue(pick(raw, 'info', 'Info'));
+    this.clauses = stringValue(pick(raw, 'clauses', 'Clauses'));
+    this.actionName = stringValue(pick(raw, 'action_name', 'actionName', 'ActionName'));
+    const u = pick(raw, 'universe', 'Universe');
+    this.universe = u != null ? stringArrayMap(u) : null;
+  }
+}
+
 export class ARGTransition extends RawBackedModel<unknown> {
   readonly sourceId: number;
   readonly targetId: number;
@@ -194,6 +229,21 @@ export class AnalysisGraphState extends RawBackedModel<unknown> {
   constructor(raw: unknown = {}) {
     super(raw);
     this.states = typedArray(pick(raw, 'states', 'States'), ARGNode);
+    this.transitions = typedArray(pick(raw, 'transitions', 'Transitions'), ARGTransition);
+    this.covering = typedArray(pick(raw, 'covering', 'Covering'), ARGCover);
+  }
+}
+
+// FullAnalysisGraphState is a superset of AnalysisGraphState where each node
+// carries formula and universe data for CTI inspection.
+export class FullAnalysisGraphState extends RawBackedModel<unknown> {
+  readonly states: FullARGNode[];
+  readonly transitions: ARGTransition[];
+  readonly covering: ARGCover[];
+
+  constructor(raw: unknown = {}) {
+    super(raw);
+    this.states = typedArray(pick(raw, 'states', 'States'), FullARGNode);
     this.transitions = typedArray(pick(raw, 'transitions', 'Transitions'), ARGTransition);
     this.covering = typedArray(pick(raw, 'covering', 'Covering'), ARGCover);
   }
@@ -454,14 +504,30 @@ export class ConceptGraphModel extends RawBackedModel<unknown> {
 export class ARGSnapshot extends RawBackedModel<unknown> {
   readonly render: CyElements;
   readonly analysisGraphState: AnalysisGraphState;
+  readonly fullAnalysisGraphState: FullAnalysisGraphState;
 
   constructor(raw: unknown = {}) {
     super(raw);
-    // ARG payload is flat: {elements:[…], analysis_graph_state:{…}, positions:null}.
-    // CyElements reads 'elements' from the raw root; AnalysisGraphState from sub-key.
+    // ARG payload is flat: {elements:[…], analysis_graph_state:{…}}.
+    // CyElements reads 'elements' from the raw root; graph state from sub-key.
     this.render = new CyElements(raw);
-    this.analysisGraphState = new AnalysisGraphState(pick(raw, 'analysis_graph_state', 'analysisGraphState') ?? {});
+    const ags = pick(raw, 'analysis_graph_state', 'analysisGraphState') ?? {};
+    this.analysisGraphState = new AnalysisGraphState(ags);
+    this.fullAnalysisGraphState = new FullAnalysisGraphState(ags);
     // Note: no 'analysis_graph' key exists in the Go wire format.
+  }
+}
+
+// CTISnapshot is returned by GET /api/session/{id}/arg/cti.
+// It extends ARGSnapshot with CTI-specific fields.
+export class CTISnapshot extends ARGSnapshot {
+  readonly haveCti: boolean;
+  readonly currentConjecture: string;
+
+  constructor(raw: unknown = {}) {
+    super(raw);
+    this.haveCti = boolValue(pick(raw, 'have_cti', 'haveCti'));
+    this.currentConjecture = stringValue(pick(raw, 'current_conjecture', 'currentConjecture'));
   }
 }
 
@@ -500,6 +566,7 @@ export class SheetModel extends RawBackedModel<unknown> {
   readonly type: SheetKind;
   arg: ARGSnapshot | null;
   concept: ConceptSnapshot | null;
+  cti: CTISnapshot | null;
   selectedArgNode: string | null;
   visualOnly: boolean;
 
@@ -509,6 +576,7 @@ export class SheetModel extends RawBackedModel<unknown> {
     this.type = stringValue(pick(raw, 'type'), 'analysis');
     this.arg = null;
     this.concept = null;
+    this.cti = null;
     const selected = pick(raw, 'selectedArgNode', 'selected_arg_node');
     this.selectedArgNode = typeof selected === 'string' ? selected : null;
     this.visualOnly = boolValue(pick(raw, 'visualOnly', 'visual_only'));
@@ -573,6 +641,12 @@ export class UIDataModel extends RawBackedModel<unknown> {
     const sheet = this.registerSheet(sheetId || this.activeSheetId);
     sheet.concept = new ConceptSnapshot(payload);
     return sheet.concept;
+  }
+
+  acceptCtiSnapshot(sheetId: string, payload: unknown = {}): CTISnapshot {
+    const sheet = this.registerSheet(sheetId || this.activeSheetId);
+    sheet.cti = new CTISnapshot(payload);
+    return sheet.cti;
   }
 
   setSelectedArgNode(sheetId: string, nodeId: string | null | undefined): string | null {

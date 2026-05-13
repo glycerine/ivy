@@ -296,6 +296,131 @@ func TestARGNodeInfoIsFormula(t *testing.T) {
 	}
 }
 
+// TestFullARGNodeUniverse verifies argNodeUniverse converts map[string][]Expr correctly.
+func TestFullARGNodeUniverse(t *testing.T) {
+	nodeSort := &goivy.UninterpretedSort{Name: "node"}
+	n0 := goivy.NewConst("n0", nodeSort)
+	n1 := goivy.NewConst("n1", nodeSort)
+	st := &goivy.State{
+		Universe: map[string][]goivy.Expr{"node": {n0, n1}},
+	}
+	u := argNodeUniverse(st)
+	if u == nil {
+		t.Fatal("argNodeUniverse: expected non-nil map")
+	}
+	nodes, ok := u["node"]
+	if !ok {
+		t.Fatal("argNodeUniverse: missing 'node' key")
+	}
+	if len(nodes) != 2 {
+		t.Errorf("argNodeUniverse: got %d entries, want 2", len(nodes))
+	}
+}
+
+// TestFullARGNodeUniverseNil verifies argNodeUniverse returns nil when Universe is nil.
+func TestFullARGNodeUniverseNil(t *testing.T) {
+	st := &goivy.State{}
+	u := argNodeUniverse(st)
+	if u != nil {
+		t.Errorf("argNodeUniverse: expected nil for nil Universe, got %v", u)
+	}
+}
+
+// TestFullARGNodeUniverseUnknownType verifies argNodeUniverse returns nil for
+// unsupported Universe types (e.g., map[string]interface{} from mc_phase7).
+func TestFullARGNodeUniverseUnknownType(t *testing.T) {
+	st := &goivy.State{
+		Universe: map[string]interface{}{"node": []interface{}{"n0", "n1"}},
+	}
+	u := argNodeUniverse(st)
+	if u != nil {
+		t.Errorf("argNodeUniverse: expected nil for unsupported Universe type, got %v", u)
+	}
+}
+
+// TestFullARGPayloadStructure verifies FullAnalysisUIARGPayload JSON shape.
+func TestFullARGPayloadStructure(t *testing.T) {
+	st := &goivy.State{
+		ID:      3,
+		Clauses: goivy.TrueClauses(nil),
+	}
+	st.ActionName = "send"
+	ag := &goivy.AnalysisGraph{States: []*goivy.State{st}}
+
+	ui := NewAnalysisGraphUI()
+	ui.AG = ag
+
+	payload := FullAnalysisUIARGPayload(ui)
+	data := mustCanonicalJSON(t, payload)
+	keys := unmarshalKeys(t, data)
+
+	if _, ok := keys["elements"]; !ok {
+		t.Error("FullARG payload missing 'elements' key")
+	}
+	if _, ok := keys["analysis_graph_state"]; !ok {
+		t.Error("FullARG payload missing 'analysis_graph_state' key")
+	}
+
+	var ags map[string]json.RawMessage
+	if err := json.Unmarshal(keys["analysis_graph_state"], &ags); err != nil {
+		t.Fatalf("analysis_graph_state not an object: %v", err)
+	}
+
+	var states []map[string]json.RawMessage
+	if err := json.Unmarshal(ags["states"], &states); err != nil {
+		t.Fatalf("states not an array: %v", err)
+	}
+	if len(states) == 0 {
+		t.Fatal("states array is empty")
+	}
+	node := states[0]
+	if _, ok := node["clauses"]; !ok {
+		t.Error("FullARGNode missing 'clauses' key")
+	}
+	if _, ok := node["action_name"]; !ok {
+		t.Error("FullARGNode missing 'action_name' key")
+	}
+	// universe must be absent when nil (omitempty)
+	if _, ok := node["universe"]; ok {
+		t.Error("FullARGNode must not have 'universe' when nil (omitempty)")
+	}
+}
+
+// TestCTIARGPayloadShape verifies GetCTIARG produces the expected JSON fields.
+func TestCTIARGPayloadShape(t *testing.T) {
+	be := NewGoBackend(nil)
+	sessionData, err := be.NewSession(&goivy.Config{})
+	if err != nil {
+		t.Fatalf("NewSession: %v", err)
+	}
+	var sess struct {
+		SessionID string `json:"session_id"`
+	}
+	if err := json.Unmarshal(sessionData, &sess); err != nil {
+		t.Fatalf("unmarshal session: %v", err)
+	}
+
+	data, err := be.GetCTIARG(sess.SessionID)
+	if err != nil {
+		t.Fatalf("GetCTIARG: %v", err)
+	}
+	keys := unmarshalKeys(t, data)
+
+	for _, k := range []string{"have_cti", "current_conjecture", "elements"} {
+		if _, ok := keys[k]; !ok {
+			t.Errorf("CTI payload missing key %q", k)
+		}
+	}
+	var haveCTI bool
+	if err := json.Unmarshal(keys["have_cti"], &haveCTI); err != nil {
+		t.Errorf("have_cti is not bool: %v", err)
+	}
+	var conjecture string
+	if err := json.Unmarshal(keys["current_conjecture"], &conjecture); err != nil {
+		t.Errorf("current_conjecture is not string: %v", err)
+	}
+}
+
 // TestConceptDomainNeverNull verifies the GetConcept response map always has a
 // non-null concept_domain value.
 func TestConceptDomainNeverNull(t *testing.T) {

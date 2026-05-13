@@ -61,6 +61,11 @@ export class IvyApiAdapter {
     return snapshot && snapshot.arg;
   }
 
+  async getCTIARG(options = {}) {
+    const snapshot = await this.getSnapshot({ ctiArg: options || {} });
+    return snapshot && snapshot.ctiArg;
+  }
+
   async getMenus() {
     const snapshot = await this.getSnapshot({ menus: true });
     return snapshot && snapshot.menus;

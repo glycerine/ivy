@@ -151,10 +151,17 @@ func (c *ConformBackend) Action(sessionID, action string, args map[string]interf
 	)
 }
 
-func (c *ConformBackend) GetARG(sessionID string) ([]byte, error) {
+func (c *ConformBackend) GetARG(sessionID string, full bool) ([]byte, error) {
 	return c.conform("GetARG",
-		func() ([]byte, error) { return c.goBE.GetARG(sessionID) },
-		func() ([]byte, error) { return c.pyBE.GetARG(c.pySessionID(sessionID)) },
+		func() ([]byte, error) { return c.goBE.GetARG(sessionID, full) },
+		func() ([]byte, error) { return c.pyBE.GetARG(c.pySessionID(sessionID), full) },
+	)
+}
+
+func (c *ConformBackend) GetCTIARG(sessionID string) ([]byte, error) {
+	return c.conform("GetCTIARG",
+		func() ([]byte, error) { return c.goBE.GetCTIARG(sessionID) },
+		func() ([]byte, error) { return c.pyBE.GetCTIARG(c.pySessionID(sessionID)) },
 	)
 }
 
