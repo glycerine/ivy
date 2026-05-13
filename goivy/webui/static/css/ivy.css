@@ -504,13 +504,14 @@ html, body {
     bottom: 22px;
     z-index: 850;
     background: rgba(18, 18, 18, 0.96);
-    border-top: 1px solid #3c3c3c;
-    transform: translateY(100%);
+    border-top: 1px solid transparent;
+    transform: translateY(calc(100% + 32px));
     transition: transform 180ms ease-out;
     pointer-events: none;
 }
 
 .job-control-page.open {
+    border-top-color: #3c3c3c;
     transform: translateY(0);
     pointer-events: auto;
 }
@@ -521,6 +522,10 @@ html, body {
     display: flex;
     flex-direction: column;
     background: #1e1e1e;
+    box-shadow: none;
+}
+
+.job-control-page.open .job-control-shell {
     box-shadow: 0 -12px 28px rgba(0, 0, 0, 0.45);
 }
 
