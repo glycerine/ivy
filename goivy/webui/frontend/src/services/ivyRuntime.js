@@ -1640,12 +1640,6 @@ class IvyRuntime {
 
     selectedEventPattern(sheetId) {
         return selectedEventPatternViaService(this, sheetId);
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getSelectedEventPattern === 'function') {
-            return window.__ivyVueBridge.getSelectedEventPattern(sheetId) || '';
-        }
-        var sheet = document.getElementById(sheetId);
-        var select = sheet ? sheet.querySelector('.event-pattern-list') : null;
-        return select && select.value ? select.value : '';
     }
 
     async addEventPattern(sheetId, pattern) {
