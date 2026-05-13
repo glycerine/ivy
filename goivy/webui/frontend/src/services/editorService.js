@@ -42,6 +42,11 @@ export function updateEditorLabel(app, {
     editorLabel.textContent = labelText;
     editorLabel.title = `Editing: ${labelText}`;
   }
+  const loadedFile = doc && doc.getElementById('loaded-file');
+  if (loadedFile) {
+    loadedFile.textContent = name;
+    loadedFile.title = name;
+  }
   if (typeof updateReopenLastFileButton === 'function') updateReopenLastFileButton();
   return labelText;
 }

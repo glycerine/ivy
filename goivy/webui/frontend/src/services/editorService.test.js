@@ -34,13 +34,14 @@ describe('editorService', () => {
   });
 
   it('updates the editor label DOM from runtime editor state', () => {
-    document.body.innerHTML = '<span id="model-editor-label"></span>';
+    document.body.innerHTML = '<span id="model-editor-label"></span><span id="loaded-file"></span>';
     const app = appWithContent('saved');
 
     expect(updateEditorLabel(app, {
       updateReopenLastFileButton: app._updateReopenLastFileButton,
     })).toBe('client.ivy [saved]');
     expect(document.getElementById('model-editor-label').textContent).toBe('client.ivy [saved]');
+    expect(document.getElementById('loaded-file').textContent).toBe('client.ivy');
     expect(app._updateReopenLastFileButton).toHaveBeenCalledTimes(1);
   });
 

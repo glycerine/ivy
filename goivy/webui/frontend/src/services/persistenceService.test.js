@@ -88,7 +88,7 @@ describe('persistenceService', () => {
   });
 
   it('restores mode, loaded file, and relation toggles into DOM state', () => {
-    document.body.innerHTML = '<select id="mode-select"><option value="pdr">pdr</option></select><span id="loaded-file"></span><table><tbody id="state-checkbox-body"><tr><td><input type="checkbox" name="link" value="edge_unknown"></td></tr></tbody></table>';
+    document.body.innerHTML = '<select id="mode-select"><option value="pdr">pdr</option></select><span id="loaded-file"></span><span id="model-editor-label"></span><table><tbody id="state-checkbox-body"><tr><td><input type="checkbox" name="link" value="edge_unknown"></td></tr></tbody></table>';
     const persist = createIvyPersist(window);
 
     persist._setMode('pdr');
@@ -98,6 +98,7 @@ describe('persistenceService', () => {
     expect(document.getElementById('mode-select').value).toBe('pdr');
     expect(document.querySelector('input[name="link"][value="edge_unknown"]').checked).toBe(true);
     expect(document.getElementById('loaded-file').textContent).toBe('/tmp/client.ivy');
+    expect(document.getElementById('model-editor-label').textContent).toBe('/tmp/client.ivy');
   });
 
   it('keeps URL session and path truncation behavior compatible with the old runtime', () => {

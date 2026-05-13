@@ -430,10 +430,23 @@ export function createIvyPersist(winArg = globalThis.window) {
 
     setFileName(fileName, filePath) {
       const el = doc && doc.getElementById('loaded-file');
+      const display = filePath || fileName || '';
       if (el) {
-        const display = filePath || fileName || '';
         el.textContent = display;
         el.title = display;
+      }
+      const editorLabel = doc && doc.getElementById('model-editor-label');
+      if (editorLabel) {
+        const current = editorLabel.textContent || '';
+        const shouldSetEditorLabel =
+          !current ||
+          current === '(unsaved file)' ||
+          current.indexOf(fileName || display) < 0;
+        if (shouldSetEditorLabel) {
+          const labelText = display || '(unsaved file)';
+          editorLabel.textContent = labelText;
+          editorLabel.title = `Editing: ${labelText}`;
+        }
       }
     },
 
