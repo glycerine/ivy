@@ -1,3 +1,5 @@
+claude:
+
 Great. Next I want to have a discussion about how to test web user interfaces quickly
   and efficiently. I am used to Go backend testing where testing can be very fast and
   efficient. I don't want to refer to our currently nascent testing efforts. They are
@@ -218,3 +220,92 @@ Great. Next I want to have a discussion about how to test web user interfaces qu
   The model: Go tests verify the data; Vitest/jsdom tests verify the rendering of data;
   Playwright verifies the app exists and the critical path runs once.
 
+
+-----------------
+
+The data model audit is complete. Ready for your next task.
+
+Q: a compaction interrupted you and may have prevented you from actually answering the
+  question, which is: tell me how much of the data model that you described just now is
+  present a) in javascript files and b) in Go files. Answer now in this discussion.
+
+Claude: Let me verify the current state of the key files before answering.
+
+Here is the complete picture:
+
+---
+Go side — all three layers fully present
+
+Layer 1 — Semantic model (art.go, goivy package):
+- AnalysisGraph { States []*State; Transitions []Transition; Covering []CoveringPair;
+PVars []Expr }
+- State { ID; Clauses; IsBottom(); Label; ... }
+- Transition { Pre *State; Op ActionsAction; Label string; Post *State }
+
+Layer 1b — Typed render intermediates (art_cyrender.go):
+- AnalysisGraphState { States []ARGNode; Transitions []ARGTransition; Covering
+[]ARGCover }
+- ARGNode { ID int; Label string; IsBottom bool; Info string }
+- ARGTransition { SourceID; TargetID; Label; IsJoin }
+- ARGCover { CoveredID; CoveringID }
+
+Layer 2 — Concept/proof model (webui_graph_model.go, webui_concept_isession.go,
+webui_concept_domain.go):
+- Graph { Sorts; ConceptSess *ConceptSession; Checks *DisplayCheckboxes; GraphStack }
+- DisplayCheckboxes { EdgeDisplayCheckboxes map[string]map[string]*Option;
+NodeLabelDisplayCheckboxes ... }
+- Full ConceptInteractiveSession with domain, undo/redo stack, suppose constraints
+
+Layer 3 — Cytoscape render (art_cyrender.go):
+- CyElements { Elements []CyElement; NodeID map[string]string; EdgeID map[string]string
+ }
+- CyElement { Group; Data map[string]interface{}; Classes; Position *CyPosition }
+
+---
+JS side — partial coverage only
+
+┌─────────────────────────┬──────────┬─────────────────────────────────────────────┐
+│          What           │ Present? │                    Where                    │
+├─────────────────────────┼──────────┼─────────────────────────────────────────────┤
+│ Session metadata (mode, │ ✅       │ sessionStore.js                             │
+│  status, sessionId)     │          │                                             │
+├─────────────────────────┼──────────┼─────────────────────────────────────────────┤
+│ Toggle/checkbox state   │          │ stateRelationsStore.js —                    │
+│ Toggle/checkbox state         │ ✅       │ rows[].checked.{all_to_all,           │
+│ mirroring DisplayCheckboxes   │          │ edge_unknown, none_to_none,           │
+│                               │          │ transitive}                           │
+├───────────────────────────────┼──────────┼───────────────────────────────────────┤
+│ Cytoscape style constants     │ ✅       │ graphRuntime.js — CONCEPT_STYLE,      │
+│                               │          │ ARG_STYLE, PROOF_STYLE                │
+├───────────────────────────────┼──────────┼───────────────────────────────────────┤
+│ Raw Cytoscape element arrays  │          │ graphStore.js —                       │
+│ (opaque dicts from server)    │ ✅       │ argBySheet[sheetId].elements,         │
+│                               │          │ conceptBySheet[sheetId].elements      │
+├───────────────────────────────┼──────────┼───────────────────────────────────────┤
+│ Typed ARGNode / ARGTransition │ ❌       │ absent                                │
+│  / ARGCover                   │          │                                       │
+├───────────────────────────────┼──────────┼───────────────────────────────────────┤
+│ State with id, clauses, safe, │ ❌       │ absent                                │
+│  label                        │          │                                       │
+├───────────────────────────────┼──────────┼───────────────────────────────────────┤
+│ AnalysisGraph with typed      │ ❌       │ absent                                │
+│ states/transitions/covering   │          │                                       │
+├───────────────────────────────┼──────────┼───────────────────────────────────────┤
+│ ConceptDomain,                │          │                                       │
+│ ConceptInteractiveSession,    │ ❌       │ absent                                │
+│ undo stack                    │          │                                       │
+├───────────────────────────────┼──────────┼───────────────────────────────────────┤
+│ GraphStack (undo/redo for     │ ❌       │ absent                                │
+│ concept domain)               │          │                                       │
+└───────────────────────────────┴──────────┴───────────────────────────────────────┘
+
+---
+Bottom line: The JS client treats all graph data as opaque server-sent Cytoscape JSON.
+It has Layer 2 toggle state and Layer 1 session metadata, but no typed representations
+of the ARG nodes/transitions, no State objects, and no concept session model. Layers 1
+and 2 exist exclusively on the server (Go). The JS would need typed counterparts — at
+minimum ARGNode/Transition/Cover and a concept-domain checkbox model — to support
+client-side graph operations like selection, marking, undo, or any computation that
+shouldn't require a round-trip.
+
+-------
