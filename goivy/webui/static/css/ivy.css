@@ -96,7 +96,11 @@ html, body {
 .menu-icon {
     width: 22px;
     height: 22px;
-    fill: currentColor;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.2;
     display: block;
 }
 
