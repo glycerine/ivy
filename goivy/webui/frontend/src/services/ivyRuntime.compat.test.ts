@@ -41,12 +41,14 @@ describe('ivyRuntime compatibility behavior', () => {
       '<section id="job-control-page" aria-hidden="true"></section>',
       '<button id="job-control-close"></button>',
       '<button id="job-submission-toggle" class="job-mode-toggle is-browser" data-mode="browser"></button>',
+      '<span id="job-submission-label"></span>',
     ].join('');
     const runtime = makeRuntime();
 
     runtime._setupJobControlHandlers();
     expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-browser')).toBe(true);
     expect(document.getElementById('btn-toggle-job-control').getAttribute('data-job-submission-mode')).toBe('browser');
+    expect(document.getElementById('job-submission-label').textContent).toBe('run in browser');
 
     document.getElementById('btn-toggle-job-control').click();
 
@@ -60,6 +62,7 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-browser')).toBe(false);
     expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-remote')).toBe(true);
     expect(document.getElementById('btn-toggle-job-control').getAttribute('data-job-submission-mode')).toBe('remote');
+    expect(document.getElementById('job-submission-label').textContent).toBe('submit to remote');
 
     document.getElementById('job-submission-toggle').click();
     expect(runtime.jobSubmissionMode).toBe('browser');
@@ -67,6 +70,7 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-browser')).toBe(true);
     expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-remote')).toBe(false);
     expect(document.getElementById('btn-toggle-job-control').getAttribute('data-job-submission-mode')).toBe('browser');
+    expect(document.getElementById('job-submission-label').textContent).toBe('run in browser');
 
     document.getElementById('job-control-close').click();
     expect(document.getElementById('job-control-page').classList.contains('open')).toBe(false);
