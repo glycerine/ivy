@@ -248,9 +248,13 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 			}
 		}
 
+		conceptDomain := NewConceptDomain() // non-nil fallback; SimpleSess is always set
+		if sess.SimpleSess != nil {
+			conceptDomain = sess.SimpleSess.Domain
+		}
 		response := map[string]interface{}{
 			"abstract_value":              abstractValue,
-			"concept_domain":              nil,
+			"concept_domain":              conceptDomain,
 			"concept_interactive_session": conceptInteractiveSessionPayload(sess.ConceptSess),
 			"concept_session":             sess.SimpleSess,
 			"display_checkboxes":          checks,
@@ -267,9 +271,6 @@ func (gbe *GoBackend) GetConcept(sessionID, sheetID, nodeID string) (by []byte, 
 			"selected_node":               selectedNode,
 			"state_label":                 stateLabel,
 			"toggles":                     checks,
-		}
-		if sess.SimpleSess != nil {
-			response["concept_domain"] = sess.SimpleSess.Domain
 		}
 		if widget != nil && widget.G() != nil {
 			response["graph"] = conceptGraphPayload(widget.G(), widget.GraphStack)

@@ -232,51 +232,52 @@ dispatch to them and store the result per-sheet.
 - `ARGSnapshot` conditional `analysis_graph_state` matches `WebUIARGPayload()` (absent when empty); locked by `TestConformARG`.
 - TagValue array → bool-map conversion tested in `TestConceptInteractiveSessionPayloadTagValues` (Go) and multiple TypeScript tests.
 
-**Known limitations and gaps for porting work:**
+**Fixed limitations** (code changes applied):
 
-1. **CIS `domain` field is always empty.**  Go's `ConceptInteractiveSession` sends
-   its domain as a `CDConceptDomain` (PascalCase field names, `CDConceptDict` entries)
-   while TypeScript's `ConceptSession` constructor expects plain snake_case
-   `ConceptDomain` format.  The TypeScript `interactiveSession.domain` will always
-   be an empty `ConceptDomain`.  **For all GUI work use `snapshot.domain` (parsed
-   from the top-level `concept_domain` key) as the authoritative concept domain.**
+1. ~~CIS `domain` field is always empty~~ — **Fixed.**  Removed `"domain"` from
+   `conceptInteractiveSessionPayload()` (`webui_session.go`).  `CDConceptDomain` had
+   unexported fields and serialized to `{}`.  The authoritative domain is always
+   `snapshot.domain` from the top-level `concept_domain` key.
+   Locked by `TestCISPayloadNoDomainKey`.
 
-2. **`State.clauses` and `State.expr` are `unknown`.**  On the Go side these are
-   complex `*Clauses` and `Expr` AST types that are not yet serialized in a
-   human-readable form.  The fields are present in the TypeScript model but will be
-   `undefined` until Go adds explicit JSON serialization.  `State.label` (string) and
-   `State.info` (string, via `ARGNode`) are the usable display fields today.
+2. ~~`State.clauses` and `State.expr` are `unknown`~~ — **Fixed.**  `ArtToGraphState()`
+   (`webui_ui_main.go`) now populates `ARGNode.Info` with `state.Clauses.String()`
+   instead of the hardcoded `"State %d"` fallback.  The formula string is therefore
+   reachable via `ARGNode.info` in TypeScript (already parsed correctly).
+   Locked by `TestARGNodeInfoIsFormula`.
 
-3. **`AnalysisGraph` / `AnalysisTransition` are not populated from the current wire.**
-   The `AnalysisGraph` class has full structure (`states`, `transitions`, `covering`,
-   `pvars`) but Go sends `AnalysisGraphState` (render-level intermediates), not the
-   raw computation graph.  These classes are available for future CTI inspection or
-   if a full-graph endpoint is added.  Do not try to parse an ARG response into
-   `AnalysisGraph`; use `ARGSnapshot.analysisGraphState` instead.
+5. ~~`facts` array is `unknown[]`~~ — **Fixed.**  `FactSelection` TypeScript class added
+   to `uiDataModel.ts`; `ConceptSnapshot.facts` retyped from `unknown[]` to
+   `FactSelection[]`.  Wire format: `{index:int, text:string, selected:bool}`.
+   Locked by three TypeScript tests in `uiDataModel.test.ts`.
 
-4. **`abstract_value` at top level of `GetConcept` is node-label keys only.**
-   Go filters it to `strings.HasPrefix(k, "node_label|")` entries.  TypeScript reads
-   this as `ConceptSession.abstractValue` which is correct, but it is a sparse map.
-   The full abstract value (node_info + edge_info keys) lives in
-   `ConceptInteractiveSession.abstractValue`.
+7. ~~`concept_domain` is null in fresh sessions~~ — **Fixed.**  `GetConcept()`
+   (`webui_backend_go.go`) now initialises `conceptDomain` to `NewConceptDomain()`
+   (empty but non-nil) before the `SimpleSess` guard, eliminating the `nil` JSON value.
+   Locked by `TestConceptDomainNeverNull`.
 
-5. **`facts` array is `unknown[]`.**  Go's `FactSelection` struct is not yet modeled
-   in TypeScript.  It is preserved as raw JSON.  Model it when porting the fact/
-   suppose-constraint UI panel.
+**Accepted as by-design** (no code change needed):
 
-6. **`ConceptGraphModel` is partially populated.**  `GetConcept` sends `graph` as
-   `conceptGraphPayload(nil, nil)` (zero values) when no GraphWidget is active.
-   Fields like `sorts`, `newRelations`, `concrete`, `attributes`, `state`,
-   `reverseResult` are only meaningful once a widget is associated with the session.
+3. **`AnalysisGraph` / `AnalysisTransition` not on wire.**  Go's `AnalysisGraph` has
+   circular references (`Pred`, `JoinOf`, `Unders` on `State`) and no JSON tags.  The
+   lightweight render intermediates (`AnalysisGraphState`) are sufficient for all GUI
+   behaviors in PLAN378.  TypeScript classes are pre-built for future CTI use only;
+   always use `ARGSnapshot.analysisGraphState` for current GUI work.
 
-7. **`concept_domain` is null in fresh sessions.**  Go sets `response["concept_domain"] = nil`
-   until `sess.SimpleSess != nil`.  TypeScript `ConceptSnapshot.domain` falls back to
-   an empty `ConceptDomain` in this case; guard with `snap.domain.nodes.length > 0`
-   before rendering.
+4. **`abstract_value` at top level is node-label keys only.**  This is by design: the
+   top-level `abstract_value` feeds the node-label checkbox panel (node_label| keys);
+   `ConceptInteractiveSession.abstractValue` (TagValue-converted map) carries the full
+   picture including node_info and edge_info keys.  Use the CIS field for concept-panel
+   truth-value display.
 
-8. **No Python-side `pvars` or `state_graphs` serialization.**  Python's
-   `AnalysisGraph.pvars` and `state_graphs` are tracked by `AnalysisGraph.pvars` in
-   TypeScript but Go does not currently serialize them.
+6. **`ConceptGraphModel` is zero-valued before file load.**  `GetConcept` returns
+   `conceptGraphPayload(nil, nil)` until a `GraphWidget` is associated with the session.
+   All fields zero-default cleanly in TypeScript.  Guard with `graph.sorts.length > 0`
+   before rendering sort-dependent UI.
+
+8. **`pvars` / `state_graphs` not serialized.**  `AnalysisGraph.PVars` is `[]Expr` (an
+   interface slice with no JSON tags) and `StateGraphs` is `[]interface{}`.  Neither is
+   used in the webui package nor required by any GUI behavior in PLAN378.  Out of scope.
 
 ---
 

@@ -137,6 +137,10 @@ export class ARGCover extends RawBackedModel<unknown> {
   }
 }
 
+// AnalysisGraph is NOT populated from the current wire format (Go sends lightweight
+// AnalysisGraphState render intermediates, not the full graph). These classes are
+// reserved for future CTI inspection or a full-graph endpoint. For current GUI work
+// use ARGSnapshot.analysisGraphState (ARGNode/ARGTransition/ARGCover).
 export class AnalysisGraph extends RawBackedModel<unknown> {
   readonly states: State[];
   readonly transitions: AnalysisTransition[];
@@ -232,6 +236,19 @@ export class CyElements extends RawBackedModel<unknown> {
     this.elements = typedArray(pick(raw, 'elements', 'Elements'), CyElement);
     // NodeID and EdgeID are tagged json:"-" in Go and never appear on the wire.
     // Use element.data['id'] and element.data['obj'] for lookups instead.
+  }
+}
+
+export class FactSelection extends RawBackedModel<unknown> {
+  readonly index: number;
+  readonly text: string;
+  readonly selected: boolean;
+
+  constructor(raw: unknown = {}) {
+    super(raw);
+    this.index = intValue(pick(raw, 'index', 'Index'));
+    this.text = stringValue(pick(raw, 'text', 'Text'));
+    this.selected = boolValue(pick(raw, 'selected', 'Selected'));
   }
 }
 
@@ -373,9 +390,9 @@ export class ConceptInteractiveSession extends ConceptSession {
     super(raw);
     // Go sends abstract_value as []TagValue (array of {Tag: string[], Value: bool}),
     // not as map[string]bool. Convert to Record<string,bool> keyed by "|"-joined tag.
-    // The domain field inherited from ConceptSession will be empty because Go sends
-    // CDConceptDomain (PascalCase, complex structure) rather than ConceptDomain format.
-    // Use snapshot.domain (from concept_domain key) for the concept domain instead.
+    // The domain field inherited from ConceptSession is always empty: Go no longer sends
+    // the "domain" key in the CIS payload (CDConceptDomain had unexported fields and
+    // serialized to {}). Use snapshot.domain (from concept_domain key) instead.
     const avRaw = pick(raw, 'abstract_value', 'abstractValue', 'AbstractValue');
     if (Array.isArray(avRaw)) {
       (this as any).abstractValue = tagValueArrayToMap(avRaw);
@@ -456,7 +473,7 @@ export class ConceptSnapshot extends RawBackedModel<unknown> {
   readonly displayCheckboxes: DisplayCheckboxes;
   readonly graphStack: GraphStack;
   readonly graph: ConceptGraphModel;
-  readonly facts: unknown[];
+  readonly facts: FactSelection[];
   readonly selectedNode: string | null;
   readonly stateLabel: string;
 
@@ -469,7 +486,7 @@ export class ConceptSnapshot extends RawBackedModel<unknown> {
     this.displayCheckboxes = new DisplayCheckboxes(pick(raw, 'display_checkboxes', 'toggles') ?? {});
     this.graphStack = new GraphStack(pick(raw, 'graph_stack', 'graphStack') ?? {});
     this.graph = new ConceptGraphModel(pick(raw, 'graph', 'Graph') ?? {});
-    this.facts = rawArray(pick(raw, 'facts'));
+    this.facts = typedArray(pick(raw, 'facts'), FactSelection);
     const selected = pick(raw, 'selected_node', 'selectedNode');
     this.selectedNode = typeof selected === 'string' ? selected : null;
     this.stateLabel = stringValue(pick(raw, 'state_label', 'stateLabel'));

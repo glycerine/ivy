@@ -208,7 +208,7 @@ func ArtToGraphState(ag *goivy.AnalysisGraph) *WebUIAnalysisGraphState {
 			ID:       st.ID,
 			Label:    label,
 			IsBottom: st.IsBottom(),
-			Info:     fmt.Sprintf("State %d", st.ID),
+			Info:     argNodeInfo(st),
 		})
 	}
 	for _, t := range ag.Transitions {
@@ -225,6 +225,13 @@ func ArtToGraphState(ag *goivy.AnalysisGraph) *WebUIAnalysisGraphState {
 		})
 	}
 	return gs
+}
+
+func argNodeInfo(st *goivy.State) string {
+	if st.Clauses != nil {
+		return st.Clauses.String()
+	}
+	return fmt.Sprintf("State %d", st.ID)
 }
 
 // defEquationLabel extracts a display label from a state equation (ast.Definition).

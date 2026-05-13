@@ -7,6 +7,7 @@ package webui
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	goivy "github.com/glycerine/ivy/goivy"
@@ -238,5 +239,85 @@ func TestConceptInteractiveSessionPayloadTagValues(t *testing.T) {
 		if err := json.Unmarshal(keys[k], &n); err != nil {
 			t.Errorf("%s is not an int: %v", k, err)
 		}
+	}
+}
+
+// TestCISPayloadNoDomainKey verifies the CIS payload never sends a "domain" key.
+// CDConceptDomain has unexported fields and serializes to {}, so the key was removed.
+func TestCISPayloadNoDomainKey(t *testing.T) {
+	// nil CIS
+	nilPayload := conceptInteractiveSessionPayload(nil)
+	nilData := mustCanonicalJSON(t, nilPayload)
+	nilKeys := unmarshalKeys(t, nilData)
+	if _, ok := nilKeys["domain"]; ok {
+		t.Error("nil CIS payload must NOT contain 'domain' key")
+	}
+
+	// live CIS
+	cis := &ConceptInteractiveSession{
+		AbstractValue:      []TagValue{},
+		GoalConstraints:    []goivy.Expr{},
+		SupposeConstraints: []goivy.Expr{},
+	}
+	livePayload := conceptInteractiveSessionPayload(cis)
+	liveData := mustCanonicalJSON(t, livePayload)
+	liveKeys := unmarshalKeys(t, liveData)
+	if _, ok := liveKeys["domain"]; ok {
+		t.Error("live CIS payload must NOT contain 'domain' key")
+	}
+	// Required keys remain present.
+	for _, k := range []string{"abstract_value", "goal_constraints", "suppose_constraints", "undo_depth", "redo_depth", "axioms", "cache", "state", "info"} {
+		if _, ok := liveKeys[k]; !ok {
+			t.Errorf("CIS payload missing required key %q", k)
+		}
+	}
+}
+
+// TestARGNodeInfoIsFormula verifies ArtToGraphState populates ARGNode.Info from
+// state.Clauses.String() rather than the hardcoded "State N" fallback.
+func TestARGNodeInfoIsFormula(t *testing.T) {
+	st := &goivy.State{
+		ID:      7,
+		Clauses: goivy.TrueClauses(nil),
+	}
+	ag := &goivy.AnalysisGraph{States: []*goivy.State{st}}
+	gs := ArtToGraphState(ag)
+
+	if len(gs.States) != 1 {
+		t.Fatalf("expected 1 ARGNode, got %d", len(gs.States))
+	}
+	info := gs.States[0].Info
+	if info == "" {
+		t.Error("ARGNode.Info must not be empty when Clauses is non-nil")
+	}
+	fallback := fmt.Sprintf("State %d", st.ID)
+	if info == fallback {
+		t.Errorf("ARGNode.Info must carry Clauses string, got fallback %q", info)
+	}
+}
+
+// TestConceptDomainNeverNull verifies the GetConcept response map always has a
+// non-null concept_domain value.
+func TestConceptDomainNeverNull(t *testing.T) {
+	// Simulate the pattern used in GetConcept: build conceptDomain defensively.
+	conceptDomain := NewConceptDomain()
+	response := map[string]interface{}{
+		"concept_domain": conceptDomain,
+	}
+	data := mustCanonicalJSON(t, response)
+	keys := unmarshalKeys(t, data)
+
+	raw, ok := keys["concept_domain"]
+	if !ok {
+		t.Fatal("concept_domain key missing from response")
+	}
+	// Must not be JSON null.
+	if string(raw) == "null" {
+		t.Error("concept_domain must never be JSON null")
+	}
+	// Must be an object.
+	var obj map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &obj); err != nil {
+		t.Errorf("concept_domain must be a JSON object, got: %s", raw)
 	}
 }

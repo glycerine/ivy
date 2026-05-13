@@ -6,6 +6,7 @@ import {
   ConceptSnapshot,
   CyElement,
   CyElements,
+  FactSelection,
   GraphStack,
   State,
   UIDataModel,
@@ -377,5 +378,43 @@ describe('UIDataModel — wire format coverage', () => {
     // selected_node and state_label
     expect(snap.selectedNode).toBe('n0');
     expect(snap.stateLabel).toBe('state 0');
+  });
+
+  // -------------------------------------------------------------------------
+  // FactSelection tests
+  // -------------------------------------------------------------------------
+
+  it('FactSelection: three-field parse from wire', () => {
+    const f = new FactSelection({ index: 2, text: 'forall X. p(X)', selected: true });
+    expect(f.index).toBe(2);
+    expect(f.text).toBe('forall X. p(X)');
+    expect(f.selected).toBe(true);
+  });
+
+  it('FactSelection: zero-value defaults when fields absent', () => {
+    const f = new FactSelection({});
+    expect(f.index).toBe(0);
+    expect(f.text).toBe('');
+    expect(f.selected).toBe(false);
+  });
+
+  it('ConceptSnapshot.facts parsed as FactSelection[]', () => {
+    const snap = new ConceptSnapshot({
+      facts: [
+        { index: 0, text: '~r(X)', selected: true },
+        { index: 1, text: 'p(a)', selected: false },
+      ],
+    });
+    expect(snap.facts).toHaveLength(2);
+    expect(snap.facts[0]).toBeInstanceOf(FactSelection);
+    expect(snap.facts[0].text).toBe('~r(X)');
+    expect(snap.facts[0].selected).toBe(true);
+    expect(snap.facts[1].index).toBe(1);
+    expect(snap.facts[1].selected).toBe(false);
+  });
+
+  it('ConceptSnapshot.facts is empty array when facts absent', () => {
+    const snap = new ConceptSnapshot({});
+    expect(snap.facts).toEqual([]);
   });
 });

@@ -594,7 +594,6 @@ func conceptInteractiveSessionPayload(s *ConceptInteractiveSession) map[string]i
 		"abstract_value":      append([]TagValue{}, s.AbstractValue...),
 		"axioms":              fmt.Sprint(s.Axioms),
 		"cache":               s.Cache,
-		"domain":              s.Domain,
 		"goal_constraints":    exprStrings(s.GoalConstraints),
 		"info":                s.Info,
 		"redo_depth":          len(s.RedoStack),
