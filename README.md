@@ -2718,9 +2718,7 @@ ConceptInteractiveSession (concept_interactive_session.py:26)
 CyElements (cy_elements.py:5)         ← render-side, serializable
   └─ elements: []dict                 ← sent as JSON to browser
 
-This is a solid data model. The Go port already mirrors
-most of this — the question is whether the Go structs are
-complete and cover all three layers.
+This is a solid data model. 
 
 ----
 
