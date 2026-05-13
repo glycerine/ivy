@@ -8,7 +8,7 @@ export default defineConfig({
   cacheDir: path.resolve(frontendDir, '../node_modules/.vite-goivy-webui-test'),
   test: {
     environment: 'jsdom',
-    include: ['src/**/*.test.{js,ts}'],
+    include: ['src/**/*.test.ts'],
     clearMocks: true,
     restoreMocks: true,
     mockReset: true,

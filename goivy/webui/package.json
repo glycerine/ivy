@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build:webui": "npm --prefix frontend run build",
+    "typecheck:webui": "npm --prefix frontend run typecheck",
     "test:webui:js": "npm --prefix frontend run test",
     "test:webui:js:watch": "cd frontend && ../node_modules/.bin/vitest --watch --config vitest.config.mjs",
     "test:webui:all": "npm run test:webui:js",

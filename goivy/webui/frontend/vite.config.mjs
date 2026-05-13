@@ -12,7 +12,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {
-      input: path.resolve(frontendDir, 'src/main.js'),
+      input: path.resolve(frontendDir, 'src/main.ts'),
       output: {
         entryFileNames: 'ivyweb.js',
         chunkFileNames: 'ivyweb-[name].js',
