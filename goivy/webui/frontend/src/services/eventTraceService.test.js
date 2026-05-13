@@ -51,17 +51,35 @@ describe('eventTraceService', () => {
     expect(lookupEventTrace(events, '0/99')).toBeNull();
   });
 
-  it('uses the Vue bridge to toggle expanded event nodes and selected patterns', () => {
-    const bridge = {
-      isEventTraceExpanded: vi.fn(() => false),
-      setEventTraceExpanded: vi.fn(),
-      getSelectedEventPattern: vi.fn(() => 'p(X)'),
+  it('toggles expanded event nodes and reads selected patterns from DOM state', () => {
+    document.body.innerHTML = [
+      '<div id="events-1">',
+      '  <li class="event-tree-node">',
+      '    <div class="event-row" data-event-address="0"><button class="event-toggle">+</button></div>',
+      '  </li>',
+      '  <select class="event-pattern-list"><option selected>p(X)</option></select>',
+      '</div>',
+    ].join('');
+    const app = {
+      sheets: {
+        'events-1': { events: [{ address: '0', subs: [{ address: '0/0', text: 'child' }] }] },
+      },
+      eventTraceRow(sheetId, address) {
+        return document.getElementById(sheetId).querySelector(`[data-event-address="${address}"]`);
+      },
+      lookupEventTrace,
+      renderEventTreeNode(event) {
+        const li = document.createElement('li');
+        li.className = 'event-tree-node';
+        li.textContent = event.text;
+        return li;
+      },
     };
 
-    toggleEventTraceNode({}, 'events-1', '0/1', { bridge });
+    toggleEventTraceNode(app, 'events-1', '0', { doc: document });
 
-    expect(bridge.setEventTraceExpanded).toHaveBeenCalledWith('events-1', '0/1', true);
-    expect(selectedEventPattern({}, 'events-1', { bridge })).toBe('p(X)');
+    expect(document.querySelectorAll('ul.event-tree-list')).toHaveLength(1);
+    expect(selectedEventPattern({}, 'events-1', { doc: document })).toBe('p(X)');
   });
 
   it('runs find against the active event sheet and selects the result', async () => {
@@ -184,18 +202,15 @@ describe('eventTraceService', () => {
     expect(app.downloadTextFile).toHaveBeenCalledWith('event_patterns.pats', 'server\n', 'text/plain');
   });
 
-  it('renders and updates event pattern lists through Vue or DOM fallback', () => {
+  it('renders and updates event pattern lists through runtime DOM state', () => {
     const app = makePatternApp();
-    const bridge = {
-      updateEventPatterns: vi.fn(),
-    };
 
-    applyEventPatternResult(app, 'events-1', { patterns: ['server'] }, null, { bridge });
+    applyEventPatternResult(app, 'events-1', { patterns: ['server'] });
     expect(app.sheets['events-1'].patterns).toEqual(['server']);
-    expect(bridge.updateEventPatterns).toHaveBeenCalledWith('events-1', ['server']);
+    expect(app.renderEventPatternList).toHaveBeenCalledWith('events-1');
 
     document.body.innerHTML = '<div id="events-1"><select class="event-pattern-list"></select></div>';
-    renderEventPatternList(app, 'events-1', { bridge: null, doc: document });
+    renderEventPatternList(app, 'events-1', { doc: document });
     expect(Array.from(document.querySelectorAll('option')).map((option) => option.textContent)).toEqual(['server']);
   });
 
@@ -209,7 +224,7 @@ describe('eventTraceService', () => {
       uncoverEventTraceAddress: vi.fn(),
     });
 
-    expect(() => selectEventTraceRow(app, 'events-1', '0"]', { bridge: null, doc: document })).not.toThrow();
+    expect(() => selectEventTraceRow(app, 'events-1', '0"]', { doc: document })).not.toThrow();
     expect(document.querySelector('.event-row').classList.contains('selected')).toBe(true);
   });
 });

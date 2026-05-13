@@ -2,7 +2,7 @@
   <div id="sheet-area" @mousedown="handleSheetResizeMouseDown">
     <TabBar />
 
-    <div id="sheet-1" class="sheet-content" :class="{ active: sheetStore.activeSheetId === 'sheet-1' }">
+    <div id="sheet-1" class="sheet-content active">
       <div class="sheet-columns">
         <div class="sheet-left">
           <div class="sheet-main">
@@ -18,7 +18,6 @@
         <StateRelationsPane />
       </div>
     </div>
-    <EventTraceSheetHost />
   </div>
 </template>
 
@@ -26,14 +25,11 @@
 import ArgPane from './ArgPane.vue';
 import ConceptPane from './ConceptPane.vue';
 import DetailsPane from './DetailsPane.vue';
-import EventTraceSheetHost from './EventTraceSheetHost.vue';
 import StateRelationsPane from './StateRelationsPane.vue';
 import TabBar from './TabBar.vue';
-import { useSheetStore } from '../../stores/sheetStore.js';
 import { useLayoutStore } from '../../stores/layoutStore.js';
 import { scheduleLayoutRefresh, setGraphPointerEvents, startMouseDrag } from '../../resizeDrag.js';
 
-const sheetStore = useSheetStore();
 const layoutStore = useLayoutStore();
 
 function detailsMinimumMainHeight(sheetLeft) {

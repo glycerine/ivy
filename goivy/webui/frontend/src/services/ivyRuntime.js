@@ -297,20 +297,15 @@ class IvyRuntime {
             var codeMirror = runtimeDeps.CodeMirror || window.CodeMirror;
             this.cmEditor = initializeCodeMirrorEditor({
                 runtime: this,
-                editorStore: { keymap: this.getEditorKeymap() },
+                keymap: this.getEditorKeymap(),
                 doc: document,
                 codeMirror: codeMirror,
             });
-            // Keymap radio button switching fallback for non-Vue test harnesses.
-            if (!(window.__ivyVueBridge &&
-                typeof window.__ivyVueBridge.editorKeymapHandled === 'function' &&
-                window.__ivyVueBridge.editorKeymapHandled())) {
-                var radios = document.querySelectorAll('input[name="keymap"]');
-                for (var i = 0; i < radios.length; i++) {
-                    radios[i].addEventListener('change', function () {
-                        self.setEditorKeymap(this.value);
-                    });
-                }
+            var radios = document.querySelectorAll('input[name="keymap"]');
+            for (var i = 0; i < radios.length; i++) {
+                radios[i].addEventListener('change', function () {
+                    self.setEditorKeymap(this.value);
+                });
             }
         }
 
@@ -1165,11 +1160,6 @@ class IvyRuntime {
         this._sheetCounter = 1;
         var tabBar = document.getElementById('tab-bar');
         if (!tabBar) return;
-        if (window.__ivyVueBridge &&
-            typeof window.__ivyVueBridge.tabClicksHandled === 'function' &&
-            window.__ivyVueBridge.tabClicksHandled()) {
-            return;
-        }
         tabBar.addEventListener('click', function (e) {
             // Close button clicked?
             if (e.target.classList.contains('tab-close')) {
@@ -3096,10 +3086,6 @@ class IvyRuntime {
     }
 
     tabLabelForSheet(sheetId) {
-        if (window.__ivyVueBridge && typeof window.__ivyVueBridge.getSheetTabLabel === 'function') {
-            var bridgeLabel = window.__ivyVueBridge.getSheetTabLabel(sheetId);
-            if (bridgeLabel) return bridgeLabel;
-        }
         var tab = this.sheetTab(sheetId);
         var label = tab ? tab.querySelector('span') : null;
         return label ? label.textContent : sheetId;

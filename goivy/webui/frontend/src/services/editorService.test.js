@@ -33,39 +33,25 @@ describe('editorService', () => {
     expect(editorDirty(app)).toBe(true);
   });
 
-  it('syncs runtime editor state into the Vue bridge label model', () => {
+  it('updates the editor label DOM from runtime editor state', () => {
+    document.body.innerHTML = '<span id="model-editor-label"></span>';
     const app = appWithContent('saved');
-    const bridge = {
-      updateEditor: vi.fn(),
-    };
 
     expect(updateEditorLabel(app, {
-      bridge,
       updateReopenLastFileButton: app._updateReopenLastFileButton,
     })).toBe('client.ivy [saved]');
-    expect(bridge.updateEditor).toHaveBeenCalledWith({
-      path: 'client.ivy',
-      content: 'saved',
-      savedContent: 'saved',
-      saveInProgress: false,
-    });
+    expect(document.getElementById('model-editor-label').textContent).toBe('client.ivy [saved]');
     expect(app._updateReopenLastFileButton).toHaveBeenCalledTimes(1);
   });
 
   it('sets editor content and marks it saved', () => {
     const app = appWithContent('');
-    const bridge = {
-      updateEditor: vi.fn(),
-    };
-    window.__ivyVueBridge = bridge;
 
     setEditorContent(app, 'new text');
 
     expect(app._persistedFileContent).toBe('new text');
     expect(app._savedFileContent).toBe('new text');
     expect(app.cmEditor.setValue).toHaveBeenCalledWith('new text');
-    expect(bridge.updateEditor).toHaveBeenCalled();
-    delete window.__ivyVueBridge;
   });
 
   it('refreshes CodeMirror immediately and on queued layout turns', () => {
@@ -104,24 +90,7 @@ describe('editorService', () => {
     expect(app._highlightedEditorLine).toBe(3);
   });
 
-  it('gets and sets keymaps through the bridge', () => {
-    const bridge = {
-      getEditorKeymap: vi.fn(() => 'vim'),
-      setEditorKeymap: vi.fn(),
-    };
-    const app = {
-      cmEditor: {
-        setOption: vi.fn(),
-      },
-    };
-
-    expect(getEditorKeymap({ bridge })).toBe('vim');
-    expect(setEditorKeymap(app, 'emacs', { bridge })).toBe('emacs');
-    expect(app.cmEditor.setOption).toHaveBeenCalledWith('keyMap', 'emacs');
-    expect(bridge.setEditorKeymap).toHaveBeenCalledWith('emacs');
-  });
-
-  it('falls back to keymap radios only when Vue does not own keymap state', () => {
+  it('gets and sets keymaps through the DOM radios', () => {
     document.body.innerHTML = [
       '<label><input type="radio" name="keymap" value="sublime" checked></label>',
       '<label><input type="radio" name="keymap" value="vim"></label>',
@@ -132,8 +101,8 @@ describe('editorService', () => {
       },
     };
 
-    expect(getEditorKeymap({ bridge: null, doc: document })).toBe('sublime');
-    expect(setEditorKeymap(app, 'vim', { bridge: null, doc: document })).toBe('vim');
+    expect(getEditorKeymap({ doc: document })).toBe('sublime');
+    expect(setEditorKeymap(app, 'vim', { doc: document })).toBe('vim');
 
     expect(app.cmEditor.setOption).toHaveBeenCalledWith('keyMap', 'vim');
     expect(document.querySelector('input[name="keymap"][value="sublime"]').checked).toBe(false);

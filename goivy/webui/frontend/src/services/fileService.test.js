@@ -124,13 +124,12 @@ describe('fileService', () => {
     expect(app._lastClosedSessionId).toBe('stable-session');
     expect(app._lastClosedFileName).toBe('client.ivy');
 
-    const bridge = {
-      updateReopenLastFileButton: vi.fn(),
-    };
+    document.body.innerHTML = '<button id="file-reopen-last" style="display:none"></button>';
     app._fileHandle = null;
     app._persistedFileName = '';
-    updateReopenLastFileButton(app, { bridge });
-    expect(bridge.updateReopenLastFileButton).toHaveBeenCalledWith(true, 'Re-open last file client.ivy');
+    updateReopenLastFileButton(app, { doc: document });
+    expect(document.getElementById('file-reopen-last').textContent).toBe('Re-open last file client.ivy');
+    expect(document.getElementById('file-reopen-last').style.display).toBe('');
   });
 
   it('marks downloaded fallback saves as saved', () => {

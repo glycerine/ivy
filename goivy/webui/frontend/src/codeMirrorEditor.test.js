@@ -22,7 +22,7 @@ describe('codeMirrorEditor', () => {
 
     const result = initializeCodeMirrorEditor({
       runtime,
-      editorStore: { keymap: 'vim' },
+      keymap: 'vim',
       codeMirror,
     });
 

@@ -16,7 +16,6 @@ export function editorDirty(app) {
 }
 
 export function updateEditorLabel(app, {
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
   doc = globalThis.document,
   updateReopenLastFileButton,
 } = {}) {
@@ -36,17 +35,6 @@ export function updateEditorLabel(app, {
     labelText = `** ${name}`;
   } else {
     labelText = `${name} [saved]`;
-  }
-
-  if (bridge && typeof bridge.updateEditor === 'function') {
-    bridge.updateEditor({
-      path: name,
-      content: current,
-      savedContent: saved,
-      saveInProgress: !!(app && app._saveInProgress),
-    });
-    if (typeof updateReopenLastFileButton === 'function') updateReopenLastFileButton();
-    return labelText;
   }
 
   const editorLabel = doc && doc.getElementById('model-editor-label');
@@ -114,27 +102,18 @@ export function scrollEditorToLine(app, lineno) {
 }
 
 export function getEditorKeymap({
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
   doc = globalThis.document,
 } = {}) {
-  if (bridge && typeof bridge.getEditorKeymap === 'function') {
-    return bridge.getEditorKeymap() || 'sublime';
-  }
   const checked = doc && doc.querySelector('input[name="keymap"]:checked');
   return checked ? checked.value : 'sublime';
 }
 
 export function setEditorKeymap(app, keymap, {
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
   doc = globalThis.document,
 } = {}) {
   const next = EDITOR_KEYMAPS.has(keymap) ? keymap : 'sublime';
   if (app.cmEditor && typeof app.cmEditor.setOption === 'function') {
     app.cmEditor.setOption('keyMap', next);
-  }
-  if (bridge && typeof bridge.setEditorKeymap === 'function') {
-    bridge.setEditorKeymap(next);
-    return next;
   }
   const radio = doc && doc.querySelector(`input[name="keymap"][value="${next}"]`);
   if (radio) radio.checked = true;

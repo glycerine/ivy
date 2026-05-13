@@ -377,10 +377,6 @@ export function createIvyPersist(winArg = globalThis.window) {
     },
 
     _getToggles() {
-      const bridge = getBridge(win);
-      if (bridge && typeof bridge.getStateRelationToggles === 'function') {
-        return bridge.getStateRelationToggles() || {};
-      }
       const toggles = {};
       const table = doc && doc.getElementById('state-checkbox-body');
       if (!table) return toggles;
@@ -391,11 +387,6 @@ export function createIvyPersist(winArg = globalThis.window) {
     },
 
     _setToggles(toggles = {}) {
-      const bridge = getBridge(win);
-      if (bridge && typeof bridge.setStateRelationToggles === 'function') {
-        bridge.setStateRelationToggles(toggles || {});
-        return;
-      }
       const table = doc && doc.getElementById('state-checkbox-body');
       if (!table) return;
       table.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach((input) => {
@@ -412,10 +403,6 @@ export function createIvyPersist(winArg = globalThis.window) {
     },
 
     _buildVisibilityFromCheckboxes() {
-      const bridge = getBridge(win);
-      if (bridge && typeof bridge.buildStateRelationVisibility === 'function') {
-        return bridge.buildStateRelationVisibility() || { edges: {}, labels: {} };
-      }
       const edges = {};
       const labels = {};
       const tbody = doc && doc.getElementById('state-checkbox-body');
@@ -481,4 +468,3 @@ export function createIvyPersist(winArg = globalThis.window) {
 
   return persist;
 }
-

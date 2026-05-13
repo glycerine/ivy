@@ -41,27 +41,19 @@ export function sheetExists(app, sheetId, doc = globalThis.document) {
 }
 
 export function switchSheet(app, sheetId, {
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
   doc = globalThis.document,
 } = {}) {
-  const vueTabs = bridge && typeof bridge.activateSheetTab === 'function';
-  if (vueTabs) {
-    bridge.activateSheetTab(sheetId);
-  }
-
-  const tabs = vueTabs ? [] : doc.querySelectorAll('.sheet-tab');
+  const tabs = doc.querySelectorAll('.sheet-tab');
   const sheets = doc.querySelectorAll('.sheet-content');
   for (const tab of tabs) tab.classList.remove('active');
   for (const sheet of sheets) {
-    if (!vueTabs || sheet.__ivyVueRenderedSheet) {
-      sheet.classList.remove('active');
-    }
+    sheet.classList.remove('active');
   }
 
   const tab = app.sheetTab(sheetId);
   const sheet = doc.getElementById(sheetId);
-  if (tab && !vueTabs) tab.classList.add('active');
-  if (sheet && (!vueTabs || sheet.__ivyVueRenderedSheet)) sheet.classList.add('active');
+  if (tab) tab.classList.add('active');
+  if (sheet) sheet.classList.add('active');
   if (app.sheets && app.sheets[sheetId]) {
     app.activeSheetId = sheetId;
     if (app.sheets[sheetId].type !== 'events') {

@@ -6,15 +6,11 @@ import {
   useDetailsStore,
   useDialogStore,
   useDropdownStore,
-  useEditorStore,
   useEngineStore,
-  useEventTraceStore,
   useLayoutStore,
   useMenuDescriptorStore,
   useRecentFilesStore,
   useSessionStore,
-  useSheetStore,
-  useStateRelationsStore,
   useToastStore,
 } from './stores/index.js';
 
@@ -41,18 +37,14 @@ export function createIvyVueBridge({
     throw new Error('createIvyVueBridge requires a Pinia instance');
   }
 
-  const editorStore = useEditorStore(pinia);
   const engineStore = useEngineStore(pinia);
   const contextMenuStore = useContextMenuStore(pinia);
   const detailsStore = useDetailsStore(pinia);
   const dialogStore = useDialogStore(pinia);
   const dropdownStore = useDropdownStore(pinia);
   const sessionStore = useSessionStore(pinia);
-  const stateRelationsStore = useStateRelationsStore(pinia);
   const menuDescriptorStore = useMenuDescriptorStore(pinia);
-  const sheetStore = useSheetStore(pinia);
   const recentFilesStore = useRecentFilesStore(pinia);
-  const eventTraceStore = useEventTraceStore(pinia);
   const layoutStore = useLayoutStore(pinia);
   const toastStore = useToastStore(pinia);
 
@@ -71,33 +63,17 @@ export function createIvyVueBridge({
       contextMenuStore.hide();
       syncContextMenuElement(false, 0, 0, doc);
     },
-    updateEditor(snapshot) {
-      editorStore.applyRuntimeSnapshot(snapshot);
-    },
     initializeEditor(runtime) {
       return initializeCodeMirrorEditor({
         runtime,
-        editorStore,
+        keymap: runtime && typeof runtime.getEditorKeymap === 'function'
+          ? runtime.getEditorKeymap()
+          : 'sublime',
         doc,
         codeMirror: win.CodeMirror,
       });
     },
-    setEditorKeymap(keymap) {
-      editorStore.setKeymap(keymap);
-    },
-    getEditorKeymap() {
-      return editorStore.keymap;
-    },
-    editorKeymapHandled() {
-      return true;
-    },
-    updateReopenLastFileButton(visible, label) {
-      editorStore.setReopenLastFileButton(visible, label);
-    },
     staticCommandHandlersHandled() {
-      return true;
-    },
-    tabClicksHandled() {
       return true;
     },
     fileInputHandlersHandled() {
@@ -123,24 +99,6 @@ export function createIvyVueBridge({
     },
     setCheckTraceAction(action) {
       detailsStore.setTraceAction(action);
-    },
-    updateStateRelations(rows, onToggle) {
-      stateRelationsStore.setRows(rows, onToggle);
-    },
-    getStateRelationToggles() {
-      return stateRelationsStore.toggleSnapshot;
-    },
-    setStateRelationToggles(toggles) {
-      stateRelationsStore.applyToggleSnapshot(toggles || {});
-    },
-    buildStateRelationVisibility() {
-      return stateRelationsStore.visibilitySnapshot;
-    },
-    clearStateRelations() {
-      stateRelationsStore.clear();
-    },
-    updateStateLabel(value) {
-      stateRelationsStore.setStateLabel(value);
     },
     updateStatus(message, level = '') {
       sessionStore.setStatus(message, level);
@@ -179,9 +137,6 @@ export function createIvyVueBridge({
     flashMenuItem(id, durationMs) {
       dropdownStore.flashItem(id, durationMs);
     },
-    upsertSheetTab(tab) {
-      sheetStore.upsertTab(tab);
-    },
     createAnalysisSheetShell({ id, counter }) {
       if (!id) return null;
       const sheetArea = doc && doc.getElementById('sheet-area');
@@ -207,52 +162,11 @@ export function createIvyVueBridge({
       }
       return false;
     },
-    activateSheetTab(sheetId) {
-      sheetStore.activateTab(sheetId);
-    },
-    removeSheetTab(sheetId) {
-      sheetStore.removeTab(sheetId);
-      eventTraceStore.removeSheet(sheetId);
-    },
-    resetSheetTabs() {
-      sheetStore.resetTabs();
-      eventTraceStore.reset();
-    },
-    getSheetTabLabel(sheetId) {
-      return sheetStore.labelFor(sheetId);
-    },
     showDialog(config) {
       return dialogStore.open(config);
     },
-    editorSaveSheenHandled() {
-      return true;
-    },
     updateRecentFiles(items, loader) {
       recentFilesStore.setItems(items, loader);
-    },
-    upsertEventTraceSheet(sheet) {
-      eventTraceStore.upsertSheet(sheet);
-    },
-    setEventTraceExpanded(sheetId, address, expanded) {
-      eventTraceStore.setExpanded(sheetId, address, expanded);
-    },
-    isEventTraceExpanded(sheetId, address) {
-      return eventTraceStore.isExpanded(sheetId, address);
-    },
-    selectEventTraceRow(sheetId, address) {
-      eventTraceStore.selectEvent(sheetId, address);
-    },
-    updateEventPatterns(sheetId, patterns) {
-      eventTraceStore.setPatterns(sheetId, patterns);
-    },
-    setSelectedEventPatternIndex(sheetId, index) {
-      eventTraceStore.setSelectedPatternIndex(sheetId, index);
-    },
-    getSelectedEventPattern(sheetId) {
-      return eventTraceStore.selectedPattern(sheetId);
-    },
-    getSelectedEventPatternIndex(sheetId) {
-      return eventTraceStore.selectedPatternIndex(sheetId);
     },
     setTutorialVisible(visible) {
       layoutStore.setTutorialVisible(visible);

@@ -9,17 +9,12 @@ export function rememberLastOpenFile(app, persist) {
 }
 
 export function updateReopenLastFileButton(app, {
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
   doc = globalThis.document,
 } = {}) {
   const btn = doc && doc.getElementById('file-reopen-last');
   const noCurrentFile = !app._fileHandle && !app._persistedFileName;
   const visible = !!(noCurrentFile && (app._lastClosedFileHandle || app._lastClosedSessionId));
   const label = `Re-open last file ${app._lastClosedFileName || 'file'}`;
-  if (bridge && typeof bridge.updateReopenLastFileButton === 'function') {
-    bridge.updateReopenLastFileButton(visible, label);
-    return;
-  }
   if (!btn) return;
   if (visible) {
     btn.textContent = label;
@@ -376,7 +371,6 @@ export async function closeCurrentFile(app) {
 
 export async function newModel(app, persist, {
   options = {},
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
   doc = globalThis.document,
 } = {}) {
   if (!options.skipSaveCurrent && app._persistedFileContent) {
@@ -407,12 +401,8 @@ export async function newModel(app, persist, {
   app.setEditorContent('');
   persist.setFileName('');
   app._updateReopenLastFileButton();
-  if (bridge && typeof bridge.clearStateRelations === 'function') {
-    bridge.clearStateRelations();
-  } else {
-    const tbody = doc && doc.getElementById('state-checkbox-body');
-    if (tbody) tbody.innerHTML = '';
-  }
+  const tbody = doc && doc.getElementById('state-checkbox-body');
+  if (tbody) tbody.innerHTML = '';
 
   app.controls.setStatus('New model — load an .ivy file to begin', 'success');
 }

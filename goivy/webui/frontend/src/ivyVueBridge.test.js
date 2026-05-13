@@ -4,10 +4,7 @@ import { createPinia, setActivePinia } from 'pinia';
 import { configureEngineFromRuntime, createIvyVueBridge, installIvyVueBridge, syncContextMenuElement } from './ivyVueBridge.js';
 import {
   useContextMenuStore,
-  useEditorStore,
   useEngineStore,
-  useEventTraceStore,
-  useSheetStore,
 } from './stores/index.js';
 
 function makeBridge() {
@@ -73,52 +70,14 @@ describe('ivyVueBridge', () => {
     expect(sheet.innerHTML).toBe('');
   });
 
-  it('exposes editor and sheet state through the installed global bridge', () => {
+  it('installs the global bridge without owning editor or sheet state', () => {
     const { app, pinia } = makeBridge();
     const bridge = installIvyVueBridge({ app, pinia });
-    const editorStore = useEditorStore(pinia);
-    const sheetStore = useSheetStore(pinia);
-
-    bridge.updateEditor({
-      path: 'client_server_example.ivy',
-      content: 'changed',
-      savedContent: 'original',
-    });
-    bridge.upsertSheetTab({ id: 'events-1', label: 'Trace', type: 'events', closable: true });
-    bridge.activateSheetTab('events-1');
 
     expect(window.__ivyVueBridge).toBe(bridge);
-    expect(editorStore.path).toBe('client_server_example.ivy');
-    expect(editorStore.dirty).toBe(true);
-    expect(sheetStore.activeSheetId).toBe('events-1');
-    expect(bridge.getSheetTabLabel('events-1')).toBe('Trace');
-  });
-
-  it('keeps event trace sheets and patterns in Pinia through the bridge', () => {
-    const { pinia } = makeBridge();
-    const bridge = installIvyVueBridge({ pinia });
-    const eventTraceStore = useEventTraceStore(pinia);
-
-    bridge.upsertEventTraceSheet({
-      id: 'events-1',
-      label: 'Trace',
-      events: [{ text: 'root(a)', address: '0' }],
-      patterns: ['old'],
-    });
-    bridge.updateEventPatterns('events-1', ['old', 'new']);
-    bridge.setSelectedEventPatternIndex('events-1', 1);
-    bridge.selectEventTraceRow('events-1', '0');
-
-    expect(eventTraceStore.sheetById('events-1')).toMatchObject({
-      label: 'Trace',
-      patterns: ['old', 'new'],
-      selectedEventAddress: '0',
-    });
-    expect(bridge.getSelectedEventPattern('events-1')).toBe('new');
-
-    bridge.removeSheetTab('events-1');
-
-    expect(eventTraceStore.sheetById('events-1')).toBeNull();
+    expect(typeof bridge.updateEditor).toBe('undefined');
+    expect(typeof bridge.upsertSheetTab).toBe('undefined');
+    expect(typeof bridge.upsertEventTraceSheet).toBe('undefined');
   });
 
   it('can select a runtime-supplied engine before the API adapter is created', () => {

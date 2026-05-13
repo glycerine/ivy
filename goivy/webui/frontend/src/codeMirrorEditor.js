@@ -1,6 +1,6 @@
 export function initializeCodeMirrorEditor({
   runtime,
-  editorStore,
+  keymap = 'sublime',
   doc = globalThis.document,
   codeMirror = globalThis.CodeMirror,
 } = {}) {
@@ -15,7 +15,7 @@ export function initializeCodeMirrorEditor({
 
   const editor = codeMirror.fromTextArea(modelEditor, {
     lineNumbers: true,
-    keyMap: editorStore && editorStore.keymap ? editorStore.keymap : 'sublime',
+    keyMap: keymap || 'sublime',
     tabSize: 4,
     indentUnit: 4,
     lineWrapping: false,

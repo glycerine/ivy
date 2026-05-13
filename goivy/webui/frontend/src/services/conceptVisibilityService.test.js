@@ -11,7 +11,7 @@ import {
 } from './conceptVisibilityService.js';
 
 describe('conceptVisibilityService', () => {
-  it('hydrates backend toggle state and builds Vue relation rows', () => {
+  it('hydrates backend toggle state and builds relation rows', () => {
     const app = {};
     hydrateBackendToggleState(app, {
       toggles: {
@@ -40,7 +40,8 @@ describe('conceptVisibilityService', () => {
     ]);
   });
 
-  it('routes relation rows through the Vue bridge', () => {
+  it('renders relation rows into the DOM table', () => {
+    document.body.innerHTML = '<table><tbody id="state-checkbox-body"></tbody></table>';
     const app = {
       _edgeVisibility: {},
       _labelVisibility: {},
@@ -49,17 +50,12 @@ describe('conceptVisibilityService', () => {
       populateConstraintFacts: vi.fn(),
       onEdgeToggle: vi.fn(),
     };
-    const bridge = {
-      updateStateRelations: vi.fn(),
-    };
 
-    populateStateCheckboxes(app, { relations: ['link(X,Y)'] }, { bridge });
+    populateStateCheckboxes(app, { relations: ['link(X,Y)'] }, { doc: document });
 
-    expect(bridge.updateStateRelations).toHaveBeenCalledWith(
-      expect.arrayContaining([expect.objectContaining({ name: 'link(X,Y)' })]),
-      expect.any(Function),
-    );
-    bridge.updateStateRelations.mock.calls[0][1]('link(X,Y)', 'all_to_all', true);
+    expect(document.querySelector('.name-col a').textContent).toBe('link(X,Y)');
+    document.querySelector('input[value="all_to_all"]').checked = true;
+    document.querySelector('input[value="all_to_all"]').dispatchEvent(new Event('change'));
     expect(app.onEdgeToggle).toHaveBeenCalledWith('link(X,Y)', 'all_to_all', true);
   });
 
@@ -97,15 +93,9 @@ describe('conceptVisibilityService', () => {
     expect(displayConceptName('=X:client')).toBe('=X');
   });
 
-  it('updates the state label through Vue or DOM fallback', () => {
-    const bridge = {
-      updateStateLabel: vi.fn(),
-    };
-    updateStateLabel(3, { bridge });
-    expect(bridge.updateStateLabel).toHaveBeenCalledWith(3);
-
+  it('updates the state label through the DOM', () => {
     document.body.innerHTML = '<span id="state-label"></span>';
-    updateStateLabel(null, { bridge: null, doc: document });
+    updateStateLabel(null, { doc: document });
     expect(document.getElementById('state-label').textContent).toBe('State: —');
   });
 });

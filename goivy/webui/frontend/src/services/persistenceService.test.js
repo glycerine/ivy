@@ -31,9 +31,9 @@ function makeApp(overrides = {}) {
 
 describe('persistenceService', () => {
   it('saves and lists sessions through the Vue-bundled IvyPersist shim', () => {
+    document.body.innerHTML = '<table><tbody id="state-checkbox-body"><tr><td><input type="checkbox" name="link" value="all_to_all" checked></td></tr></tbody></table>';
     window.__ivyVueBridge = {
       getMode: vi.fn(() => 'bounded'),
-      getStateRelationToggles: vi.fn(() => ({ 'link|all_to_all': true })),
     };
     const persist = createIvyPersist(window);
 
@@ -91,10 +91,10 @@ describe('persistenceService', () => {
     ]);
   });
 
-  it('routes restored mode, relation toggles, and loaded file into the Vue bridge', () => {
+  it('routes restored mode and loaded file into the bridge while relation toggles use DOM', () => {
+    document.body.innerHTML = '<table><tbody id="state-checkbox-body"><tr><td><input type="checkbox" name="link" value="edge_unknown"></td></tr></tbody></table>';
     window.__ivyVueBridge = {
       setMode: vi.fn(),
-      setStateRelationToggles: vi.fn(),
       setLoadedFile: vi.fn(),
     };
     const persist = createIvyPersist(window);
@@ -104,7 +104,7 @@ describe('persistenceService', () => {
     persist.setFileName('client.ivy', '/tmp/client.ivy');
 
     expect(window.__ivyVueBridge.setMode).toHaveBeenCalledWith('pdr');
-    expect(window.__ivyVueBridge.setStateRelationToggles).toHaveBeenCalledWith({ 'link|edge_unknown': true });
+    expect(document.querySelector('input[name="link"][value="edge_unknown"]').checked).toBe(true);
     expect(window.__ivyVueBridge.setLoadedFile).toHaveBeenCalledWith('client.ivy', '/tmp/client.ivy');
   });
 

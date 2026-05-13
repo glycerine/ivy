@@ -59,7 +59,6 @@ export function stateRelationRows(app, conceptData) {
 }
 
 export function populateStateCheckboxes(app, conceptData, {
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
   doc = globalThis.document,
 } = {}) {
   app._lastConceptData = conceptData;
@@ -67,16 +66,6 @@ export function populateStateCheckboxes(app, conceptData, {
   hydrateBackendToggleState(app, conceptData);
   const rows = stateRelationRows(app, conceptData);
   const names = rows.map((row) => row.name);
-
-  if (bridge && typeof bridge.updateStateRelations === 'function') {
-    bridge.updateStateRelations(rows, (name, displayClass, checked) => {
-      app.onEdgeToggle(name, displayClass, checked);
-    });
-    app._applyEdgeVisibility();
-    app._applyNodeLabels();
-    app.populateConstraintFacts(conceptData);
-    return;
-  }
 
   if (!tbody) return;
   tbody.innerHTML = '';
@@ -250,13 +239,8 @@ export function applyNodeLabels(app) {
 }
 
 export function updateStateLabel(nodeId, {
-  bridge = globalThis.window && globalThis.window.__ivyVueBridge,
   doc = globalThis.document,
 } = {}) {
-  if (bridge && typeof bridge.updateStateLabel === 'function') {
-    bridge.updateStateLabel(nodeId);
-    return;
-  }
   const label = doc && doc.getElementById('state-label');
   if (label) {
     label.textContent = `State: ${nodeId != null ? nodeId : '\u2014'}`;
