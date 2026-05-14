@@ -2,6 +2,7 @@ import {
   ConceptSnapshot,
   CyElement,
   FactSelection,
+  GraphPositionMap,
   GraphSelection,
   SheetModel,
   UIDataModel,
@@ -56,6 +57,15 @@ function cloneCyElement(element: CyElement): RawRecord {
 
 function cyElementsToDefinitions(elements: CyElement[]): RawRecord[] {
   return elements.map(cloneCyElement);
+}
+
+function clonePositionMap(positions: GraphPositionMap | null | undefined): GraphPositionMap | null {
+  const out: GraphPositionMap = {};
+  for (const [id, position] of Object.entries(positions || {})) {
+    if (!position) continue;
+    out[id] = { x: position.x, y: position.y };
+  }
+  return Object.keys(out).length > 0 ? out : null;
 }
 
 function bareRelationName(name: string): string {
@@ -143,7 +153,7 @@ export function selectArgGraphView(sheet: SheetModel | null | undefined) {
   const elements = sheet && sheet.arg ? cyElementsToDefinitions(sheet.arg.render.elements) : [];
   return {
     elements,
-    positions: null,
+    positions: clonePositionMap(sheet && sheet.argPositions),
     selectedNodeId: sheet ? sheet.selectedArgNode : null,
   };
 }
@@ -175,7 +185,7 @@ export function selectConceptGraphView(sheet: SheetModel | null | undefined) {
 
   return {
     elements,
-    positions: null,
+    positions: clonePositionMap(sheet && sheet.conceptPositions),
     edgeVisibilityById,
   };
 }

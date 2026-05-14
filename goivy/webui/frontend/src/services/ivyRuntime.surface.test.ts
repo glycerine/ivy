@@ -115,6 +115,7 @@ describe('ivyRuntime public surface', () => {
       'refreshAfterLoad',
       'refreshConceptGraph',
       'registerSheet',
+      'relayoutConceptGraph',
       'rememberGraph',
       'removeAnalysisStateExtraSheets',
       'removeConcept',

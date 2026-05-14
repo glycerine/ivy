@@ -5,6 +5,16 @@ import {
   selectStateToggles,
 } from '../models/uiDataSelectors.ts';
 
+function rawRecord(value) {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+}
+
+function graphPayload(snapshot, positions) {
+  const payload = snapshot ? { ...rawRecord(snapshot.raw) } : { elements: [] };
+  payload.positions = positions && Object.keys(positions).length > 0 ? positions : null;
+  return payload;
+}
+
 export function analysisStateLimits() {
   return {
     maxFileBytes: 25 * 1024 * 1024,
@@ -43,8 +53,8 @@ export function buildAnalysisState(app, persist) {
         label: app.tabLabelForSheet(sheetId),
         selectedArgNode: modelSheet ? modelSheet.selectedArgNode : null,
         conceptSelections: selectConceptSelections(modelSheet),
-        arg: modelSheet && modelSheet.arg ? modelSheet.arg.raw : { elements: [], positions: null },
-        concept: modelSheet && modelSheet.concept ? modelSheet.concept.raw : { elements: [], positions: null },
+        arg: modelSheet ? graphPayload(modelSheet.arg, modelSheet.argPositions) : { elements: [], positions: null },
+        concept: modelSheet ? graphPayload(modelSheet.concept, modelSheet.conceptPositions) : { elements: [], positions: null },
       });
     }
   }

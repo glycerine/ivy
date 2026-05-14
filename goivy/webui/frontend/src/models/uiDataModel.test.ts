@@ -139,6 +139,21 @@ describe('UIDataModel — wire format coverage', () => {
     expect(el.position!.y).toBe(20);
   });
 
+  it('CyElements parses graph-level and node-level positions', () => {
+    const elements = new CyElements({
+      positions: { n0: { x: 1, y: 2 } },
+      elements: [
+        { group: 'nodes', data: { id: 'n0' } },
+        { group: 'nodes', data: { id: 'n1' }, position: { x: 3, y: 4 } },
+      ],
+    });
+
+    expect(elements.positions).toEqual({
+      n0: { x: 1, y: 2 },
+      n1: { x: 3, y: 4 },
+    });
+  });
+
   it('CyElementData parses typed metadata and emits only the render contract', () => {
     const data = new CyElementData({
       id: 'e0',
@@ -554,5 +569,25 @@ describe('UIDataModel — wire format coverage', () => {
 
     store.applyConceptSnapshot('sheet-1', { elements: [] });
     expect(model.sheets['sheet-1'].conceptSelections).toEqual([]);
+  });
+
+  it('keeps graph positions as model state across edge-only snapshot changes', () => {
+    const model = new UIDataModel();
+    const store = createUIDataModelStore(model);
+    store.applyConceptSnapshot('sheet-1', {
+      elements: [{ group: 'nodes', data: { id: 'client' } }],
+      positions: { client: { x: 20, y: 30 } },
+    });
+
+    store.applyConceptSnapshot('sheet-1', {
+      elements: [
+        { group: 'nodes', data: { id: 'client' } },
+        { group: 'edges', data: { id: 'self', source: 'client', target: 'client' } },
+      ],
+    });
+
+    expect(model.sheets['sheet-1'].conceptPositions).toEqual({
+      client: { x: 20, y: 30 },
+    });
   });
 });

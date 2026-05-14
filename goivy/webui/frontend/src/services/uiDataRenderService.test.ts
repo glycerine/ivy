@@ -92,6 +92,28 @@ describe('uiDataRenderService', () => {
     ], null);
   });
 
+  it('captures graph-rendered positions back into model state without a render loop', () => {
+    const argGraph = makeGraph();
+    argGraph.update.mockReturnValue({ state_0: { x: 5, y: 6 } });
+    const app = {
+      uiDataModel: new UIDataModel(),
+      activeSheetId: 'sheet-1',
+      selectedArgNode: null,
+      sheets: {
+        'sheet-1': { id: 'sheet-1', type: 'analysis', argGraph, conceptGraph: makeGraph() },
+      },
+      _applyEdgeVisibility: vi.fn(),
+    };
+    installUIDataModelStore(app);
+
+    app.uiDataStore.applyArgSnapshot('sheet-1', {
+      elements: [{ group: 'nodes', data: { id: 'state_0', label: '0' } }],
+    });
+
+    expect(app.uiDataModel.sheets['sheet-1'].argPositions).toEqual({ state_0: { x: 5, y: 6 } });
+    expect(argGraph.update).toHaveBeenCalledTimes(1);
+  });
+
   it('does not render event sheets into the active analysis graphs', () => {
     const analysisArg = makeGraph();
     const analysisConcept = makeGraph();

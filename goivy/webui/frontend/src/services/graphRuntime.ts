@@ -186,6 +186,92 @@ function copyOptions(defaults: any, options: any) {
   return { ...defaults, ...(options || {}) };
 }
 
+function positionValue(position: any) {
+  return position
+    && typeof position.x === 'number'
+    && typeof position.y === 'number'
+    && Number.isFinite(position.x)
+    && Number.isFinite(position.y)
+    ? { x: position.x, y: position.y }
+    : null;
+}
+
+function nodeId(element: any): string {
+  const data = (element && element.data) || {};
+  return String(data.id || data.obj || data.label || '');
+}
+
+function clonePositionMap(positions: any = {}) {
+  const out = {};
+  for (const [id, position] of Object.entries(positions || {})) {
+    const value = positionValue(position);
+    if (id && value) out[id] = value;
+  }
+  return out;
+}
+
+function mergePositionMaps(...maps: any[]) {
+  return Object.assign({}, ...maps.map((map) => clonePositionMap(map)));
+}
+
+function graphNodeIds(elements: any[]): string[] {
+  return (elements || [])
+    .filter((element) => element && element.group === 'nodes')
+    .map(nodeId)
+    .filter(Boolean);
+}
+
+function averageKnownNeighborPosition(node: string, elements: any[], positions: any) {
+  const neighbors = [];
+  for (const element of elements || []) {
+    if (!element || element.group !== 'edges') continue;
+    const data = element.data || {};
+    if (data.source === node && positions[data.target]) neighbors.push(positions[data.target]);
+    if (data.target === node && positions[data.source]) neighbors.push(positions[data.source]);
+  }
+  if (neighbors.length === 0) return null;
+  const sum = neighbors.reduce((acc, position) => ({
+    x: acc.x + position.x,
+    y: acc.y + position.y,
+  }), { x: 0, y: 0 });
+  return { x: sum.x / neighbors.length, y: sum.y / neighbors.length };
+}
+
+function fallbackPosition(positions: any, index: number) {
+  const known = Object.values(positions || {}).filter(Boolean) as any[];
+  if (known.length === 0) return null;
+  const maxX = Math.max(...known.map((position) => position.x));
+  const minY = Math.min(...known.map((position) => position.y));
+  const col = index % 4;
+  const row = Math.floor(index / 4);
+  return { x: maxX + 100 + col * 90, y: minY + row * 80 };
+}
+
+function fillMissingNodePositions(elements: any[], positions: any) {
+  const out = clonePositionMap(positions);
+  if (Object.keys(out).length === 0) return out;
+  let missingIndex = 0;
+  for (const id of graphNodeIds(elements)) {
+    if (out[id]) continue;
+    const neighbor = averageKnownNeighborPosition(id, elements, out);
+    const fallback = fallbackPosition(out, missingIndex);
+    const position = neighbor || fallback;
+    if (position) {
+      out[id] = {
+        x: position.x + 40 + (missingIndex % 3) * 30,
+        y: position.y + 40 + Math.floor(missingIndex / 3) * 30,
+      };
+    }
+    missingIndex += 1;
+  }
+  return out;
+}
+
+function allNodesHavePositions(elements: any[], positions: any): boolean {
+  const ids = graphNodeIds(elements);
+  return ids.length > 0 && ids.every((id) => !!positions[id]);
+}
+
 export class IvyGraph {
   [key: string]: any;
 
@@ -228,20 +314,35 @@ export class IvyGraph {
   }
 
   update(elements, positions) {
+    const currentPositions = this.getNodePositions();
     this.cy.elements().remove();
     if (!elements || elements.length === 0) return;
 
     const toAdd = elements.map((element) => {
+      const next = {
+        ...element,
+        data: { ...(element.data || {}) },
+      };
       if (element.group === 'nodes') {
-        if (!element.data.width) {
-          element.data.width = element.data.label ? Math.max(50, element.data.label.length * 8 + 20) : 50;
+        if (!next.data.width) {
+          next.data.width = next.data.label ? Math.max(50, next.data.label.length * 8 + 20) : 50;
         }
-        if (!element.data.height) element.data.height = 50;
-        if (!element.data.shape) element.data.shape = 'ellipse';
-        if (!element.data.border_color) element.data.border_color = '#000';
+        if (!next.data.height) next.data.height = 50;
+        if (!next.data.shape) next.data.shape = 'ellipse';
+        if (!next.data.border_color) next.data.border_color = '#000';
       }
-      return element;
+      return next;
     });
+
+    const mergedPositions = fillMissingNodePositions(toAdd, mergePositionMaps(currentPositions, positions));
+    const usePresetPositions = allNodesHavePositions(toAdd, mergedPositions);
+    if (usePresetPositions) {
+      for (const element of toAdd) {
+        if (element.group !== 'nodes') continue;
+        const id = nodeId(element);
+        if (mergedPositions[id]) element.position = mergedPositions[id];
+      }
+    }
 
     this.cy.add(toAdd);
     this.cy.nodes().forEach((node) => {
@@ -249,15 +350,15 @@ export class IvyGraph {
       if (borderColor) node.style('border-color', borderColor);
     });
 
-    if (positions) {
-      Object.entries(positions).forEach(([nodeId, position]) => {
-        const node = this.cy.getElementById(nodeId);
+    if (usePresetPositions) {
+      Object.entries(mergedPositions).forEach(([id, position]) => {
+        const node = this.cy.getElementById(id);
         if (node.length > 0) node.position(position);
       });
-      this.cy.fit(undefined, 30);
     } else {
       this.runLayout();
     }
+    return this.getNodePositions();
   }
 
   runLayout(options: any = undefined) {
@@ -280,6 +381,18 @@ export class IvyGraph {
     }
   }
 
+  getNodePositions() {
+    const out = {};
+    if (!this.cy || typeof this.cy.nodes !== 'function') return out;
+    this.cy.nodes().forEach((node) => {
+      const id = node.id ? node.id() : node.data && node.data('id');
+      const position = node.position ? node.position() : null;
+      const value = positionValue(position);
+      if (id && value) out[id] = value;
+    });
+    return out;
+  }
+
   onNodeClick(callback) {
     this.cy.on('tap', 'node', (evt) => {
       callback(evt.target.data(), evt);
@@ -290,6 +403,12 @@ export class IvyGraph {
     this.cy.on('cxttap', 'node', (evt) => {
       const pos = evt.renderedPosition || evt.target.renderedPosition();
       callback(evt.target.data(), pos, evt);
+    });
+  }
+
+  onNodePositionChange(callback) {
+    this.cy.on('free', 'node', (evt) => {
+      callback(this.getNodePositions(), evt);
     });
   }
 

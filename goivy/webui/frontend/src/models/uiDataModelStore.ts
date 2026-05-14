@@ -2,7 +2,9 @@ import {
   ARGSnapshot,
   CTISnapshot,
   ConceptSnapshot,
+  GraphPositionMap,
   UIDataModel,
+  positionsForElements,
 } from './uiDataModel.ts';
 
 export type UIDataChangeKind =
@@ -12,6 +14,8 @@ export type UIDataChangeKind =
   | 'sheet'
   | 'argSelection'
   | 'conceptSelection'
+  | 'argLayout'
+  | 'conceptLayout'
   | 'visualOnly'
   | 'interaction';
 
@@ -66,6 +70,7 @@ export class UIDataModelStore {
     const sheet = this.model.registerSheet(id);
     const snapshot = new ARGSnapshot(payload);
     sheet.arg = snapshot;
+    sheet.argPositions = positionsForElements(snapshot.render.elements, snapshot.render.positions, sheet.argPositions);
     sheet.selectedArgNode = null;
     this.emit({ sheetId: id, changed: ['arg', 'argSelection'] });
     return snapshot;
@@ -76,6 +81,7 @@ export class UIDataModelStore {
     const sheet = this.model.registerSheet(id);
     const snapshot = new ConceptSnapshot(payload);
     sheet.concept = snapshot;
+    sheet.conceptPositions = positionsForElements(snapshot.render.elements, snapshot.render.positions, sheet.conceptPositions);
     sheet.conceptSelections = [];
     this.emit({ sheetId: id, changed: ['concept', 'conceptSelection'] });
     return snapshot;
@@ -95,6 +101,17 @@ export class UIDataModelStore {
     const selected = this.model.setSelectedArgNode(id, nodeId);
     this.emit({ sheetId: id, changed: ['argSelection'] });
     return selected;
+  }
+
+  setGraphPositions(sheetId: string, graphKind: 'arg' | 'concept', positions: GraphPositionMap | null | undefined, {
+    emit = true,
+  } = {}): GraphPositionMap {
+    const id = sheetId || this.model.activeSheetId;
+    const next = this.model.setGraphPositions(id, graphKind, positions);
+    if (emit) {
+      this.emit({ sheetId: id, changed: [graphKind === 'arg' ? 'argLayout' : 'conceptLayout'] });
+    }
+    return next;
   }
 
   toggleConceptNodeSelection(sheetId: string, node: unknown): boolean {

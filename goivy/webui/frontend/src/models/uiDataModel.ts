@@ -278,6 +278,32 @@ export class CyPosition extends RawBackedModel<unknown> {
   }
 }
 
+export interface CyPositionData {
+  x: number;
+  y: number;
+}
+
+export type GraphPositionMap = Record<string, CyPositionData>;
+
+function positionData(raw: unknown): CyPositionData | null {
+  if (!isRecord(raw)) return null;
+  const x = pick(raw, 'x', 'X');
+  const y = pick(raw, 'y', 'Y');
+  if (typeof x !== 'number' || typeof y !== 'number') return null;
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+  return { x, y };
+}
+
+function graphPositionMap(value: unknown): GraphPositionMap {
+  const out: GraphPositionMap = {};
+  const obj = rawRecord(value);
+  for (const id of Object.keys(obj)) {
+    const position = positionData(obj[id]);
+    if (position) out[id] = position;
+  }
+  return out;
+}
+
 export class GraphAction {
   readonly label: string;
   readonly action: string;
@@ -446,12 +472,48 @@ export class CyElement {
 
 export class CyElements {
   readonly elements: CyElement[];
+  readonly positions: GraphPositionMap;
 
   constructor(raw: unknown = {}) {
     this.elements = typedArray(pick(raw, 'elements', 'Elements'), CyElement);
+    this.positions = graphPositionMap(pick(raw, 'positions', 'Positions'));
+    for (const element of this.elements) {
+      if (element.group !== 'nodes' || !element.position) continue;
+      const id = element.data.id || element.data.obj || element.data.label;
+      if (id && !this.positions[id]) {
+        this.positions[id] = { x: element.position.x, y: element.position.y };
+      }
+    }
     // NodeID and EdgeID are tagged json:"-" in Go and never appear on the wire.
     // Use typed CyElementData id/obj/tuple fields for lookups instead.
   }
+}
+
+function nodeIds(elements: CyElement[]): string[] {
+  return elements
+    .filter((element) => element.group === 'nodes')
+    .map((element) => element.data.id || element.data.obj || element.data.label)
+    .filter((id): id is string => !!id);
+}
+
+function clonePositionMap(positions: GraphPositionMap | null | undefined): GraphPositionMap {
+  const out: GraphPositionMap = {};
+  for (const [id, position] of Object.entries(positions || {})) {
+    if (!position) continue;
+    out[id] = { x: position.x, y: position.y };
+  }
+  return out;
+}
+
+export function positionsForElements(elements: CyElement[], incoming: GraphPositionMap | null | undefined, previous: GraphPositionMap | null | undefined): GraphPositionMap {
+  const out: GraphPositionMap = {};
+  const incomingMap = incoming || {};
+  const previousMap = previous || {};
+  for (const id of nodeIds(elements)) {
+    const position = incomingMap[id] || previousMap[id];
+    if (position) out[id] = { x: position.x, y: position.y };
+  }
+  return out;
 }
 
 export class FactSelection extends RawBackedModel<unknown> {
@@ -752,6 +814,8 @@ export class SheetModel extends RawBackedModel<unknown> {
   arg: ARGSnapshot | null;
   concept: ConceptSnapshot | null;
   cti: CTISnapshot | null;
+  argPositions: GraphPositionMap;
+  conceptPositions: GraphPositionMap;
   selectedArgNode: string | null;
   conceptSelections: GraphSelection[];
   visualOnly: boolean;
@@ -763,6 +827,8 @@ export class SheetModel extends RawBackedModel<unknown> {
     this.arg = null;
     this.concept = null;
     this.cti = null;
+    this.argPositions = graphPositionMap(pick(raw, 'argPositions', 'arg_positions'));
+    this.conceptPositions = graphPositionMap(pick(raw, 'conceptPositions', 'concept_positions'));
     const selected = pick(raw, 'selectedArgNode', 'selected_arg_node');
     this.selectedArgNode = typeof selected === 'string' ? selected : null;
     this.conceptSelections = rawArray(pick(raw, 'conceptSelections', 'concept_selections'))
@@ -824,6 +890,17 @@ export class UIDataModel extends RawBackedModel<unknown> {
     const sheet = this.registerSheet(sheetId || this.activeSheetId);
     sheet.selectedArgNode = nodeId || null;
     return sheet.selectedArgNode;
+  }
+
+  setGraphPositions(sheetId: string, graphKind: 'arg' | 'concept', positions: GraphPositionMap | null | undefined): GraphPositionMap {
+    const sheet = this.registerSheet(sheetId || this.activeSheetId);
+    const next = clonePositionMap(positions);
+    if (graphKind === 'arg') {
+      sheet.argPositions = next;
+    } else {
+      sheet.conceptPositions = next;
+    }
+    return next;
   }
 
   toggleConceptNodeSelection(sheetId: string, selectionInput: unknown): boolean {

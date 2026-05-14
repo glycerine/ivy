@@ -31,6 +31,8 @@ describe('analysisStateService', () => {
       toggles: { edges: { link: { all_to_all: true } } },
     });
     store.setSelectedArgNode('sheet-1', 'n0');
+    store.setGraphPositions('sheet-1', 'arg', { a: { x: 1, y: 2 } }, { emit: false });
+    store.setGraphPositions('sheet-1', 'concept', { c: { x: 3, y: 4 } }, { emit: false });
     const app = {
       uiDataModel,
       sheets: {
@@ -67,8 +69,8 @@ describe('analysisStateService', () => {
       sheets: [
         {
           id: 'sheet-1',
-          arg: { elements: ['arg'] },
-          concept: { elements: ['concept'] },
+          arg: { elements: ['arg'], positions: { a: { x: 1, y: 2 } } },
+          concept: { elements: ['concept'], positions: { c: { x: 3, y: 4 } } },
         },
         {
           id: 'events-1',

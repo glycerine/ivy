@@ -12,7 +12,7 @@ function makeFakeCy() {
       const list = Array.isArray(elements) ? elements : [elements];
       cy.added.push(...list);
       list.filter((element) => element.group === 'nodes').forEach((element) => {
-        nodes.push(makeNode(element.data));
+        nodes.push(makeNode(element));
       });
     }),
     nodes: vi.fn(() => {
@@ -39,13 +39,18 @@ function makeFakeCy() {
   return cy;
 }
 
-function makeNode(data) {
+function makeNode(element) {
+  const data = element.data || {};
+  let currentPosition = element.position || { x: 0, y: 0 };
   return {
     length: 1,
     id: () => data.id,
     data: vi.fn((key) => (key ? data[key] : data)),
     style: vi.fn(),
-    position: vi.fn(),
+    position: vi.fn((next) => {
+      if (next) currentPosition = next;
+      return currentPosition;
+    }),
     addClass: vi.fn(),
     remove: vi.fn(),
   };
@@ -92,6 +97,26 @@ describe('graphRuntime', () => {
       border_color: '#000',
     });
     expect(cy.getElementById('n1').position).toHaveBeenCalledWith({ x: 12, y: 34 });
-    expect(cy.fit).toHaveBeenCalledWith(undefined, 30);
+    expect(cy.fit).not.toHaveBeenCalled();
+  });
+
+  it('preserves existing node positions when an edge-only update arrives', () => {
+    const cy = makeFakeCy();
+    window.cytoscape = vi.fn(() => cy);
+    document.body.innerHTML = '<div id="arg-graph"></div>';
+    const graph = new IvyGraph('arg-graph', ARG_STYLE);
+
+    graph.update([
+      { group: 'nodes', data: { id: 'n1', label: 'state' } },
+    ], { n1: { x: 12, y: 34 } });
+    cy.layout.mockClear();
+
+    graph.update([
+      { group: 'nodes', data: { id: 'n1', label: 'state' } },
+      { group: 'edges', data: { id: 'e1', source: 'n1', target: 'n1' } },
+    ], null);
+
+    expect(cy.getElementById('n1').position).toHaveBeenCalledWith({ x: 12, y: 34 });
+    expect(cy.layout).not.toHaveBeenCalled();
   });
 });

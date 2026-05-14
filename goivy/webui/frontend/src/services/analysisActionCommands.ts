@@ -17,6 +17,7 @@ export const ANALYSIS_ACTION_COMMANDS = [
   'makeConjecture',
   'backtrack',
   'recalculateGraph',
+  'relayoutConceptGraph',
   'rememberGraph',
   'exportConjecture',
   'refreshAfterLoad',

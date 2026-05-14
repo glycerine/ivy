@@ -126,6 +126,9 @@ import {
     runAction as runActionViaService,
 } from './analysisActionService.ts';
 import {
+    relayoutGraphWithDot as relayoutGraphWithDotViaService,
+} from './graphLayoutService.ts';
+import {
     closeAllDropdowns as closeAllDropdownsViaService,
     dispatchMenuDescriptorAction as dispatchMenuDescriptorActionViaService,
     flashAndClose as flashAndCloseViaService,
@@ -644,6 +647,13 @@ class IvyRuntime {
             self.controls.clearInfo();
             self.controls.hideContextMenu();
         });
+        if (argGraph.onNodePositionChange) {
+            argGraph.onNodePositionChange(function (positions) {
+                if (self.uiDataStore && self.uiDataStore.setGraphPositions) {
+                    self.uiDataStore.setGraphPositions(sheetId, 'arg', positions, { emit: false });
+                }
+            });
+        }
 
         conceptGraph.onNodeRightClick(function (nodeData, pos) {
             self.onConceptNodeRightClick(nodeData, pos);
@@ -681,6 +691,13 @@ class IvyRuntime {
             self.controls.clearInfo();
             self.controls.hideContextMenu();
         });
+        if (conceptGraph.onNodePositionChange) {
+            conceptGraph.onNodePositionChange(function (positions) {
+                if (self.uiDataStore && self.uiDataStore.setGraphPositions) {
+                    self.uiDataStore.setGraphPositions(sheetId, 'concept', positions, { emit: false });
+                }
+            });
+        }
     }
 
     async chooseAndLoadModelFile() {
@@ -897,6 +914,7 @@ class IvyRuntime {
             this.bindMenuAction('conj-remember', function () { self.rememberGraph(); });
             this.bindMenuAction('conj-export', function () { self.exportConjecture(); });
             this.bindMenuAction('view-add-relation', function () { self.addRelationFromString(); });
+            this.bindMenuAction('view-relayout-dot', function () { self.relayoutConceptGraph(); });
 
         // --- Click anywhere to dismiss context menu and dropdowns ---
         document.addEventListener('click', function (e) {
@@ -3211,6 +3229,16 @@ class IvyRuntime {
             }
         } catch (e) {
             console.error('Concept graph refresh error:', e);
+        }
+    }
+
+    async relayoutConceptGraph() {
+        this.controls.setStatus('Relayout with Graphviz dot...');
+        try {
+            await relayoutGraphWithDotViaService(this, 'concept', { sheetId: this.activeSheetId || 'sheet-1' });
+            this.controls.setStatus('Relayout complete', 'success');
+        } catch (e) {
+            this.controls.setStatus('Relayout failed: ' + e.message, 'error');
         }
     }
 

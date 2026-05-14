@@ -57,7 +57,10 @@ function renderArgGraph(app, sheetId) {
   const view = selectArgGraphView(sheet);
   const { argGraph } = sheetGraphs(app, sheetId);
   if (argGraph && typeof argGraph.update === 'function') {
-    argGraph.update(view.elements, view.positions);
+    const positions = argGraph.update(view.elements, view.positions);
+    if (positions && app && app.uiDataStore && typeof app.uiDataStore.setGraphPositions === 'function') {
+      app.uiDataStore.setGraphPositions(sheetId, 'arg', positions, { emit: false });
+    }
   }
   if (argGraph && typeof argGraph.highlightNode === 'function') {
     if (view.selectedNodeId) {
@@ -74,7 +77,10 @@ function renderConceptGraph(app, sheetId) {
   const view = selectConceptGraphView(sheet);
   const { conceptGraph } = sheetGraphs(app, sheetId);
   if (conceptGraph && typeof conceptGraph.update === 'function') {
-    conceptGraph.update(view.elements, view.positions);
+    const positions = conceptGraph.update(view.elements, view.positions);
+    if (positions && app && app.uiDataStore && typeof app.uiDataStore.setGraphPositions === 'function') {
+      app.uiDataStore.setGraphPositions(sheetId, 'concept', positions, { emit: false });
+    }
   }
   if (conceptGraph && typeof app._applyEdgeVisibility === 'function') {
     app._applyEdgeVisibility(conceptGraph, view);
@@ -96,7 +102,7 @@ export function renderUIDataChange(app, change, options = {}) {
   if (!app || !change || !change.sheetId) return;
   const changed = new Set(change.changed || []);
   syncRuntimeSheetMirrors(app, change.sheetId);
-  if (changed.has('arg')) {
+  if (changed.has('arg') || changed.has('argLayout')) {
     renderArgGraph(app, change.sheetId);
   } else if (changed.has('argSelection')) {
     const sheet = selectSheet(app.uiDataModel, change.sheetId);
@@ -110,7 +116,7 @@ export function renderUIDataChange(app, change, options = {}) {
       }
     }
   }
-  if (changed.has('concept') || changed.has('conceptSelection')) {
+  if (changed.has('concept') || changed.has('conceptSelection') || changed.has('conceptLayout')) {
     renderConceptGraph(app, change.sheetId);
   }
   if (changed.has('concept') || changed.has('conceptSelection') || changed.has('sheet')) {
