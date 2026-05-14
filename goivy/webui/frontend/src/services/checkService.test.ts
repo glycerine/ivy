@@ -12,7 +12,8 @@ describe('checkService', () => {
   it('adds CTI details and trace actions for failed checks', () => {
     const app = {
       addCheckResultViewActions: vi.fn(),
-      argGraph: { update: vi.fn() },
+      activeSheetId: 'sheet-1',
+      uiDataStore: { applyArgSnapshot: vi.fn() },
       controls: {
         setStatus: vi.fn(),
         showInfo: vi.fn(),
@@ -35,7 +36,10 @@ describe('checkService', () => {
     );
     expect(app.controls.showInfo.mock.calls[0][1]).toContain('frame details');
     expect(app.addCheckResultViewActions).toHaveBeenCalled();
-    expect(app.argGraph.update).toHaveBeenCalledWith([1], {});
+    expect(app.uiDataStore.applyArgSnapshot).toHaveBeenCalledWith('sheet-1', {
+      elements: [1],
+      positions: {},
+    });
   });
 
   it('adds a direct DOM view-trace action', () => {

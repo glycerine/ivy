@@ -1,3 +1,5 @@
+import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
+
 export function analysisStateLimits() {
   return {
     maxFileBytes: 25 * 1024 * 1024,
@@ -33,9 +35,13 @@ export function buildAnalysisState(app, persist) {
         id: sheetId,
         type: 'analysis',
         label: app.tabLabelForSheet(sheetId),
-        selectedArgNode: sheet.selectedArgNode || null,
-        arg: { elements: app.graphElementsSnapshot(sheet.argGraph), positions: null },
-        concept: { elements: app.graphElementsSnapshot(sheet.conceptGraph), positions: null },
+        selectedArgNode: (app.uiDataModel && app.uiDataModel.sheets[sheetId] && app.uiDataModel.sheets[sheetId].selectedArgNode) || sheet.selectedArgNode || null,
+        arg: app.uiDataModel && app.uiDataModel.sheets[sheetId] && app.uiDataModel.sheets[sheetId].arg
+          ? app.uiDataModel.sheets[sheetId].arg.raw
+          : { elements: app.graphElementsSnapshot(sheet.argGraph), positions: null },
+        concept: app.uiDataModel && app.uiDataModel.sheets[sheetId] && app.uiDataModel.sheets[sheetId].concept
+          ? app.uiDataModel.sheets[sheetId].concept.raw
+          : { elements: app.graphElementsSnapshot(sheet.conceptGraph), positions: null },
       });
     }
   }
@@ -49,8 +55,8 @@ export function buildAnalysisState(app, persist) {
     mode: app.getMode(),
     activeSheetId: app.activeSheetId || 'sheet-1',
     selectedArgNode: app.selectedArgNode || null,
-    edgeVisibility: app._edgeVisibility || {},
-    labelVisibility: app._labelVisibility || {},
+    edgeVisibility: {},
+    labelVisibility: {},
     toggles: persist && persist._getToggles ? persist._getToggles() : {},
     sheets,
   };
@@ -195,8 +201,6 @@ export async function loadAnalysisStateObject(app, state, persist) {
   app._persistedFilePath = state.filePath || state.fileName || '';
   app._persistedFileContent = state.fileContent || '';
   app._savedFileContent = app._persistedFileContent;
-  app._edgeVisibility = state.edgeVisibility || {};
-  app._labelVisibility = state.labelVisibility || {};
   app.selectedArgNode = state.selectedArgNode || null;
 
   if (app.setEditorContent) {
@@ -222,28 +226,27 @@ export async function loadAnalysisStateObject(app, state, persist) {
     }
     if (sheet.id === 'sheet-1') {
       if (sheet.arg && sheet.arg.elements && app.argGraph) {
-        if (app.acceptArgSnapshot) app.acceptArgSnapshot(sheet.id, sheet.arg);
-        app.argGraph.update(sheet.arg.elements, sheet.arg.positions || undefined);
+        applyArgSnapshot(app, sheet.id, sheet.arg);
       }
       if (sheet.concept && sheet.concept.elements && app.conceptGraph) {
-        if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(sheet.id, sheet.concept);
-        app.conceptGraph.update(sheet.concept.elements, sheet.concept.positions || undefined);
+        applyConceptSnapshot(app, sheet.id, sheet.concept);
       }
       if (app.sheets && app.sheets['sheet-1']) {
         app.sheets['sheet-1'].selectedArgNode = sheet.selectedArgNode || null;
         app.sheets['sheet-1'].visualOnly = true;
       }
+      if (app.uiDataStore) app.uiDataStore.setSelectedArgNode(sheet.id, sheet.selectedArgNode || null);
     } else if (sheet.arg && sheet.arg.elements) {
       app.openARGSheet(sheet.label || sheet.id, sheet.arg, sheet.id);
       const opened = app.sheets && app.sheets[sheet.id];
       if (opened && opened.conceptGraph && sheet.concept && sheet.concept.elements) {
-        if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(sheet.id, sheet.concept);
-        opened.conceptGraph.update(sheet.concept.elements, sheet.concept.positions || undefined);
+        applyConceptSnapshot(app, sheet.id, sheet.concept);
       }
       if (opened) {
         opened.selectedArgNode = sheet.selectedArgNode || null;
         opened.visualOnly = true;
       }
+      if (app.uiDataStore) app.uiDataStore.setSelectedArgNode(sheet.id, sheet.selectedArgNode || null);
     }
   }
 

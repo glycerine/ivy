@@ -40,16 +40,18 @@ describe('argActionService', () => {
         })),
       },
       sheets: {},
-      argGraph: { update: vi.fn() },
-      conceptGraph: { update: vi.fn() },
+      uiDataStore: {
+        applyArgSnapshot: vi.fn(),
+        applyConceptSnapshot: vi.fn(),
+      },
       controls: { setStatus: vi.fn() },
     };
 
     await executeArgNodeAction(app, { id: 'n0' }, { id: 'extend' }, 'sheet-1');
 
     expect(app.api.argNodeAction).toHaveBeenCalledWith('n0', 'extend', { sheet_id: 'sheet-1' });
-    expect(app.argGraph.update).toHaveBeenCalledWith(['arg'], null);
-    expect(app.conceptGraph.update).toHaveBeenCalledWith(['concept'], null);
+    expect(app.uiDataStore.applyArgSnapshot).toHaveBeenCalledWith('sheet-1', { elements: ['arg'], positions: null });
+    expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', { elements: ['concept'], positions: null });
   });
 
   it('loads source returned by ARG edge view-source actions', async () => {

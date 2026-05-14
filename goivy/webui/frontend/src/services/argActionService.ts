@@ -1,3 +1,5 @@
+import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
+
 export async function prepareArgNodeActionArgs(app, nodeData, actionName, args, sheetId) {
   if (actionName === 'try_conjecture' && !args.conjecture) {
     const conjChoices = await app.api.argNodeAction(nodeData.obj || nodeData.id, 'try_conjecture_choices', { sheet_id: sheetId });
@@ -39,16 +41,11 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
       return null;
     }
     const result = await app.api.argNodeAction(nodeData.obj || nodeData.id, actionName, args);
-    const sheet = app.sheets && app.sheets[targetSheetId];
-    const argGraph = (sheet && sheet.argGraph) || app.argGraph;
-    const conceptGraph = (sheet && sheet.conceptGraph) || app.conceptGraph;
     if (result && result.arg) {
-      if (app.acceptArgSnapshot) app.acceptArgSnapshot(targetSheetId, result.arg);
-      argGraph.update(result.arg.elements, result.arg.positions);
+      applyArgSnapshot(app, targetSheetId, result.arg);
     }
     if (result && result.concept) {
-      if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(targetSheetId, result.concept);
-      conceptGraph.update(result.concept.elements, result.concept.positions);
+      applyConceptSnapshot(app, targetSheetId, result.concept);
     }
     app.controls.setStatus(`Action complete: ${actionName}`, 'success');
     return result;
@@ -73,10 +70,7 @@ export async function executeArgEdgeAction(app, edgeData, actionName, sheetId) {
       app.openARGSheet(label, result.sub_arg, result.sheet_id);
     }
     if (result && result.arg) {
-      const sheet = app.sheets && app.sheets[targetSheetId];
-      const argGraph = (sheet && sheet.argGraph) || app.argGraph;
-      if (app.acceptArgSnapshot) app.acceptArgSnapshot(targetSheetId, result.arg);
-      argGraph.update(result.arg.elements, result.arg.positions);
+      applyArgSnapshot(app, targetSheetId, result.arg);
     }
     if (result && result.source && actionName === 'view_source') {
       app.setEditorContent(result.source);

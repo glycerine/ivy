@@ -1,3 +1,5 @@
+import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
+
 export async function runCheck(app) {
   const mode = app.getMode();
   app.controls.showLoading(`Running ${mode} check...`);
@@ -12,15 +14,12 @@ export async function runCheck(app) {
 
     const argData = await app.api.getARG();
     if (argData && argData.elements) {
-      if (app.acceptArgSnapshot) app.acceptArgSnapshot(app.activeSheetId || 'sheet-1', argData);
-      app.argGraph.update(argData.elements, argData.positions);
+      applyArgSnapshot(app, app.activeSheetId || 'sheet-1', argData);
     }
 
     const conceptData = await app.api.getConceptGraph();
     if (conceptData && conceptData.elements) {
-      app._lastConceptData = conceptData;
-      if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(app.activeSheetId || 'sheet-1', conceptData);
-      app.conceptGraph.update(conceptData.elements, conceptData.positions);
+      applyConceptSnapshot(app, app.activeSheetId || 'sheet-1', conceptData);
     }
 
     if (result && result.used_relations) {
@@ -82,8 +81,7 @@ export function showCheckResult(app, result) {
     app.controls.showInfo('Verification Result', `FAILED${z3note}: ${failDetails}`);
     app.addCheckResultViewActions(result);
     if (result.arg) {
-      if (app.acceptArgSnapshot) app.acceptArgSnapshot(app.activeSheetId || 'sheet-1', result.arg);
-      app.argGraph.update(result.arg.elements, result.arg.positions);
+      applyArgSnapshot(app, app.activeSheetId || 'sheet-1', result.arg);
     }
   } else if (verdict === 'error') {
     app.controls.setStatus(`Check ERROR${mode}${z3note}`, 'error');

@@ -4,7 +4,8 @@ export function currentSheet(app) {
 
 export function registerSheet(app, sheetId, argGraph, conceptGraph) {
   app.installConceptGraphVisibilityHook(conceptGraph);
-  if (app.uiDataModel) app.uiDataModel.registerSheet(sheetId, { type: 'analysis' });
+  if (app.uiDataStore) app.uiDataStore.registerSheet(sheetId, { type: 'analysis' });
+  else if (app.uiDataModel) app.uiDataModel.registerSheet(sheetId, { type: 'analysis' });
   app.sheets[sheetId] = {
     id: sheetId,
     type: 'analysis',

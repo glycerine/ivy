@@ -43,8 +43,6 @@ describe('analysisStateService', () => {
       getMode: () => 'pdr',
       activeSheetId: 'events-1',
       selectedArgNode: 'n0',
-      _edgeVisibility: { link: { all_to_all: true } },
-      _labelVisibility: {},
     };
     const persist = {
       _getToggles: vi.fn(() => { return { 'link|all_to_all': true }; }),
@@ -163,6 +161,11 @@ describe('analysisStateService', () => {
       openARGSheet: vi.fn((label, arg, sheetId) => {
         app.sheets[sheetId] = { id: sheetId, type: 'analysis', conceptGraph: extraConcept };
       }),
+      uiDataStore: {
+        applyArgSnapshot: vi.fn(),
+        applyConceptSnapshot: vi.fn(),
+        setSelectedArgNode: vi.fn(),
+      },
       setVisualOnlySheet: vi.fn((sheetId, visualOnly) => {
         app.sheets[sheetId].visualOnly = visualOnly;
       }),
@@ -218,10 +221,10 @@ describe('analysisStateService', () => {
     expect(app.api.reloadContent).toHaveBeenCalledWith('ivy source', 'client.ivy');
     expect(app.setEditorContent).toHaveBeenCalledWith('ivy source');
     expect(app.setMode).toHaveBeenCalledWith('bounded');
-    expect(app.argGraph.update).toHaveBeenCalledWith(state.sheets[0].arg.elements, undefined);
-    expect(app.conceptGraph.update).toHaveBeenCalledWith(state.sheets[0].concept.elements, undefined);
+    expect(app.uiDataStore.applyArgSnapshot).toHaveBeenCalledWith('sheet-1', state.sheets[0].arg);
+    expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', state.sheets[0].concept);
     expect(app.openARGSheet).toHaveBeenCalledWith('Saved Sheet', state.sheets[1].arg, 'sheet-2');
-    expect(extraConcept.update).toHaveBeenCalledWith(state.sheets[1].concept.elements, undefined);
+    expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-2', state.sheets[1].concept);
     expect(app.openEventTraceSheet).toHaveBeenCalledWith('Trace', {
       sheet_id: 'events-1',
       events: state.sheets[2].events,

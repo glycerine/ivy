@@ -33,8 +33,8 @@ describe('analysisActionService', () => {
       api: {
         getConceptGraph: vi.fn(async () => concept),
       },
-      conceptGraph: {
-        update: vi.fn(),
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
       },
       populateStateCheckboxes: vi.fn(),
     };
@@ -42,8 +42,8 @@ describe('analysisActionService', () => {
     await refreshConceptGraph(app);
 
     expect(app.api.getConceptGraph).toHaveBeenCalledWith('0');
-    expect(app.conceptGraph.update).toHaveBeenCalledWith(concept.elements, concept.positions);
-    expect(app.populateStateCheckboxes).toHaveBeenCalledWith(concept);
+    expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', concept);
+    expect(app.populateStateCheckboxes).not.toHaveBeenCalled();
   });
 
   it('executes simple refresh actions with expected status messages', async () => {

@@ -1,3 +1,5 @@
+import { applyConceptSnapshot } from './uiDataRenderService.ts';
+
 export async function runAction(app, actionName, args, options) {
   const opts = options || {};
   const runningMessage = opts.runningMessage || `Running: ${actionName}...`;
@@ -31,10 +33,8 @@ export async function refreshConceptGraph(app) {
   try {
     const result = await app.api.getConceptGraph(app.selectedArgNode);
     if (result && result.elements) {
-      if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(app.activeSheetId || 'sheet-1', result);
-      app.conceptGraph.update(result.elements, result.positions);
-    }
-    if (result) {
+      applyConceptSnapshot(app, app.activeSheetId || 'sheet-1', result);
+    } else if (result) {
       app.populateStateCheckboxes(result);
     }
   } catch (err) {

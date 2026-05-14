@@ -1,3 +1,5 @@
+import { selectMaterializableEdges } from '../models/uiDataSelectors.ts';
+
 export async function executeConceptNodeAction(app, nodeData, action) {
   const actionID = action.action || action.id || action[0] || action.name || '';
   const actionName = actionID.toLowerCase();
@@ -137,15 +139,7 @@ export async function materializeEdgeFromSelected(app, targetConceptId) {
     app.controls.setStatus('Select a source node first', 'warning');
     return undefined;
   }
-  const data = app._lastConceptData || {};
-  const edgeSorts = data.edge_sorts || {};
-  let relations = Object.keys(edgeSorts).filter((rel) => {
-    const sorts = edgeSorts[rel] || [];
-    return sorts.length >= 2 && sorts[0] === sourceConceptId && sorts[1] === targetConceptId;
-  });
-  if (relations.length === 0 && Array.isArray(data.edges)) {
-    relations = data.edges.slice();
-  }
+  let relations = selectMaterializableEdges(app.uiDataModel, app.activeSheetId || 'sheet-1', sourceConceptId, targetConceptId);
   if (relations.length === 0) {
     app.controls.setStatus('No matching binary relations', 'warning');
     return undefined;
@@ -192,18 +186,14 @@ export async function addRelationFromString(app) {
 }
 
 export function selectConceptNode(app, conceptId) {
-  app.selectedConceptNode = conceptId;
-  if (app.conceptGraph && app.conceptGraph.cy) {
-    const node = app.conceptGraph.cy.nodes().filter((n) => n.data('obj') === conceptId || n.id() === conceptId);
-    if (node.length > 0) {
-      if (node.hasClass('selected_node')) {
-        node.removeClass('selected_node');
-        app.controls.setStatus(`Deselected: ${conceptId}`);
-      } else {
-        node.addClass('selected_node');
-        app.controls.setStatus(`Selected: ${conceptId}`);
-      }
-    }
+  const selected = app.uiDataStore
+    ? app.uiDataStore.toggleConceptNodeSelection(app.activeSheetId || 'sheet-1', conceptId)
+    : true;
+  app.selectedConceptNode = selected ? conceptId : null;
+  if (selected) {
+    app.controls.setStatus(`Selected: ${conceptId}`);
+  } else {
+    app.controls.setStatus(`Deselected: ${conceptId}`);
   }
 }
 

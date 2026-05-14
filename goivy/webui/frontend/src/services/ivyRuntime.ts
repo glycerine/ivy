@@ -29,6 +29,13 @@ import {
 import { initializeCodeMirrorEditor } from '../codeMirrorEditor.ts';
 import { UIDataModel } from '../models/uiDataModel.ts';
 import {
+    applyArgSnapshot as applyArgSnapshotViaModel,
+    applyConceptSnapshot as applyConceptSnapshotViaModel,
+    applyCtiSnapshot as applyCtiSnapshotViaModel,
+    installUIDataModelStore,
+    renderUIDataChange as renderUIDataChangeViaService,
+} from './uiDataRenderService.ts';
+import {
     chooseAndLoadModelFile as chooseAndLoadModelFileViaService,
     closeCurrentFile as closeCurrentFileViaService,
     confirmNoExternalChangeBeforeSave as confirmNoExternalChangeBeforeSaveViaService,
@@ -184,19 +191,11 @@ class IvyRuntime {
         this.argGraph = null;
         this.conceptGraph = null;
         this.uiDataModel = new UIDataModel();
+        this.uiDataStore = null;
+        this._uiDataRenderUnsubscribe = null;
         this.sheets = {};
         this.activeSheetId = 'sheet-1';
         this.selectedArgNode = null;
-        // Edge visibility state, matching Python's edge_display_checkboxes.
-        // Keys: edgeName, values: {all_to_all: bool, edge_unknown: bool, none_to_none: bool, transitive: bool}
-        // Default: all false (edges hidden until checkbox is checked).
-        this._edgeVisibility = {};
-        // Node label visibility state, matching Python's node_label_display_checkboxes.
-        // Keys: labelName, values: {node_necessarily: bool, node_maybe: bool, node_necessarily_not: bool}
-        // Maps to checkbox columns: + → node_necessarily, ? → node_maybe, - → node_necessarily_not
-        this._labelVisibility = {};
-        // Concept data from last server response (for node/label sort info)
-        this._lastConceptData = null;
         // File System Access API handle for in-place saves (Ctrl+S).
         this._fileHandle = null;
         this._lastClosedFileHandle = null;
@@ -253,6 +252,7 @@ class IvyRuntime {
         this.argGraph = new runtimeDeps.IvyGraph('arg-graph', runtimeDeps.ARG_STYLE);
         this.conceptGraph = new runtimeDeps.IvyGraph('concept-graph', runtimeDeps.CONCEPT_STYLE);
         this.registerSheet('sheet-1', this.argGraph, this.conceptGraph);
+        installUIDataModelStore(this);
 
         // Health check: verify graphs initialized correctly.
         this.argGraph.healthCheck();
@@ -587,6 +587,27 @@ class IvyRuntime {
         return this.uiDataModel.acceptConceptSnapshot(sheetId || this.activeSheetId || 'sheet-1', payload || {});
     }
 
+    acceptCtiSnapshot(sheetId, payload) {
+        if (!this.uiDataModel) return null;
+        return this.uiDataModel.acceptCtiSnapshot(sheetId || this.activeSheetId || 'sheet-1', payload || {});
+    }
+
+    applyArgSnapshot(sheetId, payload) {
+        return applyArgSnapshotViaModel(this, sheetId || this.activeSheetId || 'sheet-1', payload || {});
+    }
+
+    applyConceptSnapshot(sheetId, payload) {
+        return applyConceptSnapshotViaModel(this, sheetId || this.activeSheetId || 'sheet-1', payload || {});
+    }
+
+    applyCtiSnapshot(sheetId, payload) {
+        return applyCtiSnapshotViaModel(this, sheetId || this.activeSheetId || 'sheet-1', payload || {});
+    }
+
+    renderUIDataChange(change) {
+        return renderUIDataChangeViaService(this, change);
+    }
+
     isVisualOnlySheet(sheetId) {
         return isVisualOnlySheetViaService(this, sheetId);
     }
@@ -601,14 +622,6 @@ class IvyRuntime {
 
     installConceptGraphVisibilityHook(conceptGraph) {
         if (!conceptGraph || conceptGraph._ivyVisibilityHooked) return;
-        var self = this;
-        var origUpdate = conceptGraph.update.bind(conceptGraph);
-        conceptGraph.update = function(elements, positions) {
-            origUpdate(elements, positions);
-            if (conceptGraph.cy && typeof conceptGraph.cy.edges === 'function') {
-                self._applyEdgeVisibility(conceptGraph);
-            }
-        };
         conceptGraph._ivyVisibilityHooked = true;
     }
 
@@ -652,15 +665,15 @@ class IvyRuntime {
         });
         conceptGraph.onNodeClick(function (nodeData, evt) {
             try {
-                var node = evt.target;
                 var name = nodeData.obj || nodeData.id;
-                if (node.hasClass('selected_node')) {
-                    node.removeClass('selected_node');
-                    node.unselect();
+                var selected = self.uiDataStore
+                    ? self.uiDataStore.toggleConceptNodeSelection(sheetId, name)
+                    : true;
+                if (!selected) {
+                    if (self.selectedConceptNode === name) self.selectedConceptNode = null;
                     self.controls.setStatus('Deselected: ' + name);
                     self.controls.clearInfo();
                 } else {
-                    node.addClass('selected_node');
                     self.selectedConceptNode = name;
                     self.controls.setStatus('Selected: ' + name);
                     self.controls.showInfo(nodeData.short_info, nodeData.long_info);
@@ -670,16 +683,15 @@ class IvyRuntime {
             }
         });
         conceptGraph.onEdgeClick(function (edgeData, evt) {
-            var edge = evt.target;
             var name = edgeData.obj || edgeData.label || edgeData.id;
-            if (edge.hasClass('selected_edge')) {
-                edge.removeClass('selected_edge');
-                edge.unselect();
-                edge.removeStyle('line-color target-arrow-color source-arrow-color width');
+            var edgeId = edgeData.id || name;
+            var selected = self.uiDataStore
+                ? self.uiDataStore.toggleConceptEdgeSelection(sheetId, edgeId)
+                : true;
+            if (!selected) {
                 self.controls.setStatus('Deselected: ' + name);
                 self.controls.clearInfo();
             } else {
-                edge.addClass('selected_edge');
                 self.controls.setStatus('Selected: ' + name);
                 self.controls.showInfo(edgeData.short_info, edgeData.long_info);
             }
@@ -1336,11 +1348,7 @@ class IvyRuntime {
 
     openARGSheet(label, argData, preferredSheetId) {
         var sheetId = this.addSheet(label, preferredSheetId);
-        this.acceptArgSnapshot(sheetId, argData || {});
-        var sheetState = this.sheets && this.sheets[sheetId];
-        if (sheetState && sheetState.argGraph && argData && argData.elements) {
-            sheetState.argGraph.update(argData.elements, argData.positions);
-        }
+        this.applyArgSnapshot(sheetId, argData || {});
         return sheetId;
     }
 
@@ -2138,17 +2146,12 @@ class IvyRuntime {
             conceptGraph = sheet.conceptGraph;
         }
         this.selectedArgNode = nodeData.id;
-        if (sheet) {
-            sheet.selectedArgNode = nodeData.id;
-        }
-        if (this.uiDataModel) {
+        if (this.uiDataStore) {
+            this.uiDataStore.setSelectedArgNode(sheetId, nodeData.id);
+        } else if (this.uiDataModel) {
             this.uiDataModel.setSelectedArgNode(sheetId, nodeData.id);
         }
-        if (argGraph && typeof argGraph.highlightNode === 'function') {
-            argGraph.highlightNode(nodeData.id);
-        }
         this.controls.showInfo(nodeData.short_info, nodeData.long_info);
-        this.updateStateLabel(nodeData.label || nodeData.id);
         if (sheet && sheet.visualOnly) {
             this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
             return;
@@ -2158,8 +2161,7 @@ class IvyRuntime {
         try {
             var result = await this.api.getConceptGraph(nodeData.obj || nodeData.id, sheetId);
             if (result && result.elements) {
-                this.acceptConceptSnapshot(sheetId, result);
-                conceptGraph.update(result.elements, result.positions);
+                this.applyConceptSnapshot(sheetId, result);
             }
             // Build toggles if toggle info is provided
             if (result && result.edge_names) {
@@ -2273,14 +2275,11 @@ class IvyRuntime {
                 return;
             }
             var result = await this.api.argNodeAction(nodeData.obj || nodeData.id, actionName, args);
-            var sheet = this.sheets && this.sheets[sheetId];
-            var argGraph = (sheet && sheet.argGraph) || this.argGraph;
-            var conceptGraph = (sheet && sheet.conceptGraph) || this.conceptGraph;
             if (result && result.arg) {
-                argGraph.update(result.arg.elements, result.arg.positions);
+                this.applyArgSnapshot(sheetId, result.arg);
             }
             if (result && result.concept) {
-                conceptGraph.update(result.concept.elements, result.concept.positions);
+                this.applyConceptSnapshot(sheetId, result.concept);
             }
             this.controls.setStatus('Action complete: ' + actionName, 'success');
         } catch (e) {
@@ -2371,9 +2370,7 @@ class IvyRuntime {
                 this.openARGSheet(label, result.sub_arg, result.sheet_id);
             }
             if (result && result.arg) {
-                var sheet = this.sheets && this.sheets[sheetId];
-                var argGraph = (sheet && sheet.argGraph) || this.argGraph;
-                argGraph.update(result.arg.elements, result.arg.positions);
+                this.applyArgSnapshot(sheetId, result.arg);
             }
             if (result && result.source && actionName === 'view_source') {
                 // Show source in the model editor and scroll to the action line.
@@ -2748,14 +2745,14 @@ class IvyRuntime {
             this.controls.setStatus('Select a source node first', 'warning');
             return;
         }
-        var data = this._lastConceptData || {};
-        var edgeSorts = data.edge_sorts || {};
-        var relations = Object.keys(edgeSorts).filter(function (rel) {
-            var sorts = edgeSorts[rel] || [];
+        var sheet = this.uiDataModel && this.uiDataModel.sheets[this.activeSheetId || 'sheet-1'];
+        var snapshot = sheet && sheet.concept;
+        var relations = snapshot ? Object.keys(snapshot.edgeSorts).filter(function (rel) {
+            var sorts = snapshot.edgeSorts[rel] || [];
             return sorts.length >= 2 && sorts[0] === sourceConceptId && sorts[1] === targetConceptId;
-        });
-        if (relations.length === 0 && Array.isArray(data.edges)) {
-            relations = data.edges.slice();
+        }) : [];
+        if (relations.length === 0 && snapshot) {
+            relations = snapshot.edges.slice();
         }
         if (relations.length === 0) {
             this.controls.setStatus('No matching binary relations', 'warning');
@@ -2981,9 +2978,13 @@ class IvyRuntime {
                     id: sheetId,
                     type: 'analysis',
                     label: this.tabLabelForSheet(sheetId),
-                    selectedArgNode: sheet.selectedArgNode || null,
-                    arg: { elements: this.graphElementsSnapshot(sheet.argGraph), positions: null },
-                    concept: { elements: this.graphElementsSnapshot(sheet.conceptGraph), positions: null },
+                    selectedArgNode: (this.uiDataModel && this.uiDataModel.sheets[sheetId] && this.uiDataModel.sheets[sheetId].selectedArgNode) || sheet.selectedArgNode || null,
+                    arg: this.uiDataModel && this.uiDataModel.sheets[sheetId] && this.uiDataModel.sheets[sheetId].arg
+                        ? this.uiDataModel.sheets[sheetId].arg.raw
+                        : { elements: this.graphElementsSnapshot(sheet.argGraph), positions: null },
+                    concept: this.uiDataModel && this.uiDataModel.sheets[sheetId] && this.uiDataModel.sheets[sheetId].concept
+                        ? this.uiDataModel.sheets[sheetId].concept.raw
+                        : { elements: this.graphElementsSnapshot(sheet.conceptGraph), positions: null },
                 });
             }
         }
@@ -2997,8 +2998,8 @@ class IvyRuntime {
             mode: this.getMode(),
             activeSheetId: this.activeSheetId || 'sheet-1',
             selectedArgNode: this.selectedArgNode || null,
-            edgeVisibility: this._edgeVisibility || {},
-            labelVisibility: this._labelVisibility || {},
+            edgeVisibility: {},
+            labelVisibility: {},
             toggles: runtimeDeps.IvyPersist._getToggles ? runtimeDeps.IvyPersist._getToggles() : {},
             sheets: sheets,
         };
@@ -3054,8 +3055,6 @@ class IvyRuntime {
         this._persistedFilePath = state.filePath || state.fileName || '';
         this._persistedFileContent = state.fileContent || '';
         this._savedFileContent = this._persistedFileContent;
-        this._edgeVisibility = state.edgeVisibility || {};
-        this._labelVisibility = state.labelVisibility || {};
         this.selectedArgNode = state.selectedArgNode || null;
 
         if (this.setEditorContent) {
@@ -3082,10 +3081,10 @@ class IvyRuntime {
             }
             if (sheet.id === 'sheet-1') {
                 if (sheet.arg && sheet.arg.elements && this.argGraph) {
-                    this.argGraph.update(sheet.arg.elements, sheet.arg.positions || undefined);
+                    this.applyArgSnapshot(sheet.id, sheet.arg);
                 }
                 if (sheet.concept && sheet.concept.elements && this.conceptGraph) {
-                    this.conceptGraph.update(sheet.concept.elements, sheet.concept.positions || undefined);
+                    this.applyConceptSnapshot(sheet.id, sheet.concept);
                 }
                 if (this.sheets && this.sheets['sheet-1']) {
                     this.sheets['sheet-1'].selectedArgNode = sheet.selectedArgNode || null;
@@ -3095,7 +3094,7 @@ class IvyRuntime {
                 this.openARGSheet(sheet.label || sheet.id, sheet.arg, sheet.id);
                 var opened = this.sheets && this.sheets[sheet.id];
                 if (opened && opened.conceptGraph && sheet.concept && sheet.concept.elements) {
-                    opened.conceptGraph.update(sheet.concept.elements, sheet.concept.positions || undefined);
+                    this.applyConceptSnapshot(sheet.id, sheet.concept);
                 }
                 if (opened) {
                     opened.selectedArgNode = sheet.selectedArgNode || null;
@@ -3272,15 +3271,14 @@ class IvyRuntime {
             // After check: refresh ARG to show counterexample states.
             var argData = await this.api.getARG();
             if (argData && argData.elements) {
-                this.argGraph.update(argData.elements, argData.positions);
+                this.applyArgSnapshot(this.activeSheetId || 'sheet-1', argData);
             }
 
             // After check: refresh concept graph to pick up new abstract_value.
             // Matches Python: view_state() → set_parent_state() → recompute().
             var conceptData = await this.api.getConceptGraph();
             if (conceptData && conceptData.elements) {
-                this._lastConceptData = conceptData;
-                this.conceptGraph.update(conceptData.elements, conceptData.positions);
+                this.applyConceptSnapshot(this.activeSheetId || 'sheet-1', conceptData);
             }
 
             // Auto-check "+" for used relations.
@@ -3361,7 +3359,7 @@ class IvyRuntime {
             this.controls.showInfo('Verification Result', 'FAILED' + z3note + ': ' + failDetails);
             this.addCheckResultViewActions(result);
             if (result.arg) {
-                this.argGraph.update(result.arg.elements, result.arg.positions);
+                this.applyArgSnapshot(this.activeSheetId || 'sheet-1', result.arg);
             }
         } else if (verdict === 'error') {
             this.controls.setStatus('Check ERROR' + mode + z3note, 'error');
@@ -3435,7 +3433,7 @@ class IvyRuntime {
         try {
             var result = await this.api.getConceptGraph(this.selectedArgNode);
             if (result && result.elements) {
-                this.conceptGraph.update(result.elements, result.positions);
+                this.applyConceptSnapshot(this.activeSheetId || 'sheet-1', result);
             }
             if (result) {
                 this.populateStateCheckboxes(result);
@@ -3460,13 +3458,13 @@ class IvyRuntime {
         switch (event.type) {
             case 'arg_updated':
                 if (event.data && event.data.elements) {
-                    this.argGraph.update(event.data.elements, event.data.positions);
+                    this.applyArgSnapshot(this.activeSheetId || 'sheet-1', event.data);
                 }
                 break;
 
             case 'concept_updated':
                 if (event.data && event.data.elements) {
-                    this.conceptGraph.update(event.data.elements, event.data.positions);
+                    this.applyConceptSnapshot(this.activeSheetId || 'sheet-1', event.data);
                 }
                 if (event.data && event.data.edge_names) {
                     this.controls.buildEdgeToggles(event.data.edge_names, this.onEdgeToggleChange.bind(this));
@@ -4465,17 +4463,13 @@ class IvyRuntime {
             // Refresh ARG
             var argData = await this.api.getARG();
             if (argData && argData.elements) {
-                this.acceptArgSnapshot(this.activeSheetId || 'sheet-1', argData);
-                this.argGraph.update(argData.elements, argData.positions);
+                this.applyArgSnapshot(this.activeSheetId || 'sheet-1', argData);
             }
             // Refresh concept graph and populate state checkbox pane
             var conceptData = await this.api.getConceptGraph();
             if (conceptData && conceptData.elements) {
-                this.acceptConceptSnapshot(this.activeSheetId || 'sheet-1', conceptData);
-                this.conceptGraph.update(conceptData.elements, conceptData.positions);
+                this.applyConceptSnapshot(this.activeSheetId || 'sheet-1', conceptData);
             }
-            this.populateStateCheckboxes(conceptData);
-            this.updateStateLabel(0);
         } catch (e) {
             console.error('refreshAfterLoad error:', e);
         }

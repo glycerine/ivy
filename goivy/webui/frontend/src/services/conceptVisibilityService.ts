@@ -1,78 +1,46 @@
-const EDGE_DEFAULTS = {
-  all_to_all: false,
-  edge_unknown: false,
-  none_to_none: false,
-  transitive: false,
-};
+import { ConceptSnapshot } from '../models/uiDataModel.ts';
+import {
+  EDGE_DISPLAY_CLASSES,
+  displayConceptName,
+  selectConceptGraphView,
+  selectSheet,
+  selectStateCheckboxRows,
+  toggleChecked as selectorToggleChecked,
+} from '../models/uiDataSelectors.ts';
 
-const LABEL_DEFAULTS = {
-  node_necessarily: false,
-  node_maybe: false,
-  node_necessarily_not: false,
-};
+function snapshotFrom(app, conceptData = null) {
+  if (conceptData instanceof ConceptSnapshot) return conceptData;
+  if (conceptData) return new ConceptSnapshot(conceptData);
+  const sheet = selectSheet(app && app.uiDataModel, app && app.activeSheetId);
+  return sheet ? sheet.concept : null;
+}
 
-const EDGE_TO_LABEL_CLASS = {
-  all_to_all: 'node_necessarily',
-  edge_unknown: 'node_maybe',
-  none_to_none: 'node_necessarily_not',
-};
+function activeSheet(app) {
+  return selectSheet(app && app.uiDataModel, app && app.activeSheetId);
+}
 
 export function hydrateBackendToggleState(app, conceptData) {
-  app._edgeVisibility = {};
-  app._labelVisibility = {};
-  const toggles = (conceptData && conceptData.toggles) || {};
-  const edges = toggles.edges || {};
-  const labels = toggles.labels || {};
-  for (const edge of Object.keys(edges)) {
-    app._edgeVisibility[edge] = { ...EDGE_DEFAULTS, ...edges[edge] };
-  }
-  for (const label of Object.keys(labels)) {
-    app._labelVisibility[label] = { ...LABEL_DEFAULTS, ...labels[label] };
-  }
+  return snapshotFrom(app, conceptData);
 }
 
 export function toggleChecked(app, name, displayClass) {
-  const base = name.split('(')[0];
-  const vis = app._edgeVisibility[name] || app._edgeVisibility[base];
-  if (vis && Object.prototype.hasOwnProperty.call(vis, displayClass)) {
-    return !!vis[displayClass];
-  }
-  const labelKey = EDGE_TO_LABEL_CLASS[displayClass];
-  const labelVis = app._labelVisibility[name] || app._labelVisibility[base];
-  if (labelKey && labelVis && Object.prototype.hasOwnProperty.call(labelVis, labelKey)) {
-    return !!labelVis[labelKey];
-  }
-  return false;
+  return selectorToggleChecked(snapshotFrom(app), name, displayClass);
 }
 
 export function stateRelationRows(app, conceptData) {
-  const names = conceptData && conceptData.relations ? conceptData.relations.slice().sort() : [];
-  return names.map((name) => ({
-    name,
-    checked: {
-      all_to_all: toggleChecked(app, name, 'all_to_all'),
-      edge_unknown: toggleChecked(app, name, 'edge_unknown'),
-      none_to_none: toggleChecked(app, name, 'none_to_none'),
-      transitive: toggleChecked(app, name, 'transitive'),
-    },
-  }));
+  const snapshot = snapshotFrom(app, conceptData);
+  if (!snapshot) return [];
+  const shimSheet: any = { concept: snapshot, selectedConceptNodes: [], selectedConceptEdges: [] };
+  return selectStateCheckboxRows(shimSheet);
 }
 
-export function populateStateCheckboxes(app, conceptData, {
+export function renderStateCheckboxes(app, rows, {
   doc = globalThis.document,
 } = {}) {
-  app._lastConceptData = conceptData;
-  if (app.acceptConceptSnapshot) {
-    app.acceptConceptSnapshot((conceptData && conceptData.sheet_id) || app.activeSheetId || 'sheet-1', conceptData || {});
-  }
   const tbody = doc && doc.getElementById('state-checkbox-body');
-  hydrateBackendToggleState(app, conceptData);
-  const rows = stateRelationRows(app, conceptData);
-  const names = rows.map((row) => row.name);
-
   if (!tbody) return;
   tbody.innerHTML = '';
-  for (const name of names) {
+  for (const row of rows || []) {
     const tr = doc.createElement('tr');
     [
       ['all_to_all', 'Show definite edges'],
@@ -83,12 +51,12 @@ export function populateStateCheckboxes(app, conceptData, {
       const td = doc.createElement('td');
       const cb = doc.createElement('input');
       cb.type = 'checkbox';
-      cb.name = name;
+      cb.name = row.name;
       cb.value = displayClass;
-      cb.title = `${title} (${name})`;
-      cb.checked = toggleChecked(app, name, displayClass);
+      cb.title = `${title} (${row.name})`;
+      cb.checked = !!(row.checked && row.checked[displayClass]);
       cb.addEventListener('change', () => {
-        app.onEdgeToggle(name, displayClass, cb.checked);
+        app.onEdgeToggle(row.name, displayClass, cb.checked);
       });
       td.appendChild(cb);
       tr.appendChild(td);
@@ -97,7 +65,7 @@ export function populateStateCheckboxes(app, conceptData, {
     const td = doc.createElement('td');
     td.className = 'name-col';
     const a = doc.createElement('a');
-    a.textContent = name;
+    a.textContent = row.name;
     a.href = '#';
     a.addEventListener('click', (event) => {
       event.preventDefault();
@@ -107,7 +75,7 @@ export function populateStateCheckboxes(app, conceptData, {
     tbody.appendChild(tr);
   }
 
-  if (names.length === 0 && conceptData) {
+  if ((!rows || rows.length === 0) && snapshotFrom(app)) {
     const tr = doc.createElement('tr');
     const td = doc.createElement('td');
     td.colSpan = 5;
@@ -117,30 +85,25 @@ export function populateStateCheckboxes(app, conceptData, {
     tr.appendChild(td);
     tbody.appendChild(tr);
   }
+}
 
-  app._applyEdgeVisibility();
-  app._applyNodeLabels();
-  app.populateConstraintFacts(conceptData);
+export function populateStateCheckboxes(app, conceptData, {
+  doc = globalThis.document,
+} = {}) {
+  if (conceptData && app && typeof app.applyConceptSnapshot === 'function') {
+    return app.applyConceptSnapshot((conceptData && conceptData.sheet_id) || app.activeSheetId || 'sheet-1', conceptData || {});
+  }
+  if (conceptData && app && typeof app.acceptConceptSnapshot === 'function') {
+    app.acceptConceptSnapshot((conceptData && conceptData.sheet_id) || app.activeSheetId || 'sheet-1', conceptData || {});
+  }
+  renderStateCheckboxes(app, stateRelationRows(app, conceptData), { doc });
+  if (app && typeof app.populateConstraintFacts === 'function') {
+    app.populateConstraintFacts(conceptData);
+  }
+  return snapshotFrom(app, conceptData);
 }
 
 export async function onEdgeToggle(app, edgeName, displayClass, checked) {
-  if (!app._edgeVisibility[edgeName]) {
-    app._edgeVisibility[edgeName] = { ...EDGE_DEFAULTS };
-  }
-  app._edgeVisibility[edgeName][displayClass] = checked;
-
-  const labelKey = EDGE_TO_LABEL_CLASS[displayClass];
-  if (labelKey) {
-    const bareName = edgeName.split('(')[0];
-    if (!app._labelVisibility[bareName]) {
-      app._labelVisibility[bareName] = { ...LABEL_DEFAULTS };
-    }
-    app._labelVisibility[bareName][labelKey] = checked;
-  }
-
-  app._applyEdgeVisibility();
-  app._applyNodeLabels();
-
   try {
     await app.api.setToggles({
       edge: edgeName,
@@ -154,91 +117,34 @@ export async function onEdgeToggle(app, edgeName, displayClass, checked) {
 }
 
 export function findEdgeVisibility(app, obj, label) {
-  const ev = app._edgeVisibility;
-  if (ev[obj]) return ev[obj];
-  if (ev[label]) return ev[label];
-  for (const key of Object.keys(ev)) {
-    const base = key.split('(')[0];
-    if (base === obj || base === label) {
-      return ev[key];
+  const snapshot = snapshotFrom(app);
+  if (!snapshot) return null;
+  const names = [obj, label].filter(Boolean);
+  for (const name of names) {
+    for (const displayClass of EDGE_DISPLAY_CLASSES) {
+      if (selectorToggleChecked(snapshot, name, displayClass)) {
+        return Object.fromEntries(EDGE_DISPLAY_CLASSES.map((klass) => [klass, selectorToggleChecked(snapshot, name, klass)]));
+      }
     }
   }
   return null;
 }
 
-export function applyEdgeVisibility(app, conceptGraph) {
-  const graph = conceptGraph || app.conceptGraph;
+export function applyEdgeVisibility(app, conceptGraph, view = null) {
+  const graph = conceptGraph || (app && app.conceptGraph);
   if (!graph || !graph.cy) return;
+  const conceptView = view || selectConceptGraphView(activeSheet(app));
   graph.cy.edges().forEach((edge) => {
-    const obj = edge.data('obj') || '';
-    const label = edge.data('label') || '';
-    const vis = findEdgeVisibility(app, obj, label);
-    if (!vis) {
-      edge.style('display', 'none');
-      return;
-    }
-    const classList = edge.classes();
-    const show = classList.some((className) => vis[className]);
-    edge.style('display', show ? 'element' : 'none');
+    const id = edge.id ? edge.id() : edge.data('id');
+    const visible = conceptView.edgeVisibilityById[id];
+    edge.style('display', visible ? 'element' : 'none');
   });
-}
-
-export function displayConceptName(name) {
-  if (typeof name === 'string' && name.charAt(0) === '=') {
-    const body = name.slice(1);
-    const idx = body.lastIndexOf(':');
-    if (idx > 0) {
-      return `=${body.slice(0, idx)}`;
-    }
-  }
-  return name;
 }
 
 export function applyNodeLabels(app) {
-  if (!app.conceptGraph || !app.conceptGraph.cy) return;
-  if (!app._lastConceptData) return;
-
-  const labelPrefixes = {
-    node_necessarily: '',
-    node_maybe: '?',
-    node_necessarily_not: '\u00AC',
-  };
-  const nodeLabels = app._lastConceptData.node_labels || [];
-  const labelSorts = app._lastConceptData.label_sorts || {};
-  const abstractValue = app._lastConceptData.abstract_value || {};
-
-  app.conceptGraph.cy.nodes().forEach((node) => {
-    const nodeID = node.data('obj') || '';
-    if (!nodeID) return;
-    const sortName = node.data('cluster') || node.data('sort') || nodeID;
-    const topLabel = node.data('display_label') || sortName;
-    const labelParts = [topLabel];
-
-    for (const labelName of nodeLabels) {
-      const baseLabelName = labelName.split('(')[0];
-      const labelSort = labelSorts[labelName] || labelSorts[baseLabelName];
-      if (labelSort && labelSort !== sortName) continue;
-
-      const necKey = `node_label|node_necessarily|${nodeID}|${baseLabelName}`;
-      const necNotKey = `node_label|node_necessarily_not|${nodeID}|${baseLabelName}`;
-      let k = 'node_maybe';
-      if (abstractValue[necKey]) {
-        k = 'node_necessarily';
-      } else if (abstractValue[necNotKey]) {
-        k = 'node_necessarily_not';
-      }
-
-      const vis = app._labelVisibility[labelName] || app._labelVisibility[baseLabelName];
-      if (!vis || !vis[k]) continue;
-      labelParts.push(`${labelPrefixes[k]}${displayConceptName(baseLabelName)}`);
-    }
-
-    const newLabel = labelParts.join('\n');
-    if (node.data('label') !== newLabel) {
-      node.data('label', newLabel);
-      node.data('height', Math.max(50, 30 + labelParts.length * 20));
-    }
-  });
+  if (app && typeof app.renderUIDataChange === 'function') {
+    app.renderUIDataChange({ sheetId: app.activeSheetId || 'sheet-1', changed: ['concept'] });
+  }
 }
 
 export function updateStateLabel(nodeId, {
@@ -246,21 +152,12 @@ export function updateStateLabel(nodeId, {
 } = {}) {
   const label = doc && doc.getElementById('state-label');
   if (label) {
-    label.textContent = `State: ${nodeId != null ? nodeId : '\u2014'}`;
+    label.textContent = `State: ${nodeId != null && nodeId !== '' ? nodeId : '\u2014'}`;
   }
 }
 
 export async function onEdgeToggleChange(app, edgeName, className, checked) {
-  try {
-    await app.api.setToggles({
-      edge: edgeName,
-      display_class: className,
-      value: checked,
-    });
-    await app.refreshConceptGraph();
-  } catch (err) {
-    console.error('Toggle update error:', err);
-  }
+  return onEdgeToggle(app, edgeName, className, checked);
 }
 
 export async function onLabelToggleChange(app, labelName, className, checked) {
@@ -275,3 +172,5 @@ export async function onLabelToggleChange(app, labelName, className, checked) {
     console.error('Toggle update error:', err);
   }
 }
+
+export { displayConceptName };

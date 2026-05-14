@@ -1,3 +1,5 @@
+import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
+
 const STORAGE_SESSIONS = 'ivy_sessions';
 const STORAGE_LAST_SESSION = 'ivy_last_session';
 const SESSION_PREFIX = 'ivy_sess_';
@@ -54,8 +56,8 @@ export function createIvyPersist(winArg = globalThis.window) {
           mode: persist._getMode(),
           selectedConceptNodes: persist._getSelectedConceptNodes(app),
           toggles: persist._getToggles(),
-          edgeVisibility: app._edgeVisibility || {},
-          labelVisibility: app._labelVisibility || {},
+          edgeVisibility: {},
+          labelVisibility: {},
           argElements: persist._getCyElements(app.argGraph),
           conceptElements: persist._getCyElements(app.conceptGraph),
           conceptRelations: app._persistedConceptRelations || null,
@@ -275,22 +277,16 @@ export function createIvyPersist(winArg = globalThis.window) {
           console.warn('IvyPersist.restore: server rejected file (parse error):', err.message || String(err));
         }
 
-        if (state.edgeVisibility) app._edgeVisibility = state.edgeVisibility;
-        if (state.labelVisibility) app._labelVisibility = state.labelVisibility;
-
         if (parseOk) {
           const argData = await app.api.getARG();
           if (argData && argData.elements) {
-            if (app.acceptArgSnapshot) app.acceptArgSnapshot(app.activeSheetId || 'sheet-1', argData);
-            app.argGraph.update(argData.elements, argData.positions);
+            applyArgSnapshot(app, app.activeSheetId || 'sheet-1', argData);
           }
           conceptData = await app.api.getConceptGraph();
           if (conceptData && conceptData.elements) {
-            if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(app.activeSheetId || 'sheet-1', conceptData);
-            app.conceptGraph.update(conceptData.elements, conceptData.positions);
+            applyConceptSnapshot(app, app.activeSheetId || 'sheet-1', conceptData);
           }
           app._persistedConceptRelations = conceptData;
-          app.populateStateCheckboxes(conceptData);
         }
 
         if (state.mode) persist._setMode(state.mode);
@@ -302,11 +298,7 @@ export function createIvyPersist(winArg = globalThis.window) {
         }
         if (state.toggles) persist._setToggles(state.toggles);
 
-        const built = persist._buildVisibilityFromCheckboxes();
-        app._edgeVisibility = built.edges;
-        app._labelVisibility = built.labels;
-        app._applyEdgeVisibility();
-        app._applyNodeLabels();
+        persist._buildVisibilityFromCheckboxes();
 
         if (state.selectedArgNode) app.selectedArgNode = state.selectedArgNode;
         if (state.analysisState && app.loadAnalysisStateObject) {

@@ -1,4 +1,5 @@
 import { connectSessionEvents, createSession } from './sessionService.ts';
+import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
 
 export function rememberLastOpenFile(app, persist) {
   const name = app._persistedFileName || (app._fileHandle && app._fileHandle.name) || '';
@@ -175,17 +176,13 @@ export async function loadModelFile(app, file, persist, { win = globalThis.windo
     await app.api.loadFile(file);
     const argData = await app.api.getARG();
     if (argData && argData.elements) {
-      if (app.acceptArgSnapshot) app.acceptArgSnapshot(app.activeSheetId || 'sheet-1', argData);
-      app.argGraph.update(argData.elements, argData.positions);
+      applyArgSnapshot(app, app.activeSheetId || 'sheet-1', argData);
     }
     const conceptData = await app.api.getConceptGraph();
     if (conceptData && conceptData.elements) {
-      if (app.acceptConceptSnapshot) app.acceptConceptSnapshot(app.activeSheetId || 'sheet-1', conceptData);
-      app.conceptGraph.update(conceptData.elements, conceptData.positions);
+      applyConceptSnapshot(app, app.activeSheetId || 'sheet-1', conceptData);
     }
     app._persistedConceptRelations = conceptData;
-    app.populateStateCheckboxes(conceptData);
-    app.updateStateLabel(0);
     persist.setFileName(file.name, app._persistedFilePath);
     app.controls.setStatus(`Loaded: ${file.name}`, 'success');
     persist.save(app);

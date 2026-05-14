@@ -9,20 +9,29 @@ import {
   toggleChecked,
   updateStateLabel,
 } from './conceptVisibilityService.ts';
+import { UIDataModel } from '../models/uiDataModel.ts';
+
+function modelApp(conceptData) {
+  const uiDataModel = new UIDataModel();
+  uiDataModel.acceptConceptSnapshot('sheet-1', conceptData);
+  return { uiDataModel, activeSheetId: 'sheet-1' };
+}
 
 describe('conceptVisibilityService', () => {
   it('hydrates backend toggle state and builds relation rows', () => {
-    const app = {};
-    hydrateBackendToggleState(app, {
+    const conceptData = {
+      relations: ['link(X,Y)'],
       toggles: {
         edges: { 'link(X,Y)': { edge_unknown: true } },
         labels: { semaphore: { node_necessarily: true } },
       },
-    });
+    };
+    const app = modelApp(conceptData);
+    hydrateBackendToggleState(app, conceptData);
 
     expect(toggleChecked(app, 'link(X,Y)', 'edge_unknown')).toBe(true);
     expect(toggleChecked(app, 'semaphore', 'all_to_all')).toBe(true);
-    expect(stateRelationRows(app, { relations: ['link(X,Y)'] })).toEqual([
+    expect(stateRelationRows(app)).toEqual([
       {
         name: 'link(X,Y)',
         checked: {
@@ -43,10 +52,6 @@ describe('conceptVisibilityService', () => {
   it('renders relation rows into the DOM table', () => {
     document.body.innerHTML = '<table><tbody id="state-checkbox-body"></tbody></table>';
     const app = {
-      _edgeVisibility: {},
-      _labelVisibility: {},
-      _applyEdgeVisibility: vi.fn(),
-      _applyNodeLabels: vi.fn(),
       populateConstraintFacts: vi.fn(),
       onEdgeToggle: vi.fn(),
     };
@@ -59,12 +64,8 @@ describe('conceptVisibilityService', () => {
     expect(app.onEdgeToggle).toHaveBeenCalledWith('link(X,Y)', 'all_to_all', true);
   });
 
-  it('updates local edge and label visibility before notifying the backend', async () => {
+  it('notifies the backend before refreshing model-owned visibility', async () => {
     const app = {
-      _edgeVisibility: {},
-      _labelVisibility: {},
-      _applyEdgeVisibility: vi.fn(),
-      _applyNodeLabels: vi.fn(),
       refreshConceptGraph: vi.fn(),
       api: {
         setToggles: vi.fn(),
@@ -73,23 +74,27 @@ describe('conceptVisibilityService', () => {
 
     await onEdgeToggle(app, 'semaphore(X)', 'all_to_all', true);
 
-    expect(app._edgeVisibility['semaphore(X)'].all_to_all).toBe(true);
-    expect(app._labelVisibility.semaphore.node_necessarily).toBe(true);
     expect(app.api.setToggles).toHaveBeenCalledWith({
       edge: 'semaphore(X)',
       display_class: 'all_to_all',
       value: true,
     });
+    expect(app.refreshConceptGraph).toHaveBeenCalled();
   });
 
   it('finds visibility by full or bare relation names and formats equality labels', () => {
-    const app = {
-      _edgeVisibility: {
-        'link(X,Y)': { all_to_all: true },
+    const app = modelApp({
+      toggles: {
+        edges: { link: { all_to_all: true } },
       },
-    };
+    });
 
-    expect(findEdgeVisibility(app, 'link', '')).toEqual({ all_to_all: true });
+    expect(findEdgeVisibility(app, 'link', '')).toEqual({
+      all_to_all: true,
+      edge_unknown: false,
+      none_to_none: false,
+      transitive: false,
+    });
     expect(displayConceptName('=X:client')).toBe('=X');
   });
 

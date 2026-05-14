@@ -203,6 +203,23 @@ in Go and never serialized.  TypeScript `ConceptSession` correctly has no
 calls.  `UIDataModel.acceptArgSnapshot()` and `UIDataModel.acceptConceptSnapshot()`
 dispatch to them and store the result per-sheet.
 
+The TypeScript model is now the browser-side driver for graph and panel updates:
+
+```
+API/service result
+  -> UIDataModelStore.apply*Snapshot(sheetID, payload)
+  -> UIDataModel typed SheetModel snapshot
+  -> uiDataSelectors view models
+  -> uiDataRenderService
+  -> Cytoscape.js + DOM panels
+```
+
+Service code should not render directly from raw response payloads.  Direct
+`IvyGraph.update(...)` calls are centralized in `uiDataRenderService.ts`, where they
+consume typed selector output derived from `UIDataModel`.  Concept visibility,
+node-label text, state checkbox rows, constraint facts, graph selection, and restored
+analysis-state graph payloads follow the same model-first path.
+
 `ConceptSnapshot` field map vs `GetConcept` response keys:
 
 | `ConceptSnapshot` field | `GetConcept` JSON key          |
@@ -369,6 +386,8 @@ AnalysisGraph / ConceptSession
   → WebUICyElements (with octagon nodes, edge classes, per-sort colors)
   → GetARG / GetConcept HTTP response
   → ARGSnapshot.render / ConceptSnapshot.render (TypeScript CyElements)
+  → UIDataModelStore + uiDataSelectors
+  → uiDataRenderService
   → Cytoscape.js instance
 ```
 
@@ -397,4 +416,3 @@ bspline routing), use Cytoscape layout options rather than pre-computed dot posi
   `ConceptInteractiveSession.undoDepth` counts CIS-level undo entries
   (suppose/goal/alpha refinement steps).  These are independent stacks with separate
   undo action endpoints.
-

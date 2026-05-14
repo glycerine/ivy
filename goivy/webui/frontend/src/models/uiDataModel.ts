@@ -540,6 +540,14 @@ export class ConceptSnapshot extends RawBackedModel<unknown> {
   readonly graphStack: GraphStack;
   readonly graph: ConceptGraphModel;
   readonly facts: FactSelection[];
+  readonly nodes: string[];
+  readonly edges: string[];
+  readonly nodeLabels: string[];
+  readonly relations: string[];
+  readonly edgeSorts: Record<string, string[]>;
+  readonly labelSorts: Record<string, string>;
+  readonly abstractValue: Record<string, boolean>;
+  readonly sheetId: string;
   readonly selectedNode: string | null;
   readonly stateLabel: string;
 
@@ -553,6 +561,18 @@ export class ConceptSnapshot extends RawBackedModel<unknown> {
     this.graphStack = new GraphStack(pick(raw, 'graph_stack', 'graphStack') ?? {});
     this.graph = new ConceptGraphModel(pick(raw, 'graph', 'Graph') ?? {});
     this.facts = typedArray(pick(raw, 'facts'), FactSelection);
+    this.nodes = stringArray(pick(raw, 'nodes', 'Nodes'));
+    this.edges = stringArray(pick(raw, 'edges', 'Edges'));
+    this.nodeLabels = stringArray(pick(raw, 'node_labels', 'nodeLabels', 'NodeLabels'));
+    this.relations = stringArray(pick(raw, 'relations', 'Relations'));
+    this.edgeSorts = stringArrayMap(pick(raw, 'edge_sorts', 'edgeSorts', 'EdgeSorts'));
+    const labelSortsRaw = rawRecord(pick(raw, 'label_sorts', 'labelSorts', 'LabelSorts'));
+    this.labelSorts = {};
+    for (const key of Object.keys(labelSortsRaw)) {
+      this.labelSorts[key] = stringValue(labelSortsRaw[key]);
+    }
+    this.abstractValue = boolMap(pick(raw, 'abstract_value', 'abstractValue', 'AbstractValue'));
+    this.sheetId = stringValue(pick(raw, 'sheet_id', 'sheetId'));
     const selected = pick(raw, 'selected_node', 'selectedNode');
     this.selectedNode = typeof selected === 'string' ? selected : null;
     this.stateLabel = stringValue(pick(raw, 'state_label', 'stateLabel'));
@@ -568,6 +588,8 @@ export class SheetModel extends RawBackedModel<unknown> {
   concept: ConceptSnapshot | null;
   cti: CTISnapshot | null;
   selectedArgNode: string | null;
+  selectedConceptNodes: string[];
+  selectedConceptEdges: string[];
   visualOnly: boolean;
 
   constructor(raw: unknown = {}) {
@@ -579,6 +601,8 @@ export class SheetModel extends RawBackedModel<unknown> {
     this.cti = null;
     const selected = pick(raw, 'selectedArgNode', 'selected_arg_node');
     this.selectedArgNode = typeof selected === 'string' ? selected : null;
+    this.selectedConceptNodes = stringArray(pick(raw, 'selectedConceptNodes', 'selected_concept_nodes'));
+    this.selectedConceptEdges = stringArray(pick(raw, 'selectedConceptEdges', 'selected_concept_edges'));
     this.visualOnly = boolValue(pick(raw, 'visualOnly', 'visual_only'));
   }
 }
@@ -634,12 +658,15 @@ export class UIDataModel extends RawBackedModel<unknown> {
   acceptArgSnapshot(sheetId: string, payload: unknown = {}): ARGSnapshot {
     const sheet = this.registerSheet(sheetId || this.activeSheetId);
     sheet.arg = new ARGSnapshot(payload);
+    sheet.selectedArgNode = null;
     return sheet.arg;
   }
 
   acceptConceptSnapshot(sheetId: string, payload: unknown = {}): ConceptSnapshot {
     const sheet = this.registerSheet(sheetId || this.activeSheetId);
     sheet.concept = new ConceptSnapshot(payload);
+    sheet.selectedConceptNodes = [];
+    sheet.selectedConceptEdges = [];
     return sheet.concept;
   }
 
@@ -653,6 +680,36 @@ export class UIDataModel extends RawBackedModel<unknown> {
     const sheet = this.registerSheet(sheetId || this.activeSheetId);
     sheet.selectedArgNode = nodeId || null;
     return sheet.selectedArgNode;
+  }
+
+  toggleConceptNodeSelection(sheetId: string, nodeId: string | null | undefined): boolean {
+    const sheet = this.registerSheet(sheetId || this.activeSheetId);
+    if (!nodeId) return false;
+    const existing = sheet.selectedConceptNodes.indexOf(nodeId);
+    if (existing >= 0) {
+      sheet.selectedConceptNodes.splice(existing, 1);
+      return false;
+    }
+    sheet.selectedConceptNodes.push(nodeId);
+    return true;
+  }
+
+  toggleConceptEdgeSelection(sheetId: string, edgeId: string | null | undefined): boolean {
+    const sheet = this.registerSheet(sheetId || this.activeSheetId);
+    if (!edgeId) return false;
+    const existing = sheet.selectedConceptEdges.indexOf(edgeId);
+    if (existing >= 0) {
+      sheet.selectedConceptEdges.splice(existing, 1);
+      return false;
+    }
+    sheet.selectedConceptEdges.push(edgeId);
+    return true;
+  }
+
+  clearConceptSelection(sheetId: string): void {
+    const sheet = this.registerSheet(sheetId || this.activeSheetId);
+    sheet.selectedConceptNodes = [];
+    sheet.selectedConceptEdges = [];
   }
 
   setFile(fileName: string, filePath?: string): void {
