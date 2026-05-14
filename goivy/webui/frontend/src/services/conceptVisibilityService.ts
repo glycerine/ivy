@@ -44,35 +44,72 @@ function headerLabels() {
   ];
 }
 
+function headerRows(table) {
+  return Array.prototype.slice.call(table.querySelectorAll('thead'));
+}
+
+function headerCellAt(doc, tr, index) {
+  let cell = tr.children[index];
+  if (!cell) {
+    cell = doc.createElement('th');
+    tr.appendChild(cell);
+  }
+  return cell;
+}
+
+function wireDisplayClassHeader(app, rows, cell, displayClass, label, title) {
+  if (!cell.textContent || !cell.textContent.trim()) {
+    cell.textContent = label;
+  }
+  cell.setAttribute('data-state-toggle-class', displayClass);
+  cell.setAttribute('role', 'button');
+  cell.setAttribute('tabindex', '0');
+  cell.setAttribute('title', title);
+  cell.setAttribute('aria-label', title);
+  cell.onclick = () => {
+    const shouldCheck = (rows || []).some((row) => !(row.checked && row.checked[displayClass]));
+    onDisplayClassToggle(app, rows || [], displayClass, shouldCheck);
+  };
+  cell.onkeydown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      cell.click();
+    }
+  };
+}
+
 function ensureStateCheckboxHeader(app, tbody, rows, doc) {
   const table = tbody && tbody.closest ? tbody.closest('table') : null;
   if (!table || !doc) return;
-  let thead = table.querySelector('thead[data-state-checkbox-header]');
+
+  const theads = headerRows(table);
+  const staticThead = theads.find((candidate) => !candidate.hasAttribute('data-state-checkbox-header'));
+  const generatedTheads = theads.filter((candidate) => candidate.hasAttribute('data-state-checkbox-header'));
+  if (staticThead) {
+    generatedTheads.forEach((candidate) => candidate.remove());
+  }
+
+  let thead = staticThead || generatedTheads[0];
   if (!thead) {
     thead = doc.createElement('thead');
     thead.setAttribute('data-state-checkbox-header', 'true');
     table.insertBefore(thead, table.firstChild);
   }
-  thead.innerHTML = '';
-  const tr = doc.createElement('tr');
-  for (const [displayClass, label, title] of headerLabels()) {
-    const th = doc.createElement('th');
-    const button = doc.createElement('button');
-    button.type = 'button';
-    button.textContent = label;
-    button.title = title;
-    button.setAttribute('data-state-toggle-class', displayClass);
-    button.addEventListener('click', () => {
-      const shouldCheck = (rows || []).some((row) => !(row.checked && row.checked[displayClass]));
-      onDisplayClassToggle(app, rows || [], displayClass, shouldCheck);
-    });
-    th.appendChild(button);
-    tr.appendChild(th);
+
+  let tr = thead.querySelector('tr');
+  if (!tr) {
+    tr = doc.createElement('tr');
+    thead.appendChild(tr);
   }
-  const nameHeader = doc.createElement('th');
-  nameHeader.textContent = 'Relation';
-  tr.appendChild(nameHeader);
-  thead.appendChild(tr);
+
+  headerLabels().forEach(([displayClass, label, title], index) => {
+    wireDisplayClassHeader(app, rows, headerCellAt(doc, tr, index), displayClass, label, title);
+  });
+
+  const nameHeader = headerCellAt(doc, tr, headerLabels().length);
+  if (!nameHeader.textContent || !nameHeader.textContent.trim()) {
+    nameHeader.textContent = 'Relation';
+  }
 }
 
 export function renderStateCheckboxes(app, rows, {

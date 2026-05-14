@@ -67,6 +67,51 @@ describe('conceptVisibilityService', () => {
     expect(app.onEdgeToggle).toHaveBeenCalledWith('link(X,Y)', 'all_to_all', true);
   });
 
+  it('reuses the static state header instead of adding a duplicate header row', () => {
+    document.body.innerHTML = `
+      <table id="state-checkbox-table">
+        <thead>
+          <tr>
+            <th class="chk-col">+</th>
+            <th class="chk-col">?</th>
+            <th class="chk-col">-</th>
+            <th class="chk-col">T</th>
+            <th class="name-col"></th>
+          </tr>
+        </thead>
+        <tbody id="state-checkbox-body"></tbody>
+      </table>
+    `;
+    const app = {
+      onEdgeToggle: vi.fn(),
+      refreshConceptGraph: vi.fn(),
+      api: {
+        setToggles: vi.fn(),
+      },
+    };
+
+    populateStateCheckboxes(app, { relations: ['link(X,Y)'] }, { doc: document });
+
+    expect(document.querySelectorAll('thead')).toHaveLength(1);
+    expect(document.querySelectorAll('thead tr')).toHaveLength(1);
+    expect(Array.from(document.querySelectorAll('thead th')).map((th) => th.textContent.trim())).toEqual([
+      '+',
+      '?',
+      '-',
+      'T',
+      'Relation',
+    ]);
+
+    document.querySelector('th[data-state-toggle-class="all_to_all"]').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(app.api.setToggles).toHaveBeenCalledTimes(1);
+    expect(app.api.setToggles).toHaveBeenCalledWith({
+      edge: 'link(X,Y)',
+      display_class: 'all_to_all',
+      value: true,
+    });
+  });
+
   it('bulk toggles relation rows and display classes through one refresh', async () => {
     const app = {
       refreshConceptGraph: vi.fn(),

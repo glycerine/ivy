@@ -1060,6 +1060,20 @@ html, body {
     padding-left: 8px;
 }
 
+#state-checkbox-table th[data-state-toggle-class] {
+    cursor: pointer;
+    user-select: none;
+}
+
+#state-checkbox-table th[data-state-toggle-class]:hover {
+    color: #e0e0e0;
+}
+
+#state-checkbox-table th[data-state-toggle-class]:focus-visible {
+    outline: 1px solid #4fc1ff;
+    outline-offset: 2px;
+}
+
 #state-checkbox-table td {
     padding: 3px 4px;
     text-align: center;
@@ -1071,13 +1085,20 @@ html, body {
     color: #c8c8c8;
 }
 
-#state-checkbox-table td.name-col a {
+#state-checkbox-table td.name-col a,
+#state-checkbox-table td.name-col button {
+    background: none;
+    border: 0;
     color: #4fc1ff;
-    text-decoration: none;
     cursor: pointer;
+    font: inherit;
+    padding: 0;
+    text-align: left;
+    text-decoration: none;
 }
 
-#state-checkbox-table td.name-col a:hover {
+#state-checkbox-table td.name-col a:hover,
+#state-checkbox-table td.name-col button:hover {
     text-decoration: underline;
 }
 
