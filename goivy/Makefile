@@ -213,7 +213,7 @@ dylib_test: z3ivy
 	DYLD_LIBRARY_PATH=$(CURDIR)/z3ivy/lib:$$DYLD_LIBRARY_PATH go test ./... -count=1 # -tags web
 
 test:
-	XTRACE_OFF=1 go test ./... -count=1 # -tags web
+	XTRACE_OFF=1 go test ./... -count=1 -tags xtracer_off
 
 webui/node_modules/.package-lock.stamp: webui/package.json webui/package-lock.json
 	cd webui && npm ci
