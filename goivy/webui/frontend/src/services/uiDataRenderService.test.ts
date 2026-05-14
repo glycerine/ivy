@@ -1,12 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import { UIDataModel } from '../models/uiDataModel.ts';
-import { installUIDataModelStore } from './uiDataRenderService.ts';
+import { applyArgSnapshot, installUIDataModelStore } from './uiDataRenderService.ts';
 
 function makeGraph() {
   return {
     update: vi.fn(),
     highlightNode: vi.fn(),
     clearHighlights: vi.fn(),
+    resize: vi.fn(),
   };
 }
 
@@ -67,5 +68,85 @@ describe('uiDataRenderService', () => {
     expect(latestElements[0].data.label).toBe('client\n?p');
     expect(latestElements[0].classes).toContain('selected_node');
     expect(app._applyEdgeVisibility.mock.calls.at(-1)[1].edgeVisibilityById.e1).toBe(true);
+  });
+
+  it('installs the store before applying snapshots through service helpers', () => {
+    const argGraph = makeGraph();
+    const app = {
+      uiDataModel: new UIDataModel(),
+      activeSheetId: 'sheet-1',
+      selectedArgNode: null,
+      sheets: {
+        'sheet-1': { id: 'sheet-1', type: 'analysis', argGraph, conceptGraph: makeGraph() },
+      },
+      _applyEdgeVisibility: vi.fn(),
+    };
+
+    applyArgSnapshot(app, 'sheet-1', {
+      elements: [{ group: 'nodes', data: { id: 'state_0', label: '0' } }],
+    });
+
+    expect(app.uiDataStore).toBeTruthy();
+    expect(argGraph.update).toHaveBeenCalledWith([
+      { group: 'nodes', data: { id: 'state_0', label: '0' } },
+    ], null);
+  });
+
+  it('does not render event sheets into the active analysis graphs', () => {
+    const analysisArg = makeGraph();
+    const analysisConcept = makeGraph();
+    const app = {
+      uiDataModel: new UIDataModel(),
+      activeSheetId: 'events-1',
+      selectedArgNode: null,
+      argGraph: analysisArg,
+      conceptGraph: analysisConcept,
+      sheets: {
+        'events-1': { id: 'events-1', type: 'events' },
+      },
+      _applyEdgeVisibility: vi.fn(),
+    };
+    installUIDataModelStore(app);
+    app.uiDataStore.registerSheet('events-1', { type: 'events' });
+
+    app.uiDataStore.applyConceptSnapshot('events-1', {
+      elements: [{ group: 'nodes', data: { id: 'client', obj: 'client' } }],
+    });
+
+    expect(analysisArg.update).not.toHaveBeenCalled();
+    expect(analysisConcept.update).not.toHaveBeenCalled();
+    expect(app._applyEdgeVisibility).not.toHaveBeenCalled();
+    expect(app.uiDataModel.sheets['events-1'].type).toBe('events');
+  });
+
+  it('routes ARG and concept selection changes independently', () => {
+    const argGraph = makeGraph();
+    const conceptGraph = makeGraph();
+    const app = {
+      uiDataModel: new UIDataModel(),
+      activeSheetId: 'sheet-1',
+      selectedArgNode: null,
+      sheets: {
+        'sheet-1': { id: 'sheet-1', type: 'analysis', argGraph, conceptGraph },
+      },
+      _applyEdgeVisibility: vi.fn(),
+    };
+    installUIDataModelStore(app);
+    app.uiDataStore.applyArgSnapshot('sheet-1', {
+      elements: [{ group: 'nodes', data: { id: 'state_0', label: '0' } }],
+    });
+    app.uiDataStore.applyConceptSnapshot('sheet-1', {
+      elements: [{ group: 'nodes', data: { id: 'client', obj: 'client' } }],
+    });
+    argGraph.update.mockClear();
+    conceptGraph.update.mockClear();
+
+    app.uiDataStore.setSelectedArgNode('sheet-1', 'state_0');
+    expect(argGraph.highlightNode).toHaveBeenCalledWith('state_0');
+    expect(conceptGraph.update).not.toHaveBeenCalled();
+
+    app.uiDataStore.toggleConceptNodeSelection('sheet-1', { id: 'client', obj: 'client' });
+    expect(conceptGraph.update).toHaveBeenCalled();
+    expect(argGraph.update).not.toHaveBeenCalled();
   });
 });

@@ -8,6 +8,8 @@ import {
   saveAnalysisState,
   validateAnalysisStateObject,
 } from './analysisStateService.ts';
+import { UIDataModel } from '../models/uiDataModel.ts';
+import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 
 function makeGraph(elements = []) {
   return {
@@ -20,7 +22,17 @@ function makeGraph(elements = []) {
 
 describe('analysisStateService', () => {
   it('builds a serializable analysis state from explicit app dependencies', () => {
+    const uiDataModel = new UIDataModel();
+    const store = createUIDataModelStore(uiDataModel);
+    store.applyArgSnapshot('sheet-1', { elements: ['arg'] });
+    store.applyConceptSnapshot('sheet-1', {
+      elements: ['concept'],
+      relations: ['link'],
+      toggles: { edges: { link: { all_to_all: true } } },
+    });
+    store.setSelectedArgNode('sheet-1', 'n0');
     const app = {
+      uiDataModel,
       sheets: {
         'sheet-1': {
           type: 'analysis',
@@ -36,7 +48,6 @@ describe('analysisStateService', () => {
         },
       },
       tabLabelForSheet: vi.fn((sheetId) => (sheetId === 'events-1' ? 'Trace' : 'ARG')),
-      graphElementsSnapshot: (graph) => graph.cy.json().elements,
       _persistedFileName: 'client.ivy',
       _persistedFilePath: '/tmp/client.ivy',
       _editorContent: () => 'ivy',
@@ -45,7 +56,7 @@ describe('analysisStateService', () => {
       selectedArgNode: 'n0',
     };
     const persist = {
-      _getToggles: vi.fn(() => { return { 'link|all_to_all': true }; }),
+      getToggles: vi.fn(() => { return { 'link|all_to_all': true }; }),
     };
 
     expect(buildAnalysisState(app, persist)).toMatchObject({
@@ -165,6 +176,7 @@ describe('analysisStateService', () => {
         applyArgSnapshot: vi.fn(),
         applyConceptSnapshot: vi.fn(),
         setSelectedArgNode: vi.fn(),
+        setConceptSelections: vi.fn(),
       },
       setVisualOnlySheet: vi.fn((sheetId, visualOnly) => {
         app.sheets[sheetId].visualOnly = visualOnly;
@@ -175,7 +187,7 @@ describe('analysisStateService', () => {
       api: { reloadContent: vi.fn(async () => ({ status: 'ok' })) },
     };
     const persist = {
-      _setToggles: vi.fn(),
+      applyToggles: vi.fn(),
       setFileName: vi.fn(),
     };
     const state = {
@@ -186,8 +198,6 @@ describe('analysisStateService', () => {
       mode: 'bounded',
       activeSheetId: 'events-1',
       selectedArgNode: 'state_1',
-      edgeVisibility: { link: { all_to_all: true } },
-      labelVisibility: { semaphore: { node_maybe: true } },
       toggles: { 'link|all_to_all': true },
       sheets: [
         {
@@ -195,6 +205,7 @@ describe('analysisStateService', () => {
           type: 'analysis',
           label: 'Sheet 1',
           selectedArgNode: 'state_1',
+          conceptSelections: [{ kind: 'node', id: 'c1', obj: 'server', label: 'server', sourceObj: '', targetObj: '' }],
           arg: { elements: [{ data: { id: 'n1', obj: 'state_1' } }] },
           concept: { elements: [{ data: { id: 'c1', obj: 'server' } }] },
         },
@@ -203,6 +214,7 @@ describe('analysisStateService', () => {
           type: 'analysis',
           label: 'Saved Sheet',
           selectedArgNode: 'state_2',
+          conceptSelections: [{ kind: 'node', id: 'c2', obj: 'client', label: 'client', sourceObj: '', targetObj: '' }],
           arg: { elements: [{ data: { id: 'n2', obj: 'state_2' } }] },
           concept: { elements: [{ data: { id: 'c2', obj: 'client' } }] },
         },
@@ -223,8 +235,10 @@ describe('analysisStateService', () => {
     expect(app.setMode).toHaveBeenCalledWith('bounded');
     expect(app.uiDataStore.applyArgSnapshot).toHaveBeenCalledWith('sheet-1', state.sheets[0].arg);
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', state.sheets[0].concept);
+    expect(app.uiDataStore.setConceptSelections).toHaveBeenCalledWith('sheet-1', state.sheets[0].conceptSelections);
     expect(app.openARGSheet).toHaveBeenCalledWith('Saved Sheet', state.sheets[1].arg, 'sheet-2');
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-2', state.sheets[1].concept);
+    expect(app.uiDataStore.setConceptSelections).toHaveBeenCalledWith('sheet-2', state.sheets[1].conceptSelections);
     expect(app.openEventTraceSheet).toHaveBeenCalledWith('Trace', {
       sheet_id: 'events-1',
       events: state.sheets[2].events,
@@ -234,7 +248,7 @@ describe('analysisStateService', () => {
     expect(app.sheets['sheet-1'].visualOnly).toBe(true);
     expect(app.sheets['sheet-2'].visualOnly).toBe(true);
     expect(app.sheets['events-1'].visualOnly).toBe(true);
-    expect(persist._setToggles).toHaveBeenCalledWith({ 'link|all_to_all': true });
+    expect(persist.applyToggles).toHaveBeenCalledWith(app, { 'link|all_to_all': true });
     expect(app.switchSheet).toHaveBeenCalledWith('events-1');
     expect(persist.setFileName).toHaveBeenCalledWith('client.ivy', '/tmp/client.ivy');
   });

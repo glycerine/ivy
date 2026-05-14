@@ -12,11 +12,30 @@ import { populateConstraintFacts } from './detailsService.ts';
 
 function sheetGraphs(app, sheetId) {
   const runtimeSheet = app && app.sheets && app.sheets[sheetId];
+  const modelSheet = selectSheet(app && app.uiDataModel, sheetId);
+  const kind = (runtimeSheet && runtimeSheet.type) || (modelSheet && modelSheet.type);
+  if (kind === 'events') {
+    return { runtimeSheet, argGraph: null, conceptGraph: null };
+  }
+  if (runtimeSheet) {
+    return {
+      runtimeSheet,
+      argGraph: runtimeSheet.argGraph || null,
+      conceptGraph: runtimeSheet.conceptGraph || null,
+    };
+  }
   return {
     runtimeSheet,
-    argGraph: (runtimeSheet && runtimeSheet.argGraph) || (app && app.argGraph),
-    conceptGraph: (runtimeSheet && runtimeSheet.conceptGraph) || (app && app.conceptGraph),
+    argGraph: app && app.argGraph,
+    conceptGraph: app && app.conceptGraph,
   };
+}
+
+function isAnalysisSheet(app, sheetId) {
+  const runtimeSheet = app && app.sheets && app.sheets[sheetId];
+  const modelSheet = selectSheet(app && app.uiDataModel, sheetId);
+  const kind = (runtimeSheet && runtimeSheet.type) || (modelSheet && modelSheet.type) || 'analysis';
+  return kind !== 'events';
 }
 
 function syncRuntimeSheetMirrors(app, sheetId) {
@@ -33,6 +52,7 @@ function syncRuntimeSheetMirrors(app, sheetId) {
 }
 
 function renderArgGraph(app, sheetId) {
+  if (!isAnalysisSheet(app, sheetId)) return;
   const sheet = selectSheet(app && app.uiDataModel, sheetId);
   const view = selectArgGraphView(sheet);
   const { argGraph } = sheetGraphs(app, sheetId);
@@ -49,13 +69,14 @@ function renderArgGraph(app, sheetId) {
 }
 
 function renderConceptGraph(app, sheetId) {
+  if (!isAnalysisSheet(app, sheetId)) return;
   const sheet = selectSheet(app && app.uiDataModel, sheetId);
   const view = selectConceptGraphView(sheet);
   const { conceptGraph } = sheetGraphs(app, sheetId);
   if (conceptGraph && typeof conceptGraph.update === 'function') {
     conceptGraph.update(view.elements, view.positions);
   }
-  if (typeof app._applyEdgeVisibility === 'function') {
+  if (conceptGraph && typeof app._applyEdgeVisibility === 'function') {
     app._applyEdgeVisibility(conceptGraph, view);
   }
 }
@@ -64,6 +85,7 @@ function renderActivePanels(app, sheetId, {
   doc = globalThis.document,
 } = {}) {
   if (!app || app.activeSheetId !== sheetId) return;
+  if (!isAnalysisSheet(app, sheetId)) return;
   const sheet = selectSheet(app.uiDataModel, sheetId);
   renderStateCheckboxes(app, selectStateCheckboxRows(sheet), { doc });
   populateConstraintFacts(app, { facts: selectConstraintFacts(sheet) }, { doc });
@@ -76,7 +98,7 @@ export function renderUIDataChange(app, change, options = {}) {
   syncRuntimeSheetMirrors(app, change.sheetId);
   if (changed.has('arg')) {
     renderArgGraph(app, change.sheetId);
-  } else if (changed.has('selection')) {
+  } else if (changed.has('argSelection')) {
     const sheet = selectSheet(app.uiDataModel, change.sheetId);
     const view = selectArgGraphView(sheet);
     const { argGraph } = sheetGraphs(app, change.sheetId);
@@ -88,10 +110,10 @@ export function renderUIDataChange(app, change, options = {}) {
       }
     }
   }
-  if (changed.has('concept') || changed.has('selection')) {
+  if (changed.has('concept') || changed.has('conceptSelection')) {
     renderConceptGraph(app, change.sheetId);
   }
-  if (changed.has('concept') || changed.has('selection') || changed.has('sheet')) {
+  if (changed.has('concept') || changed.has('conceptSelection') || changed.has('sheet')) {
     renderActivePanels(app, change.sheetId, options);
   }
 }
@@ -110,21 +132,21 @@ export function installUIDataModelStore(app, options = {}) {
 
 export function applyArgSnapshot(app, sheetId, payload) {
   const id = sheetId || (app && app.activeSheetId) || 'sheet-1';
-  if (app && app.uiDataStore) return app.uiDataStore.applyArgSnapshot(id, payload || {});
-  if (app && typeof app.acceptArgSnapshot === 'function') return app.acceptArgSnapshot(id, payload || {});
-  return null;
+  const store = app && (app.uiDataStore || installUIDataModelStore(app));
+  if (!store) throw new Error('UIDataModel store is required to apply ARG snapshots');
+  return store.applyArgSnapshot(id, payload || {});
 }
 
 export function applyConceptSnapshot(app, sheetId, payload) {
   const id = sheetId || (app && app.activeSheetId) || 'sheet-1';
-  if (app && app.uiDataStore) return app.uiDataStore.applyConceptSnapshot(id, payload || {});
-  if (app && typeof app.acceptConceptSnapshot === 'function') return app.acceptConceptSnapshot(id, payload || {});
-  return null;
+  const store = app && (app.uiDataStore || installUIDataModelStore(app));
+  if (!store) throw new Error('UIDataModel store is required to apply concept snapshots');
+  return store.applyConceptSnapshot(id, payload || {});
 }
 
 export function applyCtiSnapshot(app, sheetId, payload) {
   const id = sheetId || (app && app.activeSheetId) || 'sheet-1';
-  if (app && app.uiDataStore) return app.uiDataStore.applyCtiSnapshot(id, payload || {});
-  if (app && typeof app.acceptCtiSnapshot === 'function') return app.acceptCtiSnapshot(id, payload || {});
-  return null;
+  const store = app && (app.uiDataStore || installUIDataModelStore(app));
+  if (!store) throw new Error('UIDataModel store is required to apply CTI snapshots');
+  return store.applyCtiSnapshot(id, payload || {});
 }

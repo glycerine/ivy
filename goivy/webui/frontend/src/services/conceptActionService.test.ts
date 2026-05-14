@@ -7,6 +7,7 @@ import {
   removeConcept,
 } from './conceptActionService.ts';
 import { UIDataModel } from '../models/uiDataModel.ts';
+import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 
 describe('conceptActionService', () => {
   it('dispatches named concept node actions to high-level workflows', async () => {
@@ -41,17 +42,20 @@ describe('conceptActionService', () => {
 
   it('materializes an edge from the selected source node after relation choice', async () => {
     const uiDataModel = new UIDataModel();
-    uiDataModel.acceptConceptSnapshot('sheet-1', {
+    const store = createUIDataModelStore(uiDataModel);
+    store.applyConceptSnapshot('sheet-1', {
       edge_sorts: {
         link: ['client', 'server'],
         other: ['server', 'client'],
       },
       edges: ['link', 'other'],
     });
+    store.setConceptSelections('sheet-1', [
+      { kind: 'node', id: 'client', obj: 'client', label: 'client', sourceObj: '', targetObj: '' },
+    ]);
     const app = {
       activeSheetId: 'sheet-1',
       uiDataModel,
-      selectedConceptNode: 'client',
       listboxDialog: vi.fn(async () => 'link'),
       api: {
         materializeEdge: vi.fn(async () => ({ status: 'ok' })),

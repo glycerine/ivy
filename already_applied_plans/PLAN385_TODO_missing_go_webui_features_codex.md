@@ -40,7 +40,7 @@ The browser has a mode `<select>` and top-level checks pass a mode to `/check`, 
 
 TODO: add an explicit mode command or include mode in all relevant ARG actions so backend behavior always matches the visible mode. Tests should set each mode in the UI, run node safety and extension-related actions, and verify the backend branch and resulting graph/state match the selected mode.
 
-### 4. Typed `UIDataModel` Is Present But Not The Driver For Most Behaviors
+### 4. FIXED. Typed `UIDataModel` Is Present But Not The Driver For Most Behaviors
 
 Inventory refs: DATA_MODEL.md and PLAN383 items 83 through 86.
 
@@ -76,7 +76,7 @@ TODO: decide which of these are in scope for the Go/web GUI port. If any are in 
 
 ## P1: Menus, Commands, And Dialogs
 
-### 8. Descriptor Menus Are Static And Not Session/Mode Aware
+[ ] ### 8. Descriptor Menus Are Static And Not Session/Mode Aware
 
 Inventory refs: PLAN383 items 9, 37, 64, and 72; PLAN378 sections 4, 20.1, and 20.12 through 20.20.
 
@@ -84,7 +84,7 @@ The backend exposes browser menu descriptors, but `BuildBrowserMenuDescriptors()
 
 TODO: collapse menu ownership into one active-session menu model or make the static menus the only source of truth. Tests should load a model, enter CTI and non-CTI contexts, switch sheets, and assert that only valid current actions are enabled and dispatchable.
 
-### 9. Some Menu Items Dispatch Unsupported Backend Actions
+[ ] ### 9. Some Menu Items Dispatch Unsupported Backend Actions
 
 Inventory refs: PLAN383 items 9, 31, 33, 34, and 35; PLAN378 sections 5 and 7.
 
@@ -100,7 +100,7 @@ The Python GUI can pre-seed dialog answers to make workflows testable without ma
 
 TODO: add a small dialog-answer harness owned by the controller or command registry. Tests should pre-seed entry, integer, listbox, multiple-selection, and button-list dialogs, run real commands, and assert the command receives the injected result.
 
-### 11. Dialog Return Semantics Differ From Tk In Several Places
+[ ] ### 11. Dialog Return Semantics Differ From Tk In Several Places
 
 Inventory refs: PLAN383 items 13 through 18; PLAN378 sections 22.3 through 22.10.
 
@@ -108,7 +108,7 @@ The web `listboxDialog` generally returns option values, while the Tk inventory 
 
 TODO: define and test dialog return semantics per dialog kind. Tests should cover single selection, multiple selection, cancel, Escape, Return, out-of-range integer input, and callers that need selected indices rather than displayed text.
 
-### 12. RunContext/Error Modal Behavior Is Only Partially Ported
+[ ] ### 12. RunContext/Error Modal Behavior Is Only Partially Ported
 
 Inventory refs: PLAN383 item 10; PLAN378 sections 22.13 through 22.15 and 33.1.
 
@@ -116,7 +116,7 @@ Python wraps long-running UI callbacks in a run context that shows blocking Ivy 
 
 TODO: define a web equivalent of `RunContext` for command execution, including modal-vs-status policy and busy/ready visual state. Tests should force backend errors in check, ARG action, concept action, CTI action, and event filtering paths and assert consistent user-visible error handling.
 
-### 13. Save-As Dialog Filters And Titles Are Incomplete
+[ ] ### 13. Save-As Dialog Filters And Titles Are Incomplete
 
 Inventory refs: PLAN383 item 19; PLAN378 section 22.11.
 
@@ -126,7 +126,7 @@ TODO: inventory every save/open/export path and give it an explicit suggested na
 
 ## P1: ARG Graph Behavior
 
-### 14. ARG Safe-Node Coloring Is Missing From Rendered State
+[ ] ### 14. ARG Safe-Node Coloring Is Missing From Rendered State
 
 Inventory refs: PLAN383 items 22 and 66; PLAN378 sections 8.6, 12.3, and 32.1.
 
@@ -134,7 +134,7 @@ Inventory refs: PLAN383 items 22 and 66; PLAN378 sections 8.6, 12.3, and 32.1.
 
 TODO: carry safety status through the ARG data model and Cytoscape element classes. Tests should run a safety check, inspect the backend ARG payload for safety metadata, and verify the rendered node class/style changes without relying only on a status message.
 
-### 15. Marked ARG Node Visualization Is Missing
+[ ] ### 15. Marked ARG Node Visualization Is Missing
 
 Inventory refs: PLAN383 item 26; PLAN378 section 11.
 
@@ -158,7 +158,7 @@ There is a top-level bounded check and backend methods for BMC-like operations, 
 
 TODO: add the missing ARG/CTI BMC commands and result dialogs, or clearly merge them with the existing bounded-check button. Tests should cover user-entered bounds, unreachable results, reachable counterexamples, and trace-sheet creation.
 
-### 18. Recalculate-State Behavior Is Missing Or Ambiguous
+[ ] ### 18. Recalculate-State Behavior Is Missing Or Ambiguous
 
 Inventory refs: PLAN383 item 32; PLAN378 sections 7.1, 10.2, and 16.4.
 
@@ -166,7 +166,7 @@ The port supports recalculating all transitions and recalculating an edge, but t
 
 TODO: identify the Python state-level recalculate behavior and add a matching command if it is distinct from edge/all recalculation. Tests should select a state, modify concept/domain information, run recalculate state, and verify the concept graph is updated without recalculating unrelated targets.
 
-### 19. `Extend` Closed-Node Reporting Is Too Weak
+[ ] ### 19. `Extend` Closed-Node Reporting Is Too Weak
 
 Inventory refs: PLAN383 item 30; PLAN378 sections 14.1 and 14.2.
 
@@ -174,7 +174,7 @@ The backend can attempt an extension and returns an error when the state is clos
 
 TODO: make closed-node and extension-success UX match the inventory. Tests should run Extend on a closed node and assert a visible closed-node message, then run it on an extendable node and assert the new state/edge appears.
 
-### 20. Try-Conjecture Source Browsing And Result Views Are Partial
+[ ] ### 20. Try-Conjecture Source Browsing And Result Views Are Partial
 
 Inventory refs: PLAN383 item 57; PLAN378 sections 16.1 through 16.4.
 
@@ -182,7 +182,7 @@ The web UI prompts for conjecture choices and calls the backend, but the Python 
 
 TODO: complete the mode-specific try-conjecture flow, including source browsing and resulting concept/trace graph presentation. Tests should try a conjecture in bounded, induction, and PDR modes and assert the expected sheet/dialog/source behavior for each mode.
 
-### 21. Interpolant Refinement Workflow Is Missing
+[ ] ### 21. Interpolant Refinement Workflow Is Missing
 
 Inventory refs: PLAN378 sections 17.1 through 17.3.
 
@@ -190,7 +190,7 @@ Python supports refinement with interpolants, including a vacuous-pre-state mess
 
 TODO: port the interpolant/refinement command path or explicitly classify it as deferred. Tests should trigger a refinement case, accept an interpolant, and verify the new predicate appears in the concept relation controls and graph.
 
-### 22. ARG Source Browser Should Not Depend On The Main Editor
+[ ] ### 22. ARG Source Browser Should Not Depend On The Main Editor
 
 Inventory refs: PLAN383 item 20; PLAN378 section 23.
 
@@ -198,7 +198,7 @@ Python source browsing reuses a separate file browser window, loads a file, high
 
 TODO: add a source peek/browser panel or modal that is independent of the model editor. Tests should view source for an edge while the editor has unsaved changes and verify the edit buffer is preserved, the source line is highlighted, and repeated source views reuse/raise the same browser surface.
 
-### 23. Direct Context-Popup Shortcut For Single `<>` Action Is Not Preserved
+[ ] ### 23. Direct Context-Popup Shortcut For Single `<>` Action Is Not Preserved
 
 Inventory refs: PLAN383 item 105; PLAN378 section 9.2.
 
@@ -216,7 +216,7 @@ Python uses Graphviz DOT and maps DOT coordinates, dimensions, edge weights, and
 
 TODO: decide which DOT layout behaviors are required for port fidelity. Tests should compare layout invariants that matter to users, such as state ordering, cluster placement, back edge handling, and stable positions after recalculation.
 
-### 25. Cluster/Subgraph Box Rendering Is Missing
+[ ] ### 25. Cluster/Subgraph Box Rendering Is Missing
 
 Inventory refs: PLAN378 sections 8.13, 26.4, and 104.
 
@@ -224,7 +224,7 @@ The Python canvas renderer draws cluster/subgraph rectangles when graph elements
 
 TODO: either render cluster/subgraph boxes in Cytoscape or record them as intentionally omitted. Tests should load a graph with subgraph/cluster metadata and assert the web graph displays the same grouping affordance.
 
-### 26. Back Edge Reversal And Pending Edge Constraints Are Missing
+[ ] ### 26. Back Edge Reversal And Pending Edge Constraints Are Missing
 
 Inventory refs: PLAN378 sections 26.3 and 26.6.
 
@@ -232,7 +232,7 @@ Python graph rendering handles DOT-specific back edge reversal and pending edge 
 
 TODO: identify whether Ivy ARG/concept graphs still emit these edge cases in the Go port. Tests should construct a graph containing a back edge and pending edge constraint and verify the displayed direction and placement match the intended semantics.
 
-### 27. Edge Label Post-Processing Is Incomplete
+[ ] ### 27. Edge Label Post-Processing Is Incomplete
 
 Inventory refs: PLAN383 item 44; PLAN378 section 8.3.
 
@@ -240,7 +240,7 @@ The Go renderer restores brace markers in ARG labels, and there is regression co
 
 TODO: port the full label transformation rules from Python graph rendering. Tests should include labels with escaped braces, newline encodings, and action labels that combine transition and action names.
 
-### 28. ARG Green/Black Outline And Concept Grey Background Styling Diverge
+[ ] ### 28. ARG Green/Black Outline And Concept Grey Background Styling Diverge
 
 Inventory refs: PLAN378 sections 32.1 through 32.18; PLAN383 items 40 through 42 and 97.
 
@@ -250,7 +250,7 @@ TODO: decide which visual styling details are semantic test requirements. At min
 
 ## P1: Concept Graph And Domain Workflows
 
-### 29. Relation Bulk-Toggling By Relation And Class Is Partial
+[ ] ### 29. Relation Bulk-Toggling By Relation And Class Is Partial
 
 Inventory refs: PLAN383 items 39 and 85; PLAN378 sections 19.1 through 19.7.
 
@@ -258,7 +258,7 @@ The web UI renders per-relation checkboxes for `+`, `?`, `-`, and `T` and syncs 
 
 TODO: add bulk toggle controls or document their exclusion. Tests should toggle one class for all relations, one relation across all classes, and a single cell, then verify backend-owned toggle state and graph visibility remain consistent.
 
-### 30. Relation Color Assignment Is Partial
+[ ] ### 30. Relation Color Assignment Is Partial
 
 Inventory refs: PLAN383 item 40; PLAN378 sections 19.8 and 32.18.
 
@@ -266,7 +266,7 @@ The Go concept renderer computes a fixed palette for sort/node border colors, bu
 
 TODO: decide whether Python's relation color cycling is required for readability and tests. If required, carry relation color metadata through the render payload and test that controls, edges, and labels use stable colors across graph rebuilds.
 
-### 31. Constraint Text/Facts UI Is Not The Same As Python's Selectable Text Area
+[ ] ### 31. Constraint Text/Facts UI Is Not The Same As Python's Selectable Text Area
 
 Inventory refs: PLAN383 item 45; PLAN378 sections 19.9, 20.28, 33.9, 33.10, and 33.11.
 
@@ -274,7 +274,7 @@ The web details panel renders facts as selectable buttons and persists selected 
 
 TODO: finish the fact-selection contract: visual location, multi-select ergonomics, highlight-selected-facts behavior, and exact use in conjecture/CTI flows. Tests should gather facts, select/deselect facts, verify graph highlighting, and assert selected facts are the only facts used by conjecture/minimize/strengthen when appropriate.
 
-### 32. Concept Domain Save/Load/Replace Is Backend-Tested But Not UI-Exposed
+[ ] ### 32. Concept Domain Save/Load/Replace Is Backend-Tested But Not UI-Exposed
 
 Inventory refs: PLAN378 sections 30.3 and 30.4.
 
@@ -282,7 +282,7 @@ The Go concept domain/session code has save/load/replace-style functionality and
 
 TODO: add UI commands for save domain, load domain, and replace domain if these remain part of the GUI contract. Tests should save a modified domain, reset/replace it, reload the saved domain, and verify concepts, checkboxes, graph stack, and abstract value update correctly.
 
-### 33. Add Projection And Ternary Relation UX Needs Full Fidelity
+[ ] ### 33. Add Projection And Ternary Relation UX Needs Full Fidelity
 
 Inventory refs: PLAN383 item 56; PLAN378 section 20.21.
 
@@ -290,7 +290,7 @@ The backend and frontend have add-projection plumbing, but the Python UI present
 
 TODO: test and finish projection selection for ternary and higher-arity relations. Tests should right-click a concept node with available projections, add a projection, and verify the new binary concept appears with correct endpoints and relation controls.
 
-### 34. Splatter, Materialize, And Empty Need End-To-End Browser Coverage
+[ ] ### 34. Splatter, Materialize, And Empty Need End-To-End Browser Coverage
 
 Inventory refs: PLAN383 items 51 through 55; PLAN378 sections 20.23 through 20.27 and 33.14.
 
@@ -298,7 +298,7 @@ The backend implements splatter, empty, materialize node, positive/negative edge
 
 TODO: add UI-level tests for each concept context action. Tests should verify witness names with `@` prefixes, negative edge facts, selected-source materialize edge prompts, graph-stack undo/redo after the operation, and relation checkbox preservation.
 
-### 35. One-Step Reachability Eliminated-Conjecture Dialog Is Missing
+[ ] ### 35. One-Step Reachability Eliminated-Conjecture Dialog Is Missing
 
 Inventory refs: PLAN383 item 61; PLAN378 sections 31.1 and 31.2.
 
@@ -308,7 +308,7 @@ TODO: port eliminated-conjecture reporting for reach operations. Tests should ru
 
 ## P1: CTI And Invariant Workflows
 
-### 36. CTI Menu Switching Is Partial
+[ ] ### 36. CTI Menu Switching Is Partial
 
 Inventory refs: PLAN383 items 64 and 72; PLAN378 sections 20.1 and 20.12 through 20.20.
 
@@ -316,7 +316,7 @@ The web shell always shows static Invariant and Conjecture menus, and descriptor
 
 TODO: make CTI/non-CTI menu switching match the active sheet and state. Tests should load a model with conjectures, cause a CTI, switch between ARG, CTI, and event sheets, and assert the visible menu set and enabled actions match Python's CTI menus.
 
-### 37. CTI Used-Relations Display Is Partial
+[ ] ### 37. CTI Used-Relations Display Is Partial
 
 Inventory refs: PLAN383 item 67; PLAN378 sections 20.10 and 33.7.
 
@@ -324,7 +324,7 @@ The frontend can auto-check used relation rows from a failed check result, but P
 
 TODO: add CTI used-relations and relations-to-minimize UI. Tests should run a failing induction check, verify only relevant relation controls are enabled/checked, edit the relations-to-minimize input, and verify minimize uses that set.
 
-### 38. CTI Diagram Pre/Post State Presentation Is Partial
+[ ] ### 38. CTI Diagram Pre/Post State Presentation Is Partial
 
 Inventory refs: PLAN383 item 68; PLAN378 sections 20.6 and 20.11.
 
@@ -332,7 +332,7 @@ The backend routes diagram through `CTIUI.Diagram()` and returns concept payload
 
 TODO: add visible CTI state labels and verify diagram uses the intended pre-state. Tests should create a CTI, run Diagram, and assert the concept graph/facts correspond to the pre-state rather than a stale BMC or post-state value.
 
-### 39. CTI Strengthen Confirmation Is Missing
+[ ] ### 39. CTI Strengthen Confirmation Is Missing
 
 Inventory refs: PLAN383 item 75; PLAN378 section 20.18.
 
@@ -340,7 +340,7 @@ Python asks for confirmation before adding a selected conjecture as a strengthen
 
 TODO: add a confirm dialog with the exact conjecture text before strengthening. Tests should cancel and accept the dialog, verifying cancel leaves conjectures unchanged and accept appends exactly one new conjecture.
 
-### 40. CTI Save-Invariant File Content Needs Full Section Fidelity
+[ ] ### 40. CTI Save-Invariant File Content Needs Full Section Fidelity
 
 Inventory refs: PLAN383 item 70; PLAN378 section 20.8.
 
@@ -348,7 +348,7 @@ There is backend coverage for kept/dropped-style invariant output, but the brows
 
 TODO: add browser-level tests for CTI Save invariant, including kept, dropped, and new conjectures. Tests should verify the filename, extension, content sections, labels, and formula formatting.
 
-### 41. CTI Bounded-Check Counterexample Viewing Is Partial
+[ ] ### 41. CTI Bounded-Check Counterexample Viewing Is Partial
 
 Inventory refs: PLAN383 item 71; PLAN378 section 20.9.
 
@@ -382,7 +382,7 @@ The web UI can load event traces and show check-result details, but Python trace
 
 TODO: port trace formatting or explicitly fold it into the event trace viewer. Tests should feed traces with repeated states, function calls, detailed and non-detailed output, and line numbers, then verify the displayed text matches the Python behavior.
 
-### 45. Event Viewer Launch As A Standalone Tool Is Missing
+[ ] ### 45. Event Viewer Launch As A Standalone Tool Is Missing
 
 Inventory refs: PLAN383 item 79; PLAN378 sections 25.1 and 25.2.
 
@@ -416,7 +416,7 @@ Python notebook widgets expose first/prev/next/last history navigation, step inf
 
 TODO: implement or exclude analysis-session history navigation for web UI. Tests should drive a multi-step analysis session, navigate back and forward, and verify the ARG/concept/transition widgets reflect the selected history step.
 
-### 49. Proof Goal And CRG Widget Interactions Are Missing From The Browser
+[ ] ### 49. Proof Goal And CRG Widget Interactions Are Missing From The Browser
 
 Inventory refs: PLAN378 sections 33.3 and 33.4.
 
@@ -424,7 +424,7 @@ The backend has proof stack data and proof actions, but the browser has no proof
 
 TODO: add a proof/goal graph UI or mark proof widgets out of scope. Tests should click proof goals and CRG nodes and verify the concept graph, transition view, and selected goal state update.
 
-### 50. Abstractor, BMC Bound, Relations-To-Minimize, And Transition Log Controls Are Missing
+[ ] ### 50. Abstractor, BMC Bound, Relations-To-Minimize, And Transition Log Controls Are Missing
 
 Inventory refs: PLAN378 sections 33.5 through 33.8.
 
@@ -440,7 +440,7 @@ The Go code has some registered ARG helper actions, but the Python `ui_extension
 
 TODO: design a web extension action descriptor API for ARG nodes, proof goals, and modal interactions. Tests should register a fake extension action, verify it appears in the right context menu, exercise its dialog interactions, and confirm it mutates backend state.
 
-### 52. Interactive UPDR Modal Fact/Core Selection Is Missing
+[ ] ### 52. Interactive UPDR Modal Fact/Core Selection Is Missing
 
 Inventory refs: PLAN383 item 88; PLAN378 sections 28.8 through 28.10 and 29.6.
 
@@ -450,7 +450,7 @@ TODO: port interactive UPDR selection dialogs or provide a non-interactive mode 
 
 ## P3: Lower-Level Rendering And Styling Details
 
-### 53. Generic Canvas Element Mapping Is Not Ported
+[ ] ### 53. Generic Canvas Element Mapping Is Not Ported
 
 Inventory refs: PLAN378 section 26 and PLAN383 item 104.
 
@@ -476,7 +476,7 @@ TODO: add graph-render tests for long state labels, relation labels, concept lab
 
 ## P3: Source, Files, And Recent State
 
-### 56. File Browser Raise/Re-use Semantics Are Missing
+[ ] ### 56. File Browser Raise/Re-use Semantics Are Missing
 
 Inventory refs: PLAN383 item 20; PLAN378 sections 23.1 through 23.5.
 

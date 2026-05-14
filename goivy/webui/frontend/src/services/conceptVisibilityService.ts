@@ -5,6 +5,7 @@ import {
   selectConceptGraphView,
   selectSheet,
   selectStateCheckboxRows,
+  selectStateToggles,
   toggleChecked as selectorToggleChecked,
 } from '../models/uiDataSelectors.ts';
 
@@ -30,8 +31,48 @@ export function toggleChecked(app, name, displayClass) {
 export function stateRelationRows(app, conceptData) {
   const snapshot = snapshotFrom(app, conceptData);
   if (!snapshot) return [];
-  const shimSheet: any = { concept: snapshot, selectedConceptNodes: [], selectedConceptEdges: [] };
+  const shimSheet: any = { concept: snapshot, conceptSelections: [] };
   return selectStateCheckboxRows(shimSheet);
+}
+
+function headerLabels() {
+  return [
+    ['all_to_all', '+', 'Show definite edges'],
+    ['edge_unknown', '?', 'Show unknown edges'],
+    ['none_to_none', '-', 'Show absent edges'],
+    ['transitive', 'T', 'Transitive reduction'],
+  ];
+}
+
+function ensureStateCheckboxHeader(app, tbody, rows, doc) {
+  const table = tbody && tbody.closest ? tbody.closest('table') : null;
+  if (!table || !doc) return;
+  let thead = table.querySelector('thead[data-state-checkbox-header]');
+  if (!thead) {
+    thead = doc.createElement('thead');
+    thead.setAttribute('data-state-checkbox-header', 'true');
+    table.insertBefore(thead, table.firstChild);
+  }
+  thead.innerHTML = '';
+  const tr = doc.createElement('tr');
+  for (const [displayClass, label, title] of headerLabels()) {
+    const th = doc.createElement('th');
+    const button = doc.createElement('button');
+    button.type = 'button';
+    button.textContent = label;
+    button.title = title;
+    button.setAttribute('data-state-toggle-class', displayClass);
+    button.addEventListener('click', () => {
+      const shouldCheck = (rows || []).some((row) => !(row.checked && row.checked[displayClass]));
+      onDisplayClassToggle(app, rows || [], displayClass, shouldCheck);
+    });
+    th.appendChild(button);
+    tr.appendChild(th);
+  }
+  const nameHeader = doc.createElement('th');
+  nameHeader.textContent = 'Relation';
+  tr.appendChild(nameHeader);
+  thead.appendChild(tr);
 }
 
 export function renderStateCheckboxes(app, rows, {
@@ -39,6 +80,7 @@ export function renderStateCheckboxes(app, rows, {
 } = {}) {
   const tbody = doc && doc.getElementById('state-checkbox-body');
   if (!tbody) return;
+  ensureStateCheckboxHeader(app, tbody, rows, doc);
   tbody.innerHTML = '';
   for (const row of rows || []) {
     const tr = doc.createElement('tr');
@@ -64,13 +106,15 @@ export function renderStateCheckboxes(app, rows, {
 
     const td = doc.createElement('td');
     td.className = 'name-col';
-    const a = doc.createElement('a');
-    a.textContent = row.name;
-    a.href = '#';
-    a.addEventListener('click', (event) => {
-      event.preventDefault();
+    const relationButton = doc.createElement('button');
+    relationButton.type = 'button';
+    relationButton.textContent = row.name;
+    relationButton.setAttribute('data-state-toggle-relation', row.name);
+    relationButton.addEventListener('click', () => {
+      const shouldCheck = EDGE_DISPLAY_CLASSES.some((displayClass) => !(row.checked && row.checked[displayClass]));
+      onRelationToggle(app, row.name, shouldCheck);
     });
-    td.appendChild(a);
+    td.appendChild(relationButton);
     tr.appendChild(td);
     tbody.appendChild(tr);
   }
@@ -93,9 +137,6 @@ export function populateStateCheckboxes(app, conceptData, {
   if (conceptData && app && typeof app.applyConceptSnapshot === 'function') {
     return app.applyConceptSnapshot((conceptData && conceptData.sheet_id) || app.activeSheetId || 'sheet-1', conceptData || {});
   }
-  if (conceptData && app && typeof app.acceptConceptSnapshot === 'function') {
-    app.acceptConceptSnapshot((conceptData && conceptData.sheet_id) || app.activeSheetId || 'sheet-1', conceptData || {});
-  }
   renderStateCheckboxes(app, stateRelationRows(app, conceptData), { doc });
   if (app && typeof app.populateConstraintFacts === 'function') {
     app.populateConstraintFacts(conceptData);
@@ -104,16 +145,43 @@ export function populateStateCheckboxes(app, conceptData, {
 }
 
 export async function onEdgeToggle(app, edgeName, displayClass, checked) {
+  return applyToggleBatch(app, [{ edge: edgeName, display_class: displayClass, value: checked }]);
+}
+
+export async function applyToggleBatch(app, updates) {
+  const changes = (updates || []).filter(Boolean);
+  if (changes.length === 0) return;
   try {
-    await app.api.setToggles({
-      edge: edgeName,
-      display_class: displayClass,
-      value: checked,
-    });
+    for (const update of changes) {
+      await app.api.setToggles(update);
+    }
     await app.refreshConceptGraph();
   } catch (err) {
     console.error('Toggle error:', err);
+    if (app && typeof app.refreshConceptGraph === 'function') {
+      try {
+        await app.refreshConceptGraph();
+      } catch (refreshErr) {
+        console.error('Toggle resync error:', refreshErr);
+      }
+    }
   }
+}
+
+export async function onRelationToggle(app, edgeName, checked) {
+  return applyToggleBatch(app, EDGE_DISPLAY_CLASSES.map((displayClass) => ({
+    edge: edgeName,
+    display_class: displayClass,
+    value: checked,
+  })));
+}
+
+export async function onDisplayClassToggle(app, rows, displayClass, checked) {
+  return applyToggleBatch(app, (rows || []).map((row) => ({
+    edge: row.name,
+    display_class: displayClass,
+    value: checked,
+  })));
 }
 
 export function findEdgeVisibility(app, obj, label) {
@@ -136,7 +204,13 @@ export function applyEdgeVisibility(app, conceptGraph, view = null) {
   const conceptView = view || selectConceptGraphView(activeSheet(app));
   graph.cy.edges().forEach((edge) => {
     const id = edge.id ? edge.id() : edge.data('id');
-    const visible = conceptView.edgeVisibilityById[id];
+    const aliases = [
+      id,
+      `edge:${id}`,
+      `edge:${edge.data('obj') || ''}`,
+      `edge:${edge.data('obj') || ''}|${edge.data('source_obj') || ''}|${edge.data('target_obj') || ''}`,
+    ];
+    const visible = aliases.some((alias) => conceptView.edgeVisibilityById[alias]);
     edge.style('display', visible ? 'element' : 'none');
   });
 }
@@ -171,6 +245,10 @@ export async function onLabelToggleChange(app, labelName, className, checked) {
   } catch (err) {
     console.error('Toggle update error:', err);
   }
+}
+
+export function persistedToggles(app) {
+  return selectStateToggles(activeSheet(app));
 }
 
 export { displayConceptName };

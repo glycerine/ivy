@@ -6,6 +6,7 @@ import {
   ConceptSession,
   ConceptSnapshot,
   CyElement,
+  CyElementData,
   CyElements,
   FactSelection,
   FullARGNode,
@@ -13,12 +14,13 @@ import {
   GraphStack,
   State,
   UIDataModel,
+  graphSelectionKey,
 } from './uiDataModel.ts';
+import { createUIDataModelStore } from './uiDataModelStore.ts';
 
 describe('UIDataModel', () => {
   it('preserves typed ARG payloads separately from Cytoscape render elements', () => {
-    const model = new UIDataModel();
-    const snapshot = model.acceptArgSnapshot('sheet-1', {
+    const snapshot = new ARGSnapshot({
       analysis_graph_state: {
         states: [{ id: 0, label: '0', is_bottom: false, info: 'initial' }],
         transitions: [{ source_id: 0, target_id: 1, label: 'connect', is_join: true }],
@@ -34,8 +36,7 @@ describe('UIDataModel', () => {
   });
 
   it('does not infer ARG state from Cytoscape elements when typed fields are absent', () => {
-    const model = new UIDataModel();
-    const snapshot = model.acceptArgSnapshot('sheet-1', {
+    const snapshot = new ARGSnapshot({
       elements: [{ group: 'nodes', data: { id: 'n0', obj: 'state_0' } }],
     });
 
@@ -138,6 +139,35 @@ describe('UIDataModel — wire format coverage', () => {
     expect(el.position!.y).toBe(20);
   });
 
+  it('CyElementData parses typed metadata and emits only the render contract', () => {
+    const data = new CyElementData({
+      id: 'e0',
+      obj: 'link',
+      source: 'n0',
+      target: 'n1',
+      source_obj: 'client',
+      target_obj: 'server',
+      short_info: 'link(client, server)',
+      long_info: ['formula'],
+      actions: [{ label: 'Remove', action: 'remove', args: { concept: 'link' } }],
+      ignored_raw_field: 'nope',
+    });
+
+    expect(data.sourceObj).toBe('client');
+    expect(data.actions[0].action).toBe('remove');
+    expect(data.toCytoscapeData()).toEqual({
+      id: 'e0',
+      obj: 'link',
+      source: 'n0',
+      target: 'n1',
+      source_obj: 'client',
+      target_obj: 'server',
+      short_info: 'link(client, server)',
+      long_info: ['formula'],
+      actions: [{ label: 'Remove', action: 'remove', args: { concept: 'link' } }],
+    });
+  });
+
   it('State.expr and State.universe preserved from raw', () => {
     const s = new State({ id: 0, label: 'q0', expr: 'assume(pre)', universe: { client: ['c0'] } });
     expect(s.expr).toBe('assume(pre)');
@@ -158,6 +188,7 @@ describe('UIDataModel — wire format coverage', () => {
     const cy = new CyElements({ elements: [{ group: 'nodes', data: { id: 'n0' } }] });
     expect('nodeId' in cy).toBe(false);
     expect('edgeId' in cy).toBe(false);
+    expect('raw' in cy).toBe(false);
     expect(cy.elements).toHaveLength(1);
   });
 
@@ -498,5 +529,30 @@ describe('UIDataModel — wire format coverage', () => {
     expect(snap.render.elements).toHaveLength(1);
     expect(snap.fullAnalysisGraphState.states[0]).toBeInstanceOf(FullARGNode);
     expect(snap.haveCti).toBe(false);
+  });
+
+  it('stores concept node and edge selections as typed graph tuples', () => {
+    const model = new UIDataModel();
+    const store = createUIDataModelStore(model);
+    store.applyConceptSnapshot('sheet-1', { elements: [] });
+
+    expect(store.toggleConceptNodeSelection('sheet-1', { id: 'n0', obj: 'client', label: 'client' })).toBe(true);
+    expect(store.toggleConceptEdgeSelection('sheet-1', {
+      id: 'e0',
+      obj: 'link',
+      label: 'link',
+      source_obj: 'client',
+      target_obj: 'server',
+    })).toBe(true);
+
+    const selections = model.sheets['sheet-1'].conceptSelections;
+    expect(selections).toEqual([
+      { kind: 'node', id: 'n0', obj: 'client', label: 'client', sourceObj: '', targetObj: '' },
+      { kind: 'edge', id: 'e0', obj: 'link', label: 'link', sourceObj: 'client', targetObj: 'server' },
+    ]);
+    expect(graphSelectionKey(selections[1])).toBe('edge:e0');
+
+    store.applyConceptSnapshot('sheet-1', { elements: [] });
+    expect(model.sheets['sheet-1'].conceptSelections).toEqual([]);
   });
 });

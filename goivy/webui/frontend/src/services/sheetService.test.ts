@@ -8,6 +8,7 @@ import {
   switchSheet,
   visualOnlyMessage,
 } from './sheetService.ts';
+import { UIDataModel } from '../models/uiDataModel.ts';
 
 describe('sheetService', () => {
   it('validates sheet ids and visual-only state', () => {
@@ -61,5 +62,39 @@ describe('sheetService', () => {
     expect(document.getElementById('sheet-2').classList.contains('active')).toBe(true);
     expect(app.selectedArgNode).toBe('n2');
     expect(app.argGraph.resize).toHaveBeenCalled();
+  });
+
+  it('switches event sheets without touching analysis graphs or changing model type', () => {
+    document.body.innerHTML = [
+      '<button class="sheet-tab active" data-sheet="sheet-1"></button>',
+      '<button class="sheet-tab" data-sheet="events-1"></button>',
+      '<div id="sheet-1" class="sheet-content active"></div>',
+      '<div id="events-1" class="sheet-content"></div>',
+    ].join('');
+    const uiDataModel = new UIDataModel();
+    const analysisArg = { resize: vi.fn() };
+    const analysisConcept = { resize: vi.fn() };
+    const app = {
+      activeSheetId: 'sheet-1',
+      argGraph: analysisArg,
+      conceptGraph: analysisConcept,
+      uiDataModel,
+      sheetTab(id) {
+        return document.querySelector(`[data-sheet="${id}"]`);
+      },
+      sheets: {
+        'sheet-1': { type: 'analysis', argGraph: analysisArg, conceptGraph: analysisConcept },
+        'events-1': { type: 'events' },
+      },
+    };
+
+    switchSheet(app, 'events-1', { doc: document });
+
+    expect(app.activeSheetId).toBe('events-1');
+    expect(app.argGraph).toBeNull();
+    expect(app.conceptGraph).toBeNull();
+    expect(analysisArg.resize).not.toHaveBeenCalled();
+    expect(analysisConcept.resize).not.toHaveBeenCalled();
+    expect(app.uiDataModel.sheets['events-1'].type).toBe('events');
   });
 });

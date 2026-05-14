@@ -1,4 +1,9 @@
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
+import {
+  selectConceptSelections,
+  selectSheet,
+  selectStateToggles,
+} from '../models/uiDataSelectors.ts';
 
 export function analysisStateLimits() {
   return {
@@ -31,20 +36,19 @@ export function buildAnalysisState(app, persist) {
         selectedEventAddress: sheet.selectedEventAddress || null,
       });
     } else {
+      const modelSheet = selectSheet(app.uiDataModel, sheetId);
       sheets.push({
         id: sheetId,
         type: 'analysis',
         label: app.tabLabelForSheet(sheetId),
-        selectedArgNode: (app.uiDataModel && app.uiDataModel.sheets[sheetId] && app.uiDataModel.sheets[sheetId].selectedArgNode) || sheet.selectedArgNode || null,
-        arg: app.uiDataModel && app.uiDataModel.sheets[sheetId] && app.uiDataModel.sheets[sheetId].arg
-          ? app.uiDataModel.sheets[sheetId].arg.raw
-          : { elements: app.graphElementsSnapshot(sheet.argGraph), positions: null },
-        concept: app.uiDataModel && app.uiDataModel.sheets[sheetId] && app.uiDataModel.sheets[sheetId].concept
-          ? app.uiDataModel.sheets[sheetId].concept.raw
-          : { elements: app.graphElementsSnapshot(sheet.conceptGraph), positions: null },
+        selectedArgNode: modelSheet ? modelSheet.selectedArgNode : null,
+        conceptSelections: selectConceptSelections(modelSheet),
+        arg: modelSheet && modelSheet.arg ? modelSheet.arg.raw : { elements: [], positions: null },
+        concept: modelSheet && modelSheet.concept ? modelSheet.concept.raw : { elements: [], positions: null },
       });
     }
   }
+  const activeSheet = selectSheet(app.uiDataModel, app.activeSheetId || 'sheet-1');
   return {
     analysis_state_format: 'ivyweb-json',
     analysis_state_version: 1,
@@ -54,10 +58,8 @@ export function buildAnalysisState(app, persist) {
     fileContent: app._editorContent ? app._editorContent() : (app._persistedFileContent || ''),
     mode: app.getMode(),
     activeSheetId: app.activeSheetId || 'sheet-1',
-    selectedArgNode: app.selectedArgNode || null,
-    edgeVisibility: {},
-    labelVisibility: {},
-    toggles: persist && persist._getToggles ? persist._getToggles() : {},
+    selectedArgNode: activeSheet ? activeSheet.selectedArgNode : null,
+    toggles: persist && persist.getToggles ? persist.getToggles(app) : selectStateToggles(activeSheet),
     sheets,
   };
 }
@@ -201,7 +203,6 @@ export async function loadAnalysisStateObject(app, state, persist) {
   app._persistedFilePath = state.filePath || state.fileName || '';
   app._persistedFileContent = state.fileContent || '';
   app._savedFileContent = app._persistedFileContent;
-  app.selectedArgNode = state.selectedArgNode || null;
 
   if (app.setEditorContent) {
     app.setEditorContent(app._persistedFileContent);
@@ -236,6 +237,7 @@ export async function loadAnalysisStateObject(app, state, persist) {
         app.sheets['sheet-1'].visualOnly = true;
       }
       if (app.uiDataStore) app.uiDataStore.setSelectedArgNode(sheet.id, sheet.selectedArgNode || null);
+      if (app.uiDataStore) app.uiDataStore.setConceptSelections(sheet.id, sheet.conceptSelections || []);
     } else if (sheet.arg && sheet.arg.elements) {
       app.openARGSheet(sheet.label || sheet.id, sheet.arg, sheet.id);
       const opened = app.sheets && app.sheets[sheet.id];
@@ -247,11 +249,12 @@ export async function loadAnalysisStateObject(app, state, persist) {
         opened.visualOnly = true;
       }
       if (app.uiDataStore) app.uiDataStore.setSelectedArgNode(sheet.id, sheet.selectedArgNode || null);
+      if (app.uiDataStore) app.uiDataStore.setConceptSelections(sheet.id, sheet.conceptSelections || []);
     }
   }
 
-  if (state.toggles && persist && persist._setToggles) {
-    persist._setToggles(state.toggles);
+  if (state.toggles && persist && persist.applyToggles) {
+    await persist.applyToggles(app, state.toggles);
   }
   if (state.activeSheetId && app.sheetExists(state.activeSheetId)) {
     app.switchSheet(state.activeSheetId);

@@ -1,17 +1,18 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
   currentSheet,
-  graphElementsSnapshot,
   refreshLayoutAfterPatch,
   refreshGraphsAndEditorLayout,
   registerSheet,
 } from './graphService.ts';
+import { UIDataModel } from '../models/uiDataModel.ts';
 
 describe('graphService', () => {
   it('registers analysis sheets and reports the current one', () => {
     const app = {
       sheets: {},
       activeSheetId: 'sheet-1',
+      uiDataModel: new UIDataModel(),
       installConceptGraphVisibilityHook: vi.fn(),
     };
     const argGraph = {};
@@ -28,12 +29,10 @@ describe('graphService', () => {
       visualOnly: false,
     });
     expect(app.installConceptGraphVisibilityHook).toHaveBeenCalledWith(conceptGraph);
+    expect(app.uiDataModel.sheets['sheet-1'].type).toBe('analysis');
   });
 
-  it('creates graph element snapshots and refreshes visible graph layouts', () => {
-    const elements = [{ data: { id: 'n' } }];
-    expect(graphElementsSnapshot({ cy: { json: () => ({ elements }) } })).toBe(elements);
-
+  it('refreshes visible graph layouts', () => {
     const app = {
       argGraph: { resize: vi.fn() },
       conceptGraph: { resize: vi.fn() },

@@ -77,6 +77,24 @@ function cloneRecord(value: unknown): RawRecord {
   return { ...rawRecord(value) };
 }
 
+function optionalString(value: unknown): string | undefined {
+  return typeof value === 'string' && value !== '' ? value : undefined;
+}
+
+function optionalNumber(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+}
+
+function cloneJsonish(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(cloneJsonish);
+  if (isRecord(value)) {
+    const out: RawRecord = {};
+    for (const key of Object.keys(value)) out[key] = cloneJsonish(value[key]);
+    return out;
+  }
+  return value;
+}
+
 export class RawBackedModel<TRaw = unknown> {
   readonly raw: TRaw;
 
@@ -260,17 +278,165 @@ export class CyPosition extends RawBackedModel<unknown> {
   }
 }
 
-export class CyElement extends RawBackedModel<unknown> {
+export class GraphAction {
+  readonly label: string;
+  readonly action: string;
+  readonly id: string;
+  readonly name: string;
+  readonly args: RawRecord;
+
+  constructor(raw: unknown = {}) {
+    const obj = rawRecord(raw);
+    this.label = stringValue(pick(raw, 'label', 'Label', 'name', 'Name'));
+    this.action = stringValue(pick(raw, 'action', 'Action', 'id', 'ID'));
+    this.id = stringValue(pick(raw, 'id', 'ID'), this.action);
+    this.name = stringValue(pick(raw, 'name', 'Name'), this.label);
+    this.args = cloneRecord(pick(raw, 'args', 'Args'));
+  }
+
+  toClientAction(): RawRecord {
+    const out: RawRecord = {};
+    if (this.label) out.label = this.label;
+    if (this.action) out.action = this.action;
+    if (this.id && this.id !== this.action) out.id = this.id;
+    if (this.name && this.name !== this.label) out.name = this.name;
+    if (Object.keys(this.args).length > 0) out.args = cloneJsonish(this.args);
+    return out;
+  }
+}
+
+export class CyElementData {
+  readonly id: string;
+  readonly obj: string;
+  readonly label: string;
+  readonly source: string;
+  readonly target: string;
+  readonly sourceObj: string;
+  readonly targetObj: string;
+  readonly shortInfo: string;
+  readonly longInfo: unknown;
+  readonly actions: GraphAction[];
+  readonly cluster: string;
+  readonly displayLabel: string;
+  readonly sort: string;
+  readonly width: number | undefined;
+  readonly height: number | undefined;
+  readonly shape: string;
+  readonly borderColor: string;
+
+  constructor(raw: unknown = {}) {
+    this.id = stringValue(pick(raw, 'id', 'ID'));
+    this.obj = stringValue(pick(raw, 'obj', 'Obj'));
+    this.label = stringValue(pick(raw, 'label', 'Label'));
+    this.source = stringValue(pick(raw, 'source', 'Source'));
+    this.target = stringValue(pick(raw, 'target', 'Target'));
+    this.sourceObj = stringValue(pick(raw, 'source_obj', 'sourceObj', 'SourceObj'));
+    this.targetObj = stringValue(pick(raw, 'target_obj', 'targetObj', 'TargetObj'));
+    this.shortInfo = stringValue(pick(raw, 'short_info', 'shortInfo', 'ShortInfo'));
+    this.longInfo = cloneJsonish(pick(raw, 'long_info', 'longInfo', 'LongInfo'));
+    this.actions = typedArray(pick(raw, 'actions', 'Actions'), GraphAction);
+    this.cluster = stringValue(pick(raw, 'cluster', 'Cluster'));
+    this.displayLabel = stringValue(pick(raw, 'display_label', 'displayLabel', 'DisplayLabel'));
+    this.sort = stringValue(pick(raw, 'sort', 'Sort'));
+    this.width = optionalNumber(pick(raw, 'width', 'Width'));
+    this.height = optionalNumber(pick(raw, 'height', 'Height'));
+    this.shape = stringValue(pick(raw, 'shape', 'Shape'));
+    this.borderColor = stringValue(pick(raw, 'border_color', 'borderColor', 'BorderColor'));
+  }
+
+  toCytoscapeData(): RawRecord {
+    const out: RawRecord = {};
+    if (this.id) out.id = this.id;
+    if (this.obj) out.obj = this.obj;
+    if (this.label) out.label = this.label;
+    if (this.source) out.source = this.source;
+    if (this.target) out.target = this.target;
+    if (this.sourceObj) out.source_obj = this.sourceObj;
+    if (this.targetObj) out.target_obj = this.targetObj;
+    if (this.shortInfo) out.short_info = this.shortInfo;
+    if (this.longInfo !== undefined) out.long_info = cloneJsonish(this.longInfo);
+    if (this.actions.length > 0) out.actions = this.actions.map((action) => action.toClientAction());
+    if (this.cluster) out.cluster = this.cluster;
+    if (this.displayLabel) out.display_label = this.displayLabel;
+    if (this.sort) out.sort = this.sort;
+    if (this.width !== undefined) out.width = this.width;
+    if (this.height !== undefined) out.height = this.height;
+    if (this.shape) out.shape = this.shape;
+    if (this.borderColor) out.border_color = this.borderColor;
+    return out;
+  }
+}
+
+export type GraphSelectionKind = 'node' | 'edge';
+
+export interface GraphSelection {
+  kind: GraphSelectionKind;
+  id: string;
+  obj: string;
+  label: string;
+  sourceObj: string;
+  targetObj: string;
+}
+
+function normalizeGraphSelection(raw: unknown, fallbackKind: GraphSelectionKind): GraphSelection | null {
+  if (typeof raw === 'string') {
+    const value = raw.trim();
+    if (!value) return null;
+    return { kind: fallbackKind, id: value, obj: value, label: value, sourceObj: '', targetObj: '' };
+  }
+  const obj = rawRecord(raw);
+  const kind = stringValue(pick(raw, 'kind'), fallbackKind) as GraphSelectionKind;
+  const data = rawRecord(pick(raw, 'data'));
+  const source = Object.keys(data).length > 0 ? data : obj;
+  const id = stringValue(pick(source, 'id', 'ID'));
+  const selectedObj = stringValue(pick(source, 'obj', 'Obj'), id);
+  const label = stringValue(pick(source, 'label', 'Label'), selectedObj || id);
+  const sourceObj = stringValue(pick(source, 'source_obj', 'sourceObj', 'SourceObj'));
+  const targetObj = stringValue(pick(source, 'target_obj', 'targetObj', 'TargetObj'));
+  if (!id && !selectedObj && !label) return null;
+  return { kind, id, obj: selectedObj, label, sourceObj, targetObj };
+}
+
+export function conceptNodeSelection(raw: unknown): GraphSelection | null {
+  return normalizeGraphSelection(raw, 'node');
+}
+
+export function conceptEdgeSelection(raw: unknown): GraphSelection | null {
+  return normalizeGraphSelection(raw, 'edge');
+}
+
+export function graphSelectionKey(selection: GraphSelection | null | undefined): string {
+  if (!selection) return '';
+  if (selection.kind === 'edge') {
+    const tuple = [selection.obj, selection.sourceObj, selection.targetObj].filter(Boolean).join('|');
+    return `edge:${selection.id || tuple || selection.label}`;
+  }
+  return `node:${selection.obj || selection.id || selection.label}`;
+}
+
+export function graphSelectionAliases(selection: GraphSelection | null | undefined): string[] {
+  if (!selection) return [];
+  const aliases = new Set<string>();
+  const primary = graphSelectionKey(selection);
+  if (primary) aliases.add(primary);
+  if (selection.id) aliases.add(`${selection.kind}:${selection.id}`);
+  if (selection.obj) aliases.add(`${selection.kind}:${selection.obj}`);
+  if (selection.kind === 'edge' && selection.obj && selection.sourceObj && selection.targetObj) {
+    aliases.add(`edge:${selection.obj}|${selection.sourceObj}|${selection.targetObj}`);
+  }
+  return Array.from(aliases);
+}
+
+export class CyElement {
   readonly group: string;
-  readonly data: RawRecord;
+  readonly data: CyElementData;
   readonly classes: string;
   readonly locked: boolean;
   readonly position: CyPosition | null;
 
   constructor(raw: unknown = {}) {
-    super(raw);
     this.group = stringValue(pick(raw, 'group', 'Group'));
-    this.data = cloneRecord(pick(raw, 'data', 'Data'));
+    this.data = new CyElementData(pick(raw, 'data', 'Data'));
     this.classes = stringValue(pick(raw, 'classes', 'Classes'));
     this.locked = boolValue(pick(raw, 'locked', 'Locked'));
     const position = pick(raw, 'position', 'Position');
@@ -278,14 +444,13 @@ export class CyElement extends RawBackedModel<unknown> {
   }
 }
 
-export class CyElements extends RawBackedModel<unknown> {
+export class CyElements {
   readonly elements: CyElement[];
 
   constructor(raw: unknown = {}) {
-    super(raw);
     this.elements = typedArray(pick(raw, 'elements', 'Elements'), CyElement);
     // NodeID and EdgeID are tagged json:"-" in Go and never appear on the wire.
-    // Use element.data['id'] and element.data['obj'] for lookups instead.
+    // Use typed CyElementData id/obj/tuple fields for lookups instead.
   }
 }
 
@@ -588,8 +753,7 @@ export class SheetModel extends RawBackedModel<unknown> {
   concept: ConceptSnapshot | null;
   cti: CTISnapshot | null;
   selectedArgNode: string | null;
-  selectedConceptNodes: string[];
-  selectedConceptEdges: string[];
+  conceptSelections: GraphSelection[];
   visualOnly: boolean;
 
   constructor(raw: unknown = {}) {
@@ -601,8 +765,9 @@ export class SheetModel extends RawBackedModel<unknown> {
     this.cti = null;
     const selected = pick(raw, 'selectedArgNode', 'selected_arg_node');
     this.selectedArgNode = typeof selected === 'string' ? selected : null;
-    this.selectedConceptNodes = stringArray(pick(raw, 'selectedConceptNodes', 'selected_concept_nodes'));
-    this.selectedConceptEdges = stringArray(pick(raw, 'selectedConceptEdges', 'selected_concept_edges'));
+    this.conceptSelections = rawArray(pick(raw, 'conceptSelections', 'concept_selections'))
+      .map((item) => normalizeGraphSelection(item, 'node'))
+      .filter((item): item is GraphSelection => !!item);
     this.visualOnly = boolValue(pick(raw, 'visualOnly', 'visual_only'));
   }
 }
@@ -655,61 +820,53 @@ export class UIDataModel extends RawBackedModel<unknown> {
     return this.activeSheetId;
   }
 
-  acceptArgSnapshot(sheetId: string, payload: unknown = {}): ARGSnapshot {
-    const sheet = this.registerSheet(sheetId || this.activeSheetId);
-    sheet.arg = new ARGSnapshot(payload);
-    sheet.selectedArgNode = null;
-    return sheet.arg;
-  }
-
-  acceptConceptSnapshot(sheetId: string, payload: unknown = {}): ConceptSnapshot {
-    const sheet = this.registerSheet(sheetId || this.activeSheetId);
-    sheet.concept = new ConceptSnapshot(payload);
-    sheet.selectedConceptNodes = [];
-    sheet.selectedConceptEdges = [];
-    return sheet.concept;
-  }
-
-  acceptCtiSnapshot(sheetId: string, payload: unknown = {}): CTISnapshot {
-    const sheet = this.registerSheet(sheetId || this.activeSheetId);
-    sheet.cti = new CTISnapshot(payload);
-    return sheet.cti;
-  }
-
   setSelectedArgNode(sheetId: string, nodeId: string | null | undefined): string | null {
     const sheet = this.registerSheet(sheetId || this.activeSheetId);
     sheet.selectedArgNode = nodeId || null;
     return sheet.selectedArgNode;
   }
 
-  toggleConceptNodeSelection(sheetId: string, nodeId: string | null | undefined): boolean {
+  toggleConceptNodeSelection(sheetId: string, selectionInput: unknown): boolean {
     const sheet = this.registerSheet(sheetId || this.activeSheetId);
-    if (!nodeId) return false;
-    const existing = sheet.selectedConceptNodes.indexOf(nodeId);
+    const selection = conceptNodeSelection(selectionInput);
+    if (!selection) return false;
+    const aliases = new Set(graphSelectionAliases(selection));
+    const existing = sheet.conceptSelections.findIndex((candidate) =>
+      graphSelectionAliases(candidate).some((alias) => aliases.has(alias)));
     if (existing >= 0) {
-      sheet.selectedConceptNodes.splice(existing, 1);
+      sheet.conceptSelections.splice(existing, 1);
       return false;
     }
-    sheet.selectedConceptNodes.push(nodeId);
+    sheet.conceptSelections.push(selection);
     return true;
   }
 
-  toggleConceptEdgeSelection(sheetId: string, edgeId: string | null | undefined): boolean {
+  toggleConceptEdgeSelection(sheetId: string, selectionInput: unknown): boolean {
     const sheet = this.registerSheet(sheetId || this.activeSheetId);
-    if (!edgeId) return false;
-    const existing = sheet.selectedConceptEdges.indexOf(edgeId);
+    const selection = conceptEdgeSelection(selectionInput);
+    if (!selection) return false;
+    const aliases = new Set(graphSelectionAliases(selection));
+    const existing = sheet.conceptSelections.findIndex((candidate) =>
+      graphSelectionAliases(candidate).some((alias) => aliases.has(alias)));
     if (existing >= 0) {
-      sheet.selectedConceptEdges.splice(existing, 1);
+      sheet.conceptSelections.splice(existing, 1);
       return false;
     }
-    sheet.selectedConceptEdges.push(edgeId);
+    sheet.conceptSelections.push(selection);
     return true;
   }
 
   clearConceptSelection(sheetId: string): void {
     const sheet = this.registerSheet(sheetId || this.activeSheetId);
-    sheet.selectedConceptNodes = [];
-    sheet.selectedConceptEdges = [];
+    sheet.conceptSelections = [];
+  }
+
+  setConceptSelections(sheetId: string, selections: unknown[] = []): GraphSelection[] {
+    const sheet = this.registerSheet(sheetId || this.activeSheetId);
+    sheet.conceptSelections = selections
+      .map((item) => normalizeGraphSelection(item, 'node'))
+      .filter((item): item is GraphSelection => !!item);
+    return sheet.conceptSelections;
   }
 
   setFile(fileName: string, filePath?: string): void {

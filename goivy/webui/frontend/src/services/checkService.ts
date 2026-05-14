@@ -1,4 +1,5 @@
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
+import { selectSheet, selectStateCheckboxRows } from '../models/uiDataSelectors.ts';
 
 export async function runCheck(app) {
   const mode = app.getMode();
@@ -34,26 +35,19 @@ export async function runCheck(app) {
   }
 }
 
-export async function autoCheckUsedRelations(app, relationNames, doc = globalThis.document) {
+export async function autoCheckUsedRelations(app, relationNames) {
   if (!relationNames || relationNames.length === 0) return;
   const usedSet = {};
   for (const relationName of relationNames) {
     usedSet[relationName] = true;
   }
-  const tbody = doc.getElementById('state-checkbox-body');
-  if (!tbody) return;
-  const rows = tbody.querySelectorAll('tr');
+  const sheet = selectSheet(app && app.uiDataModel, app && app.activeSheetId);
+  const rows = selectStateCheckboxRows(sheet);
   for (const row of rows) {
-    const nameCell = row.querySelector('.name-col a');
-    if (!nameCell) continue;
-    const name = nameCell.textContent.trim();
+    const name = row.name;
     const baseName = name.split('(')[0];
-    if (usedSet[name] || usedSet[baseName]) {
-      const inputs = row.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
-      if (inputs.length > 0 && !inputs[0].checked) {
-        inputs[0].checked = true;
-        await app.onEdgeToggle(name, 'all_to_all', true);
-      }
+    if ((usedSet[name] || usedSet[baseName]) && !(row.checked && row.checked.all_to_all)) {
+      await app.onEdgeToggle(name, 'all_to_all', true);
     }
   }
 }

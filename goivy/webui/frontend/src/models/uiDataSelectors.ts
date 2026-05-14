@@ -2,8 +2,12 @@ import {
   ConceptSnapshot,
   CyElement,
   FactSelection,
+  GraphSelection,
   SheetModel,
   UIDataModel,
+  conceptEdgeSelection,
+  conceptNodeSelection,
+  graphSelectionAliases,
 } from './uiDataModel.ts';
 
 export const EDGE_DISPLAY_CLASSES = ['all_to_all', 'edge_unknown', 'none_to_none', 'transitive'];
@@ -42,7 +46,7 @@ function addClass(element: RawRecord, className: string): void {
 function cloneCyElement(element: CyElement): RawRecord {
   const out: RawRecord = {
     group: element.group,
-    data: { ...element.data },
+    data: element.data.toCytoscapeData(),
   };
   if (element.classes) out.classes = element.classes;
   if (element.locked) out.locked = element.locked;
@@ -147,22 +151,25 @@ export function selectArgGraphView(sheet: SheetModel | null | undefined) {
 export function selectConceptGraphView(sheet: SheetModel | null | undefined) {
   const snapshot = sheet && sheet.concept;
   const elements = snapshot ? cyElementsToDefinitions(snapshot.render.elements) : [];
-  const selectedNodes = new Set(sheet ? sheet.selectedConceptNodes : []);
-  const selectedEdges = new Set(sheet ? sheet.selectedConceptEdges : []);
+  const selectedAliases = new Set<string>();
+  for (const selection of sheet ? sheet.conceptSelections : []) {
+    for (const alias of graphSelectionAliases(selection)) selectedAliases.add(alias);
+  }
   const edgeVisibilityById: Record<string, boolean> = {};
 
   for (const element of elements) {
     const data = rawRecord(element.data);
     if (element.group === 'nodes') {
       if (snapshot) applyConceptNodeLabel(snapshot, element);
-      const id = elementId(element);
-      const obj = String(data.obj || '');
-      if (selectedNodes.has(id) || selectedNodes.has(obj)) addClass(element, 'selected_node');
+      const selection = conceptNodeSelection(data);
+      if (graphSelectionAliases(selection).some((alias) => selectedAliases.has(alias))) addClass(element, 'selected_node');
     } else if (element.group === 'edges') {
+      const selection = conceptEdgeSelection(data);
+      if (graphSelectionAliases(selection).some((alias) => selectedAliases.has(alias))) addClass(element, 'selected_edge');
+      const visible = snapshot ? conceptEdgeVisible(snapshot, element) : true;
       const id = elementId(element);
-      const obj = String(data.obj || '');
-      if (selectedEdges.has(id) || selectedEdges.has(obj)) addClass(element, 'selected_edge');
-      edgeVisibilityById[id] = snapshot ? conceptEdgeVisible(snapshot, element) : true;
+      if (id) edgeVisibilityById[id] = visible;
+      for (const alias of graphSelectionAliases(selection)) edgeVisibilityById[alias] = visible;
     }
   }
 
@@ -193,6 +200,38 @@ export function selectStateCheckboxRows(sheet: SheetModel | null | undefined) {
       transitive: toggleChecked(snapshot, name, 'transitive'),
     },
   }));
+}
+
+export function selectStateToggles(sheet: SheetModel | null | undefined): Record<string, boolean> {
+  const toggles: Record<string, boolean> = {};
+  for (const row of selectStateCheckboxRows(sheet)) {
+    for (const displayClass of EDGE_DISPLAY_CLASSES) {
+      toggles[`${row.name}|${displayClass}`] = !!row.checked[displayClass];
+    }
+  }
+  return toggles;
+}
+
+export function selectConceptSelections(sheet: SheetModel | null | undefined): GraphSelection[] {
+  return sheet ? sheet.conceptSelections.map((selection) => ({ ...selection })) : [];
+}
+
+export function selectPrimaryConceptNodeSelection(model: UIDataModel | null | undefined, sheetId?: string): GraphSelection | null {
+  const sheet = selectSheet(model, sheetId);
+  if (!sheet) return null;
+  for (let i = sheet.conceptSelections.length - 1; i >= 0; i -= 1) {
+    if (sheet.conceptSelections[i].kind === 'node') return { ...sheet.conceptSelections[i] };
+  }
+  return null;
+}
+
+export function selectConceptNodeSelected(model: UIDataModel | null | undefined, sheetId: string | undefined, node: unknown): boolean {
+  const sheet = selectSheet(model, sheetId);
+  const selection = conceptNodeSelection(node);
+  if (!sheet || !selection) return false;
+  const aliases = new Set(graphSelectionAliases(selection));
+  return sheet.conceptSelections.some((candidate) =>
+    candidate.kind === 'node' && graphSelectionAliases(candidate).some((alias) => aliases.has(alias)));
 }
 
 export function selectConstraintFacts(sheet: SheetModel | null | undefined): FactSelection[] {

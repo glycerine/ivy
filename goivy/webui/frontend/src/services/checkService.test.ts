@@ -7,6 +7,8 @@ import {
   showCheckResult,
   weakenInvariant,
 } from './checkService.ts';
+import { UIDataModel } from '../models/uiDataModel.ts';
+import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 
 describe('checkService', () => {
   it('adds CTI details and trace actions for failed checks', () => {
@@ -139,20 +141,19 @@ describe('checkService', () => {
   });
 
   it('auto-checks used relation rows', async () => {
-    document.body.innerHTML = [
-      '<table><tbody id="state-checkbox-body">',
-      '<tr><td class="name-col"><a>link(X,Y)</a></td><td><input type="checkbox"></td></tr>',
-      '</tbody></table>',
-    ].join('');
-    const row = document.querySelector('tr');
-    row.appendChild(row.firstElementChild);
+    const uiDataModel = new UIDataModel();
+    createUIDataModelStore(uiDataModel).applyConceptSnapshot('sheet-1', {
+      relations: ['link(X,Y)'],
+      toggles: { edges: { 'link(X,Y)': { all_to_all: false } } },
+    });
     const app = {
+      uiDataModel,
+      activeSheetId: 'sheet-1',
       onEdgeToggle: vi.fn(),
     };
 
-    await autoCheckUsedRelations(app, ['link'], document);
+    await autoCheckUsedRelations(app, ['link']);
 
-    expect(document.querySelector('input').checked).toBe(true);
     expect(app.onEdgeToggle).toHaveBeenCalledWith('link(X,Y)', 'all_to_all', true);
   });
 });

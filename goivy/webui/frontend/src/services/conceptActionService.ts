@@ -1,4 +1,7 @@
-import { selectMaterializableEdges } from '../models/uiDataSelectors.ts';
+import {
+  selectMaterializableEdges,
+  selectPrimaryConceptNodeSelection,
+} from '../models/uiDataSelectors.ts';
 
 export async function executeConceptNodeAction(app, nodeData, action) {
   const actionID = action.action || action.id || action[0] || action.name || '';
@@ -134,7 +137,8 @@ export async function addProjection(app, name, concept) {
 }
 
 export async function materializeEdgeFromSelected(app, targetConceptId) {
-  const sourceConceptId = app.selectedConceptNode;
+  const sourceSelection = selectPrimaryConceptNodeSelection(app.uiDataModel, app.activeSheetId || 'sheet-1');
+  const sourceConceptId = sourceSelection && (sourceSelection.obj || sourceSelection.id || sourceSelection.label);
   if (!sourceConceptId) {
     app.controls.setStatus('Select a source node first', 'warning');
     return undefined;
@@ -186,10 +190,8 @@ export async function addRelationFromString(app) {
 }
 
 export function selectConceptNode(app, conceptId) {
-  const selected = app.uiDataStore
-    ? app.uiDataStore.toggleConceptNodeSelection(app.activeSheetId || 'sheet-1', conceptId)
-    : true;
-  app.selectedConceptNode = selected ? conceptId : null;
+  if (!app.uiDataStore) throw new Error('UIDataModel store is required to select concept nodes');
+  const selected = app.uiDataStore.toggleConceptNodeSelection(app.activeSheetId || 'sheet-1', conceptId);
   if (selected) {
     app.controls.setStatus(`Selected: ${conceptId}`);
   } else {

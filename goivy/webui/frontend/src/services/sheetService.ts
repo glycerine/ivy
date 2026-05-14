@@ -1,3 +1,5 @@
+import { installUIDataModelStore } from './uiDataRenderService.ts';
+
 export function isVisualOnlySheet(app, sheetId) {
   const modelSheet = app.uiDataModel && app.uiDataModel.sheets && app.uiDataModel.sheets[sheetId];
   if (modelSheet) return !!modelSheet.visualOnly;
@@ -8,10 +10,9 @@ export function isVisualOnlySheet(app, sheetId) {
 export function setVisualOnlySheet(app, sheetId, visualOnly) {
   const sheet = app.sheets && app.sheets[sheetId];
   if (sheet) sheet.visualOnly = !!visualOnly;
-  if (app.uiDataStore) {
-    app.uiDataStore.setVisualOnly(sheetId, !!visualOnly);
-  } else if (app.uiDataModel) {
-    app.uiDataModel.registerSheet(sheetId).visualOnly = !!visualOnly;
+  if (app.uiDataModel) {
+    const store = app.uiDataStore || installUIDataModelStore(app);
+    if (store) store.setVisualOnly(sheetId, !!visualOnly, { type: sheet && sheet.type });
   }
 }
 
@@ -62,16 +63,28 @@ export function switchSheet(app, sheetId, {
   if (tab) tab.classList.add('active');
   if (sheet) sheet.classList.add('active');
   if (app.sheets && app.sheets[sheetId]) {
-    app.activeSheetId = sheetId;
-    if (app.uiDataStore) app.uiDataStore.setActiveSheet(sheetId);
-    else if (app.uiDataModel) app.uiDataModel.setActiveSheet(sheetId);
-    if (app.sheets[sheetId].type !== 'events') {
-      app.argGraph = app.sheets[sheetId].argGraph;
-      app.conceptGraph = app.sheets[sheetId].conceptGraph;
+    const runtimeSheet = app.sheets[sheetId];
+    if (runtimeSheet.type !== 'events') {
+      app.argGraph = runtimeSheet.argGraph;
+      app.conceptGraph = runtimeSheet.conceptGraph;
       const modelSheet = app.uiDataModel && app.uiDataModel.sheets[sheetId];
-      app.selectedArgNode = modelSheet ? modelSheet.selectedArgNode : app.sheets[sheetId].selectedArgNode;
+      app.selectedArgNode = modelSheet ? modelSheet.selectedArgNode : runtimeSheet.selectedArgNode;
+    } else {
+      app.argGraph = null;
+      app.conceptGraph = null;
     }
+    app.activeSheetId = sheetId;
+    if (app.uiDataModel) {
+      const store = app.uiDataStore || installUIDataModelStore(app);
+      if (store) {
+        store.registerSheet(sheetId, { type: runtimeSheet.type });
+        store.setActiveSheet(sheetId);
+      }
+    }
+    if (runtimeSheet.type !== 'events') {
+      if (runtimeSheet.argGraph) runtimeSheet.argGraph.resize();
+      if (runtimeSheet.conceptGraph) runtimeSheet.conceptGraph.resize();
+    }
+    return;
   }
-  if (app.argGraph) app.argGraph.resize();
-  if (app.conceptGraph) app.conceptGraph.resize();
 }

@@ -3,7 +3,6 @@ import { registerMethodCommands, requiredMethods } from './commandRegistrationHe
 export const GRAPH_COMMANDS = [
   'installConceptGraphVisibilityHook',
   'attachGraphEventHandlers',
-  'graphElementsSnapshot',
   'refreshConceptGraph',
   'populateStateCheckboxes',
   'populateConstraintFacts',

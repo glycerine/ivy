@@ -1,11 +1,17 @@
-import { UIDataModel } from './uiDataModel.ts';
+import {
+  ARGSnapshot,
+  CTISnapshot,
+  ConceptSnapshot,
+  UIDataModel,
+} from './uiDataModel.ts';
 
 export type UIDataChangeKind =
   | 'arg'
   | 'concept'
   | 'cti'
   | 'sheet'
-  | 'selection'
+  | 'argSelection'
+  | 'conceptSelection'
   | 'visualOnly'
   | 'interaction';
 
@@ -51,27 +57,35 @@ export class UIDataModelStore {
 
   setActiveSheet(sheetId: string): string {
     const active = this.model.setActiveSheet(sheetId);
-    this.emit({ sheetId: active, changed: ['sheet', 'selection'] });
+    this.emit({ sheetId: active, changed: ['sheet'] });
     return active;
   }
 
   applyArgSnapshot(sheetId: string, payload: unknown = {}) {
     const id = sheetId || this.model.activeSheetId;
-    const snapshot = this.model.acceptArgSnapshot(id, payload);
-    this.emit({ sheetId: id, changed: ['arg', 'selection'] });
+    const sheet = this.model.registerSheet(id);
+    const snapshot = new ARGSnapshot(payload);
+    sheet.arg = snapshot;
+    sheet.selectedArgNode = null;
+    this.emit({ sheetId: id, changed: ['arg', 'argSelection'] });
     return snapshot;
   }
 
   applyConceptSnapshot(sheetId: string, payload: unknown = {}) {
     const id = sheetId || this.model.activeSheetId;
-    const snapshot = this.model.acceptConceptSnapshot(id, payload);
-    this.emit({ sheetId: id, changed: ['concept', 'selection'] });
+    const sheet = this.model.registerSheet(id);
+    const snapshot = new ConceptSnapshot(payload);
+    sheet.concept = snapshot;
+    sheet.conceptSelections = [];
+    this.emit({ sheetId: id, changed: ['concept', 'conceptSelection'] });
     return snapshot;
   }
 
   applyCtiSnapshot(sheetId: string, payload: unknown = {}) {
     const id = sheetId || this.model.activeSheetId;
-    const snapshot = this.model.acceptCtiSnapshot(id, payload);
+    const sheet = this.model.registerSheet(id);
+    const snapshot = new CTISnapshot(payload);
+    sheet.cti = snapshot;
     this.emit({ sheetId: id, changed: ['cti'] });
     return snapshot;
   }
@@ -79,33 +93,40 @@ export class UIDataModelStore {
   setSelectedArgNode(sheetId: string, nodeId: string | null | undefined): string | null {
     const id = sheetId || this.model.activeSheetId;
     const selected = this.model.setSelectedArgNode(id, nodeId);
-    this.emit({ sheetId: id, changed: ['selection'] });
+    this.emit({ sheetId: id, changed: ['argSelection'] });
     return selected;
   }
 
-  toggleConceptNodeSelection(sheetId: string, nodeId: string | null | undefined): boolean {
+  toggleConceptNodeSelection(sheetId: string, node: unknown): boolean {
     const id = sheetId || this.model.activeSheetId;
-    const selected = this.model.toggleConceptNodeSelection(id, nodeId);
-    this.emit({ sheetId: id, changed: ['selection'] });
+    const selected = this.model.toggleConceptNodeSelection(id, node);
+    this.emit({ sheetId: id, changed: ['conceptSelection'] });
     return selected;
   }
 
-  toggleConceptEdgeSelection(sheetId: string, edgeId: string | null | undefined): boolean {
+  toggleConceptEdgeSelection(sheetId: string, edge: unknown): boolean {
     const id = sheetId || this.model.activeSheetId;
-    const selected = this.model.toggleConceptEdgeSelection(id, edgeId);
-    this.emit({ sheetId: id, changed: ['selection'] });
+    const selected = this.model.toggleConceptEdgeSelection(id, edge);
+    this.emit({ sheetId: id, changed: ['conceptSelection'] });
     return selected;
   }
 
   clearConceptSelection(sheetId: string): void {
     const id = sheetId || this.model.activeSheetId;
     this.model.clearConceptSelection(id);
-    this.emit({ sheetId: id, changed: ['selection'] });
+    this.emit({ sheetId: id, changed: ['conceptSelection'] });
   }
 
-  setVisualOnly(sheetId: string, visualOnly: boolean): boolean {
+  setConceptSelections(sheetId: string, selections: unknown[] = []) {
     const id = sheetId || this.model.activeSheetId;
-    const sheet = this.model.registerSheet(id);
+    const selected = this.model.setConceptSelections(id, selections);
+    this.emit({ sheetId: id, changed: ['conceptSelection'] });
+    return selected;
+  }
+
+  setVisualOnly(sheetId: string, visualOnly: boolean, raw: unknown = {}): boolean {
+    const id = sheetId || this.model.activeSheetId;
+    const sheet = this.model.registerSheet(id, raw);
     sheet.visualOnly = !!visualOnly;
     this.emit({ sheetId: id, changed: ['visualOnly'] });
     return sheet.visualOnly;

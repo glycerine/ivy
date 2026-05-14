@@ -3,17 +3,20 @@ import {
   displayConceptName,
   findEdgeVisibility,
   hydrateBackendToggleState,
+  onDisplayClassToggle,
   onEdgeToggle,
+  onRelationToggle,
   populateStateCheckboxes,
   stateRelationRows,
   toggleChecked,
   updateStateLabel,
 } from './conceptVisibilityService.ts';
 import { UIDataModel } from '../models/uiDataModel.ts';
+import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 
 function modelApp(conceptData) {
   const uiDataModel = new UIDataModel();
-  uiDataModel.acceptConceptSnapshot('sheet-1', conceptData);
+  createUIDataModelStore(uiDataModel).applyConceptSnapshot('sheet-1', conceptData);
   return { uiDataModel, activeSheetId: 'sheet-1' };
 }
 
@@ -58,10 +61,39 @@ describe('conceptVisibilityService', () => {
 
     populateStateCheckboxes(app, { relations: ['link(X,Y)'] }, { doc: document });
 
-    expect(document.querySelector('.name-col a').textContent).toBe('link(X,Y)');
+    expect(document.querySelector('.name-col button').textContent).toBe('link(X,Y)');
     document.querySelector('input[value="all_to_all"]').checked = true;
     document.querySelector('input[value="all_to_all"]').dispatchEvent(new Event('change'));
     expect(app.onEdgeToggle).toHaveBeenCalledWith('link(X,Y)', 'all_to_all', true);
+  });
+
+  it('bulk toggles relation rows and display classes through one refresh', async () => {
+    const app = {
+      refreshConceptGraph: vi.fn(),
+      api: {
+        setToggles: vi.fn(),
+      },
+    };
+
+    await onRelationToggle(app, 'link(X,Y)', true);
+    expect(app.api.setToggles).toHaveBeenCalledTimes(4);
+    expect(app.api.setToggles).toHaveBeenCalledWith({
+      edge: 'link(X,Y)',
+      display_class: 'all_to_all',
+      value: true,
+    });
+    expect(app.refreshConceptGraph).toHaveBeenCalledTimes(1);
+
+    app.api.setToggles.mockClear();
+    app.refreshConceptGraph.mockClear();
+    await onDisplayClassToggle(app, [{ name: 'link' }, { name: 'other' }], 'edge_unknown', false);
+    expect(app.api.setToggles).toHaveBeenCalledTimes(2);
+    expect(app.api.setToggles).toHaveBeenNthCalledWith(2, {
+      edge: 'other',
+      display_class: 'edge_unknown',
+      value: false,
+    });
+    expect(app.refreshConceptGraph).toHaveBeenCalledTimes(1);
   });
 
   it('notifies the backend before refreshing model-owned visibility', async () => {

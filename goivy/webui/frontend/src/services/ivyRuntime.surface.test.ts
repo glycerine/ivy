@@ -20,9 +20,6 @@ describe('ivyRuntime public surface', () => {
   // list should shrink.
   it('inventories the public methods still exposed by the runtime coordinator', () => {
     expect(publicRuntimeMethods()).toEqual([
-      'acceptArgSnapshot',
-      'acceptConceptSnapshot',
-      'acceptCtiSnapshot',
       'activeEventSheet',
       'addCheckResultViewActions',
       'addEventPattern',
@@ -73,7 +70,6 @@ describe('ivyRuntime public surface', () => {
       'gatherFacts',
       'getEditorKeymap',
       'getMode',
-      'graphElementsSnapshot',
       'handleEvent',
       'hideSaveAsExplanationNotice',
       'init',

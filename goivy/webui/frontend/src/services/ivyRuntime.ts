@@ -28,6 +28,7 @@ import {
 } from './editorService.ts';
 import { initializeCodeMirrorEditor } from '../codeMirrorEditor.ts';
 import { UIDataModel } from '../models/uiDataModel.ts';
+import { selectConceptNodeSelected } from '../models/uiDataSelectors.ts';
 import {
     applyArgSnapshot as applyArgSnapshotViaModel,
     applyConceptSnapshot as applyConceptSnapshotViaModel,
@@ -60,7 +61,6 @@ import {
 } from './recentFileService.ts';
 import {
     currentSheet as currentSheetViaService,
-    graphElementsSnapshot as graphElementsSnapshotViaService,
     refreshGraphsAndEditorLayout,
     refreshLayoutAfterPatch,
     registerSheet as registerSheetViaService,
@@ -577,21 +577,6 @@ class IvyRuntime {
         registerSheetViaService(this, sheetId, argGraph, conceptGraph);
     }
 
-    acceptArgSnapshot(sheetId, payload) {
-        if (!this.uiDataModel) return null;
-        return this.uiDataModel.acceptArgSnapshot(sheetId || this.activeSheetId || 'sheet-1', payload || {});
-    }
-
-    acceptConceptSnapshot(sheetId, payload) {
-        if (!this.uiDataModel) return null;
-        return this.uiDataModel.acceptConceptSnapshot(sheetId || this.activeSheetId || 'sheet-1', payload || {});
-    }
-
-    acceptCtiSnapshot(sheetId, payload) {
-        if (!this.uiDataModel) return null;
-        return this.uiDataModel.acceptCtiSnapshot(sheetId || this.activeSheetId || 'sheet-1', payload || {});
-    }
-
     applyArgSnapshot(sheetId, payload) {
         return applyArgSnapshotViaModel(this, sheetId || this.activeSheetId || 'sheet-1', payload || {});
     }
@@ -666,15 +651,11 @@ class IvyRuntime {
         conceptGraph.onNodeClick(function (nodeData, evt) {
             try {
                 var name = nodeData.obj || nodeData.id;
-                var selected = self.uiDataStore
-                    ? self.uiDataStore.toggleConceptNodeSelection(sheetId, name)
-                    : true;
+                var selected = self.uiDataStore.toggleConceptNodeSelection(sheetId, nodeData);
                 if (!selected) {
-                    if (self.selectedConceptNode === name) self.selectedConceptNode = null;
                     self.controls.setStatus('Deselected: ' + name);
                     self.controls.clearInfo();
                 } else {
-                    self.selectedConceptNode = name;
                     self.controls.setStatus('Selected: ' + name);
                     self.controls.showInfo(nodeData.short_info, nodeData.long_info);
                 }
@@ -684,10 +665,7 @@ class IvyRuntime {
         });
         conceptGraph.onEdgeClick(function (edgeData, evt) {
             var name = edgeData.obj || edgeData.label || edgeData.id;
-            var edgeId = edgeData.id || name;
-            var selected = self.uiDataStore
-                ? self.uiDataStore.toggleConceptEdgeSelection(sheetId, edgeId)
-                : true;
+            var selected = self.uiDataStore.toggleConceptEdgeSelection(sheetId, edgeData);
             if (!selected) {
                 self.controls.setStatus('Deselected: ' + name);
                 self.controls.clearInfo();
@@ -2089,8 +2067,8 @@ class IvyRuntime {
         return onEdgeToggleViaService(this, edgeName, displayClass, checked);
     }
 
-    _applyEdgeVisibility(conceptGraph) {
-        return applyEdgeVisibility(this, conceptGraph);
+    _applyEdgeVisibility(conceptGraph, view) {
+        return applyEdgeVisibility(this, conceptGraph, view);
     }
 
     _findEdgeVisibility(obj, label) {
@@ -2146,11 +2124,7 @@ class IvyRuntime {
             conceptGraph = sheet.conceptGraph;
         }
         this.selectedArgNode = nodeData.id;
-        if (this.uiDataStore) {
-            this.uiDataStore.setSelectedArgNode(sheetId, nodeData.id);
-        } else if (this.uiDataModel) {
-            this.uiDataModel.setSelectedArgNode(sheetId, nodeData.id);
-        }
+        this.uiDataStore.setSelectedArgNode(sheetId, nodeData.id);
         this.controls.showInfo(nodeData.short_info, nodeData.long_info);
         if (sheet && sheet.visualOnly) {
             this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
@@ -2433,13 +2407,7 @@ class IvyRuntime {
         } else {
             // Default concept node actions — matches Python tk_graph_ui.py
             var conceptId = nodeData.obj || nodeData.id;
-            var isSelected = false;
-            if (self.conceptGraph && self.conceptGraph.cy) {
-                var nd = self.conceptGraph.cy.nodes().filter(function (n) {
-                    return n.data('obj') === conceptId || n.id() === conceptId;
-                });
-                isSelected = nd.length > 0 && nd.hasClass('selected_node');
-            }
+            var isSelected = selectConceptNodeSelected(self.uiDataModel, self.activeSheetId || 'sheet-1', nodeData);
             actions.push({
                 name: isSelected ? 'Unselect' : 'Select',
                 id: 'select',
@@ -2720,62 +2688,10 @@ class IvyRuntime {
      */
     selectConceptNode(conceptId) {
         return selectConceptNodeViaService(this, conceptId);
-        this.selectedConceptNode = conceptId;
-        // Toggle selected_node class (same visual as left-click)
-        if (this.conceptGraph && this.conceptGraph.cy) {
-            var node = this.conceptGraph.cy.nodes().filter(function (n) {
-                return n.data('obj') === conceptId || n.id() === conceptId;
-            });
-            if (node.length > 0) {
-                if (node.hasClass('selected_node')) {
-                    node.removeClass('selected_node');
-                    this.controls.setStatus('Deselected: ' + conceptId);
-                } else {
-                    node.addClass('selected_node');
-                    this.controls.setStatus('Selected: ' + conceptId);
-                }
-            }
-        }
     }
 
     async materializeEdgeFromSelected(targetConceptId) {
         return materializeEdgeFromSelectedViaService(this, targetConceptId);
-        var sourceConceptId = this.selectedConceptNode;
-        if (!sourceConceptId) {
-            this.controls.setStatus('Select a source node first', 'warning');
-            return;
-        }
-        var sheet = this.uiDataModel && this.uiDataModel.sheets[this.activeSheetId || 'sheet-1'];
-        var snapshot = sheet && sheet.concept;
-        var relations = snapshot ? Object.keys(snapshot.edgeSorts).filter(function (rel) {
-            var sorts = snapshot.edgeSorts[rel] || [];
-            return sorts.length >= 2 && sorts[0] === sourceConceptId && sorts[1] === targetConceptId;
-        }) : [];
-        if (relations.length === 0 && snapshot) {
-            relations = snapshot.edges.slice();
-        }
-        if (relations.length === 0) {
-            this.controls.setStatus('No matching binary relations', 'warning');
-            return;
-        }
-        var selected = await this.listboxDialog(
-            'Materialize edge',
-            'Materialize this relation from selected node:',
-            relations.map(function (rel) { return { label: rel, value: rel }; }),
-            { cancel: true }
-        );
-        if (selected == null) {
-            this.controls.setStatus('Materialize edge cancelled', 'warning');
-            return;
-        }
-        this.controls.setStatus('Materializing edge ' + selected + '...');
-        try {
-            await this.api.materializeEdge(selected, sourceConceptId, targetConceptId, true);
-            await this.refreshConceptGraph();
-            this.controls.setStatus('Edge materialized (+)', 'success');
-        } catch (e) {
-            this.controls.setStatus('Materialize edge failed: ' + e.message, 'error');
-        }
     }
 
     /**
@@ -2923,10 +2839,6 @@ class IvyRuntime {
     // Keep saveSession as an alias for downloadModel (used by ARG panel binding)
     async saveSession() { return this.downloadModel(); }
 
-    graphElementsSnapshot(graph) {
-        return graphElementsSnapshotViaService(graph);
-    }
-
     getEditorKeymap() {
         return getEditorKeymapViaService();
     }
@@ -2953,56 +2865,6 @@ class IvyRuntime {
 
     buildAnalysisState() {
         return buildAnalysisStateViaService(this, runtimeDeps.IvyPersist);
-        var sheets = [];
-        var ids = Object.keys(this.sheets || {});
-        ids.sort(function (a, b) {
-            if (a === 'sheet-1') return -1;
-            if (b === 'sheet-1') return 1;
-            return a.localeCompare(b);
-        });
-        for (var i = 0; i < ids.length; i++) {
-            var sheetId = ids[i];
-            var sheet = this.sheets[sheetId];
-            if (!sheet) continue;
-            if (sheet.type === 'events') {
-                sheets.push({
-                    id: sheetId,
-                    type: 'events',
-                    label: this.tabLabelForSheet(sheetId),
-                    events: sheet.events || [],
-                    patterns: sheet.patterns || [],
-                    selectedEventAddress: sheet.selectedEventAddress || null,
-                });
-            } else {
-                sheets.push({
-                    id: sheetId,
-                    type: 'analysis',
-                    label: this.tabLabelForSheet(sheetId),
-                    selectedArgNode: (this.uiDataModel && this.uiDataModel.sheets[sheetId] && this.uiDataModel.sheets[sheetId].selectedArgNode) || sheet.selectedArgNode || null,
-                    arg: this.uiDataModel && this.uiDataModel.sheets[sheetId] && this.uiDataModel.sheets[sheetId].arg
-                        ? this.uiDataModel.sheets[sheetId].arg.raw
-                        : { elements: this.graphElementsSnapshot(sheet.argGraph), positions: null },
-                    concept: this.uiDataModel && this.uiDataModel.sheets[sheetId] && this.uiDataModel.sheets[sheetId].concept
-                        ? this.uiDataModel.sheets[sheetId].concept.raw
-                        : { elements: this.graphElementsSnapshot(sheet.conceptGraph), positions: null },
-                });
-            }
-        }
-        return {
-            analysis_state_format: 'ivyweb-json',
-            analysis_state_version: 1,
-            python_a2g_equivalent: false,
-            fileName: this._persistedFileName || '',
-            filePath: this._persistedFilePath || this._persistedFileName || '',
-            fileContent: this._editorContent ? this._editorContent() : (this._persistedFileContent || ''),
-            mode: this.getMode(),
-            activeSheetId: this.activeSheetId || 'sheet-1',
-            selectedArgNode: this.selectedArgNode || null,
-            edgeVisibility: {},
-            labelVisibility: {},
-            toggles: runtimeDeps.IvyPersist._getToggles ? runtimeDeps.IvyPersist._getToggles() : {},
-            sheets: sheets,
-        };
     }
 
     async saveAnalysisState() {
@@ -3047,73 +2909,6 @@ class IvyRuntime {
 
     async loadAnalysisStateObject(state) {
         return loadAnalysisStateObjectViaService(this, state, runtimeDeps.IvyPersist);
-        this.validateAnalysisStateObject(state);
-        if (!state || state.analysis_state_format !== 'ivyweb-json') {
-            throw new Error('unsupported analysis state format');
-        }
-        this._persistedFileName = state.fileName || '';
-        this._persistedFilePath = state.filePath || state.fileName || '';
-        this._persistedFileContent = state.fileContent || '';
-        this._savedFileContent = this._persistedFileContent;
-        this.selectedArgNode = state.selectedArgNode || null;
-
-        if (this.setEditorContent) {
-            this.setEditorContent(this._persistedFileContent);
-        }
-        if (state.mode) this.setMode(state.mode);
-        if (this.api && this.api.reloadContent && this._persistedFileContent) {
-            await this.api.reloadContent(this._persistedFileContent, this._persistedFileName || 'restored.ivy');
-        }
-
-        this.removeAnalysisStateExtraSheets();
-        var sheets = state.sheets || [];
-        for (var i = 0; i < sheets.length; i++) {
-            var sheet = sheets[i];
-            if (sheet.type === 'events') {
-                this.openEventTraceSheet(sheet.label || 'Events', {
-                    sheet_id: sheet.id,
-                    events: sheet.events || [],
-                    patterns: sheet.patterns || [],
-                    selected_address: sheet.selectedEventAddress || null,
-                }, sheet.id);
-                this.setVisualOnlySheet(sheet.id, true);
-                continue;
-            }
-            if (sheet.id === 'sheet-1') {
-                if (sheet.arg && sheet.arg.elements && this.argGraph) {
-                    this.applyArgSnapshot(sheet.id, sheet.arg);
-                }
-                if (sheet.concept && sheet.concept.elements && this.conceptGraph) {
-                    this.applyConceptSnapshot(sheet.id, sheet.concept);
-                }
-                if (this.sheets && this.sheets['sheet-1']) {
-                    this.sheets['sheet-1'].selectedArgNode = sheet.selectedArgNode || null;
-                    this.sheets['sheet-1'].visualOnly = true;
-                }
-            } else if (sheet.arg && sheet.arg.elements) {
-                this.openARGSheet(sheet.label || sheet.id, sheet.arg, sheet.id);
-                var opened = this.sheets && this.sheets[sheet.id];
-                if (opened && opened.conceptGraph && sheet.concept && sheet.concept.elements) {
-                    this.applyConceptSnapshot(sheet.id, sheet.concept);
-                }
-                if (opened) {
-                    opened.selectedArgNode = sheet.selectedArgNode || null;
-                    opened.visualOnly = true;
-                }
-            }
-        }
-
-        if (state.toggles) {
-            runtimeDeps.IvyPersist._setToggles(state.toggles);
-        }
-        if (state.activeSheetId && this.sheetExists(state.activeSheetId)) {
-            this.switchSheet(state.activeSheetId);
-        } else {
-            this.switchSheet('sheet-1');
-        }
-        runtimeDeps.IvyPersist.setFileName(this._persistedFileName, this._persistedFilePath);
-        this.controls.setStatus('Visual analysis state loaded: ' + (this._persistedFileName || 'state'), 'warning');
-        return true;
     }
 
     analysisStateLimits() {
@@ -3303,30 +3098,6 @@ class IvyRuntime {
      */
     async _autoCheckUsedRelations(relationNames) {
         return autoCheckUsedRelations(this, relationNames);
-        if (!relationNames || relationNames.length === 0) return;
-        var usedSet = {};
-        for (var i = 0; i < relationNames.length; i++) {
-            usedSet[relationNames[i]] = true;
-        }
-        // Find checkbox rows and auto-check "+" for matching relations
-        var tbody = document.getElementById('state-checkbox-body');
-        if (!tbody) return;
-        var rows = tbody.querySelectorAll('tr');
-        for (var r = 0; r < rows.length; r++) {
-            var nameCell = rows[r].querySelector('.name-col a');
-            if (!nameCell) continue;
-            var name = nameCell.textContent.trim();
-            var baseName = name.split('(')[0];
-            if (usedSet[name] || usedSet[baseName]) {
-                // Auto-check the "+" checkbox (first checkbox, index 0)
-                var inputs = rows[r].querySelectorAll('input[type="checkbox"]');
-                if (inputs.length > 0 && !inputs[0].checked) {
-                    inputs[0].checked = true;
-                    // Trigger the toggle handler
-                    await this.onEdgeToggle(name, 'all_to_all', true);
-                }
-            }
-        }
     }
 
     /**

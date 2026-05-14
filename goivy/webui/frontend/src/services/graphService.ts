@@ -1,11 +1,15 @@
+import { installUIDataModelStore } from './uiDataRenderService.ts';
+
 export function currentSheet(app) {
   return app.sheets ? app.sheets[app.activeSheetId] : null;
 }
 
 export function registerSheet(app, sheetId, argGraph, conceptGraph) {
   app.installConceptGraphVisibilityHook(conceptGraph);
-  if (app.uiDataStore) app.uiDataStore.registerSheet(sheetId, { type: 'analysis' });
-  else if (app.uiDataModel) app.uiDataModel.registerSheet(sheetId, { type: 'analysis' });
+  if (app.uiDataModel) {
+    const store = app.uiDataStore || installUIDataModelStore(app);
+    if (store) store.registerSheet(sheetId, { type: 'analysis' });
+  }
   app.sheets[sheetId] = {
     id: sheetId,
     type: 'analysis',
@@ -14,12 +18,6 @@ export function registerSheet(app, sheetId, argGraph, conceptGraph) {
     selectedArgNode: null,
     visualOnly: false,
   };
-}
-
-export function graphElementsSnapshot(graph) {
-  if (!graph || !graph.cy || typeof graph.cy.json !== 'function') return null;
-  const json = graph.cy.json();
-  return json ? json.elements : null;
 }
 
 export function refreshGraphsAndEditorLayout(app) {

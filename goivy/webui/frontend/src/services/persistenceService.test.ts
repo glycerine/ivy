@@ -1,35 +1,45 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createIvyPersist } from './persistenceService.ts';
+import { UIDataModel } from '../models/uiDataModel.ts';
+import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 
 afterEach(() => {
   localStorage.clear();
   window.history.replaceState(null, '', '/');
 });
 
-function makeApp(overrides = {}) {
+function makeModel(selectedArgNode = '0') {
+  const uiDataModel = new UIDataModel();
+  const store = createUIDataModelStore(uiDataModel);
+  store.applyArgSnapshot('sheet-1', { elements: [{ data: { id: 'a' } }] });
+  store.applyConceptSnapshot('sheet-1', {
+    relations: ['link'],
+    toggles: { edges: { link: { all_to_all: true } } },
+    elements: [{ data: { id: 'c', obj: 'selected-c' } }],
+  });
+  store.setSelectedArgNode('sheet-1', selectedArgNode);
+  store.setConceptSelections('sheet-1', [
+    { kind: 'node', id: 'selected-c', obj: 'selected-c', label: 'selected-c', sourceObj: '', targetObj: '' },
+  ]);
+  return uiDataModel;
+}
+
+function makeApp(overrides: any = {}) {
+  const uiDataModel = overrides.uiDataModel || makeModel(overrides.selectedArgNode || '0');
   return {
     api: { sessionId: 'sess-1' },
+    activeSheetId: 'sheet-1',
     _persistedFileName: 'client.ivy',
     _persistedFilePath: '/tmp/client.ivy',
     _persistedFileContent: '#lang ivy1.7',
-    selectedArgNode: '0',
-    _edgeVisibility: { link: { all_to_all: true } },
-    _labelVisibility: { link: { node_necessarily: true } },
-    _persistedConceptRelations: { relations: [] },
-    argGraph: { cy: { json: () => ({ elements: { nodes: [{ data: { id: 'a' } }] } }) } },
-    conceptGraph: {
-      cy: {
-        json: () => ({ elements: { nodes: [{ data: { id: 'c' } }] } }),
-        nodes: () => [{ id: () => 'selected-c' }],
-      },
-    },
     buildAnalysisState: () => ({ sheets: [] }),
     ...overrides,
+    uiDataModel,
   };
 }
 
 describe('persistenceService', () => {
-  it('saves and lists sessions from controller-owned DOM state', () => {
+  it('saves and lists sessions from model-owned state', () => {
     document.body.innerHTML = '<select id="mode-select"><option value="bounded" selected>bounded</option></select><table><tbody id="state-checkbox-body"><tr><td><input type="checkbox" name="link" value="all_to_all" checked></td></tr></tbody></table>';
     const persist = createIvyPersist(window);
 
@@ -41,7 +51,9 @@ describe('persistenceService', () => {
       filePath: '/tmp/client.ivy',
       mode: 'bounded',
       toggles: { 'link|all_to_all': true },
-      selectedConceptNodes: ['selected-c'],
+      conceptSelections: [
+        { kind: 'node', id: 'selected-c', obj: 'selected-c', label: 'selected-c', sourceObj: '', targetObj: '' },
+      ],
     });
     expect(persist.listSessions()).toEqual([
       expect.objectContaining({
@@ -61,8 +73,6 @@ describe('persistenceService', () => {
       _persistedFilePath: '/tmp/ivy/client.ivy',
       _persistedFileContent: 'ivy content',
       selectedArgNode: 'node0',
-      _edgeVisibility: { link: { all_to_all: true } },
-      _labelVisibility: { semaphore: { node_maybe: true } },
       argGraph: null,
       conceptGraph: null,
     }));
@@ -87,16 +97,25 @@ describe('persistenceService', () => {
     ]);
   });
 
-  it('restores mode, loaded file, and relation toggles into DOM state', () => {
-    document.body.innerHTML = '<select id="mode-select"><option value="pdr">pdr</option></select><span id="loaded-file"></span><span id="model-editor-label"></span><table><tbody id="state-checkbox-body"><tr><td><input type="checkbox" name="link" value="edge_unknown"></td></tr></tbody></table>';
+  it('restores mode, loaded file, and applies relation toggles through the backend', async () => {
+    document.body.innerHTML = '<select id="mode-select"><option value="pdr">pdr</option></select><span id="loaded-file"></span><span id="model-editor-label"></span>';
     const persist = createIvyPersist(window);
+    const app = {
+      api: { setToggles: vi.fn() },
+      refreshConceptGraph: vi.fn(),
+    };
 
     persist._setMode('pdr');
-    persist._setToggles({ 'link|edge_unknown': true });
+    await persist.applyToggles(app, { 'link|edge_unknown': true });
     persist.setFileName('client.ivy', '/tmp/client.ivy');
 
     expect(document.getElementById('mode-select').value).toBe('pdr');
-    expect(document.querySelector('input[name="link"][value="edge_unknown"]').checked).toBe(true);
+    expect(app.api.setToggles).toHaveBeenCalledWith({
+      edge: 'link',
+      display_class: 'edge_unknown',
+      value: true,
+    });
+    expect(app.refreshConceptGraph).toHaveBeenCalled();
     expect(document.getElementById('loaded-file').textContent).toBe('/tmp/client.ivy');
     expect(document.getElementById('model-editor-label').textContent).toBe('/tmp/client.ivy');
   });

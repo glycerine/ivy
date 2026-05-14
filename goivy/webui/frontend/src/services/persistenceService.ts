@@ -1,4 +1,9 @@
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
+import {
+  selectConceptSelections,
+  selectSheet,
+  selectStateToggles,
+} from '../models/uiDataSelectors.ts';
 
 const STORAGE_SESSIONS = 'ivy_sessions';
 const STORAGE_LAST_SESSION = 'ivy_last_session';
@@ -52,15 +57,10 @@ export function createIvyPersist(winArg = globalThis.window) {
           fileName: app._persistedFileName || '',
           filePath: app._persistedFilePath || app._persistedFileName || '',
           fileContent: app._persistedFileContent || '',
-          selectedArgNode: app.selectedArgNode || null,
+          selectedArgNode: persist._selectedArgNode(app),
           mode: persist._getMode(),
-          selectedConceptNodes: persist._getSelectedConceptNodes(app),
-          toggles: persist._getToggles(),
-          edgeVisibility: {},
-          labelVisibility: {},
-          argElements: persist._getCyElements(app.argGraph),
-          conceptElements: persist._getCyElements(app.conceptGraph),
-          conceptRelations: app._persistedConceptRelations || null,
+          conceptSelections: persist._conceptSelections(app),
+          toggles: persist.getToggles(app),
           analysisState: app.buildAnalysisState ? app.buildAnalysisState() : null,
         };
         storage.setItem(`${SESSION_PREFIX}${sid}`, JSON.stringify(state));
@@ -290,17 +290,14 @@ export function createIvyPersist(winArg = globalThis.window) {
         }
 
         if (state.mode) persist._setMode(state.mode);
-        if (state.selectedConceptNodes && app.conceptGraph && app.conceptGraph.cy) {
-          state.selectedConceptNodes.forEach((id) => {
-            const node = app.conceptGraph.cy.getElementById(id);
-            if (node.length > 0) node.addClass('selected_node');
-          });
+        if (state.selectedArgNode && app.uiDataStore) {
+          app.uiDataStore.setSelectedArgNode(app.activeSheetId || 'sheet-1', state.selectedArgNode);
         }
-        if (state.toggles) persist._setToggles(state.toggles);
+        if (state.conceptSelections && app.uiDataStore) {
+          app.uiDataStore.setConceptSelections(app.activeSheetId || 'sheet-1', state.conceptSelections);
+        }
+        if (state.toggles) await persist.applyToggles(app, state.toggles);
 
-        persist._buildVisibilityFromCheckboxes();
-
-        if (state.selectedArgNode) app.selectedArgNode = state.selectedArgNode;
         if (state.analysisState && app.loadAnalysisStateObject) {
           state.analysisState.fileContent = restoredContent;
           state.analysisState.fileName = app._persistedFileName || state.fileName || state.analysisState.fileName;
@@ -347,68 +344,34 @@ export function createIvyPersist(winArg = globalThis.window) {
       if (select && mode) select.value = mode;
     },
 
-    _getSelectedConceptNodes(app) {
-      const ids = [];
-      if (app.conceptGraph && app.conceptGraph.cy) {
-        app.conceptGraph.cy.nodes('.selected_node').forEach((node) => {
-          ids.push(node.id());
+    _selectedArgNode(app) {
+      const sheet = selectSheet(app && app.uiDataModel, app && app.activeSheetId);
+      return sheet ? sheet.selectedArgNode : null;
+    },
+
+    _conceptSelections(app) {
+      return selectConceptSelections(selectSheet(app && app.uiDataModel, app && app.activeSheetId));
+    },
+
+    getToggles(app) {
+      return selectStateToggles(selectSheet(app && app.uiDataModel, app && app.activeSheetId));
+    },
+
+    async applyToggles(app, toggles = {}) {
+      const entries = Object.entries(toggles || {});
+      if (!app || !app.api || typeof app.api.setToggles !== 'function' || entries.length === 0) return;
+      for (const [key, value] of entries) {
+        const split = String(key).split('|');
+        const displayClass = split.pop();
+        const edge = split.join('|');
+        if (!edge || !displayClass) continue;
+        await app.api.setToggles({
+          edge,
+          display_class: displayClass,
+          value: !!value,
         });
       }
-      return ids;
-    },
-
-    _getToggles() {
-      const toggles = {};
-      const table = doc && doc.getElementById('state-checkbox-body');
-      if (!table) return toggles;
-      table.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach((input) => {
-        if (input.name) toggles[`${input.name}|${input.value}`] = input.checked;
-      });
-      return toggles;
-    },
-
-    _setToggles(toggles = {}) {
-      const table = doc && doc.getElementById('state-checkbox-body');
-      if (!table) return;
-      table.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach((input) => {
-        const key = `${input.name}|${input.value}`;
-        if (Object.prototype.hasOwnProperty.call(toggles, key)) {
-          input.checked = toggles[key];
-        }
-      });
-    },
-
-    _getCyElements(graph) {
-      if (!graph || !graph.cy) return null;
-      return graph.cy.json().elements;
-    },
-
-    _buildVisibilityFromCheckboxes() {
-      const edges = {};
-      const labels = {};
-      const tbody = doc && doc.getElementById('state-checkbox-body');
-      if (!tbody) return { edges, labels };
-      const edgeClasses = ['all_to_all', 'edge_unknown', 'none_to_none', 'transitive'];
-      const labelClasses = ['node_necessarily', 'node_maybe', 'node_necessarily_not'];
-      tbody.querySelectorAll('tr').forEach((row) => {
-        const inputs = Array.from(row.querySelectorAll('input[type="checkbox"]')) as HTMLInputElement[];
-        const nameCell = row.querySelector('.name-col a');
-        const name = nameCell ? nameCell.textContent.trim() : '';
-        if (!name) return;
-        edges[name] = {};
-        labels[name] = {};
-        edgeClasses.forEach((className, index) => {
-          if (inputs[index]) edges[name][className] = inputs[index].checked;
-        });
-        labelClasses.forEach((className, index) => {
-          if (inputs[index]) labels[name][className] = inputs[index].checked;
-        });
-      });
-      return { edges, labels };
-    },
-
-    _buildEdgeVisibilityFromCheckboxes() {
-      return persist._buildVisibilityFromCheckboxes().edges;
+      if (typeof app.refreshConceptGraph === 'function') await app.refreshConceptGraph();
     },
 
     getSessionIdFromURL() {
