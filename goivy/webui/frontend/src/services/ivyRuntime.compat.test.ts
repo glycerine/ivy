@@ -62,7 +62,7 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-browser')).toBe(false);
     expect(document.getElementById('btn-toggle-job-control').classList.contains('job-submission-remote')).toBe(true);
     expect(document.getElementById('btn-toggle-job-control').getAttribute('data-job-submission-mode')).toBe('remote');
-    expect(document.getElementById('job-submission-label').textContent).toBe('submit to remote');
+    expect(document.getElementById('job-submission-label').textContent).toBe('run on remote');
 
     document.getElementById('job-submission-toggle').click();
     expect(runtime.jobSubmissionMode).toBe('browser');

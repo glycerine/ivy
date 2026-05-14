@@ -328,6 +328,7 @@ install-wasm-opt:
 prod:
 	cd webui && npm run typecheck:webui # run tsc compiler
 	cd webui && npm --prefix frontend run typecheck # type check the frontend/ dir
+	cd webui/frontend && npm run build
 	cd webui && npm run build:webui     # Vite bundle out: webui/static/dist/ivyweb.js
 	go install -tags xtracer_off ./cmd/ivyweb
 	ivyweb

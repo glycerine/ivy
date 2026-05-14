@@ -994,10 +994,10 @@ class IvyRuntime {
             toggle.classList.toggle('is-browser', normalized === 'browser');
             toggle.classList.toggle('is-remote', normalized === 'remote');
             toggle.title = 'Job submission: ' + normalized;
-            toggle.setAttribute('aria-label', normalized === 'remote' ? 'submit to remote' : 'run in browser');
+            toggle.setAttribute('aria-label', normalized === 'remote' ? 'run on remote' : 'run in browser');
         }
         if (label) {
-            label.textContent = normalized === 'remote' ? 'submit to remote' : 'run in browser';
+            label.textContent = normalized === 'remote' ? 'run on remote' : 'run in browser';
         }
         if (settingsButton) {
             settingsButton.setAttribute('data-job-submission-mode', normalized);
