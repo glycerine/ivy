@@ -2747,3 +2747,5 @@ Layer 3 — Cytoscape render (art_cyrender.go):
  }
 - CyElement { Group; Data map[string]interface{}; Classes; Position *CyPosition }
 ~~~
+
+We use both graphviz and cytoscape and persist the graph layout as well.
