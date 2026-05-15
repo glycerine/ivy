@@ -208,7 +208,7 @@ TODO: decide whether the shortcut matters in the web context-menu implementation
 
 ## P1: Graph Rendering Fidelity
 
-### 24. DOT/Tk Layout Fidelity Is Replaced By Cytoscape Dagre
+### FIXED (partly at least) by adding in graphviz. 24. DOT/Tk Layout Fidelity Is Replaced By Cytoscape Dagre
 
 Inventory refs: PLAN383 item 43; PLAN378 sections 8.2, 26.1, 26.2, 26.5, and 26.7.
 
