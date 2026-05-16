@@ -2749,3 +2749,24 @@ Layer 3 — Cytoscape render (art_cyrender.go):
 ~~~
 
 We use both graphviz and cytoscape and persist the graph layout as well.
+
+Enhancement over python note, re
+
+efaca53ae fix a webui bug, concept graph recompute failed:
+
+Q: okay, does python Ivy do the same? Or maybe python 
+Ivy does not expose the same functionality? I'm worried 
+we might have diverged from what Python ivy 
+does in similar circumstances.
+
+A: (codex comments)
+
+Short answer: Python Ivy is inconsistent here.
+
+In `pyivy/ivy/ivy/concept.py`, `get_initial_concept_domain()` classifies symbols by arity only, not by Boolean range. So a binary non-Boolean function is made into `Concept(name, [X,Y], c(X,Y))`, which is not a Boolean formula. See [concept.py](/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/concept.py:450) and [concept.py](/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/concept.py:456).
+
+But Python’s `get_structure_concept_domain()` does the correct thing: it splits relations from functions by checking `c.sort.range == Boolean`; non-Boolean arity-2 functions become ternary concepts `Eq(c(X,Y), Z)`. See [concept.py](/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/concept.py:595) and [concept.py](/Users/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/ivy/concept.py:624).
+
+One more wrinkle: Python’s initial domain does not immediately put those arity-2 concepts into `concepts['edges']`; the edge recompute path iterates `concepts['edges']`. The Go webui had eagerly put binary symbols in `edges`, so it hit the bug earlier and harder during Check.
+
+So: yes, Python has the same underlying bad arity-only assumption in one path, but it often does not expose it immediately. The fix I made aligns Go with Python’s more correct `get_structure_concept_domain()` behavior, not with the buggy initial-domain behavior. That seems like the right direction, especially because it preserves actual verification while keeping the concept graph well-typed.
