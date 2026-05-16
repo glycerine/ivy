@@ -65,6 +65,7 @@ html, body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    white-space: nowrap;
 }
 
 .menu-btn:hover {
@@ -171,7 +172,7 @@ html, body {
 }
 
 #ui-mode-select {
-    min-width: 245px;
+    width: 118px;
 }
 
 #mode-select:focus {

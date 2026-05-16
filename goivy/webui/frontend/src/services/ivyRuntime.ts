@@ -2889,7 +2889,7 @@ class IvyRuntime {
         this.closeAllDropdowns();
         var opts = options || {};
         if (opts.announce && this.controls) {
-            var label = normalized === 'reachability' ? 'reachability graph mode' : 'counterexample-to-induction mode';
+            var label = normalized === 'reachability' ? 'reachability' : 'CTI';
             this.controls.setStatus('Workflow: ' + label);
         }
         return normalized;
