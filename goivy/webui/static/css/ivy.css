@@ -956,6 +956,21 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     overflow-y: auto;
 }
 
+.reachability-only-sheet .sheet-left,
+.reachability-only-sheet .sheet-main,
+.reachability-only-sheet #arg-panel {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.reachability-only-sheet #concept-panel,
+.reachability-only-sheet #divider,
+.reachability-only-sheet #divider2,
+.reachability-only-sheet #state-panel,
+.reachability-only-sheet .info-panel {
+    display: none;
+}
+
 .panel-menu {
     font-size: 12px;
     color: #c8c8c8;

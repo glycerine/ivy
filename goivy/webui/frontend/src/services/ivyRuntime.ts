@@ -656,48 +656,50 @@ class IvyRuntime {
             });
         }
 
-        conceptGraph.onNodeRightClick(function (nodeData, pos) {
-            self.onConceptNodeRightClick(nodeData, pos);
-        });
-        conceptGraph.onNodeClick(function (nodeData, evt) {
-            try {
-                var name = nodeData.obj || nodeData.id;
-                var selected = self.uiDataStore.toggleConceptNodeSelection(sheetId, nodeData);
+        if (conceptGraph) {
+            conceptGraph.onNodeRightClick(function (nodeData, pos) {
+                self.onConceptNodeRightClick(nodeData, pos);
+            });
+            conceptGraph.onNodeClick(function (nodeData, evt) {
+                try {
+                    var name = nodeData.obj || nodeData.id;
+                    var selected = self.uiDataStore.toggleConceptNodeSelection(sheetId, nodeData);
+                    if (!selected) {
+                        self.controls.setStatus('Deselected: ' + name);
+                        self.controls.clearInfo();
+                    } else {
+                        self.controls.setStatus('Selected: ' + name);
+                        self.controls.showInfo(nodeData.short_info, nodeData.long_info);
+                    }
+                } catch (e) {
+                    console.error('concept node click error:', e);
+                }
+            });
+            conceptGraph.onEdgeClick(function (edgeData, evt) {
+                var name = edgeData.obj || edgeData.label || edgeData.id;
+                var selected = self.uiDataStore.toggleConceptEdgeSelection(sheetId, edgeData);
                 if (!selected) {
                     self.controls.setStatus('Deselected: ' + name);
                     self.controls.clearInfo();
                 } else {
                     self.controls.setStatus('Selected: ' + name);
-                    self.controls.showInfo(nodeData.short_info, nodeData.long_info);
-                }
-            } catch (e) {
-                console.error('concept node click error:', e);
-            }
-        });
-        conceptGraph.onEdgeClick(function (edgeData, evt) {
-            var name = edgeData.obj || edgeData.label || edgeData.id;
-            var selected = self.uiDataStore.toggleConceptEdgeSelection(sheetId, edgeData);
-            if (!selected) {
-                self.controls.setStatus('Deselected: ' + name);
-                self.controls.clearInfo();
-            } else {
-                self.controls.setStatus('Selected: ' + name);
-                self.controls.showInfo(edgeData.short_info, edgeData.long_info);
-            }
-        });
-        conceptGraph.onEdgeRightClick(function (edgeData, pos) {
-            self.onConceptEdgeRightClick(edgeData, pos);
-        });
-        conceptGraph.onBackgroundClick(function () {
-            self.controls.clearInfo();
-            self.controls.hideContextMenu();
-        });
-        if (conceptGraph.onNodePositionChange) {
-            conceptGraph.onNodePositionChange(function (positions) {
-                if (self.uiDataStore && self.uiDataStore.setGraphPositions) {
-                    self.uiDataStore.setGraphPositions(sheetId, 'concept', positions, { emit: false });
+                    self.controls.showInfo(edgeData.short_info, edgeData.long_info);
                 }
             });
+            conceptGraph.onEdgeRightClick(function (edgeData, pos) {
+                self.onConceptEdgeRightClick(edgeData, pos);
+            });
+            conceptGraph.onBackgroundClick(function () {
+                self.controls.clearInfo();
+                self.controls.hideContextMenu();
+            });
+            if (conceptGraph.onNodePositionChange) {
+                conceptGraph.onNodePositionChange(function (positions) {
+                    if (self.uiDataStore && self.uiDataStore.setGraphPositions) {
+                        self.uiDataStore.setGraphPositions(sheetId, 'concept', positions, { emit: false });
+                    }
+                });
+            }
         }
     }
 
@@ -1269,7 +1271,7 @@ class IvyRuntime {
      * @param {string} [label] - Tab label (default: "Sheet N")
      * @returns {string} The new sheet ID
      */
-    addSheet(label, preferredSheetId) {
+    addSheet(label, preferredSheetId, options: any = {}) {
         this._sheetCounter++;
         var sheetId = preferredSheetId || ('sheet-' + this._sheetCounter);
         while (!preferredSheetId && this.sheetExists(sheetId)) {
@@ -1305,6 +1307,12 @@ class IvyRuntime {
         var newSheet = template.cloneNode(true);
         newSheet.id = sheetId;
         newSheet.classList.remove('active');
+        newSheet.classList.toggle('reachability-only-sheet', !!options.reachabilityOnly);
+        if (options.reachabilityOnly) {
+            newSheet.setAttribute('data-sheet-layout', 'reachability-only');
+        } else {
+            newSheet.removeAttribute('data-sheet-layout');
+        }
         // Clear graph containers (they'll be initialized fresh)
         var fallbackGraphs = newSheet.querySelectorAll('.graph-container');
         for (var g = 0; g < fallbackGraphs.length; g++) {
@@ -1331,10 +1339,13 @@ class IvyRuntime {
         }
 
         var argGraph = new runtimeDeps.IvyGraph(graphIds[0], runtimeDeps.ARG_STYLE);
-        var conceptGraph = new runtimeDeps.IvyGraph(graphIds[1], runtimeDeps.CONCEPT_STYLE);
+        var conceptGraph = options.reachabilityOnly ? null : new runtimeDeps.IvyGraph(graphIds[1], runtimeDeps.CONCEPT_STYLE);
         argGraph.healthCheck();
-        conceptGraph.healthCheck();
+        if (conceptGraph) conceptGraph.healthCheck();
         this.registerSheet(sheetId, argGraph, conceptGraph);
+        if (this.sheets[sheetId]) {
+            this.sheets[sheetId].reachabilityOnly = !!options.reachabilityOnly;
+        }
         this.attachGraphEventHandlers(argGraph, conceptGraph, sheetId);
 
         // Switch to the new sheet
@@ -1343,8 +1354,8 @@ class IvyRuntime {
         return sheetId;
     }
 
-    openARGSheet(label, argData, preferredSheetId) {
-        var sheetId = this.addSheet(label, preferredSheetId);
+    openARGSheet(label, argData, preferredSheetId, options: any = {}) {
+        var sheetId = this.addSheet(label, preferredSheetId, options);
         this.applyArgSnapshot(sheetId, argData || {});
         return sheetId;
     }
@@ -2147,6 +2158,10 @@ class IvyRuntime {
         this.controls.showInfo(nodeData.short_info, nodeData.long_info);
         if (sheet && sheet.visualOnly) {
             this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
+            return;
+        }
+        if (sheet && sheet.reachabilityOnly) {
+            this.controls.setStatus('Viewing trace state ' + (nodeData.label || nodeData.id));
             return;
         }
         this.controls.setStatus('Loading concept graph for state ' + (nodeData.label || nodeData.id) + '...');

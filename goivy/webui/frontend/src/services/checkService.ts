@@ -133,7 +133,9 @@ export async function showCtiBoundedCheckResult(app, result, message) {
     });
     if (action !== null) {
       if (typeof app.setUIMode === 'function') app.setUIMode('reachability');
-      app.openARGSheet(traceLabelForResult(result), result.trace_arg, result.trace_sheet_id);
+      app.openARGSheet(traceLabelForResult(result), result.trace_arg, result.trace_sheet_id, {
+        reachabilityOnly: true,
+      });
     }
     return;
   }

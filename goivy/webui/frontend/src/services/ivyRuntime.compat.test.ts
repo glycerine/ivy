@@ -91,4 +91,37 @@ describe('ivyRuntime compatibility behavior', () => {
     await expect(resultPromise).resolves.toBe(10);
     expect(document.querySelector('[data-ivy-dialog]')).toBeNull();
   });
+
+  it('opens reachability-only sheets without a concept graph runtime', () => {
+    document.body.innerHTML = [
+      '<div id="sheet-area">',
+      '  <div id="tab-bar"><button class="sheet-tab active" data-sheet="sheet-1"><span>Sheet 1</span></button></div>',
+      '  <div id="sheet-1" class="sheet-content active">',
+      '    <div class="sheet-columns">',
+      '      <div class="sheet-left">',
+      '        <div class="sheet-main">',
+      '          <div id="arg-panel" class="panel"><div id="arg-graph" class="graph-container"></div></div>',
+      '          <div id="divider" class="divider"></div>',
+      '          <div id="concept-panel" class="panel"><div id="concept-graph" class="graph-container"></div></div>',
+      '        </div>',
+      '        <div id="info-panel" class="info-panel"><div id="info-content"></div></div>',
+      '      </div>',
+      '      <div id="divider2" class="divider"></div>',
+      '      <div id="state-panel" class="panel"></div>',
+      '    </div>',
+      '  </div>',
+      '</div>',
+    ].join('');
+    const runtime = makeRuntime();
+
+    const sheetId = runtime.addSheet('Sheet 3', 'sheet-3', { reachabilityOnly: true });
+    const sheet = document.getElementById('sheet-3');
+
+    expect(sheetId).toBe('sheet-3');
+    expect(sheet.classList.contains('reachability-only-sheet')).toBe(true);
+    expect(sheet.getAttribute('data-sheet-layout')).toBe('reachability-only');
+    expect(runtime.sheets['sheet-3'].reachabilityOnly).toBe(true);
+    expect(runtime.sheets['sheet-3'].argGraph).toBeTruthy();
+    expect(runtime.sheets['sheet-3'].conceptGraph).toBeNull();
+  });
 });

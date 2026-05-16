@@ -163,7 +163,9 @@ describe('checkService', () => {
       { okLabel: 'View', cancel: true, primaryFirst: true },
     );
     expect(app.setUIMode).toHaveBeenCalledWith('reachability');
-    expect(app.openARGSheet).toHaveBeenCalledWith('Sheet 3', traceArg, 'sheet-3');
+    expect(app.openARGSheet).toHaveBeenCalledWith('Sheet 3', traceArg, 'sheet-3', {
+      reachabilityOnly: true,
+    });
   });
 
   it('does not open CTI BMC counterexample traces when the dialog is cancelled', async () => {

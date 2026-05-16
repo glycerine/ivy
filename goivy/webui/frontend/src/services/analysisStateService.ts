@@ -51,6 +51,7 @@ export function buildAnalysisState(app, persist) {
         id: sheetId,
         type: 'analysis',
         label: app.tabLabelForSheet(sheetId),
+        ...(sheet.reachabilityOnly ? { reachabilityOnly: true } : {}),
         selectedArgNode: modelSheet ? modelSheet.selectedArgNode : null,
         conceptSelections: selectConceptSelections(modelSheet),
         arg: modelSheet ? graphPayload(modelSheet.arg, modelSheet.argPositions) : { elements: [], positions: null },
@@ -119,6 +120,9 @@ export function validateAnalysisStateSheet(sheet, seen, limits, isValidSheetId) 
   seen[sheet.id] = true;
   if (sheet.type !== 'analysis' && sheet.type !== 'events') {
     throw new Error(`invalid sheet type: ${sheet.type}`);
+  }
+  if (sheet.reachabilityOnly != null && typeof sheet.reachabilityOnly !== 'boolean') {
+    throw new Error('sheet reachabilityOnly must be a boolean');
   }
   if (sheet.type === 'events') {
     if (sheet.events != null && !Array.isArray(sheet.events)) {
@@ -249,7 +253,11 @@ export async function loadAnalysisStateObject(app, state, persist) {
       if (app.uiDataStore) app.uiDataStore.setSelectedArgNode(sheet.id, sheet.selectedArgNode || null);
       if (app.uiDataStore) app.uiDataStore.setConceptSelections(sheet.id, sheet.conceptSelections || []);
     } else if (sheet.arg && sheet.arg.elements) {
-      app.openARGSheet(sheet.label || sheet.id, sheet.arg, sheet.id);
+      if (sheet.reachabilityOnly) {
+        app.openARGSheet(sheet.label || sheet.id, sheet.arg, sheet.id, { reachabilityOnly: true });
+      } else {
+        app.openARGSheet(sheet.label || sheet.id, sheet.arg, sheet.id);
+      }
       const opened = app.sheets && app.sheets[sheet.id];
       if (opened && opened.conceptGraph && sheet.concept && sheet.concept.elements) {
         applyConceptSnapshot(app, sheet.id, sheet.concept);
