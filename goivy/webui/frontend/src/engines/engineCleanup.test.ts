@@ -3,9 +3,10 @@ import * as engines from './index.ts';
 import { IvyApiAdapter } from './ivyApiAdapter.ts';
 
 describe('engine cleanup', () => {
-  it('exports only the canonical adapter contract and real hosted implementation', () => {
+  it('exports only the canonical adapter contract and real implementations', () => {
     expect(engines.IvyApiAdapter).toBe(IvyApiAdapter);
     expect(engines.HostedGoIvyApiAdapter).toBeTypeOf('function');
+    expect(engines.BrowserWasmIvyApiAdapter).toBeTypeOf('function');
     expect('IvyEngine' in engines).toBe(false);
     expect('HostedGoEngine' in engines).toBe(false);
     expect('WanixEngine' in engines).toBe(false);

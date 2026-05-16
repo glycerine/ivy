@@ -152,6 +152,32 @@ webvue/static/wasm_exec-go1.25.6.js: /usr/local/go/lib/wasm/wasm_exec.js
 
 vendor-go-wasm-exec-js: webvue/static/wasm_exec-go1.25.6.js
 
+webui/static/wasm/z3-471-api.wasm: webvue/static/z3-471-api.wasm
+	mkdir -p webui/static/wasm
+	cp -p webvue/static/z3-471-api.wasm webui/static/wasm/z3-471-api.wasm
+	chmod 0644 webui/static/wasm/z3-471-api.wasm
+
+webui/static/wasm/z3-471-api.js: webvue/static/z3-471-api.js
+	mkdir -p webui/static/wasm
+	cp -p webvue/static/z3-471-api.js webui/static/wasm/z3-471-api.js
+	chmod 0644 webui/static/wasm/z3-471-api.js
+
+webui/static/wasm/wasm_exec-go1.25.6.js: webvue/static/wasm_exec-go1.25.6.js
+	mkdir -p webui/static/wasm
+	cp -p webvue/static/wasm_exec-go1.25.6.js webui/static/wasm/wasm_exec-go1.25.6.js
+	chmod 0644 webui/static/wasm/wasm_exec-go1.25.6.js
+
+webui/static/wasm/include-tree.json: webui/scripts/build-include-tree.mjs $(shell find ../ivy-lang-examples/ivy/include -type f -name '*.ivy' 2>/dev/null)
+	node webui/scripts/build-include-tree.mjs ../ivy-lang-examples/ivy/include webui/static/wasm/include-tree.json
+	chmod 0644 webui/static/wasm/include-tree.json
+
+webui/static/wasm/goivy-webengine.wasm: FORCE
+	mkdir -p webui/static/wasm
+	GOOS=js GOARCH=wasm go build -o webui/static/wasm/goivy-webengine.wasm ./cmd/goivy-webengine-wasm
+	chmod 0644 webui/static/wasm/goivy-webengine.wasm
+
+webui-wasm-engine: webui/static/wasm/goivy-webengine.wasm webui/static/wasm/z3-471-api.wasm webui/static/wasm/z3-471-api.js webui/static/wasm/wasm_exec-go1.25.6.js webui/static/wasm/include-tree.json
+
 test-z3-wasm-wazero: z3-wasm-api-wazero
 	go test ./z3wasm -run TestZ3WasmArtifactCompilesWithWazeroExceptionHandling -count=1
 
@@ -339,7 +365,7 @@ nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 install-wasm-opt:
 	cd ~/go/src/github.com/ && git clone https://github.com/WebAssembly/binaryen && cd binaryen && git submodule init && git submodule update && cmake . && make -j8 && sudo make install
 
-prod:
+prod: webui-wasm-engine
 	cd webui && npm run typecheck:webui # run tsc compiler
 	cd webui && npm --prefix frontend run typecheck # type check the frontend/ dir
 	cd webui/frontend && npm run build
@@ -352,4 +378,4 @@ prod_old:
 	go install -tags xtracer_off ./cmd/ivysvk
 	IVYSVK_DEV=true IVYSVK_STATIC_DIR=$(CURDIR)/svk/.svelte-kit/output/client IVYSVK_PUBLIC_BASE_URL=http://127.0.0.1:8080 ivysvk
 
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup webui-node-deps webui-wasm-graphviz unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE prod
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup webui-node-deps webui-wasm-graphviz webui-wasm-engine unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE prod

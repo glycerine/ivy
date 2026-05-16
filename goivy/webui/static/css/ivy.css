@@ -664,8 +664,10 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     padding: 18px;
     overflow: auto;
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    gap: 18px;
 }
 
 .job-control-row {
@@ -674,6 +676,44 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     align-items: center;
     gap: 8px;
     margin-left: auto;
+}
+
+.job-control-list {
+    width: 100%;
+    min-height: 120px;
+    border-top: 1px solid #333;
+    padding-top: 14px;
+    color: #d6d6d6;
+    font-size: 13px;
+}
+
+.job-control-empty {
+    color: #999;
+}
+
+.job-control-job {
+    min-height: 28px;
+    padding: 6px 0;
+    border-bottom: 1px solid #303030;
+    color: #ddd;
+}
+
+.job-control-job[data-job-status="running"] {
+    color: #f3c744;
+}
+
+.job-control-job[data-job-status="cancelled"] {
+    color: #aaa;
+}
+
+.job-control-job[data-job-status="error"],
+.job-control-job[data-job-status="fail"] {
+    color: #ff8a8a;
+}
+
+.job-control-job[data-job-status="pass"],
+.job-control-job[data-job-status="complete"] {
+    color: #9fd69f;
 }
 
 .job-control-label {

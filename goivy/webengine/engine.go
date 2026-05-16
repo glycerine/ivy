@@ -19,8 +19,10 @@ type SessionInfo struct {
 }
 
 type LoadResult struct {
-	Status   string `json:"status"`
-	Filename string `json:"filename,omitempty"`
+	Status   string   `json:"status"`
+	Filename string   `json:"filename,omitempty"`
+	Isolate  string   `json:"isolate,omitempty"`
+	Isolates []string `json:"isolates,omitempty"`
 }
 
 type CheckRequest struct {
@@ -58,6 +60,11 @@ type ArgActionRequest struct {
 	Args   map[string]any `json:"args,omitempty"`
 }
 
+type ProofActionRequest struct {
+	Goal   string `json:"goal"`
+	Action string `json:"action"`
+}
+
 type Payload map[string]any
 
 func New(cfg *goivy.Config, backend ...webui.Backend) *Engine {
@@ -90,12 +97,16 @@ func (e *Engine) NewSession(ctx context.Context) (SessionInfo, error) {
 	return SessionInfo{ID: raw.SessionID}, nil
 }
 
-func (e *Engine) LoadModel(ctx context.Context, sessionID, filename string, content []byte) (LoadResult, error) {
+func (e *Engine) LoadModel(ctx context.Context, sessionID, filename string, content []byte, isolate ...string) (LoadResult, error) {
 	if err := ctx.Err(); err != nil {
 		return LoadResult{}, err
 	}
+	selectedIsolate := ""
+	if len(isolate) > 0 {
+		selectedIsolate = isolate[0]
+	}
 	var result LoadResult
-	data, backendErr := e.backend.Load(sessionID, filename, content, "")
+	data, backendErr := e.backend.Load(sessionID, filename, content, selectedIsolate)
 	if err := decode(data, backendErr, &result); err != nil {
 		return LoadResult{}, err
 	}
@@ -125,6 +136,13 @@ func (e *Engine) ARG(ctx context.Context, sessionID string) (Payload, error) {
 	return decodePayload(e.backend.GetARG(sessionID, false))
 }
 
+func (e *Engine) CTIARG(ctx context.Context, sessionID string) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.GetCTIARG(sessionID))
+}
+
 func (e *Engine) Concept(ctx context.Context, sessionID string, req ConceptRequest) (Payload, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
@@ -139,6 +157,21 @@ func (e *Engine) Toggles(ctx context.Context, sessionID string) (Payload, error)
 	return decodePayload(e.backend.GetToggles(sessionID))
 }
 
+func (e *Engine) Menus(ctx context.Context) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	data, err := json.Marshal(webui.BuildBrowserMenuDescriptors())
+	if err != nil {
+		return nil, err
+	}
+	var payload Payload
+	if err := json.Unmarshal(data, &payload); err != nil {
+		return nil, fmt.Errorf("webengine: decode menu json: %w", err)
+	}
+	return payload, nil
+}
+
 func (e *Engine) Action(ctx context.Context, sessionID string, req ActionRequest) (Payload, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
@@ -151,6 +184,83 @@ func (e *Engine) ArgAction(ctx context.Context, sessionID string, req ArgActionR
 		return nil, err
 	}
 	return decodePayload(e.backend.ArgAction(sessionID, req.Node, req.Action, req.Args))
+}
+
+func (e *Engine) ConceptSplit(ctx context.Context, sessionID, concept, splitBy string) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.ConceptSplit(sessionID, concept, splitBy))
+}
+
+func (e *Engine) ConceptEmpty(ctx context.Context, sessionID, concept string) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.ConceptEmpty(sessionID, concept))
+}
+
+func (e *Engine) ConceptRemove(ctx context.Context, sessionID, concept string) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.ConceptRemove(sessionID, concept))
+}
+
+func (e *Engine) ConceptUndo(ctx context.Context, sessionID string) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.ConceptUndo(sessionID))
+}
+
+func (e *Engine) ConceptMaterialize(ctx context.Context, sessionID string, req webui.ConceptMaterializeRequest) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.ConceptMaterialize(sessionID, req))
+}
+
+func (e *Engine) ConceptReset(ctx context.Context, sessionID string) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.ConceptReset(sessionID))
+}
+
+func (e *Engine) ConceptDiagram(ctx context.Context, sessionID string) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.ConceptDiagram(sessionID))
+}
+
+func (e *Engine) ConceptProjection(ctx context.Context, sessionID, name, concept string) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.ConceptProjection(sessionID, name, concept))
+}
+
+func (e *Engine) SetToggle(ctx context.Context, sessionID, name, displayClass string, value bool) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.SetToggle(sessionID, name, displayClass, value))
+}
+
+func (e *Engine) Proof(ctx context.Context, sessionID string) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.GetProof(sessionID))
+}
+
+func (e *Engine) ProofAction(ctx context.Context, sessionID string, req ProofActionRequest) (Payload, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return decodePayload(e.backend.ProofAction(sessionID, req.Goal, req.Action))
 }
 
 func (e *Engine) Events(ctx context.Context, sessionID string) (<-chan webui.Event, error) {

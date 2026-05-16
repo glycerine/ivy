@@ -1,4 +1,4 @@
-import { HostedGoIvyApiAdapter } from '../engines/index.ts';
+import { BrowserWasmIvyApiAdapter, HostedGoIvyApiAdapter } from '../engines/index.ts';
 
 export class IvyAPIShim extends HostedGoIvyApiAdapter {
   baseURL: string;
@@ -6,6 +6,15 @@ export class IvyAPIShim extends HostedGoIvyApiAdapter {
   constructor(baseURL = '') {
     super({ baseURL });
     this.baseURL = baseURL || '';
+  }
+}
+
+export class IvyBrowserAPIShim extends BrowserWasmIvyApiAdapter {
+  assetBaseURL: string;
+
+  constructor(assetBaseURL = '/static/wasm/') {
+    super({ assetBaseUrl: assetBaseURL });
+    this.assetBaseURL = assetBaseURL || '/static/wasm/';
   }
 }
 

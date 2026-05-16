@@ -7,7 +7,11 @@
  */
 
 import { ARG_STYLE as DEFAULT_ARG_STYLE, CONCEPT_STYLE as DEFAULT_CONCEPT_STYLE, IvyGraph as DefaultIvyGraph } from './graphRuntime.ts';
-import { IvyAPIShim as DefaultIvyAPI, IvyControlsShim as DefaultIvyControls } from './runtimeShims.ts';
+import {
+    IvyAPIShim as DefaultIvyAPI,
+    IvyBrowserAPIShim as DefaultBrowserIvyAPI,
+    IvyControlsShim as DefaultIvyControls,
+} from './runtimeShims.ts';
 import { createIvyPersist } from './persistenceService.ts';
 import {
     connectSessionEvents,
@@ -168,6 +172,7 @@ import {
 } from './conceptActionService.ts';
 const defaultRuntimeDependencies = {
     IvyAPI: DefaultIvyAPI,
+    BrowserIvyAPI: DefaultBrowserIvyAPI,
     IvyControls: DefaultIvyControls,
     IvyGraph: DefaultIvyGraph,
     IvyPersist: createIvyPersist(globalThis.window),
@@ -179,6 +184,9 @@ let runtimeDeps = { ...defaultRuntimeDependencies };
 
 function configureIvyRuntimeDependencies(overrides) {
     runtimeDeps = { ...defaultRuntimeDependencies, ...(overrides || {}) };
+    if (overrides && overrides.IvyAPI && !overrides.BrowserIvyAPI) {
+        runtimeDeps.BrowserIvyAPI = overrides.IvyAPI;
+    }
     return runtimeDeps;
 }
 
@@ -191,7 +199,10 @@ class IvyRuntime {
     [key: string]: any;
 
     constructor() {
-        this.api = this.createApi();
+        this.jobSubmissionMode = 'browser';
+        this._apiMode = this.jobSubmissionMode;
+        this._jobSubmissionReady = false;
+        this.api = this.createApi(this.jobSubmissionMode);
         this.controls = new runtimeDeps.IvyControls(this.api);
         this.argGraph = null;
         this.conceptGraph = null;
@@ -216,9 +227,12 @@ class IvyRuntime {
         this.activeIsolate = '';
     }
 
-    createApi() {
+    createApi(mode = this.jobSubmissionMode || 'browser') {
         return createIvyApi({
             fallbackApiFactory: function () {
+                if (mode === 'browser') {
+                    return new runtimeDeps.BrowserIvyAPI();
+                }
                 return new runtimeDeps.IvyAPI();
             },
         });
@@ -336,6 +350,7 @@ class IvyRuntime {
                 runtimeDeps.IvyPersist.save(self);
             }
         };
+        this._jobSubmissionReady = true;
     }
 
     // --- Editor helpers (CodeMirror) ---
@@ -980,7 +995,54 @@ class IvyRuntime {
             settingsButton.title = 'Settings - job submission: ' + normalized;
             settingsButton.setAttribute('aria-label', 'Settings - job submission: ' + normalized);
         }
+        if (this._jobSubmissionReady && this._apiMode !== normalized) {
+            this._switchJobSubmissionBackend(normalized);
+        }
         return normalized;
+    }
+
+    async _switchJobSubmissionBackend(mode) {
+        var normalized = mode === 'remote' ? 'remote' : 'browser';
+        var previous = this.api;
+        var next = this.createApi(normalized);
+        this._apiMode = normalized;
+        this.api = next;
+        if (this.controls) {
+            this.controls.api = next;
+        }
+        if (previous && typeof previous.disconnectEvents === 'function') {
+            previous.disconnectEvents();
+        }
+        this.controls.setStatus('Switching job backend to ' + (normalized === 'remote' ? 'remote' : 'browser') + '...');
+        try {
+            await createSession(next, { controls: this.controls });
+            this.updateSessionDisplay(runtimeDeps.IvyPersist.getSessionIdFromURL() || next.sessionId);
+            this.uiDataModel.setSessionMetadata({
+                id: runtimeDeps.IvyPersist.getSessionIdFromURL() || next.sessionId || '',
+            });
+            connectSessionEvents(next, this.handleEvent.bind(this), () => {
+                this.controls.setStatus('Backend connection lost', 'error');
+            });
+            var content = this.cmEditor && typeof this.cmEditor.getValue === 'function'
+                ? this.cmEditor.getValue()
+                : this._persistedFileContent;
+            if (content) {
+                await next.reloadContent(content, this._persistedFileName || 'model.ivy', {
+                    isolate: this.activeIsolate || '',
+                });
+            }
+            this.controls.setStatus(
+                normalized === 'remote' ? 'Running jobs on remote backend' : 'Running jobs in browser',
+                'success',
+            );
+        } catch (err) {
+            this.controls.setStatus('Backend switch failed: ' + err.message, 'error');
+            if (previous) {
+                this.api = previous;
+                this._apiMode = previous.kind === 'browser-wasm' ? 'browser' : 'remote';
+                if (this.controls) this.controls.api = previous;
+            }
+        }
     }
 
     /**
@@ -3450,6 +3512,19 @@ class IvyRuntime {
             case 'check_progress':
                 if (event.data && event.data.message) {
                     this.controls.setStatus(event.data.message, event.data.level || 'info');
+                }
+                break;
+
+            case 'job-progress':
+            case 'job_progress':
+                if (event.data && event.data.message) {
+                    this.controls.setStatus(event.data.message, event.data.level || 'info');
+                }
+                break;
+
+            case 'job_log':
+                if (event.data && event.data.message) {
+                    this.controls.setStatus(event.data.message, event.data.stream === 'stderr' ? 'warning' : 'info');
                 }
                 break;
 

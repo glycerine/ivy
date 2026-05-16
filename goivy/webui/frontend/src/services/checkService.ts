@@ -20,6 +20,37 @@ function setCheckControlsRunning(running) {
   }
 }
 
+function renderJobControl(app) {
+  const doc = globalThis.document;
+  const list = doc && doc.getElementById('job-control-list');
+  if (!list) return;
+  const jobs = (app && app._jobControlJobs) || [];
+  list.innerHTML = '';
+  if (jobs.length === 0) {
+    const empty = doc.createElement('div');
+    empty.className = 'job-control-empty';
+    empty.textContent = 'No running jobs';
+    list.appendChild(empty);
+    return;
+  }
+  for (const job of jobs.slice().reverse()) {
+    const row = doc.createElement('div');
+    row.className = 'job-control-job';
+    row.setAttribute('data-job-status', job.status || '');
+    row.textContent = `${job.label || 'job'} - ${job.status || 'running'} (${job.backend || 'backend'})`;
+    list.appendChild(row);
+  }
+}
+
+function upsertJob(app, job) {
+  if (!app) return;
+  app._jobControlJobs = app._jobControlJobs || [];
+  const existing = app._jobControlJobs.find((candidate) => candidate.id === job.id);
+  if (existing) Object.assign(existing, job);
+  else app._jobControlJobs.push(job);
+  renderJobControl(app);
+}
+
 function makeCheckAbortController() {
   if (typeof AbortController === 'undefined') return null;
   return new AbortController();
@@ -56,8 +87,15 @@ export async function runCheck(app) {
     controller,
     cancelled: false,
     label: `${mode} check`,
+    jobId: `check-${Date.now()}`,
   };
   app._activeCheck = active;
+  upsertJob(app, {
+    id: active.jobId,
+    label: active.label,
+    status: 'running',
+    backend: app.jobSubmissionMode || (app.api && app.api.kind) || 'backend',
+  });
   setCheckControlsRunning(true);
   app.controls.showLoading(`Running ${mode} check...`);
   app.controls.setStatus('Recompiling editor content...');
@@ -74,6 +112,7 @@ export async function runCheck(app) {
 
     if (active.cancelled || result?.result === 'cancelled') {
       app.controls.setStatus(`${mode} check cancelled`, 'warning');
+      upsertJob(app, { id: active.jobId, status: 'cancelled' });
       return result;
     }
 
@@ -91,13 +130,16 @@ export async function runCheck(app) {
       await app._autoCheckUsedRelations(result.used_relations);
     }
     app.showCheckResult(result);
+    upsertJob(app, { id: active.jobId, status: (result && (result.result || result.status)) || 'complete' });
     return result;
   } catch (err) {
     if (active.cancelled || isAbortError(err)) {
       app.controls.setStatus(`${mode} check cancelled`, 'warning');
+      upsertJob(app, { id: active.jobId, status: 'cancelled' });
       return null;
     }
     app.controls.setStatus(`Check failed: ${err.message}`, 'error');
+    upsertJob(app, { id: active.jobId, status: 'error' });
     console.error('Check error:', err);
     return null;
   } finally {
