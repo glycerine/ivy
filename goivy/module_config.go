@@ -27,6 +27,11 @@ type Config struct {
 	// look for the include/ directory here:
 	IncludePathStdlib string
 
+	// StandardLibrary is the preloaded Ivy standard include tree for this
+	// runtime. Parser include handling uses it to avoid rediscovering and
+	// rereading standard-library files for every browser-loaded spec.
+	StandardLibrary *StandardLibrary `json:"-"`
+
 	CurrentModule *Module
 
 	// more for external clients like check/ sub package.

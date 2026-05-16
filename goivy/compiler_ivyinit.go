@@ -196,6 +196,17 @@ func ImportModule(name string, cfg *Config) (res *ParseResult, err error) {
 
 	fname := name + ".ivy"
 	if !ivyReadableFileExists(fname) {
+		if cfg != nil && cfg.StandardLibrary != nil && cfg.IuCfg != nil {
+			if cachedName, source, ok := cfg.StandardLibrary.includeSource(cfg.IuCfg.GetStringVersion(), name); ok {
+				var result *ParseResult
+				var resultErr error
+				cfg.IuCfg.WithSourceFile(cachedName, func() {
+					result, resultErr = ReadModuleFromNamedString(cachedName, source, true, cfg)
+				})
+				return result, resultErr
+			}
+		}
+
 		// Try standard include directory
 		stdDir := cfg.IuCfg.GetStdIncludeDir()
 		fname = filepath.Join(stdDir, fname)

@@ -15,8 +15,9 @@ import (
 // GoBackend is the native Go implementation of Backend.
 // It wraps the existing Session-based logic.
 type GoBackend struct {
-	cfg      *goivy.Config
-	sessions map[string]*Session
+	cfg       *goivy.Config
+	sessions  map[string]*Session
+	stdlibErr error
 
 	// can probably delete mu, it is overkill now that we do().
 	// but: LaunchUI() would still seem to need it!
@@ -39,10 +40,14 @@ type GoBackend struct {
 
 // NewGoBackend creates a GoBackend.
 func NewGoBackend(cfg *goivy.Config) *GoBackend {
+	if cfg == nil {
+		cfg = goivy.NewConfig()
+	}
 	b := &GoBackend{
 		cfg:      cfg,
 		sessions: make(map[string]*Session),
 	}
+	b.stdlibErr = goivy.PreloadStandardLibrary(cfg)
 	b.sst = newSameSingleThread(b)
 	//vv("NewGoBackend() with b=%p ; sst=%p", b, b.sst)
 	b.sst.start()
@@ -91,6 +96,10 @@ func (gbe *GoBackend) NewSession(cfg *goivy.Config) (by []byte, err error) {
 
 func (gbe *GoBackend) Load(sessionID, filename string, content []byte, isolate string) (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
+		if b.stdlibErr != nil {
+			err = fmt.Errorf("standard library preload: %w", b.stdlibErr)
+			return nil
+		}
 		var sess *Session
 		sess, err = b.getSession(sessionID)
 		if err != nil {
