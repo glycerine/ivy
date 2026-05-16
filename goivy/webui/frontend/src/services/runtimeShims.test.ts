@@ -21,10 +21,12 @@ describe('IvyControlsShim', () => {
 
     expect(document.getElementById('info-content')?.textContent).toBe('root details');
     expect(document.getElementById('info-content-3')?.textContent).toBe('state 0\ntransition init');
+    expect(document.getElementById('info-content-3')?.getAttribute('data-ivy-details-kind')).toBe('selection');
 
     controls.clearInfo();
 
     expect(document.getElementById('info-content')?.textContent).toBe('root details');
     expect(document.getElementById('info-content-3')?.textContent).toBe('Select a node or edge to see details');
+    expect(document.getElementById('info-content-3')?.getAttribute('data-ivy-details-kind')).toBe('placeholder');
   });
 });

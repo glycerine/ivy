@@ -104,12 +104,17 @@ export class IvyControlsShim {
       if (Array.isArray(longInfo)) lines.push(...longInfo);
       else lines.push(longInfo);
     }
-    info.textContent = lines.join('\n') || 'Select a node or edge to see details';
+    const text = lines.join('\n');
+    info.textContent = text || 'Select a node or edge to see details';
+    info.setAttribute('data-ivy-details-kind', text ? 'selection' : 'placeholder');
   }
 
   clearInfo() {
     const info = this.activeInfoElement();
-    if (info) info.textContent = 'Select a node or edge to see details';
+    if (info) {
+      info.textContent = 'Select a node or edge to see details';
+      info.setAttribute('data-ivy-details-kind', 'placeholder');
+    }
   }
 
   setStatus(message: any, level = '') {

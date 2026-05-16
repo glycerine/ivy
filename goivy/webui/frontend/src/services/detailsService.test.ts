@@ -28,4 +28,31 @@ describe('detailsService', () => {
     });
     expect(fact.classList.contains('inactive')).toBe(false);
   });
+
+  it('does not erase selected node details when a concept refresh has no facts', () => {
+    document.body.innerHTML = '<div id="info-content" data-ivy-details-kind="selection">State 0\nInitial state</div>';
+    const app = {
+      api: { executeAction: vi.fn() },
+      controls: { setStatus: vi.fn() },
+    };
+
+    populateConstraintFacts(app, { facts: [] }, { doc: document });
+
+    expect(document.getElementById('info-content')?.textContent).toBe('State 0\nInitial state');
+    expect(document.getElementById('info-content')?.getAttribute('data-ivy-details-kind')).toBe('selection');
+  });
+
+  it('clears stale constraint details when a later concept refresh has no facts', () => {
+    document.body.innerHTML = '<div id="info-content"></div>';
+    const app = {
+      api: { executeAction: vi.fn() },
+      controls: { setStatus: vi.fn() },
+    };
+
+    populateConstraintFacts(app, { facts: [{ index: 0, text: 'link(X,Y)', selected: true }] }, { doc: document });
+    populateConstraintFacts(app, { facts: [] }, { doc: document });
+
+    expect(document.getElementById('info-content')?.textContent).toBe('Select a node or edge to see details');
+    expect(document.getElementById('info-content')?.getAttribute('data-ivy-details-kind')).toBe('placeholder');
+  });
 });
