@@ -318,6 +318,13 @@ func (s *Session) registerAnalysisSheetLocked(ui *AnalysisGraphUI) string {
 	return sheetID
 }
 
+func analysisSheetLabel(sheetID string) string {
+	if strings.HasPrefix(sheetID, "sheet-") {
+		return "Sheet " + strings.TrimPrefix(sheetID, "sheet-")
+	}
+	return sheetID
+}
+
 func (s *Session) newAnalysisGraphUIForGraphLocked(ag *goivy.AnalysisGraph) *AnalysisGraphUI {
 	ui := NewAnalysisGraphUI()
 	ui.AG = ag
@@ -1439,10 +1446,19 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		ui.RememberGraph(name, w.G().Copy())
 		result["remembered"] = name
 		result["remembered_graphs"] = ui.RememberedGraphNames()
-	case "show_reachable", "show_reachable_states":
-		if s.CompiledModule == nil {
-			err = fmt.Errorf("show_reachable: no compiled module")
-			break
+		case "recalculate_all":
+			ui, resolvedSheetID, uiErr := s.requireAnalysisUIForSheetLocked(actionStringArg(args, "sheet_id"))
+			if uiErr != nil {
+				err = uiErr
+				break
+			}
+			ui.RecalculateAll()
+			result["sheet_id"] = resolvedSheetID
+			result["arg"] = AnalysisUIARGPayload(ui)
+		case "show_reachable", "show_reachable_states":
+			if s.CompiledModule == nil {
+				err = fmt.Errorf("show_reachable: no compiled module")
+				break
 		}
 		if s.ReachableUI == nil {
 			ag := goivy.NewAnalysisGraph(s.CompiledModule)
@@ -1744,17 +1760,24 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				err = fmt.Errorf("cti_bounded_check: no conjecture selected")
 				break
 			}
-			found, msg := w.ParentCTI.BoundedCheck(bound, conj)
-			result["bound"] = bound
-			result["found"] = found
-			if found {
-				result["result"] = "fail"
+				found, msg, trace := w.ParentCTI.BoundedCheckTrace(bound, conj)
+				result["bound"] = bound
+				result["found"] = found
+				if found {
+					result["result"] = "fail"
 			} else {
 				result["result"] = "pass"
-			}
-			result["message"] = msg
-			result["conjecture"] = fmt.Sprint(conj.ToFormula())
-		case "cti_minimize":
+				}
+				result["message"] = msg
+				result["conjecture"] = fmt.Sprint(conj.ToFormula())
+				if found && trace != nil && trace.AnalysisGraph != nil {
+					traceUI := s.newAnalysisGraphUIForGraphLocked(trace.AnalysisGraph)
+					traceSheetID := s.registerAnalysisSheetLocked(traceUI)
+					result["trace_sheet_id"] = traceSheetID
+					result["trace_label"] = analysisSheetLabel(traceSheetID)
+					result["trace_arg"] = AnalysisUIARGPayload(traceUI)
+				}
+			case "cti_minimize":
 			bound := 10
 			if s.CTIUI != nil && s.CTIUI.CurrentBound > 0 {
 				bound = s.CTIUI.CurrentBound

@@ -309,13 +309,21 @@ func (ui *CTIAnalysisGraphUI) checkInductivenessUnlocked() (bool, string) {
 // BoundedCheck performs bounded model checking for a conjecture
 // (Python: AnalysisGraphUI.bmc_conjecture).
 func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *goivy.Clauses) (bool, string) {
+	found, msg, _ := ui.BoundedCheckTrace(bound, conjecture)
+	return found, msg
+}
+
+// BoundedCheckTrace is BoundedCheck plus the counterexample trace object.
+// Python passes this trace to ui_parent.add(res, ui_class=ivy_ui.AnalysisGraphUI)
+// when the dialog's View button is pressed.
+func (ui *CTIAnalysisGraphUI) BoundedCheckTrace(bound int, conjecture *goivy.Clauses) (bool, string, *goivy.TraceBase) {
 	ui.mu2.Lock()
 	defer ui.mu2.Unlock()
 
 	ui.CurrentBound = bound
 
 	if ui.Mod == nil {
-		return false, "no module loaded"
+		return false, "no module loaded", nil
 	}
 
 	// Python: if conj is None: conj = and_clauses(*self.conjectures)
@@ -327,7 +335,7 @@ func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *goivy.Clauses)
 		}
 	}
 	if conj == nil {
-		return false, "no conjectures to check"
+		return false, "no conjectures to check", nil
 	}
 
 	usedNames := ui.collectUsedNames()
@@ -343,34 +351,34 @@ func (ui *CTIAnalysisGraphUI) BoundedCheck(bound int, conjecture *goivy.Clauses)
 
 	// Python: if 'initialize' in im.module.actions: ...
 	if initAct, ok := ui.Mod.Actions.Get2("initialize"); ok {
-		if act, ok2 := initAct.(goivy.ActionsAction); ok2 {
-			var err error
-			post, err = ag.Execute(true, act, post, nil, "initialize")
-			if err != nil {
-				return false, fmt.Sprintf("initialize action failed: %v", err)
+			if act, ok2 := initAct.(goivy.ActionsAction); ok2 {
+				var err error
+				post, err = ag.Execute(true, act, post, nil, "initialize")
+				if err != nil {
+					return false, fmt.Sprintf("initialize action failed: %v", err), nil
+				}
 			}
 		}
-	}
 
 	stepAction := goivy.BMCEnvAction(ui.Mod)
 
 	for n := 0; n <= bound; n++ {
-		res := goivy.CheckFinalCond(ag, post, clauses, nil, true)
-		if res != nil {
-			fmla := conj.ToFormula()
-			return true, fmt.Sprintf("BMC with bound %d found a counter-example to:\n%v", n, fmla)
-		}
-		if n < bound && stepAction != nil {
-			var err error
-			post, err = ag.Execute(true, stepAction, post, nil, "")
-			if err != nil {
-				return false, fmt.Sprintf("step %d failed: %v", n, err)
+			res := goivy.CheckFinalCond(ag, post, clauses, nil, true)
+			if res != nil {
+				fmla := conj.ToFormula()
+				return true, fmt.Sprintf("BMC with bound %d found a counter-example to:\n%v", n, fmla), res
+			}
+			if n < bound && stepAction != nil {
+				var err error
+				post, err = ag.Execute(true, stepAction, post, nil, "")
+				if err != nil {
+					return false, fmt.Sprintf("step %d failed: %v", n, err), nil
+				}
 			}
 		}
-	}
 
 	fmla := conj.ToFormula()
-	return false, fmt.Sprintf("BMC with bound %d did not find a counter-example to:\n%v", bound, fmla)
+	return false, fmt.Sprintf("BMC with bound %d did not find a counter-example to:\n%v", bound, fmla), nil
 }
 
 // Diagram computes a diagram abstraction of the current CTI
