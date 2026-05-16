@@ -1718,7 +1718,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		result["remaining_count"] = len(kept)
 		s.emit(Event{Type: "weaken_result", Data: map[string]interface{}{"removed": removed}})
 
-	case "cti_gather", "cti_minimize", "cti_check_sufficient", "cti_check_inductive", "cti_strengthen":
+	case "cti_gather", "cti_bounded_check", "cti_minimize", "cti_check_sufficient", "cti_check_inductive", "cti_strengthen":
 		w, widgetErr := s.ctiConceptWidgetForSheetLocked(actionStringArg(args, "sheet_id"))
 		if widgetErr != nil {
 			err = widgetErr
@@ -1728,6 +1728,32 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		case "cti_gather":
 			w.GatherFacts()
 			result["message"] = "CTI facts gathered"
+		case "cti_bounded_check":
+			bound := 0
+			if parsed, ok := actionIntArg(args, "bound"); ok {
+				bound = parsed
+			} else if s.CTIUI != nil && s.CTIUI.CurrentBound >= 0 {
+				bound = s.CTIUI.CurrentBound
+			}
+			if bound < 0 {
+				err = fmt.Errorf("cti_bounded_check: bound must be non-negative")
+				break
+			}
+			conj := w.GetSelectedConjecture()
+			if conj == nil {
+				err = fmt.Errorf("cti_bounded_check: no conjecture selected")
+				break
+			}
+			found, msg := w.ParentCTI.BoundedCheck(bound, conj)
+			result["bound"] = bound
+			result["found"] = found
+			if found {
+				result["result"] = "fail"
+			} else {
+				result["result"] = "pass"
+			}
+			result["message"] = msg
+			result["conjecture"] = fmt.Sprint(conj.ToFormula())
 		case "cti_minimize":
 			bound := 10
 			if s.CTIUI != nil && s.CTIUI.CurrentBound > 0 {

@@ -3,6 +3,7 @@ import {
   addCheckResultViewActions,
   autoCheckUsedRelations,
   boundedCheck,
+  ctiBoundedCheck,
   ctiConceptAction,
   showCheckResult,
   weakenInvariant,
@@ -80,6 +81,47 @@ describe('checkService', () => {
     });
     expect(app.api.runCheck).toHaveBeenCalledWith('bounded', { bound: 7 });
     expect(app.currentBound).toBe(7);
+  });
+
+  it('runs CTI concept bounded check against the active sheet', async () => {
+    const app = {
+      activeSheetId: 'sheet-2',
+      currentBound: -1,
+      integerDialog: vi.fn(async () => 0),
+      updateConceptGraph: vi.fn(),
+      api: {
+        executeAction: vi.fn(async () => ({
+          result: 'pass',
+          message: 'BMC with bound 0 did not find a counter-example to:\nnot p(X)',
+          concept: { elements: [] },
+        })),
+      },
+      controls: {
+        setStatus: vi.fn(),
+        showInfo: vi.fn(),
+      },
+    };
+
+    await ctiBoundedCheck(app);
+
+    expect(app.integerDialog).toHaveBeenCalledWith('Bounded check', 'Number of steps to check:', 0, {
+      min: 0,
+      okLabel: 'OK',
+    });
+    expect(app.api.executeAction).toHaveBeenCalledWith('cti_bounded_check', {
+      sheet_id: 'sheet-2',
+      bound: 0,
+    });
+    expect(app.currentBound).toBe(0);
+    expect(app.updateConceptGraph).toHaveBeenCalledWith({ elements: [] });
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith(
+      'BMC with bound 0 did not find a counter-example to:\nnot p(X)',
+      'success',
+    );
+    expect(app.controls.showInfo).toHaveBeenCalledWith(
+      'Bounded check',
+      'BMC with bound 0 did not find a counter-example to:\nnot p(X)',
+    );
   });
 
   it('prompts for conjectures before weakening', async () => {

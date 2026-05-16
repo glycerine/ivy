@@ -220,6 +220,7 @@ test('conjecture undo menu path does not kill the page', async ({ page }) => {
   await openIvy(page);
 
   await page.locator('[data-dropdown="conj-menu"]').click();
+  await expect(page.locator('#conj-cti-bounded-check')).toBeVisible();
   await page.locator('#conj-undo').click();
   await expect(page).toHaveTitle(/ivy/i);
 });

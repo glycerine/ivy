@@ -48,6 +48,7 @@ describe('ivyRuntime public surface', () => {
       'closeCurrentFile',
       'concreteStep',
       'createApi',
+      'ctiBoundedCheck',
       'ctiConceptAction',
       'currentSheet',
       'diagramDomain',

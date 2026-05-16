@@ -79,8 +79,15 @@ export function flashAndClose(app, el, callback, {
 }
 
 export function dispatchMenuDescriptorAction(app, region, item) {
-  void region;
   if (!item || item.enabled === false) return Promise.resolve({ ok: false, error: 'disabled action' });
+  if (item.action === 'bmc_conjecture') {
+    if (region === 'concept' && typeof app.ctiBoundedCheck === 'function') {
+      return app.ctiBoundedCheck();
+    }
+    if (typeof app.boundedCheck === 'function') {
+      return app.boundedCheck();
+    }
+  }
   if (item.dispatch === 'action') {
     return app.runAction(item.action, {}, {
       runningMessage: `Running: ${item.action}...`,

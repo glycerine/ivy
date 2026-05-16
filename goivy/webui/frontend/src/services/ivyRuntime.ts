@@ -112,6 +112,7 @@ import {
     autoCheckUsedRelations,
     boundedCheck as boundedCheckViaService,
     checkInduction as checkInductionViaService,
+    ctiBoundedCheck as ctiBoundedCheckViaService,
     ctiConceptAction as ctiConceptActionViaService,
     runCheck as runCheckViaService,
     showCheckResult as showCheckResultViaService,
@@ -891,6 +892,7 @@ class IvyRuntime {
             this.bindMenuAction('conj-undo', function () { self.doUndo(); });
             this.bindMenuAction('conj-redo', function () { self.doRedo(); });
             this.bindMenuAction('conj-cti-gather', function () { self.ctiConceptAction('cti_gather'); });
+            this.bindMenuAction('conj-cti-bounded-check', function () { self.ctiBoundedCheck(); });
             this.bindMenuAction('conj-cti-minimize', function () { self.ctiConceptAction('cti_minimize'); });
             this.bindMenuAction('conj-cti-check-sufficient', function () { self.ctiConceptAction('cti_check_sufficient'); });
             this.bindMenuAction('conj-cti-check-inductive', function () { self.ctiConceptAction('cti_check_inductive'); });
@@ -3910,6 +3912,14 @@ class IvyRuntime {
         } catch (e) {
             this.controls.setStatus('Bounded check failed: ' + e.message, 'error');
         }
+    }
+
+    /**
+     * Run CTI bounded checking for the conjecture derived from selected facts.
+     * Matches Python ivy_ui_cti.py ConceptGraphUI.bmc_conjecture().
+     */
+    async ctiBoundedCheck() {
+        return ctiBoundedCheckViaService(this);
     }
 
     /**

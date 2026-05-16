@@ -4,6 +4,7 @@ export const CHECK_COMMANDS = [
   'runCheck',
   'checkInduction',
   'boundedCheck',
+  'ctiBoundedCheck',
   'weakenInvariant',
   'showCheckResult',
   'addCheckResultViewActions',

@@ -610,6 +610,48 @@ func TestLoadFileContentInitializesCTIUI(t *testing.T) {
 	}
 }
 
+func TestCTIConceptBoundedCheckUsesSelectedFacts(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-cti-concept-bmc")
+	mod := goivy.New()
+	ui := NewCTIAnalysisGraphUI(mod)
+	widget := NewGraphWidget(StandardGraph([]string{"S"}, nil))
+	domain, _ := testDomainSetup()
+	widget.G().InteractiveSess = NewConceptInteractiveSession(
+		domain,
+		goivy.True,
+		goivy.True,
+		nil,
+		[]goivy.Expr{goivy.True},
+		nil,
+		nil,
+		nil,
+		false,
+	)
+	ui.CurrentConceptGraph = widget
+	s.CTIUI = ui
+
+	result, err := s.ExecuteAction("cti_bounded_check", map[string]interface{}{
+		"sheet_id": "sheet-1",
+		"bound":    float64(0),
+	})
+	if err != nil {
+		t.Fatalf("cti_bounded_check: %v", err)
+	}
+	if s.CTIUI.CurrentBound != 0 {
+		t.Fatalf("CurrentBound = %d, want 0", s.CTIUI.CurrentBound)
+	}
+	if got := result["bound"]; got != 0 {
+		t.Fatalf("bound result = %#v, want 0", got)
+	}
+	message, _ := result["message"].(string)
+	if !strings.Contains(message, "BMC with bound 0") {
+		t.Fatalf("message = %q, want BMC bound message", message)
+	}
+	if _, ok := result["conjecture"].(string); !ok {
+		t.Fatalf("result missing conjecture string: %#v", result)
+	}
+}
+
 func TestInductionFailureUsedRelationsExcludeUnusedSignatureRelations(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-used-relations")
 	if err := s.LoadFileContent("test.ivy", []byte(ctiUsedRelationSample)); err != nil {

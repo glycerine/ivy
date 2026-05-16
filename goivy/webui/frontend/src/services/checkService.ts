@@ -155,6 +155,40 @@ export async function boundedCheck(app) {
   }
 }
 
+export async function ctiBoundedCheck(app) {
+  try {
+    const initialBound = Number.isInteger(app.currentBound) && app.currentBound >= 0 ? app.currentBound : 0;
+    const bound = await app.integerDialog('Bounded check', 'Number of steps to check:', initialBound, {
+      min: 0,
+      okLabel: 'OK',
+    });
+    if (bound === null) {
+      app.controls.setStatus('Bounded check cancelled');
+      return null;
+    }
+    app.currentBound = bound;
+    app.controls.setStatus('Running bounded check...');
+    const result = await app.api.executeAction('cti_bounded_check', {
+      sheet_id: app.activeSheetId || 'sheet-1',
+      bound,
+    });
+    if (result && result.concept) {
+      app.updateConceptGraph(result.concept);
+    }
+    const message = (result && result.message) || 'Bounded check complete';
+    const resultKind = result && (result.result || result.status);
+    const statusKind = resultKind === 'fail' ? 'error' : 'success';
+    app.controls.setStatus(message, statusKind);
+    if (app.controls.showInfo) {
+      app.controls.showInfo('Bounded check', message);
+    }
+    return result;
+  } catch (err) {
+    app.controls.setStatus(`Bounded check failed: ${err.message}`, 'error');
+    return null;
+  }
+}
+
 export async function weakenInvariant(app) {
   try {
     app.controls.setStatus('Choosing conjectures...');

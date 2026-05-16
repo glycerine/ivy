@@ -96,4 +96,18 @@ describe('menuService', () => {
       successMessage: 'Done: undo',
     });
   });
+
+  it('maps CTI concept BMC menu descriptors to the bounded-check dialog', async () => {
+    const app = {
+      ctiBoundedCheck: vi.fn(async () => ({ ok: true })),
+      boundedCheck: vi.fn(),
+      runAction: vi.fn(),
+    };
+
+    await dispatchMenuDescriptorAction(app, 'concept', { action: 'bmc_conjecture', dispatch: 'action' });
+
+    expect(app.ctiBoundedCheck).toHaveBeenCalled();
+    expect(app.boundedCheck).not.toHaveBeenCalled();
+    expect(app.runAction).not.toHaveBeenCalled();
+  });
 });
