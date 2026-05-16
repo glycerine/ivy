@@ -95,7 +95,7 @@ func (e *Engine) LoadModel(ctx context.Context, sessionID, filename string, cont
 		return LoadResult{}, err
 	}
 	var result LoadResult
-	data, backendErr := e.backend.Load(sessionID, filename, content)
+	data, backendErr := e.backend.Load(sessionID, filename, content, "")
 	if err := decode(data, backendErr, &result); err != nil {
 		return LoadResult{}, err
 	}
