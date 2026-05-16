@@ -27,9 +27,25 @@ describe('graphService', () => {
       conceptGraph,
       selectedArgNode: null,
       visualOnly: false,
+      reachabilityOnly: false,
     });
     expect(app.installConceptGraphVisibilityHook).toHaveBeenCalledWith(conceptGraph);
     expect(app.uiDataModel.sheets['sheet-1'].type).toBe('analysis');
+  });
+
+  it('registers reachability-only sheets through the model before mirroring runtime state', () => {
+    const app = {
+      sheets: {},
+      activeSheetId: 'sheet-1',
+      uiDataModel: new UIDataModel(),
+      installConceptGraphVisibilityHook: vi.fn(),
+    };
+
+    registerSheet(app, 'sheet-3', {}, null, { reachabilityOnly: true });
+
+    expect(app.uiDataModel.sheets['sheet-3'].reachabilityOnly).toBe(true);
+    expect(app.sheets['sheet-3'].reachabilityOnly).toBe(true);
+    expect(app.sheets['sheet-3'].conceptGraph).toBeNull();
   });
 
   it('refreshes visible graph layouts', () => {

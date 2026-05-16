@@ -819,6 +819,7 @@ export class SheetModel extends RawBackedModel<unknown> {
   selectedArgNode: string | null;
   conceptSelections: GraphSelection[];
   visualOnly: boolean;
+  reachabilityOnly: boolean;
 
   constructor(raw: unknown = {}) {
     super(raw);
@@ -835,6 +836,7 @@ export class SheetModel extends RawBackedModel<unknown> {
       .map((item) => normalizeGraphSelection(item, 'node'))
       .filter((item): item is GraphSelection => !!item);
     this.visualOnly = boolValue(pick(raw, 'visualOnly', 'visual_only'));
+    this.reachabilityOnly = boolValue(pick(raw, 'reachabilityOnly', 'reachability_only'));
   }
 }
 

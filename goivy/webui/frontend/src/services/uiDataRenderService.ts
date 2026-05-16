@@ -45,9 +45,24 @@ function syncRuntimeSheetMirrors(app, sheetId) {
   if (runtimeSheet) {
     runtimeSheet.selectedArgNode = sheet.selectedArgNode;
     runtimeSheet.visualOnly = sheet.visualOnly;
+    runtimeSheet.reachabilityOnly = sheet.reachabilityOnly;
   }
   if (app && app.activeSheetId === sheetId) {
     app.selectedArgNode = sheet.selectedArgNode;
+  }
+}
+
+function renderSheetLayout(app, sheetId, {
+  doc = globalThis.document,
+} = {}) {
+  const sheet = selectSheet(app && app.uiDataModel, sheetId);
+  const sheetEl = doc && doc.getElementById(sheetId);
+  if (!sheet || !sheetEl) return;
+  sheetEl.classList.toggle('reachability-only-sheet', !!sheet.reachabilityOnly);
+  if (sheet.reachabilityOnly) {
+    sheetEl.setAttribute('data-sheet-layout', 'reachability-only');
+  } else {
+    sheetEl.removeAttribute('data-sheet-layout');
   }
 }
 
@@ -102,6 +117,9 @@ export function renderUIDataChange(app, change, options = {}) {
   if (!app || !change || !change.sheetId) return;
   const changed = new Set(change.changed || []);
   syncRuntimeSheetMirrors(app, change.sheetId);
+  if (changed.has('sheet')) {
+    renderSheetLayout(app, change.sheetId, options);
+  }
   if (changed.has('arg') || changed.has('argLayout')) {
     renderArgGraph(app, change.sheetId);
   } else if (changed.has('argSelection')) {

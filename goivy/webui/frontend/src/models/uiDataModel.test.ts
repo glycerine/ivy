@@ -44,6 +44,17 @@ describe('UIDataModel', () => {
     expect(snapshot.render.elements).toHaveLength(1);
   });
 
+  it('keeps reachability-only sheet layout as typed model state', () => {
+    const model = new UIDataModel();
+    const sheet = model.registerSheet('sheet-3', {
+      type: 'analysis',
+      reachabilityOnly: true,
+    });
+
+    expect(sheet.reachabilityOnly).toBe(true);
+    expect(sheet.visualOnly).toBe(false);
+  });
+
   it('keeps concept domain, sessions, checkboxes, and graph stack as typed data', () => {
     const snapshot = new ConceptSnapshot({
       concept_domain: {

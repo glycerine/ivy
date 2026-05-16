@@ -93,6 +93,7 @@ describe('ivyRuntime compatibility behavior', () => {
   });
 
   it('opens reachability-only sheets without a concept graph runtime', () => {
+    vi.useFakeTimers();
     document.body.innerHTML = [
       '<div id="sheet-area">',
       '  <div id="tab-bar"><button class="sheet-tab active" data-sheet="sheet-1"><span>Sheet 1</span></button></div>',
@@ -100,7 +101,20 @@ describe('ivyRuntime compatibility behavior', () => {
       '    <div class="sheet-columns">',
       '      <div class="sheet-left">',
       '        <div class="sheet-main">',
-      '          <div id="arg-panel" class="panel"><div id="arg-graph" class="graph-container"></div></div>',
+      '          <div id="arg-panel" class="panel">',
+      '            <div class="panel-header">',
+      '              <div class="panel-header-actions">',
+      '                <div class="dropdown ui-mode-only ui-mode-reachability">',
+      '                  <span class="panel-menu" data-dropdown="arg-action-menu">Action</span>',
+      '                  <div id="arg-action-menu" class="dropdown-content">',
+      '                    <a href="#" id="arg-recalculate-all">Recalculate all</a>',
+      '                    <a href="#" id="arg-show-reachable">Show reachable states</a>',
+      '                  </div>',
+      '                </div>',
+      '              </div>',
+      '            </div>',
+      '            <div id="arg-graph" class="graph-container"></div>',
+      '          </div>',
       '          <div id="divider" class="divider"></div>',
       '          <div id="concept-panel" class="panel"><div id="concept-graph" class="graph-container"></div></div>',
       '        </div>',
@@ -113,6 +127,8 @@ describe('ivyRuntime compatibility behavior', () => {
       '</div>',
     ].join('');
     const runtime = makeRuntime();
+    runtime.recalculateAll = vi.fn();
+    runtime.showReachableStates = vi.fn();
 
     const sheetId = runtime.addSheet('Sheet 3', 'sheet-3', { reachabilityOnly: true });
     const sheet = document.getElementById('sheet-3');
@@ -123,5 +139,18 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(runtime.sheets['sheet-3'].reachabilityOnly).toBe(true);
     expect(runtime.sheets['sheet-3'].argGraph).toBeTruthy();
     expect(runtime.sheets['sheet-3'].conceptGraph).toBeNull();
+
+    const actionTrigger = sheet.querySelector('[data-dropdown="arg-action-menu"]') as HTMLElement;
+    actionTrigger.click();
+
+    const actionDropdown = actionTrigger.closest('.dropdown');
+    expect(actionDropdown?.classList.contains('open')).toBe(true);
+    expect(sheet.querySelector('#arg-action-menu')?.textContent).toContain('Recalculate all');
+    expect(sheet.querySelector('#arg-action-menu')?.textContent).toContain('Show reachable states');
+
+    (sheet.querySelector('#arg-recalculate-all') as HTMLElement).click();
+    vi.advanceTimersByTime(50);
+
+    expect(runtime.recalculateAll).toHaveBeenCalledOnce();
   });
 });

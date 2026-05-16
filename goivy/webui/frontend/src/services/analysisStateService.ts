@@ -47,11 +47,12 @@ export function buildAnalysisState(app, persist) {
       });
     } else {
       const modelSheet = selectSheet(app.uiDataModel, sheetId);
+      const reachabilityOnly = modelSheet ? modelSheet.reachabilityOnly : !!sheet.reachabilityOnly;
       sheets.push({
         id: sheetId,
         type: 'analysis',
         label: app.tabLabelForSheet(sheetId),
-        ...(sheet.reachabilityOnly ? { reachabilityOnly: true } : {}),
+        ...(reachabilityOnly ? { reachabilityOnly: true } : {}),
         selectedArgNode: modelSheet ? modelSheet.selectedArgNode : null,
         conceptSelections: selectConceptSelections(modelSheet),
         arg: modelSheet ? graphPayload(modelSheet.arg, modelSheet.argPositions) : { elements: [], positions: null },

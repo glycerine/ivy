@@ -577,8 +577,8 @@ class IvyRuntime {
         return currentSheetViaService(this);
     }
 
-    registerSheet(sheetId, argGraph, conceptGraph) {
-        registerSheetViaService(this, sheetId, argGraph, conceptGraph);
+    registerSheet(sheetId, argGraph, conceptGraph, raw = {}) {
+        registerSheetViaService(this, sheetId, argGraph, conceptGraph, raw);
     }
 
     applyArgSnapshot(sheetId, payload) {
@@ -883,41 +883,7 @@ class IvyRuntime {
             // --- Dropdown Menus (panel header) ---
             this.setupDropdownMenus();
 
-            // --- ARG Panel Menu Items (File, Invariant) ---
-            this.bindMenuAction('arg-check-induction', function () { self.checkInduction(); });
-            this.bindMenuAction('arg-bounded-check', function () { self.boundedCheck(); });
-            this.bindMenuAction('arg-diagram', function () { self.diagramDomain(); });
-            this.bindMenuAction('arg-weaken', function () { self.weakenInvariant(); });
-            this.bindMenuAction('arg-save-invariant', function () { self.saveInvariant(); });
-            this.bindMenuAction('arg-recalculate-all', function () { self.recalculateAll(); });
-            this.bindMenuAction('arg-show-reachable', function () { self.showReachableStates(); });
-
-            // --- Concept Panel Menu Items (Conjecture, View) ---
-            this.bindMenuAction('conj-undo', function () { self.doUndo(); });
-            this.bindMenuAction('conj-redo', function () { self.doRedo(); });
-            this.bindMenuAction('conj-cti-gather', function () { self.ctiConceptAction('cti_gather'); });
-            this.bindMenuAction('conj-cti-bounded-check', function () { self.ctiBoundedCheck(); });
-            this.bindMenuAction('conj-cti-minimize', function () { self.ctiConceptAction('cti_minimize'); });
-            this.bindMenuAction('conj-cti-check-sufficient', function () { self.ctiConceptAction('cti_check_sufficient'); });
-            this.bindMenuAction('conj-cti-check-inductive', function () { self.ctiConceptAction('cti_check_inductive'); });
-            this.bindMenuAction('conj-cti-strengthen', function () { self.ctiConceptAction('cti_strengthen'); });
-            this.bindMenuAction('conj-export', function () { self.exportConjecture(); });
-            this.bindMenuAction('conj-reach-undo', function () { self.doUndo(); });
-            this.bindMenuAction('conj-reach-redo', function () { self.doRedo(); });
-            this.bindMenuAction('conj-pdr-step', function () { self.pdrStep(); });
-            this.bindMenuAction('conj-concrete', function () { self.concreteStep(); });
-            this.bindMenuAction('conj-gather', function () { self.gatherFacts(); });
-            this.bindMenuAction('conj-reverse', function () { self.reverseStep(); });
-            this.bindMenuAction('conj-path-reach', function () { self.pathReach(); });
-            this.bindMenuAction('conj-reach', function () { self.reachStep(); });
-            this.bindMenuAction('conj-conjecture', function () { self.makeConjecture(); });
-            this.bindMenuAction('conj-backtrack', function () { self.backtrack(); });
-            this.bindMenuAction('conj-recalculate', function () { self.recalculateGraph(); });
-            this.bindMenuAction('conj-diagram', function () { self.diagramDomain(); });
-            this.bindMenuAction('conj-remember', function () { self.rememberGraph(); });
-            this.bindMenuAction('conj-reach-export', function () { self.exportConjecture(); });
-            this.bindMenuAction('view-add-relation', function () { self.addRelationFromString(); });
-            this.bindMenuAction('view-relayout-dot', function () { self.relayoutConceptGraph(); });
+            this._bindStaticMenuActions();
 
         // --- Click anywhere to dismiss context menu and dropdowns ---
         document.addEventListener('click', function (e) {
@@ -1307,12 +1273,8 @@ class IvyRuntime {
         var newSheet = template.cloneNode(true);
         newSheet.id = sheetId;
         newSheet.classList.remove('active');
-        newSheet.classList.toggle('reachability-only-sheet', !!options.reachabilityOnly);
-        if (options.reachabilityOnly) {
-            newSheet.setAttribute('data-sheet-layout', 'reachability-only');
-        } else {
-            newSheet.removeAttribute('data-sheet-layout');
-        }
+        newSheet.classList.remove('reachability-only-sheet');
+        newSheet.removeAttribute('data-sheet-layout');
         // Clear graph containers (they'll be initialized fresh)
         var fallbackGraphs = newSheet.querySelectorAll('.graph-container');
         for (var g = 0; g < fallbackGraphs.length; g++) {
@@ -1330,6 +1292,8 @@ class IvyRuntime {
         // Insert before the tutorial container
         var sheetArea = document.getElementById('sheet-area');
         sheetArea.appendChild(newSheet);
+        this.setupDropdownMenus(newSheet);
+        this._bindStaticMenuActions();
 
         var graphs = newSheet.querySelectorAll('.graph-container');
         var graphIds = [];
@@ -1342,10 +1306,7 @@ class IvyRuntime {
         var conceptGraph = options.reachabilityOnly ? null : new runtimeDeps.IvyGraph(graphIds[1], runtimeDeps.CONCEPT_STYLE);
         argGraph.healthCheck();
         if (conceptGraph) conceptGraph.healthCheck();
-        this.registerSheet(sheetId, argGraph, conceptGraph);
-        if (this.sheets[sheetId]) {
-            this.sheets[sheetId].reachabilityOnly = !!options.reachabilityOnly;
-        }
+        this.registerSheet(sheetId, argGraph, conceptGraph, { reachabilityOnly: !!options.reachabilityOnly });
         this.attachGraphEventHandlers(argGraph, conceptGraph, sheetId);
 
         // Switch to the new sheet
@@ -3391,11 +3352,14 @@ class IvyRuntime {
     /**
      * Set up panel header dropdown menus (click to toggle).
      */
-    setupDropdownMenus() {
+    setupDropdownMenus(root: any = document) {
         var self = this;
-        var dropdowns = document.querySelectorAll('.dropdown > .panel-menu');
+        var scope = root || document;
+        var dropdowns = scope.querySelectorAll('.dropdown > .panel-menu');
         for (var i = 0; i < dropdowns.length; i++) {
             (function (trigger) {
+                if (trigger._ivyDropdownBound) return;
+                trigger._ivyDropdownBound = true;
                 trigger.addEventListener('click', function (e) {
                     e.stopPropagation();
                     var parent = trigger.parentElement;
@@ -3441,18 +3405,64 @@ class IvyRuntime {
         }, 50);
     }
 
+    _bindStaticMenuActions() {
+        var self = this;
+
+        // --- ARG Panel Menu Items (File, Invariant) ---
+        this.bindMenuAction('arg-check-induction', function () { self.checkInduction(); });
+        this.bindMenuAction('arg-bounded-check', function () { self.boundedCheck(); });
+        this.bindMenuAction('arg-diagram', function () { self.diagramDomain(); });
+        this.bindMenuAction('arg-weaken', function () { self.weakenInvariant(); });
+        this.bindMenuAction('arg-save-invariant', function () { self.saveInvariant(); });
+        this.bindMenuAction('arg-recalculate-all', function () { self.recalculateAll(); });
+        this.bindMenuAction('arg-show-reachable', function () { self.showReachableStates(); });
+
+        // --- Concept Panel Menu Items (Conjecture, View) ---
+        this.bindMenuAction('conj-undo', function () { self.doUndo(); });
+        this.bindMenuAction('conj-redo', function () { self.doRedo(); });
+        this.bindMenuAction('conj-cti-gather', function () { self.ctiConceptAction('cti_gather'); });
+        this.bindMenuAction('conj-cti-bounded-check', function () { self.ctiBoundedCheck(); });
+        this.bindMenuAction('conj-cti-minimize', function () { self.ctiConceptAction('cti_minimize'); });
+        this.bindMenuAction('conj-cti-check-sufficient', function () { self.ctiConceptAction('cti_check_sufficient'); });
+        this.bindMenuAction('conj-cti-check-inductive', function () { self.ctiConceptAction('cti_check_inductive'); });
+        this.bindMenuAction('conj-cti-strengthen', function () { self.ctiConceptAction('cti_strengthen'); });
+        this.bindMenuAction('conj-export', function () { self.exportConjecture(); });
+        this.bindMenuAction('conj-reach-undo', function () { self.doUndo(); });
+        this.bindMenuAction('conj-reach-redo', function () { self.doRedo(); });
+        this.bindMenuAction('conj-pdr-step', function () { self.pdrStep(); });
+        this.bindMenuAction('conj-concrete', function () { self.concreteStep(); });
+        this.bindMenuAction('conj-gather', function () { self.gatherFacts(); });
+        this.bindMenuAction('conj-reverse', function () { self.reverseStep(); });
+        this.bindMenuAction('conj-path-reach', function () { self.pathReach(); });
+        this.bindMenuAction('conj-reach', function () { self.reachStep(); });
+        this.bindMenuAction('conj-conjecture', function () { self.makeConjecture(); });
+        this.bindMenuAction('conj-backtrack', function () { self.backtrack(); });
+        this.bindMenuAction('conj-recalculate', function () { self.recalculateGraph(); });
+        this.bindMenuAction('conj-diagram', function () { self.diagramDomain(); });
+        this.bindMenuAction('conj-remember', function () { self.rememberGraph(); });
+        this.bindMenuAction('conj-reach-export', function () { self.exportConjecture(); });
+        this.bindMenuAction('view-add-relation', function () { self.addRelationFromString(); });
+        this.bindMenuAction('view-relayout-dot', function () { self.relayoutConceptGraph(); });
+    }
+
     /**
      * Bind a menu item by ID to a callback, with dropdown auto-close.
      */
     bindMenuAction(id, callback) {
         var self = this;
-        var el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            self.flashAndClose(this, callback);
-        });
+        var escapedId = String(id).replace(/"/g, '\\"');
+        var elements = document.querySelectorAll('[id="' + escapedId + '"]');
+        for (var i = 0; i < elements.length; i++) {
+            var el = elements[i];
+            el._ivyMenuActionBindings = el._ivyMenuActionBindings || {};
+            if (el._ivyMenuActionBindings[id]) continue;
+            el._ivyMenuActionBindings[id] = true;
+            el.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                self.flashAndClose(this, callback);
+            });
+        }
     }
 
     async loadMenuDescriptors() {

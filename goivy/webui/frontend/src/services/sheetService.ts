@@ -77,7 +77,10 @@ export function switchSheet(app, sheetId, {
     if (app.uiDataModel) {
       const store = app.uiDataStore || installUIDataModelStore(app);
       if (store) {
-        store.registerSheet(sheetId, { type: runtimeSheet.type });
+        store.registerSheet(sheetId, {
+          type: runtimeSheet.type,
+          reachabilityOnly: !!runtimeSheet.reachabilityOnly,
+        });
         store.setActiveSheet(sheetId);
       }
     }

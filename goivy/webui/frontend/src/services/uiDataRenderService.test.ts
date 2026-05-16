@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { UIDataModel } from '../models/uiDataModel.ts';
 import { applyArgSnapshot, installUIDataModelStore } from './uiDataRenderService.ts';
 
@@ -12,6 +12,10 @@ function makeGraph() {
 }
 
 describe('uiDataRenderService', () => {
+  afterEach(() => {
+    document.body.innerHTML = '';
+  });
+
   it('renders ARG graph updates only after the typed model accepts a snapshot', () => {
     const argGraph = makeGraph();
     const app = {
@@ -90,6 +94,28 @@ describe('uiDataRenderService', () => {
     expect(argGraph.update).toHaveBeenCalledWith([
       { group: 'nodes', data: { id: 'state_0', label: '0' } },
     ], null);
+  });
+
+  it('derives reachability-only sheet layout from the model', () => {
+    document.body.innerHTML = '<div id="sheet-3" class="sheet-content"></div>';
+    const app = {
+      uiDataModel: new UIDataModel(),
+      activeSheetId: 'sheet-1',
+      selectedArgNode: null,
+      sheets: {
+        'sheet-3': { id: 'sheet-3', type: 'analysis', argGraph: makeGraph(), conceptGraph: null },
+      },
+      _applyEdgeVisibility: vi.fn(),
+    };
+    installUIDataModelStore(app);
+
+    app.uiDataStore.registerSheet('sheet-3', { type: 'analysis', reachabilityOnly: true });
+
+    const sheet = document.getElementById('sheet-3');
+    expect(app.uiDataModel.sheets['sheet-3'].reachabilityOnly).toBe(true);
+    expect(app.sheets['sheet-3'].reachabilityOnly).toBe(true);
+    expect(sheet.classList.contains('reachability-only-sheet')).toBe(true);
+    expect(sheet.getAttribute('data-sheet-layout')).toBe('reachability-only');
   });
 
   it('captures graph-rendered positions back into model state without a render loop', () => {

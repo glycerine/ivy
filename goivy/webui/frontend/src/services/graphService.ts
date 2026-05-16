@@ -1,15 +1,20 @@
 import { installUIDataModelStore } from './uiDataRenderService.ts';
+import { selectSheet } from '../models/uiDataSelectors.ts';
 
 export function currentSheet(app) {
   return app.sheets ? app.sheets[app.activeSheetId] : null;
 }
 
-export function registerSheet(app, sheetId, argGraph, conceptGraph) {
+export function registerSheet(app, sheetId, argGraph, conceptGraph, raw = {}) {
+  const rawRecord: any = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
   app.installConceptGraphVisibilityHook(conceptGraph);
+  let modelSheet = null;
   if (app.uiDataModel) {
     const store = app.uiDataStore || installUIDataModelStore(app);
-    if (store) store.registerSheet(sheetId, { type: 'analysis' });
+    if (store) modelSheet = store.registerSheet(sheetId, { type: 'analysis', ...rawRecord });
+    if (!modelSheet) modelSheet = selectSheet(app.uiDataModel, sheetId);
   }
+  const reachabilityOnly = !!(modelSheet ? modelSheet.reachabilityOnly : rawRecord.reachabilityOnly);
   app.sheets[sheetId] = {
     id: sheetId,
     type: 'analysis',
@@ -17,6 +22,7 @@ export function registerSheet(app, sheetId, argGraph, conceptGraph) {
     conceptGraph,
     selectedArgNode: null,
     visualOnly: false,
+    reachabilityOnly,
   };
 }
 
