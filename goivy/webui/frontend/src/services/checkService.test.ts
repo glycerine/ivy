@@ -88,7 +88,10 @@ describe('checkService', () => {
       activeSheetId: 'sheet-2',
       currentBound: -1,
       integerDialog: vi.fn(async () => 0),
-      updateConceptGraph: vi.fn(),
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
+      },
+      showTextDialog: vi.fn(),
       api: {
         executeAction: vi.fn(async () => ({
           result: 'pass',
@@ -113,14 +116,15 @@ describe('checkService', () => {
       bound: 0,
     });
     expect(app.currentBound).toBe(0);
-    expect(app.updateConceptGraph).toHaveBeenCalledWith({ elements: [] });
+    expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-2', { elements: [] });
     expect(app.controls.setStatus).toHaveBeenLastCalledWith(
       'BMC with bound 0 did not find a counter-example to:\nnot p(X)',
       'success',
     );
-    expect(app.controls.showInfo).toHaveBeenCalledWith(
-      'Bounded check',
-      'BMC with bound 0 did not find a counter-example to:\nnot p(X)',
+    expect(app.showTextDialog).toHaveBeenCalledWith(
+      'ivyweb',
+      'BMC with bound 0 did not find a counter-example to:',
+      'not p(X)',
     );
   });
 
@@ -166,9 +170,12 @@ describe('checkService', () => {
   it('dispatches CTI concept graph actions with the active sheet id', async () => {
     const app = {
       activeSheetId: 'sheet-2',
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
+      },
       refreshConceptGraph: vi.fn(),
       api: {
-        executeAction: vi.fn(async () => ({ ok: true, message: 'strengthened' })),
+        executeAction: vi.fn(async () => ({ ok: true, message: 'strengthened', concept: { elements: [] } })),
       },
       controls: {
         setStatus: vi.fn(),
@@ -178,7 +185,8 @@ describe('checkService', () => {
     await ctiConceptAction(app, 'cti_strengthen');
 
     expect(app.api.executeAction).toHaveBeenCalledWith('cti_strengthen', { sheet_id: 'sheet-2' });
-    expect(app.refreshConceptGraph).toHaveBeenCalled();
+    expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-2', { elements: [] });
+    expect(app.refreshConceptGraph).not.toHaveBeenCalled();
     expect(app.controls.setStatus).toHaveBeenLastCalledWith('strengthened', 'success');
   });
 

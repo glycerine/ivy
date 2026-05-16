@@ -173,13 +173,18 @@ export async function ctiBoundedCheck(app) {
       bound,
     });
     if (result && result.concept) {
-      app.updateConceptGraph(result.concept);
+      applyConceptSnapshot(app, result.concept.sheet_id || app.activeSheetId || 'sheet-1', result.concept);
     }
     const message = (result && result.message) || 'Bounded check complete';
     const resultKind = result && (result.result || result.status);
     const statusKind = resultKind === 'fail' ? 'error' : 'success';
     app.controls.setStatus(message, statusKind);
-    if (app.controls.showInfo) {
+    if (typeof app.showTextDialog === 'function') {
+      const textParts = String(message).split('\n');
+      const dialogMessage = textParts.shift() || 'Bounded check';
+      const dialogText = textParts.length > 0 ? textParts.join('\n') : (result && result.conjecture) || '';
+      app.showTextDialog('ivyweb', dialogMessage, dialogText);
+    } else if (app.controls.showInfo) {
       app.controls.showInfo('Bounded check', message);
     }
     return result;
@@ -222,7 +227,7 @@ export async function ctiConceptAction(app, actionName) {
   try {
     const result = await app.api.executeAction(actionName, { sheet_id: app.activeSheetId || 'sheet-1' });
     if (result && result.concept) {
-      app.updateConceptGraph(result.concept);
+      applyConceptSnapshot(app, result.concept.sheet_id || app.activeSheetId || 'sheet-1', result.concept);
     } else {
       await app.refreshConceptGraph();
     }

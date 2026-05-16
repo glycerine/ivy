@@ -3226,7 +3226,7 @@ class IvyRuntime {
         try {
             var result = await this.api.diagramDomain();
             if (result && result.concept) {
-                this.updateConceptGraph(result.concept);
+                this.applyConceptSnapshot(result.concept.sheet_id || this.activeSheetId || 'sheet-1', result.concept);
             } else {
                 await this.refreshConceptGraph();
             }
@@ -4066,7 +4066,7 @@ class IvyRuntime {
         try {
             var result = await this.api.executeAction('concrete', { sheet_id: this.activeSheetId || 'sheet-1' });
             if (result && result.concept) {
-                this.updateConceptGraph(result.concept);
+                this.applyConceptSnapshot(result.concept.sheet_id || this.activeSheetId || 'sheet-1', result.concept);
             } else {
                 await this.refreshConceptGraph();
             }
@@ -4085,7 +4085,7 @@ class IvyRuntime {
         try {
             var result = await this.api.executeAction('gather', { sheet_id: this.activeSheetId || 'sheet-1' });
             if (result && result.concept) {
-                this.updateConceptGraph(result.concept);
+                this.applyConceptSnapshot(result.concept.sheet_id || this.activeSheetId || 'sheet-1', result.concept);
             } else {
                 await this.refreshConceptGraph();
             }
@@ -4097,18 +4097,6 @@ class IvyRuntime {
 
     async ctiConceptAction(actionName) {
         return ctiConceptActionViaService(this, actionName);
-        this.controls.setStatus('Running CTI action...');
-        try {
-            var result = await this.api.executeAction(actionName, { sheet_id: this.activeSheetId || 'sheet-1' });
-            if (result && result.concept) {
-                this.updateConceptGraph(result.concept);
-            } else {
-                await this.refreshConceptGraph();
-            }
-            this.controls.setStatus((result && result.message) || 'CTI action complete', 'success');
-        } catch (e) {
-            this.controls.setStatus('CTI action failed: ' + e.message, 'error');
-        }
     }
 
     /**
