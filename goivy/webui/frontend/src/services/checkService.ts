@@ -197,7 +197,7 @@ export async function boundedCheck(app) {
 
 export async function ctiBoundedCheck(app) {
   try {
-    const initialBound = Number.isInteger(app.currentBound) && app.currentBound >= 0 ? app.currentBound : 0;
+    const initialBound = Number.isInteger(app.currentBound) && app.currentBound >= 0 ? app.currentBound : 10;
     const bound = await app.integerDialog('Bounded check', 'Number of steps to check:', initialBound, {
       min: 0,
       okLabel: 'OK',

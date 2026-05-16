@@ -3810,12 +3810,7 @@ class IvyRuntime {
             var cleanup = self._installDialogEscape(dialog, function () {
                 self._finishDialog(dialog, cleanup, resolve, null);
             });
-            if (opts.cancel !== false) {
-                self._addDialogButton(dialog, 'Cancel', function () {
-                    self._finishDialog(dialog, cleanup, resolve, null);
-                });
-            }
-            self._addDialogButton(dialog, opts.okLabel || 'OK', function () {
+            var submit = function () {
                 var raw = input.value.trim();
                 var value = Number(raw);
                 if (raw === '' || !Number.isInteger(value)) {
@@ -3831,7 +3826,19 @@ class IvyRuntime {
                     return;
                 }
                 self._finishDialog(dialog, cleanup, resolve, value);
+            };
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submit();
+                }
             });
+            self._addDialogButton(dialog, opts.okLabel || 'OK', submit);
+            if (opts.cancel !== false) {
+                self._addDialogButton(dialog, 'Cancel', function () {
+                    self._finishDialog(dialog, cleanup, resolve, null);
+                });
+            }
             input.focus();
             input.select();
         });

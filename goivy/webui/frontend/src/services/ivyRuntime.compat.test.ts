@@ -75,4 +75,20 @@ describe('ivyRuntime compatibility behavior', () => {
     document.getElementById('job-control-close').click();
     expect(document.getElementById('job-control-page').classList.contains('open')).toBe(false);
   });
+
+  it('accepts the default integer dialog value with Enter', async () => {
+    const runtime = makeRuntime();
+
+    const resultPromise = runtime.integerDialog('Bounded check', 'Number of steps to check:', 10, { min: 0 });
+    const input = document.querySelector('[data-ivy-dialog-int]') as HTMLInputElement;
+    const buttons = Array.from(document.querySelectorAll('[data-ivy-dialog-button]'));
+
+    expect(input.value).toBe('10');
+    expect(buttons.map((button) => button.textContent)).toEqual(['OK', 'Cancel']);
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+
+    await expect(resultPromise).resolves.toBe(10);
+    expect(document.querySelector('[data-ivy-dialog]')).toBeNull();
+  });
 });

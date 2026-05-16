@@ -107,7 +107,7 @@ describe('checkService', () => {
 
     await ctiBoundedCheck(app);
 
-    expect(app.integerDialog).toHaveBeenCalledWith('Bounded check', 'Number of steps to check:', 0, {
+    expect(app.integerDialog).toHaveBeenCalledWith('Bounded check', 'Number of steps to check:', 10, {
       min: 0,
       okLabel: 'OK',
     });
