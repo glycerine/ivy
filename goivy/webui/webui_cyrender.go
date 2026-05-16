@@ -75,7 +75,8 @@ func WebUIARGPayload(state *WebUIAnalysisGraphState, cy *WebUICyElements) map[st
 		cy.Elements = []WebUICyElement{}
 	}
 	payload := map[string]interface{}{
-		"elements": cy.Elements,
+		"elements":  cy.Elements,
+		"positions": cyPositionPayload(cy),
 	}
 	// Only include analysis_graph_state when the ARG has content, so that the
 	// Go response matches Python's minimal {"elements":[]} for an empty graph.
@@ -102,12 +103,43 @@ func FullARGPayload(state *goivy.FullAnalysisGraphState, cy *WebUICyElements) ma
 		cy.Elements = []WebUICyElement{}
 	}
 	payload := map[string]interface{}{
-		"elements": cy.Elements,
+		"elements":  cy.Elements,
+		"positions": cyPositionPayload(cy),
 	}
 	if len(state.States) > 0 || len(state.Transitions) > 0 || len(state.Covering) > 0 {
 		payload["analysis_graph_state"] = state
 	}
 	return payload
+}
+
+func cyPositionPayload(cy *WebUICyElements) map[string]goivy.CyPosition {
+	if cy == nil {
+		return nil
+	}
+	positions := make(map[string]goivy.CyPosition)
+	for _, element := range cy.Elements {
+		if element.Group != "nodes" || element.Position == nil {
+			continue
+		}
+		id := cyElementPositionID(element)
+		if id == "" {
+			continue
+		}
+		positions[id] = *element.Position
+	}
+	if len(positions) == 0 {
+		return nil
+	}
+	return positions
+}
+
+func cyElementPositionID(element WebUICyElement) string {
+	for _, key := range []string{"id", "obj", "label"} {
+		if value, ok := element.Data[key].(string); ok && value != "" {
+			return value
+		}
+	}
+	return ""
 }
 
 // FullAnalysisUIARGPayload builds the full wire payload from an AnalysisGraphUI.
