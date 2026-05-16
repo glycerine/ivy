@@ -52,6 +52,8 @@ class IvySession:
         self.concept_session = None
         self.file_path = ""
         self.file_content = ""
+        self.active_isolate = ""
+        self.available_isolates = []
         self.toggles = {"edges": {}}
         self.events = Queue(maxsize=256)
 
@@ -87,12 +89,23 @@ def _new_session():
     return sid
 
 
-def _load_content(sess, filename, content):
+def _webui_isolate_names():
+    names = sorted(getattr(im.module, "isolates", {}).keys())
+    if names == ["this"]:
+        return []
+    if len(names) > 1:
+        names = [name for name in names if name != "this"]
+    return names
+
+
+def _load_content(sess, filename, content, isolate=""):
     """Compile Ivy source and populate session state."""
     with _ivy_lock:
         _reset_ivy_globals()
         sess.file_path = filename
         sess.file_content = content
+        isolate = (isolate or "").strip()
+        ic.isolate.set(isolate if isolate else None)
 
         # ivy_load_file expects the full source including #lang header.
         sio = StringIO(content)
@@ -105,6 +118,10 @@ def _load_content(sess, filename, content):
         from ivy import ivy_utils as iu
         ic.ivy_load_file(sio, create_isolate=False)
         ivy_isolate.create_isolate(ic.isolate.get(), im.module)
+        sess.available_isolates = _webui_isolate_names()
+        sess.active_isolate = isolate
+        if not sess.active_isolate and len(sess.available_isolates) == 1:
+            sess.active_isolate = sess.available_isolates[0]
         im.module.labeled_axioms.extend(im.module.labeled_props)
         im.module.theory_context().__enter__()
         sess.ag = ic.ivy_new()
@@ -460,8 +477,13 @@ class SidecarHandler(BaseHTTPRequestHandler):
 
             if rest == "load":
                 if "content" in body:
-                    _load_content(sess, body.get("filename", ""), body["content"])
-                    self._send_json({"filename": body.get("filename", ""), "status": "ok"})
+                    _load_content(sess, body.get("filename", ""), body["content"], body.get("isolate", ""))
+                    self._send_json({
+                        "filename": body.get("filename", ""),
+                        "isolate": sess.active_isolate,
+                        "isolates": list(sess.available_isolates),
+                        "status": "ok",
+                    })
                 elif "path" in body:
                     p = body["path"]
                     if not p:
