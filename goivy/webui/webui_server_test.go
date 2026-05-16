@@ -4,6 +4,7 @@ package webui
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	goivy "github.com/glycerine/ivy/goivy"
 	"io"
@@ -424,6 +425,20 @@ func (b *checkDefaultModeBackend) Check(sessionID, mode string, options CheckOpt
 	return canonicalJSON(map[string]string{"result": mode})
 }
 
+type checkContextBackend struct {
+	Backend
+	cancelled bool
+}
+
+func (b *checkContextBackend) NewSession(cfg *goivy.Config) ([]byte, error) {
+	return canonicalJSON(map[string]string{"session_id": "s1"})
+}
+
+func (b *checkContextBackend) Check(sessionID, mode string, options CheckOptions) ([]byte, error) {
+	b.cancelled = options.Context != nil && options.Context.Err() != nil
+	return canonicalJSON(map[string]bool{"cancelled": b.cancelled})
+}
+
 func TestAPICheckDefaultsToPDR(t *testing.T) {
 	cfg := goivy.NewConfig()
 	be := &checkDefaultModeBackend{}
@@ -435,6 +450,26 @@ func TestAPICheckDefaultsToPDR(t *testing.T) {
 	}
 	if be.mode != "pdr" {
 		t.Fatalf("default check mode = %q, want pdr", be.mode)
+	}
+}
+
+func TestAPICheckPassesRequestContext(t *testing.T) {
+	cfg := goivy.NewConfig()
+	be := &checkContextBackend{}
+	srv := NewServer(cfg, ":0", be)
+	id := createSession(t, srv)
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	req := httptest.NewRequest("POST", "/api/session/"+id+"/check", strings.NewReader(`{"mode":"induction"}`)).WithContext(ctx)
+	w := httptest.NewRecorder()
+
+	srv.ServeHTTP(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("status = %d, body: %s", w.Code, w.Body.String())
+	}
+	if !be.cancelled {
+		t.Fatalf("backend did not receive the cancelled request context")
 	}
 }
 

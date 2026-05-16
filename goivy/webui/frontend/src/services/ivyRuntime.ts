@@ -111,6 +111,7 @@ import {
     addCheckResultViewActions as addCheckResultViewActionsViaService,
     autoCheckUsedRelations,
     boundedCheck as boundedCheckViaService,
+    cancelActiveCheck as cancelActiveCheckViaService,
     checkInduction as checkInductionViaService,
     ctiBoundedCheck as ctiBoundedCheckViaService,
     ctiConceptAction as ctiConceptActionViaService,
@@ -870,6 +871,8 @@ class IvyRuntime {
                 if (button) button.addEventListener('click', callback);
             };
             bindOptionalButton('btn-check', function () { self.runCheck(); });
+            bindOptionalButton('btn-cancel-check', function () { self.cancelActiveCheck(); });
+            bindOptionalButton('btn-cancel-loading', function () { self.cancelActiveCheck(); });
             bindOptionalButton('btn-show-reachable', function () { self.showReachableStates(); });
             bindOptionalButton('btn-undo', function () { self.doUndo(); });
             bindOptionalButton('btn-reset-domain', function () { self.resetDomain(); });
@@ -3234,6 +3237,10 @@ class IvyRuntime {
         }
     }
 
+    cancelActiveCheck() {
+        return cancelActiveCheckViaService(this);
+    }
+
     /**
      * Auto-check the "+" checkbox for used relations after finding a CTI.
      * Matches Python ivy_ui_cti.py show_used_relations → show_relation(rel, '+').
@@ -3440,12 +3447,21 @@ class IvyRuntime {
                 this.controls.setStatus('Verification running...', 'info');
                 break;
 
+            case 'check_progress':
+                if (event.data && event.data.message) {
+                    this.controls.setStatus(event.data.message, event.data.level || 'info');
+                }
+                break;
+
             case 'check_completed':
                 var resultMsg = 'Check complete';
                 if (event.data && event.data.result) {
                     resultMsg += ': ' + event.data.result;
                 }
-                this.controls.setStatus(resultMsg, 'success');
+                var checkLevel = 'success';
+                if (event.data && event.data.result === 'cancelled') checkLevel = 'warning';
+                if (event.data && (event.data.result === 'fail' || event.data.result === 'error')) checkLevel = 'error';
+                this.controls.setStatus(resultMsg, checkLevel);
                 break;
 
             case 'action_started':

@@ -187,6 +187,10 @@ func (ctx *Z3Context) Close() error {
 	return nil
 }
 
+// Interrupt is a native Z3 cancellation hook. The current wasm shim has no
+// equivalent, so cancellation is cooperative between solver calls in wasm.
+func (ctx *Z3Context) Interrupt() {}
+
 func (ctx *Z3Context) symbol(name string) z3Symbol {
 	if sym, ok := ctx.syms[name]; ok {
 		return sym

@@ -1,6 +1,7 @@
 package webui
 
 import (
+	"context"
 	"fmt"
 	goivy "github.com/glycerine/ivy/goivy"
 	"runtime"
@@ -598,6 +599,11 @@ func (gbe *GoBackend) SetToggle(sessionID, edge, displayClass string, value bool
 }
 
 func (gbe *GoBackend) Check(sessionID, mode string, options CheckOptions) (by []byte, err error) {
+	ctx := options.Context
+	if ctx == nil {
+		ctx = context.Background()
+		options.Context = ctx
+	}
 	gbe.do(func(b *GoBackend) error {
 		var sess *Session
 		sess, err = b.getSession(sessionID)

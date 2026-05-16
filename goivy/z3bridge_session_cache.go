@@ -78,6 +78,13 @@ func NewZ3SessionCacheWithCtx(ctx *smt.Z3Context) *Z3SessionCache {
 	return c
 }
 
+// Z3ContextForModule returns the module's shared Z3 context, creating it if
+// needed. Web UI cancellation uses this to interrupt a long-running check from
+// the request-cancellation goroutine.
+func Z3ContextForModule(mod *Module) *smt.Z3Context {
+	return getOrCreateModuleCache(mod).Ctx
+}
+
 // Clear resets the cache to its initial state (empty maps, but the same
 // Z3Context). Mirrors Python ivy_solver.clear() called from
 // Module.__enter__ (ivy_module.py:102).

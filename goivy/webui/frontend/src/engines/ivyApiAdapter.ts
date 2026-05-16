@@ -24,11 +24,11 @@ export class IvyApiAdapter {
     this._notImplemented('createSession');
   }
 
-  async loadModel(_model: any): Promise<any> {
+  async loadModel(_model: any, _requestOptions: RequestInit = {}): Promise<any> {
     this._notImplemented('loadModel');
   }
 
-  async runCommand(_intent: any): Promise<any> {
+  async runCommand(_intent: any, _requestOptions: RequestInit = {}): Promise<any> {
     this._notImplemented('runCommand');
   }
 
@@ -48,12 +48,12 @@ export class IvyApiAdapter {
     this._notImplemented('saveSession');
   }
 
-  async loadFile(file, options = {}) {
-    return this.loadModel({ file, ...(options || {}) });
+  async loadFile(file, options = {}, requestOptions: RequestInit = {}) {
+    return this.loadModel({ file, ...(options || {}) }, requestOptions);
   }
 
-  async reloadContent(content, filename, options = {}) {
-    return this.loadModel({ content, filename: filename || 'model.ivy', ...(options || {}) });
+  async reloadContent(content, filename, options = {}, requestOptions: RequestInit = {}) {
+    return this.loadModel({ content, filename: filename || 'model.ivy', ...(options || {}) }, requestOptions);
   }
 
   async getARG(options = {}) {
@@ -116,8 +116,11 @@ export class IvyApiAdapter {
     return this.runCommand({ commandId: 'concept.projection', args: { name, concept } });
   }
 
-  async runCheck(mode, options = {}) {
-    return this.runCommand({ commandId: `check.${mode || 'pdr'}`, args: { ...options, mode: mode || 'pdr' } });
+  async runCheck(mode, options = {}, requestOptions: RequestInit = {}) {
+    return this.runCommand(
+      { commandId: `check.${mode || 'pdr'}`, args: { ...options, mode: mode || 'pdr' } },
+      requestOptions,
+    );
   }
 
   async resetDomain() {

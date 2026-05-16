@@ -1,19 +1,81 @@
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
 import { selectSheet, selectStateCheckboxRows } from '../models/uiDataSelectors.ts';
 
+function activeCheckLabel(app) {
+  const mode = app && typeof app.getMode === 'function' ? app.getMode() : 'verification';
+  return `${mode} check`;
+}
+
+function setCheckControlsRunning(running) {
+  const doc = globalThis.document;
+  if (!doc) return;
+  const checkButton = doc.getElementById('btn-check') as HTMLButtonElement | null;
+  const cancelButton = doc.getElementById('btn-cancel-check') as HTMLButtonElement | null;
+  const overlayCancelButton = doc.getElementById('btn-cancel-loading') as HTMLButtonElement | null;
+  if (checkButton) checkButton.disabled = running;
+  for (const button of [cancelButton, overlayCancelButton]) {
+    if (!button) continue;
+    button.hidden = !running;
+    button.disabled = !running;
+  }
+}
+
+function makeCheckAbortController() {
+  if (typeof AbortController === 'undefined') return null;
+  return new AbortController();
+}
+
+function isAbortError(err) {
+  return !!err && (
+    err.name === 'AbortError' ||
+    String(err.message || '').toLowerCase().includes('aborted') ||
+    String(err.message || '').toLowerCase().includes('cancelled')
+  );
+}
+
+export function cancelActiveCheck(app) {
+  const active = app && app._activeCheck;
+  if (!active) {
+    if (app && app.controls) app.controls.setStatus('No verification check is running');
+    return false;
+  }
+  active.cancelled = true;
+  if (active.controller) active.controller.abort();
+  if (app && app.controls) app.controls.setStatus(`Cancelling ${active.label || activeCheckLabel(app)}...`, 'warning');
+  return true;
+}
+
 export async function runCheck(app) {
+  if (app._activeCheck) {
+    app.controls.setStatus(`${app._activeCheck.label || activeCheckLabel(app)} is already running`, 'warning');
+    return null;
+  }
   const mode = app.getMode();
+  const controller = makeCheckAbortController();
+  const active = {
+    controller,
+    cancelled: false,
+    label: `${mode} check`,
+  };
+  app._activeCheck = active;
+  setCheckControlsRunning(true);
   app.controls.showLoading(`Running ${mode} check...`);
   app.controls.setStatus('Recompiling editor content...');
   try {
+    const requestOptions = controller ? { signal: controller.signal } : {};
     const editorContent = app.cmEditor ? app.cmEditor.getValue() : app._persistedFileContent;
     if (editorContent) {
       await app.api.reloadContent(editorContent, app._persistedFileName || 'model.ivy', {
         isolate: app.activeIsolate || '',
-      });
+      }, requestOptions);
     }
     app.controls.setStatus(`Running ${mode} check...`);
-    const result = await app.api.runCheck(mode);
+    const result = await app.api.runCheck(mode, {}, requestOptions);
+
+    if (active.cancelled || result?.result === 'cancelled') {
+      app.controls.setStatus(`${mode} check cancelled`, 'warning');
+      return result;
+    }
 
     const argData = await app.api.getARG();
     if (argData && argData.elements) {
@@ -29,10 +91,20 @@ export async function runCheck(app) {
       await app._autoCheckUsedRelations(result.used_relations);
     }
     app.showCheckResult(result);
+    return result;
   } catch (err) {
+    if (active.cancelled || isAbortError(err)) {
+      app.controls.setStatus(`${mode} check cancelled`, 'warning');
+      return null;
+    }
     app.controls.setStatus(`Check failed: ${err.message}`, 'error');
     console.error('Check error:', err);
+    return null;
   } finally {
+    if (app._activeCheck === active) {
+      app._activeCheck = null;
+    }
+    setCheckControlsRunning(false);
     app.controls.hideLoading();
   }
 }
@@ -82,6 +154,8 @@ export function showCheckResult(app, result) {
   } else if (verdict === 'error') {
     app.controls.setStatus(`Check ERROR${mode}${z3note}`, 'error');
     app.controls.showInfo('Verification Error', result.message || 'Unknown error');
+  } else if (verdict === 'cancelled') {
+    app.controls.setStatus(`Check cancelled${mode}`, 'warning');
   } else {
     app.controls.setStatus(`Check result: ${verdict}${z3note}`);
     app.controls.showInfo('Verification Result', result.message || JSON.stringify(result));

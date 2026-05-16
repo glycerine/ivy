@@ -5,6 +5,8 @@ import {
   boundedCheck,
   ctiBoundedCheck,
   ctiConceptAction,
+  cancelActiveCheck,
+  runCheck,
   showCheckResult,
   weakenInvariant,
 } from './checkService.ts';
@@ -12,6 +14,48 @@ import { UIDataModel } from '../models/uiDataModel.ts';
 import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 
 describe('checkService', () => {
+  it('passes an abort signal to hosted checks and reports cancellation', async () => {
+    const app = {
+      getMode: vi.fn(() => 'induction'),
+      cmEditor: { getValue: vi.fn(() => 'ivy source') },
+      _persistedFileName: 'model.ivy',
+      activeIsolate: 'rnf2',
+      api: {
+        reloadContent: vi.fn(async () => ({ status: 'ok' })),
+        runCheck: vi.fn((_mode, _options, requestOptions) => new Promise((_resolve, reject) => {
+          if (requestOptions.signal.aborted) {
+            reject(Object.assign(new Error('aborted'), { name: 'AbortError' }));
+            return;
+          }
+          requestOptions.signal.addEventListener('abort', () => {
+            reject(Object.assign(new Error('aborted'), { name: 'AbortError' }));
+          });
+        })),
+      },
+      controls: {
+        showLoading: vi.fn(),
+        hideLoading: vi.fn(),
+        setStatus: vi.fn(),
+      },
+    };
+
+    const running = runCheck(app);
+    expect(app.api.reloadContent).toHaveBeenCalledWith('ivy source', 'model.ivy', {
+      isolate: 'rnf2',
+    }, expect.objectContaining({ signal: expect.any(AbortSignal) }));
+
+    cancelActiveCheck(app);
+    await running;
+
+    expect(app.api.runCheck).toHaveBeenCalledWith('induction', {}, expect.objectContaining({
+      signal: expect.any(AbortSignal),
+    }));
+    expect(app.controls.setStatus).toHaveBeenCalledWith('Cancelling induction check...', 'warning');
+    expect(app.controls.setStatus).toHaveBeenLastCalledWith('induction check cancelled', 'warning');
+    expect(app.controls.hideLoading).toHaveBeenCalled();
+    expect(app._activeCheck).toBeNull();
+  });
+
   it('adds CTI details and trace actions for failed checks', () => {
     const app = {
       addCheckResultViewActions: vi.fn(),

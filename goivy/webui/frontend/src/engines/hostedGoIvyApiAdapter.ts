@@ -27,6 +27,10 @@ function jsonPost(body: AnyRecord = {}) {
   };
 }
 
+function withRequestOptions(options: RequestInit, requestOptions: RequestInit = {}): RequestInit {
+  return { ...options, ...requestOptions };
+}
+
 function conceptNodeParam(request: AnyRecord = {}) {
   if (request.nodeId != null) return request.nodeId;
   if (request.stateId != null) return request.stateId;
@@ -92,20 +96,22 @@ export class HostedGoIvyApiAdapter extends IvyApiAdapter {
     return this.sessionId;
   }
 
-  async loadModel(model: AnyRecord = {}): Promise<any> {
+  async loadModel(model: AnyRecord = {}, requestOptions: RequestInit = {}): Promise<any> {
     return this.client.request(this.sessionPath('/load'), {
-      method: 'POST',
-      body: toFormDataFromModel(model),
+      ...withRequestOptions({
+        method: 'POST',
+        body: toFormDataFromModel(model),
+      }, requestOptions),
     });
   }
 
-  async runCommand(intent: AnyRecord = {}): Promise<any> {
+  async runCommand(intent: AnyRecord = {}, requestOptions: RequestInit = {}): Promise<any> {
     const { commandId = '', args = {}, target = {} } = intent;
 
     if (commandId.startsWith('check.')) {
       const mode = commandMode(commandId, args);
       const body = { ...args, mode };
-      return this.client.request(this.sessionPath('/check'), jsonPost(body));
+      return this.client.request(this.sessionPath('/check'), withRequestOptions(jsonPost(body), requestOptions));
     }
 
     switch (commandId) {

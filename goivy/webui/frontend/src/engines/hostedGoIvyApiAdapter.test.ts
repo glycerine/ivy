@@ -64,12 +64,14 @@ describe('HostedGoIvyApiAdapter', () => {
     const fetchImpl = vi.fn(async () => jsonResponse({ ok: true }));
     const api = new HostedGoIvyApiAdapter({ client: new IvyHttpClient({ fetchImpl }) });
     api.sessionId = 'abc';
+    const controller = new AbortController();
 
-    await api.runCheck('bounded', { bound: 7, trace: true });
+    await api.runCheck('bounded', { bound: 7, trace: true }, { signal: controller.signal });
 
     const [url, options] = fetchImpl.mock.calls[0];
     expect(url).toBe('/api/session/abc/check');
     expect(JSON.parse(options.body)).toEqual({ bound: 7, trace: true, mode: 'bounded' });
+    expect(options.signal).toBe(controller.signal);
   });
 
   it('maps command intents to current webui endpoints', async () => {

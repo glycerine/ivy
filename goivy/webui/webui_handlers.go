@@ -456,7 +456,7 @@ func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sessionID stri
 		// Default to the current mode if no body
 		req.Mode = "pdr"
 	}
-	data, err := s.backend.Check(sessionID, req.Mode, CheckOptions{Bound: req.Bound})
+	data, err := s.backend.Check(sessionID, req.Mode, CheckOptions{Bound: req.Bound, Context: r.Context()})
 	if err != nil {
 		writeBackendErr(w, err)
 		return

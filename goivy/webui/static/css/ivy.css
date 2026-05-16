@@ -84,6 +84,16 @@ html, body {
     color: #fff;
 }
 
+.menu-btn:disabled {
+    opacity: 0.55;
+    cursor: default;
+}
+
+.menu-btn:disabled:hover {
+    background-color: #3c3c3c;
+    color: #c8c8c8;
+}
+
 .menu-btn:active {
     background-color: #606060;
 }
@@ -96,6 +106,16 @@ html, body {
 
 .menu-btn.action-btn:hover {
     background-color: #1177bb;
+}
+
+.menu-btn.cancel-btn {
+    background-color: #7f2f2f;
+    border-color: #a64646;
+    color: #fff;
+}
+
+.menu-btn.cancel-btn:hover {
+    background-color: #9b3b3b;
 }
 
 .icon-menu-btn {

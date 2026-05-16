@@ -3,6 +3,7 @@
 package webui
 
 import (
+	"context"
 	goivy "github.com/glycerine/ivy/goivy"
 	"strings"
 	"testing"
@@ -27,6 +28,18 @@ func drainEvents(s *Session) {
 		default:
 			return
 		}
+	}
+}
+
+func TestRunCheckWithOptionsHonorsCancelledContext(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "cancelled-check")
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+
+	result := s.RunCheckWithOptions("induction", CheckOptions{Context: ctx})
+
+	if result.Result != "cancelled" {
+		t.Fatalf("result = %q, want cancelled (%s)", result.Result, result.Message)
 	}
 }
 

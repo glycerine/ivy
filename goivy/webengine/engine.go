@@ -111,7 +111,7 @@ func (e *Engine) Check(ctx context.Context, sessionID string, req CheckRequest) 
 		mode = "pdr"
 	}
 	var result CheckResult
-	data, backendErr := e.backend.Check(sessionID, mode, webui.CheckOptions{Bound: req.Bound})
+	data, backendErr := e.backend.Check(sessionID, mode, webui.CheckOptions{Bound: req.Bound, Context: ctx})
 	if err := decode(data, backendErr, &result); err != nil {
 		return CheckResult{}, err
 	}

@@ -109,6 +109,16 @@ func (ctx *Z3Context) do(f func()) {
 	f()
 }
 
+// Interrupt asks Z3 to abort any in-flight check on this context. Z3 documents
+// this call as the cross-thread cancellation hook, so it intentionally does not
+// take ctx.mu; a long Z3_solver_check call holds that mutex until C returns.
+func (ctx *Z3Context) Interrupt() {
+	if ctx == nil || ctx.c == nil {
+		return
+	}
+	C.Z3_interrupt(ctx.c)
+}
+
 // checkError raises a Z3 API error from normal Go control flow. It must be
 // called while ctx.mu is already held.
 func (ctx *Z3Context) checkError(op string) {

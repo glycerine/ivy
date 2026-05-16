@@ -2,6 +2,7 @@ package webui
 
 import (
 	"bytes"
+	"context"
 	"embed"
 	"encoding/json"
 	"errors"
@@ -54,7 +55,8 @@ type ConceptMaterializeRequest struct {
 }
 
 type CheckOptions struct {
-	Bound int `json:"bound,omitempty"`
+	Bound   int             `json:"bound,omitempty"`
+	Context context.Context `json:"-"`
 }
 
 // ErrSessionNotFound is returned when a session ID is not recognized.

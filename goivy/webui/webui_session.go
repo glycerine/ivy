@@ -1,6 +1,7 @@
 package webui
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	goivy "github.com/glycerine/ivy/goivy"
@@ -2955,6 +2956,63 @@ func (s *Session) RunCheck(mode string) *WebUICheckResult {
 }
 
 func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUICheckResult {
+	ctx := options.Context
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	stopCancelWatcher := s.watchCheckCancellation(ctx)
+	defer stopCancelWatcher()
+	return s.runCheckWithContext(ctx, mode, options)
+}
+
+func (s *Session) watchCheckCancellation(ctx context.Context) func() {
+	done := make(chan struct{})
+	var z3ctx interface{ Interrupt() }
+	if s.CompiledModule != nil {
+		z3ctx = goivy.Z3ContextForModule(s.CompiledModule)
+	}
+	go func() {
+		select {
+		case <-ctx.Done():
+			if z3ctx != nil {
+				z3ctx.Interrupt()
+			}
+		case <-done:
+		}
+	}()
+	return func() { close(done) }
+}
+
+func (s *Session) checkCancelled(ctx context.Context, mode string) *WebUICheckResult {
+	if ctx == nil || ctx.Err() == nil {
+		return nil
+	}
+	msg := fmt.Sprintf("%s check cancelled", mode)
+	s.emit(Event{Type: "check_progress", Data: map[string]interface{}{
+		"mode":    mode,
+		"message": msg,
+		"level":   "warning",
+	}})
+	return &WebUICheckResult{Result: "cancelled", Message: msg}
+}
+
+func (s *Session) checkProgress(mode, message string, fields map[string]interface{}) {
+	data := map[string]interface{}{
+		"mode":    mode,
+		"message": message,
+		"level":   "info",
+	}
+	for k, v := range fields {
+		data[k] = v
+	}
+	s.emit(Event{Type: "check_progress", Data: data})
+	s.emit(Event{Type: "status", Data: map[string]string{"message": message, "level": "info"}})
+}
+
+func (s *Session) runCheckWithContext(ctx context.Context, mode string, options CheckOptions) *WebUICheckResult {
+	if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
+		return cancelled
+	}
 	if s.CompiledModule == nil {
 		return &WebUICheckResult{Result: "error", Message: "No module loaded — load an .ivy file first"}
 	}
@@ -2965,8 +3023,12 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 		// Matches Python ivy_ui_cti.py check_inductiveness():
 		// tests each conjecture against init + all conjectures as background.
 		if s.ConceptSess != nil {
+			s.checkProgress(mode, "Preparing concept graph for induction check...", nil)
 			if err := s.ConceptSess.Recompute(nil); err != nil {
 				return &WebUICheckResult{Result: "error", Message: err.Error()}
+			}
+			if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
+				return cancelled
 			}
 			s.syncAbstractValue()
 		}
@@ -2981,6 +3043,10 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 		if len(conjs) == 0 {
 			return &WebUICheckResult{Result: "pass", Message: "No conjectures to check"}
 		}
+		s.checkProgress(mode, fmt.Sprintf("Preparing %d conjecture(s) for induction check...", len(conjs)), map[string]interface{}{
+			"current": 0,
+			"total":   len(conjs),
+		})
 
 		// Convert conjectures to Clauses, matching Python module.conjs property:
 		//   formula_to_clauses(lc.formula) → strips ForAll, stores open formula.
@@ -2992,12 +3058,22 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 				conjClauses = append(conjClauses, goivy.FormulaToClauses(lc.Formula.(goivy.Expr), nil))
 			}
 		}
+		if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
+			return cancelled
+		}
 
 		// make_check_art: build analysis graph, execute env_action to get post-state
 		// Matches Python: ag,post,fail = make_check_art(precond=self.conjectures)
+		s.checkProgress(mode, "Building induction transition relation...", map[string]interface{}{
+			"current": 0,
+			"total":   len(conjs),
+		})
 		ag, postState, _, err := goivy.MakeCheckArt(s.CompiledModule, "", conjClauses)
 		if err != nil {
 			return &WebUICheckResult{Result: "error", Message: fmt.Sprintf("MakeCheckArt: %v", err)}
+		}
+		if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
+			return cancelled
 		}
 
 		// Test each conjecture. Matches Python ivy_ui_cti.py check_inductiveness lines 120-174:
@@ -3005,6 +3081,9 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 		//     clauses = dual_clauses(conj, witness)
 		//     res = check_final_cond(ag, post, clauses)
 		for i, lc := range conjs {
+			if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
+				return cancelled
+			}
 			if lc.Formula == nil || i >= len(conjClauses) {
 				continue
 			}
@@ -3017,6 +3096,17 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
 			}
+			conjName := displayFormula
+			if label != "" {
+				conjName = label
+			}
+			s.checkProgress(mode, fmt.Sprintf("Checking conjecture %d of %d: %s", i+1, len(conjs), conjName), map[string]interface{}{
+				"current":      i + 1,
+				"total":        len(conjs),
+				"conjecture":   displayFormula,
+				"label":        label,
+				"z3_contacted": true,
+			})
 
 			// dual_clauses(conj, witness): Skolemize variables then negate.
 			// Python: clauses = dual_clauses(conj, witness)
@@ -3073,6 +3163,10 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 				// Matches Python: check_final_cond(ag, post, dual_clauses(conj))
 				cexTrace = goivy.CheckFinalCond(ag, postState, finalCond, nil, true)
 			}()
+			if cancelled := s.checkCancelled(ctx, mode); cancelled != nil {
+				cancelled.Z3Contacted = true
+				return cancelled
+			}
 
 			if z3err != nil {
 				// Z3 error — cannot determine inductiveness. Report as failure
@@ -3110,6 +3204,10 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 		}
 
 		// All passed — build success message.
+		s.checkProgress(mode, "Induction check complete: invariant is inductive.", map[string]interface{}{
+			"current": len(conjs),
+			"total":   len(conjs),
+		})
 		// Python: lines = [str(c) for c in conjs]
 		// str(Clauses) → repr(Let(And(*fmlas))) → str(And(*fmlas))
 		// → pretty_fmla(And(*fmlas)) → ugly(And(*fmlas), 0)

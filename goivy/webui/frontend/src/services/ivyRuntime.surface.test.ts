@@ -39,6 +39,7 @@ describe('ivyRuntime public surface', () => {
       'boundedCheck',
       'buildAnalysisState',
       'buttonListDialog',
+      'cancelActiveCheck',
       'checkInduction',
       'chooseAndLoadAnalysisStateFile',
       'chooseAndLoadEventTraceFile',
