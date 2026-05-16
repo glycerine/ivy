@@ -91,7 +91,7 @@ describe('checkService', () => {
       uiDataStore: {
         applyConceptSnapshot: vi.fn(),
       },
-      showTextDialog: vi.fn(),
+      textDialog: vi.fn(async () => 'not p(X)'),
       api: {
         executeAction: vi.fn(async () => ({
           result: 'pass',
@@ -121,11 +121,83 @@ describe('checkService', () => {
       'BMC with bound 0 did not find a counter-example to:\nnot p(X)',
       'success',
     );
-    expect(app.showTextDialog).toHaveBeenCalledWith(
+    expect(app.textDialog).toHaveBeenCalledWith(
       'ivyweb',
       'BMC with bound 0 did not find a counter-example to:',
       'not p(X)',
+      { okLabel: 'OK', cancel: false },
     );
+  });
+
+  it('opens CTI BMC counterexample traces through the Python-style View button', async () => {
+    const traceArg = { elements: [{ group: 'nodes', data: { id: 'state_0' } }] };
+    const app = {
+      activeSheetId: 'sheet-2',
+      currentBound: 10,
+      integerDialog: vi.fn(async () => 0),
+      textDialog: vi.fn(async () => '(~true)'),
+      setUIMode: vi.fn(),
+      openARGSheet: vi.fn(),
+      api: {
+        executeAction: vi.fn(async () => ({
+          found: true,
+          result: 'fail',
+          message: 'BMC with bound 0 found a counter-example to:\n(~true)',
+          conjecture: '(~true)',
+          trace_arg: traceArg,
+          trace_sheet_id: 'sheet-3',
+          trace_label: 'Sheet 3',
+        })),
+      },
+      controls: {
+        setStatus: vi.fn(),
+      },
+    };
+
+    await ctiBoundedCheck(app);
+
+    expect(app.textDialog).toHaveBeenCalledWith(
+      'ivyweb',
+      'BMC with bound 0 found a counter-example to:',
+      '(~true)',
+      { okLabel: 'View', cancel: true, primaryFirst: true },
+    );
+    expect(app.setUIMode).toHaveBeenCalledWith('reachability');
+    expect(app.openARGSheet).toHaveBeenCalledWith('Sheet 3', traceArg, 'sheet-3');
+  });
+
+  it('does not open CTI BMC counterexample traces when the dialog is cancelled', async () => {
+    const app = {
+      activeSheetId: 'sheet-2',
+      currentBound: 10,
+      integerDialog: vi.fn(async () => 0),
+      textDialog: vi.fn(async () => null),
+      setUIMode: vi.fn(),
+      openARGSheet: vi.fn(),
+      api: {
+        executeAction: vi.fn(async () => ({
+          found: true,
+          result: 'fail',
+          message: 'BMC with bound 0 found a counter-example to:\n(~true)',
+          trace_arg: { elements: [] },
+          trace_sheet_id: 'sheet-3',
+        })),
+      },
+      controls: {
+        setStatus: vi.fn(),
+      },
+    };
+
+    await ctiBoundedCheck(app);
+
+    expect(app.textDialog).toHaveBeenCalledWith(
+      'ivyweb',
+      'BMC with bound 0 found a counter-example to:',
+      '(~true)',
+      { okLabel: 'View', cancel: true, primaryFirst: true },
+    );
+    expect(app.setUIMode).not.toHaveBeenCalled();
+    expect(app.openARGSheet).not.toHaveBeenCalled();
   });
 
   it('prompts for conjectures before weakening', async () => {

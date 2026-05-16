@@ -351,31 +351,31 @@ func (ui *CTIAnalysisGraphUI) BoundedCheckTrace(bound int, conjecture *goivy.Cla
 
 	// Python: if 'initialize' in im.module.actions: ...
 	if initAct, ok := ui.Mod.Actions.Get2("initialize"); ok {
-			if act, ok2 := initAct.(goivy.ActionsAction); ok2 {
-				var err error
-				post, err = ag.Execute(true, act, post, nil, "initialize")
-				if err != nil {
-					return false, fmt.Sprintf("initialize action failed: %v", err), nil
-				}
+		if act, ok2 := initAct.(goivy.ActionsAction); ok2 {
+			var err error
+			post, err = ag.Execute(true, act, post, nil, "initialize")
+			if err != nil {
+				return false, fmt.Sprintf("initialize action failed: %v", err), nil
 			}
 		}
+	}
 
 	stepAction := goivy.BMCEnvAction(ui.Mod)
 
 	for n := 0; n <= bound; n++ {
-			res := goivy.CheckFinalCond(ag, post, clauses, nil, true)
-			if res != nil {
-				fmla := conj.ToFormula()
-				return true, fmt.Sprintf("BMC with bound %d found a counter-example to:\n%v", n, fmla), res
-			}
-			if n < bound && stepAction != nil {
-				var err error
-				post, err = ag.Execute(true, stepAction, post, nil, "")
-				if err != nil {
-					return false, fmt.Sprintf("step %d failed: %v", n, err), nil
-				}
+		res := goivy.CheckFinalCond(ag, post, clauses, nil, true)
+		if res != nil {
+			fmla := conj.ToFormula()
+			return true, fmt.Sprintf("BMC with bound %d found a counter-example to:\n%v", n, fmla), res
+		}
+		if n < bound && stepAction != nil {
+			var err error
+			post, err = ag.Execute(true, stepAction, post, nil, "")
+			if err != nil {
+				return false, fmt.Sprintf("step %d failed: %v", n, err), nil
 			}
 		}
+	}
 
 	fmla := conj.ToFormula()
 	return false, fmt.Sprintf("BMC with bound %d did not find a counter-example to:\n%v", bound, fmla), nil

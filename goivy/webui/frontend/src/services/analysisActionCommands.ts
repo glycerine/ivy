@@ -16,6 +16,7 @@ export const ANALYSIS_ACTION_COMMANDS = [
   'reachStep',
   'makeConjecture',
   'backtrack',
+  'recalculateAll',
   'recalculateGraph',
   'relayoutConceptGraph',
   'rememberGraph',

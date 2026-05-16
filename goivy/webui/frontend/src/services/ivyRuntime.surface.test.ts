@@ -113,6 +113,7 @@ describe('ivyRuntime public surface', () => {
       'prepareArgNodeActionArgs',
       'reachStep',
       'readFileText',
+      'recalculateAll',
       'recalculateGraph',
       'refreshAfterLoad',
       'refreshConceptGraph',

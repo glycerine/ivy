@@ -107,6 +107,46 @@ export function addCheckResultViewActions(app, result, {
   info.appendChild(button);
 }
 
+function splitResultMessage(message, result) {
+  const textParts = String(message || '').split('\n');
+  const dialogMessage = textParts.shift() || 'Bounded check';
+  const dialogText = textParts.length > 0 ? textParts.join('\n') : (result && result.conjecture) || '';
+  return { dialogMessage, dialogText };
+}
+
+function traceLabelForResult(result) {
+  if (result && result.trace_label) return result.trace_label;
+  const sheetId = result && result.trace_sheet_id;
+  const match = /^sheet-(\d+)$/.exec(String(sheetId || ''));
+  if (match) return `Sheet ${match[1]}`;
+  return 'BMC counterexample';
+}
+
+export async function showCtiBoundedCheckResult(app, result, message) {
+  const { dialogMessage, dialogText } = splitResultMessage(message, result);
+  const foundTrace = !!(result && result.found && result.trace_arg);
+  if (foundTrace && typeof app.textDialog === 'function') {
+    const action = await app.textDialog('ivyweb', dialogMessage, dialogText, {
+      okLabel: 'View',
+      cancel: true,
+      primaryFirst: true,
+    });
+    if (action !== null) {
+      if (typeof app.setUIMode === 'function') app.setUIMode('reachability');
+      app.openARGSheet(traceLabelForResult(result), result.trace_arg, result.trace_sheet_id);
+    }
+    return;
+  }
+  if (typeof app.textDialog === 'function') {
+    await app.textDialog('ivyweb', dialogMessage, dialogText, {
+      okLabel: 'OK',
+      cancel: false,
+    });
+  } else if (app.controls.showInfo) {
+    app.controls.showInfo('Bounded check', message);
+  }
+}
+
 export async function checkInduction(app) {
   app.controls.setStatus('Checking induction...');
   app.controls.showLoading('Checking inductiveness...');
@@ -179,14 +219,7 @@ export async function ctiBoundedCheck(app) {
     const resultKind = result && (result.result || result.status);
     const statusKind = resultKind === 'fail' ? 'error' : 'success';
     app.controls.setStatus(message, statusKind);
-    if (typeof app.showTextDialog === 'function') {
-      const textParts = String(message).split('\n');
-      const dialogMessage = textParts.shift() || 'Bounded check';
-      const dialogText = textParts.length > 0 ? textParts.join('\n') : (result && result.conjecture) || '';
-      app.showTextDialog('ivyweb', dialogMessage, dialogText);
-    } else if (app.controls.showInfo) {
-      app.controls.showInfo('Bounded check', message);
-    }
+    await showCtiBoundedCheckResult(app, result, message);
     return result;
   } catch (err) {
     app.controls.setStatus(`Bounded check failed: ${err.message}`, 'error');

@@ -650,6 +650,14 @@ func TestCTIConceptBoundedCheckUsesSelectedFacts(t *testing.T) {
 	if _, ok := result["conjecture"].(string); !ok {
 		t.Fatalf("result missing conjecture string: %#v", result)
 	}
+	if found, _ := result["found"].(bool); found {
+		if _, ok := result["trace_arg"].(map[string]interface{}); !ok {
+			t.Fatalf("found CTI BMC result missing trace_arg: %#v", result)
+		}
+		if sheetID, _ := result["trace_sheet_id"].(string); !strings.HasPrefix(sheetID, "sheet-") {
+			t.Fatalf("trace_sheet_id = %q, want registered sheet id", sheetID)
+		}
+	}
 }
 
 func TestCTIConceptBoundedCheckEmptySelectionUsesPythonDefault(t *testing.T) {
@@ -685,6 +693,19 @@ func TestCTIConceptBoundedCheckEmptySelectionUsesPythonDefault(t *testing.T) {
 	conjecture, _ := result["conjecture"].(string)
 	if !strings.Contains(conjecture, "true") {
 		t.Fatalf("conjecture = %q, want empty-selection ~true conjecture", conjecture)
+	}
+	trace, ok := result["trace_arg"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("empty-selection counterexample missing trace_arg: %#v", result)
+	}
+	if elements, ok := trace["elements"].([]goivy.CyElement); !ok || len(elements) == 0 {
+		t.Fatalf("trace_arg elements missing/empty: %#v", trace["elements"])
+	}
+	if sheetID, _ := result["trace_sheet_id"].(string); sheetID == "" || s.analysisUIForSheetLocked(sheetID) == nil {
+		t.Fatalf("trace sheet %q was not registered", sheetID)
+	}
+	if label, _ := result["trace_label"].(string); label == "" {
+		t.Fatalf("trace_label missing: %#v", result)
 	}
 }
 

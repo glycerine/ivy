@@ -870,6 +870,8 @@ class IvyRuntime {
             bindOptionalButton('btn-undo', function () { self.doUndo(); });
             bindOptionalButton('btn-reset-domain', function () { self.resetDomain(); });
             bindOptionalButton('btn-diagram-domain', function () { self.diagramDomain(); });
+            this.bindMenuAction('top-action-recalculate-all', function () { self.recalculateAll(); });
+            this.bindMenuAction('top-action-show-reachable', function () { self.showReachableStates(); });
 
             // --- Toggle Tutorial ---
             document.getElementById('btn-toggle-tutorial').addEventListener('click', function () {
@@ -3732,14 +3734,25 @@ class IvyRuntime {
             var cleanup = self._installDialogEscape(dialog, function () {
                 self._finishDialog(dialog, cleanup, resolve, null);
             });
-            if (opts.cancel) {
+            if (opts.cancel && opts.primaryFirst) {
+                self._addDialogButton(dialog, opts.okLabel || 'OK', function () {
+                    self._finishDialog(dialog, cleanup, resolve, textarea.value);
+                });
                 self._addDialogButton(dialog, 'Cancel', function () {
                     self._finishDialog(dialog, cleanup, resolve, null);
                 });
+            } else if (opts.cancel) {
+                self._addDialogButton(dialog, 'Cancel', function () {
+                    self._finishDialog(dialog, cleanup, resolve, null);
+                });
+                self._addDialogButton(dialog, opts.okLabel || 'OK', function () {
+                    self._finishDialog(dialog, cleanup, resolve, textarea.value);
+                });
+            } else {
+                self._addDialogButton(dialog, opts.okLabel || 'OK', function () {
+                    self._finishDialog(dialog, cleanup, resolve, textarea.value);
+                });
             }
-            self._addDialogButton(dialog, opts.okLabel || 'OK', function () {
-                self._finishDialog(dialog, cleanup, resolve, textarea.value);
-            });
             textarea.focus();
             textarea.select();
         });
@@ -4054,6 +4067,21 @@ class IvyRuntime {
             this.controls.setStatus('Reachable states opened', 'success');
         } catch (e) {
             this.controls.setStatus('Show reachable states failed: ' + e.message, 'error');
+        }
+    }
+
+    async recalculateAll() {
+        this.controls.setStatus('Recalculating all...');
+        try {
+            var result = await this.api.executeAction('recalculate_all', { sheet_id: this.activeSheetId || 'sheet-1' });
+            if (result && result.arg) {
+                this.applyArgSnapshot(result.sheet_id || this.activeSheetId || 'sheet-1', result.arg);
+            }
+            this.controls.setStatus('Recalculated all', 'success');
+            return result;
+        } catch (e) {
+            this.controls.setStatus('Recalculate all failed: ' + e.message, 'error');
+            return null;
         }
     }
 
