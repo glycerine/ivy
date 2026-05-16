@@ -70,9 +70,11 @@ func (c *ConformBackend) conform(op string, goFn, pyFn func() ([]byte, error)) (
 		return nil, fmt.Errorf("conformance error in %s: Python failed (%v) but Go succeeded", op, pyErr)
 	}
 
-	// Both succeeded — compare bytes.
-	if !bytes.Equal(goData, pyData) {
-		diffPos := firstDiffPos(goData, pyData)
+	// Both succeeded — compare bytes after known sidecar-shape normalizations.
+	goCompare := normalizeConformanceData(op, goData)
+	pyCompare := normalizeConformanceData(op, pyData)
+	if !bytes.Equal(goCompare, pyCompare) {
+		diffPos := firstDiffPos(goCompare, pyCompare)
 		log.Printf("CONFORM MISMATCH [%s] responses differ at byte %d:\n  Go (%d bytes): %s\n  Py (%d bytes): %s",
 			op, diffPos, len(goData), goData, len(pyData), pyData)
 		return nil, fmt.Errorf("conformance error in %s: Go and Python responses differ at byte %d (Go=%d bytes, Py=%d bytes)",
@@ -80,6 +82,28 @@ func (c *ConformBackend) conform(op string, goFn, pyFn func() ([]byte, error)) (
 	}
 
 	return goData, nil
+}
+
+func normalizeConformanceData(op string, data []byte) []byte {
+	if op != "GetARG" {
+		return data
+	}
+	var payload map[string]interface{}
+	if err := json.Unmarshal(data, &payload); err != nil {
+		return data
+	}
+	if positions, ok := payload["positions"]; ok {
+		if positions == nil {
+			delete(payload, "positions")
+		} else if positionMap, ok := positions.(map[string]interface{}); ok && len(positionMap) == 0 {
+			delete(payload, "positions")
+		}
+	}
+	normalized, err := canonicalJSON(payload)
+	if err != nil {
+		return data
+	}
+	return normalized
 }
 
 // firstDiffPos returns the byte offset of the first difference between a and b.

@@ -361,6 +361,9 @@ func TestFullARGPayloadStructure(t *testing.T) {
 	if _, ok := keys["elements"]; !ok {
 		t.Error("FullARG payload missing 'elements' key")
 	}
+	if _, ok := keys["positions"]; !ok {
+		t.Error("FullARG payload missing 'positions' key")
+	}
 	if _, ok := keys["analysis_graph_state"]; !ok {
 		t.Error("FullARG payload missing 'analysis_graph_state' key")
 	}

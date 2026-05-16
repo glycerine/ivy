@@ -318,7 +318,9 @@ func TestConformARG(t *testing.T) {
 	t.Logf("Go  ARG: %s", goARG)
 	t.Logf("Py  ARG: %s", pyARG)
 
-	if string(goARG) != string(pyARG) {
+	goComparable := normalizeConformanceData("GetARG", goARG)
+	pyComparable := normalizeConformanceData("GetARG", pyARG)
+	if string(goComparable) != string(pyComparable) {
 		t.Errorf("ARG MISMATCH:\n  Go (%d bytes): %s\n  Py (%d bytes): %s",
 			len(goARG), goARG, len(pyARG), pyARG)
 	}
