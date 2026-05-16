@@ -215,13 +215,27 @@ dylib_test: z3ivy
 test:
 	XTRACE_OFF=1 go test ./... -count=1 -tags xtracer_off
 
+WEBUI_NODE_PLATFORM := $(shell node -e 'const h = process.report && process.report.getReport ? process.report.getReport().header : {}; let libc = ""; if (process.platform === "linux") libc = h.glibcVersionRuntime ? "gnu" : "musl"; console.log([process.platform, process.arch, libc].filter(Boolean).join("-"));' 2>/dev/null || printf '%s-%s\n' "$$(uname -s)" "$$(uname -m)")
+WEBUI_NODE_DEPS_STAMP := webui/node_modules/.platform-deps-$(WEBUI_NODE_PLATFORM).stamp
+WEBUI_NODE_DEPS_CHECK := node --input-type=module -e "await import('rollup'); const graphviz = await import('@hpcc-js/wasm-graphviz'); await graphviz.Graphviz.load();"
+
 webui/node_modules/.package-lock.stamp: webui/package.json webui/package-lock.json
 	cd webui && npm ci
 	touch webui/node_modules/.package-lock.stamp
 
-webui/node_modules/.bin/vitest webui/node_modules/.bin/playwright: webui/node_modules/.package-lock.stamp
+# @hpcc-js/wasm-graphviz ships prebuilt wasm through npm. Rollup also ships
+# platform-specific optional native packages, so a reused node_modules tree can
+# satisfy package-lock but still miss the current platform's runtime package.
+$(WEBUI_NODE_DEPS_STAMP): webui/package.json webui/package-lock.json webui/node_modules/.package-lock.stamp
+	cd webui && ($(WEBUI_NODE_DEPS_CHECK) || (npm ci && $(WEBUI_NODE_DEPS_CHECK)))
+	touch webui/node_modules/.package-lock.stamp
+	touch $(WEBUI_NODE_DEPS_STAMP)
 
-vitest-setup: webui/node_modules/.bin/vitest webui/node_modules/.bin/playwright
+webui-node-deps webui-wasm-graphviz: $(WEBUI_NODE_DEPS_STAMP)
+
+webui/node_modules/.bin/vitest webui/node_modules/.bin/playwright: webui/node_modules/.package-lock.stamp $(WEBUI_NODE_DEPS_STAMP)
+
+vitest-setup: webui/node_modules/.bin/vitest webui/node_modules/.bin/playwright $(WEBUI_NODE_DEPS_STAMP)
 
 control/node_modules/.bin/playwright: control/package.json control/package-lock.json
 	cd control && npm ci
@@ -242,13 +256,13 @@ test-vue: webvue/node_modules/.bin/vitest
 build-vue: webvue/node_modules/.bin/vite
 	cd webvue && ./node_modules/.bin/vite build --config vite.config.mjs
 
-test-js: webui/node_modules/.bin/vitest
+test-js: webui/node_modules/.bin/vitest $(WEBUI_NODE_DEPS_STAMP)
 	cd webui && npm run test:webui:js
 
-test-js-watch: webui/node_modules/.bin/vitest
+test-js-watch: webui/node_modules/.bin/vitest $(WEBUI_NODE_DEPS_STAMP)
 	cd webui && npm run test:webui:js:watch
 
-test-browser: webui/node_modules/.bin/playwright
+test-browser: webui/node_modules/.bin/playwright $(WEBUI_NODE_DEPS_STAMP)
 	cd webui && npm run test:webui:browser
 
 test-control-browser: control/node_modules/.bin/playwright
@@ -257,9 +271,9 @@ test-control-browser: control/node_modules/.bin/playwright
 dylib_test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(CURDIR)/z3ivy/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
 
-test-web:
-	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
-	cd ~/ivy/goivy/webui && npm --prefix frontend run test
+test-web: $(WEBUI_NODE_DEPS_STAMP)
+	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtracer_off,web
+	cd webui && npm --prefix frontend run test
 
 unimerge-audit:
 	go run ./cmd/unimerge_audit -details -max 120
@@ -338,5 +352,4 @@ prod_old:
 	go install -tags xtracer_off ./cmd/ivysvk
 	IVYSVK_DEV=true IVYSVK_STATIC_DIR=$(CURDIR)/svk/.svelte-kit/output/client IVYSVK_PUBLIC_BASE_URL=http://127.0.0.1:8080 ivysvk
 
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE prod
-
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup webui-node-deps webui-wasm-graphviz unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE prod
