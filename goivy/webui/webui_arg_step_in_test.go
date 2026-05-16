@@ -32,6 +32,65 @@ export bad
 conjecture p(X) -> ~q(X)
 `
 
+func argStepInTestDomainSetup() (*CDConceptDomain, *goivy.UninterpretedSort) {
+	mustVar := func(name string, sort goivy.Sort) *goivy.LogicVariable {
+		v, err := goivy.NewVariable(name, sort)
+		if err != nil {
+			panic(err)
+		}
+		return v
+	}
+	mustFuncSort := func(sorts ...goivy.Sort) *goivy.LogicFunctionSort {
+		fs, err := goivy.NewFunctionSort(sorts...)
+		if err != nil {
+			panic(err)
+		}
+		return fs
+	}
+	mustApply := func(fn goivy.Expr, args ...goivy.Expr) goivy.Expr {
+		app, err := goivy.NewApply(fn, args...)
+		if err != nil {
+			panic(err)
+		}
+		return app
+	}
+	mustNot := func(expr goivy.Expr) goivy.Expr {
+		not, err := goivy.NewNot(expr)
+		if err != nil {
+			panic(err)
+		}
+		return not
+	}
+	mustAnd := func(exprs ...goivy.Expr) goivy.Expr {
+		and, err := goivy.NewAnd(exprs...)
+		if err != nil {
+			panic(err)
+		}
+		return and
+	}
+
+	S := &goivy.UninterpretedSort{Name: "S"}
+	X := mustVar("X", S)
+	Y := mustVar("Y", S)
+	unaryRel := mustFuncSort(S, goivy.Boolean)
+	binaryRel := mustFuncSort(S, S, goivy.Boolean)
+	p := goivy.NewConst("p", unaryRel)
+	q := goivy.NewConst("q", unaryRel)
+	r := goivy.NewConst("r", binaryRel)
+
+	concepts := NewCDConceptDict()
+	concepts.SetConcept("both", MustCDConcept("both", []*goivy.LogicVariable{X}, mustAnd(mustApply(p, X), mustApply(q, X))))
+	concepts.SetConcept("none", MustCDConcept("none", []*goivy.LogicVariable{X}, mustAnd(mustNot(mustApply(p, X)), mustNot(mustApply(q, X)))))
+	concepts.SetConcept("onlyp", MustCDConcept("onlyp", []*goivy.LogicVariable{X}, mustAnd(mustApply(p, X), mustNot(mustApply(q, X)))))
+	concepts.SetConcept("onlyq", MustCDConcept("onlyq", []*goivy.LogicVariable{X}, mustAnd(mustNot(mustApply(p, X)), mustApply(q, X))))
+	concepts.SetConcept("r", MustCDConcept("r", []*goivy.LogicVariable{X, Y}, mustApply(r, X, Y)))
+	concepts.SetList("nodes", []string{"both", "none", "onlyp", "onlyq"})
+	concepts.SetList("edges", []string{"r"})
+	concepts.SetList("node_labels", []string{})
+
+	return NewCDConceptDomain(concepts, GetStandardCombiners(), GetStandardCombinations()), S
+}
+
 const saveInvariantSample = `#lang ivy1.7
 type node
 relation p(X:node)
@@ -615,7 +674,7 @@ func TestCTIConceptBoundedCheckUsesSelectedFacts(t *testing.T) {
 	mod := goivy.New()
 	ui := NewCTIAnalysisGraphUI(mod)
 	widget := NewGraphWidget(StandardGraph([]string{"S"}, nil))
-	domain, _ := testDomainSetup()
+	domain, _ := argStepInTestDomainSetup()
 	widget.G().InteractiveSess = NewConceptInteractiveSession(
 		domain,
 		goivy.True,
@@ -664,7 +723,7 @@ func TestCTIConceptBoundedCheckEmptySelectionUsesPythonDefault(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-cti-empty-concept-bmc")
 	ui := NewCTIAnalysisGraphUI(goivy.New())
 	widget := NewGraphWidget(StandardGraph([]string{"S"}, nil))
-	domain, _ := testDomainSetup()
+	domain, _ := argStepInTestDomainSetup()
 	widget.G().InteractiveSess = NewConceptInteractiveSession(
 		domain,
 		goivy.True,

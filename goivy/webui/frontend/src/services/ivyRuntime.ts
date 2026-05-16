@@ -4091,7 +4091,13 @@ class IvyRuntime {
             if (result && result.interpolant && typeof this.showTextDialog === 'function') {
                 this.showTextDialog('ivyweb', result.message || 'The pre-state is vacuous.', result.interpolant);
             }
-            this.controls.setStatus((result && result.message) || 'PDR step complete', 'success');
+            var statusKind = (result && (
+                result.status === 'cannot_reverse' ||
+                result.status === 'terminated' ||
+                result.status === 'vacuous' ||
+                result.status === 'refinement_suggested'
+            )) ? 'warning' : 'success';
+            this.controls.setStatus((result && result.message) || 'PDR step complete', statusKind);
             return result;
         } catch (e) {
             this.controls.setStatus('PDR step failed: ' + e.message, 'error');

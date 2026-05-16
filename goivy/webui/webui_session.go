@@ -3202,8 +3202,8 @@ func (s *Session) SetToggle(edge, displayClass string, value bool) {
 }
 
 // runUPDR runs the tactics-based UPDR algorithm on the session's compiled
-// module. Matches Python tactics.py UPDR class invoked from the Tk GUI's
-// pdr_step button (ivy_graph_ui.py:292).
+// module for whole-model PDR checks. Interactive Concept Graph "PDR step"
+// is handled by pdrStepConceptGraphLocked instead.
 func (s *Session) runUPDR() (bool, error) {
 	mod := s.CompiledModule
 	if mod == nil {
@@ -3241,7 +3241,7 @@ func (s *Session) runUPDR() (bool, error) {
 		Node:    s.AG.States[0],
 	}
 
-	u := &goivy.UPDR{TC: tc, MaxFrames: 100}
+	u := &goivy.UPDR{TC: tc, MaxFrames: 100, MaxGoalSteps: 1000}
 	return u.Apply(goal)
 }
 
