@@ -90,12 +90,7 @@ def _new_session():
 
 
 def _webui_isolate_names():
-    names = sorted(getattr(im.module, "isolates", {}).keys())
-    if names == ["this"]:
-        return []
-    if len(names) > 1:
-        names = [name for name in names if name != "this"]
-    return names
+    return sorted(getattr(im.module, "isolates", {}).keys())
 
 
 def _load_content(sess, filename, content, isolate=""):

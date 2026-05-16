@@ -116,6 +116,24 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.querySelector('.sheet-tab span')?.textContent).toBe('Sheet 1 · cf_backup');
   });
 
+  it('shows the synthetic default this isolate for specs without declared isolates', () => {
+    document.body.innerHTML = [
+      '<div id="isolate-menu-wrapper" class="dropdown isolate-menu" hidden>',
+      '  <span id="isolate-menu-title" class="panel-menu" data-dropdown="isolate-menu">isolate</span>',
+      '  <div id="isolate-menu" class="dropdown-content"></div>',
+      '</div>',
+      '<div id="tab-bar"><button class="sheet-tab active" data-sheet="sheet-1"><span>Sheet 1</span></button></div>',
+    ].join('');
+    const runtime = makeRuntime();
+
+    runtime.setIsolates(['this'], 'this');
+
+    expect((document.getElementById('isolate-menu-wrapper') as HTMLElement).hidden).toBe(false);
+    expect(document.getElementById('isolate-menu-title')?.textContent).toBe('this');
+    expect(Array.from(document.querySelectorAll('#isolate-menu a')).map((item) => item.textContent)).toEqual(['this']);
+    expect(document.querySelector('.sheet-tab span')?.textContent).toBe('Sheet 1 · this');
+  });
+
   it('opens reachability-only sheets without a concept graph runtime', () => {
     vi.useFakeTimers();
     document.body.innerHTML = [

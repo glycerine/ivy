@@ -111,18 +111,6 @@ func webUIIsolateNames(mod *goivy.Module) []string {
 		names = append(names, name)
 	}
 	sort.Strings(names)
-	if len(names) == 1 && names[0] == "this" {
-		return nil
-	}
-	if len(names) > 1 {
-		filtered := names[:0]
-		for _, name := range names {
-			if name != "this" {
-				filtered = append(filtered, name)
-			}
-		}
-		names = filtered
-	}
 	return append([]string{}, names...)
 }
 
