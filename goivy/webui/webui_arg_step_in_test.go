@@ -652,6 +652,42 @@ func TestCTIConceptBoundedCheckUsesSelectedFacts(t *testing.T) {
 	}
 }
 
+func TestCTIConceptBoundedCheckEmptySelectionUsesPythonDefault(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-cti-empty-concept-bmc")
+	ui := NewCTIAnalysisGraphUI(goivy.New())
+	widget := NewGraphWidget(StandardGraph([]string{"S"}, nil))
+	domain, _ := testDomainSetup()
+	widget.G().InteractiveSess = NewConceptInteractiveSession(
+		domain,
+		goivy.True,
+		goivy.True,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		false,
+	)
+	ui.CurrentConceptGraph = widget
+	s.CTIUI = ui
+
+	result, err := s.ExecuteAction("cti_bounded_check", map[string]interface{}{
+		"sheet_id": "sheet-1",
+		"bound":    float64(10),
+	})
+	if err != nil {
+		t.Fatalf("cti_bounded_check with empty selection: %v", err)
+	}
+	message, _ := result["message"].(string)
+	if !strings.Contains(message, "BMC with bound 0") {
+		t.Fatalf("message = %q, want Python-style bound-0 counterexample message", message)
+	}
+	conjecture, _ := result["conjecture"].(string)
+	if !strings.Contains(conjecture, "true") {
+		t.Fatalf("conjecture = %q, want empty-selection ~true conjecture", conjecture)
+	}
+}
+
 func TestInductionFailureUsedRelationsExcludeUnusedSignatureRelations(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-used-relations")
 	if err := s.LoadFileContent("test.ivy", []byte(ctiUsedRelationSample)); err != nil {

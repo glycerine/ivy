@@ -383,8 +383,18 @@ func TestGetSelectedConjectureEmpty(t *testing.T) {
 	w := NewCTIConceptGraphWidget(gs, ui)
 	w.ActiveFactExprs = nil
 	conj := w.GetSelectedConjecture()
-	if conj != nil {
-		t.Error("expected nil conjecture with no facts")
+	if conj == nil {
+		t.Fatal("expected empty selection to match Python's (~true) conjecture")
+	}
+	if len(conj.Fmlas) != 1 {
+		t.Fatalf("expected 1 formula, got %d", len(conj.Fmlas))
+	}
+	not, ok := conj.Fmlas[0].(*goivy.LogicNot)
+	if !ok {
+		t.Fatalf("empty selection formula = %T %[1]v, want negated true", conj.Fmlas[0])
+	}
+	if !goivy.IvyIsTrue(not.Body) {
+		t.Fatalf("empty selection formula = %v, want ~true", conj.Fmlas[0])
 	}
 }
 
@@ -427,15 +437,22 @@ func TestGetSelectedConjectureWithFreeVarsReturnsNil(t *testing.T) {
 
 // --- Strengthen tests ---
 
-func TestStrengthenNoFacts(t *testing.T) {
+func TestStrengthenEmptySelectionAddsPythonDefaultConjecture(t *testing.T) {
 	gs := NewGraphStack(nil)
 	ui := NewCTIAnalysisGraphUI(nil)
 	w := NewCTIConceptGraphWidget(gs, ui)
 	w.ActiveFactExprs = nil
 
-	_, err := w.Strengthen()
-	if err == nil {
-		t.Error("expected error with no facts")
+	before := len(ui.Conjectures)
+	conj, err := w.Strengthen()
+	if err != nil {
+		t.Fatalf("unexpected error with Python empty-selection default: %v", err)
+	}
+	if conj == nil {
+		t.Fatal("expected non-nil conjecture")
+	}
+	if len(ui.Conjectures) != before+1 {
+		t.Errorf("expected %d conjectures, got %d", before+1, len(ui.Conjectures))
 	}
 }
 
@@ -480,7 +497,7 @@ func TestMinimizeConjectureNilModule(t *testing.T) {
 
 // --- IsSufficient tests ---
 
-func TestIsSufficientNoConj(t *testing.T) {
+func TestIsSufficientEmptySelectionUsesPythonDefaultConjecture(t *testing.T) {
 	gs := NewGraphStack(nil)
 	ui := NewCTIAnalysisGraphUI(nil)
 	w := NewCTIConceptGraphWidget(gs, ui)
@@ -488,10 +505,10 @@ func TestIsSufficientNoConj(t *testing.T) {
 
 	ok, msg := w.IsSufficient()
 	if ok {
-		t.Error("should not be sufficient with no conjecture")
+		t.Error("should not be sufficient with no current CTI target")
 	}
-	if !strings.Contains(msg, "no conjecture") {
-		t.Errorf("expected 'no conjecture' in msg, got: %s", msg)
+	if !strings.Contains(msg, "no current CTI") {
+		t.Errorf("expected 'no current CTI' in msg, got: %s", msg)
 	}
 }
 
@@ -516,7 +533,7 @@ func TestIsSufficientNoTarget(t *testing.T) {
 
 // --- IsInductive tests ---
 
-func TestIsInductiveNoConj(t *testing.T) {
+func TestIsInductiveEmptySelectionUsesPythonDefaultConjecture(t *testing.T) {
 	gs := NewGraphStack(nil)
 	ui := NewCTIAnalysisGraphUI(nil)
 	w := NewCTIConceptGraphWidget(gs, ui)
@@ -524,10 +541,10 @@ func TestIsInductiveNoConj(t *testing.T) {
 
 	ok, msg := w.IsInductive()
 	if ok {
-		t.Error("should not be inductive with no conjecture")
+		t.Error("should not be inductive without a loaded module")
 	}
-	if !strings.Contains(msg, "no conjecture") {
-		t.Errorf("expected 'no conjecture' in msg, got: %s", msg)
+	if !strings.Contains(msg, "no module") {
+		t.Errorf("expected 'no module' in msg, got: %s", msg)
 	}
 }
 

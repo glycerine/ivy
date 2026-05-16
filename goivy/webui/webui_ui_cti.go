@@ -771,9 +771,6 @@ func (w *CTIConceptGraphWidget) Strengthen() (*goivy.Clauses, error) {
 // (Python: ConceptGraphUI.get_selected_conjecture).
 func (w *CTIConceptGraphWidget) GetSelectedConjecture() *goivy.Clauses {
 	facts := w.ActiveFactExprs
-	if len(facts) == 0 {
-		return nil
-	}
 
 	// Python: assert len(free_variables(*facts)) == 0
 	for _, f := range facts {
