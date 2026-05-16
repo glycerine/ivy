@@ -25,6 +25,58 @@ export interface UIDataChange {
 }
 
 type Listener = (change: UIDataChange) => void;
+type RawRecord = Record<string, any>;
+
+export interface ToggleUpdate {
+  edge?: string;
+  label?: string;
+  display_class?: string;
+  displayClass?: string;
+  value?: boolean;
+}
+
+function isRecord(value: unknown): value is RawRecord {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function cloneRaw(value: unknown): RawRecord {
+  return isRecord(value) ? { ...value } : {};
+}
+
+function checkboxMapToBooleans(map: Record<string, Record<string, { val: boolean }>> = {}) {
+  const out: Record<string, Record<string, boolean>> = {};
+  for (const [name, checks] of Object.entries(map || {})) {
+    out[name] = {};
+    for (const [displayClass, option] of Object.entries(checks || {})) {
+      out[name][displayClass] = !!(option && option.val);
+    }
+  }
+  return out;
+}
+
+function conceptSnapshotWithToggles(snapshot: ConceptSnapshot, updates: ToggleUpdate[]): ConceptSnapshot {
+  const edges = checkboxMapToBooleans(snapshot.displayCheckboxes.edgeDisplayCheckboxes);
+  const labels = checkboxMapToBooleans(snapshot.displayCheckboxes.nodeLabelDisplayCheckboxes);
+  for (const update of updates || []) {
+    if (!update) continue;
+    const displayClass = update.display_class || update.displayClass;
+    if (!displayClass) continue;
+    if (update.edge) {
+      edges[update.edge] = edges[update.edge] || {};
+      edges[update.edge][displayClass] = !!update.value;
+    }
+    if (update.label) {
+      labels[update.label] = labels[update.label] || {};
+      labels[update.label][displayClass] = !!update.value;
+    }
+  }
+  const toggles = { edges, labels };
+  return new ConceptSnapshot({
+    ...cloneRaw(snapshot.raw),
+    display_checkboxes: toggles,
+    toggles,
+  });
+}
 
 export class UIDataModelStore {
   readonly model: UIDataModel;
@@ -139,6 +191,15 @@ export class UIDataModelStore {
     const selected = this.model.setConceptSelections(id, selections);
     this.emit({ sheetId: id, changed: ['conceptSelection'] });
     return selected;
+  }
+
+  setConceptToggles(sheetId: string, updates: ToggleUpdate[] = []) {
+    const id = sheetId || this.model.activeSheetId;
+    const sheet = this.model.registerSheet(id);
+    if (!sheet.concept) return null;
+    sheet.concept = conceptSnapshotWithToggles(sheet.concept, updates);
+    this.emit({ sheetId: id, changed: ['concept'] });
+    return sheet.concept;
   }
 
   setVisualOnly(sheetId: string, visualOnly: boolean, raw: unknown = {}): boolean {

@@ -46,6 +46,14 @@ function makeModel(selectedArgNode = '0') {
   return uiDataModel;
 }
 
+function makeGraph() {
+  return {
+    update: vi.fn(),
+    highlightNode: vi.fn(),
+    clearHighlights: vi.fn(),
+  };
+}
+
 function makeApp(overrides: any = {}) {
   const uiDataModel = overrides.uiDataModel || makeModel(overrides.selectedArgNode || '0');
   return {
@@ -140,6 +148,103 @@ describe('persistenceService', () => {
     expect(app.refreshConceptGraph).toHaveBeenCalled();
     expect(document.getElementById('loaded-file').textContent).toBe('/tmp/client.ivy');
     expect(document.getElementById('model-editor-label').textContent).toBe('/tmp/client.ivy');
+  });
+
+  it('restores checkbox state into the model and keeps column headers clickable', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    document.body.innerHTML = `
+      <select id="mode-select"><option value="pdr">pdr</option></select>
+      <span id="loaded-file"></span>
+      <span id="model-editor-label"></span>
+      <span id="state-label"></span>
+      <div id="info-content"></div>
+      <table id="state-checkbox-table">
+        <thead>
+          <tr>
+            <th class="chk-col">+</th>
+            <th class="chk-col">?</th>
+            <th class="chk-col">-</th>
+            <th class="chk-col">T</th>
+            <th class="name-col">Relation</th>
+          </tr>
+        </thead>
+        <tbody id="state-checkbox-body"></tbody>
+      </table>
+    `;
+    const persist = createIvyPersist(window);
+    const uiDataModel = new UIDataModel();
+    const app = {
+      uiDataModel,
+      activeSheetId: 'sheet-1',
+      argGraph: makeGraph(),
+      conceptGraph: makeGraph(),
+      sheets: {
+        'sheet-1': { id: 'sheet-1', type: 'analysis', argGraph: makeGraph(), conceptGraph: makeGraph() },
+      },
+      api: {
+        sessionId: 'server-session',
+        loadFile: vi.fn(),
+        getARG: vi.fn(async () => ({ elements: [] })),
+        getConceptGraph: vi.fn(async () => ({
+          elements: [],
+          relations: ['link', 'semaphore'],
+          toggles: {
+            edges: {
+              link: { all_to_all: false },
+              semaphore: { all_to_all: false },
+            },
+          },
+        })),
+        setToggles: vi.fn(),
+      },
+      refreshConceptGraph: vi.fn(),
+      controls: { setStatus: vi.fn() },
+      setEditorContent: vi.fn(),
+      _updateEditorLabel: vi.fn(),
+      _applyEdgeVisibility: vi.fn(),
+    };
+
+    try {
+      await persist.restore(app, {
+        sessionId: 'persisted-session',
+        fileName: 'client.ivy',
+        filePath: '/tmp/client.ivy',
+        fileContent: '#lang ivy1.7',
+        toggles: {
+          'link|all_to_all': true,
+          'semaphore|all_to_all': true,
+        },
+      });
+    } finally {
+      warn.mockRestore();
+    }
+
+    expect(Array.from(document.querySelectorAll('input[value="all_to_all"]')).map((input: HTMLInputElement) => input.checked)).toEqual([
+      true,
+      true,
+    ]);
+    expect(document.querySelectorAll('thead')).toHaveLength(1);
+
+    app.api.setToggles.mockClear();
+    (document.querySelector('th[data-state-toggle-class="all_to_all"]') as HTMLElement).click();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(app.api.setToggles).toHaveBeenCalledTimes(2);
+    expect(app.api.setToggles).toHaveBeenCalledWith({
+      edge: 'link',
+      display_class: 'all_to_all',
+      value: false,
+    });
+    expect(app.api.setToggles).toHaveBeenCalledWith({
+      edge: 'semaphore',
+      display_class: 'all_to_all',
+      value: false,
+    });
+    expect(Array.from(document.querySelectorAll('input[value="all_to_all"]')).map((input: HTMLInputElement) => input.checked)).toEqual([
+      false,
+      false,
+    ]);
   });
 
   it('keeps URL session and path truncation behavior compatible with the old runtime', () => {

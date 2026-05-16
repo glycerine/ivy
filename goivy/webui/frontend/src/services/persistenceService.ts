@@ -1,4 +1,5 @@
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
+import { applyModelToggleUpdates } from './conceptVisibilityService.ts';
 import {
   selectConceptSelections,
   selectSheet,
@@ -377,17 +378,21 @@ export function createIvyPersist(winArg = globalThis.window) {
     async applyToggles(app, toggles = {}) {
       const entries = Object.entries(toggles || {});
       if (!app || !app.api || typeof app.api.setToggles !== 'function' || entries.length === 0) return;
+      const modelUpdates = [];
       for (const [key, value] of entries) {
         const split = String(key).split('|');
         const displayClass = split.pop();
         const edge = split.join('|');
         if (!edge || !displayClass) continue;
-        await app.api.setToggles({
+        const update = {
           edge,
           display_class: displayClass,
           value: !!value,
-        });
+        };
+        await app.api.setToggles(update);
+        modelUpdates.push(update);
       }
+      applyModelToggleUpdates(app, modelUpdates);
       if (typeof app.refreshConceptGraph === 'function') await app.refreshConceptGraph();
     },
 

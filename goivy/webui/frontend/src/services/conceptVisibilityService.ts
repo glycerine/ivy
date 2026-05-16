@@ -185,6 +185,11 @@ export async function onEdgeToggle(app, edgeName, displayClass, checked) {
   return applyToggleBatch(app, [{ edge: edgeName, display_class: displayClass, value: checked }]);
 }
 
+export function applyModelToggleUpdates(app, updates) {
+  if (!app || !app.uiDataStore || typeof app.uiDataStore.setConceptToggles !== 'function') return null;
+  return app.uiDataStore.setConceptToggles(app.activeSheetId || 'sheet-1', updates || []);
+}
+
 export async function applyToggleBatch(app, updates) {
   const changes = (updates || []).filter(Boolean);
   if (changes.length === 0) return;
@@ -192,6 +197,7 @@ export async function applyToggleBatch(app, updates) {
     for (const update of changes) {
       await app.api.setToggles(update);
     }
+    applyModelToggleUpdates(app, changes);
     await app.refreshConceptGraph();
   } catch (err) {
     console.error('Toggle error:', err);
