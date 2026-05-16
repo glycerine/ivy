@@ -336,6 +336,7 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     Z3_mk_context_rc(cfg) { return z3._Z3_mk_context_rc(cfg) >>> 0; },
     Z3_mk_interpolation_context(cfg) { return z3._Z3_mk_interpolation_context(cfg) >>> 0; },
     Z3_set_error_handler(ctx) { errors.install(ctx); },
+    Z3_interrupt(ctx) { z3._Z3_interrupt(ctx); },
     Z3_get_error_code(ctx) { return z3._Z3_get_error_code(ctx) | 0; },
     Z3_get_error_msg(ctx, code) { return z3StringHandle(z3._Z3_get_error_msg(ctx, code)); },
     __z3ClearErrors() { errors.clear(); },

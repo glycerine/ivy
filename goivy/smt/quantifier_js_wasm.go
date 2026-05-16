@@ -187,9 +187,15 @@ func (ctx *Z3Context) Close() error {
 	return nil
 }
 
-// Interrupt is a native Z3 cancellation hook. The current wasm shim has no
-// equivalent, so cancellation is cooperative between solver calls in wasm.
-func (ctx *Z3Context) Interrupt() {}
+// Interrupt asks Z3 to cancel work in this context. In the current browser
+// worker runtime, this import is only reachable when JavaScript can call back
+// into Go; a synchronous solver call still needs worker-level cancellation.
+func (ctx *Z3Context) Interrupt() {
+	if ctx == nil || ctx.c == 0 || ctx.closed {
+		return
+	}
+	z3_interrupt(ctx.c)
+}
 
 func (ctx *Z3Context) symbol(name string) z3Symbol {
 	if sym, ok := ctx.syms[name]; ok {
@@ -1335,6 +1341,9 @@ func z3_mk_interpolation_context(cfg z3Config) z3Context
 
 //go:wasmimport smt_z3 Z3_set_error_handler
 func z3_set_error_handler(ctx z3Context)
+
+//go:wasmimport smt_z3 Z3_interrupt
+func z3_interrupt(ctx z3Context)
 
 //go:wasmimport smt_z3 Z3_get_error_code
 func z3_get_error_code(ctx z3Context) int32

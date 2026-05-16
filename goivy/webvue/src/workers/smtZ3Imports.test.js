@@ -2,6 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { createSmtZ3Imports } from './smtZ3Imports.js';
 
 describe('smtZ3Imports string bridge', () => {
+  it('routes context interrupts to the Z3 wasm export', () => {
+    const calls = [];
+    const z3 = {
+      _Z3_interrupt(ctx) {
+        calls.push(ctx);
+      },
+    };
+
+    const imports = createSmtZ3Imports({ z3, getGoMemory: () => null });
+    imports.Z3_interrupt(0xabc);
+
+    expect(calls).toEqual([0xabc]);
+  });
+
   it('copies Z3 C string bytes without UTF-8 decoding', () => {
     const heap = new Uint8Array(64);
     heap.set([0x41, 0xa2, 0xa3, 0x00], 8);
