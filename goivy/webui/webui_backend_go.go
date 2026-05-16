@@ -341,7 +341,10 @@ func (gbe *GoBackend) ConceptSplit(sessionID, concept, splitBy string) (by []byt
 			return nil
 		}
 		if sess.ConceptSess != nil {
-			sess.ConceptSess.Split(concept, splitBy)
+			err = sess.ConceptSess.Split(concept, splitBy)
+			if err != nil {
+				return nil
+			}
 		}
 		err = sess.SimpleSess.Split(concept, splitBy)
 		if err != nil {
@@ -361,7 +364,10 @@ func (gbe *GoBackend) ConceptEmpty(sessionID, concept string) (by []byte, err er
 			return nil
 		}
 		if sess.ConceptSess != nil {
-			sess.ConceptSess.SupposeEmpty(concept)
+			err = sess.ConceptSess.SupposeEmpty(concept)
+			if err != nil {
+				return nil
+			}
 		}
 		err = sess.SimpleSess.SupposeEmpty(concept)
 		if err != nil {
@@ -381,7 +387,10 @@ func (gbe *GoBackend) ConceptRemove(sessionID, concept string) (by []byte, err e
 			return nil
 		}
 		if sess.ConceptSess != nil {
-			sess.ConceptSess.RemoveConcepts(concept)
+			err = sess.ConceptSess.RemoveConcepts(concept)
+			if err != nil {
+				return nil
+			}
 		}
 		err = sess.SimpleSess.RemoveConcept(concept)
 		if err != nil {
@@ -496,10 +505,17 @@ func (gbe *GoBackend) ConceptReset(sessionID string) (by []byte, err error) {
 					}
 				}
 			}
-			cdDomain := GetInitialConceptDomain(sortMap, symbolMap)
-			sess.ConceptSess = NewConceptInteractiveSession(
+			cdDomain, domainErr := GetInitialConceptDomainE(sortMap, symbolMap)
+			if domainErr != nil {
+				err = domainErr
+				return nil
+			}
+			sess.ConceptSess, err = NewConceptInteractiveSessionE(
 				cdDomain, nil, nil, nil, nil, nil, nil, nil, false,
 			)
+			if err != nil {
+				return nil
+			}
 		}
 		by = okJSON
 		return nil

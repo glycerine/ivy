@@ -37,7 +37,10 @@ func TestGetFacts_InteractiveSession(t *testing.T) {
 	g := NewGraph([]string{"node"}, nil)
 	g.InteractiveSess = sess
 
-	facts := g.GetFacts(true)
+	facts, err := g.GetFacts(true)
+	if err != nil {
+		t.Fatal(err)
+	}
 	// Should delegate to InteractiveSess.GetFacts — may return empty if no
 	// witnesses exist, but should not panic.
 	_ = facts
@@ -49,7 +52,10 @@ func TestGetFacts_SimpleFallback(t *testing.T) {
 	g.ConceptSess.AbstractValue["fact2"] = true
 	g.ConceptSess.AbstractValue["fact3"] = false
 
-	facts := g.GetFacts(false)
+	facts, err := g.GetFacts(false)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if len(facts) != 2 {
 		t.Errorf("expected 2 true facts, got %d: %v", len(facts), facts)
 	}
@@ -64,7 +70,10 @@ func TestGetFacts_SimpleFallback(t *testing.T) {
 
 func TestGetFacts_NilInteractive(t *testing.T) {
 	g := NewGraph([]string{"node"}, nil)
-	facts := g.GetFacts(true)
+	facts, err := g.GetFacts(true)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if facts == nil {
 		// nil is ok when AbstractValue is empty
 	}

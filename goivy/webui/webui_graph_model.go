@@ -560,15 +560,20 @@ func (g *Graph) MaterializeNode(nodeID string, recompute bool) (string, error) {
 // MaterializeEdge materializes a witness for an edge (Python: Graph.materialize_edge).
 func (g *Graph) MaterializeEdge(relID, headID, tailID string, truth bool, recompute bool) ([]string, error) {
 	g.mu.Lock()
-	defer g.mu.Unlock()
 	if g.InteractiveSess != nil {
 		g.InteractiveSess.Push()
-		headC, tailC := g.InteractiveSess.materializeEdge(relID, headID, tailID, truth)
+		headC, tailC, err := g.InteractiveSess.materializeEdge(relID, headID, tailID, truth)
+		if err != nil {
+			g.mu.Unlock()
+			return nil, err
+		}
 		if recompute {
 			if err := g.InteractiveSess.Recompute(nil); err != nil {
+				g.mu.Unlock()
 				return nil, err
 			}
 		}
+		g.mu.Unlock()
 		var witnesses []string
 		if headC != nil {
 			witnesses = append(witnesses, headC.Name)
@@ -578,6 +583,7 @@ func (g *Graph) MaterializeEdge(relID, headID, tailID string, truth bool, recomp
 		}
 		return witnesses, nil
 	}
+	g.mu.Unlock()
 	witnesses := []string{
 		headID + "_witness",
 		tailID + "_witness",
@@ -593,22 +599,25 @@ func (g *Graph) MaterializeEdge(relID, headID, tailID string, truth bool, recomp
 // AddConstraints appends constraints to the concept session (Python: Graph.add_constraints).
 func (g *Graph) AddConstraints(constraints []string, recompute bool) error {
 	g.mu.Lock()
-	defer g.mu.Unlock()
 	if g.InteractiveSess != nil {
 		for _, cs := range constraints {
 			expr, err := parseConstraintString(cs)
 			if err != nil {
-				continue
+				g.mu.Unlock()
+				return fmt.Errorf("parse constraint %q: %w", cs, err)
 			}
 			g.InteractiveSess.Suppose(expr)
 		}
 		if recompute {
 			if err := g.InteractiveSess.Recompute(nil); err != nil {
+				g.mu.Unlock()
 				return err
 			}
 		}
+		g.mu.Unlock()
 		return nil
 	}
+	g.mu.Unlock()
 	if recompute {
 		return g.Recompute()
 	}
@@ -618,22 +627,23 @@ func (g *Graph) AddConstraints(constraints []string, recompute bool) error {
 // AddConstraintsExpr appends logic.Expr constraints to the interactive session.
 func (g *Graph) AddConstraintsExpr(constraints []goivy.Expr, recompute bool) error {
 	g.mu.Lock()
-	defer g.mu.Unlock()
 	if g.InteractiveSess != nil {
 		for _, expr := range constraints {
 			g.InteractiveSess.Suppose(expr)
 		}
 		if recompute {
 			if err := g.InteractiveSess.Recompute(nil); err != nil {
+				g.mu.Unlock()
 				return err
 			}
 		}
 	}
+	g.mu.Unlock()
 	return nil
 }
 
 // SetFacts sets the constraint facts (Python: Graph.set_facts).
-func (g *Graph) SetFacts(facts []string) {
+func (g *Graph) SetFacts(facts []string) error {
 	g.mu.Lock()
 	defer g.mu.Unlock()
 	if g.InteractiveSess != nil {
@@ -641,11 +651,12 @@ func (g *Graph) SetFacts(facts []string) {
 		for _, f := range facts {
 			expr, err := parseConstraintString(f)
 			if err != nil {
-				continue
+				return fmt.Errorf("parse fact %q: %w", f, err)
 			}
 			g.InteractiveSess.SupposeConstraints = append(g.InteractiveSess.SupposeConstraints, expr)
 		}
 	}
+	return nil
 }
 
 // SetFactsExpr replaces suppose constraints with the given logic.Expr slice.
@@ -658,18 +669,21 @@ func (g *Graph) SetFactsExpr(facts []goivy.Expr) {
 }
 
 // GetFacts gathers definite facts from the current abstract value (Python: Graph.get_facts).
-func (g *Graph) GetFacts(definite bool) []string {
+func (g *Graph) GetFacts(definite bool) ([]string, error) {
 	g.mu.Lock()
 	defer g.mu.Unlock()
 	if g.InteractiveSess != nil {
 		proj := func(a, b, c string) bool { return true }
-		facts := g.InteractiveSess.GetFacts(proj)
+		facts, err := g.InteractiveSess.GetFacts(proj)
+		if err != nil {
+			return nil, err
+		}
 		g.InteractiveSess.SupposeConstraints = append([]goivy.Expr{}, facts...)
 		result := make([]string, 0, len(facts))
 		for _, f := range facts {
 			result = append(result, f.String())
 		}
-		return result
+		return result, nil
 	}
 	var result []string
 	for k, v := range g.ConceptSess.AbstractValue {
@@ -677,7 +691,7 @@ func (g *Graph) GetFacts(definite bool) []string {
 			result = append(result, k)
 		}
 	}
-	return result
+	return result, nil
 }
 
 // FindNodeWithLabels finds a node whose label lines match all given labels.

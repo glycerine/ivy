@@ -170,8 +170,7 @@ func TestCDConceptSorts(t *testing.T) {
 	T := mkSort("T")
 	X := mkVar("X", S)
 	Y := mkVar("Y", T)
-	eq := webuiMustEq(X, Y)
-	c := MustCDConcept("mixed", []*goivy.LogicVariable{X, Y}, eq)
+	c := MustCDConcept("mixed", []*goivy.LogicVariable{X, Y}, goivy.True)
 	sorts := c.Sorts()
 	if len(sorts) != 2 {
 		t.Fatalf("expected 2 sorts, got %d", len(sorts))
@@ -527,7 +526,9 @@ func TestCDConceptDomainSplit(t *testing.T) {
 	cd.Concepts.SetConcept("splitter", splitter)
 
 	origLen := cd.Concepts.Len()
-	cd.Split("both", "splitter")
+	if err := cd.Split("both", "splitter"); err != nil {
+		t.Fatal(err)
+	}
 
 	// Should have created (both+splitter) and (both-splitter), removed both.
 	if cd.Concepts.Has("both") {
@@ -542,6 +543,17 @@ func TestCDConceptDomainSplit(t *testing.T) {
 	// Net: removed 1 concept ("both"), added 2 new ones = +1
 	if cd.Concepts.Len() != origLen+1 {
 		t.Errorf("expected %d concepts after split, got %d", origLen+1, cd.Concepts.Len())
+	}
+}
+
+func TestCDConceptDomainSplitReturnsConstructorErrors(t *testing.T) {
+	cd, S := testDomainSetup()
+	X := mkVar("X", S)
+	bad := MustCDConcept("bad", []*goivy.LogicVariable{X}, X)
+	cd.Concepts.SetConcept("bad", bad)
+
+	if err := cd.Split("both", "bad"); err == nil {
+		t.Fatal("expected split to return constructor error for non-boolean split formula")
 	}
 }
 
@@ -782,7 +794,9 @@ func TestCISSplit(t *testing.T) {
 	sess := NewConceptInteractiveSession(
 		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
-	sess.Split("both", "splitter")
+	if err := sess.Split("both", "splitter"); err != nil {
+		t.Fatal(err)
+	}
 	if sess.Domain.Concepts.Has("both") {
 		t.Error("expected 'both' to be removed after split")
 	}

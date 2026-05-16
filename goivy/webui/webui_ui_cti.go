@@ -92,31 +92,33 @@ func (ui *CTIAnalysisGraphUI) CTIMenus() []MenuDef {
 
 // StartCTI initializes the CTI UI, detecting transitive relations
 // (Python: AnalysisGraphUI.start in ivy_ui_cti.py).
-func (ui *CTIAnalysisGraphUI) StartCTI(conjectures []*goivy.Clauses) {
+func (ui *CTIAnalysisGraphUI) StartCTI(conjectures []*goivy.Clauses) error {
 	ui.AnalysisGraphUI.Start()
 	ui.TransitiveRelations = nil
 	ui.TransitiveRelationConcepts = nil
 	ui.RelationsToMinimize = "relations to minimize"
 	ui.Conjectures = conjectures
-	ui.ViewState(0, "", false)
-	ui.AutodetectTransitive()
+	if _, err := ui.ViewState(0, "", false); err != nil {
+		return err
+	}
+	return ui.AutodetectTransitive()
 }
 
 // AutodetectTransitive detects binary transitive relations in the background theory
 // (Python: AnalysisGraphUI.autodetect_transitive).
-func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
+func (ui *CTIAnalysisGraphUI) AutodetectTransitive() error {
 	ui.mu2.Lock()
 	defer ui.mu2.Unlock()
 	ui.TransitiveRelations = nil
 	ui.TransitiveRelationConcepts = nil
 
 	if ui.Mod == nil || ui.Solver == nil {
-		return
+		return nil
 	}
 
 	axioms := ui.Mod.BackgroundTheory(nil)
 	if axioms == nil {
-		return
+		return nil
 	}
 
 	for _, c := range ui.Mod.Sig.AllSymbols() {
@@ -132,9 +134,18 @@ func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
 		}
 
 		domSort := fs.Domain()[0]
-		xv, _ := goivy.NewVariable("X", domSort)
-		yv, _ := goivy.NewVariable("Y", domSort)
-		zv, _ := goivy.NewVariable("Z", domSort)
+		xv, err := goivy.NewVariable("X", domSort)
+		if err != nil {
+			return fmt.Errorf("autodetect transitive %q: %w", c.Name, err)
+		}
+		yv, err := goivy.NewVariable("Y", domSort)
+		if err != nil {
+			return fmt.Errorf("autodetect transitive %q: %w", c.Name, err)
+		}
+		zv, err := goivy.NewVariable("Z", domSort)
+		if err != nil {
+			return fmt.Errorf("autodetect transitive %q: %w", c.Name, err)
+		}
 
 		cxy := goivy.MustApply(c, xv, yv)
 		cyz := goivy.MustApply(c, yv, zv)
@@ -142,17 +153,38 @@ func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
 		cxx := goivy.MustApply(c, xv, xv)
 		cyy := goivy.MustApply(c, yv, yv)
 
-		notCxy, _ := goivy.NewNot(cxy)
-		notCyz, _ := goivy.NewNot(cyz)
-		notCyy, _ := goivy.NewNot(cyy)
+		notCxy, err := goivy.NewNot(cxy)
+		if err != nil {
+			return fmt.Errorf("autodetect transitive %q: %w", c.Name, err)
+		}
+		notCyz, err := goivy.NewNot(cyz)
+		if err != nil {
+			return fmt.Errorf("autodetect transitive %q: %w", c.Name, err)
+		}
+		notCyy, err := goivy.NewNot(cyy)
+		if err != nil {
+			return fmt.Errorf("autodetect transitive %q: %w", c.Name, err)
+		}
 
 		// transitive = ForAll([X,Y,Z], Or(Not(c(X,Y)), Not(c(Y,Z)), c(X,Z)))
-		transOr, _ := goivy.NewOr(notCxy, notCyz, cxz)
-		transitive, _ := goivy.NewForAll([]*goivy.LogicVariable{xv, yv, zv}, transOr)
+		transOr, err := goivy.NewOr(notCxy, notCyz, cxz)
+		if err != nil {
+			return fmt.Errorf("autodetect transitive %q: %w", c.Name, err)
+		}
+		transitive, err := goivy.NewForAll([]*goivy.LogicVariable{xv, yv, zv}, transOr)
+		if err != nil {
+			return fmt.Errorf("autodetect transitive %q: %w", c.Name, err)
+		}
 
 		// defined_symmetry = ForAll([X,Y], Or(c(X,X), Not(c(Y,Y))))
-		symOr, _ := goivy.NewOr(cxx, notCyy)
-		definedSym, _ := goivy.NewForAll([]*goivy.LogicVariable{xv, yv}, symOr)
+		symOr, err := goivy.NewOr(cxx, notCyy)
+		if err != nil {
+			return fmt.Errorf("autodetect transitive %q: %w", c.Name, err)
+		}
+		definedSym, err := goivy.NewForAll([]*goivy.LogicVariable{xv, yv}, symOr)
+		if err != nil {
+			return fmt.Errorf("autodetect transitive %q: %w", c.Name, err)
+		}
 
 		t := goivy.NewClauses([]goivy.Expr{transitive, definedSym}, nil, nil)
 		implied, err := ui.Solver.ClausesImply(axioms, t)
@@ -162,7 +194,10 @@ func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
 
 		ui.TransitiveRelations = append(ui.TransitiveRelations, c.Name)
 
-		concept := FormulaToConceptl(cxy)
+		concept, err := FormulaToConceptlE(cxy)
+		if err != nil {
+			return fmt.Errorf("autodetect transitive %q: %w", c.Name, err)
+		}
 		ui.TransitiveRelationConcepts = append(ui.TransitiveRelationConcepts, concept)
 
 		if ui.CurrentConceptGraph != nil {
@@ -176,6 +211,7 @@ func (ui *CTIAnalysisGraphUI) AutodetectTransitive() {
 	if len(ui.TransitiveRelations) > 0 && ui.CurrentConceptGraph != nil {
 		ui.CurrentConceptGraph.Update()
 	}
+	return nil
 }
 
 // ctiWitness returns a Skolem witness function that creates '@'-prefixed constants.
@@ -497,15 +533,15 @@ func (ui *CTIAnalysisGraphUI) SaveConjectures() string {
 
 // ShowUsedRelations enables display of relations used in given clauses
 // (Python: AnalysisGraphUI.show_used_relations).
-func (ui *CTIAnalysisGraphUI) ShowUsedRelations(clauses *goivy.Clauses, both bool) {
+func (ui *CTIAnalysisGraphUI) ShowUsedRelations(clauses *goivy.Clauses, both bool) error {
 	ui.mu2.Lock()
 	defer ui.mu2.Unlock()
-	ui.showUsedRelationsUnlocked(clauses, both)
+	return ui.showUsedRelationsUnlocked(clauses, both)
 }
 
-func (ui *CTIAnalysisGraphUI) showUsedRelationsUnlocked(clauses *goivy.Clauses, both bool) {
+func (ui *CTIAnalysisGraphUI) showUsedRelationsUnlocked(clauses *goivy.Clauses, both bool) error {
 	if ui.CurrentConceptGraph == nil || clauses == nil {
-		return
+		return nil
 	}
 	ui.CurrentConceptGraph.ClearEdges()
 
@@ -523,7 +559,7 @@ func (ui *CTIAnalysisGraphUI) showUsedRelationsUnlocked(clauses *goivy.Clauses, 
 
 	g := ui.CurrentConceptGraph.G()
 	if g == nil {
-		return
+		return nil
 	}
 
 	// Python: for rel in rels: if any(c in used ...) for c in used_constants(fmla)
@@ -550,10 +586,19 @@ func (ui *CTIAnalysisGraphUI) showUsedRelationsUnlocked(clauses *goivy.Clauses, 
 		if !goivy.IsNumeral(applyExpr.Terms[0]) {
 			continue
 		}
-		xv, _ := goivy.NewVariable("X", applyExpr.Terms[1].NodeSort())
-		yv, _ := goivy.NewVariable("Y", applyExpr.Terms[2].NodeSort())
+		xv, err := goivy.NewVariable("X", applyExpr.Terms[1].NodeSort())
+		if err != nil {
+			return fmt.Errorf("show used relations: %w", err)
+		}
+		yv, err := goivy.NewVariable("Y", applyExpr.Terms[2].NodeSort())
+		if err != nil {
+			return fmt.Errorf("show used relations: %w", err)
+		}
 		newFmla := goivy.MustApply(applyExpr.Func, applyExpr.Terms[0], xv, yv)
-		newConcept := FormulaToConceptl(newFmla)
+		newConcept, err := FormulaToConceptlE(newFmla)
+		if err != nil {
+			return err
+		}
 		simpleConcept := &Concept{Name: newConcept.Name, Arity: newConcept.Arity()}
 		g.NewRelation(simpleConcept)
 		needUpdateRelations = true
@@ -564,7 +609,7 @@ func (ui *CTIAnalysisGraphUI) showUsedRelationsUnlocked(clauses *goivy.Clauses, 
 	}
 	_ = needUpdateRelations
 
-	ui.CurrentConceptGraph.Update()
+	return ui.CurrentConceptGraph.Update()
 }
 
 // hasUsedNonSkolem checks if a formula string contains any used non-Skolem constants.
@@ -634,10 +679,10 @@ func NewCTIConceptGraphWidget(gs *GraphStack, parent *CTIAnalysisGraphUI) *CTICo
 
 // GatherFacts gathers facts from selected nodes and visible edges
 // (Python: ConceptGraphUI.gather_facts).
-func (w *CTIConceptGraphWidget) GatherFacts() {
+func (w *CTIConceptGraphWidget) GatherFacts() error {
 	g := w.G()
 	if g == nil || w.CISess == nil {
-		return
+		return nil
 	}
 
 	selectedNodes := make([]string, 0)
@@ -665,7 +710,11 @@ func (w *CTIConceptGraphWidget) GatherFacts() {
 
 	// Python: for node in selected_nodes: facts += [(f, elems) for f in g.concept_session.get_node_facts(node)]
 	for _, node := range selectedNodes {
-		for _, f := range w.CISess.GetNodeFacts(node) {
+		nodeFacts, err := w.CISess.GetNodeFacts(node)
+		if err != nil {
+			return err
+		}
+		for _, f := range nodeFacts {
 			facts = append(facts, factEntry{f})
 		}
 	}
@@ -712,7 +761,11 @@ func (w *CTIConceptGraphWidget) GatherFacts() {
 				continue
 			}
 			polTrue := true
-			for _, f := range w.CISess.GetEdgeFacts(e.edge, e.source, e.target, &polTrue) {
+			edgeFacts, err := w.CISess.GetEdgeFacts(e.edge, e.source, e.target, &polTrue)
+			if err != nil {
+				return err
+			}
+			for _, f := range edgeFacts {
 				facts = append(facts, factEntry{f})
 			}
 		}
@@ -720,7 +773,11 @@ func (w *CTIConceptGraphWidget) GatherFacts() {
 		// Python: if g.edge_display_checkboxes[edge]['none_to_none'].value or edge == '=':
 		if checks.EdgeVisible(e.edge, EdgeDisplayNoneToNone) || e.edge == "=" {
 			polFalse := false
-			for _, f := range w.CISess.GetEdgeFacts(e.edge, e.source, e.target, &polFalse) {
+			edgeFacts, err := w.CISess.GetEdgeFacts(e.edge, e.source, e.target, &polFalse)
+			if err != nil {
+				return err
+			}
+			for _, f := range edgeFacts {
 				facts = append(facts, factEntry{f})
 			}
 		}
@@ -742,9 +799,14 @@ func (w *CTIConceptGraphWidget) GatherFacts() {
 		w.ActiveFactExprs[i] = fe.formula
 		factStrs[i] = fmt.Sprintf("%v", fe.formula)
 	}
-	g.SetFacts(factStrs)
-	w.Update()
+	if err := g.SetFacts(factStrs); err != nil {
+		return err
+	}
+	if err := w.Update(); err != nil {
+		return err
+	}
 	w.HighlightSelectedFacts()
+	return nil
 }
 
 // shouldFilterFact returns true for facts that should be filtered out.
@@ -764,9 +826,12 @@ func shouldFilterFact(f goivy.Expr) bool {
 // Strengthen adds a new conjecture from selected facts
 // (Python: ConceptGraphUI.strengthen).
 func (w *CTIConceptGraphWidget) Strengthen() (*goivy.Clauses, error) {
-	conj := w.GetSelectedConjecture()
+	conj, err := w.GetSelectedConjecture()
+	if err != nil {
+		return nil, err
+	}
 	if conj == nil {
-		return nil, fmt.Errorf("no facts selected")
+		return nil, fmt.Errorf("no conjecture selected")
 	}
 	if w.ParentCTI != nil {
 		w.ParentCTI.HaveCTI = false
@@ -777,14 +842,14 @@ func (w *CTIConceptGraphWidget) Strengthen() (*goivy.Clauses, error) {
 
 // GetSelectedConjecture returns a positive universal conjecture from selected facts
 // (Python: ConceptGraphUI.get_selected_conjecture).
-func (w *CTIConceptGraphWidget) GetSelectedConjecture() *goivy.Clauses {
+func (w *CTIConceptGraphWidget) GetSelectedConjecture() (*goivy.Clauses, error) {
 	facts := w.ActiveFactExprs
 
 	// Python: assert len(free_variables(*facts)) == 0
 	for _, f := range facts {
 		fv := goivy.FreeVariables(f)
 		if fv != nil && fv.Len() > 0 {
-			return nil
+			return nil, fmt.Errorf("selected fact has free variables: %v", f)
 		}
 	}
 
@@ -819,7 +884,10 @@ func (w *CTIConceptGraphWidget) GetSelectedConjecture() *goivy.Clauses {
 		if goivy.IsNumeralName(c.Name) && w.ParentCTI != nil && w.ParentCTI.Mod != nil {
 			if goivy.IsUninterpretedSort(w.ParentCTI.Mod.Sig, c.CSort) {
 				varName := rn.Generate(fmt.Sprintf("%v", c.CSort))
-				v, _ := goivy.NewVariable(varName, c.CSort)
+				v, err := goivy.NewVariable(varName, c.CSort)
+				if err != nil {
+					return nil, fmt.Errorf("selected conjecture: %w", err)
+				}
 				subs[goivy.Key(c)] = v
 			}
 		}
@@ -830,7 +898,7 @@ func (w *CTIConceptGraphWidget) GetSelectedConjecture() *goivy.Clauses {
 	for _, f := range facts {
 		substituted, err := goivy.Substitute(f, subs)
 		if err != nil {
-			substituted = f
+			return nil, fmt.Errorf("selected conjecture: %w", err)
 		}
 		negated := goivy.Negate(substituted)
 		literals = append(literals, negated)
@@ -841,7 +909,11 @@ func (w *CTIConceptGraphWidget) GetSelectedConjecture() *goivy.Clauses {
 	if len(literals) == 1 {
 		orExpr = literals[0]
 	} else {
-		orExpr, _ = goivy.NewOr(literals...)
+		var err error
+		orExpr, err = goivy.NewOr(literals...)
+		if err != nil {
+			return nil, fmt.Errorf("selected conjecture: %w", err)
+		}
 	}
 
 	result := goivy.NewClauses([]goivy.Expr{orExpr}, nil, nil)
@@ -854,13 +926,19 @@ func (w *CTIConceptGraphWidget) GetSelectedConjecture() *goivy.Clauses {
 			for _, lit := range orNode.Terms {
 				innerLits = append(innerLits, goivy.Negate(lit))
 			}
-			andExpr, _ := goivy.NewAnd(innerLits...)
-			notExpr, _ := goivy.NewNot(andExpr)
+			andExpr, err := goivy.NewAnd(innerLits...)
+			if err != nil {
+				return nil, fmt.Errorf("selected conjecture: %w", err)
+			}
+			notExpr, err := goivy.NewNot(andExpr)
+			if err != nil {
+				return nil, fmt.Errorf("selected conjecture: %w", err)
+			}
 			result = goivy.NewClauses([]goivy.Expr{notExpr}, nil, nil)
 		}
 	}
 
-	return result
+	return result, nil
 }
 
 // MinimizeConjecture minimizes the active conjecture using unsat cores
@@ -871,7 +949,10 @@ func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*goivy.Clauses, e
 	}
 
 	// Python: if self.bmc_conjecture(bound=bound, tell_unsat=False): return
-	conj := w.GetSelectedConjecture()
+	conj, err := w.GetSelectedConjecture()
+	if err != nil {
+		return nil, err
+	}
 	if conj != nil {
 		found, _ := w.ParentCTI.BoundedCheck(bound, conj)
 		if found {
@@ -944,12 +1025,13 @@ func (w *CTIConceptGraphWidget) MinimizeConjecture(bound int) (*goivy.Clauses, e
 
 	g := w.G()
 	if g != nil {
-		g.SetFacts(filteredStrs)
+		if err := g.SetFacts(filteredStrs); err != nil {
+			return nil, err
+		}
 	}
 	w.HighlightSelectedFacts()
 
-	minimized := w.GetSelectedConjecture()
-	return minimized, nil
+	return w.GetSelectedConjecture()
 }
 
 // checkInductionHelper is the shared implementation for IsSufficient and IsInductive.
@@ -1005,7 +1087,10 @@ func (w *CTIConceptGraphWidget) checkInductionHelper(conj, targetConj *goivy.Cla
 // IsSufficient checks if the active conjecture implies the current CTI conjecture
 // (Python: ConceptGraphUI.is_sufficient).
 func (w *CTIConceptGraphWidget) IsSufficient() (bool, string) {
-	conj := w.GetSelectedConjecture()
+	conj, err := w.GetSelectedConjecture()
+	if err != nil {
+		return false, err.Error()
+	}
 	if conj == nil {
 		return false, "no conjecture selected"
 	}
@@ -1018,7 +1103,10 @@ func (w *CTIConceptGraphWidget) IsSufficient() (bool, string) {
 // IsInductive checks if the active conjecture is relatively inductive
 // (Python: ConceptGraphUI.is_inductive).
 func (w *CTIConceptGraphWidget) IsInductive() (bool, string) {
-	conj := w.GetSelectedConjecture()
+	conj, err := w.GetSelectedConjecture()
+	if err != nil {
+		return false, err.Error()
+	}
 	if conj == nil {
 		return false, "no conjecture selected"
 	}
@@ -1026,9 +1114,9 @@ func (w *CTIConceptGraphWidget) IsInductive() (bool, string) {
 	return w.checkInductionHelper(conj, conj)
 }
 
-// FormulaToConceptl creates a CDConcept from a formula.
+// FormulaToConceptlE creates a CDConcept from a formula.
 // (Python: concept_from_formula in ivy_graph.py:23-28)
-func FormulaToConceptl(fmla goivy.Expr) *CDConcept {
+func FormulaToConceptlE(fmla goivy.Expr) (*CDConcept, error) {
 	vs := goivy.UsedVariablesAsts([]goivy.Expr{fmla})
 	sort.Slice(vs, func(i, j int) bool {
 		return fmt.Sprintf("%v", vs[i]) < fmt.Sprintf("%v", vs[j])
@@ -1039,7 +1127,19 @@ func FormulaToConceptl(fmla goivy.Expr) *CDConcept {
 		parts = append(parts, fmt.Sprintf("%v:%v", v, v.VSort))
 	}
 	name := strings.Join(parts, ",") + "." + fmt.Sprintf("%v", fmla)
-	c, _ := NewCDConcept(name, vs, fmla)
+	c, err := NewCDConcept(name, vs, fmla)
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
+}
+
+// FormulaToConceptl creates a CDConcept from a formula.
+func FormulaToConceptl(fmla goivy.Expr) *CDConcept {
+	c, err := FormulaToConceptlE(fmla)
+	if err != nil {
+		panic(err)
+	}
 	return c
 }
 

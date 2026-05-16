@@ -57,7 +57,9 @@ func TestCTIConjecturesTypeClauses(t *testing.T) {
 
 func TestAutodetectTransitiveNilModule(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
-	ui.AutodetectTransitive()
+	if err := ui.AutodetectTransitive(); err != nil {
+		t.Fatal(err)
+	}
 	if len(ui.TransitiveRelations) != 0 {
 		t.Errorf("expected 0 transitive relations with nil module, got %d", len(ui.TransitiveRelations))
 	}
@@ -66,7 +68,9 @@ func TestAutodetectTransitiveNilModule(t *testing.T) {
 func TestAutodetectTransitiveEmptySig(t *testing.T) {
 	mod := goivy.New()
 	ui := NewCTIAnalysisGraphUI(mod)
-	ui.AutodetectTransitive()
+	if err := ui.AutodetectTransitive(); err != nil {
+		t.Fatal(err)
+	}
 	if len(ui.TransitiveRelations) != 0 {
 		t.Errorf("expected 0 transitive relations with empty sig, got %d", len(ui.TransitiveRelations))
 	}
@@ -354,12 +358,16 @@ func TestSaveConjecturesMultiple(t *testing.T) {
 func TestShowUsedRelationsNilGraph(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
 	ui.CurrentConceptGraph = nil
-	ui.ShowUsedRelations(nil, false)
+	if err := ui.ShowUsedRelations(nil, false); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestShowUsedRelationsNilClauses(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
-	ui.ShowUsedRelations(nil, false)
+	if err := ui.ShowUsedRelations(nil, false); err != nil {
+		t.Fatal(err)
+	}
 }
 
 // --- GatherFacts tests ---
@@ -369,7 +377,9 @@ func TestGatherFactsNilSession(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
 	w := NewCTIConceptGraphWidget(gs, ui)
 	w.CISess = nil
-	w.GatherFacts()
+	if err := w.GatherFacts(); err != nil {
+		t.Fatal(err)
+	}
 	if len(w.ActiveFactExprs) != 0 {
 		t.Errorf("expected 0 facts with nil session, got %d", len(w.ActiveFactExprs))
 	}
@@ -382,7 +392,10 @@ func TestGetSelectedConjectureEmpty(t *testing.T) {
 	ui := NewCTIAnalysisGraphUI(nil)
 	w := NewCTIConceptGraphWidget(gs, ui)
 	w.ActiveFactExprs = nil
-	conj := w.GetSelectedConjecture()
+	conj, err := w.GetSelectedConjecture()
+	if err != nil {
+		t.Fatal(err)
+	}
 	if conj == nil {
 		t.Fatal("expected empty selection to match Python's (~true) conjecture")
 	}
@@ -409,7 +422,10 @@ func TestGetSelectedConjectureBasic(t *testing.T) {
 	eq, _ := goivy.NewEq(a, b)
 	w.ActiveFactExprs = []goivy.Expr{eq}
 
-	conj := w.GetSelectedConjecture()
+	conj, err := w.GetSelectedConjecture()
+	if err != nil {
+		t.Fatal(err)
+	}
 	if conj == nil {
 		t.Fatal("expected non-nil conjecture")
 	}
@@ -429,9 +445,9 @@ func TestGetSelectedConjectureWithFreeVarsReturnsNil(t *testing.T) {
 	eq, _ := goivy.NewEq(x, a)
 	w.ActiveFactExprs = []goivy.Expr{eq}
 
-	conj := w.GetSelectedConjecture()
-	if conj != nil {
-		t.Error("expected nil conjecture when facts have free variables")
+	conj, err := w.GetSelectedConjecture()
+	if err == nil {
+		t.Fatalf("expected error when facts have free variables, got conjecture %v", conj)
 	}
 }
 

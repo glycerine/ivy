@@ -427,10 +427,11 @@ func (c *ConceptSessionControls) UpdateViewControls() {
 //
 //	def undo(self, button=None):
 //	    self.concept_session.undo()
-func (c *ConceptSessionControls) Undo(button *ButtonWidget) {
+func (c *ConceptSessionControls) Undo(button *ButtonWidget) error {
 	if c.ConceptSession != nil {
-		_ = c.ConceptSession.Undo()
+		return c.ConceptSession.Undo()
 	}
+	return nil
 }
 
 // ResetDomain mirrors Python lines 305-308.
@@ -655,7 +656,7 @@ func (c *ConceptStateViewWidget) Render() {
 //	def gather_facts(self, button=None):
 //	    facts = self.get_active_facts()
 //	    ...
-func (c *ConceptStateViewWidget) GatherFacts(button *ButtonWidget) []goivy.Expr {
+func (c *ConceptStateViewWidget) GatherFacts(button *ButtonWidget) ([]goivy.Expr, error) {
 	return c.GetActiveFacts()
 }
 
@@ -669,15 +670,19 @@ func (c *ConceptStateViewWidget) GatherFacts(button *ButtonWidget) []goivy.Expr 
 //
 // Returns the list of formula expressions that the user has selected
 // (via checkboxes) as active in the concept graph.
-func (c *ConceptStateViewWidget) GetActiveFacts() []goivy.Expr {
+func (c *ConceptStateViewWidget) GetActiveFacts() ([]goivy.Expr, error) {
 	if c.ConceptSession == nil {
-		return nil
+		return nil, nil
 	}
 	var out []goivy.Expr
 	for _, node := range c.ConceptSession.NodeNames() {
-		out = append(out, c.ConceptSession.GetNodeFacts(node)...)
+		facts, err := c.ConceptSession.GetNodeFacts(node)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, facts...)
 	}
-	return out
+	return out, nil
 }
 
 // -----------------------------------------------------------------------
@@ -804,7 +809,7 @@ func (t *TransitionViewWidget) Render() {
 }
 
 // GatherFacts mirrors Python lines 699-748 (TransitionViewWidget.gather_facts).
-func (t *TransitionViewWidget) GatherFacts(button *ButtonWidget) []goivy.Expr {
+func (t *TransitionViewWidget) GatherFacts(button *ButtonWidget) ([]goivy.Expr, error) {
 	return t.GetActiveFacts()
 }
 
@@ -824,15 +829,19 @@ func (t *TransitionViewWidget) FactToLabel(fact goivy.Expr) string {
 }
 
 // GetActiveFacts mirrors Python lines 757-768.
-func (t *TransitionViewWidget) GetActiveFacts() []goivy.Expr {
+func (t *TransitionViewWidget) GetActiveFacts() ([]goivy.Expr, error) {
 	if t.ConceptSession == nil {
-		return nil
+		return nil, nil
 	}
 	var out []goivy.Expr
 	for _, node := range t.ConceptSession.NodeNames() {
-		out = append(out, t.ConceptSession.GetNodeFacts(node)...)
+		facts, err := t.ConceptSession.GetNodeFacts(node)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, facts...)
 	}
-	return out
+	return out, nil
 }
 
 // NewAg mirrors Python lines 769-775.
@@ -885,44 +894,60 @@ func (t *TransitionViewWidget) CheckInductiveness(button *ButtonWidget) bool {
 //	    facts = self.get_active_facts()
 //	    ...
 //	    return conjecture
-func (t *TransitionViewWidget) GetSelectedConjecture() goivy.Expr {
-	facts := t.GetActiveFacts()
+func (t *TransitionViewWidget) GetSelectedConjecture() (goivy.Expr, error) {
+	facts, err := t.GetActiveFacts()
+	if err != nil {
+		return nil, err
+	}
 	if len(facts) == 0 {
-		return goivy.True
+		return goivy.True, nil
 	}
 	if len(facts) == 1 {
-		return facts[0]
+		return facts[0], nil
 	}
-	and, _ := goivy.NewAnd(facts...)
-	return and
+	and, err := goivy.NewAnd(facts...)
+	if err != nil {
+		return nil, err
+	}
+	return and, nil
 }
 
 // BmcConjecture mirrors Python lines 912-970 (TransitionViewWidget.bmc_conjecture).
-func (t *TransitionViewWidget) BmcConjecture(button *ButtonWidget, conjecture goivy.Expr, verbose bool, addToCrg bool) bool {
+func (t *TransitionViewWidget) BmcConjecture(button *ButtonWidget, conjecture goivy.Expr, verbose bool, addToCrg bool) (bool, error) {
 	if conjecture == nil {
-		conjecture = t.GetSelectedConjecture()
+		var err error
+		conjecture, err = t.GetSelectedConjecture()
+		if err != nil {
+			return false, err
+		}
 	}
 	ag := t.NewAg()
 	if ag == nil || len(ag.States) == 0 {
-		return false
+		return false, nil
 	}
-	neg := &goivy.LogicNot{Body: conjecture}
+	neg, err := goivy.NewNot(conjecture)
+	if err != nil {
+		return false, err
+	}
 	res := ag.BMC(ag.States[0], neg, nil, nil)
 	if res != nil {
 		t.ShowResult("Counterexample found.")
-		return true
+		return true, nil
 	}
 	t.ShowResult("No counterexample within bound.")
-	return false
+	return false, nil
 }
 
 // MinimizeConjecture mirrors Python lines 971-1013.
-func (t *TransitionViewWidget) MinimizeConjecture(button *ButtonWidget) goivy.Expr {
-	conj := t.GetSelectedConjecture()
+func (t *TransitionViewWidget) MinimizeConjecture(button *ButtonWidget) (goivy.Expr, error) {
+	conj, err := t.GetSelectedConjecture()
+	if err != nil {
+		return nil, err
+	}
 	// The full Python implementation greedily drops literals while
 	// maintaining inductiveness; the structural port preserves this
 	// outer call site.
-	return conj
+	return conj, nil
 }
 
 // HighlighSelectedFacts mirrors Python lines 1014-1076. The misspelling
@@ -972,14 +997,20 @@ func (t *TransitionViewWidget) IsSufficient(button *ButtonWidget) bool {
 //	def is_inductive(self, button=None):
 //	    """Run inductiveness check on a single conjecture (relative)."""
 //	    ...
-func (t *TransitionViewWidget) IsInductive(button *ButtonWidget) bool {
-	conj := t.GetSelectedConjecture()
+func (t *TransitionViewWidget) IsInductive(button *ButtonWidget) (bool, error) {
+	conj, err := t.GetSelectedConjecture()
+	if err != nil {
+		return false, err
+	}
 	ag := t.NewAg()
 	if ag == nil || len(ag.States) == 0 {
-		return false
+		return false, nil
 	}
-	neg := &goivy.LogicNot{Body: conj}
-	return ag.BMC(ag.States[0], neg, nil, nil) == nil
+	neg, err := goivy.NewNot(conj)
+	if err != nil {
+		return false, err
+	}
+	return ag.BMC(ag.States[0], neg, nil, nil) == nil, nil
 }
 
 // Strengthen mirrors Python lines 1198-1203.
@@ -988,10 +1019,14 @@ func (t *TransitionViewWidget) IsInductive(button *ButtonWidget) bool {
 //	    conj = self.get_selected_conjecture()
 //	    self.conjectures.append(conj)
 //	    self.show_result(...)
-func (t *TransitionViewWidget) Strengthen(button *ButtonWidget) {
-	conj := t.GetSelectedConjecture()
+func (t *TransitionViewWidget) Strengthen(button *ButtonWidget) error {
+	conj, err := t.GetSelectedConjecture()
+	if err != nil {
+		return err
+	}
 	t.Conjectures = append(t.Conjectures, conj)
 	t.ShowResult(fmt.Sprintf("Added the following conjecture:\n%v", conj))
+	return nil
 }
 
 // Weaken mirrors Python lines 1205-1221 (TransitionViewWidget.weaken).
@@ -1260,7 +1295,11 @@ func (a *AnalysisSessionWidget) ConceptNewGoal(button *ButtonWidget) {
 	if a.Concept == nil || a.TC == nil {
 		return
 	}
-	facts := a.Concept.GetActiveFacts()
+	facts, err := a.Concept.GetActiveFacts()
+	if err != nil {
+		a.Concept.Result.Text = fmt.Sprintf("error: %v", err)
+		return
+	}
 	if a.Concept.ArgNode == nil {
 		return
 	}
@@ -1278,7 +1317,11 @@ func (a *AnalysisSessionWidget) ConceptCheck(button *ButtonWidget) {
 	if a.Concept == nil || a.TC == nil {
 		return
 	}
-	facts := a.Concept.GetActiveFacts()
+	facts, err := a.Concept.GetActiveFacts()
+	if err != nil {
+		a.Concept.Result.Text = fmt.Sprintf("error: %v", err)
+		return
+	}
 	clauses := goivy.NewClauses(facts, nil, nil)
 	slv := goivy.NewSolver(nil, nil)
 	sat, err := slv.ClausesSat(clauses)
@@ -1302,7 +1345,11 @@ func (a *AnalysisSessionWidget) ConceptMinUnsatCore(button *ButtonWidget) {
 	if a.Concept == nil {
 		return
 	}
-	facts := a.Concept.GetActiveFacts()
+	facts, err := a.Concept.GetActiveFacts()
+	if err != nil {
+		a.Concept.Result.Text = fmt.Sprintf("error: %v", err)
+		return
+	}
 	if len(facts) == 0 {
 		a.Concept.Result.Text = "no facts"
 		return
@@ -1387,7 +1434,11 @@ func (a *AnalysisSessionWidget) ConceptRefine(button *ButtonWidget) {
 		return
 	}
 	node := a.TC.AG.States[id]
-	facts := a.Concept.GetActiveFacts()
+	facts, err := a.Concept.GetActiveFacts()
+	if err != nil {
+		a.Concept.Result.Text = fmt.Sprintf("error: %v", err)
+		return
+	}
 	goal := goivy.GoalAtArgNode(goivy.
 		NewClauses(facts, nil, nil).ToFormula(), node)
 

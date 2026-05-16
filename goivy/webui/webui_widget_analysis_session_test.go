@@ -159,7 +159,9 @@ func TestStrengthenAddsConjecture(t *testing.T) {
 	// With no facts, Strengthen should add lg.True (the default
 	// returned by GetSelectedConjecture).
 	before := len(tw.Conjectures)
-	tw.Strengthen(nil)
+	if err := tw.Strengthen(nil); err != nil {
+		t.Fatal(err)
+	}
 	if got := len(tw.Conjectures); got != before+1 {
 		t.Errorf("len(Conjectures) = %d, want %d", got, before+1)
 	}

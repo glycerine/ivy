@@ -42,9 +42,9 @@ type CISWidget interface {
 	Projection() func(string, string) bool
 }
 
-// NewConceptInteractiveSession creates a new interactive session.
+// NewConceptInteractiveSessionE creates a new interactive session.
 // If recompute is true, alpha abstraction is run immediately.
-func NewConceptInteractiveSession(
+func NewConceptInteractiveSessionE(
 	domain *CDConceptDomain,
 	state goivy.Expr,
 	axioms goivy.Expr,
@@ -54,7 +54,7 @@ func NewConceptInteractiveSession(
 	analysisSession map[string]*CDConceptDomain,
 	cache map[string]bool,
 	recompute bool,
-) *ConceptInteractiveSession {
+) (*ConceptInteractiveSession, error) {
 	if goalConstraints == nil {
 		goalConstraints = []goivy.Expr{}
 	}
@@ -80,8 +80,32 @@ func NewConceptInteractiveSession(
 	}
 	if recompute {
 		if err := s.Recompute(nil); err != nil {
-			panic(err)
+			return nil, err
 		}
+	}
+	return s, nil
+}
+
+// NewConceptInteractiveSession creates a new interactive session.
+// Production code should use NewConceptInteractiveSessionE so construction
+// errors propagate to the API boundary instead of panicking.
+func NewConceptInteractiveSession(
+	domain *CDConceptDomain,
+	state goivy.Expr,
+	axioms goivy.Expr,
+	goalConstraints []goivy.Expr,
+	supposeConstraints []goivy.Expr,
+	widget CISWidget,
+	analysisSession map[string]*CDConceptDomain,
+	cache map[string]bool,
+	recompute bool,
+) *ConceptInteractiveSession {
+	s, err := NewConceptInteractiveSessionE(
+		domain, state, axioms, goalConstraints, supposeConstraints,
+		widget, analysisSession, cache, recompute,
+	)
+	if err != nil {
+		panic(err)
 	}
 	return s
 }
@@ -89,6 +113,16 @@ func NewConceptInteractiveSession(
 // Clone creates a copy of the session. If recompute is true, recomputes
 // alpha abstraction on the copy.
 func (s *ConceptInteractiveSession) Clone(recompute bool) *ConceptInteractiveSession {
+	result, err := s.CloneE(recompute)
+	if err != nil {
+		panic(err)
+	}
+	return result
+}
+
+// CloneE creates a copy of the session and returns recompute errors instead
+// of panicking.
+func (s *ConceptInteractiveSession) CloneE(recompute bool) (*ConceptInteractiveSession, error) {
 	var cacheCopy map[string]bool
 	if s.Cache != nil {
 		cacheCopy = make(map[string]bool, len(s.Cache))
@@ -96,7 +130,7 @@ func (s *ConceptInteractiveSession) Clone(recompute bool) *ConceptInteractiveSes
 			cacheCopy[k] = v
 		}
 	}
-	result := NewConceptInteractiveSession(
+	result, err := NewConceptInteractiveSessionE(
 		s.Domain.Copy(),
 		s.State,
 		s.Axioms,
@@ -107,6 +141,9 @@ func (s *ConceptInteractiveSession) Clone(recompute bool) *ConceptInteractiveSes
 		cacheCopy,
 		recompute,
 	)
+	if err != nil {
+		return nil, err
+	}
 	for _, u := range s.UndoStack {
 		result.UndoStack = append(result.UndoStack, &cisUndoEntry{
 			Domain:             u.Domain.Copy(),
@@ -119,12 +156,12 @@ func (s *ConceptInteractiveSession) Clone(recompute bool) *ConceptInteractiveSes
 			SupposeConstraints: append([]goivy.Expr{}, u.SupposeConstraints...),
 		})
 	}
-	return result
+	return result, nil
 }
 
-// ToFormula combines state, axioms, goal constraints, and suppose constraints
+// ToFormulaE combines state, axioms, goal constraints, and suppose constraints
 // into a single formula.
-func (s *ConceptInteractiveSession) ToFormula() goivy.Expr {
+func (s *ConceptInteractiveSession) ToFormulaE() (goivy.Expr, error) {
 	terms := make([]goivy.Expr, 0, 2+len(s.GoalConstraints)+len(s.SupposeConstraints))
 	if s.State != nil {
 		terms = append(terms, s.State)
@@ -135,18 +172,35 @@ func (s *ConceptInteractiveSession) ToFormula() goivy.Expr {
 	terms = append(terms, s.GoalConstraints...)
 	terms = append(terms, s.SupposeConstraints...)
 	if len(terms) == 0 {
-		return goivy.True
+		return goivy.True, nil
 	}
-	result, _ := goivy.NewAnd(terms...)
+	result, err := goivy.NewAnd(terms...)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+// ToFormula combines state, axioms, goal constraints, and suppose constraints
+// into a single formula. Production paths use ToFormulaE/Recompute so errors
+// are returned to callers.
+func (s *ConceptInteractiveSession) ToFormula() goivy.Expr {
+	result, err := s.ToFormulaE()
+	if err != nil {
+		panic(err)
+	}
 	return result
 }
 
-// FreshConstName returns a fresh constant name not used in any formula
+// FreshConstNameE returns a fresh constant name not used in any formula
 // of the session.
-func (s *ConceptInteractiveSession) FreshConstName(extra map[string]bool) string {
+func (s *ConceptInteractiveSession) FreshConstNameE(extra map[string]bool) (string, error) {
 	used := make(map[string]bool)
 	// Collect from formula
-	formula := s.ToFormula()
+	formula, err := s.ToFormulaE()
+	if err != nil {
+		return "", err
+	}
 	if formula != nil {
 		for _, c := range goivy.UsedSymbolsAst(formula).All() {
 			used[goivy.ExprName(c)] = true
@@ -166,9 +220,19 @@ func (s *ConceptInteractiveSession) FreshConstName(extra map[string]bool) string
 	for i := 0; ; i++ {
 		name := fmt.Sprintf("__c%d", i)
 		if !used[name] {
-			return name
+			return name, nil
 		}
 	}
+}
+
+// FreshConstName returns a fresh constant name not used in any formula
+// of the session. Production paths use FreshConstNameE.
+func (s *ConceptInteractiveSession) FreshConstName(extra map[string]bool) string {
+	name, err := s.FreshConstNameE(extra)
+	if err != nil {
+		panic(err)
+	}
+	return name
 }
 
 // GetProjection returns the projection function from the widget, or nil.
@@ -185,7 +249,11 @@ func (s *ConceptInteractiveSession) Recompute(projection func(string, string) bo
 	if projection == nil {
 		projection = func(string, string) bool { return true }
 	}
-	abstractValue, err := WebUIAlpha(s.Domain, s.ToFormula(), s.Cache, projection)
+	formula, err := s.ToFormulaE()
+	if err != nil {
+		return fmt.Errorf("concept graph recompute failed: %w", err)
+	}
+	abstractValue, err := WebUIAlpha(s.Domain, formula, s.Cache, projection)
 	if err != nil {
 		return fmt.Errorf("concept graph recompute failed: %w", err)
 	}
@@ -252,7 +320,9 @@ func (s *ConceptInteractiveSession) Redo() error {
 // Split splits a concept by another concept, creating +/- variants.
 func (s *ConceptInteractiveSession) Split(concept, splitBy string) error {
 	s.Push()
-	s.Domain.Split(concept, splitBy)
+	if err := s.Domain.Split(concept, splitBy); err != nil {
+		return err
+	}
 	return s.Recompute(nil)
 }
 
@@ -267,43 +337,52 @@ func (s *ConceptInteractiveSession) RemoveConcepts(concepts ...string) error {
 }
 
 // supposeEmpty adds a constraint that the concept is empty (internal, no push).
-func (s *ConceptInteractiveSession) supposeEmpty(concept string) {
+func (s *ConceptInteractiveSession) supposeEmpty(concept string) error {
 	c := s.Domain.Concepts.GetConcept(concept)
 	if c == nil {
-		return
+		return fmt.Errorf("concept %q not found", concept)
 	}
 	fv := goivy.FreeVariablesList(c.Formula)
-	notF, _ := goivy.NewNot(c.Formula)
+	notF, err := goivy.NewNot(c.Formula)
+	if err != nil {
+		return fmt.Errorf("empty concept %q: %w", concept, err)
+	}
 	if len(fv) > 0 {
-		forall, _ := goivy.NewForAll(fv, notF)
+		forall, err := goivy.NewForAll(fv, notF)
+		if err != nil {
+			return fmt.Errorf("empty concept %q: %w", concept, err)
+		}
 		s.SupposeConstraints = append(s.SupposeConstraints, forall)
 	} else {
 		s.SupposeConstraints = append(s.SupposeConstraints, notF)
 	}
+	return nil
 }
 
 // SupposeEmpty marks a concept as empty with undo support.
 func (s *ConceptInteractiveSession) SupposeEmpty(concept string) error {
 	s.Push()
-	s.supposeEmpty(concept)
+	if err := s.supposeEmpty(concept); err != nil {
+		return err
+	}
 	return s.Recompute(nil)
 }
 
 // GetWitnesses returns constants that are witnesses for a unary concept.
 // A witness c satisfies: concept(x) implies x=c.
-func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*goivy.Const {
+func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) ([]*goivy.Const, error) {
 	concept := s.Domain.Concepts.GetConcept(conceptName)
 	if concept == nil || concept.Arity() != 1 {
-		return nil
+		return nil, nil
 	}
 	cSort := concept.Variables[0].VSort
 	if _, ok := cSort.(*goivy.TopSort); ok {
-		return nil
+		return nil, nil
 	}
 
 	// Special case for unit sort.
 	if cSort.String() == "unit" {
-		return []*goivy.Const{goivy.NewConst("0", cSort)}
+		return []*goivy.Const{goivy.NewConst("0", cSort)}, nil
 	}
 
 	var constants []*goivy.Const
@@ -312,11 +391,14 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*goivy.Co
 			constants = append(constants, c)
 		}
 	}
-	freshName := s.FreshConstName(nil)
+	freshName, err := s.FreshConstNameE(nil)
+	if err != nil {
+		return nil, fmt.Errorf("witnesses for %q: %w", conceptName, err)
+	}
 	x := goivy.NewConst(freshName, cSort)
 	f, err := concept.Call(x)
 	if err != nil {
-		return nil
+		return nil, fmt.Errorf("witnesses for %q: %w", conceptName, err)
 	}
 
 	var witnesses []*goivy.Const
@@ -325,17 +407,20 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*goivy.Co
 			// Check if f implies x=c using Z3.
 			eq, eqErr := goivy.NewEq(x, c)
 			if eqErr != nil {
-				continue
+				return nil, fmt.Errorf("witnesses for %q: %w", conceptName, eqErr)
 			}
 			// Use Z3 implies check.
 			implies, implErr := z3Implies(f, eq)
-			if implErr != nil || !implies {
+			if implErr != nil {
+				return nil, fmt.Errorf("witnesses for %q: %w", conceptName, implErr)
+			}
+			if !implies {
 				continue
 			}
 			witnesses = append(witnesses, c)
 		}
 	}
-	return witnesses
+	return witnesses, nil
 }
 
 // z3Implies checks if fmla1 implies fmla2 using the solver.
@@ -365,88 +450,112 @@ func (s *ConceptInteractiveSession) Suppose(fmla goivy.Expr) {
 
 // materializeNode creates a concrete witness for a concept (internal).
 // Returns the witness constant.
-func (s *ConceptInteractiveSession) materializeNode(conceptName string) *goivy.Const {
+func (s *ConceptInteractiveSession) materializeNode(conceptName string) (*goivy.Const, error) {
 	concept := s.Domain.Concepts.GetConcept(conceptName)
 	if concept == nil || concept.Arity() != 1 {
-		return nil
+		return nil, fmt.Errorf("materialize node %q: concept not found or not unary", conceptName)
 	}
 	cSort := concept.Variables[0].VSort
 	if _, ok := cSort.(*goivy.TopSort); ok {
-		return nil
+		return nil, fmt.Errorf("materialize node %q: unresolved top sort", conceptName)
 	}
 
-	witnesses := s.GetWitnesses(conceptName)
+	witnesses, err := s.GetWitnesses(conceptName)
+	if err != nil {
+		return nil, err
+	}
 	if len(witnesses) > 0 {
 		c := witnesses[0]
 		f, err := concept.Call(c)
-		if err == nil {
-			s.Suppose(f)
+		if err != nil {
+			return nil, fmt.Errorf("materialize node %q: %w", conceptName, err)
 		}
-		return c
+		s.Suppose(f)
+		return c, nil
 	}
 
 	// No witness found, create a fresh constant.
-	freshName := s.FreshConstName(nil)
+	freshName, err := s.FreshConstNameE(nil)
+	if err != nil {
+		return nil, err
+	}
 	c := goivy.NewConst(freshName, cSort)
 
 	// Add equality concept and split.
 	X := webuiMustVar("X", c.CSort)
-	eq, _ := goivy.NewEq(X, c)
+	eq, err := goivy.NewEq(X, c)
+	if err != nil {
+		return nil, fmt.Errorf("materialize node %q: %w", conceptName, err)
+	}
 	eqName := "=" + c.Name
-	s.Domain.Concepts.SetConcept(eqName, MustCDConcept(eqName, []*goivy.LogicVariable{X}, eq))
-	s.Domain.Split(conceptName, eqName)
+	eqConcept, err := NewCDConcept(eqName, []*goivy.LogicVariable{X}, eq)
+	if err != nil {
+		return nil, fmt.Errorf("materialize node %q: %w", conceptName, err)
+	}
+	s.Domain.Concepts.SetConcept(eqName, eqConcept)
+	if err := s.Domain.Split(conceptName, eqName); err != nil {
+		return nil, err
+	}
 
 	f, err := concept.Call(c)
-	if err == nil {
-		s.Suppose(f)
+	if err != nil {
+		return nil, fmt.Errorf("materialize node %q: %w", conceptName, err)
 	}
-	return c
+	s.Suppose(f)
+	return c, nil
 }
 
 // MaterializeNode creates a concrete witness for a concept with undo support.
 func (s *ConceptInteractiveSession) MaterializeNode(conceptName string) error {
 	s.Push()
-	s.materializeNode(conceptName)
+	if _, err := s.materializeNode(conceptName); err != nil {
+		return err
+	}
 	return s.Recompute(nil)
 }
 
 // materializeEdge creates concrete witnesses for source and target nodes
 // and supposes the edge (internal).
-func (s *ConceptInteractiveSession) materializeEdge(edge, source, target string, polarity bool) (*goivy.Const, *goivy.Const) {
+func (s *ConceptInteractiveSession) materializeEdge(edge, source, target string, polarity bool) (*goivy.Const, *goivy.Const, error) {
 	edgeConcept := s.Domain.Concepts.GetConcept(edge)
 	if edgeConcept == nil {
-		return nil, nil
+		return nil, nil, fmt.Errorf("materialize edge %q: concept not found", edge)
 	}
-	sourceC := s.materializeNode(source)
-	if sourceC == nil {
-		return nil, nil
+	sourceC, err := s.materializeNode(source)
+	if err != nil {
+		return nil, nil, err
 	}
 	var targetC *goivy.Const
 	if source == target {
 		targetC = sourceC
 	} else {
-		targetC = s.materializeNode(target)
-		if targetC == nil {
-			return sourceC, nil
+		targetC, err = s.materializeNode(target)
+		if err != nil {
+			return sourceC, nil, err
 		}
 	}
 	f, err := edgeConcept.Call(sourceC, targetC)
 	if err != nil {
-		return sourceC, targetC
+		return sourceC, targetC, fmt.Errorf("materialize edge %q: %w", edge, err)
 	}
 	if polarity {
 		s.Suppose(f)
 	} else {
-		notF, _ := goivy.NewNot(f)
+		notF, err := goivy.NewNot(f)
+		if err != nil {
+			return sourceC, targetC, fmt.Errorf("materialize edge %q: %w", edge, err)
+		}
 		s.Suppose(notF)
 	}
-	return sourceC, targetC
+	return sourceC, targetC, nil
 }
 
 // MaterializeEdge materializes an edge with undo support.
 func (s *ConceptInteractiveSession) MaterializeEdge(edge, source, target string, polarity bool) error {
 	s.Push()
-	s.materializeEdge(edge, source, target, polarity)
+	if _, _, err := s.materializeEdge(edge, source, target, polarity); err != nil {
+		return err
+	}
 	return s.Recompute(nil)
 }
 
@@ -465,56 +574,70 @@ func normalizeFacts(facts []goivy.Expr) []goivy.Expr {
 }
 
 // GetNodeFacts returns facts for a node concept used by gather.
-func (s *ConceptInteractiveSession) GetNodeFacts(node string) []goivy.Expr {
+func (s *ConceptInteractiveSession) GetNodeFacts(node string) ([]goivy.Expr, error) {
 	av := s.abstractValueMap()
 	var facts []goivy.Expr
 
 	if av[TagString(Tag{"node_info", "at_least_one", node})] {
-		for _, c := range s.GetWitnesses(node) {
-			concept := s.Domain.Concepts.GetConcept(node)
-			if concept == nil {
-				continue
-			}
+		witnesses, err := s.GetWitnesses(node)
+		if err != nil {
+			return nil, err
+		}
+		concept := s.Domain.Concepts.GetConcept(node)
+		if concept == nil {
+			return nil, fmt.Errorf("node facts for %q: concept not found", node)
+		}
+		for _, c := range witnesses {
 			f, err := concept.Call(c)
-			if err == nil {
-				facts = append(facts, f)
+			if err != nil {
+				return nil, fmt.Errorf("node facts for %q: %w", node, err)
 			}
+			facts = append(facts, f)
 			// Check node labels.
 			for _, nl := range s.Domain.Concepts.GetList("node_labels") {
 				if av[TagString(Tag{"node_label", "node_necessarily", node, nl})] {
 					nlConcept := s.Domain.Concepts.GetConcept(nl)
-					if nlConcept != nil {
-						nf, err := nlConcept.Call(c)
-						if err == nil {
-							facts = append(facts, nf)
-						}
+					if nlConcept == nil {
+						return nil, fmt.Errorf("node facts for %q: node label %q not found", node, nl)
 					}
+					nf, err := nlConcept.Call(c)
+					if err != nil {
+						return nil, fmt.Errorf("node facts for %q label %q: %w", node, nl, err)
+					}
+					facts = append(facts, nf)
 				} else if av[TagString(Tag{"node_label", "node_necessarily_not", node, nl})] {
 					nlConcept := s.Domain.Concepts.GetConcept(nl)
-					if nlConcept != nil {
-						nf, err := nlConcept.Call(c)
-						if err == nil {
-							notF, _ := goivy.NewNot(nf)
-							facts = append(facts, notF)
-						}
+					if nlConcept == nil {
+						return nil, fmt.Errorf("node facts for %q: node label %q not found", node, nl)
 					}
+					nf, err := nlConcept.Call(c)
+					if err != nil {
+						return nil, fmt.Errorf("node facts for %q label %q: %w", node, nl, err)
+					}
+					notF, err := goivy.NewNot(nf)
+					if err != nil {
+						return nil, fmt.Errorf("node facts for %q label %q: %w", node, nl, err)
+					}
+					facts = append(facts, notF)
 				}
 			}
 			// Check enum_case labels if they exist.
 			for _, nl := range s.Domain.Concepts.GetList("enum_case") {
 				if av[TagString(Tag{"node_label", "node_necessarily", node, nl})] {
 					nlConcept := s.Domain.Concepts.GetConcept(nl)
-					if nlConcept != nil {
-						nf, err := nlConcept.Call(c)
-						if err == nil {
-							facts = append(facts, nf)
-						}
+					if nlConcept == nil {
+						return nil, fmt.Errorf("node facts for %q: enum case %q not found", node, nl)
 					}
+					nf, err := nlConcept.Call(c)
+					if err != nil {
+						return nil, fmt.Errorf("node facts for %q enum case %q: %w", node, nl, err)
+					}
+					facts = append(facts, nf)
 				}
 			}
 		}
 	}
-	return normalizeFacts(facts)
+	return normalizeFacts(facts), nil
 }
 
 // abstractValueMap converts AbstractValue to a string-keyed map for lookups.
@@ -527,34 +650,43 @@ func (s *ConceptInteractiveSession) abstractValueMap() map[string]bool {
 }
 
 // getEdgeFact returns facts for a specific edge/source/target with given polarity.
-func (s *ConceptInteractiveSession) getEdgeFact(edge, source, target string, polarity bool) []goivy.Expr {
+func (s *ConceptInteractiveSession) getEdgeFact(edge, source, target string, polarity bool) ([]goivy.Expr, error) {
 	var facts []goivy.Expr
 	edgeConcept := s.Domain.Concepts.GetConcept(edge)
 	if edgeConcept == nil {
-		return nil
+		return nil, fmt.Errorf("edge facts for %q: concept not found", edge)
 	}
-	sourceWitnesses := s.GetWitnesses(source)
-	targetWitnesses := s.GetWitnesses(target)
+	sourceWitnesses, err := s.GetWitnesses(source)
+	if err != nil {
+		return nil, err
+	}
+	targetWitnesses, err := s.GetWitnesses(target)
+	if err != nil {
+		return nil, err
+	}
 	for _, sc := range sourceWitnesses {
 		for _, tc := range targetWitnesses {
 			f, err := edgeConcept.Call(sc, tc)
 			if err != nil {
-				continue
+				return nil, fmt.Errorf("edge facts for %q(%q,%q): %w", edge, source, target, err)
 			}
 			if polarity {
 				facts = append(facts, f)
 			} else {
-				notF, _ := goivy.NewNot(f)
+				notF, err := goivy.NewNot(f)
+				if err != nil {
+					return nil, fmt.Errorf("edge facts for %q(%q,%q): %w", edge, source, target, err)
+				}
 				facts = append(facts, notF)
 			}
 		}
 	}
-	return normalizeFacts(facts)
+	return normalizeFacts(facts), nil
 }
 
 // GetEdgeFacts returns facts for an edge used by gather.
 // If filterPolarity is nil, returns both positive and negative facts.
-func (s *ConceptInteractiveSession) GetEdgeFacts(edge, source, target string, filterPolarity *bool) []goivy.Expr {
+func (s *ConceptInteractiveSession) GetEdgeFacts(edge, source, target string, filterPolarity *bool) ([]goivy.Expr, error) {
 	av := s.abstractValueMap()
 	x := strings.Join([]string{edge, source, target}, "|")
 
@@ -562,7 +694,7 @@ func (s *ConceptInteractiveSession) GetEdgeFacts(edge, source, target string, fi
 	ntnKey := "edge_info|none_to_none|" + x
 
 	if _, ok := av[ataKey]; !ok {
-		return nil // not a well-sorted edge
+		return nil, nil // not a well-sorted edge
 	}
 
 	var polarity bool
@@ -571,22 +703,26 @@ func (s *ConceptInteractiveSession) GetEdgeFacts(edge, source, target string, fi
 	} else if av[ataKey] {
 		polarity = true
 	} else {
-		return nil // not a definite edge
+		return nil, nil // not a definite edge
 	}
 
 	if filterPolarity != nil && *filterPolarity != polarity {
-		return nil
+		return nil, nil
 	}
 
 	return s.getEdgeFact(edge, source, target, polarity)
 }
 
 // GetFacts returns all gathered facts.
-func (s *ConceptInteractiveSession) GetFacts(projection func(string, string, string) bool) []goivy.Expr {
+func (s *ConceptInteractiveSession) GetFacts(projection func(string, string, string) bool) ([]goivy.Expr, error) {
 	var facts []goivy.Expr
 
 	for _, node := range s.Domain.Concepts.GetList("nodes") {
-		facts = append(facts, s.GetNodeFacts(node)...)
+		nodeFacts, err := s.GetNodeFacts(node)
+		if err != nil {
+			return nil, err
+		}
+		facts = append(facts, nodeFacts...)
 	}
 
 	for _, tv := range s.AbstractValue {
@@ -607,10 +743,14 @@ func (s *ConceptInteractiveSession) GetFacts(projection func(string, string, str
 				continue
 			}
 			polarity := tv.Tag[1] == "all_to_all"
-			facts = append(facts, s.getEdgeFact(edgeName, srcName, tgtName, polarity)...)
+			edgeFacts, err := s.getEdgeFact(edgeName, srcName, tgtName, polarity)
+			if err != nil {
+				return nil, err
+			}
+			facts = append(facts, edgeFacts...)
 		}
 	}
-	return facts
+	return facts, nil
 }
 
 // SaveDomain saves the current domain to the analysis session.
@@ -648,10 +788,13 @@ type NamedConcept struct {
 }
 
 // GetProjections returns all possible projections at a node.
-func (s *ConceptInteractiveSession) GetProjections(node string) []NamedConcept {
-	witnesses := s.GetWitnesses(node)
+func (s *ConceptInteractiveSession) GetProjections(node string) ([]NamedConcept, error) {
+	witnesses, err := s.GetWitnesses(node)
+	if err != nil {
+		return nil, err
+	}
 	if len(witnesses) == 0 {
-		return nil
+		return nil, nil
 	}
 	w := witnesses[0]
 	var result []NamedConcept
@@ -673,15 +816,18 @@ func (s *ConceptInteractiveSession) GetProjections(node string) []NamedConcept {
 				subs := map[goivy.NodeKey]goivy.Expr{goivy.Key(v): w}
 				formula, err := goivy.Substitute(tConcept.Formula, subs)
 				if err != nil {
-					continue
+					return nil, fmt.Errorf("projections for %q: %w", node, err)
 				}
 				name := formula.String()
-				concept := MustCDConcept(name, variables, formula)
+				concept, err := NewCDConcept(name, variables, formula)
+				if err != nil {
+					return nil, fmt.Errorf("projections for %q: %w", node, err)
+				}
 				result = append(result, NamedConcept{Name: name, Concept: concept})
 			}
 		}
 	}
-	return result
+	return result, nil
 }
 
 // AddEdge adds an edge concept to the domain with undo support.
@@ -713,7 +859,11 @@ func (s *ConceptInteractiveSession) AddCustomNodeLabel(node, nodeLabel string) e
 // Reset restores the concept domain to its initial state.
 func (s *ConceptInteractiveSession) Reset(sorts map[string]goivy.Sort, symbols map[string]*goivy.Const) error {
 	s.Push()
-	s.Domain = GetInitialConceptDomain(sorts, symbols)
+	domain, err := GetInitialConceptDomainE(sorts, symbols)
+	if err != nil {
+		return err
+	}
+	s.Domain = domain
 	s.Cache = make(map[string]bool)
 	return s.Recompute(nil)
 }
@@ -721,7 +871,11 @@ func (s *ConceptInteractiveSession) Reset(sorts map[string]goivy.Sort, symbols m
 // Diagram switches to the diagram concept domain.
 func (s *ConceptInteractiveSession) Diagram(sorts map[string]goivy.Sort, symbols []*goivy.Const, state goivy.Expr) error {
 	s.Push()
-	s.Domain = GetDiagramConceptDomain(sorts, symbols, state)
+	domain, err := GetDiagramConceptDomainE(sorts, symbols, state)
+	if err != nil {
+		return err
+	}
+	s.Domain = domain
 	s.Cache = make(map[string]bool)
 	return s.Recompute(nil)
 }

@@ -175,7 +175,10 @@ func (w *GraphWidget) MakeConcrete() error {
 func (w *GraphWidget) Gather() ([]string, error) {
 	w.Checkpoint(false)
 	g := w.G()
-	facts := g.GetFacts(true)
+	facts, err := g.GetFacts(true)
+	if err != nil {
+		return nil, err
+	}
 	if err := w.Update(); err != nil {
 		return nil, err
 	}
@@ -344,14 +347,22 @@ func (w *GraphWidget) Splatter(nodeID string) error {
 			var eqNames []string
 			for _, c := range constants {
 				X := webuiMustVar("X", c.CSort)
-				eq, _ := goivy.NewEq(X, c)
+				eq, err := goivy.NewEq(X, c)
+				if err != nil {
+					return fmt.Errorf("splatter %q: %w", nodeID, err)
+				}
 				eqName := "=" + c.Name
-				s.Domain.Concepts.SetConcept(eqName,
-					MustCDConcept(eqName, []*goivy.LogicVariable{X}, eq))
+				eqConcept, err := NewCDConcept(eqName, []*goivy.LogicVariable{X}, eq)
+				if err != nil {
+					return fmt.Errorf("splatter %q: %w", nodeID, err)
+				}
+				s.Domain.Concepts.SetConcept(eqName, eqConcept)
 				eqNames = append(eqNames, eqName)
 			}
 			s.Domain.Concepts.SetSet(splatterName, NewCDConceptSet(eqNames...))
-			s.Domain.Split(nodeID, splatterName)
+			if err := s.Domain.Split(nodeID, splatterName); err != nil {
+				return err
+			}
 		}
 		if err := s.Recompute(nil); err != nil {
 			return err
@@ -417,7 +428,9 @@ func (w *GraphWidget) SetState(clauses string) error {
 // SetFacts sets the current constraint facts (Python: GraphWidget.set_facts).
 func (w *GraphWidget) SetFacts(facts []string) error {
 	w.Checkpoint(false)
-	w.G().SetFacts(facts)
+	if err := w.G().SetFacts(facts); err != nil {
+		return err
+	}
 	return w.Update()
 }
 
@@ -468,7 +481,10 @@ func (w *GraphWidget) GetNodeProjectionActions(nodeID string) []ActionEntry {
 	if g == nil || g.InteractiveSess == nil {
 		return nil
 	}
-	projs := g.InteractiveSess.GetProjections(nodeID)
+	projs, err := g.InteractiveSess.GetProjections(nodeID)
+	if err != nil {
+		return nil
+	}
 	if len(projs) == 0 {
 		return nil
 	}

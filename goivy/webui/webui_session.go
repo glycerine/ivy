@@ -302,10 +302,17 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	}
 
 	// Step 5: Build the real ConceptInteractiveSession with logic.Expr formulas (for Z3).
-	cdDomain := GetInitialConceptDomain(sortMap, symbolMap)
-	s.ConceptSess = NewConceptInteractiveSession(
+	var err error
+	cdDomain, err := GetInitialConceptDomainE(sortMap, symbolMap)
+	if err != nil {
+		return err
+	}
+	s.ConceptSess, err = NewConceptInteractiveSessionE(
 		cdDomain, nil, nil, nil, nil, nil, nil, nil, false,
 	)
+	if err != nil {
+		return err
+	}
 
 	// Step 6: Store the compiled module for verification operations.
 	s.CompiledModule = mod
@@ -348,7 +355,9 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	}
 	s.CTIUI.AnalysisGraphUI.AG.AddInitialState(nil, nil)
 	s.CTIUI.AnalysisGraphUI.G = ArtToGraphState(s.CTIUI.AnalysisGraphUI.AG)
-	s.CTIUI.StartCTI(ctiClausesFromModule(s.CompiledModule))
+	if err := s.CTIUI.StartCTI(ctiClausesFromModule(s.CompiledModule)); err != nil {
+		return err
+	}
 
 	// Python's ivy_new() creates an empty ARG — initial state is added
 	// lazily by each operation that needs it (e.g., runUPDR, RunCheck).
@@ -568,7 +577,9 @@ func (s *Session) selectConceptARGNode(sheetID, nodeID string) (selectedNode, st
 	if ui.CurrentConceptGraph == nil ||
 		ui.CurrentConceptGraph.G() == nil ||
 		ui.CurrentConceptGraph.G().ParentState != state {
-		ui.ViewState(idx, "", false)
+		if _, err := ui.ViewState(idx, "", false); err != nil {
+			return "", "", err
+		}
 	}
 	if s.ConceptSess != nil {
 		if state.Clauses != nil {
@@ -1053,7 +1064,9 @@ func (s *Session) installCounterexampleFeedback(cexTrace *goivy.TraceBase, final
 			if len(ag.States) > 0 {
 				// Python's CTI path immediately views the predecessor state so the
 				// concept graph explains the bad transition, not the stale load state.
-				s.AGUI.ViewState(0, "", true)
+				if _, err := s.AGUI.ViewState(0, "", true); err != nil {
+					return "", "", fmt.Errorf("view initial state: %w", err)
+				}
 			}
 		}
 		s.syncARGToGraph()
@@ -1066,11 +1079,15 @@ func (s *Session) installCounterexampleFeedback(cexTrace *goivy.TraceBase, final
 				s.CTIUI.AnalysisGraphUI.AG = ag
 				s.CTIUI.AnalysisGraphUI.G = ArtToGraphState(ag)
 				if len(ag.States) > 0 {
-					s.CTIUI.ViewState(0, "", true)
+					if _, err := s.CTIUI.ViewState(0, "", true); err != nil {
+						return "", "", fmt.Errorf("view initial CTI state: %w", err)
+					}
 				}
 			}
 			if finalCond != nil {
-				s.CTIUI.ShowUsedRelations(finalCond, false)
+				if err := s.CTIUI.ShowUsedRelations(finalCond, false); err != nil {
+					return "", "", err
+				}
 			}
 		}
 
@@ -1078,11 +1095,15 @@ func (s *Session) installCounterexampleFeedback(cexTrace *goivy.TraceBase, final
 			if err := s.setConceptSessionState(ag.States[0]); err != nil {
 				return "", "", err
 			}
-			s.installStructureConceptGraph(ag.States[0])
+			if _, err := s.installStructureConceptGraph(ag.States[0]); err != nil {
+				return "", "", err
+			}
 		}
 	}
 	if finalCond != nil {
-		s.showUsedRelationsInRoot(finalCond, false)
+		if err := s.showUsedRelationsInRoot(finalCond, false); err != nil {
+			return "", "", err
+		}
 	}
 
 	traceText = strings.TrimSpace(cexTrace.String())
@@ -1113,28 +1134,31 @@ func (s *Session) setConceptSessionState(state *goivy.State) error {
 	return nil
 }
 
-func (s *Session) installStructureConceptGraph(state *goivy.State) bool {
+func (s *Session) installStructureConceptGraph(state *goivy.State) (bool, error) {
 	universe := structureUniverseConsts(state)
 	if len(universe) == 0 {
-		return false
+		return false, nil
 	}
 	stateFormula := goivy.True
 	if state != nil && state.Clauses != nil {
 		stateFormula = state.Clauses.ToFormula()
 	}
-	cd := GetStructureConceptDomain(stateFormula, universe, s.structureSignatureSymbols())
+	cd, err := GetStructureConceptDomainE(stateFormula, universe, s.structureSignatureSymbols())
+	if err != nil {
+		return false, err
+	}
 	simple := NewConceptSession()
 	simple.Domain = simpleConceptDomainFromCD(cd)
 	simple.AbstractValue = GetStructureConceptAbstractValue(stateFormula, universe)
 	if simple.Domain == nil || len(simple.Domain.Nodes) == 0 {
-		return false
+		return false, nil
 	}
 	s.SimpleSess = simple
 	if w := s.ensureConceptGraphWidgetLocked(); w != nil && w.G() != nil {
 		w.G().ParentState = state
 	}
 	s.ensureConceptChecksLocked()
-	return true
+	return true, nil
 }
 
 func (s *Session) structureSignatureSymbols() map[string]*goivy.Const {
@@ -1265,13 +1289,13 @@ func simpleConceptDomainFromCD(cd *CDConceptDomain) *ConceptDomain {
 	return d
 }
 
-func (s *Session) showUsedRelationsInRoot(clauses *goivy.Clauses, both bool) {
+func (s *Session) showUsedRelationsInRoot(clauses *goivy.Clauses, both bool) error {
 	if clauses == nil || s.AGUI == nil {
-		return
+		return nil
 	}
 	w := s.ensureConceptGraphWidgetLocked()
 	if w == nil || w.G() == nil {
-		return
+		return nil
 	}
 	w.ClearEdges()
 	for _, rel := range relationNamesUsedByClauses(s.CompiledModule, clauses) {
@@ -1281,8 +1305,11 @@ func (s *Session) showUsedRelationsInRoot(clauses *goivy.Clauses, both bool) {
 		}
 		w.ShowRelation(&Concept{Name: rel}, boxes, true, false)
 	}
-	w.Update()
+	if err := w.Update(); err != nil {
+		return err
+	}
 	s.toggles = w.G().Checks.Snapshot()
+	return nil
 }
 
 func counterexampleFallbackText(ag *goivy.AnalysisGraph) string {
@@ -1719,7 +1746,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				s.toggles = w.G().Checks.Snapshot()
 			}
 		} else if s.ConceptSess != nil {
-			facts := s.ConceptSess.GetFacts(nil)
+			facts, factsErr := s.ConceptSess.GetFacts(nil)
+			if factsErr != nil {
+				err = factsErr
+				break
+			}
 			s.ConceptSess.SupposeConstraints = append([]goivy.Expr{}, facts...)
 			strs := make([]string, 0, len(facts))
 			for _, fact := range facts {
@@ -1767,7 +1798,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 	case "conjecture":
 		// Generate a conjecture from the gathered facts
 		if s.ConceptSess != nil {
-			facts := s.ConceptSess.GetFacts(nil)
+			facts, factsErr := s.ConceptSess.GetFacts(nil)
+			if factsErr != nil {
+				err = factsErr
+				break
+			}
 			if len(facts) > 0 {
 				s.emit(Event{Type: "conjecture_generated", Data: map[string]interface{}{
 					"facts": len(facts),
@@ -2080,7 +2115,9 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		}
 		switch actionName {
 		case "cti_gather":
-			w.GatherFacts()
+			if err = w.GatherFacts(); err != nil {
+				break
+			}
 			result["message"] = "CTI facts gathered"
 		case "cti_bounded_check":
 			bound := 0
@@ -2093,7 +2130,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				err = fmt.Errorf("cti_bounded_check: bound must be non-negative")
 				break
 			}
-			conj := w.GetSelectedConjecture()
+			conj, conjErr := w.GetSelectedConjecture()
+			if conjErr != nil {
+				err = conjErr
+				break
+			}
 			if conj == nil {
 				err = fmt.Errorf("cti_bounded_check: no conjecture selected")
 				break
@@ -2215,7 +2256,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			result["mime_type"] = "text/vnd.graphviz"
 			s.emit(Event{Type: "export", Data: map[string]interface{}{"filename": "concept_graph.dot", "bytes": len(content)}})
 		} else if s.ConceptSess != nil {
-			facts := s.ConceptSess.GetFacts(nil)
+			facts, factsErr := s.ConceptSess.GetFacts(nil)
+			if factsErr != nil {
+				err = factsErr
+				break
+			}
 			s.emit(Event{Type: "export", Data: map[string]interface{}{"facts": len(facts)}})
 		}
 	case "get_conjectures":
@@ -2429,7 +2474,9 @@ func (s *Session) AddProjection(name, concept string) error {
 	defer s.mu.Unlock()
 	if s.ConceptSess != nil {
 		// AddCustomEdge creates a projection in the concept domain
-		s.ConceptSess.AddCustomEdge(name, concept, concept)
+		if err := s.ConceptSess.AddCustomEdge(name, concept, concept); err != nil {
+			return err
+		}
 	}
 	s.emit(Event{Type: "concept_updated", Data: nil})
 	return nil
@@ -2463,7 +2510,9 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		stateIdx := -1
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
 		if stateIdx >= 0 {
-			ui.ViewState(stateIdx, "", false)
+			if _, err = ui.ViewState(stateIdx, "", false); err != nil {
+				break
+			}
 		}
 		if s.ConceptSess != nil {
 			if err = s.ConceptSess.Recompute(nil); err != nil {

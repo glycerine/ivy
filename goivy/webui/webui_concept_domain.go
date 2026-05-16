@@ -972,10 +972,10 @@ func (d *CDConceptDomain) GetFacts(projection func(string, string) bool) ([]Fact
 }
 
 // Split splits a concept into sub-concepts based on split_by.
-func (d *CDConceptDomain) Split(concept, splitBy string) {
+func (d *CDConceptDomain) Split(concept, splitBy string) error {
 	c1 := d.Concepts.GetConcept(concept)
 	if c1 == nil {
-		return
+		return fmt.Errorf("split %q by %q: concept not found", concept, splitBy)
 	}
 	c2Entry, c2exists := d.Concepts.GetEntry(splitBy)
 
@@ -992,34 +992,55 @@ func (d *CDConceptDomain) Split(concept, splitBy string) {
 			}
 			f, err := nc.Call(nodesToSlice(variables)...)
 			if err != nil {
-				continue
+				return fmt.Errorf("split %q by %q: %w", concept, splitBy, err)
 			}
 			newName := fmt.Sprintf("(%s+%s)", concept, n)
-			andF, _ := goivy.NewAnd(c1.Formula, f)
-			newConcepts = append(newConcepts, MustCDConcept(newName, variables, andF))
+			andF, err := goivy.NewAnd(c1.Formula, f)
+			if err != nil {
+				return fmt.Errorf("split %q by %q: %w", concept, splitBy, err)
+			}
+			newConcept, err := NewCDConcept(newName, variables, andF)
+			if err != nil {
+				return fmt.Errorf("split %q by %q: %w", concept, splitBy, err)
+			}
+			newConcepts = append(newConcepts, newConcept)
 			newNames = append(newNames, newName)
 		}
 	} else {
 		// splitting by a single concept
 		c2 := d.Concepts.GetConcept(splitBy)
 		if c2 == nil {
-			return
+			return fmt.Errorf("split %q by %q: split concept not found", concept, splitBy)
 		}
 		posF, err := c2.Call(nodesToSlice(variables)...)
 		if err != nil {
-			return
+			return fmt.Errorf("split %q by %q: %w", concept, splitBy, err)
 		}
-		negF, _ := goivy.NewNot(posF)
-		posAnd, _ := goivy.NewAnd(c1.Formula, posF)
-		negAnd, _ := goivy.NewAnd(c1.Formula, negF)
+		negF, err := goivy.NewNot(posF)
+		if err != nil {
+			return fmt.Errorf("split %q by %q: %w", concept, splitBy, err)
+		}
+		posAnd, err := goivy.NewAnd(c1.Formula, posF)
+		if err != nil {
+			return fmt.Errorf("split %q by %q: %w", concept, splitBy, err)
+		}
+		negAnd, err := goivy.NewAnd(c1.Formula, negF)
+		if err != nil {
+			return fmt.Errorf("split %q by %q: %w", concept, splitBy, err)
+		}
 
 		posName := fmt.Sprintf("(%s+%s)", concept, splitBy)
 		negName := fmt.Sprintf("(%s-%s)", concept, splitBy)
 
-		newConcepts = append(newConcepts,
-			MustCDConcept(posName, variables, posAnd),
-			MustCDConcept(negName, variables, negAnd),
-		)
+		posConcept, err := NewCDConcept(posName, variables, posAnd)
+		if err != nil {
+			return fmt.Errorf("split %q by %q: %w", concept, splitBy, err)
+		}
+		negConcept, err := NewCDConcept(negName, variables, negAnd)
+		if err != nil {
+			return fmt.Errorf("split %q by %q: %w", concept, splitBy, err)
+		}
+		newConcepts = append(newConcepts, posConcept, negConcept)
 		newNames = append(newNames, posName, negName)
 	}
 
@@ -1034,6 +1055,7 @@ func (d *CDConceptDomain) Split(concept, splitBy string) {
 	d.Concepts = d.Concepts.Reorder(newKeys)
 
 	d.ReplaceConcept(concept, newNames)
+	return nil
 }
 
 // ReplaceConcept replaces a concept name with a list of new names
@@ -1390,8 +1412,8 @@ func GetStandardCombinations() []Combination {
 	}
 }
 
-// GetInitialConceptDomain creates a concept domain from a signature.
-func GetInitialConceptDomain(sorts map[string]goivy.Sort, symbols map[string]*goivy.Const) *CDConceptDomain {
+// GetInitialConceptDomainE creates a concept domain from a signature.
+func GetInitialConceptDomainE(sorts map[string]goivy.Sort, symbols map[string]*goivy.Const) (*CDConceptDomain, error) {
 	concepts := NewCDConceptDict()
 
 	concepts.SetList("nodes", nil)
@@ -1409,8 +1431,15 @@ func GetInitialConceptDomain(sorts map[string]goivy.Sort, symbols map[string]*go
 	for _, name := range sortNames {
 		s := sorts[name]
 		X := webuiMustVar("X", s)
-		eq, _ := goivy.NewEq(X, X)
-		concepts.SetConcept(name, MustCDConcept(name, []*goivy.LogicVariable{X}, eq))
+		eq, err := goivy.NewEq(X, X)
+		if err != nil {
+			return nil, fmt.Errorf("initial concept domain: sort %q: %w", name, err)
+		}
+		concept, err := NewCDConcept(name, []*goivy.LogicVariable{X}, eq)
+		if err != nil {
+			return nil, fmt.Errorf("initial concept domain: sort %q: %w", name, err)
+		}
+		concepts.SetConcept(name, concept)
 		concepts.AppendToList("nodes", name)
 	}
 
@@ -1418,8 +1447,15 @@ func GetInitialConceptDomain(sorts map[string]goivy.Sort, symbols map[string]*go
 	T := goivy.NewTopSort()
 	XT := webuiMustVar("X", T)
 	YT := webuiMustVar("Y", T)
-	eqXY, _ := goivy.NewEq(XT, YT)
-	concepts.SetConcept("=", MustCDConcept("=", []*goivy.LogicVariable{XT, YT}, eqXY))
+	eqXY, err := goivy.NewEq(XT, YT)
+	if err != nil {
+		return nil, fmt.Errorf("initial concept domain: equality: %w", err)
+	}
+	eqConcept, err := NewCDConcept("=", []*goivy.LogicVariable{XT, YT}, eqXY)
+	if err != nil {
+		return nil, fmt.Errorf("initial concept domain: equality: %w", err)
+	}
+	concepts.SetConcept("=", eqConcept)
 
 	// Add concepts from symbols.
 	symNames := make([]string, 0, len(symbols))
@@ -1432,40 +1468,77 @@ func GetInitialConceptDomain(sorts map[string]goivy.Sort, symbols map[string]*go
 		if goivy.FirstOrderSort(c.CSort) {
 			// First-order constant → unary equality concept.
 			X := webuiMustVar("X", c.CSort)
-			eq, _ := goivy.NewEq(X, c)
+			eq, err := goivy.NewEq(X, c)
+			if err != nil {
+				return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+			}
 			name := "=" + c.Name
-			concepts.SetConcept(name, MustCDConcept(name, []*goivy.LogicVariable{X}, eq))
+			concept, err := NewCDConcept(name, []*goivy.LogicVariable{X}, eq)
+			if err != nil {
+				return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+			}
+			concepts.SetConcept(name, concept)
 		} else if fs, ok := c.CSort.(*goivy.LogicFunctionSort); ok {
 			switch fs.Arity() {
 			case 1:
 				// Unary relation → node_label (e.g., "semaphore")
 				X := webuiMustVar("X", fs.Domain()[0])
-				app, _ := goivy.NewApply(c, X)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X}, app))
+				app, err := goivy.NewApply(c, X)
+				if err != nil {
+					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+				}
+				concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X}, app)
+				if err != nil {
+					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+				}
+				concepts.SetConcept(c.Name, concept)
 				concepts.AppendToList("node_labels", c.Name)
 			case 2:
 				// Binary relation → edge (e.g., "link")
 				X := webuiMustVar("X", fs.Domain()[0])
 				Y := webuiMustVar("Y", fs.Domain()[1])
-				app, _ := goivy.NewApply(c, X, Y)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, app))
+				app, err := goivy.NewApply(c, X, Y)
+				if err != nil {
+					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+				}
+				concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, app)
+				if err != nil {
+					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+				}
+				concepts.SetConcept(c.Name, concept)
 				concepts.AppendToList("edges", c.Name)
 			case 3:
 				// Ternary relation
 				X := webuiMustVar("X", fs.Domain()[0])
 				Y := webuiMustVar("Y", fs.Domain()[1])
 				Z := webuiMustVar("Z", fs.Domain()[2])
-				app, _ := goivy.NewApply(c, X, Y, Z)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X, Y, Z}, app))
+				app, err := goivy.NewApply(c, X, Y, Z)
+				if err != nil {
+					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+				}
+				concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y, Z}, app)
+				if err != nil {
+					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+				}
+				concepts.SetConcept(c.Name, concept)
 			}
 		}
 	}
 
-	return NewCDConceptDomain(concepts, GetStandardCombiners(), GetStandardCombinations())
+	return NewCDConceptDomain(concepts, GetStandardCombiners(), GetStandardCombinations()), nil
 }
 
-// GetDiagramConceptDomain creates a concept domain from a signature and diagram.
-func GetDiagramConceptDomain(sorts map[string]goivy.Sort, symbols []*goivy.Const, diagram goivy.Expr) *CDConceptDomain {
+// GetInitialConceptDomain creates a concept domain from a signature.
+func GetInitialConceptDomain(sorts map[string]goivy.Sort, symbols map[string]*goivy.Const) *CDConceptDomain {
+	domain, err := GetInitialConceptDomainE(sorts, symbols)
+	if err != nil {
+		panic(err)
+	}
+	return domain
+}
+
+// GetDiagramConceptDomainE creates a concept domain from a signature and diagram.
+func GetDiagramConceptDomainE(sorts map[string]goivy.Sort, symbols []*goivy.Const, diagram goivy.Expr) (*CDConceptDomain, error) {
 	concepts := NewCDConceptDict()
 
 	concepts.SetList("nodes", nil)
@@ -1476,8 +1549,15 @@ func GetDiagramConceptDomain(sorts map[string]goivy.Sort, symbols []*goivy.Const
 	T := goivy.NewTopSort()
 	XT := webuiMustVar("X", T)
 	YT := webuiMustVar("Y", T)
-	eqXY, _ := goivy.NewEq(XT, YT)
-	concepts.SetConcept("=", MustCDConcept("=", []*goivy.LogicVariable{XT, YT}, eqXY))
+	eqXY, err := goivy.NewEq(XT, YT)
+	if err != nil {
+		return nil, fmt.Errorf("diagram concept domain: equality: %w", err)
+	}
+	eqConcept, err := NewCDConcept("=", []*goivy.LogicVariable{XT, YT}, eqXY)
+	if err != nil {
+		return nil, fmt.Errorf("diagram concept domain: equality: %w", err)
+	}
+	concepts.SetConcept("=", eqConcept)
 
 	// Merge signature symbols with diagram constants.
 	// Uses NodeKey for structural identity, matching Python's frozenset union
@@ -1512,32 +1592,69 @@ func GetDiagramConceptDomain(sorts map[string]goivy.Sort, symbols []*goivy.Const
 		c := constByName[sname]
 		if goivy.FirstOrderSort(c.CSort) {
 			X := webuiMustVar("X", c.CSort)
-			eq, _ := goivy.NewEq(X, c)
+			eq, err := goivy.NewEq(X, c)
+			if err != nil {
+				return nil, fmt.Errorf("diagram concept domain: symbol %q: %w", c.Name, err)
+			}
 			name := fmt.Sprintf("%s:%s", c.Name, c.CSort)
-			concepts.SetConcept(name, MustCDConcept(name, []*goivy.LogicVariable{X}, eq))
+			concept, err := NewCDConcept(name, []*goivy.LogicVariable{X}, eq)
+			if err != nil {
+				return nil, fmt.Errorf("diagram concept domain: symbol %q: %w", c.Name, err)
+			}
+			concepts.SetConcept(name, concept)
 			concepts.AppendToList("nodes", name)
 		} else if fs, ok := c.CSort.(*goivy.LogicFunctionSort); ok {
 			switch fs.Arity() {
 			case 1:
 				X := webuiMustVar("X", fs.Domain()[0])
-				app, _ := goivy.NewApply(c, X)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X}, app))
+				app, err := goivy.NewApply(c, X)
+				if err != nil {
+					return nil, fmt.Errorf("diagram concept domain: symbol %q: %w", c.Name, err)
+				}
+				concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X}, app)
+				if err != nil {
+					return nil, fmt.Errorf("diagram concept domain: symbol %q: %w", c.Name, err)
+				}
+				concepts.SetConcept(c.Name, concept)
 			case 2:
 				X := webuiMustVar("X", fs.Domain()[0])
 				Y := webuiMustVar("Y", fs.Domain()[1])
-				app, _ := goivy.NewApply(c, X, Y)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, app))
+				app, err := goivy.NewApply(c, X, Y)
+				if err != nil {
+					return nil, fmt.Errorf("diagram concept domain: symbol %q: %w", c.Name, err)
+				}
+				concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, app)
+				if err != nil {
+					return nil, fmt.Errorf("diagram concept domain: symbol %q: %w", c.Name, err)
+				}
+				concepts.SetConcept(c.Name, concept)
 			case 3:
 				X := webuiMustVar("X", fs.Domain()[0])
 				Y := webuiMustVar("Y", fs.Domain()[1])
 				Z := webuiMustVar("Z", fs.Domain()[2])
-				app, _ := goivy.NewApply(c, X, Y, Z)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X, Y, Z}, app))
+				app, err := goivy.NewApply(c, X, Y, Z)
+				if err != nil {
+					return nil, fmt.Errorf("diagram concept domain: symbol %q: %w", c.Name, err)
+				}
+				concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y, Z}, app)
+				if err != nil {
+					return nil, fmt.Errorf("diagram concept domain: symbol %q: %w", c.Name, err)
+				}
+				concepts.SetConcept(c.Name, concept)
 			}
 		}
 	}
 
-	return NewCDConceptDomain(concepts, GetStandardCombiners(), GetStandardCombinations())
+	return NewCDConceptDomain(concepts, GetStandardCombiners(), GetStandardCombinations()), nil
+}
+
+// GetDiagramConceptDomain creates a concept domain from a signature and diagram.
+func GetDiagramConceptDomain(sorts map[string]goivy.Sort, symbols []*goivy.Const, diagram goivy.Expr) *CDConceptDomain {
+	domain, err := GetDiagramConceptDomainE(sorts, symbols, diagram)
+	if err != nil {
+		panic(err)
+	}
+	return domain
 }
 
 // UniverseElementToConceptName converts a universe element constant to its
@@ -1551,14 +1668,14 @@ func UniverseElementToConceptName(uc *goivy.Const) string {
 	return name
 }
 
-// GetStructureConceptDomain creates a concept domain from a state with a universe.
+// GetStructureConceptDomainE creates a concept domain from a state with a universe.
 // state is a formula, universe maps sort names to element constants,
 // sig provides additional symbol information.
-func GetStructureConceptDomain(
+func GetStructureConceptDomainE(
 	stateFormula goivy.Expr,
 	universe map[string][]*goivy.Const,
 	sigSymbols map[string]*goivy.Const,
-) *CDConceptDomain {
+) (*CDConceptDomain, error) {
 	concepts := NewCDConceptDict()
 
 	concepts.SetList("nodes", nil)
@@ -1569,8 +1686,15 @@ func GetStructureConceptDomain(
 	T := goivy.NewTopSort()
 	XT := webuiMustVar("X", T)
 	YT := webuiMustVar("Y", T)
-	eqXY, _ := goivy.NewEq(XT, YT)
-	concepts.SetConcept("=", MustCDConcept("=", []*goivy.LogicVariable{XT, YT}, eqXY))
+	eqXY, err := goivy.NewEq(XT, YT)
+	if err != nil {
+		return nil, fmt.Errorf("structure concept domain: equality: %w", err)
+	}
+	eqConcept, err := NewCDConcept("=", []*goivy.LogicVariable{XT, YT}, eqXY)
+	if err != nil {
+		return nil, fmt.Errorf("structure concept domain: equality: %w", err)
+	}
+	concepts.SetConcept("=", eqConcept)
 
 	// Add nodes for universe elements.
 	var elements []*goivy.Const
@@ -1586,12 +1710,23 @@ func GetStructureConceptDomain(
 	for _, uc := range elements {
 		X := webuiMustVar("X", uc.CSort)
 		name := UniverseElementToConceptName(uc)
-		eq, _ := goivy.NewEq(X, uc)
-		concepts.SetConcept(name, MustCDConcept(name, []*goivy.LogicVariable{X}, eq))
+		eq, err := goivy.NewEq(X, uc)
+		if err != nil {
+			return nil, fmt.Errorf("structure concept domain: universe %q: %w", uc.Name, err)
+		}
+		concept, err := NewCDConcept(name, []*goivy.LogicVariable{X}, eq)
+		if err != nil {
+			return nil, fmt.Errorf("structure concept domain: universe %q: %w", uc.Name, err)
+		}
+		concepts.SetConcept(name, concept)
 		concepts.AppendToList("nodes", name)
 
 		labelName := "=" + name
-		concepts.SetConcept(labelName, MustCDConcept(labelName, []*goivy.LogicVariable{X}, eq))
+		labelConcept, err := NewCDConcept(labelName, []*goivy.LogicVariable{X}, eq)
+		if err != nil {
+			return nil, fmt.Errorf("structure concept domain: universe %q: %w", uc.Name, err)
+		}
+		concepts.SetConcept(labelName, labelConcept)
 		concepts.AppendToList("node_labels", labelName)
 	}
 
@@ -1628,9 +1763,16 @@ func GetStructureConceptDomain(
 
 		if goivy.FirstOrderSort(c.CSort) {
 			X := webuiMustVar("X", c.CSort)
-			eq, _ := goivy.NewEq(X, c)
+			eq, err := goivy.NewEq(X, c)
+			if err != nil {
+				return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+			}
 			name := "=" + c.Name
-			concepts.SetConcept(name, MustCDConcept(name, []*goivy.LogicVariable{X}, eq))
+			concept, err := NewCDConcept(name, []*goivy.LogicVariable{X}, eq)
+			if err != nil {
+				return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+			}
+			concepts.SetConcept(name, concept)
 			concepts.AppendToList("node_labels", name)
 		} else if fs, ok := c.CSort.(*goivy.LogicFunctionSort); ok {
 			if goivy.SortEqual(fs.Range(), goivy.Boolean) {
@@ -1638,21 +1780,42 @@ func GetStructureConceptDomain(
 				switch fs.Arity() {
 				case 1:
 					X := webuiMustVar("X", fs.Domain()[0])
-					app, _ := goivy.NewApply(c, X)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X}, app))
+					app, err := goivy.NewApply(c, X)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X}, app)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					concepts.SetConcept(c.Name, concept)
 					concepts.AppendToList("node_labels", c.Name)
 				case 2:
 					X := webuiMustVar("X", fs.Domain()[0])
 					Y := webuiMustVar("Y", fs.Domain()[1])
-					app, _ := goivy.NewApply(c, X, Y)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, app))
+					app, err := goivy.NewApply(c, X, Y)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, app)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					concepts.SetConcept(c.Name, concept)
 					concepts.AppendToList("edges", c.Name)
 				case 3:
 					X := webuiMustVar("X", fs.Domain()[0])
 					Y := webuiMustVar("Y", fs.Domain()[1])
 					Z := webuiMustVar("Z", fs.Domain()[2])
-					app, _ := goivy.NewApply(c, X, Y, Z)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X, Y, Z}, app))
+					app, err := goivy.NewApply(c, X, Y, Z)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y, Z}, app)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					concepts.SetConcept(c.Name, concept)
 				}
 			} else {
 				// Function
@@ -1660,23 +1823,56 @@ func GetStructureConceptDomain(
 				case 1:
 					X := webuiMustVar("X", fs.Domain()[0])
 					Y := webuiMustVar("Y", fs.Range())
-					app, _ := goivy.NewApply(c, X)
-					eq, _ := goivy.NewEq(app, Y)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, eq))
+					app, err := goivy.NewApply(c, X)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					eq, err := goivy.NewEq(app, Y)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, eq)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					concepts.SetConcept(c.Name, concept)
 					concepts.AppendToList("edges", c.Name)
 				case 2:
 					X := webuiMustVar("X", fs.Domain()[0])
 					Y := webuiMustVar("Y", fs.Domain()[1])
 					Z := webuiMustVar("Z", fs.Range())
-					app, _ := goivy.NewApply(c, X, Y)
-					eq, _ := goivy.NewEq(app, Z)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*goivy.LogicVariable{X, Y, Z}, eq))
+					app, err := goivy.NewApply(c, X, Y)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					eq, err := goivy.NewEq(app, Z)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y, Z}, eq)
+					if err != nil {
+						return nil, fmt.Errorf("structure concept domain: symbol %q: %w", c.Name, err)
+					}
+					concepts.SetConcept(c.Name, concept)
 				}
 			}
 		}
 	}
 
-	return NewCDConceptDomain(concepts, GetStandardCombiners(), GetStandardCombinations())
+	return NewCDConceptDomain(concepts, GetStandardCombiners(), GetStandardCombinations()), nil
+}
+
+// GetStructureConceptDomain creates a concept domain from a state with a universe.
+func GetStructureConceptDomain(
+	stateFormula goivy.Expr,
+	universe map[string][]*goivy.Const,
+	sigSymbols map[string]*goivy.Const,
+) *CDConceptDomain {
+	domain, err := GetStructureConceptDomainE(stateFormula, universe, sigSymbols)
+	if err != nil {
+		panic(err)
+	}
+	return domain
 }
 
 // GetStructureConceptAbstractValue computes abstract values for a structure
@@ -1940,36 +2136,57 @@ func mustApplyVar(v *goivy.LogicVariable, args ...goivy.Expr) goivy.Expr {
 }
 
 func mustNot(body goivy.Expr) goivy.Expr {
-	n, _ := goivy.NewNot(body)
+	n, err := goivy.NewNot(body)
+	if err != nil {
+		panic(err)
+	}
 	return n
 }
 
 func mustAnd(terms ...goivy.Expr) goivy.Expr {
-	n, _ := goivy.NewAnd(terms...)
+	n, err := goivy.NewAnd(terms...)
+	if err != nil {
+		panic(err)
+	}
 	return n
 }
 
 func mustOr(terms ...goivy.Expr) goivy.Expr {
-	n, _ := goivy.NewOr(terms...)
+	n, err := goivy.NewOr(terms...)
+	if err != nil {
+		panic(err)
+	}
 	return n
 }
 
 func webuiMustEq(t1, t2 goivy.Expr) goivy.Expr {
-	n, _ := goivy.NewEq(t1, t2)
+	n, err := goivy.NewEq(t1, t2)
+	if err != nil {
+		panic(err)
+	}
 	return n
 }
 
 func mustImplies(t1, t2 goivy.Expr) goivy.Expr {
-	n, _ := goivy.NewImplies(t1, t2)
+	n, err := goivy.NewImplies(t1, t2)
+	if err != nil {
+		panic(err)
+	}
 	return n
 }
 
 func webuiMustForAll(vars []*goivy.LogicVariable, body goivy.Expr) goivy.Expr {
-	n, _ := goivy.NewForAll(vars, body)
+	n, err := goivy.NewForAll(vars, body)
+	if err != nil {
+		panic(err)
+	}
 	return n
 }
 
 func webuiMustExists(vars []*goivy.LogicVariable, body goivy.Expr) goivy.Expr {
-	n, _ := goivy.NewExists(vars, body)
+	n, err := goivy.NewExists(vars, body)
+	if err != nil {
+		panic(err)
+	}
 	return n
 }

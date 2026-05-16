@@ -421,13 +421,13 @@ func (ui *AnalysisGraphUI) GetEdgeActions(click string) []ActionEntry {
 }
 
 // ViewState shows a state in the concept graph (Python: AnalysisGraphUI.view_state).
-func (ui *AnalysisGraphUI) ViewState(nodeID int, clauses string, reset bool) *GraphWidget {
+func (ui *AnalysisGraphUI) ViewState(nodeID int, clauses string, reset bool) (*GraphWidget, error) {
 	ui.mu.Lock()
 	defer ui.mu.Unlock()
 
 	state, err := ui.stateByID(nodeID)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	if clauses == "" && state.Clauses != nil {
 		clauses = state.Clauses.String()
@@ -435,8 +435,10 @@ func (ui *AnalysisGraphUI) ViewState(nodeID int, clauses string, reset bool) *Gr
 
 	if ui.CurrentConceptGraph != nil {
 		// Reuse existing concept graph.
-		ui.CurrentConceptGraph.SetParentState(state, clauses, reset)
-		return ui.CurrentConceptGraph
+		if err := ui.CurrentConceptGraph.SetParentState(state, clauses, reset); err != nil {
+			return nil, err
+		}
+		return ui.CurrentConceptGraph, nil
 	}
 
 	// Create new concept graph widget.
@@ -445,10 +447,12 @@ func (ui *AnalysisGraphUI) ViewState(nodeID int, clauses string, reset bool) *Gr
 	w := NewGraphWidget(gs)
 	w.Parent = ui
 	if clauses != "" {
-		w.G().SetState(clauses, true, false, reset)
+		if err := w.G().SetState(clauses, true, false, reset); err != nil {
+			return nil, err
+		}
 	}
 	ui.CurrentConceptGraph = w
-	return w
+	return w, nil
 }
 
 func (ui *AnalysisGraphUI) conceptSortNames() []string {
