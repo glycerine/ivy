@@ -1,10 +1,32 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createIvyPersist } from './persistenceService.ts';
 import { UIDataModel } from '../models/uiDataModel.ts';
 import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 
+function makeLocalStorage() {
+  const items = new Map<string, string>();
+  return {
+    getItem: vi.fn((key: string) => (items.has(key) ? items.get(key) : null)),
+    setItem: vi.fn((key: string, value: string) => {
+      items.set(key, String(value));
+    }),
+    removeItem: vi.fn((key: string) => {
+      items.delete(key);
+    }),
+    clear: vi.fn(() => {
+      items.clear();
+    }),
+  };
+}
+
+beforeEach(() => {
+  const storage = makeLocalStorage();
+  Object.defineProperty(window, 'localStorage', { value: storage, configurable: true });
+  Object.defineProperty(globalThis, 'localStorage', { value: storage, configurable: true });
+});
+
 afterEach(() => {
-  localStorage.clear();
+  window.localStorage.clear();
   window.history.replaceState(null, '', '/');
 });
 

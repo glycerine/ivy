@@ -159,6 +159,7 @@ html, body {
     100% { background: #3c3c3c; color: #c8c8c8; }
 }
 
+#ui-mode-select,
 #mode-select {
     background-color: #3c3c3c;
     color: #c8c8c8;
@@ -169,8 +170,21 @@ html, body {
     cursor: pointer;
 }
 
+#ui-mode-select {
+    min-width: 245px;
+}
+
 #mode-select:focus {
     outline: 1px solid #007acc;
+}
+
+#ui-mode-select:focus {
+    outline: 1px solid #007acc;
+}
+
+body[data-ui-mode="cti"] .ui-mode-reachability,
+body[data-ui-mode="reachability"] .ui-mode-cti {
+    display: none !important;
 }
 
 .session-info {

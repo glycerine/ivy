@@ -209,6 +209,7 @@ class IvyRuntime {
         this._saveInProgress = false;
         this._saveProgressSheen = null;
         this.currentBound = 10;
+        this.uiMode = 'cti';
     }
 
     createApi() {
@@ -266,7 +267,6 @@ class IvyRuntime {
         // the corresponding checkbox (+/?/-) in the state panel is checked.
         // Wire up all event handlers
         this.setupEventHandlers();
-        await this.loadMenuDescriptors();
         this.setupTabs();
         this.setupResizer();
         this.setupResizer2();
@@ -850,30 +850,25 @@ class IvyRuntime {
                 self.flashAndClose(this, function () { self.saveInvariant(); });
             });
 
-            // --- Check ---
-            document.getElementById('btn-check').addEventListener('click', function () {
-                self.runCheck();
-            });
+            var uiModeSelect = document.getElementById('ui-mode-select');
+            if (uiModeSelect) {
+                this.setUIMode(uiModeSelect.value || this.uiMode || 'cti');
+                uiModeSelect.addEventListener('change', function () {
+                    self.setUIMode(this.value, { announce: true });
+                });
+            } else {
+                this.setUIMode(this.uiMode || 'cti');
+            }
 
-            // --- Show reachable states ---
-            document.getElementById('btn-show-reachable').addEventListener('click', function () {
-                self.showReachableStates();
-            });
-
-            // --- Undo ---
-            document.getElementById('btn-undo').addEventListener('click', function () {
-                self.doUndo();
-            });
-
-            // --- Reset Domain ---
-            document.getElementById('btn-reset-domain').addEventListener('click', function () {
-                self.resetDomain();
-            });
-
-            // --- Diagram Domain ---
-            document.getElementById('btn-diagram-domain').addEventListener('click', function () {
-                self.diagramDomain();
-            });
+            var bindOptionalButton = function (id, callback) {
+                var button = document.getElementById(id);
+                if (button) button.addEventListener('click', callback);
+            };
+            bindOptionalButton('btn-check', function () { self.runCheck(); });
+            bindOptionalButton('btn-show-reachable', function () { self.showReachableStates(); });
+            bindOptionalButton('btn-undo', function () { self.doUndo(); });
+            bindOptionalButton('btn-reset-domain', function () { self.resetDomain(); });
+            bindOptionalButton('btn-diagram-domain', function () { self.diagramDomain(); });
 
             // --- Toggle Tutorial ---
             document.getElementById('btn-toggle-tutorial').addEventListener('click', function () {
@@ -886,7 +881,6 @@ class IvyRuntime {
             this.setupDropdownMenus();
 
             // --- ARG Panel Menu Items (File, Invariant) ---
-            this.bindMenuAction('arg-save-abs', function () { self.saveAbstraction(); });
             this.bindMenuAction('arg-check-induction', function () { self.checkInduction(); });
             this.bindMenuAction('arg-bounded-check', function () { self.boundedCheck(); });
             this.bindMenuAction('arg-diagram', function () { self.diagramDomain(); });
@@ -896,14 +890,17 @@ class IvyRuntime {
             // --- Concept Panel Menu Items (Conjecture, View) ---
             this.bindMenuAction('conj-undo', function () { self.doUndo(); });
             this.bindMenuAction('conj-redo', function () { self.doRedo(); });
-            this.bindMenuAction('conj-pdr-step', function () { self.pdrStep(); });
-            this.bindMenuAction('conj-concrete', function () { self.concreteStep(); });
-            this.bindMenuAction('conj-gather', function () { self.gatherFacts(); });
             this.bindMenuAction('conj-cti-gather', function () { self.ctiConceptAction('cti_gather'); });
             this.bindMenuAction('conj-cti-minimize', function () { self.ctiConceptAction('cti_minimize'); });
             this.bindMenuAction('conj-cti-check-sufficient', function () { self.ctiConceptAction('cti_check_sufficient'); });
             this.bindMenuAction('conj-cti-check-inductive', function () { self.ctiConceptAction('cti_check_inductive'); });
             this.bindMenuAction('conj-cti-strengthen', function () { self.ctiConceptAction('cti_strengthen'); });
+            this.bindMenuAction('conj-export', function () { self.exportConjecture(); });
+            this.bindMenuAction('conj-reach-undo', function () { self.doUndo(); });
+            this.bindMenuAction('conj-reach-redo', function () { self.doRedo(); });
+            this.bindMenuAction('conj-pdr-step', function () { self.pdrStep(); });
+            this.bindMenuAction('conj-concrete', function () { self.concreteStep(); });
+            this.bindMenuAction('conj-gather', function () { self.gatherFacts(); });
             this.bindMenuAction('conj-reverse', function () { self.reverseStep(); });
             this.bindMenuAction('conj-path-reach', function () { self.pathReach(); });
             this.bindMenuAction('conj-reach', function () { self.reachStep(); });
@@ -912,7 +909,7 @@ class IvyRuntime {
             this.bindMenuAction('conj-recalculate', function () { self.recalculateGraph(); });
             this.bindMenuAction('conj-diagram', function () { self.diagramDomain(); });
             this.bindMenuAction('conj-remember', function () { self.rememberGraph(); });
-            this.bindMenuAction('conj-export', function () { self.exportConjecture(); });
+            this.bindMenuAction('conj-reach-export', function () { self.exportConjecture(); });
             this.bindMenuAction('view-add-relation', function () { self.addRelationFromString(); });
             this.bindMenuAction('view-relayout-dot', function () { self.relayoutConceptGraph(); });
 
@@ -2869,6 +2866,28 @@ class IvyRuntime {
         var tab = this.sheetTab(sheetId);
         var label = tab ? tab.querySelector('span') : null;
         return label ? label.textContent : sheetId;
+    }
+
+    getUIMode() {
+        var modeEl = document.getElementById('ui-mode-select');
+        return modeEl ? modeEl.value : (this.uiMode || 'cti');
+    }
+
+    setUIMode(mode, options = undefined) {
+        var normalized = mode === 'reachability' ? 'reachability' : 'cti';
+        this.uiMode = normalized;
+        var modeEl = document.getElementById('ui-mode-select');
+        if (modeEl) modeEl.value = normalized;
+        if (document.body) {
+            document.body.setAttribute('data-ui-mode', normalized);
+        }
+        this.closeAllDropdowns();
+        var opts = options || {};
+        if (opts.announce && this.controls) {
+            var label = normalized === 'reachability' ? 'reachability graph mode' : 'counterexample-to-induction mode';
+            this.controls.setStatus('Workflow: ' + label);
+        }
+        return normalized;
     }
 
     getMode() {

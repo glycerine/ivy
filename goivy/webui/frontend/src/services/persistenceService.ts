@@ -58,6 +58,7 @@ export function createIvyPersist(winArg = globalThis.window) {
           filePath: app._persistedFilePath || app._persistedFileName || '',
           fileContent: app._persistedFileContent || '',
           selectedArgNode: persist._selectedArgNode(app),
+          uiMode: typeof app.getUIMode === 'function' ? app.getUIMode() : persist._getUIMode(),
           mode: persist._getMode(),
           conceptSelections: persist._conceptSelections(app),
           toggles: persist.getToggles(app),
@@ -289,6 +290,10 @@ export function createIvyPersist(winArg = globalThis.window) {
           app._persistedConceptRelations = conceptData;
         }
 
+        if (state.uiMode) {
+          if (typeof app.setUIMode === 'function') app.setUIMode(state.uiMode);
+          else persist._setUIMode(state.uiMode);
+        }
         if (state.mode) persist._setMode(state.mode);
         if (state.selectedArgNode && app.uiDataStore) {
           app.uiDataStore.setSelectedArgNode(app.activeSheetId || 'sheet-1', state.selectedArgNode);
@@ -342,6 +347,18 @@ export function createIvyPersist(winArg = globalThis.window) {
     _setMode(mode) {
       const select = doc && doc.getElementById('mode-select');
       if (select && mode) select.value = mode;
+    },
+
+    _getUIMode() {
+      const select = doc && doc.getElementById('ui-mode-select');
+      return select ? select.value : 'cti';
+    },
+
+    _setUIMode(mode) {
+      const normalized = mode === 'reachability' ? 'reachability' : 'cti';
+      const select = doc && doc.getElementById('ui-mode-select');
+      if (select) select.value = normalized;
+      if (doc && doc.body) doc.body.setAttribute('data-ui-mode', normalized);
     },
 
     _selectedArgNode(app) {

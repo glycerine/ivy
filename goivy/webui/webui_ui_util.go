@@ -145,8 +145,7 @@ type MenuBarDef struct {
 	Menus []MenuDef `json:"menus"`
 }
 
-// BrowserMenuDescriptors is the browser-facing menu payload. The underlying
-// menu contents still come from the Python-shaped Go UI structs.
+// BrowserMenuDescriptors is the browser-facing menu payload.
 type BrowserMenuDescriptors struct {
 	Arg     []MenuDef `json:"arg"`
 	Concept []MenuDef `json:"concept"`
@@ -160,8 +159,8 @@ func BuildMenuBar(menus []MenuDef) *MenuBarDef {
 // BuildBrowserMenuDescriptors returns the current browser menu descriptors.
 func BuildBrowserMenuDescriptors() *BrowserMenuDescriptors {
 	return &BrowserMenuDescriptors{
-		Arg:     BrowserizeMenuDefs(NewAnalysisGraphUI().Menus(), "action"),
-		Concept: BrowserizeMenuDefs(NewGraphWidget(nil).Menus(), "action"),
+		Arg:     BrowserizeMenuDefs(NewCTIAnalysisGraphUI(nil).CTIMenus(), "action"),
+		Concept: BrowserizeMenuDefs(ConceptGraphUIMenus(), "action"),
 	}
 }
 

@@ -27,7 +27,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
 </head>
-<body>
+<body data-ui-mode="cti">
     <div id="menubar">
         <div class="menu-group">
             <div class="dropdown">
@@ -49,6 +49,13 @@
             </div>
         </div>
         <div class="menu-group">
+            <label class="menu-label" for="ui-mode-select">Workflow</label>
+            <select id="ui-mode-select" aria-label="Workflow mode">
+                <option value="cti" selected>counterexample-to-induction mode</option>
+                <option value="reachability">reachability graph mode</option>
+            </select>
+        </div>
+        <div class="menu-group ui-mode-only ui-mode-reachability">
             <span class="menu-label">Mode</span>
             <select id="mode-select">
                 <option value="induction">Induction</option>
@@ -58,12 +65,14 @@
                 <option value="bounded">Bounded</option>
             </select>
         </div>
-        <div class="menu-group">
+        <div class="menu-group ui-mode-only ui-mode-reachability">
             <button id="btn-check" class="menu-btn action-btn">Check</button>
             <button id="btn-show-reachable" class="menu-btn">Show Reachable</button>
             <button id="btn-undo" class="menu-btn">Undo</button>
             <button id="btn-reset-domain" class="menu-btn">Reset Domain</button>
             <button id="btn-diagram-domain" class="menu-btn">Diagram Domain</button>
+        </div>
+        <div class="menu-group">
             <span id="loaded-file" class="loaded-file"></span>
         </div>
         <div class="menu-group menu-right">
@@ -91,7 +100,7 @@
                                     <div class="panel-header">
                                         <strong class="column-title">Reachability Graph</strong>
                                         <div class="panel-header-actions">
-                                            <div class="dropdown">
+                                            <div class="dropdown ui-mode-only ui-mode-cti">
                                                 <span class="panel-menu" data-dropdown="arg-inv-menu">Invariant</span>
                                                 <div id="arg-inv-menu" class="dropdown-content">
                                                     <a href="#" id="arg-check-induction">Check induction</a>
@@ -100,7 +109,6 @@
                                                     <a href="#" id="arg-weaken">Weaken</a>
                                                     <div class="dropdown-sep"></div>
                                                     <a href="#" id="arg-save-invariant">Save Invariant...</a>
-                                                    <a href="#" id="arg-save-abs">Save Abstraction...</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -112,20 +120,30 @@
                                     <div class="panel-header">
                                         <strong class="column-title">Concept graph</strong>
                                         <div class="panel-header-actions">
-                                            <div class="dropdown">
+                                            <div class="dropdown ui-mode-only ui-mode-cti">
                                                 <span class="panel-menu" data-dropdown="conj-menu">Conjecture</span>
                                                 <div id="conj-menu" class="dropdown-content">
                                                     <a href="#" id="conj-undo">Undo</a>
                                                     <a href="#" id="conj-redo">Redo</a>
                                                     <div class="dropdown-sep"></div>
-                                                    <a href="#" id="conj-pdr-step">PDR step</a>
-                                                    <a href="#" id="conj-concrete">Concrete</a>
-                                                    <a href="#" id="conj-gather">Gather</a>
-                                                    <a href="#" id="conj-cti-gather">CTI Gather</a>
+                                                    <a href="#" id="conj-cti-gather">Gather</a>
                                                     <a href="#" id="conj-cti-minimize">Minimize</a>
                                                     <a href="#" id="conj-cti-check-sufficient">Check sufficient</a>
                                                     <a href="#" id="conj-cti-check-inductive">Check relative induction</a>
                                                     <a href="#" id="conj-cti-strengthen">Strengthen</a>
+                                                    <div class="dropdown-sep"></div>
+                                                    <a href="#" id="conj-export">Export</a>
+                                                </div>
+                                            </div>
+                                            <div class="dropdown ui-mode-only ui-mode-reachability">
+                                                <span class="panel-menu" data-dropdown="reach-action-menu">Action</span>
+                                                <div id="reach-action-menu" class="dropdown-content">
+                                                    <a href="#" id="conj-reach-undo">Undo</a>
+                                                    <a href="#" id="conj-reach-redo">Redo</a>
+                                                    <div class="dropdown-sep"></div>
+                                                    <a href="#" id="conj-pdr-step">PDR step</a>
+                                                    <a href="#" id="conj-concrete">Concrete</a>
+                                                    <a href="#" id="conj-gather">Gather</a>
                                                     <a href="#" id="conj-reverse">Reverse</a>
                                                     <a href="#" id="conj-path-reach">Path reach</a>
                                                     <a href="#" id="conj-reach">Reach</a>
@@ -135,7 +153,7 @@
                                                     <a href="#" id="conj-recalculate">Recalculate</a>
                                                     <a href="#" id="conj-diagram">Diagram</a>
                                                     <a href="#" id="conj-remember">Remember</a>
-                                                    <a href="#" id="conj-export">Export</a>
+                                                    <a href="#" id="conj-reach-export">Export</a>
                                                 </div>
                                             </div>
                                             <div class="dropdown">

@@ -105,8 +105,8 @@ test('menubar has expected top-level labels', async ({ page }) => {
   const menubar = page.locator('#menubar');
   await expect(menubar).toBeVisible();
   await expect(menubar).toContainText('File');
-  await expect(menubar).toContainText('Mode');
-  await expect(menubar).toContainText('Check');
+  await expect(page.locator('#ui-mode-select')).toBeVisible();
+  await expect(page.locator('#ui-mode-select')).toHaveValue('cti');
 });
 
 test('status and info panels are present', async ({ page }) => {
@@ -149,14 +149,25 @@ test('browser fetch can get concept JSON', async ({ page, request }) => {
   expect(body).toBeTruthy();
 });
 
-test('mode select can change to abstract', async ({ page }) => {
+test('workflow mode selector switches CTI and reachability controls', async ({ page }) => {
   await openIvy(page);
 
-  const mode = page.locator('#mode-select');
-  await expect(mode).toBeVisible();
-  await expect(mode).toHaveValue('pdr');
-  await mode.selectOption('abstract');
-  await expect(mode).toHaveValue('abstract');
+  await expect(page.locator('#mode-select')).toBeHidden();
+  await expect(page.locator('#btn-check')).toBeHidden();
+  await expect(page.locator('#btn-show-reachable')).toBeHidden();
+  await expect(page.locator('#btn-undo')).toBeHidden();
+  await expect(page.locator('#btn-reset-domain')).toBeHidden();
+  await expect(page.locator('#btn-diagram-domain')).toBeHidden();
+  await expect(page.locator('[data-dropdown="conj-menu"]')).toBeVisible();
+  await expect(page.locator('[data-dropdown="reach-action-menu"]')).toBeHidden();
+
+  await page.locator('#ui-mode-select').selectOption('reachability');
+
+  await expect(page.locator('#mode-select')).toBeVisible();
+  await expect(page.locator('#btn-check')).toBeVisible();
+  await expect(page.locator('#btn-show-reachable')).toBeVisible();
+  await expect(page.locator('[data-dropdown="conj-menu"]')).toBeHidden();
+  await expect(page.locator('[data-dropdown="reach-action-menu"]')).toBeVisible();
 });
 
 test('graph health check passes', async ({ page }) => {
@@ -205,10 +216,11 @@ test('concept graph stays fitted after tutorial hide/show', async ({ page }) => 
   expect(box.y2).toBeLessThanOrEqual(box.height + 4);
 });
 
-test('undo button path does not kill the page', async ({ page }) => {
+test('conjecture undo menu path does not kill the page', async ({ page }) => {
   await openIvy(page);
 
-  await page.locator('#btn-undo').click();
+  await page.locator('[data-dropdown="conj-menu"]').click();
+  await page.locator('#conj-undo').click();
   await expect(page).toHaveTitle(/ivy/i);
 });
 
@@ -646,7 +658,7 @@ test('failed check result can open its trace ARG in a sheet', async ({ page }) =
   expect(result.edgeLabels).toEqual(['trace']);
 });
 
-test('Show Reachable opens a reachable-state ARG sheet', async ({ page }) => {
+test('Show Reachable command opens a reachable-state ARG sheet', async ({ page }) => {
   await openIvy(page);
 
   await page.evaluate(() => {
@@ -664,7 +676,9 @@ test('Show Reachable opens a reachable-state ARG sheet', async ({ page }) => {
     };
   });
 
-  await page.locator('#btn-show-reachable').click();
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().showReachableStates();
+  });
   const result = await page.evaluate(() => {
     const sheet = window.__ivyDiagnostics.runtime().sheets[window.__ivyDiagnostics.runtime().activeSheetId];
     return {
@@ -741,10 +755,12 @@ test('divider exists', async ({ page }) => {
   await expect(page.locator('#divider')).toBeVisible();
 });
 
-test('check button reports a visible status', async ({ page }) => {
+test('check command reports a visible status', async ({ page }) => {
   await openIvy(page);
 
-  await page.locator('#btn-check').click();
+  await page.evaluate(async () => {
+    await window.__ivyDiagnostics.runtime().runCheck();
+  });
   await expect(page.locator('#statusbar')).not.toHaveText('');
 });
 

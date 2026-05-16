@@ -909,7 +909,7 @@ func TestBrowserMenuDescriptors(t *testing.T) {
 	}
 	var foundUndo bool
 	for _, menu := range menus.Concept {
-		if menu.Label != "Action" {
+		if menu.Label != "Conjecture" {
 			continue
 		}
 		for _, item := range menu.Items {
@@ -925,7 +925,7 @@ func TestBrowserMenuDescriptors(t *testing.T) {
 		}
 	}
 	if !foundUndo {
-		t.Fatal("concept Action menu missing undo descriptor")
+		t.Fatal("concept Conjecture menu missing undo descriptor")
 	}
 }
 
