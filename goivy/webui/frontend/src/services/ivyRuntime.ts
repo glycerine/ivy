@@ -774,7 +774,7 @@ class IvyRuntime {
             });
         }
 
-        // File > Load...
+        // File > Open .ivy spec...
         // Use showOpenFilePicker when available so we get a writable FileSystemFileHandle,
         // enabling Ctrl+S to save directly without re-prompting. Fall back to <input> otherwise.
         var loadModel = document.getElementById('file-load');
