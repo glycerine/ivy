@@ -870,8 +870,6 @@ class IvyRuntime {
             bindOptionalButton('btn-undo', function () { self.doUndo(); });
             bindOptionalButton('btn-reset-domain', function () { self.resetDomain(); });
             bindOptionalButton('btn-diagram-domain', function () { self.diagramDomain(); });
-            this.bindMenuAction('top-action-recalculate-all', function () { self.recalculateAll(); });
-            this.bindMenuAction('top-action-show-reachable', function () { self.showReachableStates(); });
 
             // --- Toggle Tutorial ---
             document.getElementById('btn-toggle-tutorial').addEventListener('click', function () {
@@ -889,6 +887,8 @@ class IvyRuntime {
             this.bindMenuAction('arg-diagram', function () { self.diagramDomain(); });
             this.bindMenuAction('arg-weaken', function () { self.weakenInvariant(); });
             this.bindMenuAction('arg-save-invariant', function () { self.saveInvariant(); });
+            this.bindMenuAction('arg-recalculate-all', function () { self.recalculateAll(); });
+            this.bindMenuAction('arg-show-reachable', function () { self.showReachableStates(); });
 
             // --- Concept Panel Menu Items (Conjecture, View) ---
             this.bindMenuAction('conj-undo', function () { self.doUndo(); });
