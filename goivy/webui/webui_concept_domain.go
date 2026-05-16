@@ -1479,48 +1479,87 @@ func GetInitialConceptDomainE(sorts map[string]goivy.Sort, symbols map[string]*g
 			}
 			concepts.SetConcept(name, concept)
 		} else if fs, ok := c.CSort.(*goivy.LogicFunctionSort); ok {
-			switch fs.Arity() {
-			case 1:
-				// Unary relation → node_label (e.g., "semaphore")
-				X := webuiMustVar("X", fs.Domain()[0])
-				app, err := goivy.NewApply(c, X)
-				if err != nil {
-					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+			if goivy.SortEqual(fs.Range(), goivy.Boolean) {
+				switch fs.Arity() {
+				case 1:
+					// Unary relation → node_label (e.g., "semaphore")
+					X := webuiMustVar("X", fs.Domain()[0])
+					app, err := goivy.NewApply(c, X)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X}, app)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					concepts.SetConcept(c.Name, concept)
+					concepts.AppendToList("node_labels", c.Name)
+				case 2:
+					// Binary relation → edge (e.g., "link")
+					X := webuiMustVar("X", fs.Domain()[0])
+					Y := webuiMustVar("Y", fs.Domain()[1])
+					app, err := goivy.NewApply(c, X, Y)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, app)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					concepts.SetConcept(c.Name, concept)
+					concepts.AppendToList("edges", c.Name)
+				case 3:
+					// Ternary relation.
+					X := webuiMustVar("X", fs.Domain()[0])
+					Y := webuiMustVar("Y", fs.Domain()[1])
+					Z := webuiMustVar("Z", fs.Domain()[2])
+					app, err := goivy.NewApply(c, X, Y, Z)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y, Z}, app)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					concepts.SetConcept(c.Name, concept)
 				}
-				concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X}, app)
-				if err != nil {
-					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+			} else {
+				switch fs.Arity() {
+				case 1:
+					X := webuiMustVar("X", fs.Domain()[0])
+					Y := webuiMustVar("Y", fs.Range())
+					app, err := goivy.NewApply(c, X)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					eq, err := goivy.NewEq(app, Y)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, eq)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					concepts.SetConcept(c.Name, concept)
+					concepts.AppendToList("edges", c.Name)
+				case 2:
+					X := webuiMustVar("X", fs.Domain()[0])
+					Y := webuiMustVar("Y", fs.Domain()[1])
+					Z := webuiMustVar("Z", fs.Range())
+					app, err := goivy.NewApply(c, X, Y)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					eq, err := goivy.NewEq(app, Z)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y, Z}, eq)
+					if err != nil {
+						return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
+					}
+					concepts.SetConcept(c.Name, concept)
 				}
-				concepts.SetConcept(c.Name, concept)
-				concepts.AppendToList("node_labels", c.Name)
-			case 2:
-				// Binary relation → edge (e.g., "link")
-				X := webuiMustVar("X", fs.Domain()[0])
-				Y := webuiMustVar("Y", fs.Domain()[1])
-				app, err := goivy.NewApply(c, X, Y)
-				if err != nil {
-					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
-				}
-				concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y}, app)
-				if err != nil {
-					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
-				}
-				concepts.SetConcept(c.Name, concept)
-				concepts.AppendToList("edges", c.Name)
-			case 3:
-				// Ternary relation
-				X := webuiMustVar("X", fs.Domain()[0])
-				Y := webuiMustVar("Y", fs.Domain()[1])
-				Z := webuiMustVar("Z", fs.Domain()[2])
-				app, err := goivy.NewApply(c, X, Y, Z)
-				if err != nil {
-					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
-				}
-				concept, err := NewCDConcept(c.Name, []*goivy.LogicVariable{X, Y, Z}, app)
-				if err != nil {
-					return nil, fmt.Errorf("initial concept domain: symbol %q: %w", c.Name, err)
-				}
-				concepts.SetConcept(c.Name, concept)
 			}
 		}
 	}

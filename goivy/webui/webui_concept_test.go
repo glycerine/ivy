@@ -707,6 +707,39 @@ func TestGetInitialConceptDomain(t *testing.T) {
 	}
 }
 
+func TestGetInitialConceptDomainBinaryFunctionIsNotBooleanEdge(t *testing.T) {
+	mem := mkSort("mem_type")
+	clock := mkSort("tar_clock")
+	value := mkSort("value")
+	sorts := map[string]goivy.Sort{
+		"mem_type":  mem,
+		"tar_clock": clock,
+		"value":     value,
+	}
+	predqSort := mkFuncSort(mem, clock, value)
+	symbols := map[string]*goivy.Const{
+		"rfn.abs.predq": mkConst("rfn.abs.predq", predqSort),
+	}
+
+	cd, err := GetInitialConceptDomainE(sorts, symbols)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if stringSliceContains(cd.Concepts.GetList("edges"), "rfn.abs.predq") {
+		t.Fatal("non-boolean binary function was incorrectly classified as an edge relation")
+	}
+	c := cd.Concepts.GetConcept("rfn.abs.predq")
+	if c == nil {
+		t.Fatal("expected non-boolean binary function concept")
+	}
+	if c.Arity() != 3 {
+		t.Fatalf("expected binary function graph concept arity 3, got %d", c.Arity())
+	}
+	if _, err := cd.GetFacts(nil); err != nil {
+		t.Fatalf("initial domain facts should not treat non-boolean binary functions as edge predicates: %v", err)
+	}
+}
+
 func TestGetInitialConceptDomainEmpty(t *testing.T) {
 	cd := GetInitialConceptDomain(nil, nil)
 	if cd == nil {
