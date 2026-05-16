@@ -409,7 +409,10 @@ func (cc *CDConceptCombiner) Call(concepts ...*CDConcept) (goivy.Expr, error) {
 	// Build substitution: replace each combiner variable applied to args
 	// with the concept's formula applied to the same args.
 	// This is substitute_apply in Python.
-	result := substituteApplyNode(cc.Formula, cc.Variables, concepts)
+	result, err := substituteApplyNode(cc.Formula, cc.Variables, concepts)
+	if err != nil {
+		return nil, err
+	}
 	// Concretize sorts — replaces TopSort with inferred concrete sorts.
 	// If this fails, the formula still has TopSort and cannot be sent to Z3.
 	cr, err := goivy.ConcretizeSorts(result, nil)
@@ -434,7 +437,10 @@ func (cc *CDConceptCombiner) String() string {
 
 // substituteApplyNode replaces applications of combiner variables with
 // concept formula applications. This corresponds to Python's substitute_apply.
-func substituteApplyNode(node goivy.Expr, variables []*goivy.LogicVariable, concepts []*CDConcept) goivy.Expr {
+func substituteApplyNode(node goivy.Expr, variables []*goivy.LogicVariable, concepts []*CDConcept) (goivy.Expr, error) {
+	if node == nil {
+		return nil, fmt.Errorf("concept combiner formula is nil")
+	}
 	// Build a mapping from variable name -> concept (by_name matching like Python).
 	varMap := make(map[string]*CDConcept)
 	for i, v := range variables {
@@ -443,7 +449,10 @@ func substituteApplyNode(node goivy.Expr, variables []*goivy.LogicVariable, conc
 	return substApplyRec(node, varMap)
 }
 
-func substApplyRec(node goivy.Expr, varMap map[string]*CDConcept) goivy.Expr {
+func substApplyRec(node goivy.Expr, varMap map[string]*CDConcept) (goivy.Expr, error) {
+	if node == nil {
+		return nil, fmt.Errorf("nil expression in concept combiner substitution")
+	}
 	switch n := node.(type) {
 	case *goivy.Apply:
 		// Check if function is a variable that should be replaced.
@@ -452,93 +461,153 @@ func substApplyRec(node goivy.Expr, varMap map[string]*CDConcept) goivy.Expr {
 				// Replace V(args...) with concept.formula[concept.vars -> args]
 				args := make([]goivy.Expr, len(n.Terms))
 				for i, t := range n.Terms {
-					args[i] = substApplyRec(t, varMap)
+					arg, err := substApplyRec(t, varMap)
+					if err != nil {
+						return nil, err
+					}
+					args[i] = arg
 				}
 				result, err := concept.Call(args...)
 				if err != nil {
-					return node // fallback
+					return nil, fmt.Errorf("substitute concept %q: %w", concept.Name, err)
 				}
-				return result
+				return result, nil
 			}
 		}
 		// Recurse on function and terms.
-		newFunc := substApplyRec(n.Func, varMap)
+		newFunc, err := substApplyRec(n.Func, varMap)
+		if err != nil {
+			return nil, err
+		}
 		newTerms := make([]goivy.Expr, len(n.Terms))
 		for i, t := range n.Terms {
-			newTerms[i] = substApplyRec(t, varMap)
+			term, err := substApplyRec(t, varMap)
+			if err != nil {
+				return nil, err
+			}
+			newTerms[i] = term
 		}
 		result, err := goivy.NewApply(newFunc, newTerms...)
 		if err != nil {
-			return node
+			return nil, fmt.Errorf("rebuild apply %s: %w", n, err)
 		}
-		return result
+		return result, nil
 
 	case *goivy.Eq:
-		t1 := substApplyRec(n.T1, varMap)
-		t2 := substApplyRec(n.T2, varMap)
+		t1, err := substApplyRec(n.T1, varMap)
+		if err != nil {
+			return nil, err
+		}
+		t2, err := substApplyRec(n.T2, varMap)
+		if err != nil {
+			return nil, err
+		}
 		result, err := goivy.NewEq(t1, t2)
 		if err != nil {
-			return node
+			return nil, fmt.Errorf("rebuild equality %s: %w", n, err)
 		}
-		return result
+		return result, nil
 
 	case *goivy.LogicNot:
-		b := substApplyRec(n.Body, varMap)
-		result, _ := goivy.NewNot(b)
-		return result
+		b, err := substApplyRec(n.Body, varMap)
+		if err != nil {
+			return nil, err
+		}
+		result, err := goivy.NewNot(b)
+		if err != nil {
+			return nil, fmt.Errorf("rebuild negation %s: %w", n, err)
+		}
+		return result, nil
 
 	case *goivy.LogicAnd:
-		terms := substApplySlice(n.Terms, varMap)
-		result, _ := goivy.NewAnd(terms...)
-		return result
+		terms, err := substApplySlice(n.Terms, varMap)
+		if err != nil {
+			return nil, err
+		}
+		result, err := goivy.NewAnd(terms...)
+		if err != nil {
+			return nil, fmt.Errorf("rebuild conjunction %s: %w", n, err)
+		}
+		return result, nil
 
 	case *goivy.LogicOr:
-		terms := substApplySlice(n.Terms, varMap)
-		result, _ := goivy.NewOr(terms...)
-		return result
+		terms, err := substApplySlice(n.Terms, varMap)
+		if err != nil {
+			return nil, err
+		}
+		result, err := goivy.NewOr(terms...)
+		if err != nil {
+			return nil, fmt.Errorf("rebuild disjunction %s: %w", n, err)
+		}
+		return result, nil
 
 	case *goivy.LogicImplies:
-		t1 := substApplyRec(n.T1, varMap)
-		t2 := substApplyRec(n.T2, varMap)
-		if t1 == n.T1 && t2 == n.T2 {
-			return node
+		t1, err := substApplyRec(n.T1, varMap)
+		if err != nil {
+			return nil, err
 		}
-		result, _ := goivy.NewImplies(t1, t2)
-		return result
+		t2, err := substApplyRec(n.T2, varMap)
+		if err != nil {
+			return nil, err
+		}
+		if t1 == n.T1 && t2 == n.T2 {
+			return node, nil
+		}
+		result, err := goivy.NewImplies(t1, t2)
+		if err != nil {
+			return nil, fmt.Errorf("rebuild implication %s: %w", n, err)
+		}
+		return result, nil
 
 	case *goivy.ForAll:
-		b := substApplyRec(n.Body, varMap)
-		if b == n.Body {
-			return node
+		b, err := substApplyRec(n.Body, varMap)
+		if err != nil {
+			return nil, err
 		}
-		result, _ := goivy.NewForAll(n.Variables, b)
-		return result
+		if b == n.Body {
+			return node, nil
+		}
+		result, err := goivy.NewForAll(n.Variables, b)
+		if err != nil {
+			return nil, fmt.Errorf("rebuild forall %s: %w", n, err)
+		}
+		return result, nil
 
 	case *goivy.LogicExists:
-		b := substApplyRec(n.Body, varMap)
-		if b == n.Body {
-			return node
+		b, err := substApplyRec(n.Body, varMap)
+		if err != nil {
+			return nil, err
 		}
-		result, _ := goivy.NewExists(n.Variables, b)
-		return result
+		if b == n.Body {
+			return node, nil
+		}
+		result, err := goivy.NewExists(n.Variables, b)
+		if err != nil {
+			return nil, fmt.Errorf("rebuild exists %s: %w", n, err)
+		}
+		return result, nil
 
 	case *goivy.LogicVariable:
 		// A bare variable (not applied) that's in the map:
 		// This means U used as a standalone, treat as U() but concepts
 		// don't support 0-arity this way. Return as-is.
-		return node
+		return node, nil
 
 	default:
-		return node
+		return node, nil
 	}
 }
 
-func substApplySlice(terms []goivy.Expr, varMap map[string]*CDConcept) []goivy.Expr {
+func substApplySlice(terms []goivy.Expr, varMap map[string]*CDConcept) ([]goivy.Expr, error) {
 	newTerms := make([]goivy.Expr, len(terms))
 	for i, t := range terms {
-		newTerms[i] = substApplyRec(t, varMap)
+		term, err := substApplyRec(t, varMap)
+		if err != nil {
+			return nil, err
+		}
+		newTerms[i] = term
 	}
-	return newTerms
+	return newTerms, nil
 }
 
 // ---------------------------------------------------------------------------
@@ -779,7 +848,7 @@ func (d *CDConceptDomain) PossibleNodeLabels() []string {
 }
 
 // GetCombFacts computes facts for a single combination, appending to *facts.
-func (d *CDConceptDomain) GetCombFacts(combinationName, combinerClass string, conceptNames [][]string, facts *[]Fact) {
+func (d *CDConceptDomain) GetCombFacts(combinationName, combinerClass string, conceptNames [][]string, facts *[]Fact) error {
 	combinerNames := cdResolveName(d.Combiners, combinerClass)
 	// Cartesian product of conceptNames
 	for _, conceptCombo := range cartesianProduct(conceptNames) {
@@ -800,8 +869,10 @@ func (d *CDConceptDomain) GetCombFacts(combinationName, combinerClass string, co
 			}
 			formula, err := combiner.Call(concepts...)
 			if err != nil || formula == nil {
-				// Skip ill-sorted or unconcretizable instantiations.
-				continue
+				if err == nil {
+					err = fmt.Errorf("combiner returned nil formula")
+				}
+				return fmt.Errorf("concept fact %q/%q on %v: %w", combinationName, combinerName, conceptCombo, err)
 			}
 			tag := make(Tag, 0, 2+len(conceptCombo))
 			tag = append(tag, combinationName, combinerName)
@@ -809,6 +880,7 @@ func (d *CDConceptDomain) GetCombFacts(combinationName, combinerClass string, co
 			*facts = append(*facts, Fact{Tag: tag, Formula: formula})
 		}
 	}
+	return nil
 }
 
 // GetFacts returns all facts from all combinations.
@@ -816,7 +888,7 @@ func (d *CDConceptDomain) GetCombFacts(combinationName, combinerClass string, co
 // Signature: projection(conceptName, categoryName) bool.
 //
 // Special-cases "edge_info", "node_label", and "enum" for performance.
-func (d *CDConceptDomain) GetFacts(projection func(string, string) bool) []Fact {
+func (d *CDConceptDomain) GetFacts(projection func(string, string) bool) ([]Fact, error) {
 	var facts []Fact
 
 	// Build nodes-by-sort-name lookup.
@@ -854,7 +926,9 @@ func (d *CDConceptDomain) GetFacts(projection func(string, string) bool) []Fact 
 				}
 				c0 := nodesBySortName[s0]
 				c1 := nodesBySortName[s1]
-				d.GetCombFacts("edge_info", "edge_info", [][]string{{e}, c0, c1}, &facts)
+				if err := d.GetCombFacts("edge_info", "edge_info", [][]string{{e}, c0, c1}, &facts); err != nil {
+					return nil, err
+				}
 			}
 		} else if combinationName == "node_label" || combinationName == "enum" {
 			labelCategory := ""
@@ -877,7 +951,9 @@ func (d *CDConceptDomain) GetFacts(projection func(string, string) bool) []Fact 
 						nodesBySortName[lcS0] = nil
 					}
 					c0 := nodesBySortName[lcS0]
-					d.GetCombFacts("node_label", "node_label", [][]string{c0, {cname}}, &facts)
+					if err := d.GetCombFacts("node_label", "node_label", [][]string{c0, {cname}}, &facts); err != nil {
+						return nil, err
+					}
 				}
 			}
 		} else {
@@ -887,10 +963,12 @@ func (d *CDConceptDomain) GetFacts(projection func(string, string) bool) []Fact 
 				conceptNames[i] = cdResolveConceptName(d.Concepts, x)
 			}
 			conceptNames = cdFilterConceptNames(conceptNames, conceptSets, projection)
-			d.GetCombFacts(combinationName, combination.CombinerClass(), conceptNames, &facts)
+			if err := d.GetCombFacts(combinationName, combination.CombinerClass(), conceptNames, &facts); err != nil {
+				return nil, err
+			}
 		}
 	}
-	return facts
+	return facts, nil
 }
 
 // Split splits a concept into sub-concepts based on split_by.

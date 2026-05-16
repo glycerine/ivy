@@ -366,7 +366,7 @@ func (g *Graph) NewRelation(concept *Concept) {
 }
 
 // SetState sets the current clauses state (Python: Graph.set_state).
-func (g *Graph) SetState(clauses string, recomp bool, clearConstraints bool, reset bool) {
+func (g *Graph) SetState(clauses string, recomp bool, clearConstraints bool, reset bool) error {
 	g.mu.Lock()
 	g.State = clauses
 	if clearConstraints && g.InteractiveSess != nil {
@@ -379,8 +379,9 @@ func (g *Graph) SetState(clauses string, recomp bool, clearConstraints bool, res
 	}
 	g.mu.Unlock()
 	if recomp {
-		g.Recompute()
+		return g.Recompute()
 	}
+	return nil
 }
 
 // SetConcrete stores concrete clauses (Python: Graph.set_concrete).
@@ -391,11 +392,17 @@ func (g *Graph) SetConcrete(clauses string) {
 }
 
 // Recompute recomputes abstract value and cy elements (Python: Graph.recompute).
-func (g *Graph) Recompute() {
+func (g *Graph) Recompute() error {
 	g.mu.Lock()
 	defer g.mu.Unlock()
 	g.ConceptSess.Recompute()
+	if g.InteractiveSess != nil {
+		if err := g.InteractiveSess.Recompute(nil); err != nil {
+			return err
+		}
+	}
 	g.CyElems = RenderConceptGraph(g.ConceptSess, g.Checks)
+	return nil
 }
 
 // SetCheckbox sets a checkbox by concept name and index (Python: Graph.set_checkbox).
@@ -530,7 +537,7 @@ func (g *Graph) Empty(nodeID string, recompute bool) error {
 		return err
 	}
 	if recompute {
-		g.Recompute()
+		return g.Recompute()
 	}
 	return nil
 }
@@ -543,7 +550,9 @@ func (g *Graph) MaterializeNode(nodeID string, recompute bool) (string, error) {
 	}
 	witnessName := nodeID + "_witness"
 	if recompute {
-		g.Recompute()
+		if err := g.Recompute(); err != nil {
+			return "", err
+		}
 	}
 	return witnessName, nil
 }
@@ -556,7 +565,9 @@ func (g *Graph) MaterializeEdge(relID, headID, tailID string, truth bool, recomp
 		g.InteractiveSess.Push()
 		headC, tailC := g.InteractiveSess.materializeEdge(relID, headID, tailID, truth)
 		if recompute {
-			g.InteractiveSess.Recompute(nil)
+			if err := g.InteractiveSess.Recompute(nil); err != nil {
+				return nil, err
+			}
 		}
 		var witnesses []string
 		if headC != nil {
@@ -572,13 +583,15 @@ func (g *Graph) MaterializeEdge(relID, headID, tailID string, truth bool, recomp
 		tailID + "_witness",
 	}
 	if recompute {
-		g.Recompute()
+		if err := g.Recompute(); err != nil {
+			return nil, err
+		}
 	}
 	return witnesses, nil
 }
 
 // AddConstraints appends constraints to the concept session (Python: Graph.add_constraints).
-func (g *Graph) AddConstraints(constraints []string, recompute bool) {
+func (g *Graph) AddConstraints(constraints []string, recompute bool) error {
 	g.mu.Lock()
 	defer g.mu.Unlock()
 	if g.InteractiveSess != nil {
@@ -590,17 +603,20 @@ func (g *Graph) AddConstraints(constraints []string, recompute bool) {
 			g.InteractiveSess.Suppose(expr)
 		}
 		if recompute {
-			g.InteractiveSess.Recompute(nil)
+			if err := g.InteractiveSess.Recompute(nil); err != nil {
+				return err
+			}
 		}
-		return
+		return nil
 	}
 	if recompute {
-		g.Recompute()
+		return g.Recompute()
 	}
+	return nil
 }
 
 // AddConstraintsExpr appends logic.Expr constraints to the interactive session.
-func (g *Graph) AddConstraintsExpr(constraints []goivy.Expr, recompute bool) {
+func (g *Graph) AddConstraintsExpr(constraints []goivy.Expr, recompute bool) error {
 	g.mu.Lock()
 	defer g.mu.Unlock()
 	if g.InteractiveSess != nil {
@@ -608,9 +624,12 @@ func (g *Graph) AddConstraintsExpr(constraints []goivy.Expr, recompute bool) {
 			g.InteractiveSess.Suppose(expr)
 		}
 		if recompute {
-			g.InteractiveSess.Recompute(nil)
+			if err := g.InteractiveSess.Recompute(nil); err != nil {
+				return err
+			}
 		}
 	}
+	return nil
 }
 
 // SetFacts sets the constraint facts (Python: Graph.set_facts).

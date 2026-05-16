@@ -79,7 +79,9 @@ func NewConceptInteractiveSession(
 		widget.SetConceptSession(s)
 	}
 	if recompute {
-		s.Recompute(nil)
+		if err := s.Recompute(nil); err != nil {
+			panic(err)
+		}
 	}
 	return s
 }
@@ -179,14 +181,19 @@ func (s *ConceptInteractiveSession) GetProjection() func(string, string) bool {
 
 // Recompute runs alpha abstraction on the domain with the current state.
 // If projection is nil, a default all-true projection is used.
-func (s *ConceptInteractiveSession) Recompute(projection func(string, string) bool) {
+func (s *ConceptInteractiveSession) Recompute(projection func(string, string) bool) error {
 	if projection == nil {
 		projection = func(string, string) bool { return true }
 	}
-	s.AbstractValue = WebUIAlpha(s.Domain, s.ToFormula(), s.Cache, projection)
+	abstractValue, err := WebUIAlpha(s.Domain, s.ToFormula(), s.Cache, projection)
+	if err != nil {
+		return fmt.Errorf("concept graph recompute failed: %w", err)
+	}
+	s.AbstractValue = abstractValue
 	if s.Widget != nil {
 		s.Widget.Render()
 	}
+	return nil
 }
 
 // Push saves the current domain and suppose constraints for later undo.
@@ -222,8 +229,7 @@ func (s *ConceptInteractiveSession) Undo() error {
 	if err := s.Pop(); err != nil {
 		return err
 	}
-	s.Recompute(nil)
-	return nil
+	return s.Recompute(nil)
 }
 
 // Redo restores the most recent undone state from the redo stack.
@@ -240,25 +246,24 @@ func (s *ConceptInteractiveSession) Redo() error {
 	s.RedoStack = s.RedoStack[:len(s.RedoStack)-1]
 	s.Domain = entry.Domain.Copy()
 	s.SupposeConstraints = append([]goivy.Expr{}, entry.SupposeConstraints...)
-	s.Recompute(nil)
-	return nil
+	return s.Recompute(nil)
 }
 
 // Split splits a concept by another concept, creating +/- variants.
-func (s *ConceptInteractiveSession) Split(concept, splitBy string) {
+func (s *ConceptInteractiveSession) Split(concept, splitBy string) error {
 	s.Push()
 	s.Domain.Split(concept, splitBy)
-	s.Recompute(nil)
+	return s.Recompute(nil)
 }
 
 // RemoveConcepts removes concepts from the domain.
-func (s *ConceptInteractiveSession) RemoveConcepts(concepts ...string) {
+func (s *ConceptInteractiveSession) RemoveConcepts(concepts ...string) error {
 	s.Push()
 	for _, concept := range concepts {
 		s.Domain.Concepts.Delete(concept)
 		s.Domain.ReplaceConcept(concept, nil)
 	}
-	s.Recompute(nil)
+	return s.Recompute(nil)
 }
 
 // supposeEmpty adds a constraint that the concept is empty (internal, no push).
@@ -278,10 +283,10 @@ func (s *ConceptInteractiveSession) supposeEmpty(concept string) {
 }
 
 // SupposeEmpty marks a concept as empty with undo support.
-func (s *ConceptInteractiveSession) SupposeEmpty(concept string) {
+func (s *ConceptInteractiveSession) SupposeEmpty(concept string) error {
 	s.Push()
 	s.supposeEmpty(concept)
-	s.Recompute(nil)
+	return s.Recompute(nil)
 }
 
 // GetWitnesses returns constants that are witnesses for a unary concept.
@@ -399,10 +404,10 @@ func (s *ConceptInteractiveSession) materializeNode(conceptName string) *goivy.C
 }
 
 // MaterializeNode creates a concrete witness for a concept with undo support.
-func (s *ConceptInteractiveSession) MaterializeNode(conceptName string) {
+func (s *ConceptInteractiveSession) MaterializeNode(conceptName string) error {
 	s.Push()
 	s.materializeNode(conceptName)
-	s.Recompute(nil)
+	return s.Recompute(nil)
 }
 
 // materializeEdge creates concrete witnesses for source and target nodes
@@ -439,10 +444,10 @@ func (s *ConceptInteractiveSession) materializeEdge(edge, source, target string,
 }
 
 // MaterializeEdge materializes an edge with undo support.
-func (s *ConceptInteractiveSession) MaterializeEdge(edge, source, target string, polarity bool) {
+func (s *ConceptInteractiveSession) MaterializeEdge(edge, source, target string, polarity bool) error {
 	s.Push()
 	s.materializeEdge(edge, source, target, polarity)
-	s.Recompute(nil)
+	return s.Recompute(nil)
 }
 
 // normalizeFacts normalizes a list of formulas by removing tautological equalities.
@@ -621,12 +626,11 @@ func (s *ConceptInteractiveSession) LoadDomain(name string) error {
 	}
 	s.Push()
 	s.Domain = d.Copy()
-	s.Recompute(nil)
-	return nil
+	return s.Recompute(nil)
 }
 
 // ReplaceDomain replaces the domain and suppose constraints.
-func (s *ConceptInteractiveSession) ReplaceDomain(newDomain *CDConceptDomain, newSupposeConstraints []goivy.Expr) {
+func (s *ConceptInteractiveSession) ReplaceDomain(newDomain *CDConceptDomain, newSupposeConstraints []goivy.Expr) error {
 	s.Push()
 	s.Domain = newDomain.Copy()
 	if newSupposeConstraints != nil {
@@ -634,7 +638,7 @@ func (s *ConceptInteractiveSession) ReplaceDomain(newDomain *CDConceptDomain, ne
 	} else {
 		s.SupposeConstraints = nil
 	}
-	s.Recompute(nil)
+	return s.Recompute(nil)
 }
 
 // NamedConcept is a (name, concept) pair returned by GetProjections.
@@ -681,45 +685,45 @@ func (s *ConceptInteractiveSession) GetProjections(node string) []NamedConcept {
 }
 
 // AddEdge adds an edge concept to the domain with undo support.
-func (s *ConceptInteractiveSession) AddEdge(name string, concept *CDConcept) {
+func (s *ConceptInteractiveSession) AddEdge(name string, concept *CDConcept) error {
 	s.Push()
 	s.Domain.Concepts.SetConcept(name, concept)
 	s.Domain.Concepts.AppendToList("edges", name)
-	s.Recompute(nil)
+	return s.Recompute(nil)
 }
 
 // AddCustomEdge adds a custom edge combination to the domain.
-func (s *ConceptInteractiveSession) AddCustomEdge(edge, source, target string) {
+func (s *ConceptInteractiveSession) AddCustomEdge(edge, source, target string) error {
 	s.Push()
 	s.Domain.Combinations = append(s.Domain.Combinations,
 		NewCombination("custom_edge_info", "edge_info", edge, source, target),
 	)
-	s.Recompute(nil)
+	return s.Recompute(nil)
 }
 
 // AddCustomNodeLabel adds a custom node label combination.
-func (s *ConceptInteractiveSession) AddCustomNodeLabel(node, nodeLabel string) {
+func (s *ConceptInteractiveSession) AddCustomNodeLabel(node, nodeLabel string) error {
 	s.Push()
 	s.Domain.Combinations = append(s.Domain.Combinations,
 		NewCombination("custom_node_label", "node_label", node, nodeLabel),
 	)
-	s.Recompute(nil)
+	return s.Recompute(nil)
 }
 
 // Reset restores the concept domain to its initial state.
-func (s *ConceptInteractiveSession) Reset(sorts map[string]goivy.Sort, symbols map[string]*goivy.Const) {
+func (s *ConceptInteractiveSession) Reset(sorts map[string]goivy.Sort, symbols map[string]*goivy.Const) error {
 	s.Push()
 	s.Domain = GetInitialConceptDomain(sorts, symbols)
 	s.Cache = make(map[string]bool)
-	s.Recompute(nil)
+	return s.Recompute(nil)
 }
 
 // Diagram switches to the diagram concept domain.
-func (s *ConceptInteractiveSession) Diagram(sorts map[string]goivy.Sort, symbols []*goivy.Const, state goivy.Expr) {
+func (s *ConceptInteractiveSession) Diagram(sorts map[string]goivy.Sort, symbols []*goivy.Const, state goivy.Expr) error {
 	s.Push()
 	s.Domain = GetDiagramConceptDomain(sorts, symbols, state)
 	s.Cache = make(map[string]bool)
-	s.Recompute(nil)
+	return s.Recompute(nil)
 }
 
 // RelationNames returns display names for the state checkbox panel.

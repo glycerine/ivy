@@ -452,10 +452,16 @@ func (gbe *GoBackend) ConceptMaterialize(sessionID string, req ConceptMaterializ
 			return nil
 		}
 		if sess.ConceptSess != nil {
-			sess.ConceptSess.MaterializeNode(concept)
+			err = sess.ConceptSess.MaterializeNode(concept)
+			if err != nil {
+				return nil
+			}
 		}
 		if sess.AGUI != nil && sess.AGUI.CurrentConceptGraph != nil {
-			_, _ = sess.AGUI.CurrentConceptGraph.MaterializeNode(concept)
+			_, err = sess.AGUI.CurrentConceptGraph.MaterializeNode(concept)
+			if err != nil {
+				return nil
+			}
 		}
 		err = sess.SimpleSess.Materialize(concept)
 		if err != nil {

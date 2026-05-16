@@ -578,7 +578,9 @@ func (s *Session) selectConceptARGNode(sheetID, nodeID string) (selectedNode, st
 		}
 		s.ConceptSess.GoalConstraints = nil
 		s.ConceptSess.Cache = make(map[string]bool)
-		s.ConceptSess.Recompute(nil)
+		if err := s.ConceptSess.Recompute(nil); err != nil {
+			return "", "", err
+		}
 		s.syncAbstractValue()
 	}
 	return fmt.Sprintf("state_%d", idx), ui.StateLabel(idx), nil
@@ -794,10 +796,16 @@ func (s *Session) pdrStepConceptGraphLocked(sheetID string) (map[string]interfac
 	status := outcome.status
 	message := outcome.message
 	if outcome.reverseFalse {
-		w.Backtrack()
-		w.Recalculate()
+		if err := w.Backtrack(); err != nil {
+			return nil, err
+		}
+		if err := w.Recalculate(); err != nil {
+			return nil, err
+		}
 		if w.GraphStack != nil && w.GraphStack.CanUndo() && w.G() != nil && len(w.G().ReverseResult) > 0 {
-			w.Backtrack()
+			if err := w.Backtrack(); err != nil {
+				return nil, err
+			}
 			status = "backtracked"
 			message = "PDR step backtracked to the previous goal."
 		} else {
@@ -884,12 +892,16 @@ func (s *Session) reverseConceptGraphGoalLocked(w *GraphWidget, parentState *goi
 	g := w.G()
 	g.ParentState = nextParent
 	combined := goivy.AndClausesTyped(nextParent.Clauses, reverseClauses)
-	g.SetState(clausesDisplayString(combined), true, true, false)
+	if err := g.SetState(clausesDisplayString(combined), true, true, false); err != nil {
+		return nil, err
+	}
 	g.ReverseResult = []string{
 		clausesDisplayString(nextParent.Clauses),
 		clausesDisplayString(reverseClauses),
 	}
-	w.Update()
+	if err := w.Update(); err != nil {
+		return nil, err
+	}
 
 	status := "reversed"
 	message := "PDR step reversed the goal."
@@ -939,7 +951,7 @@ func (s *Session) diagramReversedConceptGoalLocked(w *GraphWidget, outcome *pdrR
 		false,
 	)
 	if dgm == nil {
-		w.Backtrack()
+		_ = w.Backtrack()
 		return "vacuous", "The current state is vacuous. Backtracking."
 	}
 
@@ -950,8 +962,12 @@ func (s *Session) diagramReversedConceptGoalLocked(w *GraphWidget, outcome *pdrR
 	})
 	g := w.G()
 	g.SetFactsExpr(goal.Fmlas)
-	g.SetState(clausesDisplayString(goal), true, false, false)
-	w.Update()
+	if err := g.SetState(clausesDisplayString(goal), true, false, false); err != nil {
+		return "error", err.Error()
+	}
+	if err := w.Update(); err != nil {
+		return "error", err.Error()
+	}
 	return "diagrammed", "PDR step diagrammed the predecessor goal."
 }
 
@@ -1024,9 +1040,9 @@ func relationNamesUsedByClauses(mod *goivy.Module, clauses *goivy.Clauses) []str
 	return rels
 }
 
-func (s *Session) installCounterexampleFeedback(cexTrace *goivy.TraceBase, finalCond, currentConj *goivy.Clauses) (traceText, details string) {
+func (s *Session) installCounterexampleFeedback(cexTrace *goivy.TraceBase, finalCond, currentConj *goivy.Clauses) (traceText, details string, err error) {
 	if cexTrace == nil {
-		return "", ""
+		return "", "", nil
 	}
 	ag := cexTrace.AnalysisGraph
 	if ag != nil {
@@ -1059,7 +1075,9 @@ func (s *Session) installCounterexampleFeedback(cexTrace *goivy.TraceBase, final
 		}
 
 		if len(ag.States) > 0 {
-			s.setConceptSessionState(ag.States[0])
+			if err := s.setConceptSessionState(ag.States[0]); err != nil {
+				return "", "", err
+			}
 			s.installStructureConceptGraph(ag.States[0])
 		}
 	}
@@ -1074,12 +1092,12 @@ func (s *Session) installCounterexampleFeedback(cexTrace *goivy.TraceBase, final
 	if traceText != "" {
 		details = "Counterexample trace:\n" + traceText
 	}
-	return traceText, details
+	return traceText, details, nil
 }
 
-func (s *Session) setConceptSessionState(state *goivy.State) {
+func (s *Session) setConceptSessionState(state *goivy.State) error {
 	if s.ConceptSess == nil || state == nil {
-		return
+		return nil
 	}
 	if state.Clauses != nil {
 		s.ConceptSess.State = state.Clauses.ToFormula()
@@ -1088,8 +1106,11 @@ func (s *Session) setConceptSessionState(state *goivy.State) {
 	}
 	s.ConceptSess.GoalConstraints = nil
 	s.ConceptSess.Cache = make(map[string]bool)
-	s.ConceptSess.Recompute(nil)
+	if err := s.ConceptSess.Recompute(nil); err != nil {
+		return err
+	}
 	s.syncAbstractValue()
+	return nil
 }
 
 func (s *Session) installStructureConceptGraph(state *goivy.State) bool {
@@ -1647,7 +1668,9 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 	// --- Concept graph operations (ConceptInteractiveSession) ---
 	case "undo":
 		if s.AGUI != nil && s.AGUI.CurrentConceptGraph != nil && s.AGUI.CurrentConceptGraph.GraphStack.CanUndo() {
-			s.AGUI.CurrentConceptGraph.Undo()
+			if err = s.AGUI.CurrentConceptGraph.Undo(); err != nil {
+				break
+			}
 			s.toggles = s.AGUI.CurrentConceptGraph.G().Checks.Snapshot()
 			break
 		}
@@ -1656,7 +1679,9 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		}
 	case "redo":
 		if s.AGUI != nil && s.AGUI.CurrentConceptGraph != nil && s.AGUI.CurrentConceptGraph.GraphStack.CanRedo() {
-			s.AGUI.CurrentConceptGraph.Redo()
+			if err = s.AGUI.CurrentConceptGraph.Redo(); err != nil {
+				break
+			}
 			s.toggles = s.AGUI.CurrentConceptGraph.G().Checks.Snapshot()
 			break
 		}
@@ -1665,7 +1690,9 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		}
 	case "recalculate":
 		if s.ConceptSess != nil {
-			s.ConceptSess.Recompute(nil)
+			if err = s.ConceptSess.Recompute(nil); err != nil {
+				break
+			}
 			// Propagate abstract value to SimpleSess for rendering.
 			s.syncAbstractValue()
 		}
@@ -1677,7 +1704,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				err = fmt.Errorf("gather: no concept graph for sheet %q", sheetID)
 				break
 			}
-			facts := w.Gather()
+			facts, gatherErr := w.Gather()
+			if gatherErr != nil {
+				err = gatherErr
+				break
+			}
 			active := w.GetActiveFacts()
 			if len(active) > 0 {
 				facts = active
@@ -1723,7 +1754,10 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 	case "backtrack":
 		w := s.ensureConceptGraphWidgetForSheetLocked(actionStringArg(args, "sheet_id"))
 		if w != nil {
-			w.Backtrack()
+			err = w.Backtrack()
+			if err != nil {
+				break
+			}
 			if w.G() != nil {
 				s.toggles = w.G().Checks.Snapshot()
 			}
@@ -1807,7 +1841,9 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 				err = fmt.Errorf("concrete: no concept graph for sheet %q", sheetID)
 				break
 			}
-			w.MakeConcrete()
+			if err = w.MakeConcrete(); err != nil {
+				break
+			}
 			result["state"] = w.G().State
 			result["concept"] = conceptGraphActionPayload(w)
 			if w.G() != nil {
@@ -2430,7 +2466,9 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 			ui.ViewState(stateIdx, "", false)
 		}
 		if s.ConceptSess != nil {
-			s.ConceptSess.Recompute(nil)
+			if err = s.ConceptSess.Recompute(nil); err != nil {
+				break
+			}
 			s.syncAbstractValue()
 		}
 	case "check_safety":
@@ -2878,7 +2916,9 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 		// Matches Python ivy_ui_cti.py check_inductiveness():
 		// tests each conjecture against init + all conjectures as background.
 		if s.ConceptSess != nil {
-			s.ConceptSess.Recompute(nil)
+			if err := s.ConceptSess.Recompute(nil); err != nil {
+				return &WebUICheckResult{Result: "error", Message: err.Error()}
+			}
 			s.syncAbstractValue()
 		}
 
@@ -3003,7 +3043,10 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 				//   res = ivy_trace.check_final_cond(...)
 				//   self.g = res
 				currentConj := conj
-				traceText, cexDetails := s.installCounterexampleFeedback(cexTrace, finalCond, currentConj)
+				traceText, cexDetails, feedbackErr := s.installCounterexampleFeedback(cexTrace, finalCond, currentConj)
+				if feedbackErr != nil {
+					return &WebUICheckResult{Z3Contacted: true, Result: "error", Message: feedbackErr.Error()}
+				}
 				return &WebUICheckResult{
 					Z3Contacted:           true,
 					Result:                "fail",
@@ -3086,7 +3129,9 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 	case "pdr":
 		// PDR/IC3 via tactics.UPDR (matches Python tactics.py UPDR class).
 		if s.ConceptSess != nil {
-			s.ConceptSess.Recompute(nil)
+			if err := s.ConceptSess.Recompute(nil); err != nil {
+				return &WebUICheckResult{Result: "error", Message: err.Error()}
+			}
 			s.syncAbstractValue()
 		}
 		if s.CompiledModule == nil {
@@ -3192,7 +3237,10 @@ func (s *Session) RunCheckWithOptions(mode string, options CheckOptions) *WebUIC
 						abstractErr = fmt.Errorf("alpha abstraction panic: %v", r)
 					}
 				}()
-				s.ConceptSess.Recompute(nil)
+				abstractErr = s.ConceptSess.Recompute(nil)
+				if abstractErr != nil {
+					return
+				}
 				s.syncAbstractValue()
 			}()
 			if abstractErr != nil {

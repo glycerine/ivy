@@ -19,8 +19,11 @@ import (
 // The cache maps TagString(tag) -> bool and is updated in-place.
 //
 // Returns a list of (Tag, bool) pairs.
-func WebUIAlpha(domain *CDConceptDomain, state goivy.Expr, cache map[string]bool, projection func(string, string) bool) []TagValue {
-	facts := domain.GetFacts(projection)
+func WebUIAlpha(domain *CDConceptDomain, state goivy.Expr, cache map[string]bool, projection func(string, string) bool) ([]TagValue, error) {
+	facts, err := domain.GetFacts(projection)
+	if err != nil {
+		return nil, err
+	}
 
 	if cache == nil {
 		cache = make(map[string]bool)
@@ -36,50 +39,52 @@ func WebUIAlpha(domain *CDConceptDomain, state goivy.Expr, cache map[string]bool
 			continue
 		}
 
-		// Check: state => formula?
-		// Equivalently: is (state & ~formula) unsatisfiable?
-		// Recover from Z3 panics (sort mismatches, etc.) so one bad
-		// formula doesn't crash the web server.
 		value := false
-		func() {
+		if err := func() (err error) {
 			defer func() {
 				if r := recover(); r != nil {
-					fmt.Printf("WebUIAlpha: Z3 panic for tag %v: %v\n", fact.Tag, r)
+					err = fmt.Errorf("Z3 panic for tag %v: %v", fact.Tag, r)
 				}
 			}()
 			if fact.Formula == nil || state == nil {
-				return
+				return fmt.Errorf("alpha fact %v has nil formula or state", fact.Tag)
 			}
 			// Skip formulas that still contain TopSort — Z3 will panic.
 			if goivy.ContainsTopSort(fact.Formula) {
-				return
+				return fmt.Errorf("alpha fact %v still contains TopSort after concretization", fact.Tag)
 			}
 			notF, err := goivy.NewNot(fact.Formula)
 			if err != nil {
-				return
+				return fmt.Errorf("alpha fact %v negation failed: %w", fact.Tag, err)
 			}
 			conj, err2 := goivy.NewAnd(state, notF)
 			if err2 != nil {
-				return
+				return fmt.Errorf("alpha fact %v conjunction failed: %w", fact.Tag, err2)
 			}
 			sat, err3 := slv.IsSat(conj)
 			if err3 != nil {
-				return
+				return fmt.Errorf("alpha fact %v solver failed: %w", fact.Tag, err3)
 			}
 			value = !sat // if unsat, state implies formula
-		}()
+			return nil
+		}(); err != nil {
+			return nil, err
+		}
 
 		cache[key] = value
 		result = append(result, TagValue{Tag: fact.Tag, Value: value})
 	}
 
-	return result
+	return result, nil
 }
 
 // WebUIAlphaNoSolver computes alpha abstraction without Z3, using only the cache.
 // Facts not in the cache default to false.
-func WebUIAlphaNoSolver(domain *CDConceptDomain, cache map[string]bool, projection func(string, string) bool) []TagValue {
-	facts := domain.GetFacts(projection)
+func WebUIAlphaNoSolver(domain *CDConceptDomain, cache map[string]bool, projection func(string, string) bool) ([]TagValue, error) {
+	facts, err := domain.GetFacts(projection)
+	if err != nil {
+		return nil, err
+	}
 	var result []TagValue
 	for _, fact := range facts {
 		key := TagString(fact.Tag)
@@ -91,5 +96,5 @@ func WebUIAlphaNoSolver(domain *CDConceptDomain, cache map[string]bool, projecti
 		}
 		result = append(result, TagValue{Tag: fact.Tag, Value: value})
 	}
-	return result
+	return result, nil
 }

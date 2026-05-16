@@ -130,19 +130,19 @@ func (w *GraphWidget) Checkpoint(setBacktrackPoint bool) {
 }
 
 // Undo rolls back the graph and updates.
-func (w *GraphWidget) Undo() {
+func (w *GraphWidget) Undo() error {
 	w.GraphStack.Undo()
-	w.Update()
+	return w.Update()
 }
 
 // Redo replays the last undo and updates.
-func (w *GraphWidget) Redo() {
+func (w *GraphWidget) Redo() error {
 	w.GraphStack.Redo()
-	w.Update()
+	return w.Update()
 }
 
 // Backtrack undoes to the most recent backtrack point (Python: GraphWidget.backtrack).
-func (w *GraphWidget) Backtrack() {
+func (w *GraphWidget) Backtrack() error {
 	gs := w.GraphStack
 	for gs.CanUndo() && !gs.Current.HasAttribute("backtrack_point") {
 		gs.Undo()
@@ -150,11 +150,11 @@ func (w *GraphWidget) Backtrack() {
 	if gs.Current.HasAttribute("backtrack_point") {
 		gs.Current.RemoveAttribute("backtrack_point")
 	}
-	w.Update()
+	return w.Update()
 }
 
 // MakeConcrete adds concrete state constraints to the current state.
-func (w *GraphWidget) MakeConcrete() {
+func (w *GraphWidget) MakeConcrete() error {
 	w.Checkpoint(false)
 	g := w.G()
 	combined := g.State
@@ -165,17 +165,21 @@ func (w *GraphWidget) MakeConcrete() {
 			combined = combined + " & " + g.Concrete
 		}
 	}
-	g.SetState(combined, true, false, false)
-	w.Update()
+	if err := g.SetState(combined, true, false, false); err != nil {
+		return err
+	}
+	return w.Update()
 }
 
 // Gather gathers definite facts from visible relations (Python: GraphWidget.gather).
-func (w *GraphWidget) Gather() []string {
+func (w *GraphWidget) Gather() ([]string, error) {
 	w.Checkpoint(false)
 	g := w.G()
 	facts := g.GetFacts(true)
-	w.Update()
-	return facts
+	if err := w.Update(); err != nil {
+		return nil, err
+	}
+	return facts, nil
 }
 
 // ClearElemSelection clears node and edge selections.
@@ -209,7 +213,7 @@ func (w *GraphWidget) SelectEdge(edgeKey string, selected bool) {
 }
 
 // SetParentState changes the parent state, keeping checkboxes (Python: GraphWidget.set_parent_state).
-func (w *GraphWidget) SetParentState(newParentState interface{}, clauses string, reset bool) {
+func (w *GraphWidget) SetParentState(newParentState interface{}, clauses string, reset bool) error {
 	w.Checkpoint(false)
 	g := w.G()
 	g.ParentState = newParentState
@@ -217,9 +221,11 @@ func (w *GraphWidget) SetParentState(newParentState interface{}, clauses string,
 		// Use state from parent (stub).
 		clauses = g.State
 	}
-	g.SetState(clauses, true, false, reset)
+	if err := g.SetState(clauses, true, false, reset); err != nil {
+		return err
+	}
 	w.UpdateRelations()
-	w.Update()
+	return w.Update()
 }
 
 // AddConcept adds a concept to the graph (Python: GraphWidget.add_concept).
@@ -248,8 +254,7 @@ func (w *GraphWidget) SplitConcept(predicateID, nodeID string) error {
 	if err != nil {
 		return err
 	}
-	w.Update()
-	return nil
+	return w.Update()
 }
 
 // SupposeEmpty marks a node as empty (Python: GraphWidget.empty).
@@ -259,8 +264,7 @@ func (w *GraphWidget) SupposeEmpty(nodeID string) error {
 	if err != nil {
 		return err
 	}
-	w.Update()
-	return nil
+	return w.Update()
 }
 
 // RemoveConcept removes a concept from the domain.
@@ -270,8 +274,7 @@ func (w *GraphWidget) RemoveConcept(conceptID string) error {
 	if err != nil {
 		return err
 	}
-	w.Update()
-	return nil
+	return w.Update()
 }
 
 // MaterializeNode materializes a node concept (Python: GraphWidget.materialize).
@@ -282,7 +285,9 @@ func (w *GraphWidget) MaterializeNode(nodeID string) (string, error) {
 		return "", err
 	}
 	w.UpdateRelations()
-	w.Update()
+	if err := w.Update(); err != nil {
+		return "", err
+	}
 	return witness, nil
 }
 
@@ -294,7 +299,9 @@ func (w *GraphWidget) MaterializeEdge(relID, headID, tailID string, truth bool) 
 		return nil, err
 	}
 	w.UpdateRelations()
-	w.Update()
+	if err := w.Update(); err != nil {
+		return nil, err
+	}
 	return witnesses, nil
 }
 
@@ -304,15 +311,14 @@ func (w *GraphWidget) DematerializeEdge(relID, headID, tailID string) ([]string,
 }
 
 // Splatter splits a node using all available constants (Python: Graph.splatter).
-func (w *GraphWidget) Splatter(nodeID string) {
+func (w *GraphWidget) Splatter(nodeID string) error {
 	w.Checkpoint(false)
 	g := w.G()
 	if g.InteractiveSess != nil {
 		s := g.InteractiveSess
 		concept := s.Domain.Concepts.GetConcept(nodeID)
 		if concept == nil || concept.Arity() != 1 {
-			w.Update()
-			return
+			return w.Update()
 		}
 		s.Push()
 		cSort := concept.Variables[0].VSort
@@ -347,11 +353,13 @@ func (w *GraphWidget) Splatter(nodeID string) {
 			s.Domain.Concepts.SetSet(splatterName, NewCDConceptSet(eqNames...))
 			s.Domain.Split(nodeID, splatterName)
 		}
-		s.Recompute(nil)
+		if err := s.Recompute(nil); err != nil {
+			return err
+		}
 	} else {
 		g.ConceptSess.Splatter(nodeID, nil)
 	}
-	w.Update()
+	return w.Update()
 }
 
 // AddProjection adds a projection concept.
@@ -370,12 +378,12 @@ func (w *GraphWidget) UpdateRelations() {
 }
 
 // Update triggers a re-render of the graph.
-func (w *GraphWidget) Update() {
-	w.G().Recompute()
+func (w *GraphWidget) Update() error {
+	return w.G().Recompute()
 }
 
 // Recalculate recalculates the current state from the parent (Python: GraphWidget.recalculate).
-func (w *GraphWidget) Recalculate() {
+func (w *GraphWidget) Recalculate() error {
 	g := w.G()
 	if g.ParentState != nil {
 		if agui, ok := w.Parent.(*AnalysisGraphUI); ok && agui != nil && agui.AG != nil {
@@ -383,28 +391,34 @@ func (w *GraphWidget) Recalculate() {
 				clauses := ps.Clauses.ToFormula()
 				if g.InteractiveSess != nil {
 					g.InteractiveSess.State = clauses
-					g.InteractiveSess.Recompute(nil)
+					if err := g.InteractiveSess.Recompute(nil); err != nil {
+						return err
+					}
 				}
-				g.SetState(clauses.String(), true, false, false)
+				if err := g.SetState(clauses.String(), true, false, false); err != nil {
+					return err
+				}
 			}
 		}
 	}
-	w.Update()
+	return w.Update()
 }
 
 // SetState sets the current state (Python: GraphWidget.set_state).
-func (w *GraphWidget) SetState(clauses string) {
+func (w *GraphWidget) SetState(clauses string) error {
 	w.Checkpoint(false)
-	w.G().SetState(clauses, true, false, false)
+	if err := w.G().SetState(clauses, true, false, false); err != nil {
+		return err
+	}
 	w.UpdateRelations()
-	w.Update()
+	return w.Update()
 }
 
 // SetFacts sets the current constraint facts (Python: GraphWidget.set_facts).
-func (w *GraphWidget) SetFacts(facts []string) {
+func (w *GraphWidget) SetFacts(facts []string) error {
 	w.Checkpoint(false)
 	w.G().SetFacts(facts)
-	w.Update()
+	return w.Update()
 }
 
 // GetNodeActions returns the context-menu actions for a node.

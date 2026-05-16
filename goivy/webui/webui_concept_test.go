@@ -566,7 +566,10 @@ func TestCDConceptDomainReplaceConcept(t *testing.T) {
 
 func TestCDConceptDomainGetFacts(t *testing.T) {
 	cd, _ := testDomainSetup()
-	facts := cd.GetFacts(func(n, c string) bool { return true })
+	facts, err := cd.GetFacts(func(n, c string) bool { return true })
+	if err != nil {
+		t.Fatalf("GetFacts: %v", err)
+	}
 	if len(facts) == 0 {
 		t.Error("expected some facts")
 	}
@@ -585,7 +588,10 @@ func TestCDConceptDomainGetFacts(t *testing.T) {
 
 func TestCDConceptDomainGetFactsEdgeInfo(t *testing.T) {
 	cd, _ := testDomainSetup()
-	facts := cd.GetFacts(func(n, c string) bool { return true })
+	facts, err := cd.GetFacts(func(n, c string) bool { return true })
+	if err != nil {
+		t.Fatalf("GetFacts: %v", err)
+	}
 	foundEdgeInfo := false
 	for _, f := range facts {
 		if len(f.Tag) > 0 && f.Tag[0] == "edge_info" {
@@ -600,7 +606,10 @@ func TestCDConceptDomainGetFactsEdgeInfo(t *testing.T) {
 
 func TestCDConceptDomainGetFactsNoProjection(t *testing.T) {
 	cd, _ := testDomainSetup()
-	facts := cd.GetFacts(nil)
+	facts, err := cd.GetFacts(nil)
+	if err != nil {
+		t.Fatalf("GetFacts: %v", err)
+	}
 	if len(facts) == 0 {
 		t.Error("expected some facts with nil projection")
 	}
@@ -898,7 +907,9 @@ func TestCISReplaceDomain(t *testing.T) {
 	)
 	newDomain := cd.Copy()
 	newDomain.Concepts.Delete("both")
-	sess.ReplaceDomain(newDomain, nil)
+	if err := sess.ReplaceDomain(newDomain, nil); err != nil {
+		t.Fatalf("ReplaceDomain: %v", err)
+	}
 	if sess.Domain.Concepts.Has("both") {
 		t.Error("expected 'both' to be gone after replace")
 	}
@@ -910,7 +921,9 @@ func TestCISMaterializeNode(t *testing.T) {
 		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
 	// Materialize should push and recompute without error.
-	sess.MaterializeNode("both")
+	if err := sess.MaterializeNode("both"); err != nil {
+		t.Fatalf("MaterializeNode: %v", err)
+	}
 	if len(sess.UndoStack) != 1 {
 		t.Errorf("expected 1 undo entry, got %d", len(sess.UndoStack))
 	}
@@ -921,7 +934,9 @@ func TestCISMaterializeEdge(t *testing.T) {
 	sess := NewConceptInteractiveSession(
 		cd, goivy.True, goivy.True, nil, nil, nil, nil, nil, false,
 	)
-	sess.MaterializeEdge("r", "both", "none", true)
+	if err := sess.MaterializeEdge("r", "both", "none", true); err != nil {
+		t.Fatalf("MaterializeEdge: %v", err)
+	}
 	if len(sess.UndoStack) != 1 {
 		t.Errorf("expected 1 undo entry, got %d", len(sess.UndoStack))
 	}
@@ -1014,7 +1029,10 @@ func TestAlphaNoSolver(t *testing.T) {
 	cache := map[string]bool{
 		"node_info|none|both": true,
 	}
-	result := WebUIAlphaNoSolver(cd, cache, func(string, string) bool { return true })
+	result, err := WebUIAlphaNoSolver(cd, cache, func(string, string) bool { return true })
+	if err != nil {
+		t.Fatalf("WebUIAlphaNoSolver: %v", err)
+	}
 	if len(result) == 0 {
 		t.Error("expected some results")
 	}
@@ -1032,7 +1050,10 @@ func TestAlphaNoSolver(t *testing.T) {
 
 func TestAlphaNoSolverEmptyCache(t *testing.T) {
 	cd, _ := testDomainSetup()
-	result := WebUIAlphaNoSolver(cd, nil, func(string, string) bool { return true })
+	result, err := WebUIAlphaNoSolver(cd, nil, func(string, string) bool { return true })
+	if err != nil {
+		t.Fatalf("WebUIAlphaNoSolver: %v", err)
+	}
 	if len(result) == 0 {
 		t.Error("expected some results")
 	}
@@ -1507,7 +1528,10 @@ func TestCDConceptCallBinary(t *testing.T) {
 func TestCDConceptDomainGetFactsProjectionFilter(t *testing.T) {
 	cd, _ := testDomainSetup()
 	// Only allow "both" concept.
-	facts := cd.GetFacts(func(n, c string) bool { return n == "both" })
+	facts, err := cd.GetFacts(func(n, c string) bool { return n == "both" })
+	if err != nil {
+		t.Fatalf("GetFacts: %v", err)
+	}
 	for _, f := range facts {
 		if len(f.Tag) >= 3 && f.Tag[0] == "node_info" && f.Tag[2] != "both" {
 			t.Errorf("expected only 'both' in node_info facts, got %v", f.Tag)
@@ -1518,7 +1542,9 @@ func TestCDConceptDomainGetFactsProjectionFilter(t *testing.T) {
 func TestCDConceptDomainGetCombFacts(t *testing.T) {
 	cd, _ := testDomainSetup()
 	var facts []Fact
-	cd.GetCombFacts("test", "node_info", [][]string{{"both"}}, &facts)
+	if err := cd.GetCombFacts("test", "node_info", [][]string{{"both"}}, &facts); err != nil {
+		t.Fatalf("GetCombFacts: %v", err)
+	}
 	if len(facts) == 0 {
 		t.Error("expected some comb facts")
 	}

@@ -200,17 +200,19 @@ func (c *ConceptSessionControls) NewDisplayCheckbox() *CheckboxWidget {
 //	    self.concept_session.widget = self
 //	    self.render_graph()
 //	    self.update_concept_style()
-func (c *ConceptSessionControls) ChangeDisplayCheckbox() {
+func (c *ConceptSessionControls) ChangeDisplayCheckbox() error {
 	if c.IgnoreDisplayCheckboxChange {
-		return
+		return nil
 	}
 	if c.ConceptSession == nil {
-		return
+		return nil
 	}
 	// The Python code mutates concept_session.domain.combinations and
 	// concept_session.domain.concepts directly. The Go ConceptInteractiveSession
 	// recomputes its domain on Recompute(); we just trigger a recompute.
-	c.ConceptSession.Recompute(nil)
+	if err := c.ConceptSession.Recompute(nil); err != nil {
+		return err
+	}
 	// render_graph and update_concept_style are subclass overrides; we
 	// route via a pluggable callback set by the subclass when present.
 	if c.renderGraphFn != nil {
@@ -219,6 +221,7 @@ func (c *ConceptSessionControls) ChangeDisplayCheckbox() {
 	if c.updateConceptStyleFn != nil {
 		c.updateConceptStyleFn()
 	}
+	return nil
 }
 
 // renderGraphFn / updateConceptStyleFn allow subclasses to plug in their
@@ -463,9 +466,9 @@ func (c *ConceptSessionControls) DiagramDomain(button *ButtonWidget) {
 //	def remove_concept(self, concept, source=None, target=None):
 //	    concepts = set([concept] + [x[0] for x in self.graph.selected])
 //	    self.concept_session.remove_concepts(*concepts)
-func (c *ConceptSessionControls) RemoveConcept(concept string, source, target *string) {
+func (c *ConceptSessionControls) RemoveConcept(concept string, source, target *string) error {
 	if c.ConceptSession == nil {
-		return
+		return nil
 	}
 	concepts := []string{concept}
 	if c.Graph != nil {
@@ -473,47 +476,51 @@ func (c *ConceptSessionControls) RemoveConcept(concept string, source, target *s
 			concepts = append(concepts, t.Obj)
 		}
 	}
-	c.ConceptSession.RemoveConcepts(concepts...)
+	return c.ConceptSession.RemoveConcepts(concepts...)
 }
 
 // Split mirrors Python lines 320-321.
 //
 //	def split(self, concept, by):
 //	    self.concept_session.split(concept, by)
-func (c *ConceptSessionControls) Split(concept, by string) {
+func (c *ConceptSessionControls) Split(concept, by string) error {
 	if c.ConceptSession != nil {
-		c.ConceptSession.Split(concept, by)
+		return c.ConceptSession.Split(concept, by)
 	}
+	return nil
 }
 
 // SupposeEmpty mirrors Python lines 323-324.
 //
 //	def suppose_empty(self, concept):
 //	    self.concept_session.suppose_empty(concept)
-func (c *ConceptSessionControls) SupposeEmpty(concept string) {
+func (c *ConceptSessionControls) SupposeEmpty(concept string) error {
 	if c.ConceptSession != nil {
-		c.ConceptSession.SupposeEmpty(concept)
+		return c.ConceptSession.SupposeEmpty(concept)
 	}
+	return nil
 }
 
 // MaterializeNode mirrors Python lines 326-327.
 //
 //	def materialize_node(self, concept):
 //	    self.concept_session.materialize_node(concept)
-func (c *ConceptSessionControls) MaterializeNode(concept string) {
+func (c *ConceptSessionControls) MaterializeNode(concept string) error {
 	if c.ConceptSession != nil {
-		c.ConceptSession.MaterializeNode(concept)
+		return c.ConceptSession.MaterializeNode(concept)
 	}
+	return nil
 }
 
 // MaterializeEdge mirrors Python lines 329-332.
 //
 //	def materialize_edge(self, edge, source, target, polarity):
 //	    self.concept_session.materialize_edge(edge, source, target, polarity)
-func (c *ConceptSessionControls) MaterializeEdge(edge, source, target string, polarity bool) {
+func (c *ConceptSessionControls) MaterializeEdge(edge, source, target string, polarity bool) error {
 	if c.ConceptSession != nil {
-		c.ConceptSession.MaterializeEdge(edge, source, target, polarity)
+		return c.ConceptSession.MaterializeEdge(edge, source, target, polarity)
 	}
+	return nil
 }
 
 // AddProjection mirrors Python lines 334-336.
@@ -521,7 +528,7 @@ func (c *ConceptSessionControls) MaterializeEdge(edge, source, target string, po
 //	def add_projection(self, node, name, concept):
 //	    self.edge_display_checkboxes[name]['all_to_all'].value = True
 //	    self.concept_session.add_edge(name, concept)
-func (c *ConceptSessionControls) AddProjection(node, name string, concept *CDConcept) {
+func (c *ConceptSessionControls) AddProjection(node, name string, concept *CDConcept) error {
 	if c.EdgeDisplayCheckboxes[name] == nil {
 		c.EdgeDisplayCheckboxes[name] = make(map[string]*CheckboxWidget)
 	}
@@ -530,8 +537,9 @@ func (c *ConceptSessionControls) AddProjection(node, name string, concept *CDCon
 	}
 	c.EdgeDisplayCheckboxes[name]["all_to_all"].Value = true
 	if c.ConceptSession != nil {
-		c.ConceptSession.AddEdge(name, concept)
+		return c.ConceptSession.AddEdge(name, concept)
 	}
+	return nil
 }
 
 // virtualDispatch hooks; assigned by subclass constructors.
