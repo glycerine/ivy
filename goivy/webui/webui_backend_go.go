@@ -89,18 +89,23 @@ func (gbe *GoBackend) NewSession(cfg *goivy.Config) (by []byte, err error) {
 	return
 }
 
-func (gbe *GoBackend) Load(sessionID, filename string, content []byte) (by []byte, err error) {
+func (gbe *GoBackend) Load(sessionID, filename string, content []byte, isolate string) (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
 		var sess *Session
 		sess, err = b.getSession(sessionID)
 		if err != nil {
 			return nil // return nil => sst stays up, else sst shuts down.
 		}
-		err = sess.LoadFileContent(filename, content)
+		err = sess.LoadFileContentWithIsolate(filename, content, isolate)
 		if err != nil {
 			return nil
 		}
-		by, err = canonicalJSON(map[string]string{"status": "ok", "filename": filename})
+		by, err = canonicalJSON(map[string]interface{}{
+			"status":   "ok",
+			"filename": filename,
+			"isolate":  sess.ActiveIsolate,
+			"isolates": append([]string{}, sess.AvailableIsolates...),
+		})
 		return nil
 	})
 	return

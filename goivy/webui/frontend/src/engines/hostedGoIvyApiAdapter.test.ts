@@ -37,6 +37,17 @@ describe('HostedGoIvyApiAdapter', () => {
     expect(options.body).toBeInstanceOf(FormData);
   });
 
+  it('sends selected isolate with model loads', async () => {
+    const fetchImpl = vi.fn(async () => jsonResponse({ ok: true }));
+    const api = new HostedGoIvyApiAdapter({ client: new IvyHttpClient({ fetchImpl }) });
+    api.sessionId = 'abc';
+
+    await api.loadModel({ filename: 'client.ivy', content: '#lang ivy1.7', isolate: 'cf_live' });
+
+    const form = fetchImpl.mock.calls[0][1].body;
+    expect(form.get('isolate')).toBe('cf_live');
+  });
+
   it('keeps graph calls behind snapshot requests', async () => {
     const fetchImpl = vi.fn(async (url) => jsonResponse({ url }));
     const api = new HostedGoIvyApiAdapter({ client: new IvyHttpClient({ fetchImpl }) });

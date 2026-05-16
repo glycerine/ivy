@@ -100,8 +100,8 @@ func TestConformLoad(t *testing.T) {
 	pySID := pySess["session_id"]
 
 	// Load the same file on both.
-	goLoad, goErr := goBE.Load(goSID, "test.ivy", []byte(ivySample))
-	pyLoad, pyErr := pyBE.Load(pySID, "test.ivy", []byte(ivySample))
+	goLoad, goErr := goBE.Load(goSID, "test.ivy", []byte(ivySample), "")
+	pyLoad, pyErr := pyBE.Load(pySID, "test.ivy", []byte(ivySample), "")
 
 	if goErr != nil {
 		t.Fatalf("Go Load error: %v", goErr)
@@ -145,8 +145,8 @@ func TestConformConcept(t *testing.T) {
 	goSID := goSess["session_id"]
 	pySID := pySess["session_id"]
 
-	goBE.Load(goSID, "test.ivy", []byte(ivySample))
-	pyBE.Load(pySID, "test.ivy", []byte(ivySample))
+	goBE.Load(goSID, "test.ivy", []byte(ivySample), "")
+	pyBE.Load(pySID, "test.ivy", []byte(ivySample), "")
 
 	goConcept, goErr := goBE.GetConcept(goSID, "", "")
 	pyConcept, pyErr := pyBE.GetConcept(pySID, "", "")
@@ -233,8 +233,8 @@ func TestConformCheck(t *testing.T) {
 	goSID := goSess["session_id"]
 	pySID := pySess["session_id"]
 
-	goBE.Load(goSID, "test.ivy", []byte(ivySample))
-	pyBE.Load(pySID, "test.ivy", []byte(ivySample))
+	goBE.Load(goSID, "test.ivy", []byte(ivySample), "")
+	pyBE.Load(pySID, "test.ivy", []byte(ivySample), "")
 
 	// Allow Python a moment to finish compilation.
 	time.Sleep(500 * time.Millisecond)
@@ -302,8 +302,8 @@ func TestConformARG(t *testing.T) {
 	goSID := goSess["session_id"]
 	pySID := pySess["session_id"]
 
-	goBE.Load(goSID, "test.ivy", []byte(ivySample))
-	pyBE.Load(pySID, "test.ivy", []byte(ivySample))
+	goBE.Load(goSID, "test.ivy", []byte(ivySample), "")
+	pyBE.Load(pySID, "test.ivy", []byte(ivySample), "")
 
 	goARG, goErr := goBE.GetARG(goSID, false)
 	pyARG, pyErr := pyBE.GetARG(pySID, false)

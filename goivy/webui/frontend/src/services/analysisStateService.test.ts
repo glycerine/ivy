@@ -232,7 +232,7 @@ describe('analysisStateService', () => {
 
     await loadAnalysisStateObject(app, state, persist);
 
-    expect(app.api.reloadContent).toHaveBeenCalledWith('ivy source', 'client.ivy');
+    expect(app.api.reloadContent).toHaveBeenCalledWith('ivy source', 'client.ivy', { isolate: '' });
     expect(app.setEditorContent).toHaveBeenCalledWith('ivy source');
     expect(app.setMode).toHaveBeenCalledWith('bounded');
     expect(app.uiDataStore.applyArgSnapshot).toHaveBeenCalledWith('sheet-1', state.sheets[0].arg);

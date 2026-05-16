@@ -1252,7 +1252,7 @@ func TestGetProofNonEmptyJSON(t *testing.T) {
 	}
 	sid := resp["session_id"]
 
-	_, err = be.Load(sid, "test.ivy", []byte(ivySample))
+	_, err = be.Load(sid, "test.ivy", []byte(ivySample), "")
 	if err != nil {
 		t.Fatalf("Load: %v", err)
 	}

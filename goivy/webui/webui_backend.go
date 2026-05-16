@@ -19,7 +19,7 @@ var staticContent embed.FS
 // conformance checking can compare outputs bit-for-bit.
 type Backend interface {
 	NewSession(cfg *goivy.Config) ([]byte, error)
-	Load(sessionID, filename string, content []byte) ([]byte, error)
+	Load(sessionID, filename string, content []byte, isolate string) ([]byte, error)
 	LoadPath(sessionID, path string) ([]byte, error)
 	Action(sessionID, action string, args map[string]interface{}) ([]byte, error)
 	GetARG(sessionID string, full bool) ([]byte, error)

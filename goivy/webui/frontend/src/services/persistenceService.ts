@@ -58,6 +58,8 @@ export function createIvyPersist(winArg = globalThis.window) {
           fileName: app._persistedFileName || '',
           filePath: app._persistedFilePath || app._persistedFileName || '',
           fileContent: app._persistedFileContent || '',
+          activeIsolate: app.activeIsolate || '',
+          availableIsolates: Array.isArray(app.availableIsolates) ? app.availableIsolates.slice() : [],
           selectedArgNode: persist._selectedArgNode(app),
           uiMode: typeof app.getUIMode === 'function' ? app.getUIMode() : persist._getUIMode(),
           mode: persist._getMode(),
@@ -265,6 +267,7 @@ export function createIvyPersist(winArg = globalThis.window) {
         app._persistedFileContent = restoredContent;
         if (app.setEditorContent) app.setEditorContent(restoredContent);
         if (app._updateEditorLabel) app._updateEditorLabel();
+        if (app.setIsolates) app.setIsolates(state.availableIsolates || [], state.activeIsolate || '');
 
         let parseOk = true;
         let conceptData = null;
@@ -273,7 +276,13 @@ export function createIvyPersist(winArg = globalThis.window) {
           const FileCtor = win.File || globalThis.File;
           const blob = new BlobCtor([restoredContent], { type: 'text/plain' });
           const file = new FileCtor([blob], app._persistedFileName || state.fileName || 'restored.ivy');
-          await app.api.loadFile(file);
+          const loadResult = await app.api.loadFile(file, { isolate: state.activeIsolate || '' });
+          if (app.setIsolates) {
+            app.setIsolates(
+              (loadResult && loadResult.isolates) || state.availableIsolates || [],
+              (loadResult && loadResult.isolate) || state.activeIsolate || '',
+            );
+          }
         } catch (err) {
           parseOk = false;
           console.warn('IvyPersist.restore: server rejected file (parse error):', err.message || String(err));

@@ -406,7 +406,7 @@ func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
 	if err := json.Unmarshal(sessionJSON, &session); err != nil {
 		t.Fatalf("session json: %v", err)
 	}
-	if _, err := be.Load(session["session_id"], "client_server_example.ivy", content); err != nil {
+	if _, err := be.Load(session["session_id"], "client_server_example.ivy", content, ""); err != nil {
 		t.Fatalf("Load: %v", err)
 	}
 	resultJSON, err := be.Check(session["session_id"], "induction", CheckOptions{})
@@ -473,7 +473,7 @@ func TestConceptResponseIncludesEdgeSortsForMaterializeFromSelected(t *testing.T
 	if err := json.Unmarshal(sessionJSON, &session); err != nil {
 		t.Fatalf("session json: %v", err)
 	}
-	if _, err := be.Load(session["session_id"], "test.ivy", []byte(executeActionMenuSample)); err != nil {
+	if _, err := be.Load(session["session_id"], "test.ivy", []byte(executeActionMenuSample), ""); err != nil {
 		t.Fatalf("Load: %v", err)
 	}
 	conceptJSON, err := be.GetConcept(session["session_id"], "sheet-1", "")

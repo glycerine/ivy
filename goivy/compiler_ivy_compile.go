@@ -227,7 +227,11 @@ func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 	// Python ivy_compiler.py:2569-2572 — the merge and theory update are
 	// INSIDE the if create_isolate block.
 	if createIsolate {
-		if err := CreateIsolate("this", mod); err != nil {
+		isolateName := ""
+		if mod.Cfg != nil {
+			isolateName = strings.TrimSpace(mod.Cfg.Isolate)
+		}
+		if err := CreateIsolate(isolateName, mod); err != nil {
 			pp("IvyCompile: CreateIsolate warning: %v", err)
 		}
 

@@ -68,6 +68,8 @@ export function buildAnalysisState(app, persist) {
     fileName: app._persistedFileName || '',
     filePath: app._persistedFilePath || app._persistedFileName || '',
     fileContent: app._editorContent ? app._editorContent() : (app._persistedFileContent || ''),
+    activeIsolate: app.activeIsolate || '',
+    availableIsolates: Array.isArray(app.availableIsolates) ? app.availableIsolates.slice() : [],
     mode: app.getMode(),
     activeSheetId: app.activeSheetId || 'sheet-1',
     selectedArgNode: activeSheet ? activeSheet.selectedArgNode : null,
@@ -223,8 +225,17 @@ export async function loadAnalysisStateObject(app, state, persist) {
     app.setEditorContent(app._persistedFileContent);
   }
   if (state.mode) app.setMode(state.mode);
+  if (app.setIsolates) app.setIsolates(state.availableIsolates || [], state.activeIsolate || '');
   if (app.api && app.api.reloadContent && app._persistedFileContent) {
-    await app.api.reloadContent(app._persistedFileContent, app._persistedFileName || 'restored.ivy');
+    const loadResult = await app.api.reloadContent(app._persistedFileContent, app._persistedFileName || 'restored.ivy', {
+      isolate: state.activeIsolate || '',
+    });
+    if (app.setIsolates) {
+      app.setIsolates(
+        (loadResult && loadResult.isolates) || state.availableIsolates || [],
+        (loadResult && loadResult.isolate) || state.activeIsolate || '',
+      );
+    }
   }
 
   app.removeAnalysisStateExtraSheets();

@@ -130,10 +130,10 @@ func (c *ConformBackend) NewSession(cfg *goivy.Config) ([]byte, error) {
 	return goData, nil
 }
 
-func (c *ConformBackend) Load(sessionID, filename string, content []byte) ([]byte, error) {
+func (c *ConformBackend) Load(sessionID, filename string, content []byte, isolate string) ([]byte, error) {
 	return c.conform("Load",
-		func() ([]byte, error) { return c.goBE.Load(sessionID, filename, content) },
-		func() ([]byte, error) { return c.pyBE.Load(c.pySessionID(sessionID), filename, content) },
+		func() ([]byte, error) { return c.goBE.Load(sessionID, filename, content, isolate) },
+		func() ([]byte, error) { return c.pyBE.Load(c.pySessionID(sessionID), filename, content, isolate) },
 	)
 }
 

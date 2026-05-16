@@ -247,10 +247,11 @@ func (b *PyBackend) NewSession(cfg *goivy.Config) ([]byte, error) {
 	return b.post("/session/new", nil)
 }
 
-func (b *PyBackend) Load(sessionID, filename string, content []byte) ([]byte, error) {
+func (b *PyBackend) Load(sessionID, filename string, content []byte, isolate string) ([]byte, error) {
 	return b.post("/session/"+sessionID+"/load", map[string]interface{}{
 		"filename": filename,
 		"content":  string(content),
+		"isolate":  isolate,
 	})
 }
 

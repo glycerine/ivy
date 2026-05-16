@@ -3,9 +3,11 @@
 package webui
 
 import (
+	"bytes"
 	"encoding/json"
 	goivy "github.com/glycerine/ivy/goivy"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -122,6 +124,63 @@ func TestAPILoadFile(t *testing.T) {
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/load", `{"path":"test.ivy"}`)
 	if w.Code != 200 {
 		t.Errorf("status = %d, want 200\nbody: %s", w.Code, w.Body.String())
+	}
+}
+
+type loadIsolateBackend struct {
+	Backend
+	filename string
+	content  string
+	isolate  string
+}
+
+func (b *loadIsolateBackend) NewSession(cfg *goivy.Config) ([]byte, error) {
+	return canonicalJSON(map[string]string{"session_id": "s1"})
+}
+
+func (b *loadIsolateBackend) Load(sessionID, filename string, content []byte, isolate string) ([]byte, error) {
+	b.filename = filename
+	b.content = string(content)
+	b.isolate = isolate
+	return canonicalJSON(map[string]interface{}{
+		"status":   "ok",
+		"filename": filename,
+		"isolate":  isolate,
+		"isolates": []string{isolate},
+	})
+}
+
+func TestAPILoadMultipartPassesIsolate(t *testing.T) {
+	cfg := goivy.NewConfig()
+	be := &loadIsolateBackend{}
+	srv := NewServer(cfg, ":0", be)
+	id := createSession(t, srv)
+
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
+	if err := writer.WriteField("isolate", "cf_live"); err != nil {
+		t.Fatal(err)
+	}
+	part, err := writer.CreateFormFile("file", "ord_live.ivy")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := part.Write([]byte("#lang ivy1.7\n")); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	req := httptest.NewRequest("POST", "/api/session/"+id+"/load", &body)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	w := httptest.NewRecorder()
+	srv.ServeHTTP(w, req)
+	if w.Code != 200 {
+		t.Fatalf("status = %d, body: %s", w.Code, w.Body.String())
+	}
+	if be.filename != "ord_live.ivy" || be.isolate != "cf_live" || be.content != "#lang ivy1.7\n" {
+		t.Fatalf("load payload = filename %q isolate %q content %q", be.filename, be.isolate, be.content)
 	}
 }
 

@@ -48,12 +48,12 @@ export class IvyApiAdapter {
     this._notImplemented('saveSession');
   }
 
-  async loadFile(file) {
-    return this.loadModel({ file });
+  async loadFile(file, options = {}) {
+    return this.loadModel({ file, ...(options || {}) });
   }
 
-  async reloadContent(content, filename) {
-    return this.loadModel({ content, filename: filename || 'model.ivy' });
+  async reloadContent(content, filename, options = {}) {
+    return this.loadModel({ content, filename: filename || 'model.ivy', ...(options || {}) });
   }
 
   async getARG(options = {}) {

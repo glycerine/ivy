@@ -23,27 +23,29 @@ type Event struct {
 type Session struct {
 	Cfg *goivy.Config
 
-	ID              string
-	Graph           *WebUIAnalysisGraphState   // ARG state
-	ConceptSess     *ConceptInteractiveSession // concept graph state (uses Z3 via WebUIAlpha)
-	SimpleSess      *ConceptSession            // legacy simple session (for API compat)
-	Events          chan Event                 // buffered SSE channel
-	mu              sync.Mutex
-	FilePath        string // last loaded file path
-	FileContent     string // file content (when uploaded via browser)
-	toggles         *Toggles
-	WebUIProofStack *WebUIProofStack
-	ProofMgr        *goivy.ProofManager // live proof state (goals + reachability graph)
-	CompiledModule  *goivy.Module       // populated by full compiler pipeline
-	CompiledSig     *goivy.Sig          // populated by full compiler pipeline
-	OriginalConjs   []*goivy.LabeledFormula
-	AG              *goivy.AnalysisGraph // persistent analysis graph for interactive verification
-	AGUI            *AnalysisGraphUI     // ARG navigation UI (delegates to AG)
-	CTIUI           *CTIAnalysisGraphUI  // CTI/invariant workflow UI
-	SheetUIs        map[string]*AnalysisGraphUI
-	sheetCounter    int
-	ReachableUI     *AnalysisGraphUI
-	EventViewer     *EventTraceViewer
+	ID                string
+	Graph             *WebUIAnalysisGraphState   // ARG state
+	ConceptSess       *ConceptInteractiveSession // concept graph state (uses Z3 via WebUIAlpha)
+	SimpleSess        *ConceptSession            // legacy simple session (for API compat)
+	Events            chan Event                 // buffered SSE channel
+	mu                sync.Mutex
+	FilePath          string // last loaded file path
+	FileContent       string // file content (when uploaded via browser)
+	ActiveIsolate     string
+	AvailableIsolates []string
+	toggles           *Toggles
+	WebUIProofStack   *WebUIProofStack
+	ProofMgr          *goivy.ProofManager // live proof state (goals + reachability graph)
+	CompiledModule    *goivy.Module       // populated by full compiler pipeline
+	CompiledSig       *goivy.Sig          // populated by full compiler pipeline
+	OriginalConjs     []*goivy.LabeledFormula
+	AG                *goivy.AnalysisGraph // persistent analysis graph for interactive verification
+	AGUI              *AnalysisGraphUI     // ARG navigation UI (delegates to AG)
+	CTIUI             *CTIAnalysisGraphUI  // CTI/invariant workflow UI
+	SheetUIs          map[string]*AnalysisGraphUI
+	sheetCounter      int
+	ReachableUI       *AnalysisGraphUI
+	EventViewer       *EventTraceViewer
 }
 
 const rootSheetID = "sheet-1"
@@ -60,6 +62,85 @@ func NewSession(cfg *goivy.Config, id string) *Session {
 		sheetCounter: 1,
 		EventViewer:  NewEventTraceViewer(),
 	}
+}
+
+func cloneWebUIConfigForLoad(base *goivy.Config, isolate string) *goivy.Config {
+	cfg := goivy.NewConfig()
+	if base != nil {
+		copied := *base
+		cfg = &copied
+		if base.SolverOpts != nil {
+			solver := *base.SolverOpts
+			cfg.SolverOpts = &solver
+		} else {
+			cfg.SolverOpts = goivy.DefaultSolverOptions()
+		}
+		if base.IsolateCfg != nil {
+			isolateCfg := *base.IsolateCfg
+			isolateCfg.StripAddedSymbols = append([]*goivy.Const{}, base.IsolateCfg.StripAddedSymbols...)
+			isolateCfg.VPrivates = make(map[string]bool, len(base.IsolateCfg.VPrivates))
+			for k, v := range base.IsolateCfg.VPrivates {
+				isolateCfg.VPrivates[k] = v
+			}
+			cfg.IsolateCfg = &isolateCfg
+		} else {
+			cfg.IsolateCfg = goivy.NewIsolateConfig()
+		}
+	}
+
+	iuCfg := goivy.NewIvyUtilsConfig()
+	astCfg := goivy.NewAstConfig()
+	astCfg.IuCfg = iuCfg
+	actCfg := goivy.NewActionsConfig()
+	actCfg.IuCfg = iuCfg
+	cfg.IuCfg = iuCfg
+	cfg.AstCfg = astCfg
+	cfg.ActCfg = actCfg
+	cfg.ProofCfg = goivy.TacticNewConfig()
+	cfg.GlobalIncluded = make(map[string]bool)
+	cfg.Isolate = strings.TrimSpace(isolate)
+	return cfg
+}
+
+func webUIIsolateNames(mod *goivy.Module) []string {
+	if mod == nil || len(mod.Isolates) == 0 {
+		return nil
+	}
+	names := make([]string, 0, len(mod.Isolates))
+	for name := range mod.Isolates {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	if len(names) == 1 && names[0] == "this" {
+		return nil
+	}
+	if len(names) > 1 {
+		filtered := names[:0]
+		for _, name := range names {
+			if name != "this" {
+				filtered = append(filtered, name)
+			}
+		}
+		names = filtered
+	}
+	return append([]string{}, names...)
+}
+
+func (s *Session) compileIvyDecls(decls []goivy.Node, isolate string) (*goivy.Module, *goivy.Sig, error) {
+	sig := goivy.NewSig()
+	mod := goivy.New()
+	cfg := cloneWebUIConfigForLoad(s.Cfg, isolate)
+	if cfg.ExtAction == "" {
+		cfg.ExtAction = CompileKwargs["ext"]
+	}
+	mod.Cfg = cfg
+	mod.Sig = sig
+
+	goivy.RegisterTactics(mod.Cfg.ProofCfg, mod)
+	if err := goivy.IvyCompile(decls, mod, true); err != nil {
+		return nil, nil, err
+	}
+	return mod, sig, nil
 }
 
 // LoadFile loads an Ivy source file by path into this session.
@@ -81,6 +162,12 @@ func (s *Session) LoadFile(path string) error {
 // It parses the file to extract types, relations, and actions
 // to populate the concept domain and ARG.
 func (s *Session) LoadFileContent(filename string, content []byte) error {
+	return s.LoadFileContentWithIsolate(filename, content, "")
+}
+
+// LoadFileContentWithIsolate is LoadFileContent plus the web UI equivalent of
+// Python Ivy's command-line isolate=... selection.
+func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, isolate string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if filename == "" {
@@ -114,27 +201,39 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	// Step 2: Full three-pass compilation via IvyCompile.
 	// This runs DomainSetup, ConjectureSetup, ARGSetup, post-processing,
 	// and CreateIsolate — matching Python's ivy_compile exactly.
-	sig := goivy.NewSig()
-	mod := goivy.New()
-	if s.Cfg != nil {
-		if s.Cfg.ExtAction == "" {
-			s.Cfg.ExtAction = CompileKwargs["ext"]
-		}
-		mod.Cfg = s.Cfg
+	requestedIsolate := strings.TrimSpace(isolate)
+	if requestedIsolate == "" && s.Cfg != nil {
+		requestedIsolate = strings.TrimSpace(s.Cfg.Isolate)
 	}
-	mod.Sig = sig
 
-	// Register all tactics before compilation so phase6 attach_proofs can
-	// create ProofCheckers. Matches check.Start().
-	mod.Cfg.ProofCfg = goivy.TacticNewConfig()
-	goivy.RegisterTactics(mod.Cfg.ProofCfg, mod)
-
-	compileErr := goivy.IvyCompile(decls, mod, true)
+	mod, sig, compileErr := s.compileIvyDecls(decls, requestedIsolate)
 	if compileErr != nil {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
 			"phase": "compile", "error": compileErr.Error(),
 		}})
 		return fmt.Errorf("compile: %w", compileErr)
+	}
+	availableIsolates := webUIIsolateNames(mod)
+	activeIsolate := requestedIsolate
+	if activeIsolate == "" && len(availableIsolates) > 0 {
+		activeIsolate = availableIsolates[0]
+		mod, sig, compileErr = s.compileIvyDecls(decls, activeIsolate)
+		if compileErr != nil {
+			s.emit(Event{Type: "compiler_error", Data: map[string]string{
+				"phase": "compile", "error": compileErr.Error(),
+			}})
+			return fmt.Errorf("compile: %w", compileErr)
+		}
+		availableIsolates = webUIIsolateNames(mod)
+	}
+	if activeIsolate != "" {
+		if _, ok := mod.Isolates[activeIsolate]; !ok {
+			err := fmt.Errorf("undefined isolate: %s", activeIsolate)
+			s.emit(Event{Type: "compiler_error", Data: map[string]string{
+				"phase": "compile", "error": err.Error(),
+			}})
+			return err
+		}
 	}
 
 	// Step 3: Extract sort and symbol info from the compiled signature.
@@ -209,6 +308,8 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	s.CompiledModule = mod
 	s.CompiledSig = sig
 	s.OriginalConjs = append([]*goivy.LabeledFormula{}, mod.LabeledConjs...)
+	s.ActiveIsolate = activeIsolate
+	s.AvailableIsolates = availableIsolates
 
 	// Step 6.5: Initialize ProofManager from module conjectures.
 	// Python: AnalysisState.__init__ creates self.goal_stack = ProofGoalStack()
@@ -256,6 +357,8 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 		"sorts":     sortNames(sortMap),
 		"relations": relationNames(relations),
 		"actions":   actionNames,
+		"isolate":   s.ActiveIsolate,
+		"isolates":  append([]string{}, s.AvailableIsolates...),
 	}})
 	return nil
 }

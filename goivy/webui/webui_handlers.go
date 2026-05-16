@@ -61,7 +61,7 @@ func (s *Server) apiLoad(w http.ResponseWriter, r *http.Request, sessionID strin
 			writeErr(w, http.StatusBadRequest, "reading file: "+err.Error())
 			return
 		}
-		data, err := s.backend.Load(sessionID, header.Filename, content)
+		data, err := s.backend.Load(sessionID, header.Filename, content, r.FormValue("isolate"))
 		if err != nil {
 			writeBackendErr(w, err)
 			return
@@ -72,7 +72,8 @@ func (s *Server) apiLoad(w http.ResponseWriter, r *http.Request, sessionID strin
 
 	// JSON body with a file path (programmatic use).
 	var req struct {
-		Path string `json:"path"`
+		Path    string `json:"path"`
+		Isolate string `json:"isolate"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeErr(w, http.StatusBadRequest, "invalid json")

@@ -44,6 +44,17 @@ html, body {
     margin-left: auto;
 }
 
+.isolate-menu[hidden] {
+    display: none;
+}
+
+.isolate-menu .panel-menu {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .menu-label {
     color: #999;
     font-size: 11px;
@@ -1021,6 +1032,11 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 
 .dropdown-content a:hover {
     background-color: #094771;
+    color: #fff;
+}
+
+.dropdown-content a.selected {
+    background-color: #3c3c3c;
     color: #fff;
 }
 

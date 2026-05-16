@@ -173,7 +173,8 @@ export async function loadModelFile(app, file, persist, { win = globalThis.windo
 
     app.setEditorContent(fileContent);
 
-    await app.api.loadFile(file);
+    const loadResult = await app.api.loadFile(file);
+    if (app.setIsolates) app.setIsolates(loadResult && loadResult.isolates, loadResult && loadResult.isolate);
     const argData = await app.api.getARG();
     if (argData && argData.elements) {
       applyArgSnapshot(app, app.activeSheetId || 'sheet-1', argData);

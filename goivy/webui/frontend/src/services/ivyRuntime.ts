@@ -211,6 +211,8 @@ class IvyRuntime {
         this._saveProgressSheen = null;
         this.currentBound = 10;
         this.uiMode = 'cti';
+        this.availableIsolates = [];
+        this.activeIsolate = '';
     }
 
     createApi() {
@@ -1194,6 +1196,7 @@ class IvyRuntime {
             if (!tab) return;
             self.switchSheet(tab.getAttribute('data-sheet'));
         });
+        this.updateSheetTabLabels();
     }
 
     isValidSheetId(sheetId) {
@@ -1259,7 +1262,8 @@ class IvyRuntime {
         tabBtn.className = 'sheet-tab';
         tabBtn.setAttribute('data-sheet', sheetId);
         var labelSpan = document.createElement('span');
-        labelSpan.textContent = label;
+        tabBtn.setAttribute('data-base-label', label);
+        labelSpan.textContent = this.formatSheetTabLabel(label);
         tabBtn.appendChild(labelSpan);
         var closeBtn = document.createElement('span');
         closeBtn.className = 'tab-close';
@@ -1341,8 +1345,9 @@ class IvyRuntime {
             var tabBtn = document.createElement('button');
             tabBtn.className = 'sheet-tab';
             tabBtn.setAttribute('data-sheet', sheetId);
+            tabBtn.setAttribute('data-base-label', tabLabel);
             var labelSpan = document.createElement('span');
-            labelSpan.textContent = tabLabel;
+            labelSpan.textContent = this.formatSheetTabLabel(tabLabel);
             tabBtn.appendChild(labelSpan);
             var closeBtn = document.createElement('span');
             closeBtn.className = 'tab-close';
@@ -1353,7 +1358,8 @@ class IvyRuntime {
         } else {
             var existingLabel = existingTab.querySelector('span');
             if (existingLabel) {
-                existingLabel.textContent = tabLabel;
+                existingTab.setAttribute('data-base-label', tabLabel);
+                existingLabel.textContent = this.formatSheetTabLabel(tabLabel);
             }
         }
 
@@ -2843,10 +2849,129 @@ class IvyRuntime {
         setEditorKeymapViaService(this, keymap);
     }
 
+    formatSheetTabLabel(label) {
+        var base = String(label || '');
+        var isolate = String(this.activeIsolate || '').trim();
+        return isolate ? base + ' · ' + isolate : base;
+    }
+
+    setSheetTabBaseLabel(sheetId, label) {
+        var tab = this.sheetTab(sheetId);
+        if (!tab) return;
+        var base = String(label || sheetId || '');
+        tab.setAttribute('data-base-label', base);
+        var labelSpan = tab.querySelector('span');
+        if (labelSpan) labelSpan.textContent = this.formatSheetTabLabel(base);
+    }
+
+    updateSheetTabLabels() {
+        var tabs = document.querySelectorAll('.sheet-tab');
+        for (var i = 0; i < tabs.length; i++) {
+            var tab = tabs[i];
+            var labelSpan = tab.querySelector('span');
+            if (!labelSpan) continue;
+            var base = tab.getAttribute('data-base-label') || labelSpan.textContent || tab.getAttribute('data-sheet') || '';
+            tab.setAttribute('data-base-label', base);
+            labelSpan.textContent = this.formatSheetTabLabel(base);
+        }
+    }
+
     tabLabelForSheet(sheetId) {
         var tab = this.sheetTab(sheetId);
+        if (tab && tab.getAttribute('data-base-label')) return tab.getAttribute('data-base-label');
         var label = tab ? tab.querySelector('span') : null;
         return label ? label.textContent : sheetId;
+    }
+
+    setIsolates(isolates, active) {
+        var names = [];
+        var seen = {};
+        var source = Array.isArray(isolates) ? isolates : [];
+        for (var i = 0; i < source.length; i++) {
+            var name = String(source[i] || '').trim();
+            if (!name || seen[name]) continue;
+            seen[name] = true;
+            names.push(name);
+        }
+        names.sort();
+        this.availableIsolates = names;
+        this.activeIsolate = String(active || '').trim();
+        this.renderIsolateMenu();
+        this.updateSheetTabLabels();
+    }
+
+    renderIsolateMenu() {
+        var wrapper = document.getElementById('isolate-menu-wrapper');
+        var title = document.getElementById('isolate-menu-title');
+        var menu = document.getElementById('isolate-menu');
+        if (!wrapper || !title || !menu) return;
+        var names = Array.isArray(this.availableIsolates) ? this.availableIsolates : [];
+        wrapper.hidden = names.length === 0;
+        title.textContent = this.activeIsolate || 'isolate';
+        title.setAttribute('title', this.activeIsolate || 'Select isolate');
+        menu.innerHTML = '';
+        var self = this;
+        for (var i = 0; i < names.length; i++) {
+            (function (name) {
+                var item = document.createElement('a');
+                item.href = '#';
+                item.textContent = name;
+                if (name === self.activeIsolate) item.classList.add('selected');
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    self.closeAllDropdowns();
+                    self.selectIsolate(name);
+                });
+                menu.appendChild(item);
+            })(names[i]);
+        }
+    }
+
+    async selectIsolate(name) {
+        var selected = String(name || '').trim();
+        if (!selected || selected === this.activeIsolate) {
+            this.renderIsolateMenu();
+            return;
+        }
+        var names = Array.isArray(this.availableIsolates) ? this.availableIsolates : [];
+        if (names.length > 0 && names.indexOf(selected) < 0) {
+            this.controls.setStatus('Unknown isolate: ' + selected, 'error');
+            return;
+        }
+        var content = this._editorContent ? this._editorContent() : (this._persistedFileContent || '');
+        if (!content) {
+            this.setIsolates(names, selected);
+            return;
+        }
+        this.controls.showLoading('Switching isolate...');
+        this.controls.setStatus('Switching isolate: ' + selected + '...');
+        try {
+            var filename = this._persistedFileName || 'model.ivy';
+            var result = await this.api.reloadContent(content, filename, { isolate: selected });
+            this._persistedFileContent = content;
+            this.setIsolates(
+                result && result.isolates ? result.isolates : names,
+                result && result.isolate ? result.isolate : selected
+            );
+            if (this.sheetExists && this.sheetExists('sheet-1')) {
+                this.switchSheet('sheet-1');
+            }
+            var argData = await this.api.getARG();
+            if (argData && argData.elements) {
+                this.applyArgSnapshot(this.activeSheetId || 'sheet-1', argData);
+            }
+            var conceptData = await this.api.getConceptGraph();
+            if (conceptData && conceptData.elements) {
+                this.applyConceptSnapshot(this.activeSheetId || 'sheet-1', conceptData);
+            }
+            this._persistedConceptRelations = conceptData;
+            runtimeDeps.IvyPersist.save(this);
+            this.controls.setStatus('Isolate: ' + this.activeIsolate, 'success');
+        } catch (e) {
+            this.controls.setStatus('Isolate switch failed: ' + e.message, 'error');
+        } finally {
+            this.controls.hideLoading();
+        }
     }
 
     getUIMode() {
@@ -4352,6 +4477,9 @@ class IvyRuntime {
      */
     async refreshAfterLoad(data) {
         try {
+            if (data && (data.isolates || data.isolate)) {
+                this.setIsolates(data.isolates || [], data.isolate || '');
+            }
             // Refresh ARG
             var argData = await this.api.getARG();
             if (argData && argData.elements) {

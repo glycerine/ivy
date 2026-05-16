@@ -5,6 +5,9 @@ type AnyRecord = Record<string, any>;
 
 function toFormDataFromModel(model: AnyRecord = {}) {
   const formData = new FormData();
+  if (model.isolate != null && String(model.isolate).trim() !== '') {
+    formData.append('isolate', String(model.isolate).trim());
+  }
   if (model.file) {
     formData.append('file', model.file);
     return formData;
