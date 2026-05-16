@@ -60,11 +60,11 @@ func TestSolverPDRStep(t *testing.T) {
 	if err != nil {
 		t.Fatalf("pdr_step error: %v", err)
 	}
-	if _, ok := result["valid"]; !ok {
-		t.Error("result should contain 'valid' key")
+	if status, _ := result["status"].(string); status != "cannot_reverse" {
+		t.Fatalf("status = %q, want cannot_reverse before a graph state is selected", status)
 	}
-	if _, ok := result["stats"]; !ok {
-		t.Error("result should contain 'stats' key")
+	if _, ok := result["concept"]; !ok {
+		t.Fatalf("result should contain concept graph snapshot: %#v", result)
 	}
 }
 

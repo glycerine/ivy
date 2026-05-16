@@ -4080,14 +4080,22 @@ class IvyRuntime {
      * Matches Python ivy_graph_ui.py pdr_step().
      */
     async pdrStep() {
-        return executeAndRefresh(this, { action: 'pdr_step', running: 'PDR step...', success: 'PDR step complete', failure: 'PDR step failed' });
         this.controls.setStatus('PDR step...');
         try {
-            var result = await this.api.executeAction('pdr_step', {});
-            await this.refreshConceptGraph();
-            this.controls.setStatus('PDR step complete', 'success');
+            var result = await this.api.executeAction('pdr_step', { sheet_id: this.activeSheetId || 'sheet-1' });
+            if (result && result.concept) {
+                this.applyConceptSnapshot(result.concept.sheet_id || result.sheet_id || this.activeSheetId || 'sheet-1', result.concept);
+            } else {
+                await this.refreshConceptGraph();
+            }
+            if (result && result.interpolant && typeof this.showTextDialog === 'function') {
+                this.showTextDialog('ivyweb', result.message || 'The pre-state is vacuous.', result.interpolant);
+            }
+            this.controls.setStatus((result && result.message) || 'PDR step complete', 'success');
+            return result;
         } catch (e) {
             this.controls.setStatus('PDR step failed: ' + e.message, 'error');
+            return null;
         }
     }
 

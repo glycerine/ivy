@@ -369,6 +369,9 @@ func (g *Graph) NewRelation(concept *Concept) {
 func (g *Graph) SetState(clauses string, recomp bool, clearConstraints bool, reset bool) {
 	g.mu.Lock()
 	g.State = clauses
+	if clearConstraints && g.InteractiveSess != nil {
+		g.InteractiveSess.SupposeConstraints = nil
+	}
 	if reset {
 		g.mu.Unlock()
 		g.Reset()

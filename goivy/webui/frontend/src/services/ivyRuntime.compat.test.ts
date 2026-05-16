@@ -153,4 +153,31 @@ describe('ivyRuntime compatibility behavior', () => {
 
     expect(runtime.recalculateAll).toHaveBeenCalledOnce();
   });
+
+  it('runs PDR step through the active sheet and applies returned concept model state', async () => {
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-7';
+    runtime.api.executeAction = vi.fn(async () => ({
+      sheet_id: 'sheet-7',
+      message: 'PDR step diagrammed the predecessor goal.',
+      concept: { sheet_id: 'sheet-7', graph: {}, elements: [] },
+    }));
+    runtime.applyConceptSnapshot = vi.fn();
+    runtime.refreshConceptGraph = vi.fn();
+
+    const result = await runtime.pdrStep();
+
+    expect(runtime.api.executeAction).toHaveBeenCalledWith('pdr_step', { sheet_id: 'sheet-7' });
+    expect(runtime.applyConceptSnapshot).toHaveBeenCalledWith('sheet-7', {
+      sheet_id: 'sheet-7',
+      graph: {},
+      elements: [],
+    });
+    expect(runtime.refreshConceptGraph).not.toHaveBeenCalled();
+    expect(runtime.controls.lastStatus).toEqual({
+      message: 'PDR step diagrammed the predecessor goal.',
+      kind: 'success',
+    });
+    expect(result.message).toBe('PDR step diagrammed the predecessor goal.');
+  });
 });

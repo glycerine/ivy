@@ -646,6 +646,216 @@ func conceptGraphGoalClauses(w *GraphWidget, parentState *goivy.State) (*goivy.C
 	return goivy.TrueClauses(nil), nil
 }
 
+type pdrReverseOutcome struct {
+	status       string
+	message      string
+	interpolant  string
+	reverseFalse bool
+	parentState  *goivy.State
+	clauses      *goivy.Clauses
+}
+
+func (s *Session) pdrStepConceptGraphLocked(sheetID string) (map[string]interface{}, error) {
+	ui, resolvedSheetID, err := s.requireAnalysisUIForSheetLocked(sheetID)
+	if err != nil {
+		return nil, err
+	}
+	w := ui.CurrentConceptGraph
+	if w == nil || w.G() == nil {
+		w = s.ensureConceptGraphWidgetForSheetLocked(resolvedSheetID)
+	}
+	if w == nil || w.G() == nil {
+		return nil, fmt.Errorf("pdr_step: no concept graph for sheet %q", resolvedSheetID)
+	}
+	parentState, _ := w.G().ParentState.(*goivy.State)
+	if parentState == nil {
+		return map[string]interface{}{
+			"sheet_id": resolvedSheetID,
+			"status":   "cannot_reverse",
+			"message":  "Select a Reachability Graph state before running PDR step.",
+			"concept":  conceptGraphActionPayload(w),
+		}, nil
+	}
+
+	outcome, err := s.reverseConceptGraphGoalLocked(w, parentState)
+	if err != nil {
+		return nil, err
+	}
+	if outcome == nil {
+		return nil, fmt.Errorf("pdr_step: reverse produced no result")
+	}
+
+	status := outcome.status
+	message := outcome.message
+	if outcome.reverseFalse {
+		w.Backtrack()
+		w.Recalculate()
+		if w.GraphStack != nil && w.GraphStack.CanUndo() && w.G() != nil && len(w.G().ReverseResult) > 0 {
+			w.Backtrack()
+			status = "backtracked"
+			message = "PDR step backtracked to the previous goal."
+		} else {
+			status = "terminated"
+			message = "PDR terminated."
+		}
+	} else if status == "reversed" {
+		status, message = s.diagramReversedConceptGoalLocked(w, outcome)
+	}
+
+	result := map[string]interface{}{
+		"sheet_id": resolvedSheetID,
+		"status":   status,
+		"message":  message,
+		"concept":  conceptGraphActionPayload(w),
+	}
+	if outcome.interpolant != "" {
+		result["interpolant"] = outcome.interpolant
+	}
+	if w.G() != nil {
+		s.toggles = w.G().Checks.Snapshot()
+	}
+	s.emit(Event{Type: "pdr_step", Data: map[string]string{"message": message, "status": status}})
+	return result, nil
+}
+
+func (s *Session) reverseConceptGraphGoalLocked(w *GraphWidget, parentState *goivy.State) (*pdrReverseOutcome, error) {
+	if w == nil || w.G() == nil {
+		return nil, fmt.Errorf("pdr_step: no concept graph")
+	}
+	goalClauses, err := conceptGraphGoalClauses(w, parentState)
+	if err != nil {
+		return nil, err
+	}
+
+	var (
+		nextParent     *goivy.State
+		reverseClauses *goivy.Clauses
+		interpolant    string
+	)
+
+	if parentState.Pred != nil {
+		var revErr error
+		reverseClauses, revErr = goivy.ReverseUpdateConcreteClauses(goivy.ArtToInterpState(parentState), goalClauses)
+		nextParent = parentState.Pred
+		if revErr != nil {
+			uc, ok := revErr.(*goivy.UnsatCoreWithInterpolant)
+			if !ok {
+				return nil, revErr
+			}
+			reverseClauses = goivy.FalseClauses(nil)
+			if uc.Itp != nil {
+				interpolant = goivy.PrettyFmla(uc.Itp.ToFormula())
+			}
+		}
+	} else if len(parentState.JoinOf) > 0 {
+		reverseClauses, nextParent, err = reverseJoinConcreteClausesArt(parentState, goalClauses)
+		if err != nil {
+			uc, ok := err.(*goivy.UnsatCoreWithInterpolant)
+			if !ok {
+				return nil, err
+			}
+			reverseClauses = goivy.FalseClauses(nil)
+			nextParent = parentState.JoinOf[0]
+			if uc.Itp != nil {
+				interpolant = goivy.PrettyFmla(uc.Itp.ToFormula())
+			}
+		}
+	} else {
+		return &pdrReverseOutcome{
+			status:  "cannot_reverse",
+			message: "Cannot reverse.",
+		}, nil
+	}
+
+	if nextParent == nil || reverseClauses == nil {
+		return &pdrReverseOutcome{
+			status:  "cannot_reverse",
+			message: "Cannot reverse.",
+		}, nil
+	}
+
+	w.Checkpoint(true)
+	g := w.G()
+	g.ParentState = nextParent
+	combined := goivy.AndClausesTyped(nextParent.Clauses, reverseClauses)
+	g.SetState(clausesDisplayString(combined), true, true, false)
+	g.ReverseResult = []string{
+		clausesDisplayString(nextParent.Clauses),
+		clausesDisplayString(reverseClauses),
+	}
+	w.Update()
+
+	status := "reversed"
+	message := "PDR step reversed the goal."
+	if reverseClauses.IsFalse() {
+		status = "refinement_suggested"
+		message = "The pre-state is vacuous."
+	}
+	return &pdrReverseOutcome{
+		status:       status,
+		message:      message,
+		interpolant:  interpolant,
+		reverseFalse: reverseClauses.IsFalse(),
+		parentState:  nextParent,
+		clauses:      reverseClauses,
+	}, nil
+}
+
+func reverseJoinConcreteClausesArt(state *goivy.State, clauses *goivy.Clauses) (*goivy.Clauses, *goivy.State, error) {
+	if state == nil {
+		return nil, nil, fmt.Errorf("reverse join: no state")
+	}
+	if clauses == nil {
+		clauses = state.Clauses
+	}
+	for _, joined := range state.JoinOf {
+		if joined == nil {
+			continue
+		}
+		combined := goivy.AndClausesTyped(joined.Clauses, clauses)
+		if !combined.IsFalse() {
+			return combined, joined, nil
+		}
+	}
+	return nil, nil, fmt.Errorf("reverse join: no compatible predecessor")
+}
+
+func (s *Session) diagramReversedConceptGoalLocked(w *GraphWidget, outcome *pdrReverseOutcome) (string, string) {
+	if w == nil || w.G() == nil || outcome == nil || outcome.parentState == nil || outcome.clauses == nil {
+		return "cannot_diagram", "Cannot diagram the current PDR goal."
+	}
+	dgm := goivy.Diagram(
+		goivy.ArtToInterpState(outcome.parentState),
+		outcome.clauses,
+		nil,
+		outcome.parentState.Clauses,
+		false,
+		false,
+	)
+	if dgm == nil {
+		w.Backtrack()
+		return "vacuous", "The current state is vacuous. Backtracking."
+	}
+
+	w.Checkpoint(false)
+	skolemizer := goivy.ModuleSkolemizer(s.CompiledModule)
+	goal := goivy.ReskolemizeClauses(dgm, func(v *goivy.LogicVariable) goivy.Expr {
+		return skolemizer(v)
+	})
+	g := w.G()
+	g.SetFactsExpr(goal.Fmlas)
+	g.SetState(clausesDisplayString(goal), true, false, false)
+	w.Update()
+	return "diagrammed", "PDR step diagrammed the predecessor goal."
+}
+
+func clausesDisplayString(clauses *goivy.Clauses) string {
+	if clauses == nil {
+		return ""
+	}
+	return goivy.PrettyFmla(clauses.ToFormula())
+}
+
 func (s *Session) ctiConceptWidgetForSheetLocked(sheetID string) (*CTIConceptGraphWidget, error) {
 	if s.CTIUI == nil {
 		return nil, fmt.Errorf("cti action: CTI UI is not initialized")
@@ -1471,32 +1681,18 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 
 	// --- Verification operations (check/art packages) ---
 	case "pdr_step":
-		// PDR/IC3 verification via tactics.UPDR.
-		// Matches Python ivy_graph_ui.py pdr_step() which uses the
-		// AG-level tactics (reverse, backtrack, recalculate), and
-		// Python tactics.py UPDR class.
 		if s.CompiledModule == nil {
 			err = fmt.Errorf("pdr_step: no compiled module")
 			break
 		}
-		valid, pdrErr := s.runUPDR()
+		pdrResult, pdrErr := s.pdrStepConceptGraphLocked(actionStringArg(args, "sheet_id"))
 		if pdrErr != nil {
 			err = pdrErr
 			break
 		}
-		result["valid"] = valid
-		numFrames := 0
-		if s.AG != nil {
-			numFrames = len(s.AG.States)
+		for k, v := range pdrResult {
+			result[k] = v
 		}
-		result["stats"] = map[string]int{
-			"num_frames": numFrames,
-		}
-		msg := "PDR: counterexample found"
-		if valid {
-			msg = fmt.Sprintf("PDR: invariant found (%d frames)", numFrames)
-		}
-		s.emit(Event{Type: "pdr_complete", Data: map[string]string{"message": msg}})
 
 	case "concrete":
 		if sheetID := actionStringArg(args, "sheet_id"); sheetID != "" {

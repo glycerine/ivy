@@ -294,9 +294,7 @@ func (tc *TacticsContext) RefineOrReverse(goal *ProofGoal) (bool, interface{}) {
 	// Python: x = ivy_transrel.forward_interpolant(
 	//     pred.clauses, action.update(...), goal.formula, axioms, None)
 	goalClauses := FormulaToClauses(goal.Formula, nil)
-	fmt.Println("calling ForwardInterpolant")
 	x := ForwardInterpolant(tc.Mod, pred.Clauses, update, goalClauses, axioms, nil)
-	fmt.Printf("    got: %v\n", x)
 
 	if x == nil {
 		// Python: bi = backward_image(goal.formula, action)
@@ -448,11 +446,40 @@ func (t *RefineOrReverseTactic) Apply(goal *ProofGoal) (bool, error) {
 // This iteratively builds a sequence of frames (over-approximations of
 // reachable states) and tries to block counterexamples by refining frames.
 type UPDR struct {
-	TC        *TacticsContext
-	MaxFrames int // 0 means unlimited
+	TC           *TacticsContext
+	MaxFrames    int // 0 means unlimited
+	MaxGoalSteps int // 0 uses a bounded default derived from MaxFrames
 }
 
 func (t *UPDR) Name() string { return "UPDR" }
+
+func proofGoalNodeClausesKey(goal *ProofGoal) string {
+	if goal == nil {
+		return ""
+	}
+	node, ok := goal.Node.(*State)
+	if !ok || node == nil || node.Clauses == nil {
+		return ""
+	}
+	return node.Clauses.String()
+}
+
+func proofGoalNodeLabel(goal *ProofGoal) string {
+	if goal == nil {
+		return "<nil>"
+	}
+	node, ok := goal.Node.(*State)
+	if !ok || node == nil {
+		return "<unknown>"
+	}
+	if node.ID >= 0 {
+		return fmt.Sprintf("state %d", node.ID)
+	}
+	if node.Label != "" {
+		return node.Label
+	}
+	return "unlabeled state"
+}
 
 // Apply runs the UPDR algorithm. Python tactics.py:222-292.
 func (t *UPDR) Apply(goal *ProofGoal) (bool, error) {
@@ -487,6 +514,14 @@ func (t *UPDR) Apply(goal *ProofGoal) (bool, error) {
 	if t.MaxFrames > 0 {
 		maxIter = t.MaxFrames
 	}
+	maxGoalSteps := t.MaxGoalSteps
+	if maxGoalSteps <= 0 {
+		maxGoalSteps = maxIter * 100
+		if maxGoalSteps < 100 {
+			maxGoalSteps = 100
+		}
+	}
+	goalSteps := 0
 
 	for iter := 0; iter < maxIter; iter++ {
 		// Python: check if we found an inductive invariant
@@ -512,6 +547,10 @@ func (t *UPDR) Apply(goal *ProofGoal) (bool, error) {
 
 		// Python: while not ic.interrupted:
 		for t.TC.Goals.Len() > 0 {
+			goalSteps++
+			if goalSteps > maxGoalSteps {
+				return false, fmt.Errorf("UPDR: reached goal step limit (%d) without proving or reversing the active goal", maxGoalSteps)
+			}
 			currentGoal := t.TC.TopGoal()
 			if currentGoal == nil {
 				break
@@ -532,6 +571,9 @@ func (t *UPDR) Apply(goal *ProofGoal) (bool, error) {
 			}
 
 			// Python: push_diagram(current_goal, False)
+			beforeLen := t.TC.Goals.Len()
+			beforeTop := currentGoal
+			beforeClauses := proofGoalNodeClausesKey(currentGoal)
 			dgGoal := t.TC.GetDiagram(currentGoal, false)
 			if dgGoal == nil {
 				break
@@ -543,7 +585,16 @@ func (t *UPDR) Apply(goal *ProofGoal) (bool, error) {
 
 			// Python: if refine_or_reverse(dg, False):
 			rorTactic := &RefineOrReverseTactic{TC: t.TC, AutoRemove: false}
-			rorTactic.Apply(dg)
+			refined, rorErr := rorTactic.Apply(dg)
+			if rorErr != nil {
+				return false, rorErr
+			}
+			if refined {
+				t.TC.RemoveGoal(dg)
+			}
+			if t.TC.Goals.Len() == beforeLen && t.TC.TopGoal() == beforeTop && proofGoalNodeClausesKey(currentGoal) == beforeClauses {
+				return false, fmt.Errorf("UPDR: no progress while processing goal at %s", proofGoalNodeLabel(currentGoal))
+			}
 		}
 
 		// Python: propagate phase
