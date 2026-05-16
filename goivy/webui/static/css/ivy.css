@@ -966,8 +966,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 .reachability-only-sheet #concept-panel,
 .reachability-only-sheet #divider,
 .reachability-only-sheet #divider2,
-.reachability-only-sheet #state-panel,
-.reachability-only-sheet .info-panel {
+.reachability-only-sheet #state-panel {
     display: none;
 }
 

@@ -88,8 +88,15 @@ export class IvyControlsShim {
     return this._contextMenuVisible;
   }
 
+  activeInfoElement() {
+    const doc = globalThis.document;
+    if (!doc) return null;
+    const activeInfo = doc.querySelector('.sheet-content.active .info-panel [id^="info-content"]');
+    return activeInfo || doc.getElementById('info-content');
+  }
+
   showInfo(shortInfo: any, longInfo: any) {
-    const info = globalThis.document && globalThis.document.getElementById('info-content');
+    const info = this.activeInfoElement();
     if (!info) return;
     const lines: string[] = [];
     if (shortInfo) lines.push(shortInfo);
@@ -101,7 +108,7 @@ export class IvyControlsShim {
   }
 
   clearInfo() {
-    const info = globalThis.document && globalThis.document.getElementById('info-content');
+    const info = this.activeInfoElement();
     if (info) info.textContent = 'Select a node or edge to see details';
   }
 
