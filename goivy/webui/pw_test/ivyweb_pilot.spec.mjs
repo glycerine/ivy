@@ -224,6 +224,49 @@ test('conjecture undo menu path does not kill the page', async ({ page }) => {
   await expect(page).toHaveTitle(/ivy/i);
 });
 
+test('panel dropdown menus render above the details pane', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheetLeft = document.querySelector('.sheet-left');
+    const sheetMain = sheetLeft?.querySelector('.sheet-main');
+    const infoPanel = sheetLeft?.querySelector('.info-panel');
+    const minMainHeight = app._detailsResizerMinimumMainHeight(sheetLeft);
+    if (sheetMain) {
+      sheetMain.style.flex = `0 0 ${minMainHeight}px`;
+      sheetMain.style.minHeight = `${minMainHeight}px`;
+    }
+    if (infoPanel) {
+      infoPanel.style.flex = '1 1 auto';
+      infoPanel.style.height = '';
+    }
+  });
+
+  await page.locator('[data-dropdown="conj-menu"]').click();
+  await expect(page.locator('#conj-menu')).toBeVisible();
+
+  const result = await page.evaluate(() => {
+    const menu = document.getElementById('conj-menu');
+    const infoPanel = document.getElementById('info-panel');
+    const menuBox = menu.getBoundingClientRect();
+    const infoBox = infoPanel.getBoundingClientRect();
+    const x = menuBox.left + 24;
+    const y = Math.min(menuBox.bottom - 6, Math.max(infoBox.top + 8, menuBox.top + 8));
+    const top = document.elementFromPoint(x, y);
+    return {
+      menuBottom: menuBox.bottom,
+      detailsTop: infoBox.top,
+      insideMenu: !!top?.closest('#conj-menu'),
+      insideDetails: !!top?.closest('#info-panel'),
+    };
+  });
+
+  expect(result.menuBottom).toBeGreaterThan(result.detailsTop);
+  expect(result.insideMenu).toBe(true);
+  expect(result.insideDetails).toBe(false);
+});
+
 test('shared action runner reports backend errors', async ({ page }) => {
   await openIvy(page);
 

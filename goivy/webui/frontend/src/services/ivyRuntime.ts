@@ -131,6 +131,7 @@ import {
     closeAllDropdowns as closeAllDropdownsViaService,
     dispatchMenuDescriptorAction as dispatchMenuDescriptorActionViaService,
     flashAndClose as flashAndCloseViaService,
+    positionDropdownContent as positionDropdownContentViaService,
 } from './menuService.ts';
 import {
     analysisStateLimits as analysisStateLimitsViaService,
@@ -3379,12 +3380,9 @@ class IvyRuntime {
                 trigger.addEventListener('click', function (e) {
                     e.stopPropagation();
                     var parent = trigger.parentElement;
+                    if (!parent) return;
                     var wasOpen = parent.classList.contains('open');
-                    // Close all dropdowns first
-                    var all = document.querySelectorAll('.dropdown.open');
-                    for (var j = 0; j < all.length; j++) {
-                        all[j].classList.remove('open');
-                    }
+                    self.closeAllDropdowns();
                     if (!wasOpen) {
                         parent.classList.add('open');
                         // Populate recent files when File menu opens
@@ -3392,6 +3390,7 @@ class IvyRuntime {
                         if (dropdownId === 'file-menu') {
                             self.populateRecentFiles();
                         }
+                        positionDropdownContentViaService(parent);
                     }
                 });
             })(dropdowns[i]);
@@ -3481,7 +3480,10 @@ class IvyRuntime {
             e.stopPropagation();
             var wasOpen = dropdown.classList.contains('open');
             self.closeAllDropdowns();
-            if (!wasOpen) dropdown.classList.add('open');
+            if (!wasOpen) {
+                dropdown.classList.add('open');
+                positionDropdownContentViaService(dropdown);
+            }
         });
         dropdown.appendChild(label);
 

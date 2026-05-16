@@ -1,11 +1,71 @@
 import { describe, expect, it, vi } from 'vitest';
-import { closeAllDropdowns, dispatchMenuDescriptorAction, flashAndClose } from './menuService.ts';
+import {
+  closeAllDropdowns,
+  dispatchMenuDescriptorAction,
+  flashAndClose,
+  positionDropdownContent,
+} from './menuService.ts';
 
 describe('menuService', () => {
   it('closes open dropdowns in the DOM', () => {
     document.body.innerHTML = '<div class="dropdown open"></div>';
     closeAllDropdowns({ doc: document });
     expect(document.querySelector('.dropdown').classList.contains('open')).toBe(false);
+  });
+
+  it('clears floating dropdown positioning when menus close', () => {
+    document.body.innerHTML = `
+      <div class="dropdown open">
+        <span class="panel-menu">Menu</span>
+        <div class="dropdown-content dropdown-floating" style="left: 11px; top: 12px; min-width: 200px; max-height: 90px;"></div>
+      </div>
+    `;
+
+    closeAllDropdowns({ doc: document });
+
+    const content = document.querySelector('.dropdown-content');
+    expect(content.classList.contains('dropdown-floating')).toBe(false);
+    expect(content.getAttribute('style')).toBe('');
+  });
+
+  it('positions dropdown content in viewport space', () => {
+    document.body.innerHTML = `
+      <div class="dropdown open">
+        <span class="panel-menu">Menu</span>
+        <div class="dropdown-content"></div>
+      </div>
+    `;
+    const dropdown = document.querySelector('.dropdown');
+    const trigger = document.querySelector('.panel-menu');
+    const content = document.querySelector('.dropdown-content');
+    trigger.getBoundingClientRect = () => ({
+      x: 740,
+      y: 100,
+      left: 740,
+      top: 100,
+      right: 800,
+      bottom: 124,
+      width: 60,
+      height: 24,
+      toJSON: () => ({}),
+    });
+    content.getBoundingClientRect = () => ({
+      x: 0,
+      y: 0,
+      left: 0,
+      top: 0,
+      right: 200,
+      bottom: 120,
+      width: 200,
+      height: 120,
+      toJSON: () => ({}),
+    });
+
+    positionDropdownContent(dropdown, { win: { innerWidth: 800, innerHeight: 600 } });
+
+    expect(content.classList.contains('dropdown-floating')).toBe(true);
+    expect(content.style.left).toBe('592px');
+    expect(content.style.top).toBe('125px');
   });
 
   it('flashes menu items before invoking callbacks', () => {

@@ -989,6 +989,12 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     box-shadow: 0 4px 8px rgba(0,0,0,0.4);
 }
 
+.dropdown-content.dropdown-floating {
+    position: fixed;
+    z-index: 999;
+    overflow-y: auto;
+}
+
 .dropdown-content a {
     display: block;
     padding: 4px 12px;
