@@ -29,4 +29,22 @@ describe('IvyControlsShim', () => {
     expect(document.getElementById('info-content-3')?.textContent).toBe('Select a node or edge to see details');
     expect(document.getElementById('info-content-3')?.getAttribute('data-ivy-details-kind')).toBe('placeholder');
   });
+
+  it('does not repeat details when short_info and long_info are identical', () => {
+    document.body.innerHTML = '<div class="sheet-content active"><div class="info-panel"><div id="info-content"></div></div></div>';
+    const controls = new IvyControlsShim({});
+
+    controls.showInfo('State 0', 'State 0');
+
+    expect(document.getElementById('info-content')?.textContent).toBe('State 0');
+  });
+
+  it('deduplicates repeated long_info lines while keeping distinct details', () => {
+    document.body.innerHTML = '<div class="sheet-content active"><div class="info-panel"><div id="info-content"></div></div></div>';
+    const controls = new IvyControlsShim({});
+
+    controls.showInfo('State 0', ['State 0', 'init', 'init']);
+
+    expect(document.getElementById('info-content')?.textContent).toBe('State 0\ninit');
+  });
 });

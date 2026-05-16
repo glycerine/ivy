@@ -99,10 +99,16 @@ export class IvyControlsShim {
     const info = this.activeInfoElement();
     if (!info) return;
     const lines: string[] = [];
-    if (shortInfo) lines.push(shortInfo);
+    const pushInfoLine = (value: any) => {
+      if (value == null || value === '') return;
+      const text = String(value);
+      if (!text) return;
+      if (!lines.includes(text)) lines.push(text);
+    };
+    pushInfoLine(shortInfo);
     if (longInfo) {
-      if (Array.isArray(longInfo)) lines.push(...longInfo);
-      else lines.push(longInfo);
+      if (Array.isArray(longInfo)) longInfo.forEach(pushInfoLine);
+      else pushInfoLine(longInfo);
     }
     const text = lines.join('\n');
     info.textContent = text || 'Select a node or edge to see details';
