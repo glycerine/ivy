@@ -823,7 +823,8 @@ test('concept graph right-click menu path does not crash', async ({ page }) => {
       return !!cm && cm.style.display !== 'none';
     });
     expect(menuVisible).toBe(true);
-    await expect(page.locator('#context-menu')).toContainText(/Splatter|Materialize|Remove/);
+    await expect(page.locator('#context-menu')).toContainText('Projections...');
+    await expect(page.locator('#context-menu')).not.toContainText(/Splatter|Materialize|Remove/);
   }
 
   expect(await page.evaluate(() => window.__ivyInitError || '')).toBe('');

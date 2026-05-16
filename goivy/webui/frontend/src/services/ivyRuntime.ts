@@ -28,7 +28,6 @@ import {
 } from './editorService.ts';
 import { initializeCodeMirrorEditor } from '../codeMirrorEditor.ts';
 import { UIDataModel } from '../models/uiDataModel.ts';
-import { selectConceptNodeSelected } from '../models/uiDataSelectors.ts';
 import {
     applyArgSnapshot as applyArgSnapshotViaModel,
     applyConceptSnapshot as applyConceptSnapshotViaModel,
@@ -2166,9 +2165,9 @@ class IvyRuntime {
         }
     }
 
-    /**
+     /**
      * Handle right-click on an ARG node: show context menu.
-     * Actions: view state, execute action, mark, cover, safety check.
+     * Actions match Python ivy_ui.py AnalysisGraphUI.get_node_actions().
      */
     onArgNodeRightClick(nodeData, pos, sheetId) {
         var self = this;
@@ -2178,15 +2177,7 @@ class IvyRuntime {
             this.controls.setStatus(this.visualOnlyMessage('analysis'), 'warning');
             return;
         }
-        var actions: any[] = [
-            { header: 'State ' + (nodeData.label || nodeData.id) },
-            {
-                name: 'View State',
-                id: 'view_state',
-                callback: function () { self.onArgNodeClick(nodeData, sheetId); },
-            },
-            { separator: true },
-        ];
+        var actions: any[] = [];
 
         // Add server-provided actions if available
         if (nodeData.actions && Array.isArray(nodeData.actions)) {
@@ -2213,16 +2204,19 @@ class IvyRuntime {
                 })(act);
             }
         } else {
-            // Default ARG node actions — matches Python ivy_ui.py node_commands()
+            // Default ARG node actions — matches Python ivy_ui.py get_node_actions().
+            actions.push({ header: 'Execute action:' });
+            actions.push({ separator: true });
+            actions.push({ separator: true });
             var defaultActions = [
                 { name: 'Check safety', id: 'check_safety' },
-                { name: 'Extend', id: 'extend' },
-                { name: 'Mark', id: 'mark' },
-                { name: 'Cover by marked', id: 'cover' },
-                { name: 'Join with marked', id: 'join' },
+                { name: 'Extend', id: 'find_extension' },
+                { name: 'Mark', id: 'mark_node' },
+                { name: 'Cover by marked', id: 'cover_node' },
+                { name: 'Join with marked', id: 'join_node' },
                 { name: 'Try conjecture', id: 'try_conjecture' },
                 { name: 'Try remembered goal', id: 'try_remembered' },
-                { name: 'Delete', id: 'delete' },
+                { name: 'Delete', id: 'delete_node' },
             ];
             for (var j = 0; j < defaultActions.length; j++) {
                 (function (act) {
@@ -2311,9 +2305,7 @@ class IvyRuntime {
         var self = this;
         sheetId = sheetId || this.activeSheetId || 'sheet-1';
         var sheet = this.sheets && this.sheets[sheetId];
-        var label = edgeData.label || edgeData.obj || '';
         var actions: any[] = [
-            { header: 'Transition: ' + label },
             {
                 name: 'Dismiss',
                 id: 'dismiss',
@@ -2386,18 +2378,118 @@ class IvyRuntime {
 
     /**
      * Handle right-click on a concept node: show context menu.
-     * Actions: split by X (for each possible split), suppose empty, remove, materialize.
+     * CTI mode matches Python ivy_ui_cti.py; reachability mode matches ivy_graph_ui.py.
      */
     onConceptNodeRightClick(nodeData, pos) {
         var self = this;
-        var actions: any[] = [
-            { header: nodeData.label || nodeData.obj || nodeData.id },
-        ];
+        var actions: any[] = [];
+        var uiMode = this.getUIMode();
 
-        // Server-provided actions (split by X, remove, empty, materialize, add projection)
+        if (uiMode === 'cti') {
+            actions.push({ header: 'Projections...' });
+            actions.push({ separator: true });
+        }
+
+        var addConceptAction = function (act) {
+            var label = act.label || act[0] || act.name || '';
+            var id = act.action || act.id || act[0] || '';
+            if (label === '---') {
+                actions.push({ separator: true });
+                return;
+            }
+            if (!id) {
+                actions.push({ header: label });
+                return;
+            }
+            (function (action) {
+                var actionName = action.label || action[0] || action.name;
+                actions.push({
+                    name: actionName,
+                    id: action.action || action.id || action[0] || actionName,
+                    callback: function () {
+                        self.executeConceptNodeAction(nodeData, action);
+                    },
+                });
+            })(act);
+        };
+
+        var isProjectionAction = function (act) {
+            var label = act.label || act[0] || act.name || '';
+            var id = act.action || act.id || act[0] || '';
+            return label === 'Add projection...' || id === 'add_projection' || label.indexOf('Add ') === 0;
+        };
+
         if (nodeData.actions && Array.isArray(nodeData.actions)) {
+            var inProjectionSection = false;
             for (var i = 0; i < nodeData.actions.length; i++) {
                 var act = nodeData.actions[i];
+                if (uiMode === 'cti') {
+                    var actLabel = act.label || act[0] || act.name || '';
+                    if (actLabel === 'Add projection...') inProjectionSection = true;
+                    if (!inProjectionSection && !isProjectionAction(act)) continue;
+                    if (actLabel === '---' && !inProjectionSection) continue;
+                }
+                addConceptAction(act);
+            }
+        } else if (uiMode === 'reachability') {
+            // Matches Python ivy_graph_ui.py GraphWidget.get_node_actions().
+            var reachabilityActions = [
+                { name: 'Select', id: 'select' },
+                { name: 'Empty', id: 'empty' },
+                { name: 'Materialize', id: 'materialize' },
+                { name: 'Materialize edge', id: 'materialize_from_selected' },
+                { name: 'Splatter', id: 'splatter' },
+                { name: 'Split with...', id: '' },
+                { name: '---', id: '' },
+            ];
+            for (var j = 0; j < reachabilityActions.length; j++) {
+                (function (act) {
+                    if (act.name === '---') {
+                        actions.push({ separator: true });
+                        return;
+                    }
+                    if (!act.id) {
+                        actions.push({ header: act.name });
+                        return;
+                    }
+                    actions.push({
+                        name: act.name,
+                        id: act.id,
+                        callback: function () {
+                            self.executeConceptNodeAction(nodeData, act);
+                        },
+                    });
+                })(reachabilityActions[j]);
+            }
+        }
+
+        if (actions.length === 0) {
+            this.controls.hideContextMenu();
+            return;
+        }
+
+        var graphContainer = document.getElementById('concept-graph');
+        var rect = graphContainer.getBoundingClientRect();
+        this.controls.showContextMenu(rect.left + pos.x, rect.top + pos.y, actions);
+    }
+
+    /**
+     * Handle right-click on a concept edge: show context menu.
+     * Reachability mode matches Python ivy_graph_ui.py.
+     * CTI mode matches Python ivy_ui_cti.py: no right-click edge actions.
+     */
+    onConceptEdgeRightClick(edgeData, pos) {
+        var self = this;
+        if (this.getUIMode() === 'cti') {
+            this.controls.hideContextMenu();
+            return;
+        }
+        var conceptId = edgeData.obj || edgeData.id;
+        var actions: any[] = [];
+
+        if (edgeData.actions && Array.isArray(edgeData.actions)) {
+            for (var i = 0; i < edgeData.actions.length; i++) {
+                var act = edgeData.actions[i];
                 var label = act.label || act[0] || act.name || '';
                 var id = act.action || act.id || act[0] || '';
                 if (label === '---') {
@@ -2414,85 +2506,6 @@ class IvyRuntime {
                         name: actionName,
                         id: action.action || action.id || action[0] || actionName,
                         callback: function () {
-                            self.executeConceptNodeAction(nodeData, action);
-                        },
-                    });
-                })(act);
-            }
-        } else {
-            // Default concept node actions — matches Python tk_graph_ui.py
-            var conceptId = nodeData.obj || nodeData.id;
-            var isSelected = selectConceptNodeSelected(self.uiDataModel, self.activeSheetId || 'sheet-1', nodeData);
-            actions.push({
-                name: isSelected ? 'Unselect' : 'Select',
-                id: 'select',
-                callback: function () {
-                    self.selectConceptNode(conceptId);
-                },
-            });
-            actions.push({
-                name: 'Suppose Empty',
-                id: 'suppose_empty',
-                callback: function () {
-                    self.supposeEmpty(nodeData.obj || nodeData.id);
-                },
-            });
-            actions.push({
-                name: 'Materialize',
-                id: 'materialize',
-                callback: function () {
-                    self.materializeNode(nodeData.obj || nodeData.id);
-                },
-            });
-            actions.push({
-                name: 'Materialize edge',
-                id: 'materialize_from_selected',
-                callback: function () {
-                    self.materializeEdgeFromSelected(nodeData.obj || nodeData.id);
-                },
-            });
-            actions.push({
-                name: 'Splatter',
-                id: 'splatter',
-                callback: function () {
-                    self.splatterNode(nodeData.obj || nodeData.id);
-                },
-            });
-            actions.push({ separator: true });
-            actions.push({
-                name: 'Remove',
-                id: 'remove',
-                callback: function () {
-                    self.removeConcept(nodeData.obj || nodeData.id);
-                },
-            });
-        }
-
-        var graphContainer = document.getElementById('concept-graph');
-        var rect = graphContainer.getBoundingClientRect();
-        this.controls.showContextMenu(rect.left + pos.x, rect.top + pos.y, actions);
-    }
-
-    /**
-     * Handle right-click on a concept edge: show context menu.
-     * Actions: remove, materialize +, materialize -.
-     */
-    onConceptEdgeRightClick(edgeData, pos) {
-        var self = this;
-        var conceptId = edgeData.obj || edgeData.id;
-        var actions: any[] = [
-            { header: edgeData.label || conceptId },
-        ];
-
-        if (edgeData.actions && Array.isArray(edgeData.actions)) {
-            for (var i = 0; i < edgeData.actions.length; i++) {
-                var act = edgeData.actions[i];
-                (function (action) {
-                    var actionName = action[0] || action.name;
-                    actions.push({
-                        name: actionName,
-                        id: actionName,
-                        callback: function () {
                             self.executeConceptEdgeAction(edgeData, action);
                         },
                     });
@@ -2500,32 +2513,19 @@ class IvyRuntime {
             }
         } else {
             actions.push({
-                name: 'Remove',
-                id: 'remove',
-                callback: function () { self.removeConcept(conceptId); },
-            });
-            actions.push({
-                name: 'Materialize +',
-                id: 'materialize_pos',
-                callback: function () { self.materializeEdge(edgeData, true); },
-            });
-            actions.push({
-                name: 'Materialize \u2013',
-                id: 'materialize_neg',
-                callback: function () { self.materializeEdge(edgeData, false); },
-            });
-            actions.push({ separator: true });
-            actions.push({
-                name: 'Suppose Empty',
-                id: 'empty_edge',
+                name: 'Empty',
+                id: 'empty',
                 callback: function () { self.supposeEmpty(conceptId); },
+            });
+            actions.push({
+                name: 'Materialize',
+                id: 'materialize',
+                callback: function () { self.materializeEdge(edgeData, true); },
             });
             actions.push({
                 name: 'Dematerialize',
                 id: 'dematerialize',
-                callback: function () {
-                    self.executeConceptEdgeAction(edgeData, { id: 'dematerialize' });
-                },
+                callback: function () { self.materializeEdge(edgeData, false); },
             });
         }
 

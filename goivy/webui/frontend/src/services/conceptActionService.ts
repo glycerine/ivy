@@ -9,11 +9,13 @@ export async function executeConceptNodeAction(app, nodeData, action) {
   const actionArgs = action.args || {};
   const concept = nodeData.obj || nodeData.id;
 
+  if (actionName === 'select') return app.selectConceptNode(concept);
   if (actionName === 'remove') return app.removeConcept(concept);
-  if (actionName === 'suppose empty') return app.supposeEmpty(concept);
+  if (actionName === 'empty' || actionName === 'suppose empty') return app.supposeEmpty(concept);
   if (actionName === 'materialize') return app.materializeNode(concept);
   if (actionName === 'materialize edge' || actionName === 'materialize_from_selected') return app.materializeEdgeFromSelected(concept);
   if (actionName.indexOf('split by ') === 0) return app.splitConcept(concept, actionName.substring('split by '.length));
+  if (actionName.indexOf('split:') === 0) return app.splitConcept(concept, actionName.substring('split:'.length));
   if (actionName.indexOf('add ') === 0) return app.addProjection(actionName.substring('add '.length), concept);
   if (actionName === 'add_projection') return app.addProjection(actionArgs.name, actionArgs.concept || actionArgs.name);
 
@@ -32,8 +34,9 @@ export async function executeConceptNodeAction(app, nodeData, action) {
 export async function executeConceptEdgeAction(app, edgeData, action) {
   const actionName = (action[0] || action.name || action.id || '').toLowerCase();
   const conceptId = edgeData.obj || edgeData.id;
+  if (actionName === 'empty' || actionName === 'empty_edge') return app.supposeEmpty(conceptId);
   if (actionName === 'remove') return app.removeConcept(conceptId);
-  if (actionName === 'materialize +') return app.materializeEdge(edgeData, true);
+  if (actionName === 'materialize' || actionName === 'materialize +') return app.materializeEdge(edgeData, true);
   if (actionName === 'materialize -' || actionName === 'materialize \u2013') return app.materializeEdge(edgeData, false);
   if (actionName === 'dematerialize') return app.materializeEdge(edgeData, false);
 
