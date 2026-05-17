@@ -146,10 +146,20 @@ function installEscapeBufferChord({
     const isLessThan = event.key === '<' || (event.key === ',' && event.shiftKey);
     const isGreaterThan = event.key === '>' || (event.key === '.' && event.shiftKey);
     const isPageUp = event.key === 'v';
-    if ((isLessThan || isGreaterThan || isPageUp) && inChordWindow) {
+    const isCopySelection = event.key === 'w'
+      && !event.altKey
+      && !event.ctrlKey
+      && !event.metaKey
+      && !event.shiftKey
+      && isEmacsKeymap(editor);
+    if ((isLessThan || isGreaterThan || isPageUp || isCopySelection) && inChordWindow) {
       lastEscapeAt = 0;
       event.preventDefault();
       event.stopPropagation();
+      if (isCopySelection) {
+        copySelectionToEmacsYankBuffer(editor);
+        return;
+      }
       const command = isLessThan
         ? codeMirror.commands.cursorStart
         : isPageUp
@@ -177,19 +187,73 @@ function installEmacsYankSelectionCollapse({
     const wrapper = typeof editor.getWrapperElement === 'function' ? editor.getWrapperElement() : null;
     return !!(wrapper && doc.activeElement && wrapper.contains(doc.activeElement));
   };
-  const isEmacsKeymap = () => {
-    if (typeof editor.getOption !== 'function') return true;
-    return editor.getOption('keyMap') === 'emacs';
-  };
   doc.addEventListener('keydown', (event) => {
-    if (!isEditorFocused() || !isEmacsKeymap()) return;
+    if (!isEditorFocused() || !isEmacsKeymap(editor)) return;
+    if (isNativeEmacsKillCommand(event)) {
+      clearEmacsYankBuffer(editor);
+      return;
+    }
     if (event.key !== 'y' || !event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return;
+    if (yankFromEmacsYankBuffer(editor)) {
+      event.preventDefault();
+      event.stopPropagation();
+      collapseSelectionAtPostYankCursor(editor);
+      return;
+    }
     setTimeout(() => {
       if (typeof editor.somethingSelected === 'function' && !editor.somethingSelected()) return;
-      const cursor = typeof editor.getCursor === 'function' ? editor.getCursor() || {} : {};
-      const line = Number.isFinite(cursor.line) ? cursor.line : 0;
-      const ch = Number.isFinite(cursor.ch) ? cursor.ch : 0;
-      if (typeof editor.setCursor === 'function') editor.setCursor(line, ch);
+      collapseSelectionAtPostYankCursor(editor);
     }, 0);
   }, true);
+}
+
+function isEmacsKeymap(editor: any) {
+  if (typeof editor.getOption !== 'function') return true;
+  return editor.getOption('keyMap') === 'emacs';
+}
+
+function copySelectionToEmacsYankBuffer(editor: any) {
+  if (typeof editor.somethingSelected === 'function' && !editor.somethingSelected()) {
+    return false;
+  }
+  const selectedText = typeof editor.getSelection === 'function' ? editor.getSelection() : '';
+  if (typeof selectedText !== 'string' || selectedText.length === 0) {
+    return false;
+  }
+  editor.__ivyEmacsYankBuffer = selectedText;
+  return true;
+}
+
+function yankFromEmacsYankBuffer(editor: any) {
+  const yankText = editor.__ivyEmacsYankBuffer;
+  if (typeof yankText !== 'string' || yankText.length === 0) {
+    return false;
+  }
+  if (typeof editor.replaceSelection === 'function') {
+    editor.replaceSelection(yankText, 'end');
+    return true;
+  }
+  return false;
+}
+
+function clearEmacsYankBuffer(editor: any) {
+  editor.__ivyEmacsYankBuffer = '';
+}
+
+function isNativeEmacsKillCommand(event: KeyboardEvent) {
+  if (event.metaKey || event.shiftKey) return false;
+  const isCtrlKillLine = event.key === 'k' && event.ctrlKey && !event.altKey;
+  const isCtrlKillRegion = event.key === 'w' && event.ctrlKey && !event.altKey;
+  const isAltKillWord = event.key === 'd' && event.altKey && !event.ctrlKey;
+  const isAltBackwardKillWord = event.key === 'Backspace' && event.altKey && !event.ctrlKey;
+  return isCtrlKillLine || isCtrlKillRegion || isAltKillWord || isAltBackwardKillWord;
+}
+
+function collapseSelectionAtPostYankCursor(editor: any) {
+  setTimeout(() => {
+    const cursor = typeof editor.getCursor === 'function' ? editor.getCursor() || {} : {};
+    const line = Number.isFinite(cursor.line) ? cursor.line : 0;
+    const ch = Number.isFinite(cursor.ch) ? cursor.ch : 0;
+    if (typeof editor.setCursor === 'function') editor.setCursor(line, ch);
+  }, 0);
 }

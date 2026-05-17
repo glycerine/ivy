@@ -141,6 +141,120 @@ describe('codeMirrorEditor', () => {
     expect(pageUp.defaultPrevented).toBe(true);
   });
 
+  it('maps Escape then w to copy the selection into the Emacs yank buffer', () => {
+    vi.useFakeTimers();
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getCursor: vi.fn(() => ({ line: 8, ch: 15 })),
+      getOption: vi.fn(() => 'emacs'),
+      getSelection: vi.fn(() => 'copied text\nsecond line'),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+      replaceSelection: vi.fn(),
+      setCursor: vi.fn(),
+      somethingSelected: vi.fn(() => true),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    const copy = new KeyboardEvent('keydown', { key: 'w', bubbles: true, cancelable: true });
+    doc.dispatchEvent(copy);
+
+    const yank = new KeyboardEvent('keydown', {
+      key: 'y',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    doc.dispatchEvent(yank);
+    vi.runAllTimers();
+
+    expect(copy.defaultPrevented).toBe(true);
+    expect(editor.getSelection).toHaveBeenCalled();
+    expect(yank.defaultPrevented).toBe(true);
+    expect(editor.replaceSelection).toHaveBeenCalledWith('copied text\nsecond line', 'end');
+    expect(editor.setCursor).toHaveBeenCalledWith(8, 15);
+  });
+
+  it('does not install Escape then w as a yank-buffer copy outside the Emacs keymap', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getOption: vi.fn(() => 'sublime'),
+      getSelection: vi.fn(() => 'copied text'),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+      replaceSelection: vi.fn(),
+      somethingSelected: vi.fn(() => true),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    const copy = new KeyboardEvent('keydown', { key: 'w', bubbles: true, cancelable: true });
+    doc.dispatchEvent(copy);
+
+    expect(copy.defaultPrevented).toBe(false);
+    expect(editor.getSelection).not.toHaveBeenCalled();
+  });
+
+  it('lets a native Emacs kill command replace the Escape-w yank buffer', () => {
+    vi.useFakeTimers();
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getCursor: vi.fn(() => ({ line: 4, ch: 2 })),
+      getOption: vi.fn(() => 'emacs'),
+      getSelection: vi.fn(() => 'old copied text'),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+      replaceSelection: vi.fn(),
+      setCursor: vi.fn(),
+      somethingSelected: vi.fn()
+        .mockReturnValueOnce(true)
+        .mockReturnValue(false),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'w', bubbles: true, cancelable: true }));
+    const killLine = new KeyboardEvent('keydown', {
+      key: 'k',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    doc.dispatchEvent(killLine);
+    const yank = new KeyboardEvent('keydown', {
+      key: 'y',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    doc.dispatchEvent(yank);
+    vi.runAllTimers();
+
+    expect(killLine.defaultPrevented).toBe(false);
+    expect(yank.defaultPrevented).toBe(false);
+    expect(editor.replaceSelection).not.toHaveBeenCalled();
+    expect(editor.setCursor).not.toHaveBeenCalled();
+  });
+
   it('uses emacs as the default CodeMirror keymap', () => {
     document.body.innerHTML = '<textarea id="model-editor"></textarea>';
     const codeMirror = {
