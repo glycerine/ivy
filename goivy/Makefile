@@ -173,7 +173,7 @@ webui/static/wasm/include-tree.json: webui/scripts/build-include-tree.mjs $(shel
 
 webui/static/wasm/goivy-webengine.wasm: FORCE
 	mkdir -p webui/static/wasm
-	GOOS=js GOARCH=wasm go build -o webui/static/wasm/goivy-webengine.wasm ./cmd/goivy-webengine-wasm
+	GOOS=js GOARCH=wasm go build -tags xtracer_off -o webui/static/wasm/goivy-webengine.wasm ./cmd/goivy-webengine-wasm
 	chmod 0644 webui/static/wasm/goivy-webengine.wasm
 
 webui-wasm-engine: webui/static/wasm/goivy-webengine.wasm webui/static/wasm/z3-471-api.wasm webui/static/wasm/z3-471-api.js webui/static/wasm/wasm_exec-go1.25.6.js webui/static/wasm/include-tree.json
@@ -191,7 +191,7 @@ test-z3-wasm-browser: z3-wasm-api webvue/node_modules/.bin/playwright
 FORCE:
 
 webvue/static/goivy-check-js.wasm: FORCE
-	GOOS=js GOARCH=wasm go build -a -o webvue/static/goivy-check-js.wasm ./cmd/goivy_check_jswasm
+	GOOS=js GOARCH=wasm go build -a -tags xtracer_off -o webvue/static/goivy-check-js.wasm ./cmd/goivy_check_jswasm
 
 goivy-check-js-wasm: webvue/static/goivy-check-js.wasm
 
