@@ -58,6 +58,9 @@ func TestSVKHostedWebuiContract(t *testing.T) {
 	if load["status"] != "ok" {
 		t.Fatalf("load status = %#v, want ok; body=%#v", load["status"], load)
 	}
+	if load["isolate"] != NoIsolatesFoundChoice {
+		t.Fatalf("load isolate = %#v, want %q; body=%#v", load["isolate"], NoIsolatesFoundChoice, load)
+	}
 
 	check := svkPostJSON[map[string]any](t, server.URL+"/api/session/"+sessionID+"/check", strings.NewReader(`{"mode":"induction"}`))
 	if check["result"] != "fail" {

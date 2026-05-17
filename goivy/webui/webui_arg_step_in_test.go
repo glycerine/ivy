@@ -264,6 +264,25 @@ func TestLoadWithoutDeclaredIsolatesUsesSentinelChoice(t *testing.T) {
 	}
 }
 
+func TestLoadWithoutDeclaredIsolatesIgnoresStaleThisChoice(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-no-isolates-stale-this")
+	if err := s.LoadFileContentWithIsolate("client_server_example.ivy", readClientServerExample(t), "this"); err != nil {
+		t.Fatalf("LoadFileContentWithIsolate: %v", err)
+	}
+	if s.ActiveIsolate != NoIsolatesFoundChoice {
+		t.Fatalf("ActiveIsolate = %q, want %q", s.ActiveIsolate, NoIsolatesFoundChoice)
+	}
+	if len(s.AvailableIsolates) != 1 || s.AvailableIsolates[0] != NoIsolatesFoundChoice {
+		t.Fatalf("AvailableIsolates = %#v, want [%q]", s.AvailableIsolates, NoIsolatesFoundChoice)
+	}
+	if _, ok := s.CompiledModule.Actions.Get2("connect"); !ok {
+		t.Fatalf("unisolated load did not keep source action connect")
+	}
+	if _, ok := s.CompiledModule.Actions.Get2("ext:connect"); ok {
+		t.Fatalf("no-isolates load should not synthesize ext:connect")
+	}
+}
+
 func countSimpleConceptNodesOfSort(cs *ConceptSession, sortName string) int {
 	if cs == nil || cs.Domain == nil {
 		return 0

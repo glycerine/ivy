@@ -115,6 +115,31 @@ export function createIvyPersist(winArg = globalThis.window) {
       }
     },
 
+    clearSavedSessions() {
+      const storage = getLocalStorage(win);
+      if (!storage) return 0;
+      try {
+        const keys = new Set([STORAGE_SESSIONS, STORAGE_LAST_SESSION]);
+        const ids = readJson(storage, STORAGE_SESSIONS, []);
+        if (Array.isArray(ids)) {
+          ids.forEach((id) => {
+            if (id) keys.add(`${SESSION_PREFIX}${id}`);
+          });
+        }
+        if (typeof storage.length === 'number' && typeof storage.key === 'function') {
+          for (let i = 0; i < storage.length; i++) {
+            const key = storage.key(i);
+            if (key && key.startsWith(SESSION_PREFIX)) keys.add(key);
+          }
+        }
+        keys.forEach((key) => storage.removeItem(key));
+        return keys.size;
+      } catch (err) {
+        console.warn('IvyPersist.clearSavedSessions failed:', err);
+        return 0;
+      }
+    },
+
     listSessions() {
       const storage = getLocalStorage(win);
       if (!storage) return [];

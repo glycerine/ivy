@@ -707,6 +707,26 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     gap: 18px;
 }
 
+.job-control-danger {
+    align-self: flex-start;
+    min-height: 30px;
+    padding: 0 12px;
+    border: 1px solid #9b2f2f;
+    border-radius: 3px;
+    background: #7f1d1d;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.job-control-danger:hover,
+.job-control-danger:focus {
+    background: #a52a2a;
+    border-color: #d45a5a;
+    outline: none;
+}
+
 .job-control-row {
     display: flex;
     flex-direction: column;

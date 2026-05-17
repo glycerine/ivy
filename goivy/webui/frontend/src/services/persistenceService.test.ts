@@ -6,6 +6,10 @@ import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 function makeLocalStorage() {
   const items = new Map<string, string>();
   return {
+    get length() {
+      return items.size;
+    },
+    key: vi.fn((index: number) => Array.from(items.keys())[index] || null),
     getItem: vi.fn((key: string) => (items.has(key) ? items.get(key) : null)),
     setItem: vi.fn((key: string, value: string) => {
       items.set(key, String(value));
@@ -94,6 +98,24 @@ describe('persistenceService', () => {
         filePath: '/tmp/client.ivy',
       }),
     ]);
+  });
+
+  it('clears saved localStorage session data without touching unrelated keys', () => {
+    const persist = createIvyPersist(window);
+    window.localStorage.setItem('ivy_sessions', JSON.stringify(['sess-1']));
+    window.localStorage.setItem('ivy_last_session', 'sess-1');
+    window.localStorage.setItem('ivy_sess_sess-1', '{"fileName":"client.ivy"}');
+    window.localStorage.setItem('ivy_sess_orphan', '{"fileName":"old.ivy"}');
+    window.localStorage.setItem('other_app_key', 'keep');
+
+    const removed = persist.clearSavedSessions();
+
+    expect(removed).toBe(4);
+    expect(window.localStorage.getItem('ivy_sessions')).toBeNull();
+    expect(window.localStorage.getItem('ivy_last_session')).toBeNull();
+    expect(window.localStorage.getItem('ivy_sess_sess-1')).toBeNull();
+    expect(window.localStorage.getItem('ivy_sess_orphan')).toBeNull();
+    expect(window.localStorage.getItem('other_app_key')).toBe('keep');
   });
 
   it('round-trips recent session metadata through localStorage with the URL session id', () => {

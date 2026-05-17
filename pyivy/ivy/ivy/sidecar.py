@@ -124,7 +124,8 @@ def _load_content(sess, filename, content, isolate=""):
         from ivy import ivy_utils as iu
         ic.ivy_load_file(sio, create_isolate=False)
         user_isolates = _webui_isolate_names()
-        if not isolate and len(user_isolates) == 0:
+        if len(user_isolates) == 0 and (not isolate or isolate == "this" or isolate == NO_ISOLATES_FOUND_CHOICE):
+            ic.isolate.set(None)
             sess.active_isolate = NO_ISOLATES_FOUND_CHOICE
             sess.available_isolates = [NO_ISOLATES_FOUND_CHOICE]
         elif isolate == NO_ISOLATES_FOUND_CHOICE:

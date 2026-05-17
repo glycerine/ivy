@@ -245,7 +245,7 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	}
 	availableIsolates := webUIIsolateNames(mod)
 	activeIsolate := requestedIsolate
-	if activeIsolate == "" && len(availableIsolates) == 0 {
+	if len(availableIsolates) == 0 && (activeIsolate == "" || activeIsolate == "this" || activeIsolate == NoIsolatesFoundChoice) {
 		activeIsolate = NoIsolatesFoundChoice
 		availableIsolates = []string{NoIsolatesFoundChoice}
 	} else if activeIsolate == NoIsolatesFoundChoice {

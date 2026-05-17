@@ -6,12 +6,13 @@ import {
 } from './ivyRuntime.ts';
 import { FakeAPI, FakeControls, FakeGraph } from '../test/fakes.ts';
 
-function makeRuntime() {
+function makeRuntime(overrides = {}) {
   resetIvyRuntimeDependencies();
   configureIvyRuntimeDependencies({
     IvyAPI: FakeAPI,
     IvyControls: FakeControls,
     IvyGraph: FakeGraph,
+    ...overrides,
   });
   return new IvyRuntime();
 }
@@ -111,6 +112,45 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.getElementById('job-control-page').classList.contains('open')).toBe(false);
   });
 
+  it('confirms before clearing saved localStorage session data from job control', async () => {
+    document.body.innerHTML = [
+      '<button id="job-clear-saved-sessions"></button>',
+    ].join('');
+    const clearSavedSessions = vi.fn(() => 3);
+    const runtime = makeRuntime({
+      IvyPersist: {
+        clearSavedSessions,
+      },
+    });
+
+    runtime._setupJobControlHandlers();
+    document.getElementById('job-clear-saved-sessions')?.click();
+
+    expect(document.querySelector('.dialog-message')?.textContent).toBe('Really delete all browser localStorage sessions?');
+    const buttons = Array.from(document.querySelectorAll('[data-ivy-dialog-button]')) as HTMLButtonElement[];
+    expect(buttons.map((button) => button.textContent)).toEqual(['Delete', 'Cancel']);
+    expect(document.activeElement).toBe(buttons[1]);
+
+    buttons[1].click();
+    await Promise.resolve();
+    expect(clearSavedSessions).not.toHaveBeenCalled();
+    expect(runtime.controls.lastStatus).toEqual({
+      message: 'Clear saved session data cancelled',
+      kind: 'warning',
+    });
+
+    document.getElementById('job-clear-saved-sessions')?.click();
+    const deleteButton = document.querySelector('[data-ivy-dialog-button]') as HTMLButtonElement;
+    deleteButton.click();
+    await Promise.resolve();
+
+    expect(clearSavedSessions).toHaveBeenCalledTimes(1);
+    expect(runtime.controls.lastStatus).toEqual({
+      message: 'Deleted browser localStorage sessions',
+      kind: 'success',
+    });
+  });
+
   it('accepts the default integer dialog value with Enter', async () => {
     const runtime = makeRuntime();
 
@@ -187,7 +227,7 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.getElementById('isolate-menu-title')?.getAttribute('title')).toBe('choose isolate');
     expect(document.querySelector('#isolate-menu .dropdown-heading')?.textContent).toBe('choose isolate:');
     expect(Array.from(document.querySelectorAll('#isolate-menu a')).map((item) => item.textContent)).toEqual(['no_isolates_found']);
-    expect(document.querySelector('.sheet-tab span')?.textContent).toBe('Sheet 1 · no_isolates_found');
+    expect(document.querySelector('.sheet-tab span')?.textContent).toBe('Sheet 1');
   });
 
   it('opens reachability-only sheets without a concept graph runtime', () => {

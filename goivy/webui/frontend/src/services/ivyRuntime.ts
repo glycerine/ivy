@@ -934,6 +934,7 @@ class IvyRuntime {
         var toggleButton = document.getElementById('btn-toggle-job-control');
         var closeButton = document.getElementById('job-control-close');
         var modeToggle = document.getElementById('job-submission-toggle');
+        var clearSavedSessions = document.getElementById('job-clear-saved-sessions');
         if (toggleButton && !toggleButton._ivyJobControlBound) {
             toggleButton.addEventListener('click', function () {
                 self._toggleJobControlPage();
@@ -953,7 +954,26 @@ class IvyRuntime {
             });
             modeToggle._ivyJobControlBound = true;
         }
+        if (clearSavedSessions && !clearSavedSessions._ivyJobControlBound) {
+            clearSavedSessions.addEventListener('click', function () {
+                self.clearSavedSessionData();
+            });
+            clearSavedSessions._ivyJobControlBound = true;
+        }
         this._setJobSubmissionMode(this.jobSubmissionMode || 'browser');
+    }
+
+    async clearSavedSessionData() {
+        var confirmed = await this.confirmDeleteSavedSessionsDialog();
+        if (!confirmed) {
+            this.controls.setStatus('Clear saved session data cancelled', 'warning');
+            return false;
+        }
+        var removed = runtimeDeps.IvyPersist.clearSavedSessions
+            ? runtimeDeps.IvyPersist.clearSavedSessions()
+            : 0;
+        this.controls.setStatus('Deleted browser localStorage sessions', removed ? 'success' : 'warning');
+        return true;
     }
 
     _editorHasFocusedEmacsKeymap() {
@@ -2941,6 +2961,7 @@ class IvyRuntime {
     formatSheetTabLabel(label) {
         var base = String(label || '');
         var isolate = String(this.activeIsolate || '').trim();
+        if (isolate === 'no_isolates_found') return base;
         return isolate ? base + ' · ' + isolate : base;
     }
 
@@ -4015,6 +4036,23 @@ class IvyRuntime {
             self._addDialogButton(dialog, 'OK', function () {
                 self._finishDialog(dialog, cleanup, resolve, true);
             });
+        });
+    }
+
+    confirmDeleteSavedSessionsDialog() {
+        var self = this;
+        return new Promise(function (resolve) {
+            var dialog = self._createDialog('Delete saved session data', 'Really delete all browser localStorage sessions?');
+            var cleanup = self._installDialogEscape(dialog, function () {
+                self._finishDialog(dialog, cleanup, resolve, false);
+            });
+            self._addDialogButton(dialog, 'Delete', function () {
+                self._finishDialog(dialog, cleanup, resolve, true);
+            }, 'dialog-btn-danger');
+            var cancel = self._addDialogButton(dialog, 'Cancel', function () {
+                self._finishDialog(dialog, cleanup, resolve, false);
+            });
+            cancel.focus();
         });
     }
 
