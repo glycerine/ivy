@@ -3429,6 +3429,10 @@ class IvyRuntime {
         this.controls.setStatus('Switching to diagram domain...');
         try {
             var result = await this.api.executeAction('diagram_domain', { sheet_id: this.activeSheetId || 'sheet-1' });
+            if (result && result.type === 'diagram_domain_empty') {
+                this.controls.setStatus(result.message || 'Diagram Domain would give an empty graph. Leaving existing graph alone.', 'warning');
+                return result;
+            }
             if (result && result.concept) {
                 this.applyConceptSnapshot(result.concept.sheet_id || result.sheet_id || this.activeSheetId || 'sheet-1', result.concept);
             } else {

@@ -770,6 +770,16 @@ func conceptGraphGoalClauses(w *GraphWidget, parentState *goivy.State) (*goivy.C
 	return goivy.TrueClauses(nil), nil
 }
 
+func (s *Session) diagramDomainEmptyMessage() string {
+	filename := strings.TrimSpace(s.FilePath)
+	if filename == "" {
+		filename = "current model"
+	} else {
+		filename = filepath.Base(filename)
+	}
+	return fmt.Sprintf("no first-order constants in '%s' found. Diagram Domain would give an empty graph. Leaving existing graph alone.", filename)
+}
+
 func conceptSessionCopy(src *ConceptSession) *ConceptSession {
 	if src == nil {
 		return NewConceptSession()
@@ -2020,6 +2030,13 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		)
 		if domainErr != nil {
 			err = domainErr
+			break
+		}
+		if len(cd.Concepts.GetList("nodes")) == 0 {
+			result["sheet_id"] = resolvedSheetID
+			result["type"] = "diagram_domain_empty"
+			result["status"] = "warning"
+			result["message"] = s.diagramDomainEmptyMessage()
 			break
 		}
 		if err = s.replaceConceptGraphDomainLocked(w, cd); err != nil {

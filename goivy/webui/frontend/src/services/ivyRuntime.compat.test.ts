@@ -281,4 +281,28 @@ describe('ivyRuntime compatibility behavior', () => {
     });
     expect(result.message).toBe('PDR step diagrammed the predecessor goal.');
   });
+
+  it('leaves the graph alone when Diagram Domain would be empty', async () => {
+    const runtime = makeRuntime();
+    runtime.activeSheetId = 'sheet-1';
+    runtime.api.executeAction = vi.fn(async () => ({
+      sheet_id: 'sheet-1',
+      type: 'diagram_domain_empty',
+      status: 'warning',
+      message: "no first-order constants in 'client_server_example.ivy' found. Diagram Domain would give an empty graph. Leaving existing graph alone.",
+    }));
+    runtime.applyConceptSnapshot = vi.fn();
+    runtime.refreshConceptGraph = vi.fn();
+
+    const result = await runtime.diagramDomain();
+
+    expect(runtime.api.executeAction).toHaveBeenCalledWith('diagram_domain', { sheet_id: 'sheet-1' });
+    expect(runtime.applyConceptSnapshot).not.toHaveBeenCalled();
+    expect(runtime.refreshConceptGraph).not.toHaveBeenCalled();
+    expect(runtime.controls.lastStatus).toEqual({
+      message: "no first-order constants in 'client_server_example.ivy' found. Diagram Domain would give an empty graph. Leaving existing graph alone.",
+      kind: 'warning',
+    });
+    expect(result.type).toBe('diagram_domain_empty');
+  });
 });

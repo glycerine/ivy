@@ -2,11 +2,13 @@ package webui
 
 import (
 	"encoding/json"
-	goivy "github.com/glycerine/ivy/goivy"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	goivy "github.com/glycerine/ivy/goivy"
 )
 
 const executeActionMenuSample = `#lang ivy1.7
@@ -100,12 +102,81 @@ conjecture p(X) -> q(X)
 conjecture q(X) -> q(X)
 `
 
-func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
+func readClientServerExample(t *testing.T) []byte {
+	t.Helper()
 	path := filepath.Join("..", "..", "ivy-lang-examples", "doc", "examples", "client_server_example.ivy")
 	content, err := os.ReadFile(path)
 	if err != nil {
-		t.Fatalf("read example: %v", err)
+		t.Fatalf("read client_server_example.ivy: %v", err)
 	}
+	return content
+}
+
+func clientServerExampleWithIndividualC0(t *testing.T) []byte {
+	t.Helper()
+	content := string(readClientServerExample(t))
+	withC0 := strings.Replace(content, "type server\n", "type server\n\nindividual c0 : client\n", 1)
+	if withC0 == content {
+		t.Fatalf("client_server_example.ivy did not contain expected type server declaration")
+	}
+	return []byte(withC0)
+}
+
+func pythonIvyDiagramDomainNodes(t *testing.T, content []byte) []string {
+	t.Helper()
+	pyivyRoot, err := filepath.Abs(filepath.Join("..", "..", "pyivy", "ivy"))
+	if err != nil {
+		t.Fatalf("resolve pyivy root: %v", err)
+	}
+	python, err := filepath.Abs(filepath.Join("..", "..", "pyivy", "goivy-venv", "bin", "python3"))
+	if err != nil {
+		t.Fatalf("resolve pyivy python: %v", err)
+	}
+	if _, err := os.Stat(python); err != nil {
+		var lookErr error
+		python, lookErr = exec.LookPath("python3")
+		if lookErr != nil {
+			t.Skip("python3 not available")
+		}
+	}
+	script := `
+import json
+import sys
+from ivy import ivy_module as im
+from ivy.ivy_compiler import ivy_from_string
+from ivy.concept import get_diagram_concept_domain
+from ivy.logic import And
+
+with im.Module():
+    ivy_from_string(sys.stdin.read(), create_isolate=False)
+    cd = get_diagram_concept_domain(im.module.sig, And())
+    print(json.dumps(cd.concepts['nodes']))
+`
+	cmd := exec.Command(python, "-c", script)
+	cmd.Dir = pyivyRoot
+	cmd.Stdin = strings.NewReader(string(content))
+	pythonPath := pyivyRoot
+	if existing := os.Getenv("PYTHONPATH"); existing != "" {
+		pythonPath += string(os.PathListSeparator) + existing
+	}
+	cmd.Env = append(os.Environ(),
+		"IVY_HOME="+pyivyRoot,
+		"PYTHONPATH="+pythonPath,
+		"XTRACE_OFF=1",
+	)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python Diagram Domain probe failed: %v\n%s", err, out)
+	}
+	var nodes []string
+	if err := json.Unmarshal(out, &nodes); err != nil {
+		t.Fatalf("decode python Diagram Domain nodes: %v\n%s", err, out)
+	}
+	return nodes
+}
+
+func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
+	content := readClientServerExample(t)
 
 	s := NewSession(goivy.NewConfig(), "test-step-in")
 	if err := s.LoadFileContent("client_server_example.ivy", content); err != nil {
@@ -210,11 +281,7 @@ func hasConcreteAllToAllEdge(cs *ConceptSession, edgeName string) bool {
 }
 
 func TestArgStepInRegistersIndependentAnalysisSheet(t *testing.T) {
-	path := filepath.Join("..", "..", "ivy-lang-examples", "doc", "examples", "client_server_example.ivy")
-	content, err := os.ReadFile(path)
-	if err != nil {
-		t.Fatalf("read example: %v", err)
-	}
+	content := readClientServerExample(t)
 
 	s := NewSession(goivy.NewConfig(), "test-step-in-sheet")
 	if err := s.LoadFileContent("client_server_example.ivy", content); err != nil {
@@ -850,24 +917,70 @@ func TestReachabilityDomainActionsReturnConceptSnapshots(t *testing.T) {
 	if _, err := s.ExecuteAction("diagram", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
 		t.Fatalf("diagram: %v", err)
 	}
+}
+
+func TestDiagramDomainWithoutConstantsLeavesConceptGraphAlone(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-empty-diagram-domain")
+	if err := s.LoadFileContent("client_server_example.ivy", readClientServerExample(t)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+	if _, err := s.AGUI.ViewState(0, "", false); err != nil {
+		t.Fatalf("ViewState: %v", err)
+	}
+
+	before := append([]string{}, s.AGUI.CurrentConceptGraph.G().ConceptSess.Domain.Nodes...)
+	diagram, err := s.ExecuteAction("diagram_domain", map[string]interface{}{"sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("diagram_domain: %v", err)
+	}
+	if got := diagram["type"]; got != "diagram_domain_empty" {
+		t.Fatalf("diagram_domain type = %v, want diagram_domain_empty; result=%#v", got, diagram)
+	}
+	if got := diagram["status"]; got != "warning" {
+		t.Fatalf("diagram_domain status = %v, want warning; result=%#v", got, diagram)
+	}
+	wantMessage := "no first-order constants in 'client_server_example.ivy' found. Diagram Domain would give an empty graph. Leaving existing graph alone."
+	if got := diagram["message"]; got != wantMessage {
+		t.Fatalf("diagram_domain message = %q, want %q", got, wantMessage)
+	}
+	if _, ok := diagram["concept"]; ok {
+		t.Fatalf("diagram_domain_empty should not return a concept snapshot: %#v", diagram["concept"])
+	}
+	after := s.AGUI.CurrentConceptGraph.G().ConceptSess.Domain.Nodes
+	if strings.Join(after, "\x00") != strings.Join(before, "\x00") {
+		t.Fatalf("diagram_domain_empty changed concept graph nodes: before=%v after=%v", before, after)
+	}
+}
+
+func TestDiagramDomainIndividualConstantMatchesPython(t *testing.T) {
+	content := clientServerExampleWithIndividualC0(t)
+	wantNodes := pythonIvyDiagramDomainNodes(t, content)
+	if len(wantNodes) == 0 {
+		t.Fatalf("python Diagram Domain returned no nodes for client_server_example.ivy plus individual c0 : client")
+	}
+
+	s := NewSession(goivy.NewConfig(), "test-diagram-domain-c0")
+	if err := s.LoadFileContent("client_server_example.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+	if _, err := s.AGUI.ViewState(0, "", false); err != nil {
+		t.Fatalf("ViewState: %v", err)
+	}
 
 	diagram, err := s.ExecuteAction("diagram_domain", map[string]interface{}{"sheet_id": rootSheetID})
 	if err != nil {
 		t.Fatalf("diagram_domain: %v", err)
 	}
-	if got := diagram["type"]; got != "diagram_domain" {
-		t.Fatalf("diagram_domain type = %v, want diagram_domain; result=%#v", got, diagram)
+	if got := diagram["type"]; got == "diagram_domain_empty" {
+		t.Fatalf("Go Diagram Domain was empty, but Python returned nodes %v; result=%#v", wantNodes, diagram)
 	}
-	diagramConcept, ok := diagram["concept"].(map[string]interface{})
-	if !ok {
-		t.Fatalf("diagram_domain concept payload missing: %#v", diagram["concept"])
-	}
-	diagramDomain, ok := diagramConcept["concept_domain"].(*ConceptDomain)
-	if !ok || diagramDomain == nil || len(diagramDomain.Concepts) == 0 {
-		t.Fatalf("diagram_domain concept domain missing/empty: %#v", diagramConcept["concept_domain"])
-	}
-	if s.AGUI.CurrentConceptGraph == nil || s.AGUI.CurrentConceptGraph.G() == nil {
-		t.Fatalf("diagram_domain lost current concept graph")
+	gotNodes := s.AGUI.CurrentConceptGraph.G().ConceptSess.Domain.Nodes
+	if strings.Join(gotNodes, "\x00") != strings.Join(wantNodes, "\x00") {
+		t.Fatalf("Go Diagram Domain nodes = %v, want Python nodes %v", gotNodes, wantNodes)
 	}
 }
 
@@ -929,11 +1042,7 @@ func TestSaveInvariantUsesPythonKeptDroppedSections(t *testing.T) {
 }
 
 func TestArgViewSourceReturnsLoadedSourceAndLine(t *testing.T) {
-	path := filepath.Join("..", "..", "ivy-lang-examples", "doc", "examples", "client_server_example.ivy")
-	content, err := os.ReadFile(path)
-	if err != nil {
-		t.Fatalf("read example: %v", err)
-	}
+	content := readClientServerExample(t)
 
 	s := NewSession(goivy.NewConfig(), "test-view-source")
 	if err := s.LoadFileContent("client_server_example.ivy", content); err != nil {
