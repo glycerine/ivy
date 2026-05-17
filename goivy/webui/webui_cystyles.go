@@ -131,6 +131,14 @@ func ARGStyle() []CyStyleEntry {
 			Selector: "node.bottom_state",
 			Style:    map[string]string{"background-color": "#000", "text-outline-color": "#000"},
 		},
+		{
+			Selector: "node.safe_state",
+			Style:    map[string]string{"background-color": "#2f8f46", "text-outline-color": "#1f6b33"},
+		},
+		{
+			Selector: "node.marked_state",
+			Style:    map[string]string{"background-color": "#b73535", "text-outline-color": "#7f1f1f"},
+		},
 		// base edge
 		{
 			Selector: "edge",

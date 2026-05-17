@@ -30,7 +30,7 @@ func RenderAnalysisUIARG(ui *AnalysisGraphUI) *WebUICyElements {
 	if ui == nil || ui.AG == nil {
 		return RenderWebUIARG(nil)
 	}
-	cy := RenderWebUIARG(ArtToGraphState(ui.AG))
+	cy := RenderWebUIARG(AnalysisUIARGState(ui))
 	for i := range cy.Elements {
 		ele := &cy.Elements[i]
 		if ele.Group != "nodes" {
@@ -61,7 +61,9 @@ func AnalysisUIARGState(ui *AnalysisGraphUI) *WebUIAnalysisGraphState {
 	if ui == nil || ui.AG == nil {
 		return NewWebUIAnalysisGraphState()
 	}
-	return ArtToGraphState(ui.AG)
+	state := ArtToGraphState(ui.AG)
+	ui.applyARGMetadata(state)
+	return state
 }
 
 func WebUIARGPayload(state *WebUIAnalysisGraphState, cy *WebUICyElements) map[string]interface{} {
@@ -148,6 +150,7 @@ func FullAnalysisUIARGPayload(ui *AnalysisGraphUI) map[string]interface{} {
 		return FullARGPayload(goivy.NewFullAnalysisGraphState(), nil)
 	}
 	state := ArtToFullGraphState(ui.AG)
+	ui.applyFullARGMetadata(state)
 	cy := RenderAnalysisUIARG(ui)
 	return FullARGPayload(state, cy)
 }

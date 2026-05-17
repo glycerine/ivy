@@ -179,6 +179,8 @@ type ARGNode struct {
 	ID       int    `json:"id"`
 	Label    string `json:"label"`
 	IsBottom bool   `json:"is_bottom"`
+	IsSafe   bool   `json:"is_safe,omitempty"`
+	IsMarked bool   `json:"is_marked,omitempty"`
 	Info     string `json:"info"`
 }
 
@@ -207,6 +209,8 @@ type FullARGNode struct {
 	ID         int                 `json:"id"`
 	Label      string              `json:"label"`
 	IsBottom   bool                `json:"is_bottom"`
+	IsSafe     bool                `json:"is_safe,omitempty"`
+	IsMarked   bool                `json:"is_marked,omitempty"`
 	Info       string              `json:"info"`
 	Clauses    string              `json:"clauses"`
 	ActionName string              `json:"action_name"`
@@ -249,6 +253,12 @@ func RenderARG(ag *AnalysisGraphState) *CyElements {
 		if st.IsBottom {
 			classes = []string{"bottom_state"}
 		}
+		if st.IsSafe {
+			classes = append(classes, "safe_state")
+		}
+		if st.IsMarked {
+			classes = append(classes, "marked_state")
+		}
 		g.AddNode(
 			fmt.Sprintf("state_%d", st.ID),
 			st.Label,
@@ -258,6 +268,13 @@ func RenderARG(ag *AnalysisGraphState) *CyElements {
 			nil,
 			"ellipse",
 		)
+		node := &g.Elements[len(g.Elements)-1]
+		if st.IsSafe {
+			node.Data["is_safe"] = true
+		}
+		if st.IsMarked {
+			node.Data["is_marked"] = true
+		}
 	}
 
 	// Add transition edges.

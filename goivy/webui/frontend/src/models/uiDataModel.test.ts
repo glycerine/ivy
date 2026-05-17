@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   ARGSnapshot,
+  ARGNode,
   CTISnapshot,
   ConceptInteractiveSession,
   ConceptSession,
@@ -99,8 +100,8 @@ describe('UIDataModel — wire format coverage', () => {
     const snapshot = new ARGSnapshot({
       analysis_graph_state: {
         states: [
-          { id: 0, label: 'init', is_bottom: false, info: 'initial state' },
-          { id: 1, label: 'err', is_bottom: true, info: 'bottom' },
+          { id: 0, label: 'init', is_bottom: false, is_safe: true, info: 'initial state' },
+          { id: 1, label: 'err', is_bottom: true, is_marked: true, info: 'bottom' },
         ],
         transitions: [{ source_id: 0, target_id: 1, label: 'step', is_join: false }],
         covering: [{ covered_id: 3, covering_id: 0 }],
@@ -114,7 +115,9 @@ describe('UIDataModel — wire format coverage', () => {
 
     expect(snapshot.analysisGraphState.states).toHaveLength(2);
     expect(snapshot.analysisGraphState.states[0].id).toBe(0);
+    expect(snapshot.analysisGraphState.states[0].isSafe).toBe(true);
     expect(snapshot.analysisGraphState.states[1].isBottom).toBe(true);
+    expect(snapshot.analysisGraphState.states[1].isMarked).toBe(true);
     expect(snapshot.analysisGraphState.transitions[0].sourceId).toBe(0);
     expect(snapshot.analysisGraphState.transitions[0].isJoin).toBe(false);
     expect(snapshot.analysisGraphState.covering[0].coveredId).toBe(3);
@@ -176,11 +179,15 @@ describe('UIDataModel — wire format coverage', () => {
       short_info: 'link(client, server)',
       long_info: ['formula'],
       actions: [{ label: 'Remove', action: 'remove', args: { concept: 'link' } }],
+      is_safe: true,
+      is_marked: true,
       ignored_raw_field: 'nope',
     });
 
     expect(data.sourceObj).toBe('client');
     expect(data.actions[0].action).toBe('remove');
+    expect(data.isSafe).toBe(true);
+    expect(data.isMarked).toBe(true);
     expect(data.toCytoscapeData()).toEqual({
       id: 'e0',
       obj: 'link',
@@ -191,6 +198,8 @@ describe('UIDataModel — wire format coverage', () => {
       short_info: 'link(client, server)',
       long_info: ['formula'],
       actions: [{ label: 'Remove', action: 'remove', args: { concept: 'link' } }],
+      is_safe: true,
+      is_marked: true,
     });
   });
 
@@ -483,15 +492,25 @@ describe('UIDataModel — wire format coverage', () => {
       id: 3,
       label: '3',
       is_bottom: false,
+      is_safe: true,
+      is_marked: true,
       info: 'some info',
       clauses: 'pre(x) & inv(y)',
       action_name: 'send',
       universe: { node: ['n0', 'n1'], data: ['d0'] },
     });
     expect(n.id).toBe(3);
+    expect(n.isSafe).toBe(true);
+    expect(n.isMarked).toBe(true);
     expect(n.clauses).toBe('pre(x) & inv(y)');
     expect(n.actionName).toBe('send');
     expect(n.universe).toEqual({ node: ['n0', 'n1'], data: ['d0'] });
+  });
+
+  it('ARGNode: safety and marked metadata parsed', () => {
+    const n = new ARGNode({ id: 4, label: '4', is_safe: true, is_marked: true });
+    expect(n.isSafe).toBe(true);
+    expect(n.isMarked).toBe(true);
   });
 
   it('FullARGNode: universe is null when absent', () => {

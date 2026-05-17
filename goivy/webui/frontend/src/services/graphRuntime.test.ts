@@ -75,6 +75,12 @@ describe('graphRuntime', () => {
     expect(window.PROOF_STYLE).toBeTruthy();
   });
 
+  it('styles safe and marked ARG node classes', () => {
+    expect(ARG_STYLE.some((entry) => entry.selector === 'node.safe_state')).toBe(true);
+    const marked = ARG_STYLE.find((entry) => entry.selector === 'node.marked_state');
+    expect(marked?.style['background-color']).toBe('#b73535');
+  });
+
   it('updates Cytoscape elements with Ivy defaults and supplied positions', () => {
     const cy = makeFakeCy();
     window.cytoscape = vi.fn(() => cy);

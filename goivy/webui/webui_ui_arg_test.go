@@ -4,6 +4,7 @@ package webui
 
 import (
 	goivy "github.com/glycerine/ivy/goivy"
+	"strings"
 	"testing"
 )
 
@@ -22,6 +23,50 @@ func loadARGTestSession(t *testing.T) (*Session, *AnalysisGraphUI) {
 	s.AG.AddInitialState(nil, nil)
 	s.syncARGToGraph()
 	return s, s.AGUI
+}
+
+func requireArgPayload(t *testing.T, result map[string]interface{}) map[string]interface{} {
+	t.Helper()
+	arg, ok := result["arg"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("result missing ARG payload: %#v", result)
+	}
+	return arg
+}
+
+func requireArgState(t *testing.T, arg map[string]interface{}) *goivy.AnalysisGraphState {
+	t.Helper()
+	state, ok := arg["analysis_graph_state"].(*goivy.AnalysisGraphState)
+	if !ok {
+		t.Fatalf("ARG payload missing typed analysis graph state: %#v", arg["analysis_graph_state"])
+	}
+	return state
+}
+
+func requireCyNodeByObj(t *testing.T, arg map[string]interface{}, obj string) goivy.CyElement {
+	t.Helper()
+	elements, ok := arg["elements"].([]goivy.CyElement)
+	if !ok {
+		t.Fatalf("ARG payload elements have unexpected type: %#v", arg["elements"])
+	}
+	for _, elem := range elements {
+		if elem.Group == "nodes" && elem.Data["obj"] == obj {
+			return elem
+		}
+	}
+	t.Fatalf("node %q not found in ARG payload", obj)
+	return goivy.CyElement{}
+}
+
+func countCyNodesWithClass(arg map[string]interface{}, className string) int {
+	elements, _ := arg["elements"].([]goivy.CyElement)
+	count := 0
+	for _, elem := range elements {
+		if elem.Group == "nodes" && strings.Contains(elem.Classes, className) {
+			count++
+		}
+	}
+	return count
 }
 
 // makeMinimalAGUI builds an AnalysisGraphUI backed by a fresh AnalysisGraph
@@ -489,6 +534,18 @@ func TestArgNodeActionCheckSafety(t *testing.T) {
 	if _, ok := result["safe"]; !ok {
 		t.Error("expected 'safe' key in result")
 	}
+	arg := requireArgPayload(t, result)
+	state := requireArgState(t, arg)
+	if len(state.States) == 0 || !state.States[0].IsSafe {
+		t.Fatalf("typed ARG state did not record safe node: %#v", state.States)
+	}
+	node := requireCyNodeByObj(t, arg, "state_0")
+	if !strings.Contains(node.Classes, "safe_state") {
+		t.Fatalf("safe node is missing safe_state class: %q", node.Classes)
+	}
+	if node.Data["is_safe"] != true {
+		t.Fatalf("safe node is missing is_safe metadata: %#v", node.Data)
+	}
 }
 
 func TestArgNodeActionMark(t *testing.T) {
@@ -503,6 +560,60 @@ func TestArgNodeActionMark(t *testing.T) {
 	}
 	if s.AGUI.GetMark() == nil {
 		t.Error("expected AGUI mark to be set")
+	}
+	arg := requireArgPayload(t, result)
+	state := requireArgState(t, arg)
+	if len(state.States) == 0 || !state.States[0].IsMarked {
+		t.Fatalf("typed ARG state did not record marked node: %#v", state.States)
+	}
+	node := requireCyNodeByObj(t, arg, "state_0")
+	if !strings.Contains(node.Classes, "marked_state") {
+		t.Fatalf("marked node is missing marked_state class: %q", node.Classes)
+	}
+	if node.Data["is_marked"] != true {
+		t.Fatalf("marked node is missing is_marked metadata: %#v", node.Data)
+	}
+}
+
+func TestArgNodeActionMarkReplacesCurrentMarkedNode(t *testing.T) {
+	s, _ := loadARGTestSession(t)
+	drainEvents(s)
+	if _, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{"action_name": "ext:connect"}); err != nil {
+		t.Fatalf("execute_action: %v", err)
+	}
+	if len(s.AG.States) < 2 {
+		t.Skip("need at least 2 states for mark replacement test")
+	}
+	if _, err := s.ArgNodeAction("state_0", "mark", nil); err != nil {
+		t.Fatalf("first mark: %v", err)
+	}
+	recalc, err := s.ArgNodeAction("state_0", "recalculate", nil)
+	if err != nil {
+		t.Fatalf("recalculate: %v", err)
+	}
+	if countCyNodesWithClass(requireArgPayload(t, recalc), "marked_state") != 1 {
+		t.Fatalf("marked node should survive recalculation as a single visual mark")
+	}
+	result, err := s.ArgNodeAction("state_1", "mark", nil)
+	if err != nil {
+		t.Fatalf("second mark: %v", err)
+	}
+	arg := requireArgPayload(t, result)
+	if countCyNodesWithClass(arg, "marked_state") != 1 {
+		t.Fatalf("expected exactly one marked node after replacing mark")
+	}
+	if node := requireCyNodeByObj(t, arg, "state_0"); strings.Contains(node.Classes, "marked_state") {
+		t.Fatalf("old mark is still visually marked: %q", node.Classes)
+	}
+	if node := requireCyNodeByObj(t, arg, "state_1"); !strings.Contains(node.Classes, "marked_state") {
+		t.Fatalf("new mark is not visually marked: %q", node.Classes)
+	}
+	if mark := s.AGUI.GetMark(); mark == nil || mark.ID != 1 {
+		t.Fatalf("backend mark = %#v, want state_1", mark)
+	}
+	_, err = s.ArgNodeAction("state_0", "cover", nil)
+	if err != nil && strings.Contains(err.Error(), "no marked node") {
+		t.Fatalf("cover did not use the backend mark: %v", err)
 	}
 }
 

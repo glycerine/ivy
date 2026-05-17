@@ -154,10 +154,11 @@ func TestRenderARGNodes(t *testing.T) {
 		States: []WebUIARGNode{
 			{ID: 0, Label: "0", IsBottom: false, Info: "state 0"},
 			{ID: 1, Label: "1", IsBottom: true, Info: "state 1"},
+			{ID: 2, Label: "2", IsSafe: true, IsMarked: true, Info: "state 2"},
 		},
 	}
 	g := RenderWebUIARG(ag)
-	if len(g.Elements) != 2 {
+	if len(g.Elements) != 3 {
 		t.Fatalf("len = %d", len(g.Elements))
 	}
 	if g.Elements[0].Classes != "state" {
@@ -165,6 +166,18 @@ func TestRenderARGNodes(t *testing.T) {
 	}
 	if g.Elements[1].Classes != "bottom_state" {
 		t.Errorf("classes[1] = %q", g.Elements[1].Classes)
+	}
+	if !strings.Contains(g.Elements[2].Classes, "safe_state") {
+		t.Errorf("classes[2] missing safe_state: %q", g.Elements[2].Classes)
+	}
+	if !strings.Contains(g.Elements[2].Classes, "marked_state") {
+		t.Errorf("classes[2] missing marked_state: %q", g.Elements[2].Classes)
+	}
+	if g.Elements[2].Data["is_safe"] != true {
+		t.Errorf("is_safe = %v", g.Elements[2].Data["is_safe"])
+	}
+	if g.Elements[2].Data["is_marked"] != true {
+		t.Errorf("is_marked = %v", g.Elements[2].Data["is_marked"])
 	}
 }
 
@@ -504,6 +517,12 @@ func TestARGStyleJSON(t *testing.T) {
 	}
 	if !strings.Contains(string(data), "bottom_state") {
 		t.Error("missing bottom_state selector")
+	}
+	if !strings.Contains(string(data), "safe_state") {
+		t.Error("missing safe_state selector")
+	}
+	if !strings.Contains(string(data), "marked_state") {
+		t.Error("missing marked_state selector")
 	}
 }
 

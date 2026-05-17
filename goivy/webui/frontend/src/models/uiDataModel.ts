@@ -187,6 +187,8 @@ export class ARGNode extends RawBackedModel<unknown> {
   readonly id: number;
   readonly label: string;
   readonly isBottom: boolean;
+  readonly isSafe: boolean;
+  readonly isMarked: boolean;
   readonly info: string;
 
   constructor(raw: unknown = {}) {
@@ -194,6 +196,8 @@ export class ARGNode extends RawBackedModel<unknown> {
     this.id = intValue(pick(raw, 'id', 'ID'), -1);
     this.label = stringValue(pick(raw, 'label', 'Label'));
     this.isBottom = boolValue(pick(raw, 'is_bottom', 'isBottom', 'IsBottom'));
+    this.isSafe = boolValue(pick(raw, 'is_safe', 'isSafe', 'IsSafe'));
+    this.isMarked = boolValue(pick(raw, 'is_marked', 'isMarked', 'IsMarked'));
     this.info = stringValue(pick(raw, 'info', 'Info'));
   }
 }
@@ -206,6 +210,8 @@ export class FullARGNode extends RawBackedModel<unknown> {
   readonly id: number;
   readonly label: string;
   readonly isBottom: boolean;
+  readonly isSafe: boolean;
+  readonly isMarked: boolean;
   readonly info: string;
   readonly clauses: string;
   readonly actionName: string;
@@ -216,6 +222,8 @@ export class FullARGNode extends RawBackedModel<unknown> {
     this.id = intValue(pick(raw, 'id', 'ID'), -1);
     this.label = stringValue(pick(raw, 'label', 'Label'));
     this.isBottom = boolValue(pick(raw, 'is_bottom', 'isBottom', 'IsBottom'));
+    this.isSafe = boolValue(pick(raw, 'is_safe', 'isSafe', 'IsSafe'));
+    this.isMarked = boolValue(pick(raw, 'is_marked', 'isMarked', 'IsMarked'));
     this.info = stringValue(pick(raw, 'info', 'Info'));
     this.clauses = stringValue(pick(raw, 'clauses', 'Clauses'));
     this.actionName = stringValue(pick(raw, 'action_name', 'actionName', 'ActionName'));
@@ -349,6 +357,8 @@ export class CyElementData {
   readonly height: number | undefined;
   readonly shape: string;
   readonly borderColor: string;
+  readonly isSafe: boolean;
+  readonly isMarked: boolean;
 
   constructor(raw: unknown = {}) {
     this.id = stringValue(pick(raw, 'id', 'ID'));
@@ -368,6 +378,8 @@ export class CyElementData {
     this.height = optionalNumber(pick(raw, 'height', 'Height'));
     this.shape = stringValue(pick(raw, 'shape', 'Shape'));
     this.borderColor = stringValue(pick(raw, 'border_color', 'borderColor', 'BorderColor'));
+    this.isSafe = boolValue(pick(raw, 'is_safe', 'isSafe', 'IsSafe'));
+    this.isMarked = boolValue(pick(raw, 'is_marked', 'isMarked', 'IsMarked'));
   }
 
   toCytoscapeData(): RawRecord {
@@ -389,6 +401,8 @@ export class CyElementData {
     if (this.height !== undefined) out.height = this.height;
     if (this.shape) out.shape = this.shape;
     if (this.borderColor) out.border_color = this.borderColor;
+    if (this.isSafe) out.is_safe = true;
+    if (this.isMarked) out.is_marked = true;
     return out;
   }
 }

@@ -351,11 +351,11 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	s.CTIUI.AnalysisGraphUI.Mod = s.CompiledModule
 	s.CTIUI.AnalysisGraphUI.SyncCallback = func() {
 		if s.CTIUI != nil && s.CTIUI.AnalysisGraphUI != nil {
-			s.CTIUI.AnalysisGraphUI.G = ArtToGraphState(s.CTIUI.AnalysisGraphUI.AG)
+			s.CTIUI.AnalysisGraphUI.G = AnalysisUIARGState(s.CTIUI.AnalysisGraphUI)
 		}
 	}
 	s.CTIUI.AnalysisGraphUI.AG.AddInitialState(nil, nil)
-	s.CTIUI.AnalysisGraphUI.G = ArtToGraphState(s.CTIUI.AnalysisGraphUI.AG)
+	s.CTIUI.AnalysisGraphUI.G = AnalysisUIARGState(s.CTIUI.AnalysisGraphUI)
 	if err := s.CTIUI.StartCTI(ctiClausesFromModule(s.CompiledModule)); err != nil {
 		return err
 	}
@@ -380,6 +380,10 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 // lightweight WebUIAnalysisGraphState (s.Graph) for frontend rendering.
 func (s *Session) syncARGToGraph() {
 	if s.AG == nil {
+		return
+	}
+	if s.AGUI != nil && s.AGUI.AG == s.AG {
+		s.Graph = AnalysisUIARGState(s.AGUI)
 		return
 	}
 	s.Graph = ArtToGraphState(s.AG)
@@ -448,9 +452,9 @@ func (s *Session) newAnalysisGraphUIForGraphLocked(ag *goivy.AnalysisGraph) *Ana
 	if ui.Mod == nil {
 		ui.Mod = s.CompiledModule
 	}
-	ui.G = ArtToGraphState(ag)
+	ui.G = AnalysisUIARGState(ui)
 	ui.SyncCallback = func() {
-		ui.G = ArtToGraphState(ui.AG)
+		ui.G = AnalysisUIARGState(ui)
 	}
 	return ui
 }
@@ -2528,6 +2532,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 			safe, msg := ui.CheckSafetyNode(stateIdx)
 			result["safe"] = safe
 			result["message"] = msg
+			result["arg"] = AnalysisUIARGPayload(ui)
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Safety check at node " + nodeID}})
 	case "extend", "find_extension":
@@ -2571,6 +2576,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
 		if uiErr == nil && stateIdx >= 0 {
 			ui.MarkNode(&ARGStateRef{ID: stateIdx})
+			result["arg"] = AnalysisUIARGPayload(ui)
 		}
 		result["marked"] = true
 	case "cover", "cover_node":
@@ -2581,6 +2587,8 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 			result["covered"] = ok
 			if coverErr != nil {
 				err = coverErr
+			} else {
+				result["arg"] = AnalysisUIARGPayload(ui)
 			}
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Cover node " + nodeID}})
@@ -2589,6 +2597,9 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
 		if uiErr == nil && stateIdx >= 0 {
 			err = ui.JoinNode(stateIdx)
+			if err == nil {
+				result["arg"] = AnalysisUIARGPayload(ui)
+			}
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Join at node " + nodeID}})
 	case "try_conjecture":
@@ -2645,6 +2656,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
 		if uiErr == nil && stateIdx >= 0 {
 			ui.DeleteNode(stateIdx)
+			result["arg"] = AnalysisUIARGPayload(ui)
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Delete node " + nodeID}})
 	case "recalculate", "recalculate_edge":

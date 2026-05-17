@@ -85,6 +85,9 @@ type AnalysisGraphUI struct {
 	// Mark is the currently marked ARG node (for cover, join).
 	Mark *ARGStateRef
 
+	// SafeNodes records nodes whose safety checks succeeded.
+	SafeNodes map[int]bool
+
 	// Radios stores radio-button state.
 	Radios map[string]string
 
@@ -100,6 +103,7 @@ func NewAnalysisGraphUI() *AnalysisGraphUI {
 	return &AnalysisGraphUI{
 		G:                NewWebUIAnalysisGraphState(),
 		Mode:             DefaultMode,
+		SafeNodes:        make(map[int]bool),
 		Radios:           map[string]string{"mode": string(DefaultMode)},
 		RememberedGraphs: make(map[string]*Graph),
 	}
@@ -194,6 +198,73 @@ func (ui *AnalysisGraphUI) sync() {
 	if ui.SyncCallback != nil {
 		ui.SyncCallback()
 	}
+}
+
+func (ui *AnalysisGraphUI) applyARGMetadata(gs *WebUIAnalysisGraphState) {
+	if ui == nil || gs == nil {
+		return
+	}
+	safeNodes, markedID, hasMark := ui.argRenderMetadata()
+	for i := range gs.States {
+		id := gs.States[i].ID
+		gs.States[i].IsSafe = safeNodes[id]
+		gs.States[i].IsMarked = hasMark && id == markedID
+	}
+}
+
+func (ui *AnalysisGraphUI) applyFullARGMetadata(gs *goivy.FullAnalysisGraphState) {
+	if ui == nil || gs == nil {
+		return
+	}
+	safeNodes, markedID, hasMark := ui.argRenderMetadata()
+	for i := range gs.States {
+		id := gs.States[i].ID
+		gs.States[i].IsSafe = safeNodes[id]
+		gs.States[i].IsMarked = hasMark && id == markedID
+	}
+}
+
+func (ui *AnalysisGraphUI) argRenderMetadata() (map[int]bool, int, bool) {
+	safeNodes := make(map[int]bool)
+	if ui == nil {
+		return safeNodes, 0, false
+	}
+	ui.mu.Lock()
+	defer ui.mu.Unlock()
+	for id, safe := range ui.SafeNodes {
+		if safe {
+			safeNodes[id] = true
+		}
+	}
+	if ui.Mark == nil {
+		return safeNodes, 0, false
+	}
+	return safeNodes, ui.Mark.ID, true
+}
+
+func (ui *AnalysisGraphUI) SetNodeSafety(nodeID int, safe bool) {
+	if ui == nil {
+		return
+	}
+	ui.mu.Lock()
+	defer ui.mu.Unlock()
+	if ui.SafeNodes == nil {
+		ui.SafeNodes = make(map[int]bool)
+	}
+	if safe {
+		ui.SafeNodes[nodeID] = true
+		return
+	}
+	delete(ui.SafeNodes, nodeID)
+}
+
+func (ui *AnalysisGraphUI) IsNodeSafe(nodeID int) bool {
+	if ui == nil {
+		return false
+	}
+	ui.mu.Lock()
+	defer ui.mu.Unlock()
+	return ui.SafeNodes[nodeID]
 }
 
 // ArtToGraphState converts an art.AnalysisGraph to a lightweight WebUIAnalysisGraphState.
@@ -340,7 +411,7 @@ func (ui *AnalysisGraphUI) Start() {
 
 // NodeColor returns the display color for an ARG node (Python: AnalysisGraphUI.node_color).
 func (ui *AnalysisGraphUI) NodeColor(node *ARGStateRef) string {
-	if node != nil && node.IsSafe {
+	if node != nil && (node.IsSafe || ui.IsNodeSafe(node.ID)) {
 		return "green"
 	}
 	return "black"
@@ -490,10 +561,15 @@ func (ui *AnalysisGraphUI) GetMark() *ARGStateRef {
 // (Python: AnalysisGraphUI.check_safety_node).
 func (ui *AnalysisGraphUI) CheckSafetyNode(nodeID int) (bool, string) {
 	mode := ui.GetMode()
+	var safe bool
+	var msg string
 	if mode != ModeBounded && mode != ModeInduction {
-		return ui.CheckLocalSafety(nodeID)
+		safe, msg = ui.CheckLocalSafety(nodeID)
+	} else {
+		safe, msg = ui.CheckBoundedSafety(nodeID)
 	}
-	return ui.CheckBoundedSafety(nodeID)
+	ui.SetNodeSafety(nodeID, safe)
+	return safe, msg
 }
 
 // CheckLocalSafety checks local safety of a node
@@ -663,9 +739,14 @@ func (ui *AnalysisGraphUI) DeleteNode(nodeID int) {
 			ui.AG.Delete(state)
 		}
 	}
+	ui.mu.Lock()
 	if ui.Mark != nil && ui.Mark.ID == nodeID {
 		ui.Mark = nil
 	}
+	if ui.SafeNodes != nil {
+		delete(ui.SafeNodes, nodeID)
+	}
+	ui.mu.Unlock()
 	ui.sync()
 }
 

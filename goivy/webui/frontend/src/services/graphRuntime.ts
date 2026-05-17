@@ -111,6 +111,20 @@ export const ARG_STYLE = [
     },
   },
   {
+    selector: 'node.safe_state',
+    style: {
+      'background-color': '#2f8f46',
+      'text-outline-color': '#1f6b33',
+    },
+  },
+  {
+    selector: 'node.marked_state',
+    style: {
+      'background-color': '#b73535',
+      'text-outline-color': '#7f1f1f',
+    },
+  },
+  {
     selector: 'edge',
     style: {
       content: 'data(label)',
