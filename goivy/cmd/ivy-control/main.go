@@ -5,10 +5,10 @@ import (
 	"flag"
 	"log"
 	"os"
-	"strings"
+	//"strings"
 
 	"github.com/glycerine/ivy/goivy/control"
-	"github.com/glycerine/ivy/goivy/webvue"
+	//"github.com/glycerine/ivy/goivy/webvue"
 )
 
 const defaultControlDatabaseDSN = "postgres://ivyvue_app:ivyvue_app_dev@127.0.0.1:5432/ivyvue?sslmode=disable"
@@ -16,8 +16,8 @@ const defaultControlDatabaseDSN = "postgres://ivyvue_app:ivyvue_app_dev@127.0.0.
 func main() {
 	addr := flag.String("addr", envDefault("IVY_CONTROL_ADDR", "127.0.0.1:18080"), "listen address")
 	publicBaseURL := flag.String("public-base-url", os.Getenv("IVY_CONTROL_PUBLIC_BASE_URL"), "public base URL used in emailed login links")
-	staticDir := flag.String("static-dir", os.Getenv("IVY_CONTROL_STATIC_DIR"), "serve browser assets from this directory instead of materializing embedded webvue assets")
-	runwebDir := flag.String("runweb-dir", envDefault("IVY_CONTROL_RUNWEB_DIR", webvue.DefaultRunwebDir), "directory to receive embedded browser assets when static-dir is not set")
+	//staticDir := flag.String("static-dir", os.Getenv("IVY_CONTROL_STATIC_DIR"), "serve browser assets from this directory instead of materializing embedded webvue assets")
+	//runwebDir := flag.String("runweb-dir", envDefault("IVY_CONTROL_RUNWEB_DIR", webvue.DefaultRunwebDir), "directory to receive embedded browser assets when static-dir is not set")
 	issuerURL := flag.String("oidc-issuer-url", envDefault("IVY_CONTROL_OIDC_ISSUER_URL", "http://127.0.0.1:18082"), "OIDC issuer URL")
 	authURL := flag.String("oidc-auth-url", envDefault("IVY_CONTROL_OIDC_AUTH_URL", "http://127.0.0.1:18082/login/oauth/authorize"), "OIDC authorization endpoint URL")
 	tokenURL := flag.String("oidc-token-url", os.Getenv("IVY_CONTROL_OIDC_TOKEN_URL"), "OIDC token endpoint URL")
@@ -65,14 +65,14 @@ func main() {
 			},
 		}
 	}
-	serveStaticDir, err := prepareStaticDir(*staticDir, *runwebDir)
-	if err != nil {
-		log.Fatalf("prepare browser assets: %v", err)
-	}
+	// serveStaticDir, err := prepareStaticDir(*staticDir, *runwebDir)
+	// if err != nil {
+	// 	log.Fatalf("prepare browser assets: %v", err)
+	// }
 	srv := control.NewServer(control.Config{
 		Addr:          *addr,
 		PublicBaseURL: *publicBaseURL,
-		StaticDir:     serveStaticDir,
+		//StaticDir:     serveStaticDir,
 		OIDC: control.OIDCConfig{
 			IssuerURL:    *issuerURL,
 			AuthURL:      *authURL,
@@ -98,18 +98,18 @@ func main() {
 	}
 }
 
-func prepareStaticDir(staticDir, runwebDir string) (string, error) {
-	if strings.TrimSpace(staticDir) != "" {
-		return staticDir, nil
-	}
-	if strings.TrimSpace(runwebDir) == "" {
-		runwebDir = webvue.DefaultRunwebDir
-	}
-	if err := webvue.MaterializeRunwebDir(runwebDir); err != nil {
-		return "", err
-	}
-	return runwebDir, nil
-}
+// func prepareStaticDir(staticDir, runwebDir string) (string, error) {
+// 	if strings.TrimSpace(staticDir) != "" {
+// 		return staticDir, nil
+// 	}
+// 	if strings.TrimSpace(runwebDir) == "" {
+// 		runwebDir = webvue.DefaultRunwebDir
+// 	}
+// 	if err := webvue.MaterializeRunwebDir(runwebDir); err != nil {
+// 		return "", err
+// 	}
+// 	return runwebDir, nil
+// }
 
 func envDefault(name, fallback string) string {
 	if value := os.Getenv(name); value != "" {
