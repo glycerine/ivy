@@ -19,9 +19,9 @@ fi
   -D_NO_OMP_ \
   -D_MP_INTERNAL \
   -Isrc/api \
-  -Lbuild \
+  -Lwasm.build \
   src/api/js/ivy_z3_wasm_syscalls.cc \
-  build/libz3.a \
+  wasm.build/libz3.a \
   -sWASM_BIGINT=1 \
   -sEXPORTED_FUNCTIONS="$EXPORTED_FUNCS" \
   -sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","UTF8ToString","stringToUTF8","addFunction","removeFunction"]' \
@@ -29,6 +29,6 @@ fi
   -sALLOW_TABLE_GROWTH=1 \
   -sMODULARIZE=1 \
   -sEXPORT_NAME="initZ3" \
-  -o "build/$Z3_API_BASENAME.js"
+  -o "wasm.build/$Z3_API_BASENAME.js"
 
-echo "Built build/$Z3_API_BASENAME.js and build/$Z3_API_BASENAME.wasm"
+echo "Built wasm.build/$Z3_API_BASENAME.js and wasm.build/$Z3_API_BASENAME.wasm"
