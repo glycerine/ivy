@@ -166,6 +166,11 @@ describe('codeMirrorEditor', () => {
     const copy = new KeyboardEvent('keydown', { key: 'w', bubbles: true, cancelable: true });
     doc.dispatchEvent(copy);
 
+    expect(copy.defaultPrevented).toBe(true);
+    expect(editor.getSelection).toHaveBeenCalled();
+    expect(editor.setCursor).toHaveBeenCalledTimes(1);
+    expect(editor.setCursor).toHaveBeenLastCalledWith(8, 15);
+
     const yank = new KeyboardEvent('keydown', {
       key: 'y',
       ctrlKey: true,
@@ -175,11 +180,10 @@ describe('codeMirrorEditor', () => {
     doc.dispatchEvent(yank);
     vi.runAllTimers();
 
-    expect(copy.defaultPrevented).toBe(true);
-    expect(editor.getSelection).toHaveBeenCalled();
     expect(yank.defaultPrevented).toBe(true);
     expect(editor.replaceSelection).toHaveBeenCalledWith('copied text\nsecond line', 'end');
-    expect(editor.setCursor).toHaveBeenCalledWith(8, 15);
+    expect(editor.setCursor).toHaveBeenCalledTimes(2);
+    expect(editor.setCursor).toHaveBeenLastCalledWith(8, 15);
   });
 
   it('does not install Escape then w as a yank-buffer copy outside the Emacs keymap', () => {
@@ -252,7 +256,8 @@ describe('codeMirrorEditor', () => {
     expect(killLine.defaultPrevented).toBe(false);
     expect(yank.defaultPrevented).toBe(false);
     expect(editor.replaceSelection).not.toHaveBeenCalled();
-    expect(editor.setCursor).not.toHaveBeenCalled();
+    expect(editor.setCursor).toHaveBeenCalledTimes(1);
+    expect(editor.setCursor).toHaveBeenCalledWith(4, 2);
   });
 
   it('uses emacs as the default CodeMirror keymap', () => {

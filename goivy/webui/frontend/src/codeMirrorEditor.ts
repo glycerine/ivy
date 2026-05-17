@@ -157,7 +157,9 @@ function installEscapeBufferChord({
       event.preventDefault();
       event.stopPropagation();
       if (isCopySelection) {
-        copySelectionToEmacsYankBuffer(editor);
+        if (copySelectionToEmacsYankBuffer(editor)) {
+          collapseSelectionAtCursor(editor);
+        }
         return;
       }
       const command = isLessThan
@@ -251,9 +253,13 @@ function isNativeEmacsKillCommand(event: KeyboardEvent) {
 
 function collapseSelectionAtPostYankCursor(editor: any) {
   setTimeout(() => {
-    const cursor = typeof editor.getCursor === 'function' ? editor.getCursor() || {} : {};
-    const line = Number.isFinite(cursor.line) ? cursor.line : 0;
-    const ch = Number.isFinite(cursor.ch) ? cursor.ch : 0;
-    if (typeof editor.setCursor === 'function') editor.setCursor(line, ch);
+    collapseSelectionAtCursor(editor);
   }, 0);
+}
+
+function collapseSelectionAtCursor(editor: any) {
+  const cursor = typeof editor.getCursor === 'function' ? editor.getCursor() || {} : {};
+  const line = Number.isFinite(cursor.line) ? cursor.line : 0;
+  const ch = Number.isFinite(cursor.ch) ? cursor.ch : 0;
+  if (typeof editor.setCursor === 'function') editor.setCursor(line, ch);
 }
