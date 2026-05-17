@@ -373,6 +373,54 @@ describe('codeMirrorEditor', () => {
     expect(editor.setExtending).toHaveBeenCalledWith(true);
   });
 
+  it('maps Escape then % to CodeMirror replace in the Emacs keymap', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getOption: vi.fn(() => 'emacs'),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+    };
+    const replace = vi.fn();
+    const codeMirror = {
+      commands: { replace },
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    const replaceChord = new KeyboardEvent('keydown', { key: '%', bubbles: true, cancelable: true });
+    doc.dispatchEvent(replaceChord);
+
+    expect(replaceChord.defaultPrevented).toBe(true);
+    expect(replace).toHaveBeenCalledWith(editor);
+  });
+
+  it('does not map Escape then % outside the Emacs keymap', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getOption: vi.fn(() => 'vim'),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+    };
+    const replace = vi.fn();
+    const codeMirror = {
+      commands: { replace },
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    const replaceChord = new KeyboardEvent('keydown', { key: '%', bubbles: true, cancelable: true });
+    doc.dispatchEvent(replaceChord);
+
+    expect(replaceChord.defaultPrevented).toBe(false);
+    expect(replace).not.toHaveBeenCalled();
+  });
+
   it('maps Escape then < to cursorStart while the editor has focus', () => {
     const doc = document.implementation.createHTMLDocument('');
     doc.body.innerHTML = '<textarea id="model-editor"></textarea>';

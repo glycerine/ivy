@@ -170,16 +170,25 @@ function installEscapeBufferChord({
     const isLessThan = event.key === '<' || (event.key === ',' && event.shiftKey);
     const isGreaterThan = event.key === '>' || (event.key === '.' && event.shiftKey);
     const isPageUp = event.key === 'v';
+    const isReplace = (event.key === '%' || (event.key === '5' && event.shiftKey))
+      && !event.altKey
+      && !event.ctrlKey
+      && !event.metaKey
+      && isEmacsKeymap(editor);
     const isCopySelection = event.key === 'w'
       && !event.altKey
       && !event.ctrlKey
       && !event.metaKey
       && !event.shiftKey
       && isEmacsKeymap(editor);
-    if ((isLessThan || isGreaterThan || isPageUp || isCopySelection) && inChordWindow) {
+    if ((isLessThan || isGreaterThan || isPageUp || isReplace || isCopySelection) && inChordWindow) {
       lastEscapeAt = 0;
       event.preventDefault();
       event.stopPropagation();
+      if (isReplace) {
+        runEditorCommand(editor, codeMirror, 'replace');
+        return;
+      }
       if (isCopySelection) {
         if (copySelectionToEmacsYankBuffer(editor)) {
           deactivateEmacsMarkAtCursor(editor);
