@@ -454,6 +454,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 
 /* CodeMirror dark theme overrides to match existing editor style */
 #editor-panel .CodeMirror {
+    --ivy-codemirror-minibuffer-height: 24px;
     flex: 1;
     height: auto;
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
@@ -462,6 +463,11 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     color: #e0e0e0;
     line-height: 1.4;
     border: none;
+}
+#editor-panel .CodeMirror-scroll {
+    height: calc(100% - var(--ivy-codemirror-minibuffer-height)) !important;
+    max-height: calc(100% - var(--ivy-codemirror-minibuffer-height)) !important;
+    box-sizing: border-box;
 }
 #editor-panel .CodeMirror-gutters {
     background: #16162a;
@@ -497,16 +503,20 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     color: #ffcc00 !important;
     text-decoration: underline;
 }
-/* Vim mode status bar at bottom of CodeMirror */
+/* Search/replace and Vim command prompts live in the reserved minibuffer row. */
 #editor-panel .CodeMirror-dialog {
     background: #1a1a2e;
     color: #e0e0e0;
     border-top: 1px solid #333;
-    padding: 2px 6px;
+    padding: 1px 6px;
     font-size: 11px;
+    min-height: var(--ivy-codemirror-minibuffer-height);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
 }
 #editor-panel .CodeMirror-dialog-top {
-    top: auto;
+    top: auto !important;
     bottom: 0;
     border-top: 1px solid #333;
     border-bottom: 0;
@@ -519,7 +529,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     background: #0f0f23;
     color: #e0e0e0;
     border: 1px solid #444;
-    padding: 1px 4px;
+    padding: 0 4px;
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     font-size: 11px;
 }

@@ -67,6 +67,21 @@ describe('static details styling', () => {
     expect(isearchRule).toContain('rgba(255, 214, 64, 0.88)');
     expect(isearchRule).toContain('color: #141423 !important;');
   });
+
+  it('reserves a bottom minibuffer row for CodeMirror search and replace prompts', () => {
+    const editorRule = ivyCss.match(/#editor-panel \.CodeMirror\s*\{[^}]+\}/)?.[0] || '';
+    const scrollRule = ivyCss.match(/#editor-panel \.CodeMirror-scroll\s*\{[^}]+\}/)?.[0] || '';
+    const dialogRule = ivyCss.match(/#editor-panel \.CodeMirror-dialog\s*\{[^}]+\}/)?.[0] || '';
+    const topDialogRule = ivyCss.match(/#editor-panel \.CodeMirror-dialog-top\s*\{[^}]+\}/)?.[0] || '';
+
+    expect(editorRule).toContain('--ivy-codemirror-minibuffer-height: 24px;');
+    expect(scrollRule).toContain('height: calc(100% - var(--ivy-codemirror-minibuffer-height)) !important;');
+    expect(scrollRule).toContain('box-sizing: border-box;');
+    expect(dialogRule).toContain('min-height: var(--ivy-codemirror-minibuffer-height);');
+    expect(dialogRule).toContain('display: flex;');
+    expect(topDialogRule).toContain('top: auto !important;');
+    expect(topDialogRule).toContain('bottom: 0;');
+  });
 });
 
 describe('static dropdown styling', () => {
