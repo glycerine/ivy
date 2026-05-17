@@ -10,6 +10,9 @@ wasm_cflags="-Wno-deprecated-declarations -fwasm-exceptions -U_AMD64_"
 ## can try this to address "FP math:        UNKNOWN"
 ## FPMATH_ENABLED=False AR=emar CXX=em++ CC=emcc CXXFLAGS="${wasm_cflags}" CFLAGS="${wasm_cflags}" python3 scripts/mk_make.py --staticlib  --nofp
 
+rm -rf build
+mkdir build
+
 AR=emar CXX=em++ CC=emcc CXXFLAGS="${wasm_cflags}" CFLAGS="${wasm_cflags}" python3 scripts/mk_make.py --staticlib
 
 cd build
