@@ -505,6 +505,16 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     padding: 2px 6px;
     font-size: 11px;
 }
+#editor-panel .CodeMirror-dialog-top {
+    top: auto;
+    bottom: 0;
+    border-top: 1px solid #333;
+    border-bottom: 0;
+}
+#editor-panel .CodeMirror-dialog-bottom {
+    bottom: 0;
+    border-top: 1px solid #333;
+}
 #editor-panel .CodeMirror-dialog input {
     background: #0f0f23;
     color: #e0e0e0;

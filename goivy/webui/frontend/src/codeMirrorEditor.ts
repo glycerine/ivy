@@ -263,13 +263,19 @@ function installEmacsReplacePromptKeys({
 
     event.preventDefault();
     event.stopPropagation();
+    const replaceRange = currentEditorSelectionRange(editor);
     scrollCurrentReplaceMatchIntoView(editor);
     if (action === 'yes-stop') {
       clickReplacePromptButton(dialog, 'Yes');
       setTimeout(() => {
         const nextDialog = findReplaceQuestionDialog(editor, doc);
         if (nextDialog) clickReplacePromptButton(nextDialog, 'Stop');
+        if (replaceRange) collapseSelectionAtPosition(editor, replaceRange.to);
       }, 0);
+      return;
+    }
+    if (action === 'rest') {
+      replaceRestToEnd(editor, doc, dialog);
       return;
     }
     const stopAtEnd = (action === 'Yes' || action === 'No') && isLastReplaceMatch(editor);
@@ -283,6 +289,7 @@ function installEmacsReplacePromptKeys({
         const nextDialog = findReplaceQuestionDialog(editor, doc);
         if (stopAtEnd) {
           if (nextDialog) clickReplacePromptButton(nextDialog, 'Stop');
+          if (action === 'Yes' && replaceRange) collapseSelectionAtPosition(editor, replaceRange.to);
         } else if (nextDialog) {
           scrollCurrentReplaceMatchIntoView(editor);
         }
@@ -317,7 +324,7 @@ function replacePromptAction(event: KeyboardEvent) {
   if (event.ctrlKey || event.altKey || event.metaKey) return '';
   if (event.key === 'y' || event.key === 'Y' || event.key === ' ') return 'Yes';
   if (event.key === 'n' || event.key === 'N' || event.key === 'Backspace' || event.key === 'Delete') return 'No';
-  if (event.key === '!') return 'All';
+  if (event.key === '!') return 'rest';
   if (event.key === 'q' || event.key === 'Q' || event.key === 'Enter') return 'Stop';
   if (event.key === '.') return 'yes-stop';
   return '';
@@ -331,6 +338,42 @@ function replacePromptButton(dialog: HTMLElement, label: string): HTMLButtonElem
 function clickReplacePromptButton(dialog: HTMLElement, label: string) {
   const button = replacePromptButton(dialog, label);
   if (button) button.click();
+}
+
+function replaceRestToEnd(editor: any, doc: Document, initialDialog: HTMLElement) {
+  if (!canBoundReplaceAtEOF(editor)) {
+    clickReplacePromptButton(initialDialog, 'All');
+    return;
+  }
+  let steps = 0;
+  const maxSteps = Math.max(1, editorDocumentEnd(editor).line + 10000);
+  const step = () => {
+    const dialog = findReplaceQuestionDialog(editor, doc);
+    if (!dialog || steps >= maxSteps) {
+      return;
+    }
+    steps += 1;
+    const replaceRange = currentEditorSelectionRange(editor);
+    scrollCurrentReplaceMatchIntoView(editor);
+    const stopAtEnd = isLastReplaceMatch(editor);
+    clickReplacePromptButton(dialog, 'Yes');
+    setTimeout(() => {
+      if (stopAtEnd) {
+        const nextDialog = findReplaceQuestionDialog(editor, doc);
+        if (nextDialog) clickReplacePromptButton(nextDialog, 'Stop');
+        if (replaceRange) collapseSelectionAtPosition(editor, replaceRange.to);
+      } else {
+        step();
+      }
+    }, 0);
+  };
+  step();
+}
+
+function canBoundReplaceAtEOF(editor: any) {
+  return typeof editor.getSearchCursor === 'function'
+    && !!currentReplaceQuery(editor)
+    && !!currentEditorSelectionRange(editor);
 }
 
 function isLastReplaceMatch(editor: any) {

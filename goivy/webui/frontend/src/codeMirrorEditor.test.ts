@@ -601,6 +601,53 @@ describe('codeMirrorEditor', () => {
     expect(editor.scrollTo).toHaveBeenCalledTimes(2);
   });
 
+  it('replaces rest of buffer for ! without wrapping to earlier matches', () => {
+    vi.useFakeTimers();
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    const clicks: string[] = [];
+    installReplaceDialog(wrapper, clicks);
+    doc.body.appendChild(wrapper);
+    const ranges = [
+      { from: { line: 4, ch: 1 }, to: { line: 4, ch: 5 } },
+      { from: { line: 8, ch: 2 }, to: { line: 8, ch: 6 } },
+    ];
+    let currentMatch = 0;
+    wrapper.querySelector('button')?.addEventListener('click', () => {
+      currentMatch += 1;
+    });
+    const editor = {
+      getCursor: vi.fn((which) => {
+        const range = ranges[Math.min(currentMatch, ranges.length - 1)];
+        return which === 'from' ? range.from : range.to;
+      }),
+      getLine: vi.fn(() => 'last line'),
+      getOption: vi.fn(() => 'emacs'),
+      getSearchCursor: vi.fn(() => ({ findNext: vi.fn(() => currentMatch < ranges.length - 1) })),
+      getWrapperElement: vi.fn(() => wrapper),
+      lastLine: vi.fn(() => 20),
+      on: vi.fn(),
+      scrollIntoView: vi.fn(),
+      setCursor: vi.fn(),
+      state: { search: { query: 'link' } },
+    };
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    const event = new KeyboardEvent('keydown', { key: '!', bubbles: true, cancelable: true });
+    doc.dispatchEvent(event);
+    vi.runAllTimers();
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(clicks).toEqual(['Yes', 'Yes', 'Stop']);
+    expect(clicks).not.toContain('All');
+    expect(editor.setCursor).toHaveBeenCalledWith(8, 6);
+  });
+
   it('does not map replace prompt response keys outside the Emacs keymap', () => {
     const doc = document.implementation.createHTMLDocument('');
     doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
