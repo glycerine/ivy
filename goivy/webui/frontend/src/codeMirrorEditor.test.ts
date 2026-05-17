@@ -525,6 +525,82 @@ describe('codeMirrorEditor', () => {
     expect(clicks).toEqual(['Yes', 'Stop']);
   });
 
+  it('stops Emacs replace prompt responses at the last match instead of wrapping', () => {
+    vi.useFakeTimers();
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    const clicks: string[] = [];
+    installReplaceDialog(wrapper, clicks);
+    doc.body.appendChild(wrapper);
+    const cursor = { findNext: vi.fn(() => false) };
+    const editor = {
+      getCursor: vi.fn((which) => (which === 'from' ? { line: 4, ch: 2 } : { line: 4, ch: 6 })),
+      getOption: vi.fn(() => 'emacs'),
+      getSearchCursor: vi.fn(() => cursor),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+      scrollIntoView: vi.fn(),
+      state: { search: { query: 'link' } },
+    };
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    const noEvent = new KeyboardEvent('keydown', { key: 'n', bubbles: true, cancelable: true });
+    doc.dispatchEvent(noEvent);
+    vi.runAllTimers();
+
+    expect(noEvent.defaultPrevented).toBe(true);
+    expect(clicks).toEqual(['Stop']);
+    expect(editor.getSearchCursor).toHaveBeenCalledWith('link', { line: 4, ch: 6 }, { caseFold: true });
+
+    clicks.length = 0;
+    cursor.findNext.mockClear();
+    installReplaceDialog(wrapper, clicks);
+    const yesEvent = new KeyboardEvent('keydown', { key: 'y', bubbles: true, cancelable: true });
+    doc.dispatchEvent(yesEvent);
+    vi.runAllTimers();
+
+    expect(yesEvent.defaultPrevented).toBe(true);
+    expect(clicks).toEqual(['Yes', 'Stop']);
+  });
+
+  it('centers the active Emacs replace prompt match before asking about the next match', () => {
+    vi.useFakeTimers();
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    const clicks: string[] = [];
+    installReplaceDialog(wrapper, clicks);
+    doc.body.appendChild(wrapper);
+    const editor = {
+      charCoords: vi.fn(() => ({ top: 400, bottom: 420 })),
+      getCursor: vi.fn((which) => (which === 'from' ? { line: 12, ch: 4 } : { line: 12, ch: 10 })),
+      getOption: vi.fn(() => 'emacs'),
+      getScrollerElement: vi.fn(() => ({ clientHeight: 100 })),
+      getSearchCursor: vi.fn(() => ({ findNext: vi.fn(() => true) })),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+      scrollTo: vi.fn(),
+      state: { search: { query: 'client' } },
+    };
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'n', bubbles: true, cancelable: true }));
+    vi.runAllTimers();
+
+    expect(clicks).toEqual(['No']);
+    expect(editor.scrollTo).toHaveBeenCalledWith(null, 360);
+    expect(editor.scrollTo).toHaveBeenCalledTimes(2);
+  });
+
   it('does not map replace prompt response keys outside the Emacs keymap', () => {
     const doc = document.implementation.createHTMLDocument('');
     doc.body.innerHTML = '<textarea id="model-editor"></textarea>';

@@ -263,6 +263,7 @@ function installEmacsReplacePromptKeys({
 
     event.preventDefault();
     event.stopPropagation();
+    scrollCurrentReplaceMatchIntoView(editor);
     if (action === 'yes-stop') {
       clickReplacePromptButton(dialog, 'Yes');
       setTimeout(() => {
@@ -271,7 +272,22 @@ function installEmacsReplacePromptKeys({
       }, 0);
       return;
     }
+    const stopAtEnd = (action === 'Yes' || action === 'No') && isLastReplaceMatch(editor);
+    if (stopAtEnd && action === 'No') {
+      clickReplacePromptButton(dialog, 'Stop');
+      return;
+    }
     clickReplacePromptButton(dialog, action);
+    if (action === 'Yes' || action === 'No') {
+      setTimeout(() => {
+        const nextDialog = findReplaceQuestionDialog(editor, doc);
+        if (stopAtEnd) {
+          if (nextDialog) clickReplacePromptButton(nextDialog, 'Stop');
+        } else if (nextDialog) {
+          scrollCurrentReplaceMatchIntoView(editor);
+        }
+      }, 0);
+    }
   }, true);
 }
 
@@ -315,6 +331,56 @@ function replacePromptButton(dialog: HTMLElement, label: string): HTMLButtonElem
 function clickReplacePromptButton(dialog: HTMLElement, label: string) {
   const button = replacePromptButton(dialog, label);
   if (button) button.click();
+}
+
+function isLastReplaceMatch(editor: any) {
+  if (typeof editor.getSearchCursor !== 'function') return false;
+  const query = currentReplaceQuery(editor);
+  const range = currentEditorSelectionRange(editor);
+  if (!query || !range) return false;
+  const options = typeof query === 'string' ? { caseFold: isLowerCaseSearchQuery(query) } : undefined;
+  const cursor = editor.getSearchCursor(query, range.to, options);
+  return !(cursor && typeof cursor.findNext === 'function' && cursor.findNext());
+}
+
+function currentReplaceQuery(editor: any) {
+  const state = editor && editor.state && editor.state.search;
+  const stateQuery = state && (state.query || state.lastQuery);
+  if (stateQuery) return stateQuery;
+  if (typeof editor.getSelection === 'function') {
+    const selection = editor.getSelection();
+    if (typeof selection === 'string' && selection.length > 0) return selection;
+  }
+  return null;
+}
+
+function currentEditorSelectionRange(editor: any) {
+  if (typeof editor.getCursor !== 'function') return null;
+  const from = editor.getCursor('from');
+  const to = editor.getCursor('to');
+  if (!from || !to) return null;
+  if (from.line === to.line && from.ch === to.ch) return null;
+  return { from, to };
+}
+
+function scrollCurrentReplaceMatchIntoView(editor: any) {
+  const range = currentEditorSelectionRange(editor);
+  if (!range) return false;
+  if (typeof editor.charCoords === 'function' && typeof editor.scrollTo === 'function') {
+    const from = editor.charCoords(range.from, 'local');
+    const to = editor.charCoords(range.to, 'local');
+    const top = Math.min(Number(from && from.top) || 0, Number(to && to.top) || 0);
+    const bottom = Math.max(Number(from && from.bottom) || top, Number(to && to.bottom) || top);
+    const scroller = typeof editor.getScrollerElement === 'function' ? editor.getScrollerElement() : null;
+    const height = Number(scroller && scroller.clientHeight) || 0;
+    editor.scrollTo(null, Math.max(0, Math.round((top + bottom) / 2 - height / 2)));
+    return true;
+  }
+  if (typeof editor.scrollIntoView === 'function') {
+    editor.scrollIntoView({ from: range.from, to: range.to }, 120);
+    return true;
+  }
+  return false;
 }
 
 function isEmacsKeymap(editor: any) {
@@ -365,8 +431,6 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
   if (typeof editor.openDialog !== 'function' || typeof editor.getSearchCursor !== 'function') {
     return codeMirror && codeMirror.Pass;
   }
-  clearSearchMark(editor.__ivyEmacsLastSearchMark);
-  editor.__ivyEmacsLastSearchMark = null;
   removeIsearchDialogs(editor);
 
   const originCursor = getEditorCursor(editor);
