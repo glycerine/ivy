@@ -95,6 +95,7 @@ describe('ivyRuntime public surface', () => {
       'materializeEdgeFromSelected',
       'materializeNode',
       'newModel',
+      'nextLocalSheetId',
       'okCancelDialog',
       'okDialog',
       'onArgEdgeRightClick',

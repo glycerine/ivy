@@ -225,6 +225,7 @@ class IvyRuntime {
         this.uiMode = 'cti';
         this.availableIsolates = [];
         this.activeIsolate = '';
+        this._localSheetCounter = 0;
     }
 
     createApi(mode = this.jobSubmissionMode || 'browser') {
@@ -1278,6 +1279,16 @@ class IvyRuntime {
 
     sheetExists(sheetId) {
         return sheetExistsViaService(this, sheetId);
+    }
+
+    nextLocalSheetId(prefix = 'local-sheet') {
+        var cleanPrefix = String(prefix || 'local-sheet').replace(/[^A-Za-z0-9_-]/g, '-');
+        if (!/^[A-Za-z]/.test(cleanPrefix)) cleanPrefix = 'local-' + cleanPrefix;
+        do {
+            this._localSheetCounter = (this._localSheetCounter || 0) + 1;
+            var sheetId = cleanPrefix + '-' + this._localSheetCounter;
+        } while (this.sheetExists(sheetId));
+        return sheetId;
     }
 
     eventTraceRow(sheetId, address) {
@@ -4325,7 +4336,20 @@ class IvyRuntime {
         this.controls.setStatus('Opening reachable states...');
         try {
             var result = await this.api.executeAction('show_reachable', {});
-            this.openARGSheet('Reachable states', result.arg, result.sheet_id);
+            if (result.sheet_id && this.sheetExists(result.sheet_id)) {
+                this.setSheetTabBaseLabel(result.sheet_id, 'Reachable states');
+                var sheet = this.sheets && this.sheets[result.sheet_id];
+                if (sheet) {
+                    sheet.reachabilityOnly = true;
+                    sheet.conceptGraph = null;
+                }
+                var modelSheet = this.uiDataModel && this.uiDataModel.sheets && this.uiDataModel.sheets[result.sheet_id];
+                if (modelSheet) modelSheet.reachabilityOnly = true;
+                this.applyArgSnapshot(result.sheet_id, result.arg || {});
+                this.switchSheet(result.sheet_id);
+            } else {
+                this.openARGSheet('Reachable states', result.arg, result.sheet_id, { reachabilityOnly: true });
+            }
             this.controls.setStatus('Reachable states opened', 'success');
         } catch (e) {
             this.controls.setStatus('Show reachable states failed: ' + e.message, 'error');

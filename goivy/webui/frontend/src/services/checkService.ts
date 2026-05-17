@@ -6,6 +6,15 @@ function activeCheckLabel(app) {
   return `${mode} check`;
 }
 
+let fallbackTraceSheetCounter = 0;
+
+function traceSheetIdForResult(app, result) {
+  if (result && result.trace_sheet_id) return result.trace_sheet_id;
+  if (app && typeof app.nextLocalSheetId === 'function') return app.nextLocalSheetId('trace');
+  fallbackTraceSheetCounter += 1;
+  return `trace-${fallbackTraceSheetCounter}`;
+}
+
 function setCheckControlsRunning(running) {
   const doc = globalThis.document;
   if (!doc) return;
@@ -207,7 +216,7 @@ export function addCheckResultViewActions(app, result, {
 } = {}) {
   if (!result || !result.trace_arg) return;
   const openTrace = () => {
-    app.openARGSheet('Error trace', result.trace_arg, result.trace_sheet_id, {
+    app.openARGSheet('Error trace', result.trace_arg, traceSheetIdForResult(app, result), {
       reachabilityOnly: true,
     });
   };

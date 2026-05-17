@@ -697,7 +697,7 @@ test('failed check result can open its trace ARG in a sheet', async ({ page }) =
     };
   });
 
-  expect(result.activeSheet).toBe('sheet-2');
+  expect(result.activeSheet).toBe('trace-1');
   expect(result.labels).toEqual(['0', '1']);
   expect(result.edgeLabels).toEqual(['trace']);
 });

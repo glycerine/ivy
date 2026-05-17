@@ -16,6 +16,41 @@ function makeRuntime() {
   return new IvyRuntime();
 }
 
+function installSheetDom() {
+  document.body.innerHTML = [
+    '<div id="sheet-area">',
+    '  <div id="tab-bar"><button class="sheet-tab active" data-sheet="sheet-1"><span>Sheet 1</span></button></div>',
+    '  <div id="sheet-1" class="sheet-content active">',
+    '    <div class="sheet-columns">',
+    '      <div class="sheet-left">',
+    '        <div class="sheet-main">',
+    '          <div id="arg-panel" class="panel">',
+    '            <div class="panel-header">',
+    '              <div class="panel-header-actions">',
+    '                <div class="dropdown ui-mode-only ui-mode-reachability">',
+    '                  <span class="panel-menu" data-dropdown="arg-action-menu">Action</span>',
+    '                  <div id="arg-action-menu" class="dropdown-content">',
+    '                    <a href="#" id="arg-recalculate-all">Recalculate all</a>',
+    '                    <a href="#" id="arg-show-reachable">Show reachable states</a>',
+    '                  </div>',
+    '                </div>',
+    '              </div>',
+    '            </div>',
+    '            <div id="arg-graph" class="graph-container"></div>',
+    '          </div>',
+    '          <div id="divider" class="divider"></div>',
+    '          <div id="concept-panel" class="panel"><div id="concept-graph" class="graph-container"></div></div>',
+    '        </div>',
+    '        <div id="info-panel" class="info-panel"><div id="info-content"></div></div>',
+    '      </div>',
+    '      <div id="divider2" class="divider"></div>',
+    '      <div id="state-panel" class="panel"></div>',
+    '    </div>',
+    '  </div>',
+    '</div>',
+  ].join('');
+}
+
 afterEach(() => {
   resetIvyRuntimeDependencies();
   document.body.innerHTML = '';
@@ -136,38 +171,7 @@ describe('ivyRuntime compatibility behavior', () => {
 
   it('opens reachability-only sheets without a concept graph runtime', () => {
     vi.useFakeTimers();
-    document.body.innerHTML = [
-      '<div id="sheet-area">',
-      '  <div id="tab-bar"><button class="sheet-tab active" data-sheet="sheet-1"><span>Sheet 1</span></button></div>',
-      '  <div id="sheet-1" class="sheet-content active">',
-      '    <div class="sheet-columns">',
-      '      <div class="sheet-left">',
-      '        <div class="sheet-main">',
-      '          <div id="arg-panel" class="panel">',
-      '            <div class="panel-header">',
-      '              <div class="panel-header-actions">',
-      '                <div class="dropdown ui-mode-only ui-mode-reachability">',
-      '                  <span class="panel-menu" data-dropdown="arg-action-menu">Action</span>',
-      '                  <div id="arg-action-menu" class="dropdown-content">',
-      '                    <a href="#" id="arg-recalculate-all">Recalculate all</a>',
-      '                    <a href="#" id="arg-show-reachable">Show reachable states</a>',
-      '                  </div>',
-      '                </div>',
-      '              </div>',
-      '            </div>',
-      '            <div id="arg-graph" class="graph-container"></div>',
-      '          </div>',
-      '          <div id="divider" class="divider"></div>',
-      '          <div id="concept-panel" class="panel"><div id="concept-graph" class="graph-container"></div></div>',
-      '        </div>',
-      '        <div id="info-panel" class="info-panel"><div id="info-content"></div></div>',
-      '      </div>',
-      '      <div id="divider2" class="divider"></div>',
-      '      <div id="state-panel" class="panel"></div>',
-      '    </div>',
-      '  </div>',
-      '</div>',
-    ].join('');
+    installSheetDom();
     const runtime = makeRuntime();
     runtime.recalculateAll = vi.fn();
     runtime.showReachableStates = vi.fn();
@@ -194,6 +198,40 @@ describe('ivyRuntime compatibility behavior', () => {
     vi.advanceTimersByTime(50);
 
     expect(runtime.recalculateAll).toHaveBeenCalledOnce();
+  });
+
+  it('allocates frontend-only sheet ids outside the backend sheet namespace', () => {
+    installSheetDom();
+    const runtime = makeRuntime();
+
+    expect(runtime.nextLocalSheetId('trace')).toBe('trace-1');
+    runtime.addSheet('Trace', 'trace-2', { reachabilityOnly: true });
+    expect(runtime.nextLocalSheetId('trace')).toBe('trace-3');
+  });
+
+  it('reuses an existing sheet when backend reachable-state id collides with an old local trace id', async () => {
+    installSheetDom();
+    const runtime = makeRuntime();
+    runtime.addSheet('Error trace', 'sheet-2', { reachabilityOnly: true });
+    runtime.api.executeAction = vi.fn(async () => ({
+      sheet_id: 'sheet-2',
+      arg: {
+        elements: [
+          { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+        ],
+      },
+    }));
+
+    await runtime.showReachableStates();
+
+    expect(runtime.api.executeAction).toHaveBeenCalledWith('show_reachable', {});
+    expect(runtime.activeSheetId).toBe('sheet-2');
+    expect(runtime.tabLabelForSheet('sheet-2')).toBe('Reachable states');
+    expect(runtime.sheets['sheet-2'].reachabilityOnly).toBe(true);
+    expect(runtime.controls.lastStatus).toEqual({
+      message: 'Reachable states opened',
+      kind: 'success',
+    });
   });
 
   it('runs PDR step through the active sheet and applies returned concept model state', async () => {
