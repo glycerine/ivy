@@ -95,10 +95,10 @@ z3-build:
 z3vendor/z3/src/api/js/exported-functions.json: z3vendor/z3/src/api/js/scripts/get-exports.ts z3vendor/z3/src/api/js/scripts/parse-api.ts z3vendor/z3/src/api/z3_api.h z3vendor/z3/src/api/z3_algebraic.h z3vendor/z3/src/api/z3_ast_containers.h z3vendor/z3/src/api/z3_fixedpoint.h z3vendor/z3/src/api/z3_fpa.h z3vendor/z3/src/api/z3_optimization.h z3vendor/z3/src/api/z3_polynomial.h z3vendor/z3/src/api/z3_rcf.h z3vendor/z3/src/api/z3_spacer.h z3vendor/z3/src/api/z3_interp.h
 	cd z3vendor/z3/src/api/js && ./node_modules/.bin/ts-node --transpileOnly scripts/get-exports.ts > exported-functions.json
 
-webvue/static/z3-wasm-exported-functions.json: z3vendor/z3/src/api/js/exported-functions.json
-	cp -p z3vendor/z3/src/api/js/exported-functions.json webvue/static/z3-wasm-exported-functions.json
+webui/static/wasm/z3-wasm-exported-functions.json: z3vendor/z3/src/api/js/exported-functions.json
+	cp -p z3vendor/z3/src/api/js/exported-functions.json webui/static/wasm/z3-wasm-exported-functions.json
 
-z3-wasm-exports: webvue/static/z3-wasm-exported-functions.json
+z3-wasm-exports: webui/static/wasm/z3-wasm-exported-functions.json
 
 # builds: libz3.a(wasm despite the .a re-use); and in turn,
 # the build-wasm-api.sh script turns that into: z3-api.wasm and z3-api.js
@@ -115,7 +115,7 @@ z3vendor/z3/build/libz3.a:
 
 z3-wasm-lib-wasm-eh: z3vendor/z3/build/libz3.a
 
-z3vendor/z3/build/.z3-api-wasm-eh.stamp: z3vendor/z3/build/libz3.a webvue/static/z3-wasm-exported-functions.json z3vendor/z3/build-wasm-api.sh z3vendor/z3/src/api/js/ivy_z3_wasm_syscalls.cc
+z3vendor/z3/build/.z3-api-wasm-eh.stamp: z3vendor/z3/build/libz3.a webui/static/wasm/z3-wasm-exported-functions.json z3vendor/z3/build-wasm-api.sh z3vendor/z3/src/api/js/ivy_z3_wasm_syscalls.cc
 	cd z3vendor/z3 && \
 		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
 		EM_CACHE="/tmp/ivy-emscripten-cache" EMCC="$(HOME)/go/src/github.com/emscripten-core/emsdk/upstream/emscripten/emcc" ./build-wasm-api.sh
@@ -136,35 +136,37 @@ z3vendor/z3/build/z3-api.exnref.wasm: z3vendor/z3/build/.z3-api-wasm-eh.stamp
 		--enable-nontrapping-float-to-int \
 		-o z3vendor/z3/build/z3-api.exnref.wasm z3vendor/z3/build/z3-api.pre-exnref.wasm
 
-webvue/static/z3-471-api.wasm: z3vendor/z3/build/z3-api.exnref.wasm
-	cp -p z3vendor/z3/build/z3-api.exnref.wasm webvue/static/z3-471-api.wasm
+webui/static/wasm/z3-471-api.wasm: z3vendor/z3/build/z3-api.exnref.wasm
+	cp -p z3vendor/z3/build/z3-api.exnref.wasm webui/static/wasm/z3-471-api.wasm
+	chmod 0644 webui/static/wasm/z3-471-api.wasm
 
-webvue/static/z3-471-api.js: z3vendor/z3/build/.z3-api-wasm-eh.stamp
-	cp -p z3vendor/z3/build/z3-api.js webvue/static/z3-471-api.js
+webui/static/wasm/z3-471-api.js: z3vendor/z3/build/.z3-api-wasm-eh.stamp
+	cp -p z3vendor/z3/build/z3-api.js webui/static/wasm/z3-471-api.js
+	chmod 0644 webui/static/wasm/z3-471-api.js
 
-z3-wasm-api: webvue/static/z3-471-api.wasm webvue/static/z3-471-api.js
+z3-wasm-api: webui/static/wasm/z3-471-api.wasm webui/static/wasm/z3-471-api.js
 
 z3-wasm-api-wazero: z3-wasm-api
 
-webvue/static/wasm_exec-go1.25.6.js: /usr/local/go/lib/wasm/wasm_exec.js
-	cp -p /usr/local/go/lib/wasm/wasm_exec.js webvue/static/wasm_exec-go1.25.6.js
+webui/static/wasm/wasm_exec-go1.25.6.js: /usr/local/go/lib/wasm/wasm_exec.js
+	cp -p /usr/local/go/lib/wasm/wasm_exec.js webui/static/wasm/wasm_exec-go1.25.6.js
 
-vendor-go-wasm-exec-js: webvue/static/wasm_exec-go1.25.6.js
+vendor-go-wasm-exec-js: webui/static/wasm/wasm_exec-go1.25.6.js
 
-webui/static/wasm/z3-471-api.wasm: webvue/static/z3-471-api.wasm
-	mkdir -p webui/static/wasm
-	cp -p webvue/static/z3-471-api.wasm webui/static/wasm/z3-471-api.wasm
-	chmod 0644 webui/static/wasm/z3-471-api.wasm
+# webui/static/wasm/z3-471-api.wasm: 
+# 	mkdir -p webui/static/wasm
+# 	cp -p webui/static/wasm/z3-471-api.wasm webui/static/wasm/z3-471-api.wasm
+# 	chmod 0644 webui/static/wasm/z3-471-api.wasm
 
-webui/static/wasm/z3-471-api.js: webvue/static/z3-471-api.js
-	mkdir -p webui/static/wasm
-	cp -p webvue/static/z3-471-api.js webui/static/wasm/z3-471-api.js
-	chmod 0644 webui/static/wasm/z3-471-api.js
+# webui/static/wasm/z3-471-api.js: webui/static/wasm/z3-471-api.js
+# 	mkdir -p webui/static/wasm
+# 	cp -p webui/static/wasm/z3-471-api.js webui/static/wasm/z3-471-api.js
+# 	chmod 0644 webui/static/wasm/z3-471-api.js
 
-webui/static/wasm/wasm_exec-go1.25.6.js: webvue/static/wasm_exec-go1.25.6.js
-	mkdir -p webui/static/wasm
-	cp -p webvue/static/wasm_exec-go1.25.6.js webui/static/wasm/wasm_exec-go1.25.6.js
-	chmod 0644 webui/static/wasm/wasm_exec-go1.25.6.js
+# webui/static/wasm/wasm_exec-go1.25.6.js: webui/static/wasm/wasm_exec-go1.25.6.js
+# 	mkdir -p webui/static/wasm
+# 	cp -p webui/static/wasm/wasm_exec-go1.25.6.js webui/static/wasm/wasm_exec-go1.25.6.js
+# 	chmod 0644 webui/static/wasm/wasm_exec-go1.25.6.js
 
 webui/static/wasm/include-tree.json: webui/scripts/build-include-tree.mjs $(shell find ../ivy-lang-examples/ivy/include -type f -name '*.ivy' 2>/dev/null)
 	node webui/scripts/build-include-tree.mjs ../ivy-lang-examples/ivy/include webui/static/wasm/include-tree.json
@@ -180,19 +182,19 @@ webui-wasm-engine: webui/static/wasm/goivy-webengine.wasm webui/static/wasm/z3-4
 test-z3-wasm-wazero: z3-wasm-api-wazero
 	go test ./z3wasm -run TestZ3WasmArtifactCompilesWithWazeroExceptionHandling -count=1
 
-test-z3-wasm-js: z3-wasm-api webvue/node_modules/.bin/vitest
-	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs src/wasm/z3Wasm.test.js
-
-test-z3-wasm-browser: z3-wasm-api webvue/node_modules/.bin/playwright
-	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/z3Wasm.browser.spec.js
+#test-z3-wasm-js: z3-wasm-api webvue/node_modules/.bin/vitest
+#	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs src/wasm/z3Wasm.test.js
+#
+#test-z3-wasm-browser: z3-wasm-api webvue/node_modules/.bin/playwright
+#	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/z3Wasm.browser.spec.js
 
 
 FORCE:
 
-webvue/static/goivy-check-js.wasm: FORCE
-	GOOS=js GOARCH=wasm go build -a -tags xtracer_off -o webvue/static/goivy-check-js.wasm ./cmd/goivy_check_jswasm
+webui/static/wasm/goivy-check-js.wasm: FORCE
+	GOOS=js GOARCH=wasm go build -a -tags xtracer_off -o webui/static/wasm/goivy-check-js.wasm ./cmd/goivy_check_jswasm
 
-goivy-check-js-wasm: webvue/static/goivy-check-js.wasm
+goivy-check-js-wasm: webui/static/wasm/goivy-check-js.wasm
 
 build: # grammer_gen
 	go install  -tags xtracer_off ./cmd/ivyweb
@@ -267,19 +269,19 @@ control/node_modules/.bin/playwright: control/package.json control/package-lock.
 
 control-browser-setup: control/node_modules/.bin/playwright
 
-webvue/node_modules/.package-lock.stamp: webvue/package.json webvue/package-lock.json
-	cd webvue && npm ci
-	touch webvue/node_modules/.package-lock.stamp
-
-webvue/node_modules/.bin/vitest webvue/node_modules/.bin/vite webvue/node_modules/.bin/playwright: webvue/node_modules/.package-lock.stamp
-
-webvue-setup: webvue/node_modules/.bin/vitest webvue/node_modules/.bin/vite webvue/node_modules/.bin/playwright
-
-test-vue: webvue/node_modules/.bin/vitest
-	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs
-
-build-vue: webvue/node_modules/.bin/vite
-	cd webvue && ./node_modules/.bin/vite build --config vite.config.mjs
+# webvue/node_modules/.package-lock.stamp: webvue/package.json webvue/package-lock.json
+# 	cd webvue && npm ci
+# 	touch webvue/node_modules/.package-lock.stamp
+#
+# webvue/node_modules/.bin/vitest webvue/node_modules/.bin/vite webvue/node_modules/.bin/playwright: webvue/node_modules/.package-lock.stamp
+#
+# webvue-setup: webvue/node_modules/.bin/vitest webvue/node_modules/.bin/vite webvue/node_modules/.bin/playwright
+#
+# test-vue: webvue/node_modules/.bin/vitest
+# 	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs
+#
+# build-vue: webvue/node_modules/.bin/vite
+# 	cd webvue && ./node_modules/.bin/vite build --config vite.config.mjs
 
 test-js: webui/node_modules/.bin/vitest $(WEBUI_NODE_DEPS_STAMP)
 	cd webui && npm run test:webui:js
@@ -345,14 +347,14 @@ cleardb:
 goldweb: goivy-check-js-wasm vendor-go-wasm-exec-js
 	if [ -f py.xtrace.log ]; then mv py.xtrace.log py.xtrace.log.prev; fi
 	if [ -f browser.xtrace.log ]; then mv browser.xtrace.log browser.xtrace.log.prev; fi
-	go run ./goldweb -goivy-runtime js -goivy-wasm $(CURDIR)/webvue/static/goivy-check-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.goldweb
+	go run ./goldweb -goivy-runtime js -goivy-wasm $(CURDIR)/webui/static/wasm/goivy-check-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy &> log.goldweb
 
 nodegold: goivy-check-js-wasm vendor-go-wasm-exec-js
-	time go run ./nodegold -goivy-wasm $(CURDIR)/webvue/static/goivy-check-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
+	time go run ./nodegold -goivy-wasm $(CURDIR)/webui/static/wasm/goivy-check-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
 
 nodegold2: goivy-check-js-wasm vendor-go-wasm-exec-js
 	go install ./nodegold
-	time ~/go/bin/nodegold -goivy-wasm $(CURDIR)/webvue/static/goivy-check-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
+	time ~/go/bin/nodegold -goivy-wasm $(CURDIR)/webui/static/wasm/goivy-check-js.wasm ~/ivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy # 2>&1 | zstd -c &> log.nodegold.zst
 
 # wasm-opt is from the binaryen project.
 # we need a recent build for the flag we use,
@@ -372,9 +374,4 @@ prod: webui-wasm-engine
 	go install -tags xtracer_off ./cmd/ivyweb
 	ivyweb
 
-prod_old:
-	#cd svk && npm run build:wasm && npm run build # build the bundle
-	go install -tags xtracer_off ./cmd/ivysvk
-	IVYSVK_DEV=true IVYSVK_STATIC_DIR=$(CURDIR)/svk/.svelte-kit/output/client IVYSVK_PUBLIC_BASE_URL=http://127.0.0.1:8080 ivysvk
-
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webvue-setup webui-node-deps webui-wasm-graphviz webui-wasm-engine unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE prod
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webui-node-deps webui-wasm-graphviz webui-wasm-engine unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE prod
