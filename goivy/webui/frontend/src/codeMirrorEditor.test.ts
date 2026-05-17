@@ -213,6 +213,36 @@ describe('codeMirrorEditor', () => {
     expect(greaterThan.defaultPrevented).toBe(true);
   });
 
+  it('maps Escape then > to extend an active Emacs mark to the end of the buffer', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const anchor = { line: 1, ch: 3 };
+    const editor = {
+      getCursor: vi.fn((which) => (which === 'anchor' ? anchor : { line: 2, ch: 0 })),
+      getExtending: vi.fn(() => true),
+      getLine: vi.fn(() => 'last line'),
+      hasFocus: vi.fn(() => true),
+      lastLine: vi.fn(() => 4),
+      on: vi.fn(),
+      setCursor: vi.fn(),
+      setExtending: vi.fn(),
+      setSelection: vi.fn(),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: '>', bubbles: true, cancelable: true }));
+
+    expect(editor.setCursor).not.toHaveBeenCalled();
+    expect(editor.setSelection).toHaveBeenCalledWith(anchor, { line: 4, ch: 'last line'.length });
+    expect(editor.setExtending).toHaveBeenCalledWith(true);
+  });
+
   it('maps Escape then < to cursorStart while the editor has focus', () => {
     const doc = document.implementation.createHTMLDocument('');
     doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
@@ -235,6 +265,35 @@ describe('codeMirrorEditor', () => {
 
     expect(editor.setCursor).toHaveBeenCalledWith(2, 0);
     expect(lessThan.defaultPrevented).toBe(true);
+  });
+
+  it('maps Escape then < to extend an active Emacs mark to the beginning of the buffer', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const anchor = { line: 5, ch: 2 };
+    const editor = {
+      firstLine: vi.fn(() => 0),
+      getCursor: vi.fn((which) => (which === 'anchor' ? anchor : { line: 4, ch: 0 })),
+      getExtending: vi.fn(() => true),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+      setCursor: vi.fn(),
+      setExtending: vi.fn(),
+      setSelection: vi.fn(),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: '<', bubbles: true, cancelable: true }));
+
+    expect(editor.setCursor).not.toHaveBeenCalled();
+    expect(editor.setSelection).toHaveBeenCalledWith(anchor, { line: 0, ch: 0 });
+    expect(editor.setExtending).toHaveBeenCalledWith(true);
   });
 
   it('maps Escape then v to cursorPageUp while the editor has focus', () => {

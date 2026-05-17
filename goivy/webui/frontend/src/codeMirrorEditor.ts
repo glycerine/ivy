@@ -99,13 +99,35 @@ function installBufferCursorCommands(codeMirror: any) {
 }
 
 function setEditorCursor(editor: any, line: number, ch: number) {
-  if (typeof editor.setCursor === 'function') {
+  const target = { line, ch };
+  const extending = editorSelectionIsExtending(editor);
+  if (extending && typeof editor.setSelection === 'function') {
+    editor.setSelection(editorSelectionAnchor(editor), target);
+    if (typeof editor.setExtending === 'function') editor.setExtending(true);
+  } else if (typeof editor.setCursor === 'function') {
     editor.setCursor(line, ch);
   } else if (typeof editor.setSelection === 'function') {
-    editor.setSelection({ line, ch }, { line, ch });
+    editor.setSelection(target, target);
   }
   if (typeof editor.scrollIntoView === 'function') editor.scrollIntoView({ line, ch }, 50);
   if (typeof editor.focus === 'function') editor.focus();
+}
+
+function editorSelectionIsExtending(editor: any) {
+  return typeof editor.getExtending === 'function' && !!editor.getExtending();
+}
+
+function editorSelectionAnchor(editor: any) {
+  if (typeof editor.getCursor === 'function') {
+    const anchor = editor.getCursor('anchor');
+    if (anchor && Number.isFinite(anchor.line) && Number.isFinite(anchor.ch)) return anchor;
+  }
+  if (typeof editor.listSelections === 'function') {
+    const selections = editor.listSelections();
+    const anchor = selections && selections[0] && selections[0].anchor;
+    if (anchor && Number.isFinite(anchor.line) && Number.isFinite(anchor.ch)) return anchor;
+  }
+  return getEditorCursor(editor);
 }
 
 function editorPageLineCount(editor: any) {
