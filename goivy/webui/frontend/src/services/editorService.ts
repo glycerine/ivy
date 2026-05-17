@@ -59,10 +59,17 @@ export function setEditorContent(app, content) {
   app._savedFileContent = content;
   if (app.cmEditor && typeof app.cmEditor.setValue === 'function') {
     app.cmEditor.setValue(content);
+    resetEditorUndoHistory(app.cmEditor);
   }
   updateEditorLabel(app, {
     updateReopenLastFileButton: () => app._updateReopenLastFileButton(),
   });
+}
+
+export function resetEditorUndoHistory(editor) {
+  if (editor && typeof editor.clearHistory === 'function') {
+    editor.clearHistory();
+  }
 }
 
 export function refreshEditorLayout(app, win = globalThis.window) {

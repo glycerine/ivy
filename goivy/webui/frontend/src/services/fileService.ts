@@ -1,5 +1,6 @@
 import { connectSessionEvents, createSession } from './sessionService.ts';
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
+import { resetEditorUndoHistory } from './editorService.ts';
 
 export function rememberLastOpenFile(app, persist) {
   const name = app._persistedFileName || (app._fileHandle && app._fileHandle.name) || '';
@@ -115,6 +116,7 @@ export async function confirmNoExternalChangeBeforeSave(app, content, persist) {
     app._savedFileContent = diskContent;
     if (app.cmEditor) {
       app.cmEditor.setValue(merged);
+      resetEditorUndoHistory(app.cmEditor);
     }
     app._updateEditorLabel();
     persist.save(app);

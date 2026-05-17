@@ -20,6 +20,7 @@ function appWithContent(content = 'saved') {
     cmEditor: {
       getValue: vi.fn(() => content),
       setValue: vi.fn(),
+      clearHistory: vi.fn(),
     },
   };
 }
@@ -52,6 +53,15 @@ describe('editorService', () => {
 
     expect(app._persistedFileContent).toBe('new text');
     expect(app._savedFileContent).toBe('new text');
+    expect(app.cmEditor.setValue).toHaveBeenCalledWith('new text');
+    expect(app.cmEditor.clearHistory).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not require CodeMirror clearHistory when setting content', () => {
+    const app = appWithContent('');
+    delete app.cmEditor.clearHistory;
+
+    expect(() => setEditorContent(app, 'new text')).not.toThrow();
     expect(app.cmEditor.setValue).toHaveBeenCalledWith('new text');
   });
 

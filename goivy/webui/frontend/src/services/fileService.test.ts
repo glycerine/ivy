@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
+  confirmNoExternalChangeBeforeSave,
   downloadModelForUnsupportedSave,
   ensureFileHandleWritable,
   mergeDiskVersionIntoEditBuffer,
@@ -106,6 +107,38 @@ describe('fileService', () => {
       '>>>>>>> ON DISK',
       '',
     ].join('\n'));
+  });
+
+  it('clears editor undo history after merging disk changes into the editor buffer', async () => {
+    const app = {
+      _fileHandle: {},
+      _savedFileContent: 'base\n',
+      _persistedFileName: 'client.ivy',
+      _persistedFileContent: 'editor\n',
+      _readFileHandleContent: vi.fn(async () => 'disk\n'),
+      showExternalChangeDialog: vi.fn(async () => 'merge'),
+      cmEditor: {
+        setValue: vi.fn(),
+        clearHistory: vi.fn(),
+      },
+      _updateEditorLabel: vi.fn(),
+      controls: new FakeControls(),
+    };
+    const persist = makePersist();
+
+    await expect(confirmNoExternalChangeBeforeSave(app, 'editor\n', persist)).resolves.toBe('skip');
+
+    expect(app.cmEditor.setValue).toHaveBeenCalledWith([
+      '<<<<<<< EDIT BUFFER',
+      'editor',
+      '||||||| LAST SAVED',
+      'base',
+      '=======',
+      'disk',
+      '>>>>>>> ON DISK',
+      '',
+    ].join('\n'));
+    expect(app.cmEditor.clearHistory).toHaveBeenCalledTimes(1);
   });
 
   it('remembers and displays the reopen-last-file affordance', () => {
