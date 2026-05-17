@@ -1,7 +1,11 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { initializeCodeMirrorEditor } from './codeMirrorEditor.ts';
 
 describe('codeMirrorEditor', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('initializes CodeMirror with Ivy editor options and wires dirty tracking', () => {
     document.body.innerHTML = '<textarea id="model-editor"></textarea>';
     let changeHandler = null;
@@ -236,5 +240,63 @@ describe('codeMirrorEditor', () => {
 
     expect(editor.setCursor).toHaveBeenCalledWith(8, 3);
     expect(editor.scrollIntoView).toHaveBeenCalledWith({ line: 8, ch: 3 }, 50);
+  });
+
+  it('collapses Ctrl-y yank selection at the post-yank cursor in Emacs keymap', () => {
+    vi.useFakeTimers();
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getCursor: vi.fn(() => ({ line: 10, ch: 12 })),
+      getOption: vi.fn(() => 'emacs'),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+      setCursor: vi.fn(),
+      somethingSelected: vi.fn(() => true),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+    doc.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'y',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    }));
+    vi.runAllTimers();
+
+    expect(editor.setCursor).toHaveBeenCalledWith(10, 12);
+  });
+
+  it('does not collapse Ctrl-y selection outside the Emacs keymap', () => {
+    vi.useFakeTimers();
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getCursor: vi.fn(() => ({ line: 10, ch: 12 })),
+      getOption: vi.fn(() => 'sublime'),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+      setCursor: vi.fn(),
+      somethingSelected: vi.fn(() => true),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+    doc.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'y',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    }));
+    vi.runAllTimers();
+
+    expect(editor.setCursor).not.toHaveBeenCalled();
   });
 });

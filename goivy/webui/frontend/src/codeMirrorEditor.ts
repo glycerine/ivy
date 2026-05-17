@@ -49,6 +49,10 @@ export function initializeCodeMirrorEditor({
     codeMirror,
     doc,
   });
+  installEmacsYankSelectionCollapse({
+    editor,
+    doc,
+  });
 
   if (editor && typeof editor.on === 'function' && runtime) {
     editor.on('change', () => {
@@ -156,5 +160,35 @@ function installEscapeBufferChord({
     if (!event.altKey && !event.ctrlKey && !event.metaKey && event.key !== 'Shift') {
       lastEscapeAt = 0;
     }
+  }, true);
+}
+
+function installEmacsYankSelectionCollapse({
+  editor,
+  doc,
+}: {
+  editor: any;
+  doc: Document;
+}) {
+  if (!doc || !editor) return;
+  const isEditorFocused = () => {
+    if (typeof editor.hasFocus === 'function') return editor.hasFocus();
+    const wrapper = typeof editor.getWrapperElement === 'function' ? editor.getWrapperElement() : null;
+    return !!(wrapper && doc.activeElement && wrapper.contains(doc.activeElement));
+  };
+  const isEmacsKeymap = () => {
+    if (typeof editor.getOption !== 'function') return true;
+    return editor.getOption('keyMap') === 'emacs';
+  };
+  doc.addEventListener('keydown', (event) => {
+    if (!isEditorFocused() || !isEmacsKeymap()) return;
+    if (event.key !== 'y' || !event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return;
+    setTimeout(() => {
+      if (typeof editor.somethingSelected === 'function' && !editor.somethingSelected()) return;
+      const cursor = typeof editor.getCursor === 'function' ? editor.getCursor() || {} : {};
+      const line = Number.isFinite(cursor.line) ? cursor.line : 0;
+      const ch = Number.isFinite(cursor.ch) ? cursor.ch : 0;
+      if (typeof editor.setCursor === 'function') editor.setCursor(line, ch);
+    }, 0);
   }, true);
 }
