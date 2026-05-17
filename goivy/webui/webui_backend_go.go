@@ -671,7 +671,8 @@ func (gbe *GoBackend) ArgAction(sessionID, node, action string, args map[string]
 		if err != nil {
 			return nil
 		}
-		result, err := sess.ArgNodeAction(node, action, args)
+		var result map[string]interface{}
+		result, err = sess.ArgNodeAction(node, action, args)
 		if err != nil {
 			return nil
 		}

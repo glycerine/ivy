@@ -98,6 +98,35 @@ func TestEngineHonorsCancelledContextBeforeBackendWork(t *testing.T) {
 	}
 }
 
+func TestEngineArgActionSurfacesBackendErrors(t *testing.T) {
+	ctx := context.Background()
+	engine := New(goivy.NewConfig())
+	defer engine.Close()
+
+	session, err := engine.NewSession(ctx)
+	if err != nil {
+		t.Fatalf("NewSession: %v", err)
+	}
+	if _, err := engine.LoadModel(ctx, session.ID, "client_server_example.ivy", []byte(clientServerModel)); err != nil {
+		t.Fatalf("LoadModel: %v", err)
+	}
+
+	_, err = engine.ArgAction(ctx, session.ID, ArgActionRequest{
+		Node:   "state_0",
+		Action: "execute_action",
+		Args:   map[string]any{"sheet_id": "sheet-1"},
+	})
+	if err == nil {
+		t.Fatal("ArgAction without action_name succeeded")
+	}
+	if got := err.Error(); got == "webengine: decode backend json: unexpected end of JSON input" {
+		t.Fatalf("ArgAction returned JSON decode error instead of backend error: %v", err)
+	}
+	if got := err.Error(); got != "execute_action: missing action_name" {
+		t.Fatalf("ArgAction error = %q, want execute_action: missing action_name", got)
+	}
+}
+
 func elements(t *testing.T, payload Payload) []any {
 	t.Helper()
 	raw, ok := payload["elements"].([]any)
