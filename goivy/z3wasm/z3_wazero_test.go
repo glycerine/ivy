@@ -13,7 +13,7 @@ import (
 )
 
 func TestZ3WasmArtifactCompilesWithWazeroExceptionHandling(t *testing.T) {
-	wasmPath := filepath.Join("..", "webvue", "static", "z3-471-api.wasm")
+	wasmPath := filepath.Join("..", "webui", "static", "wasm", "z3-471-api.wasm")
 	wasmBytes, err := os.ReadFile(wasmPath)
 	if err != nil {
 		t.Fatalf("read Z3 wasm artifact: %v", err)
