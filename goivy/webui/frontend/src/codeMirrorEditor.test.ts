@@ -63,12 +63,14 @@ describe('codeMirrorEditor', () => {
     const doc = document.implementation.createHTMLDocument('');
     doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
     const editor = {
+      getLine: vi.fn(() => 'last line'),
       hasFocus: vi.fn(() => true),
+      lastLine: vi.fn(() => 4),
       on: vi.fn(),
+      setCursor: vi.fn(),
     };
-    const cursorEnd = vi.fn();
     const codeMirror = {
-      commands: { cursorEnd },
+      commands: {},
       fromTextArea: vi.fn(() => editor),
     };
 
@@ -78,7 +80,7 @@ describe('codeMirrorEditor', () => {
     const greaterThan = new KeyboardEvent('keydown', { key: '>', bubbles: true, cancelable: true });
     doc.dispatchEvent(greaterThan);
 
-    expect(cursorEnd).toHaveBeenCalledWith(editor);
+    expect(editor.setCursor).toHaveBeenCalledWith(4, 'last line'.length);
     expect(greaterThan.defaultPrevented).toBe(true);
   });
 
@@ -123,5 +125,25 @@ describe('codeMirrorEditor', () => {
 
     expect(editor.setCursor).toHaveBeenCalledWith(7, 'last line'.length);
     expect(editor.scrollIntoView).toHaveBeenCalledWith({ line: 7, ch: 'last line'.length }, 50);
+  });
+
+  it('cursorEnd collapses selection instead of delegating to CodeMirror goDocEnd', () => {
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getLine: vi.fn(() => 'last line'),
+      lastLine: vi.fn(() => 7),
+      on: vi.fn(),
+      setCursor: vi.fn(),
+    };
+    const codeMirror = {
+      commands: { goDocEnd: vi.fn() },
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ codeMirror });
+    codeMirror.commands.cursorEnd(editor);
+
+    expect(codeMirror.commands.goDocEnd).not.toHaveBeenCalled();
+    expect(editor.setCursor).toHaveBeenCalledWith(7, 'last line'.length);
   });
 });
