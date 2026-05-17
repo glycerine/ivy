@@ -158,6 +158,8 @@ describe('ivyRuntime compatibility behavior', () => {
 
     expect((document.getElementById('isolate-menu-wrapper') as HTMLElement).hidden).toBe(false);
     expect(document.getElementById('isolate-menu-title')?.textContent).toBe('cf_live');
+    expect(document.getElementById('isolate-menu-title')?.getAttribute('title')).toBe('choose isolate');
+    expect(document.querySelector('#isolate-menu .dropdown-heading')?.textContent).toBe('choose isolate:');
     expect(Array.from(document.querySelectorAll('#isolate-menu a')).map((item) => item.textContent)).toEqual([
       'cf_backup',
       'cf_live',
@@ -182,6 +184,8 @@ describe('ivyRuntime compatibility behavior', () => {
 
     expect((document.getElementById('isolate-menu-wrapper') as HTMLElement).hidden).toBe(false);
     expect(document.getElementById('isolate-menu-title')?.textContent).toBe('this');
+    expect(document.getElementById('isolate-menu-title')?.getAttribute('title')).toBe('choose isolate');
+    expect(document.querySelector('#isolate-menu .dropdown-heading')?.textContent).toBe('choose isolate:');
     expect(Array.from(document.querySelectorAll('#isolate-menu a')).map((item) => item.textContent)).toEqual(['this']);
     expect(document.querySelector('.sheet-tab span')?.textContent).toBe('Sheet 1 · this');
   });

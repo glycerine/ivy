@@ -68,3 +68,14 @@ describe('static details styling', () => {
     expect(isearchRule).toContain('color: #141423 !important;');
   });
 });
+
+describe('static dropdown styling', () => {
+  it('styles dropdown headings as non-clickable inverse labels', () => {
+    const rule = ivyCss.match(/\.dropdown-heading\s*\{[^}]+\}/)?.[0] || '';
+
+    expect(rule).toContain('background-color: #c8c8c8;');
+    expect(rule).toContain('color: #1b1b1b;');
+    expect(rule).toContain('cursor: default;');
+    expect(rule).toContain('user-select: none;');
+  });
+});

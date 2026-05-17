@@ -2997,8 +2997,12 @@ class IvyRuntime {
         var names = Array.isArray(this.availableIsolates) ? this.availableIsolates : [];
         wrapper.hidden = names.length === 0;
         title.textContent = this.activeIsolate || 'isolate';
-        title.setAttribute('title', this.activeIsolate || 'Select isolate');
+        title.setAttribute('title', 'choose isolate');
         menu.innerHTML = '';
+        var heading = document.createElement('div');
+        heading.className = 'dropdown-heading isolate-menu-heading';
+        heading.textContent = 'choose isolate:';
+        menu.appendChild(heading);
         var self = this;
         for (var i = 0; i < names.length; i++) {
             (function (name) {

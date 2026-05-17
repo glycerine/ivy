@@ -1111,6 +1111,18 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     color: #fff;
 }
 
+.dropdown-heading {
+    display: block;
+    padding: 4px 12px;
+    background-color: #c8c8c8;
+    color: #1b1b1b;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: default;
+    user-select: none;
+}
+
 .dynamic-menu-root {
     display: flex;
     align-items: center;
