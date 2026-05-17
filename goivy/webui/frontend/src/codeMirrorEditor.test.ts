@@ -84,6 +84,72 @@ describe('codeMirrorEditor', () => {
     expect(greaterThan.defaultPrevented).toBe(true);
   });
 
+  it('maps Escape then < to cursorStart while the editor has focus', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      firstLine: vi.fn(() => 2),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+      setCursor: vi.fn(),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    const lessThan = new KeyboardEvent('keydown', { key: '<', bubbles: true, cancelable: true });
+    doc.dispatchEvent(lessThan);
+
+    expect(editor.setCursor).toHaveBeenCalledWith(2, 0);
+    expect(lessThan.defaultPrevented).toBe(true);
+  });
+
+  it('maps Escape then v to cursorPageUp while the editor has focus', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      defaultTextHeight: vi.fn(() => 20),
+      firstLine: vi.fn(() => 0),
+      getCursor: vi.fn(() => ({ line: 30, ch: 6 })),
+      getLine: vi.fn(() => 'short'),
+      getScrollInfo: vi.fn(() => ({ clientHeight: 100 })),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+      setCursor: vi.fn(),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    const pageUp = new KeyboardEvent('keydown', { key: 'v', bubbles: true, cancelable: true });
+    doc.dispatchEvent(pageUp);
+
+    expect(editor.setCursor).toHaveBeenCalledWith(26, 'short'.length);
+    expect(pageUp.defaultPrevented).toBe(true);
+  });
+
+  it('uses emacs as the default CodeMirror keymap', () => {
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const codeMirror = {
+      fromTextArea: vi.fn(() => ({ on: vi.fn() })),
+    };
+
+    initializeCodeMirrorEditor({ codeMirror });
+
+    expect(codeMirror.fromTextArea).toHaveBeenCalledWith(
+      document.getElementById('model-editor'),
+      expect.objectContaining({ keyMap: 'emacs' }),
+    );
+  });
+
   it('ignores Escape then > when the editor is not focused', () => {
     const doc = document.implementation.createHTMLDocument('');
     doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
@@ -145,5 +211,30 @@ describe('codeMirrorEditor', () => {
 
     expect(codeMirror.commands.goDocEnd).not.toHaveBeenCalled();
     expect(editor.setCursor).toHaveBeenCalledWith(7, 'last line'.length);
+  });
+
+  it('installs cursorPageUp as a safe CodeMirror command alias', () => {
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      defaultTextHeight: vi.fn(() => 10),
+      firstLine: vi.fn(() => 0),
+      focus: vi.fn(),
+      getCursor: vi.fn(() => ({ line: 12, ch: 3 })),
+      getLine: vi.fn(() => 'abc'),
+      getScrollInfo: vi.fn(() => ({ clientHeight: 50 })),
+      on: vi.fn(),
+      scrollIntoView: vi.fn(),
+      setCursor: vi.fn(),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ codeMirror });
+    codeMirror.commands.cursorPageUp(editor);
+
+    expect(editor.setCursor).toHaveBeenCalledWith(8, 3);
+    expect(editor.scrollIntoView).toHaveBeenCalledWith({ line: 8, ch: 3 }, 50);
   });
 });

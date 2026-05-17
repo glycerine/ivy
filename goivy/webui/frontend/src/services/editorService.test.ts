@@ -94,6 +94,7 @@ describe('editorService', () => {
   it('gets and sets keymaps through the DOM radios', () => {
     document.body.innerHTML = [
       '<label><input type="radio" name="keymap" value="sublime" checked></label>',
+      '<label><input type="radio" name="keymap" value="emacs"></label>',
       '<label><input type="radio" name="keymap" value="vim"></label>',
     ].join('');
     const app = {
@@ -108,5 +109,24 @@ describe('editorService', () => {
     expect(app.cmEditor.setOption).toHaveBeenCalledWith('keyMap', 'vim');
     expect(document.querySelector('input[name="keymap"][value="sublime"]').checked).toBe(false);
     expect(document.querySelector('input[name="keymap"][value="vim"]').checked).toBe(true);
+    expect(app._editorKeymap).toBe('vim');
+  });
+
+  it('defaults invalid or missing keymaps to emacs', () => {
+    document.body.innerHTML = [
+      '<label><input type="radio" name="keymap" value="sublime"></label>',
+      '<label><input type="radio" name="keymap" value="emacs"></label>',
+    ].join('');
+    const app = {
+      cmEditor: {
+        setOption: vi.fn(),
+      },
+    };
+
+    expect(getEditorKeymap({ doc: document })).toBe('emacs');
+    expect(setEditorKeymap(app, 'made-up', { doc: document })).toBe('emacs');
+
+    expect(app.cmEditor.setOption).toHaveBeenCalledWith('keyMap', 'emacs');
+    expect(document.querySelector('input[name="keymap"][value="emacs"]').checked).toBe(true);
   });
 });

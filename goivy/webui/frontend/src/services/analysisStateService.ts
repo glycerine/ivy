@@ -70,6 +70,7 @@ export function buildAnalysisState(app, persist) {
     fileContent: app._editorContent ? app._editorContent() : (app._persistedFileContent || ''),
     activeIsolate: app.activeIsolate || '',
     availableIsolates: Array.isArray(app.availableIsolates) ? app.availableIsolates.slice() : [],
+    editorKeymap: app.getEditorKeymap ? app.getEditorKeymap() : (app._editorKeymap || 'emacs'),
     mode: app.getMode(),
     activeSheetId: app.activeSheetId || 'sheet-1',
     selectedArgNode: activeSheet ? activeSheet.selectedArgNode : null,
@@ -225,6 +226,7 @@ export async function loadAnalysisStateObject(app, state, persist) {
     app.setEditorContent(app._persistedFileContent);
   }
   if (state.mode) app.setMode(state.mode);
+  if (state.editorKeymap && app.setEditorKeymap) app.setEditorKeymap(state.editorKeymap, { save: false });
   if (app.setIsolates) app.setIsolates(state.availableIsolates || [], state.activeIsolate || '');
   if (app.api && app.api.reloadContent && app._persistedFileContent) {
     const loadResult = await app.api.reloadContent(app._persistedFileContent, app._persistedFileName || 'restored.ivy', {

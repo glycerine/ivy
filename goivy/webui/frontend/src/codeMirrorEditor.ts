@@ -1,6 +1,6 @@
 export function initializeCodeMirrorEditor({
   runtime = null,
-  keymap = 'sublime',
+  keymap = 'emacs',
   doc = globalThis.document,
   codeMirror = globalThis.CodeMirror,
 }: {
@@ -22,7 +22,7 @@ export function initializeCodeMirrorEditor({
 
   const editor = codeMirror.fromTextArea(modelEditor, {
     lineNumbers: true,
-    keyMap: keymap || 'sublime',
+    keyMap: keymap || 'emacs',
     tabSize: 4,
     indentUnit: 4,
     lineWrapping: false,
@@ -30,8 +30,6 @@ export function initializeCodeMirrorEditor({
     extraKeys: {
       'Ctrl-F': 'find',
       'Cmd-F': 'find',
-      'Shift-Ctrl-G': 'findPrev',
-      'Shift-Cmd-G': 'findPrev',
       'Shift-Ctrl-F': 'replace',
       'Cmd-Alt-F': 'replace',
       'Shift-Ctrl-R': 'replaceAll',
@@ -40,22 +38,14 @@ export function initializeCodeMirrorEditor({
       'Ctrl-Y': 'redo',
       'Ctrl-Shift-Z': 'redo',
 
-      // trying for jump to end / beginning of buffer.
-      'Ctrl-<': 'cursorStart',
-      'Ctrl->': 'cursorEnd',
-      'Ctrl-Shift-,': 'cursorStart', // Explicitly catch the unshifted/shifted variant
-      'Ctrl-Shift-.': 'cursorEnd',
-      'Alt-<': 'cursorStart',
-      'Alt->': 'cursorEnd',
+      // alternative for jump to end / beginning of buffer.
       'Alt-Shift-,': 'cursorStart',
       'Alt-Shift-.': 'cursorEnd',
-      'Esc-<': 'cursorStart',
-      'Esc->': 'cursorEnd'
     },
   });
   modelEditor.__ivyCodeMirrorEditor = editor;
 
-  installEscapeEndChord({
+  installEscapeBufferChord({
     editor,
     codeMirror,
     doc,
@@ -89,6 +79,17 @@ function installBufferCursorCommands(codeMirror: any) {
     setEditorCursor(editor, lastLine, lineText.length);
     return true;
   };
+  codeMirror.commands.cursorPageUp = (editor: any) => {
+    const cursor = typeof editor.getCursor === 'function' ? editor.getCursor() || {} : {};
+    const currentLine = Number.isFinite(cursor.line) ? cursor.line : 0;
+    const currentCh = Number.isFinite(cursor.ch) ? cursor.ch : 0;
+    const firstLine = typeof editor.firstLine === 'function' ? editor.firstLine() : 0;
+    const pageLines = editorPageLineCount(editor);
+    const targetLine = Math.max(firstLine, currentLine - pageLines);
+    const lineText = typeof editor.getLine === 'function' ? editor.getLine(targetLine) || '' : '';
+    setEditorCursor(editor, targetLine, Math.min(currentCh, lineText.length));
+    return true;
+  };
 }
 
 function setEditorCursor(editor: any, line: number, ch: number) {
@@ -101,7 +102,17 @@ function setEditorCursor(editor: any, line: number, ch: number) {
   if (typeof editor.focus === 'function') editor.focus();
 }
 
-function installEscapeEndChord({
+function editorPageLineCount(editor: any) {
+  const textHeight = typeof editor.defaultTextHeight === 'function' ? Number(editor.defaultTextHeight()) : 0;
+  const scrollInfo = typeof editor.getScrollInfo === 'function' ? editor.getScrollInfo() || {} : {};
+  const clientHeight = Number(scrollInfo.clientHeight) || 0;
+  if (textHeight > 0 && clientHeight > 0) {
+    return Math.max(1, Math.floor(clientHeight / textHeight) - 1);
+  }
+  return 20;
+}
+
+function installEscapeBufferChord({
   editor,
   codeMirror,
   doc,
@@ -127,12 +138,20 @@ function installEscapeEndChord({
       lastEscapeAt = Date.now();
       return;
     }
+    const inChordWindow = lastEscapeAt > 0 && Date.now() - lastEscapeAt <= chordWindowMs;
+    const isLessThan = event.key === '<' || (event.key === ',' && event.shiftKey);
     const isGreaterThan = event.key === '>' || (event.key === '.' && event.shiftKey);
-    if (isGreaterThan && lastEscapeAt > 0 && Date.now() - lastEscapeAt <= chordWindowMs) {
+    const isPageUp = event.key === 'v';
+    if ((isLessThan || isGreaterThan || isPageUp) && inChordWindow) {
       lastEscapeAt = 0;
       event.preventDefault();
       event.stopPropagation();
-      codeMirror.commands.cursorEnd(editor);
+      const command = isLessThan
+        ? codeMirror.commands.cursorStart
+        : isPageUp
+          ? codeMirror.commands.cursorPageUp
+          : codeMirror.commands.cursorEnd;
+      command(editor);
       return;
     }
     if (!event.altKey && !event.ctrlKey && !event.metaKey && event.key !== 'Shift') {

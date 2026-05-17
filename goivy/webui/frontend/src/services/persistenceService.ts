@@ -9,6 +9,7 @@ import {
 const STORAGE_SESSIONS = 'ivy_sessions';
 const STORAGE_LAST_SESSION = 'ivy_last_session';
 const SESSION_PREFIX = 'ivy_sess_';
+const EDITOR_KEYMAPS = new Set(['sublime', 'emacs', 'vim']);
 
 function getWindow(win) {
   return win || globalThis.window;
@@ -60,6 +61,7 @@ export function createIvyPersist(winArg = globalThis.window) {
           fileContent: app._persistedFileContent || '',
           activeIsolate: app.activeIsolate || '',
           availableIsolates: Array.isArray(app.availableIsolates) ? app.availableIsolates.slice() : [],
+          editorKeymap: typeof app.getEditorKeymap === 'function' ? app.getEditorKeymap() : persist._getEditorKeymap(),
           selectedArgNode: persist._selectedArgNode(app),
           uiMode: typeof app.getUIMode === 'function' ? app.getUIMode() : persist._getUIMode(),
           mode: persist._getMode(),
@@ -305,6 +307,10 @@ export function createIvyPersist(winArg = globalThis.window) {
           else persist._setUIMode(state.uiMode);
         }
         if (state.mode) persist._setMode(state.mode);
+        if (state.editorKeymap) {
+          if (typeof app.setEditorKeymap === 'function') app.setEditorKeymap(state.editorKeymap, { save: false });
+          else persist._setEditorKeymap(state.editorKeymap);
+        }
         if (state.selectedArgNode && app.uiDataStore) {
           app.uiDataStore.setSelectedArgNode(app.activeSheetId || 'sheet-1', state.selectedArgNode);
         }
@@ -357,6 +363,17 @@ export function createIvyPersist(winArg = globalThis.window) {
     _setMode(mode) {
       const select = doc && doc.getElementById('mode-select');
       if (select && mode) select.value = mode;
+    },
+
+    _getEditorKeymap() {
+      const checked = doc && doc.querySelector('input[name="keymap"]:checked') as HTMLInputElement | null;
+      return checked ? checked.value : 'emacs';
+    },
+
+    _setEditorKeymap(keymap) {
+      const normalized = EDITOR_KEYMAPS.has(keymap) ? keymap : 'emacs';
+      const radio = doc && doc.querySelector(`input[name="keymap"][value="${normalized}"]`) as HTMLInputElement | null;
+      if (radio) radio.checked = true;
     },
 
     _getUIMode() {

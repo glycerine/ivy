@@ -62,6 +62,7 @@ function makeApp(overrides: any = {}) {
     _persistedFileName: 'client.ivy',
     _persistedFilePath: '/tmp/client.ivy',
     _persistedFileContent: '#lang ivy1.7',
+    getEditorKeymap: () => overrides.editorKeymap || 'emacs',
     buildAnalysisState: () => ({ sheets: [] }),
     ...overrides,
     uiDataModel,
@@ -79,6 +80,7 @@ describe('persistenceService', () => {
       sessionId: 'sess-1',
       fileName: 'client.ivy',
       filePath: '/tmp/client.ivy',
+      editorKeymap: 'emacs',
       mode: 'bounded',
       toggles: { 'link|all_to_all': true },
       conceptSelections: [
@@ -202,6 +204,7 @@ describe('persistenceService', () => {
       setEditorContent: vi.fn(),
       _updateEditorLabel: vi.fn(),
       _applyEdgeVisibility: vi.fn(),
+      setEditorKeymap: vi.fn(),
     };
 
     try {
@@ -210,6 +213,7 @@ describe('persistenceService', () => {
         fileName: 'client.ivy',
         filePath: '/tmp/client.ivy',
         fileContent: '#lang ivy1.7',
+        editorKeymap: 'vim',
         toggles: {
           'link|all_to_all': true,
           'semaphore|all_to_all': true,
@@ -223,6 +227,7 @@ describe('persistenceService', () => {
       true,
       true,
     ]);
+    expect(app.setEditorKeymap).toHaveBeenCalledWith('vim', { save: false });
     expect(document.querySelectorAll('thead')).toHaveLength(1);
 
     app.api.setToggles.mockClear();

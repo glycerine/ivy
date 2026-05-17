@@ -53,6 +53,7 @@ describe('analysisStateService', () => {
       _persistedFileName: 'client.ivy',
       _persistedFilePath: '/tmp/client.ivy',
       _editorContent: () => 'ivy',
+      getEditorKeymap: () => 'vim',
       getMode: () => 'pdr',
       activeSheetId: 'events-1',
       selectedArgNode: 'n0',
@@ -65,6 +66,7 @@ describe('analysisStateService', () => {
       analysis_state_format: 'ivyweb-json',
       fileName: 'client.ivy',
       fileContent: 'ivy',
+      editorKeymap: 'vim',
       activeSheetId: 'events-1',
       sheets: [
         {
@@ -166,6 +168,7 @@ describe('analysisStateService', () => {
       conceptGraph: makeGraph(),
       validateAnalysisStateObject: vi.fn(),
       setEditorContent: vi.fn(),
+      setEditorKeymap: vi.fn(),
       setMode: vi.fn(),
       removeAnalysisStateExtraSheets: vi.fn(),
       openEventTraceSheet: vi.fn((label, data, sheetId) => {
@@ -197,6 +200,7 @@ describe('analysisStateService', () => {
       fileName: 'client.ivy',
       filePath: '/tmp/client.ivy',
       fileContent: 'ivy source',
+      editorKeymap: 'vim',
       mode: 'bounded',
       activeSheetId: 'events-1',
       selectedArgNode: 'state_1',
@@ -234,6 +238,7 @@ describe('analysisStateService', () => {
 
     expect(app.api.reloadContent).toHaveBeenCalledWith('ivy source', 'client.ivy', { isolate: '' });
     expect(app.setEditorContent).toHaveBeenCalledWith('ivy source');
+    expect(app.setEditorKeymap).toHaveBeenCalledWith('vim', { save: false });
     expect(app.setMode).toHaveBeenCalledWith('bounded');
     expect(app.uiDataStore.applyArgSnapshot).toHaveBeenCalledWith('sheet-1', state.sheets[0].arg);
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', state.sheets[0].concept);

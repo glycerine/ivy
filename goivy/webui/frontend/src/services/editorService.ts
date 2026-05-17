@@ -113,13 +113,14 @@ export function getEditorKeymap({
   doc = globalThis.document,
 } = {}) {
   const checked = doc && doc.querySelector<HTMLInputElement>('input[name="keymap"]:checked');
-  return checked ? checked.value : 'sublime';
+  return checked ? checked.value : 'emacs';
 }
 
 export function setEditorKeymap(app, keymap, {
   doc = globalThis.document,
 } = {}) {
-  const next = EDITOR_KEYMAPS.has(keymap) ? keymap : 'sublime';
+  const next = EDITOR_KEYMAPS.has(keymap) ? keymap : 'emacs';
+  if (app) app._editorKeymap = next;
   if (app.cmEditor && typeof app.cmEditor.setOption === 'function') {
     app.cmEditor.setOption('keyMap', next);
   }

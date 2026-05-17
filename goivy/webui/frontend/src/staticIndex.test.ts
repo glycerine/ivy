@@ -26,6 +26,13 @@ describe('static CodeMirror includes', () => {
     expect(cursorIndex).toBeGreaterThan(dialogIndex);
     expect(searchIndex).toBeGreaterThan(cursorIndex);
   });
+
+  it('defaults the editor keymap preference to Emacs', () => {
+    const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
+    const checked = doc.querySelector('input[name="keymap"]:checked') as HTMLInputElement | null;
+
+    expect(checked?.value).toBe('emacs');
+  });
 });
 
 describe('static details styling', () => {

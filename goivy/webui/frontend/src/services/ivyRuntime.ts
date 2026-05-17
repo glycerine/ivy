@@ -2921,8 +2921,12 @@ class IvyRuntime {
         return getEditorKeymapViaService();
     }
 
-    setEditorKeymap(keymap) {
-        setEditorKeymapViaService(this, keymap);
+    setEditorKeymap(keymap, options = null) {
+        var next = setEditorKeymapViaService(this, keymap);
+        if (!options || options.save !== false) {
+            runtimeDeps.IvyPersist.save(this);
+        }
+        return next;
     }
 
     formatSheetTabLabel(label) {
