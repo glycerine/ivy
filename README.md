@@ -2772,8 +2772,12 @@ One more wrinkle: Python’s initial domain does not immediately put those arity
 So: yes, Python has the same underlying bad arity-only assumption in one path, but it often does not expose it immediately. The fix I made aligns Go with Python’s more correct `get_structure_concept_domain()` behavior, not with the buggy initial-domain behavior. That seems like the right direction, especially because it preserves actual verification while keeping the concept graph well-typed.
 
 ------
-emacs-ish mode editor actually pretty similar behavior to emacs now.
 
+emacs-ish mode for the CodeMirror 5 editor is actually pretty similar behavior to emacs now
+that we have added some custom key handling and a 2 second time window after Esc is pressed
+in which we check for a special follow-on key press.
+
+~~~
 Esc >         -- jump to end of buffer
 Esc <         -- jump to begining
 Esc w         -- copy region from mark to point.
@@ -2784,3 +2788,4 @@ Esc %         -- for search-and-replace
   Ctrl-g          to cancel search
   Arrow keys      to cancel search
   '.', y, n, !, q to supervise search-and-replace.
+~~~
