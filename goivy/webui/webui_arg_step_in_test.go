@@ -428,6 +428,19 @@ func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
 	if !ok || len(elements) == 0 {
 		t.Fatalf("trace_arg elements missing/empty: %#v", trace["elements"])
 	}
+	traceSheetID, _ := result["trace_sheet_id"].(string)
+	if traceSheetID == "" || traceSheetID == "sheet-1" {
+		t.Fatalf("trace_sheet_id = %#v, want registered non-root sheet", result["trace_sheet_id"])
+	}
+	if label, _ := result["trace_label"].(string); label == "" {
+		t.Fatalf("trace_label missing: %#v", result["trace_label"])
+	}
+	if _, err := be.ArgAction(session["session_id"], "state_0", "execute_action", map[string]interface{}{
+		"sheet_id":    traceSheetID,
+		"action_name": "ext:connect",
+	}); err != nil {
+		t.Fatalf("registered trace sheet ArgAction: %v", err)
+	}
 	if details, _ := result["counterexample_details"].(string); details == "" || !strings.Contains(details, "Counterexample trace") {
 		t.Fatalf("counterexample_details missing from check JSON: %#v", result["counterexample_details"])
 	}

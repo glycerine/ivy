@@ -42,6 +42,8 @@ type CheckResult struct {
 	CounterexampleTrace   string   `json:"counterexample_trace,omitempty"`
 	CounterexampleDetails string   `json:"counterexample_details,omitempty"`
 	TraceARG              Payload  `json:"trace_arg,omitempty"`
+	TraceSheetID          string   `json:"trace_sheet_id,omitempty"`
+	TraceLabel            string   `json:"trace_label,omitempty"`
 }
 
 type ConceptRequest struct {

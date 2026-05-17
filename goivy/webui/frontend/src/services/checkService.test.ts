@@ -104,6 +104,7 @@ describe('checkService', () => {
 
     expect(app.openARGSheet).toHaveBeenCalledWith('Error trace', result.trace_arg, 'trace-1', {
       reachabilityOnly: true,
+      visualOnly: false,
     });
   });
 
@@ -123,6 +124,7 @@ describe('checkService', () => {
     expect(app.nextLocalSheetId).toHaveBeenCalledWith('trace');
     expect(app.openARGSheet).toHaveBeenCalledWith('Error trace', result.trace_arg, 'trace-7', {
       reachabilityOnly: true,
+      visualOnly: true,
     });
   });
 

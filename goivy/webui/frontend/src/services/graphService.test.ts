@@ -33,7 +33,7 @@ describe('graphService', () => {
     expect(app.uiDataModel.sheets['sheet-1'].type).toBe('analysis');
   });
 
-  it('registers reachability-only sheets through the model before mirroring runtime state', () => {
+  it('registers reachability-only and visual-only sheets through the model before mirroring runtime state', () => {
     const app = {
       sheets: {},
       activeSheetId: 'sheet-1',
@@ -41,10 +41,12 @@ describe('graphService', () => {
       installConceptGraphVisibilityHook: vi.fn(),
     };
 
-    registerSheet(app, 'sheet-3', {}, null, { reachabilityOnly: true });
+    registerSheet(app, 'sheet-3', {}, null, { reachabilityOnly: true, visualOnly: true });
 
     expect(app.uiDataModel.sheets['sheet-3'].reachabilityOnly).toBe(true);
+    expect(app.uiDataModel.sheets['sheet-3'].visualOnly).toBe(true);
     expect(app.sheets['sheet-3'].reachabilityOnly).toBe(true);
+    expect(app.sheets['sheet-3'].visualOnly).toBe(true);
     expect(app.sheets['sheet-3'].conceptGraph).toBeNull();
   });
 

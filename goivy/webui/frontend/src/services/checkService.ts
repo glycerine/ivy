@@ -15,6 +15,13 @@ function traceSheetIdForResult(app, result) {
   return `trace-${fallbackTraceSheetCounter}`;
 }
 
+function traceSheetOptionsForResult(result) {
+  return {
+    reachabilityOnly: true,
+    visualOnly: !(result && result.trace_sheet_id),
+  };
+}
+
 function setCheckControlsRunning(running) {
   const doc = globalThis.document;
   if (!doc) return;
@@ -216,9 +223,7 @@ export function addCheckResultViewActions(app, result, {
 } = {}) {
   if (!result || !result.trace_arg) return;
   const openTrace = () => {
-    app.openARGSheet('Error trace', result.trace_arg, traceSheetIdForResult(app, result), {
-      reachabilityOnly: true,
-    });
+    app.openARGSheet('Error trace', result.trace_arg, traceSheetIdForResult(app, result), traceSheetOptionsForResult(result));
   };
 
   if (doc.querySelector('[data-check-view-trace]')) return;

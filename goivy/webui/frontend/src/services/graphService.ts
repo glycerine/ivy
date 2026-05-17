@@ -15,13 +15,14 @@ export function registerSheet(app, sheetId, argGraph, conceptGraph, raw = {}) {
     if (!modelSheet) modelSheet = selectSheet(app.uiDataModel, sheetId);
   }
   const reachabilityOnly = !!(modelSheet ? modelSheet.reachabilityOnly : rawRecord.reachabilityOnly);
+  const visualOnly = !!(modelSheet ? modelSheet.visualOnly : rawRecord.visualOnly);
   app.sheets[sheetId] = {
     id: sheetId,
     type: 'analysis',
     argGraph,
     conceptGraph,
     selectedArgNode: null,
-    visualOnly: false,
+    visualOnly,
     reachabilityOnly,
   };
 }

@@ -634,7 +634,13 @@ func (gbe *GoBackend) Check(sessionID, mode string, options CheckOptions) (by []
 			m["z3_contacted"] = cr.Z3Contacted
 		}
 		if !gbe.cfg.WebUIConformCheck && cr.Result == "fail" && sess.AGUI != nil && sess.AGUI.AG != nil && len(sess.AGUI.AG.States) > 0 {
-			m["trace_arg"] = AnalysisUIARGPayload(sess.AGUI)
+			sess.mu.Lock()
+			traceUI := sess.newAnalysisGraphUIForGraphLocked(sess.AGUI.AG)
+			traceSheetID := sess.registerAnalysisSheetLocked(traceUI)
+			sess.mu.Unlock()
+			m["trace_arg"] = AnalysisUIARGPayload(traceUI)
+			m["trace_sheet_id"] = traceSheetID
+			m["trace_label"] = analysisSheetLabel(traceSheetID)
 		}
 		if !gbe.cfg.WebUIConformCheck {
 			if cr.CounterexampleTrace != "" {
