@@ -195,8 +195,8 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if s.AG == nil || len(s.AG.Transitions) == 0 {
 		t.Fatalf("induction failure did not populate ARG transitions")
 	}
-	if got := s.AG.Transitions[0].Label; got != "call ext" {
-		t.Fatalf("ARG transition label = %q, want %q", got, "call ext")
+	if got := s.AG.Transitions[0].Label; got != "call connect" {
+		t.Fatalf("ARG transition label = %q, want %q", got, "call connect")
 	}
 	if cr.CounterexampleDetails == "" || !strings.Contains(cr.CounterexampleDetails, "Counterexample trace") {
 		t.Fatalf("induction failure did not return counterexample details: %#v", cr.CounterexampleDetails)
@@ -242,6 +242,25 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	}
 	if len(elements) == 0 {
 		t.Fatal("sub_arg elements empty")
+	}
+}
+
+func TestLoadWithoutDeclaredIsolatesUsesSentinelChoice(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-no-isolates-choice")
+	if err := s.LoadFileContent("client_server_example.ivy", readClientServerExample(t)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	if s.ActiveIsolate != NoIsolatesFoundChoice {
+		t.Fatalf("ActiveIsolate = %q, want %q", s.ActiveIsolate, NoIsolatesFoundChoice)
+	}
+	if len(s.AvailableIsolates) != 1 || s.AvailableIsolates[0] != NoIsolatesFoundChoice {
+		t.Fatalf("AvailableIsolates = %#v, want [%q]", s.AvailableIsolates, NoIsolatesFoundChoice)
+	}
+	if _, ok := s.CompiledModule.Actions.Get2("connect"); !ok {
+		t.Fatalf("unisolated load did not keep source action connect")
+	}
+	if _, ok := s.CompiledModule.Actions.Get2("ext:connect"); ok {
+		t.Fatalf("no-isolates load should not synthesize ext:connect")
 	}
 }
 
@@ -365,9 +384,9 @@ func TestARGExecuteActionMenuEntriesRenderAndDispatch(t *testing.T) {
 	foundExecute := false
 	for _, raw := range actions {
 		act := raw.(goivy.NodeAction)
-		if act.Label == "ext:connect" && act.Action == "execute_action" {
-			if got := act.Args["action_name"]; got != "ext:connect" {
-				t.Fatalf("ext:connect action_name = %#v, want ext:connect", got)
+		if act.Label == "connect" && act.Action == "execute_action" {
+			if got := act.Args["action_name"]; got != "connect" {
+				t.Fatalf("connect action_name = %#v, want connect", got)
 			}
 			foundExecute = true
 			break
@@ -381,7 +400,7 @@ func TestARGExecuteActionMenuEntriesRenderAndDispatch(t *testing.T) {
 	beforeTransitions := len(s.AG.Transitions)
 	result, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
 		"sheet_id":    "sheet-1",
-		"action_name": "ext:connect",
+		"action_name": "connect",
 	})
 	if err != nil {
 		t.Fatalf("ArgNodeAction execute_action: %v", err)
@@ -504,7 +523,7 @@ func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
 	}
 	if _, err := be.ArgAction(session["session_id"], "state_0", "execute_action", map[string]interface{}{
 		"sheet_id":    traceSheetID,
-		"action_name": "ext:connect",
+		"action_name": "connect",
 	}); err != nil {
 		t.Fatalf("registered trace sheet ArgAction: %v", err)
 	}

@@ -68,6 +68,7 @@ class IvySession:
 _sessions = {}
 _session_counter = 0
 _ivy_lock = threading.Lock()
+NO_ISOLATES_FOUND_CHOICE = "no_isolates_found"
 
 
 def _reset_ivy_globals():
@@ -90,7 +91,17 @@ def _new_session():
 
 
 def _webui_isolate_names():
-    return sorted(getattr(im.module, "isolates", {}).keys())
+    return sorted(
+        name for name, iso in getattr(im.module, "isolates", {}).items()
+        if not _webui_implicit_this_isolate(name, iso)
+    )
+
+
+def _webui_implicit_this_isolate(name, iso):
+    args = getattr(iso, "args", ())
+    if name != "this" or getattr(iso, "with_args", 0) != 0 or len(args) != 2:
+        return False
+    return all(getattr(arg, "relname", None) == "this" for arg in args)
 
 
 def _load_content(sess, filename, content, isolate=""):
@@ -100,7 +111,7 @@ def _load_content(sess, filename, content, isolate=""):
         sess.file_path = filename
         sess.file_content = content
         isolate = (isolate or "").strip()
-        ic.isolate.set(isolate if isolate else None)
+        ic.isolate.set(isolate if isolate and isolate != NO_ISOLATES_FOUND_CHOICE else None)
 
         # ivy_load_file expects the full source including #lang header.
         sio = StringIO(content)
@@ -112,11 +123,22 @@ def _load_content(sess, filename, content, isolate=""):
         from ivy import ivy_isolate
         from ivy import ivy_utils as iu
         ic.ivy_load_file(sio, create_isolate=False)
-        ivy_isolate.create_isolate(ic.isolate.get(), im.module)
-        sess.available_isolates = _webui_isolate_names()
-        sess.active_isolate = isolate
-        if not sess.active_isolate and len(sess.available_isolates) == 1:
-            sess.active_isolate = sess.available_isolates[0]
+        user_isolates = _webui_isolate_names()
+        if not isolate and len(user_isolates) == 0:
+            sess.active_isolate = NO_ISOLATES_FOUND_CHOICE
+            sess.available_isolates = [NO_ISOLATES_FOUND_CHOICE]
+        elif isolate == NO_ISOLATES_FOUND_CHOICE:
+            if len(user_isolates) != 0:
+                raise iu.IvyError(None, "{} is only valid when the source declares no isolates".format(NO_ISOLATES_FOUND_CHOICE))
+            sess.active_isolate = NO_ISOLATES_FOUND_CHOICE
+            sess.available_isolates = [NO_ISOLATES_FOUND_CHOICE]
+        else:
+            selected = isolate
+            if not selected and len(user_isolates) > 0:
+                selected = user_isolates[0]
+            ivy_isolate.create_isolate(selected if selected else None, im.module)
+            sess.available_isolates = _webui_isolate_names()
+            sess.active_isolate = selected
         im.module.labeled_axioms.extend(im.module.labeled_props)
         im.module.theory_context().__enter__()
         sess.ag = ic.ivy_new()

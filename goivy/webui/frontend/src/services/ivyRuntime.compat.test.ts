@@ -170,7 +170,7 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.querySelector('.sheet-tab span')?.textContent).toBe('Sheet 1 · cf_backup');
   });
 
-  it('shows the synthetic default this isolate for specs without declared isolates', () => {
+  it('shows no_isolates_found for specs without declared isolates', () => {
     document.body.innerHTML = [
       '<div id="isolate-menu-wrapper" class="dropdown isolate-menu" hidden>',
       '  <span id="isolate-menu-title" class="panel-menu" data-dropdown="isolate-menu">isolate</span>',
@@ -180,14 +180,14 @@ describe('ivyRuntime compatibility behavior', () => {
     ].join('');
     const runtime = makeRuntime();
 
-    runtime.setIsolates(['this'], 'this');
+    runtime.setIsolates(['no_isolates_found'], 'no_isolates_found');
 
     expect((document.getElementById('isolate-menu-wrapper') as HTMLElement).hidden).toBe(false);
-    expect(document.getElementById('isolate-menu-title')?.textContent).toBe('this');
+    expect(document.getElementById('isolate-menu-title')?.textContent).toBe('no_isolates_found');
     expect(document.getElementById('isolate-menu-title')?.getAttribute('title')).toBe('choose isolate');
     expect(document.querySelector('#isolate-menu .dropdown-heading')?.textContent).toBe('choose isolate:');
-    expect(Array.from(document.querySelectorAll('#isolate-menu a')).map((item) => item.textContent)).toEqual(['this']);
-    expect(document.querySelector('.sheet-tab span')?.textContent).toBe('Sheet 1 · this');
+    expect(Array.from(document.querySelectorAll('#isolate-menu a')).map((item) => item.textContent)).toEqual(['no_isolates_found']);
+    expect(document.querySelector('.sheet-tab span')?.textContent).toBe('Sheet 1 · no_isolates_found');
   });
 
   it('opens reachability-only sheets without a concept graph runtime', () => {

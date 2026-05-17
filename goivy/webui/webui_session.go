@@ -51,6 +51,13 @@ type Session struct {
 
 const rootSheetID = "sheet-1"
 
+// NoIsolatesFoundChoice is a Web UI/API sentinel, not an Ivy isolate name.
+// Ivy 1.7 compiler setup creates an implicit "this" isolate even when the
+// source file declares no isolates. When this sentinel is active, the web UI
+// intentionally keeps the loaded module un-isolated instead of passing "this"
+// back into CreateIsolate and stripping the source-level signature.
+const NoIsolatesFoundChoice = "no_isolates_found"
+
 // NewSession creates a new verification session with the given id.
 func NewSession(cfg *goivy.Config, id string) *Session {
 	return &Session{
@@ -107,6 +114,10 @@ func cloneWebUIConfigForLoad(base *goivy.Config, isolate string) *goivy.Config {
 }
 
 func (s *Session) compileIvySource(filename string, content []byte, isolate string) (*goivy.Module, *goivy.Sig, error) {
+	return s.compileIvySourceWithCreateIsolate(filename, content, isolate, true)
+}
+
+func (s *Session) compileIvySourceWithCreateIsolate(filename string, content []byte, isolate string, createIsolate bool) (*goivy.Module, *goivy.Sig, error) {
 	if s.Cfg != nil && s.Cfg.StandardLibrary == nil {
 		_ = goivy.PreloadStandardLibrary(s.Cfg)
 	}
@@ -120,7 +131,9 @@ func (s *Session) compileIvySource(filename string, content []byte, isolate stri
 	mod.Sig = sig
 
 	goivy.RegisterTactics(mod.Cfg.ProofCfg, mod)
-	if err := goivy.SourceString(filename, webUIIvySource(content), mod, sig, nil); err != nil {
+	if err := goivy.SourceString(filename, webUIIvySource(content), mod, sig, map[string]interface{}{
+		"create_isolate": createIsolate,
+	}); err != nil {
 		return nil, nil, err
 	}
 	return mod, sig, nil
@@ -140,11 +153,21 @@ func webUIIsolateNames(mod *goivy.Module) []string {
 		return nil
 	}
 	names := make([]string, 0, len(mod.Isolates))
-	for name := range mod.Isolates {
+	for name, iso := range mod.Isolates {
+		if name == "this" && webUIImplicitThisIsolate(iso) {
+			continue
+		}
 		names = append(names, name)
 	}
 	sort.Strings(names)
 	return append([]string{}, names...)
+}
+
+func webUIImplicitThisIsolate(iso *goivy.IsolateDef) bool {
+	if iso == nil || iso.WithArgs != 0 || iso.Trusted || iso.IsObject || len(iso.Elems) != 2 {
+		return false
+	}
+	return goivy.NodeRep(iso.Elems[0]) == "this" && goivy.NodeRep(iso.Elems[1]) == "this"
 }
 
 func (s *Session) compileIvyDecls(decls []goivy.Node, isolate string) (*goivy.Module, *goivy.Sig, error) {
@@ -186,8 +209,9 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	return s.LoadFileContentWithIsolate(filename, content, "")
 }
 
-// LoadFileContentWithIsolate is LoadFileContent plus the web UI equivalent of
-// Python Ivy's command-line isolate=... selection.
+// LoadFileContentWithIsolate is LoadFileContent plus the Web UI isolate choice.
+// In addition to real Ivy isolate names, the UI may pass NoIsolatesFoundChoice
+// to request the un-isolated source model for files that declare no isolates.
 func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, isolate string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -198,19 +222,21 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	s.FileContent = string(content)
 
 	// ======================================================================
-	// FULL COMPILER PIPELINE: parse → compile → module → concept domain
-	// Mirrors Python's ivy_init() → ivy_load_file() → AnalysisGraph flow.
+	// FULL COMPILER PIPELINE: parse → compile → module → concept domain.
+	// Real isolate selections still follow Python's isolated compile path; the
+	// no-isolates sentinel keeps the source-level module un-isolated.
 	// ======================================================================
 
-	// Full three-pass compilation via IvyCompile.
-	// This runs DomainSetup, ConjectureSetup, ARGSetup, post-processing,
-	// and CreateIsolate — matching Python's ivy_compile exactly.
+	// First compile without applying CreateIsolate. Ivy still records the
+	// implicit compiler-created "this" isolate in the module, which lets the
+	// web UI distinguish "the source declared no isolates" from real isolate
+	// declarations before choosing the final load mode.
 	requestedIsolate := strings.TrimSpace(isolate)
 	if requestedIsolate == "" && s.Cfg != nil {
 		requestedIsolate = strings.TrimSpace(s.Cfg.Isolate)
 	}
 
-	mod, sig, compileErr := s.compileIvySource(filename, content, requestedIsolate)
+	mod, sig, compileErr := s.compileIvySourceWithCreateIsolate(filename, content, "", false)
 	if compileErr != nil {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
 			"phase": "compile", "error": compileErr.Error(),
@@ -219,18 +245,34 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	}
 	availableIsolates := webUIIsolateNames(mod)
 	activeIsolate := requestedIsolate
-	if activeIsolate == "" && len(availableIsolates) > 0 {
-		activeIsolate = availableIsolates[0]
-		mod, sig, compileErr = s.compileIvySource(filename, content, activeIsolate)
-		if compileErr != nil {
+	if activeIsolate == "" && len(availableIsolates) == 0 {
+		activeIsolate = NoIsolatesFoundChoice
+		availableIsolates = []string{NoIsolatesFoundChoice}
+	} else if activeIsolate == NoIsolatesFoundChoice {
+		if len(availableIsolates) != 0 {
+			err := fmt.Errorf("%s is only valid when the source declares no isolates", NoIsolatesFoundChoice)
 			s.emit(Event{Type: "compiler_error", Data: map[string]string{
-				"phase": "compile", "error": compileErr.Error(),
+				"phase": "compile", "error": err.Error(),
 			}})
-			return fmt.Errorf("compile: %w", compileErr)
+			return err
 		}
-		availableIsolates = webUIIsolateNames(mod)
+		availableIsolates = []string{NoIsolatesFoundChoice}
+	} else {
+		if activeIsolate == "" && len(availableIsolates) > 0 {
+			activeIsolate = availableIsolates[0]
+		}
+		if activeIsolate != "" {
+			mod, sig, compileErr = s.compileIvySource(filename, content, activeIsolate)
+			if compileErr != nil {
+				s.emit(Event{Type: "compiler_error", Data: map[string]string{
+					"phase": "compile", "error": compileErr.Error(),
+				}})
+				return fmt.Errorf("compile: %w", compileErr)
+			}
+			availableIsolates = webUIIsolateNames(mod)
+		}
 	}
-	if activeIsolate != "" {
+	if activeIsolate != "" && activeIsolate != NoIsolatesFoundChoice {
 		if _, ok := mod.Isolates[activeIsolate]; !ok {
 			err := fmt.Errorf("undefined isolate: %s", activeIsolate)
 			s.emit(Event{Type: "compiler_error", Data: map[string]string{
