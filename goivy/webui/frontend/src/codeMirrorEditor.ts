@@ -365,6 +365,9 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
   if (typeof editor.openDialog !== 'function' || typeof editor.getSearchCursor !== 'function') {
     return codeMirror && codeMirror.Pass;
   }
+  clearSearchMark(editor.__ivyEmacsLastSearchMark);
+  editor.__ivyEmacsLastSearchMark = null;
+  removeIsearchDialogs(editor);
 
   const originCursor = getEditorCursor(editor);
   const originSelections = typeof editor.listSelections === 'function'
@@ -377,12 +380,19 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
   let closed = false;
   let closeDialog: any = null;
 
-  const closeSearch = ({ restore = false } = {}) => {
+  const closeSearch = ({ restore = false, clearMark = false } = {}) => {
     if (closed) return;
     closed = true;
     delete editor.__ivyEmacsISearch;
+    if (clearMark) {
+      clearSearchMark(currentSearchMark);
+      currentSearchMark = null;
+    } else {
+      editor.__ivyEmacsLastSearchMark = currentSearchMark;
+    }
     if (restore) restoreEditorSelections(editor, originSelections, originCursor);
     if (typeof closeDialog === 'function') closeDialog();
+    removeIsearchDialogs(editor);
     if (typeof editor.focus === 'function' && !restore) editor.focus();
   };
 
@@ -416,9 +426,7 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
   };
 
   const abortSearch = () => {
-    clearSearchMark(currentSearchMark);
-    currentSearchMark = null;
-    closeSearch({ restore: true });
+    closeSearch({ restore: true, clearMark: true });
   };
 
   editor.__ivyEmacsISearch = {
@@ -519,10 +527,43 @@ function writeIsearchInput(editor: any, value: string) {
 }
 
 function findIsearchInput(editor: any): HTMLInputElement | null {
+  removeNonInputIsearchDialogs(editor);
   const wrapper = typeof editor.getWrapperElement === 'function' ? editor.getWrapperElement() : null;
   return (wrapper && wrapper.querySelector('.CodeMirror-dialog input'))
     || (wrapper && wrapper.parentElement && wrapper.parentElement.querySelector('.CodeMirror-dialog input'))
     || null;
+}
+
+function removeIsearchDialogs(editor: any) {
+  for (const dialog of findIsearchDialogs(editor)) {
+    if (dialog.parentNode) dialog.parentNode.removeChild(dialog);
+  }
+}
+
+function removeNonInputIsearchDialogs(editor: any) {
+  for (const dialog of findIsearchDialogs(editor)) {
+    if (!dialog.querySelector('input') && dialog.parentNode) dialog.parentNode.removeChild(dialog);
+  }
+}
+
+function findIsearchDialogs(editor: any): HTMLElement[] {
+  const wrapper = typeof editor.getWrapperElement === 'function' ? editor.getWrapperElement() : null;
+  const roots = [
+    wrapper,
+    wrapper && wrapper.parentElement,
+  ].filter(Boolean) as HTMLElement[];
+  const dialogs: HTMLElement[] = [];
+  for (const root of roots) {
+    for (const dialog of Array.from(root.querySelectorAll('.CodeMirror-dialog')) as HTMLElement[]) {
+      const text = (dialog.textContent || '').replace(/\s+/g, ' ').trim();
+      const hasIsearchLabel = text.startsWith('I-search:') || text.startsWith('I-search backward:');
+      const hasIsearchInput = !!dialog.querySelector('input.CodeMirror-search-field');
+      if ((hasIsearchLabel || hasIsearchInput) && !dialogs.includes(dialog)) {
+        dialogs.push(dialog);
+      }
+    }
+  }
+  return dialogs;
 }
 
 function findSearchMatch(editor: any, query: string, start: any, direction: 'forward' | 'backward') {

@@ -154,6 +154,17 @@ describe('codeMirrorEditor', () => {
     expect(firstMark.clear).toHaveBeenCalledTimes(1);
     expect(editor.markText).toHaveBeenNthCalledWith(2, { line: 4, ch: 0 }, { line: 4, ch: 4 }, { className: 'ivy-emacs-isearch-match' });
     expect(editor.setSelection).toHaveBeenNthCalledWith(2, { line: 4, ch: 0 }, { line: 4, ch: 4 });
+
+    input.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'Enter',
+      bubbles: true,
+      cancelable: true,
+    }));
+
+    expect(closeDialog).toHaveBeenCalledTimes(1);
+    expect(secondMark.clear).not.toHaveBeenCalled();
+    expect(editor.__ivyEmacsLastSearchMark).toBe(secondMark);
+    expect(wrapper.querySelector('.CodeMirror-dialog')).toBeNull();
   });
 
   it('switches Ivy Emacs I-search to case-sensitive once the query has uppercase', () => {
