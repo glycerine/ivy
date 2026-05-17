@@ -365,9 +365,9 @@ func TestARGExecuteActionMenuEntriesRenderAndDispatch(t *testing.T) {
 	foundExecute := false
 	for _, raw := range actions {
 		act := raw.(goivy.NodeAction)
-		if act.Label == "ext:connect" && act.Action == "execute_action" {
-			if got := act.Args["action_name"]; got != "ext:connect" {
-				t.Fatalf("ext:connect action_name = %#v, want ext:connect", got)
+		if act.Label == "connect" && act.Action == "execute_action" {
+			if got := act.Args["action_name"]; got != "connect" {
+				t.Fatalf("connect action_name = %#v, want connect", got)
 			}
 			foundExecute = true
 			break
@@ -381,7 +381,7 @@ func TestARGExecuteActionMenuEntriesRenderAndDispatch(t *testing.T) {
 	beforeTransitions := len(s.AG.Transitions)
 	result, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
 		"sheet_id":    "sheet-1",
-		"action_name": "ext:connect",
+		"action_name": "connect",
 	})
 	if err != nil {
 		t.Fatalf("ArgNodeAction execute_action: %v", err)
@@ -504,7 +504,7 @@ func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
 	}
 	if _, err := be.ArgAction(session["session_id"], "state_0", "execute_action", map[string]interface{}{
 		"sheet_id":    traceSheetID,
-		"action_name": "ext:connect",
+		"action_name": "connect",
 	}); err != nil {
 		t.Fatalf("registered trace sheet ArgAction: %v", err)
 	}
