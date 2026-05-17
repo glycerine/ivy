@@ -372,6 +372,7 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
     : null;
   let currentFrom: any = null;
   let currentTo: any = null;
+  let currentSearchMark: any = null;
   let query = '';
   let closed = false;
   let closeDialog: any = null;
@@ -397,7 +398,7 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
     if (!match) return false;
     currentFrom = match.from;
     currentTo = match.to;
-    selectSearchMatch(editor, match);
+    currentSearchMark = selectSearchMatch(editor, match, currentSearchMark);
     return true;
   };
 
@@ -415,6 +416,8 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
   };
 
   const abortSearch = () => {
+    clearSearchMark(currentSearchMark);
+    currentSearchMark = null;
     closeSearch({ restore: true });
   };
 
@@ -441,7 +444,11 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
     input.addEventListener('input', () => {
       query = input.value;
       if (query) runSearch(direction, false);
-      else restoreEditorSelections(editor, originSelections, originCursor);
+      else {
+        clearSearchMark(currentSearchMark);
+        currentSearchMark = null;
+        restoreEditorSelections(editor, originSelections, originCursor);
+      }
     });
     input.addEventListener('keydown', (event) => {
       const isForwardRepeat = event.key === 's' && event.ctrlKey && !event.altKey && !event.metaKey;
@@ -541,7 +548,12 @@ function isLowerCaseSearchQuery(query: string) {
   return query === query.toLowerCase();
 }
 
-function selectSearchMatch(editor: any, match: { from: any; to: any }) {
+function selectSearchMatch(editor: any, match: { from: any; to: any }, previousMark: any = null) {
+  clearSearchMark(previousMark);
+  let nextMark = null;
+  if (typeof editor.markText === 'function') {
+    nextMark = editor.markText(match.from, match.to, { className: 'ivy-emacs-isearch-match' });
+  }
   if (typeof editor.setSelection === 'function') {
     editor.setSelection(match.from, match.to);
   } else if (typeof editor.setCursor === 'function') {
@@ -550,6 +562,11 @@ function selectSearchMatch(editor: any, match: { from: any; to: any }) {
   if (typeof editor.scrollIntoView === 'function') {
     editor.scrollIntoView({ from: match.from, to: match.to }, 80);
   }
+  return nextMark;
+}
+
+function clearSearchMark(mark: any) {
+  if (mark && typeof mark.clear === 'function') mark.clear();
 }
 
 function restoreEditorSelections(editor: any, selections: any, cursor: any) {

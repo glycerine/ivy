@@ -484,6 +484,12 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     color: #141423 !important;
     text-shadow: none !important;
 }
+#editor-panel .CodeMirror .ivy-emacs-isearch-match,
+#editor-panel .CodeMirror .ivy-emacs-isearch-match * {
+    background: rgba(255, 214, 64, 0.88) !important;
+    color: #141423 !important;
+    text-shadow: none !important;
+}
 #editor-panel .CodeMirror .ivy-source-highlight {
     background: #3a3320;
 }

@@ -98,6 +98,8 @@ describe('codeMirrorEditor', () => {
     const closeDialog = vi.fn();
     const firstCursor = makeSearchCursor({ from: { line: 2, ch: 0 }, to: { line: 2, ch: 4 } });
     const secondCursor = makeSearchCursor({ from: { line: 4, ch: 0 }, to: { line: 4, ch: 4 } });
+    const firstMark = { clear: vi.fn() };
+    const secondMark = { clear: vi.fn() };
     const editor = {
       focus: vi.fn(),
       getCursor: vi.fn(() => ({ line: 1, ch: 2 })),
@@ -106,6 +108,9 @@ describe('codeMirrorEditor', () => {
         .mockReturnValueOnce(firstCursor)
         .mockReturnValueOnce(secondCursor),
       getWrapperElement: vi.fn(() => wrapper),
+      markText: vi.fn()
+        .mockReturnValueOnce(firstMark)
+        .mockReturnValueOnce(secondMark),
       on: vi.fn(),
       openDialog: vi.fn((html) => {
         wrapper.innerHTML = `<div class="CodeMirror-dialog">${html}</div>`;
@@ -132,6 +137,7 @@ describe('codeMirrorEditor', () => {
 
     expect(editor.getSearchCursor).toHaveBeenNthCalledWith(1, 'link', { line: 1, ch: 2 }, true);
     expect(firstCursor.findNext).toHaveBeenCalled();
+    expect(editor.markText).toHaveBeenNthCalledWith(1, { line: 2, ch: 0 }, { line: 2, ch: 4 }, { className: 'ivy-emacs-isearch-match' });
     expect(editor.setSelection).toHaveBeenNthCalledWith(1, { line: 2, ch: 0 }, { line: 2, ch: 4 });
 
     const repeat = new KeyboardEvent('keydown', {
@@ -145,6 +151,8 @@ describe('codeMirrorEditor', () => {
     expect(repeat.defaultPrevented).toBe(true);
     expect(editor.getSearchCursor).toHaveBeenNthCalledWith(2, 'link', { line: 2, ch: 4 }, true);
     expect(secondCursor.findNext).toHaveBeenCalled();
+    expect(firstMark.clear).toHaveBeenCalledTimes(1);
+    expect(editor.markText).toHaveBeenNthCalledWith(2, { line: 4, ch: 0 }, { line: 4, ch: 4 }, { className: 'ivy-emacs-isearch-match' });
     expect(editor.setSelection).toHaveBeenNthCalledWith(2, { line: 4, ch: 0 }, { line: 4, ch: 4 });
   });
 

@@ -57,11 +57,14 @@ describe('static details styling', () => {
     const baseRule = ivyCss.match(/#editor-panel \.CodeMirror-selected\s*\{[^}]+\}/)?.[0] || '';
     const focusedRule = ivyCss.match(/#editor-panel \.CodeMirror-focused \.CodeMirror-selected\s*\{[^}]+\}/)?.[0] || '';
     const textRule = ivyCss.match(/#editor-panel \.CodeMirror-selectedtext,\s*#editor-panel \.CodeMirror-selectedtext \*\s*\{[^}]+\}/)?.[0] || '';
+    const isearchRule = ivyCss.match(/#editor-panel \.CodeMirror \.ivy-emacs-isearch-match,\s*#editor-panel \.CodeMirror \.ivy-emacs-isearch-match \*\s*\{[^}]+\}/)?.[0] || '';
 
     expect(baseRule).toContain('rgba(255, 224, 102, 0.78)');
     expect(focusedRule).toContain('rgba(255, 214, 64, 0.88)');
     expect(focusedRule).toContain('!important');
     expect(textRule).toContain('.CodeMirror-selectedtext *');
     expect(textRule).toContain('color: #141423 !important;');
+    expect(isearchRule).toContain('rgba(255, 214, 64, 0.88)');
+    expect(isearchRule).toContain('color: #141423 !important;');
   });
 });
