@@ -28,8 +28,6 @@ export function initializeCodeMirrorEditor({
     extraKeys: {
       'Ctrl-F': 'find',
       'Cmd-F': 'find',
-      'Ctrl-G': 'findNext',
-      'Cmd-G': 'findNext',
       'Shift-Ctrl-G': 'findPrev',
       'Shift-Cmd-G': 'findPrev',
       'Shift-Ctrl-F': 'replace',
@@ -39,6 +37,8 @@ export function initializeCodeMirrorEditor({
       'Ctrl-Z': 'undo',
       'Ctrl-Y': 'redo',
       'Ctrl-Shift-Z': 'redo',
+
+      // trying for jump to end / beginning of buffer.
       'Ctrl-<': 'cursorStart',
       'Ctrl->': 'cursorEnd',
       'Ctrl-Shift-,': 'cursorStart', // Explicitly catch the unshifted/shifted variant
@@ -47,8 +47,8 @@ export function initializeCodeMirrorEditor({
       'Alt->': 'cursorEnd',
       'Alt-Shift-,': 'cursorStart', // Explicitly catch the unshifted/shifted variant
       'Alt-Shift-.': 'cursorEnd',
-      'Esc <': 'cursorStart',       // Reinforce the multi-stroke chord
-      'Esc >': 'cursorEnd'
+      'Esc-<': 'cursorStart',       // Reinforce the multi-stroke chord
+      'Esc->': 'cursorEnd'
     },
   });
   modelEditor.__ivyCodeMirrorEditor = editor;
