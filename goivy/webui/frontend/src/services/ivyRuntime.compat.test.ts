@@ -127,6 +127,23 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.querySelector('[data-ivy-dialog]')).toBeNull();
   });
 
+  it('detects when the focused editor should own Emacs Ctrl-S search', () => {
+    const runtime = makeRuntime();
+    runtime.cmEditor = {
+      hasFocus: vi.fn(() => true),
+      getOption: vi.fn(() => 'emacs'),
+    };
+
+    expect(runtime._editorHasFocusedEmacsKeymap()).toBe(true);
+
+    runtime.cmEditor.getOption.mockReturnValue('vim');
+    expect(runtime._editorHasFocusedEmacsKeymap()).toBe(false);
+
+    runtime.cmEditor.hasFocus.mockReturnValue(false);
+    runtime.cmEditor.getOption.mockReturnValue('emacs');
+    expect(runtime._editorHasFocusedEmacsKeymap()).toBe(false);
+  });
+
   it('renders isolate choices and appends the active isolate to sheet tabs', () => {
     document.body.innerHTML = [
       '<div id="isolate-menu-wrapper" class="dropdown isolate-menu" hidden>',

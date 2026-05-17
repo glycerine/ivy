@@ -915,10 +915,12 @@ class IvyRuntime {
 
         // --- Escape key closes open dropdowns; Ctrl+S saves ---
         document.addEventListener('keydown', function (e) {
+            if (e.defaultPrevented) return;
             if (e.key === 'Escape') {
                 self.closeAllDropdowns();
             }
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                if (self._editorHasFocusedEmacsKeymap()) return;
                 e.preventDefault();
                 self.save();
             }
@@ -952,6 +954,13 @@ class IvyRuntime {
             modeToggle._ivyJobControlBound = true;
         }
         this._setJobSubmissionMode(this.jobSubmissionMode || 'browser');
+    }
+
+    _editorHasFocusedEmacsKeymap() {
+        var editor = this.cmEditor;
+        if (!editor || typeof editor.hasFocus !== 'function' || !editor.hasFocus()) return false;
+        if (typeof editor.getOption !== 'function') return true;
+        return editor.getOption('keyMap') === 'emacs';
     }
 
     _toggleJobControlPage() {

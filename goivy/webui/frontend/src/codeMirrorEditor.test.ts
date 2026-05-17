@@ -6,6 +6,15 @@ describe('codeMirrorEditor', () => {
     vi.useRealTimers();
   });
 
+  function makeSearchCursor(match: { from: any; to: any }) {
+    return {
+      findNext: vi.fn(() => true),
+      findPrevious: vi.fn(() => true),
+      from: vi.fn(() => match.from),
+      to: vi.fn(() => match.to),
+    };
+  }
+
   it('initializes CodeMirror with Ivy editor options and wires dirty tracking', () => {
     document.body.innerHTML = '<textarea id="model-editor"></textarea>';
     let changeHandler = null;
@@ -41,6 +50,8 @@ describe('codeMirrorEditor', () => {
         extraKeys: expect.objectContaining({
           'Ctrl-F': 'find',
           'Cmd-F': 'find',
+          'Ctrl-S': expect.any(Function),
+          'Ctrl-R': expect.any(Function),
           'Shift-Ctrl-F': 'replace',
           'Cmd-Alt-F': 'replace',
           'Shift-Ctrl-R': 'replaceAll',
@@ -62,6 +73,119 @@ describe('codeMirrorEditor', () => {
     document.getElementById('model-editor').__ivyCodeMirrorEditor = existing;
 
     expect(initializeCodeMirrorEditor({ codeMirror: { fromTextArea: vi.fn() } })).toBe(existing);
+  });
+
+  it('opens Ivy Emacs I-search on Ctrl-S and finds again on Ctrl-S inside the prompt', () => {
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = document.createElement('div');
+    document.body.appendChild(wrapper);
+    const closeDialog = vi.fn();
+    const firstCursor = makeSearchCursor({ from: { line: 2, ch: 0 }, to: { line: 2, ch: 4 } });
+    const secondCursor = makeSearchCursor({ from: { line: 4, ch: 0 }, to: { line: 4, ch: 4 } });
+    const editor = {
+      focus: vi.fn(),
+      getCursor: vi.fn(() => ({ line: 1, ch: 2 })),
+      getOption: vi.fn(() => 'emacs'),
+      getSearchCursor: vi.fn()
+        .mockReturnValueOnce(firstCursor)
+        .mockReturnValueOnce(secondCursor),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+      openDialog: vi.fn((html) => {
+        wrapper.innerHTML = `<div class="CodeMirror-dialog">${html}</div>`;
+        return closeDialog;
+      }),
+      scrollIntoView: vi.fn(),
+      setSelection: vi.fn(),
+    };
+    const codeMirror = {
+      Pass: Symbol('CodeMirror.Pass'),
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ codeMirror });
+    const options = codeMirror.fromTextArea.mock.calls[0][1];
+
+    expect(options.extraKeys['Ctrl-S'](editor)).toBe(true);
+    expect(editor.openDialog.mock.calls[0][0]).toContain('I-search:');
+    expect(editor.openDialog.mock.calls[0][0]).not.toContain('Search:');
+
+    const input = wrapper.querySelector('input') as HTMLInputElement;
+    input.value = 'link';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(editor.getSearchCursor).toHaveBeenNthCalledWith(1, 'link', { line: 1, ch: 2 });
+    expect(firstCursor.findNext).toHaveBeenCalled();
+    expect(editor.setSelection).toHaveBeenNthCalledWith(1, { line: 2, ch: 0 }, { line: 2, ch: 4 });
+
+    const repeat = new KeyboardEvent('keydown', {
+      key: 's',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    input.dispatchEvent(repeat);
+
+    expect(repeat.defaultPrevented).toBe(true);
+    expect(editor.getSearchCursor).toHaveBeenNthCalledWith(2, 'link', { line: 2, ch: 4 });
+    expect(secondCursor.findNext).toHaveBeenCalled();
+    expect(editor.setSelection).toHaveBeenNthCalledWith(2, { line: 4, ch: 0 }, { line: 4, ch: 4 });
+  });
+
+  it('opens Ivy Emacs reverse I-search on Ctrl-R', () => {
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = document.createElement('div');
+    document.body.appendChild(wrapper);
+    const cursor = makeSearchCursor({ from: { line: 1, ch: 0 }, to: { line: 1, ch: 4 } });
+    const editor = {
+      getCursor: vi.fn(() => ({ line: 3, ch: 1 })),
+      getLine: vi.fn(() => 'type server'),
+      getOption: vi.fn(() => 'emacs'),
+      getSearchCursor: vi.fn(() => cursor),
+      getWrapperElement: vi.fn(() => wrapper),
+      lastLine: vi.fn(() => 10),
+      on: vi.fn(),
+      openDialog: vi.fn((html) => {
+        wrapper.innerHTML = `<div class="CodeMirror-dialog">${html}</div>`;
+        return vi.fn();
+      }),
+      scrollIntoView: vi.fn(),
+      setSelection: vi.fn(),
+    };
+    const codeMirror = {
+      Pass: Symbol('CodeMirror.Pass'),
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ codeMirror });
+    const options = codeMirror.fromTextArea.mock.calls[0][1];
+
+    expect(options.extraKeys['Ctrl-R'](editor)).toBe(true);
+    expect(editor.openDialog.mock.calls[0][0]).toContain('I-search backward:');
+    const input = wrapper.querySelector('input') as HTMLInputElement;
+    input.value = 'type';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(cursor.findPrevious).toHaveBeenCalled();
+    expect(editor.setSelection).toHaveBeenCalledWith({ line: 1, ch: 0 }, { line: 1, ch: 4 });
+  });
+
+  it('leaves Ctrl-S and Ctrl-R available to other keymaps', () => {
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getOption: vi.fn(() => 'vim'),
+      on: vi.fn(),
+    };
+    const codeMirror = {
+      Pass: Symbol('CodeMirror.Pass'),
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ codeMirror });
+    const options = codeMirror.fromTextArea.mock.calls[0][1];
+
+    expect(options.extraKeys['Ctrl-S'](editor)).toBe(codeMirror.Pass);
+    expect(options.extraKeys['Ctrl-R'](editor)).toBe(codeMirror.Pass);
   });
 
   it('maps Escape then > to cursorEnd while the editor has focus', () => {

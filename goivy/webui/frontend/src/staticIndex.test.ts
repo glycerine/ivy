@@ -17,16 +17,25 @@ describe('static index toolbar', () => {
 });
 
 describe('static CodeMirror includes', () => {
-  it('loads the CodeMirror 5 search UI after dialog and search cursor addons', () => {
+  it('loads the CodeMirror 5 search addons before keymaps so Emacs isearch initializes', () => {
+    const coreIndex = indexHtml.indexOf('/codemirror.min.js');
     const dialogIndex = indexHtml.indexOf('/addon/dialog/dialog.min.js');
     const cursorIndex = indexHtml.indexOf('/addon/search/searchcursor.min.js');
     const searchIndex = indexHtml.indexOf('/addon/search/search.min.js');
     const markSelectionIndex = indexHtml.indexOf('/addon/selection/mark-selection.min.js');
+    const vimIndex = indexHtml.indexOf('/keymap/vim.min.js');
+    const emacsIndex = indexHtml.indexOf('/keymap/emacs.min.js');
+    const sublimeIndex = indexHtml.indexOf('/keymap/sublime.min.js');
 
+    expect(coreIndex).toBeGreaterThan(-1);
     expect(dialogIndex).toBeGreaterThan(-1);
+    expect(dialogIndex).toBeGreaterThan(coreIndex);
     expect(cursorIndex).toBeGreaterThan(dialogIndex);
     expect(searchIndex).toBeGreaterThan(cursorIndex);
     expect(markSelectionIndex).toBeGreaterThan(searchIndex);
+    expect(vimIndex).toBeGreaterThan(markSelectionIndex);
+    expect(emacsIndex).toBeGreaterThan(markSelectionIndex);
+    expect(sublimeIndex).toBeGreaterThan(markSelectionIndex);
   });
 
   it('defaults the editor keymap preference to Emacs', () => {
@@ -44,11 +53,13 @@ describe('static details styling', () => {
     expect(rule).toContain('white-space: pre-wrap;');
   });
 
-  it('uses a low-intensity CodeMirror selection color', () => {
+  it('uses a high-contrast yellow CodeMirror selection color', () => {
+    const baseRule = ivyCss.match(/#editor-panel \.CodeMirror-selected\s*\{[^}]+\}/)?.[0] || '';
     const focusedRule = ivyCss.match(/#editor-panel \.CodeMirror-focused \.CodeMirror-selected\s*\{[^}]+\}/)?.[0] || '';
     const textRule = ivyCss.match(/#editor-panel \.CodeMirror-selectedtext,\s*#editor-panel \.CodeMirror-selectedtext \*\s*\{[^}]+\}/)?.[0] || '';
 
-    expect(focusedRule).toContain('rgba(93, 147, 196, 0.22)');
+    expect(baseRule).toContain('rgba(255, 224, 102, 0.78)');
+    expect(focusedRule).toContain('rgba(255, 214, 64, 0.88)');
     expect(focusedRule).toContain('!important');
     expect(textRule).toContain('.CodeMirror-selectedtext *');
     expect(textRule).toContain('color: #141423 !important;');

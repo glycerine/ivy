@@ -31,6 +31,8 @@ export function initializeCodeMirrorEditor({
     extraKeys: {
       'Ctrl-F': 'find',
       'Cmd-F': 'find',
+      'Ctrl-S': (cm: any) => runEmacsSearchKey(cm, codeMirror, 'Ctrl-S'),
+      'Ctrl-R': (cm: any) => runEmacsSearchKey(cm, codeMirror, 'Ctrl-R'),
       'Shift-Ctrl-F': 'replace',
       'Cmd-Alt-F': 'replace',
       'Shift-Ctrl-R': 'replaceAll',
@@ -212,6 +214,196 @@ function installEmacsYankSelectionCollapse({
 function isEmacsKeymap(editor: any) {
   if (typeof editor.getOption !== 'function') return true;
   return editor.getOption('keyMap') === 'emacs';
+}
+
+function runEmacsSearchKey(editor: any, codeMirror: any, keyName: 'Ctrl-S' | 'Ctrl-R') {
+  if (!isEmacsKeymap(editor)) {
+    return codeMirror && codeMirror.Pass;
+  }
+  return startIvyEmacsISearch(editor, codeMirror, keyName === 'Ctrl-R' ? 'backward' : 'forward');
+}
+
+function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward' | 'backward') {
+  if (editor.__ivyEmacsISearch && typeof editor.__ivyEmacsISearch.repeat === 'function') {
+    editor.__ivyEmacsISearch.repeat(direction);
+    return true;
+  }
+  if (typeof editor.openDialog !== 'function' || typeof editor.getSearchCursor !== 'function') {
+    return codeMirror && codeMirror.Pass;
+  }
+
+  const originCursor = getEditorCursor(editor);
+  const originSelections = typeof editor.listSelections === 'function'
+    ? editor.listSelections()
+    : null;
+  let currentFrom: any = null;
+  let currentTo: any = null;
+  let query = '';
+  let closed = false;
+  let closeDialog: any = null;
+
+  const closeSearch = ({ restore = false } = {}) => {
+    if (closed) return;
+    closed = true;
+    delete editor.__ivyEmacsISearch;
+    if (restore) restoreEditorSelections(editor, originSelections, originCursor);
+    if (typeof closeDialog === 'function') closeDialog();
+    if (typeof editor.focus === 'function' && !restore) editor.focus();
+  };
+
+  const runSearch = (searchDirection: 'forward' | 'backward', repeat = false) => {
+    const text = readIsearchInput(editor) || query;
+    if (!text) return false;
+    query = text;
+    editor.__ivyLastISearchQuery = text;
+    const start = repeat && currentFrom && currentTo
+      ? (searchDirection === 'forward' ? currentTo : currentFrom)
+      : originCursor;
+    const match = findSearchMatch(editor, text, start, searchDirection);
+    if (!match) return false;
+    currentFrom = match.from;
+    currentTo = match.to;
+    selectSearchMatch(editor, match);
+    return true;
+  };
+
+  const repeatSearch = (searchDirection: 'forward' | 'backward') => {
+    if (!query && editor.__ivyLastISearchQuery) {
+      query = editor.__ivyLastISearchQuery;
+      writeIsearchInput(editor, query);
+    }
+    runSearch(searchDirection, true);
+  };
+
+  const acceptSearch = () => {
+    if (query) editor.__ivyLastISearchQuery = query;
+    closeSearch();
+  };
+
+  const abortSearch = () => {
+    closeSearch({ restore: true });
+  };
+
+  editor.__ivyEmacsISearch = {
+    repeat: repeatSearch,
+    accept: acceptSearch,
+    abort: abortSearch,
+  };
+
+  const prompt = direction === 'forward' ? 'I-search:' : 'I-search backward:';
+  closeDialog = editor.openDialog(
+    `<span class="CodeMirror-search-label">${prompt}</span> <input type="text" class="CodeMirror-search-field" autocomplete="off" />`,
+    acceptSearch,
+    {
+      bottom: true,
+      closeOnBlur: false,
+      closeOnEnter: false,
+      value: '',
+    },
+  );
+
+  const input = findIsearchInput(editor);
+  if (input) {
+    input.addEventListener('input', () => {
+      query = input.value;
+      if (query) runSearch(direction, false);
+      else restoreEditorSelections(editor, originSelections, originCursor);
+    });
+    input.addEventListener('keydown', (event) => {
+      const isForwardRepeat = event.key === 's' && event.ctrlKey && !event.altKey && !event.metaKey;
+      const isBackwardRepeat = event.key === 'r' && event.ctrlKey && !event.altKey && !event.metaKey;
+      const isAbort = event.key === 'Escape'
+        || (event.key === 'g' && event.ctrlKey && !event.altKey && !event.metaKey);
+      if (isForwardRepeat || isBackwardRepeat) {
+        event.preventDefault();
+        event.stopPropagation();
+        repeatSearch(isBackwardRepeat ? 'backward' : 'forward');
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        acceptSearch();
+      } else if (isAbort) {
+        event.preventDefault();
+        event.stopPropagation();
+        abortSearch();
+      }
+    }, true);
+    input.focus();
+  }
+
+  return true;
+}
+
+function readIsearchInput(editor: any) {
+  const input = findIsearchInput(editor);
+  return input ? input.value : '';
+}
+
+function writeIsearchInput(editor: any, value: string) {
+  const input = findIsearchInput(editor);
+  if (input) input.value = value;
+}
+
+function findIsearchInput(editor: any): HTMLInputElement | null {
+  const wrapper = typeof editor.getWrapperElement === 'function' ? editor.getWrapperElement() : null;
+  return (wrapper && wrapper.querySelector('.CodeMirror-dialog input'))
+    || (wrapper && wrapper.parentElement && wrapper.parentElement.querySelector('.CodeMirror-dialog input'))
+    || null;
+}
+
+function findSearchMatch(editor: any, query: string, start: any, direction: 'forward' | 'backward') {
+  const cursor = editor.getSearchCursor(query, start);
+  const found = direction === 'forward'
+    ? cursor.findNext()
+    : cursor.findPrevious();
+  if (found) return { from: cursor.from(), to: cursor.to() };
+
+  const wrapStart = direction === 'forward'
+    ? { line: typeof editor.firstLine === 'function' ? editor.firstLine() : 0, ch: 0 }
+    : editorDocumentEnd(editor);
+  const wrapCursor = editor.getSearchCursor(query, wrapStart);
+  const wrapFound = direction === 'forward'
+    ? wrapCursor.findNext()
+    : wrapCursor.findPrevious();
+  if (wrapFound) return { from: wrapCursor.from(), to: wrapCursor.to() };
+  return null;
+}
+
+function selectSearchMatch(editor: any, match: { from: any; to: any }) {
+  if (typeof editor.setSelection === 'function') {
+    editor.setSelection(match.from, match.to);
+  } else if (typeof editor.setCursor === 'function') {
+    editor.setCursor(match.to.line, match.to.ch);
+  }
+  if (typeof editor.scrollIntoView === 'function') {
+    editor.scrollIntoView({ from: match.from, to: match.to }, 80);
+  }
+}
+
+function restoreEditorSelections(editor: any, selections: any, cursor: any) {
+  if (selections && typeof editor.setSelections === 'function') {
+    editor.setSelections(selections);
+  } else if (selections && selections[0] && typeof editor.setSelection === 'function') {
+    editor.setSelection(selections[0].anchor, selections[0].head);
+  } else if (typeof editor.setCursor === 'function') {
+    editor.setCursor(cursor.line, cursor.ch);
+  }
+}
+
+function getEditorCursor(editor: any) {
+  const cursor = typeof editor.getCursor === 'function' ? editor.getCursor() || {} : {};
+  return {
+    line: Number.isFinite(cursor.line) ? cursor.line : 0,
+    ch: Number.isFinite(cursor.ch) ? cursor.ch : 0,
+  };
+}
+
+function editorDocumentEnd(editor: any) {
+  const lastLine = typeof editor.lastLine === 'function'
+    ? editor.lastLine()
+    : Math.max(0, (typeof editor.lineCount === 'function' ? editor.lineCount() : 1) - 1);
+  const lineText = typeof editor.getLine === 'function' ? editor.getLine(lastLine) || '' : '';
+  return { line: lastLine, ch: lineText.length };
 }
 
 function copySelectionToEmacsYankBuffer(editor: any) {

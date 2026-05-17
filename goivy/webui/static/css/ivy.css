@@ -474,10 +474,10 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     border-left: 2px solid #e0e0e0;
 }
 #editor-panel .CodeMirror-selected {
-    background: rgba(93, 147, 196, 0.16) !important;
+    background: rgba(255, 224, 102, 0.78) !important;
 }
 #editor-panel .CodeMirror-focused .CodeMirror-selected {
-    background: rgba(93, 147, 196, 0.22) !important;
+    background: rgba(255, 214, 64, 0.88) !important;
 }
 #editor-panel .CodeMirror-selectedtext,
 #editor-panel .CodeMirror-selectedtext * {
