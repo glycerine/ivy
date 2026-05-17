@@ -613,21 +613,27 @@ describe('codeMirrorEditor', () => {
       { from: { line: 4, ch: 1 }, to: { line: 4, ch: 5 } },
       { from: { line: 8, ch: 2 }, to: { line: 8, ch: 6 } },
     ];
-    let currentMatch = 0;
-    wrapper.querySelector('button')?.addEventListener('click', () => {
-      currentMatch += 1;
-    });
+    let currentMatch = -1;
+    const cursor = {
+      findNext: vi.fn(() => {
+        currentMatch += 1;
+        return currentMatch < ranges.length;
+      }),
+      replace: vi.fn(),
+      to: vi.fn(() => ranges[Math.max(0, currentMatch)].to),
+    };
     const editor = {
       getCursor: vi.fn((which) => {
-        const range = ranges[Math.min(currentMatch, ranges.length - 1)];
+        const range = ranges[0];
         return which === 'from' ? range.from : range.to;
       }),
       getLine: vi.fn(() => 'last line'),
       getOption: vi.fn(() => 'emacs'),
-      getSearchCursor: vi.fn(() => ({ findNext: vi.fn(() => currentMatch < ranges.length - 1) })),
+      getSearchCursor: vi.fn(() => cursor),
       getWrapperElement: vi.fn(() => wrapper),
       lastLine: vi.fn(() => 20),
       on: vi.fn(),
+      operation: vi.fn((fn) => fn()),
       scrollIntoView: vi.fn(),
       setCursor: vi.fn(),
       state: { search: { query: 'link' } },
@@ -637,14 +643,23 @@ describe('codeMirrorEditor', () => {
     };
 
     initializeCodeMirrorEditor({ doc, codeMirror });
+    wrapper.innerHTML = '<div class="CodeMirror-dialog">With: <input value="node\\n"></div>';
+    const input = wrapper.querySelector('input') as HTMLInputElement;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    installReplaceDialog(wrapper, clicks);
 
     const event = new KeyboardEvent('keydown', { key: '!', bubbles: true, cancelable: true });
     doc.dispatchEvent(event);
     vi.runAllTimers();
 
     expect(event.defaultPrevented).toBe(true);
-    expect(clicks).toEqual(['Yes', 'Yes', 'Stop']);
+    expect(clicks).toEqual(['Stop']);
     expect(clicks).not.toContain('All');
+    expect(editor.operation).toHaveBeenCalledTimes(1);
+    expect(editor.getSearchCursor).toHaveBeenCalledWith('link', { line: 4, ch: 1 }, { caseFold: true });
+    expect(cursor.replace).toHaveBeenCalledTimes(2);
+    expect(cursor.replace).toHaveBeenNthCalledWith(1, 'node\n');
+    expect(cursor.replace).toHaveBeenNthCalledWith(2, 'node\n');
     expect(editor.setCursor).toHaveBeenCalledWith(8, 6);
   });
 

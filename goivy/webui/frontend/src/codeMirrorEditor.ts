@@ -254,7 +254,11 @@ function installEmacsReplacePromptKeys({
   doc: Document;
 }) {
   if (!doc || !editor) return;
+  doc.addEventListener('input', (event) => {
+    rememberReplaceDialogInput(editor, event.target);
+  }, true);
   doc.addEventListener('keydown', (event) => {
+    rememberReplaceDialogInput(editor, event.target);
     if (!isEmacsKeymap(editor)) return;
     const dialog = findReplaceQuestionDialog(editor, doc);
     if (!dialog) return;
@@ -341,38 +345,40 @@ function clickReplacePromptButton(dialog: HTMLElement, label: string) {
 }
 
 function replaceRestToEnd(editor: any, doc: Document, initialDialog: HTMLElement) {
-  if (!canBoundReplaceAtEOF(editor)) {
+  if (!canBulkReplaceToEOF(editor)) {
     clickReplacePromptButton(initialDialog, 'All');
     return;
   }
-  let steps = 0;
-  const maxSteps = Math.max(1, editorDocumentEnd(editor).line + 10000);
-  const step = () => {
-    const dialog = findReplaceQuestionDialog(editor, doc);
-    if (!dialog || steps >= maxSteps) {
-      return;
-    }
-    steps += 1;
-    const replaceRange = currentEditorSelectionRange(editor);
-    scrollCurrentReplaceMatchIntoView(editor);
-    const stopAtEnd = isLastReplaceMatch(editor);
-    clickReplacePromptButton(dialog, 'Yes');
-    setTimeout(() => {
-      if (stopAtEnd) {
-        const nextDialog = findReplaceQuestionDialog(editor, doc);
-        if (nextDialog) clickReplacePromptButton(nextDialog, 'Stop');
-        if (replaceRange) collapseSelectionAtPosition(editor, replaceRange.to);
-      } else {
-        step();
+  const query = currentReplaceQuery(editor);
+  const replacement = currentReplaceText(editor);
+  const range = currentEditorSelectionRange(editor);
+  const start = range.from;
+  let lastReplacementEnd = range.to;
+  const replaceAll = () => {
+    const cursor = editor.getSearchCursor(query, start, searchCursorOptionsForQuery(query));
+    while (cursor && typeof cursor.findNext === 'function') {
+      const match = cursor.findNext();
+      if (!match) break;
+      const replacementText = replacementForSearchMatch(query, replacement, match);
+      if (typeof cursor.replace !== 'function') break;
+      cursor.replace(replacementText);
+      if (typeof cursor.to === 'function') {
+        lastReplacementEnd = cursor.to();
       }
-    }, 0);
+    }
   };
-  step();
+  if (typeof editor.operation === 'function') editor.operation(replaceAll);
+  else replaceAll();
+  const nextDialog = findReplaceQuestionDialog(editor, doc);
+  clickReplacePromptButton(nextDialog || initialDialog, 'Stop');
+  collapseSelectionAtPosition(editor, lastReplacementEnd);
+  scrollPositionIntoView(editor, lastReplacementEnd);
 }
 
-function canBoundReplaceAtEOF(editor: any) {
+function canBulkReplaceToEOF(editor: any) {
   return typeof editor.getSearchCursor === 'function'
     && !!currentReplaceQuery(editor)
+    && currentReplaceText(editor) !== null
     && !!currentEditorSelectionRange(editor);
 }
 
@@ -397,6 +403,41 @@ function currentReplaceQuery(editor: any) {
   return null;
 }
 
+function currentReplaceText(editor: any): string | null {
+  return typeof editor.__ivyEmacsReplaceText === 'string' ? editor.__ivyEmacsReplaceText : null;
+}
+
+function rememberReplaceDialogInput(editor: any, target: EventTarget | null) {
+  const input = target as HTMLInputElement | null;
+  if (!input || input.tagName !== 'INPUT') return;
+  const dialog = input.closest('.CodeMirror-dialog') as HTMLElement | null;
+  if (!dialog) return;
+  const label = (dialog.textContent || '').replace(/\s+/g, ' ').trim();
+  if (label.startsWith('Replace:')) {
+    editor.__ivyEmacsReplaceQueryText = input.value;
+  } else if (label.startsWith('With:') || label.startsWith('Replace with:')) {
+    editor.__ivyEmacsReplaceText = parseCodeMirrorReplaceString(input.value);
+  }
+}
+
+function parseCodeMirrorReplaceString(value: string) {
+  return String(value || '').replace(/\\([nrt\\])/g, (_match, ch) => {
+    if (ch === 'n') return '\n';
+    if (ch === 'r') return '\r';
+    if (ch === 't') return '\t';
+    return ch;
+  });
+}
+
+function searchCursorOptionsForQuery(query: any) {
+  return typeof query === 'string' ? { caseFold: isLowerCaseSearchQuery(query) } : undefined;
+}
+
+function replacementForSearchMatch(query: any, replacement: string, match: any) {
+  if (typeof query === 'string' || !match) return replacement;
+  return replacement.replace(/\$(\d+)/g, (_whole, index) => match[Number(index)] || '');
+}
+
 function currentEditorSelectionRange(editor: any) {
   if (typeof editor.getCursor !== 'function') return null;
   const from = editor.getCursor('from');
@@ -409,6 +450,10 @@ function currentEditorSelectionRange(editor: any) {
 function scrollCurrentReplaceMatchIntoView(editor: any) {
   const range = currentEditorSelectionRange(editor);
   if (!range) return false;
+  return scrollRangeIntoView(editor, range);
+}
+
+function scrollRangeIntoView(editor: any, range: { from: any; to: any }) {
   if (typeof editor.charCoords === 'function' && typeof editor.scrollTo === 'function') {
     const from = editor.charCoords(range.from, 'local');
     const to = editor.charCoords(range.to, 'local');
@@ -424,6 +469,11 @@ function scrollCurrentReplaceMatchIntoView(editor: any) {
     return true;
   }
   return false;
+}
+
+function scrollPositionIntoView(editor: any, position: any) {
+  if (!position) return false;
+  return scrollRangeIntoView(editor, { from: position, to: position });
 }
 
 function isEmacsKeymap(editor: any) {
