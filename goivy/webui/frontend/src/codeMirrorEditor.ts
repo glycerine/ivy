@@ -57,6 +57,10 @@ export function initializeCodeMirrorEditor({
     editor,
     doc,
   });
+  installEmacsReplacePromptKeys({
+    editor,
+    doc,
+  });
   if (editor && typeof editor.on === 'function' && runtime) {
     editor.on('change', () => {
       if (!runtime.cmEditor || typeof runtime.cmEditor.getValue !== 'function') return;
@@ -240,6 +244,77 @@ function installEmacsYankSelectionCollapse({
       collapseSelectionAtPostYankCursor(editor);
     }, 0);
   }, true);
+}
+
+function installEmacsReplacePromptKeys({
+  editor,
+  doc,
+}: {
+  editor: any;
+  doc: Document;
+}) {
+  if (!doc || !editor) return;
+  doc.addEventListener('keydown', (event) => {
+    if (!isEmacsKeymap(editor)) return;
+    const dialog = findReplaceQuestionDialog(editor, doc);
+    if (!dialog) return;
+    const action = replacePromptAction(event);
+    if (!action) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    if (action === 'yes-stop') {
+      clickReplacePromptButton(dialog, 'Yes');
+      setTimeout(() => {
+        const nextDialog = findReplaceQuestionDialog(editor, doc);
+        if (nextDialog) clickReplacePromptButton(nextDialog, 'Stop');
+      }, 0);
+      return;
+    }
+    clickReplacePromptButton(dialog, action);
+  }, true);
+}
+
+function findReplaceQuestionDialog(editor: any, doc: Document): HTMLElement | null {
+  const wrapper = typeof editor.getWrapperElement === 'function' ? editor.getWrapperElement() : null;
+  const roots = [
+    wrapper,
+    wrapper && wrapper.parentElement,
+    doc,
+  ].filter(Boolean) as Array<HTMLElement | Document>;
+  for (const root of roots) {
+    const dialogs = Array.from(root.querySelectorAll('.CodeMirror-dialog')) as HTMLElement[];
+    const dialog = dialogs.find((candidate) => {
+      const text = (candidate.textContent || '').replace(/\s+/g, ' ');
+      return text.includes('Replace?')
+        && !!replacePromptButton(candidate, 'Yes')
+        && !!replacePromptButton(candidate, 'No')
+        && !!replacePromptButton(candidate, 'All')
+        && !!replacePromptButton(candidate, 'Stop');
+    });
+    if (dialog) return dialog;
+  }
+  return null;
+}
+
+function replacePromptAction(event: KeyboardEvent) {
+  if (event.ctrlKey || event.altKey || event.metaKey) return '';
+  if (event.key === 'y' || event.key === 'Y' || event.key === ' ') return 'Yes';
+  if (event.key === 'n' || event.key === 'N' || event.key === 'Backspace' || event.key === 'Delete') return 'No';
+  if (event.key === '!') return 'All';
+  if (event.key === 'q' || event.key === 'Q' || event.key === 'Enter') return 'Stop';
+  if (event.key === '.') return 'yes-stop';
+  return '';
+}
+
+function replacePromptButton(dialog: HTMLElement, label: string): HTMLButtonElement | null {
+  const buttons = Array.from(dialog.querySelectorAll('button')) as HTMLButtonElement[];
+  return buttons.find((button) => (button.textContent || '').trim() === label) || null;
+}
+
+function clickReplacePromptButton(dialog: HTMLElement, label: string) {
+  const button = replacePromptButton(dialog, label);
+  if (button) button.click();
 }
 
 function isEmacsKeymap(editor: any) {

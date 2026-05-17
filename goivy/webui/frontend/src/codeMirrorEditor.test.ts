@@ -15,6 +15,21 @@ describe('codeMirrorEditor', () => {
     };
   }
 
+  function installReplaceDialog(wrapper: HTMLElement, clicks: string[]) {
+    wrapper.innerHTML = [
+      '<div class="CodeMirror-dialog">',
+      '  Replace?',
+      '  <button type="button">Yes</button>',
+      '  <button type="button">No</button>',
+      '  <button type="button">All</button>',
+      '  <button type="button">Stop</button>',
+      '</div>',
+    ].join('');
+    Array.from(wrapper.querySelectorAll('button')).forEach((button) => {
+      button.addEventListener('click', () => clicks.push((button.textContent || '').trim()));
+    });
+  }
+
   it('initializes CodeMirror with Ivy editor options and wires dirty tracking', () => {
     document.body.innerHTML = '<textarea id="model-editor"></textarea>';
     let changeHandler = null;
@@ -419,6 +434,85 @@ describe('codeMirrorEditor', () => {
 
     expect(replaceChord.defaultPrevented).toBe(false);
     expect(replace).not.toHaveBeenCalled();
+  });
+
+  it('maps Emacs replace prompt response keys to CodeMirror replace buttons', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    const clicks: string[] = [];
+    installReplaceDialog(wrapper, clicks);
+    doc.body.appendChild(wrapper);
+    const editor = {
+      getOption: vi.fn(() => 'emacs'),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+    };
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    for (const key of ['y', ' ', 'n', 'Backspace', 'Delete', '!', 'q', 'Enter']) {
+      const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+      doc.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+    }
+
+    expect(clicks).toEqual(['Yes', 'Yes', 'No', 'No', 'No', 'All', 'Stop', 'Stop']);
+  });
+
+  it('maps period in the Emacs replace prompt to replace once and stop', () => {
+    vi.useFakeTimers();
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    const clicks: string[] = [];
+    installReplaceDialog(wrapper, clicks);
+    doc.body.appendChild(wrapper);
+    const editor = {
+      getOption: vi.fn(() => 'emacs'),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+    };
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    const event = new KeyboardEvent('keydown', { key: '.', bubbles: true, cancelable: true });
+    doc.dispatchEvent(event);
+    vi.runAllTimers();
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(clicks).toEqual(['Yes', 'Stop']);
+  });
+
+  it('does not map replace prompt response keys outside the Emacs keymap', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    const clicks: string[] = [];
+    installReplaceDialog(wrapper, clicks);
+    doc.body.appendChild(wrapper);
+    const editor = {
+      getOption: vi.fn(() => 'vim'),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+    };
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    const event = new KeyboardEvent('keydown', { key: 'y', bubbles: true, cancelable: true });
+    doc.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBe(false);
+    expect(clicks).toEqual([]);
   });
 
   it('maps Escape then < to cursorStart while the editor has focus', () => {
