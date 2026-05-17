@@ -21,10 +21,12 @@ describe('static CodeMirror includes', () => {
     const dialogIndex = indexHtml.indexOf('/addon/dialog/dialog.min.js');
     const cursorIndex = indexHtml.indexOf('/addon/search/searchcursor.min.js');
     const searchIndex = indexHtml.indexOf('/addon/search/search.min.js');
+    const markSelectionIndex = indexHtml.indexOf('/addon/selection/mark-selection.min.js');
 
     expect(dialogIndex).toBeGreaterThan(-1);
     expect(cursorIndex).toBeGreaterThan(dialogIndex);
     expect(searchIndex).toBeGreaterThan(cursorIndex);
+    expect(markSelectionIndex).toBeGreaterThan(searchIndex);
   });
 
   it('defaults the editor keymap preference to Emacs', () => {
@@ -44,10 +46,11 @@ describe('static details styling', () => {
 
   it('uses a low-intensity CodeMirror selection color', () => {
     const focusedRule = ivyCss.match(/#editor-panel \.CodeMirror-focused \.CodeMirror-selected\s*\{[^}]+\}/)?.[0] || '';
-    const textRule = ivyCss.match(/#editor-panel \.CodeMirror-selectedtext\s*\{[^}]+\}/)?.[0] || '';
+    const textRule = ivyCss.match(/#editor-panel \.CodeMirror-selectedtext,\s*#editor-panel \.CodeMirror-selectedtext \*\s*\{[^}]+\}/)?.[0] || '';
 
     expect(focusedRule).toContain('rgba(93, 147, 196, 0.22)');
     expect(focusedRule).toContain('!important');
+    expect(textRule).toContain('.CodeMirror-selectedtext *');
     expect(textRule).toContain('color: #141423 !important;');
   });
 });

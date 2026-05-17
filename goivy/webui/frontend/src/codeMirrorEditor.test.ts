@@ -36,6 +36,7 @@ describe('codeMirrorEditor', () => {
       expect.objectContaining({
         lineNumbers: true,
         keyMap: 'vim',
+        styleSelectedText: true,
         tabSize: 4,
         extraKeys: expect.objectContaining({
           'Ctrl-F': 'find',

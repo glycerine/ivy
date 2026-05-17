@@ -12,6 +12,7 @@ export default defineConfig({
     outDir: path.resolve(frontendDir, '../static/dist'),
     emptyOutDir: true,
     sourcemap: true,
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       input: path.resolve(frontendDir, 'src/main.ts'),
       output: {

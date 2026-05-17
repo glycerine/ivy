@@ -27,6 +27,7 @@ export function initializeCodeMirrorEditor({
     indentUnit: 4,
     lineWrapping: false,
     matchBrackets: true,
+    styleSelectedText: true,
     extraKeys: {
       'Ctrl-F': 'find',
       'Cmd-F': 'find',
