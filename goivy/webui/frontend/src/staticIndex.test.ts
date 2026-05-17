@@ -41,4 +41,13 @@ describe('static details styling', () => {
 
     expect(rule).toContain('white-space: pre-wrap;');
   });
+
+  it('uses a low-intensity CodeMirror selection color', () => {
+    const focusedRule = ivyCss.match(/#editor-panel \.CodeMirror-focused \.CodeMirror-selected\s*\{[^}]+\}/)?.[0] || '';
+    const textRule = ivyCss.match(/#editor-panel \.CodeMirror-selectedtext\s*\{[^}]+\}/)?.[0] || '';
+
+    expect(focusedRule).toContain('rgba(93, 147, 196, 0.22)');
+    expect(focusedRule).toContain('!important');
+    expect(textRule).toContain('color: #141423 !important;');
+  });
 });
