@@ -39,6 +39,12 @@ export function initializeCodeMirrorEditor({
       'Ctrl-Z': 'undo',
       'Ctrl-Y': 'redo',
       'Ctrl-Shift-Z': 'redo',
+      'Alt-<': 'cursorStart',
+      'Alt->': 'cursorEnd',
+      'Alt-Shift-,': 'cursorStart', // Explicitly catch the unshifted/shifted variant
+      'Alt-Shift-.': 'cursorEnd',
+      'Esc <': 'cursorStart',       // Reinforce the multi-stroke chord
+      'Esc >': 'cursorEnd'
     },
   });
   modelEditor.__ivyCodeMirrorEditor = editor;
