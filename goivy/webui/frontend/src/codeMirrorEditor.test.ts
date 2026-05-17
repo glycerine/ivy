@@ -117,6 +117,7 @@ describe('codeMirrorEditor', () => {
         return closeDialog;
       }),
       scrollIntoView: vi.fn(),
+      setCursor: vi.fn(),
       setSelection: vi.fn(),
     };
     const codeMirror = {
@@ -162,8 +163,8 @@ describe('codeMirrorEditor', () => {
     }));
 
     expect(closeDialog).toHaveBeenCalledTimes(1);
-    expect(secondMark.clear).not.toHaveBeenCalled();
-    expect(editor.__ivyEmacsLastSearchMark).toBe(secondMark);
+    expect(secondMark.clear).toHaveBeenCalledTimes(1);
+    expect(editor.setCursor).toHaveBeenCalledWith(4, 4);
     expect(wrapper.querySelector('.CodeMirror-dialog')).toBeNull();
   });
 
@@ -213,6 +214,7 @@ describe('codeMirrorEditor', () => {
     document.body.appendChild(wrapper);
     const closeDialog = vi.fn();
     const cursor = makeSearchCursor({ from: { line: 2, ch: 0 }, to: { line: 2, ch: 4 } });
+    const mark = { clear: vi.fn() };
     const editor = {
       execCommand: vi.fn(),
       focus: vi.fn(),
@@ -220,12 +222,14 @@ describe('codeMirrorEditor', () => {
       getOption: vi.fn(() => 'emacs'),
       getSearchCursor: vi.fn(() => cursor),
       getWrapperElement: vi.fn(() => wrapper),
+      markText: vi.fn(() => mark),
       on: vi.fn(),
       openDialog: vi.fn((html) => {
         wrapper.innerHTML = `<div class="CodeMirror-dialog">${html}</div>`;
         return closeDialog;
       }),
       scrollIntoView: vi.fn(),
+      setCursor: vi.fn(),
       setSelection: vi.fn(),
     };
     const codeMirror = {
@@ -249,6 +253,8 @@ describe('codeMirrorEditor', () => {
 
     expect(arrow.defaultPrevented).toBe(true);
     expect(closeDialog).toHaveBeenCalledTimes(1);
+    expect(mark.clear).toHaveBeenCalledTimes(1);
+    expect(editor.setCursor).toHaveBeenCalledWith(2, 4);
     expect(editor.focus).toHaveBeenCalled();
     expect(editor.execCommand).toHaveBeenCalledWith('goCharRight');
   });

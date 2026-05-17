@@ -376,19 +376,19 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
   let currentFrom: any = null;
   let currentTo: any = null;
   let currentSearchMark: any = null;
+  let currentDirection = direction;
   let query = '';
   let closed = false;
   let closeDialog: any = null;
 
-  const closeSearch = ({ restore = false, clearMark = false } = {}) => {
+  const closeSearch = ({ restore = false } = {}) => {
     if (closed) return;
     closed = true;
     delete editor.__ivyEmacsISearch;
-    if (clearMark) {
-      clearSearchMark(currentSearchMark);
-      currentSearchMark = null;
-    } else {
-      editor.__ivyEmacsLastSearchMark = currentSearchMark;
+    clearSearchMark(currentSearchMark);
+    currentSearchMark = null;
+    if (!restore && currentFrom && currentTo) {
+      collapseSelectionAtPosition(editor, currentDirection === 'backward' ? currentFrom : currentTo);
     }
     if (restore) restoreEditorSelections(editor, originSelections, originCursor);
     if (typeof closeDialog === 'function') closeDialog();
@@ -408,6 +408,7 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
     if (!match) return false;
     currentFrom = match.from;
     currentTo = match.to;
+    currentDirection = searchDirection;
     currentSearchMark = selectSearchMatch(editor, match, currentSearchMark);
     return true;
   };
@@ -426,7 +427,7 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
   };
 
   const abortSearch = () => {
-    closeSearch({ restore: true, clearMark: true });
+    closeSearch({ restore: true });
   };
 
   editor.__ivyEmacsISearch = {
@@ -617,6 +618,16 @@ function restoreEditorSelections(editor: any, selections: any, cursor: any) {
     editor.setSelection(selections[0].anchor, selections[0].head);
   } else if (typeof editor.setCursor === 'function') {
     editor.setCursor(cursor.line, cursor.ch);
+  }
+}
+
+function collapseSelectionAtPosition(editor: any, position: any) {
+  const line = Number.isFinite(position && position.line) ? position.line : 0;
+  const ch = Number.isFinite(position && position.ch) ? position.ch : 0;
+  if (typeof editor.setCursor === 'function') {
+    editor.setCursor(line, ch);
+  } else if (typeof editor.setSelection === 'function') {
+    editor.setSelection({ line, ch }, { line, ch });
   }
 }
 
