@@ -188,6 +188,76 @@ describe('codeMirrorEditor', () => {
     expect(options.extraKeys['Ctrl-R'](editor)).toBe(codeMirror.Pass);
   });
 
+  it('maps Ctrl-x Ctrl-s to save while the Emacs editor has focus', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getOption: vi.fn(() => 'emacs'),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+    };
+    const runtime = {
+      save: vi.fn(),
+    };
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ runtime, doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'x',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    }));
+    const save = new KeyboardEvent('keydown', {
+      key: 's',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    doc.dispatchEvent(save);
+
+    expect(save.defaultPrevented).toBe(true);
+    expect(runtime.save).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not map Ctrl-x Ctrl-s to save outside the Emacs keymap', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getOption: vi.fn(() => 'vim'),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+    };
+    const runtime = {
+      save: vi.fn(),
+    };
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ runtime, doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'x',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    }));
+    const save = new KeyboardEvent('keydown', {
+      key: 's',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    doc.dispatchEvent(save);
+
+    expect(save.defaultPrevented).toBe(false);
+    expect(runtime.save).not.toHaveBeenCalled();
+  });
+
   it('maps Escape then > to cursorEnd while the editor has focus', () => {
     const doc = document.implementation.createHTMLDocument('');
     doc.body.innerHTML = '<textarea id="model-editor"></textarea>';

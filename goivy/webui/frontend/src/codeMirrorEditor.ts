@@ -56,6 +56,11 @@ export function initializeCodeMirrorEditor({
     editor,
     doc,
   });
+  installEmacsSaveChord({
+    editor,
+    runtime,
+    doc,
+  });
 
   if (editor && typeof editor.on === 'function' && runtime) {
     editor.on('change', () => {
@@ -230,6 +235,53 @@ function installEmacsYankSelectionCollapse({
       if (typeof editor.somethingSelected === 'function' && !editor.somethingSelected()) return;
       collapseSelectionAtPostYankCursor(editor);
     }, 0);
+  }, true);
+}
+
+function installEmacsSaveChord({
+  editor,
+  runtime,
+  doc,
+}: {
+  editor: any;
+  runtime: any;
+  doc: Document;
+}) {
+  if (!doc || !editor || !runtime || typeof runtime.save !== 'function') return;
+  let lastCtrlXAt = 0;
+  const chordWindowMs = 2000;
+  const isEditorFocused = () => {
+    if (typeof editor.hasFocus === 'function') return editor.hasFocus();
+    const wrapper = typeof editor.getWrapperElement === 'function' ? editor.getWrapperElement() : null;
+    return !!(wrapper && doc.activeElement && wrapper.contains(doc.activeElement));
+  };
+  doc.addEventListener('keydown', (event) => {
+    if (!isEditorFocused() || !isEmacsKeymap(editor)) {
+      lastCtrlXAt = 0;
+      return;
+    }
+    if (event.key === 'x' && event.ctrlKey && !event.altKey && !event.metaKey && !event.shiftKey) {
+      lastCtrlXAt = Date.now();
+      return;
+    }
+    const inChordWindow = lastCtrlXAt > 0 && Date.now() - lastCtrlXAt <= chordWindowMs;
+    if (event.key === 's' && event.ctrlKey && !event.altKey && !event.metaKey && !event.shiftKey && inChordWindow) {
+      lastCtrlXAt = 0;
+      event.preventDefault();
+      event.stopPropagation();
+      const result = runtime.save();
+      if (result && typeof result.catch === 'function') {
+        result.catch((err: any) => {
+          if (runtime.controls && typeof runtime.controls.setStatus === 'function') {
+            runtime.controls.setStatus(`Save failed: ${err && err.message ? err.message : String(err)}`, 'error');
+          }
+        });
+      }
+      return;
+    }
+    if (!event.altKey && !event.ctrlKey && !event.metaKey && event.key !== 'Shift') {
+      lastCtrlXAt = 0;
+    }
   }, true);
 }
 
