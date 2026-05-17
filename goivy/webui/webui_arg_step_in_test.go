@@ -195,8 +195,8 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if s.AG == nil || len(s.AG.Transitions) == 0 {
 		t.Fatalf("induction failure did not populate ARG transitions")
 	}
-	if got := s.AG.Transitions[0].Label; got != "call ext" {
-		t.Fatalf("ARG transition label = %q, want %q", got, "call ext")
+	if got := s.AG.Transitions[0].Label; got != "call connect" {
+		t.Fatalf("ARG transition label = %q, want %q", got, "call connect")
 	}
 	if cr.CounterexampleDetails == "" || !strings.Contains(cr.CounterexampleDetails, "Counterexample trace") {
 		t.Fatalf("induction failure did not return counterexample details: %#v", cr.CounterexampleDetails)

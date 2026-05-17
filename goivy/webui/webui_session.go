@@ -107,6 +107,10 @@ func cloneWebUIConfigForLoad(base *goivy.Config, isolate string) *goivy.Config {
 }
 
 func (s *Session) compileIvySource(filename string, content []byte, isolate string) (*goivy.Module, *goivy.Sig, error) {
+	return s.compileIvySourceWithCreateIsolate(filename, content, isolate, true)
+}
+
+func (s *Session) compileIvySourceWithCreateIsolate(filename string, content []byte, isolate string, createIsolate bool) (*goivy.Module, *goivy.Sig, error) {
 	if s.Cfg != nil && s.Cfg.StandardLibrary == nil {
 		_ = goivy.PreloadStandardLibrary(s.Cfg)
 	}
@@ -120,7 +124,9 @@ func (s *Session) compileIvySource(filename string, content []byte, isolate stri
 	mod.Sig = sig
 
 	goivy.RegisterTactics(mod.Cfg.ProofCfg, mod)
-	if err := goivy.SourceString(filename, webUIIvySource(content), mod, sig, nil); err != nil {
+	if err := goivy.SourceString(filename, webUIIvySource(content), mod, sig, map[string]interface{}{
+		"create_isolate": createIsolate,
+	}); err != nil {
 		return nil, nil, err
 	}
 	return mod, sig, nil
@@ -140,11 +146,21 @@ func webUIIsolateNames(mod *goivy.Module) []string {
 		return nil
 	}
 	names := make([]string, 0, len(mod.Isolates))
-	for name := range mod.Isolates {
+	for name, iso := range mod.Isolates {
+		if name == "this" && webUIImplicitThisIsolate(iso) {
+			continue
+		}
 		names = append(names, name)
 	}
 	sort.Strings(names)
 	return append([]string{}, names...)
+}
+
+func webUIImplicitThisIsolate(iso *goivy.IsolateDef) bool {
+	if iso == nil || iso.WithArgs != 0 || iso.Trusted || iso.IsObject || len(iso.Elems) != 2 {
+		return false
+	}
+	return goivy.NodeRep(iso.Elems[0]) == "this" && goivy.NodeRep(iso.Elems[1]) == "this"
 }
 
 func (s *Session) compileIvyDecls(decls []goivy.Node, isolate string) (*goivy.Module, *goivy.Sig, error) {
@@ -202,15 +218,15 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	// Mirrors Python's ivy_init() → ivy_load_file() → AnalysisGraph flow.
 	// ======================================================================
 
-	// Full three-pass compilation via IvyCompile.
-	// This runs DomainSetup, ConjectureSetup, ARGSetup, post-processing,
-	// and CreateIsolate — matching Python's ivy_compile exactly.
+	// Compile once without applying CreateIsolate so the Web UI can tell the
+	// difference between real user-declared isolates and Ivy's implicit "this"
+	// isolate. If a real or requested isolate exists, we recompile through it.
 	requestedIsolate := strings.TrimSpace(isolate)
 	if requestedIsolate == "" && s.Cfg != nil {
 		requestedIsolate = strings.TrimSpace(s.Cfg.Isolate)
 	}
 
-	mod, sig, compileErr := s.compileIvySource(filename, content, requestedIsolate)
+	mod, sig, compileErr := s.compileIvySourceWithCreateIsolate(filename, content, requestedIsolate, false)
 	if compileErr != nil {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
 			"phase": "compile", "error": compileErr.Error(),
@@ -221,6 +237,8 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	activeIsolate := requestedIsolate
 	if activeIsolate == "" && len(availableIsolates) > 0 {
 		activeIsolate = availableIsolates[0]
+	}
+	if activeIsolate != "" {
 		mod, sig, compileErr = s.compileIvySource(filename, content, activeIsolate)
 		if compileErr != nil {
 			s.emit(Event{Type: "compiler_error", Data: map[string]string{
