@@ -277,6 +277,7 @@ describe('codeMirrorEditor', () => {
       on: vi.fn(),
       replaceSelection: vi.fn(),
       setCursor: vi.fn(),
+      setExtending: vi.fn(),
       somethingSelected: vi.fn(() => true),
     };
     const codeMirror = {
@@ -292,6 +293,7 @@ describe('codeMirrorEditor', () => {
 
     expect(copy.defaultPrevented).toBe(true);
     expect(editor.getSelection).toHaveBeenCalled();
+    expect(editor.setExtending).toHaveBeenCalledWith(false);
     expect(editor.setCursor).toHaveBeenCalledTimes(1);
     expect(editor.setCursor).toHaveBeenLastCalledWith(8, 15);
 

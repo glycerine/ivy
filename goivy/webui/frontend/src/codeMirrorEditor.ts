@@ -160,7 +160,7 @@ function installEscapeBufferChord({
       event.stopPropagation();
       if (isCopySelection) {
         if (copySelectionToEmacsYankBuffer(editor)) {
-          collapseSelectionAtCursor(editor);
+          deactivateEmacsMarkAtCursor(editor);
         }
         return;
       }
@@ -454,4 +454,9 @@ function collapseSelectionAtCursor(editor: any) {
   const line = Number.isFinite(cursor.line) ? cursor.line : 0;
   const ch = Number.isFinite(cursor.ch) ? cursor.ch : 0;
   if (typeof editor.setCursor === 'function') editor.setCursor(line, ch);
+}
+
+function deactivateEmacsMarkAtCursor(editor: any) {
+  if (typeof editor.setExtending === 'function') editor.setExtending(false);
+  collapseSelectionAtCursor(editor);
 }
