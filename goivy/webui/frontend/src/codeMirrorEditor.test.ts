@@ -187,6 +187,7 @@ describe('codeMirrorEditor', () => {
         return vi.fn();
       }),
       scrollIntoView: vi.fn(),
+      setCursor: vi.fn(),
       setSelection: vi.fn(),
     };
     const codeMirror = {
@@ -277,6 +278,7 @@ describe('codeMirrorEditor', () => {
         return vi.fn();
       }),
       scrollIntoView: vi.fn(),
+      setCursor: vi.fn(),
       setSelection: vi.fn(),
     };
     const codeMirror = {
@@ -296,6 +298,14 @@ describe('codeMirrorEditor', () => {
     expect(cursor.findPrevious).toHaveBeenCalled();
     expect(editor.getSearchCursor).toHaveBeenCalledWith('type', { line: 3, ch: 1 }, true);
     expect(editor.setSelection).toHaveBeenCalledWith({ line: 1, ch: 0 }, { line: 1, ch: 4 });
+
+    input.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'Enter',
+      bubbles: true,
+      cancelable: true,
+    }));
+
+    expect(editor.setCursor).toHaveBeenCalledWith(1, 0);
   });
 
   it('leaves Ctrl-S and Ctrl-R available to other keymaps', () => {
