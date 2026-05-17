@@ -39,6 +39,13 @@ export function initializeCodeMirrorEditor({
       //'Cmd-Alt-F': 'replace',
       //'Shift-Ctrl-R': 'replaceAll',
       //'Shift-Cmd-Alt-F': 'replaceAll',
+      'Ctrl-G': (cm: any) => {
+        if (cm.__ivyEmacsISearch && typeof cm.__ivyEmacsISearch.abort === 'function') {
+          cm.__ivyEmacsISearch.abort();
+          return true;
+        }
+        return codeMirror.Pass;
+      },
       'Ctrl-Z': 'undo',
       'Ctrl-Shift-Z': 'redo',
 
@@ -603,6 +610,7 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
   let query = '';
   let closed = false;
   let closeDialog: any = null;
+  let removeMousedownListener: (() => void) | null = null;
 
   const closeSearch = ({ restore = false } = {}) => {
     if (closed) return;
@@ -614,6 +622,7 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
       collapseSelectionAtPosition(editor, currentDirection === 'backward' ? currentFrom : currentTo);
     }
     if (restore) restoreEditorSelections(editor, originSelections, originCursor);
+    if (removeMousedownListener) { removeMousedownListener(); removeMousedownListener = null; }
     if (typeof closeDialog === 'function') closeDialog();
     removeIsearchDialogs(editor);
     if (typeof editor.focus === 'function' && !restore) editor.focus();
@@ -708,6 +717,21 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
       }
     }, true);
     input.focus();
+  }
+
+  const ownerDoc = (typeof editor.getWrapperElement === 'function'
+    ? editor.getWrapperElement()?.ownerDocument
+    : null) || (globalThis as any).document;
+  if (ownerDoc) {
+    const onDocMousedown = (event: MouseEvent) => {
+      const dialogs = findIsearchDialogs(editor);
+      const clickedInsideDialog = dialogs.some(d => d.contains(event.target as Node));
+      if (!clickedInsideDialog) {
+        acceptSearch();
+      }
+    };
+    ownerDoc.addEventListener('mousedown', onDocMousedown);
+    removeMousedownListener = () => ownerDoc.removeEventListener('mousedown', onDocMousedown);
   }
 
   return true;
