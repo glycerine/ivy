@@ -280,7 +280,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     width: 100%;
     font-family: monospace;
     font-size: 13px;
-    background: #1a1a2e;
+    background: #000;
     color: #e0e0e0;
     border: 1px solid #555;
     border-radius: 3px;
@@ -292,7 +292,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 .dialog-input {
     width: 100%;
     font-size: 13px;
-    background: #1a1a2e;
+    background: #000;
     color: #e0e0e0;
     border: 1px solid #555;
     border-radius: 3px;
@@ -397,7 +397,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     width: 100%;
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     font-size: 12px;
-    background: #1a1a2e;
+    background: #000;
     color: #e0e0e0;
     border: none;
     padding: 8px;
@@ -413,6 +413,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     flex: 1;
     min-height: 0;
     display: flex;
+    background: #000;
 }
 
 .editor-text-shell .CodeMirror {
@@ -459,7 +460,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     height: auto;
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     font-size: 12px;
-    background: #1a1a2e;
+    background: #000;
     color: #e0e0e0;
     line-height: 1.4;
     border: none;
@@ -505,7 +506,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 }
 /* Search/replace and Vim command prompts live in the reserved minibuffer row. */
 #editor-panel .CodeMirror-dialog {
-    background: #1a1a2e;
+    background: #000;
     color: #e0e0e0;
     border-top: 1px solid #333;
     padding: 1px 6px;
