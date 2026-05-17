@@ -16,6 +16,18 @@ describe('static index toolbar', () => {
   });
 });
 
+describe('static CodeMirror includes', () => {
+  it('loads the CodeMirror 5 search UI after dialog and search cursor addons', () => {
+    const dialogIndex = indexHtml.indexOf('/addon/dialog/dialog.min.js');
+    const cursorIndex = indexHtml.indexOf('/addon/search/searchcursor.min.js');
+    const searchIndex = indexHtml.indexOf('/addon/search/search.min.js');
+
+    expect(dialogIndex).toBeGreaterThan(-1);
+    expect(cursorIndex).toBeGreaterThan(dialogIndex);
+    expect(searchIndex).toBeGreaterThan(cursorIndex);
+  });
+});
+
 describe('static details styling', () => {
   it('preserves newlines in cloned sheet details panes', () => {
     const rule = ivyCss.match(/#info-content,\s*\.info-panel \[id\^="info-content"\]\s*\{[^}]+\}/)?.[0] || '';

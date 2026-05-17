@@ -126,7 +126,7 @@ TODO: inventory every save/open/export path and give it an explicit suggested na
 
 ## P1: ARG Graph Behavior
 
-[ ] ### 14. ARG Safe-Node Coloring Is Missing From Rendered State
+[x] DONE. ### 14. ARG Safe-Node Coloring Is Missing From Rendered State
 
 Inventory refs: PLAN383 items 22 and 66; PLAN378 sections 8.6, 12.3, and 32.1.
 
@@ -134,7 +134,7 @@ Inventory refs: PLAN383 items 22 and 66; PLAN378 sections 8.6, 12.3, and 32.1.
 
 TODO: carry safety status through the ARG data model and Cytoscape element classes. Tests should run a safety check, inspect the backend ARG payload for safety metadata, and verify the rendered node class/style changes without relying only on a status message.
 
-[ ] ### 15. Marked ARG Node Visualization Is Missing
+[x] DONE. ### 15. Marked ARG Node Visualization Is Missing
 
 Inventory refs: PLAN383 item 26; PLAN378 section 11.
 

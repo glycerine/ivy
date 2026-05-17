@@ -33,6 +33,14 @@ describe('codeMirrorEditor', () => {
         lineNumbers: true,
         keyMap: 'vim',
         tabSize: 4,
+        extraKeys: expect.objectContaining({
+          'Ctrl-F': 'find',
+          'Cmd-F': 'find',
+          'Shift-Ctrl-F': 'replace',
+          'Cmd-Alt-F': 'replace',
+          'Shift-Ctrl-R': 'replaceAll',
+          'Shift-Cmd-Alt-F': 'replaceAll',
+        }),
       }),
     );
 
