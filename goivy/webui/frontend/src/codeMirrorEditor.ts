@@ -39,6 +39,10 @@ export function initializeCodeMirrorEditor({
       'Ctrl-Z': 'undo',
       'Ctrl-Y': 'redo',
       'Ctrl-Shift-Z': 'redo',
+      'Ctrl-<': 'cursorStart',
+      'Ctrl->': 'cursorEnd',
+      'Ctrl-Shift-,': 'cursorStart', // Explicitly catch the unshifted/shifted variant
+      'Ctrl-Shift-.': 'cursorEnd',
       'Alt-<': 'cursorStart',
       'Alt->': 'cursorEnd',
       'Alt-Shift-,': 'cursorStart', // Explicitly catch the unshifted/shifted variant
