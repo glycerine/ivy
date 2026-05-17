@@ -1,5 +1,26 @@
 import { applyConceptSnapshot } from './uiDataRenderService.ts';
 
+function activeSheetId(app) {
+  return (app && app.activeSheetId) || 'sheet-1';
+}
+
+function sheetForRefresh(app, sheetId) {
+  const modelSheet = app && app.uiDataModel && app.uiDataModel.sheets && app.uiDataModel.sheets[sheetId];
+  const runtimeSheet = app && app.sheets && app.sheets[sheetId];
+  return {
+    modelSheet,
+    runtimeSheet,
+    reachabilityOnly: !!((modelSheet && modelSheet.reachabilityOnly) || (runtimeSheet && runtimeSheet.reachabilityOnly)),
+    visualOnly: !!((modelSheet && modelSheet.visualOnly) || (runtimeSheet && runtimeSheet.visualOnly)),
+  };
+}
+
+function selectedArgNodeForRefresh(app, sheetId, modelSheet, runtimeSheet) {
+  if (modelSheet && modelSheet.selectedArgNode) return modelSheet.selectedArgNode;
+  if (runtimeSheet && runtimeSheet.selectedArgNode) return runtimeSheet.selectedArgNode;
+  return app && app.selectedArgNode;
+}
+
 export async function runAction(app, actionName, args, options) {
   const opts = options || {};
   const runningMessage = opts.runningMessage || `Running: ${actionName}...`;
@@ -30,15 +51,21 @@ export async function runAction(app, actionName, args, options) {
 }
 
 export async function refreshConceptGraph(app) {
+  const sheetId = activeSheetId(app);
+  const { modelSheet, runtimeSheet, reachabilityOnly, visualOnly } = sheetForRefresh(app, sheetId);
+  if (reachabilityOnly || visualOnly) return null;
+  const selectedArgNode = selectedArgNodeForRefresh(app, sheetId, modelSheet, runtimeSheet);
   try {
-    const result = await app.api.getConceptGraph(app.selectedArgNode);
+    const result = await app.api.getConceptGraph(selectedArgNode, sheetId);
     if (result && result.elements) {
-      applyConceptSnapshot(app, app.activeSheetId || 'sheet-1', result);
+      applyConceptSnapshot(app, sheetId, result);
     } else if (result) {
       app.populateStateCheckboxes(result);
     }
+    return result;
   } catch (err) {
     console.error('Concept graph refresh error:', err);
+    return null;
   }
 }
 

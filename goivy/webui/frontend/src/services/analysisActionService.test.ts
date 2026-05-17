@@ -41,9 +41,60 @@ describe('analysisActionService', () => {
 
     await refreshConceptGraph(app);
 
-    expect(app.api.getConceptGraph).toHaveBeenCalledWith('0');
+    expect(app.api.getConceptGraph).toHaveBeenCalledWith('0', 'sheet-1');
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', concept);
     expect(app.populateStateCheckboxes).not.toHaveBeenCalled();
+  });
+
+  it('refreshes concept graph for the active analysis sheet selection', async () => {
+    const concept = { elements: [{ data: { id: 'n' } }] };
+    const app = {
+      activeSheetId: 'sheet-3',
+      selectedArgNode: 'stale-root-selection',
+      uiDataModel: {
+        sheets: {
+          'sheet-3': {
+            selectedArgNode: 'state_0',
+          },
+        },
+      },
+      api: {
+        getConceptGraph: vi.fn(async () => concept),
+      },
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
+      },
+      populateStateCheckboxes: vi.fn(),
+    };
+
+    await refreshConceptGraph(app);
+
+    expect(app.api.getConceptGraph).toHaveBeenCalledWith('state_0', 'sheet-3');
+    expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-3', concept);
+  });
+
+  it('does not refresh concept graph for reachability-only trace sheets', async () => {
+    const app = {
+      activeSheetId: 'trace-1',
+      selectedArgNode: '0',
+      sheets: {
+        'trace-1': {
+          reachabilityOnly: true,
+        },
+      },
+      api: {
+        getConceptGraph: vi.fn(),
+      },
+      uiDataStore: {
+        applyConceptSnapshot: vi.fn(),
+      },
+      populateStateCheckboxes: vi.fn(),
+    };
+
+    await refreshConceptGraph(app);
+
+    expect(app.api.getConceptGraph).not.toHaveBeenCalled();
+    expect(app.uiDataStore.applyConceptSnapshot).not.toHaveBeenCalled();
   });
 
   it('executes simple refresh actions with expected status messages', async () => {
