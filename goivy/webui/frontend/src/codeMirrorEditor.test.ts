@@ -58,4 +58,70 @@ describe('codeMirrorEditor', () => {
 
     expect(initializeCodeMirrorEditor({ codeMirror: { fromTextArea: vi.fn() } })).toBe(existing);
   });
+
+  it('maps Escape then > to cursorEnd while the editor has focus', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+    };
+    const cursorEnd = vi.fn();
+    const codeMirror = {
+      commands: { cursorEnd },
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    const greaterThan = new KeyboardEvent('keydown', { key: '>', bubbles: true, cancelable: true });
+    doc.dispatchEvent(greaterThan);
+
+    expect(cursorEnd).toHaveBeenCalledWith(editor);
+    expect(greaterThan.defaultPrevented).toBe(true);
+  });
+
+  it('ignores Escape then > when the editor is not focused', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      hasFocus: vi.fn(() => false),
+      on: vi.fn(),
+    };
+    const cursorEnd = vi.fn();
+    const codeMirror = {
+      commands: { cursorEnd },
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: '>', bubbles: true, cancelable: true }));
+
+    expect(cursorEnd).not.toHaveBeenCalled();
+  });
+
+  it('installs cursorEnd as a safe CodeMirror command alias', () => {
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      focus: vi.fn(),
+      getLine: vi.fn(() => 'last line'),
+      lastLine: vi.fn(() => 7),
+      on: vi.fn(),
+      scrollIntoView: vi.fn(),
+      setCursor: vi.fn(),
+    };
+    const codeMirror = {
+      commands: {},
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ codeMirror });
+    codeMirror.commands.cursorEnd(editor);
+
+    expect(editor.setCursor).toHaveBeenCalledWith(7, 'last line'.length);
+    expect(editor.scrollIntoView).toHaveBeenCalledWith({ line: 7, ch: 'last line'.length }, 50);
+  });
 });
