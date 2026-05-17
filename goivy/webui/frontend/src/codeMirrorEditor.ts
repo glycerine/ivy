@@ -35,7 +35,6 @@ export function initializeCodeMirrorEditor({
       'Shift-Ctrl-R': 'replaceAll',
       'Shift-Cmd-Alt-F': 'replaceAll',
       'Ctrl-Z': 'undo',
-      'Ctrl-Y': 'redo',
       'Ctrl-Shift-Z': 'redo',
 
       // alternative for jump to end / beginning of buffer.
