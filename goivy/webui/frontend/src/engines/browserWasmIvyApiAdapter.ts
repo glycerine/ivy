@@ -28,6 +28,13 @@ function isCheckCommand(commandId: string): boolean {
   return !!commandId && commandId.startsWith('check.');
 }
 
+function browserWasmError(message: string) {
+  if (String(message || '').includes('exnref')) {
+    return new Error('Browser WASM backend loaded a Z3 artifact that requires WebAssembly exnref support. Update the browser or rebuild with make webui-wasm-engine, then retry; the remote backend can be used meanwhile.');
+  }
+  return new Error(message || 'Browser WASM worker failed');
+}
+
 function modeFromCommand(commandId: string, args: AnyRecord = {}) {
   if (isCheckCommand(commandId)) return commandId.slice('check.'.length);
   return args.mode || 'pdr';
@@ -247,7 +254,7 @@ export class BrowserWasmIvyApiAdapter extends IvyApiAdapter {
       pending.signal.removeEventListener('abort', pending.abortHandler);
     }
     if (message.type === 'error') {
-      pending.reject(new Error(message.error || 'Browser WASM worker failed'));
+      pending.reject(browserWasmError(message.error || 'Browser WASM worker failed'));
       return;
     }
     pending.resolve(message.value);

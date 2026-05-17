@@ -6,6 +6,7 @@ const frontendDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   root: frontendDir,
+  base: '/static/dist/',
   cacheDir: path.resolve(frontendDir, '../node_modules/.vite-goivy-webui'),
   build: {
     outDir: path.resolve(frontendDir, '../static/dist'),

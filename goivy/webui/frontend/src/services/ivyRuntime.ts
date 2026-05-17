@@ -1041,6 +1041,7 @@ class IvyRuntime {
                 this.api = previous;
                 this._apiMode = previous.kind === 'browser-wasm' ? 'browser' : 'remote';
                 if (this.controls) this.controls.api = previous;
+                this._setJobSubmissionMode(this._apiMode);
             }
         }
     }
