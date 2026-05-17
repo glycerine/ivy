@@ -490,35 +490,12 @@ func (gbe *GoBackend) ConceptReset(sessionID string) (by []byte, err error) {
 		if err != nil {
 			return nil
 		}
-		sess.SimpleSess.Reset()
-		if sess.CompiledSig != nil {
-			sortMap := make(map[string]goivy.Sort)
-			for name, sort := range sess.CompiledSig.Sorts.All() {
-				if name != "bool" {
-					sortMap[name] = sort
-				}
-			}
-			symbolMap := make(map[string]*goivy.Const)
-			for name, entry := range sess.CompiledSig.Symbols.All() {
-				if entry != nil && entry.Sort != nil {
-					if c, ok := entry.Sort.(goivy.Sort); ok {
-						symbolMap[name] = goivy.NewConst(name, c)
-					}
-				}
-			}
-			cdDomain, domainErr := GetInitialConceptDomainE(sortMap, symbolMap)
-			if domainErr != nil {
-				err = domainErr
-				return nil
-			}
-			sess.ConceptSess, err = NewConceptInteractiveSessionE(
-				cdDomain, nil, nil, nil, nil, nil, nil, nil, false,
-			)
-			if err != nil {
-				return nil
-			}
+		var result map[string]interface{}
+		result, err = sess.ExecuteAction("reset_domain", map[string]interface{}{"sheet_id": rootSheetID})
+		if err != nil {
+			return nil
 		}
-		by = okJSON
+		by, err = canonicalJSON(result)
 		return nil
 	})
 	return
@@ -547,8 +524,12 @@ func (gbe *GoBackend) ConceptDiagram(sessionID string) (by []byte, err error) {
 			by, err = canonicalJSON(response)
 			return nil
 		}
-		sess.SimpleSess.Diagram()
-		by = okJSON
+		var result map[string]interface{}
+		result, err = sess.ExecuteAction("diagram", map[string]interface{}{"sheet_id": rootSheetID})
+		if err != nil {
+			return nil
+		}
+		by, err = canonicalJSON(result)
 		return nil
 	})
 	return

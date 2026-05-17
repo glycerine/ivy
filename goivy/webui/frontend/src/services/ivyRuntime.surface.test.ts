@@ -52,6 +52,7 @@ describe('ivyRuntime public surface', () => {
       'ctiBoundedCheck',
       'ctiConceptAction',
       'currentSheet',
+      'diagramCurrentState',
       'diagramDomain',
       'dispatchMenuDescriptorAction',
       'doRedo',

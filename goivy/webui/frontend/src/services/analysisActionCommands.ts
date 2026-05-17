@@ -6,6 +6,7 @@ export const ANALYSIS_ACTION_COMMANDS = [
   'doRedo',
   'resetDomain',
   'diagramDomain',
+  'diagramCurrentState',
   'pdrStep',
   'showReachableStates',
   'concreteStep',

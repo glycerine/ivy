@@ -821,6 +821,86 @@ func TestConceptDiagramRoutesThroughCTIUI(t *testing.T) {
 	}
 }
 
+func TestReachabilityDomainActionsReturnConceptSnapshots(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-domain-actions")
+	if err := s.LoadFileContent("test.ivy", []byte(executeActionMenuSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+	if _, err := s.AGUI.ViewState(0, "", false); err != nil {
+		t.Fatalf("ViewState: %v", err)
+	}
+
+	reset, err := s.ExecuteAction("reset_domain", map[string]interface{}{"sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("reset_domain: %v", err)
+	}
+	if got := reset["type"]; got != "reset_domain" {
+		t.Fatalf("reset_domain type = %v, want reset_domain; result=%#v", got, reset)
+	}
+	resetConcept, ok := reset["concept"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("reset_domain concept payload missing: %#v", reset["concept"])
+	}
+	if elements, ok := resetConcept["elements"].([]WebUICyElement); !ok || len(elements) == 0 {
+		t.Fatalf("reset_domain elements missing/empty: %#v", resetConcept["elements"])
+	}
+
+	if _, err := s.ExecuteAction("diagram", map[string]interface{}{"sheet_id": rootSheetID}); err != nil {
+		t.Fatalf("diagram: %v", err)
+	}
+
+	diagram, err := s.ExecuteAction("diagram_domain", map[string]interface{}{"sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("diagram_domain: %v", err)
+	}
+	if got := diagram["type"]; got != "diagram_domain" {
+		t.Fatalf("diagram_domain type = %v, want diagram_domain; result=%#v", got, diagram)
+	}
+	diagramConcept, ok := diagram["concept"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("diagram_domain concept payload missing: %#v", diagram["concept"])
+	}
+	diagramDomain, ok := diagramConcept["concept_domain"].(*ConceptDomain)
+	if !ok || diagramDomain == nil || len(diagramDomain.Concepts) == 0 {
+		t.Fatalf("diagram_domain concept domain missing/empty: %#v", diagramConcept["concept_domain"])
+	}
+	if s.AGUI.CurrentConceptGraph == nil || s.AGUI.CurrentConceptGraph.G() == nil {
+		t.Fatalf("diagram_domain lost current concept graph")
+	}
+}
+
+func TestDiagramVacuousReturnsDialogPayload(t *testing.T) {
+	s := NewSession(goivy.NewConfig(), "test-vacuous-diagram")
+	if err := s.LoadFileContent("test.ivy", []byte(executeActionMenuSample)); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	s.AG.AddInitialState(nil, nil)
+	s.syncARGToGraph()
+	if _, err := s.AGUI.ViewState(0, "false", false); err != nil {
+		t.Fatalf("ViewState false: %v", err)
+	}
+
+	result, err := s.ExecuteAction("diagram", map[string]interface{}{"sheet_id": rootSheetID})
+	if err != nil {
+		t.Fatalf("diagram: %v", err)
+	}
+	if got := result["type"]; got != "vacuous" {
+		t.Fatalf("diagram type = %v, want vacuous; result=%#v", got, result)
+	}
+	if got := result["status"]; got != "vacuous" {
+		t.Fatalf("diagram status = %v, want vacuous; result=%#v", got, result)
+	}
+	message, _ := result["message"].(string)
+	if !strings.Contains(message, "The current state is vacuous.") {
+		t.Fatalf("diagram message = %q, want vacuous dialog text", message)
+	}
+	if _, ok := result["concept"].(map[string]interface{}); !ok {
+		t.Fatalf("diagram concept payload missing: %#v", result["concept"])
+	}
+}
+
 func TestSaveInvariantUsesPythonKeptDroppedSections(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-save-invariant")
 	if err := s.LoadFileContent("test.ivy", []byte(saveInvariantSample)); err != nil {

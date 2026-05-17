@@ -770,6 +770,259 @@ func conceptGraphGoalClauses(w *GraphWidget, parentState *goivy.State) (*goivy.C
 	return goivy.TrueClauses(nil), nil
 }
 
+func conceptSessionCopy(src *ConceptSession) *ConceptSession {
+	if src == nil {
+		return NewConceptSession()
+	}
+	dst := NewConceptSession()
+	if src.Domain != nil {
+		dst.Domain = src.Domain.Copy()
+	}
+	dst.AbstractValue = make(map[string]bool, len(src.AbstractValue))
+	for k, v := range src.AbstractValue {
+		dst.AbstractValue[k] = v
+	}
+	return dst
+}
+
+func (s *Session) compiledSortMapLocked() map[string]goivy.Sort {
+	sorts := make(map[string]goivy.Sort)
+	if s == nil || s.CompiledSig == nil || s.CompiledSig.Sorts == nil {
+		return sorts
+	}
+	for name, sortVal := range s.CompiledSig.Sorts.All() {
+		if sortVal != nil {
+			sorts[name] = sortVal
+		}
+	}
+	return sorts
+}
+
+func (s *Session) compiledSymbolMapLocked() map[string]*goivy.Const {
+	symbols := make(map[string]*goivy.Const)
+	if s == nil || s.CompiledSig == nil || s.CompiledSig.Symbols == nil {
+		return symbols
+	}
+	for name, entry := range s.CompiledSig.Symbols.All() {
+		if entry == nil || entry.Sort == nil {
+			continue
+		}
+		if sortVal, ok := entry.Sort.(goivy.Sort); ok {
+			symbols[name] = goivy.NewConst(name, sortVal)
+		}
+	}
+	return symbols
+}
+
+func (s *Session) compiledSymbolListLocked() []*goivy.Const {
+	symbolMap := s.compiledSymbolMapLocked()
+	names := make([]string, 0, len(symbolMap))
+	for name := range symbolMap {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	symbols := make([]*goivy.Const, 0, len(names))
+	for _, name := range names {
+		symbols = append(symbols, symbolMap[name])
+	}
+	return symbols
+}
+
+func (s *Session) activeConceptGraphForActionLocked(actionName, sheetID string) (*AnalysisGraphUI, string, *GraphWidget, error) {
+	ui, resolvedSheetID, err := s.requireAnalysisUIForSheetLocked(sheetID)
+	if err != nil {
+		return nil, resolvedSheetID, nil, err
+	}
+	w := ui.CurrentConceptGraph
+	if (w == nil || w.G() == nil || w.G().ParentState == nil) && ui.AG != nil && len(ui.AG.States) > 0 {
+		if viewed, viewErr := ui.ViewState(0, "", false); viewErr == nil {
+			w = viewed
+		} else if w == nil || w.G() == nil {
+			return nil, resolvedSheetID, nil, fmt.Errorf("%s: %w", actionName, viewErr)
+		}
+	}
+	if w == nil || w.G() == nil {
+		w = s.ensureConceptGraphWidgetForSheetLocked(resolvedSheetID)
+	}
+	if w == nil || w.G() == nil {
+		return nil, resolvedSheetID, nil, fmt.Errorf("%s: no concept graph for sheet %q", actionName, resolvedSheetID)
+	}
+	return ui, resolvedSheetID, w, nil
+}
+
+func (s *Session) replaceConceptGraphDomainLocked(w *GraphWidget, cd *CDConceptDomain) error {
+	if w == nil || w.G() == nil {
+		return fmt.Errorf("replace concept domain: no concept graph")
+	}
+	if cd == nil {
+		return fmt.Errorf("replace concept domain: nil domain")
+	}
+	w.Checkpoint(false)
+	g := w.G()
+	g.ConceptSess = NewConceptSession()
+	g.ConceptSess.Domain = simpleConceptDomainFromCD(cd)
+	g.ConceptSess.AbstractValue = make(map[string]bool)
+	g.Checks = NewDisplayCheckboxes()
+	g.NewRelations = nil
+	if err := g.Recompute(); err != nil {
+		return err
+	}
+	w.UpdateRelations()
+	if err := w.Update(); err != nil {
+		return err
+	}
+	s.SimpleSess = conceptSessionCopy(g.ConceptSess)
+	s.toggles = g.Checks.Snapshot()
+	return nil
+}
+
+func clausesFromFormulaText(text string) (*goivy.Clauses, error) {
+	text = strings.TrimSpace(text)
+	if text == "" {
+		return goivy.TrueClauses(nil), nil
+	}
+	fmla, err := goivy.ToFormula(text)
+	if err != nil {
+		return nil, fmt.Errorf("parse clauses %q: %w", text, err)
+	}
+	expr, ok := fmla.(goivy.Expr)
+	if !ok {
+		return nil, fmt.Errorf("parse clauses %q: parsed to %T, not logic.Expr", text, fmla)
+	}
+	return goivy.FormulaToClauses(expr, nil), nil
+}
+
+func (s *Session) diagramClausesForGraphLocked(w *GraphWidget, parentState *goivy.State) (*goivy.Clauses, bool, error) {
+	if w == nil || w.G() == nil {
+		return nil, false, fmt.Errorf("diagram: no concept graph")
+	}
+	g := w.G()
+	if parentState == nil {
+		return nil, false, fmt.Errorf("diagram: current concept graph has no parent ARG state")
+	}
+	if len(g.ReverseResult) >= 2 {
+		parentClauses, err := clausesFromFormulaText(g.ReverseResult[0])
+		if err != nil {
+			return nil, true, err
+		}
+		reverseClauses, err := clausesFromFormulaText(g.ReverseResult[1])
+		if err != nil {
+			return nil, true, err
+		}
+		if reverseClauses.IsFalse() || strings.EqualFold(strings.TrimSpace(g.ReverseResult[1]), "false") {
+			return nil, true, nil
+		}
+		return goivy.Diagram(
+			goivy.ArtToInterpState(parentState),
+			reverseClauses,
+			nil,
+			parentClauses,
+			false,
+			false,
+		), true, nil
+	}
+	goalClauses, err := conceptGraphGoalClauses(w, parentState)
+	if err != nil {
+		return nil, false, err
+	}
+	if goalClauses.IsFalse() || strings.EqualFold(strings.TrimSpace(g.State), "false") {
+		return nil, false, nil
+	}
+	return goivy.Diagram(
+		goivy.ArtToInterpState(parentState),
+		goalClauses,
+		nil,
+		nil,
+		false,
+		false,
+	), false, nil
+}
+
+func (s *Session) applyDiagramClausesToConceptGraphLocked(w *GraphWidget, dgm *goivy.Clauses) error {
+	if s == nil || s.CompiledModule == nil {
+		return fmt.Errorf("diagram: no compiled module")
+	}
+	if w == nil || w.G() == nil {
+		return fmt.Errorf("diagram: no concept graph")
+	}
+	skolemizer := goivy.ModuleSkolemizer(s.CompiledModule)
+	goal := goivy.ReskolemizeClauses(dgm, func(v *goivy.LogicVariable) goivy.Expr {
+		return skolemizer(v)
+	})
+	g := w.G()
+	g.SetFactsExpr(goal.Fmlas)
+	if err := g.SetState(clausesDisplayString(goal), true, false, false); err != nil {
+		return err
+	}
+	if err := w.Update(); err != nil {
+		return err
+	}
+	s.SimpleSess = conceptSessionCopy(g.ConceptSess)
+	s.toggles = g.Checks.Snapshot()
+	return nil
+}
+
+func (s *Session) diagramCurrentConceptGraphLocked(sheetID string) (map[string]interface{}, error) {
+	_, resolvedSheetID, w, err := s.activeConceptGraphForActionLocked("diagram", sheetID)
+	if err != nil {
+		return nil, err
+	}
+	parentState, _ := w.G().ParentState.(*goivy.State)
+	if parentState == nil {
+		return map[string]interface{}{
+			"sheet_id": resolvedSheetID,
+			"status":   "cannot_diagram",
+			"message":  "Select a Reachability Graph state before diagramming.",
+			"concept":  conceptGraphActionPayload(w),
+		}, nil
+	}
+
+	w.Checkpoint(false)
+	dgm, fromReverse, err := s.diagramClausesForGraphLocked(w, parentState)
+	if err != nil {
+		return nil, err
+	}
+	if dgm == nil {
+		message := "The current state is vacuous."
+		retried := false
+		if fromReverse {
+			message = "The current state is vacuous. Backtracking."
+			if backErr := w.Backtrack(); backErr != nil {
+				return nil, backErr
+			}
+			retried = true
+			if retryParent, _ := w.G().ParentState.(*goivy.State); retryParent != nil {
+				if retryDgm, _, retryErr := s.diagramClausesForGraphLocked(w, retryParent); retryErr != nil {
+					return nil, retryErr
+				} else if retryDgm != nil {
+					if applyErr := s.applyDiagramClausesToConceptGraphLocked(w, retryDgm); applyErr != nil {
+						return nil, applyErr
+					}
+				}
+			}
+		}
+		return map[string]interface{}{
+			"sheet_id": resolvedSheetID,
+			"status":   "vacuous",
+			"type":     "vacuous",
+			"message":  message,
+			"retried":  retried,
+			"concept":  conceptGraphActionPayload(w),
+		}, nil
+	}
+
+	if err := s.applyDiagramClausesToConceptGraphLocked(w, dgm); err != nil {
+		return nil, err
+	}
+	return map[string]interface{}{
+		"sheet_id": resolvedSheetID,
+		"status":   "diagrammed",
+		"type":     "diagram",
+		"message":  "Diagram complete.",
+		"concept":  conceptGraphActionPayload(w),
+	}, nil
+}
+
 type pdrReverseOutcome struct {
 	status       string
 	message      string
@@ -840,6 +1093,9 @@ func (s *Session) pdrStepConceptGraphLocked(sheetID string) (map[string]interfac
 	}
 	if outcome.interpolant != "" {
 		result["interpolant"] = outcome.interpolant
+	}
+	if status == "vacuous" {
+		result["type"] = "vacuous"
 	}
 	if w.G() != nil {
 		s.toggles = w.G().Checks.Snapshot()
@@ -968,6 +1224,13 @@ func (s *Session) diagramReversedConceptGoalLocked(w *GraphWidget, outcome *pdrR
 	)
 	if dgm == nil {
 		_ = w.Backtrack()
+		if retryParent, _ := w.G().ParentState.(*goivy.State); retryParent != nil {
+			if retryDgm, _, retryErr := s.diagramClausesForGraphLocked(w, retryParent); retryErr == nil && retryDgm != nil {
+				if applyErr := s.applyDiagramClausesToConceptGraphLocked(w, retryDgm); applyErr != nil {
+					return "error", applyErr.Error()
+				}
+			}
+		}
 		return "vacuous", "The current state is vacuous. Backtracking."
 	}
 
@@ -1719,6 +1982,61 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		}
 		if s.ConceptSess != nil {
 			err = s.ConceptSess.Redo()
+		}
+	case "reset_domain":
+		_, resolvedSheetID, w, uiErr := s.activeConceptGraphForActionLocked(actionName, actionStringArg(args, "sheet_id"))
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		cd, domainErr := GetInitialConceptDomainE(s.compiledSortMapLocked(), s.compiledSymbolMapLocked())
+		if domainErr != nil {
+			err = domainErr
+			break
+		}
+		if err = s.replaceConceptGraphDomainLocked(w, cd); err != nil {
+			break
+		}
+		result["sheet_id"] = resolvedSheetID
+		result["type"] = "reset_domain"
+		result["message"] = "Domain reset."
+		result["concept"] = conceptGraphActionPayload(w)
+	case "diagram_domain":
+		_, resolvedSheetID, w, uiErr := s.activeConceptGraphForActionLocked(actionName, actionStringArg(args, "sheet_id"))
+		if uiErr != nil {
+			err = uiErr
+			break
+		}
+		parentState, _ := w.G().ParentState.(*goivy.State)
+		goalClauses, goalErr := conceptGraphGoalClauses(w, parentState)
+		if goalErr != nil {
+			err = goalErr
+			break
+		}
+		cd, domainErr := GetDiagramConceptDomainE(
+			s.compiledSortMapLocked(),
+			s.compiledSymbolListLocked(),
+			goalClauses.ToFormula(),
+		)
+		if domainErr != nil {
+			err = domainErr
+			break
+		}
+		if err = s.replaceConceptGraphDomainLocked(w, cd); err != nil {
+			break
+		}
+		result["sheet_id"] = resolvedSheetID
+		result["type"] = "diagram_domain"
+		result["message"] = "Diagram domain active."
+		result["concept"] = conceptGraphActionPayload(w)
+	case "diagram":
+		diagramResult, diagramErr := s.diagramCurrentConceptGraphLocked(actionStringArg(args, "sheet_id"))
+		if diagramErr != nil {
+			err = diagramErr
+			break
+		}
+		for k, v := range diagramResult {
+			result[k] = v
 		}
 	case "recalculate":
 		if s.ConceptSess != nil {

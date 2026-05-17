@@ -3410,8 +3410,12 @@ class IvyRuntime {
     async resetDomain() {
         this.controls.setStatus('Resetting domain...');
         try {
-            await this.api.resetDomain();
-            await this.refreshConceptGraph();
+            var result = await this.api.executeAction('reset_domain', { sheet_id: this.activeSheetId || 'sheet-1' });
+            if (result && result.concept) {
+                this.applyConceptSnapshot(result.concept.sheet_id || result.sheet_id || this.activeSheetId || 'sheet-1', result.concept);
+            } else {
+                await this.refreshConceptGraph();
+            }
             this.controls.setStatus('Domain reset', 'success');
         } catch (e) {
             this.controls.setStatus('Reset failed: ' + e.message, 'error');
@@ -3424,15 +3428,39 @@ class IvyRuntime {
     async diagramDomain() {
         this.controls.setStatus('Switching to diagram domain...');
         try {
-            var result = await this.api.diagramDomain();
+            var result = await this.api.executeAction('diagram_domain', { sheet_id: this.activeSheetId || 'sheet-1' });
             if (result && result.concept) {
-                this.applyConceptSnapshot(result.concept.sheet_id || this.activeSheetId || 'sheet-1', result.concept);
+                this.applyConceptSnapshot(result.concept.sheet_id || result.sheet_id || this.activeSheetId || 'sheet-1', result.concept);
             } else {
                 await this.refreshConceptGraph();
             }
             this.controls.setStatus('Diagram domain active', 'success');
         } catch (e) {
             this.controls.setStatus('Diagram domain failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Diagram the current proof goal/state.
+     */
+    async diagramCurrentState() {
+        this.controls.setStatus('Diagramming current state...');
+        try {
+            var result = await this.api.executeAction('diagram', { sheet_id: this.activeSheetId || 'sheet-1' });
+            if (result && result.concept) {
+                this.applyConceptSnapshot(result.concept.sheet_id || result.sheet_id || this.activeSheetId || 'sheet-1', result.concept);
+            } else {
+                await this.refreshConceptGraph();
+            }
+            if (result && result.type === 'vacuous' && typeof this.okDialog === 'function') {
+                await this.okDialog('ivyweb', result.message || 'The current state is vacuous.');
+            }
+            var kind = result && result.type === 'vacuous' ? 'warning' : 'success';
+            this.controls.setStatus((result && result.message) || 'Diagram complete', kind);
+            return result;
+        } catch (e) {
+            this.controls.setStatus('Diagram failed: ' + e.message, 'error');
+            return null;
         }
     }
 
@@ -3655,7 +3683,7 @@ class IvyRuntime {
         // --- ARG Panel Menu Items (File, Invariant) ---
         this.bindMenuAction('arg-check-induction', function () { self.checkInduction(); });
         this.bindMenuAction('arg-bounded-check', function () { self.boundedCheck(); });
-        this.bindMenuAction('arg-diagram', function () { self.diagramDomain(); });
+        this.bindMenuAction('arg-diagram', function () { self.diagramCurrentState(); });
         this.bindMenuAction('arg-weaken', function () { self.weakenInvariant(); });
         this.bindMenuAction('arg-save-invariant', function () { self.saveInvariant(); });
         this.bindMenuAction('arg-recalculate-all', function () { self.recalculateAll(); });
@@ -3682,7 +3710,7 @@ class IvyRuntime {
         this.bindMenuAction('conj-conjecture', function () { self.makeConjecture(); });
         this.bindMenuAction('conj-backtrack', function () { self.backtrack(); });
         this.bindMenuAction('conj-recalculate', function () { self.recalculateGraph(); });
-        this.bindMenuAction('conj-diagram', function () { self.diagramDomain(); });
+        this.bindMenuAction('conj-diagram', function () { self.diagramCurrentState(); });
         this.bindMenuAction('conj-remember', function () { self.rememberGraph(); });
         this.bindMenuAction('conj-reach-export', function () { self.exportConjecture(); });
         this.bindMenuAction('view-add-relation', function () { self.addRelationFromString(); });
@@ -4334,6 +4362,9 @@ class IvyRuntime {
             }
             if (result && result.interpolant && typeof this.showTextDialog === 'function') {
                 this.showTextDialog('ivyweb', result.message || 'The pre-state is vacuous.', result.interpolant);
+            }
+            if (result && result.type === 'vacuous' && typeof this.okDialog === 'function') {
+                await this.okDialog('ivyweb', result.message || 'The current state is vacuous.');
             }
             var statusKind = (result && (
                 result.status === 'cannot_reverse' ||
