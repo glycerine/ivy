@@ -364,6 +364,7 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
       const isBackwardRepeat = event.key === 'r' && event.ctrlKey && !event.altKey && !event.metaKey;
       const isAbort = event.key === 'Escape'
         || (event.key === 'g' && event.ctrlKey && !event.altKey && !event.metaKey);
+      const arrowCommand = editorArrowCommand(event.key);
       if (isForwardRepeat || isBackwardRepeat) {
         event.preventDefault();
         event.stopPropagation();
@@ -372,6 +373,11 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
         event.preventDefault();
         event.stopPropagation();
         acceptSearch();
+      } else if (arrowCommand) {
+        event.preventDefault();
+        event.stopPropagation();
+        acceptSearch();
+        runEditorCommand(editor, codeMirror, arrowCommand);
       } else if (isAbort) {
         event.preventDefault();
         event.stopPropagation();
@@ -382,6 +388,33 @@ function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward'
   }
 
   return true;
+}
+
+function editorArrowCommand(key: string) {
+  switch (key) {
+    case 'ArrowLeft':
+      return 'goCharLeft';
+    case 'ArrowRight':
+      return 'goCharRight';
+    case 'ArrowUp':
+      return 'goLineUp';
+    case 'ArrowDown':
+      return 'goLineDown';
+    default:
+      return '';
+  }
+}
+
+function runEditorCommand(editor: any, codeMirror: any, command: string) {
+  if (typeof editor.execCommand === 'function') {
+    editor.execCommand(command);
+    return true;
+  }
+  if (codeMirror && codeMirror.commands && typeof codeMirror.commands[command] === 'function') {
+    codeMirror.commands[command](editor);
+    return true;
+  }
+  return false;
 }
 
 function readIsearchInput(editor: any) {

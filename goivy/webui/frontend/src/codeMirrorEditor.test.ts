@@ -133,6 +133,52 @@ describe('codeMirrorEditor', () => {
     expect(editor.setSelection).toHaveBeenNthCalledWith(2, { line: 4, ch: 0 }, { line: 4, ch: 4 });
   });
 
+  it('exits Ivy Emacs I-search on arrow keys and moves from the current match', () => {
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = document.createElement('div');
+    document.body.appendChild(wrapper);
+    const closeDialog = vi.fn();
+    const cursor = makeSearchCursor({ from: { line: 2, ch: 0 }, to: { line: 2, ch: 4 } });
+    const editor = {
+      execCommand: vi.fn(),
+      focus: vi.fn(),
+      getCursor: vi.fn(() => ({ line: 1, ch: 2 })),
+      getOption: vi.fn(() => 'emacs'),
+      getSearchCursor: vi.fn(() => cursor),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+      openDialog: vi.fn((html) => {
+        wrapper.innerHTML = `<div class="CodeMirror-dialog">${html}</div>`;
+        return closeDialog;
+      }),
+      scrollIntoView: vi.fn(),
+      setSelection: vi.fn(),
+    };
+    const codeMirror = {
+      Pass: Symbol('CodeMirror.Pass'),
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ codeMirror });
+    const options = codeMirror.fromTextArea.mock.calls[0][1];
+
+    options.extraKeys['Ctrl-S'](editor);
+    const input = wrapper.querySelector('input') as HTMLInputElement;
+    input.value = 'link';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    const arrow = new KeyboardEvent('keydown', {
+      key: 'ArrowRight',
+      bubbles: true,
+      cancelable: true,
+    });
+    input.dispatchEvent(arrow);
+
+    expect(arrow.defaultPrevented).toBe(true);
+    expect(closeDialog).toHaveBeenCalledTimes(1);
+    expect(editor.focus).toHaveBeenCalled();
+    expect(editor.execCommand).toHaveBeenCalledWith('goCharRight');
+  });
+
   it('opens Ivy Emacs reverse I-search on Ctrl-R', () => {
     document.body.innerHTML = '<textarea id="model-editor"></textarea>';
     const wrapper = document.createElement('div');
