@@ -68,6 +68,7 @@ describe('codeMirrorEditor', () => {
           'Ctrl-X': expect.any(Function),
           'Ctrl-S': expect.any(Function),
           'Ctrl-R': expect.any(Function),
+          'Ctrl-W': expect.any(Function),
           'Shift-Ctrl-F': 'replace',
           'Cmd-Alt-F': 'replace',
           'Shift-Ctrl-R': 'replaceAll',
@@ -347,6 +348,33 @@ describe('codeMirrorEditor', () => {
     expect(runtime.save).toHaveBeenCalledTimes(1);
   });
 
+  it('maps Ctrl-x Ctrl-w to Save As through CodeMirror while the Emacs editor has focus', () => {
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const editor = {
+      getOption: vi.fn(() => 'emacs'),
+      on: vi.fn(),
+    };
+    const runtime = {
+      save: vi.fn(),
+      saveAs: vi.fn(),
+    };
+    const codeMirror = {
+      Pass: Symbol('CodeMirror.Pass'),
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ runtime, codeMirror });
+    const options = codeMirror.fromTextArea.mock.calls[0][1];
+
+    expect(options.extraKeys['Ctrl-W'](editor)).toBe(codeMirror.Pass);
+    expect(runtime.saveAs).not.toHaveBeenCalled();
+
+    expect(options.extraKeys['Ctrl-X'](editor)).toBe(true);
+    expect(options.extraKeys['Ctrl-W'](editor)).toBe(true);
+    expect(runtime.saveAs).toHaveBeenCalledTimes(1);
+    expect(runtime.save).not.toHaveBeenCalled();
+  });
+
   it('does not map Ctrl-x Ctrl-s to save outside the Emacs keymap', () => {
     document.body.innerHTML = '<textarea id="model-editor"></textarea>';
     const editor = {
@@ -355,8 +383,10 @@ describe('codeMirrorEditor', () => {
     };
     const runtime = {
       save: vi.fn(),
+      saveAs: vi.fn(),
     };
     const codeMirror = {
+      Pass: Symbol('CodeMirror.Pass'),
       fromTextArea: vi.fn(() => editor),
     };
 
@@ -365,7 +395,9 @@ describe('codeMirrorEditor', () => {
 
     expect(options.extraKeys['Ctrl-X'](editor)).toBe(codeMirror.Pass);
     expect(options.extraKeys['Ctrl-S'](editor)).toBe(codeMirror.Pass);
+    expect(options.extraKeys['Ctrl-W'](editor)).toBe(codeMirror.Pass);
     expect(runtime.save).not.toHaveBeenCalled();
+    expect(runtime.saveAs).not.toHaveBeenCalled();
   });
 
   it('maps Escape then > to cursorEnd while the editor has focus', () => {
@@ -496,6 +528,137 @@ describe('codeMirrorEditor', () => {
     }
 
     expect(clicks).toEqual(['Yes', 'Yes', 'No', 'No', 'No', 'All', 'Stop', 'Stop']);
+  });
+
+  it('maps Ctrl-g to Stop in the Emacs replace question prompt', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    const clicks: string[] = [];
+    installReplaceDialog(wrapper, clicks);
+    doc.body.appendChild(wrapper);
+    const editor = {
+      getOption: vi.fn(() => 'emacs'),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+    };
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    const event = new KeyboardEvent('keydown', {
+      key: 'g',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    doc.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(clicks).toEqual(['Stop']);
+  });
+
+  it('aborts the Emacs replace input prompt directly on Ctrl-g', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    wrapper.innerHTML = '<div class="CodeMirror-dialog">Replace: <input value="link"></div>';
+    doc.body.appendChild(wrapper);
+    const input = wrapper.querySelector('input') as HTMLInputElement;
+    const escapeHandler = vi.fn((event) => {
+      if (event.key === 'Escape') event.preventDefault();
+    });
+    input.addEventListener('keydown', escapeHandler);
+    const editor = {
+      focus: vi.fn(),
+      getOption: vi.fn(() => 'emacs'),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+    };
+    const codeMirror = {
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    const event = new KeyboardEvent('keydown', {
+      key: 'g',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
+    input.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(escapeHandler).not.toHaveBeenCalled();
+    expect(wrapper.querySelector('.CodeMirror-dialog')).toBeNull();
+    expect(editor.focus).toHaveBeenCalled();
+  });
+
+  it('does not arm Escape-percent while Escape aborts an active replace input prompt', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    wrapper.innerHTML = '<div class="CodeMirror-dialog">Replace: <input value="link"></div>';
+    doc.body.appendChild(wrapper);
+    const editor = {
+      getOption: vi.fn(() => 'emacs'),
+      getWrapperElement: vi.fn(() => wrapper),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+    };
+    const replace = vi.fn();
+    const codeMirror = {
+      commands: { replace },
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    doc.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    wrapper.innerHTML = '';
+    const percent = new KeyboardEvent('keydown', { key: '%', bubbles: true, cancelable: true });
+    doc.dispatchEvent(percent);
+
+    expect(percent.defaultPrevented).toBe(false);
+    expect(replace).not.toHaveBeenCalled();
+  });
+
+  it('does not arm Escape-percent after Ctrl-g aborts an active replace input prompt', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = doc.createElement('div');
+    wrapper.innerHTML = '<div class="CodeMirror-dialog">Replace: <input value="link"></div>';
+    doc.body.appendChild(wrapper);
+    const input = wrapper.querySelector('input') as HTMLInputElement;
+    const editor = {
+      focus: vi.fn(),
+      getOption: vi.fn(() => 'emacs'),
+      getWrapperElement: vi.fn(() => wrapper),
+      hasFocus: vi.fn(() => true),
+      on: vi.fn(),
+    };
+    const replace = vi.fn();
+    const codeMirror = {
+      commands: { replace },
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ doc, codeMirror });
+
+    input.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'g',
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true,
+    }));
+    const percent = new KeyboardEvent('keydown', { key: '%', bubbles: true, cancelable: true });
+    doc.dispatchEvent(percent);
+
+    expect(percent.defaultPrevented).toBe(false);
+    expect(replace).not.toHaveBeenCalled();
   });
 
   it('maps period in the Emacs replace prompt to replace once and stop', () => {

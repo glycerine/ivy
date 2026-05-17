@@ -34,6 +34,7 @@ export function initializeCodeMirrorEditor({
       'Ctrl-X': (cm: any) => armEmacsSaveKey(cm, codeMirror, runtime),
       'Ctrl-S': (cm: any) => runEmacsSearchKey(cm, codeMirror, 'Ctrl-S', runtime),
       'Ctrl-R': (cm: any) => runEmacsSearchKey(cm, codeMirror, 'Ctrl-R'),
+      'Ctrl-W': (cm: any) => runEmacsSaveAsKey(cm, codeMirror, runtime),
       'Shift-Ctrl-F': 'replace',
       'Cmd-Alt-F': 'replace',
       'Shift-Ctrl-R': 'replaceAll',
@@ -166,6 +167,10 @@ function installEscapeBufferChord({
       lastEscapeAt = 0;
       return;
     }
+    if (findReplaceDialog(editor, doc)) {
+      lastEscapeAt = 0;
+      return;
+    }
     if (event.key === 'Escape') {
       lastEscapeAt = Date.now();
       return;
@@ -260,6 +265,16 @@ function installEmacsReplacePromptKeys({
   doc.addEventListener('keydown', (event) => {
     rememberReplaceDialogInput(editor, event.target);
     if (!isEmacsKeymap(editor)) return;
+    if (isCtrlG(event)) {
+      const replaceDialog = findReplaceDialog(editor, doc);
+      if (!replaceDialog) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const questionDialog = findReplaceQuestionDialog(editor, doc);
+      if (questionDialog) clickReplacePromptButton(questionDialog, 'Stop');
+      else abortReplaceDialog(editor, replaceDialog);
+      return;
+    }
     const dialog = findReplaceQuestionDialog(editor, doc);
     if (!dialog) return;
     const action = replacePromptAction(event);
@@ -300,6 +315,43 @@ function installEmacsReplacePromptKeys({
       }, 0);
     }
   }, true);
+}
+
+function isCtrlG(event: KeyboardEvent) {
+  return event.key === 'g'
+    && event.ctrlKey
+    && !event.altKey
+    && !event.metaKey
+    && !event.shiftKey;
+}
+
+function findReplaceDialog(editor: any, doc: Document): HTMLElement | null {
+  const questionDialog = findReplaceQuestionDialog(editor, doc);
+  if (questionDialog) return questionDialog;
+  const wrapper = typeof editor.getWrapperElement === 'function' ? editor.getWrapperElement() : null;
+  const roots = [
+    wrapper,
+    wrapper && wrapper.parentElement,
+    doc,
+  ].filter(Boolean) as Array<HTMLElement | Document>;
+  for (const root of roots) {
+    const dialogs = Array.from(root.querySelectorAll('.CodeMirror-dialog')) as HTMLElement[];
+    const dialog = dialogs.find((candidate) => {
+      const text = (candidate.textContent || '').replace(/\s+/g, ' ').trim();
+      return text.startsWith('Replace:')
+        || text.startsWith('With:')
+        || text.startsWith('Replace with:');
+    });
+    if (dialog) return dialog;
+  }
+  return null;
+}
+
+function abortReplaceDialog(editor: any, dialog: HTMLElement) {
+  if (dialog && dialog.parentNode) dialog.parentNode.removeChild(dialog);
+  editor.__ivyEmacsReplaceQueryText = '';
+  editor.__ivyEmacsReplaceText = null;
+  if (typeof editor.focus === 'function') editor.focus();
 }
 
 function findReplaceQuestionDialog(editor: any, doc: Document): HTMLElement | null {
@@ -499,17 +551,31 @@ function runEmacsSearchKey(editor: any, codeMirror: any, keyName: 'Ctrl-S' | 'Ct
   return startIvyEmacsISearch(editor, codeMirror, keyName === 'Ctrl-R' ? 'backward' : 'forward');
 }
 
+function runEmacsSaveAsKey(editor: any, codeMirror: any, runtime: any = null) {
+  if (!isEmacsKeymap(editor)) {
+    return codeMirror && codeMirror.Pass;
+  }
+  if (runArmedEmacsFileCommand(editor, runtime, 'saveAs', 'Save as failed')) {
+    return true;
+  }
+  return codeMirror && codeMirror.Pass;
+}
+
 function runArmedEmacsSaveKey(editor: any, runtime: any) {
+  return runArmedEmacsFileCommand(editor, runtime, 'save', 'Save failed');
+}
+
+function runArmedEmacsFileCommand(editor: any, runtime: any, method: 'save' | 'saveAs', errorPrefix: string) {
   const armedAt = Number(editor.__ivyEmacsSaveChordAt) || 0;
   editor.__ivyEmacsSaveChordAt = 0;
-  if (!armedAt || Date.now() - armedAt > 2000 || !runtime || typeof runtime.save !== 'function') {
+  if (!armedAt || Date.now() - armedAt > 2000 || !runtime || typeof runtime[method] !== 'function') {
     return false;
   }
-  const result = runtime.save();
+  const result = runtime[method]();
   if (result && typeof result.catch === 'function') {
     result.catch((err: any) => {
       if (runtime.controls && typeof runtime.controls.setStatus === 'function') {
-        runtime.controls.setStatus(`Save failed: ${err && err.message ? err.message : String(err)}`, 'error');
+        runtime.controls.setStatus(`${errorPrefix}: ${err && err.message ? err.message : String(err)}`, 'error');
       }
     });
   }
