@@ -7,6 +7,7 @@ import (
 	"fmt"
 	goivy "github.com/glycerine/ivy/goivy"
 	"sort"
+	"strings"
 	"sync"
 )
 
@@ -633,12 +634,34 @@ func (ui *AnalysisGraphUI) ExecuteAction(nodeID int, actionName string) error {
 	if err != nil {
 		return err
 	}
-	_, err = ui.AG.ExecuteAction(false, actionName, state, ui.getAlpha())
+	resolvedActionName := ui.resolveActionName(actionName)
+	_, err = ui.AG.ExecuteAction(false, resolvedActionName, state, ui.getAlpha())
 	if err != nil {
 		return err
 	}
 	ui.sync()
 	return nil
+}
+
+func (ui *AnalysisGraphUI) resolveActionName(actionName string) string {
+	if ui == nil || ui.AG == nil || ui.AG.Actions == nil {
+		return actionName
+	}
+	if _, ok := ui.AG.Actions.Get2(actionName); ok {
+		return actionName
+	}
+	if strings.HasPrefix(actionName, "ext:") {
+		trimmed := strings.TrimPrefix(actionName, "ext:")
+		if _, ok := ui.AG.Actions.Get2(trimmed); ok {
+			return trimmed
+		}
+		return actionName
+	}
+	extended := "ext:" + actionName
+	if _, ok := ui.AG.Actions.Get2(extended); ok {
+		return extended
+	}
+	return actionName
 }
 
 // RecalculateAll re-evaluates all ARG transitions (Python: AnalysisGraphUI.recalculate_all).

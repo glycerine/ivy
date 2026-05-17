@@ -156,11 +156,41 @@ func webUIIsolateNames(mod *goivy.Module) []string {
 	return append([]string{}, names...)
 }
 
+func webUIReportedIsolateNames(mod *goivy.Module) []string {
+	if mod == nil || len(mod.Isolates) == 0 {
+		return nil
+	}
+	names := make([]string, 0, len(mod.Isolates))
+	for name := range mod.Isolates {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return append([]string{}, names...)
+}
+
 func webUIImplicitThisIsolate(iso *goivy.IsolateDef) bool {
 	if iso == nil || iso.WithArgs != 0 || iso.Trusted || iso.IsObject || len(iso.Elems) != 2 {
 		return false
 	}
 	return goivy.NodeRep(iso.Elems[0]) == "this" && goivy.NodeRep(iso.Elems[1]) == "this"
+}
+
+func webUIHasImplicitThisIsolate(mod *goivy.Module) bool {
+	if mod == nil {
+		return false
+	}
+	iso, ok := mod.Isolates["this"]
+	return ok && webUIImplicitThisIsolate(iso)
+}
+
+func webUIReportedActiveIsolate(mod *goivy.Module, activeIsolate string) string {
+	if activeIsolate != "" {
+		return activeIsolate
+	}
+	if webUIHasImplicitThisIsolate(mod) {
+		return "this"
+	}
+	return ""
 }
 
 func (s *Session) compileIvyDecls(decls []goivy.Node, isolate string) (*goivy.Module, *goivy.Sig, error) {
@@ -248,6 +278,8 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 		}
 		availableIsolates = webUIIsolateNames(mod)
 	}
+	reportedActiveIsolate := webUIReportedActiveIsolate(mod, activeIsolate)
+	reportedIsolates := webUIReportedIsolateNames(mod)
 	if activeIsolate != "" {
 		if _, ok := mod.Isolates[activeIsolate]; !ok {
 			err := fmt.Errorf("undefined isolate: %s", activeIsolate)
@@ -337,8 +369,8 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	s.CompiledModule = mod
 	s.CompiledSig = sig
 	s.OriginalConjs = append([]*goivy.LabeledFormula{}, mod.LabeledConjs...)
-	s.ActiveIsolate = activeIsolate
-	s.AvailableIsolates = availableIsolates
+	s.ActiveIsolate = reportedActiveIsolate
+	s.AvailableIsolates = reportedIsolates
 
 	// Step 6.5: Initialize ProofManager from module conjectures.
 	// Python: AnalysisState.__init__ creates self.goal_stack = ProofGoalStack()
