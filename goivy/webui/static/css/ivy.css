@@ -1399,7 +1399,8 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     color: #d0d0d0;
 }
 
-#info-content {
+#info-content,
+.info-panel [id^="info-content"] {
     padding: 6px 10px;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
     font-size: 12px;
