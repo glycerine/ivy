@@ -31,7 +31,8 @@ export function initializeCodeMirrorEditor({
     extraKeys: {
       'Ctrl-F': 'find',
       'Cmd-F': 'find',
-      'Ctrl-S': (cm: any) => runEmacsSearchKey(cm, codeMirror, 'Ctrl-S'),
+      'Ctrl-X': (cm: any) => armEmacsSaveKey(cm, codeMirror, runtime),
+      'Ctrl-S': (cm: any) => runEmacsSearchKey(cm, codeMirror, 'Ctrl-S', runtime),
       'Ctrl-R': (cm: any) => runEmacsSearchKey(cm, codeMirror, 'Ctrl-R'),
       'Shift-Ctrl-F': 'replace',
       'Cmd-Alt-F': 'replace',
@@ -56,12 +57,6 @@ export function initializeCodeMirrorEditor({
     editor,
     doc,
   });
-  installEmacsSaveChord({
-    editor,
-    runtime,
-    doc,
-  });
-
   if (editor && typeof editor.on === 'function' && runtime) {
     editor.on('change', () => {
       if (!runtime.cmEditor || typeof runtime.cmEditor.getValue !== 'function') return;
@@ -238,63 +233,44 @@ function installEmacsYankSelectionCollapse({
   }, true);
 }
 
-function installEmacsSaveChord({
-  editor,
-  runtime,
-  doc,
-}: {
-  editor: any;
-  runtime: any;
-  doc: Document;
-}) {
-  if (!doc || !editor || !runtime || typeof runtime.save !== 'function') return;
-  let lastCtrlXAt = 0;
-  const chordWindowMs = 2000;
-  const isEditorFocused = () => {
-    if (typeof editor.hasFocus === 'function') return editor.hasFocus();
-    const wrapper = typeof editor.getWrapperElement === 'function' ? editor.getWrapperElement() : null;
-    return !!(wrapper && doc.activeElement && wrapper.contains(doc.activeElement));
-  };
-  doc.addEventListener('keydown', (event) => {
-    if (!isEditorFocused() || !isEmacsKeymap(editor)) {
-      lastCtrlXAt = 0;
-      return;
-    }
-    if (event.key === 'x' && event.ctrlKey && !event.altKey && !event.metaKey && !event.shiftKey) {
-      lastCtrlXAt = Date.now();
-      return;
-    }
-    const inChordWindow = lastCtrlXAt > 0 && Date.now() - lastCtrlXAt <= chordWindowMs;
-    if (event.key === 's' && event.ctrlKey && !event.altKey && !event.metaKey && !event.shiftKey && inChordWindow) {
-      lastCtrlXAt = 0;
-      event.preventDefault();
-      event.stopPropagation();
-      const result = runtime.save();
-      if (result && typeof result.catch === 'function') {
-        result.catch((err: any) => {
-          if (runtime.controls && typeof runtime.controls.setStatus === 'function') {
-            runtime.controls.setStatus(`Save failed: ${err && err.message ? err.message : String(err)}`, 'error');
-          }
-        });
-      }
-      return;
-    }
-    if (!event.altKey && !event.ctrlKey && !event.metaKey && event.key !== 'Shift') {
-      lastCtrlXAt = 0;
-    }
-  }, true);
-}
-
 function isEmacsKeymap(editor: any) {
   if (typeof editor.getOption !== 'function') return true;
   return editor.getOption('keyMap') === 'emacs';
 }
 
-function runEmacsSearchKey(editor: any, codeMirror: any, keyName: 'Ctrl-S' | 'Ctrl-R') {
+function armEmacsSaveKey(editor: any, codeMirror: any, runtime: any) {
+  if (!isEmacsKeymap(editor) || !runtime || typeof runtime.save !== 'function') {
+    return codeMirror && codeMirror.Pass;
+  }
+  editor.__ivyEmacsSaveChordAt = Date.now();
+  return true;
+}
+
+function runEmacsSearchKey(editor: any, codeMirror: any, keyName: 'Ctrl-S' | 'Ctrl-R', runtime: any = null) {
   if (!isEmacsKeymap(editor)) {
     return codeMirror && codeMirror.Pass;
   }
+  if (keyName === 'Ctrl-S' && runArmedEmacsSaveKey(editor, runtime)) {
+    return true;
+  }
   return startIvyEmacsISearch(editor, codeMirror, keyName === 'Ctrl-R' ? 'backward' : 'forward');
+}
+
+function runArmedEmacsSaveKey(editor: any, runtime: any) {
+  const armedAt = Number(editor.__ivyEmacsSaveChordAt) || 0;
+  editor.__ivyEmacsSaveChordAt = 0;
+  if (!armedAt || Date.now() - armedAt > 2000 || !runtime || typeof runtime.save !== 'function') {
+    return false;
+  }
+  const result = runtime.save();
+  if (result && typeof result.catch === 'function') {
+    result.catch((err: any) => {
+      if (runtime.controls && typeof runtime.controls.setStatus === 'function') {
+        runtime.controls.setStatus(`Save failed: ${err && err.message ? err.message : String(err)}`, 'error');
+      }
+    });
+  }
+  return true;
 }
 
 function startIvyEmacsISearch(editor: any, codeMirror: any, direction: 'forward' | 'backward') {

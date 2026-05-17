@@ -50,6 +50,7 @@ describe('codeMirrorEditor', () => {
         extraKeys: expect.objectContaining({
           'Ctrl-F': 'find',
           'Cmd-F': 'find',
+          'Ctrl-X': expect.any(Function),
           'Ctrl-S': expect.any(Function),
           'Ctrl-R': expect.any(Function),
           'Shift-Ctrl-F': 'replace',
@@ -188,12 +189,10 @@ describe('codeMirrorEditor', () => {
     expect(options.extraKeys['Ctrl-R'](editor)).toBe(codeMirror.Pass);
   });
 
-  it('maps Ctrl-x Ctrl-s to save while the Emacs editor has focus', () => {
-    const doc = document.implementation.createHTMLDocument('');
-    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+  it('maps Ctrl-x Ctrl-s to save through CodeMirror while the Emacs editor has focus', () => {
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
     const editor = {
       getOption: vi.fn(() => 'emacs'),
-      hasFocus: vi.fn(() => true),
       on: vi.fn(),
     };
     const runtime = {
@@ -203,32 +202,18 @@ describe('codeMirrorEditor', () => {
       fromTextArea: vi.fn(() => editor),
     };
 
-    initializeCodeMirrorEditor({ runtime, doc, codeMirror });
+    initializeCodeMirrorEditor({ runtime, codeMirror });
+    const options = codeMirror.fromTextArea.mock.calls[0][1];
 
-    doc.dispatchEvent(new KeyboardEvent('keydown', {
-      key: 'x',
-      ctrlKey: true,
-      bubbles: true,
-      cancelable: true,
-    }));
-    const save = new KeyboardEvent('keydown', {
-      key: 's',
-      ctrlKey: true,
-      bubbles: true,
-      cancelable: true,
-    });
-    doc.dispatchEvent(save);
-
-    expect(save.defaultPrevented).toBe(true);
+    expect(options.extraKeys['Ctrl-X'](editor)).toBe(true);
+    expect(options.extraKeys['Ctrl-S'](editor)).toBe(true);
     expect(runtime.save).toHaveBeenCalledTimes(1);
   });
 
   it('does not map Ctrl-x Ctrl-s to save outside the Emacs keymap', () => {
-    const doc = document.implementation.createHTMLDocument('');
-    doc.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
     const editor = {
       getOption: vi.fn(() => 'vim'),
-      hasFocus: vi.fn(() => true),
       on: vi.fn(),
     };
     const runtime = {
@@ -238,23 +223,11 @@ describe('codeMirrorEditor', () => {
       fromTextArea: vi.fn(() => editor),
     };
 
-    initializeCodeMirrorEditor({ runtime, doc, codeMirror });
+    initializeCodeMirrorEditor({ runtime, codeMirror });
+    const options = codeMirror.fromTextArea.mock.calls[0][1];
 
-    doc.dispatchEvent(new KeyboardEvent('keydown', {
-      key: 'x',
-      ctrlKey: true,
-      bubbles: true,
-      cancelable: true,
-    }));
-    const save = new KeyboardEvent('keydown', {
-      key: 's',
-      ctrlKey: true,
-      bubbles: true,
-      cancelable: true,
-    });
-    doc.dispatchEvent(save);
-
-    expect(save.defaultPrevented).toBe(false);
+    expect(options.extraKeys['Ctrl-X'](editor)).toBe(codeMirror.Pass);
+    expect(options.extraKeys['Ctrl-S'](editor)).toBe(codeMirror.Pass);
     expect(runtime.save).not.toHaveBeenCalled();
   });
 
