@@ -71,12 +71,14 @@ describe('static details styling', () => {
   it('reserves a bottom minibuffer row for CodeMirror search and replace prompts', () => {
     const editorRule = ivyCss.match(/#editor-panel \.CodeMirror\s*\{[^}]+\}/)?.[0] || '';
     const scrollRule = ivyCss.match(/#editor-panel \.CodeMirror-scroll\s*\{[^}]+\}/)?.[0] || '';
+    const fakeScrollbarRule = ivyCss.match(/#editor-panel \.CodeMirror-hscrollbar,\s*#editor-panel \.CodeMirror-scrollbar-filler,\s*#editor-panel \.CodeMirror-gutter-filler\s*\{[^}]+\}/)?.[0] || '';
     const dialogRule = ivyCss.match(/#editor-panel \.CodeMirror-dialog\s*\{[^}]+\}/)?.[0] || '';
     const topDialogRule = ivyCss.match(/#editor-panel \.CodeMirror-dialog-top\s*\{[^}]+\}/)?.[0] || '';
 
     expect(editorRule).toContain('--ivy-codemirror-minibuffer-height: 24px;');
     expect(scrollRule).toContain('height: calc(100% - var(--ivy-codemirror-minibuffer-height)) !important;');
     expect(scrollRule).toContain('box-sizing: border-box;');
+    expect(fakeScrollbarRule).toContain('display: none !important;');
     expect(dialogRule).toContain('min-height: var(--ivy-codemirror-minibuffer-height);');
     expect(dialogRule).toContain('display: flex;');
     expect(topDialogRule).toContain('top: auto !important;');
