@@ -2770,3 +2770,17 @@ But Python’s `get_structure_concept_domain()` does the correct thing: it split
 One more wrinkle: Python’s initial domain does not immediately put those arity-2 concepts into `concepts['edges']`; the edge recompute path iterates `concepts['edges']`. The Go webui had eagerly put binary symbols in `edges`, so it hit the bug earlier and harder during Check.
 
 So: yes, Python has the same underlying bad arity-only assumption in one path, but it often does not expose it immediately. The fix I made aligns Go with Python’s more correct `get_structure_concept_domain()` behavior, not with the buggy initial-domain behavior. That seems like the right direction, especially because it preserves actual verification while keeping the concept graph well-typed.
+
+------
+emacs-ish mode editor actually pretty similar behavior to emacs now.
+
+Esc >         -- jump to end of buffer
+Esc <         -- jump to begining
+Esc w         -- copy region from mark to point.
+Ctrl-x Ctrl-s -- to save
+Ctrl-s        -- to i-search
+Ctrl-r        -- to i-search backwards
+Esc %         -- for search-and-replace
+  Ctrl-g          to cancel search
+  Arrow keys      to cancel search
+  '.', y, n, !, q to supervise search-and-replace.
