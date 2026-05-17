@@ -886,7 +886,6 @@ class IvyRuntime {
                 if (button) button.addEventListener('click', callback);
             };
             bindOptionalButton('btn-check', function () { self.runCheck(); });
-            bindOptionalButton('btn-cancel-check', function () { self.cancelActiveCheck(); });
             bindOptionalButton('btn-cancel-loading', function () { self.cancelActiveCheck(); });
             bindOptionalButton('btn-show-reachable', function () { self.showReachableStates(); });
             bindOptionalButton('btn-undo', function () { self.doUndo(); });

@@ -102,7 +102,9 @@ describe('checkService', () => {
     addCheckResultViewActions(app, result, { doc: document });
     document.querySelector('[data-check-view-trace]').click();
 
-    expect(app.openARGSheet).toHaveBeenCalledWith('Error trace', result.trace_arg, 'trace-1');
+    expect(app.openARGSheet).toHaveBeenCalledWith('Error trace', result.trace_arg, 'trace-1', {
+      reachabilityOnly: true,
+    });
   });
 
   it('prompts for a bounded-check bound and sends it to the backend', async () => {

@@ -10,13 +10,11 @@ function setCheckControlsRunning(running) {
   const doc = globalThis.document;
   if (!doc) return;
   const checkButton = doc.getElementById('btn-check') as HTMLButtonElement | null;
-  const cancelButton = doc.getElementById('btn-cancel-check') as HTMLButtonElement | null;
   const overlayCancelButton = doc.getElementById('btn-cancel-loading') as HTMLButtonElement | null;
   if (checkButton) checkButton.disabled = running;
-  for (const button of [cancelButton, overlayCancelButton]) {
-    if (!button) continue;
-    button.hidden = !running;
-    button.disabled = !running;
+  if (overlayCancelButton) {
+    overlayCancelButton.hidden = !running;
+    overlayCancelButton.disabled = !running;
   }
 }
 
@@ -209,7 +207,9 @@ export function addCheckResultViewActions(app, result, {
 } = {}) {
   if (!result || !result.trace_arg) return;
   const openTrace = () => {
-    app.openARGSheet('Error trace', result.trace_arg, result.trace_sheet_id);
+    app.openARGSheet('Error trace', result.trace_arg, result.trace_sheet_id, {
+      reachabilityOnly: true,
+    });
   };
 
   if (doc.querySelector('[data-check-view-trace]')) return;
