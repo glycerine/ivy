@@ -435,7 +435,8 @@ function findIsearchInput(editor: any): HTMLInputElement | null {
 }
 
 function findSearchMatch(editor: any, query: string, start: any, direction: 'forward' | 'backward') {
-  const cursor = editor.getSearchCursor(query, start);
+  const caseFold = isLowerCaseSearchQuery(query);
+  const cursor = editor.getSearchCursor(query, start, caseFold);
   const found = direction === 'forward'
     ? cursor.findNext()
     : cursor.findPrevious();
@@ -444,12 +445,16 @@ function findSearchMatch(editor: any, query: string, start: any, direction: 'for
   const wrapStart = direction === 'forward'
     ? { line: typeof editor.firstLine === 'function' ? editor.firstLine() : 0, ch: 0 }
     : editorDocumentEnd(editor);
-  const wrapCursor = editor.getSearchCursor(query, wrapStart);
+  const wrapCursor = editor.getSearchCursor(query, wrapStart, caseFold);
   const wrapFound = direction === 'forward'
     ? wrapCursor.findNext()
     : wrapCursor.findPrevious();
   if (wrapFound) return { from: wrapCursor.from(), to: wrapCursor.to() };
   return null;
+}
+
+function isLowerCaseSearchQuery(query: string) {
+  return query === query.toLowerCase();
 }
 
 function selectSearchMatch(editor: any, match: { from: any; to: any }) {

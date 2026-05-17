@@ -115,7 +115,7 @@ describe('codeMirrorEditor', () => {
     input.value = 'link';
     input.dispatchEvent(new Event('input', { bubbles: true }));
 
-    expect(editor.getSearchCursor).toHaveBeenNthCalledWith(1, 'link', { line: 1, ch: 2 });
+    expect(editor.getSearchCursor).toHaveBeenNthCalledWith(1, 'link', { line: 1, ch: 2 }, true);
     expect(firstCursor.findNext).toHaveBeenCalled();
     expect(editor.setSelection).toHaveBeenNthCalledWith(1, { line: 2, ch: 0 }, { line: 2, ch: 4 });
 
@@ -128,9 +128,49 @@ describe('codeMirrorEditor', () => {
     input.dispatchEvent(repeat);
 
     expect(repeat.defaultPrevented).toBe(true);
-    expect(editor.getSearchCursor).toHaveBeenNthCalledWith(2, 'link', { line: 2, ch: 4 });
+    expect(editor.getSearchCursor).toHaveBeenNthCalledWith(2, 'link', { line: 2, ch: 4 }, true);
     expect(secondCursor.findNext).toHaveBeenCalled();
     expect(editor.setSelection).toHaveBeenNthCalledWith(2, { line: 4, ch: 0 }, { line: 4, ch: 4 });
+  });
+
+  it('switches Ivy Emacs I-search to case-sensitive once the query has uppercase', () => {
+    document.body.innerHTML = '<textarea id="model-editor"></textarea>';
+    const wrapper = document.createElement('div');
+    document.body.appendChild(wrapper);
+    const lowerCursor = makeSearchCursor({ from: { line: 2, ch: 0 }, to: { line: 2, ch: 4 } });
+    const upperCursor = makeSearchCursor({ from: { line: 3, ch: 0 }, to: { line: 3, ch: 4 } });
+    const editor = {
+      getCursor: vi.fn(() => ({ line: 1, ch: 2 })),
+      getOption: vi.fn(() => 'emacs'),
+      getSearchCursor: vi.fn()
+        .mockReturnValueOnce(lowerCursor)
+        .mockReturnValueOnce(upperCursor),
+      getWrapperElement: vi.fn(() => wrapper),
+      on: vi.fn(),
+      openDialog: vi.fn((html) => {
+        wrapper.innerHTML = `<div class="CodeMirror-dialog">${html}</div>`;
+        return vi.fn();
+      }),
+      scrollIntoView: vi.fn(),
+      setSelection: vi.fn(),
+    };
+    const codeMirror = {
+      Pass: Symbol('CodeMirror.Pass'),
+      fromTextArea: vi.fn(() => editor),
+    };
+
+    initializeCodeMirrorEditor({ codeMirror });
+    const options = codeMirror.fromTextArea.mock.calls[0][1];
+
+    options.extraKeys['Ctrl-S'](editor);
+    const input = wrapper.querySelector('input') as HTMLInputElement;
+    input.value = 'link';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.value = 'Link';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(editor.getSearchCursor).toHaveBeenNthCalledWith(1, 'link', { line: 1, ch: 2 }, true);
+    expect(editor.getSearchCursor).toHaveBeenNthCalledWith(2, 'Link', { line: 1, ch: 2 }, false);
   });
 
   it('exits Ivy Emacs I-search on arrow keys and moves from the current match', () => {
@@ -214,6 +254,7 @@ describe('codeMirrorEditor', () => {
     input.dispatchEvent(new Event('input', { bubbles: true }));
 
     expect(cursor.findPrevious).toHaveBeenCalled();
+    expect(editor.getSearchCursor).toHaveBeenCalledWith('type', { line: 3, ch: 1 }, true);
     expect(editor.setSelection).toHaveBeenCalledWith({ line: 1, ch: 0 }, { line: 1, ch: 4 });
   });
 
