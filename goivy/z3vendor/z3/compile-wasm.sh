@@ -22,6 +22,9 @@ cd ..
 mv build wasm.build
 ln -s wasm.build build
 
+EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && EM_CACHE="/tmp/ivy-emscripten-cache" EMCC="$(HOME)/go/src/github.com/emscripten-core/emsdk/upstream/emscripten/emcc" ./build-wasm-api.sh
+
+
 # save them above in case we rebuild native and wipe them out by accident.
 for i in z3-api.js z3-api.wasm z3.wasm libz3.a libz3.wasm libz3.dylib; do cp -p wasm.build/$i ../wasm_lib/; done
 

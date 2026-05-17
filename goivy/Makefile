@@ -6,7 +6,6 @@
 # The Go Z3 bridge links against the same Z3 4.7.1 fork that Python Ivy uses.
 WAZ_MEM_GC_HEAP_LIMIT ?=
 WAZ_CLI_MEM_GC_HEAP_LIMIT ?=
-Z3_WASM_JOBS        ?= 8
 # Z3 4.7.1's generator infers _AMD64_ from the host machine, but Emscripten
 # targets wasm32 here. Native builds must keep their normal 64-bit settings.
 Z3_WASM_CC_FLAGS    := -Wno-deprecated-declarations -fwasm-exceptions -U_AMD64_
@@ -112,7 +111,7 @@ z3vendor/z3/build/libz3.a:
 		python3 scripts/mk_make.py --staticlib
 	cd z3vendor/z3/build && \
 		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
-		EM_CACHE="/tmp/ivy-emscripten-cache" emmake $(MAKE) -j$(Z3_WASM_JOBS) libz3.a
+		EM_CACHE="/tmp/ivy-emscripten-cache" emmake $(MAKE) -j8 libz3.a
 
 z3-wasm-lib-wasm-eh: z3vendor/z3/build/libz3.a
 
