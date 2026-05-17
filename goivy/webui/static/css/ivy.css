@@ -470,6 +470,11 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     max-height: calc(100% - var(--ivy-codemirror-minibuffer-height)) !important;
     box-sizing: border-box;
 }
+#editor-panel .CodeMirror-hscrollbar,
+#editor-panel .CodeMirror-scrollbar-filler,
+#editor-panel .CodeMirror-gutter-filler {
+    bottom: var(--ivy-codemirror-minibuffer-height) !important;
+}
 #editor-panel .CodeMirror-gutters {
     background: #16162a;
     border-right: 1px solid #333;
