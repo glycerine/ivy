@@ -56,6 +56,23 @@ func pyivyDir() string {
 	return candidates[0]
 }
 
+func pyivyPython() string {
+	if py := os.Getenv("PYIVY_PYTHON"); py != "" {
+		return py
+	}
+	home := os.Getenv("HOME")
+	candidates := []string{
+		filepath.Join(home, "ivy", "pyivy", "goivy-venv", "bin", "python3"),
+		filepath.Join(home, "pyivy", "goivy-venv", "bin", "python3"),
+	}
+	for _, candidate := range candidates {
+		if st, err := os.Stat(candidate); err == nil && !st.IsDir() {
+			return candidate
+		}
+	}
+	return "python3"
+}
+
 // newPythonOracle starts the Python oracle subprocess.
 func newPythonOracle() (*PythonOracle, error) {
 	script := pythonScriptPath()
@@ -69,7 +86,7 @@ func newPythonOracle() (*PythonOracle, error) {
 	}
 
 	// Use -O to suppress __debug__/xtracer output
-	cmd := exec.Command("python3", "-O", script)
+	cmd := exec.Command(pyivyPython(), "-O", script)
 	cmd.Dir = ivyDir
 	pythonPath := ivyDir
 	if existing := os.Getenv("PYTHONPATH"); existing != "" {
