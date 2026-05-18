@@ -123,15 +123,15 @@ z3vendor/z3/wasm.build/libz3.a:
 
 z3-wasm-lib-wasm-eh: z3vendor/z3/wasm.build/libz3.a
 
-z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp: z3vendor/z3/wasm.build/libz3.a webui/static/wasm/z3-wasm-exported-functions.json z3vendor/z3/build-wasm-api.sh z3vendor/z3/src/api/js/ivy_z3_wasm_syscalls.cc
-	cd z3vendor/z3 && \
-		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
-		EM_CACHE="/tmp/ivy-emscripten-cache" EMCC="$(HOME)/go/src/github.com/emscripten-core/emsdk/upstream/emscripten/emcc" ./build-wasm-api.sh
-	touch z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp
+# z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp: z3vendor/z3/wasm.build/libz3.a webui/static/wasm/z3-wasm-exported-functions.json z3vendor/z3/build-wasm-api.sh z3vendor/z3/src/api/js/ivy_z3_wasm_syscalls.cc
+# 	cd z3vendor/z3 && \
+# 		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
+# 		EM_CACHE="/tmp/ivy-emscripten-cache" EMCC="$(HOME)/go/src/github.com/emscripten-core/emsdk/upstream/emscripten/emcc" ./build-wasm-api.sh
+# 	touch z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp
+#
+# z3-wasm-api-link: z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp
 
-z3-wasm-api-link: z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp
-
-z3vendor/z3/wasm.build/z3-api.exnref.wasm: z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp
+z3vendor/z3/wasm.build/z3-api.exnref.wasm: z3vendor/z3/wasm.build/z3-api.wasm z3vendor/z3/wasm.build/z3-api.js
 	cp -p z3vendor/z3/wasm.build/z3-api.wasm z3vendor/z3/wasm.build/z3-api.pre-exnref.wasm
 	/usr/local/bin/wasm-opt --translate-to-exnref \
 		--enable-exception-handling \
@@ -144,17 +144,18 @@ z3vendor/z3/wasm.build/z3-api.exnref.wasm: z3vendor/z3/wasm.build/.z3-api-wasm-e
 		--enable-nontrapping-float-to-int \
 		-o z3vendor/z3/wasm.build/z3-api.exnref.wasm z3vendor/z3/wasm.build/z3-api.pre-exnref.wasm
 
-webui/static/wasm/z3-471-api.wasm: z3vendor/z3/wasm.build/z3-api.exnref.wasm
-	cp -p z3vendor/z3/wasm.build/z3-api.exnref.wasm webui/static/wasm/z3-471-api.wasm
-	chmod 0644 webui/static/wasm/z3-471-api.wasm
-
-webui/static/wasm/z3-471-api.js: z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp
-	cp -p z3vendor/z3/wasm.build/z3-api.js webui/static/wasm/z3-471-api.js
-	chmod 0644 webui/static/wasm/z3-471-api.js
-
-z3-wasm-api: webui/static/wasm/z3-471-api.wasm webui/static/wasm/z3-471-api.js
-
-z3-wasm-api-wazero: z3-wasm-api
+# symlink instead of copying now
+# webui/static/wasm/z3-471-api.wasm: z3vendor/z3/wasm.build/z3-api.exnref.wasm
+# 	cp -p z3vendor/z3/wasm.build/z3-api.exnref.wasm webui/static/wasm/z3-471-api.wasm
+# 	chmod 0644 webui/static/wasm/z3-471-api.wasm
+#
+# webui/static/wasm/z3-471-api.js: # z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp
+# 	cp -p z3vendor/z3/wasm.build/z3-api.js webui/static/wasm/z3-471-api.js
+# 	chmod 0644 webui/static/wasm/z3-471-api.js
+#
+#z3-wasm-api: webui/static/wasm/z3-471-api.wasm webui/static/wasm/z3-471-api.js
+#
+#z3-wasm-api-wazero: z3-wasm-api
 
 webui/static/wasm/wasm_exec-go1.25.6.js: /usr/local/go/lib/wasm/wasm_exec.js
 	cp -p /usr/local/go/lib/wasm/wasm_exec.js webui/static/wasm/wasm_exec-go1.25.6.js
@@ -361,4 +362,4 @@ prod: webui-wasm-engine
 	go install -tags xtracer_off ./cmd/ivyweb
 	ivyweb
 
-.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webui-node-deps webui-wasm-graphviz webui-wasm-engine unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE prod
+.PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webui-node-deps webui-wasm-graphviz unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE prod
