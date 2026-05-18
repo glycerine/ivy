@@ -605,6 +605,15 @@ func TestVerboseNonstopOrdLive(t *testing.T) {
 	GoldenPathCompareIvyCheck(t, true, false, path, args, "")
 }
 
+func TestEchoDotIvy(t *testing.T) {
+	path := "ivy-lang-examples/doc/examples/echo.ivy"
+	args := []string{"isolate=protocol"}
+	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
+	vv("TestEchoDotIvy: echo.ivy test: done with isolate=protcol, now on to isolate=service")
+	args = []string{"isolate=service"}
+	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
+}
+
 func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string, args []string, useNode string) {
 	off := os.Getenv("XTRACE_OFF")
 	if off != "" {

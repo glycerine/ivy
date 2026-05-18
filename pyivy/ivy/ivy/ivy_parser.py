@@ -511,7 +511,10 @@ def newlabel(pref):
     return Atom(pref+str(label_counter))
 
 def mk_label(s,pref):
-    if __debug__: xtracer.trace("parser.mk_label ENTER")
+    # p_top_nativequote is only caller. does: mk_label(None,'native');
+    # The goivy port just calls newLabel like we do; so avoid
+    # an xtrace divergence by not tracing here.
+    # if __debug__: xtracer.trace("parser.mk_label ENTER")
     return s if s is not None else newlabel(pref)
         
 def addlabel(lf,pref):

@@ -35,6 +35,11 @@ node-golden-2hr: # takes 2 hours to check all isolates.
 	if [ -f log.node.golden.2hr ]; then mv log.node.golden.2hr log.node.golden.2hr.prev; fi
 	go test -v -timeout=0 -count=1 -run Test2hrNodeGoldenOrdLive &> log.node.golden.2hr
 
+echo:
+	if [ -f log.echo ]; then mv log.echo log.echo.prev; fi
+	go test -v -timeout=0 -count=1 -run TestEchoDotIvy &> log.echo
+
+
 rfn: # TestRfnAbsIso start 3 hours in on golden-2hr. start with it. do we go faster?
 	if [ -f log.rfn ]; then mv log.rfn log.rfn.prev; fi
 	go test -v -timeout=0 -count=1 -run TestRfnAbsIso &> log.rfn
