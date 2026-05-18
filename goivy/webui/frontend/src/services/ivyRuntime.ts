@@ -311,7 +311,7 @@ class IvyRuntime {
                     }
                     return async function () {
                         if (!isModelIndependentAPIInvocation(methodName, arguments)) {
-                            await self.ensureFreshModelState();
+                            await self._ensureFreshModelState();
                         }
                         return value.apply(target, arguments);
                     };
@@ -323,7 +323,7 @@ class IvyRuntime {
         return proxy;
     }
 
-    invalidateModelState(reason) {
+    _invalidateModelState(reason) {
         if (this._suppressModelStateInvalidation) return false;
         this._modelStateInvalid = true;
         this._modelStateInvalidReason = reason || 'model-change';
@@ -334,7 +334,7 @@ class IvyRuntime {
         return true;
     }
 
-    async ensureFreshModelState() {
+    async _ensureFreshModelState() {
         if (!this._modelStateInvalid || this._modelStateRefreshInProgress) return false;
         var content = this.cmEditor && typeof this.cmEditor.getValue === 'function'
             ? this.cmEditor.getValue()

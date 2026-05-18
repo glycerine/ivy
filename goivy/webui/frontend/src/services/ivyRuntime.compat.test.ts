@@ -86,7 +86,7 @@ describe('ivyRuntime compatibility behavior', () => {
     runtime._persistedFileName = 'client.ivy';
     runtime.activeIsolate = 'iso_client';
 
-    runtime.invalidateModelState('test-edit');
+    runtime._invalidateModelState('test-edit');
     const result = await runtime.api.executeAction('diagram', {});
 
     expect(result).toEqual({ status: 'ran' });
@@ -111,7 +111,7 @@ describe('ivyRuntime compatibility behavior', () => {
     const runtime = makeRuntime({ IvyAPI: EventAPI });
     runtime.cmEditor = { getValue: vi.fn(() => 'edited') };
 
-    runtime.invalidateModelState('test-edit');
+    runtime._invalidateModelState('test-edit');
     await runtime.api.executeAction('events_find', { query: 'send' });
 
     expect(apiInstance.reloadContent).not.toHaveBeenCalled();

@@ -46,7 +46,7 @@ describe('codeMirrorEditor', () => {
     const runtime = {
       cmEditor: editor,
       _updateEditorLabel: vi.fn(),
-      invalidateModelState: vi.fn(),
+      _invalidateModelState: vi.fn(),
     };
 
     const result = initializeCodeMirrorEditor({
@@ -82,7 +82,7 @@ describe('codeMirrorEditor', () => {
 
     expect(runtime._persistedFileContent).toBe('edited');
     expect(runtime._updateEditorLabel).toHaveBeenCalled();
-    expect(runtime.invalidateModelState).toHaveBeenCalledWith('editor-change');
+    expect(runtime._invalidateModelState).toHaveBeenCalledWith('editor-change');
   });
 
   it('reuses an existing editor for the textarea', () => {

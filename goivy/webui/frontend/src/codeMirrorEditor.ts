@@ -76,8 +76,8 @@ export function initializeCodeMirrorEditor({
       if (typeof runtime._updateEditorLabel === 'function') {
         runtime._updateEditorLabel();
       }
-      if (typeof runtime.invalidateModelState === 'function') {
-        runtime.invalidateModelState('editor-change');
+      if (typeof runtime._invalidateModelState === 'function') {
+        runtime._invalidateModelState('editor-change');
       }
     });
   }
