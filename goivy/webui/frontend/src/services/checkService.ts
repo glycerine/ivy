@@ -34,6 +34,54 @@ function setCheckControlsRunning(running) {
   }
 }
 
+function padNumber(value, width) {
+  return String(value).padStart(width, '0');
+}
+
+function formatJobTimestamp(value) {
+  const date = value instanceof Date ? value : new Date(value || Date.now());
+  const offsetMinutes = -date.getTimezoneOffset();
+  const absOffset = Math.abs(offsetMinutes);
+  const offset = offsetMinutes === 0
+    ? 'Z'
+    : `${offsetMinutes >= 0 ? '+' : '-'}${padNumber(Math.floor(absOffset / 60), 2)}:${padNumber(absOffset % 60, 2)}`;
+  const nanos = padNumber(date.getMilliseconds() * 1000000, 9);
+  return `${date.getFullYear()}-${padNumber(date.getMonth() + 1, 2)}-${padNumber(date.getDate(), 2)} ` +
+    `${padNumber(date.getHours(), 2)}:${padNumber(date.getMinutes(), 2)}:${padNumber(date.getSeconds(), 2)}.${nanos}${offset}`;
+}
+
+function nextJobNumber(app) {
+  app._jobControlSeq = Number.isInteger(app._jobControlSeq) ? app._jobControlSeq + 1 : 1;
+  return app._jobControlSeq;
+}
+
+function jobValue(value) {
+  const text = String(value == null || value === '' ? '(none)' : value);
+  if (text === '(none)') return text;
+  if (/^[A-Za-z0-9_.:/@+-]+$/.test(text)) return text;
+  return JSON.stringify(text);
+}
+
+function jobDetails(job) {
+  const parts = [];
+  if (job.filename) parts.push(`file=${jobValue(job.filename)}`);
+  parts.push(`isolate=${jobValue(job.isolate)}`);
+  if (job.mode) parts.push(`mode=${jobValue(job.mode)}`);
+  if (job.bound != null) parts.push(`bound=${jobValue(job.bound)}`);
+  if (job.z3Contacted != null) parts.push(`z3=${job.z3Contacted ? 'yes' : 'no'}`);
+  if (job.failedLabel) parts.push(`failed_label=${jobValue(job.failedLabel)}`);
+  if (job.message) parts.push(`message=${jobValue(job.message)}`);
+  return parts.join(' ');
+}
+
+function renderJobLine(job) {
+  const number = padNumber(job.number || 0, 3);
+  const timestamp = formatJobTimestamp(job.startedAt);
+  const details = jobDetails(job);
+  const base = `${number} ${timestamp} ${job.label || 'job'} - ${job.status || 'running'} (${job.backend || 'backend'})`;
+  return details ? `${base} ${details}` : base;
+}
+
 function renderJobControl(app) {
   const doc = globalThis.document;
   const list = doc && doc.getElementById('job-control-list');
@@ -51,7 +99,7 @@ function renderJobControl(app) {
     const row = doc.createElement('div');
     row.className = 'job-control-job';
     row.setAttribute('data-job-status', job.status || '');
-    row.textContent = `${job.label || 'job'} - ${job.status || 'running'} (${job.backend || 'backend'})`;
+    row.textContent = renderJobLine(job);
     list.appendChild(row);
   }
 }
@@ -61,7 +109,11 @@ function upsertJob(app, job) {
   app._jobControlJobs = app._jobControlJobs || [];
   const existing = app._jobControlJobs.find((candidate) => candidate.id === job.id);
   if (existing) Object.assign(existing, job);
-  else app._jobControlJobs.push(job);
+  else app._jobControlJobs.push({
+    number: nextJobNumber(app),
+    startedAt: new Date(),
+    ...job,
+  });
   renderJobControl(app);
 }
 
@@ -109,6 +161,9 @@ export async function runCheck(app) {
     label: active.label,
     status: 'running',
     backend: app.jobSubmissionMode || (app.api && app.api.kind) || 'backend',
+    filename: app._persistedFileName || 'model.ivy',
+    isolate: app.activeIsolate || '',
+    mode,
   });
   setCheckControlsRunning(true);
   app.controls.showLoading(`Running ${mode} check...`);
@@ -144,7 +199,14 @@ export async function runCheck(app) {
       await app._autoCheckUsedRelations(result.used_relations);
     }
     app.showCheckResult(result);
-    upsertJob(app, { id: active.jobId, status: (result && (result.result || result.status)) || 'complete' });
+    upsertJob(app, {
+      id: active.jobId,
+      status: (result && (result.result || result.status)) || 'complete',
+      mode: (result && result.mode) || mode,
+      z3Contacted: result && result.z3_contacted,
+      failedLabel: result && result.failed_label,
+      message: result && result.message,
+    });
     return result;
   } catch (err) {
     if (active.cancelled || isAbortError(err)) {
@@ -153,7 +215,7 @@ export async function runCheck(app) {
       return null;
     }
     app.controls.setStatus(`Check failed: ${err.message}`, 'error');
-    upsertJob(app, { id: active.jobId, status: 'error' });
+    upsertJob(app, { id: active.jobId, status: 'error', message: err.message });
     console.error('Check error:', err);
     return null;
   } finally {

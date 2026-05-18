@@ -14,6 +14,101 @@ import { UIDataModel } from '../models/uiDataModel.ts';
 import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 
 describe('checkService', () => {
+  it('renders numbered job control rows with timestamp, isolate, and run details', async () => {
+    vi.useFakeTimers();
+    try {
+      document.body.innerHTML = '<div id="job-control-list"></div>';
+      vi.setSystemTime(new Date(2026, 4, 18, 12, 34, 56, 789));
+      const app = {
+        getMode: vi.fn(() => 'induction'),
+        cmEditor: { getValue: vi.fn(() => 'ivy source') },
+        _persistedFileName: 'client_server_example.ivy',
+        activeIsolate: 'no_isolates_found',
+        activeSheetId: 'sheet-1',
+        jobSubmissionMode: 'remote',
+        api: {
+          reloadContent: vi.fn(async () => ({ status: 'ok' })),
+          runCheck: vi.fn(async () => ({
+            status: 'ok',
+            result: 'pass',
+            mode: 'induction',
+            z3_contacted: true,
+            message: 'All conjectures are inductive.',
+          })),
+          getARG: vi.fn(async () => null),
+          getConceptGraph: vi.fn(async () => null),
+        },
+        controls: {
+          showLoading: vi.fn(),
+          hideLoading: vi.fn(),
+          setStatus: vi.fn(),
+        },
+        showCheckResult: vi.fn(),
+        _autoCheckUsedRelations: vi.fn(),
+      };
+
+      await runCheck(app);
+
+      const row = document.querySelector('.job-control-job');
+      expect(row?.textContent).toContain('001 2026-05-18 12:34:56.789000000');
+      expect(row?.textContent).toContain(' induction check - pass (remote) ');
+      expect(row?.textContent).toContain('file=client_server_example.ivy');
+      expect(row?.textContent).toContain('isolate=no_isolates_found');
+      expect(row?.textContent).toContain('mode=induction');
+      expect(row?.textContent).toContain('z3=yes');
+      expect(row?.textContent).toContain('message="All conjectures are inductive."');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('keeps job numbers stable and shows newest jobs first', async () => {
+    vi.useFakeTimers();
+    try {
+      document.body.innerHTML = '<div id="job-control-list"></div>';
+      const app = {
+        getMode: vi.fn(() => 'induction'),
+        cmEditor: { getValue: vi.fn(() => 'ivy source') },
+        _persistedFileName: 'model.ivy',
+        activeIsolate: 'cf_live',
+        activeSheetId: 'sheet-1',
+        jobSubmissionMode: 'browser',
+        api: {
+          reloadContent: vi.fn(async () => ({ status: 'ok' })),
+          runCheck: vi.fn(async () => ({
+            status: 'ok',
+            result: 'fail',
+            mode: 'induction',
+            z3_contacted: false,
+            message: 'Counterexample found',
+          })),
+          getARG: vi.fn(async () => null),
+          getConceptGraph: vi.fn(async () => null),
+        },
+        controls: {
+          showLoading: vi.fn(),
+          hideLoading: vi.fn(),
+          setStatus: vi.fn(),
+        },
+        showCheckResult: vi.fn(),
+        _autoCheckUsedRelations: vi.fn(),
+      };
+
+      vi.setSystemTime(new Date(2026, 4, 18, 1, 2, 3, 4));
+      await runCheck(app);
+      vi.setSystemTime(new Date(2026, 4, 18, 1, 2, 4, 5));
+      await runCheck(app);
+
+      const rows = Array.from(document.querySelectorAll('.job-control-job')).map((row) => row.textContent || '');
+      expect(rows).toHaveLength(2);
+      expect(rows[0]).toMatch(/^002 /);
+      expect(rows[1]).toMatch(/^001 /);
+      expect(app._jobControlJobs.map((job) => job.number)).toEqual([1, 2]);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('passes an abort signal to hosted checks and reports cancellation', async () => {
     const app = {
       getMode: vi.fn(() => 'induction'),

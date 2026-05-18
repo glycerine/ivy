@@ -753,6 +753,8 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     padding: 6px 0;
     border-bottom: 1px solid #303030;
     color: #ddd;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    line-height: 1.35;
 }
 
 .job-control-job[data-job-status="running"] {
