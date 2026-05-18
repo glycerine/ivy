@@ -195,8 +195,8 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if s.AG == nil || len(s.AG.Transitions) == 0 {
 		t.Fatalf("induction failure did not populate ARG transitions")
 	}
-	if got := s.AG.Transitions[0].Label; got != "call connect" {
-		t.Fatalf("ARG transition label = %q, want %q", got, "call connect")
+	if got := s.AG.Transitions[0].Label; got != "call ext" {
+		t.Fatalf("ARG transition label = %q, want %q", got, "call ext")
 	}
 	if cr.CounterexampleDetails == "" || !strings.Contains(cr.CounterexampleDetails, "Counterexample trace") {
 		t.Fatalf("induction failure did not return counterexample details: %#v", cr.CounterexampleDetails)
@@ -245,6 +245,28 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	}
 }
 
+func TestClientServerStrengtheningInvariantMakesInductionPass(t *testing.T) {
+	content := append([]byte{}, readClientServerExample(t)...)
+	content = append(content, []byte(`
+
+private {
+    invariant ~(link(X,Y) & semaphore(Y))
+}
+`)...)
+
+	s := NewSession(goivy.NewConfig(), "test-client-server-strengthened")
+	if err := s.LoadFileContent("client_server_example.ivy", content); err != nil {
+		t.Fatalf("LoadFileContent: %v", err)
+	}
+	if s.ActiveIsolate != NoIsolatesFoundChoice {
+		t.Fatalf("ActiveIsolate = %q, want %q", s.ActiveIsolate, NoIsolatesFoundChoice)
+	}
+	cr := s.RunCheck("induction")
+	if cr.Result != "pass" {
+		t.Fatalf("RunCheck induction result = %q, want pass; message: %s; failed conjecture: %s", cr.Result, cr.Message, cr.FailedConjecture)
+	}
+}
+
 func TestLoadWithoutDeclaredIsolatesUsesSentinelChoice(t *testing.T) {
 	s := NewSession(goivy.NewConfig(), "test-no-isolates-choice")
 	if err := s.LoadFileContent("client_server_example.ivy", readClientServerExample(t)); err != nil {
@@ -256,11 +278,11 @@ func TestLoadWithoutDeclaredIsolatesUsesSentinelChoice(t *testing.T) {
 	if len(s.AvailableIsolates) != 1 || s.AvailableIsolates[0] != NoIsolatesFoundChoice {
 		t.Fatalf("AvailableIsolates = %#v, want [%q]", s.AvailableIsolates, NoIsolatesFoundChoice)
 	}
-	if _, ok := s.CompiledModule.Actions.Get2("connect"); !ok {
-		t.Fatalf("unisolated load did not keep source action connect")
+	if _, ok := s.CompiledModule.Actions.Get2("ext:connect"); !ok {
+		t.Fatalf("no-isolates load should still compile Ivy's implicit ext:connect action")
 	}
-	if _, ok := s.CompiledModule.Actions.Get2("ext:connect"); ok {
-		t.Fatalf("no-isolates load should not synthesize ext:connect")
+	if _, ok := s.CompiledModule.Actions.Get2("connect"); ok {
+		t.Fatalf("no-isolates load should expose the compiled implicit isolate, not raw source action connect")
 	}
 }
 
@@ -275,11 +297,11 @@ func TestLoadWithoutDeclaredIsolatesIgnoresStaleThisChoice(t *testing.T) {
 	if len(s.AvailableIsolates) != 1 || s.AvailableIsolates[0] != NoIsolatesFoundChoice {
 		t.Fatalf("AvailableIsolates = %#v, want [%q]", s.AvailableIsolates, NoIsolatesFoundChoice)
 	}
-	if _, ok := s.CompiledModule.Actions.Get2("connect"); !ok {
-		t.Fatalf("unisolated load did not keep source action connect")
+	if _, ok := s.CompiledModule.Actions.Get2("ext:connect"); !ok {
+		t.Fatalf("no-isolates load should still compile Ivy's implicit ext:connect action")
 	}
-	if _, ok := s.CompiledModule.Actions.Get2("ext:connect"); ok {
-		t.Fatalf("no-isolates load should not synthesize ext:connect")
+	if _, ok := s.CompiledModule.Actions.Get2("connect"); ok {
+		t.Fatalf("no-isolates load should expose the compiled implicit isolate, not raw source action connect")
 	}
 }
 
@@ -403,23 +425,23 @@ func TestARGExecuteActionMenuEntriesRenderAndDispatch(t *testing.T) {
 	foundExecute := false
 	for _, raw := range actions {
 		act := raw.(goivy.NodeAction)
-		if act.Label == "connect" && act.Action == "execute_action" {
-			if got := act.Args["action_name"]; got != "connect" {
-				t.Fatalf("connect action_name = %#v, want connect", got)
+		if act.Label == "ext:connect" && act.Action == "execute_action" {
+			if got := act.Args["action_name"]; got != "ext:connect" {
+				t.Fatalf("ext:connect action_name = %#v, want ext:connect", got)
 			}
 			foundExecute = true
 			break
 		}
 	}
 	if !foundExecute {
-		t.Fatalf("state_0 actions do not include connect execute_action: %#v", actions)
+		t.Fatalf("state_0 actions do not include ext:connect execute_action: %#v", actions)
 	}
 
 	beforeStates := len(s.AG.States)
 	beforeTransitions := len(s.AG.Transitions)
 	result, err := s.ArgNodeAction("state_0", "execute_action", map[string]interface{}{
 		"sheet_id":    "sheet-1",
-		"action_name": "connect",
+		"action_name": "ext:connect",
 	})
 	if err != nil {
 		t.Fatalf("ArgNodeAction execute_action: %v", err)

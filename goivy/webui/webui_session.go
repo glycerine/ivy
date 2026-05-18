@@ -39,6 +39,8 @@ type Session struct {
 	ProofMgr          *goivy.ProofManager // live proof state (goals + reachability graph)
 	CompiledModule    *goivy.Module       // populated by full compiler pipeline
 	CompiledSig       *goivy.Sig          // populated by full compiler pipeline
+	SourceModule      *goivy.Module       // pre-isolate compile used for source-level UI operations
+	SourceSig         *goivy.Sig          // pre-isolate signature used by Diagram Domain
 	OriginalConjs     []*goivy.LabeledFormula
 	AG                *goivy.AnalysisGraph // persistent analysis graph for interactive verification
 	AGUI              *AnalysisGraphUI     // ARG navigation UI (delegates to AG)
@@ -52,10 +54,10 @@ type Session struct {
 const rootSheetID = "sheet-1"
 
 // NoIsolatesFoundChoice is a Web UI/API sentinel, not an Ivy isolate name.
-// Ivy 1.7 compiler setup creates an implicit "this" isolate even when the
-// source file declares no isolates. When this sentinel is active, the web UI
-// intentionally keeps the loaded module un-isolated instead of passing "this"
-// back into CreateIsolate and stripping the source-level signature.
+// Ivy 1.7 creates an implicit internal "this" isolate even when the source
+// declares no isolates. The UI shows this sentinel so users do not have to pick
+// a synthetic isolate name, while the compiler still follows Ivy's normal
+// implicit-isolate path for checking semantics.
 const NoIsolatesFoundChoice = "no_isolates_found"
 
 // NewSession creates a new verification session with the given id.
@@ -211,7 +213,8 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 
 // LoadFileContentWithIsolate is LoadFileContent plus the Web UI isolate choice.
 // In addition to real Ivy isolate names, the UI may pass NoIsolatesFoundChoice
-// to request the un-isolated source model for files that declare no isolates.
+// for files that declare no user isolates. That sentinel remains a UI/API
+// label; internally the compiler still creates Ivy's implicit "this" isolate.
 func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, isolate string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -223,8 +226,8 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 
 	// ======================================================================
 	// FULL COMPILER PIPELINE: parse → compile → module → concept domain.
-	// Real isolate selections still follow Python's isolated compile path; the
-	// no-isolates sentinel keeps the source-level module un-isolated.
+	// The discovery pass below compiles without applying CreateIsolate so the
+	// web UI can distinguish real user isolates from Ivy's implicit "this".
 	// ======================================================================
 
 	// First compile without applying CreateIsolate. Ivy still records the
@@ -243,11 +246,19 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 		}})
 		return fmt.Errorf("compile: %w", compileErr)
 	}
+	sourceMod, sourceSig := mod, sig
 	availableIsolates := webUIIsolateNames(mod)
 	activeIsolate := requestedIsolate
 	if len(availableIsolates) == 0 && (activeIsolate == "" || activeIsolate == "this" || activeIsolate == NoIsolatesFoundChoice) {
 		activeIsolate = NoIsolatesFoundChoice
 		availableIsolates = []string{NoIsolatesFoundChoice}
+		mod, sig, compileErr = s.compileIvySource(filename, content, "")
+		if compileErr != nil {
+			s.emit(Event{Type: "compiler_error", Data: map[string]string{
+				"phase": "compile", "error": compileErr.Error(),
+			}})
+			return fmt.Errorf("compile: %w", compileErr)
+		}
 	} else if activeIsolate == NoIsolatesFoundChoice {
 		if len(availableIsolates) != 0 {
 			err := fmt.Errorf("%s is only valid when the source declares no isolates", NoIsolatesFoundChoice)
@@ -257,6 +268,13 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 			return err
 		}
 		availableIsolates = []string{NoIsolatesFoundChoice}
+		mod, sig, compileErr = s.compileIvySource(filename, content, "")
+		if compileErr != nil {
+			s.emit(Event{Type: "compiler_error", Data: map[string]string{
+				"phase": "compile", "error": compileErr.Error(),
+			}})
+			return fmt.Errorf("compile: %w", compileErr)
+		}
 	} else {
 		if activeIsolate == "" && len(availableIsolates) > 0 {
 			activeIsolate = availableIsolates[0]
@@ -360,6 +378,12 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	// Step 6: Store the compiled module for verification operations.
 	s.CompiledModule = mod
 	s.CompiledSig = sig
+	s.SourceModule = mod
+	s.SourceSig = sig
+	if sourceMod != nil && sourceSig != nil {
+		s.SourceModule = sourceMod
+		s.SourceSig = sourceSig
+	}
 	s.OriginalConjs = append([]*goivy.LabeledFormula{}, mod.LabeledConjs...)
 	s.ActiveIsolate = activeIsolate
 	s.AvailableIsolates = availableIsolates
@@ -868,6 +892,49 @@ func (s *Session) compiledSymbolMapLocked() map[string]*goivy.Const {
 
 func (s *Session) compiledSymbolListLocked() []*goivy.Const {
 	symbolMap := s.compiledSymbolMapLocked()
+	names := make([]string, 0, len(symbolMap))
+	for name := range symbolMap {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	symbols := make([]*goivy.Const, 0, len(names))
+	for _, name := range names {
+		symbols = append(symbols, symbolMap[name])
+	}
+	return symbols
+}
+
+func (s *Session) sourceSortMapLocked() map[string]goivy.Sort {
+	if s == nil || s.SourceSig == nil || s.SourceSig.Sorts == nil {
+		return s.compiledSortMapLocked()
+	}
+	sorts := make(map[string]goivy.Sort)
+	for name, sortVal := range s.SourceSig.Sorts.All() {
+		if sortVal != nil {
+			sorts[name] = sortVal
+		}
+	}
+	return sorts
+}
+
+func (s *Session) sourceSymbolMapLocked() map[string]*goivy.Const {
+	if s == nil || s.SourceSig == nil || s.SourceSig.Symbols == nil {
+		return s.compiledSymbolMapLocked()
+	}
+	symbols := make(map[string]*goivy.Const)
+	for name, entry := range s.SourceSig.Symbols.All() {
+		if entry == nil || entry.Sort == nil {
+			continue
+		}
+		if sortVal, ok := entry.Sort.(goivy.Sort); ok {
+			symbols[name] = goivy.NewConst(name, sortVal)
+		}
+	}
+	return symbols
+}
+
+func (s *Session) sourceSymbolListLocked() []*goivy.Const {
+	symbolMap := s.sourceSymbolMapLocked()
 	names := make([]string, 0, len(symbolMap))
 	for name := range symbolMap {
 		names = append(names, name)
@@ -2066,8 +2133,8 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			break
 		}
 		cd, domainErr := GetDiagramConceptDomainE(
-			s.compiledSortMapLocked(),
-			s.compiledSymbolListLocked(),
+			s.sourceSortMapLocked(),
+			s.sourceSymbolListLocked(),
 			goalClauses.ToFormula(),
 		)
 		if domainErr != nil {
