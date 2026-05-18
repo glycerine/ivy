@@ -200,8 +200,6 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []Expr, top 
 				atom.SetLineno(lineno)
 				result, err := c.CompileInlineCall(atom, callArgs, true)
 				return result, args, err
-			} else {
-				xtracer.Trace("compiler.compile_field_reference_rec action_NOT_found name=%s", destrName)
 			}
 		}
 

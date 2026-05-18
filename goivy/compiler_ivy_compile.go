@@ -1073,7 +1073,7 @@ func FixConstructors(mod *Module) {
 
 		conss, ok := mod.SortConstructors[sortname]
 		if !ok {
-			continue
+			conss = nil
 		}
 
 		newCons := make([]*Const, 0, len(conss))
