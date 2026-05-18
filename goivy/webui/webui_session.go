@@ -211,6 +211,26 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	return s.LoadFileContentWithIsolate(filename, content, "")
 }
 
+func (s *Session) invalidateCachedModelStateLocked() {
+	s.Graph = NewWebUIAnalysisGraphState()
+	s.ConceptSess = nil
+	s.SimpleSess = NewConceptSession()
+	s.toggles = nil
+	s.WebUIProofStack = nil
+	s.ProofMgr = nil
+	s.CompiledModule = nil
+	s.CompiledSig = nil
+	s.SourceModule = nil
+	s.SourceSig = nil
+	s.OriginalConjs = nil
+	s.AG = nil
+	s.AGUI = nil
+	s.CTIUI = nil
+	s.SheetUIs = make(map[string]*AnalysisGraphUI)
+	s.sheetCounter = 1
+	s.ReachableUI = nil
+}
+
 // LoadFileContentWithIsolate is LoadFileContent plus the Web UI isolate choice.
 // In addition to real Ivy isolate names, the UI may pass NoIsolatesFoundChoice
 // for files that declare no user isolates. That sentinel remains a UI/API
@@ -223,6 +243,7 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	}
 	s.FilePath = filename
 	s.FileContent = string(content)
+	s.invalidateCachedModelStateLocked()
 
 	// ======================================================================
 	// FULL COMPILER PIPELINE: parse → compile → module → concept domain.

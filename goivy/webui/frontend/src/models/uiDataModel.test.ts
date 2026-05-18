@@ -620,4 +620,32 @@ describe('UIDataModel — wire format coverage', () => {
       client: { x: 20, y: 30 },
     });
   });
+
+  it('invalidates cached analysis model state without clearing event sheets', () => {
+    const model = new UIDataModel();
+    const store = createUIDataModelStore(model);
+    store.applyArgSnapshot('sheet-1', {
+      elements: [{ group: 'nodes', data: { id: 's0' } }],
+      positions: { s0: { x: 1, y: 2 } },
+    });
+    store.applyConceptSnapshot('sheet-1', {
+      elements: [{ group: 'nodes', data: { id: 'client' } }],
+      positions: { client: { x: 3, y: 4 } },
+    });
+    store.applyCtiSnapshot('sheet-1', { elements: [{ group: 'nodes', data: { id: 'cti0' } }] });
+    store.setSelectedArgNode('sheet-1', 's0');
+    store.setConceptSelections('sheet-1', [{ kind: 'node', id: 'client', obj: 'client' }]);
+    model.registerSheet('events-1', { id: 'events-1', type: 'events' }).argPositions = { kept: { x: 9, y: 9 } };
+
+    store.invalidateModelState();
+
+    expect(model.sheets['sheet-1'].arg).toBeNull();
+    expect(model.sheets['sheet-1'].concept).toBeNull();
+    expect(model.sheets['sheet-1'].cti).toBeNull();
+    expect(model.sheets['sheet-1'].argPositions).toEqual({});
+    expect(model.sheets['sheet-1'].conceptPositions).toEqual({});
+    expect(model.sheets['sheet-1'].selectedArgNode).toBeNull();
+    expect(model.sheets['sheet-1'].conceptSelections).toEqual([]);
+    expect(model.sheets['events-1'].argPositions).toEqual({ kept: { x: 9, y: 9 } });
+  });
 });

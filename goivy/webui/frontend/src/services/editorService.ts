@@ -58,8 +58,14 @@ export function setEditorContent(app, content) {
   app._persistedFileContent = content;
   app._savedFileContent = content;
   if (app.cmEditor && typeof app.cmEditor.setValue === 'function') {
-    app.cmEditor.setValue(content);
-    resetEditorUndoHistory(app.cmEditor);
+    const previousSuppress = app._suppressModelStateInvalidation;
+    app._suppressModelStateInvalidation = true;
+    try {
+      app.cmEditor.setValue(content);
+      resetEditorUndoHistory(app.cmEditor);
+    } finally {
+      app._suppressModelStateInvalidation = previousSuppress;
+    }
   }
   updateEditorLabel(app, {
     updateReopenLastFileButton: () => app._updateReopenLastFileButton(),

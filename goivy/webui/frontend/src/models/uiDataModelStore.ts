@@ -209,6 +209,25 @@ export class UIDataModelStore {
     this.emit({ sheetId: id, changed: ['visualOnly'] });
     return sheet.visualOnly;
   }
+
+  invalidateModelState(): void {
+    const sheetIds = Object.keys(this.model.sheets);
+    if (sheetIds.length === 0) {
+      this.model.registerSheet(this.model.activeSheetId || 'sheet-1');
+    }
+    for (const id of Object.keys(this.model.sheets)) {
+      const sheet = this.model.sheets[id];
+      if (!sheet || sheet.type === 'events') continue;
+      sheet.arg = null;
+      sheet.concept = null;
+      sheet.cti = null;
+      sheet.argPositions = {};
+      sheet.conceptPositions = {};
+      sheet.selectedArgNode = null;
+      sheet.conceptSelections = [];
+      this.emit({ sheetId: id, changed: ['arg', 'concept', 'cti', 'argSelection', 'conceptSelection'] });
+    }
+  }
 }
 
 export function createUIDataModelStore(model: UIDataModel): UIDataModelStore {

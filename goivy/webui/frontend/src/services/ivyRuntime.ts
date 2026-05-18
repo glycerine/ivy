@@ -182,6 +182,52 @@ const defaultRuntimeDependencies = {
 };
 let runtimeDeps = { ...defaultRuntimeDependencies };
 
+const MODEL_RELOAD_API_METHODS = new Set([
+    'loadModel',
+    'loadFile',
+    'reloadContent',
+]);
+
+const MODEL_DEPENDENT_API_METHODS = new Set([
+    'runCommand',
+    'executeAction',
+    'argNodeAction',
+    'proofGoalAction',
+    'runCheck',
+    'getSnapshot',
+    'getARG',
+    'getCTIARG',
+    'getConceptGraph',
+    'getProofGraph',
+    'getMenus',
+    'getToggles',
+    'setToggles',
+    'splitConcept',
+    'supposeEmpty',
+    'removeConcept',
+    'undo',
+    'materializeNode',
+    'materializeEdge',
+    'addProjection',
+    'resetDomain',
+    'diagramDomain',
+]);
+
+function isEventTraceAction(actionName) {
+    return typeof actionName === 'string' && actionName.indexOf('events_') === 0;
+}
+
+function isModelIndependentAPIInvocation(methodName, args) {
+    if (methodName === 'executeAction') {
+        return isEventTraceAction(args && args[0]);
+    }
+    if (methodName === 'runCommand') {
+        var intent = args && args[0];
+        return !!intent && isEventTraceAction(intent.commandId);
+    }
+    return false;
+}
+
 function configureIvyRuntimeDependencies(overrides) {
     runtimeDeps = { ...defaultRuntimeDependencies, ...(overrides || {}) };
     if (overrides && overrides.IvyAPI && !overrides.BrowserIvyAPI) {
@@ -226,10 +272,14 @@ class IvyRuntime {
         this.availableIsolates = [];
         this.activeIsolate = '';
         this._localSheetCounter = 0;
+        this._modelStateInvalid = false;
+        this._modelStateRefreshInProgress = false;
+        this._suppressModelStateInvalidation = false;
+        this._loadedModelContent = '';
     }
 
     createApi(mode = this.jobSubmissionMode || 'browser') {
-        return createIvyApi({
+        var api = createIvyApi({
             fallbackApiFactory: function () {
                 if (mode === 'browser') {
                     return new runtimeDeps.BrowserIvyAPI();
@@ -237,6 +287,74 @@ class IvyRuntime {
                 return new runtimeDeps.IvyAPI();
             },
         });
+        return this._wrapApiForModelInvalidation(api);
+    }
+
+    _wrapApiForModelInvalidation(api) {
+        if (!api || api.__ivyModelInvalidationWrapped) return api;
+        var self = this;
+        var proxy = new Proxy(api, {
+            get(target, prop, receiver) {
+                var value = Reflect.get(target, prop, receiver);
+                if (typeof value !== 'function') return value;
+                var methodName = String(prop);
+                if (MODEL_RELOAD_API_METHODS.has(methodName)) {
+                    return async function () {
+                        var result = await value.apply(target, arguments);
+                        self._markModelStateFresh();
+                        return result;
+                    };
+                }
+                if (MODEL_DEPENDENT_API_METHODS.has(methodName)) {
+                    if (!self._modelStateInvalid) {
+                        return value;
+                    }
+                    return async function () {
+                        if (!isModelIndependentAPIInvocation(methodName, arguments)) {
+                            await self.ensureFreshModelState();
+                        }
+                        return value.apply(target, arguments);
+                    };
+                }
+                return value.bind(target);
+            },
+        });
+        proxy.__ivyModelInvalidationWrapped = true;
+        return proxy;
+    }
+
+    invalidateModelState(reason) {
+        if (this._suppressModelStateInvalidation) return false;
+        this._modelStateInvalid = true;
+        this._modelStateInvalidReason = reason || 'model-change';
+        this.selectedArgNode = null;
+        if (this.uiDataStore && typeof this.uiDataStore.invalidateModelState === 'function') {
+            this.uiDataStore.invalidateModelState();
+        }
+        return true;
+    }
+
+    async ensureFreshModelState() {
+        if (!this._modelStateInvalid || this._modelStateRefreshInProgress) return false;
+        var content = this.cmEditor && typeof this.cmEditor.getValue === 'function'
+            ? this.cmEditor.getValue()
+            : this._persistedFileContent || '';
+        this._modelStateRefreshInProgress = true;
+        try {
+            await this.api.reloadContent(content, this._persistedFileName || 'model.ivy', {
+                isolate: this.activeIsolate || '',
+            });
+            this._markModelStateFresh(content);
+            return true;
+        } finally {
+            this._modelStateRefreshInProgress = false;
+        }
+    }
+
+    _markModelStateFresh(content) {
+        this._modelStateInvalid = false;
+        this._modelStateInvalidReason = '';
+        this._loadedModelContent = content != null ? content : this._editorContent();
     }
 
     /**

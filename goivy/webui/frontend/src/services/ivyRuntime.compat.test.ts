@@ -71,6 +71,54 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(toast.classList.contains('custom-toast')).toBe(true);
   });
 
+  it('reloads edited model content before model-dependent API calls', async () => {
+    let apiInstance: any = null;
+    class ReloadingAPI extends FakeAPI {
+      constructor() {
+        super();
+        apiInstance = this;
+        this.reloadContent = vi.fn(async () => ({ status: 'ok' }));
+        this.executeAction = vi.fn(async () => ({ status: 'ran' }));
+      }
+    }
+    const runtime = makeRuntime({ IvyAPI: ReloadingAPI });
+    runtime.cmEditor = { getValue: vi.fn(() => 'type client\n') };
+    runtime._persistedFileName = 'client.ivy';
+    runtime.activeIsolate = 'iso_client';
+
+    runtime.invalidateModelState('test-edit');
+    const result = await runtime.api.executeAction('diagram', {});
+
+    expect(result).toEqual({ status: 'ran' });
+    expect(apiInstance.reloadContent).toHaveBeenCalledWith('type client\n', 'client.ivy', { isolate: 'iso_client' });
+    expect(apiInstance.executeAction).toHaveBeenCalledWith('diagram', {});
+    expect(apiInstance.reloadContent.mock.invocationCallOrder[0]).toBeLessThan(
+      apiInstance.executeAction.mock.invocationCallOrder[0],
+    );
+    expect(runtime._modelStateInvalid).toBe(false);
+  });
+
+  it('does not reload model content for event-trace-only actions', async () => {
+    let apiInstance: any = null;
+    class EventAPI extends FakeAPI {
+      constructor() {
+        super();
+        apiInstance = this;
+        this.reloadContent = vi.fn(async () => ({ status: 'ok' }));
+        this.executeAction = vi.fn(async () => ({ status: 'events' }));
+      }
+    }
+    const runtime = makeRuntime({ IvyAPI: EventAPI });
+    runtime.cmEditor = { getValue: vi.fn(() => 'edited') };
+
+    runtime.invalidateModelState('test-edit');
+    await runtime.api.executeAction('events_find', { query: 'send' });
+
+    expect(apiInstance.reloadContent).not.toHaveBeenCalled();
+    expect(apiInstance.executeAction).toHaveBeenCalledWith('events_find', { query: 'send' });
+    expect(runtime._modelStateInvalid).toBe(true);
+  });
+
   it('opens job control and toggles browser/remote submission mode', () => {
     document.body.innerHTML = [
       '<button id="btn-toggle-job-control"></button>',

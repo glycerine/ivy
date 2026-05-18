@@ -1007,6 +1007,34 @@ func TestShowVerificationSuccess(t *testing.T) {
 	}
 }
 
+func TestLoadFileContentInvalidatesCachedModelStateBeforeCompile(t *testing.T) {
+	sess := NewSession(goivy.NewConfig(), "test-invalidate-on-edit")
+	if err := sess.LoadFileContent("valid.ivy", []byte(ivySample)); err != nil {
+		t.Fatalf("initial LoadFileContent: %v", err)
+	}
+	if sess.CompiledModule == nil || sess.AG == nil || sess.AGUI == nil || sess.CTIUI == nil {
+		t.Fatalf("expected valid load to populate cached model state")
+	}
+
+	err := sess.LoadFileContent("broken.ivy", []byte("type client\nthis is not ivy syntax @@@\n"))
+	if err == nil {
+		t.Fatal("expected compile error for broken source")
+	}
+	if sess.FileContent != "type client\nthis is not ivy syntax @@@\n" {
+		t.Fatalf("FileContent should track the edited source, got %q", sess.FileContent)
+	}
+	if sess.CompiledModule != nil || sess.CompiledSig != nil || sess.AG != nil || sess.AGUI != nil || sess.CTIUI != nil {
+		t.Fatalf("cached model state survived failed reload: module=%v sig=%v ag=%v agui=%v cti=%v",
+			sess.CompiledModule, sess.CompiledSig, sess.AG, sess.AGUI, sess.CTIUI)
+	}
+	if sess.SimpleSess == nil || sess.SimpleSess.Domain == nil {
+		t.Fatal("SimpleSess should be reset to an empty session")
+	}
+	if len(sess.SimpleSess.Domain.Concepts) != 0 {
+		t.Fatalf("SimpleSess domain should be empty after invalidation, got %d concepts", len(sess.SimpleSess.Domain.Concepts))
+	}
+}
+
 func TestShowVerificationFromTestVectors(t *testing.T) {
 	path := filepath.Join("..", "test_vectors", "bmc_minimal.ivy")
 	if _, err := os.Stat(path); err != nil {
