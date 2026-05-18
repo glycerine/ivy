@@ -35,3 +35,5 @@ control/test-results/
 browser.xtrace.log
 py.xtrace.log
 webui/static/dist
+webui/static/wasm/goivy-webengine.wasm
+z3vendor/z3/wasm.build.good/

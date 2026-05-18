@@ -165,6 +165,15 @@ func webUIIsolateNames(mod *goivy.Module) []string {
 	return append([]string{}, names...)
 }
 
+func stringInSlice(xs []string, needle string) bool {
+	for _, x := range xs {
+		if x == needle {
+			return true
+		}
+	}
+	return false
+}
+
 func webUIImplicitThisIsolate(iso *goivy.IsolateDef) bool {
 	if iso == nil || iso.WithArgs != 0 || iso.Trusted || iso.IsObject || len(iso.Elems) != 2 {
 		return false
@@ -215,6 +224,8 @@ func (s *Session) invalidateCachedModelStateLocked() {
 	s.Graph = NewWebUIAnalysisGraphState()
 	s.ConceptSess = nil
 	s.SimpleSess = NewConceptSession()
+	s.ActiveIsolate = ""
+	s.AvailableIsolates = nil
 	s.toggles = nil
 	s.WebUIProofStack = nil
 	s.ProofMgr = nil
@@ -270,6 +281,9 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 	sourceMod, sourceSig := mod, sig
 	availableIsolates := webUIIsolateNames(mod)
 	activeIsolate := requestedIsolate
+	if activeIsolate != "" && activeIsolate != "this" && activeIsolate != NoIsolatesFoundChoice && !stringInSlice(availableIsolates, activeIsolate) {
+		activeIsolate = ""
+	}
 	if len(availableIsolates) == 0 && (activeIsolate == "" || activeIsolate == "this" || activeIsolate == NoIsolatesFoundChoice) {
 		activeIsolate = NoIsolatesFoundChoice
 		availableIsolates = []string{NoIsolatesFoundChoice}

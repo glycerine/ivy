@@ -161,9 +161,10 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []Expr, top 
 		if c.TopCtx != nil {
 			_, inSig := c.Sig.Symbols.Get2(destrName)
 			_, inAct := c.TopCtx.Actions[destrName]
+			_, inModuleDestr := c.moduleDestructorSymbol(destrName)
 			xtracer.Trace("compiler.compile_field_reference_rec destr_check name=%s inSig=%v inAct=%v", destrName, inSig, inAct)
 			if !inSig {
-				if !inAct {
+				if !inAct && !inModuleDestr {
 					// Try sibling of the sort
 					sortPC := iuCfg.ParentChildName(IvySortName(sort))
 					destrName = iuCfg.ComposeNames(sortPC[0], childName)
@@ -207,7 +208,11 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []Expr, top 
 		// Find the destructor symbol
 		destrSym, err := c.findSymbol(destrName)
 		if err != nil {
-			return nil, args, &cfrError{SymbolName: symbolName}
+			var ok bool
+			destrSym, ok = c.moduleDestructorSymbol(destrName)
+			if !ok {
+				return nil, args, &cfrError{SymbolName: symbolName}
+			}
 		}
 		// Prepend base to args
 		args = append([]Expr{base}, args...)

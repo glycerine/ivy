@@ -475,34 +475,44 @@ func (d *DomainSetup) TypeDecl(node Node) error {
 			d.Compiler.Module.SortDestructors[name] = []*Const{}
 		}
 		for _, field := range v.Fields {
-			if atom, ok := field.(*Atom); ok {
-				fieldName := atom.Rep
-				qualName := name + "." + fieldName
-
-				// Python line 1233-1234: validate field has a sort
-				if atom.ASort == nil {
-					return NewIvyError(atom, fmt.Sprintf("no sort provided for field %s", fieldName))
-				}
-
-				// Get the field's sort
-				var fieldSort Sort = TopS
-				sn := compilerExtractSortRep(atom.ASort)
-				if sn != "" {
-					if s, err := d.Compiler.CmplSort(sn); err == nil {
-						fieldSort = s
-					}
-				}
-
-				// Create destructor: sort -> fieldSort
-				destrSort := FuncConstSort(sort, fieldSort)
-				destr, err := d.Compiler.AddSymbol(qualName, destrSort, d.Compiler.Sig)
-				if err != nil {
-					return err
-				}
-				d.Compiler.Module.DestructorSorts[qualName] = sort
-				d.Compiler.Module.SortDestructors[name] = append(
-					d.Compiler.Module.SortDestructors[name], destr)
+			fieldName := NodeRep(field)
+			var fieldSortNode Node
+			switch f := field.(type) {
+			case *Atom:
+				fieldSortNode = f.ASort
+			case *App:
+				fieldSortNode = f.ASort
+			default:
+				continue
 			}
+			qualName := fieldName
+			if !strings.Contains(fieldName, ".") {
+				qualName = name + "." + fieldName
+			}
+
+			// Python line 1233-1234: validate field has a sort
+			if fieldSortNode == nil {
+				return NewIvyError(field, fmt.Sprintf("no sort provided for field %s", fieldName))
+			}
+
+			// Get the field's sort
+			var fieldSort Sort = TopS
+			sn := compilerExtractSortRep(fieldSortNode)
+			if sn != "" {
+				if s, err := d.Compiler.CmplSort(sn); err == nil {
+					fieldSort = s
+				}
+			}
+
+			// Create destructor: sort -> fieldSort
+			destrSort := FuncConstSort(sort, fieldSort)
+			destr, err := d.Compiler.AddSymbol(qualName, destrSort, d.Compiler.Sig)
+			if err != nil {
+				return err
+			}
+			d.Compiler.Module.DestructorSorts[qualName] = sort
+			d.Compiler.Module.SortDestructors[name] = append(
+				d.Compiler.Module.SortDestructors[name], destr)
 		}
 	default:
 		// Uninterpreted sort

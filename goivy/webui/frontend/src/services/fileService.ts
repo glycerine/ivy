@@ -173,9 +173,10 @@ export async function loadModelFile(app, file, persist, { win = globalThis.windo
       await persist.saveFileHandle(app);
     }
 
+    if (app.setIsolates) app.setIsolates([], '');
     app.setEditorContent(fileContent);
 
-    const loadResult = await app.api.loadFile(file);
+    const loadResult = await app.api.loadFile(file, { isolate: '' });
     if (app.setIsolates) app.setIsolates(loadResult && loadResult.isolates, loadResult && loadResult.isolate);
     const argData = await app.api.getARG();
     if (argData && argData.elements) {
@@ -399,6 +400,7 @@ export async function newModel(app, persist, {
   app._fileHandle = null;
   app._savedFileContent = null;
   app.selectedArgNode = null;
+  if (app.setIsolates) app.setIsolates([], '');
 
   app.setEditorContent('');
   persist.setFileName('');

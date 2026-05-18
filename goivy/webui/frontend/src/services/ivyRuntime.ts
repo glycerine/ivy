@@ -328,6 +328,10 @@ class IvyRuntime {
         this._modelStateInvalid = true;
         this._modelStateInvalidReason = reason || 'model-change';
         this.selectedArgNode = null;
+        this.availableIsolates = [];
+        this.activeIsolate = '';
+        this.renderIsolateMenu();
+        this.updateSheetTabLabels();
         if (this.uiDataStore && typeof this.uiDataStore.invalidateModelState === 'function') {
             this.uiDataStore.invalidateModelState();
         }
@@ -341,9 +345,12 @@ class IvyRuntime {
             : this._persistedFileContent || '';
         this._modelStateRefreshInProgress = true;
         try {
-            await this.api.reloadContent(content, this._persistedFileName || 'model.ivy', {
+            var result = await this.api.reloadContent(content, this._persistedFileName || 'model.ivy', {
                 isolate: this.activeIsolate || '',
             });
+            if (result && (result.isolates || result.isolate)) {
+                this.setIsolates(result.isolates || [], result.isolate || '');
+            }
             this._markModelStateFresh(content);
             return true;
         } finally {
@@ -1174,9 +1181,13 @@ class IvyRuntime {
                 ? this.cmEditor.getValue()
                 : this._persistedFileContent;
             if (content) {
-                await next.reloadContent(content, this._persistedFileName || 'model.ivy', {
-                    isolate: this.activeIsolate || '',
+                var loadResult = await next.reloadContent(content, this._persistedFileName || 'model.ivy', {
+                    isolate: this._modelStateInvalid ? '' : (this.activeIsolate || ''),
                 });
+                if (loadResult && (loadResult.isolates || loadResult.isolate)) {
+                    this.setIsolates(loadResult.isolates || [], loadResult.isolate || '');
+                }
+                this._markModelStateFresh(content);
             }
             this.controls.setStatus(
                 normalized === 'remote' ? 'Running jobs on remote backend' : 'Running jobs in browser',
@@ -3122,8 +3133,12 @@ class IvyRuntime {
             names.push(name);
         }
         names.sort();
+        var activeName = String(active || '').trim();
+        if (activeName && names.length > 0 && names.indexOf(activeName) < 0) {
+            activeName = '';
+        }
         this.availableIsolates = names;
-        this.activeIsolate = String(active || '').trim();
+        this.activeIsolate = activeName;
         this.renderIsolateMenu();
         this.updateSheetTabLabels();
     }

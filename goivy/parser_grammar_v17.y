@@ -1336,28 +1336,11 @@ top:
         $$ = $1
         atom := parser17Acfg(parser17lex).NewAtom($3.(*Symbol).Rep)
         aroundLoc := tokLineno(parser17lex.(*parser17LexAdapter), $2)
+        atom.SetLineno(aroundLoc)
         before := parser17MakeSequence(parser17Acfg(parser17lex), $7)
         after := parser17MakeSequence(parser17Acfg(parser17lex), $10)
-        // before mixin
-        parser17Acfg(parser17lex).LabelCounter++
-        bmixer := parser17Acfg(parser17lex).NewAtom(fmt.Sprintf("%s[before%d]", atom.Rep, parser17Acfg(parser17lex).LabelCounter))
-        bdf := parser17Acfg(parser17lex).NewActionDef(bmixer, before, $4, $5)
-        bdf.SetLineno(aroundLoc)
-        bdecl := parser17Acfg(parser17lex).NewActionDecl(bdf)
-        $$.declare(bdecl)
-        bm := parser17Acfg(parser17lex).NewMixinBeforeDef(bmixer, atom)
-        bmd := parser17Acfg(parser17lex).NewMixinDecl(bm)
-        $$.declare(bmd)
-        // after mixin
-        parser17Acfg(parser17lex).LabelCounter++
-        amixer := parser17Acfg(parser17lex).NewAtom(fmt.Sprintf("%s[after%d]", atom.Rep, parser17Acfg(parser17lex).LabelCounter))
-        adf := parser17Acfg(parser17lex).NewActionDef(amixer, after, $4, $5)
-        adf.SetLineno(aroundLoc)
-        adecl := parser17Acfg(parser17lex).NewActionDecl(adf)
-        $$.declare(adecl)
-        am := parser17Acfg(parser17lex).NewMixinAfterDef(amixer, atom)
-        amd := parser17Acfg(parser17lex).NewMixinDecl(am)
-        $$.declare(amd)
+        handleBeforeAfter(parser17Acfg(parser17lex), "before", atom, before, $$, $4, $5)
+        handleBeforeAfter(parser17Acfg(parser17lex), "after", atom, after, $$, $4, $5)
     }
     // --- After init ---
     | top PARSER_TOK_AFTER PARSER_TOK_INIT optargs topseq

@@ -955,7 +955,8 @@ func (c *Compiler) compileMethodCall(n *MethodCall) (Expr, error) {
 	iuCfg := c.Module.Cfg.IuCfg
 	destrName := iuCfg.ComposeNames(IvySortName(sort), childName)
 	if c.TopCtx != nil {
-		if _, inSig := c.Sig.Symbols.Get2(destrName); !inSig {
+		_, inModuleDestr := c.moduleDestructorSymbol(destrName)
+		if _, inSig := c.Sig.Symbols.Get2(destrName); !inSig && !inModuleDestr {
 			if _, inAct := c.TopCtx.Actions[destrName]; !inAct {
 				// Try sibling of the sort
 				pc := iuCfg.ParentChildName(IvySortName(sort))
@@ -982,7 +983,11 @@ func (c *Compiler) compileMethodCall(n *MethodCall) (Expr, error) {
 	// Find the destructor symbol
 	sym, err := c.findSymbol(destrName)
 	if err != nil {
-		return nil, err
+		var ok bool
+		sym, ok = c.moduleDestructorSymbol(destrName)
+		if !ok {
+			return nil, err
+		}
 	}
 	allArgs := append([]Expr{base}, methodArgs...)
 	if len(allArgs) == 0 {
@@ -1330,6 +1335,23 @@ func (c *Compiler) findSymbol(name string) (*Const, error) {
 		return sym, nil
 	}
 	return c.Sig.FindSymbol(name, false)
+}
+
+func (c *Compiler) moduleDestructorSymbol(name string) (*Const, bool) {
+	if c == nil || c.Module == nil {
+		return nil, false
+	}
+	if _, ok := c.Module.DestructorSorts[name]; !ok {
+		return nil, false
+	}
+	for _, destrs := range c.Module.SortDestructors {
+		for _, destr := range destrs {
+			if destr != nil && destr.Name == name {
+				return destr, true
+			}
+		}
+	}
+	return nil, false
 }
 
 // CompileDefn compiles a definition (lhs = rhs) AST node.

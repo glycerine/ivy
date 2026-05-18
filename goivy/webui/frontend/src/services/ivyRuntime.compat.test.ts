@@ -77,7 +77,7 @@ describe('ivyRuntime compatibility behavior', () => {
       constructor() {
         super();
         apiInstance = this;
-        this.reloadContent = vi.fn(async () => ({ status: 'ok' }));
+        this.reloadContent = vi.fn(async () => ({ status: 'ok', isolates: ['fresh_iso'], isolate: 'fresh_iso' }));
         this.executeAction = vi.fn(async () => ({ status: 'ran' }));
       }
     }
@@ -85,17 +85,22 @@ describe('ivyRuntime compatibility behavior', () => {
     runtime.cmEditor = { getValue: vi.fn(() => 'type client\n') };
     runtime._persistedFileName = 'client.ivy';
     runtime.activeIsolate = 'iso_client';
+    runtime.availableIsolates = ['iso_client'];
 
     runtime._invalidateModelState('test-edit');
+    expect(runtime.activeIsolate).toBe('');
+    expect(runtime.availableIsolates).toEqual([]);
     const result = await runtime.api.executeAction('diagram', {});
 
     expect(result).toEqual({ status: 'ran' });
-    expect(apiInstance.reloadContent).toHaveBeenCalledWith('type client\n', 'client.ivy', { isolate: 'iso_client' });
+    expect(apiInstance.reloadContent).toHaveBeenCalledWith('type client\n', 'client.ivy', { isolate: '' });
     expect(apiInstance.executeAction).toHaveBeenCalledWith('diagram', {});
     expect(apiInstance.reloadContent.mock.invocationCallOrder[0]).toBeLessThan(
       apiInstance.executeAction.mock.invocationCallOrder[0],
     );
     expect(runtime._modelStateInvalid).toBe(false);
+    expect(runtime.activeIsolate).toBe('fresh_iso');
+    expect(runtime.availableIsolates).toEqual(['fresh_iso']);
   });
 
   it('does not reload model content for event-trace-only actions', async () => {
@@ -275,6 +280,24 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(document.getElementById('isolate-menu-title')?.getAttribute('title')).toBe('choose isolate');
     expect(document.querySelector('#isolate-menu .dropdown-heading')?.textContent).toBe('choose isolate:');
     expect(Array.from(document.querySelectorAll('#isolate-menu a')).map((item) => item.textContent)).toEqual(['no_isolates_found']);
+    expect(document.querySelector('.sheet-tab span')?.textContent).toBe('Sheet 1');
+  });
+
+  it('does not keep an active isolate that is absent from the current isolate list', () => {
+    document.body.innerHTML = [
+      '<div id="isolate-menu-wrapper" class="dropdown isolate-menu" hidden>',
+      '  <span id="isolate-menu-title" class="panel-menu" data-dropdown="isolate-menu">isolate</span>',
+      '  <div id="isolate-menu" class="dropdown-content"></div>',
+      '</div>',
+      '<div id="tab-bar"><button class="sheet-tab active" data-sheet="sheet-1"><span>Sheet 1</span></button></div>',
+    ].join('');
+    const runtime = makeRuntime();
+
+    runtime.setIsolates(['service', 'protocol'], 'dramc_nb2');
+
+    expect(runtime.activeIsolate).toBe('');
+    expect(runtime.availableIsolates).toEqual(['protocol', 'service']);
+    expect(document.getElementById('isolate-menu-title')?.textContent).toBe('isolate');
     expect(document.querySelector('.sheet-tab span')?.textContent).toBe('Sheet 1');
   });
 

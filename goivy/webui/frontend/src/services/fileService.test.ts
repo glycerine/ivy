@@ -3,6 +3,7 @@ import {
   confirmNoExternalChangeBeforeSave,
   downloadModelForUnsupportedSave,
   ensureFileHandleWritable,
+  loadModelFile,
   mergeDiskVersionIntoEditBuffer,
   rememberLastOpenFile,
   restoreFileHandleForCurrentFile,
@@ -83,6 +84,54 @@ function makeSaveApp({
 }
 
 describe('fileService', () => {
+  it('clears stale isolate selection before loading a new model file', async () => {
+    const controls = {
+      showLoading: vi.fn(),
+      hideLoading: vi.fn(),
+      setStatus: vi.fn(),
+    };
+    const app: any = {
+      controls,
+      _fileHandle: null,
+      activeIsolate: 'dramc_nb2',
+      availableIsolates: ['dramc_nb2'],
+      setIsolates: vi.fn((isolates, active) => {
+        app.availableIsolates = isolates || [];
+        app.activeIsolate = active || '';
+      }),
+      setEditorContent: vi.fn(),
+      api: {
+        loadFile: vi.fn(async () => ({ isolates: ['protocol', 'service'], isolate: 'protocol' })),
+        getARG: vi.fn(async () => null),
+        getConceptGraph: vi.fn(async () => null),
+      },
+    };
+    const persist = makePersist();
+    class FakeFileReader {
+      result = '';
+      onload: null | (() => void) = null;
+      onerror: null | (() => void) = null;
+      readAsText(file: any) {
+        this.result = file.content;
+        if (this.onload) this.onload();
+      }
+    }
+
+    await loadModelFile(
+      app,
+      { name: 'echo.ivy', content: '#lang ivy1.7\n' },
+      persist,
+      { win: { FileReader: FakeFileReader } },
+    );
+
+    expect(app.setIsolates).toHaveBeenNthCalledWith(1, [], '');
+    expect(app.api.loadFile).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'echo.ivy' }),
+      { isolate: '' },
+    );
+    expect(app.setIsolates).toHaveBeenLastCalledWith(['protocol', 'service'], 'protocol');
+  });
+
   it('checks writable permissions only when the browser handle requires it', async () => {
     const app = {
       _fileHandle: {

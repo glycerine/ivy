@@ -305,6 +305,29 @@ func TestLoadWithoutDeclaredIsolatesIgnoresStaleThisChoice(t *testing.T) {
 	}
 }
 
+func TestLoadWithDeclaredIsolatesIgnoresStaleUnknownChoice(t *testing.T) {
+	const content = `#lang ivy1.7
+
+isolate alpha = {
+    type t
+}
+
+isolate beta = {
+    type u
+}
+`
+	s := NewSession(goivy.NewConfig(), "test-stale-unknown-isolate")
+	if err := s.LoadFileContentWithIsolate("two_isolates.ivy", []byte(content), "dramc_nb2"); err != nil {
+		t.Fatalf("LoadFileContentWithIsolate: %v", err)
+	}
+	if s.ActiveIsolate != "alpha" {
+		t.Fatalf("ActiveIsolate = %q, want alpha", s.ActiveIsolate)
+	}
+	if len(s.AvailableIsolates) != 2 || s.AvailableIsolates[0] != "alpha" || s.AvailableIsolates[1] != "beta" {
+		t.Fatalf("AvailableIsolates = %#v, want [alpha beta]", s.AvailableIsolates)
+	}
+}
+
 func countSimpleConceptNodesOfSort(cs *ConceptSession, sortName string) int {
 	if cs == nil || cs.Domain == nil {
 		return 0

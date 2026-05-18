@@ -134,6 +134,30 @@ func TestDomainSetupDestructor(t *testing.T) {
 	}
 }
 
+func TestDomainSetupStructFieldsFromParserAppsRegisterDestructors(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+	c.Sig.AddSort(&UninterpretedSort{Name: "data"})
+
+	field := cfg.NewApp(cfg.NewSymbol("request.content", nil))
+	field.ASort = cfg.NewSymbol("data", nil)
+	td := cfg.NewTypeDef(cfg.NewAtom("request"), cfg.NewStructSort(field))
+	decl := cfg.NewTypeDecl(td)
+
+	if err := NewDomainSetup(c).ProcessDecls([]Node{decl}); err != nil {
+		t.Fatalf("ProcessDecls: %v", err)
+	}
+	if _, ok := c.Module.DestructorSorts["request.content"]; !ok {
+		t.Fatalf("request.content destructor missing; got %#v", c.Module.DestructorSorts)
+	}
+	if _, ok := c.Module.DestructorSorts["request.request.content"]; ok {
+		t.Fatalf("struct field destructor was double-qualified: %#v", c.Module.DestructorSorts)
+	}
+	if _, ok := c.Sig.Symbols.Get2("request.content"); !ok {
+		t.Fatal("request.content missing from signature")
+	}
+}
+
 // TestDomainSetupDestructorNoDomain checks that a 0-arity destructor raises an error.
 // Python: raises IvyError "A destructor must have at least one parameter"
 func TestDomainSetupDestructorNoDomain(t *testing.T) {

@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -35,6 +36,38 @@ specification {
 		}
 		t.Error("expected 'spec' attribute from specification block")
 	}
+}
+
+func TestAroundInfersTargetActionFormals(t *testing.T) {
+	input := `#lang 1.7
+type t
+action a(x:t)
+around a {
+    require x = x;
+    ...
+}`
+	result, err := Parse(input, Version{1, 7})
+	if err != nil {
+		t.Fatalf("parse: %v", err)
+	}
+	for _, d := range result.Decls {
+		ad, ok := d.(*ActionDecl)
+		if !ok {
+			continue
+		}
+		for _, arg := range ad.DeclArgs {
+			def, ok := arg.(*ActionDef)
+			if !ok || !strings.Contains(NodeRep(def.Name), "[before") {
+				continue
+			}
+			params, _ := def.Formals()
+			if len(params) != 1 || NodeRep(params[0]) != "x" {
+				t.Fatalf("around before formals = %#v, want x", params)
+			}
+			return
+		}
+	}
+	t.Fatal("around before action not found")
 }
 
 // TestGlobalAndCommonSeparateSlots verifies that GLOBAL and COMMON use
