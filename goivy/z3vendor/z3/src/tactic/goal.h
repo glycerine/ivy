@@ -178,6 +178,16 @@ bool test(goal const & g, Predicate & proc) {
     catch (typename Predicate::found) {
         return true;
     }
+#ifdef __EMSCRIPTEN__
+    // Emscripten's wasm EH path can fail to match the dependent nested
+    // Predicate::found type used by Z3's probe predicates, letting internal
+    // probe sentinels escape through the C API. These tests intentionally use
+    // exceptions only as local "found" control flow, so keep wasm behavior
+    // aligned with native by treating any probe exception as found.
+    catch (...) {
+        return true;
+    }
+#endif
     return false;
 }
 
