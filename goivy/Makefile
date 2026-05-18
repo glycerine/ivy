@@ -110,7 +110,7 @@ z3-wasm-exports: webui/static/wasm/z3-wasm-exported-functions.json
 
 # builds: libz3.a(wasm despite the .a re-use); and in turn,
 # the build-wasm-api.sh script turns that into: z3-api.wasm and z3-api.js
-z3vendor/z3/wasm.build/libz3.a:
+z3vendor/z3/wasm.build/libz3.a: z3vendor/z3/wasm.build/libz3.a webui/static/wasm/z3-wasm-exported-functions.json z3vendor/z3/build-wasm-api.sh z3vendor/z3/src/api/js/ivy_z3_wasm_syscalls.cc
 	cd z3vendor/z3 && \
 		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
 		EM_CACHE="/tmp/ivy-emscripten-cache" AR=emar CXX=em++ CC=emcc \
@@ -120,6 +120,11 @@ z3vendor/z3/wasm.build/libz3.a:
 	cd z3vendor/z3/wasm.build && \
 		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
 		EM_CACHE="/tmp/ivy-emscripten-cache" emmake $(MAKE) -j8 libz3.a
+	# generate wasm.build/z3-api.js and wasm.build/z3-api.wasm by running build-wasm-api.sh
+	cd z3vendor/z3 && \
+		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
+		EM_CACHE="/tmp/ivy-emscripten-cache" EMCC="$(HOME)/go/src/github.com/emscripten-core/emsdk/upstream/emscripten/emcc" ./build-wasm-api.sh
+	# last step is to generate z3vendor/z3/wasm.build/z3-api.exnref.wasm by running wasm-opt; see below
 
 z3-wasm-lib-wasm-eh: z3vendor/z3/wasm.build/libz3.a
 
@@ -127,9 +132,7 @@ z3-wasm-lib-wasm-eh: z3vendor/z3/wasm.build/libz3.a
 # 	cd z3vendor/z3 && \
 # 		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
 # 		EM_CACHE="/tmp/ivy-emscripten-cache" EMCC="$(HOME)/go/src/github.com/emscripten-core/emsdk/upstream/emscripten/emcc" ./build-wasm-api.sh
-# 	touch z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp
-#
-# z3-wasm-api-link: z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp
+# generates: wasm.build/z3-api.js and wasm.build/z3-api.wasm
 
 z3vendor/z3/wasm.build/z3-api.exnref.wasm: z3vendor/z3/wasm.build/z3-api.wasm z3vendor/z3/wasm.build/z3-api.js
 	cp -p z3vendor/z3/wasm.build/z3-api.wasm z3vendor/z3/wasm.build/z3-api.pre-exnref.wasm
@@ -144,38 +147,10 @@ z3vendor/z3/wasm.build/z3-api.exnref.wasm: z3vendor/z3/wasm.build/z3-api.wasm z3
 		--enable-nontrapping-float-to-int \
 		-o z3vendor/z3/wasm.build/z3-api.exnref.wasm z3vendor/z3/wasm.build/z3-api.pre-exnref.wasm
 
-# symlink instead of copying now
-# webui/static/wasm/z3-471-api.wasm: z3vendor/z3/wasm.build/z3-api.exnref.wasm
-# 	cp -p z3vendor/z3/wasm.build/z3-api.exnref.wasm webui/static/wasm/z3-471-api.wasm
-# 	chmod 0644 webui/static/wasm/z3-471-api.wasm
-#
-# webui/static/wasm/z3-471-api.js: # z3vendor/z3/wasm.build/.z3-api-wasm-eh.stamp
-# 	cp -p z3vendor/z3/wasm.build/z3-api.js webui/static/wasm/z3-471-api.js
-# 	chmod 0644 webui/static/wasm/z3-471-api.js
-#
-#z3-wasm-api: webui/static/wasm/z3-471-api.wasm webui/static/wasm/z3-471-api.js
-#
-#z3-wasm-api-wazero: z3-wasm-api
-
 webui/static/wasm/wasm_exec-go1.25.6.js: /usr/local/go/lib/wasm/wasm_exec.js
 	cp -p /usr/local/go/lib/wasm/wasm_exec.js webui/static/wasm/wasm_exec-go1.25.6.js
 
 vendor-go-wasm-exec-js: webui/static/wasm/wasm_exec-go1.25.6.js
-
-# webui/static/wasm/z3-471-api.wasm: 
-# 	mkdir -p webui/static/wasm
-# 	cp -p webui/static/wasm/z3-471-api.wasm webui/static/wasm/z3-471-api.wasm
-# 	chmod 0644 webui/static/wasm/z3-471-api.wasm
-
-# webui/static/wasm/z3-471-api.js: webui/static/wasm/z3-471-api.js
-# 	mkdir -p webui/static/wasm
-# 	cp -p webui/static/wasm/z3-471-api.js webui/static/wasm/z3-471-api.js
-# 	chmod 0644 webui/static/wasm/z3-471-api.js
-
-# webui/static/wasm/wasm_exec-go1.25.6.js: webui/static/wasm/wasm_exec-go1.25.6.js
-# 	mkdir -p webui/static/wasm
-# 	cp -p webui/static/wasm/wasm_exec-go1.25.6.js webui/static/wasm/wasm_exec-go1.25.6.js
-# 	chmod 0644 webui/static/wasm/wasm_exec-go1.25.6.js
 
 webui/static/wasm/include-tree.json: webui/scripts/build-include-tree.mjs $(shell find ../ivy-lang-examples/ivy/include -type f -name '*.ivy' 2>/dev/null)
 	node webui/scripts/build-include-tree.mjs ../ivy-lang-examples/ivy/include webui/static/wasm/include-tree.json
