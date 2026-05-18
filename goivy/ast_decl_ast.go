@@ -1470,8 +1470,15 @@ func (i *IsolateDef) Clone(args []Node) Node {
 }
 func (i *IsolateDef) IsoName() string {
 	if len(i.Elems) > 0 {
-		if a, ok := i.Elems[0].(*Atom); ok {
-			return a.Relname()
+		switch n := i.Elems[0].(type) {
+		case *Atom:
+			return n.Relname()
+		case *App:
+			return n.Relname()
+		case *Variable:
+			return n.Rep
+		case *Symbol:
+			return n.Rep
 		}
 	}
 	return ""
