@@ -268,6 +268,10 @@ func ParseArrayTheory(name string) (key, val string, ok bool) {
 // ParseIntParams parses integer parameters from a sort name like "bv[32]".
 func ParseIntParams(name string) (base string, params []int, ok bool) {
 	xtracer.Trace("ivy_solver.py:152 parse_int_params() ENTER name=%s", name)
+	return parseIntParamsNoTrace(name)
+}
+
+func parseIntParamsNoTrace(name string) (base string, params []int, ok bool) {
 	for i, c := range name {
 		if c == '[' {
 			base = name[:i]
@@ -305,7 +309,7 @@ func IsSolverSort(name string) bool {
 		"Int", "Bool", "Real", "String": // Z3 capitalized forms
 		return true
 	}
-	if base, _, ok := ParseIntParams(name); ok {
+	if base, _, ok := parseIntParamsNoTrace(name); ok {
 		switch base {
 		case "bv", "strbv", "intbv", "arr", "array":
 			return true

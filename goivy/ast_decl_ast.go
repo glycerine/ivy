@@ -1435,11 +1435,9 @@ func (d *IsolateDecl) String() string { return "isolate" }
 func (d *IsolateDecl) Defines() []string {
 	var names []string
 	for _, arg := range d.DeclArgs {
-		if idef, ok := arg.(*IsolateDef); ok {
-			if len(idef.Elems) > 0 {
-				if rep := NodeRep(idef.Elems[0]); rep != "" {
-					names = append(names, rep)
-				}
+		if idef, ok := arg.(interface{ IsoName() string }); ok {
+			if rep := idef.IsoName(); rep != "" {
+				names = append(names, rep)
 			}
 		}
 	}
@@ -1467,7 +1465,7 @@ func (cfg *AstConfig) NewIsolateDef(elems []Node, withArgs int) *IsolateDef {
 
 func (i *IsolateDef) Args() []Node { return i.Elems }
 func (i *IsolateDef) Clone(args []Node) Node {
-	return &IsolateDef{Base: i.Base, Elems: args, WithArgs: i.WithArgs}
+	return &IsolateDef{Base: i.Base, Elems: args, WithArgs: i.WithArgs, Trusted: i.Trusted, IsObject: i.IsObject}
 }
 func (i *IsolateDef) IsoName() string {
 	if len(i.Elems) > 0 {
@@ -1956,6 +1954,19 @@ func (d *InstantiateDecl) Clone(args []Node) Node {
 	return &InstantiateDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *InstantiateDecl) String() string { return "instantiate" }
+func (d *InstantiateDecl) Defines() []string {
+	var names []string
+	for _, arg := range d.DeclArgs {
+		inst, ok := arg.(*Instantiation)
+		if !ok || inst.Name == nil {
+			continue
+		}
+		if name := NodeRep(inst.Name); name != "" {
+			names = append(names, name)
+		}
+	}
+	return names
+}
 
 // AutoInstanceDecl declares automatic instantiation.
 type AutoInstanceDecl struct {
@@ -2527,7 +2538,7 @@ func DeclName(decl Node) string {
 	case *ExportDecl:
 		return "export"
 	case *ImportDecl:
-		return "import"
+		return "import_"
 	case *IsolateDecl:
 		return "isolate"
 	case *InterpretDecl:

@@ -772,6 +772,21 @@ func parser17MakeSequence(cfg *AstConfig, stmts []Node) Node {
 	return cfg.NewSequence(stmts...)
 }
 
+// parser17StmtToSeq matches Python stmt_to_seq() used by around declarations
+// in Ivy 1.7. It deliberately has its own trace boundary before lowering.
+func parser17StmtToSeq(cfg *AstConfig, stmts []Node) Node {
+	xtracer.Trace("parser.stmt_to_seq ENTER")
+	stmts = lowerVarStmts(stmts)
+	if len(stmts) == 1 {
+		return stmts[0]
+	}
+	res := cfg.NewSequence(stmts...)
+	if len(stmts) > 0 {
+		res.SetLineno(stmts[0].GetLineno())
+	}
+	return res
+}
+
 //line yacctab:1
 var parser17Exca = [...]int16{
 	-1, 1,
@@ -2731,8 +2746,8 @@ parser17default:
 			atom := parser17Acfg(parser17lex).NewAtom(parser17Dollar[3].node.(*Symbol).Rep)
 			aroundLoc := tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok)
 			atom.SetLineno(aroundLoc)
-			before := parser17MakeSequence(parser17Acfg(parser17lex), parser17Dollar[7].nodes)
-			after := parser17MakeSequence(parser17Acfg(parser17lex), parser17Dollar[10].nodes)
+			before := parser17StmtToSeq(parser17Acfg(parser17lex), parser17Dollar[7].nodes)
+			after := parser17StmtToSeq(parser17Acfg(parser17lex), parser17Dollar[10].nodes)
 			handleBeforeAfter(parser17Acfg(parser17lex), "before", atom, before, parser17VAL.accum, parser17Dollar[4].nodes, parser17Dollar[5].nodes)
 			handleBeforeAfter(parser17Acfg(parser17lex), "after", atom, after, parser17VAL.accum, parser17Dollar[4].nodes, parser17Dollar[5].nodes)
 		}
@@ -2861,7 +2876,7 @@ parser17default:
 			pdef := parser17Acfg(parser17lex).NewProcessDef(*edef)
 			pdef.Elems[0].SetLineno(tokLineno(lex, parser17Dollar[2].tok))
 			pdef.SetLineno(tokLineno(lex, parser17Dollar[2].tok))
-			id := parser17Acfg(parser17lex).NewIsolateObjectDecl(*parser17Acfg(parser17lex).NewIsolateDecl(&pdef.IsolateDef))
+			id := parser17Acfg(parser17lex).NewIsolateObjectDecl(*parser17Acfg(parser17lex).NewIsolateDecl(pdef))
 			parser17VAL.accum.declare(id)
 			// Python: stack.pop() equivalent
 			lex.accum = parser17VAL.accum
@@ -2883,7 +2898,7 @@ parser17default:
 			edef := parser17Acfg(parser17lex).NewExtractDef(*parser17Acfg(parser17lex).NewIsolateDef(elems, len(parser17Dollar[6].nodes)))
 			edef.Elems[0].SetLineno(tokLineno(lex, parser17Dollar[2].tok))
 			edef.SetLineno(tokLineno(lex, parser17Dollar[2].tok))
-			id := parser17Acfg(parser17lex).NewIsolateDecl(&edef.IsolateDef)
+			id := parser17Acfg(parser17lex).NewIsolateDecl(edef)
 			parser17VAL.accum.declare(id)
 		}
 	case 47:
@@ -3014,7 +3029,7 @@ parser17default:
 			tdfn.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[4].tok))
 			td := parser17Acfg(parser17lex).NewTypeDecl(tdfn)
 			parser17VAL.accum.declare(td)
-			vdfn := parser17Acfg(parser17lex).NewVariantDef(scnst, parser17Dollar[5].node)
+			vdfn := parser17Acfg(parser17lex).NewVariantDef(scnst, parser17Acfg(parser17lex).NewAtom(NodeRep(parser17Dollar[5].node)))
 			vd := parser17Acfg(parser17lex).NewVariantDecl(vdfn)
 			parser17VAL.accum.declare(vd)
 		}
@@ -3030,7 +3045,7 @@ parser17default:
 			tdfn.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[4].tok))
 			td := parser17Acfg(parser17lex).NewTypeDecl(tdfn)
 			parser17VAL.accum.declare(td)
-			vdfn := parser17Acfg(parser17lex).NewVariantDef(scnst, parser17Dollar[5].node)
+			vdfn := parser17Acfg(parser17lex).NewVariantDef(scnst, parser17Acfg(parser17lex).NewAtom(NodeRep(parser17Dollar[5].node)))
 			vd := parser17Acfg(parser17lex).NewVariantDecl(vdfn)
 			parser17VAL.accum.declare(vd)
 		}
@@ -3450,7 +3465,7 @@ parser17default:
 //line parser_grammar_v17.y:2038
 		{
 			xtracer.Trace("parser.p_term_term_PTO_term ENTER (term)")
-			n := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol("*>", nil), parser17Dollar[1].node, parser17Dollar[3].node)
+			n := parser17Acfg(parser17lex).NewAtom("*>", parser17Dollar[1].node, parser17Dollar[3].node)
 			n.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
 			parser17VAL.node = n
 		}

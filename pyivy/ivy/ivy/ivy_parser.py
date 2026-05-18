@@ -2195,6 +2195,7 @@ if not (iu.get_numeric_version() <= [1,1]):
 
     if not (iu.get_numeric_version() <= [1,6]):
         def stmt_to_seq(stmts,p,n):
+            # no Go-side counterpart at the moment. TODO: add it in.
             if __debug__: xtracer.trace("parser.stmt_to_seq ENTER")
             stmts = lower_var_stmts(stmts)
             if len(stmts) == 1:
