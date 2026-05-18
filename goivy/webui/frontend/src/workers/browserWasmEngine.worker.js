@@ -64,6 +64,11 @@ async function handleMessage(request) {
           sessionId: session.id,
           model: request.model || {},
         });
+        postJobComplete(session.id, {
+          phase: 'browser-wasm-load',
+          message: 'Model loaded in browser engine.',
+          value,
+        });
         post({ type: 'load-result', requestId: request.requestId, value });
         break;
       }
@@ -84,6 +89,12 @@ async function handleMessage(request) {
           requestId: request.requestId,
           sessionId: session.id,
           intent: request.intent || {},
+        });
+        postJobComplete(session.id, {
+          phase: 'browser-wasm-command',
+          commandId: request.intent && request.intent.commandId,
+          message: commandCompleteMessage(value),
+          value,
         });
         post({ type: 'command-result', requestId: request.requestId, value });
         break;
@@ -234,6 +245,37 @@ function nextId(prefix) {
 
 function postEvent(sessionId, event) {
   post({ type: 'event', requestId: nextId('event'), sessionId, event });
+}
+
+function postJobComplete(sessionId, { phase, commandId, message, value }) {
+  postEvent(sessionId, {
+    type: 'job-progress',
+    data: {
+      phase,
+      commandId,
+      status: 'complete',
+      level: resultLevel(value),
+      message,
+    },
+  });
+}
+
+function commandCompleteMessage(value) {
+  if (value && typeof value.message === 'string' && value.message.trim()) {
+    return value.message.trim();
+  }
+  const verdict = value && (value.result || value.status);
+  if (verdict && verdict !== 'ok') {
+    return `Browser command complete: ${verdict}`;
+  }
+  return 'Browser command complete.';
+}
+
+function resultLevel(value) {
+  const verdict = String(value && (value.result || value.status) || '').toLowerCase();
+  if (verdict === 'error' || verdict === 'fail' || verdict === 'failed') return 'error';
+  if (verdict === 'warning' || verdict === 'cancelled' || verdict === 'canceled') return 'warning';
+  return 'success';
 }
 
 function post(response) {
