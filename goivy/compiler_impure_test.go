@@ -7,6 +7,15 @@ import (
 	"testing"
 )
 
+func nativeActionCodeString(t *testing.T, code Expr) string {
+	t.Helper()
+	nativeCode, ok := code.(*NativeCode)
+	if !ok {
+		t.Fatalf("expected Code to be *NativeCode, got %T", code)
+	}
+	return nativeCode.Code
+}
+
 func TestCompileNativeAction_ImpureFlag(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()
@@ -29,13 +38,9 @@ func TestCompileNativeAction_ImpureFlag(t *testing.T) {
 		t.Error("NativeAction.Impure should be true when code starts with 'impure'")
 	}
 
-	// Verify "impure" line was stripped from code
-	codeConst, ok := na.Code.(*Const)
-	if !ok {
-		t.Fatalf("expected Code to be *lg.Const, got %T", na.Code)
-	}
-	if codeConst.Name != "actual_code_here" {
-		t.Errorf("code after stripping = %q, want %q", codeConst.Name, "actual_code_here")
+	// Verify "impure" line was stripped from code.
+	if got := nativeActionCodeString(t, na.Code); got != "actual_code_here" {
+		t.Errorf("code after stripping = %q, want %q", got, "actual_code_here")
 	}
 }
 
@@ -61,13 +66,9 @@ func TestCompileNativeAction_NotImpure(t *testing.T) {
 		t.Error("NativeAction.Impure should be false for normal code")
 	}
 
-	// Verify code is preserved unchanged
-	codeConst, ok := na.Code.(*Const)
-	if !ok {
-		t.Fatalf("expected Code to be *lg.Const, got %T", na.Code)
-	}
-	if codeConst.Name != "normal_code\nmore_code" {
-		t.Errorf("code = %q, want %q", codeConst.Name, "normal_code\nmore_code")
+	// Verify code is preserved unchanged.
+	if got := nativeActionCodeString(t, na.Code); got != "normal_code\nmore_code" {
+		t.Errorf("code = %q, want %q", got, "normal_code\nmore_code")
 	}
 }
 
@@ -90,12 +91,8 @@ func TestCompileActionBodyNativeActionPreservesCode(t *testing.T) {
 	if na.Code == nil {
 		t.Fatal("native action code is nil")
 	}
-	codeConst, ok := na.Code.(*Const)
-	if !ok {
-		t.Fatalf("expected Code to be *Const, got %T", na.Code)
-	}
-	if codeConst.Name != "native_code" {
-		t.Errorf("code = %q, want %q", codeConst.Name, "native_code")
+	if got := nativeActionCodeString(t, na.Code); got != "native_code" {
+		t.Errorf("code = %q, want %q", got, "native_code")
 	}
 }
 
@@ -122,12 +119,8 @@ func TestCompileNativeAction_ImpureWithWhitespace(t *testing.T) {
 		t.Error("NativeAction.Impure should be true for '  impure  ' (with whitespace)")
 	}
 
-	codeConst, ok := na.Code.(*Const)
-	if !ok {
-		t.Fatalf("expected Code to be *lg.Const, got %T", na.Code)
-	}
-	if codeConst.Name != "code_body" {
-		t.Errorf("code after stripping = %q, want %q", codeConst.Name, "code_body")
+	if got := nativeActionCodeString(t, na.Code); got != "code_body" {
+		t.Errorf("code after stripping = %q, want %q", got, "code_body")
 	}
 }
 
@@ -153,11 +146,7 @@ func TestCompileNativeAction_ImpureOnly(t *testing.T) {
 		t.Error("NativeAction.Impure should be true when code is just 'impure'")
 	}
 
-	codeConst, ok := na.Code.(*Const)
-	if !ok {
-		t.Fatalf("expected Code to be *lg.Const, got %T", na.Code)
-	}
-	if codeConst.Name != "" {
-		t.Errorf("code after stripping = %q, want empty string", codeConst.Name)
+	if got := nativeActionCodeString(t, na.Code); got != "" {
+		t.Errorf("code after stripping = %q, want empty string", got)
 	}
 }

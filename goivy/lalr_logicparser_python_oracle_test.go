@@ -40,8 +40,20 @@ func pythonScriptPath() string {
 
 // pyivyDir returns the path to the Python Ivy source tree.
 func pyivyDir() string {
+	if root := os.Getenv("PYIVY_ROOT"); root != "" {
+		return root
+	}
 	home := os.Getenv("HOME")
-	return filepath.Join(home, "pyivy", "ivy")
+	candidates := []string{
+		filepath.Join(home, "ivy", "pyivy", "ivy"),
+		filepath.Join(home, "pyivy", "ivy"),
+	}
+	for _, candidate := range candidates {
+		if st, err := os.Stat(candidate); err == nil && st.IsDir() {
+			return candidate
+		}
+	}
+	return candidates[0]
 }
 
 // newPythonOracle starts the Python oracle subprocess.
@@ -59,6 +71,11 @@ func newPythonOracle() (*PythonOracle, error) {
 	// Use -O to suppress __debug__/xtracer output
 	cmd := exec.Command("python3", "-O", script)
 	cmd.Dir = ivyDir
+	pythonPath := ivyDir
+	if existing := os.Getenv("PYTHONPATH"); existing != "" {
+		pythonPath += string(os.PathListSeparator) + existing
+	}
+	cmd.Env = append(os.Environ(), "PYTHONPATH="+pythonPath)
 	cmd.Stderr = os.Stderr // let Python errors through for debugging
 
 	stdin, err := cmd.StdinPipe()
