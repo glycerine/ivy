@@ -315,8 +315,10 @@ func parseBinary(path string, data []byte) (*wasmBinary, error) {
 	}
 	version := uint32(data[4]) | uint32(data[5])<<8 | uint32(data[6])<<16 | uint32(data[7])<<24
 
+	abs, err := filepath.Abs(path)
+	panicOn(err)
 	wb := &wasmBinary{
-		path:           path,
+		path:           abs,
 		version:        version,
 		customSections: make(map[string][]byte),
 		targetFeatures: make(map[string]bool),
@@ -682,4 +684,10 @@ func Blake3OfFile(path string) (blake3sum string, err error) {
 
 	blake3sum = "blake3.33B-" + cristalbase64.URLEncoding.EncodeToString(sum[:33])
 	return
+}
+
+func panicOn(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
