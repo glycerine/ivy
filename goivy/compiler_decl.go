@@ -467,6 +467,7 @@ func (d *DomainSetup) TypeDecl(node Node) error {
 		// Add the sort and its destructors
 		// Corresponds to Python ivy_compiler.py:1225-1239
 		sort := &UninterpretedSort{Name: name}
+		xtracer.Trace("compiler.DomainSetup.type sort=struct name=%s", name)
 		if err := d.Compiler.Sig.AddSort(sort); err != nil {
 			return nil
 		}
