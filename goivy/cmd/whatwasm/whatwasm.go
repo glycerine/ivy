@@ -18,6 +18,9 @@ import (
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"
 	"github.com/tetratelabs/wazero/experimental"
+
+	cristalbase64 "github.com/cristalhq/base64"
+	"github.com/glycerine/blake3"
 )
 
 // WASM binary section IDs per spec.
@@ -67,6 +70,7 @@ type wasmBinary struct {
 	path    string
 	size    int64
 	version uint32
+	b3      string
 
 	sections       []sectionHeader
 	customSections map[string][]byte // section name → raw bytes after name field
@@ -145,6 +149,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "parse error: %v\n", err)
 		os.Exit(1)
 	}
+
 	ctx := context.Background()
 	fmt.Fprintf(os.Stderr, "probing features with wazero (may take a moment for large binaries)...\n")
 	probes, wazeroErr := probeFeatures(ctx, data)
@@ -316,9 +321,18 @@ func parseBinary(path string, data []byte) (*wasmBinary, error) {
 		customSections: make(map[string][]byte),
 		targetFeatures: make(map[string]bool),
 	}
-	if fi, err := os.Stat(path); err == nil {
+	fi, err := os.Stat(path)
+	if err == nil {
 		wb.size = fi.Size()
+	} else {
+		panic(fmt.Sprintf("could not stat path '%v': '%v'\n", path, err))
 	}
+
+	b3, err := Blake3OfFile(path)
+	if err != nil {
+		panic(fmt.Sprintf("Blake3OfFile on path '%v' error: %v\n", path, err))
+	}
+	wb.b3 = b3
 
 	pos := 8
 	for pos < len(data) {
@@ -512,9 +526,11 @@ func uniqueImportModules(wb *wasmBinary) []string {
 
 func printReport(wb *wasmBinary, probes map[string]probeResult, wazeroErr error) {
 	fmt.Printf("=== WebAssembly Binary Analysis ===\n")
-	fmt.Printf("File:    %s  (%s)\n", filepath.Base(wb.path), humanSize(wb.size))
+	fmt.Printf("File:    %s  (%v bytes ; %s)\n", filepath.Base(wb.path), wb.size, humanSize(wb.size))
 	fmt.Printf("Path:    %s\n", wb.path)
 	fmt.Printf("Version: %d\n", wb.version)
+	fmt.Printf("b3: %v\n", wb.b3)
+
 	fmt.Println()
 
 	// Environment
@@ -655,4 +671,15 @@ func printReport(wb *wasmBinary, probes map[string]probeResult, wazeroErr error)
 		}
 		fmt.Printf("  First funcs: %s%s\n", strings.Join(firstFuncs, ", "), suffix)
 	}
+}
+
+func Blake3OfFile(path string) (blake3sum string, err error) {
+
+	sum, _, err1 := blake3.HashFile(path)
+	if err1 != nil {
+		return "", err1
+	}
+
+	blake3sum = "blake3.33B-" + cristalbase64.URLEncoding.EncodeToString(sum[:33])
+	return
 }
