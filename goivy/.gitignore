@@ -47,3 +47,6 @@ svk/static/wasm/goivy-check-js.wasm
 svk/static/wasm/goivy-webengine.wasm
 *.wasm
 webui/static/dist
+webui/static/wasm/include-tree.json
+webui/static/wasm/wasm_exec-go1.25.6.js
+webui/static/wasm/z3-471-api.js
