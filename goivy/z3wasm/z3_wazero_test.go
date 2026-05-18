@@ -1,5 +1,8 @@
 package z3wasm
 
+// See also: goivy/cmd/whatwasm full a more built out and thorough description
+// of wasm binaries. It is based on this kind of check, but goes further.
+
 import (
 	"context"
 	"os"
