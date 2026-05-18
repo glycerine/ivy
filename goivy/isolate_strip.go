@@ -932,11 +932,11 @@ func StripSortFromModule(mod *Module, sortName string) error {
 	}
 
 	// Remove destructors for this sort.
-	delete(mod.SortDestructors, sortName)
+	mod.SortDestructors.Delkey(sortName)
 	delete(mod.DestructorSorts, sortName)
 
 	// Remove constructors for this sort.
-	delete(mod.SortConstructors, sortName)
+	mod.SortConstructors.Delkey(sortName)
 	delete(mod.ConstructorSorts, sortName)
 
 	// Remove from sort order.

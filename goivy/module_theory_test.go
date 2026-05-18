@@ -199,7 +199,7 @@ func TestUpdateTheoryExtensionality(t *testing.T) {
 	m.Sig.AddSort(sSort)
 	m.Sig.AddSort(tSort)
 	m.Sig.AddSymbol("myfield", dSort)
-	m.SortDestructors["mystruct"] = []*Const{destr}
+	m.SortDestructors.Set("mystruct", []*Const{destr})
 
 	m.UpdateTheory()
 	theory := m.BackgroundTheory(nil)

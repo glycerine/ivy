@@ -1300,7 +1300,7 @@ func valueToStrDestructors(mod *Module, val *Const, evalFn func(Expr) Expr) (str
 	if mod == nil || val == nil || val.CSort == nil || evalFn == nil {
 		return "", false
 	}
-	destrs, ok := mod.SortDestructors[IvySortName(val.CSort)]
+	destrs, ok := mod.SortDestructors.Get2(IvySortName(val.CSort))
 	if !ok {
 		return "", false
 	}

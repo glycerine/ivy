@@ -1056,7 +1056,7 @@ func FixConstructors(mod *Module) {
 		xtracer.Trace("compiler.FixConstructors EXIT")
 		return
 	}
-	for sortname, destrs := range mod.SortDestructors {
+	for sortname, destrs := range mod.SortDestructors.All() {
 		// Skip higher-order: any destructor with len(dom) > 1
 		higherOrder := false
 		for _, f := range destrs {
@@ -1071,7 +1071,7 @@ func FixConstructors(mod *Module) {
 			continue
 		}
 
-		conss, ok := mod.SortConstructors[sortname]
+		conss, ok := mod.SortConstructors.Get2(sortname)
 		if !ok {
 			conss = nil
 		}
@@ -1112,7 +1112,7 @@ func FixConstructors(mod *Module) {
 			}
 			newCons = append(newCons, cons)
 		}
-		mod.SortConstructors[sortname] = newCons
+		mod.SortConstructors.Set(sortname, newCons)
 	}
 	xtracer.Trace("compiler.FixConstructors EXIT")
 }
@@ -1181,7 +1181,7 @@ func CreateConstructorSchemata(mod *Module) error {
 	}
 
 	// Part A + B: iterate sort_destructors
-	for sortname, destrs := range mod.SortDestructors {
+	for sortname, destrs := range mod.SortDestructors.All() {
 		// Skip higher-order: any destructor with len(dom) > 1
 		higherOrder := false
 		for _, f := range destrs {
@@ -1231,7 +1231,11 @@ func CreateConstructorSchemata(mod *Module) error {
 		}
 
 		// fmla = LogicExists([Y], And(*eqs))
-		fmla := IvyExists([]*LogicVariable{yVar}, NormalizedAnd(eqs...))
+		andBody, err := NewAnd(eqs...)
+		if err != nil {
+			continue
+		}
+		fmla := IvyExists([]*LogicVariable{yVar}, andBody)
 
 		// name = Atom(compose_names(sortname, 'constr'), [])
 		schemaName := mod.Cfg.AstCfg.NewAtom(mod.Cfg.IuCfg.ComposeNames(sortname, "constr"))
@@ -1247,7 +1251,7 @@ func CreateConstructorSchemata(mod *Module) error {
 		mod.Schemata.Set(schemaName.Relname(), goal)
 
 		// Part B: per-constructor schema
-		conss, ok := mod.SortConstructors[sortname]
+		conss, ok := mod.SortConstructors.Get2(sortname)
 		if !ok {
 			continue
 		}
@@ -1316,7 +1320,10 @@ func CreateConstructorSchemata(mod *Module) error {
 			}
 
 			// fmla = LogicAnd(*eqs)
-			consFmla := NormalizedAnd(consEqs...)
+			consFmla, err := NewAnd(consEqs...)
+			if err != nil {
+				continue
+			}
 
 			// name = Atom(compose_names(cons.name, 'constr'), [])
 			consSchemaName := mod.Cfg.AstCfg.NewAtom(mod.Cfg.IuCfg.ComposeNames(cons.Name, "constr"))
@@ -1333,9 +1340,9 @@ func CreateConstructorSchemata(mod *Module) error {
 
 	// Part C: validate constructors have destructors
 	// Python: raise IvyError(cons, "Cannot define constructor ... because ... is not a structure type")
-	for sortname, conss := range mod.SortConstructors {
+	for sortname, conss := range mod.SortConstructors.All() {
 		for _, cons := range conss {
-			if _, ok := mod.SortDestructors[sortname]; !ok {
+			if _, ok := mod.SortDestructors.Get2(sortname); !ok {
 				xtracer.Trace("compiler.CreateConstructorSchemata EXIT")
 				return NewIvyError(nil, fmt.Sprintf(
 					"Cannot define constructor %s for type %s because %s is not a structure type",
@@ -2039,7 +2046,18 @@ func exprDefinesName(expr Expr) string {
 //	self.mod.isolates[iso.name()] = iso.clone(args)
 func registerIsolateDecl(declArgs []Node, mod *Module) {
 	for _, arg := range declArgs {
-		if isoDef, ok := arg.(*IsolateDef); ok {
+		var isoDef *IsolateDef
+		switch iso := arg.(type) {
+		case *IsolateDef:
+			isoDef = iso
+		case *TrustedIsolateDef:
+			isoDef = &iso.IsolateDef
+		case *ExtractDef:
+			isoDef = &iso.IsolateDef
+		case *ProcessDef:
+			isoDef = &iso.IsolateDef
+		}
+		if isoDef != nil {
 			name := isoDef.IsoName()
 			xtracer.Trace("compiler.ARGSetup.isolate ENTER name=%s", name)
 			mod.Isolates[name] = isoDef

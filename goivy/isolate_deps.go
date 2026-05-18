@@ -114,6 +114,7 @@ func GetCallsModsRecFull(
 	if mixins != nil {
 		mixins[actname] = amixins
 	}
+	actCfg := &ActionsConfig{Context: NewActionContext(mod)}
 
 	// Optional loop tracking
 	var loopMap map[string][]ActionsAction
@@ -124,7 +125,7 @@ func GetCallsModsRecFull(
 	for _, sub := range action.IterSubactions() {
 		// Collect modifications via sub.modifies() — matching Python exactly.
 		// Python: for sym in sub.modifies(): if sym in interf_syms: amods.add(sym)
-		for _, sym := range ModifiesSingle(sub) {
+		for _, sym := range ModifiesSingle(sub, actCfg) {
 			xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=%s",
 				actname, sym.Name, ActionTypeName(sub))
 			if interfSyms == nil || interfSyms[sym.Name] {
@@ -697,9 +698,9 @@ func ConeOfInfluenceFilter(mod *Module, goals []*LabeledFormula) error {
 		mod.SortOrder = newOrder
 
 		// Filter sort destructors.
-		for name := range mod.SortDestructors {
+		for name := range mod.SortDestructors.All() {
 			if !allSorts[name] {
-				delete(mod.SortDestructors, name)
+				mod.SortDestructors.Delkey(name)
 			}
 		}
 
@@ -776,7 +777,7 @@ func CollectSortDestructors(mod *Module, sortName string, result map[string]bool
 	memo[sortName] = true
 
 	// Add destructors for this sort.
-	if destrs, ok := mod.SortDestructors[sortName]; ok {
+	if destrs, ok := mod.SortDestructors.Get2(sortName); ok {
 		for _, d := range destrs {
 			result[d.Name] = true
 			// Recursively collect destructors of the range sort.

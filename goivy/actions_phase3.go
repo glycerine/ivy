@@ -314,7 +314,7 @@ func DestrAsgnVal(lhs Expr, fmlas *[]Expr, m *Module) (Expr, *Clauses, *Const) {
 	mutSort := mut.NodeSort()
 	if mutSort != nil && m.SortDestructors != nil {
 		sortName := IvySortName(mutSort)
-		if destrs, ok := m.SortDestructors[sortName]; ok {
+		if destrs, ok := m.SortDestructors.Get2(sortName); ok {
 			for _, destr := range destrs {
 				if destr.Name == nSym.Name {
 					continue

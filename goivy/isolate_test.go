@@ -585,7 +585,7 @@ func TestCollectSortDestructors(t *testing.T) {
 	m := mkModule()
 	destrSort, _ := NewFunctionSort(isolateMkSort("MySort"), Boolean)
 	destr := NewConst("get_field", destrSort)
-	m.SortDestructors["MySort"] = []*Const{destr}
+	m.SortDestructors.Set("MySort", []*Const{destr})
 
 	result := make(map[string]bool)
 	CollectSortDestructors(m, "MySort", result, make(map[string]bool))
@@ -601,7 +601,7 @@ func TestCollectSortDestructorsWithVariants(t *testing.T) {
 
 	destrSort, _ := NewFunctionSort(isolateMkSort("Variant1"), Boolean)
 	destr := NewConst("v1_field", destrSort)
-	m.SortDestructors["Variant1"] = []*Const{destr}
+	m.SortDestructors.Set("Variant1", []*Const{destr})
 
 	result := make(map[string]bool)
 	CollectSortDestructors(m, "Base", result, make(map[string]bool))
@@ -753,7 +753,7 @@ func TestStripSortFromModule(t *testing.T) {
 	m.Sig = NewSig()
 	m.Sig.Sorts.Set("mysort", isolateMkSort("mysort"))
 	m.SortOrder = []string{"bool", "mysort", "int"}
-	m.SortDestructors["mysort"] = []*Const{isolateMkConst("d")}
+	m.SortDestructors.Set("mysort", []*Const{isolateMkConst("d")})
 	m.DestructorSorts["mysort"] = isolateMkSort("mysort")
 
 	err := StripSortFromModule(m, "mysort")
@@ -764,7 +764,7 @@ func TestStripSortFromModule(t *testing.T) {
 	if _, ok := m.Sig.Sorts.Get2("mysort"); ok {
 		t.Error("sort should be removed from signature")
 	}
-	if _, ok := m.SortDestructors["mysort"]; ok {
+	if _, ok := m.SortDestructors.Get2("mysort"); ok {
 		t.Error("sort destructors should be removed")
 	}
 	if _, ok := m.DestructorSorts["mysort"]; ok {

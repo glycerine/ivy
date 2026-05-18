@@ -9,7 +9,7 @@ import (
 )
 
 // InsMap is a key-value dictionary like the built
-// in Go map, except that we iteratee in insertion order
+// in Go map, except that we iterate in insertion order
 // when using All() to range.
 //
 // InsMap is not goroutine safe on its own.

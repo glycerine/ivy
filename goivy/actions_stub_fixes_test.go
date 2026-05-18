@@ -400,7 +400,7 @@ func TestDestrAsgnVal_SimpleDestructor(t *testing.T) {
 	fldSym := NewConst("fld", fldSort)
 
 	mod.DestructorSorts["fld"] = sortT
-	mod.SortDestructors["T"] = []*Const{fldSym}
+	mod.SortDestructors.Set("T", []*Const{fldSym})
 
 	// lhs = fld(obj), rhs = val
 	objSym := NewConst("obj", sortT)
@@ -442,7 +442,7 @@ func TestDestrAsgnVal_WithSiblingDestructor(t *testing.T) {
 
 	mod.DestructorSorts["fld1"] = sortT
 	mod.DestructorSorts["fld2"] = sortT
-	mod.SortDestructors["T"] = []*Const{fld1Sym, fld2Sym}
+	mod.SortDestructors.Set("T", []*Const{fld1Sym, fld2Sym})
 
 	// lhs = fld1(obj), rhs = val — should produce frame condition for fld2
 	objSym := NewConst("obj", sortT)
@@ -483,7 +483,7 @@ func TestDestructorAssignUpdate_FullPath(t *testing.T) {
 	fldSym := NewConst("fld", fldSort)
 
 	mod.DestructorSorts["fld"] = sortT
-	mod.SortDestructors["T"] = []*Const{fldSym}
+	mod.SortDestructors.Set("T", []*Const{fldSym})
 
 	objSym := NewConst("obj", sortT)
 	valSym := NewConst("val", sortS)

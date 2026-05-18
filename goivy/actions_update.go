@@ -619,7 +619,7 @@ func destrAsgnVal(lhs Expr, fmlas *[]Expr, domain *Module) (Expr, *Clauses, *Con
 		} else {
 			sortName = mutSort.String()
 		}
-		if destrs, ok := domain.SortDestructors[sortName]; ok {
+		if destrs, ok := domain.SortDestructors.Get2(sortName); ok {
 			for _, destr := range destrs {
 				if destr.Name != n.Name {
 					destrPhs := SymPlaceholders(destr)

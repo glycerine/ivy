@@ -667,8 +667,9 @@ func (c *Compiler) CompileThunkAction(node Node) (Expr, error) {
 		dsym := NewConst(dsymName, dsort)
 
 		c.Module.DestructorSorts[dsym.Name] = subsort
-		c.Module.SortDestructors[subsort.String()] = append(
-			c.Module.SortDestructors[subsort.String()], dsym)
+		subsortName := subsort.String()
+		destrs, _ := c.Module.SortDestructors.Get2(subsortName)
+		c.Module.SortDestructors.Set(subsortName, append(destrs, dsym))
 
 		app, err := NewApply(dsym, selfparam)
 		if err != nil {
@@ -866,15 +867,13 @@ func (c *Compiler) CompileNativeArg(node Node) (Expr, error) {
 			exprArgs[i] = compiled
 		}
 		resolved := ResolveAlias(atom.Rep, c.Module)
-		sym := NewConst(resolved, TopS)
-		if len(exprArgs) > 0 {
-			applied, err := NewApply(sym, exprArgs...)
-			if err != nil {
-				return applied, nil
-			}
-			return applied, nil
+		terms := make([]Node, len(exprArgs))
+		for i, expr := range exprArgs {
+			terms[i] = expr
 		}
-		return sym, nil
+		res := c.Module.Cfg.AstCfg.NewAtom(resolved, terms...)
+		res.SetLineno(node.GetLineno())
+		return newNativeAtomExpr(res), nil
 	}
 	return c.SortifyWithInference(node)
 }
@@ -984,9 +983,8 @@ func (c *Compiler) CompileNativeAction(node Node) (Expr, error) {
 	}
 	// B5-R6: Preserve the code template from args[0] (NativeCode node).
 	// Python: args = [self.args[0]] + [...] — preserves the NativeCode as args[0].
-	// Store the template string as the symbol name so code generation can recover it.
 	if codeNode, ok := args[0].(*NativeCode); ok {
-		compiled[0] = NewConst(codeNode.Code, TopS)
+		compiled[0] = codeNode.Clone(nil).(*NativeCode)
 	} else if compiled[0] == nil {
 		compiled[0] = NewConst("native", TopS)
 	}
@@ -994,15 +992,15 @@ func (c *Compiler) CompileNativeAction(node Node) (Expr, error) {
 	// Python: NativeAction.__init__ checks args[0].code.split('\n')[0].strip() == "impure"
 	// and strips that line, setting self.impure = True.
 	isImpure := false
-	if codeConst, ok := compiled[0].(*Const); ok {
-		lines := strings.SplitN(codeConst.Name, "\n", 2)
+	if codeNode, ok := compiled[0].(*NativeCode); ok {
+		lines := strings.SplitN(codeNode.Code, "\n", 2)
 		if len(lines) > 0 && strings.TrimSpace(lines[0]) == "impure" {
 			isImpure = true
-			newCode := ""
 			if len(lines) > 1 {
-				newCode = lines[1]
+				codeNode.Code = lines[1]
+			} else {
+				codeNode.Code = ""
 			}
-			compiled[0] = NewConst(newCode, TopS)
 		}
 	}
 	act := NewNativeAction(compiled[0], compiled[1:]...)
@@ -1039,11 +1037,13 @@ func (c *Compiler) CompileNativeName(node Node) (Expr, error) {
 			vars[i] = compiled
 		}
 	}
-	sym := NewConst(atom.Rep, TopS)
-	if len(vars) > 0 {
-		return NewApply(sym, vars...)
+	terms := make([]Node, len(vars))
+	for i, v := range vars {
+		terms[i] = v
 	}
-	return sym, nil
+	res := c.Module.Cfg.AstCfg.NewAtom(atom.Rep, terms...)
+	res.SetLineno(node.GetLineno())
+	return newNativeAtomExpr(res), nil
 }
 
 // CompileNativeDef compiles a native definition block.

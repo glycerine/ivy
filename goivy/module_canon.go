@@ -539,20 +539,20 @@ func canonSortSliceMap(m map[string][]Sort) string {
 	return fmt.Sprintf("(hash %s)", strings.Join(parts, " "))
 }
 
-// canonConstSliceMap returns canonical form of map[string][]*lg.Const.
-func canonConstSliceMap(m map[string][]*Const) string {
-	if len(m) == 0 {
+// canonConstSliceMap returns canonical form of an insertion-ordered map[string][]*lg.Const.
+func canonConstSliceMap(m *InsMap[string, []*Const]) string {
+	if m == nil || m.Len() == 0 {
 		return "(hash)"
 	}
-	keys := make([]string, 0, len(m))
-	for k := range m {
+	keys := make([]string, 0, m.Len())
+	for k := range m.All() {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
 	var parts []string
 	for _, k := range keys {
 		var cs []string
-		for _, c := range m[k] {
+		for _, c := range m.Get(k) {
 			cs = append(cs, string(c.Sexp()))
 		}
 		parts = append(parts, fmt.Sprintf("%s:[%s]", k, strings.Join(cs, " ")))

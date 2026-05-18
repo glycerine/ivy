@@ -472,8 +472,8 @@ func (d *DomainSetup) TypeDecl(node Node) error {
 			return nil
 		}
 		// Python line 1229-1230: initialize empty destructor list for empty structs
-		if _, exists := d.Compiler.Module.SortDestructors[name]; !exists {
-			d.Compiler.Module.SortDestructors[name] = []*Const{}
+		if _, exists := d.Compiler.Module.SortDestructors.Get2(name); !exists {
+			d.Compiler.Module.SortDestructors.Set(name, []*Const{})
 		}
 		for _, field := range v.Fields {
 			fieldName := NodeRep(field)
@@ -1590,8 +1590,9 @@ func (d *DomainSetup) Destructor(node Node) error {
 		return NewIvyError(node, "A destructor must have at least one parameter")
 	}
 	mod.DestructorSorts[sym.Name] = dom[0]
-	mod.SortDestructors[IvySortName(dom[0])] = append(
-		mod.SortDestructors[IvySortName(dom[0])], sym)
+	sortName := IvySortName(dom[0])
+	destrs, _ := mod.SortDestructors.Get2(sortName)
+	mod.SortDestructors.Set(sortName, append(destrs, sym))
 	return nil
 }
 
@@ -1607,7 +1608,8 @@ func (d *DomainSetup) Constructor(node Node) error {
 	rng := SortRange(sym.CSort)
 	mod.ConstructorSorts[sym.Name] = rng
 	sortName := IvySortName(rng)
-	mod.SortConstructors[sortName] = append(mod.SortConstructors[sortName], sym)
+	conss, _ := mod.SortConstructors.Get2(sortName)
+	mod.SortConstructors.Set(sortName, append(conss, sym))
 	return nil
 }
 

@@ -605,7 +605,7 @@ print(json.dumps({
 	if err != nil {
 		t.Fatalf("field symbol: %v", err)
 	}
-	mod.SortDestructors["rec"] = []*Const{field}
+	mod.SortDestructors.Set("rec", []*Const{field})
 	destrVals := map[NodeKey]Expr{
 		Key(MustApply(field, r)): NewConst("v", fieldSort),
 	}

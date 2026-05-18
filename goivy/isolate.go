@@ -1664,9 +1664,9 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		mod.SortOrder = newSortOrder
 
 		// Filter sort destructors
-		for name := range mod.SortDestructors {
+		for name := range mod.SortDestructors.All() {
 			if !allSorts[name] {
-				delete(mod.SortDestructors, name)
+				mod.SortDestructors.Delkey(name)
 			}
 		}
 		for name, s := range mod.DestructorSorts {

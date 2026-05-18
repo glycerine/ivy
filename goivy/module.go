@@ -60,9 +60,9 @@ type Module struct {
 
 	// Sorts and destructors
 	DestructorSorts  map[string]Sort
-	SortDestructors  map[string][]*Const
+	SortDestructors  *InsMap[string, []*Const]
 	ConstructorSorts map[string]Sort
-	SortConstructors map[string][]*Const
+	SortConstructors *InsMap[string, []*Const]
 	GhostSorts       map[string]bool
 	SortOrder        []string
 	SymbolOrder      []*Const
@@ -283,9 +283,9 @@ func (m *Module) Clear() {
 	m.MixOrd = nil
 
 	m.DestructorSorts = make(map[string]Sort)
-	m.SortDestructors = make(map[string][]*Const)
+	m.SortDestructors = NewInsMap[string, []*Const]()
 	m.ConstructorSorts = make(map[string]Sort)
-	m.SortConstructors = make(map[string][]*Const)
+	m.SortConstructors = NewInsMap[string, []*Const]()
 
 	m.Privates = make(map[string]bool)
 	m.Interps = make(map[string][]Node)
@@ -421,15 +421,15 @@ func (m *Module) Copy() *Module {
 	c.FiniteSorts = copyMapBool(m.FiniteSorts)
 
 	// Copy maps missing from original port (Python copies ALL via dict iteration).
-	// SortDestructors: map[string][]*lg.Const
-	c.SortDestructors = make(map[string][]*Const, len(m.SortDestructors))
-	for k, v := range m.SortDestructors {
-		c.SortDestructors[k] = append([]*Const{}, v...)
+	// SortDestructors: insertion-ordered map[string][]*lg.Const
+	c.SortDestructors = NewInsMap[string, []*Const]()
+	for k, v := range m.SortDestructors.All() {
+		c.SortDestructors.Set(k, append([]*Const{}, v...))
 	}
-	// SortConstructors: map[string][]*lg.Const
-	c.SortConstructors = make(map[string][]*Const, len(m.SortConstructors))
-	for k, v := range m.SortConstructors {
-		c.SortConstructors[k] = append([]*Const{}, v...)
+	// SortConstructors: insertion-ordered map[string][]*lg.Const
+	c.SortConstructors = NewInsMap[string, []*Const]()
+	for k, v := range m.SortConstructors.All() {
+		c.SortConstructors.Set(k, append([]*Const{}, v...))
 	}
 	// Variants: map[string][]lg.Sort
 	c.Variants = make(map[string][]Sort, len(m.Variants))
@@ -628,7 +628,7 @@ func (m *Module) CallGraph() map[string][]string {
 
 // SortDependencies returns sort names that the given sort depends on.
 func (m *Module) SortDependencies(sortName string, withVariants bool) []string {
-	if destrs, ok := m.SortDestructors[sortName]; ok {
+	if destrs, ok := m.SortDestructors.Get2(sortName); ok {
 		var deps []string
 		for _, destr := range destrs {
 			if fs, ok := destr.CSort.(*LogicFunctionSort); ok {

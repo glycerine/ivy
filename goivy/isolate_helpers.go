@@ -1050,7 +1050,7 @@ func GetLocMods(mod *Module, actname string) []string {
 		return nil
 	}
 	// Python: action.modifies() — non-recursive, returns [] for Sequence.
-	modSet := ModifiesSingle(act)
+	modSet := ModifiesSingle(act, &ActionsConfig{Context: NewActionContext(mod)})
 	var result []string
 	for _, sym := range modSet {
 		if strings.HasPrefix(sym.Name, "fml:") {

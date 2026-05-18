@@ -425,6 +425,26 @@ func (a *Atom) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(atom%v rep:%q terms:%v aSort:%v)", a.Base.canonFields(), a.Rep, SliceCanon(a.Terms), sortCanon(a.ASort)))
 }
 
+// nativeAtomExpr preserves Python's native-action behavior where selected
+// native arguments remain AST atoms after compilation.
+type nativeAtomExpr struct {
+	*Atom
+}
+
+func newNativeAtomExpr(atom *Atom) *nativeAtomExpr { return &nativeAtomExpr{Atom: atom} }
+func (n *nativeAtomExpr) NodeSort() Sort           { return TopS }
+func (n *nativeAtomExpr) Children() []Expr {
+	children := make([]Expr, 0, len(n.Terms))
+	for _, term := range n.Terms {
+		if expr, ok := term.(Expr); ok {
+			children = append(children, expr)
+		}
+	}
+	return children
+}
+func (n *nativeAtomExpr) Equal(other Expr) bool { return n.Sexp() == other.Sexp() }
+func (n *nativeAtomExpr) Sexp() NodeKey         { return NodeKey(n.Canon()) }
+
 // App is a function application (term level).
 type App struct {
 	Base

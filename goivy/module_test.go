@@ -193,7 +193,7 @@ func TestModuleSortDependencies(t *testing.T) {
 	uSort := &UninterpretedSort{Name: "u"}
 	dSort, _ := NewFunctionSort(tSort, uSort)
 	destr := NewConst("d", dSort)
-	m.SortDestructors["t"] = []*Const{destr}
+	m.SortDestructors.Set("t", []*Const{destr})
 
 	deps := m.SortDependencies("t", false)
 	if len(deps) != 1 || deps[0] != "u" {

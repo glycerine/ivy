@@ -107,7 +107,7 @@ func TestSortDependencyGraph(t *testing.T) {
 	uSort := &UninterpretedSort{Name: "u"}
 	dSort, _ := NewFunctionSort(tSort, uSort)
 	destr := NewConst("d", dSort)
-	m.SortDestructors["t"] = []*Const{destr}
+	m.SortDestructors.Set("t", []*Const{destr})
 	m.SortOrder = []string{"t", "u"}
 
 	graph := m.SortDependencyGraph()

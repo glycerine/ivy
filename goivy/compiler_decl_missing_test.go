@@ -118,7 +118,7 @@ func TestDomainSetupDestructor(t *testing.T) {
 	}
 
 	// Check SortDestructors["pair"] contains the val symbol
-	sd, ok := c.Module.SortDestructors["pair"]
+	sd, ok := c.Module.SortDestructors.Get2("pair")
 	if !ok {
 		t.Fatal("expected SortDestructors to have entry 'pair'")
 	}
@@ -217,7 +217,7 @@ func TestDomainSetupConstructor(t *testing.T) {
 	}
 
 	// Check SortConstructors["pair"] contains mk_pair symbol
-	sc, ok := c.Module.SortConstructors["pair"]
+	sc, ok := c.Module.SortConstructors.Get2("pair")
 	if !ok {
 		t.Fatal("expected SortConstructors to have entry 'pair'")
 	}

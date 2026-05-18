@@ -551,7 +551,7 @@ func TestCompileThunkAction_CreatesDestructors(t *testing.T) {
 	}
 
 	// Check sort_destructors for the handler sort
-	if destrs, found := c.Module.SortDestructors["handler"]; !found || len(destrs) == 0 {
+	if destrs, found := c.Module.SortDestructors.Get2("handler"); !found || len(destrs) == 0 {
 		t.Errorf("expected sort_destructors[%q] to contain at least 1 destructor", "handler")
 	}
 }
@@ -736,7 +736,7 @@ func TestCompileThunkAction_DestructorSort(t *testing.T) {
 	}
 
 	// The destructor "handler.x" should have sort: handler -> t
-	destrs := c.Module.SortDestructors["handler"]
+	destrs := c.Module.SortDestructors.Get("handler")
 	if len(destrs) == 0 {
 		t.Fatal("no destructors found for handler sort")
 	}

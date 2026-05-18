@@ -1455,6 +1455,7 @@ type IsolateDef struct {
 	// cannot store the TrustedIsolateDef subtype.
 	Trusted  bool
 	IsObject bool // Python: df.is_object — marks isolate as created from object body
+	Kind     string
 }
 
 func (cfg *AstConfig) NewIsolateDef(elems []Node, withArgs int) *IsolateDef {
@@ -1465,7 +1466,7 @@ func (cfg *AstConfig) NewIsolateDef(elems []Node, withArgs int) *IsolateDef {
 
 func (i *IsolateDef) Args() []Node { return i.Elems }
 func (i *IsolateDef) Clone(args []Node) Node {
-	return &IsolateDef{Base: i.Base, Elems: args, WithArgs: i.WithArgs, Trusted: i.Trusted, IsObject: i.IsObject}
+	return &IsolateDef{Base: i.Base, Elems: args, WithArgs: i.WithArgs, Trusted: i.Trusted, IsObject: i.IsObject, Kind: i.Kind}
 }
 func (i *IsolateDef) IsoName() string {
 	if len(i.Elems) > 0 {
@@ -1542,7 +1543,7 @@ func (i *IsolateDef) PresentNames() []string {
 
 // IsExtract returns false — IsolateDef is an isolate, not an extract.
 func (i *IsolateDef) IsExtract() bool {
-	return false
+	return i.Kind == "extract" || i.Kind == "process"
 }
 
 // TrustedIsolateDef is a trusted (unverified) isolate.
@@ -1556,6 +1557,7 @@ func (t *TrustedIsolateDef) Clone(args []Node) Node {
 type ExtractDef struct{ IsolateDef }
 
 func (cfg *AstConfig) NewExtractDef(idef IsolateDef) *ExtractDef {
+	idef.Kind = "extract"
 	e := &ExtractDef{IsolateDef: idef}
 	e.Cfg = cfg
 	return e
@@ -1573,6 +1575,7 @@ func (p *ProcessDef) Clone(args []Node) Node {
 }
 
 func (cfg *AstConfig) NewProcessDef(edef ExtractDef) *ProcessDef {
+	edef.Kind = "process"
 	p := &ProcessDef{ExtractDef: edef}
 	p.Cfg = cfg
 	return p
@@ -1794,6 +1797,13 @@ func (cfg *AstConfig) NewNativeCode(code string) *NativeCode {
 func (n *NativeCode) Args() []Node           { return nil }
 func (n *NativeCode) Clone(args []Node) Node { return &NativeCode{Base: n.Base, Code: n.Code} }
 func (n *NativeCode) String() string         { return n.Code }
+func (n *NativeCode) NodeSort() Sort         { return TopS }
+func (n *NativeCode) Children() []Expr       { return nil }
+func (n *NativeCode) Equal(other Expr) bool {
+	o, ok := other.(*NativeCode)
+	return ok && n.Code == o.Code
+}
+func (n *NativeCode) Sexp() NodeKey { return NodeKey(n.Canon()) }
 
 // NativeType wraps a native type expression.
 type NativeType struct {

@@ -86,14 +86,14 @@ func (m *Module) UpdateTheory() {
 	}
 
 	// Extensionality axioms for structs.
-	sortNames := make([]string, 0, len(m.SortDestructors))
-	for s := range m.SortDestructors {
+	sortNames := make([]string, 0, m.SortDestructors.Len())
+	for s := range m.SortDestructors.All() {
 		sortNames = append(sortNames, s)
 	}
 	sort.Strings(sortNames)
 
 	for _, sname := range sortNames {
-		destrs := m.SortDestructors[sname]
+		destrs := m.SortDestructors.Get(sname)
 		// Check if any destructor is in the signature.
 		anyInSig := false
 		for _, d := range destrs {

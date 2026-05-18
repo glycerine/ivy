@@ -262,6 +262,10 @@ func (i *IsolateDef) Canon() Canonical {
 	typeName := "isolateDef"
 	if i.Trusted {
 		typeName = "trustedIsolateDef"
+	} else if i.Kind == "extract" {
+		typeName = "extractDef"
+	} else if i.Kind == "process" {
+		typeName = "processDef"
 	}
 	return Canonical(fmt.Sprintf("(%v%v elems:%v withArgs:%d trusted:%v isObject:%v)",
 		typeName, i.Base.canonFields(), SliceCanon(i.Elems), i.WithArgs, i.Trusted, i.IsObject))

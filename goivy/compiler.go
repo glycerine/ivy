@@ -1344,7 +1344,7 @@ func (c *Compiler) moduleDestructorSymbol(name string) (*Const, bool) {
 	if _, ok := c.Module.DestructorSorts[name]; !ok {
 		return nil, false
 	}
-	for _, destrs := range c.Module.SortDestructors {
+	for _, destrs := range c.Module.SortDestructors.All() {
 		for _, destr := range destrs {
 			if destr != nil && destr.Name == name {
 				return destr, true
