@@ -351,7 +351,7 @@ class IvyRuntime {
         }
     }
 
-    _markModelStateFresh(content) {
+    _markModelStateFresh(content = undefined) {
         this._modelStateInvalid = false;
         this._modelStateInvalidReason = '';
         this._loadedModelContent = content != null ? content : this._editorContent();
