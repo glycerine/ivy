@@ -539,9 +539,14 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 	case *NativeAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=NativeAction")
 		// Python: compile_native_action
-		act := NewNativeAction(nil)
-		act.SetLineno(node.GetLineno())
-		return act, nil
+		result, err := c.CompileNativeAction(node)
+		if err != nil {
+			return nil, err
+		}
+		if act, ok := result.(ActionsAction); ok {
+			return act, nil
+		}
+		return NewSequence(), nil
 
 	case *Sequence:
 		// Python: Sequence has no .cmpl, uses other_thing (default):

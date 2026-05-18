@@ -71,6 +71,34 @@ func TestCompileNativeAction_NotImpure(t *testing.T) {
 	}
 }
 
+func TestCompileActionBodyNativeActionPreservesCode(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+
+	code := cfg.NewNativeCode("native_code")
+	nativeAST := cfg.NewNativeAction(code)
+
+	result, err := c.CompileActionBody(nativeAST)
+	if err != nil {
+		t.Fatalf("CompileActionBody: %v", err)
+	}
+
+	na, ok := result.(*LogicNativeAction)
+	if !ok {
+		t.Fatalf("expected *LogicNativeAction, got %T", result)
+	}
+	if na.Code == nil {
+		t.Fatal("native action code is nil")
+	}
+	codeConst, ok := na.Code.(*Const)
+	if !ok {
+		t.Fatalf("expected Code to be *Const, got %T", na.Code)
+	}
+	if codeConst.Name != "native_code" {
+		t.Errorf("code = %q, want %q", codeConst.Name, "native_code")
+	}
+}
+
 func TestCompileNativeAction_ImpureWithWhitespace(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()
