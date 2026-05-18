@@ -57,7 +57,7 @@ func TestAuthMeUnauthenticated(t *testing.T) {
 	}
 }
 
-func TestStaticWebvueIndexAndAssetsAreServed(t *testing.T) {
+func TestStaticWebuiIndexAndAssetsAreServed(t *testing.T) {
 	dir := t.TempDir()
 	dist := filepath.Join(dir, "dist")
 	if err := os.MkdirAll(dist, 0o755); err != nil {
@@ -66,7 +66,7 @@ func TestStaticWebvueIndexAndAssetsAreServed(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(dir, "index.html"), []byte("<!doctype html><div id=\"app\"></div>"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(dist, "ivywebvue.js"), []byte("console.log('webvue')"), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dist, "ivyweb.js"), []byte("console.log('web')"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	server := NewServer(Config{Store: newTestStore(t), StaticDir: dir})
@@ -92,10 +92,10 @@ func TestStaticWebvueIndexAndAssetsAreServed(t *testing.T) {
 		t.Fatalf("email continue response = %d %q", continueRec.Code, continueRec.Body.String())
 	}
 
-	assetReq := httptest.NewRequest(http.MethodGet, "/static/dist/ivywebvue.js", nil)
+	assetReq := httptest.NewRequest(http.MethodGet, "/static/dist/ivyweb.js", nil)
 	assetRec := httptest.NewRecorder()
 	server.Handler().ServeHTTP(assetRec, assetReq)
-	if assetRec.Code != http.StatusOK || !strings.Contains(assetRec.Body.String(), "webvue") {
+	if assetRec.Code != http.StatusOK || !strings.Contains(assetRec.Body.String(), "web") {
 		t.Fatalf("asset response = %d %q", assetRec.Code, assetRec.Body.String())
 	}
 }

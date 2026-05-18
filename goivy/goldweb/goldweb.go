@@ -71,7 +71,7 @@ var sideOutput io.Writer = os.Stdout
 type app struct {
 	listen       string
 	goivyRoot    string
-	webvueDir    string
+	webuiDir     string
 	staticDir    string
 	workerDir    string
 	includeDir   string
@@ -230,7 +230,7 @@ func main() {
 	listen := flag.String("listen", "127.0.0.1:8998", "address for the goldweb HTTP/WebSocket server")
 	root := flag.String("root", rootDefault, "goivy source root")
 	includeDir := flag.String("include-dir", defaultIncludeDir(rootDefault), "Ivy standard-library include directory to mirror into the browser filesystem")
-	goivyWasm := flag.String("goivy-wasm", filepath.Join(rootDefault, "webvue", "static", "goivy-check-js.wasm"), "Go Ivy js/wasm file to serve at /goivy-check.wasm")
+	goivyWasm := flag.String("goivy-wasm", filepath.Join(rootDefault, "webui", "static", "wasm", "goivy-check-js.wasm"), "Go Ivy js/wasm file to serve at /goivy-check.wasm")
 	goivyRuntime := flag.String("goivy-runtime", "js", "Go Ivy browser wasm runtime: js")
 	ivyCheck := flag.String("ivy-check", "ivy_check", "Python ivy_check executable")
 	flag.Parse()
@@ -262,13 +262,13 @@ func newApp(listen, root, includeDir, goivyWasm, goivyRuntime, ivyCheck string, 
 	if goivyRuntime == "" {
 		goivyRuntime = "js"
 	}
-	webvueDir := filepath.Join(root, "webvue")
+	webuiDir := filepath.Join(root, "webui")
 	return &app{
 		listen:       listen,
 		goivyRoot:    root,
-		webvueDir:    webvueDir,
-		staticDir:    filepath.Join(webvueDir, "static"),
-		workerDir:    filepath.Join(webvueDir, "src", "workers"),
+		webuiDir:     webuiDir,
+		staticDir:    filepath.Join(webuiDir, "static", "wasm"),
+		workerDir:    filepath.Join(webuiDir, "frontend", "src", "workers"),
 		includeDir:   includeDir,
 		goivyWasm:    goivyWasm,
 		goivyRuntime: goivyRuntime,
@@ -1675,7 +1675,7 @@ func defaultGoivyRoot() string {
 
 func looksLikeGoivyRoot(dir string) bool {
 	_, err1 := os.Stat(filepath.Join(dir, "go.mod"))
-	_, err2 := os.Stat(filepath.Join(dir, "webvue", "static", "z3-471-api.js"))
+	_, err2 := os.Stat(filepath.Join(dir, "webui", "static", "wasm", "z3-471-api.js"))
 	return err1 == nil && err2 == nil
 }
 

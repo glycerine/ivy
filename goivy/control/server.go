@@ -14,9 +14,9 @@ import (
 )
 
 const (
-	SessionCookieName = "ivy_webvue_session"
-	OIDCStateCookie   = "ivy_webvue_oidc_state"
-	OIDCNonceCookie   = "ivy_webvue_oidc_nonce"
+	SessionCookieName = "ivy_webui_session"
+	OIDCStateCookie   = "ivy_webui_oidc_state"
+	OIDCNonceCookie   = "ivy_webui_oidc_nonce"
 )
 
 type Config struct {

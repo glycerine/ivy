@@ -1152,7 +1152,7 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	goivyRoot := filepath.Dir(thisFile)
 
 	nodegoldCmdDir := filepath.Join(goivyRoot, "nodegold")
-	goivyWasm := filepath.Join(goivyRoot, "webvue", "static", "goivy-check-js.wasm")
+	goivyWasm := filepath.Join(goivyRoot, "webui", "static", "wasm", "goivy-check-js.wasm")
 	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
 
 	wasmFullCmd := fmt.Sprintf("cd %v && GOOS=js GOARCH=wasm %v build -o %v ./cmd/goivy_check_jswasm", goivyRoot, goBinary, goivyWasm)

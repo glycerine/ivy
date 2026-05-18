@@ -34,7 +34,7 @@ test('Feature: Sign-up - email magic link verifies email and creates app session
   await expect(page).toHaveURL('http://127.0.0.1:18080/verified');
 
   const cookies = await page.context().cookies();
-  const session = cookies.find((cookie) => cookie.name === 'ivy_webvue_session');
+  const session = cookies.find((cookie) => cookie.name === 'ivy_webui_session');
   expect(session).toBeTruthy();
   expect(session.httpOnly).toBe(true);
   expect(session.expires).toBeGreaterThan(Date.now() / 1000 + 399 * 24 * 60 * 60);
@@ -109,7 +109,7 @@ test('Feature: Login - successful OIDC callback creates app session and project 
   await expect(page).toHaveURL('http://127.0.0.1:18080/');
 
   const cookies = await page.context().cookies();
-  const session = cookies.find((cookie) => cookie.name === 'ivy_webvue_session');
+  const session = cookies.find((cookie) => cookie.name === 'ivy_webui_session');
   expect(session).toBeTruthy();
   expect(session.httpOnly).toBe(true);
 

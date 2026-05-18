@@ -15,7 +15,7 @@ Current responsibilities in this slice:
 - optionally send real email through Mailgun when an API key is explicitly set
 - expose an `/admin` dashboard for pending unverified email links
 - consume 10-minute, single-use email login tokens
-- create and refresh the HttpOnly `ivy_webvue_session` app cookie for 400 days
+- create and refresh the HttpOnly `ivy_webui_session` app cookie for 400 days
 - record authenticated return visits in hourly `visiting_hours` rows
 - return the authenticated user's starter account, team, project, and role
 - keep OIDC client code available for future Google/GitHub sign-in attachment
@@ -54,7 +54,7 @@ IVY_CONTROL_TEST_EMAIL_OUTBOX=1 \
 go run ./cmd/ivy-control
 ```
 
-On startup, `ivy-control` copies the embedded `webvue` assets into `./.runweb`
+On startup, `ivy-control` copies the embedded `webui` assets into `./.runweb`
 relative to the directory where the binary is run, then serves those files. The
 binary therefore does not need to be launched from the repository. While the
 server is running, edits to files in `.runweb` are served directly. Use

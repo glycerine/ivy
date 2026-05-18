@@ -17,7 +17,7 @@ import "fmt"
 //
 // In the browser js/wasm backend, the registered
 // Z3 error handler is installed by
-// webvue/src/workers/smtZ3Imports.js because Z3 wasm
+// webui/frontend/src/workers/smtZ3Imports.js because Z3 wasm
 // needs a function-table callback supplied by
 // the JavaScript host. That callback is essential,
 // but it is deliberately dumb: it records the Z3
