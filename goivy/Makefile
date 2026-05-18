@@ -10,6 +10,14 @@ WAZ_CLI_MEM_GC_HEAP_LIMIT ?=
 # targets wasm32 here. Native builds must keep their normal 64-bit settings.
 Z3_WASM_CC_FLAGS    := -Wno-deprecated-declarations -fwasm-exceptions -U_AMD64_
 
+# nvm use 22.22.2
+# Now using node v22.22.2 (npm v10.9.7)
+# npm install -g typescript
+# tsc --version
+# Version 6.0.3 # was 5.4.3
+# which tsc
+# /home/jaten/.nvm/versions/node/v22.22.2/bin/tsc
+
 all: build
 
 # for bashisms like &>
