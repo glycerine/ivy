@@ -2789,3 +2789,5 @@ Esc %         -- for search-and-replace
   Arrow keys      to cancel search
   '.', y, n, !, q to supervise search-and-replace.
 ~~~
+
+atg. have discarded _attic now.
