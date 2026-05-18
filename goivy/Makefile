@@ -182,11 +182,10 @@ webui/static/wasm/include-tree.json: webui/scripts/build-include-tree.mjs $(shel
 	chmod 0644 webui/static/wasm/include-tree.json
 
 webui/static/wasm/goivy-webengine.wasm: FORCE
-	mkdir -p webui/static/wasm
 	GOOS=js GOARCH=wasm go build -tags xtracer_off -o webui/static/wasm/goivy-webengine.wasm ./cmd/goivy-webengine-wasm
 	chmod 0644 webui/static/wasm/goivy-webengine.wasm
 
-webui-wasm-engine: webui/static/wasm/goivy-webengine.wasm webui/static/wasm/z3-471-api.wasm webui/static/wasm/z3-471-api.js webui/static/wasm/wasm_exec-go1.25.6.js webui/static/wasm/include-tree.json
+webui-wasm-engine: webui/static/wasm/goivy-webengine.wasm webui/static/wasm/z3-471-api.wasm webui/static/wasm/z3-471-api.js webui/static/wasm/wasm_exec-go1.25.6.js webui/static/wasm/include-tree.json z3vendor/z3/wasm.build/z3-api.exnref.wasm
 
 test-z3-wasm-wazero: z3-wasm-api-wazero
 	go test ./z3wasm -run TestZ3WasmArtifactCompilesWithWazeroExceptionHandling -count=1
