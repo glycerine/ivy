@@ -46,8 +46,8 @@ type config struct {
 
 func main() {
 	rootDefault := defaultGoivyRoot()
-	staticDefault := filepath.Join(rootDefault, "webvue", "static")
-	workerDefault := filepath.Join(rootDefault, "webvue", "src", "workers")
+	staticDefault := filepath.Join(rootDefault, "webui", "static", "wasm")
+	workerDefault := filepath.Join(rootDefault, "webui", "frontend", "src", "workers")
 
 	node := flag.String("node", "node", "Node.js executable")
 	script := flag.String("script", filepath.Join(rootDefault, "nodegold", "nodegold.mjs"), "Node.js harness script")
@@ -259,6 +259,6 @@ func defaultGoivyRoot() string {
 
 func looksLikeGoivyRoot(dir string) bool {
 	_, err1 := os.Stat(filepath.Join(dir, "go.mod"))
-	_, err2 := os.Stat(filepath.Join(dir, "webvue", "static", "z3-471-api.js"))
+	_, err2 := os.Stat(filepath.Join(dir, "webui", "static", "wasm", "z3-471-api.js"))
 	return err1 == nil && err2 == nil
 }
