@@ -45,6 +45,7 @@ action a(x:t)
 around a {
     require x = x;
     ...
+    require x = x
 }`
 	result, err := Parse(input, Version{1, 7})
 	if err != nil {
