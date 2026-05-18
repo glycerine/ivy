@@ -182,12 +182,6 @@ webui-wasm-engine: webui/static/wasm/goivy-webengine.wasm webui/static/wasm/z3-4
 test-z3-wasm-wazero: z3-wasm-api-wazero
 	go test ./z3wasm -run TestZ3WasmArtifactCompilesWithWazeroExceptionHandling -count=1
 
-#test-z3-wasm-js: z3-wasm-api webvue/node_modules/.bin/vitest
-#	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs src/wasm/z3Wasm.test.js
-#
-#test-z3-wasm-browser: z3-wasm-api webvue/node_modules/.bin/playwright
-#	cd webvue && ./node_modules/.bin/playwright test --config playwright.config.mjs tests/z3Wasm.browser.spec.js
-
 
 FORCE:
 
@@ -267,20 +261,6 @@ control/node_modules/.bin/playwright: control/package.json control/package-lock.
 	cd control && npm ci
 
 control-browser-setup: control/node_modules/.bin/playwright
-
-# webvue/node_modules/.package-lock.stamp: webvue/package.json webvue/package-lock.json
-# 	cd webvue && npm ci
-# 	touch webvue/node_modules/.package-lock.stamp
-#
-# webvue/node_modules/.bin/vitest webvue/node_modules/.bin/vite webvue/node_modules/.bin/playwright: webvue/node_modules/.package-lock.stamp
-#
-# webvue-setup: webvue/node_modules/.bin/vitest webvue/node_modules/.bin/vite webvue/node_modules/.bin/playwright
-#
-# test-vue: webvue/node_modules/.bin/vitest
-# 	cd webvue && ./node_modules/.bin/vitest run --config vitest.config.mjs
-#
-# build-vue: webvue/node_modules/.bin/vite
-# 	cd webvue && ./node_modules/.bin/vite build --config vite.config.mjs
 
 test-js: webui/node_modules/.bin/vitest $(WEBUI_NODE_DEPS_STAMP)
 	cd webui && npm run test:webui:js
