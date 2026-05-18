@@ -555,12 +555,14 @@ func printReport(wb *wasmBinary, probes map[string]probeResult, wazeroErr error)
 
 	// Feature table
 	fmt.Printf("WEBASSEMBLY FEATURES\n")
+	fmt.Printf("  (target_features = authoritative; wazero-probe may have false negatives for\n")
+	fmt.Printf("   features checked at instantiation time rather than compile time)\n")
 	if wazeroErr != nil {
 		fmt.Printf("  (wazero probing unavailable: %v)\n", wazeroErr)
 	}
 	fmt.Printf("  %-28s  %-16s  %-14s  %s\n",
 		"Feature", "target_features", "section-hint", "wazero-probe")
-	fmt.Printf("  %s\n", strings.Repeat("─", 76))
+	fmt.Printf("  %s\n", strings.Repeat("─", 80))
 
 	sectionHint := func(name string) string {
 		switch name {
@@ -577,8 +579,10 @@ func printReport(wb *wasmBinary, probes map[string]probeResult, wazeroErr error)
 	}
 
 	for _, fe := range knownFeatures {
+		tfEnabled := false
 		tfVal := "n/a"
 		if v, ok := wb.targetFeatures[fe.lookupName()]; ok {
+			tfEnabled = v
 			if v {
 				tfVal = "[+]"
 			} else {
@@ -593,6 +597,10 @@ func printReport(wb *wasmBinary, probes map[string]probeResult, wazeroErr error)
 				probeStr = "(no wazero bit)"
 			case r.required:
 				probeStr = "required"
+			case tfEnabled:
+				// target_features says used but wazero compile-phase didn't catch it:
+				// wazero validates this feature lazily (at instantiation, not compile time)
+				probeStr = "not required (lazy check)"
 			default:
 				probeStr = "not required"
 			}
