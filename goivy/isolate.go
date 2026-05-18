@@ -255,6 +255,37 @@ func StartsWithEqSome(name string, prefixes map[string]bool, mod *Module, implMa
 	return startsWithEqSomeRec(name, prefixes, mod)
 }
 
+func keepNativeLabel(label Node, present map[string]bool, mod *Module, implMap map[string]string) bool {
+	if label == nil {
+		return true
+	}
+	name := ""
+	switch n := label.(type) {
+	case *Atom:
+		name = n.Rep
+	case *CompiledNode:
+		switch x := n.Node.(type) {
+		case *nativeAtomExpr:
+			name = x.Rep
+		case *Atom:
+			name = x.Rep
+		case *Const:
+			name = x.Name
+		case interface{ Relname() string }:
+			name = x.Relname()
+		default:
+			name = fmt.Sprint(x)
+		}
+	case *Const:
+		name = n.Name
+	case interface{ Relname() string }:
+		name = n.Relname()
+	default:
+		name = NodeRep(label)
+	}
+	return StartsWithEqSome(name, present, mod, implMap)
+}
+
 func startsWithEqSomeRec(name string, prefixes map[string]bool, mod *Module) bool {
 	if prefixes[name] {
 		return true
@@ -899,11 +930,8 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	// Filter natives
 	var newNatives []Node
 	for _, nat := range mod.Natives {
-		if lf, ok := nat.(*LabeledFormula); ok {
-			if keepAx(isolateNodeToExpr(lf.Label)) {
-				newNatives = append(newNatives, nat)
-			}
-		} else {
+		args := nat.Args()
+		if len(args) == 0 || keepNativeLabel(args[0], present, mod, implementationMap) {
 			newNatives = append(newNatives, nat)
 		}
 	}

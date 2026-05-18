@@ -540,7 +540,7 @@ func destrAsgnVal(lhs Expr, fmlas *[]Expr, domain *Module) (Expr, *Clauses, *Con
 	} else {
 		// Base case: mut is the root mutable symbol
 		// Python: nondet = mut_n.suffix("_nd").skolem()
-		skSym := NewConst(mutN.Name+"_nd", mutN.CSort)
+		skSym := NewConst("__"+mutN.Name+"_nd", mutN.CSort)
 		phs := SymPlaceholders(mutN)
 		phNodes := actionsVarsToNodes(phs)
 		// Python: new_clauses = mk_assign_clauses(mut_n, nondet(*sym_placeholders(mut_n)))
@@ -741,7 +741,7 @@ func mkVariantAssignClauses(lhs, rhs Expr, domain *Module) *Update {
 
 	// Create nondeterministic skolem symbol
 	// Python: nondet = n.suffix("_nd").skolem()
-	skSym := NewConst(sym.Name+"_nd", sym.CSort)
+	skSym := NewConst("__"+sym.Name+"_nd", sym.CSort)
 	var nondet Expr
 	if len(phNodes) > 0 {
 		nondet = applyToNodes(skSym, phNodes)
