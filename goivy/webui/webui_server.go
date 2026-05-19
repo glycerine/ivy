@@ -116,13 +116,15 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 // handleStatic serves static assets (JS, CSS, tutorial) from the static/ directory.
-// Tutorial files get long cache lifetimes so they're available offline.
+// Tutorial files use no-store during development so link/content fixes are
+// immediately visible in the browser tutorial pane.
 // JS/CSS get no-cache during development so the browser always fetches the latest.
 func (s *Server) handleStatic(w http.ResponseWriter, r *http.Request) {
 
 	if strings.HasPrefix(r.URL.Path, "/static/tutorial/") {
-		// Tutorial files: cache for 1 year, available offline
-		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+		w.Header().Set("Cache-Control", "no-store, max-age=0")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
 	} else {
 		// Dev assets (JS, CSS): always revalidate
 		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")

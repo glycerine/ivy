@@ -100,6 +100,24 @@ func TestStaticNotFound(t *testing.T) {
 	}
 }
 
+func TestTutorialStaticDisablesBrowserCaching(t *testing.T) {
+	cfg := goivy.NewConfig()
+	srv := NewServer(cfg, ":0")
+	w := doReq(t, srv, "GET", "/static/tutorial/kenmcmil.github.io/ivy/language.html", "")
+	if w.Code != 200 {
+		t.Fatalf("status = %d, want 200", w.Code)
+	}
+	if got, want := w.Header().Get("Cache-Control"), "no-store, max-age=0"; got != want {
+		t.Errorf("Cache-Control = %q, want %q", got, want)
+	}
+	if got, want := w.Header().Get("Pragma"), "no-cache"; got != want {
+		t.Errorf("Pragma = %q, want %q", got, want)
+	}
+	if got, want := w.Header().Get("Expires"), "0"; got != want {
+		t.Errorf("Expires = %q, want %q", got, want)
+	}
+}
+
 func TestAPINewSession(t *testing.T) {
 	cfg := goivy.NewConfig()
 	srv := NewServer(cfg, ":0")

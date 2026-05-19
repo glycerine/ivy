@@ -210,7 +210,7 @@ This allows for the possibility that the message queues are bounded.</p>
 <code class="language-plaintext highlighter-rouge">requested</code>, <code class="language-plaintext highlighter-rouge">replied</code> and <code class="language-plaintext highlighter-rouge">delegated</code>. Each indicates that a message
 of a given type is in transit to a certain destination. The type <code class="language-plaintext highlighter-rouge">req</code>
 is used for both request and reply messages, while the delegate
-message contains a <a href="examples/sht/shard.html">shard</a>.</p>
+message contains a <a href="shard.html">shard</a>.</p>
 
 <p>The service specification has three parts relating to the three types
 of messages. Here is the specification for request messages:</p>
@@ -511,7 +511,7 @@ protocol message no more than once.</p>
 
 <h2 id="the-message-queues">The message queues</h2>
 
-<p>We aqlso need to verify the mesage queues agains their specification. We will use <a href="ivy/examples/sht/leader.md">parameter stripping</a> to do that:</p>
+<p>We aqlso need to verify the mesage queues agains their specification. We will use <a href="../leader.html">parameter stripping</a> to do that:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate iso_mq(mq_me:id) = mq(mq_me) with seq_num
 </code></pre></div></div>
@@ -524,7 +524,7 @@ message queues don’t interfere with each other.</p>
 
 <p>Before implementing the application-level protcol on top of this
 service, it’s worth instantiating and proving it, and perhaps also
-testing it a bit. Here is a <a href="examples/sht/trans_test.ivy">test module</a>:</p>
+testing it a bit. Here is a <a href="trans_test.ivy">test module</a>:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include trans
 include seqnum

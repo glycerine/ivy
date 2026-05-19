@@ -164,7 +164,7 @@ IVy is a research tool intended to allow interactive development of protocols an
 	</header>
 
 	<div class="post-content">
-	  <p>The <a href="examples/sht/table.ivy">abstract data type of hash tables</a> provides the
+	  <p>The <a href="table.ivy">abstract data type of hash tables</a> provides the
 server’s internal representation of the directory. It provides the
 usual <code class="language-plaintext highlighter-rouge">get</code> and <code class="language-plaintext highlighter-rouge">set</code> operations, but also actions that extract a
 range of key as a shard, and incorporate a shard into the table. Here
@@ -426,7 +426,7 @@ object invariants and this won’t be needed.</p>
 verifying it and maybe even testing it a bit so we’re fairly confident
 the specification is what we want.</p>
 
-<p>Here’s a <a href="examples/sht/table_test.ivy">simple program</a> to do the test:</p>
+<p>Here’s a <a href="table_test.ivy">simple program</a> to do the test:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include shard
 include table
