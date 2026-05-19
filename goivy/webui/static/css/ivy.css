@@ -1776,22 +1776,9 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 }
 
 /* --- Scrollbar Styling --- */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #1e1e1e;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #424242;
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
+html {
+    scrollbar-color: #424242 #1e1e1e;
+    scrollbar-width: thin;
 }
 
 /* --- Selection highlight in graph --- */
