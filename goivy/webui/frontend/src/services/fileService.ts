@@ -161,6 +161,52 @@ export function readBrowserFileText(file, win = globalThis.window) {
   });
 }
 
+export function preparePrimarySheetForModelLoad(app, {
+  doc = globalThis.document,
+} = {}) {
+  const sheetId = 'sheet-1';
+  const runtimeSheet = app && app.sheets && app.sheets[sheetId];
+  if (runtimeSheet) {
+    runtimeSheet.reachabilityOnly = false;
+    runtimeSheet.visualOnly = false;
+  }
+  const modelSheet = app && app.uiDataModel && app.uiDataModel.sheets && app.uiDataModel.sheets[sheetId];
+  if (modelSheet) {
+    modelSheet.reachabilityOnly = false;
+    modelSheet.visualOnly = false;
+  }
+  if (app && typeof app.removeAnalysisStateExtraSheets === 'function') {
+    app.removeAnalysisStateExtraSheets();
+  }
+  if (app && typeof app.switchSheet === 'function' && (!app.sheetExists || app.sheetExists(sheetId))) {
+    app.switchSheet(sheetId);
+  } else if (app) {
+    app.activeSheetId = sheetId;
+  }
+  const sheetEl = doc && doc.getElementById(sheetId);
+  if (sheetEl) {
+    sheetEl.classList.remove('reachability-only-sheet');
+    sheetEl.removeAttribute('data-sheet-layout');
+  }
+  return sheetId;
+}
+
+export async function refreshLoadedModelSnapshots(app, {
+  doc = globalThis.document,
+} = {}) {
+  const sheetId = preparePrimarySheetForModelLoad(app, { doc });
+  const argData = await app.api.getARG();
+  if (argData) {
+    applyArgSnapshot(app, sheetId, argData);
+  }
+  const conceptData = await app.api.getConceptGraph();
+  if (conceptData) {
+    applyConceptSnapshot(app, sheetId, conceptData);
+  }
+  app._persistedConceptRelations = conceptData;
+  return { sheetId, argData, conceptData };
+}
+
 export async function loadModelFile(app, file, persist, { win = globalThis.window } = {}) {
   app.controls.showLoading(`Loading ${file.name}...`);
   app.controls.setStatus(`Loading file: ${file.name}...`);
@@ -178,15 +224,7 @@ export async function loadModelFile(app, file, persist, { win = globalThis.windo
 
     const loadResult = await app.api.loadFile(file, { isolate: '' });
     if (app.setIsolates) app.setIsolates(loadResult && loadResult.isolates, loadResult && loadResult.isolate);
-    const argData = await app.api.getARG();
-    if (argData && argData.elements) {
-      applyArgSnapshot(app, app.activeSheetId || 'sheet-1', argData);
-    }
-    const conceptData = await app.api.getConceptGraph();
-    if (conceptData && conceptData.elements) {
-      applyConceptSnapshot(app, app.activeSheetId || 'sheet-1', conceptData);
-    }
-    app._persistedConceptRelations = conceptData;
+    await refreshLoadedModelSnapshots(app);
     persist.setFileName(file.name, app._persistedFilePath);
     app.controls.setStatus(`Loaded: ${file.name}`, 'success');
     persist.save(app);

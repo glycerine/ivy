@@ -12,6 +12,8 @@ import {
   updateReopenLastFileButton,
 } from './fileService.ts';
 import { FakeControls, makePersist, makeWritableHandle } from '../test/fakes.ts';
+import { UIDataModel } from '../models/uiDataModel.ts';
+import { createUIDataModelStore } from '../models/uiDataModelStore.ts';
 
 function deferred() {
   let resolve;
@@ -130,6 +132,79 @@ describe('fileService', () => {
       { isolate: '' },
     );
     expect(app.setIsolates).toHaveBeenLastCalledWith(['protocol', 'service'], 'protocol');
+  });
+
+  it('loads a new model onto the primary sheet instead of preserving stale reachability-only layout', async () => {
+    const controls = {
+      showLoading: vi.fn(),
+      hideLoading: vi.fn(),
+      setStatus: vi.fn(),
+    };
+    document.body.innerHTML = [
+      '<div id="sheet-1" class="sheet-content reachability-only-sheet" data-sheet-layout="reachability-only"></div>',
+      '<div id="sheet-2" class="sheet-content"></div>',
+    ].join('');
+    const uiDataModel = new UIDataModel();
+    const uiDataStore = createUIDataModelStore(uiDataModel);
+    uiDataStore.registerSheet('sheet-1', { reachabilityOnly: true, visualOnly: true });
+    uiDataStore.registerSheet('sheet-2', { reachabilityOnly: true, visualOnly: false });
+    const app: any = {
+      controls,
+      activeSheetId: 'sheet-2',
+      sheets: {
+        'sheet-1': { reachabilityOnly: true, visualOnly: true },
+        'sheet-2': { reachabilityOnly: true, visualOnly: false },
+      },
+      uiDataModel,
+      uiDataStore,
+      setIsolates: vi.fn(),
+      setEditorContent: vi.fn(),
+      sheetExists: vi.fn((sheetId) => sheetId === 'sheet-1' || sheetId === 'sheet-2'),
+      switchSheet: vi.fn((sheetId) => {
+        app.activeSheetId = sheetId;
+      }),
+      removeAnalysisStateExtraSheets: vi.fn(() => {
+        delete app.sheets['sheet-2'];
+        delete app.uiDataModel.sheets['sheet-2'];
+      }),
+      api: {
+        loadFile: vi.fn(async () => ({ isolates: ['cf_live'], isolate: 'cf_live' })),
+        getARG: vi.fn(async () => ({ elements: [{ data: { id: 'state_0' } }] })),
+        getConceptGraph: vi.fn(async () => ({
+          elements: [{ data: { id: 'proc' } }],
+          relations: ['ref.prevents'],
+        })),
+      },
+    };
+    const persist = makePersist();
+    class FakeFileReader {
+      result = '';
+      onload: null | (() => void) = null;
+      onerror: null | (() => void) = null;
+      readAsText(file: any) {
+        this.result = file.content;
+        if (this.onload) this.onload();
+      }
+    }
+
+    await loadModelFile(
+      app,
+      { name: 'ord_live.ivy', content: '#lang ivy1.8\n' },
+      persist,
+      { win: { FileReader: FakeFileReader } },
+    );
+
+    expect(app.removeAnalysisStateExtraSheets).toHaveBeenCalled();
+    expect(app.switchSheet).toHaveBeenCalledWith('sheet-1');
+    expect(app.activeSheetId).toBe('sheet-1');
+    expect(app.sheets['sheet-1'].reachabilityOnly).toBe(false);
+    expect(app.sheets['sheet-1'].visualOnly).toBe(false);
+    expect(app.uiDataModel.sheets['sheet-1'].reachabilityOnly).toBe(false);
+    expect(app.uiDataModel.sheets['sheet-1'].visualOnly).toBe(false);
+    expect(document.getElementById('sheet-1').classList.contains('reachability-only-sheet')).toBe(false);
+    expect(document.getElementById('sheet-1').hasAttribute('data-sheet-layout')).toBe(false);
+    expect(app.api.getARG).toHaveBeenCalled();
+    expect(app.api.getConceptGraph).toHaveBeenCalled();
   });
 
   it('checks writable permissions only when the browser handle requires it', async () => {

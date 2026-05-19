@@ -52,6 +52,7 @@ import {
     newModel as newModelViaService,
     readFileHandleContent,
     rememberLastOpenFile,
+    refreshLoadedModelSnapshots,
     reopenLastFile as reopenLastFileViaService,
     restoreFileHandleForCurrentFile,
     saveModel,
@@ -4961,16 +4962,7 @@ class IvyRuntime {
             if (data && (data.isolates || data.isolate)) {
                 this.setIsolates(data.isolates || [], data.isolate || '');
             }
-            // Refresh ARG
-            var argData = await this.api.getARG();
-            if (argData && argData.elements) {
-                this.applyArgSnapshot(this.activeSheetId || 'sheet-1', argData);
-            }
-            // Refresh concept graph and populate state checkbox pane
-            var conceptData = await this.api.getConceptGraph();
-            if (conceptData && conceptData.elements) {
-                this.applyConceptSnapshot(this.activeSheetId || 'sheet-1', conceptData);
-            }
+            await refreshLoadedModelSnapshots(this);
         } catch (e) {
             console.error('refreshAfterLoad error:', e);
         }

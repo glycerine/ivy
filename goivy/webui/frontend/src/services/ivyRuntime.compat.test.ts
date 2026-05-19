@@ -442,6 +442,34 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(runtime.recalculateAll).toHaveBeenCalledOnce();
   });
 
+  it('refreshes file-loaded events through the primary analysis sheet, not the active reachability sheet', async () => {
+    installSheetDom();
+    const runtime = makeRuntime();
+    runtime.argGraph = new FakeGraph('arg-graph');
+    runtime.conceptGraph = new FakeGraph('concept-graph');
+    runtime.registerSheet('sheet-1', runtime.argGraph, runtime.conceptGraph);
+    runtime.api = {
+      getARG: vi.fn(async () => ({ elements: [{ data: { id: 's0' } }] })),
+      getConceptGraph: vi.fn(async () => ({
+        elements: [{ data: { id: 'rel' } }],
+        relations: ['link(X,Y)'],
+      })),
+    };
+
+    runtime.addSheet('Reachable states', 'sheet-2', { reachabilityOnly: true });
+    expect(runtime.activeSheetId).toBe('sheet-2');
+
+    await runtime.refreshAfterLoad({ isolates: ['cf_live'], isolate: 'cf_live' });
+
+    expect(runtime.activeSheetId).toBe('sheet-1');
+    expect(runtime.sheets['sheet-1'].reachabilityOnly).toBe(false);
+    expect(runtime.uiDataModel.sheets['sheet-1'].reachabilityOnly).toBe(false);
+    expect(document.getElementById('sheet-1')?.classList.contains('reachability-only-sheet')).toBe(false);
+    expect(document.getElementById('sheet-1')?.hasAttribute('data-sheet-layout')).toBe(false);
+    expect(runtime.uiDataModel.sheets['sheet-1'].concept?.relations).toEqual(['link(X,Y)']);
+    expect(runtime.sheets['sheet-2']).toBeUndefined();
+  });
+
   it('allocates frontend-only sheet ids outside the backend sheet namespace', () => {
     installSheetDom();
     const runtime = makeRuntime();
