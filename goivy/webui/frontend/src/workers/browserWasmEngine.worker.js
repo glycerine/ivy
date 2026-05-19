@@ -1,5 +1,6 @@
 const DEFAULT_ASSET_BASE_URL = '/static/wasm/';
 const DEFAULT_INCLUDE_ROOT = '/include';
+const MAX_RUNTIME_LOG_CHARS = 20000;
 
 let assetBaseUrl = DEFAULT_ASSET_BASE_URL;
 let includeRoot = DEFAULT_INCLUDE_ROOT;
@@ -7,6 +8,8 @@ let initialized = false;
 let wasmReady = null;
 let wasmGeneration = 0;
 let wasmRuntimeError = null;
+let wasmRuntimeCrashReported = false;
+let runtimeLogEntries = [];
 let sequence = 0;
 const sessions = new Map();
 
@@ -136,6 +139,8 @@ async function loadWebEngineWasm() {
   const generation = wasmGeneration + 1;
   wasmGeneration = generation;
   wasmRuntimeError = null;
+  wasmRuntimeCrashReported = false;
+  runtimeLogEntries = [];
   wasmReady = (async () => {
     const [{ createSmtZ3Imports }, { installGoIvyNodeFS }] = await Promise.all([
       import('./smtZ3Imports.js'),
@@ -146,8 +151,16 @@ async function loadWebEngineWasm() {
     const fsHost = installGoIvyNodeFS({
       includeRoot,
       includeTree,
-      stdout: (bytes) => post({ type: 'stdout', value: fsHost.decode(bytes) }),
-      stderr: (bytes) => post({ type: 'stderr', value: fsHost.decode(bytes) }),
+      stdout: (bytes) => {
+        const text = fsHost.decode(bytes);
+        appendRuntimeLog('stdout', text);
+        post({ type: 'stdout', value: text });
+      },
+      stderr: (bytes) => {
+        const text = fsHost.decode(bytes);
+        appendRuntimeLog('stderr', text);
+        post({ type: 'stderr', value: text });
+      },
     });
     if (typeof globalThis.Go !== 'function') {
       await import(/* @vite-ignore */ `${assetBaseUrl}wasm_exec-go1.25.6.js`);
@@ -170,12 +183,12 @@ async function loadWebEngineWasm() {
     try {
       runPromise = go.run(result.instance);
     } catch (error) {
-      resetWasmRuntime(generation, error);
+      resetWasmRuntime(generation, error, 'go.run threw before startup completed');
       throw error;
     }
     Promise.resolve(runPromise).then(
-      () => resetWasmRuntime(generation, new Error('goivy webengine wasm exited')),
-      (error) => resetWasmRuntime(generation, error),
+      () => resetWasmRuntime(generation, new Error('goivy webengine wasm exited'), 'go.run resolved'),
+      (error) => resetWasmRuntime(generation, error, 'go.run rejected'),
     );
     await waitForDispatch(() => (generation === wasmGeneration ? wasmRuntimeError : null));
   })();
@@ -188,9 +201,61 @@ function discardWasmRuntime(error) {
   globalThis.goivyWebEngineDispatch = undefined;
 }
 
-function resetWasmRuntime(generation, error) {
+function resetWasmRuntime(generation, error, reason = 'Go runtime exited') {
   if (generation !== wasmGeneration) return;
+  reportWasmRuntimeCrash(error, reason);
   discardWasmRuntime(error);
+}
+
+function appendRuntimeLog(stream, text) {
+  const value = String(text || '');
+  if (!value) return;
+  runtimeLogEntries.push({ stream, text: value });
+  let total = runtimeLogEntries.reduce((sum, entry) => sum + entry.text.length, 0);
+  while (total > MAX_RUNTIME_LOG_CHARS && runtimeLogEntries.length > 0) {
+    const first = runtimeLogEntries[0];
+    const excess = total - MAX_RUNTIME_LOG_CHARS;
+    if (first.text.length <= excess) {
+      runtimeLogEntries.shift();
+      total -= first.text.length;
+    } else {
+      first.text = first.text.slice(excess);
+      total -= excess;
+    }
+  }
+}
+
+function runtimeLogText() {
+  return runtimeLogEntries.map((entry) => `[${entry.stream}] ${entry.text}`).join('');
+}
+
+function errorMessage(error) {
+  return String((error && error.message) || error || 'Go WASM runtime exited');
+}
+
+function errorStack(error) {
+  return String((error && error.stack) || '');
+}
+
+function reportWasmRuntimeCrash(error, reason) {
+  if (wasmRuntimeCrashReported) return;
+  wasmRuntimeCrashReported = true;
+  post({
+    type: 'event',
+    requestId: nextId('event'),
+    event: {
+      type: 'browser_wasm_runtime_crash',
+      data: {
+        reason: reason || 'Go WASM runtime exited',
+        message: errorMessage(error),
+        stack: errorStack(error),
+        recent_output: runtimeLogText(),
+        asset_base_url: assetBaseUrl,
+        generation: wasmGeneration,
+        timestamp: new Date().toISOString(),
+      },
+    },
+  });
 }
 
 async function instantiateWasm(url, imports) {
@@ -219,10 +284,14 @@ async function loadZ3() {
   const initZ3 = new Function(`${source}; return initZ3;`)();
   return initZ3({
     print(text) {
-      post({ type: 'stdout', value: String(text) });
+      const value = String(text);
+      appendRuntimeLog('stdout', value);
+      post({ type: 'stdout', value });
     },
     printErr(text) {
-      post({ type: 'stderr', value: String(text) });
+      const value = String(text);
+      appendRuntimeLog('stderr', value);
+      post({ type: 'stderr', value });
     },
     locateFile(path) {
       if (String(path).endsWith('.wasm')) return `${assetBaseUrl}z3-471-api.wasm`;
@@ -256,6 +325,7 @@ async function callWasm(request, retryOnExited = true) {
     rawResponse = dispatch(JSON.stringify(request));
   } catch (error) {
     if (retryOnExited && isGoProgramExited(error)) {
+      reportWasmRuntimeCrash(error, `stale dispatcher while handling ${request.type || 'request'}`);
       discardWasmRuntime(error);
       return callWasm(request, false);
     }

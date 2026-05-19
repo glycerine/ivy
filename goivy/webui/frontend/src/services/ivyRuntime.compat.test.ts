@@ -71,6 +71,36 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(toast.classList.contains('custom-toast')).toBe(true);
   });
 
+  it('opens a large crash report dialog when the browser WASM Go runtime exits', () => {
+    const runtime = makeRuntime();
+    runtime.textDialog = vi.fn();
+
+    runtime.handleEvent({
+      type: 'browser_wasm_runtime_crash',
+      data: {
+        timestamp: '2026-05-19T01:02:03.000Z',
+        reason: 'go.run rejected',
+        message: 'panic: fake crash',
+        stack: 'Error: fake crash\n    at go.run',
+        recent_output: '[stderr] panic: fake crash\n[stderr] goroutine 1 [running]\n',
+        asset_base_url: '/static/wasm/',
+        generation: 3,
+      },
+    });
+
+    expect(runtime.controls.lastStatus).toEqual({
+      message: 'Browser WASM Go runtime exited; crash report opened',
+      kind: 'error',
+    });
+    expect(runtime.controls.lastInfo.shortInfo).toBe('Browser WASM Go runtime crashed');
+    expect(runtime.textDialog).toHaveBeenCalledWith(
+      'Browser WASM Go runtime crashed',
+      expect.stringContaining('Ivy will try to restart it'),
+      expect.stringContaining('goroutine 1 [running]'),
+      expect.objectContaining({ readOnly: true, rows: 28, cols: 120 }),
+    );
+  });
+
   it('reloads edited model content before model-dependent API calls', async () => {
     let apiInstance: any = null;
     class ReloadingAPI extends FakeAPI {

@@ -3742,6 +3742,10 @@ class IvyRuntime {
                 }
                 break;
 
+            case 'browser_wasm_runtime_crash':
+                this._showBrowserWasmRuntimeCrash(event.data || {});
+                break;
+
             case 'check_completed':
                 var resultMsg = 'Check complete';
                 if (event.data && event.data.result) {
@@ -4235,6 +4239,49 @@ class IvyRuntime {
      */
     showTextDialog(title, message, text) {
         this.textDialog(title, message, text, { readOnly: false, okLabel: 'OK' });
+    }
+
+    _showBrowserWasmRuntimeCrash(data) {
+        var report = this._browserWasmRuntimeCrashReport(data || {});
+        if (this.controls && typeof this.controls.hideLoading === 'function') {
+            this.controls.hideLoading();
+        }
+        this.controls.setStatus('Browser WASM Go runtime exited; crash report opened', 'error');
+        if (this.controls && typeof this.controls.showInfo === 'function') {
+            this.controls.showInfo('Browser WASM Go runtime crashed', data.message || 'Go runtime exited');
+        }
+        this.textDialog(
+            'Browser WASM Go runtime crashed',
+            'The in-browser Go backend exited. Ivy will try to restart it; please keep this crash report.',
+            report,
+            { readOnly: true, okLabel: 'OK', rows: 28, cols: 120 },
+        );
+    }
+
+    _browserWasmRuntimeCrashReport(data) {
+        var lines = [];
+        lines.push('Browser WASM Go runtime crash report');
+        lines.push('');
+        lines.push('Time: ' + (data.timestamp || new Date().toISOString()));
+        lines.push('Reason: ' + (data.reason || '(unknown)'));
+        lines.push('Message: ' + (data.message || '(none)'));
+        if (data.asset_base_url) lines.push('Asset base URL: ' + data.asset_base_url);
+        if (data.generation != null) lines.push('Runtime generation: ' + data.generation);
+        if (data.stack) {
+            lines.push('');
+            lines.push('JavaScript stack / go.run rejection:');
+            lines.push(String(data.stack));
+        }
+        if (data.recent_output) {
+            lines.push('');
+            lines.push('Recent worker stdout/stderr:');
+            lines.push(String(data.recent_output));
+        }
+        if (!data.stack && !data.recent_output) {
+            lines.push('');
+            lines.push('(No stack or worker output was captured.)');
+        }
+        return lines.join('\n');
     }
 
     entryDialog(title, message, initialValue, options) {

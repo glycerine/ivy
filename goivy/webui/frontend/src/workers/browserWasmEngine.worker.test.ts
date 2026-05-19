@@ -46,6 +46,10 @@ function installFakeGoRuntime() {
     run() {
       (globalThis as any).__fakeGoRunCount += 1;
       if ((globalThis as any).__fakeGoRunCount === 1) {
+        const fs = (globalThis as any).fs;
+        if (fs && typeof fs.writeSync === 'function') {
+          fs.writeSync(2, new TextEncoder().encode('panic: fake Go wasm crash\nfake stack frame\n'));
+        }
         (globalThis as any).goivyWebEngineDispatch = () => {
           throw new Error('Go program has already exited');
         };
@@ -62,6 +66,12 @@ function installFakeGoRuntime() {
       return new Promise(() => {});
     }
   });
+}
+
+async function flushAsync() {
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
 }
 
 describe('browserWasmEngine worker runtime lifecycle', () => {
@@ -104,6 +114,7 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
       assetBaseUrl: '/static/wasm/',
       includeRoot: '/include',
     })).resolves.toEqual({ ok: true });
+    await flushAsync();
 
     await expect(harness.send({
       type: 'new-session',
@@ -111,5 +122,11 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
       projectId: 'webui',
     })).resolves.toEqual({ id: 'browser-s2' });
     expect((globalThis as any).__fakeGoRunCount).toBe(2);
+    const crashEvent = harness.messages.find((message) => (
+      message.type === 'event' && message.event?.type === 'browser_wasm_runtime_crash'
+    ));
+    expect(crashEvent?.event.data.message).toContain('goivy webengine wasm exited');
+    expect(crashEvent?.event.data.recent_output).toContain('panic: fake Go wasm crash');
+    expect(crashEvent?.event.data.recent_output).toContain('fake stack frame');
   });
 });
