@@ -55,10 +55,28 @@ function installSheetDom() {
 afterEach(() => {
   resetIvyRuntimeDependencies();
   document.body.innerHTML = '';
+  document.documentElement.style.removeProperty('--ivy-graph-background');
   vi.useRealTimers();
 });
 
 describe('ivyRuntime compatibility behavior', () => {
+  it('maps the graph background slider from dark blue through neutral blue-gray to white', () => {
+    document.body.innerHTML = '<input id="graph-background-slider" type="range" min="0" max="100" value="50">';
+    const runtime = makeRuntime();
+    const slider = document.getElementById('graph-background-slider') as HTMLInputElement;
+
+    runtime._setupGraphBackgroundSlider();
+    expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(141, 141, 151)');
+
+    slider.value = '0';
+    slider.dispatchEvent(new Event('input'));
+    expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(26, 26, 46)');
+
+    slider.value = '100';
+    slider.dispatchEvent(new Event('input'));
+    expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(255, 255, 255)');
+  });
+
   it('shows a direct DOM toast notification', () => {
     const runtime = makeRuntime();
 

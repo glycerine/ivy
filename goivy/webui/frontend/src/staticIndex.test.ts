@@ -39,6 +39,29 @@ describe('static index toolbar', () => {
   });
 });
 
+describe('static graph background controls', () => {
+  it('places a midpoint background slider next to the Concept graph title', () => {
+    const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
+    const conceptHeader = doc.querySelector('#concept-panel .panel-header');
+    const titleRow = conceptHeader?.querySelector('.panel-title-row');
+    const slider = doc.getElementById('graph-background-slider') as HTMLInputElement | null;
+    const rootRule = ivyCss.match(/:root\s*\{[^}]+\}/)?.[0] || '';
+    const graphRule = ivyCss.match(/\.graph-container\s*\{[^}]+\}/)?.[0] || '';
+    const sliderRule = ivyCss.match(/\.graph-background-slider\s*\{[^}]+\}/)?.[0] || '';
+
+    expect(titleRow?.querySelector('.column-title')?.textContent).toBe('Concept graph');
+    expect(titleRow?.querySelector('#graph-background-slider')).toBe(slider);
+    expect(slider?.type).toBe('range');
+    expect(slider?.min).toBe('0');
+    expect(slider?.max).toBe('100');
+    expect(slider?.value).toBe('50');
+    expect(slider?.getAttribute('aria-label')).toBe('Graph background');
+    expect(rootRule).toContain('--ivy-graph-background: rgb(141, 141, 151);');
+    expect(graphRule).toContain('background-color: var(--ivy-graph-background);');
+    expect(sliderRule).toContain('width: 120px;');
+  });
+});
+
 describe('static CodeMirror includes', () => {
   it('loads the CodeMirror 5 search addons before keymaps so Emacs isearch initializes', () => {
     const coreIndex = indexHtml.indexOf('/codemirror.min.js');

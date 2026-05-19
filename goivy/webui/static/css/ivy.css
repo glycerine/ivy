@@ -3,6 +3,10 @@
    Dark theme IDE-like layout
    ============================================================ */
 
+:root {
+    --ivy-graph-background: rgb(141, 141, 151);
+}
+
 /* --- Reset & Base --- */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -1344,6 +1348,19 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     line-height: 1.25;
 }
 
+.panel-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.graph-background-slider {
+    width: 120px;
+    height: 18px;
+    accent-color: #b8beca;
+}
+
 .editor-title-row {
     display: flex;
     align-items: baseline;
@@ -1373,7 +1390,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 /* --- Graph Container --- */
 .graph-container {
     flex: 1;
-    background-color: #1a1a2e;
+    background-color: var(--ivy-graph-background);
     position: relative;
     min-height: 0;
 }

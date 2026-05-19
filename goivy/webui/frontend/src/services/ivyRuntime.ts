@@ -364,6 +364,29 @@ class IvyRuntime {
         this._loadedModelContent = content != null ? content : this._editorContent();
     }
 
+    _graphBackgroundColor(value) {
+        var pct = Math.max(0, Math.min(100, Number(value))) / 100;
+        var dark = [26, 26, 46];
+        var light = [255, 255, 255];
+        var channel = function (i) {
+            return Math.round(dark[i] + (light[i] - dark[i]) * pct);
+        };
+        return 'rgb(' + channel(0) + ', ' + channel(1) + ', ' + channel(2) + ')';
+    }
+
+    _setupGraphBackgroundSlider(doc = document) {
+        var slider = doc && doc.getElementById('graph-background-slider');
+        if (!slider || slider._ivyGraphBackgroundBound) return;
+        var self = this;
+        var apply = function () {
+            var color = self._graphBackgroundColor(slider.value);
+            doc.documentElement.style.setProperty('--ivy-graph-background', color);
+        };
+        slider._ivyGraphBackgroundBound = true;
+        slider.addEventListener('input', apply);
+        apply();
+    }
+
     /**
      * Initialize the application: create session, build graphs, wire events.
      */
@@ -419,6 +442,7 @@ class IvyRuntime {
         this.setupDetailsResizer();
         this.setupTutorialUrlBar();
         this.setupKeyboardShortcuts();
+        this._setupGraphBackgroundSlider();
 
         // Connect to SSE for real-time updates
         if (this.api.sessionId) {
