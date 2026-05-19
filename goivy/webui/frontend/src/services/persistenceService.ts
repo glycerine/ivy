@@ -10,6 +10,7 @@ const STORAGE_SESSIONS = 'ivy_sessions';
 const STORAGE_LAST_SESSION = 'ivy_last_session';
 const SESSION_PREFIX = 'ivy_sess_';
 const EDITOR_KEYMAPS = new Set(['sublime', 'emacs', 'vim']);
+const RECENT_SPEC_PREFIX = 'recent-spec:';
 
 function getWindow(win) {
   return win || globalThis.window;
@@ -36,6 +37,12 @@ function readJson(storage, key, fallback = null) {
   const raw = storage && storage.getItem(key);
   if (!raw) return fallback;
   return JSON.parse(raw);
+}
+
+function recentSpecSessionId(state) {
+  if (!state || !state.fileName || state.fileName === '(unnamed)') return '';
+  const identity = state.filePath || state.fileName;
+  return identity ? `${RECENT_SPEC_PREFIX}${identity}` : '';
 }
 
 export function createIvyPersist(winArg = globalThis.window) {
@@ -70,6 +77,11 @@ export function createIvyPersist(winArg = globalThis.window) {
           analysisState: app.buildAnalysisState ? app.buildAnalysisState() : null,
         };
         storage.setItem(`${SESSION_PREFIX}${sid}`, JSON.stringify(state));
+        const recentSid = recentSpecSessionId(state);
+        if (recentSid && recentSid !== sid) {
+          storage.setItem(`${SESSION_PREFIX}${recentSid}`, JSON.stringify(state));
+          persist._updateSessionList(recentSid);
+        }
         storage.setItem(STORAGE_LAST_SESSION, sid);
         persist._updateSessionList(sid);
       } catch (err) {

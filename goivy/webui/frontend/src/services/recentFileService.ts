@@ -10,14 +10,13 @@ export function recentFileItems(sessions, truncatePath) {
     seen[dedupKey] = true;
     unique.push(sess);
   }
-  unique.sort((a, b) => (a.fileName || '').localeCompare(b.fileName || ''));
 
   const baseNameCount = {};
   for (const session of unique) {
     baseNameCount[session.fileName] = (baseNameCount[session.fileName] || 0) + 1;
   }
 
-  return unique.slice(0, 10).map((session) => {
+  return unique.slice(0, 6).map((session) => {
     let label = session.fileName;
     if (baseNameCount[session.fileName] > 1 && session.filePath) {
       label = `${session.fileName}  ${truncatePath(session.filePath, 15)}`;

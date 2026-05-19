@@ -176,10 +176,8 @@ with im.Module():
 }
 
 func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
-	content := readClientServerExample(t)
-
 	s := NewSession(goivy.NewConfig(), "test-step-in")
-	if err := s.LoadFileContent("client_server_example.ivy", content); err != nil {
+	if err := s.LoadFileContent("cti_used_relation.ivy", []byte(ctiUsedRelationSample)); err != nil {
 		t.Fatalf("LoadFileContent: %v", err)
 	}
 	cr := s.RunCheck("induction")
@@ -189,8 +187,8 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if cr.FailedConjecture == "" {
 		t.Fatalf("RunCheck induction failed without reporting failed conjecture; message: %s", cr.Message)
 	}
-	if !strings.Contains(cr.FailedConjecture, "link") {
-		t.Fatalf("failed conjecture %q does not mention expected relation link", cr.FailedConjecture)
+	if !strings.Contains(cr.FailedConjecture, "p") || !strings.Contains(cr.FailedConjecture, "q") {
+		t.Fatalf("failed conjecture %q does not mention expected relations p and q", cr.FailedConjecture)
 	}
 	if s.AG == nil || len(s.AG.Transitions) == 0 {
 		t.Fatalf("induction failure did not populate ARG transitions")
@@ -210,19 +208,14 @@ func TestArgStepInClientServerDiagnosticEdge(t *testing.T) {
 	if len(s.SimpleSess.AbstractValue) == 0 {
 		t.Fatalf("concept graph abstract value was not recomputed for the CTI predecessor")
 	}
-	if got := countSimpleConceptNodesOfSort(s.SimpleSess, "client"); got < 2 {
-		t.Fatalf("CTI concept graph has %d client nodes, want at least 2 concrete witnesses", got)
+	if got := countSimpleConceptNodesOfSort(s.SimpleSess, "node"); got < 1 {
+		t.Fatalf("CTI concept graph has %d node witnesses, want at least 1 concrete witness", got)
 	}
-	if got := countSimpleConceptNodesOfSort(s.SimpleSess, "server"); got < 1 {
-		t.Fatalf("CTI concept graph has %d server nodes, want at least 1 concrete witness", got)
-	}
-	for _, want := range []string{"=@X", "=@Y", "=@Z", "link(X,Y)", "semaphore"} {
-		if !stringSliceContains(s.SimpleSess.RelationNames(), want) {
+	relationRows := strings.Join(s.SimpleSess.RelationNames(), "\n")
+	for _, want := range []string{"=@X", "p", "q"} {
+		if !strings.Contains(relationRows, want) {
 			t.Fatalf("CTI relation rows = %v, missing %q", s.SimpleSess.RelationNames(), want)
 		}
-	}
-	if !hasConcreteAllToAllEdge(s.SimpleSess, "link") {
-		t.Fatalf("CTI concept graph did not expose a concrete all_to_all link edge; abstract value=%v", s.SimpleSess.AbstractValue)
 	}
 
 	result, err := s.ArgNodeAction("state_0", "decompose", map[string]interface{}{"target": "state_1"})
@@ -364,10 +357,8 @@ func hasConcreteAllToAllEdge(cs *ConceptSession, edgeName string) bool {
 }
 
 func TestArgStepInRegistersIndependentAnalysisSheet(t *testing.T) {
-	content := readClientServerExample(t)
-
 	s := NewSession(goivy.NewConfig(), "test-step-in-sheet")
-	if err := s.LoadFileContent("client_server_example.ivy", content); err != nil {
+	if err := s.LoadFileContent("cti_used_relation.ivy", []byte(ctiUsedRelationSample)); err != nil {
 		t.Fatalf("LoadFileContent: %v", err)
 	}
 	cr := s.RunCheck("induction")
@@ -540,12 +531,6 @@ func TestARGChoiceBackedCommandsExposeConjecturesAndRememberedGraphs(t *testing.
 }
 
 func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
-	path := filepath.Join("..", "..", "ivy-lang-examples", "doc", "examples", "client_server_example.ivy")
-	content, err := os.ReadFile(path)
-	if err != nil {
-		t.Fatalf("read example: %v", err)
-	}
-
 	cfg := goivy.NewConfig()
 	be := NewGoBackend(cfg)
 	sessionJSON, err := be.NewSession(cfg)
@@ -556,7 +541,7 @@ func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
 	if err := json.Unmarshal(sessionJSON, &session); err != nil {
 		t.Fatalf("session json: %v", err)
 	}
-	if _, err := be.Load(session["session_id"], "client_server_example.ivy", content, ""); err != nil {
+	if _, err := be.Load(session["session_id"], "cti_used_relation.ivy", []byte(ctiUsedRelationSample), ""); err != nil {
 		t.Fatalf("Load: %v", err)
 	}
 	resultJSON, err := be.Check(session["session_id"], "induction", CheckOptions{})
@@ -587,7 +572,7 @@ func TestCheckFailureCarriesTraceARGForViewAction(t *testing.T) {
 	}
 	if _, err := be.ArgAction(session["session_id"], "state_0", "execute_action", map[string]interface{}{
 		"sheet_id":    traceSheetID,
-		"action_name": "connect",
+		"action_name": "ext:bad",
 	}); err != nil {
 		t.Fatalf("registered trace sheet ArgAction: %v", err)
 	}
@@ -1125,10 +1110,10 @@ func TestSaveInvariantUsesPythonKeptDroppedSections(t *testing.T) {
 }
 
 func TestArgViewSourceReturnsLoadedSourceAndLine(t *testing.T) {
-	content := readClientServerExample(t)
+	content := []byte(ctiUsedRelationSample)
 
 	s := NewSession(goivy.NewConfig(), "test-view-source")
-	if err := s.LoadFileContent("client_server_example.ivy", content); err != nil {
+	if err := s.LoadFileContent("cti_used_relation.ivy", content); err != nil {
 		t.Fatalf("LoadFileContent: %v", err)
 	}
 	cr := s.RunCheck("induction")

@@ -17,6 +17,22 @@ describe('recentFileService', () => {
     expect(items[1].label).toContain('...nt.ivy');
   });
 
+  it('keeps the six most recent files in storage order', () => {
+    const sessions = [
+      { id: 'current', fileName: 'zeta.ivy', filePath: '/tmp/zeta.ivy', timestamp: 7 },
+      { id: 's6', fileName: 'alpha.ivy', filePath: '/tmp/alpha.ivy', timestamp: 6 },
+      { id: 's5', fileName: 'beta.ivy', filePath: '/tmp/beta.ivy', timestamp: 5 },
+      { id: 's4', fileName: 'gamma.ivy', filePath: '/tmp/gamma.ivy', timestamp: 4 },
+      { id: 's3', fileName: 'delta.ivy', filePath: '/tmp/delta.ivy', timestamp: 3 },
+      { id: 's2', fileName: 'epsilon.ivy', filePath: '/tmp/epsilon.ivy', timestamp: 2 },
+      { id: 's1', fileName: 'old.ivy', filePath: '/tmp/old.ivy', timestamp: 1 },
+    ];
+
+    const items = recentFileItems(sessions, (path) => path);
+
+    expect(items.map((item) => item.id)).toEqual(['current', 's6', 's5', 's4', 's3', 's2']);
+  });
+
   it('renders recent files into the DOM and opens the selected session', () => {
     document.body.innerHTML = '<div id="file-recent-list"></div>';
     const app = {

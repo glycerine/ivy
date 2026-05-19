@@ -91,13 +91,13 @@ describe('persistenceService', () => {
         { kind: 'node', id: 'selected-c', obj: 'selected-c', label: 'selected-c', sourceObj: '', targetObj: '' },
       ],
     });
-    expect(persist.listSessions()).toEqual([
+    expect(persist.listSessions()).toEqual(expect.arrayContaining([
       expect.objectContaining({
         id: 'sess-1',
         fileName: 'client.ivy',
         filePath: '/tmp/client.ivy',
       }),
-    ]);
+    ]));
   });
 
   it('clears saved localStorage session data without touching unrelated keys', () => {
@@ -140,15 +140,44 @@ describe('persistenceService', () => {
       selectedArgNode: 'node0',
     });
     expect(window.localStorage.getItem('ivy_last_session')).toBe('stable-session');
-    expect(JSON.parse(window.localStorage.getItem('ivy_sessions'))).toEqual(['stable-session']);
-    expect(persist.listSessions()).toEqual([
-      {
+    expect(JSON.parse(window.localStorage.getItem('ivy_sessions'))).toEqual(expect.arrayContaining([
+      'stable-session',
+      'recent-spec:/tmp/ivy/client.ivy',
+    ]));
+    expect(persist.listSessions()).toEqual(expect.arrayContaining([
+      expect.objectContaining({
         id: 'stable-session',
         fileName: 'client.ivy',
         filePath: '/tmp/ivy/client.ivy',
         timestamp: state.timestamp,
-      },
-    ]);
+      }),
+    ]));
+  });
+
+  it('keeps recently opened specs even when one browser session loads several files', () => {
+    window.history.replaceState(null, '', '/#stable-session');
+    const persist = createIvyPersist(window);
+
+    persist.save(makeApp({
+      api: { sessionId: 'server-session' },
+      _persistedFileName: 'client.ivy',
+      _persistedFilePath: '/tmp/ivy/client.ivy',
+      _persistedFileContent: 'client content',
+    }));
+    persist.save(makeApp({
+      api: { sessionId: 'server-session' },
+      _persistedFileName: 'server.ivy',
+      _persistedFilePath: '/tmp/ivy/server.ivy',
+      _persistedFileContent: 'server content',
+    }));
+
+    const sessions = persist.listSessions();
+    expect(sessions.map((session) => session.filePath)).toContain('/tmp/ivy/client.ivy');
+    expect(sessions.map((session) => session.filePath)).toContain('/tmp/ivy/server.ivy');
+    expect(persist.loadSession('recent-spec:/tmp/ivy/client.ivy')).toMatchObject({
+      fileName: 'client.ivy',
+      fileContent: 'client content',
+    });
   });
 
   it('restores mode, loaded file, and applies relation toggles through the backend', async () => {
