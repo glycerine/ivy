@@ -12,8 +12,8 @@ IVy is a research tool intended to allow interactive development of protocols an
 ">
 
   <link rel="stylesheet" href="../../css/main.css">
-  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/sht/proto.html">
-  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+  <link rel="canonical" href="ivy/examples/sht/proto.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="ivy/feed.xml">
 </head>
 
 
@@ -23,7 +23,7 @@ IVy is a research tool intended to allow interactive development of protocols an
 
   <div class="wrapper">
 
-    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+    <a class="site-title" href="">IVy</a>
 
     <nav class="site-nav">
       <a href="proto.html#" class="menu-icon">
@@ -164,7 +164,7 @@ IVy is a research tool intended to allow interactive development of protocols an
 	</header>
 
 	<div class="post-content">
-	  <p>Now we get to the <a href="https://kenmcmil.github.io/examples/sht/proto.ivy">actual protocol</a>. Each host has a hash
+	  <p>Now we get to the <a href="examples/sht/proto.ivy">actual protocol</a>. Each host has a hash
 table and a delegation map describing where to find ranges of
 keys. When the host receives a request to get or set the value of a
 key in the directory, it looks up the key in the delegation map. If
@@ -436,7 +436,7 @@ conjecture impl.dm.map(K,me) &amp; X ~= me -&gt; ~proto(X).impl.dm.map(K,X)
 </code></pre></div></div>
 
 <p>The second invarient refers to <code class="language-plaintext highlighter-rouge">proto</code>, which is a collection of all
-hosts. This will be defined when we <a href="https://kenmcmil.github.io/examples/sht/sht.html">instantiate the protocol</a>.</p>
+hosts. This will be defined when we <a href="examples/sht/sht.html">instantiate the protocol</a>.</p>
 
 <p>The invariants for delegation message in transit are:</p>
 
