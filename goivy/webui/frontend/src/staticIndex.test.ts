@@ -14,6 +14,29 @@ describe('static index toolbar', () => {
     expect(doc.getElementById('btn-cancel-check')).toBeNull();
     expect(doc.getElementById('btn-cancel-loading')).not.toBeNull();
   });
+
+  it('keeps the right-side isolate, settings, and tutorial controls protected from long filenames', () => {
+    const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
+    const right = doc.querySelector('#menubar .menu-right');
+    const loadedFileGroup = doc.querySelector('#menubar .loaded-file-group');
+    const menuRightRule = ivyCss.match(/\.menu-right\s*\{[^}]+\}/)?.[0] || '';
+    const loadedFileRule = ivyCss.match(/\.loaded-file\s*\{[^}]+\}/)?.[0] || '';
+    const loadedFileGroupRule = ivyCss.match(/\.loaded-file-group\s*\{[^}]+\}/)?.[0] || '';
+    const workflowSelectRule = ivyCss.match(/#ui-mode-select\s*\{[^}]+\}/)?.[0] || '';
+
+    expect(doc.getElementById('btn-undo')).toBeNull();
+    expect(loadedFileGroup).not.toBeNull();
+    expect(right?.querySelector('#isolate-menu-wrapper')).not.toBeNull();
+    expect(right?.querySelector('#btn-toggle-job-control')).not.toBeNull();
+    expect(right?.querySelector('#btn-toggle-tutorial')).not.toBeNull();
+    expect(menuRightRule).toContain('flex: 0 0 auto;');
+    expect(menuRightRule).toContain('min-width: max-content;');
+    expect(loadedFileGroupRule).toContain('flex: 1 1 12rem;');
+    expect(loadedFileGroupRule).toContain('overflow: hidden;');
+    expect(loadedFileRule).toContain('text-overflow: ellipsis;');
+    expect(loadedFileRule).toContain('font-size: 11px;');
+    expect(workflowSelectRule).toContain('width: 104px;');
+  });
 });
 
 describe('static CodeMirror includes', () => {

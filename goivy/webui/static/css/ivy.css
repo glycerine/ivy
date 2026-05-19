@@ -28,9 +28,10 @@ html, body {
     background-color: #2d2d2d;
     border-bottom: 1px solid #3c3c3c;
     padding: 0 8px;
-    gap: 12px;
+    gap: 8px;
     flex-shrink: 0;
     user-select: none;
+    overflow: hidden;
 }
 
 .menu-group {
@@ -38,10 +39,15 @@ html, body {
     align-items: center;
     gap: 4px;
     align-self: stretch;
+    min-width: 0;
+    flex: 0 0 auto;
 }
 
 .menu-right {
     margin-left: auto;
+    flex: 0 0 auto;
+    min-width: max-content;
+    gap: 6px;
 }
 
 .isolate-menu[hidden] {
@@ -203,7 +209,7 @@ html, body {
 }
 
 #ui-mode-select {
-    width: 118px;
+    width: 104px;
 }
 
 #mode-select:focus {
@@ -342,11 +348,25 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 
 .loaded-file {
     color: #aad;
-    font-size: 12px;
-    margin-left: 10px;
+    display: block;
+    font-size: 11px;
+    margin-left: 0;
     font-style: italic;
     user-select: text;
     cursor: text;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.loaded-file-group {
+    flex: 1 1 12rem;
+    justify-content: center;
+    overflow: hidden;
+    min-width: 3rem;
+    padding: 0 4px;
 }
 
 .editor-close-btn {
