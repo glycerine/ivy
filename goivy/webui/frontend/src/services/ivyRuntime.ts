@@ -378,12 +378,72 @@ class IvyRuntime {
         var slider = doc && doc.getElementById('graph-background-slider');
         if (!slider || slider._ivyGraphBackgroundBound) return;
         var self = this;
-        var apply = function () {
+        var readout = null;
+        var dragging = false;
+        var lastPointer = null;
+        var positionReadout = function (event) {
+            if (event && typeof event.clientX === 'number' && typeof event.clientY === 'number') {
+                lastPointer = { x: event.clientX, y: event.clientY };
+            }
+            if (!readout) return;
+            var point = lastPointer;
+            if (!point && slider.getBoundingClientRect) {
+                var rect = slider.getBoundingClientRect();
+                point = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+            }
+            if (!point) point = { x: 0, y: 0 };
+            readout.style.left = Math.round(point.x + 14) + 'px';
+            readout.style.top = Math.round(point.y + 16) + 'px';
+        };
+        var showReadout = function (color, event) {
+            if (!readout) {
+                readout = doc.createElement('div');
+                readout.className = 'graph-background-readout';
+                readout.setAttribute('aria-hidden', 'true');
+                doc.body.appendChild(readout);
+            }
+            readout.textContent = color;
+            positionReadout(event);
+            readout.classList.add('visible');
+        };
+        var hideReadout = function () {
+            if (!readout) return;
+            if (readout.parentNode) {
+                readout.parentNode.removeChild(readout);
+            }
+            readout = null;
+        };
+        var apply = function (event = null) {
             var color = self._graphBackgroundColor(slider.value);
             doc.documentElement.style.setProperty('--ivy-graph-background', color);
+            slider.style.setProperty('--ivy-graph-slider-color', color);
+            slider.title = 'Graph background: ' + color;
+            if (dragging) {
+                showReadout(color, event);
+            }
         };
         slider._ivyGraphBackgroundBound = true;
         slider.addEventListener('input', apply);
+        slider.addEventListener('pointerdown', function (event) {
+            dragging = true;
+            apply(event);
+        });
+        slider.addEventListener('pointermove', function (event) {
+            if (!dragging) return;
+            positionReadout(event);
+        });
+        doc.addEventListener('pointerup', function (event) {
+            if (!dragging) return;
+            dragging = false;
+            positionReadout(event);
+            hideReadout();
+        });
+        doc.addEventListener('pointercancel', function (event) {
+            if (!dragging) return;
+            dragging = false;
+            positionReadout(event);
+            hideReadout();
+        });
         apply();
     }
 

@@ -48,6 +48,10 @@ describe('static graph background controls', () => {
     const rootRule = ivyCss.match(/:root\s*\{[^}]+\}/)?.[0] || '';
     const graphRule = ivyCss.match(/\.graph-container\s*\{[^}]+\}/)?.[0] || '';
     const sliderRule = ivyCss.match(/\.graph-background-slider\s*\{[^}]+\}/)?.[0] || '';
+    const webkitTrackRule = ivyCss.match(/\.graph-background-slider::-webkit-slider-runnable-track\s*\{[^}]+\}/)?.[0] || '';
+    const mozTrackRule = ivyCss.match(/\.graph-background-slider::-moz-range-track\s*\{[^}]+\}/)?.[0] || '';
+    const readoutRule = ivyCss.match(/\.graph-background-readout\s*\{[^}]+\}/)?.[0] || '';
+    const readoutVisibleRule = ivyCss.match(/\.graph-background-readout\.visible\s*\{[^}]+\}/)?.[0] || '';
 
     expect(titleRow?.querySelector('.column-title')?.textContent).toBe('Concept graph');
     expect(titleRow?.querySelector('#graph-background-slider')).toBe(slider);
@@ -56,9 +60,20 @@ describe('static graph background controls', () => {
     expect(slider?.max).toBe('100');
     expect(slider?.value).toBe('50');
     expect(slider?.getAttribute('aria-label')).toBe('Graph background');
+    expect(slider?.title).toBe('Graph background: rgb(141, 141, 151)');
     expect(rootRule).toContain('--ivy-graph-background: rgb(141, 141, 151);');
     expect(graphRule).toContain('background-color: var(--ivy-graph-background);');
     expect(sliderRule).toContain('width: 120px;');
+    expect(sliderRule).toContain('height: 9px;');
+    expect(sliderRule).toContain('background: var(--ivy-graph-slider-color, var(--ivy-graph-background));');
+    expect(sliderRule).toContain('accent-color: var(--ivy-graph-slider-color, var(--ivy-graph-background));');
+    expect(webkitTrackRule).toContain('height: 7px;');
+    expect(webkitTrackRule).toContain('background: var(--ivy-graph-slider-color, var(--ivy-graph-background));');
+    expect(mozTrackRule).toContain('height: 7px;');
+    expect(mozTrackRule).toContain('background: var(--ivy-graph-slider-color, var(--ivy-graph-background));');
+    expect(readoutRule).toContain('position: fixed;');
+    expect(readoutRule).toContain('pointer-events: none;');
+    expect(readoutVisibleRule).toContain('opacity: 1;');
   });
 });
 

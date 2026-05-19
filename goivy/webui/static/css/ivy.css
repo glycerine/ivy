@@ -1357,8 +1357,64 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 
 .graph-background-slider {
     width: 120px;
-    height: 18px;
-    accent-color: #b8beca;
+    height: 9px;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 999px;
+    background: var(--ivy-graph-slider-color, var(--ivy-graph-background));
+    border: 1px solid #5f6672;
+    accent-color: var(--ivy-graph-slider-color, var(--ivy-graph-background));
+}
+
+.graph-background-slider::-webkit-slider-runnable-track {
+    height: 7px;
+    border-radius: 999px;
+    background: var(--ivy-graph-slider-color, var(--ivy-graph-background));
+}
+
+.graph-background-slider::-moz-range-track {
+    height: 7px;
+    border-radius: 999px;
+    background: var(--ivy-graph-slider-color, var(--ivy-graph-background));
+}
+
+.graph-background-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 9px;
+    height: 9px;
+    margin-top: -1px;
+    border-radius: 50%;
+    border: 1px solid #20232a;
+    background: #f0f0f0;
+}
+
+.graph-background-slider::-moz-range-thumb {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid #20232a;
+    background: #f0f0f0;
+}
+
+.graph-background-readout {
+    position: fixed;
+    z-index: 10000;
+    pointer-events: none;
+    padding: 3px 6px;
+    border: 1px solid #5f6672;
+    border-radius: 4px;
+    background: rgba(30, 30, 30, 0.92);
+    color: #f0f0f0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 11px;
+    line-height: 1.2;
+    opacity: 0;
+    transition: opacity 180ms ease-out;
+    white-space: nowrap;
+}
+
+.graph-background-readout.visible {
+    opacity: 1;
 }
 
 .editor-title-row {
