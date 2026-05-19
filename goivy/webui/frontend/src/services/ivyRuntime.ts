@@ -415,8 +415,14 @@ class IvyRuntime {
         };
         var apply = function (event = null) {
             var color = self._graphBackgroundColor(slider.value);
+            var min = Number(slider.min || 0);
+            var max = Number(slider.max || 100);
+            var value = Number(slider.value || min);
+            var pct = max > min ? ((value - min) / (max - min)) * 100 : 0;
+            pct = Math.max(0, Math.min(100, pct));
             doc.documentElement.style.setProperty('--ivy-graph-background', color);
             slider.style.setProperty('--ivy-graph-slider-color', color);
+            slider.style.setProperty('--ivy-graph-slider-fill', pct + '%');
             slider.title = 'Graph background: ' + color;
             if (dragging) {
                 showReadout(color, event);

@@ -1357,32 +1357,44 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 
 .graph-background-slider {
     width: 120px;
-    height: 9px;
+    height: 18px;
     appearance: none;
     -webkit-appearance: none;
-    border-radius: 999px;
-    background: var(--ivy-graph-slider-color, var(--ivy-graph-background));
-    border: 1px solid #5f6672;
+    background: transparent;
     accent-color: var(--ivy-graph-slider-color, var(--ivy-graph-background));
 }
 
 .graph-background-slider::-webkit-slider-runnable-track {
-    height: 7px;
+    height: 5px;
     border-radius: 999px;
-    background: var(--ivy-graph-slider-color, var(--ivy-graph-background));
+    background: linear-gradient(
+        to right,
+        var(--ivy-graph-slider-color, var(--ivy-graph-background)) 0%,
+        var(--ivy-graph-slider-color, var(--ivy-graph-background)) var(--ivy-graph-slider-fill, 50%),
+        #111 var(--ivy-graph-slider-fill, 50%),
+        #111 100%
+    );
+    box-shadow: 0 0 0 1px #5f6672;
 }
 
 .graph-background-slider::-moz-range-track {
-    height: 7px;
+    height: 5px;
     border-radius: 999px;
-    background: var(--ivy-graph-slider-color, var(--ivy-graph-background));
+    background: linear-gradient(
+        to right,
+        var(--ivy-graph-slider-color, var(--ivy-graph-background)) 0%,
+        var(--ivy-graph-slider-color, var(--ivy-graph-background)) var(--ivy-graph-slider-fill, 50%),
+        #111 var(--ivy-graph-slider-fill, 50%),
+        #111 100%
+    );
+    box-shadow: 0 0 0 1px #5f6672;
 }
 
 .graph-background-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 18px;
     height: 18px;
-    margin-top: -5px;
+    margin-top: -6.5px;
     border-radius: 50%;
     border: 1px solid #20232a;
     background: #f0f0f0;
