@@ -1352,12 +1352,14 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
     min-width: 0;
 }
 
 .graph-background-slider {
     width: 120px;
     height: 18px;
+    margin-left: auto;
     appearance: none;
     -webkit-appearance: none;
     background: transparent;

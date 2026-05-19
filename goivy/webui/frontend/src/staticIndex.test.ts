@@ -47,6 +47,7 @@ describe('static graph background controls', () => {
     const slider = doc.getElementById('graph-background-slider') as HTMLInputElement | null;
     const rootRule = ivyCss.match(/:root\s*\{[^}]+\}/)?.[0] || '';
     const graphRule = ivyCss.match(/\.graph-container\s*\{[^}]+\}/)?.[0] || '';
+    const titleRowRule = ivyCss.match(/\.panel-title-row\s*\{[^}]+\}/)?.[0] || '';
     const sliderRule = ivyCss.match(/\.graph-background-slider\s*\{[^}]+\}/)?.[0] || '';
     const webkitTrackRule = ivyCss.match(/\.graph-background-slider::-webkit-slider-runnable-track\s*\{[^}]+\}/)?.[0] || '';
     const mozTrackRule = ivyCss.match(/\.graph-background-slider::-moz-range-track\s*\{[^}]+\}/)?.[0] || '';
@@ -65,8 +66,10 @@ describe('static graph background controls', () => {
     expect(slider?.title).toBe('Graph background: rgb(141, 141, 151)');
     expect(rootRule).toContain('--ivy-graph-background: rgb(141, 141, 151);');
     expect(graphRule).toContain('background-color: var(--ivy-graph-background);');
+    expect(titleRowRule).toContain('width: 100%;');
     expect(sliderRule).toContain('width: 120px;');
     expect(sliderRule).toContain('height: 18px;');
+    expect(sliderRule).toContain('margin-left: auto;');
     expect(sliderRule).toContain('background: transparent;');
     expect(sliderRule).toContain('accent-color: var(--ivy-graph-slider-color, var(--ivy-graph-background));');
     expect(webkitTrackRule).toContain('height: 5px;');
