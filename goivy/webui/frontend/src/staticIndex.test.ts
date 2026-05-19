@@ -50,6 +50,8 @@ describe('static graph background controls', () => {
     const sliderRule = ivyCss.match(/\.graph-background-slider\s*\{[^}]+\}/)?.[0] || '';
     const webkitTrackRule = ivyCss.match(/\.graph-background-slider::-webkit-slider-runnable-track\s*\{[^}]+\}/)?.[0] || '';
     const mozTrackRule = ivyCss.match(/\.graph-background-slider::-moz-range-track\s*\{[^}]+\}/)?.[0] || '';
+    const webkitThumbRule = ivyCss.match(/\.graph-background-slider::-webkit-slider-thumb\s*\{[^}]+\}/)?.[0] || '';
+    const mozThumbRule = ivyCss.match(/\.graph-background-slider::-moz-range-thumb\s*\{[^}]+\}/)?.[0] || '';
     const readoutRule = ivyCss.match(/\.graph-background-readout\s*\{[^}]+\}/)?.[0] || '';
     const readoutVisibleRule = ivyCss.match(/\.graph-background-readout\.visible\s*\{[^}]+\}/)?.[0] || '';
 
@@ -71,6 +73,10 @@ describe('static graph background controls', () => {
     expect(webkitTrackRule).toContain('background: var(--ivy-graph-slider-color, var(--ivy-graph-background));');
     expect(mozTrackRule).toContain('height: 7px;');
     expect(mozTrackRule).toContain('background: var(--ivy-graph-slider-color, var(--ivy-graph-background));');
+    expect(webkitThumbRule).toContain('width: 18px;');
+    expect(webkitThumbRule).toContain('height: 18px;');
+    expect(mozThumbRule).toContain('width: 18px;');
+    expect(mozThumbRule).toContain('height: 18px;');
     expect(readoutRule).toContain('position: fixed;');
     expect(readoutRule).toContain('pointer-events: none;');
     expect(readoutVisibleRule).toContain('opacity: 1;');

@@ -1380,17 +1380,17 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 
 .graph-background-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 9px;
-    height: 9px;
-    margin-top: -1px;
+    width: 18px;
+    height: 18px;
+    margin-top: -5px;
     border-radius: 50%;
     border: 1px solid #20232a;
     background: #f0f0f0;
 }
 
 .graph-background-slider::-moz-range-thumb {
-    width: 9px;
-    height: 9px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     border: 1px solid #20232a;
     background: #f0f0f0;
