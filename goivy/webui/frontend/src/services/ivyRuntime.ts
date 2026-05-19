@@ -2455,6 +2455,7 @@ class IvyRuntime {
         // Update URL bar when iframe navigates, and cache successful pages.
         iframe.addEventListener('load', function () {
             try {
+                self._installTutorialExternalLinkInterceptor(iframe);
                 var newUrl = iframe.contentWindow.location.href;
                 // Convert full URL to path for cleaner display
                 if (newUrl && newUrl !== 'about:blank') {
@@ -2478,6 +2479,38 @@ class IvyRuntime {
         });
 
         updateNavButtons();
+    }
+
+    _installTutorialExternalLinkInterceptor(iframe) {
+        if (!iframe || !iframe.contentDocument) return false;
+        var doc = iframe.contentDocument;
+        if (doc._ivyExternalLinkInterceptorInstalled) return true;
+        doc._ivyExternalLinkInterceptorInstalled = true;
+        doc.addEventListener('click', (event) => {
+            var anchor = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+            if (!anchor) return;
+            var externalUrl = this._externalTutorialLinkUrl(anchor, doc);
+            if (!externalUrl) return;
+            event.preventDefault();
+            event.stopPropagation();
+            window.open(externalUrl, '_blank', 'noopener,noreferrer');
+        });
+        return true;
+    }
+
+    _externalTutorialLinkUrl(anchor, doc = globalThis.document) {
+        if (!anchor || !anchor.getAttribute) return '';
+        var href = anchor.getAttribute('href') || '';
+        if (!href || href.charAt(0) === '#') return '';
+        var base = doc && doc.location && doc.location.href ? doc.location.href : window.location.href;
+        var url;
+        try {
+            url = new URL(href, base);
+        } catch (e) {
+            return '';
+        }
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
+        return url.origin === window.location.origin ? '' : url.href;
     }
 
     populateStateCheckboxes(conceptData) {

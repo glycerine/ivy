@@ -125,6 +125,37 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(toast.classList.contains('custom-toast')).toBe(true);
   });
 
+  it('opens external tutorial links outside the iframe while preserving local links', () => {
+    window.history.replaceState(null, '', '/static/tutorial/kenmcmil.github.io/ivy/examples/sht/table.html');
+    const runtime = makeRuntime();
+    const tutorialDoc = document.implementation.createHTMLDocument('tutorial');
+    tutorialDoc.body.innerHTML = [
+      '<a id="external" href="http://dl.acm.org/citation.cfm?id=359108">ACM</a>',
+      '<a id="local" href="table.ivy">Local</a>',
+    ].join('');
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null);
+
+    try {
+      expect(runtime._externalTutorialLinkUrl(
+        tutorialDoc.getElementById('local'),
+        { location: { href: window.location.href } },
+      )).toBe('');
+      runtime._installTutorialExternalLinkInterceptor({ contentDocument: tutorialDoc });
+
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+      const dispatched = tutorialDoc.getElementById('external')!.dispatchEvent(event);
+
+      expect(dispatched).toBe(false);
+      expect(open).toHaveBeenCalledWith(
+        'http://dl.acm.org/citation.cfm?id=359108',
+        '_blank',
+        'noopener,noreferrer',
+      );
+    } finally {
+      open.mockRestore();
+    }
+  });
+
   it('opens a large crash report dialog when the browser WASM Go runtime exits', () => {
     const runtime = makeRuntime();
     runtime.textDialog = vi.fn();
