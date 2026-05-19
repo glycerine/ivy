@@ -149,7 +149,9 @@ async function loadWebEngineWasm() {
       stdout: (bytes) => post({ type: 'stdout', value: fsHost.decode(bytes) }),
       stderr: (bytes) => post({ type: 'stderr', value: fsHost.decode(bytes) }),
     });
-    await import(/* @vite-ignore */ `${assetBaseUrl}wasm_exec-go1.25.6.js`);
+    if (typeof globalThis.Go !== 'function') {
+      await import(/* @vite-ignore */ `${assetBaseUrl}wasm_exec-go1.25.6.js`);
+    }
     if (typeof globalThis.Go !== 'function') {
       throw new Error('wasm_exec-go1.25.6.js did not expose Go');
     }

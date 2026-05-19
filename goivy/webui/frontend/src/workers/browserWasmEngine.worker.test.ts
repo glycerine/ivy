@@ -36,6 +36,34 @@ function installWorkerHarness() {
   };
 }
 
+function installFakeGoRuntime() {
+  (globalThis as any).__fakeGoRunCount = 0;
+  vi.stubGlobal('Go', class FakeGo {
+    argv = [];
+    env = {};
+    importObject = {};
+
+    run() {
+      (globalThis as any).__fakeGoRunCount += 1;
+      if ((globalThis as any).__fakeGoRunCount === 1) {
+        (globalThis as any).goivyWebEngineDispatch = () => {
+          throw new Error('Go program has already exited');
+        };
+        return Promise.resolve();
+      }
+      (globalThis as any).goivyWebEngineDispatch = (raw) => {
+        const request = JSON.parse(raw);
+        return JSON.stringify({
+          type: 'session',
+          requestId: request.requestId,
+          value: { id: 'browser-s2' },
+        });
+      };
+      return new Promise(() => {});
+    }
+  });
+}
+
 describe('browserWasmEngine worker runtime lifecycle', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
@@ -43,7 +71,7 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
   });
 
   it('restarts the Go runtime instead of reusing a dispatcher after wasm_exec reports exit', async () => {
-    const assetBaseUrl = './__fixtures__/';
+    installFakeGoRuntime();
     const harness = installWorkerHarness();
     vi.stubGlobal('fetch', vi.fn(async (url) => {
       const text = String(url);
@@ -73,7 +101,7 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
     await expect(harness.send({
       type: 'init',
       requestId: 'init-1',
-      assetBaseUrl,
+      assetBaseUrl: '/static/wasm/',
       includeRoot: '/include',
     })).resolves.toEqual({ ok: true });
 
