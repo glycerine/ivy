@@ -325,6 +325,12 @@ class IvyRuntime {
 
     _invalidateModelState(reason) {
         if (this._suppressModelStateInvalidation) return false;
+        if (reason === 'editor-change' && !this._modelStateInvalid) {
+            var content = this._editorContent ? this._editorContent() : '';
+            if (content === this._loadedModelContent) {
+                return false;
+            }
+        }
         this._modelStateInvalid = true;
         this._modelStateInvalidReason = reason || 'model-change';
         this.selectedArgNode = null;

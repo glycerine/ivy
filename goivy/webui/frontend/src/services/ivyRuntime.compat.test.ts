@@ -187,6 +187,32 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(runtime.availableIsolates).toEqual(['fresh_iso']);
   });
 
+  it('ignores delayed editor change events when the content still matches the freshly loaded model', () => {
+    const runtime = makeRuntime();
+    const invalidateModelState = vi.fn();
+    runtime.uiDataStore = { invalidateModelState };
+    runtime.cmEditor = { getValue: vi.fn(() => 'type client\n') };
+    runtime._loadedModelContent = 'type client\n';
+
+    expect(runtime._invalidateModelState('editor-change')).toBe(false);
+
+    expect(runtime._modelStateInvalid).toBe(false);
+    expect(invalidateModelState).not.toHaveBeenCalled();
+  });
+
+  it('invalidates model state when the editor content actually changes', () => {
+    const runtime = makeRuntime();
+    const invalidateModelState = vi.fn();
+    runtime.uiDataStore = { invalidateModelState };
+    runtime.cmEditor = { getValue: vi.fn(() => 'type server\n') };
+    runtime._loadedModelContent = 'type client\n';
+
+    expect(runtime._invalidateModelState('editor-change')).toBe(true);
+
+    expect(runtime._modelStateInvalid).toBe(true);
+    expect(invalidateModelState).toHaveBeenCalledTimes(1);
+  });
+
   it('does not reload model content for event-trace-only actions', async () => {
     let apiInstance: any = null;
     class EventAPI extends FakeAPI {
