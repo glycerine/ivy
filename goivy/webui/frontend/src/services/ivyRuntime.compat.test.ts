@@ -68,17 +68,21 @@ describe('ivyRuntime compatibility behavior', () => {
     runtime._setupGraphBackgroundSlider();
     expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(141, 141, 151)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(141, 141, 151)');
+    expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('50%');
     expect(slider.title).toBe('Graph background: rgb(141, 141, 151)');
 
     slider.value = '0';
     slider.dispatchEvent(new Event('input'));
     expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(26, 26, 46)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(26, 26, 46)');
+    expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('0%');
     expect(slider.title).toBe('Graph background: rgb(26, 26, 46)');
 
     slider.value = '100';
     slider.dispatchEvent(new Event('input'));
     expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(255, 255, 255)');
+    expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(255, 255, 255)');
+    expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('100%');
     expect(slider.title).toBe('Graph background: rgb(255, 255, 255)');
   });
 
@@ -103,6 +107,7 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(readout?.textContent).toBe('rgb(198, 198, 203)');
     expect(slider.title).toBe('Graph background: rgb(198, 198, 203)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(198, 198, 203)');
+    expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('75%');
 
     document.dispatchEvent(new MouseEvent('pointerup', { clientX: 44, clientY: 55, bubbles: true }));
     expect(document.querySelector('.graph-background-readout')).toBeNull();
