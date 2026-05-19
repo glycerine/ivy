@@ -1,33 +1,13 @@
 import { expect, test } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-async function openIvy(page) {
-  const consoleErrors = [];
-  page.on('console', (msg) => {
-    if (msg.type() === 'error') {
-      consoleErrors.push(msg.text());
-    }
-  });
-  page.on('pageerror', (err) => {
-    consoleErrors.push(err.message);
-  });
-
-  await page.goto('/');
-  await expect(page).toHaveTitle(/ivy/i);
-  await expect(page.locator('#menubar')).toBeVisible();
-  await page.waitForFunction(() => window.__ivyDiagnostics && window.__ivyDiagnostics.runtime() && window.__ivyDiagnostics.runtime().api);
-  return consoleErrors;
-}
-
-async function createSession(request) {
-  const response = await request.post('/api/session/new');
-  expect(response.ok()).toBe(true);
-  const body = await response.json();
-  expect(body.session_id).toBeTruthy();
-  return body.session_id;
-}
-
-async function loadExampleIntoCurrentSession(page) {
-  const ivyContent = `#lang ivy1.7
+const webuiDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const ivyRoot = path.resolve(webuiDir, '../..');
+const ordLivePath = path.join(ivyRoot, 'ivy-lang-examples', 'doc', 'examples', 'apple', 'ord_live.ivy');
+const ordLiveContent = readFileSync(ordLivePath, 'utf8');
+const clientServerIvyContent = `#lang ivy1.7
 
 type client
 type server
@@ -59,6 +39,43 @@ conjecture link(X,Y) -> ~semaphore(Y)
 conjecture ~link(X,Y) | ~link(X,Z) | Y = Z
 `;
 
+async function openIvy(page) {
+  const consoleErrors = [];
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') {
+      consoleErrors.push(msg.text());
+    }
+  });
+  page.on('pageerror', (err) => {
+    consoleErrors.push(err.message);
+  });
+
+  await page.goto('/');
+  await expect(page).toHaveTitle(/ivy/i);
+  await expect(page.locator('#menubar')).toBeVisible();
+  await page.waitForFunction(() => window.__ivyDiagnostics && window.__ivyDiagnostics.runtime() && window.__ivyDiagnostics.runtime().api);
+  return consoleErrors;
+}
+
+async function openIvyWithSavedSession(page, savedState) {
+  await page.addInitScript((state) => {
+    localStorage.clear();
+    localStorage.setItem('ivy_last_session', state.sessionId);
+    localStorage.setItem('ivy_sessions', JSON.stringify([state.sessionId]));
+    localStorage.setItem(`ivy_sess_${state.sessionId}`, JSON.stringify(state));
+  }, savedState);
+  return openIvy(page);
+}
+
+async function createSession(request) {
+  const response = await request.post('/api/session/new');
+  expect(response.ok()).toBe(true);
+  const body = await response.json();
+  expect(body.session_id).toBeTruthy();
+  return body.session_id;
+}
+
+async function loadExampleIntoCurrentSession(page) {
   return page.evaluate(async (content) => {
     const sid = window.__ivyDiagnostics.runtime().api.sessionId;
     const formData = new FormData();
@@ -75,7 +92,7 @@ conjecture ~link(X,Y) | ~link(X,Z) | Y = Z
       window.__ivyDiagnostics.runtime().conceptGraph.update(concept.elements, concept.positions);
     }
     return { loadBody, concept };
-  }, ivyContent);
+  }, clientServerIvyContent);
 }
 
 test('page loads', async ({ page }) => {
@@ -411,6 +428,38 @@ test('backend relation toggle controls concept edge rendering and survives refre
 
   await expect(page.locator('#state-checkbox-body tr', { hasText: 'link' }).locator('input[type="checkbox"]').nth(1)).toBeChecked();
   expect(await page.evaluate(() => window.__ivyDiagnostics.runtime().conceptGraph.cy.edges().toArray().filter((e) => e.data('obj') === 'link').length)).toBeGreaterThan(0);
+});
+
+test('ord_live load keeps state relations visible five seconds after load completes', async ({ page }) => {
+  test.setTimeout(60_000);
+  await openIvy(page);
+
+  await page.locator('#ui-mode-select').selectOption('reachability');
+  await expect(page.locator('#statusbar')).toContainText('Ready');
+  await page.evaluate(async (content) => {
+    const file = new File([content], 'client_server_example.ivy', { type: 'text/plain' });
+    await window.__ivyDiagnostics.runtime().loadFile(file);
+  }, clientServerIvyContent);
+  await expect(page.locator('#statusbar')).toContainText('Loaded: client_server_example.ivy', { timeout: 20_000 });
+  await page.locator('#btn-show-reachable').click();
+  await expect(page.locator('#statusbar')).toContainText('Reachable states opened', { timeout: 20_000 });
+  await page.waitForFunction(() => window.__ivyDiagnostics.runtime().activeSheetId !== 'sheet-1');
+
+  await page.evaluate(async (content) => {
+    const file = new File([content], 'ord_live.ivy', { type: 'text/plain' });
+    await window.__ivyDiagnostics.runtime().loadFile(file);
+  }, ordLiveContent);
+
+  await expect(page.locator('#statusbar')).toContainText('Loaded: ord_live.ivy', { timeout: 45_000 });
+  await expect(page.locator('#state-panel')).toBeVisible();
+  await page.waitForFunction(() => document.querySelectorAll('#state-checkbox-body tr').length > 1);
+
+  await page.waitForTimeout(5_000);
+
+  await expect(page.locator('#statusbar')).toContainText('Loaded: ord_live.ivy');
+  await expect(page.locator('#state-panel')).toBeVisible();
+  await expect(page.locator('#state-checkbox-body tr').first()).not.toContainText('No relations loaded');
+  expect(await page.locator('#state-checkbox-body tr').count()).toBeGreaterThan(1);
 });
 
 test('constraint facts render below the graph and toggle through backend action', async ({ page }) => {

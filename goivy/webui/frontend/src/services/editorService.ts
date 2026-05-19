@@ -57,6 +57,7 @@ export function updateEditorLabel(app, {
 export function setEditorContent(app, content) {
   app._persistedFileContent = content;
   app._savedFileContent = content;
+  app._programmaticEditorContent = content;
   if (app.cmEditor && typeof app.cmEditor.setValue === 'function') {
     const previousSuppress = app._suppressModelStateInvalidation;
     app._suppressModelStateInvalidation = true;

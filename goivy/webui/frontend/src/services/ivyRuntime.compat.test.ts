@@ -213,6 +213,25 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(invalidateModelState).toHaveBeenCalledTimes(1);
   });
 
+  it('ignores delayed editor change events caused by programmatic file loads', () => {
+    const runtime = makeRuntime();
+    const invalidateModelState = vi.fn();
+    runtime.uiDataStore = { invalidateModelState };
+    runtime._loadedModelContent = 'previous model';
+    runtime._modelStateInvalid = false;
+    runtime.cmEditor = {
+      setValue: vi.fn(),
+      getValue: vi.fn(() => 'new model'),
+    };
+    runtime._updateReopenLastFileButton = vi.fn();
+
+    runtime.setEditorContent('new model');
+
+    expect(runtime._invalidateModelState('editor-change')).toBe(false);
+    expect(runtime._modelStateInvalid).toBe(false);
+    expect(invalidateModelState).not.toHaveBeenCalled();
+  });
+
   it('does not reload model content for event-trace-only actions', async () => {
     let apiInstance: any = null;
     class EventAPI extends FakeAPI {

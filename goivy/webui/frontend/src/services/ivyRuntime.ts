@@ -277,6 +277,7 @@ class IvyRuntime {
         this._modelStateRefreshInProgress = false;
         this._suppressModelStateInvalidation = false;
         this._loadedModelContent = '';
+        this._programmaticEditorContent = '';
     }
 
     createApi(mode = this.jobSubmissionMode || 'browser') {
@@ -326,11 +327,14 @@ class IvyRuntime {
 
     _invalidateModelState(reason) {
         if (this._suppressModelStateInvalidation) return false;
-        if (reason === 'editor-change' && !this._modelStateInvalid) {
+        if (reason === 'editor-change') {
             var content = this._editorContent ? this._editorContent() : '';
-            if (content === this._loadedModelContent) {
+            if (this._programmaticEditorContent != null && content === this._programmaticEditorContent) {
+                this._programmaticEditorContent = '';
                 return false;
             }
+            this._programmaticEditorContent = '';
+            if (!this._modelStateInvalid && content === this._loadedModelContent) return false;
         }
         this._modelStateInvalid = true;
         this._modelStateInvalidReason = reason || 'model-change';
