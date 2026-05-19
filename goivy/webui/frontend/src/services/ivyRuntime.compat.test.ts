@@ -60,23 +60,23 @@ afterEach(() => {
 });
 
 describe('ivyRuntime compatibility behavior', () => {
-  it('maps the graph background slider from dark blue through neutral blue-gray to white', () => {
-    document.body.innerHTML = '<input id="graph-background-slider" type="range" min="0" max="100" value="50">';
+  it('maps the graph background slider from editor black through gray to white', () => {
+    document.body.innerHTML = '<input id="graph-background-slider" type="range" min="0" max="100" value="0">';
     const runtime = makeRuntime();
     const slider = document.getElementById('graph-background-slider') as HTMLInputElement;
 
     runtime._setupGraphBackgroundSlider();
-    expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(141, 141, 151)');
-    expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(141, 141, 151)');
-    expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('50%');
-    expect(slider.title).toBe('Graph background: rgb(141, 141, 151)');
-
-    slider.value = '0';
-    slider.dispatchEvent(new Event('input'));
-    expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(26, 26, 46)');
-    expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(26, 26, 46)');
+    expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(0, 0, 0)');
+    expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(0, 0, 0)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('0%');
-    expect(slider.title).toBe('Graph background: rgb(26, 26, 46)');
+    expect(slider.title).toBe('Graph background: rgb(0, 0, 0)');
+
+    slider.value = '50';
+    slider.dispatchEvent(new Event('input'));
+    expect(document.documentElement.style.getPropertyValue('--ivy-graph-background')).toBe('rgb(128, 128, 128)');
+    expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(128, 128, 128)');
+    expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('50%');
+    expect(slider.title).toBe('Graph background: rgb(128, 128, 128)');
 
     slider.value = '100';
     slider.dispatchEvent(new Event('input'));
@@ -96,7 +96,7 @@ describe('ivyRuntime compatibility behavior', () => {
     slider.dispatchEvent(new MouseEvent('pointerdown', { clientX: 20, clientY: 30, bubbles: true }));
 
     let readout = document.querySelector('.graph-background-readout') as HTMLElement | null;
-    expect(readout?.textContent).toBe('rgb(141, 141, 151)');
+    expect(readout?.textContent).toBe('rgb(128, 128, 128)');
     expect(readout?.classList.contains('visible')).toBe(true);
     expect(readout?.style.left).toBe('34px');
     expect(readout?.style.top).toBe('46px');
@@ -104,9 +104,9 @@ describe('ivyRuntime compatibility behavior', () => {
     slider.value = '75';
     slider.dispatchEvent(new Event('input', { bubbles: true }));
     readout = document.querySelector('.graph-background-readout') as HTMLElement | null;
-    expect(readout?.textContent).toBe('rgb(198, 198, 203)');
-    expect(slider.title).toBe('Graph background: rgb(198, 198, 203)');
-    expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(198, 198, 203)');
+    expect(readout?.textContent).toBe('rgb(191, 191, 191)');
+    expect(slider.title).toBe('Graph background: rgb(191, 191, 191)');
+    expect(slider.style.getPropertyValue('--ivy-graph-slider-color')).toBe('rgb(191, 191, 191)');
     expect(slider.style.getPropertyValue('--ivy-graph-slider-fill')).toBe('75%');
 
     document.dispatchEvent(new MouseEvent('pointerup', { clientX: 44, clientY: 55, bubbles: true }));

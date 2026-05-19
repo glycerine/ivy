@@ -366,7 +366,7 @@ class IvyRuntime {
 
     _graphBackgroundColor(value) {
         var pct = Math.max(0, Math.min(100, Number(value))) / 100;
-        var dark = [26, 26, 46];
+        var dark = [0, 0, 0];
         var light = [255, 255, 255];
         var channel = function (i) {
             return Math.round(dark[i] + (light[i] - dark[i]) * pct);

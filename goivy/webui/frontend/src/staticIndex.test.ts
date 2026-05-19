@@ -61,10 +61,10 @@ describe('static graph background controls', () => {
     expect(slider?.type).toBe('range');
     expect(slider?.min).toBe('0');
     expect(slider?.max).toBe('100');
-    expect(slider?.value).toBe('50');
+    expect(slider?.value).toBe('0');
     expect(slider?.getAttribute('aria-label')).toBe('Graph background');
-    expect(slider?.title).toBe('Graph background: rgb(141, 141, 151)');
-    expect(rootRule).toContain('--ivy-graph-background: rgb(141, 141, 151);');
+    expect(slider?.title).toBe('Graph background: rgb(0, 0, 0)');
+    expect(rootRule).toContain('--ivy-graph-background: rgb(0, 0, 0);');
     expect(graphRule).toContain('background-color: var(--ivy-graph-background);');
     expect(titleRowRule).toContain('width: 100%;');
     expect(sliderRule).toContain('width: 120px;');
@@ -74,11 +74,11 @@ describe('static graph background controls', () => {
     expect(sliderRule).toContain('accent-color: var(--ivy-graph-slider-color, var(--ivy-graph-background));');
     expect(webkitTrackRule).toContain('height: 5px;');
     expect(webkitTrackRule).toContain('linear-gradient(');
-    expect(webkitTrackRule).toContain('var(--ivy-graph-slider-fill, 50%)');
+    expect(webkitTrackRule).toContain('var(--ivy-graph-slider-fill, 0%)');
     expect(webkitTrackRule).toContain('#111 100%');
     expect(mozTrackRule).toContain('height: 5px;');
     expect(mozTrackRule).toContain('linear-gradient(');
-    expect(mozTrackRule).toContain('var(--ivy-graph-slider-fill, 50%)');
+    expect(mozTrackRule).toContain('var(--ivy-graph-slider-fill, 0%)');
     expect(mozTrackRule).toContain('#111 100%');
     expect(webkitThumbRule).toContain('width: 18px;');
     expect(webkitThumbRule).toContain('height: 18px;');
