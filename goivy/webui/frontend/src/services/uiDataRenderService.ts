@@ -115,6 +115,7 @@ function renderActivePanels(app, sheetId, {
 
 export function renderUIDataChange(app, change, options = {}) {
   if (!app || !change || !change.sheetId) return;
+  if (typeof app._shouldDeferUIDataRender === 'function' && app._shouldDeferUIDataRender(change)) return;
   const changed = new Set(change.changed || []);
   syncRuntimeSheetMirrors(app, change.sheetId);
   if (changed.has('sheet')) {

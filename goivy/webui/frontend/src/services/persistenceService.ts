@@ -287,6 +287,7 @@ export function createIvyPersist(winArg = globalThis.window) {
 
     async restore(app, state) {
       if (!state || !state.fileContent) return false;
+      let modelLoad = null;
       app.controls.setStatus('Restoring session...');
       try {
         app._persistedFileName = state.fileName;
@@ -309,14 +310,24 @@ export function createIvyPersist(winArg = globalThis.window) {
         if (app.setIsolates) app.setIsolates(state.availableIsolates || [], state.activeIsolate || '');
 
         let parseOk = true;
+        let argData = null;
         let conceptData = null;
+        modelLoad = app && typeof app._beginModelLoad === 'function'
+          ? app._beginModelLoad({
+            reason: 'session-restore',
+            filename: app._persistedFileName || state.fileName || 'restored.ivy',
+            isolate: state.activeIsolate || '',
+            content: restoredContent,
+          })
+          : null;
         try {
           const BlobCtor = win.Blob || globalThis.Blob;
           const FileCtor = win.File || globalThis.File;
           const blob = new BlobCtor([restoredContent], { type: 'text/plain' });
           const file = new FileCtor([blob], app._persistedFileName || state.fileName || 'restored.ivy');
           const loadResult = await app.api.loadFile(file, { isolate: state.activeIsolate || '' });
-          if (app.setIsolates) {
+          if (modelLoad) modelLoad.loadResult = loadResult;
+          if (!modelLoad && app.setIsolates) {
             app.setIsolates(
               (loadResult && loadResult.isolates) || state.availableIsolates || [],
               (loadResult && loadResult.isolate) || state.activeIsolate || '',
@@ -328,15 +339,22 @@ export function createIvyPersist(winArg = globalThis.window) {
         }
 
         if (parseOk) {
-          const argData = await app.api.getARG();
-          if (argData && argData.elements) {
+          argData = await app.api.getARG();
+          if (modelLoad && typeof app._isCurrentModelLoad === 'function' && !app._isCurrentModelLoad(modelLoad)) return false;
+          if (!modelLoad && argData && argData.elements) {
             applyArgSnapshot(app, app.activeSheetId || 'sheet-1', argData);
           }
           conceptData = await app.api.getConceptGraph();
-          if (conceptData && conceptData.elements) {
+          if (modelLoad && typeof app._isCurrentModelLoad === 'function' && !app._isCurrentModelLoad(modelLoad)) return false;
+          if (!modelLoad && conceptData && conceptData.elements) {
             applyConceptSnapshot(app, app.activeSheetId || 'sheet-1', conceptData);
           }
+          if (modelLoad && typeof app._commitModelLoad === 'function') {
+            app._commitModelLoad(modelLoad, { argData, conceptData });
+          }
           app._persistedConceptRelations = conceptData;
+        } else if (modelLoad && typeof app._abortModelLoad === 'function') {
+          app._abortModelLoad(modelLoad);
         }
 
         if (state.uiMode) {
@@ -360,7 +378,11 @@ export function createIvyPersist(winArg = globalThis.window) {
           state.analysisState.fileContent = restoredContent;
           state.analysisState.fileName = app._persistedFileName || state.fileName || state.analysisState.fileName;
           state.analysisState.filePath = app._persistedFilePath || state.filePath || state.analysisState.filePath;
-          await app.loadAnalysisStateObject(state.analysisState);
+          await app.loadAnalysisStateObject(state.analysisState, {
+            preservePrimarySheetModel: parseOk,
+            preserveStatus: parseOk,
+            skipReloadContent: parseOk,
+          });
         }
 
         persist.setFileName(state.fileName, state.filePath);
@@ -373,9 +395,12 @@ export function createIvyPersist(winArg = globalThis.window) {
         );
         return true;
       } catch (err) {
+        if (modelLoad && typeof app._abortModelLoad === 'function') app._abortModelLoad(modelLoad);
         console.error('IvyPersist.restore failed:', err);
         app.controls.setStatus(`Restore failed: ${err.message}`, 'error');
         return false;
+      } finally {
+        if (modelLoad && typeof app._finishModelLoad === 'function') app._finishModelLoad(modelLoad);
       }
     },
 

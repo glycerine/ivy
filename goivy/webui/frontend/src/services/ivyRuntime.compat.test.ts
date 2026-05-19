@@ -489,6 +489,39 @@ describe('ivyRuntime compatibility behavior', () => {
     expect(runtime.sheets['sheet-2']).toBeUndefined();
   });
 
+  it('defers state relation redraws until the current model load generation commits', () => {
+    installSheetDom();
+    document.getElementById('state-panel')!.innerHTML = [
+      '<table id="state-checkbox-table">',
+      '  <thead><tr><th>+</th><th>?</th><th>-</th><th>T</th><th>Relation</th></tr></thead>',
+      '  <tbody id="state-checkbox-body"></tbody>',
+      '</table>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.argGraph = new FakeGraph('arg-graph');
+    runtime.conceptGraph = new FakeGraph('concept-graph');
+    runtime.registerSheet('sheet-1', runtime.argGraph, runtime.conceptGraph);
+    runtime.applyConceptSnapshot('sheet-1', {
+      elements: [{ data: { id: 'old-node' } }],
+      relations: ['old_relation'],
+    });
+    expect(document.querySelector('[data-state-toggle-relation]')?.textContent).toBe('old_relation');
+
+    const load = runtime._beginModelLoad({ reason: 'test-load', filename: 'ord_live.ivy', content: 'ivy source' });
+    runtime.applyConceptSnapshot('sheet-1', { elements: [], relations: [] });
+    expect(document.querySelector('[data-state-toggle-relation]')?.textContent).toBe('old_relation');
+
+    runtime._commitModelLoad(load, {
+      argData: { elements: [{ data: { id: 'fresh-state' } }] },
+      conceptData: { elements: [{ data: { id: 'fresh-node' } }], relations: ['fresh_relation'] },
+      content: 'ivy source',
+    });
+    runtime._finishModelLoad(load);
+
+    expect(document.querySelector('[data-state-toggle-relation]')?.textContent).toBe('fresh_relation');
+    expect(runtime.uiDataModel.sheets['sheet-1'].concept?.relations).toEqual(['fresh_relation']);
+  });
+
   it('allocates frontend-only sheet ids outside the backend sheet namespace', () => {
     installSheetDom();
     const runtime = makeRuntime();

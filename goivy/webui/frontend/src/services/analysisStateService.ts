@@ -212,11 +212,12 @@ export async function loadAnalysisStateFile(app, file) {
   return app.loadAnalysisStateObject(JSON.parse(text));
 }
 
-export async function loadAnalysisStateObject(app, state, persist) {
+export async function loadAnalysisStateObject(app, state, persist, options: any = {}) {
   app.validateAnalysisStateObject(state);
   if (!state || state.analysis_state_format !== 'ivyweb-json') {
     throw new Error('unsupported analysis state format');
   }
+  const preservePrimarySheetModel = !!options.preservePrimarySheetModel;
   app._persistedFileName = state.fileName || '';
   app._persistedFilePath = state.filePath || state.fileName || '';
   app._persistedFileContent = state.fileContent || '';
@@ -228,7 +229,7 @@ export async function loadAnalysisStateObject(app, state, persist) {
   if (state.mode) app.setMode(state.mode);
   if (state.editorKeymap && app.setEditorKeymap) app.setEditorKeymap(state.editorKeymap, { save: false });
   if (app.setIsolates) app.setIsolates(state.availableIsolates || [], state.activeIsolate || '');
-  if (app.api && app.api.reloadContent && app._persistedFileContent) {
+  if (!options.skipReloadContent && app.api && app.api.reloadContent && app._persistedFileContent) {
     const loadResult = await app.api.reloadContent(app._persistedFileContent, app._persistedFileName || 'restored.ivy', {
       isolate: state.activeIsolate || '',
     });
@@ -254,15 +255,15 @@ export async function loadAnalysisStateObject(app, state, persist) {
       continue;
     }
     if (sheet.id === 'sheet-1') {
-      if (sheet.arg && sheet.arg.elements && app.argGraph) {
+      if (!preservePrimarySheetModel && sheet.arg && sheet.arg.elements && app.argGraph) {
         applyArgSnapshot(app, sheet.id, sheet.arg);
       }
-      if (sheet.concept && sheet.concept.elements && app.conceptGraph) {
+      if (!preservePrimarySheetModel && sheet.concept && sheet.concept.elements && app.conceptGraph) {
         applyConceptSnapshot(app, sheet.id, sheet.concept);
       }
       if (app.sheets && app.sheets['sheet-1']) {
         app.sheets['sheet-1'].selectedArgNode = sheet.selectedArgNode || null;
-        app.sheets['sheet-1'].visualOnly = true;
+        app.sheets['sheet-1'].visualOnly = !preservePrimarySheetModel;
       }
       if (app.uiDataStore) app.uiDataStore.setSelectedArgNode(sheet.id, sheet.selectedArgNode || null);
       if (app.uiDataStore) app.uiDataStore.setConceptSelections(sheet.id, sheet.conceptSelections || []);
@@ -296,6 +297,8 @@ export async function loadAnalysisStateObject(app, state, persist) {
   if (persist && persist.setFileName) {
     persist.setFileName(app._persistedFileName, app._persistedFilePath);
   }
-  app.controls.setStatus(`Visual analysis state loaded: ${app._persistedFileName || 'state'}`, 'warning');
+  if (!options.preserveStatus) {
+    app.controls.setStatus(`Visual analysis state loaded: ${app._persistedFileName || 'state'}`, 'warning');
+  }
   return true;
 }

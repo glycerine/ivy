@@ -260,6 +260,58 @@ describe('analysisStateService', () => {
     expect(persist.setFileName).toHaveBeenCalledWith('client.ivy', '/tmp/client.ivy');
   });
 
+  it('can restore saved tabs without replacing the freshly committed primary model snapshot', async () => {
+    const uiDataModel = new UIDataModel();
+    const uiDataStore = createUIDataModelStore(uiDataModel);
+    uiDataStore.applyArgSnapshot('sheet-1', { elements: [{ data: { id: 'fresh-state' } }] });
+    uiDataStore.applyConceptSnapshot('sheet-1', {
+      elements: [{ data: { id: 'fresh-concept' } }],
+      relations: ['fresh_relation'],
+    });
+    const app: any = {
+      uiDataModel,
+      uiDataStore,
+      activeSheetId: 'sheet-1',
+      argGraph: makeGraph(),
+      conceptGraph: makeGraph(),
+      sheets: {
+        'sheet-1': { id: 'sheet-1', type: 'analysis', argGraph: makeGraph(), conceptGraph: makeGraph(), visualOnly: false },
+      },
+      validateAnalysisStateObject: vi.fn(),
+      setEditorContent: vi.fn(),
+      setMode: vi.fn(),
+      setIsolates: vi.fn(),
+      removeAnalysisStateExtraSheets: vi.fn(),
+      sheetExists: vi.fn((sheetId) => sheetId === 'sheet-1'),
+      switchSheet: vi.fn((sheetId) => { app.activeSheetId = sheetId; }),
+      controls: { setStatus: vi.fn() },
+      api: { reloadContent: vi.fn() },
+    };
+
+    await loadAnalysisStateObject(app, {
+      analysis_state_format: 'ivyweb-json',
+      fileName: 'ord_live.ivy',
+      fileContent: 'ivy source',
+      activeSheetId: 'sheet-1',
+      sheets: [{
+        id: 'sheet-1',
+        type: 'analysis',
+        arg: { elements: [] },
+        concept: { elements: [], relations: [] },
+        conceptSelections: [],
+      }],
+    }, null, {
+      preservePrimarySheetModel: true,
+      preserveStatus: true,
+      skipReloadContent: true,
+    });
+
+    expect(app.api.reloadContent).not.toHaveBeenCalled();
+    expect(app.uiDataModel.sheets['sheet-1'].concept?.relations).toEqual(['fresh_relation']);
+    expect(app.sheets['sheet-1'].visualOnly).toBe(false);
+    expect(app.controls.setStatus).not.toHaveBeenCalledWith(expect.stringContaining('Visual analysis state loaded'), 'warning');
+  });
+
   it('validates analysis state before mutating existing sheets or editor content', async () => {
     const app = {
       validateAnalysisStateObject: vi.fn(() => {

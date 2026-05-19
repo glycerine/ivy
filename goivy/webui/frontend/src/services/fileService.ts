@@ -194,7 +194,31 @@ export function preparePrimarySheetForModelLoad(app, {
 
 export async function refreshLoadedModelSnapshots(app, {
   doc = globalThis.document,
+  modelLoad = null,
 } = {}) {
+  if (modelLoad && app && typeof app._isCurrentModelLoad === 'function' && !app._isCurrentModelLoad(modelLoad)) {
+    return { stale: true, sheetId: 'sheet-1', argData: null, conceptData: null };
+  }
+  if (modelLoad && app && typeof app._commitModelLoad === 'function') {
+    if (!app.api || typeof app.api.getARG !== 'function' || typeof app.api.getConceptGraph !== 'function') {
+      const loadResult = modelLoad.loadResult || null;
+      if (loadResult && app.setIsolates) {
+        app.setIsolates(loadResult.isolates || app.availableIsolates || [], loadResult.isolate || modelLoad.isolate || app.activeIsolate || '');
+      }
+      if (typeof app._markModelStateFresh === 'function') app._markModelStateFresh(modelLoad.content);
+      return { snapshotUnavailable: true, sheetId: 'sheet-1', argData: null, conceptData: null };
+    }
+    const argData = await app.api.getARG();
+    if (typeof app._isCurrentModelLoad === 'function' && !app._isCurrentModelLoad(modelLoad)) {
+      return { stale: true, sheetId: 'sheet-1', argData, conceptData: null };
+    }
+    const conceptData = await app.api.getConceptGraph();
+    if (typeof app._isCurrentModelLoad === 'function' && !app._isCurrentModelLoad(modelLoad)) {
+      return { stale: true, sheetId: 'sheet-1', argData, conceptData };
+    }
+    app._commitModelLoad(modelLoad, { argData, conceptData, doc });
+    return { sheetId: 'sheet-1', argData, conceptData };
+  }
   const sheetId = preparePrimarySheetForModelLoad(app, { doc });
   const argData = await app.api.getARG();
   if (argData) {
@@ -209,10 +233,15 @@ export async function refreshLoadedModelSnapshots(app, {
 }
 
 export async function loadModelFile(app, file, persist, { win = globalThis.window } = {}) {
+  const modelLoad = app && typeof app._beginModelLoad === 'function'
+    ? app._beginModelLoad({ reason: 'file-load', filename: file && file.name })
+    : null;
   app.controls.showLoading(`Loading ${file.name}...`);
   app.controls.setStatus(`Loading file: ${file.name}...`);
   try {
     const fileContent = await readBrowserFileText(file, win);
+    if (modelLoad && typeof app._isCurrentModelLoad === 'function' && !app._isCurrentModelLoad(modelLoad)) return;
+    if (modelLoad) modelLoad.content = fileContent;
     app._persistedFileName = file.name;
     app._persistedFilePath = file.path || file.webkitRelativePath || file.name;
     app._persistedFileContent = fileContent;
@@ -224,15 +253,20 @@ export async function loadModelFile(app, file, persist, { win = globalThis.windo
     app.setEditorContent(fileContent);
 
     const loadResult = await app.api.loadFile(file, { isolate: '' });
-    if (app.setIsolates) app.setIsolates(loadResult && loadResult.isolates, loadResult && loadResult.isolate);
-    await refreshLoadedModelSnapshots(app);
+    if (modelLoad && typeof app._isCurrentModelLoad === 'function' && !app._isCurrentModelLoad(modelLoad)) return;
+    if (modelLoad) modelLoad.loadResult = loadResult;
+    if (!modelLoad && app.setIsolates) app.setIsolates(loadResult && loadResult.isolates, loadResult && loadResult.isolate);
+    await refreshLoadedModelSnapshots(app, { modelLoad });
+    if (modelLoad && typeof app._isCurrentModelLoad === 'function' && !app._isCurrentModelLoad(modelLoad)) return;
     persist.setFileName(file.name, app._persistedFilePath);
     app.controls.setStatus(`Loaded: ${file.name}`, 'success');
     persist.save(app);
   } catch (err) {
+    if (modelLoad && typeof app._abortModelLoad === 'function') app._abortModelLoad(modelLoad);
     app.controls.setStatus(`Load failed: ${err.message}`, 'error');
     console.error('File load error:', err);
   } finally {
+    if (modelLoad && typeof app._finishModelLoad === 'function') app._finishModelLoad(modelLoad);
     app.controls.hideLoading();
   }
 }

@@ -50,6 +50,7 @@ import {
     loadModelFile,
     mergeDiskVersionIntoEditBuffer,
     newModel as newModelViaService,
+    preparePrimarySheetForModelLoad,
     readFileHandleContent,
     rememberLastOpenFile,
     refreshLoadedModelSnapshots,
@@ -278,6 +279,9 @@ class IvyRuntime {
         this._suppressModelStateInvalidation = false;
         this._loadedModelContent = '';
         this._programmaticEditorContent = '';
+        this._modelLoadGeneration = 0;
+        this._activeModelLoad = null;
+        this._deferModelLoadRendering = false;
     }
 
     createApi(mode = this.jobSubmissionMode || 'browser') {
@@ -303,7 +307,7 @@ class IvyRuntime {
                 if (MODEL_RELOAD_API_METHODS.has(methodName)) {
                     return async function () {
                         var result = await value.apply(target, arguments);
-                        self._markModelStateFresh();
+                        if (!self._activeModelLoad) self._markModelStateFresh();
                         return result;
                     };
                 }
@@ -323,6 +327,77 @@ class IvyRuntime {
         });
         proxy.__ivyModelInvalidationWrapped = true;
         return proxy;
+    }
+
+    _beginModelLoad(meta: any = {}) {
+        var generation = ++this._modelLoadGeneration;
+        var txn = {
+            generation: generation,
+            reason: meta.reason || 'model-load',
+            filename: meta.filename || this._persistedFileName || '',
+            isolate: meta.isolate || '',
+            content: meta.content,
+            loadResult: meta.loadResult || null,
+            committed: false,
+            aborted: false,
+        };
+        this._activeModelLoad = txn;
+        this._deferModelLoadRendering = true;
+        return txn;
+    }
+
+    _isCurrentModelLoad(txn) {
+        return !!(txn && this._activeModelLoad && txn.generation === this._activeModelLoad.generation);
+    }
+
+    _shouldDeferUIDataRender(_change) {
+        return !!this._deferModelLoadRendering;
+    }
+
+    _commitModelLoad(txn, {
+        argData = null,
+        conceptData = null,
+        loadResult = null,
+        content = undefined,
+        doc = globalThis.document,
+    } = {}) {
+        if (!this._isCurrentModelLoad(txn)) return false;
+        var result = loadResult || txn.loadResult || null;
+        if (result && (result.isolates || result.isolate)) {
+            this.setIsolates(result.isolates || this.availableIsolates || [], result.isolate || txn.isolate || this.activeIsolate || '');
+        }
+        var sheetId = preparePrimarySheetForModelLoad(this, { doc });
+        if (argData) this.applyArgSnapshot(sheetId, argData);
+        if (conceptData) this.applyConceptSnapshot(sheetId, conceptData);
+        this._persistedConceptRelations = conceptData;
+        this._markModelStateFresh(content !== undefined ? content : txn.content);
+        txn.committed = true;
+        this._deferModelLoadRendering = false;
+        if (this.sheetExists && this.sheetExists(sheetId)) {
+            this.switchSheet(sheetId);
+        } else {
+            this.activeSheetId = sheetId;
+        }
+        renderUIDataChangeViaService(this, {
+            sheetId: sheetId,
+            changed: ['sheet', 'arg', 'concept', 'conceptSelection'],
+        });
+        return true;
+    }
+
+    _abortModelLoad(txn) {
+        if (!this._isCurrentModelLoad(txn)) return false;
+        txn.aborted = true;
+        this._deferModelLoadRendering = false;
+        this._activeModelLoad = null;
+        return true;
+    }
+
+    _finishModelLoad(txn) {
+        if (!this._isCurrentModelLoad(txn)) return false;
+        this._deferModelLoadRendering = false;
+        this._activeModelLoad = null;
+        return true;
     }
 
     _invalidateModelState(reason) {
@@ -354,17 +429,25 @@ class IvyRuntime {
         var content = this.cmEditor && typeof this.cmEditor.getValue === 'function'
             ? this.cmEditor.getValue()
             : this._persistedFileContent || '';
+        var modelLoad = this._beginModelLoad({
+            reason: 'ensure-fresh-model-state',
+            filename: this._persistedFileName || 'model.ivy',
+            content: content,
+        });
         this._modelStateRefreshInProgress = true;
         try {
             var result = await this.api.reloadContent(content, this._persistedFileName || 'model.ivy', {
                 isolate: this.activeIsolate || '',
             });
-            if (result && (result.isolates || result.isolate)) {
-                this.setIsolates(result.isolates || [], result.isolate || '');
-            }
-            this._markModelStateFresh(content);
+            if (!this._isCurrentModelLoad(modelLoad)) return false;
+            modelLoad.loadResult = result;
+            await refreshLoadedModelSnapshots(this, { modelLoad: modelLoad });
             return true;
+        } catch (e) {
+            this._abortModelLoad(modelLoad);
+            throw e;
         } finally {
+            this._finishModelLoad(modelLoad);
             this._modelStateRefreshInProgress = false;
         }
     }
@@ -1281,20 +1364,28 @@ class IvyRuntime {
             var content = this.cmEditor && typeof this.cmEditor.getValue === 'function'
                 ? this.cmEditor.getValue()
                 : this._persistedFileContent;
+            var modelLoad = null;
             if (content) {
+                modelLoad = this._beginModelLoad({
+                    reason: 'backend-switch',
+                    filename: this._persistedFileName || 'model.ivy',
+                    content: content,
+                });
                 var loadResult = await next.reloadContent(content, this._persistedFileName || 'model.ivy', {
                     isolate: this._modelStateInvalid ? '' : (this.activeIsolate || ''),
                 });
-                if (loadResult && (loadResult.isolates || loadResult.isolate)) {
-                    this.setIsolates(loadResult.isolates || [], loadResult.isolate || '');
+                if (this._isCurrentModelLoad(modelLoad)) {
+                    modelLoad.loadResult = loadResult;
+                    await refreshLoadedModelSnapshots(this, { modelLoad: modelLoad });
                 }
-                this._markModelStateFresh(content);
+                this._finishModelLoad(modelLoad);
             }
             this.controls.setStatus(
                 normalized === 'remote' ? 'Running jobs on remote backend' : 'Running jobs in browser',
                 'success',
             );
         } catch (err) {
+            if (modelLoad) this._abortModelLoad(modelLoad);
             this.controls.setStatus('Backend switch failed: ' + err.message, 'error');
             if (previous) {
                 this.api = previous;
@@ -3293,31 +3384,26 @@ class IvyRuntime {
         }
         this.controls.showLoading('Switching isolate...');
         this.controls.setStatus('Switching isolate: ' + selected + '...');
+        var modelLoad = this._beginModelLoad({
+            reason: 'isolate-switch',
+            filename: this._persistedFileName || 'model.ivy',
+            isolate: selected,
+            content: content,
+        });
         try {
             var filename = this._persistedFileName || 'model.ivy';
             var result = await this.api.reloadContent(content, filename, { isolate: selected });
+            if (!this._isCurrentModelLoad(modelLoad)) return;
+            modelLoad.loadResult = result;
             this._persistedFileContent = content;
-            this.setIsolates(
-                result && result.isolates ? result.isolates : names,
-                result && result.isolate ? result.isolate : selected
-            );
-            if (this.sheetExists && this.sheetExists('sheet-1')) {
-                this.switchSheet('sheet-1');
-            }
-            var argData = await this.api.getARG();
-            if (argData && argData.elements) {
-                this.applyArgSnapshot(this.activeSheetId || 'sheet-1', argData);
-            }
-            var conceptData = await this.api.getConceptGraph();
-            if (conceptData && conceptData.elements) {
-                this.applyConceptSnapshot(this.activeSheetId || 'sheet-1', conceptData);
-            }
-            this._persistedConceptRelations = conceptData;
+            await refreshLoadedModelSnapshots(this, { modelLoad: modelLoad });
             runtimeDeps.IvyPersist.save(this);
             this.controls.setStatus('Isolate: ' + this.activeIsolate, 'success');
         } catch (e) {
+            this._abortModelLoad(modelLoad);
             this.controls.setStatus('Isolate switch failed: ' + e.message, 'error');
         } finally {
+            this._finishModelLoad(modelLoad);
             this.controls.hideLoading();
         }
     }
@@ -3398,8 +3484,8 @@ class IvyRuntime {
         return this.loadAnalysisStateObject(JSON.parse(text));
     }
 
-    async loadAnalysisStateObject(state) {
-        return loadAnalysisStateObjectViaService(this, state, runtimeDeps.IvyPersist);
+    async loadAnalysisStateObject(state, options: any = {}) {
+        return loadAnalysisStateObjectViaService(this, state, runtimeDeps.IvyPersist, options);
     }
 
     analysisStateLimits() {
