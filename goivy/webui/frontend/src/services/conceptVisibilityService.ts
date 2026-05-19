@@ -112,12 +112,40 @@ function ensureStateCheckboxHeader(app, tbody, rows, doc) {
   }
 }
 
+export function logStateRelationTableClear(reason, app, details: any = {}) {
+  try {
+    const sheetId = app && (app.activeSheetId || 'sheet-1');
+    const sheet = app && app.uiDataModel && app.uiDataModel.sheets && app.uiDataModel.sheets[sheetId];
+    const stack = new Error().stack || '';
+    console.log('[ivyweb state-relations] clear table', {
+      reason,
+      activeSheetId: sheetId || '',
+      rowCount: details.rowCount,
+      hadRows: details.hadRows,
+      modelStateInvalid: !!(app && app._modelStateInvalid),
+      modelStateInvalidReason: (app && app._modelStateInvalidReason) || '',
+      reachabilityOnly: !!(sheet && sheet.reachabilityOnly),
+      visualOnly: !!(sheet && sheet.visualOnly),
+      hasConceptSnapshot: !!(sheet && sheet.concept),
+      selectedArgNode: sheet ? sheet.selectedArgNode : null,
+      details,
+      stack,
+    });
+  } catch (err) {
+    console.log('[ivyweb state-relations] clear table', { reason, details, logError: String(err) });
+  }
+}
+
 export function renderStateCheckboxes(app, rows, {
   doc = globalThis.document,
 } = {}) {
   const tbody = doc && doc.getElementById('state-checkbox-body');
   if (!tbody) return;
   ensureStateCheckboxHeader(app, tbody, rows, doc);
+  logStateRelationTableClear('renderStateCheckboxes: rebuild table from current sheet concept rows', app, {
+    rowCount: (rows || []).length,
+    hadRows: tbody.children.length,
+  });
   tbody.innerHTML = '';
   for (const row of rows || []) {
     const tr = doc.createElement('tr');

@@ -1,6 +1,7 @@
 import { connectSessionEvents, createSession } from './sessionService.ts';
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
 import { resetEditorUndoHistory } from './editorService.ts';
+import { logStateRelationTableClear } from './conceptVisibilityService.ts';
 
 export function rememberLastOpenFile(app, persist) {
   const name = app._persistedFileName || (app._fileHandle && app._fileHandle.name) || '';
@@ -444,7 +445,13 @@ export async function newModel(app, persist, {
   persist.setFileName('');
   app._updateReopenLastFileButton();
   const tbody = doc && doc.getElementById('state-checkbox-body');
-  if (tbody) tbody.innerHTML = '';
+  if (tbody) {
+    logStateRelationTableClear('newModel: explicit reset after clearing current model', app, {
+      rowCount: 0,
+      hadRows: tbody.children.length,
+    });
+    tbody.innerHTML = '';
+  }
 
   app.controls.setStatus('New model — load an .ivy file to begin', 'success');
 }
