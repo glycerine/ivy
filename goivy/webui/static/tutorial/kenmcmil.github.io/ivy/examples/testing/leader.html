@@ -492,7 +492,7 @@ uses the operating system API).</p>
 
 <p>Now that we’ve tested the components, we can compile the whole system
 and run it as a collection of independent processes. Our protocol is an
-example of a <a href="../leader.html">parameterized object</a>. Ivy can decompose it
+example of a <a href="../leader.html">parameterized object</a> (sample spec: <a href="leader_election_ring.ivy"></a>). Ivy can decompose it
 into a collection of processes based on the parameter <code class="language-plaintext highlighter-rouge">me</code>.  Each
 value of the parameter becomes an individual process. This
 transformation is called <em>parameter stripping</em>.</p>
