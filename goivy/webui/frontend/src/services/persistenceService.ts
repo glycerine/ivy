@@ -350,7 +350,7 @@ export function createIvyPersist(winArg = globalThis.window) {
             applyConceptSnapshot(app, app.activeSheetId || 'sheet-1', conceptData);
           }
           if (modelLoad && typeof app._commitModelLoad === 'function') {
-            app._commitModelLoad(modelLoad, { argData, conceptData });
+            app._commitModelLoad(modelLoad, { argData, conceptData, deferRender: true });
           }
           app._persistedConceptRelations = conceptData;
         } else if (modelLoad && typeof app._abortModelLoad === 'function') {

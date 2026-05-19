@@ -142,13 +142,26 @@ export function renderStateCheckboxes(app, rows, {
   const tbody = doc && doc.getElementById('state-checkbox-body');
   if (!tbody) return;
   ensureStateCheckboxHeader(app, tbody, rows, doc);
-  logStateRelationTableClear('renderStateCheckboxes: rebuild table from current sheet concept rows', app, {
-    rowCount: (rows || []).length,
-    hadRows: tbody.children.length,
-  });
-  tbody.innerHTML = '';
+
+  const existingByName = new Map();
+  for (const tr of Array.prototype.slice.call(tbody.querySelectorAll('tr[data-state-toggle-row]'))) {
+    existingByName.set(tr.getAttribute('data-state-toggle-row'), tr);
+  }
+  const desiredNames = new Set((rows || []).map((row) => row.name));
+  for (const [name, tr] of existingByName.entries()) {
+    if (!desiredNames.has(name)) tr.remove();
+  }
+
+  const emptyRow = tbody.querySelector('tr[data-state-toggle-empty]');
+  if (rows && rows.length > 0 && emptyRow) emptyRow.remove();
+
   for (const row of rows || []) {
-    const tr = doc.createElement('tr');
+    let tr = existingByName.get(row.name);
+    if (!tr) {
+      tr = doc.createElement('tr');
+      tr.setAttribute('data-state-toggle-row', row.name);
+    }
+    while (tr.firstChild) tr.removeChild(tr.firstChild);
     [
       ['all_to_all', 'Show definite edges'],
       ['edge_unknown', 'Show unknown edges'],
@@ -185,7 +198,9 @@ export function renderStateCheckboxes(app, rows, {
   }
 
   if ((!rows || rows.length === 0) && snapshotFrom(app)) {
-    const tr = doc.createElement('tr');
+    const tr = emptyRow || doc.createElement('tr');
+    tr.setAttribute('data-state-toggle-empty', 'true');
+    while (tr.firstChild) tr.removeChild(tr.firstChild);
     const td = doc.createElement('td');
     td.colSpan = 5;
     td.style.color = '#666';

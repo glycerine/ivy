@@ -360,6 +360,7 @@ class IvyRuntime {
         loadResult = null,
         content = undefined,
         doc = globalThis.document,
+        deferRender = false,
     } = {}) {
         if (!this._isCurrentModelLoad(txn)) return false;
         var result = loadResult || txn.loadResult || null;
@@ -372,10 +373,16 @@ class IvyRuntime {
         this._persistedConceptRelations = conceptData;
         this._markModelStateFresh(content !== undefined ? content : txn.content);
         txn.committed = true;
+        txn.sheetId = sheetId;
+        if (!deferRender) this._renderCommittedModelLoad(txn);
+        return true;
+    }
+
+    _renderCommittedModelLoad(txn) {
+        if (!this._isCurrentModelLoad(txn) || !txn.committed) return false;
+        var sheetId = txn.sheetId || 'sheet-1';
         this._deferModelLoadRendering = false;
-        if (this.sheetExists && this.sheetExists(sheetId)) {
-            this.switchSheet(sheetId);
-        } else {
+        if (!this.sheetExists || !this.sheetExists(sheetId)) {
             this.activeSheetId = sheetId;
         }
         renderUIDataChangeViaService(this, {
@@ -395,6 +402,9 @@ class IvyRuntime {
 
     _finishModelLoad(txn) {
         if (!this._isCurrentModelLoad(txn)) return false;
+        if (txn.committed && this._deferModelLoadRendering) {
+            this._renderCommittedModelLoad(txn);
+        }
         this._deferModelLoadRendering = false;
         this._activeModelLoad = null;
         return true;
