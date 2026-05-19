@@ -5,6 +5,8 @@ let assetBaseUrl = DEFAULT_ASSET_BASE_URL;
 let includeRoot = DEFAULT_INCLUDE_ROOT;
 let initialized = false;
 let wasmReady = null;
+let wasmGeneration = 0;
+let wasmRuntimeError = null;
 let sequence = 0;
 const sessions = new Map();
 
@@ -130,7 +132,11 @@ async function handleMessage(request) {
 }
 
 async function loadWebEngineWasm() {
-  wasmReady = wasmReady || (async () => {
+  if (wasmReady) return wasmReady;
+  const generation = wasmGeneration + 1;
+  wasmGeneration = generation;
+  wasmRuntimeError = null;
+  wasmReady = (async () => {
     const [{ createSmtZ3Imports }, { installGoIvyNodeFS }] = await Promise.all([
       import('./smtZ3Imports.js'),
       import('./goivyNodeFS.js'),
@@ -158,10 +164,31 @@ async function loadWebEngineWasm() {
     go.importObject.smt_z3 = createSmtZ3Imports({ z3, getGoMemory: () => wasmMemory });
     const result = await instantiateWasm(`${assetBaseUrl}goivy-webengine.wasm`, go.importObject);
     wasmMemory = result.instance.exports.mem || null;
-    void go.run(result.instance);
-    await waitForDispatch();
+    let runPromise;
+    try {
+      runPromise = go.run(result.instance);
+    } catch (error) {
+      resetWasmRuntime(generation, error);
+      throw error;
+    }
+    Promise.resolve(runPromise).then(
+      () => resetWasmRuntime(generation, new Error('goivy webengine wasm exited')),
+      (error) => resetWasmRuntime(generation, error),
+    );
+    await waitForDispatch(() => (generation === wasmGeneration ? wasmRuntimeError : null));
   })();
   return wasmReady;
+}
+
+function discardWasmRuntime(error) {
+  wasmReady = null;
+  wasmRuntimeError = error || null;
+  globalThis.goivyWebEngineDispatch = undefined;
+}
+
+function resetWasmRuntime(generation, error) {
+  if (generation !== wasmGeneration) return;
+  discardWasmRuntime(error);
 }
 
 async function instantiateWasm(url, imports) {
@@ -202,25 +229,45 @@ async function loadZ3() {
   });
 }
 
-async function waitForDispatch() {
+async function waitForDispatch(runtimeError) {
   for (let i = 0; i < 2000; i += 1) {
+    const error = runtimeError && runtimeError();
+    if (error) throw error;
     if (typeof globalThis.goivyWebEngineDispatch === 'function') return;
     await new Promise((resolve) => setTimeout(resolve, 5));
   }
   throw new Error('goivy webengine wasm did not register its dispatcher');
 }
 
-async function callWasm(request) {
+async function callWasm(request, retryOnExited = true) {
   await loadWebEngineWasm();
   const dispatch = globalThis.goivyWebEngineDispatch;
   if (typeof dispatch !== 'function') {
+    if (retryOnExited) {
+      discardWasmRuntime(new Error('goivy webengine wasm dispatcher is unavailable'));
+      return callWasm(request, false);
+    }
     throw new Error('goivy webengine wasm dispatcher is unavailable');
   }
-  const response = JSON.parse(dispatch(JSON.stringify(request)));
+  let rawResponse;
+  try {
+    rawResponse = dispatch(JSON.stringify(request));
+  } catch (error) {
+    if (retryOnExited && isGoProgramExited(error)) {
+      discardWasmRuntime(error);
+      return callWasm(request, false);
+    }
+    throw error;
+  }
+  const response = JSON.parse(rawResponse);
   if (response.type === 'error') {
     throw new Error(response.error || 'goivy webengine wasm failed');
   }
   return response.value;
+}
+
+function isGoProgramExited(error) {
+  return String((error && error.message) || error || '').includes('Go program has already exited');
 }
 
 function requireInit() {
