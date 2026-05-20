@@ -10,40 +10,50 @@ import (
 // It dispatches to the appropriate version-specific LALR parser.
 // The optional importer callback resolves `include` directives.
 func Parse(input string, version Version, opts ...ParseOption) (*ParseResult, error) {
-	// For now, only v1.7+ is implemented
+	if version[0] < 1 || (version[0] == 1 && version[1] <= 6) {
+		return ParseIvyV16(input, version, opts...)
+	}
 	return ParseV17(input, version, opts...)
 }
 
+type parseLexConfig interface {
+	setImporter(ImporterFunc)
+	setIncluded(map[string]bool)
+	setNested(bool)
+	setFilename(string)
+	setAstConfig(*AstConfig)
+}
+
 // ParseOption configures optional behavior for the LALR parser.
-type ParseOption func(*parser17LexAdapter)
+type ParseOption func(parseLexConfig)
 
 // WithImporter sets the include-resolution callback.
 func WithImporter(fn ImporterFunc) ParseOption {
-	return func(lex *parser17LexAdapter) {
-		lex.importer = fn
+	return func(lex parseLexConfig) {
+		lex.setImporter(fn)
 	}
 }
 
 // WithIncluded sets the already-included module set (for nested parses).
 func WithIncluded(inc map[string]bool) ParseOption {
-	return func(lex *parser17LexAdapter) {
-		lex.included = inc
+	return func(lex parseLexConfig) {
+		lex.setIncluded(inc)
 	}
 }
 
 // WithNested marks this as a nested (include) parse.
 // Nested parses skip expand_autoinstances, matching Python behavior.
 func WithNested() ParseOption {
-	return func(lex *parser17LexAdapter) {
-		lex.nested = true
+	return func(lex parseLexConfig) {
+		lex.setNested(true)
 	}
 }
 
 // WithFilename sets the source filename, matching Python's iu.filename.
 // Used by getLineno to produce Location with filename for canon matching.
 func WithFilename(name string) ParseOption {
-	return func(lex *parser17LexAdapter) {
-		lex.filename = name
+	return func(lex parseLexConfig) {
+		lex.setFilename(name)
 	}
 }
 
@@ -53,8 +63,8 @@ func WithFilename(name string) ParseOption {
 // ensures nested/imported parses share the parent's AstConfig so counters
 // and flags stay in sync.
 func WithAstConfig(cfg *AstConfig) ParseOption {
-	return func(lex *parser17LexAdapter) {
-		lex.astCfg = cfg
+	return func(lex parseLexConfig) {
+		lex.setAstConfig(cfg)
 	}
 }
 
@@ -112,6 +122,12 @@ type parser17LexAdapter struct {
 	parentObjName    string     // Python: global parent_object — passed to newIvyAccum
 	astCfg           *AstConfig // session-wide config (shared across nested parses)
 }
+
+func (l *parser17LexAdapter) setImporter(fn ImporterFunc)     { l.importer = fn }
+func (l *parser17LexAdapter) setIncluded(inc map[string]bool) { l.included = inc }
+func (l *parser17LexAdapter) setNested(nested bool)           { l.nested = nested }
+func (l *parser17LexAdapter) setFilename(name string)         { l.filename = name }
+func (l *parser17LexAdapter) setAstConfig(cfg *AstConfig)     { l.astCfg = cfg }
 
 func newParser17LexAdapter(input string, version Version) *parser17LexAdapter {
 	return &parser17LexAdapter{

@@ -38,3 +38,6 @@ webui/static/dist
 webui/static/wasm/goivy-webengine.wasm
 z3vendor/z3/wasm.build.good/
 log.echo
+log.echo.prev
+log.golden.all
+log.golden.all.prev

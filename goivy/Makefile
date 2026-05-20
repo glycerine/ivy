@@ -190,6 +190,7 @@ build: # grammer_gen
 
 grammar_gen: # be sure .y -> .go up to date
 	goyacc -o parser_grammar_v17.go -p parser17 parser_grammar_v17.y
+	goyacc -o parser_grammar_v16.go -p parser16 parser_grammar_v16.y
 	go run parser_patch_parser.go
 	cd conceptspace && go generate # cs_grammar.y
 	goyacc -o v12_grammar_v12.go -p lalr12 v12_grammar_v12.y
