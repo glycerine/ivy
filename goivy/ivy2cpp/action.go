@@ -154,7 +154,8 @@ func (g *Generator) emitChoice(w *cppWriter, a *goivy.LogicChoiceAction) {
 }
 
 func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
-	fn, err := funName(a.CalleeName())
+	name := a.CalleeName()
+	fn, err := funName(name)
 	if err != nil {
 		w.linef("/* unsupported call: %s */", escapeComment(err.Error()))
 		return
@@ -168,6 +169,17 @@ func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
 				return
 			}
 			args = append(args, s)
+		}
+	}
+	if g.Mod != nil && g.Mod.Actions != nil && len(a.ActualReturns) == 1 {
+		if callee, ok := g.Mod.Actions.Get2(name); ok && len(callee.GetFormalReturns()) == 1 {
+			ret, err := g.emitExpr(a.ActualReturns[0])
+			if err != nil {
+				w.linef("/* unsupported call return: %s */", escapeComment(err.Error()))
+				return
+			}
+			w.linef("%s = %s(%s);", ret, fn, strings.Join(args, ", "))
+			return
 		}
 	}
 	for _, r := range a.ActualReturns {

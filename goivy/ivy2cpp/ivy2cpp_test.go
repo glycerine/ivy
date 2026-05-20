@@ -316,6 +316,30 @@ after init {
 	compileGeneratedCPP(t, out)
 }
 
+func TestGeneratedSingleReturnActionCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action echo(c:color) returns (out:color) = {
+    out := c
+}
+action step = {
+    call saved := echo(green)
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "calls"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"color echo(color c)", "color out = red;", "return out;", "saved = echo(green);"} {
+		if !strings.Contains(out.Impl, want) && !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
 func TestReplDispatchForExportedAction(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 action step = {

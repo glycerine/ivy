@@ -252,9 +252,13 @@ func (g *Generator) emitMethodDecls(w *cppWriter) {
 
 func (g *Generator) methodSignature(name string, act goivy.Action, qualified bool) string {
 	ret := "void"
+	typeName := cppType
+	if qualified {
+		typeName = func(s goivy.Sort) string { return cppQualifiedType(s, g.ClassName) }
+	}
 	returns := act.GetFormalReturns()
 	if len(returns) == 1 {
-		ret = cppType(returns[0].CSort)
+		ret = typeName(returns[0].CSort)
 	}
 	fn, err := funName(name)
 	if err != nil {
@@ -265,11 +269,11 @@ func (g *Generator) methodSignature(name string, act goivy.Action, qualified boo
 	}
 	var params []string
 	for _, p := range act.GetFormalParams() {
-		params = append(params, cppType(p.CSort)+" "+varName(p.Name))
+		params = append(params, typeName(p.CSort)+" "+varName(p.Name))
 	}
 	if len(returns) > 1 {
 		for _, r := range returns {
-			params = append(params, cppType(r.CSort)+" &"+varName(r.Name))
+			params = append(params, typeName(r.CSort)+" &"+varName(r.Name))
 		}
 	}
 	return fmt.Sprintf("%s %s(%s)", ret, fn, strings.Join(params, ", "))
@@ -311,13 +315,29 @@ func (g *Generator) emitMethods(w *cppWriter) {
 			continue
 		}
 		w.open(g.methodSignature(name, act, true) + " {")
+		returns := act.GetFormalReturns()
+		if len(returns) == 1 && !formalListContains(act.GetFormalParams(), returns[0]) {
+			w.linef("%s %s = %s;", cppType(returns[0].CSort), varName(returns[0].Name), cppZeroValue(returns[0].CSort))
+		}
 		g.emitAction(w, act)
-		if len(act.GetFormalReturns()) == 1 {
-			w.linef("return %s;", cppZeroValue(act.GetFormalReturns()[0].CSort))
+		if len(returns) == 1 {
+			w.linef("return %s;", varName(returns[0].Name))
 		}
 		w.close("")
 		w.blank()
 	}
+}
+
+func formalListContains(formals []*goivy.Const, target *goivy.Const) bool {
+	if target == nil {
+		return false
+	}
+	for _, f := range formals {
+		if f == target || (f != nil && f.Name == target.Name) {
+			return true
+		}
+	}
+	return false
 }
 
 func (g *Generator) emitRepl(w *cppWriter) {
