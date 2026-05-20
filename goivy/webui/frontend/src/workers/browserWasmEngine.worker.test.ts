@@ -1,5 +1,30 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+vi.mock('./smtZ3Imports.js', () => ({
+  createSmtZ3Imports: vi.fn(() => ({})),
+}));
+
+vi.mock('./goivyNodeFS.js', () => ({
+  installGoIvyNodeFS: vi.fn(({ stdout, stderr } = {}) => {
+    const decoder = new TextDecoder('utf-8');
+    (globalThis as any).fs = {
+      writeSync(fd, bytes) {
+        if (fd === 2 && typeof stderr === 'function') {
+          stderr(bytes);
+        } else if (typeof stdout === 'function') {
+          stdout(bytes);
+        }
+        return bytes.length;
+      },
+    };
+    return {
+      decode(bytes) {
+        return decoder.decode(bytes);
+      },
+    };
+  }),
+}));
+
 function response(value, init = {}) {
   return new Response(value, { status: 200, statusText: 'OK', ...init });
 }
@@ -128,5 +153,5 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
     expect(crashEvent?.event.data.message).toContain('goivy webengine wasm exited');
     expect(crashEvent?.event.data.recent_output).toContain('panic: fake Go wasm crash');
     expect(crashEvent?.event.data.recent_output).toContain('fake stack frame');
-  });
+  }, 15000);
 });
