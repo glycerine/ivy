@@ -537,15 +537,16 @@ func mustGetRepoDir(t *testing.T) (dir string) {
 // without an "isolate=cf_live" to check
 func TestOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
-	args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
+	cfg := &goldenConfig{args: []string{"isolate=cf_live"}, path: path}
+	GoldenPathCompareIvyCheck(t, cfg)
 }
 
 // takes two hours to check all isolates.
 func Test2hrOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	//args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, false, true, path, nil, "")
+	cfg := &goldenConfig{path: path}
+	GoldenPathCompareIvyCheck(t, cfg) // verbose=false, diffStop=true
 }
 
 func TestGoldenAll(t *testing.T) {
@@ -561,9 +562,10 @@ func TestGoldenAll(t *testing.T) {
 	panicOn(err)
 	//vv("spec list (len %v) = '%#v'", len(paths), paths)
 
-	verbose := false
-	diffStop := true
-	for _, path := range paths {
+	cfg := &goldenConfig{}
+
+	skipRebuild := false
+	for ipath, path := range paths {
 
 		// when we parse here, we do not want to see all the traces.
 		xtracer.Suppressed = true
@@ -573,85 +575,119 @@ func TestGoldenAll(t *testing.T) {
 
 		path2 := path[3:] // strip "../" to get a repo-root-relative path.
 		for _, iso := range isos {
-			vv("======= begin TestGoldenAll: path='%v'; isolate='%v'", path2, iso)
-			args := []string{fmt.Sprintf("isolate=%v", iso)}
-			GoldenPathCompareIvyCheck(t, verbose, diffStop, path2, args, "")
+			vv("======= begin TestGoldenAll: path='%v'; isolate='%v' (path %v of %v)", path2, iso, ipath, len(paths))
+			cfg.path = path2
+			cfg.args = []string{fmt.Sprintf("isolate=%v", iso)}
+			cfg.skipRebuild = skipRebuild
+			GoldenPathCompareIvyCheck(t, cfg)
+			skipRebuild = true // only need rebuild the first time.
 		}
 	}
 }
 
 func Test2hrNodeGoldenOrdLive(t *testing.T) {
-	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
-	//args := []string{"isolate=cf_live"}
-	verbose := false
-	GoldenPathCompareIvyCheck(t, verbose, true, path, nil, "bigGo")
+	cfg := &goldenConfig{
+		path:    "ivy-lang-examples/doc/examples/apple/ord_live.ivy",
+		useNode: "bigGo",
+		//args: []string{"isolate=cf_live"},
+	}
+	GoldenPathCompareIvyCheck(t, cfg)
 }
 
 func TestIvyTlbModel(t *testing.T) {
-	path := "ivy-lang-examples/examples/liveness/tlb.ivy"
-	GoldenPathCompareIvyCheck(t, false, true, path, nil, "")
+	cfg := &goldenConfig{path: "ivy-lang-examples/examples/liveness/tlb.ivy"}
+	GoldenPathCompareIvyCheck(t, cfg)
 }
 
 func TestIvy_1dot1_tilelink1_model(t *testing.T) {
-	path := "ivy-lang-examples/examples/tilelink/tilelink1.ivy"
-	GoldenPathCompareIvyCheck(t, false, true, path, nil, "")
+	GoldenPathCompareIvyCheck(t, &goldenConfig{
+		path: "ivy-lang-examples/examples/tilelink/tilelink1.ivy",
+	})
 }
 
 // TestVerboseOrdLive is the same as TestOrdLive but prints every
 // matching trace line, not just the last 10 before the divergence.
 func TestVerboseOrdLive(t *testing.T) {
-	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
-	args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, true, true, path, args, "")
+	GoldenPathCompareIvyCheck(t, &goldenConfig{
+		path:    "ivy-lang-examples/doc/examples/apple/ord_live.ivy",
+		args:    []string{"isolate=cf_live"},
+		verbose: true,
+	})
 }
 
 // This isolate is the 9th one in. Seen at XTRACE 28_234_303
 // when running golden-2hr, which takes 3 hours to crash, so
 // try just running this isolate alone instead.
 func TestRfnAbsIso(t *testing.T) {
-	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
-	args := []string{"isolate=rfn.abs.iso"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
+	GoldenPathCompareIvyCheck(t, &goldenConfig{
+		path: "ivy-lang-examples/doc/examples/apple/ord_live.ivy",
+		args: []string{"isolate=rfn.abs.iso"},
+	})
 }
 
 // see "isolate sys_live = " in ivy-lang-examples/doc/examples/apple/ord_live.ivy
 func TestSysLiveIso(t *testing.T) {
-	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
-	args := []string{"isolate=sys_live"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
+	GoldenPathCompareIvyCheck(t, &goldenConfig{
+		path: "ivy-lang-examples/doc/examples/apple/ord_live.ivy",
+		args: []string{"isolate=sys_live"},
+	})
 }
 
 // see "isolate this" in ivy-lang-examples/doc/examples/apple/ord_live.ivy
 func TestThisIso(t *testing.T) {
-	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
-	args := []string{"isolate=this"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
+	GoldenPathCompareIvyCheck(t, &goldenConfig{
+		path: "ivy-lang-examples/doc/examples/apple/ord_live.ivy",
+		args: []string{"isolate=this"},
+	})
 }
 
 // TestVerboseNonstopOrdLive does not stop
 // at the first divergence. It prints all parsed
 // and xtraced lines.
 func TestVerboseNonstopOrdLive(t *testing.T) {
-	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
-	args := []string{"isolate=cf_live"}
-	GoldenPathCompareIvyCheck(t, true, false, path, args, "")
+	GoldenPathCompareIvyCheck(t, &goldenConfig{
+		path: "ivy-lang-examples/doc/examples/apple/ord_live.ivy",
+		args: []string{"isolate=cf_live"},
+	})
 }
 
 func TestEchoDotIvy(t *testing.T) {
-	path := "ivy-lang-examples/doc/examples/echo.ivy"
-	args := []string{"isolate=protocol"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
+	GoldenPathCompareIvyCheck(t, &goldenConfig{
+		path: "ivy-lang-examples/doc/examples/echo.ivy",
+		args: []string{"isolate=protocol"},
+	})
+
 	vv("TestEchoDotIvy: echo.ivy test: done with isolate=protcol, now on to isolate=service")
-	args = []string{"isolate=service"}
-	GoldenPathCompareIvyCheck(t, false, true, path, args, "")
+
+	GoldenPathCompareIvyCheck(t, &goldenConfig{
+		path: "ivy-lang-examples/doc/examples/echo.ivy",
+		args: []string{"isolate=service"},
+	})
 }
 
-func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath string, args []string, useNode string) {
+type goldenConfig struct {
+	path         string
+	verbose      bool
+	diffContinue bool
+	args         []string
+	useNode      string
+	skipRebuild  bool
+}
+
+func GoldenPathCompareIvyCheck(t *testing.T, cfg *goldenConfig) {
 	off := os.Getenv("XTRACE_OFF")
 	if off != "" {
 		t.Skip("skip again the golden test(s) when XTRACE_OFF.")
 		return // off to check everything else under make test.
 	}
+
+	verbose := cfg.verbose
+	diffStop := !cfg.diffContinue
+	repoRelPath := cfg.path
+	args := cfg.args
+	useNode := cfg.useNode
+	skipRebuild := cfg.skipRebuild
+
 	vv("top of GoldenPathCompareIvyCheck(repoRelPath='%v'); useNode=%v", repoRelPath, useNode)
 
 	repo := mustGetRepoDir(t)
@@ -686,7 +722,7 @@ func GoldenPathCompareIvyCheck(t *testing.T, verbose, diffStop bool, repoRelPath
 
 	default: // native Go
 		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo)
-		goivyPipe, goProc, goErr = goivy_check_xtrace(t, args, path, repo)
+		goivyPipe, goProc, goErr = goivy_check_xtrace(t, args, path, repo, skipRebuild)
 	}
 
 	if pyErr != nil {
@@ -1074,7 +1110,7 @@ func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadClos
 
 // goivy_check_xtrace re-makes and then runs goivy_check_xtrace.
 // It streams output back on r, a pipe, asynchronously.
-func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
+func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string, skipRebuild bool) (r io.ReadCloser, proc *os.Process, err error) {
 
 	_, thisFile, _, _ := runtime.Caller(0)
 	// parent dir.
@@ -1105,15 +1141,18 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io
 	}
 	target := filepath.Join(gobin, "goivy_check_xtrace")
 	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
-	doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", goivyCheckCmdDir, goBinary, target)
-	fmt.Printf("build goivy_check_xtrace so we know it is up to date: '%v'\n", doFullCmd)
-	cmd := exec.Command(goBinary, "build", "-o", target)
-	cmd.Dir = goivyCheckCmdDir
-	err = cmd.Run()
-	if err != nil {
-		panicf("could not run '%v' (see also 'make tr') to build goivy_check_xtrace; error: '%v'", doFullCmd, err)
+	var cmd *exec.Cmd
+	if !skipRebuild {
+		doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", goivyCheckCmdDir, goBinary, target)
+		fmt.Printf("build goivy_check_xtrace so we know it is up to date: '%v'\n", doFullCmd)
+		cmd = exec.Command(goBinary, "build", "-o", target)
+		cmd.Dir = goivyCheckCmdDir
+		err = cmd.Run()
+		if err != nil {
+			panicf("could not run '%v' (see also 'make tr') to build goivy_check_xtrace; error: '%v'", doFullCmd, err)
+		}
+		fmt.Printf("done refreshing goivy_check_xtrace\n\n")
 	}
-	fmt.Printf("done refreshing goivy_check_xtrace\n\n")
 
 	pr := newBufferedLinePipe(goldenProcessLineBuffer)
 	if err != nil {
