@@ -17,6 +17,9 @@ func cppType(s goivy.Sort) string {
 		}
 		return varName(st.Name)
 	case *goivy.RangeSort:
+		if st.Name != "" {
+			return varName(st.Name)
+		}
 		return "long long"
 	case *goivy.UninterpretedSort:
 		return varName(st.Name)
@@ -56,6 +59,9 @@ func cppQualifiedType(s goivy.Sort, className string) string {
 		}
 		return className + "::" + varName(st.Name)
 	case *goivy.RangeSort:
+		if st.Name != "" {
+			return className + "::" + varName(st.Name)
+		}
 		return "long long"
 	case *goivy.UninterpretedSort:
 		return className + "::" + varName(st.Name)
@@ -118,6 +124,9 @@ func (g *Generator) cppZeroValue(s goivy.Sort) string {
 		if name, ok := g.destructorStructName(s); ok {
 			return varName(name) + "()"
 		}
+		if name, ok := g.variantSuperName(s); ok {
+			return varName(name) + "()"
+		}
 	}
 	return cppZeroValue(s)
 }
@@ -128,6 +137,13 @@ func (g *Generator) cppZeroValueInScope(s goivy.Sort) string {
 			return typeName + "()"
 		}
 		if name, ok := g.destructorStructName(s); ok {
+			typeName := varName(name)
+			if g.ClassName != "" {
+				typeName = g.ClassName + "::" + typeName
+			}
+			return typeName + "()"
+		}
+		if name, ok := g.variantSuperName(s); ok {
 			typeName := varName(name)
 			if g.ClassName != "" {
 				typeName = g.ClassName + "::" + typeName
@@ -179,6 +195,17 @@ func (g *Generator) destructorStructName(s goivy.Sort) (string, bool) {
 		}
 	}
 	return "", false
+}
+
+func (g *Generator) variantSuperName(s goivy.Sort) (string, bool) {
+	if g == nil || g.Mod == nil {
+		return "", false
+	}
+	name := sortName(s)
+	if name == "" || !g.isVariantSuperName(name) {
+		return "", false
+	}
+	return name, true
 }
 
 func sortName(s goivy.Sort) string {

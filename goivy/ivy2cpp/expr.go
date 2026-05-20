@@ -150,6 +150,12 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 		}
 		return "(" + l + " " + name + " " + r + ")", nil
 	}
+	if code, ok, err := g.emitVariantRelation(name, a.Terms); ok || err != nil {
+		return code, err
+	}
+	if code, ok, err := g.emitDestructorApply(name, a.Terms); ok || err != nil {
+		return code, err
+	}
 	fn, err := funName(name)
 	if err != nil {
 		return "", err
@@ -172,6 +178,58 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 		return fn + "[" + args[0] + "]", nil
 	}
 	return fn + "[std::make_tuple(" + strings.Join(args, ", ") + ")]", nil
+}
+
+func (g *Generator) emitVariantRelation(name string, terms []goivy.Expr) (string, bool, error) {
+	if name != "*>" {
+		return "", false, nil
+	}
+	if len(terms) != 2 {
+		return "", true, fmt.Errorf("ivy2cpp: variant relation *> expected 2 arguments, got %d", len(terms))
+	}
+	if g == nil || g.Mod == nil || !g.Mod.IsVariant(terms[0].NodeSort(), terms[1].NodeSort()) {
+		return "", true, fmt.Errorf("ivy2cpp: %s *> %s is not a known variant relation", terms[0].String(), terms[1].String())
+	}
+	lhs, err := g.emitExpr(terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	rhs, err := g.emitExpr(terms[1])
+	if err != nil {
+		return "", true, err
+	}
+	idx := g.Mod.VariantIndex(terms[0].NodeSort(), terms[1].NodeSort())
+	field := variantPayloadField(terms[1].NodeSort())
+	return fmt.Sprintf("(%s.__tag == %d && %s.%s == %s)", lhs, idx, lhs, field, rhs), true, nil
+}
+
+func variantPayloadField(s goivy.Sort) string {
+	return "__" + varName(sortName(s))
+}
+
+func (g *Generator) emitDestructorApply(name string, terms []goivy.Expr) (string, bool, error) {
+	field, ok := g.destructorFieldName(name)
+	if !ok {
+		return "", false, nil
+	}
+	if len(terms) != 1 {
+		return "", true, fmt.Errorf("ivy2cpp: destructor %s expected 1 argument, got %d", name, len(terms))
+	}
+	obj, err := g.emitExpr(terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	return obj + "." + field, true, nil
+}
+
+func (g *Generator) destructorFieldName(name string) (string, bool) {
+	if g == nil || g.Mod == nil || g.Mod.DestructorSorts == nil || name == "" {
+		return "", false
+	}
+	if _, ok := g.Mod.DestructorSorts[name]; !ok {
+		return "", false
+	}
+	return varName(memName(name)), true
 }
 
 func (g *Generator) aliasForSymbol(e goivy.Expr) (goivy.Expr, bool) {

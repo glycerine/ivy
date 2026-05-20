@@ -77,6 +77,11 @@ func runPythonIvyToCpp(t *testing.T, src string, params ...string) (string, stri
 
 func compileGeneratedCPP(t *testing.T, out *Output) {
 	t.Helper()
+	compileGeneratedCPPWithPrefix(t, out, "")
+}
+
+func compileGeneratedCPPWithPrefix(t *testing.T, out *Output, prefix string) {
+	t.Helper()
 	cxx, err := cxxCompiler()
 	if err != nil {
 		if isMissingZ3ToolchainError(err) {
@@ -89,6 +94,13 @@ func compileGeneratedCPP(t *testing.T, out *Output) {
 		t.Fatalf("WriteOutput: %v", err)
 	}
 	args := []string{"-std=c++11"}
+	if prefix != "" {
+		prefixPath := filepath.Join(dir, "ivy2cpp_prefix.h")
+		if err := os.WriteFile(prefixPath, []byte(prefix), 0o644); err != nil {
+			t.Fatalf("write C++ prefix: %v", err)
+		}
+		args = append(args, "-include", prefixPath)
+	}
 	if outputUsesZ3(out) {
 		includeArgs, _, err := z3BuildArgs()
 		if err != nil {
@@ -104,6 +116,19 @@ func compileGeneratedCPP(t *testing.T, out *Output) {
 	if buf, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("compile generated C++: %v\n%s\nheader:\n%s\nimpl:\n%s", err, buf, out.Header, out.Impl)
 	}
+}
+
+func buildGeneratedExecutable(t *testing.T, out *Output) string {
+	t.Helper()
+	dir := t.TempDir()
+	exe, err := BuildOutput(out, dir)
+	if err != nil {
+		if isMissingZ3ToolchainError(err) {
+			t.Skip(err.Error())
+		}
+		t.Fatalf("BuildOutput: %v\nheader:\n%s\nimpl:\n%s", err, out.Header, out.Impl)
+	}
+	return exe
 }
 
 func assertNoUnsupportedCPP(t *testing.T, out *Output) {
@@ -245,6 +270,32 @@ export set
 	}
 }
 
+func TestPythonAndGoGeneratedGenFixtureCompilesWithStubs(t *testing.T) {
+	src := `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`
+	pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target=gen")
+	prefix := "#include <fstream>\nextern std::ofstream __ivy_modelfile;\n"
+	compileGeneratedCPPWithPrefix(t, &Output{
+		Header:    pyHeader,
+		Impl:      pyImpl,
+		BaseName:  "oracle",
+		ClassName: "oracle",
+	}, prefix)
+
+	mod := compileIvySource(t, src)
+	goOut, err := Generate(mod, Config{Target: "gen", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	compileGeneratedCPP(t, goOut)
+}
+
 func TestGeneratedOutputContainsNoUnsupportedComments(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -364,7 +415,7 @@ func TestCTypeBoolEnumRangeFunction(t *testing.T) {
 	if got := cppType(enum); got != "color" {
 		t.Fatalf("enum cppType=%s", got)
 	}
-	if got := cppType(rng); got != "long long" {
+	if got := cppType(rng); got != "idx" {
 		t.Fatalf("range cppType=%s", got)
 	}
 	if got := cppType(fn); got != "std::map<color,bool>" {
@@ -427,6 +478,37 @@ action step = {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestNamedRangeTypedefUsedInStateAndMethods(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..2}
+individual seen : idx
+action set(i:idx) = {
+    seen := i
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "rangetypes"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"typedef long long idx;",
+		"idx seen;",
+		"void set(idx i);",
+		"void rangetypes::set(rangetypes::idx i)",
+		"rangetypes::idx i = ivy2cpp_parse_idx",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if strings.Contains(out.Header, "long long seen;") || strings.Contains(out.Header, "void set(long long i);") {
+		t.Fatalf("named range was erased to long long:\n%s", out.Header)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
@@ -501,6 +583,148 @@ destructor shade(C:cell) : color
 	if strings.Contains(out.Header, "typedef long long cell;") {
 		t.Fatalf("destructor-backed sort should not also be typedef'd:\n%s", out.Header)
 	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestDestructorFunctionNotEmittedAsMutableState(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+`)
+	out, err := Generate(mod, Config{ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if strings.Contains(out.Header, "std::map<cell,color> shade;") {
+		t.Fatalf("destructor function should be a struct field, not mutable state:\n%s", out.Header)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestVariantStructDeclarationAndNoDestructorState(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+type color = {red, green}
+variant request of msg = struct {
+    shade : color
+}
+individual saved : msg
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "variants"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"struct request {", "color shade;"} {
+		if !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q in variant header:\n%s", want, out.Header)
+		}
+	}
+	if strings.Contains(out.Header, "std::map<request,color> shade;") {
+		t.Fatalf("variant destructor field should not be emitted as mutable state:\n%s", out.Header)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestVariantSupertypeAssignmentCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type msg
+type color = {red, green}
+variant request of msg = struct {
+    shade : color
+}
+individual saved : msg
+after init {
+    var tmp : request;
+    tmp.shade := green;
+    saved := tmp
+}
+action step = {
+    assert saved = saved
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "variants"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"struct request {",
+		"struct msg {",
+		"int __tag;",
+		"request __request;",
+		"msg(const request &value)",
+		"saved = loc__tmp;",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if strings.Contains(out.Header, "typedef long long msg;") {
+		t.Fatalf("variant supertype must not be emitted as long long:\n%s", out.Header)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestVariantSomeDowncastCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t
+variant a of t
+variant b of t
+individual v : t
+action save(inp:a) = {
+    v := inp
+}
+action load returns(out:a) = {
+    if some (q:a) v *> q {
+        out := q
+    }
+}
+export save
+export load
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "variantdown"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"struct t {",
+		"a __a;",
+		"t(const a &value) : __tag(0), __a(value) {}",
+		"if (v.__tag == 0)",
+		"a loc__q = v.__a;",
+		"out = loc__q;",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestEmitExprVariantRelation(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t
+variant a of t
+individual v : t
+individual av : a
+action step = {
+    assert v *> av
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "variantrel"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "ivy_assert((v.__tag == 0 && v.__a == av)") {
+		t.Fatalf("missing variant relation assertion:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
 }
 
@@ -826,7 +1050,7 @@ func TestEmitExprQuantifierFiniteRangeLoop(t *testing.T) {
 	if err != nil {
 		t.Fatalf("emitExpr: %v", err)
 	}
-	if !strings.Contains(got, "for (long long I = 1; I <= 3; I++)") || !strings.Contains(got, "return true;") {
+	if !strings.Contains(got, "for (idx I = 1; I <= 3; I++)") || !strings.Contains(got, "return true;") {
 		t.Fatalf("unexpected quantifier code:\n%s", got)
 	}
 }
@@ -1167,6 +1391,33 @@ action step = {
 	compileGeneratedCPP(t, out)
 }
 
+func TestInitEqualityConstraintSwapsStateOnRight(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step = {
+}
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	eq, err := goivy.NewEq(goivy.NewConst("green", color), goivy.NewConst("saved", color))
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	mod.InitCond = goivy.FormulaToClauses(eq, nil)
+	out, err := Generate(mod, Config{ClassName: "initright"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "saved = green;") {
+		t.Fatalf("missing swapped init assignment:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestInitRelationIffConstraintEmitsLoop(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -1207,6 +1458,106 @@ action step = {
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{"for (color C : {red, green})", "marked[C] = (C == green);"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestInitRelationIffConstraintSwapsStateOnRight(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+action step = {
+}
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	relSort, ok := mod.Relations.Get2("marked")
+	if !ok {
+		relSort, ok = mod.Functions.Get2("marked")
+	}
+	if !ok {
+		t.Fatal("missing marked relation")
+	}
+	c, err := goivy.NewVariable("C", color)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	marked, err := goivy.NewApply(goivy.NewConst("marked", relSort), c)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	isGreen, err := goivy.NewEq(c, goivy.NewConst("green", color))
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	init, err := goivy.NewIff(isGreen, marked)
+	if err != nil {
+		t.Fatalf("NewIff: %v", err)
+	}
+	mod.InitCond = goivy.FormulaToClauses(init, nil)
+	out, err := Generate(mod, Config{ClassName: "initrightrel"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"for (color C : {red, green})", "marked[C] = (C == green);"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestInitForAllRelationIffConstraintEmitsLoop(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+action step = {
+}
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	relSort, ok := mod.Relations.Get2("marked")
+	if !ok {
+		relSort, ok = mod.Functions.Get2("marked")
+	}
+	if !ok {
+		t.Fatal("missing marked relation")
+	}
+	c, err := goivy.NewVariable("C", color)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	marked, err := goivy.NewApply(goivy.NewConst("marked", relSort), c)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	isRed, err := goivy.NewEq(c, goivy.NewConst("red", color))
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	init, err := goivy.NewIff(marked, isRed)
+	if err != nil {
+		t.Fatalf("NewIff: %v", err)
+	}
+	forall, err := goivy.NewForAll([]*goivy.LogicVariable{c}, init)
+	if err != nil {
+		t.Fatalf("NewForAll: %v", err)
+	}
+	mod.InitCond = goivy.FormulaToClauses(forall, nil)
+	out, err := Generate(mod, Config{ClassName: "initforall"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"for (color C : {red, green})", "marked[C] = (C == red);"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
@@ -1413,7 +1764,7 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"std::string action;", "while (std::cin >> action)", "ivy2cpp_dispatch(ivy, action);"} {
+	for _, want := range []string{"std::string action;", "while (std::cin >> action)", "ivy2cpp_dispatch(ivy, action, std::cin);"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in repl main:\n%s", want, out.Impl)
 		}
@@ -1452,7 +1803,165 @@ export set
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, `if (action == "set") { ivy.set(runner::red); return; }`) {
+	for _, want := range []string{`if (action == "set")`, `runner::color c = ivy2cpp_parse_color(ivy2cpp_read_arg(input, "c"));`, `ivy.set(c);`} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in repl dispatch:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestReplDispatchParsesEnumBoolRangeArgs(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type idx = {0..2}
+individual saved : color
+individual ok : bool
+individual seen : idx
+action set(c:color,b:bool,i:idx) = {
+    saved := c;
+    ok := b;
+    seen := i
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"static std::string ivy2cpp_read_arg(std::istream &input, const char *name)",
+		"static bool ivy2cpp_parse_bool(const std::string &s)",
+		"static runner::color ivy2cpp_parse_color(const std::string &s)",
+		"static runner::idx ivy2cpp_parse_idx(const std::string &s)",
+		`runner::color c = ivy2cpp_parse_color(ivy2cpp_read_arg(input, "c"));`,
+		`bool b = ivy2cpp_parse_bool(ivy2cpp_read_arg(input, "b"));`,
+		`runner::idx i = ivy2cpp_parse_idx(ivy2cpp_read_arg(input, "i"));`,
+		"ivy.set(c, b, i);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestGeneratedReplExecutableParsesEnumArg(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action set(c:color) = {
+    assert c = green
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	exe := buildGeneratedExecutable(t, out)
+	cmd := exec.Command(exe)
+	cmd.Stdin = strings.NewReader("set green\n")
+	if buf, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("generated repl did not parse enum arg: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
+	}
+}
+
+func TestReplDispatchWritesSingleReturn(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action echo(c:color) returns (out:color) = {
+    out := c
+}
+export echo
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"static void ivy2cpp_write_value(std::ostream &out, runner::color value)",
+		"runner::color __ivy_result = ivy.echo(c);",
+		"ivy2cpp_write_value(std::cout, __ivy_result);",
+		"std::cout << std::endl;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
+		}
+	}
+	exe := buildGeneratedExecutable(t, out)
+	cmd := exec.Command(exe)
+	cmd.Stdin = strings.NewReader("echo green\n")
+	buf, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("generated repl single return failed: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
+	}
+	if strings.TrimSpace(string(buf)) != "green" {
+		t.Fatalf("unexpected repl output %q\nimpl:\n%s", buf, out.Impl)
+	}
+}
+
+func TestReplDispatchWritesMultipleReturns(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action split(c:color) returns (out:color, good:bool) = {
+    out := c;
+    good := true
+}
+export split
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"runner::color out = runner::red;",
+		"bool good = false;",
+		"ivy.split(c, out, good);",
+		"ivy2cpp_write_value(std::cout, out);",
+		`std::cout << " ";`,
+		"ivy2cpp_write_value(std::cout, good);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
+		}
+	}
+	exe := buildGeneratedExecutable(t, out)
+	cmd := exec.Command(exe)
+	cmd.Stdin = strings.NewReader("split green\n")
+	buf, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("generated repl multiple return failed: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
+	}
+	if strings.TrimSpace(string(buf)) != "green true" {
+		t.Fatalf("unexpected repl output %q\nimpl:\n%s", buf, out.Impl)
+	}
+}
+
+func TestPythonOracleReplParameterizedActionShape(t *testing.T) {
+	src := `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`
+	pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target=repl")
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"set", "color", "green"} {
+		if !strings.Contains(pyHeader+pyImpl, want) {
+			t.Fatalf("python repl output missing %q:\nheader:\n%s\nimpl:\n%s", want, pyHeader, pyImpl)
+		}
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("go repl output missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if !strings.Contains(out.Impl, "ivy2cpp_parse_color") {
 		t.Fatalf("missing parameterized repl dispatch:\n%s", out.Impl)
 	}
 	compileGeneratedCPP(t, out)
@@ -1498,6 +2007,179 @@ export step
 	assertNoUnsupportedCPP(t, out)
 }
 
+func TestTargetGenGeneratesInitAndActionGeneratorClasses(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genclasses"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"class ivy2cpp_action_gen",
+		"class init_gen : public gen",
+		"bool init_gen::generate(genclasses &obj)",
+		"class set_gen : public gen",
+		"bool set_gen::generate(genclasses &obj)",
+		"void set_gen::execute(genclasses &obj)",
+		"init_gen my_init_gen(ivy);",
+		"my_init_gen.generate(ivy);",
+		"set_gen set_generator(ivy);",
+		"if (set_generator.generate(ivy))",
+		"set_generator.execute(ivy);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in gen output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetGenRandomizesActionParamsAndExecutes(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type idx = {0..2}
+individual saved : color
+individual seen : idx
+individual ok : bool
+action set(c:color,b:bool,i:idx) = {
+    saved := c;
+    ok := b;
+    seen := i
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genparams"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"genparams::color c;",
+		"bool b;",
+		"genparams::idx i;",
+		"this->c = ivy2cpp_random_color(*this);",
+		"this->b = this->random_bool();",
+		"this->i = ivy2cpp_random_idx(*this);",
+		"obj.set(this->c, this->b, this->i);",
+		"if (set_generator.generate(ivy))",
+		"set_generator.execute(ivy);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in gen output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetGenEmitsSolverConversionsForFiniteSorts(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "solverconv"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"template <typename T> z3::expr __to_solver(gen &g, const char *sort_name, const T &value)",
+		"return g.int_to_z3(sort_name, static_cast<long long>(value));",
+		"static void __from_solver(gen &g, const z3::expr &expr, solverconv::color &out)",
+		"std::string text = g.eval_expr(expr).to_string();",
+		`if (text == "color_0" || text == "red")`,
+		"out = solverconv::red;",
+		"static z3::expr __to_solver(gen &g, const char *sort_name, solverconv::color value)",
+		"case solverconv::green: return g.int_to_z3(sort_name, 1);",
+		"template <typename T> z3::expr __to_solver(gen &g, const z3::expr &expr, const T &value)",
+		"return expr == g.int_to_z3(expr.get_sort(), static_cast<long long>(value));",
+		"static z3::expr __to_solver(gen &g, const z3::expr &expr, solverconv::color value)",
+		"case solverconv::green: return expr == g.int_to_z3(expr.get_sort(), 1);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in gen output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetGenEmitsBoolRangeSolverConversionsAndProgressState(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..2}
+individual ok : bool
+individual seen : idx
+action step(i:idx) = {
+    seen := i;
+    ok := true
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "solverconv2"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"z3::model model;",
+		"model = slvr.get_model();",
+		"z3::expr eval_expr(const z3::expr &expr)",
+		"long long eval(const z3::expr &expr)",
+		"template <> void __from_solver<bool>(gen &g, const z3::expr &expr, bool &out)",
+		"z3::expr solver_value = g.eval_expr(expr);",
+		"Z3_lbool value = solver_value.bool_value();",
+		"template <> void __from_solver<long long>(gen &g, const z3::expr &expr, long long &out)",
+		"out = g.eval(expr);",
+		"static void ivy2cpp_progress(gen &g, const std::string &label)",
+		"g.progress.push_back(label);",
+		`ivy2cpp_progress(g, "randomize");`,
+		`ivy2cpp_progress(*this, "step_gen");`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in gen output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetTestUsesInitAndActionGeneratorClasses(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testclasses"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"class init_gen : public gen",
+		"class set_gen : public gen",
+		"init_gen my_init_gen(ivy);",
+		"my_init_gen.generate(ivy);",
+		"set_gen set_generator(ivy);",
+		"if (set_generator.generate(ivy))",
+		"set_generator.execute(ivy);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in test output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestRandomizeFiniteEnumRelation(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -1523,6 +2205,85 @@ individual saved : color
 	assertNoUnsupportedCPP(t, out)
 }
 
+func TestRandomizeBinaryFiniteRelationUsesTupleKey(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type bit = {low, high}
+relation edge(C:color,B:bit)
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "randomizer2"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		`g.mk_decl("edge", {"color", "bit"}, "bool");`,
+		"for (randomizer2::color __ivy_arg0 : {randomizer2::red, randomizer2::green})",
+		"for (randomizer2::bit __ivy_arg1 : {randomizer2::low, randomizer2::high})",
+		`g.randomize("edge", {static_cast<int>(__ivy_arg0), static_cast<int>(__ivy_arg1)}, "bool");`,
+		"ivy.edge[std::make_tuple(__ivy_arg0, __ivy_arg1)] = g.random_bool();",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetGenRandomizeAddsZ3Constraints(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "z3random"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"z3::expr mk_apply_expr(const char *decl_name, const std::vector<int> &args)",
+		"expr_args.push_back(int_to_z3(decl.domain(i), args[i]));",
+		"void add_alit(const z3::expr &pred)",
+		"slvr.add(pred);",
+		"randomize(mk_apply_expr(decl_name, args_vec), range);",
+		"z3::expr pred = expr == int_to_z3(expr.get_sort(), value);",
+		"add_alit(pred);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetGenRandomizeUsesFiniteSortBounds(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type idx = {2..4}
+individual saved : color
+individual seen : idx
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "z3bounds"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"std::map<std::string, long long> sort_los;",
+		"std::map<std::string, long long> sort_his;",
+		"sort_his[std::string(name)] = values.size() == 0 ? 0 : static_cast<long long>(values.size()) - 1;",
+		`g.mk_enum("color", {"red", "green"});`,
+		`g.mk_int("idx", 2, 4);`,
+		"std::map<std::string, long long>::const_iterator lo_it = sort_los.find(range);",
+		"value = random_index(static_cast<int>(lo), static_cast<int>(hi));",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestGeneratedTestFixtureCompilesWhenZ3Available(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -1535,6 +2296,26 @@ action step = {
 export step
 `)
 	out, err := Generate(mod, Config{Target: "test", ClassName: "z3fixture"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestGeneratedGenFixtureCompilesWhenZ3Available(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type idx = {0..2}
+relation marked(C:color,I:idx)
+individual saved : color
+action set(c:color,i:idx) = {
+    saved := c;
+    marked(c,i) := true
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "z3genfixture"})
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
@@ -1601,5 +2382,40 @@ export step
 	}
 	if !strings.Contains(string(header), "class Tiny") {
 		t.Fatalf("classname parameter not reflected in header:\n%s", header)
+	}
+}
+
+func TestCommandBuildTrueProducesExecutable(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping go run integration in short mode")
+	}
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "tinybuild.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.7
+type color = {red, green}
+action echo(c:color) returns (out:color) = {
+    out := c
+}
+export echo
+`), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	cmd := exec.Command("go", "run", "./cmd/ivy2cpp", "target=repl", "build=true", "classname=TinyBuild", "outdir="+dir, spec)
+	cmd.Dir = filepath.Join(repoRoot(t), "goivy")
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("go run ivy2cpp build=true: %v\n%s", err, out)
+	}
+	exe := filepath.Join(dir, "tinybuild")
+	if _, err := os.Stat(exe); err != nil {
+		t.Fatalf("missing tinybuild executable: %v", err)
+	}
+	run := exec.Command(exe)
+	run.Stdin = strings.NewReader("echo green\n")
+	buf, err := run.CombinedOutput()
+	if err != nil {
+		t.Fatalf("built ivy2cpp executable failed: %v\n%s", err, buf)
+	}
+	if strings.TrimSpace(string(buf)) != "green" {
+		t.Fatalf("unexpected executable output %q", buf)
 	}
 }

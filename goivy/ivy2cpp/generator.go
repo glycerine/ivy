@@ -135,7 +135,7 @@ func (g *Generator) emitHeader() error {
 	w.line("#include <initializer_list>")
 	w.line("#include <iostream>")
 	w.line("#include <map>")
-	if g.usesZ3() {
+	if g.usesZ3() || g.Config.Target == "repl" {
 		w.line("#include <sstream>")
 		w.line("#include <stdexcept>")
 	}
@@ -257,7 +257,11 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 		return
 	}
 	emittedDestructorStructs := map[string]bool{}
+	emittedVariantSupers := map[string]bool{}
 	for _, name := range g.Mod.SortOrder {
+		if g.isVariantSuperName(name) {
+			continue
+		}
 		if nt, ok := g.nativeTypeForSort(name); ok {
 			g.emitNativeTypeDecl(w, name, nt)
 			continue
@@ -265,6 +269,10 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 		if _, ok := g.Mod.SortDestructors.Get2(name); ok {
 			g.emitDestructorStruct(w, name)
 			emittedDestructorStructs[name] = true
+			continue
+		}
+		if g.isVariantSubtypeName(name) {
+			g.emitVariantLeafStruct(w, name)
 			continue
 		}
 		s, ok := g.Mod.Sig.Sorts.Get2(name)
@@ -296,6 +304,13 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 			g.emitDestructorStruct(w, name)
 		}
 	}
+	for _, name := range g.Mod.SortOrder {
+		if !g.isVariantSuperName(name) || emittedVariantSupers[name] {
+			continue
+		}
+		g.emitVariantSuperStruct(w, name)
+		emittedVariantSupers[name] = true
+	}
 	w.blank()
 }
 
@@ -309,6 +324,77 @@ func (g *Generator) emitDestructorStruct(w *cppWriter, name string) {
 	}
 	g.emitDestructorStructComparators(w, name, destructors)
 	w.close(";")
+}
+
+func (g *Generator) emitVariantSuperStruct(w *cppWriter, name string) {
+	variants := g.Mod.Variants[name]
+	typeName := varName(name)
+	w.open(fmt.Sprintf("struct %s {", typeName))
+	w.line("int __tag;")
+	for _, v := range variants {
+		vname := varName(sortName(v))
+		if vname == "" {
+			continue
+		}
+		w.linef("%s __%s;", vname, vname)
+	}
+	w.linef("%s() : __tag(-1) {}", typeName)
+	for i, v := range variants {
+		vname := varName(sortName(v))
+		if vname == "" {
+			continue
+		}
+		w.linef("%s(const %s &value) : __tag(%d), __%s(value) {}", typeName, vname, i, vname)
+	}
+	g.emitVariantSuperComparators(w, typeName, variants)
+	w.close(";")
+}
+
+func (g *Generator) emitVariantLeafStruct(w *cppWriter, name string) {
+	typeName := varName(name)
+	w.open(fmt.Sprintf("struct %s {", typeName))
+	w.line("long long __value;")
+	w.linef("%s(long long value = 0) : __value(value) {}", typeName)
+	w.line("operator long long() const { return __value; }")
+	w.open(fmt.Sprintf("bool operator==(const %s &other) const {", typeName))
+	w.line("return __value == other.__value;")
+	w.close("")
+	w.open(fmt.Sprintf("bool operator<(const %s &other) const {", typeName))
+	w.line("return __value < other.__value;")
+	w.close("")
+	w.close(";")
+}
+
+func (g *Generator) emitVariantSuperComparators(w *cppWriter, typeName string, variants []goivy.Sort) {
+	w.open(fmt.Sprintf("bool operator==(const %s &other) const {", typeName))
+	w.open("if (__tag != other.__tag) {")
+	w.line("return false;")
+	w.close("")
+	w.open("switch (__tag) {")
+	for i, v := range variants {
+		vname := varName(sortName(v))
+		if vname == "" {
+			continue
+		}
+		w.linef("case %d: return __%s == other.__%s;", i, vname, vname)
+	}
+	w.line("default: return true;")
+	w.close("")
+	w.close("")
+	w.open(fmt.Sprintf("bool operator<(const %s &other) const {", typeName))
+	w.line("if (__tag < other.__tag) return true;")
+	w.line("if (other.__tag < __tag) return false;")
+	w.open("switch (__tag) {")
+	for i, v := range variants {
+		vname := varName(sortName(v))
+		if vname == "" {
+			continue
+		}
+		w.linef("case %d: return __%s < other.__%s;", i, vname, vname)
+	}
+	w.line("default: return false;")
+	w.close("")
+	w.close("")
 }
 
 func (g *Generator) emitDestructorStructComparators(w *cppWriter, name string, destructors []*goivy.Const) {
@@ -346,6 +432,27 @@ func destructorFieldComparisons(destructors []*goivy.Const, op string) []string 
 	return out
 }
 
+func (g *Generator) isVariantSuperName(name string) bool {
+	if g == nil || g.Mod == nil || len(g.Mod.Variants) == 0 {
+		return false
+	}
+	return len(g.Mod.Variants[name]) > 0
+}
+
+func (g *Generator) isVariantSubtypeName(name string) bool {
+	if g == nil || g.Mod == nil || len(g.Mod.Variants) == 0 || name == "" {
+		return false
+	}
+	for _, variants := range g.Mod.Variants {
+		for _, s := range variants {
+			if sortName(s) == name {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func (g *Generator) emitStateDecls(w *cppWriter) {
 	for _, sym := range g.stateSymbols() {
 		w.linef("%s %s;", cppType(sym.Sort), varName(sym.Name))
@@ -370,6 +477,11 @@ func (g *Generator) stateSymbols() []stateSymbol {
 		}
 		if defNames[name] {
 			return
+		}
+		if g.Mod.DestructorSorts != nil {
+			if _, ok := g.Mod.DestructorSorts[name]; ok {
+				return
+			}
 		}
 		if g.Mod.Sig != nil && g.Mod.Sig.Constructors[name] {
 			return
@@ -512,7 +624,8 @@ func (g *Generator) emitRepl(w *cppWriter) {
 	if mainName == "" {
 		mainName = "main"
 	}
-	w.line("static void ivy2cpp_dispatch(" + g.ClassName + " &ivy, const std::string &action) {")
+	g.emitReplParsers(w)
+	w.line("static void ivy2cpp_dispatch(" + g.ClassName + " &ivy, const std::string &action, std::istream &input) {")
 	w.indent++
 	initActions := g.initialMixinActionNames()
 	for name := range g.Mod.PublicActions.All() {
@@ -521,20 +634,33 @@ func (g *Generator) emitRepl(w *cppWriter) {
 		}
 		username := strings.TrimPrefix(name, "ext:")
 		fn, _ := funName(name)
-		args := g.replDispatchArgs(name)
 		act, ok := g.Mod.Actions.Get2(name)
-		if ok && len(act.GetFormalReturns()) > 1 {
+		if ok {
 			w.open(fmt.Sprintf(`if (action == "%s") {`, username))
-			for _, r := range act.GetFormalReturns() {
-				w.linef("%s %s = %s;", cppType(r.CSort), varName(r.Name), g.cppZeroValue(r.CSort))
-				args = append(args, varName(r.Name))
+			args := g.emitReplDispatchArgs(w, act)
+			returns := act.GetFormalReturns()
+			switch len(returns) {
+			case 0:
+				w.linef("ivy.%s(%s);", fn, strings.Join(args, ", "))
+			case 1:
+				w.linef("%s __ivy_result = ivy.%s(%s);", cppQualifiedType(returns[0].CSort, g.ClassName), fn, strings.Join(args, ", "))
+				g.emitReplWriteOutputs(w, []string{"__ivy_result"})
+			default:
+				var outNames []string
+				for _, r := range returns {
+					rname := varName(r.Name)
+					w.linef("%s %s = %s;", cppQualifiedType(r.CSort, g.ClassName), rname, g.cppZeroValueInScope(r.CSort))
+					args = append(args, rname)
+					outNames = append(outNames, rname)
+				}
+				w.linef("ivy.%s(%s);", fn, strings.Join(args, ", "))
+				g.emitReplWriteOutputs(w, outNames)
 			}
-			w.linef("ivy.%s(%s);", fn, strings.Join(args, ", "))
 			w.line("return;")
 			w.close("")
 			continue
 		}
-		w.linef(`if (action == "%s") { ivy.%s(%s); return; }`, username, fn, strings.Join(args, ", "))
+		w.linef(`if (action == "%s") { ivy.%s(); return; }`, username, fn)
 	}
 	w.line(`std::cerr << "undefined action: " << action << std::endl;`)
 	w.indent--
@@ -546,7 +672,7 @@ func (g *Generator) emitRepl(w *cppWriter) {
 	w.line("(void)argv;")
 	w.line("std::string action;")
 	w.open("while (std::cin >> action) {")
-	w.line("ivy2cpp_dispatch(ivy, action);")
+	w.line("ivy2cpp_dispatch(ivy, action, std::cin);")
 	w.close("")
 	w.line("return 0;")
 	w.close("")
@@ -564,6 +690,7 @@ func (g *Generator) emitTestMain(w *cppWriter) {
 	w.line("gen g;")
 	w.line("ivy2cpp_setup(g);")
 	w.line("ivy2cpp_randomize(g, ivy);")
+	g.emitGeneratorInvocations(w)
 	w.line("return 0;")
 	w.close("")
 }
@@ -577,6 +704,7 @@ func (g *Generator) emitGenMain(w *cppWriter) {
 	w.line("gen g;")
 	w.line("ivy2cpp_setup(g);")
 	w.line("ivy2cpp_randomize(g, ivy);")
+	g.emitGeneratorInvocations(w)
 	w.close("")
 	w.blank()
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
@@ -586,6 +714,23 @@ func (g *Generator) emitGenMain(w *cppWriter) {
 	w.line("ivy2cpp_generate(ivy);")
 	w.line("return 0;")
 	w.close("")
+}
+
+func (g *Generator) emitGeneratorInvocations(w *cppWriter) {
+	w.line("init_gen my_init_gen(ivy);")
+	w.line("my_init_gen.generate(ivy);")
+	initActions := g.initialMixinActionNames()
+	for name := range g.Mod.PublicActions.All() {
+		if initActions[name] {
+			continue
+		}
+		className := g.actionGeneratorClassName(name)
+		genVar := varName(strings.TrimPrefix(name, "ext:")) + "_generator"
+		w.linef("%s %s(ivy);", className, genVar)
+		w.open(fmt.Sprintf("if (%s.generate(ivy)) {", genVar))
+		w.linef("%s.execute(ivy);", genVar)
+		w.close("")
+	}
 }
 
 func (g *Generator) emitConstructDefaultObject(w *cppWriter) {
@@ -599,21 +744,6 @@ func (g *Generator) emitConstructDefaultObject(w *cppWriter) {
 func (g *Generator) constructorDefaultArgs() []string {
 	args := make([]string, 0, len(g.Mod.Params))
 	for _, p := range g.Mod.Params {
-		args = append(args, g.cppZeroValueInScope(p.CSort))
-	}
-	return args
-}
-
-func (g *Generator) replDispatchArgs(name string) []string {
-	if g.Mod == nil || g.Mod.Actions == nil {
-		return nil
-	}
-	act, ok := g.Mod.Actions.Get2(name)
-	if !ok {
-		return nil
-	}
-	var args []string
-	for _, p := range act.GetFormalParams() {
 		args = append(args, g.cppZeroValueInScope(p.CSort))
 	}
 	return args

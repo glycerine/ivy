@@ -219,6 +219,9 @@ func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy
 		g.unsupported(w, "unsupported if %s condition: minimizing/maximizing some is not supported yet", some.Kind)
 		return
 	}
+	if g.emitIfSomeVariantDowncast(w, a, some) {
+		return
+	}
 	found := g.nextTemp("__ivy_some")
 	w.linef("bool %s = false;", found)
 	opened := 0
@@ -256,6 +259,39 @@ func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy
 		g.emitAction(w, elseAct)
 		w.close("")
 	}
+}
+
+func (g *Generator) emitIfSomeVariantDowncast(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) bool {
+	if len(some.Params) != 1 {
+		return false
+	}
+	v := some.Params[0]
+	app, ok := some.Fmla.(*goivy.Apply)
+	if !ok || goivy.ExprName(app.Func) != "*>" || len(app.Terms) != 2 {
+		return false
+	}
+	if goivy.ExprName(app.Terms[1]) != v.Name || g == nil || g.Mod == nil || !g.Mod.IsVariant(app.Terms[0].NodeSort(), v.CSort) {
+		return false
+	}
+	lhs, err := g.emitExpr(app.Terms[0])
+	if err != nil {
+		g.unsupported(w, "unsupported variant downcast receiver: %s", err.Error())
+		return true
+	}
+	idx := g.Mod.VariantIndex(app.Terms[0].NodeSort(), v.CSort)
+	w.open(fmt.Sprintf("if (%s.__tag == %d) {", lhs, idx))
+	w.linef("%s %s = %s.%s;", cppType(v.CSort), varName(v.Name), lhs, variantPayloadField(v.CSort))
+	if thenAct, ok := a.ThenBody.(goivy.Action); ok {
+		g.emitAction(w, thenAct)
+	}
+	if elseAct, ok := a.ElseBody.(goivy.Action); ok {
+		w.close(" else {")
+		g.emitAction(w, elseAct)
+		w.close("")
+		return true
+	}
+	w.close("")
+	return true
 }
 
 func (g *Generator) emitWhile(w *cppWriter, a *goivy.LogicWhileAction) {
