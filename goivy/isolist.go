@@ -74,5 +74,6 @@ func IvyVersionSupported(path string) (above15 bool, err error) {
 	if version == "" {
 		return false, nil
 	}
-	return !VersionLE(version, "1.5"), nil
+	//return !VersionLE(version, "1.5"), nil
+	return !VersionLE(version, "1.6"), nil
 }
