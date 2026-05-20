@@ -34,21 +34,27 @@ func runPythonIvyToCpp(t *testing.T, src string, params ...string) (string, stri
 	t.Helper()
 	root := repoRoot(t)
 	pyivyRoot := filepath.Join(root, "pyivy", "ivy")
-	python := filepath.Join(root, "pyivy", "goivy-venv", "bin", "python3")
-	if _, err := os.Stat(python); err != nil {
-		if _, lookErr := exec.LookPath("python3"); lookErr != nil {
-			t.Skip("python3 not available")
+	runner := filepath.Join(root, "pyivy", "goivy-venv", "bin", "ivy_to_cpp")
+	args := append([]string{}, params...)
+	if _, err := os.Stat(runner); err != nil {
+		python := filepath.Join(root, "pyivy", "goivy-venv", "bin", "python3")
+		if _, statErr := os.Stat(python); statErr != nil {
+			found, lookErr := exec.LookPath("python3")
+			if lookErr != nil {
+				t.Skip("python3 not available")
+			}
+			python = found
 		}
-		python = "python3"
+		runner = python
+		args = append([]string{"-c", "from ivy.ivy_to_cpp import main; main()"}, params...)
 	}
 	dir := t.TempDir()
 	spec := filepath.Join(dir, "oracle.ivy")
 	if err := os.WriteFile(spec, []byte(src), 0o644); err != nil {
 		t.Fatalf("write oracle spec: %v", err)
 	}
-	args := append([]string{"-m", "ivy.ivy_to_cpp"}, params...)
-	args = append(args, spec)
-	cmd := exec.Command(python, args...)
+	args = append(args, filepath.Base(spec))
+	cmd := exec.Command(runner, args...)
 	cmd.Dir = dir
 	pythonPath := pyivyRoot
 	if existing := os.Getenv("PYTHONPATH"); existing != "" {
@@ -56,8 +62,7 @@ func runPythonIvyToCpp(t *testing.T, src string, params ...string) (string, stri
 	}
 	cmd.Env = append(os.Environ(), "IVY_HOME="+pyivyRoot, "PYTHONPATH="+pythonPath, "XTRACE_OFF=1")
 	if out, err := cmd.CombinedOutput(); err != nil {
-		_ = out
-		t.Skipf("python ivy_to_cpp unavailable: %v", err)
+		t.Fatalf("python ivy_to_cpp failed: %v\n%s", err, out)
 	}
 	h, err := os.ReadFile(filepath.Join(dir, "oracle.h"))
 	if err != nil {
@@ -156,6 +161,87 @@ export step
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("go output missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
+	}
+}
+
+func TestPythonOracleGoPortSharedShape(t *testing.T) {
+	src := `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`
+	fixtures := []struct {
+		name   string
+		target string
+		want   []string
+	}{
+		{
+			name:   "repl",
+			target: "repl",
+			want:   []string{"class oracle", "enum color", "__init", "set", "main"},
+		},
+		{
+			name:   "test",
+			target: "test",
+			want:   []string{`#include "z3++.h"`, "class gen", "__from_solver", "randomize", "enum color"},
+		},
+		{
+			name:   "gen",
+			target: "gen",
+			want:   []string{`#include "z3++.h"`, "class gen", "__from_solver", "randomize", "enum color"},
+		},
+	}
+	for _, tc := range fixtures {
+		t.Run(tc.name, func(t *testing.T) {
+			pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target="+tc.target)
+			mod := compileIvySource(t, src)
+			out, err := Generate(mod, Config{Target: tc.target, ClassName: "oracle"})
+			if err != nil {
+				t.Fatalf("Generate: %v", err)
+			}
+			py := normalizeCPP(pyHeader + "\n" + pyImpl)
+			goOut := normalizeCPP(out.Header + "\n" + out.Impl)
+			for _, want := range tc.want {
+				if !strings.Contains(py, want) {
+					t.Fatalf("python output missing %q:\nheader:\n%s\nimpl:\n%s", want, pyHeader, pyImpl)
+				}
+				if !strings.Contains(goOut, want) {
+					t.Fatalf("go output missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+				}
+			}
+		})
+	}
+}
+
+func TestPythonAndGoGeneratedFixturesCompile(t *testing.T) {
+	src := `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`
+	for _, target := range []string{"repl", "test"} {
+		t.Run(target, func(t *testing.T) {
+			pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target="+target)
+			compileGeneratedCPP(t, &Output{
+				Header:    pyHeader,
+				Impl:      pyImpl,
+				BaseName:  "oracle",
+				ClassName: "oracle",
+			})
+
+			mod := compileIvySource(t, src)
+			goOut, err := Generate(mod, Config{Target: target, ClassName: "oracle"})
+			if err != nil {
+				t.Fatalf("Generate: %v", err)
+			}
+			compileGeneratedCPP(t, goOut)
+		})
 	}
 }
 
