@@ -3,6 +3,8 @@ import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts
 import { resetEditorUndoHistory } from './editorService.ts';
 import { logStateRelationTableClear } from './conceptVisibilityService.ts';
 
+export const NEW_MODEL_STARTER_CONTENT = '#lang ivy1.8\n\n';
+
 export function rememberLastOpenFile(app, persist) {
   const name = app._persistedFileName || (app._fileHandle && app._fileHandle.name) || '';
   if (!name) return;
@@ -475,7 +477,7 @@ export async function newModel(app, persist, {
   app.selectedArgNode = null;
   if (app.setIsolates) app.setIsolates([], '');
 
-  app.setEditorContent('');
+  app.setEditorContent(NEW_MODEL_STARTER_CONTENT);
   persist.setFileName('');
   app._updateReopenLastFileButton();
   const tbody = doc && doc.getElementById('state-checkbox-body');

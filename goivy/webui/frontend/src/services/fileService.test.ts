@@ -5,6 +5,8 @@ import {
   ensureFileHandleWritable,
   loadModelFile,
   mergeDiskVersionIntoEditBuffer,
+  newModel,
+  NEW_MODEL_STARTER_CONTENT,
   rememberLastOpenFile,
   restoreFileHandleForCurrentFile,
   saveModel,
@@ -287,6 +289,57 @@ describe('fileService', () => {
     updateReopenLastFileButton(app, { doc: document });
     expect(document.getElementById('file-reopen-last').textContent).toBe('Re-open last file client.ivy');
     expect(document.getElementById('file-reopen-last').style.display).toBe('');
+  });
+
+  it('starts a new model with the Ivy 1.8 language boilerplate', async () => {
+    const controls = new FakeControls();
+    const app: any = {
+      _persistedFileName: 'client.ivy',
+      _persistedFilePath: 'client.ivy',
+      _persistedFileContent: 'old content',
+      _savedFileContent: 'old content',
+      _fileHandle: { name: 'client.ivy' },
+      selectedArgNode: 'state_0',
+      controls,
+      api: {
+        sessionId: 'old-session',
+        createSession: vi.fn(async () => {
+          app.api.sessionId = 'fresh-session';
+        }),
+        connectEvents: vi.fn(),
+      },
+      argGraph: { cy: { elements: vi.fn(() => ({ remove: vi.fn() })) } },
+      conceptGraph: { cy: { elements: vi.fn(() => ({ remove: vi.fn() })) } },
+      _rememberLastOpenFile: vi.fn(),
+      updateSessionDisplay: vi.fn(),
+      handleEvent: vi.fn(),
+      handleConnectionLost: vi.fn(),
+      setIsolates: vi.fn(),
+      setEditorContent: vi.fn((content) => {
+        app._persistedFileContent = content;
+        app._savedFileContent = content;
+      }),
+      _updateReopenLastFileButton: vi.fn(),
+    };
+    const persist = {
+      save: vi.fn(),
+      getSessionIdFromURL: vi.fn(() => ''),
+      setSessionIdInURL: vi.fn(),
+      setFileName: vi.fn(),
+    };
+
+    await newModel(app, persist, { doc: document });
+
+    expect(app.setEditorContent).toHaveBeenCalledWith(NEW_MODEL_STARTER_CONTENT);
+    expect(app._persistedFileName).toBe('');
+    expect(app._persistedFilePath).toBe('');
+    expect(app._persistedFileContent).toBe(NEW_MODEL_STARTER_CONTENT);
+    expect(app._savedFileContent).toBe(NEW_MODEL_STARTER_CONTENT);
+    expect(app.selectedArgNode).toBeNull();
+    expect(controls.lastStatus).toEqual({
+      message: 'New model — load an .ivy file to begin',
+      kind: 'success',
+    });
   });
 
   it('marks downloaded fallback saves as saved', () => {
