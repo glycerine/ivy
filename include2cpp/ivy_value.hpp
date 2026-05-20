@@ -286,11 +286,10 @@ void __ser<bool>(ivy_ser &res, const bool &inp) {
     res.set(inp);
 }
 
-template <>
-void __ser<std::vector<bool>::const_reference>(ivy_ser &res, const std::vector<bool>::const_reference &inp) {
+inline void __ser(ivy_ser &res, std::vector<bool>::const_reference inp) {
     bool thing = inp;
     res.set(thing);
-} 
+}
 
 template <>
 void __ser<__strlit>(ivy_ser &res, const __strlit &inp) {
