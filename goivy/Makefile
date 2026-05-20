@@ -35,6 +35,10 @@ node-golden-2hr: # takes 2 hours to check all isolates.
 	if [ -f log.node.golden.2hr ]; then mv log.node.golden.2hr log.node.golden.2hr.prev; fi
 	go test -v -timeout=0 -count=1 -run Test2hrNodeGoldenOrdLive &> log.node.golden.2hr
 
+golden-all: # check all the .ivy specs we have.
+	if [ -f log.golden.all ]; then mv log.golden.all log.golden.all.prev; fi
+	go test -v -timeout=0 -count=1 -run TestGoldenAll &> log.golden.all
+
 echo:
 	if [ -f log.echo ]; then mv log.echo log.echo.prev; fi
 	go test -v -timeout=0 -count=1 -run TestEchoDotIvy &> log.echo

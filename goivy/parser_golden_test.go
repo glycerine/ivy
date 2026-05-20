@@ -548,6 +548,21 @@ func Test2hrOrdLive(t *testing.T) {
 	GoldenPathCompareIvyCheck(t, false, true, path, nil, "")
 }
 
+func TestGoldenAll(t *testing.T) {
+
+	paths, err := ListAllIvyPathsRecursivelyDeduplicated("../ivy-lang-examples/")
+	panicOn(err)
+	for _, path := range paths {
+		isos, err := ListIsolates(path)
+		panicOn(err)
+		for _, iso := range isos {
+			vv("======= begin TestGoldenAll: path='%v'; isolate='%v'", path, iso)
+			args := []string{fmt.Sprintf("isolate=%v", iso)}
+			GoldenPathCompareIvyCheck(t, false, true, path, args, "")
+		}
+	}
+}
+
 func Test2hrNodeGoldenOrdLive(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	//args := []string{"isolate=cf_live"}
