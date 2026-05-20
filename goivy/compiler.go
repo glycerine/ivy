@@ -1072,25 +1072,11 @@ func (c *Compiler) CompileLF(lf *LabeledFormula) (*LabeledFormula, error) {
 // compileNativeExpr compiles a NativeExpr: compile args, preserve structure.
 func (c *Compiler) compileNativeExpr(n *NativeExpr) (Expr, error) {
 	xtracer.Trace("compiler.CompileNativeExpr ENTER")
-	// NativeExpr compilation: compile children, result has TopSort.
+	// Python compiles every native-expression child through thing(), including
+	// the leading NativeCode node.
 	args := n.Args()
 	compiled := make([]Expr, len(args))
 	for i, a := range args {
-		if i == 0 {
-			switch x := a.(type) {
-			case *NativeCode:
-				compiled[i] = x.Clone(nil).(*NativeCode)
-				continue
-			case *Atom:
-				nc := &NativeCode{Code: x.Rep}
-				if x.Cfg != nil {
-					nc = x.Cfg.NewNativeCode(x.Rep)
-				}
-				nc.SetLineno(x.GetLineno())
-				compiled[i] = nc
-				continue
-			}
-		}
 		r, err := c.Thing(a)
 		if err != nil {
 			return nil, err

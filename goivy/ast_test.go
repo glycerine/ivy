@@ -1258,6 +1258,47 @@ func TestAstInterpretDecl_Defines_V16DoesNotDefineLabel(t *testing.T) {
 	}
 }
 
+func TestAstLabeledDecl_Defines_V16DoesNotDefineLabel(t *testing.T) {
+	cfg := NewAstConfig()
+	SetStringVersionOn(cfg.IuCfg, "1.6")
+	lf := cfg.NewLabeledFormula(cfg.NewAtom("prop_v16"), cfg.NewAtom("true"))
+	decls := []struct {
+		name string
+		decl interface{ Defines() []string }
+	}{
+		{name: "property", decl: cfg.NewPropertyDecl(lf)},
+		{name: "definition", decl: cfg.NewDefinitionDecl(lf)},
+	}
+
+	for _, tc := range decls {
+		if defs := tc.decl.Defines(); len(defs) != 0 {
+			t.Fatalf("%s Defines() v1.6: got %v, want []", tc.name, defs)
+		}
+	}
+}
+
+func TestAstLabeledDecl_Defines_V17DefinesLabel(t *testing.T) {
+	cfg := NewAstConfig()
+	SetStringVersionOn(cfg.IuCfg, "1.7")
+	lf := cfg.NewLabeledFormula(cfg.NewAtom("prop_v17"), cfg.NewAtom("true"))
+	decl := cfg.NewPropertyDecl(lf)
+
+	defs := decl.Defines()
+	if len(defs) != 1 || defs[0] != "prop_v17" {
+		t.Fatalf("PropertyDecl.Defines() v1.7: got %v, want [prop_v17]", defs)
+	}
+}
+
+func TestAstInitDecl_DefinesNoLabels(t *testing.T) {
+	cfg := NewAstConfig()
+	lf := cfg.NewLabeledFormula(cfg.NewAtom("init_label"), cfg.NewAtom("true"))
+	decl := cfg.NewInitDecl(lf)
+
+	if defs := decl.Defines(); len(defs) != 0 {
+		t.Fatalf("InitDecl.Defines(): got %v, want []", defs)
+	}
+}
+
 func TestAstDefinition_Defines_AppLhs(t *testing.T) {
 	cfg := NewAstConfig()
 	// Definition with App LHS (via nodeRep generalization)

@@ -356,14 +356,7 @@ func parser16CreateObject(cfg *AstConfig, top *ivyAccum, name *Atom, objectargs 
 	var prefargs []Node
 	for idx, pr := range objectargs {
 		vname := fmt.Sprintf("V%d", idx)
-		var sort string
-		if a, ok := pr.(*Atom); ok && a.ASort != nil {
-			if sym, ok := a.ASort.(*Symbol); ok {
-				sort = sym.Rep
-			} else {
-				sort = fmt.Sprint(a.ASort)
-			}
-		}
+		sort := parser16ObjectArgSort(pr)
 		prefargs = append(prefargs, cfg.NewVariable(vname, sort))
 	}
 
@@ -393,6 +386,22 @@ func parser16CreateObject(cfg *AstConfig, top *ivyAccum, name *Atom, objectargs 
 	instMod(top, module, pref, map[string]string{}, vsubst, "", lineno)
 
 	xtracer.Trace("parser.create_object EXIT name=%s", name.Rep)
+}
+
+func parser16ObjectArgSort(pr Node) string {
+	switch a := pr.(type) {
+	case *Variable:
+		return a.VSort
+	case *Atom:
+		if a.ASort != nil {
+			return parser16AtypeToString(a.ASort)
+		}
+	case *App:
+		if a.ASort != nil {
+			return parser16AtypeToString(a.ASort)
+		}
+	}
+	return ""
 }
 
 // parser16TokLineno creates a Location from a TokenInfo, using the normalized filename
@@ -3340,32 +3349,22 @@ parser16default:
 //line parser_grammar_v16.y:1997
 		{
 			xtracer.Trace("parser.p_fmla_fmla_and_fmla ENTER (fmla)")
-			if existing, ok := parser16Dollar[1].node.(*And); ok {
-				existing.Terms = append(existing.Terms, parser16Dollar[3].node)
-				parser16VAL.node = existing
-			} else {
-				n := parser16Acfg(parser16lex).NewAnd(parser16Dollar[1].node, parser16Dollar[3].node)
-				n.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
-				parser16VAL.node = n
-			}
+			n := parser16Acfg(parser16lex).NewAnd(parser16Dollar[1].node, parser16Dollar[3].node)
+			n.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
+			parser16VAL.node = n
 		}
 	case 104:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2009
+//line parser_grammar_v16.y:2004
 		{
 			xtracer.Trace("parser.p_fmla_fmla_or_fmla ENTER (fmla)")
-			if existing, ok := parser16Dollar[1].node.(*Or); ok {
-				existing.Terms = append(existing.Terms, parser16Dollar[3].node)
-				parser16VAL.node = existing
-			} else {
-				n := parser16Acfg(parser16lex).NewOr(parser16Dollar[1].node, parser16Dollar[3].node)
-				n.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
-				parser16VAL.node = n
-			}
+			n := parser16Acfg(parser16lex).NewOr(parser16Dollar[1].node, parser16Dollar[3].node)
+			n.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
+			parser16VAL.node = n
 		}
 	case 105:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2021
+//line parser_grammar_v16.y:2011
 		{
 			xtracer.Trace("parser.p_fmla_fmla_arrow_fmla ENTER (fmla)")
 			n := parser16Acfg(parser16lex).NewImplies(parser16Dollar[1].node, parser16Dollar[3].node)
@@ -3712,7 +3711,7 @@ parser16default:
 		{
 			xtracer.Trace("parser.p_defnrhs_nativequote ENTER (defnrhs)")
 			text, bqs := parser16ParseNativequote(parser16Acfg(parser16lex), parser16Dollar[1].tok.Val, parser16lex.(*parser16LexAdapter))
-			elems := append([]Node{parser16Acfg(parser16lex).NewAtom(text)}, bqs...)
+			elems := append([]Node{parser16Acfg(parser16lex).NewNativeCode(text)}, bqs...)
 			ne := parser16Acfg(parser16lex).NewNativeExpr(elems)
 			ne.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 			parser16VAL.node = ne
@@ -5019,7 +5018,7 @@ parser16default:
 		{
 			xtracer.Trace("parser.p_oper_nativequote ENTER (oper)")
 			text, bqs := parser16ParseNativequote(parser16Acfg(parser16lex), parser16Dollar[1].tok.Val, parser16lex.(*parser16LexAdapter))
-			elems := append([]Node{parser16Acfg(parser16lex).NewAtom(text)}, bqs...)
+			elems := append([]Node{parser16Acfg(parser16lex).NewNativeCode(text)}, bqs...)
 			nt := parser16Acfg(parser16lex).NewNativeType(elems...)
 			nt.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 			parser16VAL.node = nt

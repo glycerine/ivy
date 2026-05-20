@@ -141,6 +141,18 @@ func TestParseV16CorpusSmoke(t *testing.T) {
 	}
 }
 
+func TestListIsolatesV16ParameterizedObjectExtract(t *testing.T) {
+	path := filepath.Join("..", "ivy-lang-examples", "doc", "examples", "interference2.ivy")
+
+	isolates, err := ListIsolates(path)
+	if err != nil {
+		t.Fatalf("ListIsolates(%s): %v", path, err)
+	}
+	if len(isolates) != 1 || isolates[0] != "iso_foo" {
+		t.Fatalf("ListIsolates(%s) = %v, want [iso_foo]", path, isolates)
+	}
+}
+
 func TestReadModuleFromStringInheritsV16Version(t *testing.T) {
 	requireParserTraceEnabled(t)
 
@@ -193,5 +205,123 @@ property forall B. (B >= n & p(B)-> p(B))`
 	}
 	if andReduce > arrowReduce {
 		t.Fatalf("Ivy 1.6 should reduce conjunction before arrow; trace:\n%s", trace)
+	}
+}
+
+func TestParseV16ConjunctionPreservesPythonNesting(t *testing.T) {
+	src := `#lang ivy1.6
+type t
+function s(X:t) : bool
+function m(X:t,Y:t) : bool
+conjecture s(K) & m(K,L) & L ~= K -> s(L)`
+
+	result, err := Parse(src, Version{1, 6}, WithFilename("v16_and_nesting.ivy"))
+	if err != nil {
+		t.Fatalf("Parse ivy1.6 conjunction: %v", err)
+	}
+
+	impl, ok := v16ConjectureFormula(t, result).(*Implies)
+	if !ok {
+		t.Fatalf("conjecture formula = %T, want *Implies", v16ConjectureFormula(t, result))
+	}
+	outer, ok := impl.T1.(*And)
+	if !ok {
+		t.Fatalf("implication antecedent = %T, want *And", impl.T1)
+	}
+	if len(outer.Terms) != 2 {
+		t.Fatalf("outer And has %d terms, want 2", len(outer.Terms))
+	}
+	inner, ok := outer.Terms[0].(*And)
+	if !ok {
+		t.Fatalf("outer And first term = %T, want nested *And", outer.Terms[0])
+	}
+	if len(inner.Terms) != 2 {
+		t.Fatalf("inner And has %d terms, want 2", len(inner.Terms))
+	}
+}
+
+func TestParseV16DisjunctionPreservesPythonNesting(t *testing.T) {
+	src := `#lang ivy1.6
+type t
+function s(X:t) : bool
+function m(X:t,Y:t) : bool
+conjecture s(K) | m(K,L) | L = K`
+
+	result, err := Parse(src, Version{1, 6}, WithFilename("v16_or_nesting.ivy"))
+	if err != nil {
+		t.Fatalf("Parse ivy1.6 disjunction: %v", err)
+	}
+
+	outer, ok := v16ConjectureFormula(t, result).(*Or)
+	if !ok {
+		t.Fatalf("conjecture formula = %T, want *Or", v16ConjectureFormula(t, result))
+	}
+	if len(outer.Terms) != 2 {
+		t.Fatalf("outer Or has %d terms, want 2", len(outer.Terms))
+	}
+	inner, ok := outer.Terms[0].(*Or)
+	if !ok {
+		t.Fatalf("outer Or first term = %T, want nested *Or", outer.Terms[0])
+	}
+	if len(inner.Terms) != 2 {
+		t.Fatalf("inner Or has %d terms, want 2", len(inner.Terms))
+	}
+}
+
+func v16ConjectureFormula(t *testing.T, result *ParseResult) Node {
+	t.Helper()
+	for _, decl := range result.Decls {
+		conj, ok := decl.(*ConjectureDecl)
+		if !ok {
+			continue
+		}
+		if len(conj.DeclArgs) != 1 {
+			t.Fatalf("conjecture has %d args, want 1", len(conj.DeclArgs))
+		}
+		lf, ok := conj.DeclArgs[0].(*LabeledFormula)
+		if !ok {
+			t.Fatalf("conjecture arg = %T, want *LabeledFormula", conj.DeclArgs[0])
+		}
+		return lf.Formula
+	}
+	t.Fatal("missing conjecture declaration")
+	return nil
+}
+
+func TestParseV16NativeQuoteTypeUsesNativeCode(t *testing.T) {
+	src := `#lang ivy1.6
+type t
+interpret t -> <<< std::vector<` + "`t`" + `> >>>`
+
+	result, err := Parse(src, Version{1, 6}, WithFilename("v16_nativequote.ivy"))
+	if err != nil {
+		t.Fatalf("Parse ivy1.6 native quote: %v", err)
+	}
+
+	var nativeType *NativeType
+	var walk func(Node)
+	walk = func(n Node) {
+		if n == nil || nativeType != nil {
+			return
+		}
+		if nt, ok := n.(*NativeType); ok {
+			nativeType = nt
+			return
+		}
+		for _, arg := range n.Args() {
+			walk(arg)
+		}
+	}
+	for _, decl := range result.Decls {
+		walk(decl)
+	}
+	if nativeType == nil {
+		t.Fatal("expected parsed interpret declaration to contain NativeType")
+	}
+	if len(nativeType.Elems) == 0 {
+		t.Fatal("expected NativeType to contain native code element")
+	}
+	if _, ok := nativeType.Elems[0].(*NativeCode); !ok {
+		t.Fatalf("NativeType first element = %T, want *NativeCode", nativeType.Elems[0])
 	}
 }

@@ -815,6 +815,9 @@ func (d *AxiomDecl) Clone(args []Node) Node {
 	return &AxiomDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *AxiomDecl) String() string { return "axiom" }
+func (d *AxiomDecl) Defines() []string {
+	return labeledDeclDefines(&d.DeclBase)
+}
 
 // PropertyDecl declares a property (provable axiom).
 type PropertyDecl struct {
@@ -831,6 +834,9 @@ func (d *PropertyDecl) Clone(args []Node) Node {
 	return &PropertyDecl{AxiomDecl: *d.AxiomDecl.Clone(args).(*AxiomDecl)}
 }
 func (d *PropertyDecl) String() string { return "property" }
+func (d *PropertyDecl) Defines() []string {
+	return labeledDeclDefines(&d.DeclBase)
+}
 
 // ConjectureDecl declares a conjecture.
 type ConjectureDecl struct {
@@ -847,6 +853,31 @@ func (d *ConjectureDecl) Clone(args []Node) Node {
 	return &ConjectureDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ConjectureDecl) String() string { return "conjecture" }
+func (d *ConjectureDecl) Defines() []string {
+	return labeledDeclDefines(&d.DeclBase)
+}
+
+func labeledDeclDefines(d *DeclBase) []string {
+	defineLabel := true
+	if cfg := d.GetAstConfig(); cfg != nil && cfg.IuCfg != nil {
+		defineLabel = !VersionLE(cfg.IuCfg.GetStringVersion(), "1.6")
+	}
+	if !defineLabel {
+		return nil
+	}
+
+	var names []string
+	for _, arg := range d.DeclArgs {
+		lf, ok := arg.(*LabeledFormula)
+		if !ok || lf.Label == nil {
+			continue
+		}
+		if rep := NodeRep(lf.Label); rep != "" {
+			names = append(names, rep)
+		}
+	}
+	return names
+}
 
 // ProofDecl declares a proof.
 type ProofDecl struct {
@@ -1120,6 +1151,9 @@ func (d *DefinitionDecl) Clone(args []Node) Node {
 	return c
 }
 func (d *DefinitionDecl) String() string { return "definition" }
+func (d *DefinitionDecl) Defines() []string {
+	return labeledDeclDefines(&d.DeclBase)
+}
 
 // ProgressDecl declares a progress property.
 type ProgressDecl struct {
@@ -1200,6 +1234,9 @@ func (d *InitDecl) Clone(args []Node) Node {
 	return &InitDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *InitDecl) String() string { return "init" }
+func (d *InitDecl) Defines() []string {
+	return nil
+}
 
 // StateDecl declares state variables.
 type StateDecl struct {

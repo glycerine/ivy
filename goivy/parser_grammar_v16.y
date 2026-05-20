@@ -365,14 +365,7 @@ func parser16CreateObject(cfg *AstConfig, top *ivyAccum, name *Atom, objectargs 
 	var prefargs []Node
 	for idx, pr := range objectargs {
 		vname := fmt.Sprintf("V%d", idx)
-		var sort string
-		if a, ok := pr.(*Atom); ok && a.ASort != nil {
-			if sym, ok := a.ASort.(*Symbol); ok {
-				sort = sym.Rep
-			} else {
-				sort = fmt.Sprint(a.ASort)
-			}
-		}
+		sort := parser16ObjectArgSort(pr)
 		prefargs = append(prefargs, cfg.NewVariable(vname, sort))
 	}
 
@@ -402,6 +395,22 @@ func parser16CreateObject(cfg *AstConfig, top *ivyAccum, name *Atom, objectargs 
 	instMod(top, module, pref, map[string]string{}, vsubst, "", lineno)
 
 	xtracer.Trace("parser.create_object EXIT name=%s", name.Rep)
+}
+
+func parser16ObjectArgSort(pr Node) string {
+	switch a := pr.(type) {
+	case *Variable:
+		return a.VSort
+	case *Atom:
+		if a.ASort != nil {
+			return parser16AtypeToString(a.ASort)
+		}
+	case *App:
+		if a.ASort != nil {
+			return parser16AtypeToString(a.ASort)
+		}
+	}
+	return ""
 }
 
 // parser16TokLineno creates a Location from a TokenInfo, using the normalized filename
@@ -1997,26 +2006,16 @@ fmla:
     | fmla PARSER16_TOK_AND fmla
     {
         xtracer.Trace("parser.p_fmla_fmla_and_fmla ENTER (fmla)")
-        if existing, ok := $1.(*And); ok {
-            existing.Terms = append(existing.Terms, $3)
-            $$ = existing
-        } else {
-            n := parser16Acfg(parser16lex).NewAnd($1, $3)
-            n.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $2))
-            $$ = n
-        }
+        n := parser16Acfg(parser16lex).NewAnd($1, $3)
+        n.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $2))
+        $$ = n
     }
     | fmla PARSER16_TOK_OR fmla
     {
         xtracer.Trace("parser.p_fmla_fmla_or_fmla ENTER (fmla)")
-        if existing, ok := $1.(*Or); ok {
-            existing.Terms = append(existing.Terms, $3)
-            $$ = existing
-        } else {
-            n := parser16Acfg(parser16lex).NewOr($1, $3)
-            n.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $2))
-            $$ = n
-        }
+        n := parser16Acfg(parser16lex).NewOr($1, $3)
+        n.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $2))
+        $$ = n
     }
     | fmla PARSER16_TOK_ARROW fmla
     {
@@ -2353,7 +2352,7 @@ defnrhs:
     {
         xtracer.Trace("parser.p_defnrhs_nativequote ENTER (defnrhs)")
         text, bqs := parser16ParseNativequote(parser16Acfg(parser16lex), $1.Val, parser16lex.(*parser16LexAdapter))
-        elems := append([]Node{parser16Acfg(parser16lex).NewAtom(text)}, bqs...)
+        elems := append([]Node{parser16Acfg(parser16lex).NewNativeCode(text)}, bqs...)
         ne := parser16Acfg(parser16lex).NewNativeExpr(elems)
         ne.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $1))
         $$ = ne
@@ -3536,7 +3535,7 @@ oper:
     {
         xtracer.Trace("parser.p_oper_nativequote ENTER (oper)")
         text, bqs := parser16ParseNativequote(parser16Acfg(parser16lex), $1.Val, parser16lex.(*parser16LexAdapter))
-        elems := append([]Node{parser16Acfg(parser16lex).NewAtom(text)}, bqs...)
+        elems := append([]Node{parser16Acfg(parser16lex).NewNativeCode(text)}, bqs...)
         nt := parser16Acfg(parser16lex).NewNativeType(elems...)
         nt.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $1))
         $$ = nt
