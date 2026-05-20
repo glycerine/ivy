@@ -59,7 +59,7 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 	case *goivy.LogicCrashAction:
 		w.line("std::abort();")
 	case *goivy.ReturnAction:
-		w.line("return;")
+		g.emitReturn(w)
 	case *goivy.IgnoreAction:
 		return
 	case *goivy.LogicAssignFieldAction:
@@ -71,6 +71,14 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 	default:
 		g.unsupported(w, "unsupported action %T: %s", act, act.String())
 	}
+}
+
+func (g *Generator) emitReturn(w *cppWriter) {
+	if g != nil && len(g.currentReturns) == 1 {
+		w.linef("return %s;", varName(g.currentReturns[0].Name))
+		return
+	}
+	w.line("return;")
 }
 
 func (g *Generator) emitHavoc(w *cppWriter, a *goivy.LogicHavocAction) {

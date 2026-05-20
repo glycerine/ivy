@@ -37,8 +37,9 @@ type Generator struct {
 	impl   cppWriter
 	tempID int
 
-	exprAliases map[string]goivy.Expr
-	errs        []error
+	exprAliases    map[string]goivy.Expr
+	currentReturns []*goivy.Const
+	errs           []error
 }
 
 func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
@@ -466,10 +467,13 @@ func (g *Generator) emitMethods(w *cppWriter) {
 		}
 		w.open(g.methodSignature(name, act, true) + " {")
 		returns := act.GetFormalReturns()
+		prevReturns := g.currentReturns
+		g.currentReturns = returns
 		if len(returns) == 1 && !formalListContains(act.GetFormalParams(), returns[0]) {
 			w.linef("%s %s = %s;", cppType(returns[0].CSort), varName(returns[0].Name), g.cppZeroValue(returns[0].CSort))
 		}
 		g.emitAction(w, act)
+		g.currentReturns = prevReturns
 		if len(returns) == 1 {
 			w.linef("return %s;", varName(returns[0].Name))
 		}
@@ -524,11 +528,7 @@ func (g *Generator) emitRepl(w *cppWriter) {
 	w.line("}")
 	w.blank()
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
-	if args := g.constructorDefaultArgs(); len(args) == 0 {
-		w.linef("%s ivy;", g.ClassName)
-	} else {
-		w.linef("%s ivy(%s);", g.ClassName, strings.Join(args, ", "))
-	}
+	g.emitConstructDefaultObject(w)
 	w.line("(void)argc;")
 	w.line("(void)argv;")
 	w.line("std::string action;")
@@ -574,7 +574,7 @@ func (g *Generator) emitConstructDefaultObject(w *cppWriter) {
 	if args := g.constructorDefaultArgs(); len(args) == 0 {
 		w.linef("%s ivy;", g.ClassName)
 	} else {
-		w.linef("%s ivy(%s);", g.ClassName, strings.Join(args, ", "))
+		w.linef("%s ivy{%s};", g.ClassName, strings.Join(args, ", "))
 	}
 }
 

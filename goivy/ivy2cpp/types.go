@@ -112,6 +112,9 @@ func cppZeroValueInScope(s goivy.Sort, className string) string {
 
 func (g *Generator) cppZeroValue(s goivy.Sort) string {
 	if g != nil {
+		if typeName, ok := g.nativeTypeName(s, ""); ok {
+			return typeName + "()"
+		}
 		if name, ok := g.destructorStructName(s); ok {
 			return varName(name) + "()"
 		}
@@ -121,6 +124,9 @@ func (g *Generator) cppZeroValue(s goivy.Sort) string {
 
 func (g *Generator) cppZeroValueInScope(s goivy.Sort) string {
 	if g != nil {
+		if typeName, ok := g.nativeTypeName(s, g.ClassName); ok {
+			return typeName + "()"
+		}
 		if name, ok := g.destructorStructName(s); ok {
 			typeName := varName(name)
 			if g.ClassName != "" {
@@ -134,6 +140,24 @@ func (g *Generator) cppZeroValueInScope(s goivy.Sort) string {
 		className = g.ClassName
 	}
 	return cppZeroValueInScope(s, className)
+}
+
+func (g *Generator) nativeTypeName(s goivy.Sort, className string) (string, bool) {
+	if g == nil || g.Mod == nil {
+		return "", false
+	}
+	name := sortName(s)
+	if name == "" {
+		return "", false
+	}
+	if _, ok := g.nativeTypeForSort(name); !ok {
+		return "", false
+	}
+	typeName := varName(name)
+	if className != "" {
+		typeName = className + "::" + typeName
+	}
+	return typeName, true
 }
 
 func (g *Generator) destructorStructName(s goivy.Sort) (string, bool) {

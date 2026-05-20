@@ -659,6 +659,16 @@ func TestReturnAndIgnoreActionsCompileInVoidMethod(t *testing.T) {
 	compileGeneratedCPP(t, out)
 }
 
+func TestReturnActionInSingleReturnMethodEmitsValueReturn(t *testing.T) {
+	color := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	ret := goivy.NewConst("out", color)
+	var w cppWriter
+	(&Generator{currentReturns: []*goivy.Const{ret}}).emitAction(&w, goivy.NewReturnAction())
+	if got := normalizeCPP(w.String()); got != "return out;" {
+		t.Fatalf("return marker code=%q", got)
+	}
+}
+
 func TestEmitAfterInitEnumLoop(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -1012,7 +1022,7 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, "paramrepl ivy(paramrepl::red);") {
+	if !strings.Contains(out.Impl, "paramrepl ivy{paramrepl::red};") {
 		t.Fatalf("missing parameterized repl construction:\n%s", out.Impl)
 	}
 	if strings.Contains(out.Impl, "ivy.__init();") {
@@ -1167,6 +1177,31 @@ action step = {
 	}
 	if !strings.Contains(out.Header, "typedef std::vector<idx> vec;") {
 		t.Fatalf("missing rendered native vector type:\n%s", out.Header)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestNativeClassParameterDefaultCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+type vec
+interpret vec -> <<< std::vector<`+"`idx`"+`> >>>
+parameter initial : vec
+individual xs : vec
+after init {
+    xs := initial
+}
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "nativeparam"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "nativeparam ivy{nativeparam::vec()};") {
+		t.Fatalf("native parameter default should value-initialize the class type:\n%s", out.Impl)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
@@ -1357,7 +1392,7 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"static void ivy2cpp_generate(genrunner &ivy)", "genrunner ivy(false);", "ivy2cpp_generate(ivy);"} {
+	for _, want := range []string{"static void ivy2cpp_generate(genrunner &ivy)", "genrunner ivy{false};", "ivy2cpp_generate(ivy);"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
