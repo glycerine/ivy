@@ -1,4 +1,4 @@
-//go:build !xtracer_off && !js
+//go:build !xtrace_off && !js
 
 package xtracer
 

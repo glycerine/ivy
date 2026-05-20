@@ -140,7 +140,7 @@ type Compiler struct {
 // on the canon= data to show exactly which sorts/symbols/declarations differ.
 //
 // IMPORTANT: Only call inside `if xtracer.Enabled { c.SigCheck(...) }` blocks.
-// When -tags xtracer_off is set, Enabled is const false, so the compiler
+// When -tags xtrace_off is set, Enabled is const false, so the compiler
 // eliminates the entire block — Canon() string building and Merkle hashing
 // have zero production cost.
 func (c *Compiler) SigCheck(label string) {

@@ -162,7 +162,7 @@ webui/static/wasm/include-tree.json: webui/scripts/build-include-tree.mjs $(shel
 	chmod 0644 webui/static/wasm/include-tree.json
 
 webui/static/wasm/goivy-webengine.wasm: FORCE
-	GOOS=js GOARCH=wasm go build -tags xtracer_off -o webui/static/wasm/goivy-webengine.wasm ./cmd/goivy-webengine-wasm
+	GOOS=js GOARCH=wasm go build -tags xtrace_off -o webui/static/wasm/goivy-webengine.wasm ./cmd/goivy-webengine-wasm
 	chmod 0644 webui/static/wasm/goivy-webengine.wasm
 
 webui-wasm-engine: webui/static/wasm/goivy-webengine.wasm webui/static/wasm/z3-471-api.wasm webui/static/wasm/z3-471-api.js webui/static/wasm/wasm_exec-go1.25.6.js webui/static/wasm/include-tree.json z3vendor/z3/wasm.build/z3-api.exnref.wasm
@@ -174,15 +174,15 @@ test-z3-wasm-wazero: z3-wasm-api-wazero
 FORCE:
 
 webui/static/wasm/goivy-check-js.wasm: FORCE
-	GOOS=js GOARCH=wasm go build -a -tags xtracer_off -o webui/static/wasm/goivy-check-js.wasm ./cmd/goivy_check_jswasm
+	GOOS=js GOARCH=wasm go build -a -tags xtrace_off -o webui/static/wasm/goivy-check-js.wasm ./cmd/goivy_check_jswasm
 
 goivy-check-js-wasm: webui/static/wasm/goivy-check-js.wasm
 
 build: # grammer_gen
-	go install  -tags xtracer_off ./cmd/ivyweb
-	go install  -tags xtracer_off ./cmd/goivy_check
-	go install  -tags xtracer_off ./cmd/whatwasm
-	go install  -tags xtracer_off ./cmd/ivy2cpp
+	go install  -tags xtrace_off ./cmd/ivyweb
+	go install  -tags xtrace_off ./cmd/goivy_check
+	go install  -tags xtrace_off ./cmd/whatwasm
+	go install  -tags xtrace_off ./cmd/ivy2cpp
 
 grammar_gen: # be sure .y -> .go up to date
 	goyacc -o parser_grammar_v17.go -p parser17 parser_grammar_v17.y
@@ -222,7 +222,7 @@ dylib_test: z3ivy
 	DYLD_LIBRARY_PATH=$(CURDIR)/z3ivy/lib:$$DYLD_LIBRARY_PATH go test ./... -count=1 # -tags web
 
 test:
-	XTRACE_OFF=1 go test ./... -count=1 -tags xtracer_off
+	XTRACE_OFF=1 go test ./... -count=1 -tags xtrace_off
 
 WEBUI_NODE_PLATFORM := $(shell node -e 'const h = process.report && process.report.getReport ? process.report.getReport().header : {}; let libc = ""; if (process.platform === "linux") libc = h.glibcVersionRuntime ? "gnu" : "musl"; console.log([process.platform, process.arch, libc].filter(Boolean).join("-"));' 2>/dev/null || printf '%s-%s\n' "$$(uname -s)" "$$(uname -m)")
 WEBUI_NODE_DEPS_STAMP := webui/node_modules/.platform-deps-$(WEBUI_NODE_PLATFORM).stamp
@@ -267,7 +267,7 @@ dylib_test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(CURDIR)/z3ivy/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
 
 test-web: $(WEBUI_NODE_DEPS_STAMP)
-	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtracer_off,web
+	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
 	cd webui && npm --prefix frontend run test
 
 unimerge-audit:
@@ -339,7 +339,7 @@ prod: webui-wasm-engine
 	cd webui && npm --prefix frontend run typecheck # type check the frontend/ dir
 	cd webui/frontend && npm run build
 	cd webui && npm run build:webui     # Vite bundle out: webui/static/dist/ivyweb.js
-	go install -tags xtracer_off ./cmd/ivyweb
+	go install -tags xtrace_off ./cmd/ivyweb
 	ivyweb
 
 .PHONY: all build test test-conform test-js test-js-watch test-browser test-control-browser test-web test-vue build-vue vitest-setup control-browser-setup webui-node-deps webui-wasm-graphviz unimerge-audit unimerge-audit-strict clean z3ivy z3-build z3-wasm-exports z3-wasm-lib-wasm-eh z3-wasm-api-link z3-wasm-api z3-wasm-api-wazero vendor-go-wasm-exec-js goivy-check-js-wasm test-z3-wasm-wazero test-z3-wasm-js test-z3-wasm-browser tr trt vs golden setup this bootstrap goldweb nodegold FORCE prod
