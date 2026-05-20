@@ -88,6 +88,13 @@ func compileGeneratedCPP(t *testing.T, out *Output) {
 	}
 }
 
+func assertNoUnsupportedCPP(t *testing.T, out *Output) {
+	t.Helper()
+	if strings.Contains(out.Header, "unsupported") || strings.Contains(out.Impl, "unsupported") {
+		t.Fatalf("generated output contains unsupported marker:\nheader:\n%s\nimpl:\n%s", out.Header, out.Impl)
+	}
+}
+
 func repoRoot(t *testing.T) string {
 	t.Helper()
 	wd, err := os.Getwd()
@@ -136,6 +143,83 @@ export step
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("go output missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
+	}
+}
+
+func TestGeneratedOutputContainsNoUnsupportedComments(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "clean"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	assertNoUnsupportedCPP(t, out)
+}
+
+func TestCompileSmokeFixturesTable(t *testing.T) {
+	fixtures := []struct {
+		name   string
+		target string
+		src    string
+		want   []string
+	}{
+		{
+			name:   "empty",
+			target: "impl",
+			src: `#lang ivy1.7
+action step = {
+}
+`,
+			want: []string{"class empty", "void step()"},
+		},
+		{
+			name:   "enum relation init",
+			target: "impl",
+			src: `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+after init {
+    marked(C) := false
+}
+`,
+			want: []string{"enum color", "std::map<color,bool> marked;", "marked[C] = false;"},
+		},
+		{
+			name:   "small repl",
+			target: "repl",
+			src: `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`,
+			want: []string{`if (action == "set")`, "small_repl ivy;"},
+		},
+	}
+	for _, tc := range fixtures {
+		t.Run(tc.name, func(t *testing.T) {
+			mod := compileIvySource(t, tc.src)
+			className := strings.ReplaceAll(tc.name, " ", "_")
+			out, err := Generate(mod, Config{Target: tc.target, ClassName: className})
+			if err != nil {
+				t.Fatalf("Generate: %v", err)
+			}
+			assertNoUnsupportedCPP(t, out)
+			for _, want := range tc.want {
+				if !strings.Contains(out.Header+out.Impl, want) {
+					t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+				}
+			}
+			compileGeneratedCPP(t, out)
+		})
 	}
 }
 
@@ -214,6 +298,90 @@ action step = {
 	if !strings.Contains(out.Header, "std::map<std::tuple<node,node>,bool> link;") {
 		t.Fatalf("missing relation declaration:\n%s", out.Header)
 	}
+}
+
+func TestImplOneConstantFunctionRelationEnumRange(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type idx = {0..2}
+individual saved : color
+function owner(I:idx) : color
+relation marked(C:color)
+action step = {
+    saved := owner(0);
+    marked(saved) := true
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "mixed"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"enum color { red, green };",
+		"typedef long long idx;",
+		"color saved;",
+		"std::map<idx,color> owner;",
+		"std::map<color,bool> marked;",
+		"saved = owner[0];",
+		"marked[saved] = true;",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestImplDerivedDefinitionEmitsMethodNotState(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+derived is_red(C:color) = C = red
+action step = {
+    assert is_red(red)
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "deriveds"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"bool is_red(color C);", "bool deriveds::is_red(deriveds::color C)", "return (C == red);", "ivy_assert(is_red(red)"} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if strings.Contains(out.Header, "std::map<color,bool> is_red;") {
+		t.Fatalf("derived definition should not be emitted as mutable state:\n%s", out.Header)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestImplBeforeAfterMixinShape(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual flag : bool
+action step = {
+}
+before step {
+    flag := true
+}
+after step {
+    flag := false
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "mixcase"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"flag = true;", "flag = false;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
 }
 
 func TestDestructorStructDeclaration(t *testing.T) {
@@ -307,6 +475,41 @@ func TestGenerateUnsupportedActionReturnsError(t *testing.T) {
 	_, err := Generate(mod, Config{ClassName: "unsupported"})
 	if err == nil || !strings.Contains(err.Error(), "unsupported action") || !strings.Contains(err.Error(), "*goivy.LogicThunkAction") {
 		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestAllKnownUnsupportedActionsReturnErrors(t *testing.T) {
+	cases := []struct {
+		name string
+		act  goivy.Action
+		want string
+	}{
+		{
+			name: "thunk",
+			act:  goivy.NewThunkAction(goivy.NewConst("x", goivy.TopS)),
+			want: "*goivy.LogicThunkAction",
+		},
+		{
+			name: "instantiate",
+			act:  goivy.NewInstantiateAction(goivy.NewConst("schema", goivy.TopS)),
+			want: "*goivy.LogicInstantiateAction",
+		},
+		{
+			name: "bad sequence child",
+			act:  goivy.NewSequence(goivy.NewConst("not_action", goivy.TopS)),
+			want: "unsupported sequence child",
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			mod := goivy.New()
+			mod.Name = tc.name
+			mod.Actions.Set("step", tc.act)
+			_, err := Generate(mod, Config{ClassName: "bad"})
+			if err == nil || !strings.Contains(err.Error(), tc.want) {
+				t.Fatalf("unexpected error: %v", err)
+			}
+		})
 	}
 }
 

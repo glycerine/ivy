@@ -28,6 +28,13 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 		if n.Name != "" && (n.Name[0] >= '0' && n.Name[0] <= '9') {
 			return n.Name, nil
 		}
+		if g.isDefinitionName(n.Name) {
+			fn, err := funName(n.Name)
+			if err != nil {
+				return "", err
+			}
+			return fn + "()", nil
+		}
 		return varName(n.Name), nil
 	case *goivy.LogicVariable:
 		return varName(n.Name), nil
@@ -151,6 +158,9 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 			return "", err
 		}
 		args[i] = s
+	}
+	if g.isDefinitionName(name) {
+		return fn + "(" + strings.Join(args, ", ") + ")", nil
 	}
 	if len(args) == 1 {
 		return fn + "[" + args[0] + "]", nil

@@ -149,6 +149,7 @@ func (g *Generator) emitHeader() error {
 	if err := g.emitNativeBlocks(w, "member"); err != nil {
 		return err
 	}
+	g.emitDefinitionDecls(w)
 	g.emitMethodDecls(w)
 	w.indent--
 	w.close(";")
@@ -196,6 +197,7 @@ func (g *Generator) emitImpl() error {
 	w.close("")
 	w.blank()
 	g.emitInit(w)
+	g.emitDefinitions(w)
 	g.emitMethods(w)
 	if g.Config.Target == "repl" {
 		g.emitRepl(w)
@@ -331,8 +333,12 @@ type stateSymbol struct {
 func (g *Generator) stateSymbols() []stateSymbol {
 	var out []stateSymbol
 	seen := map[string]bool{}
+	defNames := g.definitionNames()
 	add := func(name string, s goivy.Sort) {
 		if name == "" || seen[name] {
+			return
+		}
+		if defNames[name] {
 			return
 		}
 		if g.Mod.Sig != nil && g.Mod.Sig.Constructors[name] {
