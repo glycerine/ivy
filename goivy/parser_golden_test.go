@@ -672,6 +672,7 @@ var golden16PythonInvalidSpecs = map[string]string{
 	"../ivy-lang-examples/doc/examples/MSV/repstore3_soln.ivy":       "Python Ivy rejects line 382: delegate fwd_chan_rcvr_recv[before] -> prim",
 	"../ivy-lang-examples/doc/examples/MSV/repstore_variant.ivy":     "Python Ivy rejects line 237: delegate fwd_chan_rcvr_recv[before] -> prim",
 	"../ivy-lang-examples/doc/examples/MSV/token_ring.ivy":           "Python Ivy rejects line 34: module trans not found in current directory or module path",
+	"../ivy-lang-examples/doc/examples/sht/delmap_test.ivy":          "Python Ivy rejects line 3 from the golden16 cwd: module key not found in current directory or module path",
 	"../ivy-lang-examples/doc/examples/testing/chain3.ivy":           "Python Ivy rejects line 203: delegate headtail_rcvr_recv[before] -> head",
 	"../ivy-lang-examples/doc/examples/testing/repstore2.ivy":        "Python Ivy rejects line 451: delegate fwd_chan_rcvr_recv[before] -> prim",
 	"../ivy-lang-examples/doc/examples/testing/repstore2_orig.ivy":   "Python Ivy rejects line 447: delegate fwd_chan_rcvr_recv[before] -> prim",
@@ -711,6 +712,18 @@ func TestGolden16ListIsolatesSkipsConfiguredSpecs(t *testing.T) {
 	}
 	if len(isos) != 0 {
 		t.Fatalf("expected no isolates for skipped Python-invalid spec, got %v", isos)
+	}
+
+	localIncludePath := filepath.Join("..", "ivy-lang-examples", "doc", "examples", "sht", "delmap_test.ivy")
+	if reason, ok := golden16SkipSpecReason(localIncludePath); !ok || !strings.Contains(reason, "module key not found") {
+		t.Fatalf("expected %s to be skipped by known Python-invalid blacklist, got ok=%v reason=%q", localIncludePath, ok, reason)
+	}
+	isos, skip = listGolden16Isolates(t, localIncludePath)
+	if !skip {
+		t.Fatalf("expected %s to be skipped as Python-invalid; isolates=%v", localIncludePath, isos)
+	}
+	if len(isos) != 0 {
+		t.Fatalf("expected no isolates for skipped local-include Python-invalid spec, got %v", isos)
 	}
 }
 
