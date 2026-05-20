@@ -323,6 +323,7 @@ func (g *Generator) emitDestructorStruct(w *cppWriter, name string) {
 		}
 	}
 	g.emitDestructorStructComparators(w, name, destructors)
+	g.emitDestructorStructWriter(w, name, destructors)
 	w.close(";")
 }
 
@@ -347,6 +348,7 @@ func (g *Generator) emitVariantSuperStruct(w *cppWriter, name string) {
 		w.linef("%s(const %s &value) : __tag(%d), __%s(value) {}", typeName, vname, i, vname)
 	}
 	g.emitVariantSuperComparators(w, typeName, variants)
+	g.emitVariantSuperWriter(w, typeName, variants)
 	w.close(";")
 }
 
@@ -361,6 +363,10 @@ func (g *Generator) emitVariantLeafStruct(w *cppWriter, name string) {
 	w.close("")
 	w.open(fmt.Sprintf("bool operator<(const %s &other) const {", typeName))
 	w.line("return __value < other.__value;")
+	w.close("")
+	w.open(fmt.Sprintf("friend std::ostream &operator<<(std::ostream &out, const %s &value) {", typeName))
+	w.line("out << value.__value;")
+	w.line("return out;")
 	w.close("")
 	w.close(";")
 }
@@ -397,6 +403,21 @@ func (g *Generator) emitVariantSuperComparators(w *cppWriter, typeName string, v
 	w.close("")
 }
 
+func (g *Generator) emitVariantSuperWriter(w *cppWriter, typeName string, variants []goivy.Sort) {
+	w.open(fmt.Sprintf("friend std::ostream &operator<<(std::ostream &out, const %s &value) {", typeName))
+	w.open("switch (value.__tag) {")
+	for i, v := range variants {
+		vname := varName(sortName(v))
+		if vname == "" {
+			continue
+		}
+		w.linef("case %d: out << value.__%s; return out;", i, vname)
+	}
+	w.line(`default: out << "<none>"; return out;`)
+	w.close("")
+	w.close("")
+}
+
 func (g *Generator) emitDestructorStructComparators(w *cppWriter, name string, destructors []*goivy.Const) {
 	typeName := varName(name)
 	w.open(fmt.Sprintf("bool operator==(const %s &other) const {", typeName))
@@ -417,6 +438,25 @@ func (g *Generator) emitDestructorStructComparators(w *cppWriter, name string, d
 		w.linef("if (other.%s < %s) return false;", field, field)
 	}
 	w.line("return false;")
+	w.close("")
+}
+
+func (g *Generator) emitDestructorStructWriter(w *cppWriter, name string, destructors []*goivy.Const) {
+	typeName := varName(name)
+	w.open(fmt.Sprintf("friend std::ostream &operator<<(std::ostream &out, const %s &value) {", typeName))
+	w.line(`out << "{";`)
+	w.line("bool first = true;")
+	for _, d := range destructors {
+		if _, ok := d.CSort.(*goivy.LogicFunctionSort); !ok {
+			continue
+		}
+		field := varName(memName(d.Name))
+		w.line(`if (!first) out << ",";`)
+		w.line("first = false;")
+		w.linef(`out << "%s:" << value.%s;`, field, field)
+	}
+	w.line(`out << "}";`)
+	w.line("return out;")
 	w.close("")
 }
 

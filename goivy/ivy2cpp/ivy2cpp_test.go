@@ -472,7 +472,7 @@ action step = {
 		"color saved;",
 		"std::map<idx,color> owner;",
 		"std::map<color,bool> marked;",
-		"saved = owner[0];",
+		"saved = owner[(0 < 0 ? 0 : 2 < 0 ? 2 : 0)];",
 		"marked[saved] = true;",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
@@ -512,6 +512,40 @@ export set
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
+}
+
+func TestRangeNumeralConstantsAreClamped(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..2}
+individual saved : idx
+action high = {
+    saved := 5
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "rangeclamp"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"saved = (5 < 0 ? 0 : 2 < 5 ? 2 : 5);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in range clamp output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestNegativeRangeNumeralConstantIsClamped(t *testing.T) {
+	idx := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "2"}}
+	got, err := (&Generator{}).emitExpr(goivy.NewConst("-1", idx))
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if got != "(-1 < 0 ? 0 : 2 < -1 ? 2 : -1)" {
+		t.Fatalf("negative range clamp=%q", got)
+	}
 }
 
 func TestImplDerivedDefinitionEmitsMethodNotState(t *testing.T) {
@@ -696,6 +730,8 @@ export load
 		"a __a;",
 		"t(const a &value) : __tag(0), __a(value) {}",
 		"if (v.__tag == 0)",
+		"static variantdown::a ivy2cpp_parse_a(const std::string &s)",
+		`variantdown::a inp = ivy2cpp_parse_a(ivy2cpp_read_arg(input, "inp"));`,
 		"a loc__q = v.__a;",
 		"out = loc__q;",
 	} {
@@ -705,6 +741,94 @@ export load
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
+	exe := buildGeneratedExecutable(t, out)
+	cmd := exec.Command(exe)
+	cmd.Stdin = strings.NewReader("save 7\nload\n")
+	buf, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("generated variant repl failed: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
+	}
+	if strings.TrimSpace(string(buf)) != "7" {
+		t.Fatalf("unexpected variant repl output %q\nimpl:\n%s", buf, out.Impl)
+	}
+}
+
+func TestReplWritesVariantSupertypeReturn(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t
+variant a of t
+action make returns(out:t) = {
+    var q:a;
+    out := q
+}
+export make
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "variantout"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"friend std::ostream &operator<<(std::ostream &out, const a &value)",
+		"friend std::ostream &operator<<(std::ostream &out, const t &value)",
+		"case 0: out << value.__a; return out;",
+		"variantout::t __ivy_result = ivy.make();",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	exe := buildGeneratedExecutable(t, out)
+	cmd := exec.Command(exe)
+	cmd.Stdin = strings.NewReader("make\n")
+	buf, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("generated variant-return repl failed: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
+	}
+	if strings.TrimSpace(string(buf)) != "0" {
+		t.Fatalf("unexpected variant-return repl output %q\nimpl:\n%s", buf, out.Impl)
+	}
+}
+
+func TestReplWritesStructVariantSupertypeReturn(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t
+type color = {red, green}
+variant req of t = struct {
+    shade : color
+}
+action make returns(out:t) = {
+    var r:req;
+    r.shade := green;
+    out := r
+}
+export make
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "variantstructout"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"friend std::ostream &operator<<(std::ostream &out, const req &value)",
+		`out << "shade:" << value.shade;`,
+		"friend std::ostream &operator<<(std::ostream &out, const t &value)",
+		"case 0: out << value.__req; return out;",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	exe := buildGeneratedExecutable(t, out)
+	cmd := exec.Command(exe)
+	cmd.Stdin = strings.NewReader("make\n")
+	buf, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("generated struct-variant-return repl failed: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
+	}
+	if !strings.Contains(strings.TrimSpace(string(buf)), "shade:") {
+		t.Fatalf("unexpected struct variant output %q\nimpl:\n%s", buf, out.Impl)
+	}
 }
 
 func TestEmitExprVariantRelation(t *testing.T) {
@@ -723,6 +847,30 @@ action step = {
 	}
 	if !strings.Contains(out.Impl, "ivy_assert((v.__tag == 0 && v.__a == av)") {
 		t.Fatalf("missing variant relation assertion:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestEmitExprExistsVariantRelation(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t
+variant a of t
+variant b of t
+individual v : t
+action step = {
+    assert exists Q:a. v *> Q
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "variantexists"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "ivy_assert((v.__tag == 0)") {
+		t.Fatalf("missing optimized variant-exists assertion:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, "cannot emit bounded loop") || strings.Contains(out.Impl, "for (a Q") {
+		t.Fatalf("variant-exists should not loop over unbounded variant leaf sort:\n%s", out.Impl)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
@@ -800,6 +948,86 @@ func TestEmitExprQuantifierFiniteEnumLoop(t *testing.T) {
 	}
 }
 
+func TestEmitExprExistsUsesExtensionalRelationMap(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation marked(N:node)
+action check = {
+    assert exists X:node. marked(X)
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "extq"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"for (auto it = marked.begin(), en = marked.end(); it != en; ++it)",
+		"if (!it->second) continue;",
+		"node X = it->first;",
+		"if (marked[X]) return true;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in extensional quantifier:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestEmitExprExistsUsesBinaryExtensionalRelationMap(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+individual dst : node
+relation edge(X:node,Y:node)
+action check = {
+    assert exists X:node. edge(X,dst)
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "extq2"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"for (auto it = edge.begin(), en = edge.end(); it != en; ++it)",
+		"node X = std::get<0>(it->first);",
+		"if (edge[std::make_tuple(X, dst)]) return true;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in binary extensional quantifier:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestEmitExprForallUsesExtensionalRelationAntecedent(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation marked(N:node)
+relation ok(N:node)
+action check = {
+    assert forall X:node. marked(X) -> ok(X)
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "extfa"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"for (auto it = marked.begin(), en = marked.end(); it != en; ++it)",
+		"if (!it->second) continue;",
+		"node X = it->first;",
+		"if (!((!(marked[X]) || (ok[X])))) return false;",
+		"return true;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in forall extensional quantifier:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestEmitExprSomeFiniteEnumLoop(t *testing.T) {
 	color := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	x, err := goivy.NewVariable("X", color)
@@ -820,6 +1048,106 @@ func TestEmitExprSomeFiniteEnumLoop(t *testing.T) {
 		if !strings.Contains(got, want) {
 			t.Fatalf("missing %q in some expression:\n%s", want, got)
 		}
+	}
+}
+
+func TestEmitExprSomeVariantRelationReturnsPayload(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t
+variant a of t
+variant b of t
+individual v : t
+`)
+	tSort := mod.Sig.Sorts.Get("t")
+	aSort := mod.Sig.Sorts.Get("a")
+	q, err := goivy.NewVariable("Q", aSort)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	relSort := goivy.LogicRelationSort([]goivy.Sort{tSort, aSort})
+	body, err := goivy.NewApply(goivy.NewConst("*>", relSort), goivy.NewConst("v", tSort), q)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	got, err := (&Generator{Mod: mod}).emitExpr(goivy.NewSome([]goivy.Expr{q}, body))
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	for _, want := range []string{
+		"if (v.__tag == 0)",
+		"a Q = v.__a;",
+		"return Q;",
+		"return a();",
+	} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("missing %q in variant some expression:\n%s", want, got)
+		}
+	}
+	if strings.Contains(got, "for (a Q") {
+		t.Fatalf("variant some should not loop over unbounded variant leaf sort:\n%s", got)
+	}
+}
+
+func TestEmitExprSomeWithElseFiniteEnumLoop(t *testing.T) {
+	color := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	x, err := goivy.NewVariable("X", color)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	green := goivy.NewConst("green", color)
+	red := goivy.NewConst("red", color)
+	body, err := goivy.NewEq(x, green)
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	some := goivy.NewSomeWithElse([]goivy.Expr{x}, body, x, red)
+	got, err := (&Generator{}).emitExpr(some)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	for _, want := range []string{"for (color X : {red, green})", "if ((X == green)) return X;", "return red;"} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("missing %q in some/else expression:\n%s", want, got)
+		}
+	}
+}
+
+func TestEmitExprSomeWithElseVariantRelation(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t
+variant a of t
+variant b of t
+individual v : t
+individual fallback : a
+`)
+	tSort := mod.Sig.Sorts.Get("t")
+	aSort := mod.Sig.Sorts.Get("a")
+	q, err := goivy.NewVariable("Q", aSort)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	relSort := goivy.LogicRelationSort([]goivy.Sort{tSort, aSort})
+	body, err := goivy.NewApply(goivy.NewConst("*>", relSort), goivy.NewConst("v", tSort), q)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	some := goivy.NewSomeWithElse([]goivy.Expr{q}, body, q, goivy.NewConst("fallback", aSort))
+	got, err := (&Generator{Mod: mod}).emitExpr(some)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	for _, want := range []string{
+		"if (v.__tag == 0)",
+		"a Q = v.__a;",
+		"return Q;",
+		"return fallback;",
+	} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("missing %q in variant some/else expression:\n%s", want, got)
+		}
+	}
+	if strings.Contains(got, "for (a Q") {
+		t.Fatalf("variant some/else should not loop over unbounded variant leaf sort:\n%s", got)
 	}
 }
 
@@ -961,6 +1289,37 @@ export step
 	for _, want := range []string{"bool __ivy_some", "for (color loc__c : {red, green})", "if (!__ivy_some", "saved = loc__c;", "saved = red;"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestGeneratedIfSomeUsesExtensionalRelationMap(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation marked(N:node)
+individual saved : node
+action pick = {
+    if some x:node. marked(x) {
+        saved := x
+    }
+}
+export pick
+`)
+	out, err := Generate(mod, Config{ClassName: "someext"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"for (auto it = marked.begin(), en = marked.end(); it != en; ++it)",
+		"if (!it->second) continue;",
+		"node loc__x = it->first;",
+		"if (!__ivy_some1 && (marked[loc__x]))",
+		"saved = loc__x;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in extensional if some:\n%s", want, out.Impl)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
@@ -1847,6 +2206,39 @@ export set
 	compileGeneratedCPP(t, out)
 }
 
+func TestReplDispatchParsesUninterpretedArgs(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+individual saved : node
+action set(n:node) = {
+    saved := n;
+    assert n = 7
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"static runner::node ivy2cpp_parse_node(const std::string &s)",
+		"long long value = std::stoll(s);",
+		"return static_cast<runner::node>(value);",
+		`runner::node n = ivy2cpp_parse_node(ivy2cpp_read_arg(input, "n"));`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	exe := buildGeneratedExecutable(t, out)
+	cmd := exec.Command(exe)
+	cmd.Stdin = strings.NewReader("set 7\n")
+	if buf, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("generated repl did not parse uninterpreted arg: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
+	}
+}
+
 func TestGeneratedReplExecutableParsesEnumArg(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -2078,6 +2470,40 @@ export set
 	compileGeneratedCPP(t, out)
 }
 
+func TestTargetGenRandomizesNumericAndVariantLeafParams(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+type t
+variant a of t
+individual saved : node
+individual wrapped : t
+action touch(n:node,av:a) = {
+    saved := n;
+    wrapped := av
+}
+export touch
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gennumeric"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"static gennumeric::node ivy2cpp_random_node(gen &g)",
+		"static gennumeric::a ivy2cpp_random_a(gen &g)",
+		"return static_cast<gennumeric::node>(g.random_index(0, 4));",
+		"return static_cast<gennumeric::a>(g.random_index(0, 4));",
+		"this->n = ivy2cpp_random_node(*this);",
+		"this->av = ivy2cpp_random_a(*this);",
+		"obj.touch(this->n, this->av);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in gen output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestTargetGenEmitsSolverConversionsForFiniteSorts(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -2174,6 +2600,37 @@ export set
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in test output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetGenChecksSolverBeforeExecute(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "checkgen"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"bool check()",
+		"model = slvr.get_model();",
+		"bool init_gen::generate(checkgen &obj)",
+		"bool set_gen::generate(checkgen &obj)",
+		"if (!check())",
+		"return false;",
+		"if (set_generator.generate(ivy))",
+		"set_generator.execute(ivy);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in gen output:\n%s", want, out.Impl)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
@@ -2417,5 +2874,37 @@ export echo
 	}
 	if strings.TrimSpace(string(buf)) != "green" {
 		t.Fatalf("unexpected executable output %q", buf)
+	}
+}
+
+func TestCommandBuildTrueTargetTestProducesExecutableWhenZ3Available(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping go run integration in short mode")
+	}
+	if _, _, err := z3BuildArgs(); err != nil {
+		if isMissingZ3ToolchainError(err) {
+			t.Skipf("Z3 C++ toolchain unavailable: %v", err)
+		}
+		t.Fatalf("Z3 build args: %v", err)
+	}
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "tinyz3.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+action step = {
+}
+export step
+`), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	cmd := exec.Command("go", "run", "./cmd/ivy2cpp", "target=test", "build=true", "classname=TinyZ3", "outdir="+dir, spec)
+	cmd.Dir = filepath.Join(repoRoot(t), "goivy")
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("go run ivy2cpp target=test build=true: %v\n%s", err, out)
+	}
+	exe := filepath.Join(dir, "tinyz3")
+	if _, err := os.Stat(exe); err != nil {
+		t.Fatalf("missing tinyz3 executable: %v", err)
 	}
 }

@@ -222,6 +222,9 @@ func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy
 	if g.emitIfSomeVariantDowncast(w, a, some) {
 		return
 	}
+	if g.emitIfSomeExtensional(w, a, some) {
+		return
+	}
 	found := g.nextTemp("__ivy_some")
 	w.linef("bool %s = false;", found)
 	opened := 0
@@ -259,6 +262,51 @@ func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy
 		g.emitAction(w, elseAct)
 		w.close("")
 	}
+}
+
+func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) bool {
+	if len(some.Params) != 1 {
+		return false
+	}
+	p := some.Params[0]
+	bound := &goivy.LogicVariable{Name: p.Name, VSort: p.CSort}
+	app, argIndex, ok := g.findPositiveExtensionalRelationBound(some.Fmla, bound)
+	if !ok {
+		return false
+	}
+	rel, err := g.emitExpr(app.Func)
+	if err != nil {
+		g.unsupported(w, "unsupported some extensional relation: %s", err.Error())
+		return true
+	}
+	found := g.nextTemp("__ivy_some")
+	w.linef("bool %s = false;", found)
+	w.open(fmt.Sprintf("for (auto it = %s.begin(), en = %s.end(); it != en; ++it) {", rel, rel))
+	w.line("if (!it->second) continue;")
+	if len(app.Terms) == 1 {
+		w.linef("%s %s = it->first;", cppType(p.CSort), varName(p.Name))
+	} else {
+		w.linef("%s %s = std::get<%d>(it->first);", cppType(p.CSort), varName(p.Name), argIndex)
+	}
+	cond, err := g.emitExpr(some.Fmla)
+	if err != nil {
+		g.unsupported(w, "unsupported some condition: %s", err.Error())
+		w.close("")
+		return true
+	}
+	w.open(fmt.Sprintf("if (!%s && (%s)) {", found, cond))
+	w.linef("%s = true;", found)
+	if thenAct, ok := a.ThenBody.(goivy.Action); ok {
+		g.emitAction(w, thenAct)
+	}
+	w.close("")
+	w.close("")
+	if elseAct, ok := a.ElseBody.(goivy.Action); ok {
+		w.open(fmt.Sprintf("if (!%s) {", found))
+		g.emitAction(w, elseAct)
+		w.close("")
+	}
+	return true
 }
 
 func (g *Generator) emitIfSomeVariantDowncast(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) bool {

@@ -127,6 +127,9 @@ func (g *Generator) cppZeroValue(s goivy.Sort) string {
 		if name, ok := g.variantSuperName(s); ok {
 			return varName(name) + "()"
 		}
+		if name, ok := g.variantSubtypeName(s); ok {
+			return varName(name) + "()"
+		}
 	}
 	return cppZeroValue(s)
 }
@@ -144,6 +147,13 @@ func (g *Generator) cppZeroValueInScope(s goivy.Sort) string {
 			return typeName + "()"
 		}
 		if name, ok := g.variantSuperName(s); ok {
+			typeName := varName(name)
+			if g.ClassName != "" {
+				typeName = g.ClassName + "::" + typeName
+			}
+			return typeName + "()"
+		}
+		if name, ok := g.variantSubtypeName(s); ok {
 			typeName := varName(name)
 			if g.ClassName != "" {
 				typeName = g.ClassName + "::" + typeName
@@ -203,6 +213,17 @@ func (g *Generator) variantSuperName(s goivy.Sort) (string, bool) {
 	}
 	name := sortName(s)
 	if name == "" || !g.isVariantSuperName(name) {
+		return "", false
+	}
+	return name, true
+}
+
+func (g *Generator) variantSubtypeName(s goivy.Sort) (string, bool) {
+	if g == nil || g.Mod == nil {
+		return "", false
+	}
+	name := sortName(s)
+	if name == "" || !g.isVariantSubtypeName(name) {
 		return "", false
 	}
 	return name, true

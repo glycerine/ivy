@@ -293,6 +293,10 @@ func (g *Generator) emitZ3RandomValueHelpers(w *cppWriter) {
 			g.emitZ3EnumRandomHelper(w, st)
 			continue
 		}
+		if g.replNeedsNumericParser(s) {
+			g.emitZ3NumericRandomHelper(w, s)
+			continue
+		}
 		if rs, ok := g.rangeSortFor(s); ok {
 			g.emitZ3RangeRandomHelper(w, s, rs)
 		}
@@ -311,6 +315,17 @@ func (g *Generator) emitZ3EnumRandomHelper(w *cppWriter, s *goivy.LogicEnumerate
 	}
 	w.linef("default: return %s::%s;", g.ClassName, varName(s.Extension[len(s.Extension)-1]))
 	w.close("")
+	w.close("")
+	w.blank()
+}
+
+func (g *Generator) emitZ3NumericRandomHelper(w *cppWriter, s goivy.Sort) {
+	fn := z3RandomHelperName(s)
+	if fn == "" {
+		return
+	}
+	w.open(fmt.Sprintf("static %s %s(gen &g) {", cppQualifiedType(s, g.ClassName), fn))
+	w.linef("return static_cast<%s>(g.random_index(0, 4));", cppQualifiedType(s, g.ClassName))
 	w.close("")
 	w.blank()
 }
@@ -481,6 +496,12 @@ func (g *Generator) z3RandomValueExprFrom(s goivy.Sort, genExpr string) (string,
 				return fn + "(" + genExpr + ")", true
 			}
 		}
+		if g.replNeedsNumericParser(s) {
+			fn := z3RandomHelperName(s)
+			if fn != "" {
+				return fn + "(" + genExpr + ")", true
+			}
+		}
 		return "", false
 	}
 }
@@ -585,6 +606,9 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) {
 	w.open(fmt.Sprintf("bool init_gen::generate(%s &obj) {", g.ClassName))
 	w.line("ivy2cpp_progress(*this, \"init_gen\");")
 	w.line("ivy2cpp_randomize(*this, obj);")
+	w.open("if (!check()) {")
+	w.line("return false;")
+	w.close("")
 	w.line("obj.__init();")
 	w.line("return true;")
 	w.close("")
@@ -610,6 +634,9 @@ func (g *Generator) emitZ3ActionGenerator(w *cppWriter, name string, act goivy.A
 	w.open(fmt.Sprintf("bool %s::generate(%s &obj) {", className, g.ClassName))
 	w.linef("ivy2cpp_progress(*this, %s);", strconv.Quote(className))
 	w.line("ivy2cpp_randomize(*this, obj);")
+	w.open("if (!check()) {")
+	w.line("return false;")
+	w.close("")
 	for _, p := range act.GetFormalParams() {
 		name := varName(p.Name)
 		if value, ok := g.z3RandomValueExprFrom(p.CSort, "*this"); ok {

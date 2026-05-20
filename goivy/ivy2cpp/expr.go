@@ -25,7 +25,10 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 				return "false", nil
 			}
 		}
-		if n.Name != "" && (n.Name[0] >= '0' && n.Name[0] <= '9') {
+		if code, ok := g.emitRangeNumeral(n); ok {
+			return code, nil
+		}
+		if goivy.IsNumeral(n) && !goivy.IsLiteralString(n) {
 			return n.Name, nil
 		}
 		if g.isDefinitionName(n.Name) {
@@ -116,6 +119,22 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 	default:
 		return "", fmt.Errorf("ivy2cpp: unsupported expression %T: %s", e, e.String())
 	}
+}
+
+func (g *Generator) emitRangeNumeral(c *goivy.Const) (string, bool) {
+	if c == nil || !goivy.IsNumeral(c) || goivy.IsLiteralString(c) {
+		return "", false
+	}
+	rs, ok := g.rangeSortFor(c.CSort)
+	if !ok {
+		return "", false
+	}
+	lo, hi, ok := numericRangeBounds(rs)
+	if !ok {
+		return "", false
+	}
+	x := c.Name
+	return fmt.Sprintf("(%s < %s ? %s : %s < %s ? %s : %s)", x, lo, lo, hi, x, hi, x), true
 }
 
 func (g *Generator) emitNary(terms []goivy.Expr, op, ident string) (string, error) {
@@ -265,6 +284,14 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 	if len(vars) == 0 {
 		return g.emitExpr(body)
 	}
+	if !forall {
+		if code, ok, err := g.emitExistsVariantRelation(vars, body); ok || err != nil {
+			return code, err
+		}
+	}
+	if code, ok, err := g.emitExtensionalQuant(vars, body, forall); ok || err != nil {
+		return code, err
+	}
 	var w cppWriter
 	w.raw("([&]() {")
 	w.raw("\n")
@@ -300,12 +327,164 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 	return w.String(), nil
 }
 
+func (g *Generator) emitExistsVariantRelation(vars []*goivy.LogicVariable, body goivy.Expr) (string, bool, error) {
+	if len(vars) != 1 || g == nil || g.Mod == nil {
+		return "", false, nil
+	}
+	app, ok := body.(*goivy.Apply)
+	if !ok || goivy.ExprName(app.Func) != "*>" || len(app.Terms) != 2 {
+		return "", false, nil
+	}
+	bound := vars[0]
+	if bound == nil || goivy.ExprName(app.Terms[1]) != bound.Name {
+		return "", false, nil
+	}
+	if !g.Mod.IsVariant(app.Terms[0].NodeSort(), bound.VSort) {
+		return "", true, fmt.Errorf("ivy2cpp: %s *> %s is not a known variant relation", app.Terms[0].String(), bound.String())
+	}
+	lhs, err := g.emitExpr(app.Terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	idx := g.Mod.VariantIndex(app.Terms[0].NodeSort(), bound.VSort)
+	if idx < 0 {
+		return "", true, fmt.Errorf("ivy2cpp: no variant index for %s in %s", sortName(bound.VSort), sortName(app.Terms[0].NodeSort()))
+	}
+	return fmt.Sprintf("(%s.__tag == %d)", lhs, idx), true, nil
+}
+
+func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy.Expr, forall bool) (string, bool, error) {
+	if len(vars) != 1 || g == nil || g.Mod == nil {
+		return "", false, nil
+	}
+	bound := vars[0]
+	if bound == nil {
+		return "", false, nil
+	}
+	app, argIndex, ok := g.findExtensionalRelationBound(body, bound, forall)
+	if !ok {
+		return "", false, nil
+	}
+	rel, err := g.emitExpr(app.Func)
+	if err != nil {
+		return "", true, err
+	}
+	var w cppWriter
+	w.raw("([&]() {")
+	w.raw("\n")
+	w.indent = 1
+	w.open(fmt.Sprintf("for (auto it = %s.begin(), en = %s.end(); it != en; ++it) {", rel, rel))
+	w.line("if (!it->second) continue;")
+	if len(app.Terms) == 1 {
+		w.linef("%s %s = it->first;", cppType(bound.VSort), varName(bound.Name))
+	} else {
+		w.linef("%s %s = std::get<%d>(it->first);", cppType(bound.VSort), varName(bound.Name), argIndex)
+	}
+	expr, err := g.emitExpr(body)
+	if err != nil {
+		return "", true, err
+	}
+	if forall {
+		w.linef("if (!(%s)) return false;", expr)
+	} else {
+		w.linef("if (%s) return true;", expr)
+	}
+	w.close("")
+	if forall {
+		w.line("return true;")
+	} else {
+		w.line("return false;")
+	}
+	w.indent = 0
+	w.raw("})()")
+	return w.String(), true, nil
+}
+
+func (g *Generator) findExtensionalRelationBound(body goivy.Expr, bound *goivy.LogicVariable, forall bool) (*goivy.Apply, int, bool) {
+	if forall {
+		return g.findForallExtensionalRelationBound(body, bound)
+	}
+	return g.findPositiveExtensionalRelationBound(body, bound)
+}
+
+func (g *Generator) findPositiveExtensionalRelationBound(body goivy.Expr, bound *goivy.LogicVariable) (*goivy.Apply, int, bool) {
+	switch n := body.(type) {
+	case *goivy.Apply:
+		if idx, ok := g.extensionalRelationBoundIndex(n, bound); ok {
+			return n, idx, true
+		}
+	case *goivy.LogicLiteral:
+		if n.Polarity == 1 {
+			return g.findPositiveExtensionalRelationBound(n.Atom, bound)
+		}
+	case *goivy.LogicAnd:
+		for _, term := range n.Terms {
+			if app, idx, ok := g.findPositiveExtensionalRelationBound(term, bound); ok {
+				return app, idx, true
+			}
+		}
+	}
+	return nil, -1, false
+}
+
+func (g *Generator) findForallExtensionalRelationBound(body goivy.Expr, bound *goivy.LogicVariable) (*goivy.Apply, int, bool) {
+	switch n := body.(type) {
+	case *goivy.LogicImplies:
+		return g.findPositiveExtensionalRelationBound(n.T1, bound)
+	case *goivy.LogicNot:
+		return g.findPositiveExtensionalRelationBound(n.Body, bound)
+	case *goivy.LogicLiteral:
+		if n.Polarity == 0 {
+			return g.findPositiveExtensionalRelationBound(n.Atom, bound)
+		}
+	case *goivy.LogicOr:
+		for _, term := range n.Terms {
+			if app, idx, ok := g.findForallExtensionalRelationBound(term, bound); ok {
+				return app, idx, true
+			}
+		}
+	}
+	return nil, -1, false
+}
+
+func (g *Generator) extensionalRelationBoundIndex(app *goivy.Apply, bound *goivy.LogicVariable) (int, bool) {
+	if app == nil || bound == nil || len(app.Terms) == 0 {
+		return -1, false
+	}
+	name := goivy.ExprName(app.Func)
+	if name == "" || !g.isMutableStateSymbol(name) {
+		return -1, false
+	}
+	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok || fs.Range() != goivy.Boolean {
+		return -1, false
+	}
+	for i, term := range app.Terms {
+		if goivy.ExprName(term) == bound.Name {
+			return i, true
+		}
+	}
+	return -1, false
+}
+
+func (g *Generator) isMutableStateSymbol(name string) bool {
+	for _, sym := range g.stateSymbols() {
+		if sym.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
 func (g *Generator) emitSome(s *goivy.LogicSome) (string, error) {
 	if s == nil || len(s.Params) == 0 {
 		return "", fmt.Errorf("ivy2cpp: empty some expression")
 	}
+	if code, ok, err := g.emitSomeVariantRelation(s); ok || err != nil {
+		return code, err
+	}
 	if s.IfVal != nil || s.ElseVal != nil {
-		return "", fmt.Errorf("ivy2cpp: some expression with if/else values is not supported yet: %s", s.String())
+		return g.emitSomeWithElse(s)
 	}
 	vars := make([]*goivy.LogicVariable, 0, len(s.Params))
 	for _, p := range s.Params {
@@ -337,6 +516,112 @@ func (g *Generator) emitSome(s *goivy.LogicSome) (string, error) {
 		w.line("}")
 	}
 	w.linef("return %s;", g.cppZeroValue(s.NodeSort()))
+	w.indent = 0
+	w.raw("})()")
+	return w.String(), nil
+}
+
+func (g *Generator) emitSomeVariantRelation(s *goivy.LogicSome) (string, bool, error) {
+	if s == nil || len(s.Params) != 1 || g == nil || g.Mod == nil {
+		return "", false, nil
+	}
+	bound, ok := s.Params[0].(*goivy.LogicVariable)
+	if !ok || bound == nil {
+		return "", false, nil
+	}
+	app, ok := s.Fmla.(*goivy.Apply)
+	if !ok || goivy.ExprName(app.Func) != "*>" || len(app.Terms) != 2 {
+		return "", false, nil
+	}
+	if goivy.ExprName(app.Terms[1]) != bound.Name {
+		return "", false, nil
+	}
+	if !g.Mod.IsVariant(app.Terms[0].NodeSort(), bound.VSort) {
+		return "", true, fmt.Errorf("ivy2cpp: %s *> %s is not a known variant relation", app.Terms[0].String(), bound.String())
+	}
+	lhs, err := g.emitExpr(app.Terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	idx := g.Mod.VariantIndex(app.Terms[0].NodeSort(), bound.VSort)
+	if idx < 0 {
+		return "", true, fmt.Errorf("ivy2cpp: no variant index for %s in %s", sortName(bound.VSort), sortName(app.Terms[0].NodeSort()))
+	}
+	boundName := varName(bound.Name)
+	field := variantPayloadField(bound.VSort)
+	var w cppWriter
+	w.raw("([&]() {")
+	w.raw("\n")
+	w.indent = 1
+	w.open(fmt.Sprintf("if (%s.__tag == %d) {", lhs, idx))
+	w.linef("%s %s = %s.%s;", cppType(bound.VSort), boundName, lhs, field)
+	if s.IfVal != nil || s.ElseVal != nil {
+		if s.IfVal == nil || s.ElseVal == nil {
+			return "", true, fmt.Errorf("ivy2cpp: some expression requires both if and else values: %s", s.String())
+		}
+		ifVal, err := g.emitExpr(s.IfVal)
+		if err != nil {
+			return "", true, err
+		}
+		w.linef("return %s;", ifVal)
+		w.close("")
+		elseVal, err := g.emitExpr(s.ElseVal)
+		if err != nil {
+			return "", true, err
+		}
+		w.linef("return %s;", elseVal)
+	} else {
+		w.linef("return %s;", boundName)
+		w.close("")
+		w.linef("return %s;", g.cppZeroValue(bound.VSort))
+	}
+	w.indent = 0
+	w.raw("})()")
+	return w.String(), true, nil
+}
+
+func (g *Generator) emitSomeWithElse(s *goivy.LogicSome) (string, error) {
+	if s.IfVal == nil || s.ElseVal == nil {
+		return "", fmt.Errorf("ivy2cpp: some expression requires both if and else values: %s", s.String())
+	}
+	vars := make([]*goivy.LogicVariable, 0, len(s.Params))
+	for _, p := range s.Params {
+		v, ok := p.(*goivy.LogicVariable)
+		if !ok {
+			return "", fmt.Errorf("ivy2cpp: some parameter %T is not a variable: %s", p, s.String())
+		}
+		vars = append(vars, v)
+	}
+	var w cppWriter
+	w.raw("([&]() {")
+	w.raw("\n")
+	w.indent = 1
+	for _, v := range vars {
+		header, err := g.loopHeaderForVar(v)
+		if err != nil {
+			return "", err
+		}
+		w.line(header)
+		w.indent++
+	}
+	cond, err := g.emitExpr(s.Fmla)
+	if err != nil {
+		return "", err
+	}
+	ifVal, err := g.emitExpr(s.IfVal)
+	if err != nil {
+		return "", err
+	}
+	w.linef("if (%s) return %s;", cond, ifVal)
+	for range vars {
+		w.indent--
+		w.line("}")
+	}
+	elseVal, err := g.emitExpr(s.ElseVal)
+	if err != nil {
+		return "", err
+	}
+	w.linef("return %s;", elseVal)
 	w.indent = 0
 	w.raw("})()")
 	return w.String(), nil
