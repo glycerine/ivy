@@ -51,9 +51,7 @@ func mergeParams(params map[string]string, cfg Config) (Config, map[string]strin
 		case "stdafx":
 			cfg.Stdafx = parseBool(v)
 		case "build":
-			if parseBool(v) {
-				return cfg, nil, fmt.Errorf("ivy2cpp: build=true is not supported in v1")
-			}
+			cfg.Build = parseBool(v)
 		case "isolate":
 			ivyParams[k] = v
 		default:
@@ -61,6 +59,13 @@ func mergeParams(params map[string]string, cfg Config) (Config, map[string]strin
 		}
 	}
 	return cfg, ivyParams, nil
+}
+
+func BuildRequested(params map[string]string) bool {
+	if params == nil {
+		return false
+	}
+	return parseBool(params["build"])
 }
 
 func ParseArgs(args []string) (map[string]string, string, error) {

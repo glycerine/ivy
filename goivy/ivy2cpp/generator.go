@@ -15,6 +15,7 @@ type Config struct {
 	ClassName string
 	MainName  string
 	OutDir    string
+	Build     bool
 	EmitMain  bool
 	Trace     bool
 	Stdafx    bool
@@ -134,8 +135,16 @@ func (g *Generator) emitHeader() error {
 	w.line("#include <initializer_list>")
 	w.line("#include <iostream>")
 	w.line("#include <map>")
+	if g.usesZ3() {
+		w.line("#include <sstream>")
+		w.line("#include <stdexcept>")
+	}
 	w.line("#include <string>")
 	w.line("#include <tuple>")
+	if g.usesZ3() {
+		w.line("#include <utility>")
+		w.line(`#include "z3++.h"`)
+	}
 	w.line("#include <vector>")
 	if err := g.emitNativeBlocks(w, "header"); err != nil {
 		return err
@@ -174,6 +183,9 @@ func (g *Generator) emitImpl() error {
 	w.blank()
 	if err := g.emitNativeBlocks(w, "impl"); err != nil {
 		return err
+	}
+	if g.usesZ3() {
+		g.emitZ3Support(w)
 	}
 	w.open(g.constructorSignature(true) + " {")
 	g.emitConstructorParamAssignments(w)
@@ -549,6 +561,9 @@ func (g *Generator) emitTestMain(w *cppWriter) {
 	g.emitConstructDefaultObject(w)
 	w.line("(void)argc;")
 	w.line("(void)argv;")
+	w.line("gen g;")
+	w.line("ivy2cpp_setup(g);")
+	w.line("ivy2cpp_randomize(g, ivy);")
 	w.line("return 0;")
 	w.close("")
 }
@@ -559,7 +574,9 @@ func (g *Generator) emitGenMain(w *cppWriter) {
 		mainName = "main"
 	}
 	w.open(fmt.Sprintf("static void ivy2cpp_generate(%s &ivy) {", g.ClassName))
-	w.line("(void)ivy;")
+	w.line("gen g;")
+	w.line("ivy2cpp_setup(g);")
+	w.line("ivy2cpp_randomize(g, ivy);")
 	w.close("")
 	w.blank()
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))

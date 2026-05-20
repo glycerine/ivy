@@ -18,6 +18,13 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+	if ivy2cpp.BuildRequested(params) {
+		if _, err := ivy2cpp.BuildOutput(out, params["outdir"]); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		return
+	}
 	if err := ivy2cpp.WriteOutput(out, params["outdir"]); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

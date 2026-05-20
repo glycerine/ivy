@@ -72,17 +72,30 @@ func runPythonIvyToCpp(t *testing.T, src string, params ...string) (string, stri
 
 func compileGeneratedCPP(t *testing.T, out *Output) {
 	t.Helper()
-	cxx, err := exec.LookPath("c++")
+	cxx, err := cxxCompiler()
 	if err != nil {
-		if cxx, err = exec.LookPath("g++"); err != nil {
-			t.Skip("no C++ compiler available")
+		if isMissingZ3ToolchainError(err) {
+			t.Skip(err.Error())
 		}
+		t.Fatalf("C++ compiler lookup: %v", err)
 	}
 	dir := t.TempDir()
 	if err := WriteOutput(out, dir); err != nil {
 		t.Fatalf("WriteOutput: %v", err)
 	}
-	cmd := exec.Command(cxx, "-std=c++11", "-c", filepath.Join(dir, out.BaseName+".cpp"), "-o", filepath.Join(dir, out.BaseName+".o"))
+	args := []string{"-std=c++11"}
+	if outputUsesZ3(out) {
+		includeArgs, _, err := z3BuildArgs()
+		if err != nil {
+			if isMissingZ3ToolchainError(err) {
+				t.Skip(err.Error())
+			}
+			t.Fatalf("Z3 build args: %v", err)
+		}
+		args = append(args, includeArgs...)
+	}
+	args = append(args, "-c", filepath.Join(dir, out.BaseName+".cpp"), "-o", filepath.Join(dir, out.BaseName+".o"))
+	cmd := exec.Command(cxx, args...)
 	if buf, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("compile generated C++: %v\n%s\nheader:\n%s\nimpl:\n%s", err, buf, out.Header, out.Impl)
 	}
@@ -1359,7 +1372,7 @@ export set
 	compileGeneratedCPP(t, out)
 }
 
-func TestTargetTestGeneratesCompileableHarness(t *testing.T) {
+func TestTargetTestEmitsZ3Includes(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
 individual saved : color
@@ -1372,16 +1385,15 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"int main(int argc, char **argv)", "testrunner ivy;", "return 0;"} {
-		if !strings.Contains(out.Impl, want) {
-			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+	for _, want := range []string{`#include "z3++.h"`, "class gen", "z3::context ctx", "__from_solver", "ivy2cpp_randomize"} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
-	compileGeneratedCPP(t, out)
 }
 
-func TestTargetGenGeneratesCompileableHarness(t *testing.T) {
+func TestTargetGenEmitsGeneratorHooks(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 parameter enabled : bool
 action step = {
@@ -1392,19 +1404,83 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"static void ivy2cpp_generate(genrunner &ivy)", "genrunner ivy{false};", "ivy2cpp_generate(ivy);"} {
+	for _, want := range []string{"static void ivy2cpp_generate(genrunner &ivy)", "gen g;", "ivy2cpp_setup(g);", "ivy2cpp_randomize(g, ivy);", "ivy2cpp_progress"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
+}
+
+func TestRandomizeFiniteEnumRelation(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+individual saved : color
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "randomizer"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		`g.mk_enum("color", {"red", "green"});`,
+		`g.mk_decl("marked", {"color"}, "bool");`,
+		"for (randomizer::color __ivy_arg0 : {randomizer::red, randomizer::green})",
+		`g.randomize("marked", static_cast<int>(__ivy_arg0), "bool");`,
+		"ivy.marked[__ivy_arg0] = g.random_bool();",
+		"ivy.saved = ivy2cpp_random_color(g);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+}
+
+func TestGeneratedTestFixtureCompilesWhenZ3Available(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+after init {
+    marked(C) := false
+}
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "z3fixture"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
 }
 
-func TestBuildTrueUnsupported(t *testing.T) {
-	_, _, err := mergeParams(map[string]string{"build": "true"}, Config{})
-	if err == nil || !strings.Contains(err.Error(), "build=true is not supported") {
-		t.Fatalf("unexpected error: %v", err)
+func TestBuildTrueCompilesWhenToolchainAvailable(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "buildme.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+action step = {
+}
+export step
+`), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	out, err := CompileAndGenerate(spec, map[string]string{"target": "test", "build": "true"}, Config{ClassName: "buildme"})
+	if err != nil {
+		t.Fatalf("CompileAndGenerate: %v", err)
+	}
+	exe, err := BuildOutput(out, dir)
+	if err != nil {
+		if isMissingZ3ToolchainError(err) {
+			t.Skipf("Z3 C++ toolchain unavailable: %v", err)
+		}
+		t.Fatalf("BuildOutput: %v", err)
+	}
+	if _, err := os.Stat(exe); err != nil {
+		t.Fatalf("missing built executable %s: %v", exe, err)
 	}
 }
 
