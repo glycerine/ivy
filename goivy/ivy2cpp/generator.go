@@ -87,12 +87,13 @@ func moduleBaseName(mod *goivy.Module) string {
 }
 
 func (g *Generator) generate() error {
-	g.emitHeader()
-	g.emitImpl()
-	return nil
+	if err := g.emitHeader(); err != nil {
+		return err
+	}
+	return g.emitImpl()
 }
 
-func (g *Generator) emitHeader() {
+func (g *Generator) emitHeader() error {
 	w := &g.header
 	w.line("#pragma once")
 	w.line("#include <cstdint>")
@@ -103,6 +104,9 @@ func (g *Generator) emitHeader() {
 	w.line("#include <string>")
 	w.line("#include <tuple>")
 	w.line("#include <vector>")
+	if err := g.emitNativeBlocks(w, "header"); err != nil {
+		return err
+	}
 	w.blank()
 	w.open(fmt.Sprintf("class %s {", g.ClassName))
 	w.line("public:")
@@ -117,19 +121,30 @@ func (g *Generator) emitHeader() {
 	w.blank()
 	g.emitSortDecls(w)
 	g.emitStateDecls(w)
+	if err := g.emitNativeBlocks(w, "member"); err != nil {
+		return err
+	}
 	g.emitMethodDecls(w)
 	w.indent--
 	w.close(";")
+	return nil
 }
 
-func (g *Generator) emitImpl() {
+func (g *Generator) emitImpl() error {
 	w := &g.impl
 	if g.Config.Stdafx {
 		w.line(`#include "stdafx.h"`)
 	}
 	w.linef(`#include "%s.h"`, g.BaseName)
 	w.blank()
-	w.linef("%s::%s() {}", g.ClassName, g.ClassName)
+	if err := g.emitNativeBlocks(w, "impl"); err != nil {
+		return err
+	}
+	w.open(fmt.Sprintf("%s::%s() {", g.ClassName, g.ClassName))
+	if err := g.emitNativeBlocks(w, "init"); err != nil {
+		return err
+	}
+	w.close("")
 	w.linef("%s::~%s() {}", g.ClassName, g.ClassName)
 	w.blank()
 	w.open(fmt.Sprintf("void %s::ivy_assert(bool truth, const char *msg) {", g.ClassName))
@@ -158,6 +173,7 @@ func (g *Generator) emitImpl() {
 	if g.Config.Target == "repl" {
 		g.emitRepl(w)
 	}
+	return nil
 }
 
 func (g *Generator) emitSortDecls(w *cppWriter) {

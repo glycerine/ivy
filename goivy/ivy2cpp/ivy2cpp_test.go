@@ -455,6 +455,41 @@ export set_native
 	compileGeneratedCPP(t, out)
 }
 
+func TestTopLevelNativeBlocksEmitHeaderMemberAndInit(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+<<< header
+#include <sstream>
+>>>
+<<< member
+int `+"`native_counter`"+`;
+>>>
+<<< init
+`+"`native_counter`"+` = 7;
+>>>
+action tick_native = {
+    <<<
+        `+"`native_counter`"+`++;
+    >>>
+}
+export tick_native
+`)
+	out, err := Generate(mod, Config{ClassName: "nativeblocks"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"#include <sstream>", "int native_counter;"} {
+		if !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q in header:\n%s", want, out.Header)
+		}
+	}
+	for _, want := range []string{"nativeblocks::nativeblocks() {", "native_counter = 7;", "native_counter++;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
 func TestReplDispatchForExportedAction(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 action step = {
