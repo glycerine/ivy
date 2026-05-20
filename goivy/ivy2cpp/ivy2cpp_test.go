@@ -409,6 +409,52 @@ export step
 	compileGeneratedCPP(t, out)
 }
 
+func TestGeneratedVarActionCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step = {
+    var tmp : color := green;
+    saved := tmp
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "locals"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"{", "color loc__tmp = red;", "loc__tmp = green;", "saved = loc__tmp;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestEmitNativeActionAntiquotes(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set_native(c:color) = {
+    <<<
+        `+"`saved`"+` = `+"`c`"+`;
+    >>>
+}
+export set_native
+`)
+	out, err := Generate(mod, Config{ClassName: "nativecase"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "saved = c;") {
+		t.Fatalf("missing antiquoted native assignment:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, "native action omitted") {
+		t.Fatalf("native action was not emitted:\n%s", out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
 func TestReplDispatchForExportedAction(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 action step = {

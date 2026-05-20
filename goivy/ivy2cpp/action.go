@@ -2,6 +2,7 @@ package ivy2cpp
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -41,7 +42,7 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 	case *goivy.LogicLocalAction:
 		g.emitLocal(w, a)
 	case *goivy.LogicNativeAction:
-		w.line("/* native action omitted by ivy2cpp v1 */")
+		g.emitNativeAction(w, a)
 	case *goivy.LogicCrashAction:
 		w.line("std::abort();")
 	default:
@@ -203,6 +204,169 @@ func (g *Generator) emitLocal(w *cppWriter, a *goivy.LogicLocalAction) {
 		g.emitAction(w, bodyAct)
 	}
 	w.close("")
+}
+
+func (g *Generator) emitNativeAction(w *cppWriter, a *goivy.LogicNativeAction) {
+	code, ok := a.Code.(*goivy.NativeCode)
+	if !ok {
+		w.linef("/* unsupported native action code %T */", a.Code)
+		return
+	}
+	rendered, err := g.renderNativeTemplate(code.Code, a.Params)
+	if err != nil {
+		w.linef("/* unsupported native action: %s */", escapeComment(err.Error()))
+		return
+	}
+	emitNativeLines(w, rendered)
+}
+
+func (g *Generator) renderNativeTemplate(code string, params []goivy.Expr) (string, error) {
+	fields := strings.Split(code, "`")
+	for i := 1; i < len(fields); i += 2 {
+		idx, err := strconv.Atoi(fields[i])
+		if err != nil {
+			return "", fmt.Errorf("bad native antiquote index %q", fields[i])
+		}
+		if idx < 0 || idx >= len(params) {
+			return "", fmt.Errorf("native antiquote index %d out of range", idx)
+		}
+		prev := fields[i-1]
+		var repl string
+		switch {
+		case strings.HasSuffix(prev, "%"):
+			repl, err = g.nativeTypeOf(params[idx])
+		case strings.HasSuffix(prev, `"`):
+			repl, err = g.nativeZ3Name(params[idx])
+		default:
+			repl, err = g.nativeReference(params[idx])
+		}
+		if err != nil {
+			return "", err
+		}
+		fields[i] = repl
+	}
+	for i := 0; i < len(fields); i += 2 {
+		if strings.HasSuffix(fields[i], "%") {
+			fields[i] = strings.TrimSuffix(fields[i], "%")
+		}
+	}
+	return strings.Join(fields, ""), nil
+}
+
+func (g *Generator) nativeReference(arg goivy.Expr) (string, error) {
+	switch a := arg.(type) {
+	case *goivy.Const:
+		if s, ok := g.sortByName(a.Name); ok {
+			return cppType(s), nil
+		}
+		return varName(a.Name), nil
+	case *goivy.LogicVariable:
+		return varName(a.Name), nil
+	case *goivy.Apply:
+		return g.emitExpr(a)
+	case *goivy.UninterpretedSort:
+		return cppType(a), nil
+	case *goivy.LogicEnumeratedSort:
+		return cppType(a), nil
+	case *goivy.RangeSort:
+		return cppType(a), nil
+	}
+	if rn, ok := arg.(interface{ Relname() string }); ok {
+		name := rn.Relname()
+		if s, ok := g.sortByName(name); ok {
+			return cppType(s), nil
+		}
+		res := varName(name)
+		for _, child := range arg.Args() {
+			expr, ok := child.(goivy.Expr)
+			if !ok {
+				return "", fmt.Errorf("native reference %s has non-expression argument %T", name, child)
+			}
+			idx, err := g.nativeReference(expr)
+			if err != nil {
+				return "", err
+			}
+			res += "[" + idx + "]"
+		}
+		return res, nil
+	}
+	return g.emitExpr(arg)
+}
+
+func (g *Generator) nativeTypeOf(arg goivy.Expr) (string, error) {
+	if rn, ok := arg.(interface{ Relname() string }); ok {
+		name := rn.Relname()
+		if g.Mod != nil && g.Mod.Actions != nil {
+			if _, ok := g.Mod.Actions.Get2(name); ok {
+				return "thunk__" + varName(name), nil
+			}
+		}
+	}
+	return cppType(arg.NodeSort()), nil
+}
+
+func (g *Generator) nativeZ3Name(arg goivy.Expr) (string, error) {
+	if v, ok := arg.(*goivy.LogicVariable); ok {
+		return sortName(v.VSort), nil
+	}
+	if rn, ok := arg.(interface{ Relname() string }); ok {
+		return rn.Relname(), nil
+	}
+	if c, ok := arg.(*goivy.Const); ok {
+		return c.Name, nil
+	}
+	return "", fmt.Errorf("cannot emit native z3 name for %T", arg)
+}
+
+func (g *Generator) sortByName(name string) (goivy.Sort, bool) {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
+		return nil, false
+	}
+	return g.Mod.Sig.Sorts.Get2(name)
+}
+
+func emitNativeLines(w *cppWriter, code string) {
+	code = strings.TrimRight(code, " \t\r\n")
+	lines := strings.Split(code, "\n")
+	base := -1
+	for _, line := range lines {
+		if strings.TrimSpace(line) == "" {
+			continue
+		}
+		indent := nativeIndent(line)
+		if base == -1 || indent < base {
+			base = indent
+		}
+	}
+	if base < 0 {
+		return
+	}
+	for _, line := range lines {
+		if strings.TrimSpace(line) == "" {
+			w.line("")
+			continue
+		}
+		indent := nativeIndent(line) - base
+		if indent < 0 {
+			indent = 0
+		}
+		w.line(strings.Repeat(" ", indent) + strings.TrimSpace(line))
+	}
+}
+
+func nativeIndent(line string) int {
+	indent := 0
+	for _, r := range line {
+		switch r {
+		case ' ':
+			indent++
+		case '\t':
+			indent = ((indent + 8) / 8) * 8
+		default:
+			return indent
+		}
+	}
+	return indent
 }
 
 func escapeString(s string) string {
