@@ -1270,10 +1270,14 @@ func (d *InterpretDecl) String() string { return "interpret" }
 // Matches Python InterpretDecl.defines() (ivy_ast.py:1108-1117).
 func (d *InterpretDecl) Defines() []string {
 	var res []string
-	// label name (for version > 1.6)
+	// Python only defines the interpretation label for versions > 1.6.
+	defineLabel := true
+	if cfg := d.GetAstConfig(); cfg != nil && cfg.IuCfg != nil {
+		defineLabel = !VersionLE(cfg.IuCfg.GetStringVersion(), "1.6")
+	}
 	if len(d.DeclArgs) > 0 {
 		if lf, ok := d.DeclArgs[0].(*LabeledFormula); ok {
-			if lf.Label != nil {
+			if defineLabel && lf.Label != nil {
 				if la, ok := lf.Label.(*Atom); ok && la.Rep != "" {
 					res = append(res, la.Rep)
 				}

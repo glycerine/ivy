@@ -1242,6 +1242,22 @@ func TestAstInterpretDecl_Defines_AllNumeric(t *testing.T) {
 	}
 }
 
+func TestAstInterpretDecl_Defines_V16DoesNotDefineLabel(t *testing.T) {
+	cfg := NewAstConfig()
+	SetStringVersionOn(cfg.IuCfg, "1.6")
+	lo := cfg.NewApp(cfg.NewSymbol("0", nil))
+	hi := cfg.NewApp(cfg.NewSymbol("max", nil))
+	rng := cfg.NewRange(lo, hi)
+	fmla := cfg.NewImplies(cfg.NewAtom("t"), rng)
+	lf := cfg.NewLabeledFormula(cfg.NewAtom("interp_v16"), fmla)
+	decl := cfg.NewInterpretDecl(lf)
+
+	defs := decl.Defines()
+	if len(defs) != 1 || defs[0] != "max" {
+		t.Errorf("InterpretDecl.Defines() v1.6: got %v, want [max]", defs)
+	}
+}
+
 func TestAstDefinition_Defines_AppLhs(t *testing.T) {
 	cfg := NewAstConfig()
 	// Definition with App LHS (via nodeRep generalization)

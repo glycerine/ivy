@@ -78,6 +78,7 @@ func ParseV17(input string, version Version, opts ...ParseOption) (*ParseResult,
 	for _, opt := range opts {
 		opt(lex)
 	}
+	configureParseAstConfig(lex.astCfg, version)
 	parser17Parse(lex)
 	if lex.err != "" {
 		return nil, fmt.Errorf("LALR parse error: %s", lex.err)
@@ -96,6 +97,16 @@ func ParseV17(input string, version Version, opts ...ParseOption) (*ParseResult,
 	result := lex.accum.toResult()
 	xtracer.Trace("parser.Parse EXIT decls=%d", len(result.Decls))
 	return result, nil
+}
+
+func configureParseAstConfig(cfg *AstConfig, version Version) {
+	if cfg == nil {
+		return
+	}
+	if cfg.IuCfg == nil {
+		cfg.IuCfg = NewIvyUtilsConfig()
+	}
+	SetStringVersionOn(cfg.IuCfg, fmt.Sprintf("%d.%d", version[0], version[1]))
 }
 
 // --- parser17LexAdapter: adapter from lexer.Lexer to goyacc's parser17Lexer interface ---

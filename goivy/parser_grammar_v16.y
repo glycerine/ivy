@@ -494,7 +494,7 @@ func parser16TokLineno(lex *parser16LexAdapter, tok TokenInfo) Location {
 
 // Nonterminal types — formula/term
 %type <node>  term fmla aterm var simplevar atype
-%type <nodes> terms vars simplevars
+%type <nodes> terms simplevars
 %type <tok>   SYMBOLx SYMsubscr labelname
 
 // Nonterminal types — top-level
@@ -502,17 +502,15 @@ func parser16TokLineno(lex *parser16LexAdapter, tok TokenInfo) Location {
 
 // Nonterminal types — declarations
 %type <node>  labeledfmla lgprop gprop
-%type <node>  opttemporal optunprovable optexplicit optlabel optskolem optinit
+%type <node>  opttemporal optexplicit optlabel optskolem optinit
 %type <node>  optproof
-%type <node>  defn defnlhs defnrhs typeddefn gdefn schdefn schdefnrhs schconc
+%type <node>  defn defnlhs defnrhs typeddefn schdefn schdefnrhs schconc
 %type <node>  defarg somevarfmla
 %type <nodes> defns defargs
 %type <nodes> schdecl schdecls
 %type <node>  symdecl constantdecl parameter paramval
 %type <node>  tapp tterm
 %type <nodes> tterms targs tsyms
-%type <node>  tatom
-%type <nodes> tatoms
 %type <node>  rel fun
 %type <nodes> rels funs
 %type <node>  sort typesymbol
@@ -537,7 +535,7 @@ func parser16TokLineno(lex *parser16LexAdapter, tok TokenInfo) Location {
 %type <nodes> callatoms
 
 // Nonterminal types — module/object
-%type <node>  modulestart moduleend objectend modcat opteq objsym
+%type <node>  modulestart moduleend objectend modcat objsym
 %type <bval>  optdotdotdot opttrusted
 %type <nodes> objectargs
 %type <node>  param
@@ -569,7 +567,7 @@ func parser16TokLineno(lex *parser16LexAdapter, tok TokenInfo) Location {
 %type <nodes> atoms
 
 // Nonterminal types — scenario
-%type <node>  sceninit scenariomixin scentrans
+%type <node>  sceninit scenariomixin
 %type <nodes> scentranss places
 
 // Nonterminal types — proof/tactic
@@ -611,12 +609,6 @@ func parser16TokLineno(lex *parser16LexAdapter, tok TokenInfo) Location {
 // Nonterminal types — debug
 %type <node>  debugarg
 %type <nodes> debugargs optdebugargs
-
-// Nonterminal types — loc
-%type <str>   loc
-
-// Nonterminal types — symbols list
-%type <nodes> symbols
 
 // Precedence declarations — copied exactly from Python v1.6 precedence table.
 %left         PARSER16_TOK_SEMI
@@ -1826,19 +1818,6 @@ simplevar:
     }
     ;
 
-vars:
-    var
-    {
-        xtracer.Trace("parser.p_vars_var ENTER (vars)")
-        $$ = []Node{$1}
-    }
-    | vars PARSER16_TOK_COMMA var
-    {
-        xtracer.Trace("parser.p_vars_vars_comma_var ENTER (vars)")
-        $$ = append($1, $3)
-    }
-    ;
-
 simplevars:
     simplevar
     {
@@ -2169,19 +2148,6 @@ opttemporal:
     }
     ;
 
-optunprovable:
-    /* empty */
-    {
-        xtracer.Trace("parser.p_optunprovable ENTER (optunprovable)")
-        $$ = nil
-    }
-    | PARSER16_TOK_UNPROVABLE
-    {
-        xtracer.Trace("parser.p_optunprovable_symbol ENTER (optunprovable)")
-        $$ = parser16Acfg(parser16lex).NewAnd() // non-nil marker
-    }
-    ;
-
 optexplicit:
     /* empty */
     {
@@ -2408,20 +2374,6 @@ defns:
     {
         xtracer.Trace("parser.p_defns_defns_comma_defn ENTER (defns)")
         $$ = append($1, $3)
-    }
-    ;
-
-gdefn:
-    defn
-    {
-        xtracer.Trace("parser.p_gdefn_defn ENTER (gdefn)")
-        $$ = $1
-    }
-    | PARSER16_TOK_LCB defn PARSER16_TOK_RCB
-    {
-        xtracer.Trace("parser.p_gdefn_lcb_defn_rcb ENTER (gdefn)")
-        d := $2.(*Definition)
-        $$ = parser16Acfg(parser16lex).NewDefinitionSchema(*d)
     }
     ;
 
@@ -2772,40 +2724,6 @@ tsyms:
     | tsyms PARSER16_TOK_COMMA var
     {
         xtracer.Trace("parser.p_tsyms_tsyms_comma_tsym ENTER (tsyms)")
-        $$ = append($1, $3)
-    }
-    ;
-
-tatom:
-    SYMBOLx
-    {
-        xtracer.Trace("parser.p_tatom_symbol ENTER (tatom)")
-        $$ = parser16Acfg(parser16lex).NewAtom($1.Val)
-        $$.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $1))
-    }
-    | SYMBOLx targs
-    {
-        xtracer.Trace("parser.p_tatom_symbol_targs ENTER (tatom)")
-        $$ = parser16Acfg(parser16lex).NewAtom($1.Val, $2...)
-        $$.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $1))
-    }
-    | PARSER16_TOK_LPAREN var relop var PARSER16_TOK_RPAREN
-    {
-        xtracer.Trace("parser.p_tatom_lp_symbol_relop_symbol_rp ENTER (tatom)")
-        $$ = parser16Acfg(parser16lex).NewAtom($3, $2, $4)
-        $$.SetLineno(parser16GetLineno(parser16lex.(*parser16LexAdapter)))
-    }
-    ;
-
-tatoms:
-    tatom
-    {
-        xtracer.Trace("parser.p_tatoms_tatom ENTER (tatoms)")
-        $$ = []Node{$1}
-    }
-    | tatoms PARSER16_TOK_COMMA tatom
-    {
-        xtracer.Trace("parser.p_tatoms_tatoms_comma_tatom ENTER (tatoms)")
         $$ = append($1, $3)
     }
     ;
@@ -3179,19 +3097,6 @@ modcat:
     {
         xtracer.Trace("parser.p_modcat_isolate ENTER (modcat)")
         $$ = parser16Acfg(parser16lex).NewAtom("isolate")
-    }
-    ;
-
-opteq:
-    /* empty */
-    {
-        xtracer.Trace("parser.p_opteq ENTER (opteq)")
-        $$ = nil
-    }
-    | PARSER16_TOK_EQ
-    {
-        xtracer.Trace("parser.p_opteq_eq ENTER (opteq)")
-        $$ = nil
     }
     ;
 
@@ -4335,11 +4240,6 @@ scentranss:
         xtracer.Trace("parser.p_scentranss ENTER (scentranss)")
         $$ = nil
     }
-    | scentranss scentrans
-    {
-        xtracer.Trace("parser.p_scentranss__scentranss_scentrans ENTER (scentranss)")
-        $$ = append($1, $2)
-    }
     | scentranss places PARSER16_TOK_ARROW places PARSER16_TOK_COLON scenariomixin
     {
         xtracer.Trace("parser.p_scentranss_scentranss_places_arrow_places_colon_scenariomixin ENTER (scentranss)")
@@ -4356,22 +4256,6 @@ scentranss:
         tr := parser16Acfg(parser16lex).NewScenarioTransition(nil, to, $4)
         tr.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $3))
         $$ = append($1, tr)
-    }
-    ;
-
-scentrans:
-    places PARSER16_TOK_ARROW places PARSER16_TOK_COLON scenariomixin
-    {
-        xtracer.Trace("parser.p_scentrans__places_arrow_places_colon_scenariomixin ENTER (scentrans)")
-        from := parser16Acfg(parser16lex).NewPlaceList($1)
-        to := parser16Acfg(parser16lex).NewPlaceList($3)
-        $$ = parser16Acfg(parser16lex).NewScenarioTransition(from, to, $5)
-    }
-    | places PARSER16_TOK_COLON scenariomixin
-    {
-        xtracer.Trace("parser.p_scentrans__places_colon_scenariomixin ENTER (scentrans)")
-        from := parser16Acfg(parser16lex).NewPlaceList($1)
-        $$ = parser16Acfg(parser16lex).NewScenarioTransition(from, parser16Acfg(parser16lex).NewPlaceList(nil), $3)
     }
     ;
 
@@ -5118,36 +5002,6 @@ sum:
     {
         xtracer.Trace("parser.p_sum_sum_expr ENTER (sum)")
         $$ = append($1, $3)
-    }
-    ;
-
-// --- loc (for old v1.1 compat) ---
-
-loc:
-    /* empty */
-    {
-        xtracer.Trace("parser.p_loc ENTER (loc)")
-        $$ = ""
-    }
-    | SYMBOLx
-    {
-        xtracer.Trace("parser.p_loc_symbol ENTER (loc)")
-        $$ = $1.Val
-    }
-    ;
-
-// --- symbols list ---
-
-symbols:
-    SYMBOLx
-    {
-        xtracer.Trace("parser.p_symbols ENTER (symbols)")
-        $$ = []Node{parser16Acfg(parser16lex).NewAtom($1.Val)}
-    }
-    | symbols PARSER16_TOK_COMMA SYMBOLx
-    {
-        xtracer.Trace("parser.p_symbols_symbols_symbol ENTER (symbols)")
-        $$ = append($1, parser16Acfg(parser16lex).NewAtom($3.Val))
     }
     ;
 

@@ -16,6 +16,7 @@ func ParseIvyV16(input string, version Version, opts ...ParseOption) (*ParseResu
 	for _, opt := range opts {
 		opt(lex)
 	}
+	configureParseAstConfig(lex.astCfg, version)
 	parser16Parse(lex)
 	if lex.err != "" {
 		return nil, fmt.Errorf("LALR parse error: %s", lex.err)

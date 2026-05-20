@@ -605,6 +605,13 @@ func TestIvy_1dot1_tilelink1_model(t *testing.T) {
 	})
 }
 
+func TestMSVRepstore1IsoSrvr(t *testing.T) {
+	GoldenPathCompareIvyCheck(t, &goldenConfig{
+		path: "ivy-lang-examples/doc/examples/MSV/repstore1.ivy",
+		args: []string{"isolate=iso_srvr"},
+	})
+}
+
 // TestVerboseOrdLive is the same as TestOrdLive but prints every
 // matching trace line, not just the last 10 before the divergence.
 func TestVerboseOrdLive(t *testing.T) {
