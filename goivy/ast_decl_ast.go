@@ -135,13 +135,12 @@ func (lf *LabeledFormula) LabelName() string {
 	return fmt.Sprint(lf.Label)
 }
 
-// LabelForTrace mirrors Python's `%s goal.label` — includes Atom args
-// in parentheses (full __repr__), not just the relation name. Use this
-// for XTRACE lines that correspond to Python sites emitting `%s goal.label`.
-// For name-only needs (map keys, equality), use LabelName().
+// LabelForTrace mirrors Python's `%s goal.label`: nil labels render as
+// "None", and Atom labels include their full string form rather than just the
+// relation name. For name-only needs (map keys, equality), use LabelName().
 func (lf *LabeledFormula) LabelForTrace() string {
 	if lf.Label == nil {
-		return ""
+		return "None"
 	}
 	return fmt.Sprint(lf.Label)
 }

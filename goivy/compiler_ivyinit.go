@@ -117,6 +117,13 @@ func ReadModuleFromString(source string, cfg *Config) (*ParseResult, error) {
 	// StringIO has no .name attribute, so Python traces file=?
 	xtracer.Trace("init.ReadModule ENTER file=? nested=False")
 	body, version := parseIvySource(source)
+	if cfg != nil && cfg.IuCfg != nil {
+		header := strings.TrimSpace(strings.SplitN(source, "\n", 2)[0])
+		if !strings.HasPrefix(header, "#lang ivy") ||
+			strings.TrimSpace(strings.TrimPrefix(header, "#lang ivy")) == "" {
+			version = parseIvyVersion(cfg.IuCfg.GetStringVersion())
+		}
+	}
 
 	var opts []ParseOption
 	if cfg != nil && cfg.AstCfg != nil {

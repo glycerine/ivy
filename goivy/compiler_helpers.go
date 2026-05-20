@@ -297,6 +297,15 @@ func (c *Compiler) CompileInlineCall(self *Atom, args []Expr, methodcall bool) (
 				"wrong number of input parameters (got %d, expecting %d)",
 				len(args), len(params)))
 		}
+		for i := 0; i < len(args) && i < len(params); i++ {
+			pSort, err := c.CmplSort(GetFormalSortAnnotation(params[i]))
+			if err == nil {
+				inferred, err := c.SortInferContravariant(args[i], pSort)
+				if err == nil {
+					args[i] = inferred
+				}
+			}
+		}
 
 		// Create the CallAction: call(atom(rep, args...), returnValue)
 		calleeNode := NewConst(rep, TopS)

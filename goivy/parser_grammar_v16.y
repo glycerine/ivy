@@ -5,9 +5,13 @@
 // not just formulas/terms like lalr_logicparser.
 //
 // Precedence table (copied exactly from Python ivy_parser.py, v1.6):
-//   SEMI < GLOBALLY/EVENTUALLY < ARROW/IFF < OR < AND < TILDA
-//   < EQ/LE/LT/GE/GT/PTO < TILDAEQ < IF < ELSE < COLON
-//   < PLUS/MINUS < TIMES/DIV < DOLLAR < OLD < DOT
+//   SEMI < GLOBALLY/EVENTUALLY/WHEN* < IF < ELSE < ARROW/IFF
+//   < OR < AND < TILDA < EQ/LE/LT/GE/GT/PTO < TILDAEQ < COLON
+//   < PLUS < MINUS < TIMES < DIV < DOLLAR
+//
+// Python Ivy 1.6 omits ARROW/IFF from the explicit PLY precedence table,
+// but PLY reduces "a & b -> c" as "(a & b) -> c". goyacc shifts tokens
+// without precedence, so v16 declares ARROW/IFF here to preserve that parse.
 
 %{
 package goivy
@@ -615,6 +619,7 @@ func parser16TokLineno(lex *parser16LexAdapter, tok TokenInfo) Location {
 %left         PARSER16_TOK_GLOBALLY PARSER16_TOK_EVENTUALLY PARSER16_TOK_WHENFIRST PARSER16_TOK_WHENLAST PARSER16_TOK_WHENNEXT PARSER16_TOK_WHENPREV
 %left         PARSER16_TOK_IF
 %left         PARSER16_TOK_ELSE
+%left         PARSER16_TOK_ARROW PARSER16_TOK_IFF
 %left         PARSER16_TOK_OR
 %left         PARSER16_TOK_AND
 %left         PARSER16_TOK_TILDA
