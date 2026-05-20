@@ -54,6 +54,46 @@ describe('argActionService', () => {
     expect(app.uiDataStore.applyConceptSnapshot).toHaveBeenCalledWith('sheet-1', { elements: ['concept'], positions: null });
   });
 
+  it('passes the current mode and offers trace viewing for failed node safety', async () => {
+    document.body.innerHTML = '<div id="info-content"></div>';
+    const traceArg = { elements: [{ group: 'nodes', data: { id: 'state_0' } }] };
+    const app = {
+      activeSheetId: 'sheet-1',
+      getMode: vi.fn(() => 'bounded'),
+      isVisualOnlySheet: vi.fn(() => false),
+      prepareArgNodeActionArgs: (node, action, args, sheetId) => prepareArgNodeActionArgs(app, node, action, args, sheetId),
+      api: {
+        argNodeAction: vi.fn(async () => ({
+          result: 'fail',
+          safe: false,
+          message: 'The node is unsafe: View error trace?',
+          arg: { elements: ['arg'], positions: null },
+          trace_arg: traceArg,
+          trace_sheet_id: 'sheet-2',
+        })),
+      },
+      sheets: {},
+      uiDataStore: {
+        applyArgSnapshot: vi.fn(),
+      },
+      openARGSheet: vi.fn(),
+      controls: { setStatus: vi.fn(), showInfo: vi.fn() },
+    };
+
+    await executeArgNodeAction(app, { id: 'state_0' }, { id: 'check_safety' }, 'sheet-1');
+
+    expect(app.api.argNodeAction).toHaveBeenCalledWith('state_0', 'check_safety', {
+      sheet_id: 'sheet-1',
+      mode: 'bounded',
+    });
+    expect(app.controls.showInfo).toHaveBeenCalledWith('Safety Check', 'The node is unsafe: View error trace?');
+    document.querySelector('[data-check-view-trace]')?.click();
+    expect(app.openARGSheet).toHaveBeenCalledWith('Error trace', traceArg, 'sheet-2', {
+      reachabilityOnly: true,
+      visualOnly: false,
+    });
+  });
+
   it('loads source returned by ARG edge view-source actions', async () => {
     const app = {
       activeSheetId: 'sheet-1',

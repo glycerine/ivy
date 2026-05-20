@@ -549,8 +549,20 @@ func TestArgNodeActionCheckSafety(t *testing.T) {
 }
 
 func TestArgNodeActionBoundedSafetyFailureReturnsTrace(t *testing.T) {
-	s, ui := loadARGTestSession(t)
-	ui.AG.Assertions = append(ui.AG.Assertions, &goivy.LabeledFormula{Formula: goivy.False})
+	cfg := goivy.NewConfig()
+	s := NewSession(cfg, "test-unsafe-bounded")
+	mod := goivy.New()
+	ag := goivy.NewAnalysisGraph(mod)
+	ag.Add(goivy.NewState(mod, goivy.NewClauses([]goivy.Expr{goivy.True}, nil, nil)), nil)
+	ag.Assertions = append(ag.Assertions, &goivy.LabeledFormula{Formula: goivy.False})
+	ui := NewAnalysisGraphUI()
+	ui.AG = ag
+	ui.Mod = mod
+	ui.G = AnalysisUIARGState(ui)
+	ui.SyncCallback = func() { ui.G = AnalysisUIARGState(ui) }
+	s.AG = ag
+	s.AGUI = ui
+	s.CompiledModule = mod
 	drainEvents(s)
 
 	result, err := s.ArgNodeAction("state_0", "check_safety", map[string]interface{}{"mode": "bounded"})

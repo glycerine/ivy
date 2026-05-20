@@ -751,6 +751,57 @@ test('failed check result can open its trace ARG in a sheet', async ({ page }) =
   expect(result.edgeLabels).toEqual(['trace']);
 });
 
+test('failed ARG node safety result can open its trace ARG in a sheet', async ({ page }) => {
+  await openIvy(page);
+
+  await page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    app.api.argNodeAction = async () => ({
+      status: 'ok',
+      result: 'fail',
+      safe: false,
+      message: 'The node is unsafe: View error trace?',
+      arg: {
+        elements: [
+          { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+        ],
+      },
+      trace_arg: {
+        elements: [
+          { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+          { group: 'nodes', data: { id: 'state_1', obj: 'state_1', label: '1' }, classes: 'state marked_state' },
+          { group: 'edges', data: { id: 'trace_edge', source: 'state_0', target: 'state_1', label: 'trace' } },
+        ],
+      },
+      trace_sheet_id: 'sheet-9',
+    });
+    app.argGraph.update([
+      { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+    ]);
+    app.onArgNodeRightClick(app.argGraph.cy.getElementById('state_0').data(), { x: 16, y: 16 }, 'sheet-1');
+  });
+
+  await page.locator('.context-menu-item', { hasText: 'Check safety' }).click();
+  await expect(page.locator('[data-check-view-trace]')).toBeVisible();
+  await page.locator('[data-check-view-trace]').click();
+
+  const result = await page.evaluate(() => {
+    const app = window.__ivyDiagnostics.runtime();
+    const sheet = app.sheets[app.activeSheetId];
+    return {
+      activeSheet: app.activeSheetId,
+      labels: sheet.argGraph.cy.nodes().map((n) => n.data('label')),
+      marked: sheet.argGraph.cy.nodes('.marked_state').map((n) => n.data('label')),
+      edgeLabels: sheet.argGraph.cy.edges().map((e) => e.data('label')),
+    };
+  });
+
+  expect(result.activeSheet).toBe('sheet-9');
+  expect(result.labels).toEqual(['0', '1']);
+  expect(result.marked).toEqual(['1']);
+  expect(result.edgeLabels).toEqual(['trace']);
+});
+
 test('Show Reachable command opens a reachable-state ARG sheet', async ({ page }) => {
   await openIvy(page);
 
