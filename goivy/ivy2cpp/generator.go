@@ -354,7 +354,20 @@ func (g *Generator) emitRepl(w *cppWriter) {
 		}
 		username := strings.TrimPrefix(name, "ext:")
 		fn, _ := funName(name)
-		w.linef(`if (action == "%s") { ivy.%s(); return; }`, username, fn)
+		args := g.replDispatchArgs(name)
+		act, ok := g.Mod.Actions.Get2(name)
+		if ok && len(act.GetFormalReturns()) > 1 {
+			w.open(fmt.Sprintf(`if (action == "%s") {`, username))
+			for _, r := range act.GetFormalReturns() {
+				w.linef("%s %s = %s;", cppType(r.CSort), varName(r.Name), cppZeroValue(r.CSort))
+				args = append(args, varName(r.Name))
+			}
+			w.linef("ivy.%s(%s);", fn, strings.Join(args, ", "))
+			w.line("return;")
+			w.close("")
+			continue
+		}
+		w.linef(`if (action == "%s") { ivy.%s(%s); return; }`, username, fn, strings.Join(args, ", "))
 	}
 	w.line(`std::cerr << "undefined action: " << action << std::endl;`)
 	w.indent--
@@ -367,6 +380,21 @@ func (g *Generator) emitRepl(w *cppWriter) {
 	w.line("(void)argv;")
 	w.line("return 0;")
 	w.close("")
+}
+
+func (g *Generator) replDispatchArgs(name string) []string {
+	if g.Mod == nil || g.Mod.Actions == nil {
+		return nil
+	}
+	act, ok := g.Mod.Actions.Get2(name)
+	if !ok {
+		return nil
+	}
+	var args []string
+	for _, p := range act.GetFormalParams() {
+		args = append(args, cppZeroValueInScope(p.CSort, g.ClassName))
+	}
+	return args
 }
 
 func (g *Generator) initialMixinActionNames() map[string]bool {

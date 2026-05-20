@@ -96,6 +96,20 @@ func cppZeroValue(s goivy.Sort) string {
 	}
 }
 
+func cppZeroValueInScope(s goivy.Sort, className string) string {
+	switch st := s.(type) {
+	case *goivy.LogicEnumeratedSort:
+		if len(st.Extension) > 0 {
+			name := varName(st.Extension[0])
+			if className != "" {
+				return className + "::" + name
+			}
+			return name
+		}
+	}
+	return cppZeroValue(s)
+}
+
 func sortName(s goivy.Sort) string {
 	switch st := s.(type) {
 	case *goivy.BooleanSort:

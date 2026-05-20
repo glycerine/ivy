@@ -340,6 +340,32 @@ export step
 	compileGeneratedCPP(t, out)
 }
 
+func TestGeneratedMultipleReturnActionCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+individual ok : bool
+action split(c:color) returns (out:color, good:bool) = {
+    out := c;
+    good := true
+}
+action step = {
+    call saved, ok := split(green)
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "multi"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"void split(color c, color &out, bool &good)", "out = c;", "good = true;", "split(green, saved, ok);"} {
+		if !strings.Contains(out.Impl, want) && !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
 func TestReplDispatchForExportedAction(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 action step = {
@@ -353,6 +379,25 @@ export step
 	if !strings.Contains(out.Impl, `if (action == "step")`) {
 		t.Fatalf("missing repl dispatch:\n%s", out.Impl)
 	}
+}
+
+func TestReplDispatchForParameterizedExportCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, `if (action == "set") { ivy.set(runner::red); return; }`) {
+		t.Fatalf("missing parameterized repl dispatch:\n%s", out.Impl)
+	}
+	compileGeneratedCPP(t, out)
 }
 
 func TestBuildTrueUnsupported(t *testing.T) {
