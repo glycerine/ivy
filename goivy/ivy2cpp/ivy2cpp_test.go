@@ -1324,6 +1324,48 @@ export set
 	compileGeneratedCPP(t, out)
 }
 
+func TestTargetTestGeneratesCompileableHarness(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step = {
+    saved := green
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "testrunner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"int main(int argc, char **argv)", "testrunner ivy;", "return 0;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetGenGeneratesCompileableHarness(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+parameter enabled : bool
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genrunner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"static void ivy2cpp_generate(genrunner &ivy)", "genrunner ivy(false);", "ivy2cpp_generate(ivy);"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestBuildTrueUnsupported(t *testing.T) {
 	_, _, err := mergeParams(map[string]string{"build": "true"}, Config{})
 	if err == nil || !strings.Contains(err.Error(), "build=true is not supported") {
