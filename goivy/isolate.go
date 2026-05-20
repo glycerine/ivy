@@ -1545,11 +1545,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	}
 
 	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && mod.Sig != nil {
-		for name := range mod.Sig.Symbols.All() {
-			if !allSyms2Names[name] && !allNamesMap[name] {
-				mod.Sig.Symbols.Delkey(name)
-			}
-		}
+		filterSigSymbolsByUsed(mod.Sig, allSyms2, allNamesMap)
 	}
 
 	if mod.Sig != nil {
@@ -1876,6 +1872,47 @@ func sigSymbolTraceCount(sig *Sig) int {
 		return 0
 	}
 	return len(sig.AllSymbols())
+}
+
+func filterSigSymbolsByUsed(sig *Sig, used *InsMap[NodeKey, Expr], keepNames map[string]bool) {
+	if sig == nil || sig.Symbols == nil {
+		return
+	}
+	for name, entry := range sig.Symbols.All() {
+		if keepNames != nil && keepNames[name] {
+			continue
+		}
+		if entry == nil {
+			sig.Symbols.Delkey(name)
+			continue
+		}
+		if entry.Union != nil {
+			kept := make([]Sort, 0, len(entry.Union.Sorts))
+			for _, sort := range entry.Union.Sorts {
+				if sigUsedHas(name, sort, used) {
+					kept = append(kept, sort)
+				}
+			}
+			if len(kept) == 0 {
+				sig.Symbols.Delkey(name)
+				continue
+			}
+			entry.Union.Sorts = kept
+			entry.Sort = kept[0]
+			continue
+		}
+		if !sigUsedHas(name, entry.Sort, used) {
+			sig.Symbols.Delkey(name)
+		}
+	}
+}
+
+func sigUsedHas(name string, sort Sort, used *InsMap[NodeKey, Expr]) bool {
+	if used == nil {
+		return false
+	}
+	_, ok := used.Get2(ConstSymKey(NewConst(name, sort)))
+	return ok
 }
 
 // ClassifyComponents determines the role of each hierarchy component

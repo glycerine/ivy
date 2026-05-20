@@ -110,6 +110,32 @@ func TestSigSymbolTraceCountExpandsPolymorphicUnion(t *testing.T) {
 	}
 }
 
+func TestFilterSigSymbolsByUsedPrunesPolymorphicVariants(t *testing.T) {
+	s := NewSig()
+	sortA := &UninterpretedSort{Name: "a.t"}
+	sortB := &UninterpretedSort{Name: "b.t"}
+	aLt := LogicRelationSort([]Sort{sortA, sortA})
+	bLt := LogicRelationSort([]Sort{sortB, sortB})
+	if _, err := s.AddSymbol("<", aLt); err != nil {
+		t.Fatalf("AddSymbol(< a): %v", err)
+	}
+	if _, err := s.AddSymbol("<", bLt); err != nil {
+		t.Fatalf("AddSymbol(< b): %v", err)
+	}
+	used := NewInsMap[NodeKey, Expr]()
+	used.Set(ConstSymKey(NewConst("<", aLt)), NewConst("<", aLt))
+
+	filterSigSymbolsByUsed(s, used, nil)
+
+	if got := sigSymbolTraceCount(s); got != 1 {
+		t.Fatalf("sigSymbolTraceCount after filter = %d, want 1", got)
+	}
+	entry, ok := s.Symbols.Get2("<")
+	if !ok || entry.Union == nil || len(entry.Union.Sorts) != 1 || !SortEqual(entry.Union.Sorts[0], aLt) {
+		t.Fatalf("filtered entry = %#v, want only a.t variant", entry)
+	}
+}
+
 func TestIvyLogicSigFindSymbol(t *testing.T) {
 	s := NewSig()
 	sort := &UninterpretedSort{Name: "node"}

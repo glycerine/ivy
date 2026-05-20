@@ -296,6 +296,29 @@ conjecture s(K) & m(K,L) & L ~= K -> s(L)`
 	}
 }
 
+func TestParseV16ArrowIffChainPreservesPythonShift(t *testing.T) {
+	src := `#lang ivy1.6
+type t
+individual i : t
+function p(X:t) : bool
+function q(X:t) : bool
+function r(X:t) : bool
+property p(i) -> q(i) <-> r(i)`
+
+	result, err := Parse(src, Version{1, 6}, WithFilename("v16_arrow_iff_chain.ivy"))
+	if err != nil {
+		t.Fatalf("Parse ivy1.6 arrow/iff chain: %v", err)
+	}
+
+	impl, ok := v16PropertyFormula(t, result).(*Implies)
+	if !ok {
+		t.Fatalf("property formula = %T, want *Implies", v16PropertyFormula(t, result))
+	}
+	if _, ok := impl.T2.(*Iff); !ok {
+		t.Fatalf("implication consequent = %T, want *Iff", impl.T2)
+	}
+}
+
 func TestParseV16DisjunctionPreservesPythonNesting(t *testing.T) {
 	src := `#lang ivy1.6
 type t
@@ -341,6 +364,26 @@ func v16ConjectureFormula(t *testing.T, result *ParseResult) Node {
 		return lf.Formula
 	}
 	t.Fatal("missing conjecture declaration")
+	return nil
+}
+
+func v16PropertyFormula(t *testing.T, result *ParseResult) Node {
+	t.Helper()
+	for _, decl := range result.Decls {
+		prop, ok := decl.(*PropertyDecl)
+		if !ok {
+			continue
+		}
+		if len(prop.DeclArgs) != 1 {
+			t.Fatalf("property has %d args, want 1", len(prop.DeclArgs))
+		}
+		lf, ok := prop.DeclArgs[0].(*LabeledFormula)
+		if !ok {
+			t.Fatalf("property arg = %T, want *LabeledFormula", prop.DeclArgs[0])
+		}
+		return lf.Formula
+	}
+	t.Fatal("missing property declaration")
 	return nil
 }
 
