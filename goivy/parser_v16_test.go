@@ -212,6 +212,28 @@ init bit`
 	}
 }
 
+func TestCreateIsolateUsesParsedV16VersionForPresentConjectures(t *testing.T) {
+	requireParserTraceEnabled(t)
+
+	mod := New()
+	SetStringVersionOn(mod.Cfg.IuCfg, "1.6")
+	cfg := mod.Cfg.AstCfg
+	mod.Isolates["iso"] = cfg.NewIsolateDef([]Node{
+		cfg.NewAtom("iso"),
+		cfg.NewAtom("this"),
+	}, 0)
+
+	trace := captureParserTrace(t, func() {
+		_ = CreateIsolate("iso", mod)
+	})
+	if strings.Contains(trace, "check.ApplyPresentConjectures raw_labeled_conjs=") {
+		t.Fatalf("v1.6 CreateIsolate used v1.7 present-conjecture path:\n%s", trace)
+	}
+	if !strings.Contains(trace, "check.CreateIsolate.preInitDel") {
+		t.Fatalf("missing CreateIsolate preInitDel trace:\n%s", trace)
+	}
+}
+
 func TestParseV16ConjunctionReducesBeforeArrow(t *testing.T) {
 	requireParserTraceEnabled(t)
 

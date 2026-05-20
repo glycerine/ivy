@@ -204,9 +204,10 @@ func CreateIsolate(iso string, mod *Module) error {
 		return fmt.Errorf("create_isolate: nil module")
 	}
 	isoCfg := mod.Cfg.IsolateCfg
+	ivyVersion := createIsolateIvyVersion(mod)
 
 	// From version 1.7, if no isolate specified and there is only one, use it.
-	if iso == "" && versionLE("1.7", isoCfg.IvyVersion) {
+	if iso == "" && versionLE("1.7", ivyVersion) {
 		isoNames := make([]string, 0, len(mod.Isolates))
 		for name := range mod.Isolates {
 			isoNames = append(isoNames, name)
@@ -220,7 +221,7 @@ func CreateIsolate(iso string, mod *Module) error {
 	// Python calls this FIRST, before initializer exports, mixin/delegate/export checks.
 	var brackets []BracketEntry
 	if iso != "" {
-		if isoDef, ok := mod.Isolates[iso]; ok && versionLE("1.7", isoCfg.IvyVersion) {
+		if isoDef, ok := mod.Isolates[iso]; ok && versionLE("1.7", ivyVersion) {
 			brackets = ApplyPresentConjectures(isoDef, mod)
 		}
 	}
@@ -469,7 +470,7 @@ func CreateIsolate(iso string, mod *Module) error {
 	// Python line 1944-1946: Apply bracket actions for present conjectures (version >= 1.7)
 	xtracer.Trace("check.CreateIsolate before_bracket_actions n_brackets=%d", len(brackets))
 	if iso != "" {
-		if _, ok := mod.Isolates[iso]; ok && versionLE("1.7", isoCfg.IvyVersion) {
+		if _, ok := mod.Isolates[iso]; ok && versionLE("1.7", ivyVersion) {
 			for _, b := range brackets {
 				xtracer.Trace("check.CreateIsolate bracket_action actname=%s n_before=%d n_after=%d", b.ActName, len(b.Before), len(b.After))
 				IsolateBracketAction(mod, b.ActName, b.Before, b.After)
@@ -487,6 +488,16 @@ func CreateIsolate(iso string, mod *Module) error {
 
 	xtracer.Trace("check.CreateIsolate EXIT name=%s", iso)
 	return nil
+}
+
+func createIsolateIvyVersion(mod *Module) string {
+	if mod != nil && mod.Cfg != nil && mod.Cfg.IuCfg != nil {
+		return mod.Cfg.IuCfg.GetStringVersion()
+	}
+	if mod != nil && mod.Cfg != nil && mod.Cfg.IsolateCfg != nil {
+		return mod.Cfg.IsolateCfg.IvyVersion
+	}
+	return "1.7"
 }
 
 // getModCone returns the set of action names in the cone of influence.

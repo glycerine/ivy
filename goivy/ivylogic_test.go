@@ -86,6 +86,30 @@ func TestIvyLogicSigCanonShowsPolymorphicUnionSort(t *testing.T) {
 	}
 }
 
+func TestSigSymbolTraceCountExpandsPolymorphicUnion(t *testing.T) {
+	s := NewSig()
+	sortA := &UninterpretedSort{Name: "a.t"}
+	sortB := &UninterpretedSort{Name: "b.t"}
+	if err := s.AddSort(sortA); err != nil {
+		t.Fatalf("AddSort(a.t): %v", err)
+	}
+	if err := s.AddSort(sortB); err != nil {
+		t.Fatalf("AddSort(b.t): %v", err)
+	}
+	aLt := LogicRelationSort([]Sort{sortA, sortA})
+	bLt := LogicRelationSort([]Sort{sortB, sortB})
+	if _, err := s.AddSymbol("<", aLt); err != nil {
+		t.Fatalf("AddSymbol(< a): %v", err)
+	}
+	if _, err := s.AddSymbol("<", bLt); err != nil {
+		t.Fatalf("AddSymbol(< b): %v", err)
+	}
+
+	if got := sigSymbolTraceCount(s); got != 2 {
+		t.Fatalf("sigSymbolTraceCount = %d, want 2", got)
+	}
+}
+
 func TestIvyLogicSigFindSymbol(t *testing.T) {
 	s := NewSig()
 	sort := &UninterpretedSort{Name: "node"}

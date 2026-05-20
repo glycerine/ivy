@@ -1553,12 +1553,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	}
 
 	if mod.Sig != nil {
-		remaining := make([]string, 0)
-		for name := range mod.Sig.Symbols.All() {
-			remaining = append(remaining, name)
-		}
-		sort.Strings(remaining)
-		xtracer.Trace("isolate.sig_filter_done n_remaining=%d", len(remaining))
+		xtracer.Trace("isolate.sig_filter_done n_remaining=%d", sigSymbolTraceCount(mod.Sig))
 	}
 
 	// Check property dependencies
@@ -1874,6 +1869,13 @@ func extractIsolateNames(iso interface{}) (verified, present []string) {
 
 	// Fallback: no names extracted.
 	return nil, nil
+}
+
+func sigSymbolTraceCount(sig *Sig) int {
+	if sig == nil {
+		return 0
+	}
+	return len(sig.AllSymbols())
 }
 
 // ClassifyComponents determines the role of each hierarchy component

@@ -2851,7 +2851,7 @@ These predicates are formulas over program variables — `x > 0`, `x = 5`, `∀i
 
 Dijkstra was extremely deliberate about this. *A Discipline of Programming* leans heavily on quantifiers and predicate calculus precisely because reasoning about loops requires inductive invariants, and inductive invariants over unbounded state need quantifiers. The whole edifice of guarded commands, weakest preconditions, and the calculational style he and Gries and Hoare developed is built on predicate logic.
 
-Ivy generates its VCs using exactly this wp calculus — that's not a coincidence. Read the [Ivy decidability docs page](http://microsoft.github.io/ivy/decidability.html) you found earlier with this lens: when they say verification conditions in Ivy are generated from the calculus of weakest liberal preconditions, that's Dijkstra's machinery directly. The "liberal" variant (wlp) just drops the termination requirement — wlp(S, Q) is the weakest predicate ensuring "if S terminates, then Q holds," which is the right notion when you're proving partial correctness via inductive invariants.
+Ivy generates its VCs using exactly this wp calculus — that's not a coincidence. Read the [Ivy decidability docs page](https://kenmcmil.github.io/ivy/decidability.html) you found earlier with this lens: when they say verification conditions in Ivy are generated from the calculus of weakest liberal preconditions, that's Dijkstra's machinery directly. The "liberal" variant (wlp) just drops the termination requirement — wlp(S, Q) is the weakest predicate ensuring "if S terminates, then Q holds," which is the right notion when you're proving partial correctness via inductive invariants.
 
 ## Short mental model for your Ivy work
 
