@@ -1,6 +1,7 @@
 package ivy2cpp
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 	"sort"
@@ -37,6 +38,7 @@ type Generator struct {
 	tempID int
 
 	exprAliases map[string]goivy.Expr
+	errs        []error
 }
 
 func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
@@ -95,7 +97,16 @@ func (g *Generator) generate() error {
 	if err := g.emitHeader(); err != nil {
 		return err
 	}
-	return g.emitImpl()
+	if err := g.emitImpl(); err != nil {
+		return err
+	}
+	return errors.Join(g.errs...)
+}
+
+func (g *Generator) unsupported(w *cppWriter, format string, args ...any) {
+	err := fmt.Errorf("ivy2cpp: "+format, args...)
+	g.errs = append(g.errs, err)
+	w.linef("/* %s */", escapeComment(err.Error()))
 }
 
 func (g *Generator) validateSupportedInitialState() error {

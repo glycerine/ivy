@@ -49,6 +49,15 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 			return "", err
 		}
 		return "!(" + body + ")", nil
+	case *goivy.LogicLiteral:
+		body, err := g.emitExpr(n.Atom)
+		if err != nil {
+			return "", err
+		}
+		if n.Polarity == 0 {
+			return "!(" + body + ")", nil
+		}
+		return body, nil
 	case *goivy.LogicAnd:
 		return g.emitNary(n.Terms, "&&", "true")
 	case *goivy.LogicOr:

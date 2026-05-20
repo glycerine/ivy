@@ -54,9 +54,10 @@ func runPythonIvyToCpp(t *testing.T, src string, params ...string) (string, stri
 	if existing := os.Getenv("PYTHONPATH"); existing != "" {
 		pythonPath += string(os.PathListSeparator) + existing
 	}
-	cmd.Env = append(os.Environ(), "IVY_HOME="+pyivyRoot, "PYTHONPATH="+pythonPath)
+	cmd.Env = append(os.Environ(), "IVY_HOME="+pyivyRoot, "PYTHONPATH="+pythonPath, "XTRACE_OFF=1")
 	if out, err := cmd.CombinedOutput(); err != nil {
-		t.Skipf("python ivy_to_cpp unavailable: %v\n%s", err, out)
+		_ = out
+		t.Skipf("python ivy_to_cpp unavailable: %v", err)
 	}
 	h, err := os.ReadFile(filepath.Join(dir, "oracle.h"))
 	if err != nil {
@@ -113,6 +114,28 @@ func TestGenerateEmptyModuleProducesHeaderAndImpl(t *testing.T) {
 	}
 	if !strings.Contains(out.Impl, `#include "empty.h"`) {
 		t.Fatalf("impl missing include:\n%s", out.Impl)
+	}
+}
+
+func TestPythonOracleMinimalReplShape(t *testing.T) {
+	src := `#lang ivy1.7
+action step = {
+}
+export step
+`
+	pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target=repl")
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"class oracle", "__init", "step"} {
+		if !strings.Contains(pyHeader+pyImpl, want) {
+			t.Fatalf("python oracle missing %q:\nheader:\n%s\nimpl:\n%s", want, pyHeader, pyImpl)
+		}
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("go output missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
 	}
 }
 
@@ -231,6 +254,17 @@ func TestEmitExprBooleanAndEquality(t *testing.T) {
 	}
 }
 
+func TestEmitExprLiteral(t *testing.T) {
+	flag := goivy.NewConst("flag", goivy.Boolean)
+	got, err := (&Generator{}).emitExpr(goivy.NewLiteral(0, flag))
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if got != "!(flag)" {
+		t.Fatalf("literal code=%q", got)
+	}
+}
+
 func TestEmitExprQuantifierFiniteEnumLoop(t *testing.T) {
 	color := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	x, err := goivy.NewVariable("X", color)
@@ -262,6 +296,16 @@ func TestEmitExprUnsupportedIsActionable(t *testing.T) {
 	}
 	_, err = (&Generator{}).emitExpr(lambda)
 	if err == nil || !strings.Contains(err.Error(), "unsupported expression") || !strings.Contains(err.Error(), "*goivy.Lambda") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestGenerateUnsupportedActionReturnsError(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "unsupported"
+	mod.Actions.Set("step", goivy.NewThunkAction(goivy.NewConst("x", goivy.TopS)))
+	_, err := Generate(mod, Config{ClassName: "unsupported"})
+	if err == nil || !strings.Contains(err.Error(), "unsupported action") || !strings.Contains(err.Error(), "*goivy.LogicThunkAction") {
 		t.Fatalf("unexpected error: %v", err)
 	}
 }
@@ -784,6 +828,24 @@ export step
 	}
 }
 
+func TestReplIgnoresInternalAction(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "replprivate"
+	mod.Actions.Set("internal", goivy.NewSequence())
+	mod.Actions.Set("step", goivy.NewSequence())
+	mod.PublicActions.Set("step", true)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, `if (action == "step")`) {
+		t.Fatalf("missing exported dispatch:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, `if (action == "internal")`) {
+		t.Fatalf("internal action should not be dispatchable:\n%s", out.Impl)
+	}
+}
+
 func TestReplDispatchForParameterizedExportCompiles(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -823,15 +885,23 @@ export step
 `), 0o644); err != nil {
 		t.Fatalf("write spec: %v", err)
 	}
-	cmd := exec.Command("go", "run", "./cmd/ivy2cpp", "target=repl", "outdir="+dir, spec)
+	cmd := exec.Command("go", "run", "./cmd/ivy2cpp", "target=repl", "classname=Tiny", "outdir="+dir, spec)
 	cmd.Dir = filepath.Join(repoRoot(t), "goivy")
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("go run ivy2cpp: %v\n%s", err, out)
 	}
-	if _, err := os.Stat(filepath.Join(dir, "tiny.h")); err != nil {
+	headerPath := filepath.Join(dir, "tiny.h")
+	if _, err := os.Stat(headerPath); err != nil {
 		t.Fatalf("missing tiny.h: %v", err)
 	}
 	if _, err := os.Stat(filepath.Join(dir, "tiny.cpp")); err != nil {
 		t.Fatalf("missing tiny.cpp: %v", err)
+	}
+	header, err := os.ReadFile(headerPath)
+	if err != nil {
+		t.Fatalf("read tiny.h: %v", err)
+	}
+	if !strings.Contains(string(header), "class Tiny") {
+		t.Fatalf("classname parameter not reflected in header:\n%s", header)
 	}
 }
