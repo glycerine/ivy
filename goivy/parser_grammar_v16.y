@@ -169,8 +169,9 @@ func parser16AtypeToAtom(cfg *AstConfig, n Node) *Atom {
 	}
 }
 
-// parser16MakeMixinName generates a unique mixin name.
-// Matches Python make_mixin_name() (ivy_parser.py:2556-2562).
+// parser16MakeMixinName follows the Ivy 1.6 make_mixin_name branch.
+// Unlike Ivy 1.7+, Ivy 1.6 does not advance label_counter here or append it
+// to the mixin name.
 func parser16MakeMixinName(cfg *AstConfig, atom *Atom, suffix string) *Atom {
 	xtracer.Trace("parser.make_mixin_name ENTER")
 	// Python v1.6: name = atom.rep.replace(ivy_compose_character, '_') + '[' + suffix + ']'
