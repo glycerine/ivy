@@ -109,10 +109,17 @@ func (g *Generator) unsupported(w *cppWriter, format string, args ...any) {
 	w.linef("/* %s */", escapeComment(err.Error()))
 }
 
+func (g *Generator) nextTemp(prefix string) string {
+	g.tempID++
+	return fmt.Sprintf("%s%d", prefix, g.tempID)
+}
+
 func (g *Generator) validateSupportedInitialState() error {
 	hasExecutableInit := len(g.Mod.InitialActions) > 0 || len(g.Mod.Initializers) > 0
 	if !hasExecutableInit && g.Mod.InitCond != nil && !g.Mod.InitCond.IsTrue() {
-		return fmt.Errorf("ivy2cpp: initial constraints are not supported yet; use after init actions for v1 C++ generation")
+		if _, err := g.initialConditionActions(); err != nil {
+			return fmt.Errorf("ivy2cpp: initial constraints are not supported yet; use after init actions for v1 C++ generation: %w", err)
+		}
 	}
 	return nil
 }
@@ -429,6 +436,16 @@ func (g *Generator) emitInit(w *cppWriter) {
 			}
 		}
 	}
+	if len(g.Mod.Initializers) == 0 && !g.hasInitialMixinActions() {
+		actions, err := g.initialConditionActions()
+		if err != nil {
+			g.unsupported(w, "unsupported initial constraints: %s", err.Error())
+		} else {
+			for _, act := range actions {
+				g.emitAction(w, act)
+			}
+		}
+	}
 	w.close("")
 	w.blank()
 }
@@ -509,6 +526,10 @@ func (g *Generator) emitRepl(w *cppWriter) {
 	}
 	w.line("(void)argc;")
 	w.line("(void)argv;")
+	w.line("std::string action;")
+	w.open("while (std::cin >> action) {")
+	w.line("ivy2cpp_dispatch(ivy, action);")
+	w.close("")
 	w.line("return 0;")
 	w.close("")
 }
@@ -545,6 +566,13 @@ func (g *Generator) initialMixinActionNames() map[string]bool {
 		out[mixin.Mixer()] = true
 	}
 	return out
+}
+
+func (g *Generator) hasInitialMixinActions() bool {
+	if g == nil || g.Mod == nil || g.Mod.Actions == nil || g.Mod.Mixins == nil {
+		return false
+	}
+	return len(g.Mod.Mixins.Get("init")) > 0
 }
 
 func insMapKeys[V any](m *goivy.InsMap[string, V]) []string {

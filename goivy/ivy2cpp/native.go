@@ -226,7 +226,11 @@ func (g *Generator) emitNativeExpr(n *goivy.LogicNativeExpr) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return g.renderNativeTemplate(code, n.CompiledChildren[1:])
+	rendered, err := g.renderNativeTemplate(code, n.CompiledChildren[1:])
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(rendered), nil
 }
 
 func (g *Generator) nativeTypeForSort(name string) (*goivy.NativeType, bool) {

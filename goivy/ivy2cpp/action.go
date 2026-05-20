@@ -58,6 +58,10 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 		g.emitDebug(w, a)
 	case *goivy.LogicCrashAction:
 		w.line("std::abort();")
+	case *goivy.ReturnAction:
+		w.line("return;")
+	case *goivy.IgnoreAction:
+		return
 	case *goivy.LogicAssignFieldAction:
 		g.emitAssignField(w, a)
 	case *goivy.LogicNullFieldAction:
@@ -180,6 +184,10 @@ func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label 
 }
 
 func (g *Generator) emitIf(w *cppWriter, a *goivy.LogicIfAction) {
+	if some, ok := a.Cond.(*goivy.SomeCondition); ok {
+		g.emitIfSome(w, a, some)
+		return
+	}
 	cond, err := g.emitExpr(a.GetCond())
 	if err != nil {
 		g.unsupported(w, "unsupported if condition: %s", err.Error())
@@ -196,6 +204,50 @@ func (g *Generator) emitIf(w *cppWriter, a *goivy.LogicIfAction) {
 		return
 	}
 	w.close("")
+}
+
+func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) {
+	if some.Kind != "some" {
+		g.unsupported(w, "unsupported if %s condition: minimizing/maximizing some is not supported yet", some.Kind)
+		return
+	}
+	found := g.nextTemp("__ivy_some")
+	w.linef("bool %s = false;", found)
+	opened := 0
+	for _, p := range some.Params {
+		header, err := g.loopHeaderForSort(p.CSort, varName(p.Name))
+		if err != nil {
+			g.unsupported(w, "unsupported some parameter %s:%s", varName(p.Name), err.Error())
+			for i := 0; i < opened; i++ {
+				w.close("")
+			}
+			return
+		}
+		w.open(header)
+		opened++
+	}
+	cond, err := g.emitExpr(some.Fmla)
+	if err != nil {
+		g.unsupported(w, "unsupported some condition: %s", err.Error())
+		for i := 0; i < opened; i++ {
+			w.close("")
+		}
+		return
+	}
+	w.open(fmt.Sprintf("if (!%s && (%s)) {", found, cond))
+	w.linef("%s = true;", found)
+	if thenAct, ok := a.ThenBody.(goivy.Action); ok {
+		g.emitAction(w, thenAct)
+	}
+	w.close("")
+	for i := 0; i < opened; i++ {
+		w.close("")
+	}
+	if elseAct, ok := a.ElseBody.(goivy.Action); ok {
+		w.open(fmt.Sprintf("if (!%s) {", found))
+		g.emitAction(w, elseAct)
+		w.close("")
+	}
 }
 
 func (g *Generator) emitWhile(w *cppWriter, a *goivy.LogicWhileAction) {

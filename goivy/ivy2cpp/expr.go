@@ -109,6 +109,10 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 		return g.emitQuant(n.Variables, n.Body, false)
 	case *goivy.LogicNativeExpr:
 		return g.emitNativeExpr(n)
+	case *goivy.LogicSome:
+		return g.emitSome(n)
+	case *goivy.LogicGlobally, *goivy.LogicEventually, *goivy.LogicWhenOperator:
+		return "", fmt.Errorf("ivy2cpp: temporal expression %T is not supported in C++ generation yet: %s", e, e.String())
 	default:
 		return "", fmt.Errorf("ivy2cpp: unsupported expression %T: %s", e, e.String())
 	}
@@ -233,6 +237,48 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 	} else {
 		w.line("return false;")
 	}
+	w.indent = 0
+	w.raw("})()")
+	return w.String(), nil
+}
+
+func (g *Generator) emitSome(s *goivy.LogicSome) (string, error) {
+	if s == nil || len(s.Params) == 0 {
+		return "", fmt.Errorf("ivy2cpp: empty some expression")
+	}
+	if s.IfVal != nil || s.ElseVal != nil {
+		return "", fmt.Errorf("ivy2cpp: some expression with if/else values is not supported yet: %s", s.String())
+	}
+	vars := make([]*goivy.LogicVariable, 0, len(s.Params))
+	for _, p := range s.Params {
+		v, ok := p.(*goivy.LogicVariable)
+		if !ok {
+			return "", fmt.Errorf("ivy2cpp: some parameter %T is not a variable: %s", p, s.String())
+		}
+		vars = append(vars, v)
+	}
+	var w cppWriter
+	w.raw("([&]() {")
+	w.raw("\n")
+	w.indent = 1
+	for _, v := range vars {
+		header, err := g.loopHeaderForVar(v)
+		if err != nil {
+			return "", err
+		}
+		w.line(header)
+		w.indent++
+	}
+	cond, err := g.emitExpr(s.Fmla)
+	if err != nil {
+		return "", err
+	}
+	w.linef("if (%s) return %s;", cond, varName(vars[0].Name))
+	for range vars {
+		w.indent--
+		w.line("}")
+	}
+	w.linef("return %s;", g.cppZeroValue(s.NodeSort()))
 	w.indent = 0
 	w.raw("})()")
 	return w.String(), nil

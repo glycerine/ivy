@@ -433,6 +433,26 @@ func TestEmitExprLiteral(t *testing.T) {
 	}
 }
 
+func TestEmitExprDisequality(t *testing.T) {
+	x := goivy.NewConst("x", goivy.Boolean)
+	y := goivy.NewConst("y", goivy.Boolean)
+	eq, err := goivy.NewEq(x, y)
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	neq, err := goivy.NewNot(eq)
+	if err != nil {
+		t.Fatalf("NewNot: %v", err)
+	}
+	got, err := (&Generator{}).emitExpr(neq)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if got != "!((x == y))" {
+		t.Fatalf("disequality code=%q", got)
+	}
+}
+
 func TestEmitExprQuantifierFiniteEnumLoop(t *testing.T) {
 	color := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	x, err := goivy.NewVariable("X", color)
@@ -454,6 +474,40 @@ func TestEmitExprQuantifierFiniteEnumLoop(t *testing.T) {
 	}
 	if !strings.Contains(got, "for (color X : {red, green})") || !strings.Contains(got, "return true;") {
 		t.Fatalf("unexpected quantifier code:\n%s", got)
+	}
+}
+
+func TestEmitExprSomeFiniteEnumLoop(t *testing.T) {
+	color := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	x, err := goivy.NewVariable("X", color)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	green := goivy.NewConst("green", color)
+	body, err := goivy.NewEq(x, green)
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	some := goivy.NewSome([]goivy.Expr{x}, body)
+	got, err := (&Generator{}).emitExpr(some)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	for _, want := range []string{"for (color X : {red, green})", "if ((X == green)) return X;", "return red;"} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("missing %q in some expression:\n%s", want, got)
+		}
+	}
+}
+
+func TestEmitExprTemporalUnsupportedIsActionable(t *testing.T) {
+	g, err := goivy.NewGlobally(nil, goivy.True)
+	if err != nil {
+		t.Fatalf("NewGlobally: %v", err)
+	}
+	_, err = (&Generator{}).emitExpr(g)
+	if err == nil || !strings.Contains(err.Error(), "temporal expression") || !strings.Contains(err.Error(), "*goivy.LogicGlobally") {
+		t.Fatalf("unexpected error: %v", err)
 	}
 }
 
@@ -561,6 +615,47 @@ func TestGeneratedChoiceActionCompiles(t *testing.T) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
 	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestGeneratedIfSomeActionCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step = {
+    if some c:color. c = green {
+        saved := c
+    } else {
+        saved := red
+    }
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "someact"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"bool __ivy_some", "for (color loc__c : {red, green})", "if (!__ivy_some", "saved = loc__c;", "saved = red;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestReturnAndIgnoreActionsCompileInVoidMethod(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "markers"
+	mod.Actions.Set("step", goivy.NewSequence(goivy.NewIgnoreAction(), goivy.NewReturnAction()))
+	out, err := Generate(mod, Config{ClassName: "markers"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "return;") {
+		t.Fatalf("return marker was not emitted:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
 }
 
@@ -936,6 +1031,81 @@ func TestUnsupportedModelInitialStateReturnsError(t *testing.T) {
 	}
 }
 
+func TestInitEqualityConstraintEmitsAssignment(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step = {
+}
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	eq, err := goivy.NewEq(goivy.NewConst("saved", color), goivy.NewConst("green", color))
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	mod.InitCond = goivy.FormulaToClauses(eq, nil)
+	out, err := Generate(mod, Config{ClassName: "initeq"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "saved = green;") {
+		t.Fatalf("missing init assignment:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestInitRelationIffConstraintEmitsLoop(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+action step = {
+}
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	relSort, ok := mod.Relations.Get2("marked")
+	if !ok {
+		relSort, ok = mod.Functions.Get2("marked")
+	}
+	if !ok {
+		t.Fatal("missing marked relation")
+	}
+	c, err := goivy.NewVariable("C", color)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	marked, err := goivy.NewApply(goivy.NewConst("marked", relSort), c)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	isGreen, err := goivy.NewEq(c, goivy.NewConst("green", color))
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	init, err := goivy.NewIff(marked, isGreen)
+	if err != nil {
+		t.Fatalf("NewIff: %v", err)
+	}
+	mod.InitCond = goivy.FormulaToClauses(init, nil)
+	out, err := Generate(mod, Config{ClassName: "initrel"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"for (color C : {red, green})", "marked[C] = (C == green);"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestEmitNativeActionAntiquotes(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -995,7 +1165,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Header, "typedef std::vector<long long> vec;") {
+	if !strings.Contains(out.Header, "typedef std::vector<idx> vec;") {
 		t.Fatalf("missing rendered native vector type:\n%s", out.Header)
 	}
 	assertNoUnsupportedCPP(t, out)
@@ -1006,6 +1176,7 @@ func TestNativeDefinitionEmitsTemplateMethod(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type idx
 interpret idx -> <<< int >>>
+relation lt(X:idx,Y:idx)
 definition lt(x:idx,y:idx) = <<< `+"`x`"+` < `+"`y`"+` >>>
 action step(x:idx,y:idx) = {
     assert lt(x,y)
@@ -1096,6 +1267,24 @@ export step
 	if !strings.Contains(out.Impl, `if (action == "step")`) {
 		t.Fatalf("missing repl dispatch:\n%s", out.Impl)
 	}
+}
+
+func TestReplMainReadsCommandsFromStdin(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"std::string action;", "while (std::cin >> action)", "ivy2cpp_dispatch(ivy, action);"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in repl main:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
 }
 
 func TestReplIgnoresInternalAction(t *testing.T) {
