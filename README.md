@@ -2864,3 +2864,118 @@ The "navel-gazing" turns out to be load-bearing: every constraint Ivy enforces a
 
 If you want the canonical short read on this, Dijkstra's [EWD472 "Guarded commands, nondeterminacy and formal derivation of programs"](https://www.cs.utexas.edu/~EWD/transcriptions/EWD04xx/EWD472.html) (1975) is the original wp paper and is only a dozen pages. For the FOL-fragments angle, the Padon/McMillan paper [*Deductive Verification in Decidable Fragments with Ivy*](https://www.wisdom.weizmann.ac.il/~padon/ivy-sas18.pdf) is the right anchor — they spell out exactly why each fragment was chosen.
 
+## follow-up: what is a "term" in Predicate logic (aka first-order logic, FOL)?
+
+Q: You say, "Predicate logic (a.k.a. first-order logic, FOL) breaks open those atoms. Now your atoms are predicates applied to terms", but then do not define a "term". What is a "term" in the context of Predicate logic?
+
+A (Claude):
+
+Fair catch — I used "term" as if it were obvious, and it's actually a precise technical concept that matters.
+
+## The definition
+
+In predicate logic, a **term** is anything that *denotes an object* in your domain of discourse. Terms are the "noun phrases" of the logic — the things that refer to elements of the universe you're reasoning about. Predicates, by contrast, are the "verbs" or "adjectives" that say something *about* terms.
+
+Terms are defined inductively (this is the standard textbook definition):
+
+1. **Every variable is a term.** `x`, `y`, `n` — these denote some unspecified object in the domain.
+2. **Every constant is a term.** `0`, `nil`, `alice` — these denote specific named objects in the domain.
+3. **If `f` is an n-ary function symbol and `t₁, …, tₙ` are terms, then `f(t₁, …, tₙ)` is a term.** Functions take terms and produce new terms.
+4. Nothing else is a term.
+
+That's it. Terms are built from variables and constants by repeated function application. Crucially, **a term is not a formula**. A term has no truth value — you cannot ask whether `x + 3` is true or false; you can only ask what object it denotes.
+
+## Examples to make the distinction sharp
+
+In the language of arithmetic with `0, 1, +, ×, <, =`:
+
+- `0` — term (a constant)
+- `x` — term (a variable)
+- `x + 1` — term (function `+` applied to terms `x` and `1`)
+- `(x + 1) × y` — term (nested function application)
+- `x + 1 < y` — **not a term**. This is an *atomic formula*: the predicate `<` applied to the terms `x + 1` and `y`. It has a truth value.
+- `∀x. x + 1 < y` — a formula, not a term.
+
+In Ivy's setting, with a node type and an `id` function:
+
+- `x` — term (variable of type node)
+- `id(x)` — term (function `id` applied to term `x`; denotes some id value)
+- `id(x) < id(y)` — atomic formula (the `<` predicate applied to two terms)
+- `leader(x)` — atomic formula (the `leader` predicate applied to a term)
+
+Notice that `id(x)` and `leader(x)` look syntactically identical but live in different worlds. `id` is a **function symbol** — it takes a node and returns an id, so `id(x)` is a term denoting an object. `leader` is a **predicate symbol** — it takes a node and returns a truth value, so `leader(x)` is a formula. The distinction is in the symbol's declaration, not its surface syntax.
+
+## Why this matters in Ivy
+
+Ivy keeps function symbols and predicate symbols (relation symbols) syntactically distinct. When you declare `relation leader(N: node)` versus `function id(N: node): id_t`, you're telling Ivy which symbols produce terms and which produce formulas. This shows up in the decidable-fragment rules: the "function cycle" check Ivy enforces on EPR fragments is literally a check on the graph of function symbols (the things that build terms), because function symbols are what generate infinite Herbrand universes when quantifiers chase them.
+
+The slogan: **terms denote things, formulas say things**. Predicate logic is the layer that lets you build complex things (nested terms) and then say complex stuff about them (with predicates and quantifiers). Propositional logic, by contrast, has no terms at all — its atoms are just opaque Booleans with no internal structure to refer to.
+
+# follow-up: What are Sorts?
+
+Excellent question — this gets at something that's often glossed over in introductory treatments.
+
+## Two flavors of predicate logic
+
+There's a fork in the road here:
+
+**Unsorted (single-sorted) first-order logic** is the version in classic textbooks. There's one domain of discourse — call it the universe — and every variable, constant, and function output lives in that one universe. No sorts, no types. When you write `∀x. P(x)`, the `x` ranges over *everything*.
+
+**Many-sorted first-order logic** partitions the universe into disjoint **sorts**. Every term has a sort. Function and predicate symbols have sort signatures specifying what sorts their arguments must have and (for functions) what sort their result is. Variables are declared with a sort, and quantifiers range only over the sort.
+
+These are formally equivalent in expressive power — you can always encode sorts in unsorted FOL by introducing unary predicates `IsNode(x)`, `IsMessage(x)`, etc., and relativizing every quantifier. But this encoding is awful in practice. It bloats formulas, hides structure, and lets you write nonsense like `succ(alice) < bob.color` that should be a type error caught immediately. So real verification tools — Ivy, SMT-LIB, Z3, Dafny, F\*, Coq — all use many-sorted logic.
+
+## What is a sort?
+
+Q: Okay, so what is a "Sort"? In Predicate logic, do terms have Sorts (types)? Do formulas have Sorts?
+
+A (Claude):
+
+A sort is just a *name for a domain*. Syntactically, it's a symbol like `node`, `message`, `int`, `bool`. Semantically, when you give a model, each sort gets interpreted as a specific non-empty set, and these sets are disjoint.
+
+In Ivy you write:
+
+```
+type node
+type id_t
+relation leader(N: node)
+function id(N: node): id_t
+```
+
+This declares two sorts (`node` and `id_t`), a predicate `leader` taking a `node`, and a function `id` mapping `node` to `id_t`. The signature `node → id_t` is the sort signature of `id`.
+
+## Do terms have sorts? Yes.
+
+In many-sorted logic, every term has exactly one sort, determined inductively:
+
+1. A variable's sort is fixed by its declaration.
+2. A constant's sort is fixed by its declaration.
+3. If `f` has signature `s₁ × … × sₙ → s` and each `tᵢ` has sort `sᵢ`, then `f(t₁, …, tₙ)` has sort `s`. If the argument sorts don't match, `f(t₁, …, tₙ)` is **not a well-formed term at all** — it's a syntax error, just like a type error in a programming language.
+
+So in the Ivy example:
+- `x` (declared as `node`) has sort `node`.
+- `id(x)` has sort `id_t` (because `id : node → id_t`).
+- `id(id(x))` is **not well-formed** — `id` expects a `node`, but `id(x)` has sort `id_t`. You'd catch this at parse time.
+
+This is exactly analogous to type-checking in a programming language. Sorts in many-sorted FOL are types, and the well-formedness rule for terms is type-checking. Your background with Go's type system maps directly: function signatures, no implicit conversions, well-typedness is a syntactic check.
+
+## Do formulas have sorts?
+
+Here the answer splits depending on how puristic you want to be.
+
+**Strict traditional answer: no.** Formulas don't have sorts — they have a *truth value*. There's a categorical distinction between the term level (sorted objects in the domain) and the formula level (truth values, which live in a separate meta-level Boolean space, not in any sort of the logic). Atomic formulas are built by applying a predicate symbol to terms of matching sorts, but the resulting formula is not itself a term and doesn't have a sort. This is the standard view in mathematical logic textbooks.
+
+**Pragmatic SMT/programming-language answer: yes, formulas have sort `Bool`.** SMT-LIB, Z3, and most modern verification tools treat `Bool` as just another sort. Formulas are terms of sort `Bool`. This collapses the term/formula distinction and is enormously convenient: you can have functions that return `Bool`, you can substitute Boolean expressions like ordinary terms, you can write `ite(P, x, y)` (if-then-else) where `P` is a `Bool` term and `x, y` are terms of some other sort. The whole logic becomes uniformly term-based.
+
+Ivy, sitting on top of Z3, effectively uses this second view internally — relations are functions returning `Bool` under the hood. But Ivy's surface language preserves the predicate/function distinction syntactically (you write `relation` vs. `function`) because it matters for the decidable-fragment analysis. When Ivy's fragment checker hunts for function cycles, it's looking at non-`Bool` function symbols specifically, because those are the ones whose Herbrand expansion can blow up.
+
+## Why the sort discipline pays off in Ivy
+
+Two concrete reasons sorts matter for your verification work:
+
+**Sort-stratified Herbrand universes.** When Z3 instantiates quantifiers, it generates ground terms. In unsorted logic, every term is a candidate substitution for every variable, so the search space explodes. With sorts, only terms of the matching sort are candidates. This is one of the things that makes EPR practically tractable: in EPR with sorts, each sort's Herbrand universe is finite and small.
+
+**Sort-based decidability conditions.** Ivy's "function cycle" check operates on the graph whose nodes are sorts and whose edges are function symbols. A cycle in this graph (e.g., a function from `node` to `node`, or a chain `node → id_t → node`) means quantifier instantiation can generate arbitrarily deep nested terms, breaking decidability. Without sorts, you couldn't even formulate this check — every function would trivially "cycle" through the one universal domain.
+
+So the slogan from the previous message gets refined: **terms denote things of a specific sort, and formulas say things relating terms of matching sorts**. The sort discipline is exactly the type discipline you'd expect from a programming-language background, applied to logic.
+
