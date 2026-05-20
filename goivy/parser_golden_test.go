@@ -550,7 +550,7 @@ func Test2hrOrdLive(t *testing.T) {
 
 func TestGoldenAll(t *testing.T) {
 
-	paths, err := ListAllIvyPathsRecursivelyDeduplicated("../ivy-lang-examples/")
+	paths, err := ListAllIvyPathsRecursively("../ivy-lang-examples/")
 	panicOn(err)
 	for _, path := range paths {
 		isos, err := ListIsolates(path)

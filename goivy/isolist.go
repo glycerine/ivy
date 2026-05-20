@@ -20,9 +20,7 @@ func ListIsolates(pathToDotIvy string) (isoList []string, err error) {
 	return isoList, nil
 }
 
-// in the case of duplicate .ivy spec names, returns only the longer
-// file according to the file's Stat() byte size.
-func ListAllIvyPathsRecursivelyDeduplicated(startingDir string) (dedup []string, err error) {
+func ListAllIvyPathsRecursively(startingDir string) (ivySpecs []string, err error) {
 	// TODO: implement this using the standard library Walk of a directory tree for portability.
 	return nil, fmt.Errorf("not implemented yet.")
 }
