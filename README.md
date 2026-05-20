@@ -2792,3 +2792,4 @@ Esc %         -- for search-and-replace
 
 atg. branch has green echo.ivy test.
 
+* ~/ivy/include2cpp is common support code for python and go ivy2cpp translator/test writer.
