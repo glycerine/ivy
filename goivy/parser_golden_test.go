@@ -549,9 +549,17 @@ func Test2hrOrdLive(t *testing.T) {
 }
 
 func TestGoldenAll(t *testing.T) {
+	off := os.Getenv("XTRACE_OFF")
+	if off != "" {
+		t.Skip("skip again the golden test(s) when XTRACE_OFF.")
+		return // off to check everything else under make test.
+	}
+	vv("top of TestGoldenAll")
 
 	paths, err := ListAllIvyPathsRecursively("../ivy-lang-examples/")
 	panicOn(err)
+	//vv("spec list (len %v) = '%#v'", len(paths), paths)
+
 	for _, path := range paths {
 		isos, err := ListIsolates(path)
 		panicOn(err)

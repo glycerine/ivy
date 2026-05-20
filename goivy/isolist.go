@@ -1,7 +1,8 @@
 package goivy
 
 import (
-	"fmt"
+	"os"
+	"path/filepath"
 	"sort"
 )
 
@@ -21,6 +22,22 @@ func ListIsolates(pathToDotIvy string) (isoList []string, err error) {
 }
 
 func ListAllIvyPathsRecursively(startingDir string) (ivySpecs []string, err error) {
-	// TODO: implement this using the standard library Walk of a directory tree for portability.
-	return nil, fmt.Errorf("not implemented yet.")
+	err = filepath.Walk(startingDir, func(path string, info os.FileInfo, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if info == nil || info.IsDir() {
+			// Returning nil for a directory tells filepath.Walk to recurse into it.
+			return nil
+		}
+		if filepath.Ext(path) == ".ivy" {
+			ivySpecs = append(ivySpecs, path)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	sort.Strings(ivySpecs)
+	return ivySpecs, nil
 }
