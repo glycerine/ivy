@@ -316,6 +316,49 @@ after init {
 	compileGeneratedCPP(t, out)
 }
 
+func TestEmitAfterInitRangeLoop(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..2}
+relation marked(I:idx)
+after init {
+    marked(I) := false
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "ranges"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"typedef long long idx;", "for (idx I = 0; I <= 2; I++)", "marked[I] = false;"} {
+		if !strings.Contains(out.Header, want) && !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestEmitExprQuantifierFiniteRangeLoop(t *testing.T) {
+	idx := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "1"}, Ub: goivy.NumeralBound{Value: "3"}}
+	i, err := goivy.NewVariable("I", idx)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	body, err := goivy.NewEq(i, i)
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	fa, err := goivy.NewForAll([]*goivy.LogicVariable{i}, body)
+	if err != nil {
+		t.Fatalf("NewForAll: %v", err)
+	}
+	got, err := (&Generator{}).emitExpr(fa)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if !strings.Contains(got, "for (long long I = 1; I <= 3; I++)") || !strings.Contains(got, "return true;") {
+		t.Fatalf("unexpected quantifier code:\n%s", got)
+	}
+}
+
 func TestGeneratedSingleReturnActionCompiles(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}

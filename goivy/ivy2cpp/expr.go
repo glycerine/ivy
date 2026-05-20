@@ -2,6 +2,7 @@ package ivy2cpp
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -159,11 +160,11 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 	w.raw("\n")
 	w.indent = 1
 	for _, v := range vars {
-		vals, ok := finiteValues(v.VSort)
-		if !ok {
-			return "", fmt.Errorf("ivy2cpp: cannot emit bounded quantifier over %s", sortName(v.VSort))
+		header, err := g.loopHeaderForVar(v)
+		if err != nil {
+			return "", err
 		}
-		w.linef("for (%s %s : {%s}) {", cppType(v.VSort), varName(v.Name), strings.Join(vals, ", "))
+		w.line(header)
 		w.indent++
 	}
 	expr, err := g.emitExpr(body)
@@ -202,4 +203,54 @@ func finiteValues(s goivy.Sort) ([]string, bool) {
 	default:
 		return nil, false
 	}
+}
+
+func (g *Generator) loopHeaderForVar(v *goivy.LogicVariable) (string, error) {
+	if v == nil {
+		return "", fmt.Errorf("ivy2cpp: nil loop variable")
+	}
+	return g.loopHeaderForSort(v.VSort, varName(v.Name))
+}
+
+func (g *Generator) loopHeaderForSort(s goivy.Sort, name string) (string, error) {
+	if vals, ok := finiteValues(s); ok {
+		return fmt.Sprintf("for (%s %s : {%s}) {", cppType(s), name, strings.Join(vals, ", ")), nil
+	}
+	if rs, ok := g.rangeSortFor(s); ok {
+		lo, hi, ok := numericRangeBounds(rs)
+		if !ok {
+			return "", fmt.Errorf("ivy2cpp: cannot emit bounded loop over non-numeric range %s", sortName(s))
+		}
+		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", cppType(s), name, lo, name, hi, name), nil
+	}
+	return "", fmt.Errorf("ivy2cpp: cannot emit bounded loop over %s", sortName(s))
+}
+
+func (g *Generator) rangeSortFor(s goivy.Sort) (*goivy.RangeSort, bool) {
+	switch st := s.(type) {
+	case *goivy.RangeSort:
+		return st, true
+	case *goivy.UninterpretedSort:
+		if g != nil && g.Mod != nil && g.Mod.Sig != nil {
+			if rs, ok := g.Mod.Sig.Interp[st.Name].(*goivy.RangeSort); ok {
+				return rs, true
+			}
+		}
+	}
+	return nil, false
+}
+
+func numericRangeBounds(rs *goivy.RangeSort) (string, string, bool) {
+	if rs == nil || rs.Lb == nil || rs.Ub == nil || !rs.Lb.IsNumeral() || !rs.Ub.IsNumeral() {
+		return "", "", false
+	}
+	lo, err := strconv.Atoi(rs.LbString())
+	if err != nil {
+		return "", "", false
+	}
+	hi, err := strconv.Atoi(rs.UbString())
+	if err != nil {
+		return "", "", false
+	}
+	return strconv.Itoa(lo), strconv.Itoa(hi), true
 }

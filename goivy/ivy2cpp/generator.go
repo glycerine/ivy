@@ -176,6 +176,10 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 				vals[i] = varName(v)
 			}
 			w.linef("enum %s { %s };", varName(st.Name), strings.Join(vals, ", "))
+		case *goivy.RangeSort:
+			if st.Name != "" {
+				w.linef("typedef long long %s;", varName(st.Name))
+			}
 		case *goivy.UninterpretedSort:
 			w.linef("typedef long long %s;", varName(st.Name))
 		}

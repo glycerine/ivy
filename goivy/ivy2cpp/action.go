@@ -74,15 +74,15 @@ func (g *Generator) openAssignmentLoops(w *cppWriter, lhs goivy.Expr) (int, bool
 	vars := goivy.FreeVariablesList(lhs)
 	opened := 0
 	for _, v := range vars {
-		vals, ok := finiteValues(v.VSort)
-		if !ok {
-			w.linef("/* unsupported assignment over free variable %s:%s */", varName(v.Name), sortName(v.VSort))
+		header, err := g.loopHeaderForVar(v)
+		if err != nil {
+			w.linef("/* unsupported assignment over free variable %s:%s */", varName(v.Name), escapeComment(err.Error()))
 			for i := 0; i < opened; i++ {
 				w.close("")
 			}
 			return 0, false
 		}
-		w.open(fmt.Sprintf("for (%s %s : {%s}) {", cppType(v.VSort), varName(v.Name), strings.Join(vals, ", ")))
+		w.open(header)
 		opened++
 	}
 	return opened, true
