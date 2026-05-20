@@ -50,6 +50,10 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 }
 
 func (g *Generator) emitAssign(w *cppWriter, a *goivy.LogicAssignAction) {
+	loops, ok := g.openAssignmentLoops(w, a.LHS)
+	if !ok {
+		return
+	}
 	lhs, err := g.emitExpr(a.LHS)
 	if err != nil {
 		w.linef("/* unsupported assignment lhs: %s */", escapeComment(err.Error()))
@@ -61,6 +65,27 @@ func (g *Generator) emitAssign(w *cppWriter, a *goivy.LogicAssignAction) {
 		return
 	}
 	w.linef("%s = %s;", lhs, rhs)
+	for i := 0; i < loops; i++ {
+		w.close("")
+	}
+}
+
+func (g *Generator) openAssignmentLoops(w *cppWriter, lhs goivy.Expr) (int, bool) {
+	vars := goivy.FreeVariablesList(lhs)
+	opened := 0
+	for _, v := range vars {
+		vals, ok := finiteValues(v.VSort)
+		if !ok {
+			w.linef("/* unsupported assignment over free variable %s:%s */", varName(v.Name), sortName(v.VSort))
+			for i := 0; i < opened; i++ {
+				w.close("")
+			}
+			return 0, false
+		}
+		w.open(fmt.Sprintf("for (%s %s : {%s}) {", cppType(v.VSort), varName(v.Name), strings.Join(vals, ", ")))
+		opened++
+	}
+	return opened, true
 }
 
 func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label string) {

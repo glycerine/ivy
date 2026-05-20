@@ -15,7 +15,7 @@ func compileIvySource(t *testing.T, src string) *goivy.Module {
 	mod := goivy.New()
 	mod.Cfg = goivy.NewConfig()
 	sig := goivy.NewSigOn(mod.Cfg.IuCfg)
-	if err := goivy.SourceString("test.ivy", src, mod, sig, map[string]interface{}{"create_isolate": true}); err != nil {
+	if err := goivy.SourceString("test.ivy", src, mod, sig, map[string]interface{}{"create_isolate": false}); err != nil {
 		t.Fatalf("compile ivy source: %v", err)
 	}
 	return mod
@@ -67,6 +67,24 @@ func runPythonIvyToCpp(t *testing.T, src string, params ...string) (string, stri
 		t.Fatalf("read python impl: %v", err)
 	}
 	return string(h), string(cpp)
+}
+
+func compileGeneratedCPP(t *testing.T, out *Output) {
+	t.Helper()
+	cxx, err := exec.LookPath("c++")
+	if err != nil {
+		if cxx, err = exec.LookPath("g++"); err != nil {
+			t.Skip("no C++ compiler available")
+		}
+	}
+	dir := t.TempDir()
+	if err := WriteOutput(out, dir); err != nil {
+		t.Fatalf("WriteOutput: %v", err)
+	}
+	cmd := exec.Command(cxx, "-std=c++11", "-c", filepath.Join(dir, out.BaseName+".cpp"), "-o", filepath.Join(dir, out.BaseName+".o"))
+	if buf, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("compile generated C++: %v\n%s\nheader:\n%s\nimpl:\n%s", err, buf, out.Header, out.Impl)
+	}
 }
 
 func repoRoot(t *testing.T) string {
@@ -257,6 +275,45 @@ func TestEmitIfWhileChoice(t *testing.T) {
 			t.Fatalf("missing %q in:\n%s", want, got)
 		}
 	}
+}
+
+func TestGeneratedChoiceActionCompiles(t *testing.T) {
+	assign := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("true", goivy.Boolean))
+	choice := goivy.NewChoiceActionOn(goivy.NewActionsConfig(), assign)
+	mod := goivy.New()
+	mod.Name = "choice"
+	mod.Actions.Set("step", choice)
+	mod.Relations.Set("flag", goivy.Boolean)
+	out, err := Generate(mod, Config{ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"int ___ivy_choose(int rng, const char *name, int id);", "int runner::___ivy_choose", "return 0;"} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestEmitAfterInitEnumLoop(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+after init {
+    marked(C) := false
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "paint"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"void paint::__init()", "for (color C : {red, green})", "marked[C] = false;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
 }
 
 func TestReplDispatchForExportedAction(t *testing.T) {

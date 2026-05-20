@@ -20,7 +20,7 @@ func CompileAndGenerate(filename string, params map[string]string, cfg Config) (
 		mod.Cfg.Isolate = isolate
 	}
 	sig := goivy.NewSigOn(mod.Cfg.IuCfg)
-	if err := goivy.SourceFile(filename, mod, sig, map[string]interface{}{"create_isolate": true}); err != nil {
+	if err := goivy.SourceFile(filename, mod, sig, map[string]interface{}{"create_isolate": false}); err != nil {
 		return nil, err
 	}
 	return Generate(mod, cfg)

@@ -97,6 +97,7 @@ func (g *Generator) emitHeader() {
 	w.line("#pragma once")
 	w.line("#include <cstdint>")
 	w.line("#include <cstdlib>")
+	w.line("#include <initializer_list>")
 	w.line("#include <iostream>")
 	w.line("#include <map>")
 	w.line("#include <string>")
@@ -111,6 +112,7 @@ func (g *Generator) emitHeader() {
 	w.linef("virtual ~%s();", g.ClassName)
 	w.line("virtual void ivy_assert(bool truth, const char *msg);")
 	w.line("virtual void ivy_assume(bool truth, const char *msg);")
+	w.line("int ___ivy_choose(int rng, const char *name, int id);")
 	w.line("void __init();")
 	w.blank()
 	g.emitSortDecls(w)
@@ -142,6 +144,13 @@ func (g *Generator) emitImpl() {
 	w.line(`std::cerr << msg << ": assumption failed" << std::endl;`)
 	w.line("std::abort();")
 	w.close("")
+	w.close("")
+	w.blank()
+	w.open(fmt.Sprintf("int %s::___ivy_choose(int rng, const char *name, int id) {", g.ClassName))
+	w.line("(void)rng;")
+	w.line("(void)name;")
+	w.line("(void)id;")
+	w.line("return 0;")
 	w.close("")
 	w.blank()
 	g.emitInit(w)
@@ -208,6 +217,9 @@ func (g *Generator) stateSymbols() []stateSymbol {
 		if name == "" || seen[name] {
 			return
 		}
+		if g.Mod.Sig != nil && g.Mod.Sig.Constructors[name] {
+			return
+		}
 		seen[name] = true
 		out = append(out, stateSymbol{Name: name, Sort: s})
 	}
@@ -229,7 +241,11 @@ func (g *Generator) emitMethodDecls(w *cppWriter) {
 	if g.Mod.Actions == nil {
 		return
 	}
+	initActions := g.initialMixinActionNames()
 	for name, act := range g.Mod.Actions.All() {
+		if initActions[name] {
+			continue
+		}
 		w.line(g.methodSignature(name, act, false) + ";")
 	}
 }
@@ -261,9 +277,24 @@ func (g *Generator) methodSignature(name string, act goivy.Action, qualified boo
 
 func (g *Generator) emitInit(w *cppWriter) {
 	w.open(fmt.Sprintf("void %s::__init() {", g.ClassName))
+	if len(g.Mod.InitialActions) > 0 {
+		for _, act := range g.Mod.InitialActions {
+			g.emitAction(w, act)
+		}
+		w.close("")
+		w.blank()
+		return
+	}
 	for _, na := range g.Mod.Initializers {
 		if act, ok := na.Action.(goivy.Action); ok {
 			g.emitAction(w, act)
+		}
+	}
+	if len(g.Mod.Initializers) == 0 && g.Mod.Actions != nil && g.Mod.Mixins != nil {
+		for _, mixin := range g.Mod.Mixins.Get("init") {
+			if act, ok := g.Mod.Actions.Get2(mixin.Mixer()); ok {
+				g.emitAction(w, act)
+			}
 		}
 	}
 	w.close("")
@@ -274,7 +305,11 @@ func (g *Generator) emitMethods(w *cppWriter) {
 	if g.Mod.Actions == nil {
 		return
 	}
+	initActions := g.initialMixinActionNames()
 	for name, act := range g.Mod.Actions.All() {
+		if initActions[name] {
+			continue
+		}
 		w.open(g.methodSignature(name, act, true) + " {")
 		g.emitAction(w, act)
 		if len(act.GetFormalReturns()) == 1 {
@@ -292,7 +327,11 @@ func (g *Generator) emitRepl(w *cppWriter) {
 	}
 	w.line("static void ivy2cpp_dispatch(" + g.ClassName + " &ivy, const std::string &action) {")
 	w.indent++
+	initActions := g.initialMixinActionNames()
 	for name := range g.Mod.PublicActions.All() {
+		if initActions[name] {
+			continue
+		}
 		username := strings.TrimPrefix(name, "ext:")
 		fn, _ := funName(name)
 		w.linef(`if (action == "%s") { ivy.%s(); return; }`, username, fn)
@@ -308,6 +347,17 @@ func (g *Generator) emitRepl(w *cppWriter) {
 	w.line("(void)argv;")
 	w.line("return 0;")
 	w.close("")
+}
+
+func (g *Generator) initialMixinActionNames() map[string]bool {
+	out := map[string]bool{}
+	if g.Mod == nil || g.Mod.Mixins == nil {
+		return out
+	}
+	for _, mixin := range g.Mod.Mixins.Get("init") {
+		out[mixin.Mixer()] = true
+	}
+	return out
 }
 
 func insMapKeys[V any](m *goivy.InsMap[string, V]) []string {
