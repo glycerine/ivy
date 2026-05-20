@@ -1677,6 +1677,7 @@ class IvyRuntime {
      * @returns {string} The new sheet ID
      */
     addSheet(label, preferredSheetId, options: any = {}) {
+        this._sheetCounter = this._sheetCounter || 1;
         this._sheetCounter++;
         var sheetId = preferredSheetId || ('sheet-' + this._sheetCounter);
         while (!preferredSheetId && this.sheetExists(sheetId)) {
@@ -1722,6 +1723,8 @@ class IvyRuntime {
             fallbackGraphs[g].id = fallbackGraphs[g].id + '-' + this._sheetCounter;
         }
         // Clear info panel
+        var infoPanel = newSheet.querySelector('#info-panel');
+        if (infoPanel) infoPanel.id = 'info-panel-' + this._sheetCounter;
         var info = newSheet.querySelector('#info-content');
         if (info) {
             info.id = 'info-content-' + this._sheetCounter;
@@ -2320,7 +2323,8 @@ class IvyRuntime {
             if (activeSheetMain) {
                 activeSheetMain.style.minHeight = minMainHeight + 'px';
             }
-            if (!(activePanel.id === 'info-panel' && self._setLayoutSize('setDetailsHeight', newHeight))) {
+            var primaryInfoPanel = document.getElementById('info-panel');
+            if (!(activePanel === primaryInfoPanel && self._setLayoutSize('setDetailsHeight', newHeight))) {
                 activePanel.style.flex = '0 0 ' + newHeight + 'px';
                 activePanel.style.height = newHeight + 'px';
             }

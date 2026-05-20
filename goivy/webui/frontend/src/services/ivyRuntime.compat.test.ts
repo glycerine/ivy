@@ -42,7 +42,10 @@ function installSheetDom() {
     '          <div id="divider" class="divider"></div>',
     '          <div id="concept-panel" class="panel"><div id="concept-graph" class="graph-container"></div></div>',
     '        </div>',
-    '        <div id="info-panel" class="info-panel"><div id="info-content"></div></div>',
+    '        <div id="info-panel" class="info-panel">',
+    '          <div id="info-header" class="info-header" title="Drag to resize Details">Details</div>',
+    '          <div id="info-content"></div>',
+    '        </div>',
     '      </div>',
     '      <div id="divider2" class="divider"></div>',
     '      <div id="state-panel" class="panel"></div>',
@@ -490,6 +493,31 @@ describe('ivyRuntime compatibility behavior', () => {
     vi.advanceTimersByTime(50);
 
     expect(runtime.recalculateAll).toHaveBeenCalledOnce();
+  });
+
+  it('resizes the active reachability-only sheet details pane', () => {
+    installSheetDom();
+    const runtime = makeRuntime();
+    runtime.setupDetailsResizer();
+    runtime.addSheet('Error trace', 'sheet-2', { reachabilityOnly: true });
+
+    const rootPanel = document.querySelector('#sheet-1 .info-panel') as HTMLElement;
+    const tracePanel = document.querySelector('#sheet-2 .info-panel') as HTMLElement;
+    const traceHeader = document.querySelector('#sheet-2 .info-header') as HTMLElement;
+    const traceLeft = document.querySelector('#sheet-2 .sheet-left') as HTMLElement;
+
+    expect(rootPanel.id).toBe('info-panel');
+    expect(tracePanel.id).toBe('info-panel-2');
+    Object.defineProperty(tracePanel, 'offsetHeight', { configurable: true, value: 120 });
+    Object.defineProperty(traceLeft, 'offsetHeight', { configurable: true, value: 500 });
+
+    traceHeader.dispatchEvent(new MouseEvent('mousedown', { clientY: 400, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientY: 300, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(tracePanel.style.flex).toBe('0 0 220px');
+    expect(tracePanel.style.height).toBe('220px');
+    expect(rootPanel.style.height).toBe('');
   });
 
   it('refreshes file-loaded events through the primary analysis sheet, not the active reachability sheet', async () => {

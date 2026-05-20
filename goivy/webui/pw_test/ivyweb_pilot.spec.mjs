@@ -806,6 +806,24 @@ test('failed ARG node safety result can open its trace ARG in a sheet', async ({
   expect(result.labels).toEqual(['0', '1']);
   expect(result.marked).toEqual(['1']);
   expect(result.edgeLabels).toEqual(['trace']);
+
+  const infoPanelIds = await page.evaluate(() => Array.from(document.querySelectorAll('.info-panel')).map((panel) => panel.id));
+  expect(infoPanelIds).toContain('info-panel');
+  expect(infoPanelIds).toContain('info-panel-9');
+
+  const traceDetails = page.locator('#sheet-9 .info-panel');
+  const traceDetailsHeader = page.locator('#sheet-9 .info-header');
+  const beforeDetailsBox = await traceDetails.boundingBox();
+  const headerBox = await traceDetailsHeader.boundingBox();
+  test.skip(!beforeDetailsBox || !headerBox, 'trace details pane has no measurable box');
+
+  await page.mouse.move(headerBox.x + headerBox.width / 2, headerBox.y + headerBox.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(headerBox.x + headerBox.width / 2, headerBox.y + headerBox.height / 2 + 40);
+  await page.mouse.up();
+
+  const afterDetailsBox = await traceDetails.boundingBox();
+  expect(afterDetailsBox?.height || 0).toBeLessThan(beforeDetailsBox.height);
 });
 
 test('Show Reachable command opens a reachable-state ARG sheet', async ({ page }) => {
