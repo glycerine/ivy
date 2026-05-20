@@ -49,7 +49,16 @@ func captureParserTrace(t *testing.T, fn func()) string {
 	return buf.String()
 }
 
+func requireParserTraceEnabled(t *testing.T) {
+	t.Helper()
+	if !xtracer.Enabled {
+		t.Skip("requires xtrace; disabled by xtrace_off build tag")
+	}
+}
+
 func TestParseV16AtermCallReducesCalleeBeforeArguments(t *testing.T) {
+	requireParserTraceEnabled(t)
+
 	src := `#lang ivy1.6
 action foo = {
     store(K) := 0
@@ -133,6 +142,8 @@ func TestParseV16CorpusSmoke(t *testing.T) {
 }
 
 func TestReadModuleFromStringInheritsV16Version(t *testing.T) {
+	requireParserTraceEnabled(t)
+
 	cfg := NewConfig()
 	SetStringVersionOn(cfg.IuCfg, "1.6")
 	src := `#lang ivy
@@ -156,6 +167,8 @@ action foo = {
 }
 
 func TestParseV16ConjunctionReducesBeforeArrow(t *testing.T) {
+	requireParserTraceEnabled(t)
+
 	src := `#lang ivy1.6
 type t
 function n : t
