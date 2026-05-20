@@ -59,7 +59,11 @@ func TestBrowserWasmClientServerInductionKeepsGoRuntimeAlive(t *testing.T) {
 		t.Fatalf("write wasm driver config: %v", err)
 	}
 
-	run := exec.Command(node, driverPath, cfgPath)
+	nodeArgs := []string{driverPath, cfgPath}
+	if nodeSupportsFlag(node, "--experimental-wasm-exnref") {
+		nodeArgs = append([]string{"--experimental-wasm-exnref"}, nodeArgs...)
+	}
+	run := exec.Command(node, nodeArgs...)
 	run.Dir = root
 	out, err := run.CombinedOutput()
 	if err != nil {
@@ -68,6 +72,11 @@ func TestBrowserWasmClientServerInductionKeepsGoRuntimeAlive(t *testing.T) {
 	if !strings.Contains(string(out), `"result":"pass"`) && !strings.Contains(string(out), `"result":"fail"`) {
 		t.Fatalf("browser wasm induction did not report a completed check result:\n%s", out)
 	}
+}
+
+func nodeSupportsFlag(node, flag string) bool {
+	cmd := exec.Command(node, flag, "-e", "")
+	return cmd.Run() == nil
 }
 
 func findGoivyRoot(t *testing.T) string {
