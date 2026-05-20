@@ -53,6 +53,7 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 	if target != "impl" && target != "repl" && target != "test" && target != "gen" {
 		return nil, fmt.Errorf("ivy2cpp: target %q is not supported in v1", target)
 	}
+	cfg.Target = target
 	base := moduleBaseName(mod)
 	className := cfg.ClassName
 	if className == "" {
