@@ -236,6 +236,41 @@ func TestCanonActionMapWithActions(t *testing.T) {
 	}
 }
 
+func TestCanonModuleFunctionsPreservesPolymorphicEntries(t *testing.T) {
+	mod := New()
+	idSort := &UninterpretedSort{Name: "id.t"}
+	nodeSort := &UninterpretedSort{Name: "node.t"}
+	idCmp, err := NewFunctionSort(idSort, idSort, Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort id: %v", err)
+	}
+	nodeCmp, err := NewFunctionSort(nodeSort, nodeSort, Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort node: %v", err)
+	}
+	pending, err := NewFunctionSort(idSort, nodeSort, Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort pending: %v", err)
+	}
+
+	mod.AddFunction("<", idCmp)
+	mod.AddFunction("node.head", nodeSort)
+	mod.AddFunction("node.tail", nodeSort)
+	mod.AddFunction("<", nodeCmp)
+	mod.AddFunction("trans.pending", pending)
+	mod.AddFunction("<", nodeCmp)
+
+	got := canonModuleFunctions(mod)
+	want := "(insMap <:2 node.head:0 node.tail:0 <:2 trans.pending:2)"
+	if got != want {
+		t.Fatalf("canonModuleFunctions = %s, want %s", got, want)
+	}
+
+	if mod.Functions.Len() != 4 {
+		t.Fatalf("Functions lookup map has %d entries, want 4", mod.Functions.Len())
+	}
+}
+
 // --- Module.Canon() tests ---
 
 func TestModuleCanonEmpty(t *testing.T) {

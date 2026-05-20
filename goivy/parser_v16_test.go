@@ -178,6 +178,40 @@ action foo = {
 	}
 }
 
+func TestARGSetupInitKeepsCompiledLabeledFormula(t *testing.T) {
+	requireParserTraceEnabled(t)
+
+	cfg := NewConfig()
+	src := `#lang ivy1.6
+individual bit : bool
+init bit`
+
+	var compileErr error
+	trace := captureParserTrace(t, func() {
+		pr, err := ReadModuleFromString(src, cfg)
+		if err != nil {
+			compileErr = err
+			return
+		}
+		mod := New()
+		mod.Cfg = cfg
+		mod.Sig = NewSigOn(cfg.IuCfg)
+		compileErr = IvyCompile(pr.Decls, mod, false)
+	})
+	if compileErr != nil {
+		t.Fatalf("compile init source: %v", compileErr)
+	}
+
+	compiled := strings.Index(trace, "compiler.ARGSetup.init compiled sort=")
+	clauses := strings.Index(trace, "compiler.ARGSetup.init clauses fmlas=")
+	if compiled < 0 || clauses < 0 || compiled > clauses {
+		t.Fatalf("missing init trace markers:\n%s", trace)
+	}
+	if between := trace[compiled:clauses]; strings.Contains(between, "ast.LF.__init__") {
+		t.Fatalf("init allocated a wrapper LabeledFormula after compile:\n%s", between)
+	}
+}
+
 func TestParseV16ConjunctionReducesBeforeArrow(t *testing.T) {
 	requireParserTraceEnabled(t)
 

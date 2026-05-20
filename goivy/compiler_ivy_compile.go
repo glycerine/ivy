@@ -680,17 +680,36 @@ func (as *ARGSetup) ProcessDecls(decls []Node) error {
 			//   self.mod.labeled_inits.append(la)
 			//   im.module.init_cond = and_clauses(im.module.init_cond, formula_to_clauses(la.formula))
 			for _, arg := range n.DeclArgs {
-				compiled, err := as.Compiler.Thing(arg)
-				if err != nil {
-					return fmt.Errorf("compiling init: %w", err)
+				var (
+					mlf     *LabeledFormula
+					formula Expr
+				)
+				if lf, ok := arg.(*LabeledFormula); ok {
+					compiledLF, err := as.Compiler.ThingLF(lf)
+					if err != nil {
+						return fmt.Errorf("compiling init: %w", err)
+					}
+					mlf = compiledLF
+					if expr, ok := compiledLF.Formula.(Expr); ok {
+						formula = expr
+					} else if compiledLF.Formula != nil {
+						return fmt.Errorf("compiling init: compiled formula is %T, want Expr", compiledLF.Formula)
+					}
+				} else {
+					compiled, err := as.Compiler.Thing(arg)
+					if err != nil {
+						return fmt.Errorf("compiling init: %w", err)
+					}
+					formula = compiled
+					if formula != nil {
+						acfg := as.Compiler.Module.Cfg.AstCfg
+						mlf = acfg.NewLabeledFormula(nil, formula)
+					}
 				}
-				if compiled != nil {
-					xtracer.Trace("compiler.ARGSetup.init compiled sort=%v", compiled.NodeSort())
-					//pp("type=%T val=%v", compiled, compiled)
-					acfg := as.Compiler.Module.Cfg.AstCfg
-					mlf := acfg.NewLabeledFormula(nil, compiled)
+				if formula != nil {
+					xtracer.Trace("compiler.ARGSetup.init compiled sort=%v", formula.NodeSort())
 					mod.LabeledInits = append(mod.LabeledInits, mlf)
-					initClauses := FormulaToClauses(compiled, nil)
+					initClauses := FormulaToClauses(formula, nil)
 					xtracer.Trace("compiler.ARGSetup.init clauses fmlas=%d defs=%d", len(initClauses.Fmlas), len(initClauses.Defs))
 					if mod.InitCond == nil {
 						mod.InitCond = initClauses

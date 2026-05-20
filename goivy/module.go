@@ -29,8 +29,9 @@ type Module struct {
 	AssumedInvs   []*LabeledFormula            // assumed invariants
 
 	// Relations and functions
-	Relations *InsMap[string, Sort]
-	Functions *InsMap[string, Sort]
+	Relations       *InsMap[string, Sort]
+	Functions       *InsMap[string, Sort]
+	FunctionEntries []NamedSortEntry
 
 	// Actions and mixins
 	Actions        *InsMap[string, Action]
@@ -184,6 +185,13 @@ type NamedAction struct {
 	Action Action
 }
 
+// NamedSortEntry preserves Python's symbol-keyed dict order for function
+// declarations while Functions remains name-keyed for ordinary lookup.
+type NamedSortEntry struct {
+	Name string
+	Sort Sort
+}
+
 // ProofEntry pairs a labeled formula with a proof.
 type ProofEntry struct {
 	Formula *LabeledFormula
@@ -259,6 +267,7 @@ func (m *Module) Clear() {
 	m.InitCond = TrueClauses(nil)
 	m.Relations = NewInsMap[string, Sort]()
 	m.Functions = NewInsMap[string, Sort]()
+	m.FunctionEntries = nil
 	m.Updates = nil
 	m.Schemata = NewInsMap[string, Node]()
 	m.Theorems = make(map[string]Node)
@@ -331,6 +340,21 @@ func (m *Module) Clear() {
 	//}
 }
 
+// AddFunction registers a function in the name-keyed lookup map and in the
+// duplicate-preserving declaration list used by xtrace canonical snapshots.
+func (m *Module) AddFunction(name string, sort Sort) {
+	if m.Functions == nil {
+		m.Functions = NewInsMap[string, Sort]()
+	}
+	m.Functions.Set(name, sort)
+	for _, entry := range m.FunctionEntries {
+		if entry.Name == name && SortEqual(entry.Sort, sort) {
+			return
+		}
+	}
+	m.FunctionEntries = append(m.FunctionEntries, NamedSortEntry{Name: name, Sort: sort})
+}
+
 // Copy creates a semi-shallow copy of the module.
 func (m *Module) Copy() *Module {
 	xtracer.Trace("module.Copy ENTER actions=%d isolates=%d", m.Actions.Len(), len(m.Isolates))
@@ -392,6 +416,7 @@ func (m *Module) Copy() *Module {
 	for k, v := range m.Functions.All() {
 		c.Functions.Set(k, v)
 	}
+	c.FunctionEntries = append([]NamedSortEntry{}, m.FunctionEntries...)
 	c.Actions = NewInsMap[string, Action]()
 	for k, v := range m.Actions.All() {
 		c.Actions.Set(k, v)

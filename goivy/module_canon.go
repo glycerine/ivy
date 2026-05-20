@@ -66,7 +66,7 @@ func (m *Module) CanonSnapshot(label string) {
 
 	// Group 4: Relations and functions
 	xtracer.Trace("module.CanonSnapshot %s relations=%s", label, canonInsMapSort(m.Relations))
-	xtracer.Trace("module.CanonSnapshot %s functions=%s", label, canonInsMapSort(m.Functions))
+	xtracer.Trace("module.CanonSnapshot %s functions=%s", label, canonModuleFunctions(m))
 
 	// Group 5: Schemata, theorems, predicates
 	xtracer.Trace("module.CanonSnapshot %s schemata=%s", label, canonInsMapSchemata(m.Schemata))
@@ -434,6 +434,40 @@ func canonInsMapSort(m *InsMap[string, Sort]) string {
 	}
 	b.WriteString(")")
 	return b.String()
+}
+
+func canonModuleFunctions(m *Module) string {
+	if m == nil || len(m.FunctionEntries) == 0 {
+		if m == nil {
+			return "(insMap)"
+		}
+		return canonInsMapSort(m.Functions)
+	}
+	var b strings.Builder
+	b.WriteString("(insMap")
+	seen := make(map[string]bool, len(m.FunctionEntries))
+	for _, entry := range m.FunctionEntries {
+		fmt.Fprintf(&b, " %s:%d", entry.Name, sortArity(entry.Sort))
+		seen[namedSortKey(entry.Name, entry.Sort)] = true
+	}
+	if m.Functions != nil {
+		for name, sort := range m.Functions.All() {
+			key := namedSortKey(name, sort)
+			if seen[key] {
+				continue
+			}
+			fmt.Fprintf(&b, " %s:%d", name, sortArity(sort))
+		}
+	}
+	b.WriteString(")")
+	return b.String()
+}
+
+func namedSortKey(name string, sort Sort) string {
+	if sort == nil {
+		return name + "\x00"
+	}
+	return name + "\x00" + sort.String()
 }
 
 // sortArity returns the arity (number of domain parameters) of a sort.

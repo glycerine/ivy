@@ -450,7 +450,7 @@ func (d *DomainSetup) TypeDecl(node Node) error {
 			}
 			xtracer.Trace("compiler.DomainSetup.type enum_constructor name=%s sort=%v", elemName, sort)
 			//pp("sym=%v",  sym)
-			mod.Functions.Set(elemName, sort)
+			mod.AddFunction(elemName, sort)
 			sig.Constructors[elemName] = true
 		}
 		if td.Finite {
@@ -641,7 +641,7 @@ func (d *DomainSetup) individual(node Node) (*Const, error) {
 	}
 	// Python: self.domain.functions[sym] = len(v.args)
 	if sym != nil {
-		d.Compiler.Module.Functions.Set(sym.Name, sym.CSort)
+		d.Compiler.Module.AddFunction(sym.Name, sym.CSort)
 	}
 	return sym, nil
 }
@@ -1135,7 +1135,7 @@ func (d *DomainSetup) Interpret(node Node) error {
 			if existingSort, hasSig := sig.Sorts.Get2(lhs); hasSig {
 				sym := NewConst(c, existingSort)
 				sig.Symbols.Set(c, &SymbolEntry{Sort: existingSort})
-				mod.Functions.Set(c, existingSort)
+				mod.AddFunction(c, existingSort)
 				sig.Constructors[sym.Name] = true
 			}
 		}
