@@ -2853,9 +2853,14 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{`#include "z3++.h"`, "class gen", "z3::context ctx", "__from_solver", "ivy2cpp_randomize"} {
+	for _, want := range []string{`#include "z3++.h"`, `#include "ivy_go_z3.hpp"`, "__from_solver", "ivy2cpp_randomize"} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	for _, unwanted := range []string{"class gen {", "z3::context ctx;"} {
+		if strings.Contains(out.Impl, unwanted) {
+			t.Fatalf("go output still embeds Z3 runtime %q instead of including it:\n%s", unwanted, out.Impl)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
