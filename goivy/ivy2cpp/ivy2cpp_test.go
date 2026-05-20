@@ -174,6 +174,7 @@ action step = {
 export step
 `
 	pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target=repl")
+
 	mod := compileIvySource(t, src)
 	out, err := Generate(mod, Config{Target: "repl", ClassName: "oracle"})
 	if err != nil {
