@@ -22,6 +22,13 @@ function traceSheetOptionsForResult(result) {
   };
 }
 
+function traceInfoElement(app, doc) {
+  if (app && app.controls && typeof app.controls.activeInfoElement === 'function') {
+    return app.controls.activeInfoElement();
+  }
+  return doc.getElementById('info-content');
+}
+
 export function openTraceArgFromResult(app, result, {
   label = 'Error trace',
 } = {}) {
@@ -36,7 +43,7 @@ export function addTraceResultViewAction(app, result, {
 } = {}) {
   if (!result || !result.trace_arg) return false;
   if (doc.querySelector('[data-check-view-trace]')) return false;
-  const info = doc.getElementById('info-content');
+  const info = traceInfoElement(app, doc);
   if (!info) return false;
   const button = doc.createElement('button');
   button.type = 'button';

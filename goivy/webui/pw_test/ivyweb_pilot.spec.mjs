@@ -753,6 +753,7 @@ test('failed check result can open its trace ARG in a sheet', async ({ page }) =
 
 test('failed ARG node safety result can open its trace ARG in a sheet', async ({ page }) => {
   await openIvy(page);
+  await page.waitForFunction(() => window.__ivyDiagnostics.runtime().argGraph);
 
   await page.evaluate(() => {
     const app = window.__ivyDiagnostics.runtime();
