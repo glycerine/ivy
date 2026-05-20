@@ -2979,3 +2979,91 @@ Two concrete reasons sorts matter for your verification work:
 
 So the slogan from the previous message gets refined: **terms denote things of a specific sort, and formulas say things relating terms of matching sorts**. The sort discipline is exactly the type discipline you'd expect from a programming-language background, applied to logic.
 
+# follow-up: Nested terms
+
+Q: I am still not clear on the definition of a "nested term". What makes a term "nested"? You say that this is a danger zone, why?
+
+A (Claude):
+
+Good — let's pin this down precisely, because the danger is the whole reason Ivy's fragment checker exists.
+
+## What "nested" means
+
+A term is **nested** when a function application appears *inside* another function application. The depth of nesting is just how many layers of function symbols you have to peel off before reaching variables and constants.
+
+Take a function `f : node → node`. Starting from a variable `x : node`:
+
+- `x` — depth 0, not nested. Just a variable.
+- `f(x)` — depth 1. A function applied to a variable. Some people call this "nested," some don't; the standard usage is that nesting begins at depth 2.
+- `f(f(x))` — depth 2, **nested**. `f` applied to a term that is itself a function application.
+- `f(f(f(x)))` — depth 3, nested deeper.
+- `f(f(f(f(x))))` — depth 4. And so on.
+
+With multiple function symbols, nesting can mix them. Given `g : node → id_t` and `h : id_t → node`:
+
+- `g(x)` — depth 1.
+- `h(g(x))` — depth 2, nested. `h` applied to the result of `g`.
+- `g(h(g(x)))` — depth 3, nested.
+
+The structure is a tree. The depth of nesting is the height of that tree.
+
+A non-nested term, by contrast, has function symbols applied only to variables or constants — never to other function applications. So `f(x)`, `g(x, y)`, `h(c, x)` are all unnested (or "flat"). The moment a function's argument is itself a function call, you have nesting.
+
+## Why this is the danger zone
+
+The danger is **unbounded Herbrand expansion**, which destroys decidability. Here's the mechanism, step by step.
+
+When Z3 (or any SMT solver) tries to decide a formula with universal quantifiers, the standard technique is *quantifier instantiation*: replace `∀x. φ(x)` with a conjunction of instances `φ(t₁) ∧ φ(t₂) ∧ …` where the `tᵢ` are ground terms (terms with no variables) drawn from the **Herbrand universe** — the set of all ground terms you can build from the constants and function symbols in the formula.
+
+Now ask: how big is this Herbrand universe?
+
+**Case 1: no function symbols of the relevant sort** (this is EPR). Suppose your only `node`-producing symbols are the constants `alice` and `bob`. The Herbrand universe for sort `node` is just `{alice, bob}` — *finite*. Quantifier instantiation terminates after considering both. Decidable.
+
+**Case 2: function symbols whose result sort is not their input sort**. Suppose `g : node → id_t` and you have constants `alice, bob : node` and no functions returning `node`. Then `node`-typed ground terms are still just `{alice, bob}`, and `id_t`-typed ground terms are `{g(alice), g(bob)}`. Still finite. Still decidable.
+
+**Case 3: a function from a sort back to itself, e.g. `f : node → node`**. Now the `node`-typed Herbrand universe is:
+
+```
+alice, bob,
+f(alice), f(bob),
+f(f(alice)), f(f(bob)),
+f(f(f(alice))), f(f(f(bob))),
+…
+```
+
+**Infinite.** Every level of nesting produces fresh ground terms. Quantifier instantiation never runs out of candidates. The solver can loop forever generating ever-deeper nested instances without ever finding a model or a contradiction.
+
+**Case 4: a cycle through multiple sorts**, e.g. `g : node → id_t` and `h : id_t → node`. Then:
+
+```
+alice : node
+g(alice) : id_t
+h(g(alice)) : node
+g(h(g(alice))) : id_t
+h(g(h(g(alice)))) : node
+…
+```
+
+Also infinite. The cycle in the function-symbol-graph (`node → id_t → node → …`) means you can compose `h ∘ g` arbitrarily many times to keep producing fresh `node` terms.
+
+## The connection to Ivy's "function cycle" rule
+
+Now the fragment checker's behavior should look transparent rather than mysterious. Ivy builds a directed graph:
+
+- **Nodes** of the graph: sorts (`node`, `id_t`, `message`, …).
+- **Edges** of the graph: for each function symbol `f : s₁ × … × sₙ → s`, draw an edge from each `sᵢ` to `s`.
+
+If this graph is **acyclic**, the Herbrand universe of every sort is finite (you can only build terms of bounded depth before running out of edges to follow). Quantifier instantiation terminates. The formula is in a decidable fragment.
+
+If the graph has a **cycle**, you can build nested terms of unbounded depth around the cycle. Herbrand universe infinite. Decidability gone.
+
+This is exactly why Ivy complains about function cycles and not, say, predicate cycles. Predicates produce `Bool`, not new terms of the sorts being quantified over — they don't grow the Herbrand universe of `node` or `id_t`. Only functions do. Skolemization counts here too: an `∃y` inside a `∀x` becomes a Skolem function `sk(x)`, and if that function's signature creates a sort cycle, you've quietly entered the danger zone even though you didn't write any function symbols explicitly. That's why Ivy also yells at you about quantifier alternation — `∀∃` patterns introduce Skolem functions during normalization, and those Skolem functions can close cycles.
+
+## The intuition in one line
+
+**Nested terms are dangerous when their sorts form a cycle, because then nesting has no ceiling — and an unbounded ceiling on term depth is an unbounded ceiling on instantiation work, which is decidability's grave.**
+
+EPR forbids function symbols entirely (only constants and predicates), which trivially makes the function-sort graph have no edges, hence no cycles, hence bounded Herbrand universes. FAU is more permissive: it allows functions, but enforces the acyclicity condition on the sort graph. Both fragments are decidable for exactly this reason.
+
+This is also why your earlier instinct about EPR being "effectively propositional" lands: with no nesting possible, the Herbrand universe is finite, and the whole problem reduces to a finite (large but finite) propositional SAT problem on the ground instances. The decidability of EPR is, in a real sense, the decidability of SAT scaled up to a known-finite term space.
+
