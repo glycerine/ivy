@@ -193,6 +193,27 @@ action step = {
 	}
 }
 
+func TestDestructorStructDeclaration(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+`)
+	out, err := Generate(mod, Config{ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"struct cell {", "color shade;", "bool operator==(const cell &other) const", "bool operator<(const cell &other) const"} {
+		if !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q in header:\n%s", want, out.Header)
+		}
+	}
+	if strings.Contains(out.Header, "typedef long long cell;") {
+		t.Fatalf("destructor-backed sort should not also be typedef'd:\n%s", out.Header)
+	}
+	compileGeneratedCPP(t, out)
+}
+
 func TestEmitExprBooleanAndEquality(t *testing.T) {
 	x := goivy.NewConst("x", goivy.Boolean)
 	y := goivy.NewConst("y", goivy.Boolean)
@@ -431,6 +452,179 @@ export step
 	compileGeneratedCPP(t, out)
 }
 
+func TestGeneratedHavocActionCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step = {
+}
+export step
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	mod.Actions.Set("step", goivy.NewHavocAction(goivy.NewConst("saved", color)))
+	out, err := Generate(mod, Config{ClassName: "havocs"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"saved = red;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestGeneratedSetActionCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+action step = {
+}
+export step
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	relSort, err := goivy.NewFunctionSort(color, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	marked := goivy.NewConst("marked", relSort)
+	red := goivy.NewConst("red", color)
+	green := goivy.NewConst("green", color)
+	setRed := goivy.NewSetAction(goivy.MustApply(marked, red))
+	clearGreen := goivy.NewSetAction(goivy.NewLiteral(0, goivy.MustApply(marked, green)))
+	mod.Actions.Set("step", goivy.NewSequence(setRed, clearGreen))
+	out, err := Generate(mod, Config{ClassName: "sets"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"marked[red] = true;", "marked[green] = false;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestGeneratedDebugActionCompiles(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "debugcase"
+	mod.Relations.Set("flag", goivy.Boolean)
+	mod.Actions.Set("step", goivy.NewDebugAction(goivy.NewConst(`"tick"`, goivy.TopS), goivy.NewConst("flag", goivy.Boolean)))
+	out, err := Generate(mod, Config{ClassName: "debugcase"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{`"event\" : \"tick\"`, `"value0\" : " << (flag)`} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestGeneratedLetActionSubstitutesBoundSymbol(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+relation other(C:color)
+action step = {
+}
+export step
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	relSort, err := goivy.NewFunctionSort(color, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	marked := goivy.NewConst("marked", relSort)
+	other := goivy.NewConst("other", relSort)
+	red := goivy.NewConst("red", color)
+	binding := goivy.NewEqualsNode(marked, other)
+	mod.Actions.Set("step", goivy.NewLetAction(binding, goivy.NewSetAction(goivy.MustApply(marked, red))))
+	out, err := Generate(mod, Config{ClassName: "lets"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "other[red] = true;") {
+		t.Fatalf("let binding did not substitute marked->other:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, "marked[red] = true;") {
+		t.Fatalf("let body still writes original symbol:\n%s", out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestGeneratedEnvAndBindOldsActionsCompile(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "envcase"
+	mod.Relations.Set("flag", goivy.Boolean)
+	assign := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("true", goivy.Boolean))
+	mod.Actions.Set("step", goivy.NewEnvActionOn(goivy.NewActionsConfig(), goivy.NewBindOldsAction(assign)))
+	out, err := Generate(mod, Config{ClassName: "envcase"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"switch (___ivy_choose", "flag = true;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestGeneratedFieldActionsCompile(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+individual current : cell
+individual other : cell
+action step = {
+}
+export step
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	cell, ok := mod.Sig.Sorts.Get2("cell")
+	if !ok {
+		t.Fatal("missing cell sort")
+	}
+	shadeSort, err := goivy.NewFunctionSort(cell, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", shadeSort)
+	current := goivy.NewConst("current", cell)
+	other := goivy.NewConst("other", cell)
+	green := goivy.NewConst("green", color)
+	mod.Actions.Set("step", goivy.NewSequence(
+		goivy.NewAssignFieldAction(shade, current, green),
+		goivy.NewCopyFieldAction(other, shade, current, shade),
+		goivy.NewNullFieldAction(shade, current),
+	))
+	out, err := Generate(mod, Config{ClassName: "fields"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"current.shade = green;", "other.shade = current.shade;", "current.shade = red;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
 func TestConstructorInitializesParams(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -453,6 +647,34 @@ after init {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
+	}
+	if !strings.Contains(out.Impl, "__init();") {
+		t.Fatalf("constructor should run __init:\n%s", out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestReplWithModuleParameterCompiles(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+parameter initial : color
+individual saved : color
+after init {
+    saved := initial
+}
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "paramrepl"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "paramrepl ivy(paramrepl::red);") {
+		t.Fatalf("missing parameterized repl construction:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, "ivy.__init();") {
+		t.Fatalf("repl should rely on constructor initialization:\n%s", out.Impl)
 	}
 	compileGeneratedCPP(t, out)
 }

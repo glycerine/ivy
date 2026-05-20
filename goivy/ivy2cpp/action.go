@@ -20,6 +20,10 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 		}
 	case *goivy.LogicAssignAction:
 		g.emitAssign(w, a)
+	case *goivy.LogicHavocAction:
+		g.emitHavoc(w, a)
+	case *goivy.LogicSetAction:
+		g.emitSet(w, a)
 	case *goivy.LogicAssertAction:
 		g.emitAssertLike(w, "ivy_assert", a.Formula, a.GetLineno().String())
 	case *goivy.LogicRequiresAction:
@@ -36,16 +40,83 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 		g.emitWhile(w, a)
 	case *goivy.LogicChoiceAction:
 		g.emitChoice(w, a)
+	case *goivy.LogicEnvAction:
+		g.emitChoice(w, &a.LogicChoiceAction)
 	case *goivy.LogicCallAction:
 		g.emitCall(w, a)
 	case *goivy.LogicLocalAction:
 		g.emitLocal(w, a)
+	case *goivy.LogicLetAction:
+		g.emitLet(w, a)
+	case *goivy.LogicBindOldsAction:
+		g.emitBindOlds(w, a)
 	case *goivy.LogicNativeAction:
 		g.emitNativeAction(w, a)
+	case *goivy.LogicDebugAction:
+		g.emitDebug(w, a)
 	case *goivy.LogicCrashAction:
 		w.line("std::abort();")
+	case *goivy.LogicAssignFieldAction:
+		g.emitAssignField(w, a)
+	case *goivy.LogicNullFieldAction:
+		g.emitNullField(w, a)
+	case *goivy.LogicCopyFieldAction:
+		g.emitCopyField(w, a)
 	default:
 		w.linef("/* unsupported action %T: %s */", act, escapeComment(act.String()))
+	}
+}
+
+func (g *Generator) emitHavoc(w *cppWriter, a *goivy.LogicHavocAction) {
+	if a.Target == nil {
+		w.line("/* unsupported havoc target: nil */")
+		return
+	}
+	loops, ok := g.openAssignmentLoops(w, a.Target)
+	if !ok {
+		return
+	}
+	lhs, err := g.emitExpr(a.Target)
+	if err != nil {
+		w.linef("/* unsupported havoc target: %s */", escapeComment(err.Error()))
+		g.closeAssignmentLoops(w, loops)
+		return
+	}
+	w.linef("%s = %s;", lhs, g.cppZeroValue(a.Target.NodeSort()))
+	g.closeAssignmentLoops(w, loops)
+}
+
+func (g *Generator) emitSet(w *cppWriter, a *goivy.LogicSetAction) {
+	if a.Lit == nil {
+		w.line("/* unsupported set literal: nil */")
+		return
+	}
+	target, value := setTargetAndValue(a.Lit)
+	loops, ok := g.openAssignmentLoops(w, target)
+	if !ok {
+		return
+	}
+	lhs, err := g.emitExpr(target)
+	if err != nil {
+		w.linef("/* unsupported set literal: %s */", escapeComment(err.Error()))
+		g.closeAssignmentLoops(w, loops)
+		return
+	}
+	w.linef("%s = %s;", lhs, value)
+	g.closeAssignmentLoops(w, loops)
+}
+
+func setTargetAndValue(lit goivy.Expr) (goivy.Expr, string) {
+	switch n := lit.(type) {
+	case *goivy.LogicLiteral:
+		if n.Polarity == 0 {
+			return n.Atom, "false"
+		}
+		return n.Atom, "true"
+	case *goivy.LogicNot:
+		return n.Body, "false"
+	default:
+		return lit, "true"
 	}
 }
 
@@ -57,14 +128,20 @@ func (g *Generator) emitAssign(w *cppWriter, a *goivy.LogicAssignAction) {
 	lhs, err := g.emitExpr(a.LHS)
 	if err != nil {
 		w.linef("/* unsupported assignment lhs: %s */", escapeComment(err.Error()))
+		g.closeAssignmentLoops(w, loops)
 		return
 	}
 	rhs, err := g.emitExpr(a.RHS)
 	if err != nil {
 		w.linef("/* unsupported assignment rhs: %s */", escapeComment(err.Error()))
+		g.closeAssignmentLoops(w, loops)
 		return
 	}
 	w.linef("%s = %s;", lhs, rhs)
+	g.closeAssignmentLoops(w, loops)
+}
+
+func (g *Generator) closeAssignmentLoops(w *cppWriter, loops int) {
 	for i := 0; i < loops; i++ {
 		w.close("")
 	}
@@ -197,12 +274,115 @@ func (g *Generator) emitLocal(w *cppWriter, a *goivy.LogicLocalAction) {
 	w.open("{")
 	for _, local := range a.Locals {
 		name := goivy.ExprName(local)
-		w.linef("%s %s = %s;", cppType(local.NodeSort()), varName(name), cppZeroValue(local.NodeSort()))
+		w.linef("%s %s = %s;", cppType(local.NodeSort()), varName(name), g.cppZeroValue(local.NodeSort()))
 	}
 	if bodyAct, ok := a.Body.(goivy.Action); ok {
 		g.emitAction(w, bodyAct)
 	}
 	w.close("")
+}
+
+func (g *Generator) emitLet(w *cppWriter, a *goivy.LogicLetAction) {
+	prev := g.exprAliases
+	next := make(map[string]goivy.Expr, len(prev)+len(a.Bindings))
+	for k, v := range prev {
+		next[k] = v
+	}
+	for _, binding := range a.Bindings {
+		children := binding.Children()
+		if len(children) < 2 {
+			w.linef("/* unsupported let binding %T: %s */", binding, escapeComment(binding.String()))
+			continue
+		}
+		name := goivy.ExprName(children[0])
+		if name == "" {
+			w.linef("/* unsupported let binding lhs %T: %s */", children[0], escapeComment(children[0].String()))
+			continue
+		}
+		next[name] = children[1]
+	}
+	g.exprAliases = next
+	w.open("{")
+	if bodyAct, ok := a.Body.(goivy.Action); ok {
+		g.emitAction(w, bodyAct)
+	}
+	w.close("")
+	g.exprAliases = prev
+}
+
+func (g *Generator) emitBindOlds(w *cppWriter, a *goivy.LogicBindOldsAction) {
+	if inner, ok := a.Inner.(goivy.Action); ok {
+		g.emitAction(w, inner)
+		return
+	}
+	w.linef("/* unsupported bindolds inner %T */", a.Inner)
+}
+
+func (g *Generator) emitAssignField(w *cppWriter, a *goivy.LogicAssignFieldAction) {
+	lhs, err := g.emitFieldRef(a.Obj, a.Field)
+	if err != nil {
+		w.linef("/* unsupported field assignment lhs: %s */", escapeComment(err.Error()))
+		return
+	}
+	rhs, err := g.emitExpr(a.Value)
+	if err != nil {
+		w.linef("/* unsupported field assignment rhs: %s */", escapeComment(err.Error()))
+		return
+	}
+	w.linef("%s = %s;", lhs, rhs)
+}
+
+func (g *Generator) emitNullField(w *cppWriter, a *goivy.LogicNullFieldAction) {
+	lhs, err := g.emitFieldRef(a.Obj, a.Field)
+	if err != nil {
+		w.linef("/* unsupported null field lhs: %s */", escapeComment(err.Error()))
+		return
+	}
+	fieldSort, err := fieldRangeSort(a.Field)
+	if err != nil {
+		w.linef("/* unsupported null field sort: %s */", escapeComment(err.Error()))
+		return
+	}
+	w.linef("%s = %s;", lhs, g.cppZeroValue(fieldSort))
+}
+
+func (g *Generator) emitCopyField(w *cppWriter, a *goivy.LogicCopyFieldAction) {
+	lhs, err := g.emitFieldRef(a.Dst, a.Field)
+	if err != nil {
+		w.linef("/* unsupported copy field lhs: %s */", escapeComment(err.Error()))
+		return
+	}
+	rhs, err := g.emitFieldRef(a.Src, a.SrcField)
+	if err != nil {
+		w.linef("/* unsupported copy field rhs: %s */", escapeComment(err.Error()))
+		return
+	}
+	w.linef("%s = %s;", lhs, rhs)
+}
+
+func (g *Generator) emitFieldRef(obj, field goivy.Expr) (string, error) {
+	if obj == nil || field == nil {
+		return "", fmt.Errorf("nil field reference")
+	}
+	objCode, err := g.emitExpr(obj)
+	if err != nil {
+		return "", err
+	}
+	fieldName := goivy.ExprName(field)
+	if fieldName == "" {
+		return "", fmt.Errorf("field has no name: %T", field)
+	}
+	return objCode + "." + varName(memName(fieldName)), nil
+}
+
+func fieldRangeSort(field goivy.Expr) (goivy.Sort, error) {
+	if field == nil {
+		return nil, fmt.Errorf("nil field")
+	}
+	if fs, ok := field.NodeSort().(*goivy.LogicFunctionSort); ok {
+		return fs.Range(), nil
+	}
+	return nil, fmt.Errorf("field %s does not have function sort", field.String())
 }
 
 func (g *Generator) emitNativeAction(w *cppWriter, a *goivy.LogicNativeAction) {
@@ -217,6 +397,33 @@ func (g *Generator) emitNativeAction(w *cppWriter, a *goivy.LogicNativeAction) {
 		return
 	}
 	emitNativeLines(w, rendered)
+}
+
+func (g *Generator) emitDebug(w *cppWriter, a *goivy.LogicDebugAction) {
+	event := debugEventName(a.DebugExpr)
+	w.line(`std::cout << "{" << std::endl;`)
+	w.linef(`std::cout << "    \"event\" : \"%s\"," << std::endl;`, escapeString(event))
+	for i, e := range a.WithExprs {
+		expr, err := g.emitExpr(e)
+		if err != nil {
+			w.linef("/* unsupported debug expression: %s */", escapeComment(err.Error()))
+			continue
+		}
+		w.linef(`std::cout << "    \"value%d\" : " << (%s) << "," << std::endl;`, i, expr)
+	}
+	w.line(`std::cout << "}" << std::endl;`)
+}
+
+func debugEventName(e goivy.Expr) string {
+	if e == nil {
+		return "debug"
+	}
+	name := goivy.ExprName(e)
+	name = strings.Trim(name, `"`)
+	if strings.TrimSpace(name) == "" {
+		return "debug"
+	}
+	return name
 }
 
 func escapeString(s string) string {

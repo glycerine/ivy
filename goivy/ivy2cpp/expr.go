@@ -12,6 +12,9 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 	if e == nil {
 		return "", fmt.Errorf("ivy2cpp: nil expression")
 	}
+	if repl, ok := g.aliasForSymbol(e); ok {
+		return g.emitExpr(repl)
+	}
 	switch n := e.(type) {
 	case *goivy.Const:
 		if n.CSort == goivy.Boolean {
@@ -109,7 +112,11 @@ func (g *Generator) emitNary(terms []goivy.Expr, op, ident string) (string, erro
 }
 
 func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
-	name := goivy.ExprName(a.Func)
+	fnExpr := a.Func
+	if repl, ok := g.aliasForSymbol(fnExpr); ok {
+		fnExpr = repl
+	}
+	name := goivy.ExprName(fnExpr)
 	if len(a.Terms) == 2 && isInfix(name) {
 		l, err := g.emitExpr(a.Terms[0])
 		if err != nil {
@@ -140,6 +147,26 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 		return fn + "[" + args[0] + "]", nil
 	}
 	return fn + "[std::make_tuple(" + strings.Join(args, ", ") + ")]", nil
+}
+
+func (g *Generator) aliasForSymbol(e goivy.Expr) (goivy.Expr, bool) {
+	if g == nil || len(g.exprAliases) == 0 || e == nil {
+		return nil, false
+	}
+	switch e.(type) {
+	case *goivy.Const, *goivy.LogicVariable:
+	default:
+		return nil, false
+	}
+	name := goivy.ExprName(e)
+	if name == "" {
+		return nil, false
+	}
+	repl, ok := g.exprAliases[name]
+	if !ok || repl == nil || goivy.ExprName(repl) == name {
+		return nil, false
+	}
+	return repl, true
 }
 
 func isInfix(name string) bool {

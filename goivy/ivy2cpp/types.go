@@ -110,6 +110,53 @@ func cppZeroValueInScope(s goivy.Sort, className string) string {
 	return cppZeroValue(s)
 }
 
+func (g *Generator) cppZeroValue(s goivy.Sort) string {
+	if g != nil {
+		if name, ok := g.destructorStructName(s); ok {
+			return varName(name) + "()"
+		}
+	}
+	return cppZeroValue(s)
+}
+
+func (g *Generator) cppZeroValueInScope(s goivy.Sort) string {
+	if g != nil {
+		if name, ok := g.destructorStructName(s); ok {
+			typeName := varName(name)
+			if g.ClassName != "" {
+				typeName = g.ClassName + "::" + typeName
+			}
+			return typeName + "()"
+		}
+	}
+	className := ""
+	if g != nil {
+		className = g.ClassName
+	}
+	return cppZeroValueInScope(s, className)
+}
+
+func (g *Generator) destructorStructName(s goivy.Sort) (string, bool) {
+	if g == nil || g.Mod == nil || g.Mod.SortDestructors == nil {
+		return "", false
+	}
+	switch st := s.(type) {
+	case *goivy.UninterpretedSort:
+		if _, ok := g.Mod.SortDestructors.Get2(st.Name); ok {
+			return st.Name, true
+		}
+	case *goivy.LogicEnumeratedSort:
+		if _, ok := g.Mod.SortDestructors.Get2(st.Name); ok {
+			return st.Name, true
+		}
+	case *goivy.RangeSort:
+		if _, ok := g.Mod.SortDestructors.Get2(st.Name); ok {
+			return st.Name, true
+		}
+	}
+	return "", false
+}
+
 func sortName(s goivy.Sort) string {
 	switch st := s.(type) {
 	case *goivy.BooleanSort:

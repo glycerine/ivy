@@ -35,6 +35,8 @@ type Generator struct {
 	header cppWriter
 	impl   cppWriter
 	tempID int
+
+	exprAliases map[string]goivy.Expr
 }
 
 func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
@@ -157,6 +159,7 @@ func (g *Generator) emitImpl() error {
 	if err := g.emitNativeBlocks(w, "init"); err != nil {
 		return err
 	}
+	w.line("__init();")
 	w.close("")
 	w.linef("%s::~%s() {}", g.ClassName, g.ClassName)
 	w.blank()
@@ -214,7 +217,13 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 	if g.Mod.Sig == nil {
 		return
 	}
+	emittedDestructorStructs := map[string]bool{}
 	for _, name := range g.Mod.SortOrder {
+		if _, ok := g.Mod.SortDestructors.Get2(name); ok {
+			g.emitDestructorStruct(w, name)
+			emittedDestructorStructs[name] = true
+			continue
+		}
 		s, ok := g.Mod.Sig.Sorts.Get2(name)
 		if !ok {
 			continue
@@ -238,16 +247,60 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 	if len(destructorNames) > 0 {
 		w.blank()
 		for _, name := range destructorNames {
-			w.open(fmt.Sprintf("struct %s {", varName(name)))
-			for _, d := range g.Mod.SortDestructors.Get(name) {
-				if fs, ok := d.CSort.(*goivy.LogicFunctionSort); ok {
-					w.linef("%s %s;", cppType(fs.Range()), memName(d.Name))
-				}
+			if emittedDestructorStructs[name] {
+				continue
 			}
-			w.close(";")
+			g.emitDestructorStruct(w, name)
 		}
 	}
 	w.blank()
+}
+
+func (g *Generator) emitDestructorStruct(w *cppWriter, name string) {
+	destructors := g.Mod.SortDestructors.Get(name)
+	w.open(fmt.Sprintf("struct %s {", varName(name)))
+	for _, d := range destructors {
+		if fs, ok := d.CSort.(*goivy.LogicFunctionSort); ok {
+			w.linef("%s %s;", cppType(fs.Range()), varName(memName(d.Name)))
+		}
+	}
+	g.emitDestructorStructComparators(w, name, destructors)
+	w.close(";")
+}
+
+func (g *Generator) emitDestructorStructComparators(w *cppWriter, name string, destructors []*goivy.Const) {
+	typeName := varName(name)
+	w.open(fmt.Sprintf("bool operator==(const %s &other) const {", typeName))
+	comparisons := destructorFieldComparisons(destructors, " == ")
+	if len(comparisons) == 0 {
+		w.line("return true;")
+	} else {
+		w.linef("return %s;", strings.Join(comparisons, " && "))
+	}
+	w.close("")
+	w.open(fmt.Sprintf("bool operator<(const %s &other) const {", typeName))
+	for _, d := range destructors {
+		if _, ok := d.CSort.(*goivy.LogicFunctionSort); !ok {
+			continue
+		}
+		field := varName(memName(d.Name))
+		w.linef("if (%s < other.%s) return true;", field, field)
+		w.linef("if (other.%s < %s) return false;", field, field)
+	}
+	w.line("return false;")
+	w.close("")
+}
+
+func destructorFieldComparisons(destructors []*goivy.Const, op string) []string {
+	var out []string
+	for _, d := range destructors {
+		if _, ok := d.CSort.(*goivy.LogicFunctionSort); !ok {
+			continue
+		}
+		field := varName(memName(d.Name))
+		out = append(out, field+op+"other."+field)
+	}
+	return out
 }
 
 func (g *Generator) emitStateDecls(w *cppWriter) {
@@ -371,7 +424,7 @@ func (g *Generator) emitMethods(w *cppWriter) {
 		w.open(g.methodSignature(name, act, true) + " {")
 		returns := act.GetFormalReturns()
 		if len(returns) == 1 && !formalListContains(act.GetFormalParams(), returns[0]) {
-			w.linef("%s %s = %s;", cppType(returns[0].CSort), varName(returns[0].Name), cppZeroValue(returns[0].CSort))
+			w.linef("%s %s = %s;", cppType(returns[0].CSort), varName(returns[0].Name), g.cppZeroValue(returns[0].CSort))
 		}
 		g.emitAction(w, act)
 		if len(returns) == 1 {
@@ -413,7 +466,7 @@ func (g *Generator) emitRepl(w *cppWriter) {
 		if ok && len(act.GetFormalReturns()) > 1 {
 			w.open(fmt.Sprintf(`if (action == "%s") {`, username))
 			for _, r := range act.GetFormalReturns() {
-				w.linef("%s %s = %s;", cppType(r.CSort), varName(r.Name), cppZeroValue(r.CSort))
+				w.linef("%s %s = %s;", cppType(r.CSort), varName(r.Name), g.cppZeroValue(r.CSort))
 				args = append(args, varName(r.Name))
 			}
 			w.linef("ivy.%s(%s);", fn, strings.Join(args, ", "))
@@ -428,12 +481,23 @@ func (g *Generator) emitRepl(w *cppWriter) {
 	w.line("}")
 	w.blank()
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
-	w.linef("%s ivy;", g.ClassName)
-	w.line("ivy.__init();")
+	if args := g.constructorDefaultArgs(); len(args) == 0 {
+		w.linef("%s ivy;", g.ClassName)
+	} else {
+		w.linef("%s ivy(%s);", g.ClassName, strings.Join(args, ", "))
+	}
 	w.line("(void)argc;")
 	w.line("(void)argv;")
 	w.line("return 0;")
 	w.close("")
+}
+
+func (g *Generator) constructorDefaultArgs() []string {
+	args := make([]string, 0, len(g.Mod.Params))
+	for _, p := range g.Mod.Params {
+		args = append(args, g.cppZeroValueInScope(p.CSort))
+	}
+	return args
 }
 
 func (g *Generator) replDispatchArgs(name string) []string {
@@ -446,7 +510,7 @@ func (g *Generator) replDispatchArgs(name string) []string {
 	}
 	var args []string
 	for _, p := range act.GetFormalParams() {
-		args = append(args, cppZeroValueInScope(p.CSort, g.ClassName))
+		args = append(args, g.cppZeroValueInScope(p.CSort))
 	}
 	return args
 }
