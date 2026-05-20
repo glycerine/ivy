@@ -186,6 +186,15 @@ func repoRoot(t *testing.T) string {
 	return filepath.Clean(filepath.Join(wd, "..", ".."))
 }
 
+func readSupportHeader(t *testing.T, name string) string {
+	t.Helper()
+	b, err := os.ReadFile(filepath.Join(repoRoot(t), "include2cpp", name))
+	if err != nil {
+		t.Fatalf("read support header %s: %v", name, err)
+	}
+	return string(b)
+}
+
 func TestGenerateEmptyModuleProducesHeaderAndImpl(t *testing.T) {
 	mod := goivy.New()
 	mod.Name = "empty"
@@ -3039,18 +3048,26 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	support := readSupportHeader(t, "ivy_go_z3.hpp")
 	for _, want := range []string{
 		"z3::model model;",
 		"model = slvr.get_model();",
 		"z3::expr eval_expr(const z3::expr &expr)",
 		"long long eval(const z3::expr &expr)",
+		"static void ivy2cpp_progress(gen &g, const std::string &label)",
+		"g.progress.push_back(label);",
+	} {
+		if !strings.Contains(support, want) {
+			t.Fatalf("missing %q in shared Go Z3 support:\n%s", want, support)
+		}
+	}
+	for _, want := range []string{
+		`#include "ivy_go_z3.hpp"`,
 		"template <> void __from_solver<bool>(gen &g, const z3::expr &expr, bool &out)",
 		"z3::expr solver_value = g.eval_expr(expr);",
 		"Z3_lbool value = solver_value.bool_value();",
 		"template <> void __from_solver<long long>(gen &g, const z3::expr &expr, long long &out)",
 		"out = g.eval(expr);",
-		"static void ivy2cpp_progress(gen &g, const std::string &label)",
-		"g.progress.push_back(label);",
 		`ivy2cpp_progress(g, "randomize");`,
 		`ivy2cpp_progress(*this, "step_gen");`,
 	} {
@@ -3105,9 +3122,17 @@ export set
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	support := readSupportHeader(t, "ivy_go_z3.hpp")
 	for _, want := range []string{
 		"bool check()",
 		"model = slvr.get_model();",
+	} {
+		if !strings.Contains(support, want) {
+			t.Fatalf("missing %q in shared Go Z3 support:\n%s", want, support)
+		}
+	}
+	for _, want := range []string{
+		`#include "ivy_go_z3.hpp"`,
 		"bool init_gen::generate(checkgen &obj)",
 		"bool set_gen::generate(checkgen &obj)",
 		"if (!check())",
@@ -3182,6 +3207,7 @@ relation marked(C:color)
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	support := readSupportHeader(t, "ivy_go_z3.hpp")
 	for _, want := range []string{
 		"z3::expr mk_apply_expr(const char *decl_name, const std::vector<int> &args)",
 		"expr_args.push_back(int_to_z3(decl.domain(i), args[i]));",
@@ -3190,6 +3216,14 @@ relation marked(C:color)
 		"randomize(mk_apply_expr(decl_name, args_vec), range);",
 		"z3::expr pred = expr == int_to_z3(expr.get_sort(), value);",
 		"add_alit(pred);",
+	} {
+		if !strings.Contains(support, want) {
+			t.Fatalf("missing %q in shared Go Z3 support:\n%s", want, support)
+		}
+	}
+	for _, want := range []string{
+		`#include "ivy_go_z3.hpp"`,
+		`g.randomize("marked", static_cast<int>(__ivy_arg0), "bool");`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
@@ -3210,14 +3244,22 @@ individual seen : idx
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	support := readSupportHeader(t, "ivy_go_z3.hpp")
 	for _, want := range []string{
 		"std::map<std::string, long long> sort_los;",
 		"std::map<std::string, long long> sort_his;",
 		"sort_his[std::string(name)] = values.size() == 0 ? 0 : static_cast<long long>(values.size()) - 1;",
-		`g.mk_enum("color", {"red", "green"});`,
-		`g.mk_int("idx", 2, 4);`,
 		"std::map<std::string, long long>::const_iterator lo_it = sort_los.find(range);",
 		"value = random_index(static_cast<int>(lo), static_cast<int>(hi));",
+	} {
+		if !strings.Contains(support, want) {
+			t.Fatalf("missing %q in shared Go Z3 support:\n%s", want, support)
+		}
+	}
+	for _, want := range []string{
+		`#include "ivy_go_z3.hpp"`,
+		`g.mk_enum("color", {"red", "green"});`,
+		`g.mk_int("idx", 2, 4);`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
