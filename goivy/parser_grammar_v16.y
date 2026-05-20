@@ -741,24 +741,20 @@ top:
             xtracer.Trace("parser.include EXIT name=%s decls=%d", name, modDeclCount)
         }
     }
-    // --- Axiom (v1.6): top optexplicit opttemporal AXIOM lgprop ---
-    | top optexplicit opttemporal PARSER16_TOK_AXIOM lgprop
+    // --- Axiom (v1.6): top opttemporal AXIOM labeledfmla ---
+    | top opttemporal PARSER16_TOK_AXIOM labeledfmla
     {
-        xtracer.Trace("parser.p_top_axiom_optlabel_gprop ENTER (top)")
+        xtracer.Trace("parser.p_top_axiom_labeledfmla ENTER (top)")
         $$ = $1
-        lf := parser16AddLabel(parser16Acfg(parser16lex), $5.(*LabeledFormula), "axiom")
-        // Python: lf = addexplicit(lf) if p[2] else lf  (explicit first)
+        lf := parser16AddLabel(parser16Acfg(parser16lex), $4.(*LabeledFormula), "axiom")
+        // Python: d = AxiomDecl(addtemporal(lf) if p[2] else check_non_temporal(lf))
         if $2 != nil {
-            lf = parser16AddExplicit(lf)
-        }
-        // Python: d = AxiomDecl(addtemporal(lf) if p[3] else check_non_temporal(lf))
-        if $3 != nil {
             lf = parser16AddTemporal(lf)
         } else {
             parser16CheckNonTemporal(lf)
         }
         d := parser16Acfg(parser16lex).NewAxiomDecl(lf)
-        d.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $4))
+        d.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $3))
         $$.declare(d)
     }
     // --- Property (v1.6): top optexplicit opttemporal PROPERTY labeledfmla optskolem optproof ---
@@ -948,28 +944,19 @@ top:
         // Python: stack.pop() equivalent
         lex.accum = $$
     }
-    // --- Definition (v1.6): top optexplicit DEFINITION optlabel gdefn optproof ---
-    | top optexplicit PARSER16_TOK_DEFINITION optlabel gdefn optproof
+    // --- Definition (v1.6): top DEFINITION defns optproof ---
+    | top PARSER16_TOK_DEFINITION defns optproof
     {
-        xtracer.Trace("parser.p_top_definition_optlabel_gdefn_optproof ENTER (top)")
+        xtracer.Trace("parser.p_top_definition_defns ENTER (top)")
         $$ = $1
-        // Python: foo = p[5]
-        // Python: if p[2]: foo = DefinitionSchema(*foo.args); foo.lineno = p[5].lineno
-        gdefn := $5
-        if $2 != nil { // optexplicit is True
-            if def, ok := gdefn.(*Definition); ok {
-                ds := parser16Acfg(parser16lex).NewDefinitionSchema(*def)
-                ds.SetLineno(def.GetLineno())
-                gdefn = ds
-            }
+        labeled := make([]Node, 0, len($3))
+        for _, def := range $3 {
+            labeled = append(labeled, parser16AddLabel(parser16Acfg(parser16lex), parser16MkLF(parser16Acfg(parser16lex), def), "def"))
         }
-        lf := parser16Acfg(parser16lex).NewLabeledFormula($4, gdefn)
-        lf.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $3))
-        lf = parser16AddLabel(parser16Acfg(parser16lex), lf, "def")
-        dd := parser16Acfg(parser16lex).NewDefinitionDecl(lf)
+        dd := parser16Acfg(parser16lex).NewDefinitionDecl(labeled...)
         $$.declare(dd)
-        if $6 != nil {
-            $$.declare(parser16Acfg(parser16lex).NewProofDecl($6))
+        if $4 != nil {
+            $$.declare(parser16Acfg(parser16lex).NewProofDecl($4))
         }
     }
     // --- Schema ---
@@ -2541,18 +2528,9 @@ schdecl:
         tdfn.SetLineno(parser16TokLineno(parser16lex.(*parser16LexAdapter), $1))
         $$ = []Node{tdfn}
     }
-    | optexplicit PARSER16_TOK_PROPERTY lgprop
+    | PARSER16_TOK_PROPERTY labeledfmla
     {
         xtracer.Trace("parser.p_schdecl_propdecl ENTER (schdecl)")
-        lf := parser16AddLabel(parser16Acfg(parser16lex), $3.(*LabeledFormula), "prop")
-        if $1 != nil {
-            lf.Explicit = true
-        }
-        $$ = []Node{parser16CheckNonTemporal(lf).(*LabeledFormula)}
-    }
-    | PARSER16_TOK_THEOREM lgprop
-    {
-        xtracer.Trace("parser.p_schdecl_theorem_lgprop ENTER (schdecl)")
         lf := parser16AddLabel(parser16Acfg(parser16lex), $2.(*LabeledFormula), "prop")
         $$ = []Node{parser16CheckNonTemporal(lf).(*LabeledFormula)}
     }
@@ -2587,12 +2565,10 @@ schconc:
         xtracer.Trace("parser.p_schconc_defdecl ENTER (schconc)")
         $$ = $2
     }
-    | optexplicit PARSER16_TOK_PROPERTY lgprop
+    | PARSER16_TOK_PROPERTY fmla
     {
         xtracer.Trace("parser.p_schconc_propdecl ENTER (schconc)")
-        lf := $3.(*LabeledFormula)
-        // Python: p[0] = check_non_temporal(fmla)
-        $$ = parser16CheckNonTemporal(lf.Formula)
+        $$ = parser16CheckNonTemporal($2)
     }
     ;
 
