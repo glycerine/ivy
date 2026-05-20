@@ -87,10 +87,21 @@ func moduleBaseName(mod *goivy.Module) string {
 }
 
 func (g *Generator) generate() error {
+	if err := g.validateSupportedInitialState(); err != nil {
+		return err
+	}
 	if err := g.emitHeader(); err != nil {
 		return err
 	}
 	return g.emitImpl()
+}
+
+func (g *Generator) validateSupportedInitialState() error {
+	hasExecutableInit := len(g.Mod.InitialActions) > 0 || len(g.Mod.Initializers) > 0
+	if !hasExecutableInit && g.Mod.InitCond != nil && !g.Mod.InitCond.IsTrue() {
+		return fmt.Errorf("ivy2cpp: initial constraints are not supported yet; use after init actions for v1 C++ generation")
+	}
+	return nil
 }
 
 func (g *Generator) emitHeader() error {
@@ -112,7 +123,6 @@ func (g *Generator) emitHeader() error {
 	w.line("public:")
 	w.indent++
 	w.linef("typedef %s ivy_class;", g.ClassName)
-	w.linef("%s();", g.ClassName)
 	w.linef("virtual ~%s();", g.ClassName)
 	w.line("virtual void ivy_assert(bool truth, const char *msg);")
 	w.line("virtual void ivy_assume(bool truth, const char *msg);")
@@ -120,6 +130,8 @@ func (g *Generator) emitHeader() error {
 	w.line("void __init();")
 	w.blank()
 	g.emitSortDecls(w)
+	w.line(g.constructorSignature(false) + ";")
+	w.blank()
 	g.emitStateDecls(w)
 	if err := g.emitNativeBlocks(w, "member"); err != nil {
 		return err
@@ -140,7 +152,8 @@ func (g *Generator) emitImpl() error {
 	if err := g.emitNativeBlocks(w, "impl"); err != nil {
 		return err
 	}
-	w.open(fmt.Sprintf("%s::%s() {", g.ClassName, g.ClassName))
+	w.open(g.constructorSignature(true) + " {")
+	g.emitConstructorParamAssignments(w)
 	if err := g.emitNativeBlocks(w, "init"); err != nil {
 		return err
 	}
@@ -174,6 +187,27 @@ func (g *Generator) emitImpl() error {
 		g.emitRepl(w)
 	}
 	return nil
+}
+
+func (g *Generator) constructorSignature(qualified bool) string {
+	name := g.ClassName
+	typeName := cppType
+	if qualified {
+		name = g.ClassName + "::" + g.ClassName
+		typeName = func(s goivy.Sort) string { return cppQualifiedType(s, g.ClassName) }
+	}
+	params := make([]string, 0, len(g.Mod.Params))
+	for _, p := range g.Mod.Params {
+		params = append(params, typeName(p.CSort)+" "+varName(p.Name))
+	}
+	return fmt.Sprintf("%s(%s)", name, strings.Join(params, ", "))
+}
+
+func (g *Generator) emitConstructorParamAssignments(w *cppWriter) {
+	for _, p := range g.Mod.Params {
+		name := varName(p.Name)
+		w.linef("this->%s = %s;", name, name)
+	}
 }
 
 func (g *Generator) emitSortDecls(w *cppWriter) {

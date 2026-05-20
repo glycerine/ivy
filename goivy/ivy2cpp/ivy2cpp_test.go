@@ -431,6 +431,42 @@ export step
 	compileGeneratedCPP(t, out)
 }
 
+func TestConstructorInitializesParams(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+parameter initial : color
+individual saved : color
+after init {
+    saved := initial
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "paramcase"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"color initial;", "paramcase(color initial);"} {
+		if !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q in header:\n%s", want, out.Header)
+		}
+	}
+	for _, want := range []string{"paramcase::paramcase(paramcase::color initial)", "this->initial = initial;", "saved = initial;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestUnsupportedModelInitialStateReturnsError(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "badinit"
+	mod.InitCond = goivy.FormulaToClauses(goivy.NewConst("flag", goivy.Boolean), nil)
+	_, err := Generate(mod, Config{ClassName: "badinit"})
+	if err == nil || !strings.Contains(err.Error(), "initial constraints") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
 func TestEmitNativeActionAntiquotes(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -488,6 +524,27 @@ export tick_native
 		}
 	}
 	compileGeneratedCPP(t, out)
+}
+
+func TestDuplicateOnceNativeHeaderEmitsOnce(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+<<< once
+#include <deque>
+>>>
+<<< once
+#include <deque>
+>>>
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "dedupe"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if got := strings.Count(out.Header, "#include <deque>"); got != 1 {
+		t.Fatalf("native once header count=%d header:\n%s", got, out.Header)
+	}
 }
 
 func TestReplDispatchForExportedAction(t *testing.T) {
