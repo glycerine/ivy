@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -64,6 +65,24 @@ func TestIvyLogicSigAddSymbolDuplicate(t *testing.T) {
 	_, err := s.AddSymbol("x", &UninterpretedSort{Name: "other"})
 	if err == nil {
 		t.Error("expected error for redefining symbol with different sort")
+	}
+}
+
+func TestIvyLogicSigCanonShowsPolymorphicUnionSort(t *testing.T) {
+	s := NewSig()
+	sortT := &UninterpretedSort{Name: "t"}
+	if err := s.AddSort(sortT); err != nil {
+		t.Fatalf("AddSort(t): %v", err)
+	}
+	ltSort := LogicRelationSort([]Sort{sortT, sortT})
+	if _, err := s.AddSymbol("<", ltSort); err != nil {
+		t.Fatalf("AddSymbol(<): %v", err)
+	}
+
+	got := string(s.Canon())
+	want := "symbols:[<:UnionSort(t * t -> Boolean)]"
+	if !strings.Contains(got, want) {
+		t.Fatalf("Sig.Canon() = %s, want substring %q", got, want)
 	}
 }
 
