@@ -8,15 +8,6 @@ import (
 )
 
 func (g *Generator) emitReplParsers(w *cppWriter) {
-	w.open("static std::string ivy2cpp_read_arg(std::istream &input, const char *name) {")
-	w.line("std::string value;")
-	w.open("if (!(input >> value)) {")
-	w.line(`throw std::runtime_error(std::string("missing argument: ") + name);`)
-	w.close("")
-	w.line("return value;")
-	w.close("")
-	w.blank()
-
 	used := g.replParamSorts()
 	if _, ok := used["bool"]; ok {
 		w.open("static bool ivy2cpp_parse_bool(const std::string &s) {")
@@ -150,10 +141,10 @@ func (g *Generator) emitReplNumericParser(w *cppWriter, s goivy.Sort) {
 
 func (g *Generator) emitReplDispatchArgs(w *cppWriter, act goivy.Action) []string {
 	var args []string
-	for _, p := range act.GetFormalParams() {
+	for idx, p := range act.GetFormalParams() {
 		name := varName(p.Name)
 		if parser := g.replParserNameForSort(p.CSort); parser != "" {
-			w.linef(`%s %s = %s(ivy2cpp_read_arg(input, "%s"));`, replParamType(p.CSort, g.ClassName), name, parser, escapeString(name))
+			w.linef(`%s %s = %s(ivy2cpp_read_arg(args, %d, "%s"));`, replParamType(p.CSort, g.ClassName), name, parser, idx, escapeString(name))
 		} else {
 			w.linef("%s %s = %s;", cppQualifiedType(p.CSort, g.ClassName), name, g.cppZeroValueInScope(p.CSort))
 		}

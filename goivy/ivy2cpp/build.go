@@ -42,6 +42,11 @@ func BuildOutput(out *Output, outDir string) (string, error) {
 	cppPath := filepath.Join(dir, out.BaseName+".cpp")
 	exePath := filepath.Join(dir, out.BaseName)
 	args := []string{"-std=c++11"}
+	if includeArgs, err := supportIncludeArgs(); err == nil {
+		args = append(args, includeArgs...)
+	} else {
+		return "", err
+	}
 	var linkArgs []string
 	if outputUsesZ3(out) {
 		includeArgs, z3LinkArgs, err := z3BuildArgs()
@@ -61,6 +66,18 @@ func BuildOutput(out *Output, outDir string) (string, error) {
 		return "", fmt.Errorf("ivy2cpp: build failed: %w\n%s", err, buf.String())
 	}
 	return exePath, nil
+}
+
+func supportIncludeArgs() ([]string, error) {
+	goivyRoot, err := packageGoivyRoot()
+	if err != nil {
+		return nil, err
+	}
+	includeDir := filepath.Join(filepath.Dir(goivyRoot), "include2cpp")
+	if _, err := os.Stat(filepath.Join(includeDir, "ivy_hash.hpp")); err != nil {
+		return nil, fmt.Errorf("ivy2cpp: support include directory not found: %w", err)
+	}
+	return []string{"-I" + includeDir}, nil
 }
 
 func cxxCompiler() (string, error) {

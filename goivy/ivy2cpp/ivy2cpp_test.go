@@ -30,6 +30,40 @@ func normalizeCPP(s string) string {
 	return strings.TrimSpace(strings.Join(lines, "\n"))
 }
 
+func normalizeOracleCPPForComparison(s string) string {
+	return normalizeCPP(s)
+}
+
+type comparableFeature struct {
+	name  string
+	terms []string
+}
+
+func assertComparableFeatures(t *testing.T, label, text string, features []comparableFeature) {
+	t.Helper()
+	for _, f := range features {
+		if !hasLineWithAllTerms(text, f.terms...) {
+			t.Fatalf("%s missing comparable feature %q terms %v:\n%s", label, f.name, f.terms, text)
+		}
+	}
+}
+
+func hasLineWithAllTerms(s string, terms ...string) bool {
+	for _, line := range strings.Split(s, "\n") {
+		ok := true
+		for _, term := range terms {
+			if !strings.Contains(line, term) {
+				ok = false
+				break
+			}
+		}
+		if ok {
+			return true
+		}
+	}
+	return false
+}
+
 func runPythonIvyToCpp(t *testing.T, src string, params ...string) (string, string) {
 	t.Helper()
 	root := repoRoot(t)
@@ -94,6 +128,11 @@ func compileGeneratedCPPWithPrefix(t *testing.T, out *Output, prefix string) {
 		t.Fatalf("WriteOutput: %v", err)
 	}
 	args := []string{"-std=c++11"}
+	supportArgs, err := supportIncludeArgs()
+	if err != nil {
+		t.Fatalf("support include args: %v", err)
+	}
+	args = append(args, supportArgs...)
 	if prefix != "" {
 		prefixPath := filepath.Join(dir, "ivy2cpp_prefix.h")
 		if err := os.WriteFile(prefixPath, []byte(prefix), 0o644); err != nil {
@@ -193,6 +232,165 @@ export step
 			t.Fatalf("go output missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
 	}
+}
+
+func TestPythonOracleUsesSharedRuntimeIncludes(t *testing.T) {
+	src := `#lang ivy1.7
+action step = {
+}
+export step
+`
+	pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target=repl")
+	raw := pyHeader + "\n" + pyImpl
+	for _, want := range []string{
+		`#include "ivy_hash.hpp"`,
+		`#include "ivy_threads.hpp"`,
+		`#include "ivy_value.hpp"`,
+		`#include "ivy_repl.hpp"`,
+	} {
+		if !strings.Contains(raw, want) {
+			t.Fatalf("expected Python oracle to include shared runtime support %q:\n%s", want, raw)
+		}
+	}
+	if strings.Contains(raw, "This hash template is borrowed from Microsoft Z3") ||
+		strings.Contains(raw, "This string hash function is borrowed from Microsoft Z3") {
+		t.Fatalf("Python oracle still embeds hash support instead of including it:\n%s", raw)
+	}
+	if strings.Contains(raw, "class reader {\npublic:") ||
+		strings.Contains(raw, "class timer {\npublic:") {
+		t.Fatalf("Python oracle still embeds reader/timer runtime instead of including it:\n%s", raw)
+	}
+	for _, unwanted := range []string{
+		"struct ivy_value {",
+		"int ask_ret(long long bound)",
+		"void parse_command(const std::string &cmd",
+		"class stdin_reader: public reader",
+	} {
+		if strings.Contains(raw, unwanted) {
+			t.Fatalf("Python oracle still embeds runtime support %q instead of including it:\n%s", unwanted, raw)
+		}
+	}
+	stripped := normalizeOracleCPPForComparison(raw)
+	for _, want := range []string{"class oracle", "void __tick(int timeout);", "void oracle::__tick"} {
+		if !strings.Contains(stripped, want) {
+			t.Fatalf("stripped oracle lost %q:\n%s", want, stripped)
+		}
+	}
+}
+
+func TestGoOutputUsesSharedSupportIncludes(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{`#include "ivy_hash.hpp"`, `#include "ivy_go_repl.hpp"`} {
+		if !strings.Contains(out.Header, want) {
+			t.Fatalf("go output missing support include %q:\n%s", want, out.Header)
+		}
+	}
+	if strings.Contains(out.Impl, "static void ivy2cpp_parse_command") {
+		t.Fatalf("go output should include repl support instead of embedding parser:\n%s", out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestPythonOracleUsesSharedZ3RuntimeIncludes(t *testing.T) {
+	src := `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`
+	for _, target := range []string{"test", "gen"} {
+		t.Run(target, func(t *testing.T) {
+			pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target="+target)
+			raw := pyHeader + "\n" + pyImpl
+			for _, want := range []string{`#include "ivy_z3_gen.hpp"`, `#include "ivy_z3_helpers.hpp"`} {
+				if !strings.Contains(raw, want) {
+					t.Fatalf("expected Python %s output to include shared Z3 runtime %q:\nheader:\n%s\nimpl:\n%s", target, want, pyHeader, pyImpl)
+				}
+			}
+			for _, unwanted := range []string{
+				"class gen : public ivy_gen",
+				"template <class T> void __from_solver( gen",
+				"class z3_thunk : public thunk",
+			} {
+				if strings.Contains(raw, unwanted) {
+					t.Fatalf("Python %s output still embeds Z3 runtime support %q:\nheader:\n%s\nimpl:\n%s", target, unwanted, pyHeader, pyImpl)
+				}
+			}
+		})
+	}
+}
+
+func TestPythonGoComparableCoreHooksAndActionShape(t *testing.T) {
+	src := `#lang ivy1.7
+var x : bool
+after init {
+    x := true
+}
+action step = {
+    x := ~x
+}
+export step
+extract iso = this
+`
+	pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target=repl", "isolate=iso")
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	py := normalizeOracleCPPForComparison(pyHeader + "\n" + pyImpl)
+	goOut := normalizeOracleCPPForComparison(out.Header + "\n" + out.Impl)
+	features := []comparableFeature{
+		{name: "class", terms: []string{"class", "oracle"}},
+		{name: "init hook", terms: []string{"void", "__init"}},
+		{name: "tick hook", terms: []string{"void", "__tick", "int"}},
+		{name: "progress hook", terms: []string{"ivy_check_progress", "int"}},
+		{name: "choice hook", terms: []string{"___ivy_choose", "int"}},
+		{name: "x state", terms: []string{"bool", "x"}},
+		{name: "step action", terms: []string{"step"}},
+		{name: "init assignment", terms: []string{"x", "=", "true"}},
+		{name: "step assignment", terms: []string{"x", "=", "!"}},
+	}
+	assertComparableFeatures(t, "python oracle", py, features)
+	assertComparableFeatures(t, "go ivy2cpp", goOut, features)
+}
+
+func TestPythonGoComparableProgressTickShape(t *testing.T) {
+	src := `#lang ivy1.7
+individual ready : bool
+individual helper_ready : bool
+progress wait = ready
+progress helper = helper_ready
+rely wait -> helper
+`
+	pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target=repl")
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	py := normalizeOracleCPPForComparison(pyHeader + "\n" + pyImpl)
+	goOut := normalizeOracleCPPForComparison(out.Header + "\n" + out.Impl)
+	features := []comparableFeature{
+		{name: "tick method", terms: []string{"__tick", "__timeout"}},
+		{name: "wait update", terms: []string{"wait", "ready", "?", "0", "+ 1"}},
+		{name: "helper update", terms: []string{"helper", "helper_ready", "?", "0", "+ 1"}},
+		{name: "rely max", terms: []string{"std::max", "helper"}},
+		{name: "progress reset", terms: []string{"wait", "=", "0"}},
+		{name: "progress check", terms: []string{"ivy_check_progress", "wait"}},
+	}
+	assertComparableFeatures(t, "python oracle", py, features)
+	assertComparableFeatures(t, "go ivy2cpp", goOut, features)
 }
 
 func TestTickDeclaredForMinimalModule(t *testing.T) {
@@ -435,12 +633,12 @@ export set
 		{
 			name:   "test",
 			target: "test",
-			want:   []string{`#include "z3++.h"`, "class gen", "__from_solver", "randomize", "enum color"},
+			want:   []string{`#include "z3++.h"`, "enum color"},
 		},
 		{
 			name:   "gen",
 			target: "gen",
-			want:   []string{`#include "z3++.h"`, "class gen", "__from_solver", "randomize", "enum color"},
+			want:   []string{`#include "z3++.h"`, "enum color"},
 		},
 	}
 	for _, tc := range fixtures {
@@ -955,7 +1153,7 @@ export load
 		"t(const a &value) : __tag(0), __a(value) {}",
 		"if (v.__tag == 0)",
 		"static variantdown::a ivy2cpp_parse_a(const std::string &s)",
-		`variantdown::a inp = ivy2cpp_parse_a(ivy2cpp_read_arg(input, "inp"));`,
+		`variantdown::a inp = ivy2cpp_parse_a(ivy2cpp_read_arg(args, 0, "inp"));`,
 		"a loc__q = v.__a;",
 		"out = loc__q;",
 	} {
@@ -967,7 +1165,7 @@ export load
 	compileGeneratedCPP(t, out)
 	exe := buildGeneratedExecutable(t, out)
 	cmd := exec.Command(exe)
-	cmd.Stdin = strings.NewReader("save 7\nload\n")
+	cmd.Stdin = strings.NewReader("save(7)\nload\n")
 	buf, err := cmd.CombinedOutput()
 	if err != nil {
 		t.Fatalf("generated variant repl failed: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
@@ -2347,7 +2545,7 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"std::string action;", "while (std::cin >> action)", "ivy2cpp_dispatch(ivy, action, std::cin);"} {
+	for _, want := range []string{"std::string line;", "while (std::getline(std::cin, line))", "ivy2cpp_parse_command(line, action, args);", "ivy2cpp_dispatch(ivy, action, args);"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in repl main:\n%s", want, out.Impl)
 		}
@@ -2386,7 +2584,7 @@ export set
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{`if (action == "set")`, `runner::color c = ivy2cpp_parse_color(ivy2cpp_read_arg(input, "c"));`, `ivy.set(c);`} {
+	for _, want := range []string{`if (action == "set")`, `runner::color c = ivy2cpp_parse_color(ivy2cpp_read_arg(args, 0, "c"));`, `ivy.set(c);`} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in repl dispatch:\n%s", want, out.Impl)
 		}
@@ -2412,18 +2610,19 @@ export set
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	text := out.Header + out.Impl
 	for _, want := range []string{
-		"static std::string ivy2cpp_read_arg(std::istream &input, const char *name)",
+		`#include "ivy_go_repl.hpp"`,
 		"static bool ivy2cpp_parse_bool(const std::string &s)",
 		"static runner::color ivy2cpp_parse_color(const std::string &s)",
 		"static runner::idx ivy2cpp_parse_idx(const std::string &s)",
-		`runner::color c = ivy2cpp_parse_color(ivy2cpp_read_arg(input, "c"));`,
-		`bool b = ivy2cpp_parse_bool(ivy2cpp_read_arg(input, "b"));`,
-		`runner::idx i = ivy2cpp_parse_idx(ivy2cpp_read_arg(input, "i"));`,
+		`runner::color c = ivy2cpp_parse_color(ivy2cpp_read_arg(args, 0, "c"));`,
+		`bool b = ivy2cpp_parse_bool(ivy2cpp_read_arg(args, 1, "b"));`,
+		`runner::idx i = ivy2cpp_parse_idx(ivy2cpp_read_arg(args, 2, "i"));`,
 		"ivy.set(c, b, i);",
 	} {
-		if !strings.Contains(out.Impl, want) {
-			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in repl output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
@@ -2448,7 +2647,7 @@ export set
 		"static runner::node ivy2cpp_parse_node(const std::string &s)",
 		"long long value = std::stoll(s);",
 		"return static_cast<runner::node>(value);",
-		`runner::node n = ivy2cpp_parse_node(ivy2cpp_read_arg(input, "n"));`,
+		`runner::node n = ivy2cpp_parse_node(ivy2cpp_read_arg(args, 0, "n"));`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
@@ -2457,13 +2656,33 @@ export set
 	assertNoUnsupportedCPP(t, out)
 	exe := buildGeneratedExecutable(t, out)
 	cmd := exec.Command(exe)
-	cmd.Stdin = strings.NewReader("set 7\n")
+	cmd.Stdin = strings.NewReader("set(7)\n")
 	if buf, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("generated repl did not parse uninterpreted arg: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
 	}
 }
 
-func TestGeneratedReplExecutableParsesEnumArg(t *testing.T) {
+func TestGeneratedReplExecutableParsesPythonEnumArg(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action set(c:color) = {
+    assert c = green
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	exe := buildGeneratedExecutable(t, out)
+	cmd := exec.Command(exe)
+	cmd.Stdin = strings.NewReader("set(green)\n")
+	if buf, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("generated repl did not parse enum arg: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
+	}
+}
+
+func TestGeneratedReplExecutableRejectsWhitespaceArgs(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
 action set(c:color) = {
@@ -2478,8 +2697,46 @@ export set
 	exe := buildGeneratedExecutable(t, out)
 	cmd := exec.Command(exe)
 	cmd.Stdin = strings.NewReader("set green\n")
-	if buf, err := cmd.CombinedOutput(); err != nil {
-		t.Fatalf("generated repl did not parse enum arg: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
+	if buf, err := cmd.CombinedOutput(); err == nil {
+		t.Fatalf("generated repl accepted whitespace arg dialect; output=%q\nimpl:\n%s", buf, out.Impl)
+	}
+}
+
+func TestGeneratedReplExecutableAcceptsPythonParenthesizedCommand(t *testing.T) {
+	src := `#lang ivy1.7
+type color = {red, green}
+action echo(c:color) returns (out:color) = {
+    out := c
+}
+export echo
+`
+	pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target=repl")
+	if !strings.Contains(pyImpl, `#include "ivy_repl.hpp"`) {
+		t.Fatalf("python oracle missing shared repl support include:\nheader:\n%s\nimpl:\n%s", pyHeader, pyImpl)
+	}
+	if strings.Contains(pyImpl, "void parse_command(const std::string &cmd") {
+		t.Fatalf("python oracle still embeds parse_command instead of including repl support:\nheader:\n%s\nimpl:\n%s", pyHeader, pyImpl)
+	}
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "ivy2cpp_parse_command") {
+		t.Fatalf("go repl output missing command parser:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, "static void ivy2cpp_parse_command") {
+		t.Fatalf("go repl output should include support parser, not embed it:\n%s", out.Impl)
+	}
+	exe := buildGeneratedExecutable(t, out)
+	cmd := exec.Command(exe)
+	cmd.Stdin = strings.NewReader("echo(green)\n")
+	buf, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("generated repl did not parse Python-style command: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
+	}
+	if strings.TrimSpace(string(buf)) != "green" {
+		t.Fatalf("unexpected repl output %q\nimpl:\n%s", buf, out.Impl)
 	}
 }
 
@@ -2507,7 +2764,7 @@ export echo
 	}
 	exe := buildGeneratedExecutable(t, out)
 	cmd := exec.Command(exe)
-	cmd.Stdin = strings.NewReader("echo green\n")
+	cmd.Stdin = strings.NewReader("echo(green)\n")
 	buf, err := cmd.CombinedOutput()
 	if err != nil {
 		t.Fatalf("generated repl single return failed: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
@@ -2544,7 +2801,7 @@ export split
 	}
 	exe := buildGeneratedExecutable(t, out)
 	cmd := exec.Command(exe)
-	cmd.Stdin = strings.NewReader("split green\n")
+	cmd.Stdin = strings.NewReader("split(green)\n")
 	buf, err := cmd.CombinedOutput()
 	if err != nil {
 		t.Fatalf("generated repl multiple return failed: %v\n%s\nimpl:\n%s", err, buf, out.Impl)
@@ -3091,7 +3348,7 @@ export echo
 		t.Fatalf("missing tinybuild executable: %v", err)
 	}
 	run := exec.Command(exe)
-	run.Stdin = strings.NewReader("echo green\n")
+	run.Stdin = strings.NewReader("echo(green)\n")
 	buf, err := run.CombinedOutput()
 	if err != nil {
 		t.Fatalf("built ivy2cpp executable failed: %v\n%s", err, buf)

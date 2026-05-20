@@ -144,6 +144,10 @@ func (g *Generator) emitHeader() error {
 	}
 	w.line("#include <string>")
 	w.line("#include <tuple>")
+	w.line(`#include "ivy_hash.hpp"`)
+	if g.Config.Target == "repl" {
+		w.line(`#include "ivy_go_repl.hpp"`)
+	}
 	if g.usesZ3() {
 		w.line("#include <utility>")
 		w.line(`#include "z3++.h"`)
@@ -678,7 +682,7 @@ func (g *Generator) emitRepl(w *cppWriter) {
 		mainName = "main"
 	}
 	g.emitReplParsers(w)
-	w.line("static void ivy2cpp_dispatch(" + g.ClassName + " &ivy, const std::string &action, std::istream &input) {")
+	w.line("static void ivy2cpp_dispatch(" + g.ClassName + " &ivy, const std::string &action, const std::vector<std::string> &args) {")
 	w.indent++
 	initActions := g.initialMixinActionNames()
 	for name := range g.Mod.PublicActions.All() {
@@ -690,6 +694,7 @@ func (g *Generator) emitRepl(w *cppWriter) {
 		act, ok := g.Mod.Actions.Get2(name)
 		if ok {
 			w.open(fmt.Sprintf(`if (action == "%s") {`, username))
+			w.linef("ivy2cpp_check_arity(args, %d, action);", len(act.GetFormalParams()))
 			args := g.emitReplDispatchArgs(w, act)
 			returns := act.GetFormalReturns()
 			switch len(returns) {
@@ -713,7 +718,7 @@ func (g *Generator) emitRepl(w *cppWriter) {
 			w.close("")
 			continue
 		}
-		w.linef(`if (action == "%s") { ivy.%s(); return; }`, username, fn)
+		w.linef(`if (action == "%s") { ivy2cpp_check_arity(args, 0, action); ivy.%s(); return; }`, username, fn)
 	}
 	w.line(`std::cerr << "undefined action: " << action << std::endl;`)
 	w.indent--
@@ -723,9 +728,15 @@ func (g *Generator) emitRepl(w *cppWriter) {
 	g.emitConstructDefaultObject(w)
 	w.line("(void)argc;")
 	w.line("(void)argv;")
+	w.line("std::string line;")
 	w.line("std::string action;")
-	w.open("while (std::cin >> action) {")
-	w.line("ivy2cpp_dispatch(ivy, action, std::cin);")
+	w.line("std::vector<std::string> args;")
+	w.open("while (std::getline(std::cin, line)) {")
+	w.open("if (line.empty()) {")
+	w.line("continue;")
+	w.close("")
+	w.line("ivy2cpp_parse_command(line, action, args);")
+	w.line("ivy2cpp_dispatch(ivy, action, args);")
 	w.close("")
 	w.line("return 0;")
 	w.close("")
