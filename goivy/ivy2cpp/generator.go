@@ -130,6 +130,9 @@ func (g *Generator) validateSupportedInitialState() error {
 func (g *Generator) emitHeader() error {
 	w := &g.header
 	w.line("#pragma once")
+	if g.needsTickMax() {
+		w.line("#include <algorithm>")
+	}
 	w.line("#include <cstdint>")
 	w.line("#include <cstdlib>")
 	w.line("#include <initializer_list>")
@@ -157,13 +160,16 @@ func (g *Generator) emitHeader() error {
 	w.linef("virtual ~%s();", g.ClassName)
 	w.line("virtual void ivy_assert(bool truth, const char *msg);")
 	w.line("virtual void ivy_assume(bool truth, const char *msg);")
+	w.line("virtual void ivy_check_progress(int guarantee_ticks, int assume_ticks);")
 	w.line("int ___ivy_choose(int rng, const char *name, int id);")
 	w.line("void __init();")
+	w.line("void __tick(int timeout);")
 	w.blank()
 	g.emitSortDecls(w)
 	w.line(g.constructorSignature(false) + ";")
 	w.blank()
 	g.emitStateDecls(w)
+	g.emitProgressCounterDecls(w)
 	if err := g.emitNativeBlocks(w, "member"); err != nil {
 		return err
 	}
@@ -189,6 +195,7 @@ func (g *Generator) emitImpl() error {
 	}
 	w.open(g.constructorSignature(true) + " {")
 	g.emitConstructorParamAssignments(w)
+	g.emitProgressCounterInitializers(w)
 	if err := g.emitNativeBlocks(w, "init"); err != nil {
 		return err
 	}
@@ -210,6 +217,11 @@ func (g *Generator) emitImpl() error {
 	w.close("")
 	w.close("")
 	w.blank()
+	w.open(fmt.Sprintf("void %s::ivy_check_progress(int guarantee_ticks, int assume_ticks) {", g.ClassName))
+	w.line("(void)guarantee_ticks;")
+	w.line("(void)assume_ticks;")
+	w.close("")
+	w.blank()
 	w.open(fmt.Sprintf("int %s::___ivy_choose(int rng, const char *name, int id) {", g.ClassName))
 	w.line("(void)rng;")
 	w.line("(void)name;")
@@ -220,6 +232,7 @@ func (g *Generator) emitImpl() error {
 	g.emitInit(w)
 	g.emitDefinitions(w)
 	g.emitMethods(w)
+	g.emitTick(w)
 	switch g.Config.Target {
 	case "repl":
 		g.emitRepl(w)

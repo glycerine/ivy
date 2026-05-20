@@ -174,13 +174,18 @@ action step = {
 export step
 `
 	pyHeader, pyImpl := runPythonIvyToCpp(t, src, "target=repl")
+	//vv("python ivy.ivy_to_cpp -> pyHeader = '%v'", pyHeader)
+	//vv("python ivy.ivy_to_cpp -> pyImpl   = '%v'", pyImpl)
 
 	mod := compileIvySource(t, src)
 	out, err := Generate(mod, Config{Target: "repl", ClassName: "oracle"})
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"class oracle", "__init", "step"} {
+	//vv("goivy2cpp header = '%v'", out.Header)
+	//vv("goivy2cpp impl   = '%v'", out.Impl)
+
+	for _, want := range []string{"class oracle", "__init", "__tick", "step"} {
 		if !strings.Contains(pyHeader+pyImpl, want) {
 			t.Fatalf("python oracle missing %q:\nheader:\n%s\nimpl:\n%s", want, pyHeader, pyImpl)
 		}
@@ -188,6 +193,224 @@ export step
 			t.Fatalf("go output missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
 	}
+}
+
+func TestTickDeclaredForMinimalModule(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "tickempty"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"virtual void ivy_check_progress(int guarantee_ticks, int assume_ticks);",
+		"void __tick(int timeout);",
+		"void tickempty::__tick(int __timeout)",
+		"(void)__timeout;",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if strings.Contains(out.Impl, "ivy_check_progress(wait") {
+		t.Fatalf("empty tick should not call ivy_check_progress:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestProgressCounterDeclarationAndTickUpdate(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual ready : bool
+relation ok(C:color)
+progress wait = ready
+progress waitn(C) = ok(C)
+`)
+	out, err := Generate(mod, Config{ClassName: "tickprog"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"long long wait;",
+		"std::map<color,long long> waitn;",
+		"wait = ready ? 0 : wait + 1;",
+		"for (color C : {red, green})",
+		"waitn[C] = ok[C] ? 0 : waitn[C] + 1;",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTickCallsIvyCheckProgressWithoutRely(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual ready : bool
+progress wait = ready
+`)
+	out, err := Generate(mod, Config{ClassName: "ticknor"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"long long __ivy_maxt",
+		"__ivy_maxt",
+		"= 0;",
+		"ivy_check_progress(wait, __ivy_maxt",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestProgressBinaryTupleCounterAndTickUpdate(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type bit = {low, high}
+relation edge(C:color,B:bit)
+progress wait(C,B) = edge(C,B)
+`)
+	out, err := Generate(mod, Config{ClassName: "ticktuple"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"std::map<std::tuple<color,bit>,long long> wait;",
+		"for (color C : {red, green})",
+		"for (bit B : {low, high})",
+		"wait[std::make_tuple(C, B)] = edge[std::make_tuple(C, B)] ? 0 : wait[std::make_tuple(C, B)] + 1;",
+		"ivy_check_progress(wait[std::make_tuple(C, B)], __ivy_maxt",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTickRelyImplicationComputesMaxAndChecksProgress(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual ready : bool
+individual helper_ready : bool
+progress wait = ready
+progress helper = helper_ready
+rely wait -> helper
+`)
+	if len(mod.Rely) == 0 {
+		t.Fatalf("expected parsed rely declarations to populate module")
+	}
+	out, err := Generate(mod, Config{ClassName: "tickrely"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"#include <algorithm>",
+		"long long __ivy_maxt",
+		"__ivy_maxt",
+		"= std::max(",
+		"helper",
+		"if (__ivy_maxt",
+		"> __timeout)",
+		"wait = 0;",
+		"ivy_check_progress(wait, __ivy_maxt",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTickRelySubstitutesProgressArgs(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation ready(C:color)
+relation helper_ready(C:color)
+progress wait(C) = ready(C)
+progress helper(X) = helper_ready(X)
+rely wait(Y) -> helper(Y)
+`)
+	out, err := Generate(mod, Config{ClassName: "ticksubst"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"for (color C : {red, green})",
+		"wait[C] = ready[C] ? 0 : wait[C] + 1;",
+		"__ivy_maxt",
+		"= std::max(",
+		"helper[C]",
+		"ivy_check_progress(wait[C], __ivy_maxt",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTickRelyExtraFreeVariableLoops(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation ready(C:color)
+relation helper_ready(C:color)
+progress wait(C) = ready(C)
+progress helper(D) = helper_ready(D)
+rely wait(C) -> helper(D)
+`)
+	out, err := Generate(mod, Config{ClassName: "tickextravar"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"for (color C : {red, green})",
+		"for (color D : {red, green})",
+		"__ivy_maxt",
+		"= std::max(",
+		"helper[D]",
+		"ivy_check_progress(wait[C], __ivy_maxt",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTickUnconditionalRelySkipsProgressCheckLikePython(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual ready : bool
+progress wait = ready
+rely wait
+`)
+	if len(mod.Rely) == 0 {
+		t.Fatalf("expected parsed rely declarations to populate module")
+	}
+	out, err := Generate(mod, Config{ClassName: "tickbarely"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "wait = ready ? 0 : wait + 1;") {
+		t.Fatalf("missing progress update:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, "ivy_check_progress(wait") {
+		t.Fatalf("bare rely should skip progress check like Python:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
 }
 
 func TestPythonOracleGoPortSharedShape(t *testing.T) {

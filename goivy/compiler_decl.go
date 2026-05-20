@@ -1664,10 +1664,11 @@ func (d *DomainSetup) Rely(node Node) error {
 	xtracer.Trace("compiler.DomainSetup.rely ENTER")
 	mod := d.Compiler.Module
 	lf, ok := node.(*LabeledFormula)
-	if !ok {
-		return nil
+	formula := node
+	if ok {
+		formula = lf.Formula
 	}
-	compiled, err := d.Compiler.SortifyWithInference(lf.Formula)
+	compiled, err := d.Compiler.SortifyWithInference(formula)
 	if err != nil {
 		return err
 	}
