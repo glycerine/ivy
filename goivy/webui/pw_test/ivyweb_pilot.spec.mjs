@@ -757,7 +757,10 @@ test('failed ARG node safety result can open its trace ARG in a sheet', async ({
 
   await page.evaluate(() => {
     const app = window.__ivyDiagnostics.runtime();
-    app.api.argNodeAction = async () => ({
+    window._nodeSafetyCalls = [];
+    app.api.argNodeAction = async (node, action, args) => {
+      window._nodeSafetyCalls.push({ node, action, args });
+      return {
       status: 'ok',
       result: 'fail',
       safe: false,
@@ -775,7 +778,8 @@ test('failed ARG node safety result can open its trace ARG in a sheet', async ({
         ],
       },
       trace_sheet_id: 'sheet-9',
-    });
+      };
+    };
     app.argGraph.update([
       { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
     ]);
@@ -783,6 +787,7 @@ test('failed ARG node safety result can open its trace ARG in a sheet', async ({
   });
 
   await page.locator('.context-menu-item', { hasText: 'Check safety' }).click();
+  await page.waitForFunction(() => window._nodeSafetyCalls && window._nodeSafetyCalls.length === 1);
   await expect(page.locator('[data-check-view-trace]')).toBeVisible();
   await page.locator('[data-check-view-trace]').click();
 
