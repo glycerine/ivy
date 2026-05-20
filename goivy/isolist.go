@@ -1,9 +1,12 @@
 package goivy
 
 import (
+	"bufio"
+	"io"
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 )
 
 // ListIsolates returns the sorted list of isolates registered by the normal
@@ -52,5 +55,24 @@ func ListAllIvyPathsRecursively(startingDir string) (ivySpecs []string, err erro
 // For example, a file "#lang ivy1.5" will return above15 == false,
 // but #lang ivy1.6 will return above15 true.
 func IvyVersionSupported(path string) (above15 bool, err error) {
-	panic("implement me")
+	f, err := os.Open(path)
+	if err != nil {
+		return false, err
+	}
+	defer f.Close()
+
+	firstLine, err := bufio.NewReader(f).ReadString('\n')
+	if err != nil && err != io.EOF {
+		return false, err
+	}
+
+	header := strings.TrimSpace(firstLine)
+	if !strings.HasPrefix(header, "#lang ivy") {
+		return false, nil
+	}
+	version := strings.TrimSpace(strings.TrimPrefix(header, "#lang ivy"))
+	if version == "" {
+		return false, nil
+	}
+	return !VersionLE(version, "1.5"), nil
 }
