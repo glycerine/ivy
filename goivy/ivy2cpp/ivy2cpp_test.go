@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	goivy "github.com/glycerine/ivy/goivy"
+	"github.com/glycerine/ivy/goivy"
 )
 
 func compileIvySource(t *testing.T, src string) *goivy.Module {

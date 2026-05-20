@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	goivy "github.com/glycerine/ivy/goivy"
+	"github.com/glycerine/ivy/goivy"
 )
 
 func cppType(s goivy.Sort) string {

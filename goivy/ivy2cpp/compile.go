@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	goivy "github.com/glycerine/ivy/goivy"
+	"github.com/glycerine/ivy/goivy"
 )
 
 func CompileAndGenerate(filename string, params map[string]string, cfg Config) (*Output, error) {

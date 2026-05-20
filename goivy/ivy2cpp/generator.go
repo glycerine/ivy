@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	goivy "github.com/glycerine/ivy/goivy"
+	"github.com/glycerine/ivy/goivy"
 )
 
 type Config struct {
