@@ -30,13 +30,13 @@ const Enabled = true
 // the full canonical string.
 const HashVerbose bool = true
 
-// suppressed is set by XTRACE_OFF=1 to silence output without
+// Suppressed is set by XTRACE_OFF=1 to silence output without
 // changing Enabled (so `if xtracer.Enabled` guards still compile away).
-var suppressed bool
+var Suppressed bool
 
 func init() {
 	if os.Getenv("XTRACE_OFF") == "1" {
-		suppressed = true
+		Suppressed = true
 	}
 }
 
@@ -56,7 +56,7 @@ var mems = &runtime.MemStats{}
 // Trace prints an execution trace line to stdout.
 // Format: "XTRACE: " + fmt.Sprintf(format, args...) + "\n"
 func trace(format string, args ...interface{}) {
-	if suppressed {
+	if Suppressed {
 		return
 	}
 

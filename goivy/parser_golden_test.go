@@ -556,17 +556,26 @@ func TestGoldenAll(t *testing.T) {
 	}
 	vv("top of TestGoldenAll")
 
-	paths, err := ListAllIvyPathsRecursively("../ivy-lang-examples/")
+	startDir := "../ivy-lang-examples/"
+	paths, err := ListAllIvyPathsRecursively(startDir)
 	panicOn(err)
 	//vv("spec list (len %v) = '%#v'", len(paths), paths)
 
+	verbose := false
+	diffStop := true
 	for _, path := range paths {
+
+		// when we parse here, we do not want to see all the traces.
+		xtracer.Suppressed = true
 		isos, err := ListIsolates(path)
 		panicOn(err)
+		xtracer.Suppressed = false
+
+		path2 := path[3:] // strip "../" to get a repo-root-relative path.
 		for _, iso := range isos {
-			vv("======= begin TestGoldenAll: path='%v'; isolate='%v'", path, iso)
+			vv("======= begin TestGoldenAll: path='%v'; isolate='%v'", path2, iso)
 			args := []string{fmt.Sprintf("isolate=%v", iso)}
-			GoldenPathCompareIvyCheck(t, false, true, path, args, "")
+			GoldenPathCompareIvyCheck(t, verbose, diffStop, path2, args, "")
 		}
 	}
 }
