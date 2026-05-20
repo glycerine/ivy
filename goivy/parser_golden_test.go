@@ -557,8 +557,48 @@ func TestGoldenAll(t *testing.T) {
 	}
 	vv("top of TestGoldenAll")
 
+	v16Only := false
+
 	startDir := "../ivy-lang-examples/"
-	paths, err := ListAllIvyPathsRecursively(startDir)
+	paths, err := ListAllIvyPathsRecursively(startDir, v16Only)
+	panicOn(err)
+	//vv("spec list (len %v) = '%#v'", len(paths), paths)
+
+	cfg := &goldenConfig{}
+
+	skipRebuild := false
+	for ipath, path := range paths {
+
+		// when we parse here, we do not want to see all the traces.
+		xtracer.Suppressed = true
+		isos, err := ListIsolates(path)
+		panicOn(err)
+		xtracer.Suppressed = false
+
+		path2 := path[3:] // strip "../" to get a repo-root-relative path.
+		for _, iso := range isos {
+			vv("======= begin TestGoldenAll: path='%v'; isolate='%v' (path %v of %v)", path2, iso, ipath, len(paths))
+			cfg.path = path2
+			cfg.args = []string{fmt.Sprintf("isolate=%v", iso)}
+			cfg.skipRebuild = skipRebuild
+			GoldenPathCompareIvyCheck(t, cfg)
+			skipRebuild = true // only need rebuild the first time.
+		}
+	}
+}
+
+func TestGolden16All(t *testing.T) {
+	off := os.Getenv("XTRACE_OFF")
+	if off != "" {
+		t.Skip("skip again the golden test(s) when XTRACE_OFF.")
+		return // off to check everything else under make test.
+	}
+	vv("top of TestGolden16All")
+
+	v16Only := true
+
+	startDir := "../ivy-lang-examples/"
+	paths, err := ListAllIvyPathsRecursively(startDir, v16Only)
 	panicOn(err)
 	//vv("spec list (len %v) = '%#v'", len(paths), paths)
 

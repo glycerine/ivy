@@ -24,7 +24,7 @@ func ListIsolates(pathToDotIvy string) (isoList []string, err error) {
 	return isoList, nil
 }
 
-func ListAllIvyPathsRecursively(startingDir string) (ivySpecs []string, err error) {
+func ListAllIvyPathsRecursively(startingDir string, onlyV16 bool) (ivySpecs []string, err error) {
 	err = filepath.Walk(startingDir, func(path string, info os.FileInfo, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
@@ -33,8 +33,14 @@ func ListAllIvyPathsRecursively(startingDir string) (ivySpecs []string, err erro
 			// Returning nil for a directory tells filepath.Walk to recurse into it.
 			return nil
 		}
+		var ok bool
+		var err error
 		if filepath.Ext(path) == ".ivy" {
-			ok, err := IvyVersionSupported(path)
+			if onlyV16 {
+				ok, err = isIvyVersion16(path)
+			} else {
+				ok, err = ivyVersionSupported(path)
+			}
 			if err == nil && ok {
 				ivySpecs = append(ivySpecs, path)
 			}
@@ -54,7 +60,7 @@ func ListAllIvyPathsRecursively(startingDir string) (ivySpecs []string, err erro
 // and false for all versions <= 1.5
 // For example, a file "#lang ivy1.5" will return above15 == false,
 // but #lang ivy1.6 will return above15 true.
-func IvyVersionSupported(path string) (above15 bool, err error) {
+func ivyVersionSupported(path string) (above15 bool, err error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return false, err
@@ -76,4 +82,27 @@ func IvyVersionSupported(path string) (above15 bool, err error) {
 	}
 	return !VersionLE(version, "1.5"), nil
 	//return !VersionLE(version, "1.6"), nil
+}
+
+func isIvyVersion16(path string) (isV16 bool, err error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return false, err
+	}
+	defer f.Close()
+
+	firstLine, err := bufio.NewReader(f).ReadString('\n')
+	if err != nil && err != io.EOF {
+		return false, err
+	}
+
+	header := strings.TrimSpace(firstLine)
+	if !strings.HasPrefix(header, "#lang ivy") {
+		return false, nil
+	}
+	version := strings.TrimSpace(strings.TrimPrefix(header, "#lang ivy"))
+	if version == "" {
+		return false, nil
+	}
+	return (version == "1.6"), nil
 }
