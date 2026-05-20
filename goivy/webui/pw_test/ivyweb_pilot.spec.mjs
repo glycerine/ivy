@@ -761,23 +761,23 @@ test('failed ARG node safety result can open its trace ARG in a sheet', async ({
     app.api.argNodeAction = async (node, action, args) => {
       window._nodeSafetyCalls.push({ node, action, args });
       return {
-      status: 'ok',
-      result: 'fail',
-      safe: false,
-      message: 'The node is unsafe: View error trace?',
-      arg: {
-        elements: [
-          { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
-        ],
-      },
-      trace_arg: {
-        elements: [
-          { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
-          { group: 'nodes', data: { id: 'state_1', obj: 'state_1', label: '1' }, classes: 'state marked_state' },
-          { group: 'edges', data: { id: 'trace_edge', source: 'state_0', target: 'state_1', label: 'trace' } },
-        ],
-      },
-      trace_sheet_id: 'sheet-9',
+        status: 'ok',
+        result: 'fail',
+        safe: false,
+        message: 'The node is unsafe: View error trace?',
+        arg: {
+          elements: [
+            { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+          ],
+        },
+        trace_arg: {
+          elements: [
+            { group: 'nodes', data: { id: 'state_0', obj: 'state_0', label: '0' } },
+            { group: 'nodes', data: { id: 'state_1', obj: 'state_1', label: '1' }, classes: 'state marked_state' },
+            { group: 'edges', data: { id: 'trace_edge', source: 'state_0', target: 'state_1', label: 'trace' } },
+          ],
+        },
+        trace_sheet_id: 'sheet-9',
       };
     };
     app.argGraph.update([
