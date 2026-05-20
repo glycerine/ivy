@@ -22,6 +22,33 @@ function traceSheetOptionsForResult(result) {
   };
 }
 
+export function openTraceArgFromResult(app, result, {
+  label = 'Error trace',
+} = {}) {
+  if (!app || !result || !result.trace_arg) return false;
+  app.openARGSheet(label, result.trace_arg, traceSheetIdForResult(app, result), traceSheetOptionsForResult(result));
+  return true;
+}
+
+export function addTraceResultViewAction(app, result, {
+  doc = globalThis.document,
+  label = 'Error trace',
+} = {}) {
+  if (!result || !result.trace_arg) return false;
+  if (doc.querySelector('[data-check-view-trace]')) return false;
+  const info = doc.getElementById('info-content');
+  if (!info) return false;
+  const button = doc.createElement('button');
+  button.type = 'button';
+  button.className = 'btn small';
+  button.setAttribute('data-check-view-trace', 'true');
+  button.textContent = 'View error trace';
+  button.addEventListener('click', () => openTraceArgFromResult(app, result, { label }));
+  info.appendChild(doc.createElement('br'));
+  info.appendChild(button);
+  return true;
+}
+
 function setCheckControlsRunning(running) {
   const doc = globalThis.document;
   if (!doc) return;
@@ -283,22 +310,7 @@ export function showCheckResult(app, result) {
 export function addCheckResultViewActions(app, result, {
   doc = globalThis.document,
 } = {}) {
-  if (!result || !result.trace_arg) return;
-  const openTrace = () => {
-    app.openARGSheet('Error trace', result.trace_arg, traceSheetIdForResult(app, result), traceSheetOptionsForResult(result));
-  };
-
-  if (doc.querySelector('[data-check-view-trace]')) return;
-  const info = doc.getElementById('info-content');
-  if (!info) return;
-  const button = doc.createElement('button');
-  button.type = 'button';
-  button.className = 'btn small';
-  button.setAttribute('data-check-view-trace', 'true');
-  button.textContent = 'View error trace';
-  button.addEventListener('click', openTrace);
-  info.appendChild(doc.createElement('br'));
-  info.appendChild(button);
+  addTraceResultViewAction(app, result, { doc, label: 'Error trace' });
 }
 
 function splitResultMessage(message, result) {

@@ -1,4 +1,5 @@
 import { applyArgSnapshot, applyConceptSnapshot } from './uiDataRenderService.ts';
+import { addTraceResultViewAction } from './checkService.ts';
 
 export async function prepareArgNodeActionArgs(app, nodeData, actionName, args, sheetId) {
   if (actionName === 'try_conjecture' && !args.conjecture) {
@@ -21,8 +22,24 @@ export async function prepareArgNodeActionArgs(app, nodeData, actionName, args, 
     );
     if (selectedGoal == null) return null;
     args.goal = selectedGoal;
+  } else if (actionName === 'check_safety' && !args.mode && typeof app.getMode === 'function') {
+    args.mode = app.getMode();
   }
   return args;
+}
+
+function showArgNodeSafetyResult(app, result) {
+  const message = (result && result.message) || 'Safety check complete';
+  if (result && result.safe === true) {
+    app.controls.setStatus(message, 'success');
+    return true;
+  }
+  app.controls.setStatus(message, 'error');
+  if (app.controls && typeof app.controls.showInfo === 'function') {
+    app.controls.showInfo('Safety Check', message);
+    addTraceResultViewAction(app, result);
+  }
+  return true;
 }
 
 export async function executeArgNodeAction(app, nodeData, action, sheetId) {
@@ -46,6 +63,10 @@ export async function executeArgNodeAction(app, nodeData, action, sheetId) {
     }
     if (result && result.concept) {
       applyConceptSnapshot(app, targetSheetId, result.concept);
+    }
+    if (actionName === 'check_safety') {
+      showArgNodeSafetyResult(app, result);
+      return result;
     }
     app.controls.setStatus(`Action complete: ${actionName}`, 'success');
     return result;

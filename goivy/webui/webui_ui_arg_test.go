@@ -548,6 +548,43 @@ func TestArgNodeActionCheckSafety(t *testing.T) {
 	}
 }
 
+func TestArgNodeActionBoundedSafetyFailureReturnsTrace(t *testing.T) {
+	s, ui := loadARGTestSession(t)
+	ui.AG.Assertions = append(ui.AG.Assertions, &goivy.LabeledFormula{Formula: goivy.False})
+	drainEvents(s)
+
+	result, err := s.ArgNodeAction("state_0", "check_safety", map[string]interface{}{"mode": "bounded"})
+	if err != nil {
+		t.Fatalf("ArgNodeAction bounded check_safety: %v", err)
+	}
+	if got := result["safe"]; got != false {
+		t.Fatalf("safe = %#v, want false", got)
+	}
+	if got := result["result"]; got != "fail" {
+		t.Fatalf("result = %#v, want fail", got)
+	}
+	if got := result["message"]; got != "The node is unsafe: View error trace?" {
+		t.Fatalf("message = %#v", got)
+	}
+	if _, ok := result["trace_sheet_id"].(string); !ok {
+		t.Fatalf("missing trace_sheet_id in result: %#v", result)
+	}
+	traceArg, ok := result["trace_arg"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("missing trace_arg in result: %#v", result)
+	}
+	traceState := requireArgState(t, traceArg)
+	if len(traceState.States) == 0 {
+		t.Fatalf("trace ARG has no states: %#v", traceState)
+	}
+	if !traceState.States[len(traceState.States)-1].IsMarked {
+		t.Fatalf("final trace state is not marked: %#v", traceState.States)
+	}
+	if countCyNodesWithClass(traceArg, "marked_state") != 1 {
+		t.Fatalf("trace ARG should render exactly one marked node: %#v", traceArg["elements"])
+	}
+}
+
 func TestArgNodeActionMark(t *testing.T) {
 	s, _ := loadARGTestSession(t)
 	drainEvents(s)

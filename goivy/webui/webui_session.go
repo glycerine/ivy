@@ -3008,10 +3008,25 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		stateIdx := -1
 		fmt.Sscanf(nodeID, "state_%d", &stateIdx)
 		if uiErr == nil && stateIdx >= 0 {
-			safe, msg := ui.CheckSafetyNode(stateIdx)
-			result["safe"] = safe
-			result["message"] = msg
+			mode := ui.GetMode()
+			if modeArg := actionStringArg(args, "mode"); modeArg != "" {
+				mode = VerificationMode(modeArg)
+			}
+			safety := ui.CheckSafetyNodeResult(stateIdx, mode)
+			result["safe"] = safety.Safe
+			result["message"] = safety.Message
+			if !safety.Safe {
+				result["result"] = "fail"
+			}
 			result["arg"] = AnalysisUIARGPayload(ui)
+			if safety.Trace != nil {
+				traceUI := s.newAnalysisGraphUIForGraphLocked(safety.Trace)
+				traceUI.markFinalTraceState()
+				traceSheetID := s.registerAnalysisSheetLocked(traceUI)
+				result["trace_arg"] = AnalysisUIARGPayload(traceUI)
+				result["trace_sheet_id"] = traceSheetID
+				result["trace_label"] = analysisSheetLabel(traceSheetID)
+			}
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Safety check at node " + nodeID}})
 	case "extend", "find_extension":

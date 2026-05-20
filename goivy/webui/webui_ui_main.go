@@ -56,6 +56,12 @@ type ARGStateRef struct {
 	Label   string
 }
 
+type NodeSafetyCheckResult struct {
+	Safe    bool
+	Message string
+	Trace   *goivy.AnalysisGraph
+}
+
 // AnalysisGraphUI manages the ARG display and user interactions
 // (Python: class AnalysisGraphUI).
 type AnalysisGraphUI struct {
@@ -561,52 +567,78 @@ func (ui *AnalysisGraphUI) GetMark() *ARGStateRef {
 // CheckSafetyNode checks safety of a node according to the current mode
 // (Python: AnalysisGraphUI.check_safety_node).
 func (ui *AnalysisGraphUI) CheckSafetyNode(nodeID int) (bool, string) {
-	mode := ui.GetMode()
-	var safe bool
-	var msg string
-	if mode != ModeBounded && mode != ModeInduction {
-		safe, msg = ui.CheckLocalSafety(nodeID)
-	} else {
-		safe, msg = ui.CheckBoundedSafety(nodeID)
+	result := ui.CheckSafetyNodeResult(nodeID, "")
+	return result.Safe, result.Message
+}
+
+func (ui *AnalysisGraphUI) CheckSafetyNodeResult(nodeID int, mode VerificationMode) NodeSafetyCheckResult {
+	if mode == "" {
+		mode = ui.GetMode()
 	}
-	ui.SetNodeSafety(nodeID, safe)
-	return safe, msg
+	var result NodeSafetyCheckResult
+	if mode != ModeBounded && mode != ModeInduction {
+		result = ui.CheckLocalSafetyResult(nodeID)
+	} else {
+		result = ui.CheckBoundedSafetyResult(nodeID)
+	}
+	ui.SetNodeSafety(nodeID, result.Safe)
+	return result
 }
 
 // CheckLocalSafety checks local safety of a node
 // (Python: AnalysisGraphUI.check_local_safety).
 func (ui *AnalysisGraphUI) CheckLocalSafety(nodeID int) (bool, string) {
+	result := ui.CheckLocalSafetyResult(nodeID)
+	return result.Safe, result.Message
+}
+
+func (ui *AnalysisGraphUI) CheckLocalSafetyResult(nodeID int) NodeSafetyCheckResult {
 	state, err := ui.stateByID(nodeID)
 	if err != nil {
-		return false, err.Error()
+		return NodeSafetyCheckResult{Safe: false, Message: err.Error()}
 	}
 	result := ui.AG.CheckSafety(true, state)
 	if result.Safe {
-		return true, "Node is safe"
+		return NodeSafetyCheckResult{Safe: true, Message: "Node is safe"}
 	}
 	msg := "The node is not proved safe"
 	if result.Cex != nil && result.Cex.Msg != "" {
 		msg = fmt.Sprintf("The node is not proved safe: %s", result.Cex.Msg)
 	}
-	return false, msg
+	return NodeSafetyCheckResult{Safe: false, Message: msg}
 }
 
 // CheckBoundedSafety checks bounded safety along a path
 // (Python: AnalysisGraphUI.check_bounded_safety).
 func (ui *AnalysisGraphUI) CheckBoundedSafety(nodeID int) (bool, string) {
+	result := ui.CheckBoundedSafetyResult(nodeID)
+	return result.Safe, result.Message
+}
+
+func (ui *AnalysisGraphUI) CheckBoundedSafetyResult(nodeID int) NodeSafetyCheckResult {
 	state, err := ui.stateByID(nodeID)
 	if err != nil {
-		return false, err.Error()
+		return NodeSafetyCheckResult{Safe: false, Message: err.Error()}
 	}
 	result := ui.AG.CheckBoundedSafety(state, nil)
 	if result.Safe {
-		return true, "Node is safe (bounded check)"
+		return NodeSafetyCheckResult{Safe: true, Message: "Node is safe (bounded check)"}
 	}
 	msg := "The node is unsafe"
-	if result.Cex != nil && result.Cex.Msg != "" {
+	if result.Art != nil {
+		msg = "The node is unsafe: View error trace?"
+	} else if result.Cex != nil && result.Cex.Msg != "" {
 		msg = fmt.Sprintf("The node is unsafe: %s", result.Cex.Msg)
 	}
-	return false, msg
+	return NodeSafetyCheckResult{Safe: false, Message: msg, Trace: result.Art}
+}
+
+func (ui *AnalysisGraphUI) markFinalTraceState() {
+	if ui == nil || ui.AG == nil || len(ui.AG.States) == 0 {
+		return
+	}
+	finalState := ui.AG.States[len(ui.AG.States)-1]
+	ui.MarkNode(&ARGStateRef{ID: finalState.ID})
 }
 
 // FindExtension finds an action to extend the ARG at a node

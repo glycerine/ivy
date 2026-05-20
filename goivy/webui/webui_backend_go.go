@@ -663,6 +663,12 @@ func (gbe *GoBackend) ArgAction(sessionID, node, action string, args map[string]
 		if err != nil {
 			return nil
 		}
+		if gbe.cfg.WebUIConformCheck {
+			delete(result, "result")
+			delete(result, "trace_arg")
+			delete(result, "trace_sheet_id")
+			delete(result, "trace_label")
+		}
 		by, err = canonicalJSON(result)
 		return nil
 	})
