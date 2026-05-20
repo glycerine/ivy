@@ -960,6 +960,73 @@ export set_native
 	compileGeneratedCPP(t, out)
 }
 
+func TestNativePrimitiveTypeDeclarationFromInterpret(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type handle
+interpret handle -> <<< primitive int >>>
+individual h : handle
+action step = {
+    h := h
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "nativeint"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"typedef int handle;", "handle h;"} {
+		if !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q in header:\n%s", want, out.Header)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestNativeTypeAntiquoteReferencesSort(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+type vec
+interpret vec -> <<< primitive std::vector<`+"`idx`"+`> >>>
+individual xs : vec
+action step = {
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "nativevec"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Header, "typedef std::vector<long long> vec;") {
+		t.Fatalf("missing rendered native vector type:\n%s", out.Header)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestNativeDefinitionEmitsTemplateMethod(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx
+interpret idx -> <<< int >>>
+definition lt(x:idx,y:idx) = <<< `+"`x`"+` < `+"`y`"+` >>>
+action step(x:idx,y:idx) = {
+    assert lt(x,y)
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "nativedef"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"bool lt(idx x, idx y);", "bool nativedef::lt(nativedef::idx x, nativedef::idx y)", "return x < y;", "ivy_assert(lt(x, y)"} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if strings.Contains(out.Header, "std::map<std::tuple<idx,idx>,bool> lt;") {
+		t.Fatalf("native definition should not be emitted as mutable state:\n%s", out.Header)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestTopLevelNativeBlocksEmitHeaderMemberAndInit(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 <<< header

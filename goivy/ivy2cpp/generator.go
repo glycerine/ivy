@@ -232,6 +232,10 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 	}
 	emittedDestructorStructs := map[string]bool{}
 	for _, name := range g.Mod.SortOrder {
+		if nt, ok := g.nativeTypeForSort(name); ok {
+			g.emitNativeTypeDecl(w, name, nt)
+			continue
+		}
 		if _, ok := g.Mod.SortDestructors.Get2(name); ok {
 			g.emitDestructorStruct(w, name)
 			emittedDestructorStructs[name] = true

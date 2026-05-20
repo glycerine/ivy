@@ -32,6 +32,29 @@ func (g *Generator) derivedDefinitions() []derivedDefinition {
 	return defs
 }
 
+func (g *Generator) nativeDefinitions() []derivedDefinition {
+	if g == nil || g.Mod == nil {
+		return nil
+	}
+	defs := make([]derivedDefinition, 0, len(g.Mod.NativeDefinitions))
+	for _, lf := range g.Mod.NativeDefinitions {
+		def, ok := lf.Formula.(*goivy.LogicDefinition)
+		if !ok || def == nil {
+			continue
+		}
+		dd, ok := newDerivedDefinition(def)
+		if ok {
+			defs = append(defs, dd)
+		}
+	}
+	return defs
+}
+
+func (g *Generator) allDefinitions() []derivedDefinition {
+	defs := g.derivedDefinitions()
+	return append(defs, g.nativeDefinitions()...)
+}
+
 func newDerivedDefinition(def *goivy.LogicDefinition) (derivedDefinition, bool) {
 	if def == nil || def.Lhs == nil || def.Rhs == nil {
 		return derivedDefinition{}, false
@@ -48,13 +71,13 @@ func newDerivedDefinition(def *goivy.LogicDefinition) (derivedDefinition, bool) 
 		Name:   name,
 		Params: params,
 		RHS:    def.Rhs,
-		Sort:   def.Rhs.NodeSort(),
+		Sort:   def.Lhs.NodeSort(),
 	}, true
 }
 
 func (g *Generator) definitionNames() map[string]bool {
 	names := map[string]bool{}
-	for _, d := range g.derivedDefinitions() {
+	for _, d := range g.allDefinitions() {
 		names[d.Name] = true
 	}
 	return names
@@ -64,7 +87,7 @@ func (g *Generator) isDefinitionName(name string) bool {
 	if name == "" {
 		return false
 	}
-	for _, d := range g.derivedDefinitions() {
+	for _, d := range g.allDefinitions() {
 		if d.Name == name {
 			return true
 		}
@@ -73,16 +96,17 @@ func (g *Generator) isDefinitionName(name string) bool {
 }
 
 func (g *Generator) emitDefinitionDecls(w *cppWriter) {
-	for _, d := range g.derivedDefinitions() {
+	defs := g.allDefinitions()
+	for _, d := range defs {
 		w.line(g.definitionSignature(d, false) + ";")
 	}
-	if len(g.derivedDefinitions()) > 0 {
+	if len(defs) > 0 {
 		w.blank()
 	}
 }
 
 func (g *Generator) emitDefinitions(w *cppWriter) {
-	for _, d := range g.derivedDefinitions() {
+	for _, d := range g.allDefinitions() {
 		w.open(g.definitionSignature(d, true) + " {")
 		rhs, err := g.emitExpr(d.RHS)
 		if err != nil {

@@ -146,6 +146,128 @@ func (g *Generator) renderNativeTemplate(code string, params []goivy.Expr) (stri
 	return strings.Join(fields, ""), nil
 }
 
+func (g *Generator) nativeTypeFull(nt *goivy.NativeType) (string, error) {
+	if nt == nil || len(nt.Elems) == 0 {
+		return "", fmt.Errorf("ivy2cpp: empty native type")
+	}
+	code, err := nativeCodeText(nt.Elems[0])
+	if err != nil {
+		return "", err
+	}
+	fields := strings.Split(code, "`")
+	for i := 1; i < len(fields); i += 2 {
+		idx, err := strconv.Atoi(fields[i])
+		if err != nil {
+			return "", fmt.Errorf("bad native type antiquote index %q", fields[i])
+		}
+		if idx < 0 || idx+1 >= len(nt.Elems) {
+			return "", fmt.Errorf("native type antiquote index %d out of range", idx)
+		}
+		repl, err := g.nativeReferenceInType(nt.Elems[idx+1])
+		if err != nil {
+			return "", err
+		}
+		fields[i] = repl
+	}
+	return strings.Join(fields, ""), nil
+}
+
+func nativeCodeText(node goivy.Node) (string, error) {
+	switch n := node.(type) {
+	case *goivy.NativeCode:
+		return n.Code, nil
+	case *goivy.Atom:
+		return n.Rep, nil
+	case *goivy.Symbol:
+		return n.Rep, nil
+	case *goivy.Const:
+		return n.Name, nil
+	default:
+		return "", fmt.Errorf("ivy2cpp: native template has code %T", node)
+	}
+}
+
+func (g *Generator) nativeReferenceInType(node goivy.Node) (string, error) {
+	switch n := node.(type) {
+	case *goivy.CompiledNode:
+		if nested, ok := n.Node.(goivy.Node); ok {
+			return g.nativeReferenceInType(nested)
+		}
+	case *goivy.Atom:
+		if s, ok := g.sortByName(n.Rep); ok {
+			return cppType(s), nil
+		}
+		return varName(n.Rep), nil
+	case *goivy.Symbol:
+		if s, ok := g.sortByName(n.Rep); ok {
+			return cppType(s), nil
+		}
+		return varName(n.Rep), nil
+	case *goivy.Const:
+		if s, ok := g.sortByName(n.Name); ok {
+			return cppType(s), nil
+		}
+		return varName(n.Name), nil
+	case *goivy.UninterpretedSort:
+		return cppType(n), nil
+	case *goivy.LogicEnumeratedSort:
+		return cppType(n), nil
+	case *goivy.RangeSort:
+		return cppType(n), nil
+	}
+	return "", fmt.Errorf("ivy2cpp: native type antiquote %T is not supported", node)
+}
+
+func (g *Generator) emitNativeExpr(n *goivy.LogicNativeExpr) (string, error) {
+	if n == nil || len(n.CompiledChildren) == 0 {
+		return "", fmt.Errorf("ivy2cpp: empty native expression")
+	}
+	code, err := nativeCodeText(n.CompiledChildren[0])
+	if err != nil {
+		return "", err
+	}
+	return g.renderNativeTemplate(code, n.CompiledChildren[1:])
+}
+
+func (g *Generator) nativeTypeForSort(name string) (*goivy.NativeType, bool) {
+	if g == nil || g.Mod == nil || g.Mod.NativeTypes == nil {
+		return nil, false
+	}
+	nt, ok := g.Mod.NativeTypes[name]
+	return nt, ok && nt != nil
+}
+
+func (g *Generator) emitNativeTypeDecl(w *cppWriter, name string, nt *goivy.NativeType) {
+	code, err := g.nativeTypeFull(nt)
+	if err != nil {
+		g.unsupported(w, "unsupported native type %s: %s", name, err.Error())
+		return
+	}
+	code = strings.TrimSpace(code)
+	if strings.HasPrefix(code, "primitive ") {
+		code = strings.TrimSpace(strings.TrimPrefix(code, "primitive "))
+		w.linef("typedef %s %s;", code, varName(name))
+		return
+	}
+	switch code {
+	case "int", "bool":
+		w.linef("typedef %s %s;", code, varName(name))
+	case "std::vector<bool>":
+		g.emitNativeClassTypeDecl(w, name, "std::vector<int>")
+	default:
+		g.emitNativeClassTypeDecl(w, name, code)
+	}
+}
+
+func (g *Generator) emitNativeClassTypeDecl(w *cppWriter, name, base string) {
+	w.open(fmt.Sprintf("class %s : public %s {", varName(name), base))
+	w.line("public:")
+	w.indent++
+	w.linef("typedef %s ivy_native_base;", base)
+	w.indent--
+	w.close(";")
+}
+
 func (g *Generator) nativeReference(arg goivy.Expr) (string, error) {
 	switch a := arg.(type) {
 	case *goivy.Const:

@@ -107,6 +107,8 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 		return g.emitQuant(n.Variables, n.Body, true)
 	case *goivy.LogicExists:
 		return g.emitQuant(n.Variables, n.Body, false)
+	case *goivy.LogicNativeExpr:
+		return g.emitNativeExpr(n)
 	default:
 		return "", fmt.Errorf("ivy2cpp: unsupported expression %T: %s", e, e.String())
 	}
