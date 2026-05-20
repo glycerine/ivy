@@ -614,7 +614,8 @@ func parser16TokLineno(lex *parser16LexAdapter, tok TokenInfo) Location {
 %type <node>  debugarg
 %type <nodes> debugargs optdebugargs
 
-// Precedence declarations — copied exactly from Python v1.6 precedence table.
+// Precedence declarations — Python v1.6 table plus explicit ARROW/IFF for
+// goyacc compatibility; see file header.
 %left         PARSER16_TOK_SEMI
 %left         PARSER16_TOK_GLOBALLY PARSER16_TOK_EVENTUALLY PARSER16_TOK_WHENFIRST PARSER16_TOK_WHENLAST PARSER16_TOK_WHENNEXT PARSER16_TOK_WHENPREV
 %left         PARSER16_TOK_IF
