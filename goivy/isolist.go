@@ -31,7 +31,10 @@ func ListAllIvyPathsRecursively(startingDir string) (ivySpecs []string, err erro
 			return nil
 		}
 		if filepath.Ext(path) == ".ivy" {
-			ivySpecs = append(ivySpecs, path)
+			ok, err := IvyVersionSupported(path)
+			if err == nil && ok {
+				ivySpecs = append(ivySpecs, path)
+			}
 		}
 		return nil
 	})
@@ -40,4 +43,14 @@ func ListAllIvyPathsRecursively(startingDir string) (ivySpecs []string, err erro
 	}
 	sort.Strings(ivySpecs)
 	return ivySpecs, nil
+}
+
+// a quick read of the first line of the file.
+// If the read fails return false + the filesystem error.
+// Otherwise parse the version and return true for Ivy versions > 1.5,
+// and false for all versions <= 1.5
+// For example, a file "#lang ivy1.5" will return above15 == false,
+// but #lang ivy1.6 will return above15 true.
+func IvyVersionSupported(path string) (above15 bool, err error) {
+	panic("implement me")
 }
