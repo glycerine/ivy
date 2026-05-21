@@ -186,7 +186,9 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *NormalPr
 	}
 	for srcIdx, src := range sources {
 		for _, b := range NamedBindersAst(src) {
-			xtracer.Trace("l2s.SharedStep3 collecting binder name=%s fromSource=%d nVars=%d HASH canon=%s", b.Name, srcIdx, len(b.Variables), b.Body.Canon())
+			if !cfg.IsRankingTactic {
+				xtracer.Trace("l2s.SharedStep3 collecting binder name=%s fromSource=%d nVars=%d HASH canon=%s", b.Name, srcIdx, len(b.Variables), b.Body.Canon())
+			}
 			cfg.NamedBindersConjs[b.Name] = append(cfg.NamedBindersConjs[b.Name],
 				VarBodyPair{b.Variables, b.Body})
 		}
@@ -194,8 +196,8 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *NormalPr
 	for k, v := range cfg.NamedBindersConjs {
 		cfg.NamedBindersConjs[k] = dedupeVarBodyPairs(v)
 	}
-	// Trace named_binders_conjs after dedup (sorted keys for determinism)
-	{
+	// L2S traces named_binders_conjs after dedup; ranking does not.
+	if !cfg.IsRankingTactic {
 		keys := make([]string, 0, len(cfg.NamedBindersConjs))
 		for k := range cfg.NamedBindersConjs {
 			keys = append(keys, k)

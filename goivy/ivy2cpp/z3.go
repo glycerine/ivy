@@ -2,6 +2,7 @@ package ivy2cpp
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -12,14 +13,17 @@ func (g *Generator) usesZ3() bool {
 	return g != nil && (g.Config.Target == "test" || g.Config.Target == "gen")
 }
 
-func (g *Generator) emitZ3Support(w *cppWriter) {
+func (g *Generator) emitZ3Support(w *cppWriter) error {
 	g.emitZ3Runtime(w)
 	g.emitZ3SolverTemplates(w)
 	g.emitZ3RandomValueHelpers(w)
 	g.emitZ3SolverConversions(w)
 	g.emitZ3Setup(w)
 	g.emitZ3Randomize(w)
-	g.emitZ3GeneratorClasses(w)
+	if err := g.emitZ3GeneratorClasses(w); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (g *Generator) emitZ3Runtime(w *cppWriter) {
@@ -221,7 +225,7 @@ func (g *Generator) emitZ3SortRegistrations(w *cppWriter) {
 }
 
 func (g *Generator) emitZ3DeclRegistrations(w *cppWriter) {
-	for _, sym := range g.stateSymbols() {
+	for _, sym := range g.z3DeclSymbols() {
 		domain, rng := z3DeclSignature(sym.Sort)
 		domains := make([]string, 0, len(domain))
 		for _, d := range domain {
@@ -231,11 +235,40 @@ func (g *Generator) emitZ3DeclRegistrations(w *cppWriter) {
 	}
 }
 
+func (g *Generator) z3DeclSymbols() []stateSymbol {
+	var syms []stateSymbol
+	seen := make(map[string]bool, len(g.stateSymbols()))
+	for _, sym := range g.stateSymbols() {
+		if g.isParamName(sym.Name) {
+			continue
+		}
+		syms = append(syms, sym)
+		seen[sym.Name] = true
+	}
+	for _, lf := range g.Mod.Definitions {
+		def, ok := lf.Formula.(*goivy.LogicDefinition)
+		if !ok || def == nil {
+			continue
+		}
+		name := goivy.ExprName(def.Defines())
+		if name == "" || seen[name] {
+			continue
+		}
+		syms = append(syms, stateSymbol{Name: name, Sort: def.Defines().NodeSort()})
+		seen[name] = true
+	}
+	sort.SliceStable(syms, func(i, j int) bool { return syms[i].Name < syms[j].Name })
+	return syms
+}
+
 func (g *Generator) emitZ3Randomize(w *cppWriter) {
 	w.open(fmt.Sprintf("static void ivy2cpp_randomize(gen &g, %s &ivy) {", g.ClassName))
 	w.line("(void)ivy;")
 	w.line(`ivy2cpp_progress(g, "randomize");`)
 	for _, sym := range g.stateSymbols() {
+		if g.isParamName(sym.Name) {
+			continue
+		}
 		g.emitZ3RandomizeSymbol(w, sym)
 	}
 	w.close("")
@@ -380,7 +413,7 @@ func z3RandomHelperName(s goivy.Sort) string {
 	return "ivy2cpp_random_" + varName(name)
 }
 
-func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) {
+func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 	w.open("class ivy2cpp_action_gen {")
 	w.line("public:")
 	w.indent++
@@ -424,6 +457,9 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) {
 	w.open(fmt.Sprintf("init_gen::init_gen(%s &obj) {", g.ClassName))
 	w.line("(void)obj;")
 	w.line("ivy2cpp_setup(*this);")
+	if err := g.emitZ3InitialConstraints(w); err != nil {
+		return err
+	}
 	w.close("")
 	w.open(fmt.Sprintf("bool init_gen::generate(%s &obj) {", g.ClassName))
 	w.line("obj.___ivy_gen = this;")
@@ -432,6 +468,10 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) {
 	w.open("if (!check()) {")
 	w.line("return false;")
 	w.close("")
+	if err := g.emitZ3InitialStateEvaluation(w, "obj"); err != nil {
+		return err
+	}
+	g.emitProgressCounterResets(w, "obj")
 	w.line("obj.__init();")
 	w.line("return true;")
 	w.close("")
@@ -446,6 +486,7 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) {
 		}
 		g.emitZ3ActionGenerator(w, name, act)
 	}
+	return nil
 }
 
 func (g *Generator) emitZ3ActionGenerator(w *cppWriter, name string, act goivy.Action) {

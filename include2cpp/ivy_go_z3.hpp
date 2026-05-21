@@ -123,6 +123,11 @@ public:
         return decl(static_cast<unsigned>(expr_args.size()), &expr_args[0]);
     }
 
+    z3::expr mk_apply_expr(const char *decl_name, std::initializer_list<int> args) {
+        std::vector<int> args_vec(args.begin(), args.end());
+        return mk_apply_expr(decl_name, args_vec);
+    }
+
     void add(const z3::expr &expr) {
         slvr.add(expr);
     }

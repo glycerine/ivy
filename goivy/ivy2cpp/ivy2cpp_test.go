@@ -2370,13 +2370,16 @@ after init {
 			t.Fatalf("missing %q in header:\n%s", want, out.Header)
 		}
 	}
-	for _, want := range []string{"paramcase::paramcase(paramcase::color initial)", "this->initial = initial;", "saved = initial;"} {
+	for _, want := range []string{"paramcase::paramcase(paramcase::color initial)", "this->initial = initial;", "void paramcase::__init()", "saved = initial;"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
 	}
-	if !strings.Contains(out.Impl, "__init();") {
-		t.Fatalf("constructor should run __init:\n%s", out.Impl)
+	if strings.Contains(out.Impl, "initial = red;") {
+		t.Fatalf("constructor should preserve parameter assignment:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, "paramcase::paramcase(paramcase::color initial) {\n    __init();") {
+		t.Fatalf("constructor should not run __init directly:\n%s", out.Impl)
 	}
 	compileGeneratedCPP(t, out)
 }
@@ -2400,18 +2403,54 @@ export step
 	if !strings.Contains(out.Impl, "paramrepl_repl ivy{paramrepl::red};") {
 		t.Fatalf("missing parameterized repl construction:\n%s", out.Impl)
 	}
-	if strings.Contains(out.Impl, "ivy.__init();") {
-		t.Fatalf("repl should rely on constructor initialization:\n%s", out.Impl)
+	if !strings.Contains(out.Impl, "ivy.__init();") {
+		t.Fatalf("repl main should run explicit initial actions after construction:\n%s", out.Impl)
 	}
 	compileGeneratedCPP(t, out)
 }
 
-func TestUnsupportedModelInitialStateReturnsError(t *testing.T) {
-	mod := goivy.New()
-	mod.Name = "badinit"
-	mod.InitCond = goivy.FormulaToClauses(goivy.NewConst("flag", goivy.Boolean), nil)
-	_, err := Generate(mod, Config{ClassName: "badinit"})
-	if err == nil || !strings.Contains(err.Error(), "initial constraints") {
+func TestInconsistentModelInitialStateReturnsError(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	eqRed, err := goivy.NewEq(goivy.NewConst("saved", color), goivy.NewConst("red", color))
+	if err != nil {
+		t.Fatalf("NewEq red: %v", err)
+	}
+	eqGreen, err := goivy.NewEq(goivy.NewConst("saved", color), goivy.NewConst("green", color))
+	if err != nil {
+		t.Fatalf("NewEq green: %v", err)
+	}
+	mod.InitCond = goivy.FormulaToClauses(&goivy.LogicAnd{Terms: []goivy.Expr{eqRed, eqGreen}}, nil)
+	_, err = Generate(mod, Config{ClassName: "badinit"})
+	if err == nil || !strings.Contains(err.Error(), "inconsistent") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestInitialStateRejectsParameterDependentInit(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+parameter initial : color
+individual saved : color
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	eq, err := goivy.NewEq(goivy.NewConst("saved", color), goivy.NewConst("initial", color))
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	mod.InitCond = goivy.FormulaToClauses(eq, nil)
+	mod.LabeledInits = []*goivy.LabeledFormula{mod.Cfg.AstCfg.NewLabeledFormula(nil, eq)}
+	_, err = Generate(mod, Config{ClassName: "parambad"})
+	if err == nil || !strings.Contains(err.Error(), `stripped parameter "initial"`) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 }
@@ -2509,7 +2548,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"for (color C : {red, green})", "marked[C] = (C == green);"} {
+	for _, want := range []string{"marked.clear();", "marked[red] = false;", "marked[green] = true;"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
@@ -2557,7 +2596,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"for (color C : {red, green})", "marked[C] = (C == green);"} {
+	for _, want := range []string{"marked.clear();", "marked[red] = false;", "marked[green] = true;"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
@@ -2609,13 +2648,89 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"for (color C : {red, green})", "marked[C] = (C == red);"} {
+	for _, want := range []string{"marked.clear();", "marked[red] = true;", "marked[green] = false;"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
+}
+
+func TestInitialStateUsesRelevantDefinitions(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+relation is_green(C:color)
+definition is_green(C:color) = C = green
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	if len(mod.Definitions) == 0 {
+		t.Fatal("missing is_green definition")
+	}
+	def, ok := mod.Definitions[0].Formula.(*goivy.LogicDefinition)
+	if !ok {
+		t.Fatalf("unexpected definition formula %T", mod.Definitions[0].Formula)
+	}
+	relSort := def.Defines().NodeSort()
+	init, err := goivy.NewApply(goivy.NewConst("is_green", relSort), goivy.NewConst("saved", color))
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	mod.InitCond = goivy.FormulaToClauses(init, nil)
+	mod.LabeledInits = []*goivy.LabeledFormula{mod.Cfg.AstCfg.NewLabeledFormula(nil, init)}
+	out, err := Generate(mod, Config{ClassName: "initdef"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "saved = green;") {
+		t.Fatalf("relevant definition should constrain saved to green:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetGenAndTestEmitInitialStateSolverPath(t *testing.T) {
+	for _, target := range []string{"gen", "test"} {
+		t.Run(target, func(t *testing.T) {
+			mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step = {
+}
+export step
+`)
+			color, ok := mod.Sig.Sorts.Get2("color")
+			if !ok {
+				t.Fatal("missing color sort")
+			}
+			eq, err := goivy.NewEq(goivy.NewConst("saved", color), goivy.NewConst("green", color))
+			if err != nil {
+				t.Fatalf("NewEq: %v", err)
+			}
+			mod.InitCond = goivy.FormulaToClauses(eq, nil)
+			mod.LabeledInits = []*goivy.LabeledFormula{mod.Cfg.AstCfg.NewLabeledFormula(nil, eq)}
+			out, err := Generate(mod, Config{Target: target, ClassName: "initgenpath"})
+			if err != nil {
+				t.Fatalf("Generate: %v", err)
+			}
+			for _, want := range []string{
+				`add((mk_apply_expr("saved", {}) == int_to_z3("color", 1)));`,
+				`__from_solver(*this, mk_apply_expr("saved", {}), obj.saved);`,
+				"obj.___ivy_gen = this;",
+				"obj.__init();",
+			} {
+				if !strings.Contains(out.Impl, want) {
+					t.Fatalf("%s missing %q in impl:\n%s", target, want, out.Impl)
+				}
+			}
+			assertNoUnsupportedCPP(t, out)
+			compileGeneratedCPP(t, out)
+		})
+	}
 }
 
 func TestEmitNativeActionAntiquotes(t *testing.T) {

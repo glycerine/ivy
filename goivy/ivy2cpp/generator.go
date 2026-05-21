@@ -109,9 +109,6 @@ func moduleBaseName(mod *goivy.Module) string {
 }
 
 func (g *Generator) generate() error {
-	if err := g.validateSupportedInitialState(); err != nil {
-		return err
-	}
 	if err := g.emitHeader(); err != nil {
 		return err
 	}
@@ -130,16 +127,6 @@ func (g *Generator) unsupported(w *cppWriter, format string, args ...any) {
 func (g *Generator) nextTemp(prefix string) string {
 	g.tempID++
 	return fmt.Sprintf("%s%d", prefix, g.tempID)
-}
-
-func (g *Generator) validateSupportedInitialState() error {
-	hasExecutableInit := len(g.Mod.InitialActions) > 0 || len(g.Mod.Initializers) > 0
-	if !hasExecutableInit && g.Mod.InitCond != nil && !g.Mod.InitCond.IsTrue() {
-		if _, err := g.initialConditionActions(); err != nil {
-			return fmt.Errorf("ivy2cpp: initial constraints are not supported yet; use after init actions for v1 C++ generation: %w", err)
-		}
-	}
-	return nil
 }
 
 func (g *Generator) emitHeader() error {
@@ -191,7 +178,9 @@ func (g *Generator) emitImpl() error {
 		return err
 	}
 	if g.usesZ3() {
-		g.emitZ3Support(w)
+		if err := g.emitZ3Support(w); err != nil {
+			return err
+		}
 	}
 	w.open(g.constructorSignature(true) + " {")
 	g.emitRuntimeConstructorPrelude(w)
@@ -200,7 +189,11 @@ func (g *Generator) emitImpl() error {
 	if err := g.emitNativeBlocks(w, "init"); err != nil {
 		return err
 	}
-	w.line("__init();")
+	if !g.usesZ3() {
+		if err := g.emitOneInitialState(w); err != nil {
+			return err
+		}
+	}
 	w.close("")
 	g.emitRuntimeMethods(w)
 	g.emitInit(w)
@@ -604,16 +597,6 @@ func (g *Generator) emitInit(w *cppWriter) {
 			}
 		}
 	}
-	if len(g.Mod.Initializers) == 0 && !g.hasInitialMixinActions() {
-		actions, err := g.initialConditionActions()
-		if err != nil {
-			g.unsupported(w, "unsupported initial constraints: %s", err.Error())
-		} else {
-			for _, act := range actions {
-				g.emitAction(w, act)
-			}
-		}
-	}
 	w.close("")
 	w.blank()
 }
@@ -709,6 +692,7 @@ func (g *Generator) emitReplMain(w *cppWriter) {
 	g.emitRuntimeOutputSetup(w)
 	g.emitConstructDefaultObject(w)
 	g.emitRuntimeArgCapture(w, "ivy")
+	w.line("ivy.__init();")
 	w.line("ivy.__unlock();")
 	w.line("std::string line;")
 	w.line("std::string action;")

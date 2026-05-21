@@ -151,7 +151,36 @@ Tests to add:
 - Runtime smoke tests for a model with a reader, a timer, progress properties,
   and at least one `some`/local nondeterministic choice.
 
-## TODO 003 - Implement Python's initial-state solver path
+## DONE 003 - Implement Python's initial-state solver path
+
+Status 2026-05-21:
+
+- Added `goivy/ivy2cpp/initial_state.go` with the Python-style initial-state
+  split: labeled init/axiom parameter checks, init+axiom+relevant-definition
+  constraint collection, Z3 model construction for non-`gen`/`test` targets,
+  model evaluation into scalar state and finite-domain function/relation state,
+  and progress-counter resets after initial-state construction.
+- Updated `goivy/ivy2cpp/generator.go` so constructors initialize runtime
+  shell, constructor parameters, progress counters, native `init` blocks, and
+  solver/default state, but no longer run explicit `__init()` actions directly.
+  Generated REPL glue now calls `ivy.__init()` after construction and argv
+  capture, matching the Python lifecycle split.
+- Updated `goivy/ivy2cpp/z3.go` and `include2cpp/ivy_go_z3.hpp` so `gen` and
+  `test` targets emit init-generator constraints, call `check()`, read used
+  state symbols back from the Z3 model with `__from_solver`, reset progress
+  counters, set `obj.___ivy_gen`, and then invoke `obj.__init()`.
+- Parameter declarations remain class members and constructor parameters, but
+  are excluded from solver/default state initialization and Z3 randomization;
+  initial conditions/axioms that depend on stripped parameters now fail during
+  generation.
+- Added fast in-process tests for inconsistent logical init, stripped-parameter
+  init rejection, solver-backed finite relation initialization, relevant
+  definition initialization, and `gen`/`test` init-generator constraint/eval
+  shape.
+
+Verification:
+
+- `XTRACE_OFF=1 go test ./ivy2cpp -count=1` from `goivy/`: PASS in 0.196s.
 
 Go locations:
 
