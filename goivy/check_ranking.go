@@ -295,50 +295,14 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		invars = append(invars, labeled)
 	}
 
-	// Generate ranking invariants and postconditions
-	invars, postconds, strInvarMap, _, _, err := rankingInvariants(
+	// Generate ranking invariants and postconditions.
+	// Pass outer prems so that the internal prem-update (Python ivy_ranking.py:261-269)
+	// modifies the correct slice that modPass (line 467) closes over.
+	invars, postconds, _, _, err := rankingInvariants(
 		goal, invars, proofLabel, fmla,
-		finiteSorts, uninterpretedSorts, m)
+		finiteSorts, uninterpretedSorts, m, prems)
 	if err != nil {
 		return nil, fmt.Errorf("ranking invariant generation: %w", err)
-	}
-
-	// Python ivy_ranking.py:261-269: prem-update on the OUTER prems (line 246),
-	// which modPass (line 467) closes over. rankingInvariants only updated its own
-	// internal copy of prems, which is discarded on return.
-	if len(strInvarMap) > 0 {
-		for idx, prem := range prems {
-			lf, ok := prem.(*LabeledFormula)
-			if !ok || !lf.IsDefinition {
-				continue
-			}
-			fExpr, ok := lf.Formula.(Expr)
-			if !ok {
-				continue
-			}
-			if _, isForall := fExpr.(*ForAll); isForall {
-				continue
-			}
-			eq, ok := fExpr.(*Eq)
-			if !ok {
-				continue
-			}
-			var symName string
-			switch lhs := eq.T1.(type) {
-			case *Apply:
-				if c, ok := lhs.Func.(*Const); ok {
-					symName = c.Name
-				}
-			case *Const:
-				symName = lhs.Name
-			}
-			strRHS, ok := strInvarMap[symName]
-			if symName == "" || !ok {
-				continue
-			}
-			newEq := &Eq{T1: eq.T1, T2: strRHS}
-			prems[idx] = lf.Clone([]Node{lf.Label, newEq}).(*LabeledFormula)
-		}
 	}
 
 	// Python ivy_ranking.py:433-457: convert_to_init + iinvs + neg_prop_init.
