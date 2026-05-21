@@ -524,45 +524,91 @@ Python references:
 - `pyivy/ivy/ivy/ivy_to_cpp.py:3351-3377`
 - `pyivy/ivy/ivy/ivy_to_cpp.py:3380-3465`
 
-## TODO 009 - Port Python method signatures, parameter passing, and return handling
+## DONE 009 - Port Python method signatures, parameter passing, and return handling
+
+Status update, 2026-05-21:
+
+- Added `goivy/ivy2cpp/ptype.go` with the four passing-policy types
+  (`ValueType`, `ConstRefType`, `RefType`, `ReturnRefType{Pos int}`)
+  mirroring Python `ivy_to_cpp.py:396-412`, plus `annotateAction` /
+  `getParamTypes` (Python 1479-1517) and `mayAlias` / `rootVar` /
+  `isDestructorName` (Python 1522-1530). The (param_types, return_types)
+  annotation is cached per-generation on a new `Generator.ptypeCache` field
+  (per goivy/CLAUDE.md section C — Python attaches these to the action
+  object; Go cannot monkey-patch `*Action`).
+- `actionAssigns` walks `IterSubactions()` and uses a local
+  `modifiedRootName` helper that strips destructor applications via
+  `g.Mod.DestructorSorts` directly. `goivy.ModifiesSingle` cannot be relied
+  upon here because `g.Mod.Cfg.ActCfg.Context.GetDomain()` is not always
+  threaded in the ivy2cpp call path (e.g. tests using `compileIvySource`
+  with `create_isolate=false`).
+- `methodSignature` (`generator.go:633-699`) rewritten to consume the
+  annotation: `rtypes[0].Make(ctype(rs[0]))` produces the return type
+  (where `ReturnRefType.Make` returns `"void"`); each input param is
+  `ptypes[i].Make(scalarType) + " " + varName`; function-sorted params
+  retain the existing `cppFunctionStorageDecl` (matching Python's
+  `sym_decl(p)` ternary at `ivy_to_cpp.py:1539`); trailing
+  `ReturnRefType{Pos: pos >= len(formals)}` returns are appended as
+  `RefType{}.Make(qualifiedType) + " " + varName`; the `virtual ` prefix
+  fires only on declaration form for non-gen, non-inline (Python lines
+  1559-1560). Multi-return validation rejects exported multi-output
+  actions exactly as Python does (lines 1565-1567).
+- `emitMethods` (`generator.go:683-707`) suppresses both the synthetic
+  primary-return local and the trailing `return X;` when `rtypes[0]` is a
+  `ReturnRefType` (the input slot IS the storage). For private multi-return
+  actions whose primary return is `ValueType`, the synthetic local and
+  return are still emitted.
+- `emitCall` (`action.go:422-548`) replaced with a line-by-line port of
+  Python `emit_call` (`ivy_to_cpp.py:3811-3886`). The unified path handles
+  single-return, multi-return, alias-safety temporaries (per-output
+  `mayAlias` check vs other inputs; pre-call `__tmp` save and post-call
+  copy-back when `iparg != rv` OR an alias is detected), assignment prefix
+  vs trailing-ref routing based on `rtypes[0]`, per-argument variant
+  upcast at the formal-sort boundary, and `___ivy_stack` push/pop for
+  gen/test. The previously incorrect *result-side* variant upcast at the
+  old `action.go:459` is removed (Python upcasts only arguments).
+- Updated `TestGeneratedMultipleReturnActionCompiles` to trim
+  `PublicActions` to mirror `create_isolate`, and rewrote its expected
+  substrings to the annotation-driven signature
+  (`color split(color c, bool& good)`) and call-site
+  (`saved = split(green, ok);`).
+- Replaced `TestReplDispatchWritesMultipleReturns` with an
+  expected-rejection test, since exporting a multi-return action is
+  Python-forbidden at `ivy_to_cpp.py:1565-1567`.
+- Added eight TODO 009 tests:
+  `TestPrivateActionStructParamUsesConstRef`,
+  `TestPrivateActionStructParamModifiedUsesValue`,
+  `TestReturnAliasingInputUsesRefType`,
+  `TestCallAliasSafetySwapInputAndOutput`,
+  `TestCallNoAliasNoTempEmitted`,
+  `TestPublicActionAllValueTypeSignature`,
+  `TestVirtualKeywordOmittedForGenTarget`,
+  `TestCallSiteVariantUpcastOnArgumentOnly`. Each verifies generated-output
+  shape and (where applicable) compiles the C++ under `SLOW_CPP_TEST`.
+
+Verification:
+
+- `cd ~/ivy/goivy && make test`: PASS for every package, ivy2cpp in 0.18s.
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -count=1 -run
+  'TestGeneratedSingleReturnActionCompiles|TestGeneratedMultipleReturnActionCompiles|TestVariantSupertypeAssignmentCompiles|TestPrivateActionStructParamUsesConstRef|TestPrivateActionStructParamModifiedUsesValue|TestReturnAliasingInputUsesRefType|TestCallAliasSafetySwapInputAndOutput|TestCallNoAliasNoTempEmitted|TestPublicActionAllValueTypeSignature|TestVirtualKeywordOmittedForGenTarget|TestCallSiteVariantUpcastOnArgumentOnly'`:
+  PASS in 4.23s (generated C++ compiles for each shape).
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -count=1` (full slow
+  sweep): PASS in 59.16s.
 
 Go locations:
 
-- `goivy/ivy2cpp/generator.go:576-603`
-- `goivy/ivy2cpp/generator.go:641-665`
-- `goivy/ivy2cpp/action.go:379-417`
+- `goivy/ivy2cpp/ptype.go` (Ptype + four types + annotation + mayAlias)
+- `goivy/ivy2cpp/generator.go:41-71` (ptypeCache field on Generator)
+- `goivy/ivy2cpp/generator.go:625-699` (rewritten methodSignature)
+- `goivy/ivy2cpp/generator.go:683-707` (emitMethods annotation gating)
+- `goivy/ivy2cpp/action.go:422-548` (rewritten emitCall)
 
 Python references:
 
 - `pyivy/ivy/ivy/ivy_to_cpp.py:396-412`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:1479-1517`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:1551-1571`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1479-1530`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1542-1571`
 - `pyivy/ivy/ivy/ivy_to_cpp.py:3811-3886`
-
-Gap:
-
-- Go emits action parameters mostly by value and multiple returns by non-const
-  reference.
-- Python annotates action parameters, distinguishes inputs/outputs, return-ref
-  cases, const-ref cases, public actions, and generated temporaries for aliased
-  returns.
-- Go initializes single returns to zero and returns the local; Python has
-  generated output-reference handling and special cases for action calls that
-  return into variables, fields, or expressions.
-- Go call emission lacks Python's `___ivy_stack` push/pop logic for gen/test
-  traces.
-
-Conformance work:
-
-- Port `annotate_action` and `emit_method_decl`.
-- Port Python's call-action lowering, including variable returns, temporary
-  returns, return refs, alias-safety, stack push/pop, and variant upcasts.
-- Use the full C++ type-passing policy from the type port.
-
-Tests to add:
-
-- Actions with multiple outputs, output aliases, large value parameters, variant
-  returns, destructor returns, and nested action calls under gen/test target.
 
 ## TODO 010 - Port derived definitions, constructors, and skolemized helpers
 
