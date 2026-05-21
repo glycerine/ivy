@@ -45,6 +45,11 @@ type InstrumentationConfig struct {
 	// Dependencies closure (built by caller from defnDeps)
 	Dependencies func(map[NodeKey]bool) map[NodeKey]bool
 
+	// IsRankingTactic suppresses the L2S-only TOPLEVEL_NotLf_START trace,
+	// ResetRtrDepth(), and notLf HASH trace in SharedStep1_ConvertTemporals.
+	// Python's ranking.SharedStep1 omits these; l2s.SharedStep1 has them.
+	IsRankingTactic bool
+
 	// C5 trace_hook plumbing: data populated by l2sAutoInvariants and
 	// SharedStep11_ReplaceNamedBinders, used to attach a hook to the
 	// result goal so that the check package can route diagnostics.
@@ -146,10 +151,14 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *NormalProgr
 	}
 
 	modPass("ReplaceTemporals", cfg.ReplaceTemporals)
-	xtracer.Trace("l2s.SharedStep1 TOPLEVEL_NotLf_START fmla HASH canon=%s", cfg.Fmla.Canon())
-	ResetRtrDepth()
+	if !cfg.IsRankingTactic {
+		xtracer.Trace("l2s.SharedStep1 TOPLEVEL_NotLf_START fmla HASH canon=%s", cfg.Fmla.Canon())
+		ResetRtrDepth()
+	}
 	cfg.NotLf = cfg.ReplaceTemporals(&LogicNot{Body: cfg.Fmla}).(Expr)
-	xtracer.Trace("l2s.SharedStep1 notLf HASH canon=%s", cfg.NotLf.Canon())
+	if !cfg.IsRankingTactic {
+		xtracer.Trace("l2s.SharedStep1 notLf HASH canon=%s", cfg.NotLf.Canon())
+	}
 
 	// Normalize named binders
 	modPass("NormalizeNamedBinders", func(n Node) Node {

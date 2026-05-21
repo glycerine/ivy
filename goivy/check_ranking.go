@@ -460,6 +460,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		Fmla:               fmla,
 		Postconds:          postconds,
 		Dependencies:       BuildDependenciesFunc(defnDeps),
+		IsRankingTactic:    true,
 	}
 
 	// --- Model pass helper (ranking version: also transforms postconds) ---
