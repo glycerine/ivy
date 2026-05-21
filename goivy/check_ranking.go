@@ -217,8 +217,16 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		}
 	}
 
-	// Extract the model and formula
-	model := ExtractNormalProgram(m)
+	// Extract the model and formula.
+	// Python ivy_ranking.py:63: model = conc.model.clone([])
+	// Use the model already embedded in the TemporalModels goal conclusion,
+	// NOT NormalProgramFromModule(m), which emits a spurious XTRACE.
+	var model *NormalProgram
+	if tm != nil && tm.Model != nil {
+		model = NormalProgramClone(tm.Model.(*NormalProgram))
+	} else {
+		model = ExtractNormalProgram(m)
+	}
 
 	var fmla Expr
 	if tm != nil {
