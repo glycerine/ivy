@@ -155,6 +155,75 @@ func rankingInvariants(
 		triggers[sfx] = tr
 	}
 
+	// str_invar: strengthen each task's work_invar by adding globally formulas from work_start.
+	// Python ivy_ranking.py:245-259.
+	strInvarMap := make(map[string]Expr)
+	for _, sfx := range sortedTasks {
+		wstart := rawTriggers[sfx]["work_start"]
+		winvar := rawTasks[sfx]["work_invar"]
+		if wstart == nil || winvar == nil {
+			continue
+		}
+		var globs []Expr
+		rankingTrigGlob(wstart.T2, &globs, true)
+		rhs := winvar.T2
+		if len(globs) > 0 {
+			rhs = rankingMakeAnd(append([]Expr{rhs}, globs...)...)
+		}
+		strengthened := &Eq{T1: winvar.T1, T2: rhs}
+		rawTasks[sfx]["work_invar"] = strengthened
+		var symName string
+		switch lhs := winvar.T1.(type) {
+		case *Apply:
+			if c, ok := lhs.Func.(*Const); ok {
+				symName = c.Name
+			}
+		case *Const:
+			symName = lhs.Name
+		}
+		if symName != "" {
+			strInvarMap[symName] = rhs
+		}
+	}
+
+	// prem-update: clone prems whose work_invar definition RHS gets strengthened.
+	// Python ivy_ranking.py:261-269.
+	if len(strInvarMap) > 0 {
+		prems := GoalPrems(goal)
+		for idx, prem := range prems {
+			lf, ok := prem.(*LabeledFormula)
+			if !ok || !lf.IsDefinition {
+				continue
+			}
+			fExpr, ok := lf.Formula.(Expr)
+			if !ok {
+				continue
+			}
+			if _, isForall := fExpr.(*ForAll); isForall {
+				continue
+			}
+			eq, ok := fExpr.(*Eq)
+			if !ok {
+				continue
+			}
+			var symName string
+			switch lhs := eq.T1.(type) {
+			case *Apply:
+				if c, ok := lhs.Func.(*Const); ok {
+					symName = c.Name
+				}
+			case *Const:
+				symName = lhs.Name
+			}
+			strRHS, ok := strInvarMap[symName]
+			if symName == "" || !ok {
+				continue
+			}
+			newEq := &Eq{T1: eq.T1, T2: strRHS}
+			prems[idx] = lf.Clone([]Node{lf.Label, newEq}).(*LabeledFormula)
+		}
+	}
+
 	// Helper functions
 	eqLHSArgs := func(eq *Eq) []*LogicVariable {
 		if app, ok := eq.T1.(*Apply); ok {
@@ -358,6 +427,50 @@ func rankVarsToNodes(vs []*LogicVariable) []Expr {
 		nodes[i] = v
 	}
 	return nodes
+}
+
+// rankingTrigGlob collects globally/not-eventually formulas from prop in given polarity.
+// Python ivy_ranking.py:221-243.
+func rankingTrigGlob(prop Expr, res *[]Expr, pos bool) {
+	switch p := prop.(type) {
+	case *LogicGlobally:
+		if pos {
+			*res = append(*res, prop)
+			rankingTrigGlob(p.Body, res, pos)
+		}
+	case *LogicEventually:
+		if !pos {
+			*res = append(*res, &LogicNot{Body: prop})
+			rankingTrigGlob(p.Body, res, pos)
+		}
+	case *LogicImplies:
+		if !pos {
+			rankingTrigGlob(p.T1, res, !pos)
+			rankingTrigGlob(p.T2, res, pos)
+		}
+	case *LogicAnd:
+		if pos {
+			for _, arg := range p.Terms {
+				rankingTrigGlob(arg, res, pos)
+			}
+		}
+	case *LogicOr:
+		if !pos {
+			for _, arg := range p.Terms {
+				rankingTrigGlob(arg, res, pos)
+			}
+		}
+	case *ForAll:
+		if pos {
+			rankingTrigGlob(p.Body, res, pos)
+		}
+	case *LogicExists:
+		if !pos {
+			rankingTrigGlob(p.Body, res, pos)
+		}
+	case *LogicNot:
+		rankingTrigGlob(p.Body, res, !pos)
+	}
 }
 
 func rankApplyNB(nb *LogicNamedBinder, args ...Expr) Expr {
