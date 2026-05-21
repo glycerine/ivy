@@ -15,7 +15,11 @@ import (
 // This extracts task/trigger definitions from the proof goal premises
 // and generates the appropriate ranking invariants and postconditions.
 //
-// Returns (invars, postconds, tasks, triggers, error).
+// Returns (invars, postconds, strInvarMap, tasks, triggers, error).
+// strInvarMap maps symbol names to their strengthened RHS expressions; the
+// caller must apply prem-update to the outer prems slice using this map
+// (Python ivy_ranking.py:261-269). rankingInvariants only updates its own
+// internal rawTasks; it cannot reach the caller's prems.
 func rankingInvariants(
 	goal *LabeledFormula,
 	invars []*LabeledFormula,
@@ -24,7 +28,7 @@ func rankingInvariants(
 	finiteSorts map[string]bool,
 	uninterpretedSorts []Sort,
 	mod *Module,
-) ([]*LabeledFormula, []*LabeledFormula, map[string]*Task, map[string]*LogicTrigger, error) {
+) ([]*LabeledFormula, []*LabeledFormula, map[string]Expr, map[string]*Task, map[string]*LogicTrigger, error) {
 
 	// Helper: put into nested dict
 	type defnMap map[string]map[string]*Eq
@@ -117,7 +121,7 @@ func rankingInvariants(
 	for _, sfx := range sortedTasks {
 		for _, name := range []string{"work_created", "work_needed", "work_progress", "work_helpful"} {
 			if rawTasks[sfx][name] == nil {
-				return nil, nil, nil, nil, fmt.Errorf("tactic requires a definition of %s%s", name, sfx)
+				return nil, nil, nil, nil, nil, fmt.Errorf("tactic requires a definition of %s%s", name, sfx)
 			}
 		}
 	}
@@ -183,44 +187,6 @@ func rankingInvariants(
 		}
 		if symName != "" {
 			strInvarMap[symName] = rhs
-		}
-	}
-
-	// prem-update: clone prems whose work_invar definition RHS gets strengthened.
-	// Python ivy_ranking.py:261-269.
-	if len(strInvarMap) > 0 {
-		prems := GoalPrems(goal)
-		for idx, prem := range prems {
-			lf, ok := prem.(*LabeledFormula)
-			if !ok || !lf.IsDefinition {
-				continue
-			}
-			fExpr, ok := lf.Formula.(Expr)
-			if !ok {
-				continue
-			}
-			if _, isForall := fExpr.(*ForAll); isForall {
-				continue
-			}
-			eq, ok := fExpr.(*Eq)
-			if !ok {
-				continue
-			}
-			var symName string
-			switch lhs := eq.T1.(type) {
-			case *Apply:
-				if c, ok := lhs.Func.(*Const); ok {
-					symName = c.Name
-				}
-			case *Const:
-				symName = lhs.Name
-			}
-			strRHS, ok := strInvarMap[symName]
-			if symName == "" || !ok {
-				continue
-			}
-			newEq := &Eq{T1: eq.T1, T2: strRHS}
-			prems[idx] = lf.Clone([]Node{lf.Label, newEq}).(*LabeledFormula)
 		}
 	}
 
@@ -403,7 +369,7 @@ func rankingInvariants(
 		invars = append(invars, mklf("l2s_consts_d", rankingMakeAnd(constsDTerms...)))
 	}
 
-	return invars, postconds, tasks, triggers, nil
+	return invars, postconds, strInvarMap, tasks, triggers, nil
 }
 
 // rankingMakeAnd, CheckForAll, CheckExists, CheckOldOf are defined in ranking.go

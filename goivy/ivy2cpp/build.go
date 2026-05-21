@@ -41,10 +41,19 @@ func BuildOutput(out *Output, outDir string) (string, error) {
 	if err := WriteOutput(out, outDir); err != nil {
 		return "", err
 	}
-	plan, err := BuildPlanFor(out, outDir, out.Config)
+	cfg, _, err := normalizeConfig(out.Config)
 	if err != nil {
 		return "", err
 	}
+	compiler, err := cxxCompilerFor(cfg.Compiler)
+	if err != nil {
+		return "", err
+	}
+	plan, err := BuildPlanFor(out, outDir, cfg)
+	if err != nil {
+		return "", err
+	}
+	plan.Compiler = compiler
 	cmd := exec.Command(plan.Compiler, plan.Args...)
 	if plan.WorkDir != "" {
 		cmd.Dir = plan.WorkDir
@@ -69,7 +78,7 @@ func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {
 	if err != nil {
 		return nil, err
 	}
-	cxx, err := cxxCompilerFor(cfg.Compiler)
+	cxx, err := buildPlanCompiler(cfg.Compiler)
 	if err != nil {
 		return nil, err
 	}
@@ -116,6 +125,25 @@ func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {
 		OutputPath:  outputPath,
 		CompileOnly: compileOnly,
 	}, nil
+}
+
+func buildPlanCompiler(compiler string) (string, error) {
+	switch compiler {
+	case "", "default":
+		if cxx := strings.TrimSpace(os.Getenv("CXX")); cxx != "" {
+			return cxx, nil
+		}
+		return "c++", nil
+	case "g++":
+		return "g++", nil
+	case "cl":
+		if runtime.GOOS != "windows" {
+			return "", &missingZ3ToolchainError{reason: "compiler=cl is only supported on Windows"}
+		}
+		return "cl", nil
+	default:
+		return "", fmt.Errorf("ivy2cpp: compiler %q is not supported", compiler)
+	}
 }
 
 func msvcBuildPlan(out *Output, compiler, cppPath, outputPath string, compileOnly bool) (*BuildPlan, error) {
