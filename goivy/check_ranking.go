@@ -967,6 +967,41 @@ func cloneWithTransform(node Expr, transform func(Expr) Expr) Expr {
 
 // --- Registration ---
 
+// RankingTactic adapts RankingL2STactic to the LogicProofTactic interface.
+// Mirrors Python ivy_ranking.py:48-53 (l2s_tactic registered as 'ranking').
+func RankingTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node) ([]*LabeledFormula, error) {
+	if len(goals) == 0 {
+		return nil, fmt.Errorf("ranking: no proof goals")
+	}
+	m := pc.GetModule()
+	if m == nil || m.Sig == nil {
+		return nil, fmt.Errorf("ranking: module or sig is nil")
+	}
+	vocab := GoalVocab(goals[0])
+	ws := NewWithSymbols(m.Sig, vocab.Symbols)
+	ws.Enter()
+	defer ws.Exit()
+	wso := NewWithSorts(m.Sig, vocab.Sorts)
+	wso.Enter()
+	defer wso.Exit()
+
+	var proofDecl *LogicProofDecl
+	if tt, ok := pf.(*TacticTactic); ok {
+		proofDecl = &LogicProofDecl{
+			TacticLets:  tt.TacticLetsList(),
+			TacticDecls: tt.TacticDeclsList(),
+		}
+	}
+	cfg := &L2STacticConfig{
+		TacticName: "ranking",
+		Goals:      goals,
+		Mod:        m,
+		ProofLabel: "",
+		Proof:      proofDecl,
+	}
+	return RankingL2STactic(cfg)
+}
+
 // TacticFunc is the signature for tactic implementations.
 type TacticFunc func(cfg *L2STacticConfig) ([]*LabeledFormula, error)
 
