@@ -234,6 +234,34 @@ func TestCreateIsolateUsesParsedV16VersionForPresentConjectures(t *testing.T) {
 	}
 }
 
+func TestV16PolymorphicDefinitionDoesNotPreseedSignature(t *testing.T) {
+	requireParserTraceEnabled(t)
+
+	mod := New()
+	path := filepath.Join("..", "ivy-lang-examples", "doc", "examples", "sht", "key.ivy")
+
+	var compileErr error
+	trace := captureParserTrace(t, func() {
+		compileErr = SourceFile(path, mod, mod.Sig, map[string]interface{}{"create_isolate": false})
+	})
+	if compileErr != nil {
+		t.Fatalf("compile %s: %v", path, compileErr)
+	}
+
+	marker := "compiler.SigCheck@CompileDefnImpl.entry"
+	idx := strings.Index(trace, marker)
+	if idx < 0 {
+		t.Fatalf("missing %s trace in:\n%s", marker, trace)
+	}
+	line := trace[idx:]
+	if end := strings.IndexByte(line, '\n'); end >= 0 {
+		line = line[:end]
+	}
+	if strings.Contains(line, "<:UnionSort(alpha0") {
+		t.Fatalf("polymorphic definition pre-seeded temporary '<' in signature:\n%s", line)
+	}
+}
+
 func TestParseV16ConjunctionReducesBeforeArrow(t *testing.T) {
 	requireParserTraceEnabled(t)
 

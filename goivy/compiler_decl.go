@@ -778,7 +778,7 @@ func (d *DomainSetup) DefinitionDecl(node Node) error {
 	// Add a temporary symbol so compilation can resolve the defined name
 	var tempSym *Const
 	if lhsAtom, ok := defNode.Lhs.(*Atom); ok {
-		if _, exists := d.Compiler.Sig.Symbols.Get2(lhsAtom.Rep); !exists {
+		if _, exists := d.Compiler.Sig.Symbols.Get2(lhsAtom.Rep); !exists && !IsPolymorphicName(lhsAtom.Rep) {
 			var err error
 			tempSym, err = d.Compiler.AddSymbol(lhsAtom.Rep, TopFunctionSort(len(lhsAtom.Terms)), d.Compiler.Sig)
 			if err != nil {

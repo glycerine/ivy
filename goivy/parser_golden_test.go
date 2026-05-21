@@ -673,6 +673,12 @@ var golden16PythonInvalidSpecs = map[string]string{
 	"../ivy-lang-examples/doc/examples/MSV/repstore_variant.ivy":     "Python Ivy rejects line 237: delegate fwd_chan_rcvr_recv[before] -> prim",
 	"../ivy-lang-examples/doc/examples/MSV/token_ring.ivy":           "Python Ivy rejects line 34: module trans not found in current directory or module path",
 	"../ivy-lang-examples/doc/examples/sht/delmap_test.ivy":          "Python Ivy rejects line 3 from the golden16 cwd: module key not found in current directory or module path",
+	"../ivy-lang-examples/doc/examples/sht/proto.ivy":                "Python Ivy rejects line 11 from the golden16 cwd: module table not found in current directory or module path",
+	"../ivy-lang-examples/doc/examples/sht/shard_test.ivy":           "Python Ivy rejects line 3 from the golden16 cwd: module key not found in current directory or module path",
+	"../ivy-lang-examples/doc/examples/sht/sht.ivy":                  "Python Ivy rejects line 3 from the golden16 cwd: module proto not found in current directory or module path",
+	"../ivy-lang-examples/doc/examples/sht/table_test.ivy":           "Python Ivy rejects line 3 from the golden16 cwd: module shard not found in current directory or module path",
+	"../ivy-lang-examples/doc/examples/sht/trans.ivy":                "Python Ivy rejects line 3 from the golden16 cwd: module queue not found in current directory or module path",
+	"../ivy-lang-examples/doc/examples/sht/trans_test.ivy":           "Python Ivy rejects line 3 from the golden16 cwd: module trans not found in current directory or module path",
 	"../ivy-lang-examples/doc/examples/testing/chain3.ivy":           "Python Ivy rejects line 203: delegate headtail_rcvr_recv[before] -> head",
 	"../ivy-lang-examples/doc/examples/testing/repstore2.ivy":        "Python Ivy rejects line 451: delegate fwd_chan_rcvr_recv[before] -> prim",
 	"../ivy-lang-examples/doc/examples/testing/repstore2_orig.ivy":   "Python Ivy rejects line 447: delegate fwd_chan_rcvr_recv[before] -> prim",
@@ -724,6 +730,30 @@ func TestGolden16ListIsolatesSkipsConfiguredSpecs(t *testing.T) {
 	}
 	if len(isos) != 0 {
 		t.Fatalf("expected no isolates for skipped local-include Python-invalid spec, got %v", isos)
+	}
+
+	shardPath := filepath.Join("..", "ivy-lang-examples", "doc", "examples", "sht", "shard_test.ivy")
+	if reason, ok := golden16SkipSpecReason(shardPath); !ok || !strings.Contains(reason, "module key not found") {
+		t.Fatalf("expected %s to be skipped by known Python-invalid blacklist, got ok=%v reason=%q", shardPath, ok, reason)
+	}
+	isos, skip = listGolden16Isolates(t, shardPath)
+	if !skip {
+		t.Fatalf("expected %s to be skipped as Python-invalid; isolates=%v", shardPath, isos)
+	}
+	if len(isos) != 0 {
+		t.Fatalf("expected no isolates for skipped shard Python-invalid spec, got %v", isos)
+	}
+
+	shtPath := filepath.Join("..", "ivy-lang-examples", "doc", "examples", "sht", "sht.ivy")
+	if reason, ok := golden16SkipSpecReason(shtPath); !ok || !strings.Contains(reason, "module proto not found") {
+		t.Fatalf("expected %s to be skipped by known Python-invalid blacklist, got ok=%v reason=%q", shtPath, ok, reason)
+	}
+	isos, skip = listGolden16Isolates(t, shtPath)
+	if !skip {
+		t.Fatalf("expected %s to be skipped as Python-invalid; isolates=%v", shtPath, isos)
+	}
+	if len(isos) != 0 {
+		t.Fatalf("expected no isolates for skipped sht Python-invalid spec, got %v", isos)
 	}
 }
 
