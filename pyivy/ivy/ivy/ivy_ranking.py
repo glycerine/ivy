@@ -647,7 +647,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             if ipr.goal_is_property(lst[i]):
                 lst[i] = trns(lst[i])
 
-    named_binders_conjs = defaultdict(list,((k,list(set(v))) for k,v in named_binders_conjs.items()))
+    named_binders_conjs = defaultdict(list,((k,list(dict.fromkeys(v))) for k,v in named_binders_conjs.items()))
 
                     
     to_wait = [] # list of (variables, term) corresponding to l2s_w in conjectures
