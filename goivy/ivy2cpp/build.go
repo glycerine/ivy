@@ -2,12 +2,14 @@ package ivy2cpp
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strings"
 )
 
@@ -24,6 +26,14 @@ func isMissingZ3ToolchainError(err error) bool {
 	return errors.As(err, &target)
 }
 
+type BuildPlan struct {
+	Compiler    string
+	Args        []string
+	WorkDir     string
+	OutputPath  string
+	CompileOnly bool
+}
+
 func BuildOutput(out *Output, outDir string) (string, error) {
 	if out == nil {
 		return "", fmt.Errorf("ivy2cpp: nil output")
@@ -31,41 +41,78 @@ func BuildOutput(out *Output, outDir string) (string, error) {
 	if err := WriteOutput(out, outDir); err != nil {
 		return "", err
 	}
-	dir := outDir
-	if dir == "" {
-		dir = "."
-	}
-	cxx, err := cxxCompiler()
+	plan, err := BuildPlanFor(out, outDir, out.Config)
 	if err != nil {
 		return "", err
 	}
-	cppPath := filepath.Join(dir, out.BaseName+".cpp")
-	exePath := filepath.Join(dir, out.BaseName)
-	args := []string{"-std=c++11"}
-	if includeArgs, err := supportIncludeArgs(); err == nil {
-		args = append(args, includeArgs...)
-	} else {
-		return "", err
+	cmd := exec.Command(plan.Compiler, plan.Args...)
+	if plan.WorkDir != "" {
+		cmd.Dir = plan.WorkDir
 	}
-	var linkArgs []string
-	if outputUsesZ3(out) {
-		includeArgs, z3LinkArgs, err := z3BuildArgs()
-		if err != nil {
-			return "", err
-		}
-		args = append(args, includeArgs...)
-		linkArgs = z3LinkArgs
-	}
-	args = append(args, cppPath, "-o", exePath)
-	args = append(args, linkArgs...)
-	cmd := exec.Command(cxx, args...)
 	var buf bytes.Buffer
 	cmd.Stdout = &buf
 	cmd.Stderr = &buf
 	if err := cmd.Run(); err != nil {
 		return "", fmt.Errorf("ivy2cpp: build failed: %w\n%s", err, buf.String())
 	}
-	return exePath, nil
+	return plan.OutputPath, nil
+}
+
+func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {
+	if out == nil {
+		return nil, fmt.Errorf("ivy2cpp: nil output")
+	}
+	if cfg.Compiler == "" {
+		cfg = out.Config
+	}
+	cfg, _, err := normalizeConfig(cfg)
+	if err != nil {
+		return nil, err
+	}
+	cxx, err := cxxCompilerFor(cfg.Compiler)
+	if err != nil {
+		return nil, err
+	}
+	dir := outputDirectory(outDir)
+	cppPath := filepath.Join(dir, out.BaseName+".cpp")
+	compileOnly := out.Target == "class" || !out.EmitMain
+	outputPath := filepath.Join(dir, out.BaseName)
+	if compileOnly {
+		outputPath += ".o"
+	}
+	args := []string{"-std=c++11", "-Wno-parentheses-equality", "-g"}
+	if includeArgs, err := supportIncludeArgs(); err == nil {
+		args = append(args, includeArgs...)
+	} else {
+		return nil, err
+	}
+	var linkArgs []string
+	if outputUsesZ3(out) {
+		includeArgs, z3LinkArgs, err := z3BuildArgs()
+		if err != nil {
+			return nil, err
+		}
+		args = append(args, includeArgs...)
+		linkArgs = z3LinkArgs
+	}
+	args = append(args, includeLibSpecArgs(out)...)
+	args = append(args, cppPath)
+	if compileOnly {
+		args = append(args, "-c")
+	}
+	args = append(args, "-o", outputPath)
+	if !compileOnly {
+		args = append(args, linkArgs...)
+		args = append(args, linkLibSpecArgs(out)...)
+		args = append(args, "-pthread")
+	}
+	return &BuildPlan{
+		Compiler:    cxx,
+		Args:        args,
+		WorkDir:     "",
+		OutputPath:  outputPath,
+		CompileOnly: compileOnly,
+	}, nil
 }
 
 func supportIncludeArgs() ([]string, error) {
@@ -81,6 +128,28 @@ func supportIncludeArgs() ([]string, error) {
 }
 
 func cxxCompiler() (string, error) {
+	return cxxCompilerFor("default")
+}
+
+func cxxCompilerFor(compiler string) (string, error) {
+	switch compiler {
+	case "", "default":
+	case "g++":
+		if cxx, err := exec.LookPath("g++"); err == nil {
+			return cxx, nil
+		}
+		return "", &missingZ3ToolchainError{reason: "g++ compiler not found"}
+	case "cl":
+		if runtime.GOOS != "windows" {
+			return "", &missingZ3ToolchainError{reason: "compiler=cl is only supported on Windows"}
+		}
+		if cxx, err := exec.LookPath("cl"); err == nil {
+			return cxx, nil
+		}
+		return "", &missingZ3ToolchainError{reason: "cl compiler not found"}
+	default:
+		return "", fmt.Errorf("ivy2cpp: compiler %q is not supported", compiler)
+	}
 	if cxx := strings.TrimSpace(os.Getenv("CXX")); cxx != "" {
 		return cxx, nil
 	}
@@ -189,4 +258,86 @@ func packageGoivyRoot() (string, error) {
 		return "", &missingZ3ToolchainError{reason: "cannot locate ivy2cpp package"}
 	}
 	return filepath.Dir(filepath.Dir(file)), nil
+}
+
+func includeLibSpecArgs(out *Output) []string {
+	var args []string
+	for _, spec := range combinedLibSpecs(out) {
+		if strings.HasPrefix(spec, "-I") || strings.HasPrefix(spec, "/I") {
+			args = append(args, spec)
+		}
+	}
+	return args
+}
+
+func linkLibSpecArgs(out *Output) []string {
+	var args []string
+	for _, spec := range combinedLibSpecs(out) {
+		if strings.HasPrefix(spec, "-I") || strings.HasPrefix(spec, "/I") {
+			continue
+		}
+		if strings.HasSuffix(spec, ".lib") {
+			if runtime.GOOS == "windows" {
+				args = append(args, spec)
+			}
+			continue
+		}
+		if strings.HasPrefix(spec, "-") {
+			args = append(args, spec)
+		} else {
+			args = append(args, "-l"+spec)
+		}
+	}
+	return args
+}
+
+func combinedLibSpecs(out *Output) []string {
+	seen := map[string]bool{}
+	var specs []string
+	for _, spec := range readSpecsFileLibs() {
+		if !seen[spec] {
+			seen[spec] = true
+			specs = append(specs, spec)
+		}
+	}
+	if out != nil {
+		for _, spec := range out.LibSpecs {
+			if !seen[spec] {
+				seen[spec] = true
+				specs = append(specs, spec)
+			}
+		}
+	}
+	sort.Strings(specs)
+	return specs
+}
+
+func readSpecsFileLibs() []string {
+	goivyRoot, err := packageGoivyRoot()
+	if err != nil {
+		return nil
+	}
+	path := filepath.Join(filepath.Dir(goivyRoot), "pyivy", "ivy", "lib", "specs")
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+	var raw [][]any
+	if err := json.Unmarshal(data, &raw); err != nil {
+		return nil
+	}
+	var specs []string
+	for _, entry := range raw {
+		if len(entry) >= 2 {
+			if dir, ok := entry[1].(string); ok && dir != "" {
+				specs = append(specs, "-I"+filepath.Join(dir, "include"))
+			}
+		}
+		if len(entry) >= 3 {
+			if dir, ok := entry[2].(string); ok && dir != "" {
+				specs = append(specs, "-L"+dir)
+			}
+		}
+	}
+	return specs
 }

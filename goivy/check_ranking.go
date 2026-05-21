@@ -445,7 +445,9 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 	model.Invars = append(model.Invars, invars...)
 
 	// --- Build shared config ---
-	defnDeps := BuildDefnDeps(m)
+	// Python ivy_ranking.py:113: defn_deps includes prover.definitions + prem_defns.
+	// Pass goalPrems so BuildDefnDeps includes definition premises from the goal.
+	defnDeps := BuildDefnDeps(m, GoalPrems(goal)...)
 
 	icfg := &InstrumentationConfig{
 		ProofLabel:         proofLabel,

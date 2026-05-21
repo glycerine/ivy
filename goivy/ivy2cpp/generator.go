@@ -11,21 +11,31 @@ import (
 )
 
 type Config struct {
-	Target    string
-	ClassName string
-	MainName  string
-	OutDir    string
-	Build     bool
-	EmitMain  bool
-	Trace     bool
-	Stdafx    bool
+	Target          string
+	RequestedTarget string
+	ClassName       string
+	MainName        string
+	OutDir          string
+	Compiler        string
+	TestIters       string
+	TestRuns        string
+	Build           bool
+	EmitMain        bool
+	Trace           bool
+	Stdafx          bool
 }
 
 type Output struct {
-	Header    string
-	Impl      string
-	BaseName  string
-	ClassName string
+	Header          string
+	Impl            string
+	BaseName        string
+	ClassName       string
+	Target          string
+	EffectiveTarget string
+	EmitMain        bool
+	Config          Config
+	ExtraFiles      map[string]string
+	LibSpecs        []string
 }
 
 type Generator struct {
@@ -47,14 +57,14 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 	if mod == nil {
 		return nil, fmt.Errorf("ivy2cpp: nil module")
 	}
-	target := cfg.Target
-	if target == "" {
-		target = "impl"
+	if cfg.Target == "" && cfg.RequestedTarget == "" {
+		cfg.Target = "impl"
 	}
-	if target != "impl" && target != "repl" && target != "test" && target != "gen" {
-		return nil, fmt.Errorf("ivy2cpp: target %q is not supported in v1", target)
+	var err error
+	cfg, _, err = normalizeConfig(cfg)
+	if err != nil {
+		return nil, err
 	}
-	cfg.Target = target
 	base := moduleBaseName(mod)
 	className := cfg.ClassName
 	if className == "" {
@@ -70,10 +80,15 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 		return nil, err
 	}
 	return &Output{
-		Header:    g.header.String(),
-		Impl:      g.impl.String(),
-		BaseName:  base,
-		ClassName: className,
+		Header:          g.header.String(),
+		Impl:            g.impl.String(),
+		BaseName:        base,
+		ClassName:       className,
+		Target:          cfg.RequestedTarget,
+		EffectiveTarget: cfg.Target,
+		EmitMain:        cfg.EmitMain,
+		Config:          cfg,
+		LibSpecs:        moduleLibSpecs(mod),
 	}, nil
 }
 
@@ -239,11 +254,18 @@ func (g *Generator) emitImpl() error {
 	g.emitTick(w)
 	switch g.Config.Target {
 	case "repl":
-		g.emitRepl(w)
+		g.emitReplSupport(w)
+		if g.Config.EmitMain {
+			g.emitReplMain(w)
+		}
 	case "test":
-		g.emitTestMain(w)
+		if g.Config.EmitMain {
+			g.emitTestMain(w)
+		}
 	case "gen":
-		g.emitGenMain(w)
+		if g.Config.EmitMain {
+			g.emitGenMain(w)
+		}
 	}
 	return nil
 }
@@ -676,11 +698,7 @@ func formalListContains(formals []*goivy.Const, target *goivy.Const) bool {
 	return false
 }
 
-func (g *Generator) emitRepl(w *cppWriter) {
-	mainName := g.Config.MainName
-	if mainName == "" {
-		mainName = "main"
-	}
+func (g *Generator) emitReplSupport(w *cppWriter) {
 	g.emitReplParsers(w)
 	w.line("static void ivy2cpp_dispatch(" + g.ClassName + " &ivy, const std::string &action, const std::vector<std::string> &args) {")
 	w.indent++
@@ -724,7 +742,12 @@ func (g *Generator) emitRepl(w *cppWriter) {
 	w.indent--
 	w.line("}")
 	w.blank()
+}
+
+func (g *Generator) emitReplMain(w *cppWriter) {
+	mainName := g.Config.MainName
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
+	g.emitTestDefaults(w)
 	g.emitConstructDefaultObject(w)
 	w.line("(void)argc;")
 	w.line("(void)argv;")
@@ -744,10 +767,8 @@ func (g *Generator) emitRepl(w *cppWriter) {
 
 func (g *Generator) emitTestMain(w *cppWriter) {
 	mainName := g.Config.MainName
-	if mainName == "" {
-		mainName = "main"
-	}
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
+	g.emitTestDefaults(w)
 	g.emitConstructDefaultObject(w)
 	w.line("(void)argc;")
 	w.line("(void)argv;")
@@ -761,9 +782,6 @@ func (g *Generator) emitTestMain(w *cppWriter) {
 
 func (g *Generator) emitGenMain(w *cppWriter) {
 	mainName := g.Config.MainName
-	if mainName == "" {
-		mainName = "main"
-	}
 	w.open(fmt.Sprintf("static void ivy2cpp_generate(%s &ivy) {", g.ClassName))
 	w.line("gen g;")
 	w.line("ivy2cpp_setup(g);")
@@ -772,12 +790,20 @@ func (g *Generator) emitGenMain(w *cppWriter) {
 	w.close("")
 	w.blank()
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
+	g.emitTestDefaults(w)
 	g.emitConstructDefaultObject(w)
 	w.line("(void)argc;")
 	w.line("(void)argv;")
 	w.line("ivy2cpp_generate(ivy);")
 	w.line("return 0;")
 	w.close("")
+}
+
+func (g *Generator) emitTestDefaults(w *cppWriter) {
+	w.linef("int test_iters = %s;", g.Config.TestIters)
+	w.linef("int runs = %s;", g.Config.TestRuns)
+	w.line("(void)test_iters;")
+	w.line("(void)runs;")
 }
 
 func (g *Generator) emitGeneratorInvocations(w *cppWriter) {

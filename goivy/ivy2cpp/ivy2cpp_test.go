@@ -1,9 +1,11 @@
 package ivy2cpp
 
 import (
+	"encoding/json"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -812,6 +814,211 @@ func TestCLIParamParsingAcceptsIvyStyleKeyValues(t *testing.T) {
 	if file != "x.ivy" || params["target"] != "repl" || params["classname"] != "MyIvy" || params["outdir"] != "build" {
 		t.Fatalf("unexpected parse result params=%v file=%s", params, file)
 	}
+}
+
+func TestMergeParamsAcceptsPythonDriverSurfaceAndDefaultsToGen(t *testing.T) {
+	cfg, ivyParams, err := mergeParams(map[string]string{
+		"classname":  "MyIvy",
+		"main":       "ivy_main",
+		"outdir":     "out",
+		"trace":      "true",
+		"stdafx":     "yes",
+		"build":      "1",
+		"isolate":    "iso",
+		"test_iters": "7",
+		"test_runs":  "3",
+		"compiler":   "g++",
+	}, Config{})
+	if err != nil {
+		t.Fatalf("mergeParams: %v", err)
+	}
+	if cfg.RequestedTarget != "gen" || cfg.Target != "gen" || !cfg.EmitMain {
+		t.Fatalf("default target normalization = requested %q effective %q emitMain %v, want gen/gen/true", cfg.RequestedTarget, cfg.Target, cfg.EmitMain)
+	}
+	if cfg.ClassName != "MyIvy" || cfg.MainName != "ivy_main" || cfg.OutDir != "out" {
+		t.Fatalf("string params not merged: %+v", cfg)
+	}
+	if cfg.TestIters != "7" || cfg.TestRuns != "3" || cfg.Compiler != "g++" {
+		t.Fatalf("driver params not merged: %+v", cfg)
+	}
+	if !cfg.Trace || !cfg.Stdafx || !cfg.Build {
+		t.Fatalf("bool params not merged: %+v", cfg)
+	}
+	if ivyParams["isolate"] != "iso" {
+		t.Fatalf("isolate param = %q, want iso", ivyParams["isolate"])
+	}
+}
+
+func TestMergeParamsRejectsUnknownTargetAndCompiler(t *testing.T) {
+	for _, params := range []map[string]string{
+		{"target": "bad"},
+		{"compiler": "clang++"},
+		{"unknown": "value"},
+	} {
+		if _, _, err := mergeParams(params, Config{}); err == nil {
+			t.Fatalf("mergeParams(%v) succeeded, want error", params)
+		}
+	}
+}
+
+func TestGenerateTargetClassEmitsNoMainButKeepsReplSupport(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "class", ClassName: "OnlyClass"})
+	if err != nil {
+		t.Fatalf("Generate target=class: %v", err)
+	}
+	if out.Target != "class" || out.EffectiveTarget != "repl" || out.EmitMain {
+		t.Fatalf("class target metadata = target %q effective %q emitMain %v", out.Target, out.EffectiveTarget, out.EmitMain)
+	}
+	raw := out.Header + "\n" + out.Impl
+	for _, want := range []string{"class OnlyClass", "ivy2cpp_dispatch", `#include "ivy_go_repl.hpp"`} {
+		if !strings.Contains(raw, want) {
+			t.Fatalf("class output missing %q:\n%s", want, raw)
+		}
+	}
+	if strings.Contains(raw, "int main(") || strings.Contains(raw, "int custom_main(") || strings.Contains(raw, "ivy2cpp_generate(") {
+		t.Fatalf("class output should not emit a main/gen harness:\n%s", raw)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestMainNameAndTestDefaultsAreEmitted(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "WithMain", MainName: "ivy_main", TestIters: "7", TestRuns: "3"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{"int ivy_main(int argc, char **argv)", "int test_iters = 7;", "int runs = 3;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestCompileAndGenerateAllWritesDescriptorForReplAndTest(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "desc.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.7
+action step = {
+}
+export step
+`), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	for _, target := range []string{"repl", "test"} {
+		t.Run(target, func(t *testing.T) {
+			batch, err := CompileAndGenerateAll(spec, map[string]string{"target": target, "classname": "Desc"}, Config{})
+			if err != nil {
+				t.Fatalf("CompileAndGenerateAll: %v", err)
+			}
+			if len(batch.Outputs) != 1 {
+				t.Fatalf("outputs len = %d, want 1", len(batch.Outputs))
+			}
+			var raw string
+			for name, text := range batch.ExtraFiles {
+				if strings.HasSuffix(name, ".dsc") {
+					raw = text
+				}
+			}
+			if raw == "" {
+				t.Fatalf("missing descriptor in %#v", batch.ExtraFiles)
+			}
+			var desc map[string]interface{}
+			if err := json.Unmarshal([]byte(raw), &desc); err != nil {
+				t.Fatalf("descriptor is not JSON: %v\n%s", err, raw)
+			}
+			if _, ok := desc["processes"].([]interface{}); !ok {
+				t.Fatalf("descriptor missing processes: %#v", desc)
+			}
+			if target == "test" {
+				if _, ok := desc["test_params"].([]interface{}); !ok {
+					t.Fatalf("test descriptor missing test_params: %#v", desc)
+				}
+			}
+		})
+	}
+}
+
+func TestCompileAndGenerateAllClassDoesNotWriteDescriptor(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "class.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.7
+action step = {
+}
+export step
+`), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	batch, err := CompileAndGenerateAll(spec, map[string]string{"target": "class", "classname": "Classy"}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	if len(batch.ExtraFiles) != 0 {
+		t.Fatalf("class target should not write descriptors: %#v", batch.ExtraFiles)
+	}
+	if len(batch.Outputs) != 1 || batch.Outputs[0].Target != "class" || batch.Outputs[0].EmitMain {
+		t.Fatalf("unexpected class output metadata: %#v", batch.Outputs)
+	}
+}
+
+func TestBuildPlanForClassIsCompileOnly(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "class", ClassName: "ClassBuild"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	plan, err := BuildPlanFor(out, t.TempDir(), out.Config)
+	if err != nil {
+		if isMissingZ3ToolchainError(err) {
+			t.Skip(err.Error())
+		}
+		t.Fatalf("BuildPlanFor: %v", err)
+	}
+	if !plan.CompileOnly || !strings.HasSuffix(plan.OutputPath, ".o") {
+		t.Fatalf("class build plan = compileOnly %v output %q", plan.CompileOnly, plan.OutputPath)
+	}
+	if !sliceContains(plan.Args, "-c") || sliceContains(plan.Args, "-pthread") {
+		t.Fatalf("class build args should compile only without pthread link arg: %v", plan.Args)
+	}
+}
+
+func TestBuildPlanRejectsCLOnNonWindows(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("compiler=cl is meaningful on Windows")
+	}
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+`)
+	out, err := Generate(mod, Config{Target: "impl", ClassName: "CLNope", Compiler: "cl"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if _, err := BuildPlanFor(out, t.TempDir(), Config{Compiler: "cl", Target: "impl"}); err == nil {
+		t.Fatalf("BuildPlanFor compiler=cl succeeded on non-Windows")
+	}
+}
+
+func sliceContains(items []string, want string) bool {
+	for _, item := range items {
+		if item == want {
+			return true
+		}
+	}
+	return false
 }
 
 func TestVarNameMatchesPythonCases(t *testing.T) {

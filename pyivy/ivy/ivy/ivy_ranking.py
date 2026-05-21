@@ -520,6 +520,16 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     # Add the invariant list to the model
     model.invars = model.invars + invars
 
+    # Match Go check_ranking.go:448 BuildDefnDeps(m, GoalPrems...) traces.
+    # Go includes both module defs and definition premises from the goal,
+    # matching Python's defn_deps = prover.definitions + prem_defns.
+    if __debug__:
+        _bdd_all = list(prover.definitions.values()) + prem_defns
+        for _bdd_di, _bdd_defn in enumerate(_bdd_all):
+            _bdd_fml = ilg.drop_universals(_bdd_defn.formula)
+            xtracer.trace("l2s.BuildDefnDeps modDefn[%d] HASH canon=%s" % (_bdd_di, _bdd_fml.canon() if hasattr(_bdd_fml,'canon') else str(_bdd_fml)))
+        for _bdd_k in sorted(defn_deps.keys(), key=lambda x: x.canon() if hasattr(x,'canon') else str(x)):
+            xtracer.trace("l2s.BuildDefnDeps result dep[%s] -> [%s]" % (_bdd_k.canon() if hasattr(_bdd_k,'canon') else str(_bdd_k), ','.join(v.canon() if hasattr(v,'canon') else str(v) for v in defn_deps[_bdd_k])))
 
     def list_transform(lst,trns):
         for i in range(0,len(lst)):

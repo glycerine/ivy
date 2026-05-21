@@ -13,19 +13,21 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	out, err := ivy2cpp.CompileAndGenerate(filename, params, ivy2cpp.Config{})
+	batch, err := ivy2cpp.CompileAndGenerateAll(filename, params, ivy2cpp.Config{})
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 	if ivy2cpp.BuildRequested(params) {
-		if _, err := ivy2cpp.BuildOutput(out, params["outdir"]); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+		for _, out := range batch.Outputs {
+			if _, err := ivy2cpp.BuildOutput(out, params["outdir"]); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
 		}
 		return
 	}
-	if err := ivy2cpp.WriteOutput(out, params["outdir"]); err != nil {
+	if err := ivy2cpp.WriteBatchOutput(batch, params["outdir"]); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
