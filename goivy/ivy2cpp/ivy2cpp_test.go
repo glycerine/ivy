@@ -1839,6 +1839,187 @@ action check = {
 	compileGeneratedCPP(t, out)
 }
 
+// TODO 008 tests: verify Python-faithful extensional-relation analysis.
+
+func TestExtensionalRelationDetectedFromInitializer(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation r(X:node, Y:node)
+individual c : node
+after init {
+    r(X, Y) := false;
+}
+action check = {
+    assert forall X:node. r(X, c) -> false
+}
+`)
+	g := &Generator{Mod: mod}
+	ext := g.extensionalRelations()
+	if !ext["r"] {
+		t.Fatalf("expected r to be in extensionalRelations, got %v", ext)
+	}
+	out, err := Generate(mod, Config{ClassName: "extinit"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "for (auto it = r.memo.begin(), en = r.memo.end(); it != en; ++it)") {
+		t.Fatalf("missing r.memo iteration in:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestNonExtensionalRelationDueToBadUpdate(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+relation r(X:color)
+after init {
+    r(X) := false;
+}
+action set_all = {
+    r(X) := true
+}
+export set_all
+`)
+	g := &Generator{Mod: mod}
+	ext := g.extensionalRelations()
+	if ext["r"] {
+		t.Fatalf("expected r to NOT be extensional (variable-arg true update), got %v", ext)
+	}
+}
+
+func TestUninitializedRelationNotExtensional(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation r(X:node)
+individual c : node
+action point_update = {
+    r(c) := true
+}
+export point_update
+`)
+	g := &Generator{Mod: mod}
+	ext := g.extensionalRelations()
+	if ext["r"] {
+		t.Fatalf("expected r to NOT be extensional (no init-to-false), got %v", ext)
+	}
+}
+
+func TestExtensionalThroughDerivedDefinition(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation r(X:node)
+relation s(X:node)
+definition q(X:node) = r(X) & s(X)
+after init {
+    r(X) := false;
+    s(X) := false;
+}
+action check = {
+    assert exists X:node. q(X)
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "extderived"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// Either r or s should drive the memo loop. The derived definition
+	// q is unfolded by matchExtensionalBoundExprs and the matcher takes
+	// the first extensional atom it finds (r appears first in q's RHS).
+	if !strings.Contains(out.Impl, "for (auto it = r.memo.begin(), en = r.memo.end(); it != en; ++it)") &&
+		!strings.Contains(out.Impl, "for (auto it = s.memo.begin(), en = s.memo.end(); it != en; ++it)") {
+		t.Fatalf("missing extensional memo loop for r or s after unfolding q:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestExtensionalQuantifierMultipleVariables(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation r(X:node, Y:node)
+relation p(X:node)
+after init {
+    r(X, Y) := false;
+    p(X) := false;
+}
+action check = {
+    assert exists X:node, Y:node. r(X, Y) & p(X) & p(Y)
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "extmulti"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// Single memo loop binds both X and Y from the pair key.
+	for _, want := range []string{
+		"for (auto it = r.memo.begin(), en = r.memo.end(); it != en; ++it)",
+		"int X = it->first.arg0;",
+		"int Y = it->first.arg1;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in multi-variable extensional quantifier:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestExtensionalRelationViaPolarityNegation(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation r(X:node)
+relation p(X:node)
+after init {
+    r(X) := false;
+    p(X) := false;
+}
+action check = {
+    assert forall X:node. ~r(X) | p(X)
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "extpol"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// Forall with `~r(X) | p(X)` : matcher should descend through Or
+	// (with !exists) and Not (flipping to exists=true), find r(X) as
+	// an extensional bound, and iterate r.memo.
+	if !strings.Contains(out.Impl, "for (auto it = r.memo.begin(), en = r.memo.end(); it != en; ++it)") {
+		t.Fatalf("missing r.memo iteration for polarity-flipped forall:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestExtensionalIfSomeBoundedByDerivedDefinition(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+relation r(X:node)
+definition q(X:node) = r(X)
+individual saved : node
+after init {
+    r(X) := false;
+}
+action pick = {
+    if some x:node. q(x) {
+        saved := x
+    }
+}
+export pick
+`)
+	out, err := Generate(mod, Config{ClassName: "extifsomederived"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// Unfolding q(x) should reveal r(x); if-some should iterate r.memo.
+	if !strings.Contains(out.Impl, "for (auto it = r.memo.begin(), en = r.memo.end(); it != en; ++it)") {
+		t.Fatalf("missing r.memo iteration in if-some-via-derived:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestEmitExprSomeFiniteEnumLoop(t *testing.T) {
 	color := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	x, err := goivy.NewVariable("X", color)

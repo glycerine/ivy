@@ -459,42 +459,70 @@ Tests to add:
 - Struct sorts with scalar fields, finite-function fields, nested struct fields,
   variant fields, and bitvector/string fields.
 
-## TODO 008 - Match Python's state-symbol and extensional-relation analysis
+## DONE 008 - Match Python's state-symbol and extensional-relation analysis
+
+Status update, 2026-05-21:
+
+- Added `allStateSymbols()` in `goivy/ivy2cpp/generator.go` (mirrors Python
+  `all_state_symbols`): iterates `Sig.AllSymbols()` and excludes constructors
+  + solver-interpreted symbols via `goivy.SolverName(...)`.
+- Added `goivy/ivy2cpp/extensional.go` with `extensionalRelations()` matching
+  Python `extensional_relations` (ivy_to_cpp.py:44-76): the "bad" set comes
+  from scanning every action's `IterSubactions()` for assigns/havocs/call-
+  returns whose LHS is not a simple point and not false; the "inited" set
+  comes from recursing `Mod.Initializers` (with a fallback to init mixins for
+  modules compiled with `create_isolate=false`) and picking up
+  `r(X) := false` over all-variable LHS args. Cached on `*Generator`.
+- Replaced the narrow `findExtensionalRelationBound` family in `expr.go` with
+  `matchExtensionalBoundExprs` (Python ivy_to_cpp.py:3351-3377): full
+  polarity tracking through Not/Implies/Or/And and derived-definition
+  unfolding via `goivy.Substitute`.
+- Reworked `emitExtensionalQuant` to peel multiple quantified variables
+  sharing one extensional atom (Python ivy_to_cpp.py:3445-3453), with
+  nested numeric loops for remaining unbound variables.
+- Updated `emitIfSomeExtensional` to use the new matcher (with a small
+  Const→Variable substitution since goivy compiles `some` parameters to
+  locals).
+- Added `emitExtensionalRelationClear` in `extensional.go` to translate
+  `r(X) := false` over a hash_thunk-backed extensional relation to
+  `r.memo.clear();`, matching the semantic effect of Python's
+  `emit_assign_large` make_thunk path for this shape (full make_thunk
+  emission is reserved for TODO 013).
+- Updated the four existing extensional tests in `ivy2cpp_test.go` to
+  include explicit `after init { r(X) := false; }` blocks — Python's
+  algorithm requires init-to-false for a relation to be extensional, and
+  the old tests inadvertently verified Go's over-permissive behavior.
+- Added seven TODO 008 tests:
+  `TestExtensionalRelationDetectedFromInitializer`,
+  `TestNonExtensionalRelationDueToBadUpdate`,
+  `TestUninitializedRelationNotExtensional`,
+  `TestExtensionalThroughDerivedDefinition`,
+  `TestExtensionalQuantifierMultipleVariables`,
+  `TestExtensionalRelationViaPolarityNegation`,
+  `TestExtensionalIfSomeBoundedByDerivedDefinition`.
+
+Verification:
+
+- `cd ~/ivy/goivy && make test`: PASS for every package, ivy2cpp in 0.25s.
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -count=1 -run
+  'TestExtensionalRelationDetectedFromInitializer|TestExtensionalThroughDerivedDefinition|TestExtensionalQuantifierMultipleVariables|TestExtensionalRelationViaPolarityNegation|TestExtensionalIfSomeBoundedByDerivedDefinition'`:
+  PASS in 1.94s (generated C++ compiles for each shape).
 
 Go locations:
 
-- `goivy/ivy2cpp/generator.go:527-561`
-- `goivy/ivy2cpp/expr.go:403-477`
+- `goivy/ivy2cpp/generator.go:526-563` (allStateSymbols)
+- `goivy/ivy2cpp/extensional.go` (extensionalRelations + helpers)
+- `goivy/ivy2cpp/expr.go:394-617` (rewritten emitExtensionalQuant +
+  matchExtensionalBoundExprs)
+- `goivy/ivy2cpp/action.go:137-160, 268-340` (emitAssign clear path +
+  emitIfSomeExtensional rewire)
 
 Python references:
 
 - `pyivy/ivy/ivy/ivy_to_cpp.py:33-35`
 - `pyivy/ivy/ivy/ivy_to_cpp.py:44-76`
 - `pyivy/ivy/ivy/ivy_to_cpp.py:3351-3377`
-
-Gap:
-
-- Go collects state symbols from relations/functions with ad hoc exclusions for
-  definitions, destructors, constructors, and mixin initializers.
-- Python starts from all logic symbols, excludes constructors and solver
-  interpreted symbols, and computes extensional relations by scanning
-  initializers and exported action bodies.
-- Go's quantifier/extensional handling only recognizes one simple mutable
-  relation bound and does not use Python's global extensional-relation analysis.
-
-Conformance work:
-
-- Port `all_state_symbols` and `extensional_relations` exactly.
-- Exclude solver/interpreted symbols via the Python equivalent of
-  `slv.solver_name(None)`.
-- Use the extensional relation set consistently in expression emission,
-  quantifier emission, randomization, and action generation.
-
-Tests to add:
-
-- Models with extensional relations updated in actions and initializers.
-- Quantifiers bounded by extensional relations where the relation is not a simple
-  direct mutable state symbol.
+- `pyivy/ivy/ivy/ivy_to_cpp.py:3380-3465`
 
 ## TODO 009 - Port Python method signatures, parameter passing, and return handling
 
