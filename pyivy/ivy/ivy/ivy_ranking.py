@@ -126,7 +126,16 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 #    proof_label = proof.labels[0]
     proof_label = ""
 #    print 'proof label: {}'.format(proof_label)
-    invars = [ilg.label_temporal(ipr.compile_with_goal_vocab(inv,goal),proof_label) for inv in tactic_invars]
+    invars = []
+    for idx, inv in enumerate(tactic_invars):
+        if __debug__: xtracer.trace("ranking.RankingL2STactic compileInvar[%d] pre-compile HASH canon=%s" % (idx, inv.canon()))
+        compiled = ipr.compile_with_goal_vocab(inv, goal)
+        if compiled is None:
+            if __debug__: xtracer.trace("ranking.RankingL2STactic compileInvar[%d] compiled=nil" % idx)
+            continue
+        labeled = ilg.label_temporal(compiled, proof_label)
+        if __debug__: xtracer.trace("ranking.RankingL2STactic compileInvar[%d] post-compile HASH canon=%s" % (idx, labeled.canon()))
+        invars.append(labeled)
 #    invars = [ilg.label_temporal(inv.compile(),proof_label) for inv in proof.tactic_decls]
 
 
