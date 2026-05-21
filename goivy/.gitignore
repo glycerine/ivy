@@ -38,3 +38,5 @@ webui/static/dist
 webui/static/wasm/goivy-webengine.wasm
 z3vendor/z3/wasm.build.good/
 log.echo
+webui/static/wasm/goivy-check-js.wasm
+z3vendor/native_lib/z3
