@@ -74,6 +74,9 @@ func emitHashThunkSupport(w *cppWriter) {
 	w.line("if (foo.second && fun) res = (*fun)(arg);")
 	w.line("return res;")
 	w.close("")
+	w.open("bool operator==(const hash_thunk<D,R,HashFun> &other) const {")
+	w.line("return memo == other.memo;")
+	w.close("")
 	w.close(";")
 }
 

@@ -176,7 +176,7 @@ func cppFunctionStorageFor(g *Generator, domain []goivy.Sort, rng goivy.Sort, cl
 		return st
 	}
 	st.Kind = cppStorageHashThunk
-	st.KeyType = cppCTupleName(domain, className)
+	st.KeyType = cppCTupleNameWith(g, domain, className)
 	st.Type = fmt.Sprintf("hash_thunk<%s,%s>", st.KeyType, rangeType)
 	return st
 }
@@ -192,12 +192,16 @@ func cppArraySuffix(dims []int) string {
 }
 
 func cppCTupleName(domain []goivy.Sort, className string) string {
+	return cppCTupleNameWith(nil, domain, className)
+}
+
+func cppCTupleNameWith(g *Generator, domain []goivy.Sort, className string) string {
 	if len(domain) == 1 {
-		return cppScalarTypeWith(nil, domain[0], className)
+		return cppScalarTypeWith(g, domain[0], className)
 	}
 	parts := make([]string, len(domain))
 	for i, s := range domain {
-		part := cppScalarTypeWith(nil, s, "")
+		part := cppScalarTypeWith(g, s, "")
 		part = strings.ReplaceAll(part, " ", "_")
 		if idx := strings.LastIndex(part, "::"); idx >= 0 {
 			part = part[idx+2:]
@@ -212,12 +216,16 @@ func cppCTupleName(domain []goivy.Sort, className string) string {
 }
 
 func cppCTupleLocalName(domain []goivy.Sort) string {
+	return cppCTupleLocalNameWith(nil, domain)
+}
+
+func cppCTupleLocalNameWith(g *Generator, domain []goivy.Sort) string {
 	if len(domain) == 1 {
-		return cppScalarTypeWith(nil, domain[0], "")
+		return cppScalarTypeWith(g, domain[0], "")
 	}
 	parts := make([]string, len(domain))
 	for i, s := range domain {
-		part := cppScalarTypeWith(nil, s, "")
+		part := cppScalarTypeWith(g, s, "")
 		part = strings.ReplaceAll(part, " ", "_")
 		parts[i] = part
 	}
@@ -498,15 +506,19 @@ func sortName(s goivy.Sort) string {
 
 func (g *Generator) cppStorageDecl(name string, s goivy.Sort, className string) string {
 	if fs, ok := s.(*goivy.LogicFunctionSort); ok {
-		st := cppFunctionStorageFor(g, fs.Domain(), fs.Range(), className)
-		switch st.Kind {
-		case cppStorageArray:
-			return fmt.Sprintf("%s %s%s", st.RangeType, varName(name), cppArraySuffix(st.Dims))
-		default:
-			return fmt.Sprintf("%s %s", st.Type, varName(name))
-		}
+		return g.cppFunctionStorageDecl(name, fs.Domain(), fs.Range(), className)
 	}
 	return fmt.Sprintf("%s %s", cppScalarTypeWith(g, s, className), varName(name))
+}
+
+func (g *Generator) cppFunctionStorageDecl(name string, domain []goivy.Sort, rng goivy.Sort, className string) string {
+	st := cppFunctionStorageFor(g, domain, rng, className)
+	switch st.Kind {
+	case cppStorageArray:
+		return fmt.Sprintf("%s %s%s", st.RangeType, varName(name), cppArraySuffix(st.Dims))
+	default:
+		return fmt.Sprintf("%s %s", st.Type, varName(name))
+	}
 }
 
 func (g *Generator) cppStorageParamDecl(c *goivy.Const, className string) string {
@@ -533,7 +545,7 @@ func (g *Generator) cppStorageAccess(name string, sort goivy.Sort, args []string
 		if len(args) == 1 {
 			return fmt.Sprintf("%s[%s]", base, args[0])
 		}
-		return fmt.Sprintf("%s[%s(%s)]", base, cppCTupleLocalName(fs.Domain()), strings.Join(args, ", "))
+		return fmt.Sprintf("%s[%s(%s)]", base, cppCTupleLocalNameWith(g, fs.Domain()), strings.Join(args, ", "))
 	default:
 		return base
 	}
@@ -561,7 +573,7 @@ func (g *Generator) cppCTuples() [][]goivy.Sort {
 		if st.Kind != cppStorageHashThunk {
 			return
 		}
-		key := cppCTupleLocalName(fs.Domain())
+		key := cppCTupleLocalNameWith(g, fs.Domain())
 		if seen[key] {
 			return
 		}
@@ -581,7 +593,7 @@ func (g *Generator) cppCTuples() [][]goivy.Sort {
 		}
 		st := progressCounterStorage(g, domain)
 		if st.Kind == cppStorageHashThunk {
-			key := cppCTupleLocalName(domain)
+			key := cppCTupleLocalNameWith(g, domain)
 			if !seen[key] {
 				seen[key] = true
 				out = append(out, domain)

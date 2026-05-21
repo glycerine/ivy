@@ -99,7 +99,7 @@ func replEnumSort(s goivy.Sort) (*goivy.LogicEnumeratedSort, bool) {
 
 func (g *Generator) emitReplEnumParser(w *cppWriter, s *goivy.LogicEnumeratedSort) {
 	fn := replParserName(s)
-	w.open(fmt.Sprintf("static %s %s(const std::string &s) {", replParamType(s, g.ClassName), fn))
+	w.open(fmt.Sprintf("static %s %s(const std::string &s) {", g.replParamType(s, g.ClassName), fn))
 	for _, v := range s.Extension {
 		w.linef(`if (s == %s) return %s::%s;`, strconv.Quote(v), g.ClassName, varName(v))
 	}
@@ -117,12 +117,12 @@ func (g *Generator) emitReplRangeParser(w *cppWriter, s goivy.Sort, rs *goivy.Ra
 	if fn == "" {
 		return
 	}
-	w.open(fmt.Sprintf("static %s %s(const std::string &s) {", replParamType(s, g.ClassName), fn))
+	w.open(fmt.Sprintf("static %s %s(const std::string &s) {", g.replParamType(s, g.ClassName), fn))
 	w.line("long long value = std::stoll(s);")
 	w.open(fmt.Sprintf("if (value < %s || value > %s) {", lo, hi))
 	w.linef(`throw std::runtime_error(std::string("expected %s in range %s..%s, got: ") + s);`, escapeString(sortName(s)), lo, hi)
 	w.close("")
-	w.linef("return static_cast<%s>(value);", replParamType(s, g.ClassName))
+	w.linef("return static_cast<%s>(value);", g.replParamType(s, g.ClassName))
 	w.close("")
 	w.blank()
 }
@@ -132,9 +132,9 @@ func (g *Generator) emitReplNumericParser(w *cppWriter, s goivy.Sort) {
 	if fn == "" {
 		return
 	}
-	w.open(fmt.Sprintf("static %s %s(const std::string &s) {", replParamType(s, g.ClassName), fn))
+	w.open(fmt.Sprintf("static %s %s(const std::string &s) {", g.replParamType(s, g.ClassName), fn))
 	w.line("long long value = std::stoll(s);")
-	w.linef("return static_cast<%s>(value);", replParamType(s, g.ClassName))
+	w.linef("return static_cast<%s>(value);", g.replParamType(s, g.ClassName))
 	w.close("")
 	w.blank()
 }
@@ -144,7 +144,7 @@ func (g *Generator) emitReplDispatchArgs(w *cppWriter, act goivy.Action) []strin
 	for idx, p := range act.GetFormalParams() {
 		name := varName(p.Name)
 		if parser := g.replParserNameForSort(p.CSort); parser != "" {
-			w.linef(`%s %s = %s(ivy2cpp_read_arg(args, %d, "%s"));`, replParamType(p.CSort, g.ClassName), name, parser, idx, escapeString(name))
+			w.linef(`%s %s = %s(ivy2cpp_read_arg(args, %d, "%s"));`, g.replParamType(p.CSort, g.ClassName), name, parser, idx, escapeString(name))
 		} else {
 			w.linef("%s %s = %s;", g.cppQualifiedType(p.CSort, g.ClassName), name, g.cppZeroValueInScope(p.CSort))
 		}
@@ -175,7 +175,7 @@ func (g *Generator) emitReplWriters(w *cppWriter) {
 }
 
 func (g *Generator) emitReplEnumWriter(w *cppWriter, s *goivy.LogicEnumeratedSort) {
-	w.open(fmt.Sprintf("static void ivy2cpp_write_value(std::ostream &out, %s value) {", replParamType(s, g.ClassName)))
+	w.open(fmt.Sprintf("static void ivy2cpp_write_value(std::ostream &out, %s value) {", g.replParamType(s, g.ClassName)))
 	w.open("switch (value) {")
 	for _, v := range s.Extension {
 		w.linef(`case %s::%s: out << %s; return;`, g.ClassName, varName(v), strconv.Quote(v))
@@ -259,7 +259,7 @@ func replParserName(s goivy.Sort) string {
 	}
 }
 
-func replParamType(s goivy.Sort, className string) string {
+func (g *Generator) replParamType(s goivy.Sort, className string) string {
 	switch st := s.(type) {
 	case *goivy.BooleanSort:
 		return "bool"
@@ -267,6 +267,9 @@ func replParamType(s goivy.Sort, className string) string {
 		if !isNumericEnum(st) && st.Name != "" && className != "" {
 			return className + "::" + varName(st.Name)
 		}
+	}
+	if g != nil {
+		return g.cppQualifiedType(s, className)
 	}
 	return cppQualifiedType(s, className)
 }

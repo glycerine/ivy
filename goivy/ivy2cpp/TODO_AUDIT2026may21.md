@@ -228,7 +228,28 @@ Tests to add:
 - Initial states for functions over finite domains, hash-thunk-like large
   domains, destructors, variants, bitvectors, and native types.
 
-## TODO 004 - Port Python's type lowering and function storage model
+## DONE 004 - Port Python's type lowering and function storage model
+
+Status: completed 2026-05-21. The Go generator now follows Python's
+cardinality-driven type/storage lowering for this TODO: bools, nonnumeric
+enums, numeric enums, ranges, interpreted finite sorts, `nat`, `strlit`,
+native/destructor/variant sorts, and ordinary uninterpreted sorts lower through
+the Python-style `ctype`/`ctypefull` decision tree. Function-typed state,
+progress counters, parameters, and generated accesses now use array storage for
+small finite integer-like domains and `hash_thunk` storage for large or
+non-array domains, with generated `ctuple` key structs, `__hash`, equality,
+memo storage, and context-aware key naming. Range array dimensions intentionally
+reserve index space through the upper bound, matching Python's `cards` behavior
+for ranges such as `{2..4}`.
+
+The surrounding emitters now consume the new storage model: state declarations,
+constructor/default initialization, solved initial-state assignments, progress
+counter resets/ticks, action/expression function applications, REPL parsing,
+native type antiquote rendering, Z3 randomization, and generator action
+parameters all use the generator-aware C++ type/storage helpers. Extensional
+unknown-domain quantifier and `if some` paths now iterate `hash_thunk.memo`
+instead of assuming the old `std::map` representation. Verified with
+`XTRACE_OFF=1 go test ./ivy2cpp -count=1` in `goivy`, completing in 0.208s.
 
 Go locations:
 

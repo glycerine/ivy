@@ -1174,6 +1174,60 @@ action step = {
 	}
 }
 
+func TestLargeFiniteFunctionUsesHashThunkAndCTuple(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..32}
+relation big(X:idx,Y:idx)
+action step = {
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "largefun"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"struct __tup__unsigned__unsigned {",
+		"unsigned arg0;",
+		"unsigned arg1;",
+		"size_t __hash() const { return hash_space::hash<unsigned>()(arg0) + hash_space::hash<unsigned>()(arg1); }",
+		"hash_thunk<__tup__unsigned__unsigned,bool> big;",
+		"hash_space::hash_map<D,R,HashFun> memo;",
+		"bool operator==(const hash_thunk<D,R,HashFun> &other) const",
+	} {
+		if !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q in header:\n%s", want, out.Header)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestRangeArrayDimensionUsesUpperBoundIndexSpace(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {2..4}
+relation marked(I:idx)
+after init {
+    marked(I) := true
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "rangedim"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"typedef unsigned idx;",
+		"bool marked[5];",
+		"for (unsigned I = 2; I <= 4; I++)",
+		"marked[I] = true;",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
 func TestImplOneConstantFunctionRelationEnumRange(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -1657,9 +1711,9 @@ action check = {
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"for (auto it = marked.begin(), en = marked.end(); it != en; ++it)",
+		"for (auto it = marked.memo.begin(), en = marked.memo.end(); it != en; ++it)",
 		"if (!it->second) continue;",
-		"node X = it->first;",
+		"int X = it->first;",
 		"if (marked[X]) return true;",
 	} {
 		if !strings.Contains(out.Impl, want) {
@@ -1684,9 +1738,9 @@ action check = {
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"for (auto it = edge.begin(), en = edge.end(); it != en; ++it)",
-		"node X = std::get<0>(it->first);",
-		"if (edge[std::make_tuple(X, dst)]) return true;",
+		"for (auto it = edge.memo.begin(), en = edge.memo.end(); it != en; ++it)",
+		"int X = it->first.arg0;",
+		"if (edge[__tup__int__int(X, dst)]) return true;",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in binary extensional quantifier:\n%s", want, out.Impl)
@@ -1710,9 +1764,9 @@ action check = {
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"for (auto it = marked.begin(), en = marked.end(); it != en; ++it)",
+		"for (auto it = marked.memo.begin(), en = marked.memo.end(); it != en; ++it)",
 		"if (!it->second) continue;",
-		"node X = it->first;",
+		"int X = it->first;",
 		"if (!((!(marked[X]) || (ok[X])))) return false;",
 		"return true;",
 	} {
@@ -2008,9 +2062,9 @@ export pick
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"for (auto it = marked.begin(), en = marked.end(); it != en; ++it)",
+		"for (auto it = marked.memo.begin(), en = marked.memo.end(); it != en; ++it)",
 		"if (!it->second) continue;",
-		"node loc__x = it->first;",
+		"int loc__x = it->first;",
 		"if (!__ivy_some1 && (marked[loc__x]))",
 		"saved = loc__x;",
 	} {
@@ -2079,7 +2133,7 @@ after init {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"typedef long long idx;", "for (idx I = 0; I <= 2; I++)", "marked[I] = false;"} {
+	for _, want := range []string{"typedef unsigned idx;", "for (unsigned I = 0; I <= 2; I++)", "marked[I] = false;"} {
 		if !strings.Contains(out.Header, want) && !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
@@ -2105,7 +2159,7 @@ func TestEmitExprQuantifierFiniteRangeLoop(t *testing.T) {
 	if err != nil {
 		t.Fatalf("emitExpr: %v", err)
 	}
-	if !strings.Contains(got, "for (idx I = 1; I <= 3; I++)") || !strings.Contains(got, "return true;") {
+	if !strings.Contains(got, "for (unsigned I = 1; I <= 3; I++)") || !strings.Contains(got, "return true;") {
 		t.Fatalf("unexpected quantifier code:\n%s", got)
 	}
 }
@@ -2551,7 +2605,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"marked.clear();", "marked[red] = false;", "marked[green] = true;"} {
+	for _, want := range []string{"marked[red] = false;", "marked[green] = true;"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
@@ -2599,7 +2653,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"marked.clear();", "marked[red] = false;", "marked[green] = true;"} {
+	for _, want := range []string{"marked[red] = false;", "marked[green] = true;"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
@@ -2651,7 +2705,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"marked.clear();", "marked[red] = true;", "marked[green] = false;"} {
+	for _, want := range []string{"marked[red] = true;", "marked[green] = false;"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
@@ -2795,7 +2849,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Header, "typedef std::vector<idx> vec;") {
+	if !strings.Contains(out.Header, "typedef std::vector<unsigned> vec;") {
 		t.Fatalf("missing rendered native vector type:\n%s", out.Header)
 	}
 	assertNoUnsupportedCPP(t, out)
@@ -3004,10 +3058,10 @@ export set
 		`#include "ivy_go_repl.hpp"`,
 		"static bool ivy2cpp_parse_bool(const std::string &s)",
 		"static runner::color ivy2cpp_parse_color(const std::string &s)",
-		"static runner::idx ivy2cpp_parse_idx(const std::string &s)",
+		"static unsigned ivy2cpp_parse_idx(const std::string &s)",
 		`runner::color c = ivy2cpp_parse_color(ivy2cpp_read_arg(args, 0, "c"));`,
 		`bool b = ivy2cpp_parse_bool(ivy2cpp_read_arg(args, 1, "b"));`,
-		`runner::idx i = ivy2cpp_parse_idx(ivy2cpp_read_arg(args, 2, "i"));`,
+		`unsigned i = ivy2cpp_parse_idx(ivy2cpp_read_arg(args, 2, "i"));`,
 		"ivy.set(c, b, i);",
 	} {
 		if !strings.Contains(text, want) {
@@ -3033,10 +3087,10 @@ export set
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"static runner::node ivy2cpp_parse_node(const std::string &s)",
+		"static int ivy2cpp_parse_node(const std::string &s)",
 		"long long value = std::stoll(s);",
-		"return static_cast<runner::node>(value);",
-		`runner::node n = ivy2cpp_parse_node(ivy2cpp_read_arg(args, 0, "n"));`,
+		"return static_cast<int>(value);",
+		`int n = ivy2cpp_parse_node(ivy2cpp_read_arg(args, 0, "n"));`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
@@ -3309,7 +3363,7 @@ export set
 	for _, want := range []string{
 		"genparams::color c;",
 		"bool b;",
-		"genparams::idx i;",
+		"unsigned i;",
 		"this->c = ivy2cpp_random_color(*this);",
 		"this->b = this->random_bool();",
 		"this->i = ivy2cpp_random_idx(*this);",
@@ -3343,9 +3397,9 @@ export touch
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"static gennumeric::node ivy2cpp_random_node(gen &g)",
+		"static int ivy2cpp_random_node(gen &g)",
 		"static gennumeric::a ivy2cpp_random_a(gen &g)",
-		"return static_cast<gennumeric::node>(g.random_index(0, 4));",
+		"return static_cast<int>(g.random_index(0, 4));",
 		"return static_cast<gennumeric::a>(g.random_index(0, 4));",
 		"this->n = ivy2cpp_random_node(*this);",
 		"this->av = ivy2cpp_random_a(*this);",
@@ -3549,7 +3603,7 @@ relation edge(C:color,B:bit)
 		"for (randomizer2::color __ivy_arg0 : {randomizer2::red, randomizer2::green})",
 		"for (randomizer2::bit __ivy_arg1 : {randomizer2::low, randomizer2::high})",
 		`g.randomize("edge", {static_cast<int>(__ivy_arg0), static_cast<int>(__ivy_arg1)}, "bool");`,
-		"ivy.edge[std::make_tuple(__ivy_arg0, __ivy_arg1)] = g.random_bool();",
+		"ivy.edge[__ivy_arg0][__ivy_arg1] = g.random_bool();",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)

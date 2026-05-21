@@ -190,7 +190,7 @@ func progressCounterStorage(g *Generator, domain []goivy.Sort) cppFunctionStorag
 		return st
 	}
 	st.Kind = cppStorageHashThunk
-	st.KeyType = cppCTupleName(domain, "")
+	st.KeyType = cppCTupleNameWith(g, domain, "")
 	st.Type = fmt.Sprintf("hash_thunk<%s,long long>", st.KeyType)
 	return st
 }
@@ -379,7 +379,7 @@ func (g *Generator) progressCounterLValueWithObj(p progressDecl, obj string) str
 	}
 	st := progressCounterStorage(g, domain)
 	if st.Kind == cppStorageHashThunk && len(args) > 1 {
-		return fmt.Sprintf("%s[%s(%s)]", name, cppCTupleLocalName(domain), strings.Join(args, ", "))
+		return fmt.Sprintf("%s[%s(%s)]", name, cppCTupleLocalNameWith(g, domain), strings.Join(args, ", "))
 	}
 	return name + cppIndexSuffix(args)
 }

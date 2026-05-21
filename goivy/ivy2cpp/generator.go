@@ -317,7 +317,11 @@ func (g *Generator) emitDestructorStruct(w *cppWriter, name string) {
 	w.open(fmt.Sprintf("struct %s {", varName(name)))
 	for _, d := range destructors {
 		if fs, ok := d.CSort.(*goivy.LogicFunctionSort); ok {
-			w.linef("%s;", g.cppStorageDecl(memName(d.Name), fs, ""))
+			domain := fs.Domain()
+			if len(domain) > 0 {
+				domain = domain[1:]
+			}
+			w.linef("%s;", g.cppFunctionStorageDecl(memName(d.Name), domain, fs.Range(), ""))
 		}
 	}
 	g.emitDestructorStructComparators(w, name, destructors)
@@ -327,7 +331,7 @@ func (g *Generator) emitDestructorStruct(w *cppWriter, name string) {
 
 func (g *Generator) emitCTupleDecls(w *cppWriter) {
 	for _, dom := range g.cppCTuples() {
-		name := cppCTupleLocalName(dom)
+		name := cppCTupleLocalNameWith(g, dom)
 		w.open(fmt.Sprintf("struct %s {", name))
 		for i, s := range dom {
 			w.linef("%s arg%d;", g.cppType(s), i)
