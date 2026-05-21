@@ -15,6 +15,21 @@ func testCtx() *UpdateContext {
 	}
 }
 
+func TestDistinctObjRenamingDuplicateFormalNamesSharePythonRename(t *testing.T) {
+	sParam := NewConst("s", TopS)
+	eParam := NewConst("e", TopS)
+	sReturn := NewConst("s", TopS)
+
+	renaming := distinctObjRenaming([]*Const{sParam, eParam, sReturn}, map[string]bool{})
+	if renaming[sParam].Name != "s_a" || renaming[sReturn].Name != "s_a" {
+		t.Fatalf("duplicate formal name should share Python's last generated rename, got param=%s return=%s",
+			renaming[sParam].Name, renaming[sReturn].Name)
+	}
+	if renaming[eParam].Name != "e" {
+		t.Fatalf("unconflicted formal e should keep its name, got %s", renaming[eParam].Name)
+	}
+}
+
 // --- AssumeAction ---
 
 func TestAssumeActionUpdate(t *testing.T) {

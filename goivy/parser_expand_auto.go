@@ -195,12 +195,18 @@ func ttermTypeNames(c Node, names *TypeNames) {
 	}
 }
 
+func constantDeclTypeNames(args []Node, names *TypeNames) {
+	for _, arg := range args {
+		ttermTypeNames(arg, names)
+	}
+}
+
 // getTypeNamesFromDecl dispatches to the appropriate type-specific
 // get_type_names method. Matches Python's polymorphic decl.get_type_names(names).
 //
 // Python classes with get_type_names overrides:
 //   - Decl base: no-op (ivy_ast.py:587)
-//   - ConstantDecl: tterm_type_names for each arg (ivy_ast.py:996)
+//   - ConstantDecl and subclasses: tterm_type_names for each arg (ivy_ast.py:996)
 //   - ParameterDecl: tterm_type_names(self.mysym(), names) (ivy_ast.py:1009)
 //   - ActionDecl (FunctionDecl): formal_params + formal_returns + body (ivy_ast.py:1067)
 //   - TypeDecl: if StructSort, tterm_type_names on fields (ivy_ast.py:1095)
@@ -211,9 +217,16 @@ func getTypeNamesFromDecl(decl Node, names *TypeNames) {
 	case *ConstantDecl:
 		// Python ConstantDecl.get_type_names (ivy_ast.py:996-998):
 		//     for c in self.args: tterm_type_names(c, names)
-		for _, arg := range d.Args() {
-			ttermTypeNames(arg, names)
-		}
+		constantDeclTypeNames(d.Args(), names)
+	case *FreshConstantDecl:
+		// Python FreshConstantDecl inherits ConstantDecl.get_type_names.
+		constantDeclTypeNames(d.Args(), names)
+	case *DestructorDecl:
+		// Python DestructorDecl inherits ConstantDecl.get_type_names.
+		constantDeclTypeNames(d.Args(), names)
+	case *ConstructorDecl:
+		// Python ConstructorDecl inherits ConstantDecl.get_type_names.
+		constantDeclTypeNames(d.Args(), names)
 	case *ParameterDecl:
 		// Python ParameterDecl.get_type_names (ivy_ast.py:1009-1010):
 		//     tterm_type_names(self.mysym(), names)

@@ -2056,18 +2056,24 @@ func distinctObjRenaming(formals []*Const, vocabNames map[string]bool) map[*Cons
 		usedNames[k] = true
 	}
 
+	// Python ivy_ast.Symbol equality/hash is name-based, so duplicate formals
+	// such as action add(s:t) returns(s:t) share the last generated rename.
+	// Keep pointer-specific result entries for Go callers, but compute the
+	// target through a name-keyed map to preserve Python overwrite semantics.
+	byName := make(map[string]*Const, len(formals))
 	for _, sym := range formals {
 		name := sym.Name
 		if _, used := usedNames[name]; !used {
 			usedNames[name] = true
-			// No conflict — identity mapping (matches Python which always adds all formals)
-			result[sym] = NewConst(name, sym.CSort)
+			byName[name] = NewConst(name, sym.CSort)
 			continue
 		}
-		// Need a fresh name
 		newName := unusedNameWithBase(name, usedNames)
 		usedNames[newName] = true
-		result[sym] = NewConst(newName, sym.CSort)
+		byName[name] = NewConst(newName, sym.CSort)
+	}
+	for _, sym := range formals {
+		result[sym] = byName[sym.Name]
 	}
 	return result
 }

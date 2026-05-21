@@ -2,6 +2,8 @@ package goivy
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -9,6 +11,21 @@ import (
 // =============================================================================
 // Fix 1: IsCheckModUnprovable filtering
 // =============================================================================
+
+func TestRegression_Arrayset3IsoSOverwriteFormalGuaranteePasses(t *testing.T) {
+	path, err := filepath.Abs("../ivy-lang-examples/doc/examples/arrayset3.ivy")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(path); err != nil {
+		t.Skipf("arrayset3 fixture not available: %v", err)
+	}
+	cfg := NewConfig()
+	cfg.Isolate = "iso_s"
+	if err := Start([]string{path}, cfg); err != nil {
+		t.Fatalf("arrayset3 iso_s should verify like Python Ivy 1.6: %v", err)
+	}
+}
 
 func TestRegression_Bug1_NormalMode(t *testing.T) {
 	cfg := NewConfig()
