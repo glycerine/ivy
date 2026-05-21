@@ -128,7 +128,6 @@ func (g *Generator) emitOneInitialState(w *cppWriter) error {
 			return err
 		}
 	}
-	g.emitProgressCounterResets(w, "")
 	return nil
 }
 
@@ -349,21 +348,15 @@ func (g *Generator) emitProgressCounterResets(w *cppWriter, obj string) {
 }
 
 func (g *Generator) emitProgressCounterReset(w *cppWriter, p progressDecl, obj string) {
+	// Python ivy_to_cpp.py:884-895 emit_clear_progress: opens the loop
+	// over free variables of the progress LHS and emits a per-iteration
+	// `lhs = 0;` assignment. No hash_thunk shortcut.
 	prefix := ""
 	if obj != "" {
 		prefix = obj + "."
 	}
 	if len(p.Vars) == 0 {
 		w.linef("%s%s = 0;", prefix, varName(p.Name))
-		return
-	}
-	domain := make([]goivy.Sort, len(p.Vars))
-	for i, v := range p.Vars {
-		domain[i] = v.VSort
-	}
-	st := progressCounterStorage(g, domain)
-	if st.Kind == cppStorageHashThunk {
-		w.linef("%s%s = %s();", prefix, varName(p.Name), st.Type)
 		return
 	}
 	opened := g.openProgressLoops(w, p)
@@ -646,33 +639,9 @@ func (g *Generator) emitZ3InitialStateEvaluation(w *cppWriter, obj string) error
 }
 
 func (g *Generator) emitZ3EvaluateStateSymbol(w *cppWriter, obj string, sym stateSymbol) error {
-	fs, ok := sym.Sort.(*goivy.LogicFunctionSort)
-	if !ok || len(fs.Domain()) == 0 {
-		w.linef("__from_solver(*this, mk_apply_expr(%q, {}), %s.%s);", sym.Name, obj, varName(sym.Name))
-		return nil
-	}
-	var args []string
-	var keyArgs []string
-	opened := 0
-	for i, s := range fs.Domain() {
-		name := fmt.Sprintf("__ivy_arg%d", i)
-		header, ok := g.z3LoopHeaderForSort(s, name)
-		if !ok {
-			return fmt.Errorf("ivy2cpp: cannot enumerate initial-state domain of %s", sym.Name)
-		}
-		w.line(header)
-		w.indent++
-		opened++
-		args = append(args, fmt.Sprintf("static_cast<int>(%s)", name))
-		keyArgs = append(keyArgs, name)
-	}
-	lvalue := g.cppStorageAccess(sym.Name, sym.Sort, keyArgs, obj)
-	w.linef("__from_solver(*this, mk_apply_expr(%q, {%s}), %s);", sym.Name, strings.Join(args, ", "), lvalue)
-	for i := 0; i < opened; i++ {
-		w.indent--
-		w.line("}")
-	}
-	return nil
+	// Use the shared emit_eval body so init_gen and action_gen produce
+	// identical evaluation code (Python ivy_to_cpp.py:772-799).
+	return g.emitFromSolverLoop(w, obj, sym)
 }
 
 func (g *Generator) isParamName(name string) bool {

@@ -2,7 +2,6 @@ package ivy2cpp
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/glycerine/ivy/goivy"
 )
@@ -111,10 +110,57 @@ func (g *Generator) isDefinitionName(name string) bool {
 	return false
 }
 
+// derivedActionFor builds the synthetic AssignAction used to emit a
+// derived definition as a C++ method. Mirrors Python emit_derived
+// (ivy_to_cpp.py:1351-1362) up to the emit_some_action call:
+//
+//   - retval = Symbol("ret:val", sort)
+//   - skolemize bound Variables X_i → Constants "fml:X_i"
+//   - substitute Variables→Constants in RHS
+//   - action = AssignAction(retval, rhs); formal_params = skolems;
+//     formal_returns = [retval].
+//
+// Returns the method name and the synthetic action ready for
+// emitSomeAction / emitMethodDeclLine.
+func (g *Generator) derivedActionFor(d derivedDefinition) (string, goivy.Action, error) {
+	retval := goivy.NewConst("ret:val", d.Sort)
+
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	skolems := make([]*goivy.Const, 0, len(d.Params))
+	for _, p := range d.Params {
+		pname := goivy.ExprName(p)
+		if pname == "" {
+			return "", nil, fmt.Errorf("derived definition %s: parameter has empty name (%T)", d.Name, p)
+		}
+		skol := goivy.NewConst("fml:"+pname, p.NodeSort())
+		subs[goivy.Key(p)] = skol
+		skolems = append(skolems, skol)
+	}
+
+	rhs := d.RHS
+	if len(subs) > 0 {
+		r, err := goivy.Substitute(d.RHS, subs)
+		if err != nil {
+			return "", nil, fmt.Errorf("derived definition %s: substitute: %w", d.Name, err)
+		}
+		rhs = r
+	}
+
+	act := goivy.NewAssignAction(retval, rhs)
+	act.SetFormalParams(skolems)
+	act.SetFormalReturns([]*goivy.Const{retval})
+	return d.Name, act, nil
+}
+
 func (g *Generator) emitDefinitionDecls(w *cppWriter) {
 	defs := g.allDefinitions()
 	for _, d := range defs {
-		w.line(g.definitionSignature(d, false) + ";")
+		name, act, err := g.derivedActionFor(d)
+		if err != nil {
+			g.errs = append(g.errs, err)
+			continue
+		}
+		g.emitMethodDeclLine(w, name, act)
 	}
 	if len(defs) > 0 {
 		w.blank()
@@ -123,35 +169,11 @@ func (g *Generator) emitDefinitionDecls(w *cppWriter) {
 
 func (g *Generator) emitDefinitions(w *cppWriter) {
 	for _, d := range g.allDefinitions() {
-		w.open(g.definitionSignature(d, true) + " {")
-		rhs, err := g.emitExpr(d.RHS)
+		name, act, err := g.derivedActionFor(d)
 		if err != nil {
-			g.unsupported(w, "unsupported definition %s rhs: %s", d.Name, err.Error())
-		} else {
-			w.linef("return %s;", rhs)
+			g.errs = append(g.errs, err)
+			continue
 		}
-		w.close("")
-		w.blank()
+		g.emitSomeAction(w, name, act)
 	}
-}
-
-func (g *Generator) definitionSignature(d derivedDefinition, qualified bool) string {
-	className := ""
-	fn, err := funName(d.Name)
-	if err != nil {
-		fn = varName(d.Name)
-	}
-	if qualified {
-		fn = g.ClassName + "::" + fn
-		className = g.ClassName
-	}
-	params := make([]string, 0, len(d.Params))
-	for _, p := range d.Params {
-		name := goivy.ExprName(p)
-		if strings.TrimSpace(name) == "" {
-			name = fmt.Sprintf("__arg%d", len(params))
-		}
-		params = append(params, g.cppQualifiedType(p.NodeSort(), className)+" "+varName(name))
-	}
-	return fmt.Sprintf("%s %s(%s)", g.cppQualifiedType(d.Sort, className), fn, strings.Join(params, ", "))
 }

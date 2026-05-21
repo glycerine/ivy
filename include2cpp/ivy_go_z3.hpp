@@ -43,6 +43,10 @@ public:
     std::map<std::string, long long> sort_los;
     std::map<std::string, long long> sort_his;
     std::vector<std::string> progress;
+    // alits holds assumption literals (Python `gen.alits`). solve() passes
+    // these to `slvr.check(alits)` so randomization preferences act as soft
+    // constraints. Cleared before each generate() call.
+    std::vector<z3::expr> alits;
     unsigned random_counter;
 
     gen() : slvr(ctx), model(ctx), random_counter(0) {
@@ -185,12 +189,55 @@ public:
         slvr.add(expr);
     }
 
+    // SMT-LIB overload: parse `smtlib` against the previously registered
+    // sorts and decls and add the resulting assertion to the solver.
+    // Mirrors Python's `add("(assert ...)")` pattern from ivy_to_cpp.py:920
+    // and :1277, which feeds slv.formula_to_z3(...).sexpr() to the solver.
+    void add(const std::string &smtlib) {
+        z3::sort_vector sv(ctx);
+        for (std::map<std::string, z3::sort>::const_iterator it = sorts.begin();
+             it != sorts.end(); ++it) {
+            sv.push_back(it->second);
+        }
+        z3::func_decl_vector dv(ctx);
+        for (std::map<std::string, z3::func_decl>::const_iterator it = decls.begin();
+             it != decls.end(); ++it) {
+            dv.push_back(it->second);
+        }
+        slvr.add(ctx.parse_string(smtlib.c_str(), sv, dv));
+    }
+
     void add_alit(const z3::expr &pred) {
         slvr.add(pred);
     }
 
+    void push() {
+        slvr.push();
+    }
+
+    void pop() {
+        slvr.pop();
+    }
+
     bool check() {
         if (slvr.check() == z3::sat) {
+            model = slvr.get_model();
+            return true;
+        }
+        return false;
+    }
+
+    // solve mirrors Python `gen.solve()`. It calls `slvr.check(alits)` so
+    // randomization preferences (added via add_alit) act as assumption
+    // literals; on `sat` it captures the model. Used by emit_init_gen /
+    // emit_action_gen (ivy_to_cpp.py:959 and :1303).
+    bool solve() {
+        z3::expr_vector assumptions(ctx);
+        for (std::vector<z3::expr>::const_iterator it = alits.begin();
+             it != alits.end(); ++it) {
+            assumptions.push_back(*it);
+        }
+        if (slvr.check(assumptions) == z3::sat) {
             model = slvr.get_model();
             return true;
         }
@@ -218,12 +265,35 @@ public:
         return 0;
     }
 
+    // eval_apply mirrors Python's `eval_apply(name, args...)` used by the
+    // scalar branch of emit_eval (ivy_to_cpp.py:794). Builds the function
+    // application from the registered decls and reads the integer-typed
+    // model value.
+    long long eval_apply(const char *decl_name) {
+        std::vector<int> args;
+        return eval(mk_apply_expr(decl_name, args));
+    }
+    long long eval_apply(const char *decl_name, int arg0) {
+        std::vector<int> args;
+        args.push_back(arg0);
+        return eval(mk_apply_expr(decl_name, args));
+    }
+    long long eval_apply(const char *decl_name, std::initializer_list<int> args) {
+        std::vector<int> args_vec(args.begin(), args.end());
+        return eval(mk_apply_expr(decl_name, args_vec));
+    }
+
     int random_index(int lo, int hi) {
+        // Use std::rand() so srand(seed) in main() controls the output
+        // sequence. Mirrors Python mk_rand (ivy_to_cpp.py:897-903) which
+        // emits `(rand() % (hi-lo+1) + lo)` inline. Cross-binary
+        // reproducibility under the same `seed=N` argv requires both
+        // sides to draw from the same PRNG.
         int span = hi - lo + 1;
         if (span <= 0) {
             return lo;
         }
-        return lo + static_cast<int>((random_counter++) % static_cast<unsigned>(span));
+        return lo + (std::rand() % span);
     }
 
     bool random_bool() {
@@ -274,6 +344,32 @@ public:
     }
 };
 
+// Primary templates for `__from_solver` / `__to_solver` / `__randomize`.
+// Per-sort explicit specializations are forward-declared in the impl
+// file's preamble (see ivy2cpp/repl.go:76-88 and
+// ivy2cpp/destructor.go:268-285), and those forward declarations are
+// only legal when the primary template is already visible. The Python
+// runtime's `ivy_z3_helpers.hpp` plays the same role on the Python side
+// (ivy_to_cpp.py:2210-2211). Per-sort specializations defining bodies
+// for class-scoped types are still emitted by ivy2cpp/z3.go,
+// ivy2cpp/destructor.go, ivy2cpp/variant.go, and ivy2cpp/cpp_types.go.
+template <typename T> void __from_solver(gen &, const z3::expr &, T &out) {
+    out = T();
+}
+
+template <typename T> z3::expr __to_solver(gen &g, const char *sort_name, const T &value) {
+    return g.int_to_z3(sort_name, static_cast<long long>(value));
+}
+
+template <typename T> z3::expr __to_solver(gen &g, const z3::expr &expr, const T &value) {
+    return expr == g.int_to_z3(expr.get_sort(), static_cast<long long>(value));
+}
+
+template <typename T> void __randomize(gen &g, const z3::expr &expr, const std::string &range) {
+    (void)sizeof(T);
+    g.randomize(expr, range);
+}
+
 template <class T>
 class __random_string_class {
 public:
@@ -301,3 +397,31 @@ static void ivy2cpp_progress(gen &g, const std::string &label) {
     g.progress.push_back(label);
     ivy2cpp_progress(label);
 }
+
+// Stubs for Python's `cpptype.prepare()` / `cleanup()` hooks
+// (ivy_to_cpp.py:937 and :970). They surround the solver-driven generate
+// loop. The Go port currently registers no cpptypes, so these are no-ops;
+// keeping them as free functions lets generated code emit the calls
+// unconditionally for parity.
+static void cpptype_prepare(gen &g) { (void)g; }
+static void cpptype_cleanup(gen &g) { (void)g; }
+
+// to_solver_class<T> is the primary template that hash_thunk
+// to_solver specializations latch onto. Mirrors
+// ivy_z3_helpers.hpp:42-44 in the Python runtime — the goivy port
+// emits specializations from ivy2cpp/solver_emit.go (emitHashThunkToSolver,
+// emitAllCtuplesToSolver). Empty by design; only specializations supply
+// `operator()`.
+template <class T> class to_solver_class {};
+
+// z3_thunk<D, R> is the abstract subclass of `thunk<D, R>` that
+// supplies a `to_z3` method consumed by the hash_thunk to_solver_class
+// specializations. Mirrors ivy_z3_helpers.hpp:135-138. `thunk<D, R>`
+// is supplied by the generated header (ivy2cpp/runtime.go
+// emitHashThunkSupport), and the impl's include order
+// (<basename>.h, then ivy_go_z3.hpp) ensures it is visible here.
+template <typename D, typename R>
+class z3_thunk : public thunk<D, R> {
+public:
+    virtual z3::expr to_z3(gen &g, const z3::expr &v) = 0;
+};

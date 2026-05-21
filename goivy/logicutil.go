@@ -349,6 +349,26 @@ func substituteRec(t Expr, subs map[NodeKey]Expr) (Expr, error) {
 	case *LogicNamedBinder:
 		return substituteNamedBinder(n, subs)
 
+	case *LogicNativeExpr:
+		// Python substitute_ast walks ast.args for any node; for a
+		// NativeExpr the args are its CompiledChildren (the antiquoted
+		// references). Recurse into each child and clone.
+		children := make([]Expr, len(n.CompiledChildren))
+		for i, c := range n.CompiledChildren {
+			nc, err := substituteRec(c, subs)
+			if err != nil {
+				return nil, err
+			}
+			children[i] = nc
+		}
+		return &LogicNativeExpr{Base: n.Base, CompiledChildren: children}, nil
+
+	case *NativeCode:
+		// NativeCode is a literal code string with no AST children;
+		// substitution leaves it unchanged. Reachable when a NativeExpr
+		// has a NativeCode fragment between its antiquoted references.
+		return n, nil
+
 	default:
 		return nil, fmt.Errorf("substitute: unsupported node type: %T", t)
 	}

@@ -487,11 +487,15 @@ func BracketAction(action ActionsAction, depth int) string {
 // --- DebugAction ---
 
 // DebugAction is a debug statement action. It is a no-op for semantics.
-// Corresponds to Python's DebugAction class.
+// Corresponds to Python's DebugAction class. Python's representation keeps
+// each "with name = expr" clause as a DebugItem(name, expr) inside
+// `self.args[1:]`; the Go compiler flattens the values into WithExprs and
+// stores the matching names in WithNames (same length, parallel slice).
 type LogicDebugAction struct {
 	ActionBase
-	DebugExpr Expr   // debug expression (first arg)
-	WithExprs []Expr // additional "with" expressions
+	DebugExpr Expr     // debug expression (first arg)
+	WithExprs []Expr   // "with" clause values
+	WithNames []string // parallel names for WithExprs (Python: DebugItem.Name.rep)
 }
 
 // NewDebugAction creates a new DebugAction.
@@ -512,6 +516,12 @@ func (a *LogicDebugAction) ActionClone(args []Expr) ActionsAction {
 	}
 	if len(args) > 1 {
 		r.WithExprs = copyNodes(args[1:])
+	}
+	// WithNames is metadata parallel to WithExprs and isn't passed through
+	// ActionClone's args slice (which is for AST children). Preserve it
+	// from the source action when the new shape still matches.
+	if len(a.WithNames) == len(a.WithExprs) && len(args)-1 == len(a.WithExprs) {
+		r.WithNames = append([]string(nil), a.WithNames...)
 	}
 	return r
 }
