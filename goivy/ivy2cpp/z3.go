@@ -16,6 +16,7 @@ func (g *Generator) usesZ3() bool {
 func (g *Generator) emitZ3Support(w *cppWriter) error {
 	g.emitZ3Runtime(w)
 	g.emitZ3SolverTemplates(w)
+	g.emitCPPTypeImpls(w)
 	g.emitZ3RandomValueHelpers(w)
 	g.emitZ3SolverConversions(w)
 	g.emitZ3Setup(w)
@@ -124,6 +125,10 @@ func (g *Generator) emitZ3RandomValueHelpers(w *cppWriter) {
 		if !ok {
 			continue
 		}
+		if it, ok := g.cppInterpType(s); ok {
+			g.emitZ3CPPInterpRandomHelper(w, s, it)
+			continue
+		}
 		if st, ok := s.(*goivy.LogicEnumeratedSort); ok && len(st.Extension) > 0 {
 			g.emitZ3EnumRandomHelper(w, st)
 			continue
@@ -150,6 +155,25 @@ func (g *Generator) emitZ3EnumRandomHelper(w *cppWriter, s *goivy.LogicEnumerate
 	}
 	w.linef("default: return %s::%s;", g.ClassName, varName(s.Extension[len(s.Extension)-1]))
 	w.close("")
+	w.close("")
+	w.blank()
+}
+
+func (g *Generator) emitZ3CPPInterpRandomHelper(w *cppWriter, s goivy.Sort, it cppInterpType) {
+	fn := z3RandomHelperName(s)
+	if fn == "" {
+		return
+	}
+	typ := g.cppQualifiedType(s, g.ClassName)
+	w.open(fmt.Sprintf("static %s %s(gen &g) {", typ, fn))
+	switch it.Kind {
+	case cppInterpBV:
+		w.linef("return static_cast<%s>(g.random_index(0, %s));", typ, bvMask(it.Bits))
+	case cppInterpStrBV:
+		w.linef("return %s::bv_to_x(g.random_index(0, %s));", typ, bvMask(it.Bits))
+	case cppInterpIntBV:
+		w.linef("return %s(g.random_index(%d, %d));", typ, it.Lo, it.Hi)
+	}
 	w.close("")
 	w.blank()
 }
@@ -206,6 +230,17 @@ func (g *Generator) emitZ3SortRegistrations(w *cppWriter) {
 			continue
 		}
 		seen[zname] = true
+		if it, ok := g.cppInterpType(s); ok {
+			switch it.Kind {
+			case cppInterpBV, cppInterpStrBV, cppInterpIntBV:
+				w.linef("g.mk_bv(%s, %d);", strconv.Quote(zname), it.Bits)
+			}
+			continue
+		}
+		if g.hasStringInterp(s) {
+			w.linef("g.mk_string(%s);", strconv.Quote(zname))
+			continue
+		}
 		switch st := s.(type) {
 		case *goivy.LogicEnumeratedSort:
 			vals := make([]string, 0, len(st.Extension))
@@ -343,6 +378,12 @@ func (g *Generator) z3RandomValueExprFrom(s goivy.Sort, genExpr string) (string,
 		}
 		return z3RandomHelperName(st) + "(" + genExpr + ")", true
 	default:
+		if _, ok := g.cppInterpType(s); ok {
+			fn := z3RandomHelperName(s)
+			if fn != "" {
+				return fn + "(" + genExpr + ")", true
+			}
+		}
 		if _, ok := g.rangeSortFor(s); ok {
 			fn := z3RandomHelperName(s)
 			if fn != "" {
@@ -369,6 +410,12 @@ func (g *Generator) z3LoopHeaderForSort(s goivy.Sort, name string) (string, bool
 			return "", false
 		}
 		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppQualifiedType(s, g.ClassName), name, lo, name, hi, name), true
+	}
+	if it, ok := g.cppInterpType(s); ok && it.Kind == cppInterpBV {
+		card := it.card()
+		if card > 0 && card <= largeThresh {
+			return fmt.Sprintf("for (%s %s = 0; %s < %d; %s++) {", g.cppQualifiedType(s, g.ClassName), name, name, card, name), true
+		}
 	}
 	return "", false
 }

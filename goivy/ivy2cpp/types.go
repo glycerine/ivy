@@ -84,6 +84,9 @@ func cppScalarTypeWith(g *Generator, s goivy.Sort, className string) string {
 				}
 				return varName(name)
 			}
+			if typeName, ok := g.cppInterpTypeName(st, className); ok {
+				return typeName
+			}
 			if g.hasStringInterp(st) {
 				return "__strlit"
 			}
@@ -251,6 +254,9 @@ func cppSortCard(g *Generator, s goivy.Sort) int {
 		}
 	case *goivy.UninterpretedSort:
 		if g != nil && g.Mod != nil {
+			if it, ok := g.cppInterpType(st); ok {
+				return it.card()
+			}
 			if rs, ok := g.rangeSortFor(st); ok {
 				if _, hi, ok := numericRangeBoundsInt(rs); ok {
 					return hi + 1
@@ -353,6 +359,12 @@ func (g *Generator) cppZeroValue(s goivy.Sort) string {
 		if typeName, ok := g.nativeTypeName(s, ""); ok {
 			return typeName + "()"
 		}
+		if typeName, ok := g.cppInterpTypeName(s, ""); ok {
+			if strings.Contains(typeName, " ") {
+				return "0"
+			}
+			return typeName + "()"
+		}
 		if g.hasStringInterp(s) {
 			return "__strlit()"
 		}
@@ -372,6 +384,12 @@ func (g *Generator) cppZeroValue(s goivy.Sort) string {
 func (g *Generator) cppZeroValueInScope(s goivy.Sort) string {
 	if g != nil {
 		if typeName, ok := g.nativeTypeName(s, g.ClassName); ok {
+			return typeName + "()"
+		}
+		if typeName, ok := g.cppInterpTypeName(s, g.ClassName); ok {
+			if strings.Contains(typeName, " ") {
+				return "0"
+			}
 			return typeName + "()"
 		}
 		if g.hasStringInterp(s) {

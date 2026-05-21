@@ -2,6 +2,7 @@
 
 #include "z3++.h"
 
+#include <cstdint>
 #include <cstdlib>
 #include <initializer_list>
 #include <map>
@@ -61,6 +62,18 @@ public:
         sort_his[std::string(name)] = hi;
     }
 
+    void mk_bv(const char *name, unsigned width) {
+        sorts.insert(std::make_pair(std::string(name), ctx.bv_sort(width)));
+        sort_los[std::string(name)] = 0;
+        sort_his[std::string(name)] = width >= 63 ? 9223372036854775807LL : ((1LL << width) - 1);
+    }
+
+    void mk_string(const char *name) {
+        sorts.insert(std::make_pair(std::string(name), ctx.string_sort()));
+        sort_los[std::string(name)] = 0;
+        sort_his[std::string(name)] = 4;
+    }
+
     z3::sort sort(const char *name) const {
         std::map<std::string, z3::sort>::const_iterator it = sorts.find(name);
         if (it == sorts.end()) {
@@ -87,9 +100,13 @@ public:
         if (std::string(sort_name) == "int") {
             return ctx.int_val(static_cast<int>(value));
         }
+        z3::sort named_sort = sort(sort_name);
+        if (named_sort.is_bv()) {
+            return ctx.bv_val(static_cast<uint64_t>(value), named_sort.bv_size());
+        }
         std::ostringstream ss;
         ss << sort_name << "_" << value;
-        return ctx.constant(ss.str().c_str(), sort(sort_name));
+        return ctx.constant(ss.str().c_str(), named_sort);
     }
 
     z3::expr int_to_z3(const z3::sort &range, long long value) {
@@ -98,6 +115,9 @@ public:
         }
         if (range.is_int()) {
             return ctx.int_val(static_cast<int>(value));
+        }
+        if (range.is_bv()) {
+            return ctx.bv_val(static_cast<uint64_t>(value), range.bv_size());
         }
         std::ostringstream ss;
         ss << range.name() << "_" << value;
@@ -220,6 +240,23 @@ public:
         add_alit(pred);
     }
 };
+
+template <class T>
+class __random_string_class {
+public:
+    std::string operator()() {
+        std::string res;
+        res.push_back('a' + (rand() % 26));
+        while (rand() % 2) {
+            res.push_back('a' + (rand() % 26));
+        }
+        return res;
+    }
+};
+
+template <class T> std::string __random_string() {
+    return __random_string_class<T>()();
+}
 
 static std::vector<std::string> ivy2cpp_stack;
 

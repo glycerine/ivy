@@ -9,6 +9,8 @@ package ivy2cpp
 //   compiler/toolchain coverage to a separate explicit slow/integration suite.
 // - CLI behavior should be tested by parsing params and calling
 //   CompileAndGenerateAll(filename, params, Config{...}) directly.
+//
+// The one exception would be when the env var SLOW_CPP_TEST is defined or the package var SlowCppTest bool is true.
 
 import (
 	"encoding/json"
@@ -21,6 +23,16 @@ import (
 
 	"github.com/glycerine/ivy/goivy"
 )
+
+// SlowCppTest true means we actually compile the C++, which
+// means the tests will take several minutes rather than
+// a second or less. Useful only occassionally to validate
+// that the C++ output is compilable.
+var SlowCppTest bool
+
+func init() {
+	_, SlowCppTest = os.LookupEnv("SLOW_CPP_TEST")
+}
 
 func compileIvySource(t *testing.T, src string) *goivy.Module {
 	t.Helper()
@@ -94,6 +106,10 @@ func compileGeneratedCPPWithPrefix(t *testing.T, out *Output, prefix string) {
 	assertNoUnsupportedCPP(t, out)
 	if prefix != "" {
 		_ = prefix
+	}
+	if SlowCppTest {
+		// TODO: compile actual generated output here.
+		// heck that the comiple succeeds. If not, we must fail the test.
 	}
 }
 
@@ -3722,6 +3738,241 @@ export set
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
+}
+
+func TestBitvectorTypesAndExpressionsShape(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type byte
+type nibble
+interpret byte -> bv[8]
+interpret nibble -> bv[4]
+individual x : byte
+individual y : byte
+individual n : nibble
+function concat(X:nibble,Y:nibble) : byte
+action step = {
+    x := 300;
+    x := bvand(x,y);
+    x := bvor(x,y);
+    x := bvnot(x);
+    x := cast(n);
+    x := concat(n,n);
+    n := bfe[0][3](x)
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "bvshape"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Header + out.Impl
+	for _, want := range []string{
+		"typedef unsigned byte;",
+		"typedef unsigned nibble;",
+		"unsigned x;",
+		"unsigned y;",
+		"unsigned n;",
+		"x = (300 & 255);",
+		"x = (((x & y)) & 255);",
+		"x = (((x | y)) & 255);",
+		"x = (((~x)) & 255);",
+		"x = ((n) & 255);",
+		"x = ((n) << 4 | (n));",
+		"n = ((((x >> 0) & 15)) & 15);",
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in bitvector output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestStringBitvectorHelperReplAndZ3Shape(t *testing.T) {
+	src := `#lang ivy1.7
+type text
+interpret text -> strbv[4]
+individual saved : text
+action set(t:text) returns(out:text) = {
+    saved := t;
+    out := t
+}
+export set
+`
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "strshape"})
+	if err != nil {
+		t.Fatalf("Generate repl: %v", err)
+	}
+	text := out.Header + out.Impl
+	for _, want := range []string{
+		"class text : public std::string {",
+		"text(const std::string &s) : std::string(s) {}",
+		"text(const char *s) : std::string(s) {}",
+		"size_t __hash() const { return hash_space::hash<std::string>()(*this); }",
+		"static hash_space::hash_map<std::string,int> x_to_bv_hash;",
+		"static hash_space::hash_map<int,std::string> bv_to_x_hash;",
+		"std::ostream &operator<<(std::ostream &s, const strshape::text &t)",
+		`static strshape::text ivy2cpp_parse_text(const std::string &s)`,
+		"return strshape::text(s);",
+		"static void ivy2cpp_write_value(std::ostream &out, const strshape::text &value)",
+		`strshape::text t = ivy2cpp_parse_text(ivy2cpp_read_arg(args, 0, "t"));`,
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in strbv repl output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+
+	mod = compileIvySource(t, src)
+	genOut, err := Generate(mod, Config{Target: "gen", ClassName: "strgen"})
+	if err != nil {
+		t.Fatalf("Generate gen: %v", err)
+	}
+	genText := genOut.Header + genOut.Impl
+	for _, want := range []string{
+		`g.mk_bv("text", 4);`,
+		"template <> void __from_solver<strgen::text>(gen &g, const z3::expr &v, strgen::text &res)",
+		"template <> z3::expr __to_solver<strgen::text>(gen &g, const z3::expr &v, const strgen::text &val)",
+		"template <> void __randomize<strgen::text>(gen &g, const z3::expr &apply_expr, const std::string &sort_name)",
+		"static strgen::text ivy2cpp_random_text(gen &g)",
+		"return strgen::text::bv_to_x(g.random_index(0, 15));",
+	} {
+		if !strings.Contains(genText, want) {
+			t.Fatalf("missing %q in strbv gen output:\nheader:\n%s\nimpl:\n%s", want, genOut.Header, genOut.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, genOut)
+	compileGeneratedCPP(t, genOut)
+}
+
+func TestIntBitvectorHelperReplAndZ3Shape(t *testing.T) {
+	src := `#lang ivy1.7
+type small
+interpret small -> intbv[10][20][4]
+individual saved : small
+action set(x:small) returns(out:small) = {
+    saved := x;
+    out := x
+}
+export set
+`
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "intshape"})
+	if err != nil {
+		t.Fatalf("Generate repl: %v", err)
+	}
+	text := out.Header + out.Impl
+	for _, want := range []string{
+		"struct IntClass {",
+		"class small : public IntClass {",
+		"small(long long v) : IntClass(v) {}",
+		"long long val;",
+		"size_t __hash() const { return hash_space::hash<IntClass>()(*this); }",
+		`static intshape::small ivy2cpp_parse_small(const std::string &s)`,
+		"long long value = std::stoll(s);",
+		"if (value < 10 || value > 20)",
+		"return intshape::small(value);",
+		"std::ostream &operator<<(std::ostream &s, const intshape::small &t)",
+		"s << t.val;",
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in intbv repl output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+
+	mod = compileIvySource(t, src)
+	genOut, err := Generate(mod, Config{Target: "gen", ClassName: "intgen"})
+	if err != nil {
+		t.Fatalf("Generate gen: %v", err)
+	}
+	genText := genOut.Header + genOut.Impl
+	for _, want := range []string{
+		`g.mk_bv("small", 4);`,
+		"template <> void __from_solver<intgen::small>(gen &g, const z3::expr &v, intgen::small &res)",
+		"template <> z3::expr __to_solver<intgen::small>(gen &g, const z3::expr &v, const intgen::small &val)",
+		"template <> void __randomize<intgen::small>(gen &g, const z3::expr &apply_expr, const std::string &sort_name)",
+		"static intgen::small ivy2cpp_random_small(gen &g)",
+		"return intgen::small(g.random_index(10, 20));",
+	} {
+		if !strings.Contains(genText, want) {
+			t.Fatalf("missing %q in intbv gen output:\nheader:\n%s\nimpl:\n%s", want, genOut.Header, genOut.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, genOut)
+	compileGeneratedCPP(t, genOut)
+}
+
+func TestBitvectorBackedSortsInGenSetupAndStorageShape(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type word
+type text
+type small
+interpret word -> bv[8]
+interpret text -> strbv[4]
+interpret small -> intbv[10][20][4]
+individual w : word
+individual t : text
+individual i : small
+action set(x:word,y:text,z:small) = {
+    w := x;
+    t := y;
+    i := z
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "genbits"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Header + out.Impl
+	for _, want := range []string{
+		`g.mk_bv("word", 8);`,
+		`g.mk_bv("text", 4);`,
+		`g.mk_bv("small", 4);`,
+		"ivy.w = ivy2cpp_random_word(g);",
+		"ivy.t = ivy2cpp_random_text(g);",
+		"ivy.i = ivy2cpp_random_small(g);",
+		"genbits::text y;",
+		"genbits::small z;",
+		"this->x = ivy2cpp_random_word(*this);",
+		"this->y = ivy2cpp_random_text(*this);",
+		"this->z = ivy2cpp_random_small(*this);",
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in gen bitvector-backed output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+
+	storageMod := compileIvySource(t, `#lang ivy1.7
+type word
+type text
+interpret word -> bv[8]
+interpret text -> strbv[4]
+function owner(W:word) : text
+relation seen(T:text)
+`)
+	storageOut, err := Generate(storageMod, Config{ClassName: "bitstore"})
+	if err != nil {
+		t.Fatalf("Generate storage: %v", err)
+	}
+	for _, want := range []string{
+		"typedef unsigned word;",
+		"class text : public std::string {",
+		"text owner[256];",
+		"hash_thunk<text,bool> seen;",
+	} {
+		if !strings.Contains(storageOut.Header, want) {
+			t.Fatalf("missing %q in storage header:\n%s", want, storageOut.Header)
+		}
+	}
+	assertNoUnsupportedCPP(t, storageOut)
+	compileGeneratedCPP(t, storageOut)
 }
 
 func TestBuildTruePlansBuildWithoutToolchain(t *testing.T) {

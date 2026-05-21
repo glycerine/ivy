@@ -299,7 +299,24 @@ Tests to add:
 - Compile tests that exercise generated equality, hash, stream, solver, and
   randomization support for each storage class.
 
-## TODO 005 - Port `ivy_cpp_types.py` bitvector and string C++ types
+## DONE 005 - Port `ivy_cpp_types.py` bitvector and string C++ types
+
+Status update, May 21, 2026:
+
+- Implemented the C++ interpreted type model for `bv[N]`, `strbv[N]`, and
+  `intbv[lo][hi][bits]` in `goivy/ivy2cpp/cpp_types.go`.
+- Wired these interpretations through sort declaration emission, scalar type
+  lowering, cardinality, zero values, array/hash-thunk storage choices, REPL
+  parsers/writers, generated Z3 setup/randomization, and support-header Z3
+  bitvector/string sort helpers.
+- Added Python-style bitvector expression emission for masked numerals, `bvand`,
+  `bvor`, `bvnot`, `cast`, arithmetic masking, `concat`, and `bfe[...]`
+  extraction.
+- Added fast in-process shape tests covering primitive bitvector lowering,
+  `StrBV`/`IntBV` helper class skeletons, REPL hooks, Z3 solver/randomization
+  specializations, generated setup, and TODO004 storage interactions.
+- Verification: `XTRACE_OFF=1 go test ./ivy2cpp -count=1` from
+  `/Users/jaten/go/src/github.com/glycerine/ivy/goivy` passed in `0.299s`.
 
 Go locations:
 

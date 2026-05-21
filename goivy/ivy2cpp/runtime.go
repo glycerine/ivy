@@ -129,6 +129,7 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.line("#include <string.h>")
 	w.line("#include <stdio.h>")
 	w.line("#include <string>")
+	w.line("#include <sstream>")
 	w.line("#include <cstdint>")
 	w.line(`#include "ivy_value.hpp"`)
 	w.blank()

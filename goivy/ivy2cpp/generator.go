@@ -183,6 +183,8 @@ func (g *Generator) emitImpl() error {
 		if err := g.emitZ3Support(w); err != nil {
 			return err
 		}
+	} else {
+		g.emitCPPTypeImpls(w)
 	}
 	w.open(g.constructorSignature(true) + " {")
 	g.emitRuntimeConstructorPrelude(w)
@@ -251,6 +253,7 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 	}
 	emittedDestructorStructs := map[string]bool{}
 	emittedVariantSupers := map[string]bool{}
+	emittedIntClass := false
 	for _, name := range g.Mod.SortOrder {
 		if g.isVariantSuperName(name) {
 			continue
@@ -270,6 +273,14 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 		}
 		s, ok := g.Mod.Sig.Sorts.Get2(name)
 		if !ok {
+			continue
+		}
+		if it, ok := g.cppInterpType(s); ok {
+			if it.Kind == cppInterpIntBV && !emittedIntClass {
+				g.emitIntClassDecl(w)
+				emittedIntClass = true
+			}
+			g.emitCPPTypeDecl(w, s, it)
 			continue
 		}
 		switch st := s.(type) {

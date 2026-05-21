@@ -26,6 +26,10 @@ func (g *Generator) emitReplParsers(w *cppWriter) {
 			continue
 		}
 		s := used[name]
+		if it, ok := g.cppInterpType(s); ok {
+			g.emitReplCPPInterpParser(w, s, it)
+			continue
+		}
 		if enum, ok := replEnumSort(s); ok {
 			g.emitReplEnumParser(w, enum)
 			continue
@@ -108,6 +112,30 @@ func (g *Generator) emitReplEnumParser(w *cppWriter, s *goivy.LogicEnumeratedSor
 	w.blank()
 }
 
+func (g *Generator) emitReplCPPInterpParser(w *cppWriter, s goivy.Sort, it cppInterpType) {
+	fn := replParserName(s)
+	if fn == "" {
+		return
+	}
+	typ := g.replParamType(s, g.ClassName)
+	w.open(fmt.Sprintf("static %s %s(const std::string &s) {", typ, fn))
+	switch it.Kind {
+	case cppInterpBV:
+		w.line("unsigned long long value = std::stoull(s);")
+		w.linef("return static_cast<%s>(value & %s);", typ, bvMask(it.Bits))
+	case cppInterpStrBV:
+		w.linef("return %s(s);", typ)
+	case cppInterpIntBV:
+		w.line("long long value = std::stoll(s);")
+		w.open(fmt.Sprintf("if (value < %d || value > %d) {", it.Lo, it.Hi))
+		w.linef(`throw std::runtime_error(std::string("expected %s in range %d..%d, got: ") + s);`, escapeString(sortName(s)), it.Lo, it.Hi)
+		w.close("")
+		w.linef("return %s(value);", typ)
+	}
+	w.close("")
+	w.blank()
+}
+
 func (g *Generator) emitReplRangeParser(w *cppWriter, s goivy.Sort, rs *goivy.RangeSort) {
 	lo, hi, ok := numericRangeBounds(rs)
 	if !ok {
@@ -168,6 +196,10 @@ func (g *Generator) emitReplWriters(w *cppWriter) {
 			}
 			if enum, ok := s.(*goivy.LogicEnumeratedSort); ok && enum.Name != "" && len(enum.Extension) > 0 {
 				g.emitReplEnumWriter(w, enum)
+				continue
+			}
+			if it, ok := g.cppInterpType(s); ok && it.helperClass() {
+				g.emitReplCPPInterpWriter(w, s)
 			}
 		}
 	}
@@ -182,6 +214,16 @@ func (g *Generator) emitReplEnumWriter(w *cppWriter, s *goivy.LogicEnumeratedSor
 	}
 	w.line(`default: out << "<unknown>"; return;`)
 	w.close("")
+	w.close("")
+}
+
+func (g *Generator) emitReplCPPInterpWriter(w *cppWriter, s goivy.Sort) {
+	typ := g.replParamType(s, g.ClassName)
+	if typ == "" {
+		return
+	}
+	w.open(fmt.Sprintf("static void ivy2cpp_write_value(std::ostream &out, const %s &value) {", typ))
+	w.line("out << value;")
 	w.close("")
 }
 

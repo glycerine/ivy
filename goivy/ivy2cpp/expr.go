@@ -25,6 +25,9 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 				return "false", nil
 			}
 		}
+		if code, ok := g.emitBVNumeral(n); ok {
+			return code, nil
+		}
 		if code, ok := g.emitRangeNumeral(n); ok {
 			return code, nil
 		}
@@ -158,6 +161,9 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 		fnExpr = repl
 	}
 	name := goivy.ExprName(fnExpr)
+	if code, ok, err := g.emitBVApply(name, a); ok || err != nil {
+		return code, err
+	}
 	if len(a.Terms) == 2 && isInfix(name) {
 		l, err := g.emitExpr(a.Terms[0])
 		if err != nil {
