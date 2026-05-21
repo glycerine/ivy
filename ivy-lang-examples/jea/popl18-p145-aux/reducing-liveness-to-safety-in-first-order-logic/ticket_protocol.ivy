@@ -1,0 +1,350 @@
+#lang ivy1.6
+
+################################################################################
+# A liveness proof of the ticket protocol according to the current
+# version of the liveness to safety reduction:
+# * all existentially quantified variables come from action parameters
+# * d is updated automatically by inserting all action parameters
+################################################################################
+
+
+################################################################################
+# Module for axiomatizing a total order
+################################################################################
+
+module total_order(r) = {
+    axiom r(X,X)                        # Reflexivity
+    axiom r(X, Y) & r(Y, Z) -> r(X, Z)  # Transitivity
+    axiom r(X, Y) & r(Y, X) -> X = Y    # Anti-symmetry
+    axiom r(X, Y) | r(Y, X)             # Totality
+}
+
+################################################################################
+#
+# Types, relations and functions describing the state
+#
+################################################################################
+
+object ticket_protocol = {
+
+    ################################################################################
+    #
+    # The protocol itself, together with encoding the fairness
+    # constraints and the negation of the liveness property
+    #
+    # property:      forall T:thread. G. pc2(T) -> F. pc3(T)
+    # fairness:      forall T:thread. G. F. last_scheduled(T)
+    # ~property:     exists T:thread. F. (pc2(T) & G. ~pc3(T))
+    # Sk(~property): F. (pc2(t0) & G. ~pc3(t0))
+    #
+    ################################################################################
+
+    type thread
+    type ticket
+
+    relation le(X:ticket, Y:ticket)
+    instantiate total_order(le)
+    individual zero:ticket
+    axiom forall X. le(zero, X)
+
+    relation pc1(T:thread)
+    relation pc2(T:thread)
+    relation pc3(T:thread)
+
+    individual service:ticket
+    individual next_ticket:ticket
+    relation m(T:thread, K:ticket)  # use relation and not a function to be in EPR
+
+    init pc1(T)
+    init ~pc2(T)
+    init ~pc3(T)
+    init service = zero
+    init next_ticket = zero
+    init m(T,K) <-> K = zero
+
+    # state for encoding the negation of the property:
+    individual t0:thread  # using a constant, note that this is never
+                          # modified by the protocol
+    relation request_flag # flag that goes from false to true once
+                          # (pc2(t0) & G. ~pc3(t0))
+    init ~request_flag
+
+    ################################################################################
+    #
+    # Protocol actions
+    #
+    ################################################################################
+
+    action succ(x:ticket) returns (y:ticket) = {
+        assume ~le(y,x) & forall Z:ticket. ~le(Z,x) -> le(y,Z)
+    }
+
+    action step12(t:thread, k1:ticket, k2:ticket) = {
+        assume pc1(t);
+        assume k1 = next_ticket;
+        assume k2 = succ(k1);
+        m(t,K) := K = k1;
+        next_ticket := k2;
+        pc1(t) := false;
+        pc2(t) := true;
+
+        # from monitor of negation of liveness property
+        if t = t0 & ~request_flag {
+            request_flag := *
+        }
+    }
+
+    action step22(t:thread, k1:ticket, k2:ticket) = {
+        assume pc2(t);
+        assume m(t,k1);
+        assume k2 = service;
+        assume ~le(k1,k2)
+        # stay in pc2
+    }
+
+    action step23(t:thread, k1:ticket, k2:ticket) = {
+        assume pc2(t);
+        assume m(t,k1);
+        assume k2 = service;
+        assume le(k1,k2);
+        pc2(t) := false;
+        pc3(t) := true;
+
+        # from monitor of negation of liveness property
+        if t = t0 & request_flag {
+            assume false # block transitions where pc3(t0) becomes
+                         # true after request_flag is true
+        }
+    }
+
+    action step31(t:thread, k1:ticket, k2:ticket) = {
+        assume pc3(t);
+        assume k1 = service;
+        assume k2 = succ(k1);
+        service := k2;
+        pc3(t) := false;
+        pc1(t) := true
+    }
+
+    export step12
+    export step22
+    export step23
+    export step31
+
+    ################################################################################
+    #
+    # Conjectures for proving safety (also helps for liveness)
+    #
+    ################################################################################
+
+    # basic
+    conjecture pc1(T) | pc2(T) | pc3(T)
+    conjecture ~pc1(T) | ~pc2(T)
+    conjecture ~pc1(T) | ~pc3(T)
+    conjecture ~pc2(T) | ~pc3(T)
+    conjecture m(T,K1) & m(T,K2) -> K1 = K2
+
+    # safety property
+    conjecture pc3(T1) & pc3(T2) -> T1 = T2
+
+    # inductive invariant for proving safety
+    conjecture next_ticket = zero -> m(T,zero)
+    conjecture next_ticket ~= zero & m(T,M) -> ~le(next_ticket,M)
+    conjecture (pc2(T) | pc3(T)) -> next_ticket ~= zero
+    conjecture m(T1,M) & m(T2,M) & M ~= zero -> T1 = T2
+    conjecture pc2(T) & m(T,M) -> le(service,M)
+    conjecture pc3(T) -> m(T,service)
+    conjecture le(service,next_ticket)
+    conjecture ~(~pc1(T1) & ~pc1(T2) & m(T1,zero) & m(T2,zero) & T1 ~= T2)
+
+    ################################################################################
+    #
+    # The liveness to safety construction
+    #
+    ################################################################################
+
+    object l2s = {
+
+        # the states of the monitor
+        relation waiting
+        relation frozen
+        relation saved
+        init waiting & ~frozen & ~saved
+        conjecture waiting | frozen | saved
+        conjecture ~waiting | ~frozen
+        conjecture ~waiting | ~saved
+        conjecture ~frozen  | ~saved
+
+        # d - the finite footprint
+        relation d_thread(T:thread)
+        relation d_ticket(K:ticket)
+        # initially d contains elements whose existance is implied by init
+        init d_thread(T) <-> T = t0
+        init d_ticket(K) <-> (K = zero | K = service | K = next_ticket)
+
+        # W - waiting for fairness constraints
+        relation w_last_scheduled(T:thread)
+        relation w_request_flag
+        # initially W contains elements whose existance is implied by init
+        init w_last_scheduled(T) <-> d_thread(T)
+        init w_request_flag
+
+        # a - the frozen copy of d
+        relation a_thread(T:thread)
+        relation a_ticket(K:ticket)
+
+        # copies of all the state relations and constants
+        relation s_pc1(T:thread)
+        relation s_pc2(T:thread)
+        relation s_pc3(T:thread)
+        individual s_service:ticket
+        individual s_next_ticket:ticket
+        relation s_m(T:thread, K:ticket)
+
+        # monitor actions combined with every protocol action
+
+        action prelude = {
+            if waiting & (forall T. ~w_last_scheduled(T)) & ~w_request_flag {
+                frozen := *;
+                if frozen {
+                    waiting := false;
+                    a_thread(T) := d_thread(T);
+                    a_ticket(K) := d_ticket(K)
+                }
+            } else {
+                if frozen {
+                    saved := *;
+                    if saved {
+                        frozen := false;
+                        # copy relations
+                        s_pc1(T) := pc1(T);
+                        s_pc2(T) := pc2(T);
+                        s_pc3(T) := pc3(T);
+                        s_service := service;
+                        s_next_ticket := next_ticket;
+                        s_m(T,K) := m(T,K);
+                        # reset W
+                        w_last_scheduled(T) := d_thread(T);
+                        w_request_flag := true
+                    }
+                }
+            }
+        }
+        before step12 { call prelude }
+        before step22 { call prelude }
+        before step23 { call prelude }
+        before step31 { call prelude }
+
+        action postlude(t:thread, k1:ticket, k2:ticket) = {
+            # update d
+            d_thread(t) := true;
+            d_ticket(k1) := true;
+            d_ticket(k2) := true;
+            d_ticket(service) := true;
+            d_ticket(next_ticket) := true;
+            # update W
+            w_last_scheduled(T) := w_last_scheduled(T) & T ~= t;
+            w_request_flag := w_request_flag & ~request_flag;
+            # assert no abstract fair cycle
+            assert ~(
+                saved &
+                (forall T. ~w_last_scheduled(T)) &
+                ~w_request_flag &
+                (forall T. a_thread(T) -> (s_pc1(T) <-> pc1(T))) &
+                (forall T. a_thread(T) -> (s_pc2(T) <-> pc2(T))) &
+                (forall T. a_thread(T) -> (s_pc3(T) <-> pc3(T))) &
+                (forall T,K. a_thread(T) & a_ticket(K) -> (s_m(T,K) <-> m(T,K))) &
+                (forall K. a_ticket(K) -> (s_service = K <-> service = K)) &
+                (forall K. a_ticket(K) -> (s_next_ticket = K <-> next_ticket = K))
+            )
+        }
+
+        after step12 { call postlude(t,k1,k2) }
+        after step22 { call postlude(t,k1,k2) }
+        after step23 { call postlude(t,k1,k2) }
+        after step31 { call postlude(t,k1,k2) }
+    }
+
+    ################################################################################
+    #
+    # Conjectures for proving liveness
+    #
+    ################################################################################
+
+
+    # all safety conjectures for s_ state
+    conjecture l2s.saved -> l2s.s_m(T,K1) & l2s.s_m(T,K2) -> K1 = K2
+    conjecture l2s.saved -> l2s.s_pc1(T) | l2s.s_pc2(T) | l2s.s_pc3(T)
+    conjecture l2s.saved -> ~l2s.s_pc1(T) | ~l2s.s_pc2(T)
+    conjecture l2s.saved -> ~l2s.s_pc1(T) | ~l2s.s_pc3(T)
+    conjecture l2s.saved -> ~l2s.s_pc2(T) | ~l2s.s_pc3(T)
+    conjecture l2s.saved -> l2s.s_pc3(T1) & l2s.s_pc3(T2) -> T1 = T2
+    conjecture l2s.saved -> l2s.s_next_ticket = zero -> l2s.s_m(T,zero)
+    conjecture l2s.saved -> l2s.s_next_ticket ~= zero & l2s.s_m(T,M) -> ~le(l2s.s_next_ticket,M)
+    conjecture l2s.saved -> (l2s.s_pc2(T) | l2s.s_pc3(T)) -> l2s.s_next_ticket ~= zero
+    conjecture l2s.saved -> l2s.s_m(T1,M) & l2s.s_m(T2,M) & M ~= zero -> T1 = T2
+    conjecture l2s.saved -> l2s.s_pc2(T) & l2s.s_m(T,M) -> le(l2s.s_service,M)
+    conjecture l2s.saved -> l2s.s_pc3(T) -> l2s.s_m(T,l2s.s_service)
+    conjecture l2s.saved -> le(l2s.s_service,l2s.s_next_ticket)
+    conjecture l2s.saved -> ~(~l2s.s_pc1(T1) & ~l2s.s_pc1(T2) & l2s.s_m(T1,zero) & l2s.s_m(T2,zero) & T1 ~= T2)
+
+    # basic
+    conjecture l2s.w_request_flag <-> ~request_flag
+    conjecture l2s.frozen -> request_flag
+    conjecture l2s.saved -> request_flag
+    conjecture request_flag -> pc2(t0)
+    conjecture l2s.saved -> l2s.s_m(t0,K) <-> m(t0,K)
+    conjecture l2s.saved -> le(l2s.s_service, service)
+
+    # more properties of reachable protocol states
+    conjecture pc1(T) & m(T,M) & M ~= zero -> ~le(service, M)
+    conjecture forall K:ticket. ~le(next_ticket, K) & le(service, K) ->
+        exists T:thread. m(T,K) & ~pc1(T)
+     conjecture exists M. m(t0, M)
+    # and their saved state counterparts
+    conjecture l2s.saved -> l2s.s_pc1(T) & l2s.s_m(T,M) & M ~= zero -> ~le(l2s.s_service, M)
+    conjecture l2s.saved -> forall K:ticket. ~le(l2s.s_next_ticket, K) & le(l2s.s_service, K) ->
+        exists T:thread. l2s.s_m(T,K) & ~l2s.s_pc1(T)
+    conjecture l2s.saved -> exists M. l2s.s_m(t0, M)
+
+    # conjecture that l2s.d is large enough
+    conjecture l2s.d_thread(t0)
+    conjecture ~pc1(T) -> l2s.d_thread(T)
+    conjecture le(K,next_ticket) -> l2s.d_ticket(K)
+    # conjecture that l2s.a is large enough
+    conjecture ~l2s.waiting -> l2s.a_thread(t0)
+    conjecture ~l2s.waiting & m(T,K) & m(t0,K0) & ~le(K0,K) & ~pc1(T) -> l2s.a_thread(T)
+    conjecture ~l2s.waiting & m(t0,K0) & le(K,K0) -> l2s.a_ticket(K)
+
+    # thread that have not been scheduled have not changed
+    conjecture l2s.saved & l2s.w_last_scheduled(T) -> (l2s.s_pc1(T) <-> pc1(T))
+    conjecture l2s.saved & l2s.w_last_scheduled(T) -> (l2s.s_pc2(T) <-> pc2(T))
+    conjecture l2s.saved & l2s.w_last_scheduled(T) -> (l2s.s_pc3(T) <-> pc3(T))
+    conjecture l2s.saved & l2s.w_last_scheduled(T) -> (l2s.s_m(T,K) <-> m(T,K))
+
+    # the thread that must advance - the thread that had the service as its local ticket at the save point
+    conjecture (
+        l2s.saved &
+        l2s.s_m(T,l2s.s_service) &
+        ~l2s.w_last_scheduled(T) &
+        l2s.s_pc2(T) &
+        m(T,K) &
+        m(t0,K0)
+    ) -> (
+        (pc1(T) & K = l2s.s_service) |
+        (pc2(T) & ~le(K,K0)) |
+        (pc3(T) & K = l2s.s_service)
+    )
+    conjecture (
+        l2s.saved &
+        l2s.s_m(T,l2s.s_service) &
+        ~l2s.w_last_scheduled(T) &
+        l2s.s_pc3(T) &
+        m(T,K) &
+        m(t0,K0)
+    ) -> (
+        (pc1(T) & K = l2s.s_service & ~le(service, l2s.s_service)) |
+        (pc2(T) & ~le(K,K0))
+    )
+
+}
