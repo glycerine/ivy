@@ -93,8 +93,9 @@ func compileGeneratedCPP(t *testing.T, out *Output) {
 	compileGeneratedCPPWithPrefix(t, out, "")
 }
 
-// Historical helper name: this must stay in-process and must not invoke a C++
-// compiler. The unit test contract is generated-output shape validation only.
+// Historical helper name: the normal unit test contract is generated-output
+// shape validation only. Set SLOW_CPP_TEST or SlowCppTest to additionally run
+// the generated C++ through the configured compiler.
 func compileGeneratedCPPWithPrefix(t *testing.T, out *Output, prefix string) {
 	t.Helper()
 	if out == nil {
@@ -104,12 +105,30 @@ func compileGeneratedCPPWithPrefix(t *testing.T, out *Output, prefix string) {
 		t.Fatalf("generated output should contain header and impl: %+v", out)
 	}
 	assertNoUnsupportedCPP(t, out)
-	if prefix != "" {
-		_ = prefix
-	}
 	if SlowCppTest {
-		// TODO: compile actual generated output here.
-		// heck that the comiple succeeds. If not, we must fail the test.
+		compileGeneratedCPPSlow(t, out, prefix)
+	}
+}
+
+func compileGeneratedCPPSlow(t *testing.T, out *Output, prefix string) {
+	t.Helper()
+	compiled := *out
+	// This helper validates that the generated translation unit compiles. It
+	// intentionally stops before linking so impl/class shape fixtures do not
+	// need to provide a generated main.
+	compiled.EmitMain = false
+	if prefix != "" {
+		compiled.Impl = prefix + compiled.Impl
+	}
+	outputPath, err := BuildOutput(&compiled, t.TempDir())
+	if err != nil {
+		if isMissingZ3ToolchainError(err) {
+			t.Skip(err.Error())
+		}
+		t.Fatalf("compile generated C++: %v", err)
+	}
+	if outputPath == "" {
+		t.Fatalf("compile generated C++ produced an empty output path")
 	}
 }
 
