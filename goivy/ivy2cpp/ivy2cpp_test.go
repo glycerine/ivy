@@ -2447,11 +2447,22 @@ action step = {
 }
 export step
 `)
+	// compileIvySource runs with create_isolate=false so the parser
+	// leaves every action public. Trim to mirror what create_isolate
+	// would do (ivy_isolate.py:1674-1678) — only the exported action
+	// stays public. Without this, split (multi-return) gets the public
+	// ValueType-only annotation, which Python rejects with IvyError
+	// (ivy_to_cpp.py:1565-1567).
+	mod.PublicActions.Set("split", false)
 	out, err := Generate(mod, Config{ClassName: "multi"})
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"void split(color c, color &out, bool &good)", "out = c;", "good = true;", "split(green, saved, ok);"} {
+	// Python annotation for private `split(c) returns (out, good)`:
+	//   ptypes=[ValueType], rtypes=[ValueType, ReturnRefType{Pos:1}]
+	// → signature returns `out` by value, `good` as trailing ref.
+	// → call site: saved = split(green, ok);
+	for _, want := range []string{"color split(color c, bool& good)", "out = c;", "good = true;", "return out;", "saved = split(green, ok);"} {
 		if !strings.Contains(out.Impl, want) && !strings.Contains(out.Header, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
@@ -3456,6 +3467,10 @@ export echo
 }
 
 func TestReplDispatchWritesMultipleReturns(t *testing.T) {
+	// Mirrors Python ivy_to_cpp.py:1565-1567: exporting a multi-return
+	// action is rejected with "cannot handle multiple output in exported
+	// actions". The previous Go behavior accepted it; TODO 009 brings the
+	// port back in line with Python.
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
 action split(c:color) returns (out:color, good:bool) = {
@@ -3464,23 +3479,13 @@ action split(c:color) returns (out:color, good:bool) = {
 }
 export split
 `)
-	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
-	if err != nil {
-		t.Fatalf("Generate: %v", err)
+	_, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err == nil {
+		t.Fatal("Generate should reject exporting a multi-return action")
 	}
-	for _, want := range []string{
-		"runner::color out = runner::red;",
-		"bool good = false;",
-		"ivy.split(c, out, good);",
-		"ivy2cpp_write_value(std::cout, out);",
-		`std::cout << " ";`,
-		"ivy2cpp_write_value(std::cout, good);",
-	} {
-		if !strings.Contains(out.Impl, want) {
-			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
-		}
+	if !strings.Contains(err.Error(), "cannot handle multiple output in exported actions: split") {
+		t.Fatalf("expected multi-output rejection error, got: %v", err)
 	}
-	compileGeneratedCPP(t, out)
 }
 
 func TestReplParameterizedActionShape(t *testing.T) {
@@ -4611,6 +4616,289 @@ export step
 	body := tail[:endIdx]
 	if strings.Contains(body, `__randomize<`) && strings.Contains(body, `g.apply("here"`) {
 		t.Fatalf("__randomize should skip uninterpreted-range destructor field:\n%s", body)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// --- TODO 009: method signatures, parameter passing, return handling ---
+
+// TestPrivateActionStructParamUsesConstRef verifies that a private action
+// taking a struct (destructor-sort) parameter it does not modify is emitted
+// with a const-reference parameter, per Python annotate_action
+// (ivy_to_cpp.py:1493-1495): not modified and is_struct → ConstRefType.
+func TestPrivateActionStructParamUsesConstRef(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+individual saved : color
+action read_shade(c:cell) returns (out:color) = {
+    out := shade(c)
+}
+action step = {
+    var k : cell;
+    call saved := read_shade(k)
+}
+export step
+`)
+	// Trim PublicActions to mirror create_isolate.
+	mod.PublicActions.Set("read_shade", false)
+	out, err := Generate(mod, Config{ClassName: "constref"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	want := "color read_shade(const cell& c)"
+	if !strings.Contains(out.Header+out.Impl, want) {
+		t.Fatalf("expected const-ref signature %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestPrivateActionStructParamModifiedUsesValue verifies that a private
+// action that modifies its struct parameter is emitted with a by-value
+// parameter, per Python annotate_action's `action_assigns(p) → ValueType`.
+func TestPrivateActionStructParamModifiedUsesValue(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+action recolor(c:cell) = {
+    c.shade := red
+}
+action step = {
+    var k : cell;
+    call recolor(k)
+}
+export step
+`)
+	mod.PublicActions.Set("recolor", false)
+	out, err := Generate(mod, Config{ClassName: "byval"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	want := "void recolor(cell c)"
+	if !strings.Contains(out.Header+out.Impl, want) {
+		t.Fatalf("expected by-value signature %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+	}
+	bad := "const cell&"
+	if strings.Contains(out.Header+out.Impl, bad) {
+		t.Fatalf("modified struct param must not be const-ref %q:\nheader:\n%s\nimpl:\n%s", bad, out.Header, out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestReturnAliasingInputUsesRefType verifies that when a return name matches
+// an input parameter name, the input is passed as a non-const reference and
+// there is no synthetic local or `return` statement in the body — the
+// parameter IS the return storage. Mirrors Python's RefType branch (input
+// in returns) at ivy_to_cpp.py:1493 and the body-emission skip when
+// rtypes[0] is ReturnRefType.
+func TestReturnAliasingInputUsesRefType(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx
+interpret idx -> <<< int >>>
+action bump(x:idx) returns (x:idx) = {
+    x := x + 1
+}
+action step = {
+    var v : idx;
+    call v := bump(v)
+}
+export step
+`)
+	mod.PublicActions.Set("bump", false)
+	out, err := Generate(mod, Config{ClassName: "alias"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	want := "void bump(idx& x)"
+	if !strings.Contains(out.Header+out.Impl, want) {
+		t.Fatalf("expected ref signature %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+	}
+	// Body must NOT contain `return x;` and must NOT pre-initialize x.
+	bodyStart := strings.Index(out.Impl, "alias::bump(")
+	if bodyStart < 0 {
+		t.Fatalf("missing alias::bump body:\n%s", out.Impl)
+	}
+	body := out.Impl[bodyStart:]
+	if end := strings.Index(body, "\n        }"); end >= 0 {
+		body = body[:end]
+	}
+	if strings.Contains(body, "return x;") {
+		t.Fatalf("ReturnRefType body must not emit return:\n%s", body)
+	}
+	if strings.Contains(body, "idx x = ") {
+		t.Fatalf("ReturnRefType body must not synthesize x local:\n%s", body)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestCallAliasSafetySwapInputAndOutput verifies that when an output target
+// at slot pos differs from the input expression at that slot, the input is
+// saved to a temporary BEFORE the call and a post-call copy-back restores
+// the output. Mirrors Python emit_call (ivy_to_cpp.py:3845-3861, 3877-3880).
+func TestCallAliasSafetySwapInputAndOutput(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx
+interpret idx -> <<< int >>>
+action bump(x:idx) returns (x:idx) = {
+    x := x + 1
+}
+action step = {
+    var a : idx;
+    var b : idx;
+    call a := bump(b)
+}
+export step
+`)
+	mod.PublicActions.Set("bump", false)
+	out, err := Generate(mod, Config{ClassName: "aliassafe"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// rtypes[0] = ReturnRefType{Pos:0}; iparg=b, rv=a; names differ →
+	// pre-call save to a temp + post-call copy back.
+	for _, want := range []string{"= loc__b;", "bump(__tmp", "loc__a = __tmp"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("alias-safety: expected snippet %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestCallNoAliasNoTempEmitted verifies that an ordinary call with distinct,
+// non-aliasing input and output expressions does not introduce an alias-
+// safety temporary. The matched-input optimization in Python emit_call
+// (ivy_to_cpp.py:3852: `iparg != rv`) keeps the call clean.
+func TestCallNoAliasNoTempEmitted(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx
+interpret idx -> <<< int >>>
+action ident(a:idx) returns (b:idx) = {
+    b := a
+}
+action step = {
+    var x : idx;
+    var y : idx;
+    call y := ident(x)
+}
+export step
+`)
+	mod.PublicActions.Set("ident", false)
+	out, err := Generate(mod, Config{ClassName: "noalias"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// rtypes[0] = ValueType (b not in formals, pos=0) → primary
+	// assigned via `lhs = ident(args);`, no trailing ref, no temp.
+	want := "loc__y = ident(loc__x);"
+	if !strings.Contains(out.Impl, want) {
+		t.Fatalf("expected clean assigning call %q:\n%s", want, out.Impl)
+	}
+	if strings.Contains(out.Impl, "__tmp") {
+		// Some __tmpN identifiers exist for unrelated reasons in the
+		// runtime skeleton. Restrict the check to the step body.
+		bodyStart := strings.Index(out.Impl, "noalias::step(")
+		if bodyStart >= 0 {
+			body := out.Impl[bodyStart:]
+			if end := strings.Index(body, "\n        }"); end >= 0 {
+				body = body[:end]
+			}
+			if strings.Contains(body, "__tmp") {
+				t.Fatalf("clean call should not emit alias temps in step body:\n%s", body)
+			}
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestPublicActionAllValueTypeSignature verifies that an exported action
+// gets the all-ValueType signature regardless of its parameter sorts, per
+// Python annotate_action (ivy_to_cpp.py:1481-1484): public branch forces
+// ValueType for every parameter and return.
+func TestPublicActionAllValueTypeSignature(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+individual seen : color
+action observe(c:cell) = {
+    seen := shade(c)
+}
+export observe
+`)
+	// observe is exported and STAYS public; compileIvySource already
+	// puts it there.
+	out, err := Generate(mod, Config{ClassName: "publicval"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	want := "void observe(cell c)"
+	if !strings.Contains(out.Header+out.Impl, want) {
+		t.Fatalf("public action must take cell by value, got:\nheader:\n%s\nimpl:\n%s", out.Header, out.Impl)
+	}
+	if strings.Contains(out.Header, "const cell&") {
+		t.Fatalf("public action must NOT use const-ref for struct param:\nheader:\n%s", out.Header)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestVirtualKeywordOmittedForGenTarget verifies the `virtual ` prefix on
+// header method declarations is present for non-gen targets and absent for
+// target=gen, mirroring Python emit_method_decl (ivy_to_cpp.py:1559-1560).
+func TestVirtualKeywordOmittedForGenTarget(t *testing.T) {
+	src := `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`
+	implOut, err := Generate(compileIvySource(t, src), Config{Target: "impl", ClassName: "vk"})
+	if err != nil {
+		t.Fatalf("Generate impl: %v", err)
+	}
+	if !strings.Contains(implOut.Header, "virtual void set(") {
+		t.Fatalf("impl target should emit 'virtual void set(':\n%s", implOut.Header)
+	}
+	genOut, err := Generate(compileIvySource(t, src), Config{Target: "gen", ClassName: "vk"})
+	if err != nil {
+		t.Fatalf("Generate gen: %v", err)
+	}
+	if strings.Contains(genOut.Header, "virtual void set(") {
+		t.Fatalf("gen target should NOT emit 'virtual ' on set:\n%s", genOut.Header)
+	}
+}
+
+// TestCallSiteVariantUpcastOnArgumentOnly verifies that variant upcast is
+// applied to the call argument expression (matching Python ivy_to_cpp.py:
+// 3870-3874) and is NOT applied around the call result (the removed
+// result-side upcast at old action.go:459).
+func TestCallSiteVariantUpcastOnArgumentOnly(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t
+variant a of t
+variant b of t
+individual v : t
+action receive(x:t) = {
+    v := x
+}
+action sender(y:a) = {
+    call receive(y)
+}
+export sender
+`)
+	mod.PublicActions.Set("receive", false)
+	out, err := Generate(mod, Config{ClassName: "upcast"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// At the call site inside sender, the argument y:a is upcast to t.
+	// Python emits: receive(t(0, new t::twrap<a>(y)));
+	want := "receive(t(0, new t::twrap<a>(y)));"
+	if !strings.Contains(out.Impl, want) {
+		t.Fatalf("expected argument-side upcast %q in impl:\n%s", want, out.Impl)
 	}
 	compileGeneratedCPP(t, out)
 }

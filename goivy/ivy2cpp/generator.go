@@ -57,6 +57,12 @@ type Generator struct {
 	// Mirrors Python ivy_to_cpp.py:1912-1913 `the_extensional_relations`,
 	// but lives on the Generator per goivy/CLAUDE.md section C.
 	extRel map[string]bool
+
+	// ptypeCache caches the (param_types, return_types) computed by
+	// annotateAction (Python ivy_to_cpp.py:1479-1517). Python attaches
+	// these to the action object; Go cannot monkey-patch *Action so the
+	// cache lives here per goivy/CLAUDE.md section C.
+	ptypeCache map[string]ptypeCacheEntry
 }
 
 func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
@@ -612,20 +618,50 @@ func (g *Generator) emitMethodDecls(w *cppWriter) {
 		if initActions[name] {
 			continue
 		}
-		w.line(g.methodSignature(name, act, false) + ";")
+		w.line(g.methodSignature(name, act, false, false) + ";")
 	}
 }
 
-func (g *Generator) methodSignature(name string, act goivy.Action, qualified bool) string {
-	ret := "void"
+// methodSignature emits the C++ method signature for action act.
+// Mirrors Python emit_method_decl + emit_param_decls_with_inouts +
+// emit_param_decls (ivy_to_cpp.py:1551-1571 + 1542-1549 + 1534-1540).
+//
+//   - qualified=true emits the body header form (ClassName::name) and
+//     suppresses the "virtual " keyword (Python `body=True`).
+//   - inline=true suppresses "virtual " on the declaration form too
+//     (Python `inline=True`, used by native code emission).
+func (g *Generator) methodSignature(name string, act goivy.Action, qualified, inline bool) string {
 	className := ""
 	if qualified {
 		className = g.ClassName
 	}
+
+	ptypes, rtypes := g.getParamTypes(name, act)
+	formals := act.GetFormalParams()
 	returns := act.GetFormalReturns()
-	if len(returns) == 1 {
-		ret = g.cppQualifiedType(returns[0].CSort, className)
+
+	// Return type. Python lines 1561-1564: void if no returns, else
+	// ctype(rs[0].sort, classname, ptype=rtypes[0]). ReturnRefType.Make
+	// returns "void", which is the same as the no-returns case.
+	ret := "void"
+	if len(returns) > 0 {
+		ret = rtypes[0].Make(g.cppQualifiedType(returns[0].CSort, className))
 	}
+
+	// Multi-return validation (Python lines 1565-1567): every secondary
+	// return must be ReturnRefType.
+	for i := 1; i < len(rtypes); i++ {
+		if _, ok := rtypes[i].(ReturnRefType); !ok {
+			g.errs = append(g.errs, fmt.Errorf("ivy2cpp: cannot handle multiple output in exported actions: %s", name))
+		}
+	}
+
+	// "virtual " on the declaration form for non-gen targets (Python
+	// lines 1559-1560).
+	if !qualified && g.Config.Target != "gen" && !inline {
+		ret = "virtual " + ret
+	}
+
 	fn, err := funName(name)
 	if err != nil {
 		fn = varName(name)
@@ -633,15 +669,32 @@ func (g *Generator) methodSignature(name string, act goivy.Action, qualified boo
 	if qualified {
 		fn = g.ClassName + "::" + fn
 	}
+
+	// Positional input parameters. Function-sorted params use sym_decl
+	// (Python emit_param_decls ternary at line 1539); ptype wrappers do
+	// not apply to function-sorted parameters.
 	var params []string
-	for _, p := range act.GetFormalParams() {
-		params = append(params, g.cppStorageDecl(p.Name, p.CSort, className))
-	}
-	if len(returns) > 1 {
-		for _, r := range returns {
-			params = append(params, g.cppQualifiedType(r.CSort, className)+" &"+varName(r.Name))
+	for i, p := range formals {
+		if _, isFS := p.CSort.(*goivy.LogicFunctionSort); isFS {
+			params = append(params, g.cppStorageDecl(p.Name, p.CSort, className))
+			continue
 		}
+		typ := ptypes[i].Make(cppScalarTypeWith(g, p.CSort, className))
+		params = append(params, typ+" "+varName(p.Name))
 	}
+
+	// Trailing output params for ReturnRefType returns whose Pos lies
+	// beyond the input slots (Python emit_param_decls_with_inouts at
+	// ivy_to_cpp.py:1542-1549). Each gets RefType.
+	for i, r := range returns {
+		rrt, ok := rtypes[i].(ReturnRefType)
+		if !ok || rrt.Pos < len(formals) {
+			continue
+		}
+		typ := RefType{}.Make(g.cppQualifiedType(r.CSort, className))
+		params = append(params, typ+" "+varName(r.Name))
+	}
+
 	return fmt.Sprintf("%s %s(%s)", ret, fn, strings.Join(params, ", "))
 }
 
@@ -680,16 +733,26 @@ func (g *Generator) emitMethods(w *cppWriter) {
 		if initActions[name] {
 			continue
 		}
-		w.open(g.methodSignature(name, act, true) + " {")
+		w.open(g.methodSignature(name, act, true, false) + " {")
 		returns := act.GetFormalReturns()
+		_, rtypes := g.getParamTypes(name, act)
+		// When the primary return is a ReturnRefType, its storage IS
+		// an input parameter — no synthetic local, no return statement.
+		// Otherwise the primary return is by value and needs both a
+		// synthetic local (unless it's also a formal param, in which
+		// case it aliases the input slot) and a trailing return.
+		firstIsReturnRef := false
+		if len(rtypes) >= 1 {
+			_, firstIsReturnRef = rtypes[0].(ReturnRefType)
+		}
 		prevReturns := g.currentReturns
 		g.currentReturns = returns
-		if len(returns) == 1 && !formalListContains(act.GetFormalParams(), returns[0]) {
+		if len(returns) >= 1 && !firstIsReturnRef && !formalListContains(act.GetFormalParams(), returns[0]) {
 			w.linef("%s %s = %s;", g.cppType(returns[0].CSort), varName(returns[0].Name), g.cppZeroValue(returns[0].CSort))
 		}
 		g.emitAction(w, act)
 		g.currentReturns = prevReturns
-		if len(returns) == 1 {
+		if len(returns) >= 1 && !firstIsReturnRef {
 			w.linef("return %s;", varName(returns[0].Name))
 		}
 		w.close("")

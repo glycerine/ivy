@@ -419,6 +419,11 @@ func (g *Generator) emitChoice(w *cppWriter, a *goivy.LogicChoiceAction) {
 	w.close("")
 }
 
+// emitCall lowers a LogicCallAction. Mirrors Python emit_call
+// (ivy_to_cpp.py:3811-3886): annotation-driven argument routing,
+// alias-safety temporaries when an output position aliases an input,
+// variant upcast at the argument boundary, and ___ivy_stack push/pop
+// for gen/test targets.
 func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
 	name := a.CalleeName()
 	fn, err := funName(name)
@@ -426,13 +431,19 @@ func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
 		g.unsupported(w, "unsupported call: %s", err.Error())
 		return
 	}
-	var args []string
+
 	var calleeAction goivy.Action
 	if g.Mod != nil && g.Mod.Actions != nil {
 		calleeAction, _ = g.Mod.Actions.Get2(name)
 	}
+
+	// Emit positional argument strings from app.Terms and capture the
+	// per-position Expr for alias-safety checks. Apply per-argument
+	// variant upcasts against the formal parameter sort.
+	var args []string
+	var argExprs []goivy.Expr
 	if app, ok := a.Callee.(*goivy.Apply); ok {
-		formals := []*goivy.Const(nil)
+		var formals []*goivy.Const
 		if calleeAction != nil {
 			formals = calleeAction.GetFormalParams()
 		}
@@ -446,33 +457,101 @@ func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
 				s = g.maybeVariantUpcast(formals[i].CSort, t.NodeSort(), s, "")
 			}
 			args = append(args, s)
+			argExprs = append(argExprs, t)
 		}
 	}
-	if g.Mod != nil && g.Mod.Actions != nil && len(a.ActualReturns) == 1 {
-		if callee, ok := g.Mod.Actions.Get2(name); ok && len(callee.GetFormalReturns()) == 1 {
-			ret, err := g.emitExpr(a.ActualReturns[0])
+
+	// Without a known callee we cannot annotate. Fall back to the
+	// trailing-ref convention so built-ins keep working.
+	if calleeAction == nil {
+		for _, r := range a.ActualReturns {
+			s, err := g.emitExpr(r)
 			if err != nil {
 				g.unsupported(w, "unsupported call return: %s", err.Error())
 				return
 			}
-			callExpr := fmt.Sprintf("%s(%s)", fn, strings.Join(args, ", "))
-			callExpr = g.maybeVariantUpcast(a.ActualReturns[0].NodeSort(), callee.GetFormalReturns()[0].CSort, callExpr, "")
-			stacked := g.emitCallStackPush(w, a)
-			w.linef("%s = %s;", ret, callExpr)
-			g.emitCallStackPop(w, stacked)
-			return
+			args = append(args, s)
+		}
+		stacked := g.emitCallStackPush(w, a)
+		w.linef("%s(%s);", fn, strings.Join(args, ", "))
+		g.emitCallStackPop(w, stacked)
+		return
+	}
+
+	_, rtypes := g.getParamTypes(name, calleeAction)
+	nargs := len(args)
+
+	// Walk returns. For each ReturnRefType return whose Pos lies inside
+	// the input args, check whether the output target aliases the input
+	// at that slot or any other input — if so, save the input to a
+	// temporary, schedule a post-call copy-back, and rewrite args[pos]
+	// to read from the temp. For ReturnRefType returns whose Pos is
+	// beyond nargs, append the return target as a trailing argument.
+	type pendingCopy struct {
+		lhs string
+		tmp string
+	}
+	var copies []pendingCopy
+
+	for rpos := 0; rpos < len(rtypes) && rpos < len(a.ActualReturns); rpos++ {
+		rrt, ok := rtypes[rpos].(ReturnRefType)
+		if !ok {
+			continue
+		}
+		rv := a.ActualReturns[rpos]
+		pos := rrt.Pos
+		if pos < nargs {
+			iparg := argExprs[pos]
+			aliases := false
+			for j, other := range argExprs {
+				if j == pos {
+					continue
+				}
+				if g.mayAlias(other, iparg) {
+					aliases = true
+					break
+				}
+			}
+			if !exprRootEqByName(iparg, rv) || aliases {
+				tmp := g.nextTemp("__tmp")
+				w.linef("%s %s = %s;", g.cppType(rv.NodeSort()), tmp, args[pos])
+				args[pos] = tmp
+				lhsStr, err := g.emitExpr(rv)
+				if err != nil {
+					g.unsupported(w, "unsupported call return: %s", err.Error())
+					return
+				}
+				copies = append(copies, pendingCopy{lhs: lhsStr, tmp: tmp})
+			}
+		} else {
+			extra, err := g.emitExpr(rv)
+			if err != nil {
+				g.unsupported(w, "unsupported call return: %s", err.Error())
+				return
+			}
+			args = append(args, extra)
 		}
 	}
-	for _, r := range a.ActualReturns {
-		s, err := g.emitExpr(r)
-		if err != nil {
-			g.unsupported(w, "unsupported call return: %s", err.Error())
-			return
+
+	// Primary return assignment prefix: emitted only when rtypes[0] is
+	// not a ReturnRefType (Python ivy_to_cpp.py:3862-3864).
+	prefix := ""
+	if len(rtypes) >= 1 && len(a.ActualReturns) >= 1 {
+		if _, isRRT := rtypes[0].(ReturnRefType); !isRRT {
+			lhs, err := g.emitExpr(a.ActualReturns[0])
+			if err != nil {
+				g.unsupported(w, "unsupported call return: %s", err.Error())
+				return
+			}
+			prefix = lhs + " = "
 		}
-		args = append(args, s)
 	}
+
 	stacked := g.emitCallStackPush(w, a)
-	w.linef("%s(%s);", fn, strings.Join(args, ", "))
+	w.linef("%s%s(%s);", prefix, fn, strings.Join(args, ", "))
+	for _, c := range copies {
+		w.linef("%s = %s;", c.lhs, c.tmp)
+	}
 	g.emitCallStackPop(w, stacked)
 }
 
