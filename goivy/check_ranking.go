@@ -274,12 +274,16 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 	invars = append(invars, model.Invars...)
 
 	// Python ivy_ranking.py:126 — compile user-supplied tactic invariants
-	for _, inv := range tacticInvars {
-		compiled := CompileWithGoalVocab(inv, goal, m)
-		if compiled == nil {
+	for idx, inv := range tacticInvars {
+		xtracer.Trace("ranking.RankingL2STactic compileInvar[%d] pre-compile HASH canon=%v", idx, inv.Canon())
+		vocab := GoalVocab(goal)
+		compiledLF := CompileExprVocabExtLF(inv, vocab, m)
+		if compiledLF == nil {
+			xtracer.Trace("ranking.RankingL2STactic compileInvar[%d] compiled=nil", idx)
 			continue
 		}
-		labeled := LabelTemporalNode(compiled, proofLabel).(*LabeledFormula)
+		labeled := LabelTemporalNode(compiledLF, proofLabel).(*LabeledFormula)
+		xtracer.Trace("ranking.RankingL2STactic compileInvar[%d] post-compile HASH canon=%v", idx, labeled.Canon())
 		invars = append(invars, labeled)
 	}
 
