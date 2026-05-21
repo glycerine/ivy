@@ -14,28 +14,28 @@ func (g *Generator) usesZ3() bool {
 }
 
 func (g *Generator) emitZ3Support(w *cppWriter) error {
-	g.emitZ3Runtime(w)
+	// `ivy_go_z3.hpp` is now included in emitRuntimeImplPreamble at the
+	// position matching Python's `ivy_z3_helpers.hpp` (ivy_to_cpp.py:2211),
+	// so no runtime header emission happens here.
 	g.emitZ3SolverTemplates(w)
 	g.emitCPPTypeImpls(w)
 	g.emitZ3RandomValueHelpers(w)
 	g.emitZ3SolverConversions(w)
 	g.emitZ3Setup(w)
 	g.emitZ3Randomize(w)
-	if err := g.emitZ3GeneratorClasses(w); err != nil {
-		return err
-	}
+	// emitZ3GeneratorClasses is now invoked after emitDestructorImpls
+	// and emitVariantImpls in generator.go so that the action_gen body
+	// can reference __from_solver<T> specializations emitted there.
 	return nil
 }
 
-func (g *Generator) emitZ3Runtime(w *cppWriter) {
-	w.line(`#include "ivy_go_z3.hpp"`)
-	w.blank()
-}
-
 func (g *Generator) emitZ3SolverTemplates(w *cppWriter) {
-	w.open("template <typename T> void __from_solver(gen &, const z3::expr &, T &out) {")
-	w.line("out = T();")
-	w.close("")
+	// The primary templates for __from_solver / __to_solver / __randomize
+	// live in include2cpp/ivy_go_z3.hpp so they are visible to the
+	// forward declarations of per-sort explicit specializations emitted
+	// by emitEnumSortArgSpecDecls / emitDestructorSortArgSpecDecls
+	// (runtime.go:168, :172). Only the primitive specializations are
+	// emitted here.
 	w.open("template <> void __from_solver<bool>(gen &g, const z3::expr &expr, bool &out) {")
 	w.line("out = false;")
 	w.line("z3::expr solver_value = g.eval_expr(expr);")
@@ -56,16 +56,6 @@ func (g *Generator) emitZ3SolverTemplates(w *cppWriter) {
 	w.open("template <> void __from_solver<unsigned long long>(gen &g, const z3::expr &expr, unsigned long long &out) {")
 	w.line("out = static_cast<unsigned long long>(g.eval(expr));")
 	w.close("")
-	w.open("template <typename T> z3::expr __to_solver(gen &g, const char *sort_name, const T &value) {")
-	w.line("return g.int_to_z3(sort_name, static_cast<long long>(value));")
-	w.close("")
-	w.open("template <typename T> z3::expr __to_solver(gen &g, const z3::expr &expr, const T &value) {")
-	w.line("return expr == g.int_to_z3(expr.get_sort(), static_cast<long long>(value));")
-	w.close("")
-	w.open("template <typename T> void __randomize(gen &g, const z3::expr &expr, const std::string &range) {")
-	w.line("(void)sizeof(T);")
-	w.line("g.randomize(expr, range);")
-	w.close("")
 	w.blank()
 }
 
@@ -84,34 +74,30 @@ func (g *Generator) emitZ3SolverConversions(w *cppWriter) {
 	}
 }
 
+// emitZ3EnumSolverConversion emits the three template specializations
+// __from_solver<T>, __to_solver<T>, __randomize<T> for an enum sort.
+// Mirrors Python ivy_to_cpp.py:2654-2668 — each specialization delegates
+// to the underlying integer specialization. The Go runtime's
+// gen::int_to_z3(<sort_name>, idx) encodes enum values as
+// "<sort_name>_<idx>" constants and gen::eval() recovers the trailing
+// integer index, so the delegation through `__from_solver<int>` works
+// uniformly with the Z3 model representation.
 func (g *Generator) emitZ3EnumSolverConversion(w *cppWriter, s *goivy.LogicEnumeratedSort) {
 	typ := g.cppQualifiedType(s, g.ClassName)
-	zname := z3SortName(s)
-	w.open(fmt.Sprintf("static void __from_solver(gen &g, const z3::expr &expr, %s &out) {", typ))
-	w.line("std::string text = g.eval_expr(expr).to_string();")
-	for i, v := range s.Extension {
-		w.open(fmt.Sprintf(`if (text == %s || text == %s) {`, strconv.Quote(fmt.Sprintf("%s_%d", zname, i)), strconv.Quote(v)))
-		w.linef("out = %s::%s;", g.ClassName, varName(v))
-		w.line("return;")
-		w.close("")
-	}
-	w.linef("out = %s(g);", z3RandomHelperName(s))
+	w.line("template <>")
+	w.open(fmt.Sprintf("void __from_solver<%s>(gen &g, const z3::expr &v, %s &res) {", typ, typ))
+	w.line("int temp;")
+	w.line("__from_solver<int>(g, v, temp);")
+	w.linef("res = (%s)temp;", typ)
 	w.close("")
-	w.open(fmt.Sprintf("static z3::expr __to_solver(gen &g, const char *sort_name, %s value) {", typ))
-	w.open("switch (value) {")
-	for i, v := range s.Extension {
-		w.linef("case %s::%s: return g.int_to_z3(sort_name, %d);", g.ClassName, varName(v), i)
-	}
-	w.line("default: return g.int_to_z3(sort_name, 0);")
+	w.line("template <>")
+	w.open(fmt.Sprintf("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val) {", typ, typ))
+	w.line("int thing = val;")
+	w.line("return __to_solver<int>(g, v, thing);")
 	w.close("")
-	w.close("")
-	w.open(fmt.Sprintf("static z3::expr __to_solver(gen &g, const z3::expr &expr, %s value) {", typ))
-	w.open("switch (value) {")
-	for i, v := range s.Extension {
-		w.linef("case %s::%s: return expr == g.int_to_z3(expr.get_sort(), %d);", g.ClassName, varName(v), i)
-	}
-	w.line("default: return expr == g.int_to_z3(expr.get_sort(), 0);")
-	w.close("")
+	w.line("template <>")
+	w.open(fmt.Sprintf("void __randomize<%s>(gen &g, const z3::expr &v, const std::string &sort_name) {", typ))
+	w.line("__randomize<int>(g, v, sort_name);")
 	w.close("")
 	w.blank()
 }
@@ -261,6 +247,20 @@ func (g *Generator) emitZ3Setup(w *cppWriter) {
 	w.blank()
 }
 
+// emitZ3SortRegistrations mirrors Python `emit_sorts` at ivy_to_cpp.py:687-728.
+//
+// Python emits `enum_sorts.insert(std::pair<std::string, z3::sort>("name",
+// <classname>::<sortvar>::z3_sort(ctx)))` for sorts registered in
+// `sort_to_cpptype` (cpp-typed bv / strbv / intbv non-variant sorts) at
+// line 715-718. The Go runtime in `include2cpp/ivy_go_z3.hpp` exposes a
+// single `sorts` map (no separate `enum_sorts`) and provides
+// `mk_bv(name, width)` / `mk_string(name)` helpers that perform the
+// equivalent insert via `ctx.bv_sort(width)` / `ctx.string_sort()` — the
+// same Z3 sort constructors that `<class>::<sortvar>::z3_sort(ctx)`
+// would invoke. The cpp_types.go static `z3_sort(ctx)` member exists for
+// Python-style reuse but is unused on the Go runtime path; the
+// `mk_bv`/`mk_string` emission is the runtime-supported equivalent of
+// Python's `enum_sorts.insert(...)` form.
 func (g *Generator) emitZ3SortRegistrations(w *cppWriter) {
 	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
 		return
@@ -277,6 +277,9 @@ func (g *Generator) emitZ3SortRegistrations(w *cppWriter) {
 		}
 		seen[zname] = true
 		if it, ok := g.cppInterpType(s); ok {
+			// Python: enum_sorts.insert(name, <class>::<sortvar>::z3_sort(ctx)).
+			// Go runtime equivalent: mk_bv(name, width) — both call
+			// ctx.bv_sort(width) on the same Z3 sort underneath.
 			switch it.Kind {
 			case cppInterpBV, cppInterpStrBV, cppInterpIntBV:
 				w.linef("g.mk_bv(%s, %d);", strconv.Quote(zname), it.Bits)
@@ -284,6 +287,10 @@ func (g *Generator) emitZ3SortRegistrations(w *cppWriter) {
 			continue
 		}
 		if g.hasStringInterp(s) {
+			// Python: enum_sorts.insert(name, <class>::<sortvar>::z3_sort(ctx))
+			// where z3_sort returns ctx.string_sort(). Go runtime equivalent:
+			// mk_string(name) — both call ctx.string_sort() on the same Z3
+			// sort underneath.
 			w.linef("g.mk_string(%s);", strconv.Quote(zname))
 			continue
 		}
@@ -546,23 +553,21 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 	w.blank()
 
 	initActions := g.initialMixinActionNames()
+	// Build action_gen plans up front so the class header and impl
+	// emission share the same analysis (inputs computed from
+	// reverse_image, etc.).
+	plans := make(map[string]*actionGenPlan)
 	for name, act := range g.Mod.Actions.All() {
 		if initActions[name] || !g.Mod.PublicActions.Get(name) {
 			continue
 		}
-		className := g.actionGeneratorClassName(name)
-		w.open(fmt.Sprintf("class %s : public gen {", className))
-		w.line("public:")
-		w.indent++
-		w.linef("%s(%s &obj);", className, g.ClassName)
-		w.linef("bool generate(%s &obj);", g.ClassName)
-		w.linef("void execute(%s &obj);", g.ClassName)
-		for _, p := range act.GetFormalParams() {
-			w.linef("%s %s;", g.cppQualifiedType(p.CSort, g.ClassName), varName(p.Name))
+		if isFinalizeName(name) {
+			continue
 		}
-		w.indent--
-		w.close(";")
-		w.blank()
+		plans[name] = g.buildActionGenPlan(name, act)
+	}
+	for name := range plans {
+		g.emitActionGenClassHeader(w, plans[name])
 	}
 
 	w.open(fmt.Sprintf("init_gen::init_gen(%s &obj) {", g.ClassName))
@@ -573,78 +578,35 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 	}
 	w.close("")
 	w.open(fmt.Sprintf("bool init_gen::generate(%s &obj) {", g.ClassName))
-	w.line("obj.___ivy_gen = this;")
 	w.line("ivy2cpp_progress(*this, \"init_gen\");")
-	w.line("ivy2cpp_randomize(*this, obj);")
-	w.open("if (!check()) {")
-	w.line("return false;")
-	w.close("")
+	w.line("cpptype_prepare(*this);")
+	w.line("alits.clear();")
+	if err := g.emitInitGenPerSymbolDispatch(w, "obj"); err != nil {
+		return err
+	}
+	w.line("bool __res = solve();")
+	w.open("if (__res) {")
 	if err := g.emitZ3InitialStateEvaluation(w, "obj"); err != nil {
 		return err
 	}
 	g.emitProgressCounterResets(w, "obj")
+	w.close("")
+	w.line("cpptype_cleanup(*this);")
+	w.line("obj.___ivy_gen = this;")
+	w.open("if (__res) {")
 	w.line("obj.__init();")
-	w.line("return true;")
+	w.close("")
+	w.line("return __res;")
 	w.close("")
 	w.open(fmt.Sprintf("void init_gen::execute(%s &obj) {", g.ClassName))
 	w.line("(void)obj;")
 	w.close("")
 	w.blank()
 
-	for name, act := range g.Mod.Actions.All() {
-		if initActions[name] || !g.Mod.PublicActions.Get(name) {
-			continue
-		}
-		g.emitZ3ActionGenerator(w, name, act)
+	for name := range plans {
+		g.emitActionGen(w, plans[name])
 	}
 	return nil
-}
-
-func (g *Generator) emitZ3ActionGenerator(w *cppWriter, name string, act goivy.Action) {
-	className := g.actionGeneratorClassName(name)
-	w.open(fmt.Sprintf("%s::%s(%s &obj) {", className, className, g.ClassName))
-	w.line("(void)obj;")
-	w.line("ivy2cpp_setup(*this);")
-	w.close("")
-	w.open(fmt.Sprintf("bool %s::generate(%s &obj) {", className, g.ClassName))
-	w.line("obj.___ivy_gen = this;")
-	w.linef("ivy2cpp_progress(*this, %s);", strconv.Quote(className))
-	w.line("ivy2cpp_randomize(*this, obj);")
-	w.open("if (!check()) {")
-	w.line("return false;")
-	w.close("")
-	for _, p := range act.GetFormalParams() {
-		name := varName(p.Name)
-		if value, ok := g.z3RandomValueExprFrom(p.CSort, "*this"); ok {
-			w.linef("this->%s = %s;", name, value)
-		} else {
-			w.linef("this->%s = %s;", name, g.cppZeroValueInScope(p.CSort))
-		}
-	}
-	w.line("return true;")
-	w.close("")
-	w.open(fmt.Sprintf("void %s::execute(%s &obj) {", className, g.ClassName))
-	fn, err := funName(name)
-	if err != nil {
-		fn = varName(name)
-	}
-	args := make([]string, 0, len(act.GetFormalParams())+len(act.GetFormalReturns()))
-	for _, p := range act.GetFormalParams() {
-		args = append(args, "this->"+varName(p.Name))
-	}
-	returns := act.GetFormalReturns()
-	if len(returns) == 1 {
-		w.linef("(void)obj.%s(%s);", fn, strings.Join(args, ", "))
-	} else {
-		for _, r := range returns {
-			name := varName(r.Name)
-			w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), name, g.cppZeroValueInScope(r.CSort))
-			args = append(args, name)
-		}
-		w.linef("obj.%s(%s);", fn, strings.Join(args, ", "))
-	}
-	w.close("")
-	w.blank()
 }
 
 func (g *Generator) actionGeneratorClassName(name string) string {

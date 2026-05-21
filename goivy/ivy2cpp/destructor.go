@@ -227,6 +227,64 @@ func (g *Generator) emitDestructorStructWriter(w *cppWriter, name string, destru
 	w.close("")
 }
 
+// destructorSortNames returns destructor sort names in module sort
+// order (the same order emitDestructorImpls uses, so forward decls
+// precede definitions). Encoded sorts are filtered out, matching Python
+// `if sort_name not in encoded_sorts` at ivy_to_cpp.py:2236.
+func (g *Generator) destructorSortNames() []string {
+	if g == nil || g.Mod == nil || g.Mod.SortDestructors == nil {
+		return nil
+	}
+	encoded := g.encodedSortSet()
+	var out []string
+	for _, name := range g.Mod.SortOrder {
+		if _, ok := g.Mod.SortDestructors.Get2(name); !ok {
+			continue
+		}
+		if encoded != nil && encoded[name] {
+			continue
+		}
+		out = append(out, name)
+	}
+	return out
+}
+
+// emitDestructorSortArgSpecDecls emits forward declarations of the
+// per-destructor `operator<<`, `_arg<T>`, `__ser<T>`, `__deser<T>`
+// (and, for gen/test, the Z3 `__from_solver`/`__to_solver`/
+// `__randomize`) symbols. Mirrors Python ivy_to_cpp.py:2232-2254 —
+// emitted right after the enum forward decls so the rest of the impl
+// file can resolve them.
+func (g *Generator) emitDestructorSortArgSpecDecls(w *cppWriter) {
+	names := g.destructorSortNames()
+	if len(names) == 0 {
+		return
+	}
+	for _, name := range names {
+		cfsname := g.ClassName + "::" + varName(name)
+		w.linef("std::ostream &operator<<(std::ostream &s, const %s &t);", cfsname)
+		w.line("template <>")
+		w.linef("%s _arg<%s>(std::vector<ivy_value> &args, unsigned idx, long long bound);", cfsname, cfsname)
+		w.line("template <>")
+		w.linef("void __ser<%s>(ivy_ser &res, const %s &);", cfsname, cfsname)
+		w.line("template <>")
+		w.linef("void __deser<%s>(ivy_deser &inp, %s &res);", cfsname, cfsname)
+	}
+	if g.usesZ3() {
+		w.line("#ifdef Z3PP_H_")
+		for _, name := range names {
+			cfsname := g.ClassName + "::" + varName(name)
+			w.line("template <>")
+			w.linef("void __from_solver<%s>(gen &g, const z3::expr &v, %s &res);", cfsname, cfsname)
+			w.line("template <>")
+			w.linef("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val);", cfsname, cfsname)
+			w.line("template <>")
+			w.linef("void __randomize<%s>(gen &g, const z3::expr &v, const std::string &sort_name);", cfsname)
+		}
+		w.line("#endif")
+	}
+}
+
 // emitDestructorImpls is the impl-section orchestrator parallel to
 // `emitVariantImpls`. Called from `emitImpl` after sort declarations.
 func (g *Generator) emitDestructorImpls(w *cppWriter) {
@@ -345,6 +403,7 @@ func (g *Generator) emitDestructorArgImpl(w *cppWriter, name, typeName string, d
 	w.open(fmt.Sprintf("template <> %s _arg<%s>(std::vector<ivy_value> &args, unsigned idx, long long bound) {", typeName, typeName))
 	w.line("(void)bound;")
 	w.linef("%s res;", typeName)
+	g.emitDestructorZeroInit(w, "res", destrs)
 	w.line("ivy_value &arg = args[idx];")
 	w.line("std::vector<ivy_value> tmp_args(1);")
 	w.open("for (unsigned i = 0; i < arg.fields.size(); i++) {")
@@ -416,6 +475,64 @@ func (g *Generator) emitDestructorArgImpl(w *cppWriter, name, typeName string, d
 	w.line("return res;")
 	w.close("") // close function
 	w.blank()
+}
+
+// emitDestructorZeroInit emits per-field zero assignments for a destructor
+// struct so that primitive cells (which C++ does not default-zero) are
+// well-defined before parsing partial atoms. Mirrors Python
+// `assign_zero_symbol` + `assign_symbol_value` at ivy_to_cpp.py:216-219.
+// hash_thunk-storage fields are skipped (no enumerable cells); native,
+// __strlit, cpptype, and variant-super sorts are left default-constructed
+// per the Python guard.
+func (g *Generator) emitDestructorZeroInit(w *cppWriter, lhsPrefix string, destrs []*goivy.Const) {
+	for _, d := range destrs {
+		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
+		if !ok {
+			continue
+		}
+		domain := fs.Domain()
+		if len(domain) > 0 {
+			domain = domain[1:]
+		}
+		st := cppFunctionStorageFor(g, domain, fs.Range(), "")
+		if st.Kind == cppStorageHashThunk {
+			continue
+		}
+		field := varName(memName(d.Name))
+		vs, closer := g.emitDomainLoops(w, domain)
+		lhs := lhsPrefix + "." + field + cppIndexSuffix(vs)
+		g.emitZeroAssign(w, lhs, fs.Range())
+		closer()
+	}
+}
+
+// emitZeroAssign emits a single zero-init line (or a recursive descent
+// into a nested destructor sort). Returns silently for sorts Python skips:
+// __strlit, native syms, sort_to_cpptype (bv/strbv/intbv), and variant
+// supers (whose default constructor sets tag=-1, ptr=0).
+func (g *Generator) emitZeroAssign(w *cppWriter, lhs string, s goivy.Sort) {
+	if us, ok := s.(*goivy.UninterpretedSort); ok && g != nil && g.Mod != nil && g.Mod.SortDestructors != nil {
+		if nested := g.Mod.SortDestructors.Get(us.Name); len(nested) > 0 {
+			g.emitDestructorZeroInit(w, lhs, nested)
+			return
+		}
+	}
+	if g != nil {
+		if _, ok := g.nativeTypeName(s, g.ClassName); ok {
+			return
+		}
+		if _, ok := g.cppInterpType(s); ok {
+			return
+		}
+		if g.isVariantSuperName(sortName(s)) {
+			return
+		}
+	}
+	cty := cppScalarTypeWith(g, s, g.ClassName)
+	if cty == "__strlit" || cty == "std::string" {
+		return
+	}
+	w.linef("%s = (%s)0;", lhs, cty)
 }
 
 // emitDestructorZ3Impl emits the `__from_solver`/`__to_solver`/`__randomize`

@@ -1,0 +1,285 @@
+package ivy2cpp
+
+import (
+	"strings"
+
+	"github.com/glycerine/ivy/goivy"
+)
+
+// Assignment emission. Mirrors Python ivy_to_cpp.py:3624-3764, which routes
+// every AssignAction through one of three paths:
+//
+//   - emit_assign_simple   — no free variables in LHS (a single point write).
+//   - the bounded two-phase path — quantified LHS, derive loop bounds, then
+//     use a function-typed temporary to avoid aliasing for self-referential
+//     RHS reads like f(X) := f(X) + 1.
+//   - emit_assign_large    — quantified LHS with bounds-error; falls back to
+//     a thunk via make_thunk (Phase C; see thunk.go).
+//
+// emitExtensionalRelationClear short-circuits the all-false extensional
+// relation case before any of the above. Keep that contract.
+
+// emitAssignSimple is the Python `emit_assign_simple` (ivy_to_cpp.py:3624-3652)
+// — the LHS has no free variables, so a single C++ assignment suffices.
+// When Config.Trace is set and the LHS root name is not in a `:`-namespaced
+// scope (Python's `':' not in self.args[0].rep.name`), an extra trace line
+// of the form `__ivy_out << "  write(<lhs>," << (<rhs>) << ")" << std::endl;`
+// is emitted just before the assignment.
+func (g *Generator) emitAssignSimple(w *cppWriter, a *goivy.LogicAssignAction) {
+	lhs, err := g.emitExpr(a.LHS)
+	if err != nil {
+		g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
+		return
+	}
+	rhs, err := g.emitExpr(a.RHS)
+	if err != nil {
+		g.unsupported(w, "unsupported assignment rhs: %s", err.Error())
+		return
+	}
+	rhs = g.maybeVariantUpcast(a.LHS.NodeSort(), a.RHS.NodeSort(), rhs, "")
+	if g.Config.Trace && !lhsHasNamespacedName(a.LHS) {
+		nf := g.numberFormat()
+		w.linef(`__ivy_out%s << "  write(" << %s << "," << (%s) << ")" << std::endl;`, nf, lhsTraceString(lhs), rhs)
+	}
+	w.linef("%s = %s;", lhs, rhs)
+}
+
+// lhsHasNamespacedName mirrors Python's gate `':' not in self.args[0].rep.name`
+// (ivy_to_cpp.py:3627): assignment traces are suppressed when the LHS root
+// symbol carries a `:`-prefixed namespace (e.g. internal helpers like
+// `loc:x` or `__ts:tick`).
+func lhsHasNamespacedName(lhs goivy.Expr) bool {
+	name := lhsRootName(lhs)
+	return strings.Contains(name, ":")
+}
+
+// lhsRootName returns the "rep.name" Python uses: the leaf symbol name at
+// the root of an LHS expression. For destructor chains (App(f, App(g, x)))
+// this peels until the leaf symbol.
+func lhsRootName(lhs goivy.Expr) string {
+	for {
+		switch v := lhs.(type) {
+		case *goivy.Apply:
+			if fn, ok := v.Func.(goivy.Expr); ok {
+				lhs = fn
+				continue
+			}
+			return ""
+		case *goivy.Const:
+			return v.Name
+		default:
+			return goivy.ExprName(v)
+		}
+	}
+}
+
+// lhsTraceString wraps the C++ LHS expression in a string literal for the
+// trace line. Python emits the LHS symbolically (`<< "f" << "(" << arg ...`),
+// which evaluates `arg` while keeping the wrapping function name as a
+// literal. Approximate this by quoting the full C++ form — close enough
+// for the runtime trace text; TODO 029 owns the broader port of
+// emit_traced_lhs.
+func lhsTraceString(lhsCPP string) string {
+	return `"` + escapeString(lhsCPP) + `"`
+}
+
+// assignBoundsExpr implements Python's bexpr trick from emit_assign
+// (ivy_to_cpp.py:3717-3720). When RHS has the shape Ite(cond, then, lhs)
+// and cond does not mention the modified symbol, cond can be used as a
+// bounds-tightening expression for the loop over the LHS free variables.
+//
+// Returns nil when the trick does not apply (Python's `bexpr = il.And()` =
+// trivially true).
+func (g *Generator) assignBoundsExpr(a *goivy.LogicAssignAction) goivy.Expr {
+	ite, ok := a.RHS.(*goivy.LogicIte)
+	if !ok {
+		return nil
+	}
+	if !ite.Else.Equal(a.LHS) {
+		return nil
+	}
+	// Python uses self.modifies()[0] — the destructor-peeled root symbol.
+	mods := goivy.ModifiesSingle(a, g.actionsCfg())
+	if len(mods) == 0 {
+		return nil
+	}
+	used := goivy.UsedSymbolsAst(ite.Cond)
+	for _, m := range mods {
+		if _, found := used.Get2(goivy.Key(m)); found {
+			return nil
+		}
+	}
+	return ite.Cond
+}
+
+// openAssignmentLoopsBounded extends openAssignmentLoops with bounds
+// tightening from a body expression (Python's bexpr in emit_assign). When
+// body is non-nil and provides inequalities constraining a free variable,
+// the loop for that variable uses the body-derived bounds via
+// loopHeaderForSortBounds (Python `open_bounded_loops` integer-loop
+// branch, ivy_to_cpp.py:3671-3677).
+//
+// When body is nil or provides no body-derived bounds for a variable, the
+// emission falls back to loopHeaderForVar, preserving the existing goivy
+// loop convention (range-for over finite enums, half-open over ranges).
+//
+// Returns the number of opened loops and a success indicator. On failure
+// (a free variable whose sort has no cardinality / iteration anchor), any
+// already-opened loops are closed and (0, false) is returned. The caller
+// is expected to fall back to emitAssignLarge (thunk-based assignment).
+// This function does NOT call g.unsupported on failure — error reporting
+// is the caller's responsibility.
+func (g *Generator) openAssignmentLoopsBounded(w *cppWriter, lhs goivy.Expr, body goivy.Expr) (int, bool) {
+	vars := goivy.FreeVariablesList(lhs)
+	opened := 0
+	for _, v := range vars {
+		var header string
+		var err error
+
+		if body != nil && cppIsAnyIntegerType(g, v.VSort) {
+			var bes []boundExpr
+			g.matchBoundExprs(v, body, true, &bes)
+			if len(bes) > 0 {
+				lo, hi, gerr := g.getBounds(v, nil, body, true)
+				if gerr == nil {
+					header, err = g.loopHeaderForSortBounds(v.VSort, varName(v.Name), lo, hi)
+				}
+			}
+		}
+
+		if header == "" {
+			header, err = g.loopHeaderForVar(v)
+		}
+		if err != nil {
+			for i := 0; i < opened; i++ {
+				w.close("")
+			}
+			return 0, false
+		}
+		w.open(header)
+		opened++
+	}
+	return opened, true
+}
+
+// canOpenAssignmentLoopsBounded performs a dry-run of
+// openAssignmentLoopsBounded without writing to a cppWriter. Used by
+// emitAssign to decide whether to take the bounded two-phase path or
+// fall back to the thunk-based emit_assign_large.
+//
+// Mirrors Python's open_bounded_loops returning a BoundsError sentinel —
+// here we just return false. Conservative: if any free variable cannot
+// open a loop header, return false so the caller picks emit_assign_large.
+func (g *Generator) canOpenAssignmentLoopsBounded(lhs goivy.Expr, body goivy.Expr) bool {
+	vars := goivy.FreeVariablesList(lhs)
+	for _, v := range vars {
+		if body != nil && cppIsAnyIntegerType(g, v.VSort) {
+			var bes []boundExpr
+			g.matchBoundExprs(v, body, true, &bes)
+			if len(bes) > 0 {
+				if _, _, err := g.getBounds(v, nil, body, true); err == nil {
+					continue
+				}
+			}
+		}
+		if _, err := g.loopHeaderForVar(v); err != nil {
+			return false
+		}
+	}
+	return true
+}
+
+// actionsCfg returns the ActionsConfig for ModifiesSingle. It may be nil
+// when the generator is constructed without a module (e.g., in some unit
+// tests); ModifiesSingle tolerates nil.
+func (g *Generator) actionsCfg() *goivy.ActionsConfig {
+	if g == nil || g.Mod == nil || g.Mod.Cfg == nil {
+		return nil
+	}
+	return g.Mod.Cfg.ActCfg
+}
+
+// emitAssignTwoPhase implements the bounded two-phase pattern from Python's
+// `emit_assign` (ivy_to_cpp.py:3725-3764). For a quantified LHS f(X...) and
+// some RHS that may itself reference f(X...) (or any other state), we:
+//
+//  1. allocate a fresh function-typed temporary sym of the same domain;
+//  2. loop over X..., evaluating the RHS and writing into sym;
+//  3. loop over X... again, copying sym back to f(X...).
+//
+// The second loop is required even when RHS doesn't read the LHS, because
+// `f(X) := g(X)` is fine to do in-place but `f(X) := f(X) + 1` is not — and
+// we don't try to prove non-aliasing at codegen time.
+func (g *Generator) emitAssignTwoPhase(w *cppWriter, a *goivy.LogicAssignAction, vs []*goivy.LogicVariable) {
+	// Build a fresh FunctionSort over the loop variables and the RHS sort.
+	sorts := make([]goivy.Sort, 0, len(vs)+1)
+	for _, v := range vs {
+		sorts = append(sorts, v.VSort)
+	}
+	sorts = append(sorts, a.RHS.NodeSort())
+	tsort, err := goivy.NewFunctionSort(sorts...)
+	if err != nil {
+		g.unsupported(w, "unsupported temp function sort: %s", err.Error())
+		return
+	}
+	tmpName := g.nextTemp("__ivy_tmp")
+	tmpSym := goivy.NewConst(tmpName, tsort)
+
+	// Declare the temp at action-body scope. cppStorageDecl picks array
+	// vs hash_thunk based on cardinality.
+	w.linef("%s;", g.cppStorageDecl(tmpName, tsort, ""))
+
+	// Build the synthetic LHS expression sym(vs...) used in both phases.
+	tmpArgs := make([]goivy.Expr, len(vs))
+	for i, v := range vs {
+		tmpArgs[i] = v
+	}
+	tmpLHS := goivy.NewApplyUnchecked(tmpSym, tmpArgs...)
+
+	// Python's bexpr trick: if RHS is Ite(cond, then, lhs) and cond does
+	// not mention the modified symbol, use cond to tighten loop bounds in
+	// both phases (ivy_to_cpp.py:3717-3720).
+	body := g.assignBoundsExpr(a)
+
+	// Phase 1: write RHS into sym.
+	loops, ok := g.openAssignmentLoopsBounded(w, a.LHS, body)
+	if !ok {
+		return
+	}
+	lhsCode, err := g.emitExpr(tmpLHS)
+	if err != nil {
+		g.unsupported(w, "unsupported temp lhs: %s", err.Error())
+		g.closeAssignmentLoops(w, loops)
+		return
+	}
+	rhsCode, err := g.emitExpr(a.RHS)
+	if err != nil {
+		g.unsupported(w, "unsupported assignment rhs: %s", err.Error())
+		g.closeAssignmentLoops(w, loops)
+		return
+	}
+	w.linef("%s = %s;", lhsCode, rhsCode)
+	g.closeAssignmentLoops(w, loops)
+
+	// Phase 2: copy sym back to the LHS. Re-emit the same loops with the
+	// same body so bounds-tightening is identical to phase 1.
+	loops, ok = g.openAssignmentLoopsBounded(w, a.LHS, body)
+	if !ok {
+		return
+	}
+	finalLHS, err := g.emitExpr(a.LHS)
+	if err != nil {
+		g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
+		g.closeAssignmentLoops(w, loops)
+		return
+	}
+	tmpRHS, err := g.emitExpr(tmpLHS)
+	if err != nil {
+		g.unsupported(w, "unsupported temp rhs: %s", err.Error())
+		g.closeAssignmentLoops(w, loops)
+		return
+	}
+	tmpRHS = g.maybeVariantUpcast(a.LHS.NodeSort(), a.RHS.NodeSort(), tmpRHS, "")
+	w.linef("%s = %s;", finalLHS, tmpRHS)
+	g.closeAssignmentLoops(w, loops)
+}

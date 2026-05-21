@@ -2,7 +2,10 @@ package ivy2cpp
 
 import (
 	"fmt"
+	"runtime"
 	"strings"
+
+	"github.com/glycerine/ivy/goivy"
 )
 
 func (g *Generator) runtimeUsesGenerator() bool {
@@ -13,7 +16,19 @@ func (g *Generator) runtimeUsesReplSubclass() bool {
 	return g != nil && (g.Config.Target == "repl" || g.Config.Target == "test")
 }
 
+func (g *Generator) hostOS() string {
+	if g.Config.HostOS != "" {
+		return g.Config.HostOS
+	}
+	return runtime.GOOS
+}
+
 func (g *Generator) emitRuntimeHeaderPreamble(w *cppWriter) {
+	if g.hostOS() == "windows" {
+		w.line("#define WIN32_LEAN_AND_MEAN")
+		w.line("#include <windows.h>")
+	}
+	w.line("#define _HAS_ITERATOR_DEBUGGING 0")
 	w.line("#include <algorithm>")
 	w.line("#include <cstdint>")
 	w.line("#include <cstdlib>")
@@ -28,9 +43,6 @@ func (g *Generator) emitRuntimeHeaderPreamble(w *cppWriter) {
 	w.line("#include <vector>")
 	w.line(`#include "ivy_hash.hpp"`)
 	w.line(`#include "ivy_threads.hpp"`)
-	if g.Config.Target == "repl" {
-		w.line(`#include "ivy_go_repl.hpp"`)
-	}
 	if g.usesZ3() {
 		w.line("#include <utility>")
 		w.line(`#include "z3++.h"`)
@@ -132,11 +144,32 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.line("#include <sstream>")
 	w.line("#include <cstdint>")
 	w.line(`#include "ivy_value.hpp"`)
+	if g.Config.Target == "repl" || g.Config.Target == "test" {
+		w.line(`#include "ivy_repl.hpp"`)
+	}
+	// Python `ivy_to_cpp.py:2210-2211` emits `ivy_z3_helpers.hpp` here.
+	// Go's `ivy_go_z3.hpp` is the consolidated substitute: it defines
+	// `ivy_gen`, `gen`, the `mk_*` helpers, and supporting includes.
+	// Per-template specializations of `__from_solver`/`__to_solver`/
+	// `__randomize` are still emitted inline by emitZ3SolverTemplates
+	// (see z3.go:35), so we deliberately do not also include
+	// `ivy_z3_helpers.hpp`.
+	if g.usesZ3() {
+		w.line(`#include "ivy_go_z3.hpp"`)
+	}
 	w.blank()
 	w.linef("typedef %s ivy_class;", g.ClassName)
 	w.line("std::ofstream __ivy_out;")
 	w.line("std::ofstream __ivy_modelfile;")
 	w.line("void __ivy_exit(int code) { exit(code); }")
+	w.blank()
+	// Forward declarations of per-enum operator<<, _arg<T>, __ser<T>,
+	// __deser<T>. Python ivy_to_cpp.py:2213-2223 emits these here.
+	g.emitEnumSortArgSpecDecls(w)
+	// Forward declarations of per-destructor operator<<, _arg<T>,
+	// __ser<T>, __deser<T> (and Z3 specs for test/gen). Python
+	// ivy_to_cpp.py:2232-2254.
+	g.emitDestructorSortArgSpecDecls(w)
 	w.blank()
 }
 
@@ -275,18 +308,92 @@ func (g *Generator) emitRuntimeReplSubclass(w *cppWriter) {
 	g.emitRuntimeReplAssertOverride(w, "ivy_assert", "assertion_failed", "assertion failed")
 	g.emitRuntimeReplAssertOverride(w, "ivy_assume", "assumption_failed", "assumption failed")
 	w.line(g.replSubclassConstructorSignature() + " : " + g.baseConstructorCall() + " {}")
+	g.emitReplImportCallbacks(w)
 	w.indent--
 	w.close(";")
 	w.blank()
 }
 
+// emitReplImportCallbacks emits a method override on `ClassName_repl`
+// for each unscoped imported action whose name matches a known action.
+// Mirrors Python emit_repl_boilerplate1 (ivy_to_cpp.py:4107-4128).
+//   - For repl target: print `< action(args)` and (if returns) call
+//     `ask_ret(__CARD__<sort>)`.
+//   - For test target: emit an empty body so the import is callable
+//     without prompting the user.
+func (g *Generator) emitReplImportCallbacks(w *cppWriter) {
+	if g.Mod == nil {
+		return
+	}
+	for _, imp := range g.Mod.Imports {
+		impDef, ok := imp.(*goivy.ImportDef)
+		if !ok {
+			continue
+		}
+		scope := ""
+		if atom, ok := impDef.Scope.(*goivy.Atom); ok {
+			scope = atom.Relname()
+		}
+		if scope != "" {
+			continue
+		}
+		var name string
+		if atom, ok := impDef.Imported.(*goivy.Atom); ok {
+			name = atom.Relname()
+		}
+		if name == "" {
+			continue
+		}
+		act, ok := g.Mod.Actions.Get2(name)
+		if !ok {
+			continue
+		}
+		g.emitReplImportCallback(w, name, act)
+	}
+}
+
+func (g *Generator) emitReplImportCallback(w *cppWriter, name string, act goivy.Action) {
+	sig := g.methodSignature(name, act, false, false)
+	if g.Config.Target == "test" {
+		// Test target: empty body so randomized actions can call into
+		// the imported entry point without console interaction.
+		w.linef("%s {}", sig)
+		return
+	}
+	w.open(sig + " {")
+	// REPL trace line: `< actname(arg1,arg2,...)`.
+	display := strings.TrimPrefix(name, "ext:")
+	formals := act.GetFormalParams()
+	var b strings.Builder
+	b.WriteString(fmt.Sprintf(`__ivy_out << "< %s"`, display))
+	if len(formals) > 0 {
+		b.WriteString(` << "("`)
+		for i, p := range formals {
+			if i > 0 {
+				b.WriteString(` << ","`)
+			}
+			b.WriteString(fmt.Sprintf(" << %s", varName(p.Name)))
+		}
+		b.WriteString(` << ")"`)
+	}
+	b.WriteString(" << std::endl;")
+	w.line(b.String())
+	// Returns: prompt the user via ask_ret(__CARD__<sort>).
+	returns := act.GetFormalReturns()
+	if len(returns) > 0 {
+		sortText := sortName(returns[0].CSort)
+		w.linef("return ask_ret(__CARD__%s);", varName(sortText))
+	}
+	w.close("")
+}
+
 func (g *Generator) emitRuntimeReplAssertOverride(w *cppWriter, method, event, text string) {
 	w.open(fmt.Sprintf("virtual void %s(bool truth, const char *msg) {", method))
 	w.open("if (!truth) {")
-	w.linef(`__ivy_out << "%s(\"" << msg << "\")" << std::endl;`, event)
+	w.linef(`__ivy_out%s << "%s(\"" << msg << "\")" << std::endl;`, g.numberFormat(), event)
 	w.linef(`std::cerr << msg << ": error: %s\n";`, text)
 	if g.Config.Trace {
-		w.line(`__ivy_out << "}" << std::endl;`)
+		w.linef(`__ivy_out%s << "}" << std::endl;`, g.numberFormat())
 	}
 	w.line("__ivy_exit(1);")
 	w.close("")

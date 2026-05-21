@@ -420,7 +420,24 @@ Tests to add:
 - Variant construction, copying, assignment, equality, REPL parse/print,
   serialization, Z3 model generation, and action return values requiring upcast.
 
-## TODO 007 - Implement full destructor/struct support
+## DONE 007 - Implement full destructor/struct support
+
+Status: completed 2026-05-22. `goivy/ivy2cpp/destructor.go` (517 lines) emits
+in-struct `operator==` / `operator<` / `operator<<` (matching Python
+`field_eq`, `ivy_to_cpp.py:222-226`), plus `_arg`, `__ser`, `__deser`,
+`__from_solver`, `__to_solver`, and `__randomize` for destructor sorts.
+Fields can be scalars, finite functions, nested struct/variant/native, or
+hash-thunked large maps. Coverage includes
+`TestDestructorStructDeclaration`,
+`TestDestructorFunctionNotEmittedAsMutableState`,
+`TestDestructorMultiArgFieldDeclaration`,
+`TestDestructorHashThunkField`,
+`TestDestructorStructStreamMultiArg`,
+`TestDestructorMultiArgFieldRoundTrip`,
+`TestDestructorSerDeserShape`,
+`TestDestructorArgShape`,
+`TestDestructorZ3ImplShape`,
+`TestDestructorRandomizeSkipsUninterpretedRange`.
 
 Go locations:
 
@@ -524,215 +541,344 @@ Python references:
 - `pyivy/ivy/ivy/ivy_to_cpp.py:3351-3377`
 - `pyivy/ivy/ivy/ivy_to_cpp.py:3380-3465`
 
-## TODO 009 - Port Python method signatures, parameter passing, and return handling
+## DONE 009 - Port Python method signatures, parameter passing, and return handling
+
+Status update, 2026-05-21:
+
+- Added `goivy/ivy2cpp/ptype.go` with the four passing-policy types
+  (`ValueType`, `ConstRefType`, `RefType`, `ReturnRefType{Pos int}`)
+  mirroring Python `ivy_to_cpp.py:396-412`, plus `annotateAction` /
+  `getParamTypes` (Python 1479-1517) and `mayAlias` / `rootVar` /
+  `isDestructorName` (Python 1522-1530). The (param_types, return_types)
+  annotation is cached per-generation on a new `Generator.ptypeCache` field
+  (per goivy/CLAUDE.md section C — Python attaches these to the action
+  object; Go cannot monkey-patch `*Action`).
+- `actionAssigns` walks `IterSubactions()` and uses a local
+  `modifiedRootName` helper that strips destructor applications via
+  `g.Mod.DestructorSorts` directly. `goivy.ModifiesSingle` cannot be relied
+  upon here because `g.Mod.Cfg.ActCfg.Context.GetDomain()` is not always
+  threaded in the ivy2cpp call path (e.g. tests using `compileIvySource`
+  with `create_isolate=false`).
+- `methodSignature` (`generator.go:633-699`) rewritten to consume the
+  annotation: `rtypes[0].Make(ctype(rs[0]))` produces the return type
+  (where `ReturnRefType.Make` returns `"void"`); each input param is
+  `ptypes[i].Make(scalarType) + " " + varName`; function-sorted params
+  retain the existing `cppFunctionStorageDecl` (matching Python's
+  `sym_decl(p)` ternary at `ivy_to_cpp.py:1539`); trailing
+  `ReturnRefType{Pos: pos >= len(formals)}` returns are appended as
+  `RefType{}.Make(qualifiedType) + " " + varName`; the `virtual ` prefix
+  fires only on declaration form for non-gen, non-inline (Python lines
+  1559-1560). Multi-return validation rejects exported multi-output
+  actions exactly as Python does (lines 1565-1567).
+- `emitMethods` (`generator.go:683-707`) suppresses both the synthetic
+  primary-return local and the trailing `return X;` when `rtypes[0]` is a
+  `ReturnRefType` (the input slot IS the storage). For private multi-return
+  actions whose primary return is `ValueType`, the synthetic local and
+  return are still emitted.
+- `emitCall` (`action.go:422-548`) replaced with a line-by-line port of
+  Python `emit_call` (`ivy_to_cpp.py:3811-3886`). The unified path handles
+  single-return, multi-return, alias-safety temporaries (per-output
+  `mayAlias` check vs other inputs; pre-call `__tmp` save and post-call
+  copy-back when `iparg != rv` OR an alias is detected), assignment prefix
+  vs trailing-ref routing based on `rtypes[0]`, per-argument variant
+  upcast at the formal-sort boundary, and `___ivy_stack` push/pop for
+  gen/test. The previously incorrect *result-side* variant upcast at the
+  old `action.go:459` is removed (Python upcasts only arguments).
+- Updated `TestGeneratedMultipleReturnActionCompiles` to trim
+  `PublicActions` to mirror `create_isolate`, and rewrote its expected
+  substrings to the annotation-driven signature
+  (`color split(color c, bool& good)`) and call-site
+  (`saved = split(green, ok);`).
+- Replaced `TestReplDispatchWritesMultipleReturns` with an
+  expected-rejection test, since exporting a multi-return action is
+  Python-forbidden at `ivy_to_cpp.py:1565-1567`.
+- Added eight TODO 009 tests:
+  `TestPrivateActionStructParamUsesConstRef`,
+  `TestPrivateActionStructParamModifiedUsesValue`,
+  `TestReturnAliasingInputUsesRefType`,
+  `TestCallAliasSafetySwapInputAndOutput`,
+  `TestCallNoAliasNoTempEmitted`,
+  `TestPublicActionAllValueTypeSignature`,
+  `TestVirtualKeywordOmittedForGenTarget`,
+  `TestCallSiteVariantUpcastOnArgumentOnly`. Each verifies generated-output
+  shape and (where applicable) compiles the C++ under `SLOW_CPP_TEST`.
+
+Verification:
+
+- `cd ~/ivy/goivy && make test`: PASS for every package, ivy2cpp in 0.18s.
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -count=1 -run
+  'TestGeneratedSingleReturnActionCompiles|TestGeneratedMultipleReturnActionCompiles|TestVariantSupertypeAssignmentCompiles|TestPrivateActionStructParamUsesConstRef|TestPrivateActionStructParamModifiedUsesValue|TestReturnAliasingInputUsesRefType|TestCallAliasSafetySwapInputAndOutput|TestCallNoAliasNoTempEmitted|TestPublicActionAllValueTypeSignature|TestVirtualKeywordOmittedForGenTarget|TestCallSiteVariantUpcastOnArgumentOnly'`:
+  PASS in 4.23s (generated C++ compiles for each shape).
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -count=1` (full slow
+  sweep): PASS in 59.16s.
 
 Go locations:
 
-- `goivy/ivy2cpp/generator.go:576-603`
-- `goivy/ivy2cpp/generator.go:641-665`
-- `goivy/ivy2cpp/action.go:379-417`
+- `goivy/ivy2cpp/ptype.go` (Ptype + four types + annotation + mayAlias)
+- `goivy/ivy2cpp/generator.go:41-71` (ptypeCache field on Generator)
+- `goivy/ivy2cpp/generator.go:625-699` (rewritten methodSignature)
+- `goivy/ivy2cpp/generator.go:683-707` (emitMethods annotation gating)
+- `goivy/ivy2cpp/action.go:422-548` (rewritten emitCall)
 
 Python references:
 
 - `pyivy/ivy/ivy/ivy_to_cpp.py:396-412`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:1479-1517`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:1551-1571`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1479-1530`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1542-1571`
 - `pyivy/ivy/ivy/ivy_to_cpp.py:3811-3886`
 
-Gap:
+## DONE 010 - Port derived definitions, constructors, and skolemized helpers
 
-- Go emits action parameters mostly by value and multiple returns by non-const
-  reference.
-- Python annotates action parameters, distinguishes inputs/outputs, return-ref
-  cases, const-ref cases, public actions, and generated temporaries for aliased
-  returns.
-- Go initializes single returns to zero and returns the local; Python has
-  generated output-reference handling and special cases for action calls that
-  return into variables, fields, or expressions.
-- Go call emission lacks Python's `___ivy_stack` push/pop logic for gen/test
-  traces.
+Status update, 2026-05-21:
 
-Conformance work:
+- Extracted `emitSomeAction` and `emitMethodDeclLine` from the
+  per-action body of `emitMethods`. Both helpers mirror Python
+  `emit_some_action` (`ivy_to_cpp.py:1592-1625`) and the
+  `emit_method_decl(header,...) + ';'` pair
+  (`ivy_to_cpp.py:1595-1597`). Behavior for ordinary actions is
+  unchanged.
+- Replaced `emitDefinitionDecls` / `emitDefinitions` in
+  `goivy/ivy2cpp/definitions.go` with the Python synthetic-action
+  route: `derivedActionFor(d)` builds an `AssignAction(retval, rhs)`
+  where each bound `*goivy.LogicVariable` is skolemized to a fresh
+  `*goivy.Const` named `fml:<varname>` (Python `var_to_skolem`
+  pattern, `ivy_logic_utils.py:1572`), substitutes the variables in
+  the body via `goivy.Substitute`, attaches `formal_params` /
+  `formal_returns`, and dispatches through `emitSomeAction` /
+  `emitMethodDeclLine`. The old `definitionSignature` helper was
+  deleted — derived definitions now share the ptype annotation
+  pipeline with ordinary actions.
+- Added `goivy/ivy2cpp/constructors.go` with `constructorActionFor`
+  (Python `emit_constructor`, `ivy_to_cpp.py:1364-1375`),
+  `emitConstructorDecls`, and `emitConstructors`. For each sort
+  constructor, the helper builds a `Sequence(...)` of
+  `AssignAction(d_i(retval), fml:X_i)` for each destructor `d_i` in
+  `g.Mod.SortDestructors[sortName]`, again routing through the shared
+  `emitSomeAction` / `emitMethodDeclLine` helpers.
+- Wired both new emitters into `Generate` immediately after their
+  derived-definition counterparts, matching Python's emission order at
+  `ivy_to_cpp.py:2308-2313`.
+- Fixed `goivy.Substitute` (`goivy/logicutil.go`) to handle
+  `*LogicNativeExpr` (recurse into `CompiledChildren`) and `*NativeCode`
+  (leaf). Python's `substitute_ast` walks `ast.args` generically; the
+  Go switch was missing these cases, which broke derived definitions
+  whose RHS contains a native expression (e.g.,
+  `definition lt(x:idx,y:idx) = <<< `+"`x`"+` < `+"`y`"+` >>>`).
+- Updated two legacy tests whose assertions tested the old direct
+  `return rhs;` emission
+  (`TestImplDerivedDefinitionEmitsMethodNotState` and
+  `TestNativeDefinitionEmitsTemplateMethod`). The new emission matches
+  Python's `val = rhs; return val;` shape from `emit_some_action`. The
+  native-definition test now also asserts `const idx&` parameter
+  passing because `interpret idx -> <<< int >>>` registers idx in
+  `mod.NativeTypes` (`compiler_decl.go:1047`), so `isStructSort(idx)`
+  returns true and `annotateAction` selects `ConstRefType`
+  (`ptype.go:103`).
+- Added six TODO 010 tests in `goivy/ivy2cpp/ivy2cpp_test.go`:
+  `TestDerivedDefinitionEmitsMethod`,
+  `TestZeroArgDerivedDefinitionEmitsMethod`,
+  `TestDerivedDefinitionStructParamUsesConstRef`,
+  `TestSortConstructorEmitsMethod`,
+  `TestConstructorExcludedFromStateSymbols`, and the
+  `SLOW_CPP_TEST`-gated `TestDerivedAndConstructorCompile`.
 
-- Port `annotate_action` and `emit_method_decl`.
-- Port Python's call-action lowering, including variable returns, temporary
-  returns, return refs, alias-safety, stack push/pop, and variant upcasts.
-- Use the full C++ type-passing policy from the type port.
+Verification:
 
-Tests to add:
-
-- Actions with multiple outputs, output aliases, large value parameters, variant
-  returns, destructor returns, and nested action calls under gen/test target.
-
-## TODO 010 - Port derived definitions, constructors, and skolemized helpers
+- `cd ~/ivy/goivy && make test`: PASS for every package, ivy2cpp in
+  0.19s.
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -count=1 -run
+  'TestDerivedDefinitionEmitsMethod$|TestZeroArgDerivedDefinitionEmitsMethod|TestDerivedDefinitionStructParamUsesConstRef|TestSortConstructorEmitsMethod|TestConstructorExcludedFromStateSymbols|TestDerivedAndConstructorCompile'`:
+  PASS in 2.08s (generated C++ compiles for each shape).
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -count=1` (full slow
+  sweep): PASS in 61.07s.
 
 Go locations:
 
-- `goivy/ivy2cpp/definitions.go:17-56`
-- `goivy/ivy2cpp/definitions.go:98-140`
+- `goivy/ivy2cpp/generator.go:618-624` (emitMethodDeclLine)
+- `goivy/ivy2cpp/generator.go:740-786` (emitSomeAction)
+- `goivy/ivy2cpp/definitions.go:114-181` (derivedActionFor + rewritten
+  emit{Definition,Definitions}Decls)
+- `goivy/ivy2cpp/constructors.go` (constructorActionFor +
+  emitConstructor{,Decl}s)
+- `goivy/logicutil.go` (Substitute cases for LogicNativeExpr +
+  NativeCode)
 
 Python references:
 
 - `pyivy/ivy/ivy/ivy_to_cpp.py:1351-1375`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2295-2347`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1592-1625`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2308-2313`
+- `pyivy/ivy/ivy/ivy_logic_utils.py:1572` (var_to_skolem)
 
-Gap:
+## DONE 011 - Complete expression emission
 
-- Go emits definitions as direct C++ methods when the body can be emitted.
-- Python emits derived functions plus constructor methods for sort constructors.
-  It also skolemizes unsupported derived forms with `fml:` symbols, creates
-  nondeterministic returns, and adds constraints via assumptions/assertions where
-  appropriate.
-- Go does not emit constructor functions for declared sort constructors.
+Done 2026-05-21 (UTC).
 
-Conformance work:
+Closed gaps:
 
-- Port `emit_derived` and `emit_constructor`.
-- Implement skolemized/nondeterministic derived definitions exactly as Python,
-  including naming and constraints.
-- Ensure constructors are excluded from state symbols but available as emitted
-  C++ functions where Python emits them.
+- `*goivy.LogicLet` now expanded by substitution (`emitLetExpr` in
+  `expr.go`), mirroring Python's pre-emit let-removal.
+- Macro expansion via `goivy.IsMacro` / `goivy.ExpandMacro` runs at the top
+  of `emitApply` (matches Python `il.is_macro` at `ivy_to_cpp.py:3124`).
+- Range-result arithmetic (`+`, `-`, `*`, `/`, `%`) clamps to `[lb, ub]`
+  using the canonical `( x < lb ? lb : ub < x ? ub : x )` form
+  (`emitRangeArithApply`).
+- `nat`-typed `-` saturates at 0 (`emitNatMinusApply`).
+- `cast` operator handles non-bitvector targets — cast to `int`/`nat`/
+  `RangeSort` (`emitCastApply`); the existing `emitBVApply` continues to
+  handle BV destinations.
+- `strlit`-interpreted constants: numeral `0` → `""`; other numerals
+  return an actionable error (matches Python emit_constant lines
+  3019–3023).
+- `if some X. fmla minimizing|maximizing idx` lowered in
+  `emitIfSomeMinMax` (`action.go`): scans candidates, tracks
+  best-so-far index and witness, dispatches THEN/ELSE.
+- `*goivy.LogicNamedBinder` returns a clear error rather than a generic
+  "unsupported expression %T" diagnostic.
 
-Tests to add:
+Tests added (in `goivy/ivy2cpp/ivy2cpp_test.go`):
 
-- Derived definitions that are direct expressions, quantified formulas, native
-  definitions, and constructor-backed sorts.
+- `TestEmitLetExpression`
+- `TestEmitMacroExpansionInApply`
+- `TestEmitNatSaturationOnMinus`
+- `TestEmitRangeSaturationOnArithmetic`
+- `TestEmitCastToRange`
+- `TestEmitCastToNat`
+- `TestEmitStringInterpConstantZero`
+- `TestEmitStringInterpConstantNonzeroErrors`
+- `TestEmitNamedBinderUnsupportedIsActionable`
+- `TestEmitIfSomeMinimizing`
+- `TestEmitIfSomeMaximizing`
 
-## TODO 011 - Complete expression emission
+Out of scope for this commit (tracked as follow-up):
 
-Go locations:
+- Native-literal `__lit<...>` wrappers via `is_native_sym`.
+- `delegate_methods_to` / `delegate_enums_to` prefixing of method/enum
+  references.
+- Action terms embedded inside expressions and lambda-as-expression
+  (no module currently produces these); the actionable error paths
+  catch them rather than emitting partial C++.
+- Parametric `let p(X,Y) := body in ...` substitution — returns an
+  explicit error rather than wrong C++.
 
-- `goivy/ivy2cpp/expr.go:18-120`
-- `goivy/ivy2cpp/expr.go:155-200`
-- `goivy/ivy2cpp/expr.go:202-223`
-- `goivy/ivy2cpp/names.go:15-64`
+## DONE 012 - Port quantifier bounds, iterable sorts, and `some`/min/max
 
-Python references:
+Done 2026-05-22 (UTC).
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3004-3043`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3060-3078`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3086-3103`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3123-3223`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3243-3256`
+Closed gaps:
 
-Gap:
+- `matchBoundExprs` walks the body collecting `<`, `<=`, `>`, `>=`
+  applications that constrain a quantified variable, tracking polarity
+  through `Not`, `LogicLiteral`, `Implies`, `Or`, `And`, and unfolding
+  derived definitions (mirrors Python `get_bound_exprs`
+  ivy_to_cpp.py:3264-3289).
+- `getBounds` / `getAllBounds` synthesize `(lo, hi)` pairs from the
+  collected inequalities, adding `"0"` for non-negative sorts, the
+  sort cardinality, range-sort interpretations, and the
+  `<sort>.cardinality` attribute as upper-bound fallback (mirrors
+  Python `get_bounds` / `get_all_bounds` ivy_to_cpp.py:3301-3349).
+  Sibling-variable filtering matches Python's `variables[i+1:]`
+  slicing in `get_all_bounds`.
+- `loopHeaderForSortBounds` emits the Python-conformant cast loop for
+  enumerated sorts (`for (T X = (T)0; (int) X < N; X = (T)(((int)X)+1))`)
+  and half-open form for integer sorts (`for (T X = lo; X < hi; X++)`),
+  mirroring `open_loop` (ivy_to_cpp.py:1697-1711).
+- `iterableSortFor` recognizes `<sort>.iterable` attributes and the
+  paired `iter` / `iter.t` sort; `quantIterableHeader` emits the
+  `for (T x = iter__create(0); !iter__is_end(x); x = iter__next(x))`
+  loop and recurses into the body for the remaining variables
+  (mirrors ivy_to_cpp.py:3405-3427).
+- `emitQuant` now tries iterable → inequality bounds → extensional
+  relation → finite-value fallback in the same order Python does.
+- `emitSome` / `emitSomeWithElse` route through a shared
+  `someLoopHeaders` helper that prefers inequality-derived bounds.
+- `emitIfSome` / `emitIfSomeMinMax` route through `someConditionLoopHeaders`,
+  which lifts the `*Const` parameters to `*LogicVariable` so the bound
+  walker can see them (matches the `emitIfSomeExtensional` pattern).
+- `firstParamIsIndex` emits the `break;` optimization when
+  `some.Params[0] == some.Index` in `if some X. ... minimizing X`
+  (mirrors Python emit_some:3539-3540 — the first hit during ascending
+  iteration is the minimum, so the loop exits early).
 
-- Go supports a narrow set of constants, variables, equality/boolean connectives,
-  basic arithmetic/comparison operators, applications, simple variants, simple
-  quantifiers, and plain `some`.
-- Missing or incomplete Python expression features include macros, `LogicLet`,
-  lambdas, interpreted operators, native literals, string literals through
-  `__strlit`, bitvector operators, casts, natural-number saturation, finite
-  `SomeMin`/`SomeMax`, action terms, destructor field access where storage is
-  non-scalar, variant upcast/downcast, and large-function/hash-thunk operations.
-- Python frequently emits temporaries for complex expressions; Go usually emits
-  direct inline expressions.
+Tests added (in `goivy/ivy2cpp/ivy2cpp_test.go`):
 
-Conformance work:
+- `TestEmitQuantInequalityBoundOverRange`
+- `TestEmitSomeMinMaxBreakWhenIndexIsFirstParam`
+- `TestEmitSomeMinMaxNoBreakWhenIndexIsExpression`
+- `TestEmitIfSomeUsesInequalityBound`
+- `TestEmitQuantMultiVarInequalityFiltersSibling`
 
-- Port `emit_constant`, `emit_special_op`, `emit_bv_op`, `emit_app`, and
-  `temp` behavior.
-- Add macro expansion and let/lambda handling in the same places Python does.
-- Respect Python's expression-level type conversions and storage-class-specific
-  read/write behavior.
-- Audit every default `unsupported expression` path and either implement the
-  Python case or fail before writing a partial C++ file.
+Pre-existing quantifier tests were updated to expect the
+Python-conformant cast/half-open form instead of the prior Go
+range-init / closed-range shorthand: `TestEmitExprQuantifierFiniteEnumLoop`,
+`TestEmitExprSomeFiniteEnumLoop`, `TestEmitExprSomeWithElseFiniteEnumLoop`,
+`TestGeneratedIfSomeActionCompiles`, `TestEmitExprQuantifierFiniteRangeLoop`,
+`TestEmitIfSomeMinimizing`.
 
-Tests to add:
+Out of scope for this commit (tracked as follow-up):
 
-- Golden expression tests for each AST expression class used by Python's
-  `emit_expr`.
-- Compile/runtime tests for nested lets, native constants, string literals,
-  casts, bitvector arithmetic, and variant/destructor field reads.
+- Expression-context `SomeMin` / `SomeMax`. `goivy.LogicSome` lacks a
+  `Kind` field, so only statement-context `if some` carries the min/max
+  discriminator. A future TODO should add `Kind` to `LogicSome` and the
+  parser side, then mirror Python's expression-context SomeMinMax in
+  `emitSome`.
 
-## TODO 012 - Port quantifier bounds, iterable sorts, and `some`/min/max
+## DONE 013 - Fix assignment/update semantics, especially quantified assignments
 
-Go locations:
+Status: completed 2026-05-21. emitAssign now dispatches to
+emitAssignSimple / emitAssignTwoPhase / emitAssignLarge mirroring Python
+emit_assign (ivy_to_cpp.py:3703-3764). Quantified assignments use a
+function-typed temporary so self-referential RHS reads see pre-assignment
+values. The bexpr trick (Python ivy_to_cpp.py:3717-3720) tightens loops
+when the RHS is Ite(cond, then, lhs) and cond does not mention the
+modified symbol. Bounds-error paths fall back to emit_assign_large +
+makeThunk, which emits a C++ thunk struct (local to the method body)
+wrapped in hash_thunk. emitAssignField was refactored to synthesize a
+LogicAssignAction and re-enter emitAssign so any future synthesizer
+inherits the new dispatch. The Z3 / gen-mode to_z3 path in makeThunk is
+stubbed and documented inline (Python ivy_to_cpp.py:538-602).
 
-- `goivy/ivy2cpp/expr.go:283-328`
-- `goivy/ivy2cpp/expr.go:403-477`
-- `goivy/ivy2cpp/expr.go:479-628`
-- `goivy/ivy2cpp/expr.go:630-664`
-- `goivy/ivy2cpp/action.go:217-220`
+Files added / modified:
 
-Python references:
+- `goivy/ivy2cpp/assign.go` (new) — emitAssignSimple, emitAssignTwoPhase,
+  assignBoundsExpr, openAssignmentLoopsBounded,
+  canOpenAssignmentLoopsBounded.
+- `goivy/ivy2cpp/thunk.go` (new) — makeThunk, emitAssignLarge,
+  emitThunkBody, thunkEnvSymbols.
+- `goivy/ivy2cpp/action.go` — emitAssign refactor; emitAssignField now
+  routes through emitAssign.
+- `goivy/ivy2cpp/generator.go` — thunkCtr field on Generator.
+- `goivy/ivy2cpp/assign_test.go` (new) — eight new tests covering
+  self-referential, multi-variable transpose, bexpr tightening,
+  bexpr-skip-on-modified, thunk fallback, field-action routing,
+  scalar-simple, and a Python oracle check for the flip case.
+- `goivy/ivy2cpp/ivy2cpp_test.go` — updated TestEmitAfterInitEnumLoop,
+  TestEmitAfterInitRangeLoop, TestRangeArrayDimensionUsesUpperBoundIndexSpace,
+  and the smoke fixtures table entry to expect the new two-phase shape.
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:1655-1711`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3264-3290`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3301-3336`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3351-3377`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3380-3465`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3486-3555`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3919-3946`
+## DONE 014 - Correct havoc, local variables, choices, and old-value binding
 
-Gap:
+Status: completed 2026-05-22. All four gap items closed:
 
-- Go loops only over bool/enumerated/range sorts and a very limited
-  one-variable extensional relation case.
-- Python extracts bounds from formulas, inequalities, derived constraints,
-  extensional relations, iterable attributes, and sort cardinality information.
-- Go rejects `some_min` and `some_max` in `emitIfSome`; Python implements
-  `Some`, `SomeMin`, and `SomeMax` with bound-aware loops and return values.
-- Go's plain `some` often returns the first parameter or zero when no witness is
-  found, while Python's generated code tracks witness existence and default
-  behavior more carefully for the context.
+- `emitHavoc` (`goivy/ivy2cpp/action.go:97-103`) mirrors Python `emit_havoc`'s
+  `assert False` (`ivy_to_cpp.py:3768-3773`) by reporting via
+  `g.unsupported` — havoc reaching emit is a bug because lowering should
+  have eliminated it upstream.
+- `emitLocal` (`action.go:785-796`) declares the local with
+  `cppStorageDecl` and then calls `mkNondetSym` with the LocalAction's
+  UniqueID, matching Python `local_start` + `emit_local`
+  (`ivy_to_cpp.py:3893-3917`).
+- `emitChoice` uses `mkNondet(..., "___branch", a.UniqueID, ...)` with
+  the same hardcoded-0 quirk as Python `ivy_to_cpp.py:189`.
+- `emitBindOlds` (`action.go:835-`) reports unsupported because Python
+  has no `BindOldsAction.emit`; the wrapper must be eliminated by
+  `bind_olds_action` upstream (`ivy_transrel.py:240`).
 
-Conformance work:
-
-- Port `is_iterable_sort`, `is_any_integer_type`, `sort_bounds`, `open_loop`,
-  `get_bound_exprs`, `get_bounds`, `get_extensional_bound_exprs`, `emit_quant`,
-  and `emit_some`.
-- Add support for inequality-derived bounds on integer/nat/range variables.
-- Add `SomeMin` and `SomeMax` for both expression and action contexts.
-- Ensure witness variables, found flags, breaks, and defaults match Python.
-
-Tests to add:
-
-- Quantifiers over finite sorts, ranged integers, cardinality-bounded sorts,
-  extensional relations, and derived-bound formulas.
-- `some`, `some_min`, and `some_max` in expressions and actions.
-
-## TODO 013 - Fix assignment/update semantics, especially quantified assignments
-
-Go locations:
-
-- `goivy/ivy2cpp/action.go:137-180`
-- `goivy/ivy2cpp/action.go:469-509`
-
-Python references:
-
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3624-3652`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3654-3663`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3665-3701`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3703-3764`
-
-Gap:
-
-- Go writes assignment targets in-place while looping over free variables.
-- Python uses a two-phase temporary for quantified assignments so RHS reads see
-  the old value, then copies the temporary back. For large functions it can emit
-  thunk-based fallback updates.
-- Go does not implement Python's guarded/bounded update loops or storage-class
-  specific assignment rules.
-- Go's field-action updates assume direct mutable struct fields and do not cover
-  Python's complex types, array fields, variants, or hash-thunk storage.
-
-Conformance work:
-
-- Port Python's `emit_assign_simple`, `emit_assign_large`,
-  `emit_assign_bounded`, and `emit_assign`.
-- Use temporaries whenever Python would use them, especially for assignments with
-  free variables or self-referential RHS expressions.
-- Add storage-specific write logic for arrays, hash-thunks, destructors,
-  variants, and native types.
-
-Tests to add:
-
-- Self-referential map updates such as `f(X) := f(X) + 1`.
-- Quantified assignments with multiple variables, guarded updates, large-domain
-  updates, and field updates inside destructor/variant values.
-
-## TODO 014 - Correct havoc, local variables, choices, and old-value binding
+Coverage: `TestGeneratedChoiceActionCompiles`,
+`TestGeneratedVarActionCompiles`, `TestGeneratedHavocReportsUnsupported`,
+`TestGeneratedChoiceUsesIfElseChain`,
+`TestGeneratedLocalActionUsesNondet`,
+`TestGeneratedLocalFunctionUsesNondetLoop`.
 
 Go locations:
 
@@ -777,7 +923,26 @@ Tests to add:
 - Actions with local variables, choice actions, explicit havoc, and `old`
   references in postconditions/updates.
 
-## TODO 015 - Port native declarations, native code blocks, and callback thunks
+## DONE 015 - Port native declarations, native code blocks, and callback thunks
+
+Status: completed 2026-05-22. `goivy/ivy2cpp/native.go` (636 lines) ports
+`split_native` (`ivy_to_cpp.py:1378`), `emit_native`
+(`ivy_to_cpp.py:1456`), and `native_reference` (`ivy_to_cpp.py:4032`),
+covering `header`, `impl`, `member`, `init`, `inline`, and `encode`
+tags plus antiquote substitution for `%`, `"`, symbol references, type
+references, and action callbacks. `goivy/ivy2cpp/native_thunk.go` ports
+the callback-thunk struct generation via `emitCallbackThunks` /
+`emitCallbackThunk` (Python lines 4032-4074). Native type declarations
+emit either typedef-style aliases or class-style wrappers, and the
+test/gen paths consume them through the existing `_arg` / serializer /
+solver helpers. Coverage: 20+ tests including
+`TestEmitNativeActionAntiquotes`,
+`TestNativePrimitiveTypeDeclarationFromInterpret`,
+`TestNativeTypeAntiquoteReferencesSort`,
+`TestNativeClassParameterDefaultCompiles`,
+`TestNativeDefinitionEmitsTemplateMethod`,
+`TestTopLevelNativeBlocksEmitHeaderMemberAndInit`,
+`TestDuplicateOnceNativeHeaderEmitsOnce`.
 
 Go locations:
 
@@ -824,7 +989,28 @@ Tests to add:
 - Native header/member/init/inline snippets, native action callbacks, native
   types used in state, and native expressions with antiquoted references.
 
-## TODO 016 - Replace the simple REPL with Python's REPL/server/test runtime
+## DONE 016 - Replace the simple REPL with Python's REPL/server/test runtime
+
+Status: completed 2026-05-22. `goivy/ivy2cpp/repl.go` (643 lines) and
+`goivy/ivy2cpp/runtime.go` (415 lines) port Python's REPL/test/server
+runtime: `emit_repl_boilerplate1a` builds the per-classname
+`cmd_reader` subclass; `_arg<T>` overloads parse every emitted sort
+(enums, ranges, numerics, destructors, variants, natives, bv/strings)
+out of `ivy_value`; main-loop server vs. REPL branching mirrors
+`emit_repl_boilerplate3` / `emit_repl_boilerplate3server`. Coverage:
+`TestRuntimeSkeletonAcrossTargets`,
+`TestRuntimeReplAndTestSubclassGlue`,
+`TestRuntimeChoiceStackAndGeneratorPlumbing`,
+`TestRuntimeNativeReaderTimerSkeletonShape`,
+`TestReplDispatchForExportedAction`,
+`TestReplMainReadsCommandsFromStdin`,
+`TestReplIgnoresInternalAction`,
+`TestReplDispatchForParameterizedExportCompiles`,
+`TestReplDispatchParsesEnumBoolRangeArgs`,
+`TestReplEmitsCmdReader`,
+`TestReplCatchesSyntaxOutOfBoundsBadArity`,
+`TestReplServerModeWhenNoPublicActions`, and several
+`TestReplWrites…SupertypeReturn` cases for variant-typed returns.
 
 Go locations:
 
@@ -867,7 +1053,7 @@ Tests to add:
 - Action dispatch with inputs/outputs, bad arity, bad value syntax, wait/delay,
   reader callbacks, and timer callbacks.
 
-## TODO 017 - Port action generation and solver-backed random testing
+## DONE 017 - Port action generation and solver-backed random testing
 
 Go locations:
 
@@ -916,47 +1102,92 @@ Tests to add:
 - Compare generated traces against Python for deterministic seeds where
   possible.
 
-## TODO 018 - Complete Z3 sort/declaration/eval/set conversion
+## DONE 018 - Complete Z3 sort/declaration/eval/set conversion
+
+Landed in four milestones (M1–M4); plan at
+`~/.claude/plans/we-are-in-ivy-goivy-ivy2cpp-wise-wombat.md`.
 
 Go locations:
 
-- `goivy/ivy2cpp/z3.go:30-56`
-- `goivy/ivy2cpp/z3.go:181-221`
-- `goivy/ivy2cpp/z3.go:234-282`
+- `goivy/ivy2cpp/solver_emit.go:emitSetField` (M1)
+- `goivy/ivy2cpp/solver_emit.go:emitSetSolver` branch (2) + `isLargeType` (M2)
+- `goivy/ivy2cpp/z3.go:emitZ3EnumSolverConversion` + `repl.go:emitEnumSortArgSpecDecls` (M3)
+- `goivy/ivy2cpp/solver_emit.go:emitFromSolverLoop` + `isRecordRange` / `recordRangeType` (M4.b)
+- `goivy/ivy2cpp/z3.go:emitZ3SortRegistrations` (M4.c — runtime-equivalence comment)
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:687-729`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:730-756`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:772-799`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:806-824`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:826-870`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:4469-4480`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:687-729` (`emit_sorts`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:730-756` (`emit_decl`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:772-799` (`emit_eval`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:806-824` (`emit_set_field`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:826-870` (`emit_set`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2654-2668` (enum-sort `__from_solver`/`__to_solver`/`__randomize`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:4469-4480` (`emit_boilerplate1`)
 
-Gap:
+What landed:
 
-- Go emits generic solver helper templates and some sort declarations for enum,
-  range, and uninterpreted sorts.
-- Python emits full sort declarations, symbol declarations, eval helpers, field
-  setters, and state setters across the complete type system.
-- Go lacks solver support for arrays/hash-thunks, destructors, variants, native
-  types, bitvectors, strings, and CPPTYPE custom conversions.
+- **M1.** Ported `emit_set_field` faithfully. `emitSetSolver` branch (1)
+  restructured to open loops per-destructor matching Python's flow; the
+  recursive `add(__to_solver(*this, apply("<destr>", lhs, ...), rhs[idx...].field))`
+  call is now emitted instead of the previous unsupported-marker stub.
+- **M2.** Added the `forall`-quantified branch in `emitSetSolver` for
+  function-sorted symbols whose domain `is_large_type` (non-integer
+  domain element or product > 1024). Added `Generator.isLargeType`
+  mirroring Python ivy_to_cpp.py:445-449.
+- **M3.** Converted enum-sort solver conversion from `static` overloads
+  to `template <>` specializations matching Python, delegating to
+  `__from_solver<int>` / `__to_solver<int>` / `__randomize<int>`. Added
+  matching forward declarations gated under `#ifdef Z3PP_H_`.
+- **M4.a.** No-op — Python's `__pto__<dom0>__<dom1>` cname at
+  ivy_to_cpp.py:735 is dead code (computed but never referenced); Python
+  emits `*>` literally and Go already matches.
+- **M4.b.** Split `emitFromSolverLoop` into the Python-faithful branches:
+  destructor / native / cpp-interp ranges → `__from_solver<class::T>
+  (*this, apply("name", ...), lvalue);`; primitive ranges → `lvalue =
+  (ctype)eval_apply("name", ...);`. Added `recordRangeType` so cpp-typed
+  bv / strbv / intbv sorts route to `<class::word>` rather than decaying
+  to `<unsigned>`. `emitZ3EvaluateStateSymbol` now delegates to the
+  shared helper.
+- **M4.c.** Documented runtime divergence at `emitZ3SortRegistrations`:
+  Python's `enum_sorts.insert(name, <class>::<sortvar>::z3_sort(ctx))`
+  is functionally equivalent to the Go runtime's `mk_bv(name, bits)` /
+  `mk_string(name)` — same Z3 sort constructors underneath, but
+  `ivy_go_z3.hpp` uses a single `sorts` map rather than Python's separate
+  `enum_sorts` map. The `z3_sort(ctx)` static method emitted by
+  `cpp_types.go` is dead on the Go runtime path; mk_bv / mk_string is the
+  runtime-supported equivalent.
 
-Conformance work:
+Tests added:
 
-- Port `emit_sorts`, `emit_decl`, `emit_eval`, `emit_set_field`, and `emit_set`.
-- Add generated `__to_solver` and `__from_solver` helpers for every Python type
-  class.
-- Ensure solver names, enum constants, uninterpreted values, and range values
-  match Python's generated C++ exactly.
+- `TestEmitSetSolverDestructorRecordRange` — white-box assertion of the
+  nested `add(__to_solver(...))` recursion (M1).
+- `TestEmitSetSolverLargeTypeForall` — asserts the `forall(__quants, ...)`
+  emission for a non-integer-domain state symbol (M2).
+- `TestEnumSortSolverSpecsAreTemplateSpecializations` — asserts the new
+  `template <>` form for enum sorts, including forward decls, and that
+  the legacy `static` overloads are gone (M3).
+- `TestEmitEvalBranchesByRangeKind` — asserts both eval branches:
+  primitive `(ctype)eval_apply(...)` cast and cpp-typed
+  `__from_solver<class::T>(*this, apply(...), x)` (M4.b).
 
-Tests to add:
+`make test` green after each milestone.
 
-- Solver round-trip tests for every type class and nested type combination.
-- Initial-state and action-generation fixtures that require model evaluation
-  into complex state values.
+## DONE 019 - Match Python progress/rely logic
 
-## TODO 019 - Match Python progress/rely logic
+Status: completed 2026-05-22. `emitRelyMax` (`goivy/ivy2cpp/tick.go:265-323`)
+now alpha-renames extra rely-RHS variables by appending `__` and rewrites the
+LHS-aligned progress args in a single substitution pass, matching Python
+`ivy_to_cpp.py:1798-1804`. Bare relies are filtered through `hasBareRely`,
+`ivy_check_progress(lhs, maxt)` is called for each progress declaration
+(`tick.go:251`), and the per-target loop bounds use the same iterable-sort
+machinery as Python `__tick`. Coverage:
+`TestTickCallsIvyCheckProgressWithoutRely`,
+`TestTickRelyImplicationComputesMaxAndChecksProgress`,
+`TestTickRelySubstitutesProgressArgs`,
+`TestTickRelyExtraFreeVariableLoops`,
+`TestTickUnconditionalRelySkipsProgressCheckLikePython`,
+`TestTickRelyExtraSharesProgressVarNameRenamed`.
 
 Go locations:
 
@@ -997,7 +1228,35 @@ Tests to add:
 - Progress properties with extra quantified variables, rely formulas, and
   counters requiring max updates.
 
-## TODO 020 - Handle requires/ensures/subgoals and exported action semantics exactly
+## DONE 020 - Handle requires/ensures/subgoals and exported action semantics exactly
+
+Status: completed 2026-05-22. Five focused fixes landed:
+
+- `goivy/ivy2cpp/action_gen.go:66-78` — `ext_preconds` wrap now preserves
+  `Lineno`, formal params, and formal returns on the new
+  `Sequence(AssumeAction(pre), action)` (Python `ivy_to_cpp.py:1213-1217`).
+- `goivy/ivy2cpp/action.go:200-208` — added `linenoStr` mirroring
+  `iu.lineno_str` (strips the trailing `": "` that `Location.String()`
+  appends) and used it for the assert/assume/requires/ensures/subgoal
+  emit sites at `action.go:30-38` so labels match Python
+  `ivy_to_cpp.py:3788-3808`.
+- `goivy/ivy2cpp/generator.go:870-940` — added `importCallers()` and
+  `emitTraceActionPrologue()` mirroring Python `find_import_callers`
+  (`ivy_to_cpp.py:1888-1897`) and `trace_action`
+  (`ivy_to_cpp.py:1576-1607`). For `target=test`, imported unscoped
+  actions now open their method body with
+  `__ivy_out << "< name(args)" << std::endl;`. Cached on `Generator`.
+- `goivy/actions_transforms.go:71-86` — `AssertToAssume` no longer
+  downgrades `LogicSubgoalAction` when `"assert"` is in kinds. Python's
+  class-identity check (`ivy_actions.py:396-403` + `:416-421`) only
+  converts when the caller explicitly opts in via `"subgoal"`.
+
+Coverage: `TestActionGenExtPrecondsPreservesFormals`,
+`TestAssertLabelStripsTrailingColonSpace`,
+`TestSubgoalNeverConvertedToAssume`,
+`TestRequiresInExternalBecomesAssume`,
+`TestImportCallerTracePrologueInTest`,
+`TestExtPrecondsAppearsInActionGenSMT`. Full `make test` green.
 
 Go locations:
 
@@ -1034,7 +1293,42 @@ Tests to add:
 - Exported actions with requires, ensures, assumptions, subgoals, and generated
   tests that must satisfy preconditions before execution.
 
-## TODO 021 - Fix debug/trace output semantics
+## DONE 021 - Fix debug/trace output semantics
+
+Status: completed 2026-05-22. Two layered fixes plus tests.
+
+**emit_debug semantics.** `LogicDebugAction` now carries a `WithNames`
+slice (`goivy/actions_phase3.go:494`) populated by `CompileDebugAction`
+(`goivy/compiler_phase6.go:818-823`) so each `with name = expr` clause
+keeps its name through compilation. `goivy/ivy2cpp/action.go:emitDebug`
+emits each value under its real name and runs the new `emitPrintExpr`,
+which opens a loop over the value's free variables and wraps the print
+with `std::cout << "["` / `"]"` per Python `emit_print_expr`
+(`ivy_to_cpp.py:3989-3996`).
+
+**Trace integration.** Added `Generator.numberFormat()`
+(`goivy/ivy2cpp/generator.go`) returning ` << std::hex << std::showbase`
+when the module attribute `radix == "16"` (Python `ivy_to_cpp.py:1935-
+1938`). Threaded into `emitTraceActionPrologue`,
+`emitRuntimeReplAssertOverride`, `emitTracePrelude`, and the REPL
+dispatch close-brace line. `emitActionGenExecute`
+(`goivy/ivy2cpp/action_gen.go`) now matches Python lines 1331-1346:
+emits the `> name(args)` trace line, opens `{` and closes `}` when
+`Config.Trace`, and prints `= __res` for single-return actions.
+`emitSomeAction` (`goivy/ivy2cpp/generator.go`) wraps the imported
+action body with `{` / `}` braces when `Config.Trace` is on.
+`emitAssignSimple` (`goivy/ivy2cpp/assign.go`) emits the
+`__ivy_out << "  write(<lhs>," << (<rhs>) << ")"` line under
+`Config.Trace`, gated by the same `':' not in name` rule as Python
+(`ivy_to_cpp.py:3627`).
+
+Coverage: `TestDebugActionEmitsNamedValues`,
+`TestDebugActionEmitsQuantifiedLoop`,
+`TestNumberFormatHexFromRadixAttribute`,
+`TestActionGenExecuteWrapsTraceBraces`,
+`TestImportCallerBodyWrappedInBracesUnderTrace`,
+`TestAssignSimpleEmitsWriteTraceUnderTrace`, plus the updated
+`TestGeneratedDebugActionCompiles`. Full `make test` green.
 
 Go locations:
 
@@ -1065,226 +1359,517 @@ Tests to add:
 - Debug actions with explicit names, multiple values, quantified values, and
   tracing enabled under `impl`, `repl`, `test`, and `gen`.
 
-## TODO 022 - Add full serialization/deserialization support
+## DONE 022 - Add full serialization/deserialization support
+
+Status: ported field-for-field from Python. Per-sort `operator<<`, `_arg<T>`,
+`__ser<T>`, `__deser<T>` are emitted for enum, destructor, and variant sorts.
+Z3 `__from_solver`/`__to_solver`/`__randomize` specializations are emitted for
+gen/test targets. StrBV/IntBV interpreted-type templates already covered the
+bv/strbv/intbv sort kinds. Three gaps closed in this pass:
+
+1. **Destructor sort forward declarations.** `emitDestructorSortArgSpecDecls`
+   in `goivy/ivy2cpp/destructor.go:258` mirrors Python `ivy_to_cpp.py:2232-2254`
+   and is invoked from `goivy/ivy2cpp/runtime.go:148` right after the enum
+   forward decls.
+2. **Zero-init for destructor `_arg<T>`.** `emitDestructorZeroInit` and
+   `emitZeroAssign` in `goivy/ivy2cpp/destructor.go:487, 513` mirror Python
+   `assign_zero_symbol` (`ivy_to_cpp.py:216-219`). They are called from
+   `emitDestructorArgImpl` at `goivy/ivy2cpp/destructor.go:406` right after the
+   `T res;` declaration. Strlit, native, cpptype, and variant-super fields are
+   skipped per the Python guard.
+3. **`to_solver_class<hash_thunk<D,R>>` specializations.** `allHashThunkDomains`
+   in `goivy/ivy2cpp/types.go:612` mirrors Python `all_hash_thunk_domains`.
+   `emitHashThunkToSolver` and `emitAllCtuplesToSolver` in
+   `goivy/ivy2cpp/solver_emit.go:736, 770` mirror Python
+   `emit_hash_thunk_to_solver` / `emit_all_ctuples_to_solver`
+   (`ivy_to_cpp.py:1841-1871`), and the wire-in is at
+   `goivy/ivy2cpp/generator.go:255` inside the existing `usesZ3()` block.
+   The runtime primary `to_solver_class<T>` template and the
+   `z3_thunk<D,R>` abstract subclass of `thunk<D,R>` are now declared in
+   `include2cpp/ivy_go_z3.hpp` (lines 379-396).
 
 Go locations:
 
-- `goivy/ivy2cpp/repl.go:10-280`
-- `goivy/ivy2cpp/generator.go:391-436`
-- `goivy/ivy2cpp/generator.go:438-478`
+- Enum impls: `goivy/ivy2cpp/repl.go:60-160`; decl wire at `goivy/ivy2cpp/runtime.go:145`.
+- Destructor impls: `goivy/ivy2cpp/destructor.go:244-517`.
+- Destructor forward decls: `goivy/ivy2cpp/destructor.go:258` (`emitDestructorSortArgSpecDecls`);
+  wire at `goivy/ivy2cpp/runtime.go:148`.
+- Destructor zero-init: `goivy/ivy2cpp/destructor.go:487, 513`
+  (`emitDestructorZeroInit`, `emitZeroAssign`).
+- Variant impls: `goivy/ivy2cpp/variant.go:122-310`.
+- StrBV/IntBV impls: `goivy/ivy2cpp/cpp_types.go:272-365`.
+- Hash-thunk to_solver: `goivy/ivy2cpp/solver_emit.go:736, 770`
+  (`emitHashThunkToSolver`, `emitAllCtuplesToSolver`); domain enumerator at
+  `goivy/ivy2cpp/types.go:612` (`allHashThunkDomains`); wire at
+  `goivy/ivy2cpp/generator.go:255`.
+- Runtime template support: `include2cpp/ivy_go_z3.hpp:379-396` (`to_solver_class`
+  primary template, `z3_thunk` abstract class).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2213-2254`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2420-2674`
-- `pyivy/ivy/ivy/ivy_cpp_types.py:355-496`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2213-2254` (forward decls).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:216-219` (`assign_zero_symbol`).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1841-1871, 2673` (`emit_hash_thunk_to_solver`,
+  `emit_all_ctuples_to_solver`).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2420-2674` (per-sort impls).
+- `pyivy/ivy/ivy/ivy_cpp_types.py:355-496` (variant/StrBV/IntBV template emission).
+- `pyivy/ivy/ivy/ivy_z3_helpers.hpp:42-44, 135-138` (`to_solver_class`, `z3_thunk`).
 
-Gap:
+Tests:
 
-- Go emits stream operators for enums/destructors/variants but does not emit the
-  Python serializer/deserializer API.
-- Python emits `__ser`, `__deser`, `_arg`, stream output, and solver conversion
-  helpers for generated and custom types.
-- The REPL/test/server runtime depends on these helpers for values crossing text,
-  network, and model boundaries.
+- Existing: `TestEmitsArgSpecForEnum` (ivy2cpp_test.go:3885),
+  `TestDestructorSerDeserShape` (5852), `TestDestructorArgShape` (5881),
+  `TestDestructorZ3ImplShape` (5909),
+  `TestDestructorRandomizeSkipsUninterpretedRange` (5940).
+- New: `TestDestructorForwardDeclsInImplPreamble`,
+  `TestDestructorZ3ForwardDeclsInImplPreamble`,
+  `TestDestructorArgZeroInitsPrimitiveFields`,
+  `TestDestructorZeroInitSkipsStringField`,
+  `TestHashThunkToSolverSpecializationEmittedForTestTarget`,
+  `TestHashThunkToSolverNotEmittedForReplTarget`
+  (all at ivy2cpp_test.go:5974+).
 
-Conformance work:
+## DONE 023 - Restore Python include ordering and support headers
 
-- Port Python's serialization and argument parsing method generation for every
-  sort kind.
-- Ensure nested functions, arrays, hash-thunks, destructors, variants, native
-  types, bitvectors, and strings serialize exactly like Python.
+Status: header and impl preambles now mirror Python's emission. Three gaps
+closed:
 
-Tests to add:
+1. **Windows host preamble.** `emitRuntimeHeaderPreamble` in
+   `goivy/ivy2cpp/runtime.go:26` emits `#define WIN32_LEAN_AND_MEAN` then
+   `#include <windows.h>` before all other includes when the build host
+   is Windows (mechanical port of Python `ivy_to_cpp.py:1949-1951` —
+   `platform.system() == 'Windows'`). Host detection lives in
+   `hostOS()` at `runtime.go:19`, which reads the new `Config.HostOS`
+   field (`generator.go:14` `Config`) with `runtime.GOOS` fallback so
+   tests can exercise both branches on any host.
+2. **`_HAS_ITERATOR_DEBUGGING` define.** Same site, unconditional, ahead
+   of all `#include` lines — mirrors Python `ivy_to_cpp.py:1952`.
+3. **Z3 helper include moved to the impl preamble.** Go's
+   `ivy_go_z3.hpp` is now emitted at `goivy/ivy2cpp/runtime.go:157`
+   immediately after `#include "ivy_value.hpp"`/`#include "ivy_repl.hpp"`
+   and before any inline `__from_solver`/`__to_solver`/`__randomize`
+   template definitions — mirroring Python `ivy_to_cpp.py:2210-2211`
+   (`ivy_z3_helpers.hpp`). The duplicate emission inside
+   `emitZ3Runtime` (formerly `z3.go:30-33`) is removed; that helper
+   is gone and `emitZ3Support` in `goivy/ivy2cpp/z3.go:12` no longer
+   calls it.
 
-- Round-trip serialization for all supported type classes, including nested
-  values.
-
-## TODO 023 - Restore Python include ordering and support headers
+Deliberate divergence (documented, not changed in this TODO): Go keeps
+`ivy_threads.hpp` in the *header* rather than the impl preamble (where
+Python places it at `ivy_to_cpp.py:2068`) because the generated Go class
+body declares `std::vector<HANDLE>` / `std::vector<pthread_t>` members
+directly — `pthread_t` must be visible at class-definition time. Existing
+test `TestGoOutputUsesSharedSupportIncludes` pins this placement and
+exercises a real C++ compile via `compileGeneratedCPP`.
 
 Go locations:
 
-- `goivy/ivy2cpp/generator.go:130-155`
-- `goivy/ivy2cpp/z3.go:11-23`
+- `goivy/ivy2cpp/runtime.go:19` (`hostOS()`).
+- `goivy/ivy2cpp/runtime.go:26-67` (`emitRuntimeHeaderPreamble`).
+- `goivy/ivy2cpp/runtime.go:119-174` (`emitRuntimeImplPreamble`); Z3
+  helper include at line 157.
+- `goivy/ivy2cpp/generator.go:14` (`Config.HostOS` field).
+- `goivy/ivy2cpp/z3.go:12-25` (`emitZ3Support` no longer emits the
+  runtime include).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:1947-1973`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2030-2069`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2206-2211`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1947-1973` (header preamble).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2030-2069` (impl preamble).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2206-2211` (late impl support includes).
 
-Gap:
+Tests:
 
-- Go emits a minimal set of standard includes and only adds Z3 includes for
-  `test`/`gen`.
-- Python includes target-specific runtime headers such as `ivy_value.hpp`,
-  `ivy_repl.hpp`, `ivy_z3_helpers.hpp`, platform/network/thread headers, and
-  other support headers based on generated features.
-- Missing includes are a compile break once Python-compatible runtime features
-  are ported.
+- Existing (pre-existing constraints preserved):
+  `TestGoOutputUsesSharedRuntimeIncludes`,
+  `TestGoOutputUsesSharedSupportIncludes` (+ `compileGeneratedCPP`),
+  `TestGoOutputUsesSharedZ3RuntimeIncludes` (now also pins
+  `ivy_go_z3.hpp` to impl-only).
+- New: `TestHeaderPreambleEmitsIteratorDebuggingDefine`,
+  `TestHeaderPreambleEmitsWindowsHostIncludesWhenHostOSIsWindows`,
+  `TestHeaderPreambleSkipsWindowsHostIncludesByDefaultOnNonWindowsHost`,
+  `TestImplPreambleEmitsZ3HelperIncludeAfterReplInclude`,
+  `TestImplPreambleOmitsZ3HelperIncludeForReplTarget`.
 
-Conformance work:
+Future work (separate TODOs): feature gates for sockets/timers/REPL/
+serialization/native snippets become meaningful only once those runtime
+features land. Python currently emits the platform-specific
+network/socket headers unconditionally in the impl preamble and Go
+already mirrors that.
 
-- Port include selection and ordering from Python.
-- Add feature gates for threads, sockets, timers, REPL, Z3, serialization, and
-  native snippets.
-- Preserve Python's `stdafx` behavior.
+## DONE 024 - Match Python's member-name collision checks
 
-Tests to add:
+Status: ported `check_member_names` faithfully. `(*Generator).checkMemberNames`
+at `goivy/ivy2cpp/generator.go:185` collects the varName-lowered names of all
+signature symbols (`g.Mod.Sig.Symbols.All()`), sorts (`g.Mod.Sig.Sorts.All()`),
+and actions (`g.Mod.Actions.All()`), and returns an `ivy2cpp:` error when the
+generated C++ class name appears among them. The check runs at the top of
+`(*Generator).generate` at `generator.go:169`, after `prepareModuleForCPP`
+in `Generate` (`generator.go:135`) has had its chance to register
+`_generating` for the test target. The error message mirrors Python's
+two-line text — including the `Use command line option classname=...` hint —
+so user-facing diagnostics match the Python toolchain.
 
-- Compile generated C++ for each target and platform mode after every runtime
-  feature port.
+Reused utilities:
 
-## TODO 024 - Match Python's member-name collision checks
+- `varName` (`goivy/ivy2cpp/names.go:15`) — already the Python `varname`
+  mirror; accepts string keys via `fmt.Sprint`.
+- Map iteration via `.Symbols.All()` / `.Sorts.All()` / `.Actions.All()` —
+  the idiom used throughout this package.
 
 Go locations:
 
-- No equivalent check found in `goivy/ivy2cpp`.
+- `goivy/ivy2cpp/generator.go:169` (call site at top of `generate`).
+- `goivy/ivy2cpp/generator.go:181-210` (`checkMemberNames` method, with
+  Python-origin comment block).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:1830-1834`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1830-1834` (`check_member_names`).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1904` (call site inside `module_to_cpp_class`).
 
-Gap:
+Tests:
 
-- Python checks whether module symbols collide with generated class member
-  names. Go does not perform this validation.
+- New (`goivy/ivy2cpp/ivy2cpp_test.go:2395-2442`):
+  - `TestCheckMemberNamesRejectsActionCollision`
+  - `TestCheckMemberNamesRejectsSymbolCollision`
+  - `TestCheckMemberNamesRejectsSortCollision`
+  - `TestCheckMemberNamesAllowsDistinctClassname` (regression guard against
+    the check firing on legitimate inputs).
 
-Conformance work:
+Out of scope (potential future TODO): Python's `check_member_names` itself
+only guards the *classname* against module-declared names. Reserved C++
+keywords, runtime helper names, lock/stream/solver names, etc. are not
+checked by Python either; broadening to those would be net-new behaviour
+and belongs in its own audit item.
 
-- Port `check_member_names` before generation.
-- Ensure reserved generated names such as runtime helpers, locks, streams, and
-  solver helpers cannot be shadowed by Ivy declarations.
+Reminder:
 
-Tests to add:
+- [x] When this lands, rename to `## DONE 024 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
 
-- Ivy declarations that collide with generated C++ members should fail with a
-  Python-compatible error.
+## DONE 025 - Port conjecture/property/isolate integration
 
-## TODO 025 - Port conjecture/property/isolate integration
+Status: ported the per-session flag setup, isolate-specific module
+preparation, and lineno-preserving conjecture insertion from Python's
+`main_int` (`pyivy/ivy/ivy/ivy_to_cpp.py:4513-4645`) and
+`add_conjs_to_actions` (`pyivy/ivy/ivy/ivy_to_cpp.py:4495-4503`).
+
+The new `applySessionParameters` helper
+(`goivy/ivy2cpp/compile.go:applySessionParameters`) runs once per
+session and mirrors Python lines 4514-4530: `SetDeterminize(true)`,
+`SolverOpts.UseZ3Enums=true`, `IsolateCfg.InterpretAllSorts=true`,
+`SetVerifyingOnMod(false)` (auto-initializing `CompCfg` when nil), and
+the `IsolateCfg` toggles `ConeOfInfluence=false`, `CreateImports=true`,
+`EnforceAxioms=true`, `AssumeInvariants=false`, plus the
+target-dependent `IsolateMode` and `FilterSymbols`/`KeepDestructors`
+choices. It is wired into both `CompileAndGenerateAll` (before
+`goivy.SourceFile`) and `Generate` (after config normalization), so
+direct-Generate callers see the same session state.
+
+Per-isolate setup inside the `CompileAndGenerateAll` loop now mirrors
+Python 4612-4622: for `target=repl` in language ≥1.7, a non-extract
+isolate named on the command line is rewritten in place to an extract
+(`iso.Kind="extract"; iso.WithArgs=len(iso.Elems)`); and
+`isoMod.Cfg.IsolateCfg.CompileWithInvariants` is set to true exactly
+when `target=="test" && languageVersionAtLeast(isoMod,"1.7")`.
+
+Early `_generating` registration (Python 4550-4551) happens before
+`goivy.SourceFile` for the `test` target so cone-of-influence sees the
+symbol; the existing late add in `prepareModuleForCPP` stays as a
+safety net.
+
+`addConjsToActions` (`goivy/ivy2cpp/compile.go`) now calls
+`a.SetLineno(conj.GetLineno())` on each appended `LogicAssertAction`,
+mirroring Python's `set_lineno(conj.lineno)`. The line number flows
+through the existing `linenoStr` formatter (`action.go:200-207`) into
+the emitted `ivy_assert(..., "<file>: line N")` label.
+
+Reused utilities:
+
+- `goivy.SetDeterminize` (`goivy/actions_phase3.go:467`).
+- `goivy.SetVerifyingOnMod` (`goivy/module_compiler_config.go:35`)
+  with `goivy.NewCompilerConfig` (`goivy/module_compiler_config.go:12`).
+- `(*IsolateDef).IsExtract` (`goivy/ast_decl_ast.go:1552`) for
+  discrimination; in-place mutation of `Kind`/`WithArgs` matches the
+  Python `im.module.isolates[isolate] = the_iso` rebind.
+- `(*ActionBase).SetLineno` (`goivy/module_action.go:53`) and the
+  `*LabeledFormula` embedded `Base.GetLineno()` (`goivy/ast.go:292`).
 
 Go locations:
 
-- `goivy/ivy2cpp/compile.go:29-86`
-- `goivy/ivy2cpp/generator.go:38-115`
+- `goivy/ivy2cpp/compile.go` — `applySessionParameters`, early
+  `_generating` add in `CompileAndGenerateAll`, per-isolate extract
+  conversion + `CompileWithInvariants` toggle, and the lineno
+  assignment in `addConjsToActions`.
+- `goivy/ivy2cpp/generator.go` — `applySessionParameters` wiring in
+  `Generate`.
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:4495-4503`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:4513-4645`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:4495-4503` (`add_conjs_to_actions`).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:4513-4645` (`main_int`).
 
-Gap:
+Tests:
 
-- Python adds conjectures to action behavior and has isolate/v2-specific
-  generation control flow.
-- Go exposes an `Isolate` field but does not port the full Python behavior
-  around isolates, conjectures, and module preparation.
+- New (`goivy/ivy2cpp/ivy2cpp_test.go`, appended after the TODO 023
+  repl-target Z3 include test):
+  - `TestConjectureAppendsAssertToPublicActions`
+  - `TestConjectureAddsCheckInvariantsInitializer`
+  - `TestPropertyMovedIntoAxioms`
+  - `TestConjectureLinenoPropagatesToAssert`
 
-Conformance work:
+Reminder:
 
-- Port conjecture insertion and isolate handling from Python's main path.
-- Verify that generated actions and tests include the same property checks as
-  Python.
+- [x] When this lands, rename to `## DONE 025 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
 
-Tests to add:
+## DONE 026 - Fill out unsupported action forms
 
-- Isolated modules with conjectures/properties, including generated tests that
-  fail when a conjecture is violated.
+Status: rebuilt the `emitAction` switch in `goivy/ivy2cpp/action.go` as
+a complete mechanical port of Python `ivy_to_cpp.py:3775-4074`. The
+switch now explicitly names every Python `Action` subclass and routes
+each to either a per-class emitter (Python `emit_*`), a deliberate
+no-op (Python `pass`), or an `unsupported`-style error that identifies
+the offending Python class.
 
-## TODO 026 - Fill out unsupported action forms
+Behavioral fixes:
+
+- `LogicCrashAction`: was emitting `std::abort();`, now emits nothing.
+  Mirrors Python `emit_crash` `pass` (`ivy_to_cpp.py:3888-3891`).
+- `LogicThunkAction`, `LogicInstantiateAction`, `LogicRanking`: were
+  falling through the `default:` arm with a `%T`-typed error. Each now
+  has an explicit case that calls `g.unsupported` with a
+  Python-class-bearing message ("thunk reached emit", "instantiate
+  reached emit", "ranking reached emit") plus the offending action's
+  `String()` and `GetLineno()`. Mirrors Python's behavior where these
+  classes have no `emit` assignment and would `AttributeError`.
+
+Documentation comments added on the existing branches where Python
+has no `emit` assignment but Go retains an explicit lowering
+(`LogicSetAction`, `LogicLetAction`, `LogicNullFieldAction`,
+`LogicCopyFieldAction`), each citing the matching Python class in
+`pyivy/ivy/ivy/ivy_actions.py`.
+
+The Python action-class matrix lives in the test
+`TestEmitActionMatrixCoverage`, which routes every Python `Action`
+subclass through `(*Generator).emitAction` and asserts on one of three
+outcomes (`emits`, `noop`, `errors`) — proving no class falls through
+the `default:` arm. Per-class shape tests still lock down the
+generated C++ for the `emits` rows.
 
 Go locations:
 
-- `goivy/ivy2cpp/action.go:14-73`
+- `goivy/ivy2cpp/action.go` — rebuilt `emitAction` switch (Crash
+  no-op, three new explicit error cases for Thunk/Instantiate/Ranking,
+  refreshed citation comments on Set/Let/NullField/CopyField).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3775-4074`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:3775-4074` (the `emit_*` block).
+- `pyivy/ivy/ivy/ivy_actions.py:669-1465` (Action subclass
+  definitions; classes without an `emit` assignment in `ivy_to_cpp.py`
+  are presumed eliminated upstream by `int_update`/`action_update`).
 
-Gap:
+Tests:
 
-- Go supports a subset of Python action classes: sequence, assert/assume,
-  assignment, if, if-some, while, choice, call, local, let, old-bind wrapper
-  placeholder, crash, field actions, debug, and native.
-- Missing or incomplete forms include logic thunk actions, instantiation
-  actions, ranking/progress-related actions, pattern-based updates, full native
-  action refs, and any Python action classes not represented in the Go switch.
-- Some supported forms are semantic stubs: `BindOlds`, `Crash`, `Havoc`, and
-  `Local` do not match Python.
+- New (`goivy/ivy2cpp/ivy2cpp_test.go`, appended after
+  `TestAllKnownUnsupportedActionsReturnErrors`):
+  - `TestEmitCrashEmitsNothing`
+  - `TestEmitActionMatrixCoverage`
+- Updated to assert the new Python-class-bearing error wording:
+  - `TestAllKnownUnsupportedActionsReturnErrors` (now includes
+    `ranking` and switches all error substrings from Go type tokens
+    like `*goivy.LogicThunkAction` to the user-facing labels
+    `"thunk reached emit"`, etc.).
+  - `TestGenerateUnsupportedActionReturnsError`.
 
-Conformance work:
+Reminder:
 
-- Build a Python action-class matrix and add one Go test per class.
-- Port every Python `emit` method mechanically, even for classes that emit
-  `pass` or assertion failures in Python.
-- Replace comment-only unsupported output with an early generation error that
-  identifies the missing Python action class.
+- [x] When this lands, rename to `## DONE 026 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
 
-Tests to add:
+## DONE 027 - Add Python-compatible parser/writer and value conversion for every sort
 
-- AST/action fixtures that exercise every Python action emission class.
+Status: the bulk of the per-sort parser/writer generation was already in
+place by DONE 022 — `_arg<T>`, `__ser<T>`, `__deser<T>` (and, for
+gen/test, Z3 `__from_solver`/`__to_solver`/`__randomize`) template
+specializations are emitted for enum (`goivy/ivy2cpp/repl.go:60-160`),
+destructor (`goivy/ivy2cpp/destructor.go:244-517`), variant supertype +
+leaf wrapper (`goivy/ivy2cpp/variant.go:122-310`), and StrBV/IntBV
+(`goivy/ivy2cpp/cpp_types.go:272-365`). Primitive sorts (bool, int, long
+long, unsigned, unsigned long long, __strlit) are served by the runtime
+support library `include2cpp/ivy_value.hpp:187-347` which already
+provides their `_arg<>`, `__ser<>`, `__deser<>` specializations and the
+matching parse failure categories (`out_of_bounds`, `syntax_error`,
+`bad_arity` at `include2cpp/ivy_value.hpp:172-185`).
 
-## TODO 027 - Add Python-compatible parser/writer and value conversion for every sort
+Two new pieces closed in this pass:
+
+1. **Lineno prefix on `emitValueParser` error messages**. `emitValueParser`
+   in `goivy/ivy2cpp/repl.go:319-338` now takes a `goivy.Location` lineno
+   and prepends `Location.String()` (`"<file>: line <N>: "`) onto both the
+   `parameter ... out of bounds` and `syntax error in parameter value ...`
+   `std::cerr` messages. Mirrors Python's `lineno=None` keyword and the
+   `"{lineno}..."` interpolation at `pyivy/ivy/ivy/ivy_to_cpp.py:2858-2870`.
+   Call sites: `emitMainParamSetup` (`goivy/ivy2cpp/repl.go:365`) passes
+   `g.Mod.ParamDefaults[i].GetLineno()` (Python `lineno=d.lineno` at
+   `ivy_to_cpp.py:2710`); `emitParamKeyValueDispatch`
+   (`goivy/ivy2cpp/repl.go:415`) passes `goivy.Location{}` (Python omits
+   `lineno=` at `ivy_to_cpp.py:2733`).
+2. **Per-sort REPL-value parsing tests** for every sort category. The
+   existing `TestEmitsArgSpecForEnum` and `TestDestructorArgShape`
+   already covered enum and destructor; five new tests now lock down the
+   bad-value `throw` paths and good-value accept paths for the remaining
+   sort categories.
 
 Go locations:
 
-- `goivy/ivy2cpp/repl.go:10-280`
-- `goivy/ivy2cpp/types.go:91-168`
+- `goivy/ivy2cpp/repl.go:324` (`emitValueParser` signature with lineno).
+- `goivy/ivy2cpp/repl.go:365, 415` (call sites).
+- `goivy/ivy2cpp/repl.go:60-160` (enum impls); decl wire at
+  `goivy/ivy2cpp/runtime.go:168`.
+- `goivy/ivy2cpp/destructor.go:244-517` (destructor impls).
+- `goivy/ivy2cpp/variant.go:122-310` (variant impls).
+- `goivy/ivy2cpp/cpp_types.go:272-365` (StrBV/IntBV impls).
+- `include2cpp/ivy_value.hpp:172-347` (primitive `_arg<>`/`__ser<>`/
+  `__deser<>` specializations and shared `out_of_bounds`/`syntax_error`
+  types).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2420-2674`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2676-2852`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2858-2870, 2710, 2733` (`emit_value_parser`
+  + lineno-bearing call site).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2420-2674` (per-sort enum/destructor
+  parser/writer emissions).
+- `pyivy/ivy/ivy/ivy_cpp_types.py:147-235, 355-496` (StrBV/IntBV/Variant
+  template emission).
 
-Gap:
+Tests:
 
-- Go parsers are simple hand-written conversions for bool, enums, numeric
-  ranges, and numeric uninterpreted sorts.
-- Python parser/writer support is generated per type and integrates with
-  `ivy_value`, `_arg`, `_arg_seq`, serializers, destructors, variants, arrays,
-  native values, bitvectors, and strings.
+- Existing: `TestEmitsArgSpecForEnum` (`ivy2cpp_test.go:4123`),
+  `TestDestructorArgShape` (`ivy2cpp_test.go:6119`),
+  `TestDestructorSerDeserShape` (`ivy2cpp_test.go:6090`),
+  `TestStringBitvectorHelperReplAndZ3Shape` (`ivy2cpp_test.go:5606`),
+  `TestIntBitvectorHelperReplAndZ3Shape` (`ivy2cpp_test.go:5666`).
+- New (appended to `ivy2cpp_test.go`):
+  - `TestArgSpecVariantBadAndGoodValuePaths` (variant supertype
+    `_arg<>`: unexpected-value/too-many-fields/unexpected-field-sort
+    throws plus per-subtype upcast accept).
+  - `TestArgSpecStrBVBadAndGoodValuePaths` (strbv `_arg<>`:
+    nested-fields throw plus atom-return accept).
+  - `TestArgSpecIntBVBadAndGoodValuePaths` (intbv `_arg<>`:
+    nested-fields throw plus istringstream `s >> res.val` accept).
+  - `TestReplDispatchUsesPrimitiveArgForBoolRangeNatStrlit` (dispatch
+    chain picks `_arg<bool>`/`_arg<unsigned>`/`_arg<unsigned long
+    long>`/`_arg<__strlit>` for the primitive-dispatched sort kinds,
+    and emits no per-sort template specialization for them).
+  - `TestValueParserPrefixesLinenoOnError` (default-application block
+    prefixes `"test.ivy: line 3: "` onto the error messages; argv
+    `param=value` branch keeps the unprefixed form).
 
-Conformance work:
+## DONE 028 - Implement Python-compatible randomization for all generated types
 
-- Delete the ad hoc parser/writer model once the Python-generated parser helpers
-  are ported.
-- Use the same parse failure categories and messages as Python where possible:
-  syntax errors, out-of-bounds values, enum constant failures, and arity errors.
+Status: the per-sort `__randomize<T>` template specializations for
+enum (`goivy/ivy2cpp/z3.go:92-110`), destructor
+(`goivy/ivy2cpp/destructor.go:603-631`), variant supertype
+(`goivy/ivy2cpp/variant.go:290-307`), and StrBV/IntBV
+(`goivy/ivy2cpp/cpp_types.go:290-307`) were already in place from
+DONE 022. The generic `__randomize<T>` fallback (z3.go:62-65)
+delegates to `gen::randomize(expr, range)`, which handles native and
+primitive ranges uniformly. Three pieces closed in this pass:
 
-Tests to add:
+1. **Widened `emitRandomizeSolver` dispatch**.
+   `goivy/ivy2cpp/solver_emit.go:313` used to gate the
+   `__randomize<T>(*this, apply(...), "...")` emission on
+   `isDestructorRecordRange` only, so action_gen formals whose range
+   was a native or cpptype sort (e.g. `word -> bv[8]`,
+   `text -> strbv[4]`, `vec -> <<< std::vector<...> >>>`) fell through
+   to the primitive `gen::randomize(name, args, range)` branch. They
+   now match Python `emit_randomize` at
+   `pyivy/ivy/ivy/ivy_to_cpp.py:996` by routing through
+   `isRecordRange` (destructor ∪ native ∪ cpp-interp). The template
+   argument is taken from `recordRangeType` (the class-scoped
+   typedef like `genbits::word`) rather than from `cppQualifiedType`
+   (which would emit the underlying `unsigned`) — Python always uses
+   the typedef form.
 
-- Bad and good REPL values for every sort category.
+2. **Re-seeded `gen::random_index`**.
+   `include2cpp/ivy_go_z3.hpp:286-296` previously used a monotonic
+   `random_counter++` for picking values, which silently ignored the
+   `srand(seed)` plumbing emitted by `repl.go:392`. It now uses
+   `std::rand() % span`, mirroring Python `mk_rand`
+   (`ivy_to_cpp.py:897-903`). Cross-binary reproducibility under the
+   same `seed=N` argv now holds: Python-emitted and Go-emitted C++
+   draw from the same PRNG sequence. The `random_counter` field is
+   retained for `fresh_name` (`ivy_go_z3.hpp:160`), which legitimately
+   needs a unique-id counter.
 
-## TODO 028 - Implement Python-compatible randomization for all generated types
+3. **Per-sort-category randomization tests** appended to
+   `goivy/ivy2cpp/ivy2cpp_test.go`:
+   - `TestRandomizeRangeSortUsesPrimitivePath` — `type rng = {2..7}`
+     symbol's action-formal range routes through
+     `randomize("__fml:x", "rng")`, not `__randomize<ranger::rng>`.
+   - `TestRandomizeNativeRangeUsesRandomizeTemplate` — native
+     interpreted sort range (e.g. `vec -> <<< std::vector<...> >>>`)
+     routes through `__randomize<natg::vec>(*this, apply(...), "vec")`.
+   - `TestRandomizeUninterpretedRangeUsesDefaultBounds` — locks in the
+     Go-specific divergence at `solver_emit.go:295-299` where
+     uninterpreted ranges use the runtime's default `mk_sort` [0,4]
+     bounds instead of raising `IvyError` like Python does.
+   - `TestRandomizeSeedPlumbingPrecedesRandomCalls` — confirms the
+     `int seed = 1;` declaration, the `else if (param == "seed")` argv
+     branch, and `srand(seed);` appear in main() in that order, before
+     any randomize call.
+
+   `TestBitvectorBackedSortsInGenSetupAndStorageShape`
+   (`ivy2cpp_test.go:5749-5771`) was updated to assert the new
+   `__randomize<genbits::{word,text,small}>(*this, apply(...), "...")`
+   shape for cpptype-range action-formal inputs.
 
 Go locations:
 
-- `goivy/ivy2cpp/z3.go:234-282`
-- `goivy/ivy2cpp/types.go:91-168`
-- `goivy/ivy2cpp/generator.go:272-478`
+- `goivy/ivy2cpp/solver_emit.go:313` (dispatch widened to
+  `isRecordRange`, template-arg routed through `recordRangeType`).
+- `goivy/ivy2cpp/z3.go:62-110, 112-247, 382-433` (existing
+  `__randomize<T>` infrastructure and top-level
+  `ivy2cpp_randomize`).
+- `goivy/ivy2cpp/destructor.go:603-631`,
+  `goivy/ivy2cpp/variant.go:290-307`,
+  `goivy/ivy2cpp/cpp_types.go:290-307` (per-sort `__randomize<T>`
+  specializations from DONE 022).
+- `include2cpp/ivy_go_z3.hpp:286-296` (`random_index` now seeded
+  through `std::rand`).
+- `goivy/ivy2cpp/repl.go:371-429` (seed plumbing, unchanged).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:979-1006`
-- `pyivy/ivy/ivy/ivy_cpp_types.py:355-496`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:979-1006` (`emit_randomize`).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2712, 2751-2752, 2773` (seed/srand
+  argv plumbing).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:897-903` (`mk_rand` — the
+  `rand() % span` shape that Go's `random_index` now mirrors).
+- `pyivy/ivy/ivy/ivy_cpp_types.py:355-496` (variant/cpptype
+  `__randomize<T>` shapes).
 
-Gap:
+Tests:
 
-- Go randomization is mostly helper-variable assignment through simple Z3 value
-  helpers.
-- Python-generated types provide per-type randomization hooks, and the solver
-  generator path uses these together with constraints and model evaluation.
-
-Conformance work:
-
-- Generate `__randomize` helpers for all Python-supported sorts.
-- Use the same randomization hooks in init/test/gen paths and in complex nested
-  values.
-
-Tests to add:
-
-- Randomization for enums, ranges, uninterpreted sorts, destructors, variants,
-  bitvectors, strings, arrays/functions, and native types.
+- Updated: `TestBitvectorBackedSortsInGenSetupAndStorageShape`
+  (`ivy2cpp_test.go:5749`).
+- New: `TestRandomizeRangeSortUsesPrimitivePath`,
+  `TestRandomizeNativeRangeUsesRandomizeTemplate`,
+  `TestRandomizeUninterpretedRangeUsesDefaultBounds`,
+  `TestRandomizeSeedPlumbingPrecedesRandomCalls` (appended after
+  `ivy2cpp_test.go:8465`).
+- Existing coverage (unchanged):
+  `TestRandomizeFiniteEnumRelation` (5396),
+  `TestRandomizeBinaryFiniteRelationUsesTupleKey` (5421),
+  `TestTargetGenRandomizesActionParamsAndExecutes` (4943),
+  `TestTargetGenRandomizesNumericAndVariantLeafParams` (4988),
+  `TestDestructorRandomizeSkipsUninterpretedRange` (6178).
 
 ## TODO 029 - Align emitted C++ expression scoping and temporary management
 
@@ -1321,6 +1906,12 @@ Tests to add:
   blocks, inline native snippets, and expression temporaries inside nested
   actions.
 
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 029 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
+
 ## TODO 030 - Add a Python/Go oracle test suite before filling feature gaps
 
 Go locations:
@@ -1355,6 +1946,12 @@ Tests to add:
 
 - This TODO is the test harness itself. It should become the gate for claiming
   the Go generator is a faithful mechanical port.
+
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 030 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
 
 ## Suggested porting order
 

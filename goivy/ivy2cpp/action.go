@@ -24,18 +24,22 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 		g.emitAssign(w, a)
 	case *goivy.LogicHavocAction:
 		g.emitHavoc(w, a)
+	// Python ivy_actions.py:669-690 SetAction has no `emit` assignment
+	// in ivy_to_cpp.py — it is lowered upstream by `action_update`
+	// before code emission. Go retains an explicit lowering through
+	// `emitSet` for direct callers that synthesize SetAction nodes.
 	case *goivy.LogicSetAction:
 		g.emitSet(w, a)
 	case *goivy.LogicAssertAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, a.GetLineno().String())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
 	case *goivy.LogicRequiresAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, a.GetLineno().String())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
 	case *goivy.LogicEnsuresAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, a.GetLineno().String())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
 	case *goivy.LogicSubgoalAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, a.GetLineno().String())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
 	case *goivy.LogicAssumeAction:
-		g.emitAssertLike(w, "ivy_assume", a.Formula, a.GetLineno().String())
+		g.emitAssertLike(w, "ivy_assume", a.Formula, linenoStr(a.GetLineno()))
 	case *goivy.LogicIfAction:
 		g.emitIf(w, a)
 	case *goivy.LogicWhileAction:
@@ -48,6 +52,10 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 		g.emitCall(w, a)
 	case *goivy.LogicLocalAction:
 		g.emitLocal(w, a)
+	// Python ivy_actions.py:1192-1206 LetAction has no `emit`
+	// assignment in ivy_to_cpp.py — it is lowered upstream by
+	// `int_update` via `subst_action`. Go's `emitLet` performs an
+	// equivalent alias-substitution rewrite for direct callers.
 	case *goivy.LogicLetAction:
 		g.emitLet(w, a)
 	case *goivy.LogicBindOldsAction:
@@ -57,17 +65,50 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 	case *goivy.LogicDebugAction:
 		g.emitDebug(w, a)
 	case *goivy.LogicCrashAction:
-		w.line("std::abort();")
+		// Mirrors Python ivy_to_cpp.py:3888-3891:
+		//     def emit_crash(self,header):
+		//         pass
+		// CrashAction is lowered upstream by action_update
+		// (ivy_actions.py:1253-1266) into a Sequence of Havoc
+		// actions before reaching emit. Python emits nothing if it
+		// ever survives that lowering; mirror that behavior.
+		_ = a
 	case *goivy.ReturnAction:
 		g.emitReturn(w)
 	case *goivy.IgnoreAction:
 		return
 	case *goivy.LogicAssignFieldAction:
 		g.emitAssignField(w, a)
+	// Python ivy_actions.py:756-797 NullFieldAction/CopyFieldAction
+	// have no `emit` assignment in ivy_to_cpp.py — they are pre-1.3
+	// legacy nodes lowered upstream into AssignAction by
+	// `make_field_update`. Go keeps direct emit helpers so synthesized
+	// instances do not crash code generation.
 	case *goivy.LogicNullFieldAction:
 		g.emitNullField(w, a)
 	case *goivy.LogicCopyFieldAction:
 		g.emitCopyField(w, a)
+	case *goivy.LogicThunkAction:
+		// Python ivy_actions.py:1271-1280 ThunkAction has no
+		// `emit` assignment in ivy_to_cpp.py — reaching emit would
+		// AttributeError. The class is desugared upstream (the
+		// inline comment on the Python class says so explicitly).
+		g.unsupported(w, "thunk reached emit (Python ThunkAction has no emit; expected to be desugared upstream): %s at %s",
+			a.String(), a.GetLineno().String())
+	case *goivy.LogicInstantiateAction:
+		// Python ivy_actions.py:798-832 InstantiateAction has no
+		// `emit` assignment in ivy_to_cpp.py — reaching emit would
+		// AttributeError. The class is inlined upstream during
+		// module composition.
+		g.unsupported(w, "instantiate reached emit (Python InstantiateAction has no emit; expected to be inlined upstream): %s at %s",
+			a.String(), a.GetLineno().String())
+	case *goivy.LogicRanking:
+		// Python ivy_actions.py:1050-1052 Ranking has no `emit`
+		// assignment in ivy_to_cpp.py — reaching emit would
+		// AttributeError. Ranking/progress declarations are
+		// enforced by separate analysis, not by code emission.
+		g.unsupported(w, "ranking reached emit (Python Ranking has no emit; ranking/progress is enforced separately): %s at %s",
+			a.String(), a.GetLineno().String())
 	default:
 		g.unsupported(w, "unsupported action %T: %s", act, act.String())
 	}
@@ -81,23 +122,25 @@ func (g *Generator) emitReturn(w *cppWriter) {
 	w.line("return;")
 }
 
+// emitHavoc mirrors Python `emit_havoc` (ivy_to_cpp.py:3768-3773):
+//
+//	def emit_havoc(self,header):
+//	    print(self)
+//	    print(self.lineno)
+//	    assert False
+//
+// Python aborts code generation at the `assert False`. HavocAction is
+// supposed to be eliminated upstream (lowered to `mk_nondet` nondet
+// init paths); reaching emit is a bug. Mirror Python by refusing to
+// emit and reporting the offending target and lineno through
+// `g.unsupported`, which records into `g.errs` so `Generate` returns
+// the diagnostic.
 func (g *Generator) emitHavoc(w *cppWriter, a *goivy.LogicHavocAction) {
-	if a.Target == nil {
-		g.unsupported(w, "unsupported havoc target: nil")
-		return
+	target := "<nil>"
+	if a.Target != nil {
+		target = a.Target.String()
 	}
-	loops, ok := g.openAssignmentLoops(w, a.Target)
-	if !ok {
-		return
-	}
-	lhs, err := g.emitExpr(a.Target)
-	if err != nil {
-		g.unsupported(w, "unsupported havoc target: %s", err.Error())
-		g.closeAssignmentLoops(w, loops)
-		return
-	}
-	w.linef("%s = %s;", lhs, g.cppZeroValue(a.Target.NodeSort()))
-	g.closeAssignmentLoops(w, loops)
+	g.unsupported(w, "havoc reached emit (Python emit_havoc asserts False): %s at %s", target, a.GetLineno().String())
 }
 
 func (g *Generator) emitSet(w *cppWriter, a *goivy.LogicSetAction) {
@@ -134,36 +177,29 @@ func setTargetAndValue(lit goivy.Expr) (goivy.Expr, string) {
 	}
 }
 
+// emitAssign mirrors Python `emit_assign` (ivy_to_cpp.py:3703-3764). The
+// extensional-relation-clear shortcut runs first; otherwise we dispatch on
+// whether the LHS has free variables, and for quantified LHSs whether the
+// loops can be opened or we need the thunk-based fallback. The simple,
+// two-phase, and large emission bodies live in assign.go / thunk.go.
 func (g *Generator) emitAssign(w *cppWriter, a *goivy.LogicAssignAction) {
-	// Python emit_assign falls through to emit_assign_large for an
-	// extensional relation set to false (ivy_to_cpp.py:3703-3724), which
-	// builds a thunk evaluating to false. For hash_thunk storage with the
-	// default operator[]-false behavior, clearing memo achieves the same
-	// state without needing make_thunk emission (TODO 013). This is the
-	// path that initializes extensional relations in `after init` blocks
-	// over uninterpreted sorts.
+	// All-false extensional-relation reset becomes `r.memo.clear();`.
+	// Python falls through to emit_assign_large for this shape; the clear
+	// is observationally equivalent for hash_thunk storage.
 	if g.emitExtensionalRelationClear(w, a) {
 		return
 	}
-	loops, ok := g.openAssignmentLoops(w, a.LHS)
-	if !ok {
+	vs := goivy.FreeVariablesList(a.LHS)
+	if len(vs) == 0 {
+		g.emitAssignSimple(w, a)
 		return
 	}
-	lhs, err := g.emitExpr(a.LHS)
-	if err != nil {
-		g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
-		g.closeAssignmentLoops(w, loops)
+	body := g.assignBoundsExpr(a)
+	if !g.canOpenAssignmentLoopsBounded(a.LHS, body) {
+		g.emitAssignLarge(w, a, vs)
 		return
 	}
-	rhs, err := g.emitExpr(a.RHS)
-	if err != nil {
-		g.unsupported(w, "unsupported assignment rhs: %s", err.Error())
-		g.closeAssignmentLoops(w, loops)
-		return
-	}
-	rhs = g.maybeVariantUpcast(a.LHS.NodeSort(), a.RHS.NodeSort(), rhs, "")
-	w.linef("%s = %s;", lhs, rhs)
-	g.closeAssignmentLoops(w, loops)
+	g.emitAssignTwoPhase(w, a, vs)
 }
 
 func (g *Generator) closeAssignmentLoops(w *cppWriter, loops int) {
@@ -202,6 +238,15 @@ func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label 
 	w.linef(`%s(%s, "%s");`, fn, expr, escapeString(label))
 }
 
+// linenoStr mirrors Python ivy_utils.lineno_str (ivy_utils.py:285-291):
+// render the AST's location, then drop a trailing ": ". Goivy's
+// Location.String() always appends ": " after filename and line, which
+// matches Python's __str__ — but Python strips that suffix before
+// substituting into ivy_assert / ivy_assume labels (ivy_to_cpp.py:3794).
+func linenoStr(loc goivy.Location) string {
+	return strings.TrimSuffix(loc.String(), ": ")
+}
+
 func (g *Generator) emitIf(w *cppWriter, a *goivy.LogicIfAction) {
 	if some, ok := a.Cond.(*goivy.SomeCondition); ok {
 		g.emitIfSome(w, a, some)
@@ -226,8 +271,8 @@ func (g *Generator) emitIf(w *cppWriter, a *goivy.LogicIfAction) {
 }
 
 func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) {
-	if some.Kind != "some" {
-		g.unsupported(w, "unsupported if %s condition: minimizing/maximizing some is not supported yet", some.Kind)
+	if some.Kind == "some_min" || some.Kind == "some_max" {
+		g.emitIfSomeMinMax(w, a, some)
 		return
 	}
 	if g.emitIfSomeVariantDowncast(w, a, some) {
@@ -238,17 +283,14 @@ func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy
 	}
 	found := g.nextTemp("__ivy_some")
 	w.linef("bool %s = false;", found)
+	headers, err := g.someConditionLoopHeaders(some)
+	if err != nil {
+		g.unsupported(w, "unsupported some parameter: %s", err.Error())
+		return
+	}
 	opened := 0
-	for _, p := range some.Params {
-		header, err := g.loopHeaderForSort(p.CSort, varName(p.Name))
-		if err != nil {
-			g.unsupported(w, "unsupported some parameter %s:%s", varName(p.Name), err.Error())
-			for i := 0; i < opened; i++ {
-				w.close("")
-			}
-			return
-		}
-		w.open(header)
+	for _, h := range headers {
+		w.open(h)
 		opened++
 	}
 	cond, err := g.emitExpr(some.Fmla)
@@ -273,6 +315,168 @@ func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy
 		g.emitAction(w, elseAct)
 		w.close("")
 	}
+}
+
+// someConditionLoopHeaders chooses per-parameter loop headers for an
+// `if some` statement. Like someLoopHeaders, but the params arrive as
+// *goivy.Const and must be lifted to LogicVariable so the bound walker
+// (which follows Python `is_variable` semantics) can match them. The
+// emitted loop variable names remain the original param names so the
+// THEN body sees the expected identifiers.
+func (g *Generator) someConditionLoopHeaders(some *goivy.SomeCondition) ([]string, error) {
+	headers := make([]string, len(some.Params))
+	useBounds := false
+	if len(some.Params) > 0 && cppIsAnyIntegerType(g, some.Params[0].CSort) {
+		vars := make([]*goivy.LogicVariable, 0, len(some.Params))
+		subs := map[goivy.NodeKey]goivy.Expr{}
+		ok := true
+		for _, p := range some.Params {
+			v, err := goivy.NewVariable("X"+p.Name, p.CSort)
+			if err != nil {
+				ok = false
+				break
+			}
+			subs[goivy.Key(p)] = v
+			vars = append(vars, v)
+		}
+		if ok {
+			fmla, err := goivy.Substitute(some.Fmla, subs)
+			if err == nil {
+				if bounds, berr := g.getAllBounds(vars, fmla, true); berr == nil {
+					useBounds = true
+					for i, p := range some.Params {
+						h, herr := g.loopHeaderForSortBounds(p.CSort, varName(p.Name), bounds[i][0], bounds[i][1])
+						if herr != nil {
+							useBounds = false
+							break
+						}
+						headers[i] = h
+					}
+				}
+			}
+		}
+	}
+	if useBounds {
+		return headers, nil
+	}
+	for i, p := range some.Params {
+		h, err := g.loopHeaderForSort(p.CSort, varName(p.Name))
+		if err != nil {
+			return nil, err
+		}
+		headers[i] = h
+	}
+	return headers, nil
+}
+
+// emitIfSomeMinMax lowers `if some X. fmla minimizing/maximizing idx`. Mirrors
+// Python emit_some's SomeMinMax branch (ivy_to_cpp.py:3486-3555): scan all
+// candidates, track the current best index in a per-loop temp, and after the
+// scan dispatch the THEN/ELSE bodies with the winning witness in scope.
+func (g *Generator) emitIfSomeMinMax(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) {
+	if some.Index == nil {
+		g.unsupported(w, "unsupported %s condition: missing index expression", some.Kind)
+		return
+	}
+	found := g.nextTemp("__ivy_some")
+	bestIdx := g.nextTemp("__ivy_some_idx")
+	idxSort := some.Index.NodeSort()
+	idxType := g.cppType(idxSort)
+	w.linef("bool %s = false;", found)
+	w.linef("%s %s = %s;", idxType, bestIdx, g.cppZeroValue(idxSort))
+	// One witness temp per parameter so the THEN body can refer to the
+	// chosen value.
+	witnesses := make([]string, len(some.Params))
+	for i, p := range some.Params {
+		w.linef("%s %s = %s;", g.cppType(p.CSort), varName("__ivy_some_w"+fmt.Sprintf("%d_%s", i, p.Name)), g.cppZeroValue(p.CSort))
+		witnesses[i] = varName("__ivy_some_w" + fmt.Sprintf("%d_%s", i, p.Name))
+	}
+	headers, herr := g.someConditionLoopHeaders(some)
+	if herr != nil {
+		g.unsupported(w, "unsupported some parameter: %s", herr.Error())
+		return
+	}
+	opened := 0
+	for _, h := range headers {
+		w.open(h)
+		opened++
+	}
+	cond, err := g.emitExpr(some.Fmla)
+	if err != nil {
+		g.unsupported(w, "unsupported some condition: %s", err.Error())
+		for i := 0; i < opened; i++ {
+			w.close("")
+		}
+		return
+	}
+	w.open(fmt.Sprintf("if (%s) {", cond))
+	curIdx := g.nextTemp("__ivy_some_cur")
+	idxExpr, err := g.emitExpr(some.Index)
+	if err != nil {
+		g.unsupported(w, "unsupported some index: %s", err.Error())
+		w.close("")
+		for i := 0; i < opened; i++ {
+			w.close("")
+		}
+		return
+	}
+	w.linef("%s %s = %s;", idxType, curIdx, idxExpr)
+	var cmp string
+	if some.Kind == "some_min" {
+		cmp = fmt.Sprintf("%s < %s", curIdx, bestIdx)
+	} else {
+		cmp = fmt.Sprintf("%s < %s", bestIdx, curIdx)
+	}
+	w.open(fmt.Sprintf("if (!%s || (%s)) {", found, cmp))
+	w.linef("%s = true;", found)
+	w.linef("%s = %s;", bestIdx, curIdx)
+	for i, p := range some.Params {
+		w.linef("%s = %s;", witnesses[i], varName(p.Name))
+	}
+	w.close("")
+	// Python emit_some:3539-3540: if minimizing the first parameter, the
+	// first hit during ascending iteration is the minimum, so exit the
+	// loop. Helpful when scanning a wide integer domain.
+	if firstParamIsIndex(some) {
+		w.line("break;")
+	}
+	w.close("")
+	for i := 0; i < opened; i++ {
+		w.close("")
+	}
+	if thenAct, ok := a.ThenBody.(goivy.Action); ok {
+		w.open(fmt.Sprintf("if (%s) {", found))
+		// Bring the witness values into scope under the original param names
+		// so the THEN body emits the expected identifiers.
+		for i, p := range some.Params {
+			w.linef("%s %s = %s;", g.cppType(p.CSort), varName(p.Name), witnesses[i])
+		}
+		g.emitAction(w, thenAct)
+		w.close("")
+	}
+	if elseAct, ok := a.ElseBody.(goivy.Action); ok {
+		w.open(fmt.Sprintf("if (!%s) {", found))
+		g.emitAction(w, elseAct)
+		w.close("")
+	}
+}
+
+// firstParamIsIndex returns true when `some.Params[0]` is the same
+// variable as `some.Index`. Mirrors Python `self.params()[0] == self.index()`
+// (ivy_to_cpp.py:3539). The Index may surface as either a *Const or a
+// *LogicVariable; compare by name.
+func firstParamIsIndex(some *goivy.SomeCondition) bool {
+	if some == nil || len(some.Params) == 0 || some.Index == nil {
+		return false
+	}
+	pname := some.Params[0].Name
+	switch x := some.Index.(type) {
+	case *goivy.LogicVariable:
+		return x.Name == pname
+	case *goivy.Const:
+		return x.Name == pname
+	}
+	return false
 }
 
 func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) bool {
@@ -398,27 +602,62 @@ func (g *Generator) emitWhile(w *cppWriter, a *goivy.LogicWhileAction) {
 	w.close("")
 }
 
+// emitChoice mirrors Python `emit_choice` (ivy_to_cpp.py:3976-3994):
+//
+//	def emit_choice(self,header):
+//	    if len(self.args) == 1:
+//	        self.args[0].emit(header)
+//	        return
+//	    tmp = new_temp(header)
+//	    mk_nondet(header,tmp,len(self.args),"___branch",self.unique_id)
+//	    for idx,arg in enumerate(self.args):
+//	        indent(header)
+//	        if idx != 0:
+//	            header.append('else ')
+//	        if idx != len(self.args)-1:
+//	            header.append('if(' + tmp + ' == ' + str(idx) + ')');
+//	        header.append('{\n')
+//	        ...
+//
+// We emit an `if/else if/.../else` chain over a fresh int temp populated
+// by `___ivy_choose`. Python's mk_nondet hardcodes 0 into the emitted
+// `___ivy_choose` call (ivy_to_cpp.py:189) even though it receives
+// `rng = len(self.args)`; we mirror that exactly via mkNondet.
 func (g *Generator) emitChoice(w *cppWriter, a *goivy.LogicChoiceAction) {
 	if len(a.Branches) == 0 {
 		return
 	}
-	w.open(fmt.Sprintf("switch (___ivy_choose(%d, \"___branch\", %d)) {", len(a.Branches), a.UniqueID))
-	for i, b := range a.Branches {
-		if i == len(a.Branches)-1 {
-			w.line("default:")
-		} else {
-			w.linef("case %d:", i)
+	if len(a.Branches) == 1 {
+		if act, ok := a.Branches[0].(goivy.Action); ok {
+			g.emitAction(w, act)
 		}
-		w.indent++
+		return
+	}
+	tmp := g.nextTemp("__ivy_branch")
+	w.linef("int %s;", tmp)
+	g.mkNondet(w, tmp, len(a.Branches), "___branch", a.UniqueID, nil)
+	for idx, b := range a.Branches {
+		prefix := ""
+		if idx != 0 {
+			prefix = "else "
+		}
+		if idx != len(a.Branches)-1 {
+			w.open(fmt.Sprintf("%sif (%s == %d) {", prefix, tmp, idx))
+		} else {
+			w.open(prefix + "{")
+		}
 		if act, ok := b.(goivy.Action); ok {
 			g.emitAction(w, act)
 		}
-		w.line("break;")
-		w.indent--
+		w.close("")
 	}
-	w.close("")
 }
 
+// emitCall lowers a LogicCallAction. Mirrors Python emit_call
+// (ivy_to_cpp.py:3811-3886): annotation-driven argument routing,
+// alias-safety temporaries when an output position aliases an input,
+// variant upcast at the argument boundary, and ___ivy_stack push/pop
+// for gen/test targets.
 func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
 	name := a.CalleeName()
 	fn, err := funName(name)
@@ -426,13 +665,19 @@ func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
 		g.unsupported(w, "unsupported call: %s", err.Error())
 		return
 	}
-	var args []string
+
 	var calleeAction goivy.Action
 	if g.Mod != nil && g.Mod.Actions != nil {
 		calleeAction, _ = g.Mod.Actions.Get2(name)
 	}
+
+	// Emit positional argument strings from app.Terms and capture the
+	// per-position Expr for alias-safety checks. Apply per-argument
+	// variant upcasts against the formal parameter sort.
+	var args []string
+	var argExprs []goivy.Expr
 	if app, ok := a.Callee.(*goivy.Apply); ok {
-		formals := []*goivy.Const(nil)
+		var formals []*goivy.Const
 		if calleeAction != nil {
 			formals = calleeAction.GetFormalParams()
 		}
@@ -446,33 +691,101 @@ func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
 				s = g.maybeVariantUpcast(formals[i].CSort, t.NodeSort(), s, "")
 			}
 			args = append(args, s)
+			argExprs = append(argExprs, t)
 		}
 	}
-	if g.Mod != nil && g.Mod.Actions != nil && len(a.ActualReturns) == 1 {
-		if callee, ok := g.Mod.Actions.Get2(name); ok && len(callee.GetFormalReturns()) == 1 {
-			ret, err := g.emitExpr(a.ActualReturns[0])
+
+	// Without a known callee we cannot annotate. Fall back to the
+	// trailing-ref convention so built-ins keep working.
+	if calleeAction == nil {
+		for _, r := range a.ActualReturns {
+			s, err := g.emitExpr(r)
 			if err != nil {
 				g.unsupported(w, "unsupported call return: %s", err.Error())
 				return
 			}
-			callExpr := fmt.Sprintf("%s(%s)", fn, strings.Join(args, ", "))
-			callExpr = g.maybeVariantUpcast(a.ActualReturns[0].NodeSort(), callee.GetFormalReturns()[0].CSort, callExpr, "")
-			stacked := g.emitCallStackPush(w, a)
-			w.linef("%s = %s;", ret, callExpr)
-			g.emitCallStackPop(w, stacked)
-			return
+			args = append(args, s)
+		}
+		stacked := g.emitCallStackPush(w, a)
+		w.linef("%s(%s);", fn, strings.Join(args, ", "))
+		g.emitCallStackPop(w, stacked)
+		return
+	}
+
+	_, rtypes := g.getParamTypes(name, calleeAction)
+	nargs := len(args)
+
+	// Walk returns. For each ReturnRefType return whose Pos lies inside
+	// the input args, check whether the output target aliases the input
+	// at that slot or any other input — if so, save the input to a
+	// temporary, schedule a post-call copy-back, and rewrite args[pos]
+	// to read from the temp. For ReturnRefType returns whose Pos is
+	// beyond nargs, append the return target as a trailing argument.
+	type pendingCopy struct {
+		lhs string
+		tmp string
+	}
+	var copies []pendingCopy
+
+	for rpos := 0; rpos < len(rtypes) && rpos < len(a.ActualReturns); rpos++ {
+		rrt, ok := rtypes[rpos].(ReturnRefType)
+		if !ok {
+			continue
+		}
+		rv := a.ActualReturns[rpos]
+		pos := rrt.Pos
+		if pos < nargs {
+			iparg := argExprs[pos]
+			aliases := false
+			for j, other := range argExprs {
+				if j == pos {
+					continue
+				}
+				if g.mayAlias(other, iparg) {
+					aliases = true
+					break
+				}
+			}
+			if !exprRootEqByName(iparg, rv) || aliases {
+				tmp := g.nextTemp("__tmp")
+				w.linef("%s %s = %s;", g.cppType(rv.NodeSort()), tmp, args[pos])
+				args[pos] = tmp
+				lhsStr, err := g.emitExpr(rv)
+				if err != nil {
+					g.unsupported(w, "unsupported call return: %s", err.Error())
+					return
+				}
+				copies = append(copies, pendingCopy{lhs: lhsStr, tmp: tmp})
+			}
+		} else {
+			extra, err := g.emitExpr(rv)
+			if err != nil {
+				g.unsupported(w, "unsupported call return: %s", err.Error())
+				return
+			}
+			args = append(args, extra)
 		}
 	}
-	for _, r := range a.ActualReturns {
-		s, err := g.emitExpr(r)
-		if err != nil {
-			g.unsupported(w, "unsupported call return: %s", err.Error())
-			return
+
+	// Primary return assignment prefix: emitted only when rtypes[0] is
+	// not a ReturnRefType (Python ivy_to_cpp.py:3862-3864).
+	prefix := ""
+	if len(rtypes) >= 1 && len(a.ActualReturns) >= 1 {
+		if _, isRRT := rtypes[0].(ReturnRefType); !isRRT {
+			lhs, err := g.emitExpr(a.ActualReturns[0])
+			if err != nil {
+				g.unsupported(w, "unsupported call return: %s", err.Error())
+				return
+			}
+			prefix = lhs + " = "
 		}
-		args = append(args, s)
 	}
+
 	stacked := g.emitCallStackPush(w, a)
-	w.linef("%s(%s);", fn, strings.Join(args, ", "))
+	w.linef("%s%s(%s);", prefix, fn, strings.Join(args, ", "))
+	for _, c := range copies {
+		w.linef("%s = %s;", c.lhs, c.tmp)
+	}
 	g.emitCallStackPop(w, stacked)
 }
 
@@ -490,11 +803,32 @@ func (g *Generator) emitCallStackPop(w *cppWriter, stacked bool) {
 	}
 }
 
+// emitLocal mirrors Python `local_start` + `emit_local`
+// (ivy_to_cpp.py:3893-3917):
+//
+//	def local_start(header,params,nondet_id=None):
+//	    indent(header); header.append('{\n')
+//	    indent_level += 1
+//	    for p in params:
+//	        indent(header); code_line(header,sym_decl(p))
+//	        if nondet_id != None:
+//	            mk_nondet_sym(header,p,p.name,nondet_id)
+//
+//	def emit_local(self,header):
+//	    local_start(header,self.args[0:-1],self.unique_id)
+//	    self.args[-1].emit(header)
+//	    local_end(header)
+//
+// Each local is first declared uninitialized via `cppStorageDecl` (the
+// Go equivalent of `sym_decl`), then nondet-initialized via
+// `mkNondetSym` using the LocalAction's UniqueID. The body is emitted
+// inside the same block scope.
 func (g *Generator) emitLocal(w *cppWriter, a *goivy.LogicLocalAction) {
 	w.open("{")
 	for _, local := range a.Locals {
 		name := goivy.ExprName(local)
-		w.linef("%s %s = %s;", g.cppType(local.NodeSort()), varName(name), g.cppZeroValue(local.NodeSort()))
+		w.linef("%s;", g.cppStorageDecl(name, local.NodeSort(), ""))
+		g.mkNondetSym(w, local, name, a.UniqueID)
 	}
 	if bodyAct, ok := a.Body.(goivy.Action); ok {
 		g.emitAction(w, bodyAct)
@@ -532,26 +866,39 @@ func (g *Generator) emitLet(w *cppWriter, a *goivy.LogicLetAction) {
 	g.exprAliases = prev
 }
 
+// emitBindOlds mirrors Python's absence of an `emit_bind_olds`
+// function (no assignment to `ia.BindOldsAction.emit` exists in
+// ivy_to_cpp.py). `BindOldsAction` is supposed to be eliminated
+// upstream during `int_update` via `bind_olds_action`
+// (ivy_transrel.py:240); reaching emit is a bug, exactly like
+// `emit_havoc`'s `assert False`. Mirror Python by refusing to emit and
+// reporting the offending bindolds wrapper through `g.unsupported`.
 func (g *Generator) emitBindOlds(w *cppWriter, a *goivy.LogicBindOldsAction) {
-	if inner, ok := a.Inner.(goivy.Action); ok {
-		g.emitAction(w, inner)
-		return
+	inner := "<nil>"
+	if a.Inner != nil {
+		inner = fmt.Sprintf("%T", a.Inner)
 	}
-	g.unsupported(w, "unsupported bindolds inner %T", a.Inner)
+	g.unsupported(w, "bindolds reached emit (Python has no emit_bind_olds): inner=%s at %s", inner, a.GetLineno().String())
 }
 
+// emitAssignField handles a LogicAssignFieldAction by synthesizing the
+// equivalent LogicAssignAction(Apply(field, obj), value) and routing it
+// through emitAssign. This matches the modern Python representation
+// where `obj.field := value` parses directly into AssignAction with a
+// destructor-decomposed LHS (Python ivy_parser.py:3082 only constructs
+// AssignFieldAction under iu.get_numeric_version() <= [1,2]).
+//
+// As a result this path picks up emitAssign's variant upcast, two-phase
+// quantified-update handling, and emit_assign_large thunk fallback for
+// free if a future caller synthesizes a LogicAssignFieldAction.
 func (g *Generator) emitAssignField(w *cppWriter, a *goivy.LogicAssignFieldAction) {
-	lhs, err := g.emitFieldRef(a.Obj, a.Field)
-	if err != nil {
-		g.unsupported(w, "unsupported field assignment lhs: %s", err.Error())
+	if a == nil || a.Field == nil || a.Obj == nil {
+		g.unsupported(w, "unsupported field assignment: nil components")
 		return
 	}
-	rhs, err := g.emitExpr(a.Value)
-	if err != nil {
-		g.unsupported(w, "unsupported field assignment rhs: %s", err.Error())
-		return
-	}
-	w.linef("%s = %s;", lhs, rhs)
+	lhs := goivy.NewApplyUnchecked(a.Field, a.Obj)
+	synth := goivy.NewAssignAction(lhs, a.Value)
+	g.emitAssign(w, synth)
 }
 
 func (g *Generator) emitNullField(w *cppWriter, a *goivy.LogicNullFieldAction) {
@@ -621,21 +968,72 @@ func (g *Generator) emitNativeAction(w *cppWriter, a *goivy.LogicNativeAction) {
 	emitNativeLines(w, rendered)
 }
 
+// emitDebug mirrors Python emit_debug (ivy_to_cpp.py:3998-4026). The
+// compiler stores names parallel to values in LogicDebugAction
+// (WithNames, populated by compiler_phase6.go). For each clause we emit
+// the name as the JSON key and run emitPrintExpr on the value so
+// quantified expressions open loops over their free variables and wrap
+// in [...] like Python's emit_print_expr.
 func (g *Generator) emitDebug(w *cppWriter, a *goivy.LogicDebugAction) {
 	event := debugEventName(a.DebugExpr)
 	w.line(`std::cout << "{" << std::endl;`)
 	w.linef(`std::cout << "    \"event\" : \"%s\"," << std::endl;`, escapeString(event))
 	for i, e := range a.WithExprs {
-		expr, err := g.emitExpr(e)
-		if err != nil {
-			g.unsupported(w, "unsupported debug expression: %s", err.Error())
-			continue
+		name := ""
+		if i < len(a.WithNames) {
+			name = a.WithNames[i]
 		}
-		w.linef(`std::cout << "    \"value%d\" : " << (%s) << "," << std::endl;`, i, expr)
+		if name == "" {
+			// Fallback: synthetic DebugActions (e.g. unit tests) may pass
+			// bare exprs without a parallel name slot. Derive a key from
+			// the expression itself so the output is still well-formed.
+			name = goivy.ExprName(e)
+		}
+		w.linef(`std::cout << "    \"%s\" : ";`, escapeString(name))
+		g.emitPrintExpr(w, e)
+		w.line(`std::cout << "," << std::endl;`)
 	}
 	w.line(`std::cout << "}" << std::endl;`)
 }
 
+// emitPrintExpr mirrors Python emit_print_expr (ivy_to_cpp.py:3989-3996):
+// for each free variable in expr, open a loop over its sort and emit
+// `[` / `]` brackets around the value with `,` separators across
+// iterations. With no free variables, this is a simple `std::cout <<
+// (expr)`.
+func (g *Generator) emitPrintExpr(w *cppWriter, expr goivy.Expr) {
+	vs := goivy.FreeVariablesList(expr)
+	opened := 0
+	for _, v := range vs {
+		header, err := g.loopHeaderForVar(v)
+		if err != nil {
+			g.unsupported(w, "unsupported debug print variable %s: %s", varName(v.Name), err.Error())
+			g.closeAssignmentLoops(w, opened)
+			return
+		}
+		w.line(`std::cout << "[";`)
+		w.open(header)
+		w.linef(`if (%s) std::cout << ",";`, varName(v.Name))
+		opened++
+	}
+	value, err := g.emitExpr(expr)
+	if err != nil {
+		g.unsupported(w, "unsupported debug print expression: %s", err.Error())
+		g.closeAssignmentLoops(w, opened)
+		return
+	}
+	w.linef(`std::cout << (%s);`, value)
+	for i := 0; i < opened; i++ {
+		w.close("")
+		w.line(`std::cout << "]";`)
+	}
+}
+
+// debugEventName extracts the event-name string from the DebugExpr. The
+// parser emits the event as a quoted string literal Const (e.g.
+// `Const("\"tick\"")`); we strip the surrounding quotes here and let
+// the caller wrap + escape per Python's quote() helper inline in
+// emit_debug (ivy_to_cpp.py:4001-4005).
 func debugEventName(e goivy.Expr) string {
 	if e == nil {
 		return "debug"
@@ -647,6 +1045,7 @@ func debugEventName(e goivy.Expr) string {
 	}
 	return name
 }
+
 
 func escapeString(s string) string {
 	s = strings.ReplaceAll(s, `\`, `\\`)
