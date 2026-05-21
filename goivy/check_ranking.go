@@ -303,31 +303,61 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		return nil, fmt.Errorf("ranking invariant generation: %w", err)
 	}
 
-	// Desugar $was/$happened in invars and postconds.
-	// Use Clone (not NewLabeledFormula) to preserve LF id + metadata,
-	// matching Python's `expr.clone(...)` recursion in desugar
-	// (ivy_ranking.py:505).
-	l2sSaved := L2SSaved()
-	desugarFn := func(n Expr) (Expr, error) {
-		return Desugar(n, proofLabel)
-	}
-	for i, inv := range invars {
-		desugared, err := desugarFn(inv.Formula.(Expr))
-		if err != nil {
-			return nil, err
+	// Python ivy_ranking.py:433-457: convert_to_init + iinvs + neg_prop_init.
+	// These LFs must be created BEFORE winvs and desugar to match Python's order.
+	{
+		knownInits := make(map[string]bool)
+		var iinvs []Expr
+		var localCTI func(f Expr) Expr
+		localCTI = func(f Expr) Expr {
+			switch n := f.(type) {
+			case *LogicAnd:
+				terms := make([]Expr, len(n.Terms))
+				for i, t := range n.Terms {
+					terms[i] = localCTI(t)
+				}
+				return &LogicAnd{Terms: terms}
+			case *LogicOr:
+				terms := make([]Expr, len(n.Terms))
+				for i, t := range n.Terms {
+					terms[i] = localCTI(t)
+				}
+				return &LogicOr{Terms: terms}
+			case *LogicNot:
+				return &LogicNot{Body: localCTI(n.Body)}
+			case *LogicImplies:
+				return &LogicImplies{T1: localCTI(n.T1), T2: localCTI(n.T2)}
+			case *LogicIff:
+				return &LogicIff{T1: localCTI(n.T1), T2: localCTI(n.T2)}
+			case *ForAll:
+				return &ForAll{Variables: n.Variables, Body: localCTI(n.Body)}
+			case *LogicExists:
+				return &LogicExists{Variables: n.Variables, Body: localCTI(n.Body)}
+			default:
+				vs := collectVarsSlice(f)
+				ini := applyNB(l2sInit(vs, f, proofLabel), checkVarsToNodes(vs)...)
+				key := string(f.Sexp())
+				if _, ok := f.(*LogicGlobally); ok && !knownInits[key] {
+					iinvs = append(iinvs, &LogicImplies{T1: ini, T2: f})
+					knownInits[key] = true
+				}
+				if _, ok := f.(*LogicEventually); ok && !knownInits[key] {
+					iinvs = append(iinvs, &LogicImplies{T1: f, T2: ini})
+					knownInits[key] = true
+				}
+				return ini
+			}
 		}
-		invars[i] = inv.Clone([]Node{inv.Label, desugared}).(*LabeledFormula)
-	}
-	for i, pc := range postconds {
-		desugared, err := desugarFn(pc.Formula.(Expr))
-		if err != nil {
-			return nil, err
+		negPropInit := &LogicNot{Body: localCTI(fmla)}
+		acfg := cfg.Mod.Cfg.AstCfg
+		for i, iinv := range iinvs {
+			invars = appendLF(acfg, invars, fmt.Sprintf("l2s_init_glob_%d", i), iinv, lineno)
 		}
-		postconds[i] = pc.Clone([]Node{pc.Label, desugared}).(*LabeledFormula)
+		invars = appendLF(acfg, invars, "neg_prop_init", negPropInit, lineno)
 	}
-	_ = l2sSaved // used by Desugar internally
 
-	// Python ivy_ranking.py:449-461: WhenOperator invariant generation from pprems.
+	// Python ivy_ranking.py:461-471: WhenOperator invariant generation from pprems.
+	// This must come BEFORE desugar to match Python's execution order.
 	{
 		var pprems []Expr
 		for _, p := range prems {
@@ -352,10 +382,6 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 				if !ok || wo.Name != "first" {
 					continue
 				}
-				// Key by Sexp (structural canonical form). The Python
-				// ranking equivalent uses Expr struct equality on
-				// WhenOperator. wo.String() = PrettyFmla drops sort
-				// annotations and would collapse sort-distinct WhenOps.
 				key := string(wo.Sexp())
 				if seen[key] {
 					continue
@@ -380,6 +406,23 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		for i, winv := range winvs {
 			label := NewConst(fmt.Sprintf("l2s_when_%d", i), Boolean)
 			invars = append(invars, acfg.NewLabeledFormula(label, winv))
+		}
+	}
+
+	// Python ivy_ranking.py:515: desugar invars only (not postconds).
+	// Use Clone (not NewLabeledFormula) to preserve LF id + metadata,
+	// matching Python's `expr.clone(...)` recursion in desugar (ivy_ranking.py:505).
+	// This comes AFTER neg_prop_init and winvs to match Python's execution order.
+	{
+		desugarFn := func(n Expr) (Expr, error) {
+			return Desugar(n, proofLabel)
+		}
+		for i, inv := range invars {
+			desugared, err := desugarFn(inv.Formula.(Expr))
+			if err != nil {
+				return nil, err
+			}
+			invars[i] = inv.Clone([]Node{inv.Label, desugared}).(*LabeledFormula)
 		}
 	}
 
