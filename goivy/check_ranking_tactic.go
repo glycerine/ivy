@@ -372,10 +372,11 @@ func rankingInvariants(
 		postconds = append(postconds, mklf("l2s_sched_exists", schedExists))
 
 		// l2s_eventually_start invariant
+		// Python: lg.Eventually(proof_label, work_start.args[1]) — environ=proof_label (empty string)
 		invars = append(invars, mklf("l2s_eventually_start",
 			&LogicImplies{
 				T1: &LogicNot{Body: workInvarVal},
-				T2: &LogicEventually{Body: eqRHS(workStart)},
+				T2: &LogicEventually{Environ: strPtr(proofLabel), Body: eqRHS(workStart)},
 			}))
 	}
 
