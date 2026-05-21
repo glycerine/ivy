@@ -151,6 +151,7 @@ func (g *Generator) emitAssign(w *cppWriter, a *goivy.LogicAssignAction) {
 		g.closeAssignmentLoops(w, loops)
 		return
 	}
+	rhs = g.maybeVariantUpcast(a.LHS.NodeSort(), a.RHS.NodeSort(), rhs, "")
 	w.linef("%s = %s;", lhs, rhs)
 	g.closeAssignmentLoops(w, loops)
 }
@@ -332,8 +333,8 @@ func (g *Generator) emitIfSomeVariantDowncast(w *cppWriter, a *goivy.LogicIfActi
 		return true
 	}
 	idx := g.Mod.VariantIndex(app.Terms[0].NodeSort(), v.CSort)
-	w.open(fmt.Sprintf("if (%s.__tag == %d) {", lhs, idx))
-	w.linef("%s %s = %s.%s;", g.cppType(v.CSort), varName(v.Name), lhs, variantPayloadField(v.CSort))
+	w.open(fmt.Sprintf("if (%s.tag == %d) {", lhs, idx))
+	w.linef("%s %s = %s;", g.cppType(v.CSort), varName(v.Name), g.variantDowncastExpr(lhs, app.Terms[0].NodeSort(), v.CSort, ""))
 	if thenAct, ok := a.ThenBody.(goivy.Action); ok {
 		g.emitAction(w, thenAct)
 	}
@@ -389,12 +390,23 @@ func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
 		return
 	}
 	var args []string
+	var calleeAction goivy.Action
+	if g.Mod != nil && g.Mod.Actions != nil {
+		calleeAction, _ = g.Mod.Actions.Get2(name)
+	}
 	if app, ok := a.Callee.(*goivy.Apply); ok {
-		for _, t := range app.Terms {
+		formals := []*goivy.Const(nil)
+		if calleeAction != nil {
+			formals = calleeAction.GetFormalParams()
+		}
+		for i, t := range app.Terms {
 			s, err := g.emitExpr(t)
 			if err != nil {
 				g.unsupported(w, "unsupported call arg: %s", err.Error())
 				return
+			}
+			if i < len(formals) {
+				s = g.maybeVariantUpcast(formals[i].CSort, t.NodeSort(), s, "")
 			}
 			args = append(args, s)
 		}
@@ -406,8 +418,10 @@ func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
 				g.unsupported(w, "unsupported call return: %s", err.Error())
 				return
 			}
+			callExpr := fmt.Sprintf("%s(%s)", fn, strings.Join(args, ", "))
+			callExpr = g.maybeVariantUpcast(a.ActualReturns[0].NodeSort(), callee.GetFormalReturns()[0].CSort, callExpr, "")
 			stacked := g.emitCallStackPush(w, a)
-			w.linef("%s = %s(%s);", ret, fn, strings.Join(args, ", "))
+			w.linef("%s = %s;", ret, callExpr)
 			g.emitCallStackPop(w, stacked)
 			return
 		}

@@ -221,8 +221,8 @@ func (g *Generator) emitVariantRelation(name string, terms []goivy.Expr) (string
 		return "", true, err
 	}
 	idx := g.Mod.VariantIndex(terms[0].NodeSort(), terms[1].NodeSort())
-	field := variantPayloadField(terms[1].NodeSort())
-	return fmt.Sprintf("(%s.__tag == %d && %s.%s == %s)", lhs, idx, lhs, field, rhs), true, nil
+	downcast := g.variantDowncastExpr(lhs, terms[0].NodeSort(), terms[1].NodeSort(), "")
+	return fmt.Sprintf("(%s.tag == %d && %s == %s)", lhs, idx, downcast, rhs), true, nil
 }
 
 func variantPayloadField(s goivy.Sort) string {
@@ -353,7 +353,7 @@ func (g *Generator) emitExistsVariantRelation(vars []*goivy.LogicVariable, body 
 	if idx < 0 {
 		return "", true, fmt.Errorf("ivy2cpp: no variant index for %s in %s", sortName(bound.VSort), sortName(app.Terms[0].NodeSort()))
 	}
-	return fmt.Sprintf("(%s.__tag == %d)", lhs, idx), true, nil
+	return fmt.Sprintf("(%s.tag == %d)", lhs, idx), true, nil
 }
 
 func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy.Expr, forall bool) (string, bool, error) {
@@ -557,13 +557,12 @@ func (g *Generator) emitSomeVariantRelation(s *goivy.LogicSome) (string, bool, e
 		return "", true, fmt.Errorf("ivy2cpp: no variant index for %s in %s", sortName(bound.VSort), sortName(app.Terms[0].NodeSort()))
 	}
 	boundName := varName(bound.Name)
-	field := variantPayloadField(bound.VSort)
 	var w cppWriter
 	w.raw("([&]() {")
 	w.raw("\n")
 	w.indent = 1
-	w.open(fmt.Sprintf("if (%s.__tag == %d) {", lhs, idx))
-	w.linef("%s %s = %s.%s;", g.cppType(bound.VSort), boundName, lhs, field)
+	w.open(fmt.Sprintf("if (%s.tag == %d) {", lhs, idx))
+	w.linef("%s %s = %s;", g.cppType(bound.VSort), boundName, g.variantDowncastExpr(lhs, app.Terms[0].NodeSort(), bound.VSort, ""))
 	if s.IfVal != nil || s.ElseVal != nil {
 		if s.IfVal == nil || s.ElseVal == nil {
 			return "", true, fmt.Errorf("ivy2cpp: some expression requires both if and else values: %s", s.String())

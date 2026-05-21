@@ -19,6 +19,20 @@ struct ivy_gen {
 };
 #endif
 
+inline z3::expr exists(const z3::expr &var, const z3::expr &body) {
+    Z3_app vars[1] = { var };
+    Z3_ast r = Z3_mk_exists_const(body.ctx(), 0, 1, vars, 0, 0, body);
+    body.check_error();
+    return z3::expr(body.ctx(), r);
+}
+
+inline z3::expr forall(const z3::expr &var, const z3::expr &body) {
+    Z3_app vars[1] = { var };
+    Z3_ast r = Z3_mk_forall_const(body.ctx(), 0, 1, vars, 0, 0, body);
+    body.check_error();
+    return z3::expr(body.ctx(), r);
+}
+
 class gen : public ivy_gen {
 public:
     z3::context ctx;

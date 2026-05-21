@@ -186,6 +186,7 @@ func (g *Generator) emitImpl() error {
 	} else {
 		g.emitCPPTypeImpls(w)
 	}
+	g.emitVariantImpls(w)
 	w.open(g.constructorSignature(true) + " {")
 	g.emitRuntimeConstructorPrelude(w)
 	g.emitConstructorParamAssignments(w)
@@ -335,6 +336,7 @@ func (g *Generator) emitDestructorStruct(w *cppWriter, name string) {
 			w.linef("%s;", g.cppFunctionStorageDecl(memName(d.Name), domain, fs.Range(), ""))
 		}
 	}
+	g.emitDestructorStructHash(w, destructors)
 	g.emitDestructorStructComparators(w, name, destructors)
 	g.emitDestructorStructWriter(w, name, destructors)
 	w.close(";")
@@ -373,28 +375,7 @@ func (g *Generator) emitCTupleDecls(w *cppWriter) {
 }
 
 func (g *Generator) emitVariantSuperStruct(w *cppWriter, name string) {
-	variants := g.Mod.Variants[name]
-	typeName := varName(name)
-	w.open(fmt.Sprintf("struct %s {", typeName))
-	w.line("int __tag;")
-	for _, v := range variants {
-		vname := varName(sortName(v))
-		if vname == "" {
-			continue
-		}
-		w.linef("%s __%s;", vname, vname)
-	}
-	w.linef("%s() : __tag(-1) {}", typeName)
-	for i, v := range variants {
-		vname := varName(sortName(v))
-		if vname == "" {
-			continue
-		}
-		w.linef("%s(const %s &value) : __tag(%d), __%s(value) {}", typeName, vname, i, vname)
-	}
-	g.emitVariantSuperComparators(w, typeName, variants)
-	g.emitVariantSuperWriter(w, typeName, variants)
-	w.close(";")
+	g.emitVariantWrapperDecl(w, name)
 }
 
 func (g *Generator) emitVariantLeafStruct(w *cppWriter, name string) {
@@ -484,6 +465,30 @@ func (g *Generator) emitDestructorStructComparators(w *cppWriter, name string, d
 	}
 	w.line("return false;")
 	w.close("")
+}
+
+func (g *Generator) emitDestructorStructHash(w *cppWriter, destructors []*goivy.Const) {
+	var parts []string
+	for _, d := range destructors {
+		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
+		if !ok {
+			continue
+		}
+		domain := fs.Domain()
+		if len(domain) > 0 {
+			domain = domain[1:]
+		}
+		if len(domain) != 0 {
+			continue
+		}
+		field := varName(memName(d.Name))
+		parts = append(parts, fmt.Sprintf("hash_space::hash<%s>()(%s)", cppHashType(g, fs.Range()), field))
+	}
+	if len(parts) == 0 {
+		w.line("size_t __hash() const { return 0; }")
+		return
+	}
+	w.linef("size_t __hash() const { return %s; }", strings.Join(parts, " + "))
 }
 
 func (g *Generator) emitDestructorStructWriter(w *cppWriter, name string, destructors []*goivy.Const) {

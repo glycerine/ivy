@@ -353,7 +353,31 @@ Tests to add:
 - Fixtures using fixed-width numeric bitvectors, string bitvectors, casts,
   extraction, concatenation, arithmetic overflow, and solver-generated values.
 
-## TODO 006 - Replace the Go variant implementation with Python's ref-counted wrapper
+## DONE 006 - Replace the Go variant implementation with Python's ref-counted wrapper
+
+Status update, May 21, 2026:
+
+- Replaced the generated flat variant-supertype representation with a
+  Python-style ref-counted wrapper: `wrap`, `twrap<T>`, `tag`, `ptr`, copy
+  constructor, assignment, destructor, `temp_counter`, `prepare`, `cleanup`,
+  `__hash`, and `unwrap<T>`.
+- Updated variant relation, `exists`, `some`, `if some`, assignments, call
+  arguments, and single-return call assignment to use Python-style
+  `isa`/downcast/upcast expressions instead of direct payload fields.
+- Emitted variant stream output, `_arg`, `__ser`, `__deser`, and Z3
+  `__from_solver`, `__to_solver`, and `__randomize` specializations with
+  `*>:super:sub` relation names.
+- Added the missing generated `__hash` method for scalar destructor/struct
+  fields so struct variants can participate in wrapper hashing.
+- Added shared Z3 `exists`/`forall` helpers to `include2cpp/ivy_go_z3.hpp` for
+  the generated variant solver templates.
+- Updated variant shape tests from the old flat `__tag`/payload-field layout to
+  the wrapper API and added checks for parser/serializer/Z3 specialization
+  shape.
+- Verification: `XTRACE_OFF=1 go test ./ivy2cpp -count=1` from
+  `/Users/jaten/go/src/github.com/glycerine/ivy/goivy` passed in `0.330s`.
+- Slow compile-only smoke: `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp
+  -run 'TestVariantSupertypeAssignmentCompiles$' -count=1` passed in `1.118s`.
 
 Go locations:
 

@@ -1501,10 +1501,21 @@ export step
 	for _, want := range []string{
 		"struct request {",
 		"struct msg {",
-		"int __tag;",
-		"request __request;",
-		"msg(const request &value)",
-		"saved = loc__tmp;",
+		"struct wrap {",
+		"template <typename T> struct twrap : public wrap",
+		"int tag;",
+		"wrap *ptr;",
+		"msg(int tag, wrap *ptr) : tag(tag), ptr(ptr) {}",
+		"static int temp_counter;",
+		"template <typename T> static const T &unwrap(const msg &x)",
+		"int variants::msg::temp_counter = 0;",
+		"bool operator==(const variants::msg &s, const variants::msg &t)",
+		"std::ostream &operator<<(std::ostream &s, const variants::msg &t)",
+		"template <> variants::msg _arg<variants::msg>",
+		"template <> void __ser<variants::msg>",
+		"template <> void __deser<variants::msg>",
+		`g.ctx.function("*>:msg:request", g.sort("msg"), g.sort("request"), g.ctx.bool_sort())`,
+		"saved = msg(0, new msg::twrap<request>(loc__tmp));",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -1540,12 +1551,13 @@ export load
 	}
 	for _, want := range []string{
 		"struct t {",
-		"a __a;",
-		"t(const a &value) : __tag(0), __a(value) {}",
-		"if (v.__tag == 0)",
+		"struct wrap {",
+		"template <typename T> struct twrap : public wrap",
+		"if (v.tag == 0)",
 		"static variantdown::a ivy2cpp_parse_a(const std::string &s)",
 		`variantdown::a inp = ivy2cpp_parse_a(ivy2cpp_read_arg(args, 0, "inp"));`,
-		"a loc__q = v.__a;",
+		"v = t(0, new t::twrap<a>(inp));",
+		"a loc__q = t::unwrap< a >(v);",
 		"out = loc__q;",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
@@ -1572,8 +1584,10 @@ export make
 	}
 	for _, want := range []string{
 		"friend std::ostream &operator<<(std::ostream &out, const a &value)",
-		"friend std::ostream &operator<<(std::ostream &out, const t &value)",
-		"case 0: out << value.__a; return out;",
+		"friend std::ostream &operator<<(std::ostream &s, const t &t);",
+		"std::ostream &operator<<(std::ostream &s, const variantout::t &t)",
+		`case 0: s << "a:" << variantout::t::unwrap< variantout::a >(t); break;`,
+		"out = t(0, new t::twrap<a>(loc__q));",
 		"variantout::t __ivy_result = ivy.make();",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
@@ -1605,8 +1619,9 @@ export make
 	for _, want := range []string{
 		"friend std::ostream &operator<<(std::ostream &out, const req &value)",
 		`out << "shade:" << value.shade;`,
-		"friend std::ostream &operator<<(std::ostream &out, const t &value)",
-		"case 0: out << value.__req; return out;",
+		"friend std::ostream &operator<<(std::ostream &s, const t &t);",
+		`case 0: s << "req:" << variantstructout::t::unwrap< variantstructout::req >(t); break;`,
+		"out = t(0, new t::twrap<req>(loc__r));",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -1630,7 +1645,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, "ivy_assert((v.__tag == 0 && v.__a == av)") {
+	if !strings.Contains(out.Impl, "ivy_assert((v.tag == 0 && t::unwrap< a >(v) == av)") {
 		t.Fatalf("missing variant relation assertion:\n%s", out.Impl)
 	}
 	assertNoUnsupportedCPP(t, out)
@@ -1651,7 +1666,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, "ivy_assert((v.__tag == 0)") {
+	if !strings.Contains(out.Impl, "ivy_assert((v.tag == 0)") {
 		t.Fatalf("missing optimized variant-exists assertion:\n%s", out.Impl)
 	}
 	if strings.Contains(out.Impl, "cannot emit bounded loop") || strings.Contains(out.Impl, "for (a Q") {
@@ -1859,8 +1874,8 @@ individual v : t
 		t.Fatalf("emitExpr: %v", err)
 	}
 	for _, want := range []string{
-		"if (v.__tag == 0)",
-		"a Q = v.__a;",
+		"if (v.tag == 0)",
+		"a Q = t::unwrap< a >(v);",
 		"return Q;",
 		"return a();",
 	} {
@@ -1922,8 +1937,8 @@ individual fallback : a
 		t.Fatalf("emitExpr: %v", err)
 	}
 	for _, want := range []string{
-		"if (v.__tag == 0)",
-		"a Q = v.__a;",
+		"if (v.tag == 0)",
+		"a Q = t::unwrap< a >(v);",
 		"return Q;",
 		"return fallback;",
 	} {

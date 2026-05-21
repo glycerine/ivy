@@ -125,6 +125,10 @@ func (g *Generator) emitZ3RandomValueHelpers(w *cppWriter) {
 		if !ok {
 			continue
 		}
+		if g.isVariantSuperName(name) {
+			g.emitZ3VariantRandomHelper(w, s)
+			continue
+		}
 		if it, ok := g.cppInterpType(s); ok {
 			g.emitZ3CPPInterpRandomHelper(w, s, it)
 			continue
@@ -154,6 +158,42 @@ func (g *Generator) emitZ3EnumRandomHelper(w *cppWriter, s *goivy.LogicEnumerate
 		w.linef("case %d: return %s::%s;", i, g.ClassName, varName(v))
 	}
 	w.linef("default: return %s::%s;", g.ClassName, varName(s.Extension[len(s.Extension)-1]))
+	w.close("")
+	w.close("")
+	w.blank()
+}
+
+func (g *Generator) emitZ3VariantRandomHelper(w *cppWriter, s goivy.Sort) {
+	if s == nil {
+		return
+	}
+	fn := z3RandomHelperName(s)
+	if fn == "" {
+		return
+	}
+	variants := g.Mod.Variants[sortName(s)]
+	if len(variants) == 0 {
+		return
+	}
+	typ := g.cppQualifiedType(s, g.ClassName)
+	w.open(fmt.Sprintf("static %s %s(gen &g) {", typ, fn))
+	w.open(fmt.Sprintf("switch (g.random_index(0, %d)) {", len(variants)-1))
+	for i, sub := range variants {
+		subType := g.cppQualifiedType(sub, g.ClassName)
+		value, ok := g.z3RandomValueExprFrom(sub, "g")
+		if !ok {
+			value = g.cppZeroValueInScope(sub)
+		}
+		prefix := fmt.Sprintf("case %d:", i)
+		if i == len(variants)-1 {
+			prefix = "default:"
+		}
+		w.line(prefix)
+		w.indent++
+		w.linef("%s tmp = %s;", subType, value)
+		w.linef("return %s;", g.variantUpcastExpr(s, sub, "tmp", g.ClassName))
+		w.indent--
+	}
 	w.close("")
 	w.close("")
 	w.blank()
@@ -378,6 +418,12 @@ func (g *Generator) z3RandomValueExprFrom(s goivy.Sort, genExpr string) (string,
 		}
 		return z3RandomHelperName(st) + "(" + genExpr + ")", true
 	default:
+		if g.isVariantSuperName(sortName(s)) {
+			fn := z3RandomHelperName(s)
+			if fn != "" {
+				return fn + "(" + genExpr + ")", true
+			}
+		}
 		if _, ok := g.cppInterpType(s); ok {
 			fn := z3RandomHelperName(s)
 			if fn != "" {
