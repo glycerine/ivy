@@ -390,6 +390,7 @@ func (g *Generator) emitVariantLeafStruct(w *cppWriter, name string) {
 	w.open(fmt.Sprintf("bool operator<(const %s &other) const {", typeName))
 	w.line("return __value < other.__value;")
 	w.close("")
+	w.line("size_t __hash() const { return hash_space::hash<long long>()(__value); }")
 	w.open(fmt.Sprintf("friend std::ostream &operator<<(std::ostream &out, const %s &value) {", typeName))
 	w.line("out << value.__value;")
 	w.line("return out;")

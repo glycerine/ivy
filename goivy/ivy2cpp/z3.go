@@ -126,7 +126,6 @@ func (g *Generator) emitZ3RandomValueHelpers(w *cppWriter) {
 			continue
 		}
 		if g.isVariantSuperName(name) {
-			g.emitZ3VariantRandomHelper(w, s)
 			continue
 		}
 		if it, ok := g.cppInterpType(s); ok {
@@ -144,6 +143,13 @@ func (g *Generator) emitZ3RandomValueHelpers(w *cppWriter) {
 		if rs, ok := g.rangeSortFor(s); ok {
 			g.emitZ3RangeRandomHelper(w, s, rs)
 		}
+	}
+	for _, name := range g.Mod.SortOrder {
+		s, ok := g.Mod.Sig.Sorts.Get2(name)
+		if !ok || !g.isVariantSuperName(name) {
+			continue
+		}
+		g.emitZ3VariantRandomHelper(w, s)
 	}
 }
 

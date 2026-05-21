@@ -248,7 +248,7 @@ func (g *Generator) emitVariantZ3Impl(w *cppWriter, super goivy.Sort, typeName s
 		w.linef("z3::func_decl pto = g.ctx.function(%s, g.sort(%s), g.sort(%s), g.ctx.bool_sort());", strconv.Quote(relName), strconv.Quote(sortText), strconv.Quote(sortName(sub)))
 		w.linef("z3::expr X = g.ctx.constant(\"X\", g.sort(%s));", strconv.Quote(sortName(sub)))
 		w.linef("%s tmp = %s;", subType, g.variantDowncastExpr("val", super, sub, g.ClassName))
-		w.line("return exists(X, pto(v, X) && __to_solver(g, X, tmp));")
+		w.line("return z3::exists(X, pto(v, X) && __to_solver(g, X, tmp));")
 		w.close("")
 	}
 	w.line("z3::expr conj = g.ctx.bool_val(false);")
@@ -258,7 +258,7 @@ func (g *Generator) emitVariantZ3Impl(w *cppWriter, super goivy.Sort, typeName s
 		w.indent++
 		w.linef("z3::func_decl pto = g.ctx.function(%s, g.sort(%s), g.sort(%s), g.ctx.bool_sort());", strconv.Quote(relName), strconv.Quote(sortText), strconv.Quote(sortName(sub)))
 		w.linef("z3::expr Y = g.ctx.constant(\"Y\", g.sort(%s));", strconv.Quote(sortName(sub)))
-		w.line("conj = conj && forall(Y, !pto(v, Y));")
+		w.line("conj = conj && z3::forall(Y, !pto(v, Y));")
 		w.indent--
 		w.line("}")
 	}
