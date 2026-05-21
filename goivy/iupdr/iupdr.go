@@ -650,6 +650,3 @@ func setDifference(prev, cur []goivy.Expr) []goivy.Expr {
 	}
 	return out
 }
-
-// Sentinel use to keep proof imported even if not directly referenced.
-var _ = (*goivy.ProofGoal)(nil)
