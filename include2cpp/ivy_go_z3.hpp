@@ -10,7 +10,15 @@
 #include <string>
 #include <vector>
 
-class gen {
+#ifndef IVY2CPP_HAS_IVY_GEN
+#define IVY2CPP_HAS_IVY_GEN
+struct ivy_gen {
+    virtual int choose(int rng, const char *name) = 0;
+    virtual ~ivy_gen() {}
+};
+#endif
+
+class gen : public ivy_gen {
 public:
     z3::context ctx;
     z3::solver slvr;
@@ -162,6 +170,14 @@ public:
 
     bool random_bool() {
         return random_index(0, 1) != 0;
+    }
+
+    int choose(int rng, const char *name) {
+        (void)name;
+        if (rng <= 0) {
+            return 0;
+        }
+        return random_index(0, rng - 1);
     }
 
     void randomize(const char *decl_name, const char *range) {

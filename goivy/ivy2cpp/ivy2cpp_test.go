@@ -322,7 +322,7 @@ export step
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"virtual void ivy_check_progress(int guarantee_ticks, int assume_ticks);",
+		"virtual void ivy_check_progress(int guarantee_ticks, int assume_ticks) {}",
 		"void __tick(int timeout);",
 		"void tickempty::__tick(int __timeout)",
 		"(void)__timeout;",
@@ -670,7 +670,7 @@ action set(c:color) = {
 }
 export set
 `,
-			want: []string{`if (action == "set")`, "small_repl ivy;"},
+			want: []string{`if (action == "set")`, "small_repl_repl ivy;"},
 		},
 	}
 	for _, tc := range fixtures {
@@ -689,6 +689,203 @@ export set
 			}
 			compileGeneratedCPP(t, out)
 		})
+	}
+}
+
+func TestRuntimeSkeletonAcrossTargets(t *testing.T) {
+	src := `#lang ivy1.7
+action step = {
+}
+export step
+`
+	for _, target := range []string{"impl", "class", "repl", "test", "gen"} {
+		t.Run(target, func(t *testing.T) {
+			mod := compileIvySource(t, src)
+			out, err := Generate(mod, Config{Target: target, ClassName: "runtime_" + target})
+			if err != nil {
+				t.Fatalf("Generate: %v", err)
+			}
+			raw := out.Header + out.Impl
+			for _, want := range []string{
+				"typedef std::string __strlit;",
+				"extern std::ofstream __ivy_out;",
+				"void __ivy_exit(int);",
+				"std::vector<std::string> __argv;",
+				"void __lock();",
+				"void __unlock();",
+				"void install_reader(reader *);",
+				"void install_thread(reader *);",
+				"void install_timer(timer *);",
+				"std::vector<int> ___ivy_stack;",
+				"std::ofstream __ivy_modelfile;",
+				"pthread_mutex_init(&mutex, NULL);",
+				"pthread_cancel(thread_ids[i]);",
+				"pthread_join(thread_ids[i], NULL);",
+			} {
+				if !strings.Contains(raw, want) {
+					t.Fatalf("%s missing runtime skeleton %q:\nheader:\n%s\nimpl:\n%s", target, want, out.Header, out.Impl)
+				}
+			}
+			if target == "gen" || target == "test" {
+				for _, want := range []string{
+					"struct ivy_gen",
+					"ivy_gen *___ivy_gen;",
+					"ss << name << ':' << id;",
+					"___ivy_gen->choose(rng, ss.str().c_str());",
+				} {
+					if !strings.Contains(raw, want) {
+						t.Fatalf("%s missing generator skeleton %q:\nheader:\n%s\nimpl:\n%s", target, want, out.Header, out.Impl)
+					}
+				}
+			} else if !strings.Contains(raw, "return 0;") {
+				t.Fatalf("%s non-generator choose should return 0:\n%s", target, out.Impl)
+			}
+			if target == "gen" {
+				if !strings.Contains(out.Header, "extern void ivy_assert(bool, const char *);") {
+					t.Fatalf("gen target should use external assert hook:\n%s", out.Header)
+				}
+				if strings.Contains(out.Header, "virtual void ivy_assert(bool truth") {
+					t.Fatalf("gen target should not emit base assert member:\n%s", out.Header)
+				}
+			} else if !strings.Contains(out.Header, "virtual void ivy_assert(bool truth, const char *msg) {}") {
+				t.Fatalf("%s target should emit no-op base assert member:\n%s", target, out.Header)
+			}
+		})
+	}
+}
+
+func TestRuntimeReplAndTestSubclassGlue(t *testing.T) {
+	src := `#lang ivy1.7
+action step = {
+    assert false
+}
+export step
+`
+	cases := []struct {
+		target string
+		want   []string
+	}{
+		{
+			target: "repl",
+			want: []string{
+				"class runtime_repl_repl : public runtime_repl",
+				`__ivy_out << "assertion_failed(\"" << msg << "\")" << std::endl;`,
+				`std::cerr << msg << ": error: assertion failed\n";`,
+				"runtime_repl_repl ivy;",
+				"ivy.__unlock();",
+				"ivy.__lock();",
+				"ivy2cpp_dispatch(ivy, action, args);",
+				`__ivy_out << "> ";`,
+			},
+		},
+		{
+			target: "test",
+			want: []string{
+				"class runtime_test_repl : public runtime_test",
+				`__ivy_out << "assumption_failed(\"" << msg << "\")" << std::endl;`,
+				"std::vector<reader *> readers;",
+				"std::vector<timer *> timers;",
+				"bool initializing = false;",
+				"initializing = true;",
+				"readers[rdridx]->bind();",
+				`__ivy_out << "test_completed" << std::endl;`,
+			},
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.target, func(t *testing.T) {
+			mod := compileIvySource(t, src)
+			out, err := Generate(mod, Config{Target: tc.target, ClassName: "runtime_" + tc.target})
+			if err != nil {
+				t.Fatalf("Generate: %v", err)
+			}
+			raw := out.Header + out.Impl
+			for _, want := range tc.want {
+				if !strings.Contains(raw, want) {
+					t.Fatalf("%s missing %q:\nheader:\n%s\nimpl:\n%s", tc.target, want, out.Header, out.Impl)
+				}
+			}
+		})
+	}
+}
+
+func TestRuntimeChoiceStackAndGeneratorPlumbing(t *testing.T) {
+	src := `#lang ivy1.7
+action helper = {
+}
+action step = {
+    call helper
+}
+export step
+`
+	for _, target := range []string{"gen", "test"} {
+		t.Run(target, func(t *testing.T) {
+			mod := compileIvySource(t, src)
+			out, err := Generate(mod, Config{Target: target, ClassName: "stacky"})
+			if err != nil {
+				t.Fatalf("Generate: %v", err)
+			}
+			for _, want := range []string{
+				"obj.___ivy_gen = this;",
+				"___ivy_stack.push_back(",
+				"helper();",
+				"___ivy_stack.pop_back();",
+				"return ___ivy_gen->choose(rng, ss.str().c_str());",
+			} {
+				if !strings.Contains(out.Header+out.Impl, want) {
+					t.Fatalf("%s missing generator plumbing %q:\nheader:\n%s\nimpl:\n%s", target, want, out.Header, out.Impl)
+				}
+			}
+		})
+	}
+	support := readSupportHeader(t, "ivy_go_z3.hpp")
+	for _, want := range []string{
+		"struct ivy_gen",
+		"class gen : public ivy_gen",
+		"int choose(int rng, const char *name)",
+	} {
+		if !strings.Contains(support, want) {
+			t.Fatalf("support header missing %q:\n%s", want, support)
+		}
+	}
+}
+
+func TestRuntimeNativeReaderTimerSkeletonShape(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+<<< impl
+class demo_reader : public reader {
+public:
+    int fdes() { return -1; }
+    void read() {}
+};
+class demo_timer : public timer {
+public:
+    int ms_delay() { return 1; }
+    void timeout(int) {}
+};
+>>>
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "native_runtime"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	raw := out.Header + out.Impl
+	for _, want := range []string{
+		`#include "ivy_threads.hpp"`,
+		"class demo_reader : public reader",
+		"class demo_timer : public timer",
+		"void native_runtime::install_reader(reader *r)",
+		"void native_runtime::install_thread(reader *r)",
+		"void native_runtime::install_timer(timer *r)",
+		"ReaderThreadFunction",
+		"TimerThreadFunction",
+	} {
+		if !strings.Contains(raw, want) {
+			t.Fatalf("missing native runtime shape %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
 	}
 }
 
@@ -2200,7 +2397,7 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, "paramrepl ivy{paramrepl::red};") {
+	if !strings.Contains(out.Impl, "paramrepl_repl ivy{paramrepl::red};") {
 		t.Fatalf("missing parameterized repl construction:\n%s", out.Impl)
 	}
 	if strings.Contains(out.Impl, "ivy.__init();") {

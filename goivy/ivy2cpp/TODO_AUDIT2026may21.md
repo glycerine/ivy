@@ -86,7 +86,16 @@ Tests to add:
 - Build-command tests comparing Go output with Python output for GCC and MSVC
   configurations.
 
-## TODO 002 - Restore the Python runtime/class skeleton
+## DONE 002 - Restore the Python runtime/class skeleton
+
+Status: completed 2026-05-21. The Go generator now emits the Python-style
+runtime/class skeleton for all targets: global runtime declarations and streams,
+`__argv`, mutex locking, reader/timer install hooks, thread cleanup in the
+destructor, target-specific REPL/test subclasses for assert/assume diagnostics,
+and generator-aware `___ivy_choose` with `___ivy_stack`/`___ivy_gen` plumbing.
+The local Z3 support header now exposes the `ivy_gen`/`choose` protocol used by
+generated gen/test action generators. Verified with
+`XTRACE_OFF=1 go test ./ivy2cpp -count=1` in `goivy`, completing in 0.102s.
 
 Go locations:
 

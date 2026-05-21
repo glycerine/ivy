@@ -145,29 +145,7 @@ func (g *Generator) validateSupportedInitialState() error {
 func (g *Generator) emitHeader() error {
 	w := &g.header
 	w.line("#pragma once")
-	if g.needsTickMax() {
-		w.line("#include <algorithm>")
-	}
-	w.line("#include <cstdint>")
-	w.line("#include <cstdlib>")
-	w.line("#include <initializer_list>")
-	w.line("#include <iostream>")
-	w.line("#include <map>")
-	if g.usesZ3() || g.Config.Target == "repl" {
-		w.line("#include <sstream>")
-		w.line("#include <stdexcept>")
-	}
-	w.line("#include <string>")
-	w.line("#include <tuple>")
-	w.line(`#include "ivy_hash.hpp"`)
-	if g.Config.Target == "repl" {
-		w.line(`#include "ivy_go_repl.hpp"`)
-	}
-	if g.usesZ3() {
-		w.line("#include <utility>")
-		w.line(`#include "z3++.h"`)
-	}
-	w.line("#include <vector>")
+	g.emitRuntimeHeaderPreamble(w)
 	if err := g.emitNativeBlocks(w, "header"); err != nil {
 		return err
 	}
@@ -176,10 +154,12 @@ func (g *Generator) emitHeader() error {
 	w.line("public:")
 	w.indent++
 	w.linef("typedef %s ivy_class;", g.ClassName)
-	w.linef("virtual ~%s();", g.ClassName)
-	w.line("virtual void ivy_assert(bool truth, const char *msg);")
-	w.line("virtual void ivy_assume(bool truth, const char *msg);")
-	w.line("virtual void ivy_check_progress(int guarantee_ticks, int assume_ticks);")
+	g.emitRuntimeClassMembers(w)
+	if g.Config.Target != "gen" {
+		w.line("virtual void ivy_assert(bool truth, const char *msg) {}")
+		w.line("virtual void ivy_assume(bool truth, const char *msg) {}")
+		w.line("virtual void ivy_check_progress(int guarantee_ticks, int assume_ticks) {}")
+	}
 	w.line("int ___ivy_choose(int rng, const char *name, int id);")
 	w.line("void __init();")
 	w.line("void __tick(int timeout);")
@@ -206,6 +186,7 @@ func (g *Generator) emitImpl() error {
 	}
 	w.linef(`#include "%s.h"`, g.BaseName)
 	w.blank()
+	g.emitRuntimeImplPreamble(w)
 	if err := g.emitNativeBlocks(w, "impl"); err != nil {
 		return err
 	}
@@ -213,6 +194,7 @@ func (g *Generator) emitImpl() error {
 		g.emitZ3Support(w)
 	}
 	w.open(g.constructorSignature(true) + " {")
+	g.emitRuntimeConstructorPrelude(w)
 	g.emitConstructorParamAssignments(w)
 	g.emitProgressCounterInitializers(w)
 	if err := g.emitNativeBlocks(w, "init"); err != nil {
@@ -220,38 +202,14 @@ func (g *Generator) emitImpl() error {
 	}
 	w.line("__init();")
 	w.close("")
-	w.linef("%s::~%s() {}", g.ClassName, g.ClassName)
-	w.blank()
-	w.open(fmt.Sprintf("void %s::ivy_assert(bool truth, const char *msg) {", g.ClassName))
-	w.open("if (!truth) {")
-	w.line(`std::cerr << msg << ": assertion failed" << std::endl;`)
-	w.line("std::abort();")
-	w.close("")
-	w.close("")
-	w.blank()
-	w.open(fmt.Sprintf("void %s::ivy_assume(bool truth, const char *msg) {", g.ClassName))
-	w.open("if (!truth) {")
-	w.line(`std::cerr << msg << ": assumption failed" << std::endl;`)
-	w.line("std::abort();")
-	w.close("")
-	w.close("")
-	w.blank()
-	w.open(fmt.Sprintf("void %s::ivy_check_progress(int guarantee_ticks, int assume_ticks) {", g.ClassName))
-	w.line("(void)guarantee_ticks;")
-	w.line("(void)assume_ticks;")
-	w.close("")
-	w.blank()
-	w.open(fmt.Sprintf("int %s::___ivy_choose(int rng, const char *name, int id) {", g.ClassName))
-	w.line("(void)rng;")
-	w.line("(void)name;")
-	w.line("(void)id;")
-	w.line("return 0;")
-	w.close("")
-	w.blank()
+	g.emitRuntimeMethods(w)
 	g.emitInit(w)
 	g.emitDefinitions(w)
 	g.emitMethods(w)
 	g.emitTick(w)
+	if g.runtimeUsesReplSubclass() {
+		g.emitRuntimeReplSubclass(w)
+	}
 	switch g.Config.Target {
 	case "repl":
 		g.emitReplSupport(w)
@@ -748,18 +706,34 @@ func (g *Generator) emitReplMain(w *cppWriter) {
 	mainName := g.Config.MainName
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
 	g.emitTestDefaults(w)
+	g.emitRuntimeOutputSetup(w)
 	g.emitConstructDefaultObject(w)
-	w.line("(void)argc;")
-	w.line("(void)argv;")
+	g.emitRuntimeArgCapture(w, "ivy")
+	w.line("ivy.__unlock();")
 	w.line("std::string line;")
 	w.line("std::string action;")
 	w.line("std::vector<std::string> args;")
+	w.open("if (isatty(0)) {")
+	w.line(`__ivy_out << "> ";`)
+	w.line("__ivy_out.flush();")
+	w.close("")
 	w.open("while (std::getline(std::cin, line)) {")
 	w.open("if (line.empty()) {")
 	w.line("continue;")
 	w.close("")
+	w.line("ivy.__lock();")
+	w.open("try {")
 	w.line("ivy2cpp_parse_command(line, action, args);")
 	w.line("ivy2cpp_dispatch(ivy, action, args);")
+	w.line("ivy.__unlock();")
+	w.close(" catch (const std::exception &err) {")
+	w.line("ivy.__unlock();")
+	w.line("std::cerr << err.what() << std::endl;")
+	w.close("")
+	w.open("if (isatty(0)) {")
+	w.line(`__ivy_out << "> ";`)
+	w.line("__ivy_out.flush();")
+	w.close("")
 	w.close("")
 	w.line("return 0;")
 	w.close("")
@@ -769,13 +743,24 @@ func (g *Generator) emitTestMain(w *cppWriter) {
 	mainName := g.Config.MainName
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
 	g.emitTestDefaults(w)
+	w.line("int seed = 1;")
+	w.line("int sleep_ms = 10;")
+	w.line("int final_ms = 0;")
+	w.line("(void)sleep_ms;")
+	w.line("(void)final_ms;")
+	w.line("srand(seed);")
+	g.emitRuntimeOutputSetup(w)
+	w.line("initializing = true;")
 	g.emitConstructDefaultObject(w)
-	w.line("(void)argc;")
-	w.line("(void)argv;")
+	g.emitRuntimeArgCapture(w, "ivy")
+	w.line("ivy.__unlock();")
+	w.line("initializing = false;")
+	g.emitRuntimeBindReaders(w)
 	w.line("gen g;")
 	w.line("ivy2cpp_setup(g);")
 	w.line("ivy2cpp_randomize(g, ivy);")
 	g.emitGeneratorInvocations(w)
+	w.line(`__ivy_out << "test_completed" << std::endl;`)
 	w.line("return 0;")
 	w.close("")
 }
@@ -791,9 +776,10 @@ func (g *Generator) emitGenMain(w *cppWriter) {
 	w.blank()
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
 	g.emitTestDefaults(w)
+	g.emitRuntimeOutputSetup(w)
 	g.emitConstructDefaultObject(w)
-	w.line("(void)argc;")
-	w.line("(void)argv;")
+	g.emitRuntimeArgCapture(w, "ivy")
+	w.line("ivy.__unlock();")
 	w.line("ivy2cpp_generate(ivy);")
 	w.line("return 0;")
 	w.close("")
@@ -825,9 +811,9 @@ func (g *Generator) emitGeneratorInvocations(w *cppWriter) {
 
 func (g *Generator) emitConstructDefaultObject(w *cppWriter) {
 	if args := g.constructorDefaultArgs(); len(args) == 0 {
-		w.linef("%s ivy;", g.ClassName)
+		w.linef("%s ivy;", g.runtimeMainClassName())
 	} else {
-		w.linef("%s ivy{%s};", g.ClassName, strings.Join(args, ", "))
+		w.linef("%s ivy{%s};", g.runtimeMainClassName(), strings.Join(args, ", "))
 	}
 }
 

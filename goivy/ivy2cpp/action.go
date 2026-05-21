@@ -401,7 +401,9 @@ func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
 				g.unsupported(w, "unsupported call return: %s", err.Error())
 				return
 			}
+			stacked := g.emitCallStackPush(w, a)
 			w.linef("%s = %s(%s);", ret, fn, strings.Join(args, ", "))
+			g.emitCallStackPop(w, stacked)
 			return
 		}
 	}
@@ -413,7 +415,23 @@ func (g *Generator) emitCall(w *cppWriter, a *goivy.LogicCallAction) {
 		}
 		args = append(args, s)
 	}
+	stacked := g.emitCallStackPush(w, a)
 	w.linef("%s(%s);", fn, strings.Join(args, ", "))
+	g.emitCallStackPop(w, stacked)
+}
+
+func (g *Generator) emitCallStackPush(w *cppWriter, a *goivy.LogicCallAction) bool {
+	if g == nil || a == nil || !g.runtimeUsesGenerator() {
+		return false
+	}
+	w.linef("___ivy_stack.push_back(%d);", a.UniqueID)
+	return true
+}
+
+func (g *Generator) emitCallStackPop(w *cppWriter, stacked bool) {
+	if stacked {
+		w.line("___ivy_stack.pop_back();")
+	}
 }
 
 func (g *Generator) emitLocal(w *cppWriter, a *goivy.LogicLocalAction) {
