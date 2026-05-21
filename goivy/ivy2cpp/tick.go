@@ -138,32 +138,66 @@ func (g *Generator) needsTickMax() bool {
 func (g *Generator) emitProgressCounterDecls(w *cppWriter) {
 	progress := g.progressDecls()
 	for _, p := range progress {
-		w.linef("%s %s;", progressCounterType(p), varName(p.Name))
+		w.linef("%s;", g.progressCounterDecl(p))
 	}
 	if len(progress) > 0 {
 		w.blank()
 	}
 }
 
-func progressCounterType(p progressDecl) string {
+func (g *Generator) progressCounterDecl(p progressDecl) string {
 	if len(p.Vars) == 0 {
-		return "long long"
+		return "long long " + varName(p.Name)
 	}
-	if len(p.Vars) == 1 {
-		return fmt.Sprintf("std::map<%s,long long>", cppType(p.Vars[0].VSort))
-	}
-	parts := make([]string, len(p.Vars))
+	domain := make([]goivy.Sort, len(p.Vars))
 	for i, v := range p.Vars {
-		parts[i] = cppType(v.VSort)
+		domain[i] = v.VSort
 	}
-	return fmt.Sprintf("std::map<std::tuple<%s>,long long>", strings.Join(parts, ","))
+	st := progressCounterStorage(g, domain)
+	if st.Kind == cppStorageArray {
+		return fmt.Sprintf("long long %s%s", varName(p.Name), cppArraySuffix(st.Dims))
+	}
+	return fmt.Sprintf("%s %s", st.Type, varName(p.Name))
+}
+
+func progressCounterStorage(g *Generator, domain []goivy.Sort) cppFunctionStorage {
+	st := cppFunctionStorage{Kind: cppStorageScalar, Domain: domain, RangeType: "long long", Type: "long long"}
+	if len(domain) == 0 {
+		return st
+	}
+	dims := make([]int, len(domain))
+	product := 1
+	allCards := true
+	allIntegerLike := true
+	for i, d := range domain {
+		card := cppArrayDim(g, d)
+		if card <= 0 {
+			allCards = false
+		} else {
+			dims[i] = card
+			if product <= largeThresh {
+				product *= card
+			}
+		}
+		if !cppIsAnyIntegerType(g, d) {
+			allIntegerLike = false
+		}
+	}
+	if allCards && allIntegerLike && product <= largeThresh {
+		st.Kind = cppStorageArray
+		st.Dims = dims
+		st.Type = "long long" + cppArraySuffix(dims)
+		return st
+	}
+	st.Kind = cppStorageHashThunk
+	st.KeyType = cppCTupleName(domain, "")
+	st.Type = fmt.Sprintf("hash_thunk<%s,long long>", st.KeyType)
+	return st
 }
 
 func (g *Generator) emitProgressCounterInitializers(w *cppWriter) {
 	for _, p := range g.progressDecls() {
-		if len(p.Vars) == 0 {
-			w.linef("%s = 0;", varName(p.Name))
-		}
+		g.emitProgressCounterReset(w, p, "")
 	}
 }
 
@@ -191,7 +225,7 @@ func (g *Generator) emitProgressTickUpdates(w *cppWriter, progress []progressDec
 			g.closeAssignmentLoops(w, opened)
 			continue
 		}
-		lhs := progressCounterLValue(p)
+		lhs := g.progressCounterLValue(p)
 		w.linef("%s = %s ? 0 : %s + 1;", lhs, cond, lhs)
 		g.closeAssignmentLoops(w, opened)
 	}
@@ -216,7 +250,7 @@ func (g *Generator) emitProgressRelyChecks(w *cppWriter, progress []progressDecl
 			}
 			g.emitRelyMax(w, maxt, p, r)
 		}
-		lhs := progressCounterLValue(p)
+		lhs := g.progressCounterLValue(p)
 		w.open(fmt.Sprintf("if (%s > __timeout) {", maxt))
 		w.linef("%s = 0;", lhs)
 		w.close("")
@@ -323,8 +357,15 @@ func (g *Generator) openProgressLoops(w *cppWriter, p progressDecl) int {
 	return opened
 }
 
-func progressCounterLValue(p progressDecl) string {
+func (g *Generator) progressCounterLValue(p progressDecl) string {
+	return g.progressCounterLValueWithObj(p, "")
+}
+
+func (g *Generator) progressCounterLValueWithObj(p progressDecl, obj string) string {
 	name := varName(p.Name)
+	if obj != "" {
+		name = obj + "." + name
+	}
 	if len(p.Vars) == 0 {
 		return name
 	}
@@ -332,8 +373,13 @@ func progressCounterLValue(p progressDecl) string {
 	for i, v := range p.Vars {
 		args[i] = varName(v.Name)
 	}
-	if len(args) == 1 {
-		return fmt.Sprintf("%s[%s]", name, args[0])
+	domain := make([]goivy.Sort, len(p.Vars))
+	for i, v := range p.Vars {
+		domain[i] = v.VSort
 	}
-	return fmt.Sprintf("%s[std::make_tuple(%s)]", name, strings.Join(args, ", "))
+	st := progressCounterStorage(g, domain)
+	if st.Kind == cppStorageHashThunk && len(args) > 1 {
+		return fmt.Sprintf("%s[%s(%s)]", name, cppCTupleLocalName(domain), strings.Join(args, ", "))
+	}
+	return name + cppIndexSuffix(args)
 }

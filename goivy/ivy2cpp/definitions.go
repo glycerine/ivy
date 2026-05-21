@@ -120,14 +120,14 @@ func (g *Generator) emitDefinitions(w *cppWriter) {
 }
 
 func (g *Generator) definitionSignature(d derivedDefinition, qualified bool) string {
-	typeName := cppType
+	className := ""
 	fn, err := funName(d.Name)
 	if err != nil {
 		fn = varName(d.Name)
 	}
 	if qualified {
-		typeName = func(s goivy.Sort) string { return cppQualifiedType(s, g.ClassName) }
 		fn = g.ClassName + "::" + fn
+		className = g.ClassName
 	}
 	params := make([]string, 0, len(d.Params))
 	for _, p := range d.Params {
@@ -135,7 +135,7 @@ func (g *Generator) definitionSignature(d derivedDefinition, qualified bool) str
 		if strings.TrimSpace(name) == "" {
 			name = fmt.Sprintf("__arg%d", len(params))
 		}
-		params = append(params, typeName(p.NodeSort())+" "+varName(name))
+		params = append(params, g.cppQualifiedType(p.NodeSort(), className)+" "+varName(name))
 	}
-	return fmt.Sprintf("%s %s(%s)", typeName(d.Sort), fn, strings.Join(params, ", "))
+	return fmt.Sprintf("%s %s(%s)", g.cppQualifiedType(d.Sort, className), fn, strings.Join(params, ", "))
 }

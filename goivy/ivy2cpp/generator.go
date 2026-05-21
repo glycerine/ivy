@@ -154,6 +154,8 @@ func (g *Generator) emitHeader() error {
 	g.emitSortDecls(w)
 	w.line(g.constructorSignature(false) + ";")
 	w.blank()
+	g.emitCTupleDecls(w)
+	g.emitCardinalityDecls(w)
 	g.emitStateDecls(w)
 	g.emitProgressCounterDecls(w)
 	if err := g.emitNativeBlocks(w, "member"); err != nil {
@@ -185,6 +187,7 @@ func (g *Generator) emitImpl() error {
 	w.open(g.constructorSignature(true) + " {")
 	g.emitRuntimeConstructorPrelude(w)
 	g.emitConstructorParamAssignments(w)
+	g.emitCardinalityInitializers(w)
 	g.emitProgressCounterInitializers(w)
 	if err := g.emitNativeBlocks(w, "init"); err != nil {
 		return err
@@ -223,14 +226,14 @@ func (g *Generator) emitImpl() error {
 
 func (g *Generator) constructorSignature(qualified bool) string {
 	name := g.ClassName
-	typeName := cppType
+	className := ""
 	if qualified {
 		name = g.ClassName + "::" + g.ClassName
-		typeName = func(s goivy.Sort) string { return cppQualifiedType(s, g.ClassName) }
+		className = g.ClassName
 	}
 	params := make([]string, 0, len(g.Mod.Params))
 	for _, p := range g.Mod.Params {
-		params = append(params, typeName(p.CSort)+" "+varName(p.Name))
+		params = append(params, g.cppStorageDecl(p.Name, p.CSort, className))
 	}
 	return fmt.Sprintf("%s(%s)", name, strings.Join(params, ", "))
 }
@@ -271,6 +274,9 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 		}
 		switch st := s.(type) {
 		case *goivy.LogicEnumeratedSort:
+			if isNumericEnum(st) {
+				continue
+			}
 			vals := make([]string, len(st.Extension))
 			for i, v := range st.Extension {
 				vals[i] = varName(v)
@@ -278,10 +284,12 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 			w.linef("enum %s { %s };", varName(st.Name), strings.Join(vals, ", "))
 		case *goivy.RangeSort:
 			if st.Name != "" {
-				w.linef("typedef long long %s;", varName(st.Name))
+				w.linef("typedef %s %s;", g.cppType(st), varName(st.Name))
 			}
 		case *goivy.UninterpretedSort:
-			w.linef("typedef long long %s;", varName(st.Name))
+			if typ := g.cppType(st); typ != "int" {
+				w.linef("typedef %s %s;", typ, varName(st.Name))
+			}
 		}
 	}
 	destructorNames := insMapKeys(g.Mod.SortDestructors)
@@ -309,12 +317,44 @@ func (g *Generator) emitDestructorStruct(w *cppWriter, name string) {
 	w.open(fmt.Sprintf("struct %s {", varName(name)))
 	for _, d := range destructors {
 		if fs, ok := d.CSort.(*goivy.LogicFunctionSort); ok {
-			w.linef("%s %s;", cppType(fs.Range()), varName(memName(d.Name)))
+			w.linef("%s;", g.cppStorageDecl(memName(d.Name), fs, ""))
 		}
 	}
 	g.emitDestructorStructComparators(w, name, destructors)
 	g.emitDestructorStructWriter(w, name, destructors)
 	w.close(";")
+}
+
+func (g *Generator) emitCTupleDecls(w *cppWriter) {
+	for _, dom := range g.cppCTuples() {
+		name := cppCTupleLocalName(dom)
+		w.open(fmt.Sprintf("struct %s {", name))
+		for i, s := range dom {
+			w.linef("%s arg%d;", g.cppType(s), i)
+		}
+		w.linef("%s() {}", name)
+		params := make([]string, len(dom))
+		inits := make([]string, len(dom))
+		for i, s := range dom {
+			params[i] = fmt.Sprintf("const %s &arg%d", g.cppType(s), i)
+			inits[i] = fmt.Sprintf("arg%d(arg%d)", i, i)
+		}
+		w.linef("%s(%s) : %s {}", name, strings.Join(params, ", "), strings.Join(inits, ", "))
+		hashParts := make([]string, len(dom))
+		for i, s := range dom {
+			hashParts[i] = fmt.Sprintf("hash_space::hash<%s>()(arg%d)", cppHashType(g, s), i)
+		}
+		w.linef("size_t __hash() const { return %s; }", strings.Join(hashParts, " + "))
+		w.open(fmt.Sprintf("bool operator==(const %s &other) const {", name))
+		eqParts := make([]string, len(dom))
+		for i := range dom {
+			eqParts[i] = fmt.Sprintf("arg%d == other.arg%d", i, i)
+		}
+		w.linef("return %s;", strings.Join(eqParts, " && "))
+		w.close("")
+		w.close(";")
+		w.blank()
+	}
 }
 
 func (g *Generator) emitVariantSuperStruct(w *cppWriter, name string) {
@@ -485,10 +525,52 @@ func (g *Generator) isVariantSubtypeName(name string) bool {
 
 func (g *Generator) emitStateDecls(w *cppWriter) {
 	for _, sym := range g.stateSymbols() {
-		w.linef("%s %s;", cppType(sym.Sort), varName(sym.Name))
+		w.linef("%s;", g.cppStorageDecl(sym.Name, sym.Sort, ""))
 	}
 	if len(g.stateSymbols()) > 0 {
 		w.blank()
+	}
+}
+
+func (g *Generator) emitCardinalityDecls(w *cppWriter) {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil || len(g.Mod.Sig.Interp) == 0 {
+		return
+	}
+	names := make([]string, 0, len(g.Mod.Sig.Interp))
+	for name := range g.Mod.Sig.Interp {
+		if name != "" && name != "bool" {
+			names = append(names, name)
+		}
+	}
+	sort.Strings(names)
+	for _, name := range names {
+		w.linef("long long __CARD__%s;", varName(name))
+	}
+	if len(names) > 0 {
+		w.blank()
+	}
+}
+
+func (g *Generator) emitCardinalityInitializers(w *cppWriter) {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil || len(g.Mod.Sig.Interp) == 0 {
+		return
+	}
+	names := make([]string, 0, len(g.Mod.Sig.Interp))
+	for name := range g.Mod.Sig.Interp {
+		if name != "" && name != "bool" {
+			names = append(names, name)
+		}
+	}
+	sort.Strings(names)
+	for _, name := range names {
+		if s, ok := g.Mod.Sig.Sorts.Get2(name); ok {
+			card := cppSortCard(g, s)
+			if card > 0 {
+				w.linef("__CARD__%s = %d;", varName(name), card)
+				continue
+			}
+		}
+		w.linef("__CARD__%s = 0;", varName(name))
 	}
 }
 
@@ -548,13 +630,13 @@ func (g *Generator) emitMethodDecls(w *cppWriter) {
 
 func (g *Generator) methodSignature(name string, act goivy.Action, qualified bool) string {
 	ret := "void"
-	typeName := cppType
+	className := ""
 	if qualified {
-		typeName = func(s goivy.Sort) string { return cppQualifiedType(s, g.ClassName) }
+		className = g.ClassName
 	}
 	returns := act.GetFormalReturns()
 	if len(returns) == 1 {
-		ret = typeName(returns[0].CSort)
+		ret = g.cppQualifiedType(returns[0].CSort, className)
 	}
 	fn, err := funName(name)
 	if err != nil {
@@ -565,11 +647,11 @@ func (g *Generator) methodSignature(name string, act goivy.Action, qualified boo
 	}
 	var params []string
 	for _, p := range act.GetFormalParams() {
-		params = append(params, typeName(p.CSort)+" "+varName(p.Name))
+		params = append(params, g.cppStorageDecl(p.Name, p.CSort, className))
 	}
 	if len(returns) > 1 {
 		for _, r := range returns {
-			params = append(params, typeName(r.CSort)+" &"+varName(r.Name))
+			params = append(params, g.cppQualifiedType(r.CSort, className)+" &"+varName(r.Name))
 		}
 	}
 	return fmt.Sprintf("%s %s(%s)", ret, fn, strings.Join(params, ", "))
@@ -615,7 +697,7 @@ func (g *Generator) emitMethods(w *cppWriter) {
 		prevReturns := g.currentReturns
 		g.currentReturns = returns
 		if len(returns) == 1 && !formalListContains(act.GetFormalParams(), returns[0]) {
-			w.linef("%s %s = %s;", cppType(returns[0].CSort), varName(returns[0].Name), g.cppZeroValue(returns[0].CSort))
+			w.linef("%s %s = %s;", g.cppType(returns[0].CSort), varName(returns[0].Name), g.cppZeroValue(returns[0].CSort))
 		}
 		g.emitAction(w, act)
 		g.currentReturns = prevReturns
@@ -660,13 +742,13 @@ func (g *Generator) emitReplSupport(w *cppWriter) {
 			case 0:
 				w.linef("ivy.%s(%s);", fn, strings.Join(args, ", "))
 			case 1:
-				w.linef("%s __ivy_result = ivy.%s(%s);", cppQualifiedType(returns[0].CSort, g.ClassName), fn, strings.Join(args, ", "))
+				w.linef("%s __ivy_result = ivy.%s(%s);", g.cppQualifiedType(returns[0].CSort, g.ClassName), fn, strings.Join(args, ", "))
 				g.emitReplWriteOutputs(w, []string{"__ivy_result"})
 			default:
 				var outNames []string
 				for _, r := range returns {
 					rname := varName(r.Name)
-					w.linef("%s %s = %s;", cppQualifiedType(r.CSort, g.ClassName), rname, g.cppZeroValueInScope(r.CSort))
+					w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), rname, g.cppZeroValueInScope(r.CSort))
 					args = append(args, rname)
 					outNames = append(outNames, rname)
 				}

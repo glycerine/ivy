@@ -46,6 +46,15 @@ func (g *Generator) emitZ3SolverTemplates(w *cppWriter) {
 	w.open("template <> void __from_solver<long long>(gen &g, const z3::expr &expr, long long &out) {")
 	w.line("out = g.eval(expr);")
 	w.close("")
+	w.open("template <> void __from_solver<int>(gen &g, const z3::expr &expr, int &out) {")
+	w.line("out = static_cast<int>(g.eval(expr));")
+	w.close("")
+	w.open("template <> void __from_solver<unsigned>(gen &g, const z3::expr &expr, unsigned &out) {")
+	w.line("out = static_cast<unsigned>(g.eval(expr));")
+	w.close("")
+	w.open("template <> void __from_solver<unsigned long long>(gen &g, const z3::expr &expr, unsigned long long &out) {")
+	w.line("out = static_cast<unsigned long long>(g.eval(expr));")
+	w.close("")
 	w.open("template <typename T> z3::expr __to_solver(gen &g, const char *sort_name, const T &value) {")
 	w.line("return g.int_to_z3(sort_name, static_cast<long long>(value));")
 	w.close("")
@@ -75,7 +84,7 @@ func (g *Generator) emitZ3SolverConversions(w *cppWriter) {
 }
 
 func (g *Generator) emitZ3EnumSolverConversion(w *cppWriter, s *goivy.LogicEnumeratedSort) {
-	typ := cppQualifiedType(s, g.ClassName)
+	typ := g.cppQualifiedType(s, g.ClassName)
 	zname := z3SortName(s)
 	w.open(fmt.Sprintf("static void __from_solver(gen &g, const z3::expr &expr, %s &out) {", typ))
 	w.line("std::string text = g.eval_expr(expr).to_string();")
@@ -134,7 +143,7 @@ func (g *Generator) emitZ3EnumRandomHelper(w *cppWriter, s *goivy.LogicEnumerate
 		return
 	}
 	fn := z3RandomHelperName(s)
-	w.open(fmt.Sprintf("static %s %s(gen &g) {", cppQualifiedType(s, g.ClassName), fn))
+	w.open(fmt.Sprintf("static %s %s(gen &g) {", g.cppQualifiedType(s, g.ClassName), fn))
 	w.open(fmt.Sprintf("switch (g.random_index(0, %d)) {", len(s.Extension)-1))
 	for i, v := range s.Extension[:len(s.Extension)-1] {
 		w.linef("case %d: return %s::%s;", i, g.ClassName, varName(v))
@@ -150,8 +159,8 @@ func (g *Generator) emitZ3NumericRandomHelper(w *cppWriter, s goivy.Sort) {
 	if fn == "" {
 		return
 	}
-	w.open(fmt.Sprintf("static %s %s(gen &g) {", cppQualifiedType(s, g.ClassName), fn))
-	w.linef("return static_cast<%s>(g.random_index(0, 4));", cppQualifiedType(s, g.ClassName))
+	w.open(fmt.Sprintf("static %s %s(gen &g) {", g.cppQualifiedType(s, g.ClassName), fn))
+	w.linef("return static_cast<%s>(g.random_index(0, 4));", g.cppQualifiedType(s, g.ClassName))
 	w.close("")
 	w.blank()
 }
@@ -168,8 +177,8 @@ func (g *Generator) emitZ3RangeRandomHelper(w *cppWriter, s goivy.Sort, rs *goiv
 	if fn == "" {
 		return
 	}
-	w.open(fmt.Sprintf("static %s %s(gen &g) {", cppQualifiedType(s, g.ClassName), fn))
-	w.linef("return static_cast<%s>(g.random_index(%s, %s));", cppQualifiedType(s, g.ClassName), lo, hi)
+	w.open(fmt.Sprintf("static %s %s(gen &g) {", g.cppQualifiedType(s, g.ClassName), fn))
+	w.linef("return static_cast<%s>(g.random_index(%s, %s));", g.cppQualifiedType(s, g.ClassName), lo, hi)
 	w.close("")
 	w.blank()
 }
@@ -306,22 +315,11 @@ func (g *Generator) emitZ3RandomizeSymbol(w *cppWriter, sym stateSymbol) {
 		w.linef("g.randomize(%s, {%s}, %s);", strconv.Quote(sym.Name), strings.Join(args, ", "), rng)
 	}
 	if value, ok := g.z3RandomValueExpr(fs.Range()); ok {
-		w.linef("%s = %s;", z3FunctionLValue(sym.Name, keyArgs), value)
+		w.linef("%s = %s;", g.cppStorageAccess(sym.Name, sym.Sort, keyArgs, "ivy"), value)
 	}
 	for range domain {
 		w.indent--
 		w.line("}")
-	}
-}
-
-func z3FunctionLValue(name string, args []string) string {
-	switch len(args) {
-	case 0:
-		return "ivy." + varName(name)
-	case 1:
-		return fmt.Sprintf("ivy.%s[%s]", varName(name), args[0])
-	default:
-		return fmt.Sprintf("ivy.%s[std::make_tuple(%s)]", varName(name), strings.Join(args, ", "))
 	}
 }
 
@@ -363,14 +361,14 @@ func (g *Generator) z3RandomValueExprFrom(s goivy.Sort, genExpr string) (string,
 
 func (g *Generator) z3LoopHeaderForSort(s goivy.Sort, name string) (string, bool) {
 	if vals, ok := finiteValuesInClassScope(s, g.ClassName); ok {
-		return fmt.Sprintf("for (%s %s : {%s}) {", cppQualifiedType(s, g.ClassName), name, strings.Join(vals, ", ")), true
+		return fmt.Sprintf("for (%s %s : {%s}) {", g.cppQualifiedType(s, g.ClassName), name, strings.Join(vals, ", ")), true
 	}
 	if rs, ok := g.rangeSortFor(s); ok {
 		lo, hi, ok := numericRangeBounds(rs)
 		if !ok {
 			return "", false
 		}
-		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", cppQualifiedType(s, g.ClassName), name, lo, name, hi, name), true
+		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppQualifiedType(s, g.ClassName), name, lo, name, hi, name), true
 	}
 	return "", false
 }
@@ -447,7 +445,7 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 		w.linef("bool generate(%s &obj);", g.ClassName)
 		w.linef("void execute(%s &obj);", g.ClassName)
 		for _, p := range act.GetFormalParams() {
-			w.linef("%s %s;", cppQualifiedType(p.CSort, g.ClassName), varName(p.Name))
+			w.linef("%s %s;", g.cppQualifiedType(p.CSort, g.ClassName), varName(p.Name))
 		}
 		w.indent--
 		w.close(";")
@@ -527,7 +525,7 @@ func (g *Generator) emitZ3ActionGenerator(w *cppWriter, name string, act goivy.A
 	} else {
 		for _, r := range returns {
 			name := varName(r.Name)
-			w.linef("%s %s = %s;", cppQualifiedType(r.CSort, g.ClassName), name, g.cppZeroValueInScope(r.CSort))
+			w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), name, g.cppZeroValueInScope(r.CSort))
 			args = append(args, name)
 		}
 		w.linef("obj.%s(%s);", fn, strings.Join(args, ", "))

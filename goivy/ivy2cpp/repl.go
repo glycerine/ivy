@@ -146,7 +146,7 @@ func (g *Generator) emitReplDispatchArgs(w *cppWriter, act goivy.Action) []strin
 		if parser := g.replParserNameForSort(p.CSort); parser != "" {
 			w.linef(`%s %s = %s(ivy2cpp_read_arg(args, %d, "%s"));`, replParamType(p.CSort, g.ClassName), name, parser, idx, escapeString(name))
 		} else {
-			w.linef("%s %s = %s;", cppQualifiedType(p.CSort, g.ClassName), name, g.cppZeroValueInScope(p.CSort))
+			w.linef("%s %s = %s;", g.cppQualifiedType(p.CSort, g.ClassName), name, g.cppZeroValueInScope(p.CSort))
 		}
 		args = append(args, name)
 	}
@@ -264,15 +264,7 @@ func replParamType(s goivy.Sort, className string) string {
 	case *goivy.BooleanSort:
 		return "bool"
 	case *goivy.LogicEnumeratedSort:
-		if st.Name != "" && className != "" {
-			return className + "::" + varName(st.Name)
-		}
-	case *goivy.RangeSort:
-		if st.Name != "" && className != "" {
-			return className + "::" + varName(st.Name)
-		}
-	case *goivy.UninterpretedSort:
-		if st.Name != "" && className != "" {
+		if !isNumericEnum(st) && st.Name != "" && className != "" {
 			return className + "::" + varName(st.Name)
 		}
 	}

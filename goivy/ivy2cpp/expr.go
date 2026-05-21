@@ -193,10 +193,7 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 	if g.isDefinitionName(name) {
 		return fn + "(" + strings.Join(args, ", ") + ")", nil
 	}
-	if len(args) == 1 {
-		return fn + "[" + args[0] + "]", nil
-	}
-	return fn + "[std::make_tuple(" + strings.Join(args, ", ") + ")]", nil
+	return g.cppStorageAccess(name, fnExpr.NodeSort(), args, ""), nil
 }
 
 func (g *Generator) emitVariantRelation(name string, terms []goivy.Expr) (string, bool, error) {
@@ -365,20 +362,26 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 	if !ok {
 		return "", false, nil
 	}
-	rel, err := g.emitExpr(app.Func)
-	if err != nil {
-		return "", true, err
+	relName := goivy.ExprName(app.Func)
+	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok {
+		return "", false, nil
 	}
+	st := cppFunctionStorageFor(g, fs.Domain(), fs.Range(), "")
+	if st.Kind != cppStorageHashThunk {
+		return "", false, nil
+	}
+	rel := varName(relName)
 	var w cppWriter
 	w.raw("([&]() {")
 	w.raw("\n")
 	w.indent = 1
-	w.open(fmt.Sprintf("for (auto it = %s.begin(), en = %s.end(); it != en; ++it) {", rel, rel))
+	w.open(fmt.Sprintf("for (auto it = %s.memo.begin(), en = %s.memo.end(); it != en; ++it) {", rel, rel))
 	w.line("if (!it->second) continue;")
 	if len(app.Terms) == 1 {
-		w.linef("%s %s = it->first;", cppType(bound.VSort), varName(bound.Name))
+		w.linef("%s %s = it->first;", g.cppType(bound.VSort), varName(bound.Name))
 	} else {
-		w.linef("%s %s = std::get<%d>(it->first);", cppType(bound.VSort), varName(bound.Name), argIndex)
+		w.linef("%s %s = it->first.arg%d;", g.cppType(bound.VSort), varName(bound.Name), argIndex)
 	}
 	expr, err := g.emitExpr(body)
 	if err != nil {
@@ -554,7 +557,7 @@ func (g *Generator) emitSomeVariantRelation(s *goivy.LogicSome) (string, bool, e
 	w.raw("\n")
 	w.indent = 1
 	w.open(fmt.Sprintf("if (%s.__tag == %d) {", lhs, idx))
-	w.linef("%s %s = %s.%s;", cppType(bound.VSort), boundName, lhs, field)
+	w.linef("%s %s = %s.%s;", g.cppType(bound.VSort), boundName, lhs, field)
 	if s.IfVal != nil || s.ElseVal != nil {
 		if s.IfVal == nil || s.ElseVal == nil {
 			return "", true, fmt.Errorf("ivy2cpp: some expression requires both if and else values: %s", s.String())
@@ -651,14 +654,14 @@ func (g *Generator) loopHeaderForVar(v *goivy.LogicVariable) (string, error) {
 
 func (g *Generator) loopHeaderForSort(s goivy.Sort, name string) (string, error) {
 	if vals, ok := finiteValues(s); ok {
-		return fmt.Sprintf("for (%s %s : {%s}) {", cppType(s), name, strings.Join(vals, ", ")), nil
+		return fmt.Sprintf("for (%s %s : {%s}) {", g.cppType(s), name, strings.Join(vals, ", ")), nil
 	}
 	if rs, ok := g.rangeSortFor(s); ok {
 		lo, hi, ok := numericRangeBounds(rs)
 		if !ok {
 			return "", fmt.Errorf("ivy2cpp: cannot emit bounded loop over non-numeric range %s", sortName(s))
 		}
-		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", cppType(s), name, lo, name, hi, name), nil
+		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppType(s), name, lo, name, hi, name), nil
 	}
 	return "", fmt.Errorf("ivy2cpp: cannot emit bounded loop over %s", sortName(s))
 }

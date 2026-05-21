@@ -134,7 +134,21 @@ func (g *Generator) emitOneInitialState(w *cppWriter) error {
 
 func (g *Generator) emitDefaultInitialState(w *cppWriter, sym stateSymbol) {
 	if fs, ok := sym.Sort.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
-		w.linef("%s.clear();", varName(sym.Name))
+		st := cppFunctionStorageFor(g, fs.Domain(), fs.Range(), "")
+		if st.Kind == cppStorageArray {
+			tuples, ok := g.initialDomainTuples(fs.Domain())
+			if ok {
+				for _, tuple := range tuples {
+					args := make([]string, len(tuple))
+					for i, v := range tuple {
+						args[i] = v.Cpp
+					}
+					w.linef("%s = %s;", g.cppStorageAccess(sym.Name, sym.Sort, args, ""), g.cppZeroValue(fs.Range()))
+				}
+			}
+			return
+		}
+		w.linef("%s = %s();", varName(sym.Name), st.Type)
 		return
 	}
 	rng := initialStateRange(sym.Sort)
@@ -160,7 +174,6 @@ func (g *Generator) emitSolvedInitialState(w *cppWriter, slv *goivy.Solver, mode
 	if !ok {
 		return fmt.Errorf("ivy2cpp: cannot enumerate initial-state domain of %s", sym.Name)
 	}
-	w.linef("%s.clear();", varName(sym.Name))
 	for _, tuple := range tuples {
 		args := make([]goivy.Expr, len(tuple))
 		cppArgs := make([]string, len(tuple))
@@ -173,7 +186,7 @@ func (g *Generator) emitSolvedInitialState(w *cppWriter, slv *goivy.Solver, mode
 		if err != nil {
 			return fmt.Errorf("initial value for %s: %w", sym.Name, err)
 		}
-		w.linef("%s = %s;", initialStateLValue(sym.Name, cppArgs), value)
+		w.linef("%s = %s;", g.cppStorageAccess(sym.Name, sym.Sort, cppArgs, ""), value)
 	}
 	return nil
 }
@@ -329,30 +342,34 @@ func (g *Generator) initialDomainValues(s goivy.Sort) ([]initialDomainValue, boo
 	}
 }
 
-func initialStateLValue(name string, args []string) string {
-	switch len(args) {
-	case 0:
-		return varName(name)
-	case 1:
-		return fmt.Sprintf("%s[%s]", varName(name), args[0])
-	default:
-		return fmt.Sprintf("%s[std::make_tuple(%s)]", varName(name), strings.Join(args, ", "))
+func (g *Generator) emitProgressCounterResets(w *cppWriter, obj string) {
+	for _, p := range g.progressDecls() {
+		g.emitProgressCounterReset(w, p, obj)
 	}
 }
 
-func (g *Generator) emitProgressCounterResets(w *cppWriter, obj string) {
+func (g *Generator) emitProgressCounterReset(w *cppWriter, p progressDecl, obj string) {
 	prefix := ""
 	if obj != "" {
 		prefix = obj + "."
 	}
-	for _, p := range g.progressDecls() {
-		name := prefix + varName(p.Name)
-		if len(p.Vars) == 0 {
-			w.linef("%s = 0;", name)
-		} else {
-			w.linef("%s.clear();", name)
-		}
+	if len(p.Vars) == 0 {
+		w.linef("%s%s = 0;", prefix, varName(p.Name))
+		return
 	}
+	domain := make([]goivy.Sort, len(p.Vars))
+	for i, v := range p.Vars {
+		domain[i] = v.VSort
+	}
+	st := progressCounterStorage(g, domain)
+	if st.Kind == cppStorageHashThunk {
+		w.linef("%s%s = %s();", prefix, varName(p.Name), st.Type)
+		return
+	}
+	opened := g.openProgressLoops(w, p)
+	lhs := g.progressCounterLValueWithObj(p, obj)
+	w.linef("%s = 0;", lhs)
+	g.closeAssignmentLoops(w, opened)
 }
 
 func (g *Generator) emitZ3InitialConstraints(w *cppWriter) error {
@@ -649,24 +666,13 @@ func (g *Generator) emitZ3EvaluateStateSymbol(w *cppWriter, obj string, sym stat
 		args = append(args, fmt.Sprintf("static_cast<int>(%s)", name))
 		keyArgs = append(keyArgs, name)
 	}
-	lvalue := z3ObjectFunctionLValue(obj, sym.Name, keyArgs)
+	lvalue := g.cppStorageAccess(sym.Name, sym.Sort, keyArgs, obj)
 	w.linef("__from_solver(*this, mk_apply_expr(%q, {%s}), %s);", sym.Name, strings.Join(args, ", "), lvalue)
 	for i := 0; i < opened; i++ {
 		w.indent--
 		w.line("}")
 	}
 	return nil
-}
-
-func z3ObjectFunctionLValue(obj, name string, args []string) string {
-	switch len(args) {
-	case 0:
-		return obj + "." + varName(name)
-	case 1:
-		return fmt.Sprintf("%s.%s[%s]", obj, varName(name), args[0])
-	default:
-		return fmt.Sprintf("%s.%s[std::make_tuple(%s)]", obj, varName(name), strings.Join(args, ", "))
-	}
 }
 
 func (g *Generator) isParamName(name string) bool {

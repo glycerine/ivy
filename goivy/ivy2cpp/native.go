@@ -195,25 +195,25 @@ func (g *Generator) nativeReferenceInType(node goivy.Node) (string, error) {
 		}
 	case *goivy.Atom:
 		if s, ok := g.sortByName(n.Rep); ok {
-			return cppType(s), nil
+			return g.cppType(s), nil
 		}
 		return varName(n.Rep), nil
 	case *goivy.Symbol:
 		if s, ok := g.sortByName(n.Rep); ok {
-			return cppType(s), nil
+			return g.cppType(s), nil
 		}
 		return varName(n.Rep), nil
 	case *goivy.Const:
 		if s, ok := g.sortByName(n.Name); ok {
-			return cppType(s), nil
+			return g.cppType(s), nil
 		}
 		return varName(n.Name), nil
 	case *goivy.UninterpretedSort:
-		return cppType(n), nil
+		return g.cppType(n), nil
 	case *goivy.LogicEnumeratedSort:
-		return cppType(n), nil
+		return g.cppType(n), nil
 	case *goivy.RangeSort:
-		return cppType(n), nil
+		return g.cppType(n), nil
 	}
 	return "", fmt.Errorf("ivy2cpp: native type antiquote %T is not supported", node)
 }
@@ -276,7 +276,7 @@ func (g *Generator) nativeReference(arg goivy.Expr) (string, error) {
 	switch a := arg.(type) {
 	case *goivy.Const:
 		if s, ok := g.sortByName(a.Name); ok {
-			return cppType(s), nil
+			return g.cppType(s), nil
 		}
 		return varName(a.Name), nil
 	case *goivy.LogicVariable:
@@ -284,16 +284,16 @@ func (g *Generator) nativeReference(arg goivy.Expr) (string, error) {
 	case *goivy.Apply:
 		return g.emitExpr(a)
 	case *goivy.UninterpretedSort:
-		return cppType(a), nil
+		return g.cppType(a), nil
 	case *goivy.LogicEnumeratedSort:
-		return cppType(a), nil
+		return g.cppType(a), nil
 	case *goivy.RangeSort:
-		return cppType(a), nil
+		return g.cppType(a), nil
 	}
 	if rn, ok := arg.(interface{ Relname() string }); ok {
 		name := rn.Relname()
 		if s, ok := g.sortByName(name); ok {
-			return cppType(s), nil
+			return g.cppType(s), nil
 		}
 		res := varName(name)
 		for _, child := range arg.Args() {
@@ -321,7 +321,7 @@ func (g *Generator) nativeTypeOf(arg goivy.Expr) (string, error) {
 			}
 		}
 	}
-	return cppType(arg.NodeSort()), nil
+	return g.cppType(arg.NodeSort()), nil
 }
 
 func (g *Generator) nativeZ3Name(arg goivy.Expr) (string, error) {

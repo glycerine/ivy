@@ -51,6 +51,30 @@ func (g *Generator) emitRuntimeHeaderPreamble(w *cppWriter) {
 		w.line("struct ivy_gen { virtual int choose(int rng, const char *name) = 0; virtual ~ivy_gen() {} };")
 		w.line("#endif")
 	}
+	emitHashThunkSupport(w)
+}
+
+func emitHashThunkSupport(w *cppWriter) {
+	w.line("template <typename D, typename R>")
+	w.open("struct thunk {")
+	w.line("virtual R operator()(const D &) = 0;")
+	w.line("int ___ivy_choose(int rng, const char *name, int id) { (void)rng; (void)name; (void)id; return 0; }")
+	w.line("virtual ~thunk() {}")
+	w.close(";")
+	w.line("template <typename D, typename R, class HashFun = hash_space::hash<D> >")
+	w.open("struct hash_thunk {")
+	w.line("thunk<D,R> *fun;")
+	w.line("hash_space::hash_map<D,R,HashFun> memo;")
+	w.line("hash_thunk() : fun(0) {}")
+	w.line("hash_thunk(thunk<D,R> *fun) : fun(fun) {}")
+	w.line("~hash_thunk() {}")
+	w.open("R &operator[](const D& arg) {")
+	w.line("std::pair<typename hash_space::hash_map<D,R,HashFun>::iterator,bool> foo = memo.insert(std::pair<D,R>(arg,R()));")
+	w.line("R &res = foo.first->second;")
+	w.line("if (foo.second && fun) res = (*fun)(arg);")
+	w.line("return res;")
+	w.close("")
+	w.close(";")
 }
 
 func (g *Generator) emitRuntimeClassMembers(w *cppWriter) {
@@ -268,7 +292,7 @@ func (g *Generator) emitRuntimeReplAssertOverride(w *cppWriter, method, event, t
 func (g *Generator) replSubclassConstructorSignature() string {
 	params := make([]string, 0, len(g.Mod.Params))
 	for _, p := range g.Mod.Params {
-		params = append(params, fmt.Sprintf("%s %s", cppQualifiedType(p.CSort, g.ClassName), varName(p.Name)))
+		params = append(params, g.cppStorageDecl(p.Name, p.CSort, g.ClassName))
 	}
 	return fmt.Sprintf("%s_repl(%s)", g.ClassName, strings.Join(params, ", "))
 }

@@ -352,7 +352,7 @@ progress waitn(C) = ok(C)
 	}
 	for _, want := range []string{
 		"long long wait;",
-		"std::map<color,long long> waitn;",
+		"long long waitn[2];",
 		"wait = ready ? 0 : wait + 1;",
 		"for (color C : {red, green})",
 		"waitn[C] = ok[C] ? 0 : waitn[C] + 1;",
@@ -400,11 +400,11 @@ progress wait(C,B) = edge(C,B)
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"std::map<std::tuple<color,bit>,long long> wait;",
+		"long long wait[2][2];",
 		"for (color C : {red, green})",
 		"for (bit B : {low, high})",
-		"wait[std::make_tuple(C, B)] = edge[std::make_tuple(C, B)] ? 0 : wait[std::make_tuple(C, B)] + 1;",
-		"ivy_check_progress(wait[std::make_tuple(C, B)], __ivy_maxt",
+		"wait[C][B] = edge[C][B] ? 0 : wait[C][B] + 1;",
+		"ivy_check_progress(wait[C][B], __ivy_maxt",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -657,7 +657,7 @@ after init {
     marked(C) := false
 }
 `,
-			want: []string{"enum color", "std::map<color,bool> marked;", "marked[C] = false;"},
+			want: []string{"enum color", "bool marked[2];", "marked[C] = false;"},
 		},
 		{
 			name:   "small repl",
@@ -1136,10 +1136,10 @@ func TestCTypeBoolEnumRangeFunction(t *testing.T) {
 	if got := cppType(enum); got != "color" {
 		t.Fatalf("enum cppType=%s", got)
 	}
-	if got := cppType(rng); got != "idx" {
+	if got := cppType(rng); got != "unsigned" {
 		t.Fatalf("range cppType=%s", got)
 	}
-	if got := cppType(fn); got != "std::map<color,bool>" {
+	if got := cppType(fn); got != "bool[2]" {
 		t.Fatalf("function cppType=%s", got)
 	}
 }
@@ -1150,7 +1150,7 @@ func TestTupleTypeForBinaryRelation(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewFunctionSort: %v", err)
 	}
-	if got := cppType(fn); got != "std::map<std::tuple<node,node>,bool>" {
+	if got := cppType(fn); got != "hash_thunk<__tup__int__int,bool>" {
 		t.Fatalf("binary cppType=%s", got)
 	}
 }
@@ -1166,7 +1166,10 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Header, "std::map<std::tuple<node,node>,bool> link;") {
+	if !strings.Contains(out.Header, "struct __tup__int__int {") {
+		t.Fatalf("missing tuple key declaration:\n%s", out.Header)
+	}
+	if !strings.Contains(out.Header, "hash_thunk<__tup__int__int,bool> link;") {
 		t.Fatalf("missing relation declaration:\n%s", out.Header)
 	}
 }
@@ -1189,10 +1192,10 @@ action step = {
 	}
 	for _, want := range []string{
 		"enum color { red, green };",
-		"typedef long long idx;",
+		"typedef unsigned idx;",
 		"color saved;",
-		"std::map<idx,color> owner;",
-		"std::map<color,bool> marked;",
+		"color owner[3];",
+		"bool marked[2];",
 		"saved = owner[(0 < 0 ? 0 : 2 < 0 ? 2 : 0)];",
 		"marked[saved] = true;",
 	} {
@@ -1218,18 +1221,18 @@ export set
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"typedef long long idx;",
-		"idx seen;",
-		"void set(idx i);",
-		"void rangetypes::set(rangetypes::idx i)",
-		"rangetypes::idx i = ivy2cpp_parse_idx",
+		"typedef unsigned idx;",
+		"unsigned seen;",
+		"void set(unsigned i);",
+		"void rangetypes::set(unsigned i)",
+		"unsigned i = ivy2cpp_parse_idx",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
 	}
 	if strings.Contains(out.Header, "long long seen;") || strings.Contains(out.Header, "void set(long long i);") {
-		t.Fatalf("named range was erased to long long:\n%s", out.Header)
+		t.Fatalf("named range was erased to long long instead of the Python unsigned cardinal type:\n%s", out.Header)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)

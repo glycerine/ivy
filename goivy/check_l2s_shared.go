@@ -290,11 +290,13 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *NormalPr
 	}
 	cfg.ToWait = cfg.NamedBindersConjs["l2s_w"]
 	cfg.ToSave = cfg.NamedBindersConjs["l2s_s"]
-	for i, vb := range cfg.ToWait {
-		xtracer.Trace("l2s.SharedStep3 toWait[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
-	}
-	for i, vb := range cfg.ToSave {
-		xtracer.Trace("l2s.SharedStep3 toSave[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+	if !cfg.IsRankingTactic {
+		for i, vb := range cfg.ToWait {
+			xtracer.Trace("l2s.SharedStep3 toWait[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+		}
+		for i, vb := range cfg.ToSave {
+			xtracer.Trace("l2s.SharedStep3 toSave[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+		}
 	}
 }
 
@@ -304,7 +306,9 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 	// save_state actions
 	cfg.SaveState = nil
 	for i, vb := range cfg.ToSave {
-		xtracer.Trace("l2s.SharedBuildSaveAndWait saveState[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+		if !cfg.IsRankingTactic {
+			xtracer.Trace("l2s.SharedBuildSaveAndWait saveState[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+		}
 		lhs := applyNB(l2sS(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
 		cfg.SaveState = append(cfg.SaveState, setLineno(NewAssignAction(lhs, vb.Body), cfg.Lineno))
 	}
@@ -313,14 +317,18 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 	cfg.DoneWaiting = nil
 	for i, vb := range cfg.ToWait {
 		inner := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
-		xtracer.Trace("l2s.SharedBuildSaveAndWait doneWaiting[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), inner.Canon())
+		if !cfg.IsRankingTactic {
+			xtracer.Trace("l2s.SharedBuildSaveAndWait doneWaiting[%d] nVars=%d HASH canon=%s", i, len(vb.Vars), inner.Canon())
+		}
 		cfg.DoneWaiting = append(cfg.DoneWaiting, forall(vb.Vars, &LogicNot{Body: inner}))
 	}
 
 	// reset_w actions
 	cfg.ResetW = nil
 	for i, vb := range cfg.ToWait {
-		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] nVars=%d body HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+		if !cfg.IsRankingTactic {
+			xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] nVars=%d body HASH canon=%s", i, len(vb.Vars), vb.Body.Canon())
+		}
 		lhs := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
 		var conjuncts []Expr
 		for _, v := range vb.Vars {
@@ -330,16 +338,24 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 		}
 		conjuncts = append(conjuncts, &LogicNot{Body: vb.Body})
 		negatedBody := Negate(vb.Body)
-		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] negatedBody HASH canon=%s", i, negatedBody.Canon())
+		if !cfg.IsRankingTactic {
+			xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] negatedBody HASH canon=%s", i, negatedBody.Canon())
+		}
 		preReplaceInput := &LogicNot{Body: &LogicGlobally{Environ: strPtr(cfg.ProofLabel), Body: negatedBody}}
-		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] preReplace HASH canon=%s", i, preReplaceInput.Canon())
-		ResetRtrDepth()
+		if !cfg.IsRankingTactic {
+			xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] preReplace HASH canon=%s", i, preReplaceInput.Canon())
+			ResetRtrDepth()
+		}
 		negGlob := cfg.ReplaceTemporals(preReplaceInput).(Expr)
-		xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] postReplace HASH canon=%s", i, negGlob.Canon())
+		if !cfg.IsRankingTactic {
+			xtracer.Trace("l2s.SharedBuildSaveAndWait resetW[%d] postReplace HASH canon=%s", i, negGlob.Canon())
+		}
 		conjuncts = append(conjuncts, negGlob)
 		cfg.ResetW = append(cfg.ResetW, setLineno(NewAssignAction(lhs, checkMakeAnd(conjuncts...)), cfg.Lineno))
 	}
-	xtracer.Trace("l2s.SharedBuildSaveAndWait EXIT nSaveState=%d nDoneWaiting=%d nResetW=%d", len(cfg.SaveState), len(cfg.DoneWaiting), len(cfg.ResetW))
+	if !cfg.IsRankingTactic {
+		xtracer.Trace("l2s.SharedBuildSaveAndWait EXIT nSaveState=%d nDoneWaiting=%d nResetW=%d", len(cfg.SaveState), len(cfg.DoneWaiting), len(cfg.ResetW))
+	}
 }
 
 // SharedStep6_BuildTableau builds the tableau axiom actions.

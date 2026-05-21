@@ -274,19 +274,24 @@ func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, 
 	if !ok {
 		return false
 	}
-	rel, err := g.emitExpr(app.Func)
-	if err != nil {
-		g.unsupported(w, "unsupported some extensional relation: %s", err.Error())
-		return true
+	relName := goivy.ExprName(app.Func)
+	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok {
+		return false
 	}
+	st := cppFunctionStorageFor(g, fs.Domain(), fs.Range(), "")
+	if st.Kind != cppStorageHashThunk {
+		return false
+	}
+	rel := varName(relName)
 	found := g.nextTemp("__ivy_some")
 	w.linef("bool %s = false;", found)
-	w.open(fmt.Sprintf("for (auto it = %s.begin(), en = %s.end(); it != en; ++it) {", rel, rel))
+	w.open(fmt.Sprintf("for (auto it = %s.memo.begin(), en = %s.memo.end(); it != en; ++it) {", rel, rel))
 	w.line("if (!it->second) continue;")
 	if len(app.Terms) == 1 {
-		w.linef("%s %s = it->first;", cppType(p.CSort), varName(p.Name))
+		w.linef("%s %s = it->first;", g.cppType(p.CSort), varName(p.Name))
 	} else {
-		w.linef("%s %s = std::get<%d>(it->first);", cppType(p.CSort), varName(p.Name), argIndex)
+		w.linef("%s %s = it->first.arg%d;", g.cppType(p.CSort), varName(p.Name), argIndex)
 	}
 	cond, err := g.emitExpr(some.Fmla)
 	if err != nil {
@@ -328,7 +333,7 @@ func (g *Generator) emitIfSomeVariantDowncast(w *cppWriter, a *goivy.LogicIfActi
 	}
 	idx := g.Mod.VariantIndex(app.Terms[0].NodeSort(), v.CSort)
 	w.open(fmt.Sprintf("if (%s.__tag == %d) {", lhs, idx))
-	w.linef("%s %s = %s.%s;", cppType(v.CSort), varName(v.Name), lhs, variantPayloadField(v.CSort))
+	w.linef("%s %s = %s.%s;", g.cppType(v.CSort), varName(v.Name), lhs, variantPayloadField(v.CSort))
 	if thenAct, ok := a.ThenBody.(goivy.Action); ok {
 		g.emitAction(w, thenAct)
 	}
@@ -438,7 +443,7 @@ func (g *Generator) emitLocal(w *cppWriter, a *goivy.LogicLocalAction) {
 	w.open("{")
 	for _, local := range a.Locals {
 		name := goivy.ExprName(local)
-		w.linef("%s %s = %s;", cppType(local.NodeSort()), varName(name), g.cppZeroValue(local.NodeSort()))
+		w.linef("%s %s = %s;", g.cppType(local.NodeSort()), varName(name), g.cppZeroValue(local.NodeSort()))
 	}
 	if bodyAct, ok := a.Body.(goivy.Action); ok {
 		g.emitAction(w, bodyAct)
