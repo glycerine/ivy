@@ -74,7 +74,7 @@ func AutoInstTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node) 
 	}
 
 	// Instantiate axioms by matching triggers against goal formulas.
-	instances := InstantiateAxioms2(pc.GetModule(), fmlas, triggers)
+	instances := InstantiateAxiomsFromTriggers(pc.GetModule(), fmlas, triggers)
 
 	if len(instances) == 0 {
 		// No new instances — return goal unchanged.
