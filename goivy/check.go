@@ -1144,6 +1144,7 @@ func RegisterTactics(proofCfg *ProofConfig, mod *Module) {
 	// Register temporal and l2s tactics — Python does this at import time.
 	RegisterTemporalTactics(proofCfg)
 	RegisterL2STactics(proofCfg)
+	RegisterAutoInstTactics(proofCfg)
 }
 
 /*
