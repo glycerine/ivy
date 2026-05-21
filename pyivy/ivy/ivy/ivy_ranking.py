@@ -564,7 +564,11 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         if __debug__: xtracer.trace("ranking.modPass clone init ENTER")
         model.init = transform(model.init)
         if __debug__: xtracer.trace("ranking.modPass clone init EXIT")
-        list_transform(prems,transform)
+        for i in range(len(prems)):
+            if ipr.goal_is_property(prems[i]):
+                if __debug__: xtracer.trace("ranking.modPass clone prem[%d] ENTER HASH canon=%s" % (i, prems[i].canon() if hasattr(prems[i],'canon') else str(prems[i])))
+                prems[i] = transform(prems[i])
+                if __debug__: xtracer.trace("ranking.modPass clone prem[%d] EXIT HASH canon=%s" % (i, prems[i].canon() if hasattr(prems[i],'canon') else str(prems[i])))
         for i in range(len(postconds)):
             if __debug__: xtracer.trace("ranking.modPass clone postcond[%d] ENTER HASH canon=%s" % (i, postconds[i].canon() if hasattr(postconds[i],'canon') else str(postconds[i])))
             postconds[i] = transform(postconds[i])
