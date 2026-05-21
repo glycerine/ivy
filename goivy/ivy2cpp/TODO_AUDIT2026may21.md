@@ -610,39 +610,88 @@ Python references:
 - `pyivy/ivy/ivy/ivy_to_cpp.py:1542-1571`
 - `pyivy/ivy/ivy/ivy_to_cpp.py:3811-3886`
 
-## TODO 010 - Port derived definitions, constructors, and skolemized helpers
+## DONE 010 - Port derived definitions, constructors, and skolemized helpers
+
+Status update, 2026-05-21:
+
+- Extracted `emitSomeAction` and `emitMethodDeclLine` from the
+  per-action body of `emitMethods`. Both helpers mirror Python
+  `emit_some_action` (`ivy_to_cpp.py:1592-1625`) and the
+  `emit_method_decl(header,...) + ';'` pair
+  (`ivy_to_cpp.py:1595-1597`). Behavior for ordinary actions is
+  unchanged.
+- Replaced `emitDefinitionDecls` / `emitDefinitions` in
+  `goivy/ivy2cpp/definitions.go` with the Python synthetic-action
+  route: `derivedActionFor(d)` builds an `AssignAction(retval, rhs)`
+  where each bound `*goivy.LogicVariable` is skolemized to a fresh
+  `*goivy.Const` named `fml:<varname>` (Python `var_to_skolem`
+  pattern, `ivy_logic_utils.py:1572`), substitutes the variables in
+  the body via `goivy.Substitute`, attaches `formal_params` /
+  `formal_returns`, and dispatches through `emitSomeAction` /
+  `emitMethodDeclLine`. The old `definitionSignature` helper was
+  deleted — derived definitions now share the ptype annotation
+  pipeline with ordinary actions.
+- Added `goivy/ivy2cpp/constructors.go` with `constructorActionFor`
+  (Python `emit_constructor`, `ivy_to_cpp.py:1364-1375`),
+  `emitConstructorDecls`, and `emitConstructors`. For each sort
+  constructor, the helper builds a `Sequence(...)` of
+  `AssignAction(d_i(retval), fml:X_i)` for each destructor `d_i` in
+  `g.Mod.SortDestructors[sortName]`, again routing through the shared
+  `emitSomeAction` / `emitMethodDeclLine` helpers.
+- Wired both new emitters into `Generate` immediately after their
+  derived-definition counterparts, matching Python's emission order at
+  `ivy_to_cpp.py:2308-2313`.
+- Fixed `goivy.Substitute` (`goivy/logicutil.go`) to handle
+  `*LogicNativeExpr` (recurse into `CompiledChildren`) and `*NativeCode`
+  (leaf). Python's `substitute_ast` walks `ast.args` generically; the
+  Go switch was missing these cases, which broke derived definitions
+  whose RHS contains a native expression (e.g.,
+  `definition lt(x:idx,y:idx) = <<< `+"`x`"+` < `+"`y`"+` >>>`).
+- Updated two legacy tests whose assertions tested the old direct
+  `return rhs;` emission
+  (`TestImplDerivedDefinitionEmitsMethodNotState` and
+  `TestNativeDefinitionEmitsTemplateMethod`). The new emission matches
+  Python's `val = rhs; return val;` shape from `emit_some_action`. The
+  native-definition test now also asserts `const idx&` parameter
+  passing because `interpret idx -> <<< int >>>` registers idx in
+  `mod.NativeTypes` (`compiler_decl.go:1047`), so `isStructSort(idx)`
+  returns true and `annotateAction` selects `ConstRefType`
+  (`ptype.go:103`).
+- Added six TODO 010 tests in `goivy/ivy2cpp/ivy2cpp_test.go`:
+  `TestDerivedDefinitionEmitsMethod`,
+  `TestZeroArgDerivedDefinitionEmitsMethod`,
+  `TestDerivedDefinitionStructParamUsesConstRef`,
+  `TestSortConstructorEmitsMethod`,
+  `TestConstructorExcludedFromStateSymbols`, and the
+  `SLOW_CPP_TEST`-gated `TestDerivedAndConstructorCompile`.
+
+Verification:
+
+- `cd ~/ivy/goivy && make test`: PASS for every package, ivy2cpp in
+  0.19s.
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -count=1 -run
+  'TestDerivedDefinitionEmitsMethod$|TestZeroArgDerivedDefinitionEmitsMethod|TestDerivedDefinitionStructParamUsesConstRef|TestSortConstructorEmitsMethod|TestConstructorExcludedFromStateSymbols|TestDerivedAndConstructorCompile'`:
+  PASS in 2.08s (generated C++ compiles for each shape).
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -count=1` (full slow
+  sweep): PASS in 61.07s.
 
 Go locations:
 
-- `goivy/ivy2cpp/definitions.go:17-56`
-- `goivy/ivy2cpp/definitions.go:98-140`
+- `goivy/ivy2cpp/generator.go:618-624` (emitMethodDeclLine)
+- `goivy/ivy2cpp/generator.go:740-786` (emitSomeAction)
+- `goivy/ivy2cpp/definitions.go:114-181` (derivedActionFor + rewritten
+  emit{Definition,Definitions}Decls)
+- `goivy/ivy2cpp/constructors.go` (constructorActionFor +
+  emitConstructor{,Decl}s)
+- `goivy/logicutil.go` (Substitute cases for LogicNativeExpr +
+  NativeCode)
 
 Python references:
 
 - `pyivy/ivy/ivy/ivy_to_cpp.py:1351-1375`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2295-2347`
-
-Gap:
-
-- Go emits definitions as direct C++ methods when the body can be emitted.
-- Python emits derived functions plus constructor methods for sort constructors.
-  It also skolemizes unsupported derived forms with `fml:` symbols, creates
-  nondeterministic returns, and adds constraints via assumptions/assertions where
-  appropriate.
-- Go does not emit constructor functions for declared sort constructors.
-
-Conformance work:
-
-- Port `emit_derived` and `emit_constructor`.
-- Implement skolemized/nondeterministic derived definitions exactly as Python,
-  including naming and constraints.
-- Ensure constructors are excluded from state symbols but available as emitted
-  C++ functions where Python emits them.
-
-Tests to add:
-
-- Derived definitions that are direct expressions, quantified formulas, native
-  definitions, and constructor-backed sorts.
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1592-1625`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2308-2313`
+- `pyivy/ivy/ivy/ivy_logic_utils.py:1572` (var_to_skolem)
 
 ## TODO 011 - Complete expression emission
 
