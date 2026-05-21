@@ -138,6 +138,25 @@ public:
         return ctx.constant(ss.str().c_str(), range);
     }
 
+    // apply: variadic helper mirroring Python `gen.apply("name", v, ...)`
+    // used by generated destructor __from_solver/__to_solver/__randomize
+    // helpers. The C++ z3::func_decl supports variadic operator() with
+    // z3::expr arguments, so we forward them through directly.
+    template <typename... Args>
+    z3::expr apply(const char *decl_name, const Args&... args) {
+        std::map<std::string, z3::func_decl>::const_iterator it = decls.find(decl_name);
+        if (it == decls.end()) {
+            throw std::runtime_error(std::string("missing z3 decl: ") + decl_name);
+        }
+        return it->second(args...);
+    }
+
+    std::string fresh_name() {
+        std::ostringstream os;
+        os << "__ivy_fresh__" << random_counter++;
+        return os.str();
+    }
+
     z3::expr mk_apply_expr(const char *decl_name, const std::vector<int> &args) {
         std::map<std::string, z3::func_decl>::const_iterator it = decls.find(decl_name);
         if (it == decls.end()) {

@@ -51,6 +51,12 @@ type Generator struct {
 	exprAliases    map[string]goivy.Expr
 	currentReturns []*goivy.Const
 	errs           []error
+
+	// extRel caches the result of extensionalRelations(). nil before
+	// computation; non-nil after the first call (may be empty).
+	// Mirrors Python ivy_to_cpp.py:1912-1913 `the_extensional_relations`,
+	// but lives on the Generator per goivy/CLAUDE.md section C.
+	extRel map[string]bool
 }
 
 func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
@@ -186,6 +192,7 @@ func (g *Generator) emitImpl() error {
 	} else {
 		g.emitCPPTypeImpls(w)
 	}
+	g.emitDestructorImpls(w)
 	g.emitVariantImpls(w)
 	w.open(g.constructorSignature(true) + " {")
 	g.emitRuntimeConstructorPrelude(w)
@@ -445,84 +452,6 @@ func (g *Generator) emitVariantSuperWriter(w *cppWriter, typeName string, varian
 	w.close("")
 }
 
-func (g *Generator) emitDestructorStructComparators(w *cppWriter, name string, destructors []*goivy.Const) {
-	typeName := varName(name)
-	w.open(fmt.Sprintf("bool operator==(const %s &other) const {", typeName))
-	comparisons := destructorFieldComparisons(destructors, " == ")
-	if len(comparisons) == 0 {
-		w.line("return true;")
-	} else {
-		w.linef("return %s;", strings.Join(comparisons, " && "))
-	}
-	w.close("")
-	w.open(fmt.Sprintf("bool operator<(const %s &other) const {", typeName))
-	for _, d := range destructors {
-		if _, ok := d.CSort.(*goivy.LogicFunctionSort); !ok {
-			continue
-		}
-		field := varName(memName(d.Name))
-		w.linef("if (%s < other.%s) return true;", field, field)
-		w.linef("if (other.%s < %s) return false;", field, field)
-	}
-	w.line("return false;")
-	w.close("")
-}
-
-func (g *Generator) emitDestructorStructHash(w *cppWriter, destructors []*goivy.Const) {
-	var parts []string
-	for _, d := range destructors {
-		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
-		if !ok {
-			continue
-		}
-		domain := fs.Domain()
-		if len(domain) > 0 {
-			domain = domain[1:]
-		}
-		if len(domain) != 0 {
-			continue
-		}
-		field := varName(memName(d.Name))
-		parts = append(parts, fmt.Sprintf("hash_space::hash<%s>()(%s)", cppHashType(g, fs.Range()), field))
-	}
-	if len(parts) == 0 {
-		w.line("size_t __hash() const { return 0; }")
-		return
-	}
-	w.linef("size_t __hash() const { return %s; }", strings.Join(parts, " + "))
-}
-
-func (g *Generator) emitDestructorStructWriter(w *cppWriter, name string, destructors []*goivy.Const) {
-	typeName := varName(name)
-	w.open(fmt.Sprintf("friend std::ostream &operator<<(std::ostream &out, const %s &value) {", typeName))
-	w.line(`out << "{";`)
-	w.line("bool first = true;")
-	for _, d := range destructors {
-		if _, ok := d.CSort.(*goivy.LogicFunctionSort); !ok {
-			continue
-		}
-		field := varName(memName(d.Name))
-		w.line(`if (!first) out << ",";`)
-		w.line("first = false;")
-		w.linef(`out << "%s:" << value.%s;`, field, field)
-	}
-	w.line(`out << "}";`)
-	w.line("return out;")
-	w.close("")
-}
-
-func destructorFieldComparisons(destructors []*goivy.Const, op string) []string {
-	var out []string
-	for _, d := range destructors {
-		if _, ok := d.CSort.(*goivy.LogicFunctionSort); !ok {
-			continue
-		}
-		field := varName(memName(d.Name))
-		out = append(out, field+op+"other."+field)
-	}
-	return out
-}
-
 func (g *Generator) isVariantSuperName(name string) bool {
 	if g == nil || g.Mod == nil || len(g.Mod.Variants) == 0 {
 		return false
@@ -598,6 +527,44 @@ func (g *Generator) emitCardinalityInitializers(w *cppWriter) {
 type stateSymbol struct {
 	Name string
 	Sort goivy.Sort
+}
+
+// allStateSymbols mirrors Python ivy_to_cpp.py:33-35 `all_state_symbols`.
+// It returns every symbol in the signature that is neither a constructor
+// nor a solver-interpreted symbol (the result of SolverName is "" for
+// interpreted symbols, matching Python's `slv.solver_name(...) is None`).
+// Unlike stateSymbols below, it does NOT filter destructors or derived
+// definitions — Python filters those at consumer sites (`sym_is_member`,
+// `lhs.rep.name not in destructor_sorts`, etc).
+//
+// Multiple symbols can share a name when polymorphic; deduplicate by
+// name so callers can match relation names directly.
+func (g *Generator) allStateSymbols() []stateSymbol {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
+		return nil
+	}
+	seen := map[string]bool{}
+	var out []stateSymbol
+	for _, sym := range g.Mod.Sig.AllSymbols() {
+		name := sym.Name
+		if name == "" || seen[name] {
+			continue
+		}
+		if g.Mod.Sig.Constructors[name] {
+			continue
+		}
+		// Python's `slv.solver_name(il.normalize_symbol(s)) != None`. Treat
+		// an error as "non-interpreted" (Python's IvyError path raises
+		// rather than excludes; at compile time we don't want to mask it).
+		n, err := goivy.SolverName(sym, g.Mod.Sig, nil)
+		if err == nil && n == "" {
+			continue
+		}
+		seen[name] = true
+		out = append(out, stateSymbol{Name: name, Sort: sym.CSort})
+	}
+	sort.SliceStable(out, func(i, j int) bool { return out[i].Name < out[j].Name })
+	return out
 }
 
 func (g *Generator) stateSymbols() []stateSymbol {

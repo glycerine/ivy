@@ -546,6 +546,32 @@ func (g *Generator) cppStorageParamDecl(c *goivy.Const, className string) string
 	return g.cppStorageDecl(c.Name, c.CSort, className)
 }
 
+// cppDestructorFieldAccess is the sibling of cppStorageAccess that takes
+// the destructor field's domain (excluding the implicit struct receiver)
+// and range directly. Mirrors Python emit_app destructor branch at
+// ivy_to_cpp.py:3187-3221.
+func (g *Generator) cppDestructorFieldAccess(field string, dom []goivy.Sort, rng goivy.Sort, args []string, obj string) string {
+	base := varName(field)
+	if obj != "" {
+		base = obj + "." + base
+	}
+	if len(dom) == 0 {
+		return base
+	}
+	st := cppFunctionStorageFor(g, dom, rng, "")
+	switch st.Kind {
+	case cppStorageArray:
+		return base + cppIndexSuffix(args)
+	case cppStorageHashThunk:
+		if len(args) == 1 {
+			return fmt.Sprintf("%s[%s]", base, args[0])
+		}
+		return fmt.Sprintf("%s[%s(%s)]", base, cppCTupleLocalNameWith(g, dom), strings.Join(args, ", "))
+	default:
+		return base
+	}
+}
+
 func (g *Generator) cppStorageAccess(name string, sort goivy.Sort, args []string, obj string) string {
 	base := varName(name)
 	if obj != "" {

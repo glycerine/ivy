@@ -234,14 +234,49 @@ func (g *Generator) emitDestructorApply(name string, terms []goivy.Expr) (string
 	if !ok {
 		return "", false, nil
 	}
-	if len(terms) != 1 {
-		return "", true, fmt.Errorf("ivy2cpp: destructor %s expected 1 argument, got %d", name, len(terms))
+	if len(terms) < 1 {
+		return "", true, fmt.Errorf("ivy2cpp: destructor %s expected at least 1 argument", name)
 	}
 	obj, err := g.emitExpr(terms[0])
 	if err != nil {
 		return "", true, err
 	}
-	return obj + "." + field, true, nil
+	dom, rng := g.destructorFieldSig(name)
+	args := make([]string, 0, len(terms)-1)
+	for _, t := range terms[1:] {
+		s, err := g.emitExpr(t)
+		if err != nil {
+			return "", true, err
+		}
+		args = append(args, s)
+	}
+	return g.cppDestructorFieldAccess(field, dom, rng, args, obj), true, nil
+}
+
+// destructorFieldSig returns the field domain (excluding the implicit struct
+// receiver) and range for a destructor symbol identified by name.
+func (g *Generator) destructorFieldSig(name string) ([]goivy.Sort, goivy.Sort) {
+	if g == nil || g.Mod == nil || g.Mod.DestructorSorts == nil {
+		return nil, nil
+	}
+	owner, ok := g.Mod.DestructorSorts[name]
+	if !ok {
+		return nil, nil
+	}
+	ownerName := sortName(owner)
+	destrs := g.Mod.SortDestructors.Get(ownerName)
+	for _, d := range destrs {
+		if d != nil && d.Name == name {
+			if fs, ok := d.CSort.(*goivy.LogicFunctionSort); ok {
+				dom := fs.Domain()
+				if len(dom) > 0 {
+					dom = dom[1:]
+				}
+				return dom, fs.Range()
+			}
+		}
+	}
+	return nil, nil
 }
 
 func (g *Generator) destructorFieldName(name string) (string, bool) {
@@ -356,20 +391,30 @@ func (g *Generator) emitExistsVariantRelation(vars []*goivy.LogicVariable, body 
 	return fmt.Sprintf("(%s.tag == %d)", lhs, idx), true, nil
 }
 
+// emitExtensionalQuant emits the `for(auto it = R.memo.begin() ...)`
+// loop body used for quantifiers over relations that we know to be
+// extensional (Python `the_extensional_relations`). The first
+// quantified variable that has an extensional bound drives the loop;
+// any other quantified variable that appears in the same extensional
+// atom is also bound from it->first, matching Python's emit_quant
+// (ivy_to_cpp.py:3437-3453). Remaining variables fall back to the
+// numeric / per-variable loop emitted by loopHeaderForVar.
 func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy.Expr, forall bool) (string, bool, error) {
-	if len(vars) != 1 || g == nil || g.Mod == nil {
+	if len(vars) == 0 || g == nil || g.Mod == nil {
 		return "", false, nil
 	}
-	bound := vars[0]
-	if bound == nil {
+	v0 := vars[0]
+	if v0 == nil {
 		return "", false, nil
 	}
-	app, argIndex, ok := g.findExtensionalRelationBound(body, bound, forall)
-	if !ok {
+	exists := !forall
+	var ebnds []*goivy.Apply
+	g.matchExtensionalBoundExprs(v0, body, exists, &ebnds)
+	if len(ebnds) == 0 {
 		return "", false, nil
 	}
-	relName := goivy.ExprName(app.Func)
-	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
+	ebnd := ebnds[0]
+	fs, ok := ebnd.Func.NodeSort().(*goivy.LogicFunctionSort)
 	if !ok {
 		return "", false, nil
 	}
@@ -377,18 +422,60 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 	if st.Kind != cppStorageHashThunk {
 		return "", false, nil
 	}
+	relName := goivy.ExprName(ebnd.Func)
 	rel := varName(relName)
+
 	var w cppWriter
 	w.raw("([&]() {")
 	w.raw("\n")
 	w.indent = 1
 	w.open(fmt.Sprintf("for (auto it = %s.memo.begin(), en = %s.memo.end(); it != en; ++it) {", rel, rel))
 	w.line("if (!it->second) continue;")
-	if len(app.Terms) == 1 {
-		w.linef("%s %s = it->first;", g.cppType(bound.VSort), varName(bound.Name))
-	} else {
-		w.linef("%s %s = it->first.arg%d;", g.cppType(bound.VSort), varName(bound.Name), argIndex)
+
+	// Bind every quantified variable that appears as an argument of
+	// ebnd. Python: `if v == v0 or v in variables`.
+	boundNames := map[string]bool{}
+	for pos, term := range ebnd.Terms {
+		tv, isVar := term.(*goivy.LogicVariable)
+		if !isVar {
+			continue
+		}
+		var matched *goivy.LogicVariable
+		for _, v := range vars {
+			if v != nil && v.Name == tv.Name {
+				matched = v
+				break
+			}
+		}
+		if matched == nil || boundNames[matched.Name] {
+			continue
+		}
+		boundNames[matched.Name] = true
+		if len(ebnd.Terms) == 1 {
+			w.linef("%s %s = it->first;", g.cppType(matched.VSort), varName(matched.Name))
+		} else {
+			w.linef("%s %s = it->first.arg%d;", g.cppType(matched.VSort), varName(matched.Name), pos)
+		}
 	}
+
+	// Emit per-variable loops for any quantified variable that wasn't
+	// bound by the extensional atom.
+	var remaining []*goivy.LogicVariable
+	for _, v := range vars {
+		if v != nil && !boundNames[v.Name] {
+			remaining = append(remaining, v)
+		}
+	}
+	nestedOpened := 0
+	for _, v := range remaining {
+		header, err := g.loopHeaderForVar(v)
+		if err != nil {
+			return "", true, err
+		}
+		w.open(header)
+		nestedOpened++
+	}
+
 	expr, err := g.emitExpr(body)
 	if err != nil {
 		return "", true, err
@@ -398,7 +485,11 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 	} else {
 		w.linef("if (%s) return true;", expr)
 	}
-	w.close("")
+
+	for i := 0; i < nestedOpened; i++ {
+		w.close("")
+	}
+	w.close("") // close the extensional for-loop
 	if forall {
 		w.line("return true;")
 	} else {
@@ -409,76 +500,105 @@ func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy
 	return w.String(), true, nil
 }
 
-func (g *Generator) findExtensionalRelationBound(body goivy.Expr, bound *goivy.LogicVariable, forall bool) (*goivy.Apply, int, bool) {
-	if forall {
-		return g.findForallExtensionalRelationBound(body, bound)
+// matchExtensionalBoundExprs mirrors Python ivy_to_cpp.py:3351-3377
+// `get_extensional_bound_exprs`. It collects extensional-relation
+// applications that constrain v0, tracking quantifier polarity
+// through Not / Implies / Or / And. When v0 appears inside a
+// derived definition's application, the definition is unfolded
+// (parameter substitution into the RHS) and the search continues.
+//
+// `exists` is true in an existential context. It flips through Not
+// and the antecedent of Implies; under universal context (exists =
+// false) only Or and the consequent of Implies recurse.
+func (g *Generator) matchExtensionalBoundExprs(v0 *goivy.LogicVariable, body goivy.Expr, exists bool, res *[]*goivy.Apply) {
+	if v0 == nil || body == nil {
+		return
 	}
-	return g.findPositiveExtensionalRelationBound(body, bound)
-}
-
-func (g *Generator) findPositiveExtensionalRelationBound(body goivy.Expr, bound *goivy.LogicVariable) (*goivy.Apply, int, bool) {
-	switch n := body.(type) {
-	case *goivy.Apply:
-		if idx, ok := g.extensionalRelationBoundIndex(n, bound); ok {
-			return n, idx, true
+	// Python: if isinstance(body, il.Not):
+	if not, ok := body.(*goivy.LogicNot); ok {
+		g.matchExtensionalBoundExprs(v0, not.Body, !exists, res)
+		return
+	}
+	// Go-only LogicLiteral wrapper. Polarity==0 wraps a negated atom.
+	if lit, ok := body.(*goivy.LogicLiteral); ok {
+		nextExists := exists
+		if lit.Polarity == 0 {
+			nextExists = !exists
 		}
-	case *goivy.LogicLiteral:
-		if n.Polarity == 1 {
-			return g.findPositiveExtensionalRelationBound(n.Atom, bound)
+		g.matchExtensionalBoundExprs(v0, lit.Atom, nextExists, res)
+		return
+	}
+	// Python: if il.is_app(body) and body.rep in the_extensional_relations:
+	//             if v0 in body.args and exists: res.append(body)
+	app, isApp := body.(*goivy.Apply)
+	if isApp {
+		name := goivy.ExprName(app.Func)
+		if name != "" && g.extensionalRels()[name] && exists && containsVariableByName(app.Terms, v0.Name) {
+			*res = append(*res, app)
 		}
-	case *goivy.LogicAnd:
-		for _, term := range n.Terms {
-			if app, idx, ok := g.findPositiveExtensionalRelationBound(term, bound); ok {
-				return app, idx, true
+	}
+	// Python: if isinstance(body, il.Implies) and not exists:
+	if imp, ok := body.(*goivy.LogicImplies); ok {
+		if !exists {
+			g.matchExtensionalBoundExprs(v0, imp.T1, !exists, res)
+			g.matchExtensionalBoundExprs(v0, imp.T2, exists, res)
+		}
+		return
+	}
+	// Python: if isinstance(body, il.Or) and not exists:
+	if or, ok := body.(*goivy.LogicOr); ok {
+		if !exists {
+			for _, t := range or.Terms {
+				g.matchExtensionalBoundExprs(v0, t, exists, res)
 			}
 		}
+		return
 	}
-	return nil, -1, false
-}
-
-func (g *Generator) findForallExtensionalRelationBound(body goivy.Expr, bound *goivy.LogicVariable) (*goivy.Apply, int, bool) {
-	switch n := body.(type) {
-	case *goivy.LogicImplies:
-		return g.findPositiveExtensionalRelationBound(n.T1, bound)
-	case *goivy.LogicNot:
-		return g.findPositiveExtensionalRelationBound(n.Body, bound)
-	case *goivy.LogicLiteral:
-		if n.Polarity == 0 {
-			return g.findPositiveExtensionalRelationBound(n.Atom, bound)
-		}
-	case *goivy.LogicOr:
-		for _, term := range n.Terms {
-			if app, idx, ok := g.findForallExtensionalRelationBound(term, bound); ok {
-				return app, idx, true
+	// Python: if isinstance(body, il.And) and exists:
+	if and, ok := body.(*goivy.LogicAnd); ok {
+		if exists {
+			for _, t := range and.Terms {
+				g.matchExtensionalBoundExprs(v0, t, exists, res)
 			}
 		}
+		return
 	}
-	return nil, -1, false
-}
-
-func (g *Generator) extensionalRelationBoundIndex(app *goivy.Apply, bound *goivy.LogicVariable) (int, bool) {
-	if app == nil || bound == nil || len(app.Terms) == 0 {
-		return -1, false
+	// Python: if il.is_app(body) and body.rep in is_derived and v0 in body.args:
+	if !isApp {
+		return
 	}
-	name := goivy.ExprName(app.Func)
-	if name == "" || !g.isMutableStateSymbol(name) {
-		return -1, false
+	if !containsVariableByName(app.Terms, v0.Name) {
+		return
 	}
-	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
-	if !ok || fs.Range() != goivy.Boolean {
-		return -1, false
+	def, ok := g.definitionByName(goivy.ExprName(app.Func))
+	if !ok || def.RHS == nil {
+		return
 	}
-	for i, term := range app.Terms {
-		if goivy.ExprName(term) == bound.Name {
-			return i, true
+	if !allArgsVariable(def.Params) || len(def.Params) != len(app.Terms) {
+		return
+	}
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for i, p := range def.Params {
+		pv, isVar := p.(*goivy.LogicVariable)
+		if !isVar {
+			return
 		}
+		subs[goivy.Key(pv)] = app.Terms[i]
 	}
-	return -1, false
+	substituted, err := goivy.Substitute(def.RHS, subs)
+	if err != nil {
+		return
+	}
+	g.matchExtensionalBoundExprs(v0, substituted, exists, res)
 }
 
-func (g *Generator) isMutableStateSymbol(name string) bool {
-	for _, sym := range g.stateSymbols() {
-		if sym.Name == name {
+// containsVariableByName returns true if any element of terms is a
+// LogicVariable with the given name. Used by matchExtensionalBoundExprs
+// (Python `v0 in body.args` matches variables by structural equality;
+// variable scopes are unique enough that name comparison is sufficient).
+func containsVariableByName(terms []goivy.Expr, name string) bool {
+	for _, t := range terms {
+		if v, ok := t.(*goivy.LogicVariable); ok && v.Name == name {
 			return true
 		}
 	}

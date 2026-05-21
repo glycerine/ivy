@@ -83,6 +83,22 @@ func (g *Generator) definitionNames() map[string]bool {
 	return names
 }
 
+// definitionByName looks up a derived (or native) definition by its
+// head symbol name. Returns ({}, false) when no such definition exists.
+// Used by matchExtensionalBoundExprs to unfold definitions while
+// hunting for an extensional-relation atom (Python ivy_to_cpp.py:3370).
+func (g *Generator) definitionByName(name string) (derivedDefinition, bool) {
+	if name == "" {
+		return derivedDefinition{}, false
+	}
+	for _, d := range g.allDefinitions() {
+		if d.Name == name {
+			return d, true
+		}
+	}
+	return derivedDefinition{}, false
+}
+
 func (g *Generator) isDefinitionName(name string) bool {
 	if name == "" {
 		return false

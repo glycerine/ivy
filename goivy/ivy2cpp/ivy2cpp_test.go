@@ -1618,7 +1618,8 @@ export make
 	}
 	for _, want := range []string{
 		"friend std::ostream &operator<<(std::ostream &out, const req &value)",
-		`out << "shade:" << value.shade;`,
+		`out << "shade:";`,
+		`out << value.shade;`,
 		"friend std::ostream &operator<<(std::ostream &s, const t &t);",
 		`case 0: s << "req:" << variantstructout::t::unwrap< variantstructout::req >(t); break;`,
 		"out = t(0, new t::twrap<req>(loc__r));",
@@ -1752,6 +1753,9 @@ func TestEmitExprExistsUsesExtensionalRelationMap(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
 relation marked(N:node)
+after init {
+    marked(X) := false;
+}
 action check = {
     assert exists X:node. marked(X)
 }
@@ -1779,6 +1783,9 @@ func TestEmitExprExistsUsesBinaryExtensionalRelationMap(t *testing.T) {
 type node
 individual dst : node
 relation edge(X:node,Y:node)
+after init {
+    edge(X, Y) := false;
+}
 action check = {
     assert exists X:node. edge(X,dst)
 }
@@ -1805,6 +1812,10 @@ func TestEmitExprForallUsesExtensionalRelationAntecedent(t *testing.T) {
 type node
 relation marked(N:node)
 relation ok(N:node)
+after init {
+    marked(X) := false;
+    ok(X) := false;
+}
 action check = {
     assert forall X:node. marked(X) -> ok(X)
 }
@@ -2100,6 +2111,9 @@ func TestGeneratedIfSomeUsesExtensionalRelationMap(t *testing.T) {
 type node
 relation marked(N:node)
 individual saved : node
+after init {
+    marked(X) := false;
+}
 action pick = {
     if some x:node. marked(x) {
         saved := x
@@ -4158,4 +4172,264 @@ export step
 	if _, err := os.Stat(filepath.Join(dir, "TinyZ3.dsc")); err != nil {
 		t.Fatalf("missing descriptor: %v", err)
 	}
+}
+
+// --- TODO 007: full destructor / struct support ---
+
+const destructorMultiArgIvySource = `#lang ivy1.7
+type color = {red, green, blue}
+type idx = {0..3}
+type cell
+destructor shade(C:cell, I:idx) : color
+`
+
+func TestDestructorMultiArgFieldDeclaration(t *testing.T) {
+	mod := compileIvySource(t, destructorMultiArgIvySource)
+	out, err := Generate(mod, Config{ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"struct cell {",
+		"color shade[4];",
+		"size_t __hash() const {",
+		"size_t hv = 0;",
+		// cppHashType collapses enums to int for hashing; shade is an enum.
+		"hv += hash_space::hash<int>()(shade[X__0]);",
+		"bool operator==(const cell &other) const {",
+		"if (!(shade[X__0] == other.shade[X__0])) return false;",
+		"bool operator<(const cell &other) const {",
+	} {
+		if !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q in header:\n%s", want, out.Header)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestDestructorHashThunkField(t *testing.T) {
+	// `key` is uninterpreted with no cardinality, so the destructor field
+	// must lower to hash_thunk storage. The struct __hash skips it per
+	// Python is_large_destr; equality and stream fall back to scalar form.
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type key
+type cell
+destructor shade(C:cell, K:key) : color
+`)
+	out, err := Generate(mod, Config{ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"struct cell {",
+		"hash_thunk<",
+		",color> shade;",
+		"size_t __hash() const {",
+	} {
+		if !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q in header:\n%s", want, out.Header)
+		}
+	}
+	if strings.Contains(out.Header, "hv += hash_space::hash<color>()(shade") {
+		t.Fatalf("hash should skip hash_thunk-storage destructor field:\n%s", out.Header)
+	}
+	if !strings.Contains(out.Header, "if (!(shade == other.shade)) return false;") {
+		t.Fatalf("equality should fall back to scalar compare for hash_thunk field:\n%s", out.Header)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestDestructorStructStreamMultiArg(t *testing.T) {
+	mod := compileIvySource(t, destructorMultiArgIvySource)
+	out, err := Generate(mod, Config{ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		`out << "shade:";`,
+		`out << "[";`,
+		"for (int X__0 = 0; X__0 < 4; X__0++) {",
+		`if (X__0) out << ",";`,
+		"out << value.shade[X__0];",
+		`out << "]";`,
+	} {
+		if !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q in header writer:\n%s", want, out.Header)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestDestructorMultiArgFieldRoundTrip(t *testing.T) {
+	// Construct multi-arg field actions manually (matching the pattern in
+	// TestGeneratedFieldActionsCompile). For multi-arg destructor LHS the
+	// emitter routes through Assign(App(shade, c, i), v) and must use
+	// cppDestructorFieldAccess for indexing.
+	mod := compileIvySource(t, destructorMultiArgIvySource+`
+individual a : cell
+action step = {}
+export step
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	idx, ok := mod.Sig.Sorts.Get2("idx")
+	if !ok {
+		t.Fatal("missing idx sort")
+	}
+	cell, ok := mod.Sig.Sorts.Get2("cell")
+	if !ok {
+		t.Fatal("missing cell sort")
+	}
+	shadeSort, err := goivy.NewFunctionSort(cell, idx, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", shadeSort)
+	a := goivy.NewConst("a", cell)
+	zero := goivy.NewConst("0", idx)
+	red := goivy.NewConst("red", color)
+	// Build: a.shade(0) := red
+	lhs, err := goivy.NewApply(shade, a, zero)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	assign := goivy.NewAssignAction(lhs, red)
+	mod.Actions.Set("step", goivy.NewSequence(assign))
+	mod.PublicActions.Set("step", true)
+	out, err := Generate(mod, Config{ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// The index expression is bounds-clamped by emitExpr for range targets,
+	// so we look for "a.shade[" and "] = red;" with red as the RHS rather
+	// than a literal "a.shade[0] = red;".
+	if !strings.Contains(out.Impl, "a.shade[") || !strings.Contains(out.Impl, "] = red;") {
+		t.Fatalf("missing array-indexed destructor write in impl:\n%s", out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestDestructorSerDeserShape(t *testing.T) {
+	mod := compileIvySource(t, destructorMultiArgIvySource)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"template <> void __ser<heap::cell>(ivy_ser &res, const heap::cell &t) {",
+		"res.open_struct();",
+		`res.open_field("shade");`,
+		"__ser<heap::color>(res, t.shade[X__0]);",
+		"res.close_field();",
+		"res.close_struct();",
+		"template <> void __deser<heap::cell>(ivy_deser &inp, heap::cell &res) {",
+		"inp.open_struct();",
+		`inp.open_field("shade");`,
+		"inp.open_list();",
+		"__deser(inp, res.shade[X__0]);",
+		"inp.close_list();",
+		"inp.close_field();",
+		"inp.close_struct();",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestDestructorArgShape(t *testing.T) {
+	mod := compileIvySource(t, destructorMultiArgIvySource)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"template <> heap::cell _arg<heap::cell>(std::vector<ivy_value> &args, unsigned idx, long long bound) {",
+		"ivy_value &arg = args[idx];",
+		"std::vector<ivy_value> tmp_args(1);",
+		"for (unsigned i = 0; i < arg.fields.size(); i++) {",
+		"if (arg.fields[i].is_member()) {",
+		`if (arg.fields[i].atom == "shade") {`,
+		"if (tmp.atom.size() || tmp.fields.size() != 4) throw out_of_bounds(idx, tmp.pos);",
+		"for (int X__0 = 0; X__0 < 4; X__0++) {",
+		"res.shade[X__0] = _arg<heap::color>(tmp_args, 0, 3);",
+		`throw out_of_bounds("in field shade: " + err.txt, err.pos);`,
+		`throw out_of_bounds("unexpected field: " + arg.fields[i].atom, arg.fields[i].pos);`,
+		`throw out_of_bounds("expected struct", args[idx].pos);`,
+		"return res;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestDestructorZ3ImplShape(t *testing.T) {
+	mod := compileIvySource(t, destructorMultiArgIvySource+`
+individual a : cell
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"#ifdef Z3PP_H_",
+		"template <> void __from_solver<heap::cell>(gen &g, const z3::expr &v, heap::cell &res) {",
+		`g.apply("shade", v, g.int_to_z3(g.sort("idx"), X__0))`,
+		"res.shade[X__0]",
+		"template <> z3::expr __to_solver<heap::cell>(gen &g, const z3::expr &v, const heap::cell &val) {",
+		"std::string fname = g.fresh_name();",
+		`z3::expr tmp = g.ctx.constant(fname.c_str(), g.sort("cell"));`,
+		`g.slvr.add(__to_solver(g, g.apply("shade", tmp, g.int_to_z3(g.sort("idx"), X__0)), val.shade[X__0]));`,
+		"return v == tmp;",
+		"template <> void __randomize<heap::cell>(gen &g, const z3::expr &v, const std::string &sort_name) {",
+		`__randomize<heap::color>(g, g.apply("shade", v, g.int_to_z3(g.sort("idx"), X__0)), "color");`,
+		`g.mk_decl("shade", {"cell", "idx"}, "color");`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestDestructorRandomizeSkipsUninterpretedRange(t *testing.T) {
+	// `pos` is an uninterpreted sort with no cppInterp, no native type, and
+	// not a destructor sort — so it satisfies isReallyUninterpretedRange and
+	// must be skipped by the destructor __randomize body.
+	mod := compileIvySource(t, `#lang ivy1.7
+type pos
+type cell
+destructor here(C:cell) : pos
+individual a : cell
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// The __randomize template must still be emitted (empty-bodied) — but
+	// must not contain a __randomize<...>(...) call for the `here` field.
+	idx := strings.Index(out.Impl, "template <> void __randomize<heap::cell>")
+	if idx < 0 {
+		t.Fatalf("missing __randomize<heap::cell> template:\n%s", out.Impl)
+	}
+	tail := out.Impl[idx:]
+	endIdx := strings.Index(tail, "#endif")
+	if endIdx < 0 {
+		t.Fatalf("missing #endif after __randomize template:\n%s", tail)
+	}
+	body := tail[:endIdx]
+	if strings.Contains(body, `__randomize<`) && strings.Contains(body, `g.apply("here"`) {
+		t.Fatalf("__randomize should skip uninterpreted-range destructor field:\n%s", body)
+	}
+	compileGeneratedCPP(t, out)
 }

@@ -286,11 +286,18 @@ void __ser<bool>(ivy_ser &res, const bool &inp) {
     res.set(inp);
 }
 
+// libstdc++ defines std::vector<bool>::const_reference as `bool`, so a
+// separate __ser specialization for it would redefine __ser<bool>.  libc++
+// uses a proxy reference type instead, in which case we still need a
+// dedicated specialization.  Detect the libstdc++ case via __GLIBCXX__ and
+// skip the proxy specialization there.
+#ifndef __GLIBCXX__
 template <>
 void __ser<std::vector<bool>::const_reference>(ivy_ser &res, const std::vector<bool>::const_reference &inp) {
     bool thing = inp;
     res.set(thing);
-} 
+}
+#endif
 
 template <>
 void __ser<__strlit>(ivy_ser &res, const __strlit &inp) {

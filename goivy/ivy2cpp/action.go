@@ -135,6 +135,16 @@ func setTargetAndValue(lit goivy.Expr) (goivy.Expr, string) {
 }
 
 func (g *Generator) emitAssign(w *cppWriter, a *goivy.LogicAssignAction) {
+	// Python emit_assign falls through to emit_assign_large for an
+	// extensional relation set to false (ivy_to_cpp.py:3703-3724), which
+	// builds a thunk evaluating to false. For hash_thunk storage with the
+	// default operator[]-false behavior, clearing memo achieves the same
+	// state without needing make_thunk emission (TODO 013). This is the
+	// path that initializes extensional relations in `after init` blocks
+	// over uninterpreted sorts.
+	if g.emitExtensionalRelationClear(w, a) {
+		return
+	}
 	loops, ok := g.openAssignmentLoops(w, a.LHS)
 	if !ok {
 		return
@@ -270,12 +280,25 @@ func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, 
 		return false
 	}
 	p := some.Params[0]
-	bound := &goivy.LogicVariable{Name: p.Name, VSort: p.CSort}
-	app, argIndex, ok := g.findPositiveExtensionalRelationBound(some.Fmla, bound)
-	if !ok {
+	// `some` parameters compile to local Const symbols in goivy (e.g.
+	// "loc:x"), while matchExtensionalBoundExprs follows Python's
+	// is_variable semantics and only matches LogicVariable. Substitute
+	// the Const back to a fresh Variable in the formula before searching.
+	boundVar, err := goivy.NewVariable("X"+p.Name, p.CSort)
+	if err != nil {
 		return false
 	}
-	relName := goivy.ExprName(app.Func)
+	subs := map[goivy.NodeKey]goivy.Expr{goivy.Key(p): boundVar}
+	fmla, err := goivy.Substitute(some.Fmla, subs)
+	if err != nil {
+		return false
+	}
+	var ebnds []*goivy.Apply
+	g.matchExtensionalBoundExprs(boundVar, fmla, true, &ebnds)
+	if len(ebnds) == 0 {
+		return false
+	}
+	app := ebnds[0]
 	fs, ok := app.Func.NodeSort().(*goivy.LogicFunctionSort)
 	if !ok {
 		return false
@@ -284,11 +307,25 @@ func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, 
 	if st.Kind != cppStorageHashThunk {
 		return false
 	}
+	argIndex := -1
+	for i, t := range app.Terms {
+		if tv, ok := t.(*goivy.LogicVariable); ok && tv.Name == boundVar.Name {
+			argIndex = i
+			break
+		}
+	}
+	if argIndex < 0 {
+		return false
+	}
+	relName := goivy.ExprName(app.Func)
 	rel := varName(relName)
 	found := g.nextTemp("__ivy_some")
 	w.linef("bool %s = false;", found)
 	w.open(fmt.Sprintf("for (auto it = %s.memo.begin(), en = %s.memo.end(); it != en; ++it) {", rel, rel))
 	w.line("if (!it->second) continue;")
+	// Emit using p.Name (the original local-const name) so that the
+	// downstream emitAction sees the same identifier when it expands
+	// the `then` body.
 	if len(app.Terms) == 1 {
 		w.linef("%s %s = it->first;", g.cppType(p.CSort), varName(p.Name))
 	} else {

@@ -347,6 +347,20 @@ func (g *Generator) z3DeclSymbols() []stateSymbol {
 		syms = append(syms, stateSymbol{Name: name, Sort: def.Defines().NodeSort()})
 		seen[name] = true
 	}
+	// Destructor field functions are excluded from stateSymbols() because they
+	// are not mutable state, but they must still be registered with Z3 so that
+	// generated __from_solver/__to_solver helpers can call g.apply("<destr>", ...).
+	if g.Mod.SortDestructors != nil {
+		for _, destrs := range g.Mod.SortDestructors.All() {
+			for _, d := range destrs {
+				if d == nil || seen[d.Name] {
+					continue
+				}
+				syms = append(syms, stateSymbol{Name: d.Name, Sort: d.CSort})
+				seen[d.Name] = true
+			}
+		}
+	}
 	sort.SliceStable(syms, func(i, j int) bool { return syms[i].Name < syms[j].Name })
 	return syms
 }
