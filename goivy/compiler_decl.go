@@ -429,6 +429,9 @@ func (d *DomainSetup) TypeDecl(node Node) error {
 		if err := d.Compiler.Sig.AddSort(sort); err != nil {
 			return nil
 		}
+		if td.Finite {
+			d.Compiler.Module.FiniteSorts[name] = true
+		}
 	case *EnumeratedSort:
 		ext := v.Extension()
 		sort := &LogicEnumeratedSort{Name: name, Extension: ext}
@@ -463,6 +466,9 @@ func (d *DomainSetup) TypeDecl(node Node) error {
 		if err := d.Compiler.Sig.AddSort(sort); err != nil {
 			return nil
 		}
+		if td.Finite {
+			d.Compiler.Module.FiniteSorts[name] = true
+		}
 	case *StructSort:
 		// Add the sort and its destructors
 		// Corresponds to Python ivy_compiler.py:1225-1239
@@ -470,6 +476,9 @@ func (d *DomainSetup) TypeDecl(node Node) error {
 		xtracer.Trace("compiler.DomainSetup.type sort=struct name=%s", name)
 		if err := d.Compiler.Sig.AddSort(sort); err != nil {
 			return nil
+		}
+		if td.Finite {
+			d.Compiler.Module.FiniteSorts[name] = true
 		}
 		// Python line 1229-1230: initialize empty destructor list for empty structs
 		if _, exists := d.Compiler.Module.SortDestructors.Get2(name); !exists {
