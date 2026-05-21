@@ -138,6 +138,22 @@ func TestMiss2_DefinitionFreeRHSVariable(t *testing.T) {
 	}
 }
 
+func TestDefinitionSomeExprRHSVariableIsBound(t *testing.T) {
+	cfg := NewAstConfig()
+
+	x := cfg.NewVariable("X", "bool")
+	y := cfg.NewVariable("Y", "bool")
+	e := cfg.NewVariable("E", "bool")
+	lhs := cfg.NewAtom("lerr", x, y)
+	body := cfg.NewAtom(">=", e, cfg.NewAtom("0"))
+	rhs := cfg.NewSomeExpr(e, body)
+	def := cfg.NewDefinition(lhs, rhs)
+
+	if err := addDefinitionChecks(def); err != nil {
+		t.Fatalf("some-expression binder variable should not be reported free: %v", err)
+	}
+}
+
 // ============================================================
 // Item 12: DerivedUpdate creation
 // Python: derived() (line 1167) and definition() (line 1176) both append

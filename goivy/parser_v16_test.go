@@ -153,6 +153,18 @@ func TestListIsolatesV16ParameterizedObjectExtract(t *testing.T) {
 	}
 }
 
+func TestListIsolatesV16SomeExprDefinition(t *testing.T) {
+	path := filepath.Join("..", "ivy-lang-examples", "examples", "ivy", "card2.ivy")
+
+	isolates, err := ListIsolates(path)
+	if err != nil {
+		t.Fatalf("ListIsolates(%s): %v", path, err)
+	}
+	if len(isolates) == 0 {
+		t.Fatalf("ListIsolates(%s) returned no isolates", path)
+	}
+}
+
 func TestReadModuleFromStringInheritsV16Version(t *testing.T) {
 	requireParserTraceEnabled(t)
 

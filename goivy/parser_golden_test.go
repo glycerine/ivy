@@ -688,6 +688,8 @@ var golden16PythonInvalidSpecs = map[string]string{
 	"../ivy-lang-examples/doc/examples/testing/repstore3_soln.ivy":   "Python Ivy rejects line 383: delegate fwd_chan_rcvr_recv[before] -> prim",
 	"../ivy-lang-examples/doc/examples/testing/repstore_variant.ivy": "Python Ivy rejects line 238: delegate fwd_chan_rcvr_recv[before] -> prim",
 	"../ivy-lang-examples/doc/examples/testing/token_ring.ivy":       "Python Ivy rejects line 34: module trans not found in current directory or module path",
+	"../ivy-lang-examples/doc/examples/testing/token_ring_buggy.ivy": "Python Ivy rejects line 65 from the golden16 cwd: module queue not found in current directory or module path",
+	"../ivy-lang-examples/examples/ivy/arrrel.ivy":                   "Python Ivy rejects line 38: token 'r': syntax error",
 }
 
 func golden16PythonInvalidReason(path string) (string, bool) {
@@ -754,6 +756,30 @@ func TestGolden16ListIsolatesSkipsConfiguredSpecs(t *testing.T) {
 	}
 	if len(isos) != 0 {
 		t.Fatalf("expected no isolates for skipped sht Python-invalid spec, got %v", isos)
+	}
+
+	tokenRingBuggyPath := filepath.Join("..", "ivy-lang-examples", "doc", "examples", "testing", "token_ring_buggy.ivy")
+	if reason, ok := golden16SkipSpecReason(tokenRingBuggyPath); !ok || !strings.Contains(reason, "module queue not found") {
+		t.Fatalf("expected %s to be skipped by known Python-invalid blacklist, got ok=%v reason=%q", tokenRingBuggyPath, ok, reason)
+	}
+	isos, skip = listGolden16Isolates(t, tokenRingBuggyPath)
+	if !skip {
+		t.Fatalf("expected %s to be skipped as Python-invalid; isolates=%v", tokenRingBuggyPath, isos)
+	}
+	if len(isos) != 0 {
+		t.Fatalf("expected no isolates for skipped token_ring_buggy Python-invalid spec, got %v", isos)
+	}
+
+	arrRelPath := filepath.Join("..", "ivy-lang-examples", "examples", "ivy", "arrrel.ivy")
+	if reason, ok := golden16SkipSpecReason(arrRelPath); !ok || !strings.Contains(reason, "token 'r'") {
+		t.Fatalf("expected %s to be skipped by known Python-invalid blacklist, got ok=%v reason=%q", arrRelPath, ok, reason)
+	}
+	isos, skip = listGolden16Isolates(t, arrRelPath)
+	if !skip {
+		t.Fatalf("expected %s to be skipped as Python-invalid; isolates=%v", arrRelPath, isos)
+	}
+	if len(isos) != 0 {
+		t.Fatalf("expected no isolates for skipped arrrel Python-invalid spec, got %v", isos)
 	}
 }
 

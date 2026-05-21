@@ -273,7 +273,7 @@ func collectASTVariables(node Node) []*Variable {
 }
 
 // astBinderInfo returns the set of bound variable names and the body args
-// for binder nodes (ForAll, Exists, Some, NamedBinder).
+// for binder nodes (ForAll, Exists, Some, SomeExpr, NamedBinder).
 // Returns nil, nil for non-binder nodes.
 // Corresponds to Python's binder_vars and binder_args (ivy_logic.py:640-649).
 func astBinderInfo(node Node) (bounds map[string]bool, bodyArgs []Node) {
@@ -288,6 +288,16 @@ func astBinderInfo(node Node) (bounds map[string]bool, bodyArgs []Node) {
 		bounds = astBoundNames(n.Params)
 		// Python: binder_args for Some returns args[1:] (the formula, not the params)
 		return bounds, []Node{n.Fmla}
+	case *SomeExpr:
+		bounds = astBoundNames([]Node{n.Param})
+		bodyArgs = []Node{n.Fmla}
+		if n.IfValue != nil {
+			bodyArgs = append(bodyArgs, n.IfValue)
+		}
+		if n.ElseVal != nil {
+			bodyArgs = append(bodyArgs, n.ElseVal)
+		}
+		return bounds, bodyArgs
 	case *NamedBinder:
 		bounds = astBoundNames(n.Bounds)
 		return bounds, []Node{n.Body}
