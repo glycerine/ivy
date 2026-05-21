@@ -375,8 +375,10 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 	})
 
 	// assume_g_axioms
-	for i, triple := range toG {
-		xtracer.Trace("l2s.SharedStep6 toG[%d] nVars=%d HASH canon=%s", i, len(triple.Vars), triple.Body.Canon())
+	if !cfg.IsRankingTactic {
+		for i, triple := range toG {
+			xtracer.Trace("l2s.SharedStep6 toG[%d] nVars=%d HASH canon=%s", i, len(triple.Vars), triple.Body.Canon())
+		}
 	}
 	cfg.AssumeGAxioms = nil
 	for _, triple := range toG {
@@ -424,8 +426,10 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 		cfg.AssumeWAxioms = append(cfg.AssumeWAxioms,
 			setLineno(NewAssumeAction(inner), cfg.Lineno))
 	}
-	xtracer.Trace("l2s.SharedStep6 EXIT nAssumeG=%d nAssumeWhen=%d nAssumeInit=%d nAssumeW=%d",
-		len(cfg.AssumeGAxioms), len(cfg.AssumeWhenAxioms), len(cfg.AssumeInitAxioms), len(cfg.AssumeWAxioms))
+	if !cfg.IsRankingTactic {
+		xtracer.Trace("l2s.SharedStep6 EXIT nAssumeG=%d nAssumeWhen=%d nAssumeInit=%d nAssumeW=%d",
+			len(cfg.AssumeGAxioms), len(cfg.AssumeWhenAxioms), len(cfg.AssumeInitAxioms), len(cfg.AssumeWAxioms))
+	}
 }
 
 // SharedStep7_InstrumentActions instruments all binding actions with
@@ -442,7 +446,9 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 		for sym := range SymbolsIluAst(triple.Body) {
 			if c, ok := sym.(*Const); ok {
 				k := c.Sexp()
-				xtracer.Trace("l2s.SharedStep7 symprops triple[%d] sym[%d]=%s HASH canon=%s", displayTi, si, c.Name, triple.Body.Canon())
+				if !cfg.IsRankingTactic {
+					xtracer.Trace("l2s.SharedStep7 symprops triple[%d] sym[%d]=%s HASH canon=%s", displayTi, si, c.Name, triple.Body.Canon())
+				}
 				symprops[k] = append(symprops[k], prop)
 
 				si++
@@ -458,7 +464,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 		for sym := range SymbolsIluAst(when.Body) {
 			if c, ok := sym.(*Const); ok {
 				k := c.Sexp()
-				if xtracer.Enabled {
+				if !cfg.IsRankingTactic && xtracer.Enabled {
 					xtracer.Trace("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, when.Body.Canon())
 					fmt.Printf("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s\n", wi, si, c.Name, when.Body.Canon())
 				}
@@ -466,7 +472,9 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 
 				si++
 			} else {
-				fmt.Printf("l2s.SharedStep7 not lgConst! type(sym)=%T; symwhens when[%d] when='%v' sym=%s HASH canon= when.Body=%s\n", sym, wi, when, sym, when.Body.Canon())
+				if !cfg.IsRankingTactic {
+					fmt.Printf("l2s.SharedStep7 not lgConst! type(sym)=%T; symwhens when[%d] when='%v' sym=%s HASH canon= when.Body=%s\n", sym, wi, when, sym, when.Body.Canon())
+				}
 			}
 		}
 	}
@@ -476,12 +484,16 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 		for sym := range SymbolsIluAst(vb.Body) {
 			if c, ok := sym.(*Const); ok {
 				k := c.Sexp()
-				xtracer.Trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, vb.Body.Canon())
+				if !cfg.IsRankingTactic {
+					xtracer.Trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, vb.Body.Canon())
+				}
 				symwaits[k] = append(symwaits[k], wait)
 
 				si++
 			} else {
-				fmt.Printf("l2s.SharedStep7 not lgConst! type(sym)=%T; symwaits toWait[%d] sym=%s HASH canon= vb.Body=%s\n", sym, wi, sym, vb.Body.Canon())
+				if !cfg.IsRankingTactic {
+					fmt.Printf("l2s.SharedStep7 not lgConst! type(sym)=%T; symwaits toWait[%d] sym=%s HASH canon= vb.Body=%s\n", sym, wi, sym, vb.Body.Canon())
+				}
 			}
 		}
 	}
@@ -603,9 +615,13 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 	waitEventsFunc := func(waits map[NodeKey]*LogicNamedBinder) []ActionsAction {
 		var res []ActionsAction
 		sortedWaits := sortNamedBinderMap(waits)
-		xtracer.Trace("l2s.SharedStep7 waitEventsFunc nWaits=%d", len(sortedWaits))
+		if !cfg.IsRankingTactic {
+			xtracer.Trace("l2s.SharedStep7 waitEventsFunc nWaits=%d", len(sortedWaits))
+		}
 		for wi, wait := range sortedWaits {
-			xtracer.Trace("l2s.SharedStep7 waitEventsFunc wait[%d] HASH canon=%s", wi, wait.Canon())
+			if !cfg.IsRankingTactic {
+				xtracer.Trace("l2s.SharedStep7 waitEventsFunc wait[%d] HASH canon=%s", wi, wait.Canon())
+			}
 			vs, t := wait.Variables, wait.Body
 			waitApp := applyNB(wait, checkVarsToNodes(vs)...)
 			rhs := &LogicAnd{Terms: []Expr{
@@ -651,7 +667,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 					_, inSP := symprops[k]
 					_, inSWh := symwhens[k]
 					_, inSWa := symwaits[k]
-					if xtracer.Enabled {
+					if !cfg.IsRankingTactic && xtracer.Enabled {
 						xtracer.Trace("l2s.SharedStep7 instrStmt.monitor return[%d] type=%s name=%s inSP=%s inSWh=%s inSWa=%s",
 							ri, ShortTypeName(r), symName, checkPyBool(inSP), checkPyBool(inSWh), checkPyBool(inSWa))
 					}
@@ -688,7 +704,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 			modSet[sym.Sexp()] = true
 		}
 		allDeps := cfg.Dependencies(modSet)
-		{
+		if !cfg.IsRankingTactic {
 			sortedDeps := make([]string, 0, len(allDeps))
 			for sym := range allDeps {
 				sortedDeps = append(sortedDeps, string(sym))
@@ -797,7 +813,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *NormalProgram) 
 // SharedStep11_ReplaceNamedBinders replaces named binders with fresh relation constants.
 func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *NormalProgram, modPass func(string, func(Node) Node)) {
 	namedBinders := collectAllNamedBinders(model)
-	{
+	if !cfg.IsRankingTactic {
 		// Sorted trace for diagnostics only
 		keys := make([]string, 0, namedBinders.Len())
 		for k := range namedBinders.All() {
@@ -853,7 +869,9 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *NormalP
 			subs[string(b.Sexp())] = NewConst(freshName, b.NodeSort())
 			cfg.Subs[freshName] = b.String()
 			cfg.RSubs[freshName] = b
-			xtracer.Trace("l2s.SharedStep11 sub freshName=%s binderKey=%s", freshName, b.String())
+			if !cfg.IsRankingTactic {
+				xtracer.Trace("l2s.SharedStep11 sub freshName=%s binderKey=%s", freshName, b.String())
+			}
 		}
 	}
 	// FullSubs: the binder.Sexp() → nonce Const map for forward resolution.
