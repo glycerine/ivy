@@ -331,6 +331,7 @@ func parseVersionParts(v string) []int {
 }
 
 func prepareModuleForCPP(mod *goivy.Module, cfg Config) {
+	ensureSortOrderForCPP(mod)
 	if len(mod.LabeledProps) > 0 {
 		mod.LabeledAxioms = append(mod.LabeledAxioms, mod.LabeledProps...)
 		mod.LabeledProps = nil
@@ -341,6 +342,64 @@ func prepareModuleForCPP(mod *goivy.Module, cfg Config) {
 	if cfg.Target == "test" {
 		if _, ok := mod.Sig.Symbols.Get2("_generating"); !ok {
 			_, _ = mod.Sig.AddSymbol("_generating", goivy.Boolean)
+		}
+	}
+}
+
+func ensureSortOrderForCPP(mod *goivy.Module) {
+	if mod == nil || mod.Sig == nil {
+		return
+	}
+	seen := map[string]bool{}
+	for _, name := range mod.SortOrder {
+		seen[name] = true
+	}
+	addSort := func(s goivy.Sort) {}
+	var add func(goivy.Sort)
+	add = func(s goivy.Sort) {
+		if s == nil {
+			return
+		}
+		for _, d := range goivy.SortDomain(s) {
+			add(d)
+		}
+		r := goivy.SortRange(s)
+		if r != s {
+			add(r)
+			return
+		}
+		name := sortName(s)
+		if name == "" || name == "bool" || seen[name] {
+			return
+		}
+		if _, ok := mod.Sig.Sorts.Get2(name); !ok {
+			_ = mod.Sig.AddSort(s)
+		}
+		seen[name] = true
+		mod.SortOrder = append(mod.SortOrder, name)
+	}
+	addSort = add
+	var names []string
+	for name := range mod.Sig.Sorts.All() {
+		if name != "bool" {
+			names = append(names, name)
+		}
+	}
+	sort.Strings(names)
+	for _, name := range names {
+		if s, ok := mod.Sig.Sorts.Get2(name); ok {
+			addSort(s)
+		}
+	}
+	for _, s := range mod.Relations.All() {
+		addSort(s)
+	}
+	for _, s := range mod.Functions.All() {
+		addSort(s)
+	}
+	for _, p := range mod.Params {
+		if p != nil {
+			addSort(p.CSort)
 		}
 	}
 }

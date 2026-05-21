@@ -80,6 +80,9 @@ func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {
 	if compileOnly {
 		outputPath += ".o"
 	}
+	if cfg.Compiler == "cl" {
+		return msvcBuildPlan(out, cxx, cppPath, outputPath, compileOnly)
+	}
 	args := []string{"-std=c++11", "-Wno-parentheses-equality", "-g"}
 	if includeArgs, err := supportIncludeArgs(); err == nil {
 		args = append(args, includeArgs...)
@@ -113,6 +116,66 @@ func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {
 		OutputPath:  outputPath,
 		CompileOnly: compileOnly,
 	}, nil
+}
+
+func msvcBuildPlan(out *Output, compiler, cppPath, outputPath string, compileOnly bool) (*BuildPlan, error) {
+	args := []string{"/EHsc", "/Zi"}
+	if includeArgs, err := supportIncludeArgs(); err == nil {
+		args = append(args, msvcIncludeArgs(includeArgs)...)
+	} else {
+		return nil, err
+	}
+	var linkArgs []string
+	if outputUsesZ3(out) {
+		includeArgs, z3LinkArgs, err := z3BuildArgs()
+		if err != nil {
+			return nil, err
+		}
+		args = append(args, msvcIncludeArgs(includeArgs)...)
+		linkArgs = msvcLinkArgs(z3LinkArgs)
+	}
+	args = append(args, msvcIncludeArgs(includeLibSpecArgs(out))...)
+	if compileOnly {
+		args = append(args, "/c", cppPath, "/Fo"+outputPath)
+	} else {
+		args = append(args, cppPath, "/Fe"+outputPath, "ws2_32.lib")
+		args = append(args, linkArgs...)
+		args = append(args, msvcLinkArgs(linkLibSpecArgs(out))...)
+	}
+	return &BuildPlan{
+		Compiler:    compiler,
+		Args:        args,
+		OutputPath:  outputPath,
+		CompileOnly: compileOnly,
+	}, nil
+}
+
+func msvcIncludeArgs(args []string) []string {
+	var out []string
+	for _, arg := range args {
+		if strings.HasPrefix(arg, "-I") {
+			out = append(out, "/I", strings.TrimPrefix(arg, "-I"))
+			continue
+		}
+		out = append(out, arg)
+	}
+	return out
+}
+
+func msvcLinkArgs(args []string) []string {
+	var out []string
+	for _, arg := range args {
+		switch {
+		case strings.HasPrefix(arg, "-L"):
+			out = append(out, "/LIBPATH:"+strings.TrimPrefix(arg, "-L"))
+		case strings.HasPrefix(arg, "-l"):
+			out = append(out, strings.TrimPrefix(arg, "-l")+".lib")
+		case strings.HasPrefix(arg, "-Wl,"):
+		default:
+			out = append(out, arg)
+		}
+	}
+	return out
 }
 
 func supportIncludeArgs() ([]string, error) {

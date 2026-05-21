@@ -30,7 +30,14 @@ Primary Go references:
 - `goivy/ivy2cpp/compile.go`
 - `goivy/ivy2cpp/build.go`
 
-## TODO 001 - Port the full Python command-line/driver surface
+## DONE 001 - Port the full Python command-line/driver surface
+
+Status: completed 2026-05-21. The Go port now accepts the Python driver
+surface for this item, supports `target=class`, normalizes Python-compatible
+driver defaults, emits test iteration/run defaults, writes batch outputs and
+descriptors, plans/executes class compile-only builds, and covers the behavior
+with ivy2cpp unit/integration tests. Verified with
+`XTRACE_OFF=1 go test ./ivy2cpp -count=1`.
 
 Go locations:
 
