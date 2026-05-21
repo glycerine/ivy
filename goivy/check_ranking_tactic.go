@@ -241,20 +241,6 @@ func rankingInvariants(
 		return eq.T2
 	}
 
-	substVars := func(src, dst []*LogicVariable) map[NodeKey]Expr {
-		m := make(map[NodeKey]Expr)
-		for i, v := range src {
-			if i < len(dst) {
-				sym := NewConst(v.Name, v.VSort)
-				m[Key(sym)] = dst[i]
-			}
-		}
-		return m
-	}
-	subst := func(node Expr, subs map[NodeKey]Expr) Expr {
-		return SubstituteConstantsExpr(node, subs)
-	}
-
 	mklf := func(name string, fmla Expr) *LabeledFormula {
 		return mod.Cfg.AstCfg.NewLabeledFormula(mod.Cfg.AstCfg.NewAtom(name), fmla)
 	}
@@ -271,11 +257,10 @@ func rankingInvariants(
 				}
 			}
 		}
-		rhs := eqRHS(eq)
 		if len(cons) == 0 {
 			return &LogicAnd{Terms: nil}
 		}
-		return &LogicImplies{T1: rhs, T2: rankingMakeAnd(cons...)}
+		return &LogicImplies{T1: eq.T1, T2: rankingMakeAnd(cons...)}
 	}
 
 	// Generate invariants and postconditions
@@ -295,18 +280,17 @@ func rankingInvariants(
 		helpfulArgs := eqLHSArgs(workHelpful)
 		progressArgs := eqLHSArgs(workProgress)
 
-		// work_invar definition value
-		workInvarVal := eqRHS(workInvar)
+		// work_invar predicate application (Python: work_invar = task['work_invar'].args[D] with D=0)
+		workInvarVal := workInvar.T1
 
 		// --- l2s_created invariant ---
 		invars = append(invars, mklf("l2s_created"+sfx, allD(workCreated)))
 
 		// --- l2s_needed_implies_created postcond ---
-		createdArgs := eqLHSArgs(workCreated)
-		s := substVars(neededArgs, createdArgs)
+		// Python: old_of(Implies(And(work_invar, work_needed.args[D]), work_created.args[D]))
 		neededImplCreated := &LogicImplies{
-			T1: rankingMakeAnd(workInvarVal, eqRHS(workNeeded)),
-			T2: subst(eqRHS(workCreated), s),
+			T1: rankingMakeAnd(workInvarVal, workNeeded.T1),
+			T2: workCreated.T1,
 		}
 		postconds = append(postconds, mklf("l2s_needed_implies_created"+sfx,
 			CheckOldOf(neededImplCreated)))
@@ -322,9 +306,10 @@ func rankingInvariants(
 
 		// --- l2s_needed_preserved postcond ---
 		noHelp := CheckOldOf(&LogicNot{Body: &LogicOr{Terms: helps}})
+		// Python: Implies(old_of(And(work_invar, Not(work_needed.args[D]))), Not(work_needed.args[D]))
 		notNeeded := &LogicImplies{
-			T1: CheckOldOf(rankingMakeAnd(workInvarVal, &LogicNot{Body: eqRHS(workNeeded)})),
-			T2: &LogicNot{Body: eqRHS(workNeeded)},
+			T1: CheckOldOf(rankingMakeAnd(workInvarVal, &LogicNot{Body: workNeeded.T1})),
+			T2: &LogicNot{Body: workNeeded.T1},
 		}
 		postconds = append(postconds, mklf("l2s_needed_preserved"+sfx,
 			&LogicImplies{T1: noHelp, T2: notNeeded}))
@@ -341,9 +326,10 @@ func rankingInvariants(
 		if len(helpfulArgs) > len(progressArgs) {
 			wpargs = neededArgs[len(helpfulArgs)-len(progressArgs):]
 		}
+		// Python: decreased = exists(wpargs, And(old_of(work_needed.args[D]), Not(work_needed.args[D])))
 		decreased := CheckExists(wpargs, rankingMakeAnd(
-			CheckOldOf(eqRHS(workNeeded)),
-			&LogicNot{Body: eqRHS(workNeeded)}))
+			CheckOldOf(workNeeded.T1),
+			&LogicNot{Body: workNeeded.T1}))
 		progressCond := rankingMakeAnd(
 			CheckOldOf(workInvarVal),
 			CheckOldOf(eqRHS(workHelpful)),
@@ -377,7 +363,7 @@ func rankingInvariants(
 		sfx := sortedTasks[0]
 		workInvar := rawTasks[sfx]["work_invar"]
 		workStart := rawTriggers[sfx]["work_start"]
-		workInvarVal := eqRHS(workInvar)
+		workInvarVal := workInvar.T1
 
 		schedExists := CheckOldOf(&LogicImplies{
 			T1: workInvarVal,
