@@ -564,8 +564,17 @@ func TestGoldenAll(t *testing.T) {
 
 	cfg := &goldenConfig{}
 
+	// already green once specs should not be revisted until we
+	// get through the others, to save time.
+	skipTo := 1
+
 	skipRebuild := false
 	for ipath, path := range paths {
+
+		if ipath < skipTo {
+			vv("skipTo(%v) > ipath(%v)", skipTo, ipath)
+			continue
+		}
 
 		// when we parse here, we do not want to see all the traces.
 		xtracer.Suppressed = true

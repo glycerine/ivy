@@ -2793,3 +2793,277 @@ Esc %         -- for search-and-replace
 atg. branch has green echo.ivy test.
 
 * ~/ivy/include2cpp is common support code for python and go ivy2cpp translator/test writer.
+* atg on green ivy16 branch still some ivy 1.6 work to do though.
+
+# Propisitions versus Predicates
+
+Q: I am new to "logic" because in computer science undergrad 
+they taught us truth tables and booleans and skipped alot of 
+mathematical navel gazing. Still now that I am working with
+Ivy I need to understand the difference between Propositional Logic and Predicate logic. 
+Or are they synonyms? Does Ivy use one and not the other? 
+What Dyjkstra talking about one or the other when he invented "weakest pre-conditions"?
+
+A (Claude):
+
+Great set of questions — and the framing of "mathematical navel-gazing" actually misses how *practical* this stuff becomes once you're doing verification. Let me give you the real picture.
+
+## Propositional vs. predicate logic — not synonyms
+
+They're a hierarchy. Predicate logic strictly contains propositional logic.
+
+**Propositional logic** is exactly what you learned: atomic propositions (P, Q, R) that are either true or false, glued together with ∧, ∨, ¬, →, ↔. Truth tables decide everything. The atoms have no internal structure — `P` is just a Boolean, period. SAT solvers like MiniSAT operate here.
+
+**Predicate logic** (a.k.a. first-order logic, FOL) breaks open those atoms. Now your atoms are *predicates applied to terms*: `leader(x)`, `id(x) < id(y)`, `pending(m, n)`. You get:
+
+- **Variables and quantifiers**: ∀x and ∃x ranging over some domain (nodes, messages, integers, …)
+- **Function symbols**: `id(x)`, `succ(n)`, `f(g(x))`
+- **Equality**: `x = y`
+- **A domain of discourse**: the set the variables range over
+
+So "all nodes have a unique id" is `∀x ∀y. id(x) = id(y) → x = y` — there is no way to write this in propositional logic without first fixing a specific finite number of nodes and then expanding to a giant conjunction.
+
+The expressive gap is huge. Propositional logic is *decidable* (truth tables always work, even if slowly). Predicate logic is only *semi-decidable* in general — if a formula is valid, you can find a proof, but if it isn't valid, your prover might run forever.
+
+## Where Ivy sits
+
+Ivy is fundamentally a **first-order logic** tool — predicate logic all the way. The whole point of Ivy's design philosophy makes no sense at the propositional level. Recall from your own work that Ivy targets the **EPR fragment** (Effectively Propositional, also called Bernays-Schönfinkel-Ramsey) and **FAU** (Finite Almost Uninterpreted). These are *fragments of first-order logic* that Ivy carves out specifically because:
+
+1. They're expressive enough to model real distributed protocols with unbounded numbers of nodes, messages, etc. — that's the FOL part you need.
+2. They're *decidable* — Z3 always terminates on them with a definite answer. That's the special thing about these fragments versus general FOL.
+
+The name "Effectively Propositional" is telling. EPR formulas have the form ∃*x⃗*. ∀*y⃗*. φ where φ is quantifier-free and has no function symbols (only relations and constants). The Skolemization of such a formula produces a *finite* Herbrand universe, so deciding satisfiability reduces to a (potentially huge) propositional SAT problem. EPR is in NEXPTIME — propositional logic is in NP — but the reduction is the reason for the name. So Ivy is using predicate logic, but deliberately staying in a fragment that has a propositional-flavored decision procedure underneath.
+
+When Ivy complains about a "function cycle" or "quantifier alternation" pushing your VC outside the decidable fragment, what's happening is: your formula is valid FOL, but it's drifted out of EPR/FAU into territory where Z3 might loop forever instantiating ground terms (the Herbrand expansion is now infinite). The fragment checker is enforcing the boundary.
+
+## Dijkstra and weakest preconditions
+
+Dijkstra's **wp** ("Predicate Transformer Semantics," 1975-76, and *A Discipline of Programming*, 1976) is squarely in **predicate logic**, and the name itself tells you so. The "P" in "wp" stands for *predicate*.
+
+The setup: given a program statement S and a desired postcondition Q (a predicate on program states), `wp(S, Q)` is the weakest predicate P such that executing S in any state satisfying P guarantees termination in a state satisfying Q. Example:
+
+```
+wp(x := x + 1, x > 0)  =  x > -1
+wp(x := x + 1, x = 5)  =  x = 4
+```
+
+These predicates are formulas over program variables — `x > 0`, `x = 5`, `∀i. 0 ≤ i < n → a[i] > 0` — and program variables range over infinite domains (integers, arrays, …). You cannot express any of this in propositional logic. The moment you write `x > 0` with x being any integer, you've left propositional logic; that's a unary predicate `>` applied to a term `x` and a constant `0`, ranging over an infinite domain.
+
+Dijkstra was extremely deliberate about this. *A Discipline of Programming* leans heavily on quantifiers and predicate calculus precisely because reasoning about loops requires inductive invariants, and inductive invariants over unbounded state need quantifiers. The whole edifice of guarded commands, weakest preconditions, and the calculational style he and Gries and Hoare developed is built on predicate logic.
+
+Ivy generates its VCs using exactly this wp calculus — that's not a coincidence. Read the [Ivy decidability docs page](https://kenmcmil.github.io/ivy/decidability.html) you found earlier with this lens: when they say verification conditions in Ivy are generated from the calculus of weakest liberal preconditions, that's Dijkstra's machinery directly. The "liberal" variant (wlp) just drops the termination requirement — wlp(S, Q) is the weakest predicate ensuring "if S terminates, then Q holds," which is the right notion when you're proving partial correctness via inductive invariants.
+
+## Short mental model for your Ivy work
+
+- **Propositional logic** = Booleans and connectives. Atoms have no structure. Decidable but only handles finite, fixed-size statements.
+- **First-order / predicate logic** = quantifiers over a domain, predicates and functions on terms, equality. Expressive enough for real verification. Undecidable in general.
+- **EPR, FAU, QFLIA, etc.** = carefully chosen *fragments* of FOL that are decidable. Ivy lives here.
+- **Dijkstra's wp** = a function from (program, postcondition predicate) to precondition predicate. Pure predicate logic.
+
+The "navel-gazing" turns out to be load-bearing: every constraint Ivy enforces about quantifier alternation, function cycles, and theory mixing is the tool trying to keep you inside a *decidable fragment of FOL*. Once you internalize that propositional logic was never going to be enough — you can't talk about "every node" without quantifiers — the whole design starts feeling forced by necessity rather than aesthetic preference.
+
+If you want the canonical short read on this, Dijkstra's [EWD472 "Guarded commands, nondeterminacy and formal derivation of programs"](https://www.cs.utexas.edu/~EWD/transcriptions/EWD04xx/EWD472.html) (1975) is the original wp paper and is only a dozen pages. For the FOL-fragments angle, the Padon/McMillan paper [*Deductive Verification in Decidable Fragments with Ivy*](https://www.wisdom.weizmann.ac.il/~padon/ivy-sas18.pdf) is the right anchor — they spell out exactly why each fragment was chosen.
+
+## follow-up: what is a "term" in Predicate logic (aka first-order logic, FOL)?
+
+Q: You say, "Predicate logic (a.k.a. first-order logic, FOL) breaks open those atoms. Now your atoms are predicates applied to terms", but then do not define a "term". What is a "term" in the context of Predicate logic?
+
+A (Claude):
+
+Fair catch — I used "term" as if it were obvious, and it's actually a precise technical concept that matters.
+
+## The definition
+
+In predicate logic, a **term** is anything that *denotes an object* in your domain of discourse. Terms are the "noun phrases" of the logic — the things that refer to elements of the universe you're reasoning about. Predicates, by contrast, are the "verbs" or "adjectives" that say something *about* terms.
+
+Terms are defined inductively (this is the standard textbook definition):
+
+1. **Every variable is a term.** `x`, `y`, `n` — these denote some unspecified object in the domain.
+2. **Every constant is a term.** `0`, `nil`, `alice` — these denote specific named objects in the domain.
+3. **If `f` is an n-ary function symbol and `t₁, …, tₙ` are terms, then `f(t₁, …, tₙ)` is a term.** Functions take terms and produce new terms.
+4. Nothing else is a term.
+
+That's it. Terms are built from variables and constants by repeated function application. Crucially, **a term is not a formula**. A term has no truth value — you cannot ask whether `x + 3` is true or false; you can only ask what object it denotes.
+
+## Examples to make the distinction sharp
+
+In the language of arithmetic with `0, 1, +, ×, <, =`:
+
+- `0` — term (a constant)
+- `x` — term (a variable)
+- `x + 1` — term (function `+` applied to terms `x` and `1`)
+- `(x + 1) × y` — term (nested function application)
+- `x + 1 < y` — **not a term**. This is an *atomic formula*: the predicate `<` applied to the terms `x + 1` and `y`. It has a truth value.
+- `∀x. x + 1 < y` — a formula, not a term.
+
+In Ivy's setting, with a node type and an `id` function:
+
+- `x` — term (variable of type node)
+- `id(x)` — term (function `id` applied to term `x`; denotes some id value)
+- `id(x) < id(y)` — atomic formula (the `<` predicate applied to two terms)
+- `leader(x)` — atomic formula (the `leader` predicate applied to a term)
+
+Notice that `id(x)` and `leader(x)` look syntactically identical but live in different worlds. `id` is a **function symbol** — it takes a node and returns an id, so `id(x)` is a term denoting an object. `leader` is a **predicate symbol** — it takes a node and returns a truth value, so `leader(x)` is a formula. The distinction is in the symbol's declaration, not its surface syntax.
+
+## Why this matters in Ivy
+
+Ivy keeps function symbols and predicate symbols (relation symbols) syntactically distinct. When you declare `relation leader(N: node)` versus `function id(N: node): id_t`, you're telling Ivy which symbols produce terms and which produce formulas. This shows up in the decidable-fragment rules: the "function cycle" check Ivy enforces on EPR fragments is literally a check on the graph of function symbols (the things that build terms), because function symbols are what generate infinite Herbrand universes when quantifiers chase them.
+
+The slogan: **terms denote things, formulas say things**. Predicate logic is the layer that lets you build complex things (nested terms) and then say complex stuff about them (with predicates and quantifiers). Propositional logic, by contrast, has no terms at all — its atoms are just opaque Booleans with no internal structure to refer to.
+
+# follow-up: What are Sorts?
+
+Excellent question — this gets at something that's often glossed over in introductory treatments.
+
+## Two flavors of predicate logic
+
+There's a fork in the road here:
+
+**Unsorted (single-sorted) first-order logic** is the version in classic textbooks. There's one domain of discourse — call it the universe — and every variable, constant, and function output lives in that one universe. No sorts, no types. When you write `∀x. P(x)`, the `x` ranges over *everything*.
+
+**Many-sorted first-order logic** partitions the universe into disjoint **sorts**. Every term has a sort. Function and predicate symbols have sort signatures specifying what sorts their arguments must have and (for functions) what sort their result is. Variables are declared with a sort, and quantifiers range only over the sort.
+
+These are formally equivalent in expressive power — you can always encode sorts in unsorted FOL by introducing unary predicates `IsNode(x)`, `IsMessage(x)`, etc., and relativizing every quantifier. But this encoding is awful in practice. It bloats formulas, hides structure, and lets you write nonsense like `succ(alice) < bob.color` that should be a type error caught immediately. So real verification tools — Ivy, SMT-LIB, Z3, Dafny, F\*, Coq — all use many-sorted logic.
+
+## What is a sort?
+
+Q: Okay, so what is a "Sort"? In Predicate logic, do terms have Sorts (types)? Do formulas have Sorts?
+
+A (Claude):
+
+A sort is just a *name for a domain*. Syntactically, it's a symbol like `node`, `message`, `int`, `bool`. Semantically, when you give a model, each sort gets interpreted as a specific non-empty set, and these sets are disjoint.
+
+In Ivy you write:
+
+```
+type node
+type id_t
+relation leader(N: node)
+function id(N: node): id_t
+```
+
+This declares two sorts (`node` and `id_t`), a predicate `leader` taking a `node`, and a function `id` mapping `node` to `id_t`. The signature `node → id_t` is the sort signature of `id`.
+
+## Do terms have sorts? Yes.
+
+In many-sorted logic, every term has exactly one sort, determined inductively:
+
+1. A variable's sort is fixed by its declaration.
+2. A constant's sort is fixed by its declaration.
+3. If `f` has signature `s₁ × … × sₙ → s` and each `tᵢ` has sort `sᵢ`, then `f(t₁, …, tₙ)` has sort `s`. If the argument sorts don't match, `f(t₁, …, tₙ)` is **not a well-formed term at all** — it's a syntax error, just like a type error in a programming language.
+
+So in the Ivy example:
+- `x` (declared as `node`) has sort `node`.
+- `id(x)` has sort `id_t` (because `id : node → id_t`).
+- `id(id(x))` is **not well-formed** — `id` expects a `node`, but `id(x)` has sort `id_t`. You'd catch this at parse time.
+
+This is exactly analogous to type-checking in a programming language. Sorts in many-sorted FOL are types, and the well-formedness rule for terms is type-checking. Your background with Go's type system maps directly: function signatures, no implicit conversions, well-typedness is a syntactic check.
+
+## Do formulas have sorts?
+
+Here the answer splits depending on how puristic you want to be.
+
+**Strict traditional answer: no.** Formulas don't have sorts — they have a *truth value*. There's a categorical distinction between the term level (sorted objects in the domain) and the formula level (truth values, which live in a separate meta-level Boolean space, not in any sort of the logic). Atomic formulas are built by applying a predicate symbol to terms of matching sorts, but the resulting formula is not itself a term and doesn't have a sort. This is the standard view in mathematical logic textbooks.
+
+**Pragmatic SMT/programming-language answer: yes, formulas have sort `Bool`.** SMT-LIB, Z3, and most modern verification tools treat `Bool` as just another sort. Formulas are terms of sort `Bool`. This collapses the term/formula distinction and is enormously convenient: you can have functions that return `Bool`, you can substitute Boolean expressions like ordinary terms, you can write `ite(P, x, y)` (if-then-else) where `P` is a `Bool` term and `x, y` are terms of some other sort. The whole logic becomes uniformly term-based.
+
+Ivy, sitting on top of Z3, effectively uses this second view internally — relations are functions returning `Bool` under the hood. But Ivy's surface language preserves the predicate/function distinction syntactically (you write `relation` vs. `function`) because it matters for the decidable-fragment analysis. When Ivy's fragment checker hunts for function cycles, it's looking at non-`Bool` function symbols specifically, because those are the ones whose Herbrand expansion can blow up.
+
+## Why the sort discipline pays off in Ivy
+
+Two concrete reasons sorts matter for your verification work:
+
+**Sort-stratified Herbrand universes.** When Z3 instantiates quantifiers, it generates ground terms. In unsorted logic, every term is a candidate substitution for every variable, so the search space explodes. With sorts, only terms of the matching sort are candidates. This is one of the things that makes EPR practically tractable: in EPR with sorts, each sort's Herbrand universe is finite and small.
+
+**Sort-based decidability conditions.** Ivy's "function cycle" check operates on the graph whose nodes are sorts and whose edges are function symbols. A cycle in this graph (e.g., a function from `node` to `node`, or a chain `node → id_t → node`) means quantifier instantiation can generate arbitrarily deep nested terms, breaking decidability. Without sorts, you couldn't even formulate this check — every function would trivially "cycle" through the one universal domain.
+
+So the slogan from the previous message gets refined: **terms denote things of a specific sort, and formulas say things relating terms of matching sorts**. The sort discipline is exactly the type discipline you'd expect from a programming-language background, applied to logic.
+
+# follow-up: Nested terms
+
+Q: I am still not clear on the definition of a "nested term". What makes a term "nested"? You say that this is a danger zone, why?
+
+A (Claude):
+
+Good — let's pin this down precisely, because the danger is the whole reason Ivy's fragment checker exists.
+
+## What "nested" means
+
+A term is **nested** when a function application appears *inside* another function application. The depth of nesting is just how many layers of function symbols you have to peel off before reaching variables and constants.
+
+Take a function `f : node → node`. Starting from a variable `x : node`:
+
+- `x` — depth 0, not nested. Just a variable.
+- `f(x)` — depth 1. A function applied to a variable. Some people call this "nested," some don't; the standard usage is that nesting begins at depth 2.
+- `f(f(x))` — depth 2, **nested**. `f` applied to a term that is itself a function application.
+- `f(f(f(x)))` — depth 3, nested deeper.
+- `f(f(f(f(x))))` — depth 4. And so on.
+
+With multiple function symbols, nesting can mix them. Given `g : node → id_t` and `h : id_t → node`:
+
+- `g(x)` — depth 1.
+- `h(g(x))` — depth 2, nested. `h` applied to the result of `g`.
+- `g(h(g(x)))` — depth 3, nested.
+
+The structure is a tree. The depth of nesting is the height of that tree.
+
+A non-nested term, by contrast, has function symbols applied only to variables or constants — never to other function applications. So `f(x)`, `g(x, y)`, `h(c, x)` are all unnested (or "flat"). The moment a function's argument is itself a function call, you have nesting.
+
+## Why this is the danger zone
+
+The danger is **unbounded Herbrand expansion**, which destroys decidability. Here's the mechanism, step by step.
+
+When Z3 (or any SMT solver) tries to decide a formula with universal quantifiers, the standard technique is *quantifier instantiation*: replace `∀x. φ(x)` with a conjunction of instances `φ(t₁) ∧ φ(t₂) ∧ …` where the `tᵢ` are ground terms (terms with no variables) drawn from the **Herbrand universe** — the set of all ground terms you can build from the constants and function symbols in the formula.
+
+Now ask: how big is this Herbrand universe?
+
+**Case 1: no function symbols of the relevant sort** (this is EPR). Suppose your only `node`-producing symbols are the constants `alice` and `bob`. The Herbrand universe for sort `node` is just `{alice, bob}` — *finite*. Quantifier instantiation terminates after considering both. Decidable.
+
+**Case 2: function symbols whose result sort is not their input sort**. Suppose `g : node → id_t` and you have constants `alice, bob : node` and no functions returning `node`. Then `node`-typed ground terms are still just `{alice, bob}`, and `id_t`-typed ground terms are `{g(alice), g(bob)}`. Still finite. Still decidable.
+
+**Case 3: a function from a sort back to itself, e.g. `f : node → node`**. Now the `node`-typed Herbrand universe is:
+
+```
+alice, bob,
+f(alice), f(bob),
+f(f(alice)), f(f(bob)),
+f(f(f(alice))), f(f(f(bob))),
+…
+```
+
+**Infinite.** Every level of nesting produces fresh ground terms. Quantifier instantiation never runs out of candidates. The solver can loop forever generating ever-deeper nested instances without ever finding a model or a contradiction.
+
+**Case 4: a cycle through multiple sorts**, e.g. `g : node → id_t` and `h : id_t → node`. Then:
+
+```
+alice : node
+g(alice) : id_t
+h(g(alice)) : node
+g(h(g(alice))) : id_t
+h(g(h(g(alice)))) : node
+…
+```
+
+Also infinite. The cycle in the function-symbol-graph (`node → id_t → node → …`) means you can compose `h ∘ g` arbitrarily many times to keep producing fresh `node` terms.
+
+## The connection to Ivy's "function cycle" rule
+
+Now the fragment checker's behavior should look transparent rather than mysterious. Ivy builds a directed graph:
+
+- **Nodes** of the graph: sorts (`node`, `id_t`, `message`, …).
+- **Edges** of the graph: for each function symbol `f : s₁ × … × sₙ → s`, draw an edge from each `sᵢ` to `s`.
+
+If this graph is **acyclic**, the Herbrand universe of every sort is finite (you can only build terms of bounded depth before running out of edges to follow). Quantifier instantiation terminates. The formula is in a decidable fragment.
+
+If the graph has a **cycle**, you can build nested terms of unbounded depth around the cycle. Herbrand universe infinite. Decidability gone.
+
+This is exactly why Ivy complains about function cycles and not, say, predicate cycles. Predicates produce `Bool`, not new terms of the sorts being quantified over — they don't grow the Herbrand universe of `node` or `id_t`. Only functions do. Skolemization counts here too: an `∃y` inside a `∀x` becomes a Skolem function `sk(x)`, and if that function's signature creates a sort cycle, you've quietly entered the danger zone even though you didn't write any function symbols explicitly. That's why Ivy also yells at you about quantifier alternation — `∀∃` patterns introduce Skolem functions during normalization, and those Skolem functions can close cycles.
+
+## The intuition in one line
+
+**Nested terms are dangerous when their sorts form a cycle, because then nesting has no ceiling — and an unbounded ceiling on term depth is an unbounded ceiling on instantiation work, which is decidability's grave.**
+
+EPR forbids function symbols entirely (only constants and predicates), which trivially makes the function-sort graph have no edges, hence no cycles, hence bounded Herbrand universes. FAU is more permissive: it allows functions, but enforces the acyclicity condition on the sort graph. Both fragments are decidable for exactly this reason.
+
+This is also why your earlier instinct about EPR being "effectively propositional" lands: with no nesting possible, the Herbrand universe is finite, and the whole problem reduces to a finite (large but finite) propositional SAT problem on the ground instances. The decidability of EPR is, in a real sense, the decidability of SAT scaled up to a known-finite term space.
+

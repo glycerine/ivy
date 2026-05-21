@@ -4,6 +4,8 @@
 // The compiler inlines empty functions, so there is zero runtime cost.
 package xtracer
 
+var Suppressed bool
+
 // Enabled is false when xtracer is disabled via build tag.
 const Enabled = false
 
