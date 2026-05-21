@@ -14,6 +14,7 @@ package ivy2cpp
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -3156,7 +3157,10 @@ action step(x:idx,y:idx) = {
 	}
 	// Python emit_some_action wraps the body in `val = rhs; return val;`
 	// even when rhs is a native expression (ivy_to_cpp.py:1592-1625).
-	for _, want := range []string{"bool lt(idx x, idx y);", "bool nativedef::lt(nativedef::idx x, nativedef::idx y)", "val = x < y;", "return val;", "ivy_assert(lt(x, y)"} {
+	// `idx` is registered in NativeTypes via `interpret idx -> <<< int >>>`
+	// (compiler_decl.go:1047), so the derived definition's ptype policy
+	// gives ConstRefType for its parameters (annotateAction, ptype.go:103).
+	for _, want := range []string{"bool lt(const idx& x, const idx& y);", "bool nativedef::lt(const nativedef::idx& x, const nativedef::idx& y)", "val = x < y;", "return val;", "ivy_assert(lt(x, y)"} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
@@ -4904,6 +4908,203 @@ export sender
 	want := "receive(t(0, new t::twrap<a>(y)));"
 	if !strings.Contains(out.Impl, want) {
 		t.Fatalf("expected argument-side upcast %q in impl:\n%s", want, out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// --- TODO 010 tests: derived definitions and sort constructors ---
+
+// TestDerivedDefinitionEmitsMethod verifies that a derived definition
+// of a relation is emitted as a C++ method with the same body shape as
+// Python emit_some_action: declare a primary-return local, assign rhs
+// to it, return it. Mirrors Python emit_derived (ivy_to_cpp.py:1351-1362)
+// composed with emit_some_action (ivy_to_cpp.py:1592-1625).
+func TestDerivedDefinitionEmitsMethod(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t = {a, b, c}
+relation eq(X:t, Y:t)
+definition eq(X:t, Y:t) = X = Y
+action step(p:t, q:t) = {
+    assert eq(p, q)
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "der"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// Header: forward declaration.
+	if want := "bool eq(t X, t Y);"; !strings.Contains(out.Header, want) {
+		t.Fatalf("missing %q in header:\n%s", want, out.Header)
+	}
+	// Impl: signature + body shape.
+	for _, want := range []string{
+		"bool der::eq(der::t X, der::t Y)",
+		"bool val = false;",
+		"val = (X == Y);",
+		"return val;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	// Relation must NOT be emitted as mutable state — derived defs are methods.
+	if strings.Contains(out.Header, "std::map") && strings.Contains(out.Header, "eq;") {
+		t.Fatalf("derived relation should not be emitted as state:\n%s", out.Header)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestZeroArgDerivedDefinitionEmitsMethod verifies that a derived
+// definition with no parameters emits a no-arg C++ method. The synthetic
+// AssignAction's formal_params is empty.
+func TestZeroArgDerivedDefinitionEmitsMethod(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+relation flag
+definition flag = true
+action step = {
+    assert flag
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "zd"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if want := "bool flag();"; !strings.Contains(out.Header, want) {
+		t.Fatalf("missing %q in header:\n%s", want, out.Header)
+	}
+	for _, want := range []string{
+		"bool zd::flag()",
+		"val = true;",
+		"return val;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestDerivedDefinitionStructParamUsesConstRef verifies that derived
+// definitions go through the same ptype annotation pipeline as ordinary
+// actions: an uninterpreted sort registered in NativeTypes via
+// `interpret S -> <<< ... >>>` produces ConstRefType for derived-def
+// parameters (Python emit_method_decl, ivy_to_cpp.py:1564 + 1489-1491).
+func TestDerivedDefinitionStructParamUsesConstRef(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx
+interpret idx -> <<< int >>>
+relation lt(X:idx, Y:idx)
+definition lt(X:idx, Y:idx) = X < Y
+`)
+	out, err := Generate(mod, Config{ClassName: "crd"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// idx is registered in NativeTypes by `interpret ... -> <<< int >>>`
+	// (compiler_decl.go:1047). isStructSort returns true → ConstRefType.
+	for _, want := range []string{
+		"bool lt(const idx& X, const idx& Y);",
+		"bool crd::lt(const crd::idx& X, const crd::idx& Y)",
+	} {
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestSortConstructorEmitsMethod verifies that an explicit constructor
+// declaration over a sort with destructors emits a C++ method that
+// assigns each destructor field from the corresponding formal. Mirrors
+// Python emit_constructor (ivy_to_cpp.py:1364-1375). FixConstructors
+// (compiler_ivy_compile.go:1052) rebuilds zero-arg constructors with
+// the destructor range sorts as the constructor's domain.
+func TestSortConstructorEmitsMethod(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type point
+destructor x_field(P:point) : bool
+destructor y_field(P:point) : bool
+constructor mkpoint : point
+`)
+	out, err := Generate(mod, Config{ClassName: "mk"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// Confirm the test setup actually produced a constructor in the module.
+	conss, ok := mod.SortConstructors.Get2("point")
+	if !ok || len(conss) == 0 {
+		t.Fatalf("test setup: no constructor for sort point; module: %+v", mod.SortConstructors)
+	}
+	cname := conss[0].Name
+	// Header: forward declaration. Two bool destructor fields → two bool args.
+	wantHdr := fmt.Sprintf("point %s(bool X0, bool X1);", cname)
+	if !strings.Contains(out.Header, wantHdr) {
+		t.Fatalf("missing %q in header:\n%s", wantHdr, out.Header)
+	}
+	// Impl: signature + per-destructor assignments + return.
+	wantSig := fmt.Sprintf("point mk::%s(bool X0, bool X1)", cname)
+	for _, want := range []string{
+		wantSig,
+		"val.x_field = X0;",
+		"val.y_field = X1;",
+		"return val;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestConstructorExcludedFromStateSymbols verifies that constructors,
+// even though they are emitted as methods, do not also appear in the
+// class's state-variable declarations. allStateSymbols filters by
+// g.Mod.Sig.Constructors (generator.go:559 + Python ivy_to_cpp.py:35).
+func TestConstructorExcludedFromStateSymbols(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type point
+destructor x_field(P:point) : bool
+constructor mkpoint : point
+`)
+	out, err := Generate(mod, Config{ClassName: "mk2"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	conss, ok := mod.SortConstructors.Get2("point")
+	if !ok || len(conss) == 0 {
+		t.Fatalf("test setup: no constructor for sort point")
+	}
+	cname := conss[0].Name
+	// The constructor name must not appear as a state field — only as a method.
+	// State fields would look like `point mkpoint;` (no parens).
+	stateDecl := fmt.Sprintf("    %s;\n", cname)
+	if strings.Contains(out.Header, stateDecl) {
+		t.Fatalf("constructor %s leaked into state declarations:\n%s", cname, out.Header)
+	}
+	// And it should appear as a method.
+	methodForm := fmt.Sprintf("%s(", cname)
+	if !strings.Contains(out.Header, methodForm) {
+		t.Fatalf("constructor %s missing as method:\n%s", cname, out.Header)
+	}
+}
+
+// TestDerivedAndConstructorCompile (SLOW_CPP_TEST) — end-to-end compile
+// of a fixture combining a derived definition and a sort constructor.
+func TestDerivedAndConstructorCompile(t *testing.T) {
+	if !SlowCppTest {
+		t.Skip("set SLOW_CPP_TEST=1 to run this test")
+	}
+	mod := compileIvySource(t, `#lang ivy1.7
+type t = {a, b}
+relation eq(X:t, Y:t)
+definition eq(X:t, Y:t) = X = Y
+type point
+destructor x_field(P:point) : bool
+constructor mkpoint : point
+`)
+	out, err := Generate(mod, Config{ClassName: "both"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
 	}
 	compileGeneratedCPP(t, out)
 }
