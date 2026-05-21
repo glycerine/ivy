@@ -342,7 +342,7 @@ func rankingInvariants(
 			&LogicImplies{T1: progressCond, T2: decreased}))
 
 		// --- l2s_progress_eventually postcond ---
-		eventuallyProgress := &LogicEventually{Body: eqRHS(workProgress)}
+		eventuallyProgress := &LogicEventually{Environ: strPtr(proofLabel), Body: eqRHS(workProgress)}
 		postconds = append(postconds, mklf("l2s_progress_eventually"+sfx,
 			&LogicImplies{
 				T1: rankingMakeAnd(CheckOldOf(workInvarVal), CheckOldOf(eqRHS(workHelpful))),
