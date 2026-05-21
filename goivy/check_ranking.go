@@ -195,8 +195,29 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		return nil, fmt.Errorf("tactic does not take lets")
 	}
 
-	// Extract the model and formula
 	m := cfg.Mod
+
+	// Python ivy_ranking.py:95-107 — split TacticDecls, compile definitions into goal
+	var tacticDefns []Node
+	var tacticInvars []*LabeledFormula
+	if cfg.Proof != nil {
+		for _, d := range cfg.Proof.TacticDecls {
+			if dd, ok := d.(*DerivedDecl); ok {
+				tacticDefns = append(tacticDefns, dd)
+			} else if lf, ok := d.(*LabeledFormula); ok {
+				tacticInvars = append(tacticInvars, lf)
+			}
+		}
+	}
+	for _, defn := range tacticDefns {
+		var compErr error
+		goal, compErr = CompileDefinitionGoalVocab(m.Cfg.AstCfg, defn, goal, m)
+		if compErr != nil {
+			return nil, compErr
+		}
+	}
+
+	// Extract the model and formula
 	model := ExtractNormalProgram(m)
 
 	var fmla Expr
@@ -251,6 +272,16 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 	// Add model invariants
 	var invars []*LabeledFormula
 	invars = append(invars, model.Invars...)
+
+	// Python ivy_ranking.py:126 — compile user-supplied tactic invariants
+	for _, inv := range tacticInvars {
+		compiled := CompileWithGoalVocab(inv, goal, m)
+		if compiled == nil {
+			continue
+		}
+		labeled := LabelTemporalNode(compiled, proofLabel).(*LabeledFormula)
+		invars = append(invars, labeled)
+	}
 
 	// Generate ranking invariants and postconditions
 	invars, postconds, _, _, err := rankingInvariants(
