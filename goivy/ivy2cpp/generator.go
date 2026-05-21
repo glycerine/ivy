@@ -174,6 +174,7 @@ func (g *Generator) emitHeader() error {
 		return err
 	}
 	g.emitDefinitionDecls(w)
+	g.emitConstructorDecls(w)
 	g.emitMethodDecls(w)
 	w.indent--
 	w.close(";")
@@ -217,6 +218,7 @@ func (g *Generator) emitImpl() error {
 	g.emitRuntimeMethods(w)
 	g.emitInit(w)
 	g.emitDefinitions(w)
+	g.emitConstructors(w)
 	g.emitMethods(w)
 	g.emitTick(w)
 	if g.runtimeUsesReplSubclass() {
@@ -618,8 +620,15 @@ func (g *Generator) emitMethodDecls(w *cppWriter) {
 		if initActions[name] {
 			continue
 		}
-		w.line(g.methodSignature(name, act, false, false) + ";")
+		g.emitMethodDeclLine(w, name, act)
 	}
+}
+
+// emitMethodDeclLine emits the forward declaration line for a method.
+// Mirrors the `emit_method_decl(header,...)` + `header.append(';\n')`
+// pair inside Python emit_some_action (ivy_to_cpp.py:1595-1597).
+func (g *Generator) emitMethodDeclLine(w *cppWriter, name string, act goivy.Action) {
+	w.line(g.methodSignature(name, act, false, false) + ";")
 }
 
 // methodSignature emits the C++ method signature for action act.
@@ -733,31 +742,46 @@ func (g *Generator) emitMethods(w *cppWriter) {
 		if initActions[name] {
 			continue
 		}
-		w.open(g.methodSignature(name, act, true, false) + " {")
-		returns := act.GetFormalReturns()
-		_, rtypes := g.getParamTypes(name, act)
-		// When the primary return is a ReturnRefType, its storage IS
-		// an input parameter — no synthetic local, no return statement.
-		// Otherwise the primary return is by value and needs both a
-		// synthetic local (unless it's also a formal param, in which
-		// case it aliases the input slot) and a trailing return.
-		firstIsReturnRef := false
-		if len(rtypes) >= 1 {
-			_, firstIsReturnRef = rtypes[0].(ReturnRefType)
-		}
-		prevReturns := g.currentReturns
-		g.currentReturns = returns
-		if len(returns) >= 1 && !firstIsReturnRef && !formalListContains(act.GetFormalParams(), returns[0]) {
-			w.linef("%s %s = %s;", g.cppType(returns[0].CSort), varName(returns[0].Name), g.cppZeroValue(returns[0].CSort))
-		}
-		g.emitAction(w, act)
-		g.currentReturns = prevReturns
-		if len(returns) >= 1 && !firstIsReturnRef {
-			w.linef("return %s;", varName(returns[0].Name))
-		}
-		w.close("")
-		w.blank()
+		g.emitSomeAction(w, name, act)
 	}
+}
+
+// emitSomeAction emits one C++ method definition (signature + body) for
+// any action carrying formal_params / formal_returns. Mirrors Python
+// emit_some_action (ivy_to_cpp.py:1592-1625) for the inline=False path.
+//
+// Used by emitMethods (ordinary actions), emitDefinitions (derived
+// definitions from TODO 010), and emitConstructors (sort constructors
+// from TODO 010).
+//
+// Note: the primary-return local is initialized with cppZeroValue, NOT
+// the Python `mk_nondet_sym` call. The nondet-init divergence is owned
+// by TODO 014.
+func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) {
+	w.open(g.methodSignature(name, act, true, false) + " {")
+	returns := act.GetFormalReturns()
+	_, rtypes := g.getParamTypes(name, act)
+	// When the primary return is a ReturnRefType, its storage IS
+	// an input parameter — no synthetic local, no return statement.
+	// Otherwise the primary return is by value and needs both a
+	// synthetic local (unless it's also a formal param, in which
+	// case it aliases the input slot) and a trailing return.
+	firstIsReturnRef := false
+	if len(rtypes) >= 1 {
+		_, firstIsReturnRef = rtypes[0].(ReturnRefType)
+	}
+	prevReturns := g.currentReturns
+	g.currentReturns = returns
+	if len(returns) >= 1 && !firstIsReturnRef && !formalListContains(act.GetFormalParams(), returns[0]) {
+		w.linef("%s %s = %s;", g.cppType(returns[0].CSort), varName(returns[0].Name), g.cppZeroValue(returns[0].CSort))
+	}
+	g.emitAction(w, act)
+	g.currentReturns = prevReturns
+	if len(returns) >= 1 && !firstIsReturnRef {
+		w.linef("return %s;", varName(returns[0].Name))
+	}
+	w.close("")
+	w.blank()
 }
 
 func formalListContains(formals []*goivy.Const, target *goivy.Const) bool {

@@ -1374,7 +1374,10 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"bool is_red(color C);", "bool deriveds::is_red(deriveds::color C)", "return (C == red);", "ivy_assert(is_red(red)"} {
+	// Python emit_some_action body shape (ivy_to_cpp.py:1592-1625):
+	//   declare primary-return local, run AssignAction(retval, rhs),
+	//   trailing `return retval;`. Mirrored by TODO 010 port.
+	for _, want := range []string{"bool is_red(color C);", "bool deriveds::is_red(deriveds::color C)", "val = (C == red);", "return val;", "ivy_assert(is_red(red)"} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
@@ -3151,7 +3154,9 @@ action step(x:idx,y:idx) = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"bool lt(idx x, idx y);", "bool nativedef::lt(nativedef::idx x, nativedef::idx y)", "return x < y;", "ivy_assert(lt(x, y)"} {
+	// Python emit_some_action wraps the body in `val = rhs; return val;`
+	// even when rhs is a native expression (ivy_to_cpp.py:1592-1625).
+	for _, want := range []string{"bool lt(idx x, idx y);", "bool nativedef::lt(nativedef::idx x, nativedef::idx y)", "val = x < y;", "return val;", "ivy_assert(lt(x, y)"} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
