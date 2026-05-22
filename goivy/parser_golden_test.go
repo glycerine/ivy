@@ -84,12 +84,14 @@ func attachCombinedOutputPipe(cmd *exec.Cmd) (*os.File, *os.File, error) {
 	return pr, pw, nil
 }
 
+var newline = []byte("\n")
+
 func forwardGoldenProcessLine(repo, label string, w io.Writer, xtraceCount *int64, raw string, onlyNonXtrace bool) error {
 	line := normalizeLine(repo, raw)
 	isX := strings.HasPrefix(line, "XTRACE:")
 	if onlyNonXtrace {
 		if !isX {
-			os.Stdout.Write([]byte(line))
+			fmt.Printf("~%s: %s\n", label, line)
 		}
 		return nil
 	}
@@ -666,10 +668,12 @@ func Test05550_SolverInconclusive(t *testing.T) {
 
 	go func() {
 		io.Copy(fdg, goivyR)
+		fdg.Sync()
 		vv("io.Copy go done")
 	}()
 	go func() {
 		io.Copy(fdp, ivyR)
+		fdp.Sync()
 		vv("io.Copy py done")
 	}()
 

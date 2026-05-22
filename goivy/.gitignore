@@ -38,3 +38,5 @@ webui/static/dist
 webui/static/wasm/goivy-webengine.wasm
 z3vendor/z3/wasm.build.good/
 log.echo
+out.test.05550.go.txt
+out.test.05550.py.txt
