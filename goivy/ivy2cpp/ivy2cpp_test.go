@@ -5088,6 +5088,245 @@ constructor mkpoint : point
 	}
 }
 
+// --- TODO 011 tests: complete expression emission ---
+
+func newTestGeneratorWithInterps(interps map[string]string) *Generator {
+	mod := goivy.New()
+	mod.Cfg = goivy.NewConfig()
+	mod.Sig = goivy.NewSigOn(mod.Cfg.IuCfg)
+	for sortName, interp := range interps {
+		mod.Sig.Interp[sortName] = interp
+	}
+	return &Generator{Mod: mod}
+}
+
+func TestEmitLetExpression(t *testing.T) {
+	// let x := 7 in (x + x), built as Apply(+, x, x) with a LogicDefinition x := 7.
+	sort := &goivy.UninterpretedSort{Name: "int"}
+	x := goivy.NewConst("x", sort)
+	seven := goivy.NewConst("7", sort)
+	addSort, err := goivy.NewFunctionSort(sort, sort, sort)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	plus := goivy.NewConst("+", addSort)
+	body := goivy.MustApply(plus, x, x)
+	def := goivy.NewDefinition(x, seven)
+	let := goivy.NewLet([]goivy.Expr{def}, body)
+
+	got, err := newTestGeneratorWithInterps(nil).emitExpr(let)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if strings.Contains(got, "let ") {
+		t.Fatalf("let was not expanded: %s", got)
+	}
+	if !strings.Contains(got, "7 + 7") {
+		t.Fatalf("let substitution missing 7+7: %s", got)
+	}
+}
+
+func TestEmitMacroExpansionInApply(t *testing.T) {
+	// a <= b should expand to (a < b) || (a == b).
+	mod := goivy.New()
+	mod.Cfg = goivy.NewConfig()
+	mod.Cfg.IuCfg.UsePolymorphicMacros = true
+	mod.Sig = goivy.NewSigOn(mod.Cfg.IuCfg)
+
+	s := &goivy.UninterpretedSort{Name: "nat"}
+	leSort, err := goivy.NewFunctionSort(s, s, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	leSym := goivy.NewConst("<=", leSort)
+	a := goivy.NewConst("a", s)
+	b := goivy.NewConst("b", s)
+	app := goivy.MustApply(leSym, a, b)
+
+	if !goivy.IsMacro(app, mod.Cfg.IuCfg) {
+		t.Fatalf("fixture <= should be a macro")
+	}
+	got, err := (&Generator{Mod: mod}).emitExpr(app)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if !strings.Contains(got, "<") || !strings.Contains(got, "||") {
+		t.Fatalf("expected expanded `<` / `||`, got: %s", got)
+	}
+}
+
+func TestEmitNatSaturationOnMinus(t *testing.T) {
+	g := newTestGeneratorWithInterps(map[string]string{"nat": "nat"})
+	natSort := &goivy.UninterpretedSort{Name: "nat"}
+	fnSort, err := goivy.NewFunctionSort(natSort, natSort, natSort)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	minus := goivy.NewConst("-", fnSort)
+	a := goivy.NewConst("a", natSort)
+	b := goivy.NewConst("b", natSort)
+	app := goivy.MustApply(minus, a, b)
+
+	got, err := g.emitExpr(app)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if !strings.Contains(got, "__a < __b ? 0") {
+		t.Fatalf("expected nat saturation, got: %s", got)
+	}
+}
+
+func TestEmitRangeSaturationOnArithmetic(t *testing.T) {
+	g := newTestGeneratorWithInterps(nil)
+	rng := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "5"}}
+	fnSort, err := goivy.NewFunctionSort(rng, rng, rng)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	plus := goivy.NewConst("+", fnSort)
+	a := goivy.NewConst("a", rng)
+	b := goivy.NewConst("b", rng)
+	app := goivy.MustApply(plus, a, b)
+
+	got, err := g.emitExpr(app)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if !strings.Contains(got, "__x < 0") || !strings.Contains(got, "5 < __x") {
+		t.Fatalf("expected range clamp, got: %s", got)
+	}
+}
+
+func TestEmitCastToRange(t *testing.T) {
+	g := newTestGeneratorWithInterps(nil)
+	src := &goivy.UninterpretedSort{Name: "int"}
+	rng := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "1"}, Ub: goivy.NumeralBound{Value: "9"}}
+	castSort, err := goivy.NewFunctionSort(src, rng)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	castSym := goivy.NewConst("cast", castSort)
+	v := goivy.NewConst("v", src)
+	app := goivy.MustApply(castSym, v)
+
+	got, err := g.emitExpr(app)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if !strings.Contains(got, "v < 1 ? 1") || !strings.Contains(got, "9 < v ? 9") {
+		t.Fatalf("expected range cast clamp, got: %s", got)
+	}
+}
+
+func TestEmitCastToNat(t *testing.T) {
+	g := newTestGeneratorWithInterps(map[string]string{"nat": "nat"})
+	src := &goivy.UninterpretedSort{Name: "int"}
+	natSort := &goivy.UninterpretedSort{Name: "nat"}
+	castSort, err := goivy.NewFunctionSort(src, natSort)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	castSym := goivy.NewConst("cast", castSort)
+	v := goivy.NewConst("v", src)
+	app := goivy.MustApply(castSym, v)
+
+	got, err := g.emitExpr(app)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if !strings.Contains(got, "__x < 0 ? 0") {
+		t.Fatalf("expected nat cast saturation, got: %s", got)
+	}
+}
+
+func TestEmitStringInterpConstantZero(t *testing.T) {
+	g := newTestGeneratorWithInterps(map[string]string{"str": "strlit"})
+	strSort := &goivy.UninterpretedSort{Name: "str"}
+	zero := goivy.NewConst("0", strSort)
+
+	got, err := g.emitExpr(zero)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if got != `""` {
+		t.Fatalf("expected \"\" for strlit 0, got: %s", got)
+	}
+}
+
+func TestEmitStringInterpConstantNonzeroErrors(t *testing.T) {
+	g := newTestGeneratorWithInterps(map[string]string{"str": "strlit"})
+	strSort := &goivy.UninterpretedSort{Name: "str"}
+	five := goivy.NewConst("5", strSort)
+
+	_, err := g.emitExpr(five)
+	if err == nil || !strings.Contains(err.Error(), "string sort") {
+		t.Fatalf("expected string-sort numeral error, got: %v", err)
+	}
+}
+
+func TestEmitNamedBinderUnsupportedIsActionable(t *testing.T) {
+	nb, err := goivy.NewNamedBinder("custom", nil, nil, goivy.True)
+	if err != nil {
+		t.Fatalf("NewNamedBinder: %v", err)
+	}
+	_, err = (&Generator{}).emitExpr(nb)
+	if err == nil || !strings.Contains(err.Error(), "named binder") {
+		t.Fatalf("expected named-binder error, got: %v", err)
+	}
+}
+
+func TestEmitIfSomeMinimizing(t *testing.T) {
+	rng := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "4"}}
+	p := goivy.NewConst("v", rng)
+	some := &goivy.SomeCondition{
+		Params: []*goivy.Const{p},
+		Fmla:   goivy.NewConst("true", goivy.Boolean),
+		Kind:   "some_min",
+		Index:  p,
+	}
+	thenAct := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("true", goivy.Boolean))
+	ifAct := goivy.NewIfAction(nil, thenAct)
+	ifAct.Cond = some
+
+	var w cppWriter
+	(&Generator{}).emitAction(&w, ifAct)
+	got := w.String()
+	if strings.Contains(got, "not supported yet") {
+		t.Fatalf("some_min still hits unsupported sentinel:\n%s", got)
+	}
+	for _, want := range []string{"bool __ivy_some", "__ivy_some_idx", "for (unsigned v = 0; v <= 4; v++)"} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("missing %q in some_min lowering:\n%s", want, got)
+		}
+	}
+}
+
+func TestEmitIfSomeMaximizing(t *testing.T) {
+	rng := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "4"}}
+	p := goivy.NewConst("v", rng)
+	some := &goivy.SomeCondition{
+		Params: []*goivy.Const{p},
+		Fmla:   goivy.NewConst("true", goivy.Boolean),
+		Kind:   "some_max",
+		Index:  p,
+	}
+	thenAct := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("true", goivy.Boolean))
+	ifAct := goivy.NewIfAction(nil, thenAct)
+	ifAct.Cond = some
+
+	var w cppWriter
+	(&Generator{}).emitAction(&w, ifAct)
+	got := w.String()
+	if strings.Contains(got, "not supported yet") {
+		t.Fatalf("some_max still hits unsupported sentinel:\n%s", got)
+	}
+	// Min and max differ only in the comparison direction; assert the
+	// reversed compare and the witness assignment are present.
+	if !strings.Contains(got, "__ivy_some_idx") || !strings.Contains(got, "__ivy_some_cur") {
+		t.Fatalf("missing min/max bookkeeping vars:\n%s", got)
+	}
+}
+
 // TestDerivedAndConstructorCompile (SLOW_CPP_TEST) — end-to-end compile
 // of a fixture combining a derived definition and a sort constructor.
 func TestDerivedAndConstructorCompile(t *testing.T) {

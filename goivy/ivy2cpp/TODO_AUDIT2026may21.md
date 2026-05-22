@@ -693,52 +693,56 @@ Python references:
 - `pyivy/ivy/ivy/ivy_to_cpp.py:2308-2313`
 - `pyivy/ivy/ivy/ivy_logic_utils.py:1572` (var_to_skolem)
 
-## TODO 011 - Complete expression emission
+## DONE 011 - Complete expression emission
 
-Go locations:
+Done 2026-05-21 (UTC).
 
-- `goivy/ivy2cpp/expr.go:18-120`
-- `goivy/ivy2cpp/expr.go:155-200`
-- `goivy/ivy2cpp/expr.go:202-223`
-- `goivy/ivy2cpp/names.go:15-64`
+Closed gaps:
 
-Python references:
+- `*goivy.LogicLet` now expanded by substitution (`emitLetExpr` in
+  `expr.go`), mirroring Python's pre-emit let-removal.
+- Macro expansion via `goivy.IsMacro` / `goivy.ExpandMacro` runs at the top
+  of `emitApply` (matches Python `il.is_macro` at `ivy_to_cpp.py:3124`).
+- Range-result arithmetic (`+`, `-`, `*`, `/`, `%`) clamps to `[lb, ub]`
+  using the canonical `( x < lb ? lb : ub < x ? ub : x )` form
+  (`emitRangeArithApply`).
+- `nat`-typed `-` saturates at 0 (`emitNatMinusApply`).
+- `cast` operator handles non-bitvector targets — cast to `int`/`nat`/
+  `RangeSort` (`emitCastApply`); the existing `emitBVApply` continues to
+  handle BV destinations.
+- `strlit`-interpreted constants: numeral `0` → `""`; other numerals
+  return an actionable error (matches Python emit_constant lines
+  3019–3023).
+- `if some X. fmla minimizing|maximizing idx` lowered in
+  `emitIfSomeMinMax` (`action.go`): scans candidates, tracks
+  best-so-far index and witness, dispatches THEN/ELSE.
+- `*goivy.LogicNamedBinder` returns a clear error rather than a generic
+  "unsupported expression %T" diagnostic.
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3004-3043`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3060-3078`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3086-3103`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3123-3223`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3243-3256`
+Tests added (in `goivy/ivy2cpp/ivy2cpp_test.go`):
 
-Gap:
+- `TestEmitLetExpression`
+- `TestEmitMacroExpansionInApply`
+- `TestEmitNatSaturationOnMinus`
+- `TestEmitRangeSaturationOnArithmetic`
+- `TestEmitCastToRange`
+- `TestEmitCastToNat`
+- `TestEmitStringInterpConstantZero`
+- `TestEmitStringInterpConstantNonzeroErrors`
+- `TestEmitNamedBinderUnsupportedIsActionable`
+- `TestEmitIfSomeMinimizing`
+- `TestEmitIfSomeMaximizing`
 
-- Go supports a narrow set of constants, variables, equality/boolean connectives,
-  basic arithmetic/comparison operators, applications, simple variants, simple
-  quantifiers, and plain `some`.
-- Missing or incomplete Python expression features include macros, `LogicLet`,
-  lambdas, interpreted operators, native literals, string literals through
-  `__strlit`, bitvector operators, casts, natural-number saturation, finite
-  `SomeMin`/`SomeMax`, action terms, destructor field access where storage is
-  non-scalar, variant upcast/downcast, and large-function/hash-thunk operations.
-- Python frequently emits temporaries for complex expressions; Go usually emits
-  direct inline expressions.
+Out of scope for this commit (tracked as follow-up):
 
-Conformance work:
-
-- Port `emit_constant`, `emit_special_op`, `emit_bv_op`, `emit_app`, and
-  `temp` behavior.
-- Add macro expansion and let/lambda handling in the same places Python does.
-- Respect Python's expression-level type conversions and storage-class-specific
-  read/write behavior.
-- Audit every default `unsupported expression` path and either implement the
-  Python case or fail before writing a partial C++ file.
-
-Tests to add:
-
-- Golden expression tests for each AST expression class used by Python's
-  `emit_expr`.
-- Compile/runtime tests for nested lets, native constants, string literals,
-  casts, bitvector arithmetic, and variant/destructor field reads.
+- Native-literal `__lit<...>` wrappers via `is_native_sym`.
+- `delegate_methods_to` / `delegate_enums_to` prefixing of method/enum
+  references.
+- Action terms embedded inside expressions and lambda-as-expression
+  (no module currently produces these); the actionable error paths
+  catch them rather than emitting partial C++.
+- Parametric `let p(X,Y) := body in ...` substitution — returns an
+  explicit error rather than wrong C++.
 
 ## TODO 012 - Port quantifier bounds, iterable sorts, and `some`/min/max
 

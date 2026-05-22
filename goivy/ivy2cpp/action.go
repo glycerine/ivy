@@ -226,8 +226,8 @@ func (g *Generator) emitIf(w *cppWriter, a *goivy.LogicIfAction) {
 }
 
 func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) {
-	if some.Kind != "some" {
-		g.unsupported(w, "unsupported if %s condition: minimizing/maximizing some is not supported yet", some.Kind)
+	if some.Kind == "some_min" || some.Kind == "some_max" {
+		g.emitIfSomeMinMax(w, a, some)
 		return
 	}
 	if g.emitIfSomeVariantDowncast(w, a, some) {
@@ -266,6 +266,95 @@ func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy
 	}
 	w.close("")
 	for i := 0; i < opened; i++ {
+		w.close("")
+	}
+	if elseAct, ok := a.ElseBody.(goivy.Action); ok {
+		w.open(fmt.Sprintf("if (!%s) {", found))
+		g.emitAction(w, elseAct)
+		w.close("")
+	}
+}
+
+// emitIfSomeMinMax lowers `if some X. fmla minimizing/maximizing idx`. Mirrors
+// Python emit_some's SomeMinMax branch (ivy_to_cpp.py:3486-3555): scan all
+// candidates, track the current best index in a per-loop temp, and after the
+// scan dispatch the THEN/ELSE bodies with the winning witness in scope.
+func (g *Generator) emitIfSomeMinMax(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) {
+	if some.Index == nil {
+		g.unsupported(w, "unsupported %s condition: missing index expression", some.Kind)
+		return
+	}
+	found := g.nextTemp("__ivy_some")
+	bestIdx := g.nextTemp("__ivy_some_idx")
+	idxSort := some.Index.NodeSort()
+	idxType := g.cppType(idxSort)
+	w.linef("bool %s = false;", found)
+	w.linef("%s %s = %s;", idxType, bestIdx, g.cppZeroValue(idxSort))
+	// One witness temp per parameter so the THEN body can refer to the
+	// chosen value.
+	witnesses := make([]string, len(some.Params))
+	for i, p := range some.Params {
+		w.linef("%s %s = %s;", g.cppType(p.CSort), varName("__ivy_some_w"+fmt.Sprintf("%d_%s", i, p.Name)), g.cppZeroValue(p.CSort))
+		witnesses[i] = varName("__ivy_some_w" + fmt.Sprintf("%d_%s", i, p.Name))
+	}
+	opened := 0
+	for _, p := range some.Params {
+		header, err := g.loopHeaderForSort(p.CSort, varName(p.Name))
+		if err != nil {
+			g.unsupported(w, "unsupported some parameter %s:%s", varName(p.Name), err.Error())
+			for i := 0; i < opened; i++ {
+				w.close("")
+			}
+			return
+		}
+		w.open(header)
+		opened++
+	}
+	cond, err := g.emitExpr(some.Fmla)
+	if err != nil {
+		g.unsupported(w, "unsupported some condition: %s", err.Error())
+		for i := 0; i < opened; i++ {
+			w.close("")
+		}
+		return
+	}
+	w.open(fmt.Sprintf("if (%s) {", cond))
+	curIdx := g.nextTemp("__ivy_some_cur")
+	idxExpr, err := g.emitExpr(some.Index)
+	if err != nil {
+		g.unsupported(w, "unsupported some index: %s", err.Error())
+		w.close("")
+		for i := 0; i < opened; i++ {
+			w.close("")
+		}
+		return
+	}
+	w.linef("%s %s = %s;", idxType, curIdx, idxExpr)
+	var cmp string
+	if some.Kind == "some_min" {
+		cmp = fmt.Sprintf("%s < %s", curIdx, bestIdx)
+	} else {
+		cmp = fmt.Sprintf("%s < %s", bestIdx, curIdx)
+	}
+	w.open(fmt.Sprintf("if (!%s || (%s)) {", found, cmp))
+	w.linef("%s = true;", found)
+	w.linef("%s = %s;", bestIdx, curIdx)
+	for i, p := range some.Params {
+		w.linef("%s = %s;", witnesses[i], varName(p.Name))
+	}
+	w.close("")
+	w.close("")
+	for i := 0; i < opened; i++ {
+		w.close("")
+	}
+	if thenAct, ok := a.ThenBody.(goivy.Action); ok {
+		w.open(fmt.Sprintf("if (%s) {", found))
+		// Bring the witness values into scope under the original param names
+		// so the THEN body emits the expected identifiers.
+		for i, p := range some.Params {
+			w.linef("%s %s = %s;", g.cppType(p.CSort), varName(p.Name), witnesses[i])
+		}
+		g.emitAction(w, thenAct)
 		w.close("")
 	}
 	if elseAct, ok := a.ElseBody.(goivy.Action); ok {

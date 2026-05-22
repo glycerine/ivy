@@ -31,6 +31,9 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 		if code, ok := g.emitRangeNumeral(n); ok {
 			return code, nil
 		}
+		if code, ok, err := g.emitStringInterpConst(n); ok || err != nil {
+			return code, err
+		}
 		if goivy.IsNumeral(n) && !goivy.IsLiteralString(n) {
 			return n.Name, nil
 		}
@@ -117,11 +120,166 @@ func (g *Generator) emitExpr(e goivy.Expr) (string, error) {
 		return g.emitNativeExpr(n)
 	case *goivy.LogicSome:
 		return g.emitSome(n)
+	case *goivy.LogicLet:
+		return g.emitLetExpr(n)
+	case *goivy.LogicNamedBinder:
+		return "", fmt.Errorf("ivy2cpp: named binder %q is not supported as a C++ expression: %s", n.Name, n.String())
 	case *goivy.LogicGlobally, *goivy.LogicEventually, *goivy.LogicWhenOperator:
 		return "", fmt.Errorf("ivy2cpp: temporal expression %T is not supported in C++ generation yet: %s", e, e.String())
 	default:
 		return "", fmt.Errorf("ivy2cpp: unsupported expression %T: %s", e, e.String())
 	}
+}
+
+// emitLetExpr expands `let d1, d2, ... in body` into `body` after substituting
+// each definition's LHS by its RHS. Mirrors Python `ivy_logic_utils`
+// behavior where `let` is removed from the AST via substitution before
+// `emit_app` is ever invoked.
+func (g *Generator) emitLetExpr(l *goivy.LogicLet) (string, error) {
+	if l == nil {
+		return "", fmt.Errorf("ivy2cpp: nil let expression")
+	}
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for _, d := range l.Defs {
+		def, ok := d.(*goivy.LogicDefinition)
+		if !ok {
+			return "", fmt.Errorf("ivy2cpp: let definition has unsupported shape %T: %s", d, d.String())
+		}
+		lhs := def.Lhs
+		// Parameterless LHS (Const or Variable): substitute the symbol
+		// by its RHS directly.
+		switch sym := lhs.(type) {
+		case *goivy.Const:
+			subs[goivy.Key(sym)] = def.Rhs
+		case *goivy.LogicVariable:
+			subs[goivy.Key(sym)] = def.Rhs
+		default:
+			// Parametric let (let p(X,Y) := body in ...). Faithful Python
+			// behavior would rewrite each occurrence p(a,b) with
+			// body[X→a, Y→b]; we do not yet support this shape and refuse
+			// rather than emit silently wrong C++.
+			return "", fmt.Errorf("ivy2cpp: parametric let definition not yet supported: %s", lhs.String())
+		}
+	}
+	body, err := goivy.Substitute(l.Body, subs)
+	if err != nil {
+		return "", fmt.Errorf("ivy2cpp: let substitution: %w", err)
+	}
+	return g.emitExpr(body)
+}
+
+// emitStringInterpConst mirrors Python emit_constant's strlit branch
+// (ivy_to_cpp.py:3019-3023): numeral 0 on a strlit-interpreted sort
+// becomes the empty C++ string literal; any other numeral on such a sort
+// is an error because there is no canonical way to lower it.
+func (g *Generator) emitStringInterpConst(c *goivy.Const) (string, bool, error) {
+	if c == nil || !goivy.IsNumeral(c) || goivy.IsLiteralString(c) {
+		return "", false, nil
+	}
+	if !g.hasStringInterp(c.CSort) {
+		return "", false, nil
+	}
+	if c.Name == "0" {
+		return `""`, true, nil
+	}
+	return "", true, fmt.Errorf("ivy2cpp: cannot compile numeral %s of string sort %s", c.Name, sortName(c.CSort))
+}
+
+// emitCastApply handles Python emit_app's `cast` branch
+// (ivy_to_cpp.py:3155-3175). Casts to BV target sorts are left to
+// emitBVApply via the (false, nil) fall-through.
+func (g *Generator) emitCastApply(name string, a *goivy.Apply) (string, bool, error) {
+	if name != "cast" || len(a.Terms) != 1 {
+		return "", false, nil
+	}
+	rng := a.NodeSort()
+	// BV destination — delegate to emitBVApply which already handles
+	// `(value & ((1<<W)-1))` masking.
+	if _, ok := g.bvWidthForSort(rng); ok {
+		return "", false, nil
+	}
+	operand, err := g.emitExpr(a.Terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	if rs, ok := g.rangeSortFor(rng); ok {
+		lo, hi, ok := numericRangeBounds(rs)
+		if !ok {
+			return "", true, fmt.Errorf("ivy2cpp: cannot emit cast to non-numeric range %s", sortName(rng))
+		}
+		return rangeClampExpr(operand, lo, hi), true, nil
+	}
+	if g.hasNatInterp(rng) {
+		return natSaturateExpr(operand), true, nil
+	}
+	if interp, ok := g.sortInterpString(rng); ok && interp == "int" {
+		return operand, true, nil
+	}
+	return operand, true, nil
+}
+
+// emitNatMinusApply lowers `x - y` whose result sort has interp `"nat"`
+// to a saturating subtraction. Mirrors Python emit_app:3148-3154.
+func (g *Generator) emitNatMinusApply(name string, a *goivy.Apply) (string, bool, error) {
+	if name != "-" || len(a.Terms) != 2 {
+		return "", false, nil
+	}
+	if !g.hasNatInterp(a.NodeSort()) {
+		return "", false, nil
+	}
+	l, err := g.emitExpr(a.Terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	r, err := g.emitExpr(a.Terms[1])
+	if err != nil {
+		return "", true, err
+	}
+	return fmt.Sprintf("([&](){ auto __a = (%s); auto __b = (%s); return __a < __b ? 0 : __a - __b; })()", l, r), true, nil
+}
+
+// emitRangeArithApply lowers binary `+`, `-`, `*`, `/`, `%` whose result
+// sort is a RangeSort: evaluate operands once, then clamp to [lb, ub].
+// Mirrors Python emit_app:3176-3187.
+func (g *Generator) emitRangeArithApply(name string, a *goivy.Apply) (string, bool, error) {
+	if !isInfix(name) || len(a.Terms) != 2 {
+		return "", false, nil
+	}
+	switch name {
+	case "+", "-", "*", "/", "%":
+	default:
+		return "", false, nil
+	}
+	rs, ok := g.rangeSortFor(a.NodeSort())
+	if !ok {
+		return "", false, nil
+	}
+	lo, hi, ok := numericRangeBounds(rs)
+	if !ok {
+		return "", false, nil
+	}
+	l, err := g.emitExpr(a.Terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	r, err := g.emitExpr(a.Terms[1])
+	if err != nil {
+		return "", true, err
+	}
+	body := fmt.Sprintf("auto __x = (%s) %s (%s); return %s;", l, name, r, rangeClampExpr("__x", lo, hi))
+	return fmt.Sprintf("([&](){ %s })()", body), true, nil
+}
+
+// rangeClampExpr returns `( x < lo ? lo : hi < x ? hi : x )`, matching
+// Python's clamp shape (ivy_to_cpp.py:3030 and 3174).
+func rangeClampExpr(x, lo, hi string) string {
+	return fmt.Sprintf("( %s < %s ? %s : %s < %s ? %s : %s )", x, lo, lo, hi, x, hi, x)
+}
+
+// natSaturateExpr returns `( x < 0 ? 0 : x )` as a single C++ expression.
+// Mirrors Python emit_app:3161-3164 cast-to-nat saturation.
+func natSaturateExpr(x string) string {
+	return fmt.Sprintf("([&](){ auto __x = (%s); return __x < 0 ? 0 : __x; })()", x)
 }
 
 func (g *Generator) emitRangeNumeral(c *goivy.Const) (string, bool) {
@@ -156,12 +314,28 @@ func (g *Generator) emitNary(terms []goivy.Expr, op, ident string) (string, erro
 }
 
 func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
+	// Python: `if il.is_macro(self): return il.expand_macro(self).emit(...)`
+	// (ivy_to_cpp.py:3124). Expand macros before any other dispatch so the
+	// expansion gets to use the regular emitter (constants, infix, etc).
+	if g != nil && g.Mod != nil && g.Mod.Cfg != nil && g.Mod.Cfg.IuCfg != nil &&
+		goivy.IsMacro(a, g.Mod.Cfg.IuCfg) {
+		return g.emitExpr(goivy.ExpandMacro(a))
+	}
 	fnExpr := a.Func
 	if repl, ok := g.aliasForSymbol(fnExpr); ok {
 		fnExpr = repl
 	}
 	name := goivy.ExprName(fnExpr)
+	if code, ok, err := g.emitCastApply(name, a); ok || err != nil {
+		return code, err
+	}
 	if code, ok, err := g.emitBVApply(name, a); ok || err != nil {
+		return code, err
+	}
+	if code, ok, err := g.emitNatMinusApply(name, a); ok || err != nil {
+		return code, err
+	}
+	if code, ok, err := g.emitRangeArithApply(name, a); ok || err != nil {
 		return code, err
 	}
 	if len(a.Terms) == 2 && isInfix(name) {
