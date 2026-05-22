@@ -694,6 +694,15 @@ func Test05550_SolverInconclusive(t *testing.T) {
 	panicOn(fdg.Sync())
 	panicOn(fdp.Sync())
 
+	goVers, err := os.ReadFile(outPathGo)
+	panicOn(err)
+	pyVers, err := os.ReadFile(outPathPy)
+	panicOn(err)
+
+	diff := DiffSexp(string(goVers), string(pyVers), 0)
+	if len(diff) > 0 {
+		vv("diff = \n%v\n", diff)
+	}
 }
 
 func Test2hrNodeGoldenOrdLive(t *testing.T) {
