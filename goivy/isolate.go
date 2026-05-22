@@ -536,10 +536,16 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 
 	// --- Main action classification loop ---
 
-	if xtracer.Enabled && mod.Actions != nil && mod.Actions.Len() > 0 {
-		xtracer.Trace("isolate.input_actions count=%d", mod.Actions.Len())
-		for name, action := range mod.Actions.All() {
-			xtracer.Trace("isolate.input_action[%s]=%s", name, action.Sexp())
+	if xtracer.Enabled {
+		nActions := 0
+		if mod.Actions != nil {
+			nActions = mod.Actions.Len()
+		}
+		xtracer.Trace("isolate.input_actions count=%d", nActions)
+		if mod.Actions != nil {
+			for name, action := range mod.Actions.All() {
+				xtracer.Trace("isolate.input_action[%s]=%s", name, action.Sexp())
+			}
 		}
 	}
 
