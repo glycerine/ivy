@@ -43,6 +43,10 @@ public:
     std::map<std::string, long long> sort_los;
     std::map<std::string, long long> sort_his;
     std::vector<std::string> progress;
+    // alits holds assumption literals (Python `gen.alits`). solve() passes
+    // these to `slvr.check(alits)` so randomization preferences act as soft
+    // constraints. Cleared before each generate() call.
+    std::vector<z3::expr> alits;
     unsigned random_counter;
 
     gen() : slvr(ctx), model(ctx), random_counter(0) {
