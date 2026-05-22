@@ -2352,7 +2352,7 @@ func TestGenerateUnsupportedActionReturnsError(t *testing.T) {
 	mod.Name = "unsupported"
 	mod.Actions.Set("step", goivy.NewThunkAction(goivy.NewConst("x", goivy.TopS)))
 	_, err := Generate(mod, Config{ClassName: "unsupported"})
-	if err == nil || !strings.Contains(err.Error(), "unsupported action") || !strings.Contains(err.Error(), "*goivy.LogicThunkAction") {
+	if err == nil || !strings.Contains(err.Error(), "thunk reached emit") {
 		t.Fatalf("unexpected error: %v", err)
 	}
 }
@@ -2366,12 +2366,17 @@ func TestAllKnownUnsupportedActionsReturnErrors(t *testing.T) {
 		{
 			name: "thunk",
 			act:  goivy.NewThunkAction(goivy.NewConst("x", goivy.TopS)),
-			want: "*goivy.LogicThunkAction",
+			want: "thunk reached emit",
 		},
 		{
 			name: "instantiate",
 			act:  goivy.NewInstantiateAction(goivy.NewConst("schema", goivy.TopS)),
-			want: "*goivy.LogicInstantiateAction",
+			want: "instantiate reached emit",
+		},
+		{
+			name: "ranking",
+			act:  goivy.NewRanking(goivy.NewConst("r", goivy.TopS)),
+			want: "ranking reached emit",
 		},
 		{
 			name: "bad sequence child",
@@ -2387,6 +2392,182 @@ func TestAllKnownUnsupportedActionsReturnErrors(t *testing.T) {
 			_, err := Generate(mod, Config{ClassName: "bad"})
 			if err == nil || !strings.Contains(err.Error(), tc.want) {
 				t.Fatalf("unexpected error: %v", err)
+			}
+		})
+	}
+}
+
+// TestEmitCrashEmitsNothing locks down TODO 026's Crash fix. Python
+// ivy_to_cpp.py:3888-3891 binds CrashAction.emit to `pass`, so reaching
+// emit must produce zero C++ output and zero errors. The Go branch used
+// to emit `std::abort();`, which diverged from Python.
+func TestEmitCrashEmitsNothing(t *testing.T) {
+	crash := goivy.NewCrashAction(goivy.NewConst("anything", goivy.TopS))
+	var w cppWriter
+	g := &Generator{}
+	g.emitAction(&w, crash)
+	if got := strings.TrimSpace(w.String()); got != "" {
+		t.Fatalf("emit_crash should produce no output (Python pass), got %q", got)
+	}
+	if len(g.errs) != 0 {
+		t.Fatalf("emit_crash should not record errors, got %v", g.errs)
+	}
+}
+
+// TestEmitActionMatrixCoverage is TODO 026's Python action-class matrix
+// in test form: every Python Action subclass that may reach emit is
+// constructed and routed through (*Generator).emitAction to confirm we
+// landed on the right branch — either a successful emit, a deliberate
+// no-op, or an `unsupported`-style error that names the Python class.
+//
+// This is a coverage probe, not a code-shape probe. Per-class shape
+// tests (TestEmitAssignNullaryAndIndexed, TestEmitIfWhileChoice,
+// TestEmitNativeActionAntiquotes, ...) lock down the C++ output for
+// the `emits` rows; this matrix proves no class falls through Go's
+// default branch.
+func TestEmitActionMatrixCoverage(t *testing.T) {
+	const (
+		emits  = "emits"
+		noop   = "noop"
+		errors = "errors"
+	)
+	acfg := goivy.NewAstConfig()
+	cfg := goivy.NewActionsConfig()
+	flag := goivy.NewConst("flag", goivy.Boolean)
+	trueExpr := goivy.NewConst("true", goivy.Boolean)
+	enum := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	node := &goivy.UninterpretedSort{Name: "node"}
+	fldSort, err := goivy.NewFunctionSort(node, enum)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	shade := goivy.NewConst("shade", fldSort)
+	obj := goivy.NewConst("obj", node)
+	green := goivy.NewConst("green", enum)
+	cases := []struct {
+		name   string
+		build  func() goivy.Action
+		want   string // emits, noop, errors
+		errSub string // for `errors`: required substring in error message
+	}{
+		// has-emit Python rows: Go must produce non-empty output and zero errors.
+		{name: "Sequence", build: func() goivy.Action {
+			return goivy.NewSequence(goivy.NewAssignAction(flag, trueExpr))
+		}, want: emits},
+		{name: "AssertAction", build: func() goivy.Action {
+			return goivy.NewAssertAction(trueExpr)
+		}, want: emits},
+		{name: "EnsuresAction", build: func() goivy.Action {
+			return goivy.NewEnsuresAction(trueExpr)
+		}, want: emits},
+		{name: "RequiresAction", build: func() goivy.Action {
+			return goivy.NewRequiresAction(trueExpr)
+		}, want: emits},
+		{name: "SubgoalAction", build: func() goivy.Action {
+			return goivy.NewSubgoalAction(trueExpr)
+		}, want: emits},
+		{name: "AssumeAction", build: func() goivy.Action {
+			return goivy.NewAssumeAction(trueExpr)
+		}, want: emits},
+		{name: "AssignAction", build: func() goivy.Action {
+			return goivy.NewAssignAction(flag, trueExpr)
+		}, want: emits},
+		{name: "SetAction", build: func() goivy.Action {
+			return goivy.NewSetAction(flag)
+		}, want: emits},
+		{name: "AssignFieldAction", build: func() goivy.Action {
+			return goivy.NewAssignFieldAction(shade, obj, green)
+		}, want: emits},
+		{name: "ChoiceAction", build: func() goivy.Action {
+			return goivy.NewChoiceActionOn(cfg,
+				goivy.NewAssignAction(flag, trueExpr),
+				goivy.NewAssignAction(flag, trueExpr))
+		}, want: emits},
+		{name: "EnvAction", build: func() goivy.Action {
+			return goivy.NewEnvActionOn(cfg,
+				goivy.NewAssignAction(flag, trueExpr),
+				goivy.NewAssignAction(flag, trueExpr))
+		}, want: emits},
+		{name: "IfAction", build: func() goivy.Action {
+			return goivy.NewIfAction(flag, goivy.NewAssignAction(flag, trueExpr))
+		}, want: emits},
+		{name: "WhileAction", build: func() goivy.Action {
+			return goivy.NewWhileAction(flag, goivy.NewAssignAction(flag, trueExpr))
+		}, want: emits},
+		{name: "LocalAction", build: func() goivy.Action {
+			return goivy.NewLocalActionOn(cfg, "test", flag, goivy.NewAssignAction(flag, trueExpr))
+		}, want: emits},
+		{name: "LetAction", build: func() goivy.Action {
+			return goivy.NewLetAction(goivy.NewAssignAction(flag, trueExpr))
+		}, want: emits},
+		{name: "DebugAction", build: func() goivy.Action {
+			return goivy.NewDebugAction(goivy.NewConst(`"tick"`, goivy.TopS))
+		}, want: emits},
+		{name: "NativeAction", build: func() goivy.Action {
+			return goivy.NewNativeAction(acfg.NewNativeCode("// noop"))
+		}, want: emits},
+		{name: "ReturnAction", build: func() goivy.Action {
+			return goivy.NewReturnAction()
+		}, want: emits},
+		// has-emit but no actual output for this fixture:
+		{name: "IgnoreAction", build: func() goivy.Action {
+			return goivy.NewIgnoreAction()
+		}, want: noop},
+		// Crash mirrors Python `pass` — no output, no errors.
+		{name: "CrashAction", build: func() goivy.Action {
+			return goivy.NewCrashAction(goivy.NewConst("anything", goivy.TopS))
+		}, want: noop},
+		// no-Python-emit rows: must error and name the Python class.
+		{name: "HavocAction", build: func() goivy.Action {
+			return goivy.NewHavocAction(flag)
+		}, want: errors, errSub: "havoc reached emit"},
+		{name: "BindOldsAction", build: func() goivy.Action {
+			return goivy.NewBindOldsAction(goivy.NewAssignAction(flag, trueExpr))
+		}, want: errors, errSub: "bindolds reached emit"},
+		{name: "ThunkAction", build: func() goivy.Action {
+			return goivy.NewThunkAction(goivy.NewConst("x", goivy.TopS))
+		}, want: errors, errSub: "thunk reached emit"},
+		{name: "InstantiateAction", build: func() goivy.Action {
+			return goivy.NewInstantiateAction(goivy.NewConst("schema", goivy.TopS))
+		}, want: errors, errSub: "instantiate reached emit"},
+		{name: "Ranking", build: func() goivy.Action {
+			return goivy.NewRanking(goivy.NewConst("r", goivy.TopS))
+		}, want: errors, errSub: "ranking reached emit"},
+	}
+	mod := goivy.New()
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			act := tc.build()
+			var w cppWriter
+			g := &Generator{Mod: mod, currentReturns: []*goivy.Const{flag}}
+			g.emitAction(&w, act)
+			out := strings.TrimSpace(w.String())
+			switch tc.want {
+			case emits:
+				if out == "" {
+					t.Fatalf("%s: expected non-empty C++ output, got empty", tc.name)
+				}
+				if len(g.errs) != 0 {
+					t.Fatalf("%s: expected no errors for has-emit class, got %v", tc.name, g.errs)
+				}
+				if strings.Contains(out, "/* ivy2cpp:") {
+					t.Fatalf("%s: emit output looks like an unsupported-comment fallthrough:\n%s", tc.name, out)
+				}
+			case noop:
+				if out != "" {
+					t.Fatalf("%s: expected empty output, got %q", tc.name, out)
+				}
+				if len(g.errs) != 0 {
+					t.Fatalf("%s: expected no errors, got %v", tc.name, g.errs)
+				}
+			case errors:
+				if len(g.errs) == 0 {
+					t.Fatalf("%s: expected an error identifying the Python class, got none (output=%q)", tc.name, out)
+				}
+				gotErr := g.errs[0].Error()
+				if !strings.Contains(gotErr, tc.errSub) {
+					t.Fatalf("%s: error %q missing substring %q", tc.name, gotErr, tc.errSub)
+				}
 			}
 		})
 	}

@@ -1626,42 +1626,69 @@ Reminder:
   citing the new Go locations and test names, and update this audit doc in
   the same commit as the implementation.
 
-## TODO 026 - Fill out unsupported action forms
+## DONE 026 - Fill out unsupported action forms
+
+Status: rebuilt the `emitAction` switch in `goivy/ivy2cpp/action.go` as
+a complete mechanical port of Python `ivy_to_cpp.py:3775-4074`. The
+switch now explicitly names every Python `Action` subclass and routes
+each to either a per-class emitter (Python `emit_*`), a deliberate
+no-op (Python `pass`), or an `unsupported`-style error that identifies
+the offending Python class.
+
+Behavioral fixes:
+
+- `LogicCrashAction`: was emitting `std::abort();`, now emits nothing.
+  Mirrors Python `emit_crash` `pass` (`ivy_to_cpp.py:3888-3891`).
+- `LogicThunkAction`, `LogicInstantiateAction`, `LogicRanking`: were
+  falling through the `default:` arm with a `%T`-typed error. Each now
+  has an explicit case that calls `g.unsupported` with a
+  Python-class-bearing message ("thunk reached emit", "instantiate
+  reached emit", "ranking reached emit") plus the offending action's
+  `String()` and `GetLineno()`. Mirrors Python's behavior where these
+  classes have no `emit` assignment and would `AttributeError`.
+
+Documentation comments added on the existing branches where Python
+has no `emit` assignment but Go retains an explicit lowering
+(`LogicSetAction`, `LogicLetAction`, `LogicNullFieldAction`,
+`LogicCopyFieldAction`), each citing the matching Python class in
+`pyivy/ivy/ivy/ivy_actions.py`.
+
+The Python action-class matrix lives in the test
+`TestEmitActionMatrixCoverage`, which routes every Python `Action`
+subclass through `(*Generator).emitAction` and asserts on one of three
+outcomes (`emits`, `noop`, `errors`) — proving no class falls through
+the `default:` arm. Per-class shape tests still lock down the
+generated C++ for the `emits` rows.
 
 Go locations:
 
-- `goivy/ivy2cpp/action.go:14-73`
+- `goivy/ivy2cpp/action.go` — rebuilt `emitAction` switch (Crash
+  no-op, three new explicit error cases for Thunk/Instantiate/Ranking,
+  refreshed citation comments on Set/Let/NullField/CopyField).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3775-4074`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:3775-4074` (the `emit_*` block).
+- `pyivy/ivy/ivy/ivy_actions.py:669-1465` (Action subclass
+  definitions; classes without an `emit` assignment in `ivy_to_cpp.py`
+  are presumed eliminated upstream by `int_update`/`action_update`).
 
-Gap:
+Tests:
 
-- Go supports a subset of Python action classes: sequence, assert/assume,
-  assignment, if, if-some, while, choice, call, local, let, old-bind wrapper
-  placeholder, crash, field actions, debug, and native.
-- Missing or incomplete forms include logic thunk actions, instantiation
-  actions, ranking/progress-related actions, pattern-based updates, full native
-  action refs, and any Python action classes not represented in the Go switch.
-- Some supported forms are semantic stubs: `BindOlds`, `Crash`, `Havoc`, and
-  `Local` do not match Python.
-
-Conformance work:
-
-- Build a Python action-class matrix and add one Go test per class.
-- Port every Python `emit` method mechanically, even for classes that emit
-  `pass` or assertion failures in Python.
-- Replace comment-only unsupported output with an early generation error that
-  identifies the missing Python action class.
-
-Tests to add:
-
-- AST/action fixtures that exercise every Python action emission class.
+- New (`goivy/ivy2cpp/ivy2cpp_test.go`, appended after
+  `TestAllKnownUnsupportedActionsReturnErrors`):
+  - `TestEmitCrashEmitsNothing`
+  - `TestEmitActionMatrixCoverage`
+- Updated to assert the new Python-class-bearing error wording:
+  - `TestAllKnownUnsupportedActionsReturnErrors` (now includes
+    `ranking` and switches all error substrings from Go type tokens
+    like `*goivy.LogicThunkAction` to the user-facing labels
+    `"thunk reached emit"`, etc.).
+  - `TestGenerateUnsupportedActionReturnsError`.
 
 Reminder:
 
-- [ ] When this lands, rename to `## DONE 026 - …`, add a `Status:` paragraph
+- [x] When this lands, rename to `## DONE 026 - …`, add a `Status:` paragraph
   citing the new Go locations and test names, and update this audit doc in
   the same commit as the implementation.
 

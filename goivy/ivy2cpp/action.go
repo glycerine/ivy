@@ -24,6 +24,10 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 		g.emitAssign(w, a)
 	case *goivy.LogicHavocAction:
 		g.emitHavoc(w, a)
+	// Python ivy_actions.py:669-690 SetAction has no `emit` assignment
+	// in ivy_to_cpp.py — it is lowered upstream by `action_update`
+	// before code emission. Go retains an explicit lowering through
+	// `emitSet` for direct callers that synthesize SetAction nodes.
 	case *goivy.LogicSetAction:
 		g.emitSet(w, a)
 	case *goivy.LogicAssertAction:
@@ -48,6 +52,10 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 		g.emitCall(w, a)
 	case *goivy.LogicLocalAction:
 		g.emitLocal(w, a)
+	// Python ivy_actions.py:1192-1206 LetAction has no `emit`
+	// assignment in ivy_to_cpp.py — it is lowered upstream by
+	// `int_update` via `subst_action`. Go's `emitLet` performs an
+	// equivalent alias-substitution rewrite for direct callers.
 	case *goivy.LogicLetAction:
 		g.emitLet(w, a)
 	case *goivy.LogicBindOldsAction:
@@ -57,17 +65,50 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 	case *goivy.LogicDebugAction:
 		g.emitDebug(w, a)
 	case *goivy.LogicCrashAction:
-		w.line("std::abort();")
+		// Mirrors Python ivy_to_cpp.py:3888-3891:
+		//     def emit_crash(self,header):
+		//         pass
+		// CrashAction is lowered upstream by action_update
+		// (ivy_actions.py:1253-1266) into a Sequence of Havoc
+		// actions before reaching emit. Python emits nothing if it
+		// ever survives that lowering; mirror that behavior.
+		_ = a
 	case *goivy.ReturnAction:
 		g.emitReturn(w)
 	case *goivy.IgnoreAction:
 		return
 	case *goivy.LogicAssignFieldAction:
 		g.emitAssignField(w, a)
+	// Python ivy_actions.py:756-797 NullFieldAction/CopyFieldAction
+	// have no `emit` assignment in ivy_to_cpp.py — they are pre-1.3
+	// legacy nodes lowered upstream into AssignAction by
+	// `make_field_update`. Go keeps direct emit helpers so synthesized
+	// instances do not crash code generation.
 	case *goivy.LogicNullFieldAction:
 		g.emitNullField(w, a)
 	case *goivy.LogicCopyFieldAction:
 		g.emitCopyField(w, a)
+	case *goivy.LogicThunkAction:
+		// Python ivy_actions.py:1271-1280 ThunkAction has no
+		// `emit` assignment in ivy_to_cpp.py — reaching emit would
+		// AttributeError. The class is desugared upstream (the
+		// inline comment on the Python class says so explicitly).
+		g.unsupported(w, "thunk reached emit (Python ThunkAction has no emit; expected to be desugared upstream): %s at %s",
+			a.String(), a.GetLineno().String())
+	case *goivy.LogicInstantiateAction:
+		// Python ivy_actions.py:798-832 InstantiateAction has no
+		// `emit` assignment in ivy_to_cpp.py — reaching emit would
+		// AttributeError. The class is inlined upstream during
+		// module composition.
+		g.unsupported(w, "instantiate reached emit (Python InstantiateAction has no emit; expected to be inlined upstream): %s at %s",
+			a.String(), a.GetLineno().String())
+	case *goivy.LogicRanking:
+		// Python ivy_actions.py:1050-1052 Ranking has no `emit`
+		// assignment in ivy_to_cpp.py — reaching emit would
+		// AttributeError. Ranking/progress declarations are
+		// enforced by separate analysis, not by code emission.
+		g.unsupported(w, "ranking reached emit (Python Ranking has no emit; ranking/progress is enforced separately): %s at %s",
+			a.String(), a.GetLineno().String())
 	default:
 		g.unsupported(w, "unsupported action %T: %s", act, act.String())
 	}
