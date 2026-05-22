@@ -626,6 +626,11 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		// Python: conc = ivy_ast.TemporalModels(model, lg.And())
 		// Pass the modified model, not tm (which has the original model).
 		result, err := SharedStep12_BuildGoal(cfg.Mod.Cfg.AstCfg, goal, cfg.Goals, prems, model)
+		errStr := "None"
+		if err != nil {
+			errStr = err.Error()
+		}
+		xtracer.Trace("ranking.SharedStep12 EXIT nResults=%d err=%s", len(result), errStr)
 		if err != nil {
 			return nil, err
 		}
@@ -646,6 +651,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		return result, nil
 	}
 	// Fallback: return goals as-is if no TemporalModels found
+	xtracer.Trace("ranking.SharedStep12 EXIT nResults=%d err=None", len(cfg.Goals))
 	return cfg.Goals, nil
 }
 
