@@ -699,7 +699,7 @@ func Test05550_SolverInconclusive(t *testing.T) {
 	pyVers, err := os.ReadFile(outPathPy)
 	panicOn(err)
 
-	diff := DiffSexp(string(goVers), string(pyVers), 0)
+	diff := diffLogs(string(goVers), string(pyVers), 0)
 	if len(diff) > 0 {
 		vv("diff = \n%v\n", diff)
 	}
@@ -1510,4 +1510,38 @@ func rebuild_goivy_check_xtrace() {
 		panicf("could not run '%v' (see also 'make tr') to build goivy_check_xtrace; error: '%v'", doFullCmd, err)
 	}
 	fmt.Printf("done refreshing %v\n\n", target)
+}
+
+func diffLogs(goVers, pyVers string, maxDiffs int) string {
+	linesGo := strings.Split(goVers, "\n")
+	linesPy := strings.Split(pyVers, "\n")
+
+	diffs := 0
+	var sb strings.Builder
+	maxLen := len(linesGo)
+	if len(linesPy) > maxLen {
+		maxLen = len(linesPy)
+	}
+	for i := 0; i < maxLen; i++ {
+		lgo, lpy := "", ""
+		if i < len(linesGo) {
+			lgo = strings.TrimSpace(linesGo[i])
+		}
+		if i < len(linesPy) {
+			lpy = strings.TrimSpace(linesPy[i])
+		}
+		if lgo == lpy {
+			sb.WriteString("   " + lgo + "\n")
+		} else {
+			//sb.WriteString("- " + lgo + "\n") // go
+			//sb.WriteString("+ " + lpy + "\n") // python
+			fmt.Fprintf(&sb, "line %v: - %v\n", i, lgo)
+			fmt.Fprintf(&sb, "line %v: + %v\n", i, lpy)
+			diffs++
+			if maxDiffs > 0 && diffs >= maxDiffs {
+				return sb.String()
+			}
+		}
+	}
+	return sb.String()
 }
