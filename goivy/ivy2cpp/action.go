@@ -927,21 +927,72 @@ func (g *Generator) emitNativeAction(w *cppWriter, a *goivy.LogicNativeAction) {
 	emitNativeLines(w, rendered)
 }
 
+// emitDebug mirrors Python emit_debug (ivy_to_cpp.py:3998-4026). The
+// compiler stores names parallel to values in LogicDebugAction
+// (WithNames, populated by compiler_phase6.go). For each clause we emit
+// the name as the JSON key and run emitPrintExpr on the value so
+// quantified expressions open loops over their free variables and wrap
+// in [...] like Python's emit_print_expr.
 func (g *Generator) emitDebug(w *cppWriter, a *goivy.LogicDebugAction) {
 	event := debugEventName(a.DebugExpr)
 	w.line(`std::cout << "{" << std::endl;`)
 	w.linef(`std::cout << "    \"event\" : \"%s\"," << std::endl;`, escapeString(event))
 	for i, e := range a.WithExprs {
-		expr, err := g.emitExpr(e)
-		if err != nil {
-			g.unsupported(w, "unsupported debug expression: %s", err.Error())
-			continue
+		name := ""
+		if i < len(a.WithNames) {
+			name = a.WithNames[i]
 		}
-		w.linef(`std::cout << "    \"value%d\" : " << (%s) << "," << std::endl;`, i, expr)
+		if name == "" {
+			// Fallback: synthetic DebugActions (e.g. unit tests) may pass
+			// bare exprs without a parallel name slot. Derive a key from
+			// the expression itself so the output is still well-formed.
+			name = goivy.ExprName(e)
+		}
+		w.linef(`std::cout << "    \"%s\" : ";`, escapeString(name))
+		g.emitPrintExpr(w, e)
+		w.line(`std::cout << "," << std::endl;`)
 	}
 	w.line(`std::cout << "}" << std::endl;`)
 }
 
+// emitPrintExpr mirrors Python emit_print_expr (ivy_to_cpp.py:3989-3996):
+// for each free variable in expr, open a loop over its sort and emit
+// `[` / `]` brackets around the value with `,` separators across
+// iterations. With no free variables, this is a simple `std::cout <<
+// (expr)`.
+func (g *Generator) emitPrintExpr(w *cppWriter, expr goivy.Expr) {
+	vs := goivy.FreeVariablesList(expr)
+	opened := 0
+	for _, v := range vs {
+		header, err := g.loopHeaderForVar(v)
+		if err != nil {
+			g.unsupported(w, "unsupported debug print variable %s: %s", varName(v.Name), err.Error())
+			g.closeAssignmentLoops(w, opened)
+			return
+		}
+		w.line(`std::cout << "[";`)
+		w.open(header)
+		w.linef(`if (%s) std::cout << ",";`, varName(v.Name))
+		opened++
+	}
+	value, err := g.emitExpr(expr)
+	if err != nil {
+		g.unsupported(w, "unsupported debug print expression: %s", err.Error())
+		g.closeAssignmentLoops(w, opened)
+		return
+	}
+	w.linef(`std::cout << (%s);`, value)
+	for i := 0; i < opened; i++ {
+		w.close("")
+		w.line(`std::cout << "]";`)
+	}
+}
+
+// debugEventName extracts the event-name string from the DebugExpr. The
+// parser emits the event as a quoted string literal Const (e.g.
+// `Const("\"tick\"")`); we strip the surrounding quotes here and let
+// the caller wrap + escape per Python's quote() helper inline in
+// emit_debug (ivy_to_cpp.py:4001-4005).
 func debugEventName(e goivy.Expr) string {
 	if e == nil {
 		return "debug"
@@ -953,6 +1004,7 @@ func debugEventName(e goivy.Expr) string {
 	}
 	return name
 }
+
 
 func escapeString(s string) string {
 	s = strings.ReplaceAll(s, `\`, `\\`)

@@ -2768,7 +2768,12 @@ func TestGeneratedDebugActionCompiles(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{`"event\" : \"tick\"`, `"value0\" : " << (flag)`} {
+	// Post-TODO 021: the JSON key is taken from the with-clause name
+	// (here `flag` because the synthetic DebugAction has no parallel
+	// WithNames slot and we fall back to ExprName). The value print is
+	// emitted on its own line by emitPrintExpr so quantified values can
+	// open loops around it.
+	for _, want := range []string{`"event\" : \"tick\"`, `"flag\" : `, `std::cout << (flag);`} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
@@ -7340,3 +7345,232 @@ export set
 		t.Fatalf("set_gen constructor SMT-LIB missing references to ext_preconds saved/red:\n%s", body)
 	}
 }
+
+// --- TODO 021 tests: debug/trace output semantics ---
+
+// TestDebugActionEmitsNamedValues confirms that the WithNames slice on
+// LogicDebugAction reaches emitDebug, producing `"<name>" : <value>`
+// lines instead of the legacy `"value%d"` keys. Python
+// ivy_to_cpp.py:4011-4020. The `debug` keyword isn't reserved in ivy1.7
+// (lexer.go:204-209), so we synthesize the action directly.
+//
+// Added as part of TODO 021.
+func TestDebugActionEmitsNamedValues(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "named"
+	mod.Relations.Set("flag", goivy.Boolean)
+	mod.Relations.Set("saved", goivy.Boolean)
+	dbg := goivy.NewDebugAction(
+		goivy.NewConst(`"tick"`, goivy.TopS),
+		goivy.NewConst("saved", goivy.Boolean),
+		goivy.NewConst("flag", goivy.Boolean),
+	)
+	dbg.WithNames = []string{"c", "f"}
+	mod.Actions.Set("step", dbg)
+	out, err := Generate(mod, Config{ClassName: "named"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		`"event\" : \"tick\"`,
+		`"c\" : `,
+		`"f\" : `,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	if strings.Contains(out.Impl, `"value0\"`) || strings.Contains(out.Impl, `"value1\"`) {
+		t.Fatalf("debug values still using legacy value%%d keys:\n%s", out.Impl)
+	}
+}
+
+// TestDebugActionEmitsQuantifiedLoop verifies that a debug value
+// expression carrying a free variable opens a loop over that variable
+// and wraps the print with `std::cout << "[" ... "]"`. Python
+// emit_print_expr (ivy_to_cpp.py:3989-3996). Synthesized directly
+// because `debug` is not reserved in ivy1.7.
+//
+// Added as part of TODO 021.
+func TestDebugActionEmitsQuantifiedLoop(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+relation marked(I:idx)
+`)
+	idxSort, ok := mod.Sig.Sorts.Get2("idx")
+	if !ok {
+		t.Fatal("idx sort missing")
+	}
+	relSort, err := goivy.NewFunctionSort(idxSort, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	markedFn := goivy.NewConst("marked", relSort)
+	iVar, err := goivy.NewVariable("I", idxSort)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	app, err := goivy.NewApply(markedFn, iVar)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	dbg := goivy.NewDebugAction(
+		goivy.NewConst(`"scan"`, goivy.TopS),
+		app,
+	)
+	dbg.WithNames = []string{"seen"}
+	mod.Actions.Set("step", dbg)
+
+	out, err := Generate(mod, Config{ClassName: "quant"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		`std::cout << "[";`,
+		`std::cout << "]";`,
+		`std::cout << (marked[I]);`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+}
+
+// TestNumberFormatHexFromRadixAttribute synthesizes a module with
+// `attribute radix = "16"` and confirms that the trace prologue + REPL
+// assert override inject `<< std::hex << std::showbase`. Python
+// ivy_to_cpp.py:1935-1938.
+//
+// Added as part of TODO 021.
+func TestNumberFormatHexFromRadixAttribute(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step(c:color) = {
+    saved := c
+}
+import step
+`)
+	mod.Attributes["radix"] = "16"
+	out, err := Generate(mod, Config{Target: "test", ClassName: "hexfmt"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, `__ivy_out << std::hex << std::showbase << "< step"`) {
+		t.Fatalf("expected number_format prefix on trace prologue:\n%s", out.Impl)
+	}
+}
+
+// TestActionGenExecuteWrapsTraceBraces verifies that under target=gen
+// with Trace=true, the action_gen execute body opens with `< name(args)`,
+// then `{`, then the call, then `}`. Python ivy_to_cpp.py:1331-1346.
+//
+// Added as part of TODO 021.
+func TestActionGenExecuteWrapsTraceBraces(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "gentrace", Trace: true})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	body := bodyAfterMarker(out.Impl, "void set_gen::execute")
+	if body == "" {
+		t.Fatalf("set_gen::execute not found in impl:\n%s", out.Impl)
+	}
+	for _, want := range []string{
+		`__ivy_out << "> set("`,
+		`__ivy_out << "{" << std::endl;`,
+		`obj.set(`,
+		`__ivy_out << "}" << std::endl;`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("missing %q in set_gen::execute body:\n%s", want, body)
+		}
+	}
+
+	// Without Trace=true, only the `>` line should be present; no `{`/`}`.
+	out2, err := Generate(mod, Config{Target: "gen", ClassName: "gentrace2"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	body2 := bodyAfterMarker(out2.Impl, "void set_gen::execute")
+	if strings.Contains(body2, `__ivy_out << "{" << std::endl;`) {
+		t.Fatalf("trace `{` brace should be Trace-gated:\n%s", body2)
+	}
+}
+
+// TestImportCallerBodyWrappedInBracesUnderTrace verifies that the
+// imported-action method body, in target=test + Trace=true, opens with
+// the prologue and a `{` and closes with `}` — matching Python
+// ivy_to_cpp.py:1604-1619.
+//
+// Added as part of TODO 021.
+func TestImportCallerBodyWrappedInBracesUnderTrace(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual seen : color
+action callback(c:color) = {
+    seen := c
+}
+import callback
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "tracedimp", Trace: true})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	body := bodyAfterMarker(out.Impl, "tracedimp::callback(")
+	if body == "" {
+		t.Fatalf("callback method body not found:\n%s", out.Impl)
+	}
+	for _, want := range []string{
+		`__ivy_out << "< callback"`,
+		`__ivy_out << "{" << std::endl;`,
+		`__ivy_out << "}" << std::endl;`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("missing %q in traced callback body:\n%s", want, body)
+		}
+	}
+}
+
+// TestAssignSimpleEmitsWriteTraceUnderTrace verifies that an Ivy
+// assignment `x := y` emits an extra `__ivy_out << "  write(x," << (y)
+// << ")"` line above the C++ assignment when Config.Trace is set, and
+// only then. Python ivy_to_cpp.py:3627-3650.
+//
+// Added as part of TODO 021.
+func TestAssignSimpleEmitsWriteTraceUnderTrace(t *testing.T) {
+	src := `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step(c:color) = {
+    saved := c
+}
+export step
+`
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "writetrace", Trace: true})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, `__ivy_out << "  write(`) {
+		t.Fatalf("expected write-trace line under Trace=true:\n%s", out.Impl)
+	}
+
+	// Without Trace, no write line.
+	mod2 := compileIvySource(t, src)
+	out2, err := Generate(mod2, Config{Target: "repl", ClassName: "writetrace2"})
+	if err != nil {
+		t.Fatalf("Generate (no trace): %v", err)
+	}
+	if strings.Contains(out2.Impl, `__ivy_out << "  write(`) {
+		t.Fatalf("write-trace line should be Trace-gated:\n%s", out2.Impl)
+	}
+}
+

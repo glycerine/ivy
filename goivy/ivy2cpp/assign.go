@@ -1,6 +1,8 @@
 package ivy2cpp
 
 import (
+	"strings"
+
 	"github.com/glycerine/ivy/goivy"
 )
 
@@ -19,6 +21,10 @@ import (
 
 // emitAssignSimple is the Python `emit_assign_simple` (ivy_to_cpp.py:3624-3652)
 // — the LHS has no free variables, so a single C++ assignment suffices.
+// When Config.Trace is set and the LHS root name is not in a `:`-namespaced
+// scope (Python's `':' not in self.args[0].rep.name`), an extra trace line
+// of the form `__ivy_out << "  write(<lhs>," << (<rhs>) << ")" << std::endl;`
+// is emitted just before the assignment.
 func (g *Generator) emitAssignSimple(w *cppWriter, a *goivy.LogicAssignAction) {
 	lhs, err := g.emitExpr(a.LHS)
 	if err != nil {
@@ -31,7 +37,50 @@ func (g *Generator) emitAssignSimple(w *cppWriter, a *goivy.LogicAssignAction) {
 		return
 	}
 	rhs = g.maybeVariantUpcast(a.LHS.NodeSort(), a.RHS.NodeSort(), rhs, "")
+	if g.Config.Trace && !lhsHasNamespacedName(a.LHS) {
+		nf := g.numberFormat()
+		w.linef(`__ivy_out%s << "  write(" << %s << "," << (%s) << ")" << std::endl;`, nf, lhsTraceString(lhs), rhs)
+	}
 	w.linef("%s = %s;", lhs, rhs)
+}
+
+// lhsHasNamespacedName mirrors Python's gate `':' not in self.args[0].rep.name`
+// (ivy_to_cpp.py:3627): assignment traces are suppressed when the LHS root
+// symbol carries a `:`-prefixed namespace (e.g. internal helpers like
+// `loc:x` or `__ts:tick`).
+func lhsHasNamespacedName(lhs goivy.Expr) bool {
+	name := lhsRootName(lhs)
+	return strings.Contains(name, ":")
+}
+
+// lhsRootName returns the "rep.name" Python uses: the leaf symbol name at
+// the root of an LHS expression. For destructor chains (App(f, App(g, x)))
+// this peels until the leaf symbol.
+func lhsRootName(lhs goivy.Expr) string {
+	for {
+		switch v := lhs.(type) {
+		case *goivy.Apply:
+			if fn, ok := v.Func.(goivy.Expr); ok {
+				lhs = fn
+				continue
+			}
+			return ""
+		case *goivy.Const:
+			return v.Name
+		default:
+			return goivy.ExprName(v)
+		}
+	}
+}
+
+// lhsTraceString wraps the C++ LHS expression in a string literal for the
+// trace line. Python emits the LHS symbolically (`<< "f" << "(" << arg ...`),
+// which evaluates `arg` while keeping the wrapping function name as a
+// literal. Approximate this by quoting the full C++ form — close enough
+// for the runtime trace text; TODO 029 owns the broader port of
+// emit_traced_lhs.
+func lhsTraceString(lhsCPP string) string {
+	return `"` + escapeString(lhsCPP) + `"`
 }
 
 // assignBoundsExpr implements Python's bexpr trick from emit_assign

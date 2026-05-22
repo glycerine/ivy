@@ -363,10 +363,10 @@ func (g *Generator) emitReplImportCallback(w *cppWriter, name string, act goivy.
 func (g *Generator) emitRuntimeReplAssertOverride(w *cppWriter, method, event, text string) {
 	w.open(fmt.Sprintf("virtual void %s(bool truth, const char *msg) {", method))
 	w.open("if (!truth) {")
-	w.linef(`__ivy_out << "%s(\"" << msg << "\")" << std::endl;`, event)
+	w.linef(`__ivy_out%s << "%s(\"" << msg << "\")" << std::endl;`, g.numberFormat(), event)
 	w.linef(`std::cerr << msg << ": error: %s\n";`, text)
 	if g.Config.Trace {
-		w.line(`__ivy_out << "}" << std::endl;`)
+		w.linef(`__ivy_out%s << "}" << std::endl;`, g.numberFormat())
 	}
 	w.line("__ivy_exit(1);")
 	w.close("")

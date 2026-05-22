@@ -407,7 +407,13 @@ func (g *Generator) emitWeakActionGenerator(w *cppWriter, plan *actionGenPlan) {
 }
 
 // emitActionGenExecute writes the execute() body for plan.act, mirroring
-// Python's lines 1328-1346: trace the call and invoke the method on obj.
+// Python's lines 1328-1346:
+//
+//  1. trace the call: `__ivy_out << "> name(args)" << std::endl;`
+//  2. if opt_trace: open `__ivy_out << "{"`
+//  3. invoke the method on obj (with optional return capture)
+//  4. if opt_trace: close `__ivy_out << "}"`
+//  5. if returns: print `__ivy_out << "= " << __res`
 func (g *Generator) emitActionGenExecute(w *cppWriter, plan *actionGenPlan) {
 	className := plan.className
 	act := plan.origAct
@@ -416,20 +422,74 @@ func (g *Generator) emitActionGenExecute(w *cppWriter, plan *actionGenPlan) {
 	if err != nil {
 		fn = varName(plan.name)
 	}
-	args := make([]string, 0, len(act.GetFormalParams())+len(act.GetFormalReturns()))
-	for _, p := range act.GetFormalParams() {
+
+	// Python `name.split(':')[-1]` — strip leading `ext:` for the trace
+	// label so REPL/test output matches Python.
+	displayName := plan.name
+	if idx := strings.LastIndex(displayName, ":"); idx >= 0 {
+		displayName = displayName[idx+1:]
+	}
+
+	formals := act.GetFormalParams()
+	nf := g.numberFormat()
+	// Step 1: the `> action(args)` trace line.
+	if len(formals) > 0 {
+		var b strings.Builder
+		b.WriteString(fmt.Sprintf(`__ivy_out%s << "> %s("`, nf, displayName))
+		for i, p := range formals {
+			if i > 0 {
+				b.WriteString(` << ","`)
+			}
+			b.WriteString(fmt.Sprintf(" << this->%s", varName(p.Name)))
+		}
+		b.WriteString(` << ")" << std::endl;`)
+		w.line(b.String())
+	} else {
+		w.linef(`__ivy_out%s << "> %s" << std::endl;`, nf, displayName)
+	}
+
+	// Step 2: opening `{` brace when trace is enabled.
+	if g.Config.Trace {
+		w.linef(`__ivy_out%s << "{" << std::endl;`, nf)
+	}
+
+	// Step 3: invoke the method.
+	args := make([]string, 0, len(formals)+len(act.GetFormalReturns()))
+	for _, p := range formals {
 		args = append(args, "this->"+varName(p.Name))
 	}
 	returns := act.GetFormalReturns()
-	if len(returns) == 1 {
-		w.linef("(void)obj.%s(%s);", fn, strings.Join(args, ", "))
+	callExpr := fmt.Sprintf("obj.%s(%s)", fn, strings.Join(args, ", "))
+
+	if len(returns) == 0 {
+		w.linef("%s;", callExpr)
+		if g.Config.Trace {
+			w.linef(`__ivy_out%s << "}" << std::endl;`, nf)
+		}
+	} else if len(returns) == 1 {
+		// Capture the single return when trace is on, so the closing
+		// brace lands before the result line (matches Python ordering).
+		if g.Config.Trace {
+			retType := g.cppQualifiedType(returns[0].CSort, g.ClassName)
+			w.linef("%s __res = %s;", retType, callExpr)
+			w.linef(`__ivy_out%s << "}" << std::endl;`, nf)
+			w.linef(`__ivy_out%s << "= " << __res << std::endl;`, nf)
+		} else {
+			w.linef(`__ivy_out%s << "= " << %s << std::endl;`, nf, callExpr)
+		}
 	} else {
+		// Multi-return: pre-declare extras, call into obj, then close
+		// braces. Multi-return + trace is rarely exercised; we still
+		// honor the brace ordering.
 		for _, r := range returns {
 			nm := varName(r.Name)
 			w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), nm, g.cppZeroValueInScope(r.CSort))
 			args = append(args, nm)
 		}
 		w.linef("obj.%s(%s);", fn, strings.Join(args, ", "))
+		if g.Config.Trace {
+			w.linef(`__ivy_out%s << "}" << std::endl;`, nf)
+		}
 	}
 	w.close("")
 	w.blank()

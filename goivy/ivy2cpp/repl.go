@@ -269,7 +269,7 @@ func (g *Generator) emitCmdReaderDispatchChain(w *cppWriter) {
 			}
 		}
 		if g.Config.Trace {
-			w.line(`__ivy_out << "}" << std::endl;`)
+			w.linef(`__ivy_out%s << "}" << std::endl;`, g.numberFormat())
 		}
 		w.line("ivy.__unlock();")
 		w.line("return;")
@@ -291,14 +291,16 @@ func (g *Generator) emitDispatchArgExprs(act goivy.Action) []string {
 }
 
 // emitTracePrelude emits the trace `actname(arg1,arg2) {` line preceding
-// an action call. Python ivy_to_cpp.py:2685-2690.
+// an action call. Python ivy_to_cpp.py:2685-2690. The number_format
+// prefix is inserted right after `__ivy_out` per Python.
 func (g *Generator) emitTracePrelude(w *cppWriter, username string, argExprs []string) {
+	nf := g.numberFormat()
 	if len(argExprs) == 0 {
-		w.linef(`__ivy_out << "%s {" << std::endl;`, username)
+		w.linef(`__ivy_out%s << "%s {" << std::endl;`, nf, username)
 		return
 	}
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf(`__ivy_out << "%s("`, username))
+	b.WriteString(fmt.Sprintf(`__ivy_out%s << "%s("`, nf, username))
 	for i, a := range argExprs {
 		if i > 0 {
 			b.WriteString(` << ","`)

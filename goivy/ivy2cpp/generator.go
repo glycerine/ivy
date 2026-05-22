@@ -91,6 +91,12 @@ type Generator struct {
 	// 1897). Populated on first access by importCallers(). nil before that;
 	// non-nil (possibly empty) after.
 	importCallersCache map[string]bool
+
+	// numberFormatCache memoizes the result of numberFormat() so we don't
+	// re-scan module attributes on every trace line. Empty string when not
+	// yet computed; readers should use numberFormat() which initializes it.
+	numberFormatCache    string
+	numberFormatComputed bool
 }
 
 func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
@@ -833,10 +839,14 @@ func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) 
 	_, rtypes := g.getParamTypes(name, act)
 	// Python emit_some_action (ivy_to_cpp.py:1604-1607): for imported
 	// actions in test target, emit a `< name(args)` trace prologue at
-	// the top of the body. The opt_trace `<< "{"` follow-up belongs to
-	// TODO 021 (debug/trace output semantics).
-	if g.importCallers()[name] {
+	// the top of the body, and (when opt_trace) wrap the body in `{`
+	// and `}` braces.
+	traceImportCaller := g.importCallers()[name]
+	if traceImportCaller {
 		g.emitTraceActionPrologue(w, name, act.GetFormalParams())
+		if g.Config.Trace {
+			w.linef(`__ivy_out%s << "{" << std::endl;`, g.numberFormat())
+		}
 	}
 	// When the primary return is a ReturnRefType, its storage IS
 	// an input parameter — no synthetic local, no return statement.
@@ -854,6 +864,9 @@ func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) 
 	}
 	g.emitAction(w, act)
 	g.currentReturns = prevReturns
+	if traceImportCaller && g.Config.Trace {
+		w.linef(`__ivy_out%s << "}" << std::endl;`, g.numberFormat())
+	}
 	if len(returns) >= 1 && !firstIsReturnRef {
 		w.linef("return %s;", varName(returns[0].Name))
 	}
@@ -906,11 +919,13 @@ func (g *Generator) importCallers() map[string]bool {
 //
 //	__ivy_out << "< name" << "(" << p0 << "," << p1 << ")" << std::endl;
 //
-// The leading `ext:` is stripped per Python lines 1578-1579.
+// The leading `ext:` is stripped per Python lines 1578-1579. The
+// number_format prefix (g.numberFormat()) is injected between
+// `__ivy_out` and the first `<<` literal to match Python.
 func (g *Generator) emitTraceActionPrologue(w *cppWriter, name string, formals []*goivy.Const) {
 	display := strings.TrimPrefix(name, "ext:")
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf(`__ivy_out << "< %s"`, display))
+	b.WriteString(fmt.Sprintf(`__ivy_out%s << "< %s"`, g.numberFormat(), display))
 	if len(formals) > 0 {
 		b.WriteString(` << "("`)
 		for i, p := range formals {
@@ -923,6 +938,38 @@ func (g *Generator) emitTraceActionPrologue(w *cppWriter, name string, formals [
 	}
 	b.WriteString(" << std::endl;")
 	w.line(b.String())
+}
+
+// numberFormat returns the std::ostream manipulator prefix that Python
+// inserts after `__ivy_out` on every trace line. Python sets
+// `number_format = ' << std::hex << std::showbase '` when the module
+// attribute `radix == "16"`, else the empty string
+// (ivy_to_cpp.py:1935-1938). Cached on Generator.
+func (g *Generator) numberFormat() string {
+	if g.numberFormatComputed {
+		return g.numberFormatCache
+	}
+	g.numberFormatComputed = true
+	if g.Mod == nil {
+		return ""
+	}
+	val, ok := g.Mod.Attributes["radix"]
+	if !ok {
+		return ""
+	}
+	rep := ""
+	switch v := val.(type) {
+	case string:
+		rep = v
+	case interface{ Relname() string }:
+		rep = v.Relname()
+	case goivy.Expr:
+		rep = string(v.Sexp())
+	}
+	if rep == "16" {
+		g.numberFormatCache = " << std::hex << std::showbase"
+	}
+	return g.numberFormatCache
 }
 
 func formalListContains(formals []*goivy.Const, target *goivy.Const) bool {

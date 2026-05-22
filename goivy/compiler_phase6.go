@@ -807,8 +807,11 @@ func (c *Compiler) CompileDebugAction(node Node) (Expr, error) {
 		debugExpr = NewConst("debug", TopS)
 	}
 
-	// Collect compiled with-clause values as lg.Expr
+	// Collect compiled with-clause values as lg.Expr and the matching
+	// names (Python: each DebugItem keeps args[0] as the lhs symbol; we
+	// store its rep as a parallel string slice on LogicDebugAction).
 	var withExprs []Expr
+	var withNames []string
 	for _, wn := range compiledWithNodes {
 		wArgs := wn.Args()
 		if len(wArgs) >= 2 {
@@ -816,6 +819,7 @@ func (c *Compiler) CompileDebugAction(node Node) (Expr, error) {
 			if cn, ok := wArgs[1].(*CompiledNode); ok {
 				if expr, ok := cn.Node.(Expr); ok {
 					withExprs = append(withExprs, expr)
+					withNames = append(withNames, debugClauseName(wArgs[0]))
 				}
 			}
 		}
@@ -825,9 +829,28 @@ func (c *Compiler) CompileDebugAction(node Node) (Expr, error) {
 	c.ExprCtx = savedCtx
 
 	act := NewDebugAction(debugExpr, withExprs...)
+	act.WithNames = withNames
 	act.SetLineno(node.GetLineno())
 	ctx.Code = append(ctx.Code, act)
 	return ctx.Extract(), nil
+}
+
+// debugClauseName extracts the lhs name from a DebugItem.Name node. The
+// parser builds the name as App(Symbol(name)), so prefer the App's
+// Relname (which already unwraps to the symbol's Rep when present).
+// Falls back to ExprName for any other shape.
+func debugClauseName(n Node) string {
+	switch v := n.(type) {
+	case *App:
+		return v.Relname()
+	case *Symbol:
+		return v.Rep
+	case *Atom:
+		return v.Rep
+	case Expr:
+		return ExprName(v)
+	}
+	return ""
 }
 
 // CompileNativeArg compiles a native code argument.

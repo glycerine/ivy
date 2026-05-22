@@ -1293,7 +1293,42 @@ Tests to add:
 - Exported actions with requires, ensures, assumptions, subgoals, and generated
   tests that must satisfy preconditions before execution.
 
-## TODO 021 - Fix debug/trace output semantics
+## DONE 021 - Fix debug/trace output semantics
+
+Status: completed 2026-05-22. Two layered fixes plus tests.
+
+**emit_debug semantics.** `LogicDebugAction` now carries a `WithNames`
+slice (`goivy/actions_phase3.go:494`) populated by `CompileDebugAction`
+(`goivy/compiler_phase6.go:818-823`) so each `with name = expr` clause
+keeps its name through compilation. `goivy/ivy2cpp/action.go:emitDebug`
+emits each value under its real name and runs the new `emitPrintExpr`,
+which opens a loop over the value's free variables and wraps the print
+with `std::cout << "["` / `"]"` per Python `emit_print_expr`
+(`ivy_to_cpp.py:3989-3996`).
+
+**Trace integration.** Added `Generator.numberFormat()`
+(`goivy/ivy2cpp/generator.go`) returning ` << std::hex << std::showbase`
+when the module attribute `radix == "16"` (Python `ivy_to_cpp.py:1935-
+1938`). Threaded into `emitTraceActionPrologue`,
+`emitRuntimeReplAssertOverride`, `emitTracePrelude`, and the REPL
+dispatch close-brace line. `emitActionGenExecute`
+(`goivy/ivy2cpp/action_gen.go`) now matches Python lines 1331-1346:
+emits the `> name(args)` trace line, opens `{` and closes `}` when
+`Config.Trace`, and prints `= __res` for single-return actions.
+`emitSomeAction` (`goivy/ivy2cpp/generator.go`) wraps the imported
+action body with `{` / `}` braces when `Config.Trace` is on.
+`emitAssignSimple` (`goivy/ivy2cpp/assign.go`) emits the
+`__ivy_out << "  write(<lhs>," << (<rhs>) << ")"` line under
+`Config.Trace`, gated by the same `':' not in name` rule as Python
+(`ivy_to_cpp.py:3627`).
+
+Coverage: `TestDebugActionEmitsNamedValues`,
+`TestDebugActionEmitsQuantifiedLoop`,
+`TestNumberFormatHexFromRadixAttribute`,
+`TestActionGenExecuteWrapsTraceBraces`,
+`TestImportCallerBodyWrappedInBracesUnderTrace`,
+`TestAssignSimpleEmitsWriteTraceUnderTrace`, plus the updated
+`TestGeneratedDebugActionCompiles`. Full `make test` green.
 
 Go locations:
 
@@ -1323,12 +1358,6 @@ Tests to add:
 
 - Debug actions with explicit names, multiple values, quantified values, and
   tracing enabled under `impl`, `repl`, `test`, and `gen`.
-
-Reminder:
-
-- [ ] When this lands, rename to `## DONE 021 - …`, add a `Status:` paragraph
-  citing the new Go locations and test names, and update this audit doc in
-  the same commit as the implementation.
 
 ## TODO 022 - Add full serialization/deserialization support
 
