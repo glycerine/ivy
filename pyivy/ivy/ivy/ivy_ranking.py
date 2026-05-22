@@ -31,6 +31,17 @@ from . import ivy_transrel as itr
 
 debug = iu.BooleanParameter("ranking_debug",False)
 
+def _l2s_g_triple_canon(vs, t, env):
+    """Canonical sort key for (vars, body, environ) triples used by l2s_g.
+
+    Matches Go's l2sGTriple.key() so ranking and l2s produce the same
+    deterministic tableau/action ordering.
+    """
+    env_str = env if env is not None else 'nil'
+    var_sexps = sorted(v.sexp() for v in vs)
+    vars_str = '[' + ' '.join(var_sexps) + ']'
+    return '(l2sGTriple environ:%s vars:%s body:%s)' % (env_str, vars_str, t.canon())
+
 def forall(vs, body):
     return lg.ForAll(vs, body) if len(vs) > 0 else body
 
@@ -716,7 +727,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     # TODO: get rid of the above, after properly combining it
     to_g = [] # list of (variables, formula)
     to_g += list(l2s_gs)
-    to_g = list(set(to_g))
+    to_g = list(dict.fromkeys(to_g))
+    to_g.sort(key=lambda x: _l2s_g_triple_canon(*x))
     if debug.get():
         print('='*40 + "\nto_g:\n")
         for vs, t, env in to_g:
@@ -731,7 +743,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 
     assume_when_axioms = [
         AssumeAction(forall(when.variables, lg.Implies(when.body.t1,lg.Eq(when(*when.variables),when.body.t2))))
-        for when in l2s_whens
+        for when in sorted(l2s_whens, key=lambda w: w.canon())
     ]
 
     def apply_l2s_init(vs,t):
@@ -778,6 +790,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     # semantics applied.
     
     def prop_events(gprops):
+        gprops = sorted(gprops, key=lambda p: p.canon())
         pre = []
         post = []
         for gprop in gprops:
@@ -795,6 +808,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         return (pre, post)
             
     def when_events(whens):
+        whens = sorted(whens, key=lambda w: w.canon())
         pre = []
         post = []
         for when in whens:
@@ -823,6 +837,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     # semantics applied.
 
     def wait_events(waits):
+        waits = sorted(waits, key=lambda w: w.canon())
         res = []
         for wait in waits:
             vs = wait.variables
@@ -857,12 +872,12 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     symprops = defaultdict(list)
     symwaits = defaultdict(list)
     symwhens = defaultdict(list)
-    for vs, t, env in l2s_gs:
+    for vs, t, env in sorted(l2s_gs, key=lambda x: _l2s_g_triple_canon(*x)):
         prop = l2s_g(vs,t,env)
         envprops[env].append(prop)
         for sym in ilu.symbols_ilu_ast(t):
             symprops[sym].append(prop)
-    for when in l2s_whens:
+    for when in sorted(l2s_whens, key=lambda w: w.canon()):
         for sym in ilu.symbols_ilu_ast(when.body):
             symwhens[sym].append(when)
     for vs, t in to_wait:
