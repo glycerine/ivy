@@ -594,6 +594,14 @@ func TestGoldenAll(t *testing.T) {
 	}
 }
 
+func TestSolverInconclusive(t *testing.T) {
+	cfg := &goldenConfig{
+		path: "ivy-lang-examples/doc/examples/cav2024/examp1_numeric.ivy",
+		args: []string{"isolate=q.iso"},
+	}
+	GoldenPathCompareIvyCheck(t, cfg)
+}
+
 func Test2hrNodeGoldenOrdLive(t *testing.T) {
 	cfg := &goldenConfig{
 		path:    "ivy-lang-examples/doc/examples/apple/ord_live.ivy",
