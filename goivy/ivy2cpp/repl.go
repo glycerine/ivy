@@ -316,10 +316,16 @@ func (g *Generator) emitTracePrelude(w *cppWriter, username string, argExprs []s
 // invokes `_arg<T>(arg_values, 0, csortcard)` and stores the result
 // into the param's local variable `p__<name>`. Mirrors Python
 // `emit_value_parser` (ivy_to_cpp.py:2858-2870).
-func (g *Generator) emitValueParser(w *cppWriter, p *goivy.Const, srcExpr string) {
+//
+// `lineno` is prefixed onto the error messages when non-empty, matching
+// Python's `"{lineno}parameter ... out of bounds"` interpolation at
+// ivy_to_cpp.py:2865-2868. Pass `goivy.Location{}` when no source
+// location is available (Python's `lineno=None` branch).
+func (g *Generator) emitValueParser(w *cppWriter, p *goivy.Const, srcExpr string, lineno goivy.Location) {
 	pname := "p__" + varName(p.Name)
 	typ := g.cppQualifiedType(p.CSort, g.ClassName)
 	bound := g.cppSortCardStr(p.CSort)
+	prefix := escapeString(lineno.String())
 	w.open("try {")
 	w.line("int pos = 0;")
 	w.line("std::vector<ivy_value> arg_values;")
@@ -328,11 +334,11 @@ func (g *Generator) emitValueParser(w *cppWriter, p *goivy.Const, srcExpr string
 	w.linef("%s = _arg<%s>(arg_values, 0, %s);", pname, typ, bound)
 	w.close(" catch (out_of_bounds &) {")
 	w.indent++
-	w.linef(`std::cerr << "parameter %s out of bounds\n";`, escapeString(p.Name))
+	w.linef(`std::cerr << "%sparameter %s out of bounds\n";`, prefix, escapeString(p.Name))
 	w.line("__ivy_exit(1);")
 	w.indent--
 	w.open("} catch (syntax_error &) {")
-	w.linef(`std::cerr << "syntax error in parameter value %s\n";`, escapeString(p.Name))
+	w.linef(`std::cerr << "%ssyntax error in parameter value %s\n";`, prefix, escapeString(p.Name))
 	w.line("__ivy_exit(1);")
 	w.close("")
 }
@@ -356,7 +362,7 @@ func (g *Generator) emitMainParamSetup(w *cppWriter) {
 			} else {
 				defText := paramDefaultText(g.Mod.ParamDefaults[i])
 				if defText != "" {
-					g.emitValueParser(w, p, strconv.Quote(defText))
+					g.emitValueParser(w, p, strconv.Quote(defText), g.Mod.ParamDefaults[i].GetLineno())
 				}
 			}
 		}
@@ -406,7 +412,7 @@ func (g *Generator) emitParamKeyValueDispatch(w *cppWriter) {
 			continue
 		}
 		w.open(fmt.Sprintf(`if (param == "%s") {`, escapeString(p.Name)))
-		g.emitValueParser(w, p, "value")
+		g.emitValueParser(w, p, "value", goivy.Location{})
 		w.line("continue;")
 		w.close("")
 	}
