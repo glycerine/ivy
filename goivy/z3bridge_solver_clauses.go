@@ -366,7 +366,8 @@ func Decide(z3solver *smt.Z3Solver, assumptions ...smt.Z3Expr) (smt.Z3CheckResul
 		result = z3solver.Check()
 	}
 	if result == smt.Unknown {
-		return result, fmt.Errorf("solver produced inconclusive result")
+		fmt.Println(z3solver.String())
+		return result, &IvyError{Msg: "Solver produced inconclusive result"}
 	}
 	return result, nil
 }

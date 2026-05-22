@@ -9,6 +9,15 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
+func (s *Solver) decideZ3(z3solver *smt.Z3Solver) (smt.Z3CheckResult, error) {
+	result := s.checkZ3(z3solver)
+	if result == smt.Unknown {
+		fmt.Println(z3solver.String())
+		return result, &IvyError{Msg: "Solver produced inconclusive result"}
+	}
+	return result, nil
+}
+
 // ModelResult holds a Z3 model and associated solver state.
 type ModelResult struct {
 	Solver  *smt.Z3Solver
@@ -208,7 +217,10 @@ func (s *Solver) GetSmallModelWithCond(
 				// Python ivy_solver.py:1437 calls decide(s) which emits the
 				// decide() ENTER trace before invoking solver.check.
 				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-				res := s.checkZ3(z3solver)
+				res, err := s.decideZ3(z3solver)
+				if err != nil {
+					return nil, err
+				}
 
 				if res != smt.Unsat {
 					overallResult = res
@@ -237,7 +249,11 @@ func (s *Solver) GetSmallModelWithCond(
 		// No final conditions: just check satisfiability.
 		// Python ivy_solver.py:1451 calls decide(s) here.
 		xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-		overallResult = s.checkZ3(z3solver)
+		var err error
+		overallResult, err = s.decideZ3(z3solver)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if overallResult == smt.Unsat {
@@ -256,7 +272,11 @@ func (s *Solver) GetSmallModelWithCond(
 				z3solver.Push()
 				z3solver.Assert(zsc)
 				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-				if s.checkZ3(z3solver) == smt.Sat {
+				res, err := s.decideZ3(z3solver)
+				if err != nil {
+					return nil, err
+				}
+				if res == smt.Sat {
 					break
 				}
 				z3solver.Pop()
@@ -274,7 +294,11 @@ func (s *Solver) GetSmallModelWithCond(
 				z3solver.Push()
 				z3solver.Assert(zsc)
 				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-				if s.checkZ3(z3solver) == smt.Sat {
+				res, err := s.decideZ3(z3solver)
+				if err != nil {
+					return nil, err
+				}
+				if res == smt.Sat {
 					break
 				}
 				z3solver.Pop()

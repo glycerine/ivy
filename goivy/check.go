@@ -1336,7 +1336,17 @@ func startLoaded(filename string, cfg *Config, load func(mod *Module) error) err
 }
 
 // MainWithConfig is like Main but accepts a pre-populated Config.
-func MainWithConfig(args []string, cfg *Config) int {
+func MainWithConfig(args []string, cfg *Config) (code int) {
+	defer func() {
+		if r := recover(); r != nil {
+			if err, ok := r.(*IvyError); ok {
+				fmt.Fprintf(os.Stderr, "error: %v\n", err)
+				code = 1
+				return
+			}
+			panic(r)
+		}
+	}()
 	err := Start(args, cfg)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)

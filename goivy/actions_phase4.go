@@ -293,7 +293,7 @@ func SmallModelClauses(cls *Clauses, finalCond []FinalCond, shrink bool, m *Modu
 	slv := NewSolver(m, sopts)
 	model, err := slv.GetSmallModelWithCond(cls, sorts, nil, finalCond, shrink)
 	if err != nil {
-		return nil, slv
+		panic(err)
 	}
 	return model, slv
 }
