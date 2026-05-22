@@ -623,6 +623,10 @@ func Test05550_SolverInconclusive(t *testing.T) {
 	}
 	if false {
 		GoldenPathCompareIvyCheck(t, cfg)
+	} else {
+		// need to rebuild goivy_check_xtrace so it is current.
+		// GoldenPathCompareIvyCheck will do this for us if we are using it.
+		rebuild_goivy_check_xtrace()
 	}
 	// also assert that the non-XTRACE lines agree.
 	skipRebuild := true
@@ -1250,6 +1254,9 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string, skipR
 	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
 	var cmd *exec.Cmd
 	if !skipRebuild {
+		// could do instead:
+		//rebuild_goivy_check_xtrace()
+
 		doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", goivyCheckCmdDir, goBinary, target)
 		fmt.Printf("build goivy_check_xtrace so we know it is up to date: '%v'\n", doFullCmd)
 		cmd = exec.Command(goBinary, "build", "-o", target)
@@ -1452,4 +1459,46 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 	}()
 
 	return pr, cmd.Process, nil
+}
+
+func rebuild_goivy_check_xtrace() {
+
+	_, thisFile, _, _ := runtime.Caller(0)
+	// parent dir.
+	goivyRoot := filepath.Dir(thisFile)
+	// cmd/goivy_check dir
+	goivyCheckCmdDir := filepath.Join(goivyRoot, "cmd", "goivy_check")
+
+	// we will compile goivy_check_xtrace now to make
+	// sure it is up-to-date, and place it into the gobin directory.
+	gobin := os.Getenv("GOBIN")
+	// fallback places; if GOBIN is not set.
+	home := os.Getenv("HOME")
+	gopath := os.Getenv("GOPATH")
+	if gobin == "" {
+		switch {
+		case gopath != "":
+			gobin = filepath.Join(gopath, "bin")
+		case home != "":
+			gobin = filepath.Join(home, "go", "bin")
+			if dirExists(gobin) {
+				break
+			}
+			fallthrough
+		default:
+			panicf("cannot figure out where to write refreshed goivy_check_xtracer!")
+		}
+	}
+	target := filepath.Join(gobin, "goivy_check_xtrace")
+	goBinary := filepath.Join(runtime.GOROOT(), "bin", "go")
+
+	doFullCmd := fmt.Sprintf("cd %v && %v build -o %v", goivyCheckCmdDir, goBinary, target)
+	fmt.Printf("build '%v' so we know it is up to date: '%v'\n", target, doFullCmd)
+	cmd := exec.Command(goBinary, "build", "-o", target)
+	cmd.Dir = goivyCheckCmdDir
+	err := cmd.Run()
+	if err != nil {
+		panicf("could not run '%v' (see also 'make tr') to build goivy_check_xtrace; error: '%v'", doFullCmd, err)
+	}
+	fmt.Printf("done refreshing %v\n\n", target)
 }
