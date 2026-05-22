@@ -8,6 +8,7 @@ package goivy
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -22,14 +23,14 @@ type TypeNames struct {
 }
 
 func newTypeNames() *TypeNames {
-	xtracer.Trace("parser.__init__ ENTER")
+	xtracer.Trace("parser.TypeNames.__init__ ENTER")
 	return &TypeNames{nameset: make(map[string]bool)}
 }
 
 // add matches Python TypeNames.add (ivy_parser.py:3606-3613).
 // It recursively extracts parameter names from parameterized type references.
 func (tn *TypeNames) add(tname string) {
-	xtracer.Trace("parser.add ENTER")
+	xtracer.Trace("parser.TypeNames.add ENTER tname=%s", tname)
 	if tn.nameset[tname] {
 		return
 	}
@@ -59,7 +60,8 @@ func expandAutoInstances(ivy *ivyAccum) {
 	// Python: ivy.decls = []
 	ivy.decls = nil
 
-	for _, decl := range decls {
+	for idx, decl := range decls {
+		xtracer.Trace("parser.expand_auto.decl ENTER i=%d decl=%s", idx, parserTraceNodeType(decl))
 		if aid, ok := decl.(*AutoInstanceDecl); ok {
 			// Python: for inst in decl.args:
 			//             if len(inst.args) == 2:
@@ -142,6 +144,17 @@ func expandAutoInstances(ivy *ivyAccum) {
 	xtracer.Trace("parser.expand_auto EXIT decls=%d", len(result))
 }
 
+func parserTraceNodeType(n Node) string {
+	if n == nil {
+		return "None"
+	}
+	typ := reflect.TypeOf(n)
+	if typ.Kind() == reflect.Ptr {
+		typ = typ.Elem()
+	}
+	return typ.Name()
+}
+
 // extractParametersName splits "foo(X,Y)" into ("foo", ["X","Y"]).
 // Matches Python iu.extract_parameters_name.
 func extractParametersName(name string) (string, []string) {
@@ -211,9 +224,16 @@ func getTypeNamesFromDecl(decl Node, names *TypeNames) {
 	case *ConstantDecl:
 		// Python ConstantDecl.get_type_names (ivy_ast.py:996-998):
 		//     for c in self.args: tterm_type_names(c, names)
-		for _, arg := range d.Args() {
-			ttermTypeNames(arg, names)
-		}
+		getTypeNamesFromConstantArgs(d.Args(), names)
+	case *FreshConstantDecl:
+		// Python FreshConstantDecl inherits ConstantDecl.get_type_names.
+		getTypeNamesFromConstantArgs(d.Args(), names)
+	case *DestructorDecl:
+		// Python DestructorDecl inherits ConstantDecl.get_type_names.
+		getTypeNamesFromConstantArgs(d.Args(), names)
+	case *ConstructorDecl:
+		// Python ConstructorDecl inherits ConstantDecl.get_type_names.
+		getTypeNamesFromConstantArgs(d.Args(), names)
 	case *ParameterDecl:
 		// Python ParameterDecl.get_type_names (ivy_ast.py:1009-1010):
 		//     tterm_type_names(self.mysym(), names)
@@ -276,6 +296,12 @@ func getTypeNamesFromDecl(decl Node, names *TypeNames) {
 		}
 	}
 	// Default: Decl base class has no-op get_type_names (ivy_ast.py:587)
+}
+
+func getTypeNamesFromConstantArgs(args []Node, names *TypeNames) {
+	for _, arg := range args {
+		ttermTypeNames(arg, names)
+	}
 }
 
 // getTypeNamesFromAction matches Python Action.get_type_names (ivy_actions.py:293-297):

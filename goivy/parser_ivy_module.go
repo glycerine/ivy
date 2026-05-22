@@ -106,7 +106,7 @@ func (m *ivyAccum) Rewrite(rewrite AstRewriter) Node {
 // parentObjName is the object name for inheriting defined names (Python: parent_object).
 // Pass "" for parentObjName when no object inheritance is needed.
 func newIvyAccum(parent *ivyAccum, parentObjName string) *ivyAccum {
-	xtracer.Trace("parser.__init__ ENTER")
+	xtracer.Trace("parser.Ivy.__init__ ENTER")
 	m := &ivyAccum{
 		modules:  make(map[string]*ModuleDecl),
 		macros:   make(map[string]Node),

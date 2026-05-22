@@ -283,7 +283,8 @@ common_attribute = None
 
 class Ivy(object):
     def __init__(self):
-        if __debug__: xtracer.trace("parser.__init__ ENTER")
+        global parent_object
+        if __debug__: xtracer.trace("parser.Ivy.__init__ ENTER")
         self.decls = []
         self.defined = defaultdict(list)
         self.static = set()
@@ -308,7 +309,6 @@ class Ivy(object):
         if self.attributes and stack:
             self.attributes = stack[-1].attributes + self.attributes
         # if we are a continuation object, inherent defined symbols from previous declaration
-        global parent_object
         if parent_object is not None:
             parent = stack[-1]
             if parent_object == "this":
@@ -3615,11 +3615,11 @@ parser = yacc.yacc(start='top',tabmodule='ivy_parsetab',errorlog=yacc.NullLogger
 
 class TypeNames(object):
     def __init__(self):
-        if __debug__: xtracer.trace("parser.__init__ ENTER")
+        if __debug__: xtracer.trace("parser.TypeNames.__init__ ENTER")
         self.namelist = []
         self.nameset = set()
     def add(self,tname):
-        if __debug__: xtracer.trace("parser.add ENTER")
+        if __debug__: xtracer.trace("parser.TypeNames.add ENTER tname=%s" % tname)
         if tname not in self.nameset:
             pref,refparms = iu.extract_parameters_name(tname)
             for rp in refparms:
@@ -3634,7 +3634,8 @@ def expand_autoinstances(ivy):
     decls = ivy.decls
     if __debug__: xtracer.trace("parser.expand_auto ENTER decls=%d" % len(decls))
     ivy.decls = []
-    for decl in decls:
+    for idx,decl in enumerate(decls):
+        if __debug__: xtracer.trace("parser.expand_auto.decl ENTER i=%d decl=%s" % (idx,type(decl).__name__))
         if isinstance(decl,AutoInstanceDecl):
             for inst in decl.args:
                 if len(inst.args) == 2:

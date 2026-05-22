@@ -1520,30 +1520,24 @@ func (d *DomainSetup) Named(node Node) error {
 // Corresponds to Python IvyDomainSetup.theorem.
 func (d *DomainSetup) Theorem(node Node) error {
 	xtracer.Trace("compiler.DomainSetup.theorem ENTER")
-	// A theorem is like a schema but added as a labeled property.
-	lf, ok := node.(*LabeledFormula)
-	if !ok {
+	schema, ok := node.(*Schema)
+	if !ok || schema == nil {
 		return nil
 	}
-	if lf.Formula == nil {
+	df, ok := schema.Defn.(*Definition)
+	if !ok || df == nil {
 		return nil
 	}
-
-	df, ok := lf.Formula.(*Definition)
-	if !ok {
-		return nil
-	}
-
-	defName := df.Defines()
-
-	if _, ok := df.Rhs.(*SchemaBody); ok {
-		compiled, err := d.Compiler.Thing(df.Rhs)
+	if sb, ok := df.Rhs.(*SchemaBody); ok {
+		compiled, err := d.Compiler.CompileSchemaBody(sb)
 		if err != nil {
 			return err
 		}
 		acfg := d.Compiler.Module.Cfg.AstCfg
-		mlf := acfg.NewLabeledFormula(nil, compiled)
-		mlf.SetLineno(lf.GetLineno())
+		defName := df.Defines()
+		label := acfg.NewAtom(defName)
+		mlf := acfg.NewLabeledFormula(label, compiled)
+		mlf.SetLineno(sb.GetLineno())
 		d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
 		d.Compiler.Module.Theorems[defName] = compiled
 		d.LastFact = mlf
