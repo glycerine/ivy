@@ -420,7 +420,24 @@ Tests to add:
 - Variant construction, copying, assignment, equality, REPL parse/print,
   serialization, Z3 model generation, and action return values requiring upcast.
 
-## TODO 007 - Implement full destructor/struct support
+## DONE 007 - Implement full destructor/struct support
+
+Status: completed 2026-05-22. `goivy/ivy2cpp/destructor.go` (517 lines) emits
+in-struct `operator==` / `operator<` / `operator<<` (matching Python
+`field_eq`, `ivy_to_cpp.py:222-226`), plus `_arg`, `__ser`, `__deser`,
+`__from_solver`, `__to_solver`, and `__randomize` for destructor sorts.
+Fields can be scalars, finite functions, nested struct/variant/native, or
+hash-thunked large maps. Coverage includes
+`TestDestructorStructDeclaration`,
+`TestDestructorFunctionNotEmittedAsMutableState`,
+`TestDestructorMultiArgFieldDeclaration`,
+`TestDestructorHashThunkField`,
+`TestDestructorStructStreamMultiArg`,
+`TestDestructorMultiArgFieldRoundTrip`,
+`TestDestructorSerDeserShape`,
+`TestDestructorArgShape`,
+`TestDestructorZ3ImplShape`,
+`TestDestructorRandomizeSkipsUninterpretedRange`.
 
 Go locations:
 
@@ -839,7 +856,29 @@ Files added / modified:
   TestEmitAfterInitRangeLoop, TestRangeArrayDimensionUsesUpperBoundIndexSpace,
   and the smoke fixtures table entry to expect the new two-phase shape.
 
-## TODO 014 - Correct havoc, local variables, choices, and old-value binding
+## DONE 014 - Correct havoc, local variables, choices, and old-value binding
+
+Status: completed 2026-05-22. All four gap items closed:
+
+- `emitHavoc` (`goivy/ivy2cpp/action.go:97-103`) mirrors Python `emit_havoc`'s
+  `assert False` (`ivy_to_cpp.py:3768-3773`) by reporting via
+  `g.unsupported` — havoc reaching emit is a bug because lowering should
+  have eliminated it upstream.
+- `emitLocal` (`action.go:785-796`) declares the local with
+  `cppStorageDecl` and then calls `mkNondetSym` with the LocalAction's
+  UniqueID, matching Python `local_start` + `emit_local`
+  (`ivy_to_cpp.py:3893-3917`).
+- `emitChoice` uses `mkNondet(..., "___branch", a.UniqueID, ...)` with
+  the same hardcoded-0 quirk as Python `ivy_to_cpp.py:189`.
+- `emitBindOlds` (`action.go:835-`) reports unsupported because Python
+  has no `BindOldsAction.emit`; the wrapper must be eliminated by
+  `bind_olds_action` upstream (`ivy_transrel.py:240`).
+
+Coverage: `TestGeneratedChoiceActionCompiles`,
+`TestGeneratedVarActionCompiles`, `TestGeneratedHavocReportsUnsupported`,
+`TestGeneratedChoiceUsesIfElseChain`,
+`TestGeneratedLocalActionUsesNondet`,
+`TestGeneratedLocalFunctionUsesNondetLoop`.
 
 Go locations:
 
@@ -884,7 +923,26 @@ Tests to add:
 - Actions with local variables, choice actions, explicit havoc, and `old`
   references in postconditions/updates.
 
-## TODO 015 - Port native declarations, native code blocks, and callback thunks
+## DONE 015 - Port native declarations, native code blocks, and callback thunks
+
+Status: completed 2026-05-22. `goivy/ivy2cpp/native.go` (636 lines) ports
+`split_native` (`ivy_to_cpp.py:1378`), `emit_native`
+(`ivy_to_cpp.py:1456`), and `native_reference` (`ivy_to_cpp.py:4032`),
+covering `header`, `impl`, `member`, `init`, `inline`, and `encode`
+tags plus antiquote substitution for `%`, `"`, symbol references, type
+references, and action callbacks. `goivy/ivy2cpp/native_thunk.go` ports
+the callback-thunk struct generation via `emitCallbackThunks` /
+`emitCallbackThunk` (Python lines 4032-4074). Native type declarations
+emit either typedef-style aliases or class-style wrappers, and the
+test/gen paths consume them through the existing `_arg` / serializer /
+solver helpers. Coverage: 20+ tests including
+`TestEmitNativeActionAntiquotes`,
+`TestNativePrimitiveTypeDeclarationFromInterpret`,
+`TestNativeTypeAntiquoteReferencesSort`,
+`TestNativeClassParameterDefaultCompiles`,
+`TestNativeDefinitionEmitsTemplateMethod`,
+`TestTopLevelNativeBlocksEmitHeaderMemberAndInit`,
+`TestDuplicateOnceNativeHeaderEmitsOnce`.
 
 Go locations:
 
@@ -931,7 +989,28 @@ Tests to add:
 - Native header/member/init/inline snippets, native action callbacks, native
   types used in state, and native expressions with antiquoted references.
 
-## TODO 016 - Replace the simple REPL with Python's REPL/server/test runtime
+## DONE 016 - Replace the simple REPL with Python's REPL/server/test runtime
+
+Status: completed 2026-05-22. `goivy/ivy2cpp/repl.go` (643 lines) and
+`goivy/ivy2cpp/runtime.go` (415 lines) port Python's REPL/test/server
+runtime: `emit_repl_boilerplate1a` builds the per-classname
+`cmd_reader` subclass; `_arg<T>` overloads parse every emitted sort
+(enums, ranges, numerics, destructors, variants, natives, bv/strings)
+out of `ivy_value`; main-loop server vs. REPL branching mirrors
+`emit_repl_boilerplate3` / `emit_repl_boilerplate3server`. Coverage:
+`TestRuntimeSkeletonAcrossTargets`,
+`TestRuntimeReplAndTestSubclassGlue`,
+`TestRuntimeChoiceStackAndGeneratorPlumbing`,
+`TestRuntimeNativeReaderTimerSkeletonShape`,
+`TestReplDispatchForExportedAction`,
+`TestReplMainReadsCommandsFromStdin`,
+`TestReplIgnoresInternalAction`,
+`TestReplDispatchForParameterizedExportCompiles`,
+`TestReplDispatchParsesEnumBoolRangeArgs`,
+`TestReplEmitsCmdReader`,
+`TestReplCatchesSyntaxOutOfBoundsBadArity`,
+`TestReplServerModeWhenNoPublicActions`, and several
+`TestReplWrites…SupertypeReturn` cases for variant-typed returns.
 
 Go locations:
 
@@ -1094,7 +1173,21 @@ Tests added:
 
 `make test` green after each milestone.
 
-## TODO 019 - Match Python progress/rely logic
+## DONE 019 - Match Python progress/rely logic
+
+Status: completed 2026-05-22. `emitRelyMax` (`goivy/ivy2cpp/tick.go:265-323`)
+now alpha-renames extra rely-RHS variables by appending `__` and rewrites the
+LHS-aligned progress args in a single substitution pass, matching Python
+`ivy_to_cpp.py:1798-1804`. Bare relies are filtered through `hasBareRely`,
+`ivy_check_progress(lhs, maxt)` is called for each progress declaration
+(`tick.go:251`), and the per-target loop bounds use the same iterable-sort
+machinery as Python `__tick`. Coverage:
+`TestTickCallsIvyCheckProgressWithoutRely`,
+`TestTickRelyImplicationComputesMaxAndChecksProgress`,
+`TestTickRelySubstitutesProgressArgs`,
+`TestTickRelyExtraFreeVariableLoops`,
+`TestTickUnconditionalRelySkipsProgressCheckLikePython`,
+`TestTickRelyExtraSharesProgressVarNameRenamed`.
 
 Go locations:
 
@@ -1135,9 +1228,35 @@ Tests to add:
 - Progress properties with extra quantified variables, rely formulas, and
   counters requiring max updates.
 
-## TODO 020 - Handle requires/ensures/subgoals and exported action semantics exactly
+## DONE 020 - Handle requires/ensures/subgoals and exported action semantics exactly
 
-**Status: DONE 2026-05-22**
+Status: completed 2026-05-22. Five focused fixes landed:
+
+- `goivy/ivy2cpp/action_gen.go:66-78` — `ext_preconds` wrap now preserves
+  `Lineno`, formal params, and formal returns on the new
+  `Sequence(AssumeAction(pre), action)` (Python `ivy_to_cpp.py:1213-1217`).
+- `goivy/ivy2cpp/action.go:200-208` — added `linenoStr` mirroring
+  `iu.lineno_str` (strips the trailing `": "` that `Location.String()`
+  appends) and used it for the assert/assume/requires/ensures/subgoal
+  emit sites at `action.go:30-38` so labels match Python
+  `ivy_to_cpp.py:3788-3808`.
+- `goivy/ivy2cpp/generator.go:870-940` — added `importCallers()` and
+  `emitTraceActionPrologue()` mirroring Python `find_import_callers`
+  (`ivy_to_cpp.py:1888-1897`) and `trace_action`
+  (`ivy_to_cpp.py:1576-1607`). For `target=test`, imported unscoped
+  actions now open their method body with
+  `__ivy_out << "< name(args)" << std::endl;`. Cached on `Generator`.
+- `goivy/actions_transforms.go:71-86` — `AssertToAssume` no longer
+  downgrades `LogicSubgoalAction` when `"assert"` is in kinds. Python's
+  class-identity check (`ivy_actions.py:396-403` + `:416-421`) only
+  converts when the caller explicitly opts in via `"subgoal"`.
+
+Coverage: `TestActionGenExtPrecondsPreservesFormals`,
+`TestAssertLabelStripsTrailingColonSpace`,
+`TestSubgoalNeverConvertedToAssume`,
+`TestRequiresInExternalBecomesAssume`,
+`TestImportCallerTracePrologueInTest`,
+`TestExtPrecondsAppearsInActionGenSMT`. Full `make test` green.
 
 Go locations:
 
@@ -1205,6 +1324,12 @@ Tests to add:
 - Debug actions with explicit names, multiple values, quantified values, and
   tracing enabled under `impl`, `repl`, `test`, and `gen`.
 
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 021 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
+
 ## TODO 022 - Add full serialization/deserialization support
 
 Go locations:
@@ -1239,6 +1364,12 @@ Tests to add:
 
 - Round-trip serialization for all supported type classes, including nested
   values.
+
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 022 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
 
 ## TODO 023 - Restore Python include ordering and support headers
 
@@ -1275,6 +1406,12 @@ Tests to add:
 - Compile generated C++ for each target and platform mode after every runtime
   feature port.
 
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 023 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
+
 ## TODO 024 - Match Python's member-name collision checks
 
 Go locations:
@@ -1300,6 +1437,12 @@ Tests to add:
 
 - Ivy declarations that collide with generated C++ members should fail with a
   Python-compatible error.
+
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 024 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
 
 ## TODO 025 - Port conjecture/property/isolate integration
 
@@ -1330,6 +1473,12 @@ Tests to add:
 
 - Isolated modules with conjectures/properties, including generated tests that
   fail when a conjecture is violated.
+
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 025 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
 
 ## TODO 026 - Fill out unsupported action forms
 
@@ -1364,6 +1513,12 @@ Tests to add:
 
 - AST/action fixtures that exercise every Python action emission class.
 
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 026 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
+
 ## TODO 027 - Add Python-compatible parser/writer and value conversion for every sort
 
 Go locations:
@@ -1395,6 +1550,12 @@ Tests to add:
 
 - Bad and good REPL values for every sort category.
 
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 027 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
+
 ## TODO 028 - Implement Python-compatible randomization for all generated types
 
 Go locations:
@@ -1425,6 +1586,12 @@ Tests to add:
 
 - Randomization for enums, ranges, uninterpreted sorts, destructors, variants,
   bitvectors, strings, arrays/functions, and native types.
+
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 028 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
 
 ## TODO 029 - Align emitted C++ expression scoping and temporary management
 
@@ -1461,6 +1628,12 @@ Tests to add:
   blocks, inline native snippets, and expression temporaries inside nested
   actions.
 
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 029 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
+
 ## TODO 030 - Add a Python/Go oracle test suite before filling feature gaps
 
 Go locations:
@@ -1495,6 +1668,12 @@ Tests to add:
 
 - This TODO is the test harness itself. It should become the gate for claiming
   the Go generator is a faithful mechanical port.
+
+Reminder:
+
+- [ ] When this lands, rename to `## DONE 030 - …`, add a `Status:` paragraph
+  citing the new Go locations and test names, and update this audit doc in
+  the same commit as the implementation.
 
 ## Suggested porting order
 
