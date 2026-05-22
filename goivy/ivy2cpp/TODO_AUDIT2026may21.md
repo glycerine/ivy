@@ -1771,42 +1771,105 @@ Tests:
     prefixes `"test.ivy: line 3: "` onto the error messages; argv
     `param=value` branch keeps the unprefixed form).
 
-## TODO 028 - Implement Python-compatible randomization for all generated types
+## DONE 028 - Implement Python-compatible randomization for all generated types
+
+Status: the per-sort `__randomize<T>` template specializations for
+enum (`goivy/ivy2cpp/z3.go:92-110`), destructor
+(`goivy/ivy2cpp/destructor.go:603-631`), variant supertype
+(`goivy/ivy2cpp/variant.go:290-307`), and StrBV/IntBV
+(`goivy/ivy2cpp/cpp_types.go:290-307`) were already in place from
+DONE 022. The generic `__randomize<T>` fallback (z3.go:62-65)
+delegates to `gen::randomize(expr, range)`, which handles native and
+primitive ranges uniformly. Three pieces closed in this pass:
+
+1. **Widened `emitRandomizeSolver` dispatch**.
+   `goivy/ivy2cpp/solver_emit.go:313` used to gate the
+   `__randomize<T>(*this, apply(...), "...")` emission on
+   `isDestructorRecordRange` only, so action_gen formals whose range
+   was a native or cpptype sort (e.g. `word -> bv[8]`,
+   `text -> strbv[4]`, `vec -> <<< std::vector<...> >>>`) fell through
+   to the primitive `gen::randomize(name, args, range)` branch. They
+   now match Python `emit_randomize` at
+   `pyivy/ivy/ivy/ivy_to_cpp.py:996` by routing through
+   `isRecordRange` (destructor ∪ native ∪ cpp-interp). The template
+   argument is taken from `recordRangeType` (the class-scoped
+   typedef like `genbits::word`) rather than from `cppQualifiedType`
+   (which would emit the underlying `unsigned`) — Python always uses
+   the typedef form.
+
+2. **Re-seeded `gen::random_index`**.
+   `include2cpp/ivy_go_z3.hpp:286-296` previously used a monotonic
+   `random_counter++` for picking values, which silently ignored the
+   `srand(seed)` plumbing emitted by `repl.go:392`. It now uses
+   `std::rand() % span`, mirroring Python `mk_rand`
+   (`ivy_to_cpp.py:897-903`). Cross-binary reproducibility under the
+   same `seed=N` argv now holds: Python-emitted and Go-emitted C++
+   draw from the same PRNG sequence. The `random_counter` field is
+   retained for `fresh_name` (`ivy_go_z3.hpp:160`), which legitimately
+   needs a unique-id counter.
+
+3. **Per-sort-category randomization tests** appended to
+   `goivy/ivy2cpp/ivy2cpp_test.go`:
+   - `TestRandomizeRangeSortUsesPrimitivePath` — `type rng = {2..7}`
+     symbol's action-formal range routes through
+     `randomize("__fml:x", "rng")`, not `__randomize<ranger::rng>`.
+   - `TestRandomizeNativeRangeUsesRandomizeTemplate` — native
+     interpreted sort range (e.g. `vec -> <<< std::vector<...> >>>`)
+     routes through `__randomize<natg::vec>(*this, apply(...), "vec")`.
+   - `TestRandomizeUninterpretedRangeUsesDefaultBounds` — locks in the
+     Go-specific divergence at `solver_emit.go:295-299` where
+     uninterpreted ranges use the runtime's default `mk_sort` [0,4]
+     bounds instead of raising `IvyError` like Python does.
+   - `TestRandomizeSeedPlumbingPrecedesRandomCalls` — confirms the
+     `int seed = 1;` declaration, the `else if (param == "seed")` argv
+     branch, and `srand(seed);` appear in main() in that order, before
+     any randomize call.
+
+   `TestBitvectorBackedSortsInGenSetupAndStorageShape`
+   (`ivy2cpp_test.go:5749-5771`) was updated to assert the new
+   `__randomize<genbits::{word,text,small}>(*this, apply(...), "...")`
+   shape for cpptype-range action-formal inputs.
 
 Go locations:
 
-- `goivy/ivy2cpp/z3.go:234-282`
-- `goivy/ivy2cpp/types.go:91-168`
-- `goivy/ivy2cpp/generator.go:272-478`
+- `goivy/ivy2cpp/solver_emit.go:313` (dispatch widened to
+  `isRecordRange`, template-arg routed through `recordRangeType`).
+- `goivy/ivy2cpp/z3.go:62-110, 112-247, 382-433` (existing
+  `__randomize<T>` infrastructure and top-level
+  `ivy2cpp_randomize`).
+- `goivy/ivy2cpp/destructor.go:603-631`,
+  `goivy/ivy2cpp/variant.go:290-307`,
+  `goivy/ivy2cpp/cpp_types.go:290-307` (per-sort `__randomize<T>`
+  specializations from DONE 022).
+- `include2cpp/ivy_go_z3.hpp:286-296` (`random_index` now seeded
+  through `std::rand`).
+- `goivy/ivy2cpp/repl.go:371-429` (seed plumbing, unchanged).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:979-1006`
-- `pyivy/ivy/ivy/ivy_cpp_types.py:355-496`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:979-1006` (`emit_randomize`).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2712, 2751-2752, 2773` (seed/srand
+  argv plumbing).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:897-903` (`mk_rand` — the
+  `rand() % span` shape that Go's `random_index` now mirrors).
+- `pyivy/ivy/ivy/ivy_cpp_types.py:355-496` (variant/cpptype
+  `__randomize<T>` shapes).
 
-Gap:
+Tests:
 
-- Go randomization is mostly helper-variable assignment through simple Z3 value
-  helpers.
-- Python-generated types provide per-type randomization hooks, and the solver
-  generator path uses these together with constraints and model evaluation.
-
-Conformance work:
-
-- Generate `__randomize` helpers for all Python-supported sorts.
-- Use the same randomization hooks in init/test/gen paths and in complex nested
-  values.
-
-Tests to add:
-
-- Randomization for enums, ranges, uninterpreted sorts, destructors, variants,
-  bitvectors, strings, arrays/functions, and native types.
-
-Reminder:
-
-- [ ] When this lands, rename to `## DONE 028 - …`, add a `Status:` paragraph
-  citing the new Go locations and test names, and update this audit doc in
-  the same commit as the implementation.
+- Updated: `TestBitvectorBackedSortsInGenSetupAndStorageShape`
+  (`ivy2cpp_test.go:5749`).
+- New: `TestRandomizeRangeSortUsesPrimitivePath`,
+  `TestRandomizeNativeRangeUsesRandomizeTemplate`,
+  `TestRandomizeUninterpretedRangeUsesDefaultBounds`,
+  `TestRandomizeSeedPlumbingPrecedesRandomCalls` (appended after
+  `ivy2cpp_test.go:8465`).
+- Existing coverage (unchanged):
+  `TestRandomizeFiniteEnumRelation` (5396),
+  `TestRandomizeBinaryFiniteRelationUsesTupleKey` (5421),
+  `TestTargetGenRandomizesActionParamsAndExecutes` (4943),
+  `TestTargetGenRandomizesNumericAndVariantLeafParams` (4988),
+  `TestDestructorRandomizeSkipsUninterpretedRange` (6178).
 
 ## TODO 029 - Align emitted C++ expression scoping and temporary management
 
