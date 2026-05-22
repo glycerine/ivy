@@ -1225,7 +1225,7 @@ func Main(args []string) int {
 // sets Parameter objects before start() creates the Module context.
 // If cfg is nil, we will supply a default from module.NewConfig().
 func Start(args []string, cfg *Config) error {
-	fmt.Printf("check.go:1227 top Start().\n")
+	//fmt.Printf("check.go:1228 top Start().\n")
 
 	if cfg == nil {
 		cfg = NewConfig()
