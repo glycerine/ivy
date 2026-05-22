@@ -284,11 +284,16 @@ public:
     }
 
     int random_index(int lo, int hi) {
+        // Use std::rand() so srand(seed) in main() controls the output
+        // sequence. Mirrors Python mk_rand (ivy_to_cpp.py:897-903) which
+        // emits `(rand() % (hi-lo+1) + lo)` inline. Cross-binary
+        // reproducibility under the same `seed=N` argv requires both
+        // sides to draw from the same PRNG.
         int span = hi - lo + 1;
         if (span <= 0) {
             return lo;
         }
-        return lo + static_cast<int>((random_counter++) % static_cast<unsigned>(span));
+        return lo + (std::rand() % span);
     }
 
     bool random_bool() {
