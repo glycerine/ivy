@@ -189,12 +189,55 @@ public:
         slvr.add(expr);
     }
 
+    // SMT-LIB overload: parse `smtlib` against the previously registered
+    // sorts and decls and add the resulting assertion to the solver.
+    // Mirrors Python's `add("(assert ...)")` pattern from ivy_to_cpp.py:920
+    // and :1277, which feeds slv.formula_to_z3(...).sexpr() to the solver.
+    void add(const std::string &smtlib) {
+        z3::sort_vector sv(ctx);
+        for (std::map<std::string, z3::sort>::const_iterator it = sorts.begin();
+             it != sorts.end(); ++it) {
+            sv.push_back(it->second);
+        }
+        z3::func_decl_vector dv(ctx);
+        for (std::map<std::string, z3::func_decl>::const_iterator it = decls.begin();
+             it != decls.end(); ++it) {
+            dv.push_back(it->second);
+        }
+        slvr.add(ctx.parse_string(smtlib.c_str(), sv, dv));
+    }
+
     void add_alit(const z3::expr &pred) {
         slvr.add(pred);
     }
 
+    void push() {
+        slvr.push();
+    }
+
+    void pop() {
+        slvr.pop();
+    }
+
     bool check() {
         if (slvr.check() == z3::sat) {
+            model = slvr.get_model();
+            return true;
+        }
+        return false;
+    }
+
+    // solve mirrors Python `gen.solve()`. It calls `slvr.check(alits)` so
+    // randomization preferences (added via add_alit) act as assumption
+    // literals; on `sat` it captures the model. Used by emit_init_gen /
+    // emit_action_gen (ivy_to_cpp.py:959 and :1303).
+    bool solve() {
+        z3::expr_vector assumptions(ctx);
+        for (std::vector<z3::expr>::const_iterator it = alits.begin();
+             it != alits.end(); ++it) {
+            assumptions.push_back(*it);
+        }
+        if (slvr.check(assumptions) == z3::sat) {
             model = slvr.get_model();
             return true;
         }
@@ -220,6 +263,24 @@ public:
             return std::strtoll(text.substr(pos + 1).c_str(), 0, 10);
         }
         return 0;
+    }
+
+    // eval_apply mirrors Python's `eval_apply(name, args...)` used by the
+    // scalar branch of emit_eval (ivy_to_cpp.py:794). Builds the function
+    // application from the registered decls and reads the integer-typed
+    // model value.
+    long long eval_apply(const char *decl_name) {
+        std::vector<int> args;
+        return eval(mk_apply_expr(decl_name, args));
+    }
+    long long eval_apply(const char *decl_name, int arg0) {
+        std::vector<int> args;
+        args.push_back(arg0);
+        return eval(mk_apply_expr(decl_name, args));
+    }
+    long long eval_apply(const char *decl_name, std::initializer_list<int> args) {
+        std::vector<int> args_vec(args.begin(), args.end());
+        return eval(mk_apply_expr(decl_name, args_vec));
     }
 
     int random_index(int lo, int hi) {
@@ -305,3 +366,11 @@ static void ivy2cpp_progress(gen &g, const std::string &label) {
     g.progress.push_back(label);
     ivy2cpp_progress(label);
 }
+
+// Stubs for Python's `cpptype.prepare()` / `cleanup()` hooks
+// (ivy_to_cpp.py:937 and :970). They surround the solver-driven generate
+// loop. The Go port currently registers no cpptypes, so these are no-ops;
+// keeping them as free functions lets generated code emit the calls
+// unconditionally for parity.
+static void cpptype_prepare(gen &g) { (void)g; }
+static void cpptype_cleanup(gen &g) { (void)g; }

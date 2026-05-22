@@ -237,6 +237,14 @@ func (g *Generator) emitImpl() error {
 	// ivy_to_cpp.py:2497-2510 (operator<<, __ser) and 2634-2652 (_arg,
 	// __deser).
 	g.emitEnumSortArgSpecImpls(w)
+	if g.usesZ3() {
+		// The init_gen / action_gen classes go AFTER the variant and
+		// destructor __from_solver specializations so the action_gen
+		// body can deduce the right template specialization.
+		if err := g.emitZ3GeneratorClasses(w); err != nil {
+			return err
+		}
+	}
 	w.open(g.constructorSignature(true) + " {")
 	g.emitRuntimeConstructorPrelude(w)
 	g.emitConstructorParamAssignments(w)

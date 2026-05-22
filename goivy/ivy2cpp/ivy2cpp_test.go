@@ -4572,13 +4572,21 @@ export set
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	// After TODO 017 milestone 4 the gen path randomizes formal-param
+	// inputs through the solver: each input gets g.randomize() in
+	// generate() and __from_solver() reads its value back after solve().
+	// The member declarations still use the Go-side var name (e.g. `c`,
+	// `b`, `i`); the underlying Z3 symbol carries the `__fml:` prefix.
 	for _, want := range []string{
 		"genparams::color c;",
 		"bool b;",
 		"unsigned i;",
-		"this->c = ivy2cpp_random_color(*this);",
-		"this->b = this->random_bool();",
-		"this->i = ivy2cpp_random_idx(*this);",
+		`randomize("__fml:c", "color");`,
+		`randomize("__fml:b", "bool");`,
+		`randomize("__fml:i", "idx");`,
+		`__from_solver(*this, mk_apply_expr("__fml:c", {}), c);`,
+		`__from_solver(*this, mk_apply_expr("__fml:b", {}), b);`,
+		`__from_solver(*this, mk_apply_expr("__fml:i", {}), i);`,
 		"obj.set(this->c, this->b, this->i);",
 		"if (set_generator.generate(ivy))",
 		"set_generator.execute(ivy);",
@@ -4608,13 +4616,20 @@ export touch
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	// After TODO 017 milestone 4 the action_gen randomizes inputs via the
+	// solver and reads them back via __from_solver. The free
+	// ivy2cpp_random_node / ivy2cpp_random_a helpers remain emitted for
+	// init_gen's assign_array_from_model branch; we still assert they
+	// exist.
 	for _, want := range []string{
 		"static int ivy2cpp_random_node(gen &g)",
 		"static gennumeric::a ivy2cpp_random_a(gen &g)",
 		"return static_cast<int>(g.random_index(0, 4));",
 		"return static_cast<gennumeric::a>(g.random_index(0, 4));",
-		"this->n = ivy2cpp_random_node(*this);",
-		"this->av = ivy2cpp_random_a(*this);",
+		`randomize("__fml:n", "node");`,
+		`randomize("__fml:av", "a");`,
+		`__from_solver(*this, mk_apply_expr("__fml:n", {}), n);`,
+		`__from_solver(*this, mk_apply_expr("__fml:av", {}), av);`,
 		"obj.touch(this->n, this->av);",
 	} {
 		if !strings.Contains(out.Impl, want) {
@@ -4761,12 +4776,16 @@ export set
 			t.Fatalf("missing %q in shared Go Z3 support:\n%s", want, support)
 		}
 	}
+	// After TODO 017 milestones 2 and 4, init_gen and action_gen both use
+	// solve() (with alits as assumption literals) rather than check(),
+	// and action_gen wraps generate() in push()/pop().
 	for _, want := range []string{
 		`#include "ivy_go_z3.hpp"`,
 		"bool init_gen::generate(checkgen &obj)",
 		"bool set_gen::generate(checkgen &obj)",
-		"if (!check())",
-		"return false;",
+		"bool __res = solve();",
+		"push();",
+		"pop();",
 		"if (set_generator.generate(ivy))",
 		"set_generator.execute(ivy);",
 	} {
@@ -4776,6 +4795,215 @@ export set
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
+}
+
+// TestInitGenBodyMatchesPythonStructure asserts the init_gen::generate
+// body emits the Python emit_init_gen control flow (ivy_to_cpp.py:935-976):
+//   - cpptype_prepare(*this) at entry
+//   - alits.clear() before randomization
+//   - solve() (not check()) to compute the model
+//   - eval+__init guarded by the solve() success
+//   - cpptype_cleanup(*this) at exit
+//
+// Added as part of TODO 017 milestone 2.
+func TestInitGenBodyMatchesPythonStructure(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "initstruct"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	idx := strings.Index(out.Impl, "bool init_gen::generate")
+	if idx < 0 {
+		t.Fatalf("init_gen::generate not emitted:\n%s", out.Impl)
+	}
+	end := strings.Index(out.Impl[idx:], "void init_gen::execute")
+	if end < 0 {
+		end = len(out.Impl) - idx
+	}
+	body := out.Impl[idx : idx+end]
+	for _, want := range []string{
+		"cpptype_prepare(*this);",
+		"alits.clear();",
+		"bool __res = solve();",
+		"if (__res) {",
+		"cpptype_cleanup(*this);",
+		"obj.___ivy_gen = this;",
+		"return __res;",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("init_gen body missing %q:\n%s", want, body)
+		}
+	}
+	if strings.Contains(body, "if (!check())") {
+		t.Fatalf("init_gen body should use solve(), not check():\n%s", body)
+	}
+}
+
+// TestInitGenSkipsRandomizeForPrimitiveUnusedRanges verifies that the
+// per-symbol dispatch inside init_gen follows Python emit_init_gen's
+// branching at ivy_to_cpp.py:940-955. State symbols that appear in no
+// constraint and have a primitive range (bool here, treated as "not
+// is_primitive_sort" in Python's stub semantics) should be assigned
+// directly via mk_rand rather than via the solver's randomize().
+//
+// This fixture has `marked` (relation) and `saved` (individual); neither
+// is referenced by axioms or initial conditions, so Python emits
+// assign_array_from_model with mk_rand. The Go port should match.
+func TestInitGenSkipsRandomizeForUnusedSymbols(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation marked(C:color)
+individual saved : color
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "useddisp"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// The init_gen body should contain direct C++ random assignments to
+	// state symbols (assign_array_from_model branch), not g.randomize().
+	idx := strings.Index(out.Impl, "bool init_gen::generate")
+	if idx < 0 {
+		t.Fatalf("init_gen::generate not emitted:\n%s", out.Impl)
+	}
+	end := strings.Index(out.Impl[idx:], "void init_gen::execute")
+	if end < 0 {
+		end = len(out.Impl) - idx
+	}
+	body := out.Impl[idx : idx+end]
+	if strings.Contains(body, `randomize("marked"`) {
+		t.Fatalf("init_gen body should not call randomize() for unused state %q:\n%s", "marked", body)
+	}
+	if !strings.Contains(body, "obj.marked[__ivy_arg0] =") {
+		t.Fatalf("init_gen body should assign marked via mk_rand:\n%s", body)
+	}
+	if !strings.Contains(body, "obj.saved = ivy2cpp_random_color((*this));") {
+		t.Fatalf("init_gen body should assign saved via ivy2cpp_random_color:\n%s", body)
+	}
+}
+
+// TestActionGenEmitsReverseImagePrecondition asserts that the per-action
+// generator emits its precondition as an SMT-LIB `add("(assert ...)")`
+// string (Python ivy_to_cpp.py:1277, fed through the new
+// `add(const std::string&)` runtime overload).
+//
+// Added as part of TODO 017 milestone 4.
+func TestActionGenEmitsReverseImagePrecondition(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "ripre"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	idx := strings.Index(out.Impl, "set_gen::set_gen")
+	if idx < 0 {
+		t.Fatalf("set_gen constructor not emitted:\n%s", out.Impl)
+	}
+	end := strings.Index(out.Impl[idx:], "bool set_gen::generate")
+	if end < 0 {
+		end = len(out.Impl) - idx
+	}
+	body := out.Impl[idx : idx+end]
+	for _, want := range []string{
+		`mk_decl("__fml:c", {}, "color");`,
+		`add(std::string("(assert `,
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("set_gen constructor missing %q:\n%s", want, body)
+		}
+	}
+}
+
+// TestActionGenEmitsEmitEvalAfterSolve asserts that the generate() body
+// of an action_gen reads each input back from the solver model after
+// solve() succeeds (Python ivy_to_cpp.py:1307-1310).
+//
+// Added as part of TODO 017 milestone 4.
+func TestActionGenEmitsEmitEvalAfterSolve(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "rieval"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	idx := strings.Index(out.Impl, "bool set_gen::generate")
+	if idx < 0 {
+		t.Fatalf("set_gen::generate not emitted:\n%s", out.Impl)
+	}
+	end := strings.Index(out.Impl[idx:], "void set_gen::execute")
+	if end < 0 {
+		end = len(out.Impl) - idx
+	}
+	body := out.Impl[idx : idx+end]
+	for _, want := range []string{
+		"push();",
+		"alits.clear();",
+		"bool __res = solve();",
+		"if (__res) {",
+		`__from_solver(*this, mk_apply_expr("__fml:c", {}), c);`,
+		"pop();",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("set_gen::generate missing %q:\n%s", want, body)
+		}
+	}
+}
+
+// TestActionGenExtractDefinedParameters asserts that an `assume x = expr`
+// in an action body causes extractDefinedParameters to remove the
+// equation from the asserted precondition, and that emitDefinedInputs
+// then computes the input value directly in the post-solve branch.
+// Python ivy_to_cpp.py:1027-1046 + :1316.
+//
+// Added as part of TODO 017 milestone 5.
+func TestActionGenExtractDefinedParameters(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..7}
+individual stored : idx
+action set(x:idx) = {
+    assume x = 3;
+    stored := x
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "defparam"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	idx := strings.Index(out.Impl, "bool set_gen::generate")
+	if idx < 0 {
+		t.Fatalf("set_gen::generate not emitted:\n%s", out.Impl)
+	}
+	end := strings.Index(out.Impl[idx:], "void set_gen::execute")
+	if end < 0 {
+		end = len(out.Impl) - idx
+	}
+	body := out.Impl[idx : idx+end]
+	if !strings.Contains(body, "this->x = 3;") {
+		t.Fatalf("expected emit_defined_inputs to emit `this->x = 3;` in set_gen body:\n%s", body)
+	}
+	// The defined input MUST NOT also be read back from the solver model.
+	if strings.Contains(body, `__from_solver(*this, mk_apply_expr("__fml:x", {}), x);`) {
+		t.Fatalf("defined input x should not be read from solver model:\n%s", body)
+	}
 }
 
 func TestRandomizeFiniteEnumRelation(t *testing.T) {
@@ -5131,18 +5359,24 @@ export set
 		t.Fatalf("Generate: %v", err)
 	}
 	text := out.Header + out.Impl
+	// After TODO 017 milestone 4 the action_gen randomizes inputs via
+	// solver assumptions; init_gen still calls the ivy2cpp_random_*
+	// helpers for state symbols not referenced by any constraint.
 	for _, want := range []string{
 		`g.mk_bv("word", 8);`,
 		`g.mk_bv("text", 4);`,
 		`g.mk_bv("small", 4);`,
-		"ivy.w = ivy2cpp_random_word(g);",
-		"ivy.t = ivy2cpp_random_text(g);",
-		"ivy.i = ivy2cpp_random_small(g);",
+		"obj.w = ivy2cpp_random_word((*this));",
+		"obj.t = ivy2cpp_random_text((*this));",
+		"obj.i = ivy2cpp_random_small((*this));",
 		"genbits::text y;",
 		"genbits::small z;",
-		"this->x = ivy2cpp_random_word(*this);",
-		"this->y = ivy2cpp_random_text(*this);",
-		"this->z = ivy2cpp_random_small(*this);",
+		`randomize("__fml:x", "word");`,
+		`randomize("__fml:y", "text");`,
+		`randomize("__fml:z", "small");`,
+		`__from_solver(*this, mk_apply_expr("__fml:x", {}), x);`,
+		`__from_solver(*this, mk_apply_expr("__fml:y", {}), y);`,
+		`__from_solver(*this, mk_apply_expr("__fml:z", {}), z);`,
 	} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("missing %q in gen bitvector-backed output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)

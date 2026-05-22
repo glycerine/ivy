@@ -21,9 +21,9 @@ func (g *Generator) emitZ3Support(w *cppWriter) error {
 	g.emitZ3SolverConversions(w)
 	g.emitZ3Setup(w)
 	g.emitZ3Randomize(w)
-	if err := g.emitZ3GeneratorClasses(w); err != nil {
-		return err
-	}
+	// emitZ3GeneratorClasses is now invoked after emitDestructorImpls
+	// and emitVariantImpls in generator.go so that the action_gen body
+	// can reference __from_solver<T> specializations emitted there.
 	return nil
 }
 
@@ -546,6 +546,10 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 	w.blank()
 
 	initActions := g.initialMixinActionNames()
+	// Build action_gen plans up front so the class header and impl
+	// emission share the same analysis (inputs computed from
+	// reverse_image, etc.).
+	plans := make(map[string]*actionGenPlan)
 	for name, act := range g.Mod.Actions.All() {
 		if initActions[name] || !g.Mod.PublicActions.Get(name) {
 			continue
@@ -553,19 +557,10 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 		if isFinalizeName(name) {
 			continue
 		}
-		className := g.actionGeneratorClassName(name)
-		w.open(fmt.Sprintf("class %s : public gen {", className))
-		w.line("public:")
-		w.indent++
-		w.linef("%s(%s &obj);", className, g.ClassName)
-		w.linef("bool generate(%s &obj);", g.ClassName)
-		w.linef("void execute(%s &obj);", g.ClassName)
-		for _, p := range act.GetFormalParams() {
-			w.linef("%s %s;", g.cppQualifiedType(p.CSort, g.ClassName), varName(p.Name))
-		}
-		w.indent--
-		w.close(";")
-		w.blank()
+		plans[name] = g.buildActionGenPlan(name, act)
+	}
+	for name := range plans {
+		g.emitActionGenClassHeader(w, plans[name])
 	}
 
 	w.open(fmt.Sprintf("init_gen::init_gen(%s &obj) {", g.ClassName))
@@ -576,81 +571,35 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 	}
 	w.close("")
 	w.open(fmt.Sprintf("bool init_gen::generate(%s &obj) {", g.ClassName))
-	w.line("obj.___ivy_gen = this;")
 	w.line("ivy2cpp_progress(*this, \"init_gen\");")
-	w.line("ivy2cpp_randomize(*this, obj);")
-	w.open("if (!check()) {")
-	w.line("return false;")
-	w.close("")
+	w.line("cpptype_prepare(*this);")
+	w.line("alits.clear();")
+	if err := g.emitInitGenPerSymbolDispatch(w, "obj"); err != nil {
+		return err
+	}
+	w.line("bool __res = solve();")
+	w.open("if (__res) {")
 	if err := g.emitZ3InitialStateEvaluation(w, "obj"); err != nil {
 		return err
 	}
 	g.emitProgressCounterResets(w, "obj")
+	w.close("")
+	w.line("cpptype_cleanup(*this);")
+	w.line("obj.___ivy_gen = this;")
+	w.open("if (__res) {")
 	w.line("obj.__init();")
-	w.line("return true;")
+	w.close("")
+	w.line("return __res;")
 	w.close("")
 	w.open(fmt.Sprintf("void init_gen::execute(%s &obj) {", g.ClassName))
 	w.line("(void)obj;")
 	w.close("")
 	w.blank()
 
-	for name, act := range g.Mod.Actions.All() {
-		if initActions[name] || !g.Mod.PublicActions.Get(name) {
-			continue
-		}
-		if isFinalizeName(name) {
-			continue
-		}
-		g.emitZ3ActionGenerator(w, name, act)
+	for name := range plans {
+		g.emitActionGen(w, plans[name])
 	}
 	return nil
-}
-
-func (g *Generator) emitZ3ActionGenerator(w *cppWriter, name string, act goivy.Action) {
-	className := g.actionGeneratorClassName(name)
-	w.open(fmt.Sprintf("%s::%s(%s &obj) {", className, className, g.ClassName))
-	w.line("(void)obj;")
-	w.line("ivy2cpp_setup(*this);")
-	w.close("")
-	w.open(fmt.Sprintf("bool %s::generate(%s &obj) {", className, g.ClassName))
-	w.line("obj.___ivy_gen = this;")
-	w.linef("ivy2cpp_progress(*this, %s);", strconv.Quote(className))
-	w.line("ivy2cpp_randomize(*this, obj);")
-	w.open("if (!check()) {")
-	w.line("return false;")
-	w.close("")
-	for _, p := range act.GetFormalParams() {
-		name := varName(p.Name)
-		if value, ok := g.z3RandomValueExprFrom(p.CSort, "*this"); ok {
-			w.linef("this->%s = %s;", name, value)
-		} else {
-			w.linef("this->%s = %s;", name, g.cppZeroValueInScope(p.CSort))
-		}
-	}
-	w.line("return true;")
-	w.close("")
-	w.open(fmt.Sprintf("void %s::execute(%s &obj) {", className, g.ClassName))
-	fn, err := funName(name)
-	if err != nil {
-		fn = varName(name)
-	}
-	args := make([]string, 0, len(act.GetFormalParams())+len(act.GetFormalReturns()))
-	for _, p := range act.GetFormalParams() {
-		args = append(args, "this->"+varName(p.Name))
-	}
-	returns := act.GetFormalReturns()
-	if len(returns) == 1 {
-		w.linef("(void)obj.%s(%s);", fn, strings.Join(args, ", "))
-	} else {
-		for _, r := range returns {
-			name := varName(r.Name)
-			w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), name, g.cppZeroValueInScope(r.CSort))
-			args = append(args, name)
-		}
-		w.linef("obj.%s(%s);", fn, strings.Join(args, ", "))
-	}
-	w.close("")
-	w.blank()
 }
 
 func (g *Generator) actionGeneratorClassName(name string) string {
