@@ -8,36 +8,82 @@ import (
 	"github.com/glycerine/ivy/goivy"
 )
 
+// Native code block handling. Ported from Python ivy_to_cpp.py:
+//
+//   native_split        (line 1378)  → splitNativeCode
+//   native_type         (line 1385)  → tag field of nativeBlock
+//   native_to_str       (line 1444)  → renderNativeTemplate
+//   emit_native         (line 1456)  → emitClassMemberNatives
+//   native_typeof       (line 1429)  → nativeTypeOf
+//   native_z3name       (line 1436)  → nativeZ3Name
+//   native_reference    (line 4032)  → nativeReference (incl. action thunks)
+//   native_declaration  (line 1389)  → nativeReference fallthrough path
+//
+// Tag classification mirrors the validate-and-dispatch loop at
+// ivy_to_cpp.py:2314-2328 plus the inline pass at 2395-2403.
+
+type nativeTagKind int
+
+const (
+	nativeTagInvalid nativeTagKind = iota
+	nativeTagHeader
+	nativeTagMember
+	nativeTagImpl
+	nativeTagInit
+	nativeTagInline
+	nativeTagEncode
+)
+
 type nativeBlock struct {
-	tag    string
-	code   string
-	params []goivy.Expr
+	raw         goivy.Node    // original native node, for error context
+	kind        nativeTagKind // classified tag
+	encodedSort string        // sort name (encode tag only)
+	rawTag      string        // tag text before classification (diagnostics)
+	code        string        // body code (post-split, before antiquote)
+	params      []goivy.Expr  // antiquote parameters
 }
 
-func (g *Generator) emitNativeBlocks(w *cppWriter, tags ...string) error {
-	blocks, err := g.nativeBlocks()
-	if err != nil {
-		return err
+// classifyNativeTag maps the raw tag (already antiquote-substituted for
+// the encode case) to a nativeTagKind. The first return is the kind;
+// when kind == nativeTagEncode the second return is the encoded sort
+// name (with "__" → "."). Mirrors Python ivy_to_cpp.py:2314-2326.
+//
+// The "once" tag is a Go-side alias for "header" that pre-existing
+// tests depend on; Python does not emit "once" itself.
+func classifyNativeTag(raw string) (nativeTagKind, string) {
+	tag := strings.TrimSpace(raw)
+	switch tag {
+	case "":
+		// native_split treats no-tag bodies as "member" already; reach
+		// this only when the tag line is blank.
+		return nativeTagMember, ""
+	case "once":
+		return nativeTagHeader, ""
+	case "header":
+		return nativeTagHeader, ""
+	case "member":
+		return nativeTagMember, ""
+	case "impl":
+		return nativeTagImpl, ""
+	case "init":
+		return nativeTagInit, ""
+	case "inline":
+		return nativeTagInline, ""
 	}
-	seen := map[string]bool{}
-	for _, block := range blocks {
-		if !nativeTagMatches(block.tag, tags...) {
-			continue
-		}
-		rendered, err := g.renderNativeTemplate(block.code, block.params)
-		if err != nil {
-			return err
-		}
-		if (block.tag == "header" || block.tag == "impl") && seen[rendered] {
-			continue
-		}
-		seen[rendered] = true
-		emitNativeLines(w, rendered)
+	if strings.HasPrefix(tag, "encode") {
+		rest := strings.TrimSpace(strings.TrimPrefix(tag, "encode"))
+		// Python: tag = tag[6:].strip().replace('__','.')
+		rest = strings.ReplaceAll(rest, "__", ".")
+		return nativeTagEncode, rest
 	}
-	return nil
+	return nativeTagInvalid, ""
 }
 
-func (g *Generator) nativeBlocks() ([]nativeBlock, error) {
+// buildNativeBlocks walks g.Mod.Natives once, splits the code into
+// tag+body, classifies, and renders any antiquote substitutions needed
+// to classify the tag (encode case). Errors during render attach to
+// g.errs and skip the block.
+func (g *Generator) buildNativeBlocks() ([]nativeBlock, error) {
 	if g == nil || g.Mod == nil {
 		return nil, nil
 	}
@@ -51,7 +97,7 @@ func (g *Generator) nativeBlocks() ([]nativeBlock, error) {
 		if !ok {
 			return nil, fmt.Errorf("ivy2cpp: native block has code %T", args[1])
 		}
-		tag, code := splitNativeCode(codeNode.Code)
+		rawTag, body := splitNativeCode(codeNode.Code)
 		params := make([]goivy.Expr, 0, len(args)-2)
 		for _, arg := range args[2:] {
 			expr, err := nativeExpr(arg)
@@ -60,7 +106,23 @@ func (g *Generator) nativeBlocks() ([]nativeBlock, error) {
 			}
 			params = append(params, expr)
 		}
-		blocks = append(blocks, nativeBlock{tag: normalizeNativeTag(tag), code: code, params: params})
+		// Python applies native_to_str(native, code=tag) before
+		// classifying an encode tag, so antiquote refs in the tag
+		// itself resolve. We do the same for ALL tags so that the
+		// classifier sees the substituted form.
+		renderedTag, err := g.renderNativeTemplate(rawTag, params)
+		if err == nil {
+			rawTag = renderedTag
+		}
+		kind, encoded := classifyNativeTag(rawTag)
+		blocks = append(blocks, nativeBlock{
+			raw:         node,
+			kind:        kind,
+			encodedSort: encoded,
+			rawTag:      strings.TrimSpace(rawTag),
+			code:        body,
+			params:      params,
+		})
 	}
 	return blocks, nil
 }
@@ -94,23 +156,160 @@ func nativeExpr(node goivy.Node) (goivy.Expr, error) {
 	}
 }
 
-func nativeTagMatches(tag string, targets ...string) bool {
-	tag = normalizeNativeTag(tag)
-	for _, target := range targets {
-		if tag == normalizeNativeTag(target) {
-			return true
-		}
+// onceMemo returns the lazily-initialized dedup set for header/impl/
+// inline/encode body emission. Python uses one `once_memo` across all
+// four (ivy_to_cpp.py:1974).
+func (g *Generator) onceMemo() map[string]bool {
+	if g.nativeOnceMemo == nil {
+		g.nativeOnceMemo = map[string]bool{}
 	}
-	return false
+	return g.nativeOnceMemo
 }
 
-func normalizeNativeTag(tag string) string {
-	switch strings.TrimSpace(tag) {
-	case "once":
-		return "header"
-	default:
-		return strings.TrimSpace(tag)
+func (g *Generator) encodedSet() map[string]bool {
+	if g.encodedSorts == nil {
+		g.encodedSorts = map[string]bool{}
 	}
+	return g.encodedSorts
+}
+
+// emitHeaderNatives emits `<<< header ... >>>` blocks (and the "once"
+// alias) before the class declaration in the header file. Deduped via
+// the shared once_memo.
+func (g *Generator) emitHeaderNatives(w *cppWriter) error {
+	blocks, err := g.buildNativeBlocks()
+	if err != nil {
+		return err
+	}
+	memo := g.onceMemo()
+	for _, b := range blocks {
+		if b.kind != nativeTagHeader {
+			continue
+		}
+		rendered, err := g.renderNativeTemplate(b.code, b.params)
+		if err != nil {
+			return err
+		}
+		if memo[rendered] {
+			continue
+		}
+		memo[rendered] = true
+		emitNativeLines(w, rendered)
+	}
+	return nil
+}
+
+// emitClassMemberNatives emits `<<< member ... >>>` and untagged blocks
+// inside the class declaration. NOT deduped (Python emit_native at line
+// 1456 appends unconditionally). Also surfaces unknown-tag errors
+// (Python IvyError at 2326), since this is the canonical validation
+// pass in the Python code.
+func (g *Generator) emitClassMemberNatives(w *cppWriter) error {
+	blocks, err := g.buildNativeBlocks()
+	if err != nil {
+		return err
+	}
+	for _, b := range blocks {
+		switch b.kind {
+		case nativeTagMember:
+			rendered, err := g.renderNativeTemplate(b.code, b.params)
+			if err != nil {
+				return err
+			}
+			emitNativeLines(w, rendered)
+		case nativeTagInvalid:
+			g.unsupported(w, "syntax error at token %s", b.rawTag)
+		}
+	}
+	return nil
+}
+
+// emitImplNatives emits `<<< impl ... >>>` and `<<< encode <sort> ... >>>`
+// blocks at file scope in the impl file, deduped via once_memo. Also
+// validates that encoded sorts exist and are not duplicated (Python
+// 2315-2323).
+func (g *Generator) emitImplNatives(w *cppWriter) error {
+	blocks, err := g.buildNativeBlocks()
+	if err != nil {
+		return err
+	}
+	memo := g.onceMemo()
+	encoded := g.encodedSet()
+	for _, b := range blocks {
+		switch b.kind {
+		case nativeTagImpl:
+			// fall through
+		case nativeTagEncode:
+			name := b.encodedSort
+			if _, ok := g.sortByName(name); !ok {
+				g.unsupported(w, "%s is not a declared sort", name)
+				continue
+			}
+			if encoded[name] {
+				g.unsupported(w, "duplicate encoding for sort %s", name)
+				continue
+			}
+			encoded[name] = true
+		default:
+			continue
+		}
+		rendered, err := g.renderNativeTemplate(b.code, b.params)
+		if err != nil {
+			return err
+		}
+		if memo[rendered] {
+			continue
+		}
+		memo[rendered] = true
+		emitNativeLines(w, rendered)
+	}
+	return nil
+}
+
+// emitInitNatives emits `<<< init ... >>>` blocks inside the
+// constructor body. NOT deduped (Python 2361-2370 always emits).
+func (g *Generator) emitInitNatives(w *cppWriter) error {
+	blocks, err := g.buildNativeBlocks()
+	if err != nil {
+		return err
+	}
+	for _, b := range blocks {
+		if b.kind != nativeTagInit {
+			continue
+		}
+		rendered, err := g.renderNativeTemplate(b.code, b.params)
+		if err != nil {
+			return err
+		}
+		emitNativeLines(w, rendered)
+	}
+	return nil
+}
+
+// emitInlineNatives emits `<<< inline ... >>>` blocks in the header
+// AFTER the class declaration's closing `};`. Deduped via the shared
+// once_memo. Mirrors Python ivy_to_cpp.py:2395-2403.
+func (g *Generator) emitInlineNatives(w *cppWriter) error {
+	blocks, err := g.buildNativeBlocks()
+	if err != nil {
+		return err
+	}
+	memo := g.onceMemo()
+	for _, b := range blocks {
+		if b.kind != nativeTagInline {
+			continue
+		}
+		rendered, err := g.renderNativeTemplate(b.code, b.params)
+		if err != nil {
+			return err
+		}
+		if memo[rendered] {
+			continue
+		}
+		memo[rendered] = true
+		emitNativeLines(w, rendered)
+	}
+	return nil
 }
 
 func (g *Generator) renderNativeTemplate(code string, params []goivy.Expr) (string, error) {
@@ -272,7 +471,60 @@ func (g *Generator) emitNativeClassTypeDecl(w *cppWriter, name, base string) {
 	w.close(";")
 }
 
+// isCallbackAction reports whether arg refers (via Relname) to an
+// action in the current module. Used by both nativeReference (to emit
+// a thunk constructor call) and the collectCallbackActions pass in
+// native_thunk.go.
+func (g *Generator) isCallbackAction(arg goivy.Node) (string, bool) {
+	if g == nil || g.Mod == nil || g.Mod.Actions == nil {
+		return "", false
+	}
+	rn, ok := arg.(interface{ Relname() string })
+	if !ok {
+		return "", false
+	}
+	name := rn.Relname()
+	if _, ok := g.Mod.Actions.Get2(name); !ok {
+		return "", false
+	}
+	return name, true
+}
+
+// nativeArgName extracts a plain variable name from a child node of an
+// action-reference Atom. Mirrors Python's
+// `varname(arg.rep) for arg in atom.args` (ivy_to_cpp.py:4035).
+func nativeArgName(child goivy.Node) string {
+	switch c := child.(type) {
+	case *goivy.Const:
+		return varName(c.Name)
+	case *goivy.LogicVariable:
+		return varName(c.Name)
+	case *goivy.Atom:
+		return varName(c.Rep)
+	case *goivy.Symbol:
+		return varName(c.Rep)
+	}
+	if rn, ok := child.(interface{ Relname() string }); ok {
+		return varName(rn.Relname())
+	}
+	return ""
+}
+
 func (g *Generator) nativeReference(arg goivy.Expr) (string, error) {
+	// Action callback reference (Python native_reference,
+	// ivy_to_cpp.py:4032-4036): atoms whose .rep is an action become
+	// `thunk__name(this, argvar1, argvar2, ...)`.
+	if name, ok := g.isCallbackAction(arg); ok {
+		parts := []string{"this"}
+		for _, child := range arg.Args() {
+			n := nativeArgName(child)
+			if n == "" {
+				return "", fmt.Errorf("native callback %s has unsupported argument %T", name, child)
+			}
+			parts = append(parts, n)
+		}
+		return "thunk__" + varName(name) + "(" + strings.Join(parts, ", ") + ")", nil
+	}
 	switch a := arg.(type) {
 	case *goivy.Const:
 		if s, ok := g.sortByName(a.Name); ok {
@@ -313,13 +565,8 @@ func (g *Generator) nativeReference(arg goivy.Expr) (string, error) {
 }
 
 func (g *Generator) nativeTypeOf(arg goivy.Expr) (string, error) {
-	if rn, ok := arg.(interface{ Relname() string }); ok {
-		name := rn.Relname()
-		if g.Mod != nil && g.Mod.Actions != nil {
-			if _, ok := g.Mod.Actions.Get2(name); ok {
-				return "thunk__" + varName(name), nil
-			}
-		}
+	if name, ok := g.isCallbackAction(arg); ok {
+		return "thunk__" + varName(name), nil
 	}
 	return g.cppType(arg.NodeSort()), nil
 }

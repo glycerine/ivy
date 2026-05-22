@@ -68,6 +68,18 @@ type Generator struct {
 	// these to the action object; Go cannot monkey-patch *Action so the
 	// cache lives here per goivy/CLAUDE.md section C.
 	ptypeCache map[string]ptypeCacheEntry
+
+	// nativeOnceMemo dedups header/impl/inline/encode native bodies
+	// (Python `once_memo`, ivy_to_cpp.py:1974, 2270-2274, 2401-2403).
+	// Lives on Generator per CLAUDE.md section C — never a package var.
+	nativeOnceMemo map[string]bool
+
+	// encodedSorts records sorts whose serialization/encoding is
+	// supplied by a `<<< encode <sort> ... >>>` native block. Python
+	// uses this to suppress default serializer/Z3 emission for those
+	// sorts (ivy_to_cpp.py:2315-2323). Consumers land with their owning
+	// TODOs (016, 018, 022); for now we just record the set.
+	encodedSorts map[string]bool
 }
 
 func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
@@ -150,7 +162,7 @@ func (g *Generator) emitHeader() error {
 	w := &g.header
 	w.line("#pragma once")
 	g.emitRuntimeHeaderPreamble(w)
-	if err := g.emitNativeBlocks(w, "header"); err != nil {
+	if err := g.emitHeaderNatives(w); err != nil {
 		return err
 	}
 	w.blank()
@@ -175,7 +187,7 @@ func (g *Generator) emitHeader() error {
 	g.emitCardinalityDecls(w)
 	g.emitStateDecls(w)
 	g.emitProgressCounterDecls(w)
-	if err := g.emitNativeBlocks(w, "member"); err != nil {
+	if err := g.emitClassMemberNatives(w); err != nil {
 		return err
 	}
 	g.emitDefinitionDecls(w)
@@ -183,6 +195,9 @@ func (g *Generator) emitHeader() error {
 	g.emitMethodDecls(w)
 	w.indent--
 	w.close(";")
+	if err := g.emitInlineNatives(w); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -194,7 +209,8 @@ func (g *Generator) emitImpl() error {
 	w.linef(`#include "%s.h"`, g.BaseName)
 	w.blank()
 	g.emitRuntimeImplPreamble(w)
-	if err := g.emitNativeBlocks(w, "impl"); err != nil {
+	g.emitCallbackThunks(w)
+	if err := g.emitImplNatives(w); err != nil {
 		return err
 	}
 	if g.usesZ3() {
@@ -211,7 +227,7 @@ func (g *Generator) emitImpl() error {
 	g.emitConstructorParamAssignments(w)
 	g.emitCardinalityInitializers(w)
 	g.emitProgressCounterInitializers(w)
-	if err := g.emitNativeBlocks(w, "init"); err != nil {
+	if err := g.emitInitNatives(w); err != nil {
 		return err
 	}
 	if !g.usesZ3() {
