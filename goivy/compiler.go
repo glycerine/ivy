@@ -896,6 +896,7 @@ func (c *Compiler) compileOld(n *Old) (Expr, error) {
 	xtracer.Trace("compiler.CompileOld ENTER")
 	// The inner term should be an Atom or App
 	if atom, ok := n.Term.(*Atom); ok {
+		xtracer.Trace("compiler.CompileNode return case=Atom")
 		return c.CompileApp(atom, true)
 	}
 	if app, ok := n.Term.(*App); ok {
@@ -904,6 +905,7 @@ func (c *Compiler) compileOld(n *Old) (Expr, error) {
 			atom := cfg.NewAtom(sym.Rep, app.Terms...)
 			atom.SetLineno(n.GetLineno())
 			atom.ASort = app.ASort
+			xtracer.Trace("compiler.CompileNode return case=App")
 			return c.CompileApp(atom, true)
 		}
 	}
