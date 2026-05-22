@@ -81,23 +81,25 @@ func (g *Generator) emitReturn(w *cppWriter) {
 	w.line("return;")
 }
 
+// emitHavoc mirrors Python `emit_havoc` (ivy_to_cpp.py:3768-3773):
+//
+//	def emit_havoc(self,header):
+//	    print(self)
+//	    print(self.lineno)
+//	    assert False
+//
+// Python aborts code generation at the `assert False`. HavocAction is
+// supposed to be eliminated upstream (lowered to `mk_nondet` nondet
+// init paths); reaching emit is a bug. Mirror Python by refusing to
+// emit and reporting the offending target and lineno through
+// `g.unsupported`, which records into `g.errs` so `Generate` returns
+// the diagnostic.
 func (g *Generator) emitHavoc(w *cppWriter, a *goivy.LogicHavocAction) {
-	if a.Target == nil {
-		g.unsupported(w, "unsupported havoc target: nil")
-		return
+	target := "<nil>"
+	if a.Target != nil {
+		target = a.Target.String()
 	}
-	loops, ok := g.openAssignmentLoops(w, a.Target)
-	if !ok {
-		return
-	}
-	lhs, err := g.emitExpr(a.Target)
-	if err != nil {
-		g.unsupported(w, "unsupported havoc target: %s", err.Error())
-		g.closeAssignmentLoops(w, loops)
-		return
-	}
-	w.linef("%s = %s;", lhs, g.cppZeroValue(a.Target.NodeSort()))
-	g.closeAssignmentLoops(w, loops)
+	g.unsupported(w, "havoc reached emit (Python emit_havoc asserts False): %s at %s", target, a.GetLineno().String())
 }
 
 func (g *Generator) emitSet(w *cppWriter, a *goivy.LogicSetAction) {
@@ -550,25 +552,55 @@ func (g *Generator) emitWhile(w *cppWriter, a *goivy.LogicWhileAction) {
 	w.close("")
 }
 
+// emitChoice mirrors Python `emit_choice` (ivy_to_cpp.py:3976-3994):
+//
+//	def emit_choice(self,header):
+//	    if len(self.args) == 1:
+//	        self.args[0].emit(header)
+//	        return
+//	    tmp = new_temp(header)
+//	    mk_nondet(header,tmp,len(self.args),"___branch",self.unique_id)
+//	    for idx,arg in enumerate(self.args):
+//	        indent(header)
+//	        if idx != 0:
+//	            header.append('else ')
+//	        if idx != len(self.args)-1:
+//	            header.append('if(' + tmp + ' == ' + str(idx) + ')');
+//	        header.append('{\n')
+//	        ...
+//
+// We emit an `if/else if/.../else` chain over a fresh int temp populated
+// by `___ivy_choose`. Python's mk_nondet hardcodes 0 into the emitted
+// `___ivy_choose` call (ivy_to_cpp.py:189) even though it receives
+// `rng = len(self.args)`; we mirror that exactly via mkNondet.
 func (g *Generator) emitChoice(w *cppWriter, a *goivy.LogicChoiceAction) {
 	if len(a.Branches) == 0 {
 		return
 	}
-	w.open(fmt.Sprintf("switch (___ivy_choose(%d, \"___branch\", %d)) {", len(a.Branches), a.UniqueID))
-	for i, b := range a.Branches {
-		if i == len(a.Branches)-1 {
-			w.line("default:")
-		} else {
-			w.linef("case %d:", i)
+	if len(a.Branches) == 1 {
+		if act, ok := a.Branches[0].(goivy.Action); ok {
+			g.emitAction(w, act)
 		}
-		w.indent++
+		return
+	}
+	tmp := g.nextTemp("__ivy_branch")
+	w.linef("int %s;", tmp)
+	g.mkNondet(w, tmp, len(a.Branches), "___branch", a.UniqueID, nil)
+	for idx, b := range a.Branches {
+		prefix := ""
+		if idx != 0 {
+			prefix = "else "
+		}
+		if idx != len(a.Branches)-1 {
+			w.open(fmt.Sprintf("%sif (%s == %d) {", prefix, tmp, idx))
+		} else {
+			w.open(prefix + "{")
+		}
 		if act, ok := b.(goivy.Action); ok {
 			g.emitAction(w, act)
 		}
-		w.line("break;")
-		w.indent--
+		w.close("")
 	}
-	w.close("")
 }
 
 // emitCall lowers a LogicCallAction. Mirrors Python emit_call
@@ -721,11 +753,32 @@ func (g *Generator) emitCallStackPop(w *cppWriter, stacked bool) {
 	}
 }
 
+// emitLocal mirrors Python `local_start` + `emit_local`
+// (ivy_to_cpp.py:3893-3917):
+//
+//	def local_start(header,params,nondet_id=None):
+//	    indent(header); header.append('{\n')
+//	    indent_level += 1
+//	    for p in params:
+//	        indent(header); code_line(header,sym_decl(p))
+//	        if nondet_id != None:
+//	            mk_nondet_sym(header,p,p.name,nondet_id)
+//
+//	def emit_local(self,header):
+//	    local_start(header,self.args[0:-1],self.unique_id)
+//	    self.args[-1].emit(header)
+//	    local_end(header)
+//
+// Each local is first declared uninitialized via `cppStorageDecl` (the
+// Go equivalent of `sym_decl`), then nondet-initialized via
+// `mkNondetSym` using the LocalAction's UniqueID. The body is emitted
+// inside the same block scope.
 func (g *Generator) emitLocal(w *cppWriter, a *goivy.LogicLocalAction) {
 	w.open("{")
 	for _, local := range a.Locals {
 		name := goivy.ExprName(local)
-		w.linef("%s %s = %s;", g.cppType(local.NodeSort()), varName(name), g.cppZeroValue(local.NodeSort()))
+		w.linef("%s;", g.cppStorageDecl(name, local.NodeSort(), ""))
+		g.mkNondetSym(w, local, name, a.UniqueID)
 	}
 	if bodyAct, ok := a.Body.(goivy.Action); ok {
 		g.emitAction(w, bodyAct)
@@ -763,12 +816,19 @@ func (g *Generator) emitLet(w *cppWriter, a *goivy.LogicLetAction) {
 	g.exprAliases = prev
 }
 
+// emitBindOlds mirrors Python's absence of an `emit_bind_olds`
+// function (no assignment to `ia.BindOldsAction.emit` exists in
+// ivy_to_cpp.py). `BindOldsAction` is supposed to be eliminated
+// upstream during `int_update` via `bind_olds_action`
+// (ivy_transrel.py:240); reaching emit is a bug, exactly like
+// `emit_havoc`'s `assert False`. Mirror Python by refusing to emit and
+// reporting the offending bindolds wrapper through `g.unsupported`.
 func (g *Generator) emitBindOlds(w *cppWriter, a *goivy.LogicBindOldsAction) {
-	if inner, ok := a.Inner.(goivy.Action); ok {
-		g.emitAction(w, inner)
-		return
+	inner := "<nil>"
+	if a.Inner != nil {
+		inner = fmt.Sprintf("%T", a.Inner)
 	}
-	g.unsupported(w, "unsupported bindolds inner %T", a.Inner)
+	g.unsupported(w, "bindolds reached emit (Python has no emit_bind_olds): inner=%s at %s", inner, a.GetLineno().String())
 }
 
 // emitAssignField handles a LogicAssignFieldAction by synthesizing the

@@ -2249,10 +2249,17 @@ func TestEmitIfWhileChoice(t *testing.T) {
 	var w cppWriter
 	(&Generator{}).emitAction(&w, choice)
 	got := w.String()
-	for _, want := range []string{"switch (___ivy_choose", "while (cond)", "if (cond)", "flag = true;"} {
+	// Mirrors Python emit_choice (ivy_to_cpp.py:3976-3994): one int temp
+	// populated by mk_nondet, then an if/else chain (no `switch`).
+	// Python puts `}` and `else` on separate lines, which the Go writer
+	// also does.
+	for _, want := range []string{"int __ivy_branch", `___ivy_choose(0, "___branch"`, "if (__ivy_branch", "else {", "while (cond)", "if (cond)", "flag = true;"} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("missing %q in:\n%s", want, got)
 		}
+	}
+	if strings.Contains(got, "switch (___ivy_choose") {
+		t.Fatalf("emit_choice should no longer use switch (Python uses if/else chain):\n%s", got)
 	}
 }
 
@@ -2516,15 +2523,27 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"{", "color loc__tmp = red;", "loc__tmp = green;", "saved = loc__tmp;"} {
+	// Mirrors Python local_start + mk_nondet_sym (ivy_to_cpp.py:3893-3917):
+	// declare uninitialized, then ___ivy_choose-initialize, then run the body.
+	// The parser prefixes the local's name with "loc:" so the choose label
+	// is "loc:tmp" — this preserves the original symbol identity in nondet
+	// gen/test traces.
+	for _, want := range []string{"{", "color loc__tmp;", `loc__tmp = (color)___ivy_choose(0, "loc:tmp"`, "loc__tmp = green;", "saved = loc__tmp;"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
 	}
+	if strings.Contains(out.Impl, "color loc__tmp = red;") {
+		t.Fatalf("local should not be zero-initialized — Python uses nondet init:\n%s", out.Impl)
+	}
 	compileGeneratedCPP(t, out)
 }
 
-func TestGeneratedHavocActionCompiles(t *testing.T) {
+// TestGeneratedHavocReportsUnsupported asserts that a HavocAction
+// reaching emit fails generation. Mirrors Python emit_havoc
+// (ivy_to_cpp.py:3768-3773) which `assert False`s — havoc should be
+// eliminated upstream and never reach C++ emission.
+func TestGeneratedHavocReportsUnsupported(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
 individual saved : color
@@ -2537,16 +2556,13 @@ export step
 		t.Fatal("missing color sort")
 	}
 	mod.Actions.Set("step", goivy.NewHavocAction(goivy.NewConst("saved", color)))
-	out, err := Generate(mod, Config{ClassName: "havocs"})
-	if err != nil {
-		t.Fatalf("Generate: %v", err)
+	_, err := Generate(mod, Config{ClassName: "havocs"})
+	if err == nil {
+		t.Fatalf("Generate should fail when HavocAction reaches emit")
 	}
-	for _, want := range []string{"saved = red;"} {
-		if !strings.Contains(out.Impl, want) {
-			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
-		}
+	if !strings.Contains(err.Error(), "havoc") {
+		t.Fatalf("Generate error should mention havoc, got: %v", err)
 	}
-	compileGeneratedCPP(t, out)
 }
 
 func TestGeneratedSetActionCompiles(t *testing.T) {
@@ -2635,17 +2651,167 @@ export step
 	compileGeneratedCPP(t, out)
 }
 
-func TestGeneratedEnvAndBindOldsActionsCompile(t *testing.T) {
+// TestGeneratedEnvActionEmitsChoice asserts that an EnvAction with
+// multiple branches lowers to the if/else chain over `___ivy_choose`,
+// matching Python emit_choice. EnvAction shares LogicChoiceAction's
+// dispatch, so the surface form is identical.
+func TestGeneratedEnvActionEmitsChoice(t *testing.T) {
 	mod := goivy.New()
 	mod.Name = "envcase"
 	mod.Relations.Set("flag", goivy.Boolean)
 	assign := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("true", goivy.Boolean))
-	mod.Actions.Set("step", goivy.NewEnvActionOn(goivy.NewActionsConfig(), goivy.NewBindOldsAction(assign)))
+	clear := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("false", goivy.Boolean))
+	mod.Actions.Set("step", goivy.NewEnvActionOn(goivy.NewActionsConfig(), assign, clear))
 	out, err := Generate(mod, Config{ClassName: "envcase"})
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"switch (___ivy_choose", "flag = true;"} {
+	for _, want := range []string{"int __ivy_branch", `___ivy_choose(0, "___branch"`, "if (__ivy_branch", "flag = true;", "flag = false;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	if strings.Contains(out.Impl, "switch (___ivy_choose") {
+		t.Fatalf("emit_choice should no longer use switch:\n%s", out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestGeneratedBindOldsReportsUnsupported asserts that a
+// BindOldsAction reaching emit fails generation. Python defines no
+// `emit_bind_olds` (it is eliminated upstream by
+// `ivy_transrel.bind_olds_action`), so reaching emit is a bug.
+func TestGeneratedBindOldsReportsUnsupported(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "bindcase"
+	mod.Relations.Set("flag", goivy.Boolean)
+	assign := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("true", goivy.Boolean))
+	mod.Actions.Set("step", goivy.NewBindOldsAction(assign))
+	_, err := Generate(mod, Config{ClassName: "bindcase"})
+	if err == nil {
+		t.Fatalf("Generate should fail when BindOldsAction reaches emit")
+	}
+	if !strings.Contains(err.Error(), "bindolds") {
+		t.Fatalf("Generate error should mention bindolds, got: %v", err)
+	}
+}
+
+// TestGeneratedChoiceUsesIfElseChain exercises the three-branch
+// LogicChoiceAction path. Mirrors Python emit_choice
+// (ivy_to_cpp.py:3976-3994): one int temp populated by mk_nondet, then
+// `if (tmp == 0) {...} else if (tmp == 1) {...} else {...}`.
+func TestGeneratedChoiceUsesIfElseChain(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action step = {
+}
+export step
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	red := goivy.NewConst("red", color)
+	green := goivy.NewConst("green", color)
+	blue := goivy.NewConst("blue", color)
+	saved := goivy.NewConst("saved", color)
+	branchRed := goivy.NewAssignAction(saved, red)
+	branchGreen := goivy.NewAssignAction(saved, green)
+	branchBlue := goivy.NewAssignAction(saved, blue)
+	mod.Actions.Set("step", goivy.NewChoiceActionOn(goivy.NewActionsConfig(), branchRed, branchGreen, branchBlue))
+	out, err := Generate(mod, Config{ClassName: "choice3"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"int __ivy_branch",
+		`___ivy_choose(0, "___branch"`,
+		"if (__ivy_branch",
+		"saved = red;",
+		"saved = green;",
+		"saved = blue;",
+		"else {",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	if strings.Contains(out.Impl, "switch (___ivy_choose") {
+		t.Fatalf("emit_choice should no longer use switch (Python uses if/else chain):\n%s", out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestGeneratedLocalActionUsesNondet exercises scalar local nondet
+// initialization. Mirrors Python local_start + mk_nondet_sym
+// (ivy_to_cpp.py:3893-3917 + 196-214) for the empty-domain case.
+func TestGeneratedLocalActionUsesNondet(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step = {
+}
+export step
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	cfg := goivy.NewActionsConfig()
+	local := goivy.NewConst("x", color)
+	body := goivy.NewAssignAction(goivy.NewConst("saved", color), local)
+	mod.Actions.Set("step", goivy.NewLocalActionOn(cfg, "test", local, body))
+	out, err := Generate(mod, Config{ClassName: "locact"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"color x;",
+		`x = (color)___ivy_choose(0, "x"`,
+		"saved = x;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	if strings.Contains(out.Impl, "color x = red;") {
+		t.Fatalf("local should not be zero-initialized:\n%s", out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestGeneratedLocalFunctionUsesNondetLoop exercises mk_nondet_sym's
+// bounded-array branch: a function-typed local with a small enum
+// domain. Each cell is nondet-initialized inside a per-domain loop.
+func TestGeneratedLocalFunctionUsesNondetLoop(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action step = {
+}
+export step
+`)
+	color, ok := mod.Sig.Sorts.Get2("color")
+	if !ok {
+		t.Fatal("missing color sort")
+	}
+	relSort, err := goivy.NewFunctionSort(color, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	cfg := goivy.NewActionsConfig()
+	local := goivy.NewConst("marked", relSort)
+	body := goivy.NewSequence()
+	mod.Actions.Set("step", goivy.NewLocalActionOn(cfg, "test", local, body))
+	out, err := Generate(mod, Config{ClassName: "locfunc"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"bool marked[2];",
+		"for (color X0 : {red, green}) {",
+		`marked[X0] = (bool)___ivy_choose(0, "marked"`,
+	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
