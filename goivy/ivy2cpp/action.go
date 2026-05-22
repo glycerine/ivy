@@ -27,15 +27,15 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 	case *goivy.LogicSetAction:
 		g.emitSet(w, a)
 	case *goivy.LogicAssertAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, a.GetLineno().String())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
 	case *goivy.LogicRequiresAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, a.GetLineno().String())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
 	case *goivy.LogicEnsuresAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, a.GetLineno().String())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
 	case *goivy.LogicSubgoalAction:
-		g.emitAssertLike(w, "ivy_assert", a.Formula, a.GetLineno().String())
+		g.emitAssertLike(w, "ivy_assert", a.Formula, linenoStr(a.GetLineno()))
 	case *goivy.LogicAssumeAction:
-		g.emitAssertLike(w, "ivy_assume", a.Formula, a.GetLineno().String())
+		g.emitAssertLike(w, "ivy_assume", a.Formula, linenoStr(a.GetLineno()))
 	case *goivy.LogicIfAction:
 		g.emitIf(w, a)
 	case *goivy.LogicWhileAction:
@@ -195,6 +195,15 @@ func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label 
 		label = fn
 	}
 	w.linef(`%s(%s, "%s");`, fn, expr, escapeString(label))
+}
+
+// linenoStr mirrors Python ivy_utils.lineno_str (ivy_utils.py:285-291):
+// render the AST's location, then drop a trailing ": ". Goivy's
+// Location.String() always appends ": " after filename and line, which
+// matches Python's __str__ — but Python strips that suffix before
+// substituting into ivy_assert / ivy_assume labels (ivy_to_cpp.py:3794).
+func linenoStr(loc goivy.Location) string {
+	return strings.TrimSuffix(loc.String(), ": ")
 }
 
 func (g *Generator) emitIf(w *cppWriter, a *goivy.LogicIfAction) {

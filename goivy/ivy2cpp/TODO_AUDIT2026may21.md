@@ -1137,6 +1137,8 @@ Tests to add:
 
 ## TODO 020 - Handle requires/ensures/subgoals and exported action semantics exactly
 
+**Status: DONE 2026-05-22**
+
 Go locations:
 
 - `goivy/ivy2cpp/action.go:31-36`

@@ -64,10 +64,19 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 	}
 
 	// Python: if name in im.module.ext_preconds:
+	//             orig_action = action
 	//             action = ia.Sequence(ia.AssumeAction(im.module.ext_preconds[name]),action)
+	//             action.lineno = orig_action.lineno
+	//             action.formal_params = orig_action.formal_params
+	//             action.formal_returns = orig_action.formal_returns
+	// (ivy_to_cpp.py:1213-1217)
 	if g.Mod.ExtPreconds != nil {
 		if pre, ok := g.Mod.ExtPreconds[name]; ok && pre != nil {
-			plan.act = goivy.NewSequence(goivy.NewAssumeAction(pre), exprOfAction(plan.act))
+			orig := plan.act
+			seq := goivy.NewSequence(goivy.NewAssumeAction(pre), exprOfAction(orig))
+			seq.SetLineno(orig.GetLineno())
+			goivy.CopyFormalsTo(orig, seq)
+			plan.act = seq
 		}
 	}
 

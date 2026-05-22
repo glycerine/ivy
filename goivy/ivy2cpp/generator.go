@@ -86,6 +86,11 @@ type Generator struct {
 	// sorts (ivy_to_cpp.py:2315-2323). Consumers land with their owning
 	// TODOs (016, 018, 022); for now we just record the set.
 	encodedSorts map[string]bool
+
+	// importCallersCache memoizes find_import_callers (ivy_to_cpp.py:1888-
+	// 1897). Populated on first access by importCallers(). nil before that;
+	// non-nil (possibly empty) after.
+	importCallersCache map[string]bool
 }
 
 func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
@@ -826,6 +831,13 @@ func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) 
 	w.open(g.methodSignature(name, act, true, false) + " {")
 	returns := act.GetFormalReturns()
 	_, rtypes := g.getParamTypes(name, act)
+	// Python emit_some_action (ivy_to_cpp.py:1604-1607): for imported
+	// actions in test target, emit a `< name(args)` trace prologue at
+	// the top of the body. The opt_trace `<< "{"` follow-up belongs to
+	// TODO 021 (debug/trace output semantics).
+	if g.importCallers()[name] {
+		g.emitTraceActionPrologue(w, name, act.GetFormalParams())
+	}
 	// When the primary return is a ReturnRefType, its storage IS
 	// an input parameter — no synthetic local, no return statement.
 	// Otherwise the primary return is by value and needs both a
@@ -847,6 +859,70 @@ func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) 
 	}
 	w.close("")
 	w.blank()
+}
+
+// importCallers mirrors Python find_import_callers (ivy_to_cpp.py:1888-1897).
+// For target=test, it collects the names of imported (unscoped) actions that
+// resolve to a known action. Both the bare and `ext:`-prefixed forms are
+// recorded so the lookup in emitSomeAction works regardless of which form the
+// caller passes. For non-test targets the set is empty. The result is
+// memoized on the Generator.
+func (g *Generator) importCallers() map[string]bool {
+	if g.importCallersCache != nil {
+		return g.importCallersCache
+	}
+	out := map[string]bool{}
+	if g.Config.Target == "test" && g.Mod != nil {
+		for _, imp := range g.Mod.Imports {
+			impDef, ok := imp.(*goivy.ImportDef)
+			if !ok {
+				continue
+			}
+			if atom, ok := impDef.Scope.(*goivy.Atom); ok && atom.Relname() != "" {
+				continue
+			}
+			name := ""
+			if atom, ok := impDef.Imported.(*goivy.Atom); ok {
+				name = atom.Relname()
+			}
+			if name == "" {
+				continue
+			}
+			bare := strings.TrimPrefix(name, "ext:")
+			if _, ok := g.Mod.Actions.Get2(bare); !ok {
+				if _, ok := g.Mod.Actions.Get2(name); !ok {
+					continue
+				}
+			}
+			out["ext:"+bare] = true
+			out[bare] = true
+		}
+	}
+	g.importCallersCache = out
+	return out
+}
+
+// emitTraceActionPrologue emits Python trace_action (ivy_to_cpp.py:1576-1590):
+//
+//	__ivy_out << "< name" << "(" << p0 << "," << p1 << ")" << std::endl;
+//
+// The leading `ext:` is stripped per Python lines 1578-1579.
+func (g *Generator) emitTraceActionPrologue(w *cppWriter, name string, formals []*goivy.Const) {
+	display := strings.TrimPrefix(name, "ext:")
+	var b strings.Builder
+	b.WriteString(fmt.Sprintf(`__ivy_out << "< %s"`, display))
+	if len(formals) > 0 {
+		b.WriteString(` << "("`)
+		for i, p := range formals {
+			if i > 0 {
+				b.WriteString(` << ","`)
+			}
+			b.WriteString(fmt.Sprintf(" << %s", varName(p.Name)))
+		}
+		b.WriteString(` << ")"`)
+	}
+	b.WriteString(" << std::endl;")
+	w.line(b.String())
 }
 
 func formalListContains(formals []*goivy.Const, target *goivy.Const) bool {

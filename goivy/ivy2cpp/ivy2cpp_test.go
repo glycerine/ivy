@@ -7041,3 +7041,302 @@ action check = {
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
 }
+
+// --- TODO 020 tests: requires/ensures/subgoals and exported action semantics ---
+
+// TestActionGenExtPrecondsPreservesFormals verifies that when an action_gen
+// plan wraps an action via ExtPreconds (Python ivy_to_cpp.py:1213-1217), the
+// resulting Sequence keeps the original action's lineno, formal_params and
+// formal_returns — not the empty defaults a freshly-constructed Sequence
+// would have.
+//
+// Added as part of TODO 020.
+func TestActionGenExtPrecondsPreservesFormals(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) returns (r:color) = {
+    saved := c;
+    r := c
+}
+export set
+`)
+	pre := goivy.NewConst("saved", goivy.Boolean)
+	if mod.ExtPreconds == nil {
+		mod.ExtPreconds = map[string]goivy.Expr{}
+	}
+	mod.ExtPreconds["set"] = pre
+
+	g := &Generator{Mod: mod, ClassName: "extpre", Config: Config{ClassName: "extpre"}}
+	act, ok := mod.Actions.Get2("set")
+	if !ok {
+		t.Fatalf("action `set` missing")
+	}
+	wantParams := act.GetFormalParams()
+	wantReturns := act.GetFormalReturns()
+	plan := g.buildActionGenPlan("set", act)
+	gotParams := plan.act.GetFormalParams()
+	gotReturns := plan.act.GetFormalReturns()
+	if len(gotParams) != len(wantParams) {
+		t.Fatalf("plan.act.GetFormalParams() = %d entries, want %d", len(gotParams), len(wantParams))
+	}
+	for i := range wantParams {
+		if gotParams[i].Name != wantParams[i].Name {
+			t.Fatalf("plan.act formal param[%d] = %q, want %q", i, gotParams[i].Name, wantParams[i].Name)
+		}
+	}
+	if len(gotReturns) != len(wantReturns) {
+		t.Fatalf("plan.act.GetFormalReturns() = %d entries, want %d", len(gotReturns), len(wantReturns))
+	}
+	for i := range wantReturns {
+		if gotReturns[i].Name != wantReturns[i].Name {
+			t.Fatalf("plan.act formal return[%d] = %q, want %q", i, gotReturns[i].Name, wantReturns[i].Name)
+		}
+	}
+}
+
+// TestAssertLabelStripsTrailingColonSpace verifies that the C++ label
+// passed to ivy_assert mirrors Python's iu.lineno_str (ivy_utils.py:285-
+// 291), which strips the trailing ": " from Location.String(). Without
+// the fix, labels emit as `"test.ivy: line 5: "` (trailing colon-space);
+// Python emits `"test.ivy: line 5"`.
+//
+// Added as part of TODO 020.
+func TestAssertLabelStripsTrailingColonSpace(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action check = {
+    assert saved = red
+}
+export check
+`)
+	out, err := Generate(mod, Config{ClassName: "labelfmt"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	idx := strings.Index(out.Impl, "ivy_assert(")
+	if idx < 0 {
+		t.Fatalf("no ivy_assert in impl:\n%s", out.Impl)
+	}
+	lineEnd := strings.Index(out.Impl[idx:], "\n")
+	if lineEnd < 0 {
+		lineEnd = len(out.Impl) - idx
+	}
+	line := out.Impl[idx : idx+lineEnd]
+	if strings.Contains(line, `: ");`) {
+		t.Fatalf("ivy_assert label ends in trailing colon-space (Python lineno_str strips it):\n%s", line)
+	}
+}
+
+// TestSubgoalNeverConvertedToAssume verifies that goivy.AssertToAssume
+// does NOT downgrade SubgoalAction even when "assert" is in kinds.
+// Python ivy_actions.py:396-403 compares type(self) to the kinds list;
+// SubgoalAction is its own class so passing [AssertAction] leaves it
+// untouched (ivy_actions.py:416-421).
+//
+// Added as part of TODO 020.
+func TestSubgoalNeverConvertedToAssume(t *testing.T) {
+	cfg := goivy.NewConfig()
+	fmla := goivy.NewConst("p", goivy.Boolean)
+	sub := goivy.NewSubgoalAction(fmla)
+
+	kinds := map[string]bool{"assert": true, "require": true}
+	out := goivy.AssertToAssume(sub, kinds, cfg.IuCfg)
+
+	if _, ok := out.(*goivy.LogicSubgoalAction); !ok {
+		t.Fatalf("AssertToAssume converted SubgoalAction to %T (want *LogicSubgoalAction)", out)
+	}
+
+	// Opt-in case: caller passes "subgoal" — now we DO convert.
+	kindsOpt := map[string]bool{"subgoal": true}
+	out2 := goivy.AssertToAssume(sub, kindsOpt, cfg.IuCfg)
+	if _, ok := out2.(*goivy.LogicAssumeAction); !ok {
+		t.Fatalf("AssertToAssume with kinds={subgoal} returned %T (want *LogicAssumeAction)", out2)
+	}
+}
+
+// TestRequiresInExternalBecomesAssume verifies that an exported action's
+// external wrapper (`ext:foo`) has its RequiresAction converted to
+// AssumeAction by isolation, producing an `ivy_assume(...)` call in the
+// C++ for the ext: method while the internal wrapper still emits
+// `ivy_assert(...)`. Mirrors Python ivy_isolate.py:1101 +
+// ivy_actions.py:413 + ivy_to_cpp.py:3788-3808.
+//
+// Added as part of TODO 020.
+func TestRequiresInExternalBecomesAssume(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action step(c:color) = {
+    require c = green;
+    saved := c
+}
+export step
+`)
+	// Emulate CreateIsolate's classification (isolate.go:567-606) for a
+	// verified exported action: external wrapper has requires→assume,
+	// internal version is unchanged.
+	stepAct, ok := mod.Actions.Get2("step")
+	if !ok {
+		t.Fatalf("step action missing")
+	}
+	extAct := goivy.AssertToAssume(stepAct, map[string]bool{"require": true}, mod.Cfg.IuCfg)
+	mod.Actions.Set("ext:step", extAct)
+	mod.PublicActions = goivy.NewInsMap[string, bool]()
+	mod.PublicActions.Set("ext:step", true)
+	mod.PublicActions.Set("step", false)
+
+	out, err := Generate(mod, Config{ClassName: "reqassume"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	extBody := bodyAfterMarker(out.Impl, "reqassume::ext__step")
+	intBody := bodyAfterMarker(out.Impl, "reqassume::step(")
+	if extBody == "" {
+		t.Fatalf("ext:step method not emitted:\n%s", out.Impl)
+	}
+	if intBody == "" {
+		t.Fatalf("internal step method not emitted:\n%s", out.Impl)
+	}
+	if !strings.Contains(extBody, "ivy_assume(") {
+		t.Fatalf("ext:step body missing ivy_assume(...):\n%s", extBody)
+	}
+	if !strings.Contains(intBody, "ivy_assert(") {
+		t.Fatalf("internal step body missing ivy_assert(...):\n%s", intBody)
+	}
+}
+
+// bodyAfterMarker returns the substring from the first '{' after the
+// marker up to the matching closing brace. Used to extract one method
+// body from emitted C++ for the TODO 020 tests.
+func bodyAfterMarker(s, marker string) string {
+	i := strings.Index(s, marker)
+	if i < 0 {
+		return ""
+	}
+	open := strings.Index(s[i:], "{")
+	if open < 0 {
+		return ""
+	}
+	start := i + open
+	depth := 0
+	for j := start; j < len(s); j++ {
+		switch s[j] {
+		case '{':
+			depth++
+		case '}':
+			depth--
+			if depth == 0 {
+				return s[start : j+1]
+			}
+		}
+	}
+	return s[start:]
+}
+
+// TestImportCallerTracePrologueInTest verifies that, for target=test,
+// the body of an unscoped imported action whose name resolves to a known
+// action begins with `__ivy_out << "< name(args)"`. Mirrors Python
+// emit_some_action (ivy_to_cpp.py:1604-1607) + find_import_callers
+// (ivy_to_cpp.py:1888-1897).
+//
+// Added as part of TODO 020.
+func TestImportCallerTracePrologueInTest(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual seen : color
+action callback(c:color) = {
+    seen := c
+}
+import callback
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "traceimp"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	body := bodyAfterMarker(out.Impl, "traceimp::callback(")
+	if body == "" {
+		t.Fatalf("callback method not emitted:\n%s", out.Impl)
+	}
+	want := `__ivy_out << "< callback"`
+	if !strings.Contains(body, want) {
+		t.Fatalf("expected trace prologue %q in callback body:\n%s", want, body)
+	}
+
+	// The same module at target=repl must NOT emit the prologue
+	// (Python find_import_callers gates on target=="test"; repl is the
+	// closest non-test interactive target).
+	mod2 := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual seen : color
+action callback(c:color) = {
+    seen := c
+}
+import callback
+`)
+	out2, err := Generate(mod2, Config{Target: "repl", ClassName: "traceimp2"})
+	if err != nil {
+		t.Fatalf("Generate (repl): %v", err)
+	}
+	body2 := bodyAfterMarker(out2.Impl, "traceimp2::callback(")
+	if strings.Contains(body2, `__ivy_out << "< callback"`) {
+		t.Fatalf("trace prologue should be test-only; appeared in repl target:\n%s", body2)
+	}
+}
+
+// TestExtPrecondsAppearsInActionGenSMT verifies that an ExtPreconds
+// formula on an exported action is propagated into the action_gen's
+// SMT-LIB precondition via reverse_image(Sequence(Assume(pre), action)).
+// Python ivy_to_cpp.py:1213-1239.
+//
+// Added as part of TODO 020.
+func TestExtPrecondsAppearsInActionGenSMT(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	redEntry, ok := mod.Sig.Symbols.Get2("red")
+	if !ok {
+		t.Fatalf("symbol red not found")
+	}
+	savedEntry, ok := mod.Sig.Symbols.Get2("saved")
+	if !ok {
+		t.Fatalf("symbol saved not found")
+	}
+	if mod.ExtPreconds == nil {
+		mod.ExtPreconds = map[string]goivy.Expr{}
+	}
+	eq, err := goivy.NewEq(
+		goivy.NewConst("saved", savedEntry.Sort),
+		goivy.NewConst("red", redEntry.Sort),
+	)
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	mod.ExtPreconds["set"] = eq
+
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "extpregen"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	idx := strings.Index(out.Impl, "set_gen::set_gen")
+	if idx < 0 {
+		t.Fatalf("set_gen constructor not emitted:\n%s", out.Impl)
+	}
+	end := strings.Index(out.Impl[idx:], "bool set_gen::generate")
+	if end < 0 {
+		end = len(out.Impl) - idx
+	}
+	body := out.Impl[idx : idx+end]
+	if !strings.Contains(body, `add(std::string("(assert `) {
+		t.Fatalf("set_gen constructor missing SMT-LIB add:\n%s", body)
+	}
+	if !strings.Contains(body, "saved") || !strings.Contains(body, "red") {
+		t.Fatalf("set_gen constructor SMT-LIB missing references to ext_preconds saved/red:\n%s", body)
+	}
+}
