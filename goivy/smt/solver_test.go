@@ -2,7 +2,10 @@
 
 package smt
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestSolverBoolRoundTrip(t *testing.T) {
 	ctx := NewZ3Context()
@@ -50,4 +53,19 @@ func TestZ3ErrorCallbackBoundary(t *testing.T) {
 	}()
 
 	_ = ctx.BvSort(0)
+}
+
+func TestCanonZ3AssertionsIncludesQuantifierWeight(t *testing.T) {
+	ctx := NewZ3Context()
+	defer ctx.Close()
+
+	x := ctx.Const("X", ctx.IntSort())
+	q := ctx.ForAll([]Z3Expr{x}, ctx.Le(ctx.IntVal(0), x))
+	solver := ctx.NewZ3Solver()
+	solver.Assert(q)
+
+	got := solver.CanonZ3Assertions()
+	if !strings.Contains(got, "(forall weight:1 ") {
+		t.Fatalf("canonical assertions missing quantifier weight: %s", got)
+	}
 }

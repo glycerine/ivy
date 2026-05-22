@@ -1354,9 +1354,9 @@ def _canon_z3_expr(e, binders):
             key=lambda p: p[0],
         )
         if e.is_forall():
-            head = "(forall ("
+            head = "(forall weight:%d (" % e.weight()
         else:
-            head = "(exists ("
+            head = "(exists weight:%d (" % e.weight()
         binder_strs = ["(%s %s)" % (n, s) for (n, s) in pairs]
         new_binders = binders + [ast_names]
         return head + " ".join(binder_strs) + ") " + _canon_z3_expr(e.body(), new_binders) + ")"

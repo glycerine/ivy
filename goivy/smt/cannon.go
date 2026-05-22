@@ -46,8 +46,8 @@
 //	  (v <bound_var_name>)             — bound variable, looked up by name
 //	  (c <name> <sort>)                — 0-ary application (constant)
 //	  (a <name> <arg1> <arg2> ...)     — n-ary application
-//	  (forall ((<bn1> <s1>) ...) <body>) — bound vars sorted by name
-//	  (exists ((<bn1> <s1>) ...) <body>) — bound vars sorted by name
+//	  (forall weight:<w> ((<bn1> <s1>) ...) <body>) — bound vars sorted by name
+//	  (exists weight:<w> ((<bn1> <s1>) ...) <body>) — bound vars sorted by name
 //
 //	Sorts:
 //	  <sort_name>                       — bare symbol from Z3_get_sort_name
@@ -167,10 +167,11 @@ func canonZ3ExprUnlocked(c C.Z3_context, ast C.Z3_ast, binders [][]string, sb *s
 			return pairs[i].name < pairs[j].name
 		})
 
+		weight := int(C.Z3_get_quantifier_weight(c, ast))
 		if bool(C.Z3_is_quantifier_forall(c, ast)) {
-			sb.WriteString("(forall (")
+			fmt.Fprintf(sb, "(forall weight:%d (", weight)
 		} else {
-			sb.WriteString("(exists (")
+			fmt.Fprintf(sb, "(exists weight:%d (", weight)
 		}
 		for i, p := range pairs {
 			if i > 0 {

@@ -1614,6 +1614,9 @@ func z3_get_range(ctx z3Context, fd z3FuncDecl) z3Sort
 //go:wasmimport smt_z3 Z3_is_quantifier_forall
 func z3_is_quantifier_forall(ctx z3Context, ast z3AST) uint32
 
+//go:wasmimport smt_z3 Z3_get_quantifier_weight
+func z3_get_quantifier_weight(ctx z3Context, ast z3AST) uint32
+
 //go:wasmimport smt_z3 Z3_get_quantifier_num_bound
 func z3_get_quantifier_num_bound(ctx z3Context, ast z3AST) uint32
 
