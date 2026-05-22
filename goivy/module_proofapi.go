@@ -29,9 +29,13 @@ type ProofConfig struct {
 	Tactics map[string]LogicProofTactic
 }
 
-// TacticNewConfig creates a new ProofConfig with an empty tactic registry.
+// TacticNewConfig creates a new ProofConfig with the core ivy_tactics.py
+// tactics registered. Python installs these at module import time, so callers
+// that load Ivy sources outside Start still need them available.
 func TacticNewConfig() *ProofConfig {
-	return &ProofConfig{Tactics: make(map[string]LogicProofTactic)}
+	cfg := &ProofConfig{Tactics: make(map[string]LogicProofTactic)}
+	RegisterProofTactics(cfg)
+	return cfg
 }
 
 // RegisterTactic registers a named tactic on this config.

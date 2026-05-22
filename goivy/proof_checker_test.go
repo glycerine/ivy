@@ -28,6 +28,26 @@ func TestAdmitPropositionWithComposeTactics(t *testing.T) {
 	}
 }
 
+func TestDefaultProofConfigHandlesSorryTactic(t *testing.T) {
+	mod := New()
+	mod.Cfg.UsedSorry = false
+	acfg := mod.Cfg.AstCfg
+	prop := acfg.NewLabeledFormula(acfg.NewAtom("p"), True)
+	proof := acfg.NewTacticTactic(acfg.NewAtom("sorry"), acfg.NewNoneAST(), acfg.NewNoneAST())
+
+	pc := NewProofChecker(nil, mod, nil, nil, nil, acfg)
+	subgoals, err := pc.AdmitProposition(prop, proof)
+	if err != nil {
+		t.Fatalf("AdmitProposition with default sorry tactic failed: %v", err)
+	}
+	if len(subgoals) != 0 {
+		t.Fatalf("expected sorry to discharge the current goal, got %d subgoals", len(subgoals))
+	}
+	if !mod.Cfg.UsedSorry {
+		t.Fatal("expected sorry tactic to mark Config.UsedSorry")
+	}
+}
+
 // TestAdmitPropositionDefinitionDelegates tests that admitting a definition
 // delegates to AdmitDefinition.
 func TestAdmitPropositionDefinitionDelegates(t *testing.T) {
