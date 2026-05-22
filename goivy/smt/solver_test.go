@@ -69,3 +69,25 @@ func TestCanonZ3AssertionsIncludesQuantifierWeight(t *testing.T) {
 		t.Fatalf("canonical assertions missing quantifier weight: %s", got)
 	}
 }
+
+func TestSolverToSMT2UsesBenchmarkFormat(t *testing.T) {
+	ctx := NewZ3Context()
+	defer ctx.Close()
+
+	x := ctx.Const("x", ctx.IntSort())
+	solver := ctx.NewZ3Solver()
+	solver.Assert(ctx.Lt(ctx.IntVal(0), x))
+	solver.Assert(ctx.Lt(x, ctx.IntVal(2)))
+
+	got := solver.ToSMT2()
+	for _, want := range []string{
+		"; benchmark generated from python API",
+		"(set-info :status unknown)",
+		"(assert",
+		"(check-sat)",
+	} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("ToSMT2() missing %q:\n%s", want, got)
+		}
+	}
+}

@@ -12,7 +12,7 @@ import (
 func (s *Solver) decideZ3(z3solver *smt.Z3Solver) (smt.Z3CheckResult, error) {
 	result := s.checkZ3(z3solver)
 	if result == smt.Unknown {
-		fmt.Println(z3solver.String())
+		fmt.Println(z3solver.ToSMT2())
 		return result, &IvyError{Msg: "Solver produced inconclusive result"}
 	}
 	return result, nil

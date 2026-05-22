@@ -282,6 +282,47 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     ));
   }
 
+  function benchmarkToSMTLibString(
+    ctx,
+    nameHandle,
+    nameLen,
+    logicHandle,
+    logicLen,
+    statusHandle,
+    statusLen,
+    attrsHandle,
+    attrsLen,
+    assumptionsLen,
+    assumptionsHandle,
+    formula,
+  ) {
+    const name = textDecoder.decode(scratch.takeBytes(nameHandle, nameLen));
+    const logic = textDecoder.decode(scratch.takeBytes(logicHandle, logicLen));
+    const status = textDecoder.decode(scratch.takeBytes(statusHandle, statusLen));
+    const attrs = textDecoder.decode(scratch.takeBytes(attrsHandle, attrsLen));
+    const assumptions = scratch.takeU32(assumptionsHandle, assumptionsLen);
+    return withZ3CString(z3, name, (z3Name) => (
+      withZ3CString(z3, logic, (z3Logic) => (
+        withZ3CString(z3, status, (z3Status) => (
+          withZ3CString(z3, attrs, (z3Attrs) => (
+            withZ3HandleArray(z3, assumptions, (z3Assumptions) => (
+              z3StringHandle(z3._Z3_benchmark_to_smtlib_string(
+                ctx,
+                z3Name,
+                z3Logic,
+                z3Status,
+                z3Attrs,
+                assumptions.length,
+                z3Assumptions,
+                formula,
+              ))
+            ))
+          ))
+        ))
+      ))
+    ));
+  }
+
   function modelEval(ctx, model, expr, completion) {
     const outPtr = z3._malloc(4);
     try {
@@ -443,6 +484,7 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     Z3_solver_pop(ctx, solver, n) { z3._Z3_solver_pop(ctx, solver, n); },
     Z3_solver_reset(ctx, solver) { z3._Z3_solver_reset(ctx, solver); },
     Z3_solver_to_string(ctx, solver) { return z3StringHandle(z3._Z3_solver_to_string(ctx, solver)); },
+    Z3_benchmark_to_smtlib_string_bytes: benchmarkToSMTLibString,
     Z3_solver_get_assertions(ctx, solver) { return z3._Z3_solver_get_assertions(ctx, solver) >>> 0; },
     Z3_solver_get_model(ctx, solver) { return z3._Z3_solver_get_model(ctx, solver) >>> 0; },
     Z3_solver_check_assumptions: checkAssumptions,

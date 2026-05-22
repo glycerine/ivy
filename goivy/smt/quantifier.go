@@ -1028,6 +1028,61 @@ func (s *Z3Solver) String() string {
 	return res
 }
 
+// ToSMT2 returns an SMT-LIB2 benchmark for the solver's assertions. It mirrors
+// z3py's Solver.to_smt2(), which uses all but the last assertion as benchmark
+// assumptions and the last assertion as the formula.
+func (s *Z3Solver) ToSMT2() string {
+	var res string
+	s.ctx.do(func() {
+		vec := C.Z3_solver_get_assertions(s.ctx.c, s.c)
+		C.Z3_ast_vector_inc_ref(s.ctx.c, vec)
+		defer C.Z3_ast_vector_dec_ref(s.ctx.c, vec)
+
+		n := int(C.Z3_ast_vector_size(s.ctx.c, vec))
+		nassumptions := n
+		var formula C.Z3_ast
+		if nassumptions > 0 {
+			nassumptions--
+			formula = C.Z3_ast_vector_get(s.ctx.c, vec, C.uint(nassumptions))
+		} else {
+			formula = C.Z3_mk_true(s.ctx.c)
+		}
+
+		var assumptions []C.Z3_ast
+		var assumptionsPtr *C.Z3_ast
+		if nassumptions > 0 {
+			assumptions = make([]C.Z3_ast, nassumptions)
+			for i := 0; i < nassumptions; i++ {
+				assumptions[i] = C.Z3_ast_vector_get(s.ctx.c, vec, C.uint(i))
+			}
+			assumptionsPtr = &assumptions[0]
+		}
+
+		name := C.CString("benchmark generated from python API")
+		logic := C.CString("")
+		status := C.CString("unknown")
+		attrs := C.CString("")
+		defer C.free(unsafe.Pointer(name))
+		defer C.free(unsafe.Pointer(logic))
+		defer C.free(unsafe.Pointer(status))
+		defer C.free(unsafe.Pointer(attrs))
+
+		res = C.GoString(C.Z3_benchmark_to_smtlib_string(
+			s.ctx.c,
+			name,
+			logic,
+			status,
+			attrs,
+			C.uint(nassumptions),
+			assumptionsPtr,
+			formula,
+		))
+		runtime.KeepAlive(assumptions)
+	})
+	runtime.KeepAlive(s)
+	return res
+}
+
 // ReasonUnknown returns Z3's explanation for an Unknown check result.
 func (s *Z3Solver) ReasonUnknown() string {
 	var res string

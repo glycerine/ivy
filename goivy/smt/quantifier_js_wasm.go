@@ -113,6 +113,27 @@ func z3_set_param_value_go(cfg z3Config, key, value string) {
 	z3_set_param_value(cfg, scratchBytes(k), uint32(len(k)), scratchBytes(v), uint32(len(v)))
 }
 
+func z3_benchmark_to_smtlib_string_go(ctx z3Context, name, logic, status, attrs string, assumptions []z3AST, formula z3AST) z3StringHandle {
+	n := []byte(name)
+	l := []byte(logic)
+	s := []byte(status)
+	a := []byte(attrs)
+	return z3_benchmark_to_smtlib_string(
+		ctx,
+		scratchBytes(n),
+		uint32(len(n)),
+		scratchBytes(l),
+		uint32(len(l)),
+		scratchBytes(s),
+		uint32(len(s)),
+		scratchBytes(a),
+		uint32(len(a)),
+		uint32(len(assumptions)),
+		scratchU32(assumptions),
+		formula,
+	)
+}
+
 func z3String(h z3StringHandle) string {
 	if h == 0 {
 		return ""
@@ -1059,6 +1080,44 @@ func (s *Z3Solver) String() string {
 	return res
 }
 
+// ToSMT2 returns an SMT-LIB2 benchmark for the solver's assertions. It mirrors
+// z3py's Solver.to_smt2(), which uses all but the last assertion as benchmark
+// assumptions and the last assertion as the formula.
+func (s *Z3Solver) ToSMT2() string {
+	vec := z3Solver_get_assertions(s.ctx.c, s.c)
+	z3ASTVector_inc_ref(s.ctx.c, vec)
+	defer z3ASTVector_dec_ref(s.ctx.c, vec)
+
+	n := int(z3ASTVector_size(s.ctx.c, vec))
+	nassumptions := n
+	var formula z3AST
+	if nassumptions > 0 {
+		nassumptions--
+		formula = z3ASTVector_get(s.ctx.c, vec, uint32(nassumptions))
+	} else {
+		formula = z3_mk_true(s.ctx.c)
+	}
+
+	assumptions := make([]z3AST, nassumptions)
+	for i := 0; i < nassumptions; i++ {
+		assumptions[i] = z3ASTVector_get(s.ctx.c, vec, uint32(i))
+	}
+
+	res := z3String(z3_benchmark_to_smtlib_string_go(
+		s.ctx.c,
+		"benchmark generated from python API",
+		"",
+		"unknown",
+		"",
+		assumptions,
+		formula,
+	))
+
+	runtime.KeepAlive(s)
+	runtime.KeepAlive(assumptions)
+	return res
+}
+
 // ReasonUnknown returns Z3's explanation for an Unknown check result.
 func (s *Z3Solver) ReasonUnknown() string {
 	return ""
@@ -1658,6 +1717,9 @@ func z3Solver_reset(ctx z3Context, solver z3Solver)
 
 //go:wasmimport smt_z3 Z3_solver_to_string
 func z3Solver_to_string(ctx z3Context, solver z3Solver) z3StringHandle
+
+//go:wasmimport smt_z3 Z3_benchmark_to_smtlib_string_bytes
+func z3_benchmark_to_smtlib_string(ctx z3Context, name z3Scratch, nameLen uint32, logic z3Scratch, logicLen uint32, status z3Scratch, statusLen uint32, attrs z3Scratch, attrsLen uint32, numAssumptions uint32, assumptions z3Scratch, formula z3AST) z3StringHandle
 
 //go:wasmimport smt_z3 Z3_solver_get_assertions
 func z3Solver_get_assertions(ctx z3Context, solver z3Solver) z3ASTVector
