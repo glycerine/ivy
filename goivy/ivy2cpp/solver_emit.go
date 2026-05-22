@@ -444,10 +444,17 @@ func (g *Generator) recordRangeType(s goivy.Sort) string {
 }
 
 // isRecordRange reports whether sort `s` is a destructor record, native
-// type, or cpp-interp type — matching the Python predicate at
-// ivy_to_cpp.py:789 (`sort.rng.name in im.module.sort_destructors or
-// sort.rng.name in im.module.native_types or sort.rng in sort_to_cpptype`).
-// These ranges flow through `__from_solver<T>` template specializations;
+// type, cpp-interp type, or variant supertype — i.e. a sort that has a
+// per-class `__from_solver<T>` / `__randomize<T>` specialization
+// emitted by ivy2cpp/destructor.go, ivy2cpp/variant.go,
+// ivy2cpp/cpp_types.go, or that is served by the generic template's
+// g.randomize fallback (native). Python's analogous predicate at
+// ivy_to_cpp.py:789 covers destructor / native / cpptype only —
+// Python's variant supertype has a long-long-convertible constructor
+// so the direct `(T)eval_apply(...)` cast works for it. The Go variant
+// supertype struct (variant.go:emitVariantWrapperDecl) does not, so we
+// route through the specialization here. These ranges flow through
+// `__from_solver<T>` / `__randomize<T>` template specializations;
 // all other ranges use the direct `eval_apply` cast.
 func (g *Generator) isRecordRange(s goivy.Sort) bool {
 	if s == nil || g == nil || g.Mod == nil {
@@ -463,6 +470,9 @@ func (g *Generator) isRecordRange(s goivy.Sort) bool {
 		}
 	}
 	if _, ok := g.cppInterpType(s); ok {
+		return true
+	}
+	if name != "" && g.isVariantSuperName(name) {
 		return true
 	}
 	return false
@@ -745,7 +755,7 @@ func (g *Generator) emitHashThunkToSolver(w *cppWriter, domSorts []goivy.Sort, c
 	w.line("z3::expr res = g.ctx.bool_val(true);")
 	w.line("z3::expr disj = g.ctx.bool_val(false);")
 	w.linef("z3::expr bg = val.fun ? dynamic_cast<z3_thunk<%s,R> *>(val.fun)->to_z3(g, v) : g.ctx.bool_val(true);", ctName)
-	w.open(fmt.Sprintf("for (typename hash_map<%s,R>::iterator it = val.memo.begin(), en = val.memo.end(); it != en; it++) {", ctName))
+	w.open(fmt.Sprintf("for (typename hash_space::hash_map<%s,R>::iterator it = val.memo.begin(), en = val.memo.end(); it != en; it++) {", ctName))
 	w.line("z3::expr asgn = __to_solver(g, v, it->second);")
 	if len(domSorts) > 0 {
 		parts := make([]string, len(domSorts))

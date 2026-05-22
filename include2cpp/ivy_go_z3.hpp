@@ -344,6 +344,32 @@ public:
     }
 };
 
+// Primary templates for `__from_solver` / `__to_solver` / `__randomize`.
+// Per-sort explicit specializations are forward-declared in the impl
+// file's preamble (see ivy2cpp/repl.go:76-88 and
+// ivy2cpp/destructor.go:268-285), and those forward declarations are
+// only legal when the primary template is already visible. The Python
+// runtime's `ivy_z3_helpers.hpp` plays the same role on the Python side
+// (ivy_to_cpp.py:2210-2211). Per-sort specializations defining bodies
+// for class-scoped types are still emitted by ivy2cpp/z3.go,
+// ivy2cpp/destructor.go, ivy2cpp/variant.go, and ivy2cpp/cpp_types.go.
+template <typename T> void __from_solver(gen &, const z3::expr &, T &out) {
+    out = T();
+}
+
+template <typename T> z3::expr __to_solver(gen &g, const char *sort_name, const T &value) {
+    return g.int_to_z3(sort_name, static_cast<long long>(value));
+}
+
+template <typename T> z3::expr __to_solver(gen &g, const z3::expr &expr, const T &value) {
+    return expr == g.int_to_z3(expr.get_sort(), static_cast<long long>(value));
+}
+
+template <typename T> void __randomize(gen &g, const z3::expr &expr, const std::string &range) {
+    (void)sizeof(T);
+    g.randomize(expr, range);
+}
+
 template <class T>
 class __random_string_class {
 public:

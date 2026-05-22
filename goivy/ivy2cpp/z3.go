@@ -30,9 +30,12 @@ func (g *Generator) emitZ3Support(w *cppWriter) error {
 }
 
 func (g *Generator) emitZ3SolverTemplates(w *cppWriter) {
-	w.open("template <typename T> void __from_solver(gen &, const z3::expr &, T &out) {")
-	w.line("out = T();")
-	w.close("")
+	// The primary templates for __from_solver / __to_solver / __randomize
+	// live in include2cpp/ivy_go_z3.hpp so they are visible to the
+	// forward declarations of per-sort explicit specializations emitted
+	// by emitEnumSortArgSpecDecls / emitDestructorSortArgSpecDecls
+	// (runtime.go:168, :172). Only the primitive specializations are
+	// emitted here.
 	w.open("template <> void __from_solver<bool>(gen &g, const z3::expr &expr, bool &out) {")
 	w.line("out = false;")
 	w.line("z3::expr solver_value = g.eval_expr(expr);")
@@ -52,16 +55,6 @@ func (g *Generator) emitZ3SolverTemplates(w *cppWriter) {
 	w.close("")
 	w.open("template <> void __from_solver<unsigned long long>(gen &g, const z3::expr &expr, unsigned long long &out) {")
 	w.line("out = static_cast<unsigned long long>(g.eval(expr));")
-	w.close("")
-	w.open("template <typename T> z3::expr __to_solver(gen &g, const char *sort_name, const T &value) {")
-	w.line("return g.int_to_z3(sort_name, static_cast<long long>(value));")
-	w.close("")
-	w.open("template <typename T> z3::expr __to_solver(gen &g, const z3::expr &expr, const T &value) {")
-	w.line("return expr == g.int_to_z3(expr.get_sort(), static_cast<long long>(value));")
-	w.close("")
-	w.open("template <typename T> void __randomize(gen &g, const z3::expr &expr, const std::string &range) {")
-	w.line("(void)sizeof(T);")
-	w.line("g.randomize(expr, range);")
 	w.close("")
 	w.blank()
 }

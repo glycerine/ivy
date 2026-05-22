@@ -5038,9 +5038,8 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	// Per-sort enum specializations are still emitted into the impl.
 	for _, want := range []string{
-		"template <typename T> z3::expr __to_solver(gen &g, const char *sort_name, const T &value)",
-		"return g.int_to_z3(sort_name, static_cast<long long>(value));",
 		"template <>",
 		"void __from_solver<solverconv::color>(gen &g, const z3::expr &v, solverconv::color &res)",
 		"__from_solver<int>(g, v, temp);",
@@ -5050,11 +5049,23 @@ export step
 		"return __to_solver<int>(g, v, thing);",
 		"void __randomize<solverconv::color>(gen &g, const z3::expr &v, const std::string &sort_name)",
 		"__randomize<int>(g, v, sort_name);",
-		"template <typename T> z3::expr __to_solver(gen &g, const z3::expr &expr, const T &value)",
-		"return expr == g.int_to_z3(expr.get_sort(), static_cast<long long>(value));",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in gen output:\n%s", want, out.Impl)
+		}
+	}
+	// The primary __from_solver / __to_solver / __randomize templates
+	// now live in ivy_go_z3.hpp so the impl's forward declarations of
+	// per-sort specializations see them before use.
+	support := readSupportHeader(t, "ivy_go_z3.hpp")
+	for _, want := range []string{
+		"template <typename T> void __from_solver(gen &, const z3::expr &, T &out)",
+		"template <typename T> z3::expr __to_solver(gen &g, const char *sort_name, const T &value)",
+		"template <typename T> z3::expr __to_solver(gen &g, const z3::expr &expr, const T &value)",
+		"template <typename T> void __randomize(gen &g, const z3::expr &expr, const std::string &range)",
+	} {
+		if !strings.Contains(support, want) {
+			t.Fatalf("missing primary template %q in ivy_go_z3.hpp:\n%s", want, support)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
