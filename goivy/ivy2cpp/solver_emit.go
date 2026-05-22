@@ -39,6 +39,12 @@ func cleanSmtlib(s string) string {
 // calls g.mk_decl with an empty domain. The action_gen constructor uses
 // this to register skolem symbols introduced by ExistQuantClauses /
 // reverse_image.
+//
+// Python computes a `cname = '__pto__<dom0>__<dom1>'` rewrite for the
+// special `*>` symbol at ivy_to_cpp.py:735, but the resulting `cname` is
+// never referenced — Python emits the literal `*>` symbol name in the
+// mk_decl call (via slv.solver_name). The Go port matches Python's
+// observable emission: no `*>` rewrite is performed.
 func (g *Generator) emitDeclSolver(w *cppWriter, sym stateSymbol) {
 	domain, rng := z3DeclSignature(sym.Sort)
 	domains := make([]string, 0, len(domain))
@@ -116,6 +122,28 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 		}
 		return
 	}
+	// Branch (2): "large" function-sorted symbol. Mirrors Python
+	// ivy_to_cpp.py:844-853: build a z3::expr vector of constants for the
+	// quantifier and emit a forall-quantified __to_solver constraint
+	// instead of unrolling the domain.
+	if isFn && g.isLargeType(sym.Sort) {
+		vs := make([]string, len(domain))
+		for i := range domain {
+			vs[i] = destructorIndexVarName(i)
+		}
+		cvars := make([]string, len(domain))
+		for i, d := range domain {
+			cvars[i] = fmt.Sprintf("ctx.constant(%s, sort(%s))", strconv.Quote(vs[i]), strconv.Quote(z3SortName(d)))
+		}
+		w.open("{")
+		w.line("std::vector<z3::expr> __quants;")
+		for i, d := range domain {
+			w.linef("__quants.push_back(ctx.constant(%s, sort(%s)));", strconv.Quote(vs[i]), strconv.Quote(z3SortName(d)))
+		}
+		w.linef("add(forall(__quants, __to_solver(*this, apply(%s, %s), %s.%s)));", sname, strings.Join(cvars, ", "), obj, varName(sym.Name))
+		w.close("")
+		return
+	}
 	// Branch (3): default per-element loop.
 	args := make([]string, 0, len(domain))
 	domVarNames := make([]string, 0, len(domain))
@@ -140,6 +168,38 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 		w.indent--
 		w.line("}")
 	}
+}
+
+// isLargeType mirrors Python `is_large_type` at ivy_to_cpp.py:445-449.
+// Returns true if the function sort has any non-integer-typed domain
+// element, OR if any domain cardinality is unknown / zero, OR if the
+// product of cardinalities exceeds largeThresh.
+//
+// For non-function sorts (no .dom), returns false — Python's `hasattr`
+// check skips the dom iteration entirely and the empty-cards product is 1
+// which is <= largeThresh.
+func (g *Generator) isLargeType(s goivy.Sort) bool {
+	fs, ok := s.(*goivy.LogicFunctionSort)
+	if !ok {
+		return false
+	}
+	dom := fs.Domain()
+	for _, d := range dom {
+		if !cppIsAnyIntegerType(g, d) {
+			return true
+		}
+	}
+	product := 1
+	for _, d := range dom {
+		c := cppSortCard(g, d)
+		if c <= 0 {
+			return true
+		}
+		if product <= largeThresh {
+			product *= c
+		}
+	}
+	return product > largeThresh
 }
 
 // emitSetField is the per-destructor recursion of emitSetSolver. Mirrors
@@ -300,22 +360,42 @@ func (g *Generator) emitEvalSig(w *cppWriter, obj string, used map[string]bool) 
 
 // emitFromSolverLoop is the shared body of emitZ3EvaluateStateSymbol and
 // emitEvalSolver. It emits the per-domain loops and the trailing
-// __from_solver / eval_apply call. Keeping it in one place ensures init_gen
-// and action_gen produce identical evaluation code.
+// __from_solver<T> / eval_apply call. Mirrors Python ivy_to_cpp.py:786-796
+// — for destructor / native / cpp-interp ranges it routes through the
+// `__from_solver<class::T>(*this, apply("sname", X_z3...), lvalue)`
+// template specialization; for primitive ranges it emits a direct cast
+// `lvalue = (ctype)eval_apply("sname", X...);` against the integer-typed
+// model value.
 func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol) error {
 	fs, isFn := sym.Sort.(*goivy.LogicFunctionSort)
-	if !isFn || len(fs.Domain()) == 0 {
+	var domain []goivy.Sort
+	var rng goivy.Sort
+	if isFn {
+		domain = fs.Domain()
+		rng = fs.Range()
+	} else {
+		rng = sym.Sort
+	}
+	record := g.isRecordRange(rng)
+	if len(domain) == 0 {
 		lvalue := varName(sym.Name)
 		if obj != "" {
 			lvalue = obj + "." + lvalue
 		}
-		w.linef("__from_solver(*this, mk_apply_expr(%q, {}), %s);", sym.Name, lvalue)
+		if record {
+			typ := g.recordRangeType(rng)
+			w.linef("__from_solver<%s>(*this, apply(%q), %s);", typ, sym.Name, lvalue)
+		} else {
+			ctype := cppScalarTypeWith(g, rng, g.ClassName)
+			w.linef("%s = (%s)eval_apply(%q);", lvalue, ctype, sym.Name)
+		}
 		return nil
 	}
-	var args []string
+	var applyArgs []string
 	var keyArgs []string
+	var evalArgs []string
 	opened := 0
-	for i, d := range fs.Domain() {
+	for i, d := range domain {
 		name := fmt.Sprintf("__ivy_arg%d", i)
 		header, ok := g.z3LoopHeaderForSort(d, name)
 		if !ok {
@@ -324,16 +404,63 @@ func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol
 		w.line(header)
 		w.indent++
 		opened++
-		args = append(args, fmt.Sprintf("static_cast<int>(%s)", name))
+		applyArgs = append(applyArgs, fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name))
+		evalArgs = append(evalArgs, fmt.Sprintf("static_cast<int>(%s)", name))
 		keyArgs = append(keyArgs, name)
 	}
 	lvalue := g.cppStorageAccess(sym.Name, sym.Sort, keyArgs, obj)
-	w.linef("__from_solver(*this, mk_apply_expr(%q, {%s}), %s);", sym.Name, strings.Join(args, ", "), lvalue)
+	if record {
+		typ := g.recordRangeType(rng)
+		w.linef("__from_solver<%s>(*this, apply(%q, %s), %s);", typ, sym.Name, strings.Join(applyArgs, ", "), lvalue)
+	} else {
+		ctype := cppScalarTypeWith(g, rng, g.ClassName)
+		w.linef("%s = (%s)eval_apply(%q, %s);", lvalue, ctype, sym.Name, strings.Join(evalArgs, ", "))
+	}
 	for i := 0; i < opened; i++ {
 		w.indent--
 		w.line("}")
 	}
 	return nil
+}
+
+// recordRangeType returns the fully qualified C++ type name for a record
+// range, mirroring Python's `classname + "::" + varname(sort.rng.name)`
+// at ivy_to_cpp.py:790. Unlike cppQualifiedType, it never decays bv /
+// strbv / intbv sorts to their primitive C++ type — those decays would
+// route the template specialization to the primitive form
+// (e.g. `__from_solver<unsigned>`) rather than the per-sort cpp-type
+// specialization (e.g. `__from_solver<class::word>`).
+func (g *Generator) recordRangeType(s goivy.Sort) string {
+	name := sortName(s)
+	if g != nil && g.ClassName != "" && name != "" {
+		return g.ClassName + "::" + varName(name)
+	}
+	return varName(name)
+}
+
+// isRecordRange reports whether sort `s` is a destructor record, native
+// type, or cpp-interp type — matching the Python predicate at
+// ivy_to_cpp.py:789 (`sort.rng.name in im.module.sort_destructors or
+// sort.rng.name in im.module.native_types or sort.rng in sort_to_cpptype`).
+// These ranges flow through `__from_solver<T>` template specializations;
+// all other ranges use the direct `eval_apply` cast.
+func (g *Generator) isRecordRange(s goivy.Sort) bool {
+	if s == nil || g == nil || g.Mod == nil {
+		return false
+	}
+	if g.isDestructorRecordRange(s) {
+		return true
+	}
+	name := sortName(s)
+	if name != "" && g.Mod.NativeTypes != nil {
+		if _, ok := g.Mod.NativeTypes[name]; ok {
+			return true
+		}
+	}
+	if _, ok := g.cppInterpType(s); ok {
+		return true
+	}
+	return false
 }
 
 // mkRand returns a C++ expression that produces a random value of sort s.

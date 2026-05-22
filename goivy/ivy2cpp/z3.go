@@ -84,34 +84,30 @@ func (g *Generator) emitZ3SolverConversions(w *cppWriter) {
 	}
 }
 
+// emitZ3EnumSolverConversion emits the three template specializations
+// __from_solver<T>, __to_solver<T>, __randomize<T> for an enum sort.
+// Mirrors Python ivy_to_cpp.py:2654-2668 — each specialization delegates
+// to the underlying integer specialization. The Go runtime's
+// gen::int_to_z3(<sort_name>, idx) encodes enum values as
+// "<sort_name>_<idx>" constants and gen::eval() recovers the trailing
+// integer index, so the delegation through `__from_solver<int>` works
+// uniformly with the Z3 model representation.
 func (g *Generator) emitZ3EnumSolverConversion(w *cppWriter, s *goivy.LogicEnumeratedSort) {
 	typ := g.cppQualifiedType(s, g.ClassName)
-	zname := z3SortName(s)
-	w.open(fmt.Sprintf("static void __from_solver(gen &g, const z3::expr &expr, %s &out) {", typ))
-	w.line("std::string text = g.eval_expr(expr).to_string();")
-	for i, v := range s.Extension {
-		w.open(fmt.Sprintf(`if (text == %s || text == %s) {`, strconv.Quote(fmt.Sprintf("%s_%d", zname, i)), strconv.Quote(v)))
-		w.linef("out = %s::%s;", g.ClassName, varName(v))
-		w.line("return;")
-		w.close("")
-	}
-	w.linef("out = %s(g);", z3RandomHelperName(s))
+	w.line("template <>")
+	w.open(fmt.Sprintf("void __from_solver<%s>(gen &g, const z3::expr &v, %s &res) {", typ, typ))
+	w.line("int temp;")
+	w.line("__from_solver<int>(g, v, temp);")
+	w.linef("res = (%s)temp;", typ)
 	w.close("")
-	w.open(fmt.Sprintf("static z3::expr __to_solver(gen &g, const char *sort_name, %s value) {", typ))
-	w.open("switch (value) {")
-	for i, v := range s.Extension {
-		w.linef("case %s::%s: return g.int_to_z3(sort_name, %d);", g.ClassName, varName(v), i)
-	}
-	w.line("default: return g.int_to_z3(sort_name, 0);")
+	w.line("template <>")
+	w.open(fmt.Sprintf("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val) {", typ, typ))
+	w.line("int thing = val;")
+	w.line("return __to_solver<int>(g, v, thing);")
 	w.close("")
-	w.close("")
-	w.open(fmt.Sprintf("static z3::expr __to_solver(gen &g, const z3::expr &expr, %s value) {", typ))
-	w.open("switch (value) {")
-	for i, v := range s.Extension {
-		w.linef("case %s::%s: return expr == g.int_to_z3(expr.get_sort(), %d);", g.ClassName, varName(v), i)
-	}
-	w.line("default: return expr == g.int_to_z3(expr.get_sort(), 0);")
-	w.close("")
+	w.line("template <>")
+	w.open(fmt.Sprintf("void __randomize<%s>(gen &g, const z3::expr &v, const std::string &sort_name) {", typ))
+	w.line("__randomize<int>(g, v, sort_name);")
 	w.close("")
 	w.blank()
 }
@@ -261,6 +257,20 @@ func (g *Generator) emitZ3Setup(w *cppWriter) {
 	w.blank()
 }
 
+// emitZ3SortRegistrations mirrors Python `emit_sorts` at ivy_to_cpp.py:687-728.
+//
+// Python emits `enum_sorts.insert(std::pair<std::string, z3::sort>("name",
+// <classname>::<sortvar>::z3_sort(ctx)))` for sorts registered in
+// `sort_to_cpptype` (cpp-typed bv / strbv / intbv non-variant sorts) at
+// line 715-718. The Go runtime in `include2cpp/ivy_go_z3.hpp` exposes a
+// single `sorts` map (no separate `enum_sorts`) and provides
+// `mk_bv(name, width)` / `mk_string(name)` helpers that perform the
+// equivalent insert via `ctx.bv_sort(width)` / `ctx.string_sort()` — the
+// same Z3 sort constructors that `<class>::<sortvar>::z3_sort(ctx)`
+// would invoke. The cpp_types.go static `z3_sort(ctx)` member exists for
+// Python-style reuse but is unused on the Go runtime path; the
+// `mk_bv`/`mk_string` emission is the runtime-supported equivalent of
+// Python's `enum_sorts.insert(...)` form.
 func (g *Generator) emitZ3SortRegistrations(w *cppWriter) {
 	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
 		return
@@ -277,6 +287,9 @@ func (g *Generator) emitZ3SortRegistrations(w *cppWriter) {
 		}
 		seen[zname] = true
 		if it, ok := g.cppInterpType(s); ok {
+			// Python: enum_sorts.insert(name, <class>::<sortvar>::z3_sort(ctx)).
+			// Go runtime equivalent: mk_bv(name, width) — both call
+			// ctx.bv_sort(width) on the same Z3 sort underneath.
 			switch it.Kind {
 			case cppInterpBV, cppInterpStrBV, cppInterpIntBV:
 				w.linef("g.mk_bv(%s, %d);", strconv.Quote(zname), it.Bits)
@@ -284,6 +297,10 @@ func (g *Generator) emitZ3SortRegistrations(w *cppWriter) {
 			continue
 		}
 		if g.hasStringInterp(s) {
+			// Python: enum_sorts.insert(name, <class>::<sortvar>::z3_sort(ctx))
+			// where z3_sort returns ctx.string_sort(). Go runtime equivalent:
+			// mk_string(name) — both call ctx.string_sort() on the same Z3
+			// sort underneath.
 			w.linef("g.mk_string(%s);", strconv.Quote(zname))
 			continue
 		}

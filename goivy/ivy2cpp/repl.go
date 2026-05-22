@@ -58,9 +58,12 @@ func (g *Generator) encodedSortSet() map[string]bool {
 // `operator<<`, `_arg<T>`, `__ser<T>`, `__deser<T>` symbols. Mirrors
 // Python ivy_to_cpp.py:2213-2223 — these declarations are placed right
 // after `#include "ivy_value.hpp"` so the rest of the impl file can
-// resolve them.
+// resolve them. For gen/test targets, also emits the Z3 solver
+// specialization forward declarations (Python lines 2224-2230).
 func (g *Generator) emitEnumSortArgSpecDecls(w *cppWriter) {
-	for _, st := range g.enumSortsForArgSpecs() {
+	enums := g.enumSortsForArgSpecs()
+	gateZ3 := g.usesZ3() && len(enums) > 0
+	for _, st := range enums {
 		cfsname := g.ClassName + "::" + varName(st.Name)
 		w.linef("std::ostream &operator<<(std::ostream &s, const %s &t);", cfsname)
 		w.line("template <>")
@@ -69,6 +72,19 @@ func (g *Generator) emitEnumSortArgSpecDecls(w *cppWriter) {
 		w.linef("void __ser<%s>(ivy_ser &res, const %s &);", cfsname, cfsname)
 		w.line("template <>")
 		w.linef("void __deser<%s>(ivy_deser &inp, %s &res);", cfsname, cfsname)
+	}
+	if gateZ3 {
+		w.line("#ifdef Z3PP_H_")
+		for _, st := range enums {
+			cfsname := g.ClassName + "::" + varName(st.Name)
+			w.line("template <>")
+			w.linef("void __from_solver<%s>(gen &g, const z3::expr &v, %s &res);", cfsname, cfsname)
+			w.line("template <>")
+			w.linef("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val);", cfsname, cfsname)
+			w.line("template <>")
+			w.linef("void __randomize<%s>(gen &g, const z3::expr &v, const std::string &sort_name);", cfsname)
+		}
+		w.line("#endif")
 	}
 }
 

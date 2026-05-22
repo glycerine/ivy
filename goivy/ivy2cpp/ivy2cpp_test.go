@@ -3254,7 +3254,7 @@ export step
 			}
 			for _, want := range []string{
 				`add((mk_apply_expr("saved", {}) == int_to_z3("color", 1)));`,
-				`__from_solver(*this, mk_apply_expr("saved", {}), obj.saved);`,
+				`obj.saved = (initgenpath::color)eval_apply("saved");`,
 				"obj.___ivy_gen = this;",
 				"obj.__init();",
 			} {
@@ -4584,9 +4584,9 @@ export set
 		`randomize("__fml:c", "color");`,
 		`randomize("__fml:b", "bool");`,
 		`randomize("__fml:i", "idx");`,
-		`__from_solver(*this, mk_apply_expr("__fml:c", {}), c);`,
-		`__from_solver(*this, mk_apply_expr("__fml:b", {}), b);`,
-		`__from_solver(*this, mk_apply_expr("__fml:i", {}), i);`,
+		`c = (genparams::color)eval_apply("__fml:c");`,
+		`b = (bool)eval_apply("__fml:b");`,
+		`i = (unsigned)eval_apply("__fml:i");`,
 		"obj.set(this->c, this->b, this->i);",
 		"if (set_generator.generate(ivy))",
 		"set_generator.execute(ivy);",
@@ -4628,8 +4628,8 @@ export touch
 		"return static_cast<gennumeric::a>(g.random_index(0, 4));",
 		`randomize("__fml:n", "node");`,
 		`randomize("__fml:av", "a");`,
-		`__from_solver(*this, mk_apply_expr("__fml:n", {}), n);`,
-		`__from_solver(*this, mk_apply_expr("__fml:av", {}), av);`,
+		`n = (int)eval_apply("__fml:n");`,
+		`av = (gennumeric::a)eval_apply("__fml:av");`,
 		"obj.touch(this->n, this->av);",
 	} {
 		if !strings.Contains(out.Impl, want) {
@@ -4655,16 +4655,17 @@ export step
 	for _, want := range []string{
 		"template <typename T> z3::expr __to_solver(gen &g, const char *sort_name, const T &value)",
 		"return g.int_to_z3(sort_name, static_cast<long long>(value));",
-		"static void __from_solver(gen &g, const z3::expr &expr, solverconv::color &out)",
-		"std::string text = g.eval_expr(expr).to_string();",
-		`if (text == "color_0" || text == "red")`,
-		"out = solverconv::red;",
-		"static z3::expr __to_solver(gen &g, const char *sort_name, solverconv::color value)",
-		"case solverconv::green: return g.int_to_z3(sort_name, 1);",
+		"template <>",
+		"void __from_solver<solverconv::color>(gen &g, const z3::expr &v, solverconv::color &res)",
+		"__from_solver<int>(g, v, temp);",
+		"res = (solverconv::color)temp;",
+		"z3::expr __to_solver<solverconv::color>(gen &g, const z3::expr &v, const solverconv::color &val)",
+		"int thing = val;",
+		"return __to_solver<int>(g, v, thing);",
+		"void __randomize<solverconv::color>(gen &g, const z3::expr &v, const std::string &sort_name)",
+		"__randomize<int>(g, v, sort_name);",
 		"template <typename T> z3::expr __to_solver(gen &g, const z3::expr &expr, const T &value)",
 		"return expr == g.int_to_z3(expr.get_sort(), static_cast<long long>(value));",
-		"static z3::expr __to_solver(gen &g, const z3::expr &expr, solverconv::color value)",
-		"case solverconv::green: return expr == g.int_to_z3(expr.get_sort(), 1);",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in gen output:\n%s", want, out.Impl)
@@ -4958,7 +4959,7 @@ export set
 		"alits.clear();",
 		"bool __res = solve();",
 		"if (__res) {",
-		`__from_solver(*this, mk_apply_expr("__fml:c", {}), c);`,
+		`c = (rieval::color)eval_apply("__fml:c");`,
 		"pop();",
 	} {
 		if !strings.Contains(body, want) {
@@ -5001,7 +5002,7 @@ export set
 		t.Fatalf("expected emit_defined_inputs to emit `this->x = 3;` in set_gen body:\n%s", body)
 	}
 	// The defined input MUST NOT also be read back from the solver model.
-	if strings.Contains(body, `__from_solver(*this, mk_apply_expr("__fml:x", {}), x);`) {
+	if strings.Contains(body, `x = (`) && strings.Contains(body, `)eval_apply("__fml:x");`) {
 		t.Fatalf("defined input x should not be read from solver model:\n%s", body)
 	}
 }
@@ -5374,9 +5375,9 @@ export set
 		`randomize("__fml:x", "word");`,
 		`randomize("__fml:y", "text");`,
 		`randomize("__fml:z", "small");`,
-		`__from_solver(*this, mk_apply_expr("__fml:x", {}), x);`,
-		`__from_solver(*this, mk_apply_expr("__fml:y", {}), y);`,
-		`__from_solver(*this, mk_apply_expr("__fml:z", {}), z);`,
+		`__from_solver<genbits::word>(*this, apply("__fml:x"), x);`,
+		`__from_solver<genbits::text>(*this, apply("__fml:y"), y);`,
+		`__from_solver<genbits::small>(*this, apply("__fml:z"), z);`,
 	} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("missing %q in gen bitvector-backed output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -5820,6 +5821,208 @@ export step
 		t.Fatalf("__randomize should skip uninterpreted-range destructor field:\n%s", body)
 	}
 	compileGeneratedCPP(t, out)
+}
+
+// TestEmitSetSolverDestructorRecordRange asserts that emit_set on a state
+// symbol with a destructor record range emits the per-field
+// add(__to_solver(*this, apply("<destr>", apply("<sym>"), <z3-idx>...),
+// <obj>.<sym>[<idx>...].<field>)) constraint, mirroring Python
+// emit_set_field at ivy_to_cpp.py:806-824. The Python emission appends the
+// loop indices BEFORE the field name in the rhs lvalue (a literal port of
+// the Python recursion).
+//
+// White-box: invokes emitSetSolver directly with a constructed Generator
+// so the test exercises the destructor branch without depending on the
+// action_gen reverse-image path (which currently strips destructor-record
+// receivers via expandFieldReferences).
+//
+// Added as part of TODO 018 milestone 1.
+func TestEmitSetSolverDestructorRecordRange(t *testing.T) {
+	mod := compileIvySource(t, destructorMultiArgIvySource+`
+individual saved : cell
+`)
+	g := &Generator{Mod: mod, ClassName: "heap"}
+	g.Config = Config{Target: "test", ClassName: "heap"}
+	// Find the `saved` symbol from stateSymbols so emitSetSolver gets the
+	// real Sort wiring.
+	var saved stateSymbol
+	for _, s := range g.stateSymbols() {
+		if s.Name == "saved" {
+			saved = s
+			break
+		}
+	}
+	if saved.Name == "" {
+		t.Fatalf("saved not found in stateSymbols")
+	}
+	w := &cppWriter{}
+	g.emitSetSolver(w, saved, "obj")
+	body := w.String()
+	// New behavior: a per-destructor loop opens X__0 over idx (4 elements)
+	// and emits the recursive add(__to_solver(...)) call. With the literal
+	// Python port, the rhs is `obj.saved[X__0].shade` (indices precede the
+	// dot-field per Python emit_set_field line 816).
+	for _, want := range []string{
+		"X__0 = 0; X__0 <= 3; X__0++",
+		`add(__to_solver(*this, apply("shade", apply("saved"), int_to_z3(sort("idx"), static_cast<long long>(X__0))), obj.saved[X__0].shade));`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("missing %q in emitSetSolver output:\n%s", want, body)
+		}
+	}
+	// The old stub marker must be gone.
+	if strings.Contains(body, "emitSetField unsupported") {
+		t.Fatalf("emit_set_field stub marker still present:\n%s", body)
+	}
+}
+
+// TestEmitEvalBranchesByRangeKind asserts that emit_eval emits the
+// Python-faithful branched form (ivy_to_cpp.py:789-796):
+//
+//   - destructor / native / cpp-interp range → `__from_solver<class::T>
+//     (*this, apply("name", ...), lvalue);`
+//   - primitive range → `lvalue = (ctype)eval_apply("name", ...);`
+//
+// Added as part of TODO 018 milestone 4.b.
+func TestEmitEvalBranchesByRangeKind(t *testing.T) {
+	// Primitive range (enum): direct cast via eval_apply.
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = { saved := c }
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "evalbr"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, `c = (evalbr::color)eval_apply("__fml:c");`) {
+		t.Fatalf("expected primitive-range eval_apply cast in gen:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, `__from_solver(*this, mk_apply_expr("__fml:c", {})`) {
+		t.Fatalf("legacy unified __from_solver form should be gone:\n%s", out.Impl)
+	}
+
+	// Cpp-interp range (bv): __from_solver<class::T> via apply, NOT
+	// __from_solver<unsigned> (which would skip the type's specialization).
+	mod2 := compileIvySource(t, `#lang ivy1.7
+type word
+interpret word -> bv[8]
+individual w : word
+action set(x:word) = { w := x }
+export set
+`)
+	out2, err := Generate(mod2, Config{Target: "gen", ClassName: "evalbr2"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out2.Impl, `__from_solver<evalbr2::word>(*this, apply("__fml:x"), x);`) {
+		t.Fatalf("expected cpp-typed range to route to class-qualified __from_solver:\n%s", out2.Impl)
+	}
+}
+
+// TestEnumSortSolverSpecsAreTemplateSpecializations asserts that the
+// per-enum __from_solver / __to_solver / __randomize emissions for
+// gen/test targets are template specializations (Python form,
+// ivy_to_cpp.py:2654-2668) rather than static overloads, with matching
+// forward declarations in the impl preamble (Python lines 2224-2230).
+//
+// Added as part of TODO 018 milestone 3.
+func TestEnumSortSolverSpecsAreTemplateSpecializations(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "enumspec"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// Forward decls — gated under #ifdef Z3PP_H_ for gen/test targets.
+	for _, want := range []string{
+		"#ifdef Z3PP_H_",
+		"template <>",
+		"void __from_solver<enumspec::color>(gen &g, const z3::expr &v, enumspec::color &res);",
+		"z3::expr __to_solver<enumspec::color>(gen &g, const z3::expr &v, const enumspec::color &val);",
+		"void __randomize<enumspec::color>(gen &g, const z3::expr &v, const std::string &sort_name);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	// Bodies — must be template specializations, not static overloads.
+	for _, want := range []string{
+		"void __from_solver<enumspec::color>(gen &g, const z3::expr &v, enumspec::color &res) {",
+		"__from_solver<int>(g, v, temp);",
+		"res = (enumspec::color)temp;",
+		"z3::expr __to_solver<enumspec::color>(gen &g, const z3::expr &v, const enumspec::color &val) {",
+		"int thing = val;",
+		"return __to_solver<int>(g, v, thing);",
+		"void __randomize<enumspec::color>(gen &g, const z3::expr &v, const std::string &sort_name) {",
+		"__randomize<int>(g, v, sort_name);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	// The old static-overload form must NOT be present.
+	for _, bad := range []string{
+		"static void __from_solver(gen &g, const z3::expr &expr, enumspec::color",
+		"static z3::expr __to_solver(gen &g, const char *sort_name, enumspec::color",
+		"static z3::expr __to_solver(gen &g, const z3::expr &expr, enumspec::color",
+	} {
+		if strings.Contains(out.Impl, bad) {
+			t.Fatalf("unexpected legacy static-overload form %q in impl", bad)
+		}
+	}
+}
+
+// TestEmitSetSolverLargeTypeForall asserts that emit_set on a state
+// symbol whose function-sort domain is "large" (Python is_large_type at
+// ivy_to_cpp.py:445-449) emits a forall-quantified __to_solver
+// constraint (Python lines 844-852) instead of unrolling the domain.
+//
+// Added as part of TODO 018 milestone 2.
+func TestEmitSetSolverLargeTypeForall(t *testing.T) {
+	// `key` is uninterpreted with no cardinality, so the domain of
+	// `valueof : (key -> bool)` is non-integer/unsized and triggers the
+	// large-type branch.
+	mod := compileIvySource(t, `#lang ivy1.7
+type key
+relation valueof(K:key)
+`)
+	g := &Generator{Mod: mod, ClassName: "kv"}
+	g.Config = Config{Target: "test", ClassName: "kv"}
+	var sym stateSymbol
+	for _, s := range g.stateSymbols() {
+		if s.Name == "valueof" {
+			sym = s
+			break
+		}
+	}
+	if sym.Name == "" {
+		t.Fatalf("valueof not found in stateSymbols")
+	}
+	if !g.isLargeType(sym.Sort) {
+		t.Fatalf("expected isLargeType=true for valueof : (key -> bool)")
+	}
+	w := &cppWriter{}
+	g.emitSetSolver(w, sym, "obj")
+	body := w.String()
+	for _, want := range []string{
+		"std::vector<z3::expr> __quants;",
+		`__quants.push_back(ctx.constant("X__0", sort("key")));`,
+		`add(forall(__quants, __to_solver(*this, apply("valueof", ctx.constant("X__0", sort("key"))), obj.valueof)));`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf("missing %q in emitSetSolver output:\n%s", want, body)
+		}
+	}
+	// Must not fall through to the default per-element loop.
+	if strings.Contains(body, `int_to_z3(sort("key"), static_cast<long long>`) {
+		t.Fatalf("large-type branch should not unroll into int_to_z3 calls:\n%s", body)
+	}
 }
 
 // --- TODO 009: method signatures, parameter passing, return handling ---
