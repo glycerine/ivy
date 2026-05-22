@@ -343,6 +343,15 @@ func prepareModuleForCPP(mod *goivy.Module, cfg Config) {
 		if _, ok := mod.Sig.Symbols.Get2("_generating"); !ok {
 			_, _ = mod.Sig.AddSymbol("_generating", goivy.Boolean)
 		}
+		// Also register as a relation so emitStateDecls (which iterates
+		// Mod.Relations + Mod.Functions) declares `bool _generating;` as
+		// a member. Python's `all_state_symbols` includes any signature
+		// symbol; Go's filter is narrower, so we register explicitly.
+		if mod.Relations != nil {
+			if _, exists := mod.Relations.Get2("_generating"); !exists {
+				mod.Relations.Set("_generating", goivy.Boolean)
+			}
+		}
 	}
 }
 

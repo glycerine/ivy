@@ -3973,9 +3973,8 @@ attribute set.weight = "3.0"
 		// Init generator + per-action generators.
 		"init_gen my_init_gen(ivy);",
 		"my_init_gen.generate(ivy);",
-		"std::vector<gen *> generators;",
 		"std::vector<double> weights;",
-		"generators.push_back(new set_gen(ivy));",
+		"set_gen set_generator(ivy);",
 		"weights.push_back(3);",
 		"double totalweight = 3;",
 		"int num_gens = 1;",
@@ -3984,10 +3983,10 @@ attribute set.weight = "3.0"
 		"bool do_over = false;",
 		"for (int cycle = 0; cycle < test_iters; cycle++)",
 		"if (frnd < totalweight) {",
-		"gen &gx = *generators[idx];",
 		"ivy._generating = true;",
-		"bool sat = gx.generate(ivy);",
-		"gx.execute(ivy);",
+		// Per-index dispatch instead of virtual gen *.
+		"case 0: sat = set_generator.generate(ivy); break;",
+		"case 0: set_generator.execute(ivy); break;",
 		// select() branch for readers/timers.
 		"FD_ZERO(&rdfds);",
 		"int foo = select(maxfds + 1, &rdfds, 0, 0, &timeout);",
@@ -4724,12 +4723,13 @@ export set
 		"class set_gen : public gen",
 		"init_gen my_init_gen(ivy);",
 		"my_init_gen.generate(ivy);",
-		// New Python-style weighted random loop pattern.
-		"std::vector<gen *> generators;",
-		"generators.push_back(new set_gen(ivy));",
+		// New weighted random loop pattern, with stack-allocated
+		// generators dispatched by index switch (ivy_go_z3.hpp's `gen`
+		// lacks virtual generate/execute).
+		"set_gen set_generator(ivy);",
 		"for (int cycle = 0; cycle < test_iters; cycle++)",
-		"bool sat = gx.generate(ivy);",
-		"gx.execute(ivy);",
+		"case 0: sat = set_generator.generate(ivy); break;",
+		"case 0: set_generator.execute(ivy); break;",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in test output:\n%s", want, out.Impl)

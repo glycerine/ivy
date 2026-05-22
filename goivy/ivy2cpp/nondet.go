@@ -65,6 +65,14 @@ func (g *Generator) mkNondetSym(w *cppWriter, local goivy.Expr, name string, uni
 
 	fs, isFunc := sort.(*goivy.LogicFunctionSort)
 	if !isFunc {
+		// Sorts with struct destructors get per-field nondet init
+		// recursively; the struct itself has no `(struct)int` cast.
+		// Mirrors Python `assign_symbol_value` over `sort_destructors`
+		// (ivy_to_cpp.py:203-214).
+		if _, ok := g.Mod.SortDestructors.Get2(sortName(sort)); ok {
+			g.mkNondetStructFields(w, varName(name), sort, name, uniqueID)
+			return
+		}
 		g.mkNondet(w, varName(name), 0, name, uniqueID, sort)
 		return
 	}
@@ -112,6 +120,44 @@ func (g *Generator) mkNondetSym(w *cppWriter, local goivy.Expr, name string, uni
 	g.mkNondet(w, lhs, 0, name, uniqueID, fs.Range())
 	for i := 0; i < opened; i++ {
 		w.close("")
+	}
+}
+
+// mkNondetStructFields recursively emits nondet init for every field
+// of a struct sort. Each destructor's range sort is treated the same
+// way: scalar leaves get `(ct)___ivy_choose(...)`, nested struct
+// leaves recurse, multi-index destructors loop over each index.
+// Mirrors Python `assign_symbol_value` (ivy_to_cpp.py:203-214) which
+// walks the destructor tree of `sym.sort` and applies the lambda at
+// each leaf.
+func (g *Generator) mkNondetStructFields(w *cppWriter, lhsExpr string, sort goivy.Sort, name string, uniqueID int64) {
+	destrs := g.Mod.SortDestructors.Get(sortName(sort))
+	for _, d := range destrs {
+		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
+		if !ok {
+			continue
+		}
+		domain := fs.Domain()
+		if len(domain) > 0 {
+			domain = domain[1:]
+		}
+		rng := fs.Range()
+		field := varName(memName(d.Name))
+		// Open one loop per index sort, building up the bracketed
+		// access expression as we go.
+		fieldExpr := lhsExpr + "." + field
+		vs, closer := g.emitDomainLoops(w, domain)
+		fullExpr := fieldExpr + cppIndexSuffix(vs)
+		if g.nondetSkipSort(rng) {
+			closer()
+			continue
+		}
+		if _, hasDestr := g.Mod.SortDestructors.Get2(sortName(rng)); hasDestr {
+			g.mkNondetStructFields(w, fullExpr, rng, name, uniqueID)
+		} else {
+			g.mkNondet(w, fullExpr, 0, name, uniqueID, rng)
+		}
+		closer()
 	}
 }
 

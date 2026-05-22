@@ -58,6 +58,11 @@ type Generator struct {
 	currentReturns []*goivy.Const
 	errs           []error
 
+	// testLoopGenEntries threads the per-run generator locals between
+	// emitTestLoopBody (which declares them) and emitTestLoopGenBranch
+	// (which dispatches on idx via switch). nil outside of emitTestMain.
+	testLoopGenEntries []testGenEntry
+
 	// extRel caches the result of extensionalRelations(). nil before
 	// computation; non-nil after the first call (may be empty).
 	// Mirrors Python ivy_to_cpp.py:1912-1913 `the_extensional_relations`,
@@ -106,6 +111,11 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 		BaseName:  base,
 		ClassName: className,
 	}
+	// Match the per-target setup the isolate path runs in
+	// `prepareModuleForCPP`. Skipping this for the direct-Generate path
+	// meant `_generating` and similar test-only state never got
+	// declared as a class member.
+	prepareModuleForCPP(mod, cfg)
 	if err := g.generate(); err != nil {
 		return nil, err
 	}
@@ -580,6 +590,11 @@ type stateSymbol struct {
 	Sort goivy.Sort
 }
 
+type testGenEntry struct {
+	Class string
+	Var   string
+}
+
 // allStateSymbols mirrors Python ivy_to_cpp.py:33-35 `all_state_symbols`.
 // It returns every symbol in the signature that is neither a constructor
 // nor a solver-interpreted symbol (the result of SolverName is "" for
@@ -931,31 +946,39 @@ func (g *Generator) emitTestMain(w *cppWriter) {
 // Python `emit_repl_boilerplate3test` (ivy_to_cpp.py:4265-4467):
 // build init_gen, weighted action generators, then loop test_iters
 // times choosing among generators / readers / timers via select().
+//
+// The Go port's `gen` base class (ivy_go_z3.hpp) does not have virtual
+// generate/execute methods (Python's templated `ivy_z3_gen` does). So
+// instead of `vector<gen *>` polymorphism we declare each generator as
+// a stack local and dispatch by index through a switch. This keeps
+// ivy_go_z3.hpp source-stable.
 func (g *Generator) emitTestLoopBody(w *cppWriter) {
 	// init_gen sets up the initial state.
 	w.line("init_gen my_init_gen(ivy);")
 	w.line("my_init_gen.generate(ivy);")
 	w.blank()
-	w.line("std::vector<gen *> generators;")
 	w.line("std::vector<double> weights;")
 	initActions := g.initialMixinActionNames()
 	names := g.publicActionNamesSorted()
 	totalweight := 0.0
-	numGens := 0
+	var entries []testGenEntry
 	for _, name := range names {
 		if initActions[name] || isFinalizeName(name) {
 			continue
 		}
 		className := g.actionGeneratorClassName(name)
-		w.linef("generators.push_back(new %s(ivy));", className)
+		genVar := varName(strings.TrimPrefix(name, "ext:")) + "_generator"
+		w.linef("%s %s(ivy);", className, genVar)
 		weight := g.actionWeight(name)
 		w.linef("weights.push_back(%g);", weight)
 		totalweight += weight
-		numGens++
+		entries = append(entries, testGenEntry{Class: className, Var: genVar})
 	}
 	w.linef("double totalweight = %g;", totalweight)
-	w.linef("int num_gens = %d;", numGens)
+	w.linef("int num_gens = %d;", len(entries))
 	w.blank()
+	g.testLoopGenEntries = entries
+	defer func() { g.testLoopGenEntries = nil }()
 	w.line("#ifdef _WIN32")
 	w.line("LARGE_INTEGER freq;")
 	w.line("QueryPerformanceFrequency(&freq);")
@@ -1011,12 +1034,25 @@ func (g *Generator) emitTestLoopGenBranch(w *cppWriter) {
 	w.line("if (frnd < sum) break;")
 	w.line("idx++;")
 	w.close("")
-	w.line("gen &gx = *generators[idx];")
 	w.line("ivy.__lock();")
 	w.line("ivy._generating = true;")
-	w.line("bool sat = gx.generate(ivy);")
+	w.line("bool sat = false;")
+	// Per-index dispatch (no virtual `gen` API in ivy_go_z3.hpp).
+	if len(g.testLoopGenEntries) > 0 {
+		w.open("switch (idx) {")
+		for i, e := range g.testLoopGenEntries {
+			w.linef("case %d: sat = %s.generate(ivy); break;", i, e.Var)
+		}
+		w.close("")
+	}
 	w.open("if (sat) {")
-	w.line("gx.execute(ivy);")
+	if len(g.testLoopGenEntries) > 0 {
+		w.open("switch (idx) {")
+		for i, e := range g.testLoopGenEntries {
+			w.linef("case %d: %s.execute(ivy); break;", i, e.Var)
+		}
+		w.close("")
+	}
 	w.line("ivy._generating = false;")
 	w.line("ivy.__unlock();")
 	w.line("#ifdef _WIN32")
