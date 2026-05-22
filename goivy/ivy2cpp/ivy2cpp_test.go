@@ -3422,6 +3422,167 @@ export step
 	}
 }
 
+func TestNativeInlineTagEmitsAfterClass(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+<<< inline
+inline int inlined_helper() { return 7; }
+>>>
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "inlinecase"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	classEnd := strings.Index(out.Header, "};")
+	helperAt := strings.Index(out.Header, "inline int inlined_helper()")
+	if classEnd < 0 {
+		t.Fatalf("missing class closing brace in header:\n%s", out.Header)
+	}
+	if helperAt < 0 {
+		t.Fatalf("inline native body missing from header:\n%s", out.Header)
+	}
+	if helperAt < classEnd {
+		t.Fatalf("inline native should appear AFTER closing class brace.\nhelper@%d class}@%d\n%s", helperAt, classEnd, out.Header)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestNativeUnknownTagReportsError(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+<<< bogus_tag
+int unused_member_for_validation;
+>>>
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "badtag"})
+	if err == nil {
+		t.Fatalf("expected error for unknown native tag, got nil; header:\n%s\nimpl:\n%s", out.Header, out.Impl)
+	}
+	if !strings.Contains(err.Error(), "syntax error at token bogus_tag") {
+		t.Fatalf("error should mention the offending tag, got: %v", err)
+	}
+}
+
+func TestNativeEncodeTagEmitsImplBody(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type mysort
+<<< encode mysort
+/* encode body for mysort */
+>>>
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "enc"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if got := strings.Count(out.Impl, "/* encode body for mysort */"); got != 1 {
+		t.Fatalf("encode body count=%d, want 1; impl:\n%s", got, out.Impl)
+	}
+}
+
+func TestNativeCallbackThunkEmitted(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+action handler(i:idx) = {
+}
+<<< member
+int storage_for_`+"`handler`"+`;
+>>>
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "cbcase"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	wants := []string{
+		"struct thunk__handler {",
+		"cbcase *__ivy;",
+		"thunk__handler(cbcase *__ivy)",
+		"void operator()(unsigned i) const {",
+		"__ivy->handler(i);",
+	}
+	for _, w := range wants {
+		if !strings.Contains(out.Impl, w) {
+			t.Fatalf("missing %q in impl:\n%s", w, out.Impl)
+		}
+	}
+}
+
+func TestNativeActionCallsThunkConstructor(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+action handler(i:idx) = {
+}
+action install = {
+    <<<
+        register(`+"`handler`"+`);
+    >>>
+}
+export install
+`)
+	out, err := Generate(mod, Config{ClassName: "cbact"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "register(thunk__handler(this));") {
+		t.Fatalf("native action body should call thunk constructor:\n%s", out.Impl)
+	}
+	if !strings.Contains(out.Impl, "struct thunk__handler {") {
+		t.Fatalf("thunk struct should be emitted for native-action callback:\n%s", out.Impl)
+	}
+}
+
+func TestNativeInlineDedup(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+<<< inline
+inline int dup_inline() { return 1; }
+>>>
+<<< inline
+inline int dup_inline() { return 1; }
+>>>
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "indedup"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if got := strings.Count(out.Header, "inline int dup_inline()"); got != 1 {
+		t.Fatalf("inline native dedup expected 1, got %d; header:\n%s", got, out.Header)
+	}
+}
+
+func TestNativeDuplicateEncodeErrors(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type mysort
+<<< encode mysort
+/* first encoding */
+>>>
+<<< encode mysort
+/* second encoding */
+>>>
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{ClassName: "encdup"})
+	if err == nil {
+		t.Fatalf("expected duplicate encode error; header:\n%s\nimpl:\n%s", out.Header, out.Impl)
+	}
+	if !strings.Contains(err.Error(), "duplicate encoding for sort mysort") {
+		t.Fatalf("error should mention duplicate encoding, got: %v", err)
+	}
+}
+
 func TestReplDispatchForExportedAction(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 action step = {

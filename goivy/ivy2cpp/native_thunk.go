@@ -30,14 +30,18 @@ func (g *Generator) collectCallbackActions() []string {
 	}
 	used := map[string]bool{}
 	// Top-level natives: args[0] is the label, args[1] the code body;
-	// the remaining args are the antiquote parameters.
+	// the remaining args are the antiquote parameters. Per
+	// CompileNativeDef (goivy/compiler_phase6.go:1086, 1093), each
+	// arg is wrapped in a *CompiledNode that holds the compiled
+	// goivy.Expr — unwrap before checking.
 	for _, n := range g.Mod.Natives {
 		args := n.Args()
 		if len(args) < 2 {
 			continue
 		}
 		for _, child := range args[2:] {
-			if name, ok := g.isCallbackAction(child); ok {
+			node := unwrapCompiled(child)
+			if name, ok := g.isCallbackAction(node); ok {
 				used[name] = true
 			}
 		}
@@ -64,6 +68,22 @@ func (g *Generator) collectCallbackActions() []string {
 	}
 	sort.Strings(names)
 	return names
+}
+
+// unwrapCompiled strips a *goivy.CompiledNode wrapper down to the
+// underlying Expr/Node payload. Top-level native args go through
+// CompileNativeDef which wraps each in a CompiledNode (see
+// goivy/compiler_phase6.go:1063, 1086, 1093). Antiquote params on
+// LogicNativeAction reach us already unwrapped.
+func unwrapCompiled(n goivy.Node) goivy.Node {
+	cn, ok := n.(*goivy.CompiledNode)
+	if !ok {
+		return n
+	}
+	if inner, ok := cn.Node.(goivy.Node); ok {
+		return inner
+	}
+	return n
 }
 
 // emitCallbackThunks writes one struct per callback action at file
