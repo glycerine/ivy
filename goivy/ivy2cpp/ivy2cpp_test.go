@@ -393,8 +393,8 @@ progress waitn(C) = ok(C)
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"long long wait;",
-		"long long waitn[2];",
+		"int wait;",
+		"int waitn[2];",
 		"wait = ready ? 0 : wait + 1;",
 		"for (color C : {red, green})",
 		"waitn[C] = ok[C] ? 0 : waitn[C] + 1;",
@@ -417,7 +417,7 @@ progress wait = ready
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"long long __ivy_maxt",
+		"int __ivy_maxt",
 		"__ivy_maxt",
 		"= 0;",
 		"ivy_check_progress(wait, __ivy_maxt",
@@ -442,7 +442,7 @@ progress wait(C,B) = edge(C,B)
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"long long wait[2][2];",
+		"int wait[2][2];",
 		"for (color C : {red, green})",
 		"for (bit B : {low, high})",
 		"wait[C][B] = edge[C][B] ? 0 : wait[C][B] + 1;",
@@ -473,7 +473,7 @@ rely wait -> helper
 	}
 	for _, want := range []string{
 		"#include <algorithm>",
-		"long long __ivy_maxt",
+		"int __ivy_maxt",
 		"__ivy_maxt",
 		"= std::max(",
 		"helper",
@@ -532,12 +532,16 @@ rely wait(C) -> helper(D)
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	// Python ivy_to_cpp.py:1798-1802 alpha-renames extra rely-RHS
+	// variables by appending "__" to their name; here D is an extra
+	// (in the rely RHS but not in the rely LHS), so the inner loop and
+	// the helper subscript both use D__.
 	for _, want := range []string{
 		"for (color C : {red, green})",
-		"for (color D : {red, green})",
+		"for (color D__ : {red, green})",
 		"__ivy_maxt",
 		"= std::max(",
-		"helper[D]",
+		"helper[D__]",
 		"ivy_check_progress(wait[C], __ivy_maxt",
 	} {
 		if !strings.Contains(out.Impl, want) {
@@ -566,6 +570,145 @@ rely wait
 	}
 	if strings.Contains(out.Impl, "ivy_check_progress(wait") {
 		t.Fatalf("bare rely should skip progress check like Python:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+// TestTickRelyExtraSharesProgressVarNameRenamed exercises the
+// alpha-rename path in emitRelyMax. The rely RHS extra variable D
+// shares its name with the outer progress LHS variable D; without
+// alpha-renaming the inner loop would shadow the outer and the
+// helper[D][D] subscript would collapse to a single coordinate. Python
+// (ivy_to_cpp.py:1798-1802) renames the extra to D__.
+func TestTickRelyExtraSharesProgressVarNameRenamed(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+relation ready(C:color)
+relation helper_ready(C:color, D:color)
+progress wait(D) = ready(D)
+progress helper(X, Y) = helper_ready(X, Y)
+rely wait(C) -> helper(C, D)
+`)
+	if len(mod.Rely) == 0 {
+		t.Fatalf("expected parsed rely declarations to populate module")
+	}
+	out, err := Generate(mod, Config{ClassName: "tickextrarename"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"for (color D : {red, green})",
+		"for (color D__ : {red, green})",
+		"helper[D][D__]",
+		"ivy_check_progress(wait[D], __ivy_maxt",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q:\n%s", want, out.Impl)
+		}
+	}
+	// The bug we're guarding against: without alpha-renaming the inner
+	// extras loop would shadow the outer progress loop and helper[D][D]
+	// would collapse both subscripts to the inner D.
+	if strings.Contains(out.Impl, "helper[D][D]") {
+		t.Fatalf("variable capture: expected alpha-rename to avoid helper[D][D]:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, "helper[D__][D__]") {
+		t.Fatalf("over-substitution: progress var also renamed to D__:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+// TestProgressCounterEmittedAsInt verifies the declared counter type
+// is `int`, matching Python ivy_to_cpp.py:2332-2333 which passes
+// c_type='int' to declare_symbol. ivy_check_progress's signature is
+// (int,int), so the counter must be int to avoid narrowing.
+func TestProgressCounterEmittedAsInt(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual ready : bool
+relation ok(C:color)
+progress wait = ready
+progress waitn(C) = ok(C)
+`)
+	out, err := Generate(mod, Config{ClassName: "tickintctr"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"int wait;",
+		"int waitn[2];",
+	} {
+		if !strings.Contains(out.Header, want) {
+			t.Fatalf("missing %q in header:\n%s", want, out.Header)
+		}
+	}
+	if strings.Contains(out.Header, "long long wait") {
+		t.Fatalf("progress counters must be int, not long long:\n%s", out.Header)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+// TestProgressCountersNotResetInConstructor verifies that the class
+// constructor does NOT reset progress counters to 0. Python only
+// clears progress in init_gen (ivy_to_cpp.py:964); the constructor
+// (ivy_to_cpp.py:2345-2377) does not. The only `wait = 0;` should be
+// inside __tick's `if (__ivy_maxt > __timeout)` block.
+func TestProgressCountersNotResetInConstructor(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual ready : bool
+individual helper_ready : bool
+progress wait = ready
+progress helper = helper_ready
+rely wait -> helper
+`)
+	out, err := Generate(mod, Config{ClassName: "tickctor"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// Slice out the constructor body. Python's constructor is
+	//   <classname>::<classname>(...) { ... }
+	// Find that and assert no `wait = 0;` inside.
+	impl := out.Impl
+	ctorMarker := "tickctor::tickctor("
+	start := strings.Index(impl, ctorMarker)
+	if start < 0 {
+		t.Fatalf("could not locate constructor in impl:\n%s", impl)
+	}
+	open := strings.Index(impl[start:], "{")
+	if open < 0 {
+		t.Fatalf("could not locate constructor body opening brace:\n%s", impl[start:])
+	}
+	open += start
+	depth := 0
+	end := -1
+	for i := open; i < len(impl); i++ {
+		switch impl[i] {
+		case '{':
+			depth++
+		case '}':
+			depth--
+			if depth == 0 {
+				end = i
+			}
+		}
+		if end >= 0 {
+			break
+		}
+	}
+	if end < 0 {
+		t.Fatalf("could not locate end of constructor body:\n%s", impl[open:])
+	}
+	body := impl[open : end+1]
+	if strings.Contains(body, "wait = 0;") || strings.Contains(body, "helper = 0;") {
+		t.Fatalf("progress counters must not be reset in constructor; body:\n%s", body)
+	}
+	// Sanity: the reset should still appear in __tick where Python emits it.
+	tickIdx := strings.Index(impl, "__tick(int __timeout)")
+	if tickIdx < 0 || !strings.Contains(impl[tickIdx:], "wait = 0;") {
+		t.Fatalf("expected wait = 0; inside __tick body:\n%s", impl)
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)

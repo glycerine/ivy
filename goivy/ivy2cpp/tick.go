@@ -286,20 +286,29 @@ func (g *Generator) emitRelyMax(w *cppWriter, maxt string, p progressDecl, r rel
 		w.open(header)
 		opened++
 	}
-	prev := g.exprAliases
-	next := make(map[string]goivy.Expr, len(prev)+len(aliases)+len(extras))
-	for k, v := range prev {
-		next[k] = v
-	}
-	for k, v := range aliases {
-		next[k] = v
+	// Build a single-pass substitution map (mirrors Python's
+	// substitute_ast call at ivy_to_cpp.py:1804). We can't reuse
+	// g.exprAliases here because emitExpr chains alias lookups
+	// recursively, which would re-substitute the freshly-substituted
+	// progress variable into the renamed extra (e.g. C -> D -> D__).
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for _, v := range goivy.FreeVariablesList(r.LHS) {
+		if repl, ok := aliases[v.Name]; ok {
+			subs[goivy.Key(v)] = repl
+		}
 	}
 	for i, orig := range extras {
-		next[orig.Name] = renamed[i]
+		subs[goivy.Key(orig)] = renamed[i]
 	}
-	g.exprAliases = next
-	rhs, err := g.emitExpr(r.RHS)
-	g.exprAliases = prev
+	substituted, err := goivy.Substitute(r.RHS, subs)
+	if err != nil {
+		g.unsupported(w, "unsupported rely substitution for %s: %s", p.Name, err.Error())
+		for i := 0; i < opened; i++ {
+			w.close("")
+		}
+		return
+	}
+	rhs, err := g.emitExpr(substituted)
 	if err != nil {
 		g.unsupported(w, "unsupported rely expression for %s: %s", p.Name, err.Error())
 		for i := 0; i < opened; i++ {
