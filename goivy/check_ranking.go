@@ -261,21 +261,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 
 	proofLabel := cfg.ProofLabel
 
-	// Build finite sorts map
-	finiteSorts := make(map[string]bool)
-	var uninterpretedSorts []Sort
-	if m != nil && m.Sig != nil {
-		for name, s := range m.Sig.Sorts.All() {
-			if m.FiniteSorts[name] {
-				finiteSorts[name] = true
-			} else if _, isUI := s.(*UninterpretedSort); isUI {
-				uninterpretedSorts = append(uninterpretedSorts, s)
-			}
-		}
-	}
-	sort.Slice(uninterpretedSorts, func(i, j int) bool {
-		return uninterpretedSorts[i].String() < uninterpretedSorts[j].String()
-	})
+	finiteSorts, uninterpretedSorts := rankingFiniteSortsAndUninterpreted(m)
 
 	// Add model invariants
 	var invars []*LabeledFormula
@@ -692,6 +678,24 @@ func ModelPass(model *NormalProgram, transform func(Node) Node) {
 			model.Asms[i] = transform(asm).(*LabeledFormula)
 		}
 	}
+}
+
+func rankingFiniteSortsAndUninterpreted(m *Module) (map[string]bool, []Sort) {
+	finiteSorts := make(map[string]bool)
+	var uninterpretedSorts []Sort
+	if m != nil && m.Sig != nil {
+		for name, s := range m.Sig.Sorts.All() {
+			if m.FiniteSorts[name] || isTheoryFiniteSort(name, m) {
+				finiteSorts[name] = true
+			} else if _, isUI := s.(*UninterpretedSort); isUI {
+				uninterpretedSorts = append(uninterpretedSorts, s)
+			}
+		}
+	}
+	sort.Slice(uninterpretedSorts, func(i, j int) bool {
+		return uninterpretedSorts[i].String() < uninterpretedSorts[j].String()
+	})
+	return finiteSorts, uninterpretedSorts
 }
 
 // --- Diagnostics ---

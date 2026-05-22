@@ -768,6 +768,26 @@ func TestCheckAddParamsToD_AcceptsNonUninterpSort(t *testing.T) {
 	}
 }
 
+func TestCheckRankingFiniteSortsIncludesTheoryFinite(t *testing.T) {
+	sig := NewSig()
+	phType := &LogicEnumeratedSort{Name: "ph_type", Extension: []string{"nop_ph", "wr_ph"}}
+	nodeType := &UninterpretedSort{Name: "node"}
+	sig.Sorts.Set("ph_type", phType)
+	sig.Sorts.Set("node", nodeType)
+	mod := NewWithSig(sig)
+
+	finiteSorts, uninterpretedSorts := rankingFiniteSortsAndUninterpreted(mod)
+	if !finiteSorts["ph_type"] {
+		t.Fatal("ranking finite sorts should include enumerated sorts via sort theory")
+	}
+	if finiteSorts["node"] {
+		t.Fatal("uninterpreted sort without finite interpretation should not be finite")
+	}
+	if len(uninterpretedSorts) != 1 || SortName(uninterpretedSorts[0]) != "node" {
+		t.Fatalf("uninterpretedSorts = %#v, want only node", uninterpretedSorts)
+	}
+}
+
 // --- Bug 16 regression: ranking trace_hook ---
 
 // TestRankingTraceHook_Pattern verifies the trace_hook closure pattern
