@@ -1549,39 +1549,80 @@ Reminder:
   citing the new Go locations and test names, and update this audit doc in
   the same commit as the implementation.
 
-## TODO 025 - Port conjecture/property/isolate integration
+## DONE 025 - Port conjecture/property/isolate integration
+
+Status: ported the per-session flag setup, isolate-specific module
+preparation, and lineno-preserving conjecture insertion from Python's
+`main_int` (`pyivy/ivy/ivy/ivy_to_cpp.py:4513-4645`) and
+`add_conjs_to_actions` (`pyivy/ivy/ivy/ivy_to_cpp.py:4495-4503`).
+
+The new `applySessionParameters` helper
+(`goivy/ivy2cpp/compile.go:applySessionParameters`) runs once per
+session and mirrors Python lines 4514-4530: `SetDeterminize(true)`,
+`SolverOpts.UseZ3Enums=true`, `IsolateCfg.InterpretAllSorts=true`,
+`SetVerifyingOnMod(false)` (auto-initializing `CompCfg` when nil), and
+the `IsolateCfg` toggles `ConeOfInfluence=false`, `CreateImports=true`,
+`EnforceAxioms=true`, `AssumeInvariants=false`, plus the
+target-dependent `IsolateMode` and `FilterSymbols`/`KeepDestructors`
+choices. It is wired into both `CompileAndGenerateAll` (before
+`goivy.SourceFile`) and `Generate` (after config normalization), so
+direct-Generate callers see the same session state.
+
+Per-isolate setup inside the `CompileAndGenerateAll` loop now mirrors
+Python 4612-4622: for `target=repl` in language ≥1.7, a non-extract
+isolate named on the command line is rewritten in place to an extract
+(`iso.Kind="extract"; iso.WithArgs=len(iso.Elems)`); and
+`isoMod.Cfg.IsolateCfg.CompileWithInvariants` is set to true exactly
+when `target=="test" && languageVersionAtLeast(isoMod,"1.7")`.
+
+Early `_generating` registration (Python 4550-4551) happens before
+`goivy.SourceFile` for the `test` target so cone-of-influence sees the
+symbol; the existing late add in `prepareModuleForCPP` stays as a
+safety net.
+
+`addConjsToActions` (`goivy/ivy2cpp/compile.go`) now calls
+`a.SetLineno(conj.GetLineno())` on each appended `LogicAssertAction`,
+mirroring Python's `set_lineno(conj.lineno)`. The line number flows
+through the existing `linenoStr` formatter (`action.go:200-207`) into
+the emitted `ivy_assert(..., "<file>: line N")` label.
+
+Reused utilities:
+
+- `goivy.SetDeterminize` (`goivy/actions_phase3.go:467`).
+- `goivy.SetVerifyingOnMod` (`goivy/module_compiler_config.go:35`)
+  with `goivy.NewCompilerConfig` (`goivy/module_compiler_config.go:12`).
+- `(*IsolateDef).IsExtract` (`goivy/ast_decl_ast.go:1552`) for
+  discrimination; in-place mutation of `Kind`/`WithArgs` matches the
+  Python `im.module.isolates[isolate] = the_iso` rebind.
+- `(*ActionBase).SetLineno` (`goivy/module_action.go:53`) and the
+  `*LabeledFormula` embedded `Base.GetLineno()` (`goivy/ast.go:292`).
 
 Go locations:
 
-- `goivy/ivy2cpp/compile.go:29-86`
-- `goivy/ivy2cpp/generator.go:38-115`
+- `goivy/ivy2cpp/compile.go` — `applySessionParameters`, early
+  `_generating` add in `CompileAndGenerateAll`, per-isolate extract
+  conversion + `CompileWithInvariants` toggle, and the lineno
+  assignment in `addConjsToActions`.
+- `goivy/ivy2cpp/generator.go` — `applySessionParameters` wiring in
+  `Generate`.
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:4495-4503`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:4513-4645`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:4495-4503` (`add_conjs_to_actions`).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:4513-4645` (`main_int`).
 
-Gap:
+Tests:
 
-- Python adds conjectures to action behavior and has isolate/v2-specific
-  generation control flow.
-- Go exposes an `Isolate` field but does not port the full Python behavior
-  around isolates, conjectures, and module preparation.
-
-Conformance work:
-
-- Port conjecture insertion and isolate handling from Python's main path.
-- Verify that generated actions and tests include the same property checks as
-  Python.
-
-Tests to add:
-
-- Isolated modules with conjectures/properties, including generated tests that
-  fail when a conjecture is violated.
+- New (`goivy/ivy2cpp/ivy2cpp_test.go`, appended after the TODO 023
+  repl-target Z3 include test):
+  - `TestConjectureAppendsAssertToPublicActions`
+  - `TestConjectureAddsCheckInvariantsInitializer`
+  - `TestPropertyMovedIntoAxioms`
+  - `TestConjectureLinenoPropagatesToAssert`
 
 Reminder:
 
-- [ ] When this lands, rename to `## DONE 025 - …`, add a `Status:` paragraph
+- [x] When this lands, rename to `## DONE 025 - …`, add a `Status:` paragraph
   citing the new Go locations and test names, and update this audit doc in
   the same commit as the implementation.
 

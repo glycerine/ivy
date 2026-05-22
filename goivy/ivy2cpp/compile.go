@@ -43,6 +43,14 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 	if isolate := ivyParams["isolate"]; isolate != "" {
 		mod.Cfg.Isolate = isolate
 	}
+	applySessionParameters(mod, cfg)
+	// Python ivy_to_cpp.py:4550-4551 adds _generating to the signature
+	// before ivy_init so cone-of-influence sees it as a state symbol.
+	if cfg.Target == "test" {
+		if _, ok := mod.Sig.Symbols.Get2("_generating"); !ok {
+			_, _ = mod.Sig.AddSymbol("_generating", goivy.Boolean)
+		}
+	}
 	sig := goivy.NewSigOn(mod.Cfg.IuCfg)
 	if err := goivy.SourceFile(filename, mod, sig, map[string]interface{}{"create_isolate": false}); err != nil {
 		return nil, err
@@ -58,6 +66,18 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 			isoMod.Cfg = goivy.NewConfig()
 		}
 		isoMod.Cfg.Isolate = isolate
+		// Python ivy_to_cpp.py:4612-4618 rewrites a non-extract isolate
+		// named on the command line into an ExtractDef for repl in 1.7+.
+		if cfg.Target == "repl" && languageVersionAtLeast(isoMod, "1.7") {
+			if iso, ok := isoMod.Isolates[isolate]; ok && iso != nil && !iso.IsExtract() {
+				iso.Kind = "extract"
+				iso.WithArgs = len(iso.Elems)
+			}
+		}
+		// Python ivy_to_cpp.py:4620-4622 — compile_with_invariants is
+		// true only for the test target in language version >= 1.7.
+		isoMod.Cfg.IsolateCfg.CompileWithInvariants =
+			cfg.Target == "test" && languageVersionAtLeast(isoMod, "1.7")
 		if isolate != "" || languageVersionAtLeast(isoMod, "1.7") {
 			if err := goivy.CreateIsolate(isolate, isoMod); err != nil {
 				return nil, err
@@ -413,6 +433,44 @@ func ensureSortOrderForCPP(mod *goivy.Module) {
 	}
 }
 
+// applySessionParameters mirrors the per-session flag setup that
+// Python ivy_to_cpp.py:main_int runs at lines 4514-4530 (and the
+// implicit slv.set_use_native_enums(True) default). Idempotent so it
+// is safe to call from both CompileAndGenerateAll and Generate.
+func applySessionParameters(mod *goivy.Module, cfg Config) {
+	if mod == nil || mod.Cfg == nil {
+		return
+	}
+	if mod.Cfg.ActCfg != nil {
+		goivy.SetDeterminize(mod.Cfg.ActCfg, true)
+	}
+	if mod.Cfg.SolverOpts != nil {
+		mod.Cfg.SolverOpts.UseZ3Enums = true
+	}
+	if mod.Cfg.IsolateCfg != nil {
+		isoCfg := mod.Cfg.IsolateCfg
+		isoCfg.InterpretAllSorts = true
+		isoCfg.ConeOfInfluence = false
+		isoCfg.CreateImports = true
+		isoCfg.EnforceAxioms = true
+		isoCfg.AssumeInvariants = false
+		if cfg.Target == "test" {
+			isoCfg.IsolateMode = "test"
+		} else {
+			isoCfg.IsolateMode = "compile"
+		}
+		if cfg.Target == "gen" {
+			isoCfg.FilterSymbols = false
+		} else {
+			isoCfg.KeepDestructors = true
+		}
+	}
+	if mod.CompCfg == nil {
+		mod.CompCfg = goivy.NewCompilerConfig(mod.Cfg)
+	}
+	goivy.SetVerifyingOnMod(mod, false)
+}
+
 func addConjsToActions(mod *goivy.Module) {
 	var asserts []goivy.Expr
 	for _, conj := range mod.LabeledConjs {
@@ -423,7 +481,9 @@ func addConjsToActions(mod *goivy.Module) {
 		if !ok {
 			continue
 		}
-		asserts = append(asserts, goivy.NewAssertAction(fmla))
+		a := goivy.NewAssertAction(fmla)
+		a.SetLineno(conj.GetLineno())
+		asserts = append(asserts, a)
 	}
 	if len(asserts) == 0 {
 		return

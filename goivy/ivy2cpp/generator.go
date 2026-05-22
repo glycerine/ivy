@@ -128,6 +128,7 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 		BaseName:  base,
 		ClassName: className,
 	}
+	applySessionParameters(mod, cfg)
 	// Match the per-target setup the isolate path runs in
 	// `prepareModuleForCPP`. Skipping this for the direct-Generate path
 	// meant `_generating` and similar test-only state never got

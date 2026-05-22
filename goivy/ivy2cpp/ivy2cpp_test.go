@@ -7924,3 +7924,163 @@ export step
 	}
 }
 
+// TODO 025 — Conjecture/property/isolate integration tests.
+//
+// findFirstAssertInAction walks the action tree of `a` and returns the
+// first *LogicAssertAction it encounters. Uses IterSubactions which
+// returns a flat list (self plus all descendants), so we walk it
+// without recursing.
+func findFirstAssertInAction(a goivy.Action) *goivy.LogicAssertAction {
+	if a == nil {
+		return nil
+	}
+	if as, ok := a.(*goivy.LogicAssertAction); ok {
+		return as
+	}
+	if iter, ok := a.(interface {
+		IterSubactions() []goivy.ActionsAction
+	}); ok {
+		for _, sub := range iter.IterSubactions() {
+			if as, ok := sub.(*goivy.LogicAssertAction); ok {
+				return as
+			}
+		}
+	}
+	return nil
+}
+
+// TestConjectureAppendsAssertToPublicActions mirrors Python
+// ivy_to_cpp.py:4495-4503 add_conjs_to_actions. After
+// prepareModuleForCPP runs on a module with a conjecture and one
+// exported action, the action's body must end with a sequence that
+// contains an ivy_assert(...) for the conjecture.
+func TestConjectureAppendsAssertToPublicActions(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+relation r
+after init { r := false }
+action step = { r := true }
+export step
+conjecture r
+`)
+	out, err := Generate(mod, Config{Target: "impl", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	stepAct, ok := mod.Actions.Get2("step")
+	if !ok {
+		t.Fatalf("step action missing after prepareModuleForCPP")
+	}
+	if findFirstAssertInAction(stepAct) == nil {
+		t.Fatalf("expected conjecture assert appended to exported action step; not found in:\n%v", stepAct)
+	}
+	if !strings.Contains(out.Impl, "ivy_assert(") {
+		t.Fatalf("expected ivy_assert(...) in generated impl after conjecture insertion:\n%s", out.Impl)
+	}
+}
+
+// TestConjectureAddsCheckInvariantsInitializer mirrors Python
+// ivy_to_cpp.py:4500 — the conjecture sequence is appended to
+// im.module.initializers as "__check_invariants".
+func TestConjectureAddsCheckInvariantsInitializer(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+relation r
+after init { r := false }
+action step = { r := true }
+export step
+conjecture r
+`)
+	if _, err := Generate(mod, Config{Target: "impl", ClassName: "oracle"}); err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	found := false
+	for _, init := range mod.Initializers {
+		if init.Name == "__check_invariants" {
+			found = true
+			if findFirstAssertInAction(init.Action) == nil {
+				t.Fatalf("__check_invariants initializer is present but contains no assert")
+			}
+			break
+		}
+	}
+	if !found {
+		names := make([]string, 0, len(mod.Initializers))
+		for _, i := range mod.Initializers {
+			names = append(names, i.Name)
+		}
+		t.Fatalf("__check_invariants initializer not found; have %v", names)
+	}
+}
+
+// TestPropertyMovedIntoAxioms mirrors Python ivy_to_cpp.py:4635-4636 —
+// labeled_props are appended to labeled_axioms and then cleared.
+func TestPropertyMovedIntoAxioms(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+relation r
+after init { r := true }
+property r
+action step = {}
+export step
+`)
+	beforeProps := len(mod.LabeledProps)
+	beforeAxioms := len(mod.LabeledAxioms)
+	if beforeProps == 0 {
+		t.Fatalf("test setup: expected at least one LabeledProp before Generate, got 0")
+	}
+	if _, err := Generate(mod, Config{Target: "impl", ClassName: "oracle"}); err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if len(mod.LabeledProps) != 0 {
+		t.Fatalf("expected LabeledProps cleared after prepareModuleForCPP, got %d", len(mod.LabeledProps))
+	}
+	if len(mod.LabeledAxioms) != beforeAxioms+beforeProps {
+		t.Fatalf("expected LabeledAxioms to grow by %d (properties moved in); was %d, now %d",
+			beforeProps, beforeAxioms, len(mod.LabeledAxioms))
+	}
+}
+
+// TestConjectureLinenoPropagatesToAssert verifies Python
+// ivy_to_cpp.py:4496 `set_lineno(conj.lineno)` is honored — the assert
+// appended for the conjecture carries the same line as the
+// conjecture's source location, and the generated C++ assert label
+// references that line.
+func TestConjectureLinenoPropagatesToAssert(t *testing.T) {
+	// The conjecture is on a known line of the input; record its line
+	// number relative to the source string so the test is robust to
+	// edits above.
+	src := "#lang ivy1.7\n" +
+		"relation r\n" +
+		"after init { r := false }\n" +
+		"action step = { r := true }\n" +
+		"export step\n" +
+		"conjecture r\n" // ← this is line 6
+	const conjLine = 6
+	mod := compileIvySource(t, src)
+	if len(mod.LabeledConjs) == 0 {
+		t.Fatalf("test setup: expected at least one LabeledConj, got 0")
+	}
+	if got := mod.LabeledConjs[0].GetLineno().Line; got != conjLine {
+		t.Fatalf("test setup: expected conjecture on line %d, got %d", conjLine, got)
+	}
+	out, err := Generate(mod, Config{Target: "impl", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	stepAct, ok := mod.Actions.Get2("step")
+	if !ok {
+		t.Fatalf("step action missing")
+	}
+	as := findFirstAssertInAction(stepAct)
+	if as == nil {
+		t.Fatalf("no assert appended to step")
+	}
+	if got := as.GetLineno().Line; got != conjLine {
+		t.Fatalf("appended assert lineno: want %d, got %d", conjLine, got)
+	}
+	// The emitted ivy_assert label embeds the line via linenoStr,
+	// which produces "<file>: line <N>" (see action.go:200-207).
+	wantFragment := fmt.Sprintf("line %d", conjLine)
+	if !strings.Contains(out.Impl, wantFragment) {
+		t.Fatalf("expected generated impl to reference conjecture %q; impl:\n%s", wantFragment, out.Impl)
+	}
+}
+
