@@ -841,7 +841,7 @@ func (s *Solver) EnumeratedRange(sort *LogicEnumeratedSort) ([]smt.Z3Expr, error
 // GetModelFromClauses checks satisfiability and returns a HerbrandModel if sat.
 // This is the high-level API for model extraction.
 func (s *Solver) GetModelFromClauses(clauses *Clauses) (*HerbrandModel, error) {
-	z3solver := s.tr.Ctx.NewZ3Solver()
+	z3solver := s.newZ3Solver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		return nil, err
@@ -880,7 +880,7 @@ func (s *Solver) GetModelFromClauses(clauses *Clauses) (*HerbrandModel, error) {
 func (s *Solver) ClausesCase(clauses *Clauses) (*Clauses, error) {
 	xtracer.Trace("ivy_solver.py:1128 clauses_case() ENTER")
 	// Check satisfiability
-	z3solver := s.tr.Ctx.NewZ3Solver()
+	z3solver := s.newZ3Solver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		return nil, err
@@ -1021,7 +1021,7 @@ func removeDuplicateFormulas(fmlas []Expr) []Expr {
 
 // clausesCaseLegacy is the old implementation kept for reference.
 func (s *Solver) clausesCaseLegacy(clauses *Clauses) (*Clauses, error) {
-	z3solver := s.tr.Ctx.NewZ3Solver()
+	z3solver := s.newZ3Solver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		return nil, err

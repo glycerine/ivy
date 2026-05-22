@@ -258,6 +258,14 @@ func (t *Translator) Close() error {
 	return nil
 }
 
+func (t *Translator) newZ3Solver() *smt.Z3Solver {
+	zs := t.Ctx.NewZ3Solver()
+	if t.s != nil {
+		t.s.applyZ3SolverOptions(zs)
+	}
+	return zs
+}
+
 // Clear resets all Z3 caches to initial state.
 // Corresponds to Python ivy_solver.clear() (line 228).
 func (t *Translator) Clear() {
@@ -1493,7 +1501,7 @@ func (t *Translator) Implies(f1, f2 Expr) (bool, error) {
 		return false, err
 	}
 
-	s := t.Ctx.NewZ3Solver()
+	s := t.newZ3Solver()
 	s.Assert(zf1)
 	s.Assert(t.Ctx.Not(zf2))
 
@@ -1559,7 +1567,7 @@ func (t *Translator) IsSat(f Expr) (smt.Z3CheckResult, error) {
 	if err != nil {
 		return smt.Unknown, err
 	}
-	s := t.Ctx.NewZ3Solver()
+	s := t.newZ3Solver()
 	s.Assert(zf)
 	return s.Check(), nil
 }

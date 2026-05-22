@@ -117,12 +117,19 @@ func getOrCreateModuleCache(mod *Module) *Z3SessionCache {
 // explicitly — never assumes Z3's default matches ours.
 func (s *Solver) newZ3Solver() *smt.Z3Solver {
 	zs := s.tr.Ctx.NewZ3Solver()
+	s.applyZ3SolverOptions(zs)
+	return zs
+}
+
+func (s *Solver) applyZ3SolverOptions(zs *smt.Z3Solver) {
+	if s == nil || s.opts == nil {
+		return
+	}
 	if s.opts.MacroFinder {
 		zs.SetParam("smt.macro_finder", "true")
 	} else {
 		zs.SetParam("smt.macro_finder", "false")
 	}
-	return zs
 }
 
 func (s *Solver) Close() error {

@@ -1381,10 +1381,24 @@ def _canon_z3_assertions(s):
         parts.append(_canon_z3_expr(a, []))
     return " ".join(parts) + ")"
 
-def _trace_z3_check(s, res):
-    """Emit Merkle-chained Z3 solver state and result via xtracer."""
+def _next_z3_check_trace(s, args):
+    """Emit a pre-check trace and return the sequence number for the exit."""
     _z3_check_counter[0] += 1
-    ##if __debug__: print("ivy_solver.py:1386 _trace_z3_check(): seq = %d" % _z3_check_counter[0])
+    seq = _z3_check_counter[0]
+    asserts = _canon_z3_assertions(s)
+    if __debug__: xtracer.trace("z3.check ENTER seq=%d nargs=%d HASH canon=%s" % (
+        seq, len(args), asserts))
+    return seq
+
+def _reason_unknown(s):
+    try:
+        return str(s.reason_unknown())
+    except Exception as e:
+        return "<unavailable: %s>" % e
+
+def _trace_z3_check(seq, s, res):
+    """Emit Merkle-chained Z3 solver state and result via xtracer."""
+    ##if __debug__: print("ivy_solver.py:1386 _trace_z3_check(): seq = %d" % seq)
     asserts = _canon_z3_assertions(s)
     rs = 'sat' if res == z3.sat else ('unsat' if res == z3.unsat else 'unknown')
     # Merkle-chain the solver state + result. The field is named "canon="
@@ -1396,14 +1410,25 @@ def _trace_z3_check(s, res):
     #xtracer.trace("z3.check seq=%d result=%s HASH leaf=%s root=%s canon=%s" % (
     #    _z3_check_counter[0], rs, leaf, root, asserts))
 
-    if __debug__: xtracer.trace("z3.check seq=%d result=%s HASH canon=%s" % (
-        _z3_check_counter[0], rs, asserts))
+    if __debug__:
+        xtracer.trace("z3.check seq=%d result=%s HASH canon=%s" % (
+            seq, rs, asserts))
+        if res == z3.unknown:
+            xtracer.trace("z3.check UNKNOWN seq=%d reason=%s" % (
+                seq, _reason_unknown(s)))
 
 # Monkey-patch z3.Solver.check to trace every Z3 check call globally.
 _orig_z3_solver_check = z3.Solver.check
 def _traced_z3_solver_check(self, *args):
-    res = _orig_z3_solver_check(self, *args)
-    if __debug__: _trace_z3_check(self, res)
+    seq = _next_z3_check_trace(self, args) if __debug__ else None
+    try:
+        res = _orig_z3_solver_check(self, *args)
+    except Exception as e:
+        if __debug__:
+            xtracer.trace("z3.check EXCEPTION seq=%d type=%s msg=%s" % (
+                seq, type(e).__name__, e))
+        raise
+    if __debug__: _trace_z3_check(seq, self, res)
     return res
 z3.Solver.check = _traced_z3_solver_check
 

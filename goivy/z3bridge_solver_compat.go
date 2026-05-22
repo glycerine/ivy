@@ -271,7 +271,7 @@ func (s *Solver) ModelIfNone(clauses *Clauses, implied *Clauses, model *Herbrand
 		return model
 	}
 
-	z3solver := s.tr.Ctx.NewZ3Solver()
+	z3solver := s.newZ3Solver()
 
 	// Add main clauses
 	zc, err := s.ClausesToZ3(clauses)

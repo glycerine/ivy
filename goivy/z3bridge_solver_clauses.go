@@ -14,7 +14,7 @@ import (
 // Corresponds to Python's clauses_imply_list.
 func (s *Solver) ClausesImplyList(clauses1 *Clauses, clauses2List []*Clauses) ([]bool, error) {
 	xtracer.Trace("ivy_solver.py:1036 clauses_imply_list() ENTER")
-	z3solver := s.tr.Ctx.NewZ3Solver()
+	z3solver := s.newZ3Solver()
 
 	z1, err := s.ClausesToZ3(clauses1)
 	if err != nil {
@@ -326,7 +326,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 // NewZ3Solver creates a new Z3 solver on this solver's context.
 func (s *Solver) NewZ3Solver() *smt.Z3Solver {
 	xtracer.Trace("ivy_solver.py:808 new_solver() ENTER")
-	return s.tr.Ctx.NewZ3Solver()
+	return s.newZ3Solver()
 }
 
 // AddClauses adds a clauses set to a Z3 solver.

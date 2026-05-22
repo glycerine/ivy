@@ -43,7 +43,7 @@ func (mr *ModelResult) String() string {
 // Corresponds to Python's get_model_clauses.
 func (s *Solver) GetModelClauses(clauses *Clauses) (*ModelResult, error) {
 	xtracer.Trace("ivy_solver.py:1177 get_model_clauses() ENTER")
-	z3solver := s.tr.Ctx.NewZ3Solver()
+	z3solver := s.newZ3Solver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		return nil, err
@@ -141,7 +141,7 @@ func (s *Solver) GetSmallModelWithCond(
 ) (*ModelResult, error) {
 	xtracer.Trace("ivy_solver.py:1339 get_small_model() ENTER shrink=%v", shrink)
 
-	z3solver := s.tr.Ctx.NewZ3Solver()
+	z3solver := s.newZ3Solver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		return nil, err
@@ -173,7 +173,7 @@ func (s *Solver) GetSmallModelWithCond(
 			//       s.add(clauses_to_z3(clauses))
 			//       for fmla in assumes: s.add(clauses_to_z3(fmla))
 			if !s.opts.Incremental && !fc.Assume() {
-				z3solver = s.tr.Ctx.NewZ3Solver()
+				z3solver = s.newZ3Solver()
 				zc, err = s.ClausesToZ3(clauses)
 				if err != nil {
 					return nil, err
@@ -545,7 +545,7 @@ func (s *Solver) FilterRedundantFacts(clauses *Clauses, axioms *Clauses) (*Claus
 	}
 
 	ctx := s.tr.Ctx
-	z3solver := ctx.NewZ3Solver()
+	z3solver := s.newZ3Solver()
 
 	// Add axioms
 	za, err := s.ClausesToZ3(axioms)

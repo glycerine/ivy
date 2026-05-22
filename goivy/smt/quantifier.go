@@ -878,13 +878,20 @@ func (ctx *Z3Context) ForAll(bound []Z3Expr, body Z3Expr) Z3Expr {
 	}
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_forall_const(
+		qid := ctx.symbol("")
+		skid := ctx.symbol("")
+		r = ctx.newExpr(C.Z3_mk_quantifier_const_ex(
 			ctx.c,
-			0, // weight
+			true, // is_forall
+			1,    // weight; z3py ForAll default
+			qid,
+			skid,
 			C.uint(len(cbound)),
 			&cbound[0],
 			0,   // num_patterns
 			nil, // patterns
+			0,   // num_no_patterns
+			nil, // no_patterns
 			body.c,
 		))
 	})
@@ -904,13 +911,20 @@ func (ctx *Z3Context) Exists(bound []Z3Expr, body Z3Expr) Z3Expr {
 	}
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_exists_const(
+		qid := ctx.symbol("")
+		skid := ctx.symbol("")
+		r = ctx.newExpr(C.Z3_mk_quantifier_const_ex(
 			ctx.c,
-			0, // weight
+			false, // is_forall
+			1,     // weight; z3py Exists default
+			qid,
+			skid,
 			C.uint(len(cbound)),
 			&cbound[0],
 			0,   // num_patterns
 			nil, // patterns
+			0,   // num_no_patterns
+			nil, // no_patterns
 			body.c,
 		))
 	})
@@ -1009,6 +1023,16 @@ func (s *Z3Solver) String() string {
 	var res string
 	s.ctx.do(func() {
 		res = C.GoString(C.Z3_solver_to_string(s.ctx.c, s.c))
+	})
+	runtime.KeepAlive(s)
+	return res
+}
+
+// ReasonUnknown returns Z3's explanation for an Unknown check result.
+func (s *Z3Solver) ReasonUnknown() string {
+	var res string
+	s.ctx.do(func() {
+		res = C.GoString(C.Z3_solver_get_reason_unknown(s.ctx.c, s.c))
 	})
 	runtime.KeepAlive(s)
 	return res

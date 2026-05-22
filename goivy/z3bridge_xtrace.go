@@ -57,29 +57,44 @@ func NormalizeZ3VarNames(sexpr string) string {
 var fallbackZ3CheckCounter atomic.Int64
 
 func (s *Solver) checkZ3(z3solver *smt.Z3Solver) smt.Z3CheckResult {
+	trace := s.traceZ3CheckEnter(z3solver, 0)
 	result := z3solver.Check()
-	s.traceZ3Check(z3solver, result)
+	s.traceZ3Check(z3solver, result, trace)
 	return result
 }
 
 func (s *Solver) checkZ3Assumptions(z3solver *smt.Z3Solver, assumptions []smt.Z3Expr) smt.Z3CheckResult {
+	trace := s.traceZ3CheckEnter(z3solver, 1)
 	result := z3solver.CheckAssumptions(assumptions)
-	s.traceZ3Check(z3solver, result)
+	s.traceZ3Check(z3solver, result, trace)
 	return result
 }
 
-// traceZ3Check emits Z3 solver state and check result via xtracer. Raw Z3
-// checking remains a direct smt boundary call; this helper keeps Ivy trace
-// sequencing in goivy instead of teaching smt about xtrace.
-func (s *Solver) traceZ3Check(z3solver *smt.Z3Solver, result smt.Z3CheckResult) {
-	if !xtracer.Enabled {
-		return
+type z3CheckTrace struct {
+	seq int64
+}
+
+func (s *Solver) traceZ3CheckEnter(z3solver *smt.Z3Solver, nargs int) z3CheckTrace {
+	if !xtracer.Enabled || xtracer.Suppressed {
+		return z3CheckTrace{}
 	}
 	counter := &fallbackZ3CheckCounter
 	if s != nil && s.tr != nil && s.tr.cache != nil && s.tr.cache.z3CheckCounter != nil {
 		counter = s.tr.cache.z3CheckCounter
 	}
 	seq := counter.Add(1)
+	asserts := z3solver.CanonZ3Assertions()
+	xtracer.Trace("z3.check ENTER seq=%d nargs=%d HASH canon=%s", seq, nargs, asserts)
+	return z3CheckTrace{seq: seq}
+}
+
+// traceZ3Check emits Z3 solver state and check result via xtracer. Raw Z3
+// checking remains a direct smt boundary call; this helper keeps Ivy trace
+// sequencing in goivy instead of teaching smt about xtrace.
+func (s *Solver) traceZ3Check(z3solver *smt.Z3Solver, result smt.Z3CheckResult, trace z3CheckTrace) {
+	if !xtracer.Enabled || xtracer.Suppressed || trace.seq == 0 {
+		return
+	}
 	asserts := z3solver.CanonZ3Assertions()
 
 	var rs string
@@ -98,5 +113,8 @@ func (s *Solver) traceZ3Check(z3solver *smt.Z3Solver, result smt.Z3CheckResult) 
 	//leaf, root := s.ctx.z3Merkle.AddLeaf(cs)
 	//_, _ = leaf, root
 	//xtracer.Trace("z3.check seq=%d result=%s HASH leaf=%s root=%s canon=%s", seq, rs, leaf, root, asserts)
-	xtracer.Trace("z3.check seq=%d result=%s HASH canon=%s", seq, rs, asserts)
+	xtracer.Trace("z3.check seq=%d result=%s HASH canon=%s", trace.seq, rs, asserts)
+	if result == smt.Unknown {
+		xtracer.Trace("z3.check UNKNOWN seq=%d reason=%s", trace.seq, z3solver.ReasonUnknown())
+	}
 }

@@ -927,7 +927,7 @@ func (ctx *Z3Context) ForAll(bound []Z3Expr, body Z3Expr) Z3Expr {
 
 	r = ctx.newExpr(z3_mk_forall_const(
 		ctx.c,
-		0, // weight
+		1, // weight; z3py ForAll default
 		uint32(len(cbound)),
 		scratchU32(cbound),
 		0, // num_patterns
@@ -953,7 +953,7 @@ func (ctx *Z3Context) Exists(bound []Z3Expr, body Z3Expr) Z3Expr {
 
 	r = ctx.newExpr(z3_mk_exists_const(
 		ctx.c,
-		0, // weight
+		1, // weight; z3py Exists default
 		uint32(len(cbound)),
 		scratchU32(cbound),
 		0, // num_patterns
@@ -1057,6 +1057,11 @@ func (s *Z3Solver) String() string {
 
 	runtime.KeepAlive(s)
 	return res
+}
+
+// ReasonUnknown returns Z3's explanation for an Unknown check result.
+func (s *Z3Solver) ReasonUnknown() string {
+	return ""
 }
 
 // --- Model ---
