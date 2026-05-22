@@ -1028,7 +1028,10 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             [b.action for b in model.bindings],
     )):
         named_binders[b.name].append(b)
-    named_binders = defaultdict(list, ((k,list(sorted(set(v),key=str))) for k,v in named_binders.items()))
+    # Sort by canon (full structural form), not str (PrettyFmla). This
+    # mirrors ivy_l2s.py and Go's shared Step 11 helper, and keeps fresh
+    # relation numbering stable for binders whose pretty forms collide.
+    named_binders = defaultdict(list, ((k,list(sorted(set(v),key=lambda b: b.canon()))) for k,v in named_binders.items()))
     # make sure old_l2s_g is consistent with l2s_g
 #    assert len(named_binders['l2s_g']) == len(named_binders['_old_l2s_g'])
     named_binders['_old_l2s_g'] = [
