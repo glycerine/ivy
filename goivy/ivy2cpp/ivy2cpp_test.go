@@ -693,7 +693,13 @@ after init {
     marked(C) := false
 }
 `,
-			want: []string{"enum color", "bool marked[2];", "marked[C] = false;"},
+			want: []string{
+				"enum color",
+				"bool marked[2];",
+				// Two-phase quantified assignment per Python emit_assign.
+				"__ivy_tmp1[C] = false;",
+				"marked[C] = __ivy_tmp1[C];",
+			},
 		},
 		{
 			name:   "small repl",
@@ -1250,11 +1256,13 @@ after init {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	// Two-phase quantified assignment per Python emit_assign.
 	for _, want := range []string{
 		"typedef unsigned idx;",
 		"bool marked[5];",
 		"for (unsigned I = 2; I <= 4; I++)",
-		"marked[I] = true;",
+		"__ivy_tmp1[I] = true;",
+		"marked[I] = __ivy_tmp1[I];",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -2364,7 +2372,16 @@ after init {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"void paint::__init()", "for (color C : {red, green})", "marked[C] = false;"} {
+	// Python emit_assign uses a two-phase temporary for quantified
+	// assignments (ivy_to_cpp.py:3725-3764) so RHS reads see the
+	// pre-assignment value. Match that structure.
+	for _, want := range []string{
+		"void paint::__init()",
+		"bool __ivy_tmp1[2];",
+		"for (color C : {red, green})",
+		"__ivy_tmp1[C] = false;",
+		"marked[C] = __ivy_tmp1[C];",
+	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
@@ -2384,7 +2401,13 @@ after init {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"typedef unsigned idx;", "for (unsigned I = 0; I <= 2; I++)", "marked[I] = false;"} {
+	// Two-phase quantified assignment per Python emit_assign.
+	for _, want := range []string{
+		"typedef unsigned idx;",
+		"for (unsigned I = 0; I <= 2; I++)",
+		"__ivy_tmp1[I] = false;",
+		"marked[I] = __ivy_tmp1[I];",
+	} {
 		if !strings.Contains(out.Header, want) && !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}

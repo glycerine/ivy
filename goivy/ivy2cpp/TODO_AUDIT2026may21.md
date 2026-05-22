@@ -806,45 +806,38 @@ Out of scope for this commit (tracked as follow-up):
   parser side, then mirror Python's expression-context SomeMinMax in
   `emitSome`.
 
-## TODO 013 - Fix assignment/update semantics, especially quantified assignments
+## DONE 013 - Fix assignment/update semantics, especially quantified assignments
 
-Go locations:
+Status: completed 2026-05-21. emitAssign now dispatches to
+emitAssignSimple / emitAssignTwoPhase / emitAssignLarge mirroring Python
+emit_assign (ivy_to_cpp.py:3703-3764). Quantified assignments use a
+function-typed temporary so self-referential RHS reads see pre-assignment
+values. The bexpr trick (Python ivy_to_cpp.py:3717-3720) tightens loops
+when the RHS is Ite(cond, then, lhs) and cond does not mention the
+modified symbol. Bounds-error paths fall back to emit_assign_large +
+makeThunk, which emits a C++ thunk struct (local to the method body)
+wrapped in hash_thunk. emitAssignField was refactored to synthesize a
+LogicAssignAction and re-enter emitAssign so any future synthesizer
+inherits the new dispatch. The Z3 / gen-mode to_z3 path in makeThunk is
+stubbed and documented inline (Python ivy_to_cpp.py:538-602).
 
-- `goivy/ivy2cpp/action.go:137-180`
-- `goivy/ivy2cpp/action.go:469-509`
+Files added / modified:
 
-Python references:
-
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3624-3652`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3654-3663`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3665-3701`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3703-3764`
-
-Gap:
-
-- Go writes assignment targets in-place while looping over free variables.
-- Python uses a two-phase temporary for quantified assignments so RHS reads see
-  the old value, then copies the temporary back. For large functions it can emit
-  thunk-based fallback updates.
-- Go does not implement Python's guarded/bounded update loops or storage-class
-  specific assignment rules.
-- Go's field-action updates assume direct mutable struct fields and do not cover
-  Python's complex types, array fields, variants, or hash-thunk storage.
-
-Conformance work:
-
-- Port Python's `emit_assign_simple`, `emit_assign_large`,
-  `emit_assign_bounded`, and `emit_assign`.
-- Use temporaries whenever Python would use them, especially for assignments with
-  free variables or self-referential RHS expressions.
-- Add storage-specific write logic for arrays, hash-thunks, destructors,
-  variants, and native types.
-
-Tests to add:
-
-- Self-referential map updates such as `f(X) := f(X) + 1`.
-- Quantified assignments with multiple variables, guarded updates, large-domain
-  updates, and field updates inside destructor/variant values.
+- `goivy/ivy2cpp/assign.go` (new) — emitAssignSimple, emitAssignTwoPhase,
+  assignBoundsExpr, openAssignmentLoopsBounded,
+  canOpenAssignmentLoopsBounded.
+- `goivy/ivy2cpp/thunk.go` (new) — makeThunk, emitAssignLarge,
+  emitThunkBody, thunkEnvSymbols.
+- `goivy/ivy2cpp/action.go` — emitAssign refactor; emitAssignField now
+  routes through emitAssign.
+- `goivy/ivy2cpp/generator.go` — thunkCtr field on Generator.
+- `goivy/ivy2cpp/assign_test.go` (new) — eight new tests covering
+  self-referential, multi-variable transpose, bexpr tightening,
+  bexpr-skip-on-modified, thunk fallback, field-action routing,
+  scalar-simple, and a Python oracle check for the flip case.
+- `goivy/ivy2cpp/ivy2cpp_test.go` — updated TestEmitAfterInitEnumLoop,
+  TestEmitAfterInitRangeLoop, TestRangeArrayDimensionUsesUpperBoundIndexSpace,
+  and the smoke fixtures table entry to expect the new two-phase shape.
 
 ## TODO 014 - Correct havoc, local variables, choices, and old-value binding
 

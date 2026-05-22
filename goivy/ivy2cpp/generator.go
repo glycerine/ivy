@@ -48,6 +48,11 @@ type Generator struct {
 	impl   cppWriter
 	tempID int
 
+	// thunkCtr names anonymous thunk structs (Python `thunk_counter`,
+	// ivy_to_cpp.py:504). Each makeThunk call allocates `__thunk__N`
+	// and increments. See thunk.go.
+	thunkCtr int
+
 	exprAliases    map[string]goivy.Expr
 	currentReturns []*goivy.Const
 	errs           []error

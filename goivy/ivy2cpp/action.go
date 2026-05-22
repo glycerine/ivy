@@ -134,36 +134,29 @@ func setTargetAndValue(lit goivy.Expr) (goivy.Expr, string) {
 	}
 }
 
+// emitAssign mirrors Python `emit_assign` (ivy_to_cpp.py:3703-3764). The
+// extensional-relation-clear shortcut runs first; otherwise we dispatch on
+// whether the LHS has free variables, and for quantified LHSs whether the
+// loops can be opened or we need the thunk-based fallback. The simple,
+// two-phase, and large emission bodies live in assign.go / thunk.go.
 func (g *Generator) emitAssign(w *cppWriter, a *goivy.LogicAssignAction) {
-	// Python emit_assign falls through to emit_assign_large for an
-	// extensional relation set to false (ivy_to_cpp.py:3703-3724), which
-	// builds a thunk evaluating to false. For hash_thunk storage with the
-	// default operator[]-false behavior, clearing memo achieves the same
-	// state without needing make_thunk emission (TODO 013). This is the
-	// path that initializes extensional relations in `after init` blocks
-	// over uninterpreted sorts.
+	// All-false extensional-relation reset becomes `r.memo.clear();`.
+	// Python falls through to emit_assign_large for this shape; the clear
+	// is observationally equivalent for hash_thunk storage.
 	if g.emitExtensionalRelationClear(w, a) {
 		return
 	}
-	loops, ok := g.openAssignmentLoops(w, a.LHS)
-	if !ok {
+	vs := goivy.FreeVariablesList(a.LHS)
+	if len(vs) == 0 {
+		g.emitAssignSimple(w, a)
 		return
 	}
-	lhs, err := g.emitExpr(a.LHS)
-	if err != nil {
-		g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
-		g.closeAssignmentLoops(w, loops)
+	body := g.assignBoundsExpr(a)
+	if !g.canOpenAssignmentLoopsBounded(a.LHS, body) {
+		g.emitAssignLarge(w, a, vs)
 		return
 	}
-	rhs, err := g.emitExpr(a.RHS)
-	if err != nil {
-		g.unsupported(w, "unsupported assignment rhs: %s", err.Error())
-		g.closeAssignmentLoops(w, loops)
-		return
-	}
-	rhs = g.maybeVariantUpcast(a.LHS.NodeSort(), a.RHS.NodeSort(), rhs, "")
-	w.linef("%s = %s;", lhs, rhs)
-	g.closeAssignmentLoops(w, loops)
+	g.emitAssignTwoPhase(w, a, vs)
 }
 
 func (g *Generator) closeAssignmentLoops(w *cppWriter, loops int) {
@@ -778,18 +771,24 @@ func (g *Generator) emitBindOlds(w *cppWriter, a *goivy.LogicBindOldsAction) {
 	g.unsupported(w, "unsupported bindolds inner %T", a.Inner)
 }
 
+// emitAssignField handles a LogicAssignFieldAction by synthesizing the
+// equivalent LogicAssignAction(Apply(field, obj), value) and routing it
+// through emitAssign. This matches the modern Python representation
+// where `obj.field := value` parses directly into AssignAction with a
+// destructor-decomposed LHS (Python ivy_parser.py:3082 only constructs
+// AssignFieldAction under iu.get_numeric_version() <= [1,2]).
+//
+// As a result this path picks up emitAssign's variant upcast, two-phase
+// quantified-update handling, and emit_assign_large thunk fallback for
+// free if a future caller synthesizes a LogicAssignFieldAction.
 func (g *Generator) emitAssignField(w *cppWriter, a *goivy.LogicAssignFieldAction) {
-	lhs, err := g.emitFieldRef(a.Obj, a.Field)
-	if err != nil {
-		g.unsupported(w, "unsupported field assignment lhs: %s", err.Error())
+	if a == nil || a.Field == nil || a.Obj == nil {
+		g.unsupported(w, "unsupported field assignment: nil components")
 		return
 	}
-	rhs, err := g.emitExpr(a.Value)
-	if err != nil {
-		g.unsupported(w, "unsupported field assignment rhs: %s", err.Error())
-		return
-	}
-	w.linef("%s = %s;", lhs, rhs)
+	lhs := goivy.NewApplyUnchecked(a.Field, a.Obj)
+	synth := goivy.NewAssignAction(lhs, a.Value)
+	g.emitAssign(w, synth)
 }
 
 func (g *Generator) emitNullField(w *cppWriter, a *goivy.LogicNullFieldAction) {
