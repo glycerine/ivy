@@ -91,7 +91,9 @@ func forwardGoldenProcessLine(repo, label string, w io.Writer, xtraceCount *int6
 	isX := strings.HasPrefix(line, "XTRACE:")
 	if onlyNonXtrace {
 		if !isX {
-			fmt.Printf("~%s: %s\n", label, line)
+			//fmt.Printf("~%s: %s\n", label, line)
+			os.Stdout.Write([]byte(line))
+			os.Stdout.Write(newline)
 		}
 		return nil
 	}
@@ -639,7 +641,7 @@ func Test05550_SolverInconclusive(t *testing.T) {
 		panic("nil pipe but no error?")
 	}
 	defer ivyPipe.Close()
-	ivyR := bufio.NewReader(ivyPipe)
+	//ivyR := bufio.NewReader(ivyPipe)
 
 	if goErr != nil {
 		t.Fatalf("path='%v': Go parse error: %v", path, goErr)
@@ -656,7 +658,7 @@ func Test05550_SolverInconclusive(t *testing.T) {
 			syscall.Kill(-goProc.Pid, syscall.SIGKILL)
 		}
 	})
-	goivyR := bufio.NewReader(goivyPipe)
+	//goivyR := bufio.NewReader(goivyPipe)
 
 	fdg, err := os.Create(outPathGo)
 	panicOn(err)
@@ -667,12 +669,14 @@ func Test05550_SolverInconclusive(t *testing.T) {
 	defer fdp.Close()
 
 	go func() {
-		io.Copy(fdg, goivyR)
+		//io.Copy(fdg, goivyR)
+		io.Copy(fdg, goivyPipe)
 		fdg.Sync()
 		vv("io.Copy go done")
 	}()
 	go func() {
-		io.Copy(fdp, ivyR)
+		//io.Copy(fdp, ivyR)
+		io.Copy(fdp, ivyPipe)
 		fdp.Sync()
 		vv("io.Copy py done")
 	}()
