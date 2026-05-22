@@ -292,11 +292,11 @@ func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 	} else {
 		rng = sym.Sort
 	}
-	// Python raises IvyError for uninterpreted sorts here (ivy_to_cpp.py:1001).
+	// Uninterpreted ranges: Python raises IvyError at ivy_to_cpp.py:1001.
 	// The Go runtime registers a default [0,4] bound for uninterpreted
 	// sorts via mk_sort, so randomize() returns a usable value in that
-	// range. We diverge from Python here to keep gen-target fixtures
-	// that exercise uninterpreted sorts working end-to-end.
+	// range. The Go side keeps this divergence so gen-target fixtures
+	// that exercise uninterpreted sorts work end-to-end.
 	args := make([]string, 0, len(domain))
 	opened := 0
 	for i, d := range domain {
@@ -310,8 +310,13 @@ func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 		opened++
 		args = append(args, fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name))
 	}
-	if g.isDestructorRecordRange(rng) {
-		typ := g.cppQualifiedType(rng, g.ClassName)
+	if g.isRecordRange(rng) {
+		// Python (ivy_to_cpp.py:997) always uses `classname::varname(rng)`,
+		// not the underlying C type. For plain BV ranges that's
+		// `genbits::word` (a typedef to `unsigned`), not `unsigned` —
+		// the difference matters for picking the right __randomize<T>
+		// specialization. recordRangeType encodes the Python shape.
+		typ := g.recordRangeType(rng)
 		w.linef("__randomize<%s>(*this, apply(%s%s), %s);", typ, sname, joinArgs(args), strconv.Quote(sortName(rng)))
 	} else {
 		rngName := strconv.Quote(z3SortName(rng))

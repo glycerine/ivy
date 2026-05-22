@@ -5746,9 +5746,11 @@ export set
 		t.Fatalf("Generate: %v", err)
 	}
 	text := out.Header + out.Impl
-	// After TODO 017 milestone 4 the action_gen randomizes inputs via
-	// solver assumptions; init_gen still calls the ivy2cpp_random_*
-	// helpers for state symbols not referenced by any constraint.
+	// After TODO 028 the action_gen randomizes cpptype-range inputs via
+	// the per-type __randomize<class::T> template (matching Python's
+	// emit_randomize at ivy_to_cpp.py:996); init_gen still calls the
+	// ivy2cpp_random_* helpers for state symbols not referenced by any
+	// constraint.
 	for _, want := range []string{
 		`g.mk_bv("word", 8);`,
 		`g.mk_bv("text", 4);`,
@@ -5758,9 +5760,9 @@ export set
 		"obj.i = ivy2cpp_random_small((*this));",
 		"genbits::text y;",
 		"genbits::small z;",
-		`randomize("__fml:x", "word");`,
-		`randomize("__fml:y", "text");`,
-		`randomize("__fml:z", "small");`,
+		`__randomize<genbits::word>(*this, apply("__fml:x"), "word");`,
+		`__randomize<genbits::text>(*this, apply("__fml:y"), "text");`,
+		`__randomize<genbits::small>(*this, apply("__fml:z"), "small");`,
 		`__from_solver<genbits::word>(*this, apply("__fml:x"), x);`,
 		`__from_solver<genbits::text>(*this, apply("__fml:y"), y);`,
 		`__from_solver<genbits::small>(*this, apply("__fml:z"), z);`,
@@ -8460,4 +8462,160 @@ export step
 		t.Fatalf("argv branch should not include a lineno prefix; block:\n%s", argvBlock)
 	}
 	compileGeneratedCPP(t, out)
+}
+
+// TestRandomizeRangeSortUsesPrimitivePath confirms that a top-level
+// state symbol with a range-sort range (typedef'd int with [lo,hi]
+// bounds) routes through the primitive g.randomize() path — not
+// __randomize<T>. Range sorts are not in destructors/native/cpptype,
+// so Python's emit_randomize (ivy_to_cpp.py:996-1004) hits the else
+// branch and emits randomize(name, "<rng>").
+func TestRandomizeRangeSortUsesPrimitivePath(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type rng = {2..7}
+individual r : rng
+action step(x:rng) = {
+    r := x
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "ranger"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Header + out.Impl
+	for _, want := range []string{
+		`g.mk_int("rng", 2, 7);`,
+		`randomize("__fml:x", "rng");`,
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in range-sort gen output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if strings.Contains(text, `__randomize<ranger::rng>(*this, apply("__fml:x")`) {
+		t.Fatalf("range sort must not route through __randomize<T>:\n%s", text)
+	}
+	assertNoUnsupportedCPP(t, out)
+}
+
+// TestRandomizeNativeRangeUsesRandomizeTemplate confirms that a state
+// symbol whose function range is a native-interpreted sort routes
+// through the per-type __randomize<classname::T> template, matching
+// Python emit_randomize at ivy_to_cpp.py:996.
+func TestRandomizeNativeRangeUsesRandomizeTemplate(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..3}
+type vec
+interpret vec -> <<< primitive std::vector<`+"`idx`"+`> >>>
+function owner(I:idx) : vec
+action step(i:idx, v:vec) = {
+    owner(i) := v
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "natg"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Header + out.Impl
+	// The action formal `v` has range `vec` (native). Python emits
+	// `__randomize<natg::vec>(*this, apply("__fml:v"), "vec");` for
+	// this input. The generic __randomize<T> template (z3.go:62)
+	// services this at runtime via g.randomize(expr, range).
+	for _, want := range []string{
+		`__randomize<natg::vec>(*this, apply("__fml:v"), "vec");`,
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in native-range gen output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if strings.Contains(text, `randomize("__fml:v", "vec")`) {
+		t.Fatalf("native-range input must not route through primitive randomize():\n%s", text)
+	}
+	assertNoUnsupportedCPP(t, out)
+}
+
+// TestRandomizeUninterpretedRangeUsesDefaultBounds locks in the Go
+// divergence from Python at emit_randomize: Python (ivy_to_cpp.py:1001)
+// raises IvyError when the symbol's range is uninterpreted; Go falls
+// back to g.randomize() against the runtime's default mk_sort [0,4]
+// bounds. The divergence is intentional (solver_emit.go:295-299) so
+// gen-target fixtures over uninterpreted sorts work end-to-end.
+func TestRandomizeUninterpretedRangeUsesDefaultBounds(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+individual root : node
+action pick(n:node) = {
+    root := n
+}
+export pick
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "ung"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Header + out.Impl
+	for _, want := range []string{
+		`g.mk_sort("node");`,
+		`randomize("__fml:n", "node");`,
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("missing %q in uninterpreted-range gen output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+		}
+	}
+	if strings.Contains(text, `__randomize<ung::node>`) {
+		t.Fatalf("uninterpreted range must not pick the __randomize<T> dispatch:\n%s", text)
+	}
+	assertNoUnsupportedCPP(t, out)
+}
+
+// TestRandomizeSeedPlumbingPrecedesRandomCalls confirms the
+// `seed=<int>` argv plumbing matches Python emit_main: a default
+// `int seed = 1;` declaration, the `else if (param == "seed")` argv
+// branch, and `srand(seed);` after argv parsing — in that order,
+// before randomize() is ever called by the generator. Cross-binary
+// reproducibility between Python-emitted and Go-emitted C++ under the
+// same `seed=N` depends on this exact shape.
+func TestRandomizeSeedPlumbingPrecedesRandomCalls(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual c : color
+action pick(x:color) = {
+    c := x
+}
+export pick
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "seeded", EmitMain: true})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	mainIdx := strings.LastIndex(out.Impl, "int main(int argc, char **argv)")
+	if mainIdx < 0 {
+		t.Fatalf("missing generated main() in gen output:\n%s", out.Impl)
+	}
+	mainBody := out.Impl[mainIdx:]
+	declIdx := strings.Index(mainBody, "int seed = 1;")
+	keyIdx := strings.Index(mainBody, `else if (param == "seed") { seed = atoi(value.c_str()); }`)
+	srandIdx := strings.Index(mainBody, "srand(seed);")
+	if declIdx < 0 || keyIdx < 0 || srandIdx < 0 {
+		t.Fatalf("seed plumbing pieces missing (decl=%d key=%d srand=%d):\n%s", declIdx, keyIdx, srandIdx, mainBody)
+	}
+	if !(declIdx < keyIdx && keyIdx < srandIdx) {
+		t.Fatalf("seed plumbing out of order (decl=%d key=%d srand=%d); want decl < key < srand", declIdx, keyIdx, srandIdx)
+	}
+	// The first ivy2cpp_randomize / __randomize call in the program
+	// flow must come after srand(seed); otherwise the seed wouldn't
+	// affect it.
+	randCallIdx := -1
+	for _, marker := range []string{"ivy2cpp_randomize(", "__randomize<", "g.randomize("} {
+		if i := strings.Index(out.Impl[srandIdx:], marker); i >= 0 {
+			if randCallIdx < 0 || i < randCallIdx {
+				randCallIdx = i
+			}
+		}
+	}
+	if randCallIdx < 0 {
+		t.Fatalf("no randomize call found anywhere after srand(seed) in:\n%s", out.Impl[srandIdx:])
+	}
+	assertNoUnsupportedCPP(t, out)
 }
