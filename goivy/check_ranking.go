@@ -634,6 +634,21 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		if err != nil {
 			return nil, err
 		}
+		// Python ivy_ranking.py:1094: goal = ipr.remove_unused_definitions_goal(goal)
+		if len(result) > 0 && result[0] != nil {
+			var concFmlas []Expr
+			for _, fmlaNode := range model.Fmlas() {
+				collectNodeExprs(fmlaNode, &concFmlas)
+			}
+			if goalConc := GoalConc(result[0]); goalConc != nil {
+				if tm, ok := goalConc.(*TemporalModels); ok {
+					if f, ok := tm.Fmla.(Expr); ok {
+						concFmlas = append(concFmlas, f)
+					}
+				}
+			}
+			result[0] = RemoveUnusedDefinitionsGoal(cfg.Mod.Cfg.AstCfg, result[0], concFmlas)
+		}
 		// Python ivy_ranking.py:1016: goal.trace_hook = lambda tr,fcs: auto_hook(tasks,triggers,subs,tr,fcs)
 		if len(result) > 0 && result[0] != nil {
 			subs := icfg.Subs
