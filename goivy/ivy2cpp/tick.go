@@ -147,7 +147,7 @@ func (g *Generator) emitProgressCounterDecls(w *cppWriter) {
 
 func (g *Generator) progressCounterDecl(p progressDecl) string {
 	if len(p.Vars) == 0 {
-		return "long long " + varName(p.Name)
+		return "int " + varName(p.Name)
 	}
 	domain := make([]goivy.Sort, len(p.Vars))
 	for i, v := range p.Vars {
@@ -155,13 +155,13 @@ func (g *Generator) progressCounterDecl(p progressDecl) string {
 	}
 	st := progressCounterStorage(g, domain)
 	if st.Kind == cppStorageArray {
-		return fmt.Sprintf("long long %s%s", varName(p.Name), cppArraySuffix(st.Dims))
+		return fmt.Sprintf("int %s%s", varName(p.Name), cppArraySuffix(st.Dims))
 	}
 	return fmt.Sprintf("%s %s", st.Type, varName(p.Name))
 }
 
 func progressCounterStorage(g *Generator, domain []goivy.Sort) cppFunctionStorage {
-	st := cppFunctionStorage{Kind: cppStorageScalar, Domain: domain, RangeType: "long long", Type: "long long"}
+	st := cppFunctionStorage{Kind: cppStorageScalar, Domain: domain, RangeType: "int", Type: "int"}
 	if len(domain) == 0 {
 		return st
 	}
@@ -186,19 +186,13 @@ func progressCounterStorage(g *Generator, domain []goivy.Sort) cppFunctionStorag
 	if allCards && allIntegerLike && product <= largeThresh {
 		st.Kind = cppStorageArray
 		st.Dims = dims
-		st.Type = "long long" + cppArraySuffix(dims)
+		st.Type = "int" + cppArraySuffix(dims)
 		return st
 	}
 	st.Kind = cppStorageHashThunk
 	st.KeyType = cppCTupleNameWith(g, domain, "")
-	st.Type = fmt.Sprintf("hash_thunk<%s,long long>", st.KeyType)
+	st.Type = fmt.Sprintf("hash_thunk<%s,int>", st.KeyType)
 	return st
-}
-
-func (g *Generator) emitProgressCounterInitializers(w *cppWriter) {
-	for _, p := range g.progressDecls() {
-		g.emitProgressCounterReset(w, p, "")
-	}
 }
 
 func (g *Generator) emitTick(w *cppWriter) {
@@ -243,7 +237,7 @@ func (g *Generator) emitProgressRelyChecks(w *cppWriter, progress []progressDecl
 		}
 		opened := g.openProgressLoops(w, p)
 		maxt := g.nextTemp("__ivy_maxt")
-		w.linef("long long %s = 0;", maxt)
+		w.linef("int %s = 0;", maxt)
 		for _, r := range relies {
 			if !r.Implied {
 				continue
@@ -271,11 +265,19 @@ func hasBareRely(relies []relyDecl) bool {
 func (g *Generator) emitRelyMax(w *cppWriter, maxt string, p progressDecl, r relyDecl) {
 	aliases := progressRelyAliases(p, r)
 	extras := extraRelyVars(r.RHS, aliases)
+	// Python (ivy_to_cpp.py:1798-1802): free variables on the rely RHS
+	// that don't appear on the rely LHS are alpha-renamed by appending
+	// "__" to their name, to prevent capture by the outer progress
+	// loop's variables.
+	renamed := make([]*goivy.LogicVariable, len(extras))
+	for i, v := range extras {
+		renamed[i] = &goivy.LogicVariable{Name: v.Name + "__", VSort: v.VSort}
+	}
 	opened := 0
-	for _, v := range extras {
-		header, err := g.loopHeaderForVar(v)
+	for _, rv := range renamed {
+		header, err := g.loopHeaderForVar(rv)
 		if err != nil {
-			g.unsupported(w, "unsupported rely variable %s:%s", varName(v.Name), err.Error())
+			g.unsupported(w, "unsupported rely variable %s:%s", varName(rv.Name), err.Error())
 			for i := 0; i < opened; i++ {
 				w.close("")
 			}
@@ -285,12 +287,15 @@ func (g *Generator) emitRelyMax(w *cppWriter, maxt string, p progressDecl, r rel
 		opened++
 	}
 	prev := g.exprAliases
-	next := make(map[string]goivy.Expr, len(prev)+len(aliases))
+	next := make(map[string]goivy.Expr, len(prev)+len(aliases)+len(extras))
 	for k, v := range prev {
 		next[k] = v
 	}
 	for k, v := range aliases {
 		next[k] = v
+	}
+	for i, orig := range extras {
+		next[orig.Name] = renamed[i]
 	}
 	g.exprAliases = next
 	rhs, err := g.emitExpr(r.RHS)

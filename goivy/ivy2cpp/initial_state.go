@@ -128,7 +128,6 @@ func (g *Generator) emitOneInitialState(w *cppWriter) error {
 			return err
 		}
 	}
-	g.emitProgressCounterResets(w, "")
 	return nil
 }
 
@@ -349,21 +348,15 @@ func (g *Generator) emitProgressCounterResets(w *cppWriter, obj string) {
 }
 
 func (g *Generator) emitProgressCounterReset(w *cppWriter, p progressDecl, obj string) {
+	// Python ivy_to_cpp.py:884-895 emit_clear_progress: opens the loop
+	// over free variables of the progress LHS and emits a per-iteration
+	// `lhs = 0;` assignment. No hash_thunk shortcut.
 	prefix := ""
 	if obj != "" {
 		prefix = obj + "."
 	}
 	if len(p.Vars) == 0 {
 		w.linef("%s%s = 0;", prefix, varName(p.Name))
-		return
-	}
-	domain := make([]goivy.Sort, len(p.Vars))
-	for i, v := range p.Vars {
-		domain[i] = v.VSort
-	}
-	st := progressCounterStorage(g, domain)
-	if st.Kind == cppStorageHashThunk {
-		w.linef("%s%s = %s();", prefix, varName(p.Name), st.Type)
 		return
 	}
 	opened := g.openProgressLoops(w, p)

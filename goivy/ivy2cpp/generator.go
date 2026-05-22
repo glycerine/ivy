@@ -249,7 +249,6 @@ func (g *Generator) emitImpl() error {
 	g.emitRuntimeConstructorPrelude(w)
 	g.emitConstructorParamAssignments(w)
 	g.emitCardinalityInitializers(w)
-	g.emitProgressCounterInitializers(w)
 	if err := g.emitInitNatives(w); err != nil {
 		return err
 	}
