@@ -1497,35 +1497,55 @@ features land. Python currently emits the platform-specific
 network/socket headers unconditionally in the impl preamble and Go
 already mirrors that.
 
-## TODO 024 - Match Python's member-name collision checks
+## DONE 024 - Match Python's member-name collision checks
+
+Status: ported `check_member_names` faithfully. `(*Generator).checkMemberNames`
+at `goivy/ivy2cpp/generator.go:185` collects the varName-lowered names of all
+signature symbols (`g.Mod.Sig.Symbols.All()`), sorts (`g.Mod.Sig.Sorts.All()`),
+and actions (`g.Mod.Actions.All()`), and returns an `ivy2cpp:` error when the
+generated C++ class name appears among them. The check runs at the top of
+`(*Generator).generate` at `generator.go:169`, after `prepareModuleForCPP`
+in `Generate` (`generator.go:135`) has had its chance to register
+`_generating` for the test target. The error message mirrors Python's
+two-line text — including the `Use command line option classname=...` hint —
+so user-facing diagnostics match the Python toolchain.
+
+Reused utilities:
+
+- `varName` (`goivy/ivy2cpp/names.go:15`) — already the Python `varname`
+  mirror; accepts string keys via `fmt.Sprint`.
+- Map iteration via `.Symbols.All()` / `.Sorts.All()` / `.Actions.All()` —
+  the idiom used throughout this package.
 
 Go locations:
 
-- No equivalent check found in `goivy/ivy2cpp`.
+- `goivy/ivy2cpp/generator.go:169` (call site at top of `generate`).
+- `goivy/ivy2cpp/generator.go:181-210` (`checkMemberNames` method, with
+  Python-origin comment block).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:1830-1834`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1830-1834` (`check_member_names`).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1904` (call site inside `module_to_cpp_class`).
 
-Gap:
+Tests:
 
-- Python checks whether module symbols collide with generated class member
-  names. Go does not perform this validation.
+- New (`goivy/ivy2cpp/ivy2cpp_test.go:2395-2442`):
+  - `TestCheckMemberNamesRejectsActionCollision`
+  - `TestCheckMemberNamesRejectsSymbolCollision`
+  - `TestCheckMemberNamesRejectsSortCollision`
+  - `TestCheckMemberNamesAllowsDistinctClassname` (regression guard against
+    the check firing on legitimate inputs).
 
-Conformance work:
-
-- Port `check_member_names` before generation.
-- Ensure reserved generated names such as runtime helpers, locks, streams, and
-  solver helpers cannot be shadowed by Ivy declarations.
-
-Tests to add:
-
-- Ivy declarations that collide with generated C++ members should fail with a
-  Python-compatible error.
+Out of scope (potential future TODO): Python's `check_member_names` itself
+only guards the *classname* against module-declared names. Reserved C++
+keywords, runtime helper names, lock/stream/solver names, etc. are not
+checked by Python either; broadening to those would be net-new behaviour
+and belongs in its own audit item.
 
 Reminder:
 
-- [ ] When this lands, rename to `## DONE 024 - …`, add a `Status:` paragraph
+- [x] When this lands, rename to `## DONE 024 - …`, add a `Status:` paragraph
   citing the new Go locations and test names, and update this audit doc in
   the same commit as the implementation.
 

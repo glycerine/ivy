@@ -2392,6 +2392,55 @@ func TestAllKnownUnsupportedActionsReturnErrors(t *testing.T) {
 	}
 }
 
+// TODO 024: mirror Python check_member_names (ivy_to_cpp.py:1830-1834).
+// The Go check lives in (*Generator).checkMemberNames and rejects modules
+// whose generated C++ class name would collide with a varName-lowered
+// signature symbol, sort, or action.
+
+func TestCheckMemberNamesRejectsActionCollision(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "modname"
+	mod.Actions.Set("foo", goivy.NewSequence())
+	_, err := Generate(mod, Config{ClassName: "foo"})
+	if err == nil || !strings.Contains(err.Error(), "cannot create C++ class foo with member foo") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestCheckMemberNamesRejectsSymbolCollision(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "modname"
+	if _, err := mod.Sig.AddSymbol("bar", goivy.Boolean); err != nil {
+		t.Fatalf("AddSymbol: %v", err)
+	}
+	_, err := Generate(mod, Config{ClassName: "bar"})
+	if err == nil || !strings.Contains(err.Error(), "cannot create C++ class bar with member bar") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestCheckMemberNamesRejectsSortCollision(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "modname"
+	if err := mod.Sig.AddSort(&goivy.UninterpretedSort{Name: "baz"}); err != nil {
+		t.Fatalf("AddSort: %v", err)
+	}
+	_, err := Generate(mod, Config{ClassName: "baz"})
+	if err == nil || !strings.Contains(err.Error(), "cannot create C++ class baz with member baz") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestCheckMemberNamesAllowsDistinctClassname(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "modname"
+	mod.Actions.Set("foo", goivy.NewSequence())
+	_, err := Generate(mod, Config{ClassName: "qux"})
+	if err != nil && strings.Contains(err.Error(), "cannot create C++ class") {
+		t.Fatalf("unexpected member-name collision error: %v", err)
+	}
+}
+
 func TestEmitAssignNullaryAndIndexed(t *testing.T) {
 	s := &goivy.UninterpretedSort{Name: "node"}
 	fn, err := goivy.NewFunctionSort(s, goivy.Boolean)

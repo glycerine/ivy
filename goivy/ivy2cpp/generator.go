@@ -166,6 +166,9 @@ func moduleBaseName(mod *goivy.Module) string {
 }
 
 func (g *Generator) generate() error {
+	if err := g.checkMemberNames(); err != nil {
+		return err
+	}
 	if err := g.emitHeader(); err != nil {
 		return err
 	}
@@ -173,6 +176,37 @@ func (g *Generator) generate() error {
 		return err
 	}
 	return errors.Join(g.errs...)
+}
+
+// checkMemberNames mirrors Python check_member_names
+// (ivy_to_cpp.py:1830-1834). Reject any module whose generated C++ class name
+// would collide with a member name derived from a signature symbol, sort, or
+// action (after varName lowering, matching Python's varname mapping).
+func (g *Generator) checkMemberNames() error {
+	if g == nil || g.Mod == nil {
+		return nil
+	}
+	names := map[string]bool{}
+	if g.Mod.Sig != nil {
+		for name := range g.Mod.Sig.Symbols.All() {
+			names[varName(name)] = true
+		}
+		for name := range g.Mod.Sig.Sorts.All() {
+			names[varName(name)] = true
+		}
+	}
+	if g.Mod.Actions != nil {
+		for name := range g.Mod.Actions.All() {
+			names[varName(name)] = true
+		}
+	}
+	if names[g.ClassName] {
+		return fmt.Errorf(
+			"ivy2cpp: cannot create C++ class %s with member %s.\n"+
+				"Use command line option classname=... to change the class name",
+			g.ClassName, g.ClassName)
+	}
+	return nil
 }
 
 func (g *Generator) unsupported(w *cppWriter, format string, args ...any) {
