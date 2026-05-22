@@ -84,9 +84,16 @@ func attachCombinedOutputPipe(cmd *exec.Cmd) (*os.File, *os.File, error) {
 	return pr, pw, nil
 }
 
-func forwardGoldenProcessLine(repo, label string, w io.Writer, xtraceCount *int64, raw string) error {
+func forwardGoldenProcessLine(repo, label string, w io.Writer, xtraceCount *int64, raw string, onlyNonXtrace bool) error {
 	line := normalizeLine(repo, raw)
-	if strings.HasPrefix(line, "XTRACE:") {
+	isX := strings.HasPrefix(line, "XTRACE:")
+	if onlyNonXtrace {
+		if !isX {
+			os.Stdout.Write([]byte(line))
+		}
+		return nil
+	}
+	if isX {
 		if _, err := fmt.Fprintf(w, "%s\n", line); err != nil {
 			return err
 		}
@@ -598,12 +605,81 @@ func TestGoldenAll(t *testing.T) {
 // EPR fragment and invokes the Z3 inconclusive behavior. We
 // focused on this to get the ToSMT2 diagnostic output to be
 // comparable in Go.
-func TestSolverInconclusive(t *testing.T) {
+func Test05550_SolverInconclusive(t *testing.T) {
+
+	outPathGo := "out.test.05550.go.txt"
+	outPathPy := "out.test.05550.py.txt"
+	os.Remove(outPathGo)
+	os.Remove(outPathPy)
+
 	cfg := &goldenConfig{
 		path: "ivy-lang-examples/doc/examples/cav2024/examp1_numeric.ivy",
 		args: []string{"isolate=q.iso"},
 	}
 	GoldenPathCompareIvyCheck(t, cfg)
+
+	// also assert that the non-XTRACE lines agree.
+	skipRebuild := true
+	repo := mustGetRepoDir(t)
+	path := filepath.Join(repo, cfg.path)
+
+	onlyNonXtrace := true
+	ivyPipe, pyProc, pyErr := ivy_check(t, cfg.args, path, repo, onlyNonXtrace)
+	goivyPipe, goProc, goErr := goivy_check_xtrace(t, cfg.args, path, repo, skipRebuild, onlyNonXtrace)
+
+	if pyErr != nil {
+		t.Fatalf("%v had Python error: %v", path, pyErr)
+		panic(pyErr)
+		return
+	}
+	if ivyPipe == nil {
+		panic("nil pipe but no error?")
+	}
+	defer ivyPipe.Close()
+	ivyR := bufio.NewReader(ivyPipe)
+
+	if goErr != nil {
+		t.Fatalf("path='%v': Go parse error: %v", path, goErr)
+		return
+	}
+	defer goivyPipe.Close()
+
+	t.Cleanup(func() {
+		if pyProc != nil {
+			// Kill entire process group: negative PID = process group.
+			syscall.Kill(-pyProc.Pid, syscall.SIGKILL)
+		}
+		if goProc != nil {
+			syscall.Kill(-goProc.Pid, syscall.SIGKILL)
+		}
+	})
+	goivyR := bufio.NewReader(goivyPipe)
+
+	fdg, err := os.Create(outPathGo)
+	panicOn(err)
+	defer fdg.Close()
+
+	fdp, err := os.Create(outPathPy)
+	panicOn(err)
+	defer fdp.Close()
+
+	go func() {
+		io.Copy(fdg, goivyR)
+		vv("io.Copy go done")
+	}()
+	go func() {
+		io.Copy(fdp, ivyR)
+		vv("io.Copy py done")
+	}()
+
+	goProc.Wait()
+	pyProc.Wait()
+	vv("done waiting on both")
+
+	// diff them
+	panicOn(fdg.Sync())
+	panicOn(fdp.Sync())
+
 }
 
 func Test2hrNodeGoldenOrdLive(t *testing.T) {
@@ -738,12 +814,12 @@ func GoldenPathCompareIvyCheck(t *testing.T, cfg *goldenConfig) {
 		// The nodegold helper may rebuild the js/wasm payload before it starts
 		// producing xtrace. Start it before Python so Python does not fill and
 		// block behind an unread pipe during that preparation window.
-		goivyPipe, goProc, goErr = nodegold_ivy_check_xtrace(t, args, path, repo)
-		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo)
+		goivyPipe, goProc, goErr = nodegold_ivy_check_xtrace(t, args, path, repo, false)
+		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo, false)
 
 	default: // native Go
-		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo)
-		goivyPipe, goProc, goErr = goivy_check_xtrace(t, args, path, repo, skipRebuild)
+		ivyPipe, pyProc, pyErr = ivy_check(t, args, path, repo, false)
+		goivyPipe, goProc, goErr = goivy_check_xtrace(t, args, path, repo, skipRebuild, false)
 	}
 
 	if pyErr != nil {
@@ -1050,7 +1126,7 @@ const showLast30Lines = 300
 
 // ivy_check calls ivy_check.
 // It streams output back on r, a pipe, asynchronously.
-func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
+func ivy_check(t *testing.T, args []string, ivyFile, repo string, onlyNonXtrace bool) (r io.ReadCloser, proc *os.Process, err error) {
 
 	_, thisFile, _, _ := runtime.Caller(0)
 	ivyRoot := filepath.Dir(thisFile)
@@ -1110,7 +1186,7 @@ func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadClos
 		scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
 		var xtraceCount int64
 		for scanner.Scan() {
-			if err := forwardGoldenProcessLine(repo, "py", w, &xtraceCount, scanner.Text()); err != nil {
+			if err := forwardGoldenProcessLine(repo, "py", w, &xtraceCount, scanner.Text(), onlyNonXtrace); err != nil {
 				vv("ivy_check scanner could not forward line: %v", err)
 				break
 			}
@@ -1131,7 +1207,7 @@ func ivy_check(t *testing.T, args []string, ivyFile, repo string) (r io.ReadClos
 
 // goivy_check_xtrace re-makes and then runs goivy_check_xtrace.
 // It streams output back on r, a pipe, asynchronously.
-func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string, skipRebuild bool) (r io.ReadCloser, proc *os.Process, err error) {
+func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string, skipRebuild, onlyNonXtrace bool) (r io.ReadCloser, proc *os.Process, err error) {
 
 	_, thisFile, _, _ := runtime.Caller(0)
 	// parent dir.
@@ -1223,7 +1299,7 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string, skipR
 		scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
 		var xtraceCount int64
 		for scanner.Scan() {
-			if err := forwardGoldenProcessLine(repo, "go", w, &xtraceCount, scanner.Text()); err != nil {
+			if err := forwardGoldenProcessLine(repo, "go", w, &xtraceCount, scanner.Text(), onlyNonXtrace); err != nil {
 				vv("goivy_check_xtrace scanner could not forward line: %v", err)
 				break
 			}
@@ -1246,7 +1322,7 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string, skipR
 //
 // nodegold_ivy_check_xtrace re-makes and then runs nodegold
 // It streams output back on r, a pipe, asynchronously.
-func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string) (r io.ReadCloser, proc *os.Process, err error) {
+func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string, onlyNonXtrace bool) (r io.ReadCloser, proc *os.Process, err error) {
 
 	_, thisFile, _, _ := runtime.Caller(0)
 	// parent dir.
@@ -1349,7 +1425,7 @@ func nodegold_ivy_check_xtrace(t *testing.T, args []string, ivyFile, repo string
 		scanner.Buffer(make([]byte, 0, 16<<20), 1<<30)
 		var xtraceCount int64
 		for scanner.Scan() {
-			if err := forwardGoldenProcessLine(repo, "go", w, &xtraceCount, scanner.Text()); err != nil {
+			if err := forwardGoldenProcessLine(repo, "go", w, &xtraceCount, scanner.Text(), onlyNonXtrace); err != nil {
 				vv("nodegold scanner could not forward line: %v", err)
 				break
 			}
