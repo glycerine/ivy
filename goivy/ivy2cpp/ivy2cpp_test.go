@@ -3692,6 +3692,107 @@ export set
 	compileGeneratedCPP(t, out)
 }
 
+// Phase 1: per-enum operator<<, _arg<T>, __ser<T>, __deser<T>
+// specializations alongside the existing ad-hoc `ivy2cpp_parse_TYPE`
+// family. Mirrors Python ivy_to_cpp.py:2497-2510 and 2634-2652.
+func TestEmitsArgSpecForEnum(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action set(c:color) = { saved := c }
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		// Forward decls in the impl preamble.
+		`std::ostream &operator<<(std::ostream &s, const runner::color &t);`,
+		`runner::color _arg<runner::color>(std::vector<ivy_value> &args, unsigned idx, long long bound);`,
+		`void __ser<runner::color>(ivy_ser &res, const runner::color &);`,
+		`void __deser<runner::color>(ivy_deser &inp, runner::color &res);`,
+		// Definitions.
+		`std::ostream &operator<<(std::ostream &s, const runner::color &t) {`,
+		`if (t == runner::red) s << "red";`,
+		`if (t == runner::green) s << "green";`,
+		`if (t == runner::blue) s << "blue";`,
+		`void __ser<runner::color>(ivy_ser &res, const runner::color &t) {`,
+		`__ser(res, (int)t);`,
+		`runner::color _arg<runner::color>(std::vector<ivy_value> &args, unsigned idx, long long bound) {`,
+		`ivy_value &arg = args[idx];`,
+		`if (arg.atom.size() == 0 || arg.fields.size() != 0) throw out_of_bounds(idx, arg.pos);`,
+		`if (arg.atom == "red") return runner::red;`,
+		`if (arg.atom == "green") return runner::green;`,
+		`if (arg.atom == "blue") return runner::blue;`,
+		`throw out_of_bounds("bad value: " + arg.atom, arg.pos);`,
+		`void __deser<runner::color>(ivy_deser &inp, runner::color &res) {`,
+		`__deser(inp, __res);`,
+		`res = (runner::color)__res;`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+}
+
+// Numeric enums (extension is integer literals) are mapped to `int`
+// and must NOT get a template specialization — that would collide with
+// `_arg<int>` from ivy_value.hpp. Mirrors Python's `is_numeric_range`
+// gate in ctype_remaining_cases.
+func TestSkipsArgSpecForNumericEnum(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..2}
+individual seen : idx
+action set(i:idx) = { seen := i }
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// `idx` is a numeric range/enum; no per-sort _arg<runner::idx>
+	// template should be emitted (it would conflict with _arg<unsigned>
+	// from ivy_value.hpp via the typedef).
+	for _, banned := range []string{
+		`_arg<runner::idx>`,
+		`__ser<runner::idx>`,
+		`__deser<runner::idx>`,
+	} {
+		if strings.Contains(out.Impl, banned) {
+			t.Fatalf("unexpected %q in impl output:\n%s", banned, out.Impl)
+		}
+	}
+}
+
+// Plain uninterpreted sorts already get coverage via the primitive
+// `_arg<int>` / `_arg<unsigned>` etc. specializations in ivy_value.hpp
+// once the typedef alias is in place. We must NOT emit a duplicate
+// per-sort template since C++ forbids redundant specializations on the
+// same underlying type.
+func TestSkipsArgSpecForPlainUninterpreted(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type node
+individual saved : node
+action set(n:node) = { saved := n; assert n = 7 }
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, banned := range []string{
+		`_arg<runner::node>`,
+		`__ser<runner::node>`,
+		`__deser<runner::node>`,
+	} {
+		if strings.Contains(out.Impl, banned) {
+			t.Fatalf("unexpected %q in impl output:\n%s", banned, out.Impl)
+		}
+	}
+}
+
 func TestReplDispatchParsesUninterpretedArgs(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node

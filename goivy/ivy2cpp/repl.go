@@ -7,6 +7,137 @@ import (
 	"github.com/glycerine/ivy/goivy"
 )
 
+// enumSortsForArgSpecs returns the named, non-numeric, non-encoded enum
+// sorts in module sort order. Mirrors Python ivy_to_cpp.py:2419 +
+// per-loop filter `sort_name not in encoded_sorts`. These are the enums
+// for which Python emits `operator<<`, `_arg<T>`, `__ser<T>`,
+// `__deser<T>` (and, for test/gen, `__from_solver`/`__to_solver`/
+// `__randomize`).
+func (g *Generator) enumSortsForArgSpecs() []*goivy.LogicEnumeratedSort {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
+		return nil
+	}
+	encoded := g.encodedSortSet()
+	var out []*goivy.LogicEnumeratedSort
+	for _, name := range g.Mod.SortOrder {
+		if encoded != nil && encoded[name] {
+			continue
+		}
+		s, ok := g.Mod.Sig.Sorts.Get2(name)
+		if !ok {
+			continue
+		}
+		st, ok := s.(*goivy.LogicEnumeratedSort)
+		if !ok {
+			continue
+		}
+		if st.Name == "" || len(st.Extension) == 0 {
+			continue
+		}
+		if isNumericEnum(st) {
+			continue
+		}
+		out = append(out, st)
+	}
+	return out
+}
+
+// encodedSortSet returns the encoded-sort set for filtering, or nil if
+// none. The accessor lives on Generator via the lazy initializer used
+// by native.go.
+func (g *Generator) encodedSortSet() map[string]bool {
+	if g == nil {
+		return nil
+	}
+	return g.encodedSorts
+}
+
+// emitEnumSortArgSpecDecls emits forward declarations of the per-enum
+// `operator<<`, `_arg<T>`, `__ser<T>`, `__deser<T>` symbols. Mirrors
+// Python ivy_to_cpp.py:2213-2223 — these declarations are placed right
+// after `#include "ivy_value.hpp"` so the rest of the impl file can
+// resolve them.
+func (g *Generator) emitEnumSortArgSpecDecls(w *cppWriter) {
+	for _, st := range g.enumSortsForArgSpecs() {
+		cfsname := g.ClassName + "::" + varName(st.Name)
+		w.linef("std::ostream &operator<<(std::ostream &s, const %s &t);", cfsname)
+		w.line("template <>")
+		w.linef("%s _arg<%s>(std::vector<ivy_value> &args, unsigned idx, long long bound);", cfsname, cfsname)
+		w.line("template <>")
+		w.linef("void __ser<%s>(ivy_ser &res, const %s &);", cfsname, cfsname)
+		w.line("template <>")
+		w.linef("void __deser<%s>(ivy_deser &inp, %s &res);", cfsname, cfsname)
+	}
+}
+
+// emitEnumSortArgSpecImpls emits the per-enum `operator<<`, `_arg<T>`,
+// `__ser<T>`, `__deser<T>` definitions. Mirrors Python
+// ivy_to_cpp.py:2497-2510 (operator<<, __ser) and 2634-2652 (_arg,
+// __deser).
+func (g *Generator) emitEnumSortArgSpecImpls(w *cppWriter) {
+	enums := g.enumSortsForArgSpecs()
+	if len(enums) == 0 {
+		return
+	}
+	for _, st := range enums {
+		g.emitEnumOperatorOut(w, st)
+		g.emitEnumSer(w, st)
+		g.emitEnumArg(w, st)
+		g.emitEnumDeser(w, st)
+	}
+	w.blank()
+}
+
+// emitEnumOperatorOut mirrors Python ivy_to_cpp.py:2502-2506.
+func (g *Generator) emitEnumOperatorOut(w *cppWriter, st *goivy.LogicEnumeratedSort) {
+	cfsname := g.ClassName + "::" + varName(st.Name)
+	w.open(fmt.Sprintf("std::ostream &operator<<(std::ostream &s, const %s &t) {", cfsname))
+	for _, sym := range st.Extension {
+		w.linef(`if (t == %s::%s) s << %s;`, g.ClassName, varName(sym), strconv.Quote(sym))
+	}
+	w.line("return s;")
+	w.close("")
+	w.blank()
+}
+
+// emitEnumSer mirrors Python ivy_to_cpp.py:2507-2510.
+func (g *Generator) emitEnumSer(w *cppWriter, st *goivy.LogicEnumeratedSort) {
+	cfsname := g.ClassName + "::" + varName(st.Name)
+	w.line("template <>")
+	w.open(fmt.Sprintf("void __ser<%s>(ivy_ser &res, const %s &t) {", cfsname, cfsname))
+	w.line("__ser(res, (int)t);")
+	w.close("")
+	w.blank()
+}
+
+// emitEnumArg mirrors Python ivy_to_cpp.py:2639-2646.
+func (g *Generator) emitEnumArg(w *cppWriter, st *goivy.LogicEnumeratedSort) {
+	cfsname := g.ClassName + "::" + varName(st.Name)
+	w.line("template <>")
+	w.open(fmt.Sprintf("%s _arg<%s>(std::vector<ivy_value> &args, unsigned idx, long long bound) {", cfsname, cfsname))
+	w.line("(void)bound;")
+	w.line("ivy_value &arg = args[idx];")
+	w.line("if (arg.atom.size() == 0 || arg.fields.size() != 0) throw out_of_bounds(idx, arg.pos);")
+	for _, sym := range st.Extension {
+		w.linef(`if (arg.atom == %s) return %s::%s;`, strconv.Quote(sym), g.ClassName, varName(sym))
+	}
+	w.line(`throw out_of_bounds("bad value: " + arg.atom, arg.pos);`)
+	w.close("")
+	w.blank()
+}
+
+// emitEnumDeser mirrors Python ivy_to_cpp.py:2647-2652.
+func (g *Generator) emitEnumDeser(w *cppWriter, st *goivy.LogicEnumeratedSort) {
+	cfsname := g.ClassName + "::" + varName(st.Name)
+	w.line("template <>")
+	w.open(fmt.Sprintf("void __deser<%s>(ivy_deser &inp, %s &res) {", cfsname, cfsname))
+	w.line("int __res;")
+	w.line("__deser(inp, __res);")
+	w.linef("res = (%s)__res;", cfsname)
+	w.close("")
+	w.blank()
+}
+
 func (g *Generator) emitReplParsers(w *cppWriter) {
 	used := g.replParamSorts()
 	if _, ok := used["bool"]; ok {

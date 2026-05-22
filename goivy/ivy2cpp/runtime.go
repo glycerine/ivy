@@ -28,9 +28,6 @@ func (g *Generator) emitRuntimeHeaderPreamble(w *cppWriter) {
 	w.line("#include <vector>")
 	w.line(`#include "ivy_hash.hpp"`)
 	w.line(`#include "ivy_threads.hpp"`)
-	if g.Config.Target == "repl" {
-		w.line(`#include "ivy_go_repl.hpp"`)
-	}
 	if g.usesZ3() {
 		w.line("#include <utility>")
 		w.line(`#include "z3++.h"`)
@@ -132,11 +129,18 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.line("#include <sstream>")
 	w.line("#include <cstdint>")
 	w.line(`#include "ivy_value.hpp"`)
+	if g.Config.Target == "repl" || g.Config.Target == "test" {
+		w.line(`#include "ivy_repl.hpp"`)
+	}
 	w.blank()
 	w.linef("typedef %s ivy_class;", g.ClassName)
 	w.line("std::ofstream __ivy_out;")
 	w.line("std::ofstream __ivy_modelfile;")
 	w.line("void __ivy_exit(int code) { exit(code); }")
+	w.blank()
+	// Forward declarations of per-enum operator<<, _arg<T>, __ser<T>,
+	// __deser<T>. Python ivy_to_cpp.py:2213-2223 emits these here.
+	g.emitEnumSortArgSpecDecls(w)
 	w.blank()
 }
 

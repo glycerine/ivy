@@ -222,6 +222,10 @@ func (g *Generator) emitImpl() error {
 	}
 	g.emitDestructorImpls(w)
 	g.emitVariantImpls(w)
+	// Per-enum operator<<, _arg<T>, __ser<T>, __deser<T>. Python
+	// ivy_to_cpp.py:2497-2510 (operator<<, __ser) and 2634-2652 (_arg,
+	// __deser).
+	g.emitEnumSortArgSpecImpls(w)
 	w.open(g.constructorSignature(true) + " {")
 	g.emitRuntimeConstructorPrelude(w)
 	g.emitConstructorParamAssignments(w)
