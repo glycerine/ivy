@@ -1870,7 +1870,7 @@ func (a *LogicCallAction) IntUpdate(ctx *UpdateContext) *Update {
 	defer xtracer.Trace("actions.CallAction.int_update EXIT")
 	calleeName := constName(a.Callee)
 	if xtracer.Enabled {
-		vv("DIAG CallAction.IntUpdate callee='%v'", calleeName)
+		fmt.Printf("DIAG CallAction.IntUpdate callee='%v'\n", calleeName)
 	}
 	if calleeName == "" {
 		// Python (ivy_actions.py:1318): name = self.args[0].rep — would

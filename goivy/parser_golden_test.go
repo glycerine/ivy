@@ -91,9 +91,10 @@ func forwardGoldenProcessLine(repo, label string, w io.Writer, xtraceCount *int6
 	isX := strings.HasPrefix(line, "XTRACE:")
 	if onlyNonXtrace {
 		if !isX {
-			//fmt.Printf("~%s: %s\n", label, line)
-			os.Stdout.Write([]byte(line))
-			os.Stdout.Write(newline)
+			//fmt.Fprintf(w, "%s\n", line)
+			//fmt.Fprintf(w, "%s\n", label, line)
+			w.Write([]byte(line))
+			w.Write(newline)
 		}
 		return nil
 	}
