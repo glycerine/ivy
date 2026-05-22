@@ -143,6 +143,7 @@ type L2STacticConfig struct {
 	ProofLabel string
 	Mod        *Module
 	Goals      []*LabeledFormula
+	Axioms     []*LabeledFormula
 	Proof      *LogicProofDecl
 }
 
@@ -242,6 +243,16 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		return nil, fmt.Errorf("cannot extract formula from goal conclusion")
 	}
 
+	// Python ivy_ranking.py includes non-explicit temporal prover axioms in
+	// both the monitor assumptions and the temporal premise wrapper.
+	for _, ax := range cfg.Axioms {
+		if !ax.Explicit && ax.IsTemporal() {
+			if g, ok := ax.Formula.(*LogicGlobally); ok {
+				model.Asms = append(model.Asms, ax.Clone([]Node{ax.Label, g.Body}).(*LabeledFormula))
+			}
+		}
+	}
+
 	// Process temporal premises
 	prems := GoalPrems(goal)
 	var temporalPrems []Expr
@@ -251,6 +262,13 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 				if f, ok := lf.Formula.(Expr); ok {
 					temporalPrems = append(temporalPrems, f)
 				}
+			}
+		}
+	}
+	for _, ax := range cfg.Axioms {
+		if !ax.Explicit && ax.IsTemporal() {
+			if f, ok := ax.Formula.(Expr); ok {
+				temporalPrems = append(temporalPrems, f)
 			}
 		}
 	}
@@ -1113,6 +1131,7 @@ func RankingTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node) (
 		Goals:      goals,
 		Mod:        m,
 		ProofLabel: "",
+		Axioms:     pc.GetAxioms(),
 		Proof:      proofDecl,
 	}
 	return RankingL2STactic(cfg)

@@ -261,9 +261,6 @@ func rankingInvariants(
 				}
 			}
 		}
-		if len(cons) == 0 {
-			return &LogicAnd{Terms: nil}
-		}
 		return &LogicImplies{T1: eq.T1, T2: rankingMakeAnd(cons...)}
 	}
 
