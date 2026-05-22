@@ -8265,3 +8265,199 @@ func TestConjectureLinenoPropagatesToAssert(t *testing.T) {
 	}
 }
 
+// TODO 027: per-sort REPL-value parsing tests. Each test locks down both
+// the good-value accept path and the bad-value error throw path inside
+// each emitted `_arg<T>` body, for the sort categories not already
+// covered by TestEmitsArgSpecForEnum and TestDestructorArgShape.
+
+// TestArgSpecVariantBadAndGoodValuePaths locks down the variant
+// supertype `_arg<>` body shape, mirroring Python ivy_to_cpp.py via
+// ivy_cpp_types.py:374-388 (the VariantType.emit_templates `_arg<>`
+// branch).
+func TestArgSpecVariantBadAndGoodValuePaths(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t
+variant a of t
+variant b of t
+individual v : t
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "vrun"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		// _arg<vrun::t> opener.
+		"template <> vrun::t _arg<vrun::t>(std::vector<ivy_value> &args, unsigned idx, long long bound) {",
+		// Bad value: atom rejected.
+		`throw out_of_bounds("unexpected value for sort t: " + args[idx].atom, args[idx].pos);`,
+		// Bad value: multiple fields rejected.
+		`throw out_of_bounds("too many fields for sort t (expected one)", args[idx].pos);`,
+		// Good value paths: one per subtype, with upcast.
+		`if (args[idx].fields[0].atom == "a") return vrun::t(0, new vrun::t::twrap<vrun::a>(_arg<vrun::a>(args[idx].fields[0].fields, 0, 0)));`,
+		`if (args[idx].fields[0].atom == "b") return vrun::t(1, new vrun::t::twrap<vrun::b>(_arg<vrun::b>(args[idx].fields[0].fields, 0, 0)));`,
+		// Bad value: unknown subtype rejected.
+		`throw out_of_bounds("unexpected field sort t: " + args[idx].fields[0].atom, args[idx].pos);`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestArgSpecStrBVBadAndGoodValuePaths locks down the strbv `_arg<>`
+// body shape, mirroring Python ivy_cpp_types.py:147-152 (StrBV.emit_templates).
+func TestArgSpecStrBVBadAndGoodValuePaths(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type text
+interpret text -> strbv[4]
+individual saved : text
+action set(t:text) = { saved := t }
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "srun"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"template <> srun::text _arg<srun::text>(std::vector<ivy_value> &args, unsigned idx, long long bound) {",
+		// Bad value: nested fields rejected.
+		"if (args[idx].fields.size()) {",
+		"throw out_of_bounds(idx);",
+		// Good value: atom returned as-is.
+		"return args[idx].atom;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestArgSpecIntBVBadAndGoodValuePaths locks down the intbv `_arg<>`
+// body shape, mirroring Python ivy_cpp_types.py:211-223 (IntBV.emit_templates).
+func TestArgSpecIntBVBadAndGoodValuePaths(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type small
+interpret small -> intbv[0][7][3]
+individual saved : small
+action set(x:small) = { saved := x }
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "irun"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"template <> irun::small _arg<irun::small>(std::vector<ivy_value> &args, unsigned idx, long long bound) {",
+		// Bad value: nested fields rejected.
+		"if (args[idx].fields.size()) {",
+		"throw out_of_bounds(idx);",
+		// Good value: atom parsed via istringstream into res.val.
+		"std::istringstream s(args[idx].atom.c_str());",
+		"s >> res.val;",
+		"return res;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestReplDispatchUsesPrimitiveArgForBoolRangeNatStrlit verifies the
+// dispatch chain in emitDispatchArgExprs (repl.go:282-291) picks the
+// right runtime `_arg<>` primitive specialization for each primitive
+// sort kind. The matching `_arg<bool>`, `_arg<unsigned>`, `_arg<unsigned
+// long long>`, and `_arg<__strlit>` template specializations live in
+// include2cpp/ivy_value.hpp.
+func TestReplDispatchUsesPrimitiveArgForBoolRangeNatStrlit(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type rng = {0..5}
+type bigint
+interpret bigint -> nat
+type str
+interpret str -> strlit
+action poke(b:bool, r:rng, n:bigint, s:str) = {}
+export poke
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "prim"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// rng cardinality 6 → bound 6. bool bound 2. nat/strlit are
+	// unbounded — Python passes csortcard which is 0 in those cases.
+	wantDispatch := `ivy.poke(_arg<bool>(args, 0, 2), _arg<unsigned>(args, 1, 6), _arg<unsigned long long>(args, 2, 0), _arg<__strlit>(args, 3, 0));`
+	if !strings.Contains(out.Impl, wantDispatch) {
+		t.Fatalf("missing dispatch call %q in impl:\n%s", wantDispatch, out.Impl)
+	}
+	// No per-sort _arg<> spec should have been emitted for these
+	// primitive-dispatched sorts.
+	for _, banned := range []string{
+		"_arg<prim::rng>",
+		"_arg<prim::bigint>",
+		"_arg<prim::str>",
+	} {
+		if strings.Contains(out.Impl, banned) {
+			t.Fatalf("unexpected per-sort _arg<> %q in impl:\n%s", banned, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestValueParserPrefixesLinenoOnError mirrors Python's
+// emit_value_parser lineno interpolation at ivy_to_cpp.py:2865-2868:
+// when the param default's AST node carries a non-zero source line, the
+// generated error message starts with "line <N>: " ahead of the
+// "parameter ..." / "syntax error in parameter value ..." text.
+func TestValueParserPrefixesLinenoOnError(t *testing.T) {
+	// `parameter pick : color = red` lives on line 3 of the source; the
+	// generator should propagate that lineno into the emit_value_parser
+	// error strings.
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+parameter pick : color = red
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "lrun"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		// The default-application block uses the lineno prefix.
+		`std::cerr << "test.ivy: line 3: parameter pick out of bounds\n";`,
+		`std::cerr << "test.ivy: line 3: syntax error in parameter value pick\n";`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing lineno-prefixed message %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	// The argv `param=value` branch passes no lineno (Python omits the
+	// lineno= keyword at ivy_to_cpp.py:2733), so the second occurrence
+	// inside `if (param == "pick") { ... }` must have an empty prefix.
+	idx := strings.Index(out.Impl, `if (param == "pick") {`)
+	if idx < 0 {
+		t.Fatalf("missing argv dispatch for `pick`:\n%s", out.Impl)
+	}
+	tail := out.Impl[idx:]
+	end := strings.Index(tail, `continue;`)
+	if end < 0 {
+		t.Fatalf("missing terminator for argv pick branch:\n%s", tail)
+	}
+	argvBlock := tail[:end]
+	for _, want := range []string{
+		`std::cerr << "parameter pick out of bounds\n";`,
+		`std::cerr << "syntax error in parameter value pick\n";`,
+	} {
+		if !strings.Contains(argvBlock, want) {
+			t.Fatalf("argv branch missing unprefixed message %q; block:\n%s", want, argvBlock)
+		}
+	}
+	if strings.Contains(argvBlock, "line ") {
+		t.Fatalf("argv branch should not include a lineno prefix; block:\n%s", argvBlock)
+	}
+	compileGeneratedCPP(t, out)
+}

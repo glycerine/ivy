@@ -1692,42 +1692,84 @@ Reminder:
   citing the new Go locations and test names, and update this audit doc in
   the same commit as the implementation.
 
-## TODO 027 - Add Python-compatible parser/writer and value conversion for every sort
+## DONE 027 - Add Python-compatible parser/writer and value conversion for every sort
+
+Status: the bulk of the per-sort parser/writer generation was already in
+place by DONE 022 — `_arg<T>`, `__ser<T>`, `__deser<T>` (and, for
+gen/test, Z3 `__from_solver`/`__to_solver`/`__randomize`) template
+specializations are emitted for enum (`goivy/ivy2cpp/repl.go:60-160`),
+destructor (`goivy/ivy2cpp/destructor.go:244-517`), variant supertype +
+leaf wrapper (`goivy/ivy2cpp/variant.go:122-310`), and StrBV/IntBV
+(`goivy/ivy2cpp/cpp_types.go:272-365`). Primitive sorts (bool, int, long
+long, unsigned, unsigned long long, __strlit) are served by the runtime
+support library `include2cpp/ivy_value.hpp:187-347` which already
+provides their `_arg<>`, `__ser<>`, `__deser<>` specializations and the
+matching parse failure categories (`out_of_bounds`, `syntax_error`,
+`bad_arity` at `include2cpp/ivy_value.hpp:172-185`).
+
+Two new pieces closed in this pass:
+
+1. **Lineno prefix on `emitValueParser` error messages**. `emitValueParser`
+   in `goivy/ivy2cpp/repl.go:319-338` now takes a `goivy.Location` lineno
+   and prepends `Location.String()` (`"<file>: line <N>: "`) onto both the
+   `parameter ... out of bounds` and `syntax error in parameter value ...`
+   `std::cerr` messages. Mirrors Python's `lineno=None` keyword and the
+   `"{lineno}..."` interpolation at `pyivy/ivy/ivy/ivy_to_cpp.py:2858-2870`.
+   Call sites: `emitMainParamSetup` (`goivy/ivy2cpp/repl.go:365`) passes
+   `g.Mod.ParamDefaults[i].GetLineno()` (Python `lineno=d.lineno` at
+   `ivy_to_cpp.py:2710`); `emitParamKeyValueDispatch`
+   (`goivy/ivy2cpp/repl.go:415`) passes `goivy.Location{}` (Python omits
+   `lineno=` at `ivy_to_cpp.py:2733`).
+2. **Per-sort REPL-value parsing tests** for every sort category. The
+   existing `TestEmitsArgSpecForEnum` and `TestDestructorArgShape`
+   already covered enum and destructor; five new tests now lock down the
+   bad-value `throw` paths and good-value accept paths for the remaining
+   sort categories.
 
 Go locations:
 
-- `goivy/ivy2cpp/repl.go:10-280`
-- `goivy/ivy2cpp/types.go:91-168`
+- `goivy/ivy2cpp/repl.go:324` (`emitValueParser` signature with lineno).
+- `goivy/ivy2cpp/repl.go:365, 415` (call sites).
+- `goivy/ivy2cpp/repl.go:60-160` (enum impls); decl wire at
+  `goivy/ivy2cpp/runtime.go:168`.
+- `goivy/ivy2cpp/destructor.go:244-517` (destructor impls).
+- `goivy/ivy2cpp/variant.go:122-310` (variant impls).
+- `goivy/ivy2cpp/cpp_types.go:272-365` (StrBV/IntBV impls).
+- `include2cpp/ivy_value.hpp:172-347` (primitive `_arg<>`/`__ser<>`/
+  `__deser<>` specializations and shared `out_of_bounds`/`syntax_error`
+  types).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2420-2674`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2676-2852`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2858-2870, 2710, 2733` (`emit_value_parser`
+  + lineno-bearing call site).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2420-2674` (per-sort enum/destructor
+  parser/writer emissions).
+- `pyivy/ivy/ivy/ivy_cpp_types.py:147-235, 355-496` (StrBV/IntBV/Variant
+  template emission).
 
-Gap:
+Tests:
 
-- Go parsers are simple hand-written conversions for bool, enums, numeric
-  ranges, and numeric uninterpreted sorts.
-- Python parser/writer support is generated per type and integrates with
-  `ivy_value`, `_arg`, `_arg_seq`, serializers, destructors, variants, arrays,
-  native values, bitvectors, and strings.
-
-Conformance work:
-
-- Delete the ad hoc parser/writer model once the Python-generated parser helpers
-  are ported.
-- Use the same parse failure categories and messages as Python where possible:
-  syntax errors, out-of-bounds values, enum constant failures, and arity errors.
-
-Tests to add:
-
-- Bad and good REPL values for every sort category.
-
-Reminder:
-
-- [ ] When this lands, rename to `## DONE 027 - …`, add a `Status:` paragraph
-  citing the new Go locations and test names, and update this audit doc in
-  the same commit as the implementation.
+- Existing: `TestEmitsArgSpecForEnum` (`ivy2cpp_test.go:4123`),
+  `TestDestructorArgShape` (`ivy2cpp_test.go:6119`),
+  `TestDestructorSerDeserShape` (`ivy2cpp_test.go:6090`),
+  `TestStringBitvectorHelperReplAndZ3Shape` (`ivy2cpp_test.go:5606`),
+  `TestIntBitvectorHelperReplAndZ3Shape` (`ivy2cpp_test.go:5666`).
+- New (appended to `ivy2cpp_test.go`):
+  - `TestArgSpecVariantBadAndGoodValuePaths` (variant supertype
+    `_arg<>`: unexpected-value/too-many-fields/unexpected-field-sort
+    throws plus per-subtype upcast accept).
+  - `TestArgSpecStrBVBadAndGoodValuePaths` (strbv `_arg<>`:
+    nested-fields throw plus atom-return accept).
+  - `TestArgSpecIntBVBadAndGoodValuePaths` (intbv `_arg<>`:
+    nested-fields throw plus istringstream `s >> res.val` accept).
+  - `TestReplDispatchUsesPrimitiveArgForBoolRangeNatStrlit` (dispatch
+    chain picks `_arg<bool>`/`_arg<unsigned>`/`_arg<unsigned long
+    long>`/`_arg<__strlit>` for the primitive-dispatched sort kinds,
+    and emits no per-sort template specialization for them).
+  - `TestValueParserPrefixesLinenoOnError` (default-application block
+    prefixes `"test.ivy: line 3: "` onto the error messages; argv
+    `param=value` branch keeps the unprefixed form).
 
 ## TODO 028 - Implement Python-compatible randomization for all generated types
 
