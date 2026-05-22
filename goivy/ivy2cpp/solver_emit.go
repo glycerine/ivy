@@ -74,31 +74,45 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 	} else {
 		rng = sym.Sort
 	}
-	// Branch (1): destructor record range.
+	// Branch (1): destructor record range. Mirrors Python ivy_to_cpp.py:833-843:
+	// per-destructor, open fresh loops over the full domain, build the
+	// receiver-side apply and the C++ lvalue, then recurse via emitSetField.
 	if g.isDestructorRecordRange(rng) {
-		// Open the per-domain loop, then iterate over destructors of rng.
-		domArgs := make([]string, 0, len(domain))
-		opened := 0
-		for i, d := range domain {
-			name := fmt.Sprintf("X%d", i)
-			header, ok := g.z3LoopHeaderForSort(d, name)
+		for _, destr := range g.destructorsOfRange(rng) {
+			vs := make([]string, len(domain))
+			domArgs := make([]string, len(domain))
+			opened := 0
+			ok := true
+			for i, d := range domain {
+				name := destructorIndexVarName(i)
+				header, hok := g.z3LoopHeaderForSort(d, name)
+				if !hok {
+					g.unsupportedEmitSet(w, sym, "domain not enumerable")
+					ok = false
+					break
+				}
+				w.line(header)
+				w.indent++
+				opened++
+				vs[i] = name
+				domArgs[i] = fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name)
+			}
 			if !ok {
-				g.unsupportedEmitSet(w, sym, "domain not enumerable")
+				for i := 0; i < opened; i++ {
+					w.indent--
+					w.line("}")
+				}
 				return
 			}
-			w.line(header)
-			w.indent++
-			opened++
-			domArgs = append(domArgs, fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name))
-		}
-		lhs := fmt.Sprintf("apply(%s%s)", sname, joinArgs(domArgs))
-		rhs := g.cppStorageAccess(sym.Name, sym.Sort, sliceVarNames(domain), obj)
-		for _, destr := range g.destructorsOfRange(rng) {
-			g.emitSetField(w, destr, lhs, rhs, len(domain))
-		}
-		for i := 0; i < opened; i++ {
-			w.indent--
-			w.line("}")
+			lhs := fmt.Sprintf("apply(%s%s)", sname, joinArgs(domArgs))
+			rhs := g.cppStorageAccess(sym.Name, sym.Sort, vs, obj)
+			if !g.emitSetField(w, destr, lhs, rhs, len(domain)) {
+				g.unsupportedEmitSet(w, sym, "destructor field not enumerable")
+			}
+			for i := 0; i < opened; i++ {
+				w.indent--
+				w.line("}")
+			}
 		}
 		return
 	}
@@ -129,14 +143,75 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 }
 
 // emitSetField is the per-destructor recursion of emitSetSolver. Mirrors
-// Python `emit_set_field` at ivy_to_cpp.py:806. Currently a stub that
-// emits an unsupported marker — destructor record state-encoding is
-// scheduled for milestone 5. Generated tests skip cases that exercise it.
-func (g *Generator) emitSetField(w *cppWriter, destr *goivy.Const, lhs, rhs string, nvars int) {
+// Python `emit_set_field` at ivy_to_cpp.py:806-824. For each destructor
+// field, opens loops over the destructor's argument domain (excluding the
+// implicit receiver slot at dom[0]), builds the symbolic Z3 apply for the
+// field and the matching C++ lvalue, and either recurses into nested
+// destructors or emits `add(__to_solver(*this, lhs1, rhs1))`.
+//
+// nvars is the count of already-opened outer-loop variables; new loop
+// variables are named X__nvars, X__(nvars+1), ... matching Python
+// `variables(domain, start=nvars)` at ivy_to_cpp.py:2891.
+//
+// Returns false if any nested domain is not enumerable, so the caller can
+// emit an "unsupported" marker around the original symbol rather than
+// leaving partial emission in the output.
+func (g *Generator) emitSetField(w *cppWriter, destr *goivy.Const, lhs, rhs string, nvars int) bool {
 	if destr == nil {
-		return
+		return true
 	}
-	w.linef("// ivy2cpp: emitSetField unsupported for destructor %q (TODO 017 milestone 5)", destr.Name)
+	fs, ok := destr.CSort.(*goivy.LogicFunctionSort)
+	if !ok {
+		// Nullary destructor field (constant): just emit the constraint.
+		field := varName(memName(destr.Name))
+		w.linef("add(__to_solver(*this, apply(%s, %s), %s.%s));", strconv.Quote(destr.Name), lhs, rhs, field)
+		return true
+	}
+	dom := fs.Domain()
+	if len(dom) > 0 {
+		dom = dom[1:]
+	}
+	vs := make([]string, len(dom))
+	domArgs := make([]string, len(dom))
+	opened := 0
+	for i, d := range dom {
+		name := destructorIndexVarName(nvars + i)
+		header, hok := g.z3LoopHeaderForSort(d, name)
+		if !hok {
+			for k := 0; k < opened; k++ {
+				w.indent--
+				w.line("}")
+			}
+			return false
+		}
+		w.line(header)
+		w.indent++
+		opened++
+		vs[i] = name
+		domArgs[i] = fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name)
+	}
+	field := varName(memName(destr.Name))
+	lhs1 := fmt.Sprintf("apply(%s, %s%s)", strconv.Quote(destr.Name), lhs, joinArgs(domArgs))
+	rhs1 := rhs + cppIndexSuffix(vs) + "." + field
+	rng := fs.Range()
+	if g.isDestructorRecordRange(rng) {
+		for _, sub := range g.destructorsOfRange(rng) {
+			if !g.emitSetField(w, sub, lhs1, rhs1, nvars+len(dom)) {
+				for k := 0; k < opened; k++ {
+					w.indent--
+					w.line("}")
+				}
+				return false
+			}
+		}
+	} else {
+		w.linef("add(__to_solver(*this, %s, %s));", lhs1, rhs1)
+	}
+	for k := 0; k < opened; k++ {
+		w.indent--
+		w.line("}")
+	}
+	return true
 }
 
 // emitRandomizeSolver adds Z3 randomization preferences for sym. Mirrors
@@ -291,14 +366,6 @@ func (g *Generator) destructorsOfRange(s goivy.Sort) []*goivy.Const {
 	}
 	d, _ := g.Mod.SortDestructors.Get2(sortName(s))
 	return d
-}
-
-func sliceVarNames(domain []goivy.Sort) []string {
-	out := make([]string, len(domain))
-	for i := range domain {
-		out[i] = fmt.Sprintf("X%d", i)
-	}
-	return out
 }
 
 func joinArgs(args []string) string {
