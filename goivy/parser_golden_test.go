@@ -594,6 +594,10 @@ func TestGoldenAll(t *testing.T) {
 	}
 }
 
+// The exampl1_numeric.ivy spec deliberate goes outside of the
+// EPR fragment and invokes the Z3 inconclusive behavior. We
+// focused on this to get the ToSMT2 diagnostic output to be
+// comparable in Go.
 func TestSolverInconclusive(t *testing.T) {
 	cfg := &goldenConfig{
 		path: "ivy-lang-examples/doc/examples/cav2024/examp1_numeric.ivy",
