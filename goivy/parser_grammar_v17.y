@@ -2541,7 +2541,7 @@ defnrhs:
     {
         xtracer.Trace("parser.p_defnrhs_nativequote ENTER (defnrhs)")
         text, bqs := parseNativequote(parser17Acfg(parser17lex), $1.Val, parser17lex.(*parser17LexAdapter))
-        elems := append([]Node{parser17Acfg(parser17lex).NewAtom(text)}, bqs...)
+        elems := append([]Node{parser17Acfg(parser17lex).NewNativeCode(text)}, bqs...)
         ne := parser17Acfg(parser17lex).NewNativeExpr(elems)
         ne.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         $$ = ne
@@ -3796,7 +3796,7 @@ oper:
     {
         xtracer.Trace("parser.p_oper_nativequote ENTER (oper)")
         text, bqs := parseNativequote(parser17Acfg(parser17lex), $1.Val, parser17lex.(*parser17LexAdapter))
-        elems := append([]Node{parser17Acfg(parser17lex).NewAtom(text)}, bqs...)
+        elems := append([]Node{parser17Acfg(parser17lex).NewNativeCode(text)}, bqs...)
         nt := parser17Acfg(parser17lex).NewNativeType(elems...)
         nt.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
         $$ = nt
