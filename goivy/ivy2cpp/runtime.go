@@ -2,6 +2,7 @@ package ivy2cpp
 
 import (
 	"fmt"
+	"runtime"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -15,7 +16,19 @@ func (g *Generator) runtimeUsesReplSubclass() bool {
 	return g != nil && (g.Config.Target == "repl" || g.Config.Target == "test")
 }
 
+func (g *Generator) hostOS() string {
+	if g.Config.HostOS != "" {
+		return g.Config.HostOS
+	}
+	return runtime.GOOS
+}
+
 func (g *Generator) emitRuntimeHeaderPreamble(w *cppWriter) {
+	if g.hostOS() == "windows" {
+		w.line("#define WIN32_LEAN_AND_MEAN")
+		w.line("#include <windows.h>")
+	}
+	w.line("#define _HAS_ITERATOR_DEBUGGING 0")
 	w.line("#include <algorithm>")
 	w.line("#include <cstdint>")
 	w.line("#include <cstdlib>")
@@ -133,6 +146,16 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.line(`#include "ivy_value.hpp"`)
 	if g.Config.Target == "repl" || g.Config.Target == "test" {
 		w.line(`#include "ivy_repl.hpp"`)
+	}
+	// Python `ivy_to_cpp.py:2210-2211` emits `ivy_z3_helpers.hpp` here.
+	// Go's `ivy_go_z3.hpp` is the consolidated substitute: it defines
+	// `ivy_gen`, `gen`, the `mk_*` helpers, and supporting includes.
+	// Per-template specializations of `__from_solver`/`__to_solver`/
+	// `__randomize` are still emitted inline by emitZ3SolverTemplates
+	// (see z3.go:35), so we deliberately do not also include
+	// `ivy_z3_helpers.hpp`.
+	if g.usesZ3() {
+		w.line(`#include "ivy_go_z3.hpp"`)
 	}
 	w.blank()
 	w.linef("typedef %s ivy_class;", g.ClassName)

@@ -14,7 +14,9 @@ func (g *Generator) usesZ3() bool {
 }
 
 func (g *Generator) emitZ3Support(w *cppWriter) error {
-	g.emitZ3Runtime(w)
+	// `ivy_go_z3.hpp` is now included in emitRuntimeImplPreamble at the
+	// position matching Python's `ivy_z3_helpers.hpp` (ivy_to_cpp.py:2211),
+	// so no runtime header emission happens here.
 	g.emitZ3SolverTemplates(w)
 	g.emitCPPTypeImpls(w)
 	g.emitZ3RandomValueHelpers(w)
@@ -25,11 +27,6 @@ func (g *Generator) emitZ3Support(w *cppWriter) error {
 	// and emitVariantImpls in generator.go so that the action_gen body
 	// can reference __from_solver<T> specializations emitted there.
 	return nil
-}
-
-func (g *Generator) emitZ3Runtime(w *cppWriter) {
-	w.line(`#include "ivy_go_z3.hpp"`)
-	w.blank()
 }
 
 func (g *Generator) emitZ3SolverTemplates(w *cppWriter) {

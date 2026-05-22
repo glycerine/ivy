@@ -1429,46 +1429,73 @@ Tests:
   `TestHashThunkToSolverNotEmittedForReplTarget`
   (all at ivy2cpp_test.go:5974+).
 
-## TODO 023 - Restore Python include ordering and support headers
+## DONE 023 - Restore Python include ordering and support headers
+
+Status: header and impl preambles now mirror Python's emission. Three gaps
+closed:
+
+1. **Windows host preamble.** `emitRuntimeHeaderPreamble` in
+   `goivy/ivy2cpp/runtime.go:26` emits `#define WIN32_LEAN_AND_MEAN` then
+   `#include <windows.h>` before all other includes when the build host
+   is Windows (mechanical port of Python `ivy_to_cpp.py:1949-1951` —
+   `platform.system() == 'Windows'`). Host detection lives in
+   `hostOS()` at `runtime.go:19`, which reads the new `Config.HostOS`
+   field (`generator.go:14` `Config`) with `runtime.GOOS` fallback so
+   tests can exercise both branches on any host.
+2. **`_HAS_ITERATOR_DEBUGGING` define.** Same site, unconditional, ahead
+   of all `#include` lines — mirrors Python `ivy_to_cpp.py:1952`.
+3. **Z3 helper include moved to the impl preamble.** Go's
+   `ivy_go_z3.hpp` is now emitted at `goivy/ivy2cpp/runtime.go:157`
+   immediately after `#include "ivy_value.hpp"`/`#include "ivy_repl.hpp"`
+   and before any inline `__from_solver`/`__to_solver`/`__randomize`
+   template definitions — mirroring Python `ivy_to_cpp.py:2210-2211`
+   (`ivy_z3_helpers.hpp`). The duplicate emission inside
+   `emitZ3Runtime` (formerly `z3.go:30-33`) is removed; that helper
+   is gone and `emitZ3Support` in `goivy/ivy2cpp/z3.go:12` no longer
+   calls it.
+
+Deliberate divergence (documented, not changed in this TODO): Go keeps
+`ivy_threads.hpp` in the *header* rather than the impl preamble (where
+Python places it at `ivy_to_cpp.py:2068`) because the generated Go class
+body declares `std::vector<HANDLE>` / `std::vector<pthread_t>` members
+directly — `pthread_t` must be visible at class-definition time. Existing
+test `TestGoOutputUsesSharedSupportIncludes` pins this placement and
+exercises a real C++ compile via `compileGeneratedCPP`.
 
 Go locations:
 
-- `goivy/ivy2cpp/generator.go:130-155`
-- `goivy/ivy2cpp/z3.go:11-23`
+- `goivy/ivy2cpp/runtime.go:19` (`hostOS()`).
+- `goivy/ivy2cpp/runtime.go:26-67` (`emitRuntimeHeaderPreamble`).
+- `goivy/ivy2cpp/runtime.go:119-174` (`emitRuntimeImplPreamble`); Z3
+  helper include at line 157.
+- `goivy/ivy2cpp/generator.go:14` (`Config.HostOS` field).
+- `goivy/ivy2cpp/z3.go:12-25` (`emitZ3Support` no longer emits the
+  runtime include).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:1947-1973`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2030-2069`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2206-2211`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1947-1973` (header preamble).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2030-2069` (impl preamble).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2206-2211` (late impl support includes).
 
-Gap:
+Tests:
 
-- Go emits a minimal set of standard includes and only adds Z3 includes for
-  `test`/`gen`.
-- Python includes target-specific runtime headers such as `ivy_value.hpp`,
-  `ivy_repl.hpp`, `ivy_z3_helpers.hpp`, platform/network/thread headers, and
-  other support headers based on generated features.
-- Missing includes are a compile break once Python-compatible runtime features
-  are ported.
+- Existing (pre-existing constraints preserved):
+  `TestGoOutputUsesSharedRuntimeIncludes`,
+  `TestGoOutputUsesSharedSupportIncludes` (+ `compileGeneratedCPP`),
+  `TestGoOutputUsesSharedZ3RuntimeIncludes` (now also pins
+  `ivy_go_z3.hpp` to impl-only).
+- New: `TestHeaderPreambleEmitsIteratorDebuggingDefine`,
+  `TestHeaderPreambleEmitsWindowsHostIncludesWhenHostOSIsWindows`,
+  `TestHeaderPreambleSkipsWindowsHostIncludesByDefaultOnNonWindowsHost`,
+  `TestImplPreambleEmitsZ3HelperIncludeAfterReplInclude`,
+  `TestImplPreambleOmitsZ3HelperIncludeForReplTarget`.
 
-Conformance work:
-
-- Port include selection and ordering from Python.
-- Add feature gates for threads, sockets, timers, REPL, Z3, serialization, and
-  native snippets.
-- Preserve Python's `stdafx` behavior.
-
-Tests to add:
-
-- Compile generated C++ for each target and platform mode after every runtime
-  feature port.
-
-Reminder:
-
-- [ ] When this lands, rename to `## DONE 023 - …`, add a `Status:` paragraph
-  citing the new Go locations and test names, and update this audit doc in
-  the same commit as the implementation.
+Future work (separate TODOs): feature gates for sockets/timers/REPL/
+serialization/native snippets become meaningful only once those runtime
+features land. Python currently emits the platform-specific
+network/socket headers unconditionally in the impl preamble and Go
+already mirrors that.
 
 ## TODO 024 - Match Python's member-name collision checks
 

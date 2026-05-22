@@ -24,6 +24,12 @@ type Config struct {
 	EmitMain        bool
 	Trace           bool
 	Stdafx          bool
+	// HostOS overrides the build-host detection used for the header
+	// preamble. Python `ivy_to_cpp.py:1948` checks `platform.system()`
+	// at codegen time to gate `WIN32_LEAN_AND_MEAN`/`<windows.h>`. Empty
+	// string falls back to runtime.GOOS; tests set "windows"/"linux" to
+	// exercise both branches.
+	HostOS string
 }
 
 type Output struct {

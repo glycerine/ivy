@@ -283,6 +283,14 @@ export set
 					t.Fatalf("expected Go %s output to include shared Z3 runtime %q:\n%s", target, want, raw)
 				}
 			}
+			// `ivy_go_z3.hpp` must live in the impl, mirroring Python
+			// `ivy_to_cpp.py:2210-2211` (`ivy_z3_helpers.hpp`).
+			if !strings.Contains(out.Impl, `#include "ivy_go_z3.hpp"`) {
+				t.Fatalf("Go %s output: ivy_go_z3.hpp must be in impl, not header-only:\nimpl=\n%s", target, out.Impl)
+			}
+			if strings.Contains(out.Header, `#include "ivy_go_z3.hpp"`) {
+				t.Fatalf("Go %s output: ivy_go_z3.hpp should not appear in header:\nheader=\n%s", target, out.Header)
+			}
 			for _, unwanted := range []string{
 				"class gen : public ivy_gen",
 				"template <class T> void __from_solver( gen",
@@ -7738,6 +7746,132 @@ export step
 	}
 	if strings.Contains(out2.Impl, `__ivy_out << "  write(`) {
 		t.Fatalf("write-trace line should be Trace-gated:\n%s", out2.Impl)
+	}
+}
+
+// TODO 023 — Python `ivy_to_cpp.py:1952` emits this define unconditionally
+// at the top of the header. Used to suppress MSVC's iterator debug overhead.
+func TestHeaderPreambleEmitsIteratorDebuggingDefine(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Header, "#define _HAS_ITERATOR_DEBUGGING 0") {
+		t.Fatalf("expected _HAS_ITERATOR_DEBUGGING define in header:\n%s", out.Header)
+	}
+}
+
+// TODO 023 — Python `ivy_to_cpp.py:1949-1951` emits these only when the
+// codegen host is Windows. Go uses Config.HostOS to expose the gate.
+func TestHeaderPreambleEmitsWindowsHostIncludesWhenHostOSIsWindows(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "oracle", HostOS: "windows"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	wantDefine := "#define WIN32_LEAN_AND_MEAN"
+	wantInclude := "#include <windows.h>"
+	if !strings.Contains(out.Header, wantDefine) {
+		t.Fatalf("expected %q in header:\n%s", wantDefine, out.Header)
+	}
+	if !strings.Contains(out.Header, wantInclude) {
+		t.Fatalf("expected %q in header:\n%s", wantInclude, out.Header)
+	}
+	defIdx := strings.Index(out.Header, wantDefine)
+	incIdx := strings.Index(out.Header, wantInclude)
+	algIdx := strings.Index(out.Header, "#include <algorithm>")
+	if defIdx < 0 || incIdx < 0 || algIdx < 0 {
+		t.Fatalf("expected define, windows.h, and algorithm in header; got defIdx=%d incIdx=%d algIdx=%d", defIdx, incIdx, algIdx)
+	}
+	if !(defIdx < incIdx && incIdx < algIdx) {
+		t.Fatalf("expected order: WIN32_LEAN_AND_MEAN(%d) < <windows.h>(%d) < <algorithm>(%d)\n%s",
+			defIdx, incIdx, algIdx, out.Header)
+	}
+}
+
+// TODO 023 — Python `ivy_to_cpp.py:1948` only emits Windows preamble when
+// the codegen host is Windows. Non-Windows hosts skip these lines.
+func TestHeaderPreambleSkipsWindowsHostIncludesByDefaultOnNonWindowsHost(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "oracle", HostOS: "linux"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, unwanted := range []string{"#define WIN32_LEAN_AND_MEAN", "#include <windows.h>"} {
+		if strings.Contains(out.Header, unwanted) {
+			t.Fatalf("did not expect %q in header on non-Windows host:\n%s", unwanted, out.Header)
+		}
+	}
+}
+
+// TODO 023 — Python `ivy_to_cpp.py:2210-2211` emits `ivy_z3_helpers.hpp`
+// in the impl preamble, immediately after `ivy_value.hpp`/`ivy_repl.hpp`,
+// before any per-sort Z3 template specializations. Go's `ivy_go_z3.hpp`
+// occupies that slot.
+func TestImplPreambleEmitsZ3HelperIncludeAfterReplInclude(t *testing.T) {
+	src := `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	const z3Inc = `#include "ivy_go_z3.hpp"`
+	const replInc = `#include "ivy_repl.hpp"`
+	const valueInc = `#include "ivy_value.hpp"`
+	z3Idx := strings.Index(out.Impl, z3Inc)
+	replIdx := strings.Index(out.Impl, replInc)
+	valueIdx := strings.Index(out.Impl, valueInc)
+	if z3Idx < 0 {
+		t.Fatalf("expected %q in impl for test target:\n%s", z3Inc, out.Impl)
+	}
+	if replIdx < 0 || valueIdx < 0 {
+		t.Fatalf("expected value/repl includes in impl: valueIdx=%d replIdx=%d\n%s", valueIdx, replIdx, out.Impl)
+	}
+	if !(valueIdx < replIdx && replIdx < z3Idx) {
+		t.Fatalf("expected ivy_value.hpp(%d) < ivy_repl.hpp(%d) < ivy_go_z3.hpp(%d):\n%s",
+			valueIdx, replIdx, z3Idx, out.Impl)
+	}
+	// Z3 helper include must precede the inline `__from_solver` template
+	// definitions emitted by emitZ3SolverTemplates.
+	if tmplIdx := strings.Index(out.Impl, "void __from_solver"); tmplIdx >= 0 && tmplIdx < z3Idx {
+		t.Fatalf("ivy_go_z3.hpp(%d) must precede __from_solver template definitions(%d):\n%s",
+			z3Idx, tmplIdx, out.Impl)
+	}
+}
+
+// TODO 023 — Repl-only target does not need the Z3 runtime helper.
+func TestImplPreambleOmitsZ3HelperIncludeForReplTarget(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {
+}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "oracle"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if strings.Contains(out.Impl, `#include "ivy_go_z3.hpp"`) {
+		t.Fatalf("ivy_go_z3.hpp must not be emitted for repl target:\n%s", out.Impl)
 	}
 }
 
