@@ -1023,7 +1023,7 @@ Tests to add:
 - Compare generated traces against Python for deterministic seeds where
   possible.
 
-## TODO 018 - Complete Z3 sort/declaration/eval/set conversion
+## TODO 018 - Complete Z3 sort/declaration/eval/set conversion.
 
 Go locations:
 
