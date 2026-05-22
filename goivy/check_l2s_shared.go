@@ -331,9 +331,13 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 		}
 		lhs := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), checkVarsToNodes(vb.Vars)...)
 		var conjuncts []Expr
-		for _, v := range vb.Vars {
-			if !cfg.FiniteSorts[SortName(v.VSort)] {
-				conjuncts = append(conjuncts, checkMustApply(L2SD(v.VSort), v))
+		if !cfg.IsRankingTactic {
+			// ivy_ranking.py leaves reset_w unguarded by l2s_d; ordinary L2S keeps
+			// these domain guards from ivy_l2s.py.
+			for _, v := range vb.Vars {
+				if !cfg.FiniteSorts[SortName(v.VSort)] {
+					conjuncts = append(conjuncts, checkMustApply(L2SD(v.VSort), v))
+				}
 			}
 		}
 		conjuncts = append(conjuncts, &LogicNot{Body: vb.Body})
