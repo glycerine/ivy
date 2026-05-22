@@ -1023,45 +1023,76 @@ Tests to add:
 - Compare generated traces against Python for deterministic seeds where
   possible.
 
-## TODO 018 - Complete Z3 sort/declaration/eval/set conversion.
+## DONE 018 - Complete Z3 sort/declaration/eval/set conversion
+
+Landed in four milestones (M1–M4); plan at
+`~/.claude/plans/we-are-in-ivy-goivy-ivy2cpp-wise-wombat.md`.
 
 Go locations:
 
-- `goivy/ivy2cpp/z3.go:30-56`
-- `goivy/ivy2cpp/z3.go:181-221`
-- `goivy/ivy2cpp/z3.go:234-282`
+- `goivy/ivy2cpp/solver_emit.go:emitSetField` (M1)
+- `goivy/ivy2cpp/solver_emit.go:emitSetSolver` branch (2) + `isLargeType` (M2)
+- `goivy/ivy2cpp/z3.go:emitZ3EnumSolverConversion` + `repl.go:emitEnumSortArgSpecDecls` (M3)
+- `goivy/ivy2cpp/solver_emit.go:emitFromSolverLoop` + `isRecordRange` / `recordRangeType` (M4.b)
+- `goivy/ivy2cpp/z3.go:emitZ3SortRegistrations` (M4.c — runtime-equivalence comment)
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:687-729`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:730-756`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:772-799`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:806-824`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:826-870`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:4469-4480`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:687-729` (`emit_sorts`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:730-756` (`emit_decl`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:772-799` (`emit_eval`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:806-824` (`emit_set_field`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:826-870` (`emit_set`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2654-2668` (enum-sort `__from_solver`/`__to_solver`/`__randomize`)
+- `pyivy/ivy/ivy/ivy_to_cpp.py:4469-4480` (`emit_boilerplate1`)
 
-Gap:
+What landed:
 
-- Go emits generic solver helper templates and some sort declarations for enum,
-  range, and uninterpreted sorts.
-- Python emits full sort declarations, symbol declarations, eval helpers, field
-  setters, and state setters across the complete type system.
-- Go lacks solver support for arrays/hash-thunks, destructors, variants, native
-  types, bitvectors, strings, and CPPTYPE custom conversions.
+- **M1.** Ported `emit_set_field` faithfully. `emitSetSolver` branch (1)
+  restructured to open loops per-destructor matching Python's flow; the
+  recursive `add(__to_solver(*this, apply("<destr>", lhs, ...), rhs[idx...].field))`
+  call is now emitted instead of the previous unsupported-marker stub.
+- **M2.** Added the `forall`-quantified branch in `emitSetSolver` for
+  function-sorted symbols whose domain `is_large_type` (non-integer
+  domain element or product > 1024). Added `Generator.isLargeType`
+  mirroring Python ivy_to_cpp.py:445-449.
+- **M3.** Converted enum-sort solver conversion from `static` overloads
+  to `template <>` specializations matching Python, delegating to
+  `__from_solver<int>` / `__to_solver<int>` / `__randomize<int>`. Added
+  matching forward declarations gated under `#ifdef Z3PP_H_`.
+- **M4.a.** No-op — Python's `__pto__<dom0>__<dom1>` cname at
+  ivy_to_cpp.py:735 is dead code (computed but never referenced); Python
+  emits `*>` literally and Go already matches.
+- **M4.b.** Split `emitFromSolverLoop` into the Python-faithful branches:
+  destructor / native / cpp-interp ranges → `__from_solver<class::T>
+  (*this, apply("name", ...), lvalue);`; primitive ranges → `lvalue =
+  (ctype)eval_apply("name", ...);`. Added `recordRangeType` so cpp-typed
+  bv / strbv / intbv sorts route to `<class::word>` rather than decaying
+  to `<unsigned>`. `emitZ3EvaluateStateSymbol` now delegates to the
+  shared helper.
+- **M4.c.** Documented runtime divergence at `emitZ3SortRegistrations`:
+  Python's `enum_sorts.insert(name, <class>::<sortvar>::z3_sort(ctx))`
+  is functionally equivalent to the Go runtime's `mk_bv(name, bits)` /
+  `mk_string(name)` — same Z3 sort constructors underneath, but
+  `ivy_go_z3.hpp` uses a single `sorts` map rather than Python's separate
+  `enum_sorts` map. The `z3_sort(ctx)` static method emitted by
+  `cpp_types.go` is dead on the Go runtime path; mk_bv / mk_string is the
+  runtime-supported equivalent.
 
-Conformance work:
+Tests added:
 
-- Port `emit_sorts`, `emit_decl`, `emit_eval`, `emit_set_field`, and `emit_set`.
-- Add generated `__to_solver` and `__from_solver` helpers for every Python type
-  class.
-- Ensure solver names, enum constants, uninterpreted values, and range values
-  match Python's generated C++ exactly.
+- `TestEmitSetSolverDestructorRecordRange` — white-box assertion of the
+  nested `add(__to_solver(...))` recursion (M1).
+- `TestEmitSetSolverLargeTypeForall` — asserts the `forall(__quants, ...)`
+  emission for a non-integer-domain state symbol (M2).
+- `TestEnumSortSolverSpecsAreTemplateSpecializations` — asserts the new
+  `template <>` form for enum sorts, including forward decls, and that
+  the legacy `static` overloads are gone (M3).
+- `TestEmitEvalBranchesByRangeKind` — asserts both eval branches:
+  primitive `(ctype)eval_apply(...)` cast and cpp-typed
+  `__from_solver<class::T>(*this, apply(...), x)` (M4.b).
 
-Tests to add:
-
-- Solver round-trip tests for every type class and nested type combination.
-- Initial-state and action-generation fixtures that require model evaluation
-  into complex state values.
+`make test` green after each milestone.
 
 ## TODO 019 - Match Python progress/rely logic
 
