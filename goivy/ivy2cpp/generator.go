@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -515,17 +516,44 @@ func (g *Generator) emitStateDecls(w *cppWriter) {
 	}
 }
 
-func (g *Generator) emitCardinalityDecls(w *cppWriter) {
-	if g == nil || g.Mod == nil || g.Mod.Sig == nil || len(g.Mod.Sig.Interp) == 0 {
-		return
+// cardinalitySortNames returns the union of Sig.Interp keys (Python
+// behavior: `il.sig.interp` at ivy_to_cpp.py:2305) and all enumerated
+// sort names. Go's compiler does not auto-promote enum sorts into
+// Sig.Interp the way Python does, but Python's `__CARD__` table covers
+// them because Python eventually places them there. Including enums
+// here matches Python's effective behavior end-to-end so `ask_ret` (for
+// imported callbacks returning an enum) has its bound available.
+func (g *Generator) cardinalitySortNames() []string {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
+		return nil
 	}
-	names := make([]string, 0, len(g.Mod.Sig.Interp))
+	seen := map[string]bool{}
+	var names []string
+	add := func(name string) {
+		if name == "" || name == "bool" || seen[name] {
+			return
+		}
+		seen[name] = true
+		names = append(names, name)
+	}
 	for name := range g.Mod.Sig.Interp {
-		if name != "" && name != "bool" {
-			names = append(names, name)
+		add(name)
+	}
+	for _, name := range g.Mod.SortOrder {
+		s, ok := g.Mod.Sig.Sorts.Get2(name)
+		if !ok {
+			continue
+		}
+		if _, ok := s.(*goivy.LogicEnumeratedSort); ok {
+			add(name)
 		}
 	}
 	sort.Strings(names)
+	return names
+}
+
+func (g *Generator) emitCardinalityDecls(w *cppWriter) {
+	names := g.cardinalitySortNames()
 	for _, name := range names {
 		w.linef("long long __CARD__%s;", varName(name))
 	}
@@ -535,17 +563,7 @@ func (g *Generator) emitCardinalityDecls(w *cppWriter) {
 }
 
 func (g *Generator) emitCardinalityInitializers(w *cppWriter) {
-	if g == nil || g.Mod == nil || g.Mod.Sig == nil || len(g.Mod.Sig.Interp) == 0 {
-		return
-	}
-	names := make([]string, 0, len(g.Mod.Sig.Interp))
-	for name := range g.Mod.Sig.Interp {
-		if name != "" && name != "bool" {
-			names = append(names, name)
-		}
-	}
-	sort.Strings(names)
-	for _, name := range names {
+	for _, name := range g.cardinalitySortNames() {
 		if s, ok := g.Mod.Sig.Sorts.Get2(name); ok {
 			card := cppSortCard(g, s)
 			if card > 0 {
@@ -821,114 +839,325 @@ func formalListContains(formals []*goivy.Const, target *goivy.Const) bool {
 	return false
 }
 
+// emitReplSupport emits the per-classname cmd_reader. Mirrors Python
+// emit_repl_boilerplate1a + 2 (ivy_to_cpp.py:4137-4187).
 func (g *Generator) emitReplSupport(w *cppWriter) {
-	g.emitReplParsers(w)
-	w.line("static void ivy2cpp_dispatch(" + g.ClassName + " &ivy, const std::string &action, const std::vector<std::string> &args) {")
-	w.indent++
-	initActions := g.initialMixinActionNames()
-	for name := range g.Mod.PublicActions.All() {
-		if initActions[name] {
-			continue
-		}
-		username := strings.TrimPrefix(name, "ext:")
-		fn, _ := funName(name)
-		act, ok := g.Mod.Actions.Get2(name)
-		if ok {
-			w.open(fmt.Sprintf(`if (action == "%s") {`, username))
-			w.linef("ivy2cpp_check_arity(args, %d, action);", len(act.GetFormalParams()))
-			args := g.emitReplDispatchArgs(w, act)
-			returns := act.GetFormalReturns()
-			switch len(returns) {
-			case 0:
-				w.linef("ivy.%s(%s);", fn, strings.Join(args, ", "))
-			case 1:
-				w.linef("%s __ivy_result = ivy.%s(%s);", g.cppQualifiedType(returns[0].CSort, g.ClassName), fn, strings.Join(args, ", "))
-				g.emitReplWriteOutputs(w, []string{"__ivy_result"})
-			default:
-				var outNames []string
-				for _, r := range returns {
-					rname := varName(r.Name)
-					w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), rname, g.cppZeroValueInScope(r.CSort))
-					args = append(args, rname)
-					outNames = append(outNames, rname)
-				}
-				w.linef("ivy.%s(%s);", fn, strings.Join(args, ", "))
-				g.emitReplWriteOutputs(w, outNames)
-			}
-			w.line("return;")
-			w.close("")
-			continue
-		}
-		w.linef(`if (action == "%s") { ivy2cpp_check_arity(args, 0, action); ivy.%s(); return; }`, username, fn)
-	}
-	w.line(`std::cerr << "undefined action: " << action << std::endl;`)
-	w.indent--
-	w.line("}")
-	w.blank()
+	g.emitCmdReader(w)
 }
 
+// emitReplMain emits the REPL `main()` body. Mirrors Python
+// ivy_to_cpp.py:2701-2852 + emit_repl_boilerplate3 (4228-4241) when
+// public actions exist, or emit_repl_boilerplate3server (4243-4263)
+// when they don't.
 func (g *Generator) emitReplMain(w *cppWriter) {
 	mainName := g.Config.MainName
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
 	g.emitTestDefaults(w)
-	g.emitRuntimeOutputSetup(w)
-	g.emitConstructDefaultObject(w)
+	g.emitMainParamSetup(w)
+	g.emitConstructFromParams(w)
 	g.emitRuntimeArgCapture(w, "ivy")
 	w.line("ivy.__init();")
 	w.line("ivy.__unlock();")
-	w.line("std::string line;")
-	w.line("std::string action;")
-	w.line("std::vector<std::string> args;")
-	w.open("if (isatty(0)) {")
-	w.line(`__ivy_out << "> ";`)
-	w.line("__ivy_out.flush();")
-	w.close("")
-	w.open("while (std::getline(std::cin, line)) {")
-	w.open("if (line.empty()) {")
-	w.line("continue;")
-	w.close("")
-	w.line("ivy.__lock();")
-	w.open("try {")
-	w.line("ivy2cpp_parse_command(line, action, args);")
-	w.line("ivy2cpp_dispatch(ivy, action, args);")
-	w.line("ivy.__unlock();")
-	w.close(" catch (const std::exception &err) {")
-	w.line("ivy.__unlock();")
-	w.line("std::cerr << err.what() << std::endl;")
-	w.close("")
-	w.open("if (isatty(0)) {")
-	w.line(`__ivy_out << "> ";`)
-	w.line("__ivy_out.flush();")
-	w.close("")
-	w.close("")
+	if g.hasNonInitPublicActions() {
+		// emit_repl_boilerplate3 — interactive REPL.
+		w.linef("%s_cmd_reader *cr = new %s_cmd_reader(ivy);", g.ClassName, g.ClassName)
+		w.open("while (!cr->eof()) {")
+		w.line("cr->read();")
+		w.close("")
+		w.line("delete cr;")
+	} else {
+		// emit_repl_boilerplate3server — wait for reader threads.
+		w.open("for (unsigned i = 0; true; i++) {")
+		w.line("ivy.__lock();")
+		w.open("if (i >= ivy.thread_ids.size()) {")
+		w.line("ivy.__unlock();")
+		w.line("break;")
+		w.close("")
+		w.line("#ifdef _WIN32")
+		w.line("HANDLE tid = ivy.thread_ids[i];")
+		w.line("ivy.__unlock();")
+		w.line("WaitForSingleObject(tid, INFINITE);")
+		w.line("#else")
+		w.line("pthread_t tid = ivy.thread_ids[i];")
+		w.line("ivy.__unlock();")
+		w.line("pthread_join(tid, NULL);")
+		w.line("#endif")
+		w.close("")
+	}
 	w.line("return 0;")
 	w.close("")
+}
+
+// hasNonInitPublicActions reports whether any public action remains
+// after stripping initial-mixin entries. Drives REPL vs server-mode
+// selection (Python ivy_to_cpp.py:2846-2849).
+func (g *Generator) hasNonInitPublicActions() bool {
+	if g.Mod == nil || g.Mod.PublicActions == nil {
+		return false
+	}
+	initActions := g.initialMixinActionNames()
+	for name := range g.Mod.PublicActions.All() {
+		if !initActions[name] {
+			return true
+		}
+	}
+	return false
 }
 
 func (g *Generator) emitTestMain(w *cppWriter) {
 	mainName := g.Config.MainName
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
 	g.emitTestDefaults(w)
-	w.line("int seed = 1;")
-	w.line("int sleep_ms = 10;")
-	w.line("int final_ms = 0;")
-	w.line("(void)sleep_ms;")
-	w.line("(void)final_ms;")
-	w.line("srand(seed);")
-	g.emitRuntimeOutputSetup(w)
+	g.emitMainParamSetup(w)
+	// Multi-run loop. Python emit_repl_boilerplate3test: outer for over
+	// runidx, inner for over cycle.
+	w.open("for (int runidx = 0; runidx < runs; runidx++) {")
 	w.line("initializing = true;")
-	g.emitConstructDefaultObject(w)
+	g.emitConstructFromParams(w)
 	g.emitRuntimeArgCapture(w, "ivy")
+	w.line("ivy._generating = false;")
+	w.line("ivy.__init();")
 	w.line("ivy.__unlock();")
 	w.line("initializing = false;")
 	g.emitRuntimeBindReaders(w)
-	w.line("gen g;")
-	w.line("ivy2cpp_setup(g);")
-	w.line("ivy2cpp_randomize(g, ivy);")
-	g.emitGeneratorInvocations(w)
-	w.line(`__ivy_out << "test_completed" << std::endl;`)
+	w.blank()
+	g.emitTestLoopBody(w)
+	w.close("")
 	w.line("return 0;")
 	w.close("")
+}
+
+// emitTestLoopBody emits the body of the per-run test driver, mirroring
+// Python `emit_repl_boilerplate3test` (ivy_to_cpp.py:4265-4467):
+// build init_gen, weighted action generators, then loop test_iters
+// times choosing among generators / readers / timers via select().
+func (g *Generator) emitTestLoopBody(w *cppWriter) {
+	// init_gen sets up the initial state.
+	w.line("init_gen my_init_gen(ivy);")
+	w.line("my_init_gen.generate(ivy);")
+	w.blank()
+	w.line("std::vector<gen *> generators;")
+	w.line("std::vector<double> weights;")
+	initActions := g.initialMixinActionNames()
+	names := g.publicActionNamesSorted()
+	totalweight := 0.0
+	numGens := 0
+	for _, name := range names {
+		if initActions[name] || isFinalizeName(name) {
+			continue
+		}
+		className := g.actionGeneratorClassName(name)
+		w.linef("generators.push_back(new %s(ivy));", className)
+		weight := g.actionWeight(name)
+		w.linef("weights.push_back(%g);", weight)
+		totalweight += weight
+		numGens++
+	}
+	w.linef("double totalweight = %g;", totalweight)
+	w.linef("int num_gens = %d;", numGens)
+	w.blank()
+	w.line("#ifdef _WIN32")
+	w.line("LARGE_INTEGER freq;")
+	w.line("QueryPerformanceFrequency(&freq);")
+	w.line("#endif")
+	w.line("double frnd = 0.0;")
+	w.line("bool do_over = false;")
+	w.open("for (int cycle = 0; cycle < test_iters; cycle++) {")
+	w.line("double choices = totalweight + 5.0;")
+	w.open("if (do_over) {")
+	w.line("do_over = false;")
+	w.close(" else {")
+	w.indent++
+	w.line("frnd = choices * (((double)rand()) / (((double)RAND_MAX) + 1.0));")
+	w.indent--
+	w.line("}")
+	w.open("if (frnd < totalweight) {")
+	g.emitTestLoopGenBranch(w)
+	w.line("continue;")
+	w.close("")
+	w.blank()
+	g.emitTestLoopSelectBranch(w)
+	w.close("")
+	if g.hasFinalizeExport() {
+		w.line("ivy.__lock(); ivy.ext___finalize(); ivy.__unlock();")
+	}
+	w.line(`__ivy_out << "test_completed" << std::endl;`)
+	w.line("#ifdef _WIN32")
+	w.line("Sleep(final_ms);")
+	w.line("#endif")
+	w.open("if (runidx == runs - 1) {")
+	w.line("struct timespec ts;")
+	w.line("int ms = 50;")
+	w.line("ts.tv_sec = ms / 1000;")
+	w.line("ts.tv_nsec = (ms % 1000) * 1000000;")
+	w.line("nanosleep(&ts, NULL);")
+	w.line("exit(0);")
+	w.close("")
+	w.open("for (unsigned i = 0; i < readers.size(); i++) {")
+	w.line("delete readers[i];")
+	w.close("")
+	w.line("readers.clear();")
+	w.open("for (unsigned i = 0; i < timers.size(); i++) {")
+	w.line("delete timers[i];")
+	w.close("")
+	w.line("timers.clear();")
+}
+
+func (g *Generator) emitTestLoopGenBranch(w *cppWriter) {
+	w.line("int idx = 0;")
+	w.line("double sum = 0.0;")
+	w.open("while (idx < num_gens - 1) {")
+	w.line("sum += weights[idx];")
+	w.line("if (frnd < sum) break;")
+	w.line("idx++;")
+	w.close("")
+	w.line("gen &gx = *generators[idx];")
+	w.line("ivy.__lock();")
+	w.line("ivy._generating = true;")
+	w.line("bool sat = gx.generate(ivy);")
+	w.open("if (sat) {")
+	w.line("gx.execute(ivy);")
+	w.line("ivy._generating = false;")
+	w.line("ivy.__unlock();")
+	w.line("#ifdef _WIN32")
+	w.line("Sleep(sleep_ms);")
+	w.line("#endif")
+	w.close(" else {")
+	w.indent++
+	w.line("ivy._generating = false;")
+	w.line("ivy.__unlock();")
+	w.line("cycle--;")
+	w.indent--
+	w.line("}")
+}
+
+func (g *Generator) emitTestLoopSelectBranch(w *cppWriter) {
+	w.line("fd_set rdfds;")
+	w.line("FD_ZERO(&rdfds);")
+	w.line("int maxfds = 0;")
+	w.open("for (unsigned i = 0; i < readers.size(); i++) {")
+	w.line("reader *r = readers[i];")
+	w.line("int fds = r->fdes();")
+	w.open("if (fds >= 0) {")
+	w.line("FD_SET(fds, &rdfds);")
+	w.close("")
+	w.line("if (fds > maxfds) maxfds = fds;")
+	w.close("")
+	w.line("#ifdef _WIN32")
+	w.line("int timer_min = 15;")
+	w.line("#else")
+	w.line("int timer_min = 5;")
+	w.line("#endif")
+	w.line("struct timeval timeout;")
+	w.line("timeout.tv_sec = timer_min / 1000;")
+	w.line("timeout.tv_usec = 1000 * (timer_min % 1000);")
+	w.line("#ifdef _WIN32")
+	w.line("int foo;")
+	w.open("if (readers.size() == 0) {")
+	w.line("Sleep(timer_min);")
+	w.line("foo = 0;")
+	w.close(" else {")
+	w.indent++
+	w.line("foo = select(maxfds + 1, &rdfds, 0, 0, &timeout);")
+	w.indent--
+	w.line("}")
+	w.line("#else")
+	w.line("int foo = select(maxfds + 1, &rdfds, 0, 0, &timeout);")
+	w.line("#endif")
+	w.open("if (foo < 0) {")
+	w.line("#ifdef _WIN32")
+	w.line(`std::cerr << "select failed: " << WSAGetLastError() << std::endl; __ivy_exit(1);`)
+	w.line("#else")
+	w.line(`perror("select failed"); __ivy_exit(1);`)
+	w.line("#endif")
+	w.close("")
+	w.open("if (foo == 0) {")
+	w.line("cycle--;")
+	w.open("for (unsigned i = 0; i < timers.size(); i++) {")
+	w.open("if (timer_min >= timers[i]->ms_delay()) {")
+	w.line("cycle++;")
+	w.line("break;")
+	w.close("")
+	w.close("")
+	w.open("for (unsigned i = 0; i < timers.size(); i++) {")
+	w.line("timers[i]->timeout(timer_min);")
+	w.close("")
+	w.close(" else {")
+	w.indent++
+	w.line("int fdc = 0;")
+	w.open("for (unsigned i = 0; i < readers.size(); i++) {")
+	w.line("reader *r = readers[i];")
+	w.line("if (FD_ISSET(r->fdes(), &rdfds)) fdc++;")
+	w.close("")
+	w.line("int fdi = fdc * (((double)rand()) / (((double)RAND_MAX) + 1.0));")
+	w.line("fdc = 0;")
+	w.open("for (unsigned i = 0; i < readers.size(); i++) {")
+	w.line("reader *r = readers[i];")
+	w.open("if (FD_ISSET(r->fdes(), &rdfds)) {")
+	w.open("if (fdc == fdi) {")
+	w.line("r->read();")
+	w.open("if (r->background()) {")
+	w.line("cycle--;")
+	w.line("do_over = true;")
+	w.close("")
+	w.line("break;")
+	w.close("")
+	w.line("fdc++;")
+	w.close("")
+	w.close("")
+	w.indent--
+	w.line("}")
+}
+
+// isFinalizeName matches both the Python prefixed form ("ext:_finalize")
+// and Go's bare form ("_finalize"). The Go compiler does not always
+// prepend `ext:` for exported actions, but the runtime helper method
+// is still named `ext___finalize` to match Python.
+func isFinalizeName(name string) bool {
+	return name == "ext:_finalize" || name == "_finalize"
+}
+
+func (g *Generator) hasFinalizeExport() bool {
+	if g.Mod == nil || g.Mod.PublicActions == nil {
+		return false
+	}
+	for name := range g.Mod.PublicActions.All() {
+		if isFinalizeName(name) {
+			return true
+		}
+	}
+	return false
+}
+
+// actionWeight returns the `<actname>.weight` attribute as a double,
+// defaulting to 1.0. Mirrors Python ivy_to_cpp.py:4287-4298.
+func (g *Generator) actionWeight(name string) float64 {
+	username := strings.TrimPrefix(name, "ext:")
+	if g.Mod.Attributes == nil {
+		return 1.0
+	}
+	raw, ok := g.Mod.Attributes[username+".weight"]
+	if !ok {
+		return 1.0
+	}
+	type relnamer interface{ Relname() string }
+	var s string
+	switch v := raw.(type) {
+	case string:
+		s = v
+	case relnamer:
+		s = v.Relname()
+	default:
+		return 1.0
+	}
+	if len(s) >= 2 && s[0] == '"' && s[len(s)-1] == '"' {
+		s = s[1 : len(s)-1]
+	}
+	f, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		return 1.0
+	}
+	return f
 }
 
 func (g *Generator) emitGenMain(w *cppWriter) {
@@ -942,8 +1171,8 @@ func (g *Generator) emitGenMain(w *cppWriter) {
 	w.blank()
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
 	g.emitTestDefaults(w)
-	g.emitRuntimeOutputSetup(w)
-	g.emitConstructDefaultObject(w)
+	g.emitMainParamSetup(w)
+	g.emitConstructFromParams(w)
 	g.emitRuntimeArgCapture(w, "ivy")
 	w.line("ivy.__unlock();")
 	w.line("ivy2cpp_generate(ivy);")
@@ -981,6 +1210,21 @@ func (g *Generator) emitConstructDefaultObject(w *cppWriter) {
 	} else {
 		w.linef("%s ivy{%s};", g.runtimeMainClassName(), strings.Join(args, ", "))
 	}
+}
+
+// emitConstructFromParams emits `ClassName_repl ivy(p__a, p__b, ...);`
+// matching Python ivy_to_cpp.py:2838 where the actual parameter
+// locals (already filled by emitMainParamSetup) are forwarded.
+func (g *Generator) emitConstructFromParams(w *cppWriter) {
+	if len(g.Mod.Params) == 0 {
+		w.linef("%s ivy;", g.runtimeMainClassName())
+		return
+	}
+	args := make([]string, len(g.Mod.Params))
+	for i, p := range g.Mod.Params {
+		args[i] = "p__" + varName(p.Name)
+	}
+	w.linef("%s ivy(%s);", g.runtimeMainClassName(), strings.Join(args, ", "))
 }
 
 func (g *Generator) constructorDefaultArgs() []string {

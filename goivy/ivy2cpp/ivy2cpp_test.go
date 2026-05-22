@@ -207,7 +207,7 @@ export step
 		t.Fatalf("Generate: %v", err)
 	}
 	raw := out.Header + "\n" + out.Impl
-	for _, want := range []string{`#include "ivy_hash.hpp"`, `#include "ivy_go_repl.hpp"`} {
+	for _, want := range []string{`#include "ivy_hash.hpp"`, `#include "ivy_threads.hpp"`, `#include "ivy_repl.hpp"`, `#include "ivy_value.hpp"`} {
 		if !strings.Contains(raw, want) {
 			t.Fatalf("go output missing shared runtime support %q:\n%s", want, raw)
 		}
@@ -218,8 +218,8 @@ export step
 	}
 	for _, unwanted := range []string{
 		"struct ivy_value {",
-		"int ask_ret(long long bound)",
-		"void parse_command(const std::string &cmd",
+		"inline int ask_ret(long long bound)",
+		"inline void parse_command(const std::string &cmd",
 		"class stdin_reader: public reader",
 	} {
 		if strings.Contains(raw, unwanted) {
@@ -244,9 +244,15 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{`#include "ivy_hash.hpp"`, `#include "ivy_go_repl.hpp"`} {
+	// Header: hash and threads. Impl: ivy_value + ivy_repl (Python-style).
+	for _, want := range []string{`#include "ivy_hash.hpp"`, `#include "ivy_threads.hpp"`} {
 		if !strings.Contains(out.Header, want) {
-			t.Fatalf("go output missing support include %q:\n%s", want, out.Header)
+			t.Fatalf("go output missing header support include %q:\n%s", want, out.Header)
+		}
+	}
+	for _, want := range []string{`#include "ivy_value.hpp"`, `#include "ivy_repl.hpp"`} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("go output missing impl support include %q:\n%s", want, out.Impl)
 		}
 	}
 	if strings.Contains(out.Impl, "static void ivy2cpp_parse_command") {
@@ -816,7 +822,9 @@ export step
 				"runtime_repl_repl ivy;",
 				"ivy.__unlock();",
 				"ivy.__lock();",
-				"ivy2cpp_dispatch(ivy, action, args);",
+				// New: cmd_reader-based dispatch (Python style).
+				"class runtime_repl_cmd_reader : public stdin_reader",
+				"parse_command(cmd, action, args);",
 				`__ivy_out << "> ";`,
 			},
 		},
@@ -1000,7 +1008,11 @@ export step
 		t.Fatalf("class target metadata = target %q effective %q emitMain %v", out.Target, out.EffectiveTarget, out.EmitMain)
 	}
 	raw := out.Header + "\n" + out.Impl
-	for _, want := range []string{"class OnlyClass", "ivy2cpp_dispatch", `#include "ivy_go_repl.hpp"`} {
+	for _, want := range []string{
+		"class OnlyClass",
+		"class OnlyClass_cmd_reader : public stdin_reader",
+		`#include "ivy_repl.hpp"`,
+	} {
 		if !strings.Contains(raw, want) {
 			t.Fatalf("class output missing %q:\n%s", want, raw)
 		}
@@ -1323,7 +1335,9 @@ export set
 		"unsigned seen;",
 		"void set(unsigned i);",
 		"void rangetypes::set(unsigned i)",
-		"unsigned i = ivy2cpp_parse_idx",
+		// Range sorts typedef to unsigned, so _arg<unsigned> from
+		// ivy_value.hpp handles the parse with the carc bound.
+		`ivy.set(_arg<unsigned>(args, 0, 3));`,
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -1566,8 +1580,11 @@ export load
 		"struct wrap {",
 		"template <typename T> struct twrap : public wrap",
 		"if (v.tag == 0)",
-		"static variantdown::a ivy2cpp_parse_a(const std::string &s)",
-		`variantdown::a inp = ivy2cpp_parse_a(ivy2cpp_read_arg(args, 0, "inp"));`,
+		// Variant `a` already has its `_arg<>` specialization emitted by
+		// variant.go; the dispatcher calls it directly. The bound for
+		// uninterpreted variant subtypes is 0 (Python csortcard fallback).
+		`variantdown::a _arg<variantdown::a>(std::vector<ivy_value> &args, unsigned idx, long long bound)`,
+		`ivy.save(_arg<variantdown::a>(args, 0, 0));`,
 		"v = t(0, new t::twrap<a>(inp));",
 		"a loc__q = t::unwrap< a >(v);",
 		"out = loc__q;",
@@ -2911,11 +2928,18 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, "paramrepl_repl ivy{paramrepl::red};") {
-		t.Fatalf("missing parameterized repl construction:\n%s", out.Impl)
-	}
-	if !strings.Contains(out.Impl, "ivy.__init();") {
-		t.Fatalf("repl main should run explicit initial actions after construction:\n%s", out.Impl)
+	// Param has no default — declared as positional; main constructs ivy
+	// with the parsed local `p__initial`.
+	for _, want := range []string{
+		"paramrepl::color p__initial",
+		`arg_values[0] = parse_value(args[0], pos);`,
+		`p__initial = _arg<paramrepl::color>(arg_values, 0, 2);`,
+		"paramrepl_repl ivy(p__initial);",
+		"ivy.__init();",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in repl impl:\n%s", want, out.Impl)
+		}
 	}
 	compileGeneratedCPP(t, out)
 }
@@ -3328,11 +3352,17 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, "nativeparam ivy{nativeparam::vec()};") {
-		t.Fatalf("native parameter default should value-initialize the class type:\n%s", out.Impl)
+	// Parameter has no default — declared as positional. Native vec
+	// requires no special handling beyond _arg<>.
+	for _, want := range []string{
+		"nativeparam::vec p__initial",
+		"nativeparam ivy(p__initial);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
 	}
 	assertNoUnsupportedCPP(t, out)
-	compileGeneratedCPP(t, out)
 }
 
 func TestNativeDefinitionEmitsTemplateMethod(t *testing.T) {
@@ -3608,7 +3638,15 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"std::string line;", "while (std::getline(std::cin, line))", "ivy2cpp_parse_command(line, action, args);", "ivy2cpp_dispatch(ivy, action, args);"} {
+	// Python-style cmd_reader loop: runner_cmd_reader.read() in a while
+	// loop dispatches each line through parse_command + _arg<T>.
+	for _, want := range []string{
+		"class runner_cmd_reader : public stdin_reader",
+		"runner_cmd_reader *cr = new runner_cmd_reader(ivy);",
+		"while (!cr->eof())",
+		"cr->read();",
+		"parse_command(cmd, action, args);",
+	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in repl main:\n%s", want, out.Impl)
 		}
@@ -3647,7 +3685,11 @@ export set
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{`if (action == "set")`, `runner::color c = ivy2cpp_parse_color(ivy2cpp_read_arg(args, 0, "c"));`, `ivy.set(c);`} {
+	for _, want := range []string{
+		`if (action == "set")`,
+		`check_arity(args, 1, action);`,
+		`ivy.set(_arg<runner::color>(args, 0, 2));`,
+	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in repl dispatch:\n%s", want, out.Impl)
 		}
@@ -3674,15 +3716,12 @@ export set
 		t.Fatalf("Generate: %v", err)
 	}
 	text := out.Header + out.Impl
+	// Python-style dispatch via _arg<T>(args, idx, csortcard).
+	// `idx` has bound 3 (range 0..2).
 	for _, want := range []string{
-		`#include "ivy_go_repl.hpp"`,
-		"static bool ivy2cpp_parse_bool(const std::string &s)",
-		"static runner::color ivy2cpp_parse_color(const std::string &s)",
-		"static unsigned ivy2cpp_parse_idx(const std::string &s)",
-		`runner::color c = ivy2cpp_parse_color(ivy2cpp_read_arg(args, 0, "c"));`,
-		`bool b = ivy2cpp_parse_bool(ivy2cpp_read_arg(args, 1, "b"));`,
-		`unsigned i = ivy2cpp_parse_idx(ivy2cpp_read_arg(args, 2, "i"));`,
-		"ivy.set(c, b, i);",
+		`#include "ivy_repl.hpp"`,
+		`#include "ivy_value.hpp"`,
+		`ivy.set(_arg<runner::color>(args, 0, 2), _arg<bool>(args, 1, 2), _arg<unsigned>(args, 2, 3));`,
 	} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("missing %q in repl output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -3766,6 +3805,462 @@ export set
 	}
 }
 
+// Phase 2: per-module cmd_reader subclass. Mirrors Python
+// emit_repl_boilerplate1a + emit_repl_boilerplate2.
+func TestReplEmitsCmdReader(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action set(c:color) = { assert c = green }
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"class runner_cmd_reader : public stdin_reader {",
+		"runner_repl &ivy;",
+		"runner_cmd_reader(runner_repl &_ivy) : ivy(_ivy) {",
+		"virtual void process(const std::string &cmd) {",
+		"parse_command(cmd, action, args);",
+		"ivy.__lock();",
+		`if (action == "set") {`,
+		"check_arity(args, 1, action);",
+		`ivy.set(_arg<runner::color>(args, 0, 2));`,
+		"ivy.__unlock();",
+		`std::cerr << "undefined action: " << action << std::endl;`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in cmd_reader impl:\n%s", want, out.Impl)
+		}
+	}
+}
+
+// Phase 2: cmd_reader catches syntax_error / out_of_bounds / bad_arity.
+// Python emit_repl_boilerplate2 (ivy_to_cpp.py:4160-4187).
+func TestReplCatchesSyntaxOutOfBoundsBadArity(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"catch (syntax_error &err)",
+		`std::cerr << "line " << lineno << ":" << err.pos << ": syntax error"`,
+		"catch (out_of_bounds &err)",
+		`std::cerr << "line " << lineno << ":" << err.pos << ": " << err.txt << " bad value"`,
+		"catch (bad_arity &err)",
+		`std::cerr << "action " << err.action << " takes " << err.num << " input parameters"`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in cmd_reader catches:\n%s", want, out.Impl)
+		}
+	}
+}
+
+// Phase 2: REPL server mode when no public actions exist. Python
+// emit_repl_boilerplate3server (ivy_to_cpp.py:4243-4263). Build a
+// module with no exports directly so the init mixin isn't auto-promoted.
+func TestReplServerModeWhenNoPublicActions(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "srv"
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "srv"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"for (unsigned i = 0; true; i++) {",
+		"if (i >= ivy.thread_ids.size()) {",
+		"pthread_join(tid, NULL);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in repl server-mode main:\n%s", want, out.Impl)
+		}
+	}
+	if strings.Contains(out.Impl, "while (!cr->eof())") {
+		t.Fatalf("server mode should not instantiate cmd_reader loop:\n%s", out.Impl)
+	}
+}
+
+// Phase 2: Config.Trace wraps action dispatch with trace prelude/postlude.
+// Python ivy_to_cpp.py:2685-2690.
+func TestReplTraceWrapsActionCalls(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action set(c:color) = { assert c = green }
+export set
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner", Trace: true})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		`__ivy_out << "set(" << _arg<runner::color>(args, 0, 2) << ") {" << std::endl;`,
+		`ivy.set(_arg<runner::color>(args, 0, 2));`,
+		`__ivy_out << "}" << std::endl;`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in traced repl dispatch:\n%s", want, out.Impl)
+		}
+	}
+}
+
+// Phase 6: the legacy `ivy_go_repl.hpp` shim has been removed. No
+// emitted output should still reference it, and the include directory
+// should no longer contain it.
+func TestReplGoReplShimRemoved(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {}
+export step
+`)
+	for _, target := range []string{"repl", "test", "gen", "class"} {
+		out, err := Generate(mod, Config{Target: target, ClassName: "shim"})
+		if err != nil {
+			t.Fatalf("Generate(%s): %v", target, err)
+		}
+		if strings.Contains(out.Header+out.Impl, "ivy_go_repl.hpp") {
+			t.Fatalf("%s target still references ivy_go_repl.hpp:\n%s", target, out.Impl)
+		}
+		if strings.Contains(out.Impl, "ivy2cpp_parse_command") || strings.Contains(out.Impl, "ivy2cpp_dispatch") {
+			t.Fatalf("%s target still uses ivy2cpp_parse_command / ivy2cpp_dispatch helpers:\n%s", target, out.Impl)
+		}
+	}
+}
+
+// Phase 6: when Config.Trace is set, the assert/assume overrides emit
+// the closing `}` so traced output stays balanced. Python ivy_to_cpp.py:
+// emit_repl_boilerplate1 CLOSE_TRACE substitution (4099-4101).
+func TestReplTraceClosesAssertBraces(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = { assert false }
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "tr", Trace: true})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// Both ivy_assert and ivy_assume should emit the closing `}` when
+	// trace is on, after the assertion_failed/assumption_failed lines.
+	count := strings.Count(out.Impl, `__ivy_out << "}" << std::endl;`)
+	if count < 2 {
+		t.Fatalf("expected closing `}` in both ivy_assert and ivy_assume under Trace, got %d:\n%s", count, out.Impl)
+	}
+}
+
+// Phase 5: emit_repl_boilerplate3test multi-run + weighted random
+// loop shape. Python ivy_to_cpp.py:4265-4467.
+func TestTestMainWeightedGeneratorLoop(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = { saved := c }
+export set
+attribute set.weight = "3.0"
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "wt"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		// Multi-run outer loop.
+		"for (int runidx = 0; runidx < runs; runidx++)",
+		"initializing = true;",
+		"ivy._generating = false;",
+		"initializing = false;",
+		// Init generator + per-action generators.
+		"init_gen my_init_gen(ivy);",
+		"my_init_gen.generate(ivy);",
+		"std::vector<gen *> generators;",
+		"std::vector<double> weights;",
+		"generators.push_back(new set_gen(ivy));",
+		"weights.push_back(3);",
+		"double totalweight = 3;",
+		"int num_gens = 1;",
+		// Random choice + do_over.
+		"double frnd = 0.0;",
+		"bool do_over = false;",
+		"for (int cycle = 0; cycle < test_iters; cycle++)",
+		"if (frnd < totalweight) {",
+		"gen &gx = *generators[idx];",
+		"ivy._generating = true;",
+		"bool sat = gx.generate(ivy);",
+		"gx.execute(ivy);",
+		// select() branch for readers/timers.
+		"FD_ZERO(&rdfds);",
+		"int foo = select(maxfds + 1, &rdfds, 0, 0, &timeout);",
+		// Run epilogue.
+		`__ivy_out << "test_completed" << std::endl;`,
+		"if (runidx == runs - 1)",
+		"nanosleep(&ts, NULL);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in test main:\n%s", want, out.Impl)
+		}
+	}
+}
+
+// Phase 5: ext:_finalize gets invoked at end of the loop if exported.
+// Python ivy_to_cpp.py:4303 (FINALIZE substitution).
+func TestTestMainHonorsFinalize(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action _finalize = {}
+export _finalize
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "fin"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "ivy.__lock(); ivy.ext___finalize(); ivy.__unlock();") {
+		t.Fatalf("expected finalize hook in test main:\n%s", out.Impl)
+	}
+	// _finalize is filtered out of the generator list (Python 4282-4284).
+	if strings.Contains(out.Impl, "_finalize_gen") {
+		t.Fatalf("_finalize should not be in the action generator list:\n%s", out.Impl)
+	}
+}
+
+// Phase 4: a parameter with a default value is applied via the
+// emit_value_parser block and overridable from argv via `param=value`.
+// Mirrors Python ivy_to_cpp.py:2706-2735.
+func TestReplMainParsesParamWithDefault(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+parameter pick : color = red
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"runner::color p__pick",
+		`arg_values[0] = parse_value("red", pos);`,
+		`p__pick = _arg<runner::color>(arg_values, 0, 2);`,
+		`if (param == "pick") {`,
+		`arg_values[0] = parse_value(value, pos);`,
+		"runner_repl ivy(p__pick);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in main:\n%s", want, out.Impl)
+		}
+	}
+}
+
+// Phase 4: a positional parameter (no default) consumes a positional
+// argv slot via parse_value + _arg<T>. Python ivy_to_cpp.py:2779-2832.
+func TestReplMainParsesPositionalParam(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+parameter pick : color
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"runner::color p__pick",
+		"if (argc == 3) {",
+		"if (argc != 2) {",
+		`std::cerr << "usage: runner pick\n";`,
+		"std::vector<ivy_value> arg_values(1);",
+		`arg_values[0] = parse_value(args[0], pos);`,
+		`p__pick = _arg<runner::color>(arg_values, 0, 2);`,
+		"runner_repl ivy(p__pick);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in main:\n%s", want, out.Impl)
+		}
+	}
+}
+
+// Phase 4: special argv keys (out/iters/runs/seed/delay/wait/modelfile).
+// Mirrors Python ivy_to_cpp.py:2738-2770.
+func TestReplMainAcceptsSpecialOptions(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		`if (param == "out") {`,
+		"__ivy_out.open(value.c_str());",
+		`else if (param == "iters") { test_iters = atoi(value.c_str()); }`,
+		`else if (param == "runs") { runs = atoi(value.c_str()); }`,
+		`else if (param == "seed") { seed = atoi(value.c_str()); }`,
+		`else if (param == "delay") { sleep_ms = atoi(value.c_str()); }`,
+		`else if (param == "wait") { final_ms = atoi(value.c_str()); }`,
+		`else if (param == "modelfile") {`,
+		"__ivy_modelfile.open(value.c_str());",
+		`std::cerr << "unknown option: " << param << std::endl;`,
+		"srand(seed);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in main:\n%s", want, out.Impl)
+		}
+	}
+}
+
+// Phase 4: function-sorted positional parameter. Mirrors Python
+// ivy_to_cpp.py:2803-2826 (make_function_app over arg.fields).
+//
+// The ivy1.7 surface syntax does not allow `parameter` for function
+// sorts directly — instead a "parameter" of relational/function sort is
+// expressed via attribute. Build the module manually so we can exercise
+// the make_function_app emission path.
+func TestReplMainFunctionSortedParam(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "runner"
+	color := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	mod.Sig.Sorts.Set("color", color)
+	mod.SortOrder = append(mod.SortOrder, "color")
+	slot := &goivy.UninterpretedSort{Name: "slot"}
+	mod.Sig.Sorts.Set("slot", slot)
+	mod.Sig.Interp["slot"] = &goivy.RangeSort{Name: "slot", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "1"}}
+	mod.SortOrder = append(mod.SortOrder, "slot")
+	// Function-sorted param: tbl : slot -> color
+	fs, err := goivy.NewFunctionSort(slot, color)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	p := &goivy.Const{Name: "tbl", CSort: fs}
+	mod.Params = append(mod.Params, p)
+	mod.ParamDefaults = append(mod.ParamDefaults, nil)
+	mod.Actions.Set("step", goivy.NewSequence())
+	mod.PublicActions.Set("step", true)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"p__tbl",
+		"ivy_value &arg = arg_values[0];",
+		"if (arg.atom.size()) {",
+		"if (arg.fields[i].fields.size() != 2) {",
+		"p__tbl[_arg<unsigned>(arg.fields[i].fields, 0, 0)] = _arg<runner::color>(arg.fields[i].fields, 1, 0);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in function-sort main:\n%s", want, out.Impl)
+		}
+	}
+}
+
+// Phase 4: Winsock init block from emit_winsock_init.
+// Python ivy_to_cpp.py:4189-4225.
+func TestReplMainEmitsWinsockInit(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"#ifdef _WIN32",
+		"WORD wVersionRequested;",
+		"wVersionRequested = MAKEWORD(2, 2);",
+		"err = WSAStartup(wVersionRequested, &wsaData);",
+		"if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2) {",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in main:\n%s", want, out.Impl)
+		}
+	}
+}
+
+// Phase 3: imports show up as callback methods on ClassName_repl that
+// trace `< action(args)` to __ivy_out. Mirrors Python
+// emit_repl_boilerplate1 (ivy_to_cpp.py:4107-4128).
+func TestReplEmitsImportCallback(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action notify(c:color) = {}
+import notify
+action trigger = {
+    call notify(red)
+}
+export trigger
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"class runner_repl : public runner",
+		// Override of `notify` inside the repl subclass. Class-body
+		// emission uses the unqualified type since the class is in
+		// runner's scope (matches Python emit_method_decl).
+		"virtual void notify(color c)",
+		`__ivy_out << "< notify" << "(" << c << ")" << std::endl;`,
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in repl impl:\n%s", want, out.Impl)
+		}
+	}
+}
+
+// Phase 3: import callbacks that return a value prompt the user via
+// ask_ret(__CARD__<sort>). Python ivy_to_cpp.py:4126-4127.
+func TestReplImportCallbackReturnUsesAskRet(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+action poll returns (out:color) = {}
+import poll
+action trigger returns (out:color) = {
+    out := poll
+}
+export trigger
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"virtual color poll(",
+		`__ivy_out << "< poll" << std::endl;`,
+		"return ask_ret(__CARD__color);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in repl impl:\n%s", want, out.Impl)
+		}
+	}
+	// __CARD__color is declared (set in cardinality initializers).
+	if !strings.Contains(out.Header, "long long __CARD__color;") {
+		t.Fatalf("missing __CARD__ declaration in header:\n%s", out.Header)
+	}
+}
+
+// Phase 3: in test target, imported callbacks have empty bodies (no
+// console prompt). Python ivy_to_cpp.py:4112-4114.
+func TestReplImportCallbackEmptyForTest(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+action notify = {}
+import notify
+action trigger = {
+    call notify
+}
+export trigger
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "virtual void notify() {}") {
+		t.Fatalf("test target should emit empty notify body:\n%s", out.Impl)
+	}
+}
+
 // Plain uninterpreted sorts already get coverage via the primitive
 // `_arg<int>` / `_arg<unsigned>` etc. specializations in ivy_value.hpp
 // once the typedef alias is in place. We must NOT emit a duplicate
@@ -3807,11 +4302,12 @@ export set
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	// Plain uninterpreted sort `node` maps to `int` (no typedef emitted
+	// since cppType returns "int" directly). The dispatcher uses the
+	// stock `_arg<int>` template from ivy_value.hpp with bound 0
+	// (unbounded — node has no defined cardinality).
 	for _, want := range []string{
-		"static int ivy2cpp_parse_node(const std::string &s)",
-		"long long value = std::stoll(s);",
-		"return static_cast<int>(value);",
-		`int n = ivy2cpp_parse_node(ivy2cpp_read_arg(args, 0, "n"));`,
+		`ivy.set(_arg<int>(args, 0, 0));`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
@@ -3833,11 +4329,12 @@ export set
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	// Python emits `_arg<runner::color>` specialization (in repl.go) and
+	// dispatches via `_arg<runner::color>(args, 0, 2)`.
 	for _, want := range []string{
-		"static runner::color ivy2cpp_parse_color(const std::string &s)",
-		`if (s == "green") return runner::green;`,
-		`runner::color c = ivy2cpp_parse_color(ivy2cpp_read_arg(args, 0, "c"));`,
-		"ivy.set(c);",
+		`runner::color _arg<runner::color>(std::vector<ivy_value> &args, unsigned idx, long long bound) {`,
+		`if (arg.atom == "green") return runner::green;`,
+		`ivy.set(_arg<runner::color>(args, 0, 2));`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
@@ -3858,18 +4355,20 @@ export set
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	support := readSupportHeader(t, "ivy_go_repl.hpp")
+	// Python's ivy_repl.hpp provides parse_command + check_arity, which
+	// must reject whitespace-separated args by requiring parentheses.
+	support := readSupportHeader(t, "ivy_repl.hpp")
 	for _, want := range []string{
-		"static void ivy2cpp_parse_command(const std::string &line, std::string &action, std::vector<std::string> &args)",
-		`if (line[pos] != '(')`,
-		`throw std::runtime_error("expected '(' after action");`,
-		`throw std::runtime_error("trailing text after command");`,
+		"inline void parse_command(const std::string &cmd, std::string &action, std::vector<ivy_value> &args)",
+		"cmd[pos] == '('",
+		"throw_syntax(pos);",
+		"inline void check_arity(std::vector<ivy_value> &args, unsigned num, std::string &action)",
 	} {
 		if !strings.Contains(support, want) {
 			t.Fatalf("shared repl support missing %q:\n%s", want, support)
 		}
 	}
-	if !strings.Contains(out.Impl, "ivy2cpp_check_arity(args, 1, action);") {
+	if !strings.Contains(out.Impl, "check_arity(args, 1, action);") {
 		t.Fatalf("generated dispatch should keep arity checking for parenthesized args:\n%s", out.Impl)
 	}
 	compileGeneratedCPP(t, out)
@@ -3890,11 +4389,10 @@ export echo
 	}
 	text := out.Header + out.Impl
 	for _, want := range []string{
-		`#include "ivy_go_repl.hpp"`,
-		"ivy2cpp_parse_command",
-		`runner::color c = ivy2cpp_parse_color(ivy2cpp_read_arg(args, 0, "c"));`,
-		"runner::color __ivy_result = ivy.echo(c);",
-		"ivy2cpp_write_value(std::cout, __ivy_result);",
+		`#include "ivy_repl.hpp"`,
+		"parse_command(cmd, action, args);",
+		`runner::color __ivy_result = ivy.echo(_arg<runner::color>(args, 0, 2));`,
+		`__ivy_out << "= " << __ivy_result << std::endl;`,
 	} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
@@ -3919,10 +4417,10 @@ export echo
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"static void ivy2cpp_write_value(std::ostream &out, runner::color value)",
-		"runner::color __ivy_result = ivy.echo(c);",
-		"ivy2cpp_write_value(std::cout, __ivy_result);",
-		"std::cout << std::endl;",
+		// `operator<<` for the enum (from Phase 1) handles return printing.
+		"std::ostream &operator<<(std::ostream &s, const runner::color &t) {",
+		`runner::color __ivy_result = ivy.echo(_arg<runner::color>(args, 0, 2));`,
+		`__ivy_out << "= " << __ivy_result << std::endl;`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in repl output:\n%s", want, out.Impl)
@@ -3972,7 +4470,7 @@ export set
 			t.Fatalf("go repl output missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
 	}
-	if !strings.Contains(out.Impl, "ivy2cpp_parse_color") {
+	if !strings.Contains(out.Impl, `_arg<oracle::color>(args, 0, 2)`) {
 		t.Fatalf("missing parameterized repl dispatch:\n%s", out.Impl)
 	}
 	compileGeneratedCPP(t, out)
@@ -4226,9 +4724,12 @@ export set
 		"class set_gen : public gen",
 		"init_gen my_init_gen(ivy);",
 		"my_init_gen.generate(ivy);",
-		"set_gen set_generator(ivy);",
-		"if (set_generator.generate(ivy))",
-		"set_generator.execute(ivy);",
+		// New Python-style weighted random loop pattern.
+		"std::vector<gen *> generators;",
+		"generators.push_back(new set_gen(ivy));",
+		"for (int cycle = 0; cycle < test_iters; cycle++)",
+		"bool sat = gx.generate(ivy);",
+		"gx.execute(ivy);",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in test output:\n%s", want, out.Impl)
@@ -4512,10 +5013,11 @@ export set
 		"static hash_space::hash_map<std::string,int> x_to_bv_hash;",
 		"static hash_space::hash_map<int,std::string> bv_to_x_hash;",
 		"std::ostream &operator<<(std::ostream &s, const strshape::text &t)",
-		`static strshape::text ivy2cpp_parse_text(const std::string &s)`,
-		"return strshape::text(s);",
-		"static void ivy2cpp_write_value(std::ostream &out, const strshape::text &value)",
-		`strshape::text t = ivy2cpp_parse_text(ivy2cpp_read_arg(args, 0, "t"));`,
+		// cpp_types.go emits the _arg<T> specialization; the dispatcher
+		// calls it with the carc bound (strbv[4] has 2^4 = 16 elements).
+		`template <> strshape::text _arg<strshape::text>(std::vector<ivy_value> &args, unsigned idx, long long bound)`,
+		"return args[idx].atom;",
+		`strshape::text __ivy_result = ivy.set(_arg<strshape::text>(args, 0, 16));`,
 	} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("missing %q in strbv repl output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -4569,12 +5071,13 @@ export set
 		"small(long long v) : IntClass(v) {}",
 		"long long val;",
 		"size_t __hash() const { return hash_space::hash<IntClass>()(*this); }",
-		`static intshape::small ivy2cpp_parse_small(const std::string &s)`,
-		"long long value = std::stoll(s);",
-		"if (value < 10 || value > 20)",
-		"return intshape::small(value);",
+		// intbv _arg<> from cpp_types.go (else branch at line 344).
+		// intbv[10][20][4]: bound is hi-lo+1 = 11.
+		`template <> intshape::small _arg<intshape::small>(std::vector<ivy_value> &args, unsigned idx, long long bound)`,
+		"s >> res.val;",
 		"std::ostream &operator<<(std::ostream &s, const intshape::small &t)",
 		"s << t.val;",
+		`intshape::small __ivy_result = ivy.set(_arg<intshape::small>(args, 0, 11));`,
 	} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("missing %q in intbv repl output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)

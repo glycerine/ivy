@@ -126,10 +126,33 @@ func (g *Generator) emitVariantImpl(w *cppWriter, name string) {
 	w.blank()
 	g.emitVariantEqualityImpl(w, super, typeName)
 	g.emitVariantStreamImpl(w, super, typeName)
+	// Emit per-subtype _arg<> specializations BEFORE the supertype's
+	// _arg<>: the supertype's body instantiates _arg<sub>, and C++ ODR
+	// forbids specializing _arg<sub> after it has been implicitly
+	// instantiated. Variant leaves are emitted as `struct a { long long
+	// __value; a(long long v = 0); operator long long() const; ... };`
+	// (generator.go:emitVariantLeafStruct), so the specialization
+	// parses long long and constructs the leaf.
+	for _, sub := range g.Mod.Variants[sortName(super)] {
+		if _, ok := g.Mod.SortDestructors.Get2(sortName(sub)); ok {
+			continue // destructor.go already emits _arg<> for sub.
+		}
+		g.emitVariantSubArgImpl(w, sub)
+	}
 	g.emitVariantArgImpl(w, super, typeName)
 	g.emitVariantSerImpl(w, super, typeName)
 	g.emitVariantDeserImpl(w, super, typeName)
 	g.emitVariantZ3Impl(w, super, typeName)
+}
+
+func (g *Generator) emitVariantSubArgImpl(w *cppWriter, sub goivy.Sort) {
+	subType := cppScalarTypeWith(g, sub, g.ClassName)
+	w.linef("template <> %s _arg<%s>(std::vector<ivy_value> &args, unsigned idx, long long bound) {", subType, subType)
+	w.indent++
+	w.linef("return %s(_arg<long long>(args, idx, bound));", subType)
+	w.indent--
+	w.line("}")
+	w.blank()
 }
 
 func (g *Generator) emitVariantEqualityImpl(w *cppWriter, super goivy.Sort, typeName string) {

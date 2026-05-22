@@ -550,6 +550,9 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 		if initActions[name] || !g.Mod.PublicActions.Get(name) {
 			continue
 		}
+		if isFinalizeName(name) {
+			continue
+		}
 		className := g.actionGeneratorClassName(name)
 		w.open(fmt.Sprintf("class %s : public gen {", className))
 		w.line("public:")
@@ -593,6 +596,9 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 
 	for name, act := range g.Mod.Actions.All() {
 		if initActions[name] || !g.Mod.PublicActions.Get(name) {
+			continue
+		}
+		if isFinalizeName(name) {
 			continue
 		}
 		g.emitZ3ActionGenerator(w, name, act)

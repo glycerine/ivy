@@ -2,7 +2,9 @@ package ivy2cpp
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy"
 )
@@ -138,258 +140,465 @@ func (g *Generator) emitEnumDeser(w *cppWriter, st *goivy.LogicEnumeratedSort) {
 	w.blank()
 }
 
-func (g *Generator) emitReplParsers(w *cppWriter) {
-	used := g.replParamSorts()
-	if _, ok := used["bool"]; ok {
-		w.open("static bool ivy2cpp_parse_bool(const std::string &s) {")
-		w.open(`if (s == "true" || s == "1") {`)
-		w.line("return true;")
-		w.close("")
-		w.open(`if (s == "false" || s == "0") {`)
-		w.line("return false;")
-		w.close("")
-		w.line(`throw std::runtime_error(std::string("expected bool, got: ") + s);`)
-		w.close("")
-		w.blank()
-	}
-	for _, name := range sortedKeys(used) {
-		if name == "bool" {
-			continue
-		}
-		s := used[name]
-		if it, ok := g.cppInterpType(s); ok {
-			g.emitReplCPPInterpParser(w, s, it)
-			continue
-		}
-		if enum, ok := replEnumSort(s); ok {
-			g.emitReplEnumParser(w, enum)
-			continue
-		}
-		if rs, ok := g.rangeSortFor(s); ok {
-			g.emitReplRangeParser(w, s, rs)
-			continue
-		}
-		if g.replNeedsNumericParser(s) {
-			g.emitReplNumericParser(w, s)
-		}
-	}
-	g.emitReplWriters(w)
+// emitCmdReader emits a per-classname `cmd_reader` subclass of
+// `stdin_reader` whose `process()` parses one command line, dispatches
+// it to the appropriate public action with `_arg<T>`-converted
+// arguments, and catches `syntax_error` / `out_of_bounds` / `bad_arity`.
+//
+// Mirrors Python `emit_repl_boilerplate1a` (ivy_to_cpp.py:4137-4157),
+// the per-action dispatch chain (ivy_to_cpp.py:2677-2697), and
+// `emit_repl_boilerplate2` (4160-4187).
+func (g *Generator) emitCmdReader(w *cppWriter) {
+	reprClass := g.ClassName + "_repl"
+	readerClass := g.ClassName + "_cmd_reader"
+	w.open(fmt.Sprintf("class %s : public stdin_reader {", readerClass))
+	w.line("int lineno;")
+	w.line("public:")
+	w.linef("%s &ivy;", reprClass)
+	w.blank()
+	w.open(fmt.Sprintf("%s(%s &_ivy) : ivy(_ivy) {", readerClass, reprClass))
+	w.line("lineno = 1;")
+	w.open("if (isatty(fdes())) {")
+	w.line(`__ivy_out << "> ";`)
+	w.line("__ivy_out.flush();")
+	w.close("")
+	w.close("")
+	w.blank()
+	w.open("virtual void process(const std::string &cmd) {")
+	w.line("std::string action;")
+	w.line("std::vector<ivy_value> args;")
+	w.open("try {")
+	w.line("parse_command(cmd, action, args);")
+	w.line("ivy.__lock();")
+	g.emitCmdReaderDispatchChain(w)
+	w.line(`std::cerr << "undefined action: " << action << std::endl;`)
+	w.line("ivy.__unlock();")
+	w.close(" catch (syntax_error &err) {")
+	w.indent++
+	w.line("ivy.__unlock();")
+	w.line(`std::cerr << "line " << lineno << ":" << err.pos << ": syntax error" << std::endl;`)
+	w.indent--
+	w.open("} catch (out_of_bounds &err) {")
+	w.line("ivy.__unlock();")
+	w.line(`std::cerr << "line " << lineno << ":" << err.pos << ": " << err.txt << " bad value" << std::endl;`)
+	w.close("")
+	w.open("catch (bad_arity &err) {")
+	w.line("ivy.__unlock();")
+	w.line(`std::cerr << "action " << err.action << " takes " << err.num << " input parameters" << std::endl;`)
+	w.close("")
+	w.open("if (isatty(fdes())) {")
+	w.line(`__ivy_out << "> ";`)
+	w.line("__ivy_out.flush();")
+	w.close("")
+	w.line("lineno++;")
+	w.close("")
+	w.close(";")
+	w.blank()
 }
 
-func (g *Generator) replParamSorts() map[string]goivy.Sort {
-	out := map[string]goivy.Sort{}
-	if g == nil || g.Mod == nil || g.Mod.Actions == nil {
-		return out
-	}
-	for name := range g.Mod.PublicActions.All() {
-		act, ok := g.Mod.Actions.Get2(name)
-		if !ok {
+// emitCmdReaderDispatchChain emits the `if (action == "X") { ... }`
+// chain. Mirrors Python ivy_to_cpp.py:2677-2697.
+func (g *Generator) emitCmdReaderDispatchChain(w *cppWriter) {
+	initActions := g.initialMixinActionNames()
+	names := g.publicActionNamesSorted()
+	for _, name := range names {
+		if initActions[name] {
 			continue
 		}
-		for _, p := range act.GetFormalParams() {
-			if parser := g.replParserNameForSort(p.CSort); parser != "" {
-				out[replParserKey(p.CSort)] = p.CSort
+		username := strings.TrimPrefix(name, "ext:")
+		fn, _ := funName(name)
+		act, ok := g.Mod.Actions.Get2(name)
+		w.open(fmt.Sprintf(`if (action == "%s") {`, username))
+		if !ok {
+			w.linef("check_arity(args, 0, action);")
+			w.linef("ivy.%s();", fn)
+			w.line("ivy.__unlock();")
+			w.line("return;")
+			w.close("")
+			continue
+		}
+		formals := act.GetFormalParams()
+		w.linef("check_arity(args, %d, action);", len(formals))
+		argExprs := g.emitDispatchArgExprs(act)
+		returns := act.GetFormalReturns()
+		callExpr := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(argExprs, ", "))
+		if g.Config.Trace {
+			g.emitTracePrelude(w, username, argExprs)
+		}
+		switch len(returns) {
+		case 0:
+			w.linef("%s;", callExpr)
+		case 1:
+			retType := g.cppQualifiedType(returns[0].CSort, g.ClassName)
+			w.linef("%s __ivy_result = %s;", retType, callExpr)
+			w.linef(`__ivy_out << "= " << __ivy_result << std::endl;`)
+		default:
+			// Multi-return: trailing return-ref args.
+			var outNames []string
+			extraArgs := make([]string, 0, len(returns))
+			for _, r := range returns {
+				rname := varName(r.Name)
+				w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), rname, g.cppZeroValueInScope(r.CSort))
+				extraArgs = append(extraArgs, rname)
+				outNames = append(outNames, rname)
+			}
+			callExpr = fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(append(append([]string{}, argExprs...), extraArgs...), ", "))
+			w.linef("%s;", callExpr)
+			for i, on := range outNames {
+				if i == 0 {
+					w.linef(`__ivy_out << "= " << %s << std::endl;`, on)
+				} else {
+					w.linef(`__ivy_out << %s << std::endl;`, on)
+				}
 			}
 		}
+		if g.Config.Trace {
+			w.line(`__ivy_out << "}" << std::endl;`)
+		}
+		w.line("ivy.__unlock();")
+		w.line("return;")
+		w.close("")
+	}
+}
+
+// emitDispatchArgExprs returns the `_arg<T>(args, idx, csortcard)`
+// expression for each formal param. Python ivy_to_cpp.py:2680.
+func (g *Generator) emitDispatchArgExprs(act goivy.Action) []string {
+	formals := act.GetFormalParams()
+	exprs := make([]string, 0, len(formals))
+	for idx, p := range formals {
+		typ := g.cppQualifiedType(p.CSort, g.ClassName)
+		bound := g.cppSortCardStr(p.CSort)
+		exprs = append(exprs, fmt.Sprintf("_arg<%s>(args, %d, %s)", typ, idx, bound))
+	}
+	return exprs
+}
+
+// emitTracePrelude emits the trace `actname(arg1,arg2) {` line preceding
+// an action call. Python ivy_to_cpp.py:2685-2690.
+func (g *Generator) emitTracePrelude(w *cppWriter, username string, argExprs []string) {
+	if len(argExprs) == 0 {
+		w.linef(`__ivy_out << "%s {" << std::endl;`, username)
+		return
+	}
+	var b strings.Builder
+	b.WriteString(fmt.Sprintf(`__ivy_out << "%s("`, username))
+	for i, a := range argExprs {
+		if i > 0 {
+			b.WriteString(` << ","`)
+		}
+		b.WriteString(fmt.Sprintf(" << %s", a))
+	}
+	b.WriteString(` << ") {" << std::endl;`)
+	w.line(b.String())
+}
+
+// emitValueParser emits a try/catch block that parses `srcExpr` (a C++
+// expression yielding a std::string) into a single ivy_value, then
+// invokes `_arg<T>(arg_values, 0, csortcard)` and stores the result
+// into the param's local variable `p__<name>`. Mirrors Python
+// `emit_value_parser` (ivy_to_cpp.py:2858-2870).
+func (g *Generator) emitValueParser(w *cppWriter, p *goivy.Const, srcExpr string) {
+	pname := "p__" + varName(p.Name)
+	typ := g.cppQualifiedType(p.CSort, g.ClassName)
+	bound := g.cppSortCardStr(p.CSort)
+	w.open("try {")
+	w.line("int pos = 0;")
+	w.line("std::vector<ivy_value> arg_values;")
+	w.line("arg_values.resize(1);")
+	w.linef("arg_values[0] = parse_value(%s, pos);", srcExpr)
+	w.linef("%s = _arg<%s>(arg_values, 0, %s);", pname, typ, bound)
+	w.close(" catch (out_of_bounds &) {")
+	w.indent++
+	w.linef(`std::cerr << "parameter %s out of bounds\n";`, escapeString(p.Name))
+	w.line("__ivy_exit(1);")
+	w.indent--
+	w.open("} catch (syntax_error &) {")
+	w.linef(`std::cerr << "syntax error in parameter value %s\n";`, escapeString(p.Name))
+	w.line("__ivy_exit(1);")
+	w.close("")
+}
+
+// emitMainParamSetup emits the param-handling preamble of every main():
+// declares each module parameter, applies defaults from
+// g.Mod.ParamDefaults, parses argv into `key=value` pairs (with special
+// keys out/iters/runs/seed/delay/wait/modelfile) and positional pos_params,
+// validates count, calls srand(), and emits the Winsock init block.
+// Mirrors Python ivy_to_cpp.py:2702-2834 + emit_winsock_init.
+//
+// On return, the local C++ variables `argc`, `argv`, `seed`, `sleep_ms`,
+// `final_ms`, and one `p__<name>` per parameter are in scope.
+func (g *Generator) emitMainParamSetup(w *cppWriter) {
+	// Declare each parameter and apply its default.
+	for i, p := range g.Mod.Params {
+		w.linef("%s;", g.cppStorageDecl("p__"+p.Name, p.CSort, g.ClassName))
+		if i < len(g.Mod.ParamDefaults) && g.Mod.ParamDefaults[i] != nil {
+			if _, isFS := p.CSort.(*goivy.LogicFunctionSort); isFS {
+				g.errs = append(g.errs, fmt.Errorf("ivy2cpp: can't handle default values for function-sorted parameter %s", p.Name))
+			} else {
+				defText := paramDefaultText(g.Mod.ParamDefaults[i])
+				if defText != "" {
+					g.emitValueParser(w, p, strconv.Quote(defText))
+				}
+			}
+		}
+	}
+	// argv parsing loop: key=value -> param assignment OR special key.
+	w.line("int seed = 1;")
+	w.line("int sleep_ms = 10;")
+	w.line("int final_ms = 0;")
+	w.line("(void)sleep_ms;")
+	w.line("(void)final_ms;")
+	w.blank()
+	w.line("std::vector<char *> pargs;")
+	w.line("pargs.push_back(argv[0]);")
+	w.open("for (int i = 1; i < argc; i++) {")
+	w.line("std::string arg = argv[i];")
+	w.line("size_t p = arg.find('=');")
+	w.open("if (p == std::string::npos) {")
+	w.line("pargs.push_back(argv[i]);")
+	w.close(" else {")
+	w.indent++
+	w.line("std::string param = arg.substr(0, p);")
+	w.line("std::string value = arg.substr(p + 1);")
+	g.emitParamKeyValueDispatch(w)
+	w.indent--
+	w.line("}")
+	w.close("")
+	w.line("srand(seed);")
+	w.open("if (!__ivy_out.is_open()) {")
+	w.line("__ivy_out.basic_ios<char>::rdbuf(std::cout.rdbuf());")
+	w.close("")
+	w.line("argc = pargs.size();")
+	w.line("argv = &pargs[0];")
+	w.blank()
+	g.emitPositionalParamParse(w)
+	g.emitWinsockInit(w)
+}
+
+// emitParamKeyValueDispatch emits the body of the `else` branch in the
+// argv loop: each `key=value` arg dispatches to a default-bearing param
+// assignment or to one of the special keys. Python ivy_to_cpp.py:2728-2770.
+func (g *Generator) emitParamKeyValueDispatch(w *cppWriter) {
+	for i, p := range g.Mod.Params {
+		if i >= len(g.Mod.ParamDefaults) || g.Mod.ParamDefaults[i] == nil {
+			continue
+		}
+		if _, isFS := p.CSort.(*goivy.LogicFunctionSort); isFS {
+			continue
+		}
+		w.open(fmt.Sprintf(`if (param == "%s") {`, escapeString(p.Name)))
+		g.emitValueParser(w, p, "value")
+		w.line("continue;")
+		w.close("")
+	}
+	// Special keys: out, iters, runs, seed, delay, wait, modelfile.
+	w.open(`if (param == "out") {`)
+	w.line("__ivy_out.open(value.c_str());")
+	w.open("if (!__ivy_out) {")
+	w.line(`std::cerr << "cannot open to write: " << value << std::endl;`)
+	w.line("return 1;")
+	w.close("")
+	w.close("")
+	w.linef(`else if (param == "iters") { test_iters = atoi(value.c_str()); }`)
+	w.linef(`else if (param == "runs") { runs = atoi(value.c_str()); }`)
+	w.linef(`else if (param == "seed") { seed = atoi(value.c_str()); }`)
+	w.linef(`else if (param == "delay") { sleep_ms = atoi(value.c_str()); }`)
+	w.linef(`else if (param == "wait") { final_ms = atoi(value.c_str()); }`)
+	w.open(`else if (param == "modelfile") {`)
+	w.line("__ivy_modelfile.open(value.c_str());")
+	w.open("if (!__ivy_modelfile) {")
+	w.line(`std::cerr << "cannot open to write: " << value << std::endl;`)
+	w.line("return 1;")
+	w.close("")
+	w.close("")
+	w.open("else {")
+	w.line(`std::cerr << "unknown option: " << param << std::endl;`)
+	w.line("return 1;")
+	w.close("")
+}
+
+// emitPositionalParamParse emits Python's positional-parameter
+// extraction (ivy_to_cpp.py:2779-2832): if `argc == npos+2`, the last
+// argv is opened as a command file via `_open`/`_dup2`; otherwise we
+// require `argc == npos+1`. Then each positional pos_param is parsed
+// via parse_value + `_arg<T>`. Function-sorted params use the
+// `make_function_app` shape from Python 2803-2826.
+func (g *Generator) emitPositionalParamParse(w *cppWriter) {
+	posParams := g.positionalParams()
+	npos := len(posParams)
+	w.linef("if (argc == %d) {", npos+2)
+	w.indent++
+	w.line("argc--;")
+	w.line("int fd = _open(argv[argc], 0);")
+	w.open("if (fd < 0) {")
+	w.linef(`std::cerr << "cannot open to read: " << argv[argc] << "\n";`)
+	w.line("__ivy_exit(1);")
+	w.close("")
+	w.line("_dup2(fd, 0);")
+	w.indent--
+	w.line("}")
+	w.open(fmt.Sprintf("if (argc != %d) {", npos+1))
+	usageNames := make([]string, len(posParams))
+	for i, p := range posParams {
+		usageNames[i] = escapeString(p.Name)
+	}
+	usage := strings.Join(usageNames, " ")
+	w.linef(`std::cerr << "usage: %s %s\n";`, escapeString(g.ClassName), usage)
+	w.line("__ivy_exit(1);")
+	w.close("")
+	if npos == 0 {
+		return
+	}
+	w.line("std::vector<std::string> args;")
+	w.linef("std::vector<ivy_value> arg_values(%d);", npos)
+	w.line("for (int i = 1; i < argc; i++) { args.push_back(argv[i]); }")
+	for idx, p := range posParams {
+		g.emitOnePositionalParam(w, p, idx)
+	}
+}
+
+// emitOnePositionalParam emits parsing for one positional parameter.
+// Python ivy_to_cpp.py:2796-2832.
+func (g *Generator) emitOnePositionalParam(w *cppWriter, p *goivy.Const, idx int) {
+	pname := "p__" + varName(p.Name)
+	w.open("try {")
+	w.line("int pos = 0;")
+	w.linef("arg_values[%d] = parse_value(args[%d], pos);", idx, idx)
+	if fs, isFS := p.CSort.(*goivy.LogicFunctionSort); isFS {
+		// Function-sorted param: parse list of {dom0,...,domN,rng} tuples.
+		// Python s.sort.dom is the domain without codomain — Go's
+		// Domain() has the same semantics, so no slicing needed.
+		dom := fs.Domain()
+		rng := fs.Range()
+		w.linef("ivy_value &arg = arg_values[%d];", idx)
+		w.open("if (arg.atom.size()) {")
+		w.linef("throw out_of_bounds(%d);", idx)
+		w.close("")
+		w.open("for (unsigned i = 0; i < arg.fields.size(); i++) {")
+		w.open(fmt.Sprintf("if (arg.fields[i].fields.size() != %d) {", 1+len(dom)))
+		w.linef("throw out_of_bounds(%d);", idx)
+		w.close("")
+		// Build LHS: `p__name[arg0][arg1]...` (or ctuple-keyed when needed).
+		domArgs := make([]string, len(dom))
+		for j, d := range dom {
+			domType := cppScalarTypeWith(g, d, g.ClassName)
+			domArgs[j] = fmt.Sprintf("_arg<%s>(arg.fields[i].fields, %d, 0)", domType, j)
+		}
+		rngType := cppScalarTypeWith(g, rng, g.ClassName)
+		lhs := g.functionAppLHS(p, dom, domArgs)
+		w.linef("%s = _arg<%s>(arg.fields[i].fields, %d, 0);", lhs, rngType, len(dom))
+		w.close("")
+	} else {
+		typ := g.cppQualifiedType(p.CSort, g.ClassName)
+		bound := g.cppSortCardStr(p.CSort)
+		w.linef("%s = _arg<%s>(arg_values, %d, %s);", pname, typ, idx, bound)
+	}
+	w.close(" catch (out_of_bounds &) {")
+	w.indent++
+	w.linef(`std::cerr << "parameter %s out of bounds\n";`, escapeString(p.Name))
+	w.line("__ivy_exit(1);")
+	w.indent--
+	w.open("} catch (syntax_error &) {")
+	w.line(`std::cerr << "syntax error in command argument\n";`)
+	w.line("__ivy_exit(1);")
+	w.close("")
+}
+
+// functionAppLHS mirrors Python `make_function_app` (ivy_to_cpp.py:2803-2817):
+// for large multi-arg sorts use a ctuple key; otherwise chain `[arg]`
+// accesses.
+func (g *Generator) functionAppLHS(p *goivy.Const, dom []goivy.Sort, domArgs []string) string {
+	base := "p__" + varName(p.Name)
+	if isLargeFunctionDomain(g, dom) && len(dom) > 1 {
+		return fmt.Sprintf("%s[%s(%s)]", base, cppCTupleLocalNameWith(g, dom), strings.Join(domArgs, ", "))
+	}
+	res := base
+	for _, a := range domArgs {
+		res += "[" + a + "]"
+	}
+	return res
+}
+
+// isLargeFunctionDomain mirrors Python `is_large_type` for function
+// sorts (any non-integer-type domain element, or product > largeThresh).
+func isLargeFunctionDomain(g *Generator, dom []goivy.Sort) bool {
+	for _, d := range dom {
+		if !cppIsAnyIntegerType(g, d) {
+			return true
+		}
+	}
+	product := 1
+	for _, d := range dom {
+		c := cppSortCard(g, d)
+		if c <= 0 {
+			return true
+		}
+		if product <= largeThresh {
+			product *= c
+		}
+	}
+	return product > largeThresh
+}
+
+// positionalParams returns module params without defaults — Python
+// `pos_params` at ivy_to_cpp.py:2727-2735.
+func (g *Generator) positionalParams() []*goivy.Const {
+	var out []*goivy.Const
+	for i, p := range g.Mod.Params {
+		if i < len(g.Mod.ParamDefaults) && g.Mod.ParamDefaults[i] != nil {
+			continue
+		}
+		out = append(out, p)
 	}
 	return out
 }
 
-func sortedKeys[V any](m map[string]V) []string {
-	keys := make([]string, 0, len(m))
-	for k := range m {
-		keys = append(keys, k)
-	}
-	sortStrings(keys)
-	return keys
-}
-
-func sortStrings(s []string) {
-	for i := 1; i < len(s); i++ {
-		for j := i; j > 0 && s[j] < s[j-1]; j-- {
-			s[j], s[j-1] = s[j-1], s[j]
-		}
-	}
-}
-
-func replParserKey(s goivy.Sort) string {
-	switch st := s.(type) {
-	case *goivy.BooleanSort:
-		return "bool"
-	case *goivy.LogicEnumeratedSort:
-		return st.Name
-	case *goivy.RangeSort:
-		return st.Name
-	case *goivy.UninterpretedSort:
-		return st.Name
-	default:
+// paramDefaultText returns the textual form of a param-default AST
+// node — `d.rep` in Python (ivy_to_cpp.py:2710). For Go we accept
+// either an Atom (Relname) or any node exposing a string Rep.
+func paramDefaultText(n goivy.Node) string {
+	if n == nil {
 		return ""
 	}
-}
-
-func replEnumSort(s goivy.Sort) (*goivy.LogicEnumeratedSort, bool) {
-	st, ok := s.(*goivy.LogicEnumeratedSort)
-	return st, ok && st.Name != "" && len(st.Extension) > 0
-}
-
-func (g *Generator) emitReplEnumParser(w *cppWriter, s *goivy.LogicEnumeratedSort) {
-	fn := replParserName(s)
-	w.open(fmt.Sprintf("static %s %s(const std::string &s) {", g.replParamType(s, g.ClassName), fn))
-	for _, v := range s.Extension {
-		w.linef(`if (s == %s) return %s::%s;`, strconv.Quote(v), g.ClassName, varName(v))
+	if a, ok := n.(*goivy.Atom); ok {
+		return a.Relname()
 	}
-	w.linef(`throw std::runtime_error(std::string("expected %s, got: ") + s);`, escapeString(s.Name))
+	type relnamer interface{ Relname() string }
+	if r, ok := n.(relnamer); ok {
+		return r.Relname()
+	}
+	return fmt.Sprintf("%v", n)
+}
+
+// emitWinsockInit emits the Windows-only Winsock 2.2 initialization
+// boilerplate from Python ivy_to_cpp.py:emit_winsock_init (4189-4225).
+func (g *Generator) emitWinsockInit(w *cppWriter) {
+	w.line("#ifdef _WIN32")
+	w.open("{")
+	w.line("WORD wVersionRequested;")
+	w.line("WSADATA wsaData;")
+	w.line("int err;")
+	w.line("wVersionRequested = MAKEWORD(2, 2);")
+	w.line("err = WSAStartup(wVersionRequested, &wsaData);")
+	w.open("if (err != 0) {")
+	w.line(`printf("WSAStartup failed with error: %d\n", err);`)
+	w.line("return 1;")
 	w.close("")
-	w.blank()
-}
-
-func (g *Generator) emitReplCPPInterpParser(w *cppWriter, s goivy.Sort, it cppInterpType) {
-	fn := replParserName(s)
-	if fn == "" {
-		return
-	}
-	typ := g.replParamType(s, g.ClassName)
-	w.open(fmt.Sprintf("static %s %s(const std::string &s) {", typ, fn))
-	switch it.Kind {
-	case cppInterpBV:
-		w.line("unsigned long long value = std::stoull(s);")
-		w.linef("return static_cast<%s>(value & %s);", typ, bvMask(it.Bits))
-	case cppInterpStrBV:
-		w.linef("return %s(s);", typ)
-	case cppInterpIntBV:
-		w.line("long long value = std::stoll(s);")
-		w.open(fmt.Sprintf("if (value < %d || value > %d) {", it.Lo, it.Hi))
-		w.linef(`throw std::runtime_error(std::string("expected %s in range %d..%d, got: ") + s);`, escapeString(sortName(s)), it.Lo, it.Hi)
-		w.close("")
-		w.linef("return %s(value);", typ)
-	}
-	w.close("")
-	w.blank()
-}
-
-func (g *Generator) emitReplRangeParser(w *cppWriter, s goivy.Sort, rs *goivy.RangeSort) {
-	lo, hi, ok := numericRangeBounds(rs)
-	if !ok {
-		return
-	}
-	fn := replParserName(s)
-	if fn == "" {
-		return
-	}
-	w.open(fmt.Sprintf("static %s %s(const std::string &s) {", g.replParamType(s, g.ClassName), fn))
-	w.line("long long value = std::stoll(s);")
-	w.open(fmt.Sprintf("if (value < %s || value > %s) {", lo, hi))
-	w.linef(`throw std::runtime_error(std::string("expected %s in range %s..%s, got: ") + s);`, escapeString(sortName(s)), lo, hi)
-	w.close("")
-	w.linef("return static_cast<%s>(value);", g.replParamType(s, g.ClassName))
-	w.close("")
-	w.blank()
-}
-
-func (g *Generator) emitReplNumericParser(w *cppWriter, s goivy.Sort) {
-	fn := replParserName(s)
-	if fn == "" {
-		return
-	}
-	w.open(fmt.Sprintf("static %s %s(const std::string &s) {", g.replParamType(s, g.ClassName), fn))
-	w.line("long long value = std::stoll(s);")
-	w.linef("return static_cast<%s>(value);", g.replParamType(s, g.ClassName))
-	w.close("")
-	w.blank()
-}
-
-func (g *Generator) emitReplDispatchArgs(w *cppWriter, act goivy.Action) []string {
-	var args []string
-	for idx, p := range act.GetFormalParams() {
-		name := varName(p.Name)
-		if parser := g.replParserNameForSort(p.CSort); parser != "" {
-			w.linef(`%s %s = %s(ivy2cpp_read_arg(args, %d, "%s"));`, g.replParamType(p.CSort, g.ClassName), name, parser, idx, escapeString(name))
-		} else {
-			w.linef("%s %s = %s;", g.cppQualifiedType(p.CSort, g.ClassName), name, g.cppZeroValueInScope(p.CSort))
-		}
-		args = append(args, name)
-	}
-	return args
-}
-
-func (g *Generator) emitReplWriters(w *cppWriter) {
-	w.open("template <typename T> static void ivy2cpp_write_value(std::ostream &out, const T &value) {")
-	w.line("out << value;")
-	w.close("")
-	w.open("static void ivy2cpp_write_value(std::ostream &out, bool value) {")
-	w.line(`out << (value ? "true" : "false");`)
-	w.close("")
-	if g != nil && g.Mod != nil && g.Mod.Sig != nil {
-		for _, name := range g.Mod.SortOrder {
-			s, ok := g.Mod.Sig.Sorts.Get2(name)
-			if !ok {
-				continue
-			}
-			if enum, ok := s.(*goivy.LogicEnumeratedSort); ok && enum.Name != "" && len(enum.Extension) > 0 {
-				g.emitReplEnumWriter(w, enum)
-				continue
-			}
-			if it, ok := g.cppInterpType(s); ok && it.helperClass() {
-				g.emitReplCPPInterpWriter(w, s)
-			}
-		}
-	}
-	w.blank()
-}
-
-func (g *Generator) emitReplEnumWriter(w *cppWriter, s *goivy.LogicEnumeratedSort) {
-	w.open(fmt.Sprintf("static void ivy2cpp_write_value(std::ostream &out, %s value) {", g.replParamType(s, g.ClassName)))
-	w.open("switch (value) {")
-	for _, v := range s.Extension {
-		w.linef(`case %s::%s: out << %s; return;`, g.ClassName, varName(v), strconv.Quote(v))
-	}
-	w.line(`default: out << "<unknown>"; return;`)
+	w.open("if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2) {")
+	w.line(`printf("Could not find a usable version of Winsock.dll\n");`)
+	w.line("WSACleanup();")
+	w.line("return 1;")
 	w.close("")
 	w.close("")
+	w.line("#endif")
 }
 
-func (g *Generator) emitReplCPPInterpWriter(w *cppWriter, s goivy.Sort) {
-	typ := g.replParamType(s, g.ClassName)
-	if typ == "" {
-		return
-	}
-	w.open(fmt.Sprintf("static void ivy2cpp_write_value(std::ostream &out, const %s &value) {", typ))
-	w.line("out << value;")
-	w.close("")
-}
-
-func (g *Generator) emitReplWriteOutputs(w *cppWriter, names []string) {
-	for i, name := range names {
-		if i > 0 {
-			w.line(`std::cout << " ";`)
-		}
-		w.linef("ivy2cpp_write_value(std::cout, %s);", name)
-	}
-	if len(names) > 0 {
-		w.line("std::cout << std::endl;")
-	}
-}
-
-func (g *Generator) replParserNameForSort(s goivy.Sort) string {
-	switch st := s.(type) {
-	case *goivy.BooleanSort:
-		return "ivy2cpp_parse_bool"
-	case *goivy.LogicEnumeratedSort:
-		if st.Name == "" || len(st.Extension) == 0 {
-			return ""
-		}
-		return replParserName(st)
-	default:
-		if _, ok := g.rangeSortFor(s); ok {
-			return replParserName(s)
-		}
-		if g.replNeedsNumericParser(s) {
-			return replParserName(s)
-		}
-		return ""
-	}
-}
-
+// isPlainNumericSort matches uninterpreted sorts that map to a plain
+// numeric C++ type (i.e. no native_type, no destructor struct, no
+// variant). Used by z3.go to decide which sorts need a numeric
+// randomization helper. Mirrors the old `replNeedsNumericParser`
+// criterion, kept under its current callers' name.
 func (g *Generator) replNeedsNumericParser(s goivy.Sort) bool {
 	if g == nil || g.Mod == nil || s == nil {
 		return false
@@ -408,41 +617,11 @@ func (g *Generator) replNeedsNumericParser(s goivy.Sort) bool {
 	return ok
 }
 
-func replParserName(s goivy.Sort) string {
-	switch st := s.(type) {
-	case *goivy.BooleanSort:
-		return "ivy2cpp_parse_bool"
-	case *goivy.LogicEnumeratedSort:
-		if st.Name == "" {
-			return ""
-		}
-		return "ivy2cpp_parse_" + varName(st.Name)
-	case *goivy.RangeSort:
-		if st.Name == "" {
-			return ""
-		}
-		return "ivy2cpp_parse_" + varName(st.Name)
-	case *goivy.UninterpretedSort:
-		if st.Name == "" {
-			return ""
-		}
-		return "ivy2cpp_parse_" + varName(st.Name)
-	default:
-		return ""
+func (g *Generator) publicActionNamesSorted() []string {
+	var names []string
+	for name := range g.Mod.PublicActions.All() {
+		names = append(names, name)
 	}
-}
-
-func (g *Generator) replParamType(s goivy.Sort, className string) string {
-	switch st := s.(type) {
-	case *goivy.BooleanSort:
-		return "bool"
-	case *goivy.LogicEnumeratedSort:
-		if !isNumericEnum(st) && st.Name != "" && className != "" {
-			return className + "::" + varName(st.Name)
-		}
-	}
-	if g != nil {
-		return g.cppQualifiedType(s, className)
-	}
-	return cppQualifiedType(s, className)
+	sort.Strings(names)
+	return names
 }
