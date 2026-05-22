@@ -374,3 +374,23 @@ static void ivy2cpp_progress(gen &g, const std::string &label) {
 // unconditionally for parity.
 static void cpptype_prepare(gen &g) { (void)g; }
 static void cpptype_cleanup(gen &g) { (void)g; }
+
+// to_solver_class<T> is the primary template that hash_thunk
+// to_solver specializations latch onto. Mirrors
+// ivy_z3_helpers.hpp:42-44 in the Python runtime — the goivy port
+// emits specializations from ivy2cpp/solver_emit.go (emitHashThunkToSolver,
+// emitAllCtuplesToSolver). Empty by design; only specializations supply
+// `operator()`.
+template <class T> class to_solver_class {};
+
+// z3_thunk<D, R> is the abstract subclass of `thunk<D, R>` that
+// supplies a `to_z3` method consumed by the hash_thunk to_solver_class
+// specializations. Mirrors ivy_z3_helpers.hpp:135-138. `thunk<D, R>`
+// is supplied by the generated header (ivy2cpp/runtime.go
+// emitHashThunkSupport), and the impl's include order
+// (<basename>.h, then ivy_go_z3.hpp) ensures it is visible here.
+template <typename D, typename R>
+class z3_thunk : public thunk<D, R> {
+public:
+    virtual z3::expr to_z3(gen &g, const z3::expr &v) = 0;
+};

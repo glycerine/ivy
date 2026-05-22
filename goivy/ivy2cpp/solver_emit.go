@@ -727,3 +727,55 @@ func (g *Generator) emitAssignArrayFromModel(w *cppWriter, obj string, sym state
 		w.line("}")
 	}
 }
+
+// emitHashThunkToSolver emits one `to_solver_class<hash_thunk<D,R>>`
+// template specialization. `domSorts` non-nil signals a multi-arg
+// ctuple domain (key access via `it->first.argN`); nil signals a
+// single-arg domain (key access via `it->first`). Mirrors Python
+// `emit_hash_thunk_to_solver` at ivy_to_cpp.py:1841-1862.
+func (g *Generator) emitHashThunkToSolver(w *cppWriter, domSorts []goivy.Sort, ctName string) {
+	w.open(fmt.Sprintf("template<typename R> class to_solver_class<hash_thunk<%s,R> > {", ctName))
+	w.line("public:")
+	w.open(fmt.Sprintf("z3::expr operator()(gen &g, const z3::expr &v, hash_thunk<%s,R> &val) {", ctName))
+	w.line("z3::expr res = g.ctx.bool_val(true);")
+	w.line("z3::expr disj = g.ctx.bool_val(false);")
+	w.linef("z3::expr bg = val.fun ? dynamic_cast<z3_thunk<%s,R> *>(val.fun)->to_z3(g, v) : g.ctx.bool_val(true);", ctName)
+	w.open(fmt.Sprintf("for (typename hash_map<%s,R>::iterator it = val.memo.begin(), en = val.memo.end(); it != en; it++) {", ctName))
+	w.line("z3::expr asgn = __to_solver(g, v, it->second);")
+	if len(domSorts) > 0 {
+		parts := make([]string, len(domSorts))
+		for i := range domSorts {
+			parts[i] = fmt.Sprintf("__to_solver(g, v.arg(%d), it->first.arg%d)", i, i)
+		}
+		w.linef("z3::expr cond = %s;", strings.Join(parts, " && "))
+	} else {
+		w.line("z3::expr cond = __to_solver(g, v.arg(0), it->first);")
+	}
+	w.line("res = res && implies(cond, asgn);")
+	w.line("disj = disj || cond;")
+	w.close("")
+	w.line("res = res && (disj || bg);")
+	w.line("return res;")
+	w.close("")
+	w.close(";")
+	w.blank()
+}
+
+// emitAllCtuplesToSolver emits a `to_solver_class<hash_thunk<D,R>>`
+// specialization for every hash_thunk domain in the module — both
+// single-arg domains (allHashThunkDomains) and multi-arg ctuple
+// domains (cppCTuples). Mirrors Python `emit_all_ctuples_to_solver`
+// at ivy_to_cpp.py:1864-1871. Gated to test/gen by caller via
+// usesZ3.
+func (g *Generator) emitAllCtuplesToSolver(w *cppWriter) {
+	if g == nil {
+		return
+	}
+	for _, ctName := range g.allHashThunkDomains() {
+		g.emitHashThunkToSolver(w, nil, ctName)
+	}
+	for _, dom := range g.cppCTuples() {
+		ctName := g.ClassName + "::" + cppCTupleLocalNameWith(g, dom)
+		g.emitHashThunkToSolver(w, dom, ctName)
+	}
+}

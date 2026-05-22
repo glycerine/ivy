@@ -5971,6 +5971,173 @@ export step
 	compileGeneratedCPP(t, out)
 }
 
+// TestDestructorForwardDeclsInImplPreamble verifies destructor sort
+// forward declarations are emitted right after the include block. Mirrors
+// Python ivy_to_cpp.py:2232-2243.
+func TestDestructorForwardDeclsInImplPreamble(t *testing.T) {
+	mod := compileIvySource(t, destructorMultiArgIvySource)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"std::ostream &operator<<(std::ostream &s, const heap::cell &t);",
+		"heap::cell _arg<heap::cell>(std::vector<ivy_value> &args, unsigned idx, long long bound);",
+		"void __ser<heap::cell>(ivy_ser &res, const heap::cell &);",
+		"void __deser<heap::cell>(ivy_deser &inp, heap::cell &res);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	declIdx := strings.Index(out.Impl, "void __ser<heap::cell>(ivy_ser &res, const heap::cell &);")
+	defIdx := strings.Index(out.Impl, "template <> void __ser<heap::cell>(ivy_ser &res, const heap::cell &t) {")
+	if declIdx < 0 || defIdx < 0 || declIdx >= defIdx {
+		t.Fatalf("destructor forward decl must precede its definition; declIdx=%d defIdx=%d", declIdx, defIdx)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestDestructorZ3ForwardDeclsInImplPreamble verifies destructor Z3
+// template forward decls are emitted (under #ifdef Z3PP_H_) for test
+// targets. Mirrors Python ivy_to_cpp.py:2246-2254.
+func TestDestructorZ3ForwardDeclsInImplPreamble(t *testing.T) {
+	mod := compileIvySource(t, destructorMultiArgIvySource+`
+individual a : cell
+action step = {}
+export step
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"void __from_solver<heap::cell>(gen &g, const z3::expr &v, heap::cell &res);",
+		"z3::expr __to_solver<heap::cell>(gen &g, const z3::expr &v, const heap::cell &val);",
+		"void __randomize<heap::cell>(gen &g, const z3::expr &v, const std::string &sort_name);",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestDestructorArgZeroInitsPrimitiveFields verifies that a destructor
+// _arg<T> body zero-initializes every primitive field before parsing,
+// so partial input atoms leave omitted fields well-defined. Mirrors
+// Python ivy_to_cpp.py:2529 (`assign_zero_symbol`).
+func TestDestructorArgZeroInitsPrimitiveFields(t *testing.T) {
+	mod := compileIvySource(t, destructorMultiArgIvySource)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	declIdx := strings.Index(out.Impl, "heap::cell res;")
+	if declIdx < 0 {
+		t.Fatalf("missing `heap::cell res;` in impl:\n%s", out.Impl)
+	}
+	tail := out.Impl[declIdx:]
+	parseStart := strings.Index(tail, "ivy_value &arg = args[idx];")
+	if parseStart < 0 {
+		t.Fatalf("missing parse-loop marker in impl:\n%s", tail)
+	}
+	preamble := tail[:parseStart]
+	for _, want := range []string{
+		"for (int X__0 = 0; X__0 < 4; X__0++) {",
+		"res.shade[X__0] = (heap::color)0;",
+	} {
+		if !strings.Contains(preamble, want) {
+			t.Fatalf("missing %q in _arg zero-init preamble:\n%s", want, preamble)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestDestructorZeroInitSkipsStringField verifies that strlit-typed
+// destructor fields are NOT assigned `(__strlit)0` (which would not
+// compile). Mirrors Python's `ctype(v.sort) == '__strlit'` guard in
+// assign_zero_symbol (ivy_to_cpp.py:216-219).
+func TestDestructorZeroInitSkipsStringField(t *testing.T) {
+	src := `#lang ivy1.7
+type cell
+type str
+interpret str -> strlit
+destructor label(C:cell) : str
+individual a : cell
+action step = {}
+export step
+`
+	mod := compileIvySource(t, src)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "heap"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	declIdx := strings.Index(out.Impl, "heap::cell res;")
+	if declIdx < 0 {
+		t.Fatalf("missing `heap::cell res;` in impl:\n%s", out.Impl)
+	}
+	tail := out.Impl[declIdx:]
+	parseStart := strings.Index(tail, "ivy_value &arg = args[idx];")
+	preamble := tail[:parseStart]
+	if strings.Contains(preamble, "(__strlit)0") || strings.Contains(preamble, "(std::string)0") {
+		t.Fatalf("_arg zero-init must skip strlit destructor fields; preamble:\n%s", preamble)
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestHashThunkToSolverSpecializationEmittedForTestTarget verifies a
+// single-arg hash_thunk domain produces a `to_solver_class<hash_thunk<D,R>>`
+// specialization in test mode. Mirrors Python ivy_to_cpp.py:2673 →
+// emit_all_ctuples_to_solver.
+func TestHashThunkToSolverSpecializationEmittedForTestTarget(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type key
+relation seen(K:key)
+after init { seen(K) := false }
+action mark(k:key) = { seen(k) := true }
+export mark
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// Unbounded uninterpreted `key` lowers to `int` per cppScalarTypeWith,
+	// matching Python's ctype dispatcher (ivy_to_cpp.py:414-432).
+	for _, want := range []string{
+		"template<typename R> class to_solver_class<hash_thunk<int,R> > {",
+		"z3::expr cond = __to_solver(g, v.arg(0), it->first);",
+		"res = res && (disj || bg);",
+		"dynamic_cast<z3_thunk<int,R> *>(val.fun)->to_z3(g, v)",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+// TestHashThunkToSolverNotEmittedForReplTarget verifies the
+// specialization is suppressed for repl targets — emit is gated on
+// usesZ3 per generator.go.
+func TestHashThunkToSolverNotEmittedForReplTarget(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type key
+relation seen(K:key)
+after init { seen(K) := false }
+action mark(k:key) = { seen(k) := true }
+export mark
+`)
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "runner"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if strings.Contains(out.Impl, "to_solver_class<hash_thunk<") {
+		t.Fatalf("repl target must not emit to_solver_class<hash_thunk<...>>:\n%s", out.Impl)
+	}
+	compileGeneratedCPP(t, out)
+}
+
 // TestEmitSetSolverDestructorRecordRange asserts that emit_set on a state
 // symbol with a destructor record range emits the per-field
 // add(__to_solver(*this, apply("<destr>", apply("<sym>"), <z3-idx>...),

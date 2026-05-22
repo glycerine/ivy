@@ -605,6 +605,51 @@ func cppIndexSuffix(args []string) string {
 	return b.String()
 }
 
+// allHashThunkDomains returns one fully-qualified C++ type name per
+// distinct single-arg hash_thunk domain in the module. Mirrors Python
+// `all_hash_thunk_domains` at ivy_to_cpp.py:327-336 — used together
+// with cppCTuples() to drive `to_solver_class<hash_thunk<D,R>>` emission.
+func (g *Generator) allHashThunkDomains() []string {
+	if g == nil || g.Mod == nil {
+		return nil
+	}
+	seen := map[string]bool{}
+	var out []string
+	addSort := func(s goivy.Sort) {
+		fs, ok := s.(*goivy.LogicFunctionSort)
+		if !ok || len(fs.Domain()) != 1 {
+			return
+		}
+		st := cppFunctionStorageFor(g, fs.Domain(), fs.Range(), "")
+		if st.Kind != cppStorageHashThunk {
+			return
+		}
+		name := cppScalarTypeWith(g, fs.Domain()[0], g.ClassName)
+		if seen[name] {
+			return
+		}
+		seen[name] = true
+		out = append(out, name)
+	}
+	for _, sym := range g.stateSymbols() {
+		addSort(sym.Sort)
+	}
+	for _, p := range g.Mod.Params {
+		addSort(p.CSort)
+	}
+	if g.Mod.Actions != nil {
+		for _, act := range g.Mod.Actions.All() {
+			for _, p := range act.GetFormalParams() {
+				addSort(p.CSort)
+			}
+			for _, r := range act.GetFormalReturns() {
+				addSort(r.CSort)
+			}
+		}
+	}
+	return out
+}
+
 func (g *Generator) cppCTuples() [][]goivy.Sort {
 	seen := map[string]bool{}
 	var out [][]goivy.Sort

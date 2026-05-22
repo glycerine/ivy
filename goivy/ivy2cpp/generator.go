@@ -249,6 +249,10 @@ func (g *Generator) emitImpl() error {
 	// __deser).
 	g.emitEnumSortArgSpecImpls(w)
 	if g.usesZ3() {
+		// to_solver_class<hash_thunk<D,R>> specializations for every
+		// hash_thunk-backed domain (single-arg and ctuple). Python
+		// ivy_to_cpp.py:2673 → emit_all_ctuples_to_solver.
+		g.emitAllCtuplesToSolver(w)
 		// The init_gen / action_gen classes go AFTER the variant and
 		// destructor __from_solver specializations so the action_gen
 		// body can deduce the right template specialization.

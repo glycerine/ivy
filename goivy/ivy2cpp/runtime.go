@@ -143,6 +143,10 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	// Forward declarations of per-enum operator<<, _arg<T>, __ser<T>,
 	// __deser<T>. Python ivy_to_cpp.py:2213-2223 emits these here.
 	g.emitEnumSortArgSpecDecls(w)
+	// Forward declarations of per-destructor operator<<, _arg<T>,
+	// __ser<T>, __deser<T> (and Z3 specs for test/gen). Python
+	// ivy_to_cpp.py:2232-2254.
+	g.emitDestructorSortArgSpecDecls(w)
 	w.blank()
 }
 

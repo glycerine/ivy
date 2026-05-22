@@ -1359,46 +1359,75 @@ Tests to add:
 - Debug actions with explicit names, multiple values, quantified values, and
   tracing enabled under `impl`, `repl`, `test`, and `gen`.
 
-## TODO 022 - Add full serialization/deserialization support
+## DONE 022 - Add full serialization/deserialization support
+
+Status: ported field-for-field from Python. Per-sort `operator<<`, `_arg<T>`,
+`__ser<T>`, `__deser<T>` are emitted for enum, destructor, and variant sorts.
+Z3 `__from_solver`/`__to_solver`/`__randomize` specializations are emitted for
+gen/test targets. StrBV/IntBV interpreted-type templates already covered the
+bv/strbv/intbv sort kinds. Three gaps closed in this pass:
+
+1. **Destructor sort forward declarations.** `emitDestructorSortArgSpecDecls`
+   in `goivy/ivy2cpp/destructor.go:258` mirrors Python `ivy_to_cpp.py:2232-2254`
+   and is invoked from `goivy/ivy2cpp/runtime.go:148` right after the enum
+   forward decls.
+2. **Zero-init for destructor `_arg<T>`.** `emitDestructorZeroInit` and
+   `emitZeroAssign` in `goivy/ivy2cpp/destructor.go:487, 513` mirror Python
+   `assign_zero_symbol` (`ivy_to_cpp.py:216-219`). They are called from
+   `emitDestructorArgImpl` at `goivy/ivy2cpp/destructor.go:406` right after the
+   `T res;` declaration. Strlit, native, cpptype, and variant-super fields are
+   skipped per the Python guard.
+3. **`to_solver_class<hash_thunk<D,R>>` specializations.** `allHashThunkDomains`
+   in `goivy/ivy2cpp/types.go:612` mirrors Python `all_hash_thunk_domains`.
+   `emitHashThunkToSolver` and `emitAllCtuplesToSolver` in
+   `goivy/ivy2cpp/solver_emit.go:736, 770` mirror Python
+   `emit_hash_thunk_to_solver` / `emit_all_ctuples_to_solver`
+   (`ivy_to_cpp.py:1841-1871`), and the wire-in is at
+   `goivy/ivy2cpp/generator.go:255` inside the existing `usesZ3()` block.
+   The runtime primary `to_solver_class<T>` template and the
+   `z3_thunk<D,R>` abstract subclass of `thunk<D,R>` are now declared in
+   `include2cpp/ivy_go_z3.hpp` (lines 379-396).
 
 Go locations:
 
-- `goivy/ivy2cpp/repl.go:10-280`
-- `goivy/ivy2cpp/generator.go:391-436`
-- `goivy/ivy2cpp/generator.go:438-478`
+- Enum impls: `goivy/ivy2cpp/repl.go:60-160`; decl wire at `goivy/ivy2cpp/runtime.go:145`.
+- Destructor impls: `goivy/ivy2cpp/destructor.go:244-517`.
+- Destructor forward decls: `goivy/ivy2cpp/destructor.go:258` (`emitDestructorSortArgSpecDecls`);
+  wire at `goivy/ivy2cpp/runtime.go:148`.
+- Destructor zero-init: `goivy/ivy2cpp/destructor.go:487, 513`
+  (`emitDestructorZeroInit`, `emitZeroAssign`).
+- Variant impls: `goivy/ivy2cpp/variant.go:122-310`.
+- StrBV/IntBV impls: `goivy/ivy2cpp/cpp_types.go:272-365`.
+- Hash-thunk to_solver: `goivy/ivy2cpp/solver_emit.go:736, 770`
+  (`emitHashThunkToSolver`, `emitAllCtuplesToSolver`); domain enumerator at
+  `goivy/ivy2cpp/types.go:612` (`allHashThunkDomains`); wire at
+  `goivy/ivy2cpp/generator.go:255`.
+- Runtime template support: `include2cpp/ivy_go_z3.hpp:379-396` (`to_solver_class`
+  primary template, `z3_thunk` abstract class).
 
 Python references:
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2213-2254`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:2420-2674`
-- `pyivy/ivy/ivy/ivy_cpp_types.py:355-496`
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2213-2254` (forward decls).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:216-219` (`assign_zero_symbol`).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:1841-1871, 2673` (`emit_hash_thunk_to_solver`,
+  `emit_all_ctuples_to_solver`).
+- `pyivy/ivy/ivy/ivy_to_cpp.py:2420-2674` (per-sort impls).
+- `pyivy/ivy/ivy/ivy_cpp_types.py:355-496` (variant/StrBV/IntBV template emission).
+- `pyivy/ivy/ivy/ivy_z3_helpers.hpp:42-44, 135-138` (`to_solver_class`, `z3_thunk`).
 
-Gap:
+Tests:
 
-- Go emits stream operators for enums/destructors/variants but does not emit the
-  Python serializer/deserializer API.
-- Python emits `__ser`, `__deser`, `_arg`, stream output, and solver conversion
-  helpers for generated and custom types.
-- The REPL/test/server runtime depends on these helpers for values crossing text,
-  network, and model boundaries.
-
-Conformance work:
-
-- Port Python's serialization and argument parsing method generation for every
-  sort kind.
-- Ensure nested functions, arrays, hash-thunks, destructors, variants, native
-  types, bitvectors, and strings serialize exactly like Python.
-
-Tests to add:
-
-- Round-trip serialization for all supported type classes, including nested
-  values.
-
-Reminder:
-
-- [ ] When this lands, rename to `## DONE 022 - …`, add a `Status:` paragraph
-  citing the new Go locations and test names, and update this audit doc in
-  the same commit as the implementation.
+- Existing: `TestEmitsArgSpecForEnum` (ivy2cpp_test.go:3885),
+  `TestDestructorSerDeserShape` (5852), `TestDestructorArgShape` (5881),
+  `TestDestructorZ3ImplShape` (5909),
+  `TestDestructorRandomizeSkipsUninterpretedRange` (5940).
+- New: `TestDestructorForwardDeclsInImplPreamble`,
+  `TestDestructorZ3ForwardDeclsInImplPreamble`,
+  `TestDestructorArgZeroInitsPrimitiveFields`,
+  `TestDestructorZeroInitSkipsStringField`,
+  `TestHashThunkToSolverSpecializationEmittedForTestTarget`,
+  `TestHashThunkToSolverNotEmittedForReplTarget`
+  (all at ivy2cpp_test.go:5974+).
 
 ## TODO 023 - Restore Python include ordering and support headers
 
