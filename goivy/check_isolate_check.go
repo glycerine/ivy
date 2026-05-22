@@ -799,8 +799,13 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 							// Python DerivedUpdate(df) stores df and uses df.args[0] as symbol.
 							// Go NewDerivedUpdate(sym, defn) takes both. Extract sym from df.
 							var sym Expr
-							if children := df.Children(); len(children) > 0 {
-								sym = children[0]
+							if args := df.Args(); len(args) > 0 {
+								if lhs, ok := args[0].(Expr); ok {
+									sym = IvyNodeRep(lhs)
+									if sym == nil {
+										sym = lhs
+									}
+								}
 							}
 							withLocalMod.Updates = append(withLocalMod.Updates, NewDerivedUpdate(sym, df))
 						}

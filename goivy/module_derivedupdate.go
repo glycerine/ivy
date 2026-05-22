@@ -40,14 +40,30 @@ func (a *DerivedUpdate) IterSubactions() []Action { return DefaultIterSubactions
 // Corresponds to Python DerivedUpdate.get_update_axioms.
 func (a *DerivedUpdate) GetUpdateAxioms(updated []*Const, action Action) ([]*Const, *Clauses, *Clauses) {
 	// Get the defined symbol
-	defSym, ok := a.Symbol.(*Const)
+	defines := a.Symbol
+	if rep := IvyNodeRep(defines); rep != nil {
+		defines = rep
+	}
+	defSym, ok := defines.(*Const)
 	if !ok || defSym == nil {
 		return updated, nil, nil
 	}
 
-	// Collect dependency symbols from the definition RHS
+	// Python DerivedUpdate uses used_symbols_ast(defn.args[1]), i.e. the RHS
+	// dependencies only. Some local proof definitions pass an applied LHS as
+	// Symbol, so the defined symbol is normalized above through IvyNodeRep.
+	depExpr := a.Defn
+	if args := a.Defn.Args(); len(args) > 1 {
+		if rhs, ok := args[1].(Expr); ok {
+			depExpr = rhs
+		}
+	}
 	deps := make(map[string]bool)
-	CollectSymNames(a.Defn, deps)
+	for _, sym := range UsedSymbolsAst(depExpr).All() {
+		if c, ok := sym.(*Const); ok {
+			deps[c.Name] = true
+		}
+	}
 
 	// Check if defines is not in updated and any dependency is in updated
 	updatedSet := make(map[string]bool)
