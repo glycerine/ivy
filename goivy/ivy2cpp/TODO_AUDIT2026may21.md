@@ -744,52 +744,67 @@ Out of scope for this commit (tracked as follow-up):
 - Parametric `let p(X,Y) := body in ...` substitution — returns an
   explicit error rather than wrong C++.
 
-## TODO 012 - Port quantifier bounds, iterable sorts, and `some`/min/max
+## DONE 012 - Port quantifier bounds, iterable sorts, and `some`/min/max
 
-Go locations:
+Done 2026-05-22 (UTC).
 
-- `goivy/ivy2cpp/expr.go:283-328`
-- `goivy/ivy2cpp/expr.go:403-477`
-- `goivy/ivy2cpp/expr.go:479-628`
-- `goivy/ivy2cpp/expr.go:630-664`
-- `goivy/ivy2cpp/action.go:217-220`
+Closed gaps:
 
-Python references:
+- `matchBoundExprs` walks the body collecting `<`, `<=`, `>`, `>=`
+  applications that constrain a quantified variable, tracking polarity
+  through `Not`, `LogicLiteral`, `Implies`, `Or`, `And`, and unfolding
+  derived definitions (mirrors Python `get_bound_exprs`
+  ivy_to_cpp.py:3264-3289).
+- `getBounds` / `getAllBounds` synthesize `(lo, hi)` pairs from the
+  collected inequalities, adding `"0"` for non-negative sorts, the
+  sort cardinality, range-sort interpretations, and the
+  `<sort>.cardinality` attribute as upper-bound fallback (mirrors
+  Python `get_bounds` / `get_all_bounds` ivy_to_cpp.py:3301-3349).
+  Sibling-variable filtering matches Python's `variables[i+1:]`
+  slicing in `get_all_bounds`.
+- `loopHeaderForSortBounds` emits the Python-conformant cast loop for
+  enumerated sorts (`for (T X = (T)0; (int) X < N; X = (T)(((int)X)+1))`)
+  and half-open form for integer sorts (`for (T X = lo; X < hi; X++)`),
+  mirroring `open_loop` (ivy_to_cpp.py:1697-1711).
+- `iterableSortFor` recognizes `<sort>.iterable` attributes and the
+  paired `iter` / `iter.t` sort; `quantIterableHeader` emits the
+  `for (T x = iter__create(0); !iter__is_end(x); x = iter__next(x))`
+  loop and recurses into the body for the remaining variables
+  (mirrors ivy_to_cpp.py:3405-3427).
+- `emitQuant` now tries iterable → inequality bounds → extensional
+  relation → finite-value fallback in the same order Python does.
+- `emitSome` / `emitSomeWithElse` route through a shared
+  `someLoopHeaders` helper that prefers inequality-derived bounds.
+- `emitIfSome` / `emitIfSomeMinMax` route through `someConditionLoopHeaders`,
+  which lifts the `*Const` parameters to `*LogicVariable` so the bound
+  walker can see them (matches the `emitIfSomeExtensional` pattern).
+- `firstParamIsIndex` emits the `break;` optimization when
+  `some.Params[0] == some.Index` in `if some X. ... minimizing X`
+  (mirrors Python emit_some:3539-3540 — the first hit during ascending
+  iteration is the minimum, so the loop exits early).
 
-- `pyivy/ivy/ivy/ivy_to_cpp.py:1655-1711`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3264-3290`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3301-3336`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3351-3377`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3380-3465`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3486-3555`
-- `pyivy/ivy/ivy/ivy_to_cpp.py:3919-3946`
+Tests added (in `goivy/ivy2cpp/ivy2cpp_test.go`):
 
-Gap:
+- `TestEmitQuantInequalityBoundOverRange`
+- `TestEmitSomeMinMaxBreakWhenIndexIsFirstParam`
+- `TestEmitSomeMinMaxNoBreakWhenIndexIsExpression`
+- `TestEmitIfSomeUsesInequalityBound`
+- `TestEmitQuantMultiVarInequalityFiltersSibling`
 
-- Go loops only over bool/enumerated/range sorts and a very limited
-  one-variable extensional relation case.
-- Python extracts bounds from formulas, inequalities, derived constraints,
-  extensional relations, iterable attributes, and sort cardinality information.
-- Go rejects `some_min` and `some_max` in `emitIfSome`; Python implements
-  `Some`, `SomeMin`, and `SomeMax` with bound-aware loops and return values.
-- Go's plain `some` often returns the first parameter or zero when no witness is
-  found, while Python's generated code tracks witness existence and default
-  behavior more carefully for the context.
+Pre-existing quantifier tests were updated to expect the
+Python-conformant cast/half-open form instead of the prior Go
+range-init / closed-range shorthand: `TestEmitExprQuantifierFiniteEnumLoop`,
+`TestEmitExprSomeFiniteEnumLoop`, `TestEmitExprSomeWithElseFiniteEnumLoop`,
+`TestGeneratedIfSomeActionCompiles`, `TestEmitExprQuantifierFiniteRangeLoop`,
+`TestEmitIfSomeMinimizing`.
 
-Conformance work:
+Out of scope for this commit (tracked as follow-up):
 
-- Port `is_iterable_sort`, `is_any_integer_type`, `sort_bounds`, `open_loop`,
-  `get_bound_exprs`, `get_bounds`, `get_extensional_bound_exprs`, `emit_quant`,
-  and `emit_some`.
-- Add support for inequality-derived bounds on integer/nat/range variables.
-- Add `SomeMin` and `SomeMax` for both expression and action contexts.
-- Ensure witness variables, found flags, breaks, and defaults match Python.
-
-Tests to add:
-
-- Quantifiers over finite sorts, ranged integers, cardinality-bounded sorts,
-  extensional relations, and derived-bound formulas.
-- `some`, `some_min`, and `some_max` in expressions and actions.
+- Expression-context `SomeMin` / `SomeMax`. `goivy.LogicSome` lacks a
+  `Kind` field, so only statement-context `if some` carries the min/max
+  discriminator. A future TODO should add `Kind` to `LogicSome` and the
+  parser side, then mirror Python's expression-context SomeMinMax in
+  `emitSome`.
 
 ## TODO 013 - Fix assignment/update semantics, especially quantified assignments
 

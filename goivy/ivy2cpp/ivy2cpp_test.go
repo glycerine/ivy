@@ -1748,7 +1748,9 @@ func TestEmitExprQuantifierFiniteEnumLoop(t *testing.T) {
 	if err != nil {
 		t.Fatalf("emitExpr: %v", err)
 	}
-	if !strings.Contains(got, "for (color X : {red, green})") || !strings.Contains(got, "return true;") {
+	// Python emit_quant emits the cast loop form for EnumeratedSort
+	// (ivy_to_cpp.py:1706-1708): `for (T X = (T)0; (int) X < N; X = ...)`.
+	if !strings.Contains(got, "for (color X = (color)0; (int) X < 2; X = (color)(((int)X) + 1))") || !strings.Contains(got, "return true;") {
 		t.Fatalf("unexpected quantifier code:\n%s", got)
 	}
 }
@@ -2040,7 +2042,7 @@ func TestEmitExprSomeFiniteEnumLoop(t *testing.T) {
 	if err != nil {
 		t.Fatalf("emitExpr: %v", err)
 	}
-	for _, want := range []string{"for (color X : {red, green})", "if ((X == green)) return X;", "return red;"} {
+	for _, want := range []string{"for (color X = (color)0; (int) X < 2; X = (color)(((int)X) + 1))", "if ((X == green)) return X;", "return red;"} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("missing %q in some expression:\n%s", want, got)
 		}
@@ -2101,7 +2103,7 @@ func TestEmitExprSomeWithElseFiniteEnumLoop(t *testing.T) {
 	if err != nil {
 		t.Fatalf("emitExpr: %v", err)
 	}
-	for _, want := range []string{"for (color X : {red, green})", "if ((X == green)) return X;", "return red;"} {
+	for _, want := range []string{"for (color X = (color)0; (int) X < 2; X = (color)(((int)X) + 1))", "if ((X == green)) return X;", "return red;"} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("missing %q in some/else expression:\n%s", want, got)
 		}
@@ -2282,7 +2284,7 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"bool __ivy_some", "for (color loc__c : {red, green})", "if (!__ivy_some", "saved = loc__c;", "saved = red;"} {
+	for _, want := range []string{"bool __ivy_some", "for (color loc__c = (color)0; (int) loc__c < 2; loc__c = (color)(((int)loc__c) + 1))", "if (!__ivy_some", "saved = loc__c;", "saved = red;"} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
 		}
@@ -2408,7 +2410,10 @@ func TestEmitExprQuantifierFiniteRangeLoop(t *testing.T) {
 	if err != nil {
 		t.Fatalf("emitExpr: %v", err)
 	}
-	if !strings.Contains(got, "for (unsigned I = 1; I <= 3; I++)") || !strings.Contains(got, "return true;") {
+	// Python `get_bounds` pushes the cardinality-derived bound first
+	// (ivy_to_cpp.py:3322-3323): los="0", his=card. For RangeSort with
+	// goivy's storage-dimension card (`ub+1`), the bound is `< 4` here.
+	if !strings.Contains(got, "for (unsigned I = 0; I < 4; I++)") || !strings.Contains(got, "return true;") {
 		t.Fatalf("unexpected quantifier code:\n%s", got)
 	}
 }
@@ -5294,7 +5299,7 @@ func TestEmitIfSomeMinimizing(t *testing.T) {
 	if strings.Contains(got, "not supported yet") {
 		t.Fatalf("some_min still hits unsupported sentinel:\n%s", got)
 	}
-	for _, want := range []string{"bool __ivy_some", "__ivy_some_idx", "for (unsigned v = 0; v <= 4; v++)"} {
+	for _, want := range []string{"bool __ivy_some", "__ivy_some_idx", "for (unsigned v = 0; v < 5; v++)"} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("missing %q in some_min lowering:\n%s", want, got)
 		}
@@ -5345,5 +5350,160 @@ constructor mkpoint : point
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	compileGeneratedCPP(t, out)
+}
+
+// TODO 012 tests — exercise inequality-derived bounds, cardinality
+// attribute bounds, multi-variable bound filtering, and the
+// first-param-is-index break in `if some X. ... minimizing X`.
+
+// TestEmitQuantInequalityBoundOverRange checks that `forall X:t. X < N -> p(X)`
+// uses the inequality `X < 5` as upper bound rather than the type's
+// full range. Mirrors Python emit_quant via get_bounds.
+func TestEmitQuantInequalityBoundOverRange(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..10}
+relation p(X:idx)
+after init {
+    p(X) := false
+}
+action check = {
+    assert forall X:idx. X < 5 -> p(X)
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "qbound"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// Upper bound from inequality should be `5` (range-clamped via the
+	// same ternary Python emits in emit_constant:3010-3014). The init
+	// block still uses `X <= 10`; only the `check` quantifier loop must
+	// use the inequality.
+	if !strings.Contains(out.Impl, "X < (5 < 0 ? 0 : 10 < 5 ? 10 : 5)") {
+		t.Fatalf("expected inequality-derived upper bound from literal `5`:\n%s", out.Impl)
+	}
+	checkIdx := strings.Index(out.Impl, "::check()")
+	if checkIdx < 0 {
+		t.Fatalf("missing check() function:\n%s", out.Impl)
+	}
+	tail := out.Impl[checkIdx:]
+	if strings.Contains(tail, "X <= 10") {
+		t.Fatalf("inequality bound should override range bound in check():\n%s", tail)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+// TestEmitSomeMinMaxBreakWhenIndexIsFirstParam asserts that the
+// generated `if some` minimizing the loop variable adds the early `break`
+// (Python emit_some:3539-3540).
+func TestEmitSomeMinMaxBreakWhenIndexIsFirstParam(t *testing.T) {
+	rng := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "4"}}
+	p := goivy.NewConst("v", rng)
+	some := &goivy.SomeCondition{
+		Params: []*goivy.Const{p},
+		Fmla:   goivy.NewConst("true", goivy.Boolean),
+		Kind:   "some_min",
+		Index:  p,
+	}
+	thenAct := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("true", goivy.Boolean))
+	ifAct := goivy.NewIfAction(nil, thenAct)
+	ifAct.Cond = some
+
+	var w cppWriter
+	(&Generator{}).emitAction(&w, ifAct)
+	got := w.String()
+	if !strings.Contains(got, "break;") {
+		t.Fatalf("first-param-is-index minimizing should emit `break;`:\n%s", got)
+	}
+}
+
+// TestEmitSomeMinMaxNoBreakWhenIndexIsExpression asserts that the
+// break-early optimization is suppressed when the minimizer is a
+// non-trivial expression (the first param does not equal the index).
+func TestEmitSomeMinMaxNoBreakWhenIndexIsExpression(t *testing.T) {
+	rng := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "4"}}
+	p := goivy.NewConst("v", rng)
+	// Index is a *different* variable — must not break early.
+	other := goivy.NewConst("w", rng)
+	some := &goivy.SomeCondition{
+		Params: []*goivy.Const{p},
+		Fmla:   goivy.NewConst("true", goivy.Boolean),
+		Kind:   "some_min",
+		Index:  other,
+	}
+	thenAct := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("true", goivy.Boolean))
+	ifAct := goivy.NewIfAction(nil, thenAct)
+	ifAct.Cond = some
+
+	var w cppWriter
+	(&Generator{}).emitAction(&w, ifAct)
+	got := w.String()
+	if strings.Contains(got, "break;") {
+		t.Fatalf("break-early should not fire when index differs from first param:\n%s", got)
+	}
+}
+
+// TestEmitIfSomeUsesInequalityBound exercises the bound path inside
+// emitIfSomeMinMax: `if some X:t. X < n & p(X) minimizing X` should
+// constrain the loop to `X < n` rather than scanning the whole range.
+func TestEmitIfSomeUsesInequalityBound(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..10}
+relation p(X:idx)
+individual saved : idx
+after init {
+    p(X) := false;
+    saved := 0
+}
+action pick = {
+    if some x:idx. x < 5 & p(x) minimizing x {
+        saved := x
+    }
+}
+export pick
+`)
+	out, err := Generate(mod, Config{ClassName: "qsomemin"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "loc__x < (5 < 0 ? 0 : 10 < 5 ? 10 : 5)") {
+		t.Fatalf("expected inequality-derived bound (range-clamped `5`):\n%s", out.Impl)
+	}
+	if !strings.Contains(out.Impl, "break;") {
+		t.Fatalf("first-param-is-index minimizing should emit `break;`:\n%s", out.Impl)
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+// TestEmitQuantMultiVarInequalityFiltersSibling asserts that a
+// quantified sibling variable cannot be used as the bound for the first
+// quantified variable. Mirrors Python get_all_bounds's `variables[1:]`
+// slicing.
+func TestEmitQuantMultiVarInequalityFiltersSibling(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type idx = {0..7}
+relation r(X:idx, Y:idx)
+after init {
+    r(X, Y) := false
+}
+action check = {
+    assert forall X:idx, Y:idx. X < Y -> r(X, Y)
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "qmulti"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	// X's upper bound must not be Y (Y is also quantified) — it should
+	// fall back to the type's cardinality. Y's lower bound *can* mention
+	// X since Y is the inner var (others = []).
+	for _, want := range []string{"X = 0; X < 8;", "Y = (X)+1; Y < 8;"} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("expected %q in multi-var bound:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
 }

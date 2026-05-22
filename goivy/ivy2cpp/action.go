@@ -238,17 +238,14 @@ func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy
 	}
 	found := g.nextTemp("__ivy_some")
 	w.linef("bool %s = false;", found)
+	headers, err := g.someConditionLoopHeaders(some)
+	if err != nil {
+		g.unsupported(w, "unsupported some parameter: %s", err.Error())
+		return
+	}
 	opened := 0
-	for _, p := range some.Params {
-		header, err := g.loopHeaderForSort(p.CSort, varName(p.Name))
-		if err != nil {
-			g.unsupported(w, "unsupported some parameter %s:%s", varName(p.Name), err.Error())
-			for i := 0; i < opened; i++ {
-				w.close("")
-			}
-			return
-		}
-		w.open(header)
+	for _, h := range headers {
+		w.open(h)
 		opened++
 	}
 	cond, err := g.emitExpr(some.Fmla)
@@ -275,6 +272,58 @@ func (g *Generator) emitIfSome(w *cppWriter, a *goivy.LogicIfAction, some *goivy
 	}
 }
 
+// someConditionLoopHeaders chooses per-parameter loop headers for an
+// `if some` statement. Like someLoopHeaders, but the params arrive as
+// *goivy.Const and must be lifted to LogicVariable so the bound walker
+// (which follows Python `is_variable` semantics) can match them. The
+// emitted loop variable names remain the original param names so the
+// THEN body sees the expected identifiers.
+func (g *Generator) someConditionLoopHeaders(some *goivy.SomeCondition) ([]string, error) {
+	headers := make([]string, len(some.Params))
+	useBounds := false
+	if len(some.Params) > 0 && cppIsAnyIntegerType(g, some.Params[0].CSort) {
+		vars := make([]*goivy.LogicVariable, 0, len(some.Params))
+		subs := map[goivy.NodeKey]goivy.Expr{}
+		ok := true
+		for _, p := range some.Params {
+			v, err := goivy.NewVariable("X"+p.Name, p.CSort)
+			if err != nil {
+				ok = false
+				break
+			}
+			subs[goivy.Key(p)] = v
+			vars = append(vars, v)
+		}
+		if ok {
+			fmla, err := goivy.Substitute(some.Fmla, subs)
+			if err == nil {
+				if bounds, berr := g.getAllBounds(vars, fmla, true); berr == nil {
+					useBounds = true
+					for i, p := range some.Params {
+						h, herr := g.loopHeaderForSortBounds(p.CSort, varName(p.Name), bounds[i][0], bounds[i][1])
+						if herr != nil {
+							useBounds = false
+							break
+						}
+						headers[i] = h
+					}
+				}
+			}
+		}
+	}
+	if useBounds {
+		return headers, nil
+	}
+	for i, p := range some.Params {
+		h, err := g.loopHeaderForSort(p.CSort, varName(p.Name))
+		if err != nil {
+			return nil, err
+		}
+		headers[i] = h
+	}
+	return headers, nil
+}
+
 // emitIfSomeMinMax lowers `if some X. fmla minimizing/maximizing idx`. Mirrors
 // Python emit_some's SomeMinMax branch (ivy_to_cpp.py:3486-3555): scan all
 // candidates, track the current best index in a per-loop temp, and after the
@@ -297,17 +346,14 @@ func (g *Generator) emitIfSomeMinMax(w *cppWriter, a *goivy.LogicIfAction, some 
 		w.linef("%s %s = %s;", g.cppType(p.CSort), varName("__ivy_some_w"+fmt.Sprintf("%d_%s", i, p.Name)), g.cppZeroValue(p.CSort))
 		witnesses[i] = varName("__ivy_some_w" + fmt.Sprintf("%d_%s", i, p.Name))
 	}
+	headers, herr := g.someConditionLoopHeaders(some)
+	if herr != nil {
+		g.unsupported(w, "unsupported some parameter: %s", herr.Error())
+		return
+	}
 	opened := 0
-	for _, p := range some.Params {
-		header, err := g.loopHeaderForSort(p.CSort, varName(p.Name))
-		if err != nil {
-			g.unsupported(w, "unsupported some parameter %s:%s", varName(p.Name), err.Error())
-			for i := 0; i < opened; i++ {
-				w.close("")
-			}
-			return
-		}
-		w.open(header)
+	for _, h := range headers {
+		w.open(h)
 		opened++
 	}
 	cond, err := g.emitExpr(some.Fmla)
@@ -343,6 +389,12 @@ func (g *Generator) emitIfSomeMinMax(w *cppWriter, a *goivy.LogicIfAction, some 
 		w.linef("%s = %s;", witnesses[i], varName(p.Name))
 	}
 	w.close("")
+	// Python emit_some:3539-3540: if minimizing the first parameter, the
+	// first hit during ascending iteration is the minimum, so exit the
+	// loop. Helpful when scanning a wide integer domain.
+	if firstParamIsIndex(some) {
+		w.line("break;")
+	}
 	w.close("")
 	for i := 0; i < opened; i++ {
 		w.close("")
@@ -362,6 +414,24 @@ func (g *Generator) emitIfSomeMinMax(w *cppWriter, a *goivy.LogicIfAction, some 
 		g.emitAction(w, elseAct)
 		w.close("")
 	}
+}
+
+// firstParamIsIndex returns true when `some.Params[0]` is the same
+// variable as `some.Index`. Mirrors Python `self.params()[0] == self.index()`
+// (ivy_to_cpp.py:3539). The Index may surface as either a *Const or a
+// *LogicVariable; compare by name.
+func firstParamIsIndex(some *goivy.SomeCondition) bool {
+	if some == nil || len(some.Params) == 0 || some.Index == nil {
+		return false
+	}
+	pname := some.Params[0].Name
+	switch x := some.Index.(type) {
+	case *goivy.LogicVariable:
+		return x.Name == pname
+	case *goivy.Const:
+		return x.Name == pname
+	}
+	return false
 }
 
 func (g *Generator) emitIfSomeExtensional(w *cppWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) bool {
