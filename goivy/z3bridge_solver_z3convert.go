@@ -502,7 +502,7 @@ func (s *Solver) RangeSortClampedAdd(lb, ub, x, y smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
 	sum := ctx.Add(x, y)
 	// If sum > ub, return ub; else if sum < lb, return lb; else return sum
-	return ctx.Ite(ctx.Gt(sum, ub), ub, ctx.Ite(ctx.Lt(sum, lb), lb, sum))
+	return ctx.Ite(s.z3pyGt(sum, ub), ub, ctx.Ite(s.z3pyLt(sum, lb), lb, sum))
 }
 
 // RangeSortClampedSub returns a Z3 expression for clamped subtraction:
@@ -511,7 +511,7 @@ func (s *Solver) RangeSortClampedAdd(lb, ub, x, y smt.Z3Expr) smt.Z3Expr {
 func (s *Solver) RangeSortClampedSub(lb, ub, x, y smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
 	diff := ctx.Sub(x, y)
-	return ctx.Ite(ctx.Gt(diff, ub), ub, ctx.Ite(ctx.Lt(diff, lb), lb, diff))
+	return ctx.Ite(s.z3pyGt(diff, ub), ub, ctx.Ite(s.z3pyLt(diff, lb), lb, diff))
 }
 
 // RangeSortClampedMul returns a Z3 expression for clamped multiplication:
@@ -520,7 +520,7 @@ func (s *Solver) RangeSortClampedSub(lb, ub, x, y smt.Z3Expr) smt.Z3Expr {
 func (s *Solver) RangeSortClampedMul(lb, ub, x, y smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
 	prod := ctx.Mul(x, y)
-	return ctx.Ite(ctx.Gt(prod, ub), ub, ctx.Ite(ctx.Lt(prod, lb), lb, prod))
+	return ctx.Ite(s.z3pyGt(prod, ub), ub, ctx.Ite(s.z3pyLt(prod, lb), lb, prod))
 }
 
 // RangeSortClampedDiv returns a Z3 expression for clamped division:
@@ -529,7 +529,7 @@ func (s *Solver) RangeSortClampedMul(lb, ub, x, y smt.Z3Expr) smt.Z3Expr {
 func (s *Solver) RangeSortClampedDiv(lb, ub, x, y smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
 	quot := ctx.Div(x, y)
-	return ctx.Ite(ctx.Gt(quot, ub), ub, ctx.Ite(ctx.Lt(quot, lb), lb, quot))
+	return ctx.Ite(s.z3pyGt(quot, ub), ub, ctx.Ite(s.z3pyLt(quot, lb), lb, quot))
 }
 
 // --- Native interpretation lookup ---
@@ -700,7 +700,7 @@ func (s *Solver) lookupPolymorphicNative(sym *Const, table func(string) any) any
 	if interpStr, ok := interp.(string); ok && interpStr == "nat" && name == "-" {
 		return NativeFunc(func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
-				return ctx.Ite(ctx.Lt(args[0], args[1]), ctx.IntVal(0), ctx.Sub(args[0], args[1]))
+				return ctx.Ite(s.z3pyLt(args[0], args[1]), ctx.IntVal(0), ctx.Sub(args[0], args[1]))
 			}
 			return ctx.IntVal(0)
 		})
@@ -840,61 +840,82 @@ func (s *Solver) lookupBuiltinFunc(name string, isRelation bool) NativeFunc {
 // Python's z3py comparison operators have a subclass dispatch quirk:
 // when `x < y` is evaluated and y's type (e.g. IntNumRef) is a proper
 // subclass of x's type (ArithRef), Python tries y's reflected method
-// first. So `x < IntVal(0)` calls `IntVal(0).__gt__(x)` → Z3_mk_gt(0,x)
-// instead of `x.__lt__(IntVal(0))` → Z3_mk_lt(x,0). These produce
-// different Z3 ASTs. We must match this behavior.
+// first. So `x < IntVal(0)` calls `IntVal(0).__gt__(x)` -> Z3_mk_gt(0,x)
+// instead of `x.__lt__(IntVal(0))` -> Z3_mk_lt(x,0). These produce
+// different Z3 ASTs, so native arithmetic helpers must use these wrappers
+// whenever they mirror z3py operator syntax.
+func (s *Solver) z3pyLt(lhs, rhs smt.Z3Expr) smt.Z3Expr {
+	ctx := s.tr.Ctx
+	if ctx.IsBvExpr(lhs) {
+		return ctx.BvUlt(lhs, rhs)
+	}
+	if !lhs.IsNumeral() && rhs.IsNumeral() {
+		return ctx.Gt(rhs, lhs)
+	}
+	return ctx.Lt(lhs, rhs)
+}
+
+func (s *Solver) z3pyLe(lhs, rhs smt.Z3Expr) smt.Z3Expr {
+	ctx := s.tr.Ctx
+	if ctx.IsBvExpr(lhs) {
+		return ctx.BvUle(lhs, rhs)
+	}
+	if !lhs.IsNumeral() && rhs.IsNumeral() {
+		return ctx.Ge(rhs, lhs)
+	}
+	return ctx.Le(lhs, rhs)
+}
+
+func (s *Solver) z3pyGt(lhs, rhs smt.Z3Expr) smt.Z3Expr {
+	ctx := s.tr.Ctx
+	if ctx.IsBvExpr(lhs) {
+		return ctx.BvUgt(lhs, rhs)
+	}
+	if !lhs.IsNumeral() && rhs.IsNumeral() {
+		return ctx.Lt(rhs, lhs)
+	}
+	return ctx.Gt(lhs, rhs)
+}
+
+func (s *Solver) z3pyGe(lhs, rhs smt.Z3Expr) smt.Z3Expr {
+	ctx := s.tr.Ctx
+	if ctx.IsBvExpr(lhs) {
+		return ctx.BvUge(lhs, rhs)
+	}
+	if !lhs.IsNumeral() && rhs.IsNumeral() {
+		return ctx.Le(rhs, lhs)
+	}
+	return ctx.Ge(lhs, rhs)
+}
+
 func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 	ctx := s.tr.Ctx
 	switch name {
 	case "<":
 		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
-				if ctx.IsBvExpr(args[0]) {
-					return ctx.BvUlt(args[0], args[1])
-				}
-				if !args[0].IsNumeral() && args[1].IsNumeral() {
-					return ctx.Gt(args[1], args[0])
-				}
-				return ctx.Lt(args[0], args[1])
+				return s.z3pyLt(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
 		}
 	case "<=":
 		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
-				if ctx.IsBvExpr(args[0]) {
-					return ctx.BvUle(args[0], args[1])
-				}
-				if !args[0].IsNumeral() && args[1].IsNumeral() {
-					return ctx.Ge(args[1], args[0])
-				}
-				return ctx.Le(args[0], args[1])
+				return s.z3pyLe(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
 		}
 	case ">":
 		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
-				if ctx.IsBvExpr(args[0]) {
-					return ctx.BvUgt(args[0], args[1])
-				}
-				if !args[0].IsNumeral() && args[1].IsNumeral() {
-					return ctx.Lt(args[1], args[0])
-				}
-				return ctx.Gt(args[0], args[1])
+				return s.z3pyGt(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
 		}
 	case ">=":
 		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
-				if ctx.IsBvExpr(args[0]) {
-					return ctx.BvUge(args[0], args[1])
-				}
-				if !args[0].IsNumeral() && args[1].IsNumeral() {
-					return ctx.Le(args[1], args[0])
-				}
-				return ctx.Ge(args[0], args[1])
+				return s.z3pyGe(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
 		}

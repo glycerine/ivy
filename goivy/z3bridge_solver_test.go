@@ -2047,6 +2047,49 @@ func TestZ3BridgeNumeralRangeClamping(t *testing.T) {
 	}
 }
 
+func TestZ3BridgeNatSubUsesZ3PyReflectedComparison(t *testing.T) {
+	sig := NewSig()
+	timeSort := &UninterpretedSort{Name: "time"}
+	sig.Interp["time"] = "nat"
+	s := NewSolverFromSig(sig, nil)
+	ctx := s.Context()
+
+	minusSort, err := NewFunctionSort(timeSort, timeSort, timeSort)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	minus := NewConst("-", minusSort)
+	native, ok := s.LookupNative(minus, s.Functions, "function").(NativeFunc)
+	if !ok {
+		t.Fatal("expected nat '-' to resolve to a native function")
+	}
+
+	x := ctx.Const("X", ctx.IntSort())
+	expr := native(x, ctx.IntVal(1))
+	got := expr.String()
+	if !strings.Contains(got, "(> 1 X)") {
+		t.Fatalf("expected z3py-reflected lower clamp guard (> 1 X), got %s", got)
+	}
+	if strings.Contains(got, "(< X 1)") {
+		t.Fatalf("nat subtraction used Go-native (< X 1) shape instead of z3py reflected form: %s", got)
+	}
+}
+
+func TestZ3BridgeRangeClampedSubUsesZ3PyReflectedComparison(t *testing.T) {
+	s := NewSolver(nil, nil)
+	ctx := s.Context()
+	x := ctx.Const("X", ctx.IntSort())
+
+	expr := s.RangeSortClampedSub(ctx.IntVal(0), ctx.IntVal(10), x, ctx.IntVal(1))
+	got := expr.String()
+	if !strings.Contains(got, "(> 0 (- X 1))") {
+		t.Fatalf("expected z3py-reflected lower clamp guard (> 0 (- X 1)), got %s", got)
+	}
+	if strings.Contains(got, "(< (- X 1) 0)") {
+		t.Fatalf("range subtraction used Go-native (< (- X 1) 0) shape instead of z3py reflected form: %s", got)
+	}
+}
+
 // TestNumeralNoClamping verifies numerals with int interpretation but no range
 // are plain integer values (not uninterpreted constants).
 func TestZ3BridgeNumeralNoClamping(t *testing.T) {
