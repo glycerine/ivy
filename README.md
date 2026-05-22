@@ -2750,7 +2750,7 @@ Layer 3 — Cytoscape render (art_cyrender.go):
 
 We use both graphviz and cytoscape and persist the graph layout as well.
 
-Enhancement over python note, re
+Enhancement over python note
 
 efaca53ae fix a webui bug, concept graph recompute failed:
 
