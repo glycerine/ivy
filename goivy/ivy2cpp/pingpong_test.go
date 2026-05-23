@@ -88,7 +88,11 @@ func TestPingPongLeftPlayerTargetTestStateConstraintUsesSolver(t *testing.T) {
 	// SMT-LIB strings.
 	want := `slvr.add(__to_solver(*this,apply("side"),obj.side));`
 	if !strings.Contains(impl, want) {
-		t.Fatalf("ping-pong target=test state constraint should use %q; generated impl:\n%s", want, out.Impl)
+		t.Errorf("ping-pong target=test state constraint should use %q; generated impl:\n%s", want, out.Impl)
+	}
+
+	if SlowCppTest {
+		compileGeneratedCPP(t, out)
 	}
 }
 
