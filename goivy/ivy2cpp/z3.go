@@ -61,10 +61,14 @@ func (g *Generator) emitZ3SolverTemplates(w *cppWriter) {
 		w.open("template <> void __from_solver<unsigned __int128>(gen &g, const z3::expr &expr, unsigned __int128 &out) {")
 		w.line("out = ivy_uint128_from_string(g.eval_numeral_string(expr));")
 		w.close("")
-		w.open("template <> z3::expr __to_solver<unsigned __int128>(gen &g, const char *sort_name, const unsigned __int128 &value) {")
-		w.line("return g.int_to_z3(sort_name, ivy_uint128_to_string(value));")
-		w.close("")
-		w.open("template <> z3::expr __to_solver<unsigned __int128>(gen &g, const z3::expr &expr, const unsigned __int128 &value) {")
+		if g.Config.Target != "test" {
+			w.open("template <> z3::expr __to_solver<unsigned __int128>(gen &g, const char *sort_name, const unsigned __int128 &value) {")
+			w.line("return g.int_to_z3(sort_name, ivy_uint128_to_string(value));")
+			w.close("")
+			w.open("template <> z3::expr __to_solver<unsigned __int128>(gen &g, const z3::expr &expr, const unsigned __int128 &value) {")
+		} else {
+			w.open("template <> z3::expr __to_solver<unsigned __int128>(gen &g, const z3::expr &expr, unsigned __int128 &value) {")
+		}
 		w.line("return expr == g.int_to_z3(expr.get_sort(), ivy_uint128_to_string(value));")
 		w.close("")
 		w.open("template <> void __randomize<unsigned __int128>(gen &g, const z3::expr &expr, const std::string &range) {")

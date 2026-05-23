@@ -75,9 +75,13 @@ public:
         return decl(arity, &expr_args[0]);
     }
 
+    z3::expr eval_expr(const z3::expr &apply_expr) {
+        return model.eval(apply_expr, true);
+    }
+
     long long eval(const z3::expr &apply_expr) {
         try {
-            z3::expr foo = model.eval(apply_expr, true);
+            z3::expr foo = eval_expr(apply_expr);
             if (foo.is_int()) {
                 assert(foo.is_numeral());
                 int v;
@@ -243,7 +247,21 @@ public:
     }
 
     z3::expr int_to_z3(const z3::sort &range, const std::string &value) {
-        return ctx.string_val(value);
+        if (range.to_string() == "String")
+            return ctx.string_val(value);
+        if (range.is_bv())
+            return ctx.bv_val(value.c_str(), range.bv_size());
+        return ctx.constant(value.c_str(), range);
+    }
+
+    std::string eval_numeral_string(const z3::expr &expr) {
+        z3::expr value = eval_expr(expr);
+        if (value.is_bool())
+            return value.bool_value() == Z3_L_TRUE ? "1" : "0";
+        std::string text;
+        if (value.is_numeral(text))
+            return text;
+        return value.to_string();
     }
 
     std::pair<unsigned long long, unsigned long long> sort_range(const z3::sort &range, const std::string &sort_name) {
@@ -431,11 +449,18 @@ public:
         mk_decl(const_name, 0, 0, sort_name);
     }
 
-    void add(const std::string &z3inp) {
-        z3::expr fmla(ctx, Z3_parse_smtlib2_string(ctx, z3inp.c_str(), sort_names.size(), &sort_names[0], &sorts[0], decl_names.size(), &decl_names[0], &decls[0]));
+    z3::expr parse_expr(const std::string &z3inp) {
+        Z3_symbol *sort_names_ptr = sort_names.empty() ? 0 : &sort_names[0];
+        Z3_sort *sorts_ptr = sorts.empty() ? 0 : &sorts[0];
+        Z3_symbol *decl_names_ptr = decl_names.empty() ? 0 : &decl_names[0];
+        Z3_func_decl *decls_ptr = decls.empty() ? 0 : &decls[0];
+        z3::expr fmla(ctx, Z3_parse_smtlib2_string(ctx, z3inp.c_str(), sort_names.size(), sort_names_ptr, sorts_ptr, decl_names.size(), decl_names_ptr, decls_ptr));
         ctx.check_error();
+        return fmla;
+    }
 
-        slvr.add(fmla);
+    void add(const std::string &z3inp) {
+        slvr.add(parse_expr(z3inp));
     }
 
     bool solve() {

@@ -3066,4 +3066,3 @@ This is exactly why Ivy complains about function cycles and not, say, predicate 
 EPR forbids function symbols entirely (only constants and predicates), which trivially makes the function-sort graph have no edges, hence no cycles, hence bounded Herbrand universes. FAU is more permissive: it allows functions, but enforces the acyclicity condition on the sort graph. Both fragments are decidable for exactly this reason.
 
 This is also why your earlier instinct about EPR being "effectively propositional" lands: with no nesting possible, the Herbrand universe is finite, and the whole problem reduces to a finite (large but finite) propositional SAT problem on the ground instances. The decidability of EPR is, in a real sense, the decidability of SAT scaled up to a known-finite term space.
-

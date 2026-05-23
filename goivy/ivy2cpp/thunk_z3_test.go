@@ -98,11 +98,12 @@ func TestMakeThunkZ3GeneralMultiArgSubstitutionAndFunctionEnv(t *testing.T) {
 
 	for _, want := range []string{
 		`struct __thunk__0 : z3_thunk<__tup__int__int, color> {`,
-		`g.mk_decl("__thunk__0_arg_0", {}, "node");`,
-		`g.mk_decl("__thunk__0_arg_1", {}, "node");`,
-		`g.mk_decl("__thunk__0_res_1", {}, "color");`,
+		`g.mk_const("__thunk__0_arg_0","node");`,
+		`g.mk_const("__thunk__0_arg_1","node");`,
+		`g.mk_const("__thunk__0_res_1","color");`,
+		`hash_map<std::string, std::string> rn;`,
 		`std::string loc_f = std::string("__loc_") + __ss.str() + std::string("__") + "f";`,
-		`g.mk_decl(loc_f.c_str(), {"node", "node"}, "color");`,
+		`g.mk_decl(loc_f.c_str(),2,`,
 		`__quants.push_back(g.ctx.constant("X__0", g.sort("node")));`,
 		`__quants.push_back(g.ctx.constant("X__1", g.sort("node")));`,
 		`g.slvr.add(forall(__quants, __to_solver(g, g.apply(loc_f.c_str(), g.ctx.constant("X__0", g.sort("node")), g.ctx.constant("X__1", g.sort("node"))), f)));`,

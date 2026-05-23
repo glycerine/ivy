@@ -367,7 +367,7 @@ func (g *Generator) emitThunkToZ3(w *cppWriter, name string, vs []*goivy.LogicVa
 		envSymsLocal[i] = goivy.NewConst(fmt.Sprintf("%s_env_%d", name, i), sym.CSort)
 	}
 	for _, c := range append(append([]*goivy.Const{}, vsyms...), append(envSymsLocal, rsym)...) {
-		w.open(fmt.Sprintf("if (g.decls.find(%s) == g.decls.end()) {", strconv.Quote(c.Name)))
+		w.open(fmt.Sprintf("if (g.decls_by_name.find(%s) == g.decls_by_name.end()) {", strconv.Quote(c.Name)))
 		g.emitDeclSolverWithName(w, stateSymbol{Name: c.Name, Sort: c.CSort}, "", "g.")
 		w.close("")
 	}
@@ -401,7 +401,11 @@ func (g *Generator) emitThunkToZ3(w *cppWriter, name string, vs []*goivy.LogicVa
 	}
 
 	w.line("z3::expr res = g.ctx.bool_val(true);")
-	w.line("std::map<std::string, std::string> rn;")
+	if g.Config.Target == "test" {
+		w.line("hash_map<std::string, std::string> rn;")
+	} else {
+		w.line("std::map<std::string, std::string> rn;")
+	}
 	for i, sym := range envSyms {
 		locv := g.emitThunkLocalZ3Symbol(w, sym)
 		g.emitSetSolverCustom(w, stateSymbol{Name: sym.Name, Sort: sym.CSort}, emitSetSolverOptions{
@@ -436,7 +440,7 @@ func (g *Generator) emitThunkToZ3(w *cppWriter, name string, vs []*goivy.LogicVa
 func (g *Generator) emitThunkLocalZ3Symbol(w *cppWriter, sym *goivy.Const) string {
 	locv := "loc_" + varName(sym.Name)
 	w.linef("std::string %s = std::string(\"__loc_\") + __ss.str() + std::string(\"__\") + %s;", locv, strconv.Quote(sym.Name))
-	w.open(fmt.Sprintf("if (g.decls.find(%s) == g.decls.end()) {", locv))
+	w.open(fmt.Sprintf("if (g.decls_by_name.find(%s) == g.decls_by_name.end()) {", locv))
 	g.emitDeclSolverWithName(w, stateSymbol{Name: sym.Name, Sort: sym.CSort}, locv+".c_str()", "g.")
 	w.close("")
 	return locv

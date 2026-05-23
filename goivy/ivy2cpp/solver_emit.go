@@ -58,6 +58,19 @@ func (g *Generator) emitDeclSolverWithName(w *cppWriter, sym stateSymbol, symNam
 	if symNameExpr == "" {
 		symNameExpr = strconv.Quote(sym.Name)
 	}
+	if g.Config.Target == "test" && prefix != "" {
+		if rng == "bool" {
+			rng = "Bool"
+		}
+		if len(domain) == 0 {
+			w.linef("%smk_const(%s,%s);", prefix, symNameExpr, strconv.Quote(rng))
+			return
+		}
+		tmp := g.nextTemp("__tmp")
+		w.linef("const char *%s_domain[%d] = {%s};", tmp, len(domain), strings.Join(domains, ","))
+		w.linef("%smk_decl(%s,%d,%s_domain,%s);", prefix, symNameExpr, len(domain), tmp, strconv.Quote(rng))
+		return
+	}
 	w.linef("%smk_decl(%s, {%s}, %s);", prefix, symNameExpr, strings.Join(domains, ", "), strconv.Quote(rng))
 }
 

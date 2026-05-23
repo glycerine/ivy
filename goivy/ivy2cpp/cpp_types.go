@@ -427,10 +427,14 @@ func (g *Generator) emitHugeBVClassImpl(w *cppWriter, bits int) {
 	w.open(fmt.Sprintf("template <> void __from_solver<%s>(gen &g, const z3::expr &v, %s &res) {", typ, typ))
 	w.line("res = " + typ + "(g.eval_numeral_string(v));")
 	w.close("")
-	w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const char *sort_name, const %s &val) {", typ, typ))
-	w.line("return g.int_to_z3(sort_name, val.to_decimal_string());")
-	w.close("")
-	w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val) {", typ, typ))
+	if g.Config.Target != "test" {
+		w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const char *sort_name, const %s &val) {", typ, typ))
+		w.line("return g.int_to_z3(sort_name, val.to_decimal_string());")
+		w.close("")
+		w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val) {", typ, typ))
+	} else {
+		w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, %s &val) {", typ, typ))
+	}
 	w.line("return v == g.int_to_z3(v.get_sort(), val.to_decimal_string());")
 	w.close("")
 	w.open(fmt.Sprintf("template <> void __randomize<%s>(gen &g, const z3::expr &apply_expr, const std::string &sort_name) {", typ))
