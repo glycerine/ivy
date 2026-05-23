@@ -731,9 +731,6 @@ func rankingFiniteSortsAndUninterpreted(m *Module) (map[string]bool, []Sort) {
 			}
 		}
 	}
-	sort.Slice(uninterpretedSorts, func(i, j int) bool {
-		return uninterpretedSorts[i].String() < uninterpretedSorts[j].String()
-	})
 	return finiteSorts, uninterpretedSorts
 }
 
