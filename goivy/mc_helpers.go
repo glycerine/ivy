@@ -109,6 +109,66 @@ func IsFiniteSortWithInterp(sort Sort, interp map[string]interface{}) bool {
 	return false
 }
 
+// sortValuesAsExprs mirrors Python sort_values at ivy_mc.py:541-553. For any
+// finite sort it returns the canonical list of ground-level Expr values with
+// the caller's sort attached (NOT the interpretation sort — Python passes the
+// original sort as the second arg to il.Symbol).
+//
+// Cases (matching Python branches):
+//   - enumerated:  one Const per Extension element
+//   - range:       one Const per integer in [lb .. ub]
+//   - bitvector:   one Const per integer in [0 .. 2^bits-1] (cowardly
+//     refusing > 8 bits, matching Python ivy_mc.py:548-549)
+//   - boolean:     [Or(), And()] — empty-Terms Or = false, And = true
+//     (Python ivy_mc.py:551-552). Returned as Expr so Qelim
+//     can substitute them uniformly with Const symbols.
+//
+// Returns nil for non-finite sorts; callers should gate via
+// IsFiniteSortWithInterp before calling.
+func sortValuesAsExprs(sort Sort, interp map[string]interface{}) []Expr {
+	th := GetSortTheory(sort, interp)
+	switch t := th.(type) {
+	case *LogicEnumeratedSort:
+		out := make([]Expr, len(t.Extension))
+		for i, s := range t.Extension {
+			out[i] = NewConst(s, sort)
+		}
+		return out
+	case *RangeSort:
+		lb, err := strconv.Atoi(t.LbString())
+		if err != nil {
+			return nil
+		}
+		ub, err := strconv.Atoi(t.UbString())
+		if err != nil {
+			return nil
+		}
+		out := make([]Expr, 0, ub-lb+1)
+		for n := lb; n <= ub; n++ {
+			out = append(out, NewConst(strconv.Itoa(n), sort))
+		}
+		return out
+	case *BooleanSort:
+		// Python: [il.Or(), il.And()] — empty disjunction (false) and
+		// empty conjunction (true). Both at Boolean sort.
+		return []Expr{&LogicOr{}, &LogicAnd{}}
+	case *Theory:
+		if t.Kind == BitVectorKind {
+			bits := t.Bits()
+			if bits > 8 {
+				panic(fmt.Sprintf("Cowardly refusing to enumerate the type bv[%d]", bits))
+			}
+			n := 1 << bits
+			out := make([]Expr, n)
+			for i := 0; i < n; i++ {
+				out[i] = NewConst(strconv.Itoa(i), sort)
+			}
+			return out
+		}
+	}
+	return nil
+}
+
 // SortValues returns a list of string values for a finite sort.
 // For enumerated sorts, the extension. For range sorts, the values from lb to ub.
 // For boolean sorts, ["false", "true"].

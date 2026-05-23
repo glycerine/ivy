@@ -23,16 +23,18 @@ type Qelim struct {
 	SortConstants2 *InsMap[string, []*Const] // sort -> constants for transition
 	IuCfg          *IvyUtilsConfig           // for IsMacro/ExpandMacro
 	FullQI         bool                      // Python: fullqi parameter (default false)
+	Interp         map[string]interface{}    // Python: il.sig.interp — for get_sort_theory
 }
 
 // NewQelim creates a new quantifier elimination context.
-func NewQelim(sortConstants, sortConstants2 *InsMap[string, []*Const], iuCfg *IvyUtilsConfig, fullQI bool) *Qelim {
+func NewQelim(sortConstants, sortConstants2 *InsMap[string, []*Const], iuCfg *IvyUtilsConfig, fullQI bool, interp map[string]interface{}) *Qelim {
 	return &Qelim{
 		Syms:           make(map[string]Expr),
 		SortConstants:  sortConstants,
 		SortConstants2: sortConstants2,
 		IuCfg:          iuCfg,
 		FullQI:         fullQI,
+		Interp:         interp,
 	}
 }
 
@@ -45,27 +47,14 @@ func (q *Qelim) Fresh(exprKey string) *Const {
 	return c
 }
 
-// GetConsts returns the constants to instantiate for a given sort.
-func (q *Qelim) GetConsts(s Sort, sortConstants *InsMap[string, []*Const]) []*Const {
-	if s == nil {
-		return nil
-	}
-	name := s.String()
-	if consts, ok := sortConstants.Get2(name); ok {
-		return consts
-	}
-	// For enumerated sorts, generate all values
-	if es, ok := s.(*LogicEnumeratedSort); ok {
-		consts := make([]*Const, len(es.Extension))
-		for i, v := range es.Extension {
-			consts[i] = NewConst(v, s)
-		}
-		return consts
-	}
-	return nil
-}
-
-// isFiniteSort checks if a sort is finite (enumerated or boolean).
+// isFiniteSort checks if a sort is finite by direct type inspection
+// (enumerated, boolean). Does NOT consult the interp map — callers that
+// need to recognise interpreted finite sorts (range, bitvector) must use
+// IsFiniteSortWithInterp from mc_helpers.go.
+//
+// This narrow helper is kept for non-Qelim callers in mc_propabs.go,
+// mc_toaiger.go, and mc_transforms.go whose interp-awareness is a separate
+// porting task. Qelim itself uses IsFiniteSortWithInterp.
 func isFiniteSort(s Sort) bool {
 	if s == nil {
 		return false
@@ -77,6 +66,39 @@ func isFiniteSort(s Sort) bool {
 		return true
 	}
 	return false
+}
+
+// GetConsts returns the values to instantiate for a given sort.
+// Python: get_consts(sort, sort_constants) at ivy_mc.py:908-911:
+//
+//	if is_finite_sort(sort): return sort_values(sort)
+//	return sort_constants[sort]
+//
+// For finite sorts (enumerated, range, bitvector, boolean — checked through
+// the interp map via GetSortTheory) it returns the canonical ground values
+// from sortValuesAsExprs; sort_constants is ignored in that case (Python
+// parity: sort_constants may carry mined skolems / action params, but the
+// finite-sort enumeration uses the canonical [0..N] / extension instead).
+//
+// For non-finite sorts, it falls back to sortConstants[name], widening the
+// []*Const slice into []Expr so callers can substitute Boolean Or()/And()
+// uniformly with Const symbols.
+func (q *Qelim) GetConsts(s Sort, sortConstants *InsMap[string, []*Const]) []Expr {
+	if s == nil {
+		return nil
+	}
+	if IsFiniteSortWithInterp(s, q.Interp) {
+		return sortValuesAsExprs(s, q.Interp)
+	}
+	name := s.String()
+	if consts, ok := sortConstants.Get2(name); ok {
+		out := make([]Expr, len(consts))
+		for i, c := range consts {
+			out[i] = c
+		}
+		return out
+	}
+	return nil
 }
 
 // QE performs quantifier elimination on an expression.
@@ -117,13 +139,13 @@ func (q *Qelim) qeQuantifier(vars []*LogicVariable, body Expr, isForall bool, so
 		return old
 	}
 
-	// Get constants for each variable's sort
-	constSets := make([][]*Const, len(vars))
+	// Get values for each variable's sort. Python: consts = [self.get_consts(x.sort,sort_constants) for x in expr.variables].
+	constSets := make([][]Expr, len(vars))
 	for i, v := range vars {
 		constSets[i] = q.GetConsts(v.VSort, sortConstants)
 	}
 
-	// Generate all combinations (cartesian product)
+	// Generate all combinations (cartesian product). Python: itertools.product(*consts).
 	combos := mcCartesianProduct(constSets)
 
 	// Build substitution maps and instantiate
@@ -138,10 +160,10 @@ func (q *Qelim) qeQuantifier(vars []*LogicVariable, body Expr, isForall bool, so
 		insts = append(insts, inst)
 	}
 
-	// If all sorts are finite, expand directly
+	// If all sorts are finite, expand directly. Python: all(is_finite_sort(x.sort) for x in expr.variables).
 	allFinite := true
 	for _, v := range vars {
-		if !isFiniteSort(v.VSort) {
+		if !IsFiniteSortWithInterp(v.VSort, q.Interp) {
 			allFinite = false
 			break
 		}
@@ -207,16 +229,17 @@ func (q *Qelim) Apply(transFmlas, transDefs []Expr, invariant Expr, indhyps []Ex
 // --- Helper functions ---
 
 // cartesianProduct computes the cartesian product of multiple slices.
-func mcCartesianProduct(sets [][]*Const) [][]*Const {
+// Python: itertools.product(*consts) at ivy_mc.py:919.
+func mcCartesianProduct(sets [][]Expr) [][]Expr {
 	if len(sets) == 0 {
-		return [][]*Const{{}}
+		return [][]Expr{{}}
 	}
 	first := sets[0]
 	rest := mcCartesianProduct(sets[1:])
-	var result [][]*Const
+	var result [][]Expr
 	for _, v := range first {
 		for _, r := range rest {
-			combo := make([]*Const, 1+len(r))
+			combo := make([]Expr, 1+len(r))
 			combo[0] = v
 			copy(combo[1:], r)
 			result = append(result, combo)

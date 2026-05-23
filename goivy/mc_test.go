@@ -1006,7 +1006,7 @@ func TestApplyMatch(t *testing.T) {
 // ============================================================
 
 func TestQelimFresh(t *testing.T) {
-	q := NewQelim(nil, nil, nil, false)
+	q := NewQelim(nil, nil, nil, false, nil)
 	name := q.Fresh("expr1")
 	if name.Name != "__qe[0]" {
 		t.Errorf("first fresh should be __qe[0], got %s", name.Name)
@@ -1026,7 +1026,7 @@ func TestQelimGetConsts(t *testing.T) {
 	sc := NewInsMap[string, []*Const]()
 	sc.Set("int", []*Const{NewConst("0", intSort), NewConst("1", intSort), NewConst("2", intSort)})
 	sc.Set("bool", []*Const{NewConst("false", boolSort), NewConst("true", boolSort)})
-	q := NewQelim(sc, nil, nil, false)
+	q := NewQelim(sc, nil, nil, false, nil)
 	consts := q.GetConsts(intSort, sc)
 	if len(consts) != 3 {
 		t.Errorf("expected 3 constants for int, got %d", len(consts))
@@ -1035,6 +1035,106 @@ func TestQelimGetConsts(t *testing.T) {
 	consts = q.GetConsts(unknownSort, sc)
 	if consts != nil {
 		t.Errorf("expected nil for unknown sort, got %v", consts)
+	}
+}
+
+// TestQelimGetConstsFiniteSort covers Python parity of Qelim.get_consts at
+// ivy_mc.py:908-911 for the four finite-sort branches handled by
+// sort_values (ivy_mc.py:541-553).
+//
+// The key behaviour: when the sort is *finite* (enumerated, range, bitvector,
+// or boolean), GetConsts MUST short-circuit sort_constants and use the
+// canonical ground value list — even if sort_constants happens to have a
+// different (mined / skolem-tainted) list under the same sort name. This is
+// what made TestGoldenAll diverge at i=3899 on client_server_example_mv.ivy:
+// the bound variables had sort "client" / "server" (UninterpretedSort with
+// RangeSort interp), and Go was returning the mined constants instead of
+// [0, 1, 2] / [0, 1] — leaving __qe[N] placeholders in the transition
+// relation.
+func TestQelimGetConstsFiniteSort(t *testing.T) {
+	// Range-sort interp (the regression case).
+	clientSort := &UninterpretedSort{Name: "client"}
+	clientRange := &RangeSort{Name: "client", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "2"}}
+	interp := map[string]interface{}{"client": clientRange}
+
+	// Deliberately seed sort_constants with the wrong values to verify
+	// they are IGNORED for finite sorts.
+	sc := NewInsMap[string, []*Const]()
+	sc.Set("client", []*Const{NewConst("__fml:x", clientSort)})
+
+	q := NewQelim(sc, nil, nil, false, interp)
+	got := q.GetConsts(clientSort, sc)
+	if len(got) != 3 {
+		t.Fatalf("range-interp sort: expected 3 ground values, got %d (%v)", len(got), got)
+	}
+	for i, want := range []string{"0", "1", "2"} {
+		c, ok := got[i].(*Const)
+		if !ok {
+			t.Fatalf("range-interp sort: got[%d] is %T, want *Const", i, got[i])
+		}
+		if c.Name != want {
+			t.Errorf("range-interp sort: got[%d].Name = %q, want %q", i, c.Name, want)
+		}
+		// Python: il.Symbol(str(n), sort) — sort is the ORIGINAL sort,
+		// not the RangeSort interp.
+		if !SortEqual(c.CSort, clientSort) {
+			t.Errorf("range-interp sort: got[%d].CSort = %s, want %s (original sort, not interp)", i, c.CSort, clientSort)
+		}
+	}
+
+	// Enumerated sort (no interp needed — direct type).
+	colorSort := &LogicEnumeratedSort{Name: "Color", Extension: []string{"red", "green", "blue"}}
+	got = q.GetConsts(colorSort, sc)
+	if len(got) != 3 {
+		t.Fatalf("enumerated sort: expected 3 ground values, got %d", len(got))
+	}
+	for i, want := range []string{"red", "green", "blue"} {
+		c, ok := got[i].(*Const)
+		if !ok || c.Name != want {
+			t.Errorf("enumerated sort: got[%d] = %v, want %q", i, got[i], want)
+		}
+	}
+
+	// Boolean sort — Python returns [Or(), And()] (false, true). Both
+	// must be returned as Expr (not *Const), and the widened return type
+	// must accept them. This locks in the type widening from []*Const → []Expr.
+	got = q.GetConsts(Boolean, sc)
+	if len(got) != 2 {
+		t.Fatalf("Boolean sort: expected 2 values (Or(), And()), got %d", len(got))
+	}
+	if _, ok := got[0].(*LogicOr); !ok {
+		t.Errorf("Boolean[0]: want *LogicOr (empty = false), got %T", got[0])
+	}
+	if _, ok := got[1].(*LogicAnd); !ok {
+		t.Errorf("Boolean[1]: want *LogicAnd (empty = true), got %T", got[1])
+	}
+
+	// Bitvector sort (via Theory interp). Python ivy_mc.py:547-550 enumerates
+	// all 2^bits values; cowardly refuses > 8 bits.
+	bvSort := &UninterpretedSort{Name: "byte"}
+	bvInterp := map[string]interface{}{"byte": NewBitVectorTheory(2)} // 2 bits → 4 values
+	qBv := NewQelim(sc, nil, nil, false, bvInterp)
+	got = qBv.GetConsts(bvSort, sc)
+	if len(got) != 4 {
+		t.Fatalf("bv[2] sort: expected 4 ground values, got %d", len(got))
+	}
+	for i, want := range []string{"0", "1", "2", "3"} {
+		c, ok := got[i].(*Const)
+		if !ok || c.Name != want {
+			t.Errorf("bv[2] sort: got[%d] = %v, want %q", i, got[i], want)
+		}
+	}
+
+	// Non-finite UninterpretedSort with no interp — falls back to
+	// sortConstants lookup (the only path that used to work).
+	unknownSort := &UninterpretedSort{Name: "unknown"}
+	sc.Set("unknown", []*Const{NewConst("c1", unknownSort), NewConst("c2", unknownSort)})
+	got = q.GetConsts(unknownSort, sc)
+	if len(got) != 2 {
+		t.Fatalf("non-finite fallback: expected 2 sort_constants values, got %d", len(got))
+	}
+	if c, ok := got[0].(*Const); !ok || c.Name != "c1" {
+		t.Errorf("non-finite fallback: got[0] = %v, want c1", got[0])
 	}
 }
 
@@ -1062,7 +1162,7 @@ func TestDefToConstraintIndividualSort(t *testing.T) {
 func TestQEEqTautologyElimination(t *testing.T) {
 	x := NewConst("x", Boolean)
 	eq := &Eq{T1: x, T2: x}
-	q := NewQelim(nil, nil, nil, false)
+	q := NewQelim(nil, nil, nil, false, nil)
 	result := q.QE(eq, nil)
 	a, ok := result.(*LogicAnd)
 	if !ok || len(a.Terms) != 0 {
@@ -1079,7 +1179,7 @@ func TestQEEqCanonicalOrder(t *testing.T) {
 	fApp := &Apply{Func: f, Terms: []Expr{arg}}
 	gApp := &Apply{Func: g, Terms: []Expr{arg}}
 	eq := &Eq{T1: gApp, T2: fApp}
-	q := NewQelim(nil, nil, nil, false)
+	q := NewQelim(nil, nil, nil, false, nil)
 	result := q.QE(eq, nil)
 	eqR, ok := result.(*Eq)
 	if !ok {
@@ -1120,7 +1220,7 @@ func TestQENestedEqNormalization(t *testing.T) {
 		&Eq{T1: x, T2: x},
 		&Eq{T1: gApp, T2: fApp},
 	}}
-	q := NewQelim(nil, nil, nil, false)
+	q := NewQelim(nil, nil, nil, false, nil)
 	result := q.QE(expr, nil)
 	a, ok := result.(*LogicAnd)
 	if !ok {
