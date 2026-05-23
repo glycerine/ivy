@@ -1149,56 +1149,7 @@ Reminder:
 
 ---
 
-## TODO 044 - `vprint.go` mutable-globals documentation (informational)
-
-Created: 2026-05-23 04:28:44 UTC
-
-Gap:
-
-- `vprint.go` contains ~10 package-level mutable vars: `verbose`,
-  `verboseVerbose`, `binVersion`, several `*time.Location` caches,
-  `myPid`, `showPid`, `showGoID`, `forceQuiet`, `TsPrintfMut`,
-  `ourStdout`.
-- CLAUDE.md section C.10 explicitly exempts "Debug-only globals
-  in vprint.go files" from the no-globals rule. So **this is not
-  a violation**.
-- The audit item exists only to make the exemption discoverable
-  to future contributors who might "clean up" the globals in
-  ignorance of C.10.
-
-Python references:
-
-- N/A (Python freely uses module-level globals; the exemption is
-  a Go-side decision).
-
-Go locations:
-
-- `goivy/ivy2cpp/vprint.go:19-117` — the mutable vars.
-- `~/ivy/goivy/CLAUDE.md` section C.10 — the exemption rule.
-
-Conformance work:
-
-1. Add a top-of-file comment in `vprint.go` reading approximately:
-   ```
-   // vprint.go contains debug/logging globals that are exempt
-   // from CLAUDE.md section C's no-globals rule, per section C.10:
-   // "Debug-only globals in vprint.go files are exempt (not
-   // production state)." Do not move these to a Config struct.
-   ```
-2. No code changes.
-
-Unit testing plan:
-
-Tests, in new `vprint_doc_test.go`:
-
-- `TestVprintGlobalsAreExempt` — read `vprint.go` and assert the
-  file header references `CLAUDE.md section C.10`.
-
-Reminder:
-
-- [ ] When this lands, rename to `## DONE 044 - …`.
-
----
+## DONE 044. ignored.
 
 ## TODO 045 - Sweep stale "deferred" comments
 
@@ -1260,71 +1211,7 @@ Reminder:
 
 ---
 
-## TODO 046 - Concurrency contract for `Generator`
-
-Created: 2026-05-23 04:28:44 UTC
-
-Gap:
-
-- CLAUDE.md section C states: "We run thread pools of ivy models
-  on multi-core machines."
-- `Generator` carries unsynchronized maps and caches:
-  `ptypeCache`, `extRel`, `numberFormatCache`, `encodedSorts`,
-  `nativeOnceMemo`, `importCallersCache`, `exprAliases`.
-- Today each `Generator` is per-isolate, so concurrent access
-  within one Generator does not happen. But that invariant is
-  *not documented*. A future contributor could share a Generator
-  across goroutines (e.g., parallelizing action emission inside
-  one isolate) and trigger a race.
-
-Python references:
-
-- N/A (Python's GIL serializes access; Go has no equivalent).
-
-Go locations:
-
-- `goivy/ivy2cpp/generator.go:1-20` — file header; needs the doc
-  comment.
-- `goivy/ivy2cpp/generator.go:Generator struct` — the caches.
-
-Conformance work:
-
-1. Add a doc comment at the top of `generator.go` stating:
-   ```
-   // A Generator is owned by a single goroutine. Concurrent
-   // Generate calls require separate Generator instances. The
-   // internal caches (ptypeCache, extRel, ...) are not
-   // synchronized; see CLAUDE.md section C for the design
-   // rationale (per-isolate Config instances).
-   ```
-2. Add `go vet`-friendly comments on each cache field calling out
-   the single-goroutine invariant.
-3. Run `go test -race ./ivy2cpp -count=1` to confirm no current
-   data race.
-4. Decide whether to enforce single-use semantics by panicking on
-   a second `Generate` call on the same Generator. Recommendation:
-   yes, with a sentinel bool field, to catch future misuse.
-
-Unit testing plan:
-
-Tests, in new `generator_concurrency_test.go`:
-
-- `TestGenerateConcurrentDifferentGenerators` — start N
-  goroutines, each constructs its own `Generator` + `Module` and
-  calls `Generate`; assert no `-race` reports, all outputs
-  non-empty.
-- `TestGenerateSingleGeneratorPanicsOnReuse` (if we adopt the
-  sentinel) — call `Generate` twice on the same instance; assert
-  the second call panics with a clear message.
-- `TestGeneratorDocCommentReferencesCLAUDE` — meta-test reading
-  the file header; assert it references CLAUDE.md section C.
-- `TestGenerateRaceFreeFullTestRun` — wrapper that re-runs the
-  existing `make test` target under `-race`; gated by
-  `RACE_TEST=1`.
-
-Reminder:
-
-- [ ] When this lands, rename to `## DONE 046 - …`.
+## DONE 046 - ignored.
 
 ---
 
@@ -1347,7 +1234,7 @@ The dependency graph among the 16 items:
 8. **Items 037, 040** — sequenced after Item 042 closes.
 9. **Item 043** — oracle harness; the final acceptance gate.
    Validates everything else.
-10. **Items 044, 045, 046** — hygiene; pair with any item above.
+10. **Items 045 ** — hygiene; pair with any item above.
 
 ## Methodology and how to verify
 
@@ -1387,9 +1274,7 @@ Per-batch (every 3-5 items):
 | 041        | partial 027             | yes            |
 | 042        | sharpens 029            | refinement     |
 | 043        | sharpens 030            | refinement     |
-| 044        | -                       | informational  |
 | 045        | -                       | yes            |
-| 046        | -                       | yes            |
 
 ## Out-of-scope / explicitly NOT in this audit
 
