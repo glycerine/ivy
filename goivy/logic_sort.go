@@ -148,8 +148,25 @@ func (s *RangeSort) LbString() string { return s.Lb.BoundString() }
 // UbString returns the upper bound as a string (convenience for consumers).
 func (s *RangeSort) UbString() string { return s.Ub.BoundString() }
 
+// String matches Python's RangeSort.__str__, which prints each bound using
+// lg.Const.ugly — numeral bounds carry a sort annotation ("0:client").
+// Python: '{' + str(self.lb) + ' .. ' + str(self.ub) + '}'  (logic.py:71-72).
 func (s *RangeSort) String() string {
-	return "{" + s.Lb.BoundString() + " .. " + s.Ub.BoundString() + "}"
+	return "{" + prettyBoundString(s.Lb, s.Name) + " .. " + prettyBoundString(s.Ub, s.Name) + "}"
+}
+
+// prettyBoundString formats a bound the way Python's lg.Const.ugly would:
+//   - NumeralBound: append ":<parentSortName>" (Python show_numeral_sorts=True).
+//   - CompiledBound: defer to fmt.Sprint on the underlying Expr (Const.String
+//     already routes through PrettyFmla → constUgly which appends the sort).
+func prettyBoundString(b NumeralOrCompiledBound, parentSortName string) string {
+	switch v := b.(type) {
+	case NumeralBound:
+		return v.Value + ":" + parentSortName
+	case CompiledBound:
+		return fmt.Sprint(v.Expr)
+	}
+	return b.BoundString()
 }
 
 func (s *RangeSort) IsFinite() bool { return true }

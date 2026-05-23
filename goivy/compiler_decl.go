@@ -1121,7 +1121,7 @@ func (d *DomainSetup) Interpret(node Node) error {
 		interp[lhs] = rangeSort
 		// Python: compile_theory(self.domain, lhs, interp[lhs])
 		// get_theory_schemata maps RangeSort → "int"
-		if err := d.Compiler.CompileTheory(lhs, "int"); err != nil {
+		if err := d.Compiler.CompileTheory(lhs, rangeSort); err != nil {
 			return err
 		}
 		xtracer.Trace("compiler.DomainSetup.interpret return=range")

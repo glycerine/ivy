@@ -2519,8 +2519,10 @@ func (c *Compiler) IvyCompileTheory(decls []Node) error {
 // Looks up the theory schemata string, then compiles it via
 // IvyCompileTheoryFromString.
 // Corresponds to Python's compile_theory(mod, sortname, theoryname).
-func (c *Compiler) CompileTheory(sortname string, theoryname string) error {
-	xtracer.Trace(fmt.Sprintf("compiler.CompileTheory ENTER sortname=%s theoryname=%s", sortname, theoryname))
+// Python's theoryname can be a string (e.g. 'int') or a RangeSort.
+func (c *Compiler) CompileTheory(sortname string, theoryname interface{}) error {
+	xtracer.Trace(fmt.Sprintf("compiler.CompileTheory ENTER sortname=%s theoryname=%s",
+		sortname, theoryNameForTrace(theoryname)))
 	mod := c.Module
 	version := mod.Cfg.IuCfg.GetStringVersion()
 	var sort Sort
@@ -2532,7 +2534,18 @@ func (c *Compiler) CompileTheory(sortname string, theoryname string) error {
 	if sort == nil {
 		sort = &UninterpretedSort{Name: sortname}
 	}
-	theoryStr := GetTheorySchemata(theoryname, sort, version)
+	// Resolve the schema-lookup key:
+	//   Python: get_theory_schemata(theoryname) treats RangeSort as 'int'.
+	var lookupName string
+	switch tn := theoryname.(type) {
+	case string:
+		lookupName = tn
+	case *RangeSort:
+		lookupName = "int"
+	default:
+		lookupName = ""
+	}
+	theoryStr := GetTheorySchemata(lookupName, sort, version)
 	if theoryStr != "" {
 		if err := c.IvyCompileTheoryFromString(theoryStr, sort, sortname); err != nil {
 			return err
@@ -2540,6 +2553,18 @@ func (c *Compiler) CompileTheory(sortname string, theoryname string) error {
 	}
 	xtracer.Trace("compiler.CompileTheory EXIT")
 	return nil
+}
+
+// theoryNameForTrace formats a theory-name argument exactly as Python's
+// `%s` formatting would (Python: str(theoryname)).
+//   - string: returned verbatim.
+//   - *RangeSort: returned via RangeSort.String() (Python pretty form, e.g.
+//     "{0:client .. 2:client}").
+func theoryNameForTrace(t interface{}) string {
+	if s, ok := t.(string); ok {
+		return s
+	}
+	return fmt.Sprint(t)
 }
 
 // CompileTheories compiles all theories in the module.

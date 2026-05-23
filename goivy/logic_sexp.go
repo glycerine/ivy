@@ -54,7 +54,10 @@ func (s *LogicEnumeratedSort) Sexp() NodeKey {
 	return NodeKey("(EnumeratedSort name:" + s.Name + " ext:[" + strings.Join(s.Extension, ",") + "])")
 }
 func (s *RangeSort) Sexp() NodeKey {
-	return NodeKey("(RangeSort name:" + s.Name + " lb:" + s.Lb.BoundString() + " ub:" + s.Ub.BoundString() + ")")
+	// Python _range_sort_sexp uses '%s' formatting on lb/ub, which calls
+	// lg.Const.__str__ → pretty_fmla → constUgly. For numerals that gives
+	// "0:<sortname>".
+	return NodeKey("(RangeSort name:" + s.Name + " lb:" + prettyBoundString(s.Lb, s.Name) + " ub:" + prettyBoundString(s.Ub, s.Name) + ")")
 }
 func (s *TopSort) Sexp() NodeKey { return NodeKey("(TopSort name:" + s.Name + ")") }
 
