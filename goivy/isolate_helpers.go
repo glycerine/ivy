@@ -64,7 +64,7 @@ func AddMixinsExt(
 		if assertToAssume != nil {
 			ata := assertToAssume(mx)
 			if ata != nil && len(ata) > 0 {
-				action1 = AssertToAssume(action1, ata)
+				action1 = AssertToAssume(action1, ata, mod.Cfg.IuCfg)
 			}
 		}
 		if modMixin != nil {

@@ -57,7 +57,7 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg ...*IvyUt
 			if len(iuCfg) > 0 && iuCfg[0] != nil {
 				ver = iuCfg[0].GetNumericVersion()
 			} else {
-				panic("AssertToAssume: EnsuresAction requires IvyUtilsConfig for version check")
+				panicf("AssertToAssume: EnsuresAction requires IvyUtilsConfig for version check. iuCfg='%#v'", iuCfg)
 			}
 			if len(ver) >= 2 && (ver[0] < 1 || (ver[0] == 1 && ver[1] <= 6)) {
 				assume := NewAssumeAction(a.Formula)
