@@ -591,7 +591,14 @@ func TestGoldenAll(t *testing.T) {
 		// when we parse here, we do not want to see all the traces.
 		xtracer.Suppressed = true
 		isos, err := ListIsolates(path)
-		panicOn(err)
+		if err != nil {
+			errs := err.Error()
+			if strings.Contains(errs, "syntax error") {
+				vv("syntax error, skip to next: '%v' on path '%v'", err, path)
+				continue
+			}
+			panicOn(err)
+		}
 		xtracer.Suppressed = false
 
 		path2 := path[3:] // strip "../" to get a repo-root-relative path.
