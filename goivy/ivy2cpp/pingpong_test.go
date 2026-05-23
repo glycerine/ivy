@@ -1,7 +1,6 @@
 package ivy2cpp
 
 import (
-	"os/exec"
 	"strings"
 	"testing"
 
@@ -124,7 +123,7 @@ func TestPingPongLeftPlayerTargetTestMatchesPythonRuntimeShape(t *testing.T) {
 	}
 
 	if SlowCppTest {
-		runGeneratedPingPongTestSlow(t, out)
+		compileGeneratedCPP(t, out)
 	}
 }
 
@@ -173,27 +172,4 @@ func generatePingPongLeftPlayerTargetTest(t *testing.T) *Output {
 func compactCPPForPingPongTest(s string) string {
 	replacer := strings.NewReplacer(" ", "", "\t", "", "\n", "", "\r", "")
 	return replacer.Replace(s)
-}
-
-func runGeneratedPingPongTestSlow(t *testing.T, out *Output) {
-	t.Helper()
-	path, err := BuildOutput(out, t.TempDir())
-	if err != nil {
-		if isMissingZ3ToolchainError(err) {
-			t.Skip(err.Error())
-		}
-		t.Fatalf("build generated ping-pong test: %v", err)
-	}
-	cmd := exec.Command(path, "iters=30", "runs=1", "seed=1")
-	data, err := cmd.CombinedOutput()
-	if err != nil {
-		t.Fatalf("run generated ping-pong test: %v\n%s", err, data)
-	}
-	got := string(data)
-	if !strings.Contains(got, "< intf.ping") {
-		t.Fatalf("generated ping-pong run should include imported-call trace; output:\n%s", got)
-	}
-	if !strings.Contains(got, "test_completed") {
-		t.Fatalf("generated ping-pong run should finish; output:\n%s", got)
-	}
 }

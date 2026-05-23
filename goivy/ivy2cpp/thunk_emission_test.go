@@ -116,5 +116,11 @@ func TestThunkScopeNoShadowWarning(t *testing.T) {
 	}
 	out := generateThunkEmissionFixture(t, "thunkshadow", "true", "false")
 	prefix := "#if defined(__GNUC__) || defined(__clang__)\n#pragma GCC diagnostic warning \"-Wshadow\"\n#pragma GCC diagnostic error \"-Wshadow\"\n#endif\n"
-	compileGeneratedCPPWithPrefix(t, out, prefix)
+	include := "#include \"" + out.BaseName + ".h\"\n"
+	if !strings.Contains(out.Impl, include) {
+		t.Fatalf("generated impl missing header include %q:\n%s", include, out.Impl)
+	}
+	scoped := *out
+	scoped.Impl = strings.Replace(out.Impl, include, include+prefix, 1)
+	compileGeneratedCPP(t, &scoped)
 }
