@@ -158,6 +158,10 @@ func TestOracleSingleTargetTest(t *testing.T) {
 				outcomes = append(outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "skip"})
 				t.Skip("fixture marked SKIP in STATUS.md")
 			}
+			if _, err := readOracleTesterArgs(fixture); errors.Is(err, errOracleTesterSkipped) {
+				outcomes = append(outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "tester skip"})
+				t.Skip(err.Error())
+			}
 			err := compareOracleFixture(t, fixture, "test")
 			recordOracleExpectation(t, fixture, status, err, &outcomes)
 		})
@@ -438,6 +442,7 @@ func runPythonIvyToCPP(fixture, outDir, target, className string) error {
 	args := []string{"target=" + target, "classname=" + className, absFixture}
 	cmd := exec.Command(tool, args...)
 	cmd.Dir = outDir
+	cmd.Env = append(os.Environ(), "PYTHONHASHSEED=0")
 	var buf bytes.Buffer
 	cmd.Stdout = &buf
 	cmd.Stderr = &buf

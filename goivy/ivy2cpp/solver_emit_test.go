@@ -94,10 +94,6 @@ func TestEmitSetSolverLargeFunctionUsesThunkToZ3(t *testing.T) {
 	for _, want := range []string{
 		"template<typename R> class to_solver_class<hash_thunk<int,R> > {",
 		"dynamic_cast<z3_thunk<int,R> *>(val.fun)->to_z3(g, v)",
-		"template<typename R> z3::expr __to_solver(gen &g, const z3::expr &v, hash_thunk<int,R> &val) {",
-		"return to_solver_class<hash_thunk<int,R> >()(g, v, val);",
-		"template<typename R> z3::expr __to_solver(gen &g, const z3::expr &v, const hash_thunk<int,R> &val) {",
-		"const_cast<hash_thunk<int,R> &>(val)",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in generated impl:\n%s", want, out.Impl)
@@ -109,8 +105,8 @@ func TestEmitSetSolverLargeFunctionUsesThunkToZ3(t *testing.T) {
 func TestEmitSetSolverHashThunkSpecializationEmittedOnce(t *testing.T) {
 	out := generateHashThunkSolverFixture(t, "dedup")
 	expectCount(t, out.Impl, "template<typename R> class to_solver_class<hash_thunk<int,R> > {", 1)
-	expectCount(t, out.Impl, "template<typename R> z3::expr __to_solver(gen &g, const z3::expr &v, hash_thunk<int,R> &val) {", 1)
-	expectCount(t, out.Impl, "template<typename R> z3::expr __to_solver(gen &g, const z3::expr &v, const hash_thunk<int,R> &val) {", 1)
+	expectCount(t, out.Impl, "template<typename R> z3::expr __to_solver(gen &g, const z3::expr &v, hash_thunk<int,R> &val) {", 0)
+	expectCount(t, out.Impl, "template<typename R> z3::expr __to_solver(gen &g, const z3::expr &v, const hash_thunk<int,R> &val) {", 0)
 }
 
 func TestEmitSetSolverHashThunkCTupleSpecialization(t *testing.T) {
@@ -118,10 +114,6 @@ func TestEmitSetSolverHashThunkCTupleSpecialization(t *testing.T) {
 	for _, want := range []string{
 		"template<typename R> class to_solver_class<hash_thunk<tuplez3::__tup__int__int,R> > {",
 		"z3::expr cond = __to_solver(g, v.arg(0), it->first.arg0) && __to_solver(g, v.arg(1), it->first.arg1);",
-		"template<typename R> z3::expr __to_solver(gen &g, const z3::expr &v, hash_thunk<tuplez3::__tup__int__int,R> &val) {",
-		"return to_solver_class<hash_thunk<tuplez3::__tup__int__int,R> >()(g, v, val);",
-		"template<typename R> z3::expr __to_solver(gen &g, const z3::expr &v, const hash_thunk<tuplez3::__tup__int__int,R> &val) {",
-		"const_cast<hash_thunk<tuplez3::__tup__int__int,R> &>(val)",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in generated impl:\n%s", want, out.Impl)

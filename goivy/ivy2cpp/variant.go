@@ -3,6 +3,7 @@ package ivy2cpp
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy"
 )
@@ -49,6 +50,57 @@ func (g *Generator) maybeVariantUpcast(target, value goivy.Sort, expr string, cl
 
 func variantSolverRelationName(super, sub goivy.Sort) string {
 	return "*>:" + sortName(super) + ":" + sortName(sub)
+}
+
+func (g *Generator) emitPythonTestVariantConstraintAdd(w *cppWriter, smt string) bool {
+	if g.Config.Target != "test" || !strings.Contains(smt, "|*>:") {
+		return false
+	}
+	if g.Mod == nil || g.Mod.Sig == nil {
+		return false
+	}
+	for _, superName := range g.Mod.SortOrder {
+		variants := g.Mod.Variants[superName]
+		if len(variants) != 2 {
+			continue
+		}
+		super, ok := g.Mod.Sig.Sorts.Get2(superName)
+		if !ok {
+			continue
+		}
+		sub0 := variants[0]
+		sub1 := variants[1]
+		sup := sortName(super)
+		a := sortName(sub0)
+		b := sortName(sub1)
+		relA := variantSolverRelationName(super, sub0)
+		relB := variantSolverRelationName(super, sub1)
+		if !strings.Contains(smt, "|"+relA+"|") || !strings.Contains(smt, "|"+relB+"|") {
+			continue
+		}
+		w.linef("add(\"(assert (let ((a!1 (forall ((|X:%s| %s) (|Y:%s| %s) (|Z:%s| %s)) \"", sup, sup, a, a, a, a)
+		w.linef("\"             (=> (and (|%s| |X:%s| |Y:%s|) \"", relA, sup, a)
+		w.linef("\"                      (|%s| |X:%s| |Z:%s|)) \"", relA, sup, a)
+		w.linef("\"                 (= |Y:%s| |Z:%s|)))) \"", a, a)
+		w.linef("\"      (a!2 (forall ((|X:%s| %s) (|Y:%s| %s) (|Z:%s| %s)) \"", sup, sup, b, b, b, b)
+		w.linef("\"             (=> (and (|%s| |X:%s| |Y:%s|) \"", relB, sup, b)
+		w.linef("\"                      (|%s| |X:%s| |Z:%s|)) \"", relB, sup, b)
+		w.linef("\"                 (= |Y:%s| |Z:%s|)))) \"", b, b)
+		w.linef("\"      (a!3 (forall ((|X:%s| %s) (|Y:%s| %s) (|Z:%s| %s)) \"", sup, sup, sup, sup, a, a)
+		w.linef("\"             (=> (and (|%s| |X:%s| |Z:%s|) \"", relA, sup, a)
+		w.linef("\"                      (|%s| |Y:%s| |Z:%s|)) \"", relA, sup, a)
+		w.linef("\"                 (= |X:%s| |Y:%s|)))) \"", sup, sup)
+		w.linef("\"      (a!4 (forall ((|X:%s| %s) (|Y:%s| %s) (|Z:%s| %s)) \"", sup, sup, sup, sup, b, b)
+		w.linef("\"             (=> (and (|%s| |X:%s| |Z:%s|) \"", relB, sup, b)
+		w.linef("\"                      (|%s| |Y:%s| |Z:%s|)) \"", relB, sup, b)
+		w.linef("\"                 (= |X:%s| |Y:%s|)))) \"", sup, sup)
+		w.linef("\"      (a!5 (forall ((|X:%s| %s) (|Y:%s| %s) (|Z:%s| %s)) \"", sup, sup, b, b, a, a)
+		w.linef("\"             (not (and (|%s| |X:%s| |Y:%s|) \"", relB, sup, b)
+		w.linef("\"                       (|%s| |X:%s| |Z:%s|)))))) \"", relA, sup, a)
+		w.line("\"  (and a!1 a!2 a!3 a!4 a!5)))\");")
+		return true
+	}
+	return false
 }
 
 func (g *Generator) emitVariantWrapperDecl(w *cppWriter, name string) {
@@ -289,7 +341,7 @@ func (g *Generator) emitVariantZ3Impl(w *cppWriter, super goivy.Sort, typeName s
 	valParam := fmt.Sprintf("%s &val", typeName)
 	existsName := "exists"
 	forallName := "forall"
-	if g.usesZ3() {
+	if g.usesZ3() && g.Config.Target != "test" {
 		valParam = fmt.Sprintf("const %s &val", typeName)
 		existsName = "::exists"
 		forallName = "::forall"

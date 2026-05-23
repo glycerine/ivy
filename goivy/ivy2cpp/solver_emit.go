@@ -349,6 +349,9 @@ func (g *Generator) emitSetFieldCustom(w *cppWriter, destr *goivy.Const, lhs, rh
 // is uninterpreted — Python raises IvyError; the Go side propagates an
 // error in the caller.
 func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
+	if g.Config.Target == "test" {
+		return g.emitPythonTestRandomizeSolver(w, sym)
+	}
 	sname := strconv.Quote(sym.Name)
 	fs, isFn := sym.Sort.(*goivy.LogicFunctionSort)
 	var domain []goivy.Sort
@@ -439,6 +442,9 @@ func (g *Generator) emitEvalSig(w *cppWriter, obj string, used map[string]bool) 
 // `lvalue = (ctype)eval_apply("sname", X...);` against the integer-typed
 // model value.
 func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol) error {
+	if g.Config.Target == "test" {
+		return g.emitPythonTestFromSolverLoop(w, obj, sym)
+	}
 	fs, isFn := sym.Sort.(*goivy.LogicFunctionSort)
 	var domain []goivy.Sort
 	var rng goivy.Sort
@@ -545,10 +551,170 @@ func (g *Generator) isRecordRange(s goivy.Sort) bool {
 	return false
 }
 
+func (g *Generator) emitPythonTestRandomizeSolver(w *cppWriter, sym stateSymbol) error {
+	sname := strconv.Quote(sym.Name)
+	fs, isFn := sym.Sort.(*goivy.LogicFunctionSort)
+	var domain []goivy.Sort
+	var rng goivy.Sort
+	if isFn {
+		domain = fs.Domain()
+		rng = fs.Range()
+	} else {
+		rng = sym.Sort
+	}
+	var args []string
+	opened := 0
+	for i, d := range domain {
+		name := fmt.Sprintf("X%d", i)
+		header, ok := g.pythonTestLoopHeaderForSort(d, name)
+		if !ok {
+			return fmt.Errorf("ivy2cpp: cannot enumerate domain of %s for emit_randomize", sym.Name)
+		}
+		w.line(header)
+		w.indent++
+		opened++
+		args = append(args, name)
+	}
+	if g.isRecordRange(rng) {
+		typ := g.recordRangeType(rng)
+		applyArgs := make([]string, len(domain))
+		for i, d := range domain {
+			applyArgs[i] = g.pythonTestIntToZ3(d, args[i])
+		}
+		w.linef("__randomize<%s>(*this, apply(%s%s), %s);", typ, sname, joinArgs(applyArgs), strconv.Quote(sortName(rng)))
+	} else {
+		switch len(args) {
+		case 0:
+			w.linef("randomize(%s,%s);", sname, strconv.Quote(z3SortName(rng)))
+		default:
+			w.linef("randomize(%s%s,%s);", sname, joinArgs(args), strconv.Quote(z3SortName(rng)))
+		}
+	}
+	for i := 0; i < opened; i++ {
+		w.indent--
+	}
+	return nil
+}
+
+func (g *Generator) emitPythonTestFromSolverLoop(w *cppWriter, obj string, sym stateSymbol) error {
+	fs, isFn := sym.Sort.(*goivy.LogicFunctionSort)
+	var domain []goivy.Sort
+	var rng goivy.Sort
+	if isFn {
+		domain = fs.Domain()
+		rng = fs.Range()
+	} else {
+		rng = sym.Sort
+	}
+	record := g.isRecordRange(rng)
+	var keyArgs []string
+	opened := 0
+	for i, d := range domain {
+		name := fmt.Sprintf("X%d", i)
+		header, ok := g.pythonTestLoopHeaderForSort(d, name)
+		if !ok {
+			return fmt.Errorf("ivy2cpp: cannot enumerate domain of %s for emit_eval", sym.Name)
+		}
+		w.line(header)
+		w.indent++
+		opened++
+		keyArgs = append(keyArgs, name)
+	}
+	lvalue := varName(sym.Name)
+	if len(domain) > 0 {
+		lvalue = g.cppStorageAccess(sym.Name, sym.Sort, keyArgs, "")
+	}
+	if obj != "" {
+		lvalue = obj + "." + lvalue
+	}
+	if record {
+		typ := g.recordRangeType(rng)
+		applyArgs := make([]string, len(domain))
+		for i, d := range domain {
+			applyArgs[i] = g.pythonTestIntToZ3(d, keyArgs[i])
+		}
+		w.linef("__from_solver<%s>(*this, apply(%q%s), %s);", typ, sym.Name, joinArgs(applyArgs), lvalue)
+	} else {
+		ctype := cppScalarTypeWith(g, rng, g.ClassName)
+		w.linef("%s = (%s)eval_apply(%q%s);", lvalue, ctype, sym.Name, joinArgs(keyArgs))
+	}
+	for i := 0; i < opened; i++ {
+		w.indent--
+	}
+	return nil
+}
+
+func (g *Generator) pythonTestRandExpr(s goivy.Sort) (string, bool) {
+	typ := cppScalarTypeWith(g, s, g.ClassName)
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		return fmt.Sprintf("(%s)(rand() %% ((2)-(0)) + (0))", typ), true
+	case *goivy.LogicEnumeratedSort:
+		if len(st.Extension) == 0 {
+			return "", false
+		}
+		return fmt.Sprintf("(%s)(rand() %% ((%d)-(0)) + (0))", typ, len(st.Extension)), true
+	default:
+		if it, ok := g.cppInterpType(s); ok {
+			if it.Kind == cppInterpBV || it.Kind == cppInterpStrBV || it.Kind == cppInterpIntBV {
+				card := it.card()
+				if card > 0 {
+					return fmt.Sprintf("(%s)(rand() %% ((%d)-(0)) + (0))", typ, card), true
+				}
+			}
+		}
+		if rs, ok := g.rangeSortFor(s); ok {
+			lo, hi, ok := numericRangeBounds(rs)
+			if ok {
+				return fmt.Sprintf("(%s)(rand() %% (((%s+1))-(%s)) + (%s))", typ, hi, lo, lo), true
+			}
+		}
+	}
+	return "", false
+}
+
+func (g *Generator) pythonTestLoopHeaderForSort(s goivy.Sort, name string) (string, bool) {
+	lo, hi, ok := g.pythonTestSortBounds(s)
+	if !ok {
+		return "", false
+	}
+	return fmt.Sprintf("for (int %s = %s; %s < %s; %s++)", name, lo, name, hi, name), true
+}
+
+func (g *Generator) pythonTestSortBounds(s goivy.Sort) (string, string, bool) {
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		return "0", "2", true
+	case *goivy.LogicEnumeratedSort:
+		return "0", strconv.Itoa(len(st.Extension)), len(st.Extension) > 0
+	default:
+		if it, ok := g.cppInterpType(s); ok {
+			card := it.card()
+			if card > 0 {
+				return "0", strconv.Itoa(card), true
+			}
+		}
+		if rs, ok := g.rangeSortFor(s); ok {
+			lo, hi, ok := numericRangeBounds(rs)
+			if ok {
+				return lo, "(" + hi + "+1)", true
+			}
+		}
+	}
+	return "", "", false
+}
+
+func (g *Generator) pythonTestIntToZ3(s goivy.Sort, val string) string {
+	return fmt.Sprintf("int_to_z3(sort(%q),%s)", z3SortName(s), val)
+}
+
 // mkRand returns a C++ expression that produces a random value of sort s.
 // Mirrors Python `mk_rand` at ivy_to_cpp.py:897. Wraps the existing
 // z3RandomValueExprFrom helper.
 func (g *Generator) mkRand(s goivy.Sort) (string, bool) {
+	if g.Config.Target == "test" {
+		return g.pythonTestRandExpr(s)
+	}
 	return g.z3RandomValueExprFrom(s, "(*this)")
 }
 
@@ -792,14 +958,28 @@ func (g *Generator) emitAssignArrayFromModel(w *cppWriter, obj string, sym state
 		value, ok := g.mkRand(sym.Sort)
 		if !ok {
 			value = g.cppZeroValueInScope(sym.Sort)
+			if g.Config.Target == "test" && g.isVariantSuperName(sortName(sym.Sort)) {
+				value = fmt.Sprintf("(%s)%s", g.cppQualifiedType(sym.Sort, g.ClassName), value)
+			}
 		}
 		w.linef("%s.%s = %s;", obj, varName(sym.Name), value)
 		return
+	}
+	if g.Config.Target == "test" {
+		st := cppFunctionStorageFor(g, fs.Domain(), fs.Range(), g.ClassName)
+		if st.Kind == cppStorageHashThunk {
+			value := g.makePythonTestNondetThunk(w, fs.Domain(), fs.Range(), sym.Name, 0)
+			w.linef("%s.%s = %s;", obj, varName(sym.Name), value)
+			return
+		}
 	}
 	var keyArgs []string
 	opened := 0
 	for i, d := range fs.Domain() {
 		name := fmt.Sprintf("__ivy_arg%d", i)
+		if g.Config.Target == "test" {
+			name = fmt.Sprintf("X__%d", i)
+		}
 		header, ok := g.z3LoopHeaderForSort(d, name)
 		if !ok {
 			w.linef("// ivy2cpp: assign_array_from_model skipped %q (domain not enumerable)", sym.Name)
@@ -825,6 +1005,40 @@ func (g *Generator) emitAssignArrayFromModel(w *cppWriter, obj string, sym state
 	}
 }
 
+func (g *Generator) makePythonTestNondetThunk(w *cppWriter, domSorts []goivy.Sort, rngSort goivy.Sort, name string, uniqueID int64) string {
+	domT := cppCTupleNameWith(g, domSorts, g.ClassName)
+	rangeT := g.cppQualifiedType(rngSort, g.ClassName)
+	thunkName := g.nextThunkName()
+	w.open(fmt.Sprintf("struct %s : z3_thunk<%s,%s> {", thunkName, domT, rangeT))
+	w.line("int __ident;")
+	w.open(fmt.Sprintf("%s()  {", thunkName))
+	w.line("__ident = z3_thunk_counter;")
+	w.line("z3_thunk_counter++;")
+	w.close("")
+	w.open(fmt.Sprintf("%s operator()(const %s &arg) {", rangeT, domT))
+	tmp := g.nextTemp("__tmp")
+	w.linef("%s %s;", rangeT, tmp)
+	g.mkNondetWithCType(w, tmp, name, uniqueID, rangeT)
+	w.linef("return %s;", tmp)
+	w.close("")
+	w.open("z3::expr to_z3(gen &g, const z3::expr &v) {")
+	ztmp := g.nextTemp("__tmp")
+	w.linef("%s %s;", rangeT, ztmp)
+	g.mkNondetWithCType(w, ztmp, name, uniqueID, rangeT)
+	w.linef("z3::expr res = v == %s;", g.pythonTestNondetZ3ValueExpr(rngSort, ztmp))
+	w.line("return res;")
+	w.close("")
+	w.close(";")
+	return fmt.Sprintf("hash_thunk<%s,%s>(new %s())", domT, rangeT, thunkName)
+}
+
+func (g *Generator) pythonTestNondetZ3ValueExpr(s goivy.Sort, val string) string {
+	if _, ok := s.(*goivy.BooleanSort); ok {
+		return fmt.Sprintf("g.ctx.bool_val(%s)", val)
+	}
+	return fmt.Sprintf("g.int_to_z3(g.sort(%q),(int)(%s))", z3SortName(s), val)
+}
+
 // emitHashThunkToSolver emits one `to_solver_class<hash_thunk<D,R>>`
 // template specialization. `domSorts` non-nil signals a multi-arg
 // ctuple domain (key access via `it->first.argN`); nil signals a
@@ -832,12 +1046,20 @@ func (g *Generator) emitAssignArrayFromModel(w *cppWriter, obj string, sym state
 // `emit_hash_thunk_to_solver` at ivy_to_cpp.py:1841-1862.
 func (g *Generator) emitHashThunkToSolver(w *cppWriter, domSorts []goivy.Sort, ctName string) {
 	w.open(fmt.Sprintf("template<typename R> class to_solver_class<hash_thunk<%s,R> > {", ctName))
-	w.line("public:")
+	if g.Config.Target == "test" {
+		w.line("public:;")
+	} else {
+		w.line("public:")
+	}
 	w.open(fmt.Sprintf("z3::expr operator()(gen &g, const z3::expr &v, hash_thunk<%s,R> &val) {", ctName))
 	w.line("z3::expr res = g.ctx.bool_val(true);")
 	w.line("z3::expr disj = g.ctx.bool_val(false);")
 	w.linef("z3::expr bg = val.fun ? dynamic_cast<z3_thunk<%s,R> *>(val.fun)->to_z3(g, v) : g.ctx.bool_val(true);", ctName)
-	w.open(fmt.Sprintf("for (typename hash_space::hash_map<%s,R>::iterator it = val.memo.begin(), en = val.memo.end(); it != en; it++) {", ctName))
+	hashMap := "hash_space::hash_map"
+	if g.Config.Target == "test" {
+		hashMap = "hash_map"
+	}
+	w.open(fmt.Sprintf("for (typename %s<%s,R>::iterator it = val.memo.begin(), en = val.memo.end(); it != en; it++) {", hashMap, ctName))
 	w.line("z3::expr asgn = __to_solver(g, v, it->second);")
 	if len(domSorts) > 0 {
 		parts := make([]string, len(domSorts))
@@ -855,6 +1077,9 @@ func (g *Generator) emitHashThunkToSolver(w *cppWriter, domSorts []goivy.Sort, c
 	w.line("return res;")
 	w.close("")
 	w.close(";")
+	if g.Config.Target == "test" {
+		return
+	}
 	w.blank()
 
 	w.open(fmt.Sprintf("template<typename R> z3::expr __to_solver(gen &g, const z3::expr &v, hash_thunk<%s,R> &val) {", ctName))

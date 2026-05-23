@@ -344,17 +344,26 @@ func (g *Generator) emitImpl() error {
 	bw.close("")
 	w.raw(body.String())
 	g.emitRuntimeDestructor(w)
-	g.emitDestructorImpls(w)
+	if g.Config.Target == "test" {
+		// Python's target=test path emits generator classes before the
+		// parser/Z3 helper definitions, then splits serializers around
+		// the REPL subclass.
+	} else {
+		g.emitDestructorImpls(w)
+	}
 	if g.usesZ3() && g.Config.Target == "test" {
-		g.emitAllCtuplesToSolver(w)
 		if err := g.emitZ3GeneratorClasses(w); err != nil {
 			return err
 		}
+		g.emitDestructorOutSerImpls(w)
+		g.emitEnumSortOutSerImpls(w)
 	}
 	// Per-enum operator<<, _arg<T>, __ser<T>, __deser<T>. Python
 	// emits the definitions after class methods and the runtime
 	// destructor; only forward declarations live near ivy_value.hpp.
-	g.emitEnumSortArgSpecImpls(w)
+	if g.Config.Target != "test" {
+		g.emitEnumSortArgSpecImpls(w)
+	}
 	var tail cppWriter
 	bw = &tail
 	if g.runtimeUsesReplSubclass() {
@@ -367,6 +376,11 @@ func (g *Generator) emitImpl() error {
 			g.emitReplMain(bw)
 		}
 	case "test":
+		g.emitAllCtuplesToSolver(bw)
+		g.emitDestructorArgDeserZ3Impls(bw)
+		g.emitEnumSortArgDeserImpls(bw)
+		g.emitZ3SolverConversions(bw)
+		g.emitReplSupport(bw)
 		if g.Config.EmitMain {
 			g.emitTestMain(bw)
 		}
@@ -462,7 +476,7 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 		}
 		emitted[name] = true
 		if it, ok := g.cppInterpType(s); ok {
-			if it.Kind == cppInterpBV && it.primitiveType() != "" && !g.usesZ3() {
+			if it.Kind == cppInterpBV && it.primitiveType() != "" && (!g.usesZ3() || g.Config.Target == "test") {
 				return
 			}
 			if it.Kind == cppInterpIntBV && !emittedIntClass {
@@ -1450,7 +1464,6 @@ func (g *Generator) emitTestMain(w *cppWriter) {
 	g.emitConstructFromParams(w)
 	g.emitRuntimeArgCapture(w, "ivy")
 	w.line("ivy._generating = false;")
-	w.line("ivy.__init();")
 	w.line("ivy.__unlock();")
 	w.line("initializing = false;")
 	g.emitRuntimeBindReaders(w)
@@ -1526,13 +1539,27 @@ func (g *Generator) emitTestLoopBody(w *cppWriter) {
 	w.line("nanosleep(&ts, NULL);")
 	w.line("exit(0);")
 	w.close("")
-	w.open("for (unsigned i = 0; i < readers.size(); i++) {")
-	w.line("delete readers[i];")
-	w.close("")
+	if g.Config.Target == "test" {
+		w.line("for (unsigned i = 0; i < readers.size(); i++)")
+		w.indent++
+		w.line("delete readers[i];")
+		w.indent--
+	} else {
+		w.open("for (unsigned i = 0; i < readers.size(); i++) {")
+		w.line("delete readers[i];")
+		w.close("")
+	}
 	w.line("readers.clear();")
-	w.open("for (unsigned i = 0; i < timers.size(); i++) {")
-	w.line("delete timers[i];")
-	w.close("")
+	if g.Config.Target == "test" {
+		w.line("for (unsigned i = 0; i < timers.size(); i++)")
+		w.indent++
+		w.line("delete timers[i];")
+		w.indent--
+	} else {
+		w.open("for (unsigned i = 0; i < timers.size(); i++) {")
+		w.line("delete timers[i];")
+		w.close("")
+	}
 	w.line("timers.clear();")
 }
 
@@ -1600,21 +1627,38 @@ func (g *Generator) emitTestLoopSelectBranch(w *cppWriter) {
 	w.open("if (readers.size() == 0) {")
 	w.line("Sleep(timer_min);")
 	w.line("foo = 0;")
-	w.close(" else {")
-	w.indent++
-	w.line("foo = select(maxfds + 1, &rdfds, 0, 0, &timeout);")
-	w.indent--
-	w.line("}")
+	if g.Config.Target == "test" {
+		w.close("")
+		w.line("else")
+		w.indent++
+		w.line("foo = select(maxfds + 1, &rdfds, 0, 0, &timeout);")
+		w.indent--
+	} else {
+		w.close(" else {")
+		w.indent++
+		w.line("foo = select(maxfds + 1, &rdfds, 0, 0, &timeout);")
+		w.indent--
+		w.line("}")
+	}
 	w.line("#else")
 	w.line("int foo = select(maxfds + 1, &rdfds, 0, 0, &timeout);")
 	w.line("#endif")
-	w.open("if (foo < 0) {")
-	w.line("#ifdef _WIN32")
-	w.line(`std::cerr << "select failed: " << WSAGetLastError() << std::endl; __ivy_exit(1);`)
-	w.line("#else")
-	w.line(`perror("select failed"); __ivy_exit(1);`)
-	w.line("#endif")
-	w.close("")
+	if g.Config.Target == "test" {
+		w.line("if (foo < 0)")
+		w.line("#ifdef _WIN32")
+		w.line(`{std::cerr << "select failed: " << WSAGetLastError() << std::endl; __ivy_exit(1);}`)
+		w.line("#else")
+		w.line(`{perror("select failed"); __ivy_exit(1);}`)
+		w.line("#endif")
+	} else {
+		w.open("if (foo < 0) {")
+		w.line("#ifdef _WIN32")
+		w.line(`std::cerr << "select failed: " << WSAGetLastError() << std::endl; __ivy_exit(1);`)
+		w.line("#else")
+		w.line(`perror("select failed"); __ivy_exit(1);`)
+		w.line("#endif")
+		w.close("")
+	}
 	w.open("if (foo == 0) {")
 	w.line("cycle--;")
 	w.open("for (unsigned i = 0; i < timers.size(); i++) {")
@@ -1623,9 +1667,16 @@ func (g *Generator) emitTestLoopSelectBranch(w *cppWriter) {
 	w.line("break;")
 	w.close("")
 	w.close("")
-	w.open("for (unsigned i = 0; i < timers.size(); i++) {")
-	w.line("timers[i]->timeout(timer_min);")
-	w.close("")
+	if g.Config.Target == "test" {
+		w.line("for (unsigned i = 0; i < timers.size(); i++)")
+		w.indent++
+		w.line("timers[i]->timeout(timer_min);")
+		w.indent--
+	} else {
+		w.open("for (unsigned i = 0; i < timers.size(); i++) {")
+		w.line("timers[i]->timeout(timer_min);")
+		w.close("")
+	}
 	w.close(" else {")
 	w.indent++
 	w.line("int fdc = 0;")
@@ -1736,8 +1787,10 @@ func (g *Generator) emitGenMain(w *cppWriter) {
 func (g *Generator) emitTestDefaults(w *cppWriter) {
 	w.linef("int test_iters = %s;", g.Config.TestIters)
 	w.linef("int runs = %s;", g.Config.TestRuns)
-	w.line("(void)test_iters;")
-	w.line("(void)runs;")
+	if g.Config.Target != "test" {
+		w.line("(void)test_iters;")
+		w.line("(void)runs;")
+	}
 }
 
 func (g *Generator) emitGeneratorInvocations(w *cppWriter) {

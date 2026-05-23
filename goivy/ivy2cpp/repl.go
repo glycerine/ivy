@@ -77,17 +77,25 @@ func (g *Generator) emitEnumSortArgSpecDecls(w *cppWriter) {
 		w.linef("void __deser<%s>(ivy_deser &inp, %s &res);", cfsname, cfsname)
 	}
 	if gateZ3 {
-		w.line("#ifdef Z3PP_H_")
+		if g.Config.Target != "test" {
+			w.line("#ifdef Z3PP_H_")
+		}
 		for _, st := range enums {
 			cfsname := g.ClassName + "::" + varName(st.Name)
 			w.line("template <>")
 			w.linef("void __from_solver<%s>(gen &g, const z3::expr &v, %s &res);", cfsname, cfsname)
 			w.line("template <>")
-			w.linef("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val);", cfsname, cfsname)
+			if g.Config.Target == "test" {
+				w.linef("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, %s &val);", cfsname, cfsname)
+			} else {
+				w.linef("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val);", cfsname, cfsname)
+			}
 			w.line("template <>")
 			w.linef("void __randomize<%s>(gen &g, const z3::expr &v, const std::string &sort_name);", cfsname)
 		}
-		w.line("#endif")
+		if g.Config.Target != "test" {
+			w.line("#endif")
+		}
 	}
 }
 
@@ -109,6 +117,22 @@ func (g *Generator) emitEnumSortArgSpecImpls(w *cppWriter) {
 		}
 	}
 	w.blank()
+}
+
+func (g *Generator) emitEnumSortOutSerImpls(w *cppWriter) {
+	enums := g.enumSortsForArgSpecs()
+	for _, st := range enums {
+		g.emitEnumOperatorOut(w, st)
+		g.emitEnumSer(w, st)
+	}
+}
+
+func (g *Generator) emitEnumSortArgDeserImpls(w *cppWriter) {
+	enums := g.enumSortsForArgSpecs()
+	for _, st := range enums {
+		g.emitEnumArg(w, st)
+		g.emitEnumDeser(w, st)
+	}
 }
 
 // emitEnumOperatorOut mirrors Python ivy_to_cpp.py:2502-2506.
@@ -138,7 +162,9 @@ func (g *Generator) emitEnumArg(w *cppWriter, st *goivy.LogicEnumeratedSort) {
 	cfsname := g.ClassName + "::" + varName(st.Name)
 	w.line("template <>")
 	w.open(fmt.Sprintf("%s _arg<%s>(std::vector<ivy_value> &args, unsigned idx, long long bound) {", cfsname, cfsname))
-	w.line("(void)bound;")
+	if g.Config.Target != "test" {
+		w.line("(void)bound;")
+	}
 	w.line("ivy_value &arg = args[idx];")
 	w.line("if (arg.atom.size() == 0 || arg.fields.size() != 0) throw out_of_bounds(idx, arg.pos);")
 	for _, sym := range st.Extension {
@@ -172,6 +198,9 @@ func (g *Generator) emitEnumDeser(w *cppWriter, st *goivy.LogicEnumeratedSort) {
 func (g *Generator) emitCmdReader(w *cppWriter) {
 	reprClass := g.ClassName + "_repl"
 	readerClass := g.ClassName + "_cmd_reader"
+	if g.Config.Target == "test" {
+		readerClass = "cmd_reader"
+	}
 	w.open(fmt.Sprintf("class %s : public stdin_reader {", readerClass))
 	w.line("int lineno;")
 	w.line("public:")
@@ -179,10 +208,17 @@ func (g *Generator) emitCmdReader(w *cppWriter) {
 	w.blank()
 	w.open(fmt.Sprintf("%s(%s &_ivy) : ivy(_ivy) {", readerClass, reprClass))
 	w.line("lineno = 1;")
-	w.open("if (isatty(fdes())) {")
-	w.line(`__ivy_out << "> ";`)
-	w.line("__ivy_out.flush();")
-	w.close("")
+	if g.Config.Target == "test" {
+		w.line("if (isatty(fdes()))")
+		w.indent++
+		w.line(`__ivy_out << "> "; __ivy_out.flush();`)
+		w.indent--
+	} else {
+		w.open("if (isatty(fdes())) {")
+		w.line(`__ivy_out << "> ";`)
+		w.line("__ivy_out.flush();")
+		w.close("")
+	}
 	w.close("")
 	w.blank()
 	w.open("virtual void process(const std::string &cmd) {")
@@ -191,8 +227,15 @@ func (g *Generator) emitCmdReader(w *cppWriter) {
 	w.open("try {")
 	w.line("parse_command(cmd, action, args);")
 	w.line("ivy.__lock();")
-	g.emitCmdReaderDispatchChain(w)
-	w.line(`std::cerr << "undefined action: " << action << std::endl;`)
+	if g.Config.Target == "test" {
+		g.emitPythonTestCmdReaderDispatchChain(w)
+		w.open("{")
+		w.line(`std::cerr << "undefined action: " << action << std::endl;`)
+		w.close("")
+	} else {
+		g.emitCmdReaderDispatchChain(w)
+		w.line(`std::cerr << "undefined action: " << action << std::endl;`)
+	}
 	w.line("ivy.__unlock();")
 	w.close(" catch (syntax_error &err) {")
 	w.indent++
@@ -207,10 +250,17 @@ func (g *Generator) emitCmdReader(w *cppWriter) {
 	w.line("ivy.__unlock();")
 	w.line(`std::cerr << "action " << err.action << " takes " << err.num << " input parameters" << std::endl;`)
 	w.close("")
-	w.open("if (isatty(fdes())) {")
-	w.line(`__ivy_out << "> ";`)
-	w.line("__ivy_out.flush();")
-	w.close("")
+	if g.Config.Target == "test" {
+		w.line("if (isatty(fdes()))")
+		w.indent++
+		w.line(`__ivy_out << "> "; __ivy_out.flush();`)
+		w.indent--
+	} else {
+		w.open("if (isatty(fdes())) {")
+		w.line(`__ivy_out << "> ";`)
+		w.line("__ivy_out.flush();")
+		w.close("")
+	}
 	w.line("lineno++;")
 	w.close("")
 	w.close(";")
@@ -279,6 +329,72 @@ func (g *Generator) emitCmdReaderDispatchChain(w *cppWriter) {
 		w.line("ivy.__unlock();")
 		w.line("return;")
 		w.close("")
+	}
+}
+
+func (g *Generator) emitPythonTestCmdReaderDispatchChain(w *cppWriter) {
+	initActions := g.initialMixinActionNames()
+	names := g.publicActionNamesSorted()
+	emitted := 0
+	for _, name := range names {
+		if initActions[name] {
+			continue
+		}
+		username := strings.TrimPrefix(name, "ext:")
+		fn, _ := funName(name)
+		act, ok := g.Mod.Actions.Get2(name)
+		prefix := "if"
+		if emitted > 0 {
+			prefix = "else if"
+		}
+		w.open(fmt.Sprintf(`%s (action == "%s") {`, prefix, username))
+		if !ok {
+			w.line("check_arity(args, 0, action);")
+			w.linef("ivy.%s();", fn)
+			w.close("")
+			emitted++
+			continue
+		}
+		formals := act.GetFormalParams()
+		w.linef("check_arity(args, %d, action);", len(formals))
+		argExprs := g.emitDispatchArgExprs(act)
+		returns := act.GetFormalReturns()
+		callExpr := fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(argExprs, ", "))
+		if g.Config.Trace {
+			g.emitTracePrelude(w, username, argExprs)
+		}
+		switch len(returns) {
+		case 0:
+			w.linef("%s;", callExpr)
+		case 1:
+			w.linef(`__ivy_out << "= " << %s << std::endl;`, callExpr)
+		default:
+			var outNames []string
+			extraArgs := make([]string, 0, len(returns))
+			for _, r := range returns {
+				rname := varName(r.Name)
+				w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), rname, g.cppZeroValueInScope(r.CSort))
+				extraArgs = append(extraArgs, rname)
+				outNames = append(outNames, rname)
+			}
+			callExpr = fmt.Sprintf("ivy.%s(%s)", fn, strings.Join(append(append([]string{}, argExprs...), extraArgs...), ", "))
+			w.linef("%s;", callExpr)
+			for i, on := range outNames {
+				if i == 0 {
+					w.linef(`__ivy_out << "= " << %s << std::endl;`, on)
+				} else {
+					w.linef(`__ivy_out << %s << std::endl;`, on)
+				}
+			}
+		}
+		if g.Config.Trace {
+			w.linef(`__ivy_out%s << "}" << std::endl;`, g.numberFormat())
+		}
+		w.close("")
+		emitted++
+	}
+	if emitted > 0 {
+		w.line("else")
 	}
 }
 
@@ -381,17 +497,27 @@ func (g *Generator) emitMainParamSetup(w *cppWriter) {
 	w.line("int seed = 1;")
 	w.line("int sleep_ms = 10;")
 	w.line("int final_ms = 0;")
-	w.line("(void)sleep_ms;")
-	w.line("(void)final_ms;")
+	if g.Config.Target != "test" {
+		w.line("(void)sleep_ms;")
+		w.line("(void)final_ms;")
+	}
 	w.blank()
 	w.line("std::vector<char *> pargs;")
 	w.line("pargs.push_back(argv[0]);")
 	w.open("for (int i = 1; i < argc; i++) {")
 	w.line("std::string arg = argv[i];")
 	w.line("size_t p = arg.find('=');")
-	w.open("if (p == std::string::npos) {")
-	w.line("pargs.push_back(argv[i]);")
-	w.close(" else {")
+	if g.Config.Target == "test" {
+		w.line("if (p == std::string::npos)")
+		w.indent++
+		w.line("pargs.push_back(argv[i]);")
+		w.indent--
+		w.open("else {")
+	} else {
+		w.open("if (p == std::string::npos) {")
+		w.line("pargs.push_back(argv[i]);")
+		w.close(" else {")
+	}
 	w.indent++
 	w.line("std::string param = arg.substr(0, p);")
 	w.line("std::string value = arg.substr(p + 1);")
@@ -400,9 +526,16 @@ func (g *Generator) emitMainParamSetup(w *cppWriter) {
 	w.line("}")
 	w.close("")
 	w.line("srand(seed);")
-	w.open("if (!__ivy_out.is_open()) {")
-	w.line("__ivy_out.basic_ios<char>::rdbuf(std::cout.rdbuf());")
-	w.close("")
+	if g.Config.Target == "test" {
+		w.line("if (!__ivy_out.is_open())")
+		w.indent++
+		w.line("__ivy_out.basic_ios<char>::rdbuf(std::cout.rdbuf());")
+		w.indent--
+	} else {
+		w.open("if (!__ivy_out.is_open()) {")
+		w.line("__ivy_out.basic_ios<char>::rdbuf(std::cout.rdbuf());")
+		w.close("")
+	}
 	w.line("argc = pargs.size();")
 	w.line("argv = &pargs[0];")
 	w.blank()
@@ -481,7 +614,7 @@ func (g *Generator) emitPositionalParamParse(w *cppWriter) {
 	w.linef(`std::cerr << "usage: %s %s\n";`, escapeString(g.ClassName), usage)
 	w.line("__ivy_exit(1);")
 	w.close("")
-	if npos == 0 {
+	if npos == 0 && g.Config.Target != "test" {
 		return
 	}
 	w.line("std::vector<std::string> args;")

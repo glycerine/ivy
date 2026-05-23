@@ -71,7 +71,7 @@ export set
 		"template <> ivy_uint<256> _arg<ivy_uint<256>>(std::vector<ivy_value> &args, unsigned idx, long long bound)",
 		"template <> void __ser<ivy_uint<256>>(ivy_ser &res, const ivy_uint<256> &inp)",
 		"template <> void __deser<ivy_uint<256>>(ivy_deser &inp, ivy_uint<256> &res)",
-		"return ivy_uint<256>::random();",
+		"ivy_uint<256> value = ivy_uint<256>::random();",
 	} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("missing %q in bv[256] output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)

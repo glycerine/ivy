@@ -271,17 +271,25 @@ func (g *Generator) emitDestructorSortArgSpecDecls(w *cppWriter) {
 		w.linef("void __deser<%s>(ivy_deser &inp, %s &res);", cfsname, cfsname)
 	}
 	if g.usesZ3() {
-		w.line("#ifdef Z3PP_H_")
+		if g.Config.Target != "test" {
+			w.line("#ifdef Z3PP_H_")
+		}
 		for _, name := range names {
 			cfsname := g.ClassName + "::" + varName(name)
 			w.line("template <>")
 			w.linef("void __from_solver<%s>(gen &g, const z3::expr &v, %s &res);", cfsname, cfsname)
 			w.line("template <>")
-			w.linef("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val);", cfsname, cfsname)
+			if g.Config.Target == "test" {
+				w.linef("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, %s &val);", cfsname, cfsname)
+			} else {
+				w.linef("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val);", cfsname, cfsname)
+			}
 			w.line("template <>")
 			w.linef("void __randomize<%s>(gen &g, const z3::expr &v, const std::string &sort_name);", cfsname)
 		}
-		w.line("#endif")
+		if g.Config.Target != "test" {
+			w.line("#endif")
+		}
 	}
 }
 
@@ -296,6 +304,39 @@ func (g *Generator) emitDestructorImpls(w *cppWriter) {
 			continue
 		}
 		g.emitDestructorImpl(w, name)
+	}
+}
+
+func (g *Generator) emitDestructorOutSerImpls(w *cppWriter) {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil || g.Mod.SortDestructors == nil {
+		return
+	}
+	for _, name := range g.Mod.SortOrder {
+		destrs := g.Mod.SortDestructors.Get(name)
+		if len(destrs) == 0 {
+			continue
+		}
+		typeName := g.ClassName + "::" + varName(name)
+		g.emitDestructorOutImpl(w, name, typeName, destrs)
+		g.emitDestructorSerImpl(w, name, typeName, destrs)
+	}
+}
+
+func (g *Generator) emitDestructorArgDeserZ3Impls(w *cppWriter) {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil || g.Mod.SortDestructors == nil {
+		return
+	}
+	for _, name := range g.Mod.SortOrder {
+		destrs := g.Mod.SortDestructors.Get(name)
+		if len(destrs) == 0 {
+			continue
+		}
+		typeName := g.ClassName + "::" + varName(name)
+		g.emitDestructorArgImpl(w, name, typeName, destrs)
+		g.emitDestructorDeserImpl(w, name, typeName, destrs)
+		if g.usesZ3() {
+			g.emitDestructorZ3Impl(w, name, typeName, destrs)
+		}
 	}
 }
 
@@ -450,7 +491,9 @@ func (g *Generator) emitDestructorDeserImpl(w *cppWriter, name, typeName string,
 func (g *Generator) emitDestructorArgImpl(w *cppWriter, name, typeName string, destrs []*goivy.Const) {
 	_ = name
 	w.open(fmt.Sprintf("template <> %s _arg<%s>(std::vector<ivy_value> &args, unsigned idx, long long bound) {", typeName, typeName))
-	w.line("(void)bound;")
+	if g.Config.Target != "test" {
+		w.line("(void)bound;")
+	}
 	w.linef("%s res;", typeName)
 	g.emitDestructorZeroInit(w, "res", destrs)
 	w.line("ivy_value &arg = args[idx];")
@@ -513,11 +556,16 @@ func (g *Generator) emitDestructorArgImpl(w *cppWriter, name, typeName string, d
 		// No scalar/array fields — every input field is unexpected.
 		w.line(`throw out_of_bounds("unexpected field: " + arg.fields[i].atom, arg.fields[i].pos);`)
 	}
-	w.close(" else {")
-	w.indent++
-	w.line(`throw out_of_bounds("expected struct", args[idx].pos);`)
-	w.indent--
-	w.line("}")
+	if g.Config.Target == "test" {
+		w.close("")
+		w.line(`else throw out_of_bounds("expected struct", args[idx].pos);`)
+	} else {
+		w.close(" else {")
+		w.indent++
+		w.line(`throw out_of_bounds("expected struct", args[idx].pos);`)
+		w.indent--
+		w.line("}")
+	}
 	w.close("") // close for loop
 	w.line("return res;")
 	w.close("") // close function
@@ -568,7 +616,7 @@ func (g *Generator) emitZeroAssign(w *cppWriter, lhs string, s goivy.Sort) {
 		if _, ok := g.nativeTypeName(s, g.ClassName); ok {
 			return
 		}
-		if _, ok := g.cppInterpType(s); ok {
+		if _, ok := g.cppInterpType(s); ok && g.Config.Target != "test" {
 			return
 		}
 		if g.isVariantSuperName(sortName(s)) {
@@ -587,7 +635,9 @@ func (g *Generator) emitZeroAssign(w *cppWriter, lhs string, s goivy.Sort) {
 // ivy_to_cpp.py:2585-2630.
 func (g *Generator) emitDestructorZ3Impl(w *cppWriter, name, typeName string, destrs []*goivy.Const) {
 	sortText := name
-	w.line("#ifdef Z3PP_H_")
+	if g.Config.Target != "test" {
+		w.line("#ifdef Z3PP_H_")
+	}
 
 	// __from_solver
 	w.open(fmt.Sprintf("template <> void __from_solver<%s>(gen &g, const z3::expr &v, %s &res) {", typeName, typeName))
@@ -618,7 +668,11 @@ func (g *Generator) emitDestructorZ3Impl(w *cppWriter, name, typeName string, de
 
 	// __to_solver — takes `const T &val` to match the primary template
 	// signature in `emitZ3SolverTemplates` (z3.go:62).
-	w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val) {", typeName, typeName))
+	if g.Config.Target == "test" {
+		w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, %s &val) {", typeName, typeName))
+	} else {
+		w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val) {", typeName, typeName))
+	}
 	w.line("std::string fname = g.fresh_name();")
 	w.linef("z3::expr tmp = g.ctx.constant(fname.c_str(), g.sort(%s));", strconv.Quote(sortText))
 	for _, d := range destrs {
@@ -649,7 +703,9 @@ func (g *Generator) emitDestructorZ3Impl(w *cppWriter, name, typeName string, de
 
 	// __randomize
 	w.open(fmt.Sprintf("template <> void __randomize<%s>(gen &g, const z3::expr &v, const std::string &sort_name) {", typeName))
-	w.line("(void)sort_name;")
+	if g.Config.Target != "test" {
+		w.line("(void)sort_name;")
+	}
 	for _, d := range destrs {
 		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
 		if !ok {
@@ -676,6 +732,8 @@ func (g *Generator) emitDestructorZ3Impl(w *cppWriter, name, typeName string, de
 		closer()
 	}
 	w.close("")
-	w.line("#endif")
+	if g.Config.Target != "test" {
+		w.line("#endif")
+	}
 	w.blank()
 }

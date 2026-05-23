@@ -30,10 +30,14 @@ func (g *Generator) emitRuntimeHeaderPreamble(w *cppWriter) {
 	}
 	w.line("#define _HAS_ITERATOR_DEBUGGING 0")
 	if g.runtimeUsesGenerator() {
-		w.line("#ifndef IVY2CPP_HAS_IVY_GEN")
-		w.line("#define IVY2CPP_HAS_IVY_GEN")
-		w.line("struct ivy_gen {virtual int choose(int rng,const char *name) = 0;};")
-		w.line("#endif")
+		if g.Config.Target == "test" {
+			w.line("struct ivy_gen {virtual int choose(int rng,const char *name) = 0;};")
+		} else {
+			w.line("#ifndef IVY2CPP_HAS_IVY_GEN")
+			w.line("#define IVY2CPP_HAS_IVY_GEN")
+			w.line("struct ivy_gen {virtual int choose(int rng,const char *name) = 0;};")
+			w.line("#endif")
+		}
 	}
 	if g.usesZ3() {
 		w.line(`#include "z3++.h"`)
@@ -74,7 +78,7 @@ func emitHashThunkSupport(w *cppWriter) {
 	w.line("thunk<D,R> *fun;")
 	w.line("hash_space::hash_map<D,R,HashFun> memo;")
 	w.line("hash_thunk() : fun(0) {}")
-	w.line("hash_thunk(thunk<D,R> *_fun) : fun(_fun) {}")
+	w.line("hash_thunk(thunk<D,R> *fun) : fun(fun) {}")
 	w.line("~hash_thunk() {}")
 	w.open("R &operator[](const D& arg) {")
 	w.line("std::pair<typename hash_space::hash_map<D,R>::iterator,bool> foo = memo.insert(std::pair<D,R>(arg,R()));")
@@ -191,7 +195,9 @@ func (g *Generator) emitRuntimeConstructorPrelude(w *cppWriter) {
 	w.line("pthread_mutex_init(&mutex, NULL);")
 	w.line("#endif")
 	if g.runtimeUsesGenerator() {
-		w.line("___ivy_gen = 0;")
+		if g.Config.Target != "test" {
+			w.line("___ivy_gen = 0;")
+		}
 	}
 	w.line("__lock();")
 }
@@ -293,6 +299,18 @@ func (g *Generator) emitRuntimeDestructor(w *cppWriter) {
 
 func (g *Generator) emitRuntimeChoose(w *cppWriter) {
 	w.open(fmt.Sprintf("int %s::___ivy_choose(int rng, const char *name, int id) {", g.ClassName))
+	if g.Config.Target == "test" {
+		w.line("std::ostringstream ss;")
+		w.line("ss << name << ':' << id;;")
+		w.line("for (unsigned i = 0; i < ___ivy_stack.size(); i++)")
+		w.indent++
+		w.line("ss << ':' << ___ivy_stack[i];")
+		w.indent--
+		w.line("return ___ivy_gen->choose(rng, ss.str().c_str());")
+		w.close("")
+		w.blank()
+		return
+	}
 	if g.runtimeUsesGenerator() {
 		w.line("std::ostringstream ss;")
 		w.line("ss << name << ':' << id;")
@@ -439,12 +457,24 @@ func (g *Generator) emitRuntimeOutputSetup(w *cppWriter) {
 }
 
 func (g *Generator) emitRuntimeArgCapture(w *cppWriter, obj string) {
+	if g.Config.Target == "test" {
+		w.open("for (unsigned i = 0; i < argc; i++) {")
+		w.linef("%s.__argv.push_back(argv[i]);", obj)
+		w.close("")
+		return
+	}
 	w.open("for (int i = 0; i < argc; i++) {")
 	w.linef("%s.__argv.push_back(argv[i]);", obj)
 	w.close("")
 }
 
 func (g *Generator) emitRuntimeBindReaders(w *cppWriter) {
+	if g.Config.Target == "test" {
+		w.open("for (int rdridx = 0; rdridx < readers.size(); rdridx++) {")
+		w.line("readers[rdridx]->bind();")
+		w.close("")
+		return
+	}
 	w.open("for (unsigned rdridx = 0; rdridx < readers.size(); rdridx++) {")
 	w.line("readers[rdridx]->bind();")
 	w.close("")

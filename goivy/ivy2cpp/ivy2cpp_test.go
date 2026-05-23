@@ -284,18 +284,32 @@ export set
 				t.Fatalf("Generate: %v", err)
 			}
 			raw := out.Header + "\n" + out.Impl
-			for _, want := range []string{`#include "z3++.h"`, `#include "ivy_go_z3.hpp"`} {
+			wants := []string{`#include "z3++.h"`}
+			helperInc := `#include "ivy_go_z3.hpp"`
+			unwantedHelperInc := []string{}
+			if target == "test" {
+				wants = append(wants, `#include "ivy_z3_gen.hpp"`, `#include "ivy_z3_helpers.hpp"`)
+				helperInc = `#include "ivy_z3_helpers.hpp"`
+				unwantedHelperInc = append(unwantedHelperInc, `#include "ivy_go_z3.hpp"`)
+			} else {
+				wants = append(wants, `#include "ivy_go_z3.hpp"`)
+				unwantedHelperInc = append(unwantedHelperInc, `#include "ivy_z3_gen.hpp"`, `#include "ivy_z3_helpers.hpp"`)
+			}
+			for _, want := range wants {
 				if !strings.Contains(raw, want) {
 					t.Fatalf("expected Go %s output to include shared Z3 runtime %q:\n%s", target, want, raw)
 				}
 			}
-			// `ivy_go_z3.hpp` must live in the impl, mirroring Python
-			// `ivy_to_cpp.py:2210-2211` (`ivy_z3_helpers.hpp`).
-			if !strings.Contains(out.Impl, `#include "ivy_go_z3.hpp"`) {
-				t.Fatalf("Go %s output: ivy_go_z3.hpp must be in impl, not header-only:\nimpl=\n%s", target, out.Impl)
+			if !strings.Contains(out.Impl, helperInc) {
+				t.Fatalf("Go %s output: %s must be in impl, not header-only:\nimpl=\n%s", target, helperInc, out.Impl)
 			}
-			if strings.Contains(out.Header, `#include "ivy_go_z3.hpp"`) {
-				t.Fatalf("Go %s output: ivy_go_z3.hpp should not appear in header:\nheader=\n%s", target, out.Header)
+			if strings.Contains(out.Header, helperInc) {
+				t.Fatalf("Go %s output: %s should not appear in header:\nheader=\n%s", target, helperInc, out.Header)
+			}
+			for _, unwanted := range unwantedHelperInc {
+				if strings.Contains(raw, unwanted) {
+					t.Fatalf("Go %s output should not include %q:\n%s", target, unwanted, raw)
+				}
 			}
 			for _, unwanted := range []string{
 				"class gen : public ivy_gen",
@@ -3694,12 +3708,21 @@ export step
 			if err != nil {
 				t.Fatalf("Generate: %v", err)
 			}
-			for _, want := range []string{
-				`add((mk_apply_expr("saved", {}) == int_to_z3("color", 1)));`,
+			wants := []string{
 				`obj.saved = (initgenpath::color)eval_apply("saved");`,
 				"obj.___ivy_gen = this;",
 				"obj.__init();",
-			} {
+			}
+			if target == "test" {
+				wants = append(wants,
+					`add("(assert (and\`,
+					`(= saved green)`,
+					`randomize("saved","color");`,
+				)
+			} else {
+				wants = append(wants, `add((mk_apply_expr("saved", {}) == int_to_z3("color", 1)));`)
+			}
+			for _, want := range wants {
 				if !strings.Contains(out.Impl, want) {
 					t.Fatalf("%s missing %q in impl:\n%s", target, want, out.Impl)
 				}
@@ -4932,12 +4955,12 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{`#include "z3++.h"`, `#include "ivy_go_z3.hpp"`, "__from_solver", "ivy2cpp_randomize"} {
+	for _, want := range []string{`#include "z3++.h"`, `#include "ivy_z3_gen.hpp"`, `#include "ivy_z3_helpers.hpp"`, "__from_solver", "__randomize<"} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
 	}
-	for _, unwanted := range []string{"class gen {", "z3::context ctx;"} {
+	for _, unwanted := range []string{`#include "ivy_go_z3.hpp"`, "class gen {", "z3::context ctx;"} {
 		if strings.Contains(out.Impl, unwanted) {
 			t.Fatalf("go output still embeds Z3 runtime %q instead of including it:\n%s", unwanted, out.Impl)
 		}
@@ -5229,11 +5252,13 @@ export set
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"static variantrandom::msg ivy2cpp_random_msg(gen &g)",
-		"case 0: {",
-		"default: {",
-		"variantrandom::request tmp = variantrandom::request();",
-		"return variantrandom::msg(0, new variantrandom::msg::twrap<variantrandom::request>(tmp));",
+		"template <> void __randomize<variantrandom::msg>(gen &g, const z3::expr &apply_expr, const std::string &sort_name) {",
+		"int tag = rand() % 3;",
+		"if (tag == 0) {",
+		`z3::expr X = g.ctx.constant(temp.c_str(), g.sort("request"));`,
+		`__randomize<variantrandom::request>(g, X, "request");`,
+		`__randomize<int>(g, X, "ack");`,
+		`__randomize<int>(g, X, "done");`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in variant random helper:\n%s", want, out.Impl)
@@ -6036,7 +6061,8 @@ export step
 	text := out.Header + out.Impl
 	for _, want := range []string{
 		`#include "z3++.h"`,
-		`#include "ivy_go_z3.hpp"`,
+		`#include "ivy_z3_gen.hpp"`,
+		`#include "ivy_z3_helpers.hpp"`,
 		"init_gen",
 		"ext__step_gen",
 		"test_params",
@@ -6259,18 +6285,17 @@ export step
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"#ifdef Z3PP_H_",
 		"template <> void __from_solver<heap::cell>(gen &g, const z3::expr &v, heap::cell &res) {",
 		`g.apply("shade", v, g.int_to_z3(g.sort("idx"), X__0))`,
 		"res.shade[X__0]",
-		"template <> z3::expr __to_solver<heap::cell>(gen &g, const z3::expr &v, const heap::cell &val) {",
+		"template <> z3::expr __to_solver<heap::cell>(gen &g, const z3::expr &v, heap::cell &val) {",
 		"std::string fname = g.fresh_name();",
 		`z3::expr tmp = g.ctx.constant(fname.c_str(), g.sort("cell"));`,
 		`g.slvr.add(__to_solver(g, g.apply("shade", tmp, g.int_to_z3(g.sort("idx"), X__0)), val.shade[X__0]));`,
 		"return v == tmp;",
 		"template <> void __randomize<heap::cell>(gen &g, const z3::expr &v, const std::string &sort_name) {",
 		`__randomize<heap::color>(g, g.apply("shade", v, g.int_to_z3(g.sort("idx"), X__0)), "color");`,
-		`g.mk_decl("shade", {"cell", "idx"}, "color");`,
+		`mk_decl("shade",2,`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
@@ -6355,7 +6380,7 @@ export step
 	}
 	for _, want := range []string{
 		"void __from_solver<heap::cell>(gen &g, const z3::expr &v, heap::cell &res);",
-		"z3::expr __to_solver<heap::cell>(gen &g, const z3::expr &v, const heap::cell &val);",
+		"z3::expr __to_solver<heap::cell>(gen &g, const z3::expr &v, heap::cell &val);",
 		"void __randomize<heap::cell>(gen &g, const z3::expr &v, const std::string &sort_name);",
 	} {
 		if !strings.Contains(out.Impl, want) {
@@ -8175,8 +8200,7 @@ export step
 
 // TODO 023 — Python `ivy_to_cpp.py:2210-2211` emits `ivy_z3_helpers.hpp`
 // in the impl preamble, immediately after `ivy_value.hpp`/`ivy_repl.hpp`,
-// before any per-sort Z3 template specializations. Go's `ivy_go_z3.hpp`
-// occupies that slot.
+// before any per-sort Z3 template specializations.
 func TestImplPreambleEmitsZ3HelperIncludeAfterReplInclude(t *testing.T) {
 	src := `#lang ivy1.7
 type color = {red, green}
@@ -8191,7 +8215,7 @@ export set
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	const z3Inc = `#include "ivy_go_z3.hpp"`
+	const z3Inc = `#include "ivy_z3_helpers.hpp"`
 	const replInc = `#include "ivy_repl.hpp"`
 	const valueInc = `#include "ivy_value.hpp"`
 	z3Idx := strings.Index(out.Impl, z3Inc)
@@ -8204,13 +8228,13 @@ export set
 		t.Fatalf("expected value/repl includes in impl: valueIdx=%d replIdx=%d\n%s", valueIdx, replIdx, out.Impl)
 	}
 	if !(valueIdx < replIdx && replIdx < z3Idx) {
-		t.Fatalf("expected ivy_value.hpp(%d) < ivy_repl.hpp(%d) < ivy_go_z3.hpp(%d):\n%s",
+		t.Fatalf("expected ivy_value.hpp(%d) < ivy_repl.hpp(%d) < ivy_z3_helpers.hpp(%d):\n%s",
 			valueIdx, replIdx, z3Idx, out.Impl)
 	}
 	// Z3 helper include must precede the inline `__from_solver` template
 	// definitions emitted by emitZ3SolverTemplates.
 	if tmplIdx := strings.Index(out.Impl, "void __from_solver"); tmplIdx >= 0 && tmplIdx < z3Idx {
-		t.Fatalf("ivy_go_z3.hpp(%d) must precede __from_solver template definitions(%d):\n%s",
+		t.Fatalf("ivy_z3_helpers.hpp(%d) must precede __from_solver template definitions(%d):\n%s",
 			z3Idx, tmplIdx, out.Impl)
 	}
 }
@@ -8226,8 +8250,10 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if strings.Contains(out.Impl, `#include "ivy_go_z3.hpp"`) {
-		t.Fatalf("ivy_go_z3.hpp must not be emitted for repl target:\n%s", out.Impl)
+	for _, unwanted := range []string{`#include "ivy_go_z3.hpp"`, `#include "ivy_z3_gen.hpp"`, `#include "ivy_z3_helpers.hpp"`} {
+		if strings.Contains(out.Impl, unwanted) || strings.Contains(out.Header, unwanted) {
+			t.Fatalf("%s must not be emitted for repl target:\nheader:\n%s\nimpl:\n%s", unwanted, out.Header, out.Impl)
+		}
 	}
 }
 

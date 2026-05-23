@@ -2,6 +2,7 @@ package ivy2cpp
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -198,6 +199,13 @@ func (g *Generator) emitActionGenClassHeader(w *cppWriter, plan *actionGenPlan) 
 	w.linef("%s(%s &obj);", className, g.ClassName)
 	w.linef("bool generate(%s &obj);", g.ClassName)
 	w.linef("void execute(%s &obj);", g.ClassName)
+	g.emitActionGenMemberDecls(w, plan)
+	w.indent--
+	w.close(";")
+	w.blank()
+}
+
+func (g *Generator) emitActionGenMemberDecls(w *cppWriter, plan *actionGenPlan) {
 	if plan.fallback {
 		// Weak generator: declare the formal params as members like the
 		// pre-M4 path did, so the existing execute body still compiles.
@@ -231,14 +239,15 @@ func (g *Generator) emitActionGenClassHeader(w *cppWriter, plan *actionGenPlan) 
 			w.linef("%s %s;", g.cppQualifiedType(rootConst.CSort, g.ClassName), varName(rootConst.Name))
 		}
 	}
-	w.indent--
-	w.close(";")
-	w.blank()
 }
 
 // emitActionGen emits the constructor, generate(), and execute() bodies
 // for one plan. Mirrors Python ivy_to_cpp.py:1260-1347.
 func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
+	if g.Config.Target == "test" {
+		g.emitPythonTestActionGen(w, plan)
+		return
+	}
 	if plan.fallback {
 		g.emitWeakActionGenerator(w, plan)
 		return
@@ -358,6 +367,131 @@ func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
 	g.emitActionGenExecute(w, plan)
 }
 
+func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
+	if plan.fallback {
+		g.emitWeakActionGenerator(w, plan)
+		return
+	}
+	className := plan.className
+
+	w.open(fmt.Sprintf("%s::%s(%s &obj){", className, className, g.ClassName))
+	g.emitPythonTestZ3Sig(w, plan.inputs)
+	emitDeclSet := make(map[goivy.NodeKey]bool)
+	for _, sym := range plan.inputs {
+		k := goivy.Key(sym)
+		if emitDeclSet[k] {
+			continue
+		}
+		emitDeclSet[k] = true
+		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
+			continue
+		}
+		if _, defidx := plan.oldPreClauses.DefIdx[k]; defidx {
+			continue
+		}
+		g.emitPythonTestDeclSolver(w, stateSymbol{Name: sym.Name, Sort: sym.CSort}, "")
+	}
+	type ptoDecl struct {
+		nameExpr string
+		sym      stateSymbol
+	}
+	var ptoDecls []ptoDecl
+	for _, sym := range plan.used.All() {
+		c, ok := sym.(*goivy.Const)
+		if !ok || c.Name != "*>" {
+			continue
+		}
+		k := goivy.Key(c)
+		if emitDeclSet[k] {
+			continue
+		}
+		emitDeclSet[k] = true
+		symName := ""
+		if fs, ok := c.CSort.(*goivy.LogicFunctionSort); ok {
+			domain := fs.Domain()
+			if len(domain) == 2 {
+				symName = strconv.Quote(variantSolverRelationName(domain[0], domain[1]))
+			}
+		}
+		ptoDecls = append(ptoDecls, ptoDecl{nameExpr: symName, sym: stateSymbol{Name: c.Name, Sort: c.CSort}})
+	}
+	sort.Slice(ptoDecls, func(i, j int) bool {
+		return ptoDecls[i].nameExpr > ptoDecls[j].nameExpr
+	})
+	for _, decl := range ptoDecls {
+		g.emitPythonTestDeclSolver(w, decl.sym, decl.nameExpr)
+	}
+	if smt, ok := g.formulaToSmtlib(plan.preFmla); ok {
+		if !g.emitPythonTestVariantConstraintAdd(w, smt) {
+			w.linef("add(%s);", strconv.Quote("(assert "+smt+")"))
+		}
+	} else {
+		w.line("// ivy2cpp: failed to translate precondition to SMT-LIB; falling back to no constraint")
+	}
+	w.close("")
+
+	w.open(fmt.Sprintf("bool %s::generate(%s& obj) {", className, g.ClassName))
+	w.line("push();")
+	g.emitVariantPrepares(w)
+	preUsed := goivy.UsedSymbolsAst(plan.preFmla)
+	defNames := preDefinedNames(plan.oldPreClauses)
+	for _, sym := range g.stateSymbols() {
+		if !preUsedContains(preUsed, sym.Name) {
+			continue
+		}
+		if defNames[sym.Name] {
+			continue
+		}
+		g.emitSetSolver(w, sym, "obj")
+	}
+	w.line("alits.clear();")
+	defedParams := plan.defedParamSet()
+	for _, sym := range plan.inputs {
+		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
+			continue
+		}
+		if _, defidx := plan.oldPreClauses.DefIdx[goivy.Key(sym)]; defidx {
+			continue
+		}
+		st := stateSymbol{Name: sym.Name, Sort: sym.CSort}
+		if err := g.emitRandomizeSolver(w, st); err != nil {
+			w.linef("// ivy2cpp: emitRandomize skipped for %q (%v)", sym.Name, err)
+		}
+	}
+	w.line("bool __res = solve();")
+	w.open("if (__res) {")
+	for _, sym := range plan.inputs {
+		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
+			continue
+		}
+		if _, defidx := plan.oldPreClauses.DefIdx[goivy.Key(sym)]; defidx {
+			continue
+		}
+		if defedParams[goivy.Key(sym)] {
+			continue
+		}
+		st := stateSymbol{Name: sym.Name, Sort: sym.CSort}
+		if err := g.emitEvalSolver(w, st, ""); err != nil {
+			w.linef("// ivy2cpp: emitEvalSolver skipped for %q (%v)", sym.Name, err)
+		}
+	}
+	if len(plan.paramDefs) > 0 {
+		ssyms := make(map[string]bool)
+		for _, sym := range g.stateSymbols() {
+			ssyms[sym.Name] = true
+		}
+		g.emitDefinedInputs(w, plan.paramDefs, plan.fsyms, ssyms)
+	}
+	w.close("")
+	g.emitVariantCleanups(w)
+	w.line("pop();")
+	w.line("obj.___ivy_gen = this;")
+	w.line("return __res;")
+	w.close("")
+
+	g.emitActionGenExecute(w, plan)
+}
+
 // emitWeakActionGenerator emits the pre-M4 fallback shape: randomize
 // state, check(), randomize inputs at C++ level, return true. Used when
 // the analysis path cannot produce a precondition for this action.
@@ -400,6 +534,10 @@ func (g *Generator) emitWeakActionGenerator(w *cppWriter, plan *actionGenPlan) {
 //  4. if opt_trace: close `__ivy_out << "}"`
 //  5. if returns: print `__ivy_out << "= " << __res`
 func (g *Generator) emitActionGenExecute(w *cppWriter, plan *actionGenPlan) {
+	if g.Config.Target == "test" {
+		g.emitPythonTestActionGenExecute(w, plan)
+		return
+	}
 	className := plan.className
 	act := plan.origAct
 	w.open(fmt.Sprintf("void %s::execute(%s &obj) {", className, g.ClassName))
@@ -475,6 +613,56 @@ func (g *Generator) emitActionGenExecute(w *cppWriter, plan *actionGenPlan) {
 		if g.Config.Trace {
 			w.linef(`__ivy_out%s << "}" << std::endl;`, nf)
 		}
+	}
+	w.close("")
+	w.blank()
+}
+
+func (g *Generator) emitPythonTestActionGenExecute(w *cppWriter, plan *actionGenPlan) {
+	className := plan.className
+	act := plan.origAct
+	fn, err := funName(plan.name)
+	if err != nil {
+		fn = varName(plan.name)
+	}
+	displayName := plan.name
+	if idx := strings.LastIndex(displayName, ":"); idx >= 0 {
+		displayName = displayName[idx+1:]
+	}
+	formals := act.GetFormalParams()
+	nf := g.numberFormat()
+	w.open(fmt.Sprintf("void %s::execute(%s& obj){", className, g.ClassName))
+	if len(formals) > 0 {
+		var b strings.Builder
+		b.WriteString(fmt.Sprintf(`__ivy_out%s << "> %s("`, nf, displayName))
+		for i, p := range formals {
+			if i > 0 {
+				b.WriteString(` << ","`)
+			}
+			b.WriteString(fmt.Sprintf(" << %s", varName(p.Name)))
+		}
+		b.WriteString(` << ")" << std::endl;`)
+		w.line(b.String())
+	} else {
+		w.linef(`__ivy_out%s << "> %s" << std::endl;`, nf, displayName)
+	}
+	args := make([]string, 0, len(formals)+len(act.GetFormalReturns()))
+	for _, p := range formals {
+		args = append(args, varName(p.Name))
+	}
+	returns := act.GetFormalReturns()
+	callExpr := fmt.Sprintf("obj.%s(%s)", fn, strings.Join(args, ", "))
+	if len(returns) == 0 {
+		w.linef("%s;", callExpr)
+	} else if len(returns) == 1 {
+		w.linef(`__ivy_out%s << "= " << %s << std::endl;`, nf, callExpr)
+	} else {
+		for _, r := range returns {
+			nm := varName(r.Name)
+			w.linef("%s %s = %s;", g.cppQualifiedType(r.CSort, g.ClassName), nm, g.cppZeroValueInScope(r.CSort))
+			args = append(args, nm)
+		}
+		w.linef("obj.%s(%s);", fn, strings.Join(args, ", "))
 	}
 	w.close("")
 	w.blank()

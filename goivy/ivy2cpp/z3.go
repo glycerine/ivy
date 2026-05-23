@@ -102,6 +102,25 @@ func (g *Generator) emitZ3SolverConversions(w *cppWriter) {
 // uniformly with the Z3 model representation.
 func (g *Generator) emitZ3EnumSolverConversion(w *cppWriter, s *goivy.LogicEnumeratedSort) {
 	typ := g.cppQualifiedType(s, g.ClassName)
+	if g.Config.Target == "test" {
+		w.line("template <>")
+		w.open(fmt.Sprintf("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, %s &val) {", typ, typ))
+		w.line("int thing = val;")
+		w.line("return __to_solver<int>(g, v, thing);")
+		w.close("")
+		w.line("template <>")
+		w.open(fmt.Sprintf("void __from_solver<%s>(gen &g, const z3::expr &v, %s &res) {", typ, typ))
+		w.line("int temp;")
+		w.line("__from_solver<int>(g, v, temp);")
+		w.linef("res = (%s)temp;", typ)
+		w.close("")
+		w.line("template <>")
+		w.open(fmt.Sprintf("void __randomize<%s>(gen &g, const z3::expr &v, const std::string &sort_name) {", typ))
+		w.line("__randomize<int>(g, v, sort_name);")
+		w.close("")
+		w.blank()
+		return
+	}
 	w.line("template <>")
 	w.open(fmt.Sprintf("void __from_solver<%s>(gen &g, const z3::expr &v, %s &res) {", typ, typ))
 	w.line("int temp;")
@@ -556,15 +575,20 @@ func z3RandomHelperName(s goivy.Sort) string {
 }
 
 func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
-	w.open("class ivy2cpp_action_gen {")
-	w.line("public:")
-	w.indent++
-	w.linef("virtual bool generate(%s &obj) = 0;", g.ClassName)
-	w.linef("virtual void execute(%s &obj) = 0;", g.ClassName)
-	w.line("virtual ~ivy2cpp_action_gen() {}")
-	w.indent--
-	w.close(";")
-	w.blank()
+	if g.Config.Target == "test" {
+		return g.emitPythonTestZ3GeneratorClasses(w)
+	}
+	if g.Config.Target != "test" {
+		w.open("class ivy2cpp_action_gen {")
+		w.line("public:")
+		w.indent++
+		w.linef("virtual bool generate(%s &obj) = 0;", g.ClassName)
+		w.linef("virtual void execute(%s &obj) = 0;", g.ClassName)
+		w.line("virtual ~ivy2cpp_action_gen() {}")
+		w.indent--
+		w.close(";")
+		w.blank()
+	}
 
 	w.open("class init_gen : public gen {")
 	w.line("public:")
@@ -639,6 +663,301 @@ func (g *Generator) actionGeneratorClassName(name string) string {
 		fn = varName(name)
 	}
 	return fn + "_gen"
+}
+
+func (g *Generator) emitPythonTestZ3GeneratorClasses(w *cppWriter) error {
+	plans := make(map[string]*actionGenPlan)
+	var names []string
+	initActions := g.initialMixinActionNames()
+	for name, act := range g.Mod.Actions.All() {
+		if initActions[name] || !g.Mod.PublicActions.Get(name) {
+			continue
+		}
+		if isFinalizeName(name) {
+			continue
+		}
+		names = append(names, name)
+		plans[name] = g.buildActionGenPlan(name, act)
+	}
+	sort.Strings(names)
+
+	if err := g.emitPythonTestInitGen(w); err != nil {
+		return err
+	}
+	for _, name := range names {
+		plan := plans[name]
+		g.emitPythonTestActionGenClassHeader(w, plan)
+		g.emitActionGen(w, plan)
+	}
+	return nil
+}
+
+func (g *Generator) emitPythonTestInitGen(w *cppWriter) error {
+	w.open("class init_gen : public gen {")
+	w.line("public:")
+	w.indent++
+	w.linef("init_gen(%s&);", g.ClassName)
+	w.linef("bool generate(%s&);", g.ClassName)
+	w.linef("void execute(%s&){}", g.ClassName)
+	w.indent--
+	w.close(";")
+
+	w.open(fmt.Sprintf("init_gen::init_gen(%s &obj){", g.ClassName))
+	g.emitPythonTestZ3Sig(w, nil)
+	if err := g.emitPythonTestInitialConstraint(w); err != nil {
+		return err
+	}
+	w.close("")
+
+	w.open(fmt.Sprintf("bool init_gen::generate(%s& obj) {", g.ClassName))
+	g.emitVariantPrepares(w)
+	w.line("alits.clear();")
+	if err := g.emitInitGenPerSymbolDispatch(w, "obj"); err != nil {
+		return err
+	}
+	w.line("bool __res = solve();")
+	w.open("if (__res) {")
+	if err := g.emitZ3InitialStateEvaluation(w, "obj"); err != nil {
+		return err
+	}
+	g.emitProgressCounterResets(w, "obj")
+	w.close("")
+	g.emitVariantCleanups(w)
+	w.line("obj.___ivy_gen = this;")
+	w.line("obj.__init();")
+	w.line("return __res;")
+	w.close("")
+	return nil
+}
+
+func (g *Generator) emitVariantPrepares(w *cppWriter) {
+	for _, name := range g.Mod.SortOrder {
+		if !g.isVariantSuperName(name) {
+			continue
+		}
+		s, ok := g.Mod.Sig.Sorts.Get2(name)
+		if !ok {
+			continue
+		}
+		w.linef("%s::prepare();", cppScalarTypeWith(g, s, g.ClassName))
+	}
+}
+
+func (g *Generator) emitVariantCleanups(w *cppWriter) {
+	for _, name := range g.Mod.SortOrder {
+		if !g.isVariantSuperName(name) {
+			continue
+		}
+		s, ok := g.Mod.Sig.Sorts.Get2(name)
+		if !ok {
+			continue
+		}
+		w.linef("%s::cleanup();", cppScalarTypeWith(g, s, g.ClassName))
+	}
+}
+
+func (g *Generator) emitPythonTestActionGenClassHeader(w *cppWriter, plan *actionGenPlan) {
+	className := plan.className
+	w.open(fmt.Sprintf("class %s : public gen {", className))
+	w.line("public:")
+	w.indent++
+	g.emitActionGenMemberDecls(w, plan)
+	w.linef("%s(%s&);", className, g.ClassName)
+	w.linef("bool generate(%s&);", g.ClassName)
+	w.linef("void execute(%s&);", g.ClassName)
+	w.indent--
+	w.close(";")
+}
+
+func (g *Generator) emitPythonTestZ3Sig(w *cppWriter, extra []*goivy.Const) {
+	g.emitPythonTestZ3SortRegistrations(w, extra)
+	for _, sym := range g.pythonTestZ3SigSymbols() {
+		g.emitPythonTestDeclSolver(w, sym, "")
+	}
+}
+
+func (g *Generator) emitPythonTestZ3SortRegistrations(w *cppWriter, extra []*goivy.Const) {
+	needed := map[string]bool{}
+	seen := map[string]bool{}
+	var collect func(goivy.Sort)
+	collect = func(s goivy.Sort) {
+		if s == nil {
+			return
+		}
+		if fs, ok := s.(*goivy.LogicFunctionSort); ok {
+			for _, d := range fs.Domain() {
+				collect(d)
+			}
+			collect(fs.Range())
+			return
+		}
+		name := sortName(s)
+		if name != "" {
+			if seen[name] {
+				return
+			}
+			seen[name] = true
+		}
+		if name != "" && name != "bool" {
+			needed[name] = true
+		}
+		if g.isDestructorRecordRange(s) {
+			if destrs, ok := g.Mod.SortDestructors.Get2(name); ok {
+				for _, d := range destrs {
+					collect(d.CSort)
+				}
+			}
+		}
+	}
+	for _, sym := range g.pythonTestZ3SigSymbols() {
+		collect(sym.Sort)
+	}
+	if g.Mod != nil && g.Mod.Actions != nil {
+		for _, act := range g.Mod.Actions.All() {
+			if act == nil {
+				continue
+			}
+			for _, p := range act.GetFormalParams() {
+				if p != nil {
+					collect(p.CSort)
+				}
+			}
+			for _, r := range act.GetFormalReturns() {
+				if r != nil {
+					collect(r.CSort)
+				}
+			}
+		}
+	}
+	for _, sym := range extra {
+		if sym != nil {
+			collect(sym.CSort)
+		}
+	}
+	for _, name := range g.Mod.SortOrder {
+		if !needed[name] {
+			continue
+		}
+		s, ok := g.Mod.Sig.Sorts.Get2(name)
+		if !ok {
+			continue
+		}
+		g.emitPythonTestZ3SortRegistration(w, name, s)
+	}
+}
+
+func (g *Generator) emitPythonTestZ3SortRegistration(w *cppWriter, name string, s goivy.Sort) {
+	if enum, ok := s.(*goivy.LogicEnumeratedSort); ok && enum.Name != "" && len(enum.Extension) > 0 {
+		values := make([]string, len(enum.Extension))
+		for i, v := range enum.Extension {
+			values[i] = strconv.Quote(v)
+		}
+		cname := varName(name)
+		w.linef("const char *%s_values[%d] = {%s};", cname, len(values), strings.Join(values, ","))
+		w.linef("mk_enum(%s,%d,%s_values);", strconv.Quote(name), len(values), cname)
+		return
+	}
+	if it, ok := g.cppInterpType(s); ok {
+		switch it.Kind {
+		case cppInterpBV, cppInterpStrBV, cppInterpIntBV:
+			w.linef("mk_bv(%s,%d);", strconv.Quote(name), it.Bits)
+			return
+		}
+	}
+	if rs, ok := g.rangeSortFor(s); ok {
+		if lo, hi, ok := numericRangeBounds(rs); ok {
+			w.linef("mk_int(%s);", strconv.Quote(name))
+			w.linef("int_ranges[%s] = std::pair<unsigned long long, unsigned long long>(%s,(%s+1)-1);", strconv.Quote(name), lo, hi)
+			return
+		}
+	}
+	if g.hasStringInterp(s) {
+		w.linef("mk_string(%s);", strconv.Quote(name))
+		return
+	}
+	w.linef("mk_sort(%s);", strconv.Quote(name))
+}
+
+func (g *Generator) pythonTestZ3SigSymbols() []stateSymbol {
+	var regular []stateSymbol
+	var generating []stateSymbol
+	seen := map[string]bool{}
+	add := func(sym stateSymbol) {
+		if sym.Name == "" || seen[sym.Name] {
+			return
+		}
+		seen[sym.Name] = true
+		if sym.Name == "_generating" {
+			generating = append(generating, sym)
+			return
+		}
+		regular = append(regular, sym)
+	}
+	if g.Mod != nil && g.Mod.SortDestructors != nil {
+		for _, sortName := range g.Mod.SortOrder {
+			destrs, ok := g.Mod.SortDestructors.Get2(sortName)
+			if !ok {
+				continue
+			}
+			for _, d := range destrs {
+				if d != nil {
+					add(stateSymbol{Name: d.Name, Sort: d.CSort})
+				}
+			}
+		}
+	}
+	for _, sym := range g.stateSymbols() {
+		add(sym)
+	}
+	out := append([]stateSymbol{}, regular...)
+	out = append(out, generating...)
+	return out
+}
+
+func (g *Generator) emitPythonTestDeclSolver(w *cppWriter, sym stateSymbol, symNameExpr string) {
+	domain, rng := z3DeclSignature(sym.Sort)
+	if rng == "bool" {
+		rng = "Bool"
+	}
+	if symNameExpr == "" {
+		symNameExpr = strconv.Quote(sym.Name)
+	}
+	if len(domain) == 0 {
+		w.linef("mk_const(%s,%s);", symNameExpr, strconv.Quote(rng))
+		return
+	}
+	tmp := g.nextTemp("__tmp")
+	domains := make([]string, len(domain))
+	for i, d := range domain {
+		domains[i] = strconv.Quote(d)
+	}
+	w.linef("const char *%s_domain[%d] = {%s};", tmp, len(domain), strings.Join(domains, ","))
+	w.linef("mk_decl(%s,%d,%s_domain,%s);", symNameExpr, len(domain), tmp, strconv.Quote(rng))
+}
+
+func (g *Generator) emitPythonTestInitialConstraint(w *cppWriter) error {
+	constraints, err := g.initialStateConstraints()
+	if err != nil {
+		return err
+	}
+	var smts []string
+	if len(constraints.Formulas) == 0 {
+		smts = append(smts, "true")
+	} else {
+		for _, f := range constraints.Formulas {
+			smt, ok := g.formulaToSmtlib(f)
+			if !ok {
+				return fmt.Errorf("ivy2cpp: failed to translate initial constraint to SMT-LIB")
+			}
+			smts = append(smts, smt)
+		}
+	}
+	w.line(`add("(assert (and\`)
+	for _, smt := range smts {
+		w.linef(`  %s\`, smt)
+	}
+	w.line(`))");`)
+	return nil
 }
 
 func z3SortName(s goivy.Sort) string {
