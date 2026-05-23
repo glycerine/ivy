@@ -286,7 +286,15 @@ func (g *Generator) emitVariantZ3Impl(w *cppWriter, super goivy.Sort, typeName s
 		w.line("}")
 	}
 	w.close("")
-	w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, %s &val) {", typeName, typeName))
+	valParam := fmt.Sprintf("%s &val", typeName)
+	existsName := "exists"
+	forallName := "forall"
+	if g.usesZ3() {
+		valParam = fmt.Sprintf("const %s &val", typeName)
+		existsName = "::exists"
+		forallName = "::forall"
+	}
+	w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, %s) {", typeName, valParam))
 	for i, sub := range g.Mod.Variants[sortText] {
 		subType := cppScalarTypeWith(g, sub, g.ClassName)
 		relName := variantSolverRelationName(super, sub)
@@ -294,7 +302,7 @@ func (g *Generator) emitVariantZ3Impl(w *cppWriter, super goivy.Sort, typeName s
 		w.linef("z3::func_decl pto = g.ctx.function(%s, g.sort(%s), g.sort(%s), g.ctx.bool_sort());", strconv.Quote(relName), strconv.Quote(sortText), strconv.Quote(sortName(sub)))
 		w.linef("z3::expr X = g.ctx.constant(\"X\", g.sort(%s));", strconv.Quote(sortName(sub)))
 		w.linef("%s tmp = %s;", subType, g.variantDowncastExpr("val", super, sub, g.ClassName))
-		w.line("return exists(X, pto(v, X) && __to_solver(g, X, tmp));")
+		w.linef("return %s(X, pto(v, X) && __to_solver(g, X, tmp));", existsName)
 		w.close("")
 	}
 	w.line("z3::expr conj = g.ctx.bool_val(false);")
@@ -304,7 +312,7 @@ func (g *Generator) emitVariantZ3Impl(w *cppWriter, super goivy.Sort, typeName s
 		w.indent++
 		w.linef("z3::func_decl pto = g.ctx.function(%s, g.sort(%s), g.sort(%s), g.ctx.bool_sort());", strconv.Quote(relName), strconv.Quote(sortText), strconv.Quote(sortName(sub)))
 		w.linef("z3::expr Y = g.ctx.constant(\"Y\", g.sort(%s));", strconv.Quote(sortName(sub)))
-		w.line("conj = conj && forall(Y, !pto(v, Y));")
+		w.linef("conj = conj && %s(Y, !pto(v, Y));", forallName)
 		w.indent--
 		w.line("}")
 	}

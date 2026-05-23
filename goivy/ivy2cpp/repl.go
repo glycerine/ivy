@@ -19,13 +19,16 @@ func (g *Generator) enumSortsForArgSpecs() []*goivy.LogicEnumeratedSort {
 	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
 		return nil
 	}
+	if g.Config.Target != "repl" && g.Config.Target != "test" && g.Config.Target != "gen" {
+		return nil
+	}
 	encoded := g.encodedSortSet()
 	var out []*goivy.LogicEnumeratedSort
 	for _, name := range g.Mod.SortOrder {
 		if encoded != nil && encoded[name] {
 			continue
 		}
-		if !g.sortNeededForGeneratedDecl(name) {
+		if !g.sortNeededForRuntimeSpecs(name) {
 			continue
 		}
 		s, ok := g.Mod.Sig.Sorts.Get2(name)

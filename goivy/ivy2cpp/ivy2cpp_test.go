@@ -5989,7 +5989,8 @@ func TestDestructorMultiArgFieldDeclaration(t *testing.T) {
 func TestDestructorHashThunkField(t *testing.T) {
 	// `key` is uninterpreted with no cardinality, so the destructor field
 	// must lower to hash_thunk storage. The struct __hash skips it per
-	// Python is_large_destr; equality and stream fall back to scalar form.
+	// Python is_large_destr; equality also skips it because hash_thunk has
+	// no C++ operator==.
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
 type key
@@ -6013,8 +6014,8 @@ destructor shade(C:cell, K:key) : color
 	if strings.Contains(out.Header, "hv += hash_space::hash<color>()(shade") {
 		t.Fatalf("hash should skip hash_thunk-storage destructor field:\n%s", out.Header)
 	}
-	if !strings.Contains(out.Header, "return ((s.shade == t.shade));") {
-		t.Fatalf("equality should fall back to scalar compare for hash_thunk field:\n%s", out.Header)
+	if !strings.Contains(out.Header, "return true;") || strings.Contains(out.Header, "s.shade == t.shade") {
+		t.Fatalf("equality should skip hash_thunk-storage destructor field:\n%s", out.Header)
 	}
 	compileGeneratedCPP(t, out)
 }

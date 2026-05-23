@@ -395,7 +395,7 @@ func (g *Generator) emitConstructorParamAssignments(w *cppWriter) {
 }
 
 func (g *Generator) emitSortDecls(w *cppWriter) {
-	if g.Mod.Sig == nil {
+	if g.Mod.Sig == nil || g.Mod.Sig.Symbols.Len() == 0 {
 		return
 	}
 	emitted := map[string]bool{}
@@ -456,27 +456,17 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 		}
 		emitted[name] = true
 		if it, ok := g.cppInterpType(s); ok {
-			if it.Kind == cppInterpBV && it.primitiveType() != "" {
-				// Primitive interpreted bitvectors lower directly to C++
-				// integer types; Python does not emit aliases for them.
-			} else {
-				if it.Kind == cppInterpIntBV && !emittedIntClass {
-					g.emitIntClassDecl(w)
-					emittedIntClass = true
-				}
-				g.emitCPPTypeDecl(w, s, it)
+			if it.Kind == cppInterpBV && it.primitiveType() != "" && !g.usesZ3() {
 				return
 			}
-		}
-		if _, interpreted := g.Mod.Sig.Interp[name]; interpreted {
-			return
-		}
-		if it, ok := g.cppInterpType(s); ok {
 			if it.Kind == cppInterpIntBV && !emittedIntClass {
 				g.emitIntClassDecl(w)
 				emittedIntClass = true
 			}
 			g.emitCPPTypeDecl(w, s, it)
+			return
+		}
+		if _, interpreted := g.Mod.Sig.Interp[name]; interpreted {
 			return
 		}
 		switch st := s.(type) {
@@ -574,7 +564,7 @@ func (g *Generator) emitDestructorEqualityInlines(w *cppWriter) {
 			}
 			field := varName(memName(d.Name))
 			st := cppFunctionStorageFor(g, domain, fs.Range(), "")
-			if st.Kind == cppStorageArray {
+			if st.Kind == cppStorageArray || st.Kind == cppStorageHashThunk {
 				continue
 			}
 			parts = append(parts, fmt.Sprintf("(s.%s == t.%s)", field, field))
@@ -805,6 +795,9 @@ func (g *Generator) cardinalitySortNames() []string {
 }
 
 func (g *Generator) emitCardinalityDecls(w *cppWriter) {
+	if g.Config.Target != "repl" && g.Config.Target != "test" && g.Config.Target != "gen" {
+		return
+	}
 	names := g.cardinalitySortNames()
 	for _, name := range names {
 		w.linef("long long __CARD__%s;", varName(name))
@@ -815,6 +808,9 @@ func (g *Generator) emitCardinalityDecls(w *cppWriter) {
 }
 
 func (g *Generator) emitCardinalityInitializers(w *cppWriter) {
+	if g.Config.Target != "repl" && g.Config.Target != "test" && g.Config.Target != "gen" {
+		return
+	}
 	for _, name := range g.cardinalitySortNames() {
 		if !g.shouldInitializeCardinality(name) {
 			continue
@@ -831,10 +827,24 @@ func (g *Generator) emitCardinalityInitializers(w *cppWriter) {
 }
 
 func (g *Generator) shouldInitializeCardinality(name string) bool {
-	return g.sortNeededForGeneratedDecl(name)
+	return g.sortNeededForRuntimeSpecs(name)
 }
 
 func (g *Generator) sortNeededForGeneratedDecl(name string) bool {
+	if g.sortNeededForRuntimeSpecs(name) {
+		return true
+	}
+	if g.Mod.Actions != nil {
+		for _, act := range g.Mod.Actions.All() {
+			if g.exprReferencesSortName(act, name, map[goivy.NodeKey]bool{}) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (g *Generator) sortNeededForRuntimeSpecs(name string) bool {
 	for _, sym := range g.stateSymbols() {
 		if g.sortDependencyReferencesName(sym.Sort, name, map[string]bool{}) {
 			return true
@@ -867,6 +877,26 @@ func (g *Generator) sortNeededForGeneratedDecl(name string) bool {
 			if p != nil && g.sortDependencyReferencesName(p.NodeSort(), name, map[string]bool{}) {
 				return true
 			}
+		}
+	}
+	return false
+}
+
+func (g *Generator) exprReferencesSortName(e goivy.Expr, name string, seen map[goivy.NodeKey]bool) bool {
+	if e == nil || name == "" {
+		return false
+	}
+	key := goivy.Key(e)
+	if seen[key] {
+		return false
+	}
+	seen[key] = true
+	if g.sortDependencyReferencesName(e.NodeSort(), name, map[string]bool{}) {
+		return true
+	}
+	for _, child := range e.Children() {
+		if g.exprReferencesSortName(child, name, seen) {
+			return true
 		}
 	}
 	return false
@@ -941,28 +971,60 @@ type testGenEntry struct {
 // Multiple symbols can share a name when polymorphic; deduplicate by
 // name so callers can match relation names directly.
 func (g *Generator) allStateSymbols() []stateSymbol {
-	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
+	if g == nil || g.Mod == nil {
 		return nil
 	}
 	seen := map[string]bool{}
+	knownSig := map[string]bool{}
 	var out []stateSymbol
-	for _, sym := range g.Mod.Sig.AllSymbols() {
-		name := sym.Name
+	add := func(name string, s goivy.Sort) {
 		if name == "" || seen[name] {
-			continue
+			return
 		}
-		if g.Mod.Sig.Constructors[name] || g.isSortConstructorName(name) {
-			continue
+		if g.Mod.Sig != nil && g.Mod.Sig.Constructors[name] {
+			return
 		}
-		// Python's `slv.solver_name(il.normalize_symbol(s)) != None`. Treat
-		// an error as "non-interpreted" (Python's IvyError path raises
-		// rather than excludes; at compile time we don't want to mask it).
-		n, err := goivy.SolverName(sym, g.Mod.Sig, nil)
-		if err == nil && n == "" {
-			continue
+		if g.isSortConstructorName(name) {
+			return
 		}
 		seen[name] = true
-		out = append(out, stateSymbol{Name: name, Sort: sym.CSort})
+		out = append(out, stateSymbol{Name: name, Sort: s})
+	}
+	if g.Mod.Sig != nil {
+		for _, sym := range g.Mod.Sig.AllSymbols() {
+			name := sym.Name
+			if name != "" {
+				knownSig[name] = true
+			}
+			if name == "" || seen[name] {
+				continue
+			}
+			if g.Mod.Sig.Constructors[name] || g.isSortConstructorName(name) {
+				continue
+			}
+			// Python's `slv.solver_name(il.normalize_symbol(s)) != None`. Treat
+			// an error as "non-interpreted" (Python's IvyError path raises
+			// rather than excludes; at compile time we don't want to mask it).
+			n, err := goivy.SolverName(sym, g.Mod.Sig, nil)
+			if err == nil && n == "" {
+				continue
+			}
+			add(name, sym.CSort)
+		}
+	}
+	if g.Mod.Relations != nil {
+		for name, s := range g.Mod.Relations.All() {
+			if !knownSig[name] {
+				add(name, s)
+			}
+		}
+	}
+	if g.Mod.Functions != nil {
+		for name, s := range g.Mod.Functions.All() {
+			if !knownSig[name] {
+				add(name, s)
+			}
+		}
 	}
 	return out
 }
