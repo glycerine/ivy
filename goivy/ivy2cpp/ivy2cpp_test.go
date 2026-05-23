@@ -6907,6 +6907,28 @@ action step(p:t, q:t) = {
 	compileGeneratedCPP(t, out)
 }
 
+// TestDerivedDefinitionParamSortDeclaredWithoutActions verifies that a sort
+// used only by a derived definition still gets a C++ declaration before the
+// method that takes it as a parameter.
+func TestDerivedDefinitionParamSortDeclaredWithoutActions(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type t = {a, b}
+relation eq(X:t, Y:t)
+definition eq(X:t, Y:t) = X = Y
+`)
+	out, err := Generate(mod, Config{ClassName: "deronly"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	enumIdx := strings.Index(out.Header, "enum t { a, b };")
+	declIdx := strings.Index(out.Header, "bool eq(t X, t Y);")
+	if enumIdx < 0 || declIdx < 0 || enumIdx > declIdx {
+		t.Fatalf("derived-only parameter sort must precede method declaration; enumIdx=%d declIdx=%d\n%s",
+			enumIdx, declIdx, out.Header)
+	}
+	compileGeneratedCPP(t, out)
+}
+
 // TestZeroArgDerivedDefinitionEmitsMethod verifies that a derived
 // definition with no parameters emits a no-arg C++ method. The synthetic
 // AssignAction's formal_params is empty.

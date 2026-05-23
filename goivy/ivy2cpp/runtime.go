@@ -30,7 +30,10 @@ func (g *Generator) emitRuntimeHeaderPreamble(w *cppWriter) {
 	}
 	w.line("#define _HAS_ITERATOR_DEBUGGING 0")
 	if g.runtimeUsesGenerator() {
+		w.line("#ifndef IVY2CPP_HAS_IVY_GEN")
+		w.line("#define IVY2CPP_HAS_IVY_GEN")
 		w.line("struct ivy_gen {virtual int choose(int rng,const char *name) = 0;};")
+		w.line("#endif")
 	}
 	if g.usesZ3() {
 		w.line(`#include "z3++.h"`)

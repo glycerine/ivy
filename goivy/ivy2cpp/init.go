@@ -90,6 +90,9 @@ func (g *Generator) isStateTarget(e goivy.Expr) bool {
 	if g.Mod.Sig != nil && g.Mod.Sig.Constructors[name] {
 		return false
 	}
+	if g.isSortConstructorName(name) {
+		return false
+	}
 	if g.Mod.DestructorSorts != nil {
 		if _, ok := g.Mod.DestructorSorts[name]; ok {
 			return false

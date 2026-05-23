@@ -398,38 +398,63 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 	if g.Mod.Sig == nil {
 		return
 	}
+	emitted := map[string]bool{}
+	visiting := map[string]bool{}
 	emittedDestructorStructs := map[string]bool{}
 	emittedVariantSupers := map[string]bool{}
 	emittedIntClass := false
-	for _, name := range g.Mod.SortOrder {
+
+	var emitOne func(name string, force bool)
+	emitOne = func(name string, force bool) {
+		if name == "" || name == "bool" || emitted[name] {
+			return
+		}
+		if visiting[name] {
+			return
+		}
+		visiting[name] = true
+		for _, dep := range g.sortDeclDependencyNames(name) {
+			emitOne(dep, true)
+		}
+		visiting[name] = false
+
 		if g.isVariantSuperName(name) {
+			emitted[name] = true
 			g.emitVariantSuperStruct(w, name)
 			emittedVariantSupers[name] = true
-			continue
+			return
 		}
 		if nt, ok := g.nativeTypeForSort(name); ok {
+			emitted[name] = true
 			g.emitNativeTypeDecl(w, name, nt)
-			continue
+			return
 		}
-		if _, ok := g.Mod.SortDestructors.Get2(name); ok {
-			g.emitDestructorStruct(w, name)
-			emittedDestructorStructs[name] = true
-			continue
+		if g.Mod.SortDestructors != nil {
+			if _, ok := g.Mod.SortDestructors.Get2(name); ok {
+				emitted[name] = true
+				g.emitDestructorStruct(w, name)
+				emittedDestructorStructs[name] = true
+				return
+			}
 		}
 		if g.isPlainVariantSubtypeName(name) {
-			continue
+			emitted[name] = true
+			return
 		}
 		if g.isVariantSubtypeName(name) {
+			emitted[name] = true
 			g.emitVariantLeafStruct(w, name)
-			continue
+			return
 		}
 		s, ok := g.Mod.Sig.Sorts.Get2(name)
 		if !ok {
-			continue
+			emitted[name] = true
+			return
 		}
-		if !g.sortNeededForGeneratedDecl(name) {
-			continue
+		if !force && !g.sortNeededForGeneratedDecl(name) {
+			return
 		}
+		emitted[name] = true
 		if it, ok := g.cppInterpType(s); ok {
 			if it.Kind == cppInterpBV && it.primitiveType() != "" {
 				// Primitive interpreted bitvectors lower directly to C++
@@ -440,11 +465,11 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 					emittedIntClass = true
 				}
 				g.emitCPPTypeDecl(w, s, it)
-				continue
+				return
 			}
 		}
 		if _, interpreted := g.Mod.Sig.Interp[name]; interpreted {
-			continue
+			return
 		}
 		if it, ok := g.cppInterpType(s); ok {
 			if it.Kind == cppInterpIntBV && !emittedIntClass {
@@ -452,12 +477,12 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 				emittedIntClass = true
 			}
 			g.emitCPPTypeDecl(w, s, it)
-			continue
+			return
 		}
 		switch st := s.(type) {
 		case *goivy.LogicEnumeratedSort:
 			if isNumericEnum(st) {
-				continue
+				return
 			}
 			vals := make([]string, len(st.Extension))
 			for i, v := range st.Extension {
@@ -474,14 +499,20 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 			}
 		}
 	}
-	destructorNames := insMapKeys(g.Mod.SortDestructors)
-	if len(destructorNames) > 0 {
-		w.blank()
-		for _, name := range destructorNames {
-			if emittedDestructorStructs[name] {
-				continue
+
+	for _, name := range g.Mod.SortOrder {
+		emitOne(name, false)
+	}
+	if g.Mod.SortDestructors != nil {
+		destructorNames := insMapKeys(g.Mod.SortDestructors)
+		if len(destructorNames) > 0 {
+			w.blank()
+			for _, name := range destructorNames {
+				if emittedDestructorStructs[name] {
+					continue
+				}
+				emitOne(name, true)
 			}
-			g.emitDestructorStruct(w, name)
 		}
 	}
 	for _, name := range g.Mod.SortOrder {
@@ -492,6 +523,22 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 		emittedVariantSupers[name] = true
 	}
 	w.blank()
+}
+
+func (g *Generator) sortDeclDependencyNames(name string) []string {
+	if g == nil || g.Mod == nil || name == "" {
+		return nil
+	}
+	seen := map[string]bool{}
+	var deps []string
+	for _, dep := range g.Mod.SortDependencies(name, false) {
+		if dep == "" || dep == "bool" || dep == name || seen[dep] {
+			continue
+		}
+		seen[dep] = true
+		deps = append(deps, dep)
+	}
+	return deps
 }
 
 func (g *Generator) emitDestructorStruct(w *cppWriter, name string) {
@@ -812,6 +859,16 @@ func (g *Generator) sortNeededForGeneratedDecl(name string) bool {
 			}
 		}
 	}
+	for _, d := range g.allDefinitions() {
+		if g.sortDependencyReferencesName(d.Sort, name, map[string]bool{}) {
+			return true
+		}
+		for _, p := range d.Params {
+			if p != nil && g.sortDependencyReferencesName(p.NodeSort(), name, map[string]bool{}) {
+				return true
+			}
+		}
+	}
 	return false
 }
 
@@ -894,7 +951,7 @@ func (g *Generator) allStateSymbols() []stateSymbol {
 		if name == "" || seen[name] {
 			continue
 		}
-		if g.Mod.Sig.Constructors[name] {
+		if g.Mod.Sig.Constructors[name] || g.isSortConstructorName(name) {
 			continue
 		}
 		// Python's `slv.solver_name(il.normalize_symbol(s)) != None`. Treat
@@ -929,6 +986,9 @@ func (g *Generator) stateSymbols() []stateSymbol {
 		if g.Mod.Sig != nil && g.Mod.Sig.Constructors[name] {
 			return
 		}
+		if g.isSortConstructorName(name) {
+			return
+		}
 		seen[name] = true
 		out = append(out, stateSymbol{Name: name, Sort: s})
 	}
@@ -936,6 +996,27 @@ func (g *Generator) stateSymbols() []stateSymbol {
 		add(sym.Name, sym.Sort)
 	}
 	return out
+}
+
+func (g *Generator) isSortConstructorName(name string) bool {
+	if g == nil || g.Mod == nil || name == "" {
+		return false
+	}
+	if g.Mod.ConstructorSorts != nil {
+		if _, ok := g.Mod.ConstructorSorts[name]; ok {
+			return true
+		}
+	}
+	if g.Mod.SortConstructors != nil {
+		for _, conss := range g.Mod.SortConstructors.All() {
+			for _, cons := range conss {
+				if cons != nil && cons.Name == name {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }
 
 func (g *Generator) emitMethodDecls(w *cppWriter) {
