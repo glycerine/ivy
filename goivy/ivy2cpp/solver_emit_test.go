@@ -35,7 +35,7 @@ func TestEmitSetSolverLargeFunctionEmitsForall(t *testing.T) {
 	for _, want := range []string{
 		"std::vector<z3::expr> __quants;",
 		`__quants.push_back(ctx.constant("X__0", sort("idx")));`,
-		`add(forall(__quants, __to_solver(*this, apply("bigf", ctx.constant("X__0", sort("idx"))), obj.bigf)));`,
+		`slvr.add(forall(__quants, __to_solver(*this,apply("bigf", ctx.constant("X__0", sort("idx"))),obj.bigf)));`,
 	} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("missing %q in large-function emit_set:\n%s", want, body)
@@ -76,7 +76,7 @@ individual slot(K:key) : cell
 	body := w.String()
 	for _, want := range []string{
 		"std::vector<z3::expr> __quants;",
-		`add(forall(__quants, __to_solver(*this, apply("slot", ctx.constant("X__0", sort("key"))), obj.slot)));`,
+		`slvr.add(forall(__quants, __to_solver(*this,apply("slot", ctx.constant("X__0", sort("key"))),obj.slot)));`,
 	} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("missing %q in large destructor-range emit_set:\n%s", want, body)

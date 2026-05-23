@@ -108,19 +108,19 @@ func (g *Generator) emitZ3EnumSolverConversion(w *cppWriter, s *goivy.LogicEnume
 	typ := g.cppQualifiedType(s, g.ClassName)
 	if g.Config.Target == "test" {
 		w.line("template <>")
-		w.open(fmt.Sprintf("z3::expr __to_solver<%s>(gen &g, const z3::expr &v, %s &val) {", typ, typ))
+		w.open(fmt.Sprintf("z3::expr  __to_solver<%s>( gen &g, const  z3::expr &v,%s &val){", typ, typ))
 		w.line("int thing = val;")
-		w.line("return __to_solver<int>(g, v, thing);")
+		w.line("return __to_solver<int>(g,v,thing);")
 		w.close("")
 		w.line("template <>")
-		w.open(fmt.Sprintf("void __from_solver<%s>(gen &g, const z3::expr &v, %s &res) {", typ, typ))
+		w.open(fmt.Sprintf("void  __from_solver<%s>( gen &g, const  z3::expr &v,%s &res){", typ, typ))
 		w.line("int temp;")
-		w.line("__from_solver<int>(g, v, temp);")
+		w.line("__from_solver<int>(g,v,temp);")
 		w.linef("res = (%s)temp;", typ)
 		w.close("")
 		w.line("template <>")
-		w.open(fmt.Sprintf("void __randomize<%s>(gen &g, const z3::expr &v, const std::string &sort_name) {", typ))
-		w.line("__randomize<int>(g, v, sort_name);")
+		w.open(fmt.Sprintf("void  __randomize<%s>( gen &g, const  z3::expr &v, const std::string &sort_name){", typ))
+		w.line("__randomize<int>(g,v,sort_name);")
 		w.close("")
 		w.blank()
 		return
@@ -697,14 +697,13 @@ func (g *Generator) emitPythonTestZ3GeneratorClasses(w *cppWriter) error {
 }
 
 func (g *Generator) emitPythonTestInitGen(w *cppWriter) error {
-	w.open("class init_gen : public gen {")
-	w.line("public:")
-	w.indent++
-	w.linef("init_gen(%s&);", g.ClassName)
-	w.linef("bool generate(%s&);", g.ClassName)
-	w.linef("void execute(%s&){}", g.ClassName)
-	w.indent--
-	w.close(";")
+	w.raw(fmt.Sprintf(`class init_gen : public gen {
+public:
+    init_gen(%s&);
+    bool generate(%s&);
+    void execute(%s&){}
+};
+`, g.ClassName, g.ClassName, g.ClassName))
 
 	w.open(fmt.Sprintf("init_gen::init_gen(%s &obj){", g.ClassName))
 	g.emitPythonTestZ3Sig(w, nil)
@@ -719,13 +718,17 @@ func (g *Generator) emitPythonTestInitGen(w *cppWriter) error {
 	if err := g.emitInitGenPerSymbolDispatch(w, "obj"); err != nil {
 		return err
 	}
+	w.blank()
+	w.line("// std::cout << slvr << std::endl;")
 	w.line("bool __res = solve();")
 	w.open("if (__res) {")
+	w.blank()
 	if err := g.emitZ3InitialStateEvaluation(w, "obj"); err != nil {
 		return err
 	}
 	g.emitProgressCounterResets(w, "obj")
 	w.close("")
+	w.blank()
 	g.emitVariantCleanups(w)
 	w.line("obj.___ivy_gen = this;")
 	w.line("obj.__init();")
@@ -762,8 +765,8 @@ func (g *Generator) emitVariantCleanups(w *cppWriter) {
 
 func (g *Generator) emitPythonTestActionGenClassHeader(w *cppWriter, plan *actionGenPlan) {
 	className := plan.className
-	w.open(fmt.Sprintf("class %s : public gen {", className))
-	w.line("public:")
+	w.linef("class %s : public gen {", className)
+	w.raw("  public:\n")
 	w.indent++
 	g.emitActionGenMemberDecls(w, plan)
 	w.linef("%s(%s&);", className, g.ClassName)

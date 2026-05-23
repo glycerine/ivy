@@ -259,7 +259,11 @@ func (g *Generator) emitIf(w *cppWriter, a *goivy.LogicIfAction) {
 		g.unsupported(w, "unsupported if condition: %s", err.Error())
 		return
 	}
-	w.open("if (" + cond + ") {")
+	if g.Config.Target == "test" {
+		w.open("if(" + cond + "){")
+	} else {
+		w.open("if (" + cond + ") {")
+	}
 	if thenAct, ok := a.ThenBody.(goivy.Action); ok {
 		g.emitAction(w, thenAct)
 	}

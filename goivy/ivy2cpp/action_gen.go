@@ -328,8 +328,15 @@ func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
 			w.linef("// ivy2cpp: emitRandomize skipped for %q (%v)", sym.Name, err)
 		}
 	}
+	if g.Config.Target == "test" {
+		w.blank()
+		w.line("// std::cout << slvr << std::endl;")
+	}
 	w.line("bool __res = solve();")
 	w.open("if (__res) {")
+	if g.Config.Target == "test" {
+		w.blank()
+	}
 	for _, sym := range plan.inputs {
 		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
 			continue
@@ -458,8 +465,15 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 			w.linef("// ivy2cpp: emitRandomize skipped for %q (%v)", sym.Name, err)
 		}
 	}
+	if g.Config.Target == "test" {
+		w.blank()
+		w.line("// std::cout << slvr << std::endl;")
+	}
 	w.line("bool __res = solve();")
 	w.open("if (__res) {")
+	if g.Config.Target == "test" {
+		w.blank()
+	}
 	for _, sym := range plan.inputs {
 		if strings.HasPrefix(sym.Name, "__ts") || sym.Name == "*>" {
 			continue
@@ -615,7 +629,9 @@ func (g *Generator) emitActionGenExecute(w *cppWriter, plan *actionGenPlan) {
 		}
 	}
 	w.close("")
-	w.blank()
+	if g.Config.Target != "test" {
+		w.blank()
+	}
 }
 
 func (g *Generator) emitPythonTestActionGenExecute(w *cppWriter, plan *actionGenPlan) {
@@ -665,7 +681,9 @@ func (g *Generator) emitPythonTestActionGenExecute(w *cppWriter, plan *actionGen
 		w.linef("obj.%s(%s);", fn, strings.Join(args, ", "))
 	}
 	w.close("")
-	w.blank()
+	if g.Config.Target != "test" {
+		w.blank()
+	}
 }
 
 // formulaToSmtlib translates fmla to a Z3 expression and returns the

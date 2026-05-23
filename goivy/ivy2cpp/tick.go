@@ -196,17 +196,25 @@ func progressCounterStorage(g *Generator, domain []goivy.Sort) cppFunctionStorag
 }
 
 func (g *Generator) emitTick(w *cppWriter) {
-	w.open(fmt.Sprintf("void %s::__tick(int __timeout) {", g.ClassName))
+	if g.Config.Target == "test" {
+		w.open(fmt.Sprintf("void %s::__tick(int __timeout){", g.ClassName))
+	} else {
+		w.open(fmt.Sprintf("void %s::__tick(int __timeout) {", g.ClassName))
+	}
 	progress := g.progressDecls()
 	if len(progress) == 0 {
 		w.close("")
-		w.blank()
+		if g.Config.Target != "test" {
+			w.blank()
+		}
 		return
 	}
 	g.emitProgressTickUpdates(w, progress)
 	g.emitProgressRelyChecks(w, progress)
 	w.close("")
-	w.blank()
+	if g.Config.Target != "test" {
+		w.blank()
+	}
 }
 
 func (g *Generator) emitProgressTickUpdates(w *cppWriter, progress []progressDecl) {

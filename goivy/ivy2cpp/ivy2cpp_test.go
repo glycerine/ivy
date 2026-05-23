@@ -937,12 +937,29 @@ export step
 				"void install_timer(timer *);",
 				"std::vector<int> ___ivy_stack;",
 				"std::ofstream __ivy_modelfile;",
-				"pthread_mutex_init(&mutex, NULL);",
 				"pthread_cancel(thread_ids[i]);",
-				"pthread_join(thread_ids[i], NULL);",
 			} {
 				if !strings.Contains(raw, want) {
 					t.Fatalf("%s missing runtime skeleton %q:\nheader:\n%s\nimpl:\n%s", target, want, out.Header, out.Impl)
+				}
+			}
+			if target == "test" {
+				for _, want := range []string{
+					"pthread_mutex_init(&mutex,NULL);",
+					"pthread_join(thread_ids[i],NULL);",
+				} {
+					if !strings.Contains(raw, want) {
+						t.Fatalf("%s missing runtime skeleton %q:\nheader:\n%s\nimpl:\n%s", target, want, out.Header, out.Impl)
+					}
+				}
+			} else {
+				for _, want := range []string{
+					"pthread_mutex_init(&mutex, NULL);",
+					"pthread_join(thread_ids[i], NULL);",
+				} {
+					if !strings.Contains(raw, want) {
+						t.Fatalf("%s missing runtime skeleton %q:\nheader:\n%s\nimpl:\n%s", target, want, out.Header, out.Impl)
+					}
 				}
 			}
 			if target == "gen" || target == "test" {
@@ -950,11 +967,17 @@ export step
 					"struct ivy_gen",
 					"ivy_gen *___ivy_gen;",
 					"ss << name << ':' << id;",
-					"___ivy_gen->choose(rng, ss.str().c_str());",
 				} {
 					if !strings.Contains(raw, want) {
 						t.Fatalf("%s missing generator skeleton %q:\nheader:\n%s\nimpl:\n%s", target, want, out.Header, out.Impl)
 					}
+				}
+				chooseWant := "___ivy_gen->choose(rng, ss.str().c_str());"
+				if target == "test" {
+					chooseWant = "___ivy_gen->choose(rng,ss.str().c_str());"
+				}
+				if !strings.Contains(raw, chooseWant) {
+					t.Fatalf("%s missing generator skeleton %q:\nheader:\n%s\nimpl:\n%s", target, chooseWant, out.Header, out.Impl)
 				}
 			} else if !strings.Contains(raw, "return 0;") {
 				t.Fatalf("%s non-generator choose should return 0:\n%s", target, out.Impl)
@@ -1051,11 +1074,17 @@ export step
 				"___ivy_stack.push_back(",
 				"helper();",
 				"___ivy_stack.pop_back();",
-				"return ___ivy_gen->choose(rng, ss.str().c_str());",
 			} {
 				if !strings.Contains(out.Header+out.Impl, want) {
 					t.Fatalf("%s missing generator plumbing %q:\nheader:\n%s\nimpl:\n%s", target, want, out.Header, out.Impl)
 				}
+			}
+			chooseWant := "return ___ivy_gen->choose(rng, ss.str().c_str());"
+			if target == "test" {
+				chooseWant = "return ___ivy_gen->choose(rng,ss.str().c_str());"
+			}
+			if !strings.Contains(out.Header+out.Impl, chooseWant) {
+				t.Fatalf("%s missing generator plumbing %q:\nheader:\n%s\nimpl:\n%s", target, chooseWant, out.Header, out.Impl)
 			}
 		})
 	}
@@ -4432,7 +4461,7 @@ attribute set.weight = "3.0"
 	}
 	for _, want := range []string{
 		// Multi-run outer loop.
-		"for (int runidx = 0; runidx < runs; runidx++)",
+		"for(int runidx = 0; runidx < runs; runidx++)",
 		"initializing = true;",
 		"ivy._generating = false;",
 		"initializing = false;",
@@ -4448,7 +4477,7 @@ attribute set.weight = "3.0"
 		// Random choice + do_over.
 		"double frnd = 0.0;",
 		"bool do_over = false;",
-		"for (int cycle = 0; cycle < test_iters; cycle++)",
+		"for(int cycle = 0; cycle < test_iters; cycle++)",
 		"if (frnd < totalweight) {",
 		"gen &g = *generators[idx];",
 		"ivy._generating = true;",
@@ -4456,11 +4485,11 @@ attribute set.weight = "3.0"
 		"g.execute(ivy);",
 		// select() branch for readers/timers.
 		"FD_ZERO(&rdfds);",
-		"int foo = select(maxfds + 1, &rdfds, 0, 0, &timeout);",
+		"int foo = select(maxfds+1,&rdfds,0,0,&timeout);",
 		// Run epilogue.
 		`__ivy_out << "test_completed" << std::endl;`,
-		"if (runidx == runs - 1)",
-		"nanosleep(&ts, NULL);",
+		"if (runidx == runs-1)",
+		"nanosleep(&ts,NULL);",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in test main:\n%s", want, out.Impl)
@@ -4723,7 +4752,7 @@ export trigger
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, "virtual void notify() {}") {
+	if !strings.Contains(out.Impl, "virtual void notify(){}") {
 		t.Fatalf("test target should emit empty notify body:\n%s", out.Impl)
 	}
 }
@@ -5219,7 +5248,7 @@ export set
 		"my_init_gen.generate(ivy);",
 		"std::vector<gen *> generators;",
 		"generators.push_back(new set_gen(ivy));",
-		"for (int cycle = 0; cycle < test_iters; cycle++)",
+		"for(int cycle = 0; cycle < test_iters; cycle++)",
 		"gen &g = *generators[idx];",
 		"bool sat = g.generate(ivy);",
 		"g.execute(ivy);",
@@ -6547,7 +6576,7 @@ individual saved : cell
 	// dot-field per Python emit_set_field line 816).
 	for _, want := range []string{
 		"X__0 = 0; X__0 <= 3; X__0++",
-		`add(__to_solver(*this, apply("shade", apply("saved"), int_to_z3(sort("idx"), static_cast<long long>(X__0))), obj.saved[X__0].shade));`,
+		`slvr.add(__to_solver(*this,apply("shade", apply("saved"), int_to_z3(sort("idx"), static_cast<long long>(X__0))),obj.saved[X__0].shade));`,
 	} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("missing %q in emitSetSolver output:\n%s", want, body)
@@ -6696,7 +6725,7 @@ relation valueof(K:key)
 	for _, want := range []string{
 		"std::vector<z3::expr> __quants;",
 		`__quants.push_back(ctx.constant("X__0", sort("key")));`,
-		`add(forall(__quants, __to_solver(*this, apply("valueof", ctx.constant("X__0", sort("key"))), obj.valueof)));`,
+		`slvr.add(forall(__quants, __to_solver(*this,apply("valueof", ctx.constant("X__0", sort("key"))),obj.valueof)));`,
 	} {
 		if !strings.Contains(body, want) {
 			t.Fatalf("missing %q in emitSetSolver output:\n%s", want, body)
@@ -7821,7 +7850,7 @@ import callback
 	if body == "" {
 		t.Fatalf("callback method not emitted:\n%s", out.Impl)
 	}
-	want := `__ivy_out << "< callback"`
+	want := `__ivy_out  << "< callback"`
 	if !strings.Contains(body, want) {
 		t.Fatalf("expected trace prologue %q in callback body:\n%s", want, body)
 	}
@@ -7842,7 +7871,7 @@ import callback
 		t.Fatalf("Generate (repl): %v", err)
 	}
 	body2 := bodyAfterMarker(out2.Impl, "traceimp2::callback(")
-	if strings.Contains(body2, `__ivy_out << "< callback"`) {
+	if strings.Contains(body2, `__ivy_out  << "< callback"`) {
 		t.Fatalf("trace prologue should be test-only; appeared in repl target:\n%s", body2)
 	}
 }
@@ -8013,7 +8042,7 @@ import step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, `__ivy_out << std::hex << std::showbase << "< step"`) {
+	if !strings.Contains(out.Impl, `__ivy_out << std::hex << std::showbase  << "< step"`) {
 		t.Fatalf("expected number_format prefix on trace prologue:\n%s", out.Impl)
 	}
 }
@@ -8086,7 +8115,7 @@ import callback
 		t.Fatalf("callback method body not found:\n%s", out.Impl)
 	}
 	for _, want := range []string{
-		`__ivy_out << "< callback"`,
+		`__ivy_out  << "< callback"`,
 		`__ivy_out << "{" << std::endl;`,
 		`__ivy_out << "}" << std::endl;`,
 	} {

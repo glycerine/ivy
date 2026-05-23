@@ -96,6 +96,8 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 	}
 	if g.Config.Target == "test" {
 		add = func(w *cppWriter, text string) {
+			text = strings.ReplaceAll(text, "__to_solver(*this, ", "__to_solver(*this,")
+			text = strings.ReplaceAll(text, "), obj.", "),obj.")
 			w.linef("slvr.add(%s);", text)
 		}
 	}

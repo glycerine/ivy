@@ -237,9 +237,15 @@ func (g *Generator) emitHeader() error {
 	}
 	g.emitRuntimeHeaderForwardDecls(w)
 	w.blank()
-	w.open(fmt.Sprintf("class %s {", g.ClassName))
-	w.line("public:")
-	w.indent++
+	if g.Config.Target == "test" {
+		w.linef("class %s {", g.ClassName)
+		w.raw("  public:\n")
+		w.indent++
+	} else {
+		w.open(fmt.Sprintf("class %s {", g.ClassName))
+		w.line("public:")
+		w.indent++
+	}
 	w.linef("typedef %s ivy_class;", g.ClassName)
 	g.emitRuntimeClassMembers(w)
 	w.line("int ___ivy_choose(int rng,const char *name,int id);")
@@ -257,8 +263,16 @@ func (g *Generator) emitHeader() error {
 	if err := g.emitClassMemberNatives(w); err != nil {
 		return err
 	}
-	w.line(g.constructorSignature(false) + ";")
-	w.line("void __init();")
+	if g.Config.Target == "test" {
+		w.raw("    " + g.constructorSignature(false) + ";\n")
+	} else {
+		w.line(g.constructorSignature(false) + ";")
+	}
+	if g.Config.Target == "test" {
+		w.raw("void __init();\n")
+	} else {
+		w.line("void __init();")
+	}
 	g.emitDefinitionDecls(w)
 	g.emitConstructorDecls(w)
 	g.emitMethodDecls(w)
@@ -329,7 +343,11 @@ func (g *Generator) emitImpl() error {
 	w.raw(methodSection.String())
 	var body cppWriter
 	bw := &body
-	bw.open(g.constructorSignature(true) + " {")
+	if g.Config.Target == "test" {
+		bw.open(g.constructorSignature(true) + "{")
+	} else {
+		bw.open(g.constructorSignature(true) + " {")
+	}
 	g.emitRuntimeConstructorPrelude(bw)
 	g.emitConstructorParamAssignments(bw)
 	g.emitCardinalityInitializers(bw)
@@ -498,6 +516,10 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 			for i, v := range st.Extension {
 				vals[i] = varName(v)
 			}
+			if g.Config.Target == "test" {
+				w.linef("enum %s{%s};", varName(st.Name), strings.Join(vals, ","))
+				break
+			}
 			w.linef("enum %s { %s };", varName(st.Name), strings.Join(vals, ", "))
 		case *goivy.RangeSort:
 			if st.Name != "" {
@@ -532,7 +554,9 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 		g.emitVariantSuperStruct(w, name)
 		emittedVariantSupers[name] = true
 	}
-	w.blank()
+	if g.Config.Target != "test" {
+		w.blank()
+	}
 }
 
 func (g *Generator) sortDeclDependencyNames(name string) []string {
@@ -782,7 +806,7 @@ func (g *Generator) emitStateDecls(w *cppWriter) {
 	for _, sym := range g.stateSymbols() {
 		w.linef("%s;", g.cppStorageDecl(sym.Name, sym.Sort, ""))
 	}
-	if len(g.stateSymbols()) > 0 {
+	if len(g.stateSymbols()) > 0 && g.Config.Target != "test" {
 		w.blank()
 	}
 }
@@ -1190,13 +1214,19 @@ func (g *Generator) methodSignature(name string, act goivy.Action, qualified, in
 }
 
 func (g *Generator) emitInit(w *cppWriter) {
-	w.open(fmt.Sprintf("void %s::__init() {", g.ClassName))
+	if g.Config.Target == "test" {
+		w.open(fmt.Sprintf("void %s::__init(){", g.ClassName))
+	} else {
+		w.open(fmt.Sprintf("void %s::__init() {", g.ClassName))
+	}
 	if len(g.Mod.InitialActions) > 0 {
 		for _, act := range g.Mod.InitialActions {
 			g.emitAction(w, act)
 		}
 		w.close("")
-		w.blank()
+		if g.Config.Target != "test" {
+			w.blank()
+		}
 		return
 	}
 	for _, na := range g.Mod.Initializers {
@@ -1212,7 +1242,9 @@ func (g *Generator) emitInit(w *cppWriter) {
 		}
 	}
 	w.close("")
-	w.blank()
+	if g.Config.Target != "test" {
+		w.blank()
+	}
 }
 
 func (g *Generator) emitMethods(w *cppWriter) {
@@ -1236,7 +1268,11 @@ func (g *Generator) emitMethods(w *cppWriter) {
 // definitions from TODO 010), and emitConstructors (sort constructors
 // from TODO 010).
 func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) {
-	w.open(g.methodSignature(name, act, true, false) + " {")
+	openSig := g.methodSignature(name, act, true, false) + " {"
+	if g.Config.Target == "test" {
+		openSig = g.methodSignature(name, act, true, false) + "{"
+	}
+	w.open(openSig)
 	returns := act.GetFormalReturns()
 	_, rtypes := g.getParamTypes(name, act)
 	// Python emit_some_action (ivy_to_cpp.py:1604-1607): for imported
@@ -1274,7 +1310,9 @@ func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) 
 		w.linef("return %s;", varName(returns[0].Name))
 	}
 	w.close("")
-	w.blank()
+	if g.Config.Target != "test" {
+		w.blank()
+	}
 }
 
 // importCallers mirrors Python find_import_callers (ivy_to_cpp.py:1888-1897).
@@ -1330,7 +1368,11 @@ func (g *Generator) importCallers() map[string]bool {
 func (g *Generator) emitTraceActionPrologue(w *cppWriter, name string, formals []*goivy.Const) {
 	display := strings.TrimPrefix(name, "ext:")
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf(`__ivy_out%s << "< %s"`, g.numberFormat(), display))
+	if g.Config.Target == "test" {
+		b.WriteString(fmt.Sprintf(`__ivy_out%s  << "< %s"`, g.numberFormat(), display))
+	} else {
+		b.WriteString(fmt.Sprintf(`__ivy_out%s << "< %s"`, g.numberFormat(), display))
+	}
 	if len(formals) > 0 {
 		b.WriteString(` << "("`)
 		for i, p := range formals {
@@ -1455,6 +1497,10 @@ func (g *Generator) hasNonInitPublicActions() bool {
 }
 
 func (g *Generator) emitTestMain(w *cppWriter) {
+	if len(g.Mod.Params) == 0 {
+		g.emitPythonZeroParamTestMain(w)
+		return
+	}
 	mainName := g.Config.MainName
 	w.open(fmt.Sprintf("int %s(int argc, char **argv) {", mainName))
 	g.emitTestDefaults(w)
@@ -1474,6 +1520,327 @@ func (g *Generator) emitTestMain(w *cppWriter) {
 	w.close("")
 	w.line("return 0;")
 	w.close("")
+}
+
+func (g *Generator) emitPythonZeroParamTestMain(w *cppWriter) {
+	mainName := g.Config.MainName
+	var genLines strings.Builder
+	names := g.publicActionNamesSorted()
+	initActions := g.initialMixinActionNames()
+	totalweight := 0.0
+	numGens := 0
+	for _, name := range names {
+		if initActions[name] || isFinalizeName(name) {
+			continue
+		}
+		className := g.actionGeneratorClassName(name)
+		weight := g.actionWeight(name)
+		genLines.WriteString(fmt.Sprintf("        generators.push_back(new %s(ivy));\n", className))
+		genLines.WriteString(fmt.Sprintf("        weights.push_back(%s);\n", pythonFloatLiteral(weight)))
+		totalweight += weight
+		numGens++
+	}
+	finalizeLine := ""
+	if g.hasFinalizeExport() {
+		finalizeLine = "    ivy.__lock(); ivy.ext___finalize(); ivy.__unlock();\n"
+	}
+	w.raw(fmt.Sprintf(`
+
+int %s(int argc, char **argv){
+        int test_iters = %s;
+        int runs = %s;
+
+    int seed = 1;
+    int sleep_ms = 10;
+    int final_ms = 0; 
+    
+    std::vector<char *> pargs; // positional args
+    pargs.push_back(argv[0]);
+    for (int i = 1; i < argc; i++) {
+        std::string arg = argv[i];
+        size_t p = arg.find('=');
+        if (p == std::string::npos)
+            pargs.push_back(argv[i]);
+        else {
+            std::string param = arg.substr(0,p);
+            std::string value = arg.substr(p+1);
+
+            if (param == "out") {
+                __ivy_out.open(value.c_str());
+                if (!__ivy_out) {
+                    std::cerr << "cannot open to write: " << value << std::endl;
+                    return 1;
+                }
+            }
+            else if (param == "iters") {
+                test_iters = atoi(value.c_str());
+            }
+            else if (param == "runs") {
+                runs = atoi(value.c_str());
+            }
+            else if (param == "seed") {
+                seed = atoi(value.c_str());
+            }
+            else if (param == "delay") {
+                sleep_ms = atoi(value.c_str());
+            }
+            else if (param == "wait") {
+                final_ms = atoi(value.c_str());
+            }
+            else if (param == "modelfile") {
+                __ivy_modelfile.open(value.c_str());
+                if (!__ivy_modelfile) {
+                    std::cerr << "cannot open to write: " << value << std::endl;
+                    return 1;
+                }
+            }
+            else {
+                std::cerr << "unknown option: " << param << std::endl;
+                return 1;
+            }
+        }
+    }
+    srand(seed);
+    if (!__ivy_out.is_open())
+        __ivy_out.basic_ios<char>::rdbuf(std::cout.rdbuf());
+    argc = pargs.size();
+    argv = &pargs[0];
+    if (argc == 2){
+        argc--;
+        int fd = _open(argv[argc],0);
+        if (fd < 0){
+            std::cerr << "cannot open to read: " << argv[argc] << "\n";
+            __ivy_exit(1);
+        }
+        _dup2(fd, 0);
+    }
+    if (argc != 1){
+        std::cerr << "usage: %s \n";
+        __ivy_exit(1);
+    }
+    std::vector<std::string> args;
+    std::vector<ivy_value> arg_values(0);
+    for(int i = 1; i < argc;i++){args.push_back(argv[i]);}
+
+#ifdef _WIN32
+    // Boilerplate from windows docs
+
+    {
+        WORD wVersionRequested;
+        WSADATA wsaData;
+        int err;
+
+    /* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
+        wVersionRequested = MAKEWORD(2, 2);
+
+        err = WSAStartup(wVersionRequested, &wsaData);
+        if (err != 0) {
+            /* Tell the user that we could not find a usable */
+            /* Winsock DLL.                                  */
+            printf("WSAStartup failed with error: %%d\n", err);
+            return 1;
+        }
+
+    /* Confirm that the WinSock DLL supports 2.2.*/
+    /* Note that if the DLL supports versions greater    */
+    /* than 2.2 in addition to 2.2, it will still return */
+    /* 2.2 in wVersion since that is the version we      */
+    /* requested.                                        */
+
+        if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2) {
+            /* Tell the user that we could not find a usable */
+            /* WinSock DLL.                                  */
+            printf("Could not find a usable version of Winsock.dll\n");
+            WSACleanup();
+            return 1;
+        }
+    }
+#endif
+    for(int runidx = 0; runidx < runs; runidx++) {
+    initializing = true;
+    %s_repl ivy;
+    for(unsigned i = 0; i < argc; i++) {ivy.__argv.push_back(argv[i]);}
+    ivy._generating = false;
+
+        ivy.__unlock();
+        initializing = false;
+        for(int rdridx = 0; rdridx < readers.size(); rdridx++) {
+            readers[rdridx]->bind();
+        }
+                    
+        init_gen my_init_gen(ivy);
+        my_init_gen.generate(ivy);
+        std::vector<gen *> generators;
+        std::vector<double> weights;
+
+%s        double totalweight = %s;
+        int num_gens = %d;
+
+
+#ifdef _WIN32
+    LARGE_INTEGER freq;
+    QueryPerformanceFrequency(&freq);
+#endif
+    double frnd = 0.0;
+    bool do_over = false;
+    for(int cycle = 0; cycle < test_iters; cycle++) {
+
+//        std::cout << "totalweight = " << totalweight << std::endl;
+//        double choices = totalweight + readers.size() + timers.size();
+        double choices = totalweight + 5.0;
+        if (do_over) {
+           do_over = false;
+        }  else {
+            frnd = choices * (((double)rand())/(((double)RAND_MAX)+1.0));
+        }
+        // std::cout << "frnd = " << frnd << std::endl;
+        if (frnd < totalweight) {
+            int idx = 0;
+            double sum = 0.0;
+            while (idx < num_gens-1) {
+                sum += weights[idx];
+                if (frnd < sum)
+                    break;
+                idx++;
+            }
+            gen &g = *generators[idx];
+            ivy.__lock();
+#ifdef _WIN32
+            LARGE_INTEGER before;
+            QueryPerformanceCounter(&before);
+#endif
+            ivy._generating = true;
+            bool sat = g.generate(ivy);
+#ifdef _WIN32
+            LARGE_INTEGER after;
+            QueryPerformanceCounter(&after);
+//            __ivy_out << "idx: " << idx << " sat: " << sat << " time: " << (((double)(after.QuadPart-before.QuadPart))/freq.QuadPart) << std::endl;
+#endif
+            if (sat){
+                g.execute(ivy);
+                ivy._generating = false;
+                ivy.__unlock();
+#ifdef _WIN32
+                Sleep(sleep_ms);
+#endif
+            }
+            else {
+                ivy._generating = false;
+                ivy.__unlock();
+                cycle--;
+            }
+            continue;
+        }
+
+
+        fd_set rdfds;
+        FD_ZERO(&rdfds);
+        int maxfds = 0;
+
+        for (unsigned i = 0; i < readers.size(); i++) {
+            reader *r = readers[i];
+            int fds = r->fdes();
+            if (fds >= 0) {
+                FD_SET(fds,&rdfds);
+            }
+            if (fds > maxfds)
+                maxfds = fds;
+        }
+
+#ifdef _WIN32
+        int timer_min = 15;
+#else
+        int timer_min = 5;
+#endif
+
+        struct timeval timeout;
+        timeout.tv_sec = timer_min/1000;
+        timeout.tv_usec = 1000 * (timer_min %% 1000);
+
+#ifdef _WIN32
+        int foo;
+        if (readers.size() == 0){  // winsock can't handle empty fdset!
+            Sleep(timer_min);
+            foo = 0;
+        }
+        else
+            foo = select(maxfds+1,&rdfds,0,0,&timeout);
+#else
+        int foo = select(maxfds+1,&rdfds,0,0,&timeout);
+#endif
+
+        if (foo < 0)
+#ifdef _WIN32
+            {std::cerr << "select failed: " << WSAGetLastError() << std::endl; __ivy_exit(1);}
+#else
+            {perror("select failed"); __ivy_exit(1);}
+#endif
+        
+        if (foo == 0){
+           // std::cout << "TIMEOUT\n";            
+           cycle--;
+           for (unsigned i = 0; i < timers.size(); i++){
+               if (timer_min >= timers[i]->ms_delay()) {
+                   cycle++;
+                   break;
+               }
+           }
+           for (unsigned i = 0; i < timers.size(); i++)
+               timers[i]->timeout(timer_min);
+        }
+        else {
+            int fdc = 0;
+            for (unsigned i = 0; i < readers.size(); i++) {
+                reader *r = readers[i];
+                if (FD_ISSET(r->fdes(),&rdfds))
+                    fdc++;
+            }
+            // std::cout << "fdc = " << fdc << std::endl;
+            int fdi = fdc * (((double)rand())/(((double)RAND_MAX)+1.0));
+            fdc = 0;
+            for (unsigned i = 0; i < readers.size(); i++) {
+                reader *r = readers[i];
+                if (FD_ISSET(r->fdes(),&rdfds)) {
+                    if (fdc == fdi) {
+                        // std::cout << "reader = " << i << std::endl;
+                        r->read();
+                        if (r->background()) {
+                           cycle--;
+                           do_over = true;
+                        }
+                        break;
+                    }
+                    fdc++;
+
+                }
+            }
+        }            
+    }
+%s    
+#ifdef _WIN32
+                Sleep(final_ms);  // HACK: wait for late responses
+#endif
+    __ivy_out << "test_completed" << std::endl;
+    if (runidx == runs-1) {
+        struct timespec ts;
+        int ms = 50;
+        ts.tv_sec = ms/1000;
+        ts.tv_nsec = (ms %% 1000) * 1000000;
+        nanosleep(&ts,NULL);
+        exit(0);
+    }
+    for (unsigned i = 0; i < readers.size(); i++)
+        delete readers[i];
+    readers.clear();
+    for (unsigned i = 0; i < timers.size(); i++)
+        delete timers[i];
+    timers.clear();
+
+
+    }
+    return 0;
+}
+`, mainName, g.Config.TestIters, g.Config.TestRuns, g.ClassName, g.ClassName, genLines.String(), pythonFloatLiteral(totalweight), numGens, finalizeLine))
 }
 
 // emitTestLoopBody emits the body of the per-run test driver, mirroring

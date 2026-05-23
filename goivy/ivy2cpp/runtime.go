@@ -61,6 +61,12 @@ func (g *Generator) emitRuntimeHeaderPreamble(w *cppWriter) {
 }
 
 func (g *Generator) emitRuntimeHeaderForwardDecls(w *cppWriter) {
+	if g.Config.Target == "test" {
+		w.blank()
+		w.line("    class reader;")
+		w.line("    class timer;")
+		return
+	}
 	w.line("class reader;")
 	w.line("class timer;")
 }
@@ -79,17 +85,49 @@ func emitHashThunkSupport(w *cppWriter) {
 	w.line("hash_space::hash_map<D,R,HashFun> memo;")
 	w.line("hash_thunk() : fun(0) {}")
 	w.line("hash_thunk(thunk<D,R> *fun) : fun(fun) {}")
-	w.line("~hash_thunk() {}")
-	w.open("R &operator[](const D& arg) {")
+	w.raw("    ~hash_thunk() {\n//        if (fun)\n//            delete fun;\n    }\n")
+	w.open("R &operator[](const D& arg){")
 	w.line("std::pair<typename hash_space::hash_map<D,R>::iterator,bool> foo = memo.insert(std::pair<D,R>(arg,R()));")
 	w.line("R &res = foo.first->second;")
-	w.line("if (foo.second && fun) res = (*fun)(arg);")
+	w.line("if (foo.second && fun)")
+	w.indent++
+	w.line("res = (*fun)(arg);")
+	w.indent--
 	w.line("return res;")
 	w.close("")
 	w.close(";")
 }
 
 func (g *Generator) emitRuntimeClassMembers(w *cppWriter) {
+	if g.Config.Target == "test" {
+		w.raw(`
+    std::vector<std::string> __argv;
+#ifdef _WIN32
+    void *mutex;  // forward reference to HANDLE
+#else
+    pthread_mutex_t mutex;
+#endif
+    void __lock();
+    void __unlock();
+
+#ifdef _WIN32
+    std::vector<HANDLE> thread_ids;
+
+#else
+    std::vector<pthread_t> thread_ids;
+
+#endif
+    void install_reader(reader *);
+    void install_thread(reader *);
+    void install_timer(timer *);
+    virtual ~` + g.ClassName + `();
+    std::vector<int> ___ivy_stack;
+`)
+		if g.runtimeUsesGenerator() {
+			w.raw("    ivy_gen *___ivy_gen;\n")
+		}
+		return
+	}
 	w.line("std::vector<std::string> __argv;")
 	w.line("#ifdef _WIN32")
 	w.line("void *mutex;")
@@ -119,7 +157,7 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.blank()
 	w.line("#include <iostream>")
 	w.line("#include <stdlib.h>")
-	w.line("#include <sys/types.h>")
+	w.line("#include <sys/types.h>          /* See NOTES */")
 	w.line("#include <sys/stat.h>")
 	w.line("#include <fcntl.h>")
 	w.line("#ifdef _WIN32")
@@ -130,7 +168,7 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.line("#else")
 	w.line("#include <sys/socket.h>")
 	w.line("#include <netinet/in.h>")
-	w.line("#include <netinet/ip.h>")
+	w.line("#include <netinet/ip.h> ")
 	w.line("#include <sys/select.h>")
 	w.line("#include <unistd.h>")
 	w.line("#define _open open")
@@ -161,7 +199,9 @@ func (g *Generator) emitRuntimeValueIncludes(w *cppWriter) {
 	} else if g.usesZ3() {
 		w.line(`#include "ivy_go_z3.hpp"`)
 	}
-	w.blank()
+	if g.Config.Target != "test" {
+		w.blank()
+	}
 	// Forward declarations of per-enum operator<<, _arg<T>, __ser<T>,
 	// __deser<T>. Python ivy_to_cpp.py:2213-2223 emits these here.
 	g.emitEnumSortArgSpecDecls(w)
@@ -169,7 +209,9 @@ func (g *Generator) emitRuntimeValueIncludes(w *cppWriter) {
 	// __ser<T>, __deser<T> (and Z3 specs for test/gen). Python
 	// ivy_to_cpp.py:2232-2254.
 	g.emitDestructorSortArgSpecDecls(w)
-	w.blank()
+	if g.Config.Target != "test" {
+		w.blank()
+	}
 }
 
 func (g *Generator) emitZ3Boilerplate1(w *cppWriter) {
@@ -189,6 +231,16 @@ func (g *Generator) emitZ3Boilerplate1(w *cppWriter) {
 }
 
 func (g *Generator) emitRuntimeConstructorPrelude(w *cppWriter) {
+	if g.Config.Target == "test" {
+		w.raw(`#ifdef _WIN32
+mutex = CreateMutex(NULL,FALSE,NULL);
+#else
+pthread_mutex_init(&mutex,NULL);
+#endif
+__lock();
+`)
+		return
+	}
 	w.line("#ifdef _WIN32")
 	w.line("mutex = CreateMutex(NULL, FALSE, NULL);")
 	w.line("#else")
@@ -210,6 +262,18 @@ func (g *Generator) emitRuntimeMethods(w *cppWriter) {
 }
 
 func (g *Generator) emitRuntimeLockMethods(w *cppWriter) {
+	if g.Config.Target == "test" {
+		w.raw(`#ifdef _WIN32
+    void ` + g.ClassName + `::__lock() { WaitForSingleObject(mutex,INFINITE); }
+    void ` + g.ClassName + `::__unlock() { ReleaseMutex(mutex); }
+#else
+    void ` + g.ClassName + `::__lock() { pthread_mutex_lock(&mutex); }
+    void ` + g.ClassName + `::__unlock() { pthread_mutex_unlock(&mutex); }
+#endif
+
+`)
+		return
+	}
 	w.line("#ifdef _WIN32")
 	w.open(fmt.Sprintf("void %s::__lock() {", g.ClassName))
 	w.line("WaitForSingleObject(mutex, INFINITE);")
@@ -259,6 +323,37 @@ func (g *Generator) emitRuntimeInstallMethods(w *cppWriter) {
 }
 
 func (g *Generator) emitRuntimeThreadInstallMethod(w *cppWriter, method, typ, winFn, pthreadFn string) {
+	if g.Config.Target == "test" {
+		w.raw(fmt.Sprintf(`void %s::%s(%s *r) {
+    #ifdef _WIN32
+
+        DWORD dummy;
+        HANDLE h = CreateThread( 
+            NULL,                   // default security attributes
+            0,                      // use default stack size  
+            %s,   // thread function name
+            r,                      // argument to thread function 
+            0,                      // use default creation flags 
+            &dummy);                // returns the thread identifier 
+        if (h == NULL) {
+            std::cerr << "failed to create thread" << std::endl;
+            exit(1);
+        }
+        thread_ids.push_back(h);
+    #else
+        pthread_t thread;
+        int res = pthread_create(&thread, NULL, %s, r);
+        if (res) {
+            std::cerr << "failed to create thread" << std::endl;
+            exit(1);
+        }
+        thread_ids.push_back(thread);
+    #endif
+}      
+
+`, g.ClassName, method, typ, winFn, pthreadFn))
+		return
+	}
 	w.open(fmt.Sprintf("void %s::%s(%s *r) {", g.ClassName, method, typ))
 	w.line("#ifdef _WIN32")
 	w.line("DWORD dummy;")
@@ -282,6 +377,25 @@ func (g *Generator) emitRuntimeThreadInstallMethod(w *cppWriter, method, typ, wi
 }
 
 func (g *Generator) emitRuntimeDestructor(w *cppWriter) {
+	if g.Config.Target == "test" {
+		w.raw(fmt.Sprintf(`%s::~%s(){
+    __lock(); // otherwise, thread may die holding lock!
+    for (unsigned i = 0; i < thread_ids.size(); i++){
+#ifdef _WIN32
+       // No idea how to cancel a thread on Windows. We just suspend it
+       // so it can't cause any harm as we destruct this object.
+       SuspendThread(thread_ids[i]);
+#else
+        pthread_cancel(thread_ids[i]);
+        pthread_join(thread_ids[i],NULL);
+#endif
+    }
+    __unlock();
+}
+
+`, g.ClassName, g.ClassName))
+		return
+	}
 	w.open(fmt.Sprintf("%s::~%s() {", g.ClassName, g.ClassName))
 	w.line("__lock();")
 	w.open("for (unsigned i = 0; i < thread_ids.size(); i++) {")
@@ -298,6 +412,17 @@ func (g *Generator) emitRuntimeDestructor(w *cppWriter) {
 }
 
 func (g *Generator) emitRuntimeChoose(w *cppWriter) {
+	if g.Config.Target == "test" {
+		w.raw(fmt.Sprintf(`int %s::___ivy_choose(int rng,const char *name,int id) {
+        std::ostringstream ss;
+        ss << name << ':' << id;;
+        for (unsigned i = 0; i < ___ivy_stack.size(); i++)
+            ss << ':' << ___ivy_stack[i];
+        return ___ivy_gen->choose(rng,ss.str().c_str());
+    }
+`, g.ClassName))
+		return
+	}
 	w.open(fmt.Sprintf("int %s::___ivy_choose(int rng, const char *name, int id) {", g.ClassName))
 	if g.Config.Target == "test" {
 		w.line("std::ostringstream ss;")
@@ -329,6 +454,15 @@ func (g *Generator) emitRuntimeChoose(w *cppWriter) {
 }
 
 func (g *Generator) emitRuntimeReplSubclass(w *cppWriter) {
+	if g.Config.Target == "test" {
+		w.raw("\n\n    class " + g.ClassName + "_repl : public " + g.ClassName + " {\n\n    public:\n\n")
+		g.emitRuntimeReplAssertOverride(w, "ivy_assert", "assertion_failed", "assertion failed")
+		g.emitRuntimeReplAssertOverride(w, "ivy_assume", "assumption_failed", "assumption failed")
+		w.raw("    " + g.replSubclassConstructorSignature() + " : " + g.baseConstructorCall() + "{}\n")
+		g.emitReplImportCallbacks(w)
+		w.raw("\n    };\n")
+		return
+	}
 	w.open(fmt.Sprintf("class %s_repl : public %s {", g.ClassName, g.ClassName))
 	w.line("public:")
 	w.indent++
@@ -384,7 +518,7 @@ func (g *Generator) emitReplImportCallback(w *cppWriter, name string, act goivy.
 	if g.Config.Target == "test" {
 		// Test target: empty body so randomized actions can call into
 		// the imported entry point without console interaction.
-		w.linef("%s {}", sig)
+		w.raw("    " + sig + "{}\n")
 		return
 	}
 	w.open(sig + " {")
@@ -415,6 +549,18 @@ func (g *Generator) emitReplImportCallback(w *cppWriter, name string, act goivy.
 }
 
 func (g *Generator) emitRuntimeReplAssertOverride(w *cppWriter, method, event, text string) {
+	if g.Config.Target == "test" {
+		w.raw(fmt.Sprintf(`    virtual void %s(bool truth,const char *msg){
+        if (!truth) {
+            __ivy_out << "%s(\"" << msg << "\")" << std::endl;
+            std::cerr << msg << ": error: %s\n";
+            
+            __ivy_exit(1);
+        }
+    }
+`, method, event, text))
+		return
+	}
 	w.open(fmt.Sprintf("virtual void %s(bool truth, const char *msg) {", method))
 	w.open("if (!truth) {")
 	w.linef(`__ivy_out%s << "%s(\"" << msg << "\")" << std::endl;`, g.numberFormat(), event)

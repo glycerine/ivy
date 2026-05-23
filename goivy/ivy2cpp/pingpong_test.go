@@ -95,7 +95,7 @@ func TestPingPongLeftPlayerTargetTestMatchesPythonRuntimeShape(t *testing.T) {
 	if intfPingBody == "" {
 		t.Fatalf("intf__ping body not emitted:\n%s", out.Impl)
 	}
-	if !strings.Contains(intfPingBody, `__ivy_out << "< intf.ping"`) {
+	if !strings.Contains(intfPingBody, `__ivy_out  << "< intf.ping"`) {
 		t.Errorf("intf__ping should trace the imported call like Python:\n%s", intfPingBody)
 	}
 
