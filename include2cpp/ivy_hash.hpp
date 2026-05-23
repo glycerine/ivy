@@ -48,6 +48,17 @@ public:
     size_t operator()(const unsigned long long &s) const { return static_cast<size_t>(s); }
 };
 
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+template <> class hash<unsigned __int128> {
+public:
+    size_t operator()(const unsigned __int128 &s) const {
+        unsigned long long lo = static_cast<unsigned long long>(s);
+        unsigned long long hi = static_cast<unsigned long long>(s >> 64);
+        return static_cast<size_t>(lo ^ (hi + 0x9e3779b97f4a7c15ULL + (lo << 6) + (lo >> 2)));
+    }
+};
+#endif
+
 template <> class hash<bool> {
 public:
     size_t operator()(const bool &s) const { return static_cast<size_t>(s); }

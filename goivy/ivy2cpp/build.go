@@ -29,6 +29,7 @@ func isMissingZ3ToolchainError(err error) bool {
 type BuildPlan struct {
 	Compiler    string
 	Args        []string
+	Env         []string
 	WorkDir     string
 	OutputPath  string
 	CompileOnly bool
@@ -58,6 +59,9 @@ func BuildOutput(out *Output, outDir string) (string, error) {
 	if plan.WorkDir != "" {
 		cmd.Dir = plan.WorkDir
 	}
+	if len(plan.Env) != 0 {
+		cmd.Env = plan.Env
+	}
 	var buf bytes.Buffer
 	cmd.Stdout = &buf
 	cmd.Stderr = &buf
@@ -77,6 +81,9 @@ func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {
 	cfg, _, err := normalizeConfig(cfg)
 	if err != nil {
 		return nil, err
+	}
+	if cfg.Compiler == "cl" && outputUsesWideBV(out) {
+		return nil, fmt.Errorf("ivy2cpp: compiler=cl cannot build bv widths greater than 64 bits; MSVC does not support unsigned __int128")
 	}
 	cxx, err := buildPlanCompiler(cfg.Compiler)
 	if err != nil {
@@ -148,6 +155,13 @@ func buildPlanCompiler(compiler string) (string, error) {
 
 func msvcBuildPlan(out *Output, compiler, cppPath, outputPath string, compileOnly bool) (*BuildPlan, error) {
 	args := []string{"/EHsc", "/Zi"}
+	var env []string
+	var toolchainLinkArgs []string
+	if vs, err := findVS(); err == nil {
+		args = append(args, msvcIncludeDirArgs(vs.IncludeDirs)...)
+		toolchainLinkArgs = append(toolchainLinkArgs, msvcLibDirArgs(vs.LibDirs)...)
+		env = msvcToolchainEnv(vs)
+	}
 	if includeArgs, err := supportIncludeArgs(); err == nil {
 		args = append(args, msvcIncludeArgs(includeArgs)...)
 	} else {
@@ -167,15 +181,39 @@ func msvcBuildPlan(out *Output, compiler, cppPath, outputPath string, compileOnl
 		args = append(args, "/c", cppPath, "/Fo"+outputPath)
 	} else {
 		args = append(args, cppPath, "/Fe"+outputPath, "ws2_32.lib")
+		args = append(args, toolchainLinkArgs...)
 		args = append(args, linkArgs...)
 		args = append(args, msvcLinkArgs(linkLibSpecArgs(out))...)
 	}
 	return &BuildPlan{
 		Compiler:    compiler,
 		Args:        args,
+		Env:         env,
 		OutputPath:  outputPath,
 		CompileOnly: compileOnly,
 	}, nil
+}
+
+func msvcIncludeDirArgs(dirs []string) []string {
+	var out []string
+	for _, dir := range dirs {
+		if strings.TrimSpace(dir) == "" {
+			continue
+		}
+		out = append(out, "/I", dir)
+	}
+	return out
+}
+
+func msvcLibDirArgs(dirs []string) []string {
+	var out []string
+	for _, dir := range dirs {
+		if strings.TrimSpace(dir) == "" {
+			continue
+		}
+		out = append(out, "/LIBPATH:"+dir)
+	}
+	return out
 }
 
 func msvcIncludeArgs(args []string) []string {
@@ -258,6 +296,16 @@ func outputUsesZ3(out *Output) bool {
 		return false
 	}
 	return strings.Contains(out.Header, "z3++.h") || strings.Contains(out.Impl, "z3::")
+}
+
+func outputUsesWideBV(out *Output) bool {
+	if out == nil {
+		return false
+	}
+	return strings.Contains(out.Header, "unsigned __int128") ||
+		strings.Contains(out.Header, "ivy_uint<") ||
+		strings.Contains(out.Impl, "unsigned __int128") ||
+		strings.Contains(out.Impl, "ivy_uint<")
 }
 
 func z3BuildArgs() ([]string, []string, error) {

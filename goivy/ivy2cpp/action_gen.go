@@ -21,10 +21,10 @@ import (
 //
 // Class headers are emitted by emitActionGenClassHeader(w, plan).
 //
-// On any analysis failure (panic during GetUpdate, missing Update, etc.)
-// the plan reports a fallback and the emitter falls back to the weaker
-// pre-M4 generator that randomizes inputs directly without consulting
-// the solver. This keeps the build resilient while we extend coverage.
+// Explicit analysis failures report a fallback and the emitter falls back
+// to the weaker pre-M4 generator that randomizes inputs directly without
+// consulting the solver. Illegal action trees still surface as normal Go
+// panics; callers should fix those construction bugs instead of hiding them.
 
 // actionGenPlan captures everything we need to emit a single action's
 // solver-backed generator class.
@@ -80,22 +80,7 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 		}
 	}
 
-	// Compute the action's update. Wrap in recover() because GetUpdate
-	// can panic on action subtypes whose Update method isn't fully
-	// implemented yet (TODO 014/026 territory).
-	var upd *goivy.Update
-	func() {
-		defer func() {
-			if r := recover(); r != nil {
-				plan.fallback = true
-				plan.fallbackReason = fmt.Sprintf("GetUpdate panicked: %v", r)
-			}
-		}()
-		upd = goivy.GetUpdateForArt(plan.act, g.Mod, nil)
-	}()
-	if plan.fallback {
-		return plan
-	}
+	upd := goivy.GetUpdateForArt(plan.act, g.Mod, nil)
 	if upd == nil {
 		plan.fallback = true
 		plan.fallbackReason = "GetUpdate returned nil"

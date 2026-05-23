@@ -42,6 +42,9 @@ func (g *Generator) emitRuntimeHeaderPreamble(w *cppWriter) {
 	w.line("#include <tuple>")
 	w.line("#include <vector>")
 	w.line(`#include "ivy_hash.hpp"`)
+	if g.usesWideBV() {
+		w.line(`#include "ivy_wide_uint.hpp"`)
+	}
 	w.line(`#include "ivy_threads.hpp"`)
 	if g.usesZ3() {
 		w.line("#include <utility>")

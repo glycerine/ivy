@@ -46,12 +46,19 @@ func cleanSmtlib(s string) string {
 // mk_decl call (via slv.solver_name). The Go port matches Python's
 // observable emission: no `*>` rewrite is performed.
 func (g *Generator) emitDeclSolver(w *cppWriter, sym stateSymbol) {
+	g.emitDeclSolverWithName(w, sym, "", "")
+}
+
+func (g *Generator) emitDeclSolverWithName(w *cppWriter, sym stateSymbol, symNameExpr, prefix string) {
 	domain, rng := z3DeclSignature(sym.Sort)
 	domains := make([]string, 0, len(domain))
 	for _, d := range domain {
 		domains = append(domains, strconv.Quote(d))
 	}
-	w.linef("mk_decl(%s, {%s}, %s);", strconv.Quote(sym.Name), strings.Join(domains, ", "), strconv.Quote(rng))
+	if symNameExpr == "" {
+		symNameExpr = strconv.Quote(sym.Name)
+	}
+	w.linef("%smk_decl(%s, {%s}, %s);", prefix, symNameExpr, strings.Join(domains, ", "), strconv.Quote(rng))
 }
 
 // emitSetSolver encodes the current C++ state value of sym as a Z3
@@ -63,14 +70,60 @@ func (g *Generator) emitDeclSolver(w *cppWriter, sym stateSymbol) {
 //	(1) range is a record (destructor sort): recurse into each destructor
 //	    via emitSetField.
 //	(2) "large" function-sorted symbol: forall-quantified __to_solver.
-//	    Deferred to milestone 5 (uses make_thunk infrastructure).
+//	    For hash_thunk-backed storage this depends on z3_thunk::to_z3 and
+//	    the per-domain __to_solver overloads emitted by emitHashThunkToSolver.
 //	(3) default: nested loop over the function domain, emitting
 //	    g.add(__to_solver(*this, apply("name", X0,...), obj.name[X0]...)).
 func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 	if obj == "" {
 		obj = "obj"
 	}
-	sname := strconv.Quote(sym.Name)
+	g.emitSetSolverCustom(w, sym, emitSetSolverOptions{
+		obj:    obj,
+		prefix: "",
+		gen:    "*this",
+		sname:  strconv.Quote(sym.Name),
+		cvalue: varName(sym.Name),
+		add: func(w *cppWriter, text string) {
+			w.linef("add(%s);", text)
+		},
+	})
+}
+
+type emitSetSolverOptions struct {
+	obj    string
+	prefix string
+	gen    string
+	sname  string
+	cvalue string
+	add    func(*cppWriter, string)
+}
+
+func (o emitSetSolverOptions) rhsBase() string {
+	if o.obj != "" {
+		return o.obj + "." + o.cvalue
+	}
+	return o.cvalue
+}
+
+func (o emitSetSolverOptions) addConstraint(w *cppWriter, text string) {
+	if o.add != nil {
+		o.add(w, text)
+		return
+	}
+	w.linef("add(%s);", text)
+}
+
+func (g *Generator) emitSetSolverCustom(w *cppWriter, sym stateSymbol, opts emitSetSolverOptions) {
+	if opts.gen == "" {
+		opts.gen = "*this"
+	}
+	if opts.sname == "" {
+		opts.sname = strconv.Quote(sym.Name)
+	}
+	if opts.cvalue == "" {
+		opts.cvalue = varName(sym.Name)
+	}
 	fs, isFn := sym.Sort.(*goivy.LogicFunctionSort)
 	var domain []goivy.Sort
 	var rng goivy.Sort
@@ -83,7 +136,7 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 	// Branch (1): destructor record range. Mirrors Python ivy_to_cpp.py:833-843:
 	// per-destructor, open fresh loops over the full domain, build the
 	// receiver-side apply and the C++ lvalue, then recurse via emitSetField.
-	if g.isDestructorRecordRange(rng) {
+	if g.isDestructorRecordRange(rng) && !g.isLargeType(sym.Sort) {
 		for _, destr := range g.destructorsOfRange(rng) {
 			vs := make([]string, len(domain))
 			domArgs := make([]string, len(domain))
@@ -101,7 +154,7 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 				w.indent++
 				opened++
 				vs[i] = name
-				domArgs[i] = fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name)
+				domArgs[i] = z3ValueForSortWithPrefix(d, name, opts.prefix)
 			}
 			if !ok {
 				for i := 0; i < opened; i++ {
@@ -110,9 +163,9 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 				}
 				return
 			}
-			lhs := fmt.Sprintf("apply(%s%s)", sname, joinArgs(domArgs))
-			rhs := g.cppStorageAccess(sym.Name, sym.Sort, vs, obj)
-			if !g.emitSetField(w, destr, lhs, rhs, len(domain)) {
+			lhs := z3ApplyCall(opts.prefix, opts.sname, domArgs)
+			rhs := g.cppStorageAccessBase(opts.rhsBase(), sym.Sort, vs)
+			if !g.emitSetFieldCustom(w, destr, lhs, rhs, len(domain), opts) {
 				g.unsupportedEmitSet(w, sym, "destructor field not enumerable")
 			}
 			for i := 0; i < opened; i++ {
@@ -133,14 +186,14 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 		}
 		cvars := make([]string, len(domain))
 		for i, d := range domain {
-			cvars[i] = fmt.Sprintf("ctx.constant(%s, sort(%s))", strconv.Quote(vs[i]), strconv.Quote(z3SortName(d)))
+			cvars[i] = fmt.Sprintf("%sctx.constant(%s, %ssort(%s))", opts.prefix, strconv.Quote(vs[i]), opts.prefix, strconv.Quote(z3SortName(d)))
 		}
 		w.open("{")
 		w.line("std::vector<z3::expr> __quants;")
 		for i, d := range domain {
-			w.linef("__quants.push_back(ctx.constant(%s, sort(%s)));", strconv.Quote(vs[i]), strconv.Quote(z3SortName(d)))
+			w.linef("__quants.push_back(%sctx.constant(%s, %ssort(%s)));", opts.prefix, strconv.Quote(vs[i]), opts.prefix, strconv.Quote(z3SortName(d)))
 		}
-		w.linef("add(forall(__quants, __to_solver(*this, apply(%s, %s), %s.%s)));", sname, strings.Join(cvars, ", "), obj, varName(sym.Name))
+		opts.addConstraint(w, fmt.Sprintf("forall(__quants, __to_solver(%s, %s, %s))", opts.gen, z3ApplyCall(opts.prefix, opts.sname, cvars), opts.rhsBase()))
 		w.close("")
 		return
 	}
@@ -158,12 +211,12 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 		w.line(header)
 		w.indent++
 		opened++
-		args = append(args, fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name))
+		args = append(args, z3ValueForSortWithPrefix(d, name, opts.prefix))
 		domVarNames = append(domVarNames, name)
 	}
-	lhs := fmt.Sprintf("apply(%s%s)", sname, joinArgs(args))
-	rhs := g.cppStorageAccess(sym.Name, sym.Sort, domVarNames, obj)
-	w.linef("add(__to_solver(*this, %s, %s));", lhs, rhs)
+	lhs := z3ApplyCall(opts.prefix, opts.sname, args)
+	rhs := g.cppStorageAccessBase(opts.rhsBase(), sym.Sort, domVarNames)
+	opts.addConstraint(w, fmt.Sprintf("__to_solver(%s, %s, %s)", opts.gen, lhs, rhs))
 	for i := 0; i < opened; i++ {
 		w.indent--
 		w.line("}")
@@ -217,6 +270,19 @@ func (g *Generator) isLargeType(s goivy.Sort) bool {
 // emit an "unsupported" marker around the original symbol rather than
 // leaving partial emission in the output.
 func (g *Generator) emitSetField(w *cppWriter, destr *goivy.Const, lhs, rhs string, nvars int) bool {
+	return g.emitSetFieldCustom(w, destr, lhs, rhs, nvars, emitSetSolverOptions{
+		prefix: "",
+		gen:    "*this",
+		add: func(w *cppWriter, text string) {
+			w.linef("add(%s);", text)
+		},
+	})
+}
+
+func (g *Generator) emitSetFieldCustom(w *cppWriter, destr *goivy.Const, lhs, rhs string, nvars int, opts emitSetSolverOptions) bool {
+	if opts.gen == "" {
+		opts.gen = "*this"
+	}
 	if destr == nil {
 		return true
 	}
@@ -224,7 +290,7 @@ func (g *Generator) emitSetField(w *cppWriter, destr *goivy.Const, lhs, rhs stri
 	if !ok {
 		// Nullary destructor field (constant): just emit the constraint.
 		field := varName(memName(destr.Name))
-		w.linef("add(__to_solver(*this, apply(%s, %s), %s.%s));", strconv.Quote(destr.Name), lhs, rhs, field)
+		opts.addConstraint(w, fmt.Sprintf("__to_solver(%s, %s, %s.%s)", opts.gen, z3ApplyCall(opts.prefix, strconv.Quote(destr.Name), []string{lhs}), rhs, field))
 		return true
 	}
 	dom := fs.Domain()
@@ -248,15 +314,16 @@ func (g *Generator) emitSetField(w *cppWriter, destr *goivy.Const, lhs, rhs stri
 		w.indent++
 		opened++
 		vs[i] = name
-		domArgs[i] = fmt.Sprintf("int_to_z3(sort(%s), static_cast<long long>(%s))", strconv.Quote(z3SortName(d)), name)
+		domArgs[i] = z3ValueForSortWithPrefix(d, name, opts.prefix)
 	}
 	field := varName(memName(destr.Name))
-	lhs1 := fmt.Sprintf("apply(%s, %s%s)", strconv.Quote(destr.Name), lhs, joinArgs(domArgs))
+	lhsArgs := append([]string{lhs}, domArgs...)
+	lhs1 := z3ApplyCall(opts.prefix, strconv.Quote(destr.Name), lhsArgs)
 	rhs1 := rhs + cppIndexSuffix(vs) + "." + field
 	rng := fs.Range()
 	if g.isDestructorRecordRange(rng) {
 		for _, sub := range g.destructorsOfRange(rng) {
-			if !g.emitSetField(w, sub, lhs1, rhs1, nvars+len(dom)) {
+			if !g.emitSetFieldCustom(w, sub, lhs1, rhs1, nvars+len(dom), opts) {
 				for k := 0; k < opened; k++ {
 					w.indent--
 					w.line("}")
@@ -265,7 +332,7 @@ func (g *Generator) emitSetField(w *cppWriter, destr *goivy.Const, lhs, rhs stri
 			}
 		}
 	} else {
-		w.linef("add(__to_solver(*this, %s, %s));", lhs1, rhs1)
+		opts.addConstraint(w, fmt.Sprintf("__to_solver(%s, %s, %s)", opts.gen, lhs1, rhs1))
 	}
 	for k := 0; k < opened; k++ {
 		w.indent--
@@ -517,6 +584,17 @@ func joinArgs(args []string) string {
 	return ", " + strings.Join(args, ", ")
 }
 
+func z3ValueForSortWithPrefix(s goivy.Sort, name, prefix string) string {
+	return fmt.Sprintf("%sint_to_z3(%ssort(%s), static_cast<long long>(%s))", prefix, prefix, strconv.Quote(z3SortName(s)), name)
+}
+
+func z3ApplyCall(prefix, nameExpr string, args []string) string {
+	if len(args) == 0 {
+		return fmt.Sprintf("%sapply(%s)", prefix, nameExpr)
+	}
+	return fmt.Sprintf("%sapply(%s, %s)", prefix, nameExpr, strings.Join(args, ", "))
+}
+
 func (g *Generator) unsupportedEmitSet(w *cppWriter, sym stateSymbol, reason string) {
 	w.linef("// ivy2cpp: emit_set unsupported for %q (%s)", sym.Name, reason)
 }
@@ -654,7 +732,10 @@ func bracketize(args []string) string {
 //	                if not is_large_type(sym.sort) and not is_native_sym(sym):
 //	                    assign_array_from_model(impl, sym, 'obj.', mk_rand)
 //
-// large-type / make_thunk handling is deferred to milestone 5.
+// Large hash-thunk state is handled by emitHashThunkToSolver and
+// z3_thunk::to_z3 (AUDIT2 Item 031 / DONE 034). This branch remains
+// Python's unused-state random-from-model path for enumerable,
+// non-native symbols.
 func (g *Generator) emitInitGenPerSymbolDispatch(w *cppWriter, obj string) error {
 	constraints, err := g.initialStateConstraints()
 	if err != nil {
@@ -688,11 +769,12 @@ func (g *Generator) emitInitGenPerSymbolDispatch(w *cppWriter, obj string) error
 
 // isPrimitiveRange mirrors Python `is_primitive_sort(sym.sort.rng)`
 // at ivy_to_cpp.py:635. Returns true only when the range sort is a
-// `primitive ...` native type. The Go port currently has no native
-// primitive types registered, so this is a stub returning false. When
-// native primitives land, consult mod.NativeTypes for the range sort.
+// `primitive ...` native type.
 func (g *Generator) isPrimitiveRange(s goivy.Sort) bool {
-	return false
+	if fs, ok := s.(*goivy.LogicFunctionSort); ok {
+		return g.isPrimitiveSort(fs.Range())
+	}
+	return g.isPrimitiveSort(s)
 }
 
 // emitAssignArrayFromModel emits direct C++ random assignments for sym,
@@ -773,6 +855,15 @@ func (g *Generator) emitHashThunkToSolver(w *cppWriter, domSorts []goivy.Sort, c
 	w.line("return res;")
 	w.close("")
 	w.close(";")
+	w.blank()
+
+	w.open(fmt.Sprintf("template<typename R> z3::expr __to_solver(gen &g, const z3::expr &v, hash_thunk<%s,R> &val) {", ctName))
+	w.linef("return to_solver_class<hash_thunk<%s,R> >()(g, v, val);", ctName)
+	w.close("")
+	w.blank()
+	w.open(fmt.Sprintf("template<typename R> z3::expr __to_solver(gen &g, const z3::expr &v, const hash_thunk<%s,R> &val) {", ctName))
+	w.linef("return __to_solver(g, v, const_cast<hash_thunk<%s,R> &>(val));", ctName)
+	w.close("")
 	w.blank()
 }
 

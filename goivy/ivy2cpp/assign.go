@@ -39,7 +39,12 @@ func (g *Generator) emitAssignSimple(w *cppWriter, a *goivy.LogicAssignAction) {
 	rhs = g.maybeVariantUpcast(a.LHS.NodeSort(), a.RHS.NodeSort(), rhs, "")
 	if g.Config.Trace && !lhsHasNamespacedName(a.LHS) {
 		nf := g.numberFormat()
-		w.linef(`__ivy_out%s << "  write(" << %s << "," << (%s) << ")" << std::endl;`, nf, lhsTraceString(lhs), rhs)
+		trace, err := g.emitTracedLHS(a.LHS)
+		if err != nil {
+			g.unsupported(w, "unsupported assignment trace lhs: %s", err.Error())
+			return
+		}
+		w.linef(`__ivy_out%s << "  write("%s << "," << (%s) << ")" << std::endl;`, nf, trace, rhs)
 	}
 	w.linef("%s = %s;", lhs, rhs)
 }
@@ -73,14 +78,83 @@ func lhsRootName(lhs goivy.Expr) string {
 	}
 }
 
-// lhsTraceString wraps the C++ LHS expression in a string literal for the
-// trace line. Python emits the LHS symbolically (`<< "f" << "(" << arg ...`),
-// which evaluates `arg` while keeping the wrapping function name as a
-// literal. Approximate this by quoting the full C++ form — close enough
-// for the runtime trace text; TODO 029 owns the broader port of
-// emit_traced_lhs.
-func lhsTraceString(lhsCPP string) string {
-	return `"` + escapeString(lhsCPP) + `"`
+// emitTracedLHS mirrors Python emit_traced_lhs: emit a stream chain that
+// prints the source-level LHS name while evaluating application arguments.
+// This keeps traces stable across the C++ storage choices used for arrays,
+// maps, destructor-backed structs, and future storage helpers.
+func (g *Generator) emitTracedLHS(lhs goivy.Expr) (string, error) {
+	var b strings.Builder
+	if err := g.emitTracedLHSInto(&b, lhs); err != nil {
+		return "", err
+	}
+	return b.String(), nil
+}
+
+func (g *Generator) emitTracedLHSInto(b *strings.Builder, lhs goivy.Expr) error {
+	switch n := lhs.(type) {
+	case *goivy.Const:
+		b.WriteString(` << "`)
+		b.WriteString(escapeString(n.Name))
+		b.WriteString(`"`)
+		return nil
+	case *goivy.LogicVariable:
+		b.WriteString(` << "`)
+		b.WriteString(escapeString(n.Name))
+		b.WriteString(`"`)
+		return nil
+	case *goivy.Apply:
+		name := goivy.ExprName(n.Func)
+		if name == "" {
+			return nil
+		}
+		if g.isDestructorName(name) && len(n.Terms) > 0 {
+			if err := g.emitTracedLHSInto(b, n.Terms[0]); err != nil {
+				return err
+			}
+			b.WriteString(` << ".`)
+			b.WriteString(escapeString(memName(name)))
+			b.WriteString(`"`)
+			if len(n.Terms) > 1 {
+				if err := g.emitTraceArgs(b, n.Terms[1:]); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+		b.WriteString(` << "`)
+		b.WriteString(escapeString(name))
+		b.WriteString(`"`)
+		if len(n.Terms) > 0 {
+			return g.emitTraceArgs(b, n.Terms)
+		}
+		return nil
+	default:
+		code, err := g.emitExpr(lhs)
+		if err != nil {
+			return err
+		}
+		b.WriteString(` << "`)
+		b.WriteString(escapeString(code))
+		b.WriteString(`"`)
+		return nil
+	}
+}
+
+func (g *Generator) emitTraceArgs(b *strings.Builder, args []goivy.Expr) error {
+	b.WriteString(` << "("`)
+	for i, arg := range args {
+		if i > 0 {
+			b.WriteString(` << ","`)
+		}
+		code, err := g.emitExpr(arg)
+		if err != nil {
+			return err
+		}
+		b.WriteString(` << `)
+		b.WriteString(code)
+	}
+	b.WriteString(` << ")"`)
+	return nil
 }
 
 // assignBoundsExpr implements Python's bexpr trick from emit_assign

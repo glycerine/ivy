@@ -44,7 +44,7 @@ finished.
 
 ---
 
-## TODO 031 - Z3-aware thunk generation (gen/test target)
+## DONE 031 - Z3-aware thunk generation (gen/test target)
 
 Created: 2026-05-23 04:28:44 UTC
 
@@ -136,15 +136,41 @@ Create `thunk_z3_test.go` with these tests:
   iteration, assert the binary exits 0 and the printed model
   satisfies the forall.
 
-Reminder:
+Status:
 
-- [ ] When this lands, rename to `## DONE 031 - …`, add a
-  `Status:` paragraph citing the new Go locations and test names,
-  and update this audit in the same commit as the implementation.
+- Implemented the full Python `make_thunk` Z3 path in
+  `goivy/ivy2cpp/thunk.go`: gen/test thunks now inherit
+  `z3_thunk<D,R>`, carry `__ident`, initialize
+  `z3_thunk_counter`, emit the primitive and constant fast paths,
+  declare local arg/env/result symbols, encode captured env symbols
+  under dynamic `__loc_<ident>__<name>` solver names, parse the
+  equality SMT expression, rename env symbols, and substitute domain
+  args/result against the caller's Z3 application.
+- Generalized solver env emission in `goivy/ivy2cpp/solver_emit.go`
+  so `emit_set` can be reused with Python's `prefix='g.'`,
+  `gen='g'`, dynamic `csname`, scalar/function/destructor branches,
+  and `g.slvr.add(...)`.
+- Added runtime support in `include2cpp/ivy_go_z3.hpp`:
+  `z3_thunk_counter`, `gen::parse_expr`, string `int_to_z3` /
+  `__to_solver<std::string>` support, and `__z3_rename`.
+- Tests added in `goivy/ivy2cpp/thunk_z3_test.go`:
+  `TestMakeThunkZ3GeneralSingleArgEnvEncoding`,
+  `TestMakeThunkZ3GeneralMultiArgSubstitutionAndFunctionEnv`,
+  `TestMakeThunkZ3ConstantNumericFastPath`,
+  `TestMakeThunkZ3ConstantCPPInterpFastPath`,
+  `TestMakeThunkZ3PrimitiveSortReturnsTrue`,
+  `TestMakeThunkSkipsZ3MethodOutsideGenAndTest`,
+  `TestIvyGoZ3RuntimeThunkHelpers`, and
+  `TestMakeThunkZ3GeneralGeneratedCPPCompiles`.
+- Verified with `XTRACE_OFF=1 go test ./ivy2cpp -count=1`,
+  `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run
+  TestMakeThunkZ3GeneralGeneratedCPPCompiles -count=1`, and
+  `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run
+  TestHashThunkToSolverSpecializationEmittedForTestTarget -count=1`.
 
 ---
 
-## TODO 032 - Thunk environment-symbol filtering vs `is_derived`
+## DONE 032 - Thunk environment-symbol filtering vs `is_derived`
 
 Created: 2026-05-23 04:28:44 UTC
 
@@ -219,15 +245,50 @@ Tests, added to `thunk_z3_test.go`:
   deterministic across runs; assert two consecutive generations
   produce identical field lists.
 
-Reminder:
+Status:
 
-- [ ] When this lands, rename to `## DONE 032 - …` and update.
+- Implemented derived-aware thunk preparation in
+  `goivy/ivy2cpp/thunk.go`: thunk bodies now expand derived
+  applications before env capture, derived heads are excluded from
+  captured fields, numerals/booleans remain skipped, and bare
+  higher-order function values emit an unsupported diagnostic instead
+  of becoming bogus fields. Applied state functions remain capturable,
+  preserving self-referential thunk assignments.
+- Added `Head` to `derivedDefinition` in
+  `goivy/ivy2cpp/definitions.go` so thunk expansion can key
+  parametric definitions by the exact defining symbol.
+- Tests added in `goivy/ivy2cpp/thunk_z3_test.go`:
+  `TestThunkEnvSymbolsExcludesDerivedDefinition`,
+  `TestThunkEnvSymbolsIncludesPlainState`,
+  `TestThunkEnvSymbolsSkipsNumeralsAndBooleans`,
+  `TestThunkEnvSymbolsRejectsBareFunctionSymbol`, and
+  `TestThunkEnvSymbolsStableOrder`.
+- Verified with `XTRACE_OFF=1 go test ./ivy2cpp -run
+  'TestThunkEnvSymbols|TestEmitAssignLargeThunkFallback|TestMakeThunkZ3'
+  -count=1`, `XTRACE_OFF=1 go test ./ivy2cpp -count=1`, and
+  `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run
+  TestThunkEnvSymbolsExcludesDerivedDefinition -count=1`.
 
 ---
 
-## TODO 033 - Remove `Action.Update` panic-recover scaffold
+## DONE 033 - Remove `Action.Update` panic-recover scaffold
 
 Created: 2026-05-23 04:28:44 UTC
+
+Status 2026-05-23: Removed the `defer/recover` wrapper around
+`goivy.GetUpdateForArt` in `action_gen.go`; illegal action-update
+panics now propagate instead of silently demoting a solver-backed
+action generator to weak random-input mode. Added
+`action_gen_update_test.go`, whose matrix covers the legal update
+dispatch surface (assume/assert/subgoal/requires/ensures, assignment,
+havoc, set, native/debug/return, field updates, sequence, choice/env
+including determinized branches, boolean and `some` ifs, while, local,
+let, calls with input and return formals, bind_olds, crash, fail,
+schema instantiate, and default no-op action rows). The same matrix
+also exercises `buildActionGenPlan` with `plan.fallback == false`,
+and a negative test proves illegal action trees are no longer recovered
+inside action-gen analysis. No incomplete legal `Update` implementation
+was surfaced by this pass.
 
 Gap:
 
@@ -298,16 +359,33 @@ Tests, in new `action_gen_panic_test.go`:
 
 Reminder:
 
-- [ ] When this lands, rename to `## DONE 033 - …`, mention the
+- [x] When this lands, rename to `## DONE 033 - …`, mention the
   removal of the recover, and update.
-- [ ] If this work surfaces any incomplete Update in goivy core,
+- [x] If this work surfaces any incomplete Update in goivy core,
   open a follow-up audit item in this file before closing.
 
 ---
 
-## TODO 034 - Large-function `__to_solver` end-to-end coverage
+## DONE 034 - Large-function `__to_solver` end-to-end coverage
 
 Created: 2026-05-23 04:28:44 UTC
+
+Status 2026-05-23: Updated `emitSetSolver` so destructor-record ranges
+only take the recursive field path when the whole function sort is not
+large, matching Python's `if sort.rng.name in sort_destructors and not
+is_large_type(sort)` branch. Large destructor-range functions now use the
+forall-quantified `__to_solver` path instead of falling into an
+unsupported unenumerable-domain diagnostic. `emitHashThunkToSolver` now
+emits concrete `__to_solver` overloads for both mutable and const
+`hash_thunk<D,R>` references, delegating to the Python-shaped
+`to_solver_class<hash_thunk<D,R>>` specialization so the Go runtime's
+primitive primary `__to_solver` no longer steals hash-thunk calls.
+Added `solver_emit_test.go` coverage for large cardinality functions,
+large destructor-range functions, single-key and ctuple hash-thunk
+`to_z3` dispatch, per-domain deduplication, and the stale-comment sweep.
+Verification: focused TODO 034 tests, slow C++ compile smoke for
+single-key/ctuple hash-thunk solver generation, and full
+`XTRACE_OFF=1 go test ./ivy2cpp -count=1` all pass.
 
 Gap:
 
@@ -383,13 +461,14 @@ Tests, in new `solver_emit_test.go`:
 
 Reminder:
 
-- [ ] When this lands, rename to `## DONE 034 - …` and update.
+- [x] When this lands, rename to `## DONE 034 - …` and update.
 
 ---
 
-## TODO 035 - BV widths > 64 bits
+## DONE 035 - BV widths > 64 bits
 
 Created: 2026-05-23 04:28:44 UTC
+Completed: 2026-05-23
 
 Gap:
 
@@ -462,15 +541,36 @@ Tests, in new `cpp_types_test.go`:
   XORs two `bv[128]` values; compile and run; assert the printed
   result equals the expected XOR.
 
-Reminder:
+Status:
 
-- [ ] When this lands, rename to `## DONE 035 - …`.
+- Implemented the general wide-BV path rather than a narrow slice:
+  `bv[1..32]` lowers to `unsigned`, `bv[33..64]` to `unsigned long long`,
+  `bv[65..128]` to `unsigned __int128`, and `bv[N]` for `N > 128`
+  to `ivy_uint<N>`.
+- Added `include2cpp/ivy_wide_uint.hpp` with arbitrary-width unsigned
+  arithmetic, bitwise, shift, comparison, stream, parse, decimal
+  conversion, random, and hash support. Generated headers include it
+  when a model uses a wide bit-vector.
+- Updated numeral masking, Z3 string round-trips, `_arg`, `__ser`,
+  `__deser`, `__from_solver`, `__to_solver`, and `__randomize` paths
+  for both `unsigned __int128` and `ivy_uint<N>`.
+- `BuildPlanFor` now rejects `compiler=cl` for generated outputs that
+  use widths greater than 64, because MSVC lacks `unsigned __int128`.
+- Added coverage in `cpp_types_wide_bv_test.go` for 128-bit, 256-bit,
+  513-bit, MSVC rejection, and the helper operator surface.
+
+Verification:
+
+- `XTRACE_OFF=1 go test ./ivy2cpp -run 'TestBVWidth(128|256|513)|TestBVWidth256SupportHeaderExposesGeneralOperators' -count=1`
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run 'TestBVWidth(128|256|513)' -count=1`
+- `XTRACE_OFF=1 go test ./ivy2cpp -count=1`
 
 ---
 
-## TODO 036 - `nondet.go` domain-synthesis fallbacks
+## DONE 036 - `nondet.go` domain-synthesis fallbacks
 
 Created: 2026-05-23 04:28:44 UTC
+Completed: 2026-05-23
 
 Gap:
 
@@ -540,13 +640,37 @@ Tests, in new `nondet_test.go`:
   2, 8, 16, 32, 64. Assert the loop bound is the correct
   `1<<width`.
 
-Reminder:
+Status:
 
-- [ ] When this lands, rename to `## DONE 036 - …` and update.
+- Removed the soft `g.unsupported` fallback paths from `mkNondetSym`.
+  If the generator reaches a non-iterable bounded-array domain now,
+  it panics with a contract violation instead of emitting partial C++.
+- Extended `loopHeaderForSort` to cover positive-cardinality
+  integer-like domains, including pure `bv[N]` sorts and card-bounded
+  uninterpreted sorts that lower to integer storage.
+- Fixed `nondetSkipSort` so pure `bv[N]` sorts are nondet-initialized
+  like Python's plain `bv[...]` path; only real cpptype helper sorts
+  (`strbv`, `intbv`) are skipped.
+- Centralized nondet initialization through `mkNondetValue`, so scalar
+  locals, bounded-array cells, struct fields, thunk-produced values,
+  destructor records, and variant supertypes all recurse through the
+  same logic.
+- Added variant nondet construction: choose the variant tag, nondet
+  initialize the selected subtype payload, then upcast into the
+  supertype wrapper.
+- Added focused coverage in `nondet_test.go` for destructor fields,
+  bv domains, variant locals, uninterpreted-domain thunks, boundary bv
+  loop headers, and no-unsupported legal inputs.
+
+Verification:
+
+- `XTRACE_OFF=1 go test ./ivy2cpp -run 'TestMkNondetSym' -count=1`
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run 'TestMkNondetSym' -count=1`
+- `XTRACE_OFF=1 go test ./ivy2cpp -count=1`
 
 ---
 
-## TODO 037 - Thunk struct emission scope (file vs local)
+## DONE 037 - Thunk struct emission scope (file vs local)
 
 Created: 2026-05-23 04:28:44 UTC
 
@@ -618,14 +742,34 @@ Tests, in new `thunk_emission_test.go`:
 - `TestThunkScopeNoShadowWarning` (`SLOW_CPP_TEST=1`) — build with
   `-Wshadow -Werror`; assert success.
 
-Reminder:
+Status:
 
-- [ ] When this lands, rename to `## DONE 037 - …` and note the
-  dependency on Item 042 closing first.
+- Implemented before Item 042 by adding a dedicated impl/file-scope
+  thunk buffer to `Generator` and flushing it before constructor and
+  method bodies. Full `Generate` now mirrors Python's `thunks = impl`
+  behavior; direct white-box calls still preserve their old inline
+  writer behavior unless file-scope thunk emission is explicitly
+  enabled.
+- Added content memoization by thunk class, qualified domain/range
+  types, loop variables, captured environment tuple, and expanded body
+  expression. The `__thunk__N` counter advances only for new emitted
+  structs, giving stable numbering across runs.
+- Moved nondet-generated thunk structs into the same file-scope path and
+  added scoped nondet construction so uninterpreted, struct, and variant
+  domains/ranges can be emitted outside class method bodies.
+- Added `thunk_emission_test.go` coverage for file-scope placement,
+  identical-thunk one-time emission, distinct-body emission, byte-stable
+  generation, and `-Wshadow -Werror` generated-C++ compilation.
+
+Verification:
+
+- `XTRACE_OFF=1 go test ./ivy2cpp -run 'TestThunk|TestEmitAssignLargeThunkFallback|TestMkNondetSymUninterpretedDomainUsesThunk' -count=1`
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run 'TestThunk(StructEmittedAtFileScope|IdenticalThunksEmittedOnce|DifferentBodiesGetDifferentThunkStructs|ScopeNoShadowWarning)' -count=1`
+- `XTRACE_OFF=1 go test ./ivy2cpp -count=1`
 
 ---
 
-## TODO 038 - `emit_special_op` parity audit (bitvector + string ops)
+## DONE 038 - `emit_special_op` parity audit (bitvector + string ops)
 
 Created: 2026-05-23 04:28:44 UTC
 
@@ -699,13 +843,44 @@ Tests, in new `bv_expr_test.go`:
   `bv_expr.go` source and assert every Python operator name
   appears as a case label.
 
-Reminder:
+Status:
 
-- [ ] When this lands, rename to `## DONE 038 - …`.
+- Audited the live Python `emit_special_op`/`emit_bv_op` path. The
+  checked-out Python source has a smaller explicit table than this audit
+  item described (`concat`, `bfe[...]`, and `bvand`/`bvor`/`bvnot`), but
+  the Go tree already exposes the broader Z3 BV operator family. The Go
+  implementation now covers the whole family used by the port rather
+  than only the narrow Python table.
+- Added lowering for `bvxor`, `bvneg`, `bvshl`, `bvlshr`, `bvashr`,
+  symbolic `<<`/`>>`, and named arithmetic synonyms `bvadd`, `bvsub`,
+  `bvmul`, `bvudiv`, `bvurem`, while preserving existing `+`, `-`, `*`,
+  `/`, `%`, `bvand`, `bvor`, `bvnot`, `concat`, `bfe[...]`, and `cast`.
+- Made BV casts/concat/extract explicit so the generated C++ remains
+  type-correct for primitive BV widths, `unsigned __int128`, and
+  arbitrary-width `ivy_uint<N>`.
+- Added guarded shift lowering so large shift amounts do not rely on C++
+  undefined behavior. Arithmetic right shift now sign-extends for all
+  supported BV widths, including arbitrary-width `ivy_uint<N>`.
+- Extended `ivy_wide_uint.hpp` with cross-width constructors,
+  primitive conversion operators, unary negation, and saturating shift
+  amount helpers needed by the general lowering.
+- Unknown reserved-looking BV operators now report a diagnostic naming
+  the operator and arity instead of falling through to an incorrect
+  storage access expression.
+- Added `bv_expr_test.go` coverage for XOR, negation, guarded shifts,
+  arithmetic sign extension, symbolic shift aliases, wide BV shift
+  helpers, unknown-operator diagnostics, string `+`, and operator-table
+  coverage.
+
+Verification:
+
+- `XTRACE_OFF=1 go test ./ivy2cpp -run 'TestBV|TestBitvectorTypesAndExpressionsShape|TestStringOpAddEmitsPlus' -count=1`
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run 'TestBV(Xor|Shift|Logical|Arithmetic|Neg|Wide|Operator|Unknown)|TestSymbolicShiftAliases|TestBitvectorTypesAndExpressionsShape|TestStringOpAddEmitsPlus' -count=1`
+- `XTRACE_OFF=1 go test ./ivy2cpp -count=1`
 
 ---
 
-## TODO 039 - `find_vs` / MSVC toolchain detection
+## DONE 039 - `find_vs` / MSVC toolchain detection
 
 Created: 2026-05-23 04:28:44 UTC
 
@@ -775,14 +950,38 @@ some, generic for others):
 - Integration smoke (manual, not CI): on a Windows VM with a
   fresh VS install, run `make test`; assert pass.
 
-Reminder:
+Status:
 
-- [ ] When this lands, rename to `## DONE 039 - …` and note any
-  Windows CI configuration changes.
+- Added `findVS()` plumbing with a non-Windows stub and a Windows
+  implementation that prefers `vswhere.exe`, falls back to the old
+  Python-style Visual Studio directory scan, selects the latest
+  `VC/Tools/MSVC/<version>` toolset, and constructs bin/include/lib
+  paths.
+- On Windows, discovery also attempts to run `vcvarsall.bat amd64 &&
+  set` and captures the resulting environment. This preserves the
+  Python behavior of building under the Visual Studio environment, while
+  also giving `BuildPlan` explicit PATH/INCLUDE/LIB updates.
+- `BuildPlan` now carries an optional `Env`; `BuildOutput` applies it
+  when invoking the compiler.
+- `msvcBuildPlan` uses discovered include/lib directories and prepends
+  the toolchain bin directory to PATH. If discovery fails, it still
+  returns the existing usable `cl` command line so callers with an
+  already-sourced `vcvars` shell keep working.
+- Added mocked cross-platform tests for vswhere JSON parsing, latest
+  MSVC toolset selection, MSVC include/lib/PATH injection, absent
+  vswhere diagnostics, non-Windows stub behavior, and fallback build
+  plans.
+- No Windows CI configuration was changed in this step; the Windows VM
+  smoke remains manual.
+
+Verification:
+
+- `XTRACE_OFF=1 go test ./ivy2cpp -run 'TestFindVs|TestVSInfo|TestMsvcBuildPlan|TestBuildPlanRejectsCLOnNonWindows|TestBVWidth128OnMSVCRejected' -count=1`
+- `XTRACE_OFF=1 go test ./ivy2cpp -count=1`
 
 ---
 
-## TODO 040 - `lhsTraceString` full port (number format, captures)
+## DONE 040 - `lhsTraceString` full port (number format, captures)
 
 Created: 2026-05-23 04:28:44 UTC
 
@@ -854,13 +1053,32 @@ Tests, in new `trace_test.go`:
 - `TestTraceLhsDoesNotEmitWhenTraceOff` — assert trace lines absent
   when `Config.Trace == false`.
 
-Reminder:
+Status:
 
-- [ ] When this lands, rename to `## DONE 040 - …`.
+- Replaced the quoted-C++-lvalue approximation with an AST walker that
+  emits a Python-shaped stream chain for traced assignment LHS values.
+- Constants and variables now trace as source names, function
+  applications trace as `name(arg,...)` with evaluated argument
+  expressions, and destructor-backed field chains trace as source field
+  paths such as `root.child.shade`.
+- The existing namespaced-symbol suppression is preserved, so local
+  helper assignments such as `loc:tmp` do not produce write traces.
+- Trace lines continue to use `Generator.numberFormat()`, so
+  `attribute radix = "16"` applies the same hex/showbase stream prefix
+  to LHS arguments and RHS values.
+- Added `trace_lhs_test.go` coverage for hex number format, function
+  application arguments, destructor fields, nested destructor chains,
+  namespaced local suppression, and `Trace=false`.
+
+Verification:
+
+- `XTRACE_OFF=1 go test ./ivy2cpp -run 'TestTraceLhs|TestAssignSimpleEmitsWriteTraceUnderTrace|TestNumberFormatHexFromRadixAttribute' -count=1`
+- `XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run 'TestTraceLhs|TestAssignSimpleEmitsWriteTraceUnderTrace|TestNumberFormatHexFromRadixAttribute' -count=1`
+- `XTRACE_OFF=1 go test ./ivy2cpp -count=1`
 
 ---
 
-## TODO 041 - `emit_value_parser` per-sort coverage
+## DONE 041 - `emit_value_parser` per-sort coverage
 
 Created: 2026-05-23 04:28:44 UTC
 
@@ -937,11 +1155,40 @@ Tests, in new `repl_parser_test.go`:
 
 Reminder:
 
-- [ ] When this lands, rename to `## DONE 041 - …`.
+- Added a parser coverage matrix at
+  `goivy/ivy2cpp/testdata/parser_matrix.yaml`, covering Python's
+  primitive runtime parsers, pure bitvectors through wide `ivy_uint<N>`,
+  `strbv`, `intbv`, named enums, numeric enums, ranges,
+  destructor-backed records, variants, native sorts, and positional
+  function parameters.
+- Centralized generated parser expressions through
+  `argExprForSort`/`argExprForSortBound` so action dispatch,
+  `emit_value_parser`, positional parameter parsing, destructor fields,
+  and variant payloads all route through the same C++ `_arg<T>` emission
+  policy.
+- Preserved Python's exact range/cardinality behavior: range parser
+  bounds still use `csortcard`/`sort_card` semantics (`ub + 1` for
+  ranges), matching the source-of-truth rather than adding a separate
+  lower-bound clamp.
+- Added `repl_parser_test.go` coverage for BV widths
+  `{1,2,8,16,32,64,128,256}`, named and numeric enum modes, range
+  rejection text, string escape parsing, nested destructor records,
+  variant discriminators, and native user-provided parser routing.
+- Added a captured Python-compatible range error fixture at
+  `goivy/ivy2cpp/testdata/python_errors/range_out_of_bounds.txt`. The
+  quoted `"argument 1"` is intentional: Python's generated C++ typedefs
+  `__strlit` to `std::string`, so its `operator<<` quotes strings,
+  including `out_of_bounds.txt`.
+
+Verification:
+
+- `env XTRACE_OFF=1 go test ./ivy2cpp -run 'TestParser|TestReplDispatchUsesPrimitiveArgForBoolRangeNatStrlit|TestArgSpecVariantBadAndGoodValuePaths|TestValueParserPrefixesLinenoOnError|TestReplMainFunctionSortedParam' -count=1`
+- `env XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run 'TestParser' -count=1`
+- `env XTRACE_OFF=1 go test ./ivy2cpp -count=1`
 
 ---
 
-## TODO 042 - Port `ivy_cpp.py` context model
+## DONE 042 - Port `ivy_cpp.py` context model
 
 Created: 2026-05-23 04:28:44 UTC
 
@@ -1048,12 +1295,42 @@ Tests, in new `cpp_context_test.go` — one suite per ported class:
 
 Reminder:
 
-- [ ] When this lands, rename to `## DONE 042 - …` and note that
-  items 037 and 040 unblock.
+- Added `cpp_context.go`, porting the Python `ivy_cpp.py` context
+  model: `CppFile`, `CppText`, `DeadCode`, `Context`,
+  `CppContext`, `CppClass`, `CppClassName`, `CppArray`,
+  `CppFunction`, `CppReference`, `CppVector`, `TypeDef`,
+  `CppMember`, `CppLocal`, and `CppScope`.
+- Implemented context-style `Enter(*CppContext) func()` closures for
+  class-name stacking, class member routing, member initializers,
+  function-local routing, and nested local scopes.
+- Ported the module-level Python helpers as `*CppContext` methods:
+  add-global, add-once-global, add-impl, add-member, add-local,
+  add-expr, current-classname, add-header, relname/fullname, and
+  context-owned temp generation.
+- Migrated `cppWriter` into an adapter over `CppText`, and wired
+  `Generator.Ctx` so the header and implementation buffers are now the
+  `CppContext` globals/impls buffers while existing emitter call sites
+  keep their `cppWriter` API.
+- Routed the native once-only memo through `CppContext.OnceGlobals`,
+  matching Python's single `once_globals` set while preserving the old
+  generator fallback for white-box tests.
+- Added `testdata/cpp_context_attrs.yaml` and `cpp_context_test.go`
+  coverage for the class/field mapping, once-only globals, ordinary
+  globals, local scope routing, impl bypass, class-name stack popping,
+  temp generation, `DeadCode` panic behavior, deterministic generation,
+  and Python-style declarations.
+- Items 037 and 040 now sit on a faithful context model instead of
+  ad-hoc writer state.
+
+Verification:
+
+- `env XTRACE_OFF=1 go test ./ivy2cpp -run 'TestCppContext|TestDeadCode' -count=1`
+- `env XTRACE_OFF=1 go test ./ivy2cpp -count=1`
+- `env XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run 'TestParser' -count=1`
 
 ---
 
-## TODO 043 - Oracle harness concrete blueprint
+## DONE 043 - Oracle harness concrete blueprint
 
 Created: 2026-05-23 04:28:44 UTC
 
@@ -1142,16 +1419,51 @@ Tests, in `oracle_test.go`:
 - `TestOracleStatusFileUpToDate` — meta-test: the catalog above
   matches the rows in `STATUS.md`.
 
+Status:
+
+- Added the full oracle fixture catalog under
+  `goivy/ivy2cpp/testdata/oracle/`, including all 14 files named in
+  this item and `STATUS.md` rows for PASS / EXPECTED_FAIL / SKIP
+  accounting.
+- Added `goivy/ivy2cpp/oracle_compare.go` with a tokenizing C++
+  comparator that strips C/C++ comments, ignores whitespace outside
+  literals, keeps identifiers/numbers as tokens, and reports first
+  divergence with 80-character context. Added the requested standalone
+  wrapper at `goivy/ivy2cpp/testdata/oracle/compare_cpp.go`.
+- Added `goivy/ivy2cpp/oracle_test.go` with:
+  `TestCompareCPPTokensStripsCommentsAndWhitespace`,
+  `TestCompareCPPTokensPreservesStringLiterals`,
+  `TestCompareCPPTokensReportsContext`,
+  `TestOracleFixturesExist`, `TestOracleSingle`,
+  `TestOracleCompileGo`, `TestOracleCompilePython`,
+  `TestOracleSemanticEquivalence`, and
+  `TestOracleStatusFileUpToDate`.
+- `TestOracleSingle`, Python compile, and semantic checks are gated by
+  `ORACLE_TEST=1`; compile/run hooks are gated by `SLOW_CPP_TEST=1`.
+  The current catalog starts as EXPECTED_FAIL until fixtures are
+  promoted fixture-by-fixture after token parity is proven.
+- The harness now uses each fixture basename as the generated class
+  name, matching Python's file-basename behavior and exposing real
+  token divergences rather than a constant `oracle.cpp`/`oracle.h`
+  file-set mismatch. `goivy/ivy2cpp/TODO3.md` records the remaining
+  whole-hog parity work after the first visible oracle divergence
+  moved into the shared runtime scaffold.
+- Verified with
+  `env XTRACE_OFF=1 go test ./ivy2cpp -run 'TestCompareCPP|TestOracleFixturesExist|TestOracleStatusFileUpToDate' -count=1`,
+  `env XTRACE_OFF=1 ORACLE_TEST=1 go test ./ivy2cpp -run TestOracleSingle -count=1`,
+  `env XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run TestOracleCompileGo -count=1`,
+  and `env XTRACE_OFF=1 go test ./ivy2cpp -count=1`.
+
 Reminder:
 
-- [ ] When this lands, rename to `## DONE 043 - …` and also
+- [x] When this lands, rename to `## DONE 043 - …` and also
   close the prior TODO 030.
 
 ---
 
 ## DONE 044. ignored.
 
-## TODO 045 - Sweep stale "deferred" comments
+## DONE 045 - Sweep stale "deferred" comments
 
 Created: 2026-05-23 04:28:44 UTC
 
@@ -1205,9 +1517,24 @@ Tests, in new `comments_test.go`:
   mentioning "deferred" or "TODO", assert it includes a cross-
   reference of the form `AUDIT2 Item NNN` or `TODO_AUDIT2026...`.
 
+Status:
+
+- The four originally inventoried comments had already been made
+  accurate by the implementations for AUDIT2 Items 031, 032, 033,
+  and 034. Swept the remaining stale init-gen line in
+  `goivy/ivy2cpp/solver_emit.go`, replacing "deferred to milestone 5"
+  with an accurate reference to `emitHashThunkToSolver` and
+  `z3_thunk::to_z3` (AUDIT2 Item 031 / DONE 034).
+- Added `goivy/ivy2cpp/comments_test.go` with
+  `TestNoStaleDeferralComments` and
+  `TestEveryDeferralCommentReferencesAudit2`.
+- Verified with
+  `env XTRACE_OFF=1 go test ./ivy2cpp -run 'TestNoStaleDeferralComments|TestEveryDeferralCommentReferencesAudit2' -count=1`
+  and `env XTRACE_OFF=1 go test ./ivy2cpp -count=1`.
+
 Reminder:
 
-- [ ] When this lands, rename to `## DONE 045 - …`.
+- [x] When this lands, rename to `## DONE 045 - …`.
 
 ---
 

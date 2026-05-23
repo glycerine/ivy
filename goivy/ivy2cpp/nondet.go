@@ -34,7 +34,11 @@ func (g *Generator) mkNondet(w *cppWriter, varExpr string, _rng int, label strin
 	if sort != nil {
 		ct = g.cppType(sort)
 	}
-	w.linef("%s = (%s)___ivy_choose(0, \"%s\", %d);", varExpr, ct, escapeString(label), uniqueID)
+	g.mkNondetWithCType(w, varExpr, label, uniqueID, ct)
+}
+
+func (g *Generator) mkNondetWithCType(w *cppWriter, varExpr string, label string, uniqueID int64, ctype string) {
+	w.linef("%s = (%s)___ivy_choose(0, \"%s\", %d);", varExpr, ctype, escapeString(label), uniqueID)
 }
 
 // mkNondetSym emits a nondeterministic initialization for symbol
@@ -65,15 +69,7 @@ func (g *Generator) mkNondetSym(w *cppWriter, local goivy.Expr, name string, uni
 
 	fs, isFunc := sort.(*goivy.LogicFunctionSort)
 	if !isFunc {
-		// Sorts with struct destructors get per-field nondet init
-		// recursively; the struct itself has no `(struct)int` cast.
-		// Mirrors Python `assign_symbol_value` over `sort_destructors`
-		// (ivy_to_cpp.py:203-214).
-		if _, ok := g.Mod.SortDestructors.Get2(sortName(sort)); ok {
-			g.mkNondetStructFields(w, varName(name), sort, name, uniqueID)
-			return
-		}
-		g.mkNondet(w, varName(name), 0, name, uniqueID, sort)
+		g.mkNondetValue(w, varName(name), sort, name, uniqueID)
 		return
 	}
 	dom := fs.Domain()
@@ -97,28 +93,81 @@ func (g *Generator) mkNondetSym(w *cppWriter, local goivy.Expr, name string, uni
 	for i, d := range dom {
 		v, err := goivy.NewVariable(fmt.Sprintf("X%d", i), d)
 		if err != nil {
-			g.unsupported(w, "mkNondetSym: failed to synthesize loop variable: %s", err.Error())
-			for j := 0; j < opened; j++ {
-				w.close("")
-			}
-			return
+			panic(fmt.Sprintf("ivy2cpp: mkNondetSym failed to synthesize loop variable for %s: %s", sortName(d), err.Error()))
 		}
 		vs[i] = v
 		header, err := g.loopHeaderForVar(v)
 		if err != nil {
-			g.unsupported(w, "mkNondetSym: unsupported domain sort: %s", err.Error())
-			for j := 0; j < opened; j++ {
-				w.close("")
-			}
-			return
+			panic(fmt.Sprintf("ivy2cpp: mkNondetSym received non-iterable bounded-array domain %s: %s", sortName(d), err.Error()))
 		}
 		w.open(header)
 		opened++
 		indices[i] = varName(v.Name)
 	}
 	lhs := g.cppStorageAccess(name, sort, indices, "")
-	g.mkNondet(w, lhs, 0, name, uniqueID, fs.Range())
+	g.mkNondetValue(w, lhs, fs.Range(), name, uniqueID)
 	for i := 0; i < opened; i++ {
+		w.close("")
+	}
+}
+
+// mkNondetValue applies Python's assign_symbol_value recursion to a
+// concrete C++ lvalue. Bounded-array callers must pass only iterable
+// domains here; non-iterable function domains are represented by
+// hash_thunk upstream before mkNondetValue is reached.
+func (g *Generator) mkNondetValue(w *cppWriter, lhsExpr string, sort goivy.Sort, name string, uniqueID int64) {
+	g.mkNondetValueScoped(w, lhsExpr, sort, name, uniqueID, "")
+}
+
+func (g *Generator) mkNondetValueScoped(w *cppWriter, lhsExpr string, sort goivy.Sort, name string, uniqueID int64, className string) {
+	if sort == nil || g.nondetSkipSort(sort) {
+		return
+	}
+	if _, ok := g.Mod.SortDestructors.Get2(sortName(sort)); ok {
+		g.mkNondetStructFieldsScoped(w, lhsExpr, sort, name, uniqueID, className)
+		return
+	}
+	if sortName(sort) != "" && g.isVariantSuperName(sortName(sort)) {
+		g.mkNondetVariantScoped(w, lhsExpr, sort, name, uniqueID, className)
+		return
+	}
+	ct := g.cppType(sort)
+	if className != "" {
+		ct = g.cppQualifiedType(sort, className)
+	}
+	g.mkNondetWithCType(w, lhsExpr, name, uniqueID, ct)
+}
+
+func (g *Generator) mkNondetVariant(w *cppWriter, lhsExpr string, super goivy.Sort, name string, uniqueID int64) {
+	g.mkNondetVariantScoped(w, lhsExpr, super, name, uniqueID, "")
+}
+
+func (g *Generator) mkNondetVariantScoped(w *cppWriter, lhsExpr string, super goivy.Sort, name string, uniqueID int64, className string) {
+	variants := g.Mod.Variants[sortName(super)]
+	if len(variants) == 0 {
+		ct := g.cppType(super)
+		if className != "" {
+			ct = g.cppQualifiedType(super, className)
+		}
+		g.mkNondetWithCType(w, lhsExpr, name, uniqueID, ct)
+		return
+	}
+	choice := g.nextTemp("__ivy_variant")
+	w.linef("int %s = ___ivy_choose(%d, \"%s\", %d);", choice, len(variants), escapeString(name), uniqueID)
+	for i, sub := range variants {
+		prefix := "if"
+		if i > 0 {
+			prefix = "else if"
+		}
+		w.open(fmt.Sprintf("%s (%s == %d) {", prefix, choice, i))
+		tmp := g.nextTemp("__ivy_variant_value")
+		subType := g.cppType(sub)
+		if className != "" {
+			subType = g.cppQualifiedType(sub, className)
+		}
+		w.linef("%s %s;", subType, tmp)
+		g.mkNondetValueScoped(w, tmp, sub, name, uniqueID, className)
+		w.linef("%s = %s;", lhsExpr, g.variantUpcastExpr(super, sub, tmp, className))
 		w.close("")
 	}
 }
@@ -131,6 +180,10 @@ func (g *Generator) mkNondetSym(w *cppWriter, local goivy.Expr, name string, uni
 // walks the destructor tree of `sym.sort` and applies the lambda at
 // each leaf.
 func (g *Generator) mkNondetStructFields(w *cppWriter, lhsExpr string, sort goivy.Sort, name string, uniqueID int64) {
+	g.mkNondetStructFieldsScoped(w, lhsExpr, sort, name, uniqueID, "")
+}
+
+func (g *Generator) mkNondetStructFieldsScoped(w *cppWriter, lhsExpr string, sort goivy.Sort, name string, uniqueID int64, className string) {
 	destrs := g.Mod.SortDestructors.Get(sortName(sort))
 	for _, d := range destrs {
 		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
@@ -148,15 +201,7 @@ func (g *Generator) mkNondetStructFields(w *cppWriter, lhsExpr string, sort goiv
 		fieldExpr := lhsExpr + "." + field
 		vs, closer := g.emitDomainLoops(w, domain)
 		fullExpr := fieldExpr + cppIndexSuffix(vs)
-		if g.nondetSkipSort(rng) {
-			closer()
-			continue
-		}
-		if _, hasDestr := g.Mod.SortDestructors.Get2(sortName(rng)); hasDestr {
-			g.mkNondetStructFields(w, fullExpr, rng, name, uniqueID)
-		} else {
-			g.mkNondet(w, fullExpr, 0, name, uniqueID, rng)
-		}
+		g.mkNondetValueScoped(w, fullExpr, rng, name, uniqueID, className)
 		closer()
 	}
 }
@@ -171,8 +216,8 @@ func (g *Generator) nondetSkipSort(s goivy.Sort) bool {
 	if _, ok := g.nativeTypeName(s, ""); ok {
 		return true
 	}
-	if _, ok := g.cppInterpTypeName(s, ""); ok {
-		return true
+	if it, ok := g.cppInterpType(s); ok {
+		return it.helperClass()
 	}
 	if g.hasStringInterp(s) {
 		return true
@@ -199,18 +244,28 @@ func (g *Generator) nondetSkipSort(s goivy.Sort) bool {
 // `to_z3` method; that path is documented as a follow-up in thunk.go
 // and is not addressed here.
 func (g *Generator) makeNondetThunk(w *cppWriter, domSorts []goivy.Sort, rngSort goivy.Sort, name string, uniqueID int64) string {
-	thunkName := fmt.Sprintf("__thunk__%d", g.thunkCtr)
-	g.thunkCtr++
 	domT := cppCTupleNameWith(g, domSorts, "")
 	rangeT := g.cppType(rngSort)
-	w.open(fmt.Sprintf("struct %s : thunk<%s, %s> {", thunkName, domT, rangeT))
-	w.linef("%s() {}", thunkName)
-	w.open(fmt.Sprintf("%s operator()(const %s &arg) {", rangeT, domT))
+	defW := w
+	defDomT := domT
+	defRangeT := rangeT
+	defClassName := ""
+	if g.fileScopeThunks {
+		defW = &g.thunkDefs
+		defDomT = cppCTupleNameWith(g, domSorts, g.ClassName)
+		defRangeT = g.cppQualifiedType(rngSort, g.ClassName)
+		defClassName = g.ClassName
+	}
+	thunkName := g.nextThunkName()
+	defW.open(fmt.Sprintf("struct %s : thunk<%s, %s> {", thunkName, defDomT, defRangeT))
+	defW.linef("%s() {}", thunkName)
+	defW.open(fmt.Sprintf("%s operator()(const %s &arg) {", defRangeT, defDomT))
 	tmp := g.nextTemp("__ivy_havoc")
-	w.linef("%s %s;", rangeT, tmp)
-	g.mkNondet(w, tmp, 0, name, uniqueID, rngSort)
-	w.linef("return %s;", tmp)
-	w.close("")
-	w.close(";")
+	defW.linef("%s %s;", defRangeT, tmp)
+	g.mkNondetValueScoped(defW, tmp, rngSort, name, uniqueID, defClassName)
+	defW.linef("return %s;", tmp)
+	defW.close("")
+	defW.close(";")
+	defW.blank()
 	return fmt.Sprintf("hash_thunk<%s, %s>(new %s())", domT, rangeT, thunkName)
 }

@@ -50,15 +50,19 @@ type Generator struct {
 	Config    Config
 	BaseName  string
 	ClassName string
+	Ctx       *CppContext
 
 	header cppWriter
 	impl   cppWriter
 	tempID int
 
 	// thunkCtr names anonymous thunk structs (Python `thunk_counter`,
-	// ivy_to_cpp.py:504). Each makeThunk call allocates `__thunk__N`
-	// and increments. See thunk.go.
-	thunkCtr int
+	// ivy_to_cpp.py:504). Each distinct file-scope thunk allocates
+	// `__thunk__N` and increments. See thunk.go.
+	thunkCtr        int
+	thunkDefs       cppWriter
+	thunkMemo       map[string]string
+	fileScopeThunks bool
 
 	exprAliases    map[string]goivy.Expr
 	currentReturns []*goivy.Const
@@ -127,7 +131,15 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 		Config:    cfg,
 		BaseName:  base,
 		ClassName: className,
+		Ctx:       NewCppContext(),
+		// Python make_thunk writes through the impl-level `thunks`
+		// buffer. Unit tests that call makeThunk directly leave this
+		// false and get the legacy inline writer for focused white-box
+		// assertions; full Generate uses the faithful file-scope path.
+		fileScopeThunks: true,
 	}
+	g.header = newCPPWriter(g.Ctx.Globals)
+	g.impl = newCPPWriter(g.Ctx.Impls)
 	applySessionParameters(mod, cfg)
 	// Match the per-target setup the isolate path runs in
 	// `prepareModuleForCPP`. Skipping this for the direct-Generate path
@@ -301,43 +313,47 @@ func (g *Generator) emitImpl() error {
 			return err
 		}
 	}
-	w.open(g.constructorSignature(true) + " {")
-	g.emitRuntimeConstructorPrelude(w)
-	g.emitConstructorParamAssignments(w)
-	g.emitCardinalityInitializers(w)
-	if err := g.emitInitNatives(w); err != nil {
+	var body cppWriter
+	bw := &body
+	bw.open(g.constructorSignature(true) + " {")
+	g.emitRuntimeConstructorPrelude(bw)
+	g.emitConstructorParamAssignments(bw)
+	g.emitCardinalityInitializers(bw)
+	if err := g.emitInitNatives(bw); err != nil {
 		return err
 	}
 	if !g.usesZ3() {
-		if err := g.emitOneInitialState(w); err != nil {
+		if err := g.emitOneInitialState(bw); err != nil {
 			return err
 		}
 	}
-	w.close("")
-	g.emitRuntimeMethods(w)
-	g.emitInit(w)
-	g.emitDefinitions(w)
-	g.emitConstructors(w)
-	g.emitMethods(w)
-	g.emitTick(w)
+	bw.close("")
+	g.emitRuntimeMethods(bw)
+	g.emitInit(bw)
+	g.emitDefinitions(bw)
+	g.emitConstructors(bw)
+	g.emitMethods(bw)
+	g.emitTick(bw)
 	if g.runtimeUsesReplSubclass() {
-		g.emitRuntimeReplSubclass(w)
+		g.emitRuntimeReplSubclass(bw)
 	}
 	switch g.Config.Target {
 	case "repl":
-		g.emitReplSupport(w)
+		g.emitReplSupport(bw)
 		if g.Config.EmitMain {
-			g.emitReplMain(w)
+			g.emitReplMain(bw)
 		}
 	case "test":
 		if g.Config.EmitMain {
-			g.emitTestMain(w)
+			g.emitTestMain(bw)
 		}
 	case "gen":
 		if g.Config.EmitMain {
-			g.emitGenMain(w)
+			g.emitGenMain(bw)
 		}
 	}
+	w.raw(g.thunkDefs.String())
+	w.raw(body.String())
 	return nil
 }
 

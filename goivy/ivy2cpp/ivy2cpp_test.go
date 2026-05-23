@@ -5602,9 +5602,9 @@ export step
 		"x = (((x & y)) & 255);",
 		"x = (((x | y)) & 255);",
 		"x = (((~x)) & 255);",
-		"x = ((n) & 255);",
-		"x = ((n) << 4 | (n));",
-		"n = ((((x >> 0) & 15)) & 15);",
+		"x = ((static_cast<unsigned>(n)) & 255);",
+		"x = ((((static_cast<unsigned>(n)) << 4 | (static_cast<unsigned>(n)))) & 255);",
+		"n = ((static_cast<unsigned>((x >> 0))) & 15);",
 	} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("missing %q in bitvector output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)

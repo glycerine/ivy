@@ -521,6 +521,9 @@ func (g *Generator) z3InitialConst(c *goivy.Const, env map[string]goivy.Sort) (s
 		}
 	}
 	if goivy.IsNumeral(c) && !goivy.IsLiteralString(c) {
+		if it, ok := g.cppInterpType(c.CSort); ok && it.Kind == cppInterpBV && it.Bits > 64 {
+			return fmt.Sprintf("int_to_z3(%q, std::string(%q))", z3SortName(c.CSort), c.Name), nil
+		}
 		return fmt.Sprintf("int_to_z3(%q, %s)", z3SortName(c.CSort), c.Name), nil
 	}
 	if enum, ok := c.CSort.(*goivy.LogicEnumeratedSort); ok {

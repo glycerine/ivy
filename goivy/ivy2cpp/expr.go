@@ -1377,6 +1377,13 @@ func (g *Generator) loopHeaderForSort(s goivy.Sort, name string) (string, error)
 		}
 		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppType(s), name, lo, name, hi, name), nil
 	}
+	if cppIsAnyIntegerType(g, s) {
+		card := cppSortCard(g, s)
+		if card > 0 {
+			ct := loopIntCType(g, s)
+			return fmt.Sprintf("for (%s %s = 0; %s < %d; %s++) {", ct, name, name, card, name), nil
+		}
+	}
 	return "", fmt.Errorf("ivy2cpp: cannot emit bounded loop over %s", sortName(s))
 }
 
@@ -1407,11 +1414,16 @@ func loopIntCType(g *Generator, s goivy.Sort) string {
 	if _, ok := s.(*goivy.LogicEnumeratedSort); ok {
 		return g.cppType(s)
 	}
+	if g != nil {
+		if it, ok := g.cppInterpType(s); ok && it.Kind == cppInterpBV {
+			return g.cppType(s)
+		}
+	}
 	ct := g.cppType(s)
 	switch ct {
 	case "bool":
 		return "int"
-	case "int", "long long", "unsigned", "unsigned long long":
+	case "int", "long long", "unsigned", "unsigned long long", "unsigned __int128":
 		return ct
 	default:
 		return "int"

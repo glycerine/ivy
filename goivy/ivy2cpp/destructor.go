@@ -444,9 +444,7 @@ func (g *Generator) emitDestructorArgImpl(w *cppWriter, name, typeName string, d
 			w.linef("tmp_args[0] = tmp.fields[%s];", v)
 		}
 		w.open("try {")
-		rngType := cppScalarTypeWith(g, fs.Range(), g.ClassName)
-		bound := g.cppSortCardStr(fs.Range())
-		w.linef("res.%s%s = _arg<%s>(tmp_args, 0, %s);", field, cppIndexSuffix(vs), rngType, bound)
+		w.linef("res.%s%s = %s;", field, cppIndexSuffix(vs), g.argExprForSort("tmp_args", "0", fs.Range()))
 		w.close(" catch (const out_of_bounds &err) {")
 		w.indent++
 		w.linef(`throw out_of_bounds("in field %s: " + err.txt, err.pos);`, escapeString(field))

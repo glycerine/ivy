@@ -8,6 +8,7 @@ import (
 
 type derivedDefinition struct {
 	Name   string
+	Head   goivy.Expr
 	Params []goivy.Expr
 	RHS    goivy.Expr
 	Sort   goivy.Sort
@@ -68,6 +69,7 @@ func newDerivedDefinition(def *goivy.LogicDefinition) (derivedDefinition, bool) 
 	}
 	return derivedDefinition{
 		Name:   name,
+		Head:   def.Defines(),
 		Params: params,
 		RHS:    def.Rhs,
 		Sort:   def.Lhs.NodeSort(),

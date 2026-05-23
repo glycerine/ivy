@@ -283,11 +283,18 @@ func (g *Generator) emitDispatchArgExprs(act goivy.Action) []string {
 	formals := act.GetFormalParams()
 	exprs := make([]string, 0, len(formals))
 	for idx, p := range formals {
-		typ := g.cppQualifiedType(p.CSort, g.ClassName)
-		bound := g.cppSortCardStr(p.CSort)
-		exprs = append(exprs, fmt.Sprintf("_arg<%s>(args, %d, %s)", typ, idx, bound))
+		exprs = append(exprs, g.argExprForSort("args", strconv.Itoa(idx), p.CSort))
 	}
 	return exprs
+}
+
+func (g *Generator) argExprForSort(argsExpr, idxExpr string, s goivy.Sort) string {
+	return g.argExprForSortBound(argsExpr, idxExpr, s, g.cppSortCardStr(s))
+}
+
+func (g *Generator) argExprForSortBound(argsExpr, idxExpr string, s goivy.Sort, bound string) string {
+	typ := g.cppQualifiedType(s, g.ClassName)
+	return fmt.Sprintf("_arg<%s>(%s, %s, %s)", typ, argsExpr, idxExpr, bound)
 }
 
 // emitTracePrelude emits the trace `actname(arg1,arg2) {` line preceding
@@ -323,15 +330,13 @@ func (g *Generator) emitTracePrelude(w *cppWriter, username string, argExprs []s
 // location is available (Python's `lineno=None` branch).
 func (g *Generator) emitValueParser(w *cppWriter, p *goivy.Const, srcExpr string, lineno goivy.Location) {
 	pname := "p__" + varName(p.Name)
-	typ := g.cppQualifiedType(p.CSort, g.ClassName)
-	bound := g.cppSortCardStr(p.CSort)
 	prefix := escapeString(lineno.String())
 	w.open("try {")
 	w.line("int pos = 0;")
 	w.line("std::vector<ivy_value> arg_values;")
 	w.line("arg_values.resize(1);")
 	w.linef("arg_values[0] = parse_value(%s, pos);", srcExpr)
-	w.linef("%s = _arg<%s>(arg_values, 0, %s);", pname, typ, bound)
+	w.linef("%s = %s;", pname, g.argExprForSort("arg_values", "0", p.CSort))
 	w.close(" catch (out_of_bounds &) {")
 	w.indent++
 	w.linef(`std::cerr << "%sparameter %s out of bounds\n";`, prefix, escapeString(p.Name))
@@ -506,17 +511,13 @@ func (g *Generator) emitOnePositionalParam(w *cppWriter, p *goivy.Const, idx int
 		// Build LHS: `p__name[arg0][arg1]...` (or ctuple-keyed when needed).
 		domArgs := make([]string, len(dom))
 		for j, d := range dom {
-			domType := cppScalarTypeWith(g, d, g.ClassName)
-			domArgs[j] = fmt.Sprintf("_arg<%s>(arg.fields[i].fields, %d, 0)", domType, j)
+			domArgs[j] = g.argExprForSortBound("arg.fields[i].fields", strconv.Itoa(j), d, "0")
 		}
-		rngType := cppScalarTypeWith(g, rng, g.ClassName)
 		lhs := g.functionAppLHS(p, dom, domArgs)
-		w.linef("%s = _arg<%s>(arg.fields[i].fields, %d, 0);", lhs, rngType, len(dom))
+		w.linef("%s = %s;", lhs, g.argExprForSortBound("arg.fields[i].fields", strconv.Itoa(len(dom)), rng, "0"))
 		w.close("")
 	} else {
-		typ := g.cppQualifiedType(p.CSort, g.ClassName)
-		bound := g.cppSortCardStr(p.CSort)
-		w.linef("%s = _arg<%s>(arg_values, %d, %s);", pname, typ, idx, bound)
+		w.linef("%s = %s;", pname, g.argExprForSort("arg_values", strconv.Itoa(idx), p.CSort))
 	}
 	w.close(" catch (out_of_bounds &) {")
 	w.indent++

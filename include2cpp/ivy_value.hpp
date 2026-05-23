@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "ivy_wide_uint.hpp"
+
 #ifndef _WIN32
 #include <unistd.h>
 #endif
@@ -246,6 +248,16 @@ unsigned _arg<unsigned>(std::vector<ivy_value> &args, unsigned idx, long long bo
     return res;
 }
 
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+template <>
+unsigned __int128 _arg<unsigned __int128>(std::vector<ivy_value> &args, unsigned idx, long long bound) {
+    (void)bound;
+    if (args[idx].fields.size())
+        throw out_of_bounds(idx,args[idx].pos);
+    return ivy_uint128_from_string(args[idx].atom);
+}
+#endif
+
 
 std::ostream &operator <<(std::ostream &s, const __strlit &t){
     s << "\"" << t.c_str() << "\"";
@@ -280,6 +292,13 @@ template <>
 void __ser<unsigned>(ivy_ser &res, const unsigned &inp) {
     res.set((long long)inp);
 }
+
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+template <>
+void __ser<unsigned __int128>(ivy_ser &res, const unsigned __int128 &inp) {
+    res.set(ivy_uint128_to_string(inp));
+}
+#endif
 
 template <>
 void __ser<bool>(ivy_ser &res, const bool &inp) {
@@ -331,6 +350,15 @@ void __deser<unsigned>(ivy_deser &inp, unsigned &res) {
     inp.get(temp);
     res = temp;
 }
+
+#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)
+template <>
+void __deser<unsigned __int128>(ivy_deser &inp, unsigned __int128 &res) {
+    std::string temp;
+    inp.get(temp);
+    res = ivy_uint128_from_string(temp);
+}
+#endif
 
 template <>
 void __deser<__strlit>(ivy_deser &inp, __strlit &res) {

@@ -199,8 +199,7 @@ func (g *Generator) emitVariantArgImpl(w *cppWriter, super goivy.Sort, typeName 
 	w.linef(`throw out_of_bounds("too many fields for sort %s (expected one)", args[idx].pos);`, escapeString(sortText))
 	w.close("")
 	for _, sub := range g.Mod.Variants[sortText] {
-		subType := cppScalarTypeWith(g, sub, g.ClassName)
-		upcast := g.variantUpcastExpr(super, sub, fmt.Sprintf("_arg<%s>(args[idx].fields[0].fields, 0, 0)", subType), g.ClassName)
+		upcast := g.variantUpcastExpr(super, sub, g.argExprForSortBound("args[idx].fields[0].fields", "0", sub, "0"), g.ClassName)
 		w.linef("if (args[idx].fields[0].atom == %s) return %s;", strconv.Quote(sortName(sub)), upcast)
 	}
 	w.linef(`throw out_of_bounds("unexpected field sort %s: " + args[idx].fields[0].atom, args[idx].pos);`, escapeString(sortText))

@@ -7,15 +7,22 @@ import (
 
 type cppWriter struct {
 	buf    strings.Builder
+	text   *CppText
 	indent int
 }
 
+func newCPPWriter(text *CppText) cppWriter {
+	return cppWriter{text: text}
+}
+
 func (w *cppWriter) line(s string) {
+	var b strings.Builder
 	if s != "" {
-		w.buf.WriteString(strings.Repeat("    ", w.indent))
-		w.buf.WriteString(s)
+		b.WriteString(strings.Repeat("    ", w.indent))
+		b.WriteString(s)
 	}
-	w.buf.WriteByte('\n')
+	b.WriteByte('\n')
+	w.writeString(b.String())
 }
 
 func (w *cppWriter) linef(format string, args ...any) {
@@ -23,11 +30,11 @@ func (w *cppWriter) linef(format string, args ...any) {
 }
 
 func (w *cppWriter) raw(s string) {
-	w.buf.WriteString(s)
+	w.writeString(s)
 }
 
 func (w *cppWriter) blank() {
-	w.buf.WriteByte('\n')
+	w.writeString("\n")
 }
 
 func (w *cppWriter) open(s string) {
@@ -43,5 +50,16 @@ func (w *cppWriter) close(suffix string) {
 }
 
 func (w *cppWriter) String() string {
+	if w.text != nil {
+		return w.text.GetFile()
+	}
 	return w.buf.String()
+}
+
+func (w *cppWriter) writeString(s string) {
+	if w.text != nil {
+		w.text.Write(s)
+		return
+	}
+	w.buf.WriteString(s)
 }

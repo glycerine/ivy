@@ -1871,7 +1871,7 @@ Tests:
   `TestTargetGenRandomizesNumericAndVariantLeafParams` (4988),
   `TestDestructorRandomizeSkipsUninterpretedRange` (6178).
 
-## TODO 029 - Align emitted C++ expression scoping and temporary management
+## DONE 029 - Align emitted C++ expression scoping and temporary management
 
 Go locations:
 
@@ -1906,13 +1906,34 @@ Tests to add:
   blocks, inline native snippets, and expression temporaries inside nested
   actions.
 
+Status:
+
+- Closed by AUDIT2 item 042. Added `goivy/ivy2cpp/cpp_context.go`,
+  porting the Python `ivy_cpp.py` context model surface used by the
+  generator: `CppFile`, `CppText`, `DeadCode`, `Context`,
+  `CppContext`, `CppClass`, `CppClassName`, `CppArray`,
+  `CppFunction`, `CppReference`, `CppVector`, `TypeDef`,
+  `CppMember`, `CppLocal`, and `CppScope`.
+- Migrated the generator writers in `goivy/ivy2cpp/writer.go`,
+  `goivy/ivy2cpp/generator.go`, and `goivy/ivy2cpp/native.go` so
+  generated globals/impl text and once-only native snippets flow
+  through the context model while preserving existing output behavior.
+- Added `goivy/ivy2cpp/cpp_context_test.go` and
+  `goivy/ivy2cpp/testdata/cpp_context_attrs.yaml`, covering
+  context sections, scoped members/locals, temp naming,
+  once-global de-duplication, dead-code behavior, and deterministic
+  integration through `Generate`.
+- Verified as part of AUDIT2 item 042 with focused context tests,
+  `env XTRACE_OFF=1 go test ./ivy2cpp -count=1`, and the slow parser
+  matrix run documented in AUDIT2.
+
 Reminder:
 
-- [ ] When this lands, rename to `## DONE 029 - …`, add a `Status:` paragraph
+- [x] When this lands, rename to `## DONE 029 - …`, add a `Status:` paragraph
   citing the new Go locations and test names, and update this audit doc in
   the same commit as the implementation.
 
-## TODO 030 - Add a Python/Go oracle test suite before filling feature gaps
+## DONE 030 - Add a Python/Go oracle test suite before filling feature gaps
 
 Go locations:
 
@@ -1947,9 +1968,26 @@ Tests to add:
 - This TODO is the test harness itself. It should become the gate for claiming
   the Go generator is a faithful mechanical port.
 
+Status:
+
+- Closed by AUDIT2 item 043. Added the oracle suite in
+  `goivy/ivy2cpp/oracle_test.go`, the reusable token comparator in
+  `goivy/ivy2cpp/oracle_compare.go`, the standalone comparator wrapper
+  in `goivy/ivy2cpp/testdata/oracle/compare_cpp.go`, and the 14-fixture
+  catalog plus `STATUS.md` under `goivy/ivy2cpp/testdata/oracle/`.
+- Test coverage now includes `TestOracleFixturesExist`,
+  `TestOracleSingle`, `TestOracleCompileGo`,
+  `TestOracleCompilePython`, `TestOracleSemanticEquivalence`, and
+  `TestOracleStatusFileUpToDate`, plus focused comparator tests.
+- The suite is status-aware: current fixtures begin as EXPECTED_FAIL
+  for token parity and can be promoted to PASS individually as Go/Python
+  output equivalence is proven. Python parity is gated by
+  `ORACLE_TEST=1`; compile and transcript checks are gated by
+  `SLOW_CPP_TEST=1`.
+
 Reminder:
 
-- [ ] When this lands, rename to `## DONE 030 - …`, add a `Status:` paragraph
+- [x] When this lands, rename to `## DONE 030 - …`, add a `Status:` paragraph
   citing the new Go locations and test names, and update this audit doc in
   the same commit as the implementation.
 

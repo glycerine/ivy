@@ -160,6 +160,12 @@ func nativeExpr(node goivy.Node) (goivy.Expr, error) {
 // inline/encode body emission. Python uses one `once_memo` across all
 // four (ivy_to_cpp.py:1974).
 func (g *Generator) onceMemo() map[string]bool {
+	if g != nil && g.Ctx != nil {
+		if g.Ctx.OnceGlobals == nil {
+			g.Ctx.OnceGlobals = map[string]bool{}
+		}
+		return g.Ctx.OnceGlobals
+	}
 	if g.nativeOnceMemo == nil {
 		g.nativeOnceMemo = map[string]bool{}
 	}

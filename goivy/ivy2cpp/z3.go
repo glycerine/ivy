@@ -56,6 +56,24 @@ func (g *Generator) emitZ3SolverTemplates(w *cppWriter) {
 	w.open("template <> void __from_solver<unsigned long long>(gen &g, const z3::expr &expr, unsigned long long &out) {")
 	w.line("out = static_cast<unsigned long long>(g.eval(expr));")
 	w.close("")
+	if g.usesWideBV() {
+		w.line("#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)")
+		w.open("template <> void __from_solver<unsigned __int128>(gen &g, const z3::expr &expr, unsigned __int128 &out) {")
+		w.line("out = ivy_uint128_from_string(g.eval_numeral_string(expr));")
+		w.close("")
+		w.open("template <> z3::expr __to_solver<unsigned __int128>(gen &g, const char *sort_name, const unsigned __int128 &value) {")
+		w.line("return g.int_to_z3(sort_name, ivy_uint128_to_string(value));")
+		w.close("")
+		w.open("template <> z3::expr __to_solver<unsigned __int128>(gen &g, const z3::expr &expr, const unsigned __int128 &value) {")
+		w.line("return expr == g.int_to_z3(expr.get_sort(), ivy_uint128_to_string(value));")
+		w.close("")
+		w.open("template <> void __randomize<unsigned __int128>(gen &g, const z3::expr &expr, const std::string &range) {")
+		w.line("(void)range;")
+		w.line("unsigned __int128 value = ivy_uint128_random(expr.get_sort().bv_size());")
+		w.line("g.add_alit(expr == g.int_to_z3(expr.get_sort(), ivy_uint128_to_string(value)));")
+		w.close("")
+		w.line("#endif")
+	}
 	w.blank()
 }
 
@@ -200,7 +218,14 @@ func (g *Generator) emitZ3CPPInterpRandomHelper(w *cppWriter, s goivy.Sort, it c
 	w.open(fmt.Sprintf("static %s %s(gen &g) {", typ, fn))
 	switch it.Kind {
 	case cppInterpBV:
-		w.linef("return static_cast<%s>(g.random_index(0, %s));", typ, bvMask(it.Bits))
+		switch {
+		case it.Bits > 128:
+			w.linef("return ivy_uint<%d>::random();", it.Bits)
+		case it.Bits > 64:
+			w.linef("return static_cast<%s>(ivy_uint128_random(%d));", typ, it.Bits)
+		default:
+			w.linef("return static_cast<%s>(g.random_index(0, %s));", typ, bvMask(it.Bits))
+		}
 	case cppInterpStrBV:
 		w.linef("return %s::bv_to_x(g.random_index(0, %s));", typ, bvMask(it.Bits))
 	case cppInterpIntBV:

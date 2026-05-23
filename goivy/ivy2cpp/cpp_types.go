@@ -2,6 +2,7 @@ package ivy2cpp
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -87,14 +88,32 @@ func (it cppInterpType) helperClass() bool {
 	return it.Kind == cppInterpStrBV || it.Kind == cppInterpIntBV
 }
 
+func (it cppInterpType) isBV() bool {
+	return it.Kind == cppInterpBV
+}
+
+func (it cppInterpType) wideBV() bool {
+	return it.Kind == cppInterpBV && it.Bits > 64
+}
+
+func (it cppInterpType) hugeBV() bool {
+	return it.Kind == cppInterpBV && it.Bits > 128
+}
+
 func (it cppInterpType) primitiveType() string {
 	if it.Kind != cppInterpBV {
 		return ""
 	}
-	if it.Bits > 32 {
+	if it.Bits <= 32 {
+		return "unsigned"
+	}
+	if it.Bits <= 64 {
 		return "unsigned long long"
 	}
-	return "unsigned"
+	if it.Bits <= 128 {
+		return "unsigned __int128"
+	}
+	return ""
 }
 
 func (it cppInterpType) card() int {
@@ -118,7 +137,13 @@ func bvMask(bits int) string {
 	if bits <= 0 {
 		return "0"
 	}
-	if bits >= 64 {
+	if bits > 128 {
+		return fmt.Sprintf("ivy_uint<%d>::mask()", bits)
+	}
+	if bits > 64 {
+		return fmt.Sprintf("ivy_uint128_mask(%d)", bits)
+	}
+	if bits == 64 {
 		return "18446744073709551615ULL"
 	}
 	value := uint64(1)<<uint(bits) - 1
@@ -134,7 +159,14 @@ func (g *Generator) cppInterpTypeName(s goivy.Sort, className string) (string, b
 		return "", false
 	}
 	if it.Kind == cppInterpBV {
-		return it.primitiveType(), true
+		if typ := it.primitiveType(); typ != "" {
+			return typ, true
+		}
+		name := varName(sortName(s))
+		if className != "" {
+			name = className + "::" + name
+		}
+		return name, true
 	}
 	name := varName(sortName(s))
 	if className != "" {
@@ -147,11 +179,11 @@ func (g *Generator) emitCPPTypeDecl(w *cppWriter, s goivy.Sort, it cppInterpType
 	name := varName(sortName(s))
 	switch it.Kind {
 	case cppInterpBV:
-		if it.Bits > 64 {
-			g.unsupported(w, "unsupported bitvector width for %s: bv[%d] exceeds 64-bit C++ lowering", sortName(s), it.Bits)
-			return
+		if typ := it.primitiveType(); typ != "" {
+			w.linef("typedef %s %s;", typ, name)
+		} else {
+			w.linef("typedef ivy_uint<%d> %s;", it.Bits, name)
 		}
-		w.linef("typedef %s %s;", it.primitiveType(), name)
 	case cppInterpStrBV:
 		g.emitXBVClassDecl(w, name, it, "std::string", []string{
 			fmt.Sprintf("%s(const char *s) : std::string(s) {}", name),
@@ -243,12 +275,27 @@ func (g *Generator) emitXBVClassDecl(w *cppWriter, name string, it cppInterpType
 }
 
 func (g *Generator) emitCPPTypeImpls(w *cppWriter) {
+	hugeBVWidths := map[int]bool{}
 	for _, s := range g.cppInterpretedSorts() {
 		it, ok := g.cppInterpType(s)
-		if !ok || !it.helperClass() {
+		if !ok {
 			continue
 		}
-		g.emitXBVClassImpl(w, s, it)
+		if it.helperClass() {
+			g.emitXBVClassImpl(w, s, it)
+			continue
+		}
+		if it.hugeBV() {
+			hugeBVWidths[it.Bits] = true
+		}
+	}
+	widths := make([]int, 0, len(hugeBVWidths))
+	for bits := range hugeBVWidths {
+		widths = append(widths, bits)
+	}
+	sort.Ints(widths)
+	for _, bits := range widths {
+		g.emitHugeBVClassImpl(w, bits)
 	}
 }
 
@@ -267,6 +314,15 @@ func (g *Generator) cppInterpretedSorts() []goivy.Sort {
 		}
 	}
 	return out
+}
+
+func (g *Generator) usesWideBV() bool {
+	for _, s := range g.cppInterpretedSorts() {
+		if it, ok := g.cppInterpType(s); ok && it.wideBV() {
+			return true
+		}
+	}
+	return false
 }
 
 func (g *Generator) emitXBVClassImpl(w *cppWriter, s goivy.Sort, it cppInterpType) {
@@ -361,5 +417,44 @@ func (g *Generator) emitXBVClassImpl(w *cppWriter, s goivy.Sort, it cppInterpTyp
 		w.line("inp.get(res.val);")
 		w.close("")
 	}
+	w.blank()
+}
+
+func (g *Generator) emitHugeBVClassImpl(w *cppWriter, bits int) {
+	typ := fmt.Sprintf("ivy_uint<%d>", bits)
+	w.line("#if defined(__SIZEOF_INT128__) && !defined(_MSC_VER)")
+	w.line("#ifdef Z3PP_H_")
+	w.open(fmt.Sprintf("template <> void __from_solver<%s>(gen &g, const z3::expr &v, %s &res) {", typ, typ))
+	w.line("res = " + typ + "(g.eval_numeral_string(v));")
+	w.close("")
+	w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const char *sort_name, const %s &val) {", typ, typ))
+	w.line("return g.int_to_z3(sort_name, val.to_decimal_string());")
+	w.close("")
+	w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val) {", typ, typ))
+	w.line("return v == g.int_to_z3(v.get_sort(), val.to_decimal_string());")
+	w.close("")
+	w.open(fmt.Sprintf("template <> void __randomize<%s>(gen &g, const z3::expr &apply_expr, const std::string &sort_name) {", typ))
+	w.line("(void)sort_name;")
+	w.linef("%s value = %s::random();", typ, typ)
+	w.line("z3::expr val_expr = g.int_to_z3(apply_expr.get_sort(), value.to_decimal_string());")
+	w.line("g.add_alit(apply_expr == val_expr);")
+	w.close("")
+	w.line("#endif")
+	w.open(fmt.Sprintf("template <> %s _arg<%s>(std::vector<ivy_value> &args, unsigned idx, long long bound) {", typ, typ))
+	w.line("(void)bound;")
+	w.open("if (args[idx].fields.size()) {")
+	w.line("throw out_of_bounds(idx, args[idx].pos);")
+	w.close("")
+	w.linef("return %s(args[idx].atom);", typ)
+	w.close("")
+	w.open(fmt.Sprintf("template <> void __ser<%s>(ivy_ser &res, const %s &inp) {", typ, typ))
+	w.line("res.set(inp.to_decimal_string());")
+	w.close("")
+	w.open(fmt.Sprintf("template <> void __deser<%s>(ivy_deser &inp, %s &res) {", typ, typ))
+	w.line("std::string tmp;")
+	w.line("inp.get(tmp);")
+	w.linef("res = %s(tmp);", typ)
+	w.close("")
+	w.line("#endif")
 	w.blank()
 }

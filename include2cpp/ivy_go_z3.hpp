@@ -1,6 +1,7 @@
 #pragma once
 
 #include "z3++.h"
+#include "ivy_wide_uint.hpp"
 
 #include <cstdint>
 #include <cstdlib>
@@ -127,6 +128,10 @@ public:
         return ctx.constant(ss.str().c_str(), named_sort);
     }
 
+    z3::expr int_to_z3(const char *sort_name, const std::string &value) {
+        return int_to_z3(sort(sort_name), value);
+    }
+
     z3::expr int_to_z3(const z3::sort &range, long long value) {
         if (range.is_bool()) {
             return ctx.bool_val(value != 0);
@@ -140,6 +145,16 @@ public:
         std::ostringstream ss;
         ss << range.name() << "_" << value;
         return ctx.constant(ss.str().c_str(), range);
+    }
+
+    z3::expr int_to_z3(const z3::sort &range, const std::string &value) {
+        if (range.to_string() == "String") {
+            return ctx.string_val(value);
+        }
+        if (range.is_bv()) {
+            return ctx.bv_val(value.c_str(), range.bv_size());
+        }
+        return ctx.constant(value.c_str(), range);
     }
 
     // apply: variadic helper mirroring Python `gen.apply("name", v, ...)`
@@ -207,6 +222,20 @@ public:
         slvr.add(ctx.parse_string(smtlib.c_str(), sv, dv));
     }
 
+    z3::expr parse_expr(const std::string &smtlib) {
+        z3::sort_vector sv(ctx);
+        for (std::map<std::string, z3::sort>::const_iterator it = sorts.begin();
+             it != sorts.end(); ++it) {
+            sv.push_back(it->second);
+        }
+        z3::func_decl_vector dv(ctx);
+        for (std::map<std::string, z3::func_decl>::const_iterator it = decls.begin();
+             it != decls.end(); ++it) {
+            dv.push_back(it->second);
+        }
+        return ctx.parse_string(smtlib.c_str(), sv, dv);
+    }
+
     void add_alit(const z3::expr &pred) {
         slvr.add(pred);
     }
@@ -246,6 +275,18 @@ public:
 
     z3::expr eval_expr(const z3::expr &expr) {
         return model.eval(expr, true);
+    }
+
+    std::string eval_numeral_string(const z3::expr &expr) {
+        z3::expr value = eval_expr(expr);
+        if (value.is_bool()) {
+            return value.bool_value() == Z3_L_TRUE ? "1" : "0";
+        }
+        std::string text;
+        if (value.is_numeral(text)) {
+            return text;
+        }
+        return value.to_string();
     }
 
     long long eval(const z3::expr &expr) {
@@ -365,6 +406,14 @@ template <typename T> z3::expr __to_solver(gen &g, const z3::expr &expr, const T
     return expr == g.int_to_z3(expr.get_sort(), static_cast<long long>(value));
 }
 
+template <> inline z3::expr __to_solver<std::string>(gen &g, const char *sort_name, const std::string &value) {
+    return g.int_to_z3(g.sort(sort_name), value);
+}
+
+template <> inline z3::expr __to_solver<std::string>(gen &g, const z3::expr &expr, const std::string &value) {
+    return expr == g.int_to_z3(expr.get_sort(), value);
+}
+
 template <typename T> void __randomize(gen &g, const z3::expr &expr, const std::string &range) {
     (void)sizeof(T);
     g.randomize(expr, range);
@@ -414,6 +463,8 @@ static void cpptype_cleanup(gen &g) { (void)g; }
 // `operator()`.
 template <class T> class to_solver_class {};
 
+static int z3_thunk_counter = 0;
+
 // z3_thunk<D, R> is the abstract subclass of `thunk<D, R>` that
 // supplies a `to_z3` method consumed by the hash_thunk to_solver_class
 // specializations. Mirrors ivy_z3_helpers.hpp:135-138. `thunk<D, R>`
@@ -425,3 +476,50 @@ class z3_thunk : public thunk<D, R> {
 public:
     virtual z3::expr to_z3(gen &g, const z3::expr &v) = 0;
 };
+
+inline z3::expr __z3_rename(const z3::expr &e, std::map<std::string, std::string> &rn) {
+    if (e.is_app()) {
+        z3::func_decl decl = e.decl();
+        z3::expr_vector args(e.ctx());
+        unsigned arity = e.num_args();
+        for (unsigned i = 0; i < arity; i++) {
+            args.push_back(__z3_rename(e.arg(i), rn));
+        }
+        if (decl.name().kind() == Z3_STRING_SYMBOL) {
+            std::string fun = decl.name().str();
+            if (rn.find(fun) != rn.end()) {
+                std::string newfun = rn[fun];
+                std::vector<z3::sort> domain;
+                for (unsigned i = 0; i < arity; i++) {
+                    domain.push_back(decl.domain(i));
+                }
+                z3::sort range = e.decl().range();
+                z3::sort const *domain_ptr = domain.empty() ? static_cast<z3::sort const *>(0) : &domain[0];
+                decl = e.ctx().function(newfun.c_str(), arity, domain_ptr, range);
+            }
+        }
+        return decl(args);
+    } else if (e.is_quantifier()) {
+        z3::expr body = __z3_rename(e.body(), rn);
+        unsigned nb = Z3_get_quantifier_num_bound(e.ctx(), e);
+        std::vector<Z3_symbol> bnames;
+        std::vector<Z3_sort> bsorts;
+        for (unsigned i = 0; i < nb; i++) {
+            bnames.push_back(Z3_get_quantifier_bound_name(e.ctx(), e, i));
+            bsorts.push_back(Z3_get_quantifier_bound_sort(e.ctx(), e, i));
+        }
+        Z3_sort const *sort_ptr = bsorts.empty() ? static_cast<Z3_sort const *>(0) : &bsorts[0];
+        Z3_symbol const *name_ptr = bnames.empty() ? static_cast<Z3_symbol const *>(0) : &bnames[0];
+        Z3_ast q = Z3_mk_quantifier(e.ctx(),
+                                    Z3_is_quantifier_forall(e.ctx(), e),
+                                    Z3_get_quantifier_weight(e.ctx(), e),
+                                    0,
+                                    0,
+                                    nb,
+                                    sort_ptr,
+                                    name_ptr,
+                                    body);
+        return z3::expr(e.ctx(), q);
+    }
+    return e;
+}

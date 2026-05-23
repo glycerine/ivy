@@ -290,8 +290,13 @@ func cppIsAnyIntegerType(g *Generator, s goivy.Sort) bool {
 	if _, ok := s.(*goivy.LogicEnumeratedSort); ok {
 		return true
 	}
+	if g != nil {
+		if it, ok := g.cppInterpType(s); ok && it.Kind == cppInterpBV {
+			return true
+		}
+	}
 	switch cppScalarTypeWith(g, s, "") {
-	case "bool", "int", "long long", "unsigned", "unsigned long long":
+	case "bool", "int", "long long", "unsigned", "unsigned long long", "unsigned __int128":
 		return true
 	default:
 		return false
@@ -577,6 +582,10 @@ func (g *Generator) cppStorageAccess(name string, sort goivy.Sort, args []string
 	if obj != "" {
 		base = obj + "." + base
 	}
+	return g.cppStorageAccessBase(base, sort, args)
+}
+
+func (g *Generator) cppStorageAccessBase(base string, sort goivy.Sort, args []string) string {
 	fs, ok := sort.(*goivy.LogicFunctionSort)
 	if !ok || len(fs.Domain()) == 0 {
 		return base
