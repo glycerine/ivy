@@ -277,64 +277,47 @@ func (c *Compiler) CompileInlineCall(self *Atom, args []Expr, methodcall bool) (
 	params := actInfo.FormalAST
 	returns := actInfo.FormalRetAST
 
-	if c.ReturnCtx == nil || c.ReturnCtx.Values == nil {
+	// Prelude: pick returnValues. Python compile_inline_call (ivy_compiler.py:318)
+	// has two branches that both set return_values, then falls through to a
+	// single shared tail that does contravariant sort inference, builds the
+	// CallAction, applies variant dispatch, and appends to code.
+	var returnValues []Expr
+	var locSym *Const // non-nil only when we allocated loc:N (branch A)
+	noReturnCtx := c.ReturnCtx == nil || c.ReturnCtx.Values == nil
+
+	if noReturnCtx {
+		// Branch A: no caller-supplied return values, allocate loc:N
 		if len(returns) != 1 {
 			return nil, NewIvyError(self, "wrong number of return values")
 		}
-		// Create a local symbol for the return value
 		// Python: sort = cmpl_sort(returns[0].sort)
 		retSort, err := c.CmplSort(GetFormalSortAnnotation(returns[0]))
 		if err != nil {
 			return nil, NewIvyError(self, fmt.Sprintf("cannot resolve return sort: %v", err))
 		}
 		locName := fmt.Sprintf("loc:%d", len(c.ExprCtx.LocalSyms))
-		locSym := NewConst(locName, retSort)
+		locSym = NewConst(locName, retSort)
 		c.ExprCtx.LocalSyms = append(c.ExprCtx.LocalSyms, locSym)
-
-		// Validate parameter count
-		if len(params) != len(args) {
-			return nil, NewIvyError(self, fmt.Sprintf(
-				"wrong number of input parameters (got %d, expecting %d)",
-				len(args), len(params)))
+		returnValues = []Expr{locSym}
+	} else {
+		// Branch B: use caller-supplied values, apply covariant sort inference
+		returnValues = c.ReturnCtx.Values
+		if len(returns) != len(returnValues) {
+			return nil, NewIvyError(self, "wrong number of return values")
 		}
-
-		// Create the CallAction: call(atom(rep, args...), returnValue)
-		calleeNode := NewConst(rep, TopS)
-		var callee Expr = calleeNode
-		if len(args) > 0 {
-			applied, err := NewApply(calleeNode, args...)
+		// Python: return_values = [sort_infer_covariant(a,cmpl_sort(p.sort)) for a,p in zip(return_values,returns)]
+		for i := 0; i < len(returnValues) && i < len(returns); i++ {
+			pSort, err := c.CmplSort(GetFormalSortAnnotation(returns[i]))
 			if err == nil {
-				callee = applied
-			}
-		}
-		call := NewCallActionOn(c.ActCfg, callee, locSym)
-		astTerms := make([]Node, len(args))
-		for i, a := range args {
-			astTerms[i] = a
-		}
-		call.AstCallee = c.Module.Cfg.AstCfg.NewAtom(rep, astTerms...)
-		call.SetLineno(self.GetLineno())
-		c.ExprCtx.Code = append(c.ExprCtx.Code, call)
-		return locSym, nil
-	}
-
-	// Return context has explicit values
-	returnValues := c.ReturnCtx.Values
-	if len(returns) != len(returnValues) {
-		return nil, NewIvyError(self, "wrong number of return values")
-	}
-
-	// R2: Apply covariant sort inference to return values
-	// Python: return_values = [sort_infer_covariant(a,cmpl_sort(p.sort)) for a,p in zip(return_values,returns)]
-	for i := 0; i < len(returnValues) && i < len(returns); i++ {
-		pSort, err := c.CmplSort(GetFormalSortAnnotation(returns[i]))
-		if err == nil {
-			inferred, err := c.SortInferCovariant(returnValues[i], pSort)
-			if err == nil {
-				returnValues[i] = inferred
+				inferred, err := c.SortInferCovariant(returnValues[i], pSort)
+				if err == nil {
+					returnValues[i] = inferred
+				}
 			}
 		}
 	}
+
+	// Shared tail (Python: lines 341-374). Both branches reach this.
 
 	if len(params) != len(args) {
 		return nil, NewIvyError(self, fmt.Sprintf(
@@ -342,7 +325,6 @@ func (c *Compiler) CompileInlineCall(self *Atom, args []Expr, methodcall bool) (
 			len(args), len(params)))
 	}
 
-	// R2: Apply contravariant sort inference to args
 	// Python: args = [sort_infer_contravariant(a,cmpl_sort(p.sort)) for a,p in zip(args,params)]
 	for i := 0; i < len(args) && i < len(params); i++ {
 		pSort, err := c.CmplSort(GetFormalSortAnnotation(params[i]))
@@ -354,7 +336,7 @@ func (c *Compiler) CompileInlineCall(self *Atom, args []Expr, methodcall bool) (
 		}
 	}
 
-	// Create CallAction with the explicit return values
+	// Build the CallAction.
 	calleeNode := NewConst(rep, TopS)
 	var callee Expr = calleeNode
 	if len(args) > 0 {
@@ -431,6 +413,11 @@ func (c *Compiler) CompileInlineCall(self *Atom, args []Expr, methodcall bool) (
 	}
 
 	c.ExprCtx.Code = append(c.ExprCtx.Code, call)
+	// Python: if return_context is None or return_context.values is None: return res()
+	// else: return None.
+	if noReturnCtx {
+		return locSym, nil
+	}
 	return nil, nil
 }
 
