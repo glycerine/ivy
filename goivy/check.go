@@ -4,6 +4,7 @@
 package goivy
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"sort"
@@ -1032,6 +1033,12 @@ func MCTactic(prover interface{}, goals []*LabeledFormula, proofNode Node, mod *
 			return mcErr
 		}
 		if res != nil && !res.Proved {
+			if res.Error != nil {
+				return res.Error
+			}
+			if res.DecodedTrace != nil {
+				return &MCCounterexampleFailure{Trace: res.DecodedTrace}
+			}
 			return fmt.Errorf("model checking failed")
 		}
 		return nil
@@ -1213,6 +1220,10 @@ func Main(args []string) int {
 	// Python: if profiling.get(): cProfile.runctx(...) else: start()
 	err := Start(args, nil)
 	if err != nil {
+		var reported *ReportedFailure
+		if errors.As(err, &reported) {
+			return 1
+		}
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		return 1
 	}
@@ -1349,6 +1360,10 @@ func MainWithConfig(args []string, cfg *Config) (code int) {
 	}()
 	err := Start(args, cfg)
 	if err != nil {
+		var reported *ReportedFailure
+		if errors.As(err, &reported) {
+			return 1
+		}
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		return 1
 	}

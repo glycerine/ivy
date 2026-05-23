@@ -549,8 +549,11 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	// Build decoder
 	decoder := make(map[string]Expr)
 	for exprKey, v := range propAbs.Map.All() {
-		_ = exprKey
-		decoder[v.Name] = v
+		if orig, ok := propAbs.OrigExprs.Get2(exprKey); ok {
+			decoder[v.Name] = orig
+		} else {
+			decoder[v.Name] = v
+		}
 	}
 	for _, sym := range aiger.Inputs {
 		if origSyms[sym.Name] {
@@ -744,13 +747,17 @@ func sortedPublicActions(mod *Module) []string {
 
 // addLabelToAction wraps an action with a label.
 func addLabelToAction(a ActionsAction, label string) ActionsAction {
+	if a == nil {
+		return nil
+	}
+	res := a.ActionClone(a.ActionArgs())
 	type labelSetter interface {
-		SetLabels([]string)
+		SetLabel(string)
 	}
-	if ls, ok := a.(labelSetter); ok {
-		ls.SetLabels([]string{label})
+	if ls, ok := res.(labelSetter); ok {
+		ls.SetLabel(label)
 	}
-	return a
+	return res
 }
 
 // actionNodeWrapper wraps an actions.ActionsAction as a lg.Expr so it can be used

@@ -648,6 +648,27 @@ type TraceFailure struct {
 	Cause error
 }
 
+type ReportedFailure struct {
+	Cause error
+}
+
+func (rf *ReportedFailure) Error() string {
+	if rf == nil {
+		return "<nil reported failure>"
+	}
+	if rf.Cause != nil {
+		return rf.Cause.Error()
+	}
+	return "reported failure"
+}
+
+func (rf *ReportedFailure) Unwrap() error {
+	if rf == nil {
+		return nil
+	}
+	return rf.Cause
+}
+
 func (tf *TraceFailure) Error() string {
 	if tf == nil {
 		return "<nil trace failure>"
@@ -1097,6 +1118,9 @@ func CheckModule(mod *Module) error {
 					if res.Error != nil {
 						return res.Error
 					}
+					if res.DecodedTrace != nil {
+						return &MCCounterexampleFailure{Trace: res.DecodedTrace}
+					}
 					return fmt.Errorf("model checking failed")
 				}
 				return nil
@@ -1204,6 +1228,10 @@ func MCIsolate(isolate string, mod *Module, method func(*Module) error) error {
 		if err != nil {
 			fmt.Println(err)
 			fmt.Println("FAIL")
+			var cex *MCCounterexampleFailure
+			if errors.As(err, &cex) {
+				return &ReportedFailure{Cause: err}
+			}
 			return err
 		}
 		return nil
@@ -1229,6 +1257,10 @@ func MCIsolate(isolate string, mod *Module, method func(*Module) error) error {
 		if err != nil {
 			fmt.Println(err)
 			fmt.Println("FAIL")
+			var cex *MCCounterexampleFailure
+			if errors.As(err, &cex) {
+				return &ReportedFailure{Cause: err}
+			}
 			return err
 		}
 	}

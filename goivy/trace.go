@@ -226,6 +226,28 @@ func traceActionLinenoPrefix(action ActionsAction) string {
 	return ""
 }
 
+func traceHideDetailedAction(action ActionsAction) bool {
+	if action == nil || action.HasLineno() {
+		return false
+	}
+	assign, ok := action.(*LogicAssignAction)
+	if !ok {
+		return false
+	}
+	lhs, ok := assign.LHS.(*Const)
+	if !ok {
+		return false
+	}
+	switch lhs.Name {
+	case "err_flag":
+		return IsFalse(assign.RHS)
+	case "__init":
+		return IsTrue(assign.RHS)
+	default:
+		return false
+	}
+}
+
 func traceIsAssertAction(action ActionsAction) bool {
 	switch action.(type) {
 	case *LogicAssertAction, *LogicRequiresAction, *LogicEnsuresAction:
@@ -400,9 +422,12 @@ func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int
 		state := ts.State
 		if state.Prov != nil {
 			aa, isAA := state.Prov.(*ActionApp)
+			var action ActionsAction
+			hideAction := false
 			if isAA {
-				action, _ := aa.Rep.(ActionsAction)
-				if tb.Domain.Cfg.TraceDetailed && action != nil {
+				action, _ = aa.Rep.(ActionsAction)
+				hideAction = traceHideDetailedAction(action)
+				if tb.Domain.Cfg.TraceDetailed && action != nil && !hideAction {
 					if _, labeled := traceActionLabel(action); !labeled && action.HasLineno() {
 						*lines = append(*lines, action.GetLineno().String()+"\n")
 					}
@@ -412,7 +437,7 @@ func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int
 						newlines = append(newlines, strings.Repeat("    ", indent)+line+"\n")
 					}
 					*lines = append(*lines, newlines...)
-				} else if action != nil {
+				} else if action != nil && !hideAction {
 					failed = tb.appendNonDetailedAction(lines, idx, ts, state, action, failed)
 				}
 			}
@@ -425,7 +450,7 @@ func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int
 					*lines = append(*lines, strings.Repeat("    ", indent)+"}\n")
 				}
 			}
-			if tb.Domain.Cfg.TraceDetailed {
+			if tb.Domain.Cfg.TraceDetailed && !hideAction {
 				*lines = append(*lines, "\n")
 			}
 		}

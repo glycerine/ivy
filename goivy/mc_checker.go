@@ -18,6 +18,31 @@ type MCCheckResult struct {
 	Error        error               // non-nil if model checker failed
 }
 
+type MCCounterexampleFailure struct {
+	Trace fmt.Stringer
+	Cause error
+}
+
+func (e *MCCounterexampleFailure) Error() string {
+	if e == nil {
+		return "<nil model-check counterexample>"
+	}
+	if e.Trace != nil {
+		return e.Trace.String()
+	}
+	if e.Cause != nil {
+		return e.Cause.Error()
+	}
+	return "model checking failed"
+}
+
+func (e *MCCounterexampleFailure) Unwrap() error {
+	if e == nil {
+		return nil
+	}
+	return e.Cause
+}
+
 // ModelChecker describes an external hardware model checker.
 type ModelChecker interface {
 	// Cmd returns the command to run the model checker.
