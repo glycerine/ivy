@@ -86,10 +86,18 @@ func (g *Generator) emitDeclSolverWithName(w *cppWriter, sym stateSymbol, symNam
 //	    For hash_thunk-backed storage this depends on z3_thunk::to_z3 and
 //	    the per-domain __to_solver overloads emitted by emitHashThunkToSolver.
 //	(3) default: nested loop over the function domain, emitting
-//	    g.add(__to_solver(*this, apply("name", X0,...), obj.name[X0]...)).
+//	    add/slvr.add(__to_solver(*this, apply("name", X0,...), obj.name[X0]...)).
 func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 	if obj == "" {
 		obj = "obj"
+	}
+	add := func(w *cppWriter, text string) {
+		w.linef("add(%s);", text)
+	}
+	if g.Config.Target == "test" {
+		add = func(w *cppWriter, text string) {
+			w.linef("slvr.add(%s);", text)
+		}
 	}
 	g.emitSetSolverCustom(w, sym, emitSetSolverOptions{
 		obj:    obj,
@@ -97,9 +105,7 @@ func (g *Generator) emitSetSolver(w *cppWriter, sym stateSymbol, obj string) {
 		gen:    "*this",
 		sname:  strconv.Quote(sym.Name),
 		cvalue: varName(sym.Name),
-		add: func(w *cppWriter, text string) {
-			w.linef("add(%s);", text)
-		},
+		add:    add,
 	})
 }
 
@@ -283,12 +289,18 @@ func (g *Generator) isLargeType(s goivy.Sort) bool {
 // emit an "unsupported" marker around the original symbol rather than
 // leaving partial emission in the output.
 func (g *Generator) emitSetField(w *cppWriter, destr *goivy.Const, lhs, rhs string, nvars int) bool {
+	add := func(w *cppWriter, text string) {
+		w.linef("add(%s);", text)
+	}
+	if g.Config.Target == "test" {
+		add = func(w *cppWriter, text string) {
+			w.linef("slvr.add(%s);", text)
+		}
+	}
 	return g.emitSetFieldCustom(w, destr, lhs, rhs, nvars, emitSetSolverOptions{
 		prefix: "",
 		gen:    "*this",
-		add: func(w *cppWriter, text string) {
-			w.linef("add(%s);", text)
-		},
+		add:    add,
 	})
 }
 
