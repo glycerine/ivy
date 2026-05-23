@@ -80,7 +80,7 @@ export left_player.hit
 export right_player.hit
 `
 
-func TestPingPongLeftPlayerTargetTestStateConstraintUsesSolver(t *testing.T) {
+func TestPingPongLeftPlayerTargetTestMatchesPythonRuntimeShape(t *testing.T) {
 	out := generatePingPongLeftPlayerTargetTest(t)
 	impl := compactCPPForPingPongTest(out.Impl)
 
