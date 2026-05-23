@@ -33,7 +33,7 @@ const AssertLocEnabled = false
 // This matches Python's assert_to_assume(kinds) which checks type(self) in kinds.
 //
 // Corresponds to Python's Action.assert_to_assume(kinds).
-func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg ...*IvyUtilsConfig) ActionsAction {
+func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg *IvyUtilsConfig) ActionsAction {
 	if action == nil {
 		return nil
 	}
@@ -56,13 +56,13 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg ...*IvyUt
 		//       return Action.assert_to_assume(self,kinds)   (recurse, NO class-convert)
 		//   return AssertAction.assert_to_assume(self,kinds) (class-check, convert iff in kinds)
 		var ver []int
-		if len(iuCfg) > 0 && iuCfg[0] != nil {
-			ver = iuCfg[0].GetNumericVersion()
+		if iuCfg != nil {
+			ver = iuCfg.GetNumericVersion()
 		}
 		isLE16 := len(ver) >= 2 && (ver[0] < 1 || (ver[0] == 1 && ver[1] <= 6))
 		if isLE16 {
 			// version <= 1.6: never class-convert, just recurse-and-clone
-			return assertToAssumeChildren(a, kinds, iuCfg...)
+			return assertToAssumeChildren(a, kinds, iuCfg)
 		}
 		// version > 1.6: AssertAction semantics — convert iff class in kinds
 		if kinds["ensure"] {
@@ -74,7 +74,7 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg ...*IvyUt
 			assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
 			return assume
 		}
-		return assertToAssumeChildren(a, kinds, iuCfg...)
+		return assertToAssumeChildren(a, kinds, iuCfg)
 
 	case *LogicSubgoalAction:
 		// Python checks class identity: AssertAction.assert_to_assume(kinds)
@@ -104,18 +104,18 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg ...*IvyUt
 
 	default:
 		// Recursively transform children
-		return assertToAssumeChildren(action, kinds, iuCfg...)
+		return assertToAssumeChildren(action, kinds, iuCfg)
 	}
 }
 
 // assertToAssumeChildren recursively transforms children of an action.
 // Python: Action.assert_to_assume ALWAYS clones via self.clone(args).
-func assertToAssumeChildren(action ActionsAction, kinds map[string]bool, iuCfg ...*IvyUtilsConfig) ActionsAction {
+func assertToAssumeChildren(action ActionsAction, kinds map[string]bool, iuCfg *IvyUtilsConfig) ActionsAction {
 	args := action.Args()
 	newArgs := make([]Node, len(args))
 	for i, arg := range args {
 		if child, ok := arg.(ActionsAction); ok {
-			newArgs[i] = AssertToAssume(child, kinds, iuCfg...)
+			newArgs[i] = AssertToAssume(child, kinds, iuCfg)
 		} else {
 			newArgs[i] = arg // LF, formulas pass through unchanged
 		}

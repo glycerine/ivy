@@ -469,7 +469,7 @@ func expandWhile(w *LogicWhileAction, mod *Module) ActionsAction {
 		if _, isSub := a.(*LogicSubgoalAction); isSub {
 			continue
 		}
-		assumes = append(assumes, AssertToAssume(a, assertKinds))
+		assumes = append(assumes, AssertToAssume(a, assertKinds, mod.Cfg.IuCfg))
 	}
 
 	// Filter asserts: remove any that became AssumeActions
