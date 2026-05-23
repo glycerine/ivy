@@ -4415,20 +4415,21 @@ attribute set.weight = "3.0"
 		// Init generator + per-action generators.
 		"init_gen my_init_gen(ivy);",
 		"my_init_gen.generate(ivy);",
+		"std::vector<gen *> generators;",
 		"std::vector<double> weights;",
-		"set_gen set_generator(ivy);",
-		"weights.push_back(3);",
-		"double totalweight = 3;",
+		"generators.push_back(new set_gen(ivy));",
+		"weights.push_back(3.0);",
+		"double totalweight = 3.0;",
 		"int num_gens = 1;",
 		// Random choice + do_over.
 		"double frnd = 0.0;",
 		"bool do_over = false;",
 		"for (int cycle = 0; cycle < test_iters; cycle++)",
 		"if (frnd < totalweight) {",
+		"gen &g = *generators[idx];",
 		"ivy._generating = true;",
-		// Per-index dispatch instead of virtual gen *.
-		"case 0: sat = set_generator.generate(ivy); break;",
-		"case 0: set_generator.execute(ivy); break;",
+		"bool sat = g.generate(ivy);",
+		"g.execute(ivy);",
 		// select() branch for readers/timers.
 		"FD_ZERO(&rdfds);",
 		"int foo = select(maxfds + 1, &rdfds, 0, 0, &timeout);",
@@ -5192,16 +5193,50 @@ export set
 		"class set_gen : public gen",
 		"init_gen my_init_gen(ivy);",
 		"my_init_gen.generate(ivy);",
-		// New weighted random loop pattern, with stack-allocated
-		// generators dispatched by index switch (ivy_go_z3.hpp's `gen`
-		// lacks virtual generate/execute).
-		"set_gen set_generator(ivy);",
+		"std::vector<gen *> generators;",
+		"generators.push_back(new set_gen(ivy));",
 		"for (int cycle = 0; cycle < test_iters; cycle++)",
-		"case 0: sat = set_generator.generate(ivy); break;",
-		"case 0: set_generator.execute(ivy); break;",
+		"gen &g = *generators[idx];",
+		"bool sat = g.generate(ivy);",
+		"g.execute(ivy);",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in test output:\n%s", want, out.Impl)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func TestTargetTestVariantRandomHelperScopesSwitchCases(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type req
+type msg
+type color = {red, green}
+variant request of msg = struct {
+    shade : color
+}
+variant ack of msg
+variant done of msg
+individual saved : msg
+action set(m:msg) = {
+    saved := m
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "variantrandom"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"static variantrandom::msg ivy2cpp_random_msg(gen &g)",
+		"case 0: {",
+		"default: {",
+		"variantrandom::request tmp = variantrandom::request();",
+		"return variantrandom::msg(0, new variantrandom::msg::twrap<variantrandom::request>(tmp));",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("missing %q in variant random helper:\n%s", want, out.Impl)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)

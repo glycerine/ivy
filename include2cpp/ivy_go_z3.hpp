@@ -3,6 +3,7 @@
 #include "z3++.h"
 #include "ivy_wide_uint.hpp"
 
+#include <cctype>
 #include <cstdint>
 #include <cstdlib>
 #include <initializer_list>
@@ -49,6 +50,15 @@ public:
     // constraints. Cleared before each generate() call.
     std::vector<z3::expr> alits;
     unsigned random_counter;
+
+    virtual bool generate(ivy_class &obj) {
+        (void)obj;
+        return false;
+    }
+
+    virtual void execute(ivy_class &obj) {
+        (void)obj;
+    }
 
     gen() : slvr(ctx), model(ctx), random_counter(0) {
         sorts.insert(std::make_pair(std::string("bool"), ctx.bool_sort()));
@@ -209,6 +219,15 @@ public:
     // Mirrors Python's `add("(assert ...)")` pattern from ivy_to_cpp.py:920
     // and :1277, which feeds slv.formula_to_z3(...).sexpr() to the solver.
     void add(const std::string &smtlib) {
+        std::string compact;
+        for (std::string::const_iterator it = smtlib.begin(); it != smtlib.end(); ++it) {
+            if (!std::isspace(static_cast<unsigned char>(*it))) {
+                compact.push_back(*it);
+            }
+        }
+        if (compact == "true" || compact == "(asserttrue)") {
+            return;
+        }
         z3::sort_vector sv(ctx);
         for (std::map<std::string, z3::sort>::const_iterator it = sorts.begin();
              it != sorts.end(); ++it) {

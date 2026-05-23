@@ -68,11 +68,6 @@ type Generator struct {
 	currentReturns []*goivy.Const
 	errs           []error
 
-	// testLoopGenEntries threads the per-run generator locals between
-	// emitTestLoopBody (which declares them) and emitTestLoopGenBranch
-	// (which dispatches on idx via switch). nil outside of emitTestMain.
-	testLoopGenEntries []testGenEntry
-
 	// extRel caches the result of extensionalRelations(). nil before
 	// computation; non-nil after the first call (may be empty).
 	// Mirrors Python ivy_to_cpp.py:1912-1913 `the_extensional_relations`,
@@ -949,11 +944,6 @@ type stateSymbol struct {
 	Sort goivy.Sort
 }
 
-type testGenEntry struct {
-	Class string
-	Var   string
-}
-
 // allStateSymbols mirrors Python ivy_to_cpp.py:33-35 `all_state_symbols`.
 // It returns every symbol in the signature that is neither a constructor
 // nor a solver-interpreted symbol (the result of SolverName is "" for
@@ -1464,39 +1454,29 @@ func (g *Generator) emitTestMain(w *cppWriter) {
 // Python `emit_repl_boilerplate3test` (ivy_to_cpp.py:4265-4467):
 // build init_gen, weighted action generators, then loop test_iters
 // times choosing among generators / readers / timers via select().
-//
-// The Go port's `gen` base class (ivy_go_z3.hpp) does not have virtual
-// generate/execute methods (Python's templated `ivy_z3_gen` does). So
-// instead of `vector<gen *>` polymorphism we declare each generator as
-// a stack local and dispatch by index through a switch. This keeps
-// ivy_go_z3.hpp source-stable.
 func (g *Generator) emitTestLoopBody(w *cppWriter) {
-	// init_gen sets up the initial state.
 	w.line("init_gen my_init_gen(ivy);")
 	w.line("my_init_gen.generate(ivy);")
-	w.blank()
+	w.line("std::vector<gen *> generators;")
 	w.line("std::vector<double> weights;")
-	initActions := g.initialMixinActionNames()
+	w.blank()
 	names := g.publicActionNamesSorted()
 	totalweight := 0.0
-	var entries []testGenEntry
+	numGens := 0
 	for _, name := range names {
-		if initActions[name] || isFinalizeName(name) {
+		if isFinalizeName(name) {
 			continue
 		}
 		className := g.actionGeneratorClassName(name)
-		genVar := varName(strings.TrimPrefix(name, "ext:")) + "_generator"
-		w.linef("%s %s(ivy);", className, genVar)
+		w.linef("generators.push_back(new %s(ivy));", className)
 		weight := g.actionWeight(name)
-		w.linef("weights.push_back(%g);", weight)
+		w.linef("weights.push_back(%s);", pythonFloatLiteral(weight))
 		totalweight += weight
-		entries = append(entries, testGenEntry{Class: className, Var: genVar})
+		numGens++
 	}
-	w.linef("double totalweight = %g;", totalweight)
-	w.linef("int num_gens = %d;", len(entries))
+	w.linef("double totalweight = %s;", pythonFloatLiteral(totalweight))
+	w.linef("int num_gens = %d;", numGens)
 	w.blank()
-	g.testLoopGenEntries = entries
-	defer func() { g.testLoopGenEntries = nil }()
 	w.line("#ifdef _WIN32")
 	w.line("LARGE_INTEGER freq;")
 	w.line("QueryPerformanceFrequency(&freq);")
@@ -1522,10 +1502,10 @@ func (g *Generator) emitTestLoopBody(w *cppWriter) {
 	if g.hasFinalizeExport() {
 		w.line("ivy.__lock(); ivy.ext___finalize(); ivy.__unlock();")
 	}
-	w.line(`__ivy_out << "test_completed" << std::endl;`)
 	w.line("#ifdef _WIN32")
 	w.line("Sleep(final_ms);")
 	w.line("#endif")
+	w.line(`__ivy_out << "test_completed" << std::endl;`)
 	w.open("if (runidx == runs - 1) {")
 	w.line("struct timespec ts;")
 	w.line("int ms = 50;")
@@ -1547,30 +1527,28 @@ func (g *Generator) emitTestLoopBody(w *cppWriter) {
 func (g *Generator) emitTestLoopGenBranch(w *cppWriter) {
 	w.line("int idx = 0;")
 	w.line("double sum = 0.0;")
-	w.open("while (idx < num_gens - 1) {")
+	w.open("while (idx < num_gens-1) {")
 	w.line("sum += weights[idx];")
-	w.line("if (frnd < sum) break;")
+	w.line("if (frnd < sum)")
+	w.indent++
+	w.line("break;")
+	w.indent--
 	w.line("idx++;")
 	w.close("")
+	w.line("gen &g = *generators[idx];")
 	w.line("ivy.__lock();")
+	w.line("#ifdef _WIN32")
+	w.line("LARGE_INTEGER before;")
+	w.line("QueryPerformanceCounter(&before);")
+	w.line("#endif")
 	w.line("ivy._generating = true;")
-	w.line("bool sat = false;")
-	// Per-index dispatch (no virtual `gen` API in ivy_go_z3.hpp).
-	if len(g.testLoopGenEntries) > 0 {
-		w.open("switch (idx) {")
-		for i, e := range g.testLoopGenEntries {
-			w.linef("case %d: sat = %s.generate(ivy); break;", i, e.Var)
-		}
-		w.close("")
-	}
-	w.open("if (sat) {")
-	if len(g.testLoopGenEntries) > 0 {
-		w.open("switch (idx) {")
-		for i, e := range g.testLoopGenEntries {
-			w.linef("case %d: %s.execute(ivy); break;", i, e.Var)
-		}
-		w.close("")
-	}
+	w.line("bool sat = g.generate(ivy);")
+	w.line("#ifdef _WIN32")
+	w.line("LARGE_INTEGER after;")
+	w.line("QueryPerformanceCounter(&after);")
+	w.line("#endif")
+	w.open("if (sat){")
+	w.line("g.execute(ivy);")
 	w.line("ivy._generating = false;")
 	w.line("ivy.__unlock();")
 	w.line("#ifdef _WIN32")
@@ -1714,6 +1692,15 @@ func (g *Generator) actionWeight(name string) float64 {
 	return f
 }
 
+func pythonFloatLiteral(f float64) string {
+	s := strconv.FormatFloat(f, 'g', -1, 64)
+	lower := strings.ToLower(s)
+	if strings.Contains(s, ".") || strings.Contains(lower, "e") || strings.Contains(lower, "nan") || strings.Contains(lower, "inf") {
+		return s
+	}
+	return s + ".0"
+}
+
 func (g *Generator) emitGenMain(w *cppWriter) {
 	mainName := g.Config.MainName
 	w.open(fmt.Sprintf("static void ivy2cpp_generate(%s &ivy) {", g.ClassName))
@@ -1744,9 +1731,8 @@ func (g *Generator) emitTestDefaults(w *cppWriter) {
 func (g *Generator) emitGeneratorInvocations(w *cppWriter) {
 	w.line("init_gen my_init_gen(ivy);")
 	w.line("my_init_gen.generate(ivy);")
-	initActions := g.initialMixinActionNames()
 	for name := range g.Mod.PublicActions.All() {
-		if initActions[name] {
+		if isFinalizeName(name) {
 			continue
 		}
 		className := g.actionGeneratorClassName(name)

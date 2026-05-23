@@ -220,9 +220,10 @@ func (g *Generator) emitRuntimeInstallMethods(w *cppWriter) {
 		w.blank()
 		w.open(fmt.Sprintf("void %s::install_reader(reader *r) {", g.ClassName))
 		w.line("readers.push_back(r);")
-		w.open("if (!::initializing) {")
+		w.line("if (!::initializing)")
+		w.indent++
 		w.line("r->bind();")
-		w.close("")
+		w.indent--
 		w.close("")
 		w.blank()
 		g.emitRuntimeThreadInstallMethod(w, "install_thread", "reader", "ReaderThreadFunction", "_thread_reader")

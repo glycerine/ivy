@@ -2,6 +2,7 @@ package ivy2cpp
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -84,6 +85,9 @@ func TestOracleFixturesExist(t *testing.T) {
 			if _, err := os.Stat(oracleFixturePath(fixture)); err != nil {
 				t.Fatalf("missing oracle fixture %s: %v", fixture, err)
 			}
+			if _, err := os.Stat(oracleTesterArgsPath(fixture)); err != nil {
+				t.Fatalf("missing generated tester transcript args for %s: %v", fixture, err)
+			}
 		})
 	}
 	if _, err := os.Stat(filepath.Join(oracleDir(), "compare_cpp.go")); err != nil {
@@ -137,6 +141,32 @@ func TestOracleSingle(t *testing.T) {
 	})
 }
 
+func TestOracleSingleTargetTest(t *testing.T) {
+	if !oracleTestEnabled() {
+		t.Skip("set ORACLE_TEST=1 to compare Go ivy2cpp test output against Python ivy_to_cpp")
+	}
+	if !oracleTargetTestEnabled() {
+		t.Skip("set ORACLE_TEST_TARGET_TEST=1 to run the broader target=test token oracle")
+	}
+	statuses := readOracleStatuses(t)
+	var outcomes []oracleOutcome
+	for _, fixture := range oracleFixtures {
+		fixture := fixture
+		t.Run(fixture, func(t *testing.T) {
+			status := statuses[fixture]
+			if status == oracleStatusSkip {
+				outcomes = append(outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "skip"})
+				t.Skip("fixture marked SKIP in STATUS.md")
+			}
+			err := compareOracleFixture(t, fixture, "test")
+			recordOracleExpectation(t, fixture, status, err, &outcomes)
+		})
+	}
+	t.Cleanup(func() {
+		t.Logf("oracle target=test parity summary: %s", formatOracleOutcomes(outcomes))
+	})
+}
+
 func TestOracleCompileGo(t *testing.T) {
 	if !SlowCppTest {
 		t.Skip("set SLOW_CPP_TEST=1 to compile oracle Go output")
@@ -157,6 +187,29 @@ func TestOracleCompileGo(t *testing.T) {
 	}
 	t.Cleanup(func() {
 		t.Logf("oracle Go compile summary: %s", formatOracleOutcomes(outcomes))
+	})
+}
+
+func TestOracleCompileGoTargetTest(t *testing.T) {
+	if !SlowCppTest {
+		t.Skip("set SLOW_CPP_TEST=1 to compile oracle Go test output")
+	}
+	statuses := readOracleStatuses(t)
+	var outcomes []oracleOutcome
+	for _, fixture := range oracleFixtures {
+		fixture := fixture
+		t.Run(fixture, func(t *testing.T) {
+			status := statuses[fixture]
+			if status == oracleStatusSkip {
+				outcomes = append(outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "skip"})
+				t.Skip("fixture marked SKIP in STATUS.md")
+			}
+			err := compileGoOracleFixture(t, fixture, "test")
+			recordOracleExpectation(t, fixture, status, err, &outcomes)
+		})
+	}
+	t.Cleanup(func() {
+		t.Logf("oracle Go target=test compile summary: %s", formatOracleOutcomes(outcomes))
 	})
 }
 
@@ -183,6 +236,36 @@ func TestOracleCompilePython(t *testing.T) {
 	}
 	t.Cleanup(func() {
 		t.Logf("oracle Python compile summary: %s", formatOracleOutcomes(outcomes))
+	})
+}
+
+func TestOracleCompilePythonTargetTest(t *testing.T) {
+	if !SlowCppTest {
+		t.Skip("set SLOW_CPP_TEST=1 to compile oracle Python test output")
+	}
+	if !oracleTestEnabled() {
+		t.Skip("set ORACLE_TEST=1 to compile Python ivy_to_cpp test output")
+	}
+	statuses := readOracleStatuses(t)
+	var outcomes []oracleOutcome
+	for _, fixture := range oracleFixtures {
+		fixture := fixture
+		t.Run(fixture, func(t *testing.T) {
+			status := statuses[fixture]
+			if status == oracleStatusSkip {
+				outcomes = append(outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "skip"})
+				t.Skip("fixture marked SKIP in STATUS.md")
+			}
+			if _, err := readOracleTesterArgs(fixture); errors.Is(err, errOracleTesterSkipped) {
+				outcomes = append(outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "tester skip"})
+				t.Skip(err.Error())
+			}
+			err := compilePythonOracleFixture(t, fixture, "test")
+			recordOracleExpectation(t, fixture, status, err, &outcomes)
+		})
+	}
+	t.Cleanup(func() {
+		t.Logf("oracle Python target=test compile summary: %s", formatOracleOutcomes(outcomes))
 	})
 }
 
@@ -216,6 +299,40 @@ func TestOracleSemanticEquivalence(t *testing.T) {
 	})
 }
 
+func TestOracleSemanticEquivalenceGeneratedTester(t *testing.T) {
+	if !SlowCppTest {
+		t.Skip("set SLOW_CPP_TEST=1 to run generated tester transcript equivalence")
+	}
+	if !oracleTestEnabled() {
+		t.Skip("set ORACLE_TEST=1 to run Python ivy_to_cpp tester equivalence")
+	}
+	statuses := readOracleStatuses(t)
+	var outcomes []oracleOutcome
+	for _, fixture := range oracleFixtures {
+		fixture := fixture
+		t.Run(fixture, func(t *testing.T) {
+			status := statuses[fixture]
+			if status == oracleStatusSkip {
+				outcomes = append(outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "skip"})
+				t.Skip("fixture marked SKIP in STATUS.md")
+			}
+			err := runOracleTesterTranscript(t, fixture)
+			if err == errOracleTesterArgsMissing {
+				outcomes = append(outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "no tester args"})
+				t.Skip("no .test.args transcript arguments for this fixture")
+			}
+			if errors.Is(err, errOracleTesterSkipped) {
+				outcomes = append(outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "tester skip"})
+				t.Skip(err.Error())
+			}
+			recordOracleExpectation(t, fixture, status, err, &outcomes)
+		})
+	}
+	t.Cleanup(func() {
+		t.Logf("oracle generated tester semantic summary: %s", formatOracleOutcomes(outcomes))
+	})
+}
+
 type oracleOutcome struct {
 	Fixture string
 	Status  string
@@ -230,8 +347,16 @@ func oracleFixturePath(fixture string) string {
 	return filepath.Join(oracleDir(), fixture)
 }
 
+func oracleTesterArgsPath(fixture string) string {
+	return strings.TrimSuffix(oracleFixturePath(fixture), ".ivy") + ".test.args"
+}
+
 func oracleTestEnabled() bool {
 	return os.Getenv("ORACLE_TEST") != ""
+}
+
+func oracleTargetTestEnabled() bool {
+	return os.Getenv("ORACLE_TEST_TARGET_TEST") != ""
 }
 
 func readOracleStatuses(t *testing.T) map[string]string {
@@ -513,6 +638,8 @@ func pythonIvyIncludeDirs() []string {
 }
 
 var errOracleTranscriptMissing = fmt.Errorf("oracle transcript missing")
+var errOracleTesterArgsMissing = fmt.Errorf("oracle tester args missing")
+var errOracleTesterSkipped = fmt.Errorf("oracle tester skipped")
 
 func runOracleTranscript(t *testing.T, fixture string) error {
 	t.Helper()
@@ -548,7 +675,69 @@ func runOracleTranscript(t *testing.T, fixture string) error {
 
 func buildGoOracleExecutable(t *testing.T, fixture string) (string, error) {
 	t.Helper()
-	batch, err := generateGoOracleFixture(fixture, t.TempDir(), "repl")
+	return buildGoOracleExecutableForTarget(t, fixture, "repl")
+}
+
+func buildPythonOracleExecutable(t *testing.T, fixture string) (string, error) {
+	t.Helper()
+	return buildPythonOracleExecutableForTarget(t, fixture, "repl")
+}
+
+func runOracleTesterTranscript(t *testing.T, fixture string) error {
+	t.Helper()
+	args, err := readOracleTesterArgs(fixture)
+	if err != nil {
+		return err
+	}
+	goExe, err := buildGoOracleExecutableForTarget(t, fixture, "test")
+	if err != nil {
+		return fmt.Errorf("Go tester executable: %w", err)
+	}
+	pyExe, err := buildPythonOracleExecutableForTarget(t, fixture, "test")
+	if err != nil {
+		return fmt.Errorf("Python tester executable: %w", err)
+	}
+	goOut, err := runExecutable(goExe, args, nil)
+	if err != nil {
+		return fmt.Errorf("Go tester run: %w", err)
+	}
+	pyOut, err := runExecutable(pyExe, args, nil)
+	if err != nil {
+		return fmt.Errorf("Python tester run: %w", err)
+	}
+	if string(goOut) != string(pyOut) {
+		return fmt.Errorf("tester stdout differs\nargs: %s\nGo:\n%s\nPython:\n%s", strings.Join(args, " "), goOut, pyOut)
+	}
+	return nil
+}
+
+func readOracleTesterArgs(fixture string) ([]string, error) {
+	path := oracleTesterArgsPath(fixture)
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, errOracleTesterArgsMissing
+		}
+		return nil, err
+	}
+	var args []string
+	for _, line := range strings.Split(string(raw), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		fields := strings.Fields(line)
+		if len(fields) > 0 && fields[0] == "SKIP" {
+			return nil, fmt.Errorf("%w: %s", errOracleTesterSkipped, strings.Join(fields[1:], " "))
+		}
+		args = append(args, fields...)
+	}
+	return args, nil
+}
+
+func buildGoOracleExecutableForTarget(t *testing.T, fixture, target string) (string, error) {
+	t.Helper()
+	batch, err := generateGoOracleFixture(fixture, t.TempDir(), target)
 	if err != nil {
 		return "", err
 	}
@@ -558,10 +747,10 @@ func buildGoOracleExecutable(t *testing.T, fixture string) (string, error) {
 	return BuildOutput(batch.Outputs[0], t.TempDir())
 }
 
-func buildPythonOracleExecutable(t *testing.T, fixture string) (string, error) {
+func buildPythonOracleExecutableForTarget(t *testing.T, fixture, target string) (string, error) {
 	t.Helper()
 	dir := t.TempDir()
-	if err := runPythonIvyToCPP(oracleFixturePath(fixture), dir, "repl", oracleClassName(fixture)); err != nil {
+	if err := runPythonIvyToCPP(oracleFixturePath(fixture), dir, target, oracleClassName(fixture)); err != nil {
 		return "", err
 	}
 	cpps, err := cppSourcePaths(dir)
@@ -589,10 +778,30 @@ func linkCPPExecutable(cppPath, exePath string) error {
 		return err
 	}
 	args = append(args, includeArgs...)
+	var linkArgs []string
+	raw, err := os.ReadFile(cppPath)
+	if err != nil {
+		return err
+	}
+	text := string(raw)
+	if strings.Contains(text, "z3++.h") ||
+		strings.Contains(text, "z3::") ||
+		strings.Contains(text, "ivy_z3_gen.hpp") ||
+		strings.Contains(text, "ivy_z3_helpers.hpp") ||
+		strings.Contains(text, "ivy_go_z3.hpp") {
+		z3IncludeArgs, z3LinkArgs, err := z3BuildArgs()
+		if err != nil {
+			return err
+		}
+		args = append(args, z3IncludeArgs...)
+		linkArgs = z3LinkArgs
+	}
 	for _, dir := range pythonIvyIncludeDirs() {
 		args = append(args, "-I", dir)
 	}
-	args = append(args, cppPath, "-o", exePath, "-pthread")
+	args = append(args, cppPath, "-o", exePath)
+	args = append(args, linkArgs...)
+	args = append(args, "-pthread")
 	cmd := exec.Command(compiler, args...)
 	var buf bytes.Buffer
 	cmd.Stdout = &buf
@@ -604,7 +813,11 @@ func linkCPPExecutable(cppPath, exePath string) error {
 }
 
 func runWithInput(path string, input []byte) ([]byte, error) {
-	cmd := exec.Command(path)
+	return runExecutable(path, nil, input)
+}
+
+func runExecutable(path string, args []string, input []byte) ([]byte, error) {
+	cmd := exec.Command(path, args...)
 	cmd.Stdin = bytes.NewReader(input)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout

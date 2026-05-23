@@ -198,11 +198,10 @@ func (g *Generator) emitZ3VariantRandomHelper(w *cppWriter, s goivy.Sort) {
 		if i == len(variants)-1 {
 			prefix = "default:"
 		}
-		w.line(prefix)
-		w.indent++
+		w.open(prefix + " {")
 		w.linef("%s tmp = %s;", subType, value)
 		w.linef("return %s;", g.variantUpcastExpr(s, sub, "tmp", g.ClassName))
-		w.indent--
+		w.close("")
 	}
 	w.close("")
 	w.close("")
@@ -577,13 +576,12 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 	w.close(";")
 	w.blank()
 
-	initActions := g.initialMixinActionNames()
 	// Build action_gen plans up front so the class header and impl
 	// emission share the same analysis (inputs computed from
 	// reverse_image, etc.).
 	plans := make(map[string]*actionGenPlan)
 	for name, act := range g.Mod.Actions.All() {
-		if initActions[name] || !g.Mod.PublicActions.Get(name) {
+		if !g.Mod.PublicActions.Get(name) {
 			continue
 		}
 		if isFinalizeName(name) {
