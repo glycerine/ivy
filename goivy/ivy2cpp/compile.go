@@ -68,9 +68,9 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 			}
 		}
 		// Python ivy_to_cpp.py:4620-4622 — compile_with_invariants is
-		// true only for the test target in language version >= 1.7.
+		// true only for the test target in language versions after 1.7.
 		isoMod.Cfg.IsolateCfg.CompileWithInvariants =
-			cfg.Target == "test" && languageVersionAtLeast(isoMod, "1.7")
+			cfg.Target == "test" && languageVersionAfter(isoMod, "1.7")
 		cppIface := snapshotCPPInterface(isoMod)
 		if isolate != "" || languageVersionAtLeast(isoMod, "1.7") {
 			if err := goivy.CreateIsolate(isolate, isoMod); err != nil {
@@ -334,6 +334,13 @@ func languageVersionAtLeast(mod *goivy.Module, want string) bool {
 		return true
 	}
 	return compareVersionStrings(mod.Cfg.IuCfg.GetStringVersion(), want) >= 0
+}
+
+func languageVersionAfter(mod *goivy.Module, want string) bool {
+	if mod == nil || mod.Cfg == nil || mod.Cfg.IuCfg == nil {
+		return true
+	}
+	return compareVersionStrings(mod.Cfg.IuCfg.GetStringVersion(), want) > 0
 }
 
 func compareVersionStrings(a, b string) int {
@@ -703,6 +710,11 @@ func applySessionParameters(mod *goivy.Module, cfg Config) {
 }
 
 func addConjsToActions(mod *goivy.Module) {
+	for _, init := range mod.Initializers {
+		if init.Name == "__check_invariants" {
+			return
+		}
+	}
 	var asserts []goivy.Expr
 	for _, conj := range mod.LabeledConjs {
 		if conj == nil {

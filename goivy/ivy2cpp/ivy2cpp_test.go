@@ -131,6 +131,7 @@ func compileGeneratedCPPSlow(t *testing.T, out *Output, prefix string) {
 	if outputPath == "" {
 		t.Fatalf("compile generated C++ produced an empty output path")
 	}
+	vv("outputPath = '%v'", outputPath)
 }
 
 func assertNoUnsupportedCPP(t *testing.T, out *Output) {

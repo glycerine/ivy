@@ -1278,11 +1278,10 @@ func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) 
 }
 
 // importCallers mirrors Python find_import_callers (ivy_to_cpp.py:1888-1897).
-// For target=test, it collects the names of imported (unscoped) actions that
-// resolve to a known action. Both the bare and `ext:`-prefixed forms are
-// recorded so the lookup in emitSomeAction works regardless of which form the
-// caller passes. For non-test targets the set is empty. The result is
-// memoized on the Generator.
+// For target=test, imported wrappers are named `imp__foo`; Python strips that
+// prefix and records both `foo` and `ext:foo` so the trace lands on the caller
+// action before precondition assertions. Direct non-isolate imports are kept as
+// their bare names for unit-level Generate callers.
 func (g *Generator) importCallers() map[string]bool {
 	if g.importCallersCache != nil {
 		return g.importCallersCache
@@ -1304,14 +1303,17 @@ func (g *Generator) importCallers() map[string]bool {
 			if name == "" {
 				continue
 			}
-			bare := strings.TrimPrefix(name, "ext:")
-			if _, ok := g.Mod.Actions.Get2(bare); !ok {
-				if _, ok := g.Mod.Actions.Get2(name); !ok {
-					continue
-				}
+			if _, ok := g.Mod.Actions.Get2(name); !ok {
+				continue
 			}
-			out["ext:"+bare] = true
-			out[bare] = true
+			caller := name
+			if strings.HasPrefix(caller, "imp__") {
+				caller = strings.TrimPrefix(caller, "imp__")
+			} else {
+				caller = strings.TrimPrefix(caller, "ext:")
+			}
+			out["ext:"+caller] = true
+			out[caller] = true
 		}
 	}
 	g.importCallersCache = out
