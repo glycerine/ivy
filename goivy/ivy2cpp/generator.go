@@ -287,12 +287,17 @@ func (g *Generator) emitImpl() error {
 	}
 	g.emitRuntimeLockMethods(w)
 	g.emitCallbackThunks(w)
+	if g.Config.Target == "test" {
+		g.emitZ3Boilerplate1(w)
+	}
 	g.emitRuntimeValueIncludes(w)
 	g.emitCTupleEqualities(w)
 	if err := g.emitImplNatives(w); err != nil {
 		return err
 	}
-	if g.usesZ3() {
+	if g.Config.Target == "test" {
+		g.emitCPPTypeImpls(w)
+	} else if g.usesZ3() {
 		if err := g.emitZ3Support(w); err != nil {
 			return err
 		}
@@ -300,7 +305,7 @@ func (g *Generator) emitImpl() error {
 		g.emitCPPTypeImpls(w)
 	}
 	g.emitVariantImpls(w)
-	if g.usesZ3() {
+	if g.usesZ3() && g.Config.Target != "test" {
 		// to_solver_class<hash_thunk<D,R>> specializations for every
 		// hash_thunk-backed domain (single-arg and ctuple). Python
 		// ivy_to_cpp.py:2673 → emit_all_ctuples_to_solver.
@@ -340,6 +345,12 @@ func (g *Generator) emitImpl() error {
 	w.raw(body.String())
 	g.emitRuntimeDestructor(w)
 	g.emitDestructorImpls(w)
+	if g.usesZ3() && g.Config.Target == "test" {
+		g.emitAllCtuplesToSolver(w)
+		if err := g.emitZ3GeneratorClasses(w); err != nil {
+			return err
+		}
+	}
 	// Per-enum operator<<, _arg<T>, __ser<T>, __deser<T>. Python
 	// emits the definitions after class methods and the runtime
 	// destructor; only forward declarations live near ivy_value.hpp.

@@ -152,14 +152,9 @@ func (g *Generator) emitRuntimeValueIncludes(w *cppWriter) {
 	if g.Config.Target == "repl" || g.Config.Target == "test" {
 		w.line(`#include "ivy_repl.hpp"`)
 	}
-	// Python `ivy_to_cpp.py:2210-2211` emits `ivy_z3_helpers.hpp` here.
-	// Go's `ivy_go_z3.hpp` is the consolidated substitute: it defines
-	// `ivy_gen`, `gen`, the `mk_*` helpers, and supporting includes.
-	// Per-template specializations of `__from_solver`/`__to_solver`/
-	// `__randomize` are still emitted inline by emitZ3SolverTemplates
-	// (see z3.go:35), so we deliberately do not also include
-	// `ivy_z3_helpers.hpp`.
-	if g.usesZ3() {
+	if g.Config.Target == "test" {
+		w.line(`#include "ivy_z3_helpers.hpp"`)
+	} else if g.usesZ3() {
 		w.line(`#include "ivy_go_z3.hpp"`)
 	}
 	w.blank()
@@ -171,6 +166,22 @@ func (g *Generator) emitRuntimeValueIncludes(w *cppWriter) {
 	// ivy_to_cpp.py:2232-2254.
 	g.emitDestructorSortArgSpecDecls(w)
 	w.blank()
+}
+
+func (g *Generator) emitZ3Boilerplate1(w *cppWriter) {
+	w.line("#include <string>")
+	w.line("#include <vector>")
+	w.line("#include <sstream>")
+	w.line("#include <cstdlib>")
+	w.line(`#include "ivy_z3_gen.hpp"`)
+	w.blank()
+	w.line("using namespace hash_space;")
+	w.blank()
+	modelLog := "false"
+	if g.Config.Target == "test" {
+		modelLog = "true"
+	}
+	w.linef("typedef ivy_z3_gen<%s, %s> gen;", g.ClassName, modelLog)
 }
 
 func (g *Generator) emitRuntimeConstructorPrelude(w *cppWriter) {
