@@ -76,6 +76,7 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 			if err := goivy.CreateIsolate(isolate, isoMod); err != nil {
 				return nil, err
 			}
+			pruneStateStoresToSignature(isoMod)
 			restoreCPPInterface(isoMod, cppIface)
 		}
 		prepareModuleForCPP(isoMod, cfg)
@@ -115,6 +116,33 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		}
 	}
 	return batch, nil
+}
+
+func pruneStateStoresToSignature(mod *goivy.Module) {
+	if mod == nil || mod.Sig == nil || mod.Cfg == nil || mod.Cfg.IsolateCfg == nil {
+		return
+	}
+	if !mod.Cfg.IsolateCfg.FilterSymbols && !mod.Cfg.IsolateCfg.ConeOfInfluence {
+		return
+	}
+	keep := map[string]bool{}
+	for name := range mod.Sig.Symbols.All() {
+		keep[name] = true
+	}
+	if mod.Relations != nil {
+		for name := range mod.Relations.All() {
+			if !keep[name] {
+				mod.Relations.Delkey(name)
+			}
+		}
+	}
+	if mod.Functions != nil {
+		for name := range mod.Functions.All() {
+			if !keep[name] {
+				mod.Functions.Delkey(name)
+			}
+		}
+	}
 }
 
 func mergeParams(params map[string]string, cfg Config) (Config, map[string]string, error) {

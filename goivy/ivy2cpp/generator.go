@@ -795,9 +795,6 @@ func (g *Generator) cardinalitySortNames() []string {
 }
 
 func (g *Generator) emitCardinalityDecls(w *cppWriter) {
-	if g.Config.Target != "repl" && g.Config.Target != "test" && g.Config.Target != "gen" {
-		return
-	}
 	names := g.cardinalitySortNames()
 	for _, name := range names {
 		w.linef("long long __CARD__%s;", varName(name))
@@ -808,21 +805,18 @@ func (g *Generator) emitCardinalityDecls(w *cppWriter) {
 }
 
 func (g *Generator) emitCardinalityInitializers(w *cppWriter) {
-	if g.Config.Target != "repl" && g.Config.Target != "test" && g.Config.Target != "gen" {
-		return
-	}
 	for _, name := range g.cardinalitySortNames() {
-		if !g.shouldInitializeCardinality(name) {
-			continue
-		}
 		if s, ok := g.Mod.Sig.Sorts.Get2(name); ok {
+			if !g.shouldInitializeCardinality(name) {
+				continue
+			}
 			card := cppSortCard(g, s)
 			if card > 0 {
 				w.linef("__CARD__%s = %d;", varName(name), card)
 				continue
 			}
+			w.linef("__CARD__%s = 0;", varName(name))
 		}
-		w.linef("__CARD__%s = 0;", varName(name))
 	}
 }
 

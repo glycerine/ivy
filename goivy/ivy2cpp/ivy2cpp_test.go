@@ -1241,6 +1241,67 @@ export step
 	}
 }
 
+func TestCompileAndGenerateAllPrunesFilteredStateStores(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "pruned.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.7
+type small = {0..3}
+individual x : small
+after init {
+    x := 0
+}
+action set = {
+    x := 1
+}
+export set
+`), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	batch, err := CompileAndGenerateAll(spec, map[string]string{"target": "impl", "classname": "Pruned"}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	if len(batch.Outputs) != 1 {
+		t.Fatalf("outputs len = %d, want 1", len(batch.Outputs))
+	}
+	out := batch.Outputs[0]
+	if strings.Contains(out.Header, "unsigned x;") || strings.Contains(out.Impl, "\n    x =") {
+		t.Fatalf("filtered state x should not be resurrected after CreateIsolate:\nHEADER:\n%s\nIMPL:\n%s", out.Header, out.Impl)
+	}
+	if !strings.Contains(out.Header, "long long __CARD__small;") {
+		t.Fatalf("Python keeps the filtered interpreted sort cardinality declaration:\n%s", out.Header)
+	}
+	if strings.Contains(out.Impl, "__CARD__small =") {
+		t.Fatalf("Python skips cardinality initialization when the filtered sort is absent from sig.sorts:\n%s", out.Impl)
+	}
+}
+
+func TestImplTargetEmitsEnumArgSpecs(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "enum.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action choose(c:color) returns(out:color) = {
+    saved := c;
+    out := saved
+}
+export choose
+`), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	batch, err := CompileAndGenerateAll(spec, map[string]string{"target": "impl", "classname": "EnumCase"}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	if len(batch.Outputs) != 1 {
+		t.Fatalf("outputs len = %d, want 1", len(batch.Outputs))
+	}
+	if want := "std::ostream &operator<<(std::ostream &s, const EnumCase::color &t)"; !strings.Contains(batch.Outputs[0].Impl, want) {
+		t.Fatalf("impl target must emit Python's enum arg-spec helpers; missing %q:\n%s", want, batch.Outputs[0].Impl)
+	}
+}
+
 func TestCompileAndGenerateAllClassDoesNotWriteDescriptor(t *testing.T) {
 	dir := t.TempDir()
 	spec := filepath.Join(dir, "class.ivy")

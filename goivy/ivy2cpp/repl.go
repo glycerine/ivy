@@ -19,9 +19,6 @@ func (g *Generator) enumSortsForArgSpecs() []*goivy.LogicEnumeratedSort {
 	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
 		return nil
 	}
-	if g.Config.Target != "repl" && g.Config.Target != "test" && g.Config.Target != "gen" {
-		return nil
-	}
 	encoded := g.encodedSortSet()
 	var out []*goivy.LogicEnumeratedSort
 	for _, name := range g.Mod.SortOrder {
