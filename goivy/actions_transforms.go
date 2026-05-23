@@ -50,23 +50,31 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg ...*IvyUt
 		return a
 
 	case *LogicEnsuresAction:
-		// EnsuresAction must be checked before AssertAction since it embeds it
-		// Python: checks iu.get_numeric_version() <= [1,6] before converting
-		if kinds["ensure"] {
-			var ver []int
-			if len(iuCfg) > 0 && iuCfg[0] != nil {
-				ver = iuCfg[0].GetNumericVersion()
-			} else {
-				panicf("AssertToAssume: EnsuresAction requires IvyUtilsConfig for version check. iuCfg='%#v'", iuCfg)
-			}
-			if len(ver) >= 2 && (ver[0] < 1 || (ver[0] == 1 && ver[1] <= 6)) {
-				assume := NewAssumeAction(a.Formula)
-				assume.ActionBase = a.ActionBase
-				assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
-				return assume
-			}
+		// EnsuresAction must be checked before AssertAction since it embeds it.
+		// Python ivy_actions.py:407-411:
+		//   if iu.get_numeric_version() <= [1,6]:
+		//       return Action.assert_to_assume(self,kinds)   (recurse, NO class-convert)
+		//   return AssertAction.assert_to_assume(self,kinds) (class-check, convert iff in kinds)
+		var ver []int
+		if len(iuCfg) > 0 && iuCfg[0] != nil {
+			ver = iuCfg[0].GetNumericVersion()
 		}
-		return a
+		isLE16 := len(ver) >= 2 && (ver[0] < 1 || (ver[0] == 1 && ver[1] <= 6))
+		if isLE16 {
+			// version <= 1.6: never class-convert, just recurse-and-clone
+			return assertToAssumeChildren(a, kinds, iuCfg...)
+		}
+		// version > 1.6: AssertAction semantics — convert iff class in kinds
+		if kinds["ensure"] {
+			if ver == nil {
+				panicf("AssertToAssume: EnsuresAction (version>1.6 branch) requires IvyUtilsConfig for version check. iuCfg='%#v'", iuCfg)
+			}
+			assume := NewAssumeAction(a.Formula)
+			assume.ActionBase = a.ActionBase
+			assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
+			return assume
+		}
+		return assertToAssumeChildren(a, kinds, iuCfg...)
 
 	case *LogicSubgoalAction:
 		// Python checks class identity: AssertAction.assert_to_assume(kinds)

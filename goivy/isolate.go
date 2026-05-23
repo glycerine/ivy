@@ -575,20 +575,20 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 			if !ver || delegates[actname] {
 				// Not verified or delegated: convert all assertions in the action
 				extKinds := makeKindSet("assert", "ensure", "require")
-				extAction = AssertToAssume(act, extKinds)
+				extAction = AssertToAssume(act, extKinds, mod.Cfg.IuCfg)
 				extAction = PrefixCalls(extAction, "ext:")
 
 				if delegates[actname] {
 					intAction = PrefixCalls(act, "ext:")
 				} else {
 					intKinds := makeKindSet("assert", "ensure")
-					intAction = AssertToAssume(act, intKinds)
+					intAction = AssertToAssume(act, intKinds, mod.Cfg.IuCfg)
 					intAction = PrefixCalls(intAction, "ext:")
 				}
 			} else {
 				// Verified: only assume requires in external version
 				extKinds := makeKindSet("require")
-				extAction = AssertToAssume(act, extKinds)
+				extAction = AssertToAssume(act, extKinds, mod.Cfg.IuCfg)
 				intAction = act
 			}
 
@@ -654,7 +654,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		}
 		var act ActionsAction
 		if !ver || delegates[actname] {
-			act = AssertToAssume(action, makeKindSet("assert", "require"))
+			act = AssertToAssume(action, makeKindSet("assert", "require"), mod.Cfg.IuCfg)
 			act = PrefixCalls(act, "ext:")
 		} else {
 			act = EmptyClone(action)
@@ -673,7 +673,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 			}
 			if useMixin(mixerName) && beforeMixins(mx) {
 				xtracer.Trace("isolate.make_before_export actname=%s mixer=%s", actname, mixerName)
-				action1 = AssertToAssume(action1, makeKindSet("assert", "require"))
+				action1 = AssertToAssume(action1, makeKindSet("assert", "require"), mod.Cfg.IuCfg)
 				action1 = extModMixin(allMixins)(mx, action1)
 				act = ApplyMixin(action1, act, false)
 			}
