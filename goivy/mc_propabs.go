@@ -37,19 +37,33 @@ type PropAbs struct {
 	StVarSet map[string]bool
 	// Sort constants (for prev_expr detection)
 	SortConstants *InsMap[string, []*Const]
+	// Sort interpretation table used to recognize finite interpreted sorts.
+	Interp map[string]interface{}
 	// Accumulated formulas from abstraction
 	Fmlas []Expr
 }
 
 // NewPropAbs creates a new propositional abstraction context.
-func NewPropAbs(stVarSet map[string]bool, sortConstants *InsMap[string, []*Const]) *PropAbs {
+func NewPropAbs(stVarSet map[string]bool, sortConstants *InsMap[string, []*Const], interp ...map[string]interface{}) *PropAbs {
+	var sortInterp map[string]interface{}
+	if len(interp) > 0 {
+		sortInterp = interp[0]
+	}
 	return &PropAbs{
 		Map:           NewInsMap[string, *Const](),
 		OrigExprs:     NewInsMap[string, Expr](),
 		FiniteSymsSet: make(map[string]bool),
 		StVarSet:      stVarSet,
 		SortConstants: sortConstants,
+		Interp:        sortInterp,
 	}
+}
+
+func (pa *PropAbs) isFiniteSort(s Sort) bool {
+	if pa.Interp != nil {
+		return IsFiniteSortWithInterp(s, pa.Interp)
+	}
+	return isFiniteSort(s)
 }
 
 // newProp returns the abstract proposition for an expression.
@@ -119,7 +133,7 @@ func (pa *PropAbs) MkPropAbs(expr Expr) Expr {
 		children := expr.Children()
 		if len(children) > 0 {
 			for _, child := range children {
-				if !isFiniteSort(child.NodeSort()) {
+				if !pa.isFiniteSort(child.NodeSort()) {
 					needsAbstraction = true
 					break
 				}

@@ -28,17 +28,22 @@ type ArithOp func(nbits int, x, y []int) []int
 // NewEncoder creates a new Encoder with the given inputs, latches, and outputs.
 // Each symbol is expanded into multiple bits based on its sort.
 // Python: Encoder.__init__(inputs, latches, outputs) — all [Symbol].
-func NewEncoder(inputs, latches, outputs []*Const) *Encoder {
+func NewEncoder(inputs, latches, outputs []*Const, interp ...map[string]interface{}) *Encoder {
+	var sortInterp map[string]interface{}
+	if len(interp) > 0 {
+		sortInterp = interp[0]
+	}
 	enc := &Encoder{
 		Inputs:   inputs,
 		Latches:  latches,
 		Outputs:  outputs,
 		Encoding: make(map[NodeKey][]string),
+		Interp:   sortInterp,
 	}
 
-	subInputs := encodeVars(inputs, enc.Encoding)
-	subLatches := encodeVars(latches, enc.Encoding)
-	subOutputs := encodeVars(outputs, enc.Encoding)
+	subInputs := encodeVars(inputs, enc.Encoding, enc.Interp)
+	subLatches := encodeVars(latches, enc.Encoding, enc.Interp)
+	subOutputs := encodeVars(outputs, enc.Encoding, enc.Interp)
 	enc.Sub = NewAiger(subInputs, subLatches, subOutputs)
 
 	return enc
@@ -46,10 +51,10 @@ func NewEncoder(inputs, latches, outputs []*Const) *Encoder {
 
 // encodeVars expands typed symbols into bit-level names using sort for bit width.
 // Python: encode_vars(syms, encoding) — uses get_encoding_bits(sym.sort).
-func encodeVars(syms []*Const, encoding map[NodeKey][]string) []string {
+func encodeVars(syms []*Const, encoding map[NodeKey][]string, interp map[string]interface{}) []string {
 	var res []string
 	for _, sym := range syms {
-		n := getEncodingBits(sym.CSort)
+		n := getEncodingBitsWithInterp(sym.CSort, interp)
 		vs := make([]string, n)
 		for i := 0; i < n; i++ {
 			vs[i] = fmt.Sprintf("%s[%d]", sym.Name, i)
@@ -58,6 +63,15 @@ func encodeVars(syms []*Const, encoding map[NodeKey][]string) []string {
 		res = append(res, vs...)
 	}
 	return res
+}
+
+func getEncodingBitsWithInterp(s Sort, interp map[string]interface{}) int {
+	if interp != nil {
+		if n, err := GetEncodingBits(s, interp); err == nil {
+			return n
+		}
+	}
+	return getEncodingBits(s)
 }
 
 // True returns [1] (multi-bit true).
@@ -426,6 +440,13 @@ func (e *Encoder) evalRec(expr Expr, getdef GetDefFunc) ([]int, error) {
 		return nil, fmt.Errorf("eval: non-nullary application: %v", expr)
 
 	case *Const:
+		if IsNumeral(t) {
+			n, err := GetEncodingBits(t.CSort, e.Interp)
+			if err != nil {
+				return nil, err
+			}
+			return e.BinEnc(parseNum(t.Name), n), nil
+		}
 		// Plain symbol
 		if lit, ok := e.Lit(t); ok {
 			return lit, nil
@@ -495,7 +516,7 @@ func (e *Encoder) evalRec(expr Expr, getdef GetDefFunc) ([]int, error) {
 		if err != nil {
 			return nil, err
 		}
-		nvals := getSortSize(t.T1.NodeSort())
+		nvals := getSortSizeWithInterp(t.T1.NodeSort(), e.Interp)
 		return e.EncodeEquality(nvals, lhs, rhs), nil
 
 	default:
@@ -605,6 +626,27 @@ func getSortSize(s Sort) int {
 		return len(es.Extension)
 	}
 	return 2 // boolean
+}
+
+func getSortSizeWithInterp(s Sort, interp map[string]interface{}) int {
+	if interp != nil {
+		switch t := GetSortTheory(s, interp).(type) {
+		case *LogicEnumeratedSort:
+			return len(t.Extension)
+		case *RangeSort:
+			ub, err := strconv.Atoi(t.UbString())
+			if err == nil {
+				return ub + 1
+			}
+		case *BooleanSort:
+			return 2
+		case *Theory:
+			if t.Kind == BitVectorKind {
+				return 1 << t.Bits()
+			}
+		}
+	}
+	return getSortSize(s)
 }
 
 // parseNum parses a numeral string to int.

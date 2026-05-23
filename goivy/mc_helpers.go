@@ -83,6 +83,9 @@ func IsFiniteSort(sort Sort) bool {
 // IsFiniteSortWithInterp checks whether a sort is finite, considering
 // theory interpretation.
 func IsFiniteSortWithInterp(sort Sort, interp map[string]interface{}) bool {
+	if sort == nil {
+		return false
+	}
 	if _, ok := sort.(*LogicFunctionSort); ok {
 		return false
 	}

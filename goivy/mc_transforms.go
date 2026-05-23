@@ -54,9 +54,19 @@ func ElimIte(expr Expr, cnsts *[]Expr, iteCtr *int64) Expr {
 // circuit (as opposed to a set of constraints) which might be helpful to ABC.
 //
 // Python: ivy_mc.py:1063-1114
-func ToTableLookup(trans *Clauses, invariant Expr) (*Clauses, Expr) {
+func ToTableLookup(trans *Clauses, invariant Expr, interp ...map[string]interface{}) (*Clauses, Expr) {
 	var newDefs []Expr
 	counter := 0
+	var sortInterp map[string]interface{}
+	if len(interp) > 0 {
+		sortInterp = interp[0]
+	}
+	isFinite := func(s Sort) bool {
+		if sortInterp != nil {
+			return IsFiniteSortWithInterp(s, sortInterp)
+		}
+		return isFiniteSort(s)
+	}
 
 	argSym := func(sort Sort) *Const {
 		name := fmt.Sprintf("__arg[%d]", counter)
@@ -71,13 +81,13 @@ func ToTableLookup(trans *Clauses, invariant Expr) (*Clauses, Expr) {
 			if funcSym, ok := app.Func.(*Const); ok && !isInterpretedSymbol(funcSym) {
 				allFinite := true
 				for _, arg := range app.Terms {
-					if !isFiniteSort(arg.NodeSort()) {
+					if !isFinite(arg.NodeSort()) {
 						allFinite = false
 						break
 					}
 				}
 				if allFinite {
-					return tableLookupApp(app, funcSym, argSym, &newDefs, recur)
+					return tableLookupApp(app, funcSym, argSym, &newDefs, recur, sortInterp)
 				}
 			}
 		}
@@ -151,28 +161,24 @@ func ToTableLookup(trans *Clauses, invariant Expr) (*Clauses, Expr) {
 
 // tableLookupApp converts a function application f(a1,...,an) with finite-sort
 // args into a table-lookup ITE chain.
-func tableLookupApp(app *Apply, funcSym *Const, argSym func(Sort) *Const, newDefs *[]Expr, recur func(Expr) Expr) Expr {
+func tableLookupApp(app *Apply, funcSym *Const, argSym func(Sort) *Const, newDefs *[]Expr, recur func(Expr) Expr, interp map[string]interface{}) Expr {
 	// For each argument, either use it directly or introduce a fresh symbol
 	argSyms := make([]Expr, len(app.Terms))
 	constSets := make([][]Expr, len(app.Terms))
 
 	for i, x := range app.Terms {
-		vals, err := SortValues(x.NodeSort())
-		if err != nil {
-			// Shouldn't happen since we checked isFiniteSort
+		constNodes := sortValuesAsExprs(x.NodeSort(), interp)
+		if len(constNodes) == 0 {
+			// Shouldn't happen since we checked finite-sort status.
 			return app
-		}
-		constNodes := make([]Expr, len(vals))
-		for j, v := range vals {
-			constNodes[j] = NewConst(v, x.NodeSort())
 		}
 		constSets[i] = constNodes
 
 		// Check if arg is already a constant in the sort values
 		if c, ok := x.(*Const); ok {
 			isVal := false
-			for _, v := range vals {
-				if c.Name == v {
+			for _, v := range constNodes {
+				if c.Equal(v) {
 					isVal = true
 					break
 				}
@@ -214,7 +220,7 @@ func tableLookupApp(app *Apply, funcSym *Const, argSym func(Sort) *Const, newDef
 			} else {
 				cond = &LogicAnd{Terms: eqs}
 			}
-			result = &LogicIte{Cond: cond, Then: fApp, Else: result}
+			result = &LogicIte{ISort: fApp.NodeSort(), Cond: cond, Then: fApp, Else: result}
 		}
 	}
 	return result

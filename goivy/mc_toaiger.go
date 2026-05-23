@@ -294,19 +294,17 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	// Step 4d: Instantiate axioms using pattern matching
 	stVarNameList := mcConstNames(stVars)
 	axs := InstantiateAxioms(mod, stVarNameList, trans, invariant, sortConstants, funs, mod.Cfg.IuCfg)
-	if len(axs) > 0 {
-		axConj := &LogicAnd{Terms: axs}
-		axVar := NewConst("__axioms", Boolean)
-		axDef := NewIvyDefinition(axVar, axConj)
-		invariant = &LogicImplies{T1: axVar, T2: invariant}
-		allFmlas := append(trans.Fmlas, axVar)
-		allDefs := append(trans.Defs, axDef)
-		trans = NewClauses(allFmlas, allDefs, trans.Annot)
-	}
+	axConj := &LogicAnd{Terms: axs}
+	axVar := NewConst("__axioms", Boolean)
+	axDef := NewIvyDefinition(axVar, axConj)
+	invariant = &LogicImplies{T1: axVar, T2: invariant}
+	axFmlas := append(trans.Fmlas, axVar)
+	axDefs := append(trans.Defs, axDef)
+	trans = NewClauses(axFmlas, axDefs, trans.Annot)
 	xtracer.Trace("mc.ToAiger postAxiomInst nAxioms=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s", len(axs), len(trans.Fmlas), len(trans.Defs), trans.Canon())
 
 	// Step 4e: Table lookup for finite-domain functions
-	trans, invariant = ToTableLookup(trans, invariant)
+	trans, invariant = ToTableLookup(trans, invariant, mod.Sig.Interp)
 
 	// Step 4f: Propositional abstraction
 	stVarSet := make(map[string]bool, len(stVars))
@@ -314,7 +312,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 		stVarSet[sv.Name] = true
 	}
 
-	propAbs := NewPropAbs(stVarSet, sortConstants)
+	propAbs := NewPropAbs(stVarSet, sortConstants, mod.Sig.Interp)
 	paFmlas, paDefs := propAbs.Apply(trans.Fmlas, defsToNodes(trans.Defs))
 	trans = NewClauses(paFmlas, nodesToDefs(paDefs), trans.Annot)
 
@@ -479,7 +477,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	for _, sym := range usedSyms.All() {
 		name := ExprName(sym)
 		cc, isConst := sym.(*Const)
-		if !defSet[name] && !(isConst && isInterpretedSymbol(cc)) {
+		if !defSet[name] && !(isConst && (isInterpretedSymbol(cc) || IsNumeral(cc))) {
 			if isConst {
 				inputs = append(inputs, cc)
 			}
@@ -489,10 +487,11 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	fail := NewConst("__fail", Boolean)
 	outputs := []*Const{fail}
 
-	aiger := NewEncoder(inputs, stVars, outputs)
+	var interp map[string]interface{}
 	if mod.Sig != nil {
-		aiger.Interp = mod.Sig.Interp
+		interp = mod.Sig.Interp
 	}
+	aiger := NewEncoder(inputs, stVars, outputs, interp)
 
 	// Process combinational definitions (non-next-state)
 	var combDefs []Expr
