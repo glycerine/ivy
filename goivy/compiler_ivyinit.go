@@ -100,7 +100,7 @@ func ReadModule(filename string, nested bool, cfg *Config) (*ParseResult, error)
 		}
 		result, parseErr := Parse(s, version, opts...)
 		if parseErr != nil {
-			return nil, fmt.Errorf("parse error in %s: %w", filename, parseErr)
+			return nil, parseErr
 		}
 		xtracer.Trace("init.ReadModule EXIT file=%s decls=%d", filename, len(result.Decls))
 		return result, nil
@@ -178,7 +178,7 @@ func ReadModuleFromNamedString(filename, source string, nested bool, cfg *Config
 		}
 		result, parseErr := Parse(s, version, opts...)
 		if parseErr != nil {
-			return nil, fmt.Errorf("parse error in %s: %w", filename, parseErr)
+			return nil, parseErr
 		}
 		xtracer.Trace("init.ReadModule EXIT file=%s decls=%d", filename, len(result.Decls))
 		return result, nil

@@ -1,8 +1,6 @@
 package goivy
 
 import (
-	"fmt"
-
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
@@ -69,8 +67,8 @@ func ParseV17(input string, version Version, opts ...ParseOption) (*ParseResult,
 		opt(lex)
 	}
 	parser17Parse(lex)
-	if lex.err != "" {
-		return nil, fmt.Errorf("LALR parse error: %s", lex.err)
+	if lex.err != nil {
+		return nil, lex.err
 	}
 	if lex.accum == nil {
 		xtracer.Trace("parser.Parse EXIT decls=0")
@@ -99,7 +97,7 @@ type parser17LexAdapter struct {
 	lex              *Lexer
 	accum            *ivyAccum
 	result           Node
-	err              string
+	err              *ParseError
 	importer         ImporterFunc
 	included         map[string]bool
 	nested           bool       // true for nested (include) parses — skip expand_auto
@@ -452,6 +450,15 @@ func (l *parser17LexAdapter) Lex(lval *parser17SymType) int {
 }
 
 // Error is called by goyacc when a parse error occurs.
+// Mirrors Python p_error (ivy_parser.py:3598-3606): if there is a current
+// token report its lineno+value; otherwise (EOF) report "unexpected end of input".
 func (l *parser17LexAdapter) Error(s string) {
-	l.err = s
+	pe := &ParseError{Filename: l.filename, Message: s}
+	if l.lastTok.Type == EOF {
+		pe.Message = "unexpected end of input"
+	} else {
+		pe.Lineno = l.lastTok.Line
+		pe.Token = l.lastTok.Value
+	}
+	l.err = pe
 }

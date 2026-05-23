@@ -1224,10 +1224,22 @@ func Main(args []string) int {
 		if errors.As(err, &reported) {
 			return 1
 		}
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		printTopLevelError(err)
 		return 1
 	}
 	return 0
+}
+
+// printTopLevelError prints err to stderr. For *ParseError it prints the
+// message raw, matching Python ParseError.__repr__ format. For anything
+// else it prepends "error: " as the existing convention.
+func printTopLevelError(err error) {
+	var pe *ParseError
+	if errors.As(err, &pe) {
+		fmt.Fprintln(os.Stderr, err.Error())
+		return
+	}
+	fmt.Fprintf(os.Stderr, "error: %v\n", err)
 }
 
 // StartWithConfig is like Start but accepts a pre-populated Config.
@@ -1364,7 +1376,7 @@ func MainWithConfig(args []string, cfg *Config) (code int) {
 		if errors.As(err, &reported) {
 			return 1
 		}
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		printTopLevelError(err)
 		return 1
 	}
 	return 0
