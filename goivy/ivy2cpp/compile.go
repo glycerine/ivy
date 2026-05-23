@@ -44,13 +44,6 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		mod.Cfg.Isolate = isolate
 	}
 	applySessionParameters(mod, cfg)
-	// Python ivy_to_cpp.py:4550-4551 adds _generating to the signature
-	// before ivy_init so cone-of-influence sees it as a state symbol.
-	if cfg.Target == "test" {
-		if _, ok := mod.Sig.Symbols.Get2("_generating"); !ok {
-			_, _ = mod.Sig.AddSymbol("_generating", goivy.Boolean)
-		}
-	}
 	sig := goivy.NewSigOn(mod.Cfg.IuCfg)
 	if err := goivy.SourceFile(filename, mod, sig, map[string]interface{}{"create_isolate": false}); err != nil {
 		return nil, err
@@ -78,10 +71,12 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		// true only for the test target in language version >= 1.7.
 		isoMod.Cfg.IsolateCfg.CompileWithInvariants =
 			cfg.Target == "test" && languageVersionAtLeast(isoMod, "1.7")
+		cppIface := snapshotCPPInterface(isoMod)
 		if isolate != "" || languageVersionAtLeast(isoMod, "1.7") {
 			if err := goivy.CreateIsolate(isolate, isoMod); err != nil {
 				return nil, err
 			}
+			restoreCPPInterface(isoMod, cppIface)
 		}
 		prepareModuleForCPP(isoMod, cfg)
 		outCfg := cfg
@@ -350,7 +345,212 @@ func parseVersionParts(v string) []int {
 	return out
 }
 
+type cppInterfaceSnapshot struct {
+	Actions         map[string]cppActionSignature
+	CallbackActions map[string]goivy.Action
+	ActionOrder     []string
+	SortOrder       []string
+	Sorts           map[string]goivy.Sort
+	Interps         map[string]interface{}
+	SortDestructors map[string][]*goivy.Const
+	DestructorSorts map[string]goivy.Sort
+}
+
+type cppActionSignature struct {
+	Params  []*goivy.Const
+	Returns []*goivy.Const
+}
+
+func snapshotCPPInterface(mod *goivy.Module) cppInterfaceSnapshot {
+	snap := cppInterfaceSnapshot{
+		Actions:         map[string]cppActionSignature{},
+		CallbackActions: map[string]goivy.Action{},
+		Sorts:           map[string]goivy.Sort{},
+		Interps:         map[string]interface{}{},
+		SortDestructors: map[string][]*goivy.Const{},
+		DestructorSorts: map[string]goivy.Sort{},
+	}
+	if mod == nil {
+		return snap
+	}
+	snap.SortOrder = append([]string(nil), mod.SortOrder...)
+	if mod.Actions != nil {
+		for name, act := range mod.Actions.All() {
+			snap.ActionOrder = append(snap.ActionOrder, name)
+			snap.Actions[name] = cppActionSignature{
+				Params:  append([]*goivy.Const(nil), act.GetFormalParams()...),
+				Returns: append([]*goivy.Const(nil), act.GetFormalReturns()...),
+			}
+		}
+		for _, name := range collectCallbackActionNames(mod) {
+			if act, ok := mod.Actions.Get2(name); ok {
+				snap.CallbackActions[name] = act
+			}
+		}
+	}
+	if mod.Sig != nil {
+		for name, sort := range mod.Sig.Sorts.All() {
+			snap.Sorts[name] = sort
+		}
+		for name, sort := range mod.Sig.Interp {
+			snap.Interps[name] = sort
+		}
+	}
+	if mod.SortDestructors != nil {
+		for name, destrs := range mod.SortDestructors.All() {
+			snap.SortDestructors[name] = append([]*goivy.Const(nil), destrs...)
+		}
+	}
+	for name, sort := range mod.DestructorSorts {
+		snap.DestructorSorts[name] = sort
+	}
+	return snap
+}
+
+func restoreCPPInterface(mod *goivy.Module, snap cppInterfaceSnapshot) {
+	if mod == nil {
+		return
+	}
+	if mod.Actions != nil {
+		if len(snap.CallbackActions) > 0 {
+			oldActions := mod.Actions
+			nextActions := goivy.NewInsMap[string, goivy.Action]()
+			added := map[string]bool{}
+			for _, name := range snap.ActionOrder {
+				if act, ok := oldActions.Get2(name); ok {
+					nextActions.Set(name, act)
+					added[name] = true
+					continue
+				}
+				if act, ok := snap.CallbackActions[name]; ok {
+					nextActions.Set(name, act)
+					added[name] = true
+				}
+			}
+			for name, act := range oldActions.All() {
+				if added[name] {
+					continue
+				}
+				nextActions.Set(name, act)
+			}
+			mod.Actions = nextActions
+		}
+	}
+	for name, sig := range snap.Actions {
+		restoreActionSignature(mod, name, sig)
+		restoreActionSignature(mod, "ext:"+name, sig)
+	}
+	for _, sig := range snap.Actions {
+		for _, p := range sig.Params {
+			restoreSortForCPPInterface(mod, snap, p.CSort, map[string]bool{})
+		}
+		for _, r := range sig.Returns {
+			restoreSortForCPPInterface(mod, snap, r.CSort, map[string]bool{})
+		}
+	}
+}
+
+func restoreActionSignature(mod *goivy.Module, name string, sig cppActionSignature) {
+	if mod == nil || mod.Actions == nil || len(sig.Params)+len(sig.Returns) == 0 {
+		return
+	}
+	act, ok := mod.Actions.Get2(name)
+	if !ok || act == nil {
+		return
+	}
+	if len(act.GetFormalParams()) == 0 && len(sig.Params) > 0 {
+		act.SetFormalParams(append([]*goivy.Const(nil), sig.Params...))
+	}
+	if len(act.GetFormalReturns()) == 0 && len(sig.Returns) > 0 {
+		act.SetFormalReturns(append([]*goivy.Const(nil), sig.Returns...))
+	}
+}
+
+func restoreSortForCPPInterface(mod *goivy.Module, snap cppInterfaceSnapshot, sort goivy.Sort, seen map[string]bool) {
+	if mod == nil || mod.Sig == nil || sort == nil {
+		return
+	}
+	if fs, ok := sort.(*goivy.LogicFunctionSort); ok {
+		for _, d := range fs.Domain() {
+			restoreSortForCPPInterface(mod, snap, d, seen)
+		}
+		restoreSortForCPPInterface(mod, snap, fs.Range(), seen)
+		return
+	}
+	name := sortName(sort)
+	if name == "" || name == "bool" || seen[name] {
+		return
+	}
+	seen[name] = true
+	if s, ok := snap.Sorts[name]; ok {
+		if _, exists := mod.Sig.Sorts.Get2(name); !exists {
+			mod.Sig.Sorts.Set(name, s)
+		}
+		ensureSortOrderName(mod, snap, name)
+	}
+	if interp, ok := snap.Interps[name]; ok {
+		if mod.Sig.Interp == nil {
+			mod.Sig.Interp = map[string]interface{}{}
+		}
+		if _, exists := mod.Sig.Interp[name]; !exists {
+			mod.Sig.Interp[name] = interp
+		}
+	}
+	if destrs, ok := snap.SortDestructors[name]; ok {
+		if mod.SortDestructors == nil {
+			mod.SortDestructors = goivy.NewInsMap[string, []*goivy.Const]()
+		}
+		if _, exists := mod.SortDestructors.Get2(name); !exists {
+			mod.SortDestructors.Set(name, append([]*goivy.Const(nil), destrs...))
+		}
+		if mod.DestructorSorts == nil {
+			mod.DestructorSorts = map[string]goivy.Sort{}
+		}
+		if ds, ok := snap.DestructorSorts[name]; ok {
+			mod.DestructorSorts[name] = ds
+		}
+		for _, d := range destrs {
+			if fs, ok := d.CSort.(*goivy.LogicFunctionSort); ok {
+				restoreSortForCPPInterface(mod, snap, fs.Range(), seen)
+			}
+		}
+	}
+}
+
+func ensureSortOrderName(mod *goivy.Module, snap cppInterfaceSnapshot, name string) {
+	for _, existing := range mod.SortOrder {
+		if existing == name {
+			return
+		}
+	}
+	orderIdx := len(snap.SortOrder)
+	for i, n := range snap.SortOrder {
+		if n == name {
+			orderIdx = i
+			break
+		}
+	}
+	insertAt := len(mod.SortOrder)
+	for i, existing := range mod.SortOrder {
+		existingIdx := len(snap.SortOrder)
+		for j, n := range snap.SortOrder {
+			if n == existing {
+				existingIdx = j
+				break
+			}
+		}
+		if existingIdx > orderIdx {
+			insertAt = i
+			break
+		}
+	}
+	mod.SortOrder = append(mod.SortOrder, "")
+	copy(mod.SortOrder[insertAt+1:], mod.SortOrder[insertAt:])
+	mod.SortOrder[insertAt] = name
+}
+
 func prepareModuleForCPP(mod *goivy.Module, cfg Config) {
+	ensureGeneratingSymbol(mod)
 	ensureSortOrderForCPP(mod)
 	if len(mod.LabeledProps) > 0 {
 		mod.LabeledAxioms = append(mod.LabeledAxioms, mod.LabeledProps...)
@@ -359,18 +559,21 @@ func prepareModuleForCPP(mod *goivy.Module, cfg Config) {
 	if len(mod.LabeledConjs) > 0 {
 		addConjsToActions(mod)
 	}
-	if cfg.Target == "test" {
-		if _, ok := mod.Sig.Symbols.Get2("_generating"); !ok {
-			_, _ = mod.Sig.AddSymbol("_generating", goivy.Boolean)
-		}
-		// Also register as a relation so emitStateDecls (which iterates
-		// Mod.Relations + Mod.Functions) declares `bool _generating;` as
-		// a member. Python's `all_state_symbols` includes any signature
-		// symbol; Go's filter is narrower, so we register explicitly.
-		if mod.Relations != nil {
-			if _, exists := mod.Relations.Get2("_generating"); !exists {
-				mod.Relations.Set("_generating", goivy.Boolean)
-			}
+}
+
+func ensureGeneratingSymbol(mod *goivy.Module) {
+	if mod == nil || mod.Sig == nil {
+		return
+	}
+	// Python ivy_to_cpp.py adds _generating to the signature for every
+	// target before code generation, and the runtime constructor initializes
+	// it with ___ivy_choose even for impl/repl outputs.
+	if _, ok := mod.Sig.Symbols.Get2("_generating"); !ok {
+		_, _ = mod.Sig.AddSymbol("_generating", goivy.Boolean)
+	}
+	if mod.Relations != nil {
+		if _, exists := mod.Relations.Get2("_generating"); !exists {
+			mod.Relations.Set("_generating", goivy.Boolean)
 		}
 	}
 }

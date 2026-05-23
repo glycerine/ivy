@@ -229,47 +229,50 @@ func (g *Generator) unsupported(w *cppWriter, format string, args ...any) {
 }
 
 func (g *Generator) nextTemp(prefix string) string {
+	id := g.tempID
 	g.tempID++
-	return fmt.Sprintf("%s%d", prefix, g.tempID)
+	return fmt.Sprintf("%s%d", prefix, id)
 }
 
 func (g *Generator) emitHeader() error {
 	w := &g.header
-	w.line("#pragma once")
 	g.emitRuntimeHeaderPreamble(w)
 	if err := g.emitHeaderNatives(w); err != nil {
 		return err
 	}
+	g.emitRuntimeHeaderForwardDecls(w)
 	w.blank()
 	w.open(fmt.Sprintf("class %s {", g.ClassName))
 	w.line("public:")
 	w.indent++
 	w.linef("typedef %s ivy_class;", g.ClassName)
 	g.emitRuntimeClassMembers(w)
+	w.line("int ___ivy_choose(int rng,const char *name,int id);")
 	if g.Config.Target != "gen" {
-		w.line("virtual void ivy_assert(bool truth, const char *msg) {}")
-		w.line("virtual void ivy_assume(bool truth, const char *msg) {}")
-		w.line("virtual void ivy_check_progress(int guarantee_ticks, int assume_ticks) {}")
+		w.line("virtual void ivy_assert(bool,const char *){}")
+		w.line("virtual void ivy_assume(bool,const char *){}")
+		w.line("virtual void ivy_check_progress(int,int){}")
 	}
-	w.line("int ___ivy_choose(int rng, const char *name, int id);")
-	w.line("void __init();")
-	w.line("void __tick(int timeout);")
-	w.blank()
 	g.emitSortDecls(w)
-	w.line(g.constructorSignature(false) + ";")
-	w.blank()
 	g.emitCTupleDecls(w)
-	g.emitCardinalityDecls(w)
+	g.emitCTupleHashDecls(w)
 	g.emitStateDecls(w)
 	g.emitProgressCounterDecls(w)
+	g.emitCardinalityDecls(w)
 	if err := g.emitClassMemberNatives(w); err != nil {
 		return err
 	}
+	w.line(g.constructorSignature(false) + ";")
+	w.line("void __init();")
 	g.emitDefinitionDecls(w)
 	g.emitConstructorDecls(w)
 	g.emitMethodDecls(w)
+	w.line("void __tick(int timeout);")
 	w.indent--
 	w.close(";")
+	g.emitVariantEqualityForwardDecls(w)
+	g.emitDestructorEqualityInlines(w)
+	g.emitVariantEqualityInlines(w)
 	if err := g.emitInlineNatives(w); err != nil {
 		return err
 	}
@@ -284,7 +287,13 @@ func (g *Generator) emitImpl() error {
 	w.linef(`#include "%s.h"`, g.BaseName)
 	w.blank()
 	g.emitRuntimeImplPreamble(w)
+	if g.Config.Target == "repl" || g.Config.Target == "test" {
+		g.emitRuntimeInstallMethods(w)
+	}
+	g.emitRuntimeLockMethods(w)
 	g.emitCallbackThunks(w)
+	g.emitRuntimeValueIncludes(w)
+	g.emitCTupleEqualities(w)
 	if err := g.emitImplNatives(w); err != nil {
 		return err
 	}
@@ -295,12 +304,7 @@ func (g *Generator) emitImpl() error {
 	} else {
 		g.emitCPPTypeImpls(w)
 	}
-	g.emitDestructorImpls(w)
 	g.emitVariantImpls(w)
-	// Per-enum operator<<, _arg<T>, __ser<T>, __deser<T>. Python
-	// ivy_to_cpp.py:2497-2510 (operator<<, __ser) and 2634-2652 (_arg,
-	// __deser).
-	g.emitEnumSortArgSpecImpls(w)
 	if g.usesZ3() {
 		// to_solver_class<hash_thunk<D,R>> specializations for every
 		// hash_thunk-backed domain (single-arg and ctuple). Python
@@ -313,6 +317,16 @@ func (g *Generator) emitImpl() error {
 			return err
 		}
 	}
+	g.emitRuntimeChoose(w)
+	var methodSection cppWriter
+	mw := &methodSection
+	g.emitInit(mw)
+	g.emitDefinitions(mw)
+	g.emitConstructors(mw)
+	g.emitMethods(mw)
+	g.emitTick(mw)
+	w.raw(g.thunkDefs.String())
+	w.raw(methodSection.String())
 	var body cppWriter
 	bw := &body
 	bw.open(g.constructorSignature(true) + " {")
@@ -328,12 +342,15 @@ func (g *Generator) emitImpl() error {
 		}
 	}
 	bw.close("")
-	g.emitRuntimeMethods(bw)
-	g.emitInit(bw)
-	g.emitDefinitions(bw)
-	g.emitConstructors(bw)
-	g.emitMethods(bw)
-	g.emitTick(bw)
+	w.raw(body.String())
+	g.emitRuntimeDestructor(w)
+	g.emitDestructorImpls(w)
+	// Per-enum operator<<, _arg<T>, __ser<T>, __deser<T>. Python
+	// emits the definitions after class methods and the runtime
+	// destructor; only forward declarations live near ivy_value.hpp.
+	g.emitEnumSortArgSpecImpls(w)
+	var tail cppWriter
+	bw = &tail
 	if g.runtimeUsesReplSubclass() {
 		g.emitRuntimeReplSubclass(bw)
 	}
@@ -352,8 +369,7 @@ func (g *Generator) emitImpl() error {
 			g.emitGenMain(bw)
 		}
 	}
-	w.raw(g.thunkDefs.String())
-	w.raw(body.String())
+	w.raw(tail.String())
 	return nil
 }
 
@@ -387,6 +403,8 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 	emittedIntClass := false
 	for _, name := range g.Mod.SortOrder {
 		if g.isVariantSuperName(name) {
+			g.emitVariantSuperStruct(w, name)
+			emittedVariantSupers[name] = true
 			continue
 		}
 		if nt, ok := g.nativeTypeForSort(name); ok {
@@ -398,12 +416,21 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 			emittedDestructorStructs[name] = true
 			continue
 		}
+		if g.isPlainVariantSubtypeName(name) {
+			continue
+		}
 		if g.isVariantSubtypeName(name) {
 			g.emitVariantLeafStruct(w, name)
 			continue
 		}
 		s, ok := g.Mod.Sig.Sorts.Get2(name)
 		if !ok {
+			continue
+		}
+		if !g.sortNeededForGeneratedDecl(name) {
+			continue
+		}
+		if _, interpreted := g.Mod.Sig.Interp[name]; interpreted {
 			continue
 		}
 		if it, ok := g.cppInterpType(s); ok {
@@ -467,9 +494,38 @@ func (g *Generator) emitDestructorStruct(w *cppWriter, name string) {
 		}
 	}
 	g.emitDestructorStructHash(w, destructors)
-	g.emitDestructorStructComparators(w, name, destructors)
-	g.emitDestructorStructWriter(w, name, destructors)
 	w.close(";")
+}
+
+func (g *Generator) emitDestructorEqualityInlines(w *cppWriter) {
+	for _, name := range g.destructorSortNames() {
+		destrs := g.Mod.SortDestructors.Get(name)
+		typeName := g.ClassName + "::" + varName(name)
+		w.open(fmt.Sprintf("inline bool operator ==(const %s &s, const %s &t) {", typeName, typeName))
+		parts := make([]string, 0, len(destrs))
+		for _, d := range destrs {
+			fs, ok := d.CSort.(*goivy.LogicFunctionSort)
+			if !ok {
+				continue
+			}
+			domain := fs.Domain()
+			if len(domain) > 0 {
+				domain = domain[1:]
+			}
+			field := varName(memName(d.Name))
+			st := cppFunctionStorageFor(g, domain, fs.Range(), "")
+			if st.Kind == cppStorageArray {
+				continue
+			}
+			parts = append(parts, fmt.Sprintf("(s.%s == t.%s)", field, field))
+		}
+		if len(parts) == 0 {
+			w.line("return true;")
+		} else {
+			w.linef("return (%s);", strings.Join(parts, " && "))
+		}
+		w.close("")
+	}
 }
 
 func (g *Generator) emitCTupleDecls(w *cppWriter) {
@@ -487,19 +543,52 @@ func (g *Generator) emitCTupleDecls(w *cppWriter) {
 			inits[i] = fmt.Sprintf("arg%d(arg%d)", i, i)
 		}
 		w.linef("%s(%s) : %s {}", name, strings.Join(params, ", "), strings.Join(inits, ", "))
+		w.open("size_t __hash() const {")
+		w.line("size_t hv = 0;")
+		for i, s := range dom {
+			w.linef("hv += hash_space::hash<%s>()(arg%d);", cppHashType(g, s), i)
+		}
+		w.line("return hv;")
+		w.close("")
+		w.close(";")
+		w.blank()
+	}
+}
+
+func (g *Generator) emitCTupleHashDecls(w *cppWriter) {
+	for _, dom := range g.cppCTuples() {
+		name := cppCTupleLocalNameWith(g, dom)
+		hashName := "hash__" + name
+		qualified := g.ClassName + "::" + name
+		w.open(fmt.Sprintf("class %s {", hashName))
+		w.line("public:")
+		w.indent++
+		w.open(fmt.Sprintf("size_t operator()(const %s &__s) const {", qualified))
 		hashParts := make([]string, len(dom))
 		for i, s := range dom {
-			hashParts[i] = fmt.Sprintf("hash_space::hash<%s>()(arg%d)", cppHashType(g, s), i)
+			hashParts[i] = fmt.Sprintf("hash_space::hash<%s>()(__s.arg%d)", cppHashType(g, s), i)
 		}
-		w.linef("size_t __hash() const { return %s; }", strings.Join(hashParts, " + "))
-		w.open(fmt.Sprintf("bool operator==(const %s &other) const {", name))
+		w.linef("return %s;", strings.Join(hashParts, "+"))
+		w.close("")
+		w.indent--
+		w.close(";")
+		w.blank()
+	}
+}
+
+func (g *Generator) emitCTupleEqualities(w *cppWriter) {
+	for _, dom := range g.cppCTuples() {
+		name := cppCTupleLocalNameWith(g, dom)
+		qualified := g.ClassName + "::" + name
+		w.open(fmt.Sprintf("bool operator==(const %s &x, const %s &y) {", qualified, qualified))
 		eqParts := make([]string, len(dom))
 		for i := range dom {
-			eqParts[i] = fmt.Sprintf("arg%d == other.arg%d", i, i)
+			eqParts[i] = fmt.Sprintf("x.arg%d == y.arg%d", i, i)
 		}
 		w.linef("return %s;", strings.Join(eqParts, " && "))
 		w.close("")
-		w.close(";")
+	}
+	if len(g.cppCTuples()) > 0 {
 		w.blank()
 	}
 }
@@ -596,6 +685,29 @@ func (g *Generator) isVariantSubtypeName(name string) bool {
 	return false
 }
 
+func (g *Generator) isPlainVariantSubtypeName(name string) bool {
+	if !g.isVariantSubtypeName(name) {
+		return false
+	}
+	if g.Mod == nil {
+		return false
+	}
+	if _, ok := g.Mod.NativeTypes[name]; ok {
+		return false
+	}
+	if g.Mod.SortDestructors != nil {
+		if _, ok := g.Mod.SortDestructors.Get2(name); ok {
+			return false
+		}
+	}
+	if g.Mod.Sig != nil {
+		if _, ok := g.Mod.Sig.Interp[name]; ok {
+			return false
+		}
+	}
+	return true
+}
+
 func (g *Generator) emitStateDecls(w *cppWriter) {
 	for _, sym := range g.stateSymbols() {
 		w.linef("%s;", g.cppStorageDecl(sym.Name, sym.Sort, ""))
@@ -605,13 +717,8 @@ func (g *Generator) emitStateDecls(w *cppWriter) {
 	}
 }
 
-// cardinalitySortNames returns the union of Sig.Interp keys (Python
-// behavior: `il.sig.interp` at ivy_to_cpp.py:2305) and all enumerated
-// sort names. Go's compiler does not auto-promote enum sorts into
-// Sig.Interp the way Python does, but Python's `__CARD__` table covers
-// them because Python eventually places them there. Including enums
-// here matches Python's effective behavior end-to-end so `ask_ret` (for
-// imported callbacks returning an enum) has its bound available.
+// cardinalitySortNames returns Sig.Interp keys, matching Python
+// ivy_to_cpp.py:2305.
 func (g *Generator) cardinalitySortNames() []string {
 	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
 		return nil
@@ -629,11 +736,7 @@ func (g *Generator) cardinalitySortNames() []string {
 		add(name)
 	}
 	for _, name := range g.Mod.SortOrder {
-		s, ok := g.Mod.Sig.Sorts.Get2(name)
-		if !ok {
-			continue
-		}
-		if _, ok := s.(*goivy.LogicEnumeratedSort); ok {
+		if g.isPlainVariantSubtypeName(name) {
 			add(name)
 		}
 	}
@@ -653,6 +756,9 @@ func (g *Generator) emitCardinalityDecls(w *cppWriter) {
 
 func (g *Generator) emitCardinalityInitializers(w *cppWriter) {
 	for _, name := range g.cardinalitySortNames() {
+		if !g.shouldInitializeCardinality(name) {
+			continue
+		}
 		if s, ok := g.Mod.Sig.Sorts.Get2(name); ok {
 			card := cppSortCard(g, s)
 			if card > 0 {
@@ -662,6 +768,86 @@ func (g *Generator) emitCardinalityInitializers(w *cppWriter) {
 		}
 		w.linef("__CARD__%s = 0;", varName(name))
 	}
+}
+
+func (g *Generator) shouldInitializeCardinality(name string) bool {
+	return g.sortNeededForGeneratedDecl(name)
+}
+
+func (g *Generator) sortNeededForGeneratedDecl(name string) bool {
+	for _, sym := range g.stateSymbols() {
+		if g.sortDependencyReferencesName(sym.Sort, name, map[string]bool{}) {
+			return true
+		}
+	}
+	for _, p := range g.Mod.Params {
+		if g.sortDependencyReferencesName(p.CSort, name, map[string]bool{}) {
+			return true
+		}
+	}
+	if g.Mod.Actions != nil {
+		for _, act := range g.Mod.Actions.All() {
+			for _, p := range act.GetFormalParams() {
+				if g.sortDependencyReferencesName(p.CSort, name, map[string]bool{}) {
+					return true
+				}
+			}
+			for _, r := range act.GetFormalReturns() {
+				if g.sortDependencyReferencesName(r.CSort, name, map[string]bool{}) {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
+func (g *Generator) sortDependencyReferencesName(s goivy.Sort, name string, seen map[string]bool) bool {
+	if sortReferencesName(s, name) {
+		return true
+	}
+	sortText := sortName(s)
+	if sortText == "" || seen[sortText] {
+		return false
+	}
+	seen[sortText] = true
+	if g == nil || g.Mod == nil {
+		return false
+	}
+	for _, sub := range g.Mod.Variants[sortText] {
+		if g.sortDependencyReferencesName(sub, name, seen) {
+			return true
+		}
+	}
+	if g.Mod.SortDestructors == nil {
+		return false
+	}
+	for _, d := range g.Mod.SortDestructors.Get(sortText) {
+		if fs, ok := d.CSort.(*goivy.LogicFunctionSort); ok {
+			if g.sortDependencyReferencesName(fs.Range(), name, seen) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func sortReferencesName(s goivy.Sort, name string) bool {
+	if s == nil || name == "" {
+		return false
+	}
+	if sortName(s) == name {
+		return true
+	}
+	if fs, ok := s.(*goivy.LogicFunctionSort); ok {
+		for _, d := range fs.Domain() {
+			if sortReferencesName(d, name) {
+				return true
+			}
+		}
+		return sortReferencesName(fs.Range(), name)
+	}
+	return false
 }
 
 type stateSymbol struct {
@@ -708,7 +894,6 @@ func (g *Generator) allStateSymbols() []stateSymbol {
 		seen[name] = true
 		out = append(out, stateSymbol{Name: name, Sort: sym.CSort})
 	}
-	sort.SliceStable(out, func(i, j int) bool { return out[i].Name < out[j].Name })
 	return out
 }
 
@@ -734,17 +919,9 @@ func (g *Generator) stateSymbols() []stateSymbol {
 		seen[name] = true
 		out = append(out, stateSymbol{Name: name, Sort: s})
 	}
-	if g.Mod.Relations != nil {
-		for k, v := range g.Mod.Relations.All() {
-			add(k, v)
-		}
+	for _, sym := range g.allStateSymbols() {
+		add(sym.Name, sym.Sort)
 	}
-	if g.Mod.Functions != nil {
-		for k, v := range g.Mod.Functions.All() {
-			add(k, v)
-		}
-	}
-	sort.SliceStable(out, func(i, j int) bool { return out[i].Name < out[j].Name })
 	return out
 }
 
@@ -777,11 +954,10 @@ func (g *Generator) emitMethodDeclLine(w *cppWriter, name string, act goivy.Acti
 //   - inline=true suppresses "virtual " on the declaration form too
 //     (Python `inline=True`, used by native code emission).
 func (g *Generator) methodSignature(name string, act goivy.Action, qualified, inline bool) string {
-	className := ""
+	fnClassName := ""
 	if qualified {
-		className = g.ClassName
+		fnClassName = g.ClassName
 	}
-
 	ptypes, rtypes := g.getParamTypes(name, act)
 	formals := act.GetFormalParams()
 	returns := act.GetFormalReturns()
@@ -791,7 +967,11 @@ func (g *Generator) methodSignature(name string, act goivy.Action, qualified, in
 	// returns "void", which is the same as the no-returns case.
 	ret := "void"
 	if len(returns) > 0 {
-		ret = rtypes[0].Make(g.cppQualifiedType(returns[0].CSort, className))
+		retClassName := ""
+		if qualified || g.isVariantSuperName(sortName(returns[0].CSort)) {
+			retClassName = g.ClassName
+		}
+		ret = rtypes[0].Make(g.cppQualifiedType(returns[0].CSort, retClassName))
 	}
 
 	// Multi-return validation (Python lines 1565-1567): every secondary
@@ -813,7 +993,7 @@ func (g *Generator) methodSignature(name string, act goivy.Action, qualified, in
 		fn = varName(name)
 	}
 	if qualified {
-		fn = g.ClassName + "::" + fn
+		fn = fnClassName + "::" + fn
 	}
 
 	// Positional input parameters. Function-sorted params use sym_decl
@@ -822,10 +1002,10 @@ func (g *Generator) methodSignature(name string, act goivy.Action, qualified, in
 	var params []string
 	for i, p := range formals {
 		if _, isFS := p.CSort.(*goivy.LogicFunctionSort); isFS {
-			params = append(params, g.cppStorageDecl(p.Name, p.CSort, className))
+			params = append(params, g.cppStorageDecl(p.Name, p.CSort, ""))
 			continue
 		}
-		typ := ptypes[i].Make(cppScalarTypeWith(g, p.CSort, className))
+		typ := ptypes[i].Make(cppScalarTypeWith(g, p.CSort, ""))
 		params = append(params, typ+" "+varName(p.Name))
 	}
 
@@ -837,7 +1017,7 @@ func (g *Generator) methodSignature(name string, act goivy.Action, qualified, in
 		if !ok || rrt.Pos < len(formals) {
 			continue
 		}
-		typ := RefType{}.Make(g.cppQualifiedType(r.CSort, className))
+		typ := RefType{}.Make(g.cppQualifiedType(r.CSort, ""))
 		params = append(params, typ+" "+varName(r.Name))
 	}
 
@@ -890,10 +1070,6 @@ func (g *Generator) emitMethods(w *cppWriter) {
 // Used by emitMethods (ordinary actions), emitDefinitions (derived
 // definitions from TODO 010), and emitConstructors (sort constructors
 // from TODO 010).
-//
-// Note: the primary-return local is initialized with cppZeroValue, NOT
-// the Python `mk_nondet_sym` call. The nondet-init divergence is owned
-// by TODO 014.
 func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) {
 	w.open(g.methodSignature(name, act, true, false) + " {")
 	returns := act.GetFormalReturns()
@@ -921,7 +1097,8 @@ func (g *Generator) emitSomeAction(w *cppWriter, name string, act goivy.Action) 
 	prevReturns := g.currentReturns
 	g.currentReturns = returns
 	if len(returns) >= 1 && !firstIsReturnRef && !formalListContains(act.GetFormalParams(), returns[0]) {
-		w.linef("%s %s = %s;", g.cppType(returns[0].CSort), varName(returns[0].Name), g.cppZeroValue(returns[0].CSort))
+		w.linef("%s %s;", g.cppQualifiedType(returns[0].CSort, g.ClassName), varName(returns[0].Name))
+		g.mkNondetSym(w, returns[0], returns[0].Name, 0)
 	}
 	g.emitAction(w, act)
 	g.currentReturns = prevReturns

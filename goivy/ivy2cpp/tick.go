@@ -199,7 +199,6 @@ func (g *Generator) emitTick(w *cppWriter) {
 	w.open(fmt.Sprintf("void %s::__tick(int __timeout) {", g.ClassName))
 	progress := g.progressDecls()
 	if len(progress) == 0 {
-		w.line("(void)__timeout;")
 		w.close("")
 		w.blank()
 		return
@@ -236,8 +235,9 @@ func (g *Generator) emitProgressRelyChecks(w *cppWriter, progress []progressDecl
 			continue
 		}
 		opened := g.openProgressLoops(w, p)
-		maxt := g.nextTemp("__ivy_maxt")
-		w.linef("int %s = 0;", maxt)
+		maxt := g.nextTemp("__tmp")
+		w.linef("int %s;", maxt)
+		w.linef("%s = 0;", maxt)
 		for _, r := range relies {
 			if !r.Implied {
 				continue
@@ -245,9 +245,10 @@ func (g *Generator) emitProgressRelyChecks(w *cppWriter, progress []progressDecl
 			g.emitRelyMax(w, maxt, p, r)
 		}
 		lhs := g.progressCounterLValue(p)
-		w.open(fmt.Sprintf("if (%s > __timeout) {", maxt))
+		w.linef("if (%s > __timeout)", maxt)
+		w.indent++
 		w.linef("%s = 0;", lhs)
-		w.close("")
+		w.indent--
 		w.linef("ivy_check_progress(%s, %s);", lhs, maxt)
 		g.closeAssignmentLoops(w, opened)
 	}

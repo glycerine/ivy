@@ -7,17 +7,17 @@ Python; `SLOW_CPP_TEST=1` adds compile and transcript hooks.
 
 | Fixture | Status | Notes |
 | --- | --- | --- |
-| empty.ivy | EXPECTED_FAIL | Baseline parity is intentionally enforced by the oracle harness before being promoted. |
-| basic_assign.ivy | EXPECTED_FAIL | Tracks simple mutable-state codegen parity. |
-| forall_assign.ivy | EXPECTED_FAIL | Tracks two-phase assignment and thunk lowering parity. |
-| bv_arithmetic.ivy | EXPECTED_FAIL | Tracks bitvector xor/shift/neg operator parity. |
-| enum_dispatch.ivy | EXPECTED_FAIL | Tracks enum action dispatch and return parsing parity. |
-| range_bounds.ivy | EXPECTED_FAIL | Tracks range type bounds and argument conversion parity. |
-| destructor_record.ivy | EXPECTED_FAIL | Tracks record/destructor type layout parity. |
-| variant_simple.ivy | EXPECTED_FAIL | Tracks non-recursive variant layout and conversion parity. |
-| variant_recursive.ivy | EXPECTED_FAIL | Tracks recursive variant layout parity. |
-| hash_thunk_assign.ivy | EXPECTED_FAIL | Tracks large-domain hash thunk assignment parity. |
-| native_block.ivy | EXPECTED_FAIL | Tracks native header/member/init/action antiquote parity. |
-| callback_thunk.ivy | EXPECTED_FAIL | Tracks native callback thunk parity. |
-| progress_property.ivy | EXPECTED_FAIL | Tracks progress/rely tick generation parity. |
-| isolate_two_parts.ivy | EXPECTED_FAIL | Tracks multi-isolate extraction parity. |
+| empty.ivy | PASS | Baseline runtime scaffold matches the Python oracle. |
+| basic_assign.ivy | PASS | Simple mutable-state codegen matches the Python oracle. |
+| forall_assign.ivy | PASS | Two-phase assignment and post-isolate sort helper emission match the Python oracle. |
+| bv_arithmetic.ivy | PASS | Declared bitvector helper functions and hash-thunk initialization match the Python oracle. |
+| enum_dispatch.ivy | PASS | Enum action dispatch, return initialization, and helper placement match the Python oracle. |
+| range_bounds.ivy | PASS | Range bounds and nondet initialization match the Python oracle. |
+| destructor_record.ivy | PASS | Record/destructor layout, restored exported formals, and helper placement match the Python oracle. |
+| variant_simple.ivy | PASS | Tracks non-recursive variant layout and conversion parity. |
+| variant_recursive.ivy | PASS | Tracks recursive variant layout parity. |
+| hash_thunk_assign.ivy | PASS | Tracks large-domain hash thunk assignment parity. |
+| native_block.ivy | PASS | Tracks native header/member/init/action antiquote parity. |
+| callback_thunk.ivy | PASS | Tracks native callback thunk parity. |
+| progress_property.ivy | PASS | Tracks progress/rely tick generation parity. |
+| isolate_two_parts.ivy | PASS | Tracks multi-isolate extraction parity. |

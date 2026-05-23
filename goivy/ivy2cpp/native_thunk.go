@@ -25,7 +25,14 @@ import (
 // referenced from any native antiquote in the module. Mirrors Python
 // ivy_to_cpp.py:2187-2200.
 func (g *Generator) collectCallbackActions() []string {
-	if g == nil || g.Mod == nil || g.Mod.Actions == nil {
+	if g == nil {
+		return nil
+	}
+	return collectCallbackActionNames(g.Mod)
+}
+
+func collectCallbackActionNames(mod *goivy.Module) []string {
+	if mod == nil || mod.Actions == nil {
 		return nil
 	}
 	used := map[string]bool{}
@@ -34,14 +41,14 @@ func (g *Generator) collectCallbackActions() []string {
 	// CompileNativeDef (goivy/compiler_phase6.go:1086, 1093), each
 	// arg is wrapped in a *CompiledNode that holds the compiled
 	// goivy.Expr — unwrap before checking.
-	for _, n := range g.Mod.Natives {
+	for _, n := range mod.Natives {
 		args := n.Args()
 		if len(args) < 2 {
 			continue
 		}
 		for _, child := range args[2:] {
 			node := unwrapCompiled(child)
-			if name, ok := g.isCallbackAction(node); ok {
+			if name, ok := callbackActionName(mod, node); ok {
 				used[name] = true
 			}
 		}
@@ -49,14 +56,14 @@ func (g *Generator) collectCallbackActions() []string {
 	// NativeAction subactions inside action bodies. Python's
 	// `actb.iter_subactions()` is `act.IterSubactions()` in Go (see
 	// goivy/actions_action.go:1009).
-	for _, act := range g.Mod.Actions.All() {
+	for _, act := range mod.Actions.All() {
 		for _, sub := range act.IterSubactions() {
 			na, ok := sub.(*goivy.LogicNativeAction)
 			if !ok {
 				continue
 			}
 			for _, p := range na.Params {
-				if name, ok := g.isCallbackAction(p); ok {
+				if name, ok := callbackActionName(mod, p); ok {
 					used[name] = true
 				}
 			}
@@ -166,11 +173,7 @@ func (g *Generator) emitCallbackThunk(w *cppWriter, name string, act goivy.Actio
 		allArgs = append(allArgs, varName(p.Name))
 	}
 	call := fmt.Sprintf("__ivy->%s(%s);", fn, strings.Join(allArgs, ", "))
-	if ret == "void" {
-		w.line(call)
-	} else {
-		w.line("return " + call)
-	}
+	w.line("return " + call)
 	w.close("")
 	w.close(";")
 }

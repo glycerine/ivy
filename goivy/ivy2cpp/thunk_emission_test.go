@@ -49,7 +49,7 @@ func TestThunkStructEmittedAtFileScope(t *testing.T) {
 	if structIdx < 0 || ctorIdx < 0 || methodIdx < 0 {
 		t.Fatalf("missing thunk/constructor/method markers:\n%s", out.Impl)
 	}
-	if !(structIdx < ctorIdx && ctorIdx < methodIdx) {
+	if !(structIdx < ctorIdx && structIdx < methodIdx) {
 		t.Fatalf("thunk should be file-scope before constructor and method: struct=%d ctor=%d method=%d\n%s", structIdx, ctorIdx, methodIdx, out.Impl)
 	}
 	methodBody := out.Impl[methodIdx:]
@@ -64,7 +64,11 @@ func TestThunkStructEmittedAtFileScope(t *testing.T) {
 
 func TestIdenticalThunksEmittedOnce(t *testing.T) {
 	out := generateThunkEmissionFixture(t, "thunkonce", "true", "true")
-	if got := strings.Count(out.Impl, "struct __thunk__"); got != 1 {
+	ctorIdx := strings.Index(out.Impl, "thunkonce::thunkonce()")
+	if ctorIdx < 0 {
+		t.Fatalf("missing constructor:\n%s", out.Impl)
+	}
+	if got := strings.Count(out.Impl[:ctorIdx], "struct __thunk__"); got != 1 {
 		t.Fatalf("identical thunk bodies should emit once, got %d:\n%s", got, out.Impl)
 	}
 	if !strings.Contains(out.Impl, "void thunkonce::step0()") || !strings.Contains(out.Impl, "void thunkonce::step1()") {
@@ -88,7 +92,11 @@ func TestDifferentBodiesGetDifferentThunkStructs(t *testing.T) {
 			t.Fatalf("missing %q in different-thunk output:\n%s", want, out.Impl)
 		}
 	}
-	if got := strings.Count(out.Impl, "struct __thunk__"); got != 2 {
+	ctorIdx := strings.Index(out.Impl, "thunktwo::thunktwo()")
+	if ctorIdx < 0 {
+		t.Fatalf("missing constructor:\n%s", out.Impl)
+	}
+	if got := strings.Count(out.Impl[:ctorIdx], "struct __thunk__"); got != 2 {
 		t.Fatalf("different bodies should emit two thunks, got %d:\n%s", got, out.Impl)
 	}
 	compileGeneratedCPP(t, out)

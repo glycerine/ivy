@@ -46,17 +46,17 @@ func TestEmitAssignTwoPhaseSelfReferential(t *testing.T) {
 		t.Fatalf("expected 2 for-loops (two-phase), got:\n%s", got)
 	}
 	// Temp declaration of bool-ranged storage. The exact name is
-	// __ivy_tmp1 from g.nextTemp.
-	if !strings.Contains(got, "__ivy_tmp1") {
-		t.Fatalf("expected temp declaration with __ivy_tmp1, got:\n%s", got)
+	// __ivy_tmp0 from Python-compatible g.nextTemp numbering.
+	if !strings.Contains(got, "__ivy_tmp0") {
+		t.Fatalf("expected temp declaration with __ivy_tmp0, got:\n%s", got)
 	}
 	// Phase 1 writes the temp, phase 2 writes r. Cheap structural check:
 	// the temp must be on the LHS of an assignment that contains !(r[X]).
-	if !strings.Contains(got, "__ivy_tmp1[X] = !(r[X])") {
-		t.Fatalf("expected phase-1 write `__ivy_tmp1[X] = !(r[X])`, got:\n%s", got)
+	if !strings.Contains(got, "__ivy_tmp0[X] = !(r[X])") {
+		t.Fatalf("expected phase-1 write `__ivy_tmp0[X] = !(r[X])`, got:\n%s", got)
 	}
-	if !strings.Contains(got, "r[X] = __ivy_tmp1[X]") {
-		t.Fatalf("expected phase-2 copy-back `r[X] = __ivy_tmp1[X]`, got:\n%s", got)
+	if !strings.Contains(got, "r[X] = __ivy_tmp0[X]") {
+		t.Fatalf("expected phase-2 copy-back `r[X] = __ivy_tmp0[X]`, got:\n%s", got)
 	}
 }
 
@@ -111,7 +111,7 @@ func TestEmitAssignBoundsExprTightensLoop(t *testing.T) {
 		t.Fatalf("expected loop bounded by `I < K`, got:\n%s", got)
 	}
 	// Sanity: the temp+two-phase machinery should still be there.
-	if !strings.Contains(got, "__ivy_tmp1") {
+	if !strings.Contains(got, "__ivy_tmp0") {
 		t.Fatalf("expected temp declaration, got:\n%s", got)
 	}
 }
@@ -257,7 +257,7 @@ func TestEmitAssignMultiVariableTransposeTwoPhase(t *testing.T) {
 		t.Fatalf("expected phase-1 RHS read g(Y,X) (array or tuple form), got:\n%s", got)
 	}
 	// Phase 2 writes g(X, Y) from the temp.
-	if !strings.Contains(got, "g[__tup__e__e(X, Y)] = __ivy_tmp1") && !strings.Contains(got, "g[X][Y] = __ivy_tmp1") {
+	if !strings.Contains(got, "g[__tup__e__e(X, Y)] = __ivy_tmp0") && !strings.Contains(got, "g[X][Y] = __ivy_tmp0") {
 		t.Fatalf("expected phase-2 write g(X,Y) = temp, got:\n%s", got)
 	}
 }
@@ -273,7 +273,7 @@ func TestEmitAssignMultiVariableTransposeTwoPhase(t *testing.T) {
 //	}
 //
 // Go's emission diverges in two minor ways documented inline:
-//   - temp name __ivy_tmp1 (not __tmp0) — Go counter naming convention
+//   - temp name __ivy_tmp0 — Python-compatible counter starts at zero
 //   - loop variable typed as `color` with range-for over the enum
 //     extension list — Go's loopHeaderForVar idiom, semantically
 //     equivalent to Python's `for (int X = 0; X < 2; X++)`.
@@ -298,10 +298,10 @@ export flip
 	// default target=impl (not repl/test where the prefix is added).
 	for _, want := range []string{
 		"void test_sref::flip()",
-		"bool __ivy_tmp1[2];",
+		"bool __ivy_tmp0[2];",
 		"for (color X : {red, green})",
-		"__ivy_tmp1[X] = !(marked[X]);",
-		"marked[X] = __ivy_tmp1[X];",
+		"__ivy_tmp0[X] = !(marked[X]);",
+		"marked[X] = __ivy_tmp0[X];",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
@@ -366,6 +366,3 @@ func TestEmitAssignSimpleScalarRespectsExistingPath(t *testing.T) {
 		t.Fatalf("simple path should not allocate a temp, got:\n%s", got)
 	}
 }
-
-
-

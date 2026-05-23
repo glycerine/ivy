@@ -311,7 +311,8 @@ func (g *Generator) emitDestructorImpl(w *cppWriter, name string) {
 	// behavior.  Here we emit only the helpers that must live in the impl
 	// section because of template-specialization linkage rules.
 	target := g.Config.Target
-	emitArgDeser := target == "" || target == "repl" || target == "test" || target == "impl"
+	emitArgDeser := target == "repl" || target == "test"
+	g.emitDestructorOutImpl(w, name, typeName, destrs)
 	g.emitDestructorSerImpl(w, name, typeName, destrs)
 	if emitArgDeser {
 		g.emitDestructorArgImpl(w, name, typeName, destrs)
@@ -320,6 +321,54 @@ func (g *Generator) emitDestructorImpl(w *cppWriter, name string) {
 	if target == "gen" || target == "test" {
 		g.emitDestructorZ3Impl(w, name, typeName, destrs)
 	}
+}
+
+func (g *Generator) emitDestructorOutImpl(w *cppWriter, name, typeName string, destrs []*goivy.Const) {
+	_ = name
+	w.open(fmt.Sprintf("std::ostream &operator <<(std::ostream &s, const %s &t) {", typeName))
+	w.line(`s << "{";`)
+	first := true
+	for _, d := range destrs {
+		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
+		if !ok {
+			continue
+		}
+		if !first {
+			w.line(`s << ",";`)
+		}
+		first = false
+		field := varName(memName(d.Name))
+		w.linef(`s << "%s:";`, field)
+		domain := fs.Domain()
+		if len(domain) > 0 {
+			domain = domain[1:]
+		}
+		st := cppFunctionStorageFor(g, domain, fs.Range(), "")
+		switch st.Kind {
+		case cppStorageArray:
+			vs := make([]string, len(domain))
+			for i := range domain {
+				v := destructorIndexVarName(i)
+				vs[i] = v
+				w.line(`s << "[";`)
+				card := g.cppSortCardStr(domain[i])
+				w.open(fmt.Sprintf("for (int %s = 0; %s < %s; %s++) {", v, v, card, v))
+				w.linef(`if (%s) s << ",";`, v)
+			}
+			w.linef("s << t.%s%s;", field, cppIndexSuffix(vs))
+			for range domain {
+				w.close("")
+				w.line(`s << "]";`)
+			}
+		case cppStorageHashThunk:
+			w.line(`s << "<hash_thunk>";`)
+		default:
+			w.linef("s << t.%s;", field)
+		}
+	}
+	w.line(`s << "}";`)
+	w.line("return s;")
+	w.close("")
 }
 
 // emitDestructorSerImpl emits the `__ser<T>` template specialization.

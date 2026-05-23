@@ -132,26 +132,11 @@ func (g *Generator) emitOneInitialState(w *cppWriter) error {
 }
 
 func (g *Generator) emitDefaultInitialState(w *cppWriter, sym stateSymbol) {
-	if fs, ok := sym.Sort.(*goivy.LogicFunctionSort); ok && len(fs.Domain()) > 0 {
-		st := cppFunctionStorageFor(g, fs.Domain(), fs.Range(), "")
-		if st.Kind == cppStorageArray {
-			tuples, ok := g.initialDomainTuples(fs.Domain())
-			if ok {
-				for _, tuple := range tuples {
-					args := make([]string, len(tuple))
-					for i, v := range tuple {
-						args[i] = v.Cpp
-					}
-					w.linef("%s = %s;", g.cppStorageAccess(sym.Name, sym.Sort, args, ""), g.cppZeroValue(fs.Range()))
-				}
-			}
-			return
-		}
-		w.linef("%s = %s();", varName(sym.Name), st.Type)
+	if sym.Name == "_generating" {
+		w.line("_generating = (bool)___ivy_choose(0,\"init\",0);")
 		return
 	}
-	rng := initialStateRange(sym.Sort)
-	w.linef("%s = %s;", varName(sym.Name), g.cppZeroValue(rng))
+	g.mkNondetSym(w, goivy.NewConst(sym.Name, sym.Sort), "init", 0)
 }
 
 func (g *Generator) emitSolvedInitialState(w *cppWriter, slv *goivy.Solver, model *smt.Model, sym stateSymbol) error {

@@ -101,6 +101,9 @@ func TestOracleStatusFileUpToDate(t *testing.T) {
 		default:
 			t.Fatalf("fixture %s has invalid oracle status %q", fixture, status)
 		}
+		if status == oracleStatusExpectedFail {
+			t.Fatalf("fixture %s is still marked %s after TODO3 oracle promotion", fixture, status)
+		}
 		got = append(got, fixture)
 	}
 	sort.Strings(want)
@@ -618,13 +621,11 @@ func recordOracleExpectation(t *testing.T, fixture, status string, err error, ou
 		}
 		*outcomes = append(*outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "pass"})
 	case oracleStatusExpectedFail:
+		*outcomes = append(*outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "bad status"})
 		if err != nil {
-			*outcomes = append(*outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "expected fail"})
-			t.Logf("expected oracle failure for %s: %v", fixture, err)
-			return
+			t.Fatalf("fixture %s is marked EXPECTED_FAIL; oracle gaps are no longer accepted: %v", fixture, err)
 		}
-		*outcomes = append(*outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "unexpected pass"})
-		t.Logf("fixture %s is marked EXPECTED_FAIL but passed; promote it in STATUS.md when this is intentional", fixture)
+		t.Fatalf("fixture %s is marked EXPECTED_FAIL; promote it to PASS or mark it SKIP with a reason", fixture)
 	case oracleStatusSkip:
 		*outcomes = append(*outcomes, oracleOutcome{Fixture: fixture, Status: status, Outcome: "skip"})
 		t.Skip("fixture marked SKIP in STATUS.md")

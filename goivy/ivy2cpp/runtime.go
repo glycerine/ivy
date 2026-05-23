@@ -29,28 +29,16 @@ func (g *Generator) emitRuntimeHeaderPreamble(w *cppWriter) {
 		w.line("#include <windows.h>")
 	}
 	w.line("#define _HAS_ITERATOR_DEBUGGING 0")
-	w.line("#include <algorithm>")
-	w.line("#include <cstdint>")
-	w.line("#include <cstdlib>")
-	w.line("#include <fstream>")
-	w.line("#include <initializer_list>")
-	w.line("#include <iostream>")
-	w.line("#include <map>")
-	w.line("#include <sstream>")
-	w.line("#include <stdexcept>")
-	w.line("#include <string>")
-	w.line("#include <tuple>")
-	w.line("#include <vector>")
+	if g.runtimeUsesGenerator() {
+		w.line("struct ivy_gen {virtual int choose(int rng,const char *name) = 0;};")
+	}
+	if g.usesZ3() {
+		w.line(`#include "z3++.h"`)
+	}
 	w.line(`#include "ivy_hash.hpp"`)
 	if g.usesWideBV() {
 		w.line(`#include "ivy_wide_uint.hpp"`)
 	}
-	w.line(`#include "ivy_threads.hpp"`)
-	if g.usesZ3() {
-		w.line("#include <utility>")
-		w.line(`#include "z3++.h"`)
-	}
-	w.blank()
 	w.line("typedef std::string __strlit;")
 	w.line("extern std::ofstream __ivy_out;")
 	w.line("void __ivy_exit(int);")
@@ -60,21 +48,23 @@ func (g *Generator) emitRuntimeHeaderPreamble(w *cppWriter) {
 		w.line("extern void ivy_check_progress(int, int);")
 		w.line("extern int choose(int, int);")
 	}
-	if g.runtimeUsesGenerator() {
-		w.line("#ifndef IVY2CPP_HAS_IVY_GEN")
-		w.line("#define IVY2CPP_HAS_IVY_GEN")
-		w.line("struct ivy_gen { virtual int choose(int rng, const char *name) = 0; virtual ~ivy_gen() {} };")
-		w.line("#endif")
-	}
+	w.blank()
 	emitHashThunkSupport(w)
+	w.blank()
+}
+
+func (g *Generator) emitRuntimeHeaderForwardDecls(w *cppWriter) {
+	w.line("class reader;")
+	w.line("class timer;")
 }
 
 func emitHashThunkSupport(w *cppWriter) {
 	w.line("template <typename D, typename R>")
 	w.open("struct thunk {")
 	w.line("virtual R operator()(const D &) = 0;")
-	w.line("int ___ivy_choose(int rng, const char *name, int id) { (void)rng; (void)name; (void)id; return 0; }")
-	w.line("virtual ~thunk() {}")
+	w.open("int ___ivy_choose(int rng,const char *name,int id) {")
+	w.line("return 0;")
+	w.close("")
 	w.close(";")
 	w.line("template <typename D, typename R, class HashFun = hash_space::hash<D> >")
 	w.open("struct hash_thunk {")
@@ -84,13 +74,10 @@ func emitHashThunkSupport(w *cppWriter) {
 	w.line("hash_thunk(thunk<D,R> *fun) : fun(fun) {}")
 	w.line("~hash_thunk() {}")
 	w.open("R &operator[](const D& arg) {")
-	w.line("std::pair<typename hash_space::hash_map<D,R,HashFun>::iterator,bool> foo = memo.insert(std::pair<D,R>(arg,R()));")
+	w.line("std::pair<typename hash_space::hash_map<D,R>::iterator,bool> foo = memo.insert(std::pair<D,R>(arg,R()));")
 	w.line("R &res = foo.first->second;")
 	w.line("if (foo.second && fun) res = (*fun)(arg);")
 	w.line("return res;")
-	w.close("")
-	w.open("bool operator==(const hash_thunk<D,R,HashFun> &other) const {")
-	w.line("return memo == other.memo;")
 	w.close("")
 	w.close(";")
 }
@@ -120,8 +107,9 @@ func (g *Generator) emitRuntimeClassMembers(w *cppWriter) {
 }
 
 func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
+	w.line("#include <sstream>")
 	w.line("#include <algorithm>")
-	w.line("#include <fstream>")
+	w.blank()
 	w.line("#include <iostream>")
 	w.line("#include <stdlib.h>")
 	w.line("#include <sys/types.h>")
@@ -144,8 +132,19 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.line("#include <string.h>")
 	w.line("#include <stdio.h>")
 	w.line("#include <string>")
-	w.line("#include <sstream>")
+	w.line("#if __cplusplus < 201103L")
+	w.line("#else")
 	w.line("#include <cstdint>")
+	w.line("#endif")
+	w.linef("typedef %s ivy_class;", g.ClassName)
+	w.line("std::ofstream __ivy_out;")
+	w.line("std::ofstream __ivy_modelfile;")
+	w.line("void __ivy_exit(int code){exit(code);}")
+	w.line(`#include "ivy_threads.hpp"`)
+	w.blank()
+}
+
+func (g *Generator) emitRuntimeValueIncludes(w *cppWriter) {
 	w.line(`#include "ivy_value.hpp"`)
 	if g.Config.Target == "repl" || g.Config.Target == "test" {
 		w.line(`#include "ivy_repl.hpp"`)
@@ -160,11 +159,6 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	if g.usesZ3() {
 		w.line(`#include "ivy_go_z3.hpp"`)
 	}
-	w.blank()
-	w.linef("typedef %s ivy_class;", g.ClassName)
-	w.line("std::ofstream __ivy_out;")
-	w.line("std::ofstream __ivy_modelfile;")
-	w.line("void __ivy_exit(int code) { exit(code); }")
 	w.blank()
 	// Forward declarations of per-enum operator<<, _arg<T>, __ser<T>,
 	// __deser<T>. Python ivy_to_cpp.py:2213-2223 emits these here.
@@ -295,9 +289,6 @@ func (g *Generator) emitRuntimeChoose(w *cppWriter) {
 		w.close("")
 		w.line("return 0;")
 	} else {
-		w.line("(void)rng;")
-		w.line("(void)name;")
-		w.line("(void)id;")
 		w.line("return 0;")
 	}
 	w.close("")

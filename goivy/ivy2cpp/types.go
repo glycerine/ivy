@@ -79,6 +79,9 @@ func cppScalarTypeWith(g *Generator, s goivy.Sort, className string) string {
 				return varName(name)
 			}
 			if name, ok := g.variantSubtypeName(st); ok {
+				if g.isPlainVariantSubtypeName(name) {
+					return "int"
+				}
 				if className != "" {
 					return className + "::" + varName(name)
 				}
@@ -380,6 +383,9 @@ func (g *Generator) cppZeroValue(s goivy.Sort) string {
 			return varName(name) + "()"
 		}
 		if name, ok := g.variantSubtypeName(s); ok {
+			if g.isPlainVariantSubtypeName(name) {
+				return "0"
+			}
 			return varName(name) + "()"
 		}
 	}
@@ -415,6 +421,9 @@ func (g *Generator) cppZeroValueInScope(s goivy.Sort) string {
 			return typeName + "()"
 		}
 		if name, ok := g.variantSubtypeName(s); ok {
+			if g.isPlainVariantSubtypeName(name) {
+				return "0"
+			}
 			typeName := varName(name)
 			if g.ClassName != "" {
 				typeName = g.ClassName + "::" + typeName
@@ -571,7 +580,7 @@ func (g *Generator) cppDestructorFieldAccess(field string, dom []goivy.Sort, rng
 		if len(args) == 1 {
 			return fmt.Sprintf("%s[%s]", base, args[0])
 		}
-		return fmt.Sprintf("%s[%s(%s)]", base, cppCTupleLocalNameWith(g, dom), strings.Join(args, ", "))
+		return fmt.Sprintf("%s[%s(%s)]", base, cppCTupleNameWith(g, dom, g.ClassName), strings.Join(args, ", "))
 	default:
 		return base
 	}
@@ -598,7 +607,7 @@ func (g *Generator) cppStorageAccessBase(base string, sort goivy.Sort, args []st
 		if len(args) == 1 {
 			return fmt.Sprintf("%s[%s]", base, args[0])
 		}
-		return fmt.Sprintf("%s[%s(%s)]", base, cppCTupleLocalNameWith(g, fs.Domain()), strings.Join(args, ", "))
+		return fmt.Sprintf("%s[%s(%s)]", base, cppCTupleNameWith(g, fs.Domain(), g.ClassName), strings.Join(args, ", "))
 	default:
 		return base
 	}

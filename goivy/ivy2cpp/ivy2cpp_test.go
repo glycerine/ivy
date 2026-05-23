@@ -854,8 +854,8 @@ after init {
 				"enum color",
 				"bool marked[2];",
 				// Two-phase quantified assignment per Python emit_assign.
-				"__ivy_tmp1[C] = false;",
-				"marked[C] = __ivy_tmp1[C];",
+				"__ivy_tmp0[C] = false;",
+				"marked[C] = __ivy_tmp0[C];",
 			},
 		},
 		{
@@ -1424,8 +1424,8 @@ after init {
 		"typedef unsigned idx;",
 		"bool marked[5];",
 		"for (unsigned I = 2; I <= 4; I++)",
-		"__ivy_tmp1[I] = true;",
-		"marked[I] = __ivy_tmp1[I];",
+		"__ivy_tmp0[I] = true;",
+		"marked[I] = __ivy_tmp0[I];",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -2782,10 +2782,10 @@ after init {
 	// pre-assignment value. Match that structure.
 	for _, want := range []string{
 		"void paint::__init()",
-		"bool __ivy_tmp1[2];",
+		"bool __ivy_tmp0[2];",
 		"for (color C : {red, green})",
-		"__ivy_tmp1[C] = false;",
-		"marked[C] = __ivy_tmp1[C];",
+		"__ivy_tmp0[C] = false;",
+		"marked[C] = __ivy_tmp0[C];",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
@@ -2810,8 +2810,8 @@ after init {
 	for _, want := range []string{
 		"typedef unsigned idx;",
 		"for (unsigned I = 0; I <= 2; I++)",
-		"__ivy_tmp1[I] = false;",
-		"marked[I] = __ivy_tmp1[I];",
+		"__ivy_tmp0[I] = false;",
+		"marked[I] = __ivy_tmp0[I];",
 	} {
 		if !strings.Contains(out.Header, want) && !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)

@@ -18,13 +18,22 @@ func (g *Generator) variantIsaExpr(superExpr string, super, sub goivy.Sort) stri
 	return fmt.Sprintf("((%s).tag == %d)", superExpr, g.variantIndex(super, sub))
 }
 
+func (g *Generator) variantClassName(className string) string {
+	if className != "" || g == nil {
+		return className
+	}
+	return g.ClassName
+}
+
 func (g *Generator) variantDowncastExpr(superExpr string, super, sub goivy.Sort, className string) string {
+	className = g.variantClassName(className)
 	superType := cppScalarTypeWith(g, super, className)
 	subType := cppScalarTypeWith(g, sub, className)
 	return fmt.Sprintf("%s::unwrap< %s >(%s)", superType, subType, superExpr)
 }
 
 func (g *Generator) variantUpcastExpr(super, sub goivy.Sort, expr string, className string) string {
+	className = g.variantClassName(className)
 	idx := g.variantIndex(super, sub)
 	superType := cppScalarTypeWith(g, super, className)
 	subType := cppScalarTypeWith(g, sub, className)
@@ -45,7 +54,9 @@ func variantSolverRelationName(super, sub goivy.Sort) string {
 func (g *Generator) emitVariantWrapperDecl(w *cppWriter, name string) {
 	variants := g.Mod.Variants[name]
 	typeName := varName(name)
-	w.open(fmt.Sprintf("struct %s {", typeName))
+	w.open(fmt.Sprintf("class %s {", typeName))
+	w.line("public:")
+	w.indent++
 	w.open("struct wrap {")
 	w.line("virtual wrap *dup() = 0;")
 	w.line("virtual bool deref() = 0;")
@@ -68,12 +79,12 @@ func (g *Generator) emitVariantWrapperDecl(w *cppWriter, name string) {
 	w.open(fmt.Sprintf("%s(const %s &other) {", typeName, typeName))
 	w.line("tag = other.tag;")
 	w.line("ptr = other.ptr ? other.ptr->dup() : 0;")
-	w.close("")
+	w.close(";")
 	w.open(fmt.Sprintf("%s &operator=(const %s &other) {", typeName, typeName))
 	w.line("tag = other.tag;")
 	w.line("ptr = other.ptr ? other.ptr->dup() : 0;")
 	w.line("return *this;")
-	w.close("")
+	w.close(";")
 	w.open(fmt.Sprintf("~%s() {", typeName))
 	w.line("if (ptr) { if (!ptr->deref()) delete ptr; }")
 	w.close("")
@@ -84,7 +95,7 @@ func (g *Generator) emitVariantWrapperDecl(w *cppWriter, name string) {
 	w.open("switch (tag) {")
 	superSort := g.Mod.Sig.Sorts.Get(name)
 	for i, v := range variants {
-		subType := cppScalarTypeWith(g, v, "")
+		subType := cppScalarTypeWith(g, v, g.variantClassName(""))
 		downcast := g.variantDowncastExpr("(*this)", superSort, v, "")
 		w.linef("case %d: return %d + hash_space::hash<%s>()(%s);", i, i, subType, downcast)
 	}
@@ -98,12 +109,10 @@ func (g *Generator) emitVariantWrapperDecl(w *cppWriter, name string) {
 	w.line("twrap<T> *p = static_cast<twrap<T> *>(x.ptr);")
 	w.open("if (p->refs > 1) {")
 	w.line("p = new twrap<T>(p->item);")
-	w.line("x.ptr = p;")
 	w.close("")
 	w.line("return ((static_cast<twrap<T> *>(p))->item);")
 	w.close("")
-	w.linef("friend bool operator==(const %s &s, const %s &t);", typeName, typeName)
-	w.linef("friend std::ostream &operator<<(std::ostream &s, const %s &t);", typeName)
+	w.indent--
 	w.close(";")
 }
 
@@ -119,26 +128,39 @@ func (g *Generator) emitVariantImpls(w *cppWriter) {
 	}
 }
 
+func (g *Generator) emitVariantEqualityForwardDecls(w *cppWriter) {
+	if g == nil || g.Mod == nil {
+		return
+	}
+	for _, name := range g.Mod.SortOrder {
+		if !g.isVariantSuperName(name) {
+			continue
+		}
+		typeName := g.ClassName + "::" + varName(name)
+		w.linef("inline bool operator ==(const %s &s, const %s &t);;", typeName, typeName)
+	}
+}
+
+func (g *Generator) emitVariantEqualityInlines(w *cppWriter) {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
+		return
+	}
+	for _, name := range g.Mod.SortOrder {
+		if !g.isVariantSuperName(name) {
+			continue
+		}
+		super := g.Mod.Sig.Sorts.Get(name)
+		typeName := g.ClassName + "::" + varName(name)
+		g.emitVariantEqualityImpl(w, super, typeName)
+	}
+}
+
 func (g *Generator) emitVariantImpl(w *cppWriter, name string) {
 	super := g.Mod.Sig.Sorts.Get(name)
 	typeName := g.ClassName + "::" + varName(name)
 	w.linef("int %s::temp_counter = 0;", typeName)
 	w.blank()
-	g.emitVariantEqualityImpl(w, super, typeName)
 	g.emitVariantStreamImpl(w, super, typeName)
-	// Emit per-subtype _arg<> specializations BEFORE the supertype's
-	// _arg<>: the supertype's body instantiates _arg<sub>, and C++ ODR
-	// forbids specializing _arg<sub> after it has been implicitly
-	// instantiated. Variant leaves are emitted as `struct a { long long
-	// __value; a(long long v = 0); operator long long() const; ... };`
-	// (generator.go:emitVariantLeafStruct), so the specialization
-	// parses long long and constructs the leaf.
-	for _, sub := range g.Mod.Variants[sortName(super)] {
-		if _, ok := g.Mod.SortDestructors.Get2(sortName(sub)); ok {
-			continue // destructor.go already emits _arg<> for sub.
-		}
-		g.emitVariantSubArgImpl(w, sub)
-	}
 	g.emitVariantArgImpl(w, super, typeName)
 	g.emitVariantSerImpl(w, super, typeName)
 	g.emitVariantDeserImpl(w, super, typeName)
@@ -188,21 +210,23 @@ func (g *Generator) emitVariantStreamImpl(w *cppWriter, super goivy.Sort, typeNa
 func (g *Generator) emitVariantArgImpl(w *cppWriter, super goivy.Sort, typeName string) {
 	sortText := sortName(super)
 	w.open(fmt.Sprintf("template <> %s _arg<%s>(std::vector<ivy_value> &args, unsigned idx, long long bound) {", typeName, typeName))
-	w.line("(void)bound;")
-	w.open("if (args[idx].atom.size()) {")
+	w.line("if (args[idx].atom.size())")
+	w.indent++
 	w.linef(`throw out_of_bounds("unexpected value for sort %s: " + args[idx].atom, args[idx].pos);`, escapeString(sortText))
-	w.close("")
-	w.open("if (args[idx].fields.size() == 0) {")
+	w.indent--
+	w.line("if (args[idx].fields.size() == 0)")
+	w.indent++
 	w.linef("return %s();", typeName)
-	w.close("")
-	w.open("if (args[idx].fields.size() != 1) {")
+	w.indent--
+	w.line("if (args[idx].fields.size() != 1)")
+	w.indent++
 	w.linef(`throw out_of_bounds("too many fields for sort %s (expected one)", args[idx].pos);`, escapeString(sortText))
-	w.close("")
+	w.indent--
 	for _, sub := range g.Mod.Variants[sortText] {
 		upcast := g.variantUpcastExpr(super, sub, g.argExprForSortBound("args[idx].fields[0].fields", "0", sub, "0"), g.ClassName)
 		w.linef("if (args[idx].fields[0].atom == %s) return %s;", strconv.Quote(sortName(sub)), upcast)
 	}
-	w.linef(`throw out_of_bounds("unexpected field sort %s: " + args[idx].fields[0].atom, args[idx].pos);`, escapeString(sortText))
+	w.line(`throw out_of_bounds("unexpected field sort SORTNAME: " + args[idx].fields[0].atom, args[idx].pos);`)
 	w.close("")
 	w.blank()
 }
@@ -251,7 +275,7 @@ func (g *Generator) emitVariantZ3Impl(w *cppWriter, super goivy.Sort, typeName s
 		w.open("if (av) {")
 		w.line("z3::expr_vector univ(g.ctx, av);")
 		w.open("for (unsigned i = 0; i < univ.size(); i++) {")
-		w.open("if (z3::eq(g.model.eval(pto(v, univ[i]), true), g.ctx.bool_val(true))) {")
+		w.open("if (eq(g.model.eval(pto(v, univ[i]), true), g.ctx.bool_val(true))) {")
 		w.linef("%s tmp;", subType)
 		w.line("__from_solver(g, univ[i], tmp);")
 		w.linef("res = %s;", g.variantUpcastExpr(super, sub, "tmp", g.ClassName))
@@ -262,7 +286,7 @@ func (g *Generator) emitVariantZ3Impl(w *cppWriter, super goivy.Sort, typeName s
 		w.line("}")
 	}
 	w.close("")
-	w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, const %s &val) {", typeName, typeName))
+	w.open(fmt.Sprintf("template <> z3::expr __to_solver<%s>(gen &g, const z3::expr &v, %s &val) {", typeName, typeName))
 	for i, sub := range g.Mod.Variants[sortText] {
 		subType := cppScalarTypeWith(g, sub, g.ClassName)
 		relName := variantSolverRelationName(super, sub)
@@ -270,7 +294,7 @@ func (g *Generator) emitVariantZ3Impl(w *cppWriter, super goivy.Sort, typeName s
 		w.linef("z3::func_decl pto = g.ctx.function(%s, g.sort(%s), g.sort(%s), g.ctx.bool_sort());", strconv.Quote(relName), strconv.Quote(sortText), strconv.Quote(sortName(sub)))
 		w.linef("z3::expr X = g.ctx.constant(\"X\", g.sort(%s));", strconv.Quote(sortName(sub)))
 		w.linef("%s tmp = %s;", subType, g.variantDowncastExpr("val", super, sub, g.ClassName))
-		w.line("return z3::exists(X, pto(v, X) && __to_solver(g, X, tmp));")
+		w.line("return exists(X, pto(v, X) && __to_solver(g, X, tmp));")
 		w.close("")
 	}
 	w.line("z3::expr conj = g.ctx.bool_val(false);")
@@ -280,17 +304,18 @@ func (g *Generator) emitVariantZ3Impl(w *cppWriter, super goivy.Sort, typeName s
 		w.indent++
 		w.linef("z3::func_decl pto = g.ctx.function(%s, g.sort(%s), g.sort(%s), g.ctx.bool_sort());", strconv.Quote(relName), strconv.Quote(sortText), strconv.Quote(sortName(sub)))
 		w.linef("z3::expr Y = g.ctx.constant(\"Y\", g.sort(%s));", strconv.Quote(sortName(sub)))
-		w.line("conj = conj && z3::forall(Y, !pto(v, Y));")
+		w.line("conj = conj && forall(Y, !pto(v, Y));")
 		w.indent--
 		w.line("}")
 	}
 	w.line("return conj;")
 	w.close("")
 	w.open(fmt.Sprintf("template <> void __randomize<%s>(gen &g, const z3::expr &apply_expr, const std::string &sort_name) {", typeName))
-	w.line("(void)sort_name;")
 	w.line("std::ostringstream os;")
 	w.linef("os << %s << %s::temp_counter++;", strconv.Quote("__"+sortText+"__tmp"), typeName)
 	w.line("std::string temp = os.str();")
+	w.line("z3::sort range = apply_expr.get_sort();")
+	w.line("z3::expr disj = g.ctx.bool_val(false);")
 	w.linef("int tag = rand() %% %d;", len(g.Mod.Variants[sortText]))
 	for i, sub := range g.Mod.Variants[sortText] {
 		subType := cppScalarTypeWith(g, sub, g.ClassName)

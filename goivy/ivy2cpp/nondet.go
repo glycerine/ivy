@@ -55,6 +55,10 @@ func (g *Generator) mkNondetSym(w *cppWriter, local goivy.Expr, name string, uni
 	if local == nil {
 		return
 	}
+	lhsName := goivy.ExprName(local)
+	if lhsName == "" {
+		lhsName = name
+	}
 	sort := local.NodeSort()
 
 	// Python `if is_native_sym(sym) or ctype(sym.sort.rng) == '__strlit' or sym.sort.rng in sort_to_cpptype: return`.
@@ -69,20 +73,20 @@ func (g *Generator) mkNondetSym(w *cppWriter, local goivy.Expr, name string, uni
 
 	fs, isFunc := sort.(*goivy.LogicFunctionSort)
 	if !isFunc {
-		g.mkNondetValue(w, varName(name), sort, name, uniqueID)
+		g.mkNondetValue(w, varName(lhsName), sort, name, uniqueID)
 		return
 	}
 	dom := fs.Domain()
 	if len(dom) == 0 {
 		// Function sort with empty domain — degenerate; treat as scalar
 		// of the range sort.
-		g.mkNondet(w, varName(name), 0, name, uniqueID, fs.Range())
+		g.mkNondet(w, varName(lhsName), 0, name, uniqueID, fs.Range())
 		return
 	}
 	st := cppFunctionStorageFor(g, dom, fs.Range(), "")
 	if st.Kind == cppStorageHashThunk {
 		thunkExpr := g.makeNondetThunk(w, dom, fs.Range(), name, uniqueID)
-		w.linef("%s = %s;", varName(name), thunkExpr)
+		w.linef("%s = %s;", varName(lhsName), thunkExpr)
 		return
 	}
 	// Bounded-array storage: open per-domain loops and nondet-assign
@@ -91,7 +95,7 @@ func (g *Generator) mkNondetSym(w *cppWriter, local goivy.Expr, name string, uni
 	indices := make([]string, len(dom))
 	opened := 0
 	for i, d := range dom {
-		v, err := goivy.NewVariable(fmt.Sprintf("X%d", i), d)
+		v, err := goivy.NewVariable(fmt.Sprintf("X__%d", i), d)
 		if err != nil {
 			panic(fmt.Sprintf("ivy2cpp: mkNondetSym failed to synthesize loop variable for %s: %s", sortName(d), err.Error()))
 		}
@@ -104,7 +108,7 @@ func (g *Generator) mkNondetSym(w *cppWriter, local goivy.Expr, name string, uni
 		opened++
 		indices[i] = varName(v.Name)
 	}
-	lhs := g.cppStorageAccess(name, sort, indices, "")
+	lhs := g.cppStorageAccess(lhsName, sort, indices, "")
 	g.mkNondetValue(w, lhs, fs.Range(), name, uniqueID)
 	for i := 0; i < opened; i++ {
 		w.close("")
@@ -222,6 +226,9 @@ func (g *Generator) nondetSkipSort(s goivy.Sort) bool {
 	if g.hasStringInterp(s) {
 		return true
 	}
+	if name := sortName(s); name != "" && g.isVariantSuperName(name) {
+		return true
+	}
 	return false
 }
 
@@ -244,28 +251,17 @@ func (g *Generator) nondetSkipSort(s goivy.Sort) bool {
 // `to_z3` method; that path is documented as a follow-up in thunk.go
 // and is not addressed here.
 func (g *Generator) makeNondetThunk(w *cppWriter, domSorts []goivy.Sort, rngSort goivy.Sort, name string, uniqueID int64) string {
-	domT := cppCTupleNameWith(g, domSorts, "")
-	rangeT := g.cppType(rngSort)
-	defW := w
-	defDomT := domT
-	defRangeT := rangeT
-	defClassName := ""
-	if g.fileScopeThunks {
-		defW = &g.thunkDefs
-		defDomT = cppCTupleNameWith(g, domSorts, g.ClassName)
-		defRangeT = g.cppQualifiedType(rngSort, g.ClassName)
-		defClassName = g.ClassName
-	}
+	domT := cppCTupleNameWith(g, domSorts, g.ClassName)
+	rangeT := g.cppQualifiedType(rngSort, g.ClassName)
 	thunkName := g.nextThunkName()
-	defW.open(fmt.Sprintf("struct %s : thunk<%s, %s> {", thunkName, defDomT, defRangeT))
-	defW.linef("%s() {}", thunkName)
-	defW.open(fmt.Sprintf("%s operator()(const %s &arg) {", defRangeT, defDomT))
-	tmp := g.nextTemp("__ivy_havoc")
-	defW.linef("%s %s;", defRangeT, tmp)
-	g.mkNondetValueScoped(defW, tmp, rngSort, name, uniqueID, defClassName)
-	defW.linef("return %s;", tmp)
-	defW.close("")
-	defW.close(";")
-	defW.blank()
+	w.open(fmt.Sprintf("struct %s : thunk<%s,%s> {", thunkName, domT, rangeT))
+	w.linef("%s()  {}", thunkName)
+	w.open(fmt.Sprintf("%s operator()(const %s &arg) {", rangeT, domT))
+	tmp := g.nextTemp("__tmp")
+	w.linef("%s %s;", rangeT, tmp)
+	g.mkNondetValueScoped(w, tmp, rngSort, name, uniqueID, g.ClassName)
+	w.linef("return %s;", tmp)
+	w.close("")
+	w.close(";")
 	return fmt.Sprintf("hash_thunk<%s, %s>(new %s())", domT, rangeT, thunkName)
 }

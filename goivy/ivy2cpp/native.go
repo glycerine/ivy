@@ -482,7 +482,14 @@ func (g *Generator) emitNativeClassTypeDecl(w *cppWriter, name, base string) {
 // a thunk constructor call) and the collectCallbackActions pass in
 // native_thunk.go.
 func (g *Generator) isCallbackAction(arg goivy.Node) (string, bool) {
-	if g == nil || g.Mod == nil || g.Mod.Actions == nil {
+	if g == nil {
+		return "", false
+	}
+	return callbackActionName(g.Mod, arg)
+}
+
+func callbackActionName(mod *goivy.Module, arg goivy.Node) (string, bool) {
+	if mod == nil || mod.Actions == nil {
 		return "", false
 	}
 	rn, ok := arg.(interface{ Relname() string })
@@ -490,7 +497,7 @@ func (g *Generator) isCallbackAction(arg goivy.Node) (string, bool) {
 		return "", false
 	}
 	name := rn.Relname()
-	if _, ok := g.Mod.Actions.Get2(name); !ok {
+	if _, ok := mod.Actions.Get2(name); !ok {
 		return "", false
 	}
 	return name, true

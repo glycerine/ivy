@@ -13,6 +13,7 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 	}
 	switch a := act.(type) {
 	case *goivy.LogicSequence:
+		w.open("{")
 		for _, child := range a.Elems {
 			if childAct, ok := child.(goivy.Action); ok {
 				g.emitAction(w, childAct)
@@ -20,6 +21,7 @@ func (g *Generator) emitAction(w *cppWriter, act goivy.Action) {
 				g.unsupported(w, "unsupported sequence child %T: %s", child, fmt.Sprint(child))
 			}
 		}
+		w.close("")
 	case *goivy.LogicAssignAction:
 		g.emitAssign(w, a)
 	case *goivy.LogicHavocAction:
@@ -1045,7 +1047,6 @@ func debugEventName(e goivy.Expr) string {
 	}
 	return name
 }
-
 
 func escapeString(s string) string {
 	s = strings.ReplaceAll(s, `\`, `\\`)

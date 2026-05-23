@@ -32,6 +32,9 @@ func (g *Generator) emitBVApply(name string, a *goivy.Apply) (string, bool, erro
 	if strings.HasPrefix(name, "bfe[") {
 		return g.emitBFEApply(name, a)
 	}
+	if isNamedBVOperator(name) && g.signatureHasSymbol(name) {
+		return "", false, nil
+	}
 	result, ok := g.cppInterpType(a.NodeSort())
 	if !ok || result.Kind != cppInterpBV {
 		return "", false, nil
@@ -126,6 +129,23 @@ func (g *Generator) emitBVApply(name string, a *goivy.Apply) (string, bool, erro
 			return "", true, fmt.Errorf("ivy2cpp: unknown BV operator %s/%d", name, len(a.Terms))
 		}
 		return "", false, nil
+	}
+}
+
+func (g *Generator) signatureHasSymbol(name string) bool {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil || name == "" {
+		return false
+	}
+	_, ok := g.Mod.Sig.Symbols.Get2(name)
+	return ok
+}
+
+func isNamedBVOperator(name string) bool {
+	switch name {
+	case "bvand", "bvor", "bvxor", "bvnot", "bvneg", "bvshl", "bvlshr", "bvashr", "bvadd", "bvsub", "bvmul", "bvudiv", "bvurem":
+		return true
+	default:
+		return false
 	}
 }
 

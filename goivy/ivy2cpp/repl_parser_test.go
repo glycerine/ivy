@@ -81,14 +81,14 @@ func TestParserBitvectorWidthN(t *testing.T) {
 		width int
 		want  []string
 	}{
-		{width: 1, want: []string{"typedef unsigned word;", "_arg<unsigned>(args, 0, 2)"}},
-		{width: 2, want: []string{"typedef unsigned word;", "_arg<unsigned>(args, 0, 4)"}},
-		{width: 8, want: []string{"typedef unsigned word;", "_arg<unsigned>(args, 0, 256)"}},
-		{width: 16, want: []string{"typedef unsigned word;", "_arg<unsigned>(args, 0, 65536)"}},
-		{width: 32, want: []string{"typedef unsigned word;", "_arg<unsigned>(args, 0, 4294967296)"}},
-		{width: 64, want: []string{"typedef unsigned long long word;", "_arg<unsigned long long>(args, 0, 0)"}},
-		{width: 128, want: []string{"typedef unsigned __int128 word;", "_arg<unsigned __int128>(args, 0, 0)"}},
-		{width: 256, want: []string{"typedef ivy_uint<256> word;", "_arg<bvparse256::word>(args, 0, 0)", "template <> ivy_uint<256> _arg<ivy_uint<256>>"}},
+		{width: 1, want: []string{"_arg<unsigned>(args, 0, 2)"}},
+		{width: 2, want: []string{"_arg<unsigned>(args, 0, 4)"}},
+		{width: 8, want: []string{"_arg<unsigned>(args, 0, 256)"}},
+		{width: 16, want: []string{"_arg<unsigned>(args, 0, 65536)"}},
+		{width: 32, want: []string{"_arg<unsigned>(args, 0, 4294967296)"}},
+		{width: 64, want: []string{"_arg<unsigned long long>(args, 0, 0)"}},
+		{width: 128, want: []string{"_arg<unsigned __int128>(args, 0, 0)"}},
+		{width: 256, want: []string{"_arg<ivy_uint<256>>(args, 0, 0)", "template <> ivy_uint<256> _arg<ivy_uint<256>>"}},
 	}
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("bv%d", tt.width), func(t *testing.T) {
@@ -279,8 +279,8 @@ export echo
 		"template <> variantparse::msg _arg<variantparse::msg>(std::vector<ivy_value> &args, unsigned idx, long long bound) {",
 		`throw out_of_bounds("unexpected value for sort msg: " + args[idx].atom, args[idx].pos);`,
 		`if (args[idx].fields[0].atom == "request") return variantparse::msg(0, new variantparse::msg::twrap<variantparse::request>(_arg<variantparse::request>(args[idx].fields[0].fields, 0, 0)));`,
-		`if (args[idx].fields[0].atom == "ack") return variantparse::msg(1, new variantparse::msg::twrap<variantparse::ack>(_arg<variantparse::ack>(args[idx].fields[0].fields, 0, 0)));`,
-		`throw out_of_bounds("unexpected field sort msg: " + args[idx].fields[0].atom, args[idx].pos);`,
+		`if (args[idx].fields[0].atom == "ack") return variantparse::msg(1, new variantparse::msg::twrap<int>(_arg<int>(args[idx].fields[0].fields, 0, 0)));`,
+		`throw out_of_bounds("unexpected field sort SORTNAME: " + args[idx].fields[0].atom, args[idx].pos);`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("variant parser missing %q:\n%s", want, out.Impl)

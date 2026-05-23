@@ -25,6 +25,9 @@ func (g *Generator) enumSortsForArgSpecs() []*goivy.LogicEnumeratedSort {
 		if encoded != nil && encoded[name] {
 			continue
 		}
+		if !g.sortNeededForGeneratedDecl(name) {
+			continue
+		}
 		s, ok := g.Mod.Sig.Sorts.Get2(name)
 		if !ok {
 			continue
@@ -100,8 +103,10 @@ func (g *Generator) emitEnumSortArgSpecImpls(w *cppWriter) {
 	for _, st := range enums {
 		g.emitEnumOperatorOut(w, st)
 		g.emitEnumSer(w, st)
-		g.emitEnumArg(w, st)
-		g.emitEnumDeser(w, st)
+		if g.Config.Target == "repl" || g.Config.Target == "test" {
+			g.emitEnumArg(w, st)
+			g.emitEnumDeser(w, st)
+		}
 	}
 	w.blank()
 }
