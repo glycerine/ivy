@@ -1461,10 +1461,11 @@ func (g *Generator) emitTestLoopBody(w *cppWriter) {
 	w.line("std::vector<double> weights;")
 	w.blank()
 	names := g.publicActionNamesSorted()
+	initActions := g.initialMixinActionNames()
 	totalweight := 0.0
 	numGens := 0
 	for _, name := range names {
-		if isFinalizeName(name) {
+		if initActions[name] || isFinalizeName(name) {
 			continue
 		}
 		className := g.actionGeneratorClassName(name)
@@ -1731,8 +1732,9 @@ func (g *Generator) emitTestDefaults(w *cppWriter) {
 func (g *Generator) emitGeneratorInvocations(w *cppWriter) {
 	w.line("init_gen my_init_gen(ivy);")
 	w.line("my_init_gen.generate(ivy);")
+	initActions := g.initialMixinActionNames()
 	for name := range g.Mod.PublicActions.All() {
-		if isFinalizeName(name) {
+		if initActions[name] || isFinalizeName(name) {
 			continue
 		}
 		className := g.actionGeneratorClassName(name)

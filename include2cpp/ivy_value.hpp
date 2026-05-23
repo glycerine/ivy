@@ -95,7 +95,7 @@ struct ivy_binary_deser : public ivy_deser {
     std::vector<char> inp;
     int pos;
     std::vector<int> lenstack;
-    ivy_binary_deser(const std::vector<char> &inp) : inp(inp),pos(0) {}
+    ivy_binary_deser(const std::vector<char> &_inp) : inp(_inp),pos(0) {}
     virtual bool more(unsigned bytes) {return inp.size() >= pos + bytes;}
     virtual bool can_end() {return pos == inp.size();}
     void get(long long &res) {
@@ -151,8 +151,8 @@ struct ivy_binary_deser : public ivy_deser {
 struct ivy_socket_deser : public ivy_binary_deser {
       int sock;
     public:
-      ivy_socket_deser(int sock, const std::vector<char> &inp)
-          : ivy_binary_deser(inp), sock(sock) {}
+      ivy_socket_deser(int _sock, const std::vector<char> &_inp)
+          : ivy_binary_deser(_inp), sock(_sock) {}
     virtual bool more(unsigned bytes) {
         while (inp.size() < pos + bytes) {
             int oldsize = inp.size();
@@ -174,12 +174,12 @@ struct ivy_socket_deser : public ivy_binary_deser {
 struct out_of_bounds {
     std::string txt;
     int pos;
-    out_of_bounds(int _idx, int pos = 0) : pos(pos){
+    out_of_bounds(int _idx, int _pos = 0) : pos(_pos){
         std::ostringstream os;
         os << "argument " << _idx+1;
         txt = os.str();
     }
-    out_of_bounds(const std::string &s, int pos = 0) : txt(s), pos(pos) {}
+    out_of_bounds(const std::string &s, int _pos = 0) : txt(s), pos(_pos) {}
 };
 
 template <class T> T _arg(std::vector<ivy_value> &args, unsigned idx, long long bound);

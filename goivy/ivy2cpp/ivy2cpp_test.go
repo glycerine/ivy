@@ -5633,6 +5633,9 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	if strings.Contains(out.Impl, "init__after") {
+		t.Fatalf("target=test must not generate action generators for init mixin actions:\n%s", out.Impl)
+	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
 }

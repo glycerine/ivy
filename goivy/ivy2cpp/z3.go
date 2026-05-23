@@ -576,12 +576,13 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 	w.close(";")
 	w.blank()
 
+	initActions := g.initialMixinActionNames()
 	// Build action_gen plans up front so the class header and impl
 	// emission share the same analysis (inputs computed from
 	// reverse_image, etc.).
 	plans := make(map[string]*actionGenPlan)
 	for name, act := range g.Mod.Actions.All() {
-		if !g.Mod.PublicActions.Get(name) {
+		if initActions[name] || !g.Mod.PublicActions.Get(name) {
 			continue
 		}
 		if isFinalizeName(name) {

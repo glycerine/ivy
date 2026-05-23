@@ -74,7 +74,7 @@ func emitHashThunkSupport(w *cppWriter) {
 	w.line("thunk<D,R> *fun;")
 	w.line("hash_space::hash_map<D,R,HashFun> memo;")
 	w.line("hash_thunk() : fun(0) {}")
-	w.line("hash_thunk(thunk<D,R> *fun) : fun(fun) {}")
+	w.line("hash_thunk(thunk<D,R> *_fun) : fun(_fun) {}")
 	w.line("~hash_thunk() {}")
 	w.open("R &operator[](const D& arg) {")
 	w.line("std::pair<typename hash_space::hash_map<D,R>::iterator,bool> foo = memo.insert(std::pair<D,R>(arg,R()));")
