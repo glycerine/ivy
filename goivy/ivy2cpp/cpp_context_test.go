@@ -50,7 +50,7 @@ func TestCppContextHasAllPythonAttrs(t *testing.T) {
 
 func readCppContextAttrs(t *testing.T) map[string][]string {
 	t.Helper()
-	data, err := os.ReadFile("testdata/cpp_context_attrs.yaml")
+	data, err := os.ReadFile("test_vec/cpp_context_attrs.yaml")
 	if err != nil {
 		t.Fatalf("read cpp context attrs: %v", err)
 	}

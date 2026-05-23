@@ -1,0 +1,19 @@
+#lang ivy1.7
+type value = {zero, one}
+object client = {
+    individual last : value
+    action send(v:value) = {
+        last := v
+    }
+}
+object server = {
+    individual seen : value
+    action recv(v:value) = {
+        seen := v
+    }
+}
+export client.send
+export server.recv
+isolate iso_client = client with server
+isolate iso_server = server with client
+extract iso_impl = client,server

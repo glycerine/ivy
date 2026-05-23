@@ -1,0 +1,11 @@
+#lang ivy1.7
+type idx = {2..7}
+individual saved : idx
+after init {
+    saved := 2
+}
+action set(i:idx) returns(out:idx) = {
+    saved := i;
+    out := saved
+}
+export set

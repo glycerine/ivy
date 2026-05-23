@@ -1,0 +1,8 @@
+#lang ivy1.7
+type color = {red, green, blue}
+individual saved : color
+action choose(c:color) returns(out:color) = {
+    saved := c;
+    out := saved
+}
+export choose

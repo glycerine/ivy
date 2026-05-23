@@ -1,0 +1,47 @@
+# Python ivy_cpp.py context model classes and the Go fields that carry the
+# same state. The test reads this as a small line-oriented YAML fixture.
+
+- class: CppFile
+  fields: Filename, Mode, Indent
+
+- class: CppText
+  fields: Code
+
+- class: DeadCode
+  fields:
+
+- class: Context
+  fields:
+
+- class: CppContext
+  fields: Globals, Impls, Members, Locals, Expr, Classname, GlobalIncludes, ImplIncludes, OnceGlobals
+
+- class: CppClass
+  fields: Classname, Baseclass, Members
+
+- class: CppClassName
+  fields: Classname
+
+- class: CppArray
+  fields: CppType, Dims, Name
+
+- class: CppFunction
+  fields: CppType, ArgTypes, Name
+
+- class: CppReference
+  fields: CppType, Name, Const
+
+- class: CppVector
+  fields: CppType, Name
+
+- class: TypeDef
+  fields: OldType, NewName
+
+- class: CppMember
+  fields: CppType, Name, Static, Inline
+
+- class: CppLocal
+  fields: CppMember
+
+- class: CppScope
+  fields: Code

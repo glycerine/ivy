@@ -1,0 +1,12 @@
+#lang ivy1.7
+type color = {red, green}
+type byte
+interpret byte -> bv[8]
+type cell
+destructor shade(C:cell) : color
+destructor bits(C:cell) : byte
+individual saved : cell
+action store(c:cell) = {
+    saved := c
+}
+export store

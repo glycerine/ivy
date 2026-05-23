@@ -1,0 +1,7 @@
+#lang ivy1.7
+type key
+relation seen(K:key)
+action clear_all = {
+    seen(K) := false
+}
+export clear_all

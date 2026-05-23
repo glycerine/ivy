@@ -48,7 +48,7 @@ func TestParserCoverageMatrixMatchesPython(t *testing.T) {
 
 func readParserMatrix(t *testing.T) map[string]map[string]string {
 	t.Helper()
-	data, err := os.ReadFile("testdata/parser_matrix.yaml")
+	data, err := os.ReadFile("test_vec/parser_matrix.yaml")
 	if err != nil {
 		t.Fatalf("read parser matrix: %v", err)
 	}
@@ -190,7 +190,7 @@ export echo
 	if !strings.Contains(runtime, "res < 0 || res >= bound") {
 		t.Fatalf("runtime integer _arg<T> lost Python-style bound check:\n%s", runtime)
 	}
-	if want := strings.TrimSpace(readTestdata(t, "testdata/python_errors/range_out_of_bounds.txt")); want == "" {
+	if want := strings.TrimSpace(readTestVec(t, "test_vec/python_errors/range_out_of_bounds.txt")); want == "" {
 		t.Fatalf("captured Python range error fixture is empty")
 	}
 	compileGeneratedCPP(t, out)
@@ -343,7 +343,7 @@ export echo
 		t.Fatalf("Generate: %v", err)
 	}
 	_, stderr := runGeneratedReplSlow(t, out, "echo(8)\n")
-	want := strings.TrimSpace(readTestdata(t, "testdata/python_errors/range_out_of_bounds.txt"))
+	want := strings.TrimSpace(readTestVec(t, "test_vec/python_errors/range_out_of_bounds.txt"))
 	if got := strings.TrimSpace(stderr); got != want {
 		t.Fatalf("range parser stderr mismatch:\n got: %q\nwant: %q", got, want)
 	}
@@ -370,7 +370,7 @@ func runGeneratedReplSlow(t *testing.T, out *Output, input string) (string, stri
 	return stdout.String(), stderr.String()
 }
 
-func readTestdata(t *testing.T, path string) string {
+func readTestVec(t *testing.T, path string) string {
 	t.Helper()
 	data, err := os.ReadFile(path)
 	if err != nil {

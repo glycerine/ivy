@@ -12,7 +12,7 @@ env XTRACE_OFF=1 ORACLE_TEST=1 go test ./ivy2cpp -run TestOracleSingle -v -count
 ```
 
 Current result: all 14 oracle fixtures run, and all are still marked
-`EXPECTED_FAIL` in `testdata/oracle/STATUS.md`. After fixing the initial
+`EXPECTED_FAIL` in `test_vec/oracle/STATUS.md`. After fixing the initial
 class-name/file-name mismatch in the harness, the first concrete
 divergence for every fixture is in the shared runtime scaffold.
 
@@ -74,7 +74,7 @@ For each fixture:
   exact `ivy_to_cpp.py` behavior over local style.
 - Add or update a focused unit test for that divergence.
 - Promote the fixture from `EXPECTED_FAIL` to `PASS` in
-  `testdata/oracle/STATUS.md`.
+  `test_vec/oracle/STATUS.md`.
 - Keep going until all 14 fixtures are `PASS`.
 
 ## TODO3-003 - Turn the oracle status policy into a hard gate

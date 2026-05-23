@@ -1919,7 +1919,7 @@ Status:
   generated globals/impl text and once-only native snippets flow
   through the context model while preserving existing output behavior.
 - Added `goivy/ivy2cpp/cpp_context_test.go` and
-  `goivy/ivy2cpp/testdata/cpp_context_attrs.yaml`, covering
+  `goivy/ivy2cpp/test_vec/cpp_context_attrs.yaml`, covering
   context sections, scoped members/locals, temp naming,
   once-global de-duplication, dead-code behavior, and deterministic
   integration through `Generate`.
@@ -1973,8 +1973,8 @@ Status:
 - Closed by AUDIT2 item 043. Added the oracle suite in
   `goivy/ivy2cpp/oracle_test.go`, the reusable token comparator in
   `goivy/ivy2cpp/oracle_compare.go`, the standalone comparator wrapper
-  in `goivy/ivy2cpp/testdata/oracle/compare_cpp.go`, and the 14-fixture
-  catalog plus `STATUS.md` under `goivy/ivy2cpp/testdata/oracle/`.
+  in `goivy/ivy2cpp/test_vec/oracle/compare_cpp.go`, and the 14-fixture
+  catalog plus `STATUS.md` under `goivy/ivy2cpp/test_vec/oracle/`.
 - Test coverage now includes `TestOracleFixturesExist`,
   `TestOracleSingle`, `TestOracleCompileGo`,
   `TestOracleCompilePython`, `TestOracleSemanticEquivalence`, and

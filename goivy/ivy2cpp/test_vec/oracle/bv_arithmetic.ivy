@@ -1,0 +1,18 @@
+#lang ivy1.7
+type byte
+interpret byte -> bv[8]
+individual x : byte
+individual y : byte
+function bvxor(X:byte,Y:byte) : byte
+function bvshl(X:byte,Y:byte) : byte
+function bvlshr(X:byte,Y:byte) : byte
+function bvashr(X:byte,Y:byte) : byte
+function bvneg(X:byte) : byte
+action step = {
+    x := bvxor(x,y);
+    x := bvshl(x,y);
+    x := bvlshr(x,y);
+    x := bvashr(x,y);
+    x := bvneg(x)
+}
+export step

@@ -1,0 +1,10 @@
+#lang ivy1.7
+type small = {0..3}
+individual x : small
+after init {
+    x := 0
+}
+action set = {
+    x := 1
+}
+export set

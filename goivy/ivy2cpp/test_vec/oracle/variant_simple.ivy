@@ -1,0 +1,16 @@
+#lang ivy1.7
+type msg
+type color = {red, green}
+variant req of msg = struct {
+    shade : color
+}
+variant ack of msg
+variant done of msg
+individual saved : msg
+action make_req returns(out:msg) = {
+    var r : req;
+    r.shade := green;
+    saved := r;
+    out := saved
+}
+export make_req

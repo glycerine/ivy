@@ -1,0 +1,14 @@
+#lang ivy1.7
+type idx = {0..3}
+<<< header
+template <typename T>
+void oracle_accept_callback(const T&) {}
+>>>
+action handler(i:idx) = {
+}
+action install = {
+    <<<
+        oracle_accept_callback(`handler`);
+    >>>
+}
+export install

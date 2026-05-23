@@ -220,7 +220,7 @@ type oracleOutcome struct {
 }
 
 func oracleDir() string {
-	return filepath.Join("testdata", "oracle")
+	return filepath.Join("test_vec", "oracle")
 }
 
 func oracleFixturePath(fixture string) string {

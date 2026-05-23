@@ -1,0 +1,73 @@
+# Sort kinds covered by Python ivy_to_cpp.py emit_value_parser and its
+# generated/runtime _arg<T> helpers. The Go test reads this as a small
+# line-oriented YAML fixture; keep one `kind:` entry per coverage row.
+
+- kind: bool
+  python: ivy_value.hpp::_arg<bool>
+  go: include2cpp/ivy_value.hpp::_arg<bool>
+  status: covered
+
+- kind: int
+  python: ivy_value.hpp::_arg<int>
+  go: include2cpp/ivy_value.hpp::_arg<int>
+  status: covered
+
+- kind: nat
+  python: ivy_value.hpp::_arg<unsigned long long>
+  go: include2cpp/ivy_value.hpp::_arg<unsigned long long>
+  status: covered
+
+- kind: strlit
+  python: ivy_value.hpp::_arg<__strlit> plus ivy_repl.hpp::parse_value escapes
+  go: include2cpp/ivy_value.hpp::_arg<__strlit> plus include2cpp/ivy_repl.hpp::parse_value escapes
+  status: covered
+
+- kind: bv
+  python: primitive integer _arg<T> or generated wide-BV _arg<T>
+  go: include2cpp/ivy_value.hpp primitives plus goivy/ivy2cpp/cpp_types.go wide-BV emitters
+  status: covered
+
+- kind: strbv
+  python: ivy_cpp_types.py::StrBV.emit_templates
+  go: goivy/ivy2cpp/cpp_types.go::emitXBVClassImpl
+  status: covered
+
+- kind: intbv
+  python: ivy_cpp_types.py::IntBV.emit_templates
+  go: goivy/ivy2cpp/cpp_types.go::emitXBVClassImpl
+  status: covered
+
+- kind: named_enum
+  python: ivy_to_cpp.py enum _arg<T> by member name
+  go: goivy/ivy2cpp/repl.go::emitEnumArg
+  status: covered
+
+- kind: numeric_enum
+  python: ctype=int, runtime _arg<int>
+  go: goivy/ivy2cpp/types.go::isNumericEnum plus include2cpp/ivy_value.hpp::_arg<int>
+  status: covered
+
+- kind: range
+  python: csortcard(sort) with runtime integer _arg<T>
+  go: goivy/ivy2cpp/repl.go::argExprForSort plus include2cpp/ivy_value.hpp integer _arg<T>
+  status: covered
+
+- kind: destructor_record
+  python: ivy_to_cpp.py destructor _arg<T>
+  go: goivy/ivy2cpp/destructor.go::emitDestructorArgImpl
+  status: covered
+
+- kind: variant
+  python: ivy_cpp_types.py::VariantType.emit_templates
+  go: goivy/ivy2cpp/variant.go::emitVariantArgImpl
+  status: covered
+
+- kind: native
+  python: ctype routes to user-provided native _arg<T> specialization
+  go: goivy/ivy2cpp/repl.go::argExprForSort routes to user-provided native _arg<T> specialization
+  status: covered
+
+- kind: positional_function
+  python: ivy_to_cpp.py positional parameter function tuple parser
+  go: goivy/ivy2cpp/repl.go::emitOnePositionalParam
+  status: covered

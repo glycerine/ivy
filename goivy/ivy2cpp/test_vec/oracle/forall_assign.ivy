@@ -1,0 +1,10 @@
+#lang ivy1.7
+type color = {red, green, blue}
+relation marked(C:color)
+after init {
+    marked(C) := false
+}
+action set_all = {
+    marked(C) := true
+}
+export set_all

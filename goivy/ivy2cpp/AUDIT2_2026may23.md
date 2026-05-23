@@ -1137,7 +1137,7 @@ Tests, in new `repl_parser_test.go`:
   numeric position, assert both forms parse to the same value.
 - `TestParserRangeBoundsRespected` — out-of-range input rejected
   with Python-identical message (compare to a captured Python
-  error string in `testdata/python_errors/`).
+  error string in `test_vec/python_errors/`).
 - `TestParserStringWithEscapes` — inputs `\\n`, `\\t`, `\\\"`,
   `\\\\`; assert each unescapes correctly.
 - `TestParserDestructorRecord` — nested input
@@ -1149,14 +1149,14 @@ Tests, in new `repl_parser_test.go`:
   with a user-defined native parser; assert the generated code
   calls the user function.
 - `TestParserCoverageMatrixMatchesPython` — meta-test: a YAML
-  fixture in `testdata/parser_matrix.yaml` lists every sort kind
+  fixture in `test_vec/parser_matrix.yaml` lists every sort kind
   the Python parser supports; assert the Go code has emission for
   each.
 
 Reminder:
 
 - Added a parser coverage matrix at
-  `goivy/ivy2cpp/testdata/parser_matrix.yaml`, covering Python's
+  `goivy/ivy2cpp/test_vec/parser_matrix.yaml`, covering Python's
   primitive runtime parsers, pure bitvectors through wide `ivy_uint<N>`,
   `strbv`, `intbv`, named enums, numeric enums, ranges,
   destructor-backed records, variants, native sorts, and positional
@@ -1175,7 +1175,7 @@ Reminder:
   rejection text, string escape parsing, nested destructor records,
   variant discriminators, and native user-provided parser routing.
 - Added a captured Python-compatible range error fixture at
-  `goivy/ivy2cpp/testdata/python_errors/range_out_of_bounds.txt`. The
+  `goivy/ivy2cpp/test_vec/python_errors/range_out_of_bounds.txt`. The
   quoted `"argument 1"` is intentional: Python's generated C++ typedefs
   `__strlit` to `std::string`, so its `operator<<` quotes strings,
   including `out_of_bounds.txt`.
@@ -1272,7 +1272,7 @@ Tests, in new `cpp_context_test.go` — one suite per ported class:
 
 - `TestCppContextHasAllPythonAttrs` — meta-test that scans
   `cpp_context.go` and asserts each Python class field maps to a
-  Go field. Driven by a YAML fixture in `testdata/cpp_context_attrs.yaml`.
+  Go field. Driven by a YAML fixture in `test_vec/cpp_context_attrs.yaml`.
 - `TestCppContextAddOnceGlobalDeduplicatesByContent` — call twice
   with the same string; assert only one append.
 - `TestCppContextAddGlobalAlwaysAppends` — same call twice without
@@ -1314,7 +1314,7 @@ Reminder:
 - Routed the native once-only memo through `CppContext.OnceGlobals`,
   matching Python's single `once_globals` set while preserving the old
   generator fallback for white-box tests.
-- Added `testdata/cpp_context_attrs.yaml` and `cpp_context_test.go`
+- Added `test_vec/cpp_context_attrs.yaml` and `cpp_context_test.go`
   coverage for the class/field mapping, once-only globals, ordinary
   globals, local scope routing, impl bypass, class-name stack popping,
   temp generation, `DeadCode` panic behavior, deterministic generation,
@@ -1354,11 +1354,11 @@ Go locations:
 
 - No oracle file currently exists.
 - Will live at `goivy/ivy2cpp/oracle_test.go` and
-  `goivy/ivy2cpp/testdata/oracle/<fixture>.ivy`.
+  `goivy/ivy2cpp/test_vec/oracle/<fixture>.ivy`.
 
 Conformance work:
 
-1. Create `testdata/oracle/` with the following 14 fixtures
+1. Create `test_vec/oracle/` with the following 14 fixtures
    (one Ivy file per row), each targeting `impl` unless noted:
 
    | Fixture                | What it exercises                          |
@@ -1378,7 +1378,7 @@ Conformance work:
    | isolate_two_parts.ivy  | Two isolates exporting interface           |
 
 2. Implement a tokenizing comparator
-   (`testdata/oracle/compare_cpp.go`) that:
+   (`test_vec/oracle/compare_cpp.go`) that:
    - Strips C-style and C++-style comments.
    - Collapses runs of whitespace to a single space, except
      inside string literals.
@@ -1398,7 +1398,7 @@ Conformance work:
    (the prior TODO 030 also closes).
 
 5. Until then, each fixture has a status entry in
-   `testdata/oracle/STATUS.md`: PASS / EXPECTED_FAIL / SKIP. The
+   `test_vec/oracle/STATUS.md`: PASS / EXPECTED_FAIL / SKIP. The
    harness emits a per-fixture summary at the end of the run.
 
 Unit testing plan:
@@ -1415,21 +1415,21 @@ Tests, in `oracle_test.go`:
   Python's output compiles under GCC.
 - `TestOracleSemanticEquivalence/<fixture>` (`SLOW_CPP_TEST=1`) —
   drive both compiled binaries with a shared input transcript
-  (`testdata/oracle/<fixture>.in`); assert identical stdout.
+  (`test_vec/oracle/<fixture>.in`); assert identical stdout.
 - `TestOracleStatusFileUpToDate` — meta-test: the catalog above
   matches the rows in `STATUS.md`.
 
 Status:
 
 - Added the full oracle fixture catalog under
-  `goivy/ivy2cpp/testdata/oracle/`, including all 14 files named in
+  `goivy/ivy2cpp/test_vec/oracle/`, including all 14 files named in
   this item and `STATUS.md` rows for PASS / EXPECTED_FAIL / SKIP
   accounting.
 - Added `goivy/ivy2cpp/oracle_compare.go` with a tokenizing C++
   comparator that strips C/C++ comments, ignores whitespace outside
   literals, keeps identifiers/numbers as tokens, and reports first
   divergence with 80-character context. Added the requested standalone
-  wrapper at `goivy/ivy2cpp/testdata/oracle/compare_cpp.go`.
+  wrapper at `goivy/ivy2cpp/test_vec/oracle/compare_cpp.go`.
 - Added `goivy/ivy2cpp/oracle_test.go` with:
   `TestCompareCPPTokensStripsCommentsAndWhitespace`,
   `TestCompareCPPTokensPreservesStringLiterals`,

@@ -1,0 +1,11 @@
+#lang ivy1.7
+individual ready : bool
+individual helper_ready : bool
+progress wait = ready
+progress helper = helper_ready
+rely wait -> helper
+action step = {
+    ready := true;
+    helper_ready := true
+}
+export step

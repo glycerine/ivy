@@ -1,0 +1,18 @@
+#lang ivy1.7
+type tree
+type label = {leaf_label, node_label}
+variant leaf of tree = struct {
+    value : label
+}
+variant node of tree = struct {
+    left : tree,
+    right : tree
+}
+individual root : tree
+action set_leaf returns(out:tree) = {
+    var l : leaf;
+    l.value := leaf_label;
+    root := l;
+    out := root
+}
+export set_leaf

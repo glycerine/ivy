@@ -1,0 +1,16 @@
+#lang ivy1.7
+<<< header
+#include <sstream>
+>>>
+<<< member
+int `native_counter`;
+>>>
+<<< init
+`native_counter` = 7;
+>>>
+action bump = {
+    <<<
+        `native_counter` += 1;
+    >>>
+}
+export bump
