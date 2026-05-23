@@ -1191,28 +1191,39 @@ func (d *DomainSetup) Interpret(node Node) error {
 }
 
 // compileBound compiles a range bound, returning either a NumeralBound
-// or a CompiledBound. Matches Python ivy_compiler.py:1295-1306 compile_bound.
+// or a CompiledBound. Matches Python ivy_compiler.py:1515-1523 compile_bound.
 func (d *DomainSetup) compileBound(b Node, lhsName string, sort Sort, context Node) NumeralOrCompiledBound {
 	if b == nil {
 		return NumeralBound{Value: "0"}
 	}
 	rep := fmt.Sprint(b)
+	// Python: if not ivy_logic.is_numeral_name(b.rep): b.sort = lhs; self.parameter(b)
+	if !IsNumeralName(rep) {
+		if atom, ok := b.(*Atom); ok {
+			cfg := d.Compiler.Module.Cfg.AstCfg
+			atom.ASort = cfg.NewAtom(lhsName)
+			_ = d.Parameter(b)
+		}
+	}
+	// Python: with top_sort_as_default(): res = b.compile()
+	tsDefault := TopSortAsDefault(d.Compiler.Sig)
+	tsDefault.Enter()
+	res, err := d.Compiler.Thing(b)
+	tsDefault.Exit()
+	if err != nil {
+		return NumeralBound{Value: rep}
+	}
+	// Python: with ASTContext(thing): res = sort_infer(res, sort)
+	inferred, err := SortInfer(res, sort)
+	if err != nil {
+		return NumeralBound{Value: rep}
+	}
+	// For numerals, preserve the literal representation downstream
+	// (RangeSort.LbString/UbString relies on this).
 	if IsNumeralName(rep) {
 		return NumeralBound{Value: rep}
 	}
-	// Non-numeral bound: compile as parameter
-	// Python: b.sort = lhs; self.parameter(b); res = b.compile()
-	if atom, ok := b.(*Atom); ok {
-		cfg := d.Compiler.Module.Cfg.AstCfg
-		atom.ASort = cfg.NewAtom(lhsName)
-		_ = d.Parameter(b) // register as parameter
-	}
-	compiled, err := d.Compiler.Thing(b)
-	if err != nil {
-		// Fall back to string representation
-		return NumeralBound{Value: rep}
-	}
-	return CompiledBound{Expr: compiled}
+	return CompiledBound{Expr: inferred}
 }
 
 // Mixin processes a mixin declaration in pass 1 (DomainSetup).
