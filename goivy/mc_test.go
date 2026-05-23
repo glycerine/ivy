@@ -1138,6 +1138,137 @@ func TestQelimGetConstsFiniteSort(t *testing.T) {
 	}
 }
 
+// TestQelimQERangeSortExpansion is the end-to-end regression for the i=3899
+// divergence on client_server_example_mv.ivy. Python's Qelim.qe at
+// ivy_mc.py:912-933 expands a universally-quantified body over a finite
+// (range-interpreted) sort into a LogicAnd of substituted instances — NOT
+// into a __qe[N] proposition with Implies(res, inst) constraints. Go was
+// taking the __qe[N] path because its local isFiniteSort didn't unwrap
+// UninterpretedSort → RangeSort via the interp map.
+//
+// This test reproduces the exact shape of the bug: forall X:client. P(X)
+// where client has interpret client -> {0..2}. Expected result is
+// LogicAnd{P(0:client), P(1:client), P(2:client)}; failing behaviour
+// (pre-fix) was a fresh __qe[0] symbol with three Implies constraints
+// appended to qelim.Fmlas.
+func TestQelimQERangeSortExpansion(t *testing.T) {
+	clientSort := &UninterpretedSort{Name: "client"}
+	clientRange := &RangeSort{Name: "client", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "2"}}
+	interp := map[string]interface{}{"client": clientRange}
+
+	// P : client -> Boolean
+	pSort, err := NewFunctionSort(clientSort, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	p := NewConst("P", pSort)
+	x, err := NewVariable("X", clientSort)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// forall X:client. P(X)
+	body := &Apply{Func: p, Terms: []Expr{x}}
+	forall := &ForAll{Variables: []*LogicVariable{x}, Body: body}
+
+	q := NewQelim(NewInsMap[string, []*Const](), nil, nil, false, interp)
+	got := q.QE(forall, NewInsMap[string, []*Const]())
+
+	// Must be LogicAnd, not a __qe placeholder Const.
+	and, ok := got.(*LogicAnd)
+	if !ok {
+		t.Fatalf("QE(forall X:client. P(X)) = %T; want *LogicAnd (expanded over RangeSort)", got)
+	}
+	if len(and.Terms) != 3 {
+		t.Fatalf("expected 3 substituted instances (range 0..2), got %d", len(and.Terms))
+	}
+	// No fresh symbols, no accumulated constraints — the finite branch
+	// does NOT touch Fresh()/Fmlas (Python ivy_mc.py:922-924 — only the
+	// "else" branch at 925-930 builds Implies(res, inst)).
+	if q.SymsCtr != 0 {
+		t.Errorf("finite-sort expansion must not create __qe[N] symbols; SymsCtr=%d", q.SymsCtr)
+	}
+	if len(q.Fmlas) != 0 {
+		t.Errorf("finite-sort expansion must not append constraints to Fmlas; got %d", len(q.Fmlas))
+	}
+	// Each Term should be P(<n:client>) for n in 0,1,2.
+	for i, want := range []string{"0", "1", "2"} {
+		app, ok := and.Terms[i].(*Apply)
+		if !ok {
+			t.Fatalf("Terms[%d] = %T, want *Apply", i, and.Terms[i])
+		}
+		if c, ok := app.Func.(*Const); !ok || c.Name != "P" {
+			t.Errorf("Terms[%d].Func = %v, want P", i, app.Func)
+		}
+		if len(app.Terms) != 1 {
+			t.Fatalf("Terms[%d].Terms len = %d, want 1", i, len(app.Terms))
+		}
+		arg, ok := app.Terms[0].(*Const)
+		if !ok {
+			t.Fatalf("Terms[%d].Terms[0] = %T, want *Const", i, app.Terms[0])
+		}
+		if arg.Name != want {
+			t.Errorf("Terms[%d].Terms[0].Name = %q, want %q", i, arg.Name, want)
+		}
+		// Python: il.Symbol(str(n), sort) — original sort, not the RangeSort interp.
+		if !SortEqual(arg.CSort, clientSort) {
+			t.Errorf("Terms[%d].Terms[0].CSort = %s, want %s (original sort)", i, arg.CSort, clientSort)
+		}
+	}
+}
+
+// TestQelimQEInfiniteSortPlaceholder locks in the OTHER branch of
+// Qelim.qe (ivy_mc.py:925-930): when the bound sort is NOT finite, Qelim
+// must introduce a fresh __qe[N] proposition and accumulate
+// Implies(res, inst) constraints onto Fmlas. This is the path that was
+// (incorrectly) being taken for RangeSort before the fix; it must still
+// fire for genuinely infinite uninterpreted sorts.
+func TestQelimQEInfiniteSortPlaceholder(t *testing.T) {
+	tSort := &UninterpretedSort{Name: "T"} // no interp → infinite
+	pSort, err := NewFunctionSort(tSort, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	p := NewConst("P", pSort)
+	x, err := NewVariable("X", tSort)
+	if err != nil {
+		t.Fatal(err)
+	}
+	body := &Apply{Func: p, Terms: []Expr{x}}
+	forall := &ForAll{Variables: []*LogicVariable{x}, Body: body}
+
+	// Seed sort_constants with two instances so QE has something to substitute.
+	sc := NewInsMap[string, []*Const]()
+	sc.Set("T", []*Const{NewConst("a", tSort), NewConst("b", tSort)})
+
+	q := NewQelim(sc, nil, nil, false, nil) // no interp map needed
+	got := q.QE(forall, sc)
+
+	res, ok := got.(*Const)
+	if !ok {
+		t.Fatalf("QE(forall X:T. P(X)) with infinite T = %T; want *Const placeholder", got)
+	}
+	if res.Name != "__qe[0]" {
+		t.Errorf("placeholder Name = %q, want __qe[0]", res.Name)
+	}
+	if q.SymsCtr != 1 {
+		t.Errorf("SymsCtr = %d, want 1 (one fresh symbol created)", q.SymsCtr)
+	}
+	if len(q.Fmlas) != 2 {
+		t.Fatalf("expected 2 Implies constraints (one per sort_constant), got %d", len(q.Fmlas))
+	}
+	for i, fmla := range q.Fmlas {
+		imp, ok := fmla.(*LogicImplies)
+		if !ok {
+			t.Errorf("Fmlas[%d] = %T, want *LogicImplies", i, fmla)
+			continue
+		}
+		// Python forall branch: Implies(res, inst). So T1 == __qe[0].
+		if c, ok := imp.T1.(*Const); !ok || c.Name != "__qe[0]" {
+			t.Errorf("Fmlas[%d].T1 = %v, want __qe[0]", i, imp.T1)
+		}
+	}
+}
+
 func TestDefToConstraintBooleanSort(t *testing.T) {
 	p := NewConst("p", Boolean)
 	q := NewConst("q", Boolean)
