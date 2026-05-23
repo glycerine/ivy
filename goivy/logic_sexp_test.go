@@ -422,7 +422,7 @@ func TestLogicCanonEqualsSexp(t *testing.T) {
 		{"BooleanSort", string(Boolean.Sexp()), string(Boolean.Canon())},
 		{"FunctionSort", string(fs.Sexp()), string(fs.Canon())},
 		{"EnumeratedSort", string((&LogicEnumeratedSort{Name: "E", Extension: []string{"a"}}).Sexp()), string((&LogicEnumeratedSort{Name: "E", Extension: []string{"a"}}).Canon())},
-		{"RangeSort", string((&RangeSort{Name: "r", Lb: NumeralBound{"0"}, Ub: NumeralBound{"5"}}).Sexp()), string((&RangeSort{Name: "r", Lb: NumeralBound{"0"}, Ub: NumeralBound{"5"}}).Canon())},
+		{"RangeSort", string((&RangeSort{Name: "r", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "5"}}).Sexp()), string((&RangeSort{Name: "r", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "5"}}).Canon())},
 		{"TopSort", string(TopS.Sexp()), string(TopS.Canon())},
 		{"Variable", string(X.Sexp()), string(X.Canon())},
 		{"Symbol", string(NewConst("c", S).Sexp()), string(NewConst("c", S).Canon())},

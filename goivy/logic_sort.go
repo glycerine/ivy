@@ -120,8 +120,13 @@ type NumeralOrCompiledBound interface {
 }
 
 // NumeralBound is a literal numeral string like "0" or "255".
+// Sort, if non-nil, is the inferred sort attached to this numeral after
+// sort_infer (Python's compile_bound returns a Const("0", sort), not a raw
+// int; that Const prints as "0:<sortname>"). If Sort is nil, the bound is a
+// raw integer with no sort annotation (matching how Python prints `int(0)`).
 type NumeralBound struct {
 	Value string
+	Sort  Sort
 }
 
 func (b NumeralBound) BoundString() string { return b.Value }
@@ -155,14 +160,23 @@ func (s *RangeSort) String() string {
 	return "{" + prettyBoundString(s.Lb, s.Name) + " .. " + prettyBoundString(s.Ub, s.Name) + "}"
 }
 
-// prettyBoundString formats a bound the way Python's lg.Const.ugly would:
-//   - NumeralBound: append ":<parentSortName>" (Python show_numeral_sorts=True).
-//   - CompiledBound: defer to fmt.Sprint on the underlying Expr (Const.String
-//     already routes through PrettyFmla → constUgly which appends the sort).
+// prettyBoundString formats a bound the way Python's `%s` (str) would:
+//   - NumeralBound with Sort set: "<value>:<sortname>" (Python's
+//     post-sort_infer Const → lg.Const.ugly with show_numeral_sorts=True).
+//   - NumeralBound with Sort nil: bare "<value>" (Python raw int → str(int)).
+//   - CompiledBound: fmt.Sprint(Expr) — Const.String already routes through
+//     PrettyFmla → constUgly which appends the sort for numerals.
+//
+// parentSortName is unused for now (kept in the signature in case a future
+// branch needs the lhs context). Callers pass s.Name from the parent RangeSort.
 func prettyBoundString(b NumeralOrCompiledBound, parentSortName string) string {
+	_ = parentSortName
 	switch v := b.(type) {
 	case NumeralBound:
-		return v.Value + ":" + parentSortName
+		if v.Sort != nil {
+			return v.Value + ":" + IvySortName(v.Sort)
+		}
+		return v.Value
 	case CompiledBound:
 		return fmt.Sprint(v.Expr)
 	}

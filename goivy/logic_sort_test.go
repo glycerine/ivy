@@ -116,6 +116,41 @@ func TestLogicRangeSort(t *testing.T) {
 	}
 }
 
+// TestLogicRangeSortSortedNumeralBound covers the post-sort_infer case where
+// each NumeralBound carries the inferred Sort. This mirrors Python's
+// compile_bound, which returns lg.Const("0", client_sort); lg.Const.__str__
+// (via pretty_fmla → constUgly with show_numeral_sorts=True) prints the
+// numeral as "0:client". RangeSort.String() and Sexp() must include that
+// annotation so that:
+//
+//   - compiler.CompileTheory ENTER traces match Python's
+//     "theoryname={0:client .. 2:client}" (ivy_compiler.py:2382-2387).
+//   - The Module's sig.interp canon embeds "lb:0:client ub:2:client"
+//     (matches Python's _range_sort_sexp in logic_sexp.py:32-34).
+//
+// LbString/UbString must still return the bare value because z3bridge and
+// mc_helpers parse it as an integer.
+func TestLogicRangeSortSortedNumeralBound(t *testing.T) {
+	clientSort := &UninterpretedSort{Name: "client"}
+	rs := &RangeSort{
+		Name: "client",
+		Lb:   NumeralBound{Value: "0", Sort: clientSort},
+		Ub:   NumeralBound{Value: "2", Sort: clientSort},
+	}
+	if got, want := rs.String(), "{0:client .. 2:client}"; got != want {
+		t.Errorf("String() = %q, want %q", got, want)
+	}
+	if got, want := string(rs.Sexp()), "(RangeSort name:client lb:0:client ub:2:client)"; got != want {
+		t.Errorf("Sexp() = %q, want %q", got, want)
+	}
+	if got, want := rs.LbString(), "0"; got != want {
+		t.Errorf("LbString() = %q, want %q (must remain bare for integer-parsing consumers)", got, want)
+	}
+	if got, want := rs.UbString(), "2"; got != want {
+		t.Errorf("UbString() = %q, want %q (must remain bare for integer-parsing consumers)", got, want)
+	}
+}
+
 func TestLogicTopSort(t *testing.T) {
 	ts := TopS.(*TopSort)
 	if ts.String() != "TopSort" {

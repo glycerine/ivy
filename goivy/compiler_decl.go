@@ -1194,7 +1194,7 @@ func (d *DomainSetup) Interpret(node Node) error {
 // or a CompiledBound. Matches Python ivy_compiler.py:1515-1523 compile_bound.
 func (d *DomainSetup) compileBound(b Node, lhsName string, sort Sort, context Node) NumeralOrCompiledBound {
 	if b == nil {
-		return NumeralBound{Value: "0"}
+		return NumeralBound{Value: "0", Sort: sort}
 	}
 	rep := fmt.Sprint(b)
 	// Python: if not ivy_logic.is_numeral_name(b.rep): b.sort = lhs; self.parameter(b)
@@ -1211,17 +1211,17 @@ func (d *DomainSetup) compileBound(b Node, lhsName string, sort Sort, context No
 	res, err := d.Compiler.Thing(b)
 	tsDefault.Exit()
 	if err != nil {
-		return NumeralBound{Value: rep}
+		return NumeralBound{Value: rep, Sort: sort}
 	}
 	// Python: with ASTContext(thing): res = sort_infer(res, sort)
 	inferred, err := SortInfer(res, sort)
 	if err != nil {
-		return NumeralBound{Value: rep}
+		return NumeralBound{Value: rep, Sort: sort}
 	}
 	// For numerals, preserve the literal representation downstream
 	// (RangeSort.LbString/UbString relies on this).
 	if IsNumeralName(rep) {
-		return NumeralBound{Value: rep}
+		return NumeralBound{Value: rep, Sort: sort}
 	}
 	return CompiledBound{Expr: inferred}
 }

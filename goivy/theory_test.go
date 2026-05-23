@@ -333,3 +333,40 @@ func FuzzParseTheory(f *testing.F) {
 		}
 	})
 }
+
+// TestTheoryNameForTrace covers the polymorphic theoryname argument to
+// Compiler.CompileTheory. Python's compile_theory(mod, sortname, theoryname)
+// accepts either a string ("int", "nat") or a RangeSort (for `interpret X ->
+// {0..N}` declarations); the trace uses %s formatting, which calls
+// __str__/__repr__ accordingly (ivy_compiler.py:2382-2387). Go mirrors this
+// by accepting interface{} and routing through theoryNameForTrace.
+//
+// Regression guard: when a *RangeSort with sort-annotated numeral bounds is
+// passed, the trace must render exactly "{0:client .. 2:client}" — matching
+// Python's lg.Const.ugly output. This is what made TestGoldenAll diverge
+// on client_server_example_mv.ivy at trace step i=476 before the fix.
+func TestTheoryNameForTrace(t *testing.T) {
+	if got, want := theoryNameForTrace("int"), "int"; got != want {
+		t.Errorf("string theoryname: got %q, want %q", got, want)
+	}
+	if got, want := theoryNameForTrace("nat"), "nat"; got != want {
+		t.Errorf("string theoryname: got %q, want %q", got, want)
+	}
+
+	clientSort := &UninterpretedSort{Name: "client"}
+	rs := &RangeSort{
+		Name: "client",
+		Lb:   NumeralBound{Value: "0", Sort: clientSort},
+		Ub:   NumeralBound{Value: "2", Sort: clientSort},
+	}
+	if got, want := theoryNameForTrace(rs), "{0:client .. 2:client}"; got != want {
+		t.Errorf("*RangeSort theoryname: got %q, want %q", got, want)
+	}
+
+	// Raw-int-style RangeSort (Sort field nil) should print bare, matching
+	// Python's str(int) when emit_sexp.py passes lg.RangeSort("idx", 0, 10).
+	rsRaw := &RangeSort{Name: "idx", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "10"}}
+	if got, want := theoryNameForTrace(rsRaw), "{0 .. 10}"; got != want {
+		t.Errorf("raw *RangeSort theoryname: got %q, want %q", got, want)
+	}
+}
