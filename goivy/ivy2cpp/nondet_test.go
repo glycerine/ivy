@@ -70,8 +70,8 @@ export step
 	}
 	for _, want := range []string{
 		"bool marked[256];",
-		"for (unsigned X0 = 0; X0 < 256; X0++) {",
-		`marked[X0] = (bool)___ivy_choose(0, "marked"`,
+		"for (unsigned X__0 = 0; X__0 < 256; X__0++) {",
+		`marked[X__0] = (bool)___ivy_choose(0, "marked"`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in bitvector-domain nondet output:\n%s", want, out.Impl)
@@ -102,17 +102,17 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, terms := range [][]string{
-		{"int __ivy_variant", `___ivy_choose(3, "choice"`},
-		{"choice = t(0, new t::twrap<a>("},
-		{"choice = t(1, new t::twrap<b>("},
-		{"choice = t(2, new t::twrap<c>("},
-		{`= (a)___ivy_choose(0, "choice"`},
-		{`= (b)___ivy_choose(0, "choice"`},
-		{`= (c)___ivy_choose(0, "choice"`},
+	if !strings.Contains(out.Impl, "t choice;") {
+		t.Fatalf("missing variant local declaration in output:\n%s", out.Impl)
+	}
+	for _, unwanted := range []string{
+		`___ivy_choose(3, "choice"`,
+		"choice = t(0,",
+		"choice = t(1,",
+		"choice = t(2,",
 	} {
-		if !hasLineWithAllTerms(out.Impl, terms...) {
-			t.Fatalf("missing line with terms %v in variant nondet output:\n%s", terms, out.Impl)
+		if strings.Contains(out.Impl, unwanted) {
+			t.Fatalf("variant super nondet should follow Python and remain uninitialized; found %q in:\n%s", unwanted, out.Impl)
 		}
 	}
 	assertNoUnsupportedCPP(t, out)
@@ -143,14 +143,14 @@ export step
 	}
 	for _, want := range []string{
 		"hash_thunk<int,bool> marked;",
-		"struct __thunk__0 : thunk<int, bool>",
+		"struct __thunk__0 : thunk<int,bool>",
 		"marked = hash_thunk<int, bool>(new __thunk__0());",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in uninterpreted-domain nondet output:\n%s", want, out.Impl)
 		}
 	}
-	if strings.Contains(out.Impl, "for (int X0") {
+	if strings.Contains(out.Impl, "for (int X__0") {
 		t.Fatalf("uninterpreted domain should not use a bounded iterator:\n%s", out.Impl)
 	}
 	assertNoUnsupportedCPP(t, out)

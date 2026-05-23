@@ -1,9 +1,10 @@
-# ivy2cpp TODO3: remaining whole-hog Python parity
+# ivy2cpp TODO3: whole-hog Python parity completion report
 
 Created: 2026-05-23
+Completed: 2026-05-23
 
-This file tracks what remains after AUDIT2 items 031-046 were
-implemented and the Python/Go oracle harness was added.
+This file records the completed TODO3 pass after AUDIT2 items 031-046
+were implemented and the Python/Go oracle harness was added.
 
 The oracle harness is live:
 
@@ -11,82 +12,61 @@ The oracle harness is live:
 env XTRACE_OFF=1 ORACLE_TEST=1 go test ./ivy2cpp -run TestOracleSingle -v -count=1
 ```
 
-Current result: all 14 oracle fixtures run, and all are still marked
-`EXPECTED_FAIL` in `test_vec/oracle/STATUS.md`. After fixing the initial
-class-name/file-name mismatch in the harness, the first concrete
-divergence for every fixture is in the shared runtime scaffold.
+Current result: all 14 oracle fixtures are marked `PASS` in
+`test_vec/oracle/STATUS.md`, and `EXPECTED_FAIL` is no longer accepted by
+the oracle status policy.
 
-## TODO3-001 - Make the Go runtime scaffold token-equivalent to Python
+## DONE TODO3-001 - Make the Go runtime scaffold token-equivalent to Python
 
-Observed first divergence:
+Implemented:
 
-- Go `*.cpp` starts with `<algorithm>`, `<fstream>`, `<iostream>`, ...
-- Python `*.cpp` starts with `<sstream>`, `<algorithm>`, blank line,
-  `<iostream>`, ...
+- Runtime header/implementation preambles now follow Python token order.
+- Go-only `#pragma once` and other local scaffold tokens were removed.
+- `ivy_threads.hpp`, `ivy_value.hpp`, `ivy_repl.hpp`, and `ivy_go_z3.hpp`
+  now land in the Python-equivalent slots.
+- Class skeleton order now matches Python, including `___ivy_choose`
+  before assertion hooks and `_generating` across generated targets.
+- The Go oracle harness now passes absolute fixture paths to match
+  Python's source-location strings in emitted assertions.
 
-Required work:
+## DONE TODO3-002 - Promote oracle fixtures one by one after runtime parity
 
-- Align `emitRuntimeImplPreamble` in `runtime.go` with Python
-  `ivy_to_cpp.py` output order:
-  - `#include <sstream>`
-  - `#include <algorithm>`
-  - blank line
-  - `#include <iostream>`
-  - no `<fstream>` in the impl preamble unless Python emits it for a
-    specific target
-  - conditional `#include <cstdint>` block exactly like Python
-  - `#include "ivy_threads.hpp"` after `__ivy_exit`, not in the header
-  - `#include "ivy_value.hpp"` after lock/unlock definitions for impl
-    target
-- Align `emitHeaderPreamble` with Python:
-  - Python does not emit `#pragma once` in the observed oracle output.
-  - Python header starts with `_HAS_ITERATOR_DEBUGGING`, `ivy_hash.hpp`,
-    `typedef std::string __strlit`, externs, then thunk/hash_thunk.
-  - The Go header currently emits broad C++ system includes and
-    `ivy_threads.hpp` up front.
-- Align support struct text:
-  - Python `thunk` has no virtual destructor in the observed output.
-  - Python `hash_thunk` destructor keeps the commented-out delete block.
-  - Python `hash_thunk` has no `operator==` in the observed output.
-  - Iterator type spellings and spacing differ.
-- Align class skeleton text and member order:
-  - Python emits `int ___ivy_choose(...)` before assertion hooks.
-  - Python target=impl output currently includes `_generating`; Go does
-    not for target=impl.
-  - Python method argument names differ (`timeout`, unnamed booleans).
+Implemented:
 
-Acceptance:
+- All 14 fixtures in `test_vec/oracle` were promoted to `PASS`.
+- Codegen was aligned for assignments, quantified updates, bitvectors,
+  enums, ranges, destructors, variants, hash thunks, native blocks,
+  callback thunks, progress/rely output, and multi-isolate extraction.
+- The progress fixture was adjusted to read the state it writes, avoiding
+  Ivy isolate erasure that caused both Python and Go generated C++ to
+  fail the slow compile gate.
 
-- `ORACLE_TEST=1 go test ./ivy2cpp -run TestOracleSingle/empty.ivy -v -count=1`
-  must pass with `empty.ivy` promoted to `PASS`.
+## DONE TODO3-003 - Turn the oracle status policy into a hard gate
 
-## TODO3-002 - Promote oracle fixtures one by one after runtime parity
+Implemented:
 
-Once `empty.ivy` passes, rerun:
+- `EXPECTED_FAIL` now fails the suite instead of being accepted.
+- `testdata/oracle` references were removed/avoided; the fixture path is
+  `test_vec/oracle`.
+- Fast and slow gates were run:
 
 ```sh
+env XTRACE_OFF=1 go test ./ivy2cpp -count=1
 env XTRACE_OFF=1 ORACLE_TEST=1 go test ./ivy2cpp -run TestOracleSingle -v -count=1
+env XTRACE_OFF=1 ORACLE_TEST=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run 'TestOracleCompileGo|TestOracleCompilePython|TestOracleSemanticEquivalence' -count=1 -v
 ```
 
-For each fixture:
+Results:
 
-- Fix the next token divergence in the Go generator, preferring Python's
-  exact `ivy_to_cpp.py` behavior over local style.
-- Add or update a focused unit test for that divergence.
-- Promote the fixture from `EXPECTED_FAIL` to `PASS` in
-  `test_vec/oracle/STATUS.md`.
-- Keep going until all 14 fixtures are `PASS`.
+- Fast regression: pass.
+- Token oracle: pass=14.
+- Go compile oracle: pass=14.
+- Python compile oracle: pass=14.
+- Semantic equivalence harness: pass with 14 skipped subtests because no
+  `.in` transcripts exist yet.
 
-## TODO3-003 - Turn the oracle status policy into a hard gate
-
-After all fixtures are `PASS`:
-
-- Make `TestOracleSingle` fail if any fixture remains `EXPECTED_FAIL`.
-- Run and fix the slow hooks:
-
-```sh
-env XTRACE_OFF=1 SLOW_CPP_TEST=1 go test ./ivy2cpp -run 'TestOracleCompileGo|TestOracleCompilePython|TestOracleSemanticEquivalence' -count=1
-```
+## Remaining Follow-Up
 
 - Add `.in` transcripts for exported-action REPL fixtures so semantic
-  equivalence is exercised instead of skipped.
+  equivalence executes real Go/Python binary comparisons instead of
+  reporting `no transcript=14`.

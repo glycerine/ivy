@@ -430,6 +430,19 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 		if !g.sortNeededForGeneratedDecl(name) {
 			continue
 		}
+		if it, ok := g.cppInterpType(s); ok {
+			if it.Kind == cppInterpBV && it.primitiveType() != "" {
+				// Primitive interpreted bitvectors lower directly to C++
+				// integer types; Python does not emit aliases for them.
+			} else {
+				if it.Kind == cppInterpIntBV && !emittedIntClass {
+					g.emitIntClassDecl(w)
+					emittedIntClass = true
+				}
+				g.emitCPPTypeDecl(w, s, it)
+				continue
+			}
+		}
 		if _, interpreted := g.Mod.Sig.Interp[name]; interpreted {
 			continue
 		}

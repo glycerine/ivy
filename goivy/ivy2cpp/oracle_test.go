@@ -282,12 +282,16 @@ func compareOracleFixture(t *testing.T, fixture, target string) error {
 }
 
 func generateGoOracleFixture(fixture, outDir, target string) (*BatchOutput, error) {
+	absFixture, err := filepath.Abs(oracleFixturePath(fixture))
+	if err != nil {
+		return nil, err
+	}
 	params := map[string]string{
 		"target":    target,
 		"classname": oracleClassName(fixture),
 		"outdir":    outDir,
 	}
-	batch, err := CompileAndGenerateAll(oracleFixturePath(fixture), params, Config{})
+	batch, err := CompileAndGenerateAll(absFixture, params, Config{})
 	if err != nil {
 		return nil, err
 	}

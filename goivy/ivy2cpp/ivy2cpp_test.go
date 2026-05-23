@@ -168,10 +168,13 @@ func TestGenerateEmptyModuleProducesHeaderAndImpl(t *testing.T) {
 	if out.BaseName != "empty" || out.ClassName != "empty" {
 		t.Fatalf("unexpected names: %+v", out)
 	}
-	for _, want := range []string{"#pragma once", "class empty", "void __init();"} {
+	for _, want := range []string{"class empty", "void __init();"} {
 		if !strings.Contains(out.Header, want) {
 			t.Fatalf("header missing %q:\n%s", want, out.Header)
 		}
+	}
+	if strings.Contains(out.Header, "#pragma once") {
+		t.Fatalf("header should follow Python scaffold and omit Go-only #pragma once:\n%s", out.Header)
 	}
 	if !strings.Contains(out.Impl, `#include "empty.h"`) {
 		t.Fatalf("impl missing include:\n%s", out.Impl)
@@ -244,13 +247,16 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	// Header: hash and threads. Impl: ivy_value + ivy_repl (Python-style).
-	for _, want := range []string{`#include "ivy_hash.hpp"`, `#include "ivy_threads.hpp"`} {
+	// Header: hash support. Impl: threads, ivy_value, and ivy_repl in Python order.
+	for _, want := range []string{`#include "ivy_hash.hpp"`} {
 		if !strings.Contains(out.Header, want) {
 			t.Fatalf("go output missing header support include %q:\n%s", want, out.Header)
 		}
 	}
-	for _, want := range []string{`#include "ivy_value.hpp"`, `#include "ivy_repl.hpp"`} {
+	if strings.Contains(out.Header, `#include "ivy_threads.hpp"`) {
+		t.Fatalf("ivy_threads.hpp should be emitted in impl, not header:\n%s", out.Header)
+	}
+	for _, want := range []string{`#include "ivy_threads.hpp"`, `#include "ivy_value.hpp"`, `#include "ivy_repl.hpp"`} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("go output missing impl support include %q:\n%s", want, out.Impl)
 		}
@@ -372,10 +378,9 @@ export step
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"virtual void ivy_check_progress(int guarantee_ticks, int assume_ticks) {}",
+		"virtual void ivy_check_progress(int,int){}",
 		"void __tick(int timeout);",
 		"void tickempty::__tick(int __timeout)",
-		"(void)__timeout;",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -425,10 +430,10 @@ progress wait = ready
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"int __ivy_maxt",
-		"__ivy_maxt",
+		"int __tmp0;",
+		"__tmp0",
 		"= 0;",
-		"ivy_check_progress(wait, __ivy_maxt",
+		"ivy_check_progress(wait, __tmp0",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q:\n%s", want, out.Impl)
@@ -454,7 +459,7 @@ progress wait(C,B) = edge(C,B)
 		"for (color C : {red, green})",
 		"for (bit B : {low, high})",
 		"wait[C][B] = edge[C][B] ? 0 : wait[C][B] + 1;",
-		"ivy_check_progress(wait[C][B], __ivy_maxt",
+		"ivy_check_progress(wait[C][B], __tmp0",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -481,14 +486,14 @@ rely wait -> helper
 	}
 	for _, want := range []string{
 		"#include <algorithm>",
-		"int __ivy_maxt",
-		"__ivy_maxt",
+		"int __tmp0;",
+		"__tmp0",
 		"= std::max(",
 		"helper",
-		"if (__ivy_maxt",
+		"if (__tmp0",
 		"> __timeout)",
 		"wait = 0;",
-		"ivy_check_progress(wait, __ivy_maxt",
+		"ivy_check_progress(wait, __tmp0",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -514,10 +519,10 @@ rely wait(Y) -> helper(Y)
 	for _, want := range []string{
 		"for (color C : {red, green})",
 		"wait[C] = ready[C] ? 0 : wait[C] + 1;",
-		"__ivy_maxt",
+		"__tmp0",
 		"= std::max(",
 		"helper[C]",
-		"ivy_check_progress(wait[C], __ivy_maxt",
+		"ivy_check_progress(wait[C], __tmp0",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q:\n%s", want, out.Impl)
@@ -547,10 +552,10 @@ rely wait(C) -> helper(D)
 	for _, want := range []string{
 		"for (color C : {red, green})",
 		"for (color D__ : {red, green})",
-		"__ivy_maxt",
+		"__tmp0",
 		"= std::max(",
 		"helper[D__]",
-		"ivy_check_progress(wait[C], __ivy_maxt",
+		"ivy_check_progress(wait[C], __tmp0",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q:\n%s", want, out.Impl)
@@ -609,7 +614,7 @@ rely wait(C) -> helper(C, D)
 		"for (color D : {red, green})",
 		"for (color D__ : {red, green})",
 		"helper[D][D__]",
-		"ivy_check_progress(wait[D], __ivy_maxt",
+		"ivy_check_progress(wait[D], __tmp0",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q:\n%s", want, out.Impl)
@@ -663,7 +668,7 @@ progress waitn(C) = ok(C)
 // constructor does NOT reset progress counters to 0. Python only
 // clears progress in init_gen (ivy_to_cpp.py:964); the constructor
 // (ivy_to_cpp.py:2345-2377) does not. The only `wait = 0;` should be
-// inside __tick's `if (__ivy_maxt > __timeout)` block.
+// inside __tick's `if (__tmp0 > __timeout)` block.
 func TestProgressCountersNotResetInConstructor(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 individual ready : bool
@@ -946,7 +951,7 @@ export step
 				if strings.Contains(out.Header, "virtual void ivy_assert(bool truth") {
 					t.Fatalf("gen target should not emit base assert member:\n%s", out.Header)
 				}
-			} else if !strings.Contains(out.Header, "virtual void ivy_assert(bool truth, const char *msg) {}") {
+			} else if !strings.Contains(out.Header, "virtual void ivy_assert(bool,const char *){}") {
 				t.Fatalf("%s target should emit no-op base assert member:\n%s", target, out.Header)
 			}
 		})
@@ -1394,10 +1399,11 @@ action step = {
 		"struct __tup__unsigned__unsigned {",
 		"unsigned arg0;",
 		"unsigned arg1;",
-		"size_t __hash() const { return hash_space::hash<unsigned>()(arg0) + hash_space::hash<unsigned>()(arg1); }",
+		"size_t __hash() const {",
+		"hv += hash_space::hash<unsigned>()(arg0);",
+		"hv += hash_space::hash<unsigned>()(arg1);",
 		"hash_thunk<__tup__unsigned__unsigned,bool> big;",
 		"hash_space::hash_map<D,R,HashFun> memo;",
-		"bool operator==(const hash_thunk<D,R,HashFun> &other) const",
 	} {
 		if !strings.Contains(out.Header, want) {
 			t.Fatalf("missing %q in header:\n%s", want, out.Header)
@@ -1421,7 +1427,6 @@ after init {
 	}
 	// Two-phase quantified assignment per Python emit_assign.
 	for _, want := range []string{
-		"typedef unsigned idx;",
 		"bool marked[5];",
 		"for (unsigned I = 2; I <= 4; I++)",
 		"__ivy_tmp0[I] = true;",
@@ -1453,7 +1458,6 @@ action step = {
 	}
 	for _, want := range []string{
 		"enum color { red, green };",
-		"typedef unsigned idx;",
 		"color saved;",
 		"color owner[3];",
 		"bool marked[2];",
@@ -1482,7 +1486,6 @@ export set
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"typedef unsigned idx;",
 		"unsigned seen;",
 		"void set(unsigned i);",
 		"void rangetypes::set(unsigned i)",
@@ -1551,7 +1554,7 @@ action step = {
 	// Python emit_some_action body shape (ivy_to_cpp.py:1592-1625):
 	//   declare primary-return local, run AssignAction(retval, rhs),
 	//   trailing `return retval;`. Mirrored by TODO 010 port.
-	for _, want := range []string{"bool is_red(color C);", "bool deriveds::is_red(deriveds::color C)", "val = (C == red);", "return val;", "ivy_assert(is_red(red)"} {
+	for _, want := range []string{"bool is_red(color C);", "bool deriveds::is_red(color C)", "val = (C == red);", "return val;", "ivy_assert(is_red(red)"} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
@@ -1599,7 +1602,7 @@ destructor shade(C:cell) : color
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"struct cell {", "color shade;", "bool operator==(const cell &other) const", "bool operator<(const cell &other) const"} {
+	for _, want := range []string{"struct cell {", "color shade;", "inline bool operator ==(const heap::cell &s, const heap::cell &t)"} {
 		if !strings.Contains(out.Header, want) {
 			t.Fatalf("missing %q in header:\n%s", want, out.Header)
 		}
@@ -1677,7 +1680,7 @@ export step
 	}
 	for _, want := range []string{
 		"struct request {",
-		"struct msg {",
+		"class msg {",
 		"struct wrap {",
 		"template <typename T> struct twrap : public wrap",
 		"int tag;",
@@ -1692,7 +1695,7 @@ export step
 		"template <> void __ser<variants::msg>",
 		"template <> void __deser<variants::msg>",
 		`g.ctx.function("*>:msg:request", g.sort("msg"), g.sort("request"), g.ctx.bool_sort())`,
-		"saved = msg(0, new msg::twrap<request>(loc__tmp));",
+		"saved = variants::msg(0, new variants::msg::twrap<variants::request>(loc__tmp));",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -1727,17 +1730,13 @@ export load
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"struct t {",
+		"class t {",
 		"struct wrap {",
 		"template <typename T> struct twrap : public wrap",
 		"if (v.tag == 0)",
-		// Variant `a` already has its `_arg<>` specialization emitted by
-		// variant.go; the dispatcher calls it directly. The bound for
-		// uninterpreted variant subtypes is 0 (Python csortcard fallback).
-		`variantdown::a _arg<variantdown::a>(std::vector<ivy_value> &args, unsigned idx, long long bound)`,
-		`ivy.save(_arg<variantdown::a>(args, 0, 0));`,
-		"v = t(0, new t::twrap<a>(inp));",
-		"a loc__q = t::unwrap< a >(v);",
+		`ivy.save(_arg<int>(args, 0, 0));`,
+		"v = variantdown::t(0, new variantdown::t::twrap<int>(inp));",
+		"int loc__q = variantdown::t::unwrap< int >(v);",
 		"out = loc__q;",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
@@ -1763,11 +1762,9 @@ export make
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"friend std::ostream &operator<<(std::ostream &out, const a &value)",
-		"friend std::ostream &operator<<(std::ostream &s, const t &t);",
 		"std::ostream &operator<<(std::ostream &s, const variantout::t &t)",
-		`case 0: s << "a:" << variantout::t::unwrap< variantout::a >(t); break;`,
-		"out = t(0, new t::twrap<a>(loc__q));",
+		`case 0: s << "a:" << variantout::t::unwrap< int >(t); break;`,
+		"out = variantout::t(0, new variantout::t::twrap<int>(loc__q));",
 		"variantout::t __ivy_result = ivy.make();",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
@@ -1797,12 +1794,11 @@ export make
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		"friend std::ostream &operator<<(std::ostream &out, const req &value)",
-		`out << "shade:";`,
-		`out << value.shade;`,
-		"friend std::ostream &operator<<(std::ostream &s, const t &t);",
+		"std::ostream &operator <<(std::ostream &s, const variantstructout::req &t)",
+		`s << "shade:";`,
+		`s << t.shade;`,
 		`case 0: s << "req:" << variantstructout::t::unwrap< variantstructout::req >(t); break;`,
-		"out = t(0, new t::twrap<req>(loc__r));",
+		"out = variantstructout::t(0, new variantstructout::t::twrap<variantstructout::req>(loc__r));",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -1826,7 +1822,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	if !strings.Contains(out.Impl, "ivy_assert((v.tag == 0 && t::unwrap< a >(v) == av)") {
+	if !strings.Contains(out.Impl, "ivy_assert((v.tag == 0 && variantrel::t::unwrap< int >(v) == av)") {
 		t.Fatalf("missing variant relation assertion:\n%s", out.Impl)
 	}
 	assertNoUnsupportedCPP(t, out)
@@ -1979,7 +1975,7 @@ action check = {
 	for _, want := range []string{
 		"for (auto it = edge.memo.begin(), en = edge.memo.end(); it != en; ++it)",
 		"int X = it->first.arg0;",
-		"if (edge[__tup__int__int(X, dst)]) return true;",
+		"if (edge[extq2::__tup__int__int(X, dst)]) return true;",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in binary extensional quantifier:\n%s", want, out.Impl)
@@ -2249,9 +2245,9 @@ individual v : t
 	}
 	for _, want := range []string{
 		"if (v.tag == 0)",
-		"a Q = t::unwrap< a >(v);",
+		"int Q = t::unwrap< int >(v);",
 		"return Q;",
-		"return a();",
+		"return 0;",
 	} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("missing %q in variant some expression:\n%s", want, got)
@@ -2312,7 +2308,7 @@ individual fallback : a
 	}
 	for _, want := range []string{
 		"if (v.tag == 0)",
-		"a Q = t::unwrap< a >(v);",
+		"int Q = t::unwrap< int >(v);",
 		"return Q;",
 		"return fallback;",
 	} {
@@ -2672,7 +2668,7 @@ func TestGeneratedChoiceActionCompiles(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"int ___ivy_choose(int rng, const char *name, int id);", "int runner::___ivy_choose", "return 0;"} {
+	for _, want := range []string{"int ___ivy_choose(int rng,const char *name,int id);", "int runner::___ivy_choose", "return 0;"} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
@@ -2729,7 +2725,7 @@ export pick
 		"for (auto it = marked.memo.begin(), en = marked.memo.end(); it != en; ++it)",
 		"if (!it->second) continue;",
 		"int loc__x = it->first;",
-		"if (!__ivy_some1 && (marked[loc__x]))",
+		"if (!__ivy_some0 && (marked[loc__x]))",
 		"saved = loc__x;",
 	} {
 		if !strings.Contains(out.Impl, want) {
@@ -2808,7 +2804,6 @@ after init {
 	}
 	// Two-phase quantified assignment per Python emit_assign.
 	for _, want := range []string{
-		"typedef unsigned idx;",
 		"for (unsigned I = 0; I <= 2; I++)",
 		"__ivy_tmp0[I] = false;",
 		"marked[I] = __ivy_tmp0[I];",
@@ -2862,7 +2857,7 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	for _, want := range []string{"color echo(color c)", "color out = red;", "return out;", "saved = echo(green);"} {
+	for _, want := range []string{"color echo(color c)", "calls::color out;", `out = (color)___ivy_choose(0, "fml:out", 0);`, "return out;", "saved = echo(green);"} {
 		if !strings.Contains(out.Impl, want) && !strings.Contains(out.Header, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
@@ -3212,8 +3207,8 @@ export step
 	}
 	for _, want := range []string{
 		"bool marked[2];",
-		"for (color X0 : {red, green}) {",
-		`marked[X0] = (bool)___ivy_choose(0, "marked"`,
+		"for (color X__0 : {red, green}) {",
+		`marked[X__0] = (bool)___ivy_choose(0, "marked"`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
@@ -3770,7 +3765,7 @@ action step(x:idx,y:idx) = {
 	// `idx` is registered in NativeTypes via `interpret idx -> <<< int >>>`
 	// (compiler_decl.go:1047), so the derived definition's ptype policy
 	// gives ConstRefType for its parameters (annotateAction, ptype.go:103).
-	for _, want := range []string{"bool lt(const idx& x, const idx& y);", "bool nativedef::lt(const nativedef::idx& x, const nativedef::idx& y)", "val = x < y;", "return val;", "ivy_assert(lt(x, y)"} {
+	for _, want := range []string{"bool lt(const idx& x, const idx& y);", "bool nativedef::lt(const idx& x, const idx& y)", "val = x < y;", "return val;", "ivy_assert(lt(x, y)"} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
@@ -4620,9 +4615,10 @@ export trigger
 			t.Fatalf("missing %q in repl impl:\n%s", want, out.Impl)
 		}
 	}
-	// __CARD__color is declared (set in cardinality initializers).
-	if !strings.Contains(out.Header, "long long __CARD__color;") {
-		t.Fatalf("missing __CARD__ declaration in header:\n%s", out.Header)
+	// Python only declares __CARD__ fields for interpreted sorts, even
+	// though import-return prompting references enum return sorts by name.
+	if strings.Contains(out.Header, "long long __CARD__color;") {
+		t.Fatalf("unexpected enum __CARD__ declaration under Python parity:\n%s", out.Header)
 	}
 }
 
@@ -5009,13 +5005,12 @@ export touch
 	// exist.
 	for _, want := range []string{
 		"static int ivy2cpp_random_node(gen &g)",
-		"static gennumeric::a ivy2cpp_random_a(gen &g)",
+		"static int ivy2cpp_random_a(gen &g)",
 		"return static_cast<int>(g.random_index(0, 4));",
-		"return static_cast<gennumeric::a>(g.random_index(0, 4));",
 		`randomize("__fml:n", "node");`,
 		`randomize("__fml:av", "a");`,
 		`n = (int)eval_apply("__fml:n");`,
-		`av = (gennumeric::a)eval_apply("__fml:av");`,
+		`av = (int)eval_apply("__fml:av");`,
 		"obj.touch(this->n, this->av);",
 	} {
 		if !strings.Contains(out.Impl, want) {
@@ -5593,8 +5588,6 @@ export step
 	}
 	text := out.Header + out.Impl
 	for _, want := range []string{
-		"typedef unsigned byte;",
-		"typedef unsigned nibble;",
 		"unsigned x;",
 		"unsigned y;",
 		"unsigned n;",
@@ -5798,7 +5791,6 @@ relation seen(T:text)
 		t.Fatalf("Generate storage: %v", err)
 	}
 	for _, want := range []string{
-		"typedef unsigned word;",
 		"class text : public std::string {",
 		"text owner[256];",
 		"hash_thunk<text,bool> seen;",
@@ -5984,9 +5976,8 @@ func TestDestructorMultiArgFieldDeclaration(t *testing.T) {
 		"size_t hv = 0;",
 		// cppHashType collapses enums to int for hashing; shade is an enum.
 		"hv += hash_space::hash<int>()(shade[X__0]);",
-		"bool operator==(const cell &other) const {",
-		"if (!(shade[X__0] == other.shade[X__0])) return false;",
-		"bool operator<(const cell &other) const {",
+		"inline bool operator ==(const heap::cell &s, const heap::cell &t)",
+		"return true;",
 	} {
 		if !strings.Contains(out.Header, want) {
 			t.Fatalf("missing %q in header:\n%s", want, out.Header)
@@ -6022,7 +6013,7 @@ destructor shade(C:cell, K:key) : color
 	if strings.Contains(out.Header, "hv += hash_space::hash<color>()(shade") {
 		t.Fatalf("hash should skip hash_thunk-storage destructor field:\n%s", out.Header)
 	}
-	if !strings.Contains(out.Header, "if (!(shade == other.shade)) return false;") {
+	if !strings.Contains(out.Header, "return ((s.shade == t.shade));") {
 		t.Fatalf("equality should fall back to scalar compare for hash_thunk field:\n%s", out.Header)
 	}
 	compileGeneratedCPP(t, out)
@@ -6030,20 +6021,20 @@ destructor shade(C:cell, K:key) : color
 
 func TestDestructorStructStreamMultiArg(t *testing.T) {
 	mod := compileIvySource(t, destructorMultiArgIvySource)
-	out, err := Generate(mod, Config{ClassName: "heap"})
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "heap"})
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
 	for _, want := range []string{
-		`out << "shade:";`,
-		`out << "[";`,
+		`s << "shade:";`,
+		`s << "[";`,
 		"for (int X__0 = 0; X__0 < 4; X__0++) {",
-		`if (X__0) out << ",";`,
-		"out << value.shade[X__0];",
-		`out << "]";`,
+		`if (X__0) s << ",";`,
+		"s << t.shade[X__0];",
+		`s << "]";`,
 	} {
-		if !strings.Contains(out.Header, want) {
-			t.Fatalf("missing %q in header writer:\n%s", want, out.Header)
+		if !strings.Contains(out.Header+out.Impl, want) {
+			t.Fatalf("missing %q in generated writer:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
 		}
 	}
 	compileGeneratedCPP(t, out)
@@ -6866,8 +6857,8 @@ export sender
 		t.Fatalf("Generate: %v", err)
 	}
 	// At the call site inside sender, the argument y:a is upcast to t.
-	// Python emits: receive(t(0, new t::twrap<a>(y)));
-	want := "receive(t(0, new t::twrap<a>(y)));"
+	// Python emits nullary/plain variant subtypes as int payloads.
+	want := "receive(upcast::t(0, new upcast::t::twrap<int>(y)));"
 	if !strings.Contains(out.Impl, want) {
 		t.Fatalf("expected argument-side upcast %q in impl:\n%s", want, out.Impl)
 	}
@@ -6900,8 +6891,8 @@ action step(p:t, q:t) = {
 	}
 	// Impl: signature + body shape.
 	for _, want := range []string{
-		"bool der::eq(der::t X, der::t Y)",
-		"bool val = false;",
+		"bool der::eq(t X, t Y)",
+		"bool val;",
 		"val = (X == Y);",
 		"return val;",
 	} {
@@ -6966,7 +6957,7 @@ definition lt(X:idx, Y:idx) = X < Y
 	// (compiler_decl.go:1047). isStructSort returns true → ConstRefType.
 	for _, want := range []string{
 		"bool lt(const idx& X, const idx& Y);",
-		"bool crd::lt(const crd::idx& X, const crd::idx& Y)",
+		"bool crd::lt(const idx& X, const idx& Y)",
 	} {
 		if !strings.Contains(out.Header+out.Impl, want) {
 			t.Fatalf("missing %q:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
@@ -8031,13 +8022,13 @@ export step
 	}
 	defIdx := strings.Index(out.Header, wantDefine)
 	incIdx := strings.Index(out.Header, wantInclude)
-	algIdx := strings.Index(out.Header, "#include <algorithm>")
-	if defIdx < 0 || incIdx < 0 || algIdx < 0 {
-		t.Fatalf("expected define, windows.h, and algorithm in header; got defIdx=%d incIdx=%d algIdx=%d", defIdx, incIdx, algIdx)
+	hashIdx := strings.Index(out.Header, `#include "ivy_hash.hpp"`)
+	if defIdx < 0 || incIdx < 0 || hashIdx < 0 {
+		t.Fatalf("expected define, windows.h, and ivy_hash.hpp in header; got defIdx=%d incIdx=%d hashIdx=%d", defIdx, incIdx, hashIdx)
 	}
-	if !(defIdx < incIdx && incIdx < algIdx) {
-		t.Fatalf("expected order: WIN32_LEAN_AND_MEAN(%d) < <windows.h>(%d) < <algorithm>(%d)\n%s",
-			defIdx, incIdx, algIdx, out.Header)
+	if !(defIdx < incIdx && incIdx < hashIdx) {
+		t.Fatalf("expected order: WIN32_LEAN_AND_MEAN(%d) < <windows.h>(%d) < ivy_hash.hpp(%d)\n%s",
+			defIdx, incIdx, hashIdx, out.Header)
 	}
 }
 
@@ -8308,10 +8299,10 @@ export step
 		// Bad value: multiple fields rejected.
 		`throw out_of_bounds("too many fields for sort t (expected one)", args[idx].pos);`,
 		// Good value paths: one per subtype, with upcast.
-		`if (args[idx].fields[0].atom == "a") return vrun::t(0, new vrun::t::twrap<vrun::a>(_arg<vrun::a>(args[idx].fields[0].fields, 0, 0)));`,
-		`if (args[idx].fields[0].atom == "b") return vrun::t(1, new vrun::t::twrap<vrun::b>(_arg<vrun::b>(args[idx].fields[0].fields, 0, 0)));`,
+		`if (args[idx].fields[0].atom == "a") return vrun::t(0, new vrun::t::twrap<int>(_arg<int>(args[idx].fields[0].fields, 0, 0)));`,
+		`if (args[idx].fields[0].atom == "b") return vrun::t(1, new vrun::t::twrap<int>(_arg<int>(args[idx].fields[0].fields, 0, 0)));`,
 		// Bad value: unknown subtype rejected.
-		`throw out_of_bounds("unexpected field sort t: " + args[idx].fields[0].atom, args[idx].pos);`,
+		`throw out_of_bounds("unexpected field sort SORTNAME: " + args[idx].fields[0].atom, args[idx].pos);`,
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)

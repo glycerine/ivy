@@ -88,7 +88,7 @@ func TestParserBitvectorWidthN(t *testing.T) {
 		{width: 32, want: []string{"_arg<unsigned>(args, 0, 4294967296)"}},
 		{width: 64, want: []string{"_arg<unsigned long long>(args, 0, 0)"}},
 		{width: 128, want: []string{"_arg<unsigned __int128>(args, 0, 0)"}},
-		{width: 256, want: []string{"_arg<ivy_uint<256>>(args, 0, 0)", "template <> ivy_uint<256> _arg<ivy_uint<256>>"}},
+		{width: 256, want: []string{"typedef ivy_uint<256> word;", "_arg<bvparse256::word>(args, 0, 0)", "template <> ivy_uint<256> _arg<ivy_uint<256>>"}},
 	}
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("bv%d", tt.width), func(t *testing.T) {
@@ -178,7 +178,6 @@ export echo
 	}
 	text := out.Header + "\n" + out.Impl
 	for _, want := range []string{
-		"typedef unsigned slot;",
 		"_arg<unsigned>(args, 0, 8)",
 		`std::cerr << "line " << lineno << ":" << err.pos << ": " << err.txt << " bad value" << std::endl;`,
 	} {

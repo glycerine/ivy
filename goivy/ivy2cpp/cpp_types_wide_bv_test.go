@@ -61,7 +61,8 @@ export set
 	text := out.Header + out.Impl
 	for _, want := range []string{
 		`#include "ivy_wide_uint.hpp"`,
-		"ivy_uint<256> x;",
+		"typedef ivy_uint<256> word;",
+		"word x;",
 		`x = (ivy_uint<256>("300") & ivy_uint<256>::mask());`,
 		"template <> void __from_solver<ivy_uint<256>>(gen &g, const z3::expr &v, ivy_uint<256> &res)",
 		"template <> z3::expr __to_solver<ivy_uint<256>>(gen &g, const char *sort_name, const ivy_uint<256> &val)",
@@ -97,7 +98,8 @@ export set
 	}
 	text := out.Header + out.Impl
 	for _, want := range []string{
-		"ivy_uint<513> x;",
+		"typedef ivy_uint<513> digest;",
+		"digest x;",
 		"ivy_uint<513>::mask()",
 		"template <> ivy_uint<513> _arg<ivy_uint<513>>(std::vector<ivy_value> &args, unsigned idx, long long bound)",
 	} {

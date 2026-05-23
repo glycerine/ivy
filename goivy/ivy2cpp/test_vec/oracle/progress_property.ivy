@@ -6,6 +6,8 @@ progress helper = helper_ready
 rely wait -> helper
 action step = {
     ready := true;
-    helper_ready := true
+    helper_ready := true;
+    assert ready;
+    assert helper_ready
 }
 export step
