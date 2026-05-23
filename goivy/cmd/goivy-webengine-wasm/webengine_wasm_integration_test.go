@@ -12,6 +12,36 @@ import (
 	"testing"
 )
 
+/*
+If this test goes red, check that the node version is v22.22.2, and not v23. for instance:
+
+(goivy-venv) jaten@aorus ~/ivy/goivy/cmd/goivy-webengine-wasm (master) $ go test -v
+=== RUN   TestBrowserWasmClientServerInductionKeepsGoRuntimeAlive
+
+	webengine_wasm_integration_test.go:66: run browser wasm client_server induction: exit status 1
+	    [webengine-wasm-test +0ms] importing browser wasm worker
+	    Error: Aborted(CompileError: WebAssembly.instantiate(): invalid value type 'exn', enable with --experimental-wasm-exnref @+72)
+	        at Object.postMessage (file:///tmp/TestBrowserWasmClientServerInductionKeepsGoRuntimeAlive3665260563/001/drive-webengine-wasm.mjs:116:23)
+	        at post (file:///wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/goivy/webui/frontend/src/workers/browserWasmEngine.worker.js:401:8)
+	        at handleMessage (file:///wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/goivy/webui/frontend/src/workers/browserWasmEngine.worker.js:129:5)
+
+--- FAIL: TestBrowserWasmClientServerInductionKeepsGoRuntimeAlive (0.13s)
+FAIL
+exit status 1
+FAIL	github.com/glycerine/ivy/goivy/cmd/goivy-webengine-wasm	0.136s
+(goivy-venv) jaten@aorus ~/ivy/goivy/cmd/goivy-webengine-wasm (master) $ node --version
+v23.11.0
+(goivy-venv) jaten@aorus ~/ivy/goivy/cmd/goivy-webengine-wasm (master) $ nvm use 22.22.2
+Now using node v22.22.2 (npm v10.9.7)
+(goivy-venv) jaten@aorus ~/ivy/goivy/cmd/goivy-webengine-wasm (master) $ node --version
+v22.22.2
+(goivy-venv) jaten@aorus ~/ivy/goivy/cmd/goivy-webengine-wasm (master) $ go test -v
+=== RUN   TestBrowserWasmClientServerInductionKeepsGoRuntimeAlive
+--- PASS: TestBrowserWasmClientServerInductionKeepsGoRuntimeAlive (1.69s)
+PASS
+ok  	github.com/glycerine/ivy/goivy/cmd/goivy-webengine-wasm	1.690s
+(goivy-venv) jaten@aorus ~/ivy/goivy/cmd/goivy-webengine-wasm (master) $
+*/
 func TestBrowserWasmClientServerInductionKeepsGoRuntimeAlive(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser wasm integration test in short mode")

@@ -119,7 +119,7 @@ z3-wasm-exports: webui/static/wasm/z3-wasm-exported-functions.json
 
 # builds: libz3.a(wasm despite the .a re-use); and in turn,
 # the build-wasm-api.sh script turns that into: z3-api.wasm and z3-api.js
-z3vendor/z3/wasm.build/libz3.a: z3vendor/z3/wasm.build/libz3.a webui/static/wasm/z3-wasm-exported-functions.json z3vendor/z3/build-wasm-api.sh z3vendor/z3/src/api/js/ivy_z3_wasm_syscalls.cc
+z3vendor/z3/wasm.build/libz3.a: webui/static/wasm/z3-wasm-exported-functions.json z3vendor/z3/build-wasm-api.sh z3vendor/z3/src/api/js/ivy_z3_wasm_syscalls.cc
 	cd z3vendor/z3 && \
 		EMSDK_QUIET=1 source "$(HOME)/go/src/github.com/emscripten-core/emsdk/emsdk_env.sh" && \
 		EM_CACHE="/tmp/ivy-emscripten-cache" AR=emar CXX=em++ CC=emcc \
