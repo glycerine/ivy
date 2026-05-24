@@ -77,6 +77,13 @@ type L2sGTriple = l2sGTriple
 // VarBodyPair holds a pair of variables and a body expression.
 type VarBodyPair = varBodyPair
 
+func l2sTraceSymbol(c *Const) string {
+	if c == nil {
+		return ""
+	}
+	return c.String()
+}
+
 // sortNamedBinderMap extracts values from a map[lg.NodeKey]*lg.NamedBinder and
 // returns them sorted by Canon() for deterministic cross-language ordering.
 func sortNamedBinderMap(m map[NodeKey]*LogicNamedBinder) []*LogicNamedBinder {
@@ -222,27 +229,21 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *NormalPr
 		for _, vb := range cfg.NamedBindersConjs["l2s_s"] {
 			seenSave[string(vb.Body.Sexp())] = true
 		}
-		m := cfg.Mod
 		for _, bnd := range model.Bindings {
 			for _, act := range bnd.Action.Stmt.IterSubactions() {
 				mods := Modifies(act)
 				for _, modSym := range mods {
-					symName := modSym.Name
-					if m != nil && m.Sig != nil {
-						if entry, ok := m.Sig.Symbols.Get2(symName); ok {
-							vs := SymPlaceholders(NewConst(symName, entry.Sort))
-							var expr Expr
-							if len(vs) > 0 {
-								expr = checkMustApply(NewConst(symName, entry.Sort), checkVarsToNodes(vs)...)
-							} else {
-								expr = NewConst(symName, entry.Sort)
-							}
-							key := string(expr.Sexp())
-							if !seenSave[key] {
-								cfg.NamedBindersConjs["l2s_s"] = append(cfg.NamedBindersConjs["l2s_s"],
-									VarBodyPair{vs, expr})
-							}
-						}
+					vs := SymPlaceholders(modSym)
+					var expr Expr
+					if len(vs) > 0 {
+						expr = checkMustApply(modSym, checkVarsToNodes(vs)...)
+					} else {
+						expr = modSym
+					}
+					key := string(expr.Sexp())
+					if !seenSave[key] {
+						cfg.NamedBindersConjs["l2s_s"] = append(cfg.NamedBindersConjs["l2s_s"],
+							VarBodyPair{vs, expr})
 					}
 				}
 			}
@@ -451,7 +452,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 			if c, ok := sym.(*Const); ok {
 				k := c.Sexp()
 				if !cfg.IsRankingTactic {
-					xtracer.Trace("l2s.SharedStep7 symprops triple[%d] sym[%d]=%s HASH canon=%s", displayTi, si, c.Name, triple.Body.Canon())
+					xtracer.Trace("l2s.SharedStep7 symprops triple[%d] sym[%d]=%s HASH canon=%s", displayTi, si, l2sTraceSymbol(c), triple.Body.Canon())
 				}
 				symprops[k] = append(symprops[k], prop)
 
@@ -469,8 +470,8 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 			if c, ok := sym.(*Const); ok {
 				k := c.Sexp()
 				if !cfg.IsRankingTactic && xtracer.Enabled {
-					xtracer.Trace("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, when.Body.Canon())
-					fmt.Printf("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s\n", wi, si, c.Name, when.Body.Canon())
+					xtracer.Trace("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s", wi, si, l2sTraceSymbol(c), when.Body.Canon())
+					fmt.Printf("l2s.SharedStep7 symwhens when[%d] sym[%d]=%s HASH canon=%s\n", wi, si, l2sTraceSymbol(c), when.Body.Canon())
 				}
 				symwhens[k] = append(symwhens[k], when)
 
@@ -489,7 +490,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *NormalProg
 			if c, ok := sym.(*Const); ok {
 				k := c.Sexp()
 				if !cfg.IsRankingTactic {
-					xtracer.Trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s", wi, si, c.Name, vb.Body.Canon())
+					xtracer.Trace("l2s.SharedStep7 symwaits toWait[%d] sym[%d]=%s HASH canon=%s", wi, si, l2sTraceSymbol(c), vb.Body.Canon())
 				}
 				symwaits[k] = append(symwaits[k], wait)
 

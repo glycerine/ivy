@@ -427,9 +427,10 @@ func TestZ3BridgeClausesToZ3Empty(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	str := expr.String()
-	if str != "true" {
-		t.Fatalf("empty clauses should translate to true, got %s", str)
+	z3solver := s.newZ3Solver()
+	z3solver.Assert(expr)
+	if got, want := z3solver.CanonZ3Assertions(), "(asserts (c and Bool))"; got != want {
+		t.Fatalf("empty clauses Z3 canon = %s, want %s", got, want)
 	}
 }
 

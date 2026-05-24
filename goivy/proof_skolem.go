@@ -12,6 +12,11 @@ import (
 // existential prenex form.
 // If prenex is false, don't convert to prenex form.
 func SkolemizeGoal(cfg *AstConfig, goal *LabeledFormula, prenex bool) *LabeledFormula {
+	result, _ := SkolemizeGoalE(cfg, goal, prenex)
+	return result
+}
+
+func SkolemizeGoalE(cfg *AstConfig, goal *LabeledFormula, prenex bool) (*LabeledFormula, error) {
 	xtracer.Trace("proof.SkolemizeGoal ENTER prenex=%v label=%s HASH canon=%v", prenex, goal.LabelForTrace(), goal.Canon())
 	vocab := GoalVocab(goal)
 	usedNames := make(map[string]struct{})
@@ -49,7 +54,11 @@ func SkolemizeGoal(cfg *AstConfig, goal *LabeledFormula, prenex bool) *LabeledFo
 			subs[Key(v)] = sk
 			xtracer.Trace("proof.SkolemizeGoal substitute v=%s sk=%s", v.Name, name)
 		}
-		goal = varSubstGoal(cfg, goal, subs)
+		var err error
+		goal, err = varSubstGoal(cfg, goal, subs)
+		if err != nil {
+			return nil, err
+		}
 		skfuns = append(skfuns, sks...)
 	}
 
@@ -82,7 +91,7 @@ func SkolemizeGoal(cfg *AstConfig, goal *LabeledFormula, prenex bool) *LabeledFo
 	newPrems = append(newPrems, GoalPrems(goal)...)
 	result := CloneGoal(cfg, goal, newPrems, GoalConc(goal))
 	xtracer.Trace("proof.SkolemizeGoal EXIT nskfuns=%d HASH canon=%v", len(skfuns), result.Canon())
-	return result
+	return result, nil
 }
 
 // SkolemizeFmla skolemizes a formula.
@@ -313,15 +322,19 @@ func outerVarsInFormula(fmla Expr, outer []*LogicVariable) []*LogicVariable {
 // Mirrors Python ivy_proof.py:1364-1368 var_subst_goal — uses apply_to_conc
 // so the substitution runs on the inner formula of *ast.TemporalModels and
 // the wrapper is preserved.
-func varSubstGoal(cfg *AstConfig, goal *LabeledFormula, subs map[NodeKey]Expr) *LabeledFormula {
+func varSubstGoal(cfg *AstConfig, goal *LabeledFormula, subs map[NodeKey]Expr) (*LabeledFormula, error) {
 	xtracer.Trace("proof.varSubstGoal ENTER label=%s nsubs=%d", goal.LabelForTrace(), len(subs))
 	prems := GoalPrems(goal)
 	newPrems := make([]Node, len(prems))
 	for i, p := range prems {
 		if lf, ok := p.(*LabeledFormula); ok {
-			newPrems[i] = varSubstGoal(cfg, lf, subs)
+			lfSubst, err := varSubstGoal(cfg, lf, subs)
+			if err != nil {
+				return nil, err
+			}
+			newPrems[i] = lfSubst
 		} else {
-			newPrems[i] = p
+			return nil, fmt.Errorf("'%s' object has no attribute 'label'", TypeName(p))
 		}
 	}
 	newConc := ApplyToConc(GoalConc(goal), func(c Expr) Expr {
@@ -333,7 +346,7 @@ func varSubstGoal(cfg *AstConfig, goal *LabeledFormula, subs map[NodeKey]Expr) *
 	})
 	result := CloneGoal(cfg, goal, newPrems, newConc)
 	xtracer.Trace("proof.varSubstGoal EXIT HASH canon=%v", result.Canon())
-	return result
+	return result, nil
 }
 
 // keysFromRenamer extracts the used names from a UniqueRenamer.

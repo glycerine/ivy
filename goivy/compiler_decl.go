@@ -808,7 +808,7 @@ func (d *DomainSetup) DefinitionDecl(node Node) error {
 	if def, ok := compiled.(*IvyDefinition); ok {
 		definesNode := def.Defines()
 		if cnst, ok := definesNode.(*Const); ok {
-			if _, exists := d.Compiler.Sig.Symbols.Get2(cnst.Name); !exists {
+			if !d.Compiler.Sig.ContainsSymbol(cnst.Name, cnst.CSort) {
 				d.Compiler.AddSymbol(cnst.Name, cnst.CSort, d.Compiler.Sig)
 			}
 			d.Compiler.Module.SymbolOrder = append(d.Compiler.Module.SymbolOrder, cnst)

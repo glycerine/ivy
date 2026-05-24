@@ -80,7 +80,10 @@ func (c *Compiler) OtherThing(node Node) (Expr, error) {
 	// by explicit cases in CompileNode before reaching here. This path
 	// handles CompiledNode-wrapped actions and other lg.Expr nodes.
 	if isSortInferRoot(node) {
+		tsDefault := TopSortAsDefault(c.Sig)
+		tsDefault.Enter()
 		compiled, err := c.CompileRootArgs(node.Args())
+		tsDefault.Exit()
 		if err != nil {
 			return nil, err
 		}
@@ -92,28 +95,91 @@ func (c *Compiler) OtherThing(node Node) (Expr, error) {
 		cloned := node.Clone(compiledNodes)
 		if expr, ok := cloned.(Expr); ok {
 			result, err := c.SortInfer(expr)
-			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", compilerTypeName(node)))
-			return result, err
+			if err != nil {
+				return nil, err
+			}
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=True", compilerTypeName(node)))
+			return result, nil
+		}
+		if expr, ok, err := sortInferRootActionExpr(node, compiled); err != nil {
+			return nil, err
+		} else if ok {
+			result, err := c.SortInfer(expr)
+			if err != nil {
+				return nil, err
+			}
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=True", compilerTypeName(node)))
+			return result, nil
 		}
 		// Fallback: sort-infer on combined compiled args
 		if len(compiled) == 0 {
-			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", compilerTypeName(node)))
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=True", compilerTypeName(node)))
 			return True, nil
 		}
 		if len(compiled) == 1 {
 			result, err := c.SortInfer(compiled[0])
-			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", compilerTypeName(node)))
-			return result, err
+			if err != nil {
+				return nil, err
+			}
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=True", compilerTypeName(node)))
+			return result, nil
 		}
 		combined := &LogicAnd{Terms: compiled}
 		result, err := c.SortInfer(combined)
-		xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", compilerTypeName(node)))
-		return result, err
+		if err != nil {
+			return nil, err
+		}
+		xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=True", compilerTypeName(node)))
+		return result, nil
 	}
 	// Default: compile each child and clone
 	result, err := c.compileGeneric(node)
+	if err != nil {
+		return nil, err
+	}
 	xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=False", compilerTypeName(node)))
-	return result, err
+	return result, nil
+}
+
+func sortInferRootActionExpr(node Node, args []Expr) (Expr, bool, error) {
+	switch n := node.(type) {
+	case *SetAction:
+		if len(args) != 1 {
+			return nil, true, fmt.Errorf("set action expects 1 arg, got %d", len(args))
+		}
+		act := NewSetAction(args[0])
+		act.SetLineno(n.GetLineno())
+		return act, true, nil
+	case *HavocAction:
+		if len(args) != 1 {
+			return nil, true, fmt.Errorf("havoc action expects 1 arg, got %d", len(args))
+		}
+		act := NewHavocAction(args[0])
+		act.SetLineno(n.GetLineno())
+		return act, true, nil
+	case *AssignFieldAction:
+		if len(args) != 3 {
+			return nil, true, fmt.Errorf("assign_field action expects 3 args, got %d", len(args))
+		}
+		act := NewAssignFieldAction(args[1], args[0], args[2])
+		act.SetLineno(n.GetLineno())
+		return act, true, nil
+	case *NullFieldAction:
+		if len(args) != 2 {
+			return nil, true, fmt.Errorf("null_field action expects 2 args, got %d", len(args))
+		}
+		act := NewNullFieldAction(args[1], args[0])
+		act.SetLineno(n.GetLineno())
+		return act, true, nil
+	case *CopyFieldAction:
+		if len(args) != 4 {
+			return nil, true, fmt.Errorf("copy_field action expects 4 args, got %d", len(args))
+		}
+		act := NewCopyFieldAction(args[0], args[1], args[2], args[3])
+		act.SetLineno(n.GetLineno())
+		return act, true, nil
+	}
+	return nil, false, nil
 }
 
 // isSortInferRoot returns true if the node type should use root compilation
@@ -135,6 +201,12 @@ func isSortInferRoot(node Node) bool {
 	case *SetAction:
 		return true
 	case *HavocAction:
+		return true
+	case *AssignFieldAction:
+		return true
+	case *NullFieldAction:
+		return true
+	case *CopyFieldAction:
 		return true
 	case *AssumeAction:
 		return true
@@ -203,6 +275,7 @@ func (c *Compiler) CompileRootArgs(args []Node) ([]Expr, error) {
 		}
 		result[i] = r
 	}
+	xtracer.Trace("compiler.CompileRootArgs return")
 	return result, nil
 }
 
@@ -2905,8 +2978,8 @@ func collectFormulaSymbolsRec(fmla interface{}, result map[NodeKey]bool) {
 	case *Const:
 		result[Key(n)] = true
 	case Expr:
-		for _, child := range n.Children() {
-			collectFormulaSymbolsRec(child, result)
+		for k := range UsedSymbolsAst(n).All() {
+			result[k] = true
 		}
 	case Node:
 		for _, arg := range n.Args() {

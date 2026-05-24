@@ -49,6 +49,10 @@ func ReadParams(args []string, reg *ParameterRegistry) ([]string, error) {
 // from the #lang ivy header.
 // Corresponds to Python's read_module (lines 2267-2296).
 func ReadModule(filename string, nested bool, cfg *Config) (*ParseResult, error) {
+	return readModuleWithParent(filename, nested, cfg, nil)
+}
+
+func readModuleWithParent(filename string, nested bool, cfg *Config, parent *ivyAccum) (*ParseResult, error) {
 	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
 	data, err := fileops.ReadFile(filename)
 	if err != nil {
@@ -84,13 +88,16 @@ func ReadModule(filename string, nested bool, cfg *Config) (*ParseResult, error)
 		version := parseIvyVersion(cfg.IuCfg.GetStringVersion())
 
 		// Use the LALR(1) goyacc-generated parser (faithful to Python PLY grammar)
-		importer := func(name string) (*ParseResult, error) {
-			return ImportModule(name, cfg)
+		importer := func(name string, parent *ivyAccum) (*ParseResult, error) {
+			return importModuleWithParent(name, cfg, parent)
 		}
 		opts := []ParseOption{
 			WithImporter(importer),
 			WithIncluded(cfg.GlobalIncluded),
 			WithFilename(filename),
+		}
+		if parent != nil {
+			opts = append(opts, WithParentAccum(parent))
 		}
 		if cfg != nil && cfg.AstCfg != nil {
 			opts = append(opts, WithAstConfig(cfg.AstCfg))
@@ -135,6 +142,10 @@ func ReadModuleFromString(source string, cfg *Config) (*ParseResult, error) {
 // counterpart of ReadModule: goldweb sends a spec string, but conformance still
 // needs stable file names in xtrace output.
 func ReadModuleFromNamedString(filename, source string, nested bool, cfg *Config) (*ParseResult, error) {
+	return readModuleFromNamedStringWithParent(filename, source, nested, cfg, nil)
+}
+
+func readModuleFromNamedStringWithParent(filename, source string, nested bool, cfg *Config, parent *ivyAccum) (*ParseResult, error) {
 	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
 
 	header, rest, hasRest := strings.Cut(source, "\n")
@@ -162,13 +173,16 @@ func ReadModuleFromNamedString(filename, source string, nested bool, cfg *Config
 			}
 		}
 		version := parseIvyVersion(cfg.IuCfg.GetStringVersion())
-		importer := func(name string) (*ParseResult, error) {
-			return ImportModule(name, cfg)
+		importer := func(name string, parent *ivyAccum) (*ParseResult, error) {
+			return importModuleWithParent(name, cfg, parent)
 		}
 		opts := []ParseOption{
 			WithImporter(importer),
 			WithIncluded(cfg.GlobalIncluded),
 			WithFilename(filename),
+		}
+		if parent != nil {
+			opts = append(opts, WithParentAccum(parent))
 		}
 		if cfg != nil && cfg.AstCfg != nil {
 			opts = append(opts, WithAstConfig(cfg.AstCfg))
@@ -191,6 +205,10 @@ func ReadModuleFromNamedString(filename, source string, nested bool, cfg *Config
 // current directory and then in the standard include directory.
 // Corresponds to Python's import_module (lines 2298-2310).
 func ImportModule(name string, cfg *Config) (res *ParseResult, err error) {
+	return importModuleWithParent(name, cfg, nil)
+}
+
+func importModuleWithParent(name string, cfg *Config, parent *ivyAccum) (res *ParseResult, err error) {
 	xtracer.Trace("init.ImportModule ENTER name=%s", name)
 	defer func() { xtracer.Trace("init.ImportModule EXIT name=%s", name) }()
 
@@ -201,7 +219,7 @@ func ImportModule(name string, cfg *Config) (res *ParseResult, err error) {
 				var result *ParseResult
 				var resultErr error
 				cfg.IuCfg.WithSourceFile(cachedName, func() {
-					result, resultErr = ReadModuleFromNamedString(cachedName, source, true, cfg)
+					result, resultErr = readModuleFromNamedStringWithParent(cachedName, source, true, cfg, parent)
 				})
 				return result, resultErr
 			}
@@ -219,7 +237,7 @@ func ImportModule(name string, cfg *Config) (res *ParseResult, err error) {
 	var result *ParseResult
 	var resultErr error
 	cfg.IuCfg.WithSourceFile(fname, func() {
-		result, resultErr = ReadModule(fname, true, cfg)
+		result, resultErr = readModuleWithParent(fname, true, cfg, parent)
 	})
 	return result, resultErr
 }

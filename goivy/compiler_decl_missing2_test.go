@@ -182,6 +182,46 @@ func TestDefinitionDeclDoesNotPreloadPolymorphicLHSIntoSig(t *testing.T) {
 	}
 }
 
+func TestDefinitionDeclAddsMissingPolymorphicLHSVariant(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	tSort := &UninterpretedSort{Name: "t"}
+	uSort := &UninterpretedSort{Name: "u"}
+	c.Sig.Sorts.Set("t", tSort)
+	c.Sig.Sorts.Set("u", uSort)
+	tLtSort, err := NewFunctionSort(tSort, tSort, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	uLtSort, err := NewFunctionSort(uSort, uSort, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := c.Sig.AddSymbol("<", tLtSort); err != nil {
+		t.Fatalf("AddSymbol(< t): %v", err)
+	}
+
+	x := cfg.NewVariable("X", "u")
+	y := cfg.NewVariable("Y", "u")
+	lhs := cfg.NewAtom("<", x, y)
+	rhs := cfg.NewAtom("true")
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewDefinitionDecl(lf)
+
+	if err := d.ProcessDecl(decl); err != nil {
+		t.Fatalf("ProcessDecl(DefinitionDecl): %v", err)
+	}
+	if !c.Sig.ContainsSymbol("<", tLtSort) {
+		t.Fatal("expected existing '<:t * t -> Boolean' variant to remain")
+	}
+	if !c.Sig.ContainsSymbol("<", uLtSort) {
+		t.Fatal("expected definition processing to add missing '<:u * u -> Boolean' variant")
+	}
+}
+
 // ============================================================
 // Item 12: DerivedUpdate creation
 // Python: derived() (line 1167) and definition() (line 1176) both append

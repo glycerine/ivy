@@ -165,13 +165,12 @@ func compileTacticLets(mod *Module, cfg *AstConfig, goal *LabeledFormula, proofN
 	}
 
 	lets := tt.TacticLetsList()
-	if len(lets) == 0 {
-		// No lets — empty condition
-		return nil, nil, nil, nil
-	}
-
-	// Python: vocab = pr.goal_vocab(goal, bound=True)
+	// Python computes the bound goal vocabulary before iterating tactic_lets,
+	// even when the list is empty.
 	vocab := GoalVocabBound(goal)
+	if len(lets) == 0 {
+		return nil, NormalizedAnd(), nil, nil
+	}
 
 	// Python: defs = [pr.compile_expr_vocab(ivy_ast.Atom('=', x.args[0], x.args[1]), vocab) for x in proof.tactic_lets]
 	var defs []Expr
@@ -228,13 +227,10 @@ func ApplyTempind(mod *Module, cfg *AstConfig, goal *LabeledFormula, proofNode N
 	}
 
 	// Python: conc = pr.goal_conc(goal)
-	// GoalConc now returns ast.Node so it can carry *ast.TemporalModels.
-	// Check the formula directly for TemporalModels first; otherwise use
-	// GoalConcExpr to get the lg.Expr conclusion.
-	fmlaNode := goal.Formula
+	conc := GoalConc(goal)
 
 	// Python: if not (goal.temporal or isinstance(conc, ivy_ast.TemporalModels)):
-	tm, isTM := fmlaNode.(*TemporalModels)
+	tm, isTM := conc.(*TemporalModels)
 	if !goal.IsTemporal() && !isTM {
 		return nil, fmt.Errorf("tactics/ivy_tactics: [3]proof goal is not temporal")
 	}
@@ -251,7 +247,7 @@ func ApplyTempind(mod *Module, cfg *AstConfig, goal *LabeledFormula, proofNode N
 		newFmla = tm.Clone([]Node{transformed})
 	} else {
 		// Python: fmla = tempind_fmla(conc, cond, params)
-		concExpr := GoalConcExpr(goal)
+		concExpr, _ := conc.(Expr)
 		if concExpr == nil {
 			return nil, fmt.Errorf("tempind: goal conclusion is not an lg.Expr")
 		}
@@ -326,10 +322,10 @@ func ApplyTempcase(mod *Module, cfg *AstConfig, goal *LabeledFormula, proofNode 
 	// params are the variables (LHS of each let), used as vs in tempcase_fmla
 	vs := params
 
-	fmlaNode := goal.Formula
+	conc := GoalConc(goal)
 
 	var newFmla Node
-	if tm, ok := fmlaNode.(*TemporalModels); ok {
+	if tm, ok := conc.(*TemporalModels); ok {
 		innerFmla, ok := tm.Fmla.(Expr)
 		if !ok {
 			return nil, fmt.Errorf("TemporalModels.Fmla is not lg.Expr: %T", tm.Fmla)
@@ -340,7 +336,7 @@ func ApplyTempcase(mod *Module, cfg *AstConfig, goal *LabeledFormula, proofNode 
 		}
 		newFmla = tm.Clone([]Node{transformed})
 	} else {
-		concExpr := GoalConcExpr(goal)
+		concExpr, _ := conc.(Expr)
 		if concExpr == nil {
 			return nil, fmt.Errorf("tempcase: goal conclusion is not an lg.Expr")
 		}
@@ -423,7 +419,11 @@ func Skolemize(pc ProofCheckerInterface, decls []*LabeledFormula, proofNode Node
 	}
 	goal := decls[0]
 	// Python: goal = pr.skolemize_goal(goal)
-	goal = SkolemizeGoal(pcAstCfg(pc), goal, true)
+	var err error
+	goal, err = SkolemizeGoalE(pcAstCfg(pc), goal, true)
+	if err != nil {
+		return nil, err
+	}
 	result := make([]*LabeledFormula, 0, len(decls))
 	result = append(result, goal)
 	result = append(result, decls[1:]...)
@@ -438,7 +438,11 @@ func Skolemizenp(pc ProofCheckerInterface, decls []*LabeledFormula, proofNode No
 	}
 	goal := decls[0]
 	// Python: goal = pr.skolemize_goal(goal, prenex=False)
-	goal = SkolemizeGoal(pcAstCfg(pc), goal, false)
+	var err error
+	goal, err = SkolemizeGoalE(pcAstCfg(pc), goal, false)
+	if err != nil {
+		return nil, err
+	}
 	result := make([]*LabeledFormula, 0, len(decls))
 	result = append(result, goal)
 	result = append(result, decls[1:]...)

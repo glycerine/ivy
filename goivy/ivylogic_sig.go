@@ -332,7 +332,11 @@ func (s *Sig) Canon() Canonical {
 	sort.Strings(sortNames)
 	symParts := make([]string, 0, s.Symbols.Len())
 	for name, entry := range s.Symbols.All() {
-		symParts = append(symParts, name+":"+IvySortName(entry.Sort))
+		sortName := IvySortName(entry.Sort)
+		if entry.Union != nil {
+			sortName = entry.Union.String()
+		}
+		symParts = append(symParts, name+":"+sortName)
 	}
 	sort.Strings(symParts)
 	return Canonical(fmt.Sprintf("(sig sorts:[%s] symbols:[%s])",

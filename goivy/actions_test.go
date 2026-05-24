@@ -40,6 +40,18 @@ func TestAssumeAction(t *testing.T) {
 	}
 }
 
+func TestAssumeActionStringUsesLabeledFormula(t *testing.T) {
+	cfg := NewAstConfig()
+	fmla := actionsMkConst("p")
+	lf := cfg.NewLabeledFormula(cfg.NewAtom("asrt1"), fmla)
+	a := NewAssumeAction(fmla)
+	a.LF = lf
+
+	if got, want := a.String(), "assume [asrt1] p"; got != want {
+		t.Fatalf("String() = %q, want %q", got, want)
+	}
+}
+
 func TestAssertAction(t *testing.T) {
 	fmla := actionsMkConst("q")
 	a := NewAssertAction(fmla)
@@ -48,6 +60,18 @@ func TestAssertAction(t *testing.T) {
 	}
 	if !strings.Contains(a.String(), "assert") {
 		t.Errorf("String() = %q", a.String())
+	}
+}
+
+func TestAssertActionStringUsesLabeledFormula(t *testing.T) {
+	cfg := NewAstConfig()
+	fmla := actionsMkConst("q")
+	lf := cfg.NewLabeledFormula(cfg.NewAtom("asrt2"), fmla)
+	a := NewAssertAction(fmla)
+	a.LF = lf
+
+	if got, want := a.String(), "assert [asrt2] q"; got != want {
+		t.Fatalf("String() = %q, want %q", got, want)
 	}
 }
 

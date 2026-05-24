@@ -8,6 +8,28 @@ import (
 	"testing"
 )
 
+func TestGetSymbolDependenciesIncludesAppliedFunctionDefinitions(t *testing.T) {
+	x, err := NewVariable("X", TopS)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	a := NewConst("a", TopS)
+	derived := NewConst("derived", TopS)
+	defMap := map[NodeKey]interface{}{
+		Key(derived): MustApply(a, x),
+	}
+	deps := make(map[NodeKey]bool)
+
+	GetSymbolDependencies(defMap, deps, MustApply(derived, x))
+
+	if !deps[Key(derived)] {
+		t.Fatalf("dependencies did not include applied function %s", derived)
+	}
+	if !deps[Key(a)] {
+		t.Fatalf("dependencies did not follow %s definition to %s", derived, a)
+	}
+}
+
 // TestRegression_ActionInsideIsolateBody verifies that actions declared inside
 // an isolate body are registered in mod.Actions and visible to CreateIsolate.
 //
@@ -379,5 +401,41 @@ instance idx : mymod
 	// The error must NOT be "unknown type: t"
 	if err != nil && strings.Contains(err.Error(), "unknown type: t") {
 		t.Errorf("alias type 't' not resolved after module expansion: %v", err)
+	}
+}
+
+func TestOtherThingSortInferRootPreservesAstHavocAction(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+	idSort := &UninterpretedSort{Name: "id"}
+	if err := c.Sig.AddSort(idSort); err != nil {
+		t.Fatalf("add sort: %v", err)
+	}
+	if _, err := c.Sig.AddSymbol("src", idSort); err != nil {
+		t.Fatalf("add symbol: %v", err)
+	}
+
+	seqNode := cfg.NewSequence(cfg.NewHavocAction(cfg.NewAtom("src")))
+	result, err := c.CompileActionBody(seqNode)
+	if err != nil {
+		t.Fatalf("compile sequence with havoc: %v", err)
+	}
+	seq, ok := result.(*LogicSequence)
+	if !ok {
+		t.Fatalf("expected compiled sequence, got %T", result)
+	}
+	if len(seq.Elems) != 1 {
+		t.Fatalf("expected one sequence element, got %d", len(seq.Elems))
+	}
+	havoc, ok := seq.Elems[0].(*LogicHavocAction)
+	if !ok {
+		t.Fatalf("expected havoc action to be preserved, got %T: %s", seq.Elems[0], seq.Elems[0])
+	}
+	target, ok := havoc.Target.(*Const)
+	if !ok {
+		t.Fatalf("expected havoc target const, got %T", havoc.Target)
+	}
+	if target.Name != "src" || !SortEqual(target.CSort, idSort) {
+		t.Fatalf("unexpected havoc target: %s : %s", target.Name, target.CSort)
 	}
 }

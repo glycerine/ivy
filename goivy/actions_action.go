@@ -167,10 +167,17 @@ func (a *LogicAssumeAction) ActionClone(args []Expr) ActionsAction {
 	return &LogicAssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Unprovable: a.Unprovable}
 }
 func (a *LogicAssumeAction) String() string {
-	return "assume " + fmt.Sprint(a.Formula)
+	return "assume " + actionFormulaString(a.LF, a.Formula)
 }
 func (a *LogicAssumeAction) IterCalls() []string             { return nil }
 func (a *LogicAssumeAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
+
+func actionFormulaString(lf *LabeledFormula, formula Expr) string {
+	if lf != nil {
+		return fmt.Sprint(lf)
+	}
+	return fmt.Sprint(formula)
+}
 
 // --- AssertAction ---
 
@@ -213,7 +220,11 @@ func (a *LogicAssertAction) ActionClone(args []Expr) ActionsAction {
 	return r
 }
 func (a *LogicAssertAction) String() string {
-	return "assert " + fmt.Sprint(a.Formula)
+	parts := []string{actionFormulaString(a.LF, a.Formula)}
+	if a.Proof != nil {
+		parts = append(parts, fmt.Sprint(a.Proof))
+	}
+	return "assert " + strings.Join(parts, ", ")
 }
 func (a *LogicAssertAction) IterCalls() []string             { return nil }
 func (a *LogicAssertAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }

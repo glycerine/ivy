@@ -385,7 +385,7 @@ func (s *Solver) ClausesToZ3(clauses *Clauses) (smt.Z3Expr, error) {
 	// wraps unconditionally — even with 0 or 1 clauses. We must do the
 	// same: a 1-clause unwrap shortcut would change the Z3 AST shape and
 	// break the z3.check canon hash comparison.
-	return s.tr.Ctx.And(exprs...), nil
+	return s.tr.Ctx.AndApp(exprs...), nil
 }
 
 // buildConstraintTerm builds a term for type constraints.

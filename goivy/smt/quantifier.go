@@ -375,13 +375,23 @@ func (ctx *Z3Context) And(args ...Z3Expr) Z3Expr {
 	if len(args) == 0 {
 		return ctx.BoolVal(true)
 	}
+	return ctx.AndApp(args...)
+}
+
+// AndApp returns Z3's raw and-application, preserving the AST shape even for
+// zero arguments. This matches z3py's z3.And(list) form used by clauses_to_z3.
+func (ctx *Z3Context) AndApp(args ...Z3Expr) Z3Expr {
 	cargs := make([]C.Z3_ast, len(args))
 	for i, a := range args {
 		cargs[i] = a.c
 	}
+	var cptr *C.Z3_ast
+	if len(cargs) > 0 {
+		cptr = &cargs[0]
+	}
 	var r Z3Expr
 	ctx.do(func() {
-		r = ctx.newExpr(C.Z3_mk_and(ctx.c, C.uint(len(cargs)), &cargs[0]))
+		r = ctx.newExpr(C.Z3_mk_and(ctx.c, C.uint(len(cargs)), cptr))
 	})
 	runtime.KeepAlive(args)
 	return r

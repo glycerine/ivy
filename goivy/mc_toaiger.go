@@ -162,8 +162,6 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 		_ = RenameClauses(updWithAxioms.Pre, rn)
 	}
 
-	xtracer.Trace("mc.ToAiger postAddPostAxioms nStVars=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s", len(updWithAxioms.Modified), len(trans.Fmlas), len(trans.Defs), trans.Canon())
-
 	// Python: stvars = [x for x in stvars if x not in defsyms]
 	// Use []*lg.Const (matching Python's stvars [Symbol]) to preserve sort info.
 	stVars := make([]*Const, 0, len(updWithAxioms.Modified))
@@ -172,6 +170,8 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 			stVars = append(stVars, sv)
 		}
 	}
+
+	xtracer.Trace("mc.ToAiger postAddPostAxioms nStVars=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s", len(stVars), len(trans.Fmlas), len(trans.Defs), trans.Canon())
 
 	annot := trans.Annot
 

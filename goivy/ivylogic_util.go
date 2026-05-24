@@ -239,7 +239,7 @@ func IvyForAll(vs []*LogicVariable, body Expr) Expr {
 	if len(vs) == 0 {
 		return body
 	}
-	return &ForAll{Variables: vs, Body: body}
+	return &ForAll{Variables: deduplicateAndSortVars(vs), Body: body}
 }
 
 // Exists creates an Exists node, or returns the body if vars is empty.
@@ -247,7 +247,7 @@ func IvyExists(vs []*LogicVariable, body Expr) Expr {
 	if len(vs) == 0 {
 		return body
 	}
-	return &LogicExists{Variables: vs, Body: body}
+	return &LogicExists{Variables: deduplicateAndSortVars(vs), Body: body}
 }
 
 // CloseFormula universally quantifies over all free variables.

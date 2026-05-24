@@ -711,8 +711,12 @@ func (pc *ProofChecker) tacticTactic(decls []*LabeledFormula, proof *TacticTacti
 		return nil, &ProofError{Msg: fmt.Sprintf("unknown tactic: %s", tn)}
 	}
 	result, err := tactic(pc, decls, proof)
-	xtracer.Trace("proof.tacticTactic EXIT name=%s nresult=%d err=%v", tn, len(result), err)
-	return result, err
+	if err != nil {
+		xtracer.Trace("proof.tacticTactic EXIT name=%s nresult=-1 err=%v", tn, err)
+		return nil, err
+	}
+	xtracer.Trace("proof.tacticTactic EXIT name=%s nresult=%d err=<nil>", tn, len(result))
+	return result, nil
 }
 
 // ApplyMatchGoal applies a match (symbol substitution map) to a goal.

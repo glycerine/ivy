@@ -29,6 +29,14 @@ func WithIncluded(inc map[string]bool) ParseOption {
 	}
 }
 
+// WithParentAccum links a nested parser to the including parser's accumulator.
+// Python keeps these accumulators on a single global stack while importing.
+func WithParentAccum(parent *ivyAccum) ParseOption {
+	return func(lex *parser17LexAdapter) {
+		lex.accum = parent
+	}
+}
+
 // WithNested marks this as a nested (include) parse.
 // Nested parses skip expand_autoinstances, matching Python behavior.
 func WithNested() ParseOption {
@@ -89,9 +97,10 @@ func ParseV17(input string, version Version, opts ...ParseOption) (*ParseResult,
 // --- parser17LexAdapter: adapter from lexer.Lexer to goyacc's parser17Lexer interface ---
 
 // ImporterFunc is the callback for resolving `include` directives.
-// It takes a module name and returns the parsed declarations.
+// It takes a module name and the current parser accumulator, so nested
+// imports can see the same include stack as Python's ivy_parser.stack.
 // Matches Python's ivy_parser.importer function.
-type ImporterFunc func(name string) (*ParseResult, error)
+type ImporterFunc func(name string, parent *ivyAccum) (*ParseResult, error)
 
 type parser17LexAdapter struct {
 	lex              *Lexer

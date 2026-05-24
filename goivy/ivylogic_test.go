@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -54,6 +55,27 @@ func TestIvyLogicSigAddSymbol(t *testing.T) {
 	}
 	if sym.Name != "x" {
 		t.Errorf("expected name x, got %s", sym.Name)
+	}
+}
+
+func TestPolymorphicUnionCanonUsesUnionSort(t *testing.T) {
+	s := NewSig()
+	tSort := &UninterpretedSort{Name: "t"}
+	ltSort, err := NewFunctionSort(tSort, tSort, Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	if _, err := s.AddSymbol("<", ltSort); err != nil {
+		t.Fatalf("AddSymbol(<): %v", err)
+	}
+
+	canon := string(s.Canon())
+	want := "<:UnionSort(t * t -> Boolean)"
+	if !strings.Contains(canon, want) {
+		t.Fatalf("Sig.Canon() = %q, want it to contain %q", canon, want)
+	}
+	if strings.Contains(canon, "<:t * t -> Boolean") {
+		t.Fatalf("Sig.Canon() = %q, must render polymorphic '<' as UnionSort", canon)
 	}
 }
 
@@ -662,6 +684,29 @@ func TestIvyLogicForAllExists(t *testing.T) {
 	// Empty vars: returns body
 	if IvyForAll(nil, body) != body {
 		t.Error("ForAll with no vars should return body")
+	}
+}
+
+func TestIvyLogicQuantifierConstructorsNormalizeVariables(t *testing.T) {
+	x, _ := NewVariable("X", TopS)
+	l, _ := NewVariable("L", TopS)
+	xm1, _ := NewVariable("Xm1", TopS)
+	body := &LogicAnd{}
+
+	forall := IvyForAll([]*LogicVariable{x, l, xm1, x}, body).(*ForAll)
+	exists := IvyExists([]*LogicVariable{x, l, xm1, x}, body).(*LogicExists)
+
+	for name, vars := range map[string][]*LogicVariable{
+		"ForAll": forall.Variables,
+		"Exists": exists.Variables,
+	} {
+		var got []string
+		for _, v := range vars {
+			got = append(got, v.Name)
+		}
+		if strings.Join(got, ",") != "L,X,Xm1" {
+			t.Fatalf("%s variables = %v, want Python ForAll/Exists order [L X Xm1]", name, got)
+		}
 	}
 }
 

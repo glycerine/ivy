@@ -285,6 +285,50 @@ func TestTempindWithTemporal(t *testing.T) {
 	}
 }
 
+func TestTempindSchemaBodyTemporalModelsConclusion(t *testing.T) {
+	x := tacticsMustVar("X")
+	gb, _ := NewGlobally(nil, x)
+	tm := tacticsTestAstCfg.NewTemporalModels(&NormalProgram{}, gb)
+	prem := tacticsTestAstCfg.NewConstantDecl(NewConst("c", Boolean))
+	goal := MakeGoal(tacticsTestAstCfg, Location{}, tacticsTestAstCfg.NewAtom("g"), []Node{prem}, tm)
+
+	tt := tacticsTestAstCfg.NewTacticTactic(tacticsTestAstCfg.NewAtom("tempind"), tacticsTestAstCfg.NewNoneAST(), nil)
+	result, err := Tempind(nil, []*LabeledFormula{goal}, tt)
+	if err != nil {
+		t.Fatalf("Tempind returned error: %v", err)
+	}
+	if len(result) != 1 {
+		t.Fatalf("Expected 1 goal, got %d", len(result))
+	}
+	if _, ok := GoalConc(result[0]).(*TemporalModels); !ok {
+		t.Fatalf("expected SchemaBody conclusion to remain TemporalModels, got %T", GoalConc(result[0]))
+	}
+	if len(GoalPrems(result[0])) != 1 {
+		t.Fatalf("expected original premise to remain, got %d", len(GoalPrems(result[0])))
+	}
+}
+
+func TestCompileTacticLetsEmptyUsesTrueCondition(t *testing.T) {
+	x := tacticsMustVar("X")
+	gb, _ := NewGlobally(nil, x)
+	goal := makeTemporalGoal("g", &NormalProgram{}, gb)
+	tt := tacticsTestAstCfg.NewTacticTactic(tacticsTestAstCfg.NewAtom("tempind"), tacticsTestAstCfg.NewNoneAST(), nil)
+
+	defs, cond, params, err := compileTacticLets(nil, tacticsTestAstCfg, goal, tt)
+	if err != nil {
+		t.Fatalf("compileTacticLets: %v", err)
+	}
+	if len(defs) != 0 {
+		t.Fatalf("expected no defs, got %d", len(defs))
+	}
+	if !IsTrue(cond) {
+		t.Fatalf("empty tactic lets should compile to true condition, got %T %v", cond, cond)
+	}
+	if len(params) != 0 {
+		t.Fatalf("expected no params, got %d", len(params))
+	}
+}
+
 // ---------- Registration ----------
 
 func TestRegisterProofTactics(t *testing.T) {
@@ -393,6 +437,21 @@ func TestSkolemizenp_WithProofChecker(t *testing.T) {
 	}
 	if len(result) != 1 {
 		t.Errorf("Expected 1 goal, got %d", len(result))
+	}
+}
+
+func TestSkolemizenpSchemaBodyConstantPremisePythonError(t *testing.T) {
+	tm := tacticsTestAstCfg.NewTemporalModels(&NormalProgram{}, True)
+	prem := tacticsTestAstCfg.NewConstantDecl(NewConst("c", Boolean))
+	goal := MakeGoal(tacticsTestAstCfg, Location{}, tacticsTestAstCfg.NewAtom("g"), []Node{prem}, tm)
+
+	_, err := Skolemizenp(nil, []*LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
+	if err == nil {
+		t.Fatal("expected Python-compatible ConstantDecl label error")
+	}
+	want := "'ConstantDecl' object has no attribute 'label'"
+	if err.Error() != want {
+		t.Fatalf("error = %q, want %q", err.Error(), want)
 	}
 }
 

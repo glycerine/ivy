@@ -726,11 +726,11 @@ top:
             pref.SetLineno(tokLineno(lex, $2))
             xtracer.Trace("parser.include ENTER name=%s", name)
             // Python: parent_object = "this" — in Python this affects the nested
-            // parse's Ivy.__init__. In Go, imports use a separate parser invocation
-            // so this global doesn't propagate to the imported parser.
+            // parse's Ivy.__init__. The importer also receives the current
+            // accumulator so nested parses can see the same include stack.
             modDeclCount := 0
             if lex.importer != nil {
-                mod, err := lex.importer(name)
+                mod, err := lex.importer(name, $$)
                 if err != nil {
                     xtracer.Trace("parser.include ERROR name=%s err=%v", name, err)
                 } else if mod != nil {

@@ -128,6 +128,59 @@ func TestBuildDefnDeps_NormalizedCanon(t *testing.T) {
 	}
 }
 
+func TestSharedStep3FullKeepsModifiedLocals(t *testing.T) {
+	ticket := &UninterpretedSort{Name: "ticket"}
+	mod := New()
+	mod.Sig = NewSig()
+	if err := mod.Sig.AddSort(ticket); err != nil {
+		t.Fatalf("AddSort: %v", err)
+	}
+	if _, err := mod.Sig.AddSymbol("next_ticket", ticket); err != nil {
+		t.Fatalf("AddSymbol: %v", err)
+	}
+
+	actCfg := NewActionsConfig()
+	local := NewConst("loc:ntn", ticket)
+	nextTicket := NewConst("next_ticket", ticket)
+	zero := NewConst("zero", ticket)
+	body := NewSequence(
+		NewAssignAction(local, zero),
+		NewAssignAction(nextTicket, local),
+	)
+	action := NewLocalActionOn(actCfg, "test.local.save", local, body)
+	model := &NormalProgram{
+		Bindings: []*ActionTermBinding{{
+			Name:   "step",
+			Action: &ActionTerm{Stmt: action},
+		}},
+	}
+	cfg := &InstrumentationConfig{Mod: mod, NotLf: True}
+
+	SharedStep3_CollectNamedBinders(cfg, model, true)
+
+	if len(cfg.ToSave) < 2 {
+		t.Fatalf("ToSave len = %d, want at least loc:ntn and next_ticket", len(cfg.ToSave))
+	}
+	got0, ok := cfg.ToSave[0].Body.(*Const)
+	if !ok || got0.Name != "loc:ntn" {
+		t.Fatalf("ToSave[0] = %s, want modified local loc:ntn before globals", cfg.ToSave[0].Body.Canon())
+	}
+	got1, ok := cfg.ToSave[1].Body.(*Const)
+	if !ok || got1.Name != "next_ticket" {
+		t.Fatalf("ToSave[1] = %s, want next_ticket after local initializer", cfg.ToSave[1].Body.Canon())
+	}
+}
+
+func TestL2STraceSymbolShowsNumeralSort(t *testing.T) {
+	ticket := &UninterpretedSort{Name: "ticket"}
+	if got := l2sTraceSymbol(NewConst("1", ticket)); got != "1:ticket" {
+		t.Fatalf("l2sTraceSymbol(numeral) = %q, want Python-style sort-qualified numeral", got)
+	}
+	if got := l2sTraceSymbol(NewConst("service", ticket)); got != "service" {
+		t.Fatalf("l2sTraceSymbol(service) = %q, want bare non-numeral name", got)
+	}
+}
+
 // TestBuildDefnDeps_GoalPrems verifies that definitions from goalPrems
 // (with IsDefinition=true) are also processed.
 func TestBuildDefnDeps_GoalPrems(t *testing.T) {
