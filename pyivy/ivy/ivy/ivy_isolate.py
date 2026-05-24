@@ -1988,8 +1988,8 @@ def create_isolate(iso,mod = None,**kwargs):
         if __debug__: xtracer.trace("check.CreateIsolate after_canonize_types")
 
         # Apply the present conjectures
-        if __debug__: xtracer.trace("check.CreateIsolate before_bracket_actions n_brackets=%d" % len(brackets))
         if iso and iso in mod.isolates and iu.version_le("1.7",iu.get_string_version()):
+            if __debug__: xtracer.trace("check.CreateIsolate before_bracket_actions n_brackets=%d" % len(brackets))
             for actname,before,after in brackets:
                 if __debug__: xtracer.trace("check.CreateIsolate bracket_action actname=%s n_before=%d n_after=%d" % (actname, len(before), len(after)))
                 bracket_action(mod,actname,before,after)

@@ -467,9 +467,9 @@ func CreateIsolate(iso string, mod *Module) error {
 	xtracer.Trace("check.CreateIsolate after_canonize_types")
 
 	// Python line 1944-1946: Apply bracket actions for present conjectures (version >= 1.7)
-	xtracer.Trace("check.CreateIsolate before_bracket_actions n_brackets=%d", len(brackets))
 	if iso != "" {
 		if _, ok := mod.Isolates[iso]; ok && versionLE("1.7", isoCfg.IvyVersion) {
+			xtracer.Trace("check.CreateIsolate before_bracket_actions n_brackets=%d", len(brackets))
 			for _, b := range brackets {
 				xtracer.Trace("check.CreateIsolate bracket_action actname=%s n_before=%d n_after=%d", b.ActName, len(b.Before), len(b.After))
 				IsolateBracketAction(mod, b.ActName, b.Before, b.After)
