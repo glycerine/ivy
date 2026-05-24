@@ -79,7 +79,7 @@ class Module(object):
         self.before_export = {} # map from string to action
         self.attributes = {} # map from name to atom
         self.variants = defaultdict(list) # map from sort name to list of sort
-        self.supertypes = defaultdict(list) # map from sort name to sort
+        self.supertypes = defaultdict(list) # map from subtype sort name to supertype sort
         self.ext_preconds = {} # map from action name to formula
         self.proofs = [] # list of pair (labeled formula, proof)
         self.named = [] # list of pair (labeled formula, atom)
@@ -404,7 +404,7 @@ class Module(object):
         xtracer.trace("module.CanonSnapshot %s sortOrder=%s" % (label, _canon_string_slice(self.sort_order)))
         xtracer.trace("module.CanonSnapshot %s symbolOrder=%s" % (label, _canon_const_slice(self.symbol_order)))
         xtracer.trace("module.CanonSnapshot %s variants=%s" % (label, _canon_sort_slice_map(self.variants)))
-        xtracer.trace("module.CanonSnapshot %s supertypes=%s" % (label, _canon_sort_slice_map(self.supertypes)))
+        xtracer.trace("module.CanonSnapshot %s supertypes=%s" % (label, _canon_sort_map(self.supertypes)))
         xtracer.trace("module.CanonSnapshot %s finiteSorts=%s" % (label, _canon_bool_set(self.finite_sorts)))
 
         # Group 16: Interpretations and natives

@@ -136,7 +136,7 @@ func (m *Module) CanonSnapshot(label string) {
 	xtracer.Trace("module.CanonSnapshot %s sortOrder=%s", label, canonStringSlice(m.SortOrder))
 	xtracer.Trace("module.CanonSnapshot %s symbolOrder=%s", label, canonConstSlice(m.SymbolOrder))
 	xtracer.Trace("module.CanonSnapshot %s variants=%s", label, canonSortSliceMap(m.Variants))
-	xtracer.Trace("module.CanonSnapshot %s supertypes=%s", label, canonSortSliceMap(m.Supertypes))
+	xtracer.Trace("module.CanonSnapshot %s supertypes=%s", label, canonInsMapPlainSortHash(m.Supertypes))
 	xtracer.Trace("module.CanonSnapshot %s finiteSorts=%s", label, canonBoolMap(m.FiniteSorts))
 
 	// Group 16: Interpretations and natives
@@ -224,6 +224,22 @@ func canonPlainSortMap(sorts map[string]Sort) string {
 	var parts []string
 	for _, k := range keys {
 		parts = append(parts, fmt.Sprintf("%s:%s", k, string(sorts[k].Sexp())))
+	}
+	return fmt.Sprintf("(hash %s)", strings.Join(parts, " "))
+}
+
+func canonInsMapPlainSortHash(sorts *InsMap[string, Sort]) string {
+	if sorts == nil || sorts.Len() == 0 {
+		return "(hash)"
+	}
+	keys := make([]string, 0, sorts.Len())
+	for k := range sorts.All() {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	var parts []string
+	for _, k := range keys {
+		parts = append(parts, fmt.Sprintf("%s:%s", k, string(sorts.Get(k).Sexp())))
 	}
 	return fmt.Sprintf("(hash %s)", strings.Join(parts, " "))
 }

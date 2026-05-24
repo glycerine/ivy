@@ -944,7 +944,8 @@ func (d *DomainSetup) Variant(node Node) error {
 	if err != nil {
 		return NewIvyError(vd, fmt.Sprintf("undefined sort: %s", sortName))
 	}
-	if _, err := d.Compiler.Sig.FindSort(variantName, false); err != nil {
+	supertypeSort, err := d.Compiler.Sig.FindSort(variantName, false)
+	if err != nil {
 		return NewIvyError(vd, fmt.Sprintf("undefined sort: %s", variantName))
 	}
 
@@ -953,10 +954,7 @@ func (d *DomainSetup) Variant(node Node) error {
 	d.Compiler.Module.Variants[variantName] = append(
 		d.Compiler.Module.Variants[variantName], subtypeSort)
 
-	// Python assigns the supertype sort object here, but the xtrace canon
-	// treats this table as a slice map; ConstantSort iteration contributes
-	// no elements. Preserve the observed Python shape.
-	d.Compiler.Module.Supertypes[sortName] = nil
+	d.Compiler.Module.Supertypes.Set(sortName, supertypeSort)
 
 	return nil
 }

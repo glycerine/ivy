@@ -67,7 +67,7 @@ type Module struct {
 	SortOrder        []string
 	SymbolOrder      []*Const
 	Variants         map[string][]Sort // sort name → variant sorts
-	Supertypes       map[string][]Sort
+	Supertypes       *InsMap[string, Sort]
 	FiniteSorts      map[string]bool
 
 	// Interpretations and natives
@@ -303,7 +303,7 @@ func (m *Module) Clear() {
 	m.BeforeExport = NewInsMap[string, Action]()
 	m.Attributes = make(map[string]interface{})
 	m.Variants = make(map[string][]Sort)
-	m.Supertypes = make(map[string][]Sort)
+	m.Supertypes = NewInsMap[string, Sort]()
 	m.ExtPreconds = make(map[string]Expr)
 	m.Proofs = nil
 
@@ -436,10 +436,12 @@ func (m *Module) Copy() *Module {
 	for k, v := range m.Variants {
 		c.Variants[k] = append([]Sort{}, v...)
 	}
-	// Supertypes: map[string][]lg.Sort
-	c.Supertypes = make(map[string][]Sort, len(m.Supertypes))
-	for k, v := range m.Supertypes {
-		c.Supertypes[k] = append([]Sort{}, v...)
+	// Supertypes: subtype sort name -> supertype sort.
+	c.Supertypes = NewInsMap[string, Sort]()
+	if m.Supertypes != nil {
+		for k, v := range m.Supertypes.All() {
+			c.Supertypes.Set(k, v)
+		}
 	}
 	// ExtPreconds: map[string]lg.Expr
 	c.ExtPreconds = make(map[string]Expr, len(m.ExtPreconds))
