@@ -306,24 +306,41 @@ func astBoundNames(nodes []Node) map[string]bool {
 	return names
 }
 
-// addDefinitionChecks validates that a definition's LHS has no duplicate
-// variables and that all RHS variables appear on the LHS.
-// Corresponds to Python's add_definition checks (ivy_compiler.py:1143-1152).
-func addDefinitionChecks(defNode *Definition) error {
-	lhsVars := collectASTVariables(defNode.Lhs)
-	seen := make(map[string]bool)
-	for _, v := range lhsVars {
-		if seen[v.Rep] {
-			return NewIvyError(defNode, fmt.Sprintf(
-				"Variable %s occurs twice on left-hand side of definition", v.Rep))
-		}
-		seen[v.Rep] = true
+// addDefinitionChecks validates that a compiled definition's LHS has no
+// duplicate variables and that all RHS variables appear on the LHS.
+// Corresponds to Python IvyDomainSetup.add_definition, which runs after
+// compile_defn and checks lu.variables_ast/lu.used_variables_ast on the
+// compiled ivy_logic.Definition.
+func addDefinitionChecks(defn Expr) error {
+	var lhs, rhs Expr
+	switch d := defn.(type) {
+	case *LogicDefinitionSchema:
+		lhs = d.Lhs
+		rhs = d.Rhs
+	case *LogicDefinition:
+		lhs = d.Lhs
+		rhs = d.Rhs
+	default:
+		return nil
 	}
-	rhsVars := collectASTVariables(defNode.Rhs)
+
+	var lhsVars []*LogicVariable
+	variablesAstOccurrencesRec(lhs, &lhsVars, nil)
+	seen := make(map[NodeKey]bool)
+	for _, v := range lhsVars {
+		k := Key(v)
+		if seen[k] {
+			return NewIvyError(defn, fmt.Sprintf(
+				"Variable %s occurs twice on left-hand side of definition", v))
+		}
+		seen[k] = true
+	}
+
+	rhsVars := VariablesAstList(rhs)
 	for _, v := range rhsVars {
-		if !seen[v.Rep] {
-			return NewIvyError(defNode, fmt.Sprintf(
-				"Variable %s occurs free on right-hand side of definition", v.Rep))
+		if !seen[Key(v)] {
+			return NewIvyError(defn, fmt.Sprintf(
+				"Variable %s occurs free on right-hand side of definition", v))
 		}
 	}
 	return nil
@@ -349,13 +366,13 @@ func addDefinitionChecks(defNode *Definition) error {
 // *lg.Definition (logic form), and the NativeExpr routing check needs the AST
 // form. Callers (Derived, DefinitionDecl) already have the AST defNode in
 // scope from earlier in their flow.
-//
-// NOTE: Variable validation (addDefinitionChecks) is intentionally NOT done
-// here. Validation must run BEFORE compile so a free RHS variable is reported
-// as "occurs free on right-hand side of definition" rather than the
-// compile-side "unknown symbol" error. Callers do the validation early,
-// before invoking CompileDefn.
 func (d *DomainSetup) AddDefinition(ldf *LabeledFormula, astDefNode *Definition) error {
+	if compiled, ok := ldf.Formula.(Expr); ok {
+		if err := addDefinitionChecks(compiled); err != nil {
+			return err
+		}
+	}
+
 	// Python (ivy_compiler.py:1318):
 	//   defs = self.domain.native_definitions
 	//          if isinstance(ldf.formula.args[1], ivy_ast.NativeExpr)
@@ -678,15 +695,6 @@ func (d *DomainSetup) Derived(node Node) error {
 	} else {
 		return nil
 	}
-	// Validate definition variables BEFORE compile so a free RHS variable is
-	// reported as "occurs free on right-hand side of definition" rather than
-	// the compile-side "unknown symbol" error. Python (ivy_compiler.py:1319-1325)
-	// validates inside add_definition (post-compile) but the error semantics are
-	// equivalent because variable names are invariant under compile.
-	if err := addDefinitionChecks(defNode); err != nil {
-		return err
-	}
-
 	lhs := defNode.Lhs
 	lhsAtom, ok := lhs.(*Atom)
 	if !ok {
@@ -730,9 +738,9 @@ func (d *DomainSetup) Derived(node Node) error {
 
 	// Python: self.add_definition(ldf.clone([label, df]))
 	// Clone the LabeledFormula with the compiled definition, preserving metadata.
-	// AddDefinition validates the definition variables (using astDefNode, the
-	// pre-compile AST form) and routes to either NativeDefinitions or
-	// LabeledProps based on whether the AST RHS is a NativeExpr.
+	// AddDefinition validates the compiled definition variables and routes to
+	// either NativeDefinitions or LabeledProps based on whether the AST RHS is a
+	// NativeExpr.
 	mlf := lf.Clone([]Node{lf.Label, compiled}).(*LabeledFormula)
 	if err := d.AddDefinition(mlf, defNode); err != nil {
 		return err
@@ -775,27 +783,6 @@ func (d *DomainSetup) DefinitionDecl(node Node) error {
 	} else {
 		return nil
 	}
-	// Validate definition variables BEFORE compile so a free RHS variable is
-	// reported as "occurs free on right-hand side of definition" rather than
-	// the compile-side "unknown symbol" error. Python (ivy_compiler.py:1319-1325)
-	// validates inside add_definition (post-compile) but the error semantics are
-	// equivalent because variable names are invariant under compile.
-	if err := addDefinitionChecks(defNode); err != nil {
-		return err
-	}
-
-	// Add a temporary symbol so compilation can resolve the defined name
-	var tempSym *Const
-	if lhsAtom, ok := defNode.Lhs.(*Atom); ok {
-		if _, exists := d.Compiler.Sig.Symbols.Get2(lhsAtom.Rep); !exists {
-			var err error
-			tempSym, err = d.Compiler.AddSymbol(lhsAtom.Rep, TopFunctionSort(len(lhsAtom.Terms)), d.Compiler.Sig)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
 	var compiled Expr
 	var err error
 	if isSchemaD {
@@ -805,11 +792,6 @@ func (d *DomainSetup) DefinitionDecl(node Node) error {
 	}
 	if err != nil {
 		return err
-	}
-
-	// Remove temporary symbol and re-add with inferred sort
-	if tempSym != nil {
-		d.Compiler.Sig.Symbols.Delkey(tempSym.Name)
 	}
 
 	// Python: self.add_definition(ldf.clone([label, df]))

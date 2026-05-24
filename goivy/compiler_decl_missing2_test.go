@@ -86,20 +86,28 @@ func TestMiss2_DefinitionDuplicateLHSVariable(t *testing.T) {
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
-	// Add a sort and symbols so compilation can proceed to the validation step
-	boolSort := &UninterpretedSort{Name: "bool"}
-	c.Sig.Sorts.Set("bool", boolSort)
+	// Add the sort and defined symbol so compilation reaches add_definition,
+	// where Python performs the duplicate-variable validation.
+	tSort := &UninterpretedSort{Name: "t"}
+	c.Sig.Sorts.Set("t", tSort)
+	fSort, err := NewFunctionSort(tSort, tSort, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := c.Sig.AddSymbol("f", fSort); err != nil {
+		t.Fatal(err)
+	}
 
 	// definition f(X, X) = body  — X appears twice on LHS
-	x1 := cfg.NewVariable("X", "bool")
-	x2 := cfg.NewVariable("X", "bool")
+	x1 := cfg.NewVariable("X", "t")
+	x2 := cfg.NewVariable("X", "t")
 	lhs := cfg.NewAtom("f", x1, x2)
 	rhs := cfg.NewAtom("true")
 	def := cfg.NewDefinition(lhs, rhs)
 	lf := cfg.NewLabeledFormula(nil, def)
 	decl := cfg.NewDefinitionDecl(lf)
 
-	err := d.ProcessDecl(decl)
+	err = d.ProcessDecl(decl)
 	if err == nil {
 		t.Fatal("expected error for duplicate LHS variable, got nil")
 	}
@@ -116,25 +124,61 @@ func TestMiss2_DefinitionFreeRHSVariable(t *testing.T) {
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
-	boolSort := &UninterpretedSort{Name: "bool"}
-	c.Sig.Sorts.Set("bool", boolSort)
+	tSort := &UninterpretedSort{Name: "t"}
+	c.Sig.Sorts.Set("t", tSort)
+	fSort, err := NewFunctionSort(tSort, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := c.Sig.AddSymbol("f", fSort); err != nil {
+		t.Fatal(err)
+	}
+	gSort, err := NewFunctionSort(tSort, tSort, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := c.Sig.AddSymbol("g", gSort); err != nil {
+		t.Fatal(err)
+	}
 
 	// definition f(X) = g(X, Y)  — Y is free on RHS but not on LHS
-	x := cfg.NewVariable("X", "bool")
+	x := cfg.NewVariable("X", "t")
 	lhs := cfg.NewAtom("f", x)
 	xRef := cfg.NewVariable("X", "")
-	yFree := cfg.NewVariable("Y", "")
+	yFree := cfg.NewVariable("Y", "t")
 	rhs := cfg.NewAtom("g", xRef, yFree)
 	def := cfg.NewDefinition(lhs, rhs)
 	lf := cfg.NewLabeledFormula(nil, def)
 	decl := cfg.NewDefinitionDecl(lf)
 
-	err := d.ProcessDecl(decl)
+	err = d.ProcessDecl(decl)
 	if err == nil {
 		t.Fatal("expected error for free RHS variable, got nil")
 	}
 	if !strings.Contains(err.Error(), "occurs free on right-hand side") {
 		t.Errorf("expected error about 'occurs free on right-hand side', got: %v", err)
+	}
+}
+
+func TestDefinitionDeclDoesNotPreloadPolymorphicLHSIntoSig(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+	c.Sig.Sorts.Set("t", &UninterpretedSort{Name: "t"})
+
+	x := cfg.NewVariable("X", "t")
+	y := cfg.NewVariable("Y", "t")
+	lhs := cfg.NewAtom("<", x, y)
+	rhs := cfg.NewAtom("missing", x)
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewDefinitionDecl(lf)
+
+	if err := d.ProcessDecl(decl); err == nil {
+		t.Fatal("expected unknown symbol error")
+	}
+	if _, ok := c.Sig.Symbols.Get2("<"); ok {
+		t.Fatal("normal definition processing must not pre-load polymorphic '<' into sig.symbols")
 	}
 }
 
