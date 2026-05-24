@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -267,6 +268,88 @@ func TestUnrollLoops_VerifyNesting(t *testing.T) {
 	}
 	if _, ok := assumeAct.Formula.(*LogicOr); !ok {
 		t.Errorf("base case assume: expected *lg.Or (false), got %T", assumeAct.Formula)
+	}
+}
+
+func TestEraseUnrefedPreservesFormalsOnErasedAssignAndHavoc(t *testing.T) {
+	sortT := actionsMkSort("T")
+	formalParam := NewConst("p", sortT)
+	formalReturn := NewConst("r", sortT)
+	dead := NewConst("dead", sortT)
+	value := NewConst("value", sortT)
+
+	assign := NewAssignAction(dead, value)
+	assign.SetFormalParams([]*Const{formalParam})
+	assign.SetFormalReturns([]*Const{formalReturn})
+	erasedAssign := EraseUnrefed(assign, NewInsMap[NodeKey, Expr](), map[string]bool{}, nil)
+	assertErasedActionPreservedFormals(t, erasedAssign, "p", "r")
+
+	havoc := NewHavocAction(dead)
+	havoc.SetFormalParams([]*Const{formalParam})
+	havoc.SetFormalReturns([]*Const{formalReturn})
+	erasedHavoc := EraseUnrefed(havoc, NewInsMap[NodeKey, Expr](), map[string]bool{}, nil)
+	assertErasedActionPreservedFormals(t, erasedHavoc, "p", "r")
+}
+
+func TestCallActionIntUpdateErasedFormalBearingCalleeEntersWrapperSequence(t *testing.T) {
+	cfg := NewActionsConfig()
+	mod := New()
+	sortT := actionsMkSort("T")
+	formal := NewConst("p", sortT)
+	actual := NewConst("actual", sortT)
+	dead := NewConst("dead", sortT)
+
+	assign := NewAssignAction(dead, formal)
+	assign.SetFormalParams([]*Const{formal})
+	callee := EraseUnrefed(assign, NewInsMap[NodeKey, Expr](), map[string]bool{}, nil)
+	mod.Actions.Set("callee", callee)
+
+	call := NewCallActionOn(cfg, MustApply(NewConst("callee", TopS), actual))
+	ctx := &UpdateContext{Domain: mod, ActCfg: cfg}
+	var update *Update
+	out := captureActionUpdateStdout(t, func() {
+		update = call.IntUpdate(ctx)
+	})
+
+	if update == nil {
+		t.Fatal("CallAction.IntUpdate returned nil")
+	}
+	if len(update.Modified) != 0 {
+		t.Fatalf("erased callee should hide its formal update, got modified=%v", update.Modified)
+	}
+	subIdx := strings.Index(out, "actions.substitute_constants_action ENTER type=Sequence nargs=0")
+	if subIdx < 0 {
+		t.Fatalf("erased formal-bearing callee was not substituted as an empty Sequence; output:\n%s", out)
+	}
+	seqIdx := strings.Index(out[subIdx:], "actions.Sequence.int_update ENTER")
+	if seqIdx < 0 {
+		t.Fatalf("CallAction.IntUpdate did not recurse into the Python wrapper Sequence after erased callee substitution; output:\n%s", out)
+	}
+	exitIdx := strings.Index(out, "actions.CallAction.int_update EXIT")
+	if exitIdx < 0 {
+		t.Fatalf("CallAction.IntUpdate did not complete; output:\n%s", out)
+	}
+	if subIdx+seqIdx > exitIdx {
+		t.Fatalf("wrapper Sequence trace must precede CallAction EXIT; output:\n%s", out)
+	}
+}
+
+func assertErasedActionPreservedFormals(t *testing.T, action ActionsAction, wantParam, wantReturn string) {
+	t.Helper()
+	seq, ok := action.(*LogicSequence)
+	if !ok {
+		t.Fatalf("erased action = %T, want *LogicSequence", action)
+	}
+	if len(seq.Elems) != 0 {
+		t.Fatalf("erased action should be empty, got %d elems", len(seq.Elems))
+	}
+	params := seq.GetFormalParams()
+	if len(params) != 1 || params[0].Name != wantParam {
+		t.Fatalf("erased action formal params=%v, want [%s]", params, wantParam)
+	}
+	returns := seq.GetFormalReturns()
+	if len(returns) != 1 || returns[0].Name != wantReturn {
+		t.Fatalf("erased action formal returns=%v, want [%s]", returns, wantReturn)
 	}
 }
 

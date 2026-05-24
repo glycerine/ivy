@@ -723,9 +723,7 @@ func EraseUnrefed(action ActionsAction, syms *InsMap[NodeKey, Expr], names map[s
 		if c, ok := rootSymbol(a.LHS, destructorSorts); ok {
 			_, inSyms := syms.Get2(ConstSymKey(c))
 			if !inSyms && !names[c.Name] {
-				erased := NewSequence()
-				erased.SetLineno(a.GetLineno())
-				return erased
+				return emptyErasedActionLike(a)
 			}
 		}
 		return a
@@ -735,9 +733,7 @@ func EraseUnrefed(action ActionsAction, syms *InsMap[NodeKey, Expr], names map[s
 			if c, ok := rootSymbol(a.Target, destructorSorts); ok {
 				_, inSyms := syms.Get2(ConstSymKey(c))
 				if !inSyms && !names[c.Name] {
-					erased := NewSequence()
-					erased.SetLineno(a.GetLineno())
-					return erased
+					return emptyErasedActionLike(a)
 				}
 			}
 		}
@@ -757,6 +753,13 @@ func EraseUnrefed(action ActionsAction, syms *InsMap[NodeKey, Expr], names map[s
 		}
 		return action.ActionClone(newArgs)
 	}
+}
+
+func emptyErasedActionLike(action ActionsAction) *LogicSequence {
+	erased := NewSequence()
+	erased.SetLineno(action.GetLineno())
+	CopyFormalsTo(action, erased)
+	return erased
 }
 
 // rootSymbol finds the root symbol modified by an assignment LHS.
