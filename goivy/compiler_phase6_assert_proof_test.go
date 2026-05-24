@@ -7,12 +7,18 @@ import (
 // mockProofChecker implements module.ProofCheckerInterface for testing.
 type mockProofChecker struct {
 	subgoals []*LabeledFormula
+	gotProp  *LabeledFormula
+	gotProof Node
+	getCalls int
 }
 
 func (m *mockProofChecker) AdmitProposition(prop *LabeledFormula, proof Node, existingSubgoals ...*LabeledFormula) ([]*LabeledFormula, error) {
 	return m.subgoals, nil
 }
 func (m *mockProofChecker) GetSubgoals(prop *LabeledFormula, proof Node) ([]*LabeledFormula, error) {
+	m.gotProp = prop
+	m.gotProof = proof
+	m.getCalls++
 	return m.subgoals, nil
 }
 func (m *mockProofChecker) AdmitDefinition(defn *LabeledFormula, proof Node) ([]*LabeledFormula, error) {
@@ -83,6 +89,35 @@ func TestApplyAssertProofsWithProver_BasicSubgoal(t *testing.T) {
 	last, _ := args[2].(ActionsAction)
 	if _, ok := last.(*LogicAssumeAction); !ok {
 		t.Errorf("arg[2]: expected AssumeAction, got %T", last)
+	}
+}
+
+func TestApplyAssertProofsWithProver_UsesExistingLFAndUnwrappedProof(t *testing.T) {
+	cfg := NewAstConfig()
+	mod := newTestModule(true)
+
+	cond := True
+	lf := cfg.NewLabeledFormula(cfg.NewAtom("asrt1"), cond)
+	tactic := cfg.NewLetTactic(nil)
+	aa := NewAssertAction(cond, WrapTactic(tactic))
+	aa.LF = lf
+	mod.Actions.Set("test_act", aa)
+
+	prover := &mockProofChecker{}
+	if err := ApplyAssertProofsWithProver(mod, prover); err != nil {
+		t.Fatalf("ApplyAssertProofsWithProver failed: %v", err)
+	}
+	if prover.getCalls != 1 {
+		t.Fatalf("GetSubgoals calls = %d, want 1", prover.getCalls)
+	}
+	if prover.gotProp != lf {
+		t.Fatalf("GetSubgoals prop = %p, want original LF %p", prover.gotProp, lf)
+	}
+	if prover.gotProp.LabelName() != "asrt1" {
+		t.Fatalf("GetSubgoals prop label = %q, want asrt1", prover.gotProp.LabelName())
+	}
+	if prover.gotProof != tactic {
+		t.Fatalf("GetSubgoals proof = %T/%p, want unwrapped %T/%p", prover.gotProof, prover.gotProof, tactic, tactic)
 	}
 }
 

@@ -235,6 +235,7 @@ func New() *Module {
 		Cfg:         NewConfig(),
 		z3SharedCtx: &z3CtxHolder{},
 	}
+	m.CompCfg = NewCompilerConfig(m.Cfg)
 	m.Clear()
 	m.SigMerkle = &MerkleState{}
 	return m

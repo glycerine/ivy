@@ -2271,14 +2271,25 @@ func applyAssertProofActionWithProof(mod *Module, a *LogicAssertAction, kindName
 		return assm
 	}
 	cond := a.Formula
-	acfg := mod.Cfg.AstCfg
-	goal := acfg.NewLabeledFormula(nil, cond)
+	var goal *LabeledFormula
+	if a.LF != nil {
+		goal = a.LF
+		if goalCond := goalConcExpr(mod.Cfg, goal); goalCond != nil {
+			cond = goalCond
+		}
+	} else {
+		acfg := mod.Cfg.AstCfg
+		goal = acfg.NewLabeledFormula(nil, cond)
+	}
 	goal.SetLineno(a.GetLineno())
 
 	if pf == nil {
 		assm := NewAssumeAction(a.Formula)
 		assm.SetLineno(a.GetLineno())
 		return assm
+	}
+	if wrapped, ok := pf.(*TacticNodeWrapper); ok {
+		pf = wrapped.Tactic
 	}
 
 	subgoals, err := prover.GetSubgoals(goal, pf)
@@ -2289,11 +2300,7 @@ func applyAssertProofActionWithProof(mod *Module, a *LogicAssertAction, kindName
 	}
 	subgoals = mapTheoremToProperty(subgoals, mod)
 
-	goalConc := goalConcExpr(mod.Cfg, goal)
-	if goalConc == nil {
-		goalConc = cond
-	}
-	assm := NewAssumeAction(CloseFormula(goalConc))
+	assm := NewAssumeAction(CloseFormula(cond))
 	assm.SetLineno(a.GetLineno())
 
 	seqArgs := make([]Expr, 0, len(subgoals)+1)

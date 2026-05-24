@@ -10,7 +10,7 @@ type CompilerConfig struct {
 
 // NewCompilerConfig creates a new CompilerConfig.
 func NewCompilerConfig(modCfg *Config) *CompilerConfig {
-	return &CompilerConfig{ModCfg: modCfg}
+	return &CompilerConfig{ModCfg: modCfg, OptionVerifying: true}
 }
 
 // FreshPropID generates a fresh unique ID for labeled formulas.
@@ -41,12 +41,12 @@ func SetVerifyingOnMod(mod *Module, v bool) {
 }
 
 // GetVerifyingFromCfg returns the option_verifying flag from the given
-// CompilerConfig. For backward compatibility, also accepts nil (returns false).
+// CompilerConfig. A nil config follows Python's module-level default.
 func GetVerifyingFromCfg(cc ...*CompilerConfig) bool {
 	if len(cc) > 0 && cc[0] != nil {
 		return cc[0].OptionVerifying
 	}
-	return false
+	return true
 }
 
 // GetModCompCfg extracts the CompilerConfig from a module, or returns nil.
@@ -63,7 +63,7 @@ func GetModVerifying(mod *Module) bool {
 	if cc != nil {
 		return cc.OptionVerifying
 	}
-	return false
+	return true
 }
 
 // GetModFreshPropID generates a fresh prop ID via the module's CompilerConfig.

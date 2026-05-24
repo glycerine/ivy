@@ -37,6 +37,15 @@ func TestModuleNew(t *testing.T) {
 	if m.Actions == nil {
 		t.Error("Actions map should be initialized")
 	}
+	if m.CompCfg == nil {
+		t.Fatal("Module.CompCfg should not be nil")
+	}
+	if !GetModVerifying(m) {
+		t.Error("fresh modules should default to verifying, matching Python option_verifying=True")
+	}
+	if !GetVerifyingFromCfg(nil) {
+		t.Error("nil compiler config should use Python's verifying default")
+	}
 }
 
 func TestModuleClear(t *testing.T) {
