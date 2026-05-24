@@ -147,9 +147,7 @@ after init {
     touched(K) := false;
     pair(K,L) := false
 }
-action mark(k:key) = {
-    seen(k) := true
-}
+action mark = {}
 export mark
 `)
 	out, err := Generate(mod, Config{Target: "test", ClassName: className})

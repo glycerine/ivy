@@ -2073,12 +2073,11 @@ func (g *Generator) emitTestLoopSelectBranch(w *cppWriter) {
 	w.line("}")
 }
 
-// isFinalizeName matches both the Python prefixed form ("ext:_finalize")
-// and Go's bare form ("_finalize"). The Go compiler does not always
-// prepend `ext:` for exported actions, but the runtime helper method
-// is still named `ext___finalize` to match Python.
+// isFinalizeName matches Python's special generated-tester finalizer hook.
+// A bare action named "_finalize" is just an ordinary action; only the
+// external action name gets substituted into the target=test FINALIZE slot.
 func isFinalizeName(name string) bool {
-	return name == "ext:_finalize" || name == "_finalize"
+	return name == "ext:_finalize"
 }
 
 func (g *Generator) hasFinalizeExport() bool {

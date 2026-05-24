@@ -4497,9 +4497,7 @@ attribute set.weight = "3.0"
 	}
 }
 
-// Phase 5: ext:_finalize gets invoked at end of the loop if exported.
-// Python ivy_to_cpp.py:4303 (FINALIZE substitution).
-func TestTestMainHonorsFinalize(t *testing.T) {
+func TestTestMainBareFinalizeIsOrdinaryAction(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 action _finalize = {}
 export _finalize
@@ -4510,12 +4508,33 @@ export step
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
+	if strings.Contains(out.Impl, "ivy.__lock(); ivy.ext___finalize(); ivy.__unlock();") {
+		t.Fatalf("bare _finalize should not emit Python ext:_finalize hook:\n%s", out.Impl)
+	}
+	if !strings.Contains(out.Impl, "_finalize_gen") {
+		t.Fatalf("bare _finalize should remain an ordinary generated action:\n%s", out.Impl)
+	}
+}
+
+// Phase 5: ext:_finalize gets invoked at end of the loop if exported.
+// Python ivy_to_cpp.py:4303 (FINALIZE substitution).
+func TestTestMainHonorsExtFinalize(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "fin"
+	finalize := goivy.NewSequence()
+	mod.Actions.Set("ext:_finalize", finalize)
+	mod.PublicActions.Set("ext:_finalize", true)
+	mod.Actions.Set("step", goivy.NewSequence())
+	mod.PublicActions.Set("step", true)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "fin"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
 	if !strings.Contains(out.Impl, "ivy.__lock(); ivy.ext___finalize(); ivy.__unlock();") {
 		t.Fatalf("expected finalize hook in test main:\n%s", out.Impl)
 	}
-	// _finalize is filtered out of the generator list (Python 4282-4284).
-	if strings.Contains(out.Impl, "_finalize_gen") {
-		t.Fatalf("_finalize should not be in the action generator list:\n%s", out.Impl)
+	if strings.Contains(out.Impl, "ext___finalize_gen") {
+		t.Fatalf("ext:_finalize should not be in the action generator list:\n%s", out.Impl)
 	}
 }
 
@@ -4647,6 +4666,34 @@ func TestReplMainFunctionSortedParam(t *testing.T) {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in function-sort main:\n%s", want, out.Impl)
 		}
+	}
+}
+
+func TestReplMainLargeFunctionSortedParamQualifiesTupleKey(t *testing.T) {
+	mod := goivy.New()
+	mod.Name = "largeparam"
+	key := &goivy.UninterpretedSort{Name: "key"}
+	mod.Sig.Sorts.Set("key", key)
+	mod.SortOrder = append(mod.SortOrder, "key")
+	fs, err := goivy.NewFunctionSort(key, key, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	mod.Params = append(mod.Params, &goivy.Const{Name: "tbl", CSort: fs})
+	mod.ParamDefaults = append(mod.ParamDefaults, nil)
+	mod.Actions.Set("step", goivy.NewSequence())
+	mod.PublicActions.Set("step", true)
+
+	out, err := Generate(mod, Config{Target: "repl", ClassName: "largeparam"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	want := "p__tbl[largeparam::__tup__int__int(_arg<int>(arg.fields[i].fields, 0, 0), _arg<int>(arg.fields[i].fields, 1, 0))]"
+	if !strings.Contains(out.Impl, want) {
+		t.Fatalf("large function parameter tuple key should be class-qualified; missing %q in:\n%s", want, out.Impl)
+	}
+	if strings.Contains(out.Impl, "p__tbl[__tup__int__int(") {
+		t.Fatalf("large function parameter tuple key must not use unqualified nested type:\n%s", out.Impl)
 	}
 }
 
@@ -5051,6 +5098,45 @@ export set
 	compileGeneratedCPP(t, out)
 }
 
+func TestTargetGenActionGeneratorsFollowActionOrder(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+individual saved : bool
+action beta = {
+    saved := true
+}
+export beta
+action alpha = {
+    saved := false
+}
+export alpha
+action gamma = {
+    saved := true
+}
+export gamma
+`)
+	var first string
+	for i := 0; i < 50; i++ {
+		out, err := Generate(mod, Config{Target: "gen", ClassName: "genorder"})
+		if err != nil {
+			t.Fatalf("Generate: %v", err)
+		}
+		if i == 0 {
+			first = out.Impl
+		} else if out.Impl != first {
+			t.Fatalf("target=gen action generator output should be stable across runs\nfirst:\n%s\nrun %d:\n%s", first, i, out.Impl)
+		}
+		beta := strings.Index(out.Impl, "beta_gen::beta_gen")
+		alpha := strings.Index(out.Impl, "alpha_gen::alpha_gen")
+		gamma := strings.Index(out.Impl, "gamma_gen::gamma_gen")
+		if beta < 0 || alpha < 0 || gamma < 0 {
+			t.Fatalf("missing action generators in impl:\n%s", out.Impl)
+		}
+		if !(beta < alpha && alpha < gamma) {
+			t.Fatalf("target=gen action generators should follow action order beta, alpha, gamma; positions beta=%d alpha=%d gamma=%d\n%s", beta, alpha, gamma, out.Impl)
+		}
+	}
+}
+
 func TestTargetGenRandomizesActionParamsAndExecutes(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type color = {red, green}
@@ -5096,14 +5182,14 @@ export set
 	compileGeneratedCPP(t, out)
 }
 
-func TestTargetGenRandomizesNumericAndVariantLeafParams(t *testing.T) {
+func TestTargetGenRandomizesNumericAndVariantSuperParams(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
-type node
+type node = {0..4}
 type t
 variant a of t
 individual saved : node
 individual wrapped : t
-action touch(n:node,av:a) = {
+action touch(n:node,av:t) = {
     saved := n;
     wrapped := av
 }
@@ -5114,18 +5200,15 @@ export touch
 		t.Fatalf("Generate: %v", err)
 	}
 	// After TODO 017 milestone 4 the action_gen randomizes inputs via the
-	// solver and reads them back via __from_solver. The free
-	// ivy2cpp_random_node / ivy2cpp_random_a helpers remain emitted for
-	// init_gen's assign_array_from_model branch; we still assert they
-	// exist.
+	// solver and reads them back via __from_solver. Variant supertypes use
+	// the class-local __from_solver specialization, while the named range
+	// takes the primitive eval_apply path like Python.
 	for _, want := range []string{
-		"static int ivy2cpp_random_node(gen &g)",
-		"static int ivy2cpp_random_a(gen &g)",
-		"return static_cast<int>(g.random_index(0, 4));",
+		"static gennumeric::t ivy2cpp_random_t(gen &g)",
 		`randomize("__fml:n", "node");`,
-		`randomize("__fml:av", "a");`,
-		`n = (int)eval_apply("__fml:n");`,
-		`av = (int)eval_apply("__fml:av");`,
+		`__randomize<gennumeric::t>(*this, apply("__fml:av"), "t");`,
+		`n = (unsigned)eval_apply("__fml:n");`,
+		`__from_solver<gennumeric::t>(*this, apply("__fml:av"), av);`,
 		"obj.touch(this->n, this->av);",
 	} {
 		if !strings.Contains(out.Impl, want) {
@@ -5508,6 +5591,39 @@ export set
 		if !strings.Contains(body, want) {
 			t.Fatalf("set_gen::generate missing %q:\n%s", want, body)
 		}
+	}
+}
+
+func TestActionGenExtractedFieldEvalWritesOriginalField(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+type cell
+destructor shade(C:cell) : color
+individual saved : color
+action set(c:cell) = {
+    assume shade(c) = red;
+    saved := shade(c)
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "gen", ClassName: "fieldgen"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	idx := strings.Index(out.Impl, "bool set_gen::generate")
+	if idx < 0 {
+		t.Fatalf("set_gen::generate not emitted:\n%s", out.Impl)
+	}
+	end := strings.Index(out.Impl[idx:], "void set_gen::execute")
+	if end < 0 {
+		end = len(out.Impl) - idx
+	}
+	body := out.Impl[idx : idx+end]
+	if !strings.Contains(body, `this->c.shade = fieldgen::red;`) {
+		t.Fatalf("extracted field should be read back into original field expression:\n%s", body)
+	}
+	if strings.Contains(body, `__c__shade = (fieldgen::color)eval_apply("__c__shade");`) {
+		t.Fatalf("extracted field must not be read back into synthetic field symbol:\n%s", body)
 	}
 }
 
@@ -6492,7 +6608,7 @@ func TestHashThunkToSolverSpecializationEmittedForTestTarget(t *testing.T) {
 type key
 relation seen(K:key)
 after init { seen(K) := false }
-action mark(k:key) = { seen(k) := true }
+action mark = {}
 export mark
 `)
 	out, err := Generate(mod, Config{Target: "test", ClassName: "runner"})
@@ -8715,13 +8831,7 @@ export step
 	assertNoUnsupportedCPP(t, out)
 }
 
-// TestRandomizeUninterpretedRangeUsesDefaultBounds locks in the Go
-// divergence from Python at emit_randomize: Python (ivy_to_cpp.py:1001)
-// raises IvyError when the symbol's range is uninterpreted; Go falls
-// back to g.randomize() against the runtime's default mk_sort [0,4]
-// bounds. The divergence is intentional (solver_emit.go:295-299) so
-// gen-target fixtures over uninterpreted sorts work end-to-end.
-func TestRandomizeUninterpretedRangeUsesDefaultBounds(t *testing.T) {
+func TestRandomizeUninterpretedRangeErrorsLikePython(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 type node
 individual root : node
@@ -8730,23 +8840,15 @@ action pick(n:node) = {
 }
 export pick
 `)
-	out, err := Generate(mod, Config{Target: "gen", ClassName: "ung"})
-	if err != nil {
-		t.Fatalf("Generate: %v", err)
-	}
-	text := out.Header + out.Impl
-	for _, want := range []string{
-		`g.mk_sort("node");`,
-		`randomize("__fml:n", "node");`,
-	} {
-		if !strings.Contains(text, want) {
-			t.Fatalf("missing %q in uninterpreted-range gen output:\nheader:\n%s\nimpl:\n%s", want, out.Header, out.Impl)
+	for _, target := range []string{"gen", "test"} {
+		_, err := Generate(mod, Config{Target: target, ClassName: "ung"})
+		if err == nil {
+			t.Fatalf("target=%s should reject uninterpreted-range action generator inputs like Python", target)
+		}
+		if !strings.Contains(err.Error(), "cannot create test generator because type node is uninterpreted") {
+			t.Fatalf("target=%s wrong error for uninterpreted range: %v", target, err)
 		}
 	}
-	if strings.Contains(text, `__randomize<ung::node>`) {
-		t.Fatalf("uninterpreted range must not pick the __randomize<T> dispatch:\n%s", text)
-	}
-	assertNoUnsupportedCPP(t, out)
 }
 
 // TestRandomizeSeedPlumbingPrecedesRandomCalls confirms the

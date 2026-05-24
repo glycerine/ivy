@@ -389,11 +389,9 @@ func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 	} else {
 		rng = sym.Sort
 	}
-	// Uninterpreted ranges: Python raises IvyError at ivy_to_cpp.py:1001.
-	// The Go runtime registers a default [0,4] bound for uninterpreted
-	// sorts via mk_sort, so randomize() returns a usable value in that
-	// range. The Go side keeps this divergence so gen-target fixtures
-	// that exercise uninterpreted sorts work end-to-end.
+	if err := g.uninterpretedRandomizeRangeError(rng); err != nil {
+		return err
+	}
 	args := make([]string, 0, len(domain))
 	opened := 0
 	for i, d := range domain {
@@ -439,7 +437,11 @@ func (g *Generator) emitRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 // emitFromSolverLoop. lhsObj is the receiver expression (e.g. "obj" or
 // empty string for the action_gen members case).
 func (g *Generator) emitEvalSolver(w *cppWriter, sym stateSymbol, lhsObj string) error {
-	return g.emitFromSolverLoop(w, lhsObj, sym)
+	return g.emitEvalSolverTo(w, sym, lhsObj, "")
+}
+
+func (g *Generator) emitEvalSolverTo(w *cppWriter, sym stateSymbol, lhsObj, lhsOverride string) error {
+	return g.emitFromSolverLoop(w, lhsObj, sym, lhsOverride)
 }
 
 // emitEvalSig calls emitEvalSolver for every member state symbol used in
@@ -468,9 +470,9 @@ func (g *Generator) emitEvalSig(w *cppWriter, obj string, used map[string]bool) 
 // template specialization; for primitive ranges it emits a direct cast
 // `lvalue = (ctype)eval_apply("sname", X...);` against the integer-typed
 // model value.
-func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol) error {
+func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol, lhsOverride string) error {
 	if g.Config.Target == "test" {
-		return g.emitPythonTestFromSolverLoop(w, obj, sym)
+		return g.emitPythonTestFromSolverLoop(w, obj, sym, lhsOverride)
 	}
 	fs, isFn := sym.Sort.(*goivy.LogicFunctionSort)
 	var domain []goivy.Sort
@@ -484,6 +486,9 @@ func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol
 	record := g.isRecordRange(rng)
 	if len(domain) == 0 {
 		lvalue := varName(sym.Name)
+		if lhsOverride != "" {
+			lvalue = lhsOverride
+		}
 		if obj != "" {
 			lvalue = obj + "." + lvalue
 		}
@@ -514,6 +519,12 @@ func (g *Generator) emitFromSolverLoop(w *cppWriter, obj string, sym stateSymbol
 		keyArgs = append(keyArgs, name)
 	}
 	lvalue := g.cppStorageAccess(sym.Name, sym.Sort, keyArgs, obj)
+	if lhsOverride != "" {
+		lvalue = lhsOverride + cppIndexSuffix(keyArgs)
+		if obj != "" {
+			lvalue = obj + "." + lvalue
+		}
+	}
 	if record {
 		typ := g.recordRangeType(rng)
 		w.linef("__from_solver<%s>(*this, apply(%q, %s), %s);", typ, sym.Name, strings.Join(applyArgs, ", "), lvalue)
@@ -578,6 +589,19 @@ func (g *Generator) isRecordRange(s goivy.Sort) bool {
 	return false
 }
 
+func (g *Generator) uninterpretedRandomizeRangeError(s goivy.Sort) error {
+	if _, ok := s.(*goivy.UninterpretedSort); !ok {
+		return nil
+	}
+	if _, ok := g.rangeSortFor(s); ok {
+		return nil
+	}
+	if g.isRecordRange(s) {
+		return nil
+	}
+	return fmt.Errorf("ivy2cpp: cannot create test generator because type %s is uninterpreted", sortName(s))
+}
+
 func (g *Generator) emitPythonTestRandomizeSolver(w *cppWriter, sym stateSymbol) error {
 	sname := strconv.Quote(sym.Name)
 	fs, isFn := sym.Sort.(*goivy.LogicFunctionSort)
@@ -588,6 +612,9 @@ func (g *Generator) emitPythonTestRandomizeSolver(w *cppWriter, sym stateSymbol)
 		rng = fs.Range()
 	} else {
 		rng = sym.Sort
+	}
+	if err := g.uninterpretedRandomizeRangeError(rng); err != nil {
+		return err
 	}
 	var args []string
 	opened := 0
@@ -623,7 +650,7 @@ func (g *Generator) emitPythonTestRandomizeSolver(w *cppWriter, sym stateSymbol)
 	return nil
 }
 
-func (g *Generator) emitPythonTestFromSolverLoop(w *cppWriter, obj string, sym stateSymbol) error {
+func (g *Generator) emitPythonTestFromSolverLoop(w *cppWriter, obj string, sym stateSymbol, lhsOverride string) error {
 	fs, isFn := sym.Sort.(*goivy.LogicFunctionSort)
 	var domain []goivy.Sort
 	var rng goivy.Sort
@@ -650,6 +677,12 @@ func (g *Generator) emitPythonTestFromSolverLoop(w *cppWriter, obj string, sym s
 	lvalue := varName(sym.Name)
 	if len(domain) > 0 {
 		lvalue = g.cppStorageAccess(sym.Name, sym.Sort, keyArgs, "")
+	}
+	if lhsOverride != "" {
+		lvalue = lhsOverride
+		if len(domain) > 0 {
+			lvalue += cppIndexSuffix(keyArgs)
+		}
 	}
 	if obj != "" {
 		lvalue = obj + "." + lvalue
@@ -859,9 +892,22 @@ func (g *Generator) emitDefinedInputExpr(
 		if mapped, found := fsyms[goivy.Key(c)]; found && !mapped.Equal(c) {
 			return g.emitDefinedInputExpr(mapped, fsyms, ssyms, stateContext)
 		}
+		if c.CSort == goivy.Boolean {
+			switch c.Name {
+			case "true", "false":
+				return c.Name, true
+			}
+		}
 		// numeral literal.
 		if goivy.IsNumeral(c) {
 			return c.Name, true
+		}
+		if st, ok := c.CSort.(*goivy.LogicEnumeratedSort); ok && !isNumericEnum(st) {
+			for _, val := range st.Extension {
+				if val == c.Name {
+					return g.ClassName + "::" + varName(c.Name), true
+				}
+			}
 		}
 		// state symbol -> obj.<var>.
 		if stateContext && ssyms[c.Name] {
@@ -881,6 +927,15 @@ func (g *Generator) emitDefinedInputExpr(
 				return "obj." + varName(fc.Name), true
 			}
 			return "this->" + varName(fc.Name), true
+		}
+		if len(ap.Terms) == 1 && g.Mod != nil && g.Mod.DestructorSorts != nil {
+			if _, ok := g.Mod.DestructorSorts[fc.Name]; ok {
+				recv, ok := g.emitDefinedInputExpr(ap.Terms[0], fsyms, ssyms, stateContext)
+				if !ok {
+					return "", false
+				}
+				return recv + "." + varName(memName(fc.Name)), true
+			}
 		}
 		args := make([]string, len(ap.Terms))
 		for i, t := range ap.Terms {

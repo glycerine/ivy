@@ -818,7 +818,7 @@ func (g *Generator) emitOnePositionalParam(w *cppWriter, p *goivy.Const, idx int
 func (g *Generator) functionAppLHS(p *goivy.Const, dom []goivy.Sort, domArgs []string) string {
 	base := "p__" + varName(p.Name)
 	if isLargeFunctionDomain(g, dom) && len(dom) > 1 {
-		return fmt.Sprintf("%s[%s(%s)]", base, cppCTupleLocalNameWith(g, dom), strings.Join(domArgs, ", "))
+		return fmt.Sprintf("%s[%s(%s)]", base, cppCTupleNameWith(g, dom, g.ClassName), strings.Join(domArgs, ", "))
 	}
 	res := base
 	for _, a := range domArgs {

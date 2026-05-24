@@ -609,6 +609,7 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 	// emission share the same analysis (inputs computed from
 	// reverse_image, etc.).
 	plans := make(map[string]*actionGenPlan)
+	var names []string
 	for name, act := range g.Mod.Actions.All() {
 		if initActions[name] || !g.Mod.PublicActions.Get(name) {
 			continue
@@ -616,9 +617,10 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 		if isFinalizeName(name) {
 			continue
 		}
+		names = append(names, name)
 		plans[name] = g.buildActionGenPlan(name, act)
 	}
-	for name := range plans {
+	for _, name := range names {
 		g.emitActionGenClassHeader(w, plans[name])
 	}
 
@@ -655,7 +657,7 @@ func (g *Generator) emitZ3GeneratorClasses(w *cppWriter) error {
 	w.close("")
 	w.blank()
 
-	for name := range plans {
+	for _, name := range names {
 		g.emitActionGen(w, plans[name])
 	}
 	return nil

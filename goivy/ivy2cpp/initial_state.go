@@ -629,7 +629,7 @@ func (g *Generator) emitZ3InitialStateEvaluation(w *cppWriter, obj string) error
 func (g *Generator) emitZ3EvaluateStateSymbol(w *cppWriter, obj string, sym stateSymbol) error {
 	// Use the shared emit_eval body so init_gen and action_gen produce
 	// identical evaluation code (Python ivy_to_cpp.py:772-799).
-	return g.emitFromSolverLoop(w, obj, sym)
+	return g.emitFromSolverLoop(w, obj, sym, "")
 }
 
 func (g *Generator) isParamName(name string) bool {

@@ -325,6 +325,7 @@ func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
 		}
 		st := stateSymbol{Name: sym.Name, Sort: sym.CSort}
 		if err := g.emitRandomizeSolver(w, st); err != nil {
+			g.errs = append(g.errs, err)
 			w.linef("// ivy2cpp: emitRandomize skipped for %q (%v)", sym.Name, err)
 		}
 	}
@@ -348,7 +349,13 @@ func (g *Generator) emitActionGen(w *cppWriter, plan *actionGenPlan) {
 			continue
 		}
 		st := stateSymbol{Name: sym.Name, Sort: sym.CSort}
-		if err := g.emitEvalSolver(w, st, ""); err != nil {
+		lhs := ""
+		if mapped, ok := plan.fsyms[goivy.Key(sym)]; ok && !mapped.Equal(sym) {
+			if text, textOK := g.emitDefinedInputExpr(mapped, plan.fsyms, nil, false); textOK {
+				lhs = text
+			}
+		}
+		if err := g.emitEvalSolverTo(w, st, "", lhs); err != nil {
 			w.linef("// ivy2cpp: emitEvalSolver skipped for %q (%v)", sym.Name, err)
 		}
 	}
@@ -462,6 +469,7 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 		}
 		st := stateSymbol{Name: sym.Name, Sort: sym.CSort}
 		if err := g.emitRandomizeSolver(w, st); err != nil {
+			g.errs = append(g.errs, err)
 			w.linef("// ivy2cpp: emitRandomize skipped for %q (%v)", sym.Name, err)
 		}
 	}
@@ -485,7 +493,13 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 			continue
 		}
 		st := stateSymbol{Name: sym.Name, Sort: sym.CSort}
-		if err := g.emitEvalSolver(w, st, ""); err != nil {
+		lhs := ""
+		if mapped, ok := plan.fsyms[goivy.Key(sym)]; ok && !mapped.Equal(sym) {
+			if text, textOK := g.emitDefinedInputExpr(mapped, plan.fsyms, nil, false); textOK {
+				lhs = text
+			}
+		}
+		if err := g.emitEvalSolverTo(w, st, "", lhs); err != nil {
 			w.linef("// ivy2cpp: emitEvalSolver skipped for %q (%v)", sym.Name, err)
 		}
 	}
