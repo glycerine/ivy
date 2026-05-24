@@ -1,10 +1,15 @@
 package goivy
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
+	"os"
 	"strings"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 func testCtx() *UpdateContext {
@@ -13,6 +18,44 @@ func testCtx() *UpdateContext {
 		PVars:  nil,
 		ActCfg: NewActionsConfig(),
 	}
+}
+
+func captureActionUpdateStdout(t *testing.T, fn func()) string {
+	t.Helper()
+	if !xtracer.Enabled {
+		t.Skip("xtrace disabled at build time")
+	}
+
+	oldStdout := os.Stdout
+	oldSuppressed := xtracer.Suppressed
+	r, w, err := os.Pipe()
+	if err != nil {
+		t.Fatalf("os.Pipe: %v", err)
+	}
+
+	outCh := make(chan string, 1)
+	go func() {
+		var buf bytes.Buffer
+		_, _ = io.Copy(&buf, r)
+		outCh <- buf.String()
+	}()
+
+	os.Stdout = w
+	xtracer.Suppressed = false
+	closedW := false
+	defer func() {
+		os.Stdout = oldStdout
+		xtracer.Suppressed = oldSuppressed
+		if !closedW {
+			_ = w.Close()
+		}
+		_ = r.Close()
+	}()
+	fn()
+	_ = w.Close()
+	closedW = true
+	out := <-outCh
+	return out
 }
 
 // --- AssumeAction ---
@@ -516,6 +559,92 @@ func TestBindOldsActionIntUpdate(t *testing.T) {
 	u := bindOlds.IntUpdate(ctx)
 	if len(u.Modified) != 0 {
 		t.Errorf("BindOlds of assume should modify nothing, got %v", u.Modified)
+	}
+}
+
+// --- CallAction ---
+
+func TestCallActionIntUpdateSubstitutesBeforeExitTrace(t *testing.T) {
+	cfg := NewActionsConfig()
+	mod := New()
+	mod.Actions.Set("callee", NewSequence())
+	call := NewCallActionOn(cfg, NewConst("callee", TopS))
+	ctx := &UpdateContext{Domain: mod, ActCfg: cfg}
+
+	var update *Update
+	out := captureActionUpdateStdout(t, func() {
+		update = call.IntUpdate(ctx)
+	})
+
+	if update == nil {
+		t.Fatal("CallAction.IntUpdate returned nil")
+	}
+	if len(update.Modified) != 0 {
+		t.Fatalf("empty callee should modify nothing, got %v", update.Modified)
+	}
+	if !update.TR.IsTrue() {
+		t.Fatalf("empty callee TR should be true, got %s", update.TR.Canon())
+	}
+	if !update.Pre.IsFalse() {
+		t.Fatalf("empty callee Pre should be false, got %s", update.Pre.Canon())
+	}
+
+	subIdx := strings.Index(out, "actions.substitute_constants_action ENTER type=Sequence nargs=0")
+	if subIdx < 0 {
+		t.Fatalf("CallAction.IntUpdate did not substitute the callee action before returning; output:\n%s", out)
+	}
+	exitIdx := strings.Index(out, "actions.CallAction.int_update EXIT")
+	if exitIdx < 0 {
+		t.Fatalf("CallAction.IntUpdate did not emit EXIT trace; output:\n%s", out)
+	}
+	if subIdx > exitIdx {
+		t.Fatalf("substitution trace must precede CallAction EXIT; output:\n%s", out)
+	}
+	wrapperSeqIdx := strings.Index(out[subIdx:], "actions.Sequence.int_update ENTER")
+	if wrapperSeqIdx < 0 {
+		t.Fatalf("CallAction.IntUpdate must recurse into the Python wrapper Sequence after substitution; output:\n%s", out)
+	}
+	if subIdx+wrapperSeqIdx > exitIdx {
+		t.Fatalf("wrapper Sequence trace must precede CallAction EXIT; output:\n%s", out)
+	}
+}
+
+func TestCallActionIntUpdateActualsAndHideFormals(t *testing.T) {
+	cfg := NewActionsConfig()
+	mod := New()
+	sortT := &UninterpretedSort{Name: "t"}
+
+	formalIn := NewConst("p", sortT)
+	formalOut := NewConst("r", sortT)
+	actualIn := NewConst("p", sortT) // Same name forces capture-avoiding formal rename.
+	actualOut := NewConst("out", sortT)
+	state := NewConst("state", sortT)
+
+	callee := NewSequence(NewAssignAction(state, formalIn))
+	callee.SetFormalParams([]*Const{formalIn})
+	callee.SetFormalReturns([]*Const{formalOut})
+	mod.Actions.Set("callee", callee)
+
+	call := NewCallActionOn(cfg, MustApply(NewConst("callee", TopS), actualIn), actualOut)
+	ctx := &UpdateContext{Domain: mod, ActCfg: cfg}
+	update := call.IntUpdate(ctx)
+	if update == nil {
+		t.Fatal("CallAction.IntUpdate returned nil")
+	}
+
+	modified := make(map[string]bool)
+	for _, sym := range update.Modified {
+		modified[sym.Name] = true
+	}
+	for _, name := range []string{"state", "out"} {
+		if !modified[name] {
+			t.Fatalf("CallAction.IntUpdate modified=%v, want %s after body/output assignments", modified, name)
+		}
+	}
+	for _, hidden := range []string{"p", "p_a", "r"} {
+		if modified[hidden] {
+			t.Fatalf("CallAction.IntUpdate leaked hidden formal %q in modified=%v", hidden, modified)
+		}
 	}
 }
 

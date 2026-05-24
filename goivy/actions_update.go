@@ -1867,7 +1867,6 @@ func (a *LogicBindOldsAction) IntUpdate(ctx *UpdateContext) *Update {
 // and computes the inlined update.
 func (a *LogicCallAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.CallAction.int_update ENTER")
-	defer xtracer.Trace("actions.CallAction.int_update EXIT")
 	calleeName := constName(a.Callee)
 	if xtracer.Enabled {
 		fmt.Printf("DIAG CallAction.int_update callee=%v\n", calleeName)
@@ -1909,7 +1908,9 @@ func (a *LogicCallAction) IntUpdate(ctx *UpdateContext) *Update {
 	}
 
 	// Apply actual parameters
-	return a.applyActuals(ctx, calleeAction)
+	result := a.applyActuals(ctx, calleeAction)
+	xtracer.Trace("actions.CallAction.int_update EXIT")
+	return result
 }
 
 // applyActuals inlines the callee with actual parameters.
@@ -1920,16 +1921,6 @@ func (a *LogicCallAction) applyActuals(ctx *UpdateContext, callee ActionsAction)
 	formalReturns := callee.GetFormalReturns()
 	actualParams := nodeArgs(a.Callee)
 	actualReturns := a.ActualReturns
-
-	// Validate parameter counts.
-	// Python (ivy_actions.py:1352): raise IvyError("wrong number of input parameters")
-	if len(formalParams) != len(actualParams) {
-		panic("wrong number of input parameters")
-	}
-	// Python (ivy_actions.py:1356): raise IvyError("wrong number of output parameters")
-	if len(formalReturns) != len(actualReturns) {
-		panic("wrong number of output parameters")
-	}
 
 	// Capture avoidance: rename formals to avoid colliding with actuals.
 	// Python: vocab = list(symbols_asts(actual_params+actual_returns))
@@ -1965,22 +1956,24 @@ func (a *LogicCallAction) applyActuals(ctx *UpdateContext, callee ActionsAction)
 	}
 	renamedCallee := SubstituteConstantsAction(callee, substMap)
 
-	// Get renamed formals
+	// Get renamed formals from the same substitution map Python uses.
 	renamedFormalParams := make([]*Const, len(formalParams))
 	for i, fp := range formalParams {
-		if newSym, ok := renaming[fp]; ok {
-			renamedFormalParams[i] = newSym
-		} else {
-			renamedFormalParams[i] = fp
-		}
+		renamedFormalParams[i] = callActionRenamedFormal(fp, substMap)
 	}
 	renamedFormalReturns := make([]*Const, len(formalReturns))
 	for i, fr := range formalReturns {
-		if newSym, ok := renaming[fr]; ok {
-			renamedFormalReturns[i] = newSym
-		} else {
-			renamedFormalReturns[i] = fr
-		}
+		renamedFormalReturns[i] = callActionRenamedFormal(fr, substMap)
+	}
+
+	// Validate parameter counts after substitution, matching Python ordering.
+	// Python (ivy_actions.py:1379): raise IvyError("wrong number of input parameters")
+	if len(renamedFormalParams) != len(actualParams) {
+		panic("wrong number of input parameters")
+	}
+	// Python (ivy_actions.py:1382): raise IvyError("wrong number of output parameters")
+	if len(renamedFormalReturns) != len(actualReturns) {
+		panic("wrong number of output parameters")
 	}
 
 	// Sort compatibility check.
@@ -2044,6 +2037,18 @@ func (a *LogicCallAction) applyActuals(ctx *UpdateContext, callee ActionsAction)
 	toHide = append(toHide, renamedFormalParams...)
 	toHide = append(toHide, renamedFormalReturns...)
 	return Hide(toHide, update)
+}
+
+func callActionRenamedFormal(sym *Const, substMap map[NodeKey]Expr) *Const {
+	replacement, ok := substMap[Key(sym)]
+	if !ok {
+		panic(fmt.Sprintf("CallAction.applyActuals: missing formal substitution for %s", sym.Name))
+	}
+	renamed, ok := replacement.(*Const)
+	if !ok {
+		panic(fmt.Sprintf("CallAction.applyActuals: formal %s substituted with non-Const %T", sym.Name, replacement))
+	}
+	return renamed
 }
 
 // distinctObjRenaming creates a renaming from formals to fresh names
