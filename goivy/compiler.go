@@ -1389,6 +1389,16 @@ func (c *Compiler) compileDefnImpl(df *Definition, isSchema bool) (Expr, error) 
 	if xtracer.Enabled {
 		c.SigCheck("CompileDefnImpl.afterCopy")
 	}
+	if lhsAtom != nil {
+		if _, isPoly := FindPolymorphicSymbol(lhsAtom.Rep, c.Module.Cfg.IuCfg); !isPoly {
+			if _, exists := sigCopy.Symbols.Get2(lhsAtom.Rep); !exists {
+				if _, err := sigCopy.AddSymbol(lhsAtom.Rep, TopFunctionSort(len(lhsAtom.Terms))); err != nil {
+					c.Sig = savedSig
+					return nil, err
+				}
+			}
+		}
+	}
 
 	// Compile any constant parameters in the LHS and collect variable sort substitutions
 	subst := make(map[string]string)

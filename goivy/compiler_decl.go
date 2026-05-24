@@ -796,9 +796,9 @@ func (d *DomainSetup) DefinitionDecl(node Node) error {
 
 	// Python: self.add_definition(ldf.clone([label, df]))
 	// Clone the LabeledFormula with the compiled definition, preserving metadata.
-	// AddDefinition validates the definition variables (using astDefNode, the
-	// pre-compile AST form) and routes to either NativeDefinitions or
-	// LabeledProps based on whether the AST RHS is a NativeExpr.
+	// AddDefinition validates the compiled definition variables and routes to
+	// either NativeDefinitions or LabeledProps based on whether the AST RHS is a
+	// NativeExpr.
 	mlf := lf.Clone([]Node{lf.Label, compiled}).(*LabeledFormula)
 	if err := d.AddDefinition(mlf, defNode); err != nil {
 		return err
