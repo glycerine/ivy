@@ -1336,9 +1336,9 @@ def _canon_z3_expr(e, binders):
     BYTE-FOR-BYTE. binders is a list of bound-variable name lists, one
     per enclosing quantifier (innermost LAST). Format spec lives in
     that file's header comment."""
-    if z3.is_int_value(e) or z3.is_rational_value(e) or e.sort().kind() == z3.Z3_BV_SORT:
+    if z3.is_int_value(e) or z3.is_rational_value(e) or z3.is_bv_value(e):
         # Numeric literal
-        return "(n %s)" % e.as_string()
+        return "(n %s)" % z3.Z3_get_numeral_string(e.ctx_ref(), e.as_ast())
     if z3.is_var(e):
         # Bound variable: (v <name>) -- looked up from binder stack
         idx = z3.get_var_index(e)
