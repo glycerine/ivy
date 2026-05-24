@@ -6661,7 +6661,8 @@ export mark
 	// matching Python's ctype dispatcher (ivy_to_cpp.py:414-432).
 	for _, want := range []string{
 		"template<typename R> class to_solver_class<hash_thunk<int,R> > {",
-		"z3::expr cond = __to_solver(g, v.arg(0), it->first);",
+		"auto __key = it->first;",
+		"z3::expr cond = __to_solver(g, v.arg(0), __key);",
 		"res = res && (disj || bg);",
 		"dynamic_cast<z3_thunk<int,R> *>(val.fun)->to_z3(g, v)",
 	} {

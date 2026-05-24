@@ -113,7 +113,8 @@ func TestEmitSetSolverHashThunkCTupleSpecialization(t *testing.T) {
 	out := generateHashThunkSolverFixture(t, "tuplez3")
 	for _, want := range []string{
 		"template<typename R> class to_solver_class<hash_thunk<tuplez3::__tup__int__int,R> > {",
-		"z3::expr cond = __to_solver(g, v.arg(0), it->first.arg0) && __to_solver(g, v.arg(1), it->first.arg1);",
+		"auto __key = it->first;",
+		"z3::expr cond = __to_solver(g, v.arg(0), __key.arg0) && __to_solver(g, v.arg(1), __key.arg1);",
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in generated impl:\n%s", want, out.Impl)

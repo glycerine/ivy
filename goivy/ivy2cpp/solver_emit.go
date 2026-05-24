@@ -1123,8 +1123,8 @@ func (g *Generator) pythonTestNondetZ3ValueExpr(s goivy.Sort, val string) string
 
 // emitHashThunkToSolver emits one `to_solver_class<hash_thunk<D,R>>`
 // template specialization. `domSorts` non-nil signals a multi-arg
-// ctuple domain (key access via `it->first.argN`); nil signals a
-// single-arg domain (key access via `it->first`). Mirrors Python
+// ctuple domain (key access via copied `__key.argN`); nil signals a
+// single-arg domain (key access via copied `__key`). Mirrors Python
 // `emit_hash_thunk_to_solver` at ivy_to_cpp.py:1841-1862.
 func (g *Generator) emitHashThunkToSolver(w *cppWriter, domSorts []goivy.Sort, ctName string) {
 	w.open(fmt.Sprintf("template<typename R> class to_solver_class<hash_thunk<%s,R> > {", ctName))
@@ -1143,14 +1143,15 @@ func (g *Generator) emitHashThunkToSolver(w *cppWriter, domSorts []goivy.Sort, c
 	}
 	w.open(fmt.Sprintf("for (typename %s<%s,R>::iterator it = val.memo.begin(), en = val.memo.end(); it != en; it++) {", hashMap, ctName))
 	w.line("z3::expr asgn = __to_solver(g, v, it->second);")
+	w.line("auto __key = it->first;")
 	if len(domSorts) > 0 {
 		parts := make([]string, len(domSorts))
 		for i := range domSorts {
-			parts[i] = fmt.Sprintf("__to_solver(g, v.arg(%d), it->first.arg%d)", i, i)
+			parts[i] = fmt.Sprintf("__to_solver(g, v.arg(%d), __key.arg%d)", i, i)
 		}
 		w.linef("z3::expr cond = %s;", strings.Join(parts, " && "))
 	} else {
-		w.line("z3::expr cond = __to_solver(g, v.arg(0), it->first);")
+		w.line("z3::expr cond = __to_solver(g, v.arg(0), __key);")
 	}
 	w.line("res = res && implies(cond, asgn);")
 	w.line("disj = disj || cond;")
