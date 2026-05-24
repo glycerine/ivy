@@ -314,7 +314,10 @@ class ProofChecker(object):
         vocab = goal_vocab(goal)
         defs = [compile_expr_vocab(ia.Atom('=',x.args[0],x.args[1]),vocab) for x in proof.args]
         cond = il.And(*[il.Equals(a.args[0],a.args[1]) for a in defs])
-        subgoal = ia.LabeledFormula(decls[0].label,il.Implies(cond,decls[0].formula))
+        if __debug__: xtracer.trace("proof.WrapImplies ENTER formulaType=%s" % type(decls[0].formula).__name__)
+        impl = il.Implies(cond,decls[0].formula)
+        if __debug__: xtracer.trace("proof.WrapImplies EXIT type=lgImplies HASH canon=%s" % (impl.canon() if hasattr(impl,'canon') else str(impl)))
+        subgoal = ia.LabeledFormula(decls[0].label,impl)
         if not hasattr(decls[0],'lineno'):
             print('has no line number: {}'.format(decls[0]))
             exit(1)

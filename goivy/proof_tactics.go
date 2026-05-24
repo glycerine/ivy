@@ -69,12 +69,7 @@ func (pc *ProofChecker) letTactic(decls []*LabeledFormula, proof *LetTactic) ([]
 		return decls, nil
 	}
 
-	var cond Expr
-	if len(eqs) == 1 {
-		cond = eqs[0]
-	} else {
-		cond = &LogicAnd{Terms: eqs}
-	}
+	cond := &LogicAnd{Terms: eqs}
 
 	// Python ivy_proof.py:226:
 	//   subgoal = ia.LabeledFormula(decls[0].label, il.Implies(cond, decls[0].formula))
