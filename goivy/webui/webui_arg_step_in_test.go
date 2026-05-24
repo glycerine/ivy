@@ -721,7 +721,7 @@ func TestGatherUsesRequestedConceptGraphSheet(t *testing.T) {
 func TestReachUsesCurrentConceptGraphParentState(t *testing.T) {
 	mod := goivy.New()
 	p := goivy.NewConst("p", goivy.Boolean)
-	mod.Relations.Set("p", goivy.Boolean)
+	mod.Relations.Set(goivy.RelationKey("p", goivy.Boolean), goivy.Boolean)
 	pred := goivy.NewState(mod, goivy.TrueClauses(nil))
 	pred.Unders = []*goivy.State{
 		goivy.NewState(mod, goivy.FalseClauses(nil)),

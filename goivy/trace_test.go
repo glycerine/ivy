@@ -571,7 +571,7 @@ print(json.dumps({
 	if err != nil {
 		t.Fatalf("arr.end symbol: %v", err)
 	}
-	mod.Functions.Set(end.Name, end.CSort)
+	mod.Functions.Set(Key(end), end.CSort)
 	valueSort, err := NewFunctionSort(arr, idx, elem)
 	if err != nil {
 		t.Fatalf("value sort: %v", err)
@@ -580,7 +580,7 @@ print(json.dumps({
 	if err != nil {
 		t.Fatalf("arr.value symbol: %v", err)
 	}
-	mod.Functions.Set(value.Name, value.CSort)
+	mod.Functions.Set(Key(value), value.CSort)
 
 	arrayVals := map[NodeKey]Expr{
 		Key(MustApply(end, a)):                       NewConst("2", idx),
@@ -1237,7 +1237,10 @@ print(json.dumps(rels_to_min))
 	}
 
 	mod := New()
-	mod.Relations.Set("r", Boolean)
+	if _, err := mod.Sig.AddSymbol("r", Boolean); err != nil {
+		t.Fatalf("AddSymbol(r): %v", err)
+	}
+	mod.Relations.Set(RelationKey("r", Boolean), Boolean)
 	history := &History{Maps: []LogicRenaming{LogicRenaming{}}}
 	history.Maps[0].Set(NewConst("r", Boolean), NewConst("__r", Boolean))
 	got := traceHistoryRelationsToMinimize(mod, history, []string{"r", "missing"})

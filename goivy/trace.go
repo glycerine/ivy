@@ -841,12 +841,14 @@ func traceRelationsToMinimize(mod *Module, clauses *Clauses, names []string) []*
 		}
 	}
 	if mod != nil {
-		for name, sort := range mod.Relations.All() {
+		for key, sort := range mod.Relations.All() {
+			name := SymbolNameFromKey(key)
 			if _, ok := byName[name]; !ok {
 				byName[name] = NewConst(name, sort)
 			}
 		}
-		for name, sort := range mod.Functions.All() {
+		for key, sort := range mod.Functions.All() {
+			name := SymbolNameFromKey(key)
 			if _, ok := byName[name]; !ok {
 				byName[name] = NewConst(name, sort)
 			}
@@ -889,18 +891,20 @@ func traceHistoryRelationsToMinimize(mod *Module, history *History, names []stri
 }
 
 func traceRelationSymbolByName(mod *Module, name string) *Const {
-	if mod == nil {
+	if mod == nil || mod.Sig == nil {
 		return nil
 	}
-	if sort, ok := mod.Relations.Get2(name); ok {
-		return NewConst(name, sort)
-	}
-	if sort, ok := mod.Functions.Get2(name); ok {
-		return NewConst(name, sort)
-	}
-	if mod.Sig != nil {
-		if syms := mod.Sig.AllSymbolsNamed(name); len(syms) > 0 {
-			return syms[0]
+	for _, sym := range mod.Sig.AllSymbolsNamed(name) {
+		key := Key(sym)
+		if mod.Relations != nil {
+			if _, ok := mod.Relations.Get2(key); ok {
+				return sym
+			}
+		}
+		if mod.Functions != nil {
+			if _, ok := mod.Functions.Get2(key); ok {
+				return sym
+			}
 		}
 	}
 	return nil
@@ -1345,22 +1349,8 @@ func valueToStrLookupSymbol(mod *Module, name string) *Const {
 		return nil
 	}
 	if mod.Sig != nil && mod.Sig.Symbols != nil {
-		if entry, ok := mod.Sig.Symbols.Get2(name); ok && entry != nil && entry.Sort != nil {
-			symName := entry.Name
-			if symName == "" {
-				symName = name
-			}
-			return NewConst(symName, entry.Sort)
-		}
-	}
-	if mod.Functions != nil {
-		if sort, ok := mod.Functions.Get2(name); ok && sort != nil {
-			return NewConst(name, sort)
-		}
-	}
-	if mod.Relations != nil {
-		if sort, ok := mod.Relations.Get2(name); ok && sort != nil {
-			return NewConst(name, sort)
+		if syms := mod.Sig.AllSymbolsNamed(name); len(syms) > 0 {
+			return syms[0]
 		}
 	}
 	return nil

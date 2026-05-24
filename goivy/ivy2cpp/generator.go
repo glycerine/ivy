@@ -1046,14 +1046,16 @@ func (g *Generator) allStateSymbols() []stateSymbol {
 		}
 	}
 	if g.Mod.Relations != nil {
-		for name, s := range g.Mod.Relations.All() {
+		for key, s := range g.Mod.Relations.All() {
+			name := goivy.SymbolNameFromKey(key)
 			if !knownSig[name] {
 				add(name, s)
 			}
 		}
 	}
 	if g.Mod.Functions != nil {
-		for name, s := range g.Mod.Functions.All() {
+		for key, s := range g.Mod.Functions.All() {
+			name := goivy.SymbolNameFromKey(key)
 			if !knownSig[name] {
 				add(name, s)
 			}

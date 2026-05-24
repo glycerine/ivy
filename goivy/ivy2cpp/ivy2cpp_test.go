@@ -2810,7 +2810,7 @@ func TestGeneratedChoiceActionCompiles(t *testing.T) {
 	mod := goivy.New()
 	mod.Name = "choice"
 	mod.Actions.Set("step", choice)
-	mod.Relations.Set("flag", goivy.Boolean)
+	mod.Relations.Set(goivy.RelationKey("flag", goivy.Boolean), goivy.Boolean)
 	out, err := Generate(mod, Config{ClassName: "runner"})
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
@@ -3142,7 +3142,7 @@ export step
 func TestGeneratedDebugActionCompiles(t *testing.T) {
 	mod := goivy.New()
 	mod.Name = "debugcase"
-	mod.Relations.Set("flag", goivy.Boolean)
+	mod.Relations.Set(goivy.RelationKey("flag", goivy.Boolean), goivy.Boolean)
 	mod.Actions.Set("step", goivy.NewDebugAction(goivy.NewConst(`"tick"`, goivy.TopS), goivy.NewConst("flag", goivy.Boolean)))
 	out, err := Generate(mod, Config{ClassName: "debugcase"})
 	if err != nil {
@@ -3203,7 +3203,7 @@ export step
 func TestGeneratedEnvActionEmitsChoice(t *testing.T) {
 	mod := goivy.New()
 	mod.Name = "envcase"
-	mod.Relations.Set("flag", goivy.Boolean)
+	mod.Relations.Set(goivy.RelationKey("flag", goivy.Boolean), goivy.Boolean)
 	assign := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("true", goivy.Boolean))
 	clear := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("false", goivy.Boolean))
 	mod.Actions.Set("step", goivy.NewEnvActionOn(goivy.NewActionsConfig(), assign, clear))
@@ -3229,7 +3229,7 @@ func TestGeneratedEnvActionEmitsChoice(t *testing.T) {
 func TestGeneratedBindOldsReportsUnsupported(t *testing.T) {
 	mod := goivy.New()
 	mod.Name = "bindcase"
-	mod.Relations.Set("flag", goivy.Boolean)
+	mod.Relations.Set(goivy.RelationKey("flag", goivy.Boolean), goivy.Boolean)
 	assign := goivy.NewAssignAction(goivy.NewConst("flag", goivy.Boolean), goivy.NewConst("true", goivy.Boolean))
 	mod.Actions.Set("step", goivy.NewBindOldsAction(assign))
 	_, err := Generate(mod, Config{ClassName: "bindcase"})
@@ -3583,18 +3583,16 @@ action step = {
 	if !ok {
 		t.Fatal("missing color sort")
 	}
-	relSort, ok := mod.Relations.Get2("marked")
-	if !ok {
-		relSort, ok = mod.Functions.Get2("marked")
-	}
-	if !ok {
+	marked, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
 		t.Fatal("missing marked relation")
 	}
+	relSort := marked.CSort
 	c, err := goivy.NewVariable("C", color)
 	if err != nil {
 		t.Fatalf("NewVariable: %v", err)
 	}
-	marked, err := goivy.NewApply(goivy.NewConst("marked", relSort), c)
+	markedApp, err := goivy.NewApply(goivy.NewConst("marked", relSort), c)
 	if err != nil {
 		t.Fatalf("NewApply: %v", err)
 	}
@@ -3602,7 +3600,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("NewEq: %v", err)
 	}
-	init, err := goivy.NewIff(marked, isGreen)
+	init, err := goivy.NewIff(markedApp, isGreen)
 	if err != nil {
 		t.Fatalf("NewIff: %v", err)
 	}
@@ -3631,18 +3629,16 @@ action step = {
 	if !ok {
 		t.Fatal("missing color sort")
 	}
-	relSort, ok := mod.Relations.Get2("marked")
-	if !ok {
-		relSort, ok = mod.Functions.Get2("marked")
-	}
-	if !ok {
+	marked, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
 		t.Fatal("missing marked relation")
 	}
+	relSort := marked.CSort
 	c, err := goivy.NewVariable("C", color)
 	if err != nil {
 		t.Fatalf("NewVariable: %v", err)
 	}
-	marked, err := goivy.NewApply(goivy.NewConst("marked", relSort), c)
+	markedApp, err := goivy.NewApply(goivy.NewConst("marked", relSort), c)
 	if err != nil {
 		t.Fatalf("NewApply: %v", err)
 	}
@@ -3650,7 +3646,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("NewEq: %v", err)
 	}
-	init, err := goivy.NewIff(isGreen, marked)
+	init, err := goivy.NewIff(isGreen, markedApp)
 	if err != nil {
 		t.Fatalf("NewIff: %v", err)
 	}
@@ -3679,18 +3675,16 @@ action step = {
 	if !ok {
 		t.Fatal("missing color sort")
 	}
-	relSort, ok := mod.Relations.Get2("marked")
-	if !ok {
-		relSort, ok = mod.Functions.Get2("marked")
-	}
-	if !ok {
+	marked, err := mod.Sig.FindSymbol("marked", false)
+	if err != nil {
 		t.Fatal("missing marked relation")
 	}
+	relSort := marked.CSort
 	c, err := goivy.NewVariable("C", color)
 	if err != nil {
 		t.Fatalf("NewVariable: %v", err)
 	}
-	marked, err := goivy.NewApply(goivy.NewConst("marked", relSort), c)
+	markedApp, err := goivy.NewApply(goivy.NewConst("marked", relSort), c)
 	if err != nil {
 		t.Fatalf("NewApply: %v", err)
 	}
@@ -3698,7 +3692,7 @@ action step = {
 	if err != nil {
 		t.Fatalf("NewEq: %v", err)
 	}
-	init, err := goivy.NewIff(marked, isRed)
+	init, err := goivy.NewIff(markedApp, isRed)
 	if err != nil {
 		t.Fatalf("NewIff: %v", err)
 	}
@@ -8103,8 +8097,8 @@ export set
 func TestDebugActionEmitsNamedValues(t *testing.T) {
 	mod := goivy.New()
 	mod.Name = "named"
-	mod.Relations.Set("flag", goivy.Boolean)
-	mod.Relations.Set("saved", goivy.Boolean)
+	mod.Relations.Set(goivy.RelationKey("flag", goivy.Boolean), goivy.Boolean)
+	mod.Relations.Set(goivy.RelationKey("saved", goivy.Boolean), goivy.Boolean)
 	dbg := goivy.NewDebugAction(
 		goivy.NewConst(`"tick"`, goivy.TopS),
 		goivy.NewConst("saved", goivy.Boolean),

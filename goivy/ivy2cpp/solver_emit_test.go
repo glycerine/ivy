@@ -22,7 +22,7 @@ func TestEmitSetSolverLargeFunctionEmitsForall(t *testing.T) {
 	if err := mod.Sig.AddSort(idx); err != nil {
 		t.Fatalf("AddSort(idx): %v", err)
 	}
-	mod.Functions.Set("bigf", fnSort)
+	mod.Functions.Set(goivy.FunctionKey("bigf", fnSort), fnSort)
 	g := &Generator{Mod: mod, ClassName: "bigf", Config: Config{Target: "test", ClassName: "bigf"}}
 	sym := stateSymbol{Name: "bigf", Sort: fnSort}
 	if !g.isLargeType(sym.Sort) {

@@ -151,9 +151,10 @@ func (g *Generator) stateFields() [][2]string {
 	seen := make(map[string]bool)
 
 	// Relations
-	relNames := sortedKeysInsMap(g.Module.Relations)
-	for _, name := range relNames {
-		s := g.Module.Relations.Get(name)
+	relKeys := sortedSymbolKeys(g.Module.Relations)
+	for _, key := range relKeys {
+		name := goivy.SymbolNameFromKey(key)
+		s := g.Module.Relations.Get(key)
 		goName := goExportedName(name)
 		goType := StateFieldType(name, s)
 		if !seen[goName] {
@@ -163,9 +164,10 @@ func (g *Generator) stateFields() [][2]string {
 	}
 
 	// Functions
-	fnNames := sortedKeysInsMap(g.Module.Functions)
-	for _, name := range fnNames {
-		s := g.Module.Functions.Get(name)
+	fnKeys := sortedSymbolKeys(g.Module.Functions)
+	for _, key := range fnKeys {
+		name := goivy.SymbolNameFromKey(key)
+		s := g.Module.Functions.Get(key)
 		goName := goExportedName(name)
 		goType := StateFieldType(name, s)
 		if !seen[goName] {
@@ -276,12 +278,14 @@ func (g *Generator) EmitStateStruct(name string) {
 	w := g.Writer
 	w.OpenBlock(fmt.Sprintf("type %s struct {", name))
 	if g.Module != nil {
-		for symName, s := range g.Module.Relations.All() {
+		for key, s := range g.Module.Relations.All() {
+			symName := goivy.SymbolNameFromKey(key)
 			fieldName := goExportedName(symName)
 			fieldType := StateFieldType(symName, s)
 			w.Linef("%s %s", fieldName, fieldType)
 		}
-		for symName, s := range g.Module.Functions.All() {
+		for key, s := range g.Module.Functions.All() {
+			symName := goivy.SymbolNameFromKey(key)
 			fieldName := goExportedName(symName)
 			fieldType := StateFieldType(symName, s)
 			w.Linef("%s %s", fieldName, fieldType)
@@ -319,13 +323,14 @@ func formatFormalReturns(params []*goivy.Const) string {
 	return "(" + strings.Join(parts, ", ") + ")"
 }
 
-// sortedKeysInsMap returns sorted keys from an InsMap[string, lg.Sort].
-func sortedKeysInsMap(m *goivy.InsMap[string, goivy.Sort]) []string {
-	keys := make([]string, 0, m.Len())
+func sortedSymbolKeys(m *goivy.InsMap[goivy.NodeKey, goivy.Sort]) []goivy.NodeKey {
+	keys := make([]goivy.NodeKey, 0, m.Len())
 	for k := range m.All() {
 		keys = append(keys, k)
 	}
-	sort.Strings(keys)
+	sort.Slice(keys, func(i, j int) bool {
+		return keys[i].String() < keys[j].String()
+	})
 	return keys
 }
 

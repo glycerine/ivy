@@ -29,8 +29,8 @@ type Module struct {
 	AssumedInvs   []*LabeledFormula            // assumed invariants
 
 	// Relations and functions
-	Relations *InsMap[string, Sort]
-	Functions *InsMap[string, Sort]
+	Relations *InsMap[NodeKey, Sort]
+	Functions *InsMap[NodeKey, Sort]
 
 	// Actions and mixins
 	Actions        *InsMap[string, Action]
@@ -257,8 +257,8 @@ func (m *Module) Clear() {
 
 	// Python line 36: self.init_cond = lu.true_clauses()
 	m.InitCond = TrueClauses(nil)
-	m.Relations = NewInsMap[string, Sort]()
-	m.Functions = NewInsMap[string, Sort]()
+	m.Relations = NewInsMap[NodeKey, Sort]()
+	m.Functions = NewInsMap[NodeKey, Sort]()
 	m.Updates = nil
 	m.Schemata = NewInsMap[string, Node]()
 	m.Theorems = make(map[string]Node)
@@ -384,11 +384,11 @@ func (m *Module) Copy() *Module {
 
 	// Copy maps
 	c.Postconds = copyMapLF(m.Postconds)
-	c.Relations = NewInsMap[string, Sort]()
+	c.Relations = NewInsMap[NodeKey, Sort]()
 	for k, v := range m.Relations.All() {
 		c.Relations.Set(k, v)
 	}
-	c.Functions = NewInsMap[string, Sort]()
+	c.Functions = NewInsMap[NodeKey, Sort]()
 	for k, v := range m.Functions.All() {
 		c.Functions.Set(k, v)
 	}
@@ -852,4 +852,16 @@ func (m *Module) UpdateConjs() {
 
 		m.ConceptSpaces = append(m.ConceptSpaces, ConceptSpace{Label: label, Body: space})
 	}
+}
+
+// RelationKey is the structural key Python uses for module.relations:
+// lg.Const(name, sort), whose recstruct hash/equality includes both fields.
+func RelationKey(name string, sort Sort) NodeKey {
+	return Key(NewConst(name, sort))
+}
+
+// FunctionKey is the structural key Python uses for module.functions:
+// lg.Const(name, sort), whose recstruct hash/equality includes both fields.
+func FunctionKey(name string, sort Sort) NodeKey {
+	return Key(NewConst(name, sort))
 }

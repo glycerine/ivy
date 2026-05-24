@@ -174,7 +174,7 @@ print(json.dumps({
 	mod.Sig = goivy.NewSig()
 	mod.Sig.Sorts.Set("S", S)
 	mod.Sig.Symbols.Set("P", &goivy.SymbolEntry{Sort: pSort})
-	mod.Relations.Set("P", pSort)
+	mod.Relations.Set(goivy.RelationKey("P", pSort), pSort)
 	mod.Initializers = append(mod.Initializers, goivy.NamedAction{
 		Name:   "init",
 		Action: goivy.NewAssignAction(PX, goivy.True),

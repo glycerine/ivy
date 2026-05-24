@@ -23,13 +23,13 @@ func (e *UnsatCoreWithInterpolant) Error() string {
 
 // functionsToInterpreted converts a Functions InsMap to
 // the map[string]bool expected by transrel interpolation functions.
-func functionsToInterpreted(functions *InsMap[string, Sort]) map[string]bool {
+func functionsToInterpreted(functions *InsMap[NodeKey, Sort]) map[string]bool {
 	if functions == nil {
 		return nil
 	}
 	m := make(map[string]bool, functions.Len())
-	for k := range functions.All() {
-		m[k] = true
+	for key := range functions.All() {
+		m[SymbolNameFromKey(key)] = true
 	}
 	return m
 }
@@ -156,8 +156,8 @@ func ReachState(state *InterpState, clauses *Clauses) *InterpState {
 		if c == nil {
 			return true
 		}
-		_, inRelations := state.Domain.Relations.Get2(c.Name)
-		_, inFunctions := state.Domain.Functions.Get2(c.Name)
+		_, inRelations := state.Domain.Relations.Get2(Key(c))
+		_, inFunctions := state.Domain.Functions.Get2(Key(c))
 		return !inRelations && !inFunctions
 	}
 	post, hm, err := solver.ClausesModelToClausesWithModelAndHerbrand(imgClauses, model, ignore, false)
@@ -394,8 +394,8 @@ func ModuleTypeCheckConcepts(mod *Module) error {
 
 	// Copy and extend with concept space arities.
 	// Python temporarily adds (x.rep, len(x.args)) for each concept space relation.
-	// Go's Relations is *iu.InsMap[string, lg.Sort]; we add the relation's sort if available.
-	newRelations := NewInsMap[string, Sort]()
+	// Go's Relations mirrors Python's Symbol-keyed dict.
+	newRelations := NewInsMap[NodeKey, Sort]()
 	for k, v := range origRelations.All() {
 		newRelations.Set(k, v)
 	}
@@ -409,10 +409,10 @@ func ModuleTypeCheckConcepts(mod *Module) error {
 			switch r := cs.Label.(type) {
 			case *Apply:
 				if sym, ok := r.Func.(*Const); ok {
-					newRelations.Set(sym.Name, sym.CSort)
+					newRelations.Set(Key(sym), sym.CSort)
 				}
 			case *Const:
-				newRelations.Set(r.Name, r.CSort)
+				newRelations.Set(Key(r), r.CSort)
 			}
 		}
 		if cs.Body != nil {

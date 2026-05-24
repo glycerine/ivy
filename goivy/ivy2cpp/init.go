@@ -83,10 +83,11 @@ func (g *Generator) initialConditionAction(f goivy.Expr) (goivy.Action, error) {
 }
 
 func (g *Generator) isStateTarget(e goivy.Expr) bool {
-	name := stateTargetName(e)
-	if name == "" || g == nil || g.Mod == nil {
+	sym := stateTargetSymbol(e)
+	if sym == nil || g == nil || g.Mod == nil {
 		return false
 	}
+	name := sym.Name
 	if g.Mod.Sig != nil && g.Mod.Sig.Constructors[name] {
 		return false
 	}
@@ -99,29 +100,32 @@ func (g *Generator) isStateTarget(e goivy.Expr) bool {
 		}
 	}
 	if g.Mod.Relations != nil {
-		if _, ok := g.Mod.Relations.Get2(name); ok {
+		if _, ok := g.Mod.Relations.Get2(goivy.Key(sym)); ok {
 			return true
 		}
 	}
 	if g.Mod.Functions != nil {
-		if _, ok := g.Mod.Functions.Get2(name); ok {
+		if _, ok := g.Mod.Functions.Get2(goivy.Key(sym)); ok {
 			return true
 		}
 	}
 	return false
 }
 
-func stateTargetName(e goivy.Expr) string {
+func stateTargetSymbol(e goivy.Expr) *goivy.Const {
 	switch n := e.(type) {
 	case *goivy.Apply:
-		return goivy.ExprName(n.Func)
+		if c, ok := n.Func.(*goivy.Const); ok {
+			return c
+		}
+		return nil
 	case *goivy.LogicLiteral:
-		return stateTargetName(n.Atom)
+		return stateTargetSymbol(n.Atom)
 	case *goivy.LogicNot:
-		return stateTargetName(n.Body)
-	case *goivy.Const, *goivy.LogicVariable:
-		return goivy.ExprName(e)
+		return stateTargetSymbol(n.Body)
+	case *goivy.Const:
+		return n
 	default:
-		return ""
+		return nil
 	}
 }

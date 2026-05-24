@@ -85,9 +85,9 @@ func addActionUpdateSymbol(t *testing.T, mod *goivy.Module, name string, sort go
 	}
 	if mutable {
 		if sort == goivy.Boolean || goivy.IsRelationalSort(sort) {
-			mod.Relations.Set(name, sort)
+			mod.Relations.Set(goivy.RelationKey(name, sort), sort)
 		} else {
-			mod.Functions.Set(name, sort)
+			mod.Functions.Set(goivy.FunctionKey(name, sort), sort)
 		}
 	}
 	return c

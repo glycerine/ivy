@@ -130,16 +130,18 @@ func pruneStateStoresToSignature(mod *goivy.Module) {
 		keep[name] = true
 	}
 	if mod.Relations != nil {
-		for name := range mod.Relations.All() {
+		for key := range mod.Relations.All() {
+			name := goivy.SymbolNameFromKey(key)
 			if !keep[name] {
-				mod.Relations.Delkey(name)
+				mod.Relations.Delkey(key)
 			}
 		}
 	}
 	if mod.Functions != nil {
-		for name := range mod.Functions.All() {
+		for key := range mod.Functions.All() {
+			name := goivy.SymbolNameFromKey(key)
 			if !keep[name] {
-				mod.Functions.Delkey(name)
+				mod.Functions.Delkey(key)
 			}
 		}
 	}
@@ -607,8 +609,8 @@ func ensureGeneratingSymbol(mod *goivy.Module) {
 		_, _ = mod.Sig.AddSymbol("_generating", goivy.Boolean)
 	}
 	if mod.Relations != nil {
-		if _, exists := mod.Relations.Get2("_generating"); !exists {
-			mod.Relations.Set("_generating", goivy.Boolean)
+		if _, exists := mod.Relations.Get2(goivy.RelationKey("_generating", goivy.Boolean)); !exists {
+			mod.Relations.Set(goivy.RelationKey("_generating", goivy.Boolean), goivy.Boolean)
 		}
 	}
 }

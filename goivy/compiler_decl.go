@@ -470,7 +470,7 @@ func (d *DomainSetup) TypeDecl(node Node) error {
 			}
 			xtracer.Trace("compiler.DomainSetup.type enum_constructor name=%s sort=%v", elemName, sort)
 			//pp("sym=%v",  sym)
-			mod.Functions.Set(elemName, sort)
+			mod.Functions.Set(Key(sym), sym.CSort)
 			sig.Constructors[elemName] = true
 		}
 		if td.Finite {
@@ -648,7 +648,7 @@ func (d *DomainSetup) Relation(node Node) error {
 	// Python: self.domain.all_relations.append((sym, len(rel.args)))
 	mod := d.Compiler.Module
 	mod.AllRelations = append(mod.AllRelations, sym)
-	mod.Relations.Set(atom.Rep, sort)
+	mod.Relations.Set(Key(sym), sym.CSort)
 	return nil
 }
 
@@ -667,7 +667,7 @@ func (d *DomainSetup) individual(node Node) (*Const, error) {
 	}
 	// Python: self.domain.functions[sym] = len(v.args)
 	if sym != nil {
-		d.Compiler.Module.Functions.Set(sym.Name, sym.CSort)
+		d.Compiler.Module.Functions.Set(Key(sym), sym.CSort)
 	}
 	return sym, nil
 }
@@ -751,7 +751,7 @@ func (d *DomainSetup) Derived(node Node) error {
 	// Python: self.domain.all_relations.append((sym, len(lhs.args)))
 	// Python: self.domain.relations[sym] = len(lhs.args)
 	mod.AllRelations = append(mod.AllRelations, sym)
-	mod.Relations.Set(sym.Name, sym.CSort)
+	mod.Relations.Set(Key(sym), sym.CSort)
 
 	// Python: self.domain.updates.append(DerivedUpdate(df))
 	mod.Updates = append(mod.Updates,
@@ -1126,7 +1126,7 @@ func (d *DomainSetup) Interpret(node Node) error {
 			if existingSort, hasSig := sig.Sorts.Get2(lhs); hasSig {
 				sym := NewConst(c, existingSort)
 				sig.Symbols.Set(c, &SymbolEntry{Sort: existingSort})
-				mod.Functions.Set(c, existingSort)
+				mod.Functions.Set(Key(sym), sym.CSort)
 				sig.Constructors[sym.Name] = true
 			}
 		}
@@ -1714,7 +1714,7 @@ func (d *DomainSetup) Scenario(node Node) error {
 			return err
 		}
 		mod.AllRelations = append(mod.AllRelations, sym)
-		mod.Relations.Set(pi.Name, relSort)
+		mod.Relations.Set(Key(sym), sym.CSort)
 	}
 	return nil
 }

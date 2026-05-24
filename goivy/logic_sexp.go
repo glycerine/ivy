@@ -19,6 +19,25 @@ func (k NodeKey) String() string {
 	return string(k)
 }
 
+// SymbolNameFromKey extracts the display name from a Symbol/Variable NodeKey.
+// Semantic identity remains the whole NodeKey, including the sort.
+func SymbolNameFromKey(key NodeKey) string {
+	s := string(key)
+	prefix := "(Symbol name:"
+	if !strings.HasPrefix(s, prefix) {
+		prefix = "(Variable name:"
+	}
+	if !strings.HasPrefix(s, prefix) {
+		return ""
+	}
+	rest := strings.TrimPrefix(s, prefix)
+	idx := strings.Index(rest, " sort:")
+	if idx < 0 {
+		return ""
+	}
+	return rest[:idx]
+}
+
 // Key returns the structural identity key for a node.
 // Use this as map key instead of the Expr pointer.
 func Key(n Expr) NodeKey {

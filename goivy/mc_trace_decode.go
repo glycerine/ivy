@@ -259,20 +259,7 @@ func (h *AigerMatchHandler2) NewState(env map[NodeKey]Expr) {
 }
 
 func nodeKeySymbolName(key NodeKey) string {
-	s := string(key)
-	prefix := "(Symbol name:"
-	if !strings.HasPrefix(s, prefix) {
-		prefix = "(Variable name:"
-	}
-	if !strings.HasPrefix(s, prefix) {
-		return ""
-	}
-	rest := strings.TrimPrefix(s, prefix)
-	idx := strings.Index(rest, " sort:")
-	if idx < 0 {
-		return ""
-	}
-	return rest[:idx]
+	return SymbolNameFromKey(key)
 }
 
 // showSym2 is the filtering/renaming logic for building trace equations.

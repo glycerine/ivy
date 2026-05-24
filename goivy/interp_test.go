@@ -702,7 +702,7 @@ print(json.dumps({
 
 	mod := New()
 	p := NewConst("p", Boolean)
-	mod.Relations.Set("p", Boolean)
+	mod.Relations.Set(RelationKey("p", Boolean), Boolean)
 	pred := NewInterpState(mod, nil, nil, "")
 	under0 := NewStateFromClauses(mod, FalseClauses(nil))
 	under1 := NewStateFromClauses(mod, TrueClauses(nil))
@@ -813,7 +813,7 @@ print(json.dumps(res, sort_keys=True))
 
 	mod := New()
 	p := NewConst("p", Boolean)
-	mod.Relations.Set("p", Boolean)
+	mod.Relations.Set(RelationKey("p", Boolean), Boolean)
 	pred := NewInterpState(mod, nil, nil, "")
 	state := NewStateFromClauses(mod, NewClauses([]Expr{p}, nil, nil))
 	state.SetPred(pred)
@@ -932,7 +932,7 @@ print(json.dumps({
 	if err != nil {
 		t.Fatalf("AddSymbol(p): %v", err)
 	}
-	mod.Relations.Set("p", p.CSort)
+	mod.Relations.Set(Key(p), p.CSort)
 	x, _ := NewVariable("X", sortS)
 	exists, err := NewExists([]*LogicVariable{x}, MustApply(p, x))
 	if err != nil {

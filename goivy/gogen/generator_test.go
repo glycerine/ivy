@@ -21,11 +21,11 @@ func newTestModule() *goivy.Module {
 
 	// Add a boolean relation: link(int, int) -> bool
 	linkSort, _ := goivy.NewFunctionSort(goivy.Boolean, goivy.Boolean, goivy.Boolean)
-	mod.Relations.Set("link", linkSort)
+	mod.Relations.Set(goivy.RelationKey("link", linkSort), linkSort)
 
 	// Add a function: data -> color (using bool as domain placeholder)
 	dataSort, _ := goivy.NewFunctionSort(goivy.Boolean, colorSort)
-	mod.Functions.Set("data", dataSort)
+	mod.Functions.Set(goivy.FunctionKey("data", dataSort), dataSort)
 
 	return mod
 }

@@ -65,8 +65,8 @@ func (m *Module) CanonSnapshot(label string) {
 	}
 
 	// Group 4: Relations and functions
-	xtracer.Trace("module.CanonSnapshot %s relations=%s", label, canonInsMapSort(m.Relations))
-	xtracer.Trace("module.CanonSnapshot %s functions=%s", label, canonInsMapSort(m.Functions))
+	xtracer.Trace("module.CanonSnapshot %s relations=%s", label, canonSymbolSortMap(m.Relations))
+	xtracer.Trace("module.CanonSnapshot %s functions=%s", label, canonFunctionMap(m.Functions))
 
 	// Group 5: Schemata, theorems, predicates
 	xtracer.Trace("module.CanonSnapshot %s schemata=%s", label, canonInsMapSchemata(m.Schemata))
@@ -429,6 +429,28 @@ func canonInsMapSort(m *InsMap[string, Sort]) string {
 	var b strings.Builder
 	b.WriteString("(insMap")
 	for name, s := range m.All() {
+		arity := sortArity(s)
+		fmt.Fprintf(&b, " %s:%d", name, arity)
+	}
+	b.WriteString(")")
+	return b.String()
+}
+
+func canonFunctionMap(m *InsMap[NodeKey, Sort]) string {
+	return canonSymbolSortMap(m)
+}
+
+func canonSymbolSortMap(m *InsMap[NodeKey, Sort]) string {
+	if m == nil || m.Len() == 0 {
+		return "(insMap)"
+	}
+	var b strings.Builder
+	b.WriteString("(insMap")
+	for key, s := range m.All() {
+		name := SymbolNameFromKey(key)
+		if name == "" {
+			name = key.String()
+		}
 		arity := sortArity(s)
 		fmt.Fprintf(&b, " %s:%d", name, arity)
 	}

@@ -51,7 +51,8 @@ func ModuleSkolemizer(mod *Module) func(*LogicVariable) *Const {
 	// Build the list of existing function names
 	var funcNames []string
 	if mod.Functions != nil {
-		for name := range mod.Functions.All() {
+		for key := range mod.Functions.All() {
+			name := SymbolNameFromKey(key)
 			funcNames = append(funcNames, name)
 		}
 	}

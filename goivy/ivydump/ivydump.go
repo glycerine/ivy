@@ -25,7 +25,8 @@ func DumpToIvy(w io.Writer, ag *goivy.AnalysisGraph) error {
 	mod := ag.Domain
 
 	// Dump relations
-	for name, sort := range mod.Relations.All() {
+	for key, sort := range mod.Relations.All() {
+		name := goivy.SymbolNameFromKey(key)
 		fmt.Fprintf(w, "relation %s : %s\n", name, sort)
 	}
 	if mod.Relations.Len() > 0 {
@@ -33,7 +34,8 @@ func DumpToIvy(w io.Writer, ag *goivy.AnalysisGraph) error {
 	}
 
 	// Dump functions
-	for name, sort := range mod.Functions.All() {
+	for key, sort := range mod.Functions.All() {
+		name := goivy.SymbolNameFromKey(key)
 		fmt.Fprintf(w, "function %s : %s\n", name, sort)
 	}
 	if mod.Functions.Len() > 0 {

@@ -18,7 +18,7 @@ func newThunkZ3TestModule(t *testing.T) (*goivy.Module, *goivy.UninterpretedSort
 	if _, err := mod.Sig.AddSymbol("saved", color); err != nil {
 		t.Fatalf("AddSymbol saved: %v", err)
 	}
-	mod.Functions.Set("saved", color)
+	mod.Functions.Set(goivy.FunctionKey("saved", color), color)
 	return mod, node, color
 }
 
@@ -30,7 +30,7 @@ func TestMakeThunkZ3GeneralSingleArgEnvEncoding(t *testing.T) {
 	if _, err := mod.Sig.AddSymbol("savedv", value); err != nil {
 		t.Fatalf("AddSymbol savedv: %v", err)
 	}
-	mod.Functions.Set("savedv", value)
+	mod.Functions.Set(goivy.FunctionKey("savedv", value), value)
 	x, err := goivy.NewVariable("X", node)
 	if err != nil {
 		t.Fatalf("NewVariable: %v", err)
@@ -80,7 +80,7 @@ func TestMakeThunkZ3GeneralMultiArgSubstitutionAndFunctionEnv(t *testing.T) {
 	if _, err := mod.Sig.AddSymbol("f", fnSort); err != nil {
 		t.Fatalf("AddSymbol f: %v", err)
 	}
-	mod.Functions.Set("f", fnSort)
+	mod.Functions.Set(goivy.FunctionKey("f", fnSort), fnSort)
 	f := goivy.NewConst("f", fnSort)
 	x, err := goivy.NewVariable("X", node)
 	if err != nil {
@@ -280,7 +280,7 @@ func TestThunkEnvSymbolsIncludesPlainState(t *testing.T) {
 	if _, err := mod.Sig.AddSymbol("flag", goivy.Boolean); err != nil {
 		t.Fatalf("AddSymbol flag: %v", err)
 	}
-	mod.Functions.Set("flag", goivy.Boolean)
+	mod.Functions.Set(goivy.FunctionKey("flag", goivy.Boolean), goivy.Boolean)
 	x, err := goivy.NewVariable("X", node)
 	if err != nil {
 		t.Fatalf("NewVariable: %v", err)

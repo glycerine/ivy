@@ -172,7 +172,7 @@ func TestModuleTypeCheckConcepts_RestoresRelations(t *testing.T) {
 
 	// Set up an existing relation in mod.Relations
 	existingSort, _ := NewFunctionSort(sortA, Boolean)
-	mod.Relations.Set("existing", existingSort)
+	mod.Relations.Set(RelationKey("existing", existingSort), existingSort)
 
 	// Add a concept space with a new relation "c"
 	cSort, _ := NewFunctionSort(sortA, Boolean)
@@ -192,10 +192,10 @@ func TestModuleTypeCheckConcepts_RestoresRelations(t *testing.T) {
 	if mod.Relations.Len() != 1 {
 		t.Errorf("expected 1 relation (original), got %d", mod.Relations.Len())
 	}
-	if mod.Relations.Get("existing") == nil {
+	if sort, ok := mod.Relations.Get2(RelationKey("existing", existingSort)); !ok || sort == nil {
 		t.Error("original relation 'existing' was lost")
 	}
-	if mod.Relations.Get("c") != nil {
+	if sort, ok := mod.Relations.Get2(RelationKey("c", cSort)); ok && sort != nil {
 		t.Error("temporary relation 'c' leaked into mod.Relations")
 	}
 }
