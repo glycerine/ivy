@@ -463,15 +463,23 @@ func canonSymbolSortMap(m *InsMap[NodeKey, Sort]) string {
 	var b strings.Builder
 	b.WriteString("(insMap")
 	for key, s := range m.All() {
-		name := SymbolNameFromKey(key)
-		if name == "" {
-			name = key.String()
-		}
+		name := canonSymbolSortKey(key, s)
 		arity := sortArity(s)
 		fmt.Fprintf(&b, " %s:%d", name, arity)
 	}
 	b.WriteString(")")
 	return b.String()
+}
+
+func canonSymbolSortKey(key NodeKey, s Sort) string {
+	name := SymbolNameFromKey(key)
+	if name == "" {
+		return key.String()
+	}
+	if s == nil {
+		return name
+	}
+	return NewConst(name, s).String()
 }
 
 // sortArity returns the arity (number of domain parameters) of a sort.

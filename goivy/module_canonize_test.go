@@ -236,6 +236,19 @@ func TestCanonActionMapWithActions(t *testing.T) {
 	}
 }
 
+func TestCanonSymbolSortMapUsesPythonConstStringForNumeralKeys(t *testing.T) {
+	data := &UninterpretedSort{Name: "data_type"}
+	m := NewInsMap[NodeKey, Sort]()
+	m.Set(Key(NewConst("0", data)), data)
+	m.Set(Key(NewConst("nop", data)), data)
+
+	got := canonSymbolSortMap(m)
+	want := "(insMap 0:data_type:0 nop:0)"
+	if got != want {
+		t.Fatalf("canonSymbolSortMap mismatch:\n got: %s\nwant: %s", got, want)
+	}
+}
+
 // --- Module.Canon() tests ---
 
 func TestModuleCanonEmpty(t *testing.T) {
