@@ -56,7 +56,7 @@ def string_canon(s):
     if s is None:
         return 'nil'
     if s == '':
-        return ''
+        return '""'
     if type(s).__name__ == 'This':
         return '"this"'
     if not isinstance(s, str):
