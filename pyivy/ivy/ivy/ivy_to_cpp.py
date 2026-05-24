@@ -1848,11 +1848,12 @@ def emit_hash_thunk_to_solver(header,dom,classname,ct_name,ch_name):
     open_scope(header,line='for(typename hash_map<D,R>::iterator it=val.memo.begin(), en = val.memo.end(); it != en; it++)'.replace('D',ct_name).replace('H',ch_name))
 #    code_line(header,'if ((*val.fun)(it->first) == it->second) continue;')
     code_line(header,'z3::expr asgn = __to_solver(g,v,it->second)')
+    code_line(header,'auto __key = it->first')
 #    code_line(header,'if (eq(bg,asgn)) continue')
     if dom is not None:
-        code_line(header,'z3::expr cond = '+' && '.join('__to_solver(g,v.arg('+str(n)+'),it->first.arg'+str(n)+')' for n in range(len(dom))))
+        code_line(header,'z3::expr cond = '+' && '.join('__to_solver(g,v.arg('+str(n)+'),__key.arg'+str(n)+')' for n in range(len(dom))))
     else:
-        code_line(header,'z3::expr cond = __to_solver(g,v.arg(0),it->first)')
+        code_line(header,'z3::expr cond = __to_solver(g,v.arg(0),__key)')
     code_line(header,'res = res && implies(cond,asgn)')
     code_line(header,'disj = disj || cond')
     close_scope(header)
