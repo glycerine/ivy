@@ -75,6 +75,76 @@ func TestAssertActionStringUsesLabeledFormula(t *testing.T) {
 	}
 }
 
+func TestAssertLikeActionSexpIncludesProofWhenLabeledFormulaPresent(t *testing.T) {
+	cfg := NewAstConfig()
+	fmla := actionsMkConst("q")
+	lf := cfg.NewLabeledFormula(cfg.NewAtom("asrt_proof"), fmla)
+	def := cfg.NewDefinition(cfg.NewVariable("X", "S"), cfg.NewAtom("x"))
+	proof := WrapTactic(cfg.NewLetTactic([]Node{def}))
+
+	cases := []struct {
+		name string
+		act  interface{ Sexp() NodeKey }
+	}{
+		{
+			name: "assert",
+			act: func() *LogicAssertAction {
+				a := NewAssertAction(fmla, proof)
+				a.LF = lf
+				return a
+			}(),
+		},
+		{
+			name: "requires",
+			act: func() *LogicRequiresAction {
+				a := NewRequiresAction(fmla)
+				a.LF = lf
+				a.Proof = proof
+				return a
+			}(),
+		},
+		{
+			name: "ensures",
+			act: func() *LogicEnsuresAction {
+				a := NewEnsuresAction(fmla)
+				a.LF = lf
+				a.Proof = proof
+				return a
+			}(),
+		},
+		{
+			name: "subgoal",
+			act: func() *LogicSubgoalAction {
+				a := NewSubgoalAction(fmla)
+				a.LF = lf
+				a.Proof = proof
+				return a
+			}(),
+		},
+	}
+
+	for _, tc := range cases {
+		got := string(tc.act.Sexp())
+		lfIdx := strings.Index(got, "(labeledFormula")
+		proofIdx := strings.Index(got, "(letTactic")
+		if lfIdx < 0 {
+			t.Fatalf("%s Sexp() missing labeled formula: %s", tc.name, got)
+		}
+		if proofIdx < 0 {
+			t.Fatalf("%s Sexp() missing proof tactic: %s", tc.name, got)
+		}
+		if proofIdx < lfIdx {
+			t.Fatalf("%s Sexp() renders proof before labeled formula: %s", tc.name, got)
+		}
+		if !strings.Contains(got, "(definition") {
+			t.Fatalf("%s Sexp() missing let definition: %s", tc.name, got)
+		}
+		if strings.Contains(got, "TacticNodeWrapper") {
+			t.Fatalf("%s Sexp() leaked tactic wrapper: %s", tc.name, got)
+		}
+	}
+}
+
 func TestRequiresAction(t *testing.T) {
 	a := NewRequiresAction(actionsMkConst("r"))
 	if a.Name() != "assert" { // Python: RequiresAction inherits name() → "assert"

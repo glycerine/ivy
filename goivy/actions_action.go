@@ -1219,9 +1219,10 @@ func (w *TacticNodeWrapper) Children() []Expr  { return nil }
 func (w *TacticNodeWrapper) String() string    { return fmt.Sprint(w.Tactic) }
 func (w *TacticNodeWrapper) Equal(n Expr) bool { return false }
 func (w *TacticNodeWrapper) Sexp() NodeKey {
-	return NodeKey("(TacticNodeWrapper tactic:" + fmt.Sprint(w.Tactic) + ")")
+	return NodeKey(nodeCanon(w.Tactic))
 }
-func (w *TacticNodeWrapper) Args() []Node { return []Node{w.Tactic} }
+func (w *TacticNodeWrapper) Canon() Canonical { return nodeCanon(w.Tactic) }
+func (w *TacticNodeWrapper) Args() []Node     { return []Node{w.Tactic} }
 func (w *TacticNodeWrapper) Clone(args []Node) Node {
 	if len(args) > 0 {
 		return &TacticNodeWrapper{Tactic: args[0]}

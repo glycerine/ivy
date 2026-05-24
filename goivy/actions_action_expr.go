@@ -49,6 +49,19 @@ func sliceSexp(s []Expr) string {
 	return "[" + strings.Join(parts, " ") + "]"
 }
 
+func actionFormulaProofSexp(lf *LabeledFormula, formula Expr, proof Expr) string {
+	parts := make([]string, 0, 2)
+	if lf != nil {
+		parts = append(parts, string(lf.Canon()))
+	} else {
+		parts = append(parts, actionsExprSexp(formula))
+	}
+	if proof != nil {
+		parts = append(parts, actionsExprSexp(proof))
+	}
+	return "[" + strings.Join(parts, " ") + "]"
+}
+
 // =========================================================================
 // 1. Sequence
 // =========================================================================
@@ -134,10 +147,7 @@ func (a *LogicAssertAction) NodeSort() Sort           { return ActionS }
 func (a *LogicAssertAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicAssertAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicAssertAction) Sexp() NodeKey {
-	if a.LF != nil {
-		return NodeKey(fmt.Sprintf("(assertAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
-	}
-	return NodeKey(fmt.Sprintf("(assertAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
+	return NodeKey(fmt.Sprintf("(assertAction%v elems:%v)", a.CanonFields(), actionFormulaProofSexp(a.LF, a.Formula, a.Proof)))
 }
 func (a *LogicAssertAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
@@ -178,10 +188,7 @@ func (a *LogicRequiresAction) NodeSort() Sort           { return ActionS }
 func (a *LogicRequiresAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicRequiresAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicRequiresAction) Sexp() NodeKey {
-	if a.LF != nil {
-		return NodeKey(fmt.Sprintf("(requiresAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
-	}
-	return NodeKey(fmt.Sprintf("(requiresAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
+	return NodeKey(fmt.Sprintf("(requiresAction%v elems:%v)", a.CanonFields(), actionFormulaProofSexp(a.LF, a.Formula, a.Proof)))
 }
 func (a *LogicRequiresAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
@@ -222,10 +229,7 @@ func (a *LogicEnsuresAction) NodeSort() Sort           { return ActionS }
 func (a *LogicEnsuresAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicEnsuresAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicEnsuresAction) Sexp() NodeKey {
-	if a.LF != nil {
-		return NodeKey(fmt.Sprintf("(ensuresAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
-	}
-	return NodeKey(fmt.Sprintf("(ensuresAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
+	return NodeKey(fmt.Sprintf("(ensuresAction%v elems:%v)", a.CanonFields(), actionFormulaProofSexp(a.LF, a.Formula, a.Proof)))
 }
 func (a *LogicEnsuresAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
@@ -718,10 +722,7 @@ func (a *LogicSubgoalAction) NodeSort() Sort           { return ActionS }
 func (a *LogicSubgoalAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicSubgoalAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicSubgoalAction) Sexp() NodeKey {
-	if a.LF != nil {
-		return NodeKey(fmt.Sprintf("(subgoalAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
-	}
-	return NodeKey(fmt.Sprintf("(subgoalAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
+	return NodeKey(fmt.Sprintf("(subgoalAction%v elems:%v)", a.CanonFields(), actionFormulaProofSexp(a.LF, a.Formula, a.Proof)))
 }
 func (a *LogicSubgoalAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
