@@ -1588,17 +1588,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	// --- Interference check ---
 	if isoCfg.DoCheckInterference {
 		// Python: interf_syms = set(x for x in ivy_logic.all_symbols() if x in all_syms)
-		// Filter allSyms2 to only symbols that are also in the logic signature.
-		interfSyms := NewInsMap[NodeKey, Expr]()
-		if mod.Sig != nil {
-			for key, sym := range allSyms2.All() {
-				if c, ok := sym.(*Const); ok {
-					if _, inSig := mod.Sig.Symbols.Get2(c.Name); inSig {
-						interfSyms.Set(key, sym)
-					}
-				}
-			}
-		}
+		interfSyms := filterInterfSymsForSig(allSyms2, mod.Sig)
 		if xtracer.Enabled {
 			traceSymSet("isolate.interfSyms_pre_follow", interfSyms)
 		}

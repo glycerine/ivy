@@ -21,6 +21,24 @@ func traceSymSet(label string, syms *InsMap[NodeKey, Expr]) {
 	xtracer.Trace("%s n=%d", label, syms.Len())
 }
 
+func filterInterfSymsForSig(allSyms *InsMap[NodeKey, Expr], sig *Sig) *InsMap[NodeKey, Expr] {
+	result := NewInsMap[NodeKey, Expr]()
+	if allSyms == nil || sig == nil {
+		return result
+	}
+
+	sigSymbols := make(map[NodeKey]bool)
+	for _, sym := range sig.AllSymbols() {
+		sigSymbols[ConstSymKey(sym)] = true
+	}
+	for key, sym := range allSyms.All() {
+		if sigSymbols[key] {
+			result.Set(key, sym)
+		}
+	}
+	return result
+}
+
 // -----------------------------------------------------------------------
 // AddMixinsExt: extended version of AddMixins with assert_to_assume and
 // mod_mixin callbacks. Corresponds to Python add_mixins().

@@ -29,6 +29,44 @@ func mkModuleWithActions(acts map[string]ActionsAction) *Module {
 	return m
 }
 
+func TestFilterInterfSymsForSigUsesStructuralSymbolMembership(t *testing.T) {
+	data := &LogicEnumeratedSort{Name: "data_type", Extension: []string{"0", "1", "2"}}
+	lclock := &UninterpretedSort{Name: "lclock"}
+
+	sig := NewSig()
+	if _, err := sig.AddSymbol("0", data); err != nil {
+		t.Fatalf("AddSymbol(0:data_type): %v", err)
+	}
+	if _, err := sig.AddSymbol("ref.gt", Boolean); err != nil {
+		t.Fatalf("AddSymbol(ref.gt): %v", err)
+	}
+
+	zeroLClock := NewConst("0", lclock)
+	refGT := NewConst("ref.gt", Boolean)
+	zeroData := NewConst("0", data)
+	allSyms := NewInsMap[NodeKey, Expr]()
+	allSyms.Set(ConstSymKey(zeroLClock), zeroLClock)
+	allSyms.Set(ConstSymKey(refGT), refGT)
+	allSyms.Set(ConstSymKey(zeroData), zeroData)
+
+	got := filterInterfSymsForSig(allSyms, sig)
+	if got.Len() != 2 {
+		t.Fatalf("filtered symbols len = %d, want 2", got.Len())
+	}
+	if _, ok := got.Get2(ConstSymKey(zeroLClock)); ok {
+		t.Fatalf("filtered symbols included wrong-sort numeral %s", ConstSymDisplay(zeroLClock))
+	}
+
+	var syms []Expr
+	for _, sym := range got.All() {
+		syms = append(syms, sym)
+	}
+	if syms[0] != refGT || syms[1] != zeroData {
+		t.Fatalf("filtered order = [%s %s], want [ref.gt 0:data_type]",
+			PrettyFmla(syms[0]), PrettyFmla(syms[1]))
+	}
+}
+
 // --- IsolateRole ---
 
 func TestIsolateRoleString(t *testing.T) {
