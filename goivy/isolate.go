@@ -1654,19 +1654,23 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 			}
 		}
 
-		// Add sorts from all remaining symbols
-		for name := range allSyms2Names {
-			if mod.Sig != nil {
-				if entry, ok := mod.Sig.Symbols.Get2(name); ok {
-					if entry.Union != nil {
-						for _, s := range entry.Union.Sorts {
-							addSortDeps(s, allSorts, addDeps)
-						}
-					} else if entry.Sort != nil {
-						addSortDeps(entry.Sort, allSorts, addDeps)
-					}
-				}
+		// Add sorts from all remaining symbols.
+		// Mirror ivy_isolate.py:1516-1523: read sort directly off each
+		// collected Symbol, not via mod.Sig.Symbols. The polymorphic head
+		// entry in mod.Sig.Symbols may lack the concrete instantiation
+		// (e.g. id*id->bool for `<`), which would drop the "id" sort.
+		for _, sym := range allSyms2.All() {
+			c, ok := sym.(*Const)
+			if !ok || c.CSort == nil {
+				continue
 			}
+			// Skip TopS sentinels added for destructor placeholders
+			// above; their real sorts are tracked via mod.SortDestructors
+			// and filtered separately below.
+			if IsTopSort(c.CSort) {
+				continue
+			}
+			addSortDeps(c.CSort, allSorts, addDeps)
 		}
 
 		// Add sorts from isolate parameters
