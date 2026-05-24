@@ -576,9 +576,14 @@ func TestGoldenAll(t *testing.T) {
 
 	cfg := &goldenConfig{}
 
+	var startingIsolate string
+
 	// already green once specs should not be revisted until we
 	// get through the others, to save time.
 	skipTo := 190
+	if skipTo == 190 {
+		startingIsolate = "this"
+	}
 	if skipTo > 0 {
 		vv("skipTo is %v", skipTo)
 	}
@@ -610,6 +615,13 @@ func TestGoldenAll(t *testing.T) {
 
 		path2 := path[3:] // strip "../" to get a repo-root-relative path.
 		for _, iso := range isos {
+			if startingIsolate != "" {
+				if startingIsolate != iso {
+					vv("startingIsolate = '%v' so skipping past '%v'", startingIsolate, iso)
+					continue
+				}
+				startingIsolate = ""
+			}
 			vv("======= begin TestGoldenAll: path='%v'; isolate='%v' (path %v of %v)", path2, iso, ipath, len(paths))
 			cfg.path = path2
 			cfg.args = []string{fmt.Sprintf("isolate=%v", iso)}
