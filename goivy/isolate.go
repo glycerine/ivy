@@ -1545,26 +1545,20 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		}
 	}
 
-	allSyms2Names := allSymsNameSet(allSyms2)
 	if xtracer.Enabled {
 		traceSymSet("isolate.allSyms2", allSyms2) // ivy_isolate.py:1378
 	}
 
 	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && mod.Sig != nil {
-		for name := range mod.Sig.Symbols.All() {
-			if !allSyms2Names[name] && !allNamesMap[name] {
-				mod.Sig.Symbols.Delkey(name)
+		for _, sym := range mod.Sig.AllSymbols() {
+			if _, inAllSyms := allSyms2.Get2(ConstSymKey(sym)); !inAllSyms && !allNamesMap[sym.Name] {
+				mod.Sig.RemoveSymbol(sym.Name, sym.CSort)
 			}
 		}
 	}
 
 	if mod.Sig != nil {
-		remaining := make([]string, 0)
-		for name := range mod.Sig.Symbols.All() {
-			remaining = append(remaining, name)
-		}
-		sort.Strings(remaining)
-		xtracer.Trace("isolate.sig_filter_done n_remaining=%d", len(remaining))
+		xtracer.Trace("isolate.sig_filter_done n_remaining=%d", len(mod.Sig.AllSymbols()))
 	}
 
 	// Check property dependencies

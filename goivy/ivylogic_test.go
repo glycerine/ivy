@@ -79,6 +79,40 @@ func TestPolymorphicUnionCanonUsesUnionSort(t *testing.T) {
 	}
 }
 
+func TestPolymorphicRemoveLeavesEmptyUnionEntry(t *testing.T) {
+	s := NewSig()
+	tSort := &UninterpretedSort{Name: "t"}
+	ltSort, err := NewFunctionSort(tSort, tSort, Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	if _, err := s.AddSymbol("<", ltSort); err != nil {
+		t.Fatalf("AddSymbol(<): %v", err)
+	}
+
+	s.RemoveSymbol("<", ltSort)
+
+	entry, ok := s.Symbols.Get2("<")
+	if !ok {
+		t.Fatal("polymorphic RemoveSymbol should leave the empty UnionSort entry")
+	}
+	if entry.Union == nil {
+		t.Fatal("expected '<' to remain represented as a UnionSort")
+	}
+	if len(entry.Union.Sorts) != 0 {
+		t.Fatalf("expected empty UnionSort after removing only variant, got %d variants", len(entry.Union.Sorts))
+	}
+	if s.ContainsSymbol("<", ltSort) {
+		t.Fatal("empty UnionSort should not contain the removed concrete variant")
+	}
+	if got := s.AllSymbolsNamed("<"); len(got) != 0 {
+		t.Fatalf("empty UnionSort should expand to no concrete symbols, got %d", len(got))
+	}
+	if canon := string(s.Canon()); !strings.Contains(canon, "<:UnionSort()") {
+		t.Fatalf("Sig.Canon() = %q, want empty polymorphic union entry", canon)
+	}
+}
+
 func TestIvyLogicSigAddSymbolDuplicate(t *testing.T) {
 	s := NewSig()
 	sort := &UninterpretedSort{Name: "node"}

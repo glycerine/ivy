@@ -152,9 +152,6 @@ func (s *Sig) RemoveSymbol(name string, sort Sort) {
 				break
 			}
 		}
-		if len(entry.Union.Sorts) == 0 {
-			s.Symbols.Delkey(name)
-		}
 		return
 	}
 	s.Symbols.Delkey(name)
