@@ -1955,7 +1955,7 @@ func TheoremToProperty(goal *LabeledFormula, mod *Module) *LabeledFormula {
 		premExprs := exprSlice(prems)
 		concExpr := nodeToExpr(conc)
 		if len(premExprs) > 0 {
-			antecedent := NormalizedAnd(premExprs...)
+			antecedent := &LogicAnd{Terms: premExprs}
 			impl, err := NewImplies(antecedent, concExpr)
 			if err != nil {
 				fmla = conc

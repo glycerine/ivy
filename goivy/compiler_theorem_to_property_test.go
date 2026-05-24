@@ -296,6 +296,30 @@ func TestTheoremToProperty_ImplicationBuilt(t *testing.T) {
 	}
 }
 
+func TestTheoremToPropertyWrapsSinglePremiseInAndLikePython(t *testing.T) {
+	cfg := NewAstConfig()
+	mod := makeT2PMod()
+
+	prem := cfg.NewLabeledFormula(nil, True)
+	goal := makeSchemaGoal(nil, []Node{prem}, True)
+
+	result := TheoremToProperty(goal, mod)
+	if result == nil {
+		t.Fatal("expected non-nil result")
+	}
+	imp, ok := result.Formula.(*LogicImplies)
+	if !ok {
+		t.Fatalf("result formula = %T, want *LogicImplies", result.Formula)
+	}
+	antecedent, ok := imp.T1.(*LogicAnd)
+	if !ok {
+		t.Fatalf("antecedent = %T, want *LogicAnd", imp.T1)
+	}
+	if len(antecedent.Terms) != 1 || antecedent.Terms[0] != True {
+		t.Fatalf("antecedent terms = %#v, want one preserved premise", antecedent.Terms)
+	}
+}
+
 // TestTheoremToProperty_RecursiveSchema verifies nested SchemaBody in premise
 // is recursively converted.
 func TestTheoremToProperty_RecursiveSchema(t *testing.T) {
