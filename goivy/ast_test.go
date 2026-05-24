@@ -916,6 +916,48 @@ func TestAstAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
 	}
 }
 
+func TestAstDistinctVariableRenamingUsesPythonUniqueRenamerSuffix(t *testing.T) {
+	cfg := NewAstConfig()
+	prefM := cfg.NewVariable("M", "mem_type")
+	declM := cfg.NewVariable("M", "mem_type")
+
+	renaming := DistinctVariableRenaming([]*Variable{prefM}, []*Variable{declM})
+	got, ok := renaming["M"].(*Variable)
+	if !ok {
+		t.Fatalf("renaming for M should be *Variable, got %T", renaming["M"])
+	}
+	if got.Rep != "M_a" {
+		t.Fatalf("DistinctVariableRenaming collision should match Python UniqueRenamer suffix M_a, got %q", got.Rep)
+	}
+	if got.VSort != "mem_type" {
+		t.Fatalf("renamed variable should preserve sort mem_type, got %q", got.VSort)
+	}
+}
+
+func TestAstPrefixAtomVariableCollisionRenamesToMA(t *testing.T) {
+	cfg := NewAstConfig()
+	pref := cfg.NewAtom("amcc", cfg.NewVariable("M", "mem_type"))
+	body := cfg.NewAssignAction(
+		cfg.NewAtom("x", cfg.NewVariable("M", "mem_type")),
+		cfg.NewAtom("y"),
+	)
+	decl := cfg.NewActionDecl(cfg.NewActionDef(cfg.NewAtom("step"), body, nil, nil))
+
+	map1 := DistinctVariableRenaming(UsedVariablesAst(pref), UsedVariablesAst(decl))
+	vpref := substAtomVars(pref, map1)
+
+	if len(vpref.Terms) != 1 {
+		t.Fatalf("expected one prefix term, got %d", len(vpref.Terms))
+	}
+	got, ok := vpref.Terms[0].(*Variable)
+	if !ok {
+		t.Fatalf("prefix term should remain a variable, got %T", vpref.Terms[0])
+	}
+	if got.Rep != "M_a" {
+		t.Fatalf("prefix variable collision should rename M to M_a before spaa, got %q", got.Rep)
+	}
+}
+
 // --- Defines() comprehensive tests ---
 // These tests cover all Defines() methods to prevent regressions,
 // especially after struct field nodes changed from *Atom to *App.

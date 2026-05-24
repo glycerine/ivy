@@ -1035,19 +1035,14 @@ func usedVariablesRec(node Node, result *[]*Variable, seen map[string]bool) {
 // buildVVSubst uses map1[y.Rep] to carry sort annotations from the prefix
 // to the substitution map.
 func DistinctVariableRenaming(vars1, vars2 []*Variable) map[string]Node {
-	used := make(map[string]bool)
+	used := make([]string, 0, len(vars2))
 	for _, v := range vars2 {
-		used[v.Rep] = true
+		used = append(used, v.Rep)
 	}
+	rn := NewUniqueRenamer("", used)
 	result := make(map[string]Node)
 	for _, v := range vars1 {
-		newName := v.Rep
-		if used[newName] {
-			for used[newName] {
-				newName = newName + "'"
-			}
-		}
-		used[newName] = true
+		newName := rn.Rename(v.Rep)
 		nv := &Variable{Rep: newName, VSort: v.VSort}
 		nv.Cfg = v.Cfg
 		result[v.Rep] = nv
