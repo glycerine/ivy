@@ -84,3 +84,27 @@ func TestCheckPropertiesGivesEmptyProofToSchemaBodyTheorems(t *testing.T) {
 		t.Fatalf("proved SchemaBody theorem should be registered as a schema")
 	}
 }
+
+func TestCheckPropertiesRelabelsGeneratedSubgoalsWithPreservingClone(t *testing.T) {
+	mod := New()
+	cfg := mod.Cfg.AstCfg
+	prem := cfg.NewLabeledFormula(cfg.NewAtom("prem"), True)
+	prop := cfg.NewLabeledFormula(cfg.NewAtom("schema"), cfg.NewSchemaBody(prem, True))
+	mod.LabeledProps = []*LabeledFormula{prop}
+
+	out := captureActionUpdateStdout(t, func() {
+		if err := CheckProperties(mod); err != nil {
+			t.Fatalf("CheckProperties: %v", err)
+		}
+	})
+
+	if !strings.Contains(out, "compiler.CheckProperties.classify label=schema -> props (proved, 1 subgoals)") {
+		t.Fatalf("expected schema theorem to produce one generated subgoal; got:\n%s", out)
+	}
+	if !strings.Contains(out, "ast.LF.clone PRESERVE") {
+		t.Fatalf("generated subgoal relabeling should preserve the theorem_to_property LF id; got:\n%s", out)
+	}
+	if len(mod.LabeledProps) == 0 || mod.LabeledProps[0].ID >= cfg.LfCounter {
+		t.Fatalf("relabelled generated subgoal should preserve an existing LF id; id=%d counter=%d", mod.LabeledProps[0].ID, cfg.LfCounter)
+	}
+}

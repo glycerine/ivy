@@ -2467,7 +2467,7 @@ func CheckProperties(mod *Module) error {
 						return fmt.Errorf("property label is not an Atom: %T", prop.Label)
 					}
 					label := ComposeAtoms(labelAtom, lb.Call())
-					mod.LabeledProps = append(mod.LabeledProps, g.CloneWithFreshID([]Node{label, g.Formula}))
+					mod.LabeledProps = append(mod.LabeledProps, g.Clone([]Node{label, g.Formula}).(*LabeledFormula))
 				}
 				if !isSchemaBody(prop.Formula) {
 					if _, isDef := prop.Formula.(*LogicDefinition); isDef {
