@@ -331,6 +331,9 @@ func z3BuildArgs() ([]string, []string, error) {
 		includeArgs = append(includeArgs, "-I"+dir)
 	}
 	linkArgs := []string{staticLib}
+	if runtime.GOOS == "linux" {
+		linkArgs = append(linkArgs, "-lm", "-lgomp")
+	}
 	return includeArgs, linkArgs, nil
 }
 
