@@ -191,7 +191,7 @@ func (g *Generator) emitAssign(w *cppWriter, a *goivy.LogicAssignAction) {
 	if g.emitExtensionalRelationClear(w, a) {
 		return
 	}
-	vs := goivy.FreeVariablesList(a.LHS)
+	vs := goivy.VariablesAstList(a.LHS)
 	if len(vs) == 0 {
 		g.emitAssignSimple(w, a)
 		return
@@ -211,7 +211,7 @@ func (g *Generator) closeAssignmentLoops(w *cppWriter, loops int) {
 }
 
 func (g *Generator) openAssignmentLoops(w *cppWriter, lhs goivy.Expr) (int, bool) {
-	vars := goivy.FreeVariablesList(lhs)
+	vars := goivy.VariablesAstList(lhs)
 	opened := 0
 	for _, v := range vars {
 		header, err := g.loopHeaderForVar(v)
@@ -1008,7 +1008,7 @@ func (g *Generator) emitDebug(w *cppWriter, a *goivy.LogicDebugAction) {
 // iterations. With no free variables, this is a simple `std::cout <<
 // (expr)`.
 func (g *Generator) emitPrintExpr(w *cppWriter, expr goivy.Expr) {
-	vs := goivy.FreeVariablesList(expr)
+	vs := goivy.VariablesAstList(expr)
 	opened := 0
 	for _, v := range vs {
 		header, err := g.loopHeaderForVar(v)

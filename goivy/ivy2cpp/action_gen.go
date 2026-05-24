@@ -2,7 +2,6 @@ package ivy2cpp
 
 import (
 	"fmt"
-	"sort"
 	"strconv"
 	"strings"
 
@@ -405,11 +404,6 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 		}
 		g.emitPythonTestDeclSolver(w, stateSymbol{Name: sym.Name, Sort: sym.CSort}, "")
 	}
-	type ptoDecl struct {
-		nameExpr string
-		sym      stateSymbol
-	}
-	var ptoDecls []ptoDecl
 	for _, sym := range plan.used.All() {
 		c, ok := sym.(*goivy.Const)
 		if !ok || c.Name != "*>" {
@@ -427,13 +421,7 @@ func (g *Generator) emitPythonTestActionGen(w *cppWriter, plan *actionGenPlan) {
 				symName = strconv.Quote(variantSolverRelationName(domain[0], domain[1]))
 			}
 		}
-		ptoDecls = append(ptoDecls, ptoDecl{nameExpr: symName, sym: stateSymbol{Name: c.Name, Sort: c.CSort}})
-	}
-	sort.Slice(ptoDecls, func(i, j int) bool {
-		return ptoDecls[i].nameExpr > ptoDecls[j].nameExpr
-	})
-	for _, decl := range ptoDecls {
-		g.emitPythonTestDeclSolver(w, decl.sym, decl.nameExpr)
+		g.emitPythonTestDeclSolver(w, stateSymbol{Name: c.Name, Sort: c.CSort}, symName)
 	}
 	if smt, ok := g.formulaToSmtlib(plan.preFmla); ok {
 		if !g.emitPythonTestVariantConstraintAdd(w, smt) {

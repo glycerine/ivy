@@ -204,7 +204,7 @@ func (g *Generator) assignBoundsExpr(a *goivy.LogicAssignAction) goivy.Expr {
 // This function does NOT call g.unsupported on failure — error reporting
 // is the caller's responsibility.
 func (g *Generator) openAssignmentLoopsBounded(w *cppWriter, lhs goivy.Expr, body goivy.Expr) (int, bool) {
-	vars := goivy.FreeVariablesList(lhs)
+	vars := goivy.VariablesAstList(lhs)
 	opened := 0
 	for _, v := range vars {
 		var header string
@@ -245,7 +245,7 @@ func (g *Generator) openAssignmentLoopsBounded(w *cppWriter, lhs goivy.Expr, bod
 // here we just return false. Conservative: if any free variable cannot
 // open a loop header, return false so the caller picks emit_assign_large.
 func (g *Generator) canOpenAssignmentLoopsBounded(lhs goivy.Expr, body goivy.Expr) bool {
-	vars := goivy.FreeVariablesList(lhs)
+	vars := goivy.VariablesAstList(lhs)
 	for _, v := range vars {
 		if body != nil && cppIsAnyIntegerType(g, v.VSort) {
 			var bes []boundExpr

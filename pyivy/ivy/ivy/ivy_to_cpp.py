@@ -883,7 +883,7 @@ def emit_eval_sig(header,obj=None,used=None,classname=None):
 
 def emit_clear_progress(impl,obj=None):
     for df in im.module.progress:
-        vs = list(lu.free_variables(df.args[0]))
+        vs = ordered_free_variables(df.args[0])
         open_loop(impl,vs)
         code = []
         indent(code)
@@ -1092,7 +1092,9 @@ def emit_defined_inputs(pre,inpdefs,code,classname,ssyms,fsyms):
     
 def minimal_field_references(fmla,inputs):
     inpset = set(inputs)
-    res = defaultdict(set)
+    res = defaultdict(dict)
+    def add_ref(inp, ref):
+        res[inp][ref] = None
     def field_ref(f):
         if il.is_app(f):
             if f.rep.name in im.module.destructor_sorts and len(f.args) == 1:
@@ -1106,10 +1108,10 @@ def minimal_field_references(fmla,inputs):
             if f.rep.name in im.module.destructor_sorts and len(f.args) == 1:
                 inp = field_ref(f.args[0])
                 if inp is not None:
-                    res[inp].add(f)
+                    add_ref(inp,f)
                     return
             if il.is_constant(f) and f.rep in inpset:
-                res[f.rep].add(f.rep)
+                add_ref(f.rep,f.rep)
                 return
         for x in f.args:
             recur(x)
@@ -1117,14 +1119,16 @@ def minimal_field_references(fmla,inputs):
     def get_minima(refs):
         def lt(x,y):
             return len(y.args) == 1 and (x == y.args[0] or lt(x,y.args[0]))
-        return set(y for y in refs if all(not(lt(x,y)) for x in refs))
+        return [y for y in refs if all(not(lt(x,y)) for x in refs)]
             
     recur(fmla)
-    res = dict((inp,get_minima(refs)) for inp,refs in res.items())
+    res = dict((inp,get_minima(list(refs))) for inp,refs in res.items())
     return res
                 
 def minimal_field_siblings(inputs,mrefs):
-    res = defaultdict(set)
+    res = defaultdict(dict)
+    def add_ref(inp, ref):
+        res[inp][ref] = None
     for inp in inputs:
         if inp in mrefs:
             for f in mrefs[inp]:
@@ -1132,12 +1136,12 @@ def minimal_field_siblings(inputs,mrefs):
                     sort = f.rep.sort.dom[0]
                     destrs = im.module.sort_destructors[sort.name]
                     for d in destrs:
-                        res[inp].add(d(f.args[0]))
+                        add_ref(inp,d(f.args[0]))
                 else:
-                    res[inp].add(inp)
+                    add_ref(inp,inp)
         else:
-            res[inp].add(inp)
-    return res
+            add_ref(inp,inp)
+    return dict((inp,list(refs)) for inp,refs in res.items())
 
 def extract_input_fields(pre_clauses,inputs):
     mrefs = minimal_field_references(pre_clauses.to_formula(),inputs)
@@ -1236,7 +1240,7 @@ def emit_action_gen(header,impl,name,action,classname):
     pre_clauses = ilu.and_clauses(pre_clauses,ilu.Clauses([fix_definition(ldf.formula).to_constraint() for ldf in rdefs]))
     pre_clauses = ilu.and_clauses(pre_clauses,ilu.Clauses(im.module.variant_axioms()))
     pre = pre_clauses.to_formula()
-    used = set(ilu.used_symbols_ast(pre))
+    used = list(ilu.used_symbols_ast(pre))
     used_names = set(varname(s) for s in used)
     defed_params = set(f.args[0] for f in param_defs)
     for x in used:
@@ -1260,8 +1264,7 @@ def emit_action_gen(header,impl,name,action,classname):
     impl.append(caname + "_gen::" + caname + "_gen(" + classname + " &obj){\n");
     indent_level += 1
     emit_sig(impl)
-    to_decl = set(syms)
-    to_decl.update(s for s in used if s.name == '*>')
+    to_decl = list(iu.unique(list(syms) + [s for s in used if s.name == '*>']))
     for sym in to_decl:
         emit_decl(impl,sym)
     indent(impl)
@@ -1762,7 +1765,7 @@ def emit_tick(header,impl,classname):
         rely_map[key.rep].append(df)
 
     for df in im.module.progress:
-        vs = list(lu.free_variables(df.args[0]))
+        vs = ordered_free_variables(df.args[0])
         open_loop(impl,vs)
         code = []
         indent(code)
@@ -1779,7 +1782,7 @@ def emit_tick(header,impl,classname):
     for df in im.module.progress:
         if any(not isinstance(r,il.Implies) for r in rely_map[df.defines()]):
             continue
-        vs = list(lu.free_variables(df.args[0]))
+        vs = ordered_free_variables(df.args[0])
         open_loop(impl,vs)
         maxt = new_temp(impl)
         indent(impl)
@@ -1787,7 +1790,7 @@ def emit_tick(header,impl,classname):
         for r in rely_map[df.defines()]:
             if not isinstance(r,il.Implies):
                 continue
-            rvs = list(lu.free_variables(r.args[0]))
+            rvs = ordered_free_variables(r.args[0])
             assert len(rvs) == len(vs)
             subs = dict(list(zip(rvs,vs)))
 
@@ -1795,8 +1798,8 @@ def emit_tick(header,impl,classname):
             ## rely not occuring on left, we must prevent their capture
             ## by substitution
 
-            xvs = set(lu.free_variables(r.args[1]))
-            xvs = xvs - set(rvs)
+            rvs_set = set(rvs)
+            xvs = [x for x in ordered_free_variables(r.args[1]) if x not in rvs_set]
             for xv in xvs:
                 subs[xv.name] = xv.rename(xv.name + '__')
             xvs = [subs[xv.name] for xv in xvs]
@@ -2892,6 +2895,9 @@ def subscripts(vs):
 def variables(sorts,start=0):
     return [il.Variable('X__'+str(idx+start),s) for idx,s in enumerate(sorts)]
 
+def ordered_free_variables(ast):
+    return list(iu.unique(ilu.variables_ast(ast)))
+
 
 def assign_symbol_value(header,lhs_text,m,v,same=False):
     sort = v.sort
@@ -3709,7 +3715,7 @@ def emit_assign(self,header):
 #            
 #            emit_assign_large(self,header)
 #            return
-        vs = list(lu.free_variables(self.args[0]))
+        vs = ordered_free_variables(self.args[0])
 #        for v in vs:
 #            check_iterable_sort(v.sort)
         if len(vs) == 0:

@@ -301,7 +301,7 @@ func (g *Generator) emitRelyMax(w *cppWriter, maxt string, p progressDecl, r rel
 	// recursively, which would re-substitute the freshly-substituted
 	// progress variable into the renamed extra (e.g. C -> D -> D__).
 	subs := map[goivy.NodeKey]goivy.Expr{}
-	for _, v := range goivy.FreeVariablesList(r.LHS) {
+	for _, v := range goivy.VariablesAstList(r.LHS) {
 		if repl, ok := aliases[v.Name]; ok {
 			subs[goivy.Key(v)] = repl
 		}
@@ -354,7 +354,7 @@ func progressExprArgs(expr goivy.Expr) []goivy.Expr {
 
 func extraRelyVars(rhs goivy.Expr, aliases map[string]goivy.Expr) []*goivy.LogicVariable {
 	var out []*goivy.LogicVariable
-	for _, v := range goivy.FreeVariablesList(rhs) {
+	for _, v := range goivy.VariablesAstList(rhs) {
 		if aliases[v.Name] != nil {
 			continue
 		}

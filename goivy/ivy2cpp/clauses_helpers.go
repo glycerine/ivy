@@ -252,14 +252,20 @@ func minimalFieldReferences(
 		inpset[k] = true
 		inpConst[k] = in
 	}
-	// res maps an input-Symbol (key) to the set of distinct apply
-	// references rooted at it (de-duped by structural key).
-	resSet := make(map[goivy.NodeKey]map[goivy.NodeKey]goivy.Expr)
+	// res maps an input-Symbol (key) to distinct apply references rooted
+	// at it, preserving first traversal order.
+	resSet := make(map[goivy.NodeKey]map[goivy.NodeKey]bool)
+	resOrder := make(map[goivy.NodeKey][]goivy.Expr)
 	add := func(rootKey goivy.NodeKey, ref goivy.Expr) {
 		if resSet[rootKey] == nil {
-			resSet[rootKey] = make(map[goivy.NodeKey]goivy.Expr)
+			resSet[rootKey] = make(map[goivy.NodeKey]bool)
 		}
-		resSet[rootKey][goivy.Key(ref)] = ref
+		k := goivy.Key(ref)
+		if resSet[rootKey][k] {
+			return
+		}
+		resSet[rootKey][k] = true
+		resOrder[rootKey] = append(resOrder[rootKey], ref)
 	}
 	isDestrApply := func(f *goivy.Apply) bool {
 		c, ok := f.Func.(*goivy.Const)
@@ -313,10 +319,14 @@ func minimalFieldReferences(
 	walk(fmla)
 	// Per-input minima.
 	out := make(map[goivy.NodeKey][]goivy.Expr, len(resSet))
-	for rootKey, refSet := range resSet {
-		refs := make([]goivy.Expr, 0, len(refSet))
-		for _, r := range refSet {
-			refs = append(refs, r)
+	for _, in := range inputs {
+		if in == nil {
+			continue
+		}
+		rootKey := keyOfConst(in)
+		refs := resOrder[rootKey]
+		if len(refs) == 0 {
+			continue
 		}
 		out[rootKey] = filterMinimaRefs(refs)
 		_ = inpConst[rootKey] // value kept for potential debug
@@ -452,7 +462,11 @@ func extractInputFields(
 	}
 	var ordered []fieldEntry
 	rfsyms := make(map[goivy.NodeKey]*goivy.Const)
-	for _, refs := range mrefs {
+	for _, in := range inputs {
+		if in == nil {
+			continue
+		}
+		refs := mrefs[keyOfConst(in)]
 		for _, y := range refs {
 			name := fieldSymbolName(y)
 			c := goivy.NewConst(name, y.NodeSort())
