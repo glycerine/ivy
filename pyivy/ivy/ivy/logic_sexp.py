@@ -108,13 +108,34 @@ def _named_binder_sexp(self):
         self.name, env, _vars_sexp(self.variables), self.body.sexp())
 
 
+# --- Node helpers ---
+
+def _node_sexp(n):
+    if n is None:
+        return 'nil'
+    if hasattr(n, 'sexp'):
+        return n.sexp()
+    if hasattr(n, 'canon'):
+        return n.canon()
+    raise AttributeError("'%s' object has no attribute 'sexp'" % type(n).__name__)
+
+
 # --- Definition types (in ivy_logic.py, not logic.py) ---
 
 def _definition_sexp(self):
-    return '(Def lhs:%s rhs:%s)' % (self.args[0].sexp(), self.args[1].sexp())
+    return '(Def lhs:%s rhs:%s)' % (_node_sexp(self.args[0]), _node_sexp(self.args[1]))
 
 def _definition_schema_sexp(self):
-    return '(DefSchema lhs:%s rhs:%s)' % (self.args[0].sexp(), self.args[1].sexp())
+    return '(DefSchema lhs:%s rhs:%s)' % (_node_sexp(self.args[0]), _node_sexp(self.args[1]))
+
+
+# --- Native AST placeholders ---
+
+def _make_empty_ast_sexp(name):
+    def _sexp(self):
+        from .canon import lineno_fields
+        return '({}{})'.format(name, lineno_fields(self))
+    return _sexp
 
 
 # --- ivy_logic types: Some, Let, Literal ---
@@ -178,6 +199,7 @@ def install():
     from . import ivy_logic as il
     from . import ivy_logic_utils as lut
     from . import ivy_concept_space as ics
+    from . import ivy_ast as ast
 
     # Sort types
     lg.UninterpretedSort.sexp = _uninterpreted_sort_sexp
@@ -228,6 +250,20 @@ def install():
 
     # Clauses
     lut.Clauses.sexp = _clauses_sexp
+
+    # Native AST placeholders that may appear inside ivy_logic.Definition
+    # before they are lowered into logic-native expressions.
+    for _name, _cls_name in [
+        ('nativeCode', 'NativeCode'),
+        ('nativeType', 'NativeType'),
+        ('nativeExpr', 'NativeExpr'),
+        ('nativeDef', 'NativeDef'),
+    ]:
+        _cls = getattr(ast, _cls_name, None)
+        if _cls is not None:
+            _sexp = _make_empty_ast_sexp(_name)
+            _cls.sexp = _sexp
+            _cls.canon = _sexp
 
     # --- canon() = sexp() for all types (matching Go's logic/canon.go pattern) ---
     # Go's Canon() just wraps Sexp(), so canon = sexp.
