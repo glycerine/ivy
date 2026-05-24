@@ -36,11 +36,14 @@ func (pc *ProofChecker) letTactic(decls []*LabeledFormula, proof *LetTactic) ([]
 	// Then: cond = il.And(*[il.Equals(a.args[0], a.args[1]) for a in defs])
 	var eqs []Expr
 	for _, def := range proof.Defs {
-		// Each def is an equality atom. Compile it with goal vocab.
-		compiled := CompileExprVocab(def, vocab, pc.Mod)
+		defArgs := def.Args()
+		equality := def
+		if len(defArgs) >= 2 {
+			equality = pc.astCfg().NewAtom("=", defArgs[0], defArgs[1])
+		}
+		compiled := CompileExprVocab(equality, vocab, pc.Mod)
 		if compiled == nil {
 			// Fallback: try direct extraction without compilation
-			defArgs := def.Args()
 			if len(defArgs) >= 2 {
 				lhs := astNodeToLogicNode(defArgs[0])
 				rhs := astNodeToLogicNode(defArgs[1])
