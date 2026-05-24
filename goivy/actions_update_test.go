@@ -648,6 +648,31 @@ func TestCallActionIntUpdateActualsAndHideFormals(t *testing.T) {
 	}
 }
 
+func TestDistinctObjRenamingDuplicateStructuralFormalLastWinsLikePython(t *testing.T) {
+	arrSort := &UninterpretedSort{Name: "arr"}
+	tSort := &UninterpretedSort{Name: "t"}
+	firstA := NewConst("fml:a", arrSort)
+	v := NewConst("fml:v", tSort)
+	secondA := NewConst("fml:a", arrSort)
+
+	renaming := distinctObjRenaming([]*Const{firstA, v, secondA}, map[string]bool{})
+
+	if len(renaming) != 2 {
+		t.Fatalf("duplicate structural formals should collapse to two keys, got %d", len(renaming))
+	}
+	gotA := renaming[Key(firstA)]
+	if gotA == nil {
+		t.Fatal("missing renaming for fml:a")
+	}
+	if gotA.Name != "fml:a_a" {
+		t.Fatalf("duplicate formal should keep Python's later dict value fml:a_a, got %q", gotA.Name)
+	}
+	gotV := renaming[Key(v)]
+	if gotV == nil || gotV.Name != "fml:v" {
+		t.Fatalf("non-conflicting formal should keep identity name fml:v, got %#v", gotV)
+	}
+}
+
 // --- GetUpdate ---
 
 func TestGetUpdateHidesFormals(t *testing.T) {

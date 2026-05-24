@@ -1944,8 +1944,18 @@ func (a *LogicCallAction) applyActuals(ctx *UpdateContext, callee ActionsAction)
 	// Apply renaming to callee — always call SubstituteConstantsAction
 	// (matches Python which unconditionally calls substitute_constants_ast)
 	substMap := make(map[NodeKey]Expr)
-	for oldSym, newSym := range renaming {
-		substMap[Key(oldSym)] = newSym
+	seenFormals := make(map[NodeKey]bool, len(allFormals))
+	for _, oldSym := range allFormals {
+		oldKey := Key(oldSym)
+		if seenFormals[oldKey] {
+			continue
+		}
+		seenFormals[oldKey] = true
+		newSym, ok := renaming[oldKey]
+		if !ok {
+			panic(fmt.Sprintf("CallAction.applyActuals: missing formal renaming for %s", oldSym.Name))
+		}
+		substMap[oldKey] = newSym
 		// Python (ivy_actions.py:1364-1365): subst[old(s)] = old(t)
 		//   where old(sym) = sym.prefix('old_'). Use the LogicOld() helper here
 		//   so the substMap key actually matches a real pre-state symbol in
@@ -2054,8 +2064,8 @@ func callActionRenamedFormal(sym *Const, substMap map[NodeKey]Expr) *Const {
 // distinctObjRenaming creates a renaming from formals to fresh names
 // that don't conflict with vocabNames.
 // Corresponds to Python distinct_obj_renaming.
-func distinctObjRenaming(formals []*Const, vocabNames map[string]bool) map[*Const]*Const {
-	result := make(map[*Const]*Const)
+func distinctObjRenaming(formals []*Const, vocabNames map[string]bool) map[NodeKey]*Const {
+	result := make(map[NodeKey]*Const)
 	usedNames := make(map[string]bool)
 	for k := range vocabNames {
 		usedNames[k] = true
@@ -2065,14 +2075,14 @@ func distinctObjRenaming(formals []*Const, vocabNames map[string]bool) map[*Cons
 		name := sym.Name
 		if _, used := usedNames[name]; !used {
 			usedNames[name] = true
-			// No conflict — identity mapping (matches Python which always adds all formals)
-			result[sym] = NewConst(name, sym.CSort)
+			// No conflict — identity mapping (matches Python which always adds all formals).
+			result[Key(sym)] = NewConst(name, sym.CSort)
 			continue
 		}
 		// Need a fresh name
 		newName := unusedNameWithBase(name, usedNames)
 		usedNames[newName] = true
-		result[sym] = NewConst(newName, sym.CSort)
+		result[Key(sym)] = NewConst(newName, sym.CSort)
 	}
 	return result
 }

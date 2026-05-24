@@ -937,21 +937,16 @@ func Hide(inputSyms []*Const, u *Update) *Update {
 	//   new_tr = exist_quant(syms, update[1])
 	//   new_pre = exist_quant(syms, update[2])
 
-	// Step 1: syms = set(syms)
-	syms := make([]*Const, len(inputSyms))
-	copy(syms, inputSyms)
-	symNames := make(map[string]bool, len(syms))
-	for _, s := range syms {
-		symNames[s.Name] = true
-	}
+	// Step 1: syms = set(syms). Use structural keys to match Python's
+	// recstruct equality, while preserving first-seen order deterministically.
+	syms, symSet := uniqueConstSet(inputSyms)
 
 	// Step 2: syms.update(new(s) for s in update[0] if s in syms)
 	if !u.ModifiedAll {
 		for _, s := range u.Modified {
-			if symNames[s.Name] {
+			if symSet[Key(s)] {
 				nc := NewActionConst(s)
-				syms = append(syms, nc)
-				symNames[nc.Name] = true
+				syms = appendUniqueConst(syms, symSet, nc)
 			}
 		}
 	}
@@ -965,7 +960,7 @@ func Hide(inputSyms []*Const, u *Update) *Update {
 		sort.Strings(symStrs)
 		modStrs := make([]string, 0, len(u.Modified))
 		for _, s := range u.Modified {
-			modStrs = append(modStrs, fmt.Sprintf("'%s(inSymNames=%s)'", s.Name, BoolPythonStr(symNames[s.Name])))
+			modStrs = append(modStrs, fmt.Sprintf("'%s(inSymNames=%s)'", s.Name, BoolPythonStr(symSet[Key(s)])))
 		}
 		sort.Strings(modStrs)
 		xtracer.Trace("transrel.Hide: syms=[%v] modified=[%v]", strings.Join(symStrs, ", "), strings.Join(modStrs, ", "))
@@ -975,7 +970,7 @@ func Hide(inputSyms []*Const, u *Update) *Update {
 	newMod := make([]*Const, 0)
 	if !u.ModifiedAll {
 		for _, s := range u.Modified {
-			if !symNames[s.Name] {
+			if !symSet[Key(s)] {
 				newMod = append(newMod, s)
 			}
 		}
@@ -1023,21 +1018,16 @@ func ExistQuantClauses(syms []*Const, clauses *Clauses) (map[NodeKey]*Const, *Cl
 //
 // Corresponds to Python's hide_state(syms, update).
 func HideState(syms []*Const, u *Update) *Update {
-	symNames := make(map[string]bool, len(syms))
-	toHide := make([]*Const, len(syms))
-	copy(toHide, syms)
-	for _, s := range syms {
-		symNames[s.Name] = true
-	}
+	toHide, symSet := uniqueConstSet(syms)
 	newMod := make([]*Const, 0)
 	if !u.ModifiedAll {
 		for _, s := range u.Modified {
-			if symNames[s.Name] {
-				toHide = append(toHide, OldConst(s))
+			if symSet[Key(s)] {
+				toHide = appendUniqueConst(toHide, symSet, OldConst(s))
 			}
 		}
 		for _, s := range u.Modified {
-			if !symNames[s.Name] {
+			if !symSet[Key(s)] {
 				newMod = append(newMod, s)
 			}
 		}
@@ -1056,21 +1046,16 @@ func HideState(syms []*Const, u *Update) *Update {
 // HideStateMap is like HideState but also returns the renaming map
 // for the TR. Corresponds to Python's hide_state_map.
 func HideStateMap(syms []*Const, u *Update) (map[NodeKey]*Const, *Update) {
-	symNames := make(map[string]bool, len(syms))
-	toHide := make([]*Const, len(syms))
-	copy(toHide, syms)
-	for _, s := range syms {
-		symNames[s.Name] = true
-	}
+	toHide, symSet := uniqueConstSet(syms)
 	newMod := make([]*Const, 0)
 	if !u.ModifiedAll {
 		for _, s := range u.Modified {
-			if symNames[s.Name] {
-				toHide = append(toHide, OldConst(s))
+			if symSet[Key(s)] {
+				toHide = appendUniqueConst(toHide, symSet, OldConst(s))
 			}
 		}
 		for _, s := range u.Modified {
-			if !symNames[s.Name] {
+			if !symSet[Key(s)] {
 				newMod = append(newMod, s)
 			}
 		}
@@ -1883,6 +1868,24 @@ func actionsConstSet(syms []*Const) *InsMap[NodeKey, Expr] {
 		}
 	}
 	return m
+}
+
+func uniqueConstSet(syms []*Const) ([]*Const, map[NodeKey]bool) {
+	seen := make(map[NodeKey]bool, len(syms))
+	result := make([]*Const, 0, len(syms))
+	for _, s := range syms {
+		result = appendUniqueConst(result, seen, s)
+	}
+	return result, seen
+}
+
+func appendUniqueConst(syms []*Const, seen map[NodeKey]bool, sym *Const) []*Const {
+	k := Key(sym)
+	if seen[k] {
+		return syms
+	}
+	seen[k] = true
+	return append(syms, sym)
 }
 
 // NewActionConst returns a new Const with "new_" prefix, preserving sort.

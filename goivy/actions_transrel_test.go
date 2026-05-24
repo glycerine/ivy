@@ -410,6 +410,49 @@ func TestActionsHideStub(t *testing.T) {
 	}
 }
 
+func TestActionsHideDeduplicatesInputSymbolsLikePythonSet(t *testing.T) {
+	arrSort := &UninterpretedSort{Name: "arr"}
+	tSort := &UninterpretedSort{Name: "t"}
+	fmlAA := NewConst("fml:a_a", arrSort)
+	fmlAADup := NewConst("fml:a_a", arrSort)
+	fmlV := NewConst("fml:v", tSort)
+	x := NewConst("x", tSort)
+	u := &Update{
+		Modified: []*Const{fmlAA, fmlV, x},
+		TR:       TrueClauses(nil),
+		Pre:      TrueClauses(nil),
+	}
+
+	out := captureActionUpdateStdout(t, func() {
+		_ = Hide([]*Const{fmlAA, fmlAADup, fmlV}, u)
+	})
+
+	want := "transrel.Hide: syms=['fml:a_a:arr', 'fml:v:t', 'new_fml:a_a:arr', 'new_fml:v:t']"
+	if !strings.Contains(out, want) {
+		t.Fatalf("Hide trace did not deduplicate like Python set\nwant substring: %s\nout:\n%s", want, out)
+	}
+	if strings.Count(out, "'fml:a_a:arr'") != 1 {
+		t.Fatalf("Hide trace should contain fml:a_a once before new_ counterpart, got:\n%s", out)
+	}
+}
+
+func TestActionsHideMembershipIsStructuralNotNameOnly(t *testing.T) {
+	arrSort := &UninterpretedSort{Name: "arr"}
+	tSort := &UninterpretedSort{Name: "t"}
+	hideArr := NewConst("a", arrSort)
+	modifiedT := NewConst("a", tSort)
+	u := &Update{
+		Modified: []*Const{modifiedT},
+		TR:       TrueClauses(nil),
+		Pre:      TrueClauses(nil),
+	}
+
+	result := Hide([]*Const{hideArr}, u)
+	if len(result.Modified) != 1 || result.Modified[0] != modifiedT {
+		t.Fatalf("Hide should not remove same-name symbol with different sort; got %#v", result.Modified)
+	}
+}
+
 func TestActionsHideNilModified(t *testing.T) {
 	u := PureState(True)
 	result := Hide([]*Const{NewConst("y", TopS)}, u)
