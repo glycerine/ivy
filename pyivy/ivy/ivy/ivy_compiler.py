@@ -2302,6 +2302,7 @@ def check_properties(mod):
                 prop = named_trans(prop)
                 prover.axioms[-1] = prop
                 if __debug__: xtracer.trace("compiler.CheckProperties.classify.prover schemata.insert key='%s'" % prop.name)
+                if __debug__: xtracer.trace("proof.ProofChecker.SetSchema schemata.insert key='%s' value=%s" % (prop.name, prop.canon()))
                 prover.schemata[prop.name] = prop
             if len(subgoals) == 0:
                 if not isinstance(prop.formula,ivy_ast.SchemaBody):
