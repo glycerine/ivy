@@ -895,6 +895,43 @@ func TestCheckInterferenceEnabled(t *testing.T) {
 	}
 }
 
+func TestCreateIsolateSortFilterUsesCollectedSymbolSorts(t *testing.T) {
+	src := `
+#lang ivy1.7
+
+module order_like(t) = {
+    property [uses_lt] X:t < Y -> X < Y
+}
+
+isolate id = {
+    type this
+    specification {
+        instantiate order_like(this)
+    }
+}
+
+isolate app = {
+} with id
+`
+	result, err := Parse(src, Version{1, 7})
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+
+	mod := New()
+	mod.Cfg = NewConfig()
+	if err := IvyCompile(result.Decls, mod, false); err != nil {
+		t.Fatalf("IvyCompile: %v", err)
+	}
+	if err := CreateIsolate("app", mod); err != nil {
+		t.Fatalf("CreateIsolate: %v", err)
+	}
+
+	if _, ok := mod.Sig.Sorts.Get2("id"); !ok {
+		t.Fatalf("CreateIsolate filtered out sort id; sorts are %s", canonSortMap(mod.Sig.Sorts))
+	}
+}
+
 // --- ConeOfInfluenceFilter (stubbed) ---
 
 func TestConeOfInfluenceFilterDisabled(t *testing.T) {
