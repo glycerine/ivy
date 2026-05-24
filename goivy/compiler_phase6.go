@@ -2358,7 +2358,7 @@ func CheckProperties(mod *Module) error {
 	// Give empty proofs to theorems without proofs
 	for _, prop := range props {
 		if _, hasPf := pmap[prop.ID]; !hasPf {
-			if fmla, ok := prop.Formula.(Expr); ok && isSchemaBody(fmla) {
+			if isSchemaBody(prop.Formula) {
 				pmap[prop.ID] = mod.Cfg.AstCfg.NewComposeTactics(nil)
 			}
 		}
@@ -2434,7 +2434,7 @@ func CheckProperties(mod *Module) error {
 			}
 
 			if len(subgoals) == 0 {
-				if fExpr, ok := prop.Formula.(Expr); ok && !isSchemaBody(fExpr) {
+				if !isSchemaBody(prop.Formula) {
 					if _, isDef := prop.Formula.(*LogicDefinition); isDef {
 						xtracer.Trace("compiler.CheckProperties.classify label=%s -> definitions (proved, 0 subgoals, def)", propLabel)
 						mod.Definitions = append(mod.Definitions, prop)
@@ -2469,7 +2469,7 @@ func CheckProperties(mod *Module) error {
 					label := ComposeAtoms(labelAtom, lb.Call())
 					mod.LabeledProps = append(mod.LabeledProps, g.CloneWithFreshID([]Node{label, g.Formula}))
 				}
-				if fExpr, ok := prop.Formula.(Expr); ok && !isSchemaBody(fExpr) {
+				if !isSchemaBody(prop.Formula) {
 					if _, isDef := prop.Formula.(*LogicDefinition); isDef {
 						mod.Definitions = append(mod.Definitions, prop)
 					} else {
@@ -2527,10 +2527,13 @@ func CheckProperties(mod *Module) error {
 	return err
 }
 
-// isSchemaBody checks if a lg.Expr is or wraps an ast.SchemaBody.
-func isSchemaBody(n Expr) bool {
+// isSchemaBody checks if a node is or wraps an ast.SchemaBody.
+func isSchemaBody(n Node) bool {
 	if n == nil {
 		return false
+	}
+	if _, ok := n.(*SchemaBody); ok {
+		return true
 	}
 	// Check if wrapped as an AST adapter
 	type unwrapper interface {

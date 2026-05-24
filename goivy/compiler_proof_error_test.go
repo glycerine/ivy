@@ -2,6 +2,7 @@ package goivy
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -60,5 +61,26 @@ print(json.dumps(res, sort_keys=True))
 	}
 	if !strings.Contains(err.Error(), "No property missing") {
 		t.Fatalf("CheckProperties propagated wrong proof error\nwant substring %q\ngot: %v", "No property missing", err)
+	}
+}
+
+func TestCheckPropertiesGivesEmptyProofToSchemaBodyTheorems(t *testing.T) {
+	mod := New()
+	cfg := mod.Cfg.AstCfg
+	prop := cfg.NewLabeledFormula(cfg.NewAtom("schema"), cfg.NewSchemaBody(True))
+	mod.LabeledProps = []*LabeledFormula{prop}
+
+	out := captureActionUpdateStdout(t, func() {
+		if err := CheckProperties(mod); err != nil {
+			t.Fatalf("CheckProperties: %v", err)
+		}
+	})
+
+	wantID := fmt.Sprintf("compiler.CheckProperties.classify label=schema id=%d", prop.ID)
+	if !strings.Contains(out, wantID) || !strings.Contains(out, "hasPf=True") {
+		t.Fatalf("SchemaBody theorem should receive an empty proof before classification.\nwant trace containing: %s ... hasPf=True\ngot:\n%s", wantID, out)
+	}
+	if _, found := mod.Schemata.Get2("schema"); !found {
+		t.Fatalf("proved SchemaBody theorem should be registered as a schema")
 	}
 }
