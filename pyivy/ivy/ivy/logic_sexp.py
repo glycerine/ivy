@@ -137,6 +137,10 @@ def _make_empty_ast_sexp(name):
         return '({}{})'.format(name, lineno_fields(self))
     return _sexp
 
+def _native_expr_sexp(self):
+    parts = ' '.join(_node_sexp(arg) for arg in self.args)
+    return '(NativeExpr%s)' % ((' ' + parts) if parts else '')
+
 
 # --- ivy_logic types: Some, Let, Literal ---
 # Matches Go's ivylogic/sexp.go
@@ -256,7 +260,6 @@ def install():
     for _name, _cls_name in [
         ('nativeCode', 'NativeCode'),
         ('nativeType', 'NativeType'),
-        ('nativeExpr', 'NativeExpr'),
         ('nativeDef', 'NativeDef'),
     ]:
         _cls = getattr(ast, _cls_name, None)
@@ -264,6 +267,8 @@ def install():
             _sexp = _make_empty_ast_sexp(_name)
             _cls.sexp = _sexp
             _cls.canon = _sexp
+    ast.NativeExpr.sexp = _native_expr_sexp
+    ast.NativeExpr.canon = _make_empty_ast_sexp('nativeExpr')
 
     # --- canon() = sexp() for all types (matching Go's logic/canon.go pattern) ---
     # Go's Canon() just wraps Sexp(), so canon = sexp.

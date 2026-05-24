@@ -15,6 +15,7 @@ d = ivy_logic.Definition(
     ivy_ast.NativeExpr(ivy_ast.NativeCode('foo')),
 )
 print(d.sexp())
+print(d.rhs().canon())
 `)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -24,7 +25,10 @@ print(d.sexp())
 	if strings.Contains(got, "AttributeError") {
 		t.Fatalf("NativeExpr should have a sexp helper; got:\n%s", got)
 	}
-	if !strings.Contains(got, "rhs:(nativeExpr)") {
-		t.Fatalf("NativeExpr should use Go-compatible AST canon shape; got:\n%s", got)
+	if !strings.Contains(got, "rhs:(NativeExpr (nativeCode))") {
+		t.Fatalf("NativeExpr sexp should use Go-compatible logic shape; got:\n%s", got)
+	}
+	if !strings.Contains(got, "(nativeExpr)") {
+		t.Fatalf("NativeExpr canon should keep the Go-compatible AST shape; got:\n%s", got)
 	}
 }
