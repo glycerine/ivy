@@ -1393,6 +1393,48 @@ export step
 	}
 }
 
+func TestBuildPlanUsesVendoredStaticZ3Only(t *testing.T) {
+	fakeZ3 := t.TempDir()
+	t.Setenv("Z3DIR", fakeZ3)
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green}
+individual saved : color
+action set(c:color) = {
+    saved := c
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "StaticZ3Only"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	plan, err := BuildPlanFor(out, t.TempDir(), out.Config)
+	if err != nil {
+		if isMissingZ3ToolchainError(err) {
+			t.Skip(err.Error())
+		}
+		t.Fatalf("BuildPlanFor: %v", err)
+	}
+	goivyRoot, err := packageGoivyRoot()
+	if err != nil {
+		t.Fatalf("packageGoivyRoot: %v", err)
+	}
+	wantLib := filepath.Join(goivyRoot, "z3vendor", "native_lib", "libz3.a")
+	if !sliceContains(plan.Args, wantLib) {
+		t.Fatalf("build plan should link vendored static z3 %q; args: %v", wantLib, plan.Args)
+	}
+	for _, bad := range []string{"-lz3", "-L" + fakeZ3, "-I" + filepath.Join(fakeZ3, "include")} {
+		if sliceContains(plan.Args, bad) {
+			t.Fatalf("build plan should not use system/override z3 arg %q: %v", bad, plan.Args)
+		}
+	}
+	for _, arg := range plan.Args {
+		if strings.HasPrefix(arg, "-Wl,-rpath") && strings.Contains(arg, "z3") {
+			t.Fatalf("build plan should not add z3 runtime search paths: %v", plan.Args)
+		}
+	}
+}
+
 func TestBuildPlanRejectsCLOnNonWindows(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("compiler=cl is meaningful on Windows")

@@ -313,38 +313,24 @@ func z3BuildArgs() ([]string, []string, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	var includeDirs []string
-	var libDirs []string
-	if z3dir := strings.TrimSpace(os.Getenv("Z3DIR")); z3dir != "" {
-		includeDirs = append(includeDirs, filepath.Join(z3dir, "include"), filepath.Join(z3dir, "include", "c++"))
-		libDirs = append(libDirs, filepath.Join(z3dir, "lib"), filepath.Join(z3dir, "bin"))
-	}
-	includeDirs = append(includeDirs,
+	includeDirs := []string{
 		filepath.Join(goivyRoot, "z3vendor", "z3", "src", "api"),
 		filepath.Join(goivyRoot, "z3vendor", "z3", "src", "api", "c++"),
-	)
-	libDirs = append(libDirs, filepath.Join(goivyRoot, "z3vendor", "native_lib"))
+	}
+	staticLib := filepath.Join(goivyRoot, "z3vendor", "native_lib", "libz3.a")
 
 	includeDirs = existingIncludeDirs(includeDirs)
-	libDirs = existingZ3LibDirs(libDirs)
 	if len(includeDirs) == 0 {
 		return nil, nil, &missingZ3ToolchainError{reason: "z3++.h include directory not found"}
 	}
-	if len(libDirs) == 0 {
-		return nil, nil, &missingZ3ToolchainError{reason: "libz3 not found"}
+	if _, err := os.Stat(staticLib); err != nil {
+		return nil, nil, &missingZ3ToolchainError{reason: "vendored static libz3.a not found"}
 	}
 	var includeArgs []string
 	for _, dir := range includeDirs {
 		includeArgs = append(includeArgs, "-I"+dir)
 	}
-	var linkArgs []string
-	for _, dir := range libDirs {
-		linkArgs = append(linkArgs, "-L"+dir)
-		if runtime.GOOS == "darwin" {
-			linkArgs = append(linkArgs, "-Wl,-rpath,"+dir)
-		}
-	}
-	linkArgs = append(linkArgs, "-lz3")
+	linkArgs := []string{staticLib}
 	return includeArgs, linkArgs, nil
 }
 
