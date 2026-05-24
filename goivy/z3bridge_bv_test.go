@@ -49,6 +49,14 @@ func TestBvSort(t *testing.T) {
 	}
 }
 
+func TestDumpSortsCanonBitVecMatchesPython(t *testing.T) {
+	tr := NewSolver(nil, nil).NewTranslator()
+	tr.cache.sorts[NodeKey("id")] = tr.Ctx.BvSort(64)
+	if got, want := tr.dumpSortsCanon(), "[BitVec(64)]"; got != want {
+		t.Fatalf("dumpSortsCanon() = %q, want %q", got, want)
+	}
+}
+
 func TestBvVal(t *testing.T) {
 	ctx := smt.NewZ3Context()
 	v := ctx.BvVal(42, 8)

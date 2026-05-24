@@ -543,6 +543,42 @@ type NativeFunc func(args ...smt.Z3Expr) smt.Z3Expr
 func (s *Solver) Sorts(name string) any {
 	xtracer.Trace("ivy_solver.py:121 sorts() ENTER name=%s", name)
 	ctx := s.tr.Ctx
+	if strings.HasPrefix(name, "bv[") && strings.HasSuffix(name, "]") {
+		width, err := strconv.Atoi(name[3 : len(name)-1])
+		if err == nil {
+			return ctx.BvSort(width)
+		}
+		return nil
+	}
+	if strings.HasPrefix(name, "arr[") && strings.HasSuffix(name, "]") {
+		if dom, rng, ok := ParseArraySortName(name); ok {
+			domS := &UninterpretedSort{Name: dom}
+			rngS := &UninterpretedSort{Name: rng}
+			xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3 HASH canon=%s", domS.Sexp())
+			domSort, err1 := s.tr.TranslateSort(domS)
+			xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3 HASH canon=%s", rngS.Sexp())
+			rngSort, err2 := s.tr.TranslateSort(rngS)
+			if err1 == nil && err2 == nil {
+				return ctx.ArraySort(domSort, rngSort)
+			}
+		}
+		return nil
+	}
+	if strings.HasPrefix(name, "strbv[") && strings.HasSuffix(name, "]") {
+		width, err := strconv.Atoi(name[6 : len(name)-1])
+		if err == nil {
+			return ctx.BvSort(width)
+		}
+		return nil
+	}
+	if strings.HasPrefix(name, "intbv[") && strings.HasSuffix(name, "]") {
+		idx := strings.LastIndex(name, "[")
+		width, err := strconv.Atoi(name[idx+1 : len(name)-1])
+		if err == nil {
+			return ctx.BvSort(width)
+		}
+		return nil
+	}
 	switch name {
 	case "nat", "int":
 		return ctx.IntSort()
@@ -550,24 +586,6 @@ func (s *Solver) Sorts(name string) any {
 		return ctx.RealSort()
 	case "strlit":
 		return ctx.StringSort()
-	}
-	base, params, ok := ParseIntParams(name)
-	if ok && len(params) > 0 {
-		switch base {
-		case "bv", "strbv", "intbv":
-			return ctx.BvSort(params[0])
-		}
-	}
-	if dom, rng, ok2 := ParseArraySortName(name); ok2 {
-		domS := &UninterpretedSort{Name: dom}
-		rngS := &UninterpretedSort{Name: rng}
-		xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3 HASH canon=%s", domS.Sexp())
-		domSort, err1 := s.tr.TranslateSort(domS)
-		xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3 HASH canon=%s", rngS.Sexp())
-		rngSort, err2 := s.tr.TranslateSort(rngS)
-		if err1 == nil && err2 == nil {
-			return ctx.ArraySort(domSort, rngSort)
-		}
 	}
 	return nil
 }

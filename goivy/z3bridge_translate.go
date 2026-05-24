@@ -291,10 +291,17 @@ func (t *Translator) z3Name(name string, sort Sort) string {
 func (t *Translator) dumpSortsCanon() (r string) {
 	var slc []string
 	for _, srt := range t.cache.sorts {
-		slc = append(slc, srt.String())
+		slc = append(slc, t.z3SortPythonString(srt))
 	}
 	sort.Strings(slc)
 	return "[" + strings.Join(slc, ", ") + "]"
+}
+
+func (t *Translator) z3SortPythonString(srt smt.Z3Sort) string {
+	if srt.Kind() == smt.SortBV {
+		return fmt.Sprintf("BitVec(%d)", t.Ctx.BvSortSize(srt))
+	}
+	return srt.String()
 }
 
 // TranslateSort converts an Ivy sort to a Z3 sort.
