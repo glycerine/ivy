@@ -448,12 +448,10 @@ func ConstSymKey(c *Const) NodeKey {
 // which is monkey-patched by ivy_logic.py to show "name:sortname" for numerals,
 // or just "name" for non-numerals.
 func ConstSymDisplay(c *Const) string {
-	if IsNumeralName(c.Name) && c.CSort != nil {
-		if _, isTop := c.CSort.(*TopSort); !isTop {
-			return c.Name + ":" + c.CSort.String()
-		}
+	if c == nil {
+		return "<nil>"
 	}
-	return c.Name
+	return c.String()
 }
 
 // SymKeyToDisplay converts a Sexp-based symbol key to Python's str() format.

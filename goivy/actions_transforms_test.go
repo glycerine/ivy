@@ -220,6 +220,30 @@ func TestUnrollLoops_PanicsOnNegativeCard(t *testing.T) {
 	UnrollLoops(wa, constCard(-1))
 }
 
+func TestConstSymDisplayUsesPythonConstStringForNumeralEnumConstructors(t *testing.T) {
+	data := &LogicEnumeratedSort{Name: "data_type", Extension: []string{"0", "1", "2"}}
+	if got := ConstSymDisplay(NewConst("0", data)); got != "0:data_type" {
+		t.Fatalf("ConstSymDisplay(numeral enum constructor) = %q, want %q", got, "0:data_type")
+	}
+	if got := ConstSymDisplay(NewConst("nop", data)); got != "nop" {
+		t.Fatalf("ConstSymDisplay(non-numeral enum constructor) = %q, want %q", got, "nop")
+	}
+}
+
+func TestCollectSymbolsTraceUsesPythonConstStringForNumeralEnumConstructors(t *testing.T) {
+	data := &LogicEnumeratedSort{Name: "data_type", Extension: []string{"0", "1", "2"}}
+	out := captureActionUpdateStdout(t, func() {
+		collectSymbols(NewConst("0", data), NewInsMap[NodeKey, Expr]())
+	})
+
+	if !strings.Contains(out, "XTRACE: actions.collectSymbols.add 0:data_type\n") {
+		t.Fatalf("collectSymbols trace missing Python-style numeral display:\n%s", out)
+	}
+	if strings.Contains(out, "{0,1,2}") {
+		t.Fatalf("collectSymbols trace used enumerated-sort extension instead of sort name:\n%s", out)
+	}
+}
+
 func TestUnrollLoops_VerifyNesting(t *testing.T) {
 	wa := mkWhileActionForTest("T")
 	result := UnrollLoops(wa, constCard(2))
