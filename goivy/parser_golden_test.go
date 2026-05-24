@@ -579,12 +579,15 @@ func TestGoldenAll(t *testing.T) {
 	// already green once specs should not be revisted until we
 	// get through the others, to save time.
 	skipTo := 185
+	if skipTo > 0 {
+		vv("skipTo is %v", skipTo)
+	}
 
 	skipRebuild := false
 	for ipath, path := range paths {
 
 		if ipath < skipTo {
-			vv("skipTo(%v) > ipath(%v)", skipTo, ipath)
+			//vv("skipTo(%v) > ipath(%v)", skipTo, ipath)
 			continue
 		}
 
