@@ -17,18 +17,17 @@ import (
 // env capture, and a `get(key)` method. The Z3-aware variant (gen/
 // test targets) lands in M9 alongside solver_emit.go.
 
-// makeThunk emits a Go thunk struct definition into the thunks
-// stream and returns the construction expression that wraps a new
-// instance in a map[K]V proxy.
+// makeThunk emits a Go thunk struct definition into the package's
+// thunks stream and returns the construction expression that
+// instantiates it. Mirrors ivy2cpp/thunk.go makeThunk, simplified:
+// we always use the file-scope memoization path so equivalent thunks
+// deduplicate, and we emit pure Go (no Z3) for M8 — M9 extends with
+// a toZ3 method.
 //
 // vs are the loop variables (the domain of the new function value).
 // expr is the body that produces a range value when each v in vs is
 // substituted by the corresponding key tuple field.
-//
-// Mirrors ivy2cpp/thunk.go makeThunk, simplified: we always use the
-// file-scope memoization path so equivalent thunks deduplicate, and
-// we emit pure Go (no Z3) for M8 — M9 extends with a toZ3 method.
-func (g *Generator) makeThunk(w *goWriter, vs []*goivy.LogicVariable, expr goivy.Expr) (string, error) {
+func (g *Generator) makeThunk(vs []*goivy.LogicVariable, expr goivy.Expr) (string, error) {
 	domSorts := make([]goivy.Sort, len(vs))
 	for i, v := range vs {
 		domSorts[i] = v.VSort
