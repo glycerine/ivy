@@ -439,3 +439,25 @@ func TestOtherThingSortInferRootPreservesAstHavocAction(t *testing.T) {
 		t.Fatalf("unexpected havoc target: %s : %s", target.Name, target.CSort)
 	}
 }
+
+func TestCompileCrashActionDoesNotRecurse(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+	body := cfg.NewCrashAction(cfg.NewAtom("this"))
+
+	result, err := c.CompileActionBody(body)
+	if err != nil {
+		t.Fatalf("CompileActionBody(crash) failed: %v", err)
+	}
+	crash, ok := result.(*LogicCrashAction)
+	if !ok {
+		t.Fatalf("CompileActionBody(crash) = %T, want *LogicCrashAction", result)
+	}
+	target, ok := crash.Target.(*Const)
+	if !ok {
+		t.Fatalf("crash target = %T, want *Const", crash.Target)
+	}
+	if target.Name != "this" {
+		t.Fatalf("crash target name = %q, want this", target.Name)
+	}
+}

@@ -580,7 +580,7 @@ func TestGoldenAll(t *testing.T) {
 
 	// already green once specs should not be revisted until we
 	// get through the others, to save time.
-	skipTo := 205
+	skipTo := 211
 	if skipTo == 190 {
 		startingIsolate = "this"
 	}

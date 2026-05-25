@@ -607,22 +607,30 @@ func (c *Compiler) CompileCrashAction(node Node) (Expr, error) {
 		if rep == "" {
 			rep = "this"
 		}
-		// Compile atom's args with sort inference
-		compiledTerms := make([]Node, len(atom.Terms))
+		// Compile atom's args with sort inference.
+		// Python lets sortify_with_inference errors propagate here.
+		compiledTerms := make([]Expr, len(atom.Terms))
+		targetSorts := make([]Sort, 0, len(atom.Terms)+1)
 		for i, t := range atom.Terms {
 			compiled, err := c.SortifyWithInference(t)
 			if err != nil {
-				compiledTerms[i] = t
-				continue
+				return nil, err
 			}
-			compiledTerms[i] = c.Module.Cfg.AstCfg.NewCompiledNode(compiled)
+			compiledTerms[i] = compiled
+			targetSorts = append(targetSorts, compiled.NodeSort())
 		}
-		cfg := c.Module.Cfg.AstCfg
-		thing := cfg.NewAtom(rep, compiledTerms...)
-		thing.SetLineno(node.GetLineno())
-		res := node.Clone([]Node{thing})
-		// Compile the cloned node
-		return c.Thing(res)
+		target := Expr(NewConst(rep, TopS))
+		if len(compiledTerms) > 0 {
+			targetSorts = append(targetSorts, TopS)
+			fs, err := NewFunctionSort(targetSorts...)
+			if err != nil {
+				return nil, err
+			}
+			target = MustApply(NewConst(rep, fs), compiledTerms...)
+		}
+		res := NewCrashAction(target)
+		res.SetLineno(node.GetLineno())
+		return res, nil
 	}
 	act := NewCrashAction(nil)
 	act.SetLineno(node.GetLineno())
