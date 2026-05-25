@@ -2719,7 +2719,7 @@ def _lvs_canon(node):
     return type(node).__name__
 
 def lower_var_stmts(stmts):
-    if __debug__: xtracer.trace("parser.lower_var_stmts ENTER in=%d canons=[%s]" % (len(stmts), ' '.join(_lvs_canon(s) for s in stmts)))
+    if __debug__: xtracer.trace("parser.lower_var_stmts ENTER in=%d HASH canon=[%s]" % (len(stmts), ' '.join(_lvs_canon(s) for s in stmts)))
     for idx,stmt in enumerate(stmts):
         if isinstance(stmt,VarAction):
             lhs = stmt.args[0]
@@ -2738,7 +2738,7 @@ def lower_var_stmts(stmts):
             res = LocalAction(*[asgn,body],caller="parser.lower_var")
             res.lineno = body.lineno;
             result = stmts[:idx] + [res]
-            if __debug__: xtracer.trace("parser.lower_var_stmts RETURN out=%d canons=[%s]" % (len(result), ' '.join(_lvs_canon(s) for s in result)))
+            if __debug__: xtracer.trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]" % (len(result), ' '.join(_lvs_canon(s) for s in result)))
             return result
         if isinstance(stmt,ThunkAction):
             name = stmt.args[1].rep
@@ -2747,9 +2747,9 @@ def lower_var_stmts(stmts):
             lines = lower_var_stmts(stmts[idx+1:])
             lines = [subst_prefix_atoms_ast(s,subst,None,None) for s in lines]
             result = stmts[:idx] + [stmt.clone(stmt.args + [Sequence(*lines)])]
-            if __debug__: xtracer.trace("parser.lower_var_stmts RETURN out=%d canons=[%s]" % (len(result), ' '.join(_lvs_canon(s) for s in result)))
+            if __debug__: xtracer.trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]" % (len(result), ' '.join(_lvs_canon(s) for s in result)))
             return result
-    if __debug__: xtracer.trace("parser.lower_var_stmts RETURN out=%d canons=[%s]" % (len(stmts), ' '.join(_lvs_canon(s) for s in stmts)))
+    if __debug__: xtracer.trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]" % (len(stmts), ' '.join(_lvs_canon(s) for s in stmts)))
     return stmts
 
 def p_sequence_lcb_rcb(p):

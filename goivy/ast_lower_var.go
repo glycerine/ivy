@@ -23,7 +23,7 @@ func lvsCanons(stmts []Node) string {
 // ThunkAction is also handled: the thunk name gets "loc:" prefix and
 // a continuation Sequence is appended.
 func LowerVarStatements(stmts []Node) []Node {
-	xtracer.Trace("parser.lower_var_stmts ENTER in=%d canons=[%s]", len(stmts), lvsCanons(stmts))
+	xtracer.Trace("parser.lower_var_stmts ENTER in=%d HASH canon=[%s]", len(stmts), lvsCanons(stmts))
 	for idx, stmt := range stmts {
 		// VarAction case: matches Python isinstance(stmt, VarAction)
 		if v, ok := stmt.(*VarAction); ok {
