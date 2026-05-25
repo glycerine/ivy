@@ -2128,27 +2128,45 @@ func actionsCollectSymbolNames(node Expr, names map[string]bool) {
 // Python: CrashAction.action_update — wants update axioms applied via intUpdateFromActionUpdate.
 func (a *LogicCrashAction) ActionUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.CrashAction.action_update ENTER")
-	defer xtracer.Trace("actions.CrashAction.action_update EXIT")
-	target := a.Target
-	targetName := constName(target)
-	if targetName == "" || ctx.Domain == nil {
+	if constName(a.Target) == "" || ctx == nil || ctx.Domain == nil {
+		xtracer.Trace("actions.CrashAction.action_update EXIT")
 		return NullUpdate()
 	}
 
-	// Collect symbols to havoc
-	var symsToHavoc []*Const
-	collectCrashSyms(ctx.Domain, targetName, &symsToHavoc)
-
-	if len(symsToHavoc) == 0 {
-		return NullUpdate()
+	actCfg := &ActionsConfig{Context: NewActionContext(ctx.Domain)}
+	symsToHavoc := ModifiesSingle(a, actCfg)
+	var targetTerms []Expr
+	if app, ok := a.Target.(*Apply); ok {
+		targetTerms = app.Terms
 	}
-
-	// Build havoc actions for each symbol
 	var havocParts []Expr
 	for _, sym := range symsToHavoc {
-		havocParts = append(havocParts, NewHavocAction(sym))
+		dom := SortDomain(sym.CSort)
+		if len(dom) < len(targetTerms) {
+			panic(fmt.Sprintf("action %q cannot be applied to %s because of argument mismatch", a.String(), sym.Name))
+		}
+		for i, term := range targetTerms {
+			if !SortEqual(term.NodeSort(), dom[i]) {
+				panic(fmt.Sprintf("action %q cannot be applied to %s because of argument mismatch", a.String(), sym.Name))
+			}
+		}
+		args := make([]Expr, 0, len(dom))
+		args = append(args, targetTerms...)
+		for idx, sort := range dom[len(targetTerms):] {
+			v, err := NewVariable(fmt.Sprintf("X%d", idx), sort)
+			if err != nil {
+				panic(err.Error())
+			}
+			args = append(args, v)
+		}
+		var target Expr = sym
+		if len(args) > 0 {
+			target = MustApply(sym, args...)
+		}
+		havocParts = append(havocParts, NewHavocAction(target))
 	}
 	seq := NewSequence(havocParts...)
+	xtracer.Trace("actions.CrashAction.action_update EXIT")
 	return IntUpdate(seq, ctx)
 }
 

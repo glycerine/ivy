@@ -143,7 +143,8 @@ func stripActionFullRec(action ActionsAction, stripMap StripMap, mod *Module,
 
 	default:
 		// Python lines 249-259: Check modifies() for interference.
-		for _, sym := range Modifies(action) {
+		actCfg := &ActionsConfig{Context: NewActionContext(mod)}
+		for _, sym := range ModifiesSingle(action, actCfg) {
 			if mod.Sig != nil {
 				if _, inSig := mod.Sig.Symbols.Get2(sym.Name); inSig {
 					lhsParams := StripMapLookup(sym.Name, stripMap, mod)

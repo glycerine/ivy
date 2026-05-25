@@ -220,21 +220,11 @@ func modifiesRec(action ActionsAction, result *[]*Const, cfg *ActionsConfig) {
 	case *LogicCrashAction:
 		// Python: CrashAction.modifies() walks domain.hierarchy to find all
 		// non-polymorphic, non-interpreted symbols under the target.
-		xtracer.Trace("actions.CrashAction.modifies ENTER target_type=%s", TypeName(a.Target))
+		targetName := constName(a.Target)
+		xtracer.Trace("actions.CrashAction.modifies ENTER lhs_type=Atom n_type=str n_val=%s", targetName)
 		if cfg != nil && cfg.Context != nil {
 			mod := cfg.Context.GetDomain()
 			if mod != nil && a.Target != nil {
-				// Get the name from the target's rep symbol
-				var targetName string
-				if app, ok := a.Target.(*Apply); ok {
-					if sym, ok := app.Func.(*Const); ok {
-						targetName = sym.Name
-					}
-					xtracer.Trace("actions.CrashAction.modifies ENTER target=Apply func_type=%s targetName=%s", TypeName(app.Func), targetName)
-				} else if sym, ok := a.Target.(*Const); ok {
-					targetName = sym.Name
-					xtracer.Trace("actions.CrashAction.modifies ENTER target=Symbol targetName=%s", targetName)
-				}
 				if targetName != "" {
 					// Build set of defined names
 					// Python: dfnd = [ldf.formula.defines().name for ldf in domain.definitions]
@@ -249,7 +239,12 @@ func modifiesRec(action ActionsAction, result *[]*Const, cfg *ActionsConfig) {
 					// Recurse through hierarchy
 					beforeLen := len(*result)
 					crashModifiesRec(mod, targetName, dfnd, result)
-					xtracer.Trace("actions.CrashAction.modifies EXIT n_syms=%d", len(*result)-beforeLen)
+					added := (*result)[beforeLen:]
+					symNames := make([]string, len(added))
+					for i, sym := range added {
+						symNames[i] = fmt.Sprint(sym)
+					}
+					xtracer.Trace("actions.CrashAction.modifies EXIT n_syms=%d syms=%s", len(added), strings.Join(symNames, ","))
 				}
 			}
 		}
@@ -274,7 +269,7 @@ func isDestructor(name string, cfg *ActionsConfig) bool {
 // by a CrashAction. Corresponds to Python's CrashAction.modifies() inner recur().
 func crashModifiesRec(mod *Module, n string, dfnd map[string]bool, result *[]*Const) {
 	children, inHier := mod.Hierarchy.Get2(n)
-	xtracer.Trace("actions.CrashAction.modifies.recur n_type=string n_val=%s in_hierarchy=%v", n, inHier)
+	xtracer.Trace("actions.CrashAction.modifies.recur n_type=str n_val=%s in_hierarchy=%v", n, inHier)
 	if inHier {
 		for child := range children.All() {
 			cname := n + "." + child
@@ -366,6 +361,16 @@ func referencesRec(action ActionsAction, result *InsMap[NodeKey, Expr], destruct
 		}
 		for _, ret := range a.ActualReturns {
 			collectSymbols(ret, result)
+		}
+	case *LogicCrashAction:
+		// Python's CrashAction target remains an AST Atom during references().
+		// symbols_ilu_ast(Atom) does not yield the atom rep ("this"); it only
+		// walks the terms. Go stores the target as a compiled Const/Apply, so
+		// mirror the AST-Atom behavior explicitly here.
+		if app, ok := a.Target.(*Apply); ok {
+			for _, term := range app.Terms {
+				collectSymbols(term, result)
+			}
 		}
 	default:
 		// Base Action.references (ivy_actions.py:287-290):

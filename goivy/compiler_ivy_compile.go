@@ -1531,14 +1531,6 @@ func CheckDefinitions(mod *Module) error {
 		interferenceActCfg := &ActionsConfig{
 			Context: NewActionContext(mod),
 		}
-		// Dump all action keys in insertion order for comparison.
-		{
-			var allKeys []string
-			for name := range mod.Actions.All() {
-				allKeys = append(allKeys, name)
-			}
-			xtracer.Trace("compiler.ActionInterferenceCheck allKeys=%d keys=%s", len(allKeys), strings.Join(allKeys, ","))
-		}
 		// First loop: build the modified set (order-independent).
 		// Python: side_effects = dict(); for action in list(mod.actions.values()):
 		//             for sub in action.iter_subactions():
@@ -1547,12 +1539,20 @@ func CheckDefinitions(mod *Module) error {
 		for _, actVal := range mod.Actions.All() {
 			if act, ok := actVal.(ActionsAction); ok {
 				for _, sub := range act.IterSubactions() {
-					mods := Modifies(sub, interferenceActCfg)
+					mods := ModifiesSingle(sub, interferenceActCfg)
 					for _, sym := range mods {
 						modified[Key(sym)] = true
 					}
 				}
 			}
+		}
+		// Dump all action keys in insertion order for comparison.
+		{
+			var allKeys []string
+			for name := range mod.Actions.All() {
+				allKeys = append(allKeys, name)
+			}
+			xtracer.Trace("compiler.ActionInterferenceCheck allKeys=%d keys=%s", len(allKeys), strings.Join(allKeys, ","))
 		}
 		// Second loop (xtrace only): iterate in insertion order, deduplicate via set.
 		// Python: for name,actval in mod.actions.items():
@@ -1563,7 +1563,7 @@ func CheckDefinitions(mod *Module) error {
 				modSyms := make(map[NodeKey]bool)
 				modNames := make(map[string]bool)
 				for _, sub := range act.IterSubactions() {
-					mods := Modifies(sub, interferenceActCfg)
+					mods := ModifiesSingle(sub, interferenceActCfg)
 					for _, sym := range mods {
 						modSyms[Key(sym)] = true
 						modNames[sym.Name] = true

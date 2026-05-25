@@ -244,6 +244,42 @@ func TestCollectSymbolsTraceUsesPythonConstStringForNumeralEnumConstructors(t *t
 	}
 }
 
+func TestCrashActionReferencesSkipTargetRepLikePythonAtom(t *testing.T) {
+	tSort := &UninterpretedSort{Name: "t"}
+	self := NewConst("fml:self", tSort)
+	targetSort, err := NewFunctionSort(tSort, TopS)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	this := NewConst("this", targetSort)
+	refs := References(NewCrashAction(MustApply(this, self)), nil)
+
+	if _, ok := refs.Get2(ConstSymKey(this)); ok {
+		t.Fatalf("crash references included target rep %q; Python AST Atom references skip the rep", this.Name)
+	}
+	if _, ok := refs.Get2(ConstSymKey(self)); !ok {
+		t.Fatalf("crash references did not include target term %q", self.Name)
+	}
+}
+
+func TestCrashActionSymbolsIluAstSkipTargetRepLikePythonAtom(t *testing.T) {
+	tSort := &UninterpretedSort{Name: "t"}
+	self := NewConst("fml:self", tSort)
+	targetSort, err := NewFunctionSort(tSort, TopS)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	this := NewConst("this", targetSort)
+
+	var got []Expr
+	for sym := range SymbolsIluAst(NewCrashAction(MustApply(this, self))) {
+		got = append(got, sym)
+	}
+	if len(got) != 1 || !got[0].Equal(self) {
+		t.Fatalf("SymbolsIluAst(crash) = %v, want only %s", got, self)
+	}
+}
+
 func TestUnrollLoops_VerifyNesting(t *testing.T) {
 	wa := mkWhileActionForTest("T")
 	result := UnrollLoops(wa, constCard(2))

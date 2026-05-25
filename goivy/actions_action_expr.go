@@ -634,7 +634,12 @@ func (a *LogicCrashAction) Args() []Node { return actionArgsToNodes(a.ActionArgs
 func (a *LogicCrashAction) Clone(args []Node) Node {
 	return a.ActionClone(actionsNodesToExprs(args)).(Node)
 }
-func (a *LogicCrashAction) Children() []Expr         { return a.ActionArgs() }
+func (a *LogicCrashAction) Children() []Expr {
+	if app, ok := a.Target.(*Apply); ok {
+		return app.Terms
+	}
+	return nil
+}
 func (a *LogicCrashAction) NodeSort() Sort           { return ActionS }
 func (a *LogicCrashAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicCrashAction) GetAstConfig() *AstConfig { return nil }
