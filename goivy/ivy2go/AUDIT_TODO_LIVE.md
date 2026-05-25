@@ -369,9 +369,59 @@ inputs).
 
 ---
 
+## DONE 055.8 — Variant-typed action params with Tag + payload synthesis
+
+OPEN-pass.
+
+`action_gen.go` `emitVariantInputAssembly` and the matching helper
+`variant.go` `variantLeaves` extend the input pipeline to handle
+variant supertype params:
+
+1. **Receiver Const** declared per param via the standard pipeline.
+2. **Per-leaf field Consts** declared for each destructor-backed
+   leaf — naming `__in<i>_<leaf>_<field>`. Plain leaves contribute
+   none.
+3. **Precondition signature & equalities.** `preconditionSignatureArgs`
+   / `preconditionCallArgs` now thread the per-leaf field symbols
+   too. (Destructor equalities are emitted for the leaf-level
+   destructors in the same place as struct synthesis.)
+4. **Tag pick + switch assembly.** Generate emits:
+
+   ```go
+   v0_tag := ivyChoose(<N>)
+   var v0 <SuperType>
+   switch v0_tag {
+   case 0: v0 = NewSuperLeafA()                 // plain leaf
+   case 1:                                       // destructor-backed leaf
+       v0_leafB_f := pickBoolOrChoose(g.sol, modelResult, __in0_leafB_f)
+       v0 = NewSuperLeafB(LeafB{F: v0_leafB_f})
+   }
+   ```
+
+The Ivy semantics of a supertype is just an UninterpretedSort —
+the solver doesn't natively know about a "tag" field — so tag
+selection runs through `ivyChoose`. Per-leaf field synthesis still
+goes through the solver via the same pipeline as struct params
+(OPEN 055.7).
+
+**Driveby fix.** Variant action params surfaced a previously-latent
+naming collision: a formal param literally named `s` (common in
+Ivy: `action probe(s: super)`) collided with the `(s *State)`
+method receiver. `action.go` `actionParamName` now mangles any
+param/return whose lowered name equals `s` to `s_`; alias rewrites
+in `emitActionMethod` keep body references in sync. Affects more
+than variants — any action with a param named `s` would have hit
+this regardless of the param's sort.
+
+Verification: `TestEmit_TestTarget_VariantParamPlainLeavesUseConstructorSwitch`
+(unit), `TestEmit_TestTarget_VariantNoLeaves_ZeroValue` (negative
+case), `TestSmoke_BuildEmittedTest_VariantParam` (Tier 2 smoke,
+builds the emitted package against in-tree goivy).
+
+---
+
 ## OPEN — none
 
-All known sub-items addressed end-to-end. The remaining shape that
-won't lower today is variant-typed action params (tagged union
-inputs would need solver-driven Tag + payload synthesis). No
-fixture has demanded it; will be tracked reactively if one does.
+All known reification / synthesis sub-items addressed end-to-end.
+Any new gap will surface from a real fixture and be tracked from
+there.
