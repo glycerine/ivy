@@ -44,15 +44,14 @@ type Config struct {
 	// both branches of any os-conditional emission.
 	HostOS string
 
-	// GoModule, when non-empty, is written as `module <path>` in a
-	// generated go.mod. Empty (default) skips go.mod emission —
-	// the caller is assumed to provide one (e.g., via go.work).
-	GoModule string
-
 	// GoivyImportPath is the import path the emitted programs use to
 	// reach goivy at runtime. Defaults to
 	// "github.com/glycerine/ivy/goivy" (see config.go DefaultGoivyImportPath).
 	// Override for tests/forks.
+	//
+	// NOTE: ivy2go intentionally does NOT emit a go.mod for the
+	// generated package. Place outdir inside an existing Go module
+	// (or workspace) so the goivy import resolves naturally.
 	GoivyImportPath string
 }
 

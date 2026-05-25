@@ -69,12 +69,22 @@ func BuildPlanFor(out *Output, outDir string) (*BuildPlan, error) {
 
 // BuildOutput writes out to outDir and runs `go build`. Returns the
 // produced binary path (or empty string for CompileOnly plans).
+//
+// If the resulting package directory has no enclosing go.mod,
+// BuildOutput returns a clear actionable error instead of letting
+// `go build` fail with a cryptic message. ivy2go intentionally does
+// NOT emit a go.mod (or a `replace` directive) — the user is
+// expected to place outdir inside an existing Go module (or a
+// go.work workspace) so the goivy import resolves naturally.
 func BuildOutput(out *Output, outDir string) (string, error) {
 	if err := WriteOutput(out, outDir); err != nil {
 		return "", err
 	}
 	plan, err := BuildPlanFor(out, outDir)
 	if err != nil {
+		return "", err
+	}
+	if err := checkBuildContext(plan.PackageDir, out); err != nil {
 		return "", err
 	}
 	cmd := exec.Command(plan.GoBin, plan.Args...)
@@ -87,6 +97,40 @@ func BuildOutput(out *Output, outDir string) (string, error) {
 		return "", fmt.Errorf("ivy2go: go build failed: %v\n%s", err, string(output))
 	}
 	return plan.OutputPath, nil
+}
+
+// checkBuildContext verifies the emitted package is inside an
+// existing Go module. On failure it returns an actionable error.
+func checkBuildContext(pkgDir string, out *Output) error {
+	_ = out
+	if findEnclosingGoMod(pkgDir) != "" {
+		return nil
+	}
+	return fmt.Errorf(`ivy2go: cannot build %s — the directory has no enclosing go.mod.
+Set outdir=<dir> to a path inside an existing Go module whose go.mod
+provides github.com/glycerine/ivy/goivy (e.g. inside the goivy repo
+itself, or inside a workspace that includes it). ivy2go does not
+emit a go.mod for the generated package.`, pkgDir)
+}
+
+// findEnclosingGoMod walks up from dir looking for a go.mod file.
+// Returns the absolute path to the go.mod (or "" if none found).
+func findEnclosingGoMod(dir string) string {
+	abs, err := filepath.Abs(dir)
+	if err != nil {
+		return ""
+	}
+	for {
+		candidate := filepath.Join(abs, "go.mod")
+		if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
+			return candidate
+		}
+		parent := filepath.Dir(abs)
+		if parent == abs {
+			return ""
+		}
+		abs = parent
+	}
 }
 
 // isWindows mirrors ivy2cpp/build_findvs.go's HostOS-aware branch.

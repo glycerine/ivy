@@ -122,10 +122,6 @@ func mergeParams(params map[string]string, cfg Config) (Config, map[string]strin
 			cfg.Trace = parseBool(v)
 		case "build":
 			cfg.Build = parseBool(v)
-		case "gomodule":
-			if cfg.GoModule == "" {
-				cfg.GoModule = v
-			}
 		case "isolate":
 			ivyParams[k] = v
 		default:
@@ -440,13 +436,12 @@ func WriteOutput(out *Output, outDir string) error {
 			return err
 		}
 	}
-	// go.mod is written at the package directory's root if requested.
-	if out.Config.GoModule != "" {
-		gomod := fmt.Sprintf("module %s\n\ngo 1.25\n", out.Config.GoModule)
-		if err := os.WriteFile(filepath.Join(pkgDir, "go.mod"), []byte(gomod), 0o644); err != nil {
-			return err
-		}
-	}
+	// We intentionally do NOT emit a go.mod. The caller must place
+	// outDir inside an existing Go module (or workspace) so the
+	// emitted package's `import "github.com/glycerine/ivy/goivy"`
+	// resolves naturally. Emitting our own go.mod would force a
+	// `replace` (dev-only hack) or a published goivy version (which
+	// in-tree dev work doesn't have).
 	for name, text := range out.ExtraFiles {
 		extraPath := filepath.Join(outputBaseDirectory(outDir), name)
 		if err := os.WriteFile(extraPath, []byte(text), 0o644); err != nil {
