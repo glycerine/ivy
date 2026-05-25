@@ -109,8 +109,9 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 	}
 	w.line("var modelResult *goivy.ModelResult")
 	w.line("if g.sol != nil {")
-	w.line("\ttrueClauses := goivy.NewClauses(nil, nil)")
-	w.line("\tmodelResult, _ = g.sol.GetModelClauses(trueClauses)")
+	w.line("\t// OPEN 055.2: seed the precondition with state facts.")
+	w.line("\tpreclauses := stateFactsAsClauses(state)")
+	w.line("\tmodelResult, _ = g.sol.GetModelClauses(preclauses)")
 	w.line("}")
 	w.line("_ = modelResult")
 	// 2. Pick each input. Try the model first; fall back to

@@ -85,8 +85,13 @@ relation slot(N: node)
 	if !strings.Contains(state, "func (s *State) getSlot(k Node) bool {") {
 		t.Errorf("hash-thunk symbol should emit getSlot helper, got:\n%s", state)
 	}
-	if !strings.Contains(state, "if s.__thunk_Slot != nil { return s.__thunk_Slot(k) }") {
-		t.Errorf("getter should fall back to thunk, got:\n%s", state)
+	// gofmt expands the one-line if to multi-line; just check the two
+	// key fragments are present on adjacent lines.
+	if !strings.Contains(state, "if s.__thunk_Slot != nil") {
+		t.Errorf("getter should check __thunk_Slot, got:\n%s", state)
+	}
+	if !strings.Contains(state, "return s.__thunk_Slot(k)") {
+		t.Errorf("getter should call __thunk_Slot(k), got:\n%s", state)
 	}
 }
 
