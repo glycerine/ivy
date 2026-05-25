@@ -40,6 +40,9 @@ func (g *Generator) emitRuntimeHelpers(w *goWriter) {
 	if g.Ctx.OnceGlobals["__need_lessord"] {
 		g.emitLessOrdHelper(w)
 	}
+	if g.Ctx.OnceGlobals["__need_pickinput"] {
+		g.emitPickInputHelpers(w)
+	}
 	// ite_<type> helpers: walk OnceGlobals keys, find any starting
 	// with "ite_", emit one per. We don't know the result type from
 	// the key alone — store (name, typeExpr) on g for emission.
@@ -404,6 +407,49 @@ func (g *Generator) emitLessOrdHelper(w *goWriter) {
 	w.line("\t\treturn lv.Less(b)")
 	w.line("\t}")
 	w.line("\treturn false")
+	w.line("}")
+	w.blank()
+}
+
+// emitPickInputHelpers writes the per-sort model-or-fallback helpers
+// used by action_gen.go's Generate methods. Both helpers attempt to
+// evaluate `sym` in the supplied ModelResult; on failure (nil model
+// or non-bool / non-numeric result) they reroll via ivyChoose.
+//
+// String-parsing is the chosen extraction strategy because Z3 values
+// always have a stable String() representation (mirroring how the
+// generator package interacts with smt.Z3Expr).
+func (g *Generator) emitPickInputHelpers(w *goWriter) {
+	g.Ctx.AddImport("runtime", g.Config.GoivyImportPath, "")
+	g.Ctx.AddImport("runtime", "strings", "")
+	g.Ctx.AddImport("runtime", "strconv", "")
+	w.line("// pickBoolOrChoose returns the model's value of sym (true/false)")
+	w.line("// when the model evaluates to one, else falls back to ivyChoose.")
+	w.line("func pickBoolOrChoose(mr *goivy.ModelResult, sym *goivy.Const) bool {")
+	w.line("\tif mr == nil { return ivyChoose(2) == 1 }")
+	w.line("\tz, err := mr.Solver.Translator().FormulaToZ3(sym)")
+	w.line("\tif err != nil { return ivyChoose(2) == 1 }")
+	w.line("\tv, ok := mr.Eval(z)")
+	w.line("\tif !ok { return ivyChoose(2) == 1 }")
+	w.line("\ts := strings.TrimSpace(v.String())")
+	w.line(`	if s == "true" { return true }`)
+	w.line(`	if s == "false" { return false }`)
+	w.line("\treturn ivyChoose(2) == 1")
+	w.line("}")
+	w.blank()
+	w.line("// pickUintOrChoose returns the model's value of sym (as a uint64)")
+	w.line("// clamped to [0, card), else falls back to ivyChoose.")
+	w.line("func pickUintOrChoose(mr *goivy.ModelResult, sym *goivy.Const, card int) uint64 {")
+	w.line("\tif mr == nil { return uint64(ivyChoose(card)) }")
+	w.line("\tz, err := mr.Solver.Translator().FormulaToZ3(sym)")
+	w.line("\tif err != nil { return uint64(ivyChoose(card)) }")
+	w.line("\tv, ok := mr.Eval(z)")
+	w.line("\tif !ok { return uint64(ivyChoose(card)) }")
+	w.line("\ts := strings.TrimSpace(v.String())")
+	w.line("\tn, err := strconv.ParseUint(s, 10, 64)")
+	w.line("\tif err != nil { return uint64(ivyChoose(card)) }")
+	w.line("\tif card > 0 { n = n % uint64(card) }")
+	w.line("\treturn n")
 	w.line("}")
 	w.blank()
 }

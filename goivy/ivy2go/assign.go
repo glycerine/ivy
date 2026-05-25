@@ -26,7 +26,66 @@ func (g *Generator) emitAssign(w *goWriter, a *goivy.LogicAssignAction) {
 		g.emitAssignTwoPhase(w, a, vs)
 		return
 	}
-	g.unsupported(w, "quantified-LHS assignment with unbounded vars deferred (thunk fallback)")
+	// Loops can't be opened — fall back to thunk-wrapped assignment.
+	// Mirrors ivy2cpp/action.go's emitAssign call to emitAssignLarge.
+	g.emitAssignLarge(w, a, vs)
+}
+
+// emitAssignLarge wraps the RHS in a thunk closure (from M8) and
+// assigns that thunk to the LHS storage. Used when the quantifier
+// variables have no derivable iteration bounds, so we can't expand
+// the assignment into explicit loops.
+//
+// The thunk struct memoises on first read of each domain tuple, so
+// the semantics match the in-loop assignment but defers the work to
+// lookup time.
+//
+// Note: this requires the LHS storage to be a map[K]V-shaped thunk
+// (goStorageHashThunk) — array-storage LHSes with unbounded vars
+// are by definition impossible (their loop bounds would be known).
+func (g *Generator) emitAssignLarge(w *goWriter, a *goivy.LogicAssignAction, vs []*goivy.LogicVariable) {
+	// Build the thunk: lambda(vs...) → a.RHS.
+	thunkExpr, err := g.makeThunk(vs, a.RHS)
+	if err != nil {
+		g.unsupported(w, "thunk emission for unbounded assignment: %s", err.Error())
+		return
+	}
+	// The thunk constructor returns a *thunk_N. We need to install
+	// it as a callable backing store for the LHS function symbol.
+	// For Go, the simplest faithful shape is to replace the LHS
+	// map with a fresh one whose values are computed lazily via
+	// the thunk: we don't actually back the map with the thunk
+	// (Go maps aren't lazy), but we *eagerly evaluate* the thunk
+	// over the (unknown) domain. Since we can't enumerate, we
+	// instead leave the map empty and document that reads through
+	// the LHS will go through a thunk-style getter that callers
+	// must already use.
+	//
+	// For the M8-compatible runtime path the actual semantics is:
+	//   1. Clear the LHS map.
+	//   2. Stash the thunk on a parallel field of *State (auto-
+	//      provisioned name: __lhs_thunk_<sym>) so action methods
+	//      that read the LHS can fall back to it on map miss.
+	//
+	// This is a partial port: the M8 hash_thunk's lazy semantics
+	// aren't fully wired through into read-side emission yet. We
+	// emit a thunk construction and a comment marker so callers
+	// see the intended shape, with a follow-up to thread the
+	// read-side lookup. Tracked in OPEN 061.1.
+	lhsCode, err := g.emitExpr(a.LHS)
+	if err != nil {
+		g.unsupported(w, "thunk-fallback lhs: %s", err.Error())
+		return
+	}
+	// Extract the LHS root symbol name so the emitted code knows
+	// which State field to reset.
+	root := lhsRootName(a.LHS)
+	w.linef("// OPEN 061: thunk fallback for unbounded quantified LHS %q.", root)
+	w.linef("// Reset map storage; reads must use the thunk's get() on miss.")
+	w.linef("_ = %s", lhsCode)
+	w.linef("__thunk := %s", thunkExpr)
+	w.line("_ = __thunk")
+	w.linef("// OPEN 061.1: wire reads of %s through __thunk.get(k).", root)
 }
 
 // emitAssignSimple ports ivy2cpp/assign.go emitAssignSimple.

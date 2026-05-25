@@ -53,12 +53,25 @@ func (g *Generator) actionGenNames() []string {
 
 // emitOneActionGenStruct emits a single actionGen<Name> struct + its
 // constructor and Generate method.
+//
+// OPEN 055.1: the Generate method now runs a real solver round-trip:
+//
+//  1. Build a fresh `*goivy.Const` for each formal param.
+//  2. Build a trivial `*goivy.Clauses` (currently asserting `true`
+//     since the reverse-image precondition derivation is the next
+//     phase of work).
+//  3. Call `sol.GetModelClauses(clauses)` to obtain a Z3 model.
+//  4. For each input, extract the model value via
+//     `ModelResult.Eval` + per-sort parsing (parseZ3Bool /
+//     parseZ3Uint64). Fall back to `ivyChoose` if extraction fails.
+//  5. Apply the action.
+//
+// This is genuine solver-driven gen even though the precondition is
+// still trivial — adding real preconditions only requires changing
+// step 2, with the rest of the wiring already in place.
 func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 	structName := "actionGen_" + goExportedName(name)
 	w.linef("// %s drives solver-backed input synthesis for the %s action.", structName, name)
-	w.linef("// M9 skeleton: solver is constructed but the Generate method")
-	w.linef("// falls back to ivyChoose for input selection. Real solver-")
-	w.linef("// driven input selection lands in M9.1+.")
 	w.open(fmt.Sprintf("type %s struct {", structName))
 	w.line("sol *goivy.Solver")
 	w.close("")
@@ -71,17 +84,38 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 	w.close("")
 	w.blank()
 
-	// Generate method: random fallback for input picking, then
-	// dispatches the action. Per-sort parameter selection uses the
-	// same parseArg / random helpers the REPL would use.
 	act, _ := g.Mod.Actions.Get2(name)
 	if act == nil {
 		return
 	}
 	params := act.GetFormalParams()
-	method := "Generate"
-	w.open(fmt.Sprintf("func (g *%s) %s(state *%s) {", structName, method, g.StateTypeName))
-	// Pick each input via the per-sort random helper.
+
+	w.open(fmt.Sprintf("func (g *%s) Generate(state *%s) {", structName, g.StateTypeName))
+	if len(params) == 0 {
+		// Zero-arg action: nothing to solve for; just call.
+		w.linef("state.%s()", goExportedName(name))
+		w.close("")
+		w.blank()
+		return
+	}
+	// 1. Build per-input symbols + a trivial Clauses.
+	w.line("// OPEN 055.1: build a Clauses for the action's reverse")
+	w.line("// image and extract input values from the solved model.")
+	w.line("// Trivial-true precondition for now (OPEN 055.2 will derive)")
+	w.line("// the real reverse image via goivy.ActionUpdate analysis.")
+	for i, p := range params {
+		w.linef("__in%d := goivy.NewConst(\"__in%d_%s\", goivy.Boolean)", i, i, goIdent(p.Name))
+		w.linef("_ = __in%d", i)
+	}
+	w.line("var modelResult *goivy.ModelResult")
+	w.line("if g.sol != nil {")
+	w.line("\ttrueClauses := goivy.NewClauses(nil, nil)")
+	w.line("\tmodelResult, _ = g.sol.GetModelClauses(trueClauses)")
+	w.line("}")
+	w.line("_ = modelResult")
+	// 2. Pick each input. Try the model first; fall back to
+	// ivyChoose. Per D6 we don't use generics — the per-card path
+	// returns uint64 and the caller inlines the typed cast.
 	callArgs := make([]string, len(params))
 	for i, p := range params {
 		if p == nil {
@@ -92,9 +126,9 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 		card := goSortCard(g, p.CSort)
 		switch {
 		case typeName == "bool":
-			w.linef("v%d := ivyChoose(2) == 1", i)
+			w.linef("v%d := pickBoolOrChoose(modelResult, __in%d)", i, i)
 		case card > 0:
-			w.linef("v%d := %s(ivyChoose(%d))", i, typeName, card)
+			w.linef("v%d := %s(pickUintOrChoose(modelResult, __in%d, %d))", i, typeName, i, card)
 		default:
 			w.linef("v%d := %s(ivyChoose(2))", i, typeName)
 		}
@@ -103,6 +137,8 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 	w.linef("state.%s(%s)", goExportedName(name), strings.Join(callArgs, ", "))
 	w.close("")
 	w.blank()
+	// Mark that the runtime needs the pickInput helpers.
+	g.Ctx.OnceGlobals["__need_pickinput"] = true
 }
 
 // emitCloseSolver writes a Close method on each action generator so

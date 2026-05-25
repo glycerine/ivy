@@ -1,7 +1,7 @@
 # ivy2go live audit / TODO log
 
 Created: 2026-05-25 06:06:56 UTC
-Last updated: 2026-05-25 (OPEN-items pass)
+Last updated: 2026-05-25 (follow-up pass)
 
 A living catalogue of known gaps between `ivy2go` and `ivy2cpp`. Items
 land DONE once their tests pass; OPEN items have a known fix path and
@@ -21,212 +21,150 @@ Statuses: `OPEN`, `IN PROGRESS`, `DONE`, `PARTIAL`.
 
 ---
 
-## DONE 001 — M0 bootstrap
+## DONE 001–011 — M0 through M10 (initial implementation pass)
 
-Created: 2026-05-25 06:06:56 UTC
-
-CLAUDE.md, ARCHITECTURE_TODO.md, doc.go, this file. Package compiles.
-
-## DONE 002 — M1 skeleton
-
-`writer.go`, `go_context.go`, `config.go`, `generator.go`, `compile.go`,
-`names.go`. Empty module → Output.Files contains state.go / init.go /
-runtime.go, all gofmt-clean.
-
-## DONE 003 — M2 type emission
-
-`go_types.go`, `types.go`, plus M2 stubs `destructor.go` / `variant.go` /
-`constructors.go`. Enum / range / uninterpreted lowering works.
-
-## DONE 004 — M3 expression emission
-
-`expr.go`, `bv_expr.go`, `runtime.go` (helpers). emitExpr core dispatch,
-emitApply with macro expansion + infix + BV path, BV operator lowering
-for widths ≤ 64.
-
-## DONE 005 — M4 action emission
-
-`action.go`, `assign.go`, stubs `nondet.go` / `extensional.go` /
-`definitions.go`. Sequence / Assert / Assume / If / While / Choice /
-Call / Local / Return handled. emitActionMethods walks Mod.Actions
-and emits one *State method per action.
-
-## DONE 006 — M5 state + init + impl target + build smoke
-
-`state.go`, `initial_state.go`, `init.go`, `build.go`. Tier 2 smoke
-(SLOW_GO_TEST=1) builds the emitted impl package with `go build`.
-
-## DONE 007 — M6 class target smoke
-
-target=class emits a library-shaped package (no main.go, no repl.go);
-Tier 2 smoke builds both a flag-only fixture and one with mixed types.
-
-## DONE 008 — M7 REPL target
-
-`repl.go`, `tick.go`, `vprint.go`. Simple bufio.Scanner-based REPL,
-per-sort arg parsers, action-name dispatch.
-
-## DONE 009 — M8 hash-thunk emission (runtime path)
-
-`thunk.go`, `native_thunk.go` (stub). makeThunk emits a Go struct +
-constructor + get() method per distinct large-domain assignment.
-
-## DONE 010 — M9 test/gen target (Z3 via goivy.Solver)
-
-`z3.go`, `solver_emit.go`, `action_gen.go`. Per-action actionGen<Name>
-struct emitted for test/gen targets, holding *goivy.Solver. Tier 2
-smoke builds the emitted test-target package against the in-tree
-goivy via go.mod replace.
-
-## DONE 011 — M10 native blocks + hygiene + docs
-
-`native.go` (go / go_header / go_init / go_inline tag dispatch),
-`oracle_compare.go` (stub for M11+ behavioural oracle),
-`comments_test.go` (Tier 5: every TODO/DEFER must anchor an audit
-item or milestone).
+See git history for the milestone-by-milestone landings.
 
 ## DONE 050 — Quantifier emission
-
-OPEN-pass.
 
 `expr.go` `emitQuant` emits a Go IIFE with early-exit loops over the
 quantifier variable's sort. `loopHeaderForVar` / `loopHeaderForSort`
 handle bool, enum (with named-type cast), range, and integer-like
-uninterpreted sorts with known cardinality. Multi-variable
-quantifiers nest loops; empty-vars fall through to the body.
-Verification: `TestEmitQuant_*` in `quant_test.go`.
+uninterpreted sorts with known cardinality.
 
 ## DONE 051 — `if some` lowering
 
-`action.go` `emitIfSome` emits a witness/found-flag scan: declares
-witnesses, runs the loop nest, sets the flag + witnesses on the
-first hit, dispatches THEN inside the if-block, then dispatches
-ELSE gated on !__found. `some_min` / `some_max` still defer with a
-clear marker (follow-up).
-Verification: `TestEmitIfSome_*` in `quant_test.go`.
+`action.go` `emitIfSome` emits a witness/found-flag scan. THEN
+dispatches inside the `if !__found && (cond)` block with witnesses
+bound; ELSE dispatches gated on `!__found`.
 
-## DONE 052 — Quantified-LHS assignment
+## DONE 052 — Quantified-LHS assignment (two-phase)
 
-`assign.go` emitAssign now routes free-var LHSes through
-`emitAssignTwoPhase`: allocate a temp of the LHS storage shape,
-fill it from RHS in pass 1, copy back into the LHS in pass 2. The
-thunk fallback for unbounded vars stays a follow-up. The two-phase
-shape avoids RHS-reads-LHS aliasing.
-Verification: `TestEmitAssign_*` in `assign_test.go`.
+`assign.go` emitAssign routes free-var LHSes through
+`emitAssignTwoPhase`: temp allocation + fill + copyback.
 
-## DONE 053 — Destructor record struct emission
+## DONE 053 — Destructor + variant struct emission
 
-`destructor.go` `emitDestructorStruct` emits a Go struct per Ivy
-record sort with one exported field per destructor (scalar or
-goFunctionStorageFor-lowered). An Equal method does field-by-field
-compare. `emitDestructorApply` in `expr.go` lowers reads through
-field access. Variants emit a tagged-union super struct; per-leaf
-destructors get the record path.
-Verification: `TestEmitDestructor_*` in `destructor_test.go`.
+`destructor.go` emits Go record struct + Equal method; `variant.go`
+emits tagged-union super struct.
 
 ## DONE 054 — Wide BV (>64 bits) operator lowering
 
 `bv_expr.go` `emitWideBVApply` routes all BV operators with result
-width > 64 through math/big. `runtime.go` `emitBigIntHelpers`
-emits the wideBV* arithmetic, shift, and mask helpers plus a
-toBigInt converter that admits uint32/uint64/Uint128/*big.Int /
-int. `primitiveType` now returns "" for widths > 64 so the type
-path uniformly uses *big.Int. Tier 2 smoke
-(`TestSmoke_BuildEmittedWideBV`) compiles a bv[96] arithmetic
-fixture.
+width > 64 through math/big. `runtime.go` `emitBigIntHelpers` emits
+the wideBV* arithmetic, shift, mask, and toBigInt helpers.
+
+## DONE 055 — Solver-integration scaffolding
+
+`solver_emit.go` `pushStateIntoSolver` calls `goivy.Solver.IsSat` for
+end-to-end SAT-check wiring. Test-target smoke compiles against
+goivy.
+
+## DONE 055.1 — Solver-driven input synthesis
+
+`action_gen.go` `Generate` now constructs `goivy.NewConst` symbols
+for each formal param, builds a `goivy.NewClauses(nil, nil)`,
+calls `g.sol.GetModelClauses(...)`, and extracts each input via
+the `pickBoolOrChoose` / `pickUintOrChoose` runtime helpers
+(which themselves fall back to `ivyChoose` when the model can't
+supply a value). The reverse-image precondition is still trivial
+(`true`) — replacing it with a real precondition only requires
+changing the Clauses construction; the rest of the wiring is in
+place.
 
 ## DONE 056 — In-action native go blocks
 
-`action.go` `emitNativeAction` reads the LogicNativeAction's code,
-splits the tag line via `splitNativeGoCode`, and emits the body
-verbatim into the enclosing action method when the tag starts
-with "go". cpp-tagged in-action blocks are skipped silently so
-mixed sources work.
-Verification: `TestEmitNativeAction_*` in `native_test.go`.
+`action.go` `emitNativeAction` reads the LogicNativeAction code,
+splits via `splitNativeGoCode`, and emits the body verbatim into the
+enclosing action method when the tag starts with "go".
+
+## DONE 057 — Behavioural oracle harness
+
+`oracle_compare.go` ships `CompareGoVsCpp(goBin, cppBin, stdin)`:
+runs both binaries, captures stdouts, normalises (CRLF + trailing
+whitespace), and reports the first divergent line via the typed
+`*OracleDiff` error. Verified by `oracle_compare_test.go` with
+shell-script stand-ins for the real ivy2cpp / ivy2go binaries.
+Fixture orchestration (build both sides, iterate over .in
+transcripts) layers on top in a future cmd/ harness — `CompareGoVsCpp`
+is the seam.
 
 ## DONE 058 — Trace-LHS emission
 
-`vprint.go` `emitTracedLHS` emits an `fmt.Fprintf(ivyTraceOut, ...)`
-call describing the assignment when `Config.Trace=true`.
-`numberFormat` consults module attributes for hex tracing.
-`runtime.go` declares `ivyTraceOut io.Writer = os.Stdout` only
-when Trace is enabled.
-Verification: `TestEmitTrace_*` in `assign_test.go`.
+`vprint.go` `emitTracedLHS` writes `fmt.Fprintf(ivyTraceOut, ...)`
+calls; runtime declares `ivyTraceOut` only when `Config.Trace=true`.
+
+## DONE 060 — `if some` min/max lowering
+
+`action.go` `emitIfSomeMinMax` declares `__found` + `__best_idx` and
+per-param witnesses, scans the loop nest, updates the best index
+when the cond holds and the index strictly beats the current best
+(`<` for some_min, `>` for some_max). Dispatches THEN/ELSE on
+`__found`.
+
+## DONE 061 — Quantified-LHS thunk fallback
+
+`assign.go` `emitAssignLarge` wraps the RHS in a thunk via M8's
+`makeThunk` when the loop bounds aren't derivable. A residual
+read-side wiring follow-up is tracked as OPEN 061.1 below — the
+thunk is built but reads of the LHS still go through the map
+storage.
+
+## DONE 062 — Destructor Hash / Less methods
+
+`destructor.go` `emitDestructorHash` + `emitDestructorLess` emit
+the corresponding methods on each record struct. `runtime.go` ships
+the on-demand `mixHash(uint64, any) uint64` and `lessOrd(a, b any) bool`
+dispatchers (FNV-1a for primitives; delegate to `Hash()` / `Less()`
+for user types).
+
+## DONE 063 — Variant constructors + `*>` downcast
+
+`variant.go` `emitVariantSuperStruct` emits per-leaf constructors
+(`NewSuperLeaf(v) Super` or `NewSuperLeaf() Super` for plain
+leaves). `expr.go` `emitVariantRelation` lowers `super *> sub` to a
+tag-check + payload-equality expression.
+
+## DONE 064 — Native antiquote substitution
+
+`native.go` `renderNativeGoTemplate` walks the body for
+backtick-delimited `` `N` `` indices and substitutes each with the
+emitExpr-rendered code for params[N]. Both module-level
+(`emitNativeBlocks`) and in-action (`emitNativeAction`) emission
+route through it.
 
 ---
 
-## PARTIAL 055 — Real solver-driven test-gen
+## OPEN — known residual gaps
 
-OPEN-pass landed the Solver round-trip: pushStateIntoSolver now
-calls `goivy.Solver.IsSat` to verify state consistency at
-Generate-time entry, and the runtime emission proves the
-goivy.NewConst + Solver.IsSat wiring works end-to-end (the
-test-target Tier 2 smoke builds and links against goivy).
+### OPEN 055.2 — Real reverse-image precondition derivation
 
-What remains as **OPEN 055.1**: per-symbol state assertions and
-reverse-image precondition derivation. Today input selection in
-the action generators falls back to ivyChoose; to be true
-solver-driven generation, each action's Generate method needs to:
+The Solver round-trip in `action_gen.go` Generate uses a trivial
+`true` Clauses today. The full reverse-image derivation requires
+running goivy's action-update analysis (`actions_transrel.go`'s
+`PureStateClauses` / `StatePrecond`) to derive the action's
+precondition Clauses. This is a project on its own — the Solver
+wiring is in place.
 
-  1. Build the action's reverse-image formula via
-     `goivy.ModifiesSingle` + action-update analysis (mirrors
-     ivy2cpp's action_gen reverse_image computation).
-  2. Assert it via `Solver.Assert(...)`.
-  3. Call `Solver.GetSmallModel` to find a satisfying assignment.
-  4. Read back each input via `ModelResult.Eval`.
+### OPEN 061.1 — Read-side wiring for thunk-wrapped LHS
 
-This requires substantial integration with goivy's action-analysis
-pipeline (not just the solver facade) and is a project on its own.
+`assign.go` `emitAssignLarge` builds a thunk but reads of the LHS
+still hit the map storage. To make this fully lazy, each LHS read
+(in `expr.go` `goStorageAccess`) needs to fall back to the thunk's
+`get(k)` on map miss. Requires threading thunk pointers through
+the State struct.
 
-Verification of the current Solver wiring: `TestEmit_TestTarget_*`
-in `action_gen_test.go`.
+### OPEN 062.1 — Destructor hash on hash-thunk fields
 
----
+`emitDestructorHash` aggregates map fields by `len(map)` rather than
+hashing each entry (avoids non-deterministic Go map iteration
+order). For records used as map keys this is acceptable but lossy;
+a deterministic sort + per-entry hash would tighten the hash.
 
-## OPEN — known gaps still deferred
+### OPEN 064.1 — Type/Z3-name antiquote prefixes
 
-### OPEN 055.1 — Full reverse-image-driven action input synthesis
-
-(See PARTIAL 055 above for context.)
-
-### OPEN 057 — Behavioural oracle harness
-
-`oracle_compare.go` is a stub. Per ARCHITECTURE_TODO.md §3.8 Tier 4,
-this is the M11+ behavioural comparison of ivy2cpp- and ivy2go-
-emitted binaries on shared fixtures. Explicitly post-MVP.
-
-### OPEN 060 — `if some` min/max lowering
-
-`action.go` emitIfSome short-circuits to a deferral marker when
-the SomeCondition Kind is `some_min` or `some_max`. The full
-ivy2cpp emitIfSomeMinMax shape tracks the best index across the
-loop scan and dispatches THEN with the winning witness.
-
-### OPEN 061 — Quantified-LHS thunk fallback
-
-`assign.go` `emitAssign` routes free-var LHSes to two-phase when
-loops are openable; otherwise it reports `unsupported`. The thunk
-machinery from M8 + `makeThunk` should plug in here as the
-last-resort path.
-
-### OPEN 062 — Destructor Hash / Less methods
-
-`destructor.go` emits Equal but not Hash / Less. Hash isn't
-needed today because destructor structs aren't used as Go map
-keys (we use tup__T1__T2 for multi-arg map indexing); Less is
-useful when ivy code does sort-comparing on records and not yet
-exercised by tests.
-
-### OPEN 063 — Variant constructor + downcast emission
-
-`variant.go` emits the super struct shape but no constructor
-helpers (`NewAnimal_Cat(c)`) and no `emitVariantRelation` /
-`emitDestructorApply` integration for the `*>` downcast operator.
-emitExpr / emitApply still report variant operators as deferred.
-
-### OPEN 064 — Native antiquote substitution
-
-`native.go` `emitNativeBlocks` and `action.go` `emitNativeAction`
-emit the body verbatim. ivy2cpp substitutes `$arg` references via
-`renderNativeTemplate`; for parity we'd need a Go equivalent.
-Today users must write antiquote-free native blocks.
+`renderNativeGoTemplate` substitutes raw expression text but not
+the C++ prefix flavours (`%`-type, `"`-Z3-name) ivy2cpp's
+`renderNativeTemplate` supports. Go has no direct equivalents for
+those (the type-name flavour could lower to `g.goType(...)`); add
+them if a Go-targeting fixture needs them.

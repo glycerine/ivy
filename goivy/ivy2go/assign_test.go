@@ -39,6 +39,33 @@ relation link(N1: node, N2: node)
 	}
 }
 
+func TestEmitAssign_UnboundedQuantifiedLHSWrapsInThunk(t *testing.T) {
+	// An uninterpreted sort with no known cardinality has no
+	// derivable loop bounds — should route through emitAssignLarge
+	// and emit a thunk construction.
+	g := newExprGen(t, `
+type node
+relation slot(N: node)
+`)
+	nodeSort, _ := g.Mod.Sig.Sorts.Get2("node")
+	slotSort, _ := goivy.NewFunctionSort(nodeSort, goivy.Boolean)
+	slot := goivy.NewConst("slot", slotSort)
+	x, _ := goivy.NewVariable("X", nodeSort)
+	lhs, _ := goivy.NewApply(slot, x)
+	rhs := &goivy.Const{Name: "true", CSort: goivy.Boolean}
+	a := &goivy.LogicAssignAction{LHS: lhs, RHS: rhs}
+
+	w := newGoWriter(NewGoText())
+	g.emitAction(&w, a)
+	got := w.String()
+	if !strings.Contains(got, "OPEN 061:") {
+		t.Errorf("thunk-fallback path should mark OPEN 061, got:\n%s", got)
+	}
+	if !strings.Contains(got, "__thunk :=") {
+		t.Errorf("thunk-fallback should construct a thunk, got:\n%s", got)
+	}
+}
+
 func TestEmitAssign_QuantifiedLHSSingleVar(t *testing.T) {
 	g := newExprGen(t, `
 type idx = {0..7}

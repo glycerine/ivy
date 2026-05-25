@@ -151,12 +151,12 @@ std::cout << "skipped" << std::endl;
 	}
 }
 
-func TestEmitNative_OracleStubReturnsError(t *testing.T) {
-	err := CompareGoVsCpp("/tmp/go", "/tmp/cpp", "args")
+func TestCompareGoVsCpp_NonexistentBinariesFailWithRunError(t *testing.T) {
+	err := CompareGoVsCpp("/tmp/does-not-exist", "/tmp/does-not-exist", "")
 	if err == nil {
-		t.Fatal("oracle stub should return an error")
+		t.Fatal("oracle should error on missing binaries")
 	}
-	if !strings.Contains(err.Error(), "deferred") {
-		t.Errorf("oracle stub error = %q, want substring 'deferred'", err.Error())
+	if !strings.Contains(err.Error(), "go binary") {
+		t.Errorf("oracle error should mention go binary, got: %v", err)
 	}
 }

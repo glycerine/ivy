@@ -696,12 +696,48 @@ func (g *Generator) emitSome(s *goivy.LogicSome) (string, error) {
 	return "", fmt.Errorf("ivy2go: `some` expression emission deferred (M4)")
 }
 
+// emitVariantRelation lowers Ivy's `super *> sub` downcast operator
+// into a tag-check + payload extraction. Mirrors ivy2cpp/expr.go
+// emitVariantRelation.
+//
+// Result expression shape:
+//
+//	(super.Tag == <idx> && (*super.<Sub>) == sub)
+//
+// where <idx> is the variant index and <Sub> is the payload field
+// name. For plain-leaf subtypes the body collapses to just the tag
+// check (no payload to compare).
 func (g *Generator) emitVariantRelation(name string, terms []goivy.Expr) (string, bool, error) {
 	if name != "*>" {
 		return "", false, nil
 	}
-	_ = terms
-	return "", true, fmt.Errorf("ivy2go: variant relation (*>) emission deferred (M8)")
+	if len(terms) != 2 {
+		return "", true, fmt.Errorf("ivy2go: variant relation *> expected 2 arguments, got %d", len(terms))
+	}
+	if g == nil || g.Mod == nil || !g.Mod.IsVariant(terms[0].NodeSort(), terms[1].NodeSort()) {
+		return "", true, fmt.Errorf("ivy2go: %s *> %s is not a known variant relation", terms[0].String(), terms[1].String())
+	}
+	lhs, err := g.emitExpr(terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	idx := g.Mod.VariantIndex(terms[0].NodeSort(), terms[1].NodeSort())
+	if idx < 0 {
+		return "", true, fmt.Errorf("ivy2go: no variant index for %s in %s",
+			sortName(terms[1].NodeSort()), sortName(terms[0].NodeSort()))
+	}
+	subName := sortName(terms[1].NodeSort())
+	if g.isPlainVariantSubtypeName(subName) {
+		// Plain leaves carry no payload; the tag check is the full
+		// downcast predicate.
+		return fmt.Sprintf("(%s.Tag == %d)", lhs, idx), true, nil
+	}
+	rhs, err := g.emitExpr(terms[1])
+	if err != nil {
+		return "", true, err
+	}
+	field := goExportedName(subName)
+	return fmt.Sprintf("(%s.Tag == %d && (*%s.%s) == %s)", lhs, idx, lhs, field, rhs), true, nil
 }
 
 // emitDestructorApply lowers destructor reads. Given

@@ -92,16 +92,21 @@ func (g *Generator) isPlainVariantSubtypeName(name string) bool {
 }
 
 // emitVariantSuperStruct emits a Go tagged-union struct for an Ivy
-// variant super sort. The struct carries a Tag field plus one
-// payload pointer per declared variant; constructors are deferred.
+// variant super sort plus one constructor per variant.
 //
 // Shape:
 //
 //	type Animal struct {
 //	    Tag int          // 0..N-1 identifying which variant is active
-//	    Cat *Cat         // non-nil when Tag == 0
+//	    Cat *Cat         // non-nil when Tag == 0 (omitted for plain leaves)
 //	    Dog *Dog         // non-nil when Tag == 1
 //	}
+//
+//	func NewAnimalCat(v Cat) Animal { return Animal{Tag: 0, Cat: &v} }
+//	func NewAnimalDog(v Dog) Animal { return Animal{Tag: 1, Dog: &v} }
+//
+// Plain leaves (subtypes with no destructors) get only a tag-bearing
+// constructor: `func NewAnimalCat() Animal { return Animal{Tag: 0} }`.
 func (g *Generator) emitVariantSuperStruct(w *goWriter, name string) {
 	subs, ok := g.Mod.Variants[name]
 	if !ok {
@@ -116,15 +121,29 @@ func (g *Generator) emitVariantSuperStruct(w *goWriter, name string) {
 		if subName == "" {
 			continue
 		}
-		// Plain subtypes have no payload — int alone tracks
-		// identity. For destructor-backed subtypes we'd carry a
-		// pointer to the substruct.
 		if g.isPlainVariantSubtypeName(subName) {
 			continue
 		}
 		w.linef("%s *%s", goExportedName(subName), goExportedName(subName))
 	}
 	w.close("")
+	w.blank()
+
+	// Per-leaf constructors.
+	for i, sub := range subs {
+		subName := sortName(sub)
+		if subName == "" {
+			continue
+		}
+		exportedSub := goExportedName(subName)
+		ctor := "New" + typeName + exportedSub
+		if g.isPlainVariantSubtypeName(subName) {
+			w.linef("func %s() %s { return %s{Tag: %d} }", ctor, typeName, typeName, i)
+		} else {
+			w.linef("func %s(v %s) %s { return %s{Tag: %d, %s: &v} }",
+				ctor, exportedSub, typeName, typeName, i, exportedSub)
+		}
+	}
 	w.blank()
 }
 

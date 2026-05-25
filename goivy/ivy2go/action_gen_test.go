@@ -72,6 +72,32 @@ func TestEmit_TestTarget_PushStateRunsRealIsSat(t *testing.T) {
 	}
 }
 
+func TestEmit_TestTarget_GenerateUsesGetModelClauses(t *testing.T) {
+	// OPEN 055.1: Generate now performs a real solver round-trip
+	// via GetModelClauses + per-input model extraction.
+	mod := compileIvySource(t, `
+relation flag
+action set_flag(b: bool) = {
+	flag := b
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	if !strings.Contains(actions, "g.sol.GetModelClauses(") {
+		t.Errorf("Generate should call GetModelClauses, got:\n%s", actions)
+	}
+	if !strings.Contains(actions, "goivy.NewConst(") {
+		t.Errorf("Generate should construct input goivy.Const symbols, got:\n%s", actions)
+	}
+	runtime := out.Files["runtime.go"]
+	if !strings.Contains(runtime, "func pickBoolOrChoose") {
+		t.Errorf("runtime should emit pickBoolOrChoose helper, got:\n%s", runtime)
+	}
+}
+
 func TestEmit_TestTarget_NewIvySolverHelper(t *testing.T) {
 	mod := compileIvySource(t, `relation flag`)
 	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
@@ -122,6 +148,9 @@ action set_flag = {
 }
 
 func TestEmit_TestTarget_GeneratePicksInputsByCardinality(t *testing.T) {
+	// Post-OPEN-055.1: input picking goes through pickBoolOrChoose
+	// (which itself falls back to ivyChoose when the model can't
+	// supply a value).
 	mod := compileIvySource(t, `
 relation flag
 action set_flag(b: bool) = {
@@ -133,8 +162,8 @@ action set_flag(b: bool) = {
 		t.Fatalf("Generate: %v", err)
 	}
 	actions := out.Files["actions.go"]
-	if !strings.Contains(actions, "ivyChoose(2)") {
-		t.Errorf("bool input should be picked via ivyChoose(2):\n%s", actions)
+	if !strings.Contains(actions, "pickBoolOrChoose(modelResult,") {
+		t.Errorf("bool input should be picked via pickBoolOrChoose, got:\n%s", actions)
 	}
 }
 
