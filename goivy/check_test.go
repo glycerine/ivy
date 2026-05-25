@@ -31,6 +31,16 @@ func TestBaseCheckerCond(t *testing.T) {
 	}
 }
 
+func TestBaseCheckerStartPrintsDotsWithNewlineLikePython(t *testing.T) {
+	c := NewBaseChecker(New(), True, true, false)
+	out := captureActionUpdateStdout(t, func() {
+		c.Start()
+	})
+	if out != "...\n" {
+		t.Fatalf("BaseChecker.Start output mismatch\n got: %q\nwant: %q", out, "...\n")
+	}
+}
+
 func TestBaseCheckerPass(t *testing.T) {
 	c := NewBaseChecker(New(), True, false, true)
 	result := c.Pass()

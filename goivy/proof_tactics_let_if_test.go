@@ -106,6 +106,30 @@ func TestIfTactic_LgExprGoal_WrapsWithLgImplies(t *testing.T) {
 	}
 }
 
+func TestIfTactic_CompiledConditionUnwrapsLikePython(t *testing.T) {
+	s := proofMkSort("S")
+	body := proofMkConst("p", s)
+	cond := proofMkConst("c", s)
+	goal := mkLF(proofTestAstCfg.NewAtom("g"), body)
+	proof := proofTestAstCfg.NewIfTactic(proofTestAstCfg.NewCompiledNode(cond), nil, nil)
+
+	pc := mkPC()
+	result, err := pc.ifTactic([]*LabeledFormula{goal}, proof)
+	if err != nil {
+		t.Fatalf("ifTactic failed for compiled condition: %v", err)
+	}
+	if len(result) != 2 {
+		t.Fatalf("expected 2 subgoals, got %d", len(result))
+	}
+	trueImp, ok := result[0].Formula.(*LogicImplies)
+	if !ok {
+		t.Fatalf("true subgoal: expected *lg.Implies, got %T", result[0].Formula)
+	}
+	if trueImp.T1 != cond {
+		t.Fatalf("true subgoal T1: expected unwrapped condition pointer")
+	}
+}
+
 func TestIfTactic_TemporalModelsGoal_WrapsWholeWithoutDescent(t *testing.T) {
 	s := proofMkSort("S")
 	inner := proofMkConst("phi", s)

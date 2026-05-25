@@ -1,6 +1,10 @@
 package goivy
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
+)
 
 // ParseError mirrors Python ivy_parser.ParseError (ivy_parser.py:84-98).
 // Its Error() output matches Python ParseError.__repr__.
@@ -12,6 +16,7 @@ type ParseError struct {
 }
 
 func (e *ParseError) Error() string {
+	xtracer.Trace("parser.__repr__ ENTER")
 	var s string
 	if e.Filename != "" {
 		s += e.Filename

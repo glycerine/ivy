@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -293,6 +294,33 @@ func TestCompileAssertFormula_WithProof(t *testing.T) {
 	}
 	if aa.Proof == nil {
 		t.Fatal("expected Proof to be set, got nil")
+	}
+}
+
+func TestCompileAssertFormula_WithProofCompilesProofBeforeExtractLikePython(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+
+	formula := cfg.NewAtom("true")
+	proof := cfg.NewComposeTactics(nil)
+	assertAtom := cfg.NewAtom("assert", formula, proof)
+
+	out := captureActionUpdateStdout(t, func() {
+		if _, err := c.CompileActionBody(assertAtom); err != nil {
+			t.Fatalf("CompileActionBody failed: %v", err)
+		}
+	})
+
+	proofIdx := strings.Index(out, "compiler.Thing ENTER type=ComposeTactics")
+	if proofIdx < 0 {
+		t.Fatalf("missing ComposeTactics proof compile trace:\n%s", out)
+	}
+	extractIdx := strings.Index(out, "compiler.ExprContext.Extract ENTER")
+	if extractIdx < 0 {
+		t.Fatalf("missing ExprContext.Extract trace:\n%s", out)
+	}
+	if proofIdx > extractIdx {
+		t.Fatalf("proof compile trace should precede ExprContext.Extract like Python:\n%s", out)
 	}
 }
 

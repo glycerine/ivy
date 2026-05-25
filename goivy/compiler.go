@@ -583,6 +583,47 @@ func (c *Compiler) compileGeneric(node Node) (Expr, error) {
 	if expr, ok := result.(Expr); ok {
 		return expr, nil
 	}
+	if seq, ok := result.(*Sequence); ok {
+		exprs, err := compiledExprs(node, compiled)
+		if err != nil {
+			return nil, err
+		}
+		act := NewSequence(exprs...)
+		if seq.HasLocSet() {
+			act.SetLineno(seq.GetLineno())
+		}
+		return act, nil
+	}
+	if choice, ok := result.(*ChoiceAction); ok {
+		exprs, err := compiledActionExprs(node, compiled)
+		if err != nil {
+			return nil, err
+		}
+		act := &LogicChoiceAction{
+			ActionBase: ActionBase{ActCfg: c.ActCfg},
+			Branches:   copyNodes(exprs),
+			UniqueID:   choice.UniqueID,
+		}
+		if choice.HasLocSet() {
+			act.SetLineno(choice.GetLineno())
+		}
+		return act, nil
+	}
+	if env, ok := result.(*EnvAction); ok {
+		exprs, err := compiledActionExprs(node, compiled)
+		if err != nil {
+			return nil, err
+		}
+		act := &LogicEnvAction{LogicChoiceAction: LogicChoiceAction{
+			ActionBase: ActionBase{ActCfg: c.ActCfg},
+			Branches:   copyNodes(exprs),
+			UniqueID:   env.UniqueID,
+		}}
+		if env.HasLocSet() {
+			act.SetLineno(env.GetLineno())
+		}
+		return act, nil
+	}
 	// Cloned node isn't lg.Expr — extract compiled exprs and combine
 	exprs := make([]Expr, 0, len(compiled))
 	for _, c := range compiled {
@@ -597,6 +638,31 @@ func (c *Compiler) compileGeneric(node Node) (Expr, error) {
 		return exprs[0], nil
 	}
 	return &LogicAnd{Terms: exprs}, nil
+}
+
+func compiledActionExprs(node Node, compiled []Node) ([]Expr, error) {
+	exprs, err := compiledExprs(node, compiled)
+	if err != nil {
+		return nil, err
+	}
+	for i, expr := range exprs {
+		if unwrapToAction(expr) == nil {
+			return nil, fmt.Errorf("compiling arg %d of %T produced non-action %T", i, node, expr)
+		}
+	}
+	return exprs, nil
+}
+
+func compiledExprs(node Node, compiled []Node) ([]Expr, error) {
+	exprs := make([]Expr, 0, len(compiled))
+	for i, child := range compiled {
+		expr, ok := child.(Expr)
+		if !ok {
+			return nil, fmt.Errorf("compiling arg %d of %T produced non-expr %T", i, node, child)
+		}
+		exprs = append(exprs, expr)
+	}
+	return exprs, nil
 }
 
 // --- Formula compilation ---

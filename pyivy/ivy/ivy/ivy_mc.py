@@ -1050,6 +1050,7 @@ def checked(thing):
     return ia.checked_assert.value in ["",thing.lineno]
 
 def add_err_flag(action,erf,errconds):
+    if __debug__: xtracer.trace("mc.AddErrFlag ENTER type=%s hasInstantiator=%s" % (type(action).__name__, ilu.instantiator is not None))
     if isinstance(action,ia.AssertAction):
         if checked(action):
             if verbose:
@@ -1155,7 +1156,9 @@ def to_aiger(mod,ext_act,method="mc"):
     # we use a special state variable __init to indicate the initial state
 
     ext_acts = [mod.actions[x].add_label(x) for x in sorted(mod.public_actions)]
+    if __debug__: xtracer.trace("mc.ToAiger preExtAction nExtActs=%d" % len(ext_acts))
     ext_act = ia.EnvAction(*ext_acts)
+    if __debug__: xtracer.trace("mc.ToAiger postExtAction type=%s" % type(ext_act).__name__)
 
     init_var = il.Symbol('__init',il.find_sort('bool')) 
     init = add_err_flag(ia.Sequence(*([a for n,a in mod.initializers]+[ia.AssignAction(init_var,il.And()).set_lineno(iu.nowhere())])),erf,errconds)

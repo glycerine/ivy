@@ -2058,10 +2058,20 @@ func registerIsolateDecl(declArgs []Node, mod *Module) {
 			isoDef = &iso.IsolateDef
 		}
 		if isoDef != nil {
+			isoDef = cloneIsolateForARGSetup(isoDef)
 			name := isoDef.IsoName()
 			xtracer.Trace("compiler.ARGSetup.isolate ENTER name=%s", name)
 			mod.Isolates[name] = isoDef
 			xtracer.Trace("compiler.ARGSetup.isolate EXIT name=%s", name)
 		}
 	}
+}
+
+func cloneIsolateForARGSetup(isoDef *IsolateDef) *IsolateDef {
+	args := append([]Node(nil), isoDef.Elems...)
+	if isoDef.IsObject && len(args) >= 2 {
+		args[0] = args[0].Clone(nil)
+		args[1] = args[1].Clone(nil)
+	}
+	return isoDef.Clone(args).(*IsolateDef)
 }

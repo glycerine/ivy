@@ -29,6 +29,20 @@ func mkModuleWithActions(acts map[string]ActionsAction) *Module {
 	return m
 }
 
+func TestCollectActionSymNamesSkipsCallCalleeLikePython(t *testing.T) {
+	callee := NewConst("obj1.a", ActionS)
+	ret := NewConst("obj1.r1", Boolean)
+	call := NewCallActionOn(NewActionsConfig(), callee, ret)
+
+	names := collectActionSymNames(call)
+	if names["obj1.a"] {
+		t.Fatalf("collectActionSymNames included CallAction callee; Python used_symbols_ast(action) does not")
+	}
+	if !names["obj1.r1"] {
+		t.Fatalf("collectActionSymNames omitted actual return symbol")
+	}
+}
+
 func TestFilterInterfSymsForSigUsesStructuralSymbolMembership(t *testing.T) {
 	data := &LogicEnumeratedSort{Name: "data_type", Extension: []string{"0", "1", "2"}}
 	lclock := &UninterpretedSort{Name: "lclock"}
@@ -442,6 +456,32 @@ func TestIsolateComponentNotFound(t *testing.T) {
 	err := IsolateComponent(m, "nonexistent", nil, nil, nil)
 	if err == nil {
 		t.Error("expected error for undefined isolate")
+	}
+}
+
+func TestAddExternPrecondKeepsSingletonAndLikePython(t *testing.T) {
+	mod := New()
+	sortT := isolateMkSort("t")
+	formal := NewConst("fml:x", sortT)
+	actual := NewConst("0", sortT)
+	callee := NewSequence()
+	callee.SetFormalParams([]*Const{formal})
+
+	var preconds []Expr
+	AddExternPrecond(mod, callee, []Expr{actual}, &preconds)
+
+	if len(preconds) != 1 {
+		t.Fatalf("preconds len = %d, want 1", len(preconds))
+	}
+	and, ok := preconds[0].(*LogicAnd)
+	if !ok {
+		t.Fatalf("precond type = %T, want *LogicAnd", preconds[0])
+	}
+	if len(and.Terms) != 1 {
+		t.Fatalf("And terms len = %d, want 1", len(and.Terms))
+	}
+	if _, ok := and.Terms[0].(*Eq); !ok {
+		t.Fatalf("And term type = %T, want *Eq", and.Terms[0])
 	}
 }
 

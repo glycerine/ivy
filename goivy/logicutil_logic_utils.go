@@ -437,7 +437,7 @@ func CloseEPR(fmla Expr) Expr {
 	if len(fvs) == 0 {
 		return fmla
 	}
-	return &ForAll{Variables: fvs, Body: fmla}
+	return IvyForAll(fvs, fmla)
 }
 
 // --- Resort functions ---

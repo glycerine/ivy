@@ -82,7 +82,7 @@ func NewBaseChecker(mod *Module, conj Expr, reportPass bool, invert bool) *BaseC
 func (c *BaseChecker) Cond() *Clauses { return c.FC }
 func (c *BaseChecker) Start() {
 	if c.ReportPass {
-		fmt.Print("... ")
+		fmt.Print("...\n")
 	}
 }
 func (c *BaseChecker) Sat() bool {

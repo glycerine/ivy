@@ -489,44 +489,10 @@ func CreateIsolate(iso string, mod *Module) error {
 	return nil
 }
 
-// getModCone returns the set of action names in the cone of influence.
-// An action is in the cone if it's public or transitively called by
-// a public action.
+// getModCone returns the Python get_mod_cone(mod) result: public roots,
+// native anti-quote action references, and their transitive callees.
 func getModCone(mod *Module) map[string]bool {
-	cone := make(map[string]bool)
-
-	// Start with public actions
-	for name := range mod.PublicActions.All() {
-		cone[name] = true
-	}
-
-	// Transitively add called actions
-	changed := true
-	for changed {
-		changed = false
-		for name := range cone {
-			if act, ok := mod.Actions.Get2(name); ok {
-				if a, ok := act.(ActionsAction); ok {
-					for _, callee := range a.IterCalls() {
-						if !cone[callee] {
-							cone[callee] = true
-							changed = true
-						}
-						// Also include ext: variants
-						if !strings.HasPrefix(callee, "ext:") {
-							extName := "ext:" + callee
-							if _, ok := mod.Actions.Get2(extName); ok && !cone[extName] {
-								cone[extName] = true
-								changed = true
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return cone
+	return GetModConeFull(mod, mod.Actions, mod.PublicActions, nil)
 }
 
 // -----------------------------------------------------------------------

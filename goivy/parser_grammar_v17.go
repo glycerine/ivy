@@ -2047,6 +2047,7 @@ parser17default:
 			lex := parser17lex.(*parser17LexAdapter)
 			parent := lex.accum // nil for outermost top
 			parser17VAL.accum = newIvyAccum(parent, lex.parentObjName)
+			parser17VAL.accum.filename = lex.filename
 			lex.parentObjName = "" // consumed
 			parser17VAL.accum.parent = parent
 			// Ensure astCfg is set from lex adapter (for first accum where parent is nil)
@@ -2118,7 +2119,7 @@ parser17default:
 						modDeclCount = len(mod.Decls)
 						// Python: for decl in module.decls: p[0].declare(decl, allow_redef=True)
 						for _, d := range mod.Decls {
-							parser17VAL.accum.declare(d)
+							parser17VAL.accum.declareAllowRedef(d, true)
 						}
 						// Python: p[0].included.update(module.included)
 						if parser17VAL.accum.included == nil {

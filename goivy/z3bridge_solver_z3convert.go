@@ -800,7 +800,7 @@ func (s *Solver) lookupBuiltinFunc(name string, isRelation bool) NativeFunc {
 	case "/":
 		return func(args ...smt.Z3Expr) smt.Z3Expr {
 			if len(args) == 2 {
-				return ctx.Div(args[0], args[1])
+				return s.z3pyDiv(args[0], args[1])
 			}
 			return ctx.IntVal(0)
 		}
@@ -850,36 +850,45 @@ func (s *Solver) lookupBuiltinFunc(name string, isRelation bool) NativeFunc {
 	return nil
 }
 
-func (s *Solver) z3pyAdd(lhs, rhs smt.Z3Expr) smt.Z3Expr {
+func (s *Solver) z3pyAdd(x, y smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
-	if ctx.IsBvExpr(lhs) {
-		return ctx.BvAdd(lhs, rhs)
+	if ctx.IsBvExpr(x) {
+		return ctx.BvAdd(x, y)
 	}
-	return ctx.Add(lhs, rhs)
+	return ctx.Add(x, y)
 }
 
-func (s *Solver) z3pySub(lhs, rhs smt.Z3Expr) smt.Z3Expr {
+func (s *Solver) z3pySub(x, y smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
-	if ctx.IsBvExpr(lhs) {
-		return ctx.BvSub(lhs, rhs)
+	if ctx.IsBvExpr(x) {
+		return ctx.BvSub(x, y)
 	}
-	return ctx.Sub(lhs, rhs)
+	return ctx.Sub(x, y)
 }
 
-func (s *Solver) z3pyNeg(expr smt.Z3Expr) smt.Z3Expr {
+func (s *Solver) z3pyNeg(x smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
-	if ctx.IsBvExpr(expr) {
-		return ctx.BvNeg(expr)
+	if ctx.IsBvExpr(x) {
+		width := ctx.BvSortSize(x.ExprSort())
+		return ctx.BvSub(ctx.BvVal(0, width), x)
 	}
-	return ctx.Sub(ctx.IntVal(0), expr)
+	return ctx.Sub(ctx.IntVal(0), x)
 }
 
-func (s *Solver) z3pyMul(lhs, rhs smt.Z3Expr) smt.Z3Expr {
+func (s *Solver) z3pyMul(x, y smt.Z3Expr) smt.Z3Expr {
 	ctx := s.tr.Ctx
-	if ctx.IsBvExpr(lhs) {
-		return ctx.BvMul(lhs, rhs)
+	if ctx.IsBvExpr(x) {
+		return ctx.BvMul(x, y)
 	}
-	return ctx.Mul(lhs, rhs)
+	return ctx.Mul(x, y)
+}
+
+func (s *Solver) z3pyDiv(x, y smt.Z3Expr) smt.Z3Expr {
+	ctx := s.tr.Ctx
+	if ctx.IsBvExpr(x) {
+		return ctx.BvSdiv(x, y)
+	}
+	return ctx.Div(x, y)
 }
 
 // lookupBuiltinRelation returns the native Z3 relation for a built-in name.

@@ -118,7 +118,25 @@ type varID struct {
 }
 
 func makeVarID(v *LogicVariable) varID {
-	return varID{name: v.Name, sort: v.VSort.String()}
+	return varID{name: v.Name, sort: sortIDString(v.VSort)}
+}
+
+func sortIDString(s Sort) string {
+	if s == nil {
+		return "nil"
+	}
+	return s.String()
+}
+
+func makeMacroNodeID(n Node) (varID, bool) {
+	switch t := n.(type) {
+	case *LogicVariable:
+		return makeVarID(t), true
+	case *Const:
+		return varID{name: t.Name, sort: sortIDString(t.CSort)}, true
+	default:
+		return varID{}, false
+	}
 }
 
 type macroDef struct {
@@ -193,9 +211,17 @@ func (c *checker) isUnivVar(v *LogicVariable) bool {
 
 // getUnivNode gets the strat_map node for a universally quantified variable.
 func (c *checker) getUnivNode(v *LogicVariable) *UFNode {
+	return c.getUnivNodeFor(v, "lookup")
+}
+
+func (c *checker) getUnivNodeFor(v *LogicVariable, reason string) *UFNode {
 	key := varKey(v)
+	_, existed := c.stratMap[key]
 	n := c.getStratNodeWith(key, stratEntry{v: v})
 	n.Var = v
+	if !existed {
+		xtracer.Trace("fragment.univNode.create reason=%s id=%d var=%s", reason, n.ID, v.Canon())
+	}
 	return n
 }
 
@@ -216,7 +242,7 @@ func (c *checker) mapFmla(lineno int, fmla Expr, pol int) (*UFNode, map[*UFNode]
 	if v, ok := fmla.(*LogicVariable); ok {
 		vid := makeVarID(v)
 		if c.isUnivVar(v) {
-			node := c.getUnivNode(v)
+			node := c.getUnivNodeFor(v, "mapFmla")
 			return node, make(map[*UFNode]bool)
 		}
 		// Check macro maps
@@ -437,42 +463,41 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 			appArgs := NodeArgs(app)
 
 			for i := 0; i < len(appArgs) && i < len(lhsArgs); i++ {
-				w, wIsVar := lhsArgs[i].(*LogicVariable)
-				if !wIsVar {
+				wid, wIDOk := makeMacroNodeID(lhsArgs[i])
+				if !wIDOk {
 					continue
 				}
-				wid := makeVarID(w)
 
 				v, vIsVar := appArgs[i].(*LogicVariable)
-				if vIsVar {
-					vid := makeVarID(v)
-					if c.isUnivVar(v) {
-						node := c.getUnivNode(v)
-						c.varMapAdd(wid, node)
-					}
-					if mvNode, ok := c.macroVarMap[vid]; ok {
-						c.varMapAdd(wid, mvNode)
-					}
-					if deps, ok := c.macroDepMap[vid]; ok {
-						if c.macroDepMap[wid] == nil {
-							c.macroDepMap[wid] = make(map[*UFNode]bool)
+				if _, wIsVar := lhsArgs[i].(*LogicVariable); wIsVar {
+					if vIsVar {
+						vid := makeVarID(v)
+						if c.isUnivVar(v) {
+							node := c.getUnivNodeFor(v, "createMacroMaps.var")
+							c.varMapAdd(wid, node)
 						}
-						for k, v := range deps {
-							c.macroDepMap[wid][k] = v
+						if mvNode, ok := c.macroVarMap[vid]; ok {
+							c.varMapAdd(wid, mvNode)
+						}
+					}
+					if vid, ok := makeMacroNodeID(appArgs[i]); ok {
+						if deps, ok := c.macroDepMap[vid]; ok {
+							if c.macroDepMap[wid] == nil {
+								c.macroDepMap[wid] = make(map[*UFNode]bool)
+							}
+							for k, v := range deps {
+								c.macroDepMap[wid][k] = v
+							}
 						}
 					}
 				} else {
-					// Non-variable argument: free variables contribute to deps.
-					// Python uses ilu.used_variables_ast (ivy_logic_utils.variables_ast)
-					// which collects free variables (excludes bound vars from binders).
-					// Note: ivy_ast.py has a different used_variables_ast that collects ALL
-					// variables, but ivy_fragment.py imports from ivy_logic_utils, not ivy_ast.
-					fvs := FreeVariables(appArgs[i])
-					for _, uNode := range fvs.All() {
-						u := uNode.(*LogicVariable)
+					// Python's create_macro_maps treats lower-case macro formals
+					// as constants, then records universal variables appearing in
+					// the corresponding actual under that formal.
+					for _, u := range VariablesAstList(appArgs[i]) {
 						uid := makeVarID(u)
 						if c.isUnivVar(u) {
-							node := c.getUnivNode(u)
+							node := c.getUnivNodeFor(u, "createMacroMaps.free")
 							if c.macroDepMap[wid] == nil {
 								c.macroDepMap[wid] = make(map[*UFNode]bool)
 							}
@@ -533,7 +558,7 @@ func (c *checker) makeSkolems(fmla Expr, source Node, pol bool, univs []*LogicVa
 				for _, e := range qvars {
 					eid := makeVarID(e)
 					c.skolemMap[eid] = skolemEntry{fmla: fmla, ast: source}
-					uNode := c.getUnivNode(u)
+					uNode := c.getUnivNodeFor(u, "makeSkolems")
 					if c.macroDepMap[eid] == nil {
 						c.macroDepMap[eid] = make(map[*UFNode]bool)
 					}

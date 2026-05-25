@@ -54,7 +54,9 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 		}
 	}
 
+	xtracer.Trace("mc.ToAiger preExtAction nExtActs=%d", len(extActs))
 	extAct := NewEnvActionOn(mod.Cfg.ActCfg, extActs...)
+	xtracer.Trace("mc.ToAiger postExtAction type=%s", ActionTypeName(extAct))
 
 	initVar := NewConst("__init", Boolean)
 
@@ -651,6 +653,7 @@ func AddErrFlagMod(mod *Module, erf *Const, errConds *[]Expr) {
 //
 // Python: ivy_mc.py:1020-1046
 func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator func([]Expr) *Clauses) ActionsAction {
+	xtracer.Trace("mc.AddErrFlag ENTER type=%s hasInstantiator=%s", ActionTypeName(action), checkPyBool(instantiator != nil))
 	switch a := action.(type) {
 	case *LogicAssertAction:
 		// Python: errcond = ilu.dual_formula(il.drop_universals(action.formula))
@@ -661,16 +664,23 @@ func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator
 		return res
 
 	case *LogicRequiresAction:
-		// Require is a kind of assert
-		errCond := &LogicNot{Body: IvyDropUniversals(a.Formula)}
+		// Python RequiresAction inherits AssertAction, so it uses the same
+		// dual_formula path, including module instantiation.
+		errCond := DualFormula(IvyDropUniversals(a.Formula), nil, instantiator)
 		*errConds = append(*errConds, errCond)
 		res := NewAssignAction(erf, &LogicOr{Terms: []Expr{erf, errCond}})
 		setMCNowhere(res)
 		return res
 
 	case *LogicSubgoalAction:
-		// Skip subgoals
-		return NewSequence()
+		// Python SubgoalAction inherits AssertAction. With the default checked
+		// assertion setting it is instrumented before the SubgoalAction skip
+		// branch can apply.
+		errCond := DualFormula(IvyDropUniversals(a.Formula), nil, instantiator)
+		*errConds = append(*errConds, errCond)
+		res := NewAssignAction(erf, &LogicOr{Terms: []Expr{erf, errCond}})
+		setMCNowhere(res)
+		return res
 
 	case *LogicAssumeAction:
 		// Assume: weaken to assume(or(erf, formula))

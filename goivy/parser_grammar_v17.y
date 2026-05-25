@@ -684,6 +684,7 @@ top:
         lex := parser17lex.(*parser17LexAdapter)
         parent := lex.accum // nil for outermost top
         $$ = newIvyAccum(parent, lex.parentObjName)
+        $$.filename = lex.filename
         lex.parentObjName = "" // consumed
         $$.parent = parent
         // Ensure astCfg is set from lex adapter (for first accum where parent is nil)
@@ -747,12 +748,12 @@ top:
                 mod, err := lex.importer(name, $$)
                 if err != nil {
                     xtracer.Trace("parser.include ERROR name=%s err=%v", name, err)
-                } else if mod != nil {
-                    modDeclCount = len(mod.Decls)
-                    // Python: for decl in module.decls: p[0].declare(decl, allow_redef=True)
-                    for _, d := range mod.Decls {
-                        $$.declare(d)
-                    }
+                    } else if mod != nil {
+                        modDeclCount = len(mod.Decls)
+                        // Python: for decl in module.decls: p[0].declare(decl, allow_redef=True)
+                        for _, d := range mod.Decls {
+                            $$.declareAllowRedef(d, true)
+                        }
                     // Python: p[0].included.update(module.included)
                     if $$.included == nil {
                         $$.included = make(map[string]bool)

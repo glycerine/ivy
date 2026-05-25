@@ -379,6 +379,35 @@ func TestCompileWhile_SomeCondition(t *testing.T) {
 	}
 }
 
+func TestCompileWhileSomeEmitsPythonCompileIfTrace(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+	tSort := &UninterpretedSort{Name: "t"}
+	c.Sig.Sorts.Set("t", tSort)
+
+	xParam := cfg.NewAtom("x")
+	xParam.ASort = cfg.NewAtom("t")
+	someCond := cfg.NewSome([]Node{xParam}, cfg.NewAtom("=", cfg.NewAtom("x"), cfg.NewAtom("x")))
+
+	var err error
+	out := captureActionUpdateStdout(t, func() {
+		_, err = c.CompileWhile(someCond, cfg.NewSequence(), nil)
+	})
+	if err != nil {
+		t.Fatalf("CompileWhile with Some condition returned error: %v\n%s", err, out)
+	}
+
+	ifIdx := strings.Index(out, "XTRACE: compiler.CompileNode return case=default type=IfAction\n")
+	enterIdx := strings.Index(out, "XTRACE: compiler.compile_if_action ENTER\n")
+	constIdx := strings.Index(out, "XTRACE: compiler.CompileConst ENTER\n")
+	if ifIdx < 0 || enterIdx < 0 || constIdx < 0 {
+		t.Fatalf("missing Python while-some compile-if trace order:\n%s", out)
+	}
+	if !(ifIdx < enterIdx && enterIdx < constIdx) {
+		t.Fatalf("while-some trace order drifted from Python:\n%s", out)
+	}
+}
+
 func TestCompileWhileExtractTraceMatchesPython(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()

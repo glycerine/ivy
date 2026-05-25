@@ -603,7 +603,11 @@ def find_references(mod,syms,new_actions):
         if syms.intersection(lu.used_symbols_ast(x.formula)):
             refs.add(x.lineno)
     for x in list(new_actions.values()):
-        if syms.intersection(lu.used_symbols_ast(x)):
+        action_syms = lu.used_symbols_ast(x)
+        if __debug__:
+            for sym in action_syms:
+                xtracer.trace("isolate.collectActionSymNames.add %s" % sym)
+        if syms.intersection(action_syms):
             refs.add(x.lineno)
     if __debug__: xtracer.trace("isolate.FindReferences n_syms=%d n_refs=%d" % (len(syms), len(refs)))
     return refs

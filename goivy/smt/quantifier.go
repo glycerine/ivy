@@ -728,6 +728,17 @@ func (ctx *Z3Context) BvUdiv(e1, e2 Z3Expr) Z3Expr {
 	return r
 }
 
+// BvSdiv returns signed bit-vector division.
+func (ctx *Z3Context) BvSdiv(e1, e2 Z3Expr) Z3Expr {
+	var r Z3Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvsdiv(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
 // BvShl returns bit-vector shift left.
 func (ctx *Z3Context) BvShl(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr

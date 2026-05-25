@@ -261,20 +261,10 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 			// B2-R1: Delegate to CompileAssertFormula which uses ExprContext + Extract
 			// Python: compile_assert_action compiles args[0] as formula, args[1] as proof
 			if len(n.Terms) >= 1 {
-				act, err := c.CompileAssertFormula(n.Terms[0])
-				if err != nil {
-					return nil, err
-				}
-				// Python: if len(self.args) > 1: pf = self.args[1].compile()
 				if len(n.Terms) >= 2 {
-					pf, pfErr := c.CompileTactic(n.Terms[1])
-					if pfErr == nil && pf != nil {
-						if aa, ok := act.(*LogicAssertAction); ok {
-							aa.Proof = WrapTactic(pf)
-						}
-					}
+					return c.CompileAssertFormulaWithProof(n.Terms[0], n.Terms[1])
 				}
-				return act, nil
+				return c.CompileAssertFormula(n.Terms[0])
 			}
 			return nil, fmt.Errorf("assert needs a formula")
 
@@ -415,19 +405,10 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Python: compile_assert_action — args[0] is the formula, args[1] is optional proof
 		if len(n.Elems) >= 1 {
-			act, err := c.CompileAssertFormula(n.Elems[0])
-			if err != nil {
-				return nil, err
-			}
 			if len(n.Elems) >= 2 {
-				pf, pfErr := c.CompileTactic(n.Elems[1])
-				if pfErr == nil && pf != nil {
-					if aa, ok := act.(*LogicAssertAction); ok {
-						aa.Proof = WrapTactic(pf)
-					}
-				}
+				return c.CompileAssertFormulaWithProof(n.Elems[0], n.Elems[1])
 			}
-			return act, nil
+			return c.CompileAssertFormula(n.Elems[0])
 		}
 		return nil, fmt.Errorf("assert needs a formula")
 
@@ -443,19 +424,10 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Python: RequiresAction inherits compile_assert_action from AssertAction
 		if len(n.Elems) >= 1 {
-			act, err := c.CompileRequiresFormula(n.Elems[0])
-			if err != nil {
-				return nil, err
-			}
 			if len(n.Elems) >= 2 {
-				pf, pfErr := c.CompileTactic(n.Elems[1])
-				if pfErr == nil && pf != nil {
-					if ra, ok := act.(*LogicRequiresAction); ok {
-						ra.Proof = WrapTactic(pf)
-					}
-				}
+				return c.CompileRequiresFormulaWithProof(n.Elems[0], n.Elems[1])
 			}
-			return act, nil
+			return c.CompileRequiresFormula(n.Elems[0])
 		}
 		return nil, fmt.Errorf("require needs a formula")
 
@@ -463,19 +435,10 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Python: EnsuresAction inherits compile_assert_action from AssertAction
 		if len(n.Elems) >= 1 {
-			act, err := c.CompileEnsuresFormula(n.Elems[0])
-			if err != nil {
-				return nil, err
-			}
 			if len(n.Elems) >= 2 {
-				pf, pfErr := c.CompileTactic(n.Elems[1])
-				if pfErr == nil && pf != nil {
-					if ea, ok := act.(*LogicEnsuresAction); ok {
-						ea.Proof = WrapTactic(pf)
-					}
-				}
+				return c.CompileEnsuresFormulaWithProof(n.Elems[0], n.Elems[1])
 			}
-			return act, nil
+			return c.CompileEnsuresFormula(n.Elems[0])
 		}
 		return nil, fmt.Errorf("ensure needs a formula")
 
@@ -483,19 +446,10 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Python: SubgoalAction inherits compile_assert_action from AssertAction
 		if len(n.Elems) >= 1 {
-			act, err := c.CompileSubgoalFormula(n.Elems[0])
-			if err != nil {
-				return nil, err
-			}
 			if len(n.Elems) >= 2 {
-				pf, pfErr := c.CompileTactic(n.Elems[1])
-				if pfErr == nil && pf != nil {
-					if sa, ok := act.(*LogicSubgoalAction); ok {
-						sa.Proof = WrapTactic(pf)
-					}
-				}
+				return c.CompileSubgoalFormulaWithProof(n.Elems[0], n.Elems[1])
 			}
-			return act, nil
+			return c.CompileSubgoalFormula(n.Elems[0])
 		}
 		return nil, fmt.Errorf("subgoal needs a formula")
 
@@ -1352,6 +1306,8 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 	//             return res.clone(res.args + invars)
 	switch cond := condNode.(type) {
 	case *Some:
+		xtracer.Trace("compiler.CompileNode return case=default type=IfAction")
+		xtracer.Trace("compiler.compile_if_action ENTER")
 		res, err := c.compileIfSome(cond.Params, cond.Fmla, nil, "some", bodyNode, nil, condNode)
 		if err != nil {
 			return nil, fmt.Errorf("compiling while some condition: %w", err)
@@ -1374,6 +1330,8 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 		}
 		return res, nil
 	case *SomeMin:
+		xtracer.Trace("compiler.CompileNode return case=default type=IfAction")
+		xtracer.Trace("compiler.compile_if_action ENTER")
 		res, err := c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_min", bodyNode, nil, condNode)
 		if err != nil {
 			return nil, fmt.Errorf("compiling while some_min condition: %w", err)
@@ -1395,6 +1353,8 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 		}
 		return res, nil
 	case *SomeMax:
+		xtracer.Trace("compiler.CompileNode return case=default type=IfAction")
+		xtracer.Trace("compiler.compile_if_action ENTER")
 		res, err := c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_max", bodyNode, nil, condNode)
 		if err != nil {
 			return nil, fmt.Errorf("compiling while some_max condition: %w", err)
@@ -1545,6 +1505,29 @@ func (c *Compiler) CompileAssertFormula(node Node) (ActionsAction, error) {
 	return res, nil
 }
 
+func (c *Compiler) CompileAssertFormulaWithProof(node Node, proof Node) (ActionsAction, error) {
+	xtracer.Trace("compiler.compile_assert_action ENTER")
+	r, err := c.compileAssertLikeFormula(node, "Assert")
+	if err != nil {
+		return nil, err
+	}
+	wrappedProof, err := c.compileAssertLikeProof(proof)
+	if err != nil {
+		return nil, err
+	}
+	res := NewAssertAction(r.cond)
+	res.LF = r.compiledLF
+	res.Unprovable = r.unprovable
+	res.Proof = wrappedProof
+	res.SetLineno(node.GetLineno())
+	r.ctx.Code = append(r.ctx.Code, res)
+	extracted := r.ctx.Extract()
+	if act, ok := extracted.(ActionsAction); ok {
+		return act, nil
+	}
+	return res, nil
+}
+
 // CompileRequiresFormula compiles a require (precondition) from a formula AST node.
 // Python: RequiresAction inherits compile_assert_action; self.clone() preserves type.
 func (c *Compiler) CompileRequiresFormula(node Node) (ActionsAction, error) {
@@ -1556,6 +1539,29 @@ func (c *Compiler) CompileRequiresFormula(node Node) (ActionsAction, error) {
 	res := NewRequiresAction(r.cond)
 	res.LF = r.compiledLF
 	res.Unprovable = r.unprovable
+	res.SetLineno(node.GetLineno())
+	r.ctx.Code = append(r.ctx.Code, res)
+	extracted := r.ctx.Extract()
+	if act, ok := extracted.(ActionsAction); ok {
+		return act, nil
+	}
+	return res, nil
+}
+
+func (c *Compiler) CompileRequiresFormulaWithProof(node Node, proof Node) (ActionsAction, error) {
+	xtracer.Trace("compiler.compile_assert_action ENTER")
+	r, err := c.compileAssertLikeFormula(node, "Requires")
+	if err != nil {
+		return nil, err
+	}
+	wrappedProof, err := c.compileAssertLikeProof(proof)
+	if err != nil {
+		return nil, err
+	}
+	res := NewRequiresAction(r.cond)
+	res.LF = r.compiledLF
+	res.Unprovable = r.unprovable
+	res.Proof = wrappedProof
 	res.SetLineno(node.GetLineno())
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
@@ -1585,6 +1591,29 @@ func (c *Compiler) CompileEnsuresFormula(node Node) (ActionsAction, error) {
 	return res, nil
 }
 
+func (c *Compiler) CompileEnsuresFormulaWithProof(node Node, proof Node) (ActionsAction, error) {
+	xtracer.Trace("compiler.compile_assert_action ENTER")
+	r, err := c.compileAssertLikeFormula(node, "Ensures")
+	if err != nil {
+		return nil, err
+	}
+	wrappedProof, err := c.compileAssertLikeProof(proof)
+	if err != nil {
+		return nil, err
+	}
+	res := NewEnsuresAction(r.cond)
+	res.LF = r.compiledLF
+	res.Unprovable = r.unprovable
+	res.Proof = wrappedProof
+	res.SetLineno(node.GetLineno())
+	r.ctx.Code = append(r.ctx.Code, res)
+	extracted := r.ctx.Extract()
+	if act, ok := extracted.(ActionsAction); ok {
+		return act, nil
+	}
+	return res, nil
+}
+
 // CompileSubgoalFormula compiles a subgoal assertion from a formula AST node.
 // Python: SubgoalAction inherits compile_assert_action; self.clone() preserves type+kind.
 func (c *Compiler) CompileSubgoalFormula(node Node) (ActionsAction, error) {
@@ -1596,6 +1625,29 @@ func (c *Compiler) CompileSubgoalFormula(node Node) (ActionsAction, error) {
 	res := NewSubgoalAction(r.cond)
 	res.LF = r.compiledLF
 	res.Unprovable = r.unprovable
+	res.SetLineno(node.GetLineno())
+	r.ctx.Code = append(r.ctx.Code, res)
+	extracted := r.ctx.Extract()
+	if act, ok := extracted.(ActionsAction); ok {
+		return act, nil
+	}
+	return res, nil
+}
+
+func (c *Compiler) CompileSubgoalFormulaWithProof(node Node, proof Node) (ActionsAction, error) {
+	xtracer.Trace("compiler.compile_assert_action ENTER")
+	r, err := c.compileAssertLikeFormula(node, "Subgoal")
+	if err != nil {
+		return nil, err
+	}
+	wrappedProof, err := c.compileAssertLikeProof(proof)
+	if err != nil {
+		return nil, err
+	}
+	res := NewSubgoalAction(r.cond)
+	res.LF = r.compiledLF
+	res.Unprovable = r.unprovable
+	res.Proof = wrappedProof
 	res.SetLineno(node.GetLineno())
 	r.ctx.Code = append(r.ctx.Code, res)
 	extracted := r.ctx.Extract()
@@ -1627,4 +1679,18 @@ func (c *Compiler) CompileAssumeFormula(node Node) (ActionsAction, error) {
 		return act, nil
 	}
 	return res, nil
+}
+
+func (c *Compiler) compileAssertLikeProof(proof Node) (Expr, error) {
+	if proof == nil {
+		return nil, nil
+	}
+	pf, err := c.CompileTactic(proof)
+	if err != nil {
+		return nil, err
+	}
+	if pf == nil {
+		return nil, nil
+	}
+	return WrapTactic(pf), nil
 }

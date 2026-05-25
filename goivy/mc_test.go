@@ -83,6 +83,60 @@ func TestSetMCNowhereMarksSyntheticAssignLikePython(t *testing.T) {
 	requireMCNowhere(t, setMCNowhere(action))
 }
 
+func TestAddErrFlagRequiresUsesDualFormulaInstantiatorLikePython(t *testing.T) {
+	erf := NewConst("err_flag", Boolean)
+	p := NewConst("p", Boolean)
+	var errConds []Expr
+	called := false
+	instantiator := func(gts []Expr) *Clauses {
+		called = true
+		return NewClauses(nil, nil, nil)
+	}
+
+	out := captureActionUpdateStdout(t, func() {
+		AddErrFlag(NewRequiresAction(p), erf, &errConds, instantiator)
+	})
+
+	if !called {
+		t.Fatal("requires instrumentation did not call instantiator through DualFormula")
+	}
+	if !strings.Contains(out, "XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0") {
+		t.Fatalf("requires instrumentation did not use Python dual_formula clauses_to_formula path:\n%s", out)
+	}
+	if len(errConds) != 1 {
+		t.Fatalf("requires errconds = %d, want 1", len(errConds))
+	}
+	if _, ok := errConds[0].(*LogicAnd); !ok {
+		t.Fatalf("requires errcond = %T, want *LogicAnd from dual_formula with instantiator", errConds[0])
+	}
+}
+
+func TestAddErrFlagSubgoalUsesAssertPathWhenCheckedLikePython(t *testing.T) {
+	erf := NewConst("err_flag", Boolean)
+	p := NewConst("p", Boolean)
+	var errConds []Expr
+	called := false
+	instantiator := func(gts []Expr) *Clauses {
+		called = true
+		return NewClauses(nil, nil, nil)
+	}
+
+	out := captureActionUpdateStdout(t, func() {
+		action := AddErrFlag(NewSubgoalAction(p), erf, &errConds, instantiator)
+		requireMCNowhere(t, action)
+	})
+
+	if !called {
+		t.Fatal("subgoal instrumentation did not call instantiator through DualFormula")
+	}
+	if !strings.Contains(out, "XTRACE: ops.ToOpenFormula nFmlas=0 nDefs=0") {
+		t.Fatalf("subgoal instrumentation did not use Python checked AssertAction path:\n%s", out)
+	}
+	if len(errConds) != 1 {
+		t.Fatalf("subgoal errconds = %d, want 1", len(errConds))
+	}
+}
+
 // ============================================================
 // Aiger tests
 // ============================================================

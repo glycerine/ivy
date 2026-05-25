@@ -58,6 +58,8 @@ type ivyAccum struct {
 	objects    map[string]interface{}    // Python: ivy.objects
 	merkle     MerkleState               // rolling Merkle hash of declared AST nodes
 	astCfg     *AstConfig                // per-parse AST config (replaces globals)
+	filename   string                    // Python: iu.filename used by ParseError.__repr__
+	errors     []*ParseError             // Python: module-level error_list
 }
 
 // --- ast.Node interface for ivyAccum ---
@@ -153,7 +155,7 @@ func newIvyAccum(parent *ivyAccum, parentObjName string) *ivyAccum {
 //	            if allow_redef: return
 //	            report_error(Redefining(name, lineno, olineno))
 //	    self.defined[name].append((lineno, cls))
-func (m *ivyAccum) define(name string, lineno Location, cls string) {
+func (m *ivyAccum) define(name string, lineno Location, cls string, allowRedef bool) {
 	xtracer.Trace("parser.define ENTER")
 	if m.defined == nil {
 		m.defined = make(map[string][]definedEntry)
@@ -170,11 +172,11 @@ func (m *ivyAccum) define(name string, lineno Location, cls string) {
 		} else if cls == "ObjectDecl" {
 			conflict = (x.DeclType != "TypeDecl")
 		}
-		if conflict && x.DeclType != "" {
-			// Python: report_error(Redefining(name, lineno, olineno))
-			// For now, log but don't error — matches Python's default allow_redef=False
-			// but we don't have report_error wired up yet.
-			_ = conflict
+		if conflict {
+			if allowRedef {
+				return
+			}
+			m.reportError(newRedefiningParseError(m.filename, name, lineno))
 		}
 	}
 	m.defined[name] = append(m.defined[name], definedEntry{Lineno: lineno, DeclType: cls})
@@ -183,6 +185,10 @@ func (m *ivyAccum) define(name string, lineno Location, cls string) {
 // declare adds a declaration, matching Python Ivy.declare().
 // Python iterates decl.defines() and calls self.define(df) for each.
 func (m *ivyAccum) declare(decl Node) {
+	m.declareAllowRedef(decl, false)
+}
+
+func (m *ivyAccum) declareAllowRedef(decl Node, allowRedef bool) {
 	xtracer.Trace("parser.declare ENTER")
 	// Python: decl.attributes = self.attributes + decl.attributes
 	if db := GetDeclBase(decl); db != nil && len(m.attributes) > 0 {
@@ -231,7 +237,7 @@ func (m *ivyAccum) declare(decl Node) {
 	declLineno := decl.GetLineno()
 	if definer, ok := decl.(interface{ Defines() []string }); ok {
 		for _, name := range definer.Defines() {
-			m.define(name, declLineno, cls)
+			m.define(name, declLineno, cls, allowRedef)
 		}
 	}
 	m.decls = append(m.decls, decl)
@@ -267,6 +273,23 @@ func (m *ivyAccum) declare(decl Node) {
 				}
 			}
 		}
+	}
+}
+
+func (m *ivyAccum) reportError(err *ParseError) {
+	xtracer.Trace("parser.report_error ENTER")
+	m.errors = append(m.errors, err)
+}
+
+func newRedefiningParseError(filename, name string, lineno Location) *ParseError {
+	// Python Redefining.__init__ traces, then calls ParseError.__init__ which
+	// traces again.
+	xtracer.Trace("parser.__init__ ENTER")
+	xtracer.Trace("parser.__init__ ENTER")
+	return &ParseError{
+		Filename: filename,
+		Lineno:   lineno.Line,
+		Message:  "redefining " + name,
 	}
 }
 

@@ -307,6 +307,71 @@ func TestIsGprop(t *testing.T) {
 	}
 }
 
+func TestInvarianceTacticCompilesAuxInvariantsBeforeCloningMainInvariant(t *testing.T) {
+	cfg := NewAstConfig()
+	mod := New()
+	if _, err := mod.Sig.AddSymbol("b", Boolean); err != nil {
+		t.Fatalf("AddSymbol(b): %v", err)
+	}
+	pc := NewProofChecker(nil, mod, nil, nil, nil, cfg)
+
+	body := temporalBoolConst("b")
+	globally, err := NewGlobally(nil, body)
+	if err != nil {
+		t.Fatalf("NewGlobally: %v", err)
+	}
+	model := &NormalProgram{Init: NewSequence()}
+	goal := cfg.NewLabeledFormula(
+		cfg.NewAtom("myprop"),
+		cfg.NewTemporalModels(model, globally),
+	)
+	aux := cfg.NewLabeledFormula(cfg.NewAtom("inv1"), cfg.NewAtom("b"))
+	proof := cfg.NewTacticTactic(
+		cfg.NewAtom("invariance"),
+		cfg.NewTacticWith([]Node{aux}),
+		cfg.NewNoneAST(),
+	)
+
+	var result []*LabeledFormula
+	out := captureActionUpdateStdout(t, func() {
+		result, err = InvarianceTactic(pc, []*LabeledFormula{goal}, proof)
+	})
+	if err != nil {
+		t.Fatalf("InvarianceTactic: %v\n%s", err, out)
+	}
+
+	compileIdx := strings.Index(out, "XTRACE: compiler.Thing ENTER type=LabeledFormula\n")
+	cloneIdx := strings.Index(out, "XTRACE: ast.LF.__init__")
+	if compileIdx < 0 {
+		t.Fatalf("auxiliary invariant was not compiled:\n%s", out)
+	}
+	cloneGoalIdx := strings.Index(out, "XTRACE: proof.CloneGoal ENTER label=myprop nprems=0 concType=Const\n")
+	if cloneGoalIdx < 0 {
+		t.Fatalf("main invariant did not go through proof.CloneGoal:\n%s", out)
+	}
+	if cloneIdx < 0 {
+		t.Fatalf("main invariant clone trace missing:\n%s", out)
+	}
+	if compileIdx > cloneGoalIdx || cloneGoalIdx > cloneIdx {
+		t.Fatalf("expected auxiliary compile, then proof.CloneGoal, then LF allocation:\n%s", out)
+	}
+
+	if len(result) != 1 {
+		t.Fatalf("got %d goals, want 1", len(result))
+	}
+	tm, ok := GoalConc(result[0]).(*TemporalModels)
+	if !ok {
+		t.Fatalf("result conclusion is %T, want *TemporalModels", GoalConc(result[0]))
+	}
+	np, ok := tm.Model.(*NormalProgram)
+	if !ok {
+		t.Fatalf("result model is %T, want *NormalProgram", tm.Model)
+	}
+	if len(np.Invars) != 2 {
+		t.Fatalf("model invariant count = %d, want auxiliary plus main", len(np.Invars))
+	}
+}
+
 // --- GetEnviron / EnvironStr ---
 
 func TestGetEnviron(t *testing.T) {

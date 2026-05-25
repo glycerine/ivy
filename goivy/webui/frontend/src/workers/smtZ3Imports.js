@@ -426,6 +426,7 @@ export function createSmtZ3Imports({ z3, getGoMemory }) {
     Z3_mk_bvsub(ctx, a, b) { return z3._Z3_mk_bvsub(ctx, a, b) >>> 0; },
     Z3_mk_bvmul(ctx, a, b) { return z3._Z3_mk_bvmul(ctx, a, b) >>> 0; },
     Z3_mk_bvudiv(ctx, a, b) { return z3._Z3_mk_bvudiv(ctx, a, b) >>> 0; },
+    Z3_mk_bvsdiv(ctx, a, b) { return z3._Z3_mk_bvsdiv(ctx, a, b) >>> 0; },
     Z3_mk_bvshl(ctx, a, b) { return z3._Z3_mk_bvshl(ctx, a, b) >>> 0; },
     Z3_mk_bvlshr(ctx, a, b) { return z3._Z3_mk_bvlshr(ctx, a, b) >>> 0; },
     Z3_mk_bvashr(ctx, a, b) { return z3._Z3_mk_bvashr(ctx, a, b) >>> 0; },

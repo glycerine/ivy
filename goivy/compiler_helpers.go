@@ -111,6 +111,7 @@ func (c *Compiler) CompileFieldReference(symbolName string, args []Expr, lineno 
 // synthesized atoms (e.g., for inline action calls at line 201) inherit it.
 func (c *Compiler) compileFieldReferenceRec(symbolName string, args []Expr, top bool, old bool, lineno Location) (Expr, []Expr, error) {
 	xtracer.Trace("compiler.compile_field_reference_rec ENTER name=%s", symbolName)
+	resolvedAppliedDestructor := false
 	// Try to find the symbol directly (polymorphic or in signature)
 	sym, found := FindPolymorphicSymbol(symbolName, c.Module.Cfg.IuCfg)
 	if !found {
@@ -216,14 +217,22 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []Expr, top 
 		args = append([]Expr{base}, args...)
 		sym = destrSym
 		found = true
+		resolvedAppliedDestructor = true
 	}
 
 	if !found {
 		return nil, args, &cfrError{SymbolName: symbolName}
 	}
 
-	// Apply old_ prefix if needed
-	if old {
+	// Python applies old_ to a direct symbol, but for an applied field
+	// destructor it applies old_ to the recursively compiled base.
+	shouldPrefixOld := old
+	if old && resolvedAppliedDestructor {
+		if fs, ok := sym.CSort.(*LogicFunctionSort); ok && fs.Arity() > 0 {
+			shouldPrefixOld = false
+		}
+	}
+	if shouldPrefixOld {
 		sym = NewConst("old_"+sym.Name, sym.CSort)
 	}
 

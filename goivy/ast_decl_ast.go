@@ -1153,6 +1153,9 @@ func (d *RelyDecl) Clone(args []Node) Node {
 	return &RelyDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *RelyDecl) String() string { return "rely" }
+func (d *RelyDecl) Defines() []string {
+	return nil
+}
 
 // MixOrdDecl declares a mixin ordering.
 type MixOrdDecl struct {
@@ -1169,6 +1172,9 @@ func (d *MixOrdDecl) Clone(args []Node) Node {
 	return &MixOrdDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *MixOrdDecl) String() string { return "mixord" }
+func (d *MixOrdDecl) Defines() []string {
+	return nil
+}
 
 // ConceptDecl declares a concept.
 type ConceptDecl struct {

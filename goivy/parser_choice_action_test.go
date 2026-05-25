@@ -64,13 +64,58 @@ func TestChoiceActionCanon(t *testing.T) {
 	if !strings.Contains(canon, "choiceAction") {
 		t.Errorf("expected 'choiceAction' in canon, got %s", canon)
 	}
-	if !strings.Contains(canon, "branches:") {
-		t.Errorf("expected 'branches:' in canon, got %s", canon)
+	if !strings.Contains(canon, "elems:") {
+		t.Errorf("expected 'elems:' in canon, got %s", canon)
 	}
 	if !strings.Contains(canon, "uniqueID:") {
 		t.Errorf("expected 'uniqueID:' in canon, got %s", canon)
 	}
 	t.Logf("ChoiceAction canon: %s", canon)
+}
+
+func TestEnvActionCanonUsesPythonElemsField(t *testing.T) {
+	cfg := NewAstConfig()
+	env := cfg.NewEnvAction(cfg.NewAtom("a"), cfg.NewAtom("b"))
+	canon := string(env.Canon())
+	if !strings.Contains(canon, "envAction") {
+		t.Errorf("expected 'envAction' in canon, got %s", canon)
+	}
+	if !strings.Contains(canon, "elems:") {
+		t.Errorf("expected 'elems:' in canon, got %s", canon)
+	}
+	if strings.Contains(canon, "branches:") {
+		t.Errorf("unexpected Go-only 'branches:' field in canon: %s", canon)
+	}
+}
+
+func TestCompileChoiceActionPreservesActionLikePython(t *testing.T) {
+	mod := New()
+	cfg := mod.Cfg.AstCfg
+	c := NewFromModule(mod)
+	choice := cfg.NewChoiceAction(
+		cfg.NewAssumeAction(cfg.NewAnd()),
+		cfg.NewAssumeAction(cfg.NewAnd()),
+	)
+
+	compiled, err := c.Thing(choice)
+	if err != nil {
+		t.Fatalf("compile choice: %v", err)
+	}
+	act, ok := compiled.(*LogicChoiceAction)
+	if !ok {
+		t.Fatalf("compiled choice is %T, want *LogicChoiceAction", compiled)
+	}
+	if len(act.Branches) != 2 {
+		t.Fatalf("compiled branch count = %d, want 2", len(act.Branches))
+	}
+	for i, branch := range act.Branches {
+		if unwrapToAction(branch) == nil {
+			t.Fatalf("compiled branch %d is %T, want action", i, branch)
+		}
+	}
+	if act.UniqueID != choice.UniqueID+1 {
+		t.Fatalf("compiled choice uniqueID = %d, want cloned AST uniqueID %d", act.UniqueID, choice.UniqueID+1)
+	}
 }
 
 // TestChoiceActionBranches verifies that branches are stored correctly.

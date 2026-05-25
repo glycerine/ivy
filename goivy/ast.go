@@ -1069,7 +1069,7 @@ func (c *ChoiceAction) Clone(args []Node) Node {
 }
 func (c *ChoiceAction) String() string { return "choice" }
 func (c *ChoiceAction) Canon() Canonical {
-	return Canonical(fmt.Sprintf("(choiceAction%v branches:%v uniqueID:%d)", c.Base.canonFields(), SliceCanon(c.Branches), c.UniqueID))
+	return Canonical(fmt.Sprintf("(choiceAction%v elems:%v uniqueID:%d)", c.Base.canonFields(), SliceCanon(c.Branches), c.UniqueID))
 }
 
 // EnvAction represents an environment action (non-deterministic choice of public actions).
@@ -1104,7 +1104,7 @@ func (a *EnvAction) Clone(args []Node) Node {
 }
 func (a *EnvAction) String() string { return "env" }
 func (a *EnvAction) Canon() Canonical {
-	return Canonical(fmt.Sprintf("(envAction%v branches:%v uniqueID:%d)", a.Base.canonFields(), SliceCanon(a.Branches), a.UniqueID))
+	return Canonical(fmt.Sprintf("(envAction%v elems:%v uniqueID:%d)", a.Base.canonFields(), SliceCanon(a.Branches), a.UniqueID))
 }
 
 // LetAction represents "let x = y, ... { body }".
@@ -1931,6 +1931,18 @@ func (cfg *AstConfig) NewCompiledNode(node interface{}) *CompiledNode {
 func (c *CompiledNode) Args() []Node           { return nil }
 func (c *CompiledNode) Clone(args []Node) Node { return &CompiledNode{Base: c.Base, Node: c.Node} }
 func (c *CompiledNode) String() string         { return fmt.Sprint(c.Node) }
+func (c *CompiledNode) Unwrap() Expr {
+	if c == nil {
+		return nil
+	}
+	if expr, ok := c.Node.(Expr); ok {
+		return expr
+	}
+	if unwrapper, ok := c.Node.(interface{ Unwrap() Expr }); ok {
+		return unwrapper.Unwrap()
+	}
+	return nil
+}
 func (c *CompiledNode) Canon() Canonical {
 	if cz, ok := c.Node.(Canonizer); ok {
 		return cz.Canon()

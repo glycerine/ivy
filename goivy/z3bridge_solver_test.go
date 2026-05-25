@@ -2076,6 +2076,32 @@ func TestZ3BridgeNatSubUsesZ3PyReflectedComparison(t *testing.T) {
 	}
 }
 
+func TestZ3BridgeBVArithmeticBuiltinsDispatchLikeZ3Py(t *testing.T) {
+	sig := NewSig()
+	bvSort := &UninterpretedSort{Name: "t"}
+	sig.Interp["t"] = "bv[2]"
+	s := NewSolverFromSig(sig, nil)
+	ctx := s.Context()
+
+	binarySort, err := NewFunctionSort(bvSort, bvSort, bvSort)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	x := ctx.Const("X", ctx.BvSort(2))
+	one := ctx.BvVal(1, 2)
+
+	for _, name := range []string{"+", "-", "*", "/"} {
+		native, ok := s.LookupNative(NewConst(name, binarySort), s.Functions, "function").(NativeFunc)
+		if !ok {
+			t.Fatalf("expected %q to resolve to a native function", name)
+		}
+		expr := native(x, one)
+		if !ctx.IsBvExpr(expr) {
+			t.Fatalf("%q returned non-BV expression %v", name, expr)
+		}
+	}
+}
+
 func TestZ3BridgeRangeClampedSubUsesZ3PyReflectedComparison(t *testing.T) {
 	s := NewSolver(nil, nil)
 	ctx := s.Context()

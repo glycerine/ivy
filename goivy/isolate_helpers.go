@@ -752,6 +752,35 @@ func GetCone(actionsMap *InsMap[string, ActionsAction], actionName string, cone 
 	}
 }
 
+func nativeConeActionName(node Node) string {
+	switch n := node.(type) {
+	case *Atom:
+		return n.Rep
+	case *nativeAtomExpr:
+		return n.Rep
+	case *Const:
+		return n.Name
+	case *CompiledNode:
+		switch e := n.Node.(type) {
+		case *nativeAtomExpr:
+			return e.Rep
+		case *Atom:
+			return e.Rep
+		case *Const:
+			return e.Name
+		case *Apply:
+			if c, ok := e.Func.(*Const); ok {
+				return c.Name
+			}
+		case interface{ Relname() string }:
+			return e.Relname()
+		}
+	case interface{ Relname() string }:
+		return n.Relname()
+	}
+	return ""
+}
+
 // GetModConeFull returns the cone of action names reachable from roots.
 // Actions referenced by natives and initializers are also included.
 // Matches Python get_mod_cone (ivy_isolate.py:1482-1494).
@@ -772,25 +801,12 @@ func GetModConeFull(mod *Module, actionsMap *InsMap[string, ActionsAction],
 	for _, nat := range mod.Natives {
 		args := nat.Args()
 		for i := 2; i < len(args); i++ {
-			name := ""
-			if atom, ok := args[i].(*Atom); ok {
-				// Pre-compilation: direct Atom (matches Python isinstance(a, ivy_ast.Atom))
-				name = atom.Rep
-			} else if cn, ok := args[i].(*CompiledNode); ok {
-				// Post-compilation: CompiledNode wrapping lg.Expr
-				switch e := cn.Node.(type) {
-				case *Const:
-					name = e.Name
-				case *Apply:
-					if c, ok := e.Func.(*Const); ok {
-						name = c.Name
-					}
-				}
+			name := nativeConeActionName(args[i])
+			if name == "" {
+				continue
 			}
-			if name != "" {
-				if _, exists := actionsMap.Get2(name); exists {
-					GetCone(actionsMap, name, cone)
-				}
+			if _, exists := mod.Actions.Get2(name); exists {
+				GetCone(actionsMap, name, cone)
 			}
 		}
 	}
@@ -1134,7 +1150,7 @@ func FindReferences(mod *Module, syms map[string]bool, newActions *InsMap[string
 // Returns a name-only set for use in FindReferences.
 func collectActionSymNames(act ActionsAction) map[string]bool {
 	exprs := NewInsMap[NodeKey, Expr]()
-	for _, arg := range act.ActionArgs() {
+	for _, arg := range actionSymbolArgs(act) {
 		collectSymbolsInto("isolate.collectActionSymNames", arg, exprs)
 	}
 	// Also recurse into sub-actions
@@ -1142,7 +1158,7 @@ func collectActionSymNames(act ActionsAction) map[string]bool {
 		if sub == act {
 			continue // skip self to avoid infinite loop
 		}
-		for _, arg := range sub.ActionArgs() {
+		for _, arg := range actionSymbolArgs(sub) {
 			collectSymbolsInto("isolate.collectActionSymNames", arg, exprs)
 		}
 	}
@@ -1153,6 +1169,13 @@ func collectActionSymNames(act ActionsAction) map[string]bool {
 		}
 	}
 	return names
+}
+
+func actionSymbolArgs(act ActionsAction) []Expr {
+	if call, ok := act.(*LogicCallAction); ok {
+		return call.ActualReturns
+	}
+	return act.ActionArgs()
 }
 
 // -----------------------------------------------------------------------

@@ -89,6 +89,9 @@ func ParseV17(input string, version Version, opts ...ParseOption) (*ParseResult,
 	if !lex.nested {
 		expandAutoInstances(lex.accum)
 	}
+	if len(lex.accum.errors) > 0 {
+		return nil, lex.accum.errors[0]
+	}
 	result := lex.accum.toResult()
 	xtracer.Trace("parser.Parse EXIT decls=%d", len(result.Decls))
 	return result, nil

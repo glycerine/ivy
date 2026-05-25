@@ -259,7 +259,7 @@ def env_action(bindings):
 def invariance_tactic(prover,goals,proof):
     goal = goals[0]                  # pick up the first proof goal
     conc = ipr.goal_conc(goal)       # get its conclusion
-    if not isinstance(conc,TemporalModels):
+    if not isinstance(conc,ia.TemporalModels):
         raise iu.IvyError(proof,'[4]proof goal is not temporal')
     model = conc.model
     fmla = conc.fmla
@@ -384,7 +384,7 @@ def invariance_tactic(prover,goals,proof):
     #     model.bindings = [b.clone([prefix_action(b.action,assumes)]) for b in model.bindings]
 
     # Change the conclusion formula to M |= true
-    conc = TemporalModels(model,il.And())
+    conc = ia.TemporalModels(model,il.And())
 
     # Build the new goal
     goal = ipr.clone_goal(goal,ipr.goal_prems(goal),conc)

@@ -126,6 +126,46 @@ func TestIsMixinImplementConcreteAfterUniPackageMerge(t *testing.T) {
 	}
 }
 
+func TestGetModConeNativeCompiledNativeAtomReferencesActionsLikePython(t *testing.T) {
+	mod := mkModuleWithSig()
+	acfg := mod.Cfg.AstCfg
+	actCfg := mod.Cfg.ActCfg
+
+	target := NewSequence()
+	handler := NewCallActionOn(actCfg, NewConst("target", TopS))
+	actions := NewInsMap[string, ActionsAction]()
+	actions.Set("handler", handler)
+	actions.Set("target", target)
+	mod.Actions.Set("handler", handler)
+	mod.Actions.Set("target", target)
+
+	nativeRef := newNativeAtomExpr(acfg.NewAtom("handler"))
+	mod.Natives = []Node{
+		acfg.NewNativeDef([]Node{
+			acfg.NewAtom("native"),
+			acfg.NewNativeCode("`handler`"),
+			acfg.NewCompiledNode(nativeRef),
+		}),
+	}
+
+	cone := GetModConeFull(mod, actions, NewInsMap[string, bool](), nil)
+	if !cone["handler"] {
+		t.Fatal("native anti-quote action reference should seed the cone")
+	}
+	if !cone["target"] {
+		t.Fatal("native anti-quote action reference should include transitive callees")
+	}
+
+	mod.PublicActions = NewInsMap[string, bool]()
+	createCone := getModCone(mod)
+	if !createCone["handler"] {
+		t.Fatal("CreateIsolate cone helper should seed native anti-quote action references")
+	}
+	if !createCone["target"] {
+		t.Fatal("CreateIsolate cone helper should include transitive callees")
+	}
+}
+
 // B3: StripIsolate clears mod.Params for version <= 1.6
 func TestStripIsolateVersion16ClearsParams(t *testing.T) {
 	m := mkModuleWithSig()
@@ -485,6 +525,29 @@ func TestNumIsolateParams_SetByStripIsolateParams(t *testing.T) {
 	// After call, NumIsolateParams should reflect isolate params count
 	if m.Cfg.IsolateCfg.NumIsolateParams == 99 {
 		t.Error("NumIsolateParams was not updated by StripIsolateParams")
+	}
+}
+
+func TestStripIsolateParamsAcceptsVariableParamNodesLikePython(t *testing.T) {
+	m := mkModuleWithSig()
+	tSort := &UninterpretedSort{Name: "t"}
+	m.Sig.Sorts.Set("t", tSort)
+
+	acfg := NewAstConfig()
+	selfParam := acfg.NewVariable("self", "t")
+	iso := acfg.NewIsolateDef([]Node{
+		acfg.NewAtom("iso", selfParam),
+		acfg.NewAtom("foo", selfParam),
+	}, 0)
+
+	if err := StripIsolateParams(m, iso, NewInsMap[string, []IsolateMixinIface](), nil, nil); err != nil {
+		t.Fatalf("StripIsolateParams returned error: %v", err)
+	}
+	if len(m.Params) != 1 || m.Params[0].Name != "self" || !m.Params[0].CSort.Equal(tSort) {
+		t.Fatalf("module params = %v, want self:t", m.Params)
+	}
+	if _, ok := m.Sig.Symbols.Get2("self"); !ok {
+		t.Fatal("expected self to be added to signature symbols")
 	}
 }
 

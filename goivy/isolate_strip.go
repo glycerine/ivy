@@ -523,6 +523,42 @@ type isolateParamProvider interface {
 	Params() []Node
 }
 
+func isolateParamNameSort(node Node) (name, sortName string, ok bool) {
+	switch n := node.(type) {
+	case *Atom:
+		if len(n.Terms) != 0 {
+			return "", "", false
+		}
+		return n.Rep, astSortName(n.ASort), true
+	case *App:
+		if len(n.Terms) != 0 {
+			return "", "", false
+		}
+		return n.Relname(), astSortName(n.ASort), true
+	case *Variable:
+		return n.Rep, n.VSort, true
+	case *Symbol:
+		return n.Rep, astSortName(n.Sort), true
+	default:
+		return "", "", false
+	}
+}
+
+func astSortName(node Node) string {
+	switch s := node.(type) {
+	case *Atom:
+		return s.Rep
+	case *App:
+		return s.Relname()
+	case *Symbol:
+		return s.Rep
+	case *Variable:
+		return s.Rep
+	default:
+		return ""
+	}
+}
+
 // StripIsolateParams is the full version of strip_isolate that handles
 // variable isolate parameter substitution, initializer handling, impl_mixin
 // strip propagation, and extra_strip.
@@ -584,18 +620,17 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 	if pp, ok := isolate.(isolateParamProvider); ok {
 		ips := make(map[string]bool)
 		for _, p := range pp.Params() {
-			if a, ok := p.(*Atom); ok {
-				ips[a.Rep] = true
+			if name, _, ok := isolateParamNameSort(p); ok {
+				ips[name] = true
 			}
 		}
 		if ap, ok2 := isolate.(isolateAtomProvider); ok2 {
 			for _, atom := range append(ap.Verified(), ap.Present()...) {
 				if a, ok3 := atom.(*Atom); ok3 {
 					for _, p := range a.Terms {
-						if pa, ok4 := p.(*Atom); ok4 {
-							if !ips[pa.Rep] {
-								return fmt.Errorf("unbound isolate parameter: %s", pa.Rep)
-							}
+						name, _, ok4 := isolateParamNameSort(p)
+						if !ok4 || !ips[name] {
+							return fmt.Errorf("unbound isolate parameter: %s", name)
 						}
 					}
 				}
@@ -614,27 +649,21 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 				continue
 			}
 			name := a.Relname()
-			// Python: check all args are simple Apps without args
-			valid := true
-			for _, v := range a.Terms {
-				va, ok2 := v.(*Atom)
-				if !ok2 || len(va.Terms) != 0 {
-					valid = false
-					break
-				}
-				// Python line 368-369: check parameter doesn't redefine a symbol
-				if mod.Sig != nil {
-					if _, exists := mod.Sig.Symbols.Get2(va.Rep); exists {
-						return fmt.Errorf("isolate parameter redefines %s", va.Rep)
-					}
-				}
-			}
-			if !valid {
-				return fmt.Errorf("bad isolate parameter in %s", name)
-			}
+			// Python checks for simple zero-arg App nodes. The Go parser can
+			// represent typed isolate parameters as AST Variables here, so accept
+			// the equivalent zero-arg parameter nodes by name.
 			params := make([]string, len(a.Terms))
 			for i, v := range a.Terms {
-				params[i] = v.(*Atom).Rep
+				paramName, _, ok2 := isolateParamNameSort(v)
+				if !ok2 {
+					return fmt.Errorf("bad isolate parameter in %s", name)
+				}
+				if mod.Sig != nil {
+					if _, exists := mod.Sig.Symbols.Get2(paramName); exists {
+						return fmt.Errorf("isolate parameter redefines %s", paramName)
+					}
+				}
+				params[i] = paramName
 			}
 			stripMap[name] = params
 		}
@@ -668,22 +697,15 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 			if node == nil {
 				continue
 			}
-			// Python: s.rep and s.sort — params are Atoms
-			paramAtom, isAtom := node.(*Atom)
-			if !isAtom {
+			paramName, paramSortName, ok := isolateParamNameSort(node)
+			if !ok {
 				continue
 			}
-			paramName := paramAtom.Rep
 			// Python: add_symbol(s.rep, mod.sig.sorts[s.sort])
 			// Look up sort by name from the atom's sort annotation
 			var paramSort Sort
-			if paramAtom.ASort != nil {
-				// ASort is an ast.Node; extract sort name and look up
-				if sortAtom, ok := paramAtom.ASort.(*Atom); ok {
-					if mod.Sig != nil {
-						paramSort = mod.Sig.Sorts.Get(sortAtom.Rep)
-					}
-				}
+			if paramSortName != "" && mod.Sig != nil {
+				paramSort = mod.Sig.Sorts.Get(paramSortName)
 			}
 
 			if mod.Sig != nil {

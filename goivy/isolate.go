@@ -1764,9 +1764,6 @@ func isolateMakeAnd(terms ...Expr) Expr {
 	if len(terms) == 0 {
 		return &LogicAnd{Terms: nil} // empty conjunction = true
 	}
-	if len(terms) == 1 {
-		return terms[0]
-	}
 	a, err := NewAnd(terms...)
 	if err != nil {
 		return &LogicAnd{Terms: terms}

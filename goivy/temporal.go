@@ -684,6 +684,36 @@ func InvarianceTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node
 		return nil, fmt.Errorf("invariance: tactic applies only to formulas 'globally p' where p is non-temporal")
 	}
 
+	// Collect the auxiliary invariants before cloning the main invariant.
+	// Python ivy_temporal.py:274:
+	//   invars = [inv.compile() for inv in proof.tactic_decls]
+	var invars []*LabeledFormula
+	if tt, ok := pf.(*TacticTactic); ok {
+		var compiler *Compiler
+		if pc != nil && pc.GetModule() != nil {
+			compiler = NewFromModule(pc.GetModule())
+		} else {
+			compiler = NewCompiler(nil, nil)
+		}
+		for _, invNode := range tt.TacticDeclsList() {
+			inv, ok := invNode.(*LabeledFormula)
+			if !ok {
+				return nil, fmt.Errorf("invariance: tactic declaration is not a labeled formula: %T", invNode)
+			}
+			compiled, err := compiler.ThingLF(inv)
+			if err != nil {
+				return nil, err
+			}
+			invars = append(invars, compiled)
+		}
+	}
+
+	// Add the invariant phi to the list. Python ivy_temporal.py:277:
+	//   invars.append(ipr.clone_goal(goal,[],invar))
+	// where clone_goal calls goal.clone_with_fresh_id([goal.label, invar]) — fresh
+	// id is intentional, but the label must be the goal's label, not nil.
+	invars = append(invars, CloneGoal(pc.GetAstCfg(), goal, nil, invar))
+
 	// Get the model from the TemporalModels conclusion (Python line 262: model = conc.model)
 	// Clone before mutating (Python line 278: model = model.clone([]))
 	var model *NormalProgram
@@ -695,11 +725,9 @@ func InvarianceTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node
 		model = &NormalProgram{Init: NewSequence()}
 	}
 
-	// Add the invariant phi to the model's invariants. Python ivy_temporal.py:275:
-	//   invars.append(ipr.clone_goal(goal,[],invar))
-	// where clone_goal calls goal.clone_with_fresh_id([goal.label, invar]) — fresh
-	// id is intentional, but the label must be the goal's label, not nil.
-	model.Invars = append(model.Invars, goal.CloneWithFreshID([]Node{goal.Label, invar}))
+	// Add the invariant list to the model. Python ivy_temporal.py:279:
+	//   model.invars = model.invars + invars
+	model.Invars = append(model.Invars, invars...)
 
 	// Collect assumed globally properties from prover axioms
 	var gprops []Expr

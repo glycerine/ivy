@@ -5,15 +5,15 @@ import (
 )
 
 // Divergence 5: Python ivy_fragment.py:260 uses ilu.used_variables_ast(v)
-// and Go fragment.go:451 uses lu.FreeVariables(appArgs[i]).
+// and Go fragment.go used lu.FreeVariables(appArgs[i]).
 //
-// Investigation shows this is a FALSE ALARM: Python's ilu.used_variables_ast
-// (from ivy_logic_utils.py:485) wraps variables_ast (line 464) which is
-// explicitly commented "# get free variables" and excludes bound variables
-// from binders. This matches Go's lu.FreeVariables behavior exactly.
+// The set of variables matched, but order also matters: Python's
+// ilu.used_variables_ast wraps variables_ast with dict.fromkeys, preserving
+// DFS first-occurrence order. Go's FreeVariables stores an ordered map keyed
+// structurally, which is deterministic but not source-order preserving.
 //
-// These tests confirm the equivalence by exercising the same expression
-// patterns that createMacroMaps passes to FreeVariables.
+// These tests exercise the same expression ordering used by createMacroMaps
+// when Python records dependencies for lower-case macro formals.
 
 // TestDivergence5_SimpleTerm verifies that FreeVariables on a simple
 // application f(x, y) returns {x, y}, matching Python's
@@ -107,5 +107,68 @@ func TestDivergence5_NestedBinders(t *testing.T) {
 	}
 	if _, ok := fvs.Get2(Key(z)); !ok {
 		t.Error("Z should be free in ForAll X. Exists Y. Q(X,Y,Z)")
+	}
+}
+
+func TestCreateMacroMapsLowercaseFormalUsesActualVariableSourceOrderLikePython(t *testing.T) {
+	ResetCounter()
+
+	S := &UninterpretedSort{Name: "S"}
+	Z, _ := NewVariable("Z", S)
+	A, _ := NewVariable("A", S)
+	n := NewConst("n", S)
+
+	pairSort, err := NewFunctionSort(S, S, S)
+	if err != nil {
+		t.Fatal(err)
+	}
+	pair := NewConst("pair", pairSort)
+	pairZA, err := NewApply(pair, Z, A)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	macroSort, err := NewFunctionSort(S, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	macro := NewConst("macro", macroSort)
+	macroLHS, err := NewApply(macro, n)
+	if err != nil {
+		t.Fatal(err)
+	}
+	macroDef := NewDefinition(macroLHS, &Eq{T1: n, T2: n})
+
+	macroCall, err := NewApply(macro, pairZA)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	acfg := NewAstConfig()
+	lfMacro := acfg.NewLabeledFormula(nil, nil)
+	lfAssume := acfg.NewLabeledFormula(nil, nil)
+	sig := NewSig()
+	sig.AddSort(S)
+	c := newChecker(sig, nil)
+	c.universallyQuantifiedVars[makeVarID(Z)] = Z
+	c.universallyQuantifiedVars[makeVarID(A)] = A
+
+	c.createMacroMaps(
+		[]fmlaPair{{fmla: macroCall, source: lfAssume, lineno: 1}},
+		nil,
+		[]fmlaPair{{fmla: macroDef, source: lfMacro, lineno: 2}},
+	)
+
+	zNode := c.stratMap[varKey(Z)]
+	aNode := c.stratMap[varKey(A)]
+	if zNode == nil || aNode == nil {
+		t.Fatalf("expected strat nodes for Z and A, got Z=%v A=%v", zNode, aNode)
+	}
+	if zNode.ID >= aNode.ID {
+		t.Fatalf("lower-case macro formal dependencies were created out of source order: Z id=%d A id=%d", zNode.ID, aNode.ID)
+	}
+	deps := c.macroDepMap[varID{name: "n", sort: "S"}]
+	if len(deps) != 2 || !deps[zNode] || !deps[aNode] {
+		t.Fatalf("macroDepMap[n:S] = %v, want Z and A nodes", deps)
 	}
 }

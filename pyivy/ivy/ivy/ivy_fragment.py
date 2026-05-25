@@ -85,6 +85,15 @@ from .ivy_union_find2 import *
 # even number, one for an odd number and None if the formula occurs
 # under both an even number and an odd number of negations.
 
+def get_univ_node(v, reason):
+    global strat_map
+    created = v not in strat_map
+    node = strat_map[v]
+    node.var = v
+    if created:
+        if __debug__: xtracer.trace("fragment.univNode.create reason=%s id=%d var=%s" % (reason, node.id, v.canon()))
+    return node
+
 def map_fmla(lineno,fmla,pol):
     """ Add all of the subterms of `fmla` to the stratification graph. """
 
@@ -100,11 +109,7 @@ def map_fmla(lineno,fmla,pol):
         return map_fmla(lineno,fmla.body,pol)
     if il.is_variable(fmla):
         if fmla in universally_quantified_variables:
-            if fmla not in strat_map:
-                res = UFNode()
-                res.var = fmla
-                strat_map[fmla] = res
-            return strat_map[fmla],set()
+            return get_univ_node(fmla, "mapFmla"),set()
         node,vs = macro_var_map.get(fmla,None), macro_dep_map.get(fmla,set())
         return node,vs
     reses = [map_fmla(lineno,f,il.polar(fmla,pos,pol)) for pos,f in enumerate(fmla.args)]
@@ -248,18 +253,18 @@ def create_macro_maps(assumes,asserts,macros):
             if app.rep in macro_map:
                 mvs = macro_map[app.rep][0].args[0].args
                 for v,w in zip(app.args,mvs):
-                    if il.is_variable(w):
-                        if il.is_variable(v):
-                            if v in universally_quantified_variables:
-                                var_map_add(w,strat_map[v])
-                            if v in macro_var_map:
-                                var_map_add(w,macro_var_map[v])
+                        if il.is_variable(w):
+                            if il.is_variable(v):
+                                if v in universally_quantified_variables:
+                                    var_map_add(w,get_univ_node(v, "createMacroMaps.var"))
+                                if v in macro_var_map:
+                                    var_map_add(w,macro_var_map[v])
                             if v in macro_dep_map:
                                 macro_dep_map[w].update(macro_dep_map[v])
                         else:
                             for u in ilu.used_variables_ast(v):
                                 if u in universally_quantified_variables:
-                                    macro_dep_map[w].add(strat_map[u])
+                                    macro_dep_map[w].add(get_univ_node(u, "createMacroMaps.free"))
                                 if u in macro_var_map:
                                     macro_dep_map[w].add(macro_var_map[u])
                                 if u in macro_dep_map:
@@ -309,7 +314,7 @@ def make_skolems(fmla,ast,pol,univs):
             if u in fvs:
                 for e in il.quantifier_vars(fmla):
                     skolem_map[e] = (fmla,ast)
-                    macro_dep_map[e].add(strat_map[u])
+                    macro_dep_map[e].add(get_univ_node(u, "makeSkolems"))
     if is_e and not pol or is_a and pol:
         make_skolems(fmla.args[0],ast,pol,univs+list(il.quantifier_vars(fmla)))
     for arg in fmla.args:

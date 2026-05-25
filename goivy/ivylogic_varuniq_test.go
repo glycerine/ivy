@@ -9,6 +9,30 @@ import (
 // same UniqueRenamer, same suffix sequence (a,b,...,z,a0,b0,...), same
 // traversal order, same binder save/restore logic.
 
+func TestVariableUniqifierSortsQuantifierVarsAfterRenamingLikePython(t *testing.T) {
+	S := &UninterpretedSort{Name: "S"}
+	V, _ := NewVariable("V", S)
+	V0, _ := NewVariable("V0", S)
+	body := &LogicAnd{Terms: []Expr{
+		&Eq{T1: V, T2: V},
+		&Eq{T1: V0, T2: V0},
+	}}
+	fmla := &ForAll{Variables: []*LogicVariable{V, V0}, Body: body}
+
+	vu := NewVariableUniqifier([]string{"V"})
+	result := vu.Uniquify(fmla)
+	fa, ok := result.(*ForAll)
+	if !ok {
+		t.Fatalf("expected ForAll, got %T", result)
+	}
+
+	got := []string{fa.Variables[0].Name, fa.Variables[1].Name}
+	want := []string{"V0", "V_a"}
+	if got[0] != want[0] || got[1] != want[1] {
+		t.Fatalf("renamed ForAll vars not sorted like Python constructor: got %v want %v", got, want)
+	}
+}
+
 func TestVariableUniqifierExactNames(t *testing.T) {
 	// IvyForAll([X:S], IvyExists([Y:S], Eq(X, Y)))
 	// First call: X → "X", Y → "Y" (both first-time, unused)

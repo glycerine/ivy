@@ -124,9 +124,9 @@ func CloneNode(n Expr, args []Expr) Expr {
 func CloneBinder(n Expr, vars []*LogicVariable, body Expr) Expr {
 	switch t := n.(type) {
 	case *ForAll:
-		return &ForAll{Variables: vars, Body: body}
+		return &ForAll{Variables: deduplicateAndSortVars(vars), Body: body}
 	case *LogicExists:
-		return &LogicExists{Variables: vars, Body: body}
+		return &LogicExists{Variables: deduplicateAndSortVars(vars), Body: body}
 	case *Lambda:
 		return &Lambda{Variables: vars, Body: body}
 	case *LogicNamedBinder:
@@ -256,7 +256,7 @@ func CloseFormula(fmla Expr) Expr {
 	if len(fvs) == 0 {
 		return fmla
 	}
-	return &ForAll{Variables: fvs, Body: fmla}
+	return IvyForAll(fvs, fmla)
 }
 
 // IsGroundFormula returns true if a formula contains no free variables.

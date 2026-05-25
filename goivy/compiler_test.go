@@ -542,6 +542,46 @@ func TestCompileOld(t *testing.T) {
 	}
 }
 
+func TestCompileOldFieldReferenceOldsBaseNotDestructor(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+	tSort := &UninterpretedSort{Name: "t"}
+	c.Sig.Sorts.Set("t", tSort)
+	c.Sig.AddSymbol("fml:a", tSort)
+	rSort, err := NewFunctionSort(tSort, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c.Sig.AddSymbol("t.r", rSort)
+
+	oldNode := cfg.NewOld(cfg.NewAtom("fml:a.r"))
+	result, err := c.CompileNode(oldNode)
+	if err != nil {
+		t.Fatalf("compile old field reference: %v", err)
+	}
+	app, ok := result.(*Apply)
+	if !ok {
+		t.Fatalf("expected *Apply, got %T", result)
+	}
+	fn, ok := app.Func.(*Const)
+	if !ok {
+		t.Fatalf("expected Const function, got %T", app.Func)
+	}
+	if fn.Name != "t.r" {
+		t.Fatalf("old field reference should keep destructor t.r, got %s", fn.Name)
+	}
+	if len(app.Terms) != 1 {
+		t.Fatalf("expected one receiver term, got %d", len(app.Terms))
+	}
+	arg, ok := app.Terms[0].(*Const)
+	if !ok {
+		t.Fatalf("expected old receiver Const, got %T", app.Terms[0])
+	}
+	if arg.Name != "old_fml:a" {
+		t.Fatalf("expected receiver old_fml:a, got %s", arg.Name)
+	}
+}
+
 // TestCompileIte checks if-then-else expression compilation.
 func TestCompileIte(t *testing.T) {
 	cfg := NewAstConfig()

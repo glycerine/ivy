@@ -246,7 +246,6 @@ func importModuleWithParent(name string, cfg *Config, parent *ivyAccum) (res *Pa
 // Corresponds to Python's source_file (lines 69-78).
 func SourceFile(filename string, mod *Module, sig *Sig, kwargs map[string]interface{}) error {
 	xtracer.Trace("init.SourceFile ENTER file=%s", filename)
-	defer func() { xtracer.Trace("init.SourceFile EXIT file=%s", filename) }()
 
 	// Python: with iu.SourceFile(fn): ivy_load_file(f, **kwargs)
 	// WithSourceFile pushes/pops the global Filename for error reporting.
@@ -284,7 +283,11 @@ func SourceFile(filename string, mod *Module, sig *Sig, kwargs map[string]interf
 			mod.Name = filename
 		}
 	})
-	return outerErr
+	if outerErr != nil {
+		return outerErr
+	}
+	xtracer.Trace("init.SourceFile EXIT file=%s", filename)
+	return nil
 }
 
 // SourceString compiles an Ivy source string under filename. It mirrors
@@ -292,7 +295,6 @@ func SourceFile(filename string, mod *Module, sig *Sig, kwargs map[string]interf
 // browser-supplied in-memory spec with Python ivy_check's file-backed run.
 func SourceString(filename, source string, mod *Module, sig *Sig, kwargs map[string]interface{}) error {
 	xtracer.Trace("init.SourceFile ENTER file=%s", filename)
-	defer func() { xtracer.Trace("init.SourceFile EXIT file=%s", filename) }()
 
 	var outerErr error
 	mod.Cfg.IuCfg.WithSourceFile(filename, func() {
@@ -321,7 +323,11 @@ func SourceString(filename, source string, mod *Module, sig *Sig, kwargs map[str
 			mod.Name = filename
 		}
 	})
-	return outerErr
+	if outerErr != nil {
+		return outerErr
+	}
+	xtracer.Trace("init.SourceFile EXIT file=%s", filename)
+	return nil
 }
 
 // IvyInit initializes the Ivy system from command-line arguments.

@@ -82,6 +82,58 @@ export bar.a
 	}
 }
 
+func TestRegression_IsolateObjectARGSetupStripsOwnParametersLikePython(t *testing.T) {
+	src := `
+type key
+type value
+
+object noparam = {
+    action caller(n:key) = {
+        var q := parametrized.implicit_value(n);
+    }
+    export caller
+}
+
+isolate parametrized(n:key) = {
+    individual implicit_value: value
+} with noparam(n)
+`
+	result, err := Parse(src, Version{1, 7})
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+
+	mod := New()
+	mod.Cfg = NewConfig()
+	if err := IvyCompile(result.Decls, mod, false); err != nil {
+		t.Fatalf("IvyCompile error: %v", err)
+	}
+
+	iso, ok := mod.Isolates["parametrized"]
+	if !ok {
+		t.Fatal("parametrized isolate was not registered")
+	}
+	if len(iso.Elems) != 3 {
+		t.Fatalf("parametrized isolate elems mismatch: got %d, want 3", len(iso.Elems))
+	}
+	for i := 0; i < 2; i++ {
+		atom, ok := iso.Elems[i].(*Atom)
+		if !ok {
+			t.Fatalf("elem[%d] type = %T, want *Atom", i, iso.Elems[i])
+		}
+		if atom.Rep != "parametrized" || len(atom.Terms) != 0 {
+			t.Fatalf("elem[%d] = %s, want bare parametrized atom", i, atom.Canon())
+		}
+	}
+	present, ok := iso.Elems[2].(*Atom)
+	if !ok {
+		t.Fatalf("present elem type = %T, want *Atom", iso.Elems[2])
+	}
+	if present.Rep != "noparam" || len(present.Terms) != 1 {
+		t.Fatalf("present elem = %s, want noparam(n)", present.Canon())
+	}
+}
+
 // TestRegression_ImmutableSymbolAssigned verifies that mutable symbols
 // (like boolean vars assigned inside action bodies) are not incorrectly
 // flagged as immutable during compilation.
