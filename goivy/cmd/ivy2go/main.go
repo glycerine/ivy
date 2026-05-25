@@ -11,14 +11,18 @@
 //
 //	target=impl|class|repl|test|gen
 //	package=<go-package-name>     (alias: classname)
-//	outdir=<dir>
+//	outdir=<dir>                  must be inside an existing Go module
 //	main=<main-func-name>
 //	test_iters=<n>
 //	test_runs=<n>
 //	trace=true|false
 //	build=true|false              when true, run `go build` after WriteOutput
-//	gomodule=<module-path>        when set, emit a go.mod
 //	isolate=<isolate-name>|all
+//
+// ivy2go does NOT emit a go.mod for the generated package. Place
+// outdir inside an existing Go module (e.g. the goivy repo itself,
+// or a workspace that includes it) so `import "github.com/glycerine/ivy/goivy"`
+// resolves naturally.
 package main
 
 import (

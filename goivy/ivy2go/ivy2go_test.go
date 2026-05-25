@@ -281,11 +281,10 @@ func TestNormalizeConfigClassRewritesTargetToRepl(t *testing.T) {
 
 func TestMergeParamsRoutesKnownKeys(t *testing.T) {
 	cfg, ivy, err := mergeParams(map[string]string{
-		"target":   "impl",
-		"package":  "demo",
-		"trace":    "true",
-		"isolate":  "iso1",
-		"gomodule": "example.com/demo",
+		"target":  "impl",
+		"package": "demo",
+		"trace":   "true",
+		"isolate": "iso1",
 	}, Config{})
 	if err != nil {
 		t.Fatalf("mergeParams: %v", err)
@@ -299,11 +298,17 @@ func TestMergeParamsRoutesKnownKeys(t *testing.T) {
 	if !cfg.Trace {
 		t.Error("Trace should be true")
 	}
-	if cfg.GoModule != "example.com/demo" {
-		t.Errorf("GoModule = %q, want %q", cfg.GoModule, "example.com/demo")
-	}
 	if ivy["isolate"] != "iso1" {
 		t.Errorf("ivyParams[isolate] = %q, want %q", ivy["isolate"], "iso1")
+	}
+}
+
+func TestMergeParamsRejectsGomodule(t *testing.T) {
+	// gomodule used to be accepted; we removed it intentionally.
+	// It should now produce the "unknown parameter" error.
+	_, _, err := mergeParams(map[string]string{"gomodule": "example.com/demo"}, Config{})
+	if err == nil {
+		t.Fatal("expected mergeParams to reject gomodule, got nil")
 	}
 }
 

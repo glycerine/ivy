@@ -87,7 +87,7 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 // mergeParams routes the params map into Config and a residual map of
 // goivy-specific parameters (currently just "isolate"). Mirrors
 // ivy2cpp/compile.go mergeParams with the C++-only keys removed
-// (compiler, stdafx) and Go-only keys added (gomodule).
+// (compiler, stdafx). No gomodule key — see config.go for why.
 func mergeParams(params map[string]string, cfg Config) (Config, map[string]string, error) {
 	ivyParams := map[string]string{}
 	for k, v := range params {
