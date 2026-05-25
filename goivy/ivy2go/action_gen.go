@@ -722,18 +722,36 @@ func (g *Generator) requireMustHelpers() {
 }
 
 // actionGenNames returns the actions eligible for action-gen
-// emission, in deterministic order. Mirrors replActionNames'
-// filtering rule (no ext:/imp:/ivy:/__ prefixed names).
+// emission, in deterministic order. Mirrors ivy2cpp's
+// publicActionNamesSorted: an action gets a generator iff the
+// module's PublicActions map flags it. Falls back to the prefix
+// filter (no ext:/imp:/ivy:/__ names) when PublicActions is empty —
+// e.g. when running outside an isolate context.
 func (g *Generator) actionGenNames() []string {
 	if g == nil || g.Mod == nil || g.Mod.Actions == nil {
 		return nil
 	}
 	names := make([]string, 0)
-	for name := range g.Mod.Actions.All() {
-		if hasPrefixAny(name, "ext:", "imp:", "ivy:", "__") {
-			continue
+	if g.Mod.PublicActions != nil && g.Mod.PublicActions.Len() > 0 {
+		for name := range g.Mod.PublicActions.All() {
+			// PublicActions is authoritative, but skip names that
+			// the action lookup can't resolve (rare). Also keep
+			// the prefix filter as a safety net.
+			if hasPrefixAny(name, "imp__", "__") {
+				continue
+			}
+			if _, ok := g.Mod.Actions.Get2(name); !ok {
+				continue
+			}
+			names = append(names, name)
 		}
-		names = append(names, name)
+	} else {
+		for name := range g.Mod.Actions.All() {
+			if hasPrefixAny(name, "ext:", "imp:", "ivy:", "imp__", "__") {
+				continue
+			}
+			names = append(names, name)
+		}
 	}
 	sort.Strings(names)
 	return names
