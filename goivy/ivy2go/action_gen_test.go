@@ -446,6 +446,47 @@ func buildEmittedAgainstGoivy(t *testing.T, mod *goivy.Module, modName string) {
 	}
 }
 
+// --- Test-loop main: build AND run the emitted binary -------------
+
+func TestSmoke_BuildAndRunEmittedTestBinary(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+relation flag
+action set_flag(b: bool) = {
+	require b;
+	flag := b
+}
+action unset = {
+	flag := false
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "main"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	dir := playpenDir(t)
+	if err := WriteOutput(out, dir); err != nil {
+		t.Fatalf("WriteOutput: %v", err)
+	}
+	pkgDir := outputDirectory(dir, out.BaseName)
+	build := exec.Command("go", "build", "-o", "test_bin", ".")
+	build.Dir = pkgDir
+	if output, err := build.CombinedOutput(); err != nil {
+		t.Fatalf("go build:\n%s", string(output))
+	}
+	// Run the binary with a small iter count so the test is fast.
+	run := exec.Command(filepath.Join(pkgDir, "test_bin"), "--iters=5")
+	output, err := run.CombinedOutput()
+	if err != nil {
+		t.Fatalf("run failed: %v\n%s", err, string(output))
+	}
+	if !strings.Contains(string(output), "test_completed") {
+		t.Errorf("test binary should print test_completed; got:\n%s", string(output))
+	}
+}
+
 // --- OPEN 055.4: extended reifier coverage --------------------------
 
 func TestReifyExprAsGoCode_ApplyWrapsInMustApply(t *testing.T) {
