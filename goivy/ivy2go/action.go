@@ -563,6 +563,62 @@ func (g *Generator) actionParamName(c *goivy.Const) string {
 	return id
 }
 
+// isExternallyCallable reports whether the named action is one the
+// test driver invokes from outside — i.e. it appears in
+// actionGenNames. Internal helper actions (those called only by
+// other actions) don't emit a `<` trace prologue to keep the trace
+// focused on observable behaviour.
+//
+// The class target is also excluded: it's a library shape where the
+// caller drives the API themselves, ivyTraceOut isn't declared, and
+// a body-level trace would create a hard dep on an absent global.
+func (g *Generator) isExternallyCallable(name string) bool {
+	if g == nil || g.Config.RequestedTarget == "class" {
+		return false
+	}
+	for _, n := range g.actionGenNames() {
+		if n == name {
+			return true
+		}
+	}
+	return false
+}
+
+// emitActionTraceLine emits a single fmt.Fprintln to ivyTraceOut
+// of the form `<dir> name(arg0,arg1,…)` (or `<dir> name` for
+// zero-arg actions). Mirrors ivy2cpp's emitTraceActionPrologue but
+// produces a single Go call instead of a chain of stream writes.
+//
+// dir is "<" (action body — observed from inside) or ">" (test
+// driver — about to fire from outside). name is the raw action
+// name without the `ext:` prefix.
+func (g *Generator) emitActionTraceLine(w *goWriter, dir, name string, params []*goivy.Const) {
+	display := strings.TrimPrefix(name, "ext:")
+	g.Ctx.AddImport("actions", "fmt", "")
+	if len(params) == 0 {
+		w.linef(`fmt.Fprintln(ivyTraceOut, %q)`, dir+" "+display)
+		return
+	}
+	// Build a printf-style format string: `< name(%v,%v,…)`
+	var fmtStr strings.Builder
+	fmtStr.WriteString(dir)
+	fmtStr.WriteByte(' ')
+	fmtStr.WriteString(display)
+	fmtStr.WriteByte('(')
+	for i := range params {
+		if i > 0 {
+			fmtStr.WriteByte(',')
+		}
+		fmtStr.WriteString("%v")
+	}
+	fmtStr.WriteString(")\n")
+	args := make([]string, 0, len(params))
+	for _, p := range params {
+		args = append(args, g.actionParamName(p))
+	}
+	w.linef(`fmt.Fprintf(ivyTraceOut, %q, %s)`, fmtStr.String(), strings.Join(args, ", "))
+}
+
 // unsupported records a generator-time error and emits a marker
 // comment so the failure is visible in the source. Mirrors
 // ivy2cpp/generator.go unsupported.
@@ -637,6 +693,16 @@ func (g *Generator) emitActionMethod(w *goWriter, name string, act goivy.Action)
 		header += " (" + strings.Join(returnParts, ", ") + ")"
 	}
 	w.open(header + " {")
+
+	// Trace prologue: emit `< name(args)` for externally-callable
+	// actions so a test observer sees the action being invoked from
+	// the action's own body. Mirrors ivy2cpp's
+	// emitTraceActionPrologue (Python ivy_to_cpp.py:1576-1590).
+	// Gated on actionGenNames so internal helper actions don't
+	// flood the trace.
+	if g.isExternallyCallable(name) {
+		g.emitActionTraceLine(w, "<", name, params)
+	}
 
 	// Track returns so emitReturn can use the right names.
 	prev := g.currentReturns

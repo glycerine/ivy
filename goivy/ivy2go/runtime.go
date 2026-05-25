@@ -77,11 +77,14 @@ func (g *Generator) emitRuntimePreamble(w *goWriter) {
 	w.blank()
 
 	// ivyTraceOut is the io.Writer trace writes target. Default is
-	// os.Stdout; tests / embedders can override.
-	if g.Config.Trace {
+	// os.Stdout; tests / embedders can override. Always declared
+	// for non-class targets so action-prologue traces (`< name(…)`)
+	// and the test-driver traces (`> name(…)`) emitted by the
+	// test main always have a sink.
+	if g.Config.RequestedTarget != "class" {
 		g.Ctx.AddImport("runtime", "io", "")
 		g.Ctx.AddImport("runtime", "os", "")
-		w.line("// ivyTraceOut is the io.Writer used by trace-LHS writes.")
+		w.line("// ivyTraceOut is the io.Writer used by all trace lines.")
 		w.line("// Defaults to os.Stdout; override by reassigning before Init.")
 		w.line("var ivyTraceOut io.Writer = os.Stdout")
 		w.blank()

@@ -785,6 +785,8 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 		// action whose require would assert (mirrors ivy2cpp's
 		// test-harness check).
 		w.linef("if wouldFail_%s(state) { return }", goExportedName(name))
+		// Test-driver trace: `> name` before invocation.
+		g.emitActionTraceLine(w, ">", name, nil)
 		w.linef("state.%s()", goExportedName(name))
 		w.close("")
 		w.blank()
@@ -887,6 +889,8 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 	// frequently violate `require` clauses and crash the binary.
 	w.linef("if wouldFail_%s(state%s) { return }",
 		goExportedName(name), prefixCommaArgs(callArgs))
+	// Test-driver trace: `> name(args)` before invocation.
+	g.emitDriverTraceLine(w, name, callArgs)
 	w.linef("state.%s(%s)", goExportedName(name), strings.Join(callArgs, ", "))
 	w.close("")
 	w.blank()
@@ -901,6 +905,33 @@ func prefixCommaArgs(args []string) string {
 		return ""
 	}
 	return ", " + strings.Join(args, ", ")
+}
+
+// emitDriverTraceLine emits the `> name(arg0,arg1,…)` test-driver
+// trace at the start of actionGen.Generate. Counterpart to
+// emitActionTraceLine which emits `<` inside the action body.
+//
+// callArgs is the list of pre-computed local names (v0, v1, …) the
+// driver is about to pass to the action.
+func (g *Generator) emitDriverTraceLine(w *goWriter, name string, callArgs []string) {
+	display := strings.TrimPrefix(name, "ext:")
+	g.Ctx.AddImport("actions", "fmt", "")
+	if len(callArgs) == 0 {
+		w.linef(`fmt.Fprintln(ivyTraceOut, %q)`, "> "+display)
+		return
+	}
+	var fmtStr strings.Builder
+	fmtStr.WriteString("> ")
+	fmtStr.WriteString(display)
+	fmtStr.WriteByte('(')
+	for i := range callArgs {
+		if i > 0 {
+			fmtStr.WriteByte(',')
+		}
+		fmtStr.WriteString("%v")
+	}
+	fmtStr.WriteString(")\n")
+	w.linef(`fmt.Fprintf(ivyTraceOut, %q, %s)`, fmtStr.String(), strings.Join(callArgs, ", "))
 }
 
 // emitCloseSolver writes a Close method on each action generator so
