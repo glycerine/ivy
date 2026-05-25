@@ -1,4 +1,5 @@
-// Copyright 2016 The Go Authors. All rights reserved.
+// portions Copyright 2026 Jason E. Aten, Ph.D. All rights reserved.
+// portions Copyright 2023 The Go Authors. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -25,33 +26,13 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Copyright (c) 2020
-// The C2SP Authors.  All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions
-// are met:
-// 1. Redistributions of source code must retain the above copyright
-//    notice, this list of conditions and the following disclaimer.
-//
-// THIS SOFTWARE IS PROVIDED BY The C2SP Authors ``AS IS'' AND
-// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-// ARE DISCLAIMED.  IN NO EVENT SHALL The C2SP Authors BE LIABLE
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-// OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-// LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-// OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-// SUCH DAMAGE.
 
 #ifndef CHACHA8_HPP
 #define CHACHA8_HPP
 
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 
 namespace chacha8c {
 
@@ -74,13 +55,6 @@ static constexpr std::size_t block_size = 64;
 // constants as ChaCha20; the "8" only means 8 rounds
 // instead of 20. So these constants are part of the
 // algorithm's state initialization for the 32-byte-key variant.
-//
-// One nuance: in the Go demo main, those constants are
-// subtracted back out of the first four output words
-// after ChaCha8(...). That subtraction is not normal
-// ChaCha keystream generation; it is part of that 
-// specific test/demo transform. But the constants
-// themselves are canonical ChaCha constants.
 
 static constexpr std::uint32_t j0 = 0x61707865u;
 static constexpr std::uint32_t j1 = 0x3320646eu;
@@ -109,6 +83,12 @@ inline void store32_le(std::uint8_t *p, std::uint32_t x) noexcept
 	p[3] = static_cast<std::uint8_t>(x >> 24);
 }
 
+inline void store64_le(std::uint8_t *p, std::uint64_t x) noexcept
+{
+	store32_le(p, static_cast<std::uint32_t>(x));
+	store32_le(p + 4, static_cast<std::uint32_t>(x >> 32));
+}
+
 namespace detail {
 
 inline std::uint32_t rotl32(std::uint32_t x, unsigned int n) noexcept
@@ -135,117 +115,217 @@ inline void quarter_round(std::uint32_t &a,
 	b = rotl32(b, 7);
 }
 
-} // namespace detail
+static constexpr std::uint32_t ctr_inc = 4;
+static constexpr std::uint32_t ctr_max = 16;
+static constexpr std::uint32_t chunk = 32;
+static constexpr std::uint32_t reseed = 4;
 
-inline void chacha8(const std::uint8_t key[key_size],
-                    std::uint8_t *dst,
-                    std::size_t dst_len) noexcept
+struct chacha8rand_state {
+	std::uint64_t buf[chunk];
+	std::uint64_t seed[4];
+	std::uint32_t i;
+	std::uint32_t n;
+	std::uint32_t c;
+};
+
+inline void setup(const std::uint64_t seed[4],
+                  std::uint32_t b[16][4],
+                  std::uint32_t counter) noexcept
 {
-	std::uint32_t k[8];
-	std::uint32_t c0 = j0;
-	std::uint32_t c1 = j1;
-	std::uint32_t c2 = j2;
-	std::uint32_t c3 = j3;
-	std::uint32_t c12 = 0;
-	std::uint32_t c13 = 0;
-	std::uint32_t c14 = 0;
-	std::uint32_t c15 = 0;
-
-	for (std::size_t i = 0; i < 8; i++) {
-		k[i] = load32_le(key + i * 4);
+	for (std::size_t lane = 0; lane < 4; lane++) {
+		b[0][lane] = j0;
+		b[1][lane] = j1;
+		b[2][lane] = j2;
+		b[3][lane] = j3;
+		b[4][lane] = static_cast<std::uint32_t>(seed[0]);
+		b[5][lane] = static_cast<std::uint32_t>(seed[0] >> 32);
+		b[6][lane] = static_cast<std::uint32_t>(seed[1]);
+		b[7][lane] = static_cast<std::uint32_t>(seed[1] >> 32);
+		b[8][lane] = static_cast<std::uint32_t>(seed[2]);
+		b[9][lane] = static_cast<std::uint32_t>(seed[2] >> 32);
+		b[10][lane] = static_cast<std::uint32_t>(seed[3]);
+		b[11][lane] = static_cast<std::uint32_t>(seed[3] >> 32);
+		b[12][lane] = counter + static_cast<std::uint32_t>(lane);
+		b[13][lane] = 0;
+		b[14][lane] = 0;
+		b[15][lane] = 0;
 	}
+}
 
-	std::uint32_t c4 = k[0];
-	std::uint32_t c5 = k[1];
-	std::uint32_t c6 = k[2];
-	std::uint32_t c7 = k[3];
-	std::uint32_t c8 = k[4];
-	std::uint32_t c9 = k[5];
-	std::uint32_t c10 = k[6];
-	std::uint32_t c11 = k[7];
+inline void block(const std::uint64_t seed[4],
+                  std::uint64_t buf[chunk],
+                  std::uint32_t counter) noexcept
+{
+	std::uint32_t b[16][4];
 
-	std::uint32_t p1 = c1;
-	std::uint32_t p5 = c5;
-	std::uint32_t p9 = c9;
-	std::uint32_t p13 = c13;
-	detail::quarter_round(p1, p5, p9, p13);
+	setup(seed, b, counter);
 
-	std::uint32_t p2 = c2;
-	std::uint32_t p6 = c6;
-	std::uint32_t p10 = c10;
-	std::uint32_t p14 = c14;
-	detail::quarter_round(p2, p6, p10, p14);
+	for (std::size_t lane = 0; lane < 4; lane++) {
+		std::uint32_t b0 = b[0][lane];
+		std::uint32_t b1 = b[1][lane];
+		std::uint32_t b2 = b[2][lane];
+		std::uint32_t b3 = b[3][lane];
+		std::uint32_t b4 = b[4][lane];
+		std::uint32_t b5 = b[5][lane];
+		std::uint32_t b6 = b[6][lane];
+		std::uint32_t b7 = b[7][lane];
+		std::uint32_t b8 = b[8][lane];
+		std::uint32_t b9 = b[9][lane];
+		std::uint32_t b10 = b[10][lane];
+		std::uint32_t b11 = b[11][lane];
+		std::uint32_t b12 = b[12][lane];
+		std::uint32_t b13 = b[13][lane];
+		std::uint32_t b14 = b[14][lane];
+		std::uint32_t b15 = b[15][lane];
 
-	std::uint32_t p3 = c3;
-	std::uint32_t p7 = c7;
-	std::uint32_t p11 = c11;
-	std::uint32_t p15 = c15;
-	detail::quarter_round(p3, p7, p11, p15);
+		for (int round = 0; round < 4; round++) {
+			quarter_round(b0, b4, b8, b12);
+			quarter_round(b1, b5, b9, b13);
+			quarter_round(b2, b6, b10, b14);
+			quarter_round(b3, b7, b11, b15);
 
-	while (dst_len >= block_size) {
-		std::uint32_t fcr0 = c0;
-		std::uint32_t fcr4 = c4;
-		std::uint32_t fcr8 = c8;
-		std::uint32_t fcr12 = c12;
-		detail::quarter_round(fcr0, fcr4, fcr8, fcr12);
-
-		std::uint32_t x0 = fcr0;
-		std::uint32_t x5 = p5;
-		std::uint32_t x10 = p10;
-		std::uint32_t x15 = p15;
-		detail::quarter_round(x0, x5, x10, x15);
-
-		std::uint32_t x1 = p1;
-		std::uint32_t x6 = p6;
-		std::uint32_t x11 = p11;
-		std::uint32_t x12 = fcr12;
-		detail::quarter_round(x1, x6, x11, x12);
-
-		std::uint32_t x2 = p2;
-		std::uint32_t x7 = p7;
-		std::uint32_t x8 = fcr8;
-		std::uint32_t x13 = p13;
-		detail::quarter_round(x2, x7, x8, x13);
-
-		std::uint32_t x3 = p3;
-		std::uint32_t x4 = fcr4;
-		std::uint32_t x9 = p9;
-		std::uint32_t x14 = p14;
-		detail::quarter_round(x3, x4, x9, x14);
-
-		for (int round = 0; round < 3; round++) {
-			detail::quarter_round(x0, x4, x8, x12);
-			detail::quarter_round(x1, x5, x9, x13);
-			detail::quarter_round(x2, x6, x10, x14);
-			detail::quarter_round(x3, x7, x11, x15);
-
-			detail::quarter_round(x0, x5, x10, x15);
-			detail::quarter_round(x1, x6, x11, x12);
-			detail::quarter_round(x2, x7, x8, x13);
-			detail::quarter_round(x3, x4, x9, x14);
+			quarter_round(b0, b5, b10, b15);
+			quarter_round(b1, b6, b11, b12);
+			quarter_round(b2, b7, b8, b13);
+			quarter_round(b3, b4, b9, b14);
 		}
 
-		store32_le(dst + 0, x0 + c0);
-		store32_le(dst + 4, x1 + c1);
-		store32_le(dst + 8, x2 + c2);
-		store32_le(dst + 12, x3 + c3);
-		store32_le(dst + 16, x4 + c4);
-		store32_le(dst + 20, x5 + c5);
-		store32_le(dst + 24, x6 + c6);
-		store32_le(dst + 28, x7 + c7);
-		store32_le(dst + 32, x8 + c8);
-		store32_le(dst + 36, x9 + c9);
-		store32_le(dst + 40, x10 + c10);
-		store32_le(dst + 44, x11 + c11);
-		store32_le(dst + 48, x12 + c12);
-		store32_le(dst + 52, x13 + c13);
-		store32_le(dst + 56, x14 + c14);
-		store32_le(dst + 60, x15 + c15);
-
-		c12++;
-		dst += block_size;
-		dst_len -= block_size;
+		b[0][lane] = b0;
+		b[1][lane] = b1;
+		b[2][lane] = b2;
+		b[3][lane] = b3;
+		b[4][lane] += b4;
+		b[5][lane] += b5;
+		b[6][lane] += b6;
+		b[7][lane] += b7;
+		b[8][lane] += b8;
+		b[9][lane] += b9;
+		b[10][lane] += b10;
+		b[11][lane] += b11;
+		b[12][lane] = b12;
+		b[13][lane] = b13;
+		b[14][lane] = b14;
+		b[15][lane] = b15;
 	}
+
+	for (std::size_t word = 0; word < 16; word++) {
+		buf[word * 2 + 0] = static_cast<std::uint64_t>(b[word][0]) |
+		                     (static_cast<std::uint64_t>(b[word][1]) << 32);
+		buf[word * 2 + 1] = static_cast<std::uint64_t>(b[word][2]) |
+		                     (static_cast<std::uint64_t>(b[word][3]) << 32);
+	}
+}
+
+inline void init(chacha8rand_state &s, const std::uint8_t seed[key_size]) noexcept
+{
+	s.seed[0] = load64_le(seed + 0 * 8);
+	s.seed[1] = load64_le(seed + 1 * 8);
+	s.seed[2] = load64_le(seed + 2 * 8);
+	s.seed[3] = load64_le(seed + 3 * 8);
+	block(s.seed, s.buf, 0);
+	s.c = 0;
+	s.i = 0;
+	s.n = chunk;
+}
+
+inline bool next(chacha8rand_state &s, std::uint64_t &out) noexcept
+{
+	std::uint32_t i = s.i;
+
+	if (i >= s.n) {
+		return false;
+	}
+	s.i = i + 1;
+	out = s.buf[i & 31u];
+	return true;
+}
+
+inline void refill(chacha8rand_state &s) noexcept
+{
+	s.c += ctr_inc;
+	if (s.c == ctr_max) {
+		s.seed[0] = s.buf[chunk - reseed + 0];
+		s.seed[1] = s.buf[chunk - reseed + 1];
+		s.seed[2] = s.buf[chunk - reseed + 2];
+		s.seed[3] = s.buf[chunk - reseed + 3];
+		s.c = 0;
+	}
+	block(s.seed, s.buf, s.c);
+	s.i = 0;
+	s.n = chunk;
+	if (s.c == ctr_max - ctr_inc) {
+		s.n = chunk - reseed;
+	}
+}
+
+} // namespace detail
+
+class ChaCha8 {
+public:
+	explicit ChaCha8(const std::uint8_t seed[key_size]) noexcept
+	{
+		Seed(seed);
+	}
+
+	void Seed(const std::uint8_t seed[key_size]) noexcept
+	{
+		detail::init(state_, seed);
+		std::memset(read_buf_, 0, sizeof(read_buf_));
+		read_len_ = 0;
+	}
+
+	std::uint64_t Uint64() noexcept
+	{
+		std::uint64_t x;
+
+		for (;;) {
+			if (detail::next(state_, x)) {
+				return x;
+			}
+			detail::refill(state_);
+		}
+	}
+
+	std::size_t Read(std::uint8_t *p, std::size_t len) noexcept
+	{
+		std::size_t n = 0;
+
+		if (read_len_ > 0) {
+			std::size_t take = len < read_len_ ? len : read_len_;
+
+			std::memcpy(p, read_buf_ + sizeof(read_buf_) - read_len_, take);
+			read_len_ -= take;
+			p += take;
+			len -= take;
+			n += take;
+		}
+
+		while (len >= 8) {
+			store64_le(p, Uint64());
+			p += 8;
+			len -= 8;
+			n += 8;
+		}
+
+		if (len > 0) {
+			store64_le(read_buf_, Uint64());
+			std::memcpy(p, read_buf_, len);
+			read_len_ = 8 - len;
+			n += len;
+		}
+
+		return n;
+	}
+
+private:
+	detail::chacha8rand_state state_;
+	std::uint8_t read_buf_[8];
+	std::size_t read_len_;
+};
+
+inline ChaCha8 NewChaCha8(const std::uint8_t seed[key_size]) noexcept
+{
+	return ChaCha8(seed);
 }
 
 } // namespace chacha8c
