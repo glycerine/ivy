@@ -1667,24 +1667,38 @@ func (a *LogicWhileAction) Expand(ctx *UpdateContext) ActionsAction {
 		invariants = append(invariants, inv)
 	}
 
-	// Build assert invariants
-	// Python ivy_actions.py:1070: asserts = [a for a in asserts if not isinstance(a, AssumeAction)]
+	// Build assert invariants.
+	// Python keeps invariant nodes as actions:
+	//   asserts = self.args[2:]
+	//   asserts = [a for a in asserts if not isinstance(a, AssumeAction)]
 	var asserts []ActionsAction
 	for _, inv := range invariants {
-		if _, isAssume := inv.(*LogicAssumeAction); isAssume {
-			continue
+		if act := extractActionFromNode(inv); act != nil {
+			if _, isAssume := act.(*LogicAssumeAction); !isAssume {
+				asserts = append(asserts, act)
+			}
+		} else {
+			asserts = append(asserts, NewAssertAction(inv))
 		}
-		asserts = append(asserts, NewAssertAction(inv))
 	}
 
 	// Build assume invariants (assert→assume conversion)
-	// Python ivy_actions.py:1069: assumes = [... for a in asserts if not isinstance(a, SubgoalAction)]
+	// Python ivy_actions.py:1069: assumes = [a.assert_to_assume([AssertAction])
+	//                                         for a in asserts if not isinstance(a, SubgoalAction)]
 	var assumes []ActionsAction
+	assertKinds := map[string]bool{"assert": true}
+	var iuCfg *IvyUtilsConfig
+	if ctx != nil && ctx.Domain != nil && ctx.Domain.Cfg != nil {
+		iuCfg = ctx.Domain.Cfg.IuCfg
+	}
 	for _, inv := range invariants {
-		if _, isSG := inv.(*LogicSubgoalAction); isSG {
-			continue
+		if act := extractActionFromNode(inv); act != nil {
+			if _, isSG := act.(*LogicSubgoalAction); !isSG {
+				assumes = append(assumes, AssertToAssume(act, assertKinds, iuCfg))
+			}
+		} else {
+			assumes = append(assumes, NewAssumeAction(inv))
 		}
-		assumes = append(assumes, NewAssumeAction(inv))
 	}
 
 	// Build havocs for modified symbols

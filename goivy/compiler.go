@@ -1245,7 +1245,59 @@ func (c *Compiler) SortifyWithInference(astNode Node) (Expr, error) {
 		loc := astNode.GetLineno()
 		return nil, fmt.Errorf("at %v: %w", loc, err)
 	}
+	preserveAssertLikeLF(result, res)
 	return result, nil
+}
+
+func preserveAssertLikeLF(node Expr, source Expr) {
+	assertBase := func(n Expr) *LogicAssertAction {
+		switch a := n.(type) {
+		case *LogicAssertAction:
+			return a
+		case *LogicRequiresAction:
+			return &a.LogicAssertAction
+		case *LogicEnsuresAction:
+			return &a.LogicAssertAction
+		case *LogicSubgoalAction:
+			return &a.LogicAssertAction
+		default:
+			return nil
+		}
+	}
+	if target := assertBase(node); target != nil {
+		lf := target.LF
+		if lf == nil {
+			if src := assertBase(source); src != nil {
+				lf = src.LF
+			}
+		}
+		if lf == nil {
+			return
+		}
+		lf = lf.Clone([]Node{lf.Label, lf.Formula}).(*LabeledFormula)
+		target.LF = lf
+		if f, ok := lf.Formula.(Expr); ok {
+			target.Formula = f
+		}
+		return
+	}
+
+	if a, ok := node.(*LogicAssumeAction); ok {
+		lf := a.LF
+		if lf == nil {
+			if src, ok := source.(*LogicAssumeAction); ok {
+				lf = src.LF
+			}
+		}
+		if lf == nil {
+			return
+		}
+		lf = lf.Clone([]Node{lf.Label, lf.Formula}).(*LabeledFormula)
+		a.LF = lf
+		if f, ok := lf.Formula.(Expr); ok {
+			a.Formula = f
+		}
+	}
 }
 
 // CompileWithSortInference is the adapter used by ast.Schema.GetInstance.

@@ -75,6 +75,29 @@ func TestWhileExpandRankingLocalActionCallerMatchesPython(t *testing.T) {
 	}
 }
 
+func TestWhileExpandUsesInvariantActionsDirectly(t *testing.T) {
+	cond := NewConst("q", Boolean)
+	p := NewConst("p", Boolean)
+	body := NewAssignAction(p, p)
+	inv := NewAssertAction(p)
+	w := NewWhileAction(cond, body, inv)
+
+	expanded := w.Expand(testCtx())
+	seq, ok := expanded.(*LogicSequence)
+	if !ok {
+		t.Fatalf("while expansion should be a sequence, got %T", expanded)
+	}
+	for _, child := range seq.ActionArgs() {
+		assert, ok := child.(*LogicAssertAction)
+		if !ok {
+			continue
+		}
+		if _, wrapped := assert.Formula.(ActionsAction); wrapped {
+			t.Fatalf("while invariant action was wrapped as an assertion formula: %s", assert.Canon())
+		}
+	}
+}
+
 // --- AssumeAction ---
 
 func TestAssumeActionUpdate(t *testing.T) {

@@ -402,6 +402,25 @@ func TestCompileWhileExtractTraceMatchesPython(t *testing.T) {
 	}
 }
 
+func TestSortifyAssertActionPreservesLabeledFormulaLikePython(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+	c.Sig.Symbols.Set("p", &SymbolEntry{Name: "p", Sort: Boolean})
+
+	lf := cfg.NewLabeledFormula(cfg.NewAtom("asrt"), cfg.NewAtom("p"))
+	inv := cfg.NewAssertAction(lf)
+
+	out := captureActionUpdateStdout(t, func() {
+		if _, err := c.SortifyWithInference(inv); err != nil {
+			t.Fatalf("SortifyWithInference(assert LF) failed: %v", err)
+		}
+	})
+
+	if got := strings.Count(out, "XTRACE: ast.LF.clone PRESERVE"); got < 2 {
+		t.Fatalf("assert-action sort inference should preserve-clone the LF wrapper twice like Python; got %d:\n%s", got, out)
+	}
+}
+
 func TestCompileWhilePreservesRankingWrapperLikePython(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()
