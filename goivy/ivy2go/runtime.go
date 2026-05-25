@@ -97,20 +97,14 @@ func (g *Generator) emitRuntimePreamble(w *goWriter) {
 	w.close("")
 	w.blank()
 
-	// ivyAssumeFailed is the sentinel an ivyAssume failure panics
-	// with so the test driver's recover() can distinguish "the env
-	// contract was violated for this run" (recoverable) from a
-	// genuine ivyAssert failure (which we still want to surface).
-	w.line("// ivyAssumeFailed signals an environment-contract violation —")
-	w.line("// caught and dropped by the test driver's recover() so the")
-	w.line("// random scheduler can skip the offending iteration.")
-	w.line("type ivyAssumeFailed struct{ Label string }")
-	w.blank()
-	w.line(`func (e ivyAssumeFailed) Error() string { return "ivy assume failed: " + e.Label }`)
-	w.blank()
+	// ivyAssume panics on failure — the random test driver pre-gates
+	// all assume conditions through `wouldFail_<Name>` before firing
+	// an action, so a live panic here means a wouldFail bug or a
+	// missed precondition path. Panicking (rather than log.Fatalf)
+	// preserves the stack trace.
 	w.open("func ivyAssume(cond bool, label string) {")
 	w.open("if !cond {")
-	w.line(`panic(ivyAssumeFailed{Label: label})`)
+	w.line(`panic(fmt.Sprintf("ivy assume failed: %s (wouldFail gate missed this precondition)", label))`)
 	w.close("")
 	w.close("")
 	w.blank()

@@ -46,16 +46,30 @@ func (g *Generator) emitActionGenStructs(w *goWriter) {
 }
 
 // emitWouldFailHelper writes `wouldFail_<Name>(state *State, v0 T0, …) bool`.
-// Returns true when the action's Pre clauses would hold (i.e. the
-// action would fail an assert) given the supplied input values, so
-// actionGen.Generate can skip the call. Mirrors the precondition
-// gating ivy2cpp's test harness does via the Z3 model-feasibility
-// check.
+// Returns true when the action should NOT fire in the current state.
+// actionGen.Generate calls it as a precondition gate so randomized
+// inputs don't trigger an `ivyAssert` or `ivyAssume` panic at runtime.
 //
-// We emit Pre.Fmlas as a plain-Go disjunction (any one fmla being
-// true means failure), with references to formal params rewritten
-// to the corresponding `v<i>` local and references to state symbols
-// routed through `s.<Exported>` via the existing emitExpr machinery.
+// Two flavors of failure are folded into one boolean:
+//
+//  1. assert-failure paths captured by goivy's `Update.Pre.Fmlas`.
+//     Treated as a CONJUNCTION (the goivy Clauses semantics): the
+//     action fails iff every fmla holds. Joined with `&&`.
+//
+//  2. env-contract violations — the action body has an `assume` that
+//     would fail in the current state. goivy's `Update.Pre` does not
+//     surface these (assume is the environment's obligation, not a
+//     system failure), so we derive them from the entry precondition
+//     `ReverseImage(true, true, upd).Fmlas`, filtered to fmlas that
+//     reference only old-state / formal symbols. The action fails iff
+//     any of these old-state-only fmlas evaluate to false in the
+//     current state.
+//
+// Combined: wouldFail = (every Pre.Fmla holds) OR (some entry-
+// precondition fmla is violated). Without (2), back-to-back firings
+// of an action like `intf.pong` (whose body starts with `assume side
+// == right` after the spec's `before` mixin) would crash the test
+// driver via the `ivyAssume` panic.
 func (g *Generator) emitWouldFailHelper(w *goWriter, name string) {
 	act, _ := g.Mod.Actions.Get2(name)
 	if act == nil {
@@ -73,6 +87,17 @@ func (g *Generator) emitWouldFailHelper(w *goWriter, name string) {
 		defer func() { _ = recover() }()
 		update = goivy.GetUpdate(act, ctx)
 	}()
+	// envPre = reverse-image entry precondition; its old-state-only
+	// fmlas are exactly the assume-style obligations the test
+	// environment must satisfy before firing the action.
+	var envPre *goivy.Clauses
+	if update != nil {
+		func() {
+			defer func() { _ = recover() }()
+			truePre := goivy.TrueClauses(nil)
+			envPre = goivy.ReverseImage(truePre, truePre, update)
+		}()
+	}
 
 	helperName := "wouldFail_" + goExportedName(name)
 	sig := "state *" + g.StateTypeName
@@ -90,58 +115,86 @@ func (g *Generator) emitWouldFailHelper(w *goWriter, name string) {
 	for i := range params {
 		w.linef("\t_ = v%d", i)
 	}
-	if update == nil || update.Pre == nil || update.Pre.IsFalse() {
-		// Pre trivially-false → action never fails on this input.
-		w.line("\treturn false")
-		w.line("}")
-		w.blank()
-		return
-	}
-	// Lower each Pre fmla into a Go boolean expression. The body
-	// runs inside a function whose receiver is `s *State`, so we
-	// alias the helper's `state` param to that convention by
-	// emitting wrappers below.
-	//
-	// Strategy: walk each Pre fmla, rewrite formal-param refs to
-	// the corresponding v<i> local, then emit the Go expression.
-	// State-symbol refs route through `s.X` per emitExpr — but
-	// our helper has `state *State`, not `s *State`. We fix that
-	// by aliasing `s := state` once at function entry.
+	// `s := state` so the formula emitter can reuse the standard
+	// `s.<Exported>` lowering path for state-symbol references.
 	w.line("\ts := state")
 	w.line("\t_ = s")
-	// Inline Pre.Defs into every Pre.Fmla so synthetic temporaries
-	// (e.g. `__ts0_a = left_player.ball`) become resolvable
-	// references to state symbols / formals. Without this, fmlas
-	// that mention the temporary get marked unreifiable and the
-	// action is skipped, which masks the user's actual Pre and
-	// breaks the test trace (cf. ivy2cpp's pingpong output that
-	// fires `left_player.hit`).
-	defSubs := buildDefSubstitutions(update.Pre.Defs)
-	parts := []string{}
-	for _, fmla := range update.Pre.Fmlas {
-		inlined := applyDefSubstitutions(fmla, defSubs)
-		expr, ok := g.emitPreFmlaAsGoExpr(inlined, params)
-		if !ok {
-			// Unreifiable fmla — conservatively assume failure so
-			// the action is skipped (safer than firing and
-			// panicking).
-			w.linef("\t// unreifiable Pre fmla — conservatively skipping action: %s",
-				strings.ReplaceAll(fmla.String(), "\n", " "))
-			parts = append(parts, "true")
-			continue
+
+	// (1) Assert-failure clauses (goivy CONJUNCTION semantics: fail
+	// iff every fmla holds).
+	preParts := []string{}
+	if update != nil && update.Pre != nil && !update.Pre.IsFalse() {
+		defSubs := buildDefSubstitutions(update.Pre.Defs)
+		for _, fmla := range update.Pre.Fmlas {
+			inlined := applyDefSubstitutions(fmla, defSubs)
+			expr, ok := g.emitPreFmlaAsGoExpr(inlined, params)
+			if !ok {
+				w.linef("\t// unreifiable Pre fmla — conservatively skipping action: %s",
+					strings.ReplaceAll(fmla.String(), "\n", " "))
+				preParts = append(preParts, "true")
+				continue
+			}
+			preParts = append(preParts, "("+expr+")")
 		}
-		parts = append(parts, "("+expr+")")
 	}
-	if len(parts) == 0 {
+
+	// (2) Env-contract (assume) preconditions: extracted from
+	// ReverseImage entry constraints; only fmlas that reference
+	// nothing but old-state / formals qualify (new-state
+	// definitions are skipped). Action fails iff any of them is
+	// false in the current state.
+	envParts := []string{}
+	if envPre != nil {
+		envDefSubs := buildDefSubstitutions(envPre.Defs)
+		for _, fmla := range envPre.Fmlas {
+			inlined := applyDefSubstitutions(fmla, envDefSubs)
+			if mentionsNewState(inlined) {
+				continue
+			}
+			expr, ok := g.emitPreFmlaAsGoExpr(inlined, params)
+			if !ok {
+				continue
+			}
+			envParts = append(envParts, "!("+expr+")")
+		}
+	}
+
+	switch {
+	case len(preParts) == 0 && len(envParts) == 0:
 		w.line("\treturn false")
-	} else {
-		// Pre.Fmlas semantics: a goivy *Clauses is a CONJUNCTION
-		// of its fmlas. The action fails iff EVERY fmla holds.
-		// Joining with `&&` (not `||`) matches that.
-		w.linef("\treturn %s", strings.Join(parts, " && "))
+	case len(envParts) == 0:
+		w.linef("\treturn %s", strings.Join(preParts, " && "))
+	case len(preParts) == 0:
+		w.linef("\treturn %s", strings.Join(envParts, " || "))
+	default:
+		w.linef("\treturn (%s) || (%s)",
+			strings.Join(preParts, " && "),
+			strings.Join(envParts, " || "))
 	}
 	w.line("}")
 	w.blank()
+}
+
+// mentionsNewState reports whether e references a new-state symbol
+// (`new_*` or `__new_*` — these names are introduced by goivy's
+// update analysis to label post-state values). Used to filter the
+// `ReverseImage` entry-precondition fmlas down to ones that only
+// constrain the pre-state, which are exactly the assume-style
+// preconditions the test environment must enforce.
+func mentionsNewState(e goivy.Expr) bool {
+	if e == nil {
+		return false
+	}
+	for _, sym := range goivy.UsedSymbolsAst(e).All() {
+		c, ok := sym.(*goivy.Const)
+		if !ok || c == nil {
+			continue
+		}
+		if strings.HasPrefix(c.Name, "__new_") || strings.HasPrefix(c.Name, "new_") {
+			return true
+		}
+	}
+	return false
 }
 
 // emitPreFmlaAsGoExpr emits a goivy Expr as a plain Go boolean
