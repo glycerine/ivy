@@ -532,6 +532,30 @@ func TestAstSchemaInstantiation(t *testing.T) {
 	}
 }
 
+func TestAstRewritePreservesAssumeGlobalTactic(t *testing.T) {
+	cfg := NewAstConfig()
+	proof := cfg.NewAssumeGlobalTacticWithMatches(
+		cfg.NewAtom("foo"),
+		cfg.NewRenaming(nil),
+		[]Node{cfg.NewDefinition(cfg.NewVariable("X", "S"), cfg.NewAtom("y"))},
+	)
+	proof.TLabel = cfg.NewNoneAST()
+
+	rewritten := SubstPrefixAtomsAst(proof, map[string]string{"y": "loc:y"}, nil, nil, nil)
+
+	global, ok := rewritten.(*AssumeGlobalTactic)
+	if !ok {
+		t.Fatalf("SubstPrefixAtomsAst erased AssumeGlobalTactic wrapper: got %T", rewritten)
+	}
+	canon := string(global.Canon())
+	if !strings.Contains(canon, "(assumeGlobalTactic") {
+		t.Fatalf("rewritten tactic canon lost global wrapper: %s", canon)
+	}
+	if !strings.Contains(canon, `rhs:(atom rep:"loc:y"`) {
+		t.Fatalf("rewritten tactic did not substitute the match RHS: %s", canon)
+	}
+}
+
 // --- Some tests ---
 
 func TestAstSome(t *testing.T) {
@@ -674,6 +698,7 @@ var _ Node = (*IsolateObjectDecl)(nil)
 var _ Node = (*Tactic)(nil)
 var _ Node = (*SchemaInstantiation)(nil)
 var _ Node = (*AssumeTactic)(nil)
+var _ Node = (*AssumeGlobalTactic)(nil)
 var _ Node = (*UnfoldSpec)(nil)
 var _ Node = (*UnfoldTactic)(nil)
 var _ Node = (*ForgetTactic)(nil)

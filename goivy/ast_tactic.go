@@ -86,6 +86,18 @@ type AssumeGlobalTactic struct {
 	AssumeTactic
 }
 
+func (a *AssumeGlobalTactic) Clone(args []Node) Node {
+	return &AssumeGlobalTactic{
+		AssumeTactic: AssumeTactic{
+			Base:       a.Base,
+			TLabel:     a.TLabel,
+			SchemaName: args[0],
+			Ren:        args[1],
+			Matches:    args[2:],
+		},
+	}
+}
+
 func (a *AssumeGlobalTactic) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(assumeGlobalTactic assumeTactic:%v)", a.AssumeTactic.Canon()))
 }
