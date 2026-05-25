@@ -571,10 +571,16 @@ func (g *Generator) emitRangeNumeral(c *goivy.Const) (string, bool) {
 	}
 	// Literal numerals are already in-bounds at parse time; emit raw
 	// digits unless the literal is out of range, in which case fall
-	// back to the safer clamp form. For now we always clamp to keep
-	// behaviour identical to ivy2cpp/expr.go.
+	// back to the safer clamp form. Use the named type for the
+	// result so comparisons / arithmetic against typed variables
+	// (e.g. `i < 4` where i:Idx) don't trip Go's type checker.
 	x := c.Name
-	return fmt.Sprintf("func() int { v := %s; %s }()", x, rangeClampExpr("v", lo, hi)), true
+	typ := g.goType(c.CSort)
+	if typ == "" {
+		typ = "int"
+	}
+	return fmt.Sprintf("func() %s { v := %s(%s); lo, hi := %s(%s), %s(%s); %s }()",
+		typ, typ, x, typ, lo, typ, hi, rangeClampExpr("v", "lo", "hi")), true
 }
 
 // emitQuant lowers `forall x:T . body(x)` or `exists x:T . body(x)`

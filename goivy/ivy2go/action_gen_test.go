@@ -191,6 +191,101 @@ func TestReifyExprAsGoCode_ParamRewriteToInput(t *testing.T) {
 	}
 }
 
+// --- OPEN 055.5 / 055.6: end-to-end build smokes for harder Pre ----
+
+func TestSmoke_BuildEmittedTest_EnumPre(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+type color = {red, green, blue}
+function pick : color
+action set_pick(c: color) = {
+	require c = red;
+	pick := c
+}
+`)
+	buildEmittedAgainstGoivy(t, mod, "ivygo_enum_pre")
+}
+
+func TestSmoke_BuildEmittedTest_RangePre(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+type idx = {0..7}
+relation slot(I: idx)
+action set_slot(i: idx) = {
+	require i < 4;
+	slot(i) := true
+}
+`)
+	buildEmittedAgainstGoivy(t, mod, "ivygo_range_pre")
+}
+
+func TestSmoke_BuildEmittedTest_ForAllPre(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+type node = {0..3}
+relation link(N1: node, N2: node)
+action sym = {
+	require forall X. link(X, X)
+}
+`)
+	buildEmittedAgainstGoivy(t, mod, "ivygo_forall_pre")
+}
+
+func TestSmoke_BuildEmittedTest_StructDestrParam(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+type point = struct { x : bool, y : bool }
+relation flag
+action set_to_x(p: point) = {
+	require x(p);
+	flag := x(p)
+}
+`)
+	buildEmittedAgainstGoivy(t, mod, "ivygo_struct_param")
+}
+
+// buildEmittedAgainstGoivy is a shared helper: write the test-target
+// output to a temp dir, point its go.mod at the in-tree goivy via
+// `replace`, run `go mod tidy` + `go build`. Fails the test on any
+// step that errors.
+func buildEmittedAgainstGoivy(t *testing.T, mod *goivy.Module, modName string) {
+	t.Helper()
+	out, err := Generate(mod, Config{Target: "test", PackageName: "main"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	dir := t.TempDir()
+	if err := WriteOutput(out, dir); err != nil {
+		t.Fatalf("WriteOutput: %v", err)
+	}
+	pkgDir := outputDirectory(dir, out.BaseName)
+	goivyAbs := repoRoot(t)
+	gomod := "module " + modName + "\n\ngo 1.25\n\n" +
+		"require github.com/glycerine/ivy/goivy v0.0.0\n\n" +
+		"replace github.com/glycerine/ivy/goivy => " + goivyAbs + "\n"
+	if err := os.WriteFile(filepath.Join(pkgDir, "go.mod"), []byte(gomod), 0o644); err != nil {
+		t.Fatalf("go.mod: %v", err)
+	}
+	tidy := exec.Command("go", "mod", "tidy")
+	tidy.Dir = pkgDir
+	if output, err := tidy.CombinedOutput(); err != nil {
+		t.Fatalf("go mod tidy:\n%s", string(output))
+	}
+	build := exec.Command("go", "build", "./...")
+	build.Dir = pkgDir
+	if output, err := build.CombinedOutput(); err != nil {
+		t.Fatalf("go build:\n%s", string(output))
+	}
+}
+
 // --- OPEN 055.4: extended reifier coverage --------------------------
 
 func TestReifyExprAsGoCode_ApplyWrapsInMustApply(t *testing.T) {
@@ -472,7 +567,7 @@ action set_flag(b: bool) = {
 		t.Fatalf("Generate: %v", err)
 	}
 	actions := out.Files["actions.go"]
-	if !strings.Contains(actions, "pickBoolOrChoose(modelResult,") {
+	if !strings.Contains(actions, "pickBoolOrChoose(g.sol, modelResult,") {
 		t.Errorf("bool input should be picked via pickBoolOrChoose, got:\n%s", actions)
 	}
 }

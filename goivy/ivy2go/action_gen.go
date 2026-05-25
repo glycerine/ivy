@@ -338,25 +338,15 @@ func (g *Generator) reifySortAsGoCode(s goivy.Sort) (string, bool) {
 		return fmt.Sprintf("&goivy.LogicEnumeratedSort{Name: %q, Extension: []string{%s}}",
 			t.Name, strings.Join(ext, ", ")), true
 	case *goivy.RangeSort:
-		// Only numeral bounds are reifiable today; compiled bounds
-		// (parameter references) require module context at runtime.
-		lb, lbOK := t.Lb.(goivy.NumeralBound)
-		ub, ubOK := t.Ub.(goivy.NumeralBound)
-		if !lbOK || !ubOK {
+		lbCode, ok := g.reifyBoundAsGoCode(t.Lb)
+		if !ok {
 			return "", false
 		}
-		lbSort, ok := g.reifySortAsGoCode(lb.Sort)
+		ubCode, ok := g.reifyBoundAsGoCode(t.Ub)
 		if !ok {
-			lbSort = "nil"
+			return "", false
 		}
-		ubSort, ok := g.reifySortAsGoCode(ub.Sort)
-		if !ok {
-			ubSort = "nil"
-		}
-		return fmt.Sprintf(
-			"&goivy.RangeSort{Name: %q, Lb: goivy.NumeralBound{Value: %q, Sort: %s}, Ub: goivy.NumeralBound{Value: %q, Sort: %s}}",
-			t.Name, lb.Value, lbSort, ub.Value, ubSort,
-		), true
+		return fmt.Sprintf("&goivy.RangeSort{Name: %q, Lb: %s, Ub: %s}", t.Name, lbCode, ubCode), true
 	case *goivy.LogicFunctionSort:
 		sorts := t.Sorts
 		parts := make([]string, 0, len(sorts))
@@ -369,6 +359,30 @@ func (g *Generator) reifySortAsGoCode(s goivy.Sort) (string, bool) {
 		}
 		g.requireMustHelpers()
 		return fmt.Sprintf("mustNewFunctionSort(%s)", strings.Join(parts, ", ")), true
+	}
+	return "", false
+}
+
+// reifyBoundAsGoCode reifies a NumeralOrCompiledBound. NumeralBound
+// becomes a direct struct literal; CompiledBound recurses into the
+// inner Expr via reifyExprAsGoCode (with no param context — bounds
+// don't capture action formals).
+func (g *Generator) reifyBoundAsGoCode(b goivy.NumeralOrCompiledBound) (string, bool) {
+	switch v := b.(type) {
+	case goivy.NumeralBound:
+		sortCode := "nil"
+		if v.Sort != nil {
+			if c, ok := g.reifySortAsGoCode(v.Sort); ok {
+				sortCode = c
+			}
+		}
+		return fmt.Sprintf("goivy.NumeralBound{Value: %q, Sort: %s}", v.Value, sortCode), true
+	case goivy.CompiledBound:
+		exprCode, ok := g.reifyExprAsGoCode(v.Expr, nil)
+		if !ok {
+			return "", false
+		}
+		return fmt.Sprintf("goivy.CompiledBound{Expr: %s}", exprCode), true
 	}
 	return "", false
 }
@@ -491,11 +505,16 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 		card := goSortCard(g, p.CSort)
 		switch {
 		case typeName == "bool":
-			w.linef("v%d := pickBoolOrChoose(modelResult, __in%d)", i, i)
-		case card > 0:
-			w.linef("v%d := %s(pickUintOrChoose(modelResult, __in%d, %d))", i, typeName, i, card)
+			w.linef("v%d := pickBoolOrChoose(g.sol, modelResult, __in%d)", i, i)
+		case card > 0 && goIsAnyIntegerType(g, p.CSort):
+			w.linef("v%d := %s(pickUintOrChoose(g.sol, modelResult, __in%d, %d))", i, typeName, i, card)
 		default:
-			w.linef("v%d := %s(ivyChoose(2))", i, typeName)
+			// Struct types (destructor records, variants) and any
+			// other shape we can't synthesise from an int: leave
+			// at the Go zero value. Real solver-driven synthesis
+			// of structured inputs is OPEN 055.7 (next iteration).
+			w.linef("var v%d %s", i, typeName)
+			w.linef("_ = v%d", i)
 		}
 		callArgs[i] = fmt.Sprintf("v%d", i)
 	}

@@ -170,11 +170,20 @@ func (g *Generator) emitOneReplArgParser(w *goWriter, parser string, s goivy.Sor
 			w.linef(`	return 0, fmt.Errorf("expected %s value, got %%q", token)`, goExportedName(st.Name))
 		}
 	default:
-		// Integer-backed (range, uninterp, BV ≤ 64): parse via Atoi
-		// and cast.
-		w.linef(`	n, err := strconv.Atoi(token)`)
-		w.linef(`	if err != nil { return %s, err }`, g.goZeroValue(s))
-		w.linef(`	return %s(n), nil`, typeName)
+		if goIsAnyIntegerType(g, s) {
+			// Integer-backed (range, uninterp, BV ≤ 64): parse
+			// via Atoi and cast.
+			w.linef(`	n, err := strconv.Atoi(token)`)
+			w.linef(`	if err != nil { return %s, err }`, g.goZeroValue(s))
+			w.linef(`	return %s(n), nil`, typeName)
+		} else {
+			// Struct types (destructor records, variants) can't be
+			// parsed from a single token; return zero value with a
+			// note. Real struct parsing is a future enhancement.
+			w.linef(`	var z %s`, typeName)
+			w.line(`	_ = token`)
+			w.line(`	return z, nil`)
+		}
 	}
 	w.line("}")
 	w.blank()
