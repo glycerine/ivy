@@ -5,8 +5,11 @@ package ivy2go
 //   - ClassName     → PackageName  (Go has packages, not classes).
 //   - Compiler      → deleted      (Go has one official toolchain).
 //   - Stdafx        → deleted      (Windows PCH artefact).
-//   - GoModule      → new          (emit go.mod when non-empty).
 //   - GoivyImport*  → new          (lets tests/forks override the import path).
+//
+// Notably ABSENT: a GoModule field. ivy2go does not emit a go.mod.
+// The caller is responsible for placing outdir inside an existing
+// Go module (or workspace) so the goivy import resolves naturally.
 type Config struct {
 	// Target is the resolved generation target: "impl", "class",
 	// "repl", "test", or "gen". When empty, defaults to "gen" per
