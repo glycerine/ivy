@@ -34,6 +34,12 @@ func (g *Generator) emitRuntimeHelpers(w *goWriter) {
 	if g.Ctx.OnceGlobals["__need_bigint"] {
 		g.emitBigIntHelpers(w)
 	}
+	if g.Ctx.OnceGlobals["__need_mixhash"] {
+		g.emitMixHashHelper(w)
+	}
+	if g.Ctx.OnceGlobals["__need_lessord"] {
+		g.emitLessOrdHelper(w)
+	}
 	// ite_<type> helpers: walk OnceGlobals keys, find any starting
 	// with "ite_", emit one per. We don't know the result type from
 	// the key alone — store (name, typeExpr) on g for emission.

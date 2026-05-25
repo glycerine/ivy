@@ -374,6 +374,131 @@ func (g *Generator) emitCall(w *goWriter, a *goivy.LogicCallAction) {
 	w.linef("%s = s.%s(%s)", strings.Join(rets, ", "), goExportedName(name), strings.Join(args, ", "))
 }
 
+// emitIfSomeMinMax lowers `if some X. p(X) minimizing/maximizing idx`.
+// Mirrors ivy2cpp/action.go emitIfSomeMinMax:
+//   - declare a __found flag and a __best_idx of the index sort
+//   - declare per-param witness vars
+//   - scan all candidates; for each (p(X), idx_expr), if it's better
+//     than the current best, update __best_idx and witnesses
+//   - dispatch THEN (with witnesses bound) or ELSE based on __found
+//
+// "Better" means strictly smaller index for some_min, strictly larger
+// for some_max.
+func (g *Generator) emitIfSomeMinMax(w *goWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) {
+	if some.Index == nil {
+		g.unsupported(w, "if-some %s missing index expression", some.Kind)
+		return
+	}
+	if len(some.Params) == 0 {
+		g.unsupported(w, "if-some %s with no params is malformed", some.Kind)
+		return
+	}
+	cmp := "<"
+	if some.Kind == "some_max" {
+		cmp = ">"
+	}
+	idxType := g.goType(some.Index.NodeSort())
+	w.open("{")
+	w.line("__found := false")
+	w.linef("var __best_idx %s", idxType)
+	w.line("_ = __best_idx")
+	// Witnesses declared at outer scope so THEN can read them.
+	for _, p := range some.Params {
+		w.linef("var %s %s", goIdent(p.Name), g.goType(p.CSort))
+		w.linef("_ = %s", goIdent(p.Name))
+	}
+	// Open loop nest using fresh loop-var names. We substitute
+	// references in the cond + index expression to point at these
+	// loop vars; on a winning iteration we copy them into the
+	// witnesses + best_idx.
+	headers := make([]string, len(some.Params))
+	closers := make([]string, len(some.Params))
+	for i, p := range some.Params {
+		loopName := "__some_" + goIdent(p.Name)
+		h, c, err := g.loopHeaderForSort(p.CSort, loopName)
+		if err != nil {
+			g.unsupported(w, "if-some min/max bounds: %s", err.Error())
+			w.close("")
+			return
+		}
+		headers[i] = h
+		closers[i] = c
+	}
+	for _, h := range headers {
+		w.open(h)
+	}
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for _, p := range some.Params {
+		lv := &goivy.Const{Name: "__some_" + p.Name, CSort: p.CSort}
+		subs[goivy.Key(p)] = lv
+	}
+	rewrittenCond, err := goivy.Substitute(some.Fmla, subs)
+	if err != nil {
+		g.unsupported(w, "if-some min/max cond subst: %s", err.Error())
+		for range closers {
+			w.close("")
+		}
+		w.close("")
+		return
+	}
+	rewrittenIdx, err := goivy.Substitute(some.Index, subs)
+	if err != nil {
+		g.unsupported(w, "if-some min/max index subst: %s", err.Error())
+		for range closers {
+			w.close("")
+		}
+		w.close("")
+		return
+	}
+	cond, err := g.emitExpr(rewrittenCond)
+	if err != nil {
+		g.unsupported(w, "if-some min/max cond: %s", err.Error())
+		for range closers {
+			w.close("")
+		}
+		w.close("")
+		return
+	}
+	idx, err := g.emitExpr(rewrittenIdx)
+	if err != nil {
+		g.unsupported(w, "if-some min/max index: %s", err.Error())
+		for range closers {
+			w.close("")
+		}
+		w.close("")
+		return
+	}
+	// First hit always sets __found + best; later hits only update
+	// when the index strictly beats the current best.
+	w.linef("if (%s) {", cond)
+	w.linef("\t__cur_idx := %s", idx)
+	w.linef("\tif !__found || __cur_idx %s __best_idx {", cmp)
+	w.line("\t\t__found = true")
+	w.line("\t\t__best_idx = __cur_idx")
+	for _, p := range some.Params {
+		w.linef("\t\t%s = __some_%s", goIdent(p.Name), goIdent(p.Name))
+	}
+	w.line("\t}")
+	w.line("}")
+	for range closers {
+		w.close("")
+	}
+	// Dispatch THEN/ELSE based on __found.
+	if thenAct, ok := a.ThenBody.(goivy.Action); ok {
+		w.line("if __found {")
+		g.emitAction(w, thenAct)
+		w.line("}")
+	}
+	if a.ElseBody != nil {
+		if elseAct, ok := a.ElseBody.(goivy.Action); ok {
+			w.line("if !__found {")
+			g.emitAction(w, elseAct)
+			w.line("}")
+		}
+	}
+	w.close("")
+}
+
 // emitNativeAction emits an inline native Go block within an action
 // body. Mirrors ivy2cpp/native.go's emitNativeAction.
 //

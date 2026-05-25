@@ -2,6 +2,7 @@ package ivy2go
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy"
 )
@@ -96,6 +97,122 @@ func (g *Generator) emitDestructorStruct(w *goWriter, name string) {
 	// Equal method: field-by-field equality. Map/array fields use
 	// helper functions (mapEqual / arrayEqual emitted in runtime).
 	g.emitDestructorEqual(w, typeName, destrs)
+	g.emitDestructorHash(w, typeName, destrs)
+	g.emitDestructorLess(w, typeName, destrs)
+}
+
+// emitDestructorHash writes a Hash() uint64 method. We use FNV-1a
+// over each field's primitive bytes; map fields fall back to a
+// commutative XOR of per-entry hashes so iteration-order doesn't
+// affect the result. Mirrors ivy2cpp/destructor.go emitDestructorStructHash.
+func (g *Generator) emitDestructorHash(w *goWriter, typeName string, destrs []*goivy.Const) {
+	w.open(fmt.Sprintf("func (a %s) Hash() uint64 {", typeName))
+	w.line("var h uint64 = 1469598103934665603 // FNV-1a offset basis")
+	for _, d := range destrs {
+		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
+		if !ok {
+			continue
+		}
+		domain := fs.Domain()
+		if len(domain) > 0 {
+			domain = domain[1:]
+		}
+		field := goExportedName(memName(d.Name))
+		if len(domain) == 0 {
+			w.linef("h = mixHash(h, a.%s)", field)
+			continue
+		}
+		st := goFunctionStorageFor(g, domain, fs.Range())
+		switch st.Kind {
+		case goStorageArray:
+			// Loop over every cell.
+			loops, closes := arrayIndexLoops(st.Dims)
+			for _, l := range loops {
+				w.line(l)
+			}
+			w.linef("\th = mixHash(h, a.%s%s)", field, arrayIndexSuffix(st.Dims))
+			for _, c := range closes {
+				w.line(c)
+			}
+		case goStorageHashThunk:
+			// Commutative aggregate so map iteration order doesn't matter.
+			w.linef("var sub uint64")
+			w.linef("for k, v := range a.%s {", field)
+			w.line("\tsub ^= mixHash(mixHash(0, k), v)")
+			w.line("}")
+			w.line("h = mixHash(h, sub)")
+		}
+	}
+	w.line("return h")
+	w.close("")
+	w.blank()
+	// Request the mixHash runtime helper.
+	g.Ctx.OnceGlobals["__need_mixhash"] = true
+}
+
+// emitDestructorLess writes a Less(other) bool method giving a
+// lexicographic order: compare field-by-field, first differing pair
+// decides. Map and array fields use cell-by-cell comparison. The
+// total order isn't semantically meaningful for record types but is
+// useful for stable sorting in test harnesses.
+func (g *Generator) emitDestructorLess(w *goWriter, typeName string, destrs []*goivy.Const) {
+	w.open(fmt.Sprintf("func (a %s) Less(b %s) bool {", typeName, typeName))
+	for _, d := range destrs {
+		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
+		if !ok {
+			continue
+		}
+		domain := fs.Domain()
+		if len(domain) > 0 {
+			domain = domain[1:]
+		}
+		field := goExportedName(memName(d.Name))
+		if len(domain) == 0 {
+			w.linef("if a.%s != b.%s { return lessOrd(a.%s, b.%s) }", field, field, field, field)
+			continue
+		}
+		st := goFunctionStorageFor(g, domain, fs.Range())
+		switch st.Kind {
+		case goStorageArray:
+			loops, closes := arrayIndexLoops(st.Dims)
+			for _, l := range loops {
+				w.line(l)
+			}
+			suf := arrayIndexSuffix(st.Dims)
+			w.linef("\tif a.%s%s != b.%s%s { return lessOrd(a.%s%s, b.%s%s) }", field, suf, field, suf, field, suf, field, suf)
+			for _, c := range closes {
+				w.line(c)
+			}
+		case goStorageHashThunk:
+			w.linef("if len(a.%s) != len(b.%s) { return len(a.%s) < len(b.%s) }", field, field, field, field)
+			// Maps have no natural order; treat equal-len maps as
+			// equal for ordering purposes.
+		}
+	}
+	w.line("return false")
+	w.close("")
+	w.blank()
+	g.Ctx.OnceGlobals["__need_lessord"] = true
+}
+
+// arrayIndexLoops returns nested for-loops with index variables
+// __i0, __i1, ... and the matching close braces.
+func arrayIndexLoops(dims []int) (open, close []string) {
+	for i, d := range dims {
+		open = append(open, fmt.Sprintf("for __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i))
+		_ = i
+		close = append([]string{"}"}, close...)
+	}
+	return open, close
+}
+
+// arrayIndexSuffix returns "[__i0][__i1]…" matching arrayIndexLoops.
+func arrayIndexSuffix(dims []int) string {
+	var b strings.Builder
+	for i := range dims {
+		b.WriteString(fmt.Sprintf("[__i%d]", i))
+	}
+	return b.String()
 }
 
 // destructorFieldType returns the Go type for a destructor field with
