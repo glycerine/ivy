@@ -174,6 +174,10 @@ func (g *Generator) generate() error {
 	if g.Config.EmitMain {
 		g.emitMain()
 	}
+	// Conditional runtime helpers — emitted LAST so any earlier
+	// emit step (including emitMain) can request them via
+	// Ctx.OnceGlobals.
+	g.emitRuntimeHelpersLate(&g.runtime)
 	return errors.Join(g.errs...)
 }
 

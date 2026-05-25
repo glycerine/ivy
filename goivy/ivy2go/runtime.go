@@ -15,16 +15,21 @@ import (
 // all other emitters have run, so any helper requests they recorded
 // in Ctx.OnceGlobals are visible.
 
-// emitRuntimeHelpers writes the helpers requested by other emitters
-// during this generation pass. Helper requests are made via
-// requireUint128, requireBigInt, requestIteHelper, etc.
+// emitRuntimeHelpers writes the always-on helpers requested by every
+// emitted program (ivyAssert, ivyAssume, ivyChoose, RNG source).
+// Conditional helpers triggered by OnceGlobals flags are emitted
+// later by emitRuntimeHelpersLate so emit* methods that run after
+// runtime — like emitMain — can still request them.
 func (g *Generator) emitRuntimeHelpers(w *goWriter) {
-	// Always-on helpers: ivyAssert / ivyAssume / ivyChoose / a
-	// package-level random source. Generated programs need these for
-	// any target other than `class`.
 	g.emitRuntimePreamble(w)
+}
 
-	// Specialised helpers: emit only those marked in OnceGlobals.
+// emitRuntimeHelpersLate writes the conditional helpers any earlier
+// emit method has requested via Ctx.OnceGlobals. Called from the
+// generate() orchestration AFTER every other emit step (state /
+// actions / init / repl / main / native / …) has had a chance to
+// register requirements.
+func (g *Generator) emitRuntimeHelpersLate(w *goWriter) {
 	if g.Ctx == nil {
 		return
 	}
@@ -50,8 +55,8 @@ func (g *Generator) emitRuntimeHelpers(w *goWriter) {
 		g.emitTestFlagsHelper(w)
 	}
 	// ite_<type> helpers: walk OnceGlobals keys, find any starting
-	// with "ite_", emit one per. We don't know the result type from
-	// the key alone — store (name, typeExpr) on g for emission.
+	// with "ite_", emit one per. Each call site recorded the helper
+	// name in OnceGlobals via requestIteHelper.
 	for _, h := range g.collectIteHelpers() {
 		g.emitIteHelper(w, h)
 	}

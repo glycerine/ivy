@@ -378,6 +378,7 @@ func TestRuntimeHelpers_Uint128EmittedOnDemand(t *testing.T) {
 	g.runtime = newGoWriter(g.Ctx.Runtime)
 	g.requireUint128()
 	g.emitRuntimeHelpers(&g.runtime)
+	g.emitRuntimeHelpersLate(&g.runtime)
 	text := g.Ctx.Runtime.GetFile()
 	for _, want := range []string{"type Uint128 struct", "func Uint128Mask", "func Uint128FromString"} {
 		if !strings.Contains(text, want) {
