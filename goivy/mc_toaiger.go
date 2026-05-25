@@ -17,6 +17,14 @@ type ToAigerResult struct {
 	StVarSet map[string]bool // set of original state variable names
 }
 
+func toAigerFiniteSort(mod *Module, sort Sort) bool {
+	var interp map[string]interface{}
+	if mod != nil && mod.Sig != nil {
+		interp = mod.Sig.Interp
+	}
+	return IsFiniteSortWithInterp(sort, interp)
+}
+
 // ToAiger converts an Ivy module to an AIGER circuit for model checking.
 // This is the main entry point for the model checking pipeline.
 //
@@ -233,7 +241,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	for _, df := range trans.Defs {
 		defSym := df.Defines()
 		if c, ok := defSym.(*Const); ok {
-			if len(df.Lhs.Children()) == 0 && isFiniteSort(c.CSort) {
+			if len(df.Lhs.Children()) == 0 && toAigerFiniteSort(mod, c.CSort) {
 				// Keep as definition (nullary, finite sort)
 				newDefs = append(newDefs, df)
 				continue
@@ -248,15 +256,19 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	// Step 4b: Eliminate ITEs over non-finite sorts
 	var iteCnsts []Expr
 	mcIteCtr := &mod.Cfg.McIteCtr
+	var interp map[string]interface{}
+	if mod.Sig != nil {
+		interp = mod.Sig.Interp
+	}
 	elimDefs := make([]*IvyDefinition, len(trans.Defs))
 	for i, df := range trans.Defs {
-		newLhs := ElimIte(df.Lhs, &iteCnsts, mcIteCtr)
-		newRhs := ElimIte(df.Rhs, &iteCnsts, mcIteCtr)
+		newLhs := ElimIteWithInterp(df.Lhs, &iteCnsts, mcIteCtr, interp)
+		newRhs := ElimIteWithInterp(df.Rhs, &iteCnsts, mcIteCtr, interp)
 		elimDefs[i] = NewIvyDefinition(newLhs, newRhs)
 	}
 	elimFmlas := make([]Expr, len(trans.Fmlas))
 	for i, f := range trans.Fmlas {
-		elimFmlas[i] = ElimIte(f, &iteCnsts, mcIteCtr)
+		elimFmlas[i] = ElimIteWithInterp(f, &iteCnsts, mcIteCtr, interp)
 	}
 	allFmlas := append(elimFmlas, iteCnsts...)
 	trans = NewClauses(allFmlas, elimDefs, trans.Annot)
@@ -386,7 +398,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	// Python: stvars = [sym for sym in stvars if is_finite_sort(sym.sort)] + new_stvars
 	var finiteStVars []*Const
 	for _, sv := range stVars {
-		if isFiniteSort(sv.CSort) {
+		if toAigerFiniteSort(mod, sv.CSort) {
 			finiteStVars = append(finiteStVars, sv)
 		}
 	}
@@ -487,10 +499,6 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	fail := NewConst("__fail", Boolean)
 	outputs := []*Const{fail}
 
-	var interp map[string]interface{}
-	if mod.Sig != nil {
-		interp = mod.Sig.Interp
-	}
 	aiger := NewEncoder(inputs, stVars, outputs, interp)
 
 	// Process combinational definitions (non-next-state)

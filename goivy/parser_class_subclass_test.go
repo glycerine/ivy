@@ -180,6 +180,40 @@ subclass child of base_t = {
 	}
 }
 
+func TestObjectDeclPreservesObjectArgSort(t *testing.T) {
+	input := `#lang 1.7
+type id
+object net(self:id) = {
+}`
+	result, err := Parse(input, Version{1, 7})
+	if err != nil {
+		t.Fatalf("parse object with sorted arg: %v", err)
+	}
+
+	for _, d := range result.Decls {
+		od, ok := d.(*ObjectDecl)
+		if !ok || len(od.DeclArgs) == 0 {
+			continue
+		}
+		a, ok := od.DeclArgs[0].(*Atom)
+		if !ok || a.Rep != "net" {
+			continue
+		}
+		if len(a.Terms) != 1 {
+			t.Fatalf("expected net ObjectDecl to have one synthesized term, got %d in %s", len(a.Terms), a.Canon())
+		}
+		v, ok := a.Terms[0].(*Variable)
+		if !ok {
+			t.Fatalf("expected synthesized object arg to be *Variable, got %T", a.Terms[0])
+		}
+		if v.Rep != "V0" || v.VSort != "id" {
+			t.Fatalf("expected synthesized object arg V0:id, got %s", v.Canon())
+		}
+		return
+	}
+	t.Fatalf("missing ObjectDecl for net in parsed declarations")
+}
+
 // TestDeclReorderingClassOneToFront tests the rotate-last-to-front logic
 // used by CLASS: p[8].decls = [p[8].decls[-1]] + p[8].decls[:-1]
 func TestDeclReorderingClassOneToFront(t *testing.T) {

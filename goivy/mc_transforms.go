@@ -15,23 +15,33 @@ import (
 //
 // Python: ivy_mc.py:757-772
 func ElimIte(expr Expr, cnsts *[]Expr, iteCtr *int64) Expr {
+	return elimIteWithFinite(expr, cnsts, iteCtr, isFiniteSort)
+}
+
+func ElimIteWithInterp(expr Expr, cnsts *[]Expr, iteCtr *int64, interp map[string]interface{}) Expr {
+	return elimIteWithFinite(expr, cnsts, iteCtr, func(sort Sort) bool {
+		return IsFiniteSortWithInterp(sort, interp)
+	})
+}
+
+func elimIteWithFinite(expr Expr, cnsts *[]Expr, iteCtr *int64, isFinite func(Sort) bool) Expr {
 	switch t := expr.(type) {
 	case *LogicIte:
-		if !isFiniteSort(t.Then.NodeSort()) {
+		if !isFinite(t.Then.NodeSort()) {
 			name := fmt.Sprintf("__ite[%d]", nextIteCtr(iteCtr))
 			v := NewConst(name, t.Then.NodeSort())
-			cElim := ElimIte(t.Cond, cnsts, iteCtr)
-			eqThen := ElimIte(&Eq{T1: v, T2: t.Then}, cnsts, iteCtr)
-			eqElse := ElimIte(&Eq{T1: v, T2: t.Else}, cnsts, iteCtr)
+			cElim := elimIteWithFinite(t.Cond, cnsts, iteCtr, isFinite)
+			eqThen := elimIteWithFinite(&Eq{T1: v, T2: t.Then}, cnsts, iteCtr, isFinite)
+			eqElse := elimIteWithFinite(&Eq{T1: v, T2: t.Else}, cnsts, iteCtr, isFinite)
 			*cnsts = append(*cnsts, &LogicIte{Cond: cElim, Then: eqThen, Else: eqElse})
 			return v
 		}
 	case *Eq:
 		if ite, ok := t.T2.(*LogicIte); ok {
-			if !isFiniteSort(ite.Then.NodeSort()) {
-				cElim := ElimIte(ite.Cond, cnsts, iteCtr)
-				eqThen := ElimIte(&Eq{T1: t.T1, T2: ite.Then}, cnsts, iteCtr)
-				eqElse := ElimIte(&Eq{T1: t.T1, T2: ite.Else}, cnsts, iteCtr)
+			if !isFinite(ite.Then.NodeSort()) {
+				cElim := elimIteWithFinite(ite.Cond, cnsts, iteCtr, isFinite)
+				eqThen := elimIteWithFinite(&Eq{T1: t.T1, T2: ite.Then}, cnsts, iteCtr, isFinite)
+				eqElse := elimIteWithFinite(&Eq{T1: t.T1, T2: ite.Else}, cnsts, iteCtr, isFinite)
 				return &LogicIte{Cond: cElim, Then: eqThen, Else: eqElse}
 			}
 		}
@@ -43,7 +53,7 @@ func ElimIte(expr Expr, cnsts *[]Expr, iteCtr *int64) Expr {
 	}
 	newChildren := make([]Expr, len(children))
 	for i, child := range children {
-		newChildren[i] = ElimIte(child, cnsts, iteCtr)
+		newChildren[i] = elimIteWithFinite(child, cnsts, iteCtr, isFinite)
 	}
 	return CloneNode(expr, newChildren)
 }

@@ -353,6 +353,28 @@ func fixIfPart(cond Node, part Node) Node {
 	return part
 }
 
+func objectArgSortName(pr Node) string {
+	var sort Node
+	switch x := pr.(type) {
+	case *Variable:
+		return x.VSort
+	case *Atom:
+		sort = x.ASort
+	case *App:
+		sort = x.ASort
+	}
+	switch s := sort.(type) {
+	case nil:
+		return ""
+	case *Symbol:
+		return s.Rep
+	case *This:
+		return s.Relname()
+	default:
+		return fmt.Sprint(s)
+	}
+}
+
 // createObject processes an object declaration by expanding its body
 // with prefix substitution via instMod.
 // Matches Python create_object() (ivy_parser.py:678-693) EXACTLY.
@@ -363,15 +385,7 @@ func createObject(cfg *AstConfig, top *ivyAccum, name *Atom, objectargs []Node, 
 	var prefargs []Node
 	for idx, pr := range objectargs {
 		vname := fmt.Sprintf("V%d", idx)
-		var sort string
-		if a, ok := pr.(*Atom); ok && a.ASort != nil {
-			if sym, ok := a.ASort.(*Symbol); ok {
-				sort = sym.Rep
-			} else {
-				sort = fmt.Sprint(a.ASort)
-			}
-		}
-		prefargs = append(prefargs, cfg.NewVariable(vname, sort))
+		prefargs = append(prefargs, cfg.NewVariable(vname, objectArgSortName(pr)))
 	}
 
 	// Python line 681: pref = Atom(name, prefargs)

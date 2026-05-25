@@ -243,7 +243,20 @@ func NewApplyUnchecked(fn Expr, terms ...Expr) *Apply {
 	return &Apply{Func: fn, Terms: cp, aSort: resultSort}
 }
 
-func (a *Apply) NodeSort() Sort { return a.aSort }
+func (a *Apply) NodeSort() Sort {
+	if a == nil || a.Func == nil {
+		return nil
+	}
+	switch fs := a.Func.NodeSort().(type) {
+	case *TopSort:
+		return TopS
+	case *LogicFunctionSort:
+		if fs != nil {
+			return fs.Range()
+		}
+	}
+	return a.aSort
+}
 
 func (a *Apply) Children() []Expr {
 	// Returns Terms only — matches Python's Apply.args property

@@ -1290,6 +1290,26 @@ func TestDefToConstraintIndividualSort(t *testing.T) {
 	}
 }
 
+func TestDefToConstraintApplyUsesLiveFunctionRangeSort(t *testing.T) {
+	id := &UninterpretedSort{Name: "id"}
+	relSort, err := NewFunctionSort(id, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	rel := NewConst("p", relSort)
+	x, err := NewVariable("X", id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	lhs := &Apply{Func: rel, Terms: []Expr{x}, aSort: id}
+	def := NewDefinition(lhs, True)
+
+	result := mcDefToConstraint(def)
+	if _, ok := result.(*LogicIff); !ok {
+		t.Errorf("relation application def should use function range sort and produce Iff, got %T", result)
+	}
+}
+
 func TestQEEqTautologyElimination(t *testing.T) {
 	x := NewConst("x", Boolean)
 	eq := &Eq{T1: x, T2: x}
@@ -1590,6 +1610,51 @@ func TestIsFiniteSortWithInterp(t *testing.T) {
 	us := &UninterpretedSort{Name: "mybv"}
 	if !IsFiniteSortWithInterp(us, interp) {
 		t.Error("mybv with bv[8] interp should be finite")
+	}
+}
+
+func TestToAigerFiniteSortUsesModuleInterp(t *testing.T) {
+	mod := New()
+	mod.Sig.Interp["id"] = "bv[2]"
+	id := &UninterpretedSort{Name: "id"}
+	if !toAigerFiniteSort(mod, id) {
+		t.Error("ToAiger finite-sort checks must treat interpreted id as finite")
+	}
+
+	relSort, err := NewFunctionSort(id, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if toAigerFiniteSort(mod, relSort) {
+		t.Error("function sorts must remain non-finite even when their domain is interpreted")
+	}
+}
+
+func TestElimIteWithInterpLeavesFiniteInterpretedSortIte(t *testing.T) {
+	id := &UninterpretedSort{Name: "id"}
+	funcSort, err := NewFunctionSort(id, id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	x, err := NewVariable("X", id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	lhs := MustApply(NewConst("new_f", funcSort), x)
+	rhs := &LogicIte{
+		Cond: NewConst("c", Boolean),
+		Then: NewConst("a", id),
+		Else: NewConst("b", id),
+	}
+	var cnsts []Expr
+	var ctr int64
+	got := ElimIteWithInterp(&Eq{T1: lhs, T2: rhs}, &cnsts, &ctr, map[string]interface{}{"id": "bv[2]"})
+
+	if _, ok := got.(*Eq); !ok {
+		t.Fatalf("finite interpreted ITE should stay inside Eq, got %T", got)
+	}
+	if len(cnsts) != 0 {
+		t.Fatalf("finite interpreted ITE should not add constraints, got %d", len(cnsts))
 	}
 }
 

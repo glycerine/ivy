@@ -617,8 +617,8 @@ func TestVariableNaming_BoolSort(t *testing.T) {
 	}
 	name := z3x.String()
 	stripped := strings.Trim(name, "|")
-	if stripped != "Flag:Bool" {
-		t.Fatalf("bool variable Z3 name = %q, want %q", name, "Flag:Bool")
+	if stripped != "Flag:bool" {
+		t.Fatalf("bool variable Z3 name = %q, want %q", name, "Flag:bool")
 	}
 }
 
