@@ -140,13 +140,15 @@ func TestParseGoInterpType(t *testing.T) {
 }
 
 func TestGoInterpTypePrimitiveBV(t *testing.T) {
+	// Post-OPEN-054: only ≤64 bit BVs map to a Go primitive; wider
+	// widths route through *big.Int (handled by goInterpTypeName).
 	cases := map[int]string{
 		8:   "uint32",
 		32:  "uint32",
 		33:  "uint64",
 		64:  "uint64",
-		65:  "Uint128",
-		128: "Uint128",
+		65:  "",
+		128: "",
 		129: "",
 	}
 	for bits, want := range cases {

@@ -56,6 +56,17 @@ func (g *Generator) emitRuntimePreamble(w *goWriter) {
 	w.line("var ivyRand = rand.New(rand.NewSource(1))")
 	w.blank()
 
+	// ivyTraceOut is the io.Writer trace writes target. Default is
+	// os.Stdout; tests / embedders can override.
+	if g.Config.Trace {
+		g.Ctx.AddImport("runtime", "io", "")
+		g.Ctx.AddImport("runtime", "os", "")
+		w.line("// ivyTraceOut is the io.Writer used by trace-LHS writes.")
+		w.line("// Defaults to os.Stdout; override by reassigning before Init.")
+		w.line("var ivyTraceOut io.Writer = os.Stdout")
+		w.blank()
+	}
+
 	w.open("func ivyAssert(cond bool, label string) {")
 	w.open("if !cond {")
 	w.line(`panic(fmt.Sprintf("ivy assert failed: %s", label))`)
@@ -170,8 +181,9 @@ func (g *Generator) emitUint128Helpers(w *goWriter) {
 	w.blank()
 }
 
-// emitBigIntHelpers writes the bigInt mask helpers needed for BV
-// widths >128. Always pairs with an math/big import.
+// emitBigIntHelpers writes the bigInt mask helpers + wide-BV
+// arithmetic helpers needed for BV widths >64. Always pairs with a
+// math/big import.
 func (g *Generator) emitBigIntHelpers(w *goWriter) {
 	if g.Ctx != nil {
 		g.Ctx.AddImport("runtime", "math/big", "")
@@ -183,6 +195,106 @@ func (g *Generator) emitBigIntHelpers(w *goWriter) {
 	w.blank()
 	w.line("func bigIntSignMask(bits int) *big.Int {")
 	w.line("\treturn new(big.Int).Lsh(big.NewInt(1), uint(bits-1))")
+	w.line("}")
+	w.blank()
+	// toBigInt: coerce any integer-ish value to *big.Int. Generated
+	// callers may pass uint32 / uint64 / Uint128 / *big.Int — each
+	// has a distinct path. We use interface{} to admit them all.
+	w.line("// toBigInt coerces a value to *big.Int. Accepts uint32,")
+	w.line("// uint64, Uint128, *big.Int, or any int-typed Go value.")
+	w.open("func toBigInt(v interface{}) *big.Int {")
+	w.line("switch x := v.(type) {")
+	w.line("case *big.Int:")
+	w.line("\treturn new(big.Int).Set(x)")
+	w.line("case uint64:")
+	w.line("\treturn new(big.Int).SetUint64(x)")
+	w.line("case uint32:")
+	w.line("\treturn new(big.Int).SetUint64(uint64(x))")
+	w.line("case int:")
+	w.line("\treturn big.NewInt(int64(x))")
+	w.line("case Uint128:")
+	w.line("\thi := new(big.Int).SetUint64(x.Hi)")
+	w.line("\thi.Lsh(hi, 64)")
+	w.line("\treturn hi.Or(hi, new(big.Int).SetUint64(x.Lo))")
+	w.line("}")
+	w.line(`panic(fmt.Sprintf("toBigInt: unsupported %T", v))`)
+	w.close("")
+	w.blank()
+	// Arithmetic helpers — each masks to `bits` after the op.
+	for _, op := range []string{"Add", "Sub", "Mul"} {
+		w.linef("func wideBV%s(a, b *big.Int, bits int) *big.Int {", op)
+		w.linef("\tr := new(big.Int).%s(a, b)", op)
+		w.line("\treturn r.And(r, bigIntMask(bits))")
+		w.line("}")
+		w.blank()
+	}
+	w.line("func wideBVDiv(a, b *big.Int, bits int) *big.Int {")
+	w.line("\tif b.Sign() == 0 { return new(big.Int) }")
+	w.line("\tr := new(big.Int).Quo(a, b)")
+	w.line("\treturn r.And(r, bigIntMask(bits))")
+	w.line("}")
+	w.blank()
+	w.line("func wideBVMod(a, b *big.Int, bits int) *big.Int {")
+	w.line("\tif b.Sign() == 0 { return new(big.Int) }")
+	w.line("\tr := new(big.Int).Rem(a, b)")
+	w.line("\treturn r.And(r, bigIntMask(bits))")
+	w.line("}")
+	w.blank()
+	for _, op := range []string{"And", "Or", "Xor"} {
+		w.linef("func wideBV%s(a, b *big.Int, bits int) *big.Int {", op)
+		w.linef("\treturn new(big.Int).%s(a, b).And(new(big.Int).%s(a, b), bigIntMask(bits))", op, op)
+		w.line("}")
+		w.blank()
+	}
+	w.line("func wideBVNot(a *big.Int, bits int) *big.Int {")
+	w.line("\tm := bigIntMask(bits)")
+	w.line("\treturn new(big.Int).Xor(a, m)")
+	w.line("}")
+	w.blank()
+	w.line("func wideBVNeg(a *big.Int, bits int) *big.Int {")
+	w.line("\tr := new(big.Int).Neg(a)")
+	w.line("\treturn r.And(r, bigIntMask(bits))")
+	w.line("}")
+	w.blank()
+	w.line("func wideBVShl(a, b *big.Int, bits int) *big.Int {")
+	w.line("\tn := uint(b.Uint64())")
+	w.line("\tif n >= uint(bits) { return new(big.Int) }")
+	w.line("\tr := new(big.Int).Lsh(a, n)")
+	w.line("\treturn r.And(r, bigIntMask(bits))")
+	w.line("}")
+	w.blank()
+	w.line("func wideBVShrLogical(a, b *big.Int, bits int) *big.Int {")
+	w.line("\tn := uint(b.Uint64())")
+	w.line("\tif n >= uint(bits) { return new(big.Int) }")
+	w.line("\treturn new(big.Int).Rsh(a, n)")
+	w.line("}")
+	w.blank()
+	w.line("func wideBVShrArith(a, b *big.Int, bits int) *big.Int {")
+	w.line("\t// Treat a's high bit (at position bits-1) as the sign;")
+	w.line("\t// fill from there on logical right-shift.")
+	w.line("\tn := uint(b.Uint64())")
+	w.line("\tsign := bigIntSignMask(bits)")
+	w.line("\tneg := new(big.Int).And(a, sign).Sign() != 0")
+	w.line("\tif n >= uint(bits) {")
+	w.line("\t\tif neg { return bigIntMask(bits) }")
+	w.line("\t\treturn new(big.Int)")
+	w.line("\t}")
+	w.line("\tr := new(big.Int).Rsh(a, n)")
+	w.line("\tif neg {")
+	w.line("\t\thi := new(big.Int).Lsh(bigIntMask(int(n)), uint(bits)-n)")
+	w.line("\t\tr.Or(r, hi)")
+	w.line("\t}")
+	w.line("\treturn r.And(r, bigIntMask(bits))")
+	w.line("}")
+	w.blank()
+	w.line("func wideBVConcat(a, b *big.Int, bWidth, bits int) *big.Int {")
+	w.line("\tr := new(big.Int).Lsh(a, uint(bWidth))")
+	w.line("\tr.Or(r, b)")
+	w.line("\treturn r.And(r, bigIntMask(bits))")
+	w.line("}")
+	w.blank()
+	w.line("func wideBVMask(a *big.Int, bits int) *big.Int {")
+	w.line("\treturn new(big.Int).And(a, bigIntMask(bits))")
 	w.line("}")
 	w.blank()
 }

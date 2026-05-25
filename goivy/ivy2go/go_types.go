@@ -110,13 +110,17 @@ func (it goInterpType) hugeBV() bool {
 }
 
 // primitiveType returns the Go primitive type for a plain "bv[N]"
-// interp. Mirrors ivy2cpp cppInterpType.primitiveType with C++ types
-// substituted for Go types per ARCHITECTURE_TODO.md §3.5.1.
+// interp.
 //
-//   - N ≤ 32  → uint32
-//   - N ≤ 64  → uint64
-//   - N ≤ 128 → Uint128  (a runtime struct emitted by M3)
-//   - N > 128 → "" (huge BV handled via *big.Int through helperClass)
+//   - N ≤ 32 → uint32
+//   - N ≤ 64 → uint64
+//   - N > 64 → ""  (handled via *big.Int through goInterpTypeName)
+//
+// OPEN 054 collapses the previous 65..128 → Uint128 branch into the
+// uniform big.Int path so generated arithmetic stays consistent
+// across all wide widths. Uint128 still exists as a runtime helper
+// for callers (constants, model conversion) but is not the
+// emit-time type.
 func (it goInterpType) primitiveType() string {
 	if it.Kind != goInterpBV {
 		return ""
@@ -126,9 +130,6 @@ func (it goInterpType) primitiveType() string {
 	}
 	if it.Bits <= 64 {
 		return "uint64"
-	}
-	if it.Bits <= 128 {
-		return "Uint128"
 	}
 	return ""
 }

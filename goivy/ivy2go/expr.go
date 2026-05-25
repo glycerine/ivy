@@ -571,16 +571,119 @@ func (g *Generator) emitRangeNumeral(c *goivy.Const) (string, bool) {
 	return fmt.Sprintf("func() int { v := %s; %s }()", x, rangeClampExpr("v", lo, hi)), true
 }
 
-// --- M3 stubs for advanced expression emitters -----------------------
-// All of the following will be fleshed out in later milestones. Each
-// returns a (true, error) so any test that exercises the path fails
-// loudly rather than emitting wrong Go.
-
+// emitQuant lowers `forall x:T . body(x)` or `exists x:T . body(x)`
+// into a Go IIFE (immediately-invoked function expression) that
+// scans the sort with an early-exit loop. Mirrors ivy2cpp/expr.go
+// emitQuant: nested loops for multi-variable quantifiers, return
+// false on the first violation (forall) or true on the first hit
+// (exists).
+//
+// Per-sort iteration shape:
+//   - bool → range over [false, true]
+//   - enum / range / uninterpreted with known finite card → integer
+//     for-loop cast to the sort's Go type
+//   - anything else → error (deferred to a later milestone alongside
+//     extensional-relation iteration)
 func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, forall bool) (string, error) {
-	_ = vars
-	_ = body
-	_ = forall
-	return "", fmt.Errorf("ivy2go: quantifier emission deferred (M4/M5)")
+	if len(vars) == 0 {
+		return g.emitExpr(body)
+	}
+	headers := make([]string, len(vars))
+	closers := make([]string, len(vars))
+	for i, v := range vars {
+		h, c, err := g.loopHeaderForVar(v)
+		if err != nil {
+			return "", err
+		}
+		headers[i] = h
+		closers[i] = c
+	}
+	inner, err := g.emitExpr(body)
+	if err != nil {
+		return "", err
+	}
+
+	var b strings.Builder
+	b.WriteString("func() bool {\n")
+	for _, h := range headers {
+		b.WriteString("\t")
+		b.WriteString(h)
+		b.WriteString("\n")
+	}
+	if forall {
+		b.WriteString("\t\tif !(")
+		b.WriteString(inner)
+		b.WriteString(") { return false }\n")
+	} else {
+		b.WriteString("\t\tif ")
+		b.WriteString(inner)
+		b.WriteString(" { return true }\n")
+	}
+	// Close loops in reverse order.
+	for i := len(closers) - 1; i >= 0; i-- {
+		b.WriteString("\t")
+		b.WriteString(closers[i])
+		b.WriteString("\n")
+	}
+	if forall {
+		b.WriteString("\treturn true\n")
+	} else {
+		b.WriteString("\treturn false\n")
+	}
+	b.WriteString("}()")
+	return b.String(), nil
+}
+
+// loopHeaderForVar returns the Go loop header for iterating over a
+// variable's sort, plus the matching close line. Mirrors
+// ivy2cpp/expr.go loopHeaderForVar / loopHeaderForSort.
+//
+// The returned header/closer pair brackets the loop body. The body
+// must use the variable's name (passed via v.Name) — the loop
+// variable is named accordingly.
+func (g *Generator) loopHeaderForVar(v *goivy.LogicVariable) (string, string, error) {
+	if v == nil {
+		return "", "", fmt.Errorf("ivy2go: nil loop variable")
+	}
+	return g.loopHeaderForSort(v.VSort, goIdent(v.Name))
+}
+
+func (g *Generator) loopHeaderForSort(s goivy.Sort, name string) (string, string, error) {
+	switch sv := s.(type) {
+	case *goivy.BooleanSort:
+		return fmt.Sprintf("for _, %s := range [2]bool{false, true} {", name), "}", nil
+	case *goivy.LogicEnumeratedSort:
+		if isNumericEnum(sv) {
+			card := len(sv.Extension)
+			return fmt.Sprintf("for %s := 0; %s < %d; %s++ {", name, name, card, name), "}", nil
+		}
+		typeName := goExportedName(sv.Name)
+		card := len(sv.Extension)
+		return fmt.Sprintf("for __i := 0; __i < %d; __i++ { %s := %s(__i)", card, name, typeName), "}", nil
+	case *goivy.RangeSort:
+		lo, hi, ok := numericRangeBounds(sv)
+		if !ok {
+			return "", "", fmt.Errorf("ivy2go: cannot emit bounded loop over non-numeric range %s", sortName(s))
+		}
+		typ := g.goType(s)
+		return fmt.Sprintf("for %s := %s(%s); %s <= %s(%s); %s++ {", name, typ, lo, name, typ, hi, name), "}", nil
+	}
+	if rs, ok := g.rangeSortFor(s); ok {
+		lo, hi, ok := numericRangeBounds(rs)
+		if !ok {
+			return "", "", fmt.Errorf("ivy2go: cannot emit bounded loop over non-numeric range %s", sortName(s))
+		}
+		typ := g.goType(s)
+		return fmt.Sprintf("for %s := %s(%s); %s <= %s(%s); %s++ {", name, typ, lo, name, typ, hi, name), "}", nil
+	}
+	if goIsAnyIntegerType(g, s) {
+		card := goSortCard(g, s)
+		if card > 0 {
+			typ := g.goType(s)
+			return fmt.Sprintf("for __i := 0; __i < %d; __i++ { %s := %s(__i)", card, name, typ), "}", nil
+		}
+	}
+	return "", "", fmt.Errorf("ivy2go: cannot emit bounded loop over %s", sortName(s))
 }
 
 func (g *Generator) emitNativeExpr(n *goivy.LogicNativeExpr) (string, error) {
@@ -601,12 +704,92 @@ func (g *Generator) emitVariantRelation(name string, terms []goivy.Expr) (string
 	return "", true, fmt.Errorf("ivy2go: variant relation (*>) emission deferred (M8)")
 }
 
+// emitDestructorApply lowers destructor reads. Given
+// `field(record, args...)`, where `field` is a registered destructor,
+// emit `record.Field` (for scalar fields) or `record.Field[args...]`
+// (for indexed fields). Mirrors ivy2cpp/expr.go emitDestructorApply.
 func (g *Generator) emitDestructorApply(name string, terms []goivy.Expr) (string, bool, error) {
 	if _, ok := g.destructorFieldName(name); !ok {
 		return "", false, nil
 	}
-	_ = terms
-	return "", true, fmt.Errorf("ivy2go: destructor apply emission deferred (M8)")
+	if len(terms) < 1 {
+		return "", true, fmt.Errorf("ivy2go: destructor %s expected at least 1 argument", name)
+	}
+	obj, err := g.emitExpr(terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	field := goExportedName(memName(name))
+	if len(terms) == 1 {
+		return obj + "." + field, true, nil
+	}
+	args := make([]string, len(terms)-1)
+	for i, t := range terms[1:] {
+		code, err := g.emitExpr(t)
+		if err != nil {
+			return "", true, err
+		}
+		args[i] = code
+	}
+	// Pick array vs map indexing based on destructor sig.
+	domain, rng := g.destructorFieldSig(name)
+	st := goFunctionStorageFor(g, domain, rng)
+	switch st.Kind {
+	case goStorageArray:
+		expr := obj + "." + field
+		for _, a := range args {
+			expr += "[" + a + "]"
+		}
+		return expr, true, nil
+	case goStorageHashThunk:
+		if len(args) == 1 {
+			return obj + "." + field + "[" + args[0] + "]", true, nil
+		}
+		keyType := goCTupleNameWith(g, domain)
+		var b strings.Builder
+		b.WriteString(obj)
+		b.WriteString(".")
+		b.WriteString(field)
+		b.WriteString("[")
+		b.WriteString(keyType)
+		b.WriteString("{")
+		for i, a := range args {
+			if i > 0 {
+				b.WriteString(", ")
+			}
+			b.WriteString(a)
+		}
+		b.WriteString("}]")
+		return b.String(), true, nil
+	default:
+		return obj + "." + field, true, nil
+	}
+}
+
+// destructorFieldSig returns the destructor's remaining-domain and
+// range sorts. Ported from ivy2cpp/expr.go destructorFieldSig.
+func (g *Generator) destructorFieldSig(name string) ([]goivy.Sort, goivy.Sort) {
+	if g == nil || g.Mod == nil || g.Mod.DestructorSorts == nil {
+		return nil, nil
+	}
+	owner, ok := g.Mod.DestructorSorts[name]
+	if !ok {
+		return nil, nil
+	}
+	ownerName := sortName(owner)
+	destrs := g.Mod.SortDestructors.Get(ownerName)
+	for _, d := range destrs {
+		if d != nil && d.Name == name {
+			if fs, ok := d.CSort.(*goivy.LogicFunctionSort); ok {
+				dom := fs.Domain()
+				if len(dom) > 0 {
+					dom = dom[1:]
+				}
+				return dom, fs.Range()
+			}
+		}
+	}
+	return nil, nil
 }
 
 // destructorFieldName mirrors ivy2cpp/expr.go same-named helper.

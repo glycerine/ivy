@@ -74,6 +74,46 @@ func dedupedHelper() {}
 	}
 }
 
+// --- OPEN 056: in-action native go block tests ----------------------
+
+func TestEmitNativeAction_BodyLandsInsideMethod(t *testing.T) {
+	mod := compileIvySource(t, `
+action shout = {
+<<<
+go
+fmt.Println("hello from native action")
+>>>
+}
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	if !strings.Contains(actions, `fmt.Println("hello from native action")`) {
+		t.Errorf("native action body should land inline, got:\n%s", actions)
+	}
+}
+
+func TestEmitNativeAction_CppTaggedBlockSkipped(t *testing.T) {
+	mod := compileIvySource(t, `
+action mixed = {
+<<<
+cpp
+std::cout << "skipped" << std::endl;
+>>>
+}
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	if strings.Contains(actions, "std::cout") {
+		t.Errorf("cpp-tagged native action should be skipped, got:\n%s", actions)
+	}
+}
+
 func TestEmitNative_OracleStubReturnsError(t *testing.T) {
 	err := CompareGoVsCpp("/tmp/go", "/tmp/cpp", "args")
 	if err == nil {

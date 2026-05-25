@@ -69,9 +69,10 @@ func (g *Generator) emitBVApply(name string, a *goivy.Apply) (string, bool, erro
 	}
 	primitive := result.primitiveType()
 	if primitive == "" || result.Bits > 64 {
-		// Defer wide / huge BV operator lowering. Hit by M3+
-		// fixtures; the error makes the gap visible.
-		return "", true, fmt.Errorf("ivy2go: BV operator %q on bv[%d] needs wide-BV lowering (deferred)", name, result.Bits)
+		// Wide BV (>64 bits) lowering via *big.Int. Mirrors
+		// ivy2cpp's ivy_uint<N> template path but uses math/big
+		// for arithmetic; mask after every op.
+		return g.emitWideBVApply(name, a, result)
 	}
 	switch name {
 	case "concat":
@@ -371,8 +372,139 @@ func (g *Generator) requireUint128() {
 }
 
 // requireBigInt records that the emitted runtime needs math/big.
+// Also pulls in Uint128 because toBigInt's switch references it. The
+// per-stream math/big imports are added lazily by finalize when it
+// detects "big.Int" in a stream's body.
 func (g *Generator) requireBigInt() {
-	if g != nil && g.Ctx != nil {
-		g.Ctx.OnceGlobals["__need_bigint"] = true
+	if g == nil || g.Ctx == nil {
+		return
 	}
+	g.Ctx.OnceGlobals["__need_bigint"] = true
+	g.Ctx.OnceGlobals["__need_uint128"] = true
+}
+
+// --- OPEN 054: wide BV operator lowering via *big.Int ----------------
+
+// emitWideBVApply lowers BV operators whose result sort has bits > 64
+// by routing through math/big. Mirrors ivy2cpp's ivy_uint<N> template
+// path. Each operand is wrapped in a big.Int via the wideBVAs helper
+// (emitted into the runtime), the operation is applied, and the
+// result is masked.
+func (g *Generator) emitWideBVApply(name string, a *goivy.Apply, result goInterpType) (string, bool, error) {
+	g.requireBigInt()
+	switch name {
+	case "bvand", "bvor", "bvxor",
+		"bvadd", "bvsub", "bvmul", "bvudiv", "bvurem",
+		"+", "-", "*", "/", "%":
+		if len(a.Terms) != 2 {
+			return "", true, fmt.Errorf("ivy2go: %s expected 2 arguments, got %d", name, len(a.Terms))
+		}
+		lhs, err := g.emitExpr(a.Terms[0])
+		if err != nil {
+			return "", true, err
+		}
+		rhs, err := g.emitExpr(a.Terms[1])
+		if err != nil {
+			return "", true, err
+		}
+		op := wideBVMethodFor(name)
+		return fmt.Sprintf("wideBV%s(%s, %s, %d)", op, wideBVAsCall(lhs), wideBVAsCall(rhs), result.Bits), true, nil
+	case "bvnot":
+		if len(a.Terms) != 1 {
+			return "", true, fmt.Errorf("ivy2go: bvnot expected 1 argument, got %d", len(a.Terms))
+		}
+		body, err := g.emitExpr(a.Terms[0])
+		if err != nil {
+			return "", true, err
+		}
+		return fmt.Sprintf("wideBVNot(%s, %d)", wideBVAsCall(body), result.Bits), true, nil
+	case "bvneg":
+		if len(a.Terms) != 1 {
+			return "", true, fmt.Errorf("ivy2go: bvneg expected 1 argument, got %d", len(a.Terms))
+		}
+		body, err := g.emitExpr(a.Terms[0])
+		if err != nil {
+			return "", true, err
+		}
+		return fmt.Sprintf("wideBVNeg(%s, %d)", wideBVAsCall(body), result.Bits), true, nil
+	case "bvshl", "<<":
+		return g.emitWideBVShift(name, a, result, "Shl")
+	case "bvlshr", ">>":
+		return g.emitWideBVShift(name, a, result, "ShrLogical")
+	case "bvashr":
+		return g.emitWideBVShift(name, a, result, "ShrArith")
+	case "cast":
+		if len(a.Terms) != 1 {
+			return "", true, fmt.Errorf("ivy2go: cast expected 1 argument, got %d", len(a.Terms))
+		}
+		body, err := g.emitExpr(a.Terms[0])
+		if err != nil {
+			return "", true, err
+		}
+		return fmt.Sprintf("wideBVMask(%s, %d)", wideBVAsCall(body), result.Bits), true, nil
+	case "concat":
+		if len(a.Terms) != 2 {
+			return "", true, fmt.Errorf("ivy2go: concat expected 2 arguments, got %d", len(a.Terms))
+		}
+		lhs, err := g.emitExpr(a.Terms[0])
+		if err != nil {
+			return "", true, err
+		}
+		rhs, err := g.emitExpr(a.Terms[1])
+		if err != nil {
+			return "", true, err
+		}
+		rhsWidth, ok := g.bvWidthForSort(a.Terms[1].NodeSort())
+		if !ok {
+			return "", true, fmt.Errorf("ivy2go: concat rhs is not a bitvector: %s", a.Terms[1].String())
+		}
+		return fmt.Sprintf("wideBVConcat(%s, %s, %d, %d)", wideBVAsCall(lhs), wideBVAsCall(rhs), rhsWidth, result.Bits), true, nil
+	default:
+		return "", true, fmt.Errorf("ivy2go: unsupported wide BV operator %q", name)
+	}
+}
+
+func (g *Generator) emitWideBVShift(name string, a *goivy.Apply, result goInterpType, method string) (string, bool, error) {
+	if len(a.Terms) != 2 {
+		return "", true, fmt.Errorf("ivy2go: %s expected 2 arguments, got %d", name, len(a.Terms))
+	}
+	lhs, err := g.emitExpr(a.Terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	rhs, err := g.emitExpr(a.Terms[1])
+	if err != nil {
+		return "", true, err
+	}
+	return fmt.Sprintf("wideBV%s(%s, %s, %d)", method, wideBVAsCall(lhs), wideBVAsCall(rhs), result.Bits), true, nil
+}
+
+// wideBVMethodFor maps a BV operator name to the helper method name
+// emitted in runtime.go (e.g. "bvadd" → "Add").
+func wideBVMethodFor(name string) string {
+	switch name {
+	case "bvand":
+		return "And"
+	case "bvor":
+		return "Or"
+	case "bvxor":
+		return "Xor"
+	case "+", "bvadd":
+		return "Add"
+	case "-", "bvsub":
+		return "Sub"
+	case "*", "bvmul":
+		return "Mul"
+	case "/", "bvudiv":
+		return "Div"
+	case "%", "bvurem":
+		return "Mod"
+	}
+	return "Add"
+}
+
+// wideBVAsCall wraps an expression in toBigInt(...) so all operands
+// land in *big.Int form regardless of their Go primitive type.
+func wideBVAsCall(expr string) string {
+	return "toBigInt(" + expr + ")"
 }

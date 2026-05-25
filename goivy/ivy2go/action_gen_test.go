@@ -55,6 +55,23 @@ action set_flag = {
 	}
 }
 
+// --- OPEN 055: real Solver integration ------------------------------
+
+func TestEmit_TestTarget_PushStateRunsRealIsSat(t *testing.T) {
+	mod := compileIvySource(t, `relation flag`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	runtime := out.Files["runtime.go"]
+	if !strings.Contains(runtime, "sol.IsSat(") {
+		t.Errorf("pushStateIntoSolver should call sol.IsSat, got:\n%s", runtime)
+	}
+	if !strings.Contains(runtime, "goivy.NewConst") {
+		t.Errorf("pushStateIntoSolver should construct goivy expressions:\n%s", runtime)
+	}
+}
+
 func TestEmit_TestTarget_NewIvySolverHelper(t *testing.T) {
 	mod := compileIvySource(t, `relation flag`)
 	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})

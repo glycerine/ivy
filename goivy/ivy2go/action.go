@@ -67,7 +67,7 @@ func (g *Generator) emitAction(w *goWriter, act goivy.Action) {
 	case *goivy.LogicBindOldsAction:
 		g.unsupported(w, "bind-olds emission deferred (M5)")
 	case *goivy.LogicNativeAction:
-		g.unsupported(w, "native-action emission deferred (M10)")
+		g.emitNativeAction(w, a)
 	case *goivy.LogicDebugAction:
 		// Python's emit_debug is a no-op; mirror that.
 		_ = a
@@ -137,11 +137,11 @@ func linenoStr(loc goivy.Location) string {
 	return strings.TrimSuffix(loc.String(), ": ")
 }
 
-// emitIf ports ivy2cpp/action.go emitIf, simplified for M4.
-// `if some` (existential conditions) is deferred to M5.
+// emitIf ports ivy2cpp/action.go emitIf. Dispatches `if some` to
+// emitIfSome; for everything else emits a Go `if cond { ... }` chain.
 func (g *Generator) emitIf(w *goWriter, a *goivy.LogicIfAction) {
-	if _, ok := a.Cond.(*goivy.SomeCondition); ok {
-		g.unsupported(w, "if-some emission deferred (M5)")
+	if some, ok := a.Cond.(*goivy.SomeCondition); ok {
+		g.emitIfSome(w, a, some)
 		return
 	}
 	cond, err := g.emitExpr(a.Cond)
@@ -159,6 +159,123 @@ func (g *Generator) emitIf(w *goWriter, a *goivy.LogicIfAction) {
 			g.emitAction(w, elseAct)
 			w.close("")
 			return
+		}
+	}
+	w.close("")
+}
+
+// emitIfSome lowers `if some X. p(X) { THEN } else { ELSE }`. Mirrors
+// ivy2cpp/action.go emitIfSome (the plain-Some path; SomeMin/SomeMax
+// are deferred to a follow-up).
+//
+// Lowering shape:
+//
+//	{
+//	    __found := false
+//	    var X T
+//	    for X := T(0); X < T(card); X++ {
+//	        if !__found && p(X) {
+//	            __found = true
+//	            // THEN with X in scope (alias rewritten via emitAction)
+//	        }
+//	    }
+//	    if !__found {
+//	        // ELSE
+//	    }
+//	}
+func (g *Generator) emitIfSome(w *goWriter, a *goivy.LogicIfAction, some *goivy.SomeCondition) {
+	if some.Kind == "some_min" || some.Kind == "some_max" {
+		g.emitIfSomeMinMax(w, a, some)
+		return
+	}
+	if len(some.Params) == 0 {
+		g.unsupported(w, "if-some with no params is malformed")
+		return
+	}
+	w.open("{")
+	w.line("__found := false")
+	// Declare witnesses outside the loops so the ELSE block can
+	// reference them (though typically only THEN does).
+	witnessNames := make([]string, len(some.Params))
+	for i, p := range some.Params {
+		name := goIdent(p.Name)
+		witnessNames[i] = name
+		w.linef("var %s %s", name, g.goType(p.CSort))
+		w.linef("_ = %s", name)
+	}
+	// Build the loop nest. For each param we open a loop, but the
+	// loop variable name shadows the witness declared above; we
+	// assign the witness inside the THEN body so it survives the
+	// loop exit.
+	headers := make([]string, len(some.Params))
+	closers := make([]string, len(some.Params))
+	for i, p := range some.Params {
+		// loopHeaderForSort takes the name directly; build it from
+		// the param name with a "Some_" prefix so the loop variable
+		// is distinct from the witness (declared above with the
+		// original name) and from any user-introduced symbol.
+		loopName := "__some_" + goIdent(p.Name)
+		h, c, herr := g.loopHeaderForSort(p.CSort, loopName)
+		if herr != nil {
+			g.unsupported(w, "if-some bounds: %s", herr.Error())
+			return
+		}
+		headers[i] = h
+		closers[i] = c
+	}
+	for _, h := range headers {
+		w.open(h)
+	}
+	// Build a substitution that rewrites references to the param
+	// inside the cond formula to the loop variable name.
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for i, p := range some.Params {
+		lv := &goivy.Const{Name: "__some_" + p.Name, CSort: p.CSort}
+		subs[goivy.Key(p)] = lv
+		_ = i
+	}
+	rewritten, err := goivy.Substitute(some.Fmla, subs)
+	if err != nil {
+		g.unsupported(w, "if-some substitution: %s", err.Error())
+		// Close the loops we opened before returning.
+		for range closers {
+			w.close("")
+		}
+		w.close("")
+		return
+	}
+	cond, err := g.emitExpr(rewritten)
+	if err != nil {
+		g.unsupported(w, "if-some condition: %s", err.Error())
+		for range closers {
+			w.close("")
+		}
+		w.close("")
+		return
+	}
+	w.linef("if !__found && (%s) {", cond)
+	w.line("\t__found = true")
+	for i, p := range some.Params {
+		w.linef("\t%s = __some_%s", witnessNames[i], goIdent(p.Name))
+	}
+	if thenAct, ok := a.ThenBody.(goivy.Action); ok {
+		// Wrap in a block so the witness assignments don't dangle.
+		w.line("\t{")
+		// emit then body — the witness names now hold the chosen
+		// values; references to the param symbols in the body see
+		// them since we declared them above.
+		g.emitAction(w, thenAct)
+		w.line("\t}")
+	}
+	w.line("}")
+	for range closers {
+		w.close("")
+	}
+	if a.ElseBody != nil {
+		if elseAct, ok := a.ElseBody.(goivy.Action); ok {
+			w.line("if !__found {")
+			g.emitAction(w, elseAct)
+			w.line("}")
 		}
 	}
 	w.close("")
@@ -257,6 +374,38 @@ func (g *Generator) emitCall(w *goWriter, a *goivy.LogicCallAction) {
 	w.linef("%s = s.%s(%s)", strings.Join(rets, ", "), goExportedName(name), strings.Join(args, ", "))
 }
 
+// emitNativeAction emits an inline native Go block within an action
+// body. Mirrors ivy2cpp/native.go's emitNativeAction.
+//
+// Like module-level native blocks (M10), each in-action block's
+// first non-blank line is the language tag. Blocks tagged "go" or
+// "go_*" emit their body verbatim into the enclosing action method;
+// blocks with non-Go tags (e.g. "cpp") are skipped.
+//
+// Antiquote substitution of the Params slice is a future refinement
+// (it would require parsing the body for $arg references); for now
+// callers should write antiquote-free Go.
+func (g *Generator) emitNativeAction(w *goWriter, a *goivy.LogicNativeAction) {
+	codeNode, ok := a.Code.(*goivy.NativeCode)
+	if !ok {
+		g.unsupported(w, "native action code is %T, not *NativeCode", a.Code)
+		return
+	}
+	tag, body := splitNativeGoCode(codeNode.Code)
+	if !strings.HasPrefix(tag, "go") {
+		// Non-Go-tagged in-action native: skip silently so a single
+		// Ivy source can carry both cpp and go native actions.
+		return
+	}
+	body = strings.TrimRight(body, "\n")
+	if body == "" {
+		return
+	}
+	for _, line := range strings.Split(body, "\n") {
+		w.line(line)
+	}
+}
+
 // emitLocal ports ivy2cpp/action.go emitLocal, simplified: each local
 // becomes a Go `var name T` declaration, then the body runs.
 func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
@@ -353,6 +502,12 @@ func (g *Generator) emitActionMethod(w *goWriter, name string, act goivy.Action)
 	g.currentReturns = returns
 	g.emitAction(w, act)
 	g.currentReturns = prev
+
+	// Named returns: append a final `return` so the function
+	// closes cleanly even if the body didn't write one.
+	if len(returns) > 0 {
+		w.line("return")
+	}
 
 	w.close("")
 	w.blank()
