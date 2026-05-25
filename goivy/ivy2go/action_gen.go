@@ -112,10 +112,104 @@ func (g *Generator) emitPreconditionForAction(w *goWriter, name string) {
 	w.blank()
 }
 
+// emitStructInputAssembly emits the per-field pick + struct-literal
+// assembly for a destructor-record param (OPEN 055.7).
+func (g *Generator) emitStructInputAssembly(w *goWriter, i int, typeName, recName string) {
+	fields := g.destructorScalarFields(recName)
+	for _, f := range fields {
+		fcard := goSortCard(g, f.Sort)
+		switch ft := g.goType(f.Sort); {
+		case ft == "bool":
+			w.linef("v%d_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s)",
+				i, goIdent(f.Name), i, goIdent(f.Name))
+		case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
+			w.linef("v%d_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s, %d))",
+				i, goIdent(f.Name), ft, i, goIdent(f.Name), fcard)
+		default:
+			w.linef("var v%d_%s %s", i, goIdent(f.Name), ft)
+			w.linef("_ = v%d_%s", i, goIdent(f.Name))
+		}
+	}
+	assign := make([]string, 0, len(fields))
+	for _, f := range fields {
+		assign = append(assign, fmt.Sprintf("%s: v%d_%s", goExportedName(f.Name), i, goIdent(f.Name)))
+	}
+	w.linef("v%d := %s{%s}", i, typeName, strings.Join(assign, ", "))
+}
+
+// emitVariantInputAssembly emits the tag-pick + switch-by-tag + per-
+// leaf constructor invocation for a variant-super-typed param
+// (OPEN 055.8).
+//
+// Shape:
+//
+//	v0_tag := ivyChoose(<numLeaves>)
+//	var v0 <SuperType>
+//	switch v0_tag {
+//	case 0: v0 = NewSuperLeafA()                  // plain leaf
+//	case 1:                                         // destructor-backed leaf
+//	    v0_leafB_f := pickBoolOrChoose(...)
+//	    v0 = NewSuperLeafB(LeafB{F: v0_leafB_f})
+//	}
+//
+// The solver doesn't natively know about tag selection (Ivy's
+// supertype is just an UninterpretedSort) so we use ivyChoose for
+// the tag. Per-leaf field synthesis still flows through the solver
+// when the leaf is destructor-backed.
+func (g *Generator) emitVariantInputAssembly(w *goWriter, i int, typeName, superName string) {
+	leaves := g.variantLeaves(superName)
+	if len(leaves) == 0 {
+		w.linef("var v%d %s", i, typeName)
+		w.linef("_ = v%d", i)
+		return
+	}
+	w.linef("v%d_tag := ivyChoose(%d)", i, len(leaves))
+	w.linef("var v%d %s", i, typeName)
+	w.linef("switch v%d_tag {", i)
+	for tag, leaf := range leaves {
+		w.linef("case %d:", tag)
+		ctor := "New" + goExportedName(superName) + goExportedName(leaf.Name)
+		if leaf.IsPlain {
+			w.linef("\tv%d = %s()", i, ctor)
+			continue
+		}
+		// Destructor-backed leaf — pick each field, build the
+		// leaf struct, pass to the constructor.
+		leafType := goExportedName(leaf.Name)
+		for _, f := range leaf.Fields {
+			fcard := goSortCard(g, f.Sort)
+			switch ft := g.goType(f.Sort); {
+			case ft == "bool":
+				w.linef("\tv%d_%s_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s_%s)",
+					i, goIdent(leaf.Name), goIdent(f.Name),
+					i, goIdent(leaf.Name), goIdent(f.Name))
+			case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
+				w.linef("\tv%d_%s_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s_%s, %d))",
+					i, goIdent(leaf.Name), goIdent(f.Name),
+					ft, i, goIdent(leaf.Name), goIdent(f.Name), fcard)
+			default:
+				w.linef("\tvar v%d_%s_%s %s", i, goIdent(leaf.Name), goIdent(f.Name), ft)
+				w.linef("\t_ = v%d_%s_%s", i, goIdent(leaf.Name), goIdent(f.Name))
+			}
+		}
+		assign := make([]string, 0, len(leaf.Fields))
+		for _, f := range leaf.Fields {
+			assign = append(assign, fmt.Sprintf("%s: v%d_%s_%s",
+				goExportedName(f.Name), i, goIdent(leaf.Name), goIdent(f.Name)))
+		}
+		w.linef("\tv%d = %s(%s{%s})", i, ctor, leafType, strings.Join(assign, ", "))
+	}
+	w.line("}")
+}
+
 // preconditionSignatureArgs returns the formal-param list of
 // buildPrecondition_<Name>: one `__in<i> *goivy.Const` per scalar
-// param plus, for struct params, one `__in<i>_<field> *goivy.Const`
-// per scalar destructor field.
+// param plus per-field symbols for struct (OPEN 055.7) and variant
+// (OPEN 055.8) params.
+//
+// For variant params each destructor-backed leaf contributes one
+// `__in<i>_<leaf>_<field>` Const per scalar field — the receiver
+// symbol __in<i> is always present too.
 func preconditionSignatureArgs(g *Generator, params []*goivy.Const) []string {
 	out := make([]string, 0, len(params))
 	for i, p := range params {
@@ -126,6 +220,15 @@ func preconditionSignatureArgs(g *Generator, params []*goivy.Const) []string {
 		if recName, ok := g.destructorStructName(p.CSort); ok {
 			for _, f := range g.destructorScalarFields(recName) {
 				out = append(out, fmt.Sprintf("__in%d_%s *goivy.Const", i, goIdent(f.Name)))
+			}
+			continue
+		}
+		if superName, ok := g.variantSuperName(p.CSort); ok {
+			for _, leaf := range g.variantLeaves(superName) {
+				for _, f := range leaf.Fields {
+					out = append(out, fmt.Sprintf("__in%d_%s_%s *goivy.Const",
+						i, goIdent(leaf.Name), goIdent(f.Name)))
+				}
 			}
 		}
 	}
@@ -144,6 +247,15 @@ func preconditionCallArgs(g *Generator, params []*goivy.Const) []string {
 		if recName, ok := g.destructorStructName(p.CSort); ok {
 			for _, f := range g.destructorScalarFields(recName) {
 				out = append(out, fmt.Sprintf("__in%d_%s", i, goIdent(f.Name)))
+			}
+			continue
+		}
+		if superName, ok := g.variantSuperName(p.CSort); ok {
+			for _, leaf := range g.variantLeaves(superName) {
+				for _, f := range leaf.Fields {
+					out = append(out, fmt.Sprintf("__in%d_%s_%s",
+						i, goIdent(leaf.Name), goIdent(f.Name)))
+				}
 			}
 		}
 	}
@@ -513,6 +625,23 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 					i, goIdent(f.Name), i, goIdent(p.Name), goIdent(f.Name), fieldSortCode)
 				w.linef("_ = __in%d_%s", i, goIdent(f.Name))
 			}
+			continue
+		}
+		// Per-leaf-field input symbols for variant-typed params.
+		if superName, ok := g.variantSuperName(p.CSort); ok {
+			for _, leaf := range g.variantLeaves(superName) {
+				for _, f := range leaf.Fields {
+					fieldSortCode, _ := g.reifySortAsGoCode(f.Sort)
+					if fieldSortCode == "" {
+						fieldSortCode = "goivy.Boolean"
+					}
+					w.linef("__in%d_%s_%s := goivy.NewConst(\"__in%d_%s_%s_%s\", %s)",
+						i, goIdent(leaf.Name), goIdent(f.Name),
+						i, goIdent(p.Name), goIdent(leaf.Name), goIdent(f.Name),
+						fieldSortCode)
+					w.linef("_ = __in%d_%s_%s", i, goIdent(leaf.Name), goIdent(f.Name))
+				}
+			}
 		}
 	}
 	w.line("var modelResult *goivy.ModelResult")
@@ -550,27 +679,11 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 			if recName, ok := g.destructorStructName(p.CSort); ok {
 				// OPEN 055.7: assemble the struct from per-field
 				// model reads.
-				fields := g.destructorScalarFields(recName)
-				for _, f := range fields {
-					fcard := goSortCard(g, f.Sort)
-					switch ft := g.goType(f.Sort); {
-					case ft == "bool":
-						w.linef("v%d_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s)",
-							i, goIdent(f.Name), i, goIdent(f.Name))
-					case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
-						w.linef("v%d_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s, %d))",
-							i, goIdent(f.Name), ft, i, goIdent(f.Name), fcard)
-					default:
-						w.linef("var v%d_%s %s", i, goIdent(f.Name), ft)
-						w.linef("_ = v%d_%s", i, goIdent(f.Name))
-					}
-				}
-				// Assemble: Point{X: v0_x, Y: v0_y}.
-				assign := make([]string, 0, len(fields))
-				for _, f := range fields {
-					assign = append(assign, fmt.Sprintf("%s: v%d_%s", goExportedName(f.Name), i, goIdent(f.Name)))
-				}
-				w.linef("v%d := %s{%s}", i, typeName, strings.Join(assign, ", "))
+				g.emitStructInputAssembly(w, i, typeName, recName)
+			} else if superName, ok := g.variantSuperName(p.CSort); ok {
+				// OPEN 055.8: pick a tag, then assemble via the
+				// per-leaf constructor with payload (if any).
+				g.emitVariantInputAssembly(w, i, typeName, superName)
 			} else {
 				// Any other shape we can't synthesise: zero value.
 				w.linef("var v%d %s", i, typeName)

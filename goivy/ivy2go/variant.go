@@ -157,3 +157,37 @@ func (g *Generator) emitVariantLeafStruct(w *goWriter, name string) {
 	_ = w
 	_ = name
 }
+
+// variantLeafInfo bundles what variant-input synthesis needs about
+// one leaf of a variant super sort.
+type variantLeafInfo struct {
+	Name    string             // leaf sort name (e.g. "leaf_a")
+	IsPlain bool               // true → no payload (NewSuperLeafA())
+	Fields  []destructorField  // scalar destructor fields (empty when plain)
+}
+
+// variantLeaves returns the leaf metadata for a variant super sort
+// in declaration order — the order matches the Tag values emitted in
+// emitVariantSuperStruct (i=0,1,...).
+func (g *Generator) variantLeaves(superName string) []variantLeafInfo {
+	if g == nil || g.Mod == nil {
+		return nil
+	}
+	subs, ok := g.Mod.Variants[superName]
+	if !ok {
+		return nil
+	}
+	out := make([]variantLeafInfo, 0, len(subs))
+	for _, sub := range subs {
+		ln := sortName(sub)
+		if ln == "" {
+			continue
+		}
+		out = append(out, variantLeafInfo{
+			Name:    ln,
+			IsPlain: g.isPlainVariantSubtypeName(ln),
+			Fields:  g.destructorScalarFields(ln),
+		})
+	}
+	return out
+}

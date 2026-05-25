@@ -102,7 +102,7 @@ func (g *Generator) emitAction(w *goWriter, act goivy.Action) {
 // emitReturn ports ivy2cpp/action.go emitReturn.
 func (g *Generator) emitReturn(w *goWriter) {
 	if g != nil && len(g.currentReturns) == 1 {
-		w.linef("return %s", goIdent(g.currentReturns[0].Name))
+		w.linef("return %s", g.actionParamName(g.currentReturns[0]))
 		return
 	}
 	w.line("return")
@@ -551,6 +551,18 @@ func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
 	w.close("")
 }
 
+// actionParamName returns the Go identifier for an action's formal
+// param or return, mangled to avoid colliding with the `s` method
+// receiver. Mirrors goIdent's safety check for the local Action
+// context.
+func (g *Generator) actionParamName(c *goivy.Const) string {
+	id := goIdent(c.Name)
+	if id == "s" {
+		return "s_"
+	}
+	return id
+}
+
 // unsupported records a generator-time error and emits a marker
 // comment so the failure is visible in the source. Mirrors
 // ivy2cpp/generator.go unsupported.
@@ -593,13 +605,16 @@ func (g *Generator) emitActionMethod(w *goWriter, name string, act goivy.Action)
 	params := act.GetFormalParams()
 	returns := act.GetFormalReturns()
 
-	// Build parameter list.
+	// Build parameter list. Mangle any param whose lowered name
+	// would collide with the method receiver `s` so the emitted
+	// signature stays valid Go (`func (s *State) F(s Super)` is a
+	// redeclaration).
 	paramParts := make([]string, 0, len(params))
 	for _, p := range params {
 		if p == nil {
 			continue
 		}
-		paramParts = append(paramParts, fmt.Sprintf("%s %s", goIdent(p.Name), g.goType(p.CSort)))
+		paramParts = append(paramParts, fmt.Sprintf("%s %s", g.actionParamName(p), g.goType(p.CSort)))
 	}
 
 	// Build return list. Named returns let `return` (without args)
@@ -610,7 +625,7 @@ func (g *Generator) emitActionMethod(w *goWriter, name string, act goivy.Action)
 		if r == nil {
 			continue
 		}
-		returnParts = append(returnParts, fmt.Sprintf("%s %s", goIdent(r.Name), g.goType(r.CSort)))
+		returnParts = append(returnParts, fmt.Sprintf("%s %s", g.actionParamName(r), g.goType(r.CSort)))
 	}
 
 	header := fmt.Sprintf("func (s *%s) %s(%s)", g.StateTypeName, methodName, strings.Join(paramParts, ", "))
@@ -626,7 +641,52 @@ func (g *Generator) emitActionMethod(w *goWriter, name string, act goivy.Action)
 	// Track returns so emitReturn can use the right names.
 	prev := g.currentReturns
 	g.currentReturns = returns
+
+	// Install alias rewrites for any formal param / return whose
+	// lowered name collided with the receiver `s`. Without this
+	// the body would emit `s` references that conflict with the
+	// receiver; mangling at the signature alone isn't enough.
+	type aliasEntry struct {
+		key  string
+		orig goivy.Expr
+		had  bool
+	}
+	if g.exprAliases == nil {
+		g.exprAliases = map[string]goivy.Expr{}
+	}
+	saved := make([]aliasEntry, 0)
+	installRewrite := func(c *goivy.Const) {
+		if c == nil {
+			return
+		}
+		mangled := g.actionParamName(c)
+		orig := goIdent(c.Name)
+		if mangled == orig {
+			return
+		}
+		prev, had := g.exprAliases[c.Name]
+		saved = append(saved, aliasEntry{key: c.Name, orig: prev, had: had})
+		// Use a fresh Const with the mangled name as the alias
+		// target; emitExpr's Const path emits goIdent(name).
+		g.exprAliases[c.Name] = &goivy.Const{Name: mangled, CSort: c.CSort}
+	}
+	for _, p := range params {
+		installRewrite(p)
+	}
+	for _, r := range returns {
+		installRewrite(r)
+	}
+
 	g.emitAction(w, act)
+
+	// Restore prior alias state.
+	for _, e := range saved {
+		if e.had {
+			g.exprAliases[e.key] = e.orig
+		} else {
+			delete(g.exprAliases, e.key)
+		}
+	}
 	g.currentReturns = prev
 
 	// Named returns: append a final `return` so the function

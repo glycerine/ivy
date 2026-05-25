@@ -270,6 +270,90 @@ action use_box(b: box) = {
 	}
 }
 
+// --- OPEN 055.8: variant-typed param synthesis ----------------------
+
+func TestEmit_TestTarget_VariantParamPlainLeavesUseConstructorSwitch(t *testing.T) {
+	mod := compileIvySource(t, `
+type super
+type leaf_a
+type leaf_b
+variant leaf_a of super
+variant leaf_b of super
+relation flag
+action probe(s: super) = {
+	flag := true
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+
+	// Receiver Const declared.
+	if !strings.Contains(actions, `__in0 := goivy.NewConst("__in0_s"`) {
+		t.Errorf("missing variant receiver Const:\n%s", actions)
+	}
+	// Tag pick via ivyChoose(N).
+	if !strings.Contains(actions, "v0_tag := ivyChoose(2)") {
+		t.Errorf("variant should pick tag via ivyChoose(2):\n%s", actions)
+	}
+	// Switch with per-leaf constructor calls.
+	if !strings.Contains(actions, "switch v0_tag {") {
+		t.Errorf("variant should switch on tag:\n%s", actions)
+	}
+	if !strings.Contains(actions, "v0 = NewSuperLeafA()") {
+		t.Errorf("case 0 should construct LeafA via NewSuperLeafA:\n%s", actions)
+	}
+	if !strings.Contains(actions, "v0 = NewSuperLeafB()") {
+		t.Errorf("case 1 should construct LeafB via NewSuperLeafB:\n%s", actions)
+	}
+	// Action invoked with synthesised value.
+	if !strings.Contains(actions, "state.Probe(v0)") {
+		t.Errorf("Generate should call Probe(v0):\n%s", actions)
+	}
+}
+
+func TestEmit_TestTarget_VariantNoLeaves_ZeroValue(t *testing.T) {
+	// Variant supertype with zero leaves should fall back to the
+	// zero-value path (no switch).
+	mod := compileIvySource(t, `
+type super
+relation flag
+action probe(s: super) = {
+	flag := true
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	// `super` here is a plain UninterpretedSort (no variants registered),
+	// so the synthesis path should NOT emit a variant switch.
+	if strings.Contains(actions, "v0_tag := ivyChoose") {
+		t.Errorf("non-variant uninterp should not get variant tag pick:\n%s", actions)
+	}
+}
+
+func TestSmoke_BuildEmittedTest_VariantParam(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+type super
+type leaf_a
+type leaf_b
+variant leaf_a of super
+variant leaf_b of super
+relation flag
+action probe(s: super) = {
+	flag := true
+}
+`)
+	buildEmittedAgainstGoivy(t, mod, "ivygo_variant_param")
+}
+
 // --- OPEN 055.5 / 055.6: end-to-end build smokes for harder Pre ----
 
 func TestSmoke_BuildEmittedTest_EnumPre(t *testing.T) {
