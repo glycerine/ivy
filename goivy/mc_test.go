@@ -1816,6 +1816,33 @@ func TestSortValuesRangeZero(t *testing.T) {
 	}
 }
 
+func TestToTableLookupUnaryGuardKeepsSingletonAndLikePython(t *testing.T) {
+	server := &LogicEnumeratedSort{Name: "server", Extension: []string{"0", "1"}}
+	fSort, err := NewFunctionSort(server, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	link := NewConst("link", fSort)
+	y := NewConst("__fml:y", server)
+	trans := NewClauses([]Expr{MustApply(link, y)}, nil, nil)
+
+	got, _ := ToTableLookup(trans, &LogicAnd{})
+	if len(got.Fmlas) != 1 {
+		t.Fatalf("ToTableLookup produced %d formulas, want 1", len(got.Fmlas))
+	}
+	ite, ok := got.Fmlas[0].(*LogicIte)
+	if !ok {
+		t.Fatalf("ToTableLookup formula = %T, want *LogicIte", got.Fmlas[0])
+	}
+	if _, ok := ite.Cond.(*LogicAnd); !ok {
+		t.Fatalf("unary table lookup condition = %T, want Python-style *LogicAnd", ite.Cond)
+	}
+	canon := string(got.Fmlas[0].Sexp())
+	if !strings.Contains(canon, "cond:(And terms:[(Eq") {
+		t.Fatalf("unary table lookup did not keep singleton And guard: %s", canon)
+	}
+}
+
 func TestAigerGetInConstants(t *testing.T) {
 	a := NewAiger(nil, nil, nil)
 	a.State = make(map[int]byte)

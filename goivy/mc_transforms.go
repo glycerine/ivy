@@ -214,12 +214,7 @@ func tableLookupApp(app *Apply, funcSym *Const, argSym func(Sort) *Const, newDef
 			for j, arg := range argSyms {
 				eqs = append(eqs, &Eq{T1: arg, T2: combo[j]})
 			}
-			var cond Expr
-			if len(eqs) == 1 {
-				cond = eqs[0]
-			} else {
-				cond = &LogicAnd{Terms: eqs}
-			}
+			cond := &LogicAnd{Terms: eqs}
 			result = &LogicIte{ISort: fApp.NodeSort(), Cond: cond, Then: fApp, Else: result}
 		}
 	}
