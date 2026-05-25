@@ -191,6 +191,85 @@ func TestReifyExprAsGoCode_ParamRewriteToInput(t *testing.T) {
 	}
 }
 
+// --- OPEN 055.7: solver-driven struct-input synthesis ---------------
+
+func TestEmit_TestTarget_StructParamSynthesisShape(t *testing.T) {
+	mod := compileIvySource(t, `
+type point = struct { x : bool, y : bool }
+relation flag
+action set_to_x(p: point) = {
+	require x(p);
+	flag := x(p)
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+
+	// Per-field input symbols declared in Generate.
+	for _, want := range []string{
+		`__in0 := goivy.NewConst("__in0_p"`,
+		`__in0_x := goivy.NewConst("__in0_p_x"`,
+		`__in0_y := goivy.NewConst("__in0_p_y"`,
+	} {
+		if !strings.Contains(actions, want) {
+			t.Errorf("missing per-field input decl %q:\n%s", want, actions)
+		}
+	}
+	// buildPrecondition_<Name> signature receives all three.
+	if !strings.Contains(actions, "buildPrecondition_SetToX(state *State, __in0 *goivy.Const, __in0_x *goivy.Const, __in0_y *goivy.Const)") {
+		t.Errorf("buildPrecondition signature missing per-field args:\n%s", actions)
+	}
+	// Destructor-equality conjuncts in the precondition body.
+	if !strings.Contains(actions, `&goivy.Eq{T1: mustApply(goivy.NewConst("x"`) {
+		t.Errorf("precondition should add x(p)=p_x equality:\n%s", actions)
+	}
+	if !strings.Contains(actions, `&goivy.Eq{T1: mustApply(goivy.NewConst("y"`) {
+		t.Errorf("precondition should add y(p)=p_y equality:\n%s", actions)
+	}
+	// Per-field pick + struct assembly in Generate.
+	if !strings.Contains(actions, "v0_x := pickBoolOrChoose(g.sol, modelResult, __in0_x)") {
+		t.Errorf("Generate should pick __in0_x via pickBoolOrChoose:\n%s", actions)
+	}
+	if !strings.Contains(actions, "v0_y := pickBoolOrChoose(g.sol, modelResult, __in0_y)") {
+		t.Errorf("Generate should pick __in0_y:\n%s", actions)
+	}
+	if !strings.Contains(actions, "v0 := Point{X: v0_x, Y: v0_y}") {
+		t.Errorf("Generate should assemble Point{X: …, Y: …}:\n%s", actions)
+	}
+	if !strings.Contains(actions, "state.SetToX(v0)") {
+		t.Errorf("Generate should call SetToX(v0):\n%s", actions)
+	}
+}
+
+func TestEmit_TestTarget_IndexedDestructorFieldsSkipped(t *testing.T) {
+	// Indexed destructor (data(I: idx) : bool) should NOT contribute
+	// per-field synthesis — those fields can't be solved as a single
+	// value. The receiver still gets an __in<i>; the indexed field
+	// stays the zero value.
+	mod := compileIvySource(t, `
+type idx = {0..3}
+type box = struct {
+	cell(I: idx) : bool
+}
+relation flag
+action use_box(b: box) = {
+	flag := true
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	// No per-field input symbol for `cell` since it's indexed.
+	if strings.Contains(actions, "__in0_cell") {
+		t.Errorf("indexed destructor field cell should not get a per-field input:\n%s", actions)
+	}
+}
+
 // --- OPEN 055.5 / 055.6: end-to-end build smokes for harder Pre ----
 
 func TestSmoke_BuildEmittedTest_EnumPre(t *testing.T) {

@@ -243,6 +243,49 @@ func (g *Generator) destructorFieldType(domain []goivy.Sort, rng goivy.Sort) str
 	}
 }
 
+// destructorScalarFields returns the (fieldName, fieldSort) pairs for
+// every destructor of `sortName` whose domain (after the implicit
+// receiver) is empty — i.e. the scalar fields of the record. Indexed
+// destructors (those whose domain has args beyond the receiver) are
+// skipped because they don't have a single value to solve for.
+//
+// Used by OPEN 055.7's struct-input synthesis: each scalar field
+// becomes a per-input goivy.Const so the solver can synthesise it.
+func (g *Generator) destructorScalarFields(sortName string) []destructorField {
+	if g == nil || g.Mod == nil || g.Mod.SortDestructors == nil {
+		return nil
+	}
+	destrs := g.Mod.SortDestructors.Get(sortName)
+	out := make([]destructorField, 0, len(destrs))
+	for _, d := range destrs {
+		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
+		if !ok {
+			continue
+		}
+		dom := fs.Domain()
+		if len(dom) > 1 {
+			// Indexed field (e.g. `data(I: idx) : bool`) — skip.
+			continue
+		}
+		out = append(out, destructorField{
+			Name:        memName(d.Name),
+			FullName:    d.Name,
+			Sort:        fs.Range(),
+			DestructorC: d,
+		})
+	}
+	return out
+}
+
+// destructorField bundles what struct-input synthesis needs about
+// one scalar field of a destructor sort.
+type destructorField struct {
+	Name        string      // e.g. "x" — the unprefixed field name
+	FullName    string      // e.g. "module__x" — the destructor's full Ivy name
+	Sort        goivy.Sort  // the field's value sort
+	DestructorC *goivy.Const // the destructor const (carries the field's function sort)
+}
+
 // emitDestructorEqual writes a value-receiver Equal method that
 // returns true iff every field matches.
 func (g *Generator) emitDestructorEqual(w *goWriter, typeName string, destrs []*goivy.Const) {

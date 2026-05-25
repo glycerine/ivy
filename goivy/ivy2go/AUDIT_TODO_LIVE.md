@@ -333,19 +333,45 @@ emitted code.
 
 ---
 
-## OPEN — last residual
+## DONE 055.7 — Solver-driven synthesis for struct-typed inputs
 
-### OPEN 055.7 — Solver-driven synthesis for struct-typed inputs
+OPEN-pass.
 
-Action params of record / variant types currently default to the
-Go zero value in actionGen.Generate (and to a zero value in the
-REPL arg parser). To synthesise those structurally we'd need to:
+`action_gen.go` now extends the per-action input-synthesis pipeline
+for any param whose sort is a destructor record:
 
-  - Declare a fresh `*goivy.Const` per destructor field (or per
-    variant tag), in the same way scalar params are declared.
-  - Build the precondition with each field as an input goivy.Const.
-  - Read each field value from the model and assemble the struct.
+1. **Per-field input symbols.** Each scalar destructor field of the
+   param's sort gets its own `__in<i>_<field>` goivy.Const declared
+   alongside the receiver `__in<i>`. Indexed destructors (those
+   with extra args beyond the receiver) are skipped — there's no
+   single value to solve for.
 
-This is structural extension of the existing pickInput pipeline;
-the Solver wiring is already in place. No fixture has demanded it
-yet.
+2. **Destructor equalities in the precondition.**
+   `buildPrecondition_<Name>` gains one `&goivy.Eq{T1: mustApply(<destr>, __in<i>), T2: __in<i>_<field>}`
+   conjunct per scalar field, so the solver binds each field value
+   to its corresponding input symbol when it computes a model.
+
+3. **Per-field model reads + struct assembly.** Generate calls
+   `pickBoolOrChoose` / `pickUintOrChoose` per field, then
+   assembles `v<i> := <RecordType>{<F1>: v<i>_<f1>, <F2>: v<i>_<f2>}`.
+
+The helper `destructor.go::destructorScalarFields` enumerates the
+relevant fields. `action_gen.go::preconditionSignatureArgs` /
+`preconditionCallArgs` keep the call-site and helper signature in
+sync so the per-field args thread through symmetrically.
+
+Verification: `TestEmit_TestTarget_StructParamSynthesisShape` (unit)
+plus `TestSmoke_BuildEmittedTest_StructDestrParam` (Tier 2 smoke,
+builds the emitted package against in-tree goivy with all new
+helpers linked) plus `TestEmit_TestTarget_IndexedDestructorFieldsSkipped`
+(confirms indexed destructors don't sprout spurious per-field
+inputs).
+
+---
+
+## OPEN — none
+
+All known sub-items addressed end-to-end. The remaining shape that
+won't lower today is variant-typed action params (tagged union
+inputs would need solver-driven Tag + payload synthesis). No
+fixture has demanded it; will be tracked reactively if one does.

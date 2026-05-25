@@ -43,11 +43,12 @@ func (g *Generator) emitActionGenStructs(w *goWriter) {
 
 // emitPreconditionForAction emits a `buildPrecondition_<Name>` helper
 // per action. The helper conjoins stateFactsAsClauses(state) with
-// the runtime-reified Pre.Fmlas (with __fml:<param> references
-// rewritten to the input symbols __in<i>_<param>).
+// the runtime-reified Pre.Fmlas AND per-field destructor equalities
+// when any param is struct-typed (OPEN 055.7).
 //
-// When the Pre can't be reified (unsupported Expr type), the helper
-// just returns the state facts so the round-trip still works.
+// Signature includes the receiver symbol per param plus, for struct
+// params, one Const per scalar field so the solver can synthesise
+// each independently.
 func (g *Generator) emitPreconditionForAction(w *goWriter, name string) {
 	act, _ := g.Mod.Actions.Get2(name)
 	if act == nil {
@@ -55,7 +56,6 @@ func (g *Generator) emitPreconditionForAction(w *goWriter, name string) {
 	}
 	params := act.GetFormalParams()
 
-	// Compute the action's update at emit time.
 	ctx := &goivy.UpdateContext{
 		Domain: g.Mod,
 		PVars:  map[string]bool{},
@@ -63,63 +63,91 @@ func (g *Generator) emitPreconditionForAction(w *goWriter, name string) {
 	}
 	var update *goivy.Update
 	func() {
-		// goivy.GetUpdate may panic on actions outside its supported
-		// shape (e.g. some thunk forms). Recover and let `update`
-		// stay nil so the rest of emission proceeds.
 		defer func() { _ = recover() }()
 		update = goivy.GetUpdate(act, ctx)
 	}()
 
 	helperName := "buildPrecondition_" + goExportedName(name)
-	// Build the input-symbol substitution: __fml:<param.Name> →
-	// inputs[i]. We collect a Go-source map literal so the
-	// reified Pre can pick the right param by name.
-	paramArgs := make([]string, len(params))
+	paramArgs := preconditionSignatureArgs(g, params)
+	w.linef("// %s reifies action %q's Pre clauses at runtime.", helperName, name)
+	w.linef("// Generated from goivy.GetUpdate(action, ctx).Pre at emit time.")
+	w.linef("func %s(state *%s%s) *goivy.Clauses {", helperName, g.StateTypeName, optComma(len(paramArgs))+strings.Join(paramArgs, ", "))
+	w.linef("\tbase := stateFactsAsClauses(state)")
+	w.line("\tvar extra []goivy.Expr")
+
+	// OPEN 055.7: for each struct-typed param, add destructor
+	// equalities (destructor(p) = p_field) so the solver binds the
+	// field values to per-field input symbols.
 	for i, p := range params {
 		if p == nil {
 			continue
 		}
-		paramArgs[i] = fmt.Sprintf("__in%d *goivy.Const", i)
-	}
-	w.linef("// %s reifies action %q's Pre clauses at runtime.", helperName, name)
-	w.linef("// Generated from goivy.GetUpdate(action, ctx).Pre at emit time.")
-	w.linef("func %s(state *%s%s) *goivy.Clauses {", helperName, g.StateTypeName, optComma(len(params))+strings.Join(paramArgs, ", "))
-	w.linef("\tbase := stateFactsAsClauses(state)")
-	if update == nil || update.Pre == nil || update.Pre.IsFalse() {
-		// Pre is trivially-false → action always safe → no extra
-		// constraints needed.
-		w.linef("\treturn base")
-		w.line("}")
-		w.blank()
-		return
-	}
-	// Build the param-name → input-symbol substitution map.
-	if len(params) > 0 {
-		w.line("\tparamSub := map[string]*goivy.Const{")
-		for i, p := range params {
-			if p == nil {
-				continue
-			}
-			w.linef("\t\t%q: __in%d,", "__fml:"+p.Name, i)
-			w.linef("\t\t%q: __in%d,", p.Name, i)
-		}
-		w.line("\t}")
-		w.line("\t_ = paramSub")
-	}
-	// Walk each fmla in Pre and reify it.
-	w.line("\tvar extra []goivy.Expr")
-	for _, fmla := range update.Pre.Fmlas {
-		code, ok := g.reifyExprAsGoCode(fmla, params)
-		if !ok {
-			// Unsupported shape — record and skip this fmla.
-			w.linef("\t// OPEN 055.3 unreifiable Pre fmla: %s", strings.ReplaceAll(fmla.String(), "\n", " "))
+		recName, isRecord := g.destructorStructName(p.CSort)
+		if !isRecord {
 			continue
 		}
-		w.linef("\textra = append(extra, %s)", code)
+		for _, f := range g.destructorScalarFields(recName) {
+			fnSortCode, ok := g.reifySortAsGoCode(f.DestructorC.CSort)
+			if !ok {
+				continue
+			}
+			w.linef("\textra = append(extra, &goivy.Eq{T1: mustApply(goivy.NewConst(%q, %s), __in%d), T2: __in%d_%s})",
+				f.FullName, fnSortCode, i, i, goIdent(f.Name))
+		}
+		g.requireMustHelpers()
+	}
+
+	if update != nil && update.Pre != nil && !update.Pre.IsFalse() {
+		for _, fmla := range update.Pre.Fmlas {
+			code, ok := g.reifyExprAsGoCode(fmla, params)
+			if !ok {
+				w.linef("\t// OPEN unreifiable Pre fmla: %s", strings.ReplaceAll(fmla.String(), "\n", " "))
+				continue
+			}
+			w.linef("\textra = append(extra, %s)", code)
+		}
 	}
 	w.line("\treturn conjClauses(base, extra...)")
 	w.line("}")
 	w.blank()
+}
+
+// preconditionSignatureArgs returns the formal-param list of
+// buildPrecondition_<Name>: one `__in<i> *goivy.Const` per scalar
+// param plus, for struct params, one `__in<i>_<field> *goivy.Const`
+// per scalar destructor field.
+func preconditionSignatureArgs(g *Generator, params []*goivy.Const) []string {
+	out := make([]string, 0, len(params))
+	for i, p := range params {
+		if p == nil {
+			continue
+		}
+		out = append(out, fmt.Sprintf("__in%d *goivy.Const", i))
+		if recName, ok := g.destructorStructName(p.CSort); ok {
+			for _, f := range g.destructorScalarFields(recName) {
+				out = append(out, fmt.Sprintf("__in%d_%s *goivy.Const", i, goIdent(f.Name)))
+			}
+		}
+	}
+	return out
+}
+
+// preconditionCallArgs returns the matching call-site identifiers for
+// preconditionSignatureArgs.
+func preconditionCallArgs(g *Generator, params []*goivy.Const) []string {
+	out := make([]string, 0, len(params))
+	for i, p := range params {
+		if p == nil {
+			continue
+		}
+		out = append(out, fmt.Sprintf("__in%d", i))
+		if recName, ok := g.destructorStructName(p.CSort); ok {
+			for _, f := range g.destructorScalarFields(recName) {
+				out = append(out, fmt.Sprintf("__in%d_%s", i, goIdent(f.Name)))
+			}
+		}
+	}
+	return out
 }
 
 // optComma returns ", " when n > 0, else "". Used to splice the
@@ -462,27 +490,37 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 		w.blank()
 		return
 	}
-	// 1. Build per-input symbols + a trivial Clauses.
-	w.line("// OPEN 055.1: build a Clauses for the action's reverse")
-	w.line("// image and extract input values from the solved model.")
-	w.line("// Trivial-true precondition for now (OPEN 055.2 will derive)")
-	w.line("// the real reverse image via goivy.ActionUpdate analysis.")
+	// 1. Build per-input symbols. Scalar params get one Const;
+	// struct (destructor record) params get one Const for the
+	// receiver plus one Const per scalar field, so the solver
+	// synthesises each field independently (OPEN 055.7).
+	w.line("// OPEN 055.1/.7: declare per-param + per-field input symbols.")
 	for i, p := range params {
-		w.linef("__in%d := goivy.NewConst(\"__in%d_%s\", goivy.Boolean)", i, i, goIdent(p.Name))
+		paramSortCode, _ := g.reifySortAsGoCode(p.CSort)
+		if paramSortCode == "" {
+			paramSortCode = "goivy.Boolean"
+		}
+		w.linef("__in%d := goivy.NewConst(\"__in%d_%s\", %s)", i, i, goIdent(p.Name), paramSortCode)
 		w.linef("_ = __in%d", i)
+		// Per-field input symbols for struct-typed params.
+		if recName, ok := g.destructorStructName(p.CSort); ok {
+			for _, f := range g.destructorScalarFields(recName) {
+				fieldSortCode, _ := g.reifySortAsGoCode(f.Sort)
+				if fieldSortCode == "" {
+					fieldSortCode = "goivy.Boolean"
+				}
+				w.linef("__in%d_%s := goivy.NewConst(\"__in%d_%s_%s\", %s)",
+					i, goIdent(f.Name), i, goIdent(p.Name), goIdent(f.Name), fieldSortCode)
+				w.linef("_ = __in%d_%s", i, goIdent(f.Name))
+			}
+		}
 	}
 	w.line("var modelResult *goivy.ModelResult")
 	w.line("if g.sol != nil {")
-	w.line("\t// OPEN 055.3: seed with state facts AND the action's")
-	w.line("\t// own reified Pre clauses (action-specific).")
-	preInputs := make([]string, 0, len(params))
-	for i, p := range params {
-		if p == nil {
-			continue
-		}
-		_ = p
-		preInputs = append(preInputs, fmt.Sprintf("__in%d", i))
-	}
+	w.line("\t// OPEN 055.3/.7: seed with state facts, the action's")
+	w.line("\t// reified Pre, and any per-field equalities for struct")
+	w.line("\t// inputs (so the solver synthesises each field too).")
+	preInputs := preconditionCallArgs(g, params)
 	preCall := "buildPrecondition_" + goExportedName(name) + "(state"
 	if len(preInputs) > 0 {
 		preCall += ", " + strings.Join(preInputs, ", ")
@@ -492,9 +530,9 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 	w.line("\tmodelResult, _ = g.sol.GetModelClauses(preclauses)")
 	w.line("}")
 	w.line("_ = modelResult")
-	// 2. Pick each input. Try the model first; fall back to
-	// ivyChoose. Per D6 we don't use generics — the per-card path
-	// returns uint64 and the caller inlines the typed cast.
+	// 2. Pick each input. Scalar params go through pick*Or-Choose;
+	// struct params have each field picked separately, then the
+	// record is assembled.
 	callArgs := make([]string, len(params))
 	for i, p := range params {
 		if p == nil {
@@ -509,12 +547,35 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 		case card > 0 && goIsAnyIntegerType(g, p.CSort):
 			w.linef("v%d := %s(pickUintOrChoose(g.sol, modelResult, __in%d, %d))", i, typeName, i, card)
 		default:
-			// Struct types (destructor records, variants) and any
-			// other shape we can't synthesise from an int: leave
-			// at the Go zero value. Real solver-driven synthesis
-			// of structured inputs is OPEN 055.7 (next iteration).
-			w.linef("var v%d %s", i, typeName)
-			w.linef("_ = v%d", i)
+			if recName, ok := g.destructorStructName(p.CSort); ok {
+				// OPEN 055.7: assemble the struct from per-field
+				// model reads.
+				fields := g.destructorScalarFields(recName)
+				for _, f := range fields {
+					fcard := goSortCard(g, f.Sort)
+					switch ft := g.goType(f.Sort); {
+					case ft == "bool":
+						w.linef("v%d_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s)",
+							i, goIdent(f.Name), i, goIdent(f.Name))
+					case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
+						w.linef("v%d_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s, %d))",
+							i, goIdent(f.Name), ft, i, goIdent(f.Name), fcard)
+					default:
+						w.linef("var v%d_%s %s", i, goIdent(f.Name), ft)
+						w.linef("_ = v%d_%s", i, goIdent(f.Name))
+					}
+				}
+				// Assemble: Point{X: v0_x, Y: v0_y}.
+				assign := make([]string, 0, len(fields))
+				for _, f := range fields {
+					assign = append(assign, fmt.Sprintf("%s: v%d_%s", goExportedName(f.Name), i, goIdent(f.Name)))
+				}
+				w.linef("v%d := %s{%s}", i, typeName, strings.Join(assign, ", "))
+			} else {
+				// Any other shape we can't synthesise: zero value.
+				w.linef("var v%d %s", i, typeName)
+				w.linef("_ = v%d", i)
+			}
 		}
 		callArgs[i] = fmt.Sprintf("v%d", i)
 	}
