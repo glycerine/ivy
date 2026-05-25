@@ -33,7 +33,8 @@ func TestBinDecBool(t *testing.T) {
 	}{
 		{[]Expr{falseExpr}, 0},
 		{[]Expr{trueExpr}, 1},
-		{[]Expr{falseExpr, trueExpr}, 2},
+		{[]Expr{trueExpr, falseExpr}, 2},
+		{[]Expr{falseExpr, trueExpr}, 1},
 		{[]Expr{trueExpr, trueExpr}, 3},
 		{[]Expr{trueExpr, falseExpr, trueExpr}, 5},
 	}
@@ -74,12 +75,12 @@ func TestDecodeValEnumerated(t *testing.T) {
 		t.Errorf("expected red, got %v", val)
 	}
 
-	val = enc.DecodeVal([]Expr{trueExpr, falseExpr}, sym)
+	val = enc.DecodeVal([]Expr{falseExpr, trueExpr}, sym)
 	if c, ok := val.(*Const); !ok || c.Name != "green" {
 		t.Errorf("expected green, got %v", val)
 	}
 
-	val = enc.DecodeVal([]Expr{falseExpr, trueExpr}, sym)
+	val = enc.DecodeVal([]Expr{trueExpr, falseExpr}, sym)
 	if c, ok := val.(*Const); !ok || c.Name != "blue" {
 		t.Errorf("expected blue, got %v", val)
 	}
@@ -108,7 +109,7 @@ func TestDecodeValRange(t *testing.T) {
 		t.Errorf("expected 3 (clamped), got %v", val)
 	}
 
-	val = enc.DecodeVal([]Expr{trueExpr, falseExpr}, sym)
+	val = enc.DecodeVal([]Expr{falseExpr, trueExpr}, sym)
 	if c, ok := val.(*Const); !ok || c.Name != "1" {
 		t.Errorf("expected 1, got %v", val)
 	}
@@ -270,6 +271,31 @@ func TestAigerMatchHandler2NewStateUsesStructuralEnvRenameForNextLatch(t *testin
 	}
 	if !eq.T1.Equal(x) || !IsTrue(eq.T2) {
 		t.Fatalf("expected x = true from env-renamed next latch, got %s", eq)
+	}
+}
+
+func TestAigerMatchHandler2ShowSymSkipsEnvFormalLikePython(t *testing.T) {
+	client := &UninterpretedSort{Name: "client"}
+	message1 := &LogicEnumeratedSort{Name: "message1", Extension: []string{"empty1", "reqshared", "reqexclusive"}}
+	channel1 := NewConst("s.channel1", &LogicFunctionSort{Sorts: []Sort{client, message1}})
+	formal := NewConst("__fml:cl", client)
+	decd := MustApply(channel1, formal)
+	val := NewConst("reqshared", message1)
+
+	handler := NewAigerMatchHandler2(nil, nil, nil, nil, New())
+	handler.Depth = 1
+
+	var eqns []Expr
+	handler.showSym2(
+		"__abs[0]",
+		decd,
+		val,
+		map[string]string{},
+		map[string]bool{"__fml:cl": true},
+		&eqns,
+	)
+	if len(eqns) != 0 {
+		t.Fatalf("showSym2 emitted %d eqns for env-bound __fml formal, want 0: %v", len(eqns), eqns)
 	}
 }
 

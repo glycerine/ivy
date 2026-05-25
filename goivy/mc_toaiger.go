@@ -65,12 +65,15 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 			initParts = append(initParts, a)
 		}
 	}
-	initParts = append(initParts, NewAssignAction(initVar, &LogicAnd{Terms: nil}))
+	initDone := NewAssignAction(initVar, &LogicAnd{Terms: nil})
+	setMCNowhere(initDone)
+	initParts = append(initParts, initDone)
 	initSeq := NewSequence(initParts...)
 	initAction := AddErrFlag(initSeq, erf, &errConds, mod.Instantiator)
 
 	// Python: action = LogicSequence(AssignAction(erf, Or()), IfAction(init_var, ext_act, init))
 	erfReset := NewAssignAction(erf, &LogicOr{Terms: nil})
+	setMCNowhere(erfReset)
 	ifAct := NewIfAction(initVar, extAct, initAction)
 	composedAction := NewSequence(erfReset, ifAct)
 
@@ -654,6 +657,7 @@ func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator
 		errCond := DualFormula(IvyDropUniversals(a.Formula), nil, instantiator)
 		*errConds = append(*errConds, errCond)
 		res := NewAssignAction(erf, &LogicOr{Terms: []Expr{erf, errCond}})
+		setMCNowhere(res)
 		return res
 
 	case *LogicRequiresAction:
@@ -661,6 +665,7 @@ func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator
 		errCond := &LogicNot{Body: IvyDropUniversals(a.Formula)}
 		*errConds = append(*errConds, errCond)
 		res := NewAssignAction(erf, &LogicOr{Terms: []Expr{erf, errCond}})
+		setMCNowhere(res)
 		return res
 
 	case *LogicSubgoalAction:
@@ -670,6 +675,7 @@ func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator
 	case *LogicAssumeAction:
 		// Assume: weaken to assume(or(erf, formula))
 		res := NewAssumeAction(&LogicOr{Terms: []Expr{erf, a.Formula}})
+		setMCNowhere(res)
 		return res
 
 	case *LogicSequence:
@@ -748,6 +754,17 @@ func AddErrFlag(action ActionsAction, erf *Const, errConds *[]Expr, instantiator
 		return a.ActionClone(newArgs)
 	}
 
+	return action
+}
+
+func mcNowhereLocation() Location {
+	return Location{Filename: "nowhere", Line: 0}
+}
+
+func setMCNowhere(action ActionsAction) ActionsAction {
+	if action != nil {
+		action.SetLineno(mcNowhereLocation())
+	}
 	return action
 }
 

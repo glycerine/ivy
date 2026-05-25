@@ -42,7 +42,9 @@ func MatchAnnotation(action ActionsAction, annot Annotation, handler AnnotationH
 			}
 		}
 	}()
+	xtracer.Trace("actions.match_annotation ENTER actionType=%s annotType=%s", actionTypeNameForTrace(action), annotationTypeName(annot))
 	matchAnnotationRecur(action, annot, make(map[NodeKey]Expr), handler, -1, mod)
+	xtracer.Trace("actions.match_annotation EXIT")
 }
 
 // matchAnnotationRecur is the recursive core of MatchAnnotation.
@@ -54,6 +56,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 	//             env[x] = env.get(y,y)
 	// Keys and lookups use lg.NodeKey (structural equality via Sexp).
 	if ra, ok := annot.(*RenameAnnotation); ok {
+		xtracer.Trace("actions.match_annotation.Rename ENTER actionType=%s annotType=%s nmap=%d env=%d pos=%d", actionTypeNameForTrace(action), annotationTypeName(ra.Arg), len(ra.Map), len(env), pos)
 		save := make(map[NodeKey]Expr)
 		for x, y := range ra.Map {
 			if old, exists := env[x]; exists {
@@ -73,6 +76,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 		for x, v := range save {
 			env[x] = v
 		}
+		xtracer.Trace("actions.match_annotation.Rename EXIT env=%d restored=%d", len(env), len(save))
 		return
 	}
 
@@ -81,6 +85,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 		if pos < 0 {
 			pos = len(seq.Elems)
 		}
+		xtracer.Trace("actions.match_annotation.Sequence ENTER pos=%d nElems=%d annotType=%s env=%d", pos, len(seq.Elems), annotationTypeName(annot), len(env))
 		if pos == 0 {
 			if _, ok := annot.(EmptyAnnotation); !ok {
 				fmt.Println("annotation error: should be empty annotation")
@@ -92,6 +97,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 		if ite, ok := annot.(*IteAnnotation); ok {
 			rncond := envGetExpr(env, ite.Cond)
 			cond := handler.Eval(rncond)
+			xtracer.Trace("actions.match_annotation.SequenceIte pos=%d condType=%s result=%v cond HASH canon=%s rncond HASH canon=%s", pos, ShortTypeName(ite.Cond), cond, exprCanonForTrace(ite.Cond), exprCanonForTrace(rncond))
 			if cond {
 				matchAnnotationRecur(action, ite.ThenB, env, handler, pos, mod)
 				return
@@ -110,6 +116,11 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 			fmt.Println("annotation error: ComposeAnnotation should have 2 args")
 			return
 		}
+		childType := "nil"
+		if pos-1 >= 0 && pos-1 < len(seq.Elems) {
+			childType = actionTypeNameForTrace(extractActionFromNode(seq.Elems[pos-1]))
+		}
+		xtracer.Trace("actions.match_annotation.SequenceCompose pos=%d childType=%s leftAnnot=%s rightAnnot=%s", pos, childType, annotationTypeName(compose.Args[0]), annotationTypeName(compose.Args[1]))
 		matchAnnotationRecur(action, compose.Args[0], env, handler, pos-1, mod)
 		childAction := extractActionFromNode(seq.Elems[pos-1])
 		if childAction != nil {
@@ -128,6 +139,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 		isSome := matchAnnotationIfConditionIsSome(ifAct)
 		rncond := envGetExpr(env, ite.Cond)
 		cond := handler.Eval(rncond)
+		xtracer.Trace("actions.match_annotation.IfAction isSome=%v condType=%s result=%v cond HASH canon=%s rncond HASH canon=%s", isSome, ShortTypeName(ite.Cond), cond, exprCanonForTrace(ite.Cond), exprCanonForTrace(rncond))
 		if cond {
 			thenAction := extractActionFromNode(ifAct.ThenBody)
 			if thenAction != nil {
@@ -177,11 +189,14 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 			fmt.Printf("annotation error: %d annots but %d branches\n", len(annots), len(branches))
 			return
 		}
+		xtracer.Trace("actions.match_annotation.ChoiceAction nBranches=%d nAnnots=%d env=%d", len(branches), len(annots), len(env))
 
 		// Walk branches in reverse order, pick the first whose condition is true
 		for i := len(branches) - 1; i >= 0; i-- {
 			rncond := envGetExpr(env, annots[i].Cond)
-			if handler.Eval(rncond) {
+			condResult := handler.Eval(rncond)
+			xtracer.Trace("actions.match_annotation.ChoiceBranch idx=%d actionType=%s condType=%s result=%v cond HASH canon=%s rncond HASH canon=%s", i, actionTypeNameForTrace(extractActionFromNode(branches[i])), ShortTypeName(annots[i].Cond), condResult, exprCanonForTrace(annots[i].Cond), exprCanonForTrace(rncond))
+			if condResult {
 				branchAction := extractActionFromNode(branches[i])
 
 				// Handle EnvAction without label
@@ -212,6 +227,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 	//         seq = LogicSequence(IgnoreAction(), callee, ReturnAction())
 	//         recur(seq, annot, env, None)
 	if callAct, ok := action.(*LogicCallAction); ok {
+		xtracer.Trace("actions.match_annotation.CallAction callee=%s env=%d", callAct.CalleeName(), len(env))
 		handler.Handle(action, env)
 		if mod != nil {
 			calleeName := callAct.CalleeName()
@@ -247,17 +263,20 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 
 	// Handle ReturnAction
 	if _, ok := action.(*ReturnAction); ok {
+		xtracer.Trace("actions.match_annotation.ReturnAction env=%d", len(env))
 		handler.DoReturn(action, env)
 		return
 	}
 
 	// Handle IgnoreAction
 	if _, ok := action.(*IgnoreAction); ok {
+		xtracer.Trace("actions.match_annotation.IgnoreAction")
 		return
 	}
 
 	// Handle LocalAction
 	if local, ok := action.(*LogicLocalAction); ok {
+		xtracer.Trace("actions.match_annotation.LocalAction env=%d", len(env))
 		bodyAction := extractActionFromNode(local.Body)
 		if bodyAction != nil {
 			matchAnnotationRecur(bodyAction, annot, env, handler, -1, mod)
@@ -266,6 +285,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 	}
 
 	if failed, ok := action.(interface{ FailedAction() ActionsAction }); ok {
+		xtracer.Trace("actions.match_annotation.FailedAction actionType=%s env=%d", actionTypeNameForTrace(action), len(env))
 		if inner := failed.FailedAction(); inner != nil {
 			matchAnnotationRecur(inner, annot, env, handler, -1, mod)
 		}
@@ -274,6 +294,7 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 	}
 
 	// Default: handle the action directly
+	xtracer.Trace("actions.match_annotation.Handle actionType=%s env=%d", actionTypeNameForTrace(action), len(env))
 	handler.Handle(action, env)
 }
 
@@ -319,6 +340,27 @@ func envGetExpr(env map[NodeKey]Expr, cond Expr) Expr {
 		return v
 	}
 	return cond
+}
+
+func annotationTypeName(annot Annotation) string {
+	if annot == nil {
+		return "nil"
+	}
+	return TypeName(annot)
+}
+
+func actionTypeNameForTrace(action ActionsAction) string {
+	if action == nil || isNil(action) {
+		return "nil"
+	}
+	return ActionTypeName(action)
+}
+
+func exprCanonForTrace(expr Expr) Canonical {
+	if expr == nil {
+		return "nil"
+	}
+	return expr.Canon()
 }
 
 func matchAnnotationIfConditionIsSome(ifAct *LogicIfAction) bool {

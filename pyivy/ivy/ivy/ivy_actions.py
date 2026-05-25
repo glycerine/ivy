@@ -16,6 +16,7 @@ from .ivy_ast import AST, compose_atoms, MixinAfterDef
 from . import ivy_module
 from . import ivy_utils as iu
 from . import xtracer
+from .canon import node_canon
 
 def p_c_a(s):
     a = s.split(':')
@@ -1701,6 +1702,15 @@ class ReturnAction(object):
 class IgnoreAction(object):
     pass
 
+def _match_action_type_name(action):
+    return type(action).__name__ if action is not None else 'nil'
+
+def _match_annot_type_name(annot):
+    return type(annot).__name__ if annot is not None else 'nil'
+
+def _match_pos(pos):
+    return -1 if pos is None else pos
+
 def match_annotation(action,annot,handler):
     def recur(action,annot,env,pos=None):
         def show_me():
@@ -1708,6 +1718,7 @@ def match_annotation(action,annot,handler):
 
         try:
             if isinstance(annot,RenameAnnotation):
+                if __debug__: xtracer.trace("actions.match_annotation.Rename ENTER actionType=%s annotType=%s nmap=%d env=%d pos=%d" % (_match_action_type_name(action), _match_annot_type_name(annot.arg), len(annot.map), len(env), _match_pos(pos)))
                 save = dict()
                 for x,y in annot.map.items():
                     if x in env:
@@ -1715,10 +1726,12 @@ def match_annotation(action,annot,handler):
                     env[x] = env.get(y,y)
                 recur(action,annot.arg,env,pos)
                 env.update(save)
+                if __debug__: xtracer.trace("actions.match_annotation.Rename EXIT env=%d restored=%d" % (len(env), len(save)))
                 return
             if isinstance(action,Sequence):
                 if pos is None:
                     pos = len(action.args)
+                if __debug__: xtracer.trace("actions.match_annotation.Sequence ENTER pos=%d nElems=%d annotType=%s env=%d" % (pos, len(action.args), _match_annot_type_name(annot), len(env)))
                 if pos == 0:
                     if not isinstance(annot,EmptyAnnotation):
                         print("annotation error: should be empty annotation")
@@ -1728,6 +1741,7 @@ def match_annotation(action,annot,handler):
                     # This means a failure may occur here
                     rncond = env.get(annot.cond,annot.cond)
                     cond = handler.eval(rncond)
+                    if __debug__: xtracer.trace("actions.match_annotation.SequenceIte pos=%d condType=%s result=%s cond HASH canon=%s rncond HASH canon=%s" % (pos, type(annot.cond).__name__, cond, node_canon(annot.cond), node_canon(rncond)))
                     if cond:
 #                        print 'entering then branch {}'.format(pos)
                         recur(action,annot.thenb,env,pos)
@@ -1741,6 +1755,8 @@ def match_annotation(action,annot,handler):
                     print("annotation error: should be ComposeAnnotation")
                     return
 #                        raise AnnotationError()
+                child_type = _match_action_type_name(action.args[pos-1]) if 0 <= pos-1 < len(action.args) else 'nil'
+                if __debug__: xtracer.trace("actions.match_annotation.SequenceCompose pos=%d childType=%s leftAnnot=%s rightAnnot=%s" % (pos, child_type, _match_annot_type_name(annot.args[0]), _match_annot_type_name(annot.args[1])))
                 recur(action,annot.args[0],env,pos-1)
                 recur(action.args[pos-1],annot.args[1],env)
                 return
@@ -1751,10 +1767,12 @@ def match_annotation(action,annot,handler):
                 try:
                     cond = handler.eval(rncond)
                 except KeyError:
+                    if __debug__: xtracer.trace("actions.match_annotation.IfAction evalKeyError isSome=%s condType=%s cond HASH canon=%s rncond HASH canon=%s" % (is_some, type(annot.cond).__name__, node_canon(annot.cond), node_canon(rncond)))
                     print('{}skipping conditional'.format(action.lineno))
                     iu.dbg('str_map(env)')
                     iu.dbg('env.get(annot.cond,annot.cond)')
                     return
+                if __debug__: xtracer.trace("actions.match_annotation.IfAction isSome=%s condType=%s result=%s cond HASH canon=%s rncond HASH canon=%s" % (is_some, type(annot.cond).__name__, cond, node_canon(annot.cond), node_canon(rncond)))
                 if cond:
                     code = action.args[1]
                     if is_some:
@@ -1773,9 +1791,12 @@ def match_annotation(action,annot,handler):
                 assert isinstance(annot,IteAnnotation)
                 annots = unite_annot(annot)
                 assert len(annots) == len(action.args)
-                for act,(cond,ann) in reversed(list(zip(action.args,annots))):
+                if __debug__: xtracer.trace("actions.match_annotation.ChoiceAction nBranches=%d nAnnots=%d env=%d" % (len(action.args), len(annots), len(env)))
+                for idx,(act,(cond,ann)) in reversed(list(enumerate(zip(action.args,annots)))):
                     rncond = env.get(cond,cond)
-                    if handler.eval(rncond):
+                    cond_result = handler.eval(rncond)
+                    if __debug__: xtracer.trace("actions.match_annotation.ChoiceBranch idx=%d actionType=%s condType=%s result=%s cond HASH canon=%s rncond HASH canon=%s" % (idx, _match_action_type_name(act), type(cond).__name__, cond_result, node_canon(cond), node_canon(rncond)))
+                    if cond_result:
                         if isinstance(action,EnvAction) and not hasattr(action,'label'):
                             callact = act
                             label = act.label if hasattr(act,'label') else 'unknown'
@@ -1787,17 +1808,21 @@ def match_annotation(action,annot,handler):
                         return
                 assert False,'problem in match_annotation'
             if isinstance(action,CallAction):
+                if __debug__: xtracer.trace("actions.match_annotation.CallAction callee=%s env=%d" % (action.args[0].rep, len(env)))
                 handler.handle(action,env)
                 callee = ivy_module.module.actions[action.args[0].rep]
                 seq = Sequence(IgnoreAction(),callee,ReturnAction())
                 recur(seq,annot,env,None)
                 return
             if isinstance(action,ReturnAction):
+                if __debug__: xtracer.trace("actions.match_annotation.ReturnAction env=%d" % len(env))
                 handler.do_return(action,env)
                 return
             if isinstance(action,IgnoreAction):
+                if __debug__: xtracer.trace("actions.match_annotation.IgnoreAction")
                 return
             if isinstance(action,LocalAction):
+                if __debug__: xtracer.trace("actions.match_annotation.LocalAction env=%d" % len(env))
                 recur(action.args[-1],annot,env)
                 return
             if isinstance(action,WhileAction):
@@ -1805,17 +1830,21 @@ def match_annotation(action,annot,handler):
                 recur(expanded,annot,env)
                 return
             if hasattr(action,'failed_action'):
+                if __debug__: xtracer.trace("actions.match_annotation.FailedAction actionType=%s env=%d" % (_match_action_type_name(action), len(env)))
     #            iu.dbg('annot')
     #            iu.dbg('action.failed_action()')
                 recur(action.failed_action(),annot,env)
                 handler.fail()
                 return
+            if __debug__: xtracer.trace("actions.match_annotation.Handle actionType=%s env=%d" % (_match_action_type_name(action), len(env)))
             handler.handle(action,env)
         except AnnotationError:
 #            show_me()
             raise AnnotationError()
+    if __debug__: xtracer.trace("actions.match_annotation ENTER actionType=%s annotType=%s" % (_match_action_type_name(action), _match_annot_type_name(annot)))
     try:
         recur(action,annot,dict())
+        if __debug__: xtracer.trace("actions.match_annotation EXIT")
     except AnnotationError:
         assert False
         print("internal error: cannot convert satisfying assignment to program trace")
@@ -1849,4 +1878,3 @@ def env_action(actname,label=None):
 #        action.label = label if not isinstance(actname,str) else actname
     if __debug__: xtracer.trace("actions.env_action EXIT")
     return action
-

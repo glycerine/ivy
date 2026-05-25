@@ -691,13 +691,14 @@ func bitsToBoolExprs(s string) []Expr {
 }
 
 // binDecBool converts boolean expression bits to an integer.
-// Each bit is &lg.And{} (true=1) or &lg.Or{} (false=0), LSB first.
+// Each bit is &lg.And{} (true=1) or &lg.Or{} (false=0), MSB first.
 // Python: Encoder.bindec(bits) in ivy_mc.py.
 func binDecBool(bits []Expr) int {
 	res := 0
-	for idx, bit := range bits {
+	n := len(bits)
+	for i, bit := range bits {
 		if isTrueNode(bit) {
-			res += 1 << idx
+			res += 1 << (n - 1 - i)
 		}
 	}
 	return res

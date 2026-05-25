@@ -7,6 +7,8 @@ import (
 	"io"
 	"os"
 	"strings"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // AigerMatchHandler evaluates conditions and decodes state from an AIGER
@@ -136,18 +138,26 @@ func NewAigerMatchHandler2(
 // Eval evaluates a condition.
 // Python: ivy_mc.py:1533-1543
 func (h *AigerMatchHandler2) Eval(cond Expr) bool {
+	xtracer.Trace("mc.AigerMatchHandler2.eval ENTER type=%s HASH canon=%s", ShortTypeName(cond), exprCanonForTrace(cond))
 	if isFalseNode(cond) {
+		xtracer.Trace("mc.AigerMatchHandler2.eval EXIT case=false result=%v", false)
 		return false
 	}
 	if isTrueNode(cond) {
+		xtracer.Trace("mc.AigerMatchHandler2.eval EXIT case=true result=%v", true)
 		return true
 	}
 	if n, ok := cond.(*LogicNot); ok {
-		return !h.Eval(n.Body)
+		res := !h.Eval(n.Body)
+		xtracer.Trace("mc.AigerMatchHandler2.eval EXIT case=not result=%v", res)
+		return res
 	}
 	if c, ok := cond.(*Const); ok {
-		return isTrueNode(h.Aiger.GetSym(c))
+		res := isTrueNode(h.Aiger.GetSym(c))
+		xtracer.Trace("mc.AigerMatchHandler2.eval EXIT case=sym result=%v", res)
+		return res
 	}
+	xtracer.Trace("mc.AigerMatchHandler2.eval EXIT case=default result=%v", true)
 	return true
 }
 
@@ -162,19 +172,26 @@ func (h *AigerMatchHandler2) Clone() *AigerMatchHandler2 {
 // Handle processes an action during trace construction.
 // Replicates Python TraceBase.handle (ivy_trace.py:201-211).
 func (h *AigerMatchHandler2) Handle(action ActionsAction, env map[NodeKey]Expr) {
+	lineno := action.GetLineno()
+	filename := lineno.Filename
+	xtracer.Trace("mc.AigerMatchHandler2.handle ENTER actionType=%s hasLineno=%v filename=%s sub=%v returned=%v lastType=%s env=%d", actionTypeNameForTrace(action), action.HasLineno(), filename, h.Sub != nil, h.Returned != nil, actionTypeNameForTrace(h.LastAction), len(env))
 	if h.Sub != nil {
+		xtracer.Trace("mc.AigerMatchHandler2.handle DELEGATE sub")
 		h.Sub.Handle(action, env)
 		return
 	}
 	if isCallOrEnvAction(h.LastAction) && h.Returned == nil {
+		xtracer.Trace("mc.AigerMatchHandler2.handle START_SUB lastType=%s", actionTypeNameForTrace(h.LastAction))
 		h.Sub = h.Clone()
 		h.Sub.Handle(action, env)
 		return
 	}
-	lineno := action.GetLineno()
 	if lineno.Filename != "nowhere" {
+		xtracer.Trace("mc.AigerMatchHandler2.handle NEW_STATE actionType=%s", actionTypeNameForTrace(action))
 		h.NewState(env)
 		h.LastAction = action
+	} else {
+		xtracer.Trace("mc.AigerMatchHandler2.handle SKIP_NOWHERE actionType=%s", actionTypeNameForTrace(action))
 	}
 }
 
@@ -207,6 +224,7 @@ func (h *AigerMatchHandler2) NewState(env map[NodeKey]Expr) {
 		h.AddState(nil)
 		return
 	}
+	xtracer.Trace("mc.AigerMatchHandler2.new_state ENTER env=%d inputs=%d latches=%d depth=%d", len(env), len(h.Aiger.Inputs), len(h.Aiger.Latches), h.Depth)
 	invEnv := make(map[string]string)
 	envNames := make(map[string]bool)
 	envRename := make(map[NodeKey]*Const)
@@ -228,7 +246,7 @@ func (h *AigerMatchHandler2) NewState(env map[NodeKey]Expr) {
 	for _, v := range h.Aiger.Inputs {
 		if decd, ok := h.Decoder[v.Name]; ok {
 			val := h.Aiger.GetSym(v)
-			h.showSym2(decd, val, invEnv, envNames, &eqns)
+			h.showSym2(v.Name, decd, val, invEnv, envNames, &eqns)
 		}
 	}
 
@@ -240,18 +258,19 @@ func (h *AigerMatchHandler2) NewState(env map[NodeKey]Expr) {
 	for _, v := range h.Aiger.Latches {
 		if decd, ok := h.Decoder[v.Name]; ok {
 			val := h.Aiger.GetSym(v)
-			h.showSym2(decd, val, invEnv, envNames, &eqns)
+			h.showSym2(v.Name, decd, val, invEnv, envNames, &eqns)
 
 			nextDecd := RenameASTByName(decd, rn)
 			curDecd := RenameAST(decd, envRename)
 			if nextDecd != nil && curDecd != nil && nextDecd.Equal(curDecd) {
 				nextVal := h.Aiger.GetNextSym(v)
-				h.showSym2(nextDecd, nextVal, invEnv, envNames, &eqns)
+				h.showSym2(v.Name+"/next", nextDecd, nextVal, invEnv, envNames, &eqns)
 			}
 		}
 	}
 
 	h.AddState(eqns)
+	xtracer.Trace("mc.AigerMatchHandler2.new_state EXIT nEqns=%d", len(eqns))
 }
 
 func nodeKeySymbolName(key NodeKey) string {
@@ -261,6 +280,7 @@ func nodeKeySymbolName(key NodeKey) string {
 // showSym2 is the filtering/renaming logic for building trace equations.
 // Python: ivy_mc.py:1559-1568 show_sym inner function.
 func (h *AigerMatchHandler2) showSym2(
+	source string,
 	decd Expr,
 	val Expr,
 	invEnv map[string]string,
@@ -281,7 +301,6 @@ func (h *AigerMatchHandler2) showSym2(
 
 	syms := UsedSymbolsAst(decd)
 	allOK := true
-	fallbackEnv := make(map[string]string)
 	for _, sym := range syms.All() {
 		c, ok := sym.(*Const)
 		if !ok {
@@ -289,10 +308,6 @@ func (h *AigerMatchHandler2) showSym2(
 		}
 		_, inInv := invEnv[c.Name]
 		if !inInv {
-			if fallback := traceFormalFallbackName(c.Name, h.Depth > 0); fallback != "" {
-				fallbackEnv[c.Name] = fallback
-				continue
-			}
 			if h.isSkolem(c.Name) || IsNew(c.Name) || envNames[c.Name] {
 				allOK = false
 				break
@@ -303,17 +318,7 @@ func (h *AigerMatchHandler2) showSym2(
 		return
 	}
 
-	renameEnv := invEnv
-	if len(fallbackEnv) > 0 {
-		renameEnv = make(map[string]string, len(invEnv)+len(fallbackEnv))
-		for k, v := range fallbackEnv {
-			renameEnv[k] = v
-		}
-		for k, v := range invEnv {
-			renameEnv[k] = v
-		}
-	}
-	expr := RenameASTByName(decd, renameEnv)
+	expr := RenameASTByName(decd, invEnv)
 
 	if app, ok := expr.(*Apply); ok {
 		if c, ok2 := app.Func.(*Const); ok2 && IsNew(c.Name) {
@@ -329,14 +334,8 @@ func (h *AigerMatchHandler2) showSym2(
 		}
 	}
 
+	xtracer.Trace("mc.AigerMatchHandler2.show_sym ADD source=%s HASH decd=%s expr=%s val=%s", source, exprCanonForTrace(decd), exprCanonForTrace(expr), exprCanonForTrace(val))
 	*eqns = append(*eqns, &Eq{T1: expr, T2: val})
-}
-
-func traceFormalFallbackName(name string, allow bool) string {
-	if !allow || !strings.HasPrefix(name, "__fml:") {
-		return ""
-	}
-	return strings.TrimPrefix(name, "__")
 }
 
 // FinalState advances the AIGER simulator and collects the final latch state.

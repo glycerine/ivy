@@ -36,6 +36,53 @@ func evalMultiConstLits(a *Aiger, lits []int) int {
 	return result
 }
 
+func requireMCNowhere(t *testing.T, action ActionsAction) {
+	t.Helper()
+	if action == nil {
+		t.Fatal("action is nil")
+	}
+	if !action.HasLineno() {
+		t.Fatalf("%s has no lineno, want synthetic nowhere lineno", ActionTypeName(action))
+	}
+	if got := action.GetLineno().Filename; got != "nowhere" {
+		t.Fatalf("%s filename = %q, want %q", ActionTypeName(action), got, "nowhere")
+	}
+	if got := action.GetLineno().Line; got != 0 {
+		t.Fatalf("%s line = %d, want 0", ActionTypeName(action), got)
+	}
+}
+
+func TestAddErrFlagSyntheticActionsUseNowhereLinenoLikePython(t *testing.T) {
+	erf := NewConst("err_flag", Boolean)
+	p := NewConst("p", Boolean)
+
+	var assertErrConds []Expr
+	assertAction := AddErrFlag(NewAssertAction(p), erf, &assertErrConds, nil)
+	requireMCNowhere(t, assertAction)
+	if len(assertErrConds) != 1 {
+		t.Fatalf("assert errconds = %d, want 1", len(assertErrConds))
+	}
+
+	var assumeErrConds []Expr
+	assumeAction := AddErrFlag(NewAssumeAction(p), erf, &assumeErrConds, nil)
+	requireMCNowhere(t, assumeAction)
+	if len(assumeErrConds) != 0 {
+		t.Fatalf("assume errconds = %d, want 0", len(assumeErrConds))
+	}
+
+	var requiresErrConds []Expr
+	requiresAction := AddErrFlag(NewRequiresAction(p), erf, &requiresErrConds, nil)
+	requireMCNowhere(t, requiresAction)
+	if len(requiresErrConds) != 1 {
+		t.Fatalf("requires errconds = %d, want 1", len(requiresErrConds))
+	}
+}
+
+func TestSetMCNowhereMarksSyntheticAssignLikePython(t *testing.T) {
+	action := NewAssignAction(NewConst("err_flag", Boolean), &LogicOr{Terms: nil})
+	requireMCNowhere(t, setMCNowhere(action))
+}
+
 // ============================================================
 // Aiger tests
 // ============================================================

@@ -22,6 +22,7 @@ from collections import defaultdict
 import itertools
 import sys
 import os
+from .canon import node_canon
 
 logfile = None
 verbose = False
@@ -1525,25 +1526,32 @@ class AigerMatchHandler(object):
             print('    {}{}'.format(action.lineno,action))
         
 class AigerMatchHandler2(ivy_trace.TraceBase):
-    def __init__(self,aiger,decoder,cnsts,stvarset,current):
+    def __init__(self,aiger,decoder,cnsts,stvarset,current,depth=0):
         ivy_trace.TraceBase.__init__(self)
         self.aiger,self.decoder,self.cnsts,self.stvarset = aiger,decoder,cnsts,stvarset
         self.current = current
         self.is_full_trace = True
+        self.depth = depth
     def eval(self,cond):
+        if __debug__: xtracer.trace("mc.AigerMatchHandler2.eval ENTER type=%s HASH canon=%s" % (type(cond).__name__, node_canon(cond)))
         if il.is_false(cond):
             res = False
+            if __debug__: xtracer.trace("mc.AigerMatchHandler2.eval EXIT case=false result=%s" % res)
         elif il.is_true(cond):
             res =  True
+            if __debug__: xtracer.trace("mc.AigerMatchHandler2.eval EXIT case=true result=%s" % res)
         elif isinstance(cond,il.Not):
-            return not self.eval(cond.args[0])
+            res = not self.eval(cond.args[0])
+            if __debug__: xtracer.trace("mc.AigerMatchHandler2.eval EXIT case=not result=%s" % res)
+            return res
         else:
             res = il.is_true(self.aiger.get_sym(cond))
+            if __debug__: xtracer.trace("mc.AigerMatchHandler2.eval EXIT case=sym result=%s" % res)
 #        print 'eval: {} = {}'.format(cond,res)
         return res
 
     def clone(self):
-        return AigerMatchHandler2(self.aiger,self.decoder,self.cnsts,self.stvarset,self.current)
+        return AigerMatchHandler2(self.aiger,self.decoder,self.cnsts,self.stvarset,self.current,self.depth + 1)
 
     def get_universes(self):
         return None
@@ -1551,7 +1559,28 @@ class AigerMatchHandler2(ivy_trace.TraceBase):
     def do_return(self,action,env):
         pass
 
+    def handle(self,action,env):
+        has_lineno = hasattr(action,"lineno")
+        filename = action.lineno.filename if has_lineno else ''
+        last_type = type(self.last_action).__name__ if self.last_action is not None else 'nil'
+        if __debug__: xtracer.trace("mc.AigerMatchHandler2.handle ENTER actionType=%s hasLineno=%s filename=%s sub=%s returned=%s lastType=%s env=%d" % (type(action).__name__, has_lineno, filename, self.sub is not None, self.returned is not None, last_type, len(env)))
+        if self.sub is not None:
+            if __debug__: xtracer.trace("mc.AigerMatchHandler2.handle DELEGATE sub")
+            self.sub.handle(action,env)
+        elif isinstance(self.last_action,(ia.CallAction,ia.EnvAction)) and self.returned is None:
+            if __debug__: xtracer.trace("mc.AigerMatchHandler2.handle START_SUB lastType=%s" % last_type)
+            self.sub = self.clone()
+            self.sub.handle(action,env)
+        else:
+            if not (has_lineno and action.lineno.filename == "nowhere"):
+                if __debug__: xtracer.trace("mc.AigerMatchHandler2.handle NEW_STATE actionType=%s" % type(action).__name__)
+                self.new_state(env)
+                self.last_action = action
+            else:
+                if __debug__: xtracer.trace("mc.AigerMatchHandler2.handle SKIP_NOWHERE actionType=%s" % type(action).__name__)
+
     def new_state(self,env):
+        if __debug__: xtracer.trace("mc.AigerMatchHandler2.new_state ENTER env=%d inputs=%d latches=%d depth=%d" % (len(env), len(self.aiger.inputs), len(self.aiger.latches), self.depth))
 
         def my_is_skolem(x):
             return tr.is_skolem(x) and x not in self.cnsts
@@ -1565,6 +1594,7 @@ class AigerMatchHandler2(ivy_trace.TraceBase):
                 if not il.is_app(expr) or not tr.is_new(expr.rep):
                     if il.is_constant(expr) and expr in il.sig.constructors:
                         return
+                    if __debug__: xtracer.trace("mc.AigerMatchHandler2.show_sym ADD source=%s HASH decd=%s expr=%s val=%s" % (v.name, node_canon(decd), node_canon(expr), node_canon(val)))
                     eqns.append(il.Equals(expr,val))
 
         inv_env = dict((y,x) for x,y in env.items() if not my_is_skolem(x) and not tr.is_new(x))
@@ -1580,9 +1610,14 @@ class AigerMatchHandler2(ivy_trace.TraceBase):
                 next_decd = ilu.rename_ast(decd,rn)
                 cur_decd = ilu.rename_ast(decd,env)
                 if next_decd == cur_decd:
-                    show_sym(v,next_decd,self.aiger.get_next_sym(v),eqns)
+                    class _NextSym(object):
+                        pass
+                    next_v = _NextSym()
+                    next_v.name = v.name + "/next"
+                    show_sym(next_v,next_decd,self.aiger.get_next_sym(v),eqns)
 
         self.add_state(eqns)
+        if __debug__: xtracer.trace("mc.AigerMatchHandler2.new_state EXIT nEqns=%d" % len(eqns))
         
     def final_state(self):
         next(self.aiger.sub)
