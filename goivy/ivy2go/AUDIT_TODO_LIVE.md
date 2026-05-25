@@ -135,36 +135,69 @@ route through it.
 
 ---
 
-## OPEN — known residual gaps
+## DONE 055.2 — State-fact precondition (per-action)
 
-### OPEN 055.2 — Real reverse-image precondition derivation
+`solver_emit.go` `emitSetSolver` now also emits two runtime helpers:
 
-The Solver round-trip in `action_gen.go` Generate uses a trivial
-`true` Clauses today. The full reverse-image derivation requires
-running goivy's action-update analysis (`actions_transrel.go`'s
-`PureStateClauses` / `StatePrecond`) to derive the action's
-precondition Clauses. This is a project on its own — the Solver
-wiring is in place.
+  - `stateFactsAsClauses(state *State) *goivy.Clauses` builds a
+    Clauses asserting that every scalar bool state symbol equals
+    its current value. Each scalar bool symbol contributes
+    `mkBoolFact(name, value)` — the symbol itself or its negation,
+    depending on the state value.
+  - `mkBoolFact(name string, val bool) goivy.Expr` returns either
+    `goivy.NewConst(name, goivy.Boolean)` or
+    `&goivy.LogicNot{Body: …}` matching the encoding goivy.Solver
+    expects.
 
-### OPEN 061.1 — Read-side wiring for thunk-wrapped LHS
+Each actionGen's Generate now calls `stateFactsAsClauses(state)` to
+seed `GetModelClauses`, so the synthesised inputs are consistent
+with the current state. Function-sorted symbols + the action's
+real Pre derivation are the next sub-step (OPEN 055.3 below).
 
-`assign.go` `emitAssignLarge` builds a thunk but reads of the LHS
-still hit the map storage. To make this fully lazy, each LHS read
-(in `expr.go` `goStorageAccess`) needs to fall back to the thunk's
-`get(k)` on map miss. Requires threading thunk pointers through
-the State struct.
+## DONE 061.1 — Thunk read-side wiring
 
-### OPEN 062.1 — Destructor hash on hash-thunk fields
+`state.go` `emitStateStruct` now declares a parallel
+`__thunk_<Sym> func(K) V` field next to each hash-thunk-backed
+storage field, and `emitStateGetters` emits a `(s *State) get<Sym>(k)`
+helper that consults `map → thunk → zero`. `expr.go`
+`goStorageAccess` routes read-context map access through that
+getter; write context (LHS of assignment) keeps the raw indexed
+form via the new `Generator.lhsContext` flag toggled by
+`emitAssignSimple` / `emitAssignTwoPhase`. `emitAssignLarge` now
+clears the map and installs the thunk on `s.__thunk_<Sym>`.
 
-`emitDestructorHash` aggregates map fields by `len(map)` rather than
-hashing each entry (avoids non-deterministic Go map iteration
-order). For records used as map keys this is acceptable but lossy;
-a deterministic sort + per-entry hash would tighten the hash.
+## DONE 062.1 — Deterministic hash for hash-thunk fields
 
-### OPEN 064.1 — Type/Z3-name antiquote prefixes
+`destructor.go` `emitDestructorHash` now emits a per-key sort + ordered
+per-entry hash for map fields: collect keys into a slice, run
+`sort.Slice` with the `lessOrd` runtime helper, then mix each
+`(key, value)` pair into the FNV-1a accumulator. Avoids the
+non-deterministic Go map iteration order.
 
-`renderNativeGoTemplate` substitutes raw expression text but not
-the C++ prefix flavours (`%`-type, `"`-Z3-name) ivy2cpp's
-`renderNativeTemplate` supports. Go has no direct equivalents for
-those (the type-name flavour could lower to `g.goType(...)`); add
-them if a Go-targeting fixture needs them.
+## DONE 064.1 — Antiquote prefix flavours
+
+`native.go` `renderNativeGoTemplate` now recognises two flavour
+prefixes on the text preceding a `` `N` `` antiquote:
+
+  - `%` → substitute with `g.goType(params[N].NodeSort())`
+    (the Go type expression for the param's sort).
+  - `"` → substitute with the bare identifier name of params[N]
+    so an enclosing `"..."` stays well-formed.
+
+Default flavour (no prefix) still substitutes with the
+`emitExpr`-rendered Go source.
+
+---
+
+## OPEN — final residuals (sub-sub items)
+
+### OPEN 055.3 — Function-sorted state facts + action Pre
+
+`stateFactsAsClauses` covers scalar bool symbols only. The full
+precondition would also need:
+  - per-cell forall assertions for array / map state symbols
+  - the action's own Pre clause from `action.ActionUpdate(ctx).Pre`
+    walked into an Expr-construction Go source string
+
+The Solver round-trip and per-input model extraction are already in
+place; only the Clauses construction needs to grow.

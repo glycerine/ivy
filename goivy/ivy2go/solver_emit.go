@@ -59,7 +59,7 @@ func (g *Generator) emitSetSolver(w *goWriter) {
 		exported := goExportedName(sym.Name)
 		w.linef("\tfmlas = append(fmlas, mkBoolFact(%q, state.%s))", sym.Name, exported)
 	}
-	w.line("\treturn goivy.NewClauses(fmlas, nil)")
+	w.line("\treturn goivy.NewClauses(fmlas, nil, goivy.EmptyAnnotation{})")
 	w.line("}")
 	w.blank()
 

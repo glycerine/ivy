@@ -72,6 +72,48 @@ func TestEmit_TestTarget_PushStateRunsRealIsSat(t *testing.T) {
 	}
 }
 
+// --- OPEN 055.2: state-fact precondition tests ----------------------
+
+func TestEmit_TestTarget_StateFactsClausesEmitted(t *testing.T) {
+	mod := compileIvySource(t, `
+relation flag
+action set_flag = {
+	flag := true
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	runtime := out.Files["runtime.go"]
+	if !strings.Contains(runtime, "func stateFactsAsClauses(state *State) *goivy.Clauses") {
+		t.Errorf("stateFactsAsClauses helper missing, got:\n%s", runtime)
+	}
+	if !strings.Contains(runtime, `mkBoolFact("flag", state.Flag)`) {
+		t.Errorf("scalar bool symbol should be in state facts, got:\n%s", runtime)
+	}
+	if !strings.Contains(runtime, "func mkBoolFact(name string, val bool) goivy.Expr") {
+		t.Errorf("mkBoolFact helper missing, got:\n%s", runtime)
+	}
+}
+
+func TestEmit_TestTarget_GenerateBuildsPreconditionFromState(t *testing.T) {
+	mod := compileIvySource(t, `
+relation flag
+action set_flag(b: bool) = {
+	flag := b
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	if !strings.Contains(actions, "stateFactsAsClauses(state)") {
+		t.Errorf("Generate should seed precondition with state facts, got:\n%s", actions)
+	}
+}
+
 func TestEmit_TestTarget_GenerateUsesGetModelClauses(t *testing.T) {
 	// OPEN 055.1: Generate now performs a real solver round-trip
 	// via GetModelClauses + per-input model extraction.
