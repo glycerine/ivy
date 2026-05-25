@@ -49,6 +49,28 @@ func sliceSexp(s []Expr) string {
 	return "[" + strings.Join(parts, " ") + "]"
 }
 
+func crashTargetSexp(target Expr) string {
+	switch t := target.(type) {
+	case nil:
+		return "nil"
+	case *Const:
+		return fmt.Sprintf("(atom rep:%q terms:[] aSort:nil)", t.Name)
+	case *Apply:
+		if c, ok := t.Func.(*Const); ok {
+			return fmt.Sprintf("(atom rep:%q terms:%v aSort:nil)", c.Name, sliceSexp(t.Terms))
+		}
+	}
+	return actionsExprSexp(target)
+}
+
+func crashTargetSliceSexp(args []Expr) string {
+	parts := make([]string, len(args))
+	for i, target := range args {
+		parts[i] = crashTargetSexp(target)
+	}
+	return "[" + strings.Join(parts, " ") + "]"
+}
+
 func actionFormulaProofSexp(lf *LabeledFormula, formula Expr, proof Expr) string {
 	parts := make([]string, 0, 2)
 	if lf != nil {
@@ -617,7 +639,7 @@ func (a *LogicCrashAction) NodeSort() Sort           { return ActionS }
 func (a *LogicCrashAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicCrashAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicCrashAction) Sexp() NodeKey {
-	return NodeKey(fmt.Sprintf("(crashAction%v declArgs:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
+	return NodeKey(fmt.Sprintf("(crashAction%v declArgs:%v)", a.CanonFields(), crashTargetSliceSexp(a.ActionArgs())))
 }
 func (a *LogicCrashAction) Canon() Canonical { return Canonical(a.Sexp()) }
 

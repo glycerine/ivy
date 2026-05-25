@@ -461,3 +461,28 @@ func TestCompileCrashActionDoesNotRecurse(t *testing.T) {
 		t.Fatalf("crash target name = %q, want this", target.Name)
 	}
 }
+
+func TestCompileCrashActionCanonMatchesPythonAtomTarget(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+	if err := c.Sig.AddSort(&UninterpretedSort{Name: "t"}); err != nil {
+		t.Fatalf("AddSort(t): %v", err)
+	}
+	body := cfg.NewCrashAction(cfg.NewAtom("this", cfg.NewVariable("X", "t")))
+
+	result, err := c.CompileActionBody(body)
+	if err != nil {
+		t.Fatalf("CompileActionBody(crash with target arg) failed: %v", err)
+	}
+	crash, ok := result.(*LogicCrashAction)
+	if !ok {
+		t.Fatalf("CompileActionBody(crash) = %T, want *LogicCrashAction", result)
+	}
+	canon := string(crash.Canon())
+	if !strings.Contains(canon, `(atom rep:"this" terms:[`) {
+		t.Fatalf("crash canon does not preserve Python atom target shape: %s", canon)
+	}
+	if strings.Contains(canon, "(Apply func:") {
+		t.Fatalf("crash canon leaked compiled Apply target instead of Python atom target: %s", canon)
+	}
+}
