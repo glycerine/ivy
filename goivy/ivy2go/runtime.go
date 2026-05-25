@@ -345,6 +345,69 @@ func iteHelperTypeFromSuffix(suffix string) string {
 	return suffix
 }
 
+// emitMixHashHelper writes a generic mixHash(uint64, any) → uint64
+// FNV-1a step. We use any rather than generics per D6 (no generics
+// in emitted code) — the function lives once and dispatches by type.
+func (g *Generator) emitMixHashHelper(w *goWriter) {
+	w.line("// mixHash mixes v into h via an FNV-1a step. Primitive types")
+	w.line("// hash directly; struct types must implement Hash() uint64.")
+	w.line("func mixHash(h uint64, v any) uint64 {")
+	w.line("\tconst prime uint64 = 1099511628211")
+	w.line("\tvar bits uint64")
+	w.line("\tswitch x := v.(type) {")
+	w.line("\tcase bool:")
+	w.line("\t\tif x { bits = 1 } else { bits = 0 }")
+	w.line("\tcase uint32:")
+	w.line("\t\tbits = uint64(x)")
+	w.line("\tcase uint64:")
+	w.line("\t\tbits = x")
+	w.line("\tcase int:")
+	w.line("\t\tbits = uint64(x)")
+	w.line("\tcase int64:")
+	w.line("\t\tbits = uint64(x)")
+	w.line("\tcase string:")
+	w.line("\t\tfor i := 0; i < len(x); i++ {")
+	w.line("\t\t\th = (h ^ uint64(x[i])) * prime")
+	w.line("\t\t}")
+	w.line("\t\treturn h")
+	w.line("\tdefault:")
+	w.line("\t\tif hv, ok := v.(interface{ Hash() uint64 }); ok {")
+	w.line("\t\t\tbits = hv.Hash()")
+	w.line("\t\t}")
+	w.line("\t}")
+	w.line("\treturn (h ^ bits) * prime")
+	w.line("}")
+	w.blank()
+}
+
+// emitLessOrdHelper writes a generic lessOrd(a, b) bool that orders
+// primitive types and delegates to Less() for struct types.
+func (g *Generator) emitLessOrdHelper(w *goWriter) {
+	w.line("// lessOrd orders comparable primitives. Struct types must")
+	w.line("// implement Less(other) bool.")
+	w.line("func lessOrd(a, b any) bool {")
+	w.line("\tswitch x := a.(type) {")
+	w.line("\tcase bool:")
+	w.line("\t\treturn !x && b.(bool)")
+	w.line("\tcase uint32:")
+	w.line("\t\treturn x < b.(uint32)")
+	w.line("\tcase uint64:")
+	w.line("\t\treturn x < b.(uint64)")
+	w.line("\tcase int:")
+	w.line("\t\treturn x < b.(int)")
+	w.line("\tcase int64:")
+	w.line("\t\treturn x < b.(int64)")
+	w.line("\tcase string:")
+	w.line("\t\treturn x < b.(string)")
+	w.line("\t}")
+	w.line("\tif lv, ok := a.(interface{ Less(any) bool }); ok {")
+	w.line("\t\treturn lv.Less(b)")
+	w.line("\t}")
+	w.line("\treturn false")
+	w.line("}")
+	w.blank()
+}
+
 // emitIteHelper writes a single ite helper. ite(cond, t, f) returns t
 // when cond is true, else f. Per D6 we specialise per type instead of
 // using generics.

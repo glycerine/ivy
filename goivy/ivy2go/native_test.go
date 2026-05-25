@@ -3,6 +3,8 @@ package ivy2go
 import (
 	"strings"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy"
 )
 
 // --- M10: native go-block emission tests ----------------------------
@@ -71,6 +73,41 @@ func dedupedHelper() {}
 	text := out.Files["native.go"]
 	if got := strings.Count(text, "func dedupedHelper()"); got != 1 {
 		t.Errorf("duplicate go blocks should dedup; got %d copies:\n%s", got, text)
+	}
+}
+
+// --- OPEN 064: antiquote substitution tests -------------------------
+
+func TestRenderNativeGoTemplate_BadIndexLeavesMarker(t *testing.T) {
+	g := newExprGen(t, "")
+	got := g.renderNativeGoTemplate("fmt.Println(`xyz`)", nil)
+	if !strings.Contains(got, "bad antiquote") {
+		t.Errorf("non-numeric antiquote should leave a marker, got: %q", got)
+	}
+}
+
+func TestRenderNativeGoTemplate_OutOfRangeIndex(t *testing.T) {
+	g := newExprGen(t, "")
+	got := g.renderNativeGoTemplate("`5`", nil)
+	if !strings.Contains(got, "out of range") {
+		t.Errorf("out-of-range index should leave a marker, got: %q", got)
+	}
+}
+
+func TestRenderNativeGoTemplate_PassthroughWhenNoBackticks(t *testing.T) {
+	g := newExprGen(t, "")
+	got := g.renderNativeGoTemplate("fmt.Println(\"hi\")", nil)
+	if got != `fmt.Println("hi")` {
+		t.Errorf("plain body should pass through, got: %q", got)
+	}
+}
+
+func TestRenderNativeGoTemplate_SubstitutesParam(t *testing.T) {
+	g := newExprGen(t, "")
+	p := &goivy.Const{Name: "true", CSort: goivy.Boolean}
+	got := g.renderNativeGoTemplate("v := `0`", []goivy.Expr{p})
+	if got != "v := true" {
+		t.Errorf("antiquote should substitute param, got: %q", got)
 	}
 }
 

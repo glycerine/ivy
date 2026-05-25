@@ -522,6 +522,7 @@ func (g *Generator) emitNativeAction(w *goWriter, a *goivy.LogicNativeAction) {
 		// Ivy source can carry both cpp and go native actions.
 		return
 	}
+	body = g.renderNativeGoTemplate(body, a.Params)
 	body = strings.TrimRight(body, "\n")
 	if body == "" {
 		return

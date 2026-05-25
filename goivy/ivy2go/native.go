@@ -16,8 +16,9 @@ import (
 // nativeGoBlock is the parsed form of a single Ivy native block whose
 // tag indicates Go emission.
 type nativeGoBlock struct {
-	Tag  string // canonical tag: "go", "go_header", "go_init", "go_inline"
-	Body string // raw Go source to insert
+	Tag    string        // canonical tag: "go", "go_header", "go_init", "go_inline"
+	Body   string        // raw Go source to insert (after antiquote substitution)
+	Params []goivy.Expr  // antiquote substitution params (`0`, `1`, ...)
 }
 
 // emitNativeBlocks distributes any go-tagged native blocks to the
@@ -49,9 +50,71 @@ func (g *Generator) collectNativeGoBlocks() []nativeGoBlock {
 		if !strings.HasPrefix(tag, "go") {
 			continue
 		}
-		out = append(out, nativeGoBlock{Tag: tag, Body: body})
+		// Trailing args (after [0] meta, [1] code) are antiquote
+		// substitution params. Lift them into Expr where possible.
+		params := make([]goivy.Expr, 0, len(args)-2)
+		for _, p := range args[2:] {
+			if expr, ok := p.(goivy.Expr); ok {
+				params = append(params, expr)
+				continue
+			}
+			if cn, ok := p.(*goivy.CompiledNode); ok {
+				if expr, ok := cn.Node.(goivy.Expr); ok {
+					params = append(params, expr)
+					continue
+				}
+			}
+		}
+		out = append(out, nativeGoBlock{Tag: tag, Body: body, Params: params})
 	}
 	return out
+}
+
+// renderNativeGoTemplate substitutes ` `N` `-delimited antiquotes in
+// body with the emitExpr-rendered code for params[N]. Mirrors
+// ivy2cpp/native.go renderNativeTemplate, simplified for Go: no
+// %-type or "-Z3-name prefixes (those are C++ specific). Antiquote
+// indices out of range or non-numeric fall through unchanged so the
+// emitted Go fails cleanly at compile time with a clear message.
+func (g *Generator) renderNativeGoTemplate(body string, params []goivy.Expr) string {
+	if !strings.Contains(body, "`") {
+		return body
+	}
+	fields := strings.Split(body, "`")
+	for i := 1; i < len(fields); i += 2 {
+		idx, err := strconvAtoiSafe(fields[i])
+		if err != nil {
+			fields[i] = "/*ivy2go: bad antiquote index `" + fields[i] + "`*/"
+			continue
+		}
+		if idx < 0 || idx >= len(params) {
+			fields[i] = "/*ivy2go: antiquote index out of range*/"
+			continue
+		}
+		code, err := g.emitExpr(params[idx])
+		if err != nil {
+			fields[i] = "/*ivy2go: antiquote emit error*/"
+			continue
+		}
+		fields[i] = code
+	}
+	return strings.Join(fields, "")
+}
+
+// strconvAtoiSafe parses a positive integer; returns error on empty.
+func strconvAtoiSafe(s string) (int, error) {
+	if s == "" {
+		return 0, fmt.Errorf("empty")
+	}
+	n := 0
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if c < '0' || c > '9' {
+			return 0, fmt.Errorf("non-digit %q", c)
+		}
+		n = n*10 + int(c-'0')
+	}
+	return n, nil
 }
 
 // splitNativeGoCode mirrors ivy2cpp/native.go splitNativeCode but
@@ -87,12 +150,15 @@ func splitNativeGoCode(code string) (string, string) {
 // ARCHITECTURE_TODO.md §3.5.10 (native blocks are trusted source).
 // nativeOnceMemo dedups identical bodies.
 func (g *Generator) dispatchNativeGoBlock(blk nativeGoBlock) {
-	key := blk.Tag + "|" + blk.Body
+	// Substitute antiquotes before dedup so different param bindings
+	// produce different keys (and hence different emissions).
+	rendered := g.renderNativeGoTemplate(blk.Body, blk.Params)
+	key := blk.Tag + "|" + rendered
 	if g.nativeOnceMemo[key] {
 		return
 	}
 	g.nativeOnceMemo[key] = true
-	body := strings.TrimRight(blk.Body, "\n") + "\n"
+	body := strings.TrimRight(rendered, "\n") + "\n"
 
 	switch blk.Tag {
 	case "go":

@@ -85,6 +85,68 @@ action set_to_x(p: point) = {
 	}
 }
 
+// --- OPEN 062: Hash + Less methods on destructor structs ------------
+
+func TestEmitDestructor_HasHashMethod(t *testing.T) {
+	mod := compileIvySource(t, `
+type point = struct {
+    x : bool,
+    y : bool
+}
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Files["types.go"]
+	if !strings.Contains(text, "func (a Point) Hash() uint64") {
+		t.Errorf("Point should have Hash method, got:\n%s", text)
+	}
+	if !strings.Contains(text, "mixHash(h, a.X)") {
+		t.Errorf("Hash should mix in X field, got:\n%s", text)
+	}
+}
+
+func TestEmitDestructor_HasLessMethod(t *testing.T) {
+	mod := compileIvySource(t, `
+type point = struct {
+    x : bool,
+    y : bool
+}
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Files["types.go"]
+	if !strings.Contains(text, "func (a Point) Less(b Point) bool") {
+		t.Errorf("Point should have Less method, got:\n%s", text)
+	}
+	if !strings.Contains(text, "lessOrd(a.X, b.X)") {
+		t.Errorf("Less should compare X via lessOrd, got:\n%s", text)
+	}
+}
+
+func TestEmitDestructor_RuntimeHelpersEmittedOnDemand(t *testing.T) {
+	mod := compileIvySource(t, `
+type point = struct {
+    x : bool,
+    y : bool
+}
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	runtime := out.Files["runtime.go"]
+	if !strings.Contains(runtime, "func mixHash(h uint64, v any) uint64") {
+		t.Errorf("mixHash helper missing, got:\n%s", runtime)
+	}
+	if !strings.Contains(runtime, "func lessOrd(a, b any) bool") {
+		t.Errorf("lessOrd helper missing, got:\n%s", runtime)
+	}
+}
+
 func TestEmitDestructor_AllFilesGofmtClean(t *testing.T) {
 	mod := compileIvySource(t, `
 type point = struct {
