@@ -86,17 +86,25 @@ func TestEmitInit_NondetScalar(t *testing.T) {
 	}
 }
 
-func TestEmitInit_TestTargetDefersToSolver(t *testing.T) {
+func TestEmitInit_TestTargetEmitsNondetWhenNoAxioms(t *testing.T) {
+	// Mirrors ivy2cpp/initial_state.go emitDefaultInitialState: when
+	// the module has no InitCond formulas to solve, the test/gen
+	// targets fall back to nondet just like impl/repl — they don't
+	// silently leave fields at the Go zero value.
 	mod := compileIvySource(t, `relation flag`)
 	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
 	text := out.Files["init.go"]
-	if !strings.Contains(text, "TODO(M9)") {
-		t.Errorf("test target should leave M9 marker, got:\n%s", text)
+	if strings.Contains(text, "TODO(M9)") {
+		t.Errorf("test target with no InitCond should not emit M9 TODO, got:\n%s", text)
+	}
+	if !strings.Contains(text, "s.Flag = ivyChoose(2) == 1") {
+		t.Errorf("expected nondet flag init under test target, got:\n%s", text)
 	}
 }
+
 
 // --- M5: build plan tests -------------------------------------------
 

@@ -109,14 +109,23 @@ func (g *Generator) emitWouldFailHelper(w *goWriter, name string) {
 	// by aliasing `s := state` once at function entry.
 	w.line("\ts := state")
 	w.line("\t_ = s")
+	// Inline Pre.Defs into every Pre.Fmla so synthetic temporaries
+	// (e.g. `__ts0_a = left_player.ball`) become resolvable
+	// references to state symbols / formals. Without this, fmlas
+	// that mention the temporary get marked unreifiable and the
+	// action is skipped, which masks the user's actual Pre and
+	// breaks the test trace (cf. ivy2cpp's pingpong output that
+	// fires `left_player.hit`).
+	defSubs := buildDefSubstitutions(update.Pre.Defs)
 	parts := []string{}
 	for _, fmla := range update.Pre.Fmlas {
-		expr, ok := g.emitPreFmlaAsGoExpr(fmla, params)
+		inlined := applyDefSubstitutions(fmla, defSubs)
+		expr, ok := g.emitPreFmlaAsGoExpr(inlined, params)
 		if !ok {
 			// Unreifiable fmla — conservatively assume failure so
 			// the action is skipped (safer than firing and
 			// panicking).
-			w.linef("\t// OPEN: unreifiable Pre fmla — skipping action: %s",
+			w.linef("\t// unreifiable Pre fmla — conservatively skipping action: %s",
 				strings.ReplaceAll(fmla.String(), "\n", " "))
 			parts = append(parts, "true")
 			continue
@@ -126,7 +135,10 @@ func (g *Generator) emitWouldFailHelper(w *goWriter, name string) {
 	if len(parts) == 0 {
 		w.line("\treturn false")
 	} else {
-		w.linef("\treturn %s", strings.Join(parts, " || "))
+		// Pre.Fmlas semantics: a goivy *Clauses is a CONJUNCTION
+		// of its fmlas. The action fails iff EVERY fmla holds.
+		// Joining with `&&` (not `||`) matches that.
+		w.linef("\treturn %s", strings.Join(parts, " && "))
 	}
 	w.line("}")
 	w.blank()
@@ -170,6 +182,134 @@ func (g *Generator) emitPreFmlaAsGoExpr(fmla goivy.Expr, params []*goivy.Const) 
 		return "", false
 	}
 	return code, true
+}
+
+// buildDefSubstitutions converts a slice of Pre.Defs (each
+// `IvyDefinition` defining a temporary or new-state symbol in
+// terms of the old state) into a map keyed by the LHS symbol name.
+//
+// Used by applyDefSubstitutions to inline synthetic temporaries
+// like `__ts0_a` before reifying a Pre fmla as Go code.
+func buildDefSubstitutions(defs []*goivy.IvyDefinition) map[string]goivy.Expr {
+	out := make(map[string]goivy.Expr, len(defs))
+	for _, d := range defs {
+		if d == nil {
+			continue
+		}
+		lhs, ok := d.Lhs.(*goivy.Const)
+		if !ok {
+			continue
+		}
+		out[lhs.Name] = d.Rhs
+	}
+	return out
+}
+
+// applyDefSubstitutions walks e and replaces any *goivy.Const whose
+// name is a key in subs with the corresponding RHS Expr. Used to
+// inline Pre.Defs so synthetic temporaries don't appear in the
+// emitted Go expression.
+//
+// Iterates until a fixed point in case one def references another.
+// Cap at 8 passes to defend against pathological circular defs.
+func applyDefSubstitutions(e goivy.Expr, subs map[string]goivy.Expr) goivy.Expr {
+	if len(subs) == 0 {
+		return e
+	}
+	for pass := 0; pass < 8; pass++ {
+		next, changed := applyDefSubstitutionsOnce(e, subs)
+		if !changed {
+			return e
+		}
+		e = next
+	}
+	return e
+}
+
+func applyDefSubstitutionsOnce(e goivy.Expr, subs map[string]goivy.Expr) (goivy.Expr, bool) {
+	if e == nil {
+		return nil, false
+	}
+	switch n := e.(type) {
+	case *goivy.Const:
+		if rhs, ok := subs[n.Name]; ok {
+			return rhs, true
+		}
+		return n, false
+	case *goivy.LogicNot:
+		body, ch := applyDefSubstitutionsOnce(n.Body, subs)
+		if !ch {
+			return n, false
+		}
+		return &goivy.LogicNot{Body: body}, true
+	case *goivy.LogicAnd:
+		anyCh := false
+		terms := make([]goivy.Expr, len(n.Terms))
+		for i, t := range n.Terms {
+			nt, ch := applyDefSubstitutionsOnce(t, subs)
+			if ch {
+				anyCh = true
+			}
+			terms[i] = nt
+		}
+		if !anyCh {
+			return n, false
+		}
+		return &goivy.LogicAnd{Terms: terms}, true
+	case *goivy.LogicOr:
+		anyCh := false
+		terms := make([]goivy.Expr, len(n.Terms))
+		for i, t := range n.Terms {
+			nt, ch := applyDefSubstitutionsOnce(t, subs)
+			if ch {
+				anyCh = true
+			}
+			terms[i] = nt
+		}
+		if !anyCh {
+			return n, false
+		}
+		return &goivy.LogicOr{Terms: terms}, true
+	case *goivy.LogicImplies:
+		l, lch := applyDefSubstitutionsOnce(n.T1, subs)
+		r, rch := applyDefSubstitutionsOnce(n.T2, subs)
+		if !lch && !rch {
+			return n, false
+		}
+		return &goivy.LogicImplies{T1: l, T2: r}, true
+	case *goivy.LogicIff:
+		l, lch := applyDefSubstitutionsOnce(n.T1, subs)
+		r, rch := applyDefSubstitutionsOnce(n.T2, subs)
+		if !lch && !rch {
+			return n, false
+		}
+		return &goivy.LogicIff{T1: l, T2: r}, true
+	case *goivy.Eq:
+		l, lch := applyDefSubstitutionsOnce(n.T1, subs)
+		r, rch := applyDefSubstitutionsOnce(n.T2, subs)
+		if !lch && !rch {
+			return n, false
+		}
+		return &goivy.Eq{T1: l, T2: r}, true
+	case *goivy.Apply:
+		anyCh := false
+		newTerms := make([]goivy.Expr, len(n.Terms))
+		for i, t := range n.Terms {
+			nt, ch := applyDefSubstitutionsOnce(t, subs)
+			if ch {
+				anyCh = true
+			}
+			newTerms[i] = nt
+		}
+		if !anyCh {
+			return n, false
+		}
+		if a, err := goivy.NewApply(n.Func, newTerms...); err == nil {
+			return a, true
+		}
+		return n, false
+	}
+	return e, false
 }
 
 // preHasUnresolvableRef walks e looking for Const references that

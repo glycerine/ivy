@@ -106,12 +106,17 @@ func Generate(mod *goivy.Module, cfg Config) (*Output, error) {
 		StateTypeName: stateType,
 		Ctx:           NewGoContext(),
 
-		thunkMemo:          map[string]string{},
-		exprAliases:        map[string]goivy.Expr{},
-		extRel:             map[string]bool{},
-		nativeOnceMemo:     map[string]bool{},
-		encodedSorts:       map[string]bool{},
-		importCallersCache: map[string]bool{},
+		thunkMemo:      map[string]string{},
+		exprAliases:    map[string]goivy.Expr{},
+		extRel:         map[string]bool{},
+		nativeOnceMemo: map[string]bool{},
+		encodedSorts:   map[string]bool{},
+		// IMPORTANT: importCallersCache is INTENTIONALLY left
+		// nil so its first lookup triggers the lazy computation
+		// in importCallers(). Pre-populating with an empty map
+		// would short-circuit the cache check and permanently
+		// hide every import-caller (the trace `< name` lines
+		// would never appear).
 	}
 	g.Ctx.PackageName = pkg
 	g.types = newGoWriter(g.Ctx.Types)

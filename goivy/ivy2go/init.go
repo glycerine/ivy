@@ -20,9 +20,18 @@ func (g *Generator) emitInitMethod(w *goWriter) {
 	w.blank()
 }
 
-// emitAfterInitActions emits calls to any `after init {…}` blocks the
-// Ivy module declared. M5 leaves this empty; M7 fills it in alongside
-// the REPL setup.
+// emitAfterInitActions emits the imperative `after init { … }` blocks
+// the Ivy module declared. Mirrors ivy2cpp/generator.go emitInit lines
+// 1224-1227: walk g.Mod.InitialActions and feed each through the
+// regular action emitter. Without this, state assignments like
+// `side := left; ball := true` never run, leaving every field at its
+// Go zero value — and downstream guards like `if s.LeftPlayerBall`
+// silently skip the body.
 func (g *Generator) emitAfterInitActions(w *goWriter) {
-	_ = w
+	if g == nil || g.Mod == nil {
+		return
+	}
+	for _, act := range g.Mod.InitialActions {
+		g.emitAction(w, act)
+	}
 }

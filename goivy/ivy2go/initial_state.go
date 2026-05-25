@@ -23,19 +23,20 @@ func (g *Generator) emitInitialState(w *goWriter) {
 	if g == nil || g.Mod == nil {
 		return
 	}
-	target := g.Config.Target
+	// Mirror ivy2cpp/initial_state.go emitDefaultInitialState: every
+	// scalar state symbol gets a nondeterministic choice. Solver-
+	// driven init for axiom-constrained symbols lands in M9; mark
+	// the gap only when an actual InitCond formula would be missed,
+	// not for every symbol.
+	if g.Mod.InitCond != nil && !g.Mod.InitCond.IsTrue() && (g.Config.Target == "test" || g.Config.Target == "gen") {
+		w.linef("// TODO(M9): solver-driven init for InitCond (%d fmlas)", len(g.Mod.InitCond.Fmlas))
+	}
 	for _, sym := range g.stateSymbols() {
 		if isFunctionSort(sym.Sort) {
 			// Function-sorted symbols (arrays / maps) are handled
 			// either by NewState (map allocation) or by individual
 			// per-cell init steps lowered upstream. M5 leaves them
 			// alone; refine in M8/M9.
-			continue
-		}
-		if target == "test" || target == "gen" {
-			// Solver-driven init lands in M9 via a different path;
-			// the comment below keeps the gap visible.
-			w.linef("// TODO(M9): solver-driven init for symbol %q", sym.Name)
 			continue
 		}
 		g.emitScalarChoice(w, sym)

@@ -563,25 +563,81 @@ func (g *Generator) actionParamName(c *goivy.Const) string {
 	return id
 }
 
-// isExternallyCallable reports whether the named action is one the
-// test driver invokes from outside — i.e. it appears in
-// actionGenNames. Internal helper actions (those called only by
-// other actions) don't emit a `<` trace prologue to keep the trace
-// focused on observable behaviour.
+// isImportCaller reports whether the named action body should emit
+// a `<` trace prologue. Faithfully mirrors Python ivy_to_cpp.py's
+// find_import_callers (lines 1888-1901):
 //
-// The class target is also excluded: it's a library shape where the
-// caller drives the API themselves, ivyTraceOut isn't declared, and
-// a body-level trace would create a hard dep on an absent global.
-func (g *Generator) isExternallyCallable(name string) bool {
+//	for imp in im.module.imports:
+//	    name = imp.imported()      # e.g. "imp__intf.ping"
+//	    if not imp.scope() and name in im.module.actions:
+//	        import_callers.add('ext:' + name[5:])
+//	        import_callers.add(name[5:])
+//
+// The result is cached on Generator.importCallersCache. Only fires
+// for target=test (mirroring Python's target-gate). Class target is
+// excluded for the same reason `>` is — no ivyTraceOut declared.
+//
+// For pingpong's left_player isolate, mod.Imports contains an
+// ImportDef whose Imported is `imp__intf.ping`. After stripping the
+// 5-char `imp__` prefix we get `intf.ping`, and the set populates
+// to {ext:intf.ping, intf.ping}. The action body named `intf.ping`
+// is then the one whose Generator emits the `< intf.ping` prologue.
+func (g *Generator) isImportCaller(name string) bool {
 	if g == nil || g.Config.RequestedTarget == "class" {
 		return false
 	}
-	for _, n := range g.actionGenNames() {
-		if n == name {
-			return true
+	return g.importCallers()[name]
+}
+
+// importCallers ports ivy2cpp/generator.go importCallers — which in
+// turn ports Python find_import_callers. Cached on the Generator.
+func (g *Generator) importCallers() map[string]bool {
+	if g.importCallersCache != nil {
+		return g.importCallersCache
+	}
+	out := map[string]bool{}
+	// Python: if target.get() != "test": return  (skip all)
+	// We allow gen too — both targets drive actions via the
+	// action_gen mechanism.
+	if g.Config.Target == "test" || g.Config.Target == "gen" {
+		if g.Mod != nil {
+			for _, imp := range g.Mod.Imports {
+				impDef, ok := imp.(*goivy.ImportDef)
+				if !ok {
+					continue
+				}
+				// Skip imports with a non-empty scope (those are
+				// scoped to a sub-module, not the test boundary).
+				if atom, ok := impDef.Scope.(*goivy.Atom); ok && atom.Relname() != "" {
+					continue
+				}
+				atom, ok := impDef.Imported.(*goivy.Atom)
+				if !ok {
+					continue
+				}
+				name := atom.Relname()
+				if name == "" {
+					continue
+				}
+				if _, ok := g.Mod.Actions.Get2(name); !ok {
+					continue
+				}
+				// Strip the 5-char `imp__` prefix Python uses; if
+				// the name already has `ext:`, strip that too.
+				caller := name
+				switch {
+				case strings.HasPrefix(caller, "imp__"):
+					caller = strings.TrimPrefix(caller, "imp__")
+				case strings.HasPrefix(caller, "ext:"):
+					caller = strings.TrimPrefix(caller, "ext:")
+				}
+				out["ext:"+caller] = true
+				out[caller] = true
+			}
 		}
 	}
-	return false
+	g.importCallersCache = out
+	return out
 }
 
 // emitActionTraceLine emits a single fmt.Fprintln to ivyTraceOut
@@ -694,13 +750,12 @@ func (g *Generator) emitActionMethod(w *goWriter, name string, act goivy.Action)
 	}
 	w.open(header + " {")
 
-	// Trace prologue: emit `< name(args)` for externally-callable
-	// actions so a test observer sees the action being invoked from
-	// the action's own body. Mirrors ivy2cpp's
-	// emitTraceActionPrologue (Python ivy_to_cpp.py:1576-1590).
-	// Gated on actionGenNames so internal helper actions don't
-	// flood the trace.
-	if g.isExternallyCallable(name) {
+	// Trace prologue: emit `< name(args)` for import-caller actions
+	// (Python ivy_to_cpp.py:1607-1610 / find_import_callers). These
+	// represent system→env callbacks: actions the system calls
+	// whose impl is owned by the environment. The display name
+	// strips `ext:` per Python trace_action (line 1581-1582).
+	if g.isImportCaller(name) {
 		g.emitActionTraceLine(w, "<", name, params)
 	}
 
