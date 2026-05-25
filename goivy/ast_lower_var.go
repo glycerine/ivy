@@ -71,7 +71,7 @@ func LowerVarStatements(stmts []Node) []Node {
 			res.SetLineno(body.GetLineno())
 
 			result := append(stmts[:idx], res)
-			xtracer.Trace("parser.lower_var_stmts RETURN out=%d canons=[%s]", len(result), lvsCanons(result))
+			xtracer.Trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]", len(result), lvsCanons(result))
 			return result
 		}
 
@@ -92,11 +92,11 @@ func LowerVarStatements(stmts []Node) []Node {
 			seq.Cfg = t.Cfg
 			newArgs := append(t.Args(), seq)
 			result := append(stmts[:idx:idx], t.Clone(newArgs))
-			xtracer.Trace("parser.lower_var_stmts RETURN out=%d canons=[%s]", len(result), lvsCanons(result))
+			xtracer.Trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]", len(result), lvsCanons(result))
 			return result
 		}
 	}
-	xtracer.Trace("parser.lower_var_stmts RETURN out=%d canons=[%s]", len(stmts), lvsCanons(stmts))
+	xtracer.Trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]", len(stmts), lvsCanons(stmts))
 	return stmts
 }
 
