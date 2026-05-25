@@ -263,23 +263,119 @@ func (g *Generator) emitRepl() {
 }
 
 func (g *Generator) emitMain() {
-	hasRepl := g.Config.RequestedTarget != "class" && (g.Config.Target == "repl" || g.Config.Target == "test")
-	if hasRepl {
-		g.Ctx.AddImport("main", "fmt", "")
-		g.Ctx.AddImport("main", "os", "")
+	if g.Config.RequestedTarget == "class" {
+		// class target produces a library; no main.
+		return
 	}
+	switch g.Config.Target {
+	case "repl":
+		g.emitReplMain()
+	case "test", "gen":
+		g.emitTestMain()
+	default:
+		// impl (and anything else): plain construct + init + exit.
+		g.main.open("func main() {")
+		g.main.linef("state := New%s()", g.StateTypeName)
+		g.main.line("state.Init()")
+		g.main.line("_ = state")
+		g.main.close("")
+	}
+}
+
+// emitReplMain emits a main() that reads commands from stdin via
+// runRepl. Used by target=repl.
+func (g *Generator) emitReplMain() {
+	g.Ctx.AddImport("main", "fmt", "")
+	g.Ctx.AddImport("main", "os", "")
 	g.main.open("func main() {")
 	g.main.linef("state := New%s()", g.StateTypeName)
 	g.main.line("state.Init()")
-	if hasRepl {
-		g.main.line("if err := runRepl(state, os.Stdin, os.Stdout); err != nil {")
-		g.main.line(`	fmt.Fprintln(os.Stderr, err)`)
-		g.main.line(`	os.Exit(1)`)
-		g.main.line("}")
-	} else {
-		g.main.line("_ = state")
-	}
+	g.main.line("if err := runRepl(state, os.Stdin, os.Stdout); err != nil {")
+	g.main.line(`	fmt.Fprintln(os.Stderr, err)`)
+	g.main.line(`	os.Exit(1)`)
+	g.main.line("}")
 	g.main.close("")
+}
+
+// emitTestMain emits a main() that drives a randomized test loop
+// using the per-action actionGen_* structs. Mirrors the role of
+// ivy2cpp/generator.go emitTestLoopBody (Python
+// emit_repl_boilerplate3test).
+//
+// Shape:
+//
+//	func main() {
+//	    iters := parseTestItersFlag(<default>)
+//	    state := NewState()
+//	    state.Init()
+//
+//	    type actionEntry struct {
+//	        name string
+//	        gen  interface{ Generate(*State); Close() error }
+//	    }
+//	    var actions []actionEntry
+//	    actions = append(actions, actionEntry{"set_flag", newactionGen_SetFlag(state)})
+//	    …
+//	    defer func() { for _, a := range actions { _ = a.gen.Close() } }()
+//
+//	    for i := 0; i < iters; i++ {
+//	        idx := ivyChoose(len(actions))
+//	        actions[idx].gen.Generate(state)
+//	    }
+//	    fmt.Println("test_completed")
+//	}
+func (g *Generator) emitTestMain() {
+	g.Ctx.AddImport("main", "fmt", "")
+	g.Ctx.AddImport("main", "os", "")
+	g.Ctx.AddImport("main", "strconv", "")
+
+	names := g.actionGenNames()
+
+	g.main.open("func main() {")
+	g.main.linef("iters := parseTestItersFlag(%s)", g.Config.TestIters)
+	g.main.linef("state := New%s()", g.StateTypeName)
+	g.main.line("state.Init()")
+	g.main.blank()
+	if len(names) == 0 {
+		// Module has no public actions to drive — just complete.
+		g.main.line(`fmt.Println("test_completed")`)
+		g.main.close("")
+		return
+	}
+	// Action generator slice. Each entry pairs a name (for traces)
+	// with a small adapter struct that owns the actionGen and
+	// exposes Generate / Close uniformly.
+	g.main.line("// Per-action generator registry.")
+	g.main.line("type actionEntry struct {")
+	g.main.line("\tname     string")
+	g.main.linef("\tgenerate func(*%s)", g.StateTypeName)
+	g.main.line("\tclose    func() error")
+	g.main.line("}")
+	g.main.line("var actions []actionEntry")
+	for _, name := range names {
+		struc := "actionGen_" + goExportedName(name)
+		g.main.linef("{")
+		g.main.linef("\tg := new%s(state)", struc)
+		g.main.linef("\tactions = append(actions, actionEntry{name: %q, generate: g.Generate, close: g.Close})", name)
+		g.main.line("}")
+	}
+	g.main.line("defer func() {")
+	g.main.line("\tfor _, a := range actions {")
+	g.main.line("\t\t_ = a.close()")
+	g.main.line("\t}")
+	g.main.line("}()")
+	g.main.blank()
+	g.main.line("for i := 0; i < iters; i++ {")
+	g.main.line("\tidx := ivyChoose(len(actions))")
+	g.main.line("\tactions[idx].generate(state)")
+	g.main.line("\t_ = i")
+	g.main.line("}")
+	g.main.line(`fmt.Println("test_completed")`)
+	g.main.line("_ = os.Stderr")
+	g.main.line("_ = strconv.Itoa")
+	g.main.close("")
+	// Mark that the runtime needs parseTestItersFlag.
+	g.Ctx.OnceGlobals["__need_testflags"] = true
 }
 
 // finalize composes each stream into a complete .go source file

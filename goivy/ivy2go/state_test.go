@@ -1,9 +1,7 @@
 package ivy2go
 
 import (
-	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -149,22 +147,14 @@ func TestSmoke_BuildEmittedPackage_EmptyModule(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	dir := t.TempDir()
+	dir := playpenDir(t)
 	if err := WriteOutput(out, dir); err != nil {
 		t.Fatalf("WriteOutput: %v", err)
 	}
-	// We can't BuildOutput directly because the generated package
-	// has no go.mod (Config.GoModule wasn't set). Build through a
-	// throwaway module created in dir.
 	pkgDir := outputDirectory(dir, out.BaseName)
-	gomodPath := filepath.Join(pkgDir, "go.mod")
-	if err := os.WriteFile(gomodPath, []byte("module ivygo_smoke\n\ngo 1.25\n"), 0o644); err != nil {
-		t.Fatalf("write go.mod: %v", err)
-	}
-	cmd := exec.Command("go", "build", "./...")
+	cmd := exec.Command("go", "build", ".")
 	cmd.Dir = pkgDir
-	output, err := cmd.CombinedOutput()
-	if err != nil {
+	if output, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("go build failed:\n%s", string(output))
 	}
 }
@@ -183,19 +173,14 @@ action set_flag = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	dir := t.TempDir()
+	dir := playpenDir(t)
 	if err := WriteOutput(out, dir); err != nil {
 		t.Fatalf("WriteOutput: %v", err)
 	}
 	pkgDir := outputDirectory(dir, out.BaseName)
-	if err := os.WriteFile(filepath.Join(pkgDir, "go.mod"),
-		[]byte("module ivygo_smoke\n\ngo 1.25\n"), 0o644); err != nil {
-		t.Fatalf("go.mod: %v", err)
-	}
-	cmd := exec.Command("go", "build", "./...")
+	cmd := exec.Command("go", "build", ".")
 	cmd.Dir = pkgDir
-	output, err := cmd.CombinedOutput()
-	if err != nil {
+	if output, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("go build failed:\n%s", string(output))
 	}
 }

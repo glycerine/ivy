@@ -46,6 +46,9 @@ func (g *Generator) emitRuntimeHelpers(w *goWriter) {
 	if g.Ctx.OnceGlobals["__need_musthelpers"] {
 		g.emitMustHelpers(w)
 	}
+	if g.Ctx.OnceGlobals["__need_testflags"] {
+		g.emitTestFlagsHelper(w)
+	}
 	// ite_<type> helpers: walk OnceGlobals keys, find any starting
 	// with "ite_", emit one per. We don't know the result type from
 	// the key alone — store (name, typeExpr) on g for emission.
@@ -455,6 +458,31 @@ func (g *Generator) emitPickInputHelpers(w *goWriter) {
 	w.line("\tif err != nil { return uint64(ivyChoose(card)) }")
 	w.line("\tif card > 0 { n = n % uint64(card) }")
 	w.line("\treturn n")
+	w.line("}")
+	w.blank()
+}
+
+// emitTestFlagsHelper writes parseTestItersFlag — used by the
+// test-loop main to decide how many iterations to run. Flag
+// precedence: `--iters=N` on argv → IVY_ITERS env var → default.
+// Mirrors ivy2cpp's `test_iters` argv plumbing.
+func (g *Generator) emitTestFlagsHelper(w *goWriter) {
+	g.Ctx.AddImport("runtime", "os", "")
+	g.Ctx.AddImport("runtime", "strconv", "")
+	g.Ctx.AddImport("runtime", "strings", "")
+	w.line("// parseTestItersFlag returns the iteration count for the")
+	w.line("// test loop. Argv `--iters=N`, env `IVY_ITERS`, then the")
+	w.line("// emit-time default (in that order).")
+	w.line("func parseTestItersFlag(defaultIters int) int {")
+	w.line("\tfor _, a := range os.Args[1:] {")
+	w.line(`		if strings.HasPrefix(a, "--iters=") {`)
+	w.line(`			if n, err := strconv.Atoi(a[len("--iters="):]); err == nil { return n }`)
+	w.line("\t\t}")
+	w.line("\t}")
+	w.line(`	if v := os.Getenv("IVY_ITERS"); v != "" {`)
+	w.line("\t\tif n, err := strconv.Atoi(v); err == nil { return n }")
+	w.line("\t}")
+	w.line("\treturn defaultIters")
 	w.line("}")
 	w.blank()
 }

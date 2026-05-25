@@ -416,33 +416,30 @@ action set_to_x(p: point) = {
 }
 
 // buildEmittedAgainstGoivy is a shared helper: write the test-target
-// output to a temp dir, point its go.mod at the in-tree goivy via
-// `replace`, run `go mod tidy` + `go build`. Fails the test on any
-// step that errors.
+// output to a unique playpen subdir (under ~/ivy/goivy/playpen/
+// _smoke-…) and run `go build .`.
+//
+// Because the playpen lives inside the goivy module, the emitted
+// package's `import "github.com/glycerine/ivy/goivy"` resolves via
+// the enclosing go.mod — no replace, no separate go.mod, no proxy
+// fetch. The `_smoke-…` prefix means `go build ./...` from the
+// goivy module root skips these directories automatically.
+//
+// modName is informational only; it appears in the temp dir name
+// for grep-ability if a test leaves output behind on a failure.
 func buildEmittedAgainstGoivy(t *testing.T, mod *goivy.Module, modName string) {
 	t.Helper()
+	_ = modName
 	out, err := Generate(mod, Config{Target: "test", PackageName: "main"})
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	dir := t.TempDir()
+	dir := playpenDir(t)
 	if err := WriteOutput(out, dir); err != nil {
 		t.Fatalf("WriteOutput: %v", err)
 	}
 	pkgDir := outputDirectory(dir, out.BaseName)
-	goivyAbs := repoRoot(t)
-	gomod := "module " + modName + "\n\ngo 1.25\n\n" +
-		"require github.com/glycerine/ivy/goivy v0.0.0\n\n" +
-		"replace github.com/glycerine/ivy/goivy => " + goivyAbs + "\n"
-	if err := os.WriteFile(filepath.Join(pkgDir, "go.mod"), []byte(gomod), 0o644); err != nil {
-		t.Fatalf("go.mod: %v", err)
-	}
-	tidy := exec.Command("go", "mod", "tidy")
-	tidy.Dir = pkgDir
-	if output, err := tidy.CombinedOutput(); err != nil {
-		t.Fatalf("go mod tidy:\n%s", string(output))
-	}
-	build := exec.Command("go", "build", "./...")
+	build := exec.Command("go", "build", ".")
 	build.Dir = pkgDir
 	if output, err := build.CombinedOutput(); err != nil {
 		t.Fatalf("go build:\n%s", string(output))
@@ -768,29 +765,12 @@ action set_flag = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	dir := t.TempDir()
+	dir := playpenDir(t)
 	if err := WriteOutput(out, dir); err != nil {
 		t.Fatalf("WriteOutput: %v", err)
 	}
 	pkgDir := outputDirectory(dir, out.BaseName)
-	// Write a go.mod that maps the goivy import to our in-tree
-	// goivy via a replace directive — the workspace files are next
-	// to the test process's $GOPATH/src/github.com/glycerine/ivy/goivy.
-	goivyAbs := repoRoot(t)
-	gomod := "module ivygo_test_smoke\n\ngo 1.25\n\n" +
-		"require github.com/glycerine/ivy/goivy v0.0.0\n\n" +
-		"replace github.com/glycerine/ivy/goivy => " + goivyAbs + "\n"
-	if err := os.WriteFile(filepath.Join(pkgDir, "go.mod"), []byte(gomod), 0o644); err != nil {
-		t.Fatalf("go.mod: %v", err)
-	}
-	// Bring in a real go.sum so `go build` doesn't try to download.
-	// Easiest: run `go mod tidy` first.
-	tidy := exec.Command("go", "mod", "tidy")
-	tidy.Dir = pkgDir
-	if output, err := tidy.CombinedOutput(); err != nil {
-		t.Fatalf("go mod tidy failed:\n%s", string(output))
-	}
-	cmd := exec.Command("go", "build", "-o", filepath.Join(pkgDir, "test_bin"), "./...")
+	cmd := exec.Command("go", "build", "-o", "test_bin", ".")
 	cmd.Dir = pkgDir
 	output, err := cmd.CombinedOutput()
 	if err != nil {

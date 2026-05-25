@@ -15,6 +15,7 @@ import (
 	"go/parser"
 	"go/token"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -27,6 +28,33 @@ var SlowGoTest bool
 
 func init() {
 	_, SlowGoTest = os.LookupEnv("SLOW_GO_TEST")
+}
+
+// playpenDir returns a fresh, unique subdirectory under
+// ~/ivy/goivy/playpen/ for a smoke test's emitted output. The
+// directory name is prefixed with "_" so `go build ./...` from the
+// goivy module root automatically skips it (Go ignores dirs that
+// start with `_` or `.`).
+//
+// Placing emitted code under the goivy module dir is what makes
+// `import "github.com/glycerine/ivy/goivy"` resolve cleanly — the
+// import sees the enclosing go.mod and uses the in-tree code. No
+// `replace` directive, no separate go.mod, no proxy fetch.
+//
+// The directory is registered with t.Cleanup so it's removed when
+// the test ends (success or failure).
+func playpenDir(t *testing.T) string {
+	t.Helper()
+	pp := filepath.Join(repoRoot(t), "playpen")
+	if err := os.MkdirAll(pp, 0o755); err != nil {
+		t.Fatalf("playpenDir: mkdir %s: %v", pp, err)
+	}
+	dir, err := os.MkdirTemp(pp, "_smoke-")
+	if err != nil {
+		t.Fatalf("playpenDir: MkdirTemp under %s: %v", pp, err)
+	}
+	t.Cleanup(func() { _ = os.RemoveAll(dir) })
+	return dir
 }
 
 // compileIvySource parses an Ivy source string into a goivy Module.

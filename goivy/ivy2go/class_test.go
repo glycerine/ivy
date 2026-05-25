@@ -1,9 +1,7 @@
 package ivy2go
 
 import (
-	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -83,20 +81,15 @@ action set_flag = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	dir := t.TempDir()
+	dir := playpenDir(t)
 	if err := WriteOutput(out, dir); err != nil {
 		t.Fatalf("WriteOutput: %v", err)
 	}
 	pkgDir := outputDirectory(dir, out.BaseName)
-	if err := os.WriteFile(filepath.Join(pkgDir, "go.mod"),
-		[]byte("module ivygo_class_smoke\n\ngo 1.25\n"), 0o644); err != nil {
-		t.Fatalf("go.mod: %v", err)
-	}
-	cmd := exec.Command("go", "build", "./...")
-	cmd.Dir = pkgDir
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		t.Fatalf("go build ./... failed:\n%s", string(output))
+	cmdBuild := exec.Command("go", "build", ".")
+	cmdBuild.Dir = pkgDir
+	if output, err := cmdBuild.CombinedOutput(); err != nil {
+		t.Fatalf("go build failed:\n%s", string(output))
 	}
 }
 
@@ -118,19 +111,15 @@ action set_red = {
 	if err != nil {
 		t.Fatalf("Generate: %v", err)
 	}
-	dir := t.TempDir()
+	dir := playpenDir(t)
 	if err := WriteOutput(out, dir); err != nil {
 		t.Fatalf("WriteOutput: %v", err)
 	}
 	pkgDir := outputDirectory(dir, out.BaseName)
-	if err := os.WriteFile(filepath.Join(pkgDir, "go.mod"),
-		[]byte("module ivygo_class_mixed\n\ngo 1.25\n"), 0o644); err != nil {
-		t.Fatalf("go.mod: %v", err)
-	}
-	cmd := exec.Command("go", "build", "./...")
+	cmd := exec.Command("go", "build", ".")
 	cmd.Dir = pkgDir
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		t.Fatalf("go build ./... failed:\n%s", string(output))
+		t.Fatalf("go build failed:\n%s", string(output))
 	}
 }
