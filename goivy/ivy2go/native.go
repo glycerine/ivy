@@ -70,12 +70,22 @@ func (g *Generator) collectNativeGoBlocks() []nativeGoBlock {
 	return out
 }
 
-// renderNativeGoTemplate substitutes ` `N` `-delimited antiquotes in
-// body with the emitExpr-rendered code for params[N]. Mirrors
-// ivy2cpp/native.go renderNativeTemplate, simplified for Go: no
-// %-type or "-Z3-name prefixes (those are C++ specific). Antiquote
-// indices out of range or non-numeric fall through unchanged so the
-// emitted Go fails cleanly at compile time with a clear message.
+// renderNativeGoTemplate substitutes `` `N` ``-delimited antiquotes
+// in body with one of three flavours, selected by the trailing
+// character of the preceding text (mirrors ivy2cpp/native.go
+// renderNativeTemplate):
+//
+//   - default     → emitExpr(params[N])         — Go-source value reference
+//   - prefix '%'  → goType(params[N].NodeSort()) — Go type expression
+//   - prefix '"'  → strconv.Quote(name(params[N])) — Z3 name (quoted string)
+//
+// The prefix character is consumed (dropped from the preceding
+// text) when matched, so a template like ` %`0` ` produces
+// `<typeOf(p0)>` with no `%` left in the output.
+//
+// Antiquote indices that are non-numeric or out of range produce a
+// `/*ivy2go: …*/` marker so the emitted Go fails cleanly at compile
+// time with a clear message.
 func (g *Generator) renderNativeGoTemplate(body string, params []goivy.Expr) string {
 	if !strings.Contains(body, "`") {
 		return body
@@ -91,12 +101,35 @@ func (g *Generator) renderNativeGoTemplate(body string, params []goivy.Expr) str
 			fields[i] = "/*ivy2go: antiquote index out of range*/"
 			continue
 		}
-		code, err := g.emitExpr(params[idx])
-		if err != nil {
-			fields[i] = "/*ivy2go: antiquote emit error*/"
-			continue
+		// Inspect the trailing char of the preceding field to pick
+		// a flavour.
+		prev := fields[i-1]
+		flavour := byte(0)
+		if len(prev) > 0 {
+			c := prev[len(prev)-1]
+			if c == '%' || c == '"' {
+				flavour = c
+			}
 		}
-		fields[i] = code
+		var sub string
+		switch flavour {
+		case '%':
+			sub = g.goType(params[idx].NodeSort())
+			fields[i-1] = prev[:len(prev)-1]
+		case '"':
+			// Z3-name: the user has already opened with `"`; we
+			// emit the bare identifier so the surrounding "..." is
+			// still well-formed.
+			sub = goivy.ExprName(params[idx])
+		default:
+			code, err := g.emitExpr(params[idx])
+			if err != nil {
+				fields[i] = "/*ivy2go: antiquote emit error*/"
+				continue
+			}
+			sub = code
+		}
+		fields[i] = sub
 	}
 	return strings.Join(fields, "")
 }

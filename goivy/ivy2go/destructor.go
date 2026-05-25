@@ -135,12 +135,21 @@ func (g *Generator) emitDestructorHash(w *goWriter, typeName string, destrs []*g
 				w.line(c)
 			}
 		case goStorageHashThunk:
-			// Commutative aggregate so map iteration order doesn't matter.
-			w.linef("var sub uint64")
-			w.linef("for k, v := range a.%s {", field)
-			w.line("\tsub ^= mixHash(mixHash(0, k), v)")
-			w.line("}")
-			w.line("h = mixHash(h, sub)")
+			// OPEN 062.1: deterministic per-entry hash. Per D6 we
+			// don't use generics — we lean on sort.Slice's reflection
+			// API instead. Inline a per-key-type slice declaration
+			// (the key type is known at emission time), collect
+			// keys, sort via lessOrd, then hash entries in order.
+			w.linef("{")
+			w.linef("\tkeys := make([]%s, 0, len(a.%s))", st.KeyType, field)
+			w.linef("\tfor k := range a.%s { keys = append(keys, k) }", field)
+			w.linef("\tsort.Slice(keys, func(i, j int) bool { return lessOrd(keys[i], keys[j]) })")
+			w.linef("\tfor _, k := range keys {")
+			w.linef("\t\th = mixHash(mixHash(h, k), a.%s[k])", field)
+			w.linef("\t}")
+			w.linef("}")
+			// Ensure types.go can import sort.
+			g.Ctx.AddImport("types", "sort", "")
 		}
 	}
 	w.line("return h")

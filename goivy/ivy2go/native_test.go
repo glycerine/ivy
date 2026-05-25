@@ -111,6 +111,29 @@ func TestRenderNativeGoTemplate_SubstitutesParam(t *testing.T) {
 	}
 }
 
+// --- OPEN 064.1: antiquote prefix flavours --------------------------
+
+func TestRenderNativeGoTemplate_TypePrefixEmitsGoType(t *testing.T) {
+	g := newExprGen(t, "")
+	p := &goivy.Const{Name: "flag", CSort: goivy.Boolean}
+	// `%` prefix → substitute with the Go type of the param's sort.
+	got := g.renderNativeGoTemplate("var x %`0`", []goivy.Expr{p})
+	if got != "var x bool" {
+		t.Errorf("%%-prefix antiquote should emit type, got: %q", got)
+	}
+}
+
+func TestRenderNativeGoTemplate_QuotePrefixEmitsName(t *testing.T) {
+	g := newExprGen(t, "")
+	p := &goivy.Const{Name: "flag", CSort: goivy.Boolean}
+	// `"` prefix → substitute with the bare identifier (caller's
+	// surrounding "..." is preserved).
+	got := g.renderNativeGoTemplate(`label := "`+"`"+`0`+"`"+`"`, []goivy.Expr{p})
+	if got != `label := "flag"` {
+		t.Errorf("\"-prefix antiquote should emit name, got: %q", got)
+	}
+}
+
 // --- OPEN 056: in-action native go block tests ----------------------
 
 func TestEmitNativeAction_BodyLandsInsideMethod(t *testing.T) {

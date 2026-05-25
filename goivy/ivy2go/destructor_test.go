@@ -127,6 +127,30 @@ type point = struct {
 	}
 }
 
+// --- OPEN 062.1: deterministic hash for hash-thunk fields -----------
+
+func TestEmitDestructorHash_MapFieldSortsKeys(t *testing.T) {
+	// Indexed destructor with a large enough domain to force map
+	// storage. cell(I: idx) where idx has 2048 values → map.
+	mod := compileIvySource(t, `
+type idx = {0..2048}
+type holder = struct {
+    cell(I: idx) : bool
+}
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Files["types.go"]
+	if !strings.Contains(text, "sort.Slice(keys") {
+		t.Errorf("map-field Hash should sort keys, got:\n%s", text)
+	}
+	if !strings.Contains(text, "lessOrd(keys[i], keys[j])") {
+		t.Errorf("sort ordering should go through lessOrd, got:\n%s", text)
+	}
+}
+
 func TestEmitDestructor_RuntimeHelpersEmittedOnDemand(t *testing.T) {
 	mod := compileIvySource(t, `
 type point = struct {
