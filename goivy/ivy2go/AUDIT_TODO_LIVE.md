@@ -189,15 +189,71 @@ Default flavour (no prefix) still substitutes with the
 
 ---
 
-## OPEN — final residuals (sub-sub items)
+## DONE 055.3 — Function-sorted state facts + action Pre reifier
 
-### OPEN 055.3 — Function-sorted state facts + action Pre
+OPEN-pass.
 
-`stateFactsAsClauses` covers scalar bool symbols only. The full
-precondition would also need:
-  - per-cell forall assertions for array / map state symbols
-  - the action's own Pre clause from `action.ActionUpdate(ctx).Pre`
-    walked into an Expr-construction Go source string
+Two pieces landed:
 
-The Solver round-trip and per-input model extraction are already in
-place; only the Clauses construction needs to grow.
+**(a) Array-storage state facts.** `solver_emit.go`
+`emitStateSymbolFacts` now extends `stateFactsAsClauses` to walk
+each array-storage state symbol's dimensions, emit nested loops,
+and append per-cell `mkBoolFact("<sym>(<i0>,<i1>)", state.X[__i0][__i1])`
+assertions for bool-valued cells. Hash-thunk symbols are handled
+by the read-side thunk slot (OPEN 061.1) and are intentionally
+skipped here. Non-bool cell ranges (integer/enum) are the next
+sub-step.
+
+**(b) Per-action precondition reifier.** `action_gen.go`
+`emitPreconditionForAction` calls `goivy.GetUpdate(action, ctx)`
+at emit time and walks `update.Pre.Fmlas` through
+`reifyExprAsGoCode`, which produces a Go source string that
+reconstructs the same Expr tree at runtime via
+`goivy.NewConst` / `&goivy.LogicNot{}` / `&goivy.LogicAnd{}` /
+`&goivy.LogicOr{}` / `&goivy.LogicImplies{}` / `&goivy.LogicIff{}` /
+`&goivy.Eq{}`.
+
+Formal-parameter references inside the Pre are rewritten to the
+runtime input symbols `__in<i>`. goivy's three naming conventions
+for the same param (`b`, `fml:b`, `__fml:b`) are all matched by
+the reifier so the substitution is robust.
+
+The emitted helper signature is
+`buildPrecondition_<Name>(state *State, __in0 *goivy.Const, …) *goivy.Clauses`
+which returns `conjClauses(stateFactsAsClauses(state), …reified Pre…)`.
+Each actionGen's Generate now seeds `GetModelClauses` with this
+helper's result, so the solver receives the action's actual reverse
+image (when reifiable) plus the current state.
+
+Unreifiable Pre shapes (sort kinds beyond Boolean/Uninterpreted,
+Apply, ForAll, etc.) are silently skipped with a `// OPEN 055.3
+unreifiable Pre fmla: <…>` comment so callers can see which fmlas
+fell through. Extending the reifier's sort + Expr coverage is the
+natural next refinement.
+
+Verification: `TestEmit_TestTarget_ArrayStorageStateFacts`,
+`TestEmit_TestTarget_BuildPreconditionHelperPerAction`,
+`TestEmit_TestTarget_ReifiedPreReferencesInputSym`,
+`TestReifyExprAsGoCode_*` in `action_gen_test.go`. Tier 2 smoke
+(`TestSmoke_BuildEmittedTest`) still compiles the emitted test-
+target package against in-tree goivy with the new helpers.
+
+---
+
+## OPEN — final remaining residual
+
+### OPEN 055.4 — Reifier coverage for Apply / ForAll / non-Boolean sorts
+
+`reifyExprAsGoCode` supports `Const / LogicNot / LogicAnd / LogicOr /
+LogicImplies / LogicIff / Eq`. `reifySortAsGoCode` supports
+`BooleanSort / UninterpretedSort`. Pre clauses that mention
+`Apply`, `ForAll`, `LogicExists`, or sorts beyond Boolean and
+uninterpreted (e.g. enum, range, BV-interp) fall through to a
+`// OPEN 055.3 unreifiable Pre fmla: …` comment. The Solver round-
+trip still works — the precondition just degrades to the state
+facts in that case.
+
+Extending the reifier is straightforward but routine: add cases
+for each Expr/Sort type that translates structurally into the
+goivy.New* constructor form. Likely needs `mustApply` / `mustNewVariable`
+runtime helpers since `NewApply`/`NewVariable` can return errors.

@@ -1,6 +1,11 @@
 package ivy2go
 
-import "github.com/glycerine/ivy/goivy"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/glycerine/ivy/goivy"
+)
 
 // solver_emit.go mirrors ivy2cpp/solver_emit.go. The C++ file emits
 // `add(__to_solver(...))` calls per state cell plus forall-quantified
@@ -42,22 +47,18 @@ func (g *Generator) emitSetSolver(w *goWriter) {
 	w.blank()
 	g.Ctx.AddImport("runtime", "fmt", "")
 
-	// Shared helper that builds a Clauses asserting every scalar
-	// bool state symbol equals its current value. Each action's
-	// buildPrecondition_<Name> calls this and conjoins its inputs.
+	// Shared helper that builds a Clauses asserting per-symbol state
+	// facts. OPEN 055.3 extends 055.2 to cover function-sorted
+	// (array-storage) state symbols via per-cell facts.
 	w.line("// stateFactsAsClauses builds a *goivy.Clauses asserting that")
-	w.line("// each scalar bool state symbol equals its current value.")
-	w.line("// Used by every actionGen's input synthesis as the seed")
-	w.line("// of the precondition (OPEN 055.2). Function-sorted and")
-	w.line("// non-bool symbols are skipped for now (OPEN 055.3).")
+	w.line("// each scalar and array-storage state symbol matches its")
+	w.line("// current value. Map-storage (large-domain) symbols are")
+	w.line("// skipped because their domain is unbounded; the thunk-slot")
+	w.line("// wiring (OPEN 061.1) handles those at read time.")
 	w.linef("func stateFactsAsClauses(state *%s) *goivy.Clauses {", g.StateTypeName)
 	w.line("\tvar fmlas []goivy.Expr")
 	for _, sym := range g.stateSymbols() {
-		if _, ok := sym.Sort.(*goivy.BooleanSort); !ok {
-			continue
-		}
-		exported := goExportedName(sym.Name)
-		w.linef("\tfmlas = append(fmlas, mkBoolFact(%q, state.%s))", sym.Name, exported)
+		g.emitStateSymbolFacts(w, sym)
 	}
 	w.line("\treturn goivy.NewClauses(fmlas, nil, goivy.EmptyAnnotation{})")
 	w.line("}")
@@ -73,6 +74,100 @@ func (g *Generator) emitSetSolver(w *goWriter) {
 	w.line("\t\treturn sym")
 	w.line("\t}")
 	w.line("\treturn &goivy.LogicNot{Body: sym}")
+	w.line("}")
+	w.blank()
+
+	// Per-action precondition reifier — emitted via emitActionGen.
+	// Helpers used by the reified expressions live here.
+	g.emitPreconditionHelpers(w)
+}
+
+// emitStateSymbolFacts appends per-symbol fact assertions to the
+// stateFactsAsClauses body. Scalar bools use mkBoolFact; array-storage
+// function symbols iterate cells and emit per-cell facts.
+func (g *Generator) emitStateSymbolFacts(w *goWriter, sym stateSymbol) {
+	exported := goExportedName(sym.Name)
+	if _, ok := sym.Sort.(*goivy.BooleanSort); ok {
+		w.linef("\tfmlas = append(fmlas, mkBoolFact(%q, state.%s))", sym.Name, exported)
+		return
+	}
+	fs, ok := sym.Sort.(*goivy.LogicFunctionSort)
+	if !ok {
+		// Non-bool scalar (e.g. enum / range). For now we skip;
+		// extending to integer-valued facts is the next sub-step.
+		return
+	}
+	domain := fs.Domain()
+	st := goFunctionStorageFor(g, domain, fs.Range())
+	if st.Kind != goStorageArray {
+		// Hash-thunk: skip (handled by thunk-slot wiring at read time).
+		return
+	}
+	// Only emit bool-valued cells for now — they have a clean
+	// mkBoolFact path. Other-valued cells need a mkCellFact helper
+	// that's scheduled for the next sub-step.
+	if _, ok := fs.Range().(*goivy.BooleanSort); !ok {
+		return
+	}
+	w.linef("\t// Per-cell facts for array-storage symbol %q.", sym.Name)
+	// Emit nested loops over each dim.
+	for i, d := range st.Dims {
+		w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i)
+	}
+	// Build the cell name (e.g. "link(0,1)") and the cell value
+	// expression (state.Link[__i0][__i1]).
+	w.line("\t\tcellName := " + cellNameExpr(sym.Name, len(st.Dims)))
+	cellAcc := "state." + exported
+	for i := range st.Dims {
+		cellAcc += "[__i" + fmt.Sprintf("%d", i) + "]"
+	}
+	w.linef("\t\tfmlas = append(fmlas, mkBoolFact(cellName, %s))", cellAcc)
+	for range st.Dims {
+		w.line("\t}")
+	}
+}
+
+// cellNameExpr returns a Go expression that builds the synthetic
+// per-cell symbol name like "link(0,1)" for `sym` over `arity` dims.
+func cellNameExpr(sym string, arity int) string {
+	var parts []string
+	parts = append(parts, fmt.Sprintf("%q", sym+"("))
+	for i := 0; i < arity; i++ {
+		if i > 0 {
+			parts = append(parts, `","`)
+		}
+		parts = append(parts, fmt.Sprintf("strconv.Itoa(__i%d)", i))
+	}
+	parts = append(parts, `")"`)
+	return strings.Join(parts, " + ")
+}
+
+// emitPreconditionHelpers writes the small helpers each per-action
+// buildPrecondition function leans on for reifying Pre.Fmlas.
+// strconv is added lazily by finalize() when cellNameExpr usage
+// in stateFactsAsClauses references it (array-storage symbols only).
+func (g *Generator) emitPreconditionHelpers(w *goWriter) {
+	w.line("// mkAnd builds the conjunction of fmlas, simplifying the")
+	w.line("// trivial 0/1-term cases.")
+	w.line("func mkAnd(fmlas []goivy.Expr) goivy.Expr {")
+	w.line("\tswitch len(fmlas) {")
+	w.line(`	case 0:`)
+	w.line(`		return goivy.NewConst("true", goivy.Boolean)`)
+	w.line("\tcase 1:")
+	w.line("\t\treturn fmlas[0]")
+	w.line("\t}")
+	w.line("\treturn &goivy.LogicAnd{Terms: fmlas}")
+	w.line("}")
+	w.blank()
+	w.line("// conjClauses returns a fresh Clauses whose fmlas are the")
+	w.line("// concatenation of a.Fmlas and extra.")
+	w.line("func conjClauses(a *goivy.Clauses, extra ...goivy.Expr) *goivy.Clauses {")
+	w.line("\tif a == nil {")
+	w.line("\t\treturn goivy.NewClauses(extra, nil, goivy.EmptyAnnotation{})")
+	w.line("\t}")
+	w.line("\tfmlas := append([]goivy.Expr{}, a.Fmlas...)")
+	w.line("\tfmlas = append(fmlas, extra...)")
+	w.line("\treturn goivy.NewClauses(fmlas, a.Defs, goivy.EmptyAnnotation{})")
 	w.line("}")
 	w.blank()
 }

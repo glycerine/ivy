@@ -314,11 +314,14 @@ func (g *Generator) finalize() (map[string]string, error) {
 		if !e.always && strings.TrimSpace(e.body) == "" {
 			continue
 		}
-		// Auto-add math/big when the body references big.Int.
-		// Cheaper than threading explicit imports through every
-		// emitter that might touch wide BV.
+		// Auto-add imports when the body references their canonical
+		// identifier. Cheaper than threading explicit imports
+		// through every emitter that might touch them.
 		if strings.Contains(e.body, "big.Int") {
 			g.Ctx.AddImport(e.stream, "math/big", "")
+		}
+		if strings.Contains(e.body, "strconv.") {
+			g.Ctx.AddImport(e.stream, "strconv", "")
 		}
 		var b strings.Builder
 		b.WriteString("package ")

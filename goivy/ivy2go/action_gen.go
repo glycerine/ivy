@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+
+	"github.com/glycerine/ivy/goivy"
 )
 
 // action_gen.go mirrors ivy2cpp/action_gen.go. For target=test/gen,
@@ -21,6 +23,11 @@ import (
 // emitActionGenStructs walks the module's actions and emits one
 // actionGen<Name> struct per public action. Only runs for target=test
 // or target=gen.
+//
+// OPEN 055.3: for each action we also emit a buildPrecondition_<Name>
+// helper that conjoins the state facts with a runtime-reified copy
+// of action.GetUpdate(ctx).Pre.Fmlas — so the solver's input
+// synthesis is informed by the action's actual reverse image.
 func (g *Generator) emitActionGenStructs(w *goWriter) {
 	if !g.usesZ3() {
 		return
@@ -29,8 +36,209 @@ func (g *Generator) emitActionGenStructs(w *goWriter) {
 		g.Ctx.AddImport("actions", g.Config.GoivyImportPath, "")
 	}
 	for _, name := range g.actionGenNames() {
+		g.emitPreconditionForAction(w, name)
 		g.emitOneActionGenStruct(w, name)
 	}
+}
+
+// emitPreconditionForAction emits a `buildPrecondition_<Name>` helper
+// per action. The helper conjoins stateFactsAsClauses(state) with
+// the runtime-reified Pre.Fmlas (with __fml:<param> references
+// rewritten to the input symbols __in<i>_<param>).
+//
+// When the Pre can't be reified (unsupported Expr type), the helper
+// just returns the state facts so the round-trip still works.
+func (g *Generator) emitPreconditionForAction(w *goWriter, name string) {
+	act, _ := g.Mod.Actions.Get2(name)
+	if act == nil {
+		return
+	}
+	params := act.GetFormalParams()
+
+	// Compute the action's update at emit time.
+	ctx := &goivy.UpdateContext{
+		Domain: g.Mod,
+		PVars:  map[string]bool{},
+		ActCfg: g.Mod.Cfg.ActCfg,
+	}
+	var update *goivy.Update
+	func() {
+		// goivy.GetUpdate may panic on actions outside its supported
+		// shape (e.g. some thunk forms). Recover and let `update`
+		// stay nil so the rest of emission proceeds.
+		defer func() { _ = recover() }()
+		update = goivy.GetUpdate(act, ctx)
+	}()
+
+	helperName := "buildPrecondition_" + goExportedName(name)
+	// Build the input-symbol substitution: __fml:<param.Name> →
+	// inputs[i]. We collect a Go-source map literal so the
+	// reified Pre can pick the right param by name.
+	paramArgs := make([]string, len(params))
+	for i, p := range params {
+		if p == nil {
+			continue
+		}
+		paramArgs[i] = fmt.Sprintf("__in%d *goivy.Const", i)
+	}
+	w.linef("// %s reifies action %q's Pre clauses at runtime.", helperName, name)
+	w.linef("// Generated from goivy.GetUpdate(action, ctx).Pre at emit time.")
+	w.linef("func %s(state *%s%s) *goivy.Clauses {", helperName, g.StateTypeName, optComma(len(params))+strings.Join(paramArgs, ", "))
+	w.linef("\tbase := stateFactsAsClauses(state)")
+	if update == nil || update.Pre == nil || update.Pre.IsFalse() {
+		// Pre is trivially-false → action always safe → no extra
+		// constraints needed.
+		w.linef("\treturn base")
+		w.line("}")
+		w.blank()
+		return
+	}
+	// Build the param-name → input-symbol substitution map.
+	if len(params) > 0 {
+		w.line("\tparamSub := map[string]*goivy.Const{")
+		for i, p := range params {
+			if p == nil {
+				continue
+			}
+			w.linef("\t\t%q: __in%d,", "__fml:"+p.Name, i)
+			w.linef("\t\t%q: __in%d,", p.Name, i)
+		}
+		w.line("\t}")
+		w.line("\t_ = paramSub")
+	}
+	// Walk each fmla in Pre and reify it.
+	w.line("\tvar extra []goivy.Expr")
+	for _, fmla := range update.Pre.Fmlas {
+		code, ok := g.reifyExprAsGoCode(fmla, params)
+		if !ok {
+			// Unsupported shape — record and skip this fmla.
+			w.linef("\t// OPEN 055.3 unreifiable Pre fmla: %s", strings.ReplaceAll(fmla.String(), "\n", " "))
+			continue
+		}
+		w.linef("\textra = append(extra, %s)", code)
+	}
+	w.line("\treturn conjClauses(base, extra...)")
+	w.line("}")
+	w.blank()
+}
+
+// optComma returns ", " when n > 0, else "". Used to splice the
+// state arg comfortably with the inputs in a function signature.
+func optComma(n int) string {
+	if n > 0 {
+		return ", "
+	}
+	return ""
+}
+
+// reifyExprAsGoCode walks an Expr and returns a Go source string that,
+// when evaluated at runtime, constructs the same Expr. The params
+// slice lets us rewrite formal-param references (`__fml:<name>` or
+// bare param name) to the input symbol __in<i> in the emitted
+// helper's scope.
+//
+// Returns (code, true) on success; (_, false) when the Expr shape
+// isn't supported (caller skips the fmla and emits a comment).
+func (g *Generator) reifyExprAsGoCode(e goivy.Expr, params []*goivy.Const) (string, bool) {
+	if e == nil {
+		return "nil", true
+	}
+	switch n := e.(type) {
+	case *goivy.Const:
+		// Param reference: rewrite to the runtime input symbol.
+		// goivy uses several name conventions for the same formal
+		// parameter ("b", "fml:b", "__fml:b"). Match any of them.
+		for i, p := range params {
+			if p == nil {
+				continue
+			}
+			short := strings.TrimPrefix(strings.TrimPrefix(p.Name, "__fml:"), "fml:")
+			if n.Name == p.Name ||
+				n.Name == short ||
+				n.Name == "fml:"+short ||
+				n.Name == "__fml:"+short {
+				return fmt.Sprintf("__in%d", i), true
+			}
+		}
+		// Plain constant: build a fresh goivy.Const with the
+		// sort reified.
+		sortCode, ok := g.reifySortAsGoCode(n.CSort)
+		if !ok {
+			return "", false
+		}
+		return fmt.Sprintf("goivy.NewConst(%q, %s)", n.Name, sortCode), true
+	case *goivy.LogicNot:
+		body, ok := g.reifyExprAsGoCode(n.Body, params)
+		if !ok {
+			return "", false
+		}
+		return fmt.Sprintf("&goivy.LogicNot{Body: %s}", body), true
+	case *goivy.LogicAnd:
+		parts := make([]string, 0, len(n.Terms))
+		for _, t := range n.Terms {
+			code, ok := g.reifyExprAsGoCode(t, params)
+			if !ok {
+				return "", false
+			}
+			parts = append(parts, code)
+		}
+		return fmt.Sprintf("&goivy.LogicAnd{Terms: []goivy.Expr{%s}}", strings.Join(parts, ", ")), true
+	case *goivy.LogicOr:
+		parts := make([]string, 0, len(n.Terms))
+		for _, t := range n.Terms {
+			code, ok := g.reifyExprAsGoCode(t, params)
+			if !ok {
+				return "", false
+			}
+			parts = append(parts, code)
+		}
+		return fmt.Sprintf("&goivy.LogicOr{Terms: []goivy.Expr{%s}}", strings.Join(parts, ", ")), true
+	case *goivy.LogicImplies:
+		l, ok := g.reifyExprAsGoCode(n.T1, params)
+		if !ok {
+			return "", false
+		}
+		r, ok := g.reifyExprAsGoCode(n.T2, params)
+		if !ok {
+			return "", false
+		}
+		return fmt.Sprintf("&goivy.LogicImplies{T1: %s, T2: %s}", l, r), true
+	case *goivy.LogicIff:
+		l, ok := g.reifyExprAsGoCode(n.T1, params)
+		if !ok {
+			return "", false
+		}
+		r, ok := g.reifyExprAsGoCode(n.T2, params)
+		if !ok {
+			return "", false
+		}
+		return fmt.Sprintf("&goivy.LogicIff{T1: %s, T2: %s}", l, r), true
+	case *goivy.Eq:
+		l, ok := g.reifyExprAsGoCode(n.T1, params)
+		if !ok {
+			return "", false
+		}
+		r, ok := g.reifyExprAsGoCode(n.T2, params)
+		if !ok {
+			return "", false
+		}
+		return fmt.Sprintf("&goivy.Eq{T1: %s, T2: %s}", l, r), true
+	default:
+		return "", false
+	}
+}
+
+// reifySortAsGoCode returns a Go source expression that constructs s.
+// Supports Boolean and named uninterpreted sorts; anything else
+// returns false so the caller falls back.
+func (g *Generator) reifySortAsGoCode(s goivy.Sort) (string, bool) {
+	switch t := s.(type) {
+	case *goivy.BooleanSort:
+		return "goivy.Boolean", true
+	case *goivy.UninterpretedSort:
+		return fmt.Sprintf("&goivy.UninterpretedSort{Name: %q}", t.Name), true
+	}
+	return "", false
 }
 
 // actionGenNames returns the actions eligible for action-gen
@@ -109,8 +317,22 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 	}
 	w.line("var modelResult *goivy.ModelResult")
 	w.line("if g.sol != nil {")
-	w.line("\t// OPEN 055.2: seed the precondition with state facts.")
-	w.line("\tpreclauses := stateFactsAsClauses(state)")
+	w.line("\t// OPEN 055.3: seed with state facts AND the action's")
+	w.line("\t// own reified Pre clauses (action-specific).")
+	preInputs := make([]string, 0, len(params))
+	for i, p := range params {
+		if p == nil {
+			continue
+		}
+		_ = p
+		preInputs = append(preInputs, fmt.Sprintf("__in%d", i))
+	}
+	preCall := "buildPrecondition_" + goExportedName(name) + "(state"
+	if len(preInputs) > 0 {
+		preCall += ", " + strings.Join(preInputs, ", ")
+	}
+	preCall += ")"
+	w.linef("\tpreclauses := %s", preCall)
 	w.line("\tmodelResult, _ = g.sol.GetModelClauses(preclauses)")
 	w.line("}")
 	w.line("_ = modelResult")
