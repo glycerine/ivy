@@ -32,66 +32,64 @@ func (g *Generator) emitAssign(w *goWriter, a *goivy.LogicAssignAction) {
 }
 
 // emitAssignLarge wraps the RHS in a thunk closure (from M8) and
-// assigns that thunk to the LHS storage. Used when the quantifier
-// variables have no derivable iteration bounds, so we can't expand
-// the assignment into explicit loops.
+// installs it as the read-side fallback on the LHS state field.
+// Used when the quantifier variables have no derivable iteration
+// bounds, so we can't expand the assignment into explicit loops.
 //
-// The thunk struct memoises on first read of each domain tuple, so
-// the semantics match the in-loop assignment but defers the work to
-// lookup time.
+// OPEN 061.1 lands the read-side wiring: the State struct carries
+// a `__thunk_<sym> func(K) V` slot per hash-thunk symbol, and the
+// per-symbol `get<sym>(k)` helper falls through to it on map miss.
+// emitAssignLarge writes both:
 //
-// Note: this requires the LHS storage to be a map[K]V-shaped thunk
-// (goStorageHashThunk) — array-storage LHSes with unbounded vars
-// are by definition impossible (their loop bounds would be known).
+//	s.<Sym> = map[K]V{}                  // clear explicit entries
+//	s.__thunk_<Sym> = newthunk_N(...).get // install thunk method-value
+//
+// Subsequent reads through `s.get<Sym>(k)` consult the (now empty)
+// map first, then the thunk, then return zero.
 func (g *Generator) emitAssignLarge(w *goWriter, a *goivy.LogicAssignAction, vs []*goivy.LogicVariable) {
-	// Build the thunk: lambda(vs...) → a.RHS.
 	thunkExpr, err := g.makeThunk(vs, a.RHS)
 	if err != nil {
 		g.unsupported(w, "thunk emission for unbounded assignment: %s", err.Error())
 		return
 	}
-	// The thunk constructor returns a *thunk_N. We need to install
-	// it as a callable backing store for the LHS function symbol.
-	// For Go, the simplest faithful shape is to replace the LHS
-	// map with a fresh one whose values are computed lazily via
-	// the thunk: we don't actually back the map with the thunk
-	// (Go maps aren't lazy), but we *eagerly evaluate* the thunk
-	// over the (unknown) domain. Since we can't enumerate, we
-	// instead leave the map empty and document that reads through
-	// the LHS will go through a thunk-style getter that callers
-	// must already use.
-	//
-	// For the M8-compatible runtime path the actual semantics is:
-	//   1. Clear the LHS map.
-	//   2. Stash the thunk on a parallel field of *State (auto-
-	//      provisioned name: __lhs_thunk_<sym>) so action methods
-	//      that read the LHS can fall back to it on map miss.
-	//
-	// This is a partial port: the M8 hash_thunk's lazy semantics
-	// aren't fully wired through into read-side emission yet. We
-	// emit a thunk construction and a comment marker so callers
-	// see the intended shape, with a follow-up to thread the
-	// read-side lookup. Tracked in OPEN 061.1.
-	lhsCode, err := g.emitExpr(a.LHS)
-	if err != nil {
-		g.unsupported(w, "thunk-fallback lhs: %s", err.Error())
+	root := lhsRootName(a.LHS)
+	if root == "" {
+		g.unsupported(w, "thunk-fallback LHS has no root symbol")
 		return
 	}
-	// Extract the LHS root symbol name so the emitted code knows
-	// which State field to reset.
-	root := lhsRootName(a.LHS)
-	w.linef("// OPEN 061: thunk fallback for unbounded quantified LHS %q.", root)
-	w.linef("// Reset map storage; reads must use the thunk's get() on miss.")
-	w.linef("_ = %s", lhsCode)
-	w.linef("__thunk := %s", thunkExpr)
-	w.line("_ = __thunk")
-	w.linef("// OPEN 061.1: wire reads of %s through __thunk.get(k).", root)
+	if !g.isStateSymbolName(root) {
+		g.unsupported(w, "thunk-fallback root %q is not a state symbol", root)
+		return
+	}
+	field := "s." + goExportedName(root)
+	thunkField := "s.__thunk_" + goExportedName(root)
+	// Look up the LHS sort to build the map clear with the right type.
+	entry, ok := g.Mod.Sig.Symbols.Get2(root)
+	if !ok {
+		g.unsupported(w, "thunk-fallback root %q not in signature", root)
+		return
+	}
+	fs, ok := entry.Sort.(*goivy.LogicFunctionSort)
+	if !ok {
+		g.unsupported(w, "thunk-fallback root %q is not a function-sorted symbol", root)
+		return
+	}
+	mapType := g.goType(entry.Sort)
+	_ = fs
+	w.linef("%s = %s{}", field, mapType)
+	w.linef("%s = (%s).get", thunkField, thunkExpr)
 }
 
 // emitAssignSimple ports ivy2cpp/assign.go emitAssignSimple.
 // Trace-LHS emission (Config.Trace) is handled separately in vprint.go.
+//
+// OPEN 061.1: LHS emission runs with lhsContext=true so map-backed
+// hash-thunk symbols produce an assignable `s.X[k]` form instead of
+// the getter call non-assignment readers see.
 func (g *Generator) emitAssignSimple(w *goWriter, a *goivy.LogicAssignAction) {
+	g.lhsContext = true
 	lhs, err := g.emitExpr(a.LHS)
+	g.lhsContext = false
 	if err != nil {
 		g.unsupported(w, "unsupported assignment lhs: %s", err.Error())
 		return
@@ -194,8 +192,11 @@ func (g *Generator) emitAssignmentLoopsBody(w *goWriter, vs []*goivy.LogicVariab
 		}
 		w.linef("%s = %s", keyExpr, rhsCode)
 	} else {
-		// lhs[loop vars] = tmp[key]
+		// lhs[loop vars] = tmp[key]. LHS context is on so the
+		// emitted lhs is assignable (raw map index, not getter).
+		g.lhsContext = true
 		lhsCode, err := g.emitExpr(rhsOrLHS)
+		g.lhsContext = false
 		if err != nil {
 			g.unsupported(w, "unsupported lhs in two-phase: %s", err.Error())
 			for range closers {

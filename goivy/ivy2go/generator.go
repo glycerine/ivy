@@ -63,6 +63,12 @@ type Generator struct {
 	numberFormatCache    string
 	numberFormatComputed bool
 
+	// lhsContext is set transiently by emitAssign / emitAssignTwoPhase
+	// while emitting the LHS expression so goStorageAccess produces
+	// an assignable form (raw map index) rather than the getter
+	// call. OPEN 061.1.
+	lhsContext bool
+
 	errs []error
 }
 

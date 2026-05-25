@@ -39,10 +39,11 @@ relation link(N1: node, N2: node)
 	}
 }
 
-func TestEmitAssign_UnboundedQuantifiedLHSWrapsInThunk(t *testing.T) {
+func TestEmitAssign_UnboundedQuantifiedLHSInstallsThunkOnState(t *testing.T) {
 	// An uninterpreted sort with no known cardinality has no
-	// derivable loop bounds — should route through emitAssignLarge
-	// and emit a thunk construction.
+	// derivable loop bounds — emitAssignLarge clears the map and
+	// installs the thunk on the per-symbol __thunk_<sym> slot
+	// (OPEN 061.1).
 	g := newExprGen(t, `
 type node
 relation slot(N: node)
@@ -58,11 +59,34 @@ relation slot(N: node)
 	w := newGoWriter(NewGoText())
 	g.emitAction(&w, a)
 	got := w.String()
-	if !strings.Contains(got, "OPEN 061:") {
-		t.Errorf("thunk-fallback path should mark OPEN 061, got:\n%s", got)
+	if !strings.Contains(got, "s.Slot = map[Node]bool{}") {
+		t.Errorf("thunk fallback should clear the map, got:\n%s", got)
 	}
-	if !strings.Contains(got, "__thunk :=") {
-		t.Errorf("thunk-fallback should construct a thunk, got:\n%s", got)
+	if !strings.Contains(got, "s.__thunk_Slot = (newthunk_0()).get") {
+		t.Errorf("thunk fallback should install thunk on State slot, got:\n%s", got)
+	}
+}
+
+func TestEmitState_HashThunkSymbolGetsThunkSlotAndGetter(t *testing.T) {
+	// Symbol with map storage should produce both a __thunk_<sym>
+	// slot and a get<Sym> helper.
+	mod := compileIvySource(t, `
+type node = {0..2048}
+relation slot(N: node)
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	state := out.Files["state.go"]
+	if !strings.Contains(state, "__thunk_Slot func(Node) bool") {
+		t.Errorf("hash-thunk symbol should declare __thunk_Slot field, got:\n%s", state)
+	}
+	if !strings.Contains(state, "func (s *State) getSlot(k Node) bool {") {
+		t.Errorf("hash-thunk symbol should emit getSlot helper, got:\n%s", state)
+	}
+	if !strings.Contains(state, "if s.__thunk_Slot != nil { return s.__thunk_Slot(k) }") {
+		t.Errorf("getter should fall back to thunk, got:\n%s", state)
 	}
 }
 

@@ -263,17 +263,19 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 	return g.goStorageAccess(name, fnExpr.NodeSort(), args), nil
 }
 
-// goStorageAccess returns the Go expression that reads function /
-// relation symbol `name` with the given args. Mirrors ivy2cpp/expr.go
-// cppStorageAccess but lowers to Go array / map indexing.
+// goStorageAccess returns the Go expression that reads or writes
+// function / relation symbol `name` with the given args. Mirrors
+// ivy2cpp/expr.go cppStorageAccess but lowers to Go array / map
+// indexing.
 //
 //   - Scalar (no args):              s.<Name>
 //   - Array storage (small fns):     s.<Name>[arg0][arg1]…
-//   - Hash-thunk storage (large fns):s.<Name>[<keyExpr>]
+//   - Hash-thunk read (lhsContext=false): s.get<Name>(<key>)
+//   - Hash-thunk write (lhsContext=true): s.<Name>[<key>]
 //
-// The leading `s.` receiver is appropriate when this expression lives
-// inside an action method on *State; we always emit it for now and
-// rely on M4/M5 to refine the addressing model if needed.
+// The lhsContext gate (OPEN 061.1) lets emitAssign emit an
+// assignable map expression while non-assignment readers transparently
+// fall through to the thunk slot.
 func (g *Generator) goStorageAccess(name string, fnSort goivy.Sort, args []string) string {
 	field := "s." + goExportedName(name)
 	if len(args) == 0 {
@@ -295,24 +297,28 @@ func (g *Generator) goStorageAccess(name string, fnSort goivy.Sort, args []strin
 		}
 		return b.String()
 	case goStorageHashThunk:
-		if len(args) == 1 {
-			return field + "[" + args[0] + "]"
-		}
-		keyType := goCTupleNameWith(g, fs.Domain())
-		var b strings.Builder
-		b.WriteString(field)
-		b.WriteByte('[')
-		b.WriteString(keyType)
-		b.WriteByte('{')
-		for i, a := range args {
-			if i > 0 {
-				b.WriteString(", ")
+		// Read context routes through the per-symbol getter so the
+		// thunk slot is honoured. Write context (LHS of assignment)
+		// must produce an assignable expression — raw map index.
+		key := args[0]
+		if len(args) > 1 {
+			keyType := goCTupleNameWith(g, fs.Domain())
+			var b strings.Builder
+			b.WriteString(keyType)
+			b.WriteByte('{')
+			for i, a := range args {
+				if i > 0 {
+					b.WriteString(", ")
+				}
+				b.WriteString(a)
 			}
-			b.WriteString(a)
+			b.WriteByte('}')
+			key = b.String()
 		}
-		b.WriteByte('}')
-		b.WriteByte(']')
-		return b.String()
+		if g.lhsContext {
+			return field + "[" + key + "]"
+		}
+		return "s.get" + goExportedName(name) + "(" + key + ")"
 	default:
 		return field
 	}

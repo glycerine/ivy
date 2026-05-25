@@ -15,14 +15,70 @@ import (
 // State struct with one exported field per symbol. Function-sorted
 // symbols use the storage decided in goFunctionStorageFor (per
 // ARCHITECTURE_TODO.md §3.5.4): scalar / fixed array / map[K]V.
+//
+// OPEN 061.1: hash-thunk-backed symbols also get a parallel
+// __thunk_<sym> closure slot (default nil). emitAssignLarge installs
+// the thunk at write-time; per-symbol get<Sym>(k) routes reads
+// through map → thunk → zero.
 func (g *Generator) emitStateStruct(w *goWriter) {
 	w.linef("// %s holds the runtime state of the Ivy module.", g.StateTypeName)
 	w.open(fmt.Sprintf("type %s struct {", g.StateTypeName))
 	for _, sym := range g.stateSymbols() {
 		w.linef("%s %s", goExportedName(sym.Name), g.goType(sym.Sort))
+		if g.symbolNeedsThunkSlot(sym.Sort) {
+			fs := sym.Sort.(*goivy.LogicFunctionSort)
+			keyT, valT := g.thunkSlotTypes(fs)
+			w.linef("__thunk_%s func(%s) %s", goExportedName(sym.Name), keyT, valT)
+		}
 	}
 	w.close("")
 	w.blank()
+	// Emit per-symbol getters that route through the thunk slot.
+	g.emitStateGetters(w)
+}
+
+// emitStateGetters writes a get<Sym>(k) helper for every hash-thunk
+// state symbol so reads can transparently fall back through map →
+// thunk → zero. Mirrors the read-side wiring ivy2cpp does inline
+// for hash_thunk<K, V>.
+func (g *Generator) emitStateGetters(w *goWriter) {
+	for _, sym := range g.stateSymbols() {
+		if !g.symbolNeedsThunkSlot(sym.Sort) {
+			continue
+		}
+		fs := sym.Sort.(*goivy.LogicFunctionSort)
+		keyT, valT := g.thunkSlotTypes(fs)
+		exported := goExportedName(sym.Name)
+		w.linef("// get%s returns %s[k] with thunk fallback. Mirrors the", exported, exported)
+		w.line("// read-side semantics of ivy2cpp's hash_thunk<K,V>::operator[].")
+		w.linef("func (s *%s) get%s(k %s) %s {", g.StateTypeName, exported, keyT, valT)
+		w.linef("\tif v, ok := s.%s[k]; ok { return v }", exported)
+		w.linef("\tif s.__thunk_%s != nil { return s.__thunk_%s(k) }", exported, exported)
+		w.linef("\tvar z %s", valT)
+		w.line("\treturn z")
+		w.line("}")
+		w.blank()
+	}
+}
+
+// symbolNeedsThunkSlot reports whether the symbol's storage is the
+// hash-thunk (map[K]V) form. Only those symbols need the parallel
+// thunk-closure field.
+func (g *Generator) symbolNeedsThunkSlot(s goivy.Sort) bool {
+	fs, ok := s.(*goivy.LogicFunctionSort)
+	if !ok {
+		return false
+	}
+	st := goFunctionStorageFor(g, fs.Domain(), fs.Range())
+	return st.Kind == goStorageHashThunk
+}
+
+// thunkSlotTypes returns the (key, val) Go types for a hash-thunk
+// symbol — used both for the State field type and the get<Sym>
+// helper signature.
+func (g *Generator) thunkSlotTypes(fs *goivy.LogicFunctionSort) (string, string) {
+	st := goFunctionStorageFor(g, fs.Domain(), fs.Range())
+	return st.KeyType, st.RangeType
 }
 
 // emitNewState emits the NewState constructor. Maps are allocated;
