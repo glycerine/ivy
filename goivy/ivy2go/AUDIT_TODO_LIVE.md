@@ -281,9 +281,71 @@ runtime helpers linked.
 
 ---
 
-## OPEN — no open items
+## DONE 055.5 — CompiledBound RangeSort reification
 
-All known sub-items addressed. The remaining unreifiable cases
-(CompiledBound range sorts; module-context-dependent symbols) are
-edge cases that would only surface for specific Ivy modules and
-can be addressed reactively as they appear.
+OPEN-pass.
+
+`action_gen.go` `reifyBoundAsGoCode` handles both `NumeralBound`
+(value + sort, direct struct literal) and `CompiledBound` (recurses
+into the inner Expr via `reifyExprAsGoCode`). The RangeSort case in
+`reifySortAsGoCode` now delegates both bounds to that helper, so a
+range with either kind of bound reifies cleanly.
+
+## DONE 055.6 — Module-context symbol resolution
+
+OPEN-pass. Driving the build-smoke against three harder fixtures
+(enum require, range require, struct-destr param) surfaced three
+real, previously-hidden bugs that have all been fixed:
+
+1. **Wrong Solver/Translator access path** in `runtime.go`'s
+   `pickBoolOrChoose` / `pickUintOrChoose`. `ModelResult.Solver` is
+   `*smt.Z3Solver`, not `*goivy.Solver`, so it has no `Translator()`
+   method. Helpers now take the `*goivy.Solver` explicitly as their
+   first arg, call `sol.Translator().TermToZ3(sym)` (the correct
+   API — `FormulaToZ3` doesn't exist on `Translator`). All call sites
+   in `action_gen.go` pass `g.sol`. The bug was latent until
+   non-empty-param actions started emitting pick helpers (zero-arg
+   actions short-circuit before requiring them).
+
+2. **Range-numeral type mismatch.** `emitRangeNumeral` previously
+   returned `func() int { … }()` even when the numeral's range sort
+   was named (`type Idx int`). Comparing `i < 4` where `i: Idx`
+   tripped Go's type checker. The IIFE now returns the named type
+   and binds typed `lo` / `hi` locals so the comparison stays
+   homogeneous.
+
+3. **Struct-typed action params.** Action params of destructor /
+   variant record types (e.g. `p: point`) tried to lower to
+   `Point(ivyChoose(2))` (and analogously `Point(n)` in the REPL
+   parser) — both invalid since structs aren't numeric. Both
+   call sites now use the Go zero value (`var v0 Point`) plus a
+   suppression note; real struct synthesis is a future enhancement
+   (OPEN 055.7 below).
+
+Verification: `TestSmoke_BuildEmittedTest_EnumPre`,
+`TestSmoke_BuildEmittedTest_RangePre`,
+`TestSmoke_BuildEmittedTest_ForAllPre`,
+`TestSmoke_BuildEmittedTest_StructDestrParam` —
+all four heavy build smokes pass under `SLOW_GO_TEST=1`,
+exercising real `goivy.NewSolver` + `Translator.TermToZ3` +
+`GetModelClauses` + `ModelResult.Eval` round-trips through the
+emitted code.
+
+---
+
+## OPEN — last residual
+
+### OPEN 055.7 — Solver-driven synthesis for struct-typed inputs
+
+Action params of record / variant types currently default to the
+Go zero value in actionGen.Generate (and to a zero value in the
+REPL arg parser). To synthesise those structurally we'd need to:
+
+  - Declare a fresh `*goivy.Const` per destructor field (or per
+    variant tag), in the same way scalar params are declared.
+  - Build the precondition with each field as an input goivy.Const.
+  - Read each field value from the model and assemble the struct.
+
+This is structural extension of the existing pickInput pipeline;
+the Solver wiring is already in place. No fixture has demanded it
+yet.
