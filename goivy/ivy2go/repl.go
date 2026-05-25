@@ -69,6 +69,7 @@ func (g *Generator) emitReplDispatch(w *goWriter) {
 	w.close("")
 	w.line("name := tokens[0]")
 	w.line("args := tokens[1:]")
+	w.line("_ = args // may be empty when no action takes inputs")
 	w.line("switch name {")
 
 	for _, name := range g.replActionNames() {

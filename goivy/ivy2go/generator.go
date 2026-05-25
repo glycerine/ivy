@@ -168,7 +168,12 @@ func (g *Generator) generate() error {
 	g.emitDefinitions()
 	g.emitThunks()
 	g.emitNative()
-	if g.Config.RequestedTarget != "class" && (g.Config.Target == "repl" || g.Config.Target == "test") {
+	// REPL helpers are only useful for the repl target. The test
+	// target drives actions via actionGen_* in main.go, not by
+	// reading commands from stdin — emitting repl.go alongside
+	// test would leave unused (and potentially type-broken)
+	// dispatch code.
+	if g.Config.RequestedTarget != "class" && g.Config.Target == "repl" {
 		g.emitRepl()
 	}
 	if g.Config.EmitMain {
@@ -329,9 +334,10 @@ func (g *Generator) emitReplMain() {
 //	    fmt.Println("test_completed")
 //	}
 func (g *Generator) emitTestMain() {
+	// Request parseTestItersFlag up front so emitRuntimeHelpersLate
+	// emits it regardless of whether the empty-actions branch fires.
+	g.Ctx.OnceGlobals["__need_testflags"] = true
 	g.Ctx.AddImport("main", "fmt", "")
-	g.Ctx.AddImport("main", "os", "")
-	g.Ctx.AddImport("main", "strconv", "")
 
 	names := g.actionGenNames()
 
@@ -342,6 +348,7 @@ func (g *Generator) emitTestMain() {
 	g.main.blank()
 	if len(names) == 0 {
 		// Module has no public actions to drive — just complete.
+		g.main.line("_ = iters")
 		g.main.line(`fmt.Println("test_completed")`)
 		g.main.close("")
 		return
@@ -370,16 +377,12 @@ func (g *Generator) emitTestMain() {
 	g.main.line("}()")
 	g.main.blank()
 	g.main.line("for i := 0; i < iters; i++ {")
+	g.main.line("\t_ = i")
 	g.main.line("\tidx := ivyChoose(len(actions))")
 	g.main.line("\tactions[idx].generate(state)")
-	g.main.line("\t_ = i")
 	g.main.line("}")
 	g.main.line(`fmt.Println("test_completed")`)
-	g.main.line("_ = os.Stderr")
-	g.main.line("_ = strconv.Itoa")
 	g.main.close("")
-	// Mark that the runtime needs parseTestItersFlag.
-	g.Ctx.OnceGlobals["__need_testflags"] = true
 }
 
 // finalize composes each stream into a complete .go source file

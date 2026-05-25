@@ -355,7 +355,13 @@ ivy2cpp-check:
 	cd tmp-ivy2cpp-check && XTRACE_OFF=1 ivy2cpp isolate=left_player target=test build=true pingpong.ivy
 
 ivy2go-check:
+	go install ./cmd/ivy2go
 	rm -rf tmp-ivy2go-check
 	mkdir tmp-ivy2go-check
 	cp ../ivy-lang-examples/doc/examples/pingpong.ivy tmp-ivy2go-check/
-	cd tmp-ivy2go-check && XTRACE_OFF=1 ivy2go isolate=left_player target=test build=true pingpong.ivy
+	cd tmp-ivy2go-check && XTRACE_OFF=1 ivy2go isolate=left_player target=test package=main build=true pingpong.ivy
+	@echo
+	@echo "built binary: tmp-ivy2go-check/pingpong/pingpong"
+	@file tmp-ivy2go-check/pingpong/pingpong
+	@echo
+	@echo "run with: ./tmp-ivy2go-check/pingpong/pingpong --iters=10"

@@ -62,20 +62,28 @@ func BuildPlanFor(out *Output, outDir string) (*BuildPlan, error) {
 	if isWindows() {
 		binaryName += ".exe"
 	}
-	plan.OutputPath = filepath.Join(pkgDir, binaryName)
-	plan.Args = []string{"build", "-o", plan.OutputPath, "."}
+	// Resolve OutputPath to an absolute path so the recorded path
+	// matches where `go build` actually writes the binary. The
+	// `-o` arg passed to `go build` is the bare name so it lands
+	// in pkgDir (which is cmd.Dir).
+	absPkgDir, err := filepath.Abs(pkgDir)
+	if err != nil {
+		return nil, fmt.Errorf("ivy2go: cannot resolve package dir: %w", err)
+	}
+	plan.OutputPath = filepath.Join(absPkgDir, binaryName)
+	plan.Args = []string{"build", "-o", binaryName, "."}
 	return plan, nil
 }
 
 // BuildOutput writes out to outDir and runs `go build`. Returns the
 // produced binary path (or empty string for CompileOnly plans).
 //
-// If the resulting package directory has no enclosing go.mod,
-// BuildOutput returns a clear actionable error instead of letting
-// `go build` fail with a cryptic message. ivy2go intentionally does
-// NOT emit a go.mod (or a `replace` directive) — the user is
-// expected to place outdir inside an existing Go module (or a
-// go.work workspace) so the goivy import resolves naturally.
+// Preflight checks (each returns a clear, actionable error):
+//   - The package directory has an enclosing go.mod. ivy2go does NOT
+//     emit a go.mod; place outdir inside an existing Go module.
+//   - For non-class targets, the resolved PackageName must be "main"
+//     so `func main()` actually lands. Without this, `go build`
+//     silently produces a .a archive instead of an executable.
 func BuildOutput(out *Output, outDir string) (string, error) {
 	if err := WriteOutput(out, outDir); err != nil {
 		return "", err
@@ -85,6 +93,9 @@ func BuildOutput(out *Output, outDir string) (string, error) {
 		return "", err
 	}
 	if err := checkBuildContext(plan.PackageDir, out); err != nil {
+		return "", err
+	}
+	if err := checkBuildableBinary(out); err != nil {
 		return "", err
 	}
 	cmd := exec.Command(plan.GoBin, plan.Args...)
@@ -97,6 +108,26 @@ func BuildOutput(out *Output, outDir string) (string, error) {
 		return "", fmt.Errorf("ivy2go: go build failed: %v\n%s", err, string(output))
 	}
 	return plan.OutputPath, nil
+}
+
+// checkBuildableBinary errors when the resolved Config would
+// produce a Go library (.a archive) instead of an executable.
+// `func main()` can only live in `package main`, so non-class
+// targets with a non-main PackageName silently fail to produce a
+// binary — surface that upfront.
+func checkBuildableBinary(out *Output) error {
+	if out.Config.RequestedTarget == "class" {
+		// class target is library-only by design (CompileOnly plan).
+		return nil
+	}
+	if out.PackageName == "main" {
+		return nil
+	}
+	return fmt.Errorf(`ivy2go: cannot build executable for target=%s with package=%q.
+Go's `+"`func main()`"+` only lives in package main; without it the build
+produces a .a archive, not an executable. Pass package=main on the
+command line (or set Config.PackageName = "main" in code).`,
+		out.Config.RequestedTarget, out.PackageName)
 }
 
 // checkBuildContext verifies the emitted package is inside an
