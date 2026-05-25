@@ -116,13 +116,21 @@ func goScalarTypeWith(g *Generator, s goivy.Sort) string {
 			if g.hasNatInterp(st) {
 				return "uint64"
 			}
+			// Range-interpreted UninterpretedSort (e.g. `type idx
+			// = {0..7}`): emitSortDecls declared `type Idx int`,
+			// so use that named type rather than falling back to
+			// goCardinalType. This keeps fields, params, and map
+			// keys spellable via the declared name.
+			if _, ok := g.rangeSortFor(st); ok && st.Name != "" {
+				return goExportedName(st.Name)
+			}
+		}
+		if st.Name != "" {
+			return goExportedName(st.Name)
 		}
 		card := goSortCard(g, st)
 		if card > 0 {
 			return goCardinalType(card)
-		}
-		if st.Name != "" {
-			return goExportedName(st.Name)
 		}
 		return "int"
 	default:
@@ -212,12 +220,22 @@ func goFunctionStorageFor(g *Generator, domain []goivy.Sort, rng goivy.Sort) goF
 // goIsAnyIntegerType mirrors ivy2cpp/types.go cppIsAnyIntegerType.
 // Returns true when the sort lowers to a Go type usable as an array
 // index (so we can pack it into a flat array).
+//
+// Named integer-backed types (e.g. `type Idx int` for a range sort)
+// count too: although their declared name isn't in the primitive
+// switch below, the underlying repr is integer.
 func goIsAnyIntegerType(g *Generator, s goivy.Sort) bool {
 	if _, ok := s.(*goivy.LogicEnumeratedSort); ok {
 		return true
 	}
+	if _, ok := s.(*goivy.RangeSort); ok {
+		return true
+	}
 	if g != nil {
 		if it, ok := g.goInterpType(s); ok && it.Kind == goInterpBV {
+			return true
+		}
+		if _, ok := g.rangeSortFor(s); ok {
 			return true
 		}
 	}

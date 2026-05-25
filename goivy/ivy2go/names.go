@@ -118,9 +118,10 @@ func goIdent(name string) string {
 }
 
 // goExportedName returns an exported Go identifier (PascalCase) derived
-// from name. Used for top-level types, action methods, exported fields.
-// If the lowered identifier would start with a digit, it's prefixed
-// with "X" so the Go compiler accepts it.
+// from name. snake_case input ("set_flag") becomes PascalCase ("SetFlag")
+// so emitted methods read naturally. If the lowered identifier would
+// start with a digit, it's prefixed with "X" so the Go compiler accepts
+// it.
 func goExportedName(name string) string {
 	id := varName(name)
 	if id == "" {
@@ -129,7 +130,22 @@ func goExportedName(name string) string {
 	if id[0] >= '0' && id[0] <= '9' {
 		id = "X" + id
 	}
-	return upperFirst(id)
+	// snake_case → PascalCase: split on '_', capitalise each part,
+	// rejoin. Empty parts (e.g. "foo__bar" → ["foo","","bar"]) get
+	// dropped so we don't introduce stutter.
+	parts := strings.Split(id, "_")
+	var b strings.Builder
+	for _, p := range parts {
+		if p == "" {
+			continue
+		}
+		b.WriteString(upperFirst(p))
+	}
+	out := b.String()
+	if out == "" {
+		return "X"
+	}
+	return out
 }
 
 // goPackageName returns a valid Go package name derived from base.

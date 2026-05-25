@@ -56,6 +56,13 @@ type Generator struct {
 	encodedSorts       map[string]bool
 	importCallersCache map[string]bool
 
+	// numberFormatCache memoizes numberFormat() so we don't re-scan
+	// module attributes on every trace line. Empty string until
+	// computed; readers should call numberFormat() which initializes
+	// it on first use.
+	numberFormatCache    string
+	numberFormatComputed bool
+
 	errs []error
 }
 
@@ -155,7 +162,7 @@ func (g *Generator) generate() error {
 	g.emitDefinitions()
 	g.emitThunks()
 	g.emitNative()
-	if g.Config.Target == "repl" || g.Config.Target == "test" {
+	if g.Config.RequestedTarget != "class" && (g.Config.Target == "repl" || g.Config.Target == "test") {
 		g.emitRepl()
 	}
 	if g.Config.EmitMain {
@@ -202,23 +209,20 @@ func (g *Generator) emitTypes() {
 }
 
 func (g *Generator) emitState() {
-	g.state.linef("// state.go: %s struct + NewState. Filled in by M5.", g.StateTypeName)
-	g.state.linef("type %s struct{}", g.StateTypeName)
-	g.state.blank()
-	g.state.linef("func New%s() *%s { return &%s{} }", g.StateTypeName, g.StateTypeName, g.StateTypeName)
+	g.emitStateStruct(&g.state)
+	g.emitNewState(&g.state)
 }
 
 func (g *Generator) emitActions() {
-	g.actions.line("// actions.go: action methods on *State. Filled in by M4.")
+	g.emitActionMethods(&g.actions)
 }
 
 func (g *Generator) emitInit() {
-	g.init.line("// init.go: (*State).Init body. Filled in by M5.")
-	g.init.linef("func (s *%s) Init() {}", g.StateTypeName)
+	g.emitInitMethod(&g.init)
 }
 
 func (g *Generator) emitRuntime() {
-	g.runtime.line("// runtime.go: package-level helpers. Filled in by M3+.")
+	g.emitRuntimeHelpers(&g.runtime)
 }
 
 func (g *Generator) emitNondet() {
@@ -242,13 +246,29 @@ func (g *Generator) emitNative() {
 }
 
 func (g *Generator) emitRepl() {
-	g.repl.line("// repl.go: REPL command reader. Filled in by M7.")
+	g.emitReplLoop(&g.repl)
+	// Tick lives in the runtime stream so it's available to both
+	// REPL and non-REPL targets.
+	g.emitTickMethod(&g.runtime)
 }
 
 func (g *Generator) emitMain() {
-	g.main.line("// main.go: program entry point. Filled in by M5+.")
+	hasRepl := g.Config.RequestedTarget != "class" && (g.Config.Target == "repl" || g.Config.Target == "test")
+	if hasRepl {
+		g.Ctx.AddImport("main", "fmt", "")
+		g.Ctx.AddImport("main", "os", "")
+	}
 	g.main.open("func main() {")
-	g.main.linef("_ = New%s()", g.StateTypeName)
+	g.main.linef("state := New%s()", g.StateTypeName)
+	g.main.line("state.Init()")
+	if hasRepl {
+		g.main.line("if err := runRepl(state, os.Stdin, os.Stdout); err != nil {")
+		g.main.line(`	fmt.Fprintln(os.Stderr, err)`)
+		g.main.line(`	os.Exit(1)`)
+		g.main.line("}")
+	} else {
+		g.main.line("_ = state")
+	}
 	g.main.close("")
 }
 
