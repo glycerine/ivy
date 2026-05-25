@@ -353,3 +353,9 @@ ivy2cpp-check:
 	mkdir tmp-ivy2cpp-check
 	cp ../ivy-lang-examples/doc/examples/pingpong.ivy tmp-ivy2cpp-check/
 	cd tmp-ivy2cpp-check && XTRACE_OFF=1 ivy2cpp isolate=left_player target=test build=true pingpong.ivy
+
+ivy2go-check:
+	rm -rf tmp-ivy2go-check
+	mkdir tmp-ivy2go-check
+	cp ../ivy-lang-examples/doc/examples/pingpong.ivy tmp-ivy2go-check/
+	cd tmp-ivy2go-check && XTRACE_OFF=1 ivy2go isolate=left_player target=test build=true pingpong.ivy
