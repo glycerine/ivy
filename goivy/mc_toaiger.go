@@ -325,6 +325,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	}
 
 	propAbs := NewPropAbs(stVarSet, sortConstants, mod.Sig.Interp)
+	propAbs.Constructors = mod.Sig.Constructors
 	paFmlas, paDefs := propAbs.Apply(trans.Fmlas, defsToNodes(trans.Defs))
 	trans = NewClauses(paFmlas, nodesToDefs(paDefs), trans.Annot)
 

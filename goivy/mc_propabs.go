@@ -16,7 +16,7 @@ import (
 
 // PropAbs holds the state for propositional abstraction of non-finite atoms.
 // Non-propositional atoms (quantifiers, non-finite-sort applications) are
-// replaced with fresh boolean variables.
+// replaced with fresh variables of the abstracted expression's sort.
 //
 // Python: ivy_mc.py:1287-1318
 type PropAbs struct {
@@ -39,6 +39,8 @@ type PropAbs struct {
 	SortConstants *InsMap[string, []*Const]
 	// Sort interpretation table used to recognize finite interpreted sorts.
 	Interp map[string]interface{}
+	// Constructors are excluded from finite symbol state tracking.
+	Constructors map[string]bool
 	// Accumulated formulas from abstraction
 	Fmlas []Expr
 }
@@ -66,7 +68,11 @@ func (pa *PropAbs) isFiniteSort(s Sort) bool {
 	return isFiniteSort(s)
 }
 
-// newProp returns the abstract proposition for an expression.
+func (pa *PropAbs) isConstructor(c *Const) bool {
+	return pa != nil && pa.Constructors != nil && pa.Constructors[c.Name]
+}
+
+// newProp returns the abstract variable for an expression.
 // If the expression is a "prev_expr" (refers to next-state of a state var),
 // it links the new variable to the old one.
 // Python: ivy_mc.py:1287-1303
@@ -90,7 +96,7 @@ func (pa *PropAbs) newProp(expr Expr) *Const {
 
 	name := fmt.Sprintf("__abs[%d]", pa.Ctr)
 	pa.Ctr++
-	res := NewConst(name, Boolean)
+	res := NewConst(name, expr.NodeSort())
 	pa.Map.Set(key, res)
 	pa.OrigExprs.Set(key, expr)
 	return res
@@ -156,7 +162,7 @@ func (pa *PropAbs) MkPropAbs(expr Expr) Expr {
 
 	// Track finite symbols (non-numeral, non-constructor constants)
 	if c, ok := expr.(*Const); ok {
-		if !IsNumeral(c) && !pa.FiniteSymsSet[c.Name] {
+		if !IsNumeral(c) && !pa.isConstructor(c) && !IsSkolem(c.Name) && !pa.FiniteSymsSet[c.Name] {
 			pa.FiniteSymsSet[c.Name] = true
 			pa.FiniteSyms = append(pa.FiniteSyms, c)
 		}

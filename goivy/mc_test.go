@@ -1435,6 +1435,47 @@ func TestPropAbsNewProp(t *testing.T) {
 	}
 }
 
+func TestPropAbsNewPropPreservesExpressionSort(t *testing.T) {
+	pa := NewPropAbs(nil, nil)
+	idSort := &UninterpretedSort{Name: "id"}
+	waitSort := &LogicEnumeratedSort{Name: "wait_type", Extension: []string{"none", "get", "getX"}}
+	waitFnSort, err := NewFunctionSort(idSort, waitSort)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	waitFn := NewConst("cache.wait", waitFnSort)
+	home := NewConst("home", idSort)
+	app := MustApply(waitFn, home)
+
+	abs, ok := pa.MkPropAbs(app).(*Const)
+	if !ok {
+		t.Fatalf("expected abstract Const, got %T", pa.MkPropAbs(app))
+	}
+	if abs.Name != "__abs[0]" {
+		t.Fatalf("abstract const name = %q, want __abs[0]", abs.Name)
+	}
+	if abs.CSort != waitSort {
+		t.Fatalf("abstract const sort = %s, want %s", abs.CSort, waitSort)
+	}
+}
+
+func TestPropAbsFiniteSymsSkipsConstructorsAndSkolems(t *testing.T) {
+	sortS := &LogicEnumeratedSort{Name: "swhbtype", Extension: []string{"noshwb", "shwb", "fack"}}
+	pa := NewPropAbs(nil, nil)
+	pa.Constructors = map[string]bool{"noshwb": true}
+
+	pa.MkPropAbs(NewConst("noshwb", sortS))
+	pa.MkPropAbs(NewConst("__m_skolem", sortS))
+	pa.MkPropAbs(NewConst("ordinary", sortS))
+
+	if len(pa.FiniteSyms) != 1 {
+		t.Fatalf("finite symbols = %v, want only ordinary", pa.FiniteSyms)
+	}
+	if pa.FiniteSyms[0].Name != "ordinary" {
+		t.Fatalf("finite symbol = %s, want ordinary", pa.FiniteSyms[0].Name)
+	}
+}
+
 // ============================================================
 // Witness tests
 // ============================================================
