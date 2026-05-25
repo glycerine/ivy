@@ -24,10 +24,13 @@ import (
 // actionGen<Name> struct per public action. Only runs for target=test
 // or target=gen.
 //
-// OPEN 055.3: for each action we also emit a buildPrecondition_<Name>
-// helper that conjoins the state facts with a runtime-reified copy
-// of action.GetUpdate(ctx).Pre.Fmlas — so the solver's input
-// synthesis is informed by the action's actual reverse image.
+// Per action we emit three helpers:
+//
+//   - buildPrecondition_<Name>   — reified Pre Clauses for the solver
+//     (OPEN 055.3)
+//   - wouldFail_<Name>           — plain-Go Pre evaluator used as a
+//     pre-firing check (so randomized inputs don't crash an assert)
+//   - actionGen_<Name>           — the per-action generator struct
 func (g *Generator) emitActionGenStructs(w *goWriter) {
 	if !g.usesZ3() {
 		return
@@ -37,8 +40,189 @@ func (g *Generator) emitActionGenStructs(w *goWriter) {
 	}
 	for _, name := range g.actionGenNames() {
 		g.emitPreconditionForAction(w, name)
+		g.emitWouldFailHelper(w, name)
 		g.emitOneActionGenStruct(w, name)
 	}
+}
+
+// emitWouldFailHelper writes `wouldFail_<Name>(state *State, v0 T0, …) bool`.
+// Returns true when the action's Pre clauses would hold (i.e. the
+// action would fail an assert) given the supplied input values, so
+// actionGen.Generate can skip the call. Mirrors the precondition
+// gating ivy2cpp's test harness does via the Z3 model-feasibility
+// check.
+//
+// We emit Pre.Fmlas as a plain-Go disjunction (any one fmla being
+// true means failure), with references to formal params rewritten
+// to the corresponding `v<i>` local and references to state symbols
+// routed through `s.<Exported>` via the existing emitExpr machinery.
+func (g *Generator) emitWouldFailHelper(w *goWriter, name string) {
+	act, _ := g.Mod.Actions.Get2(name)
+	if act == nil {
+		return
+	}
+	params := act.GetFormalParams()
+
+	ctx := &goivy.UpdateContext{
+		Domain: g.Mod,
+		PVars:  map[string]bool{},
+		ActCfg: g.Mod.Cfg.ActCfg,
+	}
+	var update *goivy.Update
+	func() {
+		defer func() { _ = recover() }()
+		update = goivy.GetUpdate(act, ctx)
+	}()
+
+	helperName := "wouldFail_" + goExportedName(name)
+	sig := "state *" + g.StateTypeName
+	for i, p := range params {
+		if p == nil {
+			continue
+		}
+		sig += fmt.Sprintf(", v%d %s", i, g.goType(p.CSort))
+	}
+	w.linef("// %s evaluates action %q's Pre clauses with the picked", helperName, name)
+	w.linef("// inputs. Returns true iff the action would fail an")
+	w.linef("// ivyAssert/ivyAssume so callers can skip it.")
+	w.linef("func %s(%s) bool {", helperName, sig)
+	w.line("\t_ = state")
+	for i := range params {
+		w.linef("\t_ = v%d", i)
+	}
+	if update == nil || update.Pre == nil || update.Pre.IsFalse() {
+		// Pre trivially-false → action never fails on this input.
+		w.line("\treturn false")
+		w.line("}")
+		w.blank()
+		return
+	}
+	// Lower each Pre fmla into a Go boolean expression. The body
+	// runs inside a function whose receiver is `s *State`, so we
+	// alias the helper's `state` param to that convention by
+	// emitting wrappers below.
+	//
+	// Strategy: walk each Pre fmla, rewrite formal-param refs to
+	// the corresponding v<i> local, then emit the Go expression.
+	// State-symbol refs route through `s.X` per emitExpr — but
+	// our helper has `state *State`, not `s *State`. We fix that
+	// by aliasing `s := state` once at function entry.
+	w.line("\ts := state")
+	w.line("\t_ = s")
+	parts := []string{}
+	for _, fmla := range update.Pre.Fmlas {
+		expr, ok := g.emitPreFmlaAsGoExpr(fmla, params)
+		if !ok {
+			// Unreifiable fmla — conservatively assume failure so
+			// the action is skipped (safer than firing and
+			// panicking).
+			w.linef("\t// OPEN: unreifiable Pre fmla — skipping action: %s",
+				strings.ReplaceAll(fmla.String(), "\n", " "))
+			parts = append(parts, "true")
+			continue
+		}
+		parts = append(parts, "("+expr+")")
+	}
+	if len(parts) == 0 {
+		w.line("\treturn false")
+	} else {
+		w.linef("\treturn %s", strings.Join(parts, " || "))
+	}
+	w.line("}")
+	w.blank()
+}
+
+// emitPreFmlaAsGoExpr emits a goivy Expr as a plain Go boolean
+// expression by first substituting formal-param references with
+// v<i>-named Consts (so they lower via emitExpr's goIdent path
+// to the v<i> locals in scope), then calling emitExpr.
+func (g *Generator) emitPreFmlaAsGoExpr(fmla goivy.Expr, params []*goivy.Const) (string, bool) {
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for i, p := range params {
+		if p == nil {
+			continue
+		}
+		// Substitute by key (matches the formal's own *Const ID).
+		subs[goivy.Key(p)] = &goivy.Const{Name: fmt.Sprintf("v%d", i), CSort: p.CSort}
+	}
+	rewritten := fmla
+	if len(subs) > 0 {
+		if r, err := goivy.Substitute(fmla, subs); err == nil {
+			rewritten = r
+		}
+	}
+	// Also handle name-based references (__fml:b, fml:b, b) that
+	// don't share *Const identity with the formal — walk the
+	// rewritten tree and rebuild Consts when their name matches.
+	rewritten = rewriteFormalRefsByName(rewritten, params)
+	code, err := g.emitExpr(rewritten)
+	if err != nil {
+		return "", false
+	}
+	return code, true
+}
+
+// rewriteFormalRefsByName traverses e and replaces any *goivy.Const
+// whose name matches a formal param (with the goivy naming
+// conventions `b`, `fml:b`, `__fml:b`) by a fresh Const named
+// `v<i>`. Used by emitPreFmlaAsGoExpr to catch references that
+// goivy.Substitute missed due to non-identity-matching.
+func rewriteFormalRefsByName(e goivy.Expr, params []*goivy.Const) goivy.Expr {
+	if e == nil {
+		return nil
+	}
+	switch n := e.(type) {
+	case *goivy.Const:
+		for i, p := range params {
+			if p == nil {
+				continue
+			}
+			short := strings.TrimPrefix(strings.TrimPrefix(p.Name, "__fml:"), "fml:")
+			if n.Name == p.Name ||
+				n.Name == short ||
+				n.Name == "fml:"+short ||
+				n.Name == "__fml:"+short {
+				return &goivy.Const{Name: fmt.Sprintf("v%d", i), CSort: n.CSort}
+			}
+		}
+		return n
+	case *goivy.LogicNot:
+		return &goivy.LogicNot{Body: rewriteFormalRefsByName(n.Body, params)}
+	case *goivy.LogicAnd:
+		terms := make([]goivy.Expr, len(n.Terms))
+		for i, t := range n.Terms {
+			terms[i] = rewriteFormalRefsByName(t, params)
+		}
+		return &goivy.LogicAnd{Terms: terms}
+	case *goivy.LogicOr:
+		terms := make([]goivy.Expr, len(n.Terms))
+		for i, t := range n.Terms {
+			terms[i] = rewriteFormalRefsByName(t, params)
+		}
+		return &goivy.LogicOr{Terms: terms}
+	case *goivy.LogicImplies:
+		return &goivy.LogicImplies{T1: rewriteFormalRefsByName(n.T1, params), T2: rewriteFormalRefsByName(n.T2, params)}
+	case *goivy.LogicIff:
+		return &goivy.LogicIff{T1: rewriteFormalRefsByName(n.T1, params), T2: rewriteFormalRefsByName(n.T2, params)}
+	case *goivy.Eq:
+		return &goivy.Eq{T1: rewriteFormalRefsByName(n.T1, params), T2: rewriteFormalRefsByName(n.T2, params)}
+	case *goivy.Apply:
+		// Walk args; leave the function symbol alone (its name is
+		// the destructor/relation name, not a formal).
+		newTerms := make([]goivy.Expr, len(n.Terms))
+		for i, t := range n.Terms {
+			newTerms[i] = rewriteFormalRefsByName(t, params)
+		}
+		if a, err := goivy.NewApply(n.Func, newTerms...); err == nil {
+			return a
+		}
+		return n
+	case *goivy.ForAll:
+		return &goivy.ForAll{Variables: n.Variables, Body: rewriteFormalRefsByName(n.Body, params)}
+	case *goivy.LogicExists:
+		return &goivy.LogicExists{Variables: n.Variables, Body: rewriteFormalRefsByName(n.Body, params)}
+	}
+	return e
 }
 
 // emitPreconditionForAction emits a `buildPrecondition_<Name>` helper
@@ -596,7 +780,11 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 
 	w.open(fmt.Sprintf("func (g *%s) Generate(state *%s) {", structName, g.StateTypeName))
 	if len(params) == 0 {
-		// Zero-arg action: nothing to solve for; just call.
+		// Zero-arg action: nothing to solve for. Still gate on
+		// wouldFail_<Name> so the random scheduler can't fire an
+		// action whose require would assert (mirrors ivy2cpp's
+		// test-harness check).
+		w.linef("if wouldFail_%s(state) { return }", goExportedName(name))
 		w.linef("state.%s()", goExportedName(name))
 		w.close("")
 		w.blank()
@@ -692,11 +880,27 @@ func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
 		}
 		callArgs[i] = fmt.Sprintf("v%d", i)
 	}
+	// Pre-firing precondition check. Skip this iteration when the
+	// picked inputs would make the action fail (mirrors ivy2cpp's
+	// test harness, which checks Z3-model feasibility before
+	// invoking the action). Without this, randomized inputs
+	// frequently violate `require` clauses and crash the binary.
+	w.linef("if wouldFail_%s(state%s) { return }",
+		goExportedName(name), prefixCommaArgs(callArgs))
 	w.linef("state.%s(%s)", goExportedName(name), strings.Join(callArgs, ", "))
 	w.close("")
 	w.blank()
-	// Mark that the runtime needs the pickInput helpers.
 	g.Ctx.OnceGlobals["__need_pickinput"] = true
+}
+
+// prefixCommaArgs returns ", a, b, c" when args is non-empty, else
+// "". Used to splice variadic args onto a function call alongside a
+// fixed prefix argument.
+func prefixCommaArgs(args []string) string {
+	if len(args) == 0 {
+		return ""
+	}
+	return ", " + strings.Join(args, ", ")
 }
 
 // emitCloseSolver writes a Close method on each action generator so
