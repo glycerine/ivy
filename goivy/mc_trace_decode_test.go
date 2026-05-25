@@ -239,6 +239,40 @@ func TestAigerMatchHandler2EndCallsFinalState(t *testing.T) {
 	}
 }
 
+func TestAigerMatchHandler2NewStateUsesStructuralEnvRenameForNextLatch(t *testing.T) {
+	x := NewConst("x", Boolean)
+	newX := NewConst("new_x", Boolean)
+	enc := NewEncoder(nil, []*Const{x}, nil)
+	enc.Interp = make(map[string]interface{})
+	enc.SetSym(x, []int{enc.Sub.True()})
+
+	enc.Sub.Reset()
+	enc.Sub.Step("0") // bogus=0
+
+	h := NewAigerMatchHandler2(
+		enc,
+		map[string]Expr{x.Name: x},
+		map[string]bool{},
+		map[string]bool{x.Name: true},
+		nil,
+	)
+	h.NewState(map[NodeKey]Expr{Key(x): newX})
+
+	if len(h.States) != 1 {
+		t.Fatalf("expected one decoded state, got %d", len(h.States))
+	}
+	if len(h.States[0]) != 1 {
+		t.Fatalf("expected env-renamed next latch equation, got %d: %#v", len(h.States[0]), h.States[0])
+	}
+	eq, ok := h.States[0][0].(*Eq)
+	if !ok {
+		t.Fatalf("expected Eq, got %T", h.States[0][0])
+	}
+	if !eq.T1.Equal(x) || !IsTrue(eq.T2) {
+		t.Fatalf("expected x = true from env-renamed next latch, got %s", eq)
+	}
+}
+
 func TestAigerWitnessToIvyTrace2CallsMatchAnnotation(t *testing.T) {
 	// Build a minimal circuit: one boolean input, one boolean latch, one output
 	input := NewConst("inp", Boolean)

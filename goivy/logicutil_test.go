@@ -1,8 +1,14 @@
 package goivy
 
 import (
+	"bytes"
 	"errors"
+	"io"
+	"os"
+	"strings"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 func logicutilMustFS(t *testing.T, sorts ...Sort) *LogicFunctionSort {
@@ -12,6 +18,67 @@ func logicutilMustFS(t *testing.T, sorts ...Sort) *LogicFunctionSort {
 		t.Fatal(err)
 	}
 	return fs
+}
+
+func captureLogicutilStdout(t *testing.T, fn func()) string {
+	t.Helper()
+	if !xtracer.Enabled {
+		t.Skip("xtrace disabled at build time")
+	}
+
+	oldStdout := os.Stdout
+	oldSuppressed := xtracer.Suppressed
+	r, w, err := os.Pipe()
+	if err != nil {
+		t.Fatalf("os.Pipe: %v", err)
+	}
+
+	outCh := make(chan string, 1)
+	go func() {
+		var buf bytes.Buffer
+		_, _ = io.Copy(&buf, r)
+		outCh <- buf.String()
+	}()
+
+	os.Stdout = w
+	xtracer.Suppressed = false
+	closedW := false
+	defer func() {
+		os.Stdout = oldStdout
+		xtracer.Suppressed = oldSuppressed
+		if !closedW {
+			_ = w.Close()
+		}
+		_ = r.Close()
+	}()
+
+	fn()
+	_ = w.Close()
+	closedW = true
+	return <-outCh
+}
+
+func TestReduceNamedBindersReducesApplyArgsBeforeNormalizingFunc(t *testing.T) {
+	client := &UninterpretedSort{Name: "client"}
+	cacheState := &LogicEnumeratedSort{Name: "cachestate", Extension: []string{"invalid", "shared", "exclusive"}}
+	message := &LogicEnumeratedSort{Name: "message2_4", Extension: []string{"empty2_4", "invalidate", "grantshared", "grantexclusive"}}
+	cache := NewConst("s.cache", logicutilMustFS(t, client, cacheState))
+	channel := NewConst("s.channel2_4", logicutilMustFS(t, cacheState, message))
+	c := NewConst("c", client)
+
+	outer := MustApply(channel, MustApply(cache, c))
+	out := captureLogicutilStdout(t, func() {
+		_ = ReduceNamedBinders(outer, nil)
+	})
+
+	cacheIdx := strings.Index(out, "name:s.cache")
+	channelIdx := strings.Index(out, "name:s.channel2_4")
+	if cacheIdx < 0 || channelIdx < 0 {
+		t.Fatalf("expected both function symbols in xtrace, got:\n%s", out)
+	}
+	if channelIdx < cacheIdx {
+		t.Fatalf("ReduceNamedBinders normalized apply function before reducing args:\n%s", out)
+	}
 }
 
 func TestFreeVariablesSimple(t *testing.T) {

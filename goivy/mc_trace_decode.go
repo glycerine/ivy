@@ -209,12 +209,14 @@ func (h *AigerMatchHandler2) NewState(env map[NodeKey]Expr) {
 	}
 	invEnv := make(map[string]string)
 	envNames := make(map[string]bool)
+	envRename := make(map[NodeKey]*Const)
 	for k, v := range env {
 		envName := nodeKeySymbolName(k)
 		if envName != "" {
 			envNames[envName] = true
 		}
 		if c, ok := v.(*Const); ok {
+			envRename[k] = c
 			if envName != "" && !h.isSkolem(envName) && !IsNew(envName) {
 				invEnv[c.Name] = envName
 			}
@@ -240,14 +242,8 @@ func (h *AigerMatchHandler2) NewState(env map[NodeKey]Expr) {
 			val := h.Aiger.GetSym(v)
 			h.showSym2(decd, val, invEnv, envNames, &eqns)
 
-			envNameMap := make(map[string]string)
-			for k, v := range env {
-				if c, ok := v.(*Const); ok {
-					envNameMap[string(k)] = c.Name
-				}
-			}
 			nextDecd := RenameASTByName(decd, rn)
-			curDecd := RenameASTByName(decd, envNameMap)
+			curDecd := RenameAST(decd, envRename)
 			if nextDecd != nil && curDecd != nil && nextDecd.Equal(curDecd) {
 				nextVal := h.Aiger.GetNextSym(v)
 				h.showSym2(nextDecd, nextVal, invEnv, envNames, &eqns)

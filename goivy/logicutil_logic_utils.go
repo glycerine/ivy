@@ -1095,6 +1095,10 @@ func reduceNamedBindersRec(ast Expr, g GloballyBinderFunc) Expr {
 		return ast
 	}
 	if app, ok := ast.(*Apply); ok {
+		newTerms := make([]Expr, len(app.Terms))
+		for i, t := range app.Terms {
+			newTerms[i] = reduceNamedBindersRec(t, g)
+		}
 		if nb, ok := app.Func.(*LogicNamedBinder); ok {
 			subst := make(map[string]Expr, len(nb.Variables))
 			for i, v := range nb.Variables {
@@ -1106,10 +1110,6 @@ func reduceNamedBindersRec(ast Expr, g GloballyBinderFunc) Expr {
 			return &LogicNamedBinder{Name: nb.Name, Variables: nil, Environ: nil, Body: body}
 		}
 		newFunc := NormalizeNamedBinders(app.Func, nil).(Expr)
-		newTerms := make([]Expr, len(app.Terms))
-		for i, t := range app.Terms {
-			newTerms[i] = reduceNamedBindersRec(t, g)
-		}
 		return MustApply(newFunc, newTerms...)
 	}
 
