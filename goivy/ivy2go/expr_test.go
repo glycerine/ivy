@@ -15,7 +15,9 @@ import (
 // with just enough Module wiring suffices.
 
 // newExprGen returns a Generator suitable for emitExpr unit tests,
-// with the given Ivy source compiled into its Module.
+// with the given Ivy source compiled into its Module and every
+// per-stream goWriter wired up against Ctx (so direct emitter calls
+// in tests land in the same streams Generate() would use).
 func newExprGen(t *testing.T, src string) *Generator {
 	t.Helper()
 	mod := compileIvySource(t, src)
@@ -32,6 +34,19 @@ func newExprGen(t *testing.T, src string) *Generator {
 		encodedSorts:       map[string]bool{},
 		importCallersCache: map[string]bool{},
 	}
+	g.Ctx.PackageName = g.PackageName
+	g.types = newGoWriter(g.Ctx.Types)
+	g.state = newGoWriter(g.Ctx.State)
+	g.actions = newGoWriter(g.Ctx.Actions)
+	g.init = newGoWriter(g.Ctx.Init)
+	g.runtime = newGoWriter(g.Ctx.Runtime)
+	g.nondet = newGoWriter(g.Ctx.Nondet)
+	g.extensional = newGoWriter(g.Ctx.Extensional)
+	g.definitions = newGoWriter(g.Ctx.Definitions)
+	g.thunks = newGoWriter(g.Ctx.Thunks)
+	g.native = newGoWriter(g.Ctx.Native)
+	g.repl = newGoWriter(g.Ctx.Repl)
+	g.main = newGoWriter(g.Ctx.Main)
 	prepareModuleForGo(mod, g.Config)
 	return g
 }

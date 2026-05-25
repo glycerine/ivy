@@ -215,6 +215,8 @@ func (g *Generator) emitState() {
 
 func (g *Generator) emitActions() {
 	g.emitActionMethods(&g.actions)
+	g.emitActionGenStructs(&g.actions)
+	g.emitCloseSolver(&g.actions)
 }
 
 func (g *Generator) emitInit() {
@@ -223,6 +225,8 @@ func (g *Generator) emitInit() {
 
 func (g *Generator) emitRuntime() {
 	g.emitRuntimeHelpers(&g.runtime)
+	g.emitZ3Support(&g.runtime)
+	g.emitSetSolver(&g.runtime)
 }
 
 func (g *Generator) emitNondet() {
@@ -242,7 +246,7 @@ func (g *Generator) emitThunks() {
 }
 
 func (g *Generator) emitNative() {
-	g.native.line("// native.go: user-supplied native Go blocks. Filled in by M10.")
+	g.emitNativeBlocks()
 }
 
 func (g *Generator) emitRepl() {

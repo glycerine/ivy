@@ -129,7 +129,9 @@ func (g *Generator) emitThunkStruct(w *goWriter, name, domT, rangeT string, vs [
 	// t.env_<sym>. Emitting the body without these rewrites would
 	// produce invalid Go that doesn't know about k or t.
 	w.linef("func (t *%s) get(k %s) %s {", name, domT, rangeT)
-	w.linef("\tif v, ok := t.memo[k]; ok { return v }")
+	w.line("\tif v, ok := t.memo[k]; ok {")
+	w.line("\t\treturn v")
+	w.line("\t}")
 	body, err := g.emitThunkBody(vs, expr, envSyms)
 	if err != nil {
 		// Record the error and fall back to zero-value so the
@@ -226,6 +228,10 @@ func (g *Generator) emitThunkBody(vs []*goivy.LogicVariable, expr goivy.Expr, en
 // thunkEnvSymbols mirrors ivy2cpp/thunk.go thunkEnvSymbols. Returns
 // the Const symbols referenced in expr that aren't loop variables
 // themselves — these become env fields on the thunk struct.
+//
+// Note: goivy.Apply.Children returns only Terms, not the Func slot.
+// We descend into Apply.Func explicitly so the called symbol gets
+// captured as env.
 func (g *Generator) thunkEnvSymbols(vs []*goivy.LogicVariable, expr goivy.Expr) []*goivy.Const {
 	loopNames := map[string]bool{}
 	for _, v := range vs {
@@ -253,12 +259,18 @@ func (g *Generator) thunkEnvSymbols(vs []*goivy.LogicVariable, expr goivy.Expr) 
 			}
 			return
 		}
+		if a, ok := e.(*goivy.Apply); ok {
+			walk(a.Func)
+			for _, t := range a.Terms {
+				walk(t)
+			}
+			return
+		}
 		for _, ch := range e.Children() {
 			walk(ch)
 		}
 	}
 	walk(expr)
-	// Stable ordering for deterministic emission.
 	sort.Slice(env, func(i, j int) bool { return env[i].Name < env[j].Name })
 	return env
 }

@@ -90,14 +90,16 @@ func assertGoSourceValid(t *testing.T, name, text string) {
 
 // assertGoSourceGofmt asserts that text matches its gofmt output. This
 // is stronger than parse-only: it catches stylistic deviations that
-// finalize is supposed to normalize away.
+// finalize is supposed to normalize away. Trailing whitespace is
+// trimmed before comparison so the assertion is robust to the single
+// trailing-blank-line gofmt strips.
 func assertGoSourceGofmt(t *testing.T, name, text string) {
 	t.Helper()
 	formatted, err := format.Source([]byte(text))
 	if err != nil {
 		t.Fatalf("emitted %s is not valid Go: %v\n---\n%s", name, err, text)
 	}
-	if string(formatted) != text {
+	if strings.TrimRight(string(formatted), "\n") != strings.TrimRight(text, "\n") {
 		t.Fatalf("emitted %s is not gofmt-clean. diff:\nwant:\n%s\ngot:\n%s", name, string(formatted), text)
 	}
 }

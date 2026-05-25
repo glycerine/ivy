@@ -17,9 +17,7 @@ func TestMakeThunk_SingleVariableEmitsStruct(t *testing.T) {
 		t.Fatalf("NewVariable: %v", err)
 	}
 	body := &goivy.LogicNot{Body: v}
-	w := newGoWriter(NewGoText())
-	g.thunks = w
-	expr, err := g.makeThunk(&w, []*goivy.LogicVariable{v}, body)
+	expr, err := g.makeThunk([]*goivy.LogicVariable{v}, body)
 	if err != nil {
 		t.Fatalf("makeThunk: %v", err)
 	}
@@ -50,13 +48,11 @@ func TestMakeThunk_MemoizesIdenticalRequests(t *testing.T) {
 		t.Fatalf("NewVariable: %v", err)
 	}
 	body := &goivy.LogicNot{Body: v}
-	w := newGoWriter(NewGoText())
-	g.thunks = w
-	expr1, err := g.makeThunk(&w, []*goivy.LogicVariable{v}, body)
+	expr1, err := g.makeThunk([]*goivy.LogicVariable{v}, body)
 	if err != nil {
 		t.Fatalf("makeThunk #1: %v", err)
 	}
-	expr2, err := g.makeThunk(&w, []*goivy.LogicVariable{v}, body)
+	expr2, err := g.makeThunk([]*goivy.LogicVariable{v}, body)
 	if err != nil {
 		t.Fatalf("makeThunk #2: %v", err)
 	}
@@ -124,9 +120,7 @@ func TestThunkStruct_GofmtClean(t *testing.T) {
 		t.Fatalf("NewVariable: %v", err)
 	}
 	body := &goivy.LogicNot{Body: v}
-	w := newGoWriter(NewGoText())
-	g.thunks = w
-	if _, err := g.makeThunk(&w, []*goivy.LogicVariable{v}, body); err != nil {
+	if _, err := g.makeThunk([]*goivy.LogicVariable{v}, body); err != nil {
 		t.Fatalf("makeThunk: %v", err)
 	}
 	// Compose a stand-alone file and assert gofmt-clean.
