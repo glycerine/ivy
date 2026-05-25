@@ -303,9 +303,9 @@ func (pc *ProofChecker) ApplyProof(goals []*LabeledFormula, proof Node) ([]*Labe
 		return res, err
 
 	case *AssumeGlobalTactic:
-		xtracer.Trace("proof.ApplyProof dispatch name=AssumeGlobalTactic")
+		xtracer.Trace("proof.ApplyProof dispatch name=AssumeTactic")
 		res, err := pc.assumeTactic(goals, &p.AssumeTactic, true)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=AssumeGlobalTactic ngoals=%d err=%v", len(res), err)
+		xtracer.Trace("proof.ApplyProof EXIT proofType=AssumeTactic ngoals=%d err=%v", len(res), err)
 		return res, err
 
 	case *AssumeTactic:

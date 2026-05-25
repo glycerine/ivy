@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -57,6 +58,33 @@ func TestAssumeTactic_BasicInstantiate(t *testing.T) {
 	}
 	if !foundMyax {
 		t.Error("expected premise 'myax' in result")
+	}
+}
+
+func TestApplyProofAssumeGlobalDispatchTraceMatchesPython(t *testing.T) {
+	s := proofMkSort("S")
+	c := proofMkConst("c", s)
+	goal := mkLF(proofTestAstCfg.NewAtom("goal"), c)
+	schema := mkLF(proofTestAstCfg.NewAtom("myax"), c)
+	pc := mkPC(schema)
+	proof := proofTestAstCfg.NewAssumeGlobalTactic(proofTestAstCfg.NewAtom("myax"), nil)
+	proof.TLabel = proofTestAstCfg.NewNoneAST()
+
+	out := captureActionUpdateStdout(t, func() {
+		result, err := pc.ApplyProof([]*LabeledFormula{goal}, proof)
+		if err != nil {
+			t.Fatalf("ApplyProof failed: %v", err)
+		}
+		if len(result) != 1 {
+			t.Fatalf("ApplyProof returned %d goals, want 1", len(result))
+		}
+	})
+
+	if !strings.Contains(out, "XTRACE: proof.ApplyProof dispatch name=AssumeTactic") {
+		t.Fatalf("ApplyProof trace did not dispatch through Python's inherited AssumeTactic path:\n%s", out)
+	}
+	if !strings.Contains(out, "XTRACE: proof.assumeTactic ENTER ndecls=1 isGlobal=True") {
+		t.Fatalf("ApplyProof trace did not preserve global assume semantics:\n%s", out)
 	}
 }
 
