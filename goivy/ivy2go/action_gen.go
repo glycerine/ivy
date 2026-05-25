@@ -223,22 +223,164 @@ func (g *Generator) reifyExprAsGoCode(e goivy.Expr, params []*goivy.Const) (stri
 			return "", false
 		}
 		return fmt.Sprintf("&goivy.Eq{T1: %s, T2: %s}", l, r), true
+
+	case *goivy.LogicVariable:
+		sortCode, ok := g.reifySortAsGoCode(n.VSort)
+		if !ok {
+			return "", false
+		}
+		// LogicVariable.NewVariable validates uppercase first
+		// letter; rely on the mustNewVariable runtime helper for a
+		// panic-on-failure facade.
+		g.requireMustHelpers()
+		return fmt.Sprintf("mustNewVariable(%q, %s)", n.Name, sortCode), true
+
+	case *goivy.Apply:
+		fnCode, ok := g.reifyExprAsGoCode(n.Func, params)
+		if !ok {
+			return "", false
+		}
+		argCodes := make([]string, 0, len(n.Terms))
+		for _, t := range n.Terms {
+			c, ok := g.reifyExprAsGoCode(t, params)
+			if !ok {
+				return "", false
+			}
+			argCodes = append(argCodes, c)
+		}
+		g.requireMustHelpers()
+		if len(argCodes) == 0 {
+			return fmt.Sprintf("mustApply(%s)", fnCode), true
+		}
+		return fmt.Sprintf("mustApply(%s, %s)", fnCode, strings.Join(argCodes, ", ")), true
+
+	case *goivy.ForAll:
+		varCodes, sortOK := g.reifyVariableSlice(n.Variables)
+		if !sortOK {
+			return "", false
+		}
+		body, ok := g.reifyExprAsGoCode(n.Body, params)
+		if !ok {
+			return "", false
+		}
+		return fmt.Sprintf("&goivy.ForAll{Variables: %s, Body: %s}", varCodes, body), true
+
+	case *goivy.LogicExists:
+		varCodes, sortOK := g.reifyVariableSlice(n.Variables)
+		if !sortOK {
+			return "", false
+		}
+		body, ok := g.reifyExprAsGoCode(n.Body, params)
+		if !ok {
+			return "", false
+		}
+		return fmt.Sprintf("&goivy.LogicExists{Variables: %s, Body: %s}", varCodes, body), true
+
+	case *goivy.LogicIte:
+		c, ok := g.reifyExprAsGoCode(n.Cond, params)
+		if !ok {
+			return "", false
+		}
+		t, ok := g.reifyExprAsGoCode(n.Then, params)
+		if !ok {
+			return "", false
+		}
+		e, ok := g.reifyExprAsGoCode(n.Else, params)
+		if !ok {
+			return "", false
+		}
+		g.requireMustHelpers()
+		return fmt.Sprintf("mustNewIte(%s, %s, %s)", c, t, e), true
+
 	default:
 		return "", false
 	}
 }
 
+// reifyVariableSlice helps the ForAll/LogicExists cases by turning a
+// []*goivy.LogicVariable into a Go composite-literal string.
+// Returns (code, true) when every variable's sort is reifiable.
+func (g *Generator) reifyVariableSlice(vars []*goivy.LogicVariable) (string, bool) {
+	if len(vars) == 0 {
+		return "nil", true
+	}
+	parts := make([]string, 0, len(vars))
+	for _, v := range vars {
+		if v == nil {
+			parts = append(parts, "nil")
+			continue
+		}
+		sortCode, ok := g.reifySortAsGoCode(v.VSort)
+		if !ok {
+			return "", false
+		}
+		g.requireMustHelpers()
+		parts = append(parts, fmt.Sprintf("mustNewVariable(%q, %s)", v.Name, sortCode))
+	}
+	return fmt.Sprintf("[]*goivy.LogicVariable{%s}", strings.Join(parts, ", ")), true
+}
+
 // reifySortAsGoCode returns a Go source expression that constructs s.
-// Supports Boolean and named uninterpreted sorts; anything else
-// returns false so the caller falls back.
+// Supports BooleanSort, UninterpretedSort, LogicEnumeratedSort,
+// RangeSort (numeral bounds only), and LogicFunctionSort. Anything
+// else returns false so the caller falls back.
 func (g *Generator) reifySortAsGoCode(s goivy.Sort) (string, bool) {
 	switch t := s.(type) {
 	case *goivy.BooleanSort:
 		return "goivy.Boolean", true
 	case *goivy.UninterpretedSort:
 		return fmt.Sprintf("&goivy.UninterpretedSort{Name: %q}", t.Name), true
+	case *goivy.LogicEnumeratedSort:
+		ext := make([]string, len(t.Extension))
+		for i, v := range t.Extension {
+			ext[i] = fmt.Sprintf("%q", v)
+		}
+		return fmt.Sprintf("&goivy.LogicEnumeratedSort{Name: %q, Extension: []string{%s}}",
+			t.Name, strings.Join(ext, ", ")), true
+	case *goivy.RangeSort:
+		// Only numeral bounds are reifiable today; compiled bounds
+		// (parameter references) require module context at runtime.
+		lb, lbOK := t.Lb.(goivy.NumeralBound)
+		ub, ubOK := t.Ub.(goivy.NumeralBound)
+		if !lbOK || !ubOK {
+			return "", false
+		}
+		lbSort, ok := g.reifySortAsGoCode(lb.Sort)
+		if !ok {
+			lbSort = "nil"
+		}
+		ubSort, ok := g.reifySortAsGoCode(ub.Sort)
+		if !ok {
+			ubSort = "nil"
+		}
+		return fmt.Sprintf(
+			"&goivy.RangeSort{Name: %q, Lb: goivy.NumeralBound{Value: %q, Sort: %s}, Ub: goivy.NumeralBound{Value: %q, Sort: %s}}",
+			t.Name, lb.Value, lbSort, ub.Value, ubSort,
+		), true
+	case *goivy.LogicFunctionSort:
+		sorts := t.Sorts
+		parts := make([]string, 0, len(sorts))
+		for _, sub := range sorts {
+			code, ok := g.reifySortAsGoCode(sub)
+			if !ok {
+				return "", false
+			}
+			parts = append(parts, code)
+		}
+		g.requireMustHelpers()
+		return fmt.Sprintf("mustNewFunctionSort(%s)", strings.Join(parts, ", ")), true
 	}
 	return "", false
+}
+
+// requireMustHelpers flags the runtime to emit the must* facades
+// (mustApply / mustNewVariable / mustNewIte / mustNewFunctionSort).
+// All four share a single emission gate; needing any one pulls them
+// all in to keep the dependency graph trivial.
+func (g *Generator) requireMustHelpers() {
+	if g != nil && g.Ctx != nil {
+		g.Ctx.OnceGlobals["__need_musthelpers"] = true
+	}
 }
 
 // actionGenNames returns the actions eligible for action-gen

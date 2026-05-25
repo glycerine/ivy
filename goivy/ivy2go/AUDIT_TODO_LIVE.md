@@ -240,20 +240,50 @@ target package against in-tree goivy with the new helpers.
 
 ---
 
-## OPEN — final remaining residual
+## DONE 055.4 — Reifier coverage for Apply / ForAll / non-Boolean sorts
 
-### OPEN 055.4 — Reifier coverage for Apply / ForAll / non-Boolean sorts
+OPEN-pass.
 
-`reifyExprAsGoCode` supports `Const / LogicNot / LogicAnd / LogicOr /
-LogicImplies / LogicIff / Eq`. `reifySortAsGoCode` supports
-`BooleanSort / UninterpretedSort`. Pre clauses that mention
-`Apply`, `ForAll`, `LogicExists`, or sorts beyond Boolean and
-uninterpreted (e.g. enum, range, BV-interp) fall through to a
-`// OPEN 055.3 unreifiable Pre fmla: …` comment. The Solver round-
-trip still works — the precondition just degrades to the state
-facts in that case.
+**Expr coverage extended.** `reifyExprAsGoCode` in `action_gen.go`
+now handles `*goivy.Apply` (via runtime `mustApply` facade),
+`*goivy.LogicVariable` (via `mustNewVariable`), `*goivy.ForAll` and
+`*goivy.LogicExists` (with reified variable slices), and
+`*goivy.LogicIte` (via `mustNewIte`). The previously-supported
+shapes (Const / LogicNot / And / Or / Implies / Iff / Eq) are
+unchanged.
 
-Extending the reifier is straightforward but routine: add cases
-for each Expr/Sort type that translates structurally into the
-goivy.New* constructor form. Likely needs `mustApply` / `mustNewVariable`
-runtime helpers since `NewApply`/`NewVariable` can return errors.
+**Sort coverage extended.** `reifySortAsGoCode` now handles
+`*goivy.LogicEnumeratedSort` (with embedded Extension list),
+`*goivy.RangeSort` (numeral-bound case via `goivy.NumeralBound`),
+and `*goivy.LogicFunctionSort` (via runtime `mustNewFunctionSort`).
+Compiled-bound RangeSorts (parameter-referencing) still fall
+through; they need module-context resolution at runtime and
+aren't likely to appear in a typical action's Pre.
+
+**Runtime helpers.** `runtime.go` `emitMustHelpers` writes the four
+panic-on-failure facades (`mustApply`, `mustNewVariable`,
+`mustNewIte`, `mustNewFunctionSort`) when the reifier flags a
+need via `requireMustHelpers`. The facades let the reified Pre
+code read cleanly without per-node error plumbing.
+
+Verification: `TestReifyExprAsGoCode_ApplyWrapsInMustApply`,
+`TestReifyExprAsGoCode_ForAllEmitsVariableSlice`,
+`TestReifyExprAsGoCode_ExistsAndIte`,
+`TestReifyExprAsGoCode_LogicVariableUsesMustNewVariable`,
+`TestReifySortAsGoCode_EnumeratedSort`,
+`TestReifySortAsGoCode_RangeSortWithNumeralBounds`,
+`TestReifySortAsGoCode_FunctionSortUsesMustFactory`,
+`TestEmitRuntime_MustHelpersEmittedOnDemand` in
+`action_gen_test.go`. Tier 2 smoke
+(`TestSmoke_BuildEmittedTest`) still compiles the emitted
+test-target package against in-tree goivy with all new
+runtime helpers linked.
+
+---
+
+## OPEN — no open items
+
+All known sub-items addressed. The remaining unreifiable cases
+(CompiledBound range sorts; module-context-dependent symbols) are
+edge cases that would only surface for specific Ivy modules and
+can be addressed reactively as they appear.

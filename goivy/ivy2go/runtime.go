@@ -43,6 +43,9 @@ func (g *Generator) emitRuntimeHelpers(w *goWriter) {
 	if g.Ctx.OnceGlobals["__need_pickinput"] {
 		g.emitPickInputHelpers(w)
 	}
+	if g.Ctx.OnceGlobals["__need_musthelpers"] {
+		g.emitMustHelpers(w)
+	}
 	// ite_<type> helpers: walk OnceGlobals keys, find any starting
 	// with "ite_", emit one per. We don't know the result type from
 	// the key alone — store (name, typeExpr) on g for emission.
@@ -450,6 +453,44 @@ func (g *Generator) emitPickInputHelpers(w *goWriter) {
 	w.line("\tif err != nil { return uint64(ivyChoose(card)) }")
 	w.line("\tif card > 0 { n = n % uint64(card) }")
 	w.line("\treturn n")
+	w.line("}")
+	w.blank()
+}
+
+// emitMustHelpers writes the panic-on-failure facades for goivy
+// constructors that return (T, error). The reifier in action_gen.go
+// uses them so the emitted Pre-construction code reads cleanly
+// (no error-plumbing per node).
+func (g *Generator) emitMustHelpers(w *goWriter) {
+	g.Ctx.AddImport("runtime", g.Config.GoivyImportPath, "")
+	w.line("// mustApply wraps goivy.NewApply; panics on error.")
+	w.line("// Used by the reified Pre-clause builders in action_gen.")
+	w.line("func mustApply(fn goivy.Expr, args ...goivy.Expr) goivy.Expr {")
+	w.line("\tres, err := goivy.NewApply(fn, args...)")
+	w.line(`	if err != nil { panic(fmt.Sprintf("ivy reify: NewApply: %s", err)) }`)
+	w.line("\treturn res")
+	w.line("}")
+	w.blank()
+	w.line("// mustNewVariable wraps goivy.NewVariable; panics on error.")
+	w.line("func mustNewVariable(name string, sort goivy.Sort) *goivy.LogicVariable {")
+	w.line("\tres, err := goivy.NewVariable(name, sort)")
+	w.line(`	if err != nil { panic(fmt.Sprintf("ivy reify: NewVariable %q: %s", name, err)) }`)
+	w.line("\treturn res")
+	w.line("}")
+	w.blank()
+	w.line("// mustNewIte wraps goivy.NewIte; panics on error.")
+	w.line("func mustNewIte(cond, t, e goivy.Expr) goivy.Expr {")
+	w.line("\tres, err := goivy.NewIte(cond, t, e)")
+	w.line(`	if err != nil { panic(fmt.Sprintf("ivy reify: NewIte: %s", err)) }`)
+	w.line("\treturn res")
+	w.line("}")
+	w.blank()
+	w.line("// mustNewFunctionSort wraps goivy.NewFunctionSort; panics on")
+	w.line("// error. Takes one or more sorts; the last is the range.")
+	w.line("func mustNewFunctionSort(sorts ...goivy.Sort) *goivy.LogicFunctionSort {")
+	w.line("\tres, err := goivy.NewFunctionSort(sorts...)")
+	w.line(`	if err != nil { panic(fmt.Sprintf("ivy reify: NewFunctionSort: %s", err)) }`)
+	w.line("\treturn res")
 	w.line("}")
 	w.blank()
 }

@@ -191,6 +191,155 @@ func TestReifyExprAsGoCode_ParamRewriteToInput(t *testing.T) {
 	}
 }
 
+// --- OPEN 055.4: extended reifier coverage --------------------------
+
+func TestReifyExprAsGoCode_ApplyWrapsInMustApply(t *testing.T) {
+	g := newExprGen(t, "")
+	// f : bool * bool -> bool, applied to two consts.
+	fnSort, _ := goivy.NewFunctionSort(goivy.Boolean, goivy.Boolean, goivy.Boolean)
+	fn := goivy.NewConst("f", fnSort)
+	a := &goivy.Const{Name: "x", CSort: goivy.Boolean}
+	b := &goivy.Const{Name: "y", CSort: goivy.Boolean}
+	apply, err := goivy.NewApply(fn, a, b)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	got, ok := g.reifyExprAsGoCode(apply, nil)
+	if !ok {
+		t.Fatal("Apply reify not ok")
+	}
+	if !strings.HasPrefix(got, "mustApply(") {
+		t.Errorf("Apply reify should start with mustApply(, got: %q", got)
+	}
+	if !strings.Contains(got, "mustNewFunctionSort(") {
+		t.Errorf("Apply reify should reify function sort via mustNewFunctionSort, got: %q", got)
+	}
+	// Reifier should have flagged must helpers.
+	if !g.Ctx.OnceGlobals["__need_musthelpers"] {
+		t.Error("Apply reify should require must helpers")
+	}
+}
+
+func TestReifyExprAsGoCode_ForAllEmitsVariableSlice(t *testing.T) {
+	g := newExprGen(t, "")
+	v, _ := goivy.NewVariable("X", goivy.Boolean)
+	body := &goivy.Const{Name: "true", CSort: goivy.Boolean}
+	got, ok := g.reifyExprAsGoCode(&goivy.ForAll{Variables: []*goivy.LogicVariable{v}, Body: body}, nil)
+	if !ok {
+		t.Fatal("ForAll reify not ok")
+	}
+	if !strings.Contains(got, "goivy.ForAll{Variables: []*goivy.LogicVariable{") {
+		t.Errorf("ForAll reify should include variable slice, got: %q", got)
+	}
+	if !strings.Contains(got, `mustNewVariable("X", goivy.Boolean)`) {
+		t.Errorf("ForAll should reify variable via mustNewVariable, got: %q", got)
+	}
+}
+
+func TestReifyExprAsGoCode_ExistsAndIte(t *testing.T) {
+	g := newExprGen(t, "")
+	v, _ := goivy.NewVariable("Y", goivy.Boolean)
+	body := &goivy.Const{Name: "true", CSort: goivy.Boolean}
+	got, ok := g.reifyExprAsGoCode(&goivy.LogicExists{Variables: []*goivy.LogicVariable{v}, Body: body}, nil)
+	if !ok || !strings.Contains(got, "goivy.LogicExists{Variables:") {
+		t.Errorf("LogicExists reify = (%q, %v)", got, ok)
+	}
+	// Ite uses mustNewIte.
+	c := &goivy.Const{Name: "true", CSort: goivy.Boolean}
+	thn := &goivy.Const{Name: "true", CSort: goivy.Boolean}
+	els := &goivy.Const{Name: "false", CSort: goivy.Boolean}
+	ite, _ := goivy.NewIte(c, thn, els)
+	got, ok = g.reifyExprAsGoCode(ite, nil)
+	if !ok || !strings.HasPrefix(got, "mustNewIte(") {
+		t.Errorf("Ite reify = (%q, %v), want prefix mustNewIte(", got, ok)
+	}
+}
+
+func TestReifyExprAsGoCode_LogicVariableUsesMustNewVariable(t *testing.T) {
+	g := newExprGen(t, "")
+	v, _ := goivy.NewVariable("X", goivy.Boolean)
+	got, ok := g.reifyExprAsGoCode(v, nil)
+	if !ok || got != `mustNewVariable("X", goivy.Boolean)` {
+		t.Errorf("LogicVariable reify = (%q, %v)", got, ok)
+	}
+}
+
+func TestReifySortAsGoCode_EnumeratedSort(t *testing.T) {
+	g := newExprGen(t, "")
+	s := &goivy.LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
+	got, ok := g.reifySortAsGoCode(s)
+	if !ok {
+		t.Fatal("enum reify not ok")
+	}
+	if !strings.Contains(got, `&goivy.LogicEnumeratedSort{Name: "color"`) {
+		t.Errorf("enum reify missing Name field, got: %q", got)
+	}
+	if !strings.Contains(got, `Extension: []string{"red", "green"}`) {
+		t.Errorf("enum reify should include Extension list, got: %q", got)
+	}
+}
+
+func TestReifySortAsGoCode_RangeSortWithNumeralBounds(t *testing.T) {
+	g := newExprGen(t, "")
+	s := &goivy.RangeSort{
+		Name: "idx",
+		Lb:   goivy.NumeralBound{Value: "0", Sort: nil},
+		Ub:   goivy.NumeralBound{Value: "7", Sort: nil},
+	}
+	got, ok := g.reifySortAsGoCode(s)
+	if !ok {
+		t.Fatal("range reify not ok")
+	}
+	if !strings.Contains(got, `&goivy.RangeSort{Name: "idx"`) {
+		t.Errorf("range reify missing Name, got: %q", got)
+	}
+	if !strings.Contains(got, `Lb: goivy.NumeralBound{Value: "0"`) {
+		t.Errorf("range reify missing Lb, got: %q", got)
+	}
+	if !strings.Contains(got, `Ub: goivy.NumeralBound{Value: "7"`) {
+		t.Errorf("range reify missing Ub, got: %q", got)
+	}
+}
+
+func TestReifySortAsGoCode_FunctionSortUsesMustFactory(t *testing.T) {
+	g := newExprGen(t, "")
+	fs, _ := goivy.NewFunctionSort(goivy.Boolean, goivy.Boolean, goivy.Boolean)
+	got, ok := g.reifySortAsGoCode(fs)
+	if !ok {
+		t.Fatal("function sort reify not ok")
+	}
+	if !strings.HasPrefix(got, "mustNewFunctionSort(") {
+		t.Errorf("function sort reify should use mustNewFunctionSort, got: %q", got)
+	}
+}
+
+func TestEmitRuntime_MustHelpersEmittedOnDemand(t *testing.T) {
+	// A module whose action.Pre needs a function sort triggers the
+	// must helpers via the reifier.
+	mod := compileIvySource(t, `
+type idx = {0..3}
+relation slot(I: idx)
+action set_slot(i: idx) = {
+	require slot(i);
+	slot(i) := true
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	runtime := out.Files["runtime.go"]
+	if !strings.Contains(runtime, "func mustApply(fn goivy.Expr") {
+		t.Errorf("mustApply helper missing, got:\n%s", runtime)
+	}
+	if !strings.Contains(runtime, "func mustNewVariable(") {
+		t.Errorf("mustNewVariable helper missing, got:\n%s", runtime)
+	}
+	if !strings.Contains(runtime, "func mustNewFunctionSort(") {
+		t.Errorf("mustNewFunctionSort helper missing, got:\n%s", runtime)
+	}
+}
+
 // --- OPEN 055.2: state-fact precondition tests ----------------------
 
 func TestEmit_TestTarget_StateFactsClausesEmitted(t *testing.T) {
