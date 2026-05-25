@@ -519,6 +519,32 @@ func TestEncoderOrlMulti(t *testing.T) {
 	}
 }
 
+func TestEncoderEvalConstConstructorPrecedesInputLookup(t *testing.T) {
+	color := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	green := NewConst("green", color)
+	enc := NewEncoder([]*Const{green}, nil, nil)
+	enc.IsConstructor = func(sym *Const) bool {
+		return sym.Name == "green"
+	}
+	enc.ConstructorIndexFn = func(sym *Const) (int, int) {
+		return 1, 3
+	}
+
+	bits, err := enc.Eval(green, nil)
+	if err != nil {
+		t.Fatalf("Eval constructor: %v", err)
+	}
+	want := enc.BinEnc(1, 2)
+	if len(bits) != len(want) {
+		t.Fatalf("constructor bits width = %d, want %d", len(bits), len(want))
+	}
+	for i := range bits {
+		if bits[i] != want[i] {
+			t.Fatalf("constructor bits = %v, want %v", bits, want)
+		}
+	}
+}
+
 func TestEncoderGeBin(t *testing.T) {
 	enc := NewEncoder(nil, nil, nil)
 	// GeBin with constant true bits

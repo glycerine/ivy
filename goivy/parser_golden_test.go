@@ -580,7 +580,10 @@ func TestGoldenAll(t *testing.T) {
 
 	// already green once specs should not be revisted until we
 	// get through the others, to save time.
-	skipTo := 243
+
+	// 243 runs for 500 seconds:
+	// XTRACE_OFF=1 time python -O `which ivy_check` isolate=this /Users/jaten/ivy/ivy-lang-examples/test/flash2_finite_mc.ivy
+	skipTo := 243 // 243 runs for 500 seconds.
 	if skipTo == 190 {
 		startingIsolate = "this"
 	}

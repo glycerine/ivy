@@ -501,6 +501,31 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	outputs := []*Const{fail}
 
 	aiger := NewEncoder(inputs, stVars, outputs, interp)
+	aiger.IsConstructor = func(sym *Const) bool {
+		return sym != nil && mod.Sig != nil && mod.Sig.Constructors[sym.Name]
+	}
+	aiger.ConstructorIndexFn = func(sym *Const) (int, int) {
+		if sym == nil {
+			return 0, 1
+		}
+		if enumSort, ok := GetSortTheory(sym.CSort, interp).(*LogicEnumeratedSort); ok {
+			for i, name := range enumSort.Extension {
+				if name == sym.Name {
+					return i, len(enumSort.Extension)
+				}
+			}
+			return 0, len(enumSort.Extension)
+		}
+		if enumSort, ok := sym.CSort.(*LogicEnumeratedSort); ok {
+			for i, name := range enumSort.Extension {
+				if name == sym.Name {
+					return i, len(enumSort.Extension)
+				}
+			}
+			return 0, len(enumSort.Extension)
+		}
+		return 0, 1
+	}
 
 	// Process combinational definitions (non-next-state)
 	var combDefs []Expr

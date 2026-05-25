@@ -440,6 +440,11 @@ func (e *Encoder) evalRec(expr Expr, getdef GetDefFunc) ([]int, error) {
 		return nil, fmt.Errorf("eval: non-nullary application: %v", expr)
 
 	case *Const:
+		if e.IsConstructor != nil && e.IsConstructor(t) {
+			idx, total := e.ConstructorIndex(t)
+			bits := ceilLog2(total)
+			return e.BinEnc(idx, bits), nil
+		}
 		if IsNumeral(t) {
 			n, err := GetEncodingBits(t.CSort, e.Interp)
 			if err != nil {
