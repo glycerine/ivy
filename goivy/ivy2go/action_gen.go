@@ -136,6 +136,13 @@ func (g *Generator) emitWouldFailHelper(w *goWriter, name string) {
 // expression by first substituting formal-param references with
 // v<i>-named Consts (so they lower via emitExpr's goIdent path
 // to the v<i> locals in scope), then calling emitExpr.
+//
+// Returns ("", false) when the Pre fmla mentions any symbol we
+// can't resolve at the Go level — state symbols, formal params,
+// numerals, enum constants, and definitions are OK; goivy-internal
+// temporaries (e.g. `__ts0_a` from the update-analysis pass) are
+// not. The caller treats this as "conservatively assume the action
+// would fail" so the random scheduler skips it.
 func (g *Generator) emitPreFmlaAsGoExpr(fmla goivy.Expr, params []*goivy.Const) (string, bool) {
 	subs := map[goivy.NodeKey]goivy.Expr{}
 	for i, p := range params {
@@ -155,11 +162,74 @@ func (g *Generator) emitPreFmlaAsGoExpr(fmla goivy.Expr, params []*goivy.Const) 
 	// don't share *Const identity with the formal — walk the
 	// rewritten tree and rebuild Consts when their name matches.
 	rewritten = rewriteFormalRefsByName(rewritten, params)
+	if g.preHasUnresolvableRef(rewritten) {
+		return "", false
+	}
 	code, err := g.emitExpr(rewritten)
 	if err != nil {
 		return "", false
 	}
 	return code, true
+}
+
+// preHasUnresolvableRef walks e looking for Const references that
+// can't be lowered to a sensible Go expression at runtime. Anything
+// outside (state symbols, enum members, definitions, numerals, the
+// known v<i> locals, plain bool literals) is flagged.
+func (g *Generator) preHasUnresolvableRef(e goivy.Expr) bool {
+	if e == nil {
+		return false
+	}
+	switch n := e.(type) {
+	case *goivy.Const:
+		// Plain bool literals.
+		if n.CSort == goivy.Boolean && (n.Name == "true" || n.Name == "false") {
+			return false
+		}
+		// Numerals.
+		if goivy.IsNumeral(n) {
+			return false
+		}
+		// State symbols.
+		if g.isStateSymbolName(n.Name) {
+			return false
+		}
+		// Enum members.
+		if g.isEnumConstantName(n.Name) {
+			return false
+		}
+		// Definitions (parameterless).
+		if g.isDefinitionName(n.Name) {
+			return false
+		}
+		// v<i> locals minted by emitPreFmlaAsGoExpr.
+		if strings.HasPrefix(n.Name, "v") {
+			rest := n.Name[1:]
+			allDigits := len(rest) > 0
+			for _, c := range rest {
+				if c < '0' || c > '9' {
+					allDigits = false
+					break
+				}
+			}
+			if allDigits {
+				return false
+			}
+		}
+		// Unknown — likely a goivy-internal temporary.
+		return true
+	}
+	for _, ch := range e.Children() {
+		if g.preHasUnresolvableRef(ch) {
+			return true
+		}
+	}
+	if a, ok := e.(*goivy.Apply); ok {
+		if g.preHasUnresolvableRef(a.Func) {
+			return true
+		}
+	}
+	return false
 }
 
 // rewriteFormalRefsByName traverses e and replaces any *goivy.Const
