@@ -367,6 +367,7 @@ class ProofChecker(object):
             fmla = lu.substitute_ast(fmla.body,{evar.name:term})
             cut = clone_goal(cut,[],fmla)
             goal = goal_add_prem(goal,ia.ConstantDecl(sym),goal.lineno)
+            if __debug__: xtracer.trace("proof.propertyTactic skolem sym=%s nTargs=%d" % (sym.name, len(targs)))
         
         subgoals = [subgoal]
         pf = proof.args[2]
@@ -445,6 +446,7 @@ class ProofChecker(object):
         return result
 
     def setup_schema_matching(self,decl,proof,schema,allow_witness=False):
+        if __debug__: xtracer.trace("proof.SetupSchemaMatching ENTER schemaLabel=%s declLabel=%s allowWitness=%s" % (schema.label, decl.label, allow_witness))
         if __debug__: xtracer.trace("proof.SetupSchemaMatchingRaw ENTER schemaLabel=%s declLabel=%s nmatches=%d allowWitness=%s" % (schema.label, decl.label, len(proof.match() or []), allow_witness))
         schema = rename_goal(schema,proof.renaming())
         schema = transform_defn_schema(schema,decl)

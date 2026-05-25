@@ -379,6 +379,52 @@ func TestCompileWhile_SomeCondition(t *testing.T) {
 	}
 }
 
+func TestCompileWhileExtractTraceMatchesPython(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+
+	out := captureActionUpdateStdout(t, func() {
+		if _, err := c.CompileWhile(cfg.NewAtom("true"), cfg.NewSequence(), nil); err != nil {
+			t.Fatalf("CompileWhile failed: %v", err)
+		}
+	})
+
+	bodyIdx := strings.Index(out, "XTRACE: compiler.Thing return type=Sequence\n")
+	if bodyIdx < 0 {
+		t.Fatalf("while body compile trace missing:\n%s", out)
+	}
+	extractIdx := strings.Index(out, "XTRACE: compiler.ExprContext.Extract ENTER\n")
+	if extractIdx < 0 {
+		t.Fatalf("CompileWhile did not return through ExprContext.Extract:\n%s", out)
+	}
+	if extractIdx < bodyIdx {
+		t.Fatalf("ExprContext.Extract happened before body compile returned; want Python order:\n%s", out)
+	}
+}
+
+func TestCompileWhilePreservesRankingWrapperLikePython(t *testing.T) {
+	cfg := NewAstConfig()
+	c := newTestCompiler()
+
+	result, err := c.CompileWhile(cfg.NewAtom("true"), cfg.NewSequence(), []Node{cfg.NewRanking(cfg.NewAtom("true"))})
+	if err != nil {
+		t.Fatalf("CompileWhile failed: %v", err)
+	}
+	whileAct, ok := result.(*LogicWhileAction)
+	if !ok {
+		t.Fatalf("expected *LogicWhileAction, got %T", result)
+	}
+	if len(whileAct.Invariants) != 1 {
+		t.Fatalf("expected one while invariant, got %d", len(whileAct.Invariants))
+	}
+	if _, ok := whileAct.Invariants[0].(*LogicRanking); !ok {
+		t.Fatalf("decreases invariant lost Python Ranking wrapper: %T %s", whileAct.Invariants[0], whileAct.Invariants[0].Canon())
+	}
+	if !strings.Contains(string(whileAct.Canon()), "(ranking") {
+		t.Fatalf("compiled while canon does not preserve ranking action: %s", whileAct.Canon())
+	}
+}
+
 // TestCompileWhile_SomeMinCondition tests Bug 2 for SomeMin variant.
 func TestCompileWhile_SomeMinCondition(t *testing.T) {
 	cfg := NewAstConfig()

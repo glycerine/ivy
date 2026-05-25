@@ -511,7 +511,12 @@ func (pc *ProofChecker) propertyTactic(decls []*LabeledFormula, proof *PropertyT
 	// proof.Prop is a LabeledFormula from the grammar
 	var cut *LabeledFormula
 	if propLF, ok := proof.Prop.(*LabeledFormula); ok {
-		cut = CompileExprVocabExtLF(propLF, vocab, pc.Mod)
+		var err error
+		cut, err = compileExprVocabLF(propLF, vocab, pc.Mod)
+		if err != nil {
+			xtracer.Trace("proof.propertyTactic EXIT err=compileFailed err=%v", err)
+			return nil, err
+		}
 	}
 	if cut == nil {
 		// Fallback: compile as expression, wrap in LabeledFormula
@@ -613,7 +618,7 @@ func (pc *ProofChecker) propertyTactic(decls []*LabeledFormula, proof *PropertyT
 		symSort := FuncConstSort(domSorts...)
 
 		// Python: sym = il.Symbol(lhs.rep, il.FuncConstSort(*(dom+[rng])))
-		sym := &Const{Name: lhs.Rep, CSort: symSort}
+		sym := NewConst(lhs.Rep, symSort)
 
 		// Python: if sym in self.stale or sym in goal_defns(goal):
 		goalDefns := GoalDefns(goal)

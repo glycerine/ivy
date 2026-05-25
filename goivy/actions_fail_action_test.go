@@ -117,6 +117,13 @@ func TestActionTypeNameFailAction(t *testing.T) {
 	}
 }
 
+func TestActionTypeNameRankingMatchesPython(t *testing.T) {
+	r := NewRanking(nil, True)
+	if got := ActionTypeName(r); got != "Ranking" {
+		t.Errorf("ActionTypeName(*LogicRanking) = %q, want %q", got, "Ranking")
+	}
+}
+
 func TestGetUpdateBypassesFailEnter(t *testing.T) {
 	// GetUpdate(*FailAction, ctx) must NOT emit "actions.GetUpdate ENTER
 	// type=fail_action" — Python's fail_action.update overrides

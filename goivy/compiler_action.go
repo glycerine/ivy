@@ -1215,7 +1215,8 @@ func (c *Compiler) CompileIf(condNode, thenNode Node, elseNode Node) (ActionsAct
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
 	loc := condNode.GetLineno()
-	c.ExprCtx = &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
+	ctx := &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
+	c.ExprCtx = ctx
 
 	// Compile condition with sort inference within ExprContext
 	// Python: with ctx: cond = sortify_with_inference(self.args[0])
@@ -1224,7 +1225,6 @@ func (c *Compiler) CompileIf(condNode, thenNode Node, elseNode Node) (ActionsAct
 		c.ExprCtx = savedCtx
 		return nil, fmt.Errorf("compiling if condition: %w", err)
 	}
-	ctx := c.ExprCtx
 	c.ExprCtx = savedCtx
 
 	// Compile then/else branches outside ExprContext (like Python)
@@ -1421,7 +1421,8 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
 	loc := condNode.GetLineno()
-	c.ExprCtx = &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
+	ctx := &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
+	c.ExprCtx = ctx
 
 	// Compile condition
 	cond, err := c.SortifyWithInference(condNode)
@@ -1442,7 +1443,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 	}
 
 	// Check for action calls in condition (Python: if ctx.code: raise IvyError)
-	if len(c.ExprCtx.Code) > 0 {
+	if len(ctx.Code) > 0 {
 		c.ExprCtx = savedCtx
 		return nil, NewIvyError(condNode, "while condition may not contain action calls")
 	}
@@ -1458,7 +1459,13 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 
 	res := NewWhileAction(cond, body, invs...)
 	res.SetLineno(condNode.GetLineno())
-	return res, nil
+	ctx.Code = append(ctx.Code, res)
+	extracted := ctx.Extract()
+	act, ok := extracted.(ActionsAction)
+	if !ok {
+		return nil, fmt.Errorf("compile while: extracted non-action %T", extracted)
+	}
+	return act, nil
 }
 
 // assertLikeResult holds the compiled formula state shared by all assert-like compilations.

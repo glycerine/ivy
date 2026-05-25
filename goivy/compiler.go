@@ -565,6 +565,19 @@ func (c *Compiler) compileGeneric(node Node) (Expr, error) {
 		}
 		compiled[i] = r
 	}
+	if rank, ok := node.(*Ranking); ok {
+		exprs := make([]Expr, 0, len(compiled))
+		for _, c := range compiled {
+			e, ok := c.(Expr)
+			if !ok {
+				return nil, fmt.Errorf("compiling Ranking arg of %T produced non-expr %T", node, c)
+			}
+			exprs = append(exprs, e)
+		}
+		res := NewRanking(nil, exprs...)
+		res.SetLineno(rank.GetLineno())
+		return res, nil
+	}
 	// Python: self.clone([a.compile() for a in self.args])
 	result := node.Clone(compiled)
 	if expr, ok := result.(Expr); ok {

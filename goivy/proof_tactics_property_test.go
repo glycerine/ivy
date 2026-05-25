@@ -130,6 +130,53 @@ func mkPropertyTacticNode(cfg *AstConfig, prop, pname, proof Node) *PropertyTact
 	return cfg.NewPropertyTactic(prop, pname, proof)
 }
 
+func TestPropertyTacticLabeledFormulaCompileTraceMatchesPython(t *testing.T) {
+	cfg := NewAstConfig()
+	mod := New()
+	pc := mkPCWithModule(mod)
+	goal := cfg.NewLabeledFormula(cfg.NewAtom("g"), True)
+	propLF := cfg.NewLabeledFormula(cfg.NewAtom("prop"), True)
+	pt := mkPropertyTacticNode(cfg, propLF, nil, nil)
+
+	out := captureActionUpdateStdout(t, func() {
+		if _, err := pc.propertyTactic([]*LabeledFormula{goal}, pt); err != nil {
+			t.Fatalf("propertyTactic failed: %v", err)
+		}
+	})
+
+	compileIdx := strings.Index(out, "XTRACE: proof.CompileExprVocab ENTER exprType=LabeledFormula\n")
+	if compileIdx < 0 {
+		t.Fatalf("property tactic did not use Python compile_expr_vocab for LF cut:\n%s", out)
+	}
+	sortIdx := strings.Index(out, "XTRACE: ivylogic.WithSorts.Enter nSorts=0\n")
+	if sortIdx < 0 {
+		t.Fatalf("property tactic did not enter WithSorts while compiling LF cut:\n%s", out)
+	}
+	if sortIdx < compileIdx {
+		t.Fatalf("WithSorts trace preceded CompileExprVocab; want Python order:\n%s", out)
+	}
+}
+
+func TestPropertyTacticSkolemTraceMatchesPython(t *testing.T) {
+	cfg := NewAstConfig()
+	mod := mkTestMod(1)
+	pc := mkPCWithModule(mod)
+	goal := cfg.NewLabeledFormula(cfg.NewAtom("g"), True)
+	yv := cfg.NewVariable("Y", "S")
+	propLF := cfg.NewLabeledFormula(cfg.NewAtom("prop"), cfg.NewExists([]Node{yv}, cfg.NewAtom("P", yv)))
+	pt := mkPropertyTacticNode(cfg, propLF, cfg.NewAtom("c"), nil)
+
+	out := captureActionUpdateStdout(t, func() {
+		if _, err := pc.propertyTactic([]*LabeledFormula{goal}, pt); err != nil {
+			t.Fatalf("propertyTactic failed: %v", err)
+		}
+	})
+
+	if !strings.Contains(out, "XTRACE: proof.propertyTactic skolem sym=c nTargs=0\n") {
+		t.Fatalf("property tactic did not emit Python-matched skolem trace:\n%s", out)
+	}
+}
+
 // Test 1: Basic Skolem witness with one universal
 func TestPropertyTactic_BasicSkolemWitness(t *testing.T) {
 	cfg := NewAstConfig()
@@ -225,6 +272,9 @@ func TestPropertyTactic_NullarySkolemConstant(t *testing.T) {
 					// Nullary: sort should be just "S", not a FunctionSort
 					if _, ok := c.CSort.(*LogicFunctionSort); ok {
 						t.Error("Skolem sort: expected non-function sort for nullary constant")
+					}
+					if !strings.Contains(string(cd.Canon()), `declArgs:[(Symbol name:c sort:(UninterpretedSort name:S))]`) {
+						t.Fatalf("Skolem ConstantDecl lost its structural symbol in canon: %s", cd.Canon())
 					}
 				}
 			}

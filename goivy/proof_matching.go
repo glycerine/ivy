@@ -23,7 +23,11 @@ func (pc *ProofChecker) SetupMatching(decl *LabeledFormula, proof *SchemaInstant
 	if pm != nil {
 		n = pm.Len()
 	}
-	xtracer.Trace("proof.SetupMatching EXIT err=%v npmatch=%d", e, n)
+	if e != nil {
+		xtracer.Trace("proof.SetupMatching EXIT err=%v npmatch=%d", e, n)
+	} else {
+		xtracer.Trace("proof.SetupMatching EXIT npmatch=%d", n)
+	}
 	return prob, pm, e
 }
 
@@ -47,6 +51,7 @@ func (pc *ProofChecker) SetupSchemaMatchingRaw(
 	allowWitness bool,
 ) (*MatchProblem, *InsMap[NodeKey, Expr], error) {
 
+	xtracer.Trace("proof.SetupSchemaMatching ENTER schemaLabel=%s declLabel=%s allowWitness=%v", schema.LabelForTrace(), decl.LabelForTrace(), allowWitness)
 	xtracer.Trace("proof.SetupSchemaMatchingRaw ENTER schemaLabel=%s declLabel=%s nmatches=%d allowWitness=%v", schema.LabelForTrace(), decl.LabelForTrace(), len(matches), allowWitness)
 
 	// Step 1: Rename schema using proof renaming
@@ -109,7 +114,6 @@ func (pc *ProofChecker) SetupSchemaMatching(
 	allowWitness bool,
 	mod *Module,
 ) (*MatchProblem, *InsMap[NodeKey, Expr], error) {
-	xtracer.Trace("proof.SetupSchemaMatching ENTER schemaLabel=%s declLabel=%s allowWitness=%v", schema.LabelForTrace(), decl.LabelForTrace(), allowWitness)
 	var ren Node
 	var matches []Node
 	if proof != nil {

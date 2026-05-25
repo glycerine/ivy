@@ -1158,7 +1158,7 @@ func (r *Ranking) Args() []Node           { return []Node{r.Fmla} }
 func (r *Ranking) Clone(args []Node) Node { return &Ranking{Base: r.Base, Fmla: args[0]} }
 func (r *Ranking) String() string         { return "decreases" }
 func (r *Ranking) Canon() Canonical {
-	return Canonical(fmt.Sprintf("(ranking%v fmla:%v)", r.Base.canonFields(), nodeCanon(r.Fmla)))
+	return Canonical(fmt.Sprintf("(ranking%v elems:%v)", r.Base.canonFields(), SliceCanon(r.Args())))
 }
 
 // AssertAction asserts a formula (can fail verification).

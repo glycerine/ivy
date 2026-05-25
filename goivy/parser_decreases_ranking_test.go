@@ -51,8 +51,11 @@ func TestRankingConstruction(t *testing.T) {
 	if !strings.Contains(canon, "ranking") {
 		t.Errorf("expected 'ranking' in canon, got %s", canon)
 	}
-	if !strings.Contains(canon, "fmla:") {
-		t.Errorf("expected 'fmla:' in canon, got %s", canon)
+	if strings.Contains(canon, "fmla:") {
+		t.Errorf("ranking canon used old Go-only fmla field, got %s", canon)
+	}
+	if !strings.Contains(canon, "elems:[") {
+		t.Errorf("expected Python generic action elems canon, got %s", canon)
 	}
 	t.Logf("Ranking canon: %s", canon)
 }

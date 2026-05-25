@@ -58,6 +58,23 @@ func captureActionUpdateStdout(t *testing.T, fn func()) string {
 	return out
 }
 
+func TestWhileExpandRankingLocalActionCallerMatchesPython(t *testing.T) {
+	rank := NewRanking(nil, True)
+	w := NewWhileAction(True, NewSequence(), rank)
+
+	out := captureActionUpdateStdout(t, func() {
+		_ = w.Expand(testCtx())
+	})
+
+	if !strings.Contains(out, "XTRACE: LocalAction.__init__ uniqueID=") ||
+		!strings.Contains(out, "caller=actions.WhileAction.action_update") {
+		t.Fatalf("ranking while expansion used the wrong LocalAction caller trace:\n%s", out)
+	}
+	if strings.Contains(out, "caller=actions.action_on_subgoal") {
+		t.Fatalf("ranking while expansion used stale helper caller trace:\n%s", out)
+	}
+}
+
 // --- AssumeAction ---
 
 func TestAssumeActionUpdate(t *testing.T) {

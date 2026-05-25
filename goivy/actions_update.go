@@ -1108,6 +1108,8 @@ func ActionTypeName(a interface{}) string {
 		return "CrashAction"
 	case *LogicInstantiateAction:
 		return "InstantiateAction"
+	case *LogicRanking:
+		return "Ranking"
 	case *LogicNativeAction:
 		return "NativeAction"
 	case *LogicDebugAction:
@@ -1762,7 +1764,7 @@ func (a *LogicWhileAction) Expand(ctx *UpdateContext) ActionsAction {
 
 	// If there's a ranking function, wrap in LocalAction
 	if rankLocal != nil {
-		return NewLocalActionOn(ctx.ActCfg, "actions.action_on_subgoal", rankLocal, result)
+		return NewLocalActionOn(ctx.ActCfg, "actions.WhileAction.action_update", rankLocal, result)
 	}
 	return result
 }
