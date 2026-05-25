@@ -279,6 +279,83 @@ print(json.dumps(h.events))
 	}
 }
 
+type envLeakAnnotationHandler struct {
+	seen []bool
+	key  NodeKey
+}
+
+func (h *envLeakAnnotationHandler) Eval(cond Expr) bool { return true }
+
+func (h *envLeakAnnotationHandler) Handle(action ActionsAction, env map[NodeKey]Expr) {
+	_, ok := env[h.key]
+	h.seen = append(h.seen, ok)
+}
+
+func (h *envLeakAnnotationHandler) DoReturn(action ActionsAction, env map[NodeKey]Expr) {}
+func (h *envLeakAnnotationHandler) Fail()                                               {}
+
+func TestMatchAnnotationRenameKeepsNewBindingsForSiblingsLikePython(t *testing.T) {
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+import json
+from ivy import ivy_actions as act, ivy_logic as il, logic as lg
+
+x = il.Symbol("x", lg.Boolean)
+y = il.Symbol("y", lg.Boolean)
+p = il.Symbol("p", lg.Boolean)
+action = act.Sequence(act.AssumeAction(p), act.AssumeAction(p))
+annot = act.ComposeAnnotation(
+    act.RenameAnnotation(act.ComposeAnnotation(act.EmptyAnnotation(), act.EmptyAnnotation()), {x:y}),
+    act.EmptyAnnotation(),
+)
+
+class H(object):
+    def __init__(self):
+        self.seen = []
+    def eval(self, cond):
+        return True
+    def handle(self, action, env):
+        self.seen.append(x in env)
+    def do_return(self, action, env):
+        pass
+    def fail(self):
+        pass
+
+h = H()
+act.match_annotation(action, annot, h)
+print(json.dumps(h.seen))
+`)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("python MatchAnnotation rename oracle failed: %v\n%s", err, out)
+	}
+	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+	var want []bool
+	if err := json.Unmarshal([]byte(lines[len(lines)-1]), &want); err != nil {
+		t.Fatalf("decode python MatchAnnotation rename oracle %q: %v", out, err)
+	}
+
+	x := NewConst("x", Boolean)
+	y := NewConst("y", Boolean)
+	p := NewConst("p", Boolean)
+	action := NewSequence(NewAssumeAction(p), NewAssumeAction(p))
+	annot := &ComposeAnnotation{Args: []Annotation{
+		newRenameAnnotation(&ComposeAnnotation{Args: []Annotation{EmptyAnnotation{}, EmptyAnnotation{}}}, map[NodeKey]Expr{Key(x): y}),
+		EmptyAnnotation{},
+	}}
+	handler := &envLeakAnnotationHandler{key: Key(x)}
+
+	MatchAnnotation(action, annot, handler, nil)
+
+	if len(handler.seen) != len(want) {
+		t.Fatalf("Go MatchAnnotation handler count differs from Python\nwant: %#v\ngot:  %#v", want, handler.seen)
+	}
+	for i := range want {
+		if handler.seen[i] != want[i] {
+			t.Fatalf("Go MatchAnnotation rename env differs from Python\nwant: %#v\ngot:  %#v", want, handler.seen)
+		}
+	}
+}
+
 func TestTraceExpandWhileRankingChecksUseDecreasesLinenoLikePython(t *testing.T) {
 	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
 import json

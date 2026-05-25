@@ -68,10 +68,8 @@ func matchAnnotationRecur(action ActionsAction, annot Annotation, env map[NodeKe
 			}
 		}
 		matchAnnotationRecur(action, ra.Arg, env, handler, pos, mod)
-		// Restore saved env
-		for x := range ra.Map {
-			delete(env, x)
-		}
+		// Python only restores entries that were present before the rename.
+		// Newly-added bindings remain visible to later annotation siblings.
 		for x, v := range save {
 			env[x] = v
 		}
