@@ -1171,7 +1171,7 @@ func sortDisplayName(sort Sort) string {
 	case *RangeSort:
 		return s.Name
 	case *BooleanSort:
-		return "Bool"
+		return "bool"
 	default:
 		return string(sort.Sexp())
 	}

@@ -1308,9 +1308,12 @@ def apply_match(match,fmla,env = None):
     Have to first alpha-rename to avoid capture of variables by binders
 
     """
+    if __debug__: xtracer.trace("proof.ApplyMatch ENTER nmatch=%d fmlaType=%s" % (len(match), type(fmla).__name__))
     freevars = match_rhs_vars(match)
     fmla = il.alpha_avoid(fmla,freevars)
-    return apply_match_rec(match,fmla,env if env is not None else set())
+    result = apply_match_rec(match,fmla,env if env is not None else set())
+    if __debug__: xtracer.trace("proof.ApplyMatch EXIT HASH canon=%s" % (result.canon() if hasattr(result,'canon') else str(result)))
+    return result
 
 def apply_match_rec(match,fmla,env):
     args = [apply_match_rec(match,f,env) for f in fmla.args]

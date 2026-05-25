@@ -944,19 +944,23 @@ func AvoidCaptureProblem(cfg *AstConfig, prob *MatchProblem, match map[NodeKey]E
 	mrv := MatchRhsVars(match)
 	matchNames := make(map[string]bool)
 	for _, v := range mrv {
-		if c, ok := v.(*Const); ok {
-			matchNames[c.Name] = true
-		}
-		if v2, ok := v.(*LogicVariable); ok {
-			matchNames[v2.Name] = true
+		if v != nil {
+			matchNames[ExprName(v)] = true
 		}
 	}
 	var used []string
 	for name := range matchNames {
 		used = append(used, name)
 	}
-	for k := range prob.FreeSyms {
-		used = append(used, fmt.Sprint(k))
+	if prob.SchemaLF != nil {
+		for _, sym := range GoalDefns(prob.SchemaLF) {
+			used = append(used, ExprName(sym))
+		}
+		for _, sym := range GoalFree(prob.SchemaLF) {
+			if v, ok := sym.(*LogicVariable); ok {
+				used = append(used, v.Name)
+			}
+		}
 	}
 	rn := NewUniqueRenamer("", used)
 	cmatch := make(map[NodeKey]Expr)
@@ -970,9 +974,7 @@ func AvoidCaptureProblem(cfg *AstConfig, prob *MatchProblem, match map[NodeKey]E
 			}
 		}
 	}
-	if len(cmatch) > 0 {
-		RenameProblem(cfg, cmatch, prob)
-	}
+	RenameProblem(cfg, cmatch, prob)
 }
 
 // RaiseCapture raises a CaptureError for a captured symbol.
@@ -1417,7 +1419,13 @@ func MakeDistinctVars(sorts []Sort, asts ...Expr) []*LogicVariable {
 // ApplyMatchGoalNode applies a match to a goal.
 // Corresponds to Python's apply_match_goal with apply_match_alt.
 func ApplyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFormula) *LabeledFormula {
-	xtracer.Trace("proof.ApplyMatchGoalNode ENTER label=%s nmatch=%d", goal.LabelForTrace(), len(match))
+	return applyMatchGoalNode(cfg, match, goal, true)
+}
+
+func applyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFormula, traceTop bool) *LabeledFormula {
+	if traceTop {
+		xtracer.Trace("proof.ApplyMatchGoalNode ENTER label=%s nmatch=%d", goal.LabelForTrace(), len(match))
+	}
 	// Python's apply_match_goal has no early return for empty match — it always
 	// processes and clones the goal, producing a PRESERVE trace. We must do the same.
 	prems := GoalPrems(goal)
@@ -1425,7 +1433,7 @@ func ApplyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFor
 	for _, p := range prems {
 		pu := unwrapCompiledNode(p)
 		if lf, ok := pu.(*LabeledFormula); ok {
-			newPrems = append(newPrems, ApplyMatchGoalNode(cfg, match, lf))
+			newPrems = append(newPrems, applyMatchGoalNode(cfg, match, lf, false))
 		} else if s, ok := pu.(Sort); ok {
 			// Apply sort renaming: match[sort] → newSort
 			key := Key(s)
@@ -1510,7 +1518,9 @@ func ApplyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFor
 		newConc = rawConc
 	}
 	result := CloneGoalPreserveID(cfg, goal, newPrems, newConc)
-	xtracer.Trace("proof.ApplyMatchGoalNode EXIT HASH canon=%v", result.Canon())
+	if traceTop {
+		xtracer.Trace("proof.ApplyMatchGoalNode EXIT HASH canon=%v", result.Canon())
+	}
 	return result
 }
 
@@ -1518,7 +1528,13 @@ func ApplyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFor
 // (non-capture-checking) apply function. Used for fomatch applications.
 // Corresponds to Python's apply_match_goal called with apply_match.
 func ApplyMatchGoalNodeNonAlt(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFormula) *LabeledFormula {
-	xtracer.Trace("proof.ApplyMatchGoalNodeNonAlt ENTER label=%s nmatch=%d", goal.LabelForTrace(), len(match))
+	return applyMatchGoalNodeNonAlt(cfg, match, goal, true)
+}
+
+func applyMatchGoalNodeNonAlt(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFormula, traceTop bool) *LabeledFormula {
+	if traceTop {
+		xtracer.Trace("proof.ApplyMatchGoalNode ENTER label=%s nmatch=%d", goal.LabelForTrace(), len(match))
+	}
 	// Python's apply_match_goal has no early return for empty match — it always
 	// processes and clones the goal, producing a PRESERVE trace. We must do the same.
 	prems := GoalPrems(goal)
@@ -1526,7 +1542,7 @@ func ApplyMatchGoalNodeNonAlt(cfg *AstConfig, match map[NodeKey]Expr, goal *Labe
 	for _, p := range prems {
 		pu := unwrapCompiledNode(p)
 		if lf, ok := pu.(*LabeledFormula); ok {
-			newPrems = append(newPrems, ApplyMatchGoalNodeNonAlt(cfg, match, lf))
+			newPrems = append(newPrems, applyMatchGoalNodeNonAlt(cfg, match, lf, false))
 		} else if s, ok := pu.(Sort); ok {
 			key := Key(s)
 			if rep, found := match[key]; found {
@@ -1592,7 +1608,9 @@ func ApplyMatchGoalNodeNonAlt(cfg *AstConfig, match map[NodeKey]Expr, goal *Labe
 		newConc = rawConc
 	}
 	result := CloneGoalPreserveID(cfg, goal, newPrems, newConc)
-	xtracer.Trace("proof.ApplyMatchGoalNodeNonAlt EXIT HASH canon=%v", result.Canon())
+	if traceTop {
+		xtracer.Trace("proof.ApplyMatchGoalNode EXIT HASH canon=%v", result.Canon())
+	}
 	return result
 }
 

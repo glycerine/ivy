@@ -382,9 +382,9 @@ func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantia
 	pmatch := insMapToMap(pmatchIns)
 
 	// Step 2: Apply initial proof match (from compile_match) to problem
-	if len(pmatch) > 0 {
-		ApplyMatchToProblem(pc.astCfg(), pmatch, prob)
-	}
+	// Python always calls apply_match_to_problem, even when pmatch is empty:
+	// the helper still performs capture setup and clones the schema.
+	ApplyMatchToProblem(pc.astCfg(), pmatch, prob)
 
 	// Step 3+4: Match (with Tuple handling for premise matches)
 	// Python: if isinstance(prob.pat, ia.Tuple): ...
@@ -395,12 +395,14 @@ func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantia
 			inst := prob.TupleInsts[i]
 
 			fomatch := FOMatch(pat, inst, prob.FreeSyms, prob.Constants)
-			if fomatch != nil && len(fomatch) > 0 {
+			if fomatch != nil {
 				ApplyMatchToProblem(pc.astCfg(), fomatch, prob)
 				// Update remaining tuple patterns with this match
-				for j := i + 1; j < len(prob.TuplePats); j++ {
-					prob.TuplePats[j] = ApplyMatch(fomatch, prob.TuplePats[j])
-					prob.TupleInsts[j] = ApplyMatch(fomatch, prob.TupleInsts[j])
+				if len(fomatch) > 0 {
+					for j := i + 1; j < len(prob.TuplePats); j++ {
+						prob.TuplePats[j] = ApplyMatch(fomatch, prob.TuplePats[j])
+						prob.TupleInsts[j] = ApplyMatch(fomatch, prob.TupleInsts[j])
+					}
 				}
 			}
 
@@ -408,8 +410,8 @@ func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantia
 			if somatch == nil {
 				return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
 			}
+			ApplyMatchToProblem(pc.astCfg(), somatch, prob)
 			if len(somatch) > 0 {
-				ApplyMatchToProblem(pc.astCfg(), somatch, prob)
 				for j := i + 1; j < len(prob.TuplePats); j++ {
 					prob.TuplePats[j] = ApplyMatchAlt(somatch, prob.TuplePats[j], nil)
 					prob.TupleInsts[j] = ApplyMatchAlt(somatch, prob.TupleInsts[j], nil)
@@ -419,7 +421,7 @@ func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantia
 	} else {
 		// Non-tuple: single pattern matching
 		fomatch := FOMatch(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
-		if fomatch != nil && len(fomatch) > 0 {
+		if fomatch != nil {
 			// Python: apply_match_to_problem(fomatch, prob, apply_match) — non-alt
 			ApplyMatchToProblemNonAlt(pc.astCfg(), fomatch, prob)
 		}
@@ -429,9 +431,7 @@ func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantia
 			xtracer.Trace("proof.MatchSchema EXIT err=matchFailed")
 			return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
 		}
-		if len(somatch) > 0 {
-			ApplyMatchToProblem(pc.astCfg(), somatch, prob)
-		}
+		ApplyMatchToProblem(pc.astCfg(), somatch, prob)
 	}
 
 	// Step 5: Detect nonce symbol clashes
@@ -445,7 +445,7 @@ func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantia
 		xtracer.Trace("proof.MatchSchema EXIT err=schemaLFNil")
 		return nil, &NoMatch{Msg: "schema is not a labeled formula after matching"}
 	}
-	result, err := GoalSubgoalsFromSchema(pc.astCfg(), prob.SchemaLF, goal)
+	result, err := GoalSubgoals(pc.astCfg(), prob.SchemaLF, goal, proof.GetLineno())
 	xtracer.Trace("proof.MatchSchema EXIT nsubgoals=%d err=%v", len(result), err)
 	return result, err
 }

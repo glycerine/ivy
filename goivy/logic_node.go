@@ -28,6 +28,8 @@ func ExprName(x Expr) string {
 		return t.Name
 	case *UninterpretedSort:
 		return t.Name
+	case *BooleanSort:
+		return "bool"
 	case *LogicEnumeratedSort:
 		return t.Name
 	case *RangeSort:
