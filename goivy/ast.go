@@ -433,6 +433,9 @@ type nativeAtomExpr struct {
 
 func newNativeAtomExpr(atom *Atom) *nativeAtomExpr { return &nativeAtomExpr{Atom: atom} }
 func (n *nativeAtomExpr) NodeSort() Sort           { return TopS }
+func (n *nativeAtomExpr) Clone(args []Node) Node {
+	return newNativeAtomExpr(n.Atom.Clone(args).(*Atom))
+}
 func (n *nativeAtomExpr) Children() []Expr {
 	children := make([]Expr, 0, len(n.Terms))
 	for _, term := range n.Terms {

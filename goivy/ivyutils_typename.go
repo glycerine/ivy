@@ -14,6 +14,9 @@ func TypeName(v interface{}) string {
 	if _, ok := v.(*LogicVariable); ok {
 		return "Var"
 	}
+	if _, ok := v.(*nativeAtomExpr); ok {
+		return "Atom"
+	}
 	t := reflect.TypeOf(v)
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()

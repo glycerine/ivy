@@ -16,4 +16,9 @@ func TestTypeNameConcreteVariableNamesAfterUniPackageMerge(t *testing.T) {
 	if got := TypeName(logicVar); got != "Var" {
 		t.Fatalf("TypeName(LogicVariable) = %q, want Var", got)
 	}
+
+	atom := cfg.NewAtom("byte.random")
+	if got := TypeName(newNativeAtomExpr(atom)); got != "Atom" {
+		t.Fatalf("TypeName(nativeAtomExpr) = %q, want Atom", got)
+	}
 }

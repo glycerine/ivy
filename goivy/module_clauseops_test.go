@@ -450,6 +450,29 @@ func TestModuleClauseOpsSubstituteConstantsAST(t *testing.T) {
 	}
 }
 
+func TestSubstituteConstantsActionPreservesNativeAtomExpr(t *testing.T) {
+	cfg := NewAstConfig()
+	act := NewNativeAction(
+		cfg.NewNativeCode("byte random `8`"),
+		newNativeAtomExpr(cfg.NewAtom("8")),
+	)
+
+	result := SubstituteConstantsAction(act, nil)
+	native, ok := result.(*LogicNativeAction)
+	if !ok {
+		t.Fatalf("SubstituteConstantsAction = %T, want *LogicNativeAction", result)
+	}
+	if len(native.Params) != 1 {
+		t.Fatalf("native params = %d, want 1", len(native.Params))
+	}
+	if _, ok := native.Params[0].(*nativeAtomExpr); !ok {
+		t.Fatalf("native param = %T, want *nativeAtomExpr", native.Params[0])
+	}
+	if got := TypeName(native.Params[0]); got != "Atom" {
+		t.Fatalf("TypeName(native param) = %q, want Atom", got)
+	}
+}
+
 func TestModuleClauseOpsRenameAST(t *testing.T) {
 	a := moduleMkConst("a")
 	b := moduleMkConst("b")
