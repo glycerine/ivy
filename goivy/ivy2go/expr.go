@@ -591,6 +591,21 @@ func (g *Generator) emitQuant(vars []*goivy.LogicVariable, body goivy.Expr, fora
 	if len(vars) == 0 {
 		return g.emitExpr(body)
 	}
+	// Fast-path: when the body is a single ∃ on an extensional
+	// relation atom (e.g. `exists X. link(X, Y)`), iterate the
+	// relation's actual map entries instead of the full Cartesian
+	// product. Mirrors cpp's emitExtensionalQuant call.
+	if code, ok, err := g.emitExtensionalQuant(vars, body, forall); ok || err != nil {
+		return code, err
+	}
+	// Fast-path: when the first variable has an `iterable` attribute,
+	// use the user-supplied iter sort instead of the full enum domain.
+	if h, ok, err := g.quantIterableHeader(vars[0]); ok || err != nil {
+		if err != nil {
+			return "", err
+		}
+		return g.emitQuantWithHeaders(vars, body, forall, []string{h}, true)
+	}
 	headers := make([]string, len(vars))
 	closers := make([]string, len(vars))
 	for i, v := range vars {
@@ -1112,6 +1127,66 @@ func (g *Generator) getAllBounds(vars []*goivy.LogicVariable, body goivy.Expr, e
 	return bounds, nil
 }
 
+// emitQuantWithHeaders mirrors ivy2cpp/expr.go:554. Renders a
+// quantifier expression as a Go `func() bool { … }()` closure
+// using caller-provided loop headers. When `iterFirstOnly` is set,
+// only the first header is opened here; the remaining vars are
+// quantified recursively through emitQuant so the inner closure
+// uses whatever bound-derivation / iterable / generic header the
+// sub-call picks.
+func (g *Generator) emitQuantWithHeaders(vars []*goivy.LogicVariable, body goivy.Expr, forall bool, headers []string, iterFirstOnly bool) (string, error) {
+	var b strings.Builder
+	b.WriteString("func() bool {\n")
+	emitted := headers
+	if iterFirstOnly {
+		emitted = headers[:1]
+	}
+	for _, h := range emitted {
+		b.WriteString("\t")
+		b.WriteString(h)
+		b.WriteString("\n")
+	}
+	if iterFirstOnly && len(vars) > 1 {
+		inner, err := g.emitQuant(vars[1:], body, forall)
+		if err != nil {
+			return "", err
+		}
+		if forall {
+			b.WriteString("\t\tif !(")
+			b.WriteString(inner)
+			b.WriteString(") { return false }\n")
+		} else {
+			b.WriteString("\t\tif ")
+			b.WriteString(inner)
+			b.WriteString(" { return true }\n")
+		}
+	} else {
+		expr, err := g.emitExpr(body)
+		if err != nil {
+			return "", err
+		}
+		if forall {
+			b.WriteString("\t\tif !(")
+			b.WriteString(expr)
+			b.WriteString(") { return false }\n")
+		} else {
+			b.WriteString("\t\tif ")
+			b.WriteString(expr)
+			b.WriteString(" { return true }\n")
+		}
+	}
+	for range emitted {
+		b.WriteString("\t}\n")
+	}
+	if forall {
+		b.WriteString("\treturn true\n")
+	} else {
+		b.WriteString("\treturn false\n")
+	}
+	b.WriteString("}()")
+	return b.String(), nil
+}
+
 // quantIterableHeader mirrors ivy2cpp/expr.go:604. Emits an
 // iter-based Go `for` header when the variable's sort declares an
 // `iterable` attribute with companion `create` / `is_end` / `next`
@@ -1162,6 +1237,112 @@ func (g *Generator) emitExistsVariantRelation(vars []*goivy.LogicVariable, body 
 		return "", true, fmt.Errorf("ivy2go: no variant index for %s in %s", sortName(bound.VSort), sortName(app.Terms[0].NodeSort()))
 	}
 	return fmt.Sprintf("(%s.Tag == %d)", lhs, idx), true, nil
+}
+
+// emitExtensionalQuant mirrors ivy2cpp/expr.go:654. Iterates the
+// extensional relation's actual entries (its backing map) instead
+// of the full Cartesian product of the variable sorts. Returns
+// ("", false, nil) when the formula isn't of the extensional shape.
+func (g *Generator) emitExtensionalQuant(vars []*goivy.LogicVariable, body goivy.Expr, forall bool) (string, bool, error) {
+	if len(vars) == 0 || g == nil || g.Mod == nil {
+		return "", false, nil
+	}
+	v0 := vars[0]
+	if v0 == nil {
+		return "", false, nil
+	}
+	exists := !forall
+	var ebnds []*goivy.Apply
+	g.matchExtensionalBoundExprs(v0, body, exists, &ebnds)
+	if len(ebnds) == 0 {
+		return "", false, nil
+	}
+	ebnd := ebnds[0]
+	fs, ok := ebnd.Func.NodeSort().(*goivy.LogicFunctionSort)
+	if !ok {
+		return "", false, nil
+	}
+	st := goFunctionStorageFor(g, fs.Domain(), fs.Range())
+	if st.Kind != goStorageHashThunk {
+		return "", false, nil
+	}
+	relName := goivy.ExprName(ebnd.Func)
+	rel := "s." + goExportedName(relName)
+
+	var b strings.Builder
+	b.WriteString("func() bool {\n")
+	b.WriteString(fmt.Sprintf("\tfor __k, __v := range %s {\n", rel))
+	b.WriteString("\t\tif !__v { continue }\n")
+
+	// Bind each quantified variable that appears as an argument of
+	// ebnd to the corresponding field of the map key.
+	boundNames := map[string]bool{}
+	multiArg := len(ebnd.Terms) > 1
+	for pos, term := range ebnd.Terms {
+		tv, isVar := term.(*goivy.LogicVariable)
+		if !isVar {
+			continue
+		}
+		var matched *goivy.LogicVariable
+		for _, v := range vars {
+			if v != nil && v.Name == tv.Name {
+				matched = v
+				break
+			}
+		}
+		if matched == nil || boundNames[matched.Name] {
+			continue
+		}
+		boundNames[matched.Name] = true
+		if multiArg {
+			b.WriteString(fmt.Sprintf("\t\t%s := __k.Arg%d\n", goIdent(matched.Name), pos))
+		} else {
+			b.WriteString(fmt.Sprintf("\t\t%s := __k\n", goIdent(matched.Name)))
+		}
+		b.WriteString(fmt.Sprintf("\t\t_ = %s\n", goIdent(matched.Name)))
+	}
+
+	// Open generic loops over any quantified variable not bound by
+	// the extensional atom.
+	var remaining []*goivy.LogicVariable
+	for _, v := range vars {
+		if v != nil && !boundNames[v.Name] {
+			remaining = append(remaining, v)
+		}
+	}
+	nestedOpened := 0
+	for _, v := range remaining {
+		header, _, err := g.loopHeaderForVar(v)
+		if err != nil {
+			return "", true, err
+		}
+		b.WriteString("\t\t")
+		b.WriteString(header)
+		b.WriteString("\n")
+		nestedOpened++
+	}
+
+	expr, err := g.emitExpr(body)
+	if err != nil {
+		return "", true, err
+	}
+	if forall {
+		b.WriteString(fmt.Sprintf("\t\tif !(%s) { return false }\n", expr))
+	} else {
+		b.WriteString(fmt.Sprintf("\t\tif %s { return true }\n", expr))
+	}
+
+	for i := 0; i < nestedOpened; i++ {
+		b.WriteString("\t\t}\n")
+	}
+	b.WriteString("\t}\n")
+	if forall {
+		b.WriteString("\treturn true\n")
+	} else {
+		b.WriteString("\treturn false\n")
+	}
+	b.WriteString("}()")
+	return b.String(), true, nil
 }
 
 // matchExtensionalBoundExprs mirrors ivy2cpp/expr.go:765. Walks

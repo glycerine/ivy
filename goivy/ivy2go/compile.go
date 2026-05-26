@@ -1,6 +1,7 @@
 package ivy2go
 
 import (
+	goJSON "encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -331,6 +332,62 @@ func pruneStateStoresToSignature(mod *goivy.Module) {
 			}
 		}
 	}
+}
+
+// descriptorParamDesc mirrors ivy2cpp/compile.go:20.
+type descriptorParamDesc struct {
+	Name string `json:"name"`
+	Type string `json:"type"`
+}
+
+// descriptorJSON mirrors ivy2cpp/compile.go:748. Builds a JSON
+// descriptor of the emitted module — used by external tooling that
+// wants to know the binary name, isolate, and parameter shape per
+// generated process.
+func descriptorJSON(mod *goivy.Module, cfg Config, outputs []*Output, isolates []string) (string, error) {
+	type processDesc struct {
+		Binary string                `json:"binary"`
+		Name   string                `json:"name"`
+		Params []descriptorParamDesc `json:"params"`
+	}
+	desc := map[string]any{}
+	processes := make([]processDesc, 0, len(outputs))
+	for i, out := range outputs {
+		name := ""
+		if i < len(isolates) {
+			name = isolates[i]
+		}
+		processes = append(processes, processDesc{
+			Binary: out.BaseName,
+			Name:   name,
+			Params: describeParams(mod.Params),
+		})
+	}
+	desc["processes"] = processes
+	if cfg.Target == "test" {
+		desc["test_params"] = []string{"iters", "runs", "seed", "delay", "wait", "modelfile"}
+	}
+	data, err := goJSON.Marshal(desc)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+// describeParams mirrors ivy2cpp/compile.go:778.
+func describeParams(params []*goivy.Const) []descriptorParamDesc {
+	out := make([]descriptorParamDesc, 0, len(params))
+	for _, p := range params {
+		if p == nil {
+			continue
+		}
+		typ := ""
+		if p.CSort != nil {
+			typ = p.CSort.String()
+		}
+		out = append(out, descriptorParamDesc{Name: p.Name, Type: typ})
+	}
+	return out
 }
 
 // addConjsToActions mirrors ivy2cpp/compile.go:714. Walks the

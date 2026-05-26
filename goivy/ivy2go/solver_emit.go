@@ -82,6 +82,34 @@ func (g *Generator) emitSetSolver(w *goWriter) {
 	g.emitPreconditionHelpers(w)
 }
 
+// isLargeType mirrors ivy2cpp/solver_emit.go:255. Returns true when
+// the function sort's domain is too large for cell-by-cell solver
+// assertions — either because some domain sort isn't enumerable or
+// because the product of cardinalities exceeds largeThresh.
+func (g *Generator) isLargeType(s goivy.Sort) bool {
+	fs, ok := s.(*goivy.LogicFunctionSort)
+	if !ok {
+		return false
+	}
+	dom := fs.Domain()
+	for _, d := range dom {
+		if !goIsAnyIntegerType(g, d) {
+			return true
+		}
+	}
+	product := 1
+	for _, d := range dom {
+		c := goSortCard(g, d)
+		if c <= 0 {
+			return true
+		}
+		if product <= largeThresh {
+			product *= c
+		}
+	}
+	return product > largeThresh
+}
+
 // emitStateSymbolFacts appends per-symbol fact assertions to the
 // stateFactsAsClauses body. Dispatches on sort shape:
 //   - bool scalar              → mkBoolFact
@@ -98,6 +126,13 @@ func (g *Generator) emitStateSymbolFacts(w *goWriter, sym stateSymbol) {
 	}
 	if es, ok := sym.Sort.(*goivy.LogicEnumeratedSort); ok {
 		g.emitEnumScalarFact(w, sym.Name, "state."+exported, es)
+		return
+	}
+	// Record-valued (destructor) scalar — pin each scalar field via
+	// the destructor accessor. Mirrors the cpp recursion in
+	// emitSetSolverCustom for destructor record state symbols.
+	if recName, ok := g.destructorStructName(sym.Sort); ok {
+		g.emitRecordScalarFacts(w, sym.Name, "state."+exported, recName)
 		return
 	}
 	// Range/uninterpreted scalar with a known cardinality → pin via
@@ -148,6 +183,26 @@ func (g *Generator) emitStateSymbolFacts(w *goWriter, sym stateSymbol) {
 			w.line("\t}")
 		}
 	default:
+		// Record-valued cells: per-cell per-field equalities so
+		// the solver sees `<field-accessor>(<f>(<cell-args>)) =
+		// <state.<F>[…].<Field>>` and can resolve formula
+		// references through the destructor accessors.
+		if recName, ok := g.destructorStructName(fs.Range()); ok {
+			w.linef("\t// Per-cell record-field facts for array-storage symbol %q.", sym.Name)
+			for i, d := range st.Dims {
+				w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i)
+			}
+			w.line("\t\tcellName := " + cellNameExpr(sym.Name, len(st.Dims)))
+			cellAcc := "state." + exported
+			for i := range st.Dims {
+				cellAcc += "[__i" + fmt.Sprintf("%d", i) + "]"
+			}
+			g.emitRecordCellFacts(w, "cellName", cellAcc, recName)
+			for range st.Dims {
+				w.line("\t}")
+			}
+			return
+		}
 		// Integer/range/uninterp-valued cells: pin via integer
 		// equality if the range has a known cardinality.
 		if card := goSortCard(g, fs.Range()); card > 0 {
@@ -163,6 +218,78 @@ func (g *Generator) emitStateSymbolFacts(w *goWriter, sym stateSymbol) {
 			g.emitIntScalarFactIndented(w, "cellName", cellAcc, fs.Range(), "\t\t")
 			for range st.Dims {
 				w.line("\t}")
+			}
+		}
+	}
+}
+
+// emitRecordCellFacts is the per-cell-loop variant of
+// emitRecordScalarFacts. `nameExpr` is a Go expression that yields
+// the symbol's cell name (e.g. "f(<i0>,<i1>)") and `lhsAcc` indexes
+// into the cell's storage.
+func (g *Generator) emitRecordCellFacts(w *goWriter, nameExpr, lhsAcc, recName string) {
+	for _, f := range g.destructorScalarFields(recName) {
+		field := goExportedName(memName(f.Name))
+		access := lhsAcc + "." + field
+		destrName := f.FullName
+		switch fs := f.Sort.(type) {
+		case *goivy.BooleanSort:
+			_ = fs
+			w.linef("\t\tfmlas = append(fmlas, mkBoolFact(%q+%s+%q, %s))",
+				destrName+"(", nameExpr, ")", access)
+		case *goivy.LogicEnumeratedSort:
+			sortCode, ok := g.reifySortAsGoCode(fs)
+			if !ok {
+				continue
+			}
+			extLits := make([]string, len(fs.Extension))
+			for i, ext := range fs.Extension {
+				extLits[i] = fmt.Sprintf("%q", ext)
+			}
+			w.line("\t\t{")
+			w.linef("\t\t\textNames := []string{%s}", strings.Join(extLits, ", "))
+			w.linef("\t\t\tsortDecl := %s", sortCode)
+			w.linef("\t\t\tfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%q+%s+%q, sortDecl), T2: goivy.NewConst(extNames[int(%s)], sortDecl)})",
+				destrName+"(", nameExpr, ")", access)
+			w.line("\t\t}")
+		default:
+			if goSortCard(g, f.Sort) > 0 {
+				sortCode, ok := g.reifySortAsGoCode(f.Sort)
+				if !ok {
+					continue
+				}
+				w.linef("\t\tfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%q+%s+%q, %s), T2: goivy.NewConst(strconv.Itoa(int(%s)), %s)})",
+					destrName+"(", nameExpr, ")", sortCode, access, sortCode)
+				g.Ctx.AddImport("runtime", "strconv", "")
+			}
+		}
+	}
+}
+
+// emitRecordScalarFacts emits per-destructor-field facts for a
+// record-valued state symbol. Mirrors the cpp recursion in
+// emitSetSolverCustom's destructor branch (ivy2cpp/solver_emit.go).
+// For each scalar destructor field of `recName`, emits an equality
+// pinning `<destr-name>(<sym>) = <state.<Field>>` so the solver
+// sees the record's current contents.
+func (g *Generator) emitRecordScalarFacts(w *goWriter, symName, lhsAcc, recName string) {
+	for _, f := range g.destructorScalarFields(recName) {
+		field := goExportedName(memName(f.Name))
+		access := lhsAcc + "." + field
+		// Destructor-side name for the field accessor (e.g. "foo.x")
+		// so the solver formula references match formula-side
+		// `Apply(foo.x, <sym>)` references.
+		destrName := f.FullName
+		switch fs := f.Sort.(type) {
+		case *goivy.BooleanSort:
+			_ = fs
+			w.linef("\tfmlas = append(fmlas, mkBoolFact(%q, %s))",
+				symName+"."+destrName, access)
+		case *goivy.LogicEnumeratedSort:
+			g.emitEnumScalarFact(w, symName+"."+destrName, access, fs)
+		default:
+			if goSortCard(g, f.Sort) > 0 {
+				g.emitIntScalarFact(w, symName+"."+destrName, access, f.Sort)
 			}
 		}
 	}
