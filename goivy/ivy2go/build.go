@@ -71,7 +71,7 @@ func BuildPlanFor(out *Output, outDir string) (*BuildPlan, error) {
 		return nil, fmt.Errorf("ivy2go: cannot resolve package dir: %w", err)
 	}
 	plan.OutputPath = filepath.Join(absPkgDir, binaryName)
-	plan.Args = []string{"build", "-o", binaryName, "."}
+	plan.Args = []string{"build", "-tags=xtrace_off", "-o", binaryName, "."}
 	return plan, nil
 }
 
