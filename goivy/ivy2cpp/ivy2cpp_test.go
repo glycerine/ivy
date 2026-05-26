@@ -5402,7 +5402,7 @@ export set
 	}
 	for _, want := range []string{
 		"template <> void __randomize<variantrandom::msg>(gen &g, const z3::expr &apply_expr, const std::string &sort_name) {",
-		"int tag = rand() % 3;",
+		"int tag = __chacha8c_rng.Rand() % 3;",
 		"if (tag == 0) {",
 		`z3::expr X = g.ctx.constant(temp.c_str(), g.sort("request"));`,
 		`__randomize<variantrandom::request>(g, X, "request");`,

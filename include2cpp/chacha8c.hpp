@@ -287,6 +287,25 @@ public:
 		}
 	}
 
+        // like <random>'s rand(), returns a number in [0, RAND_MAX] inclusive.
+        std::int32_t Rand() noexcept {
+            const std::uint64_t range = static_cast<std::uint64_t>(RAND_MAX) + 1;
+
+            // Calculate the largest multiple of 'range' that fits in a uint64_t
+            // Any roll at or above this limit causes modulo bias.
+            const std::uint64_t limit = (UINT64_MAX / range) * range;
+
+            // rejection sampling:
+            while (true) {
+                std::uint64_t x = Uint64();
+        
+                // If x is within the safe, perfectly divisible zone, we use it
+                if (x < limit) {
+                    return static_cast<std::int32_t>(x % range);
+                }
+            }
+        }
+
 	std::size_t Read(std::uint8_t *p, std::size_t len) noexcept
 	{
 		std::size_t n = 0;

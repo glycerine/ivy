@@ -639,7 +639,6 @@ func (g *Generator) emitMainParamSetup(w *cppWriter) {
 	}
 	// argv parsing loop: key=value -> param assignment OR special key.
 	w.line("int seed = 1;")
-
 	w.line("std::uint8_t seed32[chacha8c::key_size] = {0};")
 	w.line("std::memcpy(seed32, &seed, sizeof(seed));")
 	w.line("__chacha8c_rng.Seed(seed32);")
@@ -675,6 +674,9 @@ func (g *Generator) emitMainParamSetup(w *cppWriter) {
 	w.line("}")
 	w.close("")
 	w.line("srand(seed);")
+	w.line("std::memcpy(seed32, &seed, sizeof(seed));")
+	w.line("__chacha8c_rng.Seed(seed32);")
+
 	if g.Config.Target == "test" {
 		w.line("if (!__ivy_out.is_open())")
 		w.indent++

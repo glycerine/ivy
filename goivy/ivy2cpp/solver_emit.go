@@ -708,25 +708,25 @@ func (g *Generator) pythonTestRandExpr(s goivy.Sort) (string, bool) {
 	typ := cppScalarTypeWith(g, s, g.ClassName)
 	switch st := s.(type) {
 	case *goivy.BooleanSort:
-		return fmt.Sprintf("(%s)(rand() %% ((2)-(0)) + (0))", typ), true
+		return fmt.Sprintf("(%s)(__chacha8c_rng.Rand() %% ((2)-(0)) + (0))", typ), true
 	case *goivy.LogicEnumeratedSort:
 		if len(st.Extension) == 0 {
 			return "", false
 		}
-		return fmt.Sprintf("(%s)(rand() %% ((%d)-(0)) + (0))", typ, len(st.Extension)), true
+		return fmt.Sprintf("(%s)(__chacha8c_rng.Rand() %% ((%d)-(0)) + (0))", typ, len(st.Extension)), true
 	default:
 		if it, ok := g.cppInterpType(s); ok {
 			if it.Kind == cppInterpBV || it.Kind == cppInterpStrBV || it.Kind == cppInterpIntBV {
 				card := it.card()
 				if card > 0 {
-					return fmt.Sprintf("(%s)(rand() %% ((%d)-(0)) + (0))", typ, card), true
+					return fmt.Sprintf("(%s)(__chacha8c_rng.Rand() %% ((%d)-(0)) + (0))", typ, card), true
 				}
 			}
 		}
 		if rs, ok := g.rangeSortFor(s); ok {
 			lo, hi, ok := numericRangeBounds(rs)
 			if ok {
-				return fmt.Sprintf("(%s)(rand() %% (((%s+1))-(%s)) + (%s))", typ, hi, lo, lo), true
+				return fmt.Sprintf("(%s)(__chacha8c_rng.Rand() %% (((%s+1))-(%s)) + (%s))", typ, hi, lo, lo), true
 			}
 		}
 	}

@@ -1607,6 +1607,9 @@ int %s(int argc, char **argv){
         }
     }
     srand(seed);
+    std::memcpy(seed32, &seed, sizeof(seed));
+    __chacha8c_rng.Seed(seed32);
+
     if (!__ivy_out.is_open())
         __ivy_out.basic_ios<char>::rdbuf(std::cout.rdbuf());
     argc = pargs.size();
@@ -1697,7 +1700,7 @@ int %s(int argc, char **argv){
         if (do_over) {
            do_over = false;
         }  else {
-            frnd = choices * (((double)rand())/(((double)RAND_MAX)+1.0));
+            frnd = choices * (((double)__chacha8c_rng.Rand())/(((double)RAND_MAX)+1.0));
         }
         // std::cout << "frnd = " << frnd << std::endl;
         if (frnd < totalweight) {
@@ -1802,7 +1805,7 @@ int %s(int argc, char **argv){
                     fdc++;
             }
             // std::cout << "fdc = " << fdc << std::endl;
-            int fdi = fdc * (((double)rand())/(((double)RAND_MAX)+1.0));
+            int fdi = fdc * (((double)__chacha8c_rng.Rand())/(((double)RAND_MAX)+1.0));
             fdc = 0;
             for (unsigned i = 0; i < readers.size(); i++) {
                 reader *r = readers[i];
@@ -1889,7 +1892,7 @@ func (g *Generator) emitTestLoopBody(w *cppWriter) {
 	w.line("do_over = false;")
 	w.close(" else {")
 	w.indent++
-	w.line("frnd = choices * (((double)rand()) / (((double)RAND_MAX) + 1.0));")
+	w.line("frnd = choices * (((double)__chacha8c_rng.Rand()) / (((double)RAND_MAX) + 1.0));")
 	w.indent--
 	w.line("}")
 	w.open("if (frnd < totalweight) {")
@@ -2059,7 +2062,7 @@ func (g *Generator) emitTestLoopSelectBranch(w *cppWriter) {
 	w.line("reader *r = readers[i];")
 	w.line("if (FD_ISSET(r->fdes(), &rdfds)) fdc++;")
 	w.close("")
-	w.line("int fdi = fdc * (((double)rand()) / (((double)RAND_MAX) + 1.0));")
+	w.line("int fdi = fdc * (((double)__chacha8c_rng.Rand()) / (((double)RAND_MAX) + 1.0));")
 	w.line("fdc = 0;")
 	w.open("for (unsigned i = 0; i < readers.size(); i++) {")
 	w.line("reader *r = readers[i];")

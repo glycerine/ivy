@@ -376,7 +376,7 @@ func (g *Generator) emitVariantZ3Impl(w *cppWriter, super goivy.Sort, typeName s
 	w.line("std::string temp = os.str();")
 	w.line("z3::sort range = apply_expr.get_sort();")
 	w.line("z3::expr disj = g.ctx.bool_val(false);")
-	w.linef("int tag = rand() %% %d;", len(g.Mod.Variants[sortText]))
+	w.linef("int tag = __chacha8c_rng.Rand() %% %d;", len(g.Mod.Variants[sortText]))
 	for i, sub := range g.Mod.Variants[sortText] {
 		subType := cppScalarTypeWith(g, sub, g.ClassName)
 		relName := variantSolverRelationName(super, sub)
