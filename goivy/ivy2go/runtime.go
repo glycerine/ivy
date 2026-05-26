@@ -481,14 +481,17 @@ func (g *Generator) emitPickInputHelpers(w *goWriter) {
 	w.blank()
 }
 
-// emitTestFlagsHelper writes parseTestItersFlag — used by the
-// test-loop main to decide how many iterations to run. Flag
-// precedence: `--iters=N` on argv → IVY_ITERS env var → default.
-// Mirrors ivy2cpp's `test_iters` argv plumbing.
+// emitTestFlagsHelper writes parseTestItersFlag + applyTestSeedFlag.
+// Mirrors ivy2cpp's `test_iters` + `seed` argv plumbing so cpp / go
+// emitted binaries accept the same flags. Flag precedence:
+// `--iters=N` / `--seed=N` on argv → IVY_ITERS / IVY_SEED env vars →
+// the emit-time default. applyTestSeedFlag re-seeds the package
+// RNG when an explicit seed is supplied.
 func (g *Generator) emitTestFlagsHelper(w *goWriter) {
 	g.Ctx.AddImport("runtime", "os", "")
 	g.Ctx.AddImport("runtime", "strconv", "")
 	g.Ctx.AddImport("runtime", "strings", "")
+	g.Ctx.AddImport("runtime", "math/rand", "")
 	w.line("// parseTestItersFlag returns the iteration count for the")
 	w.line("// test loop. Argv `--iters=N`, env `IVY_ITERS`, then the")
 	w.line("// emit-time default (in that order).")
@@ -502,6 +505,28 @@ func (g *Generator) emitTestFlagsHelper(w *goWriter) {
 	w.line("\t\tif n, err := strconv.Atoi(v); err == nil { return n }")
 	w.line("\t}")
 	w.line("\treturn defaultIters")
+	w.line("}")
+	w.blank()
+	w.line("// applyTestSeedFlag re-seeds ivyRand when `--seed=N` is on")
+	w.line("// argv or IVY_SEED is set. Matches cpp's `seed=N` arg.")
+	w.line("func applyTestSeedFlag() {")
+	w.line("\tparse := func(s string) (int64, bool) {")
+	w.line("\t\tif n, err := strconv.ParseInt(s, 10, 64); err == nil { return n, true }")
+	w.line("\t\treturn 0, false")
+	w.line("\t}")
+	w.line("\tfor _, a := range os.Args[1:] {")
+	w.line(`		if strings.HasPrefix(a, "--seed=") {`)
+	w.line(`			if n, ok := parse(a[len("--seed="):]); ok {`)
+	w.line("\t\t\t\tivyRand = rand.New(rand.NewSource(n))")
+	w.line("\t\t\t\treturn")
+	w.line("\t\t\t}")
+	w.line("\t\t}")
+	w.line("\t}")
+	w.line(`	if v := os.Getenv("IVY_SEED"); v != "" {`)
+	w.line("\t\tif n, ok := parse(v); ok {")
+	w.line("\t\t\tivyRand = rand.New(rand.NewSource(n))")
+	w.line("\t\t}")
+	w.line("\t}")
 	w.line("}")
 	w.blank()
 }

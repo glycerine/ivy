@@ -351,6 +351,7 @@ func (g *Generator) emitTestMain() {
 	names := g.actionGenNames()
 
 	g.main.open("func main() {")
+	g.main.line("applyTestSeedFlag()")
 	g.main.linef("iters := parseTestItersFlag(%s)", g.Config.TestIters)
 	g.main.linef("state := New%s()", g.StateTypeName)
 	g.main.line("state.Init()")
