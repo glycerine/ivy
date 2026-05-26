@@ -126,9 +126,6 @@ func (g *Generator) stateSymbols() []stateSymbol {
 	names := make([]string, 0)
 	seen := map[string]bool{}
 	for name := range g.Mod.Sig.Symbols.All() {
-		if name == "_generating" {
-			continue
-		}
 		if seen[name] {
 			continue
 		}
