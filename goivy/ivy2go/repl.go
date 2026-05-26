@@ -51,7 +51,7 @@ func (g *Generator) emitReplLoop(w *goWriter) {
 	w.blank()
 
 	// Per-action dispatch chain.
-	g.emitReplDispatch(w)
+	g.emitCmdReaderDispatchChain(w)
 
 	// Per-sort arg parsers.
 	g.emitReplArgParsers(w)
@@ -60,10 +60,10 @@ func (g *Generator) emitReplLoop(w *goWriter) {
 	w.line("var _ = strconv.Atoi")
 }
 
-// emitReplDispatch writes a single dispatcher that switches on the
+// emitCmdReaderDispatchChain writes a single dispatcher that switches on the
 // action name and parses its args. Mirrors ivy2cpp/repl.go
 // emitCmdReaderDispatchChain.
-func (g *Generator) emitReplDispatch(w *goWriter) {
+func (g *Generator) emitCmdReaderDispatchChain(w *goWriter) {
 	w.open(fmt.Sprintf("func dispatchReplCommand(state *%s, tokens []string, out io.Writer) error {", g.StateTypeName))
 	w.open("if len(tokens) == 0 {")
 	w.line("return nil")
@@ -73,7 +73,7 @@ func (g *Generator) emitReplDispatch(w *goWriter) {
 	w.line("_ = args // may be empty when no action takes inputs")
 	w.line("switch name {")
 
-	for _, name := range g.replActionNames() {
+	for _, name := range g.publicActionNamesSorted() {
 		act, _ := g.Mod.Actions.Get2(name)
 		if act == nil {
 			continue
@@ -122,7 +122,7 @@ func (g *Generator) emitReplDispatch(w *goWriter) {
 // the parsers monomorphic (D6: no generics) and small.
 func (g *Generator) emitReplArgParsers(w *goWriter) {
 	seen := map[string]bool{}
-	for _, name := range g.replActionNames() {
+	for _, name := range g.publicActionNamesSorted() {
 		act, _ := g.Mod.Actions.Get2(name)
 		if act == nil {
 			continue
@@ -191,10 +191,10 @@ func (g *Generator) emitOneReplArgParser(w *goWriter, parser string, s goivy.Sor
 	w.blank()
 }
 
-// replActionNames returns the action names eligible for REPL
+// publicActionNamesSorted returns the action names eligible for REPL
 // dispatch, in deterministic order. M7 keeps all named actions; M9
 // can prune internal/ext: ones.
-func (g *Generator) replActionNames() []string {
+func (g *Generator) publicActionNamesSorted() []string {
 	if g == nil || g.Mod == nil || g.Mod.Actions == nil {
 		return nil
 	}

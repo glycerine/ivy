@@ -166,7 +166,7 @@ func (g *Generator) generate() error {
 	g.emitTypes()
 	g.emitState()
 	g.emitActions()
-	g.emitInit()
+	g.emitInitStream()
 	g.emitRuntime()
 	g.emitNondet()
 	g.emitExtensional()
@@ -234,12 +234,12 @@ func (g *Generator) emitState() {
 }
 
 func (g *Generator) emitActions() {
-	g.emitActionMethods(&g.actions)
+	g.emitMethods(&g.actions)
 	g.emitActionGenStructs(&g.actions)
 }
 
-func (g *Generator) emitInit() {
-	g.emitInitMethod(&g.init)
+func (g *Generator) emitInitStream() {
+	g.emitInit(&g.init)
 }
 
 func (g *Generator) emitRuntime() {
@@ -272,7 +272,7 @@ func (g *Generator) emitRepl() {
 	g.emitReplLoop(&g.repl)
 	// Tick lives in the runtime stream so it's available to both
 	// REPL and non-REPL targets.
-	g.emitTickMethod(&g.runtime)
+	g.emitTick(&g.runtime)
 }
 
 func (g *Generator) emitMain() {

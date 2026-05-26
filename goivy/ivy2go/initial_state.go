@@ -11,15 +11,15 @@ import (
 // gets ivyChoose; named maps stay empty until first write.
 //
 // The solver-driven path for target=test/gen is deferred to M9 and
-// will plug into the same emitInitialState hook.
+// will plug into the same emitOneInitialState hook.
 
-// emitInitialState writes statements into `init.go` that populate the
+// emitOneInitialState writes statements into `init.go` that populate the
 // receiver `s` with sensible nondeterministic defaults. For the
 // non-solver targets it's enough to set scalar booleans / range values
 // to a randomised choice (mirroring Python's `mk_nondet` path); map
 // storage is left empty since map reads on missing keys return the
 // element zero value (matching ivy2cpp's hash_thunk semantics).
-func (g *Generator) emitInitialState(w *goWriter) {
+func (g *Generator) emitOneInitialState(w *goWriter) {
 	if g == nil || g.Mod == nil {
 		return
 	}

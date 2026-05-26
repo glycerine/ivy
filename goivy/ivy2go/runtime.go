@@ -21,7 +21,7 @@ import (
 // later by emitRuntimeHelpersLate so emit* methods that run after
 // runtime — like emitMain — can still request them.
 func (g *Generator) emitRuntimeHelpers(w *goWriter) {
-	g.emitRuntimePreamble(w)
+	g.emitRuntimeImplPreamble(w)
 }
 
 // emitRuntimeHelpersLate writes the conditional helpers any earlier
@@ -62,9 +62,9 @@ func (g *Generator) emitRuntimeHelpersLate(w *goWriter) {
 	}
 }
 
-// emitRuntimePreamble writes the package-level helpers every emitted
+// emitRuntimeImplPreamble writes the package-level helpers every emitted
 // program needs at runtime.
-func (g *Generator) emitRuntimePreamble(w *goWriter) {
+func (g *Generator) emitRuntimeImplPreamble(w *goWriter) {
 	// Import list for runtime.go.
 	if g.Ctx != nil {
 		g.Ctx.AddImport("runtime", "fmt", "")

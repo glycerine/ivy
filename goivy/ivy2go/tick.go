@@ -4,10 +4,10 @@ package ivy2go
 // progress / rely-decl based scheduling lands in a later milestone
 // alongside any concurrency support.
 
-// emitTickMethod writes a (*State).Tick() method into the runtime
+// emitTick writes a (*State).Tick() method into the runtime
 // stream. The body is a no-op for M7; future milestones can append
 // progress / rely scheduling logic here.
-func (g *Generator) emitTickMethod(w *goWriter) {
+func (g *Generator) emitTick(w *goWriter) {
 	w.linef("// Tick advances any timed / progress-tracked state. M7 stub: no-op.")
 	w.linef("func (s *%s) Tick() {}", g.StateTypeName)
 	w.blank()

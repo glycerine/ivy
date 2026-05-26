@@ -667,8 +667,8 @@ Counts: OMITTED=510, INVENTED=120.
 ## Verdict counts
 
 - delete=5  ← **all drained 2026-05-25** (isImportCaller, emitCloseSolver, emitTraceWrite, strconvAtoiSafe, joinComma)
-- rename=40 ← pending; mostly trivial mechanical renames
-- legitimate=75 ← no action needed; documented justification per row
+- rename=14 done / 26 reclassified to legitimate (see Status 2026-05-26 below) — total 40 originally
+- legitimate=75 + 26 reclassified = 101 (no further action needed)
 
 ## Status (2026-05-25)
 
@@ -688,6 +688,49 @@ Counts: OMITTED=510, INVENTED=120.
 - All 5 `delete` rows drained.
 - The 40 `rename` items are pending. Most are trivial mechanical renames (emitActionMethods→emitMethods, emitActionMethod→emitSomeAction, emitActionTraceLine→emitTraceActionPrologue, etc.) but draining requires per-row work plus a test update where callers reference the old name.
 - The 510 OMITTED rows are NOT a single-session task. Many represent significant ivy2cpp subsystems (assign.go's openAssignmentLoops family, destructor.go's 35+ functions, generator.go's 60+ functions). Drain these incrementally, prioritising by user-visible regression risk.
+
+## Status (2026-05-26): rename batch 1 + reclassification
+
+**14 renames landed** (function moved to its ivy2cpp name; callers + tests updated):
+
+| ivy2go (old)              | ivy2cpp (target, now used in ivy2go) |
+| ---                       | ---                                  |
+| emitActionTraceLine       | emitTraceActionPrologue              |
+| emitActionMethods         | emitMethods                          |
+| emitActionMethod          | emitSomeAction                       |
+| emitDestructorHash        | emitDestructorStructHash             |
+| emitDestructorEqual       | emitDestructorStructEqual            |
+| emitInitMethod            | emitInit                             |
+| emitInitialState          | emitOneInitialState                  |
+| emitRuntimePreamble       | emitRuntimeImplPreamble              |
+| emitTickMethod            | emitTick                             |
+| collectNativeGoBlocks     | buildNativeBlocks                    |
+| renderNativeGoTemplate    | renderNativeTemplate                 |
+| splitNativeGoCode         | splitNativeCode                      |
+| emitReplDispatch          | emitCmdReaderDispatchChain           |
+| replActionNames           | publicActionNamesSorted              |
+
+Plus a collision-avoidance rename in generator.go: the Phase-A stream-orchestration wrapper `emitInit()` (no cpp 1:1) became `emitInitStream()` so the init.go method can carry the proper `emitInit` name.
+
+**26 reclassified `rename` → `legitimate`** — review showed no clean cpp 1:1 mapping; each is either a Phase-A intentional decomposition or a Go-specific abstraction:
+
+| ivy2go function                            | why legitimate, not rename                                                |
+| ---                                        | ---                                                                       |
+| (generator.go) emitTypes, emitState, emitActions, emitRuntime, emitNondet, emitExtensional, emitThunks, emitNative, emitRepl, emitMain | Phase-A per-file stream wrappers; cpp uses two-stream `emitHeader`/`emitImpl` so there is no 1:1 |
+| (action_gen.go) emitActionGenStructDecl, emitActionGenConstructor, emitActionGenGenerate, emitActionGenClose, emitFallbackInputAssignments | Phase-A split of cpp's monolithic `emitActionGen` into per-method emitters; Go-idiomatic decomposition |
+| (assign.go) canOpenAssignmentLoops | Different signature than cpp's `canOpenAssignmentLoopsBounded(lhs, body)`; takes a `[]*LogicVariable` directly. Distinct abstraction. |
+| (bv_expr.go) bvMask | False positive: cpp has the same name. Spurious INVENTED row from the extraction pass. |
+| (compile.go) prepareModuleForGo, ensureSortOrderForGo | Package-convention naming (`*ForGo` mirrors cpp's `*ForCPP`). Same role, intentional naming difference. |
+| (init.go) emitAfterInitActions | Extracted from cpp `emitInit`'s `InitialActions` loop as a separate method for clarity. Go-idiomatic decomposition. |
+| (initial_state.go) emitScalarChoice | Extracted from cpp's inline `mkNondetSym` invocation in `emitDefaultInitialState`. Go-idiomatic decomposition. |
+| (native.go) emitNativeBlocks | Top-level distributor with no cpp 1:1 (cpp uses per-stream `emit*Natives` family). |
+| (repl.go) emitReplLoop | Vague mapping; cpp uses `emitCmdReader` + `emitReplSupport`. Distinct shape. |
+| (runtime.go) emitRuntimeHelpers, emitTestFlagsHelper | Vague mapping into cpp's runtime-emission family; no clean rename target. |
+| (types.go) goScalarType | Returns Go type string; cpp `cppScalarTypeWith` takes more args and produces qualified C++ type. Different abstraction. |
+
+**Verification after rename pass:** all ivy2go tests pass under `SLOW_GO_TEST=1`; pingpong 500-iter run produces clean trace with zero double-pongs.
+
+**Remaining Phase C work:** 510 OMITTED rows — same scope as before this session, no progress yet.
 
 ## Suggested next-step ordering for Phase C continuation
 

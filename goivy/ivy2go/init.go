@@ -6,15 +6,15 @@ import "fmt"
 // ivy2cpp/init.go but the C++ "after-init action list" is collapsed
 // into a single Go method here.
 
-// emitInitMethod writes:
+// emitInit writes:
 //
 //	func (s *State) Init() {
-//	    // nondet initial state (per emitInitialState)
+//	    // nondet initial state (per emitOneInitialState)
 //	    // after-init actions, if any (M7 lands them)
 //	}
-func (g *Generator) emitInitMethod(w *goWriter) {
+func (g *Generator) emitInit(w *goWriter) {
 	w.open(fmt.Sprintf("func (s *%s) Init() {", g.StateTypeName))
-	g.emitInitialState(w)
+	g.emitOneInitialState(w)
 	g.emitAfterInitActions(w)
 	w.close("")
 	w.blank()

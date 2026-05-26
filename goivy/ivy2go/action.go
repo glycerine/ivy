@@ -516,13 +516,13 @@ func (g *Generator) emitNativeAction(w *goWriter, a *goivy.LogicNativeAction) {
 		g.unsupported(w, "native action code is %T, not *NativeCode", a.Code)
 		return
 	}
-	tag, body := splitNativeGoCode(codeNode.Code)
+	tag, body := splitNativeCode(codeNode.Code)
 	if !strings.HasPrefix(tag, "go") {
 		// Non-Go-tagged in-action native: skip silently so a single
 		// Ivy source can carry both cpp and go native actions.
 		return
 	}
-	body = g.renderNativeGoTemplate(body, a.Params)
+	body = g.renderNativeTemplate(body, a.Params)
 	body = strings.TrimRight(body, "\n")
 	if body == "" {
 		return
@@ -614,7 +614,7 @@ func (g *Generator) importCallers() map[string]bool {
 	return out
 }
 
-// emitActionTraceLine emits a single fmt.Fprintln to ivyTraceOut
+// emitTraceActionPrologue emits a single fmt.Fprintln to ivyTraceOut
 // of the form `<dir> name(arg0,arg1,…)` (or `<dir> name` for
 // zero-arg actions). Mirrors ivy2cpp's emitTraceActionPrologue but
 // produces a single Go call instead of a chain of stream writes.
@@ -622,7 +622,7 @@ func (g *Generator) importCallers() map[string]bool {
 // dir is "<" (action body — observed from inside) or ">" (test
 // driver — about to fire from outside). name is the raw action
 // name without the `ext:` prefix.
-func (g *Generator) emitActionTraceLine(w *goWriter, dir, name string, params []*goivy.Const) {
+func (g *Generator) emitTraceActionPrologue(w *goWriter, dir, name string, params []*goivy.Const) {
 	display := strings.TrimPrefix(name, "ext:")
 	g.Ctx.AddImport("actions", "fmt", "")
 	if len(params) == 0 {
@@ -660,12 +660,12 @@ func (g *Generator) unsupported(w *goWriter, format string, args ...any) {
 	}
 }
 
-// emitActionMethods walks the module's Actions map and emits one Go
+// emitMethods walks the module's Actions map and emits one Go
 // method on *State per action. Mirrors ivy2cpp/generator.go's
 // per-action emission, simplified for M4: parameters become method
 // params, return values become named return values, and the action
 // body is the method body.
-func (g *Generator) emitActionMethods(w *goWriter) {
+func (g *Generator) emitMethods(w *goWriter) {
 	if g == nil || g.Mod == nil || g.Mod.Actions == nil {
 		return
 	}
@@ -680,13 +680,13 @@ func (g *Generator) emitActionMethods(w *goWriter) {
 		if act == nil {
 			continue
 		}
-		g.emitActionMethod(w, name, act)
+		g.emitSomeAction(w, name, act)
 	}
 }
 
-// emitActionMethod renders a single Go method on *State for an Ivy
+// emitSomeAction renders a single Go method on *State for an Ivy
 // action.
-func (g *Generator) emitActionMethod(w *goWriter, name string, act goivy.Action) {
+func (g *Generator) emitSomeAction(w *goWriter, name string, act goivy.Action) {
 	methodName := goExportedName(name)
 	params := act.GetFormalParams()
 	returns := act.GetFormalReturns()
@@ -733,7 +733,7 @@ func (g *Generator) emitActionMethod(w *goWriter, name string, act goivy.Action)
 	// action body so the test driver sees the system→env callback.
 	// Mirrors ivy2cpp/generator.go emitSomeAction line 1284.
 	if g.importCallers()[name] {
-		g.emitActionTraceLine(w, "<", name, params)
+		g.emitTraceActionPrologue(w, "<", name, params)
 	}
 
 	// Track returns so emitReturn can use the right names.

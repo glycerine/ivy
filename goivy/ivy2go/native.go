@@ -29,14 +29,14 @@ func (g *Generator) emitNativeBlocks() {
 	if g == nil || g.Mod == nil {
 		return
 	}
-	for _, blk := range g.collectNativeGoBlocks() {
+	for _, blk := range g.buildNativeBlocks() {
 		g.dispatchNativeGoBlock(blk)
 	}
 }
 
-// collectNativeGoBlocks walks g.Mod.Natives and returns those whose
+// buildNativeBlocks walks g.Mod.Natives and returns those whose
 // tag starts with "go".
-func (g *Generator) collectNativeGoBlocks() []nativeGoBlock {
+func (g *Generator) buildNativeBlocks() []nativeGoBlock {
 	var out []nativeGoBlock
 	for _, node := range g.Mod.Natives {
 		args := node.Args()
@@ -47,7 +47,7 @@ func (g *Generator) collectNativeGoBlocks() []nativeGoBlock {
 		if !ok {
 			continue
 		}
-		tag, body := splitNativeGoCode(codeNode.Code)
+		tag, body := splitNativeCode(codeNode.Code)
 		if !strings.HasPrefix(tag, "go") {
 			continue
 		}
@@ -71,7 +71,7 @@ func (g *Generator) collectNativeGoBlocks() []nativeGoBlock {
 	return out
 }
 
-// renderNativeGoTemplate substitutes `` `N` ``-delimited antiquotes
+// renderNativeTemplate substitutes `` `N` ``-delimited antiquotes
 // in body with one of three flavours, selected by the trailing
 // character of the preceding text (mirrors ivy2cpp/native.go
 // renderNativeTemplate):
@@ -87,7 +87,7 @@ func (g *Generator) collectNativeGoBlocks() []nativeGoBlock {
 // Antiquote indices that are non-numeric or out of range produce a
 // `/*ivy2go: …*/` marker so the emitted Go fails cleanly at compile
 // time with a clear message.
-func (g *Generator) renderNativeGoTemplate(body string, params []goivy.Expr) string {
+func (g *Generator) renderNativeTemplate(body string, params []goivy.Expr) string {
 	if !strings.Contains(body, "`") {
 		return body
 	}
@@ -135,11 +135,11 @@ func (g *Generator) renderNativeGoTemplate(body string, params []goivy.Expr) str
 	return strings.Join(fields, "")
 }
 
-// splitNativeGoCode mirrors ivy2cpp/native.go splitNativeCode but
+// splitNativeCode mirrors ivy2cpp/native.go splitNativeCode but
 // without the "member" default (Go has no member concept). The first
 // non-blank line is the tag; the rest is the body. When the block
 // has no tag line, the whole code is treated as a "go" body.
-func splitNativeGoCode(code string) (string, string) {
+func splitNativeCode(code string) (string, string) {
 	// Trim any leading blank line(s) the parser may have prepended.
 	for strings.HasPrefix(code, "\n") {
 		code = code[1:]
@@ -170,7 +170,7 @@ func splitNativeGoCode(code string) (string, string) {
 func (g *Generator) dispatchNativeGoBlock(blk nativeGoBlock) {
 	// Substitute antiquotes before dedup so different param bindings
 	// produce different keys (and hence different emissions).
-	rendered := g.renderNativeGoTemplate(blk.Body, blk.Params)
+	rendered := g.renderNativeTemplate(blk.Body, blk.Params)
 	key := blk.Tag + "|" + rendered
 	if g.nativeOnceMemo[key] {
 		return

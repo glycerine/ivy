@@ -80,7 +80,7 @@ func dedupedHelper() {}
 
 func TestRenderNativeGoTemplate_BadIndexLeavesMarker(t *testing.T) {
 	g := newExprGen(t, "")
-	got := g.renderNativeGoTemplate("fmt.Println(`xyz`)", nil)
+	got := g.renderNativeTemplate("fmt.Println(`xyz`)", nil)
 	if !strings.Contains(got, "bad antiquote") {
 		t.Errorf("non-numeric antiquote should leave a marker, got: %q", got)
 	}
@@ -88,7 +88,7 @@ func TestRenderNativeGoTemplate_BadIndexLeavesMarker(t *testing.T) {
 
 func TestRenderNativeGoTemplate_OutOfRangeIndex(t *testing.T) {
 	g := newExprGen(t, "")
-	got := g.renderNativeGoTemplate("`5`", nil)
+	got := g.renderNativeTemplate("`5`", nil)
 	if !strings.Contains(got, "out of range") {
 		t.Errorf("out-of-range index should leave a marker, got: %q", got)
 	}
@@ -96,7 +96,7 @@ func TestRenderNativeGoTemplate_OutOfRangeIndex(t *testing.T) {
 
 func TestRenderNativeGoTemplate_PassthroughWhenNoBackticks(t *testing.T) {
 	g := newExprGen(t, "")
-	got := g.renderNativeGoTemplate("fmt.Println(\"hi\")", nil)
+	got := g.renderNativeTemplate("fmt.Println(\"hi\")", nil)
 	if got != `fmt.Println("hi")` {
 		t.Errorf("plain body should pass through, got: %q", got)
 	}
@@ -105,7 +105,7 @@ func TestRenderNativeGoTemplate_PassthroughWhenNoBackticks(t *testing.T) {
 func TestRenderNativeGoTemplate_SubstitutesParam(t *testing.T) {
 	g := newExprGen(t, "")
 	p := &goivy.Const{Name: "true", CSort: goivy.Boolean}
-	got := g.renderNativeGoTemplate("v := `0`", []goivy.Expr{p})
+	got := g.renderNativeTemplate("v := `0`", []goivy.Expr{p})
 	if got != "v := true" {
 		t.Errorf("antiquote should substitute param, got: %q", got)
 	}
@@ -117,7 +117,7 @@ func TestRenderNativeGoTemplate_TypePrefixEmitsGoType(t *testing.T) {
 	g := newExprGen(t, "")
 	p := &goivy.Const{Name: "flag", CSort: goivy.Boolean}
 	// `%` prefix → substitute with the Go type of the param's sort.
-	got := g.renderNativeGoTemplate("var x %`0`", []goivy.Expr{p})
+	got := g.renderNativeTemplate("var x %`0`", []goivy.Expr{p})
 	if got != "var x bool" {
 		t.Errorf("%%-prefix antiquote should emit type, got: %q", got)
 	}
@@ -128,7 +128,7 @@ func TestRenderNativeGoTemplate_QuotePrefixEmitsName(t *testing.T) {
 	p := &goivy.Const{Name: "flag", CSort: goivy.Boolean}
 	// `"` prefix → substitute with the bare identifier (caller's
 	// surrounding "..." is preserved).
-	got := g.renderNativeGoTemplate(`label := "`+"`"+`0`+"`"+`"`, []goivy.Expr{p})
+	got := g.renderNativeTemplate(`label := "`+"`"+`0`+"`"+`"`, []goivy.Expr{p})
 	if got != `label := "flag"` {
 		t.Errorf("\"-prefix antiquote should emit name, got: %q", got)
 	}

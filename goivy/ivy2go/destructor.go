@@ -96,16 +96,16 @@ func (g *Generator) emitDestructorStruct(w *goWriter, name string) {
 
 	// Equal method: field-by-field equality. Map/array fields use
 	// helper functions (mapEqual / arrayEqual emitted in runtime).
-	g.emitDestructorEqual(w, typeName, destrs)
-	g.emitDestructorHash(w, typeName, destrs)
+	g.emitDestructorStructEqual(w, typeName, destrs)
+	g.emitDestructorStructHash(w, typeName, destrs)
 	g.emitDestructorLess(w, typeName, destrs)
 }
 
-// emitDestructorHash writes a Hash() uint64 method. We use FNV-1a
+// emitDestructorStructHash writes a Hash() uint64 method. We use FNV-1a
 // over each field's primitive bytes; map fields fall back to a
 // commutative XOR of per-entry hashes so iteration-order doesn't
 // affect the result. Mirrors ivy2cpp/destructor.go emitDestructorStructHash.
-func (g *Generator) emitDestructorHash(w *goWriter, typeName string, destrs []*goivy.Const) {
+func (g *Generator) emitDestructorStructHash(w *goWriter, typeName string, destrs []*goivy.Const) {
 	w.open(fmt.Sprintf("func (a %s) Hash() uint64 {", typeName))
 	w.line("var h uint64 = 1469598103934665603 // FNV-1a offset basis")
 	for _, d := range destrs {
@@ -286,9 +286,9 @@ type destructorField struct {
 	DestructorC *goivy.Const // the destructor const (carries the field's function sort)
 }
 
-// emitDestructorEqual writes a value-receiver Equal method that
+// emitDestructorStructEqual writes a value-receiver Equal method that
 // returns true iff every field matches.
-func (g *Generator) emitDestructorEqual(w *goWriter, typeName string, destrs []*goivy.Const) {
+func (g *Generator) emitDestructorStructEqual(w *goWriter, typeName string, destrs []*goivy.Const) {
 	w.open(fmt.Sprintf("func (a %s) Equal(b %s) bool {", typeName, typeName))
 	if len(destrs) == 0 {
 		w.line("return true")
