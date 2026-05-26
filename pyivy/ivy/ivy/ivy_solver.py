@@ -61,6 +61,25 @@ def set_use_native_enums(t):
 
 z3_builtins = set(["bit0","bit1"])
 
+# SMT-LIB v2 BV operator names (and a few other Z3 builtins). When
+# preloaded as user func_decls into Z3_parse_smtlib2_string's `decls`
+# array, the vendored Z3 4.7.1's cmd_context::insert throws
+# cmd_exception. We auto-rename them via a `u__` prefix in
+# solver_name so Ivy authors can use these natural names without
+# triggering a parser crash.
+z3_builtins_rename = set([
+    "bvadd","bvsub","bvneg","bvmul",
+    "bvudiv","bvurem","bvsdiv","bvsrem","bvsmod",
+    "bvshl","bvlshr","bvashr",
+    "bvor","bvand","bvnand","bvnor",
+    "bvxor","bvxnor","bvnot",
+    "bvult","bvule","bvugt","bvuge",
+    "bvslt","bvsle","bvsgt","bvsge",
+    "concat","extract","repeat",
+    "zero_extend","sign_extend",
+    "rotate_left","rotate_right",
+])
+
 def solver_name(symbol):
     if __debug__: xtracer.trace("ivy_solver.py:65 solver_name() ENTER name=%s" % symbol.name)
     name = symbol.name
@@ -84,6 +103,9 @@ def solver_name(symbol):
     if name in z3_builtins:
         if __debug__: xtracer.trace("ivy_solver.py:85 solver_name() EXIT 4")
         raise iu.IvyError(None,'name "{}" clashes with Z3 built-in'.format(name))
+    if name in z3_builtins_rename:
+        if __debug__: xtracer.trace("ivy_solver.py:85 solver_name() EXIT 4 (auto-rename)")
+        return "u__" + name
     if __debug__: xtracer.trace("ivy_solver.py:87 solver_name() EXIT 5")
     return name
     #    return '_' + name if isinstance(symbol,ivy_logic.Symbol) and name[0].isalpha() else name

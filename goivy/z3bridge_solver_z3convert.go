@@ -1203,6 +1203,15 @@ func SolverName(sym *Const, sig *Sig, bfeCheck func(*Const) bool) (string, error
 		xtracer.Trace("ivy_solver.py:85 solver_name() EXIT 4")
 		return "", NewIvyError(nil, fmt.Sprintf(`name "%s" clashes with Z3 built-in`, name))
 	}
+	// SMT-LIB v2 BV operator names — Z3_parse_smtlib2_string's cmd_context
+	// throws cmd_exception when these are preloaded as user func_decls.
+	// Auto-rename with `u__` prefix; both mk_decl and runtime
+	// ___ivy_choose("name", ...) flow through this function, so the
+	// renamed key stays consistent.
+	if z3BuiltinsRename[name] {
+		xtracer.Trace("ivy_solver.py:85 solver_name() EXIT 4 (auto-rename)")
+		return "u__" + name, nil
+	}
 	xtracer.Trace("ivy_solver.py:87 solver_name() EXIT 5")
 	return name, nil
 }
@@ -1221,10 +1230,32 @@ func (s *Solver) SolverName(sym *Const) string {
 }
 
 // z3Builtins is the set of names that clash with Z3 built-in symbols.
-// Corresponds to Python z3_builtins (ivy_solver.py:58).
+// Corresponds to Python z3_builtins (ivy_solver.py:58). These names are
+// rejected hard via IvyError — keep the strict set tiny and add only
+// names that should never naturally surface in Ivy code.
 var z3Builtins = map[string]bool{
 	"bit0": true,
 	"bit1": true,
+}
+
+// z3BuiltinsRename mirrors the SMT-LIB v2 bitvector operator names
+// (and a few other Z3 builtins) that, when registered as user
+// func_decls and preloaded via Z3_parse_smtlib2_string's `decls`
+// array, throw cmd_exception in cmd_context::insert under the
+// vendored Z3 4.7.1. We auto-rename via a `u__` prefix in SolverName
+// so user Ivy code is free to use these natural names (e.g.
+// `function bvxor(x:byte,y:byte):byte`).
+var z3BuiltinsRename = map[string]bool{
+	"bvadd": true, "bvsub": true, "bvneg": true, "bvmul": true,
+	"bvudiv": true, "bvurem": true, "bvsdiv": true, "bvsrem": true, "bvsmod": true,
+	"bvshl": true, "bvlshr": true, "bvashr": true,
+	"bvor": true, "bvand": true, "bvnand": true, "bvnor": true,
+	"bvxor": true, "bvxnor": true, "bvnot": true,
+	"bvult": true, "bvule": true, "bvugt": true, "bvuge": true,
+	"bvslt": true, "bvsle": true, "bvsgt": true, "bvsge": true,
+	"concat": true, "extract": true, "repeat": true,
+	"zero_extend": true, "sign_extend": true,
+	"rotate_left": true, "rotate_right": true,
 }
 
 // isPolymorphicOp returns true if the name is a polymorphic operator.

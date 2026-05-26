@@ -12,6 +12,7 @@ extern chacha8c::ChaCha8 __chacha8c_rng;
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <set>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -442,6 +443,28 @@ public:
         sorts.push_back(sort);
     }
 
+    // mangle_z3_name maps SMT-LIB builtin operator names (bvxor, bvshl,
+    // etc.) to a `u__`-prefixed variant. Preloading user func_decls
+    // that shadow these builtins into Z3_parse_smtlib2_string's `decls`
+    // array throws cmd_exception in cmd_context::insert (vendored Z3
+    // 4.7.1). Applied uniformly here in mk_decl AND in gen::choose so
+    // both registration and lookup converge on the same Z3-internal
+    // name — emitted cpp source still uses the original Ivy name in
+    // trace lines, comments, hash_thunk field accesses, etc.
+    static std::string mangle_z3_name(const char *name) {
+        static const std::set<std::string> reserved = {
+            "bvadd","bvsub","bvneg","bvmul","bvudiv","bvurem","bvsdiv","bvsrem","bvsmod",
+            "bvshl","bvlshr","bvashr",
+            "bvor","bvand","bvnand","bvnor","bvxor","bvxnor","bvnot",
+            "bvult","bvule","bvugt","bvuge","bvslt","bvsle","bvsgt","bvsge",
+            "concat","extract","repeat",
+            "zero_extend","sign_extend","rotate_left","rotate_right",
+        };
+        std::string s(name);
+        if (reserved.find(s) != reserved.end()) return "u__" + s;
+        return s;
+    }
+
     void mk_decl(const char *decl_name, unsigned arity, const char **domain_names, const char *range_name) {
         std::vector<z3::sort> domain;
         for (unsigned i = 0; i < arity; i++) {
@@ -453,10 +476,11 @@ public:
         }
         std::string bool_name("Bool");
         z3::sort range = (range_name == bool_name) ? ctx.bool_sort() : enum_sorts.find(range_name)->second;
-        z3::func_decl decl = ctx.function(decl_name, arity, &domain[0], range);
-        decl_names.push_back(Z3_mk_string_symbol(ctx, decl_name));
+        std::string mangled = mangle_z3_name(decl_name);
+        z3::func_decl decl = ctx.function(mangled.c_str(), arity, &domain[0], range);
+        decl_names.push_back(Z3_mk_string_symbol(ctx, mangled.c_str()));
         decls.push_back(decl);
-        decls_by_name.insert(std::pair<std::string, z3::func_decl>(decl_name, decl));
+        decls_by_name.insert(std::pair<std::string, z3::func_decl>(mangled, decl));
     }
 
     void mk_const(const char *const_name, const char *sort_name) {
@@ -519,8 +543,14 @@ public:
     }
 
     int choose(int rng, const char *name) {
-        if (decls_by_name.find(name) == decls_by_name.end())
+        // Apply the same mangle as mk_decl so user functions whose
+        // names shadow Z3 builtins (bvxor, bvshl, …) resolve to the
+        // same Z3-internal symbol that was registered. Without this,
+        // the lookup misses and the runtime defaults to 0, changing
+        // the emitted random sequence.
+        std::string key = mangle_z3_name(name);
+        if (decls_by_name.find(key) == decls_by_name.end())
             return 0;
-        return eval_apply(name);
+        return eval_apply(key.c_str());
     }
 };
