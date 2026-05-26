@@ -8,11 +8,11 @@ package ivy2go
 // summary line.
 //
 // First iteration uses `iters=0` (no test loop iterations). Both
-// binaries should emit only `test_completed`, so byte-for-byte stdout
-// match is meaningful without worrying about RNG divergence between
-// Go's `math/rand` and C++'s `std::mt19937`. Future iterations can
-// add an action-count parity tier once Tier 1 OMITTED entries are
-// closed.
+// binaries emit only `test_completed`, giving a deterministic
+// baseline. With both sides now seeded by the same ChaCha8 PRNG
+// (matching ivy_to_cpp's Python implementation), the harness also
+// runs an `iters=N seed=N` sweep that expects byte-identical action
+// trace sequences — see TestOracleParitySeeded.
 //
 // Gated behind `ORACLE=1 SLOW_GO_TEST=1` because the harness runs
 // `go build` + `g++` (with Z3 link) on every fixture — too expensive
@@ -133,10 +133,13 @@ func runOracleParityFixture(t *testing.T, fixture string) oracleOutcome {
 }
 
 // runOracleGoPipeline emits target=test Go for fixture, builds it,
-// runs it with `--iters=0 --seed=1`, and returns whatever stdout the
+// runs it with the given flags, and returns whatever stdout the
 // binary produced (or the stage that failed).
-func runOracleGoPipeline(t *testing.T, srcAbs, fixture string) (oraclePipelineStage, string, string) {
+func runOracleGoPipeline(t *testing.T, srcAbs, fixture string, runArgs ...string) (oraclePipelineStage, string, string) {
 	t.Helper()
+	if len(runArgs) == 0 {
+		runArgs = []string{"--iters=0", "--seed=1"}
+	}
 	dir := playpenDir(t)
 	out, err := CompileAndGenerate(srcAbs, nil, Config{
 		Target:      "test",
@@ -155,7 +158,7 @@ func runOracleGoPipeline(t *testing.T, srcAbs, fixture string) (oraclePipelineSt
 	if buildOut, err := build.CombinedOutput(); err != nil {
 		return oracleStageBuild, fmt.Sprintf("go build: %v\n%s", err, string(buildOut)), ""
 	}
-	run := exec.Command(filepath.Join(pkgDir, binName), "--iters=0", "--seed=1")
+	run := exec.Command(filepath.Join(pkgDir, binName), runArgs...)
 	runOut, err := run.CombinedOutput()
 	if err != nil {
 		return oracleStageRun, fmt.Sprintf("run: %v\n%s", err, string(runOut)), string(runOut)
@@ -164,10 +167,13 @@ func runOracleGoPipeline(t *testing.T, srcAbs, fixture string) (oraclePipelineSt
 }
 
 // runOracleCppPipeline emits target=test C++ for fixture, builds it
-// with g++, runs it with `iters=0 seed=1`, and returns whatever stdout
+// with g++, runs it with the given flags, and returns whatever stdout
 // the binary produced (or the stage that failed).
-func runOracleCppPipeline(t *testing.T, srcAbs, fixture string) (oraclePipelineStage, string, string) {
+func runOracleCppPipeline(t *testing.T, srcAbs, fixture string, runArgs ...string) (oraclePipelineStage, string, string) {
 	t.Helper()
+	if len(runArgs) == 0 {
+		runArgs = []string{"iters=0", "seed=1"}
+	}
 	dir := playpenDir(t)
 	className := strings.TrimSuffix(fixture, ".ivy")
 	className = strings.ReplaceAll(className, "-", "_")
@@ -191,7 +197,7 @@ func runOracleCppPipeline(t *testing.T, srcAbs, fixture string) (oraclePipelineS
 	if err != nil {
 		return oracleStageBuild, fmt.Sprintf("ivy2cpp.BuildOutput: %v", err), ""
 	}
-	run := exec.Command(binPath, "iters=0", "seed=1")
+	run := exec.Command(binPath, runArgs...)
 	runOut, err := run.CombinedOutput()
 	if err != nil {
 		return oracleStageRun, fmt.Sprintf("run: %v\n%s", err, string(runOut)), string(runOut)
@@ -224,6 +230,81 @@ func trim(s string, n int) string {
 		return s
 	}
 	return s[:n] + fmt.Sprintf("... [%d more bytes]", len(s)-n)
+}
+
+// TestOracleSeededParity runs every fixture with a non-zero iter
+// count and the same `seed=N` on both pipelines. Because ivy_to_cpp
+// (Python), ivy2cpp, and ivy2go now all use the same ChaCha8 RNG
+// seeded the same way (ivySeedBytes ↔ cpp's memcpy-of-int-into-key
+// pattern), the random action sequence is byte-identical and the
+// emitted trace lines should match exactly.
+//
+// This is the strongest correctness gate — a divergence here means
+// ivy2go's emission semantics drift from ivy2cpp on a path the
+// iters=0 baseline can't reach (action body emission, precondition
+// gating, weighted scheduler, etc.).
+func TestOracleSeededParity(t *testing.T) {
+	if os.Getenv("ORACLE") == "" {
+		t.Skip("set ORACLE=1 to compare ivy2cpp-emitted vs ivy2go-emitted binary stdout under matching ChaCha8 seeds")
+	}
+	if !SlowGoTest {
+		t.Skip("set SLOW_GO_TEST=1 to enable build-and-run oracle parity")
+	}
+	const iters = 20
+	outcomes := make([]oracleOutcome, 0, len(oracleFixtures))
+	for _, fixture := range oracleFixtures {
+		fixture := fixture
+		t.Run(fixture, func(t *testing.T) {
+			outcome := runOracleSeededFixture(t, fixture, iters, 1)
+			outcomes = append(outcomes, outcome)
+			switch outcome.Verdict {
+			case "parity":
+				// silent on success
+			case "divergent":
+				t.Errorf("DIVERGENT under chacha8 seed=1 iters=%d:\n  go (%d bytes): %q\n  cpp (%d bytes): %q",
+					iters,
+					len(outcome.GoStdout), trim(outcome.GoStdout, 400),
+					len(outcome.CppStdout), trim(outcome.CppStdout, 400))
+			default:
+				t.Logf("BLOCKED: %s\n  go-err: %s\n  cpp-err: %s",
+					outcome.Verdict, trim(outcome.GoErr, 400), trim(outcome.CppErr, 400))
+			}
+		})
+	}
+	t.Cleanup(func() {
+		t.Logf("oracle SEEDED (iters=%d seed=1) parity summary:", iters)
+		logOracleParitySummary(t, outcomes)
+	})
+}
+
+// runOracleSeededFixture runs both pipelines with iters/seed flags
+// in their respective conventions (Go `--iters=N --seed=N`, cpp
+// `iters=N seed=N`) and diffs the resulting stdout streams. Both
+// forms re-seed the package ChaCha8 the same way; the only reason a
+// run could diverge is an actual emission-semantics mismatch.
+func runOracleSeededFixture(t *testing.T, fixture string, iters, seed int) oracleOutcome {
+	t.Helper()
+	srcAbs := mustAbs(t, oracleParityFixturePath(fixture))
+	out := oracleOutcome{Fixture: fixture}
+	goArgs := []string{fmt.Sprintf("--iters=%d", iters), fmt.Sprintf("--seed=%d", seed)}
+	cppArgs := []string{fmt.Sprintf("iters=%d", iters), fmt.Sprintf("seed=%d", seed)}
+	out.GoStage, out.GoErr, out.GoStdout = runOracleGoPipeline(t, srcAbs, fixture, goArgs...)
+	out.CppStage, out.CppErr, out.CppStdout = runOracleCppPipeline(t, srcAbs, fixture, cppArgs...)
+	switch {
+	case out.GoStage != "" && out.CppStage != "":
+		out.Verdict = "blocked-both"
+	case out.GoStage != "":
+		out.Verdict = "blocked-go-" + string(out.GoStage)
+	case out.CppStage != "":
+		out.Verdict = "blocked-cpp-" + string(out.CppStage)
+	default:
+		if normalizeOracleStdout(out.GoStdout) == normalizeOracleStdout(out.CppStdout) {
+			out.Verdict = "parity"
+		} else {
+			out.Verdict = "divergent"
+		}
+	}
+	return out
 }
 
 // logOracleParitySummary prints the N parity / M blocked / Z divergent
