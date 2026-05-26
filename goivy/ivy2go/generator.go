@@ -173,6 +173,9 @@ func (g *Generator) generate() error {
 	g.emitDefinitionsStream()
 	g.emitThunks()
 	g.emitNative()
+	// Tick lives in the runtime stream and is needed by every target
+	// (test/gen/repl call it; impl/class can ignore it without harm).
+	g.emitTick(&g.runtime)
 	// REPL helpers are only useful for the repl target. The test
 	// target drives actions via actionGen_* in main.go, not by
 	// reading commands from stdin — emitting repl.go alongside
@@ -273,9 +276,8 @@ func (g *Generator) emitNative() {
 
 func (g *Generator) emitRepl() {
 	g.emitReplLoop(&g.repl)
-	// Tick lives in the runtime stream so it's available to both
-	// REPL and non-REPL targets.
-	g.emitTick(&g.runtime)
+	// Tick is emitted from the top-level pipeline (above) for every
+	// target, so REPL doesn't re-emit it.
 }
 
 func (g *Generator) emitMain() {
@@ -396,6 +398,9 @@ func (g *Generator) emitTestMain() {
 	g.main.line("\tif actions[idx].generate(state) {")
 	g.main.line("\t\tactions[idx].execute(state)")
 	g.main.line("\t}")
+	// Advance progress counters after every iteration so any rely")
+	// bound that fires is caught at the right step.
+	g.main.line("\tstate.Tick(iters)")
 	g.main.line("}")
 	g.main.line(`fmt.Println("test_completed")`)
 	g.main.close("")

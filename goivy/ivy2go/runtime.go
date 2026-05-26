@@ -54,6 +54,9 @@ func (g *Generator) emitRuntimeHelpersLate(w *goWriter) {
 	if g.Ctx.OnceGlobals["__need_testflags"] {
 		g.emitTestFlagsHelper(w)
 	}
+	if g.Ctx.OnceGlobals["__need_progress_check"] {
+		g.emitProgressCheckHelper(w)
+	}
 	// ite_<type> helpers: walk OnceGlobals keys, find any starting
 	// with "ite_", emit one per. Each call site recorded the helper
 	// name in OnceGlobals via requestIteHelper.
@@ -548,6 +551,25 @@ func (g *Generator) emitIteHelper(w *goWriter, req iteHelperReq) {
 	w.linef("func %s(c bool, t, f %s) %s {", req.Name, req.Type, req.Type)
 	w.line("\tif c { return t }")
 	w.line("\treturn f")
+	w.line("}")
+	w.blank()
+}
+
+// emitProgressCheckHelper emits the ivyCheckProgress runtime helper
+// invoked by the Tick() method when a progress counter exceeds its
+// implied-rely bound. Mirrors the cpp `ivy_check_progress` invariant
+// check — it panics with a clear message when the bound is violated,
+// because (per CLAUDE.md guidance) panic + stack trace beats a
+// silent liveness failure.
+func (g *Generator) emitProgressCheckHelper(w *goWriter) {
+	g.Ctx.AddImport("runtime", "fmt", "")
+	w.line("// ivyCheckProgress is invoked from State.Tick() to enforce a")
+	w.line("// rely-derived upper bound on a progress counter. Panics when")
+	w.line("// the bound is exceeded — liveness violation detected at runtime.")
+	w.line("func ivyCheckProgress(counter, bound int) {")
+	w.line("\tif counter > bound {")
+	w.line(`		panic(fmt.Sprintf("ivy liveness check failed: progress counter %d exceeds rely bound %d", counter, bound))`)
+	w.line("\t}")
 	w.line("}")
 	w.blank()
 }

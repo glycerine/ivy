@@ -31,6 +31,12 @@ func (g *Generator) emitStateStruct(w *goWriter) {
 			w.linef("__thunk_%s func(%s) %s", goExportedName(sym.Name), keyT, valT)
 		}
 	}
+	// Progress counters — one int / int-array / map[K]int field per
+	// `progress P(X) <-> cond` declaration. Updated by Tick(); checked
+	// against rely bounds also by Tick().
+	for _, f := range g.progressCounterFields() {
+		w.line(f)
+	}
 	w.close("")
 	w.blank()
 	// Emit per-symbol getters that route through the thunk slot.
