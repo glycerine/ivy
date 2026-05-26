@@ -108,12 +108,12 @@ void __randomize<CLASSNAME>( gen &g, const  z3::expr &apply_expr, const std::str
     z3::sort range = apply_expr.get_sort();
     CLASSNAME value;
     if (CLASSNAME::bv_to_x_hash.size() == (1<<BITS)) {
-        value = CLASSNAME::bv_to_x(rand() % (1<<BITS));
+        value = CLASSNAME::bv_to_x(__chacha8c_rng.Rand() % (1<<BITS));
     } else {
         if (CLASSNAME::nonces.size() == 0) 
            for (int i = 0; i < 2; i++)
                CLASSNAME::nonces.push_back(CLASSNAME::random_x());
-        value = CLASSNAME::nonces[rand() % CLASSNAME::nonces.size()];
+        value = CLASSNAME::nonces[__chacha8c_rng.Rand() % CLASSNAME::nonces.size()];
     }
     z3::expr val_expr = g.int_to_z3(range,CLASSNAME::x_to_bv(value));
     z3::expr pred = apply_expr == val_expr;
@@ -174,7 +174,7 @@ BASECLASS CLASSNAME::random_x(){
         return '"' + (s[1:-1] if s.startswith('"') else s) + '"'
 
     def rand(self):
-        return '((rand()%2) ? "a" : "b")' # TODO: let user control random string generation
+        return '((__chacha8c_rng.Rand()%2) ? "a" : "b")' # TODO: let user control random string generation
 
 class IntBV(XBV):
     """ A type that represents a large range of integers using a small a
@@ -241,7 +241,7 @@ BASECLASS CLASSNAME::random_x(){
         return str(s)
 
     def rand(self):
-            return '((rand()%{}) + {})'.format(self.card(),self.loval) # TODO: let user control random string generation
+            return '((__chacha8c_rng.Rand()%{}) + {})'.format(self.card(),self.loval) # TODO: let user control random string generation
 
 
 class VariantType(CppClass):
@@ -478,7 +478,7 @@ void __randomize<CLASSNAME>( gen &g, const  z3::expr &apply_expr, const std::str
     z3::sort range = apply_expr.get_sort();
     z3::expr disj = g.ctx.bool_val(false);
 """.replace('CLASSNAME',self.short_name()).replace('SORTNAME',self.sort.name))
-       add_impl('int tag = rand() % {};\n'.format(len(self.variants)))
+       add_impl('int tag = __chacha8c_rng.Rand() % {};\n'.format(len(self.variants)))
        for idx,var in enumerate(self.variants):
            sort,ctype = var
            pto = ivy_solver.solver_name(ivy_logic.Symbol('*>',ivy_logic.RelationSort([self.sort,sort])))
@@ -521,5 +521,4 @@ def get_cpptype_constructor(descr):
     if len(params) != nparams:
         raise iu.IvyError(None,'expecting {} parameter in "{}"'.format(nparams,descr))
     return lambda classname: cpptype(*([classname]+params))
-
 

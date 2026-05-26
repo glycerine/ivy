@@ -897,8 +897,8 @@ def emit_clear_progress(impl,obj=None):
 def mk_rand(sort,classname=None,obj=None):
     bds = sort_bounds(sort,obj=obj)
 #    card = sort_card(sort)
-    return '('+ctype(sort,classname=classname)+')' + ('(rand() % (({})-({})) + ({}))'.format(bds[1],bds[0],bds[0]) if bds
-                                                      else '((rand()%2) ? "a" : "b")' if has_string_interp(sort)
+    return '('+ctype(sort,classname=classname)+')' + ('(__chacha8c_rng.Rand() % (({})-({})) + ({}))'.format(bds[1],bds[0],bds[0]) if bds
+                                                      else '((__chacha8c_rng.Rand()%2) ? "a" : "b")' if has_string_interp(sort)
                                                       else sort_to_cpptype[sort].rand() if sort in sort_to_cpptype
                                                       else "0")
 
@@ -2070,6 +2070,8 @@ def module_to_cpp_class(classname,basename):
     impl.append("void __ivy_exit(int code){exit(code);}\n")
 
     impl.append('#include "ivy_threads.hpp"\n')
+    impl.append('#include "chacha8c.hpp"\n')
+    impl.append('chacha8c::ChaCha8 __chacha8c_rng; // global pseudo-random number generator\n')
 
 
     if target.get() == "repl":
@@ -2714,6 +2716,10 @@ void CLASSNAME::install_timer(timer *r) {
                         emit_value_parser(impl,p,'"{}"'.format(d.rep.replace('"','\\"')),classname,lineno=d.lineno)
                 impl.append("""
     int seed = 1;
+    std::uint8_t seed32[chacha8c::key_size] = {0};
+    std::memcpy(seed32, &seed, sizeof(seed));
+    __chacha8c_rng.Seed(seed32);
+
     int sleep_ms = 10;
     int final_ms = 0; 
     
@@ -2775,6 +2781,9 @@ void CLASSNAME::install_timer(timer *r) {
         }
     }
     srand(seed);
+    std::memcpy(seed32, &seed, sizeof(seed));
+    __chacha8c_rng.Seed(seed32);
+
     if (!__ivy_out.is_open())
         __ivy_out.basic_ios<char>::rdbuf(std::cout.rdbuf());
     argc = pargs.size();
@@ -4325,7 +4334,7 @@ def emit_repl_boilerplate3test(header,impl,classname):
         if (do_over) {
            do_over = false;
         }  else {
-            frnd = choices * (((double)rand())/(((double)RAND_MAX)+1.0));
+            frnd = choices * (((double)__chacha8c_rng.Rand())/(((double)RAND_MAX)+1.0));
         }
         // std::cout << "frnd = " << frnd << std::endl;
         if (frnd < totalweight) {
@@ -4430,7 +4439,7 @@ def emit_repl_boilerplate3test(header,impl,classname):
                     fdc++;
             }
             // std::cout << "fdc = " << fdc << std::endl;
-            int fdi = fdc * (((double)rand())/(((double)RAND_MAX)+1.0));
+            int fdi = fdc * (((double)__chacha8c_rng.Rand())/(((double)RAND_MAX)+1.0));
             fdc = 0;
             for (unsigned i = 0; i < readers.size(); i++) {
                 reader *r = readers[i];
