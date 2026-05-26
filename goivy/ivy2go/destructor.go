@@ -137,8 +137,12 @@ func (g *Generator) emitDestructorStructString(w *goWriter, typeName string, des
 			w.line(`	__b.WriteString(",")`)
 		}
 		first = false
-		field := goExportedName(memName(d.Name))
-		w.linef(`	__b.WriteString(%q + ":")`, field)
+		// label: original ivy field name (lower-case), matching cpp's
+		// `varName(memName(d.Name))` which preserves case. field:
+		// Go-exported identifier for struct access.
+		label := memName(d.Name)
+		field := goExportedName(label)
+		w.linef(`	__b.WriteString(%q + ":")`, label)
 		domain := fs.Domain()
 		if len(domain) > 0 {
 			domain = domain[1:]

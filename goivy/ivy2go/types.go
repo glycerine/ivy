@@ -548,6 +548,22 @@ func (g *Generator) emitEnumDecl(w *goWriter, st *goivy.LogicEnumeratedSort) {
 	}
 	w.closeParen()
 	w.blank()
+	// String() — mirrors cpp's operator<< overload which prints
+	// enum values as their original ivy symbolic name (e.g. "red"
+	// not "0"). Required for byte-equivalent trace output against
+	// the cpp-emitted binary.
+	w.linef("func (e %s) String() string {", typeName)
+	w.line("\tswitch e {")
+	for i, v := range st.Extension {
+		exported := goExportedName(v)
+		w.linef("\tcase %s: return %q", exported, v)
+		_ = i
+	}
+	w.line("\t}")
+	w.linef("\treturn fmt.Sprintf(\"%s(%%d)\", int(e))", typeName)
+	w.line("}")
+	w.blank()
+	g.Ctx.AddImport("types", "fmt", "")
 }
 
 // emitRangeDecl emits a typed alias for a named range sort. Range

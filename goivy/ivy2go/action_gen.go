@@ -448,7 +448,10 @@ func (g *Generator) emitActionGenExecute(w *goWriter, plan *actionGenPlan) {
 		w.linef(`	fmt.Fprintf(ivyTraceOut, %q, %s)`, fmtStr.String(), strings.Join(args, ", "))
 	}
 
-	// Invoke state.<Name>(g.in0, g.in1, …).
+	// Invoke state.<Name>(g.in0, g.in1, …). If the action has a
+	// single return value, capture it and echo `= <value>` to the
+	// trace stream — mirrors ivy2cpp/action_gen.go:617
+	// (`__ivy_out << "= " << callExpr << std::endl;`).
 	args := make([]string, 0, len(plan.inputs))
 	for _, p := range plan.inputs {
 		if p == nil {
@@ -456,7 +459,32 @@ func (g *Generator) emitActionGenExecute(w *goWriter, plan *actionGenPlan) {
 		}
 		args = append(args, "g."+goActionGenFieldName(p.Name))
 	}
-	w.linef("\tstate.%s(%s)", goExportedName(plan.name), strings.Join(args, ", "))
+	var returns []*goivy.Const
+	if plan.origAct != nil {
+		returns = plan.origAct.GetFormalReturns()
+	}
+	callExpr := fmt.Sprintf("state.%s(%s)", goExportedName(plan.name), strings.Join(args, ", "))
+	switch len(returns) {
+	case 0:
+		w.linef("\t%s", callExpr)
+	case 1:
+		w.linef("\t__res := %s", callExpr)
+		w.line(`	fmt.Fprintf(ivyTraceOut, "= %v\n", __res)`)
+	default:
+		// Multi-return: declare extras as zero values and pass by
+		// reference. Multi-return is rarely exercised by oracle
+		// fixtures; mirror cpp's emitPythonTestActionGenExecute
+		// shape but skip the result echo (cpp also skips it).
+		for _, r := range returns {
+			if r == nil {
+				continue
+			}
+			zero := g.goZeroValue(r.CSort)
+			w.linef("\tvar %s = %s", goActionGenFieldName(r.Name), zero)
+			args = append(args, goActionGenFieldName(r.Name))
+		}
+		w.linef("\tstate.%s(%s)", goExportedName(plan.name), strings.Join(args, ", "))
+	}
 	w.line("}")
 	w.blank()
 }

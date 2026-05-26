@@ -20,6 +20,7 @@ package ivy2go
 // (Linux) or framework (macOS), plus the in-tree Go module.
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -27,9 +28,31 @@ import (
 	"sort"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/glycerine/ivy/goivy/ivy2cpp"
 )
+
+// oracleRunTimeout caps how long a single binary may run. Defends the
+// sweep against fixtures whose emitted binary infinite-loops or
+// deadlocks (e.g. cpp's `empty.ivy` test-loop variant with no actions
+// to schedule), so one stuck fixture doesn't block diagnosis of the
+// rest.
+const oracleRunTimeout = 25 * time.Second
+
+// runWithTimeout invokes cmd with oracleRunTimeout. Returns the
+// combined stdout+stderr, the run error (if any), and a bool telling
+// the caller whether the timeout fired.
+func runWithTimeout(cmd *exec.Cmd) ([]byte, error, bool) {
+	ctx, cancel := context.WithTimeout(context.Background(), oracleRunTimeout)
+	defer cancel()
+	timed := exec.CommandContext(ctx, cmd.Path, cmd.Args[1:]...)
+	timed.Dir = cmd.Dir
+	timed.Env = cmd.Env
+	out, err := timed.CombinedOutput()
+	timedOut := ctx.Err() == context.DeadlineExceeded
+	return out, err, timedOut
+}
 
 // oracleFixtures mirrors ivy2cpp/oracle_test.go's catalog of the 14
 // fixtures under `ivy2cpp/test_vec/oracle/`. Listed in the same order
@@ -159,7 +182,10 @@ func runOracleGoPipeline(t *testing.T, srcAbs, fixture string, runArgs ...string
 		return oracleStageBuild, fmt.Sprintf("go build: %v\n%s", err, string(buildOut)), ""
 	}
 	run := exec.Command(filepath.Join(pkgDir, binName), runArgs...)
-	runOut, err := run.CombinedOutput()
+	runOut, err, timedOut := runWithTimeout(run)
+	if timedOut {
+		return oracleStageRun, fmt.Sprintf("run: timed out after %s\n%s", oracleRunTimeout, string(runOut)), string(runOut)
+	}
 	if err != nil {
 		return oracleStageRun, fmt.Sprintf("run: %v\n%s", err, string(runOut)), string(runOut)
 	}
@@ -198,7 +224,10 @@ func runOracleCppPipeline(t *testing.T, srcAbs, fixture string, runArgs ...strin
 		return oracleStageBuild, fmt.Sprintf("ivy2cpp.BuildOutput: %v", err), ""
 	}
 	run := exec.Command(binPath, runArgs...)
-	runOut, err := run.CombinedOutput()
+	runOut, err, timedOut := runWithTimeout(run)
+	if timedOut {
+		return oracleStageRun, fmt.Sprintf("run: timed out after %s\n%s", oracleRunTimeout, string(runOut)), string(runOut)
+	}
 	if err != nil {
 		return oracleStageRun, fmt.Sprintf("run: %v\n%s", err, string(runOut)), string(runOut)
 	}
