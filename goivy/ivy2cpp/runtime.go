@@ -186,8 +186,8 @@ func (g *Generator) emitRuntimeImplPreamble(w *cppWriter) {
 	w.line("std::ofstream __ivy_modelfile;")
 	w.line("void __ivy_exit(int code){exit(code);}")
 	w.line(`#include "ivy_threads.hpp"`)
-	w.line(`#include "chacha8.hpp"`)
-	w.line("chacha8c::ChaCha8* __chacha8c_rng;")
+	w.line(`#include "chacha8c.hpp"`)
+	w.line("chacha8c::ChaCha8* __chacha8c_rng; // global pseudo-random number generator")
 
 	w.blank()
 }
