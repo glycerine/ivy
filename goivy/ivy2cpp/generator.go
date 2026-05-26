@@ -1555,8 +1555,8 @@ int %s(int argc, char **argv){
     int seed = 1;
     std::uint8_t seed32[chacha8c::key_size];
     std::memset(seed32, 0, chacha8c::key_size);
-	std::memcpy(seed32, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456", chacha8c::key_size);
-	__chacha8c_rng.Seed(seed32);
+    std::memcpy(seed32, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456", chacha8c::key_size);
+    __chacha8c_rng.Seed(seed32);
 
     int sleep_ms = 10;
     int final_ms = 0; 
