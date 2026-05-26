@@ -236,7 +236,6 @@ func (g *Generator) emitState() {
 func (g *Generator) emitActions() {
 	g.emitActionMethods(&g.actions)
 	g.emitActionGenStructs(&g.actions)
-	g.emitCloseSolver(&g.actions)
 }
 
 func (g *Generator) emitInit() {
@@ -359,12 +358,13 @@ func (g *Generator) emitTestMain() {
 		return
 	}
 	// Action generator slice. Each entry pairs a name (for traces)
-	// with a small adapter struct that owns the actionGen and
-	// exposes Generate / Close uniformly.
+	// with the per-action generate(state)bool + execute(state) pair
+	// (mirrors ivy2cpp's two-phase generate→execute split).
 	g.main.line("// Per-action generator registry.")
 	g.main.line("type actionEntry struct {")
 	g.main.line("\tname     string")
-	g.main.linef("\tgenerate func(*%s)", g.StateTypeName)
+	g.main.linef("\tgenerate func(*%s) bool", g.StateTypeName)
+	g.main.linef("\texecute  func(*%s)", g.StateTypeName)
 	g.main.line("\tclose    func() error")
 	g.main.line("}")
 	g.main.line("var actions []actionEntry")
@@ -372,7 +372,7 @@ func (g *Generator) emitTestMain() {
 		struc := "actionGen_" + goExportedName(name)
 		g.main.linef("{")
 		g.main.linef("\tg := new%s(state)", struc)
-		g.main.linef("\tactions = append(actions, actionEntry{name: %q, generate: g.Generate, close: g.Close})", name)
+		g.main.linef("\tactions = append(actions, actionEntry{name: %q, generate: g.generate, execute: g.execute, close: g.Close})", name)
 		g.main.line("}")
 	}
 	g.main.line("defer func() {")
@@ -384,10 +384,15 @@ func (g *Generator) emitTestMain() {
 	g.main.line("for i := 0; i < iters; i++ {")
 	g.main.line("\t_ = i")
 	g.main.line("\tidx := ivyChoose(len(actions))")
-	g.main.line("\t// wouldFail_<Name> gates assert/assume failures before")
-	g.main.line("\t// the action body runs, so a surviving panic here is a")
-	g.main.line("\t// real bug — let it propagate with its stack trace.")
-	g.main.line("\tactions[idx].generate(state)")
+	g.main.line("\t// Solver-driven fire/skip: generate() returns false")
+	g.main.line("\t// when the action's precondition is UNSAT in the")
+	g.main.line("\t// current state (so we don't even trace, matching")
+	g.main.line("\t// ivy2cpp's generate→execute split). A surviving")
+	g.main.line("\t// panic from execute() is a real bug — let it")
+	g.main.line("\t// propagate with its stack trace.")
+	g.main.line("\tif actions[idx].generate(state) {")
+	g.main.line("\t\tactions[idx].execute(state)")
+	g.main.line("\t}")
 	g.main.line("}")
 	g.main.line(`fmt.Println("test_completed")`)
 	g.main.close("")

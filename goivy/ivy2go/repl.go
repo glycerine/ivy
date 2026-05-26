@@ -3,6 +3,7 @@ package ivy2go
 import (
 	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy"
 )
@@ -94,9 +95,9 @@ func (g *Generator) emitReplDispatch(w *goWriter) {
 		returns := act.GetFormalReturns()
 		switch len(returns) {
 		case 0:
-			w.linef("\tstate.%s(%s)", methodName, joinComma(callArgs))
+			w.linef("\tstate.%s(%s)", methodName, strings.Join(callArgs, ", "))
 		case 1:
-			w.linef("\tret := state.%s(%s)", methodName, joinComma(callArgs))
+			w.linef("\tret := state.%s(%s)", methodName, strings.Join(callArgs, ", "))
 			w.linef(`	fmt.Fprintln(out, ret)`)
 		default:
 			// Multi-return: just print them.
@@ -104,8 +105,8 @@ func (g *Generator) emitReplDispatch(w *goWriter) {
 			for i := range returns {
 				retNames[i] = fmt.Sprintf("r%d", i)
 			}
-			w.linef("\t%s := state.%s(%s)", joinComma(retNames), methodName, joinComma(callArgs))
-			w.linef(`	fmt.Fprintln(out, %s)`, joinComma(retNames))
+			w.linef("\t%s := state.%s(%s)", strings.Join(retNames, ", "), methodName, strings.Join(callArgs, ", "))
+			w.linef(`	fmt.Fprintln(out, %s)`, strings.Join(retNames, ", "))
 		}
 	}
 	w.line("default:")
@@ -220,15 +221,3 @@ func hasPrefixAny(s string, prefixes ...string) bool {
 	return false
 }
 
-// joinComma joins parts with ", ". A small helper to keep emitted
-// lines compact.
-func joinComma(parts []string) string {
-	out := ""
-	for i, p := range parts {
-		if i > 0 {
-			out += ", "
-		}
-		out += p
-	}
-	return out
-}

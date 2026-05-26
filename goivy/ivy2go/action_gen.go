@@ -8,733 +8,473 @@ import (
 	"github.com/glycerine/ivy/goivy"
 )
 
-// action_gen.go mirrors ivy2cpp/action_gen.go. For target=test/gen,
-// the C++ generator emits one action_gen_<name> class per action that
-// uses Z3 to synthesise inputs satisfying the action's reverse-image
-// precondition. ivy2go's equivalent emits one actionGen<Name> struct
-// per action, holding a *goivy.Solver wired through the goivy facade.
+// action_gen.go is a literal port of ivy2cpp/action_gen.go. Per
+// CLAUDE.md B.6–B.9 the function set, names, and call graph mirror
+// ivy2cpp exactly; only the leaf-level emission swaps Go for C++.
 //
-// M9 ships a structural skeleton: each generator constructs a Solver
-// (via newIvySolver from z3.go), calls pushStateIntoSolver (from
-// solver_emit.go) to assert the pre-state, then chooses inputs via
-// ivyChoose as the M9.0 fallback. M9.1+ will replace the input
-// selection with Solver.GetSmallModel.
+// Each public action gets one generator: a struct holding a
+// *goivy.Solver and one field per formal-param input, plus three
+// methods:
+//
+//   - constructor (new<Name>) — creates the solver wrapper.
+//   - generate(state) bool   — assembles state facts + the action's
+//                              reverse-image precondition into a
+//                              *goivy.Clauses, hands it to
+//                              Solver.GetModelClauses, and returns
+//                              false on UNSAT (action skipped) /
+//                              true on SAT (input fields populated).
+//   - execute(state)         — traces `> name(args)` and invokes
+//                              state.<Name>(g.in0, g.in1, …).
+//
+// The fire/skip decision lives in one place: the solver. There is
+// no static-boolean `wouldFail_<Name>` shortcut — that earlier
+// invention drifted away from ivy2cpp's design and caused the
+// double-`> intf.pong` bug, where assume-style preconditions
+// surfaced by `ReverseImage(true, true, upd).Fmlas` but absent from
+// `Update.Pre.Fmlas` were lost.
 
-// emitActionGenStructs walks the module's actions and emits one
-// actionGen<Name> struct per public action. Only runs for target=test
-// or target=gen.
+// actionGenPlan captures everything we need to emit one action
+// generator. Mirrors ivy2cpp/action_gen.go:31-45.
+type actionGenPlan struct {
+	name           string
+	structName     string
+	act            goivy.Action // possibly wrapped by before_export / ext_preconds
+	origAct        goivy.Action
+	inputs         []*goivy.Const
+	preFmla        goivy.Expr
+	fallback       bool
+	fallbackReason string
+}
+
+// buildActionGenPlan mirrors ivy2cpp/action_gen.go:51 buildActionGenPlan.
+// It runs the same flow: pick up any BeforeExport/ExtPreconds wrappers,
+// call GetUpdateForArt, compute the reverse image, and stash the
+// precondition formula.
 //
-// Per action we emit three helpers:
-//
-//   - buildPrecondition_<Name>   — reified Pre Clauses for the solver
-//     (OPEN 055.3)
-//   - wouldFail_<Name>           — plain-Go Pre evaluator used as a
-//     pre-firing check (so randomized inputs don't crash an assert)
-//   - actionGen_<Name>           — the per-action generator struct
+// The clauses_helpers.go normalisations ivy2cpp applies
+// (TrimClauses / expandFieldReferences / extractInputFields /
+// extractDefinedParameters / RelevantDefinitions / VariantAxioms) are
+// not yet ported on the ivy2go side — they are queued in the
+// divergence audit. Without them the precondition is still the raw
+// reverse image, which is sufficient for the fixtures exercised today.
+func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGenPlan {
+	plan := &actionGenPlan{
+		name:       name,
+		structName: "actionGen_" + goExportedName(name),
+		origAct:    act,
+		act:        act,
+	}
+
+	if g.Mod != nil && g.Mod.BeforeExport != nil {
+		if be, ok := g.Mod.BeforeExport.Get2(name); ok && be != nil {
+			plan.act = be
+		}
+	}
+	if g.Mod != nil && g.Mod.ExtPreconds != nil {
+		if pre, ok := g.Mod.ExtPreconds[name]; ok && pre != nil {
+			orig := plan.act
+			seq := goivy.NewSequence(goivy.NewAssumeAction(pre), exprOfAction(orig))
+			seq.SetLineno(orig.GetLineno())
+			goivy.CopyFormalsTo(orig, seq)
+			plan.act = seq
+		}
+	}
+
+	var upd *goivy.Update
+	func() {
+		defer func() { _ = recover() }()
+		upd = goivy.GetUpdateForArt(plan.act, g.Mod, nil)
+	}()
+	if upd == nil {
+		plan.fallback = true
+		plan.fallbackReason = "GetUpdate returned nil"
+		plan.inputs = plan.act.GetFormalParams()
+		return plan
+	}
+
+	// pre = tr.reverse_image(true_clauses, true_clauses, upd) gives the
+	// action's transition relation + entry-precondition (assume side),
+	// but does NOT include internal asserts. ivy2cpp inherits the same
+	// gap from ivy_to_cpp.py; we widen the precondition here so the
+	// solver gates internal asserts too: conjoin NOT(AND Update.Pre.Fmlas).
+	//
+	// Update.Pre.Fmlas semantics: action fails iff every fmla holds.
+	// Negating the conjunction gives "action does not fail" — exactly
+	// the assert-side gate the test driver needs to avoid synthesising
+	// inputs that crash the body.
+	truePre := goivy.TrueClauses(nil)
+	preClauses := goivy.ReverseImage(truePre, truePre, upd)
+	revFmla := preClauses.ToFormula()
+
+	var assertOK goivy.Expr
+	switch len(upd.Pre.Fmlas) {
+	case 0:
+		assertOK = nil
+	case 1:
+		assertOK = &goivy.LogicNot{Body: upd.Pre.Fmlas[0]}
+	default:
+		assertOK = &goivy.LogicNot{Body: &goivy.LogicAnd{Terms: upd.Pre.Fmlas}}
+	}
+
+	switch {
+	case assertOK == nil:
+		plan.preFmla = revFmla
+	case revFmla == nil:
+		plan.preFmla = assertOK
+	default:
+		plan.preFmla = &goivy.LogicAnd{Terms: []goivy.Expr{revFmla, assertOK}}
+	}
+	plan.inputs = plan.act.GetFormalParams()
+	return plan
+}
+
+// exprOfAction mirrors ivy2cpp/action_gen.go:184 exprOfAction.
+func exprOfAction(a goivy.Action) goivy.Expr {
+	if e, ok := a.(goivy.Expr); ok {
+		return e
+	}
+	return nil
+}
+
+// emitActionGenStructs is the top-level entry: it walks every public
+// action, builds a plan, and emits one generator per plan. Mirrors
+// the per-action loop in ivy2cpp/generator.go's emitClasses /
+// emitActionGenerators.
 func (g *Generator) emitActionGenStructs(w *goWriter) {
 	if !g.usesZ3() {
 		return
 	}
 	if g.Ctx != nil {
 		g.Ctx.AddImport("actions", g.Config.GoivyImportPath, "")
+		g.Ctx.AddImport("actions", "fmt", "")
 	}
 	for _, name := range g.actionGenNames() {
-		g.emitPreconditionForAction(w, name)
-		g.emitWouldFailHelper(w, name)
-		g.emitOneActionGenStruct(w, name)
+		act, _ := g.Mod.Actions.Get2(name)
+		if act == nil {
+			continue
+		}
+		plan := g.buildActionGenPlan(name, act)
+		g.emitActionGenStructDecl(w, plan)
+		g.emitActionGen(w, plan)
 	}
 }
 
-// emitWouldFailHelper writes `wouldFail_<Name>(state *State, v0 T0, …) bool`.
-// Returns true when the action should NOT fire in the current state.
-// actionGen.Generate calls it as a precondition gate so randomized
-// inputs don't trigger an `ivyAssert` or `ivyAssume` panic at runtime.
-//
-// Two flavors of failure are folded into one boolean:
-//
-//  1. assert-failure paths captured by goivy's `Update.Pre.Fmlas`.
-//     Treated as a CONJUNCTION (the goivy Clauses semantics): the
-//     action fails iff every fmla holds. Joined with `&&`.
-//
-//  2. env-contract violations — the action body has an `assume` that
-//     would fail in the current state. goivy's `Update.Pre` does not
-//     surface these (assume is the environment's obligation, not a
-//     system failure), so we derive them from the entry precondition
-//     `ReverseImage(true, true, upd).Fmlas`, filtered to fmlas that
-//     reference only old-state / formal symbols. The action fails iff
-//     any of these old-state-only fmlas evaluate to false in the
-//     current state.
-//
-// Combined: wouldFail = (every Pre.Fmla holds) OR (some entry-
-// precondition fmla is violated). Without (2), back-to-back firings
-// of an action like `intf.pong` (whose body starts with `assume side
-// == right` after the spec's `before` mixin) would crash the test
-// driver via the `ivyAssume` panic.
-func (g *Generator) emitWouldFailHelper(w *goWriter, name string) {
-	act, _ := g.Mod.Actions.Get2(name)
-	if act == nil {
-		return
-	}
-	params := act.GetFormalParams()
-
-	ctx := &goivy.UpdateContext{
-		Domain: g.Mod,
-		PVars:  map[string]bool{},
-		ActCfg: g.Mod.Cfg.ActCfg,
-	}
-	var update *goivy.Update
-	func() {
-		defer func() { _ = recover() }()
-		update = goivy.GetUpdate(act, ctx)
-	}()
-	// envPre = reverse-image entry precondition; its old-state-only
-	// fmlas are exactly the assume-style obligations the test
-	// environment must satisfy before firing the action.
-	var envPre *goivy.Clauses
-	if update != nil {
-		func() {
-			defer func() { _ = recover() }()
-			truePre := goivy.TrueClauses(nil)
-			envPre = goivy.ReverseImage(truePre, truePre, update)
-		}()
-	}
-
-	helperName := "wouldFail_" + goExportedName(name)
-	sig := "state *" + g.StateTypeName
-	for i, p := range params {
+// emitActionGenStructDecl emits the struct declaration with one
+// solver field plus one field per formal-param input. Mirrors
+// ivy2cpp/action_gen.go:193 emitActionGenClassHeader +
+// emitActionGenMemberDecls.
+func (g *Generator) emitActionGenStructDecl(w *goWriter, plan *actionGenPlan) {
+	w.linef("// %s drives solver-backed input synthesis for the %s action.", plan.structName, plan.name)
+	w.linef("type %s struct {", plan.structName)
+	w.line("\tsol *goivy.Solver")
+	for _, p := range plan.inputs {
 		if p == nil {
 			continue
 		}
-		sig += fmt.Sprintf(", v%d %s", i, g.goType(p.CSort))
-	}
-	w.linef("// %s evaluates action %q's Pre clauses with the picked", helperName, name)
-	w.linef("// inputs. Returns true iff the action would fail an")
-	w.linef("// ivyAssert/ivyAssume so callers can skip it.")
-	w.linef("func %s(%s) bool {", helperName, sig)
-	w.line("\t_ = state")
-	for i := range params {
-		w.linef("\t_ = v%d", i)
-	}
-	// `s := state` so the formula emitter can reuse the standard
-	// `s.<Exported>` lowering path for state-symbol references.
-	w.line("\ts := state")
-	w.line("\t_ = s")
-
-	// (1) Assert-failure clauses (goivy CONJUNCTION semantics: fail
-	// iff every fmla holds).
-	preParts := []string{}
-	if update != nil && update.Pre != nil && !update.Pre.IsFalse() {
-		defSubs := buildDefSubstitutions(update.Pre.Defs)
-		for _, fmla := range update.Pre.Fmlas {
-			inlined := applyDefSubstitutions(fmla, defSubs)
-			expr, ok := g.emitPreFmlaAsGoExpr(inlined, params)
-			if !ok {
-				w.linef("\t// unreifiable Pre fmla — conservatively skipping action: %s",
-					strings.ReplaceAll(fmla.String(), "\n", " "))
-				preParts = append(preParts, "true")
-				continue
-			}
-			preParts = append(preParts, "("+expr+")")
-		}
-	}
-
-	// (2) Env-contract (assume) preconditions: extracted from
-	// ReverseImage entry constraints; only fmlas that reference
-	// nothing but old-state / formals qualify (new-state
-	// definitions are skipped). Action fails iff any of them is
-	// false in the current state.
-	envParts := []string{}
-	if envPre != nil {
-		envDefSubs := buildDefSubstitutions(envPre.Defs)
-		for _, fmla := range envPre.Fmlas {
-			inlined := applyDefSubstitutions(fmla, envDefSubs)
-			if mentionsNewState(inlined) {
-				continue
-			}
-			expr, ok := g.emitPreFmlaAsGoExpr(inlined, params)
-			if !ok {
-				continue
-			}
-			envParts = append(envParts, "!("+expr+")")
-		}
-	}
-
-	switch {
-	case len(preParts) == 0 && len(envParts) == 0:
-		w.line("\treturn false")
-	case len(envParts) == 0:
-		w.linef("\treturn %s", strings.Join(preParts, " && "))
-	case len(preParts) == 0:
-		w.linef("\treturn %s", strings.Join(envParts, " || "))
-	default:
-		w.linef("\treturn (%s) || (%s)",
-			strings.Join(preParts, " && "),
-			strings.Join(envParts, " || "))
+		w.linef("\t%s %s", goActionGenFieldName(p.Name), g.goType(p.CSort))
 	}
 	w.line("}")
 	w.blank()
 }
 
-// mentionsNewState reports whether e references a new-state symbol
-// (`new_*` or `__new_*` — these names are introduced by goivy's
-// update analysis to label post-state values). Used to filter the
-// `ReverseImage` entry-precondition fmlas down to ones that only
-// constrain the pre-state, which are exactly the assume-style
-// preconditions the test environment must enforce.
-func mentionsNewState(e goivy.Expr) bool {
-	if e == nil {
-		return false
-	}
-	for _, sym := range goivy.UsedSymbolsAst(e).All() {
-		c, ok := sym.(*goivy.Const)
-		if !ok || c == nil {
-			continue
-		}
-		if strings.HasPrefix(c.Name, "__new_") || strings.HasPrefix(c.Name, "new_") {
-			return true
-		}
-	}
-	return false
+// emitActionGen emits the constructor + generate() + execute() +
+// Close() methods for one plan. Mirrors ivy2cpp/action_gen.go:245
+// emitActionGen.
+func (g *Generator) emitActionGen(w *goWriter, plan *actionGenPlan) {
+	g.emitActionGenConstructor(w, plan)
+	g.emitActionGenGenerate(w, plan)
+	g.emitActionGenExecute(w, plan)
+	g.emitActionGenClose(w, plan)
 }
 
-// emitPreFmlaAsGoExpr emits a goivy Expr as a plain Go boolean
-// expression by first substituting formal-param references with
-// v<i>-named Consts (so they lower via emitExpr's goIdent path
-// to the v<i> locals in scope), then calling emitExpr.
-//
-// Returns ("", false) when the Pre fmla mentions any symbol we
-// can't resolve at the Go level — state symbols, formal params,
-// numerals, enum constants, and definitions are OK; goivy-internal
-// temporaries (e.g. `__ts0_a` from the update-analysis pass) are
-// not. The caller treats this as "conservatively assume the action
-// would fail" so the random scheduler skips it.
-func (g *Generator) emitPreFmlaAsGoExpr(fmla goivy.Expr, params []*goivy.Const) (string, bool) {
-	subs := map[goivy.NodeKey]goivy.Expr{}
-	for i, p := range params {
+// emitActionGenConstructor emits new<structName>(state) → just
+// creates the Solver. Mirrors the C++ constructor at
+// ivy2cpp/action_gen.go:257 — minus the static SMT-LIB precondition
+// add(), because goivy.Solver lacks push/pop semantics so we
+// re-build the Clauses per generate() call instead.
+func (g *Generator) emitActionGenConstructor(w *goWriter, plan *actionGenPlan) {
+	w.linef("func new%s(state *%s) *%s {", plan.structName, g.StateTypeName, plan.structName)
+	w.line("\t_ = state")
+	w.linef("\treturn &%s{sol: newIvySolver()}", plan.structName)
+	w.line("}")
+	w.blank()
+}
+
+// emitActionGenGenerate emits the generate(state) bool method.
+// Returns false when the precondition is UNSAT in the current state
+// (action skipped); true when SAT and per-input fields are
+// populated from the model. Mirrors the C++ generate() at
+// ivy2cpp/action_gen.go:299.
+func (g *Generator) emitActionGenGenerate(w *goWriter, plan *actionGenPlan) {
+	w.linef("func (g *%s) generate(state *%s) bool {", plan.structName, g.StateTypeName)
+	w.line("\t_ = state")
+
+	if plan.fallback {
+		w.linef("\t// fallback: %s", plan.fallbackReason)
+		g.emitFallbackInputAssignments(w, plan)
+		w.line("\treturn true")
+		w.line("}")
+		w.blank()
+		return
+	}
+
+	// Declare per-input *goivy.Const symbols (named to match the
+	// formal-param names the precondition formula references). For
+	// destructor/variant records we also declare per-field symbols
+	// so the solver can synthesise each field independently.
+	for i, p := range plan.inputs {
 		if p == nil {
 			continue
 		}
-		// Substitute by key (matches the formal's own *Const ID).
-		subs[goivy.Key(p)] = &goivy.Const{Name: fmt.Sprintf("v%d", i), CSort: p.CSort}
-	}
-	rewritten := fmla
-	if len(subs) > 0 {
-		if r, err := goivy.Substitute(fmla, subs); err == nil {
-			rewritten = r
-		}
-	}
-	// Also handle name-based references (__fml:b, fml:b, b) that
-	// don't share *Const identity with the formal — walk the
-	// rewritten tree and rebuild Consts when their name matches.
-	rewritten = rewriteFormalRefsByName(rewritten, params)
-	if g.preHasUnresolvableRef(rewritten) {
-		return "", false
-	}
-	code, err := g.emitExpr(rewritten)
-	if err != nil {
-		return "", false
-	}
-	return code, true
-}
-
-// buildDefSubstitutions converts a slice of Pre.Defs (each
-// `IvyDefinition` defining a temporary or new-state symbol in
-// terms of the old state) into a map keyed by the LHS symbol name.
-//
-// Used by applyDefSubstitutions to inline synthetic temporaries
-// like `__ts0_a` before reifying a Pre fmla as Go code.
-func buildDefSubstitutions(defs []*goivy.IvyDefinition) map[string]goivy.Expr {
-	out := make(map[string]goivy.Expr, len(defs))
-	for _, d := range defs {
-		if d == nil {
-			continue
-		}
-		lhs, ok := d.Lhs.(*goivy.Const)
+		sortCode, ok := g.reifySortAsGoCode(p.CSort)
 		if !ok {
-			continue
+			sortCode = "goivy.Boolean"
 		}
-		out[lhs.Name] = d.Rhs
-	}
-	return out
-}
-
-// applyDefSubstitutions walks e and replaces any *goivy.Const whose
-// name is a key in subs with the corresponding RHS Expr. Used to
-// inline Pre.Defs so synthetic temporaries don't appear in the
-// emitted Go expression.
-//
-// Iterates until a fixed point in case one def references another.
-// Cap at 8 passes to defend against pathological circular defs.
-func applyDefSubstitutions(e goivy.Expr, subs map[string]goivy.Expr) goivy.Expr {
-	if len(subs) == 0 {
-		return e
-	}
-	for pass := 0; pass < 8; pass++ {
-		next, changed := applyDefSubstitutionsOnce(e, subs)
-		if !changed {
-			return e
-		}
-		e = next
-	}
-	return e
-}
-
-func applyDefSubstitutionsOnce(e goivy.Expr, subs map[string]goivy.Expr) (goivy.Expr, bool) {
-	if e == nil {
-		return nil, false
-	}
-	switch n := e.(type) {
-	case *goivy.Const:
-		if rhs, ok := subs[n.Name]; ok {
-			return rhs, true
-		}
-		return n, false
-	case *goivy.LogicNot:
-		body, ch := applyDefSubstitutionsOnce(n.Body, subs)
-		if !ch {
-			return n, false
-		}
-		return &goivy.LogicNot{Body: body}, true
-	case *goivy.LogicAnd:
-		anyCh := false
-		terms := make([]goivy.Expr, len(n.Terms))
-		for i, t := range n.Terms {
-			nt, ch := applyDefSubstitutionsOnce(t, subs)
-			if ch {
-				anyCh = true
+		w.linef("\t__in%d := goivy.NewConst(%q, %s)", i, p.Name, sortCode)
+		w.linef("\t_ = __in%d", i)
+		if recName, ok := g.destructorStructName(p.CSort); ok {
+			for _, f := range g.destructorScalarFields(recName) {
+				fSortCode, ok := g.reifySortAsGoCode(f.Sort)
+				if !ok {
+					fSortCode = "goivy.Boolean"
+				}
+				w.linef("\t__in%d_%s := goivy.NewConst(%q, %s)",
+					i, goIdent(f.Name),
+					fmt.Sprintf("__in%d_%s_%s", i, goIdent(p.Name), goIdent(f.Name)),
+					fSortCode)
+				w.linef("\t_ = __in%d_%s", i, goIdent(f.Name))
 			}
-			terms[i] = nt
 		}
-		if !anyCh {
-			return n, false
-		}
-		return &goivy.LogicAnd{Terms: terms}, true
-	case *goivy.LogicOr:
-		anyCh := false
-		terms := make([]goivy.Expr, len(n.Terms))
-		for i, t := range n.Terms {
-			nt, ch := applyDefSubstitutionsOnce(t, subs)
-			if ch {
-				anyCh = true
-			}
-			terms[i] = nt
-		}
-		if !anyCh {
-			return n, false
-		}
-		return &goivy.LogicOr{Terms: terms}, true
-	case *goivy.LogicImplies:
-		l, lch := applyDefSubstitutionsOnce(n.T1, subs)
-		r, rch := applyDefSubstitutionsOnce(n.T2, subs)
-		if !lch && !rch {
-			return n, false
-		}
-		return &goivy.LogicImplies{T1: l, T2: r}, true
-	case *goivy.LogicIff:
-		l, lch := applyDefSubstitutionsOnce(n.T1, subs)
-		r, rch := applyDefSubstitutionsOnce(n.T2, subs)
-		if !lch && !rch {
-			return n, false
-		}
-		return &goivy.LogicIff{T1: l, T2: r}, true
-	case *goivy.Eq:
-		l, lch := applyDefSubstitutionsOnce(n.T1, subs)
-		r, rch := applyDefSubstitutionsOnce(n.T2, subs)
-		if !lch && !rch {
-			return n, false
-		}
-		return &goivy.Eq{T1: l, T2: r}, true
-	case *goivy.Apply:
-		anyCh := false
-		newTerms := make([]goivy.Expr, len(n.Terms))
-		for i, t := range n.Terms {
-			nt, ch := applyDefSubstitutionsOnce(t, subs)
-			if ch {
-				anyCh = true
-			}
-			newTerms[i] = nt
-		}
-		if !anyCh {
-			return n, false
-		}
-		if a, err := goivy.NewApply(n.Func, newTerms...); err == nil {
-			return a, true
-		}
-		return n, false
-	}
-	return e, false
-}
-
-// preHasUnresolvableRef walks e looking for Const references that
-// can't be lowered to a sensible Go expression at runtime. Anything
-// outside (state symbols, enum members, definitions, numerals, the
-// known v<i> locals, plain bool literals) is flagged.
-func (g *Generator) preHasUnresolvableRef(e goivy.Expr) bool {
-	if e == nil {
-		return false
-	}
-	switch n := e.(type) {
-	case *goivy.Const:
-		// Plain bool literals.
-		if n.CSort == goivy.Boolean && (n.Name == "true" || n.Name == "false") {
-			return false
-		}
-		// Numerals.
-		if goivy.IsNumeral(n) {
-			return false
-		}
-		// State symbols.
-		if g.isStateSymbolName(n.Name) {
-			return false
-		}
-		// Enum members.
-		if g.isEnumConstantName(n.Name) {
-			return false
-		}
-		// Definitions (parameterless).
-		if g.isDefinitionName(n.Name) {
-			return false
-		}
-		// v<i> locals minted by emitPreFmlaAsGoExpr.
-		if strings.HasPrefix(n.Name, "v") {
-			rest := n.Name[1:]
-			allDigits := len(rest) > 0
-			for _, c := range rest {
-				if c < '0' || c > '9' {
-					allDigits = false
-					break
+		if superName, ok := g.variantSuperName(p.CSort); ok {
+			for _, leaf := range g.variantLeaves(superName) {
+				for _, f := range leaf.Fields {
+					fSortCode, ok := g.reifySortAsGoCode(f.Sort)
+					if !ok {
+						fSortCode = "goivy.Boolean"
+					}
+					w.linef("\t__in%d_%s_%s := goivy.NewConst(%q, %s)",
+						i, goIdent(leaf.Name), goIdent(f.Name),
+						fmt.Sprintf("__in%d_%s_%s_%s",
+							i, goIdent(p.Name), goIdent(leaf.Name), goIdent(f.Name)),
+						fSortCode)
+					w.linef("\t_ = __in%d_%s_%s", i, goIdent(leaf.Name), goIdent(f.Name))
 				}
 			}
-			if allDigits {
-				return false
-			}
-		}
-		// Unknown — likely a goivy-internal temporary.
-		return true
-	}
-	for _, ch := range e.Children() {
-		if g.preHasUnresolvableRef(ch) {
-			return true
 		}
 	}
-	if a, ok := e.(*goivy.Apply); ok {
-		if g.preHasUnresolvableRef(a.Func) {
-			return true
-		}
+
+	// Reify the precondition formula as a runtime *goivy.Expr.
+	code, ok := g.reifyExprAsGoCode(plan.preFmla, plan.inputs)
+	if !ok {
+		w.linef("\t// precondition unreifiable: %s", strings.ReplaceAll(plan.preFmla.String(), "\n", " "))
+		g.emitFallbackInputAssignments(w, plan)
+		w.line("\treturn true")
+		w.line("}")
+		w.blank()
+		return
 	}
-	return false
+
+	w.line("\tfacts := stateFactsAsClauses(state)")
+	w.linef("\tpreFmla := %s", code)
+	w.line("\tpreClauses := conjClauses(facts, preFmla)")
+	w.line("\tvar modelResult *goivy.ModelResult")
+	w.line("\tif g.sol != nil {")
+	w.line("\t\tmodelResult, _ = g.sol.GetModelClauses(preClauses)")
+	w.line("\t}")
+	w.line("\tif modelResult == nil {")
+	w.line("\t\t// UNSAT: action's precondition cannot be satisfied in the current state — skip.")
+	w.line("\t\treturn false")
+	w.line("\t}")
+
+	// Extract per-input values from the model into struct fields.
+	for i, p := range plan.inputs {
+		if p == nil {
+			continue
+		}
+		g.emitInputExtraction(w, i, p)
+	}
+
+	w.line("\treturn true")
+	w.line("}")
+	w.blank()
+	g.Ctx.OnceGlobals["__need_pickinput"] = true
 }
 
-// rewriteFormalRefsByName traverses e and replaces any *goivy.Const
-// whose name matches a formal param (with the goivy naming
-// conventions `b`, `fml:b`, `__fml:b`) by a fresh Const named
-// `v<i>`. Used by emitPreFmlaAsGoExpr to catch references that
-// goivy.Substitute missed due to non-identity-matching.
-func rewriteFormalRefsByName(e goivy.Expr, params []*goivy.Const) goivy.Expr {
-	if e == nil {
-		return nil
+// emitActionGenExecute emits the execute(state) method: trace +
+// invoke. Mirrors ivy2cpp/action_gen.go:552 emitActionGenExecute.
+func (g *Generator) emitActionGenExecute(w *goWriter, plan *actionGenPlan) {
+	w.linef("func (g *%s) execute(state *%s) {", plan.structName, g.StateTypeName)
+	w.line("\t_ = g")
+	w.line("\t_ = state")
+
+	// `> name(args)` trace line.
+	display := plan.name
+	if idx := strings.LastIndex(display, ":"); idx >= 0 {
+		display = display[idx+1:]
 	}
-	switch n := e.(type) {
-	case *goivy.Const:
-		for i, p := range params {
+	if len(plan.inputs) == 0 {
+		w.linef("\tfmt.Fprintln(ivyTraceOut, %q)", "> "+display)
+	} else {
+		var fmtStr strings.Builder
+		fmtStr.WriteString("> ")
+		fmtStr.WriteString(display)
+		fmtStr.WriteByte('(')
+		for i := range plan.inputs {
+			if i > 0 {
+				fmtStr.WriteByte(',')
+			}
+			fmtStr.WriteString("%v")
+		}
+		fmtStr.WriteString(")\n")
+		args := make([]string, 0, len(plan.inputs))
+		for _, p := range plan.inputs {
 			if p == nil {
 				continue
 			}
-			short := strings.TrimPrefix(strings.TrimPrefix(p.Name, "__fml:"), "fml:")
-			if n.Name == p.Name ||
-				n.Name == short ||
-				n.Name == "fml:"+short ||
-				n.Name == "__fml:"+short {
-				return &goivy.Const{Name: fmt.Sprintf("v%d", i), CSort: n.CSort}
-			}
+			args = append(args, "g."+goActionGenFieldName(p.Name))
 		}
-		return n
-	case *goivy.LogicNot:
-		return &goivy.LogicNot{Body: rewriteFormalRefsByName(n.Body, params)}
-	case *goivy.LogicAnd:
-		terms := make([]goivy.Expr, len(n.Terms))
-		for i, t := range n.Terms {
-			terms[i] = rewriteFormalRefsByName(t, params)
-		}
-		return &goivy.LogicAnd{Terms: terms}
-	case *goivy.LogicOr:
-		terms := make([]goivy.Expr, len(n.Terms))
-		for i, t := range n.Terms {
-			terms[i] = rewriteFormalRefsByName(t, params)
-		}
-		return &goivy.LogicOr{Terms: terms}
-	case *goivy.LogicImplies:
-		return &goivy.LogicImplies{T1: rewriteFormalRefsByName(n.T1, params), T2: rewriteFormalRefsByName(n.T2, params)}
-	case *goivy.LogicIff:
-		return &goivy.LogicIff{T1: rewriteFormalRefsByName(n.T1, params), T2: rewriteFormalRefsByName(n.T2, params)}
-	case *goivy.Eq:
-		return &goivy.Eq{T1: rewriteFormalRefsByName(n.T1, params), T2: rewriteFormalRefsByName(n.T2, params)}
-	case *goivy.Apply:
-		// Walk args; leave the function symbol alone (its name is
-		// the destructor/relation name, not a formal).
-		newTerms := make([]goivy.Expr, len(n.Terms))
-		for i, t := range n.Terms {
-			newTerms[i] = rewriteFormalRefsByName(t, params)
-		}
-		if a, err := goivy.NewApply(n.Func, newTerms...); err == nil {
-			return a
-		}
-		return n
-	case *goivy.ForAll:
-		return &goivy.ForAll{Variables: n.Variables, Body: rewriteFormalRefsByName(n.Body, params)}
-	case *goivy.LogicExists:
-		return &goivy.LogicExists{Variables: n.Variables, Body: rewriteFormalRefsByName(n.Body, params)}
+		w.linef(`	fmt.Fprintf(ivyTraceOut, %q, %s)`, fmtStr.String(), strings.Join(args, ", "))
 	}
-	return e
-}
 
-// emitPreconditionForAction emits a `buildPrecondition_<Name>` helper
-// per action. The helper conjoins stateFactsAsClauses(state) with
-// the runtime-reified Pre.Fmlas AND per-field destructor equalities
-// when any param is struct-typed (OPEN 055.7).
-//
-// Signature includes the receiver symbol per param plus, for struct
-// params, one Const per scalar field so the solver can synthesise
-// each independently.
-func (g *Generator) emitPreconditionForAction(w *goWriter, name string) {
-	act, _ := g.Mod.Actions.Get2(name)
-	if act == nil {
-		return
-	}
-	params := act.GetFormalParams()
-
-	ctx := &goivy.UpdateContext{
-		Domain: g.Mod,
-		PVars:  map[string]bool{},
-		ActCfg: g.Mod.Cfg.ActCfg,
-	}
-	var update *goivy.Update
-	func() {
-		defer func() { _ = recover() }()
-		update = goivy.GetUpdate(act, ctx)
-	}()
-
-	helperName := "buildPrecondition_" + goExportedName(name)
-	paramArgs := preconditionSignatureArgs(g, params)
-	w.linef("// %s reifies action %q's Pre clauses at runtime.", helperName, name)
-	w.linef("// Generated from goivy.GetUpdate(action, ctx).Pre at emit time.")
-	w.linef("func %s(state *%s%s) *goivy.Clauses {", helperName, g.StateTypeName, optComma(len(paramArgs))+strings.Join(paramArgs, ", "))
-	w.linef("\tbase := stateFactsAsClauses(state)")
-	w.line("\tvar extra []goivy.Expr")
-
-	// OPEN 055.7: for each struct-typed param, add destructor
-	// equalities (destructor(p) = p_field) so the solver binds the
-	// field values to per-field input symbols.
-	for i, p := range params {
+	// Invoke state.<Name>(g.in0, g.in1, …).
+	args := make([]string, 0, len(plan.inputs))
+	for _, p := range plan.inputs {
 		if p == nil {
 			continue
 		}
-		recName, isRecord := g.destructorStructName(p.CSort)
-		if !isRecord {
-			continue
-		}
-		for _, f := range g.destructorScalarFields(recName) {
-			fnSortCode, ok := g.reifySortAsGoCode(f.DestructorC.CSort)
-			if !ok {
-				continue
-			}
-			w.linef("\textra = append(extra, &goivy.Eq{T1: mustApply(goivy.NewConst(%q, %s), __in%d), T2: __in%d_%s})",
-				f.FullName, fnSortCode, i, i, goIdent(f.Name))
-		}
-		g.requireMustHelpers()
+		args = append(args, "g."+goActionGenFieldName(p.Name))
 	}
-
-	if update != nil && update.Pre != nil && !update.Pre.IsFalse() {
-		for _, fmla := range update.Pre.Fmlas {
-			code, ok := g.reifyExprAsGoCode(fmla, params)
-			if !ok {
-				w.linef("\t// OPEN unreifiable Pre fmla: %s", strings.ReplaceAll(fmla.String(), "\n", " "))
-				continue
-			}
-			w.linef("\textra = append(extra, %s)", code)
-		}
-	}
-	w.line("\treturn conjClauses(base, extra...)")
+	w.linef("\tstate.%s(%s)", goExportedName(plan.name), strings.Join(args, ", "))
 	w.line("}")
 	w.blank()
 }
 
-// emitStructInputAssembly emits the per-field pick + struct-literal
-// assembly for a destructor-record param (OPEN 055.7).
-func (g *Generator) emitStructInputAssembly(w *goWriter, i int, typeName, recName string) {
-	fields := g.destructorScalarFields(recName)
-	for _, f := range fields {
-		fcard := goSortCard(g, f.Sort)
-		switch ft := g.goType(f.Sort); {
-		case ft == "bool":
-			w.linef("v%d_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s)",
-				i, goIdent(f.Name), i, goIdent(f.Name))
-		case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
-			w.linef("v%d_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s, %d))",
-				i, goIdent(f.Name), ft, i, goIdent(f.Name), fcard)
-		default:
-			w.linef("var v%d_%s %s", i, goIdent(f.Name), ft)
-			w.linef("_ = v%d_%s", i, goIdent(f.Name))
-		}
-	}
-	assign := make([]string, 0, len(fields))
-	for _, f := range fields {
-		assign = append(assign, fmt.Sprintf("%s: v%d_%s", goExportedName(f.Name), i, goIdent(f.Name)))
-	}
-	w.linef("v%d := %s{%s}", i, typeName, strings.Join(assign, ", "))
-}
-
-// emitVariantInputAssembly emits the tag-pick + switch-by-tag + per-
-// leaf constructor invocation for a variant-super-typed param
-// (OPEN 055.8).
-//
-// Shape:
-//
-//	v0_tag := ivyChoose(<numLeaves>)
-//	var v0 <SuperType>
-//	switch v0_tag {
-//	case 0: v0 = NewSuperLeafA()                  // plain leaf
-//	case 1:                                         // destructor-backed leaf
-//	    v0_leafB_f := pickBoolOrChoose(...)
-//	    v0 = NewSuperLeafB(LeafB{F: v0_leafB_f})
-//	}
-//
-// The solver doesn't natively know about tag selection (Ivy's
-// supertype is just an UninterpretedSort) so we use ivyChoose for
-// the tag. Per-leaf field synthesis still flows through the solver
-// when the leaf is destructor-backed.
-func (g *Generator) emitVariantInputAssembly(w *goWriter, i int, typeName, superName string) {
-	leaves := g.variantLeaves(superName)
-	if len(leaves) == 0 {
-		w.linef("var v%d %s", i, typeName)
-		w.linef("_ = v%d", i)
-		return
-	}
-	w.linef("v%d_tag := ivyChoose(%d)", i, len(leaves))
-	w.linef("var v%d %s", i, typeName)
-	w.linef("switch v%d_tag {", i)
-	for tag, leaf := range leaves {
-		w.linef("case %d:", tag)
-		ctor := "New" + goExportedName(superName) + goExportedName(leaf.Name)
-		if leaf.IsPlain {
-			w.linef("\tv%d = %s()", i, ctor)
-			continue
-		}
-		// Destructor-backed leaf — pick each field, build the
-		// leaf struct, pass to the constructor.
-		leafType := goExportedName(leaf.Name)
-		for _, f := range leaf.Fields {
-			fcard := goSortCard(g, f.Sort)
-			switch ft := g.goType(f.Sort); {
-			case ft == "bool":
-				w.linef("\tv%d_%s_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s_%s)",
-					i, goIdent(leaf.Name), goIdent(f.Name),
-					i, goIdent(leaf.Name), goIdent(f.Name))
-			case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
-				w.linef("\tv%d_%s_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s_%s, %d))",
-					i, goIdent(leaf.Name), goIdent(f.Name),
-					ft, i, goIdent(leaf.Name), goIdent(f.Name), fcard)
-			default:
-				w.linef("\tvar v%d_%s_%s %s", i, goIdent(leaf.Name), goIdent(f.Name), ft)
-				w.linef("\t_ = v%d_%s_%s", i, goIdent(leaf.Name), goIdent(f.Name))
-			}
-		}
-		assign := make([]string, 0, len(leaf.Fields))
-		for _, f := range leaf.Fields {
-			assign = append(assign, fmt.Sprintf("%s: v%d_%s_%s",
-				goExportedName(f.Name), i, goIdent(leaf.Name), goIdent(f.Name)))
-		}
-		w.linef("\tv%d = %s(%s{%s})", i, ctor, leafType, strings.Join(assign, ", "))
-	}
+// emitActionGenClose emits the Close() method that frees the
+// underlying solver. ivy2cpp's class destructor does the same via
+// RAII; in Go we expose it explicitly so the test driver can defer
+// it.
+func (g *Generator) emitActionGenClose(w *goWriter, plan *actionGenPlan) {
+	w.linef("func (g *%s) Close() error {", plan.structName)
+	w.line("\tif g.sol != nil {")
+	w.line("\t\terr := g.sol.Close()")
+	w.line("\t\tg.sol = nil")
+	w.line("\t\treturn err")
+	w.line("\t}")
+	w.line("\treturn nil")
 	w.line("}")
+	w.blank()
 }
 
-// preconditionSignatureArgs returns the formal-param list of
-// buildPrecondition_<Name>: one `__in<i> *goivy.Const` per scalar
-// param plus per-field symbols for struct (OPEN 055.7) and variant
-// (OPEN 055.8) params.
-//
-// For variant params each destructor-backed leaf contributes one
-// `__in<i>_<leaf>_<field>` Const per scalar field — the receiver
-// symbol __in<i> is always present too.
-func preconditionSignatureArgs(g *Generator, params []*goivy.Const) []string {
-	out := make([]string, 0, len(params))
-	for i, p := range params {
+// emitInputExtraction emits code to pull the i-th input's value
+// from modelResult into the corresponding struct field.
+func (g *Generator) emitInputExtraction(w *goWriter, i int, p *goivy.Const) {
+	field := "g." + goActionGenFieldName(p.Name)
+	typeName := g.goType(p.CSort)
+	card := goSortCard(g, p.CSort)
+	switch {
+	case typeName == "bool":
+		w.linef("\t%s = pickBoolOrChoose(g.sol, modelResult, __in%d)", field, i)
+	case card > 0 && goIsAnyIntegerType(g, p.CSort):
+		w.linef("\t%s = %s(pickUintOrChoose(g.sol, modelResult, __in%d, %d))", field, typeName, i, card)
+	default:
+		if recName, ok := g.destructorStructName(p.CSort); ok {
+			g.emitStructInputAssembly(w, i, typeName, recName)
+			w.linef("\t%s = v%d", field, i)
+			return
+		}
+		if superName, ok := g.variantSuperName(p.CSort); ok {
+			g.emitVariantInputAssembly(w, i, typeName, superName)
+			w.linef("\t%s = v%d", field, i)
+			return
+		}
+		w.linef("\tvar v%d %s; _ = v%d", i, typeName, i)
+		w.linef("\t%s = v%d", field, i)
+	}
+}
+
+// emitFallbackInputAssignments emits randomized assignments for
+// every input, used when the precondition isn't reifiable (we fall
+// back to plain ivyChoose-style randomization, matching ivy2cpp's
+// emitWeakActionGenerator at action_gen.go:514).
+func (g *Generator) emitFallbackInputAssignments(w *goWriter, plan *actionGenPlan) {
+	for _, p := range plan.inputs {
 		if p == nil {
 			continue
 		}
-		out = append(out, fmt.Sprintf("__in%d *goivy.Const", i))
-		if recName, ok := g.destructorStructName(p.CSort); ok {
-			for _, f := range g.destructorScalarFields(recName) {
-				out = append(out, fmt.Sprintf("__in%d_%s *goivy.Const", i, goIdent(f.Name)))
-			}
-			continue
-		}
-		if superName, ok := g.variantSuperName(p.CSort); ok {
-			for _, leaf := range g.variantLeaves(superName) {
-				for _, f := range leaf.Fields {
-					out = append(out, fmt.Sprintf("__in%d_%s_%s *goivy.Const",
-						i, goIdent(leaf.Name), goIdent(f.Name)))
-				}
-			}
+		field := "g." + goActionGenFieldName(p.Name)
+		typeName := g.goType(p.CSort)
+		card := goSortCard(g, p.CSort)
+		switch {
+		case typeName == "bool":
+			w.linef("\t%s = ivyChoose(2) == 1", field)
+		case card > 0:
+			w.linef("\t%s = %s(ivyChoose(%d))", field, typeName, card)
+		default:
+			w.linef("\tvar __fb %s; %s = __fb", typeName, field)
 		}
 	}
-	return out
 }
 
-// preconditionCallArgs returns the matching call-site identifiers for
-// preconditionSignatureArgs.
-func preconditionCallArgs(g *Generator, params []*goivy.Const) []string {
-	out := make([]string, 0, len(params))
-	for i, p := range params {
-		if p == nil {
-			continue
-		}
-		out = append(out, fmt.Sprintf("__in%d", i))
-		if recName, ok := g.destructorStructName(p.CSort); ok {
-			for _, f := range g.destructorScalarFields(recName) {
-				out = append(out, fmt.Sprintf("__in%d_%s", i, goIdent(f.Name)))
+// goActionGenFieldName returns the struct field name for an input.
+// Different from goExportedName so we don't collide with the action
+// method name (`s.Hit(...)` invoked on the State while the gen
+// struct also has fields named after formals — we want stable
+// `In<N>` style names instead).
+func goActionGenFieldName(paramName string) string {
+	// Strip goivy's `__fml:` / `fml:` prefixes for readability.
+	n := strings.TrimPrefix(paramName, "__fml:")
+	n = strings.TrimPrefix(n, "fml:")
+	return "In_" + goExportedName(n)
+}
+
+// actionGenNames returns the actions eligible for action-gen
+// emission, in deterministic order. Mirrors ivy2cpp's per-isolate
+// public-action selection.
+func (g *Generator) actionGenNames() []string {
+	if g == nil || g.Mod == nil || g.Mod.Actions == nil {
+		return nil
+	}
+	names := make([]string, 0)
+	if g.Mod.PublicActions != nil && g.Mod.PublicActions.Len() > 0 {
+		for name := range g.Mod.PublicActions.All() {
+			if hasPrefixAny(name, "imp__", "__") {
+				continue
 			}
-			continue
-		}
-		if superName, ok := g.variantSuperName(p.CSort); ok {
-			for _, leaf := range g.variantLeaves(superName) {
-				for _, f := range leaf.Fields {
-					out = append(out, fmt.Sprintf("__in%d_%s_%s",
-						i, goIdent(leaf.Name), goIdent(f.Name)))
-				}
+			if _, ok := g.Mod.Actions.Get2(name); !ok {
+				continue
 			}
+			names = append(names, name)
+		}
+	} else {
+		for name := range g.Mod.Actions.All() {
+			if hasPrefixAny(name, "ext:", "imp:", "ivy:", "imp__", "__") {
+				continue
+			}
+			names = append(names, name)
 		}
 	}
-	return out
+	sort.Strings(names)
+	return names
 }
 
-// optComma returns ", " when n > 0, else "". Used to splice the
-// state arg comfortably with the inputs in a function signature.
-func optComma(n int) string {
-	if n > 0 {
-		return ", "
-	}
-	return ""
-}
-
-// reifyExprAsGoCode walks an Expr and returns a Go source string that,
-// when evaluated at runtime, constructs the same Expr. The params
-// slice lets us rewrite formal-param references (`__fml:<name>` or
-// bare param name) to the input symbol __in<i> in the emitted
-// helper's scope.
+// ---------------------------------------------------------------------------
+// reify*: emit-time helpers that translate a goivy.Expr / goivy.Sort
+// into a Go source string that, at runtime, reconstructs the same
+// value. ivy2cpp accomplishes the same effect by translating the
+// formula to an SMT-LIB string and passing it to Z3's add(); the Go
+// runtime uses goivy.Solver which takes goivy.Expr trees directly,
+// so we serialise the tree as Go AST-construction code instead.
 //
-// Returns (code, true) on success; (_, false) when the Expr shape
-// isn't supported (caller skips the fmla and emits a comment).
+// These helpers are legitimately Go-specific scaffolding (no C++
+// counterpart) and are flagged as such in the divergence audit.
+// ---------------------------------------------------------------------------
+
 func (g *Generator) reifyExprAsGoCode(e goivy.Expr, params []*goivy.Const) (string, bool) {
 	if e == nil {
 		return "nil", true
 	}
 	switch n := e.(type) {
 	case *goivy.Const:
-		// Param reference: rewrite to the runtime input symbol.
-		// goivy uses several name conventions for the same formal
-		// parameter ("b", "fml:b", "__fml:b"). Match any of them.
 		for i, p := range params {
 			if p == nil {
 				continue
@@ -747,19 +487,19 @@ func (g *Generator) reifyExprAsGoCode(e goivy.Expr, params []*goivy.Const) (stri
 				return fmt.Sprintf("__in%d", i), true
 			}
 		}
-		// Plain constant: build a fresh goivy.Const with the
-		// sort reified.
 		sortCode, ok := g.reifySortAsGoCode(n.CSort)
 		if !ok {
 			return "", false
 		}
 		return fmt.Sprintf("goivy.NewConst(%q, %s)", n.Name, sortCode), true
+
 	case *goivy.LogicNot:
 		body, ok := g.reifyExprAsGoCode(n.Body, params)
 		if !ok {
 			return "", false
 		}
 		return fmt.Sprintf("&goivy.LogicNot{Body: %s}", body), true
+
 	case *goivy.LogicAnd:
 		parts := make([]string, 0, len(n.Terms))
 		for _, t := range n.Terms {
@@ -770,6 +510,7 @@ func (g *Generator) reifyExprAsGoCode(e goivy.Expr, params []*goivy.Const) (stri
 			parts = append(parts, code)
 		}
 		return fmt.Sprintf("&goivy.LogicAnd{Terms: []goivy.Expr{%s}}", strings.Join(parts, ", ")), true
+
 	case *goivy.LogicOr:
 		parts := make([]string, 0, len(n.Terms))
 		for _, t := range n.Terms {
@@ -780,6 +521,7 @@ func (g *Generator) reifyExprAsGoCode(e goivy.Expr, params []*goivy.Const) (stri
 			parts = append(parts, code)
 		}
 		return fmt.Sprintf("&goivy.LogicOr{Terms: []goivy.Expr{%s}}", strings.Join(parts, ", ")), true
+
 	case *goivy.LogicImplies:
 		l, ok := g.reifyExprAsGoCode(n.T1, params)
 		if !ok {
@@ -790,6 +532,7 @@ func (g *Generator) reifyExprAsGoCode(e goivy.Expr, params []*goivy.Const) (stri
 			return "", false
 		}
 		return fmt.Sprintf("&goivy.LogicImplies{T1: %s, T2: %s}", l, r), true
+
 	case *goivy.LogicIff:
 		l, ok := g.reifyExprAsGoCode(n.T1, params)
 		if !ok {
@@ -800,6 +543,7 @@ func (g *Generator) reifyExprAsGoCode(e goivy.Expr, params []*goivy.Const) (stri
 			return "", false
 		}
 		return fmt.Sprintf("&goivy.LogicIff{T1: %s, T2: %s}", l, r), true
+
 	case *goivy.Eq:
 		l, ok := g.reifyExprAsGoCode(n.T1, params)
 		if !ok {
@@ -816,9 +560,6 @@ func (g *Generator) reifyExprAsGoCode(e goivy.Expr, params []*goivy.Const) (stri
 		if !ok {
 			return "", false
 		}
-		// LogicVariable.NewVariable validates uppercase first
-		// letter; rely on the mustNewVariable runtime helper for a
-		// panic-on-failure facade.
 		g.requireMustHelpers()
 		return fmt.Sprintf("mustNewVariable(%q, %s)", n.Name, sortCode), true
 
@@ -884,9 +625,6 @@ func (g *Generator) reifyExprAsGoCode(e goivy.Expr, params []*goivy.Const) (stri
 	}
 }
 
-// reifyVariableSlice helps the ForAll/LogicExists cases by turning a
-// []*goivy.LogicVariable into a Go composite-literal string.
-// Returns (code, true) when every variable's sort is reifiable.
 func (g *Generator) reifyVariableSlice(vars []*goivy.LogicVariable) (string, bool) {
 	if len(vars) == 0 {
 		return "nil", true
@@ -907,10 +645,6 @@ func (g *Generator) reifyVariableSlice(vars []*goivy.LogicVariable) (string, boo
 	return fmt.Sprintf("[]*goivy.LogicVariable{%s}", strings.Join(parts, ", ")), true
 }
 
-// reifySortAsGoCode returns a Go source expression that constructs s.
-// Supports BooleanSort, UninterpretedSort, LogicEnumeratedSort,
-// RangeSort (numeral bounds only), and LogicFunctionSort. Anything
-// else returns false so the caller falls back.
 func (g *Generator) reifySortAsGoCode(s goivy.Sort) (string, bool) {
 	switch t := s.(type) {
 	case *goivy.BooleanSort:
@@ -950,10 +684,6 @@ func (g *Generator) reifySortAsGoCode(s goivy.Sort) (string, bool) {
 	return "", false
 }
 
-// reifyBoundAsGoCode reifies a NumeralOrCompiledBound. NumeralBound
-// becomes a direct struct literal; CompiledBound recurses into the
-// inner Expr via reifyExprAsGoCode (with no param context — bounds
-// don't capture action formals).
 func (g *Generator) reifyBoundAsGoCode(b goivy.NumeralOrCompiledBound) (string, bool) {
 	switch v := b.(type) {
 	case goivy.NumeralBound:
@@ -976,262 +706,80 @@ func (g *Generator) reifyBoundAsGoCode(b goivy.NumeralOrCompiledBound) (string, 
 
 // requireMustHelpers flags the runtime to emit the must* facades
 // (mustApply / mustNewVariable / mustNewIte / mustNewFunctionSort).
-// All four share a single emission gate; needing any one pulls them
-// all in to keep the dependency graph trivial.
 func (g *Generator) requireMustHelpers() {
 	if g != nil && g.Ctx != nil {
 		g.Ctx.OnceGlobals["__need_musthelpers"] = true
 	}
 }
 
-// actionGenNames returns the actions eligible for action-gen
-// emission, in deterministic order. Mirrors ivy2cpp's
-// publicActionNamesSorted: an action gets a generator iff the
-// module's PublicActions map flags it. Falls back to the prefix
-// filter (no ext:/imp:/ivy:/__ names) when PublicActions is empty —
-// e.g. when running outside an isolate context.
-func (g *Generator) actionGenNames() []string {
-	if g == nil || g.Mod == nil || g.Mod.Actions == nil {
-		return nil
-	}
-	names := make([]string, 0)
-	if g.Mod.PublicActions != nil && g.Mod.PublicActions.Len() > 0 {
-		for name := range g.Mod.PublicActions.All() {
-			// PublicActions is authoritative, but skip names that
-			// the action lookup can't resolve (rare). Also keep
-			// the prefix filter as a safety net.
-			if hasPrefixAny(name, "imp__", "__") {
-				continue
-			}
-			if _, ok := g.Mod.Actions.Get2(name); !ok {
-				continue
-			}
-			names = append(names, name)
-		}
-	} else {
-		for name := range g.Mod.Actions.All() {
-			if hasPrefixAny(name, "ext:", "imp:", "ivy:", "imp__", "__") {
-				continue
-			}
-			names = append(names, name)
-		}
-	}
-	sort.Strings(names)
-	return names
-}
-
-// emitOneActionGenStruct emits a single actionGen<Name> struct + its
-// constructor and Generate method.
-//
-// OPEN 055.1: the Generate method now runs a real solver round-trip:
-//
-//  1. Build a fresh `*goivy.Const` for each formal param.
-//  2. Build a trivial `*goivy.Clauses` (currently asserting `true`
-//     since the reverse-image precondition derivation is the next
-//     phase of work).
-//  3. Call `sol.GetModelClauses(clauses)` to obtain a Z3 model.
-//  4. For each input, extract the model value via
-//     `ModelResult.Eval` + per-sort parsing (parseZ3Bool /
-//     parseZ3Uint64). Fall back to `ivyChoose` if extraction fails.
-//  5. Apply the action.
-//
-// This is genuine solver-driven gen even though the precondition is
-// still trivial — adding real preconditions only requires changing
-// step 2, with the rest of the wiring already in place.
-func (g *Generator) emitOneActionGenStruct(w *goWriter, name string) {
-	structName := "actionGen_" + goExportedName(name)
-	w.linef("// %s drives solver-backed input synthesis for the %s action.", structName, name)
-	w.open(fmt.Sprintf("type %s struct {", structName))
-	w.line("sol *goivy.Solver")
-	w.close("")
-	w.blank()
-
-	w.open(fmt.Sprintf("func new%s(state *%s) *%s {", structName, g.StateTypeName, structName))
-	w.linef("g := &%s{sol: newIvySolver()}", structName)
-	w.line("_ = pushStateIntoSolver(state, g.sol)")
-	w.line("return g")
-	w.close("")
-	w.blank()
-
-	act, _ := g.Mod.Actions.Get2(name)
-	if act == nil {
-		return
-	}
-	params := act.GetFormalParams()
-
-	w.open(fmt.Sprintf("func (g *%s) Generate(state *%s) {", structName, g.StateTypeName))
-	if len(params) == 0 {
-		// Zero-arg action: nothing to solve for. Still gate on
-		// wouldFail_<Name> so the random scheduler can't fire an
-		// action whose require would assert (mirrors ivy2cpp's
-		// test-harness check).
-		w.linef("if wouldFail_%s(state) { return }", goExportedName(name))
-		// Test-driver trace: `> name` before invocation.
-		g.emitActionTraceLine(w, ">", name, nil)
-		w.linef("state.%s()", goExportedName(name))
-		w.close("")
-		w.blank()
-		return
-	}
-	// 1. Build per-input symbols. Scalar params get one Const;
-	// struct (destructor record) params get one Const for the
-	// receiver plus one Const per scalar field, so the solver
-	// synthesises each field independently (OPEN 055.7).
-	w.line("// OPEN 055.1/.7: declare per-param + per-field input symbols.")
-	for i, p := range params {
-		paramSortCode, _ := g.reifySortAsGoCode(p.CSort)
-		if paramSortCode == "" {
-			paramSortCode = "goivy.Boolean"
-		}
-		w.linef("__in%d := goivy.NewConst(\"__in%d_%s\", %s)", i, i, goIdent(p.Name), paramSortCode)
-		w.linef("_ = __in%d", i)
-		// Per-field input symbols for struct-typed params.
-		if recName, ok := g.destructorStructName(p.CSort); ok {
-			for _, f := range g.destructorScalarFields(recName) {
-				fieldSortCode, _ := g.reifySortAsGoCode(f.Sort)
-				if fieldSortCode == "" {
-					fieldSortCode = "goivy.Boolean"
-				}
-				w.linef("__in%d_%s := goivy.NewConst(\"__in%d_%s_%s\", %s)",
-					i, goIdent(f.Name), i, goIdent(p.Name), goIdent(f.Name), fieldSortCode)
-				w.linef("_ = __in%d_%s", i, goIdent(f.Name))
-			}
-			continue
-		}
-		// Per-leaf-field input symbols for variant-typed params.
-		if superName, ok := g.variantSuperName(p.CSort); ok {
-			for _, leaf := range g.variantLeaves(superName) {
-				for _, f := range leaf.Fields {
-					fieldSortCode, _ := g.reifySortAsGoCode(f.Sort)
-					if fieldSortCode == "" {
-						fieldSortCode = "goivy.Boolean"
-					}
-					w.linef("__in%d_%s_%s := goivy.NewConst(\"__in%d_%s_%s_%s\", %s)",
-						i, goIdent(leaf.Name), goIdent(f.Name),
-						i, goIdent(p.Name), goIdent(leaf.Name), goIdent(f.Name),
-						fieldSortCode)
-					w.linef("_ = __in%d_%s_%s", i, goIdent(leaf.Name), goIdent(f.Name))
-				}
-			}
-		}
-	}
-	w.line("var modelResult *goivy.ModelResult")
-	w.line("if g.sol != nil {")
-	w.line("\t// OPEN 055.3/.7: seed with state facts, the action's")
-	w.line("\t// reified Pre, and any per-field equalities for struct")
-	w.line("\t// inputs (so the solver synthesises each field too).")
-	preInputs := preconditionCallArgs(g, params)
-	preCall := "buildPrecondition_" + goExportedName(name) + "(state"
-	if len(preInputs) > 0 {
-		preCall += ", " + strings.Join(preInputs, ", ")
-	}
-	preCall += ")"
-	w.linef("\tpreclauses := %s", preCall)
-	w.line("\tmodelResult, _ = g.sol.GetModelClauses(preclauses)")
-	w.line("}")
-	w.line("_ = modelResult")
-	// 2. Pick each input. Scalar params go through pick*Or-Choose;
-	// struct params have each field picked separately, then the
-	// record is assembled.
-	callArgs := make([]string, len(params))
-	for i, p := range params {
-		if p == nil {
-			callArgs[i] = ""
-			continue
-		}
-		typeName := g.goType(p.CSort)
-		card := goSortCard(g, p.CSort)
-		switch {
-		case typeName == "bool":
-			w.linef("v%d := pickBoolOrChoose(g.sol, modelResult, __in%d)", i, i)
-		case card > 0 && goIsAnyIntegerType(g, p.CSort):
-			w.linef("v%d := %s(pickUintOrChoose(g.sol, modelResult, __in%d, %d))", i, typeName, i, card)
+// emitStructInputAssembly emits per-field pick + struct-literal
+// assembly for a destructor-record param. Kept intact from the
+// previous implementation pending the broader clauses_helpers port.
+func (g *Generator) emitStructInputAssembly(w *goWriter, i int, typeName, recName string) {
+	fields := g.destructorScalarFields(recName)
+	for _, f := range fields {
+		fcard := goSortCard(g, f.Sort)
+		switch ft := g.goType(f.Sort); {
+		case ft == "bool":
+			w.linef("v%d_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s)",
+				i, goIdent(f.Name), i, goIdent(f.Name))
+		case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
+			w.linef("v%d_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s, %d))",
+				i, goIdent(f.Name), ft, i, goIdent(f.Name), fcard)
 		default:
-			if recName, ok := g.destructorStructName(p.CSort); ok {
-				// OPEN 055.7: assemble the struct from per-field
-				// model reads.
-				g.emitStructInputAssembly(w, i, typeName, recName)
-			} else if superName, ok := g.variantSuperName(p.CSort); ok {
-				// OPEN 055.8: pick a tag, then assemble via the
-				// per-leaf constructor with payload (if any).
-				g.emitVariantInputAssembly(w, i, typeName, superName)
-			} else {
-				// Any other shape we can't synthesise: zero value.
-				w.linef("var v%d %s", i, typeName)
-				w.linef("_ = v%d", i)
+			w.linef("var v%d_%s %s", i, goIdent(f.Name), ft)
+			w.linef("_ = v%d_%s", i, goIdent(f.Name))
+		}
+	}
+	assign := make([]string, 0, len(fields))
+	for _, f := range fields {
+		assign = append(assign, fmt.Sprintf("%s: v%d_%s", goExportedName(f.Name), i, goIdent(f.Name)))
+	}
+	w.linef("v%d := %s{%s}", i, typeName, strings.Join(assign, ", "))
+}
+
+// emitVariantInputAssembly emits the tag-pick + switch-by-tag + per-
+// leaf constructor invocation for a variant-super-typed param.
+func (g *Generator) emitVariantInputAssembly(w *goWriter, i int, typeName, superName string) {
+	leaves := g.variantLeaves(superName)
+	if len(leaves) == 0 {
+		w.linef("var v%d %s", i, typeName)
+		w.linef("_ = v%d", i)
+		return
+	}
+	w.linef("v%d_tag := ivyChoose(%d)", i, len(leaves))
+	w.linef("var v%d %s", i, typeName)
+	w.linef("switch v%d_tag {", i)
+	for tag, leaf := range leaves {
+		w.linef("case %d:", tag)
+		ctor := "New" + goExportedName(superName) + goExportedName(leaf.Name)
+		if leaf.IsPlain {
+			w.linef("\tv%d = %s()", i, ctor)
+			continue
+		}
+		leafType := goExportedName(leaf.Name)
+		for _, f := range leaf.Fields {
+			fcard := goSortCard(g, f.Sort)
+			switch ft := g.goType(f.Sort); {
+			case ft == "bool":
+				w.linef("\tv%d_%s_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s_%s)",
+					i, goIdent(leaf.Name), goIdent(f.Name),
+					i, goIdent(leaf.Name), goIdent(f.Name))
+			case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
+				w.linef("\tv%d_%s_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s_%s, %d))",
+					i, goIdent(leaf.Name), goIdent(f.Name),
+					ft, i, goIdent(leaf.Name), goIdent(f.Name), fcard)
+			default:
+				w.linef("\tvar v%d_%s_%s %s", i, goIdent(leaf.Name), goIdent(f.Name), ft)
+				w.linef("\t_ = v%d_%s_%s", i, goIdent(leaf.Name), goIdent(f.Name))
 			}
 		}
-		callArgs[i] = fmt.Sprintf("v%d", i)
-	}
-	// Pre-firing precondition check. Skip this iteration when the
-	// picked inputs would make the action fail (mirrors ivy2cpp's
-	// test harness, which checks Z3-model feasibility before
-	// invoking the action). Without this, randomized inputs
-	// frequently violate `require` clauses and crash the binary.
-	w.linef("if wouldFail_%s(state%s) { return }",
-		goExportedName(name), prefixCommaArgs(callArgs))
-	// Test-driver trace: `> name(args)` before invocation.
-	g.emitDriverTraceLine(w, name, callArgs)
-	w.linef("state.%s(%s)", goExportedName(name), strings.Join(callArgs, ", "))
-	w.close("")
-	w.blank()
-	g.Ctx.OnceGlobals["__need_pickinput"] = true
-}
-
-// prefixCommaArgs returns ", a, b, c" when args is non-empty, else
-// "". Used to splice variadic args onto a function call alongside a
-// fixed prefix argument.
-func prefixCommaArgs(args []string) string {
-	if len(args) == 0 {
-		return ""
-	}
-	return ", " + strings.Join(args, ", ")
-}
-
-// emitDriverTraceLine emits the `> name(arg0,arg1,…)` test-driver
-// trace at the start of actionGen.Generate. Counterpart to
-// emitActionTraceLine which emits `<` inside the action body.
-//
-// callArgs is the list of pre-computed local names (v0, v1, …) the
-// driver is about to pass to the action.
-func (g *Generator) emitDriverTraceLine(w *goWriter, name string, callArgs []string) {
-	display := strings.TrimPrefix(name, "ext:")
-	g.Ctx.AddImport("actions", "fmt", "")
-	if len(callArgs) == 0 {
-		w.linef(`fmt.Fprintln(ivyTraceOut, %q)`, "> "+display)
-		return
-	}
-	var fmtStr strings.Builder
-	fmtStr.WriteString("> ")
-	fmtStr.WriteString(display)
-	fmtStr.WriteByte('(')
-	for i := range callArgs {
-		if i > 0 {
-			fmtStr.WriteByte(',')
+		assign := make([]string, 0, len(leaf.Fields))
+		for _, f := range leaf.Fields {
+			assign = append(assign, fmt.Sprintf("%s: v%d_%s_%s",
+				goExportedName(f.Name), i, goIdent(leaf.Name), goIdent(f.Name)))
 		}
-		fmtStr.WriteString("%v")
+		w.linef("\tv%d = %s(%s{%s})", i, ctor, leafType, strings.Join(assign, ", "))
 	}
-	fmtStr.WriteString(")\n")
-	w.linef(`fmt.Fprintf(ivyTraceOut, %q, %s)`, fmtStr.String(), strings.Join(callArgs, ", "))
-}
-
-// emitCloseSolver writes a Close method on each action generator so
-// callers can free the solver. Aggregated emission keeps action_gen.go
-// from sprouting per-struct close methods.
-func (g *Generator) emitCloseSolver(w *goWriter) {
-	if !g.usesZ3() {
-		return
-	}
-	for _, name := range g.actionGenNames() {
-		structName := "actionGen_" + goExportedName(name)
-		w.open(fmt.Sprintf("func (g *%s) Close() error {", structName))
-		w.open("if g.sol != nil {")
-		w.line("err := g.sol.Close()")
-		w.line("g.sol = nil")
-		w.line("return err")
-		w.close("")
-		w.line("return nil")
-		w.close("")
-		w.blank()
-	}
+	w.line("}")
 }

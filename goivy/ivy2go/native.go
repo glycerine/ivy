@@ -2,6 +2,7 @@ package ivy2go
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -92,7 +93,7 @@ func (g *Generator) renderNativeGoTemplate(body string, params []goivy.Expr) str
 	}
 	fields := strings.Split(body, "`")
 	for i := 1; i < len(fields); i += 2 {
-		idx, err := strconvAtoiSafe(fields[i])
+		idx, err := strconv.Atoi(fields[i])
 		if err != nil {
 			fields[i] = "/*ivy2go: bad antiquote index `" + fields[i] + "`*/"
 			continue
@@ -132,22 +133,6 @@ func (g *Generator) renderNativeGoTemplate(body string, params []goivy.Expr) str
 		fields[i] = sub
 	}
 	return strings.Join(fields, "")
-}
-
-// strconvAtoiSafe parses a positive integer; returns error on empty.
-func strconvAtoiSafe(s string) (int, error) {
-	if s == "" {
-		return 0, fmt.Errorf("empty")
-	}
-	n := 0
-	for i := 0; i < len(s); i++ {
-		c := s[i]
-		if c < '0' || c > '9' {
-			return 0, fmt.Errorf("non-digit %q", c)
-		}
-		n = n*10 + int(c-'0')
-	}
-	return n, nil
 }
 
 // splitNativeGoCode mirrors ivy2cpp/native.go splitNativeCode but

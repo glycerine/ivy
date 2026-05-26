@@ -100,7 +100,7 @@ func (g *Generator) emitAssignSimple(w *goWriter, a *goivy.LogicAssignAction) {
 		return
 	}
 	if g.Config.Trace {
-		g.emitTraceWrite(w, a.LHS, rhs)
+		g.emitTracedLHS(w, a.LHS, rhs)
 	}
 	w.linef("%s = %s", lhs, rhs)
 }
@@ -247,8 +247,3 @@ func (g *Generator) tempKeyExpression(vs []*goivy.LogicVariable, tmpName string)
 	return expr
 }
 
-// emitTraceWrite is OPEN 058's hook. M10 left it stubbed; the real
-// implementation in vprint.go is called here when Config.Trace is on.
-func (g *Generator) emitTraceWrite(w *goWriter, lhs goivy.Expr, rhsCode string) {
-	g.emitTracedLHS(w, lhs, rhsCode)
-}

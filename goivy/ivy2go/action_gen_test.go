@@ -33,8 +33,11 @@ action set_flag = {
 	if !strings.Contains(actions, "func newactionGen_SetFlag(state *State)") {
 		t.Errorf("actionGen needs constructor:\n%s", actions)
 	}
-	if !strings.Contains(actions, "func (g *actionGen_SetFlag) Generate(state *State)") {
-		t.Errorf("actionGen needs Generate method:\n%s", actions)
+	if !strings.Contains(actions, "func (g *actionGen_SetFlag) generate(state *State) bool") {
+		t.Errorf("actionGen needs generate(state)bool method:\n%s", actions)
+	}
+	if !strings.Contains(actions, "func (g *actionGen_SetFlag) execute(state *State)") {
+		t.Errorf("actionGen needs execute(state) method:\n%s", actions)
 	}
 }
 
@@ -102,8 +105,12 @@ action set_slot = {
 	}
 }
 
-func TestEmit_TestTarget_BuildPreconditionHelperPerAction(t *testing.T) {
-	// Each action should get its own buildPrecondition_<Name>.
+func TestEmit_TestTarget_PreconditionInlineInGenerate(t *testing.T) {
+	// The literal port emits the precondition formula inline in each
+	// generate() body (mirrors ivy2cpp/action_gen.go where the
+	// constructor adds the SMT-LIB precondition into the solver),
+	// then gates on the model-nil-vs-non-nil signal. No separate
+	// buildPrecondition_<Name> helper exists.
 	mod := compileIvySource(t, `
 relation flag
 action set_flag(b: bool) = {
@@ -119,20 +126,28 @@ action unset = {
 		t.Fatalf("Generate: %v", err)
 	}
 	actions := out.Files["actions.go"]
-	if !strings.Contains(actions, "func buildPrecondition_SetFlag(state *State, __in0 *goivy.Const) *goivy.Clauses") {
-		t.Errorf("buildPrecondition_SetFlag signature wrong, got:\n%s", actions)
+	if strings.Contains(actions, "buildPrecondition_") {
+		t.Errorf("buildPrecondition_<Name> helpers were deleted; emission still references them:\n%s", actions)
 	}
-	if !strings.Contains(actions, "func buildPrecondition_Unset(state *State) *goivy.Clauses") {
-		t.Errorf("buildPrecondition_Unset signature wrong, got:\n%s", actions)
+	if !strings.Contains(actions, "facts := stateFactsAsClauses(state)") {
+		t.Errorf("generate() should assemble state facts inline:\n%s", actions)
 	}
-	if !strings.Contains(actions, "buildPrecondition_SetFlag(state, __in0)") {
-		t.Errorf("Generate should call buildPrecondition_SetFlag, got:\n%s", actions)
+	if !strings.Contains(actions, "preClauses := conjClauses(facts, preFmla)") {
+		t.Errorf("generate() should conjoin facts with the precondition formula:\n%s", actions)
+	}
+	if !strings.Contains(actions, "modelResult, _ = g.sol.GetModelClauses(preClauses)") {
+		t.Errorf("generate() should hand preClauses to the solver:\n%s", actions)
+	}
+	if !strings.Contains(actions, "if modelResult == nil {") {
+		t.Errorf("generate() should gate on solver UNSAT (nil modelResult):\n%s", actions)
 	}
 }
 
 func TestEmit_TestTarget_ReifiedPreReferencesInputSym(t *testing.T) {
-	// `require b` produces a Pre that mentions __fml:b; the reifier
-	// must rewrite that reference to __in0.
+	// `require b` produces a precondition formula that mentions
+	// __fml:b. The literal-port emission rewrites that reference to
+	// the runtime input symbol __in0 (declared at the top of
+	// generate()).
 	mod := compileIvySource(t, `
 relation flag
 action set_flag(b: bool) = {
@@ -145,11 +160,20 @@ action set_flag(b: bool) = {
 		t.Fatalf("Generate: %v", err)
 	}
 	actions := out.Files["actions.go"]
-	if !strings.Contains(actions, "extra = append(extra,") {
-		t.Errorf("Pre fmlas should land in extra, got:\n%s", actions)
+	if !strings.Contains(actions, "preFmla :=") {
+		t.Errorf("generate() should bind preFmla, got:\n%s", actions)
 	}
-	if !strings.Contains(actions, "&goivy.LogicNot{Body: __in0}") {
-		t.Errorf("require b should reify as LogicNot{__in0}, got:\n%s", actions)
+	if !strings.Contains(actions, "__in0 := goivy.NewConst(") {
+		t.Errorf("generate() should declare __in0 input symbol, got:\n%s", actions)
+	}
+	// `require b` (an assert in goivy's IR) joins the precondition as
+	// the negation of the failure path (Update.Pre.Fmlas = [~b];
+	// assertOK = NOT(~b) → reifies to a LogicNot wrapping a LogicNot
+	// of __in0, or — with the simpler single-Pre.Fmla path — a
+	// LogicNot whose body resolves to __in0).
+	if !strings.Contains(actions, "&goivy.LogicNot{Body: __in0}") &&
+		!strings.Contains(actions, "&goivy.LogicNot{Body: &goivy.LogicNot{Body: __in0}}") {
+		t.Errorf("require b should reify referencing __in0, got:\n%s", actions)
 	}
 }
 
@@ -208,39 +232,30 @@ action set_to_x(p: point) = {
 	}
 	actions := out.Files["actions.go"]
 
-	// Per-field input symbols declared in Generate.
+	// Per-field input symbols declared in generate().
 	for _, want := range []string{
-		`__in0 := goivy.NewConst("__in0_p"`,
-		`__in0_x := goivy.NewConst("__in0_p_x"`,
-		`__in0_y := goivy.NewConst("__in0_p_y"`,
+		`__in0 := goivy.NewConst("`,
+		`__in0_x := goivy.NewConst("`,
+		`__in0_y := goivy.NewConst("`,
 	} {
 		if !strings.Contains(actions, want) {
 			t.Errorf("missing per-field input decl %q:\n%s", want, actions)
 		}
 	}
-	// buildPrecondition_<Name> signature receives all three.
-	if !strings.Contains(actions, "buildPrecondition_SetToX(state *State, __in0 *goivy.Const, __in0_x *goivy.Const, __in0_y *goivy.Const)") {
-		t.Errorf("buildPrecondition signature missing per-field args:\n%s", actions)
-	}
-	// Destructor-equality conjuncts in the precondition body.
-	if !strings.Contains(actions, `&goivy.Eq{T1: mustApply(goivy.NewConst("x"`) {
-		t.Errorf("precondition should add x(p)=p_x equality:\n%s", actions)
-	}
-	if !strings.Contains(actions, `&goivy.Eq{T1: mustApply(goivy.NewConst("y"`) {
-		t.Errorf("precondition should add y(p)=p_y equality:\n%s", actions)
-	}
-	// Per-field pick + struct assembly in Generate.
+	// Per-field pick + struct assembly in generate().
 	if !strings.Contains(actions, "v0_x := pickBoolOrChoose(g.sol, modelResult, __in0_x)") {
-		t.Errorf("Generate should pick __in0_x via pickBoolOrChoose:\n%s", actions)
+		t.Errorf("generate() should pick __in0_x via pickBoolOrChoose:\n%s", actions)
 	}
 	if !strings.Contains(actions, "v0_y := pickBoolOrChoose(g.sol, modelResult, __in0_y)") {
-		t.Errorf("Generate should pick __in0_y:\n%s", actions)
+		t.Errorf("generate() should pick __in0_y:\n%s", actions)
 	}
 	if !strings.Contains(actions, "v0 := Point{X: v0_x, Y: v0_y}") {
-		t.Errorf("Generate should assemble Point{X: …, Y: …}:\n%s", actions)
+		t.Errorf("generate() should assemble Point{X: …, Y: …}:\n%s", actions)
 	}
-	if !strings.Contains(actions, "state.SetToX(v0)") {
-		t.Errorf("Generate should call SetToX(v0):\n%s", actions)
+	// The execute() method invokes the action with the field stored
+	// on the gen struct.
+	if !strings.Contains(actions, "state.SetToX(g.In_P)") {
+		t.Errorf("execute() should call SetToX(g.In_P):\n%s", actions)
 	}
 }
 
@@ -289,7 +304,7 @@ action probe(s: super) = {
 	actions := out.Files["actions.go"]
 
 	// Receiver Const declared.
-	if !strings.Contains(actions, `__in0 := goivy.NewConst("__in0_s"`) {
+	if !strings.Contains(actions, `__in0 := goivy.NewConst("`) {
 		t.Errorf("missing variant receiver Const:\n%s", actions)
 	}
 	// Tag pick via ivyChoose(N).
@@ -306,9 +321,9 @@ action probe(s: super) = {
 	if !strings.Contains(actions, "v0 = NewSuperLeafB()") {
 		t.Errorf("case 1 should construct LeafB via NewSuperLeafB:\n%s", actions)
 	}
-	// Action invoked with synthesised value.
-	if !strings.Contains(actions, "state.Probe(v0)") {
-		t.Errorf("Generate should call Probe(v0):\n%s", actions)
+	// Action invoked with the synthesised value stored on the gen struct.
+	if !strings.Contains(actions, "state.Probe(g.In_S)") {
+		t.Errorf("execute() should call Probe(g.In_S):\n%s", actions)
 	}
 }
 

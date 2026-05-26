@@ -563,32 +563,6 @@ func (g *Generator) actionParamName(c *goivy.Const) string {
 	return id
 }
 
-// isImportCaller reports whether the named action body should emit
-// a `<` trace prologue. Faithfully mirrors Python ivy_to_cpp.py's
-// find_import_callers (lines 1888-1901):
-//
-//	for imp in im.module.imports:
-//	    name = imp.imported()      # e.g. "imp__intf.ping"
-//	    if not imp.scope() and name in im.module.actions:
-//	        import_callers.add('ext:' + name[5:])
-//	        import_callers.add(name[5:])
-//
-// The result is cached on Generator.importCallersCache. Only fires
-// for target=test (mirroring Python's target-gate). Class target is
-// excluded for the same reason `>` is — no ivyTraceOut declared.
-//
-// For pingpong's left_player isolate, mod.Imports contains an
-// ImportDef whose Imported is `imp__intf.ping`. After stripping the
-// 5-char `imp__` prefix we get `intf.ping`, and the set populates
-// to {ext:intf.ping, intf.ping}. The action body named `intf.ping`
-// is then the one whose Generator emits the `< intf.ping` prologue.
-func (g *Generator) isImportCaller(name string) bool {
-	if g == nil || g.Config.RequestedTarget == "class" {
-		return false
-	}
-	return g.importCallers()[name]
-}
-
 // importCallers ports ivy2cpp/generator.go importCallers — which in
 // turn ports Python find_import_callers. Cached on the Generator.
 func (g *Generator) importCallers() map[string]bool {
@@ -755,7 +729,10 @@ func (g *Generator) emitActionMethod(w *goWriter, name string, act goivy.Action)
 	// represent system→env callbacks: actions the system calls
 	// whose impl is owned by the environment. The display name
 	// strips `ext:` per Python trace_action (line 1581-1582).
-	if g.isImportCaller(name) {
+	// `<` trace prologue — emitted at the top of each import-caller
+	// action body so the test driver sees the system→env callback.
+	// Mirrors ivy2cpp/generator.go emitSomeAction line 1284.
+	if g.importCallers()[name] {
 		g.emitActionTraceLine(w, "<", name, params)
 	}
 

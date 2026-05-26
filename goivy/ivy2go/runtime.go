@@ -97,14 +97,17 @@ func (g *Generator) emitRuntimePreamble(w *goWriter) {
 	w.close("")
 	w.blank()
 
-	// ivyAssume panics on failure — the random test driver pre-gates
-	// all assume conditions through `wouldFail_<Name>` before firing
-	// an action, so a live panic here means a wouldFail bug or a
-	// missed precondition path. Panicking (rather than log.Fatalf)
-	// preserves the stack trace.
+	// ivyAssume panics on failure — the per-action solver (see
+	// actionGen_*.generate in action_gen.go) is the single source of
+	// truth for whether an action can fire. UNSAT preconditions
+	// cause generate() to return false and execute() is never
+	// called, so a live panic from ivyAssume means either the
+	// solver lost a precondition or some non-test-driver caller
+	// invoked the action directly. Either way it's a real bug, and
+	// panicking (rather than log.Fatalf) keeps the stack trace.
 	w.open("func ivyAssume(cond bool, label string) {")
 	w.open("if !cond {")
-	w.line(`panic(fmt.Sprintf("ivy assume failed: %s (wouldFail gate missed this precondition)", label))`)
+	w.line(`panic(fmt.Sprintf("ivy assume failed: %s (solver precondition was not enforced)", label))`)
 	w.close("")
 	w.close("")
 	w.blank()

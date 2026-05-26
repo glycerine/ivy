@@ -104,9 +104,14 @@ type stateSymbol struct {
 }
 
 // stateSymbols returns the list of symbols that contribute a State
-// field, in deterministic (alphabetical) order. Excludes the
-// _generating bookkeeping symbol prepareModuleForGo injects, which
-// lives separately in M9.
+// field, in deterministic (alphabetical) order. Mirrors ivy2cpp/
+// generator.go stateSymbols (line 1067): excludes definitions, sort
+// constructors, destructor sort names, and sig.Constructors (enum
+// constants and similar) — they are NOT mutable state, so emitting
+// them as State fields breaks the solver-driven test harness (the
+// runtime fact `right = state.Right` was contradicting Z3's enum
+// encoding and forcing every action's precondition UNSAT after the
+// first iteration).
 func (g *Generator) stateSymbols() []stateSymbol {
 	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
 		return nil
@@ -130,9 +135,59 @@ func (g *Generator) stateSymbols() []stateSymbol {
 		if !ok || entry == nil {
 			continue
 		}
+		if g.isNonStateSignatureSymbol(name) {
+			continue
+		}
 		syms = append(syms, stateSymbol{Name: name, Sort: entry.Sort})
 	}
 	return syms
+}
+
+// isSortConstructorName mirrors ivy2cpp/generator.go:1098.
+func (g *Generator) isSortConstructorName(name string) bool {
+	if g == nil || g.Mod == nil || name == "" {
+		return false
+	}
+	if g.Mod.ConstructorSorts != nil {
+		if _, ok := g.Mod.ConstructorSorts[name]; ok {
+			return true
+		}
+	}
+	if g.Mod.SortConstructors != nil {
+		for _, conss := range g.Mod.SortConstructors.All() {
+			for _, cons := range conss {
+				if cons != nil && cons.Name == name {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
+// isNonStateSignatureSymbol mirrors the per-symbol filter inside
+// ivy2cpp/generator.go stateSymbols (line 1067). It returns true for
+// any signature symbol that is NOT mutable state — enum constants,
+// constructors, destructor record names, and pure definitions.
+func (g *Generator) isNonStateSignatureSymbol(name string) bool {
+	if g == nil || g.Mod == nil {
+		return false
+	}
+	if g.Mod.Sig != nil && g.Mod.Sig.Constructors != nil && g.Mod.Sig.Constructors[name] {
+		return true
+	}
+	if g.Mod.DestructorSorts != nil {
+		if _, ok := g.Mod.DestructorSorts[name]; ok {
+			return true
+		}
+	}
+	if g.isSortConstructorName(name) {
+		return true
+	}
+	if g.isDefinitionName(name) {
+		return true
+	}
+	return false
 }
 
 // symbolNeedsMakeMap returns true when the symbol's storage maps to a

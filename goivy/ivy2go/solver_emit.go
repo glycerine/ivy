@@ -83,18 +83,41 @@ func (g *Generator) emitSetSolver(w *goWriter) {
 }
 
 // emitStateSymbolFacts appends per-symbol fact assertions to the
-// stateFactsAsClauses body. Scalar bools use mkBoolFact; array-storage
-// function symbols iterate cells and emit per-cell facts.
+// stateFactsAsClauses body. Scalar bools use mkBoolFact; enum-sorted
+// scalars use an Eq-to-named-constant; array-storage function symbols
+// iterate cells and emit per-cell facts.
 func (g *Generator) emitStateSymbolFacts(w *goWriter, sym stateSymbol) {
 	exported := goExportedName(sym.Name)
 	if _, ok := sym.Sort.(*goivy.BooleanSort); ok {
 		w.linef("\tfmlas = append(fmlas, mkBoolFact(%q, state.%s))", sym.Name, exported)
 		return
 	}
+	if es, ok := sym.Sort.(*goivy.LogicEnumeratedSort); ok {
+		// Enum-sorted scalar: pin `<name> = <current-extension-name>`
+		// in the solver so the precondition formula's references to
+		// the state symbol resolve to the actual current value.
+		// Without this, the symbol is a free Z3 variable and
+		// constraints like `side = right` become trivially SAT.
+		sortCode, ok := g.reifySortAsGoCode(es)
+		if !ok {
+			return
+		}
+		extLits := make([]string, len(es.Extension))
+		for i, name := range es.Extension {
+			extLits[i] = fmt.Sprintf("%q", name)
+		}
+		w.linef("\t{")
+		w.linef("\t\textNames := []string{%s}", strings.Join(extLits, ", "))
+		w.linef("\t\tsortDecl := %s", sortCode)
+		w.linef("\t\tfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%q, sortDecl), T2: goivy.NewConst(extNames[int(state.%s)], sortDecl)})",
+			sym.Name, exported)
+		w.linef("\t}")
+		return
+	}
 	fs, ok := sym.Sort.(*goivy.LogicFunctionSort)
 	if !ok {
-		// Non-bool scalar (e.g. enum / range). For now we skip;
-		// extending to integer-valued facts is the next sub-step.
+		// Other scalar shapes (range, uninterpreted) deferred —
+		// pingpong's enum case is what surfaced first.
 		return
 	}
 	domain := fs.Domain()
