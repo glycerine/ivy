@@ -1224,8 +1224,8 @@ func (t *Translator) translateVarOrConst(name string, sort Sort) (smt.Z3Expr, er
 	// match). Non-enum constants use Symbol object keys for storage but
 	// string keys for lookup, so the cache never hits for them — solver_name
 	// is always called. We must match that behavior.
-	if _, isEnum := sort.(*LogicEnumeratedSort); isEnum {
-		key := NodeKey(name + ":" + string(sort.Sexp()))
+	if es := t.cachedEnumConstSort(sort); es != nil {
+		key := NodeKey(name + ":" + string(es.Sexp()))
 		if cached, ok := t.cache.consts[key]; ok {
 			return cached, nil
 		}
@@ -1307,6 +1307,26 @@ func (t *Translator) translateVarOrConst(name string, sort Sort) (smt.Z3Expr, er
 	}
 
 	return smt.Z3Expr{}, fmt.Errorf("cannot translate %s with sort %s to Z3", name, sort)
+}
+
+// cachedEnumConstSort returns the concrete enum sort whose constructors
+// enumeratedsort() registers in z3_constants. Python looks up enum
+// constructors by text before any term_to_z3_const trace; for interpreted
+// sorts the term still carries the outer UninterpretedSort, so Go must look
+// through sig.interp to find the cached constructor key.
+func (t *Translator) cachedEnumConstSort(sort Sort) *LogicEnumeratedSort {
+	if es, ok := sort.(*LogicEnumeratedSort); ok {
+		return es
+	}
+	if t == nil || t.s == nil || t.s.sig == nil {
+		return nil
+	}
+	if interp, ok := t.s.sig.Interp[sortDisplayName(sort)]; ok {
+		if es, ok := interp.(*LogicEnumeratedSort); ok {
+			return es
+		}
+	}
+	return nil
 }
 
 // enumeratedToNumeralZ3 converts an enum ordinal to a Z3 expression in the

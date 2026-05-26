@@ -68,6 +68,41 @@ func TestGetModelConstant_NativeEnum(t *testing.T) {
 	}
 }
 
+func TestInterpretedEnumConstCacheHitUsesOuterSort(t *testing.T) {
+	hostSort := &UninterpretedSort{Name: "ip.host"}
+	hostEnum := &LogicEnumeratedSort{Name: "ip.host", Extension: []string{"host1", "router", "host2"}}
+	sig := NewSig()
+	if err := sig.AddSort(hostSort); err != nil {
+		t.Fatalf("AddSort: %v", err)
+	}
+	sig.Interp["ip.host"] = hostEnum
+	sig.Constructors["host1"] = true
+	sig.Constructors["router"] = true
+	sig.Constructors["host2"] = true
+
+	s := NewSolverFromSig(sig, DefaultSolverOptions())
+	tr := s.Translator()
+	if _, err := tr.TranslateSort(hostSort); err != nil {
+		t.Fatalf("TranslateSort(hostSort): %v", err)
+	}
+
+	h1 := NewConst("host1", hostSort)
+	h2 := NewConst("host2", hostSort)
+	eq := NewEquals(h1, h2)
+
+	out := captureActionUpdateStdout(t, func() {
+		if _, err := tr.Formula_to_z3_int(eq, "test"); err != nil {
+			t.Fatalf("Formula_to_z3_int: %v", err)
+		}
+	})
+	if strings.Contains(out, "TranslateSort_call callsite=term_to_z3_const HASH canon=(Symbol name:host1") {
+		t.Fatalf("interpreted enum constructor missed Python z3_constants cache:\n%s", out)
+	}
+	if !strings.Contains(out, "ivy_solver.py:95 my_eq() ENTER") {
+		t.Fatalf("expected equality to reach my_eq after cached enum args:\n%s", out)
+	}
+}
+
 // TestGetModelConstant_BinaryEncoding verifies that with UseZ3Enums=false,
 // the iteration path (checking each enum value) works correctly.
 func TestGetModelConstant_BinaryEncoding(t *testing.T) {
