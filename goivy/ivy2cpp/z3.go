@@ -817,6 +817,19 @@ func (g *Generator) emitPythonTestZ3SortRegistrations(w *cppWriter, extra []*goi
 				}
 			}
 		}
+		// Variant supertype → propagate to subtypes so `mk_decl("*>:msg:ack",...)`
+		// can resolve "ack" in enum_sorts. Without this, plain variant leaves
+		// (subtypes with no destructors) are silently dropped from `needed`
+		// and the cpp runtime exits with `unknown sort: ack` from
+		// ivy_z3_gen.hpp:443. Python's emit_sorts walks all sig.sorts so it
+		// doesn't have this gap — this brings the Go port to parity.
+		if g.Mod != nil && g.Mod.Variants != nil {
+			if subs, ok := g.Mod.Variants[name]; ok {
+				for _, sub := range subs {
+					collect(sub)
+				}
+			}
+		}
 	}
 	for _, sym := range g.pythonTestZ3SigSymbols() {
 		collect(sym.Sort)

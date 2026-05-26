@@ -1692,6 +1692,7 @@ int %s(int argc, char **argv){
 #endif
     double frnd = 0.0;
     bool do_over = false;
+    if (num_gens > 0) {
     for(int cycle = 0; cycle < test_iters; cycle++) {
 
 //        std::cout << "totalweight = " << totalweight << std::endl;
@@ -1823,9 +1824,10 @@ int %s(int argc, char **argv){
 
                 }
             }
-        }            
+        }
     }
-%s    
+    } // end if (num_gens > 0) — empty fixtures fall through to test_completed
+%s
 #ifdef _WIN32
                 Sleep(final_ms);  // HACK: wait for late responses
 #endif

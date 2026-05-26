@@ -416,16 +416,22 @@ public:
     void mk_bv(const char *sort_name, unsigned width) {
         z3::sort sort = ctx.bv_sort(width);
         enum_sorts.insert(std::pair<std::string, z3::sort>(sort_name, sort));
+        sort_names.push_back(Z3_mk_string_symbol(ctx, sort_name));
+        sorts.push_back(sort);
     }
 
     void mk_int(const char *sort_name) {
         z3::sort sort = ctx.int_sort();
         enum_sorts.insert(std::pair<std::string, z3::sort>(sort_name, sort));
+        sort_names.push_back(Z3_mk_string_symbol(ctx, sort_name));
+        sorts.push_back(sort);
     }
 
     void mk_string(const char *sort_name) {
         z3::sort sort = ctx.string_sort();
         enum_sorts.insert(std::pair<std::string, z3::sort>(sort_name, sort));
+        sort_names.push_back(Z3_mk_string_symbol(ctx, sort_name));
+        sorts.push_back(sort);
     }
 
     void mk_sort(const char *sort_name) {
