@@ -642,7 +642,7 @@ func (g *Generator) emitMainParamSetup(w *cppWriter) {
 
 	w.line("std::uint8_t seed32[chacha8c::key_size];")
 	w.line(`std::memcpy(seed32, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456", chacha8c::key_size);`)
-	w.line("__chacha8c_rng = chacha8c::NewChaCha8(seed32);")
+	w.line("__chacha8c_rng.Seed(seed32);")
 
 	w.line("int sleep_ms = 10;")
 	w.line("int final_ms = 0;")

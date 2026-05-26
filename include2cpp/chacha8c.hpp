@@ -266,6 +266,7 @@ public:
 	{
 		Seed(seed);
 	}
+	ChaCha8() noexcept {}
 
 	void Seed(const std::uint8_t seed[key_size]) noexcept
 	{
