@@ -583,9 +583,9 @@ func TestGoldenAll(t *testing.T) {
 
 	// 243 runs for 500 seconds:
 	// XTRACE_OFF=1 time python -O `which ivy_check` isolate=this /Users/jaten/ivy/ivy-lang-examples/test/flash2_finite_mc.ivy
-	skipTo := 34 // 243 runs for 500 seconds.
-	if skipTo == 23 {
-		startingIsolate = "node"
+	skipTo := 44 // 243 runs for 500 seconds.
+	if skipTo == 44 {
+		startingIsolate = "this"
 	}
 	if skipTo > 0 {
 		vv("skipTo is %v", skipTo)
