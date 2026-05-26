@@ -492,6 +492,20 @@ func (g *Generator) emitOneInputPreference(w *goWriter, i int, p *goivy.Const) {
 		w.linef("\t\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(__names[__picked], __sort)})", i)
 		w.linef("\t}")
 	default:
+		// Range sort: use the actual [lo, hi] bounds so the picked
+		// value lands in the same interval cpp's random_range produces.
+		if rs, ok := g.rangeSortFor(p.CSort); ok {
+			lo, hi, hasBounds := numericRangeBoundsInt(rs)
+			if hasBounds {
+				w.linef("\t{")
+				w.linef("\t\t__sort := %s", sortCode)
+				w.linef("\t\t__picked := ivyRandomRange(%d, %d)", lo, hi)
+				w.linef("\t\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(strconv.FormatUint(__picked, 10), __sort)})", i)
+				w.linef("\t}")
+				g.Ctx.AddImport("runtime", "strconv", "")
+				return
+			}
+		}
 		card := goSortCard(g, p.CSort)
 		if card <= 0 {
 			return
@@ -598,6 +612,14 @@ func (g *Generator) emitActionGenClose(w *goWriter, plan *actionGenPlan) {
 	w.blank()
 }
 
+// isLogicEnumeratedSort reports whether s is a goivy enum sort. Used
+// by the input-extraction switch to route enum-typed inputs through
+// the name-aware pickEnumOrChoose helper.
+func isLogicEnumeratedSort(s goivy.Sort) bool {
+	_, ok := s.(*goivy.LogicEnumeratedSort)
+	return ok
+}
+
 // emitInputExtraction emits code to pull the i-th input's value
 // from modelResult into the corresponding struct field.
 func (g *Generator) emitInputExtraction(w *goWriter, i int, p *goivy.Const) {
@@ -607,6 +629,17 @@ func (g *Generator) emitInputExtraction(w *goWriter, i int, p *goivy.Const) {
 	switch {
 	case typeName == "bool":
 		w.linef("\t%s = pickBoolOrChoose(g.sol, modelResult, __in%d)", field, i)
+	case isLogicEnumeratedSort(p.CSort):
+		// Enum sort: model returns the symbolic name (e.g. "green"),
+		// not the integer index. pickEnumOrChoose translates name →
+		// index, falling back to ivyChoose if it can't.
+		es := p.CSort.(*goivy.LogicEnumeratedSort)
+		extLits := make([]string, len(es.Extension))
+		for k, v := range es.Extension {
+			extLits[k] = fmt.Sprintf("%q", v)
+		}
+		w.linef("\t%s = %s(pickEnumOrChoose(g.sol, modelResult, __in%d, []string{%s}))",
+			field, typeName, i, strings.Join(extLits, ", "))
 	case card > 0 && goIsAnyIntegerType(g, p.CSort):
 		w.linef("\t%s = %s(pickUintOrChoose(g.sol, modelResult, __in%d, %d))", field, typeName, i, card)
 	default:

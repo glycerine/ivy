@@ -137,10 +137,6 @@ func (g *Generator) emitOneInitialState(w *goWriter) {
 // Emits a nondet initialization for a state symbol when no solver
 // model constrains its value.
 func (g *Generator) emitDefaultInitialState(w *goWriter, sym stateSymbol) {
-	if sym.Name == "_generating" {
-		w.line("s._Generating = ivyChoose(2) == 1")
-		return
-	}
 	g.emitScalarChoice(w, sym)
 }
 
