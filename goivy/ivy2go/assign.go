@@ -156,6 +156,42 @@ func (g *Generator) closeAssignmentLoops(w *goWriter, loops int) {
 	}
 }
 
+// assignBoundsExpr mirrors ivy2cpp/assign.go assignBoundsExpr.
+// Recognises the `f(X) := (cond ? rhs : f(X))` ITE shape that
+// guards an update by `cond`. Returns `cond` when found and the
+// guard doesn't reference the modified symbol(s) — callers use it
+// to tighten the loop bounds of the bounded-assign path. Returns
+// nil when the assignment isn't of that shape.
+func (g *Generator) assignBoundsExpr(a *goivy.LogicAssignAction) goivy.Expr {
+	ite, ok := a.RHS.(*goivy.LogicIte)
+	if !ok {
+		return nil
+	}
+	if !ite.Else.Equal(a.LHS) {
+		return nil
+	}
+	mods := goivy.ModifiesSingle(a, g.actionsCfg())
+	if len(mods) == 0 {
+		return nil
+	}
+	used := goivy.UsedSymbolsAst(ite.Cond)
+	for _, m := range mods {
+		if _, found := used.Get2(goivy.Key(m)); found {
+			return nil
+		}
+	}
+	return ite.Cond
+}
+
+// actionsCfg returns the ActCfg from the module config so callers
+// that take an *ActionsConfig argument can construct one.
+func (g *Generator) actionsCfg() *goivy.ActionsConfig {
+	if g == nil || g.Mod == nil || g.Mod.Cfg == nil {
+		return nil
+	}
+	return g.Mod.Cfg.ActCfg
+}
+
 // emitAssignTwoPhase ports ivy2cpp/assign.go emitAssignTwoPhase. The
 // RHS is computed into a temporary indexed by the free variables, then
 // copied back into the LHS in a second loop pass — this avoids

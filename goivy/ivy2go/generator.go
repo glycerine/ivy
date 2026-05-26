@@ -6,6 +6,7 @@ import (
 	"go/format"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/glycerine/ivy/goivy"
@@ -372,13 +373,15 @@ func (g *Generator) emitTestMain() {
 	g.main.linef("\tgenerate func(*%s) bool", g.StateTypeName)
 	g.main.linef("\texecute  func(*%s)", g.StateTypeName)
 	g.main.line("\tclose    func() error")
+	g.main.line("\tweight   float64")
 	g.main.line("}")
 	g.main.line("var actions []actionEntry")
 	for _, name := range names {
 		struc := "actionGen_" + goExportedName(name)
+		w := g.actionWeight(name)
 		g.main.linef("{")
 		g.main.linef("\tg := new%s(state)", struc)
-		g.main.linef("\tactions = append(actions, actionEntry{name: %q, generate: g.generate, execute: g.execute, close: g.Close})", name)
+		g.main.linef("\tactions = append(actions, actionEntry{name: %q, generate: g.generate, execute: g.execute, close: g.Close, weight: %g})", name, w)
 		g.main.line("}")
 	}
 	g.main.line("defer func() {")
@@ -387,9 +390,27 @@ func (g *Generator) emitTestMain() {
 	g.main.line("\t}")
 	g.main.line("}()")
 	g.main.blank()
+	// Precompute weight-prefix table once (action weights are static
+	// per emit). Weighted random selection: pick a u ∈ [0, total),
+	// scan the prefix table to find the matching action.
+	g.main.line("var __totalW float64")
+	g.main.line("for _, a := range actions { __totalW += a.weight }")
 	g.main.line("for i := 0; i < iters; i++ {")
 	g.main.line("\t_ = i")
-	g.main.line("\tidx := ivyChoose(len(actions))")
+	g.main.line("\tvar idx int")
+	g.main.line("\tif __totalW > 0 {")
+	g.main.line("\t\t// Mirrors cpp's `frnd = choices * ((double)Rand() / (RAND_MAX+1.0))`")
+	g.main.line("\t\t// so ivy_to_cpp / ivy2cpp / ivy2go pick the same action index")
+	g.main.line("\t\t// under the same ChaCha8 seed.")
+	g.main.line("\t\tu := __totalW * float64(ivyRand31()) / ivyRandMaxPlus1")
+	g.main.line("\t\tacc := 0.0")
+	g.main.line("\t\tfor j, a := range actions {")
+	g.main.line("\t\t\tacc += a.weight")
+	g.main.line("\t\t\tif u < acc { idx = j; break }")
+	g.main.line("\t\t}")
+	g.main.line("\t} else {")
+	g.main.line("\t\tidx = ivyChoose(len(actions))")
+	g.main.line("\t}")
 	g.main.line("\t// Solver-driven fire/skip: generate() returns false")
 	g.main.line("\t// when the action's precondition is UNSAT in the")
 	g.main.line("\t// current state (so we don't even trace, matching")
@@ -405,6 +426,39 @@ func (g *Generator) emitTestMain() {
 	g.main.line("}")
 	g.main.line(`fmt.Println("test_completed")`)
 	g.main.close("")
+}
+
+// actionWeight mirrors ivy2cpp/generator.go actionWeight. Returns
+// the action's user-declared scheduling weight (default 1.0), used
+// by the test-loop random action picker. Reads `<action>.weight`
+// from Mod.Attributes.
+func (g *Generator) actionWeight(name string) float64 {
+	username := strings.TrimPrefix(name, "ext:")
+	if g.Mod == nil || g.Mod.Attributes == nil {
+		return 1.0
+	}
+	raw, ok := g.Mod.Attributes[username+".weight"]
+	if !ok {
+		return 1.0
+	}
+	type relnamer interface{ Relname() string }
+	var s string
+	switch v := raw.(type) {
+	case string:
+		s = v
+	case relnamer:
+		s = v.Relname()
+	default:
+		return 1.0
+	}
+	if len(s) >= 2 && s[0] == '"' && s[len(s)-1] == '"' {
+		s = s[1 : len(s)-1]
+	}
+	f, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		return 1.0
+	}
+	return f
 }
 
 // finalize composes each stream into a complete .go source file

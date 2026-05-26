@@ -70,13 +70,41 @@ func (g *Generator) emitRuntimeHelpersLate(w *goWriter) {
 func (g *Generator) emitRuntimeImplPreamble(w *goWriter) {
 	// Import list for runtime.go.
 	if g.Ctx != nil {
+		g.Ctx.AddImport("runtime", "encoding/binary", "")
 		g.Ctx.AddImport("runtime", "fmt", "")
-		g.Ctx.AddImport("runtime", "math/rand", "")
+		g.Ctx.AddImport("runtime", "math/rand/v2", "rand")
 	}
 
-	w.line("// ivyRand is the package-wide RNG used by ivyChoose and any")
-	w.line("// nondet helpers. Seeded from --seed by main.go.")
-	w.line("var ivyRand = rand.New(rand.NewSource(1))")
+	w.line("// ivyRand is the package-wide ChaCha8 RNG used by ivyChoose,")
+	w.line("// the test-loop weighted scheduler, and any nondet helpers.")
+	w.line("// Same algorithm + seeding convention as ivy_to_cpp (Python")
+	w.line("// + Go-ported C++ chacha8c.hpp) so the random stream is")
+	w.line("// byte-equivalent across all three tools for any given")
+	w.line("// `seed=N` argument. Reseeded from `--seed=N` / IVY_SEED by")
+	w.line("// applyTestSeedFlag in the test main.")
+	w.line("var ivyRand = rand.NewChaCha8(ivySeedBytes(1))")
+	w.blank()
+	w.line("// ivySeedBytes mirrors cpp's `std::memcpy(seed32, &seed, sizeof(seed))`")
+	w.line("// pattern: the seed integer's little-endian bytes occupy the")
+	w.line("// first 4 bytes of the 32-byte ChaCha8 key; the rest stay zero.")
+	w.line("func ivySeedBytes(seed uint32) [32]byte {")
+	w.line("\tvar key [32]byte")
+	w.line("\tbinary.LittleEndian.PutUint32(key[:4], seed)")
+	w.line("\treturn key")
+	w.line("}")
+	w.blank()
+	w.line("// ivyRand31 mirrors cpp's `chacha8c::Rand()` —")
+	w.line("// `static_cast<int>(Uint64() >> 33)` — yielding a non-negative")
+	w.line("// 31-bit int in [0, 2^31). Pairs with biased `% N` reduction")
+	w.line("// the same way cpp does so action selection sequences match.")
+	w.line("func ivyRand31() int {")
+	w.line("\treturn int(ivyRand.Uint64() >> 33)")
+	w.line("}")
+	w.blank()
+	w.line("// ivyRandMaxPlus1 is the cpp `(double)RAND_MAX + 1.0` constant")
+	w.line("// (2^31 = 2147483648.0). Used by the weighted action picker to")
+	w.line("// scale ivyRand31() into [0, 1.0) the same way cpp does.")
+	w.line("const ivyRandMaxPlus1 = 2147483648.0")
 	w.blank()
 
 	// ivyTraceOut is the io.Writer trace writes target. Default is
@@ -115,11 +143,14 @@ func (g *Generator) emitRuntimeImplPreamble(w *goWriter) {
 	w.close("")
 	w.blank()
 
+	// ivyChoose mirrors cpp's `___ivy_choose(0, …)` reduction —
+	// `chacha8c::Rand() % N` (biased modulo) — so the per-call output
+	// matches cpp's sequence byte-for-byte under the same seed.
 	w.open("func ivyChoose(rng int) int {")
 	w.open("if rng <= 0 {")
 	w.line("return 0")
 	w.close("")
-	w.line("return ivyRand.Intn(rng)")
+	w.line("return ivyRand31() % rng")
 	w.close("")
 	w.blank()
 }
@@ -483,22 +514,27 @@ func (g *Generator) emitPickInputHelpers(w *goWriter) {
 
 // emitTestFlagsHelper writes parseTestItersFlag + applyTestSeedFlag.
 // Mirrors ivy2cpp's `test_iters` + `seed` argv plumbing so cpp / go
-// emitted binaries accept the same flags. Flag precedence:
-// `--iters=N` / `--seed=N` on argv → IVY_ITERS / IVY_SEED env vars →
-// the emit-time default. applyTestSeedFlag re-seeds the package
-// RNG when an explicit seed is supplied.
+// emitted binaries accept the same flags AND produce the same random
+// sequence under the same seed (ChaCha8 + ivySeedBytes convention).
+// Flag precedence: `--iters=N` / `--seed=N` on argv → IVY_ITERS /
+// IVY_SEED env vars → the emit-time default.
+//
+// Also accepts the cpp-style positional `seed=N` form (no leading
+// `--`) so the same argv literally invokes both binaries the same
+// way for cross-tool comparison.
 func (g *Generator) emitTestFlagsHelper(w *goWriter) {
 	g.Ctx.AddImport("runtime", "os", "")
 	g.Ctx.AddImport("runtime", "strconv", "")
 	g.Ctx.AddImport("runtime", "strings", "")
-	g.Ctx.AddImport("runtime", "math/rand", "")
 	w.line("// parseTestItersFlag returns the iteration count for the")
-	w.line("// test loop. Argv `--iters=N`, env `IVY_ITERS`, then the")
-	w.line("// emit-time default (in that order).")
+	w.line("// test loop. Argv `--iters=N` / `iters=N`, env `IVY_ITERS`,")
+	w.line("// then the emit-time default (in that order).")
 	w.line("func parseTestItersFlag(defaultIters int) int {")
 	w.line("\tfor _, a := range os.Args[1:] {")
-	w.line(`		if strings.HasPrefix(a, "--iters=") {`)
-	w.line(`			if n, err := strconv.Atoi(a[len("--iters="):]); err == nil { return n }`)
+	w.line(`		for _, pfx := range []string{"--iters=", "iters="} {`)
+	w.line("\t\t\tif strings.HasPrefix(a, pfx) {")
+	w.line("\t\t\t\tif n, err := strconv.Atoi(a[len(pfx):]); err == nil { return n }")
+	w.line("\t\t\t}")
 	w.line("\t\t}")
 	w.line("\t}")
 	w.line(`	if v := os.Getenv("IVY_ITERS"); v != "" {`)
@@ -507,25 +543,27 @@ func (g *Generator) emitTestFlagsHelper(w *goWriter) {
 	w.line("\treturn defaultIters")
 	w.line("}")
 	w.blank()
-	w.line("// applyTestSeedFlag re-seeds ivyRand when `--seed=N` is on")
-	w.line("// argv or IVY_SEED is set. Matches cpp's `seed=N` arg.")
+	w.line("// applyTestSeedFlag re-seeds ivyRand when `--seed=N` or the")
+	w.line("// cpp-style `seed=N` positional is on argv (or IVY_SEED is")
+	w.line("// set). Uses the same ivySeedBytes packing cpp uses so the")
+	w.line("// ChaCha8 stream is byte-identical for the same seed across")
+	w.line("// ivy_to_cpp, ivy2cpp, and ivy2go binaries.")
 	w.line("func applyTestSeedFlag() {")
-	w.line("\tparse := func(s string) (int64, bool) {")
-	w.line("\t\tif n, err := strconv.ParseInt(s, 10, 64); err == nil { return n, true }")
-	w.line("\t\treturn 0, false")
+	w.line("\tapply := func(s string) bool {")
+	w.line("\t\tn, err := strconv.ParseUint(s, 10, 32)")
+	w.line("\t\tif err != nil { return false }")
+	w.line("\t\tivyRand = rand.NewChaCha8(ivySeedBytes(uint32(n)))")
+	w.line("\t\treturn true")
 	w.line("\t}")
 	w.line("\tfor _, a := range os.Args[1:] {")
-	w.line(`		if strings.HasPrefix(a, "--seed=") {`)
-	w.line(`			if n, ok := parse(a[len("--seed="):]); ok {`)
-	w.line("\t\t\t\tivyRand = rand.New(rand.NewSource(n))")
-	w.line("\t\t\t\treturn")
+	w.line(`		for _, pfx := range []string{"--seed=", "seed="} {`)
+	w.line("\t\t\tif strings.HasPrefix(a, pfx) {")
+	w.line("\t\t\t\tif apply(a[len(pfx):]) { return }")
 	w.line("\t\t\t}")
 	w.line("\t\t}")
 	w.line("\t}")
 	w.line(`	if v := os.Getenv("IVY_SEED"); v != "" {`)
-	w.line("\t\tif n, ok := parse(v); ok {")
-	w.line("\t\t\tivyRand = rand.New(rand.NewSource(n))")
-	w.line("\t\t}")
+	w.line("\t\tapply(v)")
 	w.line("\t}")
 	w.line("}")
 	w.blank()

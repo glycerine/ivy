@@ -149,6 +149,35 @@ func (g *Generator) stateSymbols() []stateSymbol {
 	return syms
 }
 
+// cardinalitySortNames mirrors ivy2cpp/generator.go cardinalitySortNames.
+// Returns the names of sorts that need a runtime `__CARD__<name>`
+// — either interpreted sorts or plain variant subtypes — sorted
+// for deterministic emission.
+func (g *Generator) cardinalitySortNames() []string {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil {
+		return nil
+	}
+	seen := map[string]bool{}
+	var names []string
+	add := func(name string) {
+		if name == "" || name == "bool" || seen[name] {
+			return
+		}
+		seen[name] = true
+		names = append(names, name)
+	}
+	for name := range g.Mod.Sig.Interp {
+		add(name)
+	}
+	for _, name := range g.Mod.SortOrder {
+		if g.isPlainVariantSubtypeName(name) {
+			add(name)
+		}
+	}
+	sort.Strings(names)
+	return names
+}
+
 // allStateSymbols mirrors ivy2cpp/generator.go:1006. Broader than
 // stateSymbols: it walks every signature symbol PLUS relations and
 // functions without applying stateSymbols' definition/destructor
