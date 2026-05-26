@@ -742,6 +742,16 @@ func (ctx *Z3Context) BvNot(e Z3Expr) Z3Expr {
 	return r
 }
 
+// BvNeg returns bit-vector negation.
+func (ctx *Z3Context) BvNeg(e Z3Expr) Z3Expr {
+	var r Z3Expr
+
+	r = ctx.newExpr(z3_mk_bvneg(ctx.c, e.c))
+
+	runtime.KeepAlive(e)
+	return r
+}
+
 // BvAdd returns bit-vector addition.
 func (ctx *Z3Context) BvAdd(e1, e2 Z3Expr) Z3Expr {
 	var r Z3Expr
@@ -1546,6 +1556,9 @@ func z3_mk_bvor(ctx z3Context, a z3AST, b z3AST) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_bvnot
 func z3_mk_bvnot(ctx z3Context, expr z3AST) z3AST
+
+//go:wasmimport smt_z3 Z3_mk_bvneg
+func z3_mk_bvneg(ctx z3Context, expr z3AST) z3AST
 
 //go:wasmimport smt_z3 Z3_mk_bvadd
 func z3_mk_bvadd(ctx z3Context, a z3AST, b z3AST) z3AST

@@ -2632,6 +2632,37 @@ func TestZ3BridgeTranslateComparisonBVSort(t *testing.T) {
 	}
 }
 
+func TestZ3BridgePolymorphicAddBVInterpDefinition(t *testing.T) {
+	nodeSort := z3UnintSort("node")
+	sig := NewSig()
+	sig.Interp["node"] = "bv[1]"
+	s := NewSolverFromSig(sig, nil)
+
+	addSort, err := NewFunctionSort(nodeSort, nodeSort, nodeSort)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	add := NewConst("+", addSort)
+	x := NewConst("__fml:x", nodeSort)
+	y := NewConst("__new_fml:y", nodeSort)
+	one := NewConst("1", nodeSort)
+	rhs, err := NewApply(add, x, one)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+
+	clauses := NewClauses(nil, []*IvyDefinition{NewIvyDefinition(y, rhs)}, nil)
+	z3expr, err := s.ClausesToZ3(clauses)
+	if err != nil {
+		t.Fatalf("ClausesToZ3 should translate bv[1] polymorphic + without sort mismatch: %v", err)
+	}
+
+	got := z3expr.String()
+	if !strings.Contains(got, "bvadd") {
+		t.Fatalf("expected bvadd in translated definition, got: %s", got)
+	}
+}
+
 // TestTranslateComparisonUninterpretedSortNoForAll tests that < on an
 // uninterpreted sort works even without ForAll wrapping (via raw Translate).
 func TestZ3BridgeTranslateComparisonUninterpretedSortNoForAll(t *testing.T) {
