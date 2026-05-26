@@ -639,6 +639,11 @@ func (g *Generator) emitMainParamSetup(w *cppWriter) {
 	}
 	// argv parsing loop: key=value -> param assignment OR special key.
 	w.line("int seed = 1;")
+
+	w.line("std::uint8_t seed32[c8::key_size];")
+	w.line(`std::memcpy(seed32, "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456", chacha8c::key_size);`)
+	w.line("__chacha8c_rng = chacha8c::NewChaCha8(seed32);")
+
 	w.line("int sleep_ms = 10;")
 	w.line("int final_ms = 0;")
 	if g.Config.Target != "test" {
