@@ -33,6 +33,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <cstdlib>
+#include <limits>
+#include <climits>
 
 namespace chacha8c {
 
@@ -260,6 +263,17 @@ inline void refill(chacha8rand_state &s) noexcept
 
 } // namespace detail
 
+constexpr int ExpectedRandMax = 2147483647;
+
+static_assert(
+    RAND_MAX == ExpectedRandMax,
+    "Unsupported platform: RAND_MAX is not 2147483647"
+);
+static_assert(
+    sizeof(int) * CHAR_BIT >= 32,
+    "This Rand() implementation requires int to be at least 32 bits"
+);
+
 class ChaCha8 {
 public:
 	explicit ChaCha8(const std::uint8_t seed[key_size]) noexcept
@@ -288,22 +302,8 @@ public:
 	}
 
         // like <random>'s rand(), returns a number in [0, RAND_MAX] inclusive.
-        std::int32_t Rand() noexcept {
-            const std::uint64_t range = static_cast<std::uint64_t>(RAND_MAX) + 1;
-
-            // Calculate the largest multiple of 'range' that fits in a uint64_t
-            // Any roll at or above this limit causes modulo bias.
-            const std::uint64_t limit = (UINT64_MAX / range) * range;
-
-            // rejection sampling:
-            while (true) {
-                std::uint64_t x = Uint64();
-        
-                // If x is within the safe, perfectly divisible zone, we use it
-                if (x < limit) {
-                    return static_cast<std::int32_t>(x % range);
-                }
-            }
+        int Rand() noexcept {
+            return static_cast<int>(Uint64() >> 33);
         }
 
 	std::size_t Read(std::uint8_t *p, std::size_t len) noexcept
