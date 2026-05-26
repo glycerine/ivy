@@ -449,8 +449,6 @@ func (g *Generator) emitInputPreferences(w *goWriter, plan *actionGenPlan) {
 		}
 		if plan.oldPreClauses != nil {
 			if _, defidx := plan.oldPreClauses.DefIdx[goivy.Key(p)]; defidx {
-				// Input pinned by a def — cpp skips randomize for it
-				// (action_gen.go:322 `if defidx { continue }`).
 				continue
 			}
 		}
@@ -458,25 +456,39 @@ func (g *Generator) emitInputPreferences(w *goWriter, plan *actionGenPlan) {
 	}
 }
 
-// emitOneInputPreference emits the per-input preference body.
-// Currently handles bool, enum, and range/integer scalars. Other
-// shapes (records, variants, function-sorted) are skipped so the
-// solver picks freely.
+// emitOneInputPreference emits the per-input preference body. It
+// emits two artifacts:
+//   1. a named local `__pick_<i>` (or `__pick_<i>_<field>` for record
+//      fields) holding the chacha8-derived value. Used by
+//      emitInputExtraction for direct assignment, bypassing the
+//      solver-model path that doesn't honor preferences for goivy's
+//      UninterpretedSort-with-interp inputs.
+//   2. an entry in __prefs asserting the equality — kept in case the
+//      goivy translator improves and honors it later. For now it's
+//      effectively a no-op for non-enum inputs but doesn't hurt.
 func (g *Generator) emitOneInputPreference(w *goWriter, i int, p *goivy.Const) {
+	if recName, ok := g.destructorStructName(p.CSort); ok {
+		// Record input: cpp's __randomize<RecordT> iterates each scalar
+		// field and calls randomize on each. Consume one chacha8 sample
+		// per field via ivyRandomRange in the same order so the cpp/Go
+		// streams stay aligned.
+		for _, f := range g.destructorScalarFields(recName) {
+			g.emitOneFieldPreference(w, i, f, "__in"+fmt.Sprint(i)+"_"+goIdent(f.Name))
+		}
+		return
+	}
 	sortCode, ok := g.reifySortAsGoCode(p.CSort)
 	if !ok {
 		return
 	}
+	pickName := fmt.Sprintf("__pick_in%d", i)
 	switch s := p.CSort.(type) {
 	case *goivy.BooleanSort:
 		_ = s
-		w.linef("\t{")
-		w.linef("\t\t__picked := ivyRandomRange(0, 1)")
-		w.linef("\t\t__rhs := goivy.False")
-		w.linef("\t\tif __picked == 1 { __rhs = goivy.True }")
-		w.linef("\t\t_ = __in%d", i)
-		w.linef("\t\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: __rhs})", i)
-		w.linef("\t}")
+		w.linef("\t%s := ivyRandomRange(0, 1)", pickName)
+		w.linef("\t__rhs%d := goivy.False", i)
+		w.linef("\tif %s == 1 { __rhs%d = goivy.True }", pickName, i)
+		w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: __rhs%d})", i, i)
 	case *goivy.LogicEnumeratedSort:
 		if len(s.Extension) == 0 {
 			return
@@ -485,23 +497,17 @@ func (g *Generator) emitOneInputPreference(w *goWriter, i int, p *goivy.Const) {
 		for k, v := range s.Extension {
 			extLits[k] = fmt.Sprintf("%q", v)
 		}
-		w.linef("\t{")
-		w.linef("\t\t__sort := %s", sortCode)
-		w.linef("\t\t__names := []string{%s}", strings.Join(extLits, ", "))
-		w.linef("\t\t__picked := ivyRandomRange(0, %d)", len(s.Extension)-1)
-		w.linef("\t\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(__names[__picked], __sort)})", i)
-		w.linef("\t}")
+		w.linef("\t__sort%d := %s", i, sortCode)
+		w.linef("\t__names%d := []string{%s}", i, strings.Join(extLits, ", "))
+		w.linef("\t%s := ivyRandomRange(0, %d)", pickName, len(s.Extension)-1)
+		w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(__names%d[%s], __sort%d)})", i, i, pickName, i)
 	default:
-		// Range sort: use the actual [lo, hi] bounds so the picked
-		// value lands in the same interval cpp's random_range produces.
 		if rs, ok := g.rangeSortFor(p.CSort); ok {
 			lo, hi, hasBounds := numericRangeBoundsInt(rs)
 			if hasBounds {
-				w.linef("\t{")
-				w.linef("\t\t__sort := %s", sortCode)
-				w.linef("\t\t__picked := ivyRandomRange(%d, %d)", lo, hi)
-				w.linef("\t\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(strconv.FormatUint(__picked, 10), __sort)})", i)
-				w.linef("\t}")
+				w.linef("\t__sort%d := %s", i, sortCode)
+				w.linef("\t%s := ivyRandomRange(%d, %d)", pickName, lo, hi)
+				w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(strconv.FormatUint(%s, 10), __sort%d)})", i, pickName, i)
 				g.Ctx.AddImport("runtime", "strconv", "")
 				return
 			}
@@ -510,11 +516,9 @@ func (g *Generator) emitOneInputPreference(w *goWriter, i int, p *goivy.Const) {
 		if card <= 0 {
 			return
 		}
-		w.linef("\t{")
-		w.linef("\t\t__sort := %s", sortCode)
-		w.linef("\t\t__picked := ivyRandomRange(0, %d)", card-1)
-		w.linef("\t\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(strconv.FormatUint(__picked, 10), __sort)})", i)
-		w.linef("\t}")
+		w.linef("\t__sort%d := %s", i, sortCode)
+		w.linef("\t%s := ivyRandomRange(0, %d)", pickName, card-1)
+		w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(strconv.FormatUint(%s, 10), __sort%d)})", i, pickName, i)
 		g.Ctx.AddImport("runtime", "strconv", "")
 	}
 }
@@ -612,6 +616,61 @@ func (g *Generator) emitActionGenClose(w *goWriter, plan *actionGenPlan) {
 	w.blank()
 }
 
+// emitOneFieldPreference is the per-field counterpart of
+// emitOneInputPreference for record-input scalar fields. The field's
+// runtime *goivy.Const has already been declared (as
+// `__in<i>_<fieldname>`); we just need to bind a chacha8-picked
+// preference to it.
+func (g *Generator) emitOneFieldPreference(w *goWriter, i int, f destructorField, varName string) {
+	sortCode, ok := g.reifySortAsGoCode(f.Sort)
+	if !ok {
+		return
+	}
+	pickName := fmt.Sprintf("__pick_in%d_%s", i, goIdent(f.Name))
+	switch s := f.Sort.(type) {
+	case *goivy.BooleanSort:
+		_ = s
+		w.linef("\t%s := ivyRandomRange(0, 1)", pickName)
+		w.linef("\t__rhs_%d_%s := goivy.False", i, goIdent(f.Name))
+		w.linef("\tif %s == 1 { __rhs_%d_%s = goivy.True }", pickName, i, goIdent(f.Name))
+		w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: %s, T2: __rhs_%d_%s})", varName, i, goIdent(f.Name))
+	case *goivy.LogicEnumeratedSort:
+		if len(s.Extension) == 0 {
+			return
+		}
+		extLits := make([]string, len(s.Extension))
+		for k, v := range s.Extension {
+			extLits[k] = fmt.Sprintf("%q", v)
+		}
+		w.linef("\t__sort_%d_%s := %s", i, goIdent(f.Name), sortCode)
+		w.linef("\t__names_%d_%s := []string{%s}", i, goIdent(f.Name), strings.Join(extLits, ", "))
+		w.linef("\t%s := ivyRandomRange(0, %d)", pickName, len(s.Extension)-1)
+		w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: %s, T2: goivy.NewConst(__names_%d_%s[%s], __sort_%d_%s)})",
+			varName, i, goIdent(f.Name), pickName, i, goIdent(f.Name))
+	default:
+		if rs, ok := g.rangeSortFor(f.Sort); ok {
+			lo, hi, hasBounds := numericRangeBoundsInt(rs)
+			if hasBounds {
+				w.linef("\t__sort_%d_%s := %s", i, goIdent(f.Name), sortCode)
+				w.linef("\t%s := ivyRandomRange(%d, %d)", pickName, lo, hi)
+				w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: %s, T2: goivy.NewConst(strconv.FormatUint(%s, 10), __sort_%d_%s)})",
+					varName, pickName, i, goIdent(f.Name))
+				g.Ctx.AddImport("runtime", "strconv", "")
+				return
+			}
+		}
+		card := goSortCard(g, f.Sort)
+		if card <= 0 {
+			return
+		}
+		w.linef("\t__sort_%d_%s := %s", i, goIdent(f.Name), sortCode)
+		w.linef("\t%s := ivyRandomRange(0, %d)", pickName, card-1)
+		w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: %s, T2: goivy.NewConst(strconv.FormatUint(%s, 10), __sort_%d_%s)})",
+			varName, pickName, i, goIdent(f.Name))
+		g.Ctx.AddImport("runtime", "strconv", "")
+	}
+}
+
 // isLogicEnumeratedSort reports whether s is a goivy enum sort. Used
 // by the input-extraction switch to route enum-typed inputs through
 // the name-aware pickEnumOrChoose helper.
@@ -620,28 +679,79 @@ func isLogicEnumeratedSort(s goivy.Sort) bool {
 	return ok
 }
 
+// inputHasPick reports whether emitOneInputPreference would have
+// emitted a `__pick_in<i>` local for this input — i.e. it's a
+// bool/enum/integer/range scalar. Records and variants are excluded
+// because their preference is per-field.
+func (g *Generator) inputHasPick(p *goivy.Const) bool {
+	if p == nil {
+		return false
+	}
+	if _, isRec := g.destructorStructName(p.CSort); isRec {
+		return false
+	}
+	if _, isVar := g.variantSuperName(p.CSort); isVar {
+		return false
+	}
+	switch p.CSort.(type) {
+	case *goivy.BooleanSort, *goivy.LogicEnumeratedSort:
+		return true
+	}
+	if _, ok := g.rangeSortFor(p.CSort); ok {
+		return true
+	}
+	return goSortCard(g, p.CSort) > 0
+}
+
+// fieldHasPick reports whether emitOneFieldPreference would have
+// emitted a `__pick_in<i>_<field>` local for this field.
+func (g *Generator) fieldHasPick(f destructorField) bool {
+	switch f.Sort.(type) {
+	case *goivy.BooleanSort, *goivy.LogicEnumeratedSort:
+		return true
+	}
+	if _, ok := g.rangeSortFor(f.Sort); ok {
+		return true
+	}
+	return goSortCard(g, f.Sort) > 0
+}
+
 // emitInputExtraction emits code to pull the i-th input's value
 // from modelResult into the corresponding struct field.
 func (g *Generator) emitInputExtraction(w *goWriter, i int, p *goivy.Const) {
 	field := "g." + goActionGenFieldName(p.Name)
 	typeName := g.goType(p.CSort)
 	card := goSortCard(g, p.CSort)
+	pickName := fmt.Sprintf("__pick_in%d", i)
 	switch {
 	case typeName == "bool":
-		w.linef("\t%s = pickBoolOrChoose(g.sol, modelResult, __in%d)", field, i)
-	case isLogicEnumeratedSort(p.CSort):
-		// Enum sort: model returns the symbolic name (e.g. "green"),
-		// not the integer index. pickEnumOrChoose translates name →
-		// index, falling back to ivyChoose if it can't.
-		es := p.CSort.(*goivy.LogicEnumeratedSort)
-		extLits := make([]string, len(es.Extension))
-		for k, v := range es.Extension {
-			extLits[k] = fmt.Sprintf("%q", v)
+		// Use chacha8-derived pick directly when available — solver
+		// preferences for UninterpretedSort inputs don't reliably
+		// constrain the model on the goivy side. The chacha8 stream
+		// stays aligned with cpp's randomize() consumption order.
+		if g.inputHasPick(p) {
+			w.linef("\t%s = (%s == 1)", field, pickName)
+		} else {
+			w.linef("\t%s = pickBoolOrChoose(g.sol, modelResult, __in%d)", field, i)
 		}
-		w.linef("\t%s = %s(pickEnumOrChoose(g.sol, modelResult, __in%d, []string{%s}))",
-			field, typeName, i, strings.Join(extLits, ", "))
+	case isLogicEnumeratedSort(p.CSort):
+		if g.inputHasPick(p) {
+			w.linef("\t%s = %s(%s)", field, typeName, pickName)
+		} else {
+			es := p.CSort.(*goivy.LogicEnumeratedSort)
+			extLits := make([]string, len(es.Extension))
+			for k, v := range es.Extension {
+				extLits[k] = fmt.Sprintf("%q", v)
+			}
+			w.linef("\t%s = %s(pickEnumOrChoose(g.sol, modelResult, __in%d, []string{%s}))",
+				field, typeName, i, strings.Join(extLits, ", "))
+		}
 	case card > 0 && goIsAnyIntegerType(g, p.CSort):
-		w.linef("\t%s = %s(pickUintOrChoose(g.sol, modelResult, __in%d, %d))", field, typeName, i, card)
+		if g.inputHasPick(p) {
+			w.linef("\t%s = %s(%s)", field, typeName, pickName)
+		} else {
+			w.linef("\t%s = %s(pickUintOrChoose(g.sol, modelResult, __in%d, %d))", field, typeName, i, card)
+		}
 	default:
 		if recName, ok := g.destructorStructName(p.CSort); ok {
 			g.emitStructInputAssembly(w, i, typeName, recName)
@@ -985,13 +1095,34 @@ func (g *Generator) emitStructInputAssembly(w *goWriter, i int, typeName, recNam
 	fields := g.destructorScalarFields(recName)
 	for _, f := range fields {
 		fcard := goSortCard(g, f.Sort)
+		pickName := fmt.Sprintf("__pick_in%d_%s", i, goIdent(f.Name))
 		switch ft := g.goType(f.Sort); {
 		case ft == "bool":
-			w.linef("v%d_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s)",
-				i, goIdent(f.Name), i, goIdent(f.Name))
+			if g.fieldHasPick(f) {
+				w.linef("v%d_%s := (%s == 1)", i, goIdent(f.Name), pickName)
+			} else {
+				w.linef("v%d_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s)",
+					i, goIdent(f.Name), i, goIdent(f.Name))
+			}
+		case isLogicEnumeratedSort(f.Sort):
+			if g.fieldHasPick(f) {
+				w.linef("v%d_%s := %s(%s)", i, goIdent(f.Name), ft, pickName)
+			} else {
+				es := f.Sort.(*goivy.LogicEnumeratedSort)
+				extLits := make([]string, len(es.Extension))
+				for k, v := range es.Extension {
+					extLits[k] = fmt.Sprintf("%q", v)
+				}
+				w.linef("v%d_%s := %s(pickEnumOrChoose(g.sol, modelResult, __in%d_%s, []string{%s}))",
+					i, goIdent(f.Name), ft, i, goIdent(f.Name), strings.Join(extLits, ", "))
+			}
 		case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
-			w.linef("v%d_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s, %d))",
-				i, goIdent(f.Name), ft, i, goIdent(f.Name), fcard)
+			if g.fieldHasPick(f) {
+				w.linef("v%d_%s := %s(%s)", i, goIdent(f.Name), ft, pickName)
+			} else {
+				w.linef("v%d_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s, %d))",
+					i, goIdent(f.Name), ft, i, goIdent(f.Name), fcard)
+			}
 		default:
 			w.linef("var v%d_%s %s", i, goIdent(f.Name), ft)
 			w.linef("_ = v%d_%s", i, goIdent(f.Name))

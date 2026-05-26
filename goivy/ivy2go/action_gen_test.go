@@ -242,12 +242,16 @@ action set_to_x(p: point) = {
 			t.Errorf("missing per-field input decl %q:\n%s", want, actions)
 		}
 	}
-	// Per-field pick + struct assembly in generate().
-	if !strings.Contains(actions, "v0_x := pickBoolOrChoose(g.sol, modelResult, __in0_x)") {
-		t.Errorf("generate() should pick __in0_x via pickBoolOrChoose:\n%s", actions)
+	// Per-field pick + struct assembly in generate(). After the
+	// chacha8 randomize-preference port (task #79), record fields
+	// use the chacha8-derived `__pick_in0_<field>` directly so the
+	// PRNG stream stays aligned with cpp's ivy_z3_gen.hpp
+	// random_range consumption order.
+	if !strings.Contains(actions, "v0_x := (__pick_in0_x == 1)") {
+		t.Errorf("generate() should bind v0_x from __pick_in0_x:\n%s", actions)
 	}
-	if !strings.Contains(actions, "v0_y := pickBoolOrChoose(g.sol, modelResult, __in0_y)") {
-		t.Errorf("generate() should pick __in0_y:\n%s", actions)
+	if !strings.Contains(actions, "v0_y := (__pick_in0_y == 1)") {
+		t.Errorf("generate() should bind v0_y from __pick_in0_y:\n%s", actions)
 	}
 	if !strings.Contains(actions, "v0 := Point{X: v0_x, Y: v0_y}") {
 		t.Errorf("generate() should assemble Point{X: …, Y: …}:\n%s", actions)
@@ -765,9 +769,11 @@ action set_flag = {
 }
 
 func TestEmit_TestTarget_GeneratePicksInputsByCardinality(t *testing.T) {
-	// Post-OPEN-055.1: input picking goes through pickBoolOrChoose
-	// (which itself falls back to ivyChoose when the model can't
-	// supply a value).
+	// Post-task-#79: scalar inputs (bool, enum, range, integer) use
+	// the chacha8-derived `__pick_in<i>` directly so the PRNG stream
+	// stays byte-aligned with cpp's ivy_z3_gen.hpp random_range
+	// consumption order. Record/variant inputs still route per-field
+	// values through pickBoolOrChoose/pickEnumOrChoose etc.
 	mod := compileIvySource(t, `
 relation flag
 action set_flag(b: bool) = {
@@ -779,8 +785,11 @@ action set_flag(b: bool) = {
 		t.Fatalf("Generate: %v", err)
 	}
 	actions := out.Files["actions.go"]
-	if !strings.Contains(actions, "pickBoolOrChoose(g.sol, modelResult,") {
-		t.Errorf("bool input should be picked via pickBoolOrChoose, got:\n%s", actions)
+	if !strings.Contains(actions, "__pick_in0 := ivyRandomRange(0, 1)") {
+		t.Errorf("bool input should consume one chacha8 sample via ivyRandomRange:\n%s", actions)
+	}
+	if !strings.Contains(actions, "= (__pick_in0 == 1)") {
+		t.Errorf("bool input field should bind directly from __pick_in0:\n%s", actions)
 	}
 }
 

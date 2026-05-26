@@ -2,6 +2,7 @@ package ivy2go
 
 import (
 	"os/exec"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -34,8 +35,11 @@ relation link(N1: node, N2: node)
 	}
 	text := out.Files["state.go"]
 	// Two-arg over 4-elem domains → array storage `[4][4]bool`.
-	if !strings.Contains(text, "Link [4][4]bool") {
-		t.Errorf("expected `Link [4][4]bool`, got:\n%s", text)
+	// gofmt aligns adjacent struct fields, so accept any whitespace
+	// between `Link` and `[4][4]bool` (single space when there are
+	// no co-aligned fields, multiple spaces when there are).
+	if !regexp.MustCompile(`Link\s+\[4\]\[4\]bool`).MatchString(text) {
+		t.Errorf("expected `Link [4][4]bool` field, got:\n%s", text)
 	}
 }
 
