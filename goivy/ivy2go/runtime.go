@@ -107,6 +107,23 @@ func (g *Generator) emitRuntimeImplPreamble(w *goWriter) {
 	w.line("const ivyRandMaxPlus1 = 2147483648.0")
 	w.blank()
 
+	w.line("// ivyRandomRange mirrors ivy_z3_gen.hpp's `random_range` —")
+	w.line("// a single chacha8 Uint64() reduced into [lo, hi]. The cpp")
+	w.line("// implementation does `res = __chacha8c_rng.Uint64(); if (card")
+	w.line("// != -1) res = res % (card+1) + lo`. Both ivy2cpp-emitted and")
+	w.line("// ivy2go-emitted binaries consume one chacha8 word per action")
+	w.line("// input under matching seeds, so the per-input randomization")
+	w.line("// preferences pinned into the solver are byte-equivalent.")
+	w.line("func ivyRandomRange(lo, hi uint64) uint64 {")
+	w.line("\tres := ivyRand.Uint64()")
+	w.line("\tcard := hi - lo")
+	w.line("\tif card != ^uint64(0) {")
+	w.line("\t\tres = res%(card+1) + lo")
+	w.line("\t}")
+	w.line("\treturn res")
+	w.line("}")
+	w.blank()
+
 	// ivyTraceOut is the io.Writer trace writes target. Default is
 	// os.Stdout; tests / embedders can override. Always declared
 	// for non-class targets so action-prologue traces (`< name(…)`)

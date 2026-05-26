@@ -1,7 +1,10 @@
 #pragma once
 
 #include "ivy_hash.hpp"
+#include "chacha8c.hpp"
 #include "z3++.h"
+
+extern chacha8c::ChaCha8 __chacha8c_rng;
 
 #include <cstdlib>
 #include <string>
@@ -82,9 +85,9 @@ class __random_string_class {
 public:
     std::string operator()() {
         std::string res;
-        res.push_back('a' + (rand() % 26));
-        while (rand() % 2)
-            res.push_back('a' + (rand() % 26));
+        res.push_back('a' + (__chacha8c_rng.Rand() % 26));
+        while (__chacha8c_rng.Rand() % 2)
+            res.push_back('a' + (__chacha8c_rng.Rand() % 26));
         return res;
     }
 };
@@ -123,7 +126,7 @@ inline void __randomize<bool>(gen &g, const z3::expr &v, const std::string &sort
 template <>
 inline void __randomize<__strlit>(gen &g, const z3::expr &apply_expr, const std::string &sort_name) {
     z3::sort range = apply_expr.get_sort();
-    __strlit value = (rand() % 2) ? "a" : "b";
+    __strlit value = (__chacha8c_rng.Rand() % 2) ? "a" : "b";
     z3::expr val_expr = g.int_to_z3(range, value);
     z3::expr pred = apply_expr == val_expr;
     g.add_alit(pred);

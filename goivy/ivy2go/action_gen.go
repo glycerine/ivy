@@ -389,9 +389,28 @@ func (g *Generator) emitActionGenGenerate(w *goWriter, plan *actionGenPlan) {
 	w.line("\tfacts := stateFactsAsClauses(state)")
 	w.linef("\tpreFmla := %s", code)
 	w.line("\tpreClauses := conjClauses(facts, preFmla)")
+
+	// Per-input randomization preferences. Mirrors cpp's per-input
+	// `g.randomize(__in, "<sort>")` calls in
+	// ivy2cpp/action_gen.go:326 + emitPythonTestRandomizeSolver,
+	// which consume one chacha8 word per input via random_range and
+	// assert `__in == picked` as an alit. We assert the equalities
+	// as hard constraints and retry without them on UNSAT (cpp does
+	// alit-shrinking; the simpler all-or-nothing fallback still
+	// preserves byte-equivalent PRNG consumption order for the common
+	// case where preferences are satisfiable).
+	g.emitInputPreferences(w, plan)
+
 	w.line("\tvar modelResult *goivy.ModelResult")
 	w.line("\tif g.sol != nil {")
-	w.line("\t\tmodelResult, _ = g.sol.GetModelClauses(preClauses)")
+	w.line("\t\tif len(__prefs) > 0 {")
+	w.line("\t\t\tmodelResult, _ = g.sol.GetModelClauses(conjClauses(preClauses, __prefs...))")
+	w.line("\t\t\tif modelResult == nil {")
+	w.line("\t\t\t\tmodelResult, _ = g.sol.GetModelClauses(preClauses)")
+	w.line("\t\t\t}")
+	w.line("\t\t} else {")
+	w.line("\t\t\tmodelResult, _ = g.sol.GetModelClauses(preClauses)")
+	w.line("\t\t}")
 	w.line("\t}")
 	w.line("\tif modelResult == nil {")
 	w.line("\t\t// UNSAT: action's precondition cannot be satisfied in the current state — skip.")
@@ -410,6 +429,80 @@ func (g *Generator) emitActionGenGenerate(w *goWriter, plan *actionGenPlan) {
 	w.line("}")
 	w.blank()
 	g.Ctx.OnceGlobals["__need_pickinput"] = true
+}
+
+// emitInputPreferences emits the per-input random-preference loop:
+// for each scalar input (bool, enum, integer-range), pick a value via
+// ivyRandomRange (one chacha8 word per input — matching cpp's
+// ivy_z3_gen.hpp `random_range` after the chacha8 migration) and
+// append `__in_i == picked` as a preference Expr. The caller
+// AND-ANDs them into the solver query; on UNSAT it retries without
+// the preference list. Record / variant inputs would need per-field
+// preferences; we currently emit no preferences for them (the
+// solver-picked model still satisfies the precondition, just without
+// preferring a chacha8-picked value).
+func (g *Generator) emitInputPreferences(w *goWriter, plan *actionGenPlan) {
+	w.line("\t__prefs := []goivy.Expr{}")
+	for i, p := range plan.inputs {
+		if p == nil {
+			continue
+		}
+		if plan.oldPreClauses != nil {
+			if _, defidx := plan.oldPreClauses.DefIdx[goivy.Key(p)]; defidx {
+				// Input pinned by a def — cpp skips randomize for it
+				// (action_gen.go:322 `if defidx { continue }`).
+				continue
+			}
+		}
+		g.emitOneInputPreference(w, i, p)
+	}
+}
+
+// emitOneInputPreference emits the per-input preference body.
+// Currently handles bool, enum, and range/integer scalars. Other
+// shapes (records, variants, function-sorted) are skipped so the
+// solver picks freely.
+func (g *Generator) emitOneInputPreference(w *goWriter, i int, p *goivy.Const) {
+	sortCode, ok := g.reifySortAsGoCode(p.CSort)
+	if !ok {
+		return
+	}
+	switch s := p.CSort.(type) {
+	case *goivy.BooleanSort:
+		_ = s
+		w.linef("\t{")
+		w.linef("\t\t__picked := ivyRandomRange(0, 1)")
+		w.linef("\t\t__rhs := goivy.False")
+		w.linef("\t\tif __picked == 1 { __rhs = goivy.True }")
+		w.linef("\t\t_ = __in%d", i)
+		w.linef("\t\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: __rhs})", i)
+		w.linef("\t}")
+	case *goivy.LogicEnumeratedSort:
+		if len(s.Extension) == 0 {
+			return
+		}
+		extLits := make([]string, len(s.Extension))
+		for k, v := range s.Extension {
+			extLits[k] = fmt.Sprintf("%q", v)
+		}
+		w.linef("\t{")
+		w.linef("\t\t__sort := %s", sortCode)
+		w.linef("\t\t__names := []string{%s}", strings.Join(extLits, ", "))
+		w.linef("\t\t__picked := ivyRandomRange(0, %d)", len(s.Extension)-1)
+		w.linef("\t\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(__names[__picked], __sort)})", i)
+		w.linef("\t}")
+	default:
+		card := goSortCard(g, p.CSort)
+		if card <= 0 {
+			return
+		}
+		w.linef("\t{")
+		w.linef("\t\t__sort := %s", sortCode)
+		w.linef("\t\t__picked := ivyRandomRange(0, %d)", card-1)
+		w.linef("\t\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(strconv.FormatUint(__picked, 10), __sort)})", i)
+		w.linef("\t}")
+		g.Ctx.AddImport("runtime", "strconv", "")
+	}
 }
 
 // emitActionGenExecute emits the execute(state) method: trace +

@@ -1,7 +1,10 @@
 #pragma once
 
 #include "ivy_hash.hpp"
+#include "chacha8c.hpp"
 #include "z3++.h"
+
+extern chacha8c::ChaCha8 __chacha8c_rng;
 
 #include <algorithm>
 #include <cassert>
@@ -333,7 +336,12 @@ public:
 
     unsigned long long random_range(std::pair<unsigned long long, unsigned long long> rng) {
         unsigned long long res = 0;
-        for (unsigned i = 0; i < 4; i++) res = (res << 16) | (rand() & 0xffff);
+        // chacha8c: single Uint64 produces the same 64-bit width as the
+        // historical 4 × (rand() & 0xffff). Routing through the
+        // chacha8c PRNG keeps action-input randomization byte-equivalent
+        // across ivy_to_cpp (Python), ivy2cpp (Go-emitted C++), and
+        // ivy2go (Go-emitted Go).
+        res = __chacha8c_rng.Uint64();
         unsigned long long card = rng.second - rng.first;
         if (card != (unsigned long long)(-1))
             res = (res % (card + 1)) + rng.first;
@@ -483,7 +491,7 @@ public:
             if (__ivy_modelfile.is_open())
                 for (unsigned i = 0; i < core.size(); i++)
                     __ivy_modelfile << "core: " << core[i] << std::endl;
-            unsigned idx = rand() % core.size();
+            unsigned idx = (unsigned)(__chacha8c_rng.Rand()) % core.size();
             z3::expr to_delete = core[idx];
             if (__ivy_modelfile.is_open())
                 __ivy_modelfile << "to delete: " << to_delete << std::endl;
