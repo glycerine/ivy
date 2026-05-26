@@ -41,9 +41,121 @@ type actionGenPlan struct {
 	act            goivy.Action // possibly wrapped by before_export / ext_preconds
 	origAct        goivy.Action
 	inputs         []*goivy.Const
+	oldPreClauses  *goivy.Clauses
+	paramDefs      []goivy.Expr
 	preFmla        goivy.Expr
+	used           *goivy.InsMap[goivy.NodeKey, goivy.Expr]
 	fallback       bool
 	fallbackReason string
+}
+
+// preDefinedNames mirrors ivy2cpp/action_gen.go:709. Returns the set
+// of defining-symbol names for each Def in `clauses`.
+func preDefinedNames(clauses *goivy.Clauses) map[string]bool {
+	out := make(map[string]bool)
+	if clauses == nil {
+		return out
+	}
+	for _, d := range clauses.Defs {
+		def := d.Defines()
+		if c, ok := def.(*goivy.Const); ok {
+			out[c.Name] = true
+		}
+	}
+	return out
+}
+
+// preUsedContains mirrors ivy2cpp/action_gen.go:725.
+func preUsedContains(used *goivy.InsMap[goivy.NodeKey, goivy.Expr], name string) bool {
+	if used == nil {
+		return false
+	}
+	for _, sym := range used.All() {
+		if c, ok := sym.(*goivy.Const); ok && c.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
+// defedParamSet mirrors ivy2cpp/action_gen.go:738. Returns the
+// NodeKey set of LHS Consts of each paramDef.
+func (p *actionGenPlan) defedParamSet() map[goivy.NodeKey]bool {
+	out := make(map[goivy.NodeKey]bool, len(p.paramDefs))
+	for _, pd := range p.paramDefs {
+		eq, ok := pd.(*goivy.Eq)
+		if !ok {
+			continue
+		}
+		if c, ok := eq.T1.(*goivy.Const); ok {
+			out[goivy.Key(c)] = true
+		}
+	}
+	return out
+}
+
+// exprRoot mirrors ivy2cpp/action_gen.go:754. Peels single-arg
+// destructor applications to reach the receiver leaf.
+func exprRoot(f goivy.Expr) goivy.Expr {
+	for {
+		ap, ok := f.(*goivy.Apply)
+		if !ok || len(ap.Terms) != 1 {
+			return f
+		}
+		f = ap.Terms[0]
+	}
+}
+
+// exprAsConst mirrors ivy2cpp/action_gen.go:767.
+func exprAsConst(f goivy.Expr) (*goivy.Const, bool) {
+	switch n := f.(type) {
+	case *goivy.Const:
+		return n, true
+	case *goivy.Apply:
+		if c, ok := n.Func.(*goivy.Const); ok && len(n.Terms) == 0 {
+			return c, true
+		}
+	}
+	return nil, false
+}
+
+// formulaToSmtlib mirrors ivy2cpp/action_gen.go:694. Translates an
+// Ivy formula into its SMT-LIB textual form via goivy.Solver +
+// Translator. Useful for cross-referencing the precondition shape
+// against ivy2cpp's emitted assertion strings.
+//
+// Returns ("true", true) for nil input, and ("", false) when the
+// translator errors out.
+func (g *Generator) formulaToSmtlib(fmla goivy.Expr) (string, bool) {
+	if fmla == nil {
+		return "true", true
+	}
+	solver := goivy.NewSolver(g.Mod, nil)
+	defer solver.Close()
+	z3expr, err := solver.FormulaToZ3(fmla)
+	if err != nil {
+		return "", false
+	}
+	return cleanSmtlib(z3expr.String()), true
+}
+
+// cleanSmtlib mirrors ivy2cpp/solver_emit.go:30. Applies Python's
+// two SMT-LIB sanitization replacements so emitted text matches
+// ivy2cpp's reference output.
+func cleanSmtlib(s string) string {
+	s = strings.ReplaceAll(s, "|!1", "!1|")
+	s = strings.ReplaceAll(s, `\|`, "")
+	return s
+}
+
+// stripZ3Bars mirrors ivy2cpp/initial_state.go:250. Removes the
+// surrounding `|…|` quoting Z3 applies to identifiers with special
+// characters.
+func stripZ3Bars(s string) string {
+	if len(s) >= 2 && s[0] == '|' && s[len(s)-1] == '|' {
+		return s[1 : len(s)-1]
+	}
+	return s
 }
 
 // buildActionGenPlan mirrors ivy2cpp/action_gen.go:51 buildActionGenPlan.

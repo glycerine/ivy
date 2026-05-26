@@ -357,25 +357,16 @@ func (g *Generator) aliasForSymbol(e goivy.Expr) (goivy.Expr, bool) {
 	return repl, true
 }
 
-// isDefinitionName mirrors ivy2cpp's same-named helper: returns true
-// when `name` is a definitional axiom (renders as `name()`).
+// isDefinitionName mirrors ivy2cpp/definitions.go:103. Routes through
+// the literal-port allDefinitions catalog so derived AND native
+// definitions both register.
 func (g *Generator) isDefinitionName(name string) bool {
-	if g == nil || g.Mod == nil || name == "" {
+	if g == nil || name == "" {
 		return false
 	}
-	for _, d := range g.Mod.Definitions {
-		if d == nil {
-			continue
-		}
-		if def, ok := d.Formula.(*goivy.LogicDefinition); ok {
-			if c, ok := def.Lhs.(*goivy.Const); ok && c.Name == name {
-				return true
-			}
-			if a, ok := def.Lhs.(*goivy.Apply); ok {
-				if goivy.ExprName(a.Func) == name {
-					return true
-				}
-			}
+	for _, d := range g.allDefinitions() {
+		if d.Name == name {
+			return true
 		}
 	}
 	return false

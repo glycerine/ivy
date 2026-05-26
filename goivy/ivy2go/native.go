@@ -198,5 +198,34 @@ func (g *Generator) dispatchNativeGoBlock(blk nativeGoBlock) {
 	}
 }
 
+// isCallbackAction mirrors ivy2cpp/native.go:484. Reports whether
+// arg references (via Relname) an action declared in the current
+// module. Used by callers that route action references through
+// thunk wrappers.
+func (g *Generator) isCallbackAction(arg goivy.Node) (string, bool) {
+	if g == nil {
+		return "", false
+	}
+	return callbackActionName(g.Mod, arg)
+}
+
+// callbackActionName mirrors ivy2cpp/native.go:491. Pure function;
+// extracted so the native_thunk catalog can call it without a
+// Generator instance.
+func callbackActionName(mod *goivy.Module, arg goivy.Node) (string, bool) {
+	if mod == nil || mod.Actions == nil {
+		return "", false
+	}
+	rn, ok := arg.(interface{ Relname() string })
+	if !ok {
+		return "", false
+	}
+	name := rn.Relname()
+	if _, ok := mod.Actions.Get2(name); !ok {
+		return "", false
+	}
+	return name, true
+}
+
 // Silence unused-import diagnostics in degenerate code paths.
 var _ = fmt.Sprintf

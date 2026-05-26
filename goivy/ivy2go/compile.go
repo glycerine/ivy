@@ -287,18 +287,95 @@ func applySessionParameters(mod *goivy.Module, cfg Config) {
 // prepareModuleForGo mirrors ivy2cpp/compile.go prepareModuleForCPP.
 // Logic is identical because both packages need the same module
 // massaging (the _generating symbol, sort ordering, props→axioms,
-// invariants→action assumptions). M5 may refine if Go emission needs
-// further shape changes.
+// invariants→action assumptions).
 func prepareModuleForGo(mod *goivy.Module, cfg Config) {
 	_ = cfg
+	pruneStateStoresToSignature(mod)
 	ensureGeneratingSymbol(mod)
 	ensureSortOrderForGo(mod)
 	if len(mod.LabeledProps) > 0 {
 		mod.LabeledAxioms = append(mod.LabeledAxioms, mod.LabeledProps...)
 		mod.LabeledProps = nil
 	}
-	// LabeledConjs → action assumptions: deferred to M4/M5 alongside
-	// action emission (mirrors ivy2cpp/compile.go addConjsToActions).
+	addConjsToActions(mod)
+}
+
+// pruneStateStoresToSignature mirrors ivy2cpp/compile.go:121. When
+// the isolate config requested symbol filtering or cone-of-influence
+// pruning, drop module relations / functions whose names are no
+// longer in the signature.
+func pruneStateStoresToSignature(mod *goivy.Module) {
+	if mod == nil || mod.Sig == nil || mod.Cfg == nil || mod.Cfg.IsolateCfg == nil {
+		return
+	}
+	if !mod.Cfg.IsolateCfg.FilterSymbols && !mod.Cfg.IsolateCfg.ConeOfInfluence {
+		return
+	}
+	keep := map[string]bool{}
+	for name := range mod.Sig.Symbols.All() {
+		keep[name] = true
+	}
+	if mod.Relations != nil {
+		for key := range mod.Relations.All() {
+			name := goivy.SymbolNameFromKey(key)
+			if !keep[name] {
+				mod.Relations.Delkey(key)
+			}
+		}
+	}
+	if mod.Functions != nil {
+		for key := range mod.Functions.All() {
+			name := goivy.SymbolNameFromKey(key)
+			if !keep[name] {
+				mod.Functions.Delkey(key)
+			}
+		}
+	}
+}
+
+// addConjsToActions mirrors ivy2cpp/compile.go:714. Walks the
+// module's labeled conjectures (invariants) and appends an
+// AssertAction for each to the body of every public action. Also
+// appends them to InitialActions and registers a synthetic
+// `__check_invariants` Initializer so the same checks run at startup.
+//
+// Idempotent: returns immediately if a `__check_invariants`
+// initializer already exists.
+func addConjsToActions(mod *goivy.Module) {
+	if mod == nil || mod.Actions == nil || mod.PublicActions == nil {
+		return
+	}
+	for _, init := range mod.Initializers {
+		if init.Name == "__check_invariants" {
+			return
+		}
+	}
+	var asserts []goivy.Expr
+	for _, conj := range mod.LabeledConjs {
+		if conj == nil {
+			continue
+		}
+		fmla, ok := conj.Formula.(goivy.Expr)
+		if !ok {
+			continue
+		}
+		a := goivy.NewAssertAction(fmla)
+		a.SetLineno(conj.GetLineno())
+		asserts = append(asserts, a)
+	}
+	if len(asserts) == 0 {
+		return
+	}
+	seq := goivy.NewSequence(asserts...)
+	for name, action := range mod.Actions.All() {
+		if mod.PublicActions.Get(name) {
+			mod.Actions.Set(name, goivy.AppendToAction(action, seq))
+		}
+	}
+	mod.Initializers = append(mod.Initializers, goivy.NamedAction{Name: "__check_invariants", Action: seq})
+	initSeq := goivy.NewSequence(asserts...)
+	initSeq.SetFormalParams([]*goivy.Const{})
+	mod.InitialActions = append(mod.InitialActions, initSeq)
 }
 
 func ensureGeneratingSymbol(mod *goivy.Module) {

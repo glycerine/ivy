@@ -39,7 +39,7 @@ func (g *Generator) emitAction(w *goWriter, act goivy.Action) {
 	case *goivy.LogicHavocAction:
 		g.emitHavoc(w, a)
 	case *goivy.LogicSetAction:
-		g.unsupported(w, "set-action emission deferred (M5)")
+		g.emitSet(w, a)
 	case *goivy.LogicAssertAction:
 		g.emitAssertLike(w, "ivyAssert", a.Formula, linenoStr(a.GetLineno()))
 	case *goivy.LogicRequiresAction:
@@ -63,9 +63,9 @@ func (g *Generator) emitAction(w *goWriter, act goivy.Action) {
 	case *goivy.LogicLocalAction:
 		g.emitLocal(w, a)
 	case *goivy.LogicLetAction:
-		g.unsupported(w, "let-action emission deferred (M5)")
+		g.emitLet(w, a)
 	case *goivy.LogicBindOldsAction:
-		g.unsupported(w, "bind-olds emission deferred (M5)")
+		g.emitBindOlds(w, a)
 	case *goivy.LogicNativeAction:
 		g.emitNativeAction(w, a)
 	case *goivy.LogicDebugAction:
@@ -80,11 +80,11 @@ func (g *Generator) emitAction(w *goWriter, act goivy.Action) {
 	case *goivy.IgnoreAction:
 		return
 	case *goivy.LogicAssignFieldAction:
-		g.unsupported(w, "assign-field emission deferred (M8)")
+		g.emitAssignField(w, a)
 	case *goivy.LogicNullFieldAction:
-		g.unsupported(w, "null-field emission deferred (M8)")
+		g.emitNullField(w, a)
 	case *goivy.LogicCopyFieldAction:
-		g.unsupported(w, "copy-field emission deferred (M8)")
+		g.emitCopyField(w, a)
 	case *goivy.LogicThunkAction:
 		g.unsupported(w, "thunk reached emit (expected desugared upstream): %s at %s",
 			a.String(), a.GetLineno().String())
@@ -116,6 +116,163 @@ func (g *Generator) emitHavoc(w *goWriter, a *goivy.LogicHavocAction) {
 		target = a.Target.String()
 	}
 	g.unsupported(w, "havoc reached emit (expected lowered upstream): %s at %s", target, a.GetLineno().String())
+}
+
+// emitSet ports ivy2cpp/action.go emitSet. Lowers a constraint-style
+// `set` action: open one loop per free variable of the target, then
+// assign the literal's value into the indexed LHS.
+func (g *Generator) emitSet(w *goWriter, a *goivy.LogicSetAction) {
+	if a.Lit == nil {
+		g.unsupported(w, "unsupported set literal: nil")
+		return
+	}
+	target, value := setTargetAndValue(a.Lit)
+	loops, ok := g.openAssignmentLoops(w, target)
+	if !ok {
+		return
+	}
+	lhs, err := g.emitExpr(target)
+	if err != nil {
+		g.unsupported(w, "unsupported set literal: %s", err.Error())
+		g.closeAssignmentLoops(w, loops)
+		return
+	}
+	w.linef("%s = %s", lhs, value)
+	g.closeAssignmentLoops(w, loops)
+}
+
+// setTargetAndValue ports ivy2cpp/action.go setTargetAndValue.
+func setTargetAndValue(lit goivy.Expr) (goivy.Expr, string) {
+	switch n := lit.(type) {
+	case *goivy.LogicLiteral:
+		if n.Polarity == 0 {
+			return n.Atom, "false"
+		}
+		return n.Atom, "true"
+	case *goivy.LogicNot:
+		return n.Body, "false"
+	default:
+		return lit, "true"
+	}
+}
+
+// emitLet ports ivy2cpp/action.go emitLet. Maintains exprAliases so
+// references in the body lower to the bound RHS.
+func (g *Generator) emitLet(w *goWriter, a *goivy.LogicLetAction) {
+	prev := g.exprAliases
+	next := make(map[string]goivy.Expr, len(prev)+len(a.Bindings))
+	for k, v := range prev {
+		next[k] = v
+	}
+	for _, binding := range a.Bindings {
+		children := binding.Children()
+		if len(children) < 2 {
+			g.unsupported(w, "unsupported let binding %T: %s", binding, binding.String())
+			continue
+		}
+		name := goivy.ExprName(children[0])
+		if name == "" {
+			g.unsupported(w, "unsupported let binding lhs %T: %s", children[0], children[0].String())
+			continue
+		}
+		next[name] = children[1]
+	}
+	g.exprAliases = next
+	w.open("{")
+	if bodyAct, ok := a.Body.(goivy.Action); ok {
+		g.emitAction(w, bodyAct)
+	} else {
+		g.unsupported(w, "unsupported let body %T", a.Body)
+	}
+	w.close("")
+	g.exprAliases = prev
+}
+
+// emitBindOlds ports ivy2cpp/action.go emitBindOlds — which itself
+// mirrors Python's lack of an emit_bind_olds: BindOldsAction is
+// supposed to be eliminated upstream by bind_olds_action during
+// int_update. Reaching emit is a bug; surface it.
+func (g *Generator) emitBindOlds(w *goWriter, a *goivy.LogicBindOldsAction) {
+	inner := "<nil>"
+	if a.Inner != nil {
+		inner = fmt.Sprintf("%T", a.Inner)
+	}
+	g.unsupported(w, "bindolds reached emit (Python has no emit_bind_olds): inner=%s at %s",
+		inner, a.GetLineno().String())
+}
+
+// emitAssignField ports ivy2cpp/action.go emitAssignField. Synthesises
+// an apply(field, obj) LHS and delegates to emitAssign so the field
+// store picks up the same variant-upcast, two-phase, and thunk
+// handling as a normal assignment.
+func (g *Generator) emitAssignField(w *goWriter, a *goivy.LogicAssignFieldAction) {
+	if a == nil || a.Field == nil || a.Obj == nil {
+		g.unsupported(w, "unsupported field assignment: nil components")
+		return
+	}
+	lhs := goivy.NewApplyUnchecked(a.Field, a.Obj)
+	synth := goivy.NewAssignAction(lhs, a.Value)
+	g.emitAssign(w, synth)
+}
+
+// emitNullField ports ivy2cpp/action.go emitNullField. Sets a field
+// to the zero value of its range sort.
+func (g *Generator) emitNullField(w *goWriter, a *goivy.LogicNullFieldAction) {
+	lhs, err := g.emitFieldRef(a.Obj, a.Field)
+	if err != nil {
+		g.unsupported(w, "unsupported null field lhs: %s", err.Error())
+		return
+	}
+	fieldSort, err := fieldRangeSort(a.Field)
+	if err != nil {
+		g.unsupported(w, "unsupported null field sort: %s", err.Error())
+		return
+	}
+	w.linef("%s = %s", lhs, g.goZeroValue(fieldSort))
+}
+
+// emitCopyField ports ivy2cpp/action.go emitCopyField. Copies one
+// destructor field into another (dst.field = src.srcField).
+func (g *Generator) emitCopyField(w *goWriter, a *goivy.LogicCopyFieldAction) {
+	lhs, err := g.emitFieldRef(a.Dst, a.Field)
+	if err != nil {
+		g.unsupported(w, "unsupported copy field lhs: %s", err.Error())
+		return
+	}
+	rhs, err := g.emitFieldRef(a.Src, a.SrcField)
+	if err != nil {
+		g.unsupported(w, "unsupported copy field rhs: %s", err.Error())
+		return
+	}
+	w.linef("%s = %s", lhs, rhs)
+}
+
+// emitFieldRef ports ivy2cpp/action.go emitFieldRef. Emits `obj.<Field>`
+// using the goExportedName convention destructor structs already use.
+func (g *Generator) emitFieldRef(obj, field goivy.Expr) (string, error) {
+	if obj == nil || field == nil {
+		return "", fmt.Errorf("nil field reference")
+	}
+	objCode, err := g.emitExpr(obj)
+	if err != nil {
+		return "", err
+	}
+	fieldName := goivy.ExprName(field)
+	if fieldName == "" {
+		return "", fmt.Errorf("field has no name: %T", field)
+	}
+	return objCode + "." + goExportedName(memName(fieldName)), nil
+}
+
+// fieldRangeSort ports ivy2cpp/action.go fieldRangeSort.
+func fieldRangeSort(field goivy.Expr) (goivy.Sort, error) {
+	if field == nil {
+		return nil, fmt.Errorf("nil field")
+	}
+	if fs, ok := field.NodeSort().(*goivy.LogicFunctionSort); ok {
+		return fs.Range(), nil
+	}
+	return nil, fmt.Errorf("field %s does not have function sort", field.String())
 }
 
 // emitAssertLike ports ivy2cpp/action.go emitAssertLike.

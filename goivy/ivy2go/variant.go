@@ -33,6 +33,33 @@ func (g *Generator) variantSuperName(s goivy.Sort) (string, bool) {
 	return "", false
 }
 
+// variantUpcastExpr wraps an expression of a variant leaf sort in
+// the supertype constructor `New<Super><Leaf>(expr)`. Mirrors
+// ivy2cpp/variant.go:36 variantUpcastExpr. The Go-side constructor
+// shape is defined in emitVariantSuperStruct (variant.go:139).
+func (g *Generator) variantUpcastExpr(super, sub goivy.Sort, expr string) string {
+	superName, _ := g.variantSuperName(super)
+	if superName == "" {
+		superName = sortName(super)
+	}
+	subName := sortName(sub)
+	ctor := "New" + goExportedName(superName) + goExportedName(subName)
+	return fmt.Sprintf("%s(%s)", ctor, expr)
+}
+
+// maybeVariantUpcast returns expr unchanged unless value is a variant
+// leaf of target; in that case it wraps expr in the supertype
+// constructor. Mirrors ivy2cpp/variant.go:44 maybeVariantUpcast.
+// Without this, assignments like `root := l` (l: leaf, root: tree)
+// emit raw `s.Root = loc__l` which Go rejects ("cannot use Leaf as
+// Tree value in assignment").
+func (g *Generator) maybeVariantUpcast(target, value goivy.Sort, expr string) string {
+	if g != nil && g.Mod != nil && g.Mod.IsVariant(target, value) {
+		return g.variantUpcastExpr(target, value, expr)
+	}
+	return expr
+}
+
 // variantSubtypeName returns the subtype name iff s is a subtype of
 // some variant super.
 func (g *Generator) variantSubtypeName(s goivy.Sort) (string, bool) {

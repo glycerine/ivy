@@ -17,6 +17,11 @@ import "github.com/glycerine/ivy/goivy"
 // emitAssign dispatches by LHS shape. Mirrors ivy2cpp/action.go
 // emitAssign.
 func (g *Generator) emitAssign(w *goWriter, a *goivy.LogicAssignAction) {
+	// Extensional-relation reset shortcut (`r(X,...) := false`).
+	// Mirrors ivy2cpp/extensional.go:213 fast path.
+	if g.emitExtensionalRelationClear(w, a) {
+		return
+	}
 	vs := goivy.VariablesAstList(a.LHS)
 	if len(vs) == 0 {
 		g.emitAssignSimple(w, a)
@@ -99,6 +104,9 @@ func (g *Generator) emitAssignSimple(w *goWriter, a *goivy.LogicAssignAction) {
 		g.unsupported(w, "unsupported assignment rhs: %s", err.Error())
 		return
 	}
+	// Mirrors ivy2cpp/assign.go:39 — wrap variant leaf in supertype
+	// constructor when the LHS is the variant supertype.
+	rhs = g.maybeVariantUpcast(a.LHS.NodeSort(), a.RHS.NodeSort(), rhs)
 	if g.Config.Trace {
 		g.emitTracedLHS(w, a.LHS, rhs)
 	}
@@ -115,6 +123,37 @@ func (g *Generator) canOpenAssignmentLoops(vs []*goivy.LogicVariable) bool {
 		}
 	}
 	return true
+}
+
+// openAssignmentLoops ports ivy2cpp/action.go openAssignmentLoops.
+// Walks the free variables of lhs and opens one Go `for` loop per
+// variable. Returns the number of loops opened plus an ok flag; on
+// failure (e.g. a free variable has no computable bounds) it closes
+// any loops already opened and returns false so the caller doesn't
+// emit a half-formed block.
+func (g *Generator) openAssignmentLoops(w *goWriter, lhs goivy.Expr) (int, bool) {
+	vars := goivy.VariablesAstList(lhs)
+	opened := 0
+	for _, v := range vars {
+		header, _, err := g.loopHeaderForVar(v)
+		if err != nil {
+			g.unsupported(w, "unsupported assignment over free variable %s: %s", goIdent(v.Name), err.Error())
+			for i := 0; i < opened; i++ {
+				w.close("")
+			}
+			return 0, false
+		}
+		w.open(header)
+		opened++
+	}
+	return opened, true
+}
+
+// closeAssignmentLoops ports ivy2cpp/action.go closeAssignmentLoops.
+func (g *Generator) closeAssignmentLoops(w *goWriter, loops int) {
+	for i := 0; i < loops; i++ {
+		w.close("")
+	}
 }
 
 // emitAssignTwoPhase ports ivy2cpp/assign.go emitAssignTwoPhase. The

@@ -274,3 +274,152 @@ func (g *Generator) thunkEnvSymbols(vs []*goivy.LogicVariable, expr goivy.Expr) 
 	sort.Slice(env, func(i, j int) bool { return env[i].Name < env[j].Name })
 	return env
 }
+
+// thunkSubstituteArgs mirrors ivy2cpp/thunk.go:164. Replaces each
+// loop variable in vs with a Const named `arg` (single-var) or
+// `arg.arg<i>` (multi-var) so the body can lower through the
+// standard emitExpr path.
+func (g *Generator) thunkSubstituteArgs(vs []*goivy.LogicVariable, expr goivy.Expr) (goivy.Expr, error) {
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	if len(vs) == 1 {
+		v := vs[0]
+		subs[goivy.Key(v)] = goivy.NewConst("arg", v.VSort)
+	} else {
+		for i, v := range vs {
+			subs[goivy.Key(v)] = goivy.NewConst(fmt.Sprintf("arg.arg%d", i), v.VSort)
+		}
+	}
+	return goivy.Substitute(expr, subs)
+}
+
+// appliedFunctionConstKeys mirrors ivy2cpp/thunk.go:233. Walks expr
+// and returns the set of NodeKeys for function-sorted Const symbols
+// used in Apply positions — i.e. function symbols that are actually
+// invoked (rather than referenced as values).
+func appliedFunctionConstKeys(expr goivy.Expr) map[goivy.NodeKey]bool {
+	out := map[goivy.NodeKey]bool{}
+	var walk func(goivy.Expr)
+	walk = func(e goivy.Expr) {
+		if e == nil {
+			return
+		}
+		if app, ok := e.(*goivy.Apply); ok {
+			if c, ok := app.Func.(*goivy.Const); ok {
+				if _, isFn := c.CSort.(*goivy.LogicFunctionSort); isFn {
+					out[goivy.Key(c)] = true
+				}
+			}
+		}
+		for _, child := range e.Children() {
+			walk(child)
+		}
+	}
+	walk(expr)
+	return out
+}
+
+// expandDerivedForThunk mirrors ivy2cpp/thunk.go:255. Unfolds all
+// derived definitions in expr, iterating to a fixed point (capped at
+// definitions.Len()+4 passes to defend against pathological loops).
+func (g *Generator) expandDerivedForThunk(expr goivy.Expr) goivy.Expr {
+	defs := g.allDefinitions()
+	if len(defs) == 0 || expr == nil {
+		return expr
+	}
+	out := expr
+	for i := 0; i < len(defs)+4; i++ {
+		next := g.expandDerivedForThunkOnce(out, defs)
+		if next == nil || next.Equal(out) {
+			return out
+		}
+		out = next
+	}
+	return out
+}
+
+// expandDerivedForThunkOnce mirrors ivy2cpp/thunk.go:271. Single
+// pass over expr applying each derived definition's substitution.
+func (g *Generator) expandDerivedForThunkOnce(expr goivy.Expr, defs []derivedDefinition) goivy.Expr {
+	applySubs := map[goivy.NodeKey]goivy.SubstituteApplyFunc{}
+	constSubs := map[goivy.NodeKey]goivy.Expr{}
+	for _, d := range defs {
+		if d.Head == nil || d.RHS == nil {
+			continue
+		}
+		if len(d.Params) == 0 {
+			constSubs[goivy.Key(d.Head)] = d.RHS
+			continue
+		}
+		def := d
+		if !allDefinitionParamsVariables(def.Params) {
+			continue
+		}
+		applySubs[goivy.Key(def.Head)] = func(terms []goivy.Expr) goivy.Expr {
+			if len(terms) != len(def.Params) {
+				return goivy.MustApply(def.Head, terms...)
+			}
+			subs := make(map[goivy.NodeKey]goivy.Expr, len(def.Params))
+			for i, p := range def.Params {
+				subs[goivy.Key(p)] = terms[i]
+			}
+			rhs, err := goivy.Substitute(def.RHS, subs)
+			if err != nil {
+				return def.RHS
+			}
+			return rhs
+		}
+	}
+	out := expr
+	if len(applySubs) > 0 {
+		out = goivy.SubstituteApply(out, applySubs)
+	}
+	if len(constSubs) > 0 {
+		out = goivy.SubstituteConstantsExpr(out, constSubs)
+	}
+	return out
+}
+
+// allDefinitionParamsVariables mirrors ivy2cpp/thunk.go:311.
+func allDefinitionParamsVariables(params []goivy.Expr) bool {
+	for _, p := range params {
+		if _, ok := p.(*goivy.LogicVariable); !ok {
+			return false
+		}
+	}
+	return true
+}
+
+// allNumericOrEnumeratedConstants mirrors ivy2cpp/thunk.go:449.
+func (g *Generator) allNumericOrEnumeratedConstants(used *goivy.InsMap[goivy.NodeKey, goivy.Expr]) bool {
+	if used == nil {
+		return true
+	}
+	for _, sym := range used.All() {
+		if !g.isNumericOrEnumeratedConstant(sym) {
+			return false
+		}
+	}
+	return true
+}
+
+// isNumericOrEnumeratedConstant mirrors ivy2cpp/thunk.go:461.
+func (g *Generator) isNumericOrEnumeratedConstant(sym goivy.Expr) bool {
+	c, ok := sym.(*goivy.Const)
+	if !ok {
+		return false
+	}
+	if goivy.IsNumeral(c) {
+		return true
+	}
+	if _, ok := c.CSort.(*goivy.LogicEnumeratedSort); ok {
+		return true
+	}
+	if g != nil && g.Mod != nil && g.Mod.Sig != nil {
+		if itp, ok := g.Mod.Sig.Interp[sortName(c.CSort)]; ok {
+			if _, isEnum := itp.(*goivy.LogicEnumeratedSort); isEnum {
+				return true
+			}
+		}
+	}
+	return false
+}

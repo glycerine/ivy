@@ -170,7 +170,7 @@ func (g *Generator) generate() error {
 	g.emitRuntime()
 	g.emitNondet()
 	g.emitExtensional()
-	g.emitDefinitions()
+	g.emitDefinitionsStream()
 	g.emitThunks()
 	g.emitNative()
 	// REPL helpers are only useful for the repl target. The test
@@ -235,6 +235,8 @@ func (g *Generator) emitState() {
 
 func (g *Generator) emitActions() {
 	g.emitMethods(&g.actions)
+	g.emitDefinitions(&g.actions)
+	g.emitConstructors(&g.actions)
 	g.emitActionGenStructs(&g.actions)
 }
 
@@ -256,8 +258,9 @@ func (g *Generator) emitExtensional() {
 	g.extensional.line("// extensional.go: extensional relation iteration. Filled in by M4.")
 }
 
-func (g *Generator) emitDefinitions() {
-	g.definitions.line("// definitions.go: definitional axioms. Filled in by M4.")
+func (g *Generator) emitDefinitionsStream() {
+	g.definitions.line("// definitions.go: per-stream marker. Definition methods are")
+	g.definitions.line("// emitted into the actions stream via emitDefinitions(w).")
 }
 
 func (g *Generator) emitThunks() {

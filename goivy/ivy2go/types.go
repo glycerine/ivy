@@ -461,6 +461,61 @@ func (g *Generator) emitSortDecls(w *goWriter) {
 	for _, name := range g.Mod.SortOrder {
 		emitOne(name, false)
 	}
+	g.emitCTupleDecls(w)
+}
+
+// goCTuples mirrors ivy2cpp/types.go cppCTuples. Walks the module's
+// state symbols and returns the deduplicated set of function-sort
+// domain tuples whose arity is >= 2 and whose storage requires a
+// composite key (hash-thunk / map-backed function symbols).
+func (g *Generator) goCTuples() [][]goivy.Sort {
+	if g == nil || g.Mod == nil {
+		return nil
+	}
+	seen := map[string]bool{}
+	var out [][]goivy.Sort
+	addSort := func(s goivy.Sort) {
+		fs, ok := s.(*goivy.LogicFunctionSort)
+		if !ok || len(fs.Domain()) <= 1 {
+			return
+		}
+		st := goFunctionStorageFor(g, fs.Domain(), fs.Range())
+		if st.Kind != goStorageHashThunk {
+			return
+		}
+		key := goCTupleNameWith(g, fs.Domain())
+		if seen[key] {
+			return
+		}
+		seen[key] = true
+		out = append(out, fs.Domain())
+	}
+	for _, sym := range g.stateSymbols() {
+		addSort(sym.Sort)
+	}
+	return out
+}
+
+// emitCTupleDecls emits a Go struct declaration for each composite
+// key shape returned by goCTuples. Used as the map-key type of
+// hash-thunk-backed function symbols (e.g. `bvxor : byte * byte ->
+// byte` lowers to `map[tup__uint32__uint32]uint32`).
+//
+// Mirrors ivy2cpp/generator.go emitCTupleDecls (line 625). Go's
+// built-in map key comparability removes the need for a hash method
+// — for the all-comparable-fields case at least; nested map/slice
+// fields are not supported by the current storage classifier.
+func (g *Generator) emitCTupleDecls(w *goWriter) {
+	for _, dom := range g.goCTuples() {
+		name := goCTupleNameWith(g, dom)
+		w.linef("// %s is a composite map-key for a multi-arg function symbol.", name)
+		w.open(fmt.Sprintf("type %s struct {", name))
+		for i, s := range dom {
+			w.linef("Arg%d %s", i, g.goType(s))
+		}
+		w.close("")
+		w.blank()
+	}
 }
 
 // emitEnumDecl emits a Go enum-like type for a non-numeric Ivy enum:
