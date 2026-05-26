@@ -110,6 +110,70 @@ func (g *Generator) emitDestructorStruct(w *goWriter, name string) {
 	g.emitDestructorStructEqual(w, typeName, destrs)
 	g.emitDestructorStructHash(w, typeName, destrs)
 	g.emitDestructorLess(w, typeName, destrs)
+	g.emitDestructorStructString(w, typeName, destrs)
+}
+
+// emitDestructorStructString mirrors ivy2cpp/destructor.go:367
+// emitDestructorOutImpl. Emits a `String() string` method on the
+// destructor struct that renders as `{field:value,…}` — matching
+// cpp's `operator<<` output exactly so trace lines compare byte-for-
+// byte. Array fields render as nested `[v0,v1,…]`; hash-thunk fields
+// render as `<hash_thunk>` (the same placeholder cpp uses).
+func (g *Generator) emitDestructorStructString(w *goWriter, typeName string, destrs []*goivy.Const) {
+	g.Ctx.AddImport("types", "fmt", "")
+	g.Ctx.AddImport("types", "strings", "")
+	w.linef("// String renders the record as `{field:value,…}` — matches")
+	w.linef("// ivy2cpp's operator<< output so trace comparisons stay parallel.")
+	w.linef("func (a %s) String() string {", typeName)
+	w.line("\tvar __b strings.Builder")
+	w.line(`	__b.WriteString("{")`)
+	first := true
+	for _, d := range destrs {
+		fs, ok := d.CSort.(*goivy.LogicFunctionSort)
+		if !ok {
+			continue
+		}
+		if !first {
+			w.line(`	__b.WriteString(",")`)
+		}
+		first = false
+		field := goExportedName(memName(d.Name))
+		w.linef(`	__b.WriteString(%q + ":")`, field)
+		domain := fs.Domain()
+		if len(domain) > 0 {
+			domain = domain[1:]
+		}
+		st := goFunctionStorageFor(g, domain, fs.Range())
+		switch st.Kind {
+		case goStorageArray:
+			for i, d2 := range domain {
+				card := goSortCard(g, d2)
+				if card <= 0 {
+					card = 0
+				}
+				w.line(`	__b.WriteString("[")`)
+				w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, card, i)
+				w.linef("\t\tif __i%d > 0 { __b.WriteString(\",\") }", i)
+			}
+			acc := "a." + field
+			for i := range domain {
+				acc += fmt.Sprintf("[__i%d]", i)
+			}
+			w.linef("\t\t__b.WriteString(fmt.Sprintf(%q, %s))", "%v", acc)
+			for range domain {
+				w.line("\t}")
+				w.line(`	__b.WriteString("]")`)
+			}
+		case goStorageHashThunk:
+			w.line(`	__b.WriteString("<hash_thunk>")`)
+		default:
+			w.linef("\t__b.WriteString(fmt.Sprintf(%q, a.%s))", "%v", field)
+		}
+	}
+	w.line(`	__b.WriteString("}")`)
+	w.line("\treturn __b.String()")
+	w.line("}")
+	w.blank()
 }
 
 // destructorIndexVarName mirrors ivy2cpp/destructor.go:13. Returns

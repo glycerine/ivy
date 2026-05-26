@@ -213,6 +213,52 @@ func (g *Generator) emitVariantSuperStruct(w *goWriter, name string) {
 		}
 	}
 	w.blank()
+	g.emitVariantStreamImpl(w, name)
+}
+
+// emitVariantStreamImpl mirrors ivy2cpp/variant.go emitVariantStreamImpl.
+// Emits a String() string method on the variant super-type that
+// renders as `{<leaf>:<payload>}`, matching cpp's operator<< output.
+func (g *Generator) emitVariantStreamImpl(w *goWriter, name string) {
+	subs, ok := g.Mod.Variants[name]
+	if !ok {
+		return
+	}
+	typeName := goExportedName(name)
+	// Only import fmt if at least one leaf carries a payload (plain
+	// leaves render as a string literal with no Sprintf).
+	needsFmt := false
+	for _, sub := range subs {
+		if sn := sortName(sub); sn != "" && !g.isPlainVariantSubtypeName(sn) {
+			needsFmt = true
+			break
+		}
+	}
+	if needsFmt {
+		g.Ctx.AddImport("types", "fmt", "")
+	}
+	w.linef("// String renders as `{<leaf>:<payload>}` — matches ivy2cpp's")
+	w.linef("// operator<< output for cross-tool trace parity.")
+	w.linef("func (t %s) String() string {", typeName)
+	w.line("\tswitch t.Tag {")
+	for i, sub := range subs {
+		subName := sortName(sub)
+		if subName == "" {
+			continue
+		}
+		exportedSub := goExportedName(subName)
+		if g.isPlainVariantSubtypeName(subName) {
+			w.linef("\tcase %d:", i)
+			w.linef("\t\treturn %q", "{"+subName+":}")
+			continue
+		}
+		w.linef("\tcase %d:", i)
+		w.linef("\t\treturn fmt.Sprintf(%q, *t.%s)", "{"+subName+":%v}", exportedSub)
+	}
+	w.line("\t}")
+	w.linef(`	return "{}"`)
+	w.line("}")
+	w.blank()
 }
 
 // emitVariantLeafStruct emits any per-leaf struct declarations the
