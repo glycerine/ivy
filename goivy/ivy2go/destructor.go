@@ -37,15 +37,26 @@ func (g *Generator) destructorStructName(s goivy.Sort) (string, bool) {
 }
 
 // destructorSortNames mirrors ivy2cpp/destructor.go destructorSortNames.
-// M2 returns the names from SortDestructors in declaration order so
-// emitSortDecls's destructor branch can iterate.
+// destructorSortNames mirrors ivy2cpp/destructor.go:234. Returns
+// destructor (record) sort names in SortOrder so emission is
+// deterministic. cpp's `encodedSortSet` filter doesn't apply on the
+// Go side (Go has no per-class type encoding to gate on).
 func (g *Generator) destructorSortNames() []string {
 	if g == nil || g.Mod == nil || g.Mod.SortDestructors == nil {
 		return nil
 	}
 	var names []string
-	for name := range g.Mod.SortDestructors.All() {
+	for _, name := range g.Mod.SortOrder {
+		if _, ok := g.Mod.SortDestructors.Get2(name); !ok {
+			continue
+		}
 		names = append(names, name)
+	}
+	// Fallback for tests / modules without a populated SortOrder.
+	if len(names) == 0 {
+		for name := range g.Mod.SortDestructors.All() {
+			names = append(names, name)
+		}
 	}
 	return names
 }
@@ -99,6 +110,49 @@ func (g *Generator) emitDestructorStruct(w *goWriter, name string) {
 	g.emitDestructorStructEqual(w, typeName, destrs)
 	g.emitDestructorStructHash(w, typeName, destrs)
 	g.emitDestructorLess(w, typeName, destrs)
+}
+
+// destructorIndexVarName mirrors ivy2cpp/destructor.go:13. Returns
+// the conventional index variable name for the i-th destructor
+// argument position. Used by emission code that opens nested loops
+// over a destructor's domain sorts.
+func destructorIndexVarName(i int) string {
+	return fmt.Sprintf("X__%d", i)
+}
+
+// destructorSolverName mirrors ivy2cpp/destructor.go:44. Returns the
+// solver-side name for a destructor field. Pass-through for now;
+// the goivy translator handles Z3 sort qualification.
+func (g *Generator) destructorSolverName(d *goivy.Const) string {
+	if d == nil {
+		return ""
+	}
+	return d.Name
+}
+
+// isReallyUninterpretedRange mirrors ivy2cpp/destructor.go:55.
+// Reports whether a sort is "really uninterpreted" — i.e. not a
+// destructor record, not a native-typed sort, and not interpreted
+// via a goInterpType (bv/intbv/etc).
+func (g *Generator) isReallyUninterpretedRange(s goivy.Sort) bool {
+	us, ok := s.(*goivy.UninterpretedSort)
+	if !ok || us == nil {
+		return false
+	}
+	if g != nil && g.Mod != nil && g.Mod.SortDestructors != nil {
+		if _, ok := g.Mod.SortDestructors.Get2(us.Name); ok {
+			return false
+		}
+	}
+	if g != nil {
+		if _, ok := g.nativeTypeName(us); ok {
+			return false
+		}
+		if _, ok := g.goInterpType(us); ok {
+			return false
+		}
+	}
+	return true
 }
 
 // emitDestructorStructHash writes a Hash() uint64 method. We use FNV-1a

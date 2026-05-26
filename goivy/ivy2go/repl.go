@@ -191,6 +191,37 @@ func (g *Generator) emitOneReplArgParser(w *goWriter, parser string, s goivy.Sor
 	w.blank()
 }
 
+// positionalParams mirrors ivy2cpp/repl.go:853. Returns the module
+// parameters that don't carry a default value (i.e. must be supplied
+// positionally on the command line).
+func (g *Generator) positionalParams() []*goivy.Const {
+	var out []*goivy.Const
+	for i, p := range g.Mod.Params {
+		if i < len(g.Mod.ParamDefaults) && g.Mod.ParamDefaults[i] != nil {
+			continue
+		}
+		out = append(out, p)
+	}
+	return out
+}
+
+// paramDefaultText mirrors ivy2cpp/repl.go:867. Returns the textual
+// form of a param-default AST node — `Relname()` when available,
+// stringification otherwise.
+func paramDefaultText(n goivy.Node) string {
+	if n == nil {
+		return ""
+	}
+	if a, ok := n.(*goivy.Atom); ok {
+		return a.Relname()
+	}
+	type relnamer interface{ Relname() string }
+	if r, ok := n.(relnamer); ok {
+		return r.Relname()
+	}
+	return fmt.Sprintf("%v", n)
+}
+
 // publicActionNamesSorted returns the action names eligible for REPL
 // dispatch, in deterministic order. M7 keeps all named actions; M9
 // can prune internal/ext: ones.

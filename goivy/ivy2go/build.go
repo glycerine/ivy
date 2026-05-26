@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	goruntime "runtime"
 )
 
 // build.go: wraps `go build` over an emitted package. Mirrors the role
@@ -171,4 +172,15 @@ func isWindows() bool {
 	// Avoid pulling runtime here just for the constant; check the
 	// path separator which is "\\" only on Windows.
 	return filepath.Separator == '\\'
+}
+
+// hostOS mirrors ivy2cpp/runtime.go hostOS. Returns the configured
+// HostOS override or — when empty — the actual `runtime.GOOS` of the
+// process. Used by emission paths that need to branch on the build
+// host (mostly a stub on the Go side; `go build` is uniform).
+func (g *Generator) hostOS() string {
+	if g != nil && g.Config.HostOS != "" {
+		return g.Config.HostOS
+	}
+	return goruntime.GOOS
 }

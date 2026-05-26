@@ -70,7 +70,7 @@ func (g *Generator) extensionalRelations() map[string]bool {
 	}
 
 	res := map[string]bool{}
-	for _, sym := range g.stateSymbols() {
+	for _, sym := range g.allStateSymbols() {
 		if inited[sym.Name] && !bad[sym.Name] {
 			res[sym.Name] = true
 		}

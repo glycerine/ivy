@@ -143,6 +143,70 @@ func (g *Generator) stateSymbols() []stateSymbol {
 	return syms
 }
 
+// allStateSymbols mirrors ivy2cpp/generator.go:1006. Broader than
+// stateSymbols: it walks every signature symbol PLUS relations and
+// functions without applying stateSymbols' definition/destructor
+// filters. Callers that need the universe of mutable state (e.g.,
+// extensional-relation analysis) use this; emitters that need a
+// fielded subset use stateSymbols.
+func (g *Generator) allStateSymbols() []stateSymbol {
+	if g == nil || g.Mod == nil {
+		return nil
+	}
+	seen := map[string]bool{}
+	knownSig := map[string]bool{}
+	var out []stateSymbol
+	add := func(name string, s goivy.Sort) {
+		if name == "" || seen[name] {
+			return
+		}
+		if g.Mod.Sig != nil && g.Mod.Sig.Constructors[name] {
+			return
+		}
+		if g.isSortConstructorName(name) {
+			return
+		}
+		seen[name] = true
+		out = append(out, stateSymbol{Name: name, Sort: s})
+	}
+	if g.Mod.Sig != nil {
+		for _, sym := range g.Mod.Sig.AllSymbols() {
+			name := sym.Name
+			if name != "" {
+				knownSig[name] = true
+			}
+			if name == "" || seen[name] {
+				continue
+			}
+			if g.Mod.Sig.Constructors[name] || g.isSortConstructorName(name) {
+				continue
+			}
+			n, err := goivy.SolverName(sym, g.Mod.Sig, nil)
+			if err == nil && n == "" {
+				continue
+			}
+			add(name, sym.CSort)
+		}
+	}
+	if g.Mod.Relations != nil {
+		for key, s := range g.Mod.Relations.All() {
+			name := goivy.SymbolNameFromKey(key)
+			if !knownSig[name] {
+				add(name, s)
+			}
+		}
+	}
+	if g.Mod.Functions != nil {
+		for key, s := range g.Mod.Functions.All() {
+			name := goivy.SymbolNameFromKey(key)
+			if !knownSig[name] {
+				add(name, s)
+			}
+		}
+	}
+	return out
+}
+
 // isSortConstructorName mirrors ivy2cpp/generator.go:1098.
 func (g *Generator) isSortConstructorName(name string) bool {
 	if g == nil || g.Mod == nil || name == "" {

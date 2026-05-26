@@ -845,3 +845,517 @@ func (g *Generator) destructorFieldName(name string) (string, bool) {
 
 // Keep strconv imported until M4 actions/numerals use it.
 var _ = strconv.Itoa
+
+// nameOfTerm mirrors ivy2cpp/expr.go nameOfTerm. Returns the
+// variable / const name of `t`, or "" for any other shape.
+func nameOfTerm(t goivy.Expr) string {
+	switch x := t.(type) {
+	case *goivy.LogicVariable:
+		return x.Name
+	case *goivy.Const:
+		return x.Name
+	}
+	return ""
+}
+
+// nameIn mirrors ivy2cpp/expr.go nameIn. Reports whether `n`
+// matches any variable's name in `vars`.
+func nameIn(vars []*goivy.LogicVariable, n string) bool {
+	for _, v := range vars {
+		if v != nil && v.Name == n {
+			return true
+		}
+	}
+	return false
+}
+
+// containsVariableByName mirrors ivy2cpp/expr.go
+// containsVariableByName. Reports whether any term in `terms` is a
+// LogicVariable whose name matches `name`.
+func containsVariableByName(terms []goivy.Expr, name string) bool {
+	for _, t := range terms {
+		if v, ok := t.(*goivy.LogicVariable); ok && v.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
+// variantPayloadField mirrors ivy2cpp/expr.go variantPayloadField.
+// Returns the synthetic payload-field name for a variant sort —
+// `__<sort>` (Go: kept as bare-identifier form for parity).
+func variantPayloadField(s goivy.Sort) string {
+	return "__" + goIdent(sortName(s))
+}
+
+// sortCardinalityAttr mirrors ivy2cpp/expr.go:1078. Returns the
+// user-declared cardinality attribute for an UninterpretedSort
+// (e.g. `attribute foo.cardinality = 8`). Used by callers that need
+// to size iteration ranges over an uninterpreted sort with a
+// declared bound.
+func (g *Generator) sortCardinalityAttr(s goivy.Sort) (string, bool) {
+	if g == nil || g.Mod == nil || g.Mod.Cfg == nil || g.Mod.Cfg.IuCfg == nil {
+		return "", false
+	}
+	if _, ok := s.(*goivy.UninterpretedSort); !ok {
+		return "", false
+	}
+	name := sortName(s)
+	if name == "" {
+		return "", false
+	}
+	attrKey := g.Mod.Cfg.IuCfg.ComposeNames(name, "cardinality")
+	val, ok := g.Mod.Attributes[attrKey]
+	if !ok {
+		return "", false
+	}
+	var rep string
+	switch v := val.(type) {
+	case goivy.Expr:
+		rep = goivy.ExprName(v)
+		if rep == "" {
+			rep = string(v.Sexp())
+		}
+	case interface{ Relname() string }:
+		rep = v.Relname()
+	case string:
+		rep = v
+	default:
+		return "", false
+	}
+	if rep == "" {
+		return "", false
+	}
+	return goIdent(g.Mod.Cfg.IuCfg.ComposeNames(name, rep)), true
+}
+
+// sortHasNegativeValues mirrors ivy2cpp/expr.go:965. Returns true
+// when the sort is interpreted as signed `int`. Range / nat / bool /
+// enum sorts have non-negative values so callers can safely lower-
+// bound them by 0.
+func (g *Generator) sortHasNegativeValues(s goivy.Sort) bool {
+	text, ok := g.sortInterpString(s)
+	return ok && text == "int"
+}
+
+// boundExpr mirrors ivy2cpp/expr.go boundExpr — one comparison
+// application carrying its polarity inside the bound-derivation walk.
+type boundExpr struct {
+	app *goivy.Apply
+	neg bool
+}
+
+// matchBoundExprs mirrors ivy2cpp/expr.go:879. Walks `body`
+// collecting `<` / `<=` / `>` / `>=` applications that constrain
+// `v0`. `exists` tracks the polarity (universal vs existential
+// context). Recurses through Not / Implies / Or / And per Python
+// semantics, and unfolds derived definitions when the call site
+// references v0 directly.
+func (g *Generator) matchBoundExprs(v0 *goivy.LogicVariable, body goivy.Expr, exists bool, res *[]boundExpr) {
+	if v0 == nil || body == nil {
+		return
+	}
+	if not, ok := body.(*goivy.LogicNot); ok {
+		g.matchBoundExprs(v0, not.Body, !exists, res)
+		return
+	}
+	if lit, ok := body.(*goivy.LogicLiteral); ok {
+		nextExists := exists
+		if lit.Polarity == 0 {
+			nextExists = !exists
+		}
+		g.matchBoundExprs(v0, lit.Atom, nextExists, res)
+		return
+	}
+	app, isApp := body.(*goivy.Apply)
+	if isApp {
+		switch goivy.ExprName(app.Func) {
+		case "<", "<=", ">", ">=":
+			*res = append(*res, boundExpr{app: app, neg: !exists})
+		}
+	}
+	if imp, ok := body.(*goivy.LogicImplies); ok {
+		if !exists {
+			g.matchBoundExprs(v0, imp.T1, !exists, res)
+			g.matchBoundExprs(v0, imp.T2, exists, res)
+		}
+		return
+	}
+	if or, ok := body.(*goivy.LogicOr); ok {
+		if !exists {
+			for _, t := range or.Terms {
+				g.matchBoundExprs(v0, t, exists, res)
+			}
+		}
+		return
+	}
+	if and, ok := body.(*goivy.LogicAnd); ok {
+		if exists {
+			for _, t := range and.Terms {
+				g.matchBoundExprs(v0, t, exists, res)
+			}
+		}
+		return
+	}
+	if !isApp {
+		return
+	}
+	if !containsVariableByName(app.Terms, v0.Name) {
+		return
+	}
+	def, ok := g.definitionByName(goivy.ExprName(app.Func))
+	if !ok || def.RHS == nil {
+		return
+	}
+	if !allArgsVariable(def.Params) || len(def.Params) != len(app.Terms) {
+		return
+	}
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for i, p := range def.Params {
+		pv, isVar := p.(*goivy.LogicVariable)
+		if !isVar {
+			return
+		}
+		subs[goivy.Key(pv)] = app.Terms[i]
+	}
+	substituted, err := goivy.Substitute(def.RHS, subs)
+	if err != nil {
+		return
+	}
+	g.matchBoundExprs(v0, substituted, exists, res)
+}
+
+// getBounds mirrors ivy2cpp/expr.go:999. Returns (lo, hi) as Go
+// expression strings for a quantified variable, or an error if no
+// bound could be derived.
+func (g *Generator) getBounds(v0 *goivy.LogicVariable, others []*goivy.LogicVariable, body goivy.Expr, exists bool) (string, string, error) {
+	var bes []boundExpr
+	g.matchBoundExprs(v0, body, exists, &bes)
+	var los, his []string
+	for _, be := range bes {
+		op := goivy.ExprName(be.app.Func)
+		strict := op == "<" || op == ">"
+		args := be.app.Terms
+		if op == ">" || op == ">=" {
+			args = []goivy.Expr{args[1], args[0]}
+		}
+		if be.neg {
+			strict = !strict
+			args = []goivy.Expr{args[1], args[0]}
+		}
+		if len(args) != 2 {
+			continue
+		}
+		ln := nameOfTerm(args[0])
+		rn := nameOfTerm(args[1])
+		if ln == v0.Name && rn != v0.Name && !nameIn(others, rn) {
+			e, err := g.emitExpr(args[1])
+			if err != nil {
+				return "", "", err
+			}
+			if strict {
+				his = append(his, e)
+			} else {
+				his = append(his, "("+e+")+1")
+			}
+		}
+		if rn == v0.Name && ln != v0.Name && !nameIn(others, ln) {
+			e, err := g.emitExpr(args[0])
+			if err != nil {
+				return "", "", err
+			}
+			if strict {
+				los = append(los, "("+e+")+1")
+			} else {
+				los = append(los, e)
+			}
+		}
+	}
+	if !g.sortHasNegativeValues(v0.VSort) {
+		los = append(los, "0")
+	}
+	if card := goSortCard(g, v0.VSort); card > 0 {
+		his = append(his, strconv.Itoa(card))
+	}
+	if rs, ok := g.rangeSortFor(v0.VSort); ok {
+		lo, hi, ok2 := numericRangeBounds(rs)
+		if ok2 {
+			los = append(los, lo)
+			his = append(his, "("+hi+")+1")
+		}
+	}
+	if len(los) == 0 {
+		return "", "", fmt.Errorf("ivy2go: cannot find a lower bound for %s", v0.Name)
+	}
+	if len(his) == 0 {
+		if hi, ok := g.sortCardinalityAttr(v0.VSort); ok {
+			his = append(his, hi)
+		} else {
+			return "", "", fmt.Errorf("ivy2go: cannot find an upper bound for %s", v0.Name)
+		}
+	}
+	return los[0], his[0], nil
+}
+
+// getAllBounds mirrors ivy2cpp/expr.go:1118. Derives bounds for each
+// variable in `vars`, using the *remaining* variables (slice tail) as
+// the others-set so siblings can't appear on the constant side.
+func (g *Generator) getAllBounds(vars []*goivy.LogicVariable, body goivy.Expr, exists bool) ([][2]string, error) {
+	bounds := make([][2]string, len(vars))
+	for i, v := range vars {
+		lo, hi, err := g.getBounds(v, vars[i+1:], body, exists)
+		if err != nil {
+			return nil, err
+		}
+		bounds[i] = [2]string{lo, hi}
+	}
+	return bounds, nil
+}
+
+// quantIterableHeader mirrors ivy2cpp/expr.go:604. Emits an
+// iter-based Go `for` header when the variable's sort declares an
+// `iterable` attribute with companion `create` / `is_end` / `next`
+// helpers. Used by quantifier emission to iterate over a
+// user-supplied finite proxy instead of the full uninterpreted sort.
+func (g *Generator) quantIterableHeader(v *goivy.LogicVariable) (string, bool, error) {
+	if v == nil {
+		return "", false, nil
+	}
+	iterPrefix, iterSort, ok := g.iterableSortFor(v.VSort)
+	if !ok {
+		return "", false, nil
+	}
+	createName := goIdent(g.Mod.Cfg.IuCfg.ComposeNames(iterPrefix, "create"))
+	isEndName := goIdent(g.Mod.Cfg.IuCfg.ComposeNames(iterPrefix, "is_end"))
+	nextName := goIdent(g.Mod.Cfg.IuCfg.ComposeNames(iterPrefix, "next"))
+	idx := goIdent(v.Name)
+	return fmt.Sprintf("for %s := %s(%s(0)); !%s(%s); %s = %s(%s) {",
+		idx, g.goType(iterSort), createName, isEndName, idx, idx, nextName, idx), true, nil
+}
+
+// emitExistsVariantRelation mirrors ivy2cpp/expr.go:620. Fast-path
+// for `exists X. <super> *> X` (one-variable existential check on a
+// variant downcast): emits `(<super>.tag == <leaf-index>)` instead
+// of looping. Returns ("", false, nil) when the formula isn't of
+// that shape.
+func (g *Generator) emitExistsVariantRelation(vars []*goivy.LogicVariable, body goivy.Expr) (string, bool, error) {
+	if len(vars) != 1 || g == nil || g.Mod == nil {
+		return "", false, nil
+	}
+	app, ok := body.(*goivy.Apply)
+	if !ok || goivy.ExprName(app.Func) != "*>" || len(app.Terms) != 2 {
+		return "", false, nil
+	}
+	bound := vars[0]
+	if bound == nil || goivy.ExprName(app.Terms[1]) != bound.Name {
+		return "", false, nil
+	}
+	if !g.Mod.IsVariant(app.Terms[0].NodeSort(), bound.VSort) {
+		return "", true, fmt.Errorf("ivy2go: %s *> %s is not a known variant relation", app.Terms[0].String(), bound.String())
+	}
+	lhs, err := g.emitExpr(app.Terms[0])
+	if err != nil {
+		return "", true, err
+	}
+	idx := g.Mod.VariantIndex(app.Terms[0].NodeSort(), bound.VSort)
+	if idx < 0 {
+		return "", true, fmt.Errorf("ivy2go: no variant index for %s in %s", sortName(bound.VSort), sortName(app.Terms[0].NodeSort()))
+	}
+	return fmt.Sprintf("(%s.Tag == %d)", lhs, idx), true, nil
+}
+
+// matchExtensionalBoundExprs mirrors ivy2cpp/expr.go:765. Walks
+// `body` collecting extensional-relation applications that
+// constrain `v0`. Tracks polarity through Not / Implies / Or / And,
+// and unfolds derived definitions when the call references v0.
+func (g *Generator) matchExtensionalBoundExprs(v0 *goivy.LogicVariable, body goivy.Expr, exists bool, res *[]*goivy.Apply) {
+	if v0 == nil || body == nil {
+		return
+	}
+	if not, ok := body.(*goivy.LogicNot); ok {
+		g.matchExtensionalBoundExprs(v0, not.Body, !exists, res)
+		return
+	}
+	if lit, ok := body.(*goivy.LogicLiteral); ok {
+		nextExists := exists
+		if lit.Polarity == 0 {
+			nextExists = !exists
+		}
+		g.matchExtensionalBoundExprs(v0, lit.Atom, nextExists, res)
+		return
+	}
+	app, isApp := body.(*goivy.Apply)
+	if isApp {
+		name := goivy.ExprName(app.Func)
+		if name != "" && g.extensionalRels()[name] && exists && containsVariableByName(app.Terms, v0.Name) {
+			*res = append(*res, app)
+		}
+	}
+	if imp, ok := body.(*goivy.LogicImplies); ok {
+		if !exists {
+			g.matchExtensionalBoundExprs(v0, imp.T1, !exists, res)
+			g.matchExtensionalBoundExprs(v0, imp.T2, exists, res)
+		}
+		return
+	}
+	if or, ok := body.(*goivy.LogicOr); ok {
+		if !exists {
+			for _, t := range or.Terms {
+				g.matchExtensionalBoundExprs(v0, t, exists, res)
+			}
+		}
+		return
+	}
+	if and, ok := body.(*goivy.LogicAnd); ok {
+		if exists {
+			for _, t := range and.Terms {
+				g.matchExtensionalBoundExprs(v0, t, exists, res)
+			}
+		}
+		return
+	}
+	if !isApp {
+		return
+	}
+	if !containsVariableByName(app.Terms, v0.Name) {
+		return
+	}
+	def, ok := g.definitionByName(goivy.ExprName(app.Func))
+	if !ok || def.RHS == nil {
+		return
+	}
+	if !allArgsVariable(def.Params) || len(def.Params) != len(app.Terms) {
+		return
+	}
+	subs := map[goivy.NodeKey]goivy.Expr{}
+	for i, p := range def.Params {
+		pv, isVar := p.(*goivy.LogicVariable)
+		if !isVar {
+			return
+		}
+		subs[goivy.Key(pv)] = app.Terms[i]
+	}
+	substituted, err := goivy.Substitute(def.RHS, subs)
+	if err != nil {
+		return
+	}
+	g.matchExtensionalBoundExprs(v0, substituted, exists, res)
+}
+
+// finiteValues mirrors ivy2cpp/expr.go:1347. Returns the finite
+// extension of a small enumerable sort, or (nil, false) for sorts
+// whose values can't be enumerated cheaply.
+func finiteValues(s goivy.Sort) ([]string, bool) {
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		return []string{"false", "true"}, true
+	case *goivy.LogicEnumeratedSort:
+		vals := make([]string, len(st.Extension))
+		for i, v := range st.Extension {
+			vals[i] = goExportedName(v)
+		}
+		return vals, true
+	default:
+		return nil, false
+	}
+}
+
+// iterableSortFor mirrors ivy2cpp/expr.go:1138. Resolves the
+// companion `<sort>.iter` (or `<sort>.iter.t`) sort when an
+// UninterpretedSort carries an `iterable` attribute. Callers use the
+// iter sort as a finite proxy for the larger enumerated type.
+func (g *Generator) iterableSortFor(s goivy.Sort) (string, goivy.Sort, bool) {
+	if g == nil || g.Mod == nil || g.Mod.Cfg == nil || g.Mod.Cfg.IuCfg == nil || g.Mod.Sig == nil {
+		return "", nil, false
+	}
+	us, ok := s.(*goivy.UninterpretedSort)
+	if !ok {
+		return "", nil, false
+	}
+	attrKey := g.Mod.Cfg.IuCfg.ComposeNames(us.Name, "iterable")
+	if _, ok := g.Mod.Attributes[attrKey]; !ok {
+		return "", nil, false
+	}
+	iterName := g.Mod.Cfg.IuCfg.ComposeNames(us.Name, "iter")
+	if iterSort, ok := g.Mod.Sig.Sorts.Get2(iterName); ok {
+		return iterName, iterSort, true
+	}
+	iterT := g.Mod.Cfg.IuCfg.ComposeNames(iterName, "t")
+	if iterSort, ok := g.Mod.Sig.Sorts.Get2(iterT); ok {
+		return iterName, iterSort, true
+	}
+	return "", nil, false
+}
+
+// someLoopHeaders mirrors ivy2cpp/expr.go:1213. Picks per-variable
+// loop headers for an existential `some` expression. Uses
+// `getAllBounds` to derive tighter bounds when the variables are
+// integer-typed; otherwise falls back to `loopHeaderForVar`.
+func (g *Generator) someLoopHeaders(vars []*goivy.LogicVariable, body goivy.Expr) ([]string, error) {
+	headers := make([]string, len(vars))
+	useBounds := false
+	if len(vars) > 0 && goIsAnyIntegerType(g, vars[0].VSort) {
+		if bounds, err := g.getAllBounds(vars, body, true); err == nil {
+			useBounds = true
+			for i, v := range vars {
+				h, herr := g.loopHeaderForSortBounds(v.VSort, goIdent(v.Name), bounds[i][0], bounds[i][1])
+				if herr != nil {
+					useBounds = false
+					break
+				}
+				headers[i] = h
+			}
+		}
+	}
+	if useBounds {
+		return headers, nil
+	}
+	for i, v := range vars {
+		h, _, err := g.loopHeaderForVar(v)
+		if err != nil {
+			return nil, err
+		}
+		headers[i] = h
+	}
+	return headers, nil
+}
+
+// loopIntCType mirrors ivy2cpp/expr.go:1413. Picks the Go integer
+// type used as the loop counter for `s`. Enum and BV sorts use the
+// sort's natural Go type; bool widens to `int`; everything else
+// defaults to the sort's Go type or `int` as a fallback.
+func loopIntCType(g *Generator, s goivy.Sort) string {
+	if _, ok := s.(*goivy.LogicEnumeratedSort); ok {
+		return g.goType(s)
+	}
+	if g != nil {
+		if it, ok := g.goInterpType(s); ok && it.Kind == goInterpBV {
+			return g.goType(s)
+		}
+	}
+	ct := g.goType(s)
+	switch ct {
+	case "bool":
+		return "int"
+	}
+	return ct
+}
+
+// loopHeaderForSortBounds mirrors ivy2cpp/expr.go:1395. Emits a Go
+// `for` loop header using explicit `lo` / `hi` integer-string
+// bounds. Enum-sorted variables loop through `int` indices and cast
+// the loop variable back to the named enum type on each iteration.
+func (g *Generator) loopHeaderForSortBounds(s goivy.Sort, name, lo, hi string) (string, error) {
+	if lo == "" || hi == "" {
+		return "", fmt.Errorf("ivy2go: empty bounds for %s", name)
+	}
+	if es, ok := s.(*goivy.LogicEnumeratedSort); ok {
+		if isNumericEnum(es) {
+			return fmt.Sprintf("for %s := (%s); %s < (%s); %s++ {", name, lo, name, hi, name), nil
+		}
+		typeName := goExportedName(es.Name)
+		return fmt.Sprintf("for __i := (%s); __i < (%s); __i++ { %s := %s(__i)", lo, hi, name, typeName), nil
+	}
+	typ := g.goType(s)
+	return fmt.Sprintf("for %s := %s(%s); %s < %s(%s); %s++ {", name, typ, lo, name, typ, hi, name), nil
+}

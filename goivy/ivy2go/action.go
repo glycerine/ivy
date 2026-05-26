@@ -69,8 +69,7 @@ func (g *Generator) emitAction(w *goWriter, act goivy.Action) {
 	case *goivy.LogicNativeAction:
 		g.emitNativeAction(w, a)
 	case *goivy.LogicDebugAction:
-		// Python's emit_debug is a no-op; mirror that.
-		_ = a
+		g.emitDebug(w, a)
 	case *goivy.LogicCrashAction:
 		// Per ivy2cpp/action.go comment: CrashAction is lowered upstream;
 		// emit nothing if it survives.
@@ -273,6 +272,180 @@ func fieldRangeSort(field goivy.Expr) (goivy.Sort, error) {
 		return fs.Range(), nil
 	}
 	return nil, fmt.Errorf("field %s does not have function sort", field.String())
+}
+
+// emitDebug ports ivy2cpp/action.go:983 emitDebug. Emits a JSON-style
+// trace event with the labelled with-clause values inside.
+func (g *Generator) emitDebug(w *goWriter, a *goivy.LogicDebugAction) {
+	event := debugEventName(a.DebugExpr)
+	g.Ctx.AddImport("actions", "fmt", "")
+	w.line(`fmt.Fprintln(ivyTraceOut, "{")`)
+	w.linef(`fmt.Fprintln(ivyTraceOut, "    \"event\" : \"%s\",")`, escapeString(event))
+	for i, e := range a.WithExprs {
+		name := ""
+		if i < len(a.WithNames) {
+			name = a.WithNames[i]
+		}
+		if name == "" {
+			name = goivy.ExprName(e)
+		}
+		w.linef(`fmt.Fprintf(ivyTraceOut, "    \"%s\" : ")`, escapeString(name))
+		g.emitPrintExpr(w, e)
+		w.line(`fmt.Fprintln(ivyTraceOut, ",")`)
+	}
+	w.line(`fmt.Fprintln(ivyTraceOut, "}")`)
+}
+
+// emitPrintExpr ports ivy2cpp/action.go:1010 emitPrintExpr. For each
+// free variable in expr, opens a loop over its sort and surrounds
+// the value(s) with `[…]` brackets, comma-separated across iterations.
+func (g *Generator) emitPrintExpr(w *goWriter, expr goivy.Expr) {
+	vs := goivy.VariablesAstList(expr)
+	openedHeaders := 0
+	for _, v := range vs {
+		header, _, err := g.loopHeaderForVar(v)
+		if err != nil {
+			g.unsupported(w, "unsupported debug print variable %s: %s", goIdent(v.Name), err.Error())
+			for i := 0; i < openedHeaders; i++ {
+				w.line("}")
+			}
+			return
+		}
+		w.line(`fmt.Fprint(ivyTraceOut, "[")`)
+		w.line(header)
+		w.linef(`if %s != 0 { fmt.Fprint(ivyTraceOut, ",") }`, goIdent(v.Name))
+		openedHeaders++
+	}
+	value, err := g.emitExpr(expr)
+	if err != nil {
+		g.unsupported(w, "unsupported debug print expression: %s", err.Error())
+		for i := 0; i < openedHeaders; i++ {
+			w.line("}")
+		}
+		return
+	}
+	w.linef(`fmt.Fprint(ivyTraceOut, %s)`, value)
+	for i := 0; i < openedHeaders; i++ {
+		w.line("}")
+		w.line(`fmt.Fprint(ivyTraceOut, "]")`)
+	}
+}
+
+// debugEventName mirrors ivy2cpp/action.go:1043. Extracts the event
+// name from a DebugExpr (typically a quoted-string Const).
+func debugEventName(e goivy.Expr) string {
+	if e == nil {
+		return "debug"
+	}
+	name := goivy.ExprName(e)
+	name = strings.Trim(name, `"`)
+	if strings.TrimSpace(name) == "" {
+		return "debug"
+	}
+	return name
+}
+
+// escapeString mirrors ivy2cpp/action.go:1055. Escapes backslashes
+// and double-quotes for embedding inside a Go string literal that
+// the emitted code will pass through fmt.
+func escapeString(s string) string {
+	s = strings.ReplaceAll(s, `\`, `\\`)
+	s = strings.ReplaceAll(s, `"`, `\"`)
+	return s
+}
+
+// escapeComment mirrors ivy2cpp/action.go:1061. Splits `*/` inside
+// a comment body so it can't terminate a `/* … */` block.
+func escapeComment(s string) string {
+	s = strings.ReplaceAll(s, "*/", "* /")
+	return s
+}
+
+// emitCallStackPush mirrors ivy2cpp/action.go:798. cpp emits a
+// `___ivy_stack.push_back(<uid>)` for runtime call-stack tracking
+// when the runtime uses the gen-target generator hook. ivy2go's
+// runtime doesn't use stack-based callback tracing (the test target
+// drives actions via per-action `actionGen_*` structs), so this is
+// a no-op — kept for parallel call-site shape with ivy2cpp.
+func (g *Generator) emitCallStackPush(w *goWriter, a *goivy.LogicCallAction) bool {
+	_ = w
+	_ = a
+	return false
+}
+
+// emitCallStackPop mirrors ivy2cpp/action.go:806. No-op for the same
+// reason as emitCallStackPush.
+func (g *Generator) emitCallStackPop(w *goWriter, stacked bool) {
+	_ = w
+	_ = stacked
+}
+
+// someConditionLoopHeaders mirrors ivy2cpp/action.go:332. Picks
+// per-parameter Go `for` loop headers for an `if some` statement.
+// When the params are integer-typed and getAllBounds derives
+// finite bounds from the some-condition formula, emit tightly-bounded
+// loops; otherwise fall back to the generic loopHeaderForSort.
+func (g *Generator) someConditionLoopHeaders(some *goivy.SomeCondition) ([]string, error) {
+	headers := make([]string, len(some.Params))
+	useBounds := false
+	if len(some.Params) > 0 && goIsAnyIntegerType(g, some.Params[0].CSort) {
+		vars := make([]*goivy.LogicVariable, 0, len(some.Params))
+		subs := map[goivy.NodeKey]goivy.Expr{}
+		ok := true
+		for _, p := range some.Params {
+			v, err := goivy.NewVariable("X"+p.Name, p.CSort)
+			if err != nil {
+				ok = false
+				break
+			}
+			subs[goivy.Key(p)] = v
+			vars = append(vars, v)
+		}
+		if ok {
+			fmla, err := goivy.Substitute(some.Fmla, subs)
+			if err == nil {
+				if bounds, berr := g.getAllBounds(vars, fmla, true); berr == nil {
+					useBounds = true
+					for i, p := range some.Params {
+						h, herr := g.loopHeaderForSortBounds(p.CSort, goIdent(p.Name), bounds[i][0], bounds[i][1])
+						if herr != nil {
+							useBounds = false
+							break
+						}
+						headers[i] = h
+					}
+				}
+			}
+		}
+	}
+	if useBounds {
+		return headers, nil
+	}
+	for i, p := range some.Params {
+		h, _, err := g.loopHeaderForSort(p.CSort, goIdent(p.Name))
+		if err != nil {
+			return nil, err
+		}
+		headers[i] = h
+	}
+	return headers, nil
+}
+
+// firstParamIsIndex mirrors ivy2cpp/action.go:474. Used by
+// `if some` optimization fast-paths to detect when the first
+// some-condition parameter is also the result index.
+func firstParamIsIndex(some *goivy.SomeCondition) bool {
+	if some == nil || len(some.Params) == 0 || some.Index == nil {
+		return false
+	}
+	pname := some.Params[0].Name
+	switch x := some.Index.(type) {
+	case *goivy.LogicVariable:
+		return x.Name == pname
+	case *goivy.Const:
+		return x.Name == pname
+	}
+	return false
 }
 
 // emitAssertLike ports ivy2cpp/action.go emitAssertLike.
@@ -689,8 +862,10 @@ func (g *Generator) emitNativeAction(w *goWriter, a *goivy.LogicNativeAction) {
 	}
 }
 
-// emitLocal ports ivy2cpp/action.go emitLocal, simplified: each local
-// becomes a Go `var name T` declaration, then the body runs.
+// emitLocal ports ivy2cpp/action.go emitLocal. Each local becomes a
+// Go `var name T` declaration followed by nondet initialization via
+// mkNondetSym (mirrors cpp's mk_nondet_sym call after sym_decl) so
+// the body observes a randomized value rather than Go's zero.
 func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
 	w.open("{")
 	for _, loc := range a.Locals {
@@ -701,6 +876,7 @@ func (g *Generator) emitLocal(w *goWriter, a *goivy.LogicLocalAction) {
 		}
 		w.linef("var %s %s", goIdent(c.Name), g.goType(c.CSort))
 		w.linef("_ = %s", goIdent(c.Name)) // silence "declared and not used"
+		g.mkNondetSym(w, c, c.Name, a.UniqueID)
 	}
 	if bodyAct, ok := a.Body.(goivy.Action); ok {
 		g.emitAction(w, bodyAct)

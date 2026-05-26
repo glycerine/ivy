@@ -209,6 +209,43 @@ func (g *Generator) isCallbackAction(arg goivy.Node) (string, bool) {
 	return callbackActionName(g.Mod, arg)
 }
 
+// nativeArgName mirrors ivy2cpp/native.go nativeArgName. Extracts a
+// plain identifier from a child node of an action-reference Atom.
+func nativeArgName(child goivy.Node) string {
+	switch c := child.(type) {
+	case *goivy.Const:
+		return goIdent(c.Name)
+	case *goivy.LogicVariable:
+		return goIdent(c.Name)
+	case *goivy.Atom:
+		return goIdent(c.Rep)
+	case *goivy.Symbol:
+		return goIdent(c.Rep)
+	}
+	if rn, ok := child.(interface{ Relname() string }); ok {
+		return goIdent(rn.Relname())
+	}
+	return ""
+}
+
+// nativeIndent mirrors ivy2cpp/native.go nativeIndent. Returns the
+// leading-whitespace column of `line` (tabs round up to the next
+// 8-column boundary, matching cpp).
+func nativeIndent(line string) int {
+	indent := 0
+	for _, r := range line {
+		switch r {
+		case ' ':
+			indent++
+		case '\t':
+			indent = ((indent + 8) / 8) * 8
+		default:
+			return indent
+		}
+	}
+	return indent
+}
+
 // callbackActionName mirrors ivy2cpp/native.go:491. Pure function;
 // extracted so the native_thunk catalog can call it without a
 // Generator instance.

@@ -83,9 +83,13 @@ func (g *Generator) emitSetSolver(w *goWriter) {
 }
 
 // emitStateSymbolFacts appends per-symbol fact assertions to the
-// stateFactsAsClauses body. Scalar bools use mkBoolFact; enum-sorted
-// scalars use an Eq-to-named-constant; array-storage function symbols
-// iterate cells and emit per-cell facts.
+// stateFactsAsClauses body. Dispatches on sort shape:
+//   - bool scalar              → mkBoolFact
+//   - enum scalar              → Eq to extension constant
+//   - range/integer scalar     → Eq to integer-named constant
+//   - bool-valued array        → nested loops + per-cell mkBoolFact
+//   - enum-valued array        → nested loops + per-cell Eq
+//   - hash-thunk function      → skip (handled by thunk-slot at read time)
 func (g *Generator) emitStateSymbolFacts(w *goWriter, sym stateSymbol) {
 	exported := goExportedName(sym.Name)
 	if _, ok := sym.Sort.(*goivy.BooleanSort); ok {
@@ -93,61 +97,141 @@ func (g *Generator) emitStateSymbolFacts(w *goWriter, sym stateSymbol) {
 		return
 	}
 	if es, ok := sym.Sort.(*goivy.LogicEnumeratedSort); ok {
-		// Enum-sorted scalar: pin `<name> = <current-extension-name>`
-		// in the solver so the precondition formula's references to
-		// the state symbol resolve to the actual current value.
-		// Without this, the symbol is a free Z3 variable and
-		// constraints like `side = right` become trivially SAT.
-		sortCode, ok := g.reifySortAsGoCode(es)
-		if !ok {
-			return
-		}
-		extLits := make([]string, len(es.Extension))
-		for i, name := range es.Extension {
-			extLits[i] = fmt.Sprintf("%q", name)
-		}
-		w.linef("\t{")
-		w.linef("\t\textNames := []string{%s}", strings.Join(extLits, ", "))
-		w.linef("\t\tsortDecl := %s", sortCode)
-		w.linef("\t\tfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%q, sortDecl), T2: goivy.NewConst(extNames[int(state.%s)], sortDecl)})",
-			sym.Name, exported)
-		w.linef("\t}")
+		g.emitEnumScalarFact(w, sym.Name, "state."+exported, es)
 		return
 	}
-	fs, ok := sym.Sort.(*goivy.LogicFunctionSort)
-	if !ok {
-		// Other scalar shapes (range, uninterpreted) deferred —
-		// pingpong's enum case is what surfaced first.
+	// Range/uninterpreted scalar with a known cardinality → pin via
+	// an integer-named constant. The solver sees `<name> = <int>`
+	// which collides correctly with formula-side references via the
+	// goivy translator's integer-sort handling.
+	if !isFunctionSort(sym.Sort) {
+		if card := goSortCard(g, sym.Sort); card > 0 {
+			g.emitIntScalarFact(w, sym.Name, "state."+exported, sym.Sort)
+		}
 		return
 	}
+	fs := sym.Sort.(*goivy.LogicFunctionSort)
 	domain := fs.Domain()
 	st := goFunctionStorageFor(g, domain, fs.Range())
 	if st.Kind != goStorageArray {
 		// Hash-thunk: skip (handled by thunk-slot wiring at read time).
 		return
 	}
-	// Only emit bool-valued cells for now — they have a clean
-	// mkBoolFact path. Other-valued cells need a mkCellFact helper
-	// that's scheduled for the next sub-step.
-	if _, ok := fs.Range().(*goivy.BooleanSort); !ok {
+	switch rng := fs.Range().(type) {
+	case *goivy.BooleanSort:
+		_ = rng
+		w.linef("\t// Per-cell facts for array-storage symbol %q.", sym.Name)
+		for i, d := range st.Dims {
+			w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i)
+		}
+		w.line("\t\tcellName := " + cellNameExpr(sym.Name, len(st.Dims)))
+		cellAcc := "state." + exported
+		for i := range st.Dims {
+			cellAcc += "[__i" + fmt.Sprintf("%d", i) + "]"
+		}
+		w.linef("\t\tfmlas = append(fmlas, mkBoolFact(cellName, %s))", cellAcc)
+		for range st.Dims {
+			w.line("\t}")
+		}
+	case *goivy.LogicEnumeratedSort:
+		w.linef("\t// Per-cell facts (enum-valued) for array-storage symbol %q.", sym.Name)
+		for i, d := range st.Dims {
+			w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i)
+		}
+		w.line("\t\tcellName := " + cellNameExpr(sym.Name, len(st.Dims)))
+		cellAcc := "state." + exported
+		for i := range st.Dims {
+			cellAcc += "[__i" + fmt.Sprintf("%d", i) + "]"
+		}
+		g.emitEnumScalarFactIndented(w, "cellName", cellAcc, rng, "\t\t")
+		for range st.Dims {
+			w.line("\t}")
+		}
+	default:
+		// Integer/range/uninterp-valued cells: pin via integer
+		// equality if the range has a known cardinality.
+		if card := goSortCard(g, fs.Range()); card > 0 {
+			w.linef("\t// Per-cell facts (int-valued) for array-storage symbol %q.", sym.Name)
+			for i, d := range st.Dims {
+				w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i)
+			}
+			w.line("\t\tcellName := " + cellNameExpr(sym.Name, len(st.Dims)))
+			cellAcc := "state." + exported
+			for i := range st.Dims {
+				cellAcc += "[__i" + fmt.Sprintf("%d", i) + "]"
+			}
+			g.emitIntScalarFactIndented(w, "cellName", cellAcc, fs.Range(), "\t\t")
+			for range st.Dims {
+				w.line("\t}")
+			}
+		}
+	}
+}
+
+// emitEnumScalarFact emits an `<name> = <extension>` equality for
+// an enum-sorted scalar state symbol whose current Go value is
+// stored at `lhsAcc`.
+func (g *Generator) emitEnumScalarFact(w *goWriter, name, lhsAcc string, es *goivy.LogicEnumeratedSort) {
+	sortCode, ok := g.reifySortAsGoCode(es)
+	if !ok {
 		return
 	}
-	w.linef("\t// Per-cell facts for array-storage symbol %q.", sym.Name)
-	// Emit nested loops over each dim.
-	for i, d := range st.Dims {
-		w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i)
+	extLits := make([]string, len(es.Extension))
+	for i, ext := range es.Extension {
+		extLits[i] = fmt.Sprintf("%q", ext)
 	}
-	// Build the cell name (e.g. "link(0,1)") and the cell value
-	// expression (state.Link[__i0][__i1]).
-	w.line("\t\tcellName := " + cellNameExpr(sym.Name, len(st.Dims)))
-	cellAcc := "state." + exported
-	for i := range st.Dims {
-		cellAcc += "[__i" + fmt.Sprintf("%d", i) + "]"
+	w.linef("\t{")
+	w.linef("\t\textNames := []string{%s}", strings.Join(extLits, ", "))
+	w.linef("\t\tsortDecl := %s", sortCode)
+	w.linef("\t\tfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%q, sortDecl), T2: goivy.NewConst(extNames[int(%s)], sortDecl)})",
+		name, lhsAcc)
+	w.linef("\t}")
+}
+
+// emitEnumScalarFactIndented is the per-cell-loop variant: `name`
+// is a Go expression (not a string literal), and `lhsAcc` indexes
+// into the cell's storage. `indent` is the surrounding indent
+// (e.g. "\t\t" inside two open loops).
+func (g *Generator) emitEnumScalarFactIndented(w *goWriter, nameExpr, lhsAcc string, es *goivy.LogicEnumeratedSort, indent string) {
+	sortCode, ok := g.reifySortAsGoCode(es)
+	if !ok {
+		return
 	}
-	w.linef("\t\tfmlas = append(fmlas, mkBoolFact(cellName, %s))", cellAcc)
-	for range st.Dims {
-		w.line("\t}")
+	extLits := make([]string, len(es.Extension))
+	for i, ext := range es.Extension {
+		extLits[i] = fmt.Sprintf("%q", ext)
 	}
+	w.linef("%s{", indent)
+	w.linef("%s\textNames := []string{%s}", indent, strings.Join(extLits, ", "))
+	w.linef("%s\tsortDecl := %s", indent, sortCode)
+	w.linef("%s\tfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%s, sortDecl), T2: goivy.NewConst(extNames[int(%s)], sortDecl)})",
+		indent, nameExpr, lhsAcc)
+	w.linef("%s}", indent)
+}
+
+// emitIntScalarFact emits an `<name> = <integer>` equality for a
+// scalar state symbol of an integer-like sort (range / numeric enum
+// / uninterpreted with int interp). The runtime resolves the int via
+// `strconv.Itoa(int(lhsAcc))`.
+func (g *Generator) emitIntScalarFact(w *goWriter, name, lhsAcc string, s goivy.Sort) {
+	sortCode, ok := g.reifySortAsGoCode(s)
+	if !ok {
+		return
+	}
+	w.linef("\tfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%q, %s), T2: goivy.NewConst(strconv.Itoa(int(%s)), %s)})",
+		name, sortCode, lhsAcc, sortCode)
+	g.Ctx.AddImport("runtime", "strconv", "")
+}
+
+// emitIntScalarFactIndented is the per-cell variant.
+func (g *Generator) emitIntScalarFactIndented(w *goWriter, nameExpr, lhsAcc string, s goivy.Sort, indent string) {
+	sortCode, ok := g.reifySortAsGoCode(s)
+	if !ok {
+		return
+	}
+	w.linef("%sfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%s, %s), T2: goivy.NewConst(strconv.Itoa(int(%s)), %s)})",
+		indent, nameExpr, sortCode, lhsAcc, sortCode)
+	g.Ctx.AddImport("runtime", "strconv", "")
 }
 
 // cellNameExpr returns a Go expression that builds the synthetic

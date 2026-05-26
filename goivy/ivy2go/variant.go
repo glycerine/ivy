@@ -33,6 +33,47 @@ func (g *Generator) variantSuperName(s goivy.Sort) (string, bool) {
 	return "", false
 }
 
+// variantIndex mirrors ivy2cpp/variant.go variantIndex. Returns the
+// integer tag of `sub` within `super`'s variant list, or -1 if
+// `sub` is not a variant of `super`.
+func (g *Generator) variantIndex(super, sub goivy.Sort) int {
+	if g == nil || g.Mod == nil {
+		return -1
+	}
+	return g.Mod.VariantIndex(super, sub)
+}
+
+// variantIsaExpr mirrors ivy2cpp/variant.go variantIsaExpr. Emits a
+// Go boolean expression that checks whether `superExpr` currently
+// holds the `sub` variant: `(superExpr.Tag == <index>)`.
+func (g *Generator) variantIsaExpr(superExpr string, super, sub goivy.Sort) string {
+	return fmt.Sprintf("((%s).Tag == %d)", superExpr, g.variantIndex(super, sub))
+}
+
+// variantDowncastExpr mirrors ivy2cpp/variant.go variantDowncastExpr.
+// Emits a Go expression that extracts the `sub`-typed payload from
+// `superExpr` — `(*superExpr.<Sub>)`. Callers should guard with
+// variantIsaExpr; dereferencing the wrong-tag payload-pointer panics.
+func (g *Generator) variantDowncastExpr(superExpr string, super, sub goivy.Sort) string {
+	subName := sortName(sub)
+	_ = super
+	return fmt.Sprintf("(*(%s).%s)", superExpr, goExportedName(subName))
+}
+
+// variantClassName is the Go counterpart of ivy2cpp/variant.go
+// variantClassName. cpp uses this to qualify type names with the
+// enclosing class; Go uses package scope, so the parameter is
+// returned unchanged.
+func (g *Generator) variantClassName(className string) string { return className }
+
+// variantSolverRelationName mirrors ivy2cpp/variant.go
+// variantSolverRelationName. Returns the solver-side relation
+// identifier (`*>:<super>:<sub>`) used to encode variant downcasts
+// in SMT-LIB. Free function (matches cpp).
+func variantSolverRelationName(super, sub goivy.Sort) string {
+	return "*>:" + sortName(super) + ":" + sortName(sub)
+}
+
 // variantUpcastExpr wraps an expression of a variant leaf sort in
 // the supertype constructor `New<Super><Leaf>(expr)`. Mirrors
 // ivy2cpp/variant.go:36 variantUpcastExpr. The Go-side constructor

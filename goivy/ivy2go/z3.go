@@ -1,5 +1,7 @@
 package ivy2go
 
+import "github.com/glycerine/ivy/goivy"
+
 // z3.go mirrors ivy2cpp/z3.go. The C++ version emits Z3 template
 // specialisations (__from_solver, __to_solver, __randomize) inline.
 // Per D1/D2, ivy2go routes ALL Z3 access through goivy.Solver — both
@@ -19,6 +21,40 @@ func (g *Generator) usesZ3() bool {
 		return true
 	}
 	return false
+}
+
+// actionGeneratorClassName mirrors ivy2cpp/z3.go:666. Returns the
+// generator type name for an action, used by callers that reference
+// the per-action generator struct by name.
+func (g *Generator) actionGeneratorClassName(name string) string {
+	return "actionGen_" + goExportedName(name)
+}
+
+// z3SortName mirrors ivy2cpp/z3.go:972. Returns a stable name string
+// for a sort, used in solver-bridge code paths that need a textual
+// sort identifier.
+func z3SortName(s goivy.Sort) string {
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		return "bool"
+	case *goivy.LogicEnumeratedSort:
+		if st.Name == "" {
+			return "int"
+		}
+		return st.Name
+	case *goivy.RangeSort:
+		if st.Name == "" {
+			return "int"
+		}
+		return st.Name
+	case *goivy.UninterpretedSort:
+		if st.Name == "" {
+			return "int"
+		}
+		return st.Name
+	default:
+		return sortName(s)
+	}
 }
 
 // emitZ3Support is the runtime-emission counterpart of
