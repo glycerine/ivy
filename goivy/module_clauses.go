@@ -254,6 +254,9 @@ func FormulaToClauses(f Expr, annot Annotation) *Clauses {
 // Delegates to the faithful port in ivylogic/constraint.go.
 func moduleDefToConstraint(d *IvyDefinition) Expr {
 	result := DefinitionToConstraint(d)
+	if _, isSome := d.Rhs.(*LogicSome); isSome {
+		return result
+	}
 	if xtracer.Enabled {
 		lhsSort := d.Lhs.NodeSort()
 		xtracer.Trace("module/clauses.go:262 defToConstraint lhsSort=%v resultType=%v", lhsSort, ShortTypeName(result))

@@ -957,7 +957,7 @@ func GetAssumesAndAsserts(m *Module, precondsOnly bool) (assumes, asserts, macro
 			macros = append(macros, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, lineno: ldf.Lineno()})
 		} else {
 			// Convert to constraint
-			constraint := fragmentDefToConstraint(def)
+			constraint := moduleDefToConstraint(def)
 			assumes = append(assumes, fmlaPair{fmla: constraint, source: ldf, lineno: ldf.Lineno()})
 		}
 	}
@@ -1045,16 +1045,6 @@ func CheckFragment(m *Module, precondsOnly bool) error {
 }
 
 // --- helpers ---
-
-// defToConstraint converts a Definition to a constraint formula.
-func fragmentDefToConstraint(d *IvyDefinition) Expr {
-	lhs := d.Lhs
-	rhs := d.Rhs
-	if SortEqual(rhs.NodeSort(), Boolean) {
-		return &LogicIff{T1: lhs, T2: rhs}
-	}
-	return &Eq{T1: lhs, T2: rhs}
-}
 
 // makeFmlaPairsFromAction returns fmlaPairs for an action's update.
 // When precondsOnly is false, it returns two pairs: TR (triple[1]) and
