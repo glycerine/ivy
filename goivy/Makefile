@@ -39,6 +39,10 @@ golden-all: # check all the .ivy specs we have.
 	if [ -f log.golden.all ]; then mv log.golden.all log.golden.all.prev; fi
 	go test -v -timeout=0 -count=1 -run TestGoldenAll &> log.golden.all
 
+golden6: # check all the .ivy #lang ivy1.6 specs we have (only 1.6 exactly)
+	if [ -f log.golden6 ]; then mv log.golden6 log.golden6.prev; fi
+	go test -v -timeout=0 -count=1 -run TestGolden16All &> log.golden6
+
 echo:
 	if [ -f log.echo ]; then mv log.echo log.echo.prev; fi
 	go test -v -timeout=0 -count=1 -run TestEchoDotIvy &> log.echo

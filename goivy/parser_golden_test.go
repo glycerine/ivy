@@ -561,6 +561,23 @@ func Test2hrOrdLive(t *testing.T) {
 	GoldenPathCompareIvyCheck(t, cfg) // verbose=false, diffStop=true
 }
 
+func TestGolden16All(t *testing.T) {
+	off := os.Getenv("XTRACE_OFF")
+	if off != "" {
+		t.Skip("skip again the golden test(s) when XTRACE_OFF.")
+		return // off to check everything else under make test.
+	}
+	vv("top of TestGolden16All")
+
+	startDir := "../ivy-lang-examples/"
+
+	// just v1.6:
+	paths, err := ListAllIvyPathsRecursivelyOnlyVersion(startDir, "1.6")
+	panicOn(err)
+	//vv("spec list (len %v) = '%#v'", len(paths), paths)
+	helpTestGoldenAll(t, paths)
+}
+
 func TestGoldenAll(t *testing.T) {
 	off := os.Getenv("XTRACE_OFF")
 	if off != "" {
@@ -573,12 +590,13 @@ func TestGoldenAll(t *testing.T) {
 
 	// temporary just process v1.6:
 	// v1.6, v1.7, and v1.8:
-	//paths, err := ListAllIvyPathsRecursively(startDir)
-	// just v1.6:
-	paths, err := ListAllIvyPathsRecursivelyOnlyVersion(startDir, "1.6")
-
+	paths, err := ListAllIvyPathsRecursively(startDir)
 	panicOn(err)
 	//vv("spec list (len %v) = '%#v'", len(paths), paths)
+	helpTestGoldenAll(t, paths)
+}
+
+func helpTestGoldenAll(t *testing.T, paths []string) {
 
 	cfg := &goldenConfig{}
 
