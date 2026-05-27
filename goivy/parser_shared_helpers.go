@@ -153,6 +153,9 @@ func makeMixinName(cfg *AstConfig, atom *Atom, suffix string) *Atom {
 func makeMixinNameV16(cfg *AstConfig, atom *Atom, suffix string) *Atom {
 	xtracer.Trace("parser.make_mixin_name ENTER")
 	rep := strings.ReplaceAll(atom.Rep, ".", "_")
+	if atom != nil {
+		return atom.Rename(fmt.Sprintf("%s[%s]", rep, suffix))
+	}
 	return cfg.NewAtom(fmt.Sprintf("%s[%s]", rep, suffix))
 }
 
@@ -232,8 +235,7 @@ func handleBeforeAfter(cfg *AstConfig, kind string, atom *Atom, action Node, ivy
 // handleBeforeAfterV16 matches Python's Ivy <=1.6 deterministic mixin names.
 func handleBeforeAfterV16(cfg *AstConfig, kind string, atom *Atom, action Node, ivy *ivyAccum, optargs []Node, optreturns []Node) {
 	xtracer.Trace("parser.handle_before_after ENTER")
-	rep := strings.ReplaceAll(atom.Rep, ".", "_")
-	mixer := cfg.NewAtom(fmt.Sprintf("%s[%s]", rep, kind))
+	mixer := makeMixinNameV16(cfg, atom, kind)
 	optargs, optreturns = inferActionParams(ivy, atom.Rep, optargs, optreturns)
 	df := cfg.NewActionDef(mixer, action, optargs, optreturns)
 	df.SetLineno(atom.GetLineno())
