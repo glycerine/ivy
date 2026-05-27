@@ -241,6 +241,104 @@ func TestGenerateMainPackageEmitsMain(t *testing.T) {
 	}
 }
 
+func TestEmitGenTargetUsesOneShotGeneratorMainNotTestLoop(t *testing.T) {
+	mod := compileIvySource(t, `
+relation flag
+action set_flag = {
+	flag := true
+}
+export set_flag
+`)
+	out, err := Generate(mod, Config{Target: "gen", PackageName: "main"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	if !strings.Contains(actions, "actionGen_SetFlag") {
+		t.Fatalf("gen target should still emit actionGen_SetFlag:\n%s", actions)
+	}
+	main := out.Files["main.go"]
+	for _, want := range []string{
+		"func ivy2goGenerate(state *State)",
+		"__gen_0 := newactionGen_SetFlag(state)",
+		"if __gen_0.generate(state) {",
+		"__gen_0.execute(state)",
+		"ivy2goGenerate(state)",
+	} {
+		if !strings.Contains(main, want) {
+			t.Fatalf("gen main missing %q:\n%s", want, main)
+		}
+	}
+	for _, forbidden := range []string{
+		"test_completed",
+		"for i := 0; i < iters; i++",
+		"type actionEntry struct",
+	} {
+		if strings.Contains(main, forbidden) {
+			t.Fatalf("gen main should not contain test-loop fragment %q:\n%s", forbidden, main)
+		}
+	}
+}
+
+func TestEmitTestTargetParsesAllDescriptorRuntimeOptions(t *testing.T) {
+	mod := compileIvySource(t, `
+relation flag
+action set_flag = {
+	flag := true
+}
+export set_flag
+`)
+	out, err := Generate(mod, Config{
+		Target:      "test",
+		PackageName: "main",
+		TestIters:   "7",
+		TestRuns:    "3",
+	})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	runtime := out.Files["runtime.go"]
+	for _, want := range []string{
+		"type ivyTestRuntimeOptions struct",
+		`case "iters":`,
+		`case "runs":`,
+		`case "seed":`,
+		`case "delay":`,
+		`case "wait":`,
+		`case "modelfile":`,
+		`case "out":`,
+		"func applyTestRuntimeOptions(opts ivyTestRuntimeOptions) func()",
+	} {
+		if !strings.Contains(runtime, want) {
+			t.Fatalf("runtime helper missing %q:\n%s", want, runtime)
+		}
+	}
+	for _, terms := range [][]string{
+		{"Iters", "int"},
+		{"Runs", "int"},
+		{"Seed", "uint32"},
+		{"DelayMS", "int"},
+		{"WaitMS", "int"},
+		{"ModelFile", "string"},
+	} {
+		requireHasLineWithAllTerms(t, runtime, terms...)
+	}
+	main := out.Files["main.go"]
+	for _, want := range []string{
+		"opts := parseTestRuntimeOptions(7, 3)",
+		"cleanup := applyTestRuntimeOptions(opts)",
+		"for runidx := 0; runidx < opts.Runs; runidx++",
+		"for i := 0; i < opts.Iters; i++",
+		"time.Sleep(time.Duration(opts.DelayMS) * time.Millisecond)",
+		"time.Sleep(time.Duration(opts.WaitMS) * time.Millisecond)",
+		`fmt.Fprintln(ivyTraceOut, "test_completed")`,
+	} {
+		if !strings.Contains(main, want) {
+			t.Fatalf("test main missing %q:\n%s", want, main)
+		}
+	}
+}
+
 /*
 Q: what are descriptor .dsc outputs used for?
 
@@ -250,28 +348,27 @@ for tooling that wants to run the compiled Ivy system.
 
 A descriptor says:
 
-* which executable(s) to launch
-* the isolate/process name for each executable
-* which module params the executable accepts, including defaults
-* for target=test, which test-run params are accepted, like 
-  iters, runs, seed, delay, wait, modelfile
+  - which executable(s) to launch
+  - the isolate/process name for each executable
+  - which module params the executable accepts, including defaults
+  - for target=test, which test-run params are accepted, like
+    iters, runs, seed, delay, wait, modelfile
 
-In the Python generator, this is emitted beside 
-target=repl / target=test outputs: ivy_to_cpp.py (line 4782). 
-In ivy2go, we mirror that in compile.go (line 380), and 
+In the Python generator, this is emitted beside
+target=repl / target=test outputs: ivy_to_cpp.py (line 4782).
+In ivy2go, we mirror that in compile.go (line 380), and
 write the .dsc into ExtraFiles at compile.go (line 103).
 
-The consumer is ivylaunch: it loads the descriptor, 
+The consumer is ivylaunch: it loads the descriptor,
 turns descriptor params into argv, and starts the
-listed binaries: 
-ivylaunch.go (line 18), 
+listed binaries:
+ivylaunch.go (line 18),
 ivylaunch.go (line 75).
 
-So: if you directly run a generated binary yourself, 
+So: if you directly run a generated binary yourself,
 you do not need .dsc. If you want Ivy-style launcher/test
-orchestration, especially multi-process/isolate or 
+orchestration, especially multi-process/isolate or
 parameterized runs, .dsc is the handoff file.
-
 */
 func TestCompileAndGenerateAllAddsDescriptorExtraFilesForTestTarget(t *testing.T) {
 	dir := t.TempDir()
@@ -331,6 +428,10 @@ action set_flag = {
 	}
 	if !stringSliceContains(desc.TestParams, "seed") {
 		t.Errorf("descriptor test_params missing seed: %#v", desc.TestParams)
+	}
+	wantParams := []string{"iters", "runs", "seed", "delay", "wait", "modelfile"}
+	if strings.Join(desc.TestParams, ",") != strings.Join(wantParams, ",") {
+		t.Errorf("descriptor test_params = %#v, want %#v", desc.TestParams, wantParams)
 	}
 }
 

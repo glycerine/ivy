@@ -292,8 +292,10 @@ func (g *Generator) emitMain() {
 	switch g.Config.Target {
 	case "repl":
 		g.emitReplMain()
-	case "test", "gen":
+	case "test":
 		g.emitTestMain()
+	case "gen":
+		g.emitGenMain()
 	default:
 		// impl (and anything else): plain construct + init + exit.
 		g.main.open("func main() {")
@@ -303,6 +305,37 @@ func (g *Generator) emitMain() {
 		g.main.line("_ = state")
 		g.main.close("")
 	}
+}
+
+func (g *Generator) emitGenMain() {
+	g.Ctx.OnceGlobals["__need_testflags"] = true
+
+	g.main.open(fmt.Sprintf("func ivy2goGenerate(state *%s) {", g.StateTypeName))
+	names := g.actionGenNames()
+	for i, name := range names {
+		struc := "actionGen_" + goExportedName(name)
+		genName := fmt.Sprintf("__gen_%d", i)
+		g.main.linef("%s := new%s(state)", genName, struc)
+		g.main.linef("defer func() { _ = %s.Close() }()", genName)
+		g.main.linef("if %s.generate(state) {", genName)
+		g.main.linef("\t%s.execute(state)", genName)
+		g.main.line("}")
+	}
+	if len(names) == 0 {
+		g.main.line("_ = state")
+	}
+	g.main.close("")
+	g.main.blank()
+
+	g.main.open("func main() {")
+	g.main.linef("opts := parseTestRuntimeOptions(%s, %s)", g.Config.TestIters, g.Config.TestRuns)
+	g.main.line("cleanup := applyTestRuntimeOptions(opts)")
+	g.main.line("defer cleanup()")
+	stateArgs := g.emitModuleParamSetup()
+	g.main.linef("state := New%s(%s)", g.StateTypeName, strings.Join(stateArgs, ", "))
+	g.main.line("state.Init()")
+	g.main.line("ivy2goGenerate(state)")
+	g.main.close("")
 }
 
 // emitReplMain emits a main() that reads commands from stdin via
@@ -349,52 +382,61 @@ func (g *Generator) emitReplMain() {
 //	    fmt.Println("test_completed")
 //	}
 func (g *Generator) emitTestMain() {
-	// Request parseTestItersFlag up front so emitRuntimeHelpersLate
+	// Request parseTestRuntimeOptions up front so emitRuntimeHelpersLate
 	// emits it regardless of whether the empty-actions branch fires.
 	g.Ctx.OnceGlobals["__need_testflags"] = true
 	g.Ctx.AddImport("main", "fmt", "")
+	g.Ctx.AddImport("main", "time", "")
 
 	names := g.actionGenNames()
 
 	g.main.open("func main() {")
-	g.main.line("applyTestSeedFlag()")
-	g.main.linef("iters := parseTestItersFlag(%s)", g.Config.TestIters)
+	g.main.linef("opts := parseTestRuntimeOptions(%s, %s)", g.Config.TestIters, g.Config.TestRuns)
+	g.main.line("cleanup := applyTestRuntimeOptions(opts)")
+	g.main.line("defer cleanup()")
 	stateArgs := g.emitModuleParamSetup()
-	g.main.linef("state := New%s(%s)", g.StateTypeName, strings.Join(stateArgs, ", "))
-	g.main.line("state.Init()")
+	g.main.line("for runidx := 0; runidx < opts.Runs; runidx++ {")
+	g.main.line("\t_ = runidx")
+	g.main.line("\tfunc() {")
+	g.main.linef("\t\tstate := New%s(%s)", g.StateTypeName, strings.Join(stateArgs, ", "))
+	g.main.line("\t\tstate.Init()")
 	g.main.blank()
 	if len(names) == 0 {
 		// Module has no public actions to drive — just complete.
-		g.main.line("_ = iters")
-		g.main.line(`fmt.Println("test_completed")`)
+		g.main.line("\t\tif opts.WaitMS > 0 {")
+		g.main.line("\t\t\ttime.Sleep(time.Duration(opts.WaitMS) * time.Millisecond)")
+		g.main.line("\t\t}")
+		g.main.line(`		fmt.Fprintln(ivyTraceOut, "test_completed")`)
+		g.main.line("\t}()")
+		g.main.line("}")
 		g.main.close("")
 		return
 	}
 	// Action generator slice. Each entry pairs a name (for traces)
 	// with the per-action generate(state)bool + execute(state) pair
 	// (mirrors ivy2cpp's two-phase generate→execute split).
-	g.main.line("// Per-action generator registry.")
-	g.main.line("type actionEntry struct {")
-	g.main.line("\tname     string")
-	g.main.linef("\tgenerate func(*%s) bool", g.StateTypeName)
-	g.main.linef("\texecute  func(*%s)", g.StateTypeName)
-	g.main.line("\tclose    func() error")
-	g.main.line("\tweight   float64")
-	g.main.line("}")
-	g.main.line("var actions []actionEntry")
+	g.main.line("\t\t// Per-action generator registry.")
+	g.main.line("\t\ttype actionEntry struct {")
+	g.main.line("\t\t\tname     string")
+	g.main.linef("\t\t\tgenerate func(*%s) bool", g.StateTypeName)
+	g.main.linef("\t\t\texecute  func(*%s)", g.StateTypeName)
+	g.main.line("\t\t\tclose    func() error")
+	g.main.line("\t\t\tweight   float64")
+	g.main.line("\t\t}")
+	g.main.line("\t\tvar actions []actionEntry")
 	for _, name := range names {
 		struc := "actionGen_" + goExportedName(name)
 		w := g.actionWeight(name)
-		g.main.linef("{")
-		g.main.linef("\tg := new%s(state)", struc)
-		g.main.linef("\tactions = append(actions, actionEntry{name: %q, generate: g.generate, execute: g.execute, close: g.Close, weight: %g})", name, w)
-		g.main.line("}")
+		g.main.linef("\t\t{")
+		g.main.linef("\t\t\tg := new%s(state)", struc)
+		g.main.linef("\t\t\tactions = append(actions, actionEntry{name: %q, generate: g.generate, execute: g.execute, close: g.Close, weight: %g})", name, w)
+		g.main.line("\t\t}")
 	}
-	g.main.line("defer func() {")
-	g.main.line("\tfor _, a := range actions {")
-	g.main.line("\t\t_ = a.close()")
-	g.main.line("\t}")
-	g.main.line("}()")
+	g.main.line("\t\tdefer func() {")
+	g.main.line("\t\t\tfor _, a := range actions {")
+	g.main.line("\t\t\t\t_ = a.close()")
+	g.main.line("\t\t\t}")
+	g.main.line("\t\t}()")
 	g.main.blank()
 	// Mirrors cpp's test-loop structure (ivy2cpp/generator.go:1685+):
 	//   choices = totalweight + 5.0   // 5 reserved for IO/select branches
@@ -406,44 +448,52 @@ func (g *Generator) emitTestMain() {
 	// random consumption sequence match ivy_to_cpp's — keeping them
 	// here is the only way ivy2go's stream stays byte-equivalent under
 	// the same chacha8 seed.
-	g.main.line("var __totalW float64")
-	g.main.line("for _, a := range actions { __totalW += a.weight }")
-	g.main.line("__choices := __totalW + 5.0")
-	g.main.line("var __frnd float64")
-	g.main.line("__doOver := false")
-	g.main.line("for i := 0; i < iters; i++ {")
-	g.main.line("\t_ = i")
-	g.main.line("\tif __doOver {")
-	g.main.line("\t\t__doOver = false")
-	g.main.line("\t} else {")
-	g.main.line("\t\t__frnd = __choices * float64(ivyRand31()) / ivyRandMaxPlus1")
-	g.main.line("\t}")
-	g.main.line("\tif __frnd < __totalW {")
-	g.main.line("\t\tidx := 0")
-	g.main.line("\t\tacc := 0.0")
-	g.main.line("\t\tfor j := 0; j < len(actions)-1; j++ {")
-	g.main.line("\t\t\tacc += actions[j].weight")
-	g.main.line("\t\t\tif __frnd < acc { idx = j; break }")
-	g.main.line("\t\t\tidx = j + 1")
-	g.main.line("\t\t}")
-	g.main.line("\t\t// Solver-driven fire/skip: generate() returns false")
-	g.main.line("\t\t// when the action's precondition is UNSAT in the")
-	g.main.line("\t\t// current state — cpp retries with `cycle--`.")
-	g.main.line("\t\tif actions[idx].generate(state) {")
-	g.main.line("\t\t\tactions[idx].execute(state)")
-	g.main.line("\t\t} else {")
-	g.main.line("\t\t\ti--")
-	g.main.line("\t\t}")
-	g.main.line("\t} else {")
-	g.main.line("\t\t// Select-branch no-op (no readers / timers in test")
-	g.main.line("\t\t// fixtures). cpp does `select(...); if (foo==0) cycle--`.")
-	g.main.line("\t\ti--")
-	g.main.line("\t}")
+	g.main.line("\t\tvar __totalW float64")
+	g.main.line("\t\tfor _, a := range actions { __totalW += a.weight }")
+	g.main.line("\t\t__choices := __totalW + 5.0")
+	g.main.line("\t\tvar __frnd float64")
+	g.main.line("\t\t__doOver := false")
+	g.main.line("\t\tfor i := 0; i < opts.Iters; i++ {")
+	g.main.line("\t\t\t_ = i")
+	g.main.line("\t\t\tif __doOver {")
+	g.main.line("\t\t\t\t__doOver = false")
+	g.main.line("\t\t\t} else {")
+	g.main.line("\t\t\t\t__frnd = __choices * float64(ivyRand31()) / ivyRandMaxPlus1")
+	g.main.line("\t\t\t}")
+	g.main.line("\t\t\tif __frnd < __totalW {")
+	g.main.line("\t\t\t\tidx := 0")
+	g.main.line("\t\t\t\tacc := 0.0")
+	g.main.line("\t\t\t\tfor j := 0; j < len(actions)-1; j++ {")
+	g.main.line("\t\t\t\t\tacc += actions[j].weight")
+	g.main.line("\t\t\t\t\tif __frnd < acc { idx = j; break }")
+	g.main.line("\t\t\t\t\tidx = j + 1")
+	g.main.line("\t\t\t\t}")
+	g.main.line("\t\t\t\t// Solver-driven fire/skip: generate() returns false")
+	g.main.line("\t\t\t\t// when the action's precondition is UNSAT in the")
+	g.main.line("\t\t\t\t// current state — cpp retries with `cycle--`.")
+	g.main.line("\t\t\t\tif actions[idx].generate(state) {")
+	g.main.line("\t\t\t\t\tactions[idx].execute(state)")
+	g.main.line("\t\t\t\t\tif opts.DelayMS > 0 {")
+	g.main.line("\t\t\t\t\t\ttime.Sleep(time.Duration(opts.DelayMS) * time.Millisecond)")
+	g.main.line("\t\t\t\t\t}")
+	g.main.line("\t\t\t\t} else {")
+	g.main.line("\t\t\t\t\ti--")
+	g.main.line("\t\t\t\t}")
+	g.main.line("\t\t\t} else {")
+	g.main.line("\t\t\t\t// Select-branch no-op (no readers / timers in test")
+	g.main.line("\t\t\t\t// fixtures). cpp does `select(...); if (foo==0) cycle--`.")
+	g.main.line("\t\t\t\ti--")
+	g.main.line("\t\t\t}")
 	// cpp's test main does NOT call __tick per iter (no select branch")
 	// invokes it for readerless fixtures). Progress/rely checks happen")
 	// inside the action body instead. Don't call state.Tick here.")
+	g.main.line("\t\t}")
+	g.main.line("\t\tif opts.WaitMS > 0 {")
+	g.main.line("\t\t\ttime.Sleep(time.Duration(opts.WaitMS) * time.Millisecond)")
+	g.main.line("\t\t}")
+	g.main.line(`		fmt.Fprintln(ivyTraceOut, "test_completed")`)
+	g.main.line("\t}()")
 	g.main.line("}")
-	g.main.line(`fmt.Println("test_completed")`)
 	g.main.close("")
 }
 

@@ -78,7 +78,7 @@ func (g *Generator) emitRuntimeImplPreamble(w *goWriter) {
 	w.line("// + Go-ported C++ chacha8c.hpp) so the random stream is")
 	w.line("// byte-equivalent across all three tools for any given")
 	w.line("// `seed=N` argument. Reseeded from `--seed=N` / IVY_SEED by")
-	w.line("// applyTestSeedFlag in the test main.")
+	w.line("// applyTestRuntimeOptions in the test/gen main.")
 	w.line("var ivyRand = rand.NewChaCha8(ivySeedBytes(1))")
 	w.blank()
 	w.line("// ivySeedBytes mirrors cpp's `std::memcpy(seed32, &seed, sizeof(seed))`")
@@ -138,6 +138,7 @@ func (g *Generator) emitRuntimeImplPreamble(w *goWriter) {
 		w.line("// ivyTraceOut is the io.Writer used by all trace lines.")
 		w.line("// Defaults to os.Stdout; override by reassigning before Init.")
 		w.line("var ivyTraceOut io.Writer = os.Stdout")
+		w.line("var ivyModelFile io.WriteCloser")
 		w.blank()
 	}
 
@@ -478,61 +479,114 @@ func (g *Generator) emitPickInputHelpers(w *goWriter) {
 	w.blank()
 }
 
-// emitTestFlagsHelper writes parseTestItersFlag + applyTestSeedFlag.
-// Mirrors ivy2cpp's `test_iters` + `seed` argv plumbing so cpp / go
-// emitted binaries accept the same flags AND produce the same random
-// sequence under the same seed (ChaCha8 + ivySeedBytes convention).
-// Flag precedence: `--iters=N` / `--seed=N` on argv → IVY_ITERS /
-// IVY_SEED env vars → the emit-time default.
-//
-// Also accepts the cpp-style positional `seed=N` form (no leading
-// `--`) so the same argv literally invokes both binaries the same
-// way for cross-tool comparison.
+// emitTestFlagsHelper writes the runtime option parser used by test
+// and gen mains. Mirrors ivy_to_cpp.py's argv handling for descriptor
+// test_params: iters, runs, seed, delay, wait, modelfile, plus out.
 func (g *Generator) emitTestFlagsHelper(w *goWriter) {
 	g.Ctx.AddImport("runtime", "os", "")
 	g.Ctx.AddImport("runtime", "strconv", "")
 	g.Ctx.AddImport("runtime", "strings", "")
-	w.line("// parseTestItersFlag returns the iteration count for the")
-	w.line("// test loop. Argv `--iters=N` / `iters=N`, env `IVY_ITERS`,")
-	w.line("// then the emit-time default (in that order).")
-	w.line("func parseTestItersFlag(defaultIters int) int {")
-	w.line("\tfor _, a := range os.Args[1:] {")
-	w.line(`		for _, pfx := range []string{"--iters=", "iters="} {`)
-	w.line("\t\t\tif strings.HasPrefix(a, pfx) {")
-	w.line("\t\t\t\tif n, err := strconv.Atoi(a[len(pfx):]); err == nil { return n }")
-	w.line("\t\t\t}")
-	w.line("\t\t}")
-	w.line("\t}")
-	w.line(`	if v := os.Getenv("IVY_ITERS"); v != "" {`)
-	w.line("\t\tif n, err := strconv.Atoi(v); err == nil { return n }")
-	w.line("\t}")
-	w.line("\treturn defaultIters")
-	w.line("}")
-	w.blank()
-	w.line("// applyTestSeedFlag re-seeds ivyRand when `--seed=N` or the")
-	w.line("// cpp-style `seed=N` positional is on argv (or IVY_SEED is")
-	w.line("// set). Uses the same ivySeedBytes packing cpp uses so the")
-	w.line("// ChaCha8 stream is byte-identical for the same seed across")
-	w.line("// ivy_to_cpp, ivy2cpp, and ivy2go binaries.")
-	w.line("func applyTestSeedFlag() {")
-	w.line("\tapply := func(s string) bool {")
-	w.line("\t\tn, err := strconv.ParseUint(s, 10, 32)")
-	w.line("\t\tif err != nil { return false }")
-	w.line("\t\tivyRand = rand.NewChaCha8(ivySeedBytes(uint32(n)))")
-	w.line("\t\treturn true")
-	w.line("\t}")
-	w.line("\tfor _, a := range os.Args[1:] {")
-	w.line(`		for _, pfx := range []string{"--seed=", "seed="} {`)
-	w.line("\t\t\tif strings.HasPrefix(a, pfx) {")
-	w.line("\t\t\t\tif apply(a[len(pfx):]) { return }")
-	w.line("\t\t\t}")
-	w.line("\t\t}")
-	w.line("\t}")
-	w.line(`	if v := os.Getenv("IVY_SEED"); v != "" {`)
-	w.line("\t\tapply(v)")
-	w.line("\t}")
-	w.line("}")
-	w.blank()
+	w.raw(`type ivyTestRuntimeOptions struct {
+	Iters    int
+	Runs     int
+	Seed     uint32
+	DelayMS  int
+	WaitMS   int
+	Out       string
+	ModelFile string
+}
+
+func parseTestRuntimeOptions(defaultIters, defaultRuns int) ivyTestRuntimeOptions {
+	opts := ivyTestRuntimeOptions{
+		Iters: defaultIters,
+		Runs:  defaultRuns,
+		Seed:  1,
+	}
+	setInt := func(dst *int, text string) {
+		n, err := strconv.Atoi(text)
+		if err == nil {
+			*dst = n
+		}
+	}
+	setSeed := func(text string) {
+		n, err := strconv.ParseUint(text, 10, 32)
+		if err == nil {
+			opts.Seed = uint32(n)
+		}
+	}
+	if v := os.Getenv("IVY_ITERS"); v != "" {
+		setInt(&opts.Iters, v)
+	}
+	if v := os.Getenv("IVY_RUNS"); v != "" {
+		setInt(&opts.Runs, v)
+	}
+	if v := os.Getenv("IVY_SEED"); v != "" {
+		setSeed(v)
+	}
+	if v := os.Getenv("IVY_DELAY"); v != "" {
+		setInt(&opts.DelayMS, v)
+	}
+	if v := os.Getenv("IVY_WAIT"); v != "" {
+		setInt(&opts.WaitMS, v)
+	}
+	if v := os.Getenv("IVY_OUT"); v != "" {
+		opts.Out = v
+	}
+	if v := os.Getenv("IVY_MODELFILE"); v != "" {
+		opts.ModelFile = v
+	}
+	for _, arg := range os.Args[1:] {
+		name, value, ok := strings.Cut(arg, "=")
+		if !ok {
+			continue
+		}
+		name = strings.TrimPrefix(name, "--")
+		switch name {
+		case "iters":
+			setInt(&opts.Iters, value)
+		case "runs":
+			setInt(&opts.Runs, value)
+		case "seed":
+			setSeed(value)
+		case "delay":
+			setInt(&opts.DelayMS, value)
+		case "wait":
+			setInt(&opts.WaitMS, value)
+		case "out":
+			opts.Out = value
+		case "modelfile":
+			opts.ModelFile = value
+		}
+	}
+	return opts
+}
+
+func applyTestRuntimeOptions(opts ivyTestRuntimeOptions) func() {
+	ivyRand = rand.NewChaCha8(ivySeedBytes(opts.Seed))
+	var closers []io.Closer
+	openOut := func(path string) *os.File {
+		f, err := os.Create(path)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "cannot open to write: %s\n", path)
+			os.Exit(1)
+		}
+		closers = append(closers, f)
+		return f
+	}
+	if opts.Out != "" {
+		ivyTraceOut = openOut(opts.Out)
+	}
+	if opts.ModelFile != "" {
+		ivyModelFile = openOut(opts.ModelFile)
+	}
+	return func() {
+		for i := len(closers) - 1; i >= 0; i-- {
+			_ = closers[i].Close()
+		}
+	}
+}
+
+`)
 }
 
 // emitMustHelpers writes the panic-on-failure facades for goivy

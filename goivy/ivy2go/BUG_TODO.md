@@ -52,28 +52,19 @@ recommendations unless there is a concrete failure mode.
   on a nil map.
 - Solver-derived initial values for numeric enums now emit numeric literals
   rather than undeclared exported identifiers.
+- `target=gen` now emits a one-shot generator harness that initializes state
+  and invokes each action generator once, instead of reusing the randomized
+  `target=test` loop.
+- Test/runtime descriptor parameters now line up with the emitted binary:
+  `iters`, `runs`, `seed`, `delay`, `wait`, `out`, and `modelfile` are parsed,
+  `runs` drives repeated test executions, `out` redirects trace output, and
+  `modelfile` opens the advertised model-log path.
 
 Remaining entries keep their original audit numbering.
 
 ## P1 - generated programs can be wrong, invalid, or unlaunchable
 
 ## P2 - target and interface behavior diverges from the intended ivy2cpp shape
-
-16. `target=gen` emits the test-loop main.
-
-    Evidence: `emitMain` routes both `test` and `gen` to `emitTestMain`
-    (`generator.go:289`). `emitTestMain` runs the randomized test loop and
-    prints `test_completed` (`generator.go:346`). ivy2cpp has a separate
-    generator path for `gen`, so the current Go target behaves like `test`.
-
-17. Test descriptors advertise parameters the binary ignores.
-
-    Evidence: `test_runs` is parsed into config (`compile.go:139`), and
-    descriptors advertise `iters`, `runs`, `seed`, `delay`, `wait`, and
-    `modelfile` (`compile.go:388`). The emitted test helper only parses
-    `iters` and `seed` (`runtime.go:557`), and `emitTestMain` has only a single
-    `iters` loop (`generator.go:408`). `runs`, `delay`, `wait`, and
-    `modelfile` are currently descriptor fiction.
 
 18. REPL dispatch exposes non-public actions.
 
