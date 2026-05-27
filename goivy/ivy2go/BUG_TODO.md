@@ -45,7 +45,8 @@ recommendations unless there is a concrete failure mode.
 - Default initial state now uses the same nondeterministic storage initializer
   as locals: bounded function arrays initialize each cell, and variant-super
   state is constructed through a valid leaf constructor instead of staying at
-  an invalid zero value.
+  an invalid zero value. Recursive variant state now terminates by using a
+  finite base leaf for recursive fields.
 - Extensional hash-thunk relation clears now replace the backing map with a
   fresh map and clear the thunk fallback, so later direct writes cannot panic
   on a nil map.
