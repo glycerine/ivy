@@ -241,6 +241,38 @@ func TestGenerateMainPackageEmitsMain(t *testing.T) {
 	}
 }
 
+/*
+Q: what are descriptor .dsc outputs used for?
+
+.dsc files are Ivy launcher descriptors. They are
+not used by the Go compiler itself; they are metadata
+for tooling that wants to run the compiled Ivy system.
+
+A descriptor says:
+
+* which executable(s) to launch
+* the isolate/process name for each executable
+* which module params the executable accepts, including defaults
+* for target=test, which test-run params are accepted, like 
+  iters, runs, seed, delay, wait, modelfile
+
+In the Python generator, this is emitted beside 
+target=repl / target=test outputs: ivy_to_cpp.py (line 4782). 
+In ivy2go, we mirror that in compile.go (line 380), and 
+write the .dsc into ExtraFiles at compile.go (line 103).
+
+The consumer is ivylaunch: it loads the descriptor, 
+turns descriptor params into argv, and starts the
+listed binaries: 
+ivylaunch.go (line 18), 
+ivylaunch.go (line 75).
+
+So: if you directly run a generated binary yourself, 
+you do not need .dsc. If you want Ivy-style launcher/test
+orchestration, especially multi-process/isolate or 
+parameterized runs, .dsc is the handoff file.
+
+*/
 func TestCompileAndGenerateAllAddsDescriptorExtraFilesForTestTarget(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "proto.ivy")
