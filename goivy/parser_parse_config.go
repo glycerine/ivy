@@ -17,6 +17,16 @@ func newParseConfig() *parseConfig {
 	}
 }
 
+func (cfg *parseConfig) setLanguageVersion(version Version) {
+	if cfg.astCfg == nil {
+		cfg.astCfg = NewAstConfig()
+	}
+	if cfg.astCfg.IuCfg == nil {
+		cfg.astCfg.IuCfg = NewIvyUtilsConfig()
+	}
+	SetStringVersionOn(cfg.astCfg.IuCfg, versionString(version))
+}
+
 // ParseOption configures optional behavior for the full-file LALR parser.
 type ParseOption func(*parseConfig)
 

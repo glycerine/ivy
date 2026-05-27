@@ -670,6 +670,44 @@ alias marcelo_alias = marcelo[class].t`
 	}
 }
 
+func TestParseV16ObjectBodyDoesNotRedefineObjectName(t *testing.T) {
+	src := `type money
+object account = {
+individual balance : money
+init balance = 0
+}`
+	if _, err := Parse(src, Version{1, 6}, WithFilename("object_redef16.ivy")); err != nil {
+		t.Fatalf("Parse v1.6 object with body declarations: %v", err)
+	}
+}
+
+func TestParseV16ObjectInterpretDoesNotRedefineObjectName(t *testing.T) {
+	src := `object packet = {
+type t
+interpret t -> bv[1]
+}`
+	if _, err := Parse(src, Version{1, 6}, WithFilename("object_interpret16.ivy")); err != nil {
+		t.Fatalf("Parse v1.6 object with interpret declaration: %v", err)
+	}
+}
+
+func TestParseV16LabeledDeclLabelsDoNotDefineNames(t *testing.T) {
+	src := `axiom [same] true
+property [same] true
+conjecture [same] true`
+	if _, err := Parse(src, Version{1, 6}, WithFilename("label_defs16.ivy")); err != nil {
+		t.Fatalf("Parse v1.6 repeated labeled declarations: %v", err)
+	}
+}
+
+func TestParseV17LabeledDeclLabelsStillDefineNames(t *testing.T) {
+	src := `axiom [same] true
+property [same] true`
+	if _, err := Parse(src, Version{1, 7}, WithFilename("label_defs17.ivy")); err == nil {
+		t.Fatal("Parse v1.7 repeated labeled declarations succeeded, want redefinition error")
+	}
+}
+
 func TestParseV16ModuleClassAndRMEAssertSyntax(t *testing.T) {
 	src := `module m = {
 type inner

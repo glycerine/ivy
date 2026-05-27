@@ -11,6 +11,7 @@ func ParseFullV16(input string, version Version, opts ...ParseOption) (*ParseRes
 	for _, opt := range opts {
 		opt(cfg)
 	}
+	cfg.setLanguageVersion(version)
 	lex := newParser16LexAdapter(input, version)
 	cfg.applyToParser16(lex)
 	parser16Parse(lex)

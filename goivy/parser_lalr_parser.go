@@ -28,6 +28,7 @@ func ParseV17(input string, version Version, opts ...ParseOption) (*ParseResult,
 	for _, opt := range opts {
 		opt(cfg)
 	}
+	cfg.setLanguageVersion(version)
 	lex := newParser17LexAdapter(input, version)
 	cfg.applyToParser17(lex)
 	parser17Parse(lex)
