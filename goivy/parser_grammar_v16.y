@@ -64,7 +64,7 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 %type <nodes> lparams params bounds invariants decreases eqns moresymbols atoms modifies insts pnames apps upaxes cdefns prod sum places scentranss optwith defargs
 %type <bval>  optdotdotdot opttrusted optfinite optghost
 %type <str>   infix dotsym SYMBOLx SYMsubscr
-%type <tok>   labelname relop
+%type <tok>   labelname relop actmeth
 
 %left         PARSER16_TOK_SEMI
 %left         PARSER16_TOK_GLOBALLY PARSER16_TOK_EVENTUALLY
@@ -380,17 +380,11 @@ top:
         $$ = $1
         parser16DeclareInit(parser16Acfg(parser16lex), $$, $3.(*LabeledFormula), tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
     }
-    | top optimpex PARSER16_TOK_ACTION SYMBOLx optargs optreturns optactiondef
+    | top optimpex actmeth SYMBOLx optargs optreturns optactiondef
     {
         xtracer.Trace("parser.p_top_optimpex_action_symbol_optargs_optreturns_eq_action ENTER (top)")
         $$ = $1
-        parser17DeclareAction(parser16Acfg(parser16lex), $$, $2, false, $4, $5, $6, $7, tok16Lineno(parser16lex.(*parser16LexAdapter), $3))
-    }
-    | top optimpex PARSER16_TOK_METHOD SYMBOLx optargs optreturns optactiondef
-    {
-        xtracer.Trace("parser.p_top_optimpex_action_symbol_optargs_optreturns_eq_action ENTER (top)")
-        $$ = $1
-        parser17DeclareAction(parser16Acfg(parser16lex), $$, $2, true, $4, $5, $6, $7, tok16Lineno(parser16lex.(*parser16LexAdapter), $3))
+        parser17DeclareAction(parser16Acfg(parser16lex), $$, $2, $3.Val == "method", $4, $5, $6, $7, tok16Lineno(parser16lex.(*parser16LexAdapter), $3))
     }
     | top PARSER16_TOK_MIXIN callatom PARSER16_TOK_BEFORE callatom
     {
@@ -842,6 +836,19 @@ optimpex:
     {
         xtracer.Trace("parser.p_optimpex_import ENTER (optimpex)")
         $$ = parser16Acfg(parser16lex).NewImportDecl()
+    }
+    ;
+
+actmeth:
+    PARSER16_TOK_ACTION
+    {
+        xtracer.Trace("parser.p_actmeth_action ENTER (actmeth)")
+        $$ = TokenInfo{Val: "action", Line: $1.Line}
+    }
+    | PARSER16_TOK_METHOD
+    {
+        xtracer.Trace("parser.p_actmeth_method ENTER (actmeth)")
+        $$ = TokenInfo{Val: "method", Line: $1.Line}
     }
     ;
 
@@ -1356,7 +1363,7 @@ complexact:
     }
     | PARSER16_TOK_IF somefmla sequence
     {
-        xtracer.Trace("parser.p_action_if_fmla_lcb_action_rcb ENTER (complexact)")
+        xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb ENTER (complexact)")
         cond := checkNonTemporal($2)
         body := fixIfPart(cond, $3)
         a := parser16Acfg(parser16lex).NewIfAction(cond, body, nil)
@@ -1365,7 +1372,7 @@ complexact:
     }
     | PARSER16_TOK_IF somefmla sequence PARSER16_TOK_ELSE action
     {
-        xtracer.Trace("parser.p_action_if_fmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
+        xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
         cond := checkNonTemporal($2)
         body := fixIfPart(cond, $3)
         a := parser16Acfg(parser16lex).NewIfAction(cond, body, $5)
@@ -2639,12 +2646,36 @@ term:
     ;
 
 relop:
-    PARSER16_TOK_EQ  { $$ = TokenInfo{Val: "=", Line: $1.Line} }
-    | PARSER16_TOK_LE  { $$ = TokenInfo{Val: "<=", Line: $1.Line} }
-    | PARSER16_TOK_LT  { $$ = TokenInfo{Val: "<", Line: $1.Line} }
-    | PARSER16_TOK_GE  { $$ = TokenInfo{Val: ">=", Line: $1.Line} }
-    | PARSER16_TOK_GT  { $$ = TokenInfo{Val: ">", Line: $1.Line} }
-    | PARSER16_TOK_PTO { $$ = TokenInfo{Val: "*>", Line: $1.Line} }
+    PARSER16_TOK_EQ
+    {
+        xtracer.Trace("parser.p_relop_eq ENTER (relop)")
+        $$ = TokenInfo{Val: "=", Line: $1.Line}
+    }
+    | PARSER16_TOK_LE
+    {
+        xtracer.Trace("parser.p_relop_le ENTER (relop)")
+        $$ = TokenInfo{Val: "<=", Line: $1.Line}
+    }
+    | PARSER16_TOK_LT
+    {
+        xtracer.Trace("parser.p_relop_lt ENTER (relop)")
+        $$ = TokenInfo{Val: "<", Line: $1.Line}
+    }
+    | PARSER16_TOK_GE
+    {
+        xtracer.Trace("parser.p_relop_ge ENTER (relop)")
+        $$ = TokenInfo{Val: ">=", Line: $1.Line}
+    }
+    | PARSER16_TOK_GT
+    {
+        xtracer.Trace("parser.p_relop_gt ENTER (relop)")
+        $$ = TokenInfo{Val: ">", Line: $1.Line}
+    }
+    | PARSER16_TOK_PTO
+    {
+        xtracer.Trace("parser.p_relop_pto ENTER (relop)")
+        $$ = TokenInfo{Val: "*>", Line: $1.Line}
+    }
     ;
 
 infix:
