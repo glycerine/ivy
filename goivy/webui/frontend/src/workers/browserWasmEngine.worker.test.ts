@@ -1,5 +1,31 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+vi.mock('./smtZ3Imports.js', () => ({
+  createSmtZ3Imports: vi.fn(() => ({})),
+}));
+
+vi.mock('./goivyNodeFS.js', () => ({
+  installGoIvyNodeFS: vi.fn((options = {}) => {
+    const decoder = new TextDecoder();
+    (globalThis as any).fs = {
+      writeSync(fd, bytes) {
+        if (fd === 1 && typeof options.stdout === 'function') {
+          options.stdout(bytes);
+        }
+        if (fd === 2 && typeof options.stderr === 'function') {
+          options.stderr(bytes);
+        }
+        return bytes.length;
+      },
+    };
+    return {
+      decode(bytes) {
+        return decoder.decode(bytes);
+      },
+    };
+  }),
+}));
+
 function response(value, init = {}) {
   return new Response(value, { status: 200, statusText: 'OK', ...init });
 }
