@@ -747,6 +747,134 @@ update r from s params x:t in { call step } -> requires true ensures true`
 	}
 }
 
+func TestParseV16GhostTypesAndModuleVariants(t *testing.T) {
+	src := `ghost type spec_t
+ghost type spec_idx = {0..1}
+module object mo = {
+type inner
+}
+module isolate mi with api = {
+action a = {}
+}`
+	result, err := Parse(src, Version{1, 6}, WithFilename("ghost_module16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 ghost/module variants: %v", err)
+	}
+	var ghosts int
+	for _, decl := range result.Decls {
+		td, ok := decl.(*TypeDecl)
+		if !ok || len(td.Args()) == 0 {
+			continue
+		}
+		if _, ok := td.Args()[0].(*GhostTypeDef); ok {
+			ghosts++
+		}
+	}
+	if ghosts != 2 {
+		t.Fatalf("GhostTypeDef count = %d, want 2", ghosts)
+	}
+	if got := countDeclsOf[*ModuleDecl](result.Decls); got != 2 {
+		t.Fatalf("ModuleDecl count = %d, want 2", got)
+	}
+	var sawInnerIsolate bool
+	for _, decl := range result.Decls {
+		md, ok := decl.(*ModuleDecl)
+		if !ok || len(md.Args()) == 0 {
+			continue
+		}
+		def, ok := md.Args()[0].(*Definition)
+		if !ok || NodeRep(def.Lhs) != "mi" {
+			continue
+		}
+		body, ok := def.Rhs.(*ivyAccum)
+		if !ok {
+			t.Fatalf("module isolate body = %T, want *ivyAccum", def.Rhs)
+		}
+		if countDeclsOf[*IsolateDecl](body.decls) == 1 {
+			sawInnerIsolate = true
+		}
+	}
+	if !sawInnerIsolate {
+		t.Fatalf("module isolate did not synthesize inner isolate declaration")
+	}
+}
+
+func TestParseV16TopLevelProofAndImplementType(t *testing.T) {
+	src := `proof [pf] intro
+implement type spec_t with impl_t`
+	result, err := Parse(src, Version{1, 6}, WithFilename("proof_implement_type16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 proof/implement type: %v", err)
+	}
+	proof := firstDeclOf[*ProofDecl](t, result.Decls)
+	lf := firstArgAs[*LabeledFormula](t, proof)
+	if lf.LabelName() != "pf" {
+		t.Fatalf("proof label = %q, want pf", lf.LabelName())
+	}
+	if _, ok := lf.Formula.(*SchemaInstantiation); !ok {
+		t.Fatalf("proof formula = %T, want *SchemaInstantiation", lf.Formula)
+	}
+	if got := countDeclsOf[*ImplementTypeDecl](result.Decls); got != 1 {
+		t.Fatalf("ImplementTypeDecl count = %d, want 1", got)
+	}
+}
+
+func TestParseV16IsolateAndExtractObjectForms(t *testing.T) {
+	src := `isolate objiso = {
+action a = {}
+} with exported
+extract worker = {
+action b = {}
+} with exported
+extract simple = a, b`
+	result, err := Parse(src, Version{1, 6}, WithFilename("isolate_extract16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 isolate/extract object forms: %v", err)
+	}
+	if got := countDeclsOf[*ObjectDecl](result.Decls); got != 2 {
+		t.Fatalf("ObjectDecl count = %d, want 2", got)
+	}
+	if got := countDeclsOf[*IsolateObjectDecl](result.Decls); got != 2 {
+		t.Fatalf("IsolateObjectDecl count = %d, want 2", got)
+	}
+	var sawExtract bool
+	for _, decl := range result.Decls {
+		id, ok := decl.(*IsolateDecl)
+		if !ok || len(id.Args()) == 0 {
+			continue
+		}
+		if ed, ok := id.Args()[0].(*ExtractDef); ok && ed.Kind == "extract" {
+			sawExtract = true
+		}
+	}
+	if !sawExtract {
+		t.Fatalf("plain extract declaration not found")
+	}
+}
+
+func TestParseV16DefinitionSomeExprAndOperatorLHS(t *testing.T) {
+	src := `type t
+relation p(X:t)
+definition choice(X:t):t = some Y:t . p(Y) in Y else X
+definition (X + Y):t = X`
+	result, err := Parse(src, Version{1, 6}, WithFilename("definition_shapes16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 definition shapes: %v", err)
+	}
+	decl := firstDeclOf[*DefinitionDecl](t, result.Decls)
+	if got := len(decl.Args()); got != 2 {
+		t.Fatalf("DefinitionDecl args = %d, want 2", got)
+	}
+	first := decl.Args()[0].(*LabeledFormula).Formula.(*Definition)
+	if _, ok := first.Rhs.(*SomeExpr); !ok {
+		t.Fatalf("choice rhs = %T, want *SomeExpr", first.Rhs)
+	}
+	second := decl.Args()[1].(*LabeledFormula).Formula.(*Definition)
+	if got := NodeRep(second.Lhs); got != "+" {
+		t.Fatalf("operator definition lhs = %q, want +", got)
+	}
+}
+
 func firstLabeledFormulaInDecl[T Node](t *testing.T, decls []Node) *LabeledFormula {
 	t.Helper()
 	for _, decl := range decls {

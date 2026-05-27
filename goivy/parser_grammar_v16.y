@@ -35,6 +35,7 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 %token <tok>  PARSER16_TOK_GLOBALLY PARSER16_TOK_EVENTUALLY
 %token <tok>  PARSER16_TOK_DOTDOTDOT
 %token <tok>  PARSER16_TOK_TYPE PARSER16_TOK_INDIV PARSER16_TOK_VAR PARSER16_TOK_FUNCTION PARSER16_TOK_RELATION PARSER16_TOK_DERIVED PARSER16_TOK_STRUCT
+%token <tok>  PARSER16_TOK_GHOST
 %token <tok>  PARSER16_TOK_FRESH PARSER16_TOK_DESTRUCTOR
 %token <tok>  PARSER16_TOK_AXIOM PARSER16_TOK_PROPERTY PARSER16_TOK_CONJECTURE PARSER16_TOK_SCHEMA PARSER16_TOK_ASSERT PARSER16_TOK_DEFINITION PARSER16_TOK_PROOF PARSER16_TOK_WITH PARSER16_TOK_INIT
 %token <tok>  PARSER16_TOK_MODULE PARSER16_TOK_CLASS PARSER16_TOK_OBJECT
@@ -43,7 +44,7 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 %token <tok>  PARSER16_TOK_MACRO PARSER16_TOK_ALIAS PARSER16_TOK_PROGRESS PARSER16_TOK_RELY PARSER16_TOK_MIXORD PARSER16_TOK_INTERPRET
 %token <tok>  PARSER16_TOK_CONCEPT PARSER16_TOK_UPDATE PARSER16_TOK_FROM PARSER16_TOK_PARAMS
 %token <tok>  PARSER16_TOK_MIXIN PARSER16_TOK_BEFORE PARSER16_TOK_AFTER PARSER16_TOK_IMPLEMENT
-%token <tok>  PARSER16_TOK_TRUSTED PARSER16_TOK_ISOLATE
+%token <tok>  PARSER16_TOK_TRUSTED PARSER16_TOK_ISOLATE PARSER16_TOK_EXTRACT
 %token <tok>  PARSER16_TOK_ATTRIBUTE PARSER16_TOK_VARIANT PARSER16_TOK_OF
 %token <tok>  PARSER16_TOK_SCENARIO
 %token <tok>  PARSER16_TOK_REQUIRES PARSER16_TOK_MODIFIES
@@ -58,9 +59,10 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 %type <node>  lparam param optinit termtuple somefmla eqn lit topseq optdelegee oper attributeval requires ensures
 %type <node>  optskolem schdefn schdefnrhs schconc objsym objectend
 %type <node>  inst modinst pname app upax expr exprterm cdefn sceninit scenariomixin
+%type <node>  modulestart moduleend modcat defnlhs typeddefn defarg somevarfmla optin optelse
 %type <nodes> terms vars simplevars tterms rels funs defns matches optargs optreturns optactualreturns names actseq actseqrev callatoms schdecl schdecls objectargs
-%type <nodes> lparams params bounds invariants decreases eqns moresymbols atoms modifies insts pnames apps upaxes cdefns prod sum places scentranss
-%type <bval>  optdotdotdot opttrusted
+%type <nodes> lparams params bounds invariants decreases eqns moresymbols atoms modifies insts pnames apps upaxes cdefns prod sum places scentranss optwith defargs
+%type <bval>  optdotdotdot opttrusted optghost
 %type <str>   relop infix dotsym SYMBOLx
 %type <tok>   labelname
 
@@ -106,32 +108,49 @@ top:
         lex := parser16lex.(*parser16LexAdapter)
         parserDeclareInclude(parser16Acfg(parser16lex), $$, lex.accum, lex.importer, $3, tok16Lineno(lex, $2))
     }
-    | top PARSER16_TOK_TYPE typesymbol
+    | top optghost PARSER16_TOK_TYPE typesymbol
     {
         xtracer.Trace("parser.p_top_type_symbol ENTER (top)")
         $$ = $1
-        parser16DeclareType(parser16Acfg(parser16lex), $$, $3.(*Atom), tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        lex := parser16lex.(*parser16LexAdapter)
+        scnst := parser16Acfg(parser16lex).NewAtom($4.(*Atom).Rep)
+        scnst.SetLineno(nodeLineno($4))
+        tdfn := parser16Acfg(parser16lex).NewTypeDef(scnst, parser16Acfg(parser16lex).NewUninterpretedSortAST())
+        tdfn.SetLineno(tok16Lineno(lex, $3))
+        var tdfnNode Node = tdfn
+        if $2 {
+            gt := parser16Acfg(parser16lex).NewGhostTypeDef(*tdfn)
+            gt.SetLineno(tok16Lineno(lex, $3))
+            tdfnNode = gt
+        }
+        $$.declare(parser16Acfg(parser16lex).NewTypeDecl(tdfnNode))
     }
-    | top PARSER16_TOK_TYPE typesymbol PARSER16_TOK_EQ sort
+    | top optghost PARSER16_TOK_TYPE typesymbol PARSER16_TOK_EQ sort
     {
         xtracer.Trace("parser.p_top_type_symbol_eq_sort ENTER (top)")
         $$ = $1
         lex := parser16lex.(*parser16LexAdapter)
-        scnst := parser16Acfg(parser16lex).NewAtom($3.(*Atom).Rep)
-        scnst.SetLineno(nodeLineno($3))
-        sortNode := $5
+        scnst := parser16Acfg(parser16lex).NewAtom($4.(*Atom).Rep)
+        scnst.SetLineno(nodeLineno($4))
+        sortNode := $6
         _, isRange := sortNode.(*Range)
         if isRange {
             sortNode = parser16Acfg(parser16lex).NewUninterpretedSortAST()
         }
         tdfn := parser16Acfg(parser16lex).NewTypeDef(scnst, sortNode)
-        tdfn.SetLineno(tok16Lineno(lex, $4))
-        $$.declare(parser16Acfg(parser16lex).NewTypeDecl(tdfn))
+        tdfn.SetLineno(tok16Lineno(lex, $5))
+        var tdfnNode Node = tdfn
+        if $2 {
+            gt := parser16Acfg(parser16lex).NewGhostTypeDef(*tdfn)
+            gt.SetLineno(tok16Lineno(lex, $5))
+            tdfnNode = gt
+        }
+        $$.declare(parser16Acfg(parser16lex).NewTypeDecl(tdfnNode))
         if isRange {
-            imp := parser16Acfg(parser16lex).NewImplies(scnst, $5)
-            imp.SetLineno(tok16Lineno(lex, $2))
+            imp := parser16Acfg(parser16lex).NewImplies(scnst, $6)
+            imp.SetLineno(tok16Lineno(lex, $3))
             thing := parser16Acfg(parser16lex).NewInterpretDecl(parser17MkLF(parser16Acfg(parser16lex), imp))
-            thing.SetLineno(tok16Lineno(lex, $2))
+            thing.SetLineno(tok16Lineno(lex, $3))
             $$.declare(thing)
         }
     }
@@ -237,14 +256,36 @@ top:
         $$ = $1
         doInsts($$, $3)
     }
-    | top PARSER16_TOK_MODULE atom PARSER16_TOK_EQ PARSER16_TOK_LCB top PARSER16_TOK_RCB
+    | top PARSER16_TOK_PROOF labelname proofstep
+    {
+        xtracer.Trace("parser.p_top_proof_label_label_proofstep ENTER (top)")
+        $$ = $1
+        label := parser16Acfg(parser16lex).NewAtom($3.Val)
+        label.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $3))
+        lf := parser16Acfg(parser16lex).NewLabeledFormula(label, $4)
+        $$.declare(parser16Acfg(parser16lex).NewProofDecl(lf))
+    }
+    | top PARSER16_TOK_MODULE modulestart modcat atom optwith PARSER16_TOK_EQ PARSER16_TOK_LCB top PARSER16_TOK_RCB moduleend
     {
         xtracer.Trace("parser.p_top_module_atom_eq_lcb_top_rcb ENTER (top)")
         $$ = $1
         lex := parser16lex.(*parser16LexAdapter)
-        modAccum := $6
-        d := parser16Acfg(parser16lex).NewDefinition(AppToAtom($3), modAccum)
+        modAccum := $9
+        d := parser16Acfg(parser16lex).NewDefinition(AppToAtom($5), modAccum)
         $$.declare(parser16Acfg(parser16lex).NewModuleDecl(d))
+        if catAtom, ok := $4.(*Atom); ok && catAtom.Rep == "isolate" {
+            thisAtom := parser16Acfg(parser16lex).NewAtom("this")
+            thisAtom.SetLineno(tok16Lineno(lex, $2))
+            iso := parser16Acfg(parser16lex).NewAtom("iso")
+            iso.SetLineno(tok16Lineno(lex, $2))
+            elems := append([]Node{iso, thisAtom}, $6...)
+            idef := parser16Acfg(parser16lex).NewIsolateDef(elems, len($6))
+            idef.SetLineno(tok16Lineno(lex, $2))
+            isoDecl := parser16Acfg(parser16lex).NewIsolateDecl(idef)
+            isoDecl.Attributes = []Node{parser16Acfg(parser16lex).NewAtom("common")}
+            isoDecl.SetLineno(tok16Lineno(lex, $2))
+            modAccum.declare(isoDecl)
+        }
         lex.accum = $$
         $$.isModule = false
     }
@@ -374,6 +415,21 @@ top:
         atom.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
         handleBeforeAfterV16(parser16Acfg(parser16lex), "implement", atom, $6, $$, $4, $5)
     }
+    | top PARSER16_TOK_IMPLEMENT PARSER16_TOK_TYPE SYMBOLx PARSER16_TOK_WITH SYMBOLx
+    {
+        xtracer.Trace("parser.p_top_implement_type_symbol_with_symbol ENTER (top)")
+        $$ = $1
+        lex := parser16lex.(*parser16LexAdapter)
+        a1 := parser16Acfg(parser16lex).NewAtom($4)
+        a1.SetLineno(tok16Lineno(lex, $4))
+        a2 := parser16Acfg(parser16lex).NewAtom($6)
+        a2.SetLineno(tok16Lineno(lex, $6))
+        impl := parser16Acfg(parser16lex).NewImplementTypeDef([]Node{a1, a2})
+        impl.SetLineno(tok16Lineno(lex, $5))
+        d := parser16Acfg(parser16lex).NewImplementTypeDecl(parser17MkLF(parser16Acfg(parser16lex), impl))
+        d.SetLineno(tok16Lineno(lex, $2))
+        $$.declare(d)
+    }
     | top opttrusted PARSER16_TOK_ISOLATE SYMBOLx optargs PARSER16_TOK_EQ callatoms
     {
         xtracer.Trace("parser.p_top_opttrusted_isolate_callatom_eq_callatoms ENTER (top)")
@@ -399,6 +455,60 @@ top:
         idef.Elems[0].SetLineno(tok16Lineno(lex, $3))
         idef.SetLineno(tok16Lineno(lex, $3))
         $$.declare(parser16Acfg(parser16lex).NewIsolateDecl(idef))
+    }
+    | top opttrusted PARSER16_TOK_ISOLATE SYMBOLx optargs PARSER16_TOK_EQ PARSER16_TOK_LCB top PARSER16_TOK_RCB optwith
+    {
+        xtracer.Trace("parser.p_top_opttrusted_isolate_callatom_eq_lcb_top_rcb_optwith ENTER (top)")
+        $$ = $1
+        lex := parser16lex.(*parser16LexAdapter)
+        objAccum := $8
+        nameAtom := parser16Acfg(parser16lex).NewAtom($4)
+        createObject(parser16Acfg(parser16lex), $$, nameAtom, $5, objAccum, tok16Lineno(lex, $4), false)
+        a1 := parser16Acfg(parser16lex).NewAtom($4, $5...)
+        a2 := parser16Acfg(parser16lex).NewAtom($4, $5...)
+        elems := append([]Node{a1, a2}, $10...)
+        idef := parser16Acfg(parser16lex).NewIsolateDef(elems, len($10))
+        idef.Trusted = $2
+        idef.IsObject = true
+        idef.Elems[0].SetLineno(tok16Lineno(lex, $3))
+        idef.SetLineno(tok16Lineno(lex, $3))
+        $$.declare(parser16Acfg(parser16lex).NewIsolateObjectDecl(*parser16Acfg(parser16lex).NewIsolateDecl(idef)))
+        lex.accum = $$
+    }
+    | top PARSER16_TOK_EXTRACT objsym objectargs PARSER16_TOK_EQ PARSER16_TOK_LCB top PARSER16_TOK_RCB optwith
+    {
+        xtracer.Trace("parser.p_top_opttrusted_extract_callatom_eq_lcb_top_rcb_optwith ENTER (top)")
+        $$ = $1
+        lex := parser16lex.(*parser16LexAdapter)
+        objAccum := $7
+        pref := $3.(*Atom)
+        createObject(parser16Acfg(parser16lex), $$, pref, $4, objAccum, nodeLineno($3), false)
+        a1 := parser16Acfg(parser16lex).NewAtom(pref.Rep, $4...)
+        a2 := parser16Acfg(parser16lex).NewAtom(pref.Rep, $4...)
+        elems := append([]Node{a1, a2}, $9...)
+        idefInner := parser16Acfg(parser16lex).NewIsolateDef(elems, len($9)+1)
+        idefInner.IsObject = true
+        edef := parser16Acfg(parser16lex).NewExtractDef(*idefInner)
+        pdef := parser16Acfg(parser16lex).NewProcessDef(*edef)
+        pdef.Elems[0].SetLineno(tok16Lineno(lex, $2))
+        pdef.SetLineno(tok16Lineno(lex, $2))
+        $$.declare(parser16Acfg(parser16lex).NewIsolateObjectDecl(*parser16Acfg(parser16lex).NewIsolateDecl(pdef)))
+        lex.accum = $$
+    }
+    | top PARSER16_TOK_EXTRACT objsym objectargs PARSER16_TOK_EQ callatoms
+    {
+        xtracer.Trace("parser.p_top_extract_callatom_eq_callatoms ENTER (top)")
+        $$ = $1
+        lex := parser16lex.(*parser16LexAdapter)
+        lex.accum.params = nil
+        lex.parentObjName = ""
+        pref := $3.(*Atom)
+        nameAtom := parser16Acfg(parser16lex).NewAtom(pref.Rep, $4...)
+        elems := append([]Node{nameAtom}, $6...)
+        edef := parser16Acfg(parser16lex).NewExtractDef(*parser16Acfg(parser16lex).NewIsolateDef(elems, len($6)))
+        edef.Elems[0].SetLineno(tok16Lineno(lex, $2))
+        edef.SetLineno(tok16Lineno(lex, $2))
+        $$.declare(parser16Acfg(parser16lex).NewIsolateDecl(edef))
     }
     | top PARSER16_TOK_DELEGATE callatoms optdelegee
     {
