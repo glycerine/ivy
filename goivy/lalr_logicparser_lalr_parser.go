@@ -22,6 +22,21 @@ func ParseLogic(input string, version Version, cfg ...*AstConfig) (Node, error) 
 	return ParseLogicV17(input, version, c)
 }
 
+// ParseLogicTerm dispatches to the appropriate version-specific term parser.
+func ParseLogicTerm(input string, version Version, cfg ...*AstConfig) (Node, error) {
+	var c *AstConfig
+	if len(cfg) > 0 {
+		c = cfg[0]
+	}
+	if version[0] < 1 || (version[0] == 1 && version[1] <= 2) {
+		return ParseV12(input, version, c)
+	}
+	if version[0] == 1 && version[1] <= 6 {
+		return ParseV16Term(input, version, c)
+	}
+	return ParseLogicV17(input, version, c)
+}
+
 // ParseLogicV17 parses a formula string using the v1.7+ LALR grammar.
 // Returns the AST node, or an error if parsing fails.
 func ParseLogicV17(input string, version Version, cfg ...*AstConfig) (Node, error) {

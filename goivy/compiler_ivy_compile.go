@@ -709,7 +709,11 @@ func (as *ARGSetup) ProcessDecls(decls []Node) error {
 			// Python IvyARGSetup.state (ivy_compiler.py:1420-1421):
 			//   self.mod.predicates[a.args[0].relname] = a.args[1]
 			for _, arg := range n.DeclArgs {
-				if lf, ok := arg.(*LabeledFormula); ok {
+				if state, ok := arg.(*StateDef); ok {
+					if state.Name != "" {
+						mod.Predicates[state.Name] = state.State
+					}
+				} else if lf, ok := arg.(*LabeledFormula); ok {
 					if def, ok := lf.Formula.(*Definition); ok {
 						key := compilerExtractSortRep(def.Lhs)
 						if key != "" {

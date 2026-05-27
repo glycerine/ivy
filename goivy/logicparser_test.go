@@ -163,3 +163,59 @@ func TestLogicParser_V16_BasicFormulas(t *testing.T) {
 		})
 	}
 }
+
+func TestLogicParser_V16_SubscriptedSymbols(t *testing.T) {
+	node, err := ParseFormula("lbl[this.part]", ver16)
+	if err != nil {
+		t.Fatalf("ParseFormula v1.6 subscripted symbol: %v", err)
+	}
+	if got := NodeRep(node); got != "lbl[this.part]" {
+		t.Fatalf("subscripted symbol parsed as %q, want lbl[this.part]", got)
+	}
+}
+
+func TestLogicParser_V16_NamedBinderTerms(t *testing.T) {
+	node, err := ParseFormula("($snap X. p(X))(a)", ver16)
+	if err != nil {
+		t.Fatalf("ParseFormula v1.6 named binder application: %v", err)
+	}
+	app, ok := node.(*App)
+	if !ok {
+		t.Fatalf("named binder application = %T, want *App", node)
+	}
+	binder, ok := app.Rep.(*NamedBinder)
+	if !ok {
+		t.Fatalf("named binder app rep = %T, want *NamedBinder", app.Rep)
+	}
+	if binder.Name != "snap" || len(binder.Bounds) != 1 {
+		t.Fatalf("named binder = %s with %d bounds, want snap with 1", binder.Name, len(binder.Bounds))
+	}
+
+	for _, input := range []string{"$saved. p(a)", "$saved $ p(a)"} {
+		t.Run(input, func(t *testing.T) {
+			node, err := ParseFormula(input, ver16)
+			if err != nil {
+				t.Fatalf("ParseFormula(%q, v1.6): %v", input, err)
+			}
+			binder, ok := node.(*NamedBinder)
+			if !ok {
+				t.Fatalf("ParseFormula(%q) = %T, want *NamedBinder", input, node)
+			}
+			if binder.Name != "saved" {
+				t.Fatalf("binder name = %q, want saved", binder.Name)
+			}
+		})
+	}
+}
+
+func TestLogicParser_V16_ParseTermUsesTermStart(t *testing.T) {
+	if _, err := ParseFormula("x = y", ver16); err != nil {
+		t.Fatalf("ParseFormula should accept v1.6 equality formula: %v", err)
+	}
+	if _, err := ParseTerm("x = y", ver16); err == nil {
+		t.Fatal("ParseTerm accepted v1.6 equality formula; want term-start parse error")
+	}
+	if _, err := ParseTerm("f(x)", ver16); err != nil {
+		t.Fatalf("ParseTerm should accept v1.6 term application: %v", err)
+	}
+}

@@ -6,11 +6,21 @@ import (
 
 // ParseV16 parses a formula string using the v1.3–v1.6 LALR grammar.
 func ParseV16(input string, version Version, cfg ...*AstConfig) (Node, error) {
+	return parseV16WithMode(input, version, false, cfg...)
+}
+
+// ParseV16Term parses a term string using the v1.3-v1.6 LALR term start.
+func ParseV16Term(input string, version Version, cfg ...*AstConfig) (Node, error) {
+	return parseV16WithMode(input, version, true, cfg...)
+}
+
+func parseV16WithMode(input string, version Version, termStart bool, cfg ...*AstConfig) (Node, error) {
 	var c *AstConfig
 	if len(cfg) > 0 {
 		c = cfg[0]
 	}
 	lex := newLalr16LexAdapter(input, version, c)
+	lex.termStart = termStart
 	lalr16Parse(lex)
 	if lex.err != "" {
 		return nil, fmt.Errorf("LALR v1.6 parse error: %s", lex.err)
@@ -19,10 +29,12 @@ func ParseV16(input string, version Version, cfg ...*AstConfig) (Node, error) {
 }
 
 type lalr16LexAdapter struct {
-	lex    *Lexer
-	cfg    *AstConfig
-	result Node
-	err    string
+	lex       *Lexer
+	cfg       *AstConfig
+	result    Node
+	err       string
+	termStart bool
+	sentStart bool
 }
 
 func newLalr16LexAdapter(input string, version Version, cfg *AstConfig) *lalr16LexAdapter {
@@ -36,6 +48,10 @@ func newLalr16LexAdapter(input string, version Version, cfg *AstConfig) *lalr16L
 }
 
 func (l *lalr16LexAdapter) Lex(lval *lalr16SymType) int {
+	if l.termStart && !l.sentStart {
+		l.sentStart = true
+		return LALR16_TOK_START_TERM
+	}
 	tok := l.lex.NextToken()
 	switch tok.Type {
 	case EOF:

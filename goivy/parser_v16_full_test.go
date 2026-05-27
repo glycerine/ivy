@@ -12,6 +12,46 @@ func TestParseV16TopLevelInit(t *testing.T) {
 	}
 }
 
+func TestParseV11StateDeclsAndCompilerPredicates(t *testing.T) {
+	src := `state idle = entry
+state visible = true | false
+state guarded = {requires true modifies {} ensures false}`
+	result, err := Parse(src, Version{1, 1}, WithFilename("state11.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.1 state declarations: %v", err)
+	}
+	if got := countDeclsOf[*StateDecl](result.Decls); got != 3 {
+		t.Fatalf("StateDecl count = %d, want 3", got)
+	}
+	state := firstArgAs[*StateDef](t, firstDeclOf[*StateDecl](t, result.Decls))
+	if state.Name != "idle" {
+		t.Fatalf("first state name = %q, want idle", state.Name)
+	}
+	if _, ok := state.State.(*RME); !ok {
+		t.Fatalf("entry state expression = %T, want *RME", state.State)
+	}
+
+	mod, err := IvyFromString("#lang ivy1.1\n" + src)
+	if err != nil {
+		t.Fatalf("Compile v1.1 state declarations: %v", err)
+	}
+	for _, name := range []string{"idle", "visible", "guarded"} {
+		if mod.Predicates[name] == nil {
+			t.Fatalf("compiled module missing predicate %q; predicates = %#v", name, mod.Predicates)
+		}
+	}
+}
+
+func TestParseV16StateKeywordMatchesPythonLexer(t *testing.T) {
+	_, err := Parse("state idle = entry", Version{1, 6}, WithFilename("state16.ivy"))
+	if err == nil {
+		t.Fatal("Parse v1.6 accepted state declaration; Python v1.6 lexer treats state as a symbol")
+	}
+	if pe, ok := err.(*ParseError); !ok || pe.Token != "state" {
+		t.Fatalf("v1.6 state error = %v, want token state", err)
+	}
+}
+
 func TestParseV16UnlabeledAxiomDoesNotSynthesizeLabel(t *testing.T) {
 	result, err := Parse("type t\nrelation r(X:t)\naxiom forall X:t . r(X)", Version{1, 6}, WithFilename("axiom16.ivy"))
 	if err != nil {

@@ -254,6 +254,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_INTERPRET
 	case CONCEPT:
 		return PARSER16_TOK_CONCEPT
+	case STATE:
+		return PARSER16_TOK_STATE
 	case UPDATE:
 		return PARSER16_TOK_UPDATE
 	case FROM:
@@ -272,6 +274,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_REQUIRES
 	case MODIFIES:
 		return PARSER16_TOK_MODIFIES
+	case ENTRY:
+		return PARSER16_TOK_ENTRY
 	case IMPORT:
 		return PARSER16_TOK_IMPORT
 	case EXPORT:

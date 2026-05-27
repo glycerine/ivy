@@ -21,7 +21,7 @@ func ParseFormula(input string, version Version) (Node, error) {
 // For earlier versions the start symbol differs, but the hand-written parser
 // uses unified expression parsing regardless.
 func ParseTerm(input string, version Version) (Node, error) {
-	return parseString(input, version)
+	return parseTermString(input, version)
 }
 
 // ToFormula parses a formula string using the default version.
@@ -49,4 +49,8 @@ func ToTermV(s string, version Version) (Node, error) {
 // matching Python's ivy_logic_parser.py.
 func parseString(input string, version Version) (Node, error) {
 	return ParseLogic(input, version)
+}
+
+func parseTermString(input string, version Version) (Node, error) {
+	return ParseLogicTerm(input, version)
 }

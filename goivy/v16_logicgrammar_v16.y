@@ -49,10 +49,11 @@ func lalr16Acfg(lex lalr16Lexer) *AstConfig {
 %token        LALR16_TOK_IF LALR16_TOK_ELSE
 %token        LALR16_TOK_GLOBALLY LALR16_TOK_EVENTUALLY
 %token        LALR16_TOK_WHENNEXT LALR16_TOK_WHENPREV LALR16_TOK_WHENFIRST LALR16_TOK_WHENLAST
+%token        LALR16_TOK_START_TERM
 
 %type <node>  top fmla term aterm var simplevar atype
 %type <nodes> terms vars simplevars
-%type <str>   relop SYMBOLx
+%type <str>   relop SYMBOLx SYMsubscr
 
 // Precedence for v1.3–v1.6 (from Python ivy_parser.py):
 %left         LALR16_TOK_SEMI
@@ -80,12 +81,35 @@ top:
     {
         lalr16lex.(*lalr16LexAdapter).result = $1
     }
+    | LALR16_TOK_START_TERM term
+    {
+        lalr16lex.(*lalr16LexAdapter).result = $2
+    }
     ;
 
 SYMBOLx:
     LALR16_TOK_PRESYMBOL
     {
         $$ = $1
+    }
+    | SYMBOLx LALR16_TOK_LB SYMsubscr LALR16_TOK_RB
+    {
+        $$ = $1 + "[" + $3 + "]"
+    }
+    ;
+
+SYMsubscr:
+    SYMBOLx
+    {
+        $$ = $1
+    }
+    | LALR16_TOK_THIS
+    {
+        $$ = "this"
+    }
+    | SYMsubscr LALR16_TOK_DOT SYMBOLx
+    {
+        $$ = $1 + "." + $3
     }
     ;
 
@@ -176,6 +200,19 @@ term:
     { $$ = $1 }
     | LALR16_TOK_OLD aterm
     { $$ = lalr16Acfg(lalr16lex).NewOld($2) }
+    | LALR16_TOK_LPAREN LALR16_TOK_DOLLAR SYMBOLx simplevars LALR16_TOK_DOT fmla LALR16_TOK_RPAREN LALR16_TOK_LPAREN terms LALR16_TOK_RPAREN
+    {
+        binder := lalr16Acfg(lalr16lex).NewNamedBinder($3, $4, $6)
+        $$ = lalr16Acfg(lalr16lex).NewApp(binder, $9...)
+    }
+    | LALR16_TOK_DOLLAR SYMBOLx LALR16_TOK_DOT fmla %prec LALR16_TOK_SEMI
+    {
+        $$ = lalr16Acfg(lalr16lex).NewNamedBinder($2, nil, $4)
+    }
+    | LALR16_TOK_DOLLAR SYMBOLx LALR16_TOK_DOLLAR fmla %prec LALR16_TOK_SEMI
+    {
+        $$ = lalr16Acfg(lalr16lex).NewNamedBinder($2, nil, $4)
+    }
     | LALR16_TOK_LPAREN term LALR16_TOK_RPAREN
     { $$ = $2 }
     | term LALR16_TOK_PLUS term

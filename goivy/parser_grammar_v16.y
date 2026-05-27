@@ -42,20 +42,20 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 %token <tok>  PARSER16_TOK_INCLUDE PARSER16_TOK_USING PARSER16_TOK_ACTION PARSER16_TOK_METHOD PARSER16_TOK_CALL PARSER16_TOK_RETURNS
 %token <tok>  PARSER16_TOK_IMPORT PARSER16_TOK_EXPORT PARSER16_TOK_PRIVATE PARSER16_TOK_DELEGATE
 %token <tok>  PARSER16_TOK_MACRO PARSER16_TOK_ALIAS PARSER16_TOK_PROGRESS PARSER16_TOK_RELY PARSER16_TOK_MIXORD PARSER16_TOK_INTERPRET
-%token <tok>  PARSER16_TOK_CONCEPT PARSER16_TOK_UPDATE PARSER16_TOK_FROM PARSER16_TOK_PARAMS
+%token <tok>  PARSER16_TOK_CONCEPT PARSER16_TOK_STATE PARSER16_TOK_UPDATE PARSER16_TOK_FROM PARSER16_TOK_PARAMS
 %token <tok>  PARSER16_TOK_MIXIN PARSER16_TOK_BEFORE PARSER16_TOK_AFTER PARSER16_TOK_IMPLEMENT
 %token <tok>  PARSER16_TOK_TRUSTED PARSER16_TOK_ISOLATE PARSER16_TOK_EXTRACT
 %token <tok>  PARSER16_TOK_ATTRIBUTE PARSER16_TOK_VARIANT PARSER16_TOK_OF
 %token <tok>  PARSER16_TOK_SCENARIO
 %token <tok>  PARSER16_TOK_REQUIRES PARSER16_TOK_MODIFIES
 %token <tok>  PARSER16_TOK_NAMED PARSER16_TOK_TEMPORAL
-%token <tok>  PARSER16_TOK_ASSUME PARSER16_TOK_ENSURES PARSER16_TOK_SET PARSER16_TOK_INSTANTIATE
+%token <tok>  PARSER16_TOK_ASSUME PARSER16_TOK_ENSURES PARSER16_TOK_ENTRY PARSER16_TOK_SET PARSER16_TOK_INSTANTIATE
 %token <tok>  PARSER16_TOK_LOCAL PARSER16_TOK_LET PARSER16_TOK_IN
 %token <tok>  PARSER16_TOK_SOME PARSER16_TOK_MINIMIZING PARSER16_TOK_MAXIMIZING PARSER16_TOK_DECREASES
 
 %type <accum> top
 %type <node>  labeledfmla fmla term aterm var simplevar atype tapp tterm typesymbol symdecl constantdecl rel sort
-%type <node>  fun defn defnrhs optproof optsemi proofstep proofseq proofgroup match opttemporal optactiondef sequence action simpleact complexact callatom atom optimpex assert_rhs
+%type <node>  fun defn defnrhs optproof optsemi proofstep proofseq proofgroup match opttemporal optactiondef sequence action simpleact complexact callatom atom optimpex assert_rhs state_expr
 %type <node>  lparam param optinit termtuple somefmla eqn lit topseq optdelegee oper attributeval requires ensures
 %type <node>  optskolem schdefn schdefnrhs schconc objsym objectend
 %type <node>  inst modinst pname app upax expr exprterm cdefn sceninit scenariomixin
@@ -229,6 +229,16 @@ top:
         xtracer.Trace("parser.p_top_concept_cdefns ENTER (top)")
         $$ = $1
         $$.declare(parser16Acfg(parser16lex).NewConceptDecl($3...))
+    }
+    | top PARSER16_TOK_STATE SYMBOLx PARSER16_TOK_EQ state_expr
+    {
+        xtracer.Trace("parser.p_top_state_symbol_eq_state_expr ENTER (top)")
+        $$ = $1
+        sd := parser16Acfg(parser16lex).NewStateDef($3, $5)
+        sd.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        d := parser16Acfg(parser16lex).NewStateDecl(sd)
+        d.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        $$.declare(d)
     }
     | top PARSER16_TOK_UPDATE apps PARSER16_TOK_FROM apps upaxes
     {
@@ -2550,6 +2560,49 @@ assert_rhs:
     {
         xtracer.Trace("parser.p_assert_rhs_fmla ENTER (assert_rhs)")
         $$ = checkNonTemporal($1)
+    }
+    ;
+
+state_expr:
+    PARSER16_TOK_TRUE
+    {
+        xtracer.Trace("parser.p_state_expr_true ENTER (state_expr)")
+        $$ = parser16Acfg(parser16lex).NewAnd()
+    }
+    | PARSER16_TOK_FALSE
+    {
+        xtracer.Trace("parser.p_state_expr_false ENTER (state_expr)")
+        $$ = parser16Acfg(parser16lex).NewOr()
+    }
+    | SYMBOLx
+    {
+        xtracer.Trace("parser.p_state_expr_symbol ENTER (state_expr)")
+        $$ = parser16Acfg(parser16lex).NewAtom($1)
+    }
+    | SYMBOLx PARSER16_TOK_LPAREN state_expr PARSER16_TOK_RPAREN
+    {
+        xtracer.Trace("parser.p_state_expr_symbol_lparen_state_expr_rparen ENTER (state_expr)")
+        $$ = parser16Acfg(parser16lex).NewAtom($1, $3)
+    }
+    | state_expr PARSER16_TOK_OR state_expr
+    {
+        xtracer.Trace("parser.p_state_expr_state_expr_or_state_expr ENTER (state_expr)")
+        if orNode, ok := $1.(*Or); ok {
+            orNode.Terms = append(orNode.Terms, $3)
+            $$ = orNode
+        } else {
+            $$ = parser16Acfg(parser16lex).NewOr($1, $3)
+        }
+    }
+    | PARSER16_TOK_LCB requires modifies ensures PARSER16_TOK_RCB
+    {
+        xtracer.Trace("parser.p_state_expr_lcb_requires_modifies_ensures_rcb ENTER (state_expr)")
+        $$ = parser16Acfg(parser16lex).NewRME($2, $3, $4)
+    }
+    | PARSER16_TOK_ENTRY
+    {
+        xtracer.Trace("parser.p_state_expr_entry ENTER (state_expr)")
+        $$ = parser16Acfg(parser16lex).NewRME(parser16Acfg(parser16lex).NewAnd(), nil, parser16Acfg(parser16lex).NewAnd())
     }
     ;
 
