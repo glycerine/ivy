@@ -21,6 +21,7 @@ func TestParseV16CorpusScan(t *testing.T) {
 	}
 
 	var failures []string
+	var expectedErrors int
 	for _, path := range files {
 		data, err := os.ReadFile(path)
 		if err != nil {
@@ -28,7 +29,21 @@ func TestParseV16CorpusScan(t *testing.T) {
 			continue
 		}
 		src := stripIvyLangLine(string(data))
-		if _, err := Parse(src, Version{1, 6}, WithFilename(path)); err != nil {
+		_, err = Parse(src, Version{1, 6}, WithFilename(path))
+		if want, ok := expectedV16CorpusParseError(path); ok {
+			expectedErrors++
+			if err == nil {
+				failures = append(failures, fmt.Sprintf("PARSE %s: got success, want Python-compatible parse error containing %q (%s)", path, want.Contains, want.Reason))
+				continue
+			}
+			if !strings.Contains(err.Error(), want.Contains) {
+				failures = append(failures, fmt.Sprintf("PARSE %s: got %q, want Python-compatible parse error containing %q (%s)", path, err.Error(), want.Contains, want.Reason))
+				continue
+			}
+			t.Logf("EXPECTED %s: %v (%s)", path, err, want.Reason)
+			continue
+		}
+		if err != nil {
 			failures = append(failures, fmt.Sprintf("PARSE %s: %v", path, err))
 		}
 	}
@@ -37,9 +52,58 @@ func TestParseV16CorpusScan(t *testing.T) {
 		t.Log(failure)
 	}
 	if len(failures) > 0 {
-		t.Fatalf("v1.6 corpus parse scan failed: scanned=%d failed=%d", len(files), len(failures))
+		t.Fatalf("v1.6 corpus parse scan failed: scanned=%d expectedErrors=%d failures=%d", len(files), expectedErrors, len(failures))
 	}
-	t.Logf("v1.6 corpus parse scan passed: scanned=%d", len(files))
+	t.Logf("v1.6 corpus parse scan passed: scanned=%d expectedErrors=%d", len(files), expectedErrors)
+}
+
+func expectedV16CorpusParseError(path string) (v16ExpectedParseError, bool) {
+	for suffix, expected := range expectedV16CorpusParseErrors {
+		if strings.HasSuffix(path, suffix) {
+			return expected, true
+		}
+	}
+	return v16ExpectedParseError{}, false
+}
+
+type v16ExpectedParseError struct {
+	Contains string
+	Reason   string
+}
+
+// expectedV16CorpusParseErrors documents #lang ivy1.6 corpus files that are
+// expected to fail according to the Python grammar we are porting. These are
+// not skipped: each file must fail, and the Go diagnostic must match the same
+// token-level syntax error shape Python reports via ivy_utils.p_error.
+var expectedV16CorpusParseErrors = map[string]v16ExpectedParseError{
+	"examples/ivy/arrrel.ivy": {
+		Contains: "token 'r': syntax error",
+		Reason:   "comma-less struct fields; Python tterms require commas",
+	},
+	"examples/raft/raft.ivy": {
+		Contains: "token 'RV_option_wf': syntax error",
+		Reason:   "uppercase label [RV_option_wf]; Python LABEL uses SYMBOL/PRESYMBOL",
+	},
+	"test/impltype1.ivy": {
+		Contains: "token 'as': syntax error",
+		Reason:   "uses an `as` cast form with no Python grammar token",
+	},
+	"test/marcelocrash3.ivy": {
+		Contains: "token 'x': syntax error",
+		Reason:   "omits the semicolon between consecutive simple actions",
+	},
+	"test/proving4.ivy": {
+		Contains: "token ';': syntax error",
+		Reason:   "uses an unbraced proof sequence; Python optproof takes one proofstep",
+	},
+	"test/recursion1.ivy": {
+		Contains: "token '->': syntax error",
+		Reason:   "uses function-sort schema parameters outside Python atype grammar",
+	},
+	"test/yacc1.ivy": {
+		Contains: "token ')': syntax error",
+		Reason:   "uses empty argument parentheses; Python optargs require lparams",
+	},
 }
 
 func v16CorpusRoots(t *testing.T) []string {
