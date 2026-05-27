@@ -17,21 +17,14 @@ recommendations unless there is a concrete failure mode.
   emit real `Apply` terms per cell, and map/hash-thunk-backed functions emit
   quantified equalities whose RHS combines the thunk fallback with explicit map
   overrides.
+- Solver-backed action generation now runs the ivy_to_cpp.py clause
+  normalization pipeline: trim reverse-image clauses, expand field references,
+  extract destructor-field inputs, compute defined parameters directly, and add
+  relevant definitions plus variant axioms before querying the solver.
 
 Remaining entries keep their original audit numbering.
 
 ## P1 - generated programs can be wrong, invalid, or unlaunchable
-
-5. Solver-backed action generation skips important ivy2cpp clause
-   normalizations.
-
-   Evidence: `buildActionGenPlan` explicitly says `TrimClauses`,
-   field-reference expansion, defined-parameter extraction, relevant
-   definitions, and variant axioms are not ported (`action_gen.go:166`), then
-   derives preconditions from raw `ReverseImage` (`action_gen.go:217`). Derived
-   predicates, record fields, and variants can therefore appear to the solver
-   as free symbols instead of the constraints the action body actually relies
-   on.
 
 6. Applying a function-valued parameter or local lowers to a state field.
 

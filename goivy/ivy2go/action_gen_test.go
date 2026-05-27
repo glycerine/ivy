@@ -224,8 +224,8 @@ action set_flag(b: bool) = {
 	}
 	// `require b` (an assert in goivy's IR) joins the precondition as
 	// the negation of the failure path (Update.Pre.Fmlas = [~b];
-	// assertOK = NOT(~b)).
-	if !strings.Contains(actions, "&goivy.LogicNot{Body: &goivy.LogicNot{Body: __in0}}") {
+	// assertOK simplifies NOT(~b) to b before clause normalization.
+	if !strings.Contains(actions, "preFmla := &goivy.LogicAnd{Terms: []goivy.Expr{__in0}}") {
 		t.Errorf("require b should reify as the non-failing path for __in0, got:\n%s", actions)
 	}
 }
@@ -285,11 +285,11 @@ action set_to_x(p: point) = {
 	}
 	actions := out.Files["actions.go"]
 
-	// Per-field input symbols declared in generate().
+	// Python-style field extraction rewrites x(p)/y(p) into synthetic
+	// scalar solver inputs while the actual action argument remains g.In_P.
 	for _, want := range []string{
-		`__in0 := goivy.NewConst("`,
-		`__in0_x := goivy.NewConst("`,
-		`__in0_y := goivy.NewConst("`,
+		`__in0 := goivy.NewConst("__fml:p__x", goivy.Boolean)`,
+		`__in1 := goivy.NewConst("__fml:p__y", goivy.Boolean)`,
 	} {
 		if !strings.Contains(actions, want) {
 			t.Errorf("missing per-field input decl %q:\n%s", want, actions)
@@ -298,20 +298,20 @@ action set_to_x(p: point) = {
 	// Per-field pick + struct assembly in generate(). The random
 	// preference consumes the cpp-aligned PRNG sample, but generated code
 	// must fall back to the solver model if the precondition rejects it.
-	if !strings.Contains(actions, "__pick_in0_x := ivyRandomRange(0, 1)") {
+	if !strings.Contains(actions, "__pick_in0 := ivyRandomRange(0, 1)") {
 		t.Errorf("generate() should consume a pick for x:\n%s", actions)
 	}
 	if !strings.Contains(actions, "if __prefsHonored {") ||
-		!strings.Contains(actions, "v0_x = (__pick_in0_x == 1)") ||
-		!strings.Contains(actions, "v0_x = pickBoolOrChoose(g.sol, modelResult, __in0_x)") {
+		!strings.Contains(actions, "g.In_P.X = (__pick_in0 == 1)") ||
+		!strings.Contains(actions, "g.In_P.X = pickBoolOrChoose(g.sol, modelResult, __in0)") {
 		t.Errorf("generate() should use x pick only when preferences are honored:\n%s", actions)
 	}
-	if !strings.Contains(actions, "v0_y = (__pick_in0_y == 1)") ||
-		!strings.Contains(actions, "v0_y = pickBoolOrChoose(g.sol, modelResult, __in0_y)") {
+	if !strings.Contains(actions, "g.In_P.Y = (__pick_in1 == 1)") ||
+		!strings.Contains(actions, "g.In_P.Y = pickBoolOrChoose(g.sol, modelResult, __in1)") {
 		t.Errorf("generate() should use y pick only when preferences are honored:\n%s", actions)
 	}
-	if !strings.Contains(actions, "v0 := Point{X: v0_x, Y: v0_y}") {
-		t.Errorf("generate() should assemble Point{X: …, Y: …}:\n%s", actions)
+	if strings.Contains(actions, "v0 := Point{") {
+		t.Errorf("field extraction should assign into g.In_P fields directly:\n%s", actions)
 	}
 	// The execute() method invokes the action with the field stored
 	// on the gen struct.

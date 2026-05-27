@@ -41,6 +41,7 @@ type actionGenPlan struct {
 	act            goivy.Action // possibly wrapped by before_export / ext_preconds
 	origAct        goivy.Action
 	inputs         []*goivy.Const
+	fsyms          map[goivy.NodeKey]goivy.Expr
 	oldPreClauses  *goivy.Clauses
 	paramDefs      []goivy.Expr
 	preFmla        goivy.Expr
@@ -92,6 +93,16 @@ func (p *actionGenPlan) defedParamSet() map[goivy.NodeKey]bool {
 		}
 	}
 	return out
+}
+
+func (p *actionGenPlan) actionParams() []*goivy.Const {
+	if p != nil && p.origAct != nil {
+		return p.origAct.GetFormalParams()
+	}
+	if p != nil && p.act != nil {
+		return p.act.GetFormalParams()
+	}
+	return nil
 }
 
 // exprRoot mirrors ivy2cpp/action_gen.go:754. Peels single-arg
@@ -158,17 +169,10 @@ func stripZ3Bars(s string) string {
 	return s
 }
 
-// buildActionGenPlan mirrors ivy2cpp/action_gen.go:51 buildActionGenPlan.
-// It runs the same flow: pick up any BeforeExport/ExtPreconds wrappers,
-// call GetUpdateForArt, compute the reverse image, and stash the
-// precondition formula.
-//
-// The clauses_helpers.go normalisations ivy2cpp applies
-// (TrimClauses / expandFieldReferences / extractInputFields /
-// extractDefinedParameters / RelevantDefinitions / VariantAxioms) are
-// not yet ported on the ivy2go side — they are queued in the
-// divergence audit. Without them the precondition is still the raw
-// reverse image, which is sufficient for the fixtures exercised today.
+// buildActionGenPlan mirrors ivy2cpp/action_gen.go:51 buildActionGenPlan
+// and Python ivy_to_cpp.py:1201-1242: compute reverse_image, normalize
+// the clauses, extract field/defined inputs, and add relevant definitions
+// plus variant axioms before emission.
 func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGenPlan {
 	plan := &actionGenPlan{
 		name:       name,
@@ -216,27 +220,79 @@ func (g *Generator) buildActionGenPlan(name string, act goivy.Action) *actionGen
 	// inputs that crash the body.
 	truePre := goivy.TrueClauses(nil)
 	preClauses := goivy.ReverseImage(truePre, truePre, upd)
-	revFmla := preClauses.ToFormula()
 
 	var assertOK goivy.Expr
 	switch len(upd.Pre.Fmlas) {
 	case 0:
 		assertOK = nil
 	case 1:
-		assertOK = &goivy.LogicNot{Body: upd.Pre.Fmlas[0]}
+		assertOK = negatedPrecondition(upd.Pre.Fmlas[0])
 	default:
 		assertOK = &goivy.LogicNot{Body: &goivy.LogicAnd{Terms: upd.Pre.Fmlas}}
 	}
-
-	switch {
-	case assertOK == nil:
-		plan.preFmla = revFmla
-	case revFmla == nil:
-		plan.preFmla = assertOK
-	default:
-		plan.preFmla = &goivy.LogicAnd{Terms: []goivy.Expr{revFmla, assertOK}}
+	if assertOK != nil {
+		preClauses = goivy.AndClausesTyped(preClauses, goivy.NewClauses([]goivy.Expr{assertOK}, nil, nil))
 	}
-	plan.inputs = plan.act.GetFormalParams()
+	preClauses = goivy.TrimClauses(preClauses)
+	preClauses = expandFieldReferences(preClauses, g.Mod.DestructorSorts)
+
+	var inputs []*goivy.Const
+	inputSet := map[goivy.NodeKey]bool{}
+	for _, sym := range goivy.UsedSymbolsClauses(preClauses).All() {
+		c, ok := sym.(*goivy.Const)
+		if !ok {
+			continue
+		}
+		if !isLocalSym(c, g.Mod.Sig) {
+			continue
+		}
+		if goivy.IsNumeral(c) {
+			continue
+		}
+		k := goivy.Key(c)
+		if inputSet[k] {
+			continue
+		}
+		inputSet[k] = true
+		inputs = append(inputs, c)
+	}
+	for _, p := range plan.act.GetFormalParams() {
+		pp := goivy.NewConst("__"+p.Name, p.CSort)
+		k := goivy.Key(pp)
+		if inputSet[k] {
+			continue
+		}
+		inputSet[k] = true
+		inputs = append(inputs, pp)
+	}
+
+	preClauses, inputs, plan.fsyms = extractInputFields(preClauses, inputs, g.Mod)
+	plan.oldPreClauses = preClauses
+	preClauses, plan.paramDefs = extractDefinedParameters(preClauses, inputs)
+
+	usedNames := make(map[string]bool)
+	for _, sym := range goivy.UsedSymbolsClauses(preClauses).All() {
+		if c, ok := sym.(*goivy.Const); ok && c.Name != "" {
+			usedNames[c.Name] = true
+		}
+	}
+	rdefs := goivy.RelevantDefinitions(g.Mod, usedNames)
+	var rdefFmlas []goivy.Expr
+	for _, lf := range rdefs {
+		if def, ok := lf.Formula.(*goivy.LogicDefinition); ok {
+			fixed := fixDefinition(def)
+			rdefFmlas = append(rdefFmlas, goivy.DefinitionToConstraint(fixed))
+		}
+	}
+	if len(rdefFmlas) > 0 {
+		preClauses = goivy.AndClausesTyped(preClauses, goivy.NewClauses(rdefFmlas, nil, nil))
+	}
+	if varAxioms := g.Mod.VariantAxioms(); len(varAxioms) > 0 {
+		preClauses = goivy.AndClausesTyped(preClauses, goivy.NewClauses(varAxioms, nil, nil))
+	}
+	plan.preFmla = preClauses.ToFormula()
+	plan.used = goivy.UsedSymbolsAst(plan.preFmla)
+	plan.inputs = inputs
 	return plan
 }
 
@@ -246,6 +302,13 @@ func exprOfAction(a goivy.Action) goivy.Expr {
 		return e
 	}
 	return nil
+}
+
+func negatedPrecondition(e goivy.Expr) goivy.Expr {
+	if n, ok := e.(*goivy.LogicNot); ok {
+		return n.Body
+	}
+	return &goivy.LogicNot{Body: e}
 }
 
 // emitActionGenStructs is the top-level entry: it walks every public
@@ -279,7 +342,7 @@ func (g *Generator) emitActionGenStructDecl(w *goWriter, plan *actionGenPlan) {
 	w.linef("// %s drives solver-backed input synthesis for the %s action.", plan.structName, plan.name)
 	w.linef("type %s struct {", plan.structName)
 	w.line("\tsol *goivy.Solver")
-	for _, p := range plan.inputs {
+	for _, p := range plan.actionParams() {
 		if p == nil {
 			continue
 		}
@@ -423,11 +486,30 @@ func (g *Generator) emitActionGenGenerate(w *goWriter, plan *actionGenPlan) {
 	w.line("\t}")
 
 	// Extract per-input values from the model into struct fields.
+	defedParams := plan.defedParamSet()
 	for i, p := range plan.inputs {
 		if p == nil {
 			continue
 		}
-		g.emitInputExtraction(w, i, p)
+		if strings.HasPrefix(p.Name, "__ts") || p.Name == "*>" {
+			continue
+		}
+		if defedParams[goivy.Key(p)] {
+			continue
+		}
+		target, ok := g.actionInputTarget(p, plan.fsyms)
+		if !ok {
+			w.linef("\t// input extraction skipped for %q", p.Name)
+			continue
+		}
+		g.emitInputExtractionTo(w, i, p, target)
+	}
+	if len(plan.paramDefs) > 0 {
+		ssyms := make(map[string]bool)
+		for _, sym := range g.stateSymbols() {
+			ssyms[sym.Name] = true
+		}
+		g.emitDefinedInputs(w, plan.paramDefs, plan.fsyms, ssyms)
 	}
 
 	w.line("\treturn true")
@@ -442,14 +524,17 @@ func (g *Generator) emitActionGenGenerate(w *goWriter, plan *actionGenPlan) {
 // ivy_z3_gen.hpp `random_range` after the chacha8 migration) and
 // append `__in_i == picked` as a preference Expr. The caller
 // AND-ANDs them into the solver query; on UNSAT it retries without
-// the preference list. Record / variant inputs would need per-field
-// preferences; we currently emit no preferences for them (the
-// solver-picked model still satisfies the precondition, just without
-// preferring a chacha8-picked value).
+// the preference list. Field extraction turns record fields mentioned
+// by the precondition into scalar solver inputs, so those receive normal
+// preferences; composite inputs that remain whole still fall back to the
+// solver-picked model.
 func (g *Generator) emitInputPreferences(w *goWriter, plan *actionGenPlan) {
 	w.line("\t__prefs := []goivy.Expr{}")
 	for i, p := range plan.inputs {
 		if p == nil {
+			continue
+		}
+		if strings.HasPrefix(p.Name, "__ts") || p.Name == "*>" {
 			continue
 		}
 		if plan.oldPreClauses != nil {
@@ -539,22 +624,23 @@ func (g *Generator) emitActionGenExecute(w *goWriter, plan *actionGenPlan) {
 	if idx := strings.LastIndex(display, ":"); idx >= 0 {
 		display = display[idx+1:]
 	}
-	if len(plan.inputs) == 0 {
+	formals := plan.actionParams()
+	if len(formals) == 0 {
 		w.linef("\tfmt.Fprintln(ivyTraceOut, %q)", "> "+display)
 	} else {
 		var fmtStr strings.Builder
 		fmtStr.WriteString("> ")
 		fmtStr.WriteString(display)
 		fmtStr.WriteByte('(')
-		for i := range plan.inputs {
+		for i := range formals {
 			if i > 0 {
 				fmtStr.WriteByte(',')
 			}
 			fmtStr.WriteString("%v")
 		}
 		fmtStr.WriteString(")\n")
-		args := make([]string, 0, len(plan.inputs))
-		for _, p := range plan.inputs {
+		args := make([]string, 0, len(formals))
+		for _, p := range formals {
 			if p == nil {
 				continue
 			}
@@ -567,8 +653,8 @@ func (g *Generator) emitActionGenExecute(w *goWriter, plan *actionGenPlan) {
 	// single return value, capture it and echo `= <value>` to the
 	// trace stream — mirrors ivy2cpp/action_gen.go:617
 	// (`__ivy_out << "= " << callExpr << std::endl;`).
-	args := make([]string, 0, len(plan.inputs))
-	for _, p := range plan.inputs {
+	args := make([]string, 0, len(formals))
+	for _, p := range formals {
 		if p == nil {
 			continue
 		}
@@ -720,10 +806,10 @@ func (g *Generator) fieldHasPick(f destructorField) bool {
 	return goSortCard(g, f.Sort) > 0
 }
 
-// emitInputExtraction emits code to pull the i-th input's value
-// from modelResult into the corresponding struct field.
-func (g *Generator) emitInputExtraction(w *goWriter, i int, p *goivy.Const) {
-	field := "g." + goActionGenFieldName(p.Name)
+// emitInputExtractionTo emits code to pull the i-th solver input's value
+// from modelResult into target, which may be either an action argument
+// field (g.In_X) or an extracted destructor field (g.In_X.Field).
+func (g *Generator) emitInputExtractionTo(w *goWriter, i int, p *goivy.Const, field string) {
 	typeName := g.goType(p.CSort)
 	card := goSortCard(g, p.CSort)
 	pickName := fmt.Sprintf("__pick_in%d", i)
@@ -786,12 +872,147 @@ func (g *Generator) emitInputExtraction(w *goWriter, i int, p *goivy.Const) {
 	}
 }
 
+func (g *Generator) actionInputTarget(p *goivy.Const, fsyms map[goivy.NodeKey]goivy.Expr) (string, bool) {
+	if p == nil {
+		return "", false
+	}
+	if mapped, ok := fsyms[goivy.Key(p)]; ok && mapped != nil && !mapped.Equal(p) {
+		return g.actionInputExprTarget(mapped)
+	}
+	return "g." + goActionGenFieldName(p.Name), true
+}
+
+func (g *Generator) actionInputExprTarget(e goivy.Expr) (string, bool) {
+	switch n := e.(type) {
+	case *goivy.Const:
+		return "g." + goActionGenFieldName(n.Name), true
+	case *goivy.Apply:
+		fc, ok := n.Func.(*goivy.Const)
+		if !ok || len(n.Terms) != 1 {
+			return "", false
+		}
+		if g == nil || g.Mod == nil {
+			return "", false
+		}
+		if _, ok := g.Mod.DestructorSorts[fc.Name]; !ok {
+			return "", false
+		}
+		recv, ok := g.actionInputExprTarget(n.Terms[0])
+		if !ok {
+			return "", false
+		}
+		return recv + "." + goExportedName(memName(fc.Name)), true
+	default:
+		return "", false
+	}
+}
+
+func (g *Generator) emitDefinedInputs(w *goWriter, paramDefs []goivy.Expr, fsyms map[goivy.NodeKey]goivy.Expr, ssyms map[string]bool) {
+	for _, pd := range paramDefs {
+		eq, ok := pd.(*goivy.Eq)
+		if !ok {
+			continue
+		}
+		lhs := eq.T1
+		if c, ok := lhs.(*goivy.Const); ok {
+			if mapped, found := fsyms[goivy.Key(c)]; found {
+				lhs = mapped
+			}
+		}
+		lhsStr, ok := g.emitDefinedInputExpr(lhs, fsyms, ssyms, false)
+		if !ok {
+			w.linef("\t// defined input skipped for lhs %s", lhs.String())
+			continue
+		}
+		rhsStr, ok := g.emitDefinedInputExpr(eq.T2, fsyms, ssyms, true)
+		if !ok {
+			w.linef("\t// defined input skipped for rhs %s", eq.T2.String())
+			continue
+		}
+		w.linef("\t%s = %s", lhsStr, rhsStr)
+	}
+}
+
+func (g *Generator) emitDefinedInputExpr(e goivy.Expr, fsyms map[goivy.NodeKey]goivy.Expr, ssyms map[string]bool, stateContext bool) (string, bool) {
+	if e == nil {
+		return "", false
+	}
+	if c, ok := e.(*goivy.Const); ok {
+		if mapped, found := fsyms[goivy.Key(c)]; found && mapped != nil && !mapped.Equal(c) {
+			return g.emitDefinedInputExpr(mapped, fsyms, ssyms, stateContext)
+		}
+		if c.CSort == goivy.Boolean {
+			switch c.Name {
+			case "true", "false":
+				return c.Name, true
+			}
+		}
+		if goivy.IsNumeral(c) {
+			return c.Name, true
+		}
+		if st, ok := c.CSort.(*goivy.LogicEnumeratedSort); ok && !isNumericEnum(st) {
+			for _, val := range st.Extension {
+				if val == c.Name {
+					return goExportedName(c.Name), true
+				}
+			}
+		}
+		if stateContext && ssyms[c.Name] {
+			return "state." + goExportedName(c.Name), true
+		}
+		return "g." + goActionGenFieldName(c.Name), true
+	}
+	if ap, ok := e.(*goivy.Apply); ok {
+		fc, isConst := ap.Func.(*goivy.Const)
+		if !isConst {
+			return "", false
+		}
+		if len(ap.Terms) == 0 {
+			if stateContext && ssyms[fc.Name] {
+				return "state." + goExportedName(fc.Name), true
+			}
+			return "g." + goActionGenFieldName(fc.Name), true
+		}
+		if len(ap.Terms) == 1 && g != nil && g.Mod != nil {
+			if _, ok := g.Mod.DestructorSorts[fc.Name]; ok {
+				recv, ok := g.emitDefinedInputExpr(ap.Terms[0], fsyms, ssyms, stateContext)
+				if !ok {
+					return "", false
+				}
+				return recv + "." + goExportedName(memName(fc.Name)), true
+			}
+		}
+		args := make([]string, len(ap.Terms))
+		for i, t := range ap.Terms {
+			s, ok := g.emitDefinedInputExpr(t, fsyms, ssyms, stateContext)
+			if !ok {
+				return "", false
+			}
+			args[i] = s
+		}
+		if stateContext && ssyms[fc.Name] {
+			return "state." + goExportedName(fc.Name) + bracketize(args), true
+		}
+	}
+	return "", false
+}
+
+func bracketize(args []string) string {
+	var out strings.Builder
+	for _, a := range args {
+		out.WriteString("[")
+		out.WriteString(a)
+		out.WriteString("]")
+	}
+	return out.String()
+}
+
 // emitFallbackInputAssignments emits randomized assignments for
 // every input, used when the precondition isn't reifiable (we fall
 // back to plain ivyChoose-style randomization, matching ivy2cpp's
 // emitWeakActionGenerator at action_gen.go:514).
 func (g *Generator) emitFallbackInputAssignments(w *goWriter, plan *actionGenPlan) {
-	for _, p := range plan.inputs {
+	for _, p := range plan.actionParams() {
 		if p == nil {
 			continue
 		}
