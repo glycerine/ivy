@@ -512,10 +512,11 @@ parser16newstate:
 parser16default:
 	/* default state action */
 	parser16n = int(parser16Def[parser16state])
+	// Always read lookahead before reducing, to match PLY trace order.
+	if parser16rcvr.char < 0 {
+		parser16rcvr.char, parser16token = parser16lex1(parser16lex, &parser16rcvr.lval)
+	}
 	if parser16n == -2 {
-		if parser16rcvr.char < 0 {
-			parser16rcvr.char, parser16token = parser16lex1(parser16lex, &parser16rcvr.lval)
-		}
 
 		/* look through exception table */
 		xi := 0
