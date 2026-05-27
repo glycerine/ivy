@@ -1551,7 +1551,7 @@ func CheckDefinitions(mod *Module) error {
 			}
 		}
 		// Dump all action keys in insertion order for comparison.
-		{
+		if xtracer.Enabled {
 			var allKeys []string
 			for name := range mod.Actions.All() {
 				allKeys = append(allKeys, name)
