@@ -2266,6 +2266,12 @@ type PrivateDef struct {
 	Elems []Node // args
 }
 
+func (cfg *AstConfig) NewPrivateDef(elems ...Node) *PrivateDef {
+	d := &PrivateDef{Elems: elems}
+	d.Cfg = cfg
+	return d
+}
+
 func (p *PrivateDef) Args() []Node { return p.Elems }
 func (p *PrivateDef) Clone(args []Node) Node {
 	return &PrivateDef{Base: p.Base, Elems: args}

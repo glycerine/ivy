@@ -51,8 +51,8 @@ Lexer and parsers:
 - `goivy/parser_parse_config.go`: `1-96`
 - `goivy/parser_v16_lalr_parser.go`: `7-32`, `35-176`
 - `goivy/parser_v16_builders.go`: `5-55`
-- `goivy/parser_grammar_v16.y`: `1-5`, `67-155`, `157-240`,
-  `256-299`, `301-338`, `347-531`
+- `goivy/parser_grammar_v16.y`: `1-5`, `67-199`, `201-256`,
+  `258-341`, `357-407`, `409-493`, `495-709`
 - `goivy/parser_grammar_v17.y`: `1-10`, `70-82`, `774-860`,
   `981-1039`, `1694-1702`, `1901-2253`, `2303-2358`, `3621-3658`,
   `4014-4093`, `4936-5110`, `5168-5185`
@@ -426,10 +426,11 @@ Implemented or partially implemented:
 - The standalone logic parser has a v1.6 grammar with separate `term` and
   `fmla` categories.
 - Full-file parsing dispatches `Version{1,6}` to `parser_grammar_v16.y`, whose
-  initial thin grammar supports include, type, individual, relation, axiom,
-  property, conjecture, top-level init, simple import/export action forms,
-  standalone import/export call atoms, simple call actions, assignment actions,
-  and the v1.6 term/formula split.
+  initial thin grammar supports include, type, individual, var, relation,
+  function, axiom, property with old bare schema proofs, conjecture, old
+  top-level assert, definition, top-level init, simple import/export action
+  forms, standalone import/export/private call atoms, simple call actions,
+  assignment actions, and the v1.6 term/formula split.
 - The generated v1.6 full-file parser is patched with the same PLY-style
   lookahead behavior as the v1.7 parser for better xtrace ordering.
 - Some compiler/action/theory/isolate code has v1.6 branches.
