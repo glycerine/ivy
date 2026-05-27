@@ -401,7 +401,7 @@ top:
         m := parser16Acfg(parser16lex).NewMixinAfterDef($3, $5)
         $$.declare(parser16Acfg(parser16lex).NewMixinDecl(m))
     }
-    | top PARSER16_TOK_BEFORE atype optargs optreturns topseq
+    | top PARSER16_TOK_BEFORE atype optargs optreturns sequence
     {
         xtracer.Trace("parser.p_top_before_callatom_lcb_action_rcb ENTER (top)")
         $$ = $1
