@@ -871,6 +871,100 @@ action set_flag = {
 	}
 }
 
+func TestEmit_TestTarget_SingleReturnExecuteCapturesReturn(t *testing.T) {
+	mod := compileIvySource(t, `
+action echo(b: bool) returns (out: bool) = {
+	out := b
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	requireHasLineWithAllTerms(t, actions, "__res := state.Echo(g.In_B)")
+	requireHasLineWithAllTerms(t, actions, `fmt.Fprintf(ivyTraceOut, "= %v\n", __res)`)
+	if strings.Contains(actions, "state.Echo(g.In_B,") {
+		t.Fatalf("single-return execute should not pass return values as out-args:\n%s", actions)
+	}
+}
+
+func TestEmit_TestTarget_MultiReturnExecuteUsesGoReturnValues(t *testing.T) {
+	mod := compileIvySource(t, `
+type color = {red, blue}
+action pair(b: bool) returns (left: bool, right: color) = {
+	left := b;
+	right := red
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	requireHasLineWithAllTerms(t, actions, "func", "(s *State)", "Pair", "b bool", "left bool", "right Color")
+	requireHasLineWithAllTerms(t, actions, "__res, _ := state.Pair(g.In_B)")
+	requireHasLineWithAllTerms(t, actions, `fmt.Fprintf(ivyTraceOut, "= %v\n", __res)`)
+	for _, bad := range []string{
+		"var In_Left",
+		"var In_Right",
+		"state.Pair(g.In_B, In_Left",
+		"state.Pair(g.In_B, In_Right",
+	} {
+		if strings.Contains(actions, bad) {
+			t.Fatalf("multi-return execute used C++ out-param shape %q:\n%s", bad, actions)
+		}
+	}
+}
+
+func TestEmit_TestTarget_ThreeReturnExecuteBlanksUnusedReturns(t *testing.T) {
+	mod := compileIvySource(t, `
+action triple(seed: bool) returns (a: bool, b: bool, c: bool) = {
+	a := seed;
+	b := false;
+	c := true
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	requireHasLineWithAllTerms(t, actions, "__res, _, _ := state.Triple(g.In_Seed)")
+	requireHasLineWithAllTerms(t, actions, `fmt.Fprintf(ivyTraceOut, "= %v\n", __res)`)
+	if strings.Contains(actions, "state.Triple(") && strings.Contains(actions, "In_A") {
+		t.Fatalf("three-return execute should not synthesize out-args:\n%s", actions)
+	}
+}
+
+func TestSmoke_BuildEmittedTest_MultiReturnAction(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+type color = {red, blue}
+action pair(b: bool) returns (left: bool, right: color) = {
+	left := b;
+	right := red
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "main"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	dir := playpenDir(t)
+	if err := WriteOutput(out, dir); err != nil {
+		t.Fatalf("WriteOutput: %v", err)
+	}
+	pkgDir := outputDirectory(dir, out.BaseName)
+	cmd := exec.Command("go", "build", "-o", "test_bin", ".")
+	cmd.Dir = pkgDir
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("go build failed:\n%s", string(output))
+	}
+}
+
 // --- M9: Tier 2 smoke — test target go-builds against goivy ---------
 
 func TestSmoke_BuildEmittedTest(t *testing.T) {

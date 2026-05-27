@@ -25,19 +25,14 @@ recommendations unless there is a concrete failure mode.
   storage rather than through `*State` fields. Map-backed function-valued
   formals/locals use raw map indexes and contribute their tuple key types to
   `types.go`, while true state functions keep the existing getter path.
+- Solver-backed test action generators now call Go action methods using normal
+  Go return values. Multi-return actions destructure the call result and print
+  the first returned value instead of passing return locals as C++-style
+  out-parameters.
 
 Remaining entries keep their original audit numbering.
 
 ## P1 - generated programs can be wrong, invalid, or unlaunchable
-
-7. Test action generators call multi-return actions with C++ out-parameter
-   style, but Go actions return values normally.
-
-   Evidence: `emitSomeAction` emits Go methods with named return values
-   (`action.go:1039`). `emitActionGenExecute` handles multiple returns by
-   declaring locals and appending them to the call argument list
-   (`action_gen.go:589` through `action_gen.go:601`). A public action with two
-   returns under `target=test` will generate a wrong-arity method call.
 
 8. Range cardinality ignores the lower bound.
 

@@ -649,10 +649,10 @@ func (g *Generator) emitActionGenExecute(w *goWriter, plan *actionGenPlan) {
 		w.linef(`	fmt.Fprintf(ivyTraceOut, %q, %s)`, fmtStr.String(), strings.Join(args, ", "))
 	}
 
-	// Invoke state.<Name>(g.in0, g.in1, …). If the action has a
-	// single return value, capture it and echo `= <value>` to the
-	// trace stream — mirrors ivy2cpp/action_gen.go:617
-	// (`__ivy_out << "= " << callExpr << std::endl;`).
+	// Invoke state.<Name>(g.in0, g.in1, …). Go action methods return
+	// values normally; unlike the C++ emitter, secondary returns are
+	// not out-parameters. Match ivy_to_cpp.py's action-gen behavior by
+	// printing the first returned value whenever the action has outputs.
 	args := make([]string, 0, len(formals))
 	for _, p := range formals {
 		if p == nil {
@@ -664,27 +664,27 @@ func (g *Generator) emitActionGenExecute(w *goWriter, plan *actionGenPlan) {
 	if plan.origAct != nil {
 		returns = plan.origAct.GetFormalReturns()
 	}
+	actualReturns := make([]*goivy.Const, 0, len(returns))
+	for _, r := range returns {
+		if r != nil {
+			actualReturns = append(actualReturns, r)
+		}
+	}
 	callExpr := fmt.Sprintf("state.%s(%s)", goExportedName(plan.name), strings.Join(args, ", "))
-	switch len(returns) {
+	switch len(actualReturns) {
 	case 0:
 		w.linef("\t%s", callExpr)
 	case 1:
 		w.linef("\t__res := %s", callExpr)
 		w.line(`	fmt.Fprintf(ivyTraceOut, "= %v\n", __res)`)
 	default:
-		// Multi-return: declare extras as zero values and pass by
-		// reference. Multi-return is rarely exercised by oracle
-		// fixtures; mirror cpp's emitPythonTestActionGenExecute
-		// shape but skip the result echo (cpp also skips it).
-		for _, r := range returns {
-			if r == nil {
-				continue
-			}
-			zero := g.goZeroValue(r.CSort)
-			w.linef("\tvar %s = %s", goActionGenFieldName(r.Name), zero)
-			args = append(args, goActionGenFieldName(r.Name))
+		lhs := make([]string, len(actualReturns))
+		lhs[0] = "__res"
+		for i := 1; i < len(lhs); i++ {
+			lhs[i] = "_"
 		}
-		w.linef("\tstate.%s(%s)", goExportedName(plan.name), strings.Join(args, ", "))
+		w.linef("\t%s := %s", strings.Join(lhs, ", "), callExpr)
+		w.line(`	fmt.Fprintf(ivyTraceOut, "= %v\n", __res)`)
 	}
 	w.line("}")
 	w.blank()
