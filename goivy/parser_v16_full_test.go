@@ -214,6 +214,108 @@ func TestParseV16ProgressDecl(t *testing.T) {
 	}
 }
 
+func TestParseV16PropertyNamedDecl(t *testing.T) {
+	result, err := Parse("property true named witness", Version{1, 6}, WithFilename("named16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 named property: %v", err)
+	}
+	if got := countDeclsOf[*PropertyDecl](result.Decls); got != 1 {
+		t.Fatalf("PropertyDecl count = %d, want 1", got)
+	}
+	decl := firstDeclOf[*NamedDecl](t, result.Decls)
+	arg := firstArgAs[*Atom](t, decl)
+	if arg.Rep != "witness" {
+		t.Fatalf("NamedDecl arg = %q, want witness", arg.Rep)
+	}
+}
+
+func TestParseV16SchemaDeclWithPropertyConclusion(t *testing.T) {
+	src := `schema congruence = {
+type d
+type r
+function f(X:d):r
+property X = Y -> f(X) = f(Y)
+}`
+	result, err := Parse(src, Version{1, 6}, WithFilename("schema16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 schema: %v", err)
+	}
+	decl := firstDeclOf[*SchemaDecl](t, result.Decls)
+	schema := firstArgAs[*Schema](t, decl)
+	def := firstArgAs[*Definition](t, schema)
+	if lhs, ok := def.Lhs.(*Atom); !ok || lhs.Rep != "congruence" {
+		t.Fatalf("schema lhs = %T %v, want Atom(congruence)", def.Lhs, def.Lhs)
+	}
+	body, ok := def.Rhs.(*SchemaBody)
+	if !ok {
+		t.Fatalf("schema rhs = %T, want *SchemaBody", def.Rhs)
+	}
+	if got := len(body.Args()); got != 4 {
+		t.Fatalf("SchemaBody args = %d, want 4", got)
+	}
+	if _, ok := body.Conc().(*Implies); !ok {
+		t.Fatalf("SchemaBody conclusion = %T, want *Implies", body.Conc())
+	}
+}
+
+func TestParseV16SchemaPremisePropertyKeepsNoSyntheticLabel(t *testing.T) {
+	src := `schema two_props = {
+property p
+property q
+}`
+	result, err := Parse(src, Version{1, 6}, WithFilename("schema_props16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 schema with property premise: %v", err)
+	}
+	decl := firstDeclOf[*SchemaDecl](t, result.Decls)
+	schema := firstArgAs[*Schema](t, decl)
+	def := firstArgAs[*Definition](t, schema)
+	body, ok := def.Rhs.(*SchemaBody)
+	if !ok {
+		t.Fatalf("schema rhs = %T, want *SchemaBody", def.Rhs)
+	}
+	if got := len(body.Args()); got != 2 {
+		t.Fatalf("SchemaBody args = %d, want 2", got)
+	}
+	prem, ok := body.Args()[0].(*LabeledFormula)
+	if !ok {
+		t.Fatalf("SchemaBody premise = %T, want *LabeledFormula", body.Args()[0])
+	}
+	if prem.LabelName() != "" {
+		t.Fatalf("v1.6 schema premise synthesized label %q, want empty", prem.LabelName())
+	}
+}
+
+func TestParseV16ObjectDeclExpandsWithPrefix(t *testing.T) {
+	src := `object obj = {
+type t
+relation p(X:t)
+}`
+	result, err := Parse(src, Version{1, 6}, WithFilename("object16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 object: %v", err)
+	}
+	decl := firstDeclOf[*ObjectDecl](t, result.Decls)
+	name := firstArgAs[*Atom](t, decl)
+	if name.Rep != "obj" {
+		t.Fatalf("ObjectDecl name = %q, want obj", name.Rep)
+	}
+	var foundPrefixedRelation bool
+	for _, d := range result.Decls {
+		cd, ok := d.(*ConstantDecl)
+		if !ok || len(cd.Args()) == 0 {
+			continue
+		}
+		if atom, ok := cd.Args()[0].(*Atom); ok && atom.Rep == "obj.p" {
+			foundPrefixedRelation = true
+			break
+		}
+	}
+	if !foundPrefixedRelation {
+		t.Fatalf("expanded object relation obj.p not found in declarations")
+	}
+}
+
 func TestParseV16TopLevelAssert(t *testing.T) {
 	result, err := Parse("relation p\nrelation q\nassert p -> q", Version{1, 6}, WithFilename("assert16.ivy"))
 	if err != nil {

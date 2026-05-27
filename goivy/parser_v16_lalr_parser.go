@@ -87,6 +87,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_COLON
 	case DOT:
 		return PARSER16_TOK_DOT
+	case DOTDOTDOT:
+		return PARSER16_TOK_DOTDOTDOT
 	case PLUS:
 		return PARSER16_TOK_PLUS
 	case MINUS:
@@ -145,6 +147,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_EVENTUALLY
 	case TYPE:
 		return PARSER16_TOK_TYPE
+	case OBJECT:
+		return PARSER16_TOK_OBJECT
 	case INDIV:
 		return PARSER16_TOK_INDIV
 	case VAR:
@@ -161,6 +165,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_PROPERTY
 	case CONJECTURE:
 		return PARSER16_TOK_CONJECTURE
+	case SCHEMA:
+		return PARSER16_TOK_SCHEMA
 	case ASSERT:
 		return PARSER16_TOK_ASSERT
 	case DEFINITION:
@@ -193,6 +199,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_RELY
 	case MIXORD:
 		return PARSER16_TOK_MIXORD
+	case NAMED:
+		return PARSER16_TOK_NAMED
 	default:
 		lval.tok = TokenInfo{Val: tok.Value, Line: tok.Line}
 		return PARSER16_TOK_PRESYMBOL
