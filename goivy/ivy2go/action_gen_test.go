@@ -168,12 +168,9 @@ action set_flag(b: bool) = {
 	}
 	// `require b` (an assert in goivy's IR) joins the precondition as
 	// the negation of the failure path (Update.Pre.Fmlas = [~b];
-	// assertOK = NOT(~b) → reifies to a LogicNot wrapping a LogicNot
-	// of __in0, or — with the simpler single-Pre.Fmla path — a
-	// LogicNot whose body resolves to __in0).
-	if !strings.Contains(actions, "&goivy.LogicNot{Body: __in0}") &&
-		!strings.Contains(actions, "&goivy.LogicNot{Body: &goivy.LogicNot{Body: __in0}}") {
-		t.Errorf("require b should reify referencing __in0, got:\n%s", actions)
+	// assertOK = NOT(~b)).
+	if !strings.Contains(actions, "&goivy.LogicNot{Body: &goivy.LogicNot{Body: __in0}}") {
+		t.Errorf("require b should reify as the non-failing path for __in0, got:\n%s", actions)
 	}
 }
 
@@ -242,16 +239,20 @@ action set_to_x(p: point) = {
 			t.Errorf("missing per-field input decl %q:\n%s", want, actions)
 		}
 	}
-	// Per-field pick + struct assembly in generate(). After the
-	// chacha8 randomize-preference port (task #79), record fields
-	// use the chacha8-derived `__pick_in0_<field>` directly so the
-	// PRNG stream stays aligned with cpp's ivy_z3_gen.hpp
-	// random_range consumption order.
-	if !strings.Contains(actions, "v0_x := (__pick_in0_x == 1)") {
-		t.Errorf("generate() should bind v0_x from __pick_in0_x:\n%s", actions)
+	// Per-field pick + struct assembly in generate(). The random
+	// preference consumes the cpp-aligned PRNG sample, but generated code
+	// must fall back to the solver model if the precondition rejects it.
+	if !strings.Contains(actions, "__pick_in0_x := ivyRandomRange(0, 1)") {
+		t.Errorf("generate() should consume a pick for x:\n%s", actions)
 	}
-	if !strings.Contains(actions, "v0_y := (__pick_in0_y == 1)") {
-		t.Errorf("generate() should bind v0_y from __pick_in0_y:\n%s", actions)
+	if !strings.Contains(actions, "if __prefsHonored {") ||
+		!strings.Contains(actions, "v0_x = (__pick_in0_x == 1)") ||
+		!strings.Contains(actions, "v0_x = pickBoolOrChoose(g.sol, modelResult, __in0_x)") {
+		t.Errorf("generate() should use x pick only when preferences are honored:\n%s", actions)
+	}
+	if !strings.Contains(actions, "v0_y = (__pick_in0_y == 1)") ||
+		!strings.Contains(actions, "v0_y = pickBoolOrChoose(g.sol, modelResult, __in0_y)") {
+		t.Errorf("generate() should use y pick only when preferences are honored:\n%s", actions)
 	}
 	if !strings.Contains(actions, "v0 := Point{X: v0_x, Y: v0_y}") {
 		t.Errorf("generate() should assemble Point{X: …, Y: …}:\n%s", actions)
@@ -769,11 +770,10 @@ action set_flag = {
 }
 
 func TestEmit_TestTarget_GeneratePicksInputsByCardinality(t *testing.T) {
-	// Post-task-#79: scalar inputs (bool, enum, range, integer) use
-	// the chacha8-derived `__pick_in<i>` directly so the PRNG stream
-	// stays byte-aligned with cpp's ivy_z3_gen.hpp random_range
-	// consumption order. Record/variant inputs still route per-field
-	// values through pickBoolOrChoose/pickEnumOrChoose etc.
+	// Scalar inputs consume a chacha8-derived `__pick_in<i>` so the PRNG
+	// stream stays byte-aligned with cpp's ivy_z3_gen.hpp random_range
+	// consumption order. The pick is assigned directly only if the
+	// preference-constrained solver query was satisfiable.
 	mod := compileIvySource(t, `
 relation flag
 action set_flag(b: bool) = {
@@ -788,8 +788,10 @@ action set_flag(b: bool) = {
 	if !strings.Contains(actions, "__pick_in0 := ivyRandomRange(0, 1)") {
 		t.Errorf("bool input should consume one chacha8 sample via ivyRandomRange:\n%s", actions)
 	}
-	if !strings.Contains(actions, "= (__pick_in0 == 1)") {
-		t.Errorf("bool input field should bind directly from __pick_in0:\n%s", actions)
+	if !strings.Contains(actions, "if __prefsHonored {") ||
+		!strings.Contains(actions, "g.In_B = (__pick_in0 == 1)") ||
+		!strings.Contains(actions, "g.In_B = pickBoolOrChoose(g.sol, modelResult, __in0)") {
+		t.Errorf("bool input field should use pick only when preferences are honored:\n%s", actions)
 	}
 }
 

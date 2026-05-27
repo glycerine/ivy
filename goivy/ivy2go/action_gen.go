@@ -398,14 +398,19 @@ func (g *Generator) emitActionGenGenerate(w *goWriter, plan *actionGenPlan) {
 	// as hard constraints and retry without them on UNSAT (cpp does
 	// alit-shrinking; the simpler all-or-nothing fallback still
 	// preserves byte-equivalent PRNG consumption order for the common
-	// case where preferences are satisfiable).
+	// case where preferences are satisfiable). Extraction uses the
+	// direct random pick only when this first query succeeded.
 	g.emitInputPreferences(w, plan)
 
 	w.line("\tvar modelResult *goivy.ModelResult")
+	w.line("\t__prefsHonored := false")
+	w.line("\t_ = __prefsHonored")
 	w.line("\tif g.sol != nil {")
 	w.line("\t\tif len(__prefs) > 0 {")
 	w.line("\t\t\tmodelResult, _ = g.sol.GetModelClauses(conjClauses(preClauses, __prefs...))")
-	w.line("\t\t\tif modelResult == nil {")
+	w.line("\t\t\tif modelResult != nil {")
+	w.line("\t\t\t\t__prefsHonored = true")
+	w.line("\t\t\t} else {")
 	w.line("\t\t\t\tmodelResult, _ = g.sol.GetModelClauses(preClauses)")
 	w.line("\t\t\t}")
 	w.line("\t\t} else {")
@@ -458,14 +463,13 @@ func (g *Generator) emitInputPreferences(w *goWriter, plan *actionGenPlan) {
 
 // emitOneInputPreference emits the per-input preference body. It
 // emits two artifacts:
-//   1. a named local `__pick_<i>` (or `__pick_<i>_<field>` for record
-//      fields) holding the chacha8-derived value. Used by
-//      emitInputExtraction for direct assignment, bypassing the
-//      solver-model path that doesn't honor preferences for goivy's
-//      UninterpretedSort-with-interp inputs.
-//   2. an entry in __prefs asserting the equality — kept in case the
-//      goivy translator improves and honors it later. For now it's
-//      effectively a no-op for non-enum inputs but doesn't hurt.
+//  1. a named local `__pick_<i>` (or `__pick_<i>_<field>` for record
+//     fields) holding the chacha8-derived value. Used by
+//     emitInputExtraction for direct assignment only when the
+//     preference-constrained model query succeeds.
+//  2. an entry in __prefs asserting the equality — kept in case the
+//     goivy translator improves and honors it later. For now it's
+//     effectively a no-op for non-enum inputs but doesn't hurt.
 func (g *Generator) emitOneInputPreference(w *goWriter, i int, p *goivy.Const) {
 	if recName, ok := g.destructorStructName(p.CSort); ok {
 		// Record input: cpp's __randomize<RecordT> iterates each scalar
@@ -725,18 +729,28 @@ func (g *Generator) emitInputExtraction(w *goWriter, i int, p *goivy.Const) {
 	pickName := fmt.Sprintf("__pick_in%d", i)
 	switch {
 	case typeName == "bool":
-		// Use chacha8-derived pick directly when available — solver
-		// preferences for UninterpretedSort inputs don't reliably
-		// constrain the model on the goivy side. The chacha8 stream
-		// stays aligned with cpp's randomize() consumption order.
 		if g.inputHasPick(p) {
-			w.linef("\t%s = (%s == 1)", field, pickName)
+			w.line("\tif __prefsHonored {")
+			w.linef("\t\t%s = (%s == 1)", field, pickName)
+			w.line("\t} else {")
+			w.linef("\t\t%s = pickBoolOrChoose(g.sol, modelResult, __in%d)", field, i)
+			w.line("\t}")
 		} else {
 			w.linef("\t%s = pickBoolOrChoose(g.sol, modelResult, __in%d)", field, i)
 		}
 	case isLogicEnumeratedSort(p.CSort):
 		if g.inputHasPick(p) {
-			w.linef("\t%s = %s(%s)", field, typeName, pickName)
+			es := p.CSort.(*goivy.LogicEnumeratedSort)
+			extLits := make([]string, len(es.Extension))
+			for k, v := range es.Extension {
+				extLits[k] = fmt.Sprintf("%q", v)
+			}
+			w.line("\tif __prefsHonored {")
+			w.linef("\t\t%s = %s(%s)", field, typeName, pickName)
+			w.line("\t} else {")
+			w.linef("\t\t%s = %s(pickEnumOrChoose(g.sol, modelResult, __in%d, []string{%s}))",
+				field, typeName, i, strings.Join(extLits, ", "))
+			w.line("\t}")
 		} else {
 			es := p.CSort.(*goivy.LogicEnumeratedSort)
 			extLits := make([]string, len(es.Extension))
@@ -748,7 +762,11 @@ func (g *Generator) emitInputExtraction(w *goWriter, i int, p *goivy.Const) {
 		}
 	case card > 0 && goIsAnyIntegerType(g, p.CSort):
 		if g.inputHasPick(p) {
-			w.linef("\t%s = %s(%s)", field, typeName, pickName)
+			w.line("\tif __prefsHonored {")
+			w.linef("\t\t%s = %s(%s)", field, typeName, pickName)
+			w.line("\t} else {")
+			w.linef("\t\t%s = %s(pickUintOrChoose(g.sol, modelResult, __in%d, %d))", field, typeName, i, card)
+			w.line("\t}")
 		} else {
 			w.linef("\t%s = %s(pickUintOrChoose(g.sol, modelResult, __in%d, %d))", field, typeName, i, card)
 		}
@@ -1099,14 +1117,31 @@ func (g *Generator) emitStructInputAssembly(w *goWriter, i int, typeName, recNam
 		switch ft := g.goType(f.Sort); {
 		case ft == "bool":
 			if g.fieldHasPick(f) {
-				w.linef("v%d_%s := (%s == 1)", i, goIdent(f.Name), pickName)
+				w.linef("var v%d_%s bool", i, goIdent(f.Name))
+				w.linef("if __prefsHonored {")
+				w.linef("\tv%d_%s = (%s == 1)", i, goIdent(f.Name), pickName)
+				w.linef("} else {")
+				w.linef("\tv%d_%s = pickBoolOrChoose(g.sol, modelResult, __in%d_%s)",
+					i, goIdent(f.Name), i, goIdent(f.Name))
+				w.linef("}")
 			} else {
 				w.linef("v%d_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s)",
 					i, goIdent(f.Name), i, goIdent(f.Name))
 			}
 		case isLogicEnumeratedSort(f.Sort):
 			if g.fieldHasPick(f) {
-				w.linef("v%d_%s := %s(%s)", i, goIdent(f.Name), ft, pickName)
+				es := f.Sort.(*goivy.LogicEnumeratedSort)
+				extLits := make([]string, len(es.Extension))
+				for k, v := range es.Extension {
+					extLits[k] = fmt.Sprintf("%q", v)
+				}
+				w.linef("var v%d_%s %s", i, goIdent(f.Name), ft)
+				w.linef("if __prefsHonored {")
+				w.linef("\tv%d_%s = %s(%s)", i, goIdent(f.Name), ft, pickName)
+				w.linef("} else {")
+				w.linef("\tv%d_%s = %s(pickEnumOrChoose(g.sol, modelResult, __in%d_%s, []string{%s}))",
+					i, goIdent(f.Name), ft, i, goIdent(f.Name), strings.Join(extLits, ", "))
+				w.linef("}")
 			} else {
 				es := f.Sort.(*goivy.LogicEnumeratedSort)
 				extLits := make([]string, len(es.Extension))
@@ -1118,7 +1153,13 @@ func (g *Generator) emitStructInputAssembly(w *goWriter, i int, typeName, recNam
 			}
 		case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
 			if g.fieldHasPick(f) {
-				w.linef("v%d_%s := %s(%s)", i, goIdent(f.Name), ft, pickName)
+				w.linef("var v%d_%s %s", i, goIdent(f.Name), ft)
+				w.linef("if __prefsHonored {")
+				w.linef("\tv%d_%s = %s(%s)", i, goIdent(f.Name), ft, pickName)
+				w.linef("} else {")
+				w.linef("\tv%d_%s = %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s, %d))",
+					i, goIdent(f.Name), ft, i, goIdent(f.Name), fcard)
+				w.linef("}")
 			} else {
 				w.linef("v%d_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s, %d))",
 					i, goIdent(f.Name), ft, i, goIdent(f.Name), fcard)
