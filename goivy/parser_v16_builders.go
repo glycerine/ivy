@@ -20,19 +20,16 @@ func parser16NodeAt(node Node, loc Location) Node {
 	return node
 }
 
-func parser16ActionFormula(node Node) Node {
-	node = checkNonTemporal(node)
-	lf, ok := node.(*LabeledFormula)
-	if !ok || lf.Label != nil {
-		return node
+func parser16AddLabel(lf *LabeledFormula, pref string) *LabeledFormula {
+	xtracer.Trace("parser.addlabel ENTER")
+	return lf
+}
+
+func parser16ActionFormula(cfg *AstConfig, node Node) Node {
+	if lf, ok := node.(*LabeledFormula); ok {
+		node = parser16AddLabel(lf, "asrt")
 	}
-	if lf.Formula != nil {
-		if lf.Formula.GetLineno().Line == 0 && lf.GetLineno().Line > 0 {
-			lf.Formula.SetLineno(lf.GetLineno())
-		}
-		return lf.Formula
-	}
-	return node
+	return checkNonTemporal(node)
 }
 
 func parser16DeclareType(cfg *AstConfig, top *ivyAccum, name *Atom, loc Location) {

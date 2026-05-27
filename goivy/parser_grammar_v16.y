@@ -1273,21 +1273,24 @@ simpleact:
     PARSER16_TOK_ASSUME labeledfmla
     {
         xtracer.Trace("parser.p_action_assume ENTER (simpleact)")
-        a := parser16Acfg(parser16lex).NewAssumeAction(parser16ActionFormula($2))
+        cfg := parser16Acfg(parser16lex)
+        a := cfg.NewAssumeAction(parser16ActionFormula(cfg, $2))
         a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
         $$ = a
     }
     | PARSER16_TOK_ASSERT labeledfmla
     {
         xtracer.Trace("parser.p_action_assert ENTER (simpleact)")
-        a := parser16Acfg(parser16lex).NewAssertAction(parser16ActionFormula($2))
+        cfg := parser16Acfg(parser16lex)
+        a := cfg.NewAssertAction(parser16ActionFormula(cfg, $2))
         a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
         $$ = a
     }
     | PARSER16_TOK_ENSURES labeledfmla
     {
         xtracer.Trace("parser.p_action_ensures ENTER (simpleact)")
-        a := parser16Acfg(parser16lex).NewEnsuresAction(parser16ActionFormula($2))
+        cfg := parser16Acfg(parser16lex)
+        a := cfg.NewEnsuresAction(parser16ActionFormula(cfg, $2))
         a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
         $$ = a
     }
@@ -1519,16 +1522,18 @@ invariants:
     | invariants PARSER16_TOK_INVARIANT labeledfmla
     {
         xtracer.Trace("parser.p_invariant_invariant_fmla ENTER (invariants)")
-        inv := parser16ActionFormula($3)
-        a := parser16Acfg(parser16lex).NewAssertAction(inv)
+        cfg := parser16Acfg(parser16lex)
+        inv := parser16ActionFormula(cfg, $3)
+        a := cfg.NewAssertAction(inv)
         a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
         $$ = append($1, a)
     }
     | invariants PARSER16_TOK_INVARIANT labeledfmla PARSER16_TOK_PROOF proofstep
     {
         xtracer.Trace("parser.p_invariant_invariant_fmla_proof ENTER (invariants)")
-        inv := parser16ActionFormula($3)
-        a := parser16Acfg(parser16lex).NewAssertAction(inv, $5)
+        cfg := parser16Acfg(parser16lex)
+        inv := parser16ActionFormula(cfg, $3)
+        a := cfg.NewAssertAction(inv, $5)
         a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
         $$ = append($1, a)
     }
