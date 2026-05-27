@@ -1,7 +1,13 @@
 package goivy
 
 import (
+	"bytes"
+	"io"
+	"os"
+	"strings"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 var tacticsTestAstCfg = NewAstConfig()
@@ -38,6 +44,44 @@ func makeTemporalGoal(name string, model Node, fmla Node) *LabeledFormula {
 	lf := tacticsTestAstCfg.NewLabeledFormula(label, tm)
 	lf.Temporal = BoolPtr(true)
 	return lf
+}
+
+func captureTacticsStdout(t *testing.T, fn func()) string {
+	t.Helper()
+	if !xtracer.Enabled {
+		t.Skip("xtrace disabled at build time")
+	}
+
+	oldStdout := os.Stdout
+	oldSuppressed := xtracer.Suppressed
+	r, w, err := os.Pipe()
+	if err != nil {
+		t.Fatalf("os.Pipe: %v", err)
+	}
+
+	outCh := make(chan string, 1)
+	go func() {
+		var buf bytes.Buffer
+		_, _ = io.Copy(&buf, r)
+		outCh <- buf.String()
+	}()
+
+	os.Stdout = w
+	xtracer.Suppressed = false
+	closedW := false
+	defer func() {
+		os.Stdout = oldStdout
+		xtracer.Suppressed = oldSuppressed
+		if !closedW {
+			_ = w.Close()
+		}
+		_ = r.Close()
+	}()
+
+	fn()
+	_ = w.Close()
+	closedW = true
+	return <-outCh
 }
 
 // ---------- Sorry ----------
@@ -445,13 +489,25 @@ func TestSkolemizenpSchemaBodyConstantPremisePythonError(t *testing.T) {
 	prem := tacticsTestAstCfg.NewConstantDecl(NewConst("c", Boolean))
 	goal := MakeGoal(tacticsTestAstCfg, Location{}, tacticsTestAstCfg.NewAtom("g"), []Node{prem}, tm)
 
-	_, err := Skolemizenp(nil, []*LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
+	var err error
+	out := captureTacticsStdout(t, func() {
+		_, err = Skolemizenp(nil, []*LabeledFormula{goal}, tacticsTestAstCfg.NewNoneAST())
+	})
 	if err == nil {
-		t.Fatal("expected Python-compatible ConstantDecl label error")
+		t.Fatal("expected Python-compatible ConstantDecl formula error")
 	}
-	want := "'ConstantDecl' object has no attribute 'label'"
+	want := "'ConstantDecl' object has no attribute 'formula'"
 	if err.Error() != want {
 		t.Fatalf("error = %q, want %q", err.Error(), want)
+	}
+	if !strings.Contains(out, "XTRACE: proof.varSubstGoal ENTER label=g nsubs=0\n") {
+		t.Fatalf("missing outer varSubstGoal trace:\n%s", out)
+	}
+	if !strings.Contains(out, "XTRACE: proof.varSubstGoal ENTER label=N/A nsubs=0\n") {
+		t.Fatalf("missing Python-style ConstantDecl recursive trace:\n%s", out)
+	}
+	if strings.Contains(out, "object has no attribute 'label'") {
+		t.Fatalf("varSubstGoal still fails at the eager Go label check:\n%s", out)
 	}
 }
 

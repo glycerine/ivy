@@ -319,34 +319,91 @@ func outerVarsInFormula(fmla Expr, outer []*LogicVariable) []*LogicVariable {
 }
 
 // varSubstGoal applies a variable substitution to a goal.
-// Mirrors Python ivy_proof.py:1364-1368 var_subst_goal — uses apply_to_conc
-// so the substitution runs on the inner formula of *ast.TemporalModels and
-// the wrapper is preserved.
+// Mirrors Python ivy_proof.py var_subst_goal. The Python function is
+// duck-typed: it traces _goal_label_trace(goal), then immediately asks
+// goal_prems(goal) for goal.formula. Keep that order so non-goal premises
+// such as ConstantDecl fail at the same dynamic attribute access point.
 func varSubstGoal(cfg *AstConfig, goal *LabeledFormula, subs map[NodeKey]Expr) (*LabeledFormula, error) {
-	xtracer.Trace("proof.varSubstGoal ENTER label=%s nsubs=%d", goal.LabelForTrace(), len(subs))
-	prems := GoalPrems(goal)
+	result, err := varSubstGoalNode(cfg, goal, subs)
+	if err != nil {
+		return nil, err
+	}
+	lf, ok := result.(*LabeledFormula)
+	if !ok {
+		return nil, pyMissingAttrError(result, "clone_with_fresh_id")
+	}
+	return lf, nil
+}
+
+func varSubstGoalNode(cfg *AstConfig, goal Node, subs map[NodeKey]Expr) (Node, error) {
+	xtracer.Trace("proof.varSubstGoal ENTER label=%s nsubs=%d", goalLabelTrace(goal), len(subs))
+	prems, err := goalPremsPy(goal)
+	if err != nil {
+		return nil, err
+	}
 	newPrems := make([]Node, len(prems))
 	for i, p := range prems {
-		if lf, ok := p.(*LabeledFormula); ok {
-			lfSubst, err := varSubstGoal(cfg, lf, subs)
-			if err != nil {
-				return nil, err
-			}
-			newPrems[i] = lfSubst
-		} else {
-			return nil, fmt.Errorf("'%s' object has no attribute 'label'", TypeName(p))
-		}
-	}
-	newConc := ApplyToConc(GoalConc(goal), func(c Expr) Expr {
-		result, err := Substitute(c, subs)
+		premSubst, err := varSubstGoalNode(cfg, p, subs)
 		if err != nil {
-			return c
+			return nil, err
 		}
-		return result
-	})
-	result := CloneGoal(cfg, goal, newPrems, newConc)
+		newPrems[i] = premSubst
+	}
+	conc, err := goalConcPy(goal)
+	if err != nil {
+		return nil, err
+	}
+	newConc := conc
+	if _, isSchemaBody := conc.(*SchemaBody); !isSchemaBody {
+		newConc = ApplyToConc(conc, func(c Expr) Expr {
+			result, err := Substitute(c, subs)
+			if err != nil {
+				return c
+			}
+			return result
+		})
+	}
+	result, err := cloneGoalPy(cfg, goal, newPrems, newConc)
+	if err != nil {
+		return nil, err
+	}
 	xtracer.Trace("proof.varSubstGoal EXIT HASH canon=%v", result.Canon())
 	return result, nil
+}
+
+func goalLabelTrace(goal Node) string {
+	if lf, ok := goal.(*LabeledFormula); ok {
+		return lf.LabelForTrace()
+	}
+	return "N/A"
+}
+
+func pyMissingAttrError(node Node, attr string) error {
+	return fmt.Errorf("'%s' object has no attribute '%s'", TypeName(node), attr)
+}
+
+func goalPremsPy(goal Node) ([]Node, error) {
+	lf, ok := goal.(*LabeledFormula)
+	if !ok {
+		return nil, pyMissingAttrError(goal, "formula")
+	}
+	return GoalPrems(lf), nil
+}
+
+func goalConcPy(goal Node) (Node, error) {
+	lf, ok := goal.(*LabeledFormula)
+	if !ok {
+		return nil, pyMissingAttrError(goal, "formula")
+	}
+	return GoalConc(lf), nil
+}
+
+func cloneGoalPy(cfg *AstConfig, goal Node, prems []Node, conc Node) (Node, error) {
+	lf, ok := goal.(*LabeledFormula)
+	if !ok {
+		return nil, pyMissingAttrError(goal, "clone_with_fresh_id")
+	}
+	return CloneGoal(cfg, lf, prems, conc), nil
 }
 
 // keysFromRenamer extracts the used names from a UniqueRenamer.
