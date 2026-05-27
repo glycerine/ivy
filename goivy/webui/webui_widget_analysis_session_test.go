@@ -1,3 +1,5 @@
+//go:build web
+
 // Tests for the widget_analysis_session.go port.
 //
 // These tests verify:

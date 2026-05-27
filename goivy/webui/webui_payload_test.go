@@ -1,3 +1,5 @@
+//go:build web
+
 package webui
 
 // Payload conformance tests — lock the JSON wire format that the TypeScript
