@@ -2790,11 +2790,6 @@ Esc %         -- for search-and-replace
   '.', y, n, !, q to supervise search-and-replace.
 ~~~
 
-atg. branch has green echo.ivy test.
-
-* ~/ivy/include2cpp is common support code for python and go ivy2cpp translator/test writer.
-* atg on green ivy16 branch still some ivy 1.6 work to do though.
-
 # Propisitions versus Predicates
 
 Q: I am new to "logic" because in computer science undergrad 
