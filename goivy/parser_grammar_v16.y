@@ -32,14 +32,15 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 %token <tok>  PARSER16_TOK_OLD PARSER16_TOK_THIS
 %token <tok>  PARSER16_TOK_IF PARSER16_TOK_ELSE
 %token <tok>  PARSER16_TOK_GLOBALLY PARSER16_TOK_EVENTUALLY
-%token <tok>  PARSER16_TOK_TYPE PARSER16_TOK_INDIV PARSER16_TOK_VAR PARSER16_TOK_FUNCTION PARSER16_TOK_RELATION
+%token <tok>  PARSER16_TOK_TYPE PARSER16_TOK_INDIV PARSER16_TOK_VAR PARSER16_TOK_FUNCTION PARSER16_TOK_RELATION PARSER16_TOK_DERIVED
 %token <tok>  PARSER16_TOK_AXIOM PARSER16_TOK_PROPERTY PARSER16_TOK_CONJECTURE PARSER16_TOK_ASSERT PARSER16_TOK_DEFINITION PARSER16_TOK_PROOF PARSER16_TOK_WITH PARSER16_TOK_INIT
 %token <tok>  PARSER16_TOK_INCLUDE PARSER16_TOK_ACTION PARSER16_TOK_CALL
 %token <tok>  PARSER16_TOK_IMPORT PARSER16_TOK_EXPORT PARSER16_TOK_PRIVATE
+%token <tok>  PARSER16_TOK_MACRO PARSER16_TOK_ALIAS PARSER16_TOK_PROGRESS PARSER16_TOK_RELY PARSER16_TOK_MIXORD
 
 %type <accum> top
 %type <node>  labeledfmla fmla term aterm var simplevar atype tterm typesymbol symdecl constantdecl rel
-%type <node>  fun defn defnrhs optproof proofstep match opttemporal optactiondef sequence simpleact callatom optimpex assert_rhs
+%type <node>  fun defn defnrhs optproof proofstep match opttemporal optactiondef sequence simpleact callatom atom optimpex assert_rhs
 %type <nodes> terms vars simplevars tterms rels funs defns matches optargs actseq
 %type <str>   relop SYMBOLx
 %type <tok>   labelname
@@ -114,6 +115,55 @@ top:
             $$.declare(d)
         }
     }
+    | top PARSER16_TOK_DERIVED defns
+    {
+        xtracer.Trace("parser.p_top_derived_defns ENTER (top)")
+        $$ = $1
+        args := make([]Node, len($3))
+        for i, x := range $3 {
+            args[i] = parser17MkLF(parser16Acfg(parser16lex), x)
+        }
+        dd := parser16Acfg(parser16lex).NewDerivedDecl(args...)
+        $$.declare(dd)
+    }
+    | top PARSER16_TOK_PROGRESS defns
+    {
+        xtracer.Trace("parser.p_top_progress_defns ENTER (top)")
+        $$ = $1
+        pd := parser16Acfg(parser16lex).NewProgressDecl($3...)
+        $$.declare(pd)
+    }
+    | top PARSER16_TOK_RELY atom PARSER16_TOK_ARROW atom
+    {
+        xtracer.Trace("parser.p_top_rely_atom_arrow_atom ENTER (top)")
+        $$ = $1
+        imp := parser16Acfg(parser16lex).NewImplies($3, $5)
+        rd := parser16Acfg(parser16lex).NewRelyDecl(imp)
+        $$.declare(rd)
+    }
+    | top PARSER16_TOK_RELY atom
+    {
+        xtracer.Trace("parser.p_top_rely_atom ENTER (top)")
+        $$ = $1
+        rd := parser16Acfg(parser16lex).NewRelyDecl($3)
+        $$.declare(rd)
+    }
+    | top PARSER16_TOK_MIXORD callatom PARSER16_TOK_ARROW callatom
+    {
+        xtracer.Trace("parser.p_top_mixord_callatom_arrow_callatom ENTER (top)")
+        $$ = $1
+        imp := parser16Acfg(parser16lex).NewImplies($3, $5)
+        md := parser16Acfg(parser16lex).NewMixOrdDecl(imp)
+        $$.declare(md)
+    }
+    | top PARSER16_TOK_MACRO atom PARSER16_TOK_EQ sequence
+    {
+        xtracer.Trace("parser.p_top_macro_atom_eq_lcb_action_rcb ENTER (top)")
+        $$ = $1
+        d := parser16Acfg(parser16lex).NewDefinition(AppToAtom($3), $5)
+        md := parser16Acfg(parser16lex).NewMacroDecl(d)
+        $$.declare(md)
+    }
     | top opttemporal PARSER16_TOK_AXIOM labeledfmla
     {
         xtracer.Trace("parser.p_top_axiom_optlabel_gprop ENTER (top)")
@@ -178,6 +228,14 @@ top:
         xtracer.Trace("parser.p_top_private_callatom ENTER (top)")
         $$ = $1
         d := parser16Acfg(parser16lex).NewPrivateDecl(parser16Acfg(parser16lex).NewPrivateDef($3))
+        d.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        $$.declare(d)
+    }
+    | top PARSER16_TOK_ALIAS SYMBOLx PARSER16_TOK_EQ callatom
+    {
+        xtracer.Trace("parser.p_top_aliase_symbol_eq_callatom ENTER (top)")
+        $$ = $1
+        d := parser16Acfg(parser16lex).NewAliasDecl(parser16Acfg(parser16lex).NewDefinition(parser16Acfg(parser16lex).NewAtom($3), $5))
         d.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
         $$.declare(d)
     }
@@ -415,6 +473,13 @@ rel:
         }
         $$ = parser16Acfg(parser16lex).NewConstantDecl($1)
     }
+    | defn
+    {
+        xtracer.Trace("parser.p_rel_defn ENTER (rel)")
+        lf := parser17MkLF(parser16Acfg(parser16lex), $1)
+        d := parser16Acfg(parser16lex).NewDerivedDecl(lf)
+        $$ = d
+    }
     ;
 
 rels:
@@ -568,6 +633,14 @@ callatom:
     {
         xtracer.Trace("parser.p_callatom_callatom_dot_callatom ENTER (callatom)")
         $$ = ComposeAtoms($1.(*Atom), $3.(*Atom))
+    }
+    ;
+
+atom:
+    aterm
+    {
+        xtracer.Trace("parser.p_atom_tatom ENTER (atom)")
+        $$ = $1
     }
     ;
 

@@ -153,6 +153,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_FUNCTION
 	case RELATION:
 		return PARSER16_TOK_RELATION
+	case DERIVED:
+		return PARSER16_TOK_DERIVED
 	case AXIOM:
 		return PARSER16_TOK_AXIOM
 	case PROPERTY:
@@ -181,6 +183,16 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_EXPORT
 	case PRIVATE:
 		return PARSER16_TOK_PRIVATE
+	case MACRO:
+		return PARSER16_TOK_MACRO
+	case ALIAS:
+		return PARSER16_TOK_ALIAS
+	case PROGRESS:
+		return PARSER16_TOK_PROGRESS
+	case RELY:
+		return PARSER16_TOK_RELY
+	case MIXORD:
+		return PARSER16_TOK_MIXORD
 	default:
 		lval.tok = TokenInfo{Val: tok.Value, Line: tok.Line}
 		return PARSER16_TOK_PRESYMBOL

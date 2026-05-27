@@ -93,6 +93,127 @@ func TestParseV16FunctionDefinitionIsDerivedWithoutSyntheticLabel(t *testing.T) 
 	}
 }
 
+func TestParseV16RelationDefinitionIsDerivedWithoutSyntheticLabel(t *testing.T) {
+	result, err := Parse("type t\nrelation p(X:t) = true", Version{1, 6}, WithFilename("relation_def16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 relation definition: %v", err)
+	}
+	decl := firstDeclOf[*DerivedDecl](t, result.Decls)
+	lf := firstArgAs[*LabeledFormula](t, decl)
+	if lf.LabelName() != "" {
+		t.Fatalf("v1.6 relation definition synthesized label %q, want empty", lf.LabelName())
+	}
+	if _, ok := lf.Formula.(*Definition); !ok {
+		t.Fatalf("derived formula = %T, want *Definition", lf.Formula)
+	}
+}
+
+func TestParseV16DerivedDeclWithoutSyntheticLabels(t *testing.T) {
+	result, err := Parse("type t\nderived id(X:t):t = X, same(X:t) = X = X", Version{1, 6}, WithFilename("derived16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 derived: %v", err)
+	}
+	decl := firstDeclOf[*DerivedDecl](t, result.Decls)
+	if got := len(decl.Args()); got != 2 {
+		t.Fatalf("DerivedDecl args = %d, want 2", got)
+	}
+	for i, arg := range decl.Args() {
+		lf, ok := arg.(*LabeledFormula)
+		if !ok {
+			t.Fatalf("DerivedDecl arg[%d] = %T, want *LabeledFormula", i, arg)
+		}
+		if lf.LabelName() != "" {
+			t.Fatalf("v1.6 derived arg[%d] synthesized label %q, want empty", i, lf.LabelName())
+		}
+		if _, ok := lf.Formula.(*Definition); !ok {
+			t.Fatalf("DerivedDecl arg[%d] formula = %T, want *Definition", i, lf.Formula)
+		}
+	}
+}
+
+func TestParseV16MacroDecl(t *testing.T) {
+	result, err := Parse("macro step = { call ping }", Version{1, 6}, WithFilename("macro16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 macro: %v", err)
+	}
+	decl := firstDeclOf[*MacroDecl](t, result.Decls)
+	def := firstArgAs[*Definition](t, decl)
+	lhs, ok := def.Lhs.(*Atom)
+	if !ok {
+		t.Fatalf("MacroDecl lhs = %T, want *Atom", def.Lhs)
+	}
+	if lhs.Rep != "step" {
+		t.Fatalf("MacroDecl lhs = %q, want step", lhs.Rep)
+	}
+	if _, ok := def.Rhs.(*CallAction); !ok {
+		t.Fatalf("MacroDecl rhs = %T, want *CallAction", def.Rhs)
+	}
+}
+
+func TestParseV16AliasDecl(t *testing.T) {
+	result, err := Parse("alias short = target.step", Version{1, 6}, WithFilename("alias16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 alias: %v", err)
+	}
+	decl := firstDeclOf[*AliasDecl](t, result.Decls)
+	def := firstArgAs[*Definition](t, decl)
+	lhs, ok := def.Lhs.(*Atom)
+	if !ok {
+		t.Fatalf("AliasDecl lhs = %T, want *Atom", def.Lhs)
+	}
+	if lhs.Rep != "short" {
+		t.Fatalf("AliasDecl lhs = %q, want short", lhs.Rep)
+	}
+	rhs, ok := def.Rhs.(*Atom)
+	if !ok {
+		t.Fatalf("AliasDecl rhs = %T, want *Atom", def.Rhs)
+	}
+	if rhs.Rep != "target.step" {
+		t.Fatalf("AliasDecl rhs = %q, want target.step", rhs.Rep)
+	}
+}
+
+func TestParseV16RelyDecls(t *testing.T) {
+	result, err := Parse("rely p -> q\nrely stable", Version{1, 6}, WithFilename("rely16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 rely: %v", err)
+	}
+	if got := countDeclsOf[*RelyDecl](result.Decls); got != 2 {
+		t.Fatalf("RelyDecl count = %d, want 2", got)
+	}
+	first := firstDeclOf[*RelyDecl](t, result.Decls)
+	if _, ok := first.Args()[0].(*Implies); !ok {
+		t.Fatalf("first RelyDecl arg = %T, want *Implies", first.Args()[0])
+	}
+}
+
+func TestParseV16MixOrdDecl(t *testing.T) {
+	result, err := Parse("mixord before -> after", Version{1, 6}, WithFilename("mixord16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 mixord: %v", err)
+	}
+	decl := firstDeclOf[*MixOrdDecl](t, result.Decls)
+	if _, ok := decl.Args()[0].(*Implies); !ok {
+		t.Fatalf("MixOrdDecl arg = %T, want *Implies", decl.Args()[0])
+	}
+}
+
+func TestParseV16ProgressDecl(t *testing.T) {
+	result, err := Parse("type t\nprogress done(X:t) = true", Version{1, 6}, WithFilename("progress16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 progress: %v", err)
+	}
+	decl := firstDeclOf[*ProgressDecl](t, result.Decls)
+	def := firstArgAs[*Definition](t, decl)
+	lhs, ok := def.Lhs.(*Atom)
+	if !ok {
+		t.Fatalf("ProgressDecl lhs = %T, want *Atom", def.Lhs)
+	}
+	if lhs.Rep != "done" {
+		t.Fatalf("ProgressDecl lhs = %q, want done", lhs.Rep)
+	}
+}
+
 func TestParseV16TopLevelAssert(t *testing.T) {
 	result, err := Parse("relation p\nrelation q\nassert p -> q", Version{1, 6}, WithFilename("assert16.ivy"))
 	if err != nil {
