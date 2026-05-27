@@ -185,6 +185,8 @@ def substitute_constants_ast(ast,subs):
     Substitute terms for *constants*. Here, subs is
     a dict from string names of constants to terms.
     """
+    if ast is None:
+         return None
     if is_constant(ast):
         return subs.get(ast.rep,ast)
     else:
