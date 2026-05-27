@@ -156,6 +156,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_EVENTUALLY
 	case TEMPORAL:
 		return PARSER16_TOK_TEMPORAL
+	case EXPLICIT:
+		return PARSER16_TOK_EXPLICIT
 	case SET:
 		return PARSER16_TOK_SET
 	case INSTANTIATE:

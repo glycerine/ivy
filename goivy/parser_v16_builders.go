@@ -52,12 +52,15 @@ func parser16DeclareAxiom(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, tem
 	top.declare(d)
 }
 
-func parser16DeclareProperty(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, temporal bool, loc Location) {
+func parser16DeclareProperty(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, temporal bool, explicit bool, loc Location) {
 	lf = parser16AddLabel(lf, "prop")
 	if temporal {
 		lf = addTemporal(lf)
 	} else {
 		checkNonTemporal(lf)
+	}
+	if explicit {
+		lf = addExplicit(lf)
 	}
 	d := cfg.NewPropertyDecl(lf)
 	d.SetLineno(loc)
@@ -72,6 +75,7 @@ func parser16DeclareConjecture(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula
 }
 
 func parser16DeclareInit(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, loc Location) {
+	checkNonTemporal(lf)
 	d := cfg.NewInitDecl(lf)
 	d.SetLineno(loc)
 	top.declare(d)

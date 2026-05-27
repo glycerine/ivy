@@ -48,14 +48,14 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 %token <tok>  PARSER16_TOK_ATTRIBUTE PARSER16_TOK_VARIANT PARSER16_TOK_OF
 %token <tok>  PARSER16_TOK_SCENARIO
 %token <tok>  PARSER16_TOK_REQUIRES PARSER16_TOK_MODIFIES
-%token <tok>  PARSER16_TOK_NAMED PARSER16_TOK_TEMPORAL
+%token <tok>  PARSER16_TOK_NAMED PARSER16_TOK_TEMPORAL PARSER16_TOK_EXPLICIT
 %token <tok>  PARSER16_TOK_ASSUME PARSER16_TOK_ENSURES PARSER16_TOK_ENTRY PARSER16_TOK_SET PARSER16_TOK_INSTANTIATE
 %token <tok>  PARSER16_TOK_LOCAL PARSER16_TOK_LET PARSER16_TOK_IN
 %token <tok>  PARSER16_TOK_SOME PARSER16_TOK_MINIMIZING PARSER16_TOK_MAXIMIZING PARSER16_TOK_DECREASES
 
 %type <accum> top
 %type <node>  labeledfmla fmla term aterm var simplevar atype tapp tterm typesymbol symdecl constantdecl rel sort
-%type <node>  fun defn defnrhs optproof optsemi proofstep proofseq proofgroup match opttemporal optactiondef sequence action simpleact complexact callatom atom optimpex assert_rhs state_expr
+%type <node>  fun defn defnrhs optproof optsemi proofstep proofseq proofgroup match optexplicit opttemporal optactiondef sequence action simpleact complexact callatom atom optimpex assert_rhs state_expr
 %type <node>  lparam param optinit termtuple somefmla eqn lit topseq optdelegee oper attributeval requires ensures
 %type <node>  optskolem schdefn schdefnrhs schconc objsym objectend
 %type <node>  inst modinst pname app upax expr exprterm cdefn sceninit scenariomixin
@@ -68,6 +68,7 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 
 %left         PARSER16_TOK_SEMI
 %left         PARSER16_TOK_GLOBALLY PARSER16_TOK_EVENTUALLY
+%left         PARSER16_TOK_ARROW PARSER16_TOK_IFF
 %left         PARSER16_TOK_IF
 %left         PARSER16_TOK_ELSE
 %left         PARSER16_TOK_OR
@@ -347,16 +348,16 @@ top:
         $$ = $1
         parser16DeclareAxiom(parser16Acfg(parser16lex), $$, $4.(*LabeledFormula), $2 != nil, tok16Lineno(parser16lex.(*parser16LexAdapter), $3))
     }
-    | top opttemporal PARSER16_TOK_PROPERTY labeledfmla optskolem optproof
+    | top optexplicit opttemporal PARSER16_TOK_PROPERTY labeledfmla optskolem optproof
     {
         xtracer.Trace("parser.p_top_property_labeledfmla ENTER (top)")
         $$ = $1
-        parser16DeclareProperty(parser16Acfg(parser16lex), $$, $4.(*LabeledFormula), $2 != nil, tok16Lineno(parser16lex.(*parser16LexAdapter), $3))
-        if $5 != nil {
-            $$.declare(parser16Acfg(parser16lex).NewNamedDecl($5))
-        }
+        parser16DeclareProperty(parser16Acfg(parser16lex), $$, $5.(*LabeledFormula), $3 != nil, $2 != nil, tok16Lineno(parser16lex.(*parser16LexAdapter), $4))
         if $6 != nil {
-            $$.declare(parser16Acfg(parser16lex).NewProofDecl($6))
+            $$.declare(parser16Acfg(parser16lex).NewNamedDecl($6))
+        }
+        if $7 != nil {
+            $$.declare(parser16Acfg(parser16lex).NewProofDecl($7))
         }
     }
     | top PARSER16_TOK_CONJECTURE labeledfmla
@@ -822,6 +823,19 @@ opttemporal:
     {
         xtracer.Trace("parser.p_opttemporal_symbol ENTER (opttemporal)")
         $$ = parser16Acfg(parser16lex).NewAtom("temporal")
+    }
+    ;
+
+optexplicit:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_optexplicit ENTER (optexplicit)")
+        $$ = nil
+    }
+    | PARSER16_TOK_EXPLICIT
+    {
+        xtracer.Trace("parser.p_optexplicit_explicit ENTER (optexplicit)")
+        $$ = parser16Acfg(parser16lex).NewAnd()
     }
     ;
 
@@ -2290,21 +2304,6 @@ SYMsubscr:
     {
         xtracer.Trace("parser.p_SYMsubscr_THIS ENTER (SYMsubscr)")
         $$ = "this"
-    }
-    | PARSER16_TOK_BEFORE
-    {
-        xtracer.Trace("parser.p_SYMsubscr_BEFORE ENTER (SYMsubscr)")
-        $$ = "before"
-    }
-    | PARSER16_TOK_AFTER
-    {
-        xtracer.Trace("parser.p_SYMsubscr_AFTER ENTER (SYMsubscr)")
-        $$ = "after"
-    }
-    | PARSER16_TOK_CLASS
-    {
-        xtracer.Trace("parser.p_SYMsubscr_CLASS ENTER (SYMsubscr)")
-        $$ = "class"
     }
     | SYMsubscr PARSER16_TOK_DOT SYMBOLx
     {
