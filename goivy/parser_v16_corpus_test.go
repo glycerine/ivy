@@ -23,6 +23,7 @@ func TestParseV16CorpusScan(t *testing.T) {
 	var failures []string
 	var expectedErrors int
 	for _, path := range files {
+		//vv("path = '%v'", path)
 		data, err := os.ReadFile(path)
 		if err != nil {
 			failures = append(failures, fmt.Sprintf("READ %s: %v", path, err))
