@@ -22,11 +22,12 @@ Goivy has several real language-version mechanisms:
 - Some compiler, action, isolate, theory, and code generator paths branch on
   `<=1.6`, `>=1.7`, or `>1.7`.
 
-But the full Ivy-file parser does not dispatch by version today. `Parse`
-always calls the v1.7+ parser. The requested version affects the lexer, so old
-or new keywords can be enabled or disabled, but the module grammar itself is
-the v1.7+ grammar. There is no active full-file v1.6 grammar and no separate
-full-file v1.8 grammar.
+The full Ivy-file parser now dispatches by version for the first major split:
+`<=1.6` uses a dedicated thin v1.6 full-file grammar, while `>=1.7` continues
+to use the hardened v1.7+ grammar. The v1.6 grammar is intentionally initial
+and conservative: it covers the core source forms needed to enter the shared
+post-parse pipeline, but it is not yet a complete port of every Python Ivy
+1.6 production. There is still no separate full-file v1.8 grammar.
 
 The implementation also has inconsistent defaults: `IvyUtilsConfig` defaults
 to language version `1.8`, the public logic parser defaults to `Version{1,7}`,
@@ -46,7 +47,12 @@ Core version state and file loading:
 Lexer and parsers:
 
 - `goivy/lexer.go`: `9-217`
-- `goivy/parser_lalr_parser.go`: `7-13`, `67-98`, `126-130`
+- `goivy/parser_lalr_parser.go`: `7-22`, `24-56`, `84-88`, `159-163`
+- `goivy/parser_parse_config.go`: `1-96`
+- `goivy/parser_v16_lalr_parser.go`: `7-32`, `35-176`
+- `goivy/parser_v16_builders.go`: `5-55`
+- `goivy/parser_grammar_v16.y`: `1-5`, `67-155`, `157-240`,
+  `256-299`, `301-338`, `347-531`
 - `goivy/parser_grammar_v17.y`: `1-10`, `70-82`, `774-860`,
   `981-1039`, `1694-1702`, `1901-2253`, `2303-2358`, `3621-3658`,
   `4014-4093`, `4936-5110`, `5168-5185`
@@ -119,33 +125,33 @@ the same `Config` for version behavior to agree.
 
 `goivy/compiler_ivyinit.go`
 
-- `48-116`: `ReadModule` reads the first line, requires `#lang ivy...`,
+- `48-134`: `ReadModule` reads the first line, requires `#lang ivy...`,
   strips it from the body while preserving line numbers, calls
-  `SetStringVersionOn` when a non-empty version suffix is present, rejects
-  nested includes whose version differs from the including file, then calls
-  `Parse` with the parsed version.
-- `119-138`: `ReadModuleFromString` parses an in-memory source by calling
-  `parseIvySource`, but does not update `cfg.IuCfg.LanguageVersion`.
-- `140-201`: `ReadModuleFromNamedString` mirrors `ReadModule` for in-memory
-  sources with a filename and does update `cfg.IuCfg.LanguageVersion`.
-- `204-242`: imports first try a preloaded standard library and then fall back
+  `setConfigLanguageVersion` when a non-empty version suffix is present,
+  rejects nested includes whose version differs from the including file, then
+  calls `Parse` with the parsed version.
+- `136-156`: `ReadModuleFromString` parses an in-memory source by calling
+  `parseIvySource`, then propagates the parsed version into config.
+- `158-218`: `ReadModuleFromNamedString` mirrors `ReadModule` for in-memory
+  sources with a filename and propagates the parsed version into config.
+- `221-259`: imports first try a preloaded standard library and then fall back
   to `cfg.IuCfg.GetStdIncludeDir()`.
 
 `goivy/compiler_phase6.go`
 
 - `2001-2019`: `GetFileVersion` extracts the `#lang ivy...` suffix from a
   file header.
-- `2804-2835`: `IvyFromString` parses a source header into a `Version`, but
-  then creates a fresh `Module` with a fresh `NewConfig`. That fresh config
-  defaults to `1.8`, so compile-time version branches do not necessarily match
-  the parsed source version.
+- `2804-2836`: `IvyFromString` parses a source header into a `Version`, parses
+  with that version, then propagates the parsed version into the fresh
+  module config before compilation.
 - `2838-2857`: `parseIvyVersion` defaults an empty or malformed version to
   `Version{1,7}`.
 - `2860-2879`: `parseIvySource` strips a `#lang ivy...` header and defaults
   to `Version{1,7}` if there is no suffix.
 
-Status quo implication: file-backed `ReadModule` is the most coherent path.
-Some in-memory helpers parse with one version while compiling with another.
+Status quo implication: the main file-backed and in-memory front doors now keep
+the parsed language version attached to the session config. Lower-level direct
+`Parse` callers still need to coordinate parse and compile config themselves.
 
 ## Include Selection
 
@@ -205,12 +211,28 @@ matches the Python `LexerVersion` idea, but it feeds a fixed full-file parser.
 
 `goivy/parser_lalr_parser.go`
 
-- `7-13`: `Parse` says it dispatches to a version-specific parser, but the
-  implementation always returns `ParseV17(input, version, opts...)`.
-- `67-98`: `ParseV17` runs the v1.7+ parser and expands autoinstances for
+- `7-22`: `Parse` dispatches `<=1.6` to `ParseFullV16` and everything else to
+  `ParseV17`.
+- `24-56`: `ParseV17` runs the v1.7+ parser and expands autoinstances for
   top-level parses.
-- `126-130`: the v1.7 parser adapter still passes the requested `Version` to
+- `64-264`: the v1.7 parser adapter still passes the requested `Version` to
   `NewLexer`, so version affects tokenization.
+
+`goivy/parser_v16_lalr_parser.go`
+
+- `7-32`: `ParseFullV16` mirrors the v1.7 parser entry point while using the
+  v1.6 generated parser.
+- `35-176`: the v1.6 parser adapter maps the version-aware lexer tokens into
+  the generated v1.6 grammar token set.
+
+`goivy/parser_grammar_v16.y`
+
+- `1-5`: documents the grammar as a thin full-file v1.6 syntax adapter.
+- `67-155`: top-level declarations for include, type, individual/relation,
+  axiom, property, conjecture, init, action, import, and export.
+- `157-240`: simple temporal markers and action bodies.
+- `256-338`: v1.6 labels, constants, relations, and type symbols.
+- `347-531`: v1.6-style separate term/formula grammar.
 
 `goivy/parser_grammar_v17.y`
 
@@ -347,17 +369,17 @@ that does not imply v1.6 source-file parsing exists.
 - `goivy/isolate_create.go:469-476`: present-conjecture bracket actions are
   gated the same way.
 
-Status quo implication: isolate behavior has many version branches, but several
-of them read `IsolateCfg.IvyVersion`, whose default is `1.7` and which is not
-automatically synchronized with `#lang ivy...`.
+Status quo implication: isolate behavior has many version branches. The main
+source-loading paths now synchronize `IsolateCfg.IvyVersion` with `#lang
+ivy...`, but lower-level tests and helper-constructed modules can still diverge
+unless they set both version fields.
 
 ## Front Doors
 
 `goivy/isolist.go`
 
-- `51-78`: `IvyVersionSupported` reads only the first line and returns true
-  for versions greater than `1.6`. This treats `ivy1.6` as unsupported for
-  whatever feature uses this helper.
+- `51-75`: `IvyVersionSupported` reads only the first line and returns true
+  for versions `>=1.6`.
 
 `goivy/webui/webui_session.go`
 
@@ -397,22 +419,31 @@ Implemented or partially implemented:
 
 - `#lang ivy1.6` is recognized by `ReadModule` and `ReadModuleFromNamedString`.
 - `SetStringVersion` derives the correct `ForbidGhostInit=false` state.
+- Source loading now propagates the parsed language version into both
+  `IuCfg.LanguageVersion` and `IsolateCfg.IvyVersion`.
 - The lexer removes 1.7-era keywords for `Version{1,6}`.
 - Include selection can choose `include/1.6`.
 - The standalone logic parser has a v1.6 grammar with separate `term` and
   `fmla` categories.
+- Full-file parsing dispatches `Version{1,6}` to `parser_grammar_v16.y`, whose
+  initial thin grammar supports include, type, individual, relation, axiom,
+  property, conjecture, top-level init, simple import/export action forms,
+  standalone import/export call atoms, simple call actions, assignment actions,
+  and the v1.6 term/formula split.
+- The generated v1.6 full-file parser is patched with the same PLY-style
+  lookahead behavior as the v1.7 parser for better xtrace ordering.
 - Some compiler/action/theory/isolate code has v1.6 branches.
+- `IvyVersionSupported` now reports `#lang ivy1.6` files as supported.
 
 Important gaps:
 
-- The full Ivy-file parser still uses `parser_grammar_v17.y`.
+- The v1.6 full-file grammar is not yet complete.
 - Old v1.6 proof syntax and schema-instantiation syntax are not active full
   module grammar.
-- The old v1.6 top-level assert production is a no-op in the v1.7 grammar.
-- Top-level `init` is not faithfully restored as a v1.6-only feature.
-- Isolate version branches can read the default `IsolateCfg.IvyVersion=1.7`
-  even when `IuCfg.LanguageVersion` was set to `1.6`.
-- `IvyVersionSupported` explicitly treats `ivy1.6` as not supported.
+- The old v1.6 top-level assert production has not been restored in the v1.6
+  grammar yet.
+- Many larger module/object/mixin/scenario/proof declarations still need to be
+  added to `parser_grammar_v16.y` as thin syntax rules over shared builders.
 
 ### Ivy 1.7
 
@@ -430,8 +461,6 @@ Important gaps:
 
 - `NewIvyUtilsConfig` defaults to `1.8`, so code paths that do not read a
   source header are not uniformly 1.7.
-- The parser comment says `Parse` dispatches version-specific parsers, but it
-  does not.
 
 ### Ivy 1.8
 
@@ -459,10 +488,10 @@ Important gaps:
 
 ## Current High-Risk Inconsistencies
 
-1. Full-source parsing is not truly version-dispatched.
+1. The initial v1.6 full-file grammar is intentionally incomplete.
 
-   `Parse` always calls `ParseV17`. This is the central limitation for Ivy 1.6
-   support.
+   `Parse` now dispatches `<=1.6` to `ParseFullV16`, but that parser currently
+   covers only the first set of core v1.6 declarations and simple actions.
 
 2. Defaults disagree.
 
@@ -470,35 +499,39 @@ Important gaps:
    default to `1.7`, `IsolateConfig` defaults to `1.7`, and the web UI inserts
    `#lang ivy1.7`.
 
-3. Some in-memory paths parse and compile under different versions.
+3. Some in-memory paths still depend on the caller using the version-aware
+   loader.
 
-   `IvyFromString` parses the header into a `Version`, then compiles with a new
-   config whose `IuCfg` defaults to `1.8`. `ReadModuleFromString` also parses a
-   version but does not update the supplied `IuCfg`.
+   `IvyFromString` and `ReadModuleFromString` now propagate the parsed version
+   into config. Any other direct `Parse` callers must still thread the same
+   version into their downstream compile config explicitly.
 
 4. Isolate version state is separate and mostly unsynchronized.
 
-   Several isolate branches consult `IsolateCfg.IvyVersion`, but source loading
-   sets `IuCfg.LanguageVersion`. A `#lang ivy1.6` source can therefore hit
-   `IuCfg`-based v1.6 branches while isolate code still sees `1.7`.
+   Source loading now syncs `IuCfg.LanguageVersion` and `IsolateCfg.IvyVersion`,
+   but the two fields are still separate and can diverge in hand-constructed
+   test modules or lower-level helper calls.
 
 5. The v1.6 logic parser can give a false impression of full v1.6 support.
 
-   `ParseFormula` and `ParseTerm` have real v1.6 behavior, but full module
-   parsing does not.
+   `ParseFormula`, `ParseTerm`, and the initial full-file parser have real
+   v1.6 behavior, but the full-file grammar is not complete yet.
 
 ## Design Takeaway
 
 Current goivy is best described as:
 
-- v1.7-oriented for full source parsing,
+- v1.7-oriented for the mature full source parser,
+- initially v1.6-capable for full source parsing through a thin parser16
+  grammar,
 - version-aware for lexing and include selection,
 - partially v1.6-aware in standalone logic parsing and downstream branches,
 - partially v1.8-aware through lexer keywords, include directories, and some
   v1.7+ grammar productions,
-- not yet a coherent Python-style language mode system.
+- not yet a complete Python-style language mode system.
 
 The largest architectural gap relative to Python is not the absence of a
-`Version` type or include selection; those exist. The gap is that full-file
-grammar selection and downstream semantic state are not coordinated under one
-authoritative language version.
+`Version` type or include selection; those exist. The remaining gap is that
+the new v1.6 grammar must be broadened while continuing to reuse the shared
+post-parse framework, and downstream semantic state still needs one
+authoritative language-version owner.
