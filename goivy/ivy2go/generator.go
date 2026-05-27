@@ -294,7 +294,8 @@ func (g *Generator) emitMain() {
 	default:
 		// impl (and anything else): plain construct + init + exit.
 		g.main.open("func main() {")
-		g.main.linef("state := New%s()", g.StateTypeName)
+		stateArgs := g.emitModuleParamSetup()
+		g.main.linef("state := New%s(%s)", g.StateTypeName, strings.Join(stateArgs, ", "))
 		g.main.line("state.Init()")
 		g.main.line("_ = state")
 		g.main.close("")
@@ -307,7 +308,8 @@ func (g *Generator) emitReplMain() {
 	g.Ctx.AddImport("main", "fmt", "")
 	g.Ctx.AddImport("main", "os", "")
 	g.main.open("func main() {")
-	g.main.linef("state := New%s()", g.StateTypeName)
+	stateArgs := g.emitModuleParamSetup()
+	g.main.linef("state := New%s(%s)", g.StateTypeName, strings.Join(stateArgs, ", "))
 	g.main.line("state.Init()")
 	g.main.line("if err := runRepl(state, os.Stdin, os.Stdout); err != nil {")
 	g.main.line(`	fmt.Fprintln(os.Stderr, err)`)
@@ -325,7 +327,7 @@ func (g *Generator) emitReplMain() {
 //
 //	func main() {
 //	    iters := parseTestItersFlag(<default>)
-//	    state := NewState()
+//	    state := NewState(<module params...>)
 //	    state.Init()
 //
 //	    type actionEntry struct {
@@ -354,7 +356,8 @@ func (g *Generator) emitTestMain() {
 	g.main.open("func main() {")
 	g.main.line("applyTestSeedFlag()")
 	g.main.linef("iters := parseTestItersFlag(%s)", g.Config.TestIters)
-	g.main.linef("state := New%s()", g.StateTypeName)
+	stateArgs := g.emitModuleParamSetup()
+	g.main.linef("state := New%s(%s)", g.StateTypeName, strings.Join(stateArgs, ", "))
 	g.main.line("state.Init()")
 	g.main.blank()
 	if len(names) == 0 {

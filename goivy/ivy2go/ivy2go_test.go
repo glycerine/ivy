@@ -254,23 +254,26 @@ action set_flag = {
 		t.Fatalf("write ivy source: %v", err)
 	}
 
-	batch, err := CompileAndGenerateAll(path, map[string]string{
-		"target":  "test",
-		"package": "demo",
-	}, Config{})
+	batch, err := CompileAndGenerateAll(path, map[string]string{"target": "test"}, Config{})
 	if err != nil {
 		t.Fatalf("CompileAndGenerateAll: %v", err)
 	}
 	if len(batch.Outputs) != 1 {
 		t.Fatalf("len(batch.Outputs) = %d, want 1", len(batch.Outputs))
 	}
-
-	dsc, ok := batch.ExtraFiles["demo.dsc"]
-	if !ok {
-		t.Fatalf("batch.ExtraFiles missing demo.dsc; keys=%v", keysOf(batch.ExtraFiles))
+	if got := batch.Outputs[0].PackageName; got != "main" {
+		t.Fatalf("descriptor target should default to package main, got %q", got)
 	}
-	if got := batch.Outputs[0].ExtraFiles["demo.dsc"]; got != dsc {
-		t.Fatalf("output ExtraFiles did not receive demo.dsc.\nwant: %q\ngot:  %q", dsc, got)
+	if !batch.Outputs[0].EmitMain {
+		t.Fatalf("descriptor target should emit main")
+	}
+
+	dsc, ok := batch.ExtraFiles["proto.dsc"]
+	if !ok {
+		t.Fatalf("batch.ExtraFiles missing proto.dsc; keys=%v", keysOf(batch.ExtraFiles))
+	}
+	if got := batch.Outputs[0].ExtraFiles["proto.dsc"]; got != dsc {
+		t.Fatalf("output ExtraFiles did not receive proto.dsc.\nwant: %q\ngot:  %q", dsc, got)
 	}
 
 	var desc struct {
@@ -287,14 +290,113 @@ action set_flag = {
 	if len(desc.Processes) != 1 {
 		t.Fatalf("descriptor processes len = %d, want 1: %s", len(desc.Processes), dsc)
 	}
-	if desc.Processes[0].Binary != batch.Outputs[0].BaseName {
-		t.Errorf("descriptor binary = %q, want output base %q", desc.Processes[0].Binary, batch.Outputs[0].BaseName)
+	wantBinary := filepath.ToSlash(filepath.Join(batch.Outputs[0].BaseName, batch.Outputs[0].BaseName))
+	if desc.Processes[0].Binary != wantBinary {
+		t.Errorf("descriptor binary = %q, want %q", desc.Processes[0].Binary, wantBinary)
 	}
 	if desc.Processes[0].Name != "this" {
 		t.Errorf("descriptor isolate name = %q, want this", desc.Processes[0].Name)
 	}
 	if !stringSliceContains(desc.TestParams, "seed") {
 		t.Errorf("descriptor test_params missing seed: %#v", desc.TestParams)
+	}
+}
+
+func TestCompileAndGenerateAllRejectsNonMainPackageForDescriptorTargets(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "runner.ivy")
+	src := `#lang ivy1.7
+action step = {}
+export step
+`
+	if err := os.WriteFile(path, []byte(src), 0o644); err != nil {
+		t.Fatalf("write ivy source: %v", err)
+	}
+	for _, tc := range []struct {
+		target string
+		key    string
+	}{
+		{target: "repl", key: "package"},
+		{target: "repl", key: "classname"},
+		{target: "test", key: "package"},
+		{target: "test", key: "classname"},
+	} {
+		t.Run(tc.target+"_"+tc.key, func(t *testing.T) {
+			_, err := CompileAndGenerateAll(path, map[string]string{
+				"target": tc.target,
+				tc.key:   "demo",
+			}, Config{})
+			if err == nil {
+				t.Fatalf("CompileAndGenerateAll should reject target=%s %s=demo", tc.target, tc.key)
+			}
+			for _, want := range []string{tc.target, "demo", "package=main"} {
+				if !strings.Contains(err.Error(), want) {
+					t.Fatalf("error %q missing %q", err.Error(), want)
+				}
+			}
+		})
+	}
+}
+
+func TestDescriptorDescribesModuleParamsAndGeneratedMainsPassThem(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "paramdesc.ivy")
+	src := `#lang ivy1.7
+type color = {red, green}
+parameter pick : color = red
+action step = {}
+export step
+`
+	if err := os.WriteFile(path, []byte(src), 0o644); err != nil {
+		t.Fatalf("write ivy source: %v", err)
+	}
+	batch, err := CompileAndGenerateAll(path, map[string]string{"target": "repl"}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	dsc, ok := batch.ExtraFiles["paramdesc.dsc"]
+	if !ok {
+		t.Fatalf("batch.ExtraFiles missing paramdesc.dsc; keys=%v", keysOf(batch.ExtraFiles))
+	}
+	var desc struct {
+		Processes []struct {
+			Params []struct {
+				Name    string `json:"name"`
+				Type    any    `json:"type"`
+				Default string `json:"default"`
+			} `json:"params"`
+		} `json:"processes"`
+	}
+	if err := json.Unmarshal([]byte(dsc), &desc); err != nil {
+		t.Fatalf("descriptor is not valid JSON: %v\n%s", err, dsc)
+	}
+	if len(desc.Processes) != 1 || len(desc.Processes[0].Params) != 1 {
+		t.Fatalf("descriptor params = %#v, want one process with one param", desc.Processes)
+	}
+	param := desc.Processes[0].Params[0]
+	if param.Name != "pick" {
+		t.Fatalf("param name = %q, want pick", param.Name)
+	}
+	if param.Type != "color" {
+		t.Fatalf("param type = %#v, want color", param.Type)
+	}
+	if param.Default != "red" {
+		t.Fatalf("param default = %q, want red", param.Default)
+	}
+
+	out := batch.Outputs[0]
+	state := out.Files["state.go"]
+	requireHasLineWithAllTerms(t, state, "func", "NewState", "p__pick", "Color", "*State")
+	requireHasLineWithAllTerms(t, state, "s.Pick", "=", "p__pick")
+	main := out.Files["main.go"]
+	for _, want := range []string{
+		`{Name: "pick", HasDefault: true, Default: "red"}`,
+		"p__pick, err := parseModuleParam_Color(__ivyModuleArgs[0])",
+		"state := NewState(p__pick)",
+	} {
+		if !strings.Contains(main, want) {
+			t.Fatalf("main.go missing %q:\n%s", want, main)
+		}
 	}
 }
 

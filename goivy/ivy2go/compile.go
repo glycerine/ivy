@@ -33,6 +33,16 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 	if err != nil {
 		return nil, err
 	}
+	descriptorTarget := isDescriptorTarget(cfg.RequestedTarget)
+	descriptorName := cfg.PackageName
+	if descriptorTarget {
+		if cfg.PackageName != "" && cfg.PackageName != "main" {
+			return nil, fmt.Errorf("ivy2go: target=%s emits a descriptor for an executable, but package=%q cannot produce one; use package=main", cfg.RequestedTarget, cfg.PackageName)
+		}
+		if cfg.PackageName == "" {
+			cfg.PackageName = "main"
+		}
+	}
 	mod := goivy.New()
 	mod.Cfg = goivy.NewConfig()
 	if isolate := ivyParams["isolate"]; isolate != "" {
@@ -72,7 +82,7 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		if len(isolates) > 1 && isolate != "" {
 			suffix := "_" + varName(isolate)
 			isoMod.Name = moduleBaseName(isoMod) + suffix
-			if outCfg.PackageName != "" {
+			if outCfg.PackageName != "" && outCfg.PackageName != "main" {
 				outCfg.PackageName += suffix
 			}
 		}
@@ -82,11 +92,11 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		}
 		batch.Outputs = append(batch.Outputs, out)
 	}
-	if cfg.RequestedTarget == "repl" || cfg.RequestedTarget == "test" {
+	if descriptorTarget {
 		if dsc, err := descriptorJSON(mod, cfg, batch.Outputs, isolates); err != nil {
 			return nil, err
 		} else if dsc != "" {
-			name := cfg.PackageName
+			name := descriptorName
 			if name == "" {
 				name = moduleBaseName(mod)
 			}
@@ -357,8 +367,10 @@ func pruneStateStoresToSignature(mod *goivy.Module) {
 
 // descriptorParamDesc mirrors ivy2cpp/compile.go:20.
 type descriptorParamDesc struct {
-	Name string `json:"name"`
-	Type string `json:"type"`
+	Name    string `json:"name"`
+	Type    any    `json:"type"`
+	Default string `json:"default,omitempty"`
+	Range   []any  `json:"range,omitempty"`
 }
 
 // descriptorJSON mirrors ivy2cpp/compile.go:748. Builds a JSON
@@ -379,9 +391,9 @@ func descriptorJSON(mod *goivy.Module, cfg Config, outputs []*Output, isolates [
 			name = isolates[i]
 		}
 		processes = append(processes, processDesc{
-			Binary: out.BaseName,
+			Binary: descriptorBinaryPath(out),
 			Name:   name,
-			Params: describeParams(mod.Params),
+			Params: describeParams(mod.Params, mod.ParamDefaults),
 		})
 	}
 	desc["processes"] = processes
@@ -395,20 +407,87 @@ func descriptorJSON(mod *goivy.Module, cfg Config, outputs []*Output, isolates [
 	return string(data), nil
 }
 
-// describeParams mirrors ivy2cpp/compile.go:778.
-func describeParams(params []*goivy.Const) []descriptorParamDesc {
+// describeParams mirrors ivy_to_cpp.py's descriptor `describe_params`.
+func describeParams(params []*goivy.Const, defaults []goivy.Node) []descriptorParamDesc {
 	out := make([]descriptorParamDesc, 0, len(params))
-	for _, p := range params {
+	for i, p := range params {
 		if p == nil {
 			continue
 		}
-		typ := ""
-		if p.CSort != nil {
-			typ = p.CSort.String()
+		desc := descriptorParamDesc{Name: p.Name, Type: descriptorParamType(p.CSort)}
+		if i < len(defaults) && defaults[i] != nil {
+			desc.Default = paramDefaultText(defaults[i])
 		}
-		out = append(out, descriptorParamDesc{Name: p.Name, Type: typ})
+		if rng := descriptorParamRange(p.CSort); len(rng) > 0 {
+			desc.Range = rng
+		}
+		out = append(out, desc)
 	}
 	return out
+}
+
+type descriptorSortDesc struct {
+	Name    string                `json:"name"`
+	Indices []descriptorParamDesc `json:"indices,omitempty"`
+}
+
+func descriptorParamType(s goivy.Sort) any {
+	if fs, ok := s.(*goivy.LogicFunctionSort); ok {
+		indices := make([]descriptorParamDesc, 0, len(fs.Domain()))
+		for i, d := range fs.Domain() {
+			indices = append(indices, descriptorParamDesc{
+				Name: fmt.Sprintf("arg%d", i),
+				Type: descriptorParamType(d),
+			})
+		}
+		return descriptorSortDesc{Name: sortName(fs.Range()), Indices: indices}
+	}
+	return sortName(s)
+}
+
+func descriptorParamRange(s goivy.Sort) []any {
+	rng, ok := s.(*goivy.RangeSort)
+	if !ok || rng.Lb == nil || rng.Ub == nil {
+		return nil
+	}
+	return []any{descriptorBoundValue(rng.Lb), descriptorBoundValue(rng.Ub)}
+}
+
+func descriptorBoundValue(b goivy.NumeralOrCompiledBound) any {
+	if b == nil {
+		return ""
+	}
+	text := b.BoundString()
+	if b.IsNumeral() {
+		n := 0
+		ok := text != ""
+		for _, r := range text {
+			if r < '0' || r > '9' {
+				ok = false
+				break
+			}
+			n = n*10 + int(r-'0')
+		}
+		if ok {
+			return n
+		}
+	}
+	return text
+}
+
+func descriptorBinaryPath(out *Output) string {
+	if out == nil {
+		return ""
+	}
+	name := out.BaseName
+	if isWindows() {
+		name += ".exe"
+	}
+	return filepath.ToSlash(filepath.Join(out.BaseName, name))
+}
+
+func isDescriptorTarget(target string) bool {
+	return target == "repl" || target == "test"
 }
 
 // addConjsToActions mirrors ivy2cpp/compile.go:714. Walks the
@@ -536,6 +615,22 @@ func ensureSortOrderForGo(mod *goivy.Module) {
 func sortName(s goivy.Sort) string {
 	if s == nil {
 		return ""
+	}
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		return "bool"
+	case *goivy.LogicEnumeratedSort:
+		if st.Name != "" {
+			return st.Name
+		}
+	case *goivy.UninterpretedSort:
+		if st.Name != "" {
+			return st.Name
+		}
+	case *goivy.RangeSort:
+		if st.Name != "" {
+			return st.Name
+		}
 	}
 	if n, ok := s.(interface{ GetName() string }); ok {
 		return n.GetName()

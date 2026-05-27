@@ -4,36 +4,18 @@ Scope: current `ivy2go` as of this audit. This list includes bugs confirmed by
 source review and sub-agent review. It intentionally avoids broad rewrite
 recommendations unless there is a concrete failure mode.
 
+## Fixed
+
+- Descriptor binary paths now include the Go package directory, matching the
+  `WriteOutput`/`BuildPlanFor` layout.
+- Descriptor-producing targets now default to `package=main` and reject explicit
+  non-main package/class names instead of advertising unbuildable executables.
+- Module parameters are now described with defaults and wired through generated
+  argv parsing into `NewState`.
+
+Remaining entries keep their original audit numbering.
+
 ## P1 - generated programs can be wrong, invalid, or unlaunchable
-
-1. Descriptor binary paths do not match the Go output layout.
-
-   Evidence: `WriteOutput` writes Go packages under `outDir/BaseName`
-   (`compile.go:579`) and writes `.dsc` files in `outputBaseDirectory(outDir)`
-   (`compile.go:600`). `BuildPlanFor` builds the executable as
-   `outDir/BaseName/BaseName` (`build.go:74`), but `descriptorJSON` records
-   only `Binary: out.BaseName` (`compile.go:381`). A launcher reading the
-   descriptor beside the package directory will look for `./BaseName`, not
-   `./BaseName/BaseName`.
-
-2. Descriptors can advertise binaries for outputs that cannot be executables.
-
-   Evidence: descriptors are emitted for `target=repl` and `target=test`
-   (`compile.go:85`) regardless of package name. `Generate` silently disables
-   `EmitMain` whenever the package is not `main` (`generator.go:96`), and
-   `BuildOutput` later rejects non-class, non-`main` packages
-   (`build.go:119`). So `target=test package=demo` can produce `demo.dsc` with
-   a process entry for a binary that the current build path refuses to create.
-
-3. Ivy module parameters are described but not wired into generated Go code.
-
-   Evidence: descriptors include `mod.Params` (`compile.go:381` and
-   `compile.go:398`), and `repl.go` has unused helpers for positional/default
-   parameters (`repl.go:194`). But `NewState` takes no parameters
-   (`state.go:92`), and generated mains call `NewState()` directly for impl,
-   repl, and test targets (`generator.go:296`, `generator.go:309`,
-   `generator.go:354`). A parameterized Ivy module cannot receive those
-   parameter values through the generated Go executable.
 
 4. Solver-backed action generation does not constrain function-sorted state
    consistently with action preconditions.

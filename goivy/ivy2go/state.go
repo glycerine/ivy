@@ -90,12 +90,15 @@ func (g *Generator) thunkSlotTypes(fs *goivy.LogicFunctionSort) (string, string)
 // emitNewState emits the NewState constructor. Maps are allocated;
 // scalar / array fields take their Go zero value.
 func (g *Generator) emitNewState(w *goWriter) {
-	w.open(fmt.Sprintf("func New%s() *%s {", g.StateTypeName, g.StateTypeName))
+	w.open(fmt.Sprintf("func New%s(%s) *%s {", g.StateTypeName, g.stateConstructorParamList(), g.StateTypeName))
 	w.linef("s := &%s{}", g.StateTypeName)
 	for _, sym := range g.stateSymbols() {
 		if g.symbolNeedsMakeMap(sym.Sort) {
 			w.linef("s.%s = %s{}", goExportedName(sym.Name), g.goType(sym.Sort))
 		}
+	}
+	for _, p := range g.moduleParams() {
+		w.linef("s.%s = %s", goExportedName(p.Name), moduleParamLocalName(p))
 	}
 	w.line("return s")
 	w.close("")
