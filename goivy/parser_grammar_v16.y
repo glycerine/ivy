@@ -2489,6 +2489,26 @@ term:
     { $$ = $1 }
     | PARSER16_TOK_OLD aterm
     { $$ = parser16Acfg(parser16lex).NewOld($2) }
+    | PARSER16_TOK_LPAREN PARSER16_TOK_DOLLAR SYMBOLx simplevars PARSER16_TOK_DOT fmla PARSER16_TOK_RPAREN PARSER16_TOK_LPAREN terms PARSER16_TOK_RPAREN
+    {
+        xtracer.Trace("parser.p_term_namedbinder_vars_dot_term ENTER (term)")
+        binder := parser16Acfg(parser16lex).NewNamedBinder($3, $4, $6)
+        binder.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        $$ = parser16Acfg(parser16lex).NewApp(binder, $9...)
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+    }
+    | PARSER16_TOK_DOLLAR SYMBOLx PARSER16_TOK_DOT fmla     %prec PARSER16_TOK_SEMI
+    {
+        xtracer.Trace("parser.p_term_namedbinder_dot_fmla ENTER (term)")
+        $$ = parser16Acfg(parser16lex).NewNamedBinder($2, nil, $4)
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+    }
+    | PARSER16_TOK_DOLLAR SYMBOLx PARSER16_TOK_DOLLAR fmla   %prec PARSER16_TOK_SEMI
+    {
+        xtracer.Trace("parser.p_term_namedbinder_dollar_fmla ENTER (term)")
+        $$ = parser16Acfg(parser16lex).NewNamedBinder($2, nil, $4)
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+    }
     | PARSER16_TOK_LPAREN term PARSER16_TOK_RPAREN
     { $$ = $2 }
     | term PARSER16_TOK_PLUS term
