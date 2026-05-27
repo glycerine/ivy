@@ -655,6 +655,15 @@ func helpTestGoldenAll(t *testing.T, paths []string) {
 			GoldenPathCompareIvyCheck(t, cfg)
 			skipRebuild = true // only need rebuild the first time.
 		}
+		if len(isos) == 0 {
+			// also run non-isolate containing specs
+			vv("======= begin TestGoldenAll: path='%v'; (no isolates) (path %v of %v)", path2, ipath, len(paths))
+			cfg.path = path2
+			cfg.args = []string{}
+			cfg.skipRebuild = skipRebuild
+			GoldenPathCompareIvyCheck(t, cfg)
+			skipRebuild = true // only need rebuild the first time.
+		}
 	}
 }
 

@@ -68,7 +68,7 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 
 %left         PARSER16_TOK_SEMI
 %left         PARSER16_TOK_GLOBALLY PARSER16_TOK_EVENTUALLY
-%left         PARSER16_TOK_ARROW PARSER16_TOK_IFF
+%right        PARSER16_TOK_ARROW PARSER16_TOK_IFF
 %left         PARSER16_TOK_IF
 %left         PARSER16_TOK_ELSE
 %left         PARSER16_TOK_OR
