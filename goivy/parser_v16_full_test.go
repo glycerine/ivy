@@ -660,6 +660,16 @@ delegate step[before], step[after] -> target`
 	}
 }
 
+func TestParseV16GeneratedClassNameSubscript(t *testing.T) {
+	src := `object marcelo[class](self:marcelo[class].t) = {
+type t
+}
+alias marcelo_alias = marcelo[class].t`
+	if _, err := Parse(src, Version{1, 6}, WithFilename("class_subscript16.ivy")); err != nil {
+		t.Fatalf("Parse v1.6 generated class name subscript: %v", err)
+	}
+}
+
 func TestParseV16ModuleClassAndRMEAssertSyntax(t *testing.T) {
 	src := `module m = {
 type inner
@@ -769,10 +779,10 @@ func TestParseV16PropertyProofWithMatches(t *testing.T) {
 	}
 }
 
-func TestParseV16PropertyProofSequence(t *testing.T) {
-	result, err := Parse("property true proof first; second", Version{1, 6}, WithFilename("proof_sequence16.ivy"))
+func TestParseV16PropertyProofGroupSequence(t *testing.T) {
+	result, err := Parse("property true proof { first; second }", Version{1, 6}, WithFilename("proof_group_sequence16.ivy"))
 	if err != nil {
-		t.Fatalf("Parse v1.6 property proof sequence: %v", err)
+		t.Fatalf("Parse v1.6 property proof group sequence: %v", err)
 	}
 	proof := firstDeclOf[*ProofDecl](t, result.Decls)
 	seq := firstArgAs[*ComposeTactics](t, proof)
@@ -787,6 +797,18 @@ func TestParseV16PropertyProofSequence(t *testing.T) {
 		if got := inst.SchemaName.String(); got != want {
 			t.Fatalf("ComposeTactics[%d] schema = %q, want %q", i, got, want)
 		}
+	}
+}
+
+func TestParseV16NamedBinderTerms(t *testing.T) {
+	src := `type t
+individual a:t
+relation p(X:t)
+conjecture ($snap X. p(X))(a)
+conjecture $saved. p(a)
+conjecture $saved $ p(a)`
+	if _, err := Parse(src, Version{1, 6}, WithFilename("named_binder16.ivy")); err != nil {
+		t.Fatalf("Parse v1.6 named binders: %v", err)
 	}
 }
 

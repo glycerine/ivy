@@ -55,7 +55,7 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 
 %type <accum> top
 %type <node>  labeledfmla fmla term aterm var simplevar atype tapp tterm typesymbol symdecl constantdecl rel sort
-%type <node>  fun defn defnrhs optproof proofstep match opttemporal optactiondef sequence action simpleact complexact callatom atom optimpex assert_rhs
+%type <node>  fun defn defnrhs optproof optsemi proofstep proofseq proofgroup match opttemporal optactiondef sequence action simpleact complexact callatom atom optimpex assert_rhs
 %type <node>  lparam param optinit termtuple somefmla eqn lit topseq optdelegee oper attributeval requires ensures
 %type <node>  optskolem schdefn schdefnrhs schconc objsym objectend
 %type <node>  inst modinst pname app upax expr exprterm cdefn sceninit scenariomixin
@@ -694,6 +694,47 @@ optproof:
     }
     ;
 
+optsemi:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_optsemi ENTER (optsemi)")
+        $$ = nil
+    }
+    | PARSER16_TOK_SEMI
+    {
+        xtracer.Trace("parser.p_optsemi_semi ENTER (optsemi)")
+        $$ = nil
+    }
+    ;
+
+proofgroup:
+    PARSER16_TOK_LCB proofseq PARSER16_TOK_RCB
+    {
+        xtracer.Trace("parser.p_proofgroup_lcb_proofseq_rcb ENTER (proofgroup)")
+        $$ = $2
+    }
+    | PARSER16_TOK_LCB PARSER16_TOK_RCB
+    {
+        xtracer.Trace("parser.p_proofgroup_lcb_rcb ENTER (proofgroup)")
+        $$ = parser16Acfg(parser16lex).NewNullTactic()
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+    }
+    ;
+
+proofseq:
+    proofstep
+    {
+        xtracer.Trace("parser.p_proofseq_proofstep ENTER (proofseq)")
+        $$ = $1
+    }
+    | proofseq optsemi proofstep
+    {
+        xtracer.Trace("parser.p_proofseq_proofseq_semi_proofstep ENTER (proofseq)")
+        $$ = parser16Acfg(parser16lex).NewComposeTactics([]Node{$1, $3})
+        $$.SetLineno(nodeLineno($2))
+    }
+    ;
+
 proofstep:
     SYMBOLx
     {
@@ -708,6 +749,11 @@ proofstep:
         a := parser16Acfg(parser16lex).NewAtom($1)
         si := parser16Acfg(parser16lex).NewSchemaInstantiationWithMatches(a, parser16Acfg(parser16lex).NewRenaming(nil), $3)
         $$ = si
+    }
+    | proofgroup
+    {
+        xtracer.Trace("parser.p_proofstep_proofgroup ENTER (proofstep)")
+        $$ = $1
     }
     ;
 
@@ -2209,6 +2255,11 @@ SYMsubscr:
     {
         xtracer.Trace("parser.p_SYMsubscr_AFTER ENTER (SYMsubscr)")
         $$ = "after"
+    }
+    | PARSER16_TOK_CLASS
+    {
+        xtracer.Trace("parser.p_SYMsubscr_CLASS ENTER (SYMsubscr)")
+        $$ = "class"
     }
     | SYMsubscr PARSER16_TOK_DOT SYMBOLx
     {
