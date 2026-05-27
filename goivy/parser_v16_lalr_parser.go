@@ -200,6 +200,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_STRUCT
 	case GHOST:
 		return PARSER16_TOK_GHOST
+	case FINITE:
+		return PARSER16_TOK_FINITE
 	case FRESH:
 		return PARSER16_TOK_FRESH
 	case DESTRUCTOR:

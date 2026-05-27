@@ -1,6 +1,14 @@
 package goivy
 
-import "testing"
+import (
+	"bytes"
+	"io"
+	"os"
+	"strings"
+	"testing"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
+)
 
 func TestParseV16TopLevelInit(t *testing.T) {
 	result, err := Parse("type t\nindividual x:t\ninit x = x", Version{1, 6}, WithFilename("init16.ivy"))
@@ -482,6 +490,66 @@ type pair = struct { first:color, second:idx }`
 	if !sawStruct {
 		t.Fatalf("struct type definition not found")
 	}
+}
+
+func TestParseV16TypeDeclTracesOptfiniteBeforeOptghost(t *testing.T) {
+	var parseErr error
+	out, err := captureParserTrace(func() {
+		_, parseErr = Parse("type key", Version{1, 6}, WithFilename("type_trace16.ivy"))
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if parseErr != nil {
+		t.Fatalf("Parse v1.6 type declaration: %v", parseErr)
+	}
+
+	finiteIdx := strings.Index(out, "XTRACE: parser.p_optfinite ENTER (optfinite)")
+	ghostIdx := strings.Index(out, "XTRACE: parser.p_optghost ENTER (optghost)")
+	if finiteIdx < 0 {
+		t.Fatalf("trace did not contain optfinite reduction:\n%s", out)
+	}
+	if ghostIdx < 0 {
+		t.Fatalf("trace did not contain optghost reduction:\n%s", out)
+	}
+	if finiteIdx > ghostIdx {
+		t.Fatalf("optfinite trace came after optghost; trace:\n%s", out)
+	}
+}
+
+func captureParserTrace(fn func()) (string, error) {
+	oldStdout := os.Stdout
+	oldSuppressed := xtracer.Suppressed
+	r, w, err := os.Pipe()
+	if err != nil {
+		return "", err
+	}
+
+	var buf bytes.Buffer
+	done := make(chan error, 1)
+	go func() {
+		_, copyErr := io.Copy(&buf, r)
+		done <- copyErr
+	}()
+
+	os.Stdout = w
+	xtracer.Suppressed = false
+	fn()
+	xtracer.Suppressed = oldSuppressed
+	os.Stdout = oldStdout
+	closeErr := w.Close()
+	copyErr := <-done
+	readErr := r.Close()
+	if closeErr != nil {
+		return "", closeErr
+	}
+	if copyErr != nil {
+		return "", copyErr
+	}
+	if readErr != nil {
+		return "", readErr
+	}
+	return buf.String(), nil
 }
 
 func TestParseV16ActionReturnsAndCoreStatements(t *testing.T) {
