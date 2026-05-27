@@ -2200,6 +2200,16 @@ SYMsubscr:
         xtracer.Trace("parser.p_SYMsubscr_THIS ENTER (SYMsubscr)")
         $$ = "this"
     }
+    | PARSER16_TOK_BEFORE
+    {
+        xtracer.Trace("parser.p_SYMsubscr_BEFORE ENTER (SYMsubscr)")
+        $$ = "before"
+    }
+    | PARSER16_TOK_AFTER
+    {
+        xtracer.Trace("parser.p_SYMsubscr_AFTER ENTER (SYMsubscr)")
+        $$ = "after"
+    }
     | SYMsubscr PARSER16_TOK_DOT SYMBOLx
     {
         xtracer.Trace("parser.p_SYMsubscr_SYMsubscr_dot_symbol ENTER (SYMsubscr)")

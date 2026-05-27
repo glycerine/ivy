@@ -633,6 +633,33 @@ variant child of sort_a = {left, right}`
 	t.Fatalf("before MixinDecl not found")
 }
 
+func TestParseV16DelegateGeneratedMixinNameSubscripts(t *testing.T) {
+	src := `action step = {}
+before step { call step }
+after step { call step }
+delegate step[before], step[after] -> target`
+	result, err := Parse(src, Version{1, 6}, WithFilename("delegate_mixin_subscript16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 delegate generated mixin names: %v", err)
+	}
+	decl := firstDeclOf[*DelegateDecl](t, result.Decls)
+	if got := len(decl.Args()); got != 2 {
+		t.Fatalf("DelegateDecl args = %d, want 2", got)
+	}
+	for i, want := range []string{"step[before]", "step[after]"} {
+		def, ok := decl.Args()[i].(*DelegateDef)
+		if !ok {
+			t.Fatalf("DelegateDecl arg[%d] = %T, want *DelegateDef", i, decl.Args()[i])
+		}
+		if got := def.Delegated(); got != want {
+			t.Fatalf("DelegateDef[%d].Delegated() = %q, want %q", i, got, want)
+		}
+		if got := def.Delegee(); got != "target" {
+			t.Fatalf("DelegateDef[%d].Delegee() = %q, want target", i, got)
+		}
+	}
+}
+
 func TestParseV16ModuleClassAndRMEAssertSyntax(t *testing.T) {
 	src := `module m = {
 type inner
@@ -739,6 +766,27 @@ func TestParseV16PropertyProofWithMatches(t *testing.T) {
 	inst := firstArgAs[*SchemaInstantiation](t, proof)
 	if len(inst.Matches) != 1 {
 		t.Fatalf("schema instantiation matches = %d, want 1", len(inst.Matches))
+	}
+}
+
+func TestParseV16PropertyProofSequence(t *testing.T) {
+	result, err := Parse("property true proof first; second", Version{1, 6}, WithFilename("proof_sequence16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 property proof sequence: %v", err)
+	}
+	proof := firstDeclOf[*ProofDecl](t, result.Decls)
+	seq := firstArgAs[*ComposeTactics](t, proof)
+	if got := len(seq.Tactics); got != 2 {
+		t.Fatalf("ComposeTactics length = %d, want 2", got)
+	}
+	for i, want := range []string{"first", "second"} {
+		inst, ok := seq.Tactics[i].(*SchemaInstantiation)
+		if !ok {
+			t.Fatalf("ComposeTactics[%d] = %T, want *SchemaInstantiation", i, seq.Tactics[i])
+		}
+		if got := inst.SchemaName.String(); got != want {
+			t.Fatalf("ComposeTactics[%d] schema = %q, want %q", i, got, want)
+		}
 	}
 }
 
