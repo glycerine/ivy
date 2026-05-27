@@ -21,18 +21,14 @@ recommendations unless there is a concrete failure mode.
   normalization pipeline: trim reverse-image clauses, expand field references,
   extract destructor-field inputs, compute defined parameters directly, and add
   relevant definitions plus variant axioms before querying the solver.
+- Function-valued action parameters and locals now lower through their local Go
+  storage rather than through `*State` fields. Map-backed function-valued
+  formals/locals use raw map indexes and contribute their tuple key types to
+  `types.go`, while true state functions keep the existing getter path.
 
 Remaining entries keep their original audit numbering.
 
 ## P1 - generated programs can be wrong, invalid, or unlaunchable
-
-6. Applying a function-valued parameter or local lowers to a state field.
-
-   Evidence: every non-definition `Apply` falls through to
-   `goStorageAccess(name, ...)` (`expr.go:260`), and `goStorageAccess` always
-   starts from `s.<Name>` (`expr.go:279`). If an action parameter or local has
-   function sort and the body calls it, the generated code refers to a
-   nonexistent `State` field instead of the local value.
 
 7. Test action generators call multi-return actions with C++ out-parameter
    style, but Go actions return values normally.

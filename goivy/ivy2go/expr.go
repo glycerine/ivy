@@ -260,6 +260,9 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 	if g.isDefinitionName(name) {
 		return fn + "(" + strings.Join(args, ", ") + ")", nil
 	}
+	if !g.isStateSymbolName(name) {
+		return g.goLocalFunctionAccess(name, fnExpr.NodeSort(), args), nil
+	}
 	return g.goStorageAccess(name, fnExpr.NodeSort(), args), nil
 }
 
@@ -277,7 +280,21 @@ func (g *Generator) emitApply(a *goivy.Apply) (string, error) {
 // assignable map expression while non-assignment readers transparently
 // fall through to the thunk slot.
 func (g *Generator) goStorageAccess(name string, fnSort goivy.Sort, args []string) string {
-	field := "s." + goExportedName(name)
+	return g.goStorageAccessBase("s."+goExportedName(name), name, fnSort, args, true)
+}
+
+// goLocalFunctionAccess is the non-state sibling of goStorageAccess.
+// Function-valued action parameters and locals have the same physical
+// storage shape as state functions, but their base expression is the
+// local Go identifier rather than a *State field. Map-backed locals
+// also read through the raw map index because they do not have a
+// thunk/getter slot.
+func (g *Generator) goLocalFunctionAccess(name string, fnSort goivy.Sort, args []string) string {
+	return g.goStorageAccessBase(goIdent(name), name, fnSort, args, false)
+}
+
+func (g *Generator) goStorageAccessBase(base, name string, fnSort goivy.Sort, args []string, stateSymbol bool) string {
+	field := base
 	if len(args) == 0 {
 		return field
 	}
@@ -316,6 +333,9 @@ func (g *Generator) goStorageAccess(name string, fnSort goivy.Sort, args []strin
 			key = b.String()
 		}
 		if g.lhsContext {
+			return field + "[" + key + "]"
+		}
+		if !stateSymbol {
 			return field + "[" + key + "]"
 		}
 		return "s.get" + goExportedName(name) + "(" + key + ")"

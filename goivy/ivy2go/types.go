@@ -2,6 +2,7 @@ package ivy2go
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -464,10 +465,10 @@ func (g *Generator) emitSortDecls(w *goWriter) {
 	g.emitCTupleDecls(w)
 }
 
-// goCTuples mirrors ivy2cpp/types.go cppCTuples. Walks the module's
-// state symbols and returns the deduplicated set of function-sort
-// domain tuples whose arity is >= 2 and whose storage requires a
-// composite key (hash-thunk / map-backed function symbols).
+// goCTuples mirrors ivy2cpp/types.go cppCTuples, with the Go-specific
+// addition that action parameters/returns/locals also need declarations:
+// their map-backed function storage can mention the same tuple key
+// types even though they are not State fields.
 func (g *Generator) goCTuples() [][]goivy.Sort {
 	if g == nil || g.Mod == nil {
 		return nil
@@ -493,7 +494,48 @@ func (g *Generator) goCTuples() [][]goivy.Sort {
 	for _, sym := range g.stateSymbols() {
 		addSort(sym.Sort)
 	}
+	if g.Mod.Actions != nil {
+		names := make([]string, 0)
+		for name := range g.Mod.Actions.All() {
+			names = append(names, name)
+		}
+		sort.Strings(names)
+		for _, name := range names {
+			act, _ := g.Mod.Actions.Get2(name)
+			g.collectActionFunctionSorts(act, addSort)
+		}
+	}
 	return out
+}
+
+func (g *Generator) collectActionFunctionSorts(act goivy.Action, add func(goivy.Sort)) {
+	if act == nil || add == nil {
+		return
+	}
+	for _, p := range act.GetFormalParams() {
+		if p != nil {
+			add(p.CSort)
+		}
+	}
+	for _, r := range act.GetFormalReturns() {
+		if r != nil {
+			add(r.CSort)
+		}
+	}
+	if local, ok := act.(*goivy.LogicLocalAction); ok {
+		for _, loc := range local.Locals {
+			if loc != nil {
+				add(loc.NodeSort())
+			}
+		}
+	}
+	for _, arg := range act.ActionArgs() {
+		child, ok := goivy.ToAction(arg)
+		if !ok || child == act {
+			continue
+		}
+		g.collectActionFunctionSorts(child, add)
+	}
 }
 
 // emitCTupleDecls emits a Go struct declaration for each composite
