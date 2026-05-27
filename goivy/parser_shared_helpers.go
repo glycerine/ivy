@@ -222,6 +222,18 @@ func handleBeforeAfter(cfg *AstConfig, kind string, atom *Atom, action Node, ivy
 	handleMixin(cfg, kind, mixer, atom, ivy)
 }
 
+// handleBeforeAfterV16 matches Python's Ivy <=1.6 deterministic mixin names.
+func handleBeforeAfterV16(cfg *AstConfig, kind string, atom *Atom, action Node, ivy *ivyAccum, optargs []Node, optreturns []Node) {
+	xtracer.Trace("parser.handle_before_after ENTER")
+	rep := strings.ReplaceAll(atom.Rep, ".", "_")
+	mixer := cfg.NewAtom(fmt.Sprintf("%s[%s]", rep, kind))
+	optargs, optreturns = inferActionParams(ivy, atom.Rep, optargs, optreturns)
+	df := cfg.NewActionDef(mixer, action, optargs, optreturns)
+	df.SetLineno(atom.GetLineno())
+	ivy.declare(cfg.NewActionDecl(df))
+	handleMixin(cfg, kind, mixer, atom, ivy)
+}
+
 // parseNativequote parses a native code block and extracts backtick references.
 func parseNativequote(cfg *AstConfig, raw string, lex *parser17LexAdapter) (string, []Node) {
 	xtracer.Trace("parser.parse_nativequote ENTER")

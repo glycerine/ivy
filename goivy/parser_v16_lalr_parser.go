@@ -143,14 +143,42 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_IF
 	case ELSE:
 		return PARSER16_TOK_ELSE
+	case WHILE:
+		return PARSER16_TOK_WHILE
+	case INVARIANT:
+		return PARSER16_TOK_INVARIANT
 	case GLOBALLY:
 		return PARSER16_TOK_GLOBALLY
 	case EVENTUALLY:
 		return PARSER16_TOK_EVENTUALLY
+	case TEMPORAL:
+		return PARSER16_TOK_TEMPORAL
+	case SET:
+		return PARSER16_TOK_SET
+	case INSTANTIATE:
+		return PARSER16_TOK_INSTANTIATE
+	case LOCAL:
+		return PARSER16_TOK_LOCAL
+	case LET:
+		return PARSER16_TOK_LET
+	case IN:
+		return PARSER16_TOK_IN
+	case SOME:
+		return PARSER16_TOK_SOME
+	case MINIMIZING:
+		return PARSER16_TOK_MINIMIZING
+	case MAXIMIZING:
+		return PARSER16_TOK_MAXIMIZING
+	case DECREASES:
+		return PARSER16_TOK_DECREASES
 	case ASSUME:
 		return PARSER16_TOK_ASSUME
 	case RETURNS:
 		return PARSER16_TOK_RETURNS
+	case MODULE:
+		return PARSER16_TOK_MODULE
+	case CLASS:
+		return PARSER16_TOK_CLASS
 	case TYPE:
 		return PARSER16_TOK_TYPE
 	case OBJECT:
@@ -189,10 +217,38 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_INCLUDE
 	case ACTION:
 		return PARSER16_TOK_ACTION
+	case METHOD:
+		return PARSER16_TOK_METHOD
 	case CALL:
 		return PARSER16_TOK_CALL
 	case ENSURES:
 		return PARSER16_TOK_ENSURES
+	case MIXIN:
+		return PARSER16_TOK_MIXIN
+	case BEFORE:
+		return PARSER16_TOK_BEFORE
+	case AFTER:
+		return PARSER16_TOK_AFTER
+	case IMPLEMENT:
+		return PARSER16_TOK_IMPLEMENT
+	case TRUSTED:
+		return PARSER16_TOK_TRUSTED
+	case ISOLATE:
+		return PARSER16_TOK_ISOLATE
+	case DELEGATE:
+		return PARSER16_TOK_DELEGATE
+	case INTERPRET:
+		return PARSER16_TOK_INTERPRET
+	case ATTRIBUTE:
+		return PARSER16_TOK_ATTRIBUTE
+	case VARIANT:
+		return PARSER16_TOK_VARIANT
+	case OF:
+		return PARSER16_TOK_OF
+	case REQUIRES:
+		return PARSER16_TOK_REQUIRES
+	case MODIFIES:
+		return PARSER16_TOK_MODIFIES
 	case IMPORT:
 		return PARSER16_TOK_IMPORT
 	case EXPORT:

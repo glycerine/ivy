@@ -188,7 +188,7 @@ func TestParseV16RelyDecls(t *testing.T) {
 }
 
 func TestParseV16MixOrdDecl(t *testing.T) {
-	result, err := Parse("mixord before -> after", Version{1, 6}, WithFilename("mixord16.ivy"))
+	result, err := Parse("mixord pre -> post", Version{1, 6}, WithFilename("mixord16.ivy"))
 	if err != nil {
 		t.Fatalf("Parse v1.6 mixord: %v", err)
 	}
@@ -441,15 +441,22 @@ action advanced = {
 		t.Fatalf("Parse v1.6 advanced action syntax: %v", err)
 	}
 	advanced := firstActionDefNamed(t, result.Decls, "advanced")
-	seq, ok := advanced.Body.(*Sequence)
+	local, ok := advanced.Body.(*LocalAction)
 	if !ok {
-		t.Fatalf("advanced body = %T, want *Sequence", advanced.Body)
+		t.Fatalf("advanced body = %T, want *LocalAction lowered from leading var", advanced.Body)
+	}
+	if got := len(local.Args()); got != 2 {
+		t.Fatalf("lowered var LocalAction args = %d, want 2", got)
+	}
+	seq, ok := local.Args()[1].(*Sequence)
+	if !ok {
+		t.Fatalf("lowered var body = %T, want *Sequence", local.Args()[1])
 	}
 	want := []struct {
 		name string
 		ok   func(Node) bool
 	}{
-		{"local lowered from var", func(n Node) bool { _, ok := n.(*LocalAction); return ok }},
+		{"explicit local", func(n Node) bool { _, ok := n.(*LocalAction); return ok }},
 		{"choice", func(n Node) bool { _, ok := n.(*ChoiceAction); return ok }},
 		{"if some", func(n Node) bool {
 			ifa, ok := n.(*IfAction)
@@ -477,6 +484,92 @@ action advanced = {
 	}
 	if got := NodeRep(then.Args()[0]); got != "witness" {
 		t.Fatalf("instantiate target = %q, want witness", got)
+	}
+}
+
+func TestParseV16SharedTopLevelDeclarationSyntax(t *testing.T) {
+	src := `temporal axiom true
+method meth = {}
+action step = {}
+before step { call step }
+after step { call step }
+implement step { call step }
+mixin step before step
+trusted isolate iso = step with step
+delegate step -> target
+interpret sort_a -> sort_b
+attribute step = true
+variant child of sort_a = {left, right}`
+	result, err := Parse(src, Version{1, 6}, WithFilename("shared_top16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 shared top-level syntax: %v", err)
+	}
+	lf := firstLabeledFormulaInDecl[*AxiomDecl](t, result.Decls)
+	if !lf.IsTemporal() {
+		t.Fatalf("temporal axiom was not marked temporal")
+	}
+	if got := countDeclsOf[*ActionDecl](result.Decls); got != 5 {
+		t.Fatalf("ActionDecl count = %d, want 5", got)
+	}
+	if got := countDeclsOf[*MixinDecl](result.Decls); got != 4 {
+		t.Fatalf("MixinDecl count = %d, want 4", got)
+	}
+	if got := countDeclsOf[*IsolateDecl](result.Decls); got != 1 {
+		t.Fatalf("IsolateDecl count = %d, want 1", got)
+	}
+	if got := countDeclsOf[*DelegateDecl](result.Decls); got != 1 {
+		t.Fatalf("DelegateDecl count = %d, want 1", got)
+	}
+	if got := countDeclsOf[*InterpretDecl](result.Decls); got != 1 {
+		t.Fatalf("InterpretDecl count = %d, want 1", got)
+	}
+	if got := countDeclsOf[*AttributeDecl](result.Decls); got != 1 {
+		t.Fatalf("AttributeDecl count = %d, want 1", got)
+	}
+	if got := countDeclsOf[*VariantDecl](result.Decls); got != 1 {
+		t.Fatalf("VariantDecl count = %d, want 1", got)
+	}
+	for _, decl := range result.Decls {
+		md, ok := decl.(*MixinDecl)
+		if !ok || len(md.Args()) == 0 {
+			continue
+		}
+		if def, ok := md.Args()[0].(*MixinBeforeDef); ok {
+			if def.Mixer() != "step[before]" {
+				t.Fatalf("v1.6 before mixin name = %q, want step[before]", def.Mixer())
+			}
+			return
+		}
+	}
+	t.Fatalf("before MixinDecl not found")
+}
+
+func TestParseV16ModuleClassAndRMEAssertSyntax(t *testing.T) {
+	src := `module m = {
+type inner
+}
+class c = {
+relation p(X:this)
+}
+relation req
+assert req -> { requires true modifies * ensures true }`
+	result, err := Parse(src, Version{1, 6}, WithFilename("module_class_rme16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 module/class/RME syntax: %v", err)
+	}
+	if got := countDeclsOf[*ModuleDecl](result.Decls); got != 1 {
+		t.Fatalf("ModuleDecl count = %d, want 1", got)
+	}
+	if got := countDeclsOf[*ObjectDecl](result.Decls); got != 1 {
+		t.Fatalf("class ObjectDecl count = %d, want 1", got)
+	}
+	decl := firstDeclOf[*AssertDecl](t, result.Decls)
+	imp, ok := decl.Args()[0].(*Implies)
+	if !ok {
+		t.Fatalf("AssertDecl arg = %T, want *Implies", decl.Args()[0])
+	}
+	if _, ok := imp.T2.(*RME); !ok {
+		t.Fatalf("AssertDecl RHS = %T, want *RME", imp.T2)
 	}
 }
 

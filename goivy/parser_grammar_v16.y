@@ -30,24 +30,32 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 %token <tok>  PARSER16_TOK_FORALL PARSER16_TOK_EXISTS
 %token <tok>  PARSER16_TOK_TRUE PARSER16_TOK_FALSE
 %token <tok>  PARSER16_TOK_OLD PARSER16_TOK_THIS
-%token <tok>  PARSER16_TOK_IF PARSER16_TOK_ELSE
+%token <tok>  PARSER16_TOK_IF PARSER16_TOK_ELSE PARSER16_TOK_WHILE PARSER16_TOK_INVARIANT
 %token <tok>  PARSER16_TOK_GLOBALLY PARSER16_TOK_EVENTUALLY
 %token <tok>  PARSER16_TOK_DOTDOTDOT
 %token <tok>  PARSER16_TOK_TYPE PARSER16_TOK_INDIV PARSER16_TOK_VAR PARSER16_TOK_FUNCTION PARSER16_TOK_RELATION PARSER16_TOK_DERIVED PARSER16_TOK_STRUCT
 %token <tok>  PARSER16_TOK_AXIOM PARSER16_TOK_PROPERTY PARSER16_TOK_CONJECTURE PARSER16_TOK_SCHEMA PARSER16_TOK_ASSERT PARSER16_TOK_DEFINITION PARSER16_TOK_PROOF PARSER16_TOK_WITH PARSER16_TOK_INIT
-%token <tok>  PARSER16_TOK_OBJECT
-%token <tok>  PARSER16_TOK_INCLUDE PARSER16_TOK_ACTION PARSER16_TOK_CALL PARSER16_TOK_RETURNS
-%token <tok>  PARSER16_TOK_IMPORT PARSER16_TOK_EXPORT PARSER16_TOK_PRIVATE
-%token <tok>  PARSER16_TOK_MACRO PARSER16_TOK_ALIAS PARSER16_TOK_PROGRESS PARSER16_TOK_RELY PARSER16_TOK_MIXORD
-%token <tok>  PARSER16_TOK_NAMED
-%token <tok>  PARSER16_TOK_ASSUME PARSER16_TOK_ENSURES
+%token <tok>  PARSER16_TOK_MODULE PARSER16_TOK_CLASS PARSER16_TOK_OBJECT
+%token <tok>  PARSER16_TOK_INCLUDE PARSER16_TOK_ACTION PARSER16_TOK_METHOD PARSER16_TOK_CALL PARSER16_TOK_RETURNS
+%token <tok>  PARSER16_TOK_IMPORT PARSER16_TOK_EXPORT PARSER16_TOK_PRIVATE PARSER16_TOK_DELEGATE
+%token <tok>  PARSER16_TOK_MACRO PARSER16_TOK_ALIAS PARSER16_TOK_PROGRESS PARSER16_TOK_RELY PARSER16_TOK_MIXORD PARSER16_TOK_INTERPRET
+%token <tok>  PARSER16_TOK_MIXIN PARSER16_TOK_BEFORE PARSER16_TOK_AFTER PARSER16_TOK_IMPLEMENT
+%token <tok>  PARSER16_TOK_TRUSTED PARSER16_TOK_ISOLATE
+%token <tok>  PARSER16_TOK_ATTRIBUTE PARSER16_TOK_VARIANT PARSER16_TOK_OF
+%token <tok>  PARSER16_TOK_REQUIRES PARSER16_TOK_MODIFIES
+%token <tok>  PARSER16_TOK_NAMED PARSER16_TOK_TEMPORAL
+%token <tok>  PARSER16_TOK_ASSUME PARSER16_TOK_ENSURES PARSER16_TOK_SET PARSER16_TOK_INSTANTIATE
+%token <tok>  PARSER16_TOK_LOCAL PARSER16_TOK_LET PARSER16_TOK_IN
+%token <tok>  PARSER16_TOK_SOME PARSER16_TOK_MINIMIZING PARSER16_TOK_MAXIMIZING PARSER16_TOK_DECREASES
 
 %type <accum> top
 %type <node>  labeledfmla fmla term aterm var simplevar atype tterm typesymbol symdecl constantdecl rel sort
 %type <node>  fun defn defnrhs optproof proofstep match opttemporal optactiondef sequence action simpleact complexact callatom atom optimpex assert_rhs
+%type <node>  lparam param optinit termtuple somefmla eqn lit topseq optdelegee oper attributeval requires ensures
 %type <node>  optskolem schdefn schdefnrhs schconc objsym objectend
-%type <nodes> terms vars simplevars tterms rels funs defns matches optargs optreturns optactualreturns names actseq callatoms schdecl schdecls objectargs
-%type <bval>  optdotdotdot
+%type <nodes> terms vars simplevars tterms rels funs defns matches optargs optreturns optactualreturns names actseq actseqrev callatoms schdecl schdecls objectargs
+%type <nodes> lparams params bounds invariants decreases eqns moresymbols atoms modifies
+%type <bval>  optdotdotdot opttrusted
 %type <str>   relop SYMBOLx
 %type <tok>   labelname
 
@@ -201,6 +209,17 @@ top:
         sd := parser16Acfg(parser16lex).NewSchemaDecl(sch)
         $$.declare(sd)
     }
+    | top PARSER16_TOK_MODULE atom PARSER16_TOK_EQ PARSER16_TOK_LCB top PARSER16_TOK_RCB
+    {
+        xtracer.Trace("parser.p_top_module_atom_eq_lcb_top_rcb ENTER (top)")
+        $$ = $1
+        lex := parser16lex.(*parser16LexAdapter)
+        modAccum := $6
+        d := parser16Acfg(parser16lex).NewDefinition(AppToAtom($3), modAccum)
+        $$.declare(parser16Acfg(parser16lex).NewModuleDecl(d))
+        lex.accum = $$
+        $$.isModule = false
+    }
     | top PARSER16_TOK_OBJECT objsym objectargs PARSER16_TOK_EQ PARSER16_TOK_LCB optdotdotdot top PARSER16_TOK_RCB objectend
     {
         xtracer.Trace("parser.p_top_object_symbol_eq_lcb_top_rcb ENTER (top)")
@@ -209,6 +228,25 @@ top:
         pref := $3.(*Atom)
         createObject(parser16Acfg(parser16lex), $$, pref, $4, objAccum, nodeLineno($3), $7)
         parser16lex.(*parser16LexAdapter).accum = $$
+    }
+    | top PARSER16_TOK_CLASS objsym objectargs PARSER16_TOK_EQ PARSER16_TOK_LCB optdotdotdot top PARSER16_TOK_RCB objectend
+    {
+        xtracer.Trace("parser.p_top__top_class_symbol_objectargs_eq_lcb_optdo ENTER (top)")
+        $$ = $1
+        lex := parser16lex.(*parser16LexAdapter)
+        objAccum := $8
+        scnst := parser16Acfg(parser16lex).NewAtom("this")
+        scnst.SetLineno(tok16Lineno(lex, $2))
+        tdfn := parser16Acfg(parser16lex).NewTypeDef(scnst, parser16Acfg(parser16lex).NewUninterpretedSortAST())
+        tdfn.SetLineno(tok16Lineno(lex, $2))
+        objAccum.declare(parser16Acfg(parser16lex).NewTypeDecl(tdfn))
+        if n := len(objAccum.decls); n > 1 {
+            last := objAccum.decls[n-1]
+            copy(objAccum.decls[1:], objAccum.decls[:n-1])
+            objAccum.decls[0] = last
+        }
+        createObject(parser16Acfg(parser16lex), $$, $3.(*Atom), $4, objAccum, nodeLineno($3), $7)
+        lex.accum = $$
     }
     | top opttemporal PARSER16_TOK_AXIOM labeledfmla
     {
@@ -252,9 +290,171 @@ top:
     }
     | top optimpex PARSER16_TOK_ACTION SYMBOLx optargs optreturns optactiondef
     {
-        xtracer.Trace("parser.p_top_optimpex_action_symbol_optargs_eq_action ENTER (top)")
+        xtracer.Trace("parser.p_top_optimpex_action_symbol_optargs_optreturns_eq_action ENTER (top)")
         $$ = $1
         parser17DeclareAction(parser16Acfg(parser16lex), $$, $2, false, $4, $5, $6, $7, tok16Lineno(parser16lex.(*parser16LexAdapter), $3))
+    }
+    | top optimpex PARSER16_TOK_METHOD SYMBOLx optargs optreturns optactiondef
+    {
+        xtracer.Trace("parser.p_top_optimpex_action_symbol_optargs_optreturns_eq_action ENTER (top)")
+        $$ = $1
+        parser17DeclareAction(parser16Acfg(parser16lex), $$, $2, true, $4, $5, $6, $7, tok16Lineno(parser16lex.(*parser16LexAdapter), $3))
+    }
+    | top PARSER16_TOK_MIXIN callatom PARSER16_TOK_BEFORE callatom
+    {
+        xtracer.Trace("parser.p_top_mixin_callatom_before_callatom ENTER (top)")
+        $$ = $1
+        m := parser16Acfg(parser16lex).NewMixinBeforeDef($3, $5)
+        $$.declare(parser16Acfg(parser16lex).NewMixinDecl(m))
+    }
+    | top PARSER16_TOK_MIXIN callatom PARSER16_TOK_AFTER callatom
+    {
+        xtracer.Trace("parser.p_top_mixin_callatom_after_callatom ENTER (top)")
+        $$ = $1
+        m := parser16Acfg(parser16lex).NewMixinAfterDef($3, $5)
+        $$.declare(parser16Acfg(parser16lex).NewMixinDecl(m))
+    }
+    | top PARSER16_TOK_BEFORE atype optargs optreturns topseq
+    {
+        xtracer.Trace("parser.p_top_before_callatom_lcb_action_rcb ENTER (top)")
+        $$ = $1
+        atom := atypeToAtom(parser16Acfg(parser16lex), $3)
+        atom.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        handleBeforeAfterV16(parser16Acfg(parser16lex), "before", atom, $6, $$, $4, $5)
+    }
+    | top PARSER16_TOK_AFTER atype optargs optreturns topseq
+    {
+        xtracer.Trace("parser.p_top_after_callatom_lcb_action_rcb ENTER (top)")
+        $$ = $1
+        atom := atypeToAtom(parser16Acfg(parser16lex), $3)
+        atom.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        handleBeforeAfterV16(parser16Acfg(parser16lex), "after", atom, $6, $$, $4, $5)
+    }
+    | top PARSER16_TOK_AFTER PARSER16_TOK_INIT optargs topseq
+    {
+        xtracer.Trace("parser.p_top_after_init_optargs_lcb_action_rcb ENTER (top)")
+        $$ = $1
+        atom := parser16Acfg(parser16lex).NewAtom("init")
+        atom.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        handleBeforeAfterV16(parser16Acfg(parser16lex), "after", atom, $5, $$, $4, nil)
+    }
+    | top PARSER16_TOK_IMPLEMENT atype optargs optreturns topseq
+    {
+        xtracer.Trace("parser.p_top_implement_callatom_lcb_action_rcb ENTER (top)")
+        $$ = $1
+        atom := atypeToAtom(parser16Acfg(parser16lex), $3)
+        atom.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        handleBeforeAfterV16(parser16Acfg(parser16lex), "implement", atom, $6, $$, $4, $5)
+    }
+    | top opttrusted PARSER16_TOK_ISOLATE SYMBOLx optargs PARSER16_TOK_EQ callatoms
+    {
+        xtracer.Trace("parser.p_top_opttrusted_isolate_callatom_eq_callatoms ENTER (top)")
+        $$ = $1
+        lex := parser16lex.(*parser16LexAdapter)
+        nameAtom := parser16Acfg(parser16lex).NewAtom($4, $5...)
+        elems := append([]Node{nameAtom}, $7...)
+        idef := parser16Acfg(parser16lex).NewIsolateDef(elems, 0)
+        idef.Trusted = $2
+        idef.Elems[0].SetLineno(tok16Lineno(lex, $3))
+        idef.SetLineno(tok16Lineno(lex, $3))
+        $$.declare(parser16Acfg(parser16lex).NewIsolateDecl(idef))
+    }
+    | top opttrusted PARSER16_TOK_ISOLATE SYMBOLx optargs PARSER16_TOK_EQ callatoms PARSER16_TOK_WITH callatoms
+    {
+        xtracer.Trace("parser.p_top_opttrusted_isolate_callatom_eq_callatoms_with_callatoms ENTER (top)")
+        $$ = $1
+        lex := parser16lex.(*parser16LexAdapter)
+        nameAtom := parser16Acfg(parser16lex).NewAtom($4, $5...)
+        elems := append(append([]Node{nameAtom}, $7...), $9...)
+        idef := parser16Acfg(parser16lex).NewIsolateDef(elems, len($9))
+        idef.Trusted = $2
+        idef.Elems[0].SetLineno(tok16Lineno(lex, $3))
+        idef.SetLineno(tok16Lineno(lex, $3))
+        $$.declare(parser16Acfg(parser16lex).NewIsolateDecl(idef))
+    }
+    | top PARSER16_TOK_DELEGATE callatoms optdelegee
+    {
+        xtracer.Trace("parser.p_top_delegate_callatom_opt ENTER (top)")
+        $$ = $1
+        args := make([]Node, len($3))
+        for i, s := range $3 {
+            if $4 != nil {
+                args[i] = parser16Acfg(parser16lex).NewDelegateDef([]Node{s, $4})
+            } else {
+                args[i] = parser16Acfg(parser16lex).NewDelegateDef([]Node{s})
+            }
+        }
+        $$.declare(parser16Acfg(parser16lex).NewDelegateDecl(args...))
+    }
+    | top PARSER16_TOK_INTERPRET oper PARSER16_TOK_ARROW oper
+    {
+        xtracer.Trace("parser.p_top_interpret_symbol_arrow_symbol ENTER (top)")
+        $$ = $1
+        lex := parser16lex.(*parser16LexAdapter)
+        imp := parser16Acfg(parser16lex).NewImplies($3, $5)
+        imp.SetLineno(tok16Lineno(lex, $4))
+        d := parser16Acfg(parser16lex).NewInterpretDecl(parser17MkLF(parser16Acfg(parser16lex), imp))
+        d.SetLineno(tok16Lineno(lex, $4))
+        $$.declare(d)
+    }
+    | top PARSER16_TOK_INTERPRET oper PARSER16_TOK_ARROW PARSER16_TOK_LCB term PARSER16_TOK_DOTS term PARSER16_TOK_RCB
+    {
+        xtracer.Trace("parser.p_top_interpret_symbol_arrow_lcb_symbol_dots_symbol_rcb ENTER (top)")
+        $$ = $1
+        lex := parser16lex.(*parser16LexAdapter)
+        rng := parser16Acfg(parser16lex).NewRange($6, $8)
+        imp := parser16Acfg(parser16lex).NewImplies($3, rng)
+        imp.SetLineno(tok16Lineno(lex, $4))
+        d := parser16Acfg(parser16lex).NewInterpretDecl(parser17MkLF(parser16Acfg(parser16lex), imp))
+        d.SetLineno(tok16Lineno(lex, $4))
+        $$.declare(d)
+    }
+    | top PARSER16_TOK_INTERPRET oper PARSER16_TOK_ARROW PARSER16_TOK_LCB SYMBOLx moresymbols PARSER16_TOK_RCB
+    {
+        xtracer.Trace("parser.p_top_interpret_symbol_arrow_lcb_symbol_moresymbols_rcb ENTER (top)")
+        $$ = $1
+        vals := append([]Node{parser16Acfg(parser16lex).NewAtom($6)}, $7...)
+        es := parser16Acfg(parser16lex).NewEnumeratedSort(vals...)
+        imp := parser16Acfg(parser16lex).NewImplies($3, es)
+        imp.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $4))
+        d := parser16Acfg(parser16lex).NewInterpretDecl(parser17MkLF(parser16Acfg(parser16lex), imp))
+        d.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $4))
+        $$.declare(d)
+    }
+    | top PARSER16_TOK_ATTRIBUTE callatom PARSER16_TOK_EQ attributeval
+    {
+        xtracer.Trace("parser.p_top_attribute_callatom_eq_attributeval ENTER (top)")
+        $$ = $1
+        lex := parser16lex.(*parser16LexAdapter)
+        adef := parser16Acfg(parser16lex).NewAttributeDef($3, $5)
+        adef.SetLineno(tok16Lineno(lex, $2))
+        d := parser16Acfg(parser16lex).NewAttributeDecl(adef)
+        d.SetLineno(tok16Lineno(lex, $2))
+        $$.declare(d)
+    }
+    | top PARSER16_TOK_VARIANT typesymbol PARSER16_TOK_OF atype
+    {
+        xtracer.Trace("parser.p_top_variant_symbol_of_atype ENTER (top)")
+        $$ = $1
+        scnst := parser16Acfg(parser16lex).NewAtom($3.(*Atom).Rep)
+        scnst.SetLineno(nodeLineno($3))
+        tdfn := parser16Acfg(parser16lex).NewTypeDef(scnst, parser16Acfg(parser16lex).NewUninterpretedSortAST())
+        tdfn.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $4))
+        $$.declare(parser16Acfg(parser16lex).NewTypeDecl(tdfn))
+        vdfn := parser16Acfg(parser16lex).NewVariantDef(scnst, parser16Acfg(parser16lex).NewAtom(NodeRep($5)))
+        $$.declare(parser16Acfg(parser16lex).NewVariantDecl(vdfn))
+    }
+    | top PARSER16_TOK_VARIANT typesymbol PARSER16_TOK_OF atype PARSER16_TOK_EQ sort
+    {
+        xtracer.Trace("parser.p_top_variant_symbol_of_symbol_eq_sort ENTER (top)")
+        $$ = $1
+        scnst := parser16Acfg(parser16lex).NewAtom($3.(*Atom).Rep)
+        scnst.SetLineno(nodeLineno($3))
+        tdfn := parser16Acfg(parser16lex).NewTypeDef(scnst, $7)
+        tdfn.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $4))
+        $$.declare(parser16Acfg(parser16lex).NewTypeDecl(tdfn))
+        vdfn := parser16Acfg(parser16lex).NewVariantDef(scnst, parser16Acfg(parser16lex).NewAtom(NodeRep($5)))
+        $$.declare(parser16Acfg(parser16lex).NewVariantDecl(vdfn))
     }
     | top PARSER16_TOK_EXPORT callatom
     {
@@ -382,10 +582,10 @@ opttemporal:
         xtracer.Trace("parser.p_opttemporal ENTER (opttemporal)")
         $$ = nil
     }
-    | PARSER16_TOK_GLOBALLY
+    | PARSER16_TOK_TEMPORAL
     {
-        xtracer.Trace("parser.p_opttemporal_temporal ENTER (opttemporal)")
-        $$ = parser16Acfg(parser16lex).NewAtom("globally")
+        xtracer.Trace("parser.p_opttemporal_symbol ENTER (opttemporal)")
+        $$ = parser16Acfg(parser16lex).NewAtom("temporal")
     }
     ;
 
@@ -404,6 +604,86 @@ optimpex:
     {
         xtracer.Trace("parser.p_optimpex_import ENTER (optimpex)")
         $$ = parser16Acfg(parser16lex).NewImportDecl()
+    }
+    ;
+
+topseq:
+    sequence
+    {
+        xtracer.Trace("parser.p_topseq_sequence ENTER (topseq)")
+        $$ = $1
+    }
+    ;
+
+opttrusted:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_opttrusted ENTER (opttrusted)")
+        $$ = false
+    }
+    | PARSER16_TOK_TRUSTED
+    {
+        xtracer.Trace("parser.p_opttrusted_trusted ENTER (opttrusted)")
+        $$ = true
+    }
+    ;
+
+optdelegee:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_optdelegee ENTER (optdelegee)")
+        $$ = nil
+    }
+    | PARSER16_TOK_ARROW callatom
+    {
+        xtracer.Trace("parser.p_optdelegee_callatom ENTER (optdelegee)")
+        $$ = $2
+    }
+    ;
+
+oper:
+    atype
+    {
+        xtracer.Trace("parser.p_oper_symbol ENTER (oper)")
+        $$ = atypeToAtom(parser16Acfg(parser16lex), $1)
+    }
+    | relop
+    {
+        xtracer.Trace("parser.p_oper_relop ENTER (oper)")
+        $$ = parser16Acfg(parser16lex).NewAtom($1)
+    }
+    ;
+
+attributeval:
+    callatom
+    {
+        xtracer.Trace("parser.p_top_attributeval_callatom ENTER (attributeval)")
+        $$ = $1
+    }
+    | PARSER16_TOK_TRUE
+    {
+        xtracer.Trace("parser.p_top_attributeval_true ENTER (attributeval)")
+        $$ = parser16Acfg(parser16lex).NewAtom("true")
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+    }
+    | PARSER16_TOK_FALSE
+    {
+        xtracer.Trace("parser.p_top_attributeval_false ENTER (attributeval)")
+        $$ = parser16Acfg(parser16lex).NewAtom("false")
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+    }
+    ;
+
+moresymbols:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_moresymbols ENTER (moresymbols)")
+        $$ = nil
+    }
+    | moresymbols PARSER16_TOK_COMMA SYMBOLx
+    {
+        xtracer.Trace("parser.p_moresymbols_more_symbols_comma_symbol ENTER (moresymbols)")
+        $$ = append($1, parser16Acfg(parser16lex).NewAtom($3))
     }
     ;
 
@@ -463,29 +743,78 @@ optactiondef:
     ;
 
 sequence:
-    PARSER16_TOK_LCB actseq PARSER16_TOK_RCB
+    PARSER16_TOK_LCB PARSER16_TOK_RCB
+    {
+        xtracer.Trace("parser.p_sequence_lcb_rcb ENTER (sequence)")
+        $$ = parser16Acfg(parser16lex).NewSequence()
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+    }
+    | PARSER16_TOK_LCB actseq PARSER16_TOK_RCB
     {
         xtracer.Trace("parser.p_sequence_lcb_actseq_rcb ENTER (sequence)")
-        $$ = parser17MakeSequence(parser16Acfg(parser16lex), $2)
-        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        stmts := lowerVarStmts($2)
+        seq := parser17MakeSequence(parser16Acfg(parser16lex), stmts)
+        if s, ok := seq.(*Sequence); ok {
+            s.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        }
+        $$ = seq
+    }
+    | PARSER16_TOK_LCB actseq PARSER16_TOK_SEMI PARSER16_TOK_RCB
+    {
+        xtracer.Trace("parser.p_sequence_lcb_actseq_semi_rcb ENTER (sequence)")
+        stmts := lowerVarStmts($2)
+        seq := parser16Acfg(parser16lex).NewSequence(stmts...)
+        seq.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = seq
     }
     ;
 
 actseq:
-    /* empty */
+    actseqrev
     {
-        xtracer.Trace("parser.p_actseq ENTER (actseq)")
-        $$ = nil
+        xtracer.Trace("parser.p_actseq_actseqrev ENTER (actseq)")
+        for i, j := 0, len($1)-1; i < j; i, j = i+1, j-1 {
+            $1[i], $1[j] = $1[j], $1[i]
+        }
+        $$ = $1
     }
-    | action
+    ;
+
+actseqrev:
+    simpleact
     {
-        xtracer.Trace("parser.p_actseq_action ENTER (actseq)")
+        xtracer.Trace("parser.p_actseqrev_simpleact ENTER (actseqrev)")
         $$ = []Node{$1}
     }
-    | actseq PARSER16_TOK_SEMI action
+    | complexact
     {
-        xtracer.Trace("parser.p_actseq_actseq_semi_action ENTER (actseq)")
-        $$ = append($1, $3)
+        xtracer.Trace("parser.p_actseqrev_complexact ENTER (actseqrev)")
+        $$ = []Node{$1}
+    }
+    | simpleact PARSER16_TOK_SEMI actseqrev
+    {
+        xtracer.Trace("parser.p_actseqrev_simpact_semi_actseqrev ENTER (actseqrev)")
+        $$ = append($3, $1)
+    }
+    | simpleact PARSER16_TOK_SEMI
+    {
+        xtracer.Trace("parser.p_actseqrev_simpact_semi ENTER (actseqrev)")
+        $$ = []Node{$1}
+    }
+    | complexact actseqrev
+    {
+        xtracer.Trace("parser.p_actseqrev_complexact_actseqrev ENTER (actseqrev)")
+        $$ = append($2, $1)
+    }
+    | complexact PARSER16_TOK_SEMI actseqrev
+    {
+        xtracer.Trace("parser.p_actseqrev_complexact_semi_actseqrev ENTER (actseqrev)")
+        $$ = append($3, $1)
+    }
+    | complexact PARSER16_TOK_SEMI
+    {
+        xtracer.Trace("parser.p_actseqrev_complexact_semi ENTER (actseqrev)")
+        $$ = []Node{$1}
     }
     ;
 
@@ -537,10 +866,41 @@ simpleact:
         $$ = parser16Acfg(parser16lex).NewCallAction($2)
         $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
     }
+    | PARSER16_TOK_SET lit
+    {
+        xtracer.Trace("parser.p_action_set_lit ENTER (simpleact)")
+        a := parser16Acfg(parser16lex).NewSetAction($2)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = a
+    }
+    | PARSER16_TOK_INSTANTIATE callatom
+    {
+        xtracer.Trace("parser.p_action_instantiate_atom ENTER (simpleact)")
+        a := parser16Acfg(parser16lex).NewInstantiateAction($2)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = a
+    }
+    | PARSER16_TOK_VAR tterm optinit
+    {
+        xtracer.Trace("parser.p_action_var_opttypedsym_assign_fmla ENTER (simpleact)")
+        if $3 != nil {
+            $$ = parser16Acfg(parser16lex).NewVarAction($2, $3)
+        } else {
+            $$ = parser16Acfg(parser16lex).NewVarAction($2)
+        }
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+    }
     | term PARSER16_TOK_ASSIGN fmla
     {
         xtracer.Trace("parser.p_action_assign ENTER (simpleact)")
         $$ = parser16Acfg(parser16lex).NewAssignAction($1, checkNonTemporal($3))
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+    }
+    | termtuple PARSER16_TOK_ASSIGN callatom
+    {
+        xtracer.Trace("parser.p_action_termtuple_assign_fmla ENTER (simpleact)")
+        callArgs := append([]Node{$3}, $1.Args()...)
+        $$ = parser16Acfg(parser16lex).NewCallAction(callArgs...)
         $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
     }
     | term PARSER16_TOK_ASSIGN PARSER16_TOK_TIMES
@@ -548,6 +908,12 @@ simpleact:
         xtracer.Trace("parser.p_action_term_assign_times ENTER (simpleact)")
         $$ = parser16Acfg(parser16lex).NewHavocAction($1)
         $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+    }
+    | term     %prec PARSER16_TOK_SEMI
+    {
+        xtracer.Trace("parser.p_action_term ENTER (simpleact)")
+        $$ = parser16Acfg(parser16lex).NewCallAction($1)
+        $$.SetLineno($1.GetLineno())
     }
     ;
 
@@ -557,21 +923,246 @@ complexact:
         xtracer.Trace("parser.p_action_sequence ENTER (complexact)")
         $$ = $1
     }
-    | PARSER16_TOK_IF fmla sequence
+    | PARSER16_TOK_IF somefmla sequence
     {
         xtracer.Trace("parser.p_action_if_fmla_lcb_action_rcb ENTER (complexact)")
         cond := checkNonTemporal($2)
-        a := parser16Acfg(parser16lex).NewIfAction(cond, $3, nil)
+        body := fixIfPart(cond, $3)
+        a := parser16Acfg(parser16lex).NewIfAction(cond, body, nil)
         a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
         $$ = a
     }
-    | PARSER16_TOK_IF fmla sequence PARSER16_TOK_ELSE action
+    | PARSER16_TOK_IF somefmla sequence PARSER16_TOK_ELSE action
     {
         xtracer.Trace("parser.p_action_if_fmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
         cond := checkNonTemporal($2)
-        a := parser16Acfg(parser16lex).NewIfAction(cond, $3, $5)
+        body := fixIfPart(cond, $3)
+        a := parser16Acfg(parser16lex).NewIfAction(cond, body, $5)
         a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
         $$ = a
+    }
+    | PARSER16_TOK_IF PARSER16_TOK_TIMES sequence PARSER16_TOK_ELSE action
+    {
+        xtracer.Trace("parser.p_action_if_times_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
+        choice := parser16Acfg(parser16lex).NewChoiceAction($3, $5)
+        choice.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = choice
+    }
+    | PARSER16_TOK_WHILE somefmla invariants decreases sequence
+    {
+        xtracer.Trace("parser.p_action_while_somefmla_invariants_decreases_lcb_action_rcb ENTER (complexact)")
+        cond := checkNonTemporal($2)
+        body := fixIfPart($2, $5)
+        args := []Node{cond, body}
+        args = append(args, $3...)
+        args = append(args, $4...)
+        w := parser16Acfg(parser16lex).NewWhileAction(args...)
+        w.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = w
+    }
+    | PARSER16_TOK_LOCAL lparams sequence
+    {
+        xtracer.Trace("parser.p_action_local_params_lcb_action_rcb ENTER (complexact)")
+        bounds := $2
+        lsyms := make([]Node, len(bounds))
+        subst := make(map[string]string)
+        for i, s := range bounds {
+            lsyms[i] = PrefixNode(s, "loc:")
+            subst[NodeRep(s)] = NodeRep(lsyms[i])
+        }
+        action := SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        args := append(lsyms, action)
+        la := parser16Acfg(parser16lex).NewLocalAction("parser.local_action_rule", args...)
+        la.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = la
+    }
+    | PARSER16_TOK_LET eqns sequence
+    {
+        xtracer.Trace("parser.p_action_let_eqns_lcb_action_rcb ENTER (complexact)")
+        args := append($2, $3)
+        la := parser16Acfg(parser16lex).NewLetAction(args...)
+        la.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = la
+    }
+    ;
+
+somefmla:
+    fmla
+    {
+        xtracer.Trace("parser.p_somefmla_fmla ENTER (somefmla)")
+        $$ = $1
+    }
+    | fmla PARSER16_TOK_ASSIGN fmla
+    {
+        xtracer.Trace("parser.p_somefmla_fmla_assign_fmla ENTER (somefmla)")
+        lhs := $1
+        lsym := PrefixNode(lhs, "loc:")
+        if a, ok := lsym.(*Atom); ok {
+            if orig, ok2 := lhs.(*Atom); ok2 {
+                a.ASort = orig.ASort
+            }
+        }
+        subst := map[string]string{NodeRep(lhs): NodeRep(lsym)}
+        fmla := parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol("*>", nil), $3, lhs)
+        fmla.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        fmla2 := SubstPrefixAtomsAst(fmla, subst, nil, nil, nil)
+        some := parser16Acfg(parser16lex).NewSome([]Node{lsym}, fmla2)
+        some.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        $$ = some
+    }
+    | PARSER16_TOK_SOME bounds fmla
+    {
+        xtracer.Trace("parser.p_somefmla_some_bounds_fmla ENTER (somefmla)")
+        bounds := $2
+        lsyms := make([]Node, len(bounds))
+        subst := make(map[string]string)
+        for i, s := range bounds {
+            lsyms[i] = PrefixNode(s, "loc:")
+            subst[NodeRep(s)] = NodeRep(lsyms[i])
+        }
+        fmla := SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        some := parser16Acfg(parser16lex).NewSome(lsyms, fmla)
+        some.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = some
+    }
+    | PARSER16_TOK_SOME bounds fmla PARSER16_TOK_MINIMIZING term
+    {
+        xtracer.Trace("parser.p_somefmla_some_bounds_fmla_minimizing_term ENTER (somefmla)")
+        bounds := $2
+        lsyms := make([]Node, len(bounds))
+        subst := make(map[string]string)
+        for i, s := range bounds {
+            lsyms[i] = PrefixNode(s, "loc:")
+            subst[NodeRep(s)] = NodeRep(lsyms[i])
+        }
+        fmla := SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        index := SubstPrefixAtomsAst($5, subst, nil, nil, nil)
+        smin := parser16Acfg(parser16lex).NewSomeMin(lsyms, fmla, index)
+        smin.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = smin
+    }
+    | PARSER16_TOK_SOME bounds fmla PARSER16_TOK_MAXIMIZING term
+    {
+        xtracer.Trace("parser.p_somefmla_some_bounds_fmla_maximizing_term ENTER (somefmla)")
+        bounds := $2
+        lsyms := make([]Node, len(bounds))
+        subst := make(map[string]string)
+        for i, s := range bounds {
+            lsyms[i] = PrefixNode(s, "loc:")
+            subst[NodeRep(s)] = NodeRep(lsyms[i])
+        }
+        fmla := SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        index := SubstPrefixAtomsAst($5, subst, nil, nil, nil)
+        smax := parser16Acfg(parser16lex).NewSomeMax(lsyms, fmla, index)
+        smax.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = smax
+    }
+    ;
+
+bounds:
+    params PARSER16_TOK_DOT
+    {
+        xtracer.Trace("parser.p_bounds_params_dot ENTER (bounds)")
+        $$ = $1
+    }
+    | PARSER16_TOK_LPAREN lparams PARSER16_TOK_RPAREN
+    {
+        xtracer.Trace("parser.p_bounds_lparen_lparams_rparen ENTER (bounds)")
+        $$ = $2
+    }
+    ;
+
+invariants:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_invariants ENTER (invariants)")
+        $$ = nil
+    }
+    | invariants PARSER16_TOK_INVARIANT labeledfmla
+    {
+        xtracer.Trace("parser.p_invariant_invariant_fmla ENTER (invariants)")
+        inv := checkNonTemporal($3)
+        a := parser16Acfg(parser16lex).NewAssertAction(inv)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        $$ = append($1, a)
+    }
+    | invariants PARSER16_TOK_INVARIANT labeledfmla PARSER16_TOK_PROOF proofstep
+    {
+        xtracer.Trace("parser.p_invariant_invariant_fmla_proof ENTER (invariants)")
+        inv := checkNonTemporal($3)
+        a := parser16Acfg(parser16lex).NewAssertAction(inv, $5)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        $$ = append($1, a)
+    }
+    ;
+
+decreases:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_decreases ENTER (decreases)")
+        $$ = nil
+    }
+    | PARSER16_TOK_DECREASES fmla
+    {
+        xtracer.Trace("parser.p_decreases_decreases_fmla ENTER (decreases)")
+        fmla := checkNonTemporal($2)
+        rank := parser16Acfg(parser16lex).NewRanking(fmla)
+        rank.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = []Node{rank}
+    }
+    ;
+
+eqn:
+    SYMBOLx PARSER16_TOK_EQ SYMBOLx
+    {
+        xtracer.Trace("parser.p_eqn_SYMBOL_EQ_SYMBOL ENTER (eqn)")
+        $$ = parser16Acfg(parser16lex).NewAtom("=", parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol($1, nil)), parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol($3, nil)))
+    }
+    ;
+
+eqns:
+    eqn
+    {
+        xtracer.Trace("parser.p_eqns_eqn ENTER (eqns)")
+        $$ = []Node{$1}
+    }
+    | eqns PARSER16_TOK_COMMA eqn
+    {
+        xtracer.Trace("parser.p_eqns_eqns_comma_eqn ENTER (eqns)")
+        $$ = append($1, $3)
+    }
+    ;
+
+lit:
+    atom
+    {
+        xtracer.Trace("parser.p_lit_atom ENTER (lit)")
+        $$ = parser16Acfg(parser16lex).NewLiteral(1, $1)
+        $$.SetLineno(nodeLineno($1))
+    }
+    | SYMBOLx PARSER16_TOK_EQ SYMBOLx
+    {
+        xtracer.Trace("parser.p_lit_term_eq_term ENTER (lit)")
+        a := parser16Acfg(parser16lex).NewAtom("=", parser16Acfg(parser16lex).NewAtom($1), parser16Acfg(parser16lex).NewAtom($3))
+        $$ = parser16Acfg(parser16lex).NewLiteral(1, a)
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+    }
+    | SYMBOLx PARSER16_TOK_TILDAEQ SYMBOLx
+    {
+        xtracer.Trace("parser.p_lit_term_tildaeq_term ENTER (lit)")
+        a := parser16Acfg(parser16lex).NewAtom("=", parser16Acfg(parser16lex).NewAtom($1), parser16Acfg(parser16lex).NewAtom($3))
+        $$ = parser16Acfg(parser16lex).NewLiteral(0, a)
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+    }
+    | PARSER16_TOK_TILDA lit
+    {
+        xtracer.Trace("parser.p_lit_tilda_atom ENTER (lit)")
+        if lit, ok := $2.(*Literal); ok {
+            $$ = parser16Acfg(parser16lex).NewLiteral(1 - lit.Polarity, lit.Atom)
+        } else {
+            $$ = parser16Acfg(parser16lex).NewLiteral(0, $2)
+        }
+        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
     }
     ;
 
@@ -581,7 +1172,7 @@ optargs:
         xtracer.Trace("parser.p_optargs ENTER (optargs)")
         $$ = nil
     }
-    | PARSER16_TOK_LPAREN tterms PARSER16_TOK_RPAREN
+    | PARSER16_TOK_LPAREN lparams PARSER16_TOK_RPAREN
     {
         xtracer.Trace("parser.p_optargs_params ENTER (optargs)")
         $$ = $2
@@ -594,7 +1185,7 @@ optreturns:
         xtracer.Trace("parser.p_optreturns ENTER (optreturns)")
         $$ = nil
     }
-    | PARSER16_TOK_RETURNS PARSER16_TOK_LPAREN tterms PARSER16_TOK_RPAREN
+    | PARSER16_TOK_RETURNS PARSER16_TOK_LPAREN lparams PARSER16_TOK_RPAREN
     {
         xtracer.Trace("parser.p_optreturns_tsyms ENTER (optreturns)")
         $$ = $3
@@ -611,6 +1202,78 @@ optactualreturns:
     {
         xtracer.Trace("parser.p_optactualreturns_callatoms_assign ENTER (optactualreturns)")
         $$ = $1
+    }
+    ;
+
+lparam:
+    SYMBOLx PARSER16_TOK_COLON atype
+    {
+        xtracer.Trace("parser.p_lparam_variable_colon_symbol ENTER (lparam)")
+        a := parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol($1, nil))
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        a.ASort = $3
+        $$ = a
+    }
+    ;
+
+lparams:
+    lparam
+    {
+        xtracer.Trace("parser.p_lparams_lparam ENTER (lparams)")
+        $$ = []Node{$1}
+    }
+    | lparams PARSER16_TOK_COMMA lparam
+    {
+        xtracer.Trace("parser.p_lparams_lparams_comma_lparam ENTER (lparams)")
+        $$ = append($1, $3)
+    }
+    ;
+
+param:
+    SYMBOLx PARSER16_TOK_COLON SYMBOLx
+    {
+        xtracer.Trace("parser.p_param_term_colon_symbol ENTER (param)")
+        a := parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol($1, nil))
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+        a.ASort = parser16Acfg(parser16lex).NewSymbol($3, nil)
+        $$ = a
+    }
+    ;
+
+params:
+    param
+    {
+        xtracer.Trace("parser.p_params_param ENTER (params)")
+        $$ = []Node{$1}
+    }
+    | params PARSER16_TOK_COMMA param
+    {
+        xtracer.Trace("parser.p_params_params_comma_param ENTER (params)")
+        $$ = append($1, $3)
+    }
+    ;
+
+optinit:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_optinit ENTER (optinit)")
+        $$ = nil
+    }
+    | PARSER16_TOK_ASSIGN fmla
+    {
+        xtracer.Trace("parser.p_optinit_assign_fmla ENTER (optinit)")
+        $$ = checkNonTemporal($2)
+    }
+    ;
+
+termtuple:
+    PARSER16_TOK_LPAREN term PARSER16_TOK_COMMA terms PARSER16_TOK_RPAREN
+    {
+        xtracer.Trace("parser.p_termtuple_lp_term_comma_terms_rp ENTER (termtuple)")
+        args := append([]Node{$2}, $4...)
+        t := parser16Acfg(parser16lex).NewTuple(args...)
+        t.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = t
     }
     ;
 
@@ -1093,10 +1756,73 @@ relop:
     ;
 
 assert_rhs:
+    PARSER16_TOK_LCB requires modifies ensures PARSER16_TOK_RCB
+    {
+        xtracer.Trace("parser.p_assert_rhs_lcb_requires_modifies_ensures_rcb ENTER (assert_rhs)")
+        $$ = parser16Acfg(parser16lex).NewRME($2, $3, $4)
+    }
+    |
     fmla
     {
         xtracer.Trace("parser.p_assert_rhs_fmla ENTER (assert_rhs)")
         $$ = checkNonTemporal($1)
+    }
+    ;
+
+requires:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_requires ENTER (requires)")
+        $$ = parser16Acfg(parser16lex).NewAnd()
+    }
+    | PARSER16_TOK_REQUIRES fmla
+    {
+        xtracer.Trace("parser.p_requires_requires_fmla ENTER (requires)")
+        $$ = checkNonTemporal($2)
+    }
+    ;
+
+modifies:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_modifies ENTER (modifies)")
+        $$ = nil
+    }
+    | PARSER16_TOK_MODIFIES PARSER16_TOK_LCB PARSER16_TOK_RCB
+    {
+        xtracer.Trace("parser.p_modifies_modifies_lcb_rcb ENTER (modifies)")
+        $$ = []Node{}
+    }
+    | PARSER16_TOK_MODIFIES PARSER16_TOK_TIMES
+    {
+        xtracer.Trace("parser.p_modifies_modofies_times ENTER (modifies)")
+        $$ = nil
+    }
+    | PARSER16_TOK_MODIFIES atoms
+    {
+        xtracer.Trace("parser.p_modifies_modifies_atoms ENTER (modifies)")
+        $$ = $2
+    }
+    ;
+
+ensures:
+    PARSER16_TOK_ENSURES fmla
+    {
+        xtracer.Trace("parser.p_ensures_ensures_fmla ENTER (ensures)")
+        $$ = checkNonTemporal($2)
+    }
+    ;
+
+atoms:
+    atom
+    {
+        xtracer.Trace("parser.p_atoms_atom ENTER (atoms)")
+        $$ = []Node{$1}
+    }
+    | atoms PARSER16_TOK_COMMA atom
+    {
+        xtracer.Trace("parser.p_atoms_atoms_atom ENTER (atoms)")
+        $$ = append($1, $3)
     }
     ;
 
