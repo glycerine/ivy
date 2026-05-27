@@ -87,6 +87,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_COLON
 	case DOT:
 		return PARSER16_TOK_DOT
+	case DOTS:
+		return PARSER16_TOK_DOTS
 	case DOTDOTDOT:
 		return PARSER16_TOK_DOTDOTDOT
 	case PLUS:
@@ -145,6 +147,10 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_GLOBALLY
 	case EVENTUALLY:
 		return PARSER16_TOK_EVENTUALLY
+	case ASSUME:
+		return PARSER16_TOK_ASSUME
+	case RETURNS:
+		return PARSER16_TOK_RETURNS
 	case TYPE:
 		return PARSER16_TOK_TYPE
 	case OBJECT:
@@ -159,6 +165,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_RELATION
 	case DERIVED:
 		return PARSER16_TOK_DERIVED
+	case STRUCT:
+		return PARSER16_TOK_STRUCT
 	case AXIOM:
 		return PARSER16_TOK_AXIOM
 	case PROPERTY:
@@ -183,6 +191,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_ACTION
 	case CALL:
 		return PARSER16_TOK_CALL
+	case ENSURES:
+		return PARSER16_TOK_ENSURES
 	case IMPORT:
 		return PARSER16_TOK_IMPORT
 	case EXPORT:

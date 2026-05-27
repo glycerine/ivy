@@ -316,6 +316,170 @@ relation p(X:t)
 	}
 }
 
+func TestParseV16TypeDefinitions(t *testing.T) {
+	src := `type color = {red, green}
+type idx = {0 .. 3}
+type pair = struct { first:color, second:idx }`
+	result, err := Parse(src, Version{1, 6}, WithFilename("types16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 type definitions: %v", err)
+	}
+	if got := countDeclsOf[*TypeDecl](result.Decls); got != 3 {
+		t.Fatalf("TypeDecl count = %d, want 3", got)
+	}
+	if got := countDeclsOf[*InterpretDecl](result.Decls); got != 1 {
+		t.Fatalf("range type InterpretDecl count = %d, want 1", got)
+	}
+	var sawEnum, sawStruct bool
+	for _, decl := range result.Decls {
+		td, ok := decl.(*TypeDecl)
+		if !ok || len(td.Args()) == 0 {
+			continue
+		}
+		def, ok := td.Args()[0].(*TypeDef)
+		if !ok {
+			continue
+		}
+		switch def.Value.(type) {
+		case *EnumeratedSort:
+			sawEnum = true
+		case *StructSort:
+			sawStruct = true
+		}
+	}
+	if !sawEnum {
+		t.Fatalf("enumerated type definition not found")
+	}
+	if !sawStruct {
+		t.Fatalf("struct type definition not found")
+	}
+}
+
+func TestParseV16ActionReturnsAndCoreStatements(t *testing.T) {
+	src := `type t
+individual x:t
+action read returns (out:t) = {
+    assume true;
+    out := x;
+    assert out = x;
+    ensures out = x
+}
+action havoc = {
+    x := *
+}
+action branch = {
+    if true {
+        call read
+    } else {
+        call havoc
+    }
+}`
+	result, err := Parse(src, Version{1, 6}, WithFilename("actions16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 action syntax: %v", err)
+	}
+	if got := countDeclsOf[*ActionDecl](result.Decls); got != 3 {
+		t.Fatalf("ActionDecl count = %d, want 3", got)
+	}
+	read := firstActionDefNamed(t, result.Decls, "read")
+	if got := len(read.FormalReturns); got != 1 {
+		t.Fatalf("read formal returns = %d, want 1", got)
+	}
+	seq, ok := read.Body.(*Sequence)
+	if !ok {
+		t.Fatalf("read body = %T, want *Sequence", read.Body)
+	}
+	if got := len(seq.Stmts); got != 4 {
+		t.Fatalf("read body statement count = %d, want 4", got)
+	}
+	if _, ok := seq.Stmts[0].(*AssumeAction); !ok {
+		t.Fatalf("read stmt[0] = %T, want *AssumeAction", seq.Stmts[0])
+	}
+	if _, ok := seq.Stmts[2].(*AssertAction); !ok {
+		t.Fatalf("read stmt[2] = %T, want *AssertAction", seq.Stmts[2])
+	}
+	if _, ok := seq.Stmts[3].(*EnsuresAction); !ok {
+		t.Fatalf("read stmt[3] = %T, want *EnsuresAction", seq.Stmts[3])
+	}
+	havoc := firstActionDefNamed(t, result.Decls, "havoc")
+	if _, ok := havoc.Body.(*HavocAction); !ok {
+		t.Fatalf("havoc body = %T, want *HavocAction", havoc.Body)
+	}
+	branch := firstActionDefNamed(t, result.Decls, "branch")
+	if _, ok := branch.Body.(*IfAction); !ok {
+		t.Fatalf("branch body = %T, want *IfAction", branch.Body)
+	}
+}
+
+func TestParseV16AdvancedActionSyntax(t *testing.T) {
+	src := `type t
+individual a:t
+relation p(X:t)
+action helper(x:t)
+action advanced = {
+    var z:t := a;
+    local w:t {
+        w := z
+    };
+    if * {
+        call helper
+    } else {
+        helper(a)
+    };
+    if some x:t . p(x) {
+        instantiate witness
+    };
+    while p(z) invariant p(z) {
+        z := a
+    };
+    let m = n {
+        helper(a)
+    };
+}`
+	result, err := Parse(src, Version{1, 6}, WithFilename("advanced_actions16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 advanced action syntax: %v", err)
+	}
+	advanced := firstActionDefNamed(t, result.Decls, "advanced")
+	seq, ok := advanced.Body.(*Sequence)
+	if !ok {
+		t.Fatalf("advanced body = %T, want *Sequence", advanced.Body)
+	}
+	want := []struct {
+		name string
+		ok   func(Node) bool
+	}{
+		{"local lowered from var", func(n Node) bool { _, ok := n.(*LocalAction); return ok }},
+		{"choice", func(n Node) bool { _, ok := n.(*ChoiceAction); return ok }},
+		{"if some", func(n Node) bool {
+			ifa, ok := n.(*IfAction)
+			if !ok {
+				return false
+			}
+			_, isSome := ifa.Cond.(*Some)
+			return isSome
+		}},
+		{"while", func(n Node) bool { _, ok := n.(*WhileAction); return ok }},
+		{"let", func(n Node) bool { _, ok := n.(*LetAction); return ok }},
+	}
+	if got := len(seq.Stmts); got != len(want) {
+		t.Fatalf("advanced body statement count = %d, want %d", got, len(want))
+	}
+	for i, w := range want {
+		if !w.ok(seq.Stmts[i]) {
+			t.Fatalf("advanced stmt[%d] = %T, want %s", i, seq.Stmts[i], w.name)
+		}
+	}
+	ifa := seq.Stmts[2].(*IfAction)
+	then, ok := ifa.Then.(*InstantiateAction)
+	if !ok {
+		t.Fatalf("if-some then = %T, want *InstantiateAction", ifa.Then)
+	}
+	if got := NodeRep(then.Args()[0]); got != "witness" {
+		t.Fatalf("instantiate target = %q, want witness", got)
+	}
+}
+
 func TestParseV16TopLevelAssert(t *testing.T) {
 	result, err := Parse("relation p\nrelation q\nassert p -> q", Version{1, 6}, WithFilename("assert16.ivy"))
 	if err != nil {
@@ -426,4 +590,25 @@ func firstArgAs[T Node](t *testing.T, node Node) T {
 		t.Fatalf("%T arg[0] = %T, want requested type", node, args[0])
 	}
 	return typed
+}
+
+func firstActionDefNamed(t *testing.T, decls []Node, name string) *ActionDef {
+	t.Helper()
+	for _, decl := range decls {
+		ad, ok := decl.(*ActionDecl)
+		if !ok {
+			continue
+		}
+		for _, arg := range ad.Args() {
+			def, ok := arg.(*ActionDef)
+			if !ok {
+				continue
+			}
+			if atom, ok := def.Name.(*Atom); ok && atom.Rep == name {
+				return def
+			}
+		}
+	}
+	t.Fatalf("no action %q found", name)
+	return nil
 }
