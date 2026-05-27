@@ -59,7 +59,7 @@ func parserDeclareUsing(cfg *AstConfig, top *ivyAccum, importer ImporterFunc, na
 				astCfg:   cfg,
 				modules:  mod.Modules,
 				included: mod.Included,
-				objects:  make(map[string]*ivyAccum),
+				objects:  make(map[string]interface{}),
 			}
 			if module.modules == nil {
 				module.modules = make(map[string]*ModuleDecl)

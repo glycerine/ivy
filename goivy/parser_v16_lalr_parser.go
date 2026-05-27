@@ -223,6 +223,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_INIT
 	case INCLUDE:
 		return PARSER16_TOK_INCLUDE
+	case USING:
+		return PARSER16_TOK_USING
 	case ACTION:
 		return PARSER16_TOK_ACTION
 	case METHOD:
