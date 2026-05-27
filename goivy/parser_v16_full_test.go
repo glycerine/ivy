@@ -66,17 +66,65 @@ func TestParseV16AndV17LabelsAcceptPythonSymbolSubscripts(t *testing.T) {
 	}
 }
 
+func TestParseV16UsingImportsWithPrefix(t *testing.T) {
+	version := Version{1, 6}
+	var calls []string
+	var importer ImporterFunc
+	importer = func(name string, parent *ivyAccum) (*ParseResult, error) {
+		calls = append(calls, name)
+		if name != "util" {
+			t.Fatalf("unexpected import %q", name)
+		}
+		return Parse("type t\nvar x:t\naction ping = {}", version,
+			WithImporter(importer),
+			WithParentAccum(parent),
+			WithNested(),
+			WithAstConfig(parent.astCfg),
+			WithFilename("util.ivy"),
+		)
+	}
+
+	result, err := Parse("using util", version, WithImporter(importer), WithFilename("main_using16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 using: %v", err)
+	}
+	if len(calls) != 1 || calls[0] != "util" {
+		t.Fatalf("using importer calls = %v, want [util]", calls)
+	}
+	var sawVar, sawAction bool
+	for _, decl := range result.Decls {
+		switch d := decl.(type) {
+		case *ConstantDecl:
+			if len(d.Args()) > 0 && NodeRep(d.Args()[0]) == "util.x" {
+				sawVar = true
+			}
+		case *ActionDecl:
+			if len(d.Args()) > 0 {
+				if def, ok := d.Args()[0].(*ActionDef); ok && NodeRep(def.Name) == "util.ping" {
+					sawAction = true
+				}
+			}
+		}
+	}
+	if !sawVar {
+		t.Fatalf("using did not declare prefixed util.x; decls = %v", result.Decls)
+	}
+	if !sawAction {
+		t.Fatalf("using did not declare prefixed util.ping; decls = %v", result.Decls)
+	}
+}
+
 func TestParseV16VarDeclaresConstant(t *testing.T) {
 	result, err := Parse("type t\nvar x:t", Version{1, 6}, WithFilename("var16.ivy"))
 	if err != nil {
 		t.Fatalf("Parse v1.6 var: %v", err)
 	}
 	decl := firstDeclOf[*ConstantDecl](t, result.Decls)
-	arg := firstArgAs[*Atom](t, decl)
-	if arg.Rep != "x" {
-		t.Fatalf("var declared %q, want x", arg.Rep)
+	arg := firstArg(t, decl)
+	if got := NodeRep(arg); got != "x" {
+		t.Fatalf("var declared %q, want x", got)
 	}
-	if got := arg.ASort.String(); got != "t" {
+	if got := nodeSortString(arg); got != "t" {
 		t.Fatalf("var sort = %q, want t", got)
 	}
 }
@@ -87,14 +135,14 @@ func TestParseV16FunctionDeclaration(t *testing.T) {
 		t.Fatalf("Parse v1.6 function: %v", err)
 	}
 	decl := firstDeclOf[*ConstantDecl](t, result.Decls)
-	arg := firstArgAs[*Atom](t, decl)
-	if arg.Rep != "f" {
-		t.Fatalf("function declared %q, want f", arg.Rep)
+	arg := firstArg(t, decl)
+	if got := NodeRep(arg); got != "f" {
+		t.Fatalf("function declared %q, want f", got)
 	}
-	if len(arg.Terms) != 1 {
-		t.Fatalf("function argument count = %d, want 1", len(arg.Terms))
+	if got := len(arg.Args()); got != 1 {
+		t.Fatalf("function argument count = %d, want 1", got)
 	}
-	if got := arg.ASort.String(); got != "t" {
+	if got := nodeSortString(arg); got != "t" {
 		t.Fatalf("function result sort = %q, want t", got)
 	}
 }
@@ -247,6 +295,26 @@ func TestParseV16PropertyNamedDecl(t *testing.T) {
 	arg := firstArgAs[*Atom](t, decl)
 	if arg.Rep != "witness" {
 		t.Fatalf("NamedDecl arg = %q, want witness", arg.Rep)
+	}
+}
+
+func TestParseV16PropertyNamedOperatorAndLabeledProof(t *testing.T) {
+	src := "property true named (X + Y) proof [pf] intro"
+	result, err := Parse(src, Version{1, 6}, WithFilename("named_operator_proof16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 named operator/labeled proof: %v", err)
+	}
+	named := firstDeclOf[*NamedDecl](t, result.Decls)
+	if got := NodeRep(firstArg(t, named)); got != "+" {
+		t.Fatalf("NamedDecl operator = %q, want +", got)
+	}
+	proof := firstDeclOf[*ProofDecl](t, result.Decls)
+	lf := firstArgAs[*LabeledFormula](t, proof)
+	if lf.LabelName() != "pf" {
+		t.Fatalf("proof label = %q, want pf", lf.LabelName())
+	}
+	if _, ok := lf.Formula.(*SchemaInstantiation); !ok {
+		t.Fatalf("proof formula = %T, want *SchemaInstantiation", lf.Formula)
 	}
 }
 
@@ -620,6 +688,18 @@ func TestParseV16PrivateCallAtom(t *testing.T) {
 	}
 }
 
+func TestParseV16ExportMethodCallAtom(t *testing.T) {
+	result, err := Parse("export method", Version{1, 6}, WithFilename("export_method16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 export method: %v", err)
+	}
+	decl := firstDeclOf[*ExportDecl](t, result.Decls)
+	def := firstArgAs[*ExportDef](t, decl)
+	if got := NodeRep(def.ExportedNode); got != "method" {
+		t.Fatalf("exported callatom = %q, want method", got)
+	}
+}
+
 func TestParseV16DefinitionDeclWithoutSyntheticLabel(t *testing.T) {
 	result, err := Parse("type t\ndefinition id(X:t):t = X", Version{1, 6}, WithFilename("definition16.ivy"))
 	if err != nil {
@@ -896,6 +976,31 @@ definition choice(X:t):t = some Y:t . p(Y) in Y else X,
 	}
 }
 
+func TestParseV16ActionNativeCrashAndOperatorTterm(t *testing.T) {
+	src := `type t
+var (X + Y):t
+action native = { <<< impure
+do_native(` + "`X`" + `)
+>>> }
+action crash = *`
+	result, err := Parse(src, Version{1, 6}, WithFilename("native_crash_tterm16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 native/crash/operator tterm: %v", err)
+	}
+	constant := firstDeclOf[*ConstantDecl](t, result.Decls)
+	if got := NodeRep(firstArg(t, constant)); got != "+" {
+		t.Fatalf("operator tterm rep = %q, want +", got)
+	}
+	native := firstActionDefNamed(t, result.Decls, "native")
+	if _, ok := native.Body.(*NativeAction); !ok {
+		t.Fatalf("native action body = %T, want *NativeAction", native.Body)
+	}
+	crash := firstActionDefNamed(t, result.Decls, "crash")
+	if _, ok := crash.Body.(*CrashAction); !ok {
+		t.Fatalf("crash action body = %T, want *CrashAction", crash.Body)
+	}
+}
+
 func firstLabeledFormulaInDecl[T Node](t *testing.T, decls []Node) *LabeledFormula {
 	t.Helper()
 	for _, decl := range decls {
@@ -927,6 +1032,15 @@ func firstDeclOf[T Node](t *testing.T, decls []Node) T {
 	return zero
 }
 
+func firstArg(t *testing.T, node Node) Node {
+	t.Helper()
+	args := node.Args()
+	if len(args) == 0 {
+		t.Fatalf("%T has no args", node)
+	}
+	return args[0]
+}
+
 func firstArgAs[T Node](t *testing.T, node Node) T {
 	t.Helper()
 	args := node.Args()
@@ -938,6 +1052,23 @@ func firstArgAs[T Node](t *testing.T, node Node) T {
 		t.Fatalf("%T arg[0] = %T, want requested type", node, args[0])
 	}
 	return typed
+}
+
+func nodeSortString(node Node) string {
+	switch n := node.(type) {
+	case *Atom:
+		if n.ASort == nil {
+			return ""
+		}
+		return n.ASort.String()
+	case *App:
+		if n.ASort == nil {
+			return ""
+		}
+		return n.ASort.String()
+	default:
+		return ""
+	}
 }
 
 func firstActionDefNamed(t *testing.T, decls []Node, name string) *ActionDef {

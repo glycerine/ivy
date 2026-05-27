@@ -43,3 +43,40 @@ func parserDeclareInclude(cfg *AstConfig, top *ivyAccum, current *ivyAccum, impo
 	}
 	xtracer.Trace("parser.include EXIT name=%s decls=%d", name, modDeclCount)
 }
+
+func parserDeclareUsing(cfg *AstConfig, top *ivyAccum, importer ImporterFunc, name string, loc Location) {
+	xtracer.Trace("parser.using ENTER name=%s", name)
+	modDeclCount := 0
+	if importer != nil {
+		mod, err := importer(name, top)
+		if err != nil {
+			xtracer.Trace("parser.using ERROR name=%s err=%v", name, err)
+		} else if mod != nil {
+			modDeclCount = len(mod.Decls)
+			module := &ivyAccum{
+				parent:   top,
+				decls:    mod.Decls,
+				astCfg:   cfg,
+				modules:  mod.Modules,
+				included: mod.Included,
+				objects:  make(map[string]*ivyAccum),
+			}
+			if module.modules == nil {
+				module.modules = make(map[string]*ModuleDecl)
+			}
+			if module.included == nil {
+				module.included = make(map[string]bool)
+			}
+			pref := cfg.NewAtom(name)
+			pref.SetLineno(loc)
+			instMod(top, module, pref, map[string]string{}, nil, name, loc)
+			for k, v := range mod.Included {
+				top.included[k] = v
+			}
+			for k, v := range mod.Modules {
+				top.modules[k] = v
+			}
+		}
+	}
+	xtracer.Trace("parser.using EXIT name=%s decls=%d", name, modDeclCount)
+}
