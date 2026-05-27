@@ -12,17 +12,14 @@ import (
 // function assignment in a memoized closure: the Ivy program said
 // `f(X) := expr(X)` where the domain is too large to materialise into
 // an array, so we compute each entry on demand.
-//
-// M8 ships the runtime emission path: a Go struct with a memo map, an
-// env capture, and a `get(key)` method. The Z3-aware variant (gen/
-// test targets) lands in M9 alongside solver_emit.go.
 
 // makeThunk emits a Go thunk struct definition into the package's
 // thunks stream and returns the construction expression that
 // instantiates it. Mirrors ivy2cpp/thunk.go makeThunk, simplified:
 // we always use the file-scope memoization path so equivalent thunks
-// deduplicate, and we emit pure Go (no Z3) for M8 — M9 extends with
-// a toZ3 method.
+// deduplicate. Each thunk also emits a solver-side `toZ3Value` method
+// so large-domain function state can be constrained during action input
+// generation.
 //
 // vs are the loop variables (the domain of the new function value).
 // expr is the body that produces a range value when each v in vs is
@@ -165,12 +162,10 @@ func (g *Generator) emitThunkStruct(w *goWriter, name, domT, rangeT string, vs [
 // into Z3's C++ solver; the Go equivalent returns a goivy.Expr
 // constraint the caller can hand to goivy.Solver.
 //
-// Shape of the emitted Go method:
+// Shape of the emitted Go methods:
 //
-//	func (t *thunk0) ToZ3(args [N]*goivy.Const, res *goivy.Const) goivy.Expr {
-//	    // body with loop vars substituted by args[i] and env syms by t.env_*
-//	    return &goivy.Eq{T1: res, T2: <reified-body>}
-//	}
+//	func (t *thunk0) toZ3Value(args []goivy.Expr) goivy.Expr { ... }
+//	func (t *thunk0) ToZ3(args []goivy.Expr, res goivy.Expr) goivy.Expr { ... }
 //
 // For simple bodies that don't reference env state, the reified body
 // is a literal goivy.Expr tree built via reifyExprAsGoCode.
@@ -198,55 +193,53 @@ func (g *Generator) emitThunkToZ3(w *goWriter, name string, vs []*goivy.LogicVar
 			substituted = r
 		}
 	}
+	prevAliases := g.reifyExprCodeAlias
+	g.reifyExprCodeAlias = map[string]string{}
+	for i, sent := range argSentinels {
+		g.reifyExprCodeAlias[sent] = fmt.Sprintf("args[%d]", i)
+	}
+	for i, sent := range envSentinels {
+		sortCode, ok := g.reifySortAsGoCode(envSyms[i].CSort)
+		if !ok {
+			sortCode = "goivy.Boolean"
+		}
+		g.reifyExprCodeAlias[sent] = fmt.Sprintf("goivy.NewConst(%q, %s)", envSyms[i].Name, sortCode)
+	}
 	bodyCode, ok := g.reifyExprAsGoCode(substituted, nil)
+	g.reifyExprCodeAlias = prevAliases
 	if !ok {
 		// Body can't be reified — emit a stub that returns the
 		// vacuous `true` constraint so callers don't crash.
-		w.linef("// ToZ3 stub: thunk body not reifiable as runtime goivy.Expr.")
-		w.linef("func (t *%s) ToZ3(args []*goivy.Const, res *goivy.Const) goivy.Expr {", name)
-		w.line("\t_ = args; _ = res")
+		w.linef("// toZ3Value stub: thunk body not reifiable as runtime goivy.Expr.")
+		w.linef("func (t *%s) toZ3Value(args []goivy.Expr) goivy.Expr {", name)
+		w.line("\t_ = t")
+		w.line("\t_ = args")
 		w.line(`	return goivy.NewConst("true", goivy.Boolean)`)
+		w.line("}")
+		w.blank()
+		w.linef("func (t *%s) ToZ3(args []goivy.Expr, res goivy.Expr) goivy.Expr {", name)
+		w.line("\treturn &goivy.Eq{T1: res, T2: t.toZ3Value(args)}")
 		w.line("}")
 		w.blank()
 		return
 	}
-	// Sentinel-to-runtime-expr rewrites: argSentinels → args[i],
-	// envSentinels → a `t.env_<name>`-wrapped Const literal.
-	for i, sent := range argSentinels {
-		ident := goIdent(sent)
-		repl := fmt.Sprintf("args[%d]", i)
-		bodyCode = stringsReplaceAll(bodyCode, ident, repl)
-	}
-	for i, sent := range envSentinels {
-		ident := goIdent(sent)
-		// At runtime build a Const carrying the captured value's name —
-		// the solver matches by name so this is equivalent to the
-		// state symbol's identity.
-		repl := fmt.Sprintf("goivy.NewConst(%q, %s)",
-			envSyms[i].Name,
-			"goivy.Boolean") // sort placeholder; the per-env-sym sort would be lazily threaded; keep Boolean as a typed-placeholder for plain references
-		bodyCode = stringsReplaceAll(bodyCode, ident, repl)
-	}
-	w.linef("// ToZ3 emits the constraint `res == <body>` for the solver.")
-	w.linef("func (t *%s) ToZ3(args []*goivy.Const, res *goivy.Const) goivy.Expr {", name)
+	w.linef("// toZ3Value emits the thunk body as a solver expression.")
+	w.linef("func (t *%s) toZ3Value(args []goivy.Expr) goivy.Expr {", name)
 	w.line("\t_ = t")
 	w.line("\t_ = args")
-	w.linef("\treturn &goivy.Eq{T1: res, T2: %s}", bodyCode)
+	w.linef("\treturn %s", bodyCode)
+	w.line("}")
+	w.blank()
+	w.linef("// ToZ3 emits the constraint `res == <body>` for the solver.")
+	w.linef("func (t *%s) ToZ3(args []goivy.Expr, res goivy.Expr) goivy.Expr {", name)
+	w.line("\treturn &goivy.Eq{T1: res, T2: t.toZ3Value(args)}")
 	w.line("}")
 	w.blank()
 }
 
-// stringsReplaceAll is a tiny local alias so the substitution loop
-// stays readable. Avoids pulling `strings` into a per-call import.
-func stringsReplaceAll(s, old, new string) string {
-	return strings.ReplaceAll(s, old, new)
-}
-
 // emitThunkBody substitutes references to loop variables (vs) by key
 // tuple field accesses (k.Arg0, k.Arg1, …) and references to env
-// symbols by t.env_<name>, then emits the expression. For M8 we keep
-// this simple — the substitution path uses goivy.Substitute when the
-// loop var has a unique field index.
+// symbols by t.env_<name>, then emits the expression.
 func (g *Generator) emitThunkBody(vs []*goivy.LogicVariable, expr goivy.Expr, envSyms []*goivy.Const) (string, error) {
 	subs := map[goivy.NodeKey]goivy.Expr{}
 	for i, v := range vs {

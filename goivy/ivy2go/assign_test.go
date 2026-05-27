@@ -62,8 +62,11 @@ relation slot(N: node)
 	if !strings.Contains(got, "s.Slot = map[Node]bool{}") {
 		t.Errorf("thunk fallback should clear the map, got:\n%s", got)
 	}
-	if !strings.Contains(got, "s.__thunk_Slot = (newthunk_0()).get") {
-		t.Errorf("thunk fallback should install thunk on State slot, got:\n%s", got)
+	if !strings.Contains(got, "s.__thunk_Slot = newthunk_0()") {
+		t.Errorf("thunk fallback should install solver-aware thunk object on State slot, got:\n%s", got)
+	}
+	if strings.Contains(got, "s.__thunk_Slot = (newthunk_0()).get") {
+		t.Errorf("thunk slot should retain the object so solver facts can call toZ3Value, got:\n%s", got)
 	}
 }
 
@@ -79,8 +82,10 @@ relation slot(N: node)
 		t.Fatalf("Generate: %v", err)
 	}
 	state := out.Files["state.go"]
-	if !strings.Contains(state, "__thunk_Slot func(Node) bool") {
-		t.Errorf("hash-thunk symbol should declare __thunk_Slot field, got:\n%s", state)
+	if !strings.Contains(state, "__thunk_Slot interface {") ||
+		!strings.Contains(state, "get(Node) bool") ||
+		!strings.Contains(state, "toZ3Value([]goivy.Expr) goivy.Expr") {
+		t.Errorf("hash-thunk symbol should retain a solver-aware thunk object, got:\n%s", state)
 	}
 	if !strings.Contains(state, "func (s *State) getSlot(k Node) bool {") {
 		t.Errorf("hash-thunk symbol should emit getSlot helper, got:\n%s", state)
@@ -90,8 +95,8 @@ relation slot(N: node)
 	if !strings.Contains(state, "if s.__thunk_Slot != nil") {
 		t.Errorf("getter should check __thunk_Slot, got:\n%s", state)
 	}
-	if !strings.Contains(state, "return s.__thunk_Slot(k)") {
-		t.Errorf("getter should call __thunk_Slot(k), got:\n%s", state)
+	if !strings.Contains(state, "return s.__thunk_Slot.get(k)") {
+		t.Errorf("getter should call __thunk_Slot.get(k), got:\n%s", state)
 	}
 }
 

@@ -9,26 +9,13 @@ import (
 
 // solver_emit.go mirrors ivy2cpp/solver_emit.go. The C++ file emits
 // `add(__to_solver(...))` calls per state cell plus forall-quantified
-// thunks for large functions; ivy2go's equivalent path goes through
-// goivy.Translator and Solver.Assert.
-//
-// M9 ships a skeleton: per-state-symbol assertion emission that
-// generates a comment marker. The real solver assertions land in
-// later increments as fixtures exercise them.
+// facts for large functions; ivy2go's equivalent path builds goivy.Expr
+// trees and hands them to goivy.Solver.
 
 // emitSetSolver writes pushStateIntoSolver and the per-action
 // buildPrecondition helpers. Together they prepare a goivy.Solver
 // with the current State as facts and an action-specific Clauses
 // describing the inputs whose values we want the solver to choose.
-//
-// OPEN 055 / 055.1 / 055.2 progression:
-//
-//   - 055   wired the Solver round-trip with a `true` sanity check.
-//   - 055.1 added GetModelClauses + per-input value extraction.
-//   - 055.2 (this) emits a per-action precondition helper that
-//     asserts state-symbol facts for every scalar bool state symbol
-//     into the returned Clauses. Function-sorted symbols + the full
-//     action.Pre derivation are the next sub-step (OPEN 055.3).
 func (g *Generator) emitSetSolver(w *goWriter) {
 	if !g.usesZ3() {
 		return
@@ -47,14 +34,11 @@ func (g *Generator) emitSetSolver(w *goWriter) {
 	w.blank()
 	g.Ctx.AddImport("runtime", "fmt", "")
 
-	// Shared helper that builds a Clauses asserting per-symbol state
-	// facts. OPEN 055.3 extends 055.2 to cover function-sorted
-	// (array-storage) state symbols via per-cell facts.
 	w.line("// stateFactsAsClauses builds a *goivy.Clauses asserting that")
-	w.line("// each scalar and array-storage state symbol matches its")
-	w.line("// current value. Map-storage (large-domain) symbols are")
-	w.line("// skipped because their domain is unbounded; the thunk-slot")
-	w.line("// wiring (OPEN 061.1) handles those at read time.")
+	w.line("// each scalar, array-storage, and map-storage state symbol")
+	w.line("// matches its current value. Function symbols are encoded with")
+	w.line("// real Apply terms so formula-side preconditions and state facts")
+	w.line("// refer to the same solver terms.")
 	w.linef("func stateFactsAsClauses(state *%s) *goivy.Clauses {", g.StateTypeName)
 	w.line("\tvar fmlas []goivy.Expr")
 	for _, sym := range g.stateSymbols() {
@@ -68,12 +52,23 @@ func (g *Generator) emitSetSolver(w *goWriter) {
 	w.line("// fresh bool-sorted goivy.Const named `name`. We return the")
 	w.line("// LHS-only literal when val is true and its negation when false,")
 	w.line("// matching the encoding goivy.Solver expects for bool facts.")
+	w.line("func mkBoolFactExpr(lhs goivy.Expr, val bool) goivy.Expr {")
+	w.line("\tif val {")
+	w.line("\t\treturn lhs")
+	w.line("\t}")
+	w.line("\treturn &goivy.LogicNot{Body: lhs}")
+	w.line("}")
+	w.blank()
 	w.line("func mkBoolFact(name string, val bool) goivy.Expr {")
 	w.line("\tsym := goivy.NewConst(name, goivy.Boolean)")
+	w.line("\treturn mkBoolFactExpr(sym, val)")
+	w.line("}")
+	w.blank()
+	w.line("func boolValueExpr(val bool) goivy.Expr {")
 	w.line("\tif val {")
-	w.line("\t\treturn sym")
+	w.line(`		return goivy.NewConst("true", goivy.Boolean)`)
 	w.line("\t}")
-	w.line("\treturn &goivy.LogicNot{Body: sym}")
+	w.line(`	return goivy.NewConst("false", goivy.Boolean)`)
 	w.line("}")
 	w.blank()
 
@@ -115,9 +110,8 @@ func (g *Generator) isLargeType(s goivy.Sort) bool {
 //   - bool scalar              → mkBoolFact
 //   - enum scalar              → Eq to extension constant
 //   - range/integer scalar     → Eq to integer-named constant
-//   - bool-valued array        → nested loops + per-cell mkBoolFact
-//   - enum-valued array        → nested loops + per-cell Eq
-//   - hash-thunk function      → skip (handled by thunk-slot at read time)
+//   - array-storage function   → nested loops + per-cell Apply facts
+//   - map-storage function     → forall Apply facts with thunk/map RHS
 func (g *Generator) emitStateSymbolFacts(w *goWriter, sym stateSymbol) {
 	exported := goExportedName(sym.Name)
 	if _, ok := sym.Sort.(*goivy.BooleanSort); ok {
@@ -149,39 +143,38 @@ func (g *Generator) emitStateSymbolFacts(w *goWriter, sym stateSymbol) {
 	domain := fs.Domain()
 	st := goFunctionStorageFor(g, domain, fs.Range())
 	if st.Kind != goStorageArray {
-		// Hash-thunk: skip (handled by thunk-slot wiring at read time).
+		g.emitMapStorageFunctionFacts(w, sym, fs, st)
 		return
+	}
+	g.emitArrayStorageFunctionFacts(w, sym, fs, st)
+}
+
+func (g *Generator) emitArrayStorageFunctionFacts(w *goWriter, sym stateSymbol, fs *goivy.LogicFunctionSort, st goFunctionStorage) {
+	ident, fnVar, sortVars, _, ok := g.emitFunctionFactPreamble(w, sym, fs)
+	if !ok {
+		return
+	}
+	exported := goExportedName(sym.Name)
+	for i, d := range st.Dims {
+		w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i)
+	}
+	argExprs := make([]string, len(st.Dims))
+	for i := range st.Dims {
+		argExprs[i] = g.domainConstFromGoValue(fs.Domain()[i], sortVars[i], fmt.Sprintf("__i%d", i))
+	}
+	w.linef("\t\t__lhs_%s := mustApply(%s, %s)", ident, fnVar, strings.Join(argExprs, ", "))
+	cellAcc := "state." + exported
+	for i := range st.Dims {
+		cellAcc += "[__i" + fmt.Sprintf("%d", i) + "]"
 	}
 	switch rng := fs.Range().(type) {
 	case *goivy.BooleanSort:
 		_ = rng
 		w.linef("\t// Per-cell facts for array-storage symbol %q.", sym.Name)
-		for i, d := range st.Dims {
-			w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i)
-		}
-		w.line("\t\tcellName := " + cellNameExpr(sym.Name, len(st.Dims)))
-		cellAcc := "state." + exported
-		for i := range st.Dims {
-			cellAcc += "[__i" + fmt.Sprintf("%d", i) + "]"
-		}
-		w.linef("\t\tfmlas = append(fmlas, mkBoolFact(cellName, %s))", cellAcc)
-		for range st.Dims {
-			w.line("\t}")
-		}
+		w.linef("\t\tfmlas = append(fmlas, mkBoolFactExpr(__lhs_%s, %s))", ident, cellAcc)
 	case *goivy.LogicEnumeratedSort:
 		w.linef("\t// Per-cell facts (enum-valued) for array-storage symbol %q.", sym.Name)
-		for i, d := range st.Dims {
-			w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i)
-		}
-		w.line("\t\tcellName := " + cellNameExpr(sym.Name, len(st.Dims)))
-		cellAcc := "state." + exported
-		for i := range st.Dims {
-			cellAcc += "[__i" + fmt.Sprintf("%d", i) + "]"
-		}
-		g.emitEnumScalarFactIndented(w, "cellName", cellAcc, rng, "\t\t")
-		for range st.Dims {
-			w.line("\t}")
-		}
+		g.emitEnumExprFactIndented(w, "__lhs_"+ident, cellAcc, rng, "\t\t")
 	default:
 		// Record-valued cells: per-cell per-field equalities so
 		// the solver sees `<field-accessor>(<f>(<cell-args>)) =
@@ -189,54 +182,179 @@ func (g *Generator) emitStateSymbolFacts(w *goWriter, sym stateSymbol) {
 		// references through the destructor accessors.
 		if recName, ok := g.destructorStructName(fs.Range()); ok {
 			w.linef("\t// Per-cell record-field facts for array-storage symbol %q.", sym.Name)
-			for i, d := range st.Dims {
-				w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i)
-			}
-			w.line("\t\tcellName := " + cellNameExpr(sym.Name, len(st.Dims)))
-			cellAcc := "state." + exported
-			for i := range st.Dims {
-				cellAcc += "[__i" + fmt.Sprintf("%d", i) + "]"
-			}
-			g.emitRecordCellFacts(w, "cellName", cellAcc, recName)
-			for range st.Dims {
-				w.line("\t}")
-			}
-			return
-		}
-		// Integer/range/uninterp-valued cells: pin via integer
-		// equality if the range has a known cardinality.
-		if card := goSortCard(g, fs.Range()); card > 0 {
+			g.emitRecordCellFacts(w, "__lhs_"+ident, cellAcc, recName)
+		} else if card := goSortCard(g, fs.Range()); card > 0 {
 			w.linef("\t// Per-cell facts (int-valued) for array-storage symbol %q.", sym.Name)
-			for i, d := range st.Dims {
-				w.linef("\tfor __i%d := 0; __i%d < %d; __i%d++ {", i, i, d, i)
-			}
-			w.line("\t\tcellName := " + cellNameExpr(sym.Name, len(st.Dims)))
-			cellAcc := "state." + exported
-			for i := range st.Dims {
-				cellAcc += "[__i" + fmt.Sprintf("%d", i) + "]"
-			}
-			g.emitIntScalarFactIndented(w, "cellName", cellAcc, fs.Range(), "\t\t")
-			for range st.Dims {
-				w.line("\t}")
-			}
+			g.emitIntExprFactIndented(w, "__lhs_"+ident, cellAcc, fs.Range(), "\t\t")
 		}
+	}
+	for range st.Dims {
+		w.line("\t}")
 	}
 }
 
+func (g *Generator) emitMapStorageFunctionFacts(w *goWriter, sym stateSymbol, fs *goivy.LogicFunctionSort, st goFunctionStorage) {
+	ident, fnVar, sortVars, rangeSortCode, ok := g.emitFunctionFactPreamble(w, sym, fs)
+	if !ok {
+		return
+	}
+	exported := goExportedName(sym.Name)
+	w.linef("\t// Quantified facts for map-storage symbol %q.", sym.Name)
+	vars := make([]string, len(fs.Domain()))
+	for i := range fs.Domain() {
+		vars[i] = fmt.Sprintf("__v%d_%s", i, ident)
+		w.linef("\t%s := mustNewVariable(%q, %s)", vars[i], fmt.Sprintf("X__%d", i), sortVars[i])
+	}
+	w.linef("\t__lhs_%s := mustApply(%s, %s)", ident, fnVar, strings.Join(vars, ", "))
+	w.linef("\tvar __rhs_%s goivy.Expr = %s", ident, g.zeroValueExprCode(fs.Range(), rangeSortCode))
+	w.linef("\tif state.__thunk_%s != nil {", exported)
+	w.linef("\t\t__rhs_%s = state.__thunk_%s.toZ3Value([]goivy.Expr{%s})", ident, exported, strings.Join(vars, ", "))
+	w.line("\t}")
+	keyVar := "__key_" + ident
+	valVar := "__val_" + ident
+	w.linef("\tfor %s, %s := range state.%s {", keyVar, valVar, exported)
+	condParts := make([]string, len(fs.Domain()))
+	for i, d := range fs.Domain() {
+		keyAccess := keyVar
+		if len(fs.Domain()) > 1 {
+			keyAccess = fmt.Sprintf("%s.Arg%d", keyVar, i)
+		}
+		w.linef("\t\t__keyExpr_%s_%d := %s", ident, i, g.domainConstFromGoValue(d, sortVars[i], keyAccess))
+		condParts[i] = fmt.Sprintf("__condPart_%s_%d", ident, i)
+		w.linef("\t\t%s := &goivy.Eq{T1: %s, T2: __keyExpr_%s_%d}", condParts[i], vars[i], ident, i)
+	}
+	condVar := "__cond_" + ident
+	if len(condParts) == 1 {
+		w.linef("\t\t%s := %s", condVar, condParts[0])
+	} else {
+		w.linef("\t\t%s := &goivy.LogicAnd{Terms: []goivy.Expr{%s}}", condVar, strings.Join(condParts, ", "))
+	}
+	g.emitValueExprBinding(w, "__valExpr_"+ident, valVar, fs.Range(), rangeSortCode, "\t\t")
+	w.linef("\t\t__rhs_%s = mustNewIte(%s, __valExpr_%s, __rhs_%s)", ident, condVar, ident, ident)
+	w.line("\t}")
+	w.linef("\tfmlas = append(fmlas, &goivy.ForAll{Variables: []*goivy.LogicVariable{%s}, Body: &goivy.Eq{T1: __lhs_%s, T2: __rhs_%s}})",
+		strings.Join(vars, ", "), ident, ident)
+	_ = st
+}
+
+func (g *Generator) emitFunctionFactPreamble(w *goWriter, sym stateSymbol, fs *goivy.LogicFunctionSort) (ident, fnVar string, sortVars []string, rangeSortCode string, ok bool) {
+	g.requireMustHelpers()
+	g.Ctx.AddImport("runtime", "strconv", "")
+	ident = goIdent(sym.Name)
+	sortVars = make([]string, len(fs.Domain()))
+	for i, d := range fs.Domain() {
+		sortCode, sortOK := g.reifySortAsGoCode(d)
+		if !sortOK {
+			return "", "", nil, "", false
+		}
+		sortVars[i] = fmt.Sprintf("__sort_%s_%d", ident, i)
+		w.linef("\t%s := %s", sortVars[i], sortCode)
+	}
+	rangeSortCode, ok = g.reifySortAsGoCode(fs.Range())
+	if !ok {
+		return "", "", nil, "", false
+	}
+	fnVar = "__fn_" + ident
+	sortArgs := append([]string{}, sortVars...)
+	sortArgs = append(sortArgs, rangeSortCode)
+	w.linef("\t%s := goivy.NewConst(%q, mustNewFunctionSort(%s))", fnVar, sym.Name, strings.Join(sortArgs, ", "))
+	return ident, fnVar, sortVars, rangeSortCode, true
+}
+
+func (g *Generator) domainConstFromGoValue(s goivy.Sort, sortVar, value string) string {
+	if es, ok := s.(*goivy.LogicEnumeratedSort); ok && !isNumericEnum(es) {
+		names := make([]string, len(es.Extension))
+		for i, ext := range es.Extension {
+			names[i] = fmt.Sprintf("%q", ext)
+		}
+		return fmt.Sprintf("goivy.NewConst([]string{%s}[int(%s)], %s)", strings.Join(names, ", "), value, sortVar)
+	}
+	return fmt.Sprintf("goivy.NewConst(strconv.Itoa(int(%s)), %s)", value, sortVar)
+}
+
+func (g *Generator) zeroValueExprCode(s goivy.Sort, sortCode string) string {
+	switch st := s.(type) {
+	case *goivy.BooleanSort:
+		_ = st
+		return `goivy.NewConst("false", goivy.Boolean)`
+	case *goivy.LogicEnumeratedSort:
+		if len(st.Extension) > 0 && !isNumericEnum(st) {
+			return fmt.Sprintf("goivy.NewConst(%q, %s)", st.Extension[0], sortCode)
+		}
+		return fmt.Sprintf("goivy.NewConst(%q, %s)", "0", sortCode)
+	default:
+		return fmt.Sprintf("goivy.NewConst(%q, %s)", "0", sortCode)
+	}
+}
+
+func (g *Generator) emitValueExprBinding(w *goWriter, name, value string, sort goivy.Sort, sortCode string, indent string) {
+	switch st := sort.(type) {
+	case *goivy.BooleanSort:
+		_ = st
+		w.linef("%s%s := boolValueExpr(%s)", indent, name, value)
+	case *goivy.LogicEnumeratedSort:
+		if !isNumericEnum(st) {
+			extLits := make([]string, len(st.Extension))
+			for i, ext := range st.Extension {
+				extLits[i] = fmt.Sprintf("%q", ext)
+			}
+			w.linef("%s__names_%s := []string{%s}", indent, name, strings.Join(extLits, ", "))
+			w.linef("%s%s := goivy.NewConst(__names_%s[int(%s)], %s)", indent, name, name, value, sortCode)
+			return
+		}
+		w.linef("%s%s := goivy.NewConst(strconv.Itoa(int(%s)), %s)", indent, name, value, sortCode)
+		g.Ctx.AddImport("runtime", "strconv", "")
+	default:
+		w.linef("%s%s := goivy.NewConst(strconv.Itoa(int(%s)), %s)", indent, name, value, sortCode)
+		g.Ctx.AddImport("runtime", "strconv", "")
+	}
+}
+
+func (g *Generator) emitEnumExprFactIndented(w *goWriter, lhsExpr, lhsAcc string, es *goivy.LogicEnumeratedSort, indent string) {
+	sortCode, ok := g.reifySortAsGoCode(es)
+	if !ok {
+		return
+	}
+	extLits := make([]string, len(es.Extension))
+	for i, ext := range es.Extension {
+		extLits[i] = fmt.Sprintf("%q", ext)
+	}
+	w.linef("%s{", indent)
+	w.linef("%s\textNames := []string{%s}", indent, strings.Join(extLits, ", "))
+	w.linef("%s\tsortDecl := %s", indent, sortCode)
+	w.linef("%s\tfmlas = append(fmlas, &goivy.Eq{T1: %s, T2: goivy.NewConst(extNames[int(%s)], sortDecl)})",
+		indent, lhsExpr, lhsAcc)
+	w.linef("%s}", indent)
+}
+
+func (g *Generator) emitIntExprFactIndented(w *goWriter, lhsExpr, lhsAcc string, s goivy.Sort, indent string) {
+	sortCode, ok := g.reifySortAsGoCode(s)
+	if !ok {
+		return
+	}
+	w.linef("%sfmlas = append(fmlas, &goivy.Eq{T1: %s, T2: goivy.NewConst(strconv.Itoa(int(%s)), %s)})",
+		indent, lhsExpr, lhsAcc, sortCode)
+	g.Ctx.AddImport("runtime", "strconv", "")
+}
+
 // emitRecordCellFacts is the per-cell-loop variant of
-// emitRecordScalarFacts. `nameExpr` is a Go expression that yields
-// the symbol's cell name (e.g. "f(<i0>,<i1>)") and `lhsAcc` indexes
-// into the cell's storage.
+// emitRecordScalarFacts. `nameExpr` is a Go expression for the
+// function application term, and `lhsAcc` indexes into the cell's storage.
 func (g *Generator) emitRecordCellFacts(w *goWriter, nameExpr, lhsAcc, recName string) {
 	for _, f := range g.destructorScalarFields(recName) {
 		field := goExportedName(memName(f.Name))
 		access := lhsAcc + "." + field
-		destrName := f.FullName
+		destrSort, ok := g.reifySortAsGoCode(f.DestructorC.CSort)
+		if !ok {
+			continue
+		}
+		destrVar := "__destr_" + goIdent(f.FullName)
+		w.linef("\t\t%s := goivy.NewConst(%q, %s)", destrVar, f.FullName, destrSort)
+		w.linef("\t\t__field_%s := mustApply(%s, %s)", goIdent(f.FullName), destrVar, nameExpr)
 		switch fs := f.Sort.(type) {
 		case *goivy.BooleanSort:
 			_ = fs
-			w.linef("\t\tfmlas = append(fmlas, mkBoolFact(%q+%s+%q, %s))",
-				destrName+"(", nameExpr, ")", access)
+			w.linef("\t\tfmlas = append(fmlas, mkBoolFactExpr(__field_%s, %s))", goIdent(f.FullName), access)
 		case *goivy.LogicEnumeratedSort:
 			sortCode, ok := g.reifySortAsGoCode(fs)
 			if !ok {
@@ -249,8 +367,8 @@ func (g *Generator) emitRecordCellFacts(w *goWriter, nameExpr, lhsAcc, recName s
 			w.line("\t\t{")
 			w.linef("\t\t\textNames := []string{%s}", strings.Join(extLits, ", "))
 			w.linef("\t\t\tsortDecl := %s", sortCode)
-			w.linef("\t\t\tfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%q+%s+%q, sortDecl), T2: goivy.NewConst(extNames[int(%s)], sortDecl)})",
-				destrName+"(", nameExpr, ")", access)
+			w.linef("\t\t\tfmlas = append(fmlas, &goivy.Eq{T1: __field_%s, T2: goivy.NewConst(extNames[int(%s)], sortDecl)})",
+				goIdent(f.FullName), access)
 			w.line("\t\t}")
 		default:
 			if goSortCard(g, f.Sort) > 0 {
@@ -258,8 +376,8 @@ func (g *Generator) emitRecordCellFacts(w *goWriter, nameExpr, lhsAcc, recName s
 				if !ok {
 					continue
 				}
-				w.linef("\t\tfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%q+%s+%q, %s), T2: goivy.NewConst(strconv.Itoa(int(%s)), %s)})",
-					destrName+"(", nameExpr, ")", sortCode, access, sortCode)
+				w.linef("\t\tfmlas = append(fmlas, &goivy.Eq{T1: __field_%s, T2: goivy.NewConst(strconv.Itoa(int(%s)), %s)})",
+					goIdent(f.FullName), access, sortCode)
 				g.Ctx.AddImport("runtime", "strconv", "")
 			}
 		}
@@ -315,27 +433,6 @@ func (g *Generator) emitEnumScalarFact(w *goWriter, name, lhsAcc string, es *goi
 	w.linef("\t}")
 }
 
-// emitEnumScalarFactIndented is the per-cell-loop variant: `name`
-// is a Go expression (not a string literal), and `lhsAcc` indexes
-// into the cell's storage. `indent` is the surrounding indent
-// (e.g. "\t\t" inside two open loops).
-func (g *Generator) emitEnumScalarFactIndented(w *goWriter, nameExpr, lhsAcc string, es *goivy.LogicEnumeratedSort, indent string) {
-	sortCode, ok := g.reifySortAsGoCode(es)
-	if !ok {
-		return
-	}
-	extLits := make([]string, len(es.Extension))
-	for i, ext := range es.Extension {
-		extLits[i] = fmt.Sprintf("%q", ext)
-	}
-	w.linef("%s{", indent)
-	w.linef("%s\textNames := []string{%s}", indent, strings.Join(extLits, ", "))
-	w.linef("%s\tsortDecl := %s", indent, sortCode)
-	w.linef("%s\tfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%s, sortDecl), T2: goivy.NewConst(extNames[int(%s)], sortDecl)})",
-		indent, nameExpr, lhsAcc)
-	w.linef("%s}", indent)
-}
-
 // emitIntScalarFact emits an `<name> = <integer>` equality for a
 // scalar state symbol of an integer-like sort (range / numeric enum
 // / uninterpreted with int interp). The runtime resolves the int via
@@ -350,36 +447,8 @@ func (g *Generator) emitIntScalarFact(w *goWriter, name, lhsAcc string, s goivy.
 	g.Ctx.AddImport("runtime", "strconv", "")
 }
 
-// emitIntScalarFactIndented is the per-cell variant.
-func (g *Generator) emitIntScalarFactIndented(w *goWriter, nameExpr, lhsAcc string, s goivy.Sort, indent string) {
-	sortCode, ok := g.reifySortAsGoCode(s)
-	if !ok {
-		return
-	}
-	w.linef("%sfmlas = append(fmlas, &goivy.Eq{T1: goivy.NewConst(%s, %s), T2: goivy.NewConst(strconv.Itoa(int(%s)), %s)})",
-		indent, nameExpr, sortCode, lhsAcc, sortCode)
-	g.Ctx.AddImport("runtime", "strconv", "")
-}
-
-// cellNameExpr returns a Go expression that builds the synthetic
-// per-cell symbol name like "link(0,1)" for `sym` over `arity` dims.
-func cellNameExpr(sym string, arity int) string {
-	var parts []string
-	parts = append(parts, fmt.Sprintf("%q", sym+"("))
-	for i := 0; i < arity; i++ {
-		if i > 0 {
-			parts = append(parts, `","`)
-		}
-		parts = append(parts, fmt.Sprintf("strconv.Itoa(__i%d)", i))
-	}
-	parts = append(parts, `")"`)
-	return strings.Join(parts, " + ")
-}
-
 // emitPreconditionHelpers writes the small helpers each per-action
 // buildPrecondition function leans on for reifying Pre.Fmlas.
-// strconv is added lazily by finalize() when cellNameExpr usage
-// in stateFactsAsClauses references it (array-storage symbols only).
 func (g *Generator) emitPreconditionHelpers(w *goWriter) {
 	w.line("// mkAnd builds the conjunction of fmlas, simplifying the")
 	w.line("// trivial 0/1-term cases.")

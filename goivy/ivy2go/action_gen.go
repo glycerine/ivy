@@ -881,6 +881,11 @@ func (g *Generator) reifyExprAsGoCode(e goivy.Expr, params []*goivy.Const) (stri
 				return fmt.Sprintf("__in%d", i), true
 			}
 		}
+		if g != nil && g.reifyExprCodeAlias != nil {
+			if code, ok := g.reifyExprCodeAlias[n.Name]; ok {
+				return code, true
+			}
+		}
 		sortCode, ok := g.reifySortAsGoCode(n.CSort)
 		if !ok {
 			return "", false

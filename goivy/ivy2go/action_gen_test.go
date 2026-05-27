@@ -81,7 +81,9 @@ func TestEmit_TestTarget_PushStateRunsRealIsSat(t *testing.T) {
 
 func TestEmit_TestTarget_ArrayStorageStateFacts(t *testing.T) {
 	// Relation over a small finite domain → array storage; cells
-	// should produce per-cell mkBoolFact assertions.
+	// should produce per-cell facts over the same Apply term shape
+	// the reified precondition uses, not synthetic Const names like
+	// "slot(0)".
 	mod := compileIvySource(t, `
 type idx = {0..3}
 relation slot(I: idx)
@@ -102,6 +104,60 @@ action set_slot = {
 	}
 	if !strings.Contains(runtime, "state.Slot[__i0]") {
 		t.Errorf("per-cell access should index state.Slot, got:\n%s", runtime)
+	}
+	for _, want := range []string{
+		`__fn_slot := goivy.NewConst("slot", mustNewFunctionSort(__sort_slot_0, goivy.Boolean))`,
+		`__lhs_slot := mustApply(__fn_slot, goivy.NewConst(strconv.Itoa(int(__i0)), __sort_slot_0))`,
+		`fmlas = append(fmlas, mkBoolFactExpr(__lhs_slot, state.Slot[__i0]))`,
+	} {
+		if !strings.Contains(runtime, want) {
+			t.Errorf("array-storage state facts should use Apply term %q, got:\n%s", want, runtime)
+		}
+	}
+	for _, bad := range []string{
+		`cellName := "slot("`,
+		`mkBoolFact(cellName`,
+	} {
+		if strings.Contains(runtime, bad) {
+			t.Errorf("array-storage state facts should not use synthetic cell consts %q:\n%s", bad, runtime)
+		}
+	}
+}
+
+func TestEmit_TestTarget_MapStorageStateFactsAreQuantified(t *testing.T) {
+	// Python ivy_to_cpp.py's emit_set uses a forall-quantified
+	// __to_solver bridge for large/hash-thunk functions. The Go port
+	// cannot skip these symbols: otherwise a precondition such as
+	// seen(n) sees an unconstrained function and can pick an illegal n.
+	mod := compileIvySource(t, `
+type node
+relation seen(N: node)
+action fire(n: node) = {
+	require seen(n);
+	seen(n) := false
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	runtime := out.Files["runtime.go"]
+	for _, want := range []string{
+		`// Quantified facts for map-storage symbol "seen".`,
+		`__fn_seen := goivy.NewConst("seen", mustNewFunctionSort(__sort_seen_0, goivy.Boolean))`,
+		`__lhs_seen := mustApply(__fn_seen, __v0_seen)`,
+		`if state.__thunk_Seen != nil {`,
+		`__rhs_seen = state.__thunk_Seen.toZ3Value([]goivy.Expr{__v0_seen})`,
+		`for __key_seen, __val_seen := range state.Seen {`,
+		`__rhs_seen = mustNewIte(__cond_seen, __valExpr_seen, __rhs_seen)`,
+		`fmlas = append(fmlas, &goivy.ForAll{Variables: []*goivy.LogicVariable{__v0_seen}, Body: &goivy.Eq{T1: __lhs_seen, T2: __rhs_seen}})`,
+	} {
+		if !strings.Contains(runtime, want) {
+			t.Errorf("map-storage state facts missing %q:\n%s", want, runtime)
+		}
+	}
+	if strings.Contains(runtime, "Hash-thunk: skip") {
+		t.Fatalf("map-storage state symbols must not be skipped:\n%s", runtime)
 	}
 }
 
@@ -671,6 +727,9 @@ action set_flag = {
 	}
 	if !strings.Contains(runtime, `mkBoolFact("flag", state.Flag)`) {
 		t.Errorf("scalar bool symbol should be in state facts, got:\n%s", runtime)
+	}
+	if !strings.Contains(runtime, "func mkBoolFactExpr(lhs goivy.Expr, val bool) goivy.Expr") {
+		t.Errorf("mkBoolFactExpr helper missing, got:\n%s", runtime)
 	}
 	if !strings.Contains(runtime, "func mkBoolFact(name string, val bool) goivy.Expr") {
 		t.Errorf("mkBoolFact helper missing, got:\n%s", runtime)

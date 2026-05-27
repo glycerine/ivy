@@ -51,6 +51,7 @@ type Generator struct {
 	// in place without ad-hoc additions to the struct.
 	thunkMemo          map[string]string
 	exprAliases        map[string]goivy.Expr
+	reifyExprCodeAlias map[string]string
 	currentReturns     []*goivy.Const
 	extRel             map[string]bool
 	nativeOnceMemo     map[string]bool

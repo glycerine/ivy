@@ -47,7 +47,7 @@ func (g *Generator) emitAssign(w *goWriter, a *goivy.LogicAssignAction) {
 // emitAssignLarge writes both:
 //
 //	s.<Sym> = map[K]V{}                  // clear explicit entries
-//	s.__thunk_<Sym> = newthunk_N(...).get // install thunk method-value
+//	s.__thunk_<Sym> = newthunk_N(...)     // install solver-aware thunk
 //
 // Subsequent reads through `s.get<Sym>(k)` consult the (now empty)
 // map first, then the thunk, then return zero.
@@ -82,7 +82,7 @@ func (g *Generator) emitAssignLarge(w *goWriter, a *goivy.LogicAssignAction, vs 
 	mapType := g.goType(entry.Sort)
 	_ = fs
 	w.linef("%s = %s{}", field, mapType)
-	w.linef("%s = (%s).get", thunkField, thunkExpr)
+	w.linef("%s = %s", thunkField, thunkExpr)
 }
 
 // emitAssignSimple ports ivy2cpp/assign.go emitAssignSimple.
@@ -321,4 +321,3 @@ func (g *Generator) tempKeyExpression(vs []*goivy.LogicVariable, tmpName string)
 	expr += "}]"
 	return expr
 }
-

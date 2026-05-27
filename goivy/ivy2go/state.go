@@ -26,9 +26,13 @@ func (g *Generator) emitStateStruct(w *goWriter) {
 	for _, sym := range g.stateSymbols() {
 		w.linef("%s %s", goExportedName(sym.Name), g.goType(sym.Sort))
 		if g.symbolNeedsThunkSlot(sym.Sort) {
+			g.Ctx.AddImport("state", g.Config.GoivyImportPath, "")
 			fs := sym.Sort.(*goivy.LogicFunctionSort)
 			keyT, valT := g.thunkSlotTypes(fs)
-			w.linef("__thunk_%s func(%s) %s", goExportedName(sym.Name), keyT, valT)
+			w.linef("__thunk_%s interface {", goExportedName(sym.Name))
+			w.linef("\tget(%s) %s", keyT, valT)
+			w.line("\ttoZ3Value([]goivy.Expr) goivy.Expr")
+			w.line("}")
 		}
 	}
 	// Progress counters — one int / int-array / map[K]int field per
@@ -59,7 +63,7 @@ func (g *Generator) emitStateGetters(w *goWriter) {
 		w.line("// read-side semantics of ivy2cpp's hash_thunk<K,V>::operator[].")
 		w.linef("func (s *%s) get%s(k %s) %s {", g.StateTypeName, exported, keyT, valT)
 		w.linef("\tif v, ok := s.%s[k]; ok { return v }", exported)
-		w.linef("\tif s.__thunk_%s != nil { return s.__thunk_%s(k) }", exported, exported)
+		w.linef("\tif s.__thunk_%s != nil { return s.__thunk_%s.get(k) }", exported, exported)
 		w.linef("\tvar z %s", valT)
 		w.line("\treturn z")
 		w.line("}")

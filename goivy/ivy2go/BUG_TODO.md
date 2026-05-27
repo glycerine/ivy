@@ -12,20 +12,15 @@ recommendations unless there is a concrete failure mode.
   non-main package/class names instead of advertising unbuildable executables.
 - Module parameters are now described with defaults and wired through generated
   argv parsing into `NewState`.
+- Solver-backed action generation now constrains function-sorted state with the
+  same solver term shape used by action preconditions. Array-backed functions
+  emit real `Apply` terms per cell, and map/hash-thunk-backed functions emit
+  quantified equalities whose RHS combines the thunk fallback with explicit map
+  overrides.
 
 Remaining entries keep their original audit numbering.
 
 ## P1 - generated programs can be wrong, invalid, or unlaunchable
-
-4. Solver-backed action generation does not constrain function-sorted state
-   consistently with action preconditions.
-
-   Evidence: hash-thunk/map-backed function state is skipped entirely in
-   `emitStateSymbolFacts` (`solver_emit.go:151`). Array-backed function state
-   is encoded as synthetic const names like `f(0)` (`solver_emit.go:162`),
-   while preconditions are reified as real `Apply` nodes (`action_gen.go:960`).
-   Those are not the same solver term shape, so test input generation can see
-   function state as unconstrained and fire actions that should be disabled.
 
 5. Solver-backed action generation skips important ivy2cpp clause
    normalizations.
