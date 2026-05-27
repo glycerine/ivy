@@ -189,6 +189,13 @@ func isolateParamStripNames(params []Node) []string {
 	return res
 }
 
+func traceIsolateName(iso string) string {
+	if iso == "" {
+		return "None"
+	}
+	return iso
+}
+
 // CreateIsolate is the main entry point for isolate creation.
 // It processes an isolate definition, applies mixins, builds the
 // exported action set, and optionally applies the cone of influence filter.
@@ -199,7 +206,7 @@ func isolateParamStripNames(params []Node) []string {
 //   - iso: the isolate name (empty string means verify everything)
 //   - mod: the module to process
 func CreateIsolate(iso string, mod *Module) error {
-	xtracer.Trace("check.CreateIsolate ENTER name=%s", iso)
+	xtracer.Trace("check.CreateIsolate ENTER name=%s", traceIsolateName(iso))
 	if mod == nil {
 		return fmt.Errorf("create_isolate: nil module")
 	}
@@ -485,7 +492,7 @@ func CreateIsolate(iso string, mod *Module) error {
 		}
 	}
 
-	xtracer.Trace("check.CreateIsolate EXIT name=%s", iso)
+	xtracer.Trace("check.CreateIsolate EXIT name=%s", traceIsolateName(iso))
 	return nil
 }
 
