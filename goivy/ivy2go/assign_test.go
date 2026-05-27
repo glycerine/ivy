@@ -121,6 +121,42 @@ relation slot(I: idx)
 	}
 }
 
+func TestEmitAssign_ExtensionalMapClearReinitializesMapBeforeWrite(t *testing.T) {
+	g := newExprGen(t, `
+type node
+relation slot(N: node)
+`)
+	g.extRel = map[string]bool{"slot": true}
+	nodeSort := g.Mod.Sig.Sorts.Get("node")
+	slotEntry, ok := g.Mod.Sig.Symbols.Get2("slot")
+	if !ok {
+		t.Fatal("missing slot symbol")
+	}
+	slot := goivy.NewConst("slot", slotEntry.Sort)
+	n, err := goivy.NewVariable("N", nodeSort)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	clearLHS, err := goivy.NewApply(slot, n)
+	if err != nil {
+		t.Fatalf("NewApply clear: %v", err)
+	}
+	x := goivy.NewConst("x", nodeSort)
+	writeLHS, err := goivy.NewApply(slot, x)
+	if err != nil {
+		t.Fatalf("NewApply write: %v", err)
+	}
+	clear := goivy.NewAssignAction(clearLHS, goivy.False)
+	write := goivy.NewAssignAction(writeLHS, goivy.True)
+
+	w := newGoWriter(NewGoText())
+	g.emitAction(&w, goivy.NewSequence(clear, write))
+	got := w.String()
+	requireHasLineWithAllTerms(t, got, "s.Slot", "=", "map[Node]bool{}")
+	requireHasLineWithAllTerms(t, got, "s.__thunk_Slot", "=", "nil")
+	requireHasLineWithAllTerms(t, got, "s.Slot[x]", "=", "true")
+}
+
 // --- OPEN 058: trace-LHS emission tests -----------------------------
 
 func TestEmitTrace_FmtCallEmittedWhenTraceOn(t *testing.T) {

@@ -57,6 +57,8 @@ type Generator struct {
 	nativeOnceMemo     map[string]bool
 	encodedSorts       map[string]bool
 	importCallersCache map[string]bool
+	nondetSortStack    map[string]int
+	nondetTempCtr      int
 
 	// numberFormatCache memoizes numberFormat() so we don't re-scan
 	// module attributes on every trace line. Empty string until

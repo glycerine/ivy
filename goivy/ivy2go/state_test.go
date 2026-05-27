@@ -3,6 +3,7 @@ package ivy2go
 import (
 	"os/exec"
 	"regexp"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -162,6 +163,104 @@ func TestEmitInit_TestTargetEmitsNondetWhenNoAxioms(t *testing.T) {
 	}
 	if !strings.Contains(text, "s.Flag = ivyChoose(2) == 1") {
 		t.Errorf("expected nondet flag init under test target, got:\n%s", text)
+	}
+}
+
+func TestEmitInit_FunctionStateArrayUsesNondetCells(t *testing.T) {
+	mod := compileIvySource(t, `
+type node = {0..1}
+relation link(N: node)
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Files["init.go"]
+	requireHasLineWithAllTerms(t, text, "for __nd_i0 := 0; __nd_i0 < 2; __nd_i0++")
+	requireHasLineWithAllTerms(t, text, "s.Link[__nd_i0]", "=", "ivyChoose(2) == 1")
+}
+
+func TestEmitInit_VariantSuperStateUsesConstructor(t *testing.T) {
+	mod := compileIvySource(t, `
+type msg
+variant req of msg = struct {
+	ok : bool
+}
+individual saved : msg
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Files["init.go"]
+	requireHasLineWithAllTerms(t, text, "__nd_tag_0 := ivyChoose(1)")
+	requireHasLineWithAllTerms(t, text, "var __nd_v_0_0 Req")
+	requireHasLineWithAllTerms(t, text, "__nd_v_0_0.Ok", "=", "ivyChoose(2) == 1")
+	requireHasLineWithAllTerms(t, text, "s.Saved", "=", "NewMsgReq(__nd_v_0_0)")
+}
+
+func TestEmitInit_RecursiveVariantSuperStateTerminatesWithBaseLeaf(t *testing.T) {
+	mod := compileIvySource(t, `
+type tree
+type label = {leaf_label, node_label}
+variant leaf of tree = struct {
+	value : label
+}
+variant node of tree = struct {
+	left : tree,
+	right : tree
+}
+individual root : tree
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Files["init.go"]
+	requireHasLineWithAllTerms(t, text, "__nd_tag_0 := ivyChoose(2)")
+	requireHasLineWithAllTerms(t, text, "s.Root", "=", "NewTreeLeaf(__nd_v_0_0)")
+	requireHasLineWithAllTerms(t, text, "__nd_v_0_1.Left", "=", "NewTreeLeaf(")
+	requireHasLineWithAllTerms(t, text, "__nd_v_0_1.Right", "=", "NewTreeLeaf(")
+	requireHasLineWithAllTerms(t, text, "s.Root", "=", "NewTreeNode(__nd_v_0_1)")
+	for name, text := range out.Files {
+		assertGoSourceGofmt(t, name, text)
+	}
+}
+
+func TestEmitInit_SolvedNumericEnumInitialStateUsesNumericLiteral(t *testing.T) {
+	mod := compileIvySource(t, `
+type digit = {0, 1}
+individual x : digit
+`)
+	digit := mustSort(t, mod, "digit")
+	digitEnum, ok := digit.(*goivy.LogicEnumeratedSort)
+	if !ok || len(digitEnum.Extension) == 0 {
+		t.Fatalf("digit sort = %T, want non-empty LogicEnumeratedSort", digit)
+	}
+	value := digitEnum.Extension[0]
+	eq, err := goivy.NewEq(goivy.NewConst("x", digit), goivy.NewConst(value, digit))
+	if err != nil {
+		t.Fatalf("NewEq: %v", err)
+	}
+	mod.InitCond = goivy.FormulaToClauses(eq, nil)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Files["init.go"]
+	rhs := ""
+	for _, line := range strings.Split(text, "\n") {
+		line = strings.TrimSpace(line)
+		if strings.HasPrefix(line, "s.X = ") {
+			rhs = strings.TrimSpace(strings.TrimPrefix(line, "s.X = "))
+			break
+		}
+	}
+	if rhs == "" {
+		t.Fatalf("missing s.X assignment:\n%s", text)
+	}
+	if _, err := strconv.Atoi(rhs); err != nil {
+		t.Fatalf("numeric enum initial value should emit a numeric literal, got %q:\n%s", rhs, text)
 	}
 }
 

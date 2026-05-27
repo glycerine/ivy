@@ -212,7 +212,9 @@ func (g *Generator) emitExtensionalRelationClear(w *goWriter, a *goivy.LogicAssi
 	if st.Kind != goStorageHashThunk {
 		return false
 	}
-	w.linef("s.%s = nil", goExportedName(name))
+	exported := goExportedName(name)
+	w.linef("s.%s = %s{}", exported, st.Type)
+	w.linef("s.__thunk_%s = nil", exported)
 	return true
 }
 

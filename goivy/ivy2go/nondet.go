@@ -76,15 +76,18 @@ func (g *Generator) mkNondetSym(w *goWriter, local goivy.Expr, name string, uniq
 	if g.nondetSkipSort(skipSort) {
 		return
 	}
+	g.mkNondetSymbolStorage(w, goIdent(lhsName), sort, name, uniqueID)
+}
 
+func (g *Generator) mkNondetSymbolStorage(w *goWriter, lhs string, sort goivy.Sort, name string, uniqueID int64) {
 	fs, isFunc := sort.(*goivy.LogicFunctionSort)
 	if !isFunc {
-		g.mkNondetValue(w, goIdent(lhsName), sort, name, uniqueID)
+		g.mkNondetValue(w, lhs, sort, name, uniqueID)
 		return
 	}
 	dom := fs.Domain()
 	if len(dom) == 0 {
-		g.mkNondet(w, goIdent(lhsName), 0, name, uniqueID, fs.Range())
+		g.mkNondetValueScoped(w, lhs, fs.Range(), name, uniqueID, "")
 		return
 	}
 	st := goFunctionStorageFor(g, dom, fs.Range())
@@ -110,11 +113,11 @@ func (g *Generator) mkNondetSym(w *goWriter, local goivy.Expr, name string, uniq
 		w.linef("for %s := 0; %s < %d; %s++ {", indices[i], indices[i], card, indices[i])
 		opened++
 	}
-	lhs := goIdent(lhsName)
+	cell := lhs
 	for _, idx := range indices {
-		lhs += "[" + idx + "]"
+		cell += "[" + idx + "]"
 	}
-	g.mkNondetValue(w, lhs, fs.Range(), name, uniqueID)
+	g.mkNondetValue(w, cell, fs.Range(), name, uniqueID)
 	for j := 0; j < opened; j++ {
 		w.line("}")
 	}
@@ -133,6 +136,17 @@ func (g *Generator) mkNondetValueScoped(w *goWriter, lhsExpr string, sort goivy.
 	if sort == nil {
 		return
 	}
+	if g.trackNondetSort(sort) {
+		sn := sortName(sort)
+		if g.enterNondetSort(sn) {
+			if g.isVariantSuperName(sn) && g.mkNondetVariantBaseScoped(w, lhsExpr, sort, name, uniqueID, className) {
+				return
+			}
+			w.linef("// nondet skipped for recursive sort %s", g.goType(sort))
+			return
+		}
+		defer g.leaveNondetSort(sn)
+	}
 	if g.Mod != nil && g.Mod.SortDestructors != nil {
 		if _, ok := g.Mod.SortDestructors.Get2(sortName(sort)); ok {
 			g.mkNondetStructFieldsScoped(w, lhsExpr, sort, name, uniqueID, className)
@@ -147,6 +161,54 @@ func (g *Generator) mkNondetValueScoped(w *goWriter, lhsExpr string, sort goivy.
 		return
 	}
 	g.mkNondetWithGoType(w, lhsExpr, name, uniqueID, sort)
+}
+
+func (g *Generator) trackNondetSort(sort goivy.Sort) bool {
+	if g == nil || sort == nil {
+		return false
+	}
+	sn := sortName(sort)
+	if sn == "" {
+		return false
+	}
+	if g.isVariantSuperName(sn) {
+		return true
+	}
+	return g.Mod != nil && g.Mod.SortDestructors != nil && g.Mod.SortDestructors.Get(sn) != nil
+}
+
+func (g *Generator) enterNondetSort(name string) bool {
+	if g.nondetSortStack == nil {
+		g.nondetSortStack = map[string]int{}
+	}
+	if g.nondetSortStack[name] > 0 {
+		return true
+	}
+	g.nondetSortStack[name] = 1
+	return false
+}
+
+func (g *Generator) leaveNondetSort(name string) {
+	if g == nil || g.nondetSortStack == nil {
+		return
+	}
+	if g.nondetSortStack[name] <= 1 {
+		delete(g.nondetSortStack, name)
+		return
+	}
+	g.nondetSortStack[name]--
+}
+
+func (g *Generator) nextNondetTemp(prefix string) string {
+	if prefix == "" {
+		prefix = "tmp"
+	}
+	n := 0
+	if g != nil {
+		n = g.nondetTempCtr
+		g.nondetTempCtr++
+	}
+	return fmt.Sprintf("__nd_%s_%d", prefix, n)
 }
 
 // mkNondetVariant mirrors ivy2cpp/nondet.go:145.
@@ -186,6 +248,81 @@ func (g *Generator) mkNondetVariantScoped(w *goWriter, lhsExpr string, super goi
 		w.linef("%s = %s(%s)", lhsExpr, ctor, tmp)
 	}
 	w.line("}")
+}
+
+func (g *Generator) mkNondetVariantBaseScoped(w *goWriter, lhsExpr string, super goivy.Sort, name string, uniqueID int64, className string) bool {
+	superName := sortName(super)
+	variants := g.Mod.Variants[superName]
+	if len(variants) == 0 {
+		return false
+	}
+	for _, sub := range variants {
+		if g.sortReferencesSort(sub, superName, map[string]bool{}) {
+			continue
+		}
+		g.emitNondetVariantLeafValue(w, lhsExpr, superName, sub, name, uniqueID, className, false)
+		return true
+	}
+	// Degenerate recursive-only variant family. There is no finite value
+	// that fully satisfies the sort, so emit the shallowest constructor
+	// and leave recursive fields at their Go zero value.
+	g.emitNondetVariantLeafValue(w, lhsExpr, superName, variants[0], name, uniqueID, className, true)
+	return true
+}
+
+func (g *Generator) emitNondetVariantLeafValue(w *goWriter, lhsExpr string, superName string, sub goivy.Sort, name string, uniqueID int64, className string, shallow bool) {
+	subName := sortName(sub)
+	ctor := "New" + goExportedName(superName) + goExportedName(subName)
+	if g.isPlainVariantSubtypeName(subName) {
+		w.linef("%s = %s()", lhsExpr, ctor)
+		return
+	}
+	tmp := g.nextNondetTemp("base")
+	w.linef("var %s %s", tmp, g.goType(sub))
+	if shallow {
+		for _, f := range g.destructorScalarFields(subName) {
+			if g.sortReferencesSort(f.Sort, superName, map[string]bool{}) {
+				continue
+			}
+			g.mkNondetValueScoped(w, tmp+"."+goExportedName(f.Name), f.Sort, name, uniqueID, className)
+		}
+	} else {
+		g.mkNondetValueScoped(w, tmp, sub, name, uniqueID, className)
+	}
+	w.linef("%s = %s(%s)", lhsExpr, ctor, tmp)
+}
+
+func (g *Generator) sortReferencesSort(s goivy.Sort, target string, seen map[string]bool) bool {
+	if g == nil || s == nil || target == "" {
+		return false
+	}
+	if fs, ok := s.(*goivy.LogicFunctionSort); ok {
+		return g.sortReferencesSort(fs.Range(), target, seen)
+	}
+	sn := sortName(s)
+	if sn == target {
+		return true
+	}
+	if sn == "" || seen[sn] {
+		return false
+	}
+	seen[sn] = true
+	if g.Mod != nil && g.Mod.SortDestructors != nil {
+		for _, d := range g.Mod.SortDestructors.Get(sn) {
+			fs, ok := d.CSort.(*goivy.LogicFunctionSort)
+			if ok && g.sortReferencesSort(fs.Range(), target, seen) {
+				return true
+			}
+		}
+	}
+	if g.Mod != nil {
+		for _, sub := range g.Mod.Variants[sn] {
+			if g.sortReferencesSort(sub, target, seen) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // mkNondetStructFields mirrors ivy2cpp/nondet.go:186.
@@ -253,9 +390,6 @@ func (g *Generator) mkNondetStructFieldsScoped(w *goWriter, lhsExpr string, sort
 // value rather than ivyChoose:
 //   - native-typed sorts use the user-supplied Go zero value.
 //   - string-interpreted sorts default to Go's "".
-//   - variant supertypes are handled by mkNondetVariant; the
-//     dispatch in mkNondetValueScoped routes there before consulting
-//     this function, matching cpp's design.
 func (g *Generator) nondetSkipSort(s goivy.Sort) bool {
 	if g == nil || s == nil {
 		return false
@@ -264,9 +398,6 @@ func (g *Generator) nondetSkipSort(s goivy.Sort) bool {
 		return true
 	}
 	if g.hasStringInterp(s) {
-		return true
-	}
-	if name := sortName(s); name != "" && g.isVariantSuperName(name) {
 		return true
 	}
 	return false

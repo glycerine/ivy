@@ -42,43 +42,19 @@ recommendations unless there is a concrete failure mode.
 - Plain variant leaves now use their zero-argument constructors in both
   leaf-to-super upcasts and nondeterministic variant-super construction, while
   payload leaves still pass their payload values.
+- Default initial state now uses the same nondeterministic storage initializer
+  as locals: bounded function arrays initialize each cell, and variant-super
+  state is constructed through a valid leaf constructor instead of staying at
+  an invalid zero value.
+- Extensional hash-thunk relation clears now replace the backing map with a
+  fresh map and clear the thunk fallback, so later direct writes cannot panic
+  on a nil map.
+- Solver-derived initial values for numeric enums now emit numeric literals
+  rather than undeclared exported identifiers.
 
 Remaining entries keep their original audit numbering.
 
 ## P1 - generated programs can be wrong, invalid, or unlaunchable
-
-12. Default state initialization skips function-sorted state instead of using
-    the existing function-aware nondet logic.
-
-    Evidence: `emitOneInitialState` skips function-sorted symbols when there is
-    no solver model or the symbol is unconstrained (`initial_state.go:113`).
-    `mkNondetSym` has separate logic for bounded function arrays and maps
-    (`nondet.go:76`), but `emitDefaultInitialState` only calls
-    `emitScalarChoice` (`initial_state.go:139`). Bounded function state is left
-    at Go zero values rather than Ivy nondet values.
-
-13. Variant-super state can be left as an invalid zero value.
-
-    Evidence: `emitDefaultInitialState` goes through `emitScalarChoice`
-    (`initial_state.go:139`), not `mkNondetValueScoped`, whose variant branch
-    exists at `nondet.go:138`. A variant super whose first leaf carries a
-    payload can remain `Tag == 0` with a nil payload pointer. Later printing or
-    downcasting can panic.
-
-14. Clearing an extensional map-backed relation can make later writes panic.
-
-    Evidence: `emitExtensionalRelationClear` emits `s.Rel = nil`
-    (`extensional.go:215`). Ordinary map writes use raw map indexing in LHS
-    context (`expr.go:318`). In Go, assigning to a nil map panics, so a clear
-    followed by `rel(x) := true` can fail at runtime.
-
-15. Numeric enum values from the initial-state solver can become undefined Go
-    identifiers.
-
-    Evidence: numeric enums are represented as `int` and get no Go constants
-    (`types.go:443`). `modelValueToGo` handles all `LogicEnumeratedSort`
-    values by returning `goExportedName(name)` (`initial_state.go:233`). For a
-    numeric enum value such as `0`, that becomes `X0`, which is not declared.
 
 ## P2 - target and interface behavior diverges from the intended ivy2cpp shape
 

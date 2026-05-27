@@ -87,9 +87,6 @@ func (g *Generator) emitOneInitialState(w *goWriter) {
 	if err != nil {
 		g.errs = append(g.errs, fmt.Errorf("ivy2go: initial state constraints: %w", err))
 		for _, sym := range g.stateSymbols() {
-			if isFunctionSort(sym.Sort) {
-				continue
-			}
 			g.emitDefaultInitialState(w, sym)
 		}
 		return
@@ -111,15 +108,6 @@ func (g *Generator) emitOneInitialState(w *goWriter) {
 		if g.isParamName(sym.Name) {
 			continue
 		}
-		if isFunctionSort(sym.Sort) {
-			// Function-sorted symbols: maps default to nil (sparse
-			// empty); bounded arrays default to Go zero. Solver-
-			// driven per-cell init still routes through
-			// emitSolvedInitialState when the model is available.
-			if model == nil || !constraints.Used[sym.Name] {
-				continue
-			}
-		}
 		if !constraints.Used[sym.Name] || model == nil {
 			g.emitDefaultInitialState(w, sym)
 			continue
@@ -138,7 +126,8 @@ func (g *Generator) emitOneInitialState(w *goWriter) {
 // Emits a nondet initialization for a state symbol when no solver
 // model constrains its value.
 func (g *Generator) emitDefaultInitialState(w *goWriter, sym stateSymbol) {
-	g.emitScalarChoice(w, sym)
+	field := "s." + goExportedName(sym.Name)
+	g.mkNondetSymbolStorage(w, field, sym.Sort, "init", 0)
 }
 
 // emitSolvedInitialState mirrors ivy2cpp/initial_state.go:142. For a
@@ -229,6 +218,17 @@ func (g *Generator) modelValueToGo(value smt.Z3Expr, s goivy.Sort) (string, erro
 			return "", fmt.Errorf("expected bool model value, got %q", text)
 		}
 	case *goivy.LogicEnumeratedSort:
+		if isNumericEnum(st) {
+			for i, name := range st.Extension {
+				if text == name || text == fmt.Sprintf("%s_%d", z3SortName(st), i) {
+					return name, nil
+				}
+			}
+			if idx, ok := parseTrailingModelIndex(text); ok && idx >= 0 && idx < len(st.Extension) {
+				return st.Extension[idx], nil
+			}
+			return "", fmt.Errorf("expected %s model value, got %q", sortName(s), text)
+		}
 		for i, name := range st.Extension {
 			if text == name || text == fmt.Sprintf("%s_%d", z3SortName(st), i) {
 				return goExportedName(name), nil
@@ -341,9 +341,13 @@ func (g *Generator) initialDomainValues(s goivy.Sort) ([]initialDomainValue, boo
 	case *goivy.LogicEnumeratedSort:
 		vals := make([]initialDomainValue, 0, len(st.Extension))
 		for i, name := range st.Extension {
+			goLit := goExportedName(name)
+			if isNumericEnum(st) {
+				goLit = name
+			}
 			vals = append(vals, initialDomainValue{
 				Expr:  goivy.NewConst(name, st),
-				Go:    goExportedName(name),
+				Go:    goLit,
 				Z3Int: strconv.Itoa(i),
 			})
 		}
