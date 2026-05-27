@@ -99,6 +99,8 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_TIMES
 	case DIV:
 		return PARSER16_TOK_DIV
+	case NATIVEQUOTE:
+		return PARSER16_TOK_NATIVEQUOTE
 	case EQ:
 		return PARSER16_TOK_EQ
 	case TILDAEQ:
@@ -195,6 +197,10 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_DERIVED
 	case STRUCT:
 		return PARSER16_TOK_STRUCT
+	case FRESH:
+		return PARSER16_TOK_FRESH
+	case DESTRUCTOR:
+		return PARSER16_TOK_DESTRUCTOR
 	case AXIOM:
 		return PARSER16_TOK_AXIOM
 	case PROPERTY:
@@ -239,12 +245,22 @@ func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
 		return PARSER16_TOK_DELEGATE
 	case INTERPRET:
 		return PARSER16_TOK_INTERPRET
+	case CONCEPT:
+		return PARSER16_TOK_CONCEPT
+	case UPDATE:
+		return PARSER16_TOK_UPDATE
+	case FROM:
+		return PARSER16_TOK_FROM
+	case PARAMS:
+		return PARSER16_TOK_PARAMS
 	case ATTRIBUTE:
 		return PARSER16_TOK_ATTRIBUTE
 	case VARIANT:
 		return PARSER16_TOK_VARIANT
 	case OF:
 		return PARSER16_TOK_OF
+	case SCENARIO:
+		return PARSER16_TOK_SCENARIO
 	case REQUIRES:
 		return PARSER16_TOK_REQUIRES
 	case MODIFIES:

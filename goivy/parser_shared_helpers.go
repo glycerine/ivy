@@ -149,6 +149,13 @@ func makeMixinName(cfg *AstConfig, atom *Atom, suffix string) *Atom {
 	return cfg.NewAtom(fmt.Sprintf("%s[%s%d]", rep, suffix, cfg.LabelCounter))
 }
 
+// makeMixinNameV16 matches Python's Ivy <=1.6 deterministic scenario mixin names.
+func makeMixinNameV16(cfg *AstConfig, atom *Atom, suffix string) *Atom {
+	xtracer.Trace("parser.make_mixin_name ENTER")
+	rep := strings.ReplaceAll(atom.Rep, ".", "_")
+	return cfg.NewAtom(fmt.Sprintf("%s[%s]", rep, suffix))
+}
+
 // handleMixin declares a mixin.
 func handleMixin(cfg *AstConfig, kind string, mixer *Atom, mixee *Atom, ivy *ivyAccum) {
 	xtracer.Trace("parser.handle_mixin ENTER")
@@ -234,8 +241,22 @@ func handleBeforeAfterV16(cfg *AstConfig, kind string, atom *Atom, action Node, 
 	handleMixin(cfg, kind, mixer, atom, ivy)
 }
 
+func parserFreshDecls(cfg *AstConfig, decls []Node) []Node {
+	out := make([]Node, len(decls))
+	for i, d := range decls {
+		if cd, ok := d.(*ConstantDecl); ok {
+			fresh := cfg.NewFreshConstantDecl(*cd)
+			fresh.SetLineno(cd.GetLineno())
+			out[i] = fresh
+			continue
+		}
+		out[i] = d
+	}
+	return out
+}
+
 // parseNativequote parses a native code block and extracts backtick references.
-func parseNativequote(cfg *AstConfig, raw string, lex *parser17LexAdapter) (string, []Node) {
+func parseNativequote(cfg *AstConfig, raw string) (string, []Node) {
 	xtracer.Trace("parser.parse_nativequote ENTER")
 	s := raw
 	if len(s) >= 6 && strings.HasPrefix(s, "<<<") && strings.HasSuffix(s, ">>>") {
@@ -261,7 +282,6 @@ func parseNativequote(cfg *AstConfig, raw string, lex *parser17LexAdapter) (stri
 		}
 	}
 	text := strings.Join(parts, "`")
-	_ = getLineno(lex)
 	return text, bqs
 }
 

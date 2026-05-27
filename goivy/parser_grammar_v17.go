@@ -2447,7 +2447,7 @@ parser17default:
 			// Python: text,bqs = parse_nativequote(p,2)
 			// Python: defn = NativeDef(*([mk_label(None,'native')] + [text] + bqs))
 			// Python: thing = NativeDecl(defn)
-			text, bqs := parseNativequote(parser17Acfg(parser17lex), parser17Dollar[2].tok.Val, parser17lex.(*parser17LexAdapter))
+			text, bqs := parseNativequote(parser17Acfg(parser17lex), parser17Dollar[2].tok.Val)
 			label := newLabel(parser17Acfg(parser17lex), "native")
 			defnArgs := append([]Node{label, parser17Acfg(parser17lex).NewNativeCode(text)}, bqs...)
 			defn := parser17Acfg(parser17lex).NewNativeDef(defnArgs)
@@ -3412,7 +3412,7 @@ parser17default:
 //line parser_grammar_v17.y:1969
 		{
 			xtracer.Trace("parser.p_defnrhs_nativequote ENTER (defnrhs)")
-			text, bqs := parseNativequote(parser17Acfg(parser17lex), parser17Dollar[1].tok.Val, parser17lex.(*parser17LexAdapter))
+			text, bqs := parseNativequote(parser17Acfg(parser17lex), parser17Dollar[1].tok.Val)
 			elems := append([]Node{parser17Acfg(parser17lex).NewNativeCode(text)}, bqs...)
 			ne := parser17Acfg(parser17lex).NewNativeExpr(elems)
 			ne.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[1].tok))
@@ -4544,7 +4544,7 @@ parser17default:
 		{
 			xtracer.Trace("parser.p_topseq_lcb_nativequote_rcb ENTER (topseq)")
 			// Python: NativeAction(*([text] + bqs))
-			text, bqs := parseNativequote(parser17Acfg(parser17lex), parser17Dollar[2].tok.Val, parser17lex.(*parser17LexAdapter))
+			text, bqs := parseNativequote(parser17Acfg(parser17lex), parser17Dollar[2].tok.Val)
 			args := append([]Node{parser17Acfg(parser17lex).NewNativeCode(text)}, bqs...)
 			na := parser17Acfg(parser17lex).NewNativeAction(args...)
 			na.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[2].tok))
@@ -4799,7 +4799,7 @@ parser17default:
 //line parser_grammar_v17.y:3224
 		{
 			xtracer.Trace("parser.p_oper_nativequote ENTER (oper)")
-			text, bqs := parseNativequote(parser17Acfg(parser17lex), parser17Dollar[1].tok.Val, parser17lex.(*parser17LexAdapter))
+			text, bqs := parseNativequote(parser17Acfg(parser17lex), parser17Dollar[1].tok.Val)
 			elems := append([]Node{parser17Acfg(parser17lex).NewNativeCode(text)}, bqs...)
 			nt := parser17Acfg(parser17lex).NewNativeType(elems...)
 			nt.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[1].tok))

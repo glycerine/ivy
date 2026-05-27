@@ -641,6 +641,112 @@ func TestParseV16PropertyProofWithMatches(t *testing.T) {
 	}
 }
 
+func TestParseV16FreshSchemaDeclsAndDestructor(t *testing.T) {
+	src := `type t
+destructor get(X:t):t
+schema fresh_bits = {
+fresh individual a:t
+fresh relation p(X:t)
+fresh function f(X:t):t
+property true
+}`
+	result, err := Parse(src, Version{1, 6}, WithFilename("fresh_destructor16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 fresh schema/destructor: %v", err)
+	}
+	if got := countDeclsOf[*DestructorDecl](result.Decls); got != 1 {
+		t.Fatalf("DestructorDecl count = %d, want 1", got)
+	}
+	schema := firstArgAs[*Schema](t, firstDeclOf[*SchemaDecl](t, result.Decls))
+	def := firstArgAs[*Definition](t, schema)
+	body, ok := def.Rhs.(*SchemaBody)
+	if !ok {
+		t.Fatalf("schema rhs = %T, want *SchemaBody", def.Rhs)
+	}
+	var fresh int
+	for _, arg := range body.Args() {
+		if _, ok := arg.(*FreshConstantDecl); ok {
+			fresh++
+		}
+	}
+	if fresh != 3 {
+		t.Fatalf("fresh schema declarations = %d, want 3", fresh)
+	}
+}
+
+func TestParseV16NativeQuoteDeclarationsAndDefinitions(t *testing.T) {
+	src := "type idx = {0..3}\ntype vec\ninterpret vec -> <<< primitive `idx` >>>\ndefinition value(A:idx) = <<< `A` >>>\n<<< native `value` >>>"
+	result, err := Parse(src, Version{1, 6}, WithFilename("native16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 nativequote forms: %v", err)
+	}
+	if got := countDeclsOf[*NativeDecl](result.Decls); got != 1 {
+		t.Fatalf("NativeDecl count = %d, want 1", got)
+	}
+	if nt := findParsedNativeType(t, result); nt == nil {
+		t.Fatalf("native type quote not found")
+	}
+	if ne := findParsedNativeExpr(t, result); ne == nil {
+		t.Fatalf("native expr quote not found")
+	}
+}
+
+func TestParseV16ScenarioUsesDeterministicMixinNames(t *testing.T) {
+	src := `action step = {}
+scenario { -> s0; s0 -> s1 : before step { call step } s1 : after step { call step } }`
+	result, err := Parse(src, Version{1, 6}, WithFilename("scenario16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 scenario: %v", err)
+	}
+	decl := firstDeclOf[*ScenarioDecl](t, result.Decls)
+	sdef := firstArgAs[*ScenarioDef](t, decl)
+	transitions := sdef.Transitions()
+	if got := len(transitions); got != 2 {
+		t.Fatalf("scenario transition count = %d, want 2", got)
+	}
+	before, ok := transitions[0].Action.(*ScenarioBeforeMixin)
+	if !ok {
+		t.Fatalf("transition[0] action = %T, want *ScenarioBeforeMixin", transitions[0].Action)
+	}
+	if got := NodeRep(before.Mixer); got != "step[before]" {
+		t.Fatalf("before scenario mixer = %q, want step[before]", got)
+	}
+	after, ok := transitions[1].Action.(*ScenarioAfterMixin)
+	if !ok {
+		t.Fatalf("transition[1] action = %T, want *ScenarioAfterMixin", transitions[1].Action)
+	}
+	if got := NodeRep(after.Mixer); got != "step[after]" {
+		t.Fatalf("after scenario mixer = %q, want step[after]", got)
+	}
+}
+
+func TestParseV16TopLevelInstantiateConceptAndUpdate(t *testing.T) {
+	src := `type t
+relation r(X:t)
+relation s(X:t)
+action step = {}
+instantiate missing
+concept c = { true }, d = r
+update r from s params x:t in { call step } -> requires true ensures true`
+	result, err := Parse(src, Version{1, 6}, WithFilename("instantiate_concept_update16.ivy"))
+	if err != nil {
+		t.Fatalf("Parse v1.6 instantiate/concept/update: %v", err)
+	}
+	instantiate := firstDeclOf[*InstantiateDecl](t, result.Decls)
+	inst := firstArgAs[*Instantiation](t, instantiate)
+	if got := NodeRep(inst.Sort); got != "missing" {
+		t.Fatalf("instantiate target = %q, want missing", got)
+	}
+	concept := firstDeclOf[*ConceptDecl](t, result.Decls)
+	if got := len(concept.Args()); got != 2 {
+		t.Fatalf("ConceptDecl args = %d, want 2", got)
+	}
+	update := firstDeclOf[*UpdateDecl](t, result.Decls)
+	if _, ok := update.Args()[0].(*PatternBasedUpdate); !ok {
+		t.Fatalf("UpdateDecl arg = %T, want *PatternBasedUpdate", update.Args()[0])
+	}
+}
+
 func firstLabeledFormulaInDecl[T Node](t *testing.T, decls []Node) *LabeledFormula {
 	t.Helper()
 	for _, decl := range decls {
