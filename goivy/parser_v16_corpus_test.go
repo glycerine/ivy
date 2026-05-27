@@ -40,7 +40,7 @@ func TestParseV16CorpusScan(t *testing.T) {
 				failures = append(failures, fmt.Sprintf("PARSE %s: got %q, want Python-compatible parse error containing %q (%s)", path, err.Error(), want.Contains, want.Reason))
 				continue
 			}
-			t.Logf("EXPECTED %s: %v (%s)", path, err, want.Reason)
+			//vv("good: got EXPECTED %s: %v (%s)", path, err, want.Reason)
 			continue
 		}
 		if err != nil {
@@ -54,7 +54,7 @@ func TestParseV16CorpusScan(t *testing.T) {
 	if len(failures) > 0 {
 		t.Fatalf("v1.6 corpus parse scan failed: scanned=%d expectedErrors=%d failures=%d", len(files), expectedErrors, len(failures))
 	}
-	t.Logf("v1.6 corpus parse scan passed: scanned=%d expectedErrors=%d", len(files), expectedErrors)
+	//vv("v1.6 corpus parse scan passed: scanned=%d expectedErrors=%d", len(files), expectedErrors)
 }
 
 func expectedV16CorpusParseError(path string) (v16ExpectedParseError, bool) {
