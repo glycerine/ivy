@@ -167,8 +167,11 @@ func TestEmitIfSome_MinMaxScansAndTracksBest(t *testing.T) {
 	if !strings.Contains(got, "__best_idx") {
 		t.Errorf("some_min should declare __best_idx, got:\n%s", got)
 	}
-	if !strings.Contains(got, "__cur_idx < __best_idx") {
-		t.Errorf("some_min should use < for best comparison, got:\n%s", got)
+	if strings.Contains(got, "__cur_idx < __best_idx") || strings.Contains(got, "__cur_idx > __best_idx") {
+		t.Errorf("bool some_min must not emit invalid Go ordering operators, got:\n%s", got)
+	}
+	if !strings.Contains(got, "(!__cur_idx && __best_idx)") {
+		t.Errorf("bool some_min should order false before true, got:\n%s", got)
 	}
 	if !strings.Contains(got, "if __found {") {
 		t.Errorf("some_min should dispatch THEN on __found, got:\n%s", got)
@@ -189,9 +192,68 @@ func TestEmitIfSome_MaxUsesGreater(t *testing.T) {
 	w := newGoWriter(NewGoText())
 	g.emitAction(&w, a)
 	got := w.String()
-	if !strings.Contains(got, "__cur_idx > __best_idx") {
-		t.Errorf("some_max should use > for best comparison, got:\n%s", got)
+	if strings.Contains(got, "__cur_idx < __best_idx") || strings.Contains(got, "__cur_idx > __best_idx") {
+		t.Errorf("bool some_max must not emit invalid Go ordering operators, got:\n%s", got)
 	}
+	if !strings.Contains(got, "(__cur_idx && !__best_idx)") {
+		t.Errorf("bool some_max should order true after false, got:\n%s", got)
+	}
+}
+
+func TestEmitIfSome_RangeMinMaxStillUsesOrderingOperators(t *testing.T) {
+	g := newExprGen(t, `
+type idx = {0..4}
+`)
+	idx := g.Mod.Sig.Sorts.Get("idx")
+	param := &goivy.Const{Name: "X", CSort: idx}
+	then := &goivy.LogicAssertAction{Formula: &goivy.Const{Name: "true", CSort: goivy.Boolean}}
+
+	for _, tc := range []struct {
+		name string
+		kind string
+		want string
+	}{
+		{name: "min", kind: "some_min", want: "__cur_idx < __best_idx"},
+		{name: "max", kind: "some_max", want: "__cur_idx > __best_idx"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			some := &goivy.SomeCondition{
+				Params: []*goivy.Const{param},
+				Fmla:   &goivy.Const{Name: "true", CSort: goivy.Boolean},
+				Kind:   tc.kind,
+				Index:  param,
+			}
+			a := &goivy.LogicIfAction{Cond: some, ThenBody: then}
+			w := newGoWriter(NewGoText())
+			g.emitAction(&w, a)
+			got := w.String()
+			if !strings.Contains(got, tc.want) {
+				t.Fatalf("%s should keep ordinary ordering for range index, got:\n%s", tc.kind, got)
+			}
+		})
+	}
+}
+
+func TestSmoke_BuildEmittedBoolSomeMinMax(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+relation flag
+action pick_min = {
+	if some x:bool. true minimizing x {
+		flag := x
+	}
+}
+action pick_max = {
+	if some x:bool. true maximizing x {
+		flag := x
+	}
+}
+export pick_min
+export pick_max
+`)
+	buildEmittedImplPackage(t, mod, "ivygo_bool_some_minmax")
 }
 
 func TestEmitQuant_ThroughEmitExpr(t *testing.T) {

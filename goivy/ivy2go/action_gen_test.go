@@ -601,6 +601,25 @@ func buildEmittedAgainstGoivy(t *testing.T, mod *goivy.Module, modName string) {
 	}
 }
 
+func buildEmittedImplPackage(t *testing.T, mod *goivy.Module, modName string) {
+	t.Helper()
+	_ = modName
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	dir := playpenDir(t)
+	if err := WriteOutput(out, dir); err != nil {
+		t.Fatalf("WriteOutput: %v", err)
+	}
+	pkgDir := outputDirectory(dir, out.BaseName)
+	build := exec.Command("go", "build", ".")
+	build.Dir = pkgDir
+	if output, err := build.CombinedOutput(); err != nil {
+		t.Fatalf("go build:\n%s", string(output))
+	}
+}
+
 // --- Test-loop main: build AND run the emitted binary -------------
 
 func TestSmoke_BuildAndRunEmittedTestBinary(t *testing.T) {

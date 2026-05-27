@@ -103,6 +103,57 @@ function rank(C: color) : color
 	}
 }
 
+func TestEmitThunkBody_AppliedStateFunctionUsesCapturedEnv(t *testing.T) {
+	g := newExprGen(t, `
+type node
+relation g(N: node)
+`)
+	nodeSort := g.Mod.Sig.Sorts.Get("node")
+	x, err := goivy.NewVariable("X", nodeSort)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	entry, ok := g.Mod.Sig.Symbols.Get2("g")
+	if !ok {
+		t.Fatal("missing g symbol")
+	}
+	gSym := goivy.NewConst("g", entry.Sort)
+	apply, err := goivy.NewApply(gSym, x)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	env := g.thunkEnvSymbols([]*goivy.LogicVariable{x}, apply)
+	if len(env) != 1 || env[0].Name != "g" {
+		t.Fatalf("expected env = [g], got %v", envNames(env))
+	}
+	body, err := g.emitThunkBody([]*goivy.LogicVariable{x}, apply, env)
+	if err != nil {
+		t.Fatalf("emitThunkBody: %v", err)
+	}
+	if strings.Contains(body, "s.") {
+		t.Fatalf("thunk body must not reference an undefined State receiver, got: %s", body)
+	}
+	if !strings.Contains(body, "t.env_g[k]") {
+		t.Fatalf("applied state function should read captured env storage, got: %s", body)
+	}
+}
+
+func TestSmoke_BuildEmittedThunkReadsCapturedStateFunction(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+type node
+relation f(N: node)
+relation g(N: node)
+action copy = {
+	f(X) := g(X)
+}
+export copy
+`)
+	buildEmittedImplPackage(t, mod, "ivygo_thunk_env_function")
+}
+
 func envNames(env []*goivy.Const) []string {
 	out := make([]string, len(env))
 	for i, c := range env {

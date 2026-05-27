@@ -131,6 +131,55 @@ func TestEmitAction_ReturnUsesNamedReturnWhenSingle(t *testing.T) {
 	}
 }
 
+func TestEmitPrintExpr_BoolVariableUsesFirstSentinel(t *testing.T) {
+	g := newActionGen(t, "")
+	b, err := goivy.NewVariable("B", goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	w := newGoWriter(NewGoText())
+	g.emitPrintExpr(&w, b)
+	got := w.String()
+	if strings.Contains(got, "B != 0") {
+		t.Fatalf("debug print over bool must not compare the loop value to zero:\n%s", got)
+	}
+	if !strings.Contains(got, "if !__temp__0") || !strings.Contains(got, "__temp__0 = false") {
+		t.Fatalf("debug print should use a per-loop first sentinel, got:\n%s", got)
+	}
+}
+
+func TestEmitPrintExpr_NonzeroRangeVariableUsesFirstSentinel(t *testing.T) {
+	g := newActionGen(t, "")
+	rng := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "5"}, Ub: goivy.NumeralBound{Value: "7"}}
+	i, err := goivy.NewVariable("I", rng)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	w := newGoWriter(NewGoText())
+	g.emitPrintExpr(&w, i)
+	got := w.String()
+	if strings.Contains(got, "I != 0") {
+		t.Fatalf("debug print over nonzero range must not use zero as comma sentinel:\n%s", got)
+	}
+	if !strings.Contains(got, "if !__temp__0") || !strings.Contains(got, "__temp__0 = false") {
+		t.Fatalf("debug print should use a per-loop first sentinel, got:\n%s", got)
+	}
+}
+
+func TestSmoke_BuildEmittedDebugPrintBoolFreeVariable(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+relation seen(B: bool)
+action report = {
+	debug "myvar" with values = seen(B)
+}
+export report
+`)
+	buildEmittedImplPackage(t, mod, "ivygo_debug_bool_free_var")
+}
+
 // --- Choice ----------------------------------------------------------
 
 func TestEmitAction_ChoiceUsesIvyChooseSwitch(t *testing.T) {

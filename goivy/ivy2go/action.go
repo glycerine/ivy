@@ -311,9 +311,15 @@ func (g *Generator) emitPrintExpr(w *goWriter, expr goivy.Expr) {
 			}
 			return
 		}
+		first := fmt.Sprintf("__ivy_debug_first_%d", openedHeaders)
+		if g != nil && g.Ctx != nil {
+			first = g.Ctx.GetTemp()
+		}
 		w.line(`fmt.Fprint(ivyTraceOut, "[")`)
+		w.linef("%s := true", first)
 		w.line(header)
-		w.linef(`if %s != 0 { fmt.Fprint(ivyTraceOut, ",") }`, goIdent(v.Name))
+		w.linef(`if !%s { fmt.Fprint(ivyTraceOut, ",") }`, first)
+		w.linef("%s = false", first)
 		openedHeaders++
 	}
 	value, err := g.emitExpr(expr)
@@ -723,10 +729,6 @@ func (g *Generator) emitIfSomeMinMax(w *goWriter, a *goivy.LogicIfAction, some *
 		g.unsupported(w, "if-some %s with no params is malformed", some.Kind)
 		return
 	}
-	cmp := "<"
-	if some.Kind == "some_max" {
-		cmp = ">"
-	}
 	idxType := g.goType(some.Index.NodeSort())
 	w.open("{")
 	w.line("__found := false")
@@ -800,9 +802,10 @@ func (g *Generator) emitIfSomeMinMax(w *goWriter, a *goivy.LogicIfAction, some *
 	}
 	// First hit always sets __found + best; later hits only update
 	// when the index strictly beats the current best.
+	better := goStrictOrderExpr("__cur_idx", "__best_idx", some.Index.NodeSort(), some.Kind)
 	w.linef("if (%s) {", cond)
 	w.linef("\t__cur_idx := %s", idx)
-	w.linef("\tif !__found || __cur_idx %s __best_idx {", cmp)
+	w.linef("\tif !__found || %s {", better)
 	w.line("\t\t__found = true")
 	w.line("\t\t__best_idx = __cur_idx")
 	for _, p := range some.Params {
@@ -827,6 +830,20 @@ func (g *Generator) emitIfSomeMinMax(w *goWriter, a *goivy.LogicIfAction, some *
 		}
 	}
 	w.close("")
+}
+
+func goStrictOrderExpr(left, right string, sort goivy.Sort, kind string) string {
+	if _, ok := sort.(*goivy.BooleanSort); ok {
+		if kind == "some_max" {
+			return fmt.Sprintf("(%s && !%s)", left, right)
+		}
+		return fmt.Sprintf("(!%s && %s)", left, right)
+	}
+	cmp := "<"
+	if kind == "some_max" {
+		cmp = ">"
+	}
+	return fmt.Sprintf("%s %s %s", left, cmp, right)
 }
 
 // emitNativeAction emits an inline native Go block within an action

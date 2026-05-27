@@ -170,6 +170,7 @@ func (g *Generator) emitThunkStruct(w *goWriter, name, domT, rangeT string, vs [
 // For simple bodies that don't reference env state, the reified body
 // is a literal goivy.Expr tree built via reifyExprAsGoCode.
 func (g *Generator) emitThunkToZ3(w *goWriter, name string, vs []*goivy.LogicVariable, expr goivy.Expr, envSyms []*goivy.Const) {
+	g.Ctx.AddImport("thunks", g.Config.GoivyImportPath, "")
 	// Build a substitution that renames loop vars to args[i] and
 	// env syms to t.env_<name> by structural placeholder Consts.
 	// reifyExprAsGoCode will lower these Consts to bare names; we
@@ -262,10 +263,20 @@ func (g *Generator) emitThunkBody(vs []*goivy.LogicVariable, expr goivy.Expr, en
 	}
 	// Env-symbol rewrite mirrors above; we use a unique fake name so
 	// emitExpr's alias machinery routes us to t.env_<name>.
+	applySubs := map[goivy.NodeKey]goivy.SubstituteApplyFunc{}
 	for _, sym := range envSyms {
 		fakeName := "__thunk_env_" + sym.Name
 		subs[goivy.Key(sym)] = &goivy.Const{Name: fakeName, CSort: sym.CSort}
+		if _, ok := sym.CSort.(*goivy.LogicFunctionSort); ok {
+			fakeFunc := &goivy.Const{Name: fakeName, CSort: sym.CSort}
+			applySubs[goivy.Key(sym)] = func(terms []goivy.Expr) goivy.Expr {
+				return goivy.MustApply(fakeFunc, terms...)
+			}
+		}
 		_ = fakeName
+	}
+	if len(applySubs) > 0 {
+		expr = goivy.SubstituteApply(expr, applySubs)
 	}
 	if len(subs) > 0 {
 		body, err := goivy.Substitute(expr, subs)
