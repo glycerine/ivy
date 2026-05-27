@@ -13,7 +13,7 @@ func TestIvyVersionSupportedIncludesV16(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ok, err := IvyVersionSupported(path)
+	ok, err := IvyVersionSupported(path, "")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -29,7 +29,7 @@ func TestIvyVersionSupportedStillRejectsBeforeV16(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ok, err := IvyVersionSupported(path)
+	ok, err := IvyVersionSupported(path, "")
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -570,7 +570,13 @@ func TestGoldenAll(t *testing.T) {
 	vv("top of TestGoldenAll")
 
 	startDir := "../ivy-lang-examples/"
-	paths, err := ListAllIvyPathsRecursively(startDir)
+
+	// temporary just process v1.6:
+	// v1.6, v1.7, and v1.8:
+	//paths, err := ListAllIvyPathsRecursively(startDir)
+	// just v1.6:
+	paths, err := ListAllIvyPathsRecursivelyOnlyVersion(startDir, "1.6")
+
 	panicOn(err)
 	//vv("spec list (len %v) = '%#v'", len(paths), paths)
 

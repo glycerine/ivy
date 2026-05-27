@@ -25,6 +25,13 @@ func ListIsolates(pathToDotIvy string) (isoList []string, err error) {
 }
 
 func ListAllIvyPathsRecursively(startingDir string) (ivySpecs []string, err error) {
+	return ListAllIvyPathsRecursivelyOnlyVersion(startingDir, "") // no version restriction
+}
+
+// for instance, use restrictToVersion == "1.6" to only process '#lang ivy1.6' files.
+// Leave restrictToVersion empty to get back >=1.6 (so 1.6, 1.7, 1.8).
+func ListAllIvyPathsRecursivelyOnlyVersion(startingDir, restrictToVersion string) (ivySpecs []string, err error) {
+
 	err = filepath.Walk(startingDir, func(path string, info os.FileInfo, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
@@ -34,7 +41,7 @@ func ListAllIvyPathsRecursively(startingDir string) (ivySpecs []string, err erro
 			return nil
 		}
 		if filepath.Ext(path) == ".ivy" {
-			ok, err := IvyVersionSupported(path)
+			ok, err := IvyVersionSupported(path, restrictToVersion)
 			if err == nil && ok {
 				ivySpecs = append(ivySpecs, path)
 			}
@@ -51,7 +58,7 @@ func ListAllIvyPathsRecursively(startingDir string) (ivySpecs []string, err erro
 // a quick read of the first line of the file.
 // If the read fails return false + the filesystem error.
 // Otherwise parse the version and return true for Ivy versions >= 1.6.
-func IvyVersionSupported(path string) (supported bool, err error) {
+func IvyVersionSupported(path, restrictToVersion string) (supported bool, err error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return false, err
@@ -71,5 +78,8 @@ func IvyVersionSupported(path string) (supported bool, err error) {
 	if version == "" {
 		return false, nil
 	}
-	return !VersionLE(version, "1.5"), nil
+	if restrictToVersion == "" {
+		return !VersionLE(version, "1.5"), nil
+	}
+	return restrictToVersion == version, nil
 }
