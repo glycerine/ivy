@@ -17,6 +17,40 @@ func TestReadModuleFromStringPropagatesLanguageVersion(t *testing.T) {
 	}
 }
 
+func TestReadModuleFromStringBareLangPreservesEstablishedLanguageVersion(t *testing.T) {
+	cfg := NewConfig()
+	setConfigLanguageVersion(cfg, "1.8")
+
+	if _, err := ReadModuleFromString("#lang ivy\ntype t", cfg); err != nil {
+		t.Fatal(err)
+	}
+	if got := cfg.IuCfg.GetStringVersion(); got != "1.8" {
+		t.Fatalf("bare #lang ivy reset IuCfg language version to %q, want 1.8", got)
+	}
+	if got := cfg.IsolateCfg.IvyVersion; got != "1.8" {
+		t.Fatalf("bare #lang ivy reset IsolateCfg IvyVersion to %q, want 1.8", got)
+	}
+}
+
+func TestSourceStringV18TheoryCompilationDoesNotDowngradeLanguageVersion(t *testing.T) {
+	mod := New()
+	src := `#lang ivy1.8
+type t
+interpret t -> int
+individual x : t
+`
+
+	if err := SourceString("v18_theory.ivy", src, mod, mod.Sig, map[string]interface{}{"create_isolate": false}); err != nil {
+		t.Fatal(err)
+	}
+	if got := mod.Cfg.IuCfg.GetStringVersion(); got != "1.8" {
+		t.Fatalf("v1.8 source with theory compilation left IuCfg language version = %q, want 1.8", got)
+	}
+	if got := mod.Cfg.IsolateCfg.IvyVersion; got != "1.8" {
+		t.Fatalf("v1.8 source with theory compilation left IsolateCfg IvyVersion = %q, want 1.8", got)
+	}
+}
+
 func TestIvyFromStringPropagatesLanguageVersion(t *testing.T) {
 	mod, err := IvyFromString("#lang ivy1.6\ntype t")
 	if err != nil {

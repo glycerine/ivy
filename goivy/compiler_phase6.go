@@ -2861,6 +2861,14 @@ func parseIvyVersion(s string) Version {
 // parseIvySource strips the "#lang ivy" header from source and returns
 // the body and parsed version. If no header is present, defaults to version 1.7.
 func parseIvySource(source string) (body string, version Version) {
+	return parseIvySourceWithBareLangVersion(source, Version{1, 7})
+}
+
+// parseIvySourceWithBareLangVersion strips the "#lang ivy" header from source.
+// A numeric header chooses that version. A bare "#lang ivy" inherits
+// bareLangVersion, matching Python's read_module behavior: the global language
+// version is unchanged when the header has no numeric suffix.
+func parseIvySourceWithBareLangVersion(source string, bareLangVersion Version) (body string, version Version) {
 	version = Version{1, 7}
 	body = source
 	lines := strings.SplitN(source, "\n", 2)
@@ -2868,7 +2876,11 @@ func parseIvySource(source string) (body string, version Version) {
 		header := strings.TrimSpace(lines[0])
 		if strings.HasPrefix(header, "#lang ivy") {
 			vStr := strings.TrimSpace(header[len("#lang ivy"):])
-			version = parseIvyVersion(vStr)
+			if vStr == "" {
+				version = bareLangVersion
+			} else {
+				version = parseIvyVersion(vStr)
+			}
 			if len(lines) > 1 {
 				body = "\n" + lines[1]
 			} else {

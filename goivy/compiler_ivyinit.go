@@ -69,6 +69,15 @@ func versionString(version Version) string {
 	return fmt.Sprintf("%d.%d", version[0], version[1])
 }
 
+func configLanguageVersionOrDefault(cfg *Config) Version {
+	if cfg != nil && cfg.IuCfg != nil {
+		if version := strings.TrimSpace(cfg.IuCfg.GetStringVersion()); version != "" {
+			return parseIvyVersion(version)
+		}
+	}
+	return Version{1, 7}
+}
+
 func readModuleWithParent(filename string, nested bool, cfg *Config, parent *ivyAccum) (*ParseResult, error) {
 	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
 	data, err := fileops.ReadFile(filename)
@@ -140,7 +149,7 @@ func ReadModuleFromString(source string, cfg *Config) (*ParseResult, error) {
 	// Python: sio = io.StringIO(theory); module = read_module(sio)
 	// StringIO has no .name attribute, so Python traces file=?
 	xtracer.Trace("init.ReadModule ENTER file=? nested=False")
-	body, version := parseIvySource(source)
+	body, version := parseIvySourceWithBareLangVersion(source, configLanguageVersionOrDefault(cfg))
 	setConfigLanguageVersion(cfg, versionString(version))
 
 	var opts []ParseOption
