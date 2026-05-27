@@ -78,10 +78,11 @@ func (g *Generator) emitCmdReaderDispatchChain(w *goWriter) {
 		if act == nil {
 			continue
 		}
+		commandName := replActionCommandName(name)
 		params := act.GetFormalParams()
-		w.linef("case %q:", name)
+		w.linef("case %q:", commandName)
 		w.linef("\tif len(args) != %d {", len(params))
-		w.linef("\t\treturn fmt.Errorf(%q+\" expects %d args, got %%d\", len(args))", name, len(params))
+		w.linef("\t\treturn fmt.Errorf(%q+\" expects %d args, got %%d\", len(args))", commandName, len(params))
 		w.line("\t}")
 		// Parse each arg.
 		callArgs := make([]string, len(params))
@@ -172,7 +173,9 @@ func (g *Generator) emitOneReplArgParser(w *goWriter, parser string, s goivy.Sor
 			w.linef(`	return 0, fmt.Errorf("expected %s value, got %%q", token)`, goExportedName(st.Name))
 		}
 	default:
-		if goIsAnyIntegerType(g, s) {
+		if g.hasStringInterp(s) {
+			w.line("\treturn token, nil")
+		} else if goIsAnyIntegerType(g, s) {
 			// Integer-backed (range, uninterp, BV ≤ 64): parse
 			// via Atoi and cast.
 			w.linef(`	n, err := strconv.Atoi(token)`)
@@ -180,11 +183,15 @@ func (g *Generator) emitOneReplArgParser(w *goWriter, parser string, s goivy.Sor
 			w.linef(`	return %s(n), nil`, typeName)
 		} else {
 			// Struct types (destructor records, variants) can't be
-			// parsed from a single token; return zero value with a
-			// note. Real struct parsing is a future enhancement.
+			// parsed from the current whitespace-token REPL. Unlike
+			// the old fallback, fail loudly instead of invoking the
+			// action with a zero value.
+			sortLabel := sortName(s)
+			if sortLabel == "" {
+				sortLabel = typeName
+			}
 			w.linef(`	var z %s`, typeName)
-			w.line(`	_ = token`)
-			w.line(`	return z, nil`)
+			w.linef(`	return z, fmt.Errorf("cannot parse %s argument from single REPL token %%q", token)`, sortLabel)
 		}
 	}
 	w.line("}")
@@ -223,13 +230,47 @@ func paramDefaultText(n goivy.Node) string {
 }
 
 // publicActionNamesSorted returns the action names eligible for REPL
-// dispatch, in deterministic order. M7 keeps all named actions; M9
-// can prune internal/ext: ones.
+// dispatch, in deterministic order. Mirrors ivy_to_cpp.py and
+// ivy2cpp: explicit global exports are the authority when present;
+// otherwise PublicActions is authoritative after isolate creation. For
+// older/minimal modules without either, fall back to ordinary
+// non-internal action names so legacy tests and direct REPL use keep
+// working.
 func (g *Generator) publicActionNamesSorted() []string {
 	if g == nil || g.Mod == nil || g.Mod.Actions == nil {
 		return nil
 	}
 	names := make([]string, 0)
+	if len(g.Mod.Exports) > 0 {
+		for _, exp := range g.Mod.Exports {
+			if exp == nil || exp.Scope() != "" {
+				continue
+			}
+			name := exp.Exported()
+			if hasPrefixAny(name, "imp__", "__") {
+				continue
+			}
+			if _, ok := g.Mod.Actions.Get2(name); !ok {
+				continue
+			}
+			names = append(names, name)
+		}
+		sort.Strings(names)
+		return names
+	}
+	if g.Mod.PublicActions != nil && g.Mod.PublicActions.Len() > 0 {
+		for name := range g.Mod.PublicActions.All() {
+			if hasPrefixAny(name, "imp__", "__") {
+				continue
+			}
+			if _, ok := g.Mod.Actions.Get2(name); !ok {
+				continue
+			}
+			names = append(names, name)
+		}
+		sort.Strings(names)
+		return names
+	}
 	for name := range g.Mod.Actions.All() {
 		// Skip internal actions starting with "ext:" or "imp:" so
 		// the REPL surfaces only user-callable actions (mirrors
@@ -243,6 +284,10 @@ func (g *Generator) publicActionNamesSorted() []string {
 	return names
 }
 
+func replActionCommandName(name string) string {
+	return strings.TrimPrefix(name, "ext:")
+}
+
 func hasPrefixAny(s string, prefixes ...string) bool {
 	for _, p := range prefixes {
 		if len(s) >= len(p) && s[:len(p)] == p {
@@ -251,4 +296,3 @@ func hasPrefixAny(s string, prefixes ...string) bool {
 	}
 	return false
 }
-

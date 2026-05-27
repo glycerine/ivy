@@ -44,6 +44,32 @@ action set_flag = {
 	}
 }
 
+func TestEmitRepl_DispatchUsesPublicActionsWhenDeclared(t *testing.T) {
+	mod := compileIvySource(t, `
+relation flag
+action helper = {
+	flag := false
+}
+action set_flag = {
+	flag := true
+}
+export set_flag
+`)
+	out, err := Generate(mod, Config{Target: "repl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Files["repl.go"]
+	if !strings.Contains(text, `case "set_flag":`) {
+		t.Fatalf("repl dispatch should include exported set_flag:\n%s", text)
+	}
+	for _, forbidden := range []string{`case "helper":`, "state.Helper("} {
+		if strings.Contains(text, forbidden) {
+			t.Fatalf("repl dispatch exposed private helper via %q:\n%s", forbidden, text)
+		}
+	}
+}
+
 func TestEmitRepl_BoolArgParser(t *testing.T) {
 	mod := compileIvySource(t, `
 relation flag
@@ -84,6 +110,43 @@ action set_pick(c: color) = {
 	}
 	if !strings.Contains(text, "return Red, nil") {
 		t.Errorf("repl should return Red enum constant:\n%s", text)
+	}
+}
+
+func TestEmitRepl_StructuredArgParsersReturnErrors(t *testing.T) {
+	mod := compileIvySource(t, `
+type point = struct {
+	ok : bool
+}
+type msg
+variant req of msg = struct {
+	ready : bool
+}
+action use_point(p: point) = {}
+action use_msg(m: msg) = {}
+export use_point
+export use_msg
+`)
+	out, err := Generate(mod, Config{Target: "repl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Files["repl.go"]
+	for _, parser := range []string{"parseArg_Point", "parseArg_Msg"} {
+		if !strings.Contains(text, "func "+parser+"(") {
+			t.Fatalf("missing %s parser:\n%s", parser, text)
+		}
+	}
+	for _, want := range []string{
+		`return z, fmt.Errorf("cannot parse point argument from single REPL token %q", token)`,
+		`return z, fmt.Errorf("cannot parse msg argument from single REPL token %q", token)`,
+	} {
+		if !strings.Contains(text, want) {
+			t.Fatalf("structured parser should fail loudly, missing %q:\n%s", want, text)
+		}
+	}
+	if strings.Contains(text, "return z, nil") {
+		t.Fatalf("structured parser must not silently accept zero values:\n%s", text)
 	}
 }
 
@@ -162,5 +225,48 @@ action unset = {
 	cmd.Dir = pkgDir
 	if output, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("go build failed:\n%s", string(output))
+	}
+}
+
+func TestSmoke_ReplStructuredArgReportsErrorInsteadOfCallingAction(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+type point = struct {
+	ok : bool
+}
+action echo(p: point) returns(out: bool) = {
+	out := p.ok
+}
+export echo
+`)
+	out, err := Generate(mod, Config{Target: "repl", PackageName: "main"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	dir := playpenDir(t)
+	if err := WriteOutput(out, dir); err != nil {
+		t.Fatalf("WriteOutput: %v", err)
+	}
+	pkgDir := outputDirectory(dir, out.BaseName)
+	build := exec.Command("go", "build", "-o", "repl_struct_arg_bin", ".")
+	build.Dir = pkgDir
+	if output, err := build.CombinedOutput(); err != nil {
+		t.Fatalf("go build failed:\n%s", string(output))
+	}
+	run := exec.Command("./repl_struct_arg_bin")
+	run.Dir = pkgDir
+	run.Stdin = strings.NewReader("echo anything\nquit\n")
+	output, err := run.CombinedOutput()
+	if err != nil {
+		t.Fatalf("generated repl failed: %v\n%s", err, string(output))
+	}
+	got := string(output)
+	if !strings.Contains(got, "error: cannot parse point argument") {
+		t.Fatalf("structured argument should report parse error, got:\n%s", got)
+	}
+	if hasLineWithAllTerms(got, "false") {
+		t.Fatalf("structured argument should not call action with zero value, got:\n%s", got)
 	}
 }

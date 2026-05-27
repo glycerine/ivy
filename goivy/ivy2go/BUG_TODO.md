@@ -59,26 +59,17 @@ recommendations unless there is a concrete failure mode.
   `iters`, `runs`, `seed`, `delay`, `wait`, `out`, and `modelfile` are parsed,
   `runs` drives repeated test executions, `out` redirects trace output, and
   `modelfile` opens the advertised model-log path.
+- REPL dispatch now exposes only explicitly exported global actions when
+  exports exist, otherwise using `PublicActions` after isolate creation and
+  preserving the old all-actions fallback only for export-less modules.
+- REPL parsers for unsupported structured single-token arguments now return an
+  explicit parse error instead of silently invoking actions with zero values.
 
 Remaining entries keep their original audit numbering.
 
 ## P1 - generated programs can be wrong, invalid, or unlaunchable
 
 ## P2 - target and interface behavior diverges from the intended ivy2cpp shape
-
-18. REPL dispatch exposes non-public actions.
-
-    Evidence: `publicActionNamesSorted` walks `g.Mod.Actions.All()` and filters
-    only by prefix (`repl.go:228`). The test action-generator path uses
-    `Mod.PublicActions` when available (`action_gen.go:832`). A private helper
-    action with an ordinary name can become callable from the Go REPL.
-
-19. REPL silently accepts unsupported structured arguments as zero values.
-
-    Evidence: `emitOneReplArgParser` returns zero value and nil error for
-    non-integer, non-bool, non-enum sorts (`repl.go:181`). Actions taking
-    struct, variant, or native-typed parameters can be invoked with any token
-    and receive a zero value instead of a parse error.
 
 ## P3 - narrower invalid-Go emitters
 
