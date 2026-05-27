@@ -332,6 +332,7 @@ func CreateIsolate(iso string, mod *Module) error {
 				if err != nil {
 					continue
 				}
+				infoAction := action1
 				action2, err := LookupAction(mod, mx.Mixee())
 				if err != nil {
 					continue
@@ -341,14 +342,20 @@ func CreateIsolate(iso string, mod *Module) error {
 				if origExports[mixedName] && !mx.IsAfter() {
 					// Before mixin on exported action: convert asserts to assumes
 					// (asserts are the caller's responsibility)
-					_ = action1 // would call action1.assert_to_assume in full impl
+					action1 = AssertToAssume(action1, map[string]bool{"assert": true}, mod.Cfg.IuCfg)
 				}
 
 				xtracer.Trace("isolate.create_no_iso mixer=%s mixee=%s", mx.Mixer(), mx.Mixee())
 				mixed := ApplyMixin(action1, action2, mx.IsAfter())
 				mod.Actions.Set(mixedName, mixed)
+				triple := MixinTriple{Mixer: mx.Mixer(), Mixee: mx.Mixee(), Action: infoAction}
+				if isMixinImplement(mx) {
+					mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations, triple)
+					implemented[mx.Mixee()] = true
+				} else {
+					mod.IsolateInfo.Monitors = append(mod.IsolateInfo.Monitors, triple)
+				}
 				implemented[mx.Mixer()] = true
-				implemented[mx.Mixee()] = true
 				_ = actname
 			}
 		}
@@ -356,7 +363,8 @@ func CreateIsolate(iso string, mod *Module) error {
 		// Actions not touched by mixins get default implementation
 		for actname, act := range mod.Actions.All() {
 			if !implemented[actname] {
-				_ = act // already in mod.Actions
+				mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations,
+					MixinTriple{Mixer: actname, Mixee: actname, Action: act})
 			}
 		}
 
