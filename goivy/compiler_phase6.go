@@ -2828,6 +2828,7 @@ func IvyFromString(source string) (*Module, error) {
 	}
 
 	mod := New()
+	setConfigLanguageVersion(mod.Cfg, versionString(version))
 	mod.Name = "string_input"
 	if err := IvyCompile(result.Decls, mod, true); err != nil {
 		return nil, err

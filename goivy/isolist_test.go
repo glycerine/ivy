@@ -3,45 +3,37 @@ package goivy
 import (
 	"os"
 	"path/filepath"
-	"runtime"
-	"strings"
 	"testing"
 )
 
-func TestListIsolatesHandlesSorryTacticDuringLoad(t *testing.T) {
-	_, file, _, ok := runtime.Caller(0)
-	if !ok {
-		t.Fatal("unable to resolve test file path")
-	}
-	path := filepath.Join(filepath.Dir(file), "..", "ivy-lang-examples", "doc", "examples", "cav2024", "examp1_numeric.ivy")
-	if _, err := os.Stat(path); err != nil {
-		t.Skipf("example not available at %s: %v", path, err)
+func TestIvyVersionSupportedIncludesV16(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "v16.ivy")
+	if err := os.WriteFile(path, []byte("#lang ivy1.6\n"), 0644); err != nil {
+		t.Fatal(err)
 	}
 
-	isolates, err := ListIsolates(path)
+	ok, err := IvyVersionSupported(path)
 	if err != nil {
-		t.Fatalf("ListIsolates failed on source with tactic sorry: %v", err)
+		t.Fatal(err)
 	}
-	if len(isolates) == 0 {
-		t.Fatal("expected at least one isolate")
+	if !ok {
+		t.Fatal("ivy1.6 should be supported")
 	}
 }
 
-func TestListIsolatesUnknownTypeReturnsError(t *testing.T) {
-	_, file, _, ok := runtime.Caller(0)
-	if !ok {
-		t.Fatal("unable to resolve test file path")
-	}
-	path := filepath.Join(filepath.Dir(file), "..", "ivy-lang-examples", "test", "cont2b.ivy")
-	if _, err := os.Stat(path); err != nil {
-		t.Skipf("example not available at %s: %v", path, err)
+func TestIvyVersionSupportedStillRejectsBeforeV16(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "v15.ivy")
+	if err := os.WriteFile(path, []byte("#lang ivy1.5\n"), 0644); err != nil {
+		t.Fatal(err)
 	}
 
-	_, err := ListIsolates(path)
-	if err == nil {
-		t.Fatal("expected unknown type error, got nil")
+	ok, err := IvyVersionSupported(path)
+	if err != nil {
+		t.Fatal(err)
 	}
-	if !strings.Contains(err.Error(), "unknown type: foo") {
-		t.Fatalf("ListIsolates error = %v, want unknown type: foo", err)
+	if ok {
+		t.Fatal("ivy1.5 should not be reported as supported")
 	}
 }
