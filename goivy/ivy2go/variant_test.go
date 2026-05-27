@@ -10,7 +10,6 @@ import (
 func TestEmitVariant_SuperStructAndConstructor(t *testing.T) {
 	mod := compileIvySource(t, `
 type t0
-type t1
 variant t1 of t0
 `)
 	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
@@ -37,8 +36,6 @@ variant t1 of t0
 func TestEmitVariant_TwoLeafConstructors(t *testing.T) {
 	mod := compileIvySource(t, `
 type super
-type leaf_a
-type leaf_b
 variant leaf_a of super
 variant leaf_b of super
 `)

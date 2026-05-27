@@ -275,8 +275,6 @@ action use_box(b: box) = {
 func TestEmit_TestTarget_VariantParamPlainLeavesUseConstructorSwitch(t *testing.T) {
 	mod := compileIvySource(t, `
 type super
-type leaf_a
-type leaf_b
 variant leaf_a of super
 variant leaf_b of super
 relation flag
@@ -342,8 +340,6 @@ func TestSmoke_BuildEmittedTest_VariantParam(t *testing.T) {
 	}
 	mod := compileIvySource(t, `
 type super
-type leaf_a
-type leaf_b
 variant leaf_a of super
 variant leaf_b of super
 relation flag
