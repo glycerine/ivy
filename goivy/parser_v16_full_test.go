@@ -855,8 +855,8 @@ extract simple = a, b`
 func TestParseV16DefinitionSomeExprAndOperatorLHS(t *testing.T) {
 	src := `type t
 relation p(X:t)
-definition choice(X:t):t = some Y:t . p(Y) in Y else X
-definition (X + Y):t = X`
+definition choice(X:t):t = some Y:t . p(Y) in Y else X,
+           (X + Y):t = X`
 	result, err := Parse(src, Version{1, 6}, WithFilename("definition_shapes16.ivy"))
 	if err != nil {
 		t.Fatalf("Parse v1.6 definition shapes: %v", err)

@@ -421,9 +421,9 @@ top:
         $$ = $1
         lex := parser16lex.(*parser16LexAdapter)
         a1 := parser16Acfg(parser16lex).NewAtom($4)
-        a1.SetLineno(tok16Lineno(lex, $4))
+        a1.SetLineno(tok16Lineno(lex, $3))
         a2 := parser16Acfg(parser16lex).NewAtom($6)
-        a2.SetLineno(tok16Lineno(lex, $6))
+        a2.SetLineno(tok16Lineno(lex, $5))
         impl := parser16Acfg(parser16lex).NewImplementTypeDef([]Node{a1, a2})
         impl.SetLineno(tok16Lineno(lex, $5))
         d := parser16Acfg(parser16lex).NewImplementTypeDecl(parser17MkLF(parser16Acfg(parser16lex), impl))
@@ -463,7 +463,7 @@ top:
         lex := parser16lex.(*parser16LexAdapter)
         objAccum := $8
         nameAtom := parser16Acfg(parser16lex).NewAtom($4)
-        createObject(parser16Acfg(parser16lex), $$, nameAtom, $5, objAccum, tok16Lineno(lex, $4), false)
+        createObject(parser16Acfg(parser16lex), $$, nameAtom, $5, objAccum, tok16Lineno(lex, $3), false)
         a1 := parser16Acfg(parser16lex).NewAtom($4, $5...)
         a2 := parser16Acfg(parser16lex).NewAtom($4, $5...)
         elems := append([]Node{a1, a2}, $10...)
@@ -982,6 +982,54 @@ objectend:
         xtracer.Trace("parser.p_objectend ENTER (objectend)")
         parser16lex.(*parser16LexAdapter).accum.isObject = false
         $$ = nil
+    }
+    ;
+
+modulestart:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_modulestart ENTER (modulestart)")
+        parser16lex.(*parser16LexAdapter).accum.isModule = true
+        $$ = nil
+    }
+    ;
+
+moduleend:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_moduleend ENTER (moduleend)")
+        $$ = nil
+    }
+    ;
+
+modcat:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_modcat ENTER (modcat)")
+        $$ = nil
+    }
+    | PARSER16_TOK_OBJECT
+    {
+        xtracer.Trace("parser.p_modcat_object ENTER (modcat)")
+        $$ = parser16Acfg(parser16lex).NewAtom("object")
+    }
+    | PARSER16_TOK_ISOLATE
+    {
+        xtracer.Trace("parser.p_modcat_isolate ENTER (modcat)")
+        $$ = parser16Acfg(parser16lex).NewAtom("isolate")
+    }
+    ;
+
+optwith:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_optwith ENTER (optwith)")
+        $$ = nil
+    }
+    | PARSER16_TOK_WITH callatoms
+    {
+        xtracer.Trace("parser.p_optwith_with_callatoms ENTER (optwith)")
+        $$ = $2
     }
     ;
 
@@ -1701,11 +1749,13 @@ constantdecl:
     ;
 
 rel:
-    aterm
+    defnlhs
     {
         xtracer.Trace("parser.p_rel_defnlhs ENTER (rel)")
         if a, ok := $1.(*Atom); ok {
             a.ASort = parser16Acfg(parser16lex).NewSymbol("bool", nil)
+        } else if app, ok := $1.(*App); ok {
+            app.ASort = parser16Acfg(parser16lex).NewSymbol("bool", nil)
         }
         $$ = parser16Acfg(parser16lex).NewConstantDecl($1)
     }
@@ -1732,16 +1782,16 @@ rels:
     ;
 
 fun:
-    tterm
+    typeddefn
     {
         xtracer.Trace("parser.p_fun_defnlhs_colon_atype ENTER (fun)")
         d := parser16Acfg(parser16lex).NewConstantDecl($1)
         $$ = d
     }
-    | tterm PARSER16_TOK_EQ fmla
+    | typeddefn PARSER16_TOK_EQ defnrhs
     {
         xtracer.Trace("parser.p_fun_defn ENTER (fun)")
-        df := parser16Acfg(parser16lex).NewDefinition(AppToAtom($1), checkNonTemporal($3))
+        df := parser16Acfg(parser16lex).NewDefinition(AppToAtom($1), $3)
         df.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
         lf := parser17MkLF(parser16Acfg(parser16lex), df)
         d := parser16Acfg(parser16lex).NewDerivedDecl(lf)
@@ -1768,6 +1818,11 @@ defnrhs:
         xtracer.Trace("parser.p_defnrhs_fmla ENTER (defnrhs)")
         $$ = checkNonTemporal($1)
     }
+    | somevarfmla
+    {
+        xtracer.Trace("parser.p_defnrhs_somevarfmla ENTER (defnrhs)")
+        $$ = checkNonTemporal($1)
+    }
     | PARSER16_TOK_NATIVEQUOTE
     {
         xtracer.Trace("parser.p_defnrhs_nativequote ENTER (defnrhs)")
@@ -1780,7 +1835,7 @@ defnrhs:
     ;
 
 defn:
-    tterm PARSER16_TOK_EQ defnrhs
+    typeddefn PARSER16_TOK_EQ defnrhs
     {
         xtracer.Trace("parser.p_defn_atom_fmla ENTER (defn)")
         d := parser16Acfg(parser16lex).NewDefinition(AppToAtom($1), $3)
@@ -1799,6 +1854,113 @@ defns:
     {
         xtracer.Trace("parser.p_defns_defns_comma_defn ENTER (defns)")
         $$ = append($1, $3)
+    }
+    ;
+
+defnlhs:
+    dotsym
+    {
+        xtracer.Trace("parser.p_defnlhs_symbol ENTER (defnlhs)")
+        $$ = parser16Acfg(parser16lex).NewAtom($1)
+    }
+    | dotsym PARSER16_TOK_LPAREN defargs PARSER16_TOK_RPAREN
+    {
+        xtracer.Trace("parser.p_defnlhs_symbol_lparen_defargs_rparen ENTER (defnlhs)")
+        a := parser16Acfg(parser16lex).NewAtom($1)
+        a.Terms = $3
+        $$ = a
+    }
+    | PARSER16_TOK_LPAREN defarg relop defarg PARSER16_TOK_RPAREN
+    {
+        xtracer.Trace("parser.p_defnlhs_lp_term_relop_term_rp ENTER (defnlhs)")
+        $$ = parser16Acfg(parser16lex).NewAtom($3, $2, $4)
+    }
+    | PARSER16_TOK_LPAREN defarg infix defarg PARSER16_TOK_RPAREN
+    {
+        xtracer.Trace("parser.p_defnlhs_lp_term_infix_term_rp ENTER (defnlhs)")
+        $$ = parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol($3, nil), $2, $4)
+    }
+    ;
+
+defarg:
+    lparam
+    {
+        xtracer.Trace("parser.p_defarg_lparam ENTER (defarg)")
+        $$ = $1
+    }
+    | var
+    {
+        xtracer.Trace("parser.p_defarg_var ENTER (defarg)")
+        $$ = $1
+    }
+    ;
+
+defargs:
+    defarg
+    {
+        xtracer.Trace("parser.p_defargs_defarg ENTER (defargs)")
+        $$ = []Node{$1}
+    }
+    | defargs PARSER16_TOK_COMMA defarg
+    {
+        xtracer.Trace("parser.p_defargs_defargs_comma_defarg ENTER (defargs)")
+        $$ = append($1, $3)
+    }
+    ;
+
+typeddefn:
+    defnlhs
+    {
+        xtracer.Trace("parser.p_typeddefn_defnlhs ENTER (typeddefn)")
+        $$ = $1
+    }
+    | defnlhs PARSER16_TOK_COLON atype
+    {
+        xtracer.Trace("parser.p_typeddefn_defnlhs_colon_atype ENTER (typeddefn)")
+        if a, ok := $1.(*Atom); ok {
+            a.ASort = $3
+        } else if app, ok := $1.(*App); ok {
+            app.ASort = $3
+        }
+        $$ = $1
+    }
+    ;
+
+somevarfmla:
+    PARSER16_TOK_SOME simplevar PARSER16_TOK_DOT fmla optin optelse
+    {
+        xtracer.Trace("parser.p_somevarfmla_some_simplevar_dot_fmla ENTER (somevarfmla)")
+        se := parser16Acfg(parser16lex).NewSomeExpr($2, $4)
+        if $5 != nil { se.IfValue = $5 }
+        if $6 != nil { se.ElseVal = $6 }
+        se.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = se
+    }
+    ;
+
+optin:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_optin ENTER (optin)")
+        $$ = nil
+    }
+    | PARSER16_TOK_IN fmla
+    {
+        xtracer.Trace("parser.p_optin_in_fmla ENTER (optin)")
+        $$ = $2
+    }
+    ;
+
+optelse:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_optelse ENTER (optelse)")
+        $$ = nil
+    }
+    | PARSER16_TOK_ELSE fmla
+    {
+        xtracer.Trace("parser.p_optelse_else_fmla ENTER (optelse)")
+        $$ = $2
     }
     ;
 
@@ -1902,11 +2064,24 @@ schconc:
     ;
 
 schdefn:
-    tterm PARSER16_TOK_EQ schdefnrhs
+    defnlhs PARSER16_TOK_EQ schdefnrhs
     {
         xtracer.Trace("parser.p_schdefn_atom_eq_fmla ENTER (schdefn)")
         $$ = parser16Acfg(parser16lex).NewDefinition(AppToAtom($1), $3)
         $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
+    }
+    ;
+
+optghost:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_optghost ENTER (optghost)")
+        $$ = false
+    }
+    | PARSER16_TOK_GHOST
+    {
+        xtracer.Trace("parser.p_optghost_ghost ENTER (optghost)")
+        $$ = true
     }
     ;
 
