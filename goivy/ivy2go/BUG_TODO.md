@@ -39,19 +39,13 @@ recommendations unless there is a concrete failure mode.
   `*big.Int` values. Solver-derived BV initial-state values also parse Z3
   decimal, hex, binary, and `(_ bvN W)` model syntax before emitting width-
   appropriate Go literals.
+- Plain variant leaves now use their zero-argument constructors in both
+  leaf-to-super upcasts and nondeterministic variant-super construction, while
+  payload leaves still pass their payload values.
 
 Remaining entries keep their original audit numbering.
 
 ## P1 - generated programs can be wrong, invalid, or unlaunchable
-
-11. Plain variant leaf constructors are called with arguments even though they
-    take none.
-
-    Evidence: `emitVariantSuperStruct` emits `func NewSuperLeaf() Super` for
-    plain leaves (`variant.go:208`). `variantUpcastExpr` always renders
-    `NewSuperLeaf(expr)` (`variant.go:81`), and `mkNondetVariantScoped` also
-    calls every variant constructor with a temp value (`nondet.go:174`). Plain
-    leaf upcasts or nondet initialization generate wrong-arity calls.
 
 12. Default state initialization skips function-sorted state instead of using
     the existing function-aware nondet logic.

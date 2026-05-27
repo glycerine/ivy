@@ -176,6 +176,10 @@ func (g *Generator) mkNondetVariantScoped(w *goWriter, lhsExpr string, super goi
 		w.linef("%s %s == %d {", prefix, choice, i)
 		subName := sortName(sub)
 		ctor := "New" + goExportedName(superName) + goExportedName(subName)
+		if g.isPlainVariantSubtypeName(subName) {
+			w.linef("%s = %s()", lhsExpr, ctor)
+			continue
+		}
 		tmp := fmt.Sprintf("__nd_v_%d_%d", uniqueID, i)
 		w.linef("var %s %s", tmp, g.goType(sub))
 		g.mkNondetValueScoped(w, tmp, sub, name, uniqueID, className)

@@ -74,18 +74,30 @@ func variantSolverRelationName(super, sub goivy.Sort) string {
 	return "*>:" + sortName(super) + ":" + sortName(sub)
 }
 
-// variantUpcastExpr wraps an expression of a variant leaf sort in
-// the supertype constructor `New<Super><Leaf>(expr)`. Mirrors
-// ivy2cpp/variant.go:36 variantUpcastExpr. The Go-side constructor
-// shape is defined in emitVariantSuperStruct (variant.go:139).
-func (g *Generator) variantUpcastExpr(super, sub goivy.Sort, expr string) string {
+// variantConstructorCall returns the constructor expression for a leaf
+// of a variant super. Plain leaves are tag-only in Go, so their
+// constructors take no payload argument; destructor-backed leaves keep
+// the payload expression.
+func (g *Generator) variantConstructorCall(super, sub goivy.Sort, expr string) string {
 	superName, _ := g.variantSuperName(super)
 	if superName == "" {
 		superName = sortName(super)
 	}
 	subName := sortName(sub)
 	ctor := "New" + goExportedName(superName) + goExportedName(subName)
+	if g.isPlainVariantSubtypeName(subName) {
+		return fmt.Sprintf("%s()", ctor)
+	}
 	return fmt.Sprintf("%s(%s)", ctor, expr)
+}
+
+// variantUpcastExpr wraps an expression of a variant leaf sort in
+// the supertype constructor. Plain leaves emit `New<Super><Leaf>()`;
+// payload leaves emit `New<Super><Leaf>(expr)`. Mirrors
+// ivy2cpp/variant.go:36 variantUpcastExpr. The Go-side constructor
+// shape is defined in emitVariantSuperStruct (variant.go:139).
+func (g *Generator) variantUpcastExpr(super, sub goivy.Sort, expr string) string {
+	return g.variantConstructorCall(super, sub, expr)
 }
 
 // maybeVariantUpcast returns expr unchanged unless value is a variant
@@ -275,9 +287,9 @@ func (g *Generator) emitVariantLeafStruct(w *goWriter, name string) {
 // variantLeafInfo bundles what variant-input synthesis needs about
 // one leaf of a variant super sort.
 type variantLeafInfo struct {
-	Name    string             // leaf sort name (e.g. "leaf_a")
-	IsPlain bool               // true → no payload (NewSuperLeafA())
-	Fields  []destructorField  // scalar destructor fields (empty when plain)
+	Name    string            // leaf sort name (e.g. "leaf_a")
+	IsPlain bool              // true → no payload (NewSuperLeafA())
+	Fields  []destructorField // scalar destructor fields (empty when plain)
 }
 
 // variantLeaves returns the leaf metadata for a variant super sort
