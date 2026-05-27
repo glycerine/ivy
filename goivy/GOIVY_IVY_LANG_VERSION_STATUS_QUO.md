@@ -53,7 +53,7 @@ Lexer and parsers:
 - `goivy/logicparser.go`: `9-52`
 - `goivy/lalr_logicparser_lalr_parser.go`: `10-23`, `25-38`, `50-57`
 - `goivy/v16_lalr_v16.go`: `7-18`, `28-35`
-- `goivy/v16_grammar_v16.y`: `1-8`, `57-74`, `113-242`
+- `goivy/v16_logicgrammar_v16.y`: `1-8`, `57-74`, `113-242`
 - `goivy/v12_lalr_v12.go`: `7-18`, `28-35`
 - `goivy/lalr_logicparser_grammar_v17.y`: `1-13`, `200-215`,
   `463-501`
@@ -267,7 +267,7 @@ structure are therefore not faithfully represented by the full module parser.
 - `7-18`: `ParseV16` runs the v1.3-v1.6 LALR logic grammar.
 - `28-35`: the v1.6 logic parser uses the version-aware lexer.
 
-`goivy/v16_grammar_v16.y`
+`goivy/v16_logicgrammar_v16.y`
 
 - `1-8`: documents the key v1.6 differences: separate formulas and terms,
   comparison operators only in formula rules, different precedence, and no

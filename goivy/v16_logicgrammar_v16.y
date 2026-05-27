@@ -1,4 +1,4 @@
-// grammar_v16.y — goyacc LALR(1) grammar for Ivy v1.3–v1.6.
+// v16_logicgrammar_v16.y — goyacc LALR(1) logic grammar for Ivy v1.3–v1.6.
 // Key differences from v1.7+:
 // - Formulas and terms are SEPARATE categories (fmla vs term)
 // - Comparison operators only appear in fmla rules, not term rules
