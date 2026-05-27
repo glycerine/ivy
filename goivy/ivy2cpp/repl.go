@@ -275,9 +275,10 @@ func (g *Generator) emitCmdReader(w *cppWriter) {
 	w.open(fmt.Sprintf("%s(%s &_ivy) : ivy(_ivy) {", readerClass, reprClass))
 	w.line("lineno = 1;")
 	if g.Config.Target == "test" {
-		w.line("if (isatty(fdes()))")
+		w.line("if (isatty(fdes())) {")
 		w.indent++
 		w.line(`__ivy_out << "> "; __ivy_out.flush();`)
+		w.line("}")
 		w.indent--
 	} else {
 		w.open("if (isatty(fdes())) {")
