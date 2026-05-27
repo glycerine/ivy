@@ -63,7 +63,7 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 %type <nodes> terms vars simplevars tterms rels funs defns matches optargs optreturns optactualreturns names actseq actseqrev callatoms schdecl schdecls objectargs
 %type <nodes> lparams params bounds invariants decreases eqns moresymbols atoms modifies insts pnames apps upaxes cdefns prod sum places scentranss optwith defargs
 %type <bval>  optdotdotdot opttrusted optghost
-%type <str>   relop infix dotsym SYMBOLx
+%type <str>   relop infix dotsym SYMBOLx SYMsubscr
 %type <tok>   labelname
 
 %left         PARSER16_TOK_SEMI
@@ -2147,7 +2147,31 @@ typesymbol:
 SYMBOLx:
     PARSER16_TOK_PRESYMBOL
     {
+        xtracer.Trace("parser.p_SYMBOL_PRESYMBOL ENTER (SYMBOL) val=%s", $1.Val)
         $$ = $1.Val
+    }
+    | SYMBOLx PARSER16_TOK_LB SYMsubscr PARSER16_TOK_RB
+    {
+        xtracer.Trace("parser.p_SYMBOL_SYMBOL_LB_SYMsubscr_RB ENTER (SYMBOL)")
+        $$ = $1 + "[" + $3 + "]"
+    }
+    ;
+
+SYMsubscr:
+    SYMBOLx
+    {
+        xtracer.Trace("parser.p_SYMsubscr_SYMBOL ENTER (SYMsubscr)")
+        $$ = $1
+    }
+    | PARSER16_TOK_THIS
+    {
+        xtracer.Trace("parser.p_SYMsubscr_THIS ENTER (SYMsubscr)")
+        $$ = "this"
+    }
+    | SYMsubscr PARSER16_TOK_DOT SYMBOLx
+    {
+        xtracer.Trace("parser.p_SYMsubscr_SYMsubscr_dot_symbol ENTER (SYMsubscr)")
+        $$ = $1 + "." + $3
     }
     ;
 

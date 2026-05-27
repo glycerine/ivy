@@ -45,6 +45,27 @@ func TestParseV17UnlabeledAxiomStillSynthesizesLabel(t *testing.T) {
 	}
 }
 
+func TestParseV16AndV17LabelsAcceptPythonSymbolSubscripts(t *testing.T) {
+	for _, tc := range []struct {
+		name    string
+		version Version
+	}{
+		{name: "v16", version: Version{1, 6}},
+		{name: "v17", version: Version{1, 7}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			result, err := Parse("type t\naxiom [lbl[this.part]] true", tc.version, WithFilename(tc.name+"_subscript_label.ivy"))
+			if err != nil {
+				t.Fatalf("Parse %s subscript label: %v", tc.name, err)
+			}
+			lf := firstLabeledFormulaInDecl[*AxiomDecl](t, result.Decls)
+			if got := lf.LabelName(); got != "lbl[this.part]" {
+				t.Fatalf("%s label = %q, want lbl[this.part]", tc.name, got)
+			}
+		})
+	}
+}
+
 func TestParseV16VarDeclaresConstant(t *testing.T) {
 	result, err := Parse("type t\nvar x:t", Version{1, 6}, WithFilename("var16.ivy"))
 	if err != nil {
