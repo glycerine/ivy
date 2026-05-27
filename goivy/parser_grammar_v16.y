@@ -162,7 +162,8 @@ top:
         if isRange {
             imp := parser16Acfg(parser16lex).NewImplies(scnst, $7)
             imp.SetLineno(tok16Lineno(lex, $4))
-            thing := parser16Acfg(parser16lex).NewInterpretDecl(parser17MkLF(parser16Acfg(parser16lex), imp))
+            lf := parser16AddLabel(parser17MkLF(parser16Acfg(parser16lex), imp), "interp")
+            thing := parser16Acfg(parser16lex).NewInterpretDecl(lf)
             thing.SetLineno(tok16Lineno(lex, $4))
             $$.declare(thing)
         }
@@ -195,7 +196,7 @@ top:
         $$ = $1
         args := make([]Node, len($3))
         for i, x := range $3 {
-            args[i] = parser17MkLF(parser16Acfg(parser16lex), x)
+            args[i] = parser16AddLabel(parser17MkLF(parser16Acfg(parser16lex), x), "def")
         }
         dd := parser16Acfg(parser16lex).NewDerivedDecl(args...)
         $$.declare(dd)
@@ -342,7 +343,7 @@ top:
     }
     | top opttemporal PARSER16_TOK_AXIOM labeledfmla
     {
-        xtracer.Trace("parser.p_top_axiom_optlabel_gprop ENTER (top)")
+        xtracer.Trace("parser.p_top_axiom_labeledfmla ENTER (top)")
         $$ = $1
         parser16DeclareAxiom(parser16Acfg(parser16lex), $$, $4.(*LabeledFormula), $2 != nil, tok16Lineno(parser16lex.(*parser16LexAdapter), $3))
     }
@@ -376,7 +377,7 @@ top:
     }
     | top PARSER16_TOK_INIT labeledfmla
     {
-        xtracer.Trace("parser.p_top_init_labeledfmla ENTER (top)")
+        xtracer.Trace("parser.p_top_init_fmla ENTER (top)")
         $$ = $1
         parser16DeclareInit(parser16Acfg(parser16lex), $$, $3.(*LabeledFormula), tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
     }
@@ -548,7 +549,8 @@ top:
         lex := parser16lex.(*parser16LexAdapter)
         imp := parser16Acfg(parser16lex).NewImplies($3, $5)
         imp.SetLineno(tok16Lineno(lex, $4))
-        d := parser16Acfg(parser16lex).NewInterpretDecl(parser17MkLF(parser16Acfg(parser16lex), imp))
+        lf := parser16AddLabel(parser17MkLF(parser16Acfg(parser16lex), imp), "interp")
+        d := parser16Acfg(parser16lex).NewInterpretDecl(lf)
         d.SetLineno(tok16Lineno(lex, $4))
         $$.declare(d)
     }
@@ -560,7 +562,8 @@ top:
         rng := parser16Acfg(parser16lex).NewRange($6, $8)
         imp := parser16Acfg(parser16lex).NewImplies($3, rng)
         imp.SetLineno(tok16Lineno(lex, $4))
-        d := parser16Acfg(parser16lex).NewInterpretDecl(parser17MkLF(parser16Acfg(parser16lex), imp))
+        lf := parser16AddLabel(parser17MkLF(parser16Acfg(parser16lex), imp), "interp")
+        d := parser16Acfg(parser16lex).NewInterpretDecl(lf)
         d.SetLineno(tok16Lineno(lex, $4))
         $$.declare(d)
     }
@@ -572,7 +575,8 @@ top:
         es := parser16Acfg(parser16lex).NewEnumeratedSort(vals...)
         imp := parser16Acfg(parser16lex).NewImplies($3, es)
         imp.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $4))
-        d := parser16Acfg(parser16lex).NewInterpretDecl(parser17MkLF(parser16Acfg(parser16lex), imp))
+        lf := parser16AddLabel(parser17MkLF(parser16Acfg(parser16lex), imp), "interp")
+        d := parser16Acfg(parser16lex).NewInterpretDecl(lf)
         d.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $4))
         $$.declare(d)
     }
@@ -671,7 +675,7 @@ top:
         $$ = $1
         lfs := make([]Node, 0, len($3))
         for _, def := range $3 {
-            lfs = append(lfs, parser17MkLF(parser16Acfg(parser16lex), def))
+            lfs = append(lfs, parser16AddLabel(parser17MkLF(parser16Acfg(parser16lex), def), "def"))
         }
         d := parser16Acfg(parser16lex).NewDefinitionDecl(lfs...)
         d.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
@@ -1868,7 +1872,7 @@ rel:
     | defn
     {
         xtracer.Trace("parser.p_rel_defn ENTER (rel)")
-        lf := parser17MkLF(parser16Acfg(parser16lex), $1)
+        lf := parser16AddLabel(parser17MkLF(parser16Acfg(parser16lex), $1), "def")
         d := parser16Acfg(parser16lex).NewDerivedDecl(lf)
         $$ = d
     }
@@ -1899,7 +1903,7 @@ fun:
         xtracer.Trace("parser.p_fun_defn ENTER (fun)")
         df := parser16Acfg(parser16lex).NewDefinition(AppToAtom($1), $3)
         df.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $2))
-        lf := parser17MkLF(parser16Acfg(parser16lex), df)
+        lf := parser16AddLabel(parser17MkLF(parser16Acfg(parser16lex), df), "def")
         d := parser16Acfg(parser16lex).NewDerivedDecl(lf)
         $$ = d
     }
@@ -2130,7 +2134,7 @@ schdecl:
     | PARSER16_TOK_PROPERTY labeledfmla
     {
         xtracer.Trace("parser.p_schdecl_propdecl ENTER (schdecl)")
-        $$ = []Node{checkNonTemporal($2)}
+        $$ = []Node{checkNonTemporal(parser16AddLabel($2.(*LabeledFormula), "prop"))}
     }
     | schdefnrhs
     {
@@ -2139,7 +2143,7 @@ schdecl:
         if $1 != nil && $1.GetLineno().Line > 0 {
             lf.SetLineno($1.GetLineno())
         }
-        $$ = []Node{lf}
+        $$ = []Node{parser16AddLabel(lf, "sch")}
     }
     ;
 

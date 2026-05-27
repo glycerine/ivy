@@ -41,6 +41,7 @@ func parser16DeclareType(cfg *AstConfig, top *ivyAccum, name *Atom, loc Location
 }
 
 func parser16DeclareAxiom(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, temporal bool, loc Location) {
+	lf = parser16AddLabel(lf, "axiom")
 	if temporal {
 		lf = addTemporal(lf)
 	} else {
@@ -52,6 +53,7 @@ func parser16DeclareAxiom(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, tem
 }
 
 func parser16DeclareProperty(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, temporal bool, loc Location) {
+	lf = parser16AddLabel(lf, "prop")
 	if temporal {
 		lf = addTemporal(lf)
 	} else {
@@ -63,6 +65,7 @@ func parser16DeclareProperty(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, 
 }
 
 func parser16DeclareConjecture(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, loc Location) {
+	lf = parser16AddLabel(lf, "conj")
 	d := cfg.NewConjectureDecl(lf)
 	d.SetLineno(loc)
 	top.declare(d)

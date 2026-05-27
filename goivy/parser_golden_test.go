@@ -588,7 +588,6 @@ func TestGoldenAll(t *testing.T) {
 
 	startDir := "../ivy-lang-examples/"
 
-	// temporary just process v1.6:
 	// v1.6, v1.7, and v1.8:
 	paths, err := ListAllIvyPathsRecursively(startDir)
 	panicOn(err)
