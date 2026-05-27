@@ -179,10 +179,7 @@ func (g *Generator) emitSolvedInitialState(w *goWriter, slv *goivy.Solver, model
 		}
 		switch st.Kind {
 		case goStorageArray:
-			lhs := field
-			for _, a := range goArgs {
-				lhs += "[" + a + "]"
-			}
+			lhs := field + g.compactArrayIndexSuffix(fs.Domain(), goArgs)
 			w.linef("%s = %s", lhs, value)
 		case goStorageHashThunk:
 			// Lazily allocate the map then assign the cell.
@@ -334,6 +331,10 @@ func (g *Generator) emitScalarChoice(w *goWriter, sym stateSymbol) {
 	case *goivy.BooleanSort:
 		w.linef("%s = ivyChoose(2) == 1", field)
 	default:
+		if expr, ok := g.rangeChoiceExpr(sym.Sort, fmt.Sprintf("ivyChoose(%d)", goSortCard(g, sym.Sort))); ok {
+			w.linef("%s = %s", field, expr)
+			return
+		}
 		card := goSortCard(g, sym.Sort)
 		if card <= 0 {
 			// Fall back to zero-initialisation when cardinality is

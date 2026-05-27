@@ -290,9 +290,6 @@ func (g *Generator) emitAssignmentLoopsBody(w *goWriter, vs []*goivy.LogicVariab
 // storage given the loop variables vs. Single-var → tmp[v]; multi-var
 // → tmp[tup__T1__T2{v1, v2}].
 func (g *Generator) tempKeyExpression(vs []*goivy.LogicVariable, tmpName string) string {
-	if len(vs) == 1 {
-		return tmpName + "[" + goIdent(vs[0].Name) + "]"
-	}
 	domSorts := make([]goivy.Sort, len(vs))
 	for i, v := range vs {
 		domSorts[i] = v.VSort
@@ -303,12 +300,15 @@ func (g *Generator) tempKeyExpression(vs []*goivy.LogicVariable, tmpName string)
 		st := goFunctionStorageFor(g, domSorts, goivy.Boolean)
 		_ = tsort
 		if st.Kind == goStorageArray {
-			expr := tmpName
-			for _, v := range vs {
-				expr += "[" + goIdent(v.Name) + "]"
+			args := make([]string, len(vs))
+			for i, v := range vs {
+				args[i] = goIdent(v.Name)
 			}
-			return expr
+			return tmpName + g.compactArrayIndexSuffix(domSorts, args)
 		}
+	}
+	if len(vs) == 1 {
+		return tmpName + "[" + goIdent(vs[0].Name) + "]"
 	}
 	keyType := goCTupleNameWith(g, domSorts)
 	expr := tmpName + "[" + keyType + "{"

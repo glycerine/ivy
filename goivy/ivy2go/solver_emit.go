@@ -160,7 +160,7 @@ func (g *Generator) emitArrayStorageFunctionFacts(w *goWriter, sym stateSymbol, 
 	}
 	argExprs := make([]string, len(st.Dims))
 	for i := range st.Dims {
-		argExprs[i] = g.domainConstFromGoValue(fs.Domain()[i], sortVars[i], fmt.Sprintf("__i%d", i))
+		argExprs[i] = g.domainConstFromCompactIndex(fs.Domain()[i], sortVars[i], fmt.Sprintf("__i%d", i))
 	}
 	w.linef("\t\t__lhs_%s := mustApply(%s, %s)", ident, fnVar, strings.Join(argExprs, ", "))
 	cellAcc := "state." + exported
@@ -270,6 +270,10 @@ func (g *Generator) domainConstFromGoValue(s goivy.Sort, sortVar, value string) 
 		return fmt.Sprintf("goivy.NewConst([]string{%s}[int(%s)], %s)", strings.Join(names, ", "), value, sortVar)
 	}
 	return fmt.Sprintf("goivy.NewConst(strconv.Itoa(int(%s)), %s)", value, sortVar)
+}
+
+func (g *Generator) domainConstFromCompactIndex(s goivy.Sort, sortVar, value string) string {
+	return g.domainConstFromGoValue(s, sortVar, g.rangeValueFromCompactIndexExpr(s, value))
 }
 
 func (g *Generator) zeroValueExprCode(s goivy.Sort, sortCode string) string {

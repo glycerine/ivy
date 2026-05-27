@@ -5,6 +5,8 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy"
 )
 
 // --- M5: state emission tests ---------------------------------------
@@ -40,6 +42,32 @@ relation link(N1: node, N2: node)
 	// no co-aligned fields, multiple spaces when there are).
 	if !regexp.MustCompile(`Link\s+\[4\]\[4\]bool`).MatchString(text) {
 		t.Errorf("expected `Link [4][4]bool` field, got:\n%s", text)
+	}
+}
+
+func TestEmitState_RangeRelationUsesCompactArrayAndOffsetAccess(t *testing.T) {
+	mod := compileIvySource(t, `
+type idx = {5..7}
+relation slot(I: idx)
+action mark(i: idx) = {
+	slot(i) := true
+}
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	state := out.Files["state.go"]
+	if !regexp.MustCompile(`Slot\s+\[3\]bool`).MatchString(state) {
+		t.Fatalf("range relation should use compact [3] storage, got:\n%s", state)
+	}
+	actions := out.Files["actions.go"]
+	requireHasLineWithAllTerms(t, actions, "s.Slot[int(i)-5]", "=", "true")
+	if strings.Contains(actions, "s.Slot[i]") || strings.Contains(actions, "s.Slot[5]") {
+		t.Fatalf("range relation access should offset by lower bound, got:\n%s", actions)
+	}
+	for name, text := range out.Files {
+		assertGoSourceGofmt(t, name, text)
 	}
 }
 
@@ -90,6 +118,34 @@ func TestEmitInit_NondetScalar(t *testing.T) {
 	}
 }
 
+func TestEmitInit_RangeNondetAddsLowerBound(t *testing.T) {
+	mod := compileIvySource(t, `
+type idx = {5..7}
+individual current : idx
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	text := out.Files["init.go"]
+	requireHasLineWithAllTerms(t, text, "s.Current", "=", "Idx(ivyChoose(3)", "+", "(5))")
+	if strings.Contains(text, "ivyChoose(8)") {
+		t.Fatalf("range nondet should choose by width, not upper bound:\n%s", text)
+	}
+}
+
+func TestEmitInit_NegativeRangeNondetAddsLowerBound(t *testing.T) {
+	g := newExprGen(t, "")
+	rng := &goivy.RangeSort{Name: "offset", Lb: goivy.NumeralBound{Value: "-2"}, Ub: goivy.NumeralBound{Value: "2"}}
+	w := newGoWriter(NewGoText())
+	g.mkNondetWithGoType(&w, "current", "current", 0, rng)
+	text := w.String()
+	requireHasLineWithAllTerms(t, text, "current", "=", "Offset(ivyChoose(5)", "+", "(-2))")
+	if strings.Contains(text, "ivyChoose(3)") {
+		t.Fatalf("negative range nondet should use width 5, not hi+1:\n%s", text)
+	}
+}
+
 func TestEmitInit_TestTargetEmitsNondetWhenNoAxioms(t *testing.T) {
 	// Mirrors ivy2cpp/initial_state.go emitDefaultInitialState: when
 	// the module has no InitCond formulas to solve, the test/gen
@@ -108,7 +164,6 @@ func TestEmitInit_TestTargetEmitsNondetWhenNoAxioms(t *testing.T) {
 		t.Errorf("expected nondet flag init under test target, got:\n%s", text)
 	}
 }
-
 
 // --- M5: build plan tests -------------------------------------------
 

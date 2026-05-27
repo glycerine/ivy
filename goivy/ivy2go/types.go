@@ -256,8 +256,8 @@ func goSortCard(g *Generator, s goivy.Sort) int {
 	case *goivy.LogicEnumeratedSort:
 		return len(st.Extension)
 	case *goivy.RangeSort:
-		if _, hi, ok := numericRangeBoundsInt(st); ok {
-			return hi + 1
+		if card, ok := numericRangeCard(st); ok {
+			return card
 		}
 	case *goivy.UninterpretedSort:
 		if g != nil && g.Mod != nil {
@@ -265,8 +265,8 @@ func goSortCard(g *Generator, s goivy.Sort) int {
 				return it.card()
 			}
 			if rs, ok := g.rangeSortFor(st); ok {
-				if _, hi, ok := numericRangeBoundsInt(rs); ok {
-					return hi + 1
+				if card, ok := numericRangeCard(rs); ok {
+					return card
 				}
 			}
 			if g.Mod.Cfg != nil {
@@ -287,6 +287,73 @@ func goSortCard(g *Generator, s goivy.Sort) int {
 		}
 	}
 	return -1
+}
+
+func numericRangeCard(rs *goivy.RangeSort) (int, bool) {
+	lo, hi, ok := numericRangeBoundsInt(rs)
+	if !ok || hi < lo {
+		return 0, false
+	}
+	return hi - lo + 1, true
+}
+
+func (g *Generator) rangeBoundsIntForSort(s goivy.Sort) (lo, hi int, ok bool) {
+	rs, ok := g.rangeSortFor(s)
+	if !ok {
+		return 0, 0, false
+	}
+	return numericRangeBoundsInt(rs)
+}
+
+func (g *Generator) isRangeSort(s goivy.Sort) bool {
+	_, ok := g.rangeSortFor(s)
+	return ok
+}
+
+func (g *Generator) rangeChoiceExpr(s goivy.Sort, choice string) (string, bool) {
+	lo, hi, ok := g.rangeBoundsIntForSort(s)
+	if !ok || hi < lo {
+		return "", false
+	}
+	typeName := g.goType(s)
+	value := choice
+	if lo != 0 {
+		value = fmt.Sprintf("%s+(%d)", choice, lo)
+	}
+	return fmt.Sprintf("%s(%s)", typeName, value), true
+}
+
+func (g *Generator) compactArrayIndexSuffix(domain []goivy.Sort, args []string) string {
+	var b strings.Builder
+	for i, a := range args {
+		d := goivy.Sort(nil)
+		if i < len(domain) {
+			d = domain[i]
+		}
+		b.WriteString("[")
+		b.WriteString(g.compactArrayIndexExpr(d, a))
+		b.WriteString("]")
+	}
+	return b.String()
+}
+
+func (g *Generator) compactArrayIndexExpr(s goivy.Sort, arg string) string {
+	if s != nil {
+		if lo, _, ok := g.rangeBoundsIntForSort(s); ok {
+			if lo == 0 {
+				return fmt.Sprintf("int(%s)", arg)
+			}
+			return fmt.Sprintf("int(%s)-%d", arg, lo)
+		}
+	}
+	return arg
+}
+
+func (g *Generator) rangeValueFromCompactIndexExpr(s goivy.Sort, idx string) string {
+	if lo, _, ok := g.rangeBoundsIntForSort(s); ok && lo != 0 {
+		return fmt.Sprintf("(%s)+(%d)", idx, lo)
+	}
+	return idx
 }
 
 // goArrayDim mirrors ivy2cpp/types.go cppArrayDim.

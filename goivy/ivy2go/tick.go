@@ -238,11 +238,7 @@ func (g *Generator) progressCounterLValue(p progressDecl) string {
 	st := progressCounterStorage(g, domain)
 	switch st.Kind {
 	case goStorageArray:
-		out := field
-		for _, a := range args {
-			out += "[" + a + "]"
-		}
-		return out
+		return field + g.compactArrayIndexSuffix(domain, args)
 	case goStorageHashThunk:
 		if len(args) == 1 {
 			return field + "[" + args[0] + "]"

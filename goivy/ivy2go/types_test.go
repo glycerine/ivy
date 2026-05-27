@@ -180,6 +180,30 @@ func TestGoFunctionStorageScalarVsArrayVsMap(t *testing.T) {
 	}
 }
 
+func TestGoSortCard_RangeUsesWidthNotUpperBound(t *testing.T) {
+	rng := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "5"}, Ub: goivy.NumeralBound{Value: "7"}}
+	if got := goSortCard(nil, rng); got != 3 {
+		t.Fatalf("goSortCard(5..7) = %d, want 3", got)
+	}
+	neg := &goivy.RangeSort{Name: "offset", Lb: goivy.NumeralBound{Value: "-2"}, Ub: goivy.NumeralBound{Value: "2"}}
+	if got := goSortCard(nil, neg); got != 5 {
+		t.Fatalf("goSortCard(-2..2) = %d, want 5", got)
+	}
+}
+
+func TestGoFunctionStorage_RangeInterpretedSortUsesCompactCardinality(t *testing.T) {
+	mod := compileIvySource(t, `type idx = {5..7}`)
+	g := &Generator{Mod: mod}
+	idx, _ := mod.Sig.Sorts.Get2("idx")
+	st := goFunctionStorageFor(g, []goivy.Sort{idx}, goivy.Boolean)
+	if st.Kind != goStorageArray {
+		t.Fatalf("range-interpreted domain should use array storage, got %v", st.Kind)
+	}
+	if len(st.Dims) != 1 || st.Dims[0] != 3 {
+		t.Fatalf("range-interpreted domain dims = %v, want [3]", st.Dims)
+	}
+}
+
 func TestGoArrayPrefixOrder(t *testing.T) {
 	if got := goArrayPrefix([]int{3, 5}); got != "[3][5]" {
 		t.Errorf("goArrayPrefix([3,5]) = %q, want [3][5]", got)

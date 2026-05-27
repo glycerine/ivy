@@ -595,8 +595,8 @@ func (g *Generator) emitOneInputPreference(w *goWriter, i int, p *goivy.Const) {
 			lo, hi, hasBounds := numericRangeBoundsInt(rs)
 			if hasBounds {
 				w.linef("\t__sort%d := %s", i, sortCode)
-				w.linef("\t%s := ivyRandomRange(%d, %d)", pickName, lo, hi)
-				w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(strconv.FormatUint(%s, 10), __sort%d)})", i, pickName, i)
+				w.linef("\t%s := ivyRandomIntRange(%d, %d)", pickName, lo, hi)
+				w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: __in%d, T2: goivy.NewConst(strconv.FormatInt(%s, 10), __sort%d)})", i, pickName, i)
 				g.Ctx.AddImport("runtime", "strconv", "")
 				return
 			}
@@ -742,8 +742,8 @@ func (g *Generator) emitOneFieldPreference(w *goWriter, i int, f destructorField
 			lo, hi, hasBounds := numericRangeBoundsInt(rs)
 			if hasBounds {
 				w.linef("\t__sort_%d_%s := %s", i, goIdent(f.Name), sortCode)
-				w.linef("\t%s := ivyRandomRange(%d, %d)", pickName, lo, hi)
-				w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: %s, T2: goivy.NewConst(strconv.FormatUint(%s, 10), __sort_%d_%s)})",
+				w.linef("\t%s := ivyRandomIntRange(%d, %d)", pickName, lo, hi)
+				w.linef("\t__prefs = append(__prefs, &goivy.Eq{T1: %s, T2: goivy.NewConst(strconv.FormatInt(%s, 10), __sort_%d_%s)})",
 					varName, pickName, i, goIdent(f.Name))
 				g.Ctx.AddImport("runtime", "strconv", "")
 				return
@@ -845,6 +845,17 @@ func (g *Generator) emitInputExtractionTo(w *goWriter, i int, p *goivy.Const, fi
 			}
 			w.linef("\t%s = %s(pickEnumOrChoose(g.sol, modelResult, __in%d, []string{%s}))",
 				field, typeName, i, strings.Join(extLits, ", "))
+		}
+	case g.isRangeSort(p.CSort):
+		lo, hi, _ := g.rangeBoundsIntForSort(p.CSort)
+		if g.inputHasPick(p) {
+			w.line("\tif __prefsHonored {")
+			w.linef("\t\t%s = %s(%s)", field, typeName, pickName)
+			w.line("\t} else {")
+			w.linef("\t\t%s = %s(pickRangeOrChoose(g.sol, modelResult, __in%d, %d, %d))", field, typeName, i, lo, hi)
+			w.line("\t}")
+		} else {
+			w.linef("\t%s = %s(pickRangeOrChoose(g.sol, modelResult, __in%d, %d, %d))", field, typeName, i, lo, hi)
 		}
 	case card > 0 && goIsAnyIntegerType(g, p.CSort):
 		if g.inputHasPick(p) {
@@ -991,7 +1002,7 @@ func (g *Generator) emitDefinedInputExpr(e goivy.Expr, fsyms map[goivy.NodeKey]g
 			args[i] = s
 		}
 		if stateContext && ssyms[fc.Name] {
-			return "state." + goExportedName(fc.Name) + bracketize(args), true
+			return g.goStorageAccessBase("state."+goExportedName(fc.Name), fc.Name, fc.CSort, args, true), true
 		}
 	}
 	return "", false
@@ -1022,6 +1033,12 @@ func (g *Generator) emitFallbackInputAssignments(w *goWriter, plan *actionGenPla
 		switch {
 		case typeName == "bool":
 			w.linef("\t%s = ivyChoose(2) == 1", field)
+		case g.isRangeSort(p.CSort):
+			if expr, ok := g.rangeChoiceExpr(p.CSort, fmt.Sprintf("ivyChoose(%d)", card)); ok {
+				w.linef("\t%s = %s", field, expr)
+			} else {
+				w.linef("\tvar __fb %s; %s = __fb", typeName, field)
+			}
 		case card > 0:
 			w.linef("\t%s = %s(ivyChoose(%d))", field, typeName, card)
 		default:
@@ -1377,6 +1394,20 @@ func (g *Generator) emitStructInputAssembly(w *goWriter, i int, typeName, recNam
 				w.linef("v%d_%s := %s(pickEnumOrChoose(g.sol, modelResult, __in%d_%s, []string{%s}))",
 					i, goIdent(f.Name), ft, i, goIdent(f.Name), strings.Join(extLits, ", "))
 			}
+		case g.isRangeSort(f.Sort):
+			lo, hi, _ := g.rangeBoundsIntForSort(f.Sort)
+			if g.fieldHasPick(f) {
+				w.linef("var v%d_%s %s", i, goIdent(f.Name), ft)
+				w.linef("if __prefsHonored {")
+				w.linef("\tv%d_%s = %s(%s)", i, goIdent(f.Name), ft, pickName)
+				w.linef("} else {")
+				w.linef("\tv%d_%s = %s(pickRangeOrChoose(g.sol, modelResult, __in%d_%s, %d, %d))",
+					i, goIdent(f.Name), ft, i, goIdent(f.Name), lo, hi)
+				w.linef("}")
+			} else {
+				w.linef("v%d_%s := %s(pickRangeOrChoose(g.sol, modelResult, __in%d_%s, %d, %d))",
+					i, goIdent(f.Name), ft, i, goIdent(f.Name), lo, hi)
+			}
 		case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
 			if g.fieldHasPick(f) {
 				w.linef("var v%d_%s %s", i, goIdent(f.Name), ft)
@@ -1429,6 +1460,11 @@ func (g *Generator) emitVariantInputAssembly(w *goWriter, i int, typeName, super
 				w.linef("\tv%d_%s_%s := pickBoolOrChoose(g.sol, modelResult, __in%d_%s_%s)",
 					i, goIdent(leaf.Name), goIdent(f.Name),
 					i, goIdent(leaf.Name), goIdent(f.Name))
+			case g.isRangeSort(f.Sort):
+				lo, hi, _ := g.rangeBoundsIntForSort(f.Sort)
+				w.linef("\tv%d_%s_%s := %s(pickRangeOrChoose(g.sol, modelResult, __in%d_%s_%s, %d, %d))",
+					i, goIdent(leaf.Name), goIdent(f.Name),
+					ft, i, goIdent(leaf.Name), goIdent(f.Name), lo, hi)
 			case fcard > 0 && goIsAnyIntegerType(g, f.Sort):
 				w.linef("\tv%d_%s_%s := %s(pickUintOrChoose(g.sol, modelResult, __in%d_%s_%s, %d))",
 					i, goIdent(leaf.Name), goIdent(f.Name),

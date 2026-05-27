@@ -305,14 +305,7 @@ func (g *Generator) goStorageAccessBase(base, name string, fnSort goivy.Sort, ar
 	st := goFunctionStorageFor(g, fs.Domain(), fs.Range())
 	switch st.Kind {
 	case goStorageArray:
-		var b strings.Builder
-		b.WriteString(field)
-		for _, a := range args {
-			b.WriteByte('[')
-			b.WriteString(a)
-			b.WriteByte(']')
-		}
-		return b.String()
+		return field + g.compactArrayIndexSuffix(fs.Domain(), args)
 	case goStorageHashThunk:
 		// Read context routes through the per-symbol getter so the
 		// thunk slot is honoured. Write context (LHS of assignment)
@@ -490,7 +483,8 @@ func (g *Generator) emitCastApply(name string, a *goivy.Apply) (string, bool, er
 		if !ok {
 			return "", true, fmt.Errorf("ivy2go: cannot emit cast to non-numeric range %s", sortName(rng))
 		}
-		return rangeClampExpr(operand, lo, hi), true, nil
+		typ := g.goType(rng)
+		return rangeClampExpr(fmt.Sprintf("%s(%s)", typ, operand), lo, hi, typ), true, nil
 	}
 	if g.hasNatInterp(rng) {
 		return natSaturateExpr(operand), true, nil
@@ -549,16 +543,15 @@ func (g *Generator) emitRangeArithApply(name string, a *goivy.Apply) (string, bo
 	if err != nil {
 		return "", true, err
 	}
-	body := fmt.Sprintf("x := (%s) %s (%s); %s", l, name, r, "return "+rangeClampExpr("x", lo, hi))
-	return fmt.Sprintf("func() int { %s }()", body), true, nil
+	typ := g.goType(a.NodeSort())
+	return rangeClampExpr(fmt.Sprintf("(%s) %s (%s)", l, name, r), lo, hi, typ), true, nil
 }
 
-// rangeClampExpr returns the Go ternary-equivalent: nested if. Used as
-// a return-value expression body in arithmetic clamping. Mirrors
-// ivy2cpp/expr.go rangeClampExpr but emits an `if` chain instead of
-// `?:` since Go lacks the ternary.
-func rangeClampExpr(x, lo, hi string) string {
-	return fmt.Sprintf("if %s < %s { return %s } else if %s < %s { return %s } else { return %s }", x, lo, lo, hi, x, hi, x)
+// rangeClampExpr returns an expression-shaped Go IIFE that evaluates x
+// once and clamps it to [lo, hi]. This is the Go counterpart of
+// ivy_to_cpp.py's ternary clamp expression.
+func rangeClampExpr(x, lo, hi, typ string) string {
+	return fmt.Sprintf("func() %s { x := %s; lo, hi := %s(%s), %s(%s); if x < lo { return lo }; if hi < x { return hi }; return x }()", typ, x, typ, lo, typ, hi)
 }
 
 // natSaturateExpr ports ivy2cpp/expr.go natSaturateExpr.
@@ -590,8 +583,7 @@ func (g *Generator) emitRangeNumeral(c *goivy.Const) (string, bool) {
 	if typ == "" {
 		typ = "int"
 	}
-	return fmt.Sprintf("func() %s { v := %s(%s); lo, hi := %s(%s), %s(%s); %s }()",
-		typ, typ, x, typ, lo, typ, hi, rangeClampExpr("v", "lo", "hi")), true
+	return rangeClampExpr(fmt.Sprintf("%s(%s)", typ, x), lo, hi, typ), true
 }
 
 // emitQuant lowers `forall x:T . body(x)` or `exists x:T . body(x)`
@@ -810,11 +802,7 @@ func (g *Generator) emitDestructorApply(name string, terms []goivy.Expr) (string
 	st := goFunctionStorageFor(g, domain, rng)
 	switch st.Kind {
 	case goStorageArray:
-		expr := obj + "." + field
-		for _, a := range args {
-			expr += "[" + a + "]"
-		}
-		return expr, true, nil
+		return obj + "." + field + g.compactArrayIndexSuffix(domain, args), true, nil
 	case goStorageHashThunk:
 		if len(args) == 1 {
 			return obj + "." + field + "[" + args[0] + "]", true, nil

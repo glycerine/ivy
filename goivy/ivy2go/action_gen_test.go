@@ -346,6 +346,53 @@ action use_box(b: box) = {
 	}
 }
 
+func TestEmit_TestTarget_RangeInputUsesRangeBounds(t *testing.T) {
+	mod := compileIvySource(t, `
+type idx = {5..7}
+relation slot(I: idx)
+action set_slot(i: idx) = {
+	require i < 7;
+	slot(i) := true
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	requireHasLineWithAllTerms(t, actions, "__pick_in0", ":=", "ivyRandomIntRange(5, 7)")
+	requireHasLineWithAllTerms(t, actions, "goivy.NewConst(strconv.FormatInt(__pick_in0, 10)", "__sort0")
+	requireHasLineWithAllTerms(t, actions, "g.In_I", "=", "Idx(__pick_in0)")
+	requireHasLineWithAllTerms(t, actions, "g.In_I", "=", "Idx(pickRangeOrChoose(g.sol, modelResult, __in0, 5, 7))")
+	for _, bad := range []string{
+		"ivyRandomRange(5, 7)",
+		"pickUintOrChoose(g.sol, modelResult, __in0, 8)",
+		"pickUintOrChoose(g.sol, modelResult, __in0, 3)",
+	} {
+		if strings.Contains(actions, bad) {
+			t.Fatalf("range input should not use cardinality-shaped unsigned picker %q:\n%s", bad, actions)
+		}
+	}
+	for name, text := range out.Files {
+		assertGoSourceGofmt(t, name, text)
+	}
+}
+
+func TestEmit_TestTarget_FallbackRangeInputAddsLowerBound(t *testing.T) {
+	g := newExprGen(t, `type idx = {5..7}`)
+	idx, _ := g.Mod.Sig.Sorts.Get2("idx")
+	param := goivy.NewConst("i", idx)
+	act := goivy.NewSequence()
+	act.SetFormalParams([]*goivy.Const{param})
+	w := newGoWriter(g.Ctx.Actions)
+	g.emitFallbackInputAssignments(&w, &actionGenPlan{act: act})
+	text := g.Ctx.Actions.GetFile()
+	requireHasLineWithAllTerms(t, text, "g.In_I", "=", "Idx(ivyChoose(3)", "+", "(5))")
+	if strings.Contains(text, "ivyChoose(8)") {
+		t.Fatalf("fallback range input should choose by width and add lower bound:\n%s", text)
+	}
+}
+
 // --- OPEN 055.8: variant-typed param synthesis ----------------------
 
 func TestEmit_TestTarget_VariantParamPlainLeavesUseConstructorSwitch(t *testing.T) {
@@ -456,6 +503,42 @@ action set_slot(i: idx) = {
 }
 `)
 	buildEmittedAgainstGoivy(t, mod, "ivygo_range_pre")
+}
+
+func TestSmoke_BuildAndRunEmittedTest_RangeNonzeroLowerBound(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+type idx = {5..7}
+relation slot(I: idx)
+action set_slot(i: idx) = {
+	require i <= 7;
+	slot(i) := true
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", PackageName: "main"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	dir := playpenDir(t)
+	if err := WriteOutput(out, dir); err != nil {
+		t.Fatalf("WriteOutput: %v", err)
+	}
+	pkgDir := outputDirectory(dir, out.BaseName)
+	build := exec.Command("go", "build", "-o", "test_bin", ".")
+	build.Dir = pkgDir
+	if output, err := build.CombinedOutput(); err != nil {
+		t.Fatalf("go build:\n%s", string(output))
+	}
+	run := exec.Command(filepath.Join(pkgDir, "test_bin"), "--iters=8", "--seed=1")
+	output, err := run.CombinedOutput()
+	if err != nil {
+		t.Fatalf("run failed: %v\n%s", err, string(output))
+	}
+	if !strings.Contains(string(output), "test_completed") {
+		t.Fatalf("test binary should complete, got:\n%s", string(output))
+	}
 }
 
 func TestSmoke_BuildEmittedTest_ForAllPre(t *testing.T) {

@@ -42,6 +42,10 @@ func (g *Generator) mkNondetWithGoType(w *goWriter, varExpr string, label string
 		w.linef("%s = ivyChoose(2) == 1", varExpr)
 		return
 	}
+	if expr, ok := g.rangeChoiceExpr(sort, fmt.Sprintf("ivyChoose(%d)", goSortCard(g, sort))); ok {
+		w.linef("%s = %s", varExpr, expr)
+		return
+	}
 	card := goSortCard(g, sort)
 	typeName := g.goType(sort)
 	if card > 0 {

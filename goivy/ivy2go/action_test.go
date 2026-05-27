@@ -189,6 +189,28 @@ relation flag
 	}
 }
 
+func TestEmitActions_RangeArithmeticClampFileIsValidGo(t *testing.T) {
+	mod := compileIvySource(t, `
+type idx = {5..7}
+individual current : idx
+action bump = {
+	current := current + current
+}
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	actions := out.Files["actions.go"]
+	requireHasLineWithAllTerms(t, actions, "func() Idx")
+	if strings.Contains(actions, "return if") {
+		t.Fatalf("range arithmetic should not emit statement text in return expression:\n%s", actions)
+	}
+	for name, text := range out.Files {
+		assertGoSourceGofmt(t, name, text)
+	}
+}
+
 // --- emitActionMethods integration ----------------------------------
 
 func TestEmitActions_EmptyModuleProducesNoActionsFile(t *testing.T) {

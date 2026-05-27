@@ -184,6 +184,68 @@ func TestEmitExpr_NumericConst(t *testing.T) {
 	}
 }
 
+func TestEmitExpr_CastToRangeClampIsTypedExpression(t *testing.T) {
+	g := newExprGen(t, "")
+	src := &goivy.UninterpretedSort{Name: "int"}
+	rng := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "5"}, Ub: goivy.NumeralBound{Value: "7"}}
+	castSort, err := goivy.NewFunctionSort(src, rng)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	app := goivy.MustApply(goivy.NewConst("cast", castSort), goivy.NewConst("v", src))
+	got, err := g.emitExpr(app)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	for _, want := range []string{"func() Idx", "x := Idx(v)", "lo, hi := Idx(5), Idx(7)", "return x"} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("range cast clamp missing %q:\n%s", want, got)
+		}
+	}
+	if strings.Contains(got, "return if") || strings.Contains(got, "return if ") {
+		t.Fatalf("range cast clamp should be expression-shaped Go, got:\n%s", got)
+	}
+	assertGoSourceValid(t, "range_cast.go", "package p\ntype Idx int\nvar v int\nvar _ Idx = "+got+"\n")
+}
+
+func TestEmitExpr_RangeArithmeticClampIsTypedExpression(t *testing.T) {
+	g := newExprGen(t, "")
+	rng := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "5"}, Ub: goivy.NumeralBound{Value: "7"}}
+	fnSort, err := goivy.NewFunctionSort(rng, rng, rng)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	app := goivy.MustApply(goivy.NewConst("+", fnSort), goivy.NewConst("a", rng), goivy.NewConst("b", rng))
+	got, err := g.emitExpr(app)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	for _, want := range []string{"func() Idx", "x := (a) + (b)", "lo, hi := Idx(5), Idx(7)", "return x"} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("range arithmetic clamp missing %q:\n%s", want, got)
+		}
+	}
+	if strings.Contains(got, "return if") {
+		t.Fatalf("range arithmetic clamp should not emit statement text as expression:\n%s", got)
+	}
+	assertGoSourceValid(t, "range_arith.go", "package p\ntype Idx int\nvar a, b Idx\nvar _ Idx = "+got+"\n")
+}
+
+func TestEmitExpr_RangeNumeralClampIsTypedExpression(t *testing.T) {
+	g := newExprGen(t, "")
+	rng := &goivy.RangeSort{Name: "idx", Lb: goivy.NumeralBound{Value: "5"}, Ub: goivy.NumeralBound{Value: "7"}}
+	got, err := g.emitExpr(goivy.NewConst("10", rng))
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	for _, want := range []string{"func() Idx", "x := Idx(10)", "lo, hi := Idx(5), Idx(7)", "return hi"} {
+		if !strings.Contains(got, want) {
+			t.Fatalf("range numeral clamp missing %q:\n%s", want, got)
+		}
+	}
+	assertGoSourceValid(t, "range_numeral.go", "package p\ntype Idx int\nvar _ Idx = "+got+"\n")
+}
+
 func TestEmitExpr_EnumConstantUsesPascalCase(t *testing.T) {
 	g := newExprGen(t, "type color = {red, green, blue}")
 	// `red` should resolve as enum constant Red, not as ident red.

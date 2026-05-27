@@ -29,28 +29,16 @@ recommendations unless there is a concrete failure mode.
   Go return values. Multi-return actions destructure the call result and print
   the first returned value instead of passing return locals as C++-style
   out-parameters.
+- Range cardinality now uses the mathematical width `hi - lo + 1`, while
+  generated Go arrays keep compact storage by offsetting range-valued indexes
+  by the lower bound.
+- Range clamping now emits typed expression-shaped Go IIFEs for casts,
+  arithmetic, and numerals instead of embedding statement text where an
+  expression is required.
 
 Remaining entries keep their original audit numbering.
 
 ## P1 - generated programs can be wrong, invalid, or unlaunchable
-
-8. Range cardinality ignores the lower bound.
-
-   Evidence: `goSortCard` returns `hi + 1` for `RangeSort` and
-   range-interpreted sorts (`types.go:257` and `types.go:266`). The correct
-   cardinality is `hi - lo + 1`. This feeds nondeterministic initialization
-   (`nondet.go:45`), array dimensions (`types.go:291`), and action input
-   generation (`action_gen.go:513`). For `type idx = {5..7}`, generation can
-   choose `0..4`; negative ranges can produce incorrect dimensions and loop
-   bounds.
-
-9. Range clamping emits statement text where expression text is required.
-
-   Evidence: `rangeClampExpr` returns an `if ... return ...` statement string
-   (`expr.go:540`). `emitCastApply` uses that string directly as an expression
-   (`expr.go:473`), and `emitRangeArithApply` constructs `return if ...`
-   (`expr.go:532`). Casts or arithmetic whose result sort is a range can
-   produce syntactically invalid Go.
 
 10. Wide BV types above 64 bits are internally inconsistent.
 
