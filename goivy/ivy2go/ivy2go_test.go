@@ -11,6 +11,7 @@ package ivy2go
 //   a separate file (added by M5).
 
 import (
+	"encoding/json"
 	"go/format"
 	"go/parser"
 	"go/token"
@@ -240,6 +241,63 @@ func TestGenerateMainPackageEmitsMain(t *testing.T) {
 	}
 }
 
+func TestCompileAndGenerateAllAddsDescriptorExtraFilesForTestTarget(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "proto.ivy")
+	src := `#lang ivy1.7
+relation flag
+action set_flag = {
+	flag := true
+}
+`
+	if err := os.WriteFile(path, []byte(src), 0o644); err != nil {
+		t.Fatalf("write ivy source: %v", err)
+	}
+
+	batch, err := CompileAndGenerateAll(path, map[string]string{
+		"target":  "test",
+		"package": "demo",
+	}, Config{})
+	if err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+	if len(batch.Outputs) != 1 {
+		t.Fatalf("len(batch.Outputs) = %d, want 1", len(batch.Outputs))
+	}
+
+	dsc, ok := batch.ExtraFiles["demo.dsc"]
+	if !ok {
+		t.Fatalf("batch.ExtraFiles missing demo.dsc; keys=%v", keysOf(batch.ExtraFiles))
+	}
+	if got := batch.Outputs[0].ExtraFiles["demo.dsc"]; got != dsc {
+		t.Fatalf("output ExtraFiles did not receive demo.dsc.\nwant: %q\ngot:  %q", dsc, got)
+	}
+
+	var desc struct {
+		Processes []struct {
+			Binary string                `json:"binary"`
+			Name   string                `json:"name"`
+			Params []descriptorParamDesc `json:"params"`
+		} `json:"processes"`
+		TestParams []string `json:"test_params"`
+	}
+	if err := json.Unmarshal([]byte(dsc), &desc); err != nil {
+		t.Fatalf("descriptor is not valid JSON: %v\n%s", err, dsc)
+	}
+	if len(desc.Processes) != 1 {
+		t.Fatalf("descriptor processes len = %d, want 1: %s", len(desc.Processes), dsc)
+	}
+	if desc.Processes[0].Binary != batch.Outputs[0].BaseName {
+		t.Errorf("descriptor binary = %q, want output base %q", desc.Processes[0].Binary, batch.Outputs[0].BaseName)
+	}
+	if desc.Processes[0].Name != "this" {
+		t.Errorf("descriptor isolate name = %q, want this", desc.Processes[0].Name)
+	}
+	if !stringSliceContains(desc.TestParams, "seed") {
+		t.Errorf("descriptor test_params missing seed: %#v", desc.TestParams)
+	}
+}
+
 func TestNormalizeConfigDefaultsTargetToGen(t *testing.T) {
 	cfg, _, err := normalizeConfig(Config{})
 	if err != nil {
@@ -423,4 +481,13 @@ func keysOf(m map[string]string) []string {
 	}
 	sortStrings(out)
 	return out
+}
+
+func stringSliceContains(xs []string, want string) bool {
+	for _, x := range xs {
+		if x == want {
+			return true
+		}
+	}
+	return false
 }

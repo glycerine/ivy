@@ -82,6 +82,27 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		}
 		batch.Outputs = append(batch.Outputs, out)
 	}
+	if cfg.RequestedTarget == "repl" || cfg.RequestedTarget == "test" {
+		if dsc, err := descriptorJSON(mod, cfg, batch.Outputs, isolates); err != nil {
+			return nil, err
+		} else if dsc != "" {
+			name := cfg.PackageName
+			if name == "" {
+				name = moduleBaseName(mod)
+			}
+			batch.ExtraFiles[name+".dsc"] = dsc
+		}
+	}
+	for _, out := range batch.Outputs {
+		if len(batch.ExtraFiles) > 0 {
+			if out.ExtraFiles == nil {
+				out.ExtraFiles = map[string]string{}
+			}
+			for k, v := range batch.ExtraFiles {
+				out.ExtraFiles[k] = v
+			}
+		}
+	}
 	return batch, nil
 }
 
