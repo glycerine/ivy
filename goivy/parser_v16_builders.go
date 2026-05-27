@@ -13,6 +13,28 @@ func tok16Lineno(lex *parser16LexAdapter, tok TokenInfo) Location {
 	}
 }
 
+func parser16NodeAt(node Node, loc Location) Node {
+	if node != nil {
+		node.SetLineno(loc)
+	}
+	return node
+}
+
+func parser16ActionFormula(node Node) Node {
+	node = checkNonTemporal(node)
+	lf, ok := node.(*LabeledFormula)
+	if !ok || lf.Label != nil {
+		return node
+	}
+	if lf.Formula != nil {
+		if lf.Formula.GetLineno().Line == 0 && lf.GetLineno().Line > 0 {
+			lf.Formula.SetLineno(lf.GetLineno())
+		}
+		return lf.Formula
+	}
+	return node
+}
+
 func parser16DeclareType(cfg *AstConfig, top *ivyAccum, name *Atom, loc Location) {
 	scnst := cfg.NewAtom(name.Rep)
 	scnst.SetLineno(nodeLineno(name))
