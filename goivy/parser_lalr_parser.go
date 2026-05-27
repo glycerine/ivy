@@ -8,72 +8,27 @@ import (
 // It dispatches to the appropriate version-specific LALR parser.
 // The optional importer callback resolves `include` directives.
 func Parse(input string, version Version, opts ...ParseOption) (*ParseResult, error) {
-	// For now, only v1.7+ is implemented
-	return ParseV17(input, version, opts...)
+	parser := fullFileParserForVersion(version)
+	return parser(input, version, opts...)
 }
 
-// ParseOption configures optional behavior for the LALR parser.
-type ParseOption func(*parser17LexAdapter)
+type fullFileParser func(input string, version Version, opts ...ParseOption) (*ParseResult, error)
 
-// WithImporter sets the include-resolution callback.
-func WithImporter(fn ImporterFunc) ParseOption {
-	return func(lex *parser17LexAdapter) {
-		lex.importer = fn
-	}
-}
-
-// WithIncluded sets the already-included module set (for nested parses).
-func WithIncluded(inc map[string]bool) ParseOption {
-	return func(lex *parser17LexAdapter) {
-		lex.included = inc
-	}
-}
-
-// WithParentAccum links a nested parser to the including parser's accumulator.
-// Python keeps these accumulators on a single global stack while importing.
-func WithParentAccum(parent *ivyAccum) ParseOption {
-	return func(lex *parser17LexAdapter) {
-		lex.accum = parent
-	}
-}
-
-// WithNested marks this as a nested (include) parse.
-// Nested parses skip expand_autoinstances, matching Python behavior.
-func WithNested() ParseOption {
-	return func(lex *parser17LexAdapter) {
-		lex.nested = true
-	}
-}
-
-// WithFilename sets the source filename, matching Python's iu.filename.
-// Used by getLineno to produce Location with filename for canon matching.
-func WithFilename(name string) ParseOption {
-	return func(lex *parser17LexAdapter) {
-		lex.filename = name
-	}
-}
-
-// WithAstConfig shares an existing AstConfig with this parse.
-// Python uses module-level globals (lf_counter, always_clone_with_fresh_id,
-// label_counter, check_unprovable) shared across all parses. This option
-// ensures nested/imported parses share the parent's AstConfig so counters
-// and flags stay in sync.
-func WithAstConfig(cfg *AstConfig) ParseOption {
-	return func(lex *parser17LexAdapter) {
-		lex.astCfg = cfg
-	}
+func fullFileParserForVersion(version Version) fullFileParser {
+	// Status quo: the hardened v1.7+ full-file grammar is still the only
+	// complete parser. A future thin v1.6 grammar should route from here.
+	return ParseV17
 }
 
 // ParseV17 parses a complete Ivy file using the v1.7+ LALR grammar.
 func ParseV17(input string, version Version, opts ...ParseOption) (*ParseResult, error) {
 	xtracer.Trace("parser.Parse ENTER")
-	lex := newParser17LexAdapter(input, version)
-	// Create a default AstConfig; WithAstConfig option will override it
-	// if the caller provides a shared one (for nested parses).
-	lex.astCfg = NewAstConfig()
+	cfg := newParseConfig()
 	for _, opt := range opts {
-		opt(lex)
+		opt(cfg)
 	}
+	lex := newParser17LexAdapter(input, version)
+	cfg.applyToParser17(lex)
 	parser17Parse(lex)
 	if lex.err != nil {
 		return nil, lex.err
