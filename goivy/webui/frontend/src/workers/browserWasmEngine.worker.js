@@ -12,8 +12,9 @@ let wasmRuntimeCrashReported = false;
 let runtimeLogEntries = [];
 let sequence = 0;
 const sessions = new Map();
+const workerScope = globalThis.self || globalThis;
 
-self.onmessage = (event) => {
+workerScope.onmessage = (event) => {
   void handleMessage(parseMessage(event.data));
 };
 
@@ -398,5 +399,5 @@ function resultLevel(value) {
 }
 
 function post(response) {
-  self.postMessage(response);
+  workerScope.postMessage(response);
 }

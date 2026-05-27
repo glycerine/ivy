@@ -7,7 +7,7 @@ function response(value, init = {}) {
 function installWorkerHarness() {
   const pending = new Map();
   const messages = [];
-  vi.stubGlobal('self', {
+  const scope = {
     onmessage: null,
     postMessage(message) {
       messages.push(message);
@@ -20,11 +20,12 @@ function installWorkerHarness() {
         waiter.resolve(message.value);
       }
     },
-  });
+  };
+  vi.stubGlobal('self', scope);
   return {
     messages,
     send(request) {
-      const onmessage = (globalThis as any).self.onmessage;
+      const onmessage = scope.onmessage;
       if (typeof onmessage !== 'function') {
         return Promise.reject(new Error('worker did not install onmessage'));
       }
@@ -107,6 +108,7 @@ describe('browserWasmEngine worker runtime lifecycle', () => {
     });
 
     await import('./browserWasmEngine.worker.js');
+    (globalThis as any).self = undefined;
 
     await expect(harness.send({
       type: 'init',
