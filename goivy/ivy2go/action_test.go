@@ -172,11 +172,25 @@ func TestSmoke_BuildEmittedDebugPrintBoolFreeVariable(t *testing.T) {
 	}
 	mod := compileIvySource(t, `
 relation seen(B: bool)
-action report = {
-	debug "myvar" with values = seen(B)
-}
+action report = {}
 export report
 `)
+	seenEntry, ok := mod.Sig.Symbols.Get2("seen")
+	if !ok {
+		t.Fatal("missing seen symbol")
+	}
+	b, err := goivy.NewVariable("B", goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	seen := goivy.NewConst("seen", seenEntry.Sort)
+	seenB, err := goivy.NewApply(seen, b)
+	if err != nil {
+		t.Fatalf("NewApply: %v", err)
+	}
+	dbg := goivy.NewDebugAction(goivy.NewConst(`"myvar"`, goivy.TopS), seenB)
+	dbg.WithNames = []string{"values"}
+	mod.SetAction("report", dbg)
 	buildEmittedImplPackage(t, mod, "ivygo_debug_bool_free_var")
 }
 

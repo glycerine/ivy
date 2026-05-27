@@ -72,6 +72,53 @@ action mark(i: idx) = {
 	}
 }
 
+func TestEmitState_BoolRelationUsesOrdinalArrayIndex(t *testing.T) {
+	mod := compileIvySource(t, `
+relation slot(B: bool)
+action mark(b: bool) = {
+	slot(b) := true
+}
+`)
+	out, err := Generate(mod, Config{Target: "impl", PackageName: "p"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	state := out.Files["state.go"]
+	if !regexp.MustCompile(`Slot\s+\[2\]bool`).MatchString(state) {
+		t.Fatalf("bool relation should use compact [2] storage, got:\n%s", state)
+	}
+	actions := out.Files["actions.go"]
+	requireHasLineWithAllTerms(t, actions, "s.Slot[ivyBoolIndex(b)]", "=", "true")
+	if strings.Contains(actions, "s.Slot[b]") {
+		t.Fatalf("bool relation access should not index array with bool, got:\n%s", actions)
+	}
+	runtime := out.Files["runtime.go"]
+	if !strings.Contains(runtime, "func ivyBoolIndex(v bool) int") {
+		t.Fatalf("bool relation access should emit ivyBoolIndex helper, got:\n%s", runtime)
+	}
+	for name, text := range out.Files {
+		assertGoSourceGofmt(t, name, text)
+	}
+}
+
+func TestSmoke_BuildEmittedBoolArrayRelationReadWrite(t *testing.T) {
+	if !SlowGoTest {
+		t.Skip("SLOW_GO_TEST not set")
+	}
+	mod := compileIvySource(t, `
+relation slot(B: bool)
+action mark(b: bool) = {
+	slot(b) := true
+}
+action check(b: bool) returns(out: bool) = {
+	out := slot(b)
+}
+export mark
+export check
+`)
+	buildEmittedImplPackage(t, mod, "ivygo_bool_array_relation")
+}
+
 func TestEmitState_LargeDomainUsesMap(t *testing.T) {
 	mod := compileIvySource(t, `
 type node = {0..2048}

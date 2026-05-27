@@ -97,6 +97,30 @@ relation pred(X: slot)
 	}
 }
 
+func TestEmitApply_BoolStateFunctionUsesOrdinalIndex(t *testing.T) {
+	g := newExprGen(t, `
+relation pred(X: bool)
+`)
+	entry, ok := g.Mod.Sig.Symbols.Get2("pred")
+	if !ok {
+		t.Fatal("pred symbol missing")
+	}
+	pred := goivy.NewConst("pred", entry.Sort)
+	x := goivy.NewConst("x", goivy.Boolean)
+	app := mustApplyExpr(t, pred, x)
+
+	got, err := g.emitExpr(app)
+	if err != nil {
+		t.Fatalf("emitExpr: %v", err)
+	}
+	if got != "s.Pred[ivyBoolIndex(x)]" {
+		t.Fatalf("bool-indexed state function apply = %q, want s.Pred[ivyBoolIndex(x)]", got)
+	}
+	if !g.Ctx.OnceGlobals["__need_boolindex"] {
+		t.Fatalf("bool-indexed array access should request ivyBoolIndex helper")
+	}
+}
+
 func TestEmitApply_MapBackedStateFunctionStillUsesGetter(t *testing.T) {
 	g := newExprGen(t, `
 type key

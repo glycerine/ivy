@@ -54,6 +54,9 @@ func (g *Generator) emitRuntimeHelpersLate(w *goWriter) {
 	if g.Ctx.OnceGlobals["__need_progress_check"] {
 		g.emitProgressCheckHelper(w)
 	}
+	if g.Ctx.OnceGlobals["__need_boolindex"] {
+		g.emitBoolIndexHelper(w)
+	}
 	// ite_<type> helpers: walk OnceGlobals keys, find any starting
 	// with "ite_", emit one per. Each call site recorded the helper
 	// name in OnceGlobals via requestIteHelper.
@@ -653,6 +656,18 @@ func (g *Generator) emitProgressCheckHelper(w *goWriter) {
 	w.line("\tif counter > bound {")
 	w.line(`		panic(fmt.Sprintf("ivy liveness check failed: progress counter %d exceeds rely bound %d", counter, bound))`)
 	w.line("\t}")
+	w.line("}")
+	w.blank()
+}
+
+func (g *Generator) emitBoolIndexHelper(w *goWriter) {
+	w.line("// ivyBoolIndex maps Ivy's bool domain order false,true onto [0,2)")
+	w.line("// for compact Go array storage.")
+	w.line("func ivyBoolIndex(v bool) int {")
+	w.line("\tif v {")
+	w.line("\t\treturn 1")
+	w.line("\t}")
+	w.line("\treturn 0")
 	w.line("}")
 	w.blank()
 }

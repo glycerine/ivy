@@ -339,6 +339,12 @@ func (g *Generator) compactArrayIndexSuffix(domain []goivy.Sort, args []string) 
 
 func (g *Generator) compactArrayIndexExpr(s goivy.Sort, arg string) string {
 	if s != nil {
+		if _, ok := s.(*goivy.BooleanSort); ok {
+			if g != nil && g.Ctx != nil {
+				g.Ctx.OnceGlobals["__need_boolindex"] = true
+			}
+			return fmt.Sprintf("ivyBoolIndex(%s)", arg)
+		}
 		if lo, _, ok := g.rangeBoundsIntForSort(s); ok {
 			if lo == 0 {
 				return fmt.Sprintf("int(%s)", arg)
