@@ -570,7 +570,6 @@ These functions exist in ivy2go but not in ivy2cpp. Each should be classified as
 | `findEnclosingGoMod(dir string) string {` | build.go:149 | legitimate | Walk for go.mod; no C++ counterpart (no module system). |
 | `isWindows() bool {` | build.go:170 | legitimate | Adds .exe suffix on Windows; cpp uses build_findvs_windows.go. |
 | `bvMask(bits int) string {` | bv_expr.go:305 | rename | Mirrors cpp bvMask in bv_expr.go; same name, listed because cpp also has it. |
-| `(g *Generator) requireUint128() {` | bv_expr.go:368 | legitimate | Marks runtime to emit Uint128 helpers; cpp uses `unsigned __int128`. |
 | `(g *Generator) requireBigInt() {` | bv_expr.go:378 | legitimate | Marks runtime to emit math/big helpers; cpp uses ivy_uint<N> templates. |
 | `(g *Generator) emitWideBVApply(name string, a *goivy.Apply, result goInterpType) (string, bool, error) {` | bv_expr.go:393 | legitimate | Routes wide BV through math/big; cpp routes through ivy_uint<N> template. |
 | `(g *Generator) emitWideBVShift(name string, a *goivy.Apply, result goInterpType, method string) (string, bool, error) {` | bv_expr.go:467 | legitimate | Companion of emitWideBVApply; math/big shift dispatch. |
@@ -634,7 +633,6 @@ These functions exist in ivy2go but not in ivy2cpp. Each should be classified as
 | `(g *Generator) emitRuntimeHelpers(w *goWriter) {` | runtime.go:23 | rename | Mirrors cpp emitRuntimeMethods / emitRuntimeImplPreamble role. |
 | `(g *Generator) emitRuntimeHelpersLate(w *goWriter) {` | runtime.go:32 | legitimate | Second-pass conditional helper emission; needed because Go has no .hpp/.cpp split. |
 | `(g *Generator) emitRuntimePreamble(w *goWriter) {` | runtime.go:67 | rename | Mirrors cpp emitRuntimeImplPreamble. |
-| `(g *Generator) emitUint128Helpers(w *goWriter) {` | runtime.go:127 | legitimate | Emits Uint128 struct + methods; cpp uses `unsigned __int128` intrinsic. |
 | `(g *Generator) emitBigIntHelpers(w *goWriter) {` | runtime.go:218 | legitimate | Emits math/big BV helpers; cpp uses ivy_uint<N> templated header. |
 | `(g *Generator) collectIteHelpers() []iteHelperReq {` | runtime.go:344 | legitimate | Collects ite_<T> requests from OnceGlobals; cpp uses ternary inline. |
 | `iteHelperTypeFromSuffix(suffix string) string {` | runtime.go:365 | legitimate | Inverse of iteHelperSuffix; reconstructs Go type from helper name. |

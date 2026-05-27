@@ -242,7 +242,7 @@ func goIsAnyIntegerType(g *Generator, s goivy.Sort) bool {
 	}
 	switch goScalarTypeWith(g, s) {
 	case "bool", "int", "int64",
-		"uint8", "uint16", "uint32", "uint64", "Uint128":
+		"uint8", "uint16", "uint32", "uint64":
 		return true
 	}
 	return false
@@ -394,9 +394,6 @@ func (g *Generator) goZeroValue(s goivy.Sort) string {
 			case "uint32", "uint64", "uint8", "uint16", "int", "int64", "bool":
 				return "0"
 			}
-			if typeName == "Uint128" {
-				return "Uint128{}"
-			}
 			if typeName == "*big.Int" {
 				return "new(big.Int)"
 			}
@@ -479,8 +476,8 @@ func (g *Generator) emitSortDecls(w *goWriter) {
 		}
 		emitted[name] = true
 		if it, ok := g.goInterpType(s); ok {
-			// Plain bv[N] with a Go primitive (uint32 / uint64 /
-			// Uint128) doesn't need its own declared type — the
+			// Plain bv[N] with a Go primitive (uint32 / uint64)
+			// doesn't need its own declared type — the
 			// interp text steers consumers to the primitive
 			// directly. Wider BVs need helper struct decls; that
 			// emission is M3's job.

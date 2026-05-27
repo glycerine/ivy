@@ -239,8 +239,7 @@ the Go output we substitute.
 | `Uninterpreted` with native `__cpptype<T>` | user-supplied C++ type | user-supplied Go type from `<<< go ... >>>` block (§3.5.10) |
 | `BitVec[N]`, N≤32 | `unsigned` | `uint32` |
 | `BitVec[N]`, 33≤N≤64 | `unsigned long long` | `uint64` |
-| `BitVec[N]`, 65≤N≤128 | `unsigned __int128` | `Uint128` struct (two `uint64` halves) from `runtime.go`; arithmetic via methods |
-| `BitVec[N]`, N>128 | `ivy_uint<N>` template | `*big.Int` masked to N bits (no generics; bare `*big.Int` is acceptable since wide BVs are rare/cold) |
+| `BitVec[N]`, N>=65 | `ivy_uint<N>` template | `*big.Int` masked to N bits (no generics; bare `*big.Int` is acceptable since wide BVs are rare/cold) |
 | `String` (`__strlit`) | `std::string` | `string` |
 | `Nat` interp | `unsigned long long` | `uint64` |
 | Function `D₁×…×Dₖ → R`, small | C array `R[d1][d2]…` | `[d1][d2]…R` Go array (only when each Dᵢ is fixed-bounded enum/range) |
@@ -366,13 +365,10 @@ audit alignment.
 #### 3.5.7 Bitvector / arithmetic (bv_expr.go)
 
 For widths ≤ 64, lowering is straightforward (mask & shift in Go's
-fixed-width integer types). For 65 ≤ width ≤ 128, ivy2cpp uses
-`unsigned __int128`; ivy2go ships a small `Uint128` struct in
-`runtime.go` with methods `Add`, `Sub`, `Mul`, `And`, `Or`, `Xor`,
-`Shl`, `Shr`, `Eq`, `Lt`, plus `Uint128FromString`, `Uint128Random`.
-For widths > 128, use `*big.Int` directly with a mask applied after
-each operation. No generics anywhere; method dispatch is monomorphic
-in `Uint128` and inlinable.
+fixed-width integer types). 
+
+For widths > 64, use `*big.Int` directly with a mask applied after
+each operation. No generics anywhere.
 
 Operator name mapping (`bvadd`, `bvsub`, `bvmul`, `bvudiv`, `bvurem`,
 `bvshl`, `bvlshr`, `bvashr`, `bvand`, `bvor`, `bvxor`, `bvnot`,
@@ -386,7 +382,7 @@ What ivy2cpp ships as static C++ headers (`ivy_repl.hpp`,
 `ivy_wide_uint.hpp`, `ivy_z3_helpers.hpp`) becomes:
 
 - A Go `runtime.go` emitted inline with helpers (`ivyAssert`,
-  `ivyAssume`, `ivyChoose`, `ivyPrint`, `ivyWriteTrace`, `Uint128`,
+  `ivyAssume`, `ivyChoose`, `ivyPrint`, `ivyWriteTrace`, 
   trace I/O, `Tick`).
 - Concurrency: `pthread` / Windows threads → goroutines + `sync.Mutex`
   / `sync.WaitGroup`. The mutex around `State` becomes a `sync.Mutex`
@@ -650,7 +646,7 @@ the `go`-tagged native blocks), they land directly under
 |---|------------------|-----------|
 | R1 | Generated test/gen binaries pull entire goivy as a dep — link bloat, build time. | Acceptable per D2. Could later split out a `goivy/smtfacade` sub-package; not now. |
 | R2 | Cyclic-import risk if goivy ever imports ivy2go. | Forbid in CI by adding a guard test (`go list -deps github.com/glycerine/ivy/goivy` must not contain `ivy2go`). |
-| R3 | Avoiding generics constrains Uint128 / forAll helpers; emission size grows. | Accepted per D6. Helpers are per-sort, emitted once per program. |
+| R3 | Avoiding generics constrains forAll helpers; emission size grows. | Accepted per D6. Helpers are per-sort, emitted once per program. |
 | R4 | No behavioral oracle at MVP means semantic regressions may slip past unit text-shape checks. | Tier 2 (build smoke) catches type errors; Tier 4 (post-MVP) catches behaviour. M9 in §4 is dedicated to designing Tier 4. |
 | R5 | Wide BV (>128) via `*big.Int` is slower than ivy2cpp's `ivy_uint<N>`. | Acceptable; wide BV is uncommon. Document the perf gap. |
 | R6 | REPL semantics drift between ivy2cpp and ivy2go. | M7 ports the REPL grammar test-by-test from `ivy2cpp/repl_parser_test.go`; the same `.test.args` must produce equivalent dispatch. |
@@ -712,8 +708,8 @@ Tests per type case (§3.5.1). Tier 3 static check on every output.
 ### M3 — Expression emission (≈3 days)
 
 - `ivy2go/expr.go` — `emitExpr` dispatch matching ivy2cpp.
-- `ivy2go/bv_expr.go` — Bitvector lowering + `Uint128` helpers.
-- `ivy2go/runtime.go` — Initial helper emission (`Uint128`, `ite`,
+- `ivy2go/bv_expr.go` — Bitvector lowering 
+- `ivy2go/runtime.go` — Initial helper emission (`ite`,
   `forAllS`/`existsS` per-sort skeletons).
 
 Tests per expression case (§3.5.2, §3.5.7).

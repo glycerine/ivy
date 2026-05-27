@@ -1,6 +1,7 @@
 package ivy2go
 
 import (
+	"strconv"
 	"strings"
 	"testing"
 
@@ -155,6 +156,32 @@ func TestGoInterpTypePrimitiveBV(t *testing.T) {
 		it := goInterpType{Kind: goInterpBV, Bits: bits}
 		if got := it.primitiveType(); got != want {
 			t.Errorf("primitiveType(bv[%d]) = %q, want %q", bits, got, want)
+		}
+	}
+}
+
+func TestGoInterpTypeName_BVBandsAreConsistent(t *testing.T) {
+	for _, tc := range []struct {
+		bits int
+		want string
+	}{
+		{1, "uint32"},
+		{32, "uint32"},
+		{33, "uint64"},
+		{64, "uint64"},
+		{65, "*big.Int"},
+		{128, "*big.Int"},
+		{256, "*big.Int"},
+	} {
+		mod := compileIvySource(t, "type word\ninterpret word -> bv["+strconv.Itoa(tc.bits)+"]")
+		g := &Generator{Mod: mod}
+		word, _ := mod.Sig.Sorts.Get2("word")
+		got, ok := g.goInterpTypeName(word)
+		if !ok {
+			t.Fatalf("goInterpTypeName(bv[%d]) = !ok", tc.bits)
+		}
+		if got != tc.want {
+			t.Fatalf("goInterpTypeName(bv[%d]) = %q, want %q", tc.bits, got, tc.want)
 		}
 	}
 }

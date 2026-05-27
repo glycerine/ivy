@@ -35,19 +35,14 @@ recommendations unless there is a concrete failure mode.
 - Range clamping now emits typed expression-shaped Go IIFEs for casts,
   arithmetic, and numerals instead of embedding statement text where an
   expression is required.
+- Wide bitvectors now consistently lower widths above 64 bits as masked
+  `*big.Int` values. Solver-derived BV initial-state values also parse Z3
+  decimal, hex, binary, and `(_ bvN W)` model syntax before emitting width-
+  appropriate Go literals.
 
 Remaining entries keep their original audit numbering.
 
 ## P1 - generated programs can be wrong, invalid, or unlaunchable
-
-10. Wide BV types above 64 bits are internally inconsistent.
-
-    Evidence: `goInterpTypeName` maps all BV widths above 64 to `*big.Int`
-    (`go_types.go:161`). But `emitBVNumeral` emits `Uint128FromString(...).MaskTo(...)`
-    for widths `65..128` (`bv_expr.go:40`). Solver-derived initial values also
-    cast numerals with `fmt.Sprintf("%s(%d)", typeName, n)` (`initial_state.go:244`),
-    which becomes invalid `*big.Int(1)` for those sorts. Wide-BV assignments
-    and initial states can therefore fail to compile.
 
 11. Plain variant leaf constructors are called with arguments even though they
     take none.

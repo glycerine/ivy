@@ -13,12 +13,7 @@ import (
 //
 //   - bits ≤ 32  → uint32 arithmetic, mask with 1<<bits - 1
 //   - bits ≤ 64  → uint64 arithmetic, mask with 1<<bits - 1
-//   - 64 < bits ≤ 128 → Uint128 struct methods (runtime.go)
-//   - bits > 128 → *big.Int via big.Int.Mod-with-mask
-//
-// M3 implements the ≤64 path completely and stubs the wider paths
-// with explicit errors that point to runtime.go's Uint128 (M3) and
-// big.Int helpers (deferred to a later milestone).
+//   - bits > 64 → *big.Int via big.Int operations and masks
 
 // emitBVNumeral mirrors ivy2cpp/bv_expr.go emitBVNumeral.
 func (g *Generator) emitBVNumeral(c *goivy.Const) (string, bool) {
@@ -30,16 +25,8 @@ func (g *Generator) emitBVNumeral(c *goivy.Const) (string, bool) {
 		return "", false
 	}
 	switch {
-	case it.Bits > 128:
-		// Defer wide-BV constant emission to a later milestone.
-		// Use a (*big.Int).SetString fallback that's correct but
-		// generates an allocation per evaluation.
-		g.requireBigInt()
-		return fmt.Sprintf("func() *big.Int { v, _ := new(big.Int).SetString(%s, 0); return v.And(v, %s) }()",
-			strconv.Quote(c.Name), bvMask(it.Bits)), true
 	case it.Bits > 64:
-		g.requireUint128()
-		return fmt.Sprintf("Uint128FromString(%s).MaskTo(%d)", strconv.Quote(c.Name), it.Bits), true
+		return g.wideBVLiteralExpr(c.Name, it.Bits), true
 	}
 	value := c.Name
 	mask := bvMask(it.Bits)
@@ -48,6 +35,12 @@ func (g *Generator) emitBVNumeral(c *goivy.Const) (string, bool) {
 		primitive = "uint64"
 	}
 	return fmt.Sprintf("(%s(%s) & %s)", primitive, value, mask), true
+}
+
+func (g *Generator) wideBVLiteralExpr(value string, bits int) string {
+	g.requireBigInt()
+	return fmt.Sprintf("func() *big.Int { v, ok := new(big.Int).SetString(%s, 0); if !ok { v = new(big.Int) }; return v.And(v, bigIntMask(%d)) }()",
+		strconv.Quote(value), bits)
 }
 
 // emitBVApply mirrors ivy2cpp/bv_expr.go emitBVApply. Returns
@@ -299,19 +292,16 @@ func (g *Generator) maskBVExpr(expr string, it goInterpType) string {
 
 // bvMask returns the all-ones mask for `bits`. Mirrors ivy2cpp's same
 // helper with Go literal syntax.
-//   - bits ≤ 64  → untyped integer literal
-//   - bits ≤ 128 → "Uint128Mask(bits)" runtime call
-//   - bits > 128 → "bigIntMask(bits)" runtime call
+//   - bits ≤ 64 → untyped integer literal
+//   - bits > 64 → "bigIntMask(bits)" runtime call
 func bvMask(bits int) string {
 	switch {
 	case bits <= 0:
 		return "0"
 	case bits == 64:
 		return "0xFFFFFFFFFFFFFFFF"
-	case bits > 128:
-		return fmt.Sprintf("bigIntMask(%d)", bits)
 	case bits > 64:
-		return fmt.Sprintf("Uint128Mask(%d)", bits)
+		return fmt.Sprintf("bigIntMask(%d)", bits)
 	}
 	return strconv.FormatUint(uint64(1)<<uint(bits)-1, 10)
 }
@@ -323,8 +313,6 @@ func bvSignMask(bits int) string {
 		return "0"
 	case bits <= 64:
 		return fmt.Sprintf("(uint64(1) << %d)", bits-1)
-	case bits <= 128:
-		return fmt.Sprintf("Uint128SignMask(%d)", bits)
 	default:
 		return fmt.Sprintf("bigIntSignMask(%d)", bits)
 	}
@@ -362,25 +350,14 @@ func looksLikeBVOperator(name string) bool {
 	return false
 }
 
-// requireUint128 records that the emitted runtime needs the Uint128
-// helper definitions. Reading from g.Ctx triggers emission in
-// runtime.go (M3+).
-func (g *Generator) requireUint128() {
-	if g != nil && g.Ctx != nil {
-		g.Ctx.OnceGlobals["__need_uint128"] = true
-	}
-}
-
 // requireBigInt records that the emitted runtime needs math/big.
-// Also pulls in Uint128 because toBigInt's switch references it. The
-// per-stream math/big imports are added lazily by finalize when it
+// The per-stream math/big imports are added lazily by finalize when it
 // detects "big.Int" in a stream's body.
 func (g *Generator) requireBigInt() {
 	if g == nil || g.Ctx == nil {
 		return
 	}
 	g.Ctx.OnceGlobals["__need_bigint"] = true
-	g.Ctx.OnceGlobals["__need_uint128"] = true
 }
 
 // --- OPEN 054: wide BV operator lowering via *big.Int ----------------

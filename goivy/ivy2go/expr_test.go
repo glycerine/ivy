@@ -318,7 +318,7 @@ func TestBVMaskBitsBands(t *testing.T) {
 		8:   "255",
 		32:  "4294967295",
 		64:  "0xFFFFFFFFFFFFFFFF",
-		128: "Uint128Mask(128)",
+		128: "bigIntMask(128)",
 		256: "bigIntMask(256)",
 	}
 	for bits, want := range cases {
@@ -344,19 +344,22 @@ interpret word -> bv[8]
 	}
 }
 
-func TestEmitBVNumeral_WideRequestsUint128(t *testing.T) {
+func TestEmitBVNumeral_WideRequestsBigInt(t *testing.T) {
 	g := newExprGen(t, `
 type wide
 interpret wide -> bv[128]
 `)
 	wideSort, _ := g.Mod.Sig.Sorts.Get2("wide")
 	c := &goivy.Const{Name: "65", CSort: wideSort}
-	_, ok := g.emitBVNumeral(c)
+	got, ok := g.emitBVNumeral(c)
 	if !ok {
 		t.Fatal("emitBVNumeral wide !ok")
 	}
-	if !g.Ctx.OnceGlobals["__need_uint128"] {
-		t.Error("wide BV numeral should trigger Uint128 runtime emission")
+	if !strings.Contains(got, "func() *big.Int") || !strings.Contains(got, "bigIntMask(128)") {
+		t.Fatalf("wide BV numeral should be a masked *big.Int expression, got %q", got)
+	}
+	if !g.Ctx.OnceGlobals["__need_bigint"] {
+		t.Error("wide BV numeral should trigger big.Int runtime emission")
 	}
 }
 
@@ -420,31 +423,6 @@ func TestRuntimeHelpers_AlwaysOn(t *testing.T) {
 	} {
 		if !strings.Contains(text, want) {
 			t.Errorf("runtime.go missing %q:\n%s", want, text)
-		}
-	}
-}
-
-func TestRuntimeHelpers_Uint128EmittedOnDemand(t *testing.T) {
-	// Build a module that triggers emitBVNumeral on a 128-bit BV
-	// during action/definitions emission; for now we invoke
-	// requireUint128 directly to validate runtime emission.
-	mod := compileIvySource(t, "")
-	g := &Generator{
-		Mod:           mod,
-		Config:        Config{Target: "impl"},
-		PackageName:   "p",
-		StateTypeName: "State",
-		Ctx:           NewGoContext(),
-	}
-	g.Ctx.PackageName = "p"
-	g.runtime = newGoWriter(g.Ctx.Runtime)
-	g.requireUint128()
-	g.emitRuntimeHelpers(&g.runtime)
-	g.emitRuntimeHelpersLate(&g.runtime)
-	text := g.Ctx.Runtime.GetFile()
-	for _, want := range []string{"type Uint128 struct", "func Uint128Mask", "func Uint128FromString"} {
-		if !strings.Contains(text, want) {
-			t.Errorf("runtime missing %q:\n%s", want, text)
 		}
 	}
 }

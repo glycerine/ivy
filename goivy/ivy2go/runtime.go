@@ -33,9 +33,6 @@ func (g *Generator) emitRuntimeHelpersLate(w *goWriter) {
 	if g.Ctx == nil {
 		return
 	}
-	if g.Ctx.OnceGlobals["__need_uint128"] {
-		g.emitUint128Helpers(w)
-	}
 	if g.Ctx.OnceGlobals["__need_bigint"] {
 		g.emitBigIntHelpers(w)
 	}
@@ -178,97 +175,6 @@ func (g *Generator) emitRuntimeImplPreamble(w *goWriter) {
 	w.blank()
 }
 
-// emitUint128Helpers writes the Uint128 struct + its methods. Lands
-// in runtime.go only when bv_expr.go's emission recorded a request
-// via requireUint128.
-func (g *Generator) emitUint128Helpers(w *goWriter) {
-	w.line("// Uint128 is a 128-bit unsigned integer used for bv[N] with")
-	w.line("// 65 <= N <= 128. Mirrors ivy2cpp's `unsigned __int128`.")
-	w.open("type Uint128 struct {")
-	w.line("Hi, Lo uint64")
-	w.close("")
-	w.blank()
-
-	w.open("func Uint128FromString(s string) Uint128 {")
-	w.line("// Minimal parser: handles decimal and 0x-prefixed hex; for")
-	w.line("// larger inputs callers should reach for big.Int. Mirrors")
-	w.line("// ivy2cpp/ivy_uint128_from_string.")
-	w.line("var v Uint128")
-	w.line(`if len(s) >= 2 && (s[:2] == "0x" || s[:2] == "0X") {`)
-	w.line("for _, r := range s[2:] {")
-	w.line("v = v.Shl(4)")
-	w.line(`if r >= '0' && r <= '9' { v.Lo |= uint64(r - '0') }`)
-	w.line(`if r >= 'a' && r <= 'f' { v.Lo |= uint64(r - 'a' + 10) }`)
-	w.line(`if r >= 'A' && r <= 'F' { v.Lo |= uint64(r - 'A' + 10) }`)
-	w.line("}")
-	w.line("return v")
-	w.line("}")
-	w.line("for _, r := range s {")
-	w.line(`if r >= '0' && r <= '9' { v = v.MulU64(10).AddU64(uint64(r - '0')) }`)
-	w.line("}")
-	w.line("return v")
-	w.close("")
-	w.blank()
-
-	w.line("func Uint128Mask(bits int) Uint128 {")
-	w.line("\tif bits <= 0 { return Uint128{} }")
-	w.line("\tif bits >= 128 { return Uint128{Hi: ^uint64(0), Lo: ^uint64(0)} }")
-	w.line("\tif bits <= 64 { return Uint128{Lo: (uint64(1) << uint(bits)) - 1} }")
-	w.line("\treturn Uint128{Hi: (uint64(1) << uint(bits-64)) - 1, Lo: ^uint64(0)}")
-	w.line("}")
-	w.blank()
-
-	w.line("func Uint128SignMask(bits int) Uint128 {")
-	w.line("\tif bits <= 0 || bits > 128 { return Uint128{} }")
-	w.line("\tif bits <= 64 { return Uint128{Lo: uint64(1) << uint(bits-1)} }")
-	w.line("\treturn Uint128{Hi: uint64(1) << uint(bits-65)}")
-	w.line("}")
-	w.blank()
-
-	// Arithmetic methods. Implemented in terms of math/bits when
-	// helpful. M3 lands the small set bv_expr.go uses; later
-	// milestones extend as needed.
-	w.line("func (a Uint128) Shl(n uint) Uint128 {")
-	w.line("\tif n == 0 { return a }")
-	w.line("\tif n >= 128 { return Uint128{} }")
-	w.line("\tif n >= 64 { return Uint128{Hi: a.Lo << (n - 64)} }")
-	w.line("\treturn Uint128{Hi: (a.Hi << n) | (a.Lo >> (64 - n)), Lo: a.Lo << n}")
-	w.line("}")
-	w.blank()
-
-	w.line("func (a Uint128) AddU64(v uint64) Uint128 {")
-	w.line("\tlo := a.Lo + v")
-	w.line("\thi := a.Hi")
-	w.line("\tif lo < a.Lo { hi++ }")
-	w.line("\treturn Uint128{Hi: hi, Lo: lo}")
-	w.line("}")
-	w.blank()
-
-	w.line("func (a Uint128) MulU64(v uint64) Uint128 {")
-	w.line("\t// Schoolbook 64x64 -> 128 using two halves of v.")
-	w.line("\tloLo, loHi := splitUint64(a.Lo)")
-	w.line("\thi := a.Hi * v")
-	w.line("\tp0 := loLo * v")
-	w.line("\tp1 := loHi * v")
-	w.line("\thi += p1 >> 32")
-	w.line("\tloProd := (p1 << 32) + p0")
-	w.line("\tif loProd < p0 { hi++ }")
-	w.line("\treturn Uint128{Hi: hi, Lo: loProd}")
-	w.line("}")
-	w.blank()
-
-	w.line("func splitUint64(x uint64) (uint64, uint64) {")
-	w.line("\treturn x & 0xFFFFFFFF, x >> 32")
-	w.line("}")
-	w.blank()
-
-	w.line("func (a Uint128) MaskTo(bits int) Uint128 {")
-	w.line("\tm := Uint128Mask(bits)")
-	w.line("\treturn Uint128{Hi: a.Hi & m.Hi, Lo: a.Lo & m.Lo}")
-	w.line("}")
-	w.blank()
-}
-
 // emitBigIntHelpers writes the bigInt mask helpers + wide-BV
 // arithmetic helpers needed for BV widths >64. Always pairs with a
 // math/big import.
@@ -286,10 +192,10 @@ func (g *Generator) emitBigIntHelpers(w *goWriter) {
 	w.line("}")
 	w.blank()
 	// toBigInt: coerce any integer-ish value to *big.Int. Generated
-	// callers may pass uint32 / uint64 / Uint128 / *big.Int — each
-	// has a distinct path. We use interface{} to admit them all.
+	// callers may pass uint32 / uint64 / *big.Int — each has a
+	// distinct path. We use interface{} to admit them all.
 	w.line("// toBigInt coerces a value to *big.Int. Accepts uint32,")
-	w.line("// uint64, Uint128, *big.Int, or any int-typed Go value.")
+	w.line("// uint64, *big.Int, or any int-typed Go value.")
 	w.open("func toBigInt(v interface{}) *big.Int {")
 	w.line("switch x := v.(type) {")
 	w.line("case *big.Int:")
@@ -300,10 +206,6 @@ func (g *Generator) emitBigIntHelpers(w *goWriter) {
 	w.line("\treturn new(big.Int).SetUint64(uint64(x))")
 	w.line("case int:")
 	w.line("\treturn big.NewInt(int64(x))")
-	w.line("case Uint128:")
-	w.line("\thi := new(big.Int).SetUint64(x.Hi)")
-	w.line("\thi.Lsh(hi, 64)")
-	w.line("\treturn hi.Or(hi, new(big.Int).SetUint64(x.Lo))")
 	w.line("}")
 	w.line(`panic(fmt.Sprintf("toBigInt: unsupported %T", v))`)
 	w.close("")
@@ -421,7 +323,7 @@ func (g *Generator) collectIteHelpers() []iteHelperReq {
 // can refine if needed.
 func iteHelperTypeFromSuffix(suffix string) string {
 	switch suffix {
-	case "uint32", "uint64", "uint8", "uint16", "int", "int64", "bool", "string", "Uint128":
+	case "uint32", "uint64", "uint8", "uint16", "int", "int64", "bool", "string":
 		return suffix
 	}
 	return suffix

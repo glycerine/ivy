@@ -116,11 +116,9 @@ func (it goInterpType) hugeBV() bool {
 //   - N ≤ 64 → uint64
 //   - N > 64 → ""  (handled via *big.Int through goInterpTypeName)
 //
-// OPEN 054 collapses the previous 65..128 → Uint128 branch into the
+// OPEN 054 collapses the previous 65..128 branch into the
 // uniform big.Int path so generated arithmetic stays consistent
-// across all wide widths. Uint128 still exists as a runtime helper
-// for callers (constants, model conversion) but is not the
-// emit-time type.
+// across all wide widths.
 func (it goInterpType) primitiveType() string {
 	if it.Kind != goInterpBV {
 		return ""

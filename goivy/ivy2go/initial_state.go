@@ -2,6 +2,7 @@ package ivy2go
 
 import (
 	"fmt"
+	"math/big"
 	"strconv"
 	"strings"
 
@@ -238,6 +239,9 @@ func (g *Generator) modelValueToGo(value smt.Z3Expr, s goivy.Sort) (string, erro
 		}
 		return "", fmt.Errorf("expected %s model value, got %q", sortName(s), text)
 	default:
+		if it, ok := g.goInterpType(s); ok && it.Kind == goInterpBV {
+			return g.bvModelValueToGo(text, it)
+		}
 		typeName := g.goType(s)
 		if n, err := strconv.ParseInt(text, 10, 64); err == nil {
 			if typeName == "int" || typeName == "" {
@@ -253,6 +257,55 @@ func (g *Generator) modelValueToGo(value smt.Z3Expr, s goivy.Sort) (string, erro
 		}
 		return "", fmt.Errorf("unsupported model value %q for sort %s", text, sortName(s))
 	}
+}
+
+func (g *Generator) bvModelValueToGo(text string, it goInterpType) (string, error) {
+	decimal, ok := parseBVModelValueText(text)
+	if !ok {
+		return "", fmt.Errorf("unsupported bitvector model value %q", text)
+	}
+	switch {
+	case it.Bits <= 32:
+		return fmt.Sprintf("(uint32(%s) & %s)", decimal, bvMask(it.Bits)), nil
+	case it.Bits <= 64:
+		return fmt.Sprintf("(uint64(%s) & %s)", decimal, bvMask(it.Bits)), nil
+	default:
+		return g.wideBVLiteralExpr(decimal, it.Bits), nil
+	}
+}
+
+func parseBVModelValueText(text string) (string, bool) {
+	text = stripZ3Bars(strings.TrimSpace(text))
+	if text == "" {
+		return "", false
+	}
+	if strings.HasPrefix(text, "#x") || strings.HasPrefix(text, "#X") {
+		return parseBigIntString(text[2:], 16)
+	}
+	if strings.HasPrefix(text, "#b") || strings.HasPrefix(text, "#B") {
+		return parseBigIntString(text[2:], 2)
+	}
+	if strings.HasPrefix(text, "(_ bv") && strings.HasSuffix(text, ")") {
+		body := strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(text, "(_ bv"), ")"))
+		fields := strings.Fields(body)
+		if len(fields) != 2 {
+			return "", false
+		}
+		return parseBigIntString(fields[0], 10)
+	}
+	return parseBigIntString(text, 10)
+}
+
+func parseBigIntString(text string, base int) (string, bool) {
+	text = strings.TrimSpace(text)
+	if text == "" {
+		return "", false
+	}
+	n, ok := new(big.Int).SetString(text, base)
+	if !ok || n.Sign() < 0 {
+		return "", false
+	}
+	return n.String(), true
 }
 
 // initialDomainTuples mirrors ivy2cpp/initial_state.go:269.
