@@ -741,40 +741,31 @@ variant child of sort_a = {left, right}`
 	t.Fatalf("before MixinDecl not found")
 }
 
-func TestParseV16DelegateGeneratedMixinNameSubscripts(t *testing.T) {
+func TestParseV16RejectsDelegateGeneratedMixinNameSubscriptsLikePython(t *testing.T) {
 	src := `action step = {}
 before step { call step }
 after step { call step }
 delegate step[before], step[after] -> target`
-	result, err := Parse(src, Version{1, 6}, WithFilename("delegate_mixin_subscript16.ivy"))
-	if err != nil {
-		t.Fatalf("Parse v1.6 delegate generated mixin names: %v", err)
+	_, err := Parse(src, Version{1, 6}, WithFilename("delegate_mixin_subscript16.ivy"))
+	if err == nil {
+		t.Fatal("Parse v1.6 delegate generated mixin names succeeded, want Python-compatible syntax error")
 	}
-	decl := firstDeclOf[*DelegateDecl](t, result.Decls)
-	if got := len(decl.Args()); got != 2 {
-		t.Fatalf("DelegateDecl args = %d, want 2", got)
-	}
-	for i, want := range []string{"step[before]", "step[after]"} {
-		def, ok := decl.Args()[i].(*DelegateDef)
-		if !ok {
-			t.Fatalf("DelegateDecl arg[%d] = %T, want *DelegateDef", i, decl.Args()[i])
-		}
-		if got := def.Delegated(); got != want {
-			t.Fatalf("DelegateDef[%d].Delegated() = %q, want %q", i, got, want)
-		}
-		if got := def.Delegee(); got != "target" {
-			t.Fatalf("DelegateDef[%d].Delegee() = %q, want target", i, got)
-		}
+	if got, want := err.Error(), "token 'before': syntax error"; !strings.Contains(got, want) {
+		t.Fatalf("Parse error = %q, want substring %q", got, want)
 	}
 }
 
-func TestParseV16GeneratedClassNameSubscript(t *testing.T) {
+func TestParseV16RejectsGeneratedClassNameSubscriptLikePython(t *testing.T) {
 	src := `object marcelo[class](self:marcelo[class].t) = {
 type t
 }
 alias marcelo_alias = marcelo[class].t`
-	if _, err := Parse(src, Version{1, 6}, WithFilename("class_subscript16.ivy")); err != nil {
-		t.Fatalf("Parse v1.6 generated class name subscript: %v", err)
+	_, err := Parse(src, Version{1, 6}, WithFilename("class_subscript16.ivy"))
+	if err == nil {
+		t.Fatal("Parse v1.6 generated class name subscript succeeded, want Python-compatible syntax error")
+	}
+	if got, want := err.Error(), "token 'class': syntax error"; !strings.Contains(got, want) {
+		t.Fatalf("Parse error = %q, want substring %q", got, want)
 	}
 }
 
