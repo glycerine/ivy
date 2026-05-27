@@ -81,3 +81,18 @@ func (cfg *parseConfig) applyToParser17(lex *parser17LexAdapter) {
 		lex.astCfg = NewAstConfig()
 	}
 }
+
+func (cfg *parseConfig) applyToParser16(lex *parser16LexAdapter) {
+	lex.importer = cfg.importer
+	if cfg.included != nil {
+		lex.included = cfg.included
+	}
+	lex.accum = cfg.parentAccum
+	lex.nested = cfg.nested
+	lex.filename = cfg.filename
+	if cfg.astCfg != nil {
+		lex.astCfg = cfg.astCfg
+	} else {
+		lex.astCfg = NewAstConfig()
+	}
+}

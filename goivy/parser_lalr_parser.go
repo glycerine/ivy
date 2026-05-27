@@ -15,8 +15,9 @@ func Parse(input string, version Version, opts ...ParseOption) (*ParseResult, er
 type fullFileParser func(input string, version Version, opts ...ParseOption) (*ParseResult, error)
 
 func fullFileParserForVersion(version Version) fullFileParser {
-	// Status quo: the hardened v1.7+ full-file grammar is still the only
-	// complete parser. A future thin v1.6 grammar should route from here.
+	if version[0] == 1 && version[1] <= 6 {
+		return ParseFullV16
+	}
 	return ParseV17
 }
 

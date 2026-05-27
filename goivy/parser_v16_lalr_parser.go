@@ -1,0 +1,185 @@
+package goivy
+
+import (
+	"github.com/glycerine/ivy/goivy/xtracer"
+)
+
+// ParseFullV16 parses a complete Ivy file using the Ivy <=1.6 full-file grammar.
+func ParseFullV16(input string, version Version, opts ...ParseOption) (*ParseResult, error) {
+	xtracer.Trace("parser.Parse ENTER")
+	cfg := newParseConfig()
+	for _, opt := range opts {
+		opt(cfg)
+	}
+	lex := newParser16LexAdapter(input, version)
+	cfg.applyToParser16(lex)
+	parser16Parse(lex)
+	if lex.err != nil {
+		return nil, lex.err
+	}
+	if lex.accum == nil {
+		xtracer.Trace("parser.Parse EXIT decls=0")
+		return &ParseResult{}, nil
+	}
+	if !lex.nested {
+		expandAutoInstances(lex.accum)
+	}
+	if len(lex.accum.errors) > 0 {
+		return nil, lex.accum.errors[0]
+	}
+	result := lex.accum.toResult()
+	xtracer.Trace("parser.Parse EXIT decls=%d", len(result.Decls))
+	return result, nil
+}
+
+type parser16LexAdapter struct {
+	lex           *Lexer
+	accum         *ivyAccum
+	err           *ParseError
+	importer      ImporterFunc
+	included      map[string]bool
+	nested        bool
+	lastTok       Token
+	prevTok       Token
+	filename      string
+	parentObjName string
+	astCfg        *AstConfig
+}
+
+func newParser16LexAdapter(input string, version Version) *parser16LexAdapter {
+	return &parser16LexAdapter{
+		lex:      NewLexer(input, version),
+		included: make(map[string]bool),
+	}
+}
+
+func (l *parser16LexAdapter) Lex(lval *parser16SymType) int {
+	tok := l.lex.NextToken()
+	l.prevTok = l.lastTok
+	l.lastTok = tok
+
+	lval.tok = TokenInfo{Val: tok.Value, Line: tok.Line}
+
+	switch tok.Type {
+	case EOF:
+		return 0
+	case SYMBOL:
+		return PARSER16_TOK_PRESYMBOL
+	case VARIABLE:
+		return PARSER16_TOK_VARIABLE
+	case LPAREN:
+		return PARSER16_TOK_LPAREN
+	case RPAREN:
+		return PARSER16_TOK_RPAREN
+	case LB:
+		return PARSER16_TOK_LB
+	case RB:
+		return PARSER16_TOK_RB
+	case LCB:
+		return PARSER16_TOK_LCB
+	case RCB:
+		return PARSER16_TOK_RCB
+	case COMMA:
+		return PARSER16_TOK_COMMA
+	case SEMI:
+		return PARSER16_TOK_SEMI
+	case COLON:
+		return PARSER16_TOK_COLON
+	case DOT:
+		return PARSER16_TOK_DOT
+	case PLUS:
+		return PARSER16_TOK_PLUS
+	case MINUS:
+		return PARSER16_TOK_MINUS
+	case TIMES:
+		return PARSER16_TOK_TIMES
+	case DIV:
+		return PARSER16_TOK_DIV
+	case EQ:
+		return PARSER16_TOK_EQ
+	case TILDAEQ:
+		return PARSER16_TOK_TILDAEQ
+	case TILDA:
+		return PARSER16_TOK_TILDA
+	case LE:
+		return PARSER16_TOK_LE
+	case LT:
+		return PARSER16_TOK_LT
+	case GE:
+		return PARSER16_TOK_GE
+	case GT:
+		return PARSER16_TOK_GT
+	case AND:
+		return PARSER16_TOK_AND
+	case OR:
+		return PARSER16_TOK_OR
+	case ARROW:
+		return PARSER16_TOK_ARROW
+	case IFF:
+		return PARSER16_TOK_IFF
+	case PTO:
+		return PARSER16_TOK_PTO
+	case DOLLAR:
+		return PARSER16_TOK_DOLLAR
+	case ASSIGN:
+		return PARSER16_TOK_ASSIGN
+	case FORALL:
+		return PARSER16_TOK_FORALL
+	case EXISTS:
+		return PARSER16_TOK_EXISTS
+	case TRUE:
+		return PARSER16_TOK_TRUE
+	case FALSE:
+		return PARSER16_TOK_FALSE
+	case OLD:
+		return PARSER16_TOK_OLD
+	case THIS:
+		return PARSER16_TOK_THIS
+	case IF:
+		return PARSER16_TOK_IF
+	case ELSE:
+		return PARSER16_TOK_ELSE
+	case GLOBALLY:
+		return PARSER16_TOK_GLOBALLY
+	case EVENTUALLY:
+		return PARSER16_TOK_EVENTUALLY
+	case TYPE:
+		return PARSER16_TOK_TYPE
+	case INDIV:
+		return PARSER16_TOK_INDIV
+	case RELATION:
+		return PARSER16_TOK_RELATION
+	case AXIOM:
+		return PARSER16_TOK_AXIOM
+	case PROPERTY:
+		return PARSER16_TOK_PROPERTY
+	case CONJECTURE:
+		return PARSER16_TOK_CONJECTURE
+	case INIT:
+		return PARSER16_TOK_INIT
+	case INCLUDE:
+		return PARSER16_TOK_INCLUDE
+	case ACTION:
+		return PARSER16_TOK_ACTION
+	case CALL:
+		return PARSER16_TOK_CALL
+	case IMPORT:
+		return PARSER16_TOK_IMPORT
+	case EXPORT:
+		return PARSER16_TOK_EXPORT
+	default:
+		lval.tok = TokenInfo{Val: tok.Value, Line: tok.Line}
+		return PARSER16_TOK_PRESYMBOL
+	}
+}
+
+func (l *parser16LexAdapter) Error(s string) {
+	pe := &ParseError{Filename: l.filename, Message: s}
+	if l.lastTok.Type == EOF {
+		pe.Message = "unexpected end of input"
+	} else {
+		pe.Lineno = l.lastTok.Line
+		pe.Token = l.lastTok.Value
+	}
+	l.err = pe
+}
