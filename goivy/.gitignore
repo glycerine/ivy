@@ -50,3 +50,5 @@ log.golden16.all.prev
 tmp-ivy2cpp-check
 tmp-ivy2go-check
 playpen
+log.golden6
+log.golden6.prev

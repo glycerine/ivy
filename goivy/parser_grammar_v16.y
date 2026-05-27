@@ -2313,10 +2313,12 @@ dotsym:
 atype:
     SYMBOLx
     {
+        xtracer.Trace("parser.p_atype_symbol ENTER (atype) val=%s", $1)
         $$ = parser16Acfg(parser16lex).NewSymbol($1, nil)
     }
     | atype PARSER16_TOK_DOT SYMBOLx
     {
+        xtracer.Trace("parser.p_atype_atype_dot_symbol ENTER (atype)")
         if _, ok := $1.(*This); ok {
             $$ = parser16Acfg(parser16lex).NewSymbol($3, nil)
         } else if sym, ok := $1.(*Symbol); ok {
@@ -2327,7 +2329,10 @@ atype:
     }
     | PARSER16_TOK_THIS
     {
-        $$ = parser16Acfg(parser16lex).NewThis()
+        xtracer.Trace("parser.p_atype_this ENTER (atype)")
+        t := parser16Acfg(parser16lex).NewThis()
+        t.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
+        $$ = t
     }
     ;
 
