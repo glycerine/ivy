@@ -990,12 +990,6 @@ pname:
         xtracer.Trace("parser.p_pname_relop ENTER (pname)")
         $$ = parser16NodeAt(parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol($1.Val, nil)), tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
     }
-    | PARSER16_TOK_THIS
-    {
-        xtracer.Trace("parser.p_pname_this ENTER (pname)")
-        $$ = parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol("this", nil))
-        $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
-    }
     | PARSER16_TOK_TRUE
     {
         xtracer.Trace("parser.p_pname_true ENTER (pname)")
