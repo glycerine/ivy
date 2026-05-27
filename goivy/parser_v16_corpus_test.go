@@ -85,9 +85,73 @@ var expectedV16CorpusParseErrors = map[string]v16ExpectedParseError{
 		Contains: "token 'RV_option_wf': syntax error",
 		Reason:   "uppercase label [RV_option_wf]; Python LABEL uses SYMBOL/PRESYMBOL",
 	},
+	"doc/examples/MSV/repstore2.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/MSV/repstore2bug.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/MSV/repstore2ex.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/MSV/repstore2ex_soln.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/MSV/repstore3.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/MSV/repstore3_soln.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/MSV/repstore_variant.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/testing/chain3.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses a [before] symbolic suffix; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/testing/repstore2.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/testing/repstore2_orig.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/testing/repstore2bug.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/testing/repstore2ex.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/testing/repstore3.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/testing/repstore3_soln.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
+	"doc/examples/testing/repstore_variant.ivy": {
+		Contains: "token 'before': syntax error",
+		Reason:   "uses delegate target fwd_chan_rcvr_recv[before]; Python 1.6 keeps before reserved, so it cannot be a SYMBOL subscript",
+	},
 	"test/impltype1.ivy": {
 		Contains: "token 'as': syntax error",
 		Reason:   "uses an `as` cast form with no Python grammar token",
+	},
+	"test/marcelocrash2.ivy": {
+		Contains: "token 'class': syntax error",
+		Reason:   "uses object marcelo[class]; Python 1.6 keeps class reserved, so it cannot be a SYMBOL subscript",
 	},
 	"test/marcelocrash3.ivy": {
 		Contains: "token 'x': syntax error",
@@ -100,6 +164,10 @@ var expectedV16CorpusParseErrors = map[string]v16ExpectedParseError{
 	"test/recursion1.ivy": {
 		Contains: "token '->': syntax error",
 		Reason:   "uses function-sort schema parameters outside Python atype grammar",
+	},
+	"test/test_liveness.ivy": {
+		Contains: "token 'property': syntax error",
+		Reason:   "puts a temporal property inside an isolate-local object body; Python 1.6 rejects this production shape",
 	},
 	"test/yacc1.ivy": {
 		Contains: "token ')': syntax error",
