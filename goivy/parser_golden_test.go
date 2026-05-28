@@ -606,7 +606,7 @@ func helpTestGoldenAll(t *testing.T, paths []string) {
 
 	// 243 runs for 500 seconds:
 	// XTRACE_OFF=1 time python -O `which ivy_check` isolate=this /Users/jaten/ivy/ivy-lang-examples/test/flash2_finite_mc.ivy
-	skipTo := 131 // 243 runs for 500 seconds.
+	skipTo := 138 // 243 runs for 500 seconds.
 	if skipTo == 31 {
 		startingIsolate = "this"
 	}
