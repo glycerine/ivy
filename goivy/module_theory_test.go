@@ -210,6 +210,38 @@ func TestUpdateTheoryExtensionality(t *testing.T) {
 	}
 }
 
+func TestUpdateTheoryKeepsHigherOrderDestructorExtensionality(t *testing.T) {
+	m := New()
+
+	tSort := &UninterpretedSort{Name: "t"}
+	bazTSort := &UninterpretedSort{Name: "baz.t"}
+	qSort := &UninterpretedSort{Name: "q"}
+
+	m.Sig.AddSort(tSort)
+	m.Sig.AddSort(bazTSort)
+	m.Sig.AddSort(qSort)
+
+	fooSort, _ := NewFunctionSort(tSort, Boolean)
+	foo := NewConst("foo", fooSort)
+	m.Sig.AddSymbol("foo", fooSort)
+	m.SortDestructors.Set("t", []*Const{foo})
+
+	bazFooSort, _ := NewFunctionSort(bazTSort, qSort, Boolean)
+	bazFoo := NewConst("baz.foo", bazFooSort)
+	m.Sig.AddSymbol("baz.foo", bazFooSort)
+	m.SortDestructors.Set("baz.t", []*Const{bazFoo})
+
+	m.UpdateTheory()
+	theory := m.BackgroundTheory(nil)
+
+	if len(theory.Fmlas) != 2 {
+		t.Fatalf("expected extensionality axioms for unary and higher-order destructors, got %d", len(theory.Fmlas))
+	}
+	if !IsEPR(Extensionality([]*Const{bazFoo})) {
+		t.Fatal("higher-order destructor extensionality should be EPR like Python ivy_logic.is_epr")
+	}
+}
+
 // Verify that Clauses type is properly used.
 func TestConjsReturnType(t *testing.T) {
 	m := New()

@@ -557,9 +557,10 @@ func nodesToVars(nodes []Expr) []*LogicVariable {
 
 // defToConstraint is now in clauses.go (merged from clauseops)
 
-// isEPR checks if a formula is in the EPR fragment (effectively
-// propositional after grounding — no function symbols in quantified
-// positions). This is a simplified check.
+// isEPR matches Python ivy_logic.is_epr: reject only existential quantifiers
+// that depend on currently universal variables. In particular, a universal
+// quantifier nested under a connective is still EPR, which matters for
+// higher-arity struct-field extensionality axioms.
 func isEPR(n Expr) bool {
-	return IsPrenexUniversal(n)
+	return IsEPR(n)
 }
