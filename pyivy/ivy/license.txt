@@ -1,4 +1,5 @@
------------------------------------------- START OF LICENSE -----------------------------------------
+(For the python IVy code:) 
+------------------------------------------ START OF LICENSE ---------------------------
 IVy-tool
 
 Copyright (c) Microsoft Corporation
