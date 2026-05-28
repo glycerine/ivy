@@ -543,11 +543,11 @@ func TestStripIsolateParamsAcceptsVariableParamNodesLikePython(t *testing.T) {
 	if err := StripIsolateParams(m, iso, NewInsMap[string, []IsolateMixinIface](), nil, nil); err != nil {
 		t.Fatalf("StripIsolateParams returned error: %v", err)
 	}
-	if len(m.Params) != 1 || m.Params[0].Name != "self" || !m.Params[0].CSort.Equal(tSort) {
-		t.Fatalf("module params = %v, want self:t", m.Params)
+	if len(m.Params) != 1 || m.Params[0].Name != "iso:self" || !m.Params[0].CSort.Equal(tSort) {
+		t.Fatalf("module params = %v, want iso:self:t", m.Params)
 	}
-	if _, ok := m.Sig.Symbols.Get2("self"); !ok {
-		t.Fatal("expected self to be added to signature symbols")
+	if _, ok := m.Sig.Symbols.Get2("iso:self"); !ok {
+		t.Fatal("expected iso:self to be added to signature symbols")
 	}
 }
 

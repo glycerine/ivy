@@ -734,10 +734,17 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 			if node == nil {
 				continue
 			}
+			// was:
 			// Preserve the source isolate parameter name in mod.params. The
 			// "iso:" rewrite above is for strip-map matching against the
 			// substituted isolate body, not for the exported module parameter.
-			paramName, paramSortName, ok := isolateParamNameSort(node)
+			// paramName, paramSortName, ok := isolateParamNameSort(node)
+
+			// now:
+			// Python substitutes variable isolate parameters into zero-arg
+			// App nodes named "iso:<param>" before it later iterates
+			// isolate.params() and appends those symbols to mod.params.
+			paramName, paramSortName, ok := isoParamNameSort(node)
 			if !ok {
 				continue
 			}
