@@ -57,8 +57,8 @@ func TestMacroMapKeyIncludesSort(t *testing.T) {
 
 	// Build fmlaPairs
 	macros := []fmlaPair{
-		{fmla: defS, source: lfS, lineno: 1},
-		{fmla: defT, source: lfT, lineno: 2},
+		{fmla: defS, source: lfS, loc: Location{Line: 1}},
+		{fmla: defT, source: lfT, loc: Location{Line: 2}},
 	}
 
 	sig := NewSig()

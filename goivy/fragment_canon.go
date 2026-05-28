@@ -77,7 +77,7 @@ func (s *stratEntry) Canon() Canonical { return Canonical(s.Sexp()) }
 // --- arc ---
 
 func (a *arc) Sexp() NodeKey {
-	lineno := a.lineno
+	lineno := a.loc.Line
 	// TODO remove?
 	lineno = 0
 	return NodeKey(fmt.Sprintf("(arc from:%s to:%s fmla:%s lineno:%d argIdx:%d hasIdx:%v)",
@@ -136,7 +136,7 @@ func (f *fmlaPair) Sexp() NodeKey {
 	if f.source != nil {
 		sourceStr = string(f.source.Canon())
 	}
-	lineno := f.lineno
+	lineno := f.loc.Line
 	// TODO revert once golden working? we avoid spurious Sexp diffs with
 	// this because the python line numbering is broken. Arguably we
 	// should fix it, but we did not want to risk messing up the python
@@ -172,23 +172,23 @@ func varIDVarMapSexp(m map[varID]*LogicVariable) string {
 	return "(hash " + strings.Join(parts, " ") + ")"
 }
 
-// sorted-map helper: map[varID]int
-func varIDIntMapSexp(m map[varID]int) string {
+// sorted-map helper: map[varID]Location
+func varIDLocationMapSexp(m map[varID]Location) string {
 	if m == nil {
 		return "nil"
 	}
 	type kv struct {
 		k string
-		v int
+		v Location
 	}
 	pairs := make([]kv, 0, len(m))
-	for vid, n := range m {
-		pairs = append(pairs, kv{k: string(vid.Sexp()), v: n})
+	for vid, loc := range m {
+		pairs = append(pairs, kv{k: string(vid.Sexp()), v: loc})
 	}
 	sort.Slice(pairs, func(i, j int) bool { return pairs[i].k < pairs[j].k })
 	parts := make([]string, len(pairs))
 	for i, p := range pairs {
-		parts[i] = fmt.Sprintf("%s:%d", p.k, p.v)
+		parts[i] = fmt.Sprintf("%s:%s", p.k, (&p.v).Canon())
 	}
 	return "(hash " + strings.Join(parts, " ") + ")"
 }
@@ -368,9 +368,9 @@ func (c *checker) Sexp() NodeKey {
 	//b.WriteString(" universallyQuantifiedVars:")
 	//b.WriteString(varIDVarMapSexp(c.universallyQuantifiedVars))
 
-	// universalVarLineno
-	//b.WriteString(" universalVarLineno:")
-	//b.WriteString(varIDIntMapSexp(c.universalVarLineno))
+	// universalVarLoc
+	//b.WriteString(" universalVarLoc:")
+	//b.WriteString(varIDLocationMapSexp(c.universalVarLoc))
 
 	// stratMap
 	b.WriteString(" stratMap:")

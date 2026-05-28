@@ -60,8 +60,8 @@ func TestMapFmlaEqualityPerExpressionKeys(t *testing.T) {
 	eq1 := &Eq{T1: x, T2: y}
 	eq2 := &Eq{T1: z, T2: y}
 
-	c.mapFmla(0, eq1, 0)
-	c.mapFmla(0, eq2, 0)
+	c.mapFmla(Location{}, eq1, 0)
+	c.mapFmla(Location{}, eq2, 0)
 
 	// Both expression-keyed entries should exist in the strat map.
 	nodeForX := c.stratMap[eqExprKey(x)]

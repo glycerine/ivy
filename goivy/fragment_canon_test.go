@@ -84,16 +84,16 @@ func buildAllFragmentSexps(t *testing.T) map[string]string {
 
 		// arc
 		"arc_with_idx": string((&arc{
-			from: f.n0, to: f.n1, fmla: f.eq, lineno: 42, argIdx: 1, hasIdx: true,
+			from: f.n0, to: f.n1, fmla: f.eq, loc: Location{Line: 42}, argIdx: 1, hasIdx: true,
 		}).Sexp()),
 		"arc_no_idx": string((&arc{
-			from: f.n0, to: f.n1, fmla: f.eq, lineno: 42, argIdx: -1, hasIdx: false,
+			from: f.n0, to: f.n1, fmla: f.eq, loc: Location{Line: 42}, argIdx: -1, hasIdx: false,
 		}).Sexp()),
 		"arc_nil_fmla": string((&arc{
-			from: f.n0, to: f.n1, fmla: nil, lineno: 10, argIdx: -1, hasIdx: false,
+			from: f.n0, to: f.n1, fmla: nil, loc: Location{Line: 10}, argIdx: -1, hasIdx: false,
 		}).Sexp()),
 		"arc_nil_nodes": string((&arc{
-			from: nil, to: nil, fmla: f.eq, lineno: 5, argIdx: -1, hasIdx: false,
+			from: nil, to: nil, fmla: f.eq, loc: Location{Line: 5}, argIdx: -1, hasIdx: false,
 		}).Sexp()),
 
 		// mapFmlaRes
@@ -115,10 +115,10 @@ func buildAllFragmentSexps(t *testing.T) map[string]string {
 
 		// fmlaPair
 		"fmla_pair_basic": string((&fmlaPair{
-			fmla: f.eq, source: f.X, lineno: 15,
+			fmla: f.eq, source: f.X, loc: Location{Line: 15},
 		}).Sexp()),
 		"fmla_pair_nil_source": string((&fmlaPair{
-			fmla: f.eq, source: nil, lineno: 7,
+			fmla: f.eq, source: nil, loc: Location{Line: 7},
 		}).Sexp()),
 		"fmla_pair_nil_fmla": string((&fmlaPair{}).Sexp()),
 
@@ -142,13 +142,13 @@ func TestFragmentCanonEqualsSexp(t *testing.T) {
 	}{
 		{"FragmentError", (&FragmentError{Message: "x"}).Sexp(), (&FragmentError{Message: "x"}).Canon()},
 		{"stratEntry", (&stratEntry{v: f.X}).Sexp(), (&stratEntry{v: f.X}).Canon()},
-		{"arc", (&arc{from: f.n0, to: f.n1, fmla: f.eq, lineno: 1}).Sexp(),
-			(&arc{from: f.n0, to: f.n1, fmla: f.eq, lineno: 1}).Canon()},
+		{"arc", (&arc{from: f.n0, to: f.n1, fmla: f.eq, loc: Location{Line: 1}}).Sexp(),
+			(&arc{from: f.n0, to: f.n1, fmla: f.eq, loc: Location{Line: 1}}).Canon()},
 		{"varID", varID{name: "X", sort: "S"}.Sexp(), varID{name: "X", sort: "S"}.Canon()},
 		{"macroDef", (&macroDef{}).Sexp(), (&macroDef{}).Canon()},
 		{"mapFmlaRes", (&mapFmlaRes{node: f.n0}).Sexp(), (&mapFmlaRes{node: f.n0}).Canon()},
 		{"skolemEntry", (&skolemEntry{fmla: f.eq}).Sexp(), (&skolemEntry{fmla: f.eq}).Canon()},
-		{"fmlaPair", (&fmlaPair{fmla: f.eq, lineno: 5}).Sexp(), (&fmlaPair{fmla: f.eq, lineno: 5}).Canon()},
+		{"fmlaPair", (&fmlaPair{fmla: f.eq, loc: Location{Line: 5}}).Sexp(), (&fmlaPair{fmla: f.eq, loc: Location{Line: 5}}).Canon()},
 	}
 
 	for _, tc := range tests {
@@ -173,7 +173,7 @@ func TestFragmentSexpDeterministic(t *testing.T) {
 		{"FragmentError", func() string { return string((&FragmentError{Message: "m"}).Sexp()) }},
 		{"stratEntry", func() string { return string((&stratEntry{sym: f.sym, idx: 3, v: f.X}).Sexp()) }},
 		{"arc", func() string {
-			return string((&arc{from: f.n0, to: f.n1, fmla: f.eq, lineno: 1, argIdx: 2, hasIdx: true}).Sexp())
+			return string((&arc{from: f.n0, to: f.n1, fmla: f.eq, loc: Location{Line: 1}, argIdx: 2, hasIdx: true}).Sexp())
 		}},
 		{"varID", func() string { return string(varID{name: "X", sort: "S"}.Sexp()) }},
 		{"mapFmlaRes", func() string {
@@ -183,7 +183,7 @@ func TestFragmentSexpDeterministic(t *testing.T) {
 			}).Sexp())
 		}},
 		{"skolemEntry", func() string { return string((&skolemEntry{fmla: f.eq, ast: f.X}).Sexp()) }},
-		{"fmlaPair", func() string { return string((&fmlaPair{fmla: f.eq, source: f.X, lineno: 7}).Sexp()) }},
+		{"fmlaPair", func() string { return string((&fmlaPair{fmla: f.eq, source: f.X, loc: Location{Line: 7}}).Sexp()) }},
 	}
 
 	for _, tc := range objects {
@@ -366,7 +366,7 @@ func randomFragmentStruct(seed uint64) sexpable {
 			from:   randomUFNode(rng),
 			to:     randomUFNode(rng),
 			fmla:   fragmentRandomExpr(rng),
-			lineno: rng.Intn(1000),
+			loc:    Location{Line: rng.Intn(1000)},
 			argIdx: rng.Intn(10) - 1,
 			hasIdx: rng.Intn(2) == 0,
 		}
@@ -387,8 +387,8 @@ func randomFragmentStruct(seed uint64) sexpable {
 		}
 	default: // fmlaPair
 		fp := &fmlaPair{
-			fmla:   fragmentRandomExpr(rng),
-			lineno: rng.Intn(500),
+			fmla: fragmentRandomExpr(rng),
+			loc:  Location{Line: rng.Intn(500)},
 		}
 		if rng.Intn(2) == 0 {
 			fp.source = randomVariable(rng)

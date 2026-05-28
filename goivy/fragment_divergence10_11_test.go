@@ -39,7 +39,7 @@ func TestDivergence10UndoInReportInterpOverVar(t *testing.T) {
 	// Register X_a as a universal variable at line 99.
 	vid := makeVarID(xA)
 	c.universallyQuantifiedVars[vid] = xA
-	c.universalVarLineno[vid] = 99
+	c.universalVarLoc[vid] = Location{Filename: "origin.ivy", Line: 99}
 
 	// Create a strat map entry for X_a.
 	node := NewUFNode()
@@ -70,7 +70,7 @@ func TestDivergence10UndoInReportInterpOverVar(t *testing.T) {
 				}
 			}
 		}()
-		c.reportInterpOverVar(appFmla, 42, node)
+		c.reportInterpOverVar(appFmla, Location{Filename: "use.ivy", Line: 42}, node)
 	}()
 
 	if errMsg == "" {
@@ -84,6 +84,9 @@ func TestDivergence10UndoInReportInterpOverVar(t *testing.T) {
 	}
 	if !strings.Contains(errMsg, "The quantified variable is") {
 		t.Errorf("error message missing 'The quantified variable is' text:\n%s", errMsg)
+	}
+	if !strings.Contains(errMsg, "use.ivy: line 42:") || !strings.Contains(errMsg, "origin.ivy: line 99:") {
+		t.Errorf("error message should include full source locations:\n%s", errMsg)
 	}
 }
 
@@ -137,7 +140,7 @@ func TestDivergence11SkolemMapInReportArc(t *testing.T) {
 		from:   fromNode,
 		to:     NewUFNode(),
 		fmla:   appFmla,
-		lineno: 5,
+		loc:    Location{Line: 5},
 		argIdx: 0, // term = E (first arg after function in NodeArgs)
 		hasIdx: true,
 	}
@@ -185,7 +188,7 @@ func TestDivergence11NoSkolemEntry(t *testing.T) {
 		from:   fromNode,
 		to:     NewUFNode(),
 		fmla:   appFmla,
-		lineno: 5,
+		loc:    Location{Line: 5},
 		argIdx: 0,
 		hasIdx: true,
 	}

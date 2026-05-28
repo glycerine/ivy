@@ -80,7 +80,7 @@ type arc struct {
 	from   *UFNode
 	to     *UFNode
 	fmla   Expr
-	lineno int
+	loc    Location
 	argIdx int  // -1 if not applicable
 	hasIdx bool // true if argIdx is valid
 }
@@ -92,8 +92,8 @@ type checker struct {
 	sig    *Sig
 	interp map[string]interface{} // sort interpretations
 
-	universallyQuantifiedVars map[varID]*LogicVariable // var → lineno origin info
-	universalVarLineno        map[varID]int            // var → lineno
+	universallyQuantifiedVars map[varID]*LogicVariable // var → source origin info
+	universalVarLoc           map[varID]Location       // var → source location
 
 	stratMap  map[NodeKey]*UFNode    // maps node key to UFNode
 	stratInfo map[NodeKey]stratEntry // metadata for error reporting
@@ -164,7 +164,7 @@ func (s SomeString) Canon() Canonical {
 type fmlaPair struct {
 	fmla   Expr
 	source Node // *ast.LabeledFormula or actions.ActionsAction
-	lineno int
+	loc    Location
 }
 
 func newChecker(sig *Sig, interp map[string]interface{}) *checker {
@@ -172,7 +172,7 @@ func newChecker(sig *Sig, interp map[string]interface{}) *checker {
 		sig:                       sig,
 		interp:                    interp,
 		universallyQuantifiedVars: make(map[varID]*LogicVariable),
-		universalVarLineno:        make(map[varID]int),
+		universalVarLoc:           make(map[varID]Location),
 		stratMap:                  make(map[NodeKey]*UFNode),
 		stratInfo:                 make(map[NodeKey]stratEntry),
 		arcs:                      nil,
@@ -230,11 +230,11 @@ func (c *checker) getUnivNodeFor(v *LogicVariable, reason string) *UFNode {
 // mapFmla adds all subterms of fmla to the stratification graph.
 // Returns (node, uvs) where node is the S_v if fmla is a universal variable,
 // and uvs is the set of universal variable nodes occurring *under* the formula.
-func (c *checker) mapFmla(lineno int, fmla Expr, pol int) (*UFNode, map[*UFNode]bool) {
+func (c *checker) mapFmla(loc Location, fmla Expr, pol int) (*UFNode, map[*UFNode]bool) {
 	if IsBinder(fmla) {
 		body := BinderBody(fmla)
 		if body != nil {
-			return c.mapFmla(lineno, body, pol)
+			return c.mapFmla(loc, body, pol)
 		}
 		return nil, make(map[*UFNode]bool)
 	}
@@ -263,7 +263,7 @@ func (c *checker) mapFmla(lineno int, fmla Expr, pol int) (*UFNode, map[*UFNode]
 	}
 	reses := make([]argRes, len(args))
 	for i, arg := range args {
-		n, uvs := c.mapFmla(lineno, arg, Polar(fmla, i, pol))
+		n, uvs := c.mapFmla(loc, arg, Polar(fmla, i, pol))
 		reses[i] = argRes{n, uvs}
 	}
 
@@ -289,7 +289,7 @@ func (c *checker) mapFmla(lineno int, fmla Expr, pol int) (*UFNode, map[*UFNode]
 					UFUnify(r.node, sSigma)
 				}
 				for _, v := range sortedUFNodes(reses[i].uvs) {
-					c.arcs = append(c.arcs, arc{from: v, to: sSigma, fmla: fmla, lineno: lineno, argIdx: -1})
+					c.arcs = append(c.arcs, arc{from: v, to: sSigma, fmla: fmla, loc: loc, argIdx: -1})
 				}
 			}
 		} else {
@@ -299,7 +299,7 @@ func (c *checker) mapFmla(lineno int, fmla Expr, pol int) (*UFNode, map[*UFNode]
 				nodes[i] = r.node
 				uvss[i] = r.uvs
 			}
-			c.checkInterpreted(fmla, nodes, uvss, lineno, pol)
+			c.checkInterpreted(fmla, nodes, uvss, loc, pol)
 		}
 		return nil, allUvs
 	}
@@ -331,7 +331,7 @@ func (c *checker) mapFmla(lineno int, fmla Expr, pol int) (*UFNode, map[*UFNode]
 					return res.node, res.uvs
 				}
 				if md, ok := c.macroMap[repKey]; ok {
-					resNode, resUvs := c.mapFmla(md.lf.Lineno(), md.def.Rhs, -1)
+					resNode, resUvs := c.mapFmla(md.lf.GetLineno(), md.def.Rhs, -1)
 					c.macroValueMap[repKey] = mapFmlaRes{node: resNode, uvs: resUvs}
 					return resNode, resUvs
 				}
@@ -342,7 +342,7 @@ func (c *checker) mapFmla(lineno int, fmla Expr, pol int) (*UFNode, map[*UFNode]
 						UFUnify(anode, r.node)
 					}
 					for _, v := range sortedUFNodes(reses[i].uvs) {
-						c.arcs = append(c.arcs, arc{from: v, to: anode, fmla: fmla, lineno: lineno, argIdx: i, hasIdx: true})
+						c.arcs = append(c.arcs, arc{from: v, to: anode, fmla: fmla, loc: loc, argIdx: i, hasIdx: true})
 					}
 				}
 			} else {
@@ -352,7 +352,7 @@ func (c *checker) mapFmla(lineno int, fmla Expr, pol int) (*UFNode, map[*UFNode]
 					nodes[i] = r.node
 					uvss[i] = r.uvs
 				}
-				c.checkInterpreted(fmla, nodes, uvss, lineno, pol)
+				c.checkInterpreted(fmla, nodes, uvss, loc, pol)
 			}
 		}
 		return nil, allUvs
@@ -363,11 +363,11 @@ func (c *checker) mapFmla(lineno int, fmla Expr, pol int) (*UFNode, map[*UFNode]
 
 // checkInterpreted checks that an interpreted symbol application satisfies the
 // FAU arithmetic literal conditions.
-func (c *checker) checkInterpreted(app Expr, nodes []*UFNode, uvs []map[*UFNode]bool, lineno int, pol int) {
+func (c *checker) checkInterpreted(app Expr, nodes []*UFNode, uvs []map[*UFNode]bool, loc Location, pol int) {
 	for idx := range nodes {
 		if nodes[idx] != nil {
 			if !c.isArithmeticLiteral(app, idx, nodes, uvs, pol) {
-				c.reportInterpOverVar(app, lineno, nodes[idx])
+				c.reportInterpOverVar(app, loc, nodes[idx])
 			}
 		}
 	}
@@ -615,11 +615,11 @@ func (c *checker) createStratMap(assumes, asserts, macros []fmlaPair) {
 	allFmlas := make([]fmlaPair, 0, len(assumes)+len(asserts)+len(macros))
 	for _, a := range assumes {
 		closed := CloseFormula(a.fmla)
-		allFmlas = append(allFmlas, fmlaPair{fmla: closed, source: a.source, lineno: a.lineno})
+		allFmlas = append(allFmlas, fmlaPair{fmla: closed, source: a.source, loc: a.loc})
 	}
 	for _, a := range asserts {
 		negated := &LogicNot{Body: a.fmla}
-		allFmlas = append(allFmlas, fmlaPair{fmla: negated, source: a.source, lineno: a.lineno})
+		allFmlas = append(allFmlas, fmlaPair{fmla: negated, source: a.source, loc: a.loc})
 	}
 	allFmlas = append(allFmlas, macros...)
 
@@ -631,7 +631,7 @@ func (c *checker) createStratMap(assumes, asserts, macros []fmlaPair) {
 			if IsUninterpretedSort(c.sig, v.VSort) ||
 				HasInfiniteInterpretation(c.sig, v.VSort) {
 				c.universallyQuantifiedVars[vid] = v
-				c.universalVarLineno[vid] = fp.lineno
+				c.universalVarLoc[vid] = fp.loc
 			}
 		}
 	}
@@ -646,7 +646,7 @@ func (c *checker) createStratMap(assumes, asserts, macros []fmlaPair) {
 
 	// Build graph by mapping all assumes and asserts
 	for _, pair := range append(assumes, asserts...) {
-		c.mapFmla(pair.lineno, pair.fmla, 0)
+		c.mapFmla(pair.loc, pair.fmla, 0)
 	}
 }
 
@@ -680,7 +680,7 @@ func (c *checker) getNodeSort(n *UFNode) Sort {
 
 func (c *checker) reportArc(a arc) string {
 	var b strings.Builder
-	fmt.Fprintf(&b, "\n%d: %s", a.lineno, a.fmla)
+	fmt.Fprintf(&b, "\n%s%s", a.loc, a.fmla)
 	if a.hasIdx {
 		args := NodeArgs(a.fmla)
 		if a.argIdx >= 0 && a.argIdx < len(args) {
@@ -717,20 +717,20 @@ func (c *checker) reportCycle(cycle []arc) error {
 			strings.Join(parts, "\n"))
 }
 
-func (c *checker) reportInterpOverVar(fmla Expr, lineno int, node *UFNode) {
+func (c *checker) reportInterpOverVar(fmla Expr, loc Location, node *UFNode) {
 	varMsg := ""
 	for key, n := range c.stratMap {
 		if n == node {
 			if info, ok := c.stratInfo[key]; ok && info.v != nil {
 				vid := makeVarID(info.v)
-				if origLn, exists := c.universalVarLineno[vid]; exists {
-					varMsg = fmt.Sprintf("\n%d: The quantified variable is %s", origLn, c.varUniq.Undo(info.v))
+				if origLoc, exists := c.universalVarLoc[vid]; exists {
+					varMsg = fmt.Sprintf("\n%sThe quantified variable is %s", origLoc, c.varUniq.Undo(info.v))
 				}
 			}
 		}
 	}
-	msg := fmt.Sprintf("An interpreted symbol is applied to a universally quantified variable:\n%d: %s%s",
-		lineno, c.varUniq.Undo(fmla), varMsg)
+	msg := fmt.Sprintf("An interpreted symbol is applied to a universally quantified variable:\n%s%s%s",
+		loc, c.varUniq.Undo(fmla), varMsg)
 	// In Python this raises; we panic-wrap it via the caller's error handling
 	panic(&FragmentError{Message: "The verification condition is not in the fragment FAU.\n\n" + msg})
 }
@@ -760,7 +760,7 @@ func CheckFEU(
 		return fmlaPair{
 			fmla:   c.varUniq.Uniquify(p.fmla),
 			source: p.source,
-			lineno: p.lineno,
+			loc:    p.loc,
 		}
 	}
 
@@ -785,7 +785,7 @@ func CheckFEU(
 			} else {
 				panic(r) // re-panic for unexpected errors
 			}
-			panic(r) // re-throw anyway!
+			//panic(r) // re-throw anyway!
 		}
 	}()
 
@@ -844,8 +844,8 @@ func CheckFEU(
 		for i, a := range c.arcs {
 			fromRoot := UFFind(a.from).ID
 			toRoot := UFFind(a.to).ID
-			xtracer.Trace("  HASH canon= arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s argIdx=%d", // lineno=%d
-				i, a.from.ID, fromRoot, a.to.ID, toRoot, fragmentExprSexp(a.fmla), a.argIdx) // a.lineno,
+			xtracer.Trace("  HASH canon= arc[%d]: from_id=%d(root=%d) to_id=%d(root=%d) fmla=%s argIdx=%d", // loc=%s
+				i, a.from.ID, fromRoot, a.to.ID, toRoot, fragmentExprSexp(a.fmla), a.argIdx) // a.loc,
 		}
 
 		xtracer.Trace("fragment/fragment.go CheckFEU after createStratMap HASH canon= %s", c.Canon())
@@ -979,18 +979,18 @@ func GetAssumesAndAsserts(m *Module, precondsOnly bool) (assumes, asserts, macro
 		_, isSome := def.Rhs.(*LogicSome)
 
 		if !isRecursive && !isSome {
-			macros = append(macros, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, lineno: ldf.Lineno()})
+			macros = append(macros, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, loc: ldf.GetLineno()})
 		} else {
 			// Convert to constraint
 			constraint := moduleDefToConstraint(def)
-			assumes = append(assumes, fmlaPair{fmla: constraint, source: ldf, lineno: ldf.Lineno()})
+			assumes = append(assumes, fmlaPair{fmla: constraint, source: ldf, loc: ldf.GetLineno()})
 		}
 	}
 
 	// Axioms
 	for _, ldf := range m.LabeledAxioms {
 		if !ldf.IsTemporal() {
-			assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, lineno: ldf.Lineno()})
+			assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, loc: ldf.GetLineno()})
 		}
 	}
 
@@ -1007,23 +1007,23 @@ func GetAssumesAndAsserts(m *Module, precondsOnly bool) (assumes, asserts, macro
 	for _, ldf := range m.LabeledProps {
 		if !ldf.IsTemporal() {
 			if !proofIDs[ldf.ID] {
-				asserts = append(asserts, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, lineno: ldf.Lineno()})
+				asserts = append(asserts, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, loc: ldf.GetLineno()})
 			} else if subgoalIDs[ldf.ID] && !ldf.Explicit {
-				assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, lineno: ldf.Lineno()})
+				assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, loc: ldf.GetLineno()})
 			}
 		}
 	}
 
 	// Conjectures (both assumed and asserted)
 	for _, ldf := range m.LabeledConjs {
-		asserts = append(asserts, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, lineno: ldf.Lineno()})
-		assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, lineno: ldf.Lineno()})
+		asserts = append(asserts, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, loc: ldf.GetLineno()})
+		assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, loc: ldf.GetLineno()})
 	}
 
 	// Assumed invariants
 	for _, ldf := range m.AssumedInvs {
 		if !ldf.Explicit {
-			assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, lineno: ldf.Lineno()})
+			assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(Expr), source: ldf, loc: ldf.GetLineno()})
 		}
 	}
 
@@ -1094,9 +1094,10 @@ func makeFmlaPairsFromAction(action ActionsAction, m *Module, precondsOnly bool)
 	//         assumes.append((foo,action))
 	formulaTR := ClausesToFormula(upd.TR)
 	tr := CloseEPR(formulaTR)
+	loc := action.GetLineno()
 
 	result := []fmlaPair{
-		{fmla: tr, source: action},
+		{fmla: tr, source: action, loc: loc},
 	}
 
 	// When not precondsOnly, also add Pre formula (triple[2]).
@@ -1112,7 +1113,7 @@ func makeFmlaPairsFromAction(action ActionsAction, m *Module, precondsOnly bool)
 			preIn = ClausesToFormula(upd.Pre)
 		}
 		pre := CloseEPR(preIn)
-		result = append(result, fmlaPair{fmla: pre, source: action})
+		result = append(result, fmlaPair{fmla: pre, source: action, loc: loc})
 	}
 
 	return result

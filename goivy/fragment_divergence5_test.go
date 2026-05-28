@@ -154,9 +154,9 @@ func TestCreateMacroMapsLowercaseFormalUsesActualVariableSourceOrderLikePython(t
 	c.universallyQuantifiedVars[makeVarID(A)] = A
 
 	c.createMacroMaps(
-		[]fmlaPair{{fmla: macroCall, source: lfAssume, lineno: 1}},
+		[]fmlaPair{{fmla: macroCall, source: lfAssume, loc: Location{Line: 1}}},
 		nil,
-		[]fmlaPair{{fmla: macroDef, source: lfMacro, lineno: 2}},
+		[]fmlaPair{{fmla: macroDef, source: lfMacro, loc: Location{Line: 2}}},
 	)
 
 	zNode := c.stratMap[varKey(Z)]
