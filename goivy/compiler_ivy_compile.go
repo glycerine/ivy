@@ -820,6 +820,7 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 		mixee := mdef.Mixee()
 		existing, _ := mod.Mixins.Get2(mixee)
 		mod.Mixins.Set(mixee, append(existing, mdef))
+		xtracer.Trace("compiler.ARGSetup.mixin ENTER")
 		xtracer.Trace("compiler.ARGSetup.mixin mixee=%s mixer=%s kind=%s", mixee, mdef.Mixer(), "MixinAfterDef")
 	}
 
@@ -841,9 +842,6 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 			subst := make(map[NodeKey]Expr)
 			for j := 0; j < len(aparams) && j < len(canonical); j++ {
 				subst[Key(aparams[j])] = canonical[j]
-			}
-			if len(subst) == 0 {
-				return act
 			}
 			renamed := SubstituteConstantsAction(act, subst)
 			renamed.SetLineno(act.GetLineno())
@@ -1027,6 +1025,7 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 				mixeeName := mdef.Mixee()
 				existingM, _ := mod.Mixins.Get2(mixeeName)
 				mod.Mixins.Set(mixeeName, append(existingM, mdef))
+				xtracer.Trace("compiler.ARGSetup.mixin ENTER")
 				xtracer.Trace("compiler.ARGSetup.mixin mixee=%s mixer=%s kind=%s", mixeeName, mdef.Mixer(), "MixinBeforeDef")
 			}
 		}
@@ -1053,6 +1052,7 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 				mixeeName := mdef.Mixee()
 				existingM, _ := mod.Mixins.Get2(mixeeName)
 				mod.Mixins.Set(mixeeName, append(existingM, mdef))
+				xtracer.Trace("compiler.ARGSetup.mixin ENTER")
 				xtracer.Trace("compiler.ARGSetup.mixin mixee=%s mixer=%s kind=%s", mixeeName, mdef.Mixer(), "MixinAfterDef")
 			}
 		}
