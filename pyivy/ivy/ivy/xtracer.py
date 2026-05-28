@@ -64,6 +64,10 @@ def normalize_filename(f):
     _mod_include = os.path.join(_mod_dir, 'include') + os.sep
     if _mod_include not in prefixes and os.path.isdir(_mod_include):
         prefixes.append(_mod_include)
+    if examples_dir:
+        _examples_include = os.path.join(examples_dir, 'ivy', 'include') + os.sep
+        if _examples_include not in prefixes and os.path.isdir(_examples_include):
+            prefixes.append(_examples_include)
     for prefix in prefixes:
         if f.startswith(prefix):
             return '<IVY_INCLUDE>/' + f[len(prefix):]
