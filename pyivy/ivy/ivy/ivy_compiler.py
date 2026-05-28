@@ -1795,8 +1795,9 @@ def BalancedChoice(choices):
     if __debug__: xtracer.trace("compiler.BalancedChoice ENTER")
     if len(choices) == 1:
         return choices[0]
-    return ChoiceAction(BalancedChoice(choices[0:len(choices)/2]),
-                        BalancedChoice(choices[len(choices)/2:]))
+    mid = len(choices) // 2
+    return ChoiceAction(BalancedChoice(choices[0:mid]),
+                        BalancedChoice(choices[mid:]))
 
 def get_file_version(filename):
     try:
