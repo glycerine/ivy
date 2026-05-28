@@ -387,7 +387,7 @@ top:
     // --- Class ---
     | top PARSER_TOK_CLASS objsym objectargs PARSER_TOK_EQ PARSER_TOK_LCB optdotdotdot top PARSER_TOK_RCB objectend
     {
-        xtracer.Trace("parser.p_top__top_class_symbol_objectargs_eq_lcb_optdo ENTER (top)")
+        xtracer.Trace("parser.p_top_class_symbol_eq_lcb_top_rcb ENTER (top)")
         $$ = $1
         lex := parser17lex.(*parser17LexAdapter)
         objAccum := $8
@@ -421,7 +421,7 @@ top:
     // --- Subclass ---
     | top PARSER_TOK_SUBCLASS objsym PARSER_TOK_OF atype PARSER_TOK_EQ PARSER_TOK_LCB optdotdotdot top PARSER_TOK_RCB objectend
     {
-        xtracer.Trace("parser.p_top__top_subclass_symbol_of_atype_eq_lcb_optd ENTER (top)")
+        xtracer.Trace("parser.p_top_subclass_symbol_eq_lcb_top_rcb ENTER (top)")
         $$ = $1
         lex := parser17lex.(*parser17LexAdapter)
         objAccum := $9

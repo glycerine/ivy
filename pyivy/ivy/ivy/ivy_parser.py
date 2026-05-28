@@ -2012,7 +2012,7 @@ def p_modifies_modifies_lcb_rcb(p):
 
 def p_modifies_modofies_times(p):
     'modifies : MODIFIES TIMES'
-    if __debug__: xtracer.trace("parser.p_modifies_modofies_times ENTER (modifies)")
+    if __debug__: xtracer.trace("parser.p_modifies_modifies_times ENTER (modifies)")
     p[0] = None
 
 def p_modifies_modifies_atoms(p):

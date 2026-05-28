@@ -325,7 +325,7 @@ top:
     }
     | top PARSER16_TOK_CLASS objsym objectargs PARSER16_TOK_EQ PARSER16_TOK_LCB optdotdotdot top PARSER16_TOK_RCB objectend
     {
-        xtracer.Trace("parser.p_top__top_class_symbol_objectargs_eq_lcb_optdo ENTER (top)")
+        xtracer.Trace("parser.p_top_class_symbol_eq_lcb_top_rcb ENTER (top)")
         $$ = $1
         lex := parser16lex.(*parser16LexAdapter)
         objAccum := $8
@@ -2793,7 +2793,7 @@ modifies:
     }
     | PARSER16_TOK_MODIFIES PARSER16_TOK_TIMES
     {
-        xtracer.Trace("parser.p_modifies_modofies_times ENTER (modifies)")
+        xtracer.Trace("parser.p_modifies_modifies_times ENTER (modifies)")
         $$ = nil
     }
     | PARSER16_TOK_MODIFIES atoms

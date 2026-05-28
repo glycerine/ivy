@@ -1473,11 +1473,10 @@ parser17newstate:
 parser17default:
 	/* default state action */
 	parser17n = int(parser17Def[parser17state])
-	// Always read lookahead before reducing, to match PLY trace order.
-	if parser17rcvr.char < 0 {
-		parser17rcvr.char, parser17token = parser17lex1(parser17lex, &parser17rcvr.lval)
-	}
 	if parser17n == -2 {
+		if parser17rcvr.char < 0 {
+			parser17rcvr.char, parser17token = parser17lex1(parser17lex, &parser17rcvr.lval)
+		}
 
 		/* look through exception table */
 		xi := 0
@@ -1723,7 +1722,7 @@ parser17default:
 		parser17Dollar = parser17S[parser17pt-10 : parser17pt+1]
 //line parser_grammar_v17.y:389
 		{
-			xtracer.Trace("parser.p_top__top_class_symbol_objectargs_eq_lcb_optdo ENTER (top)")
+			xtracer.Trace("parser.p_top_class_symbol_eq_lcb_top_rcb ENTER (top)")
 			parser17VAL.accum = parser17Dollar[1].accum
 			lex := parser17lex.(*parser17LexAdapter)
 			objAccum := parser17Dollar[8].accum
@@ -1758,7 +1757,7 @@ parser17default:
 		parser17Dollar = parser17S[parser17pt-11 : parser17pt+1]
 //line parser_grammar_v17.y:423
 		{
-			xtracer.Trace("parser.p_top__top_subclass_symbol_of_atype_eq_lcb_optd ENTER (top)")
+			xtracer.Trace("parser.p_top_subclass_symbol_eq_lcb_top_rcb ENTER (top)")
 			parser17VAL.accum = parser17Dollar[1].accum
 			lex := parser17lex.(*parser17LexAdapter)
 			objAccum := parser17Dollar[9].accum

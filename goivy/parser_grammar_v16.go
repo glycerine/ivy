@@ -1512,7 +1512,7 @@ parser16default:
 		parser16Dollar = parser16S[parser16pt-10 : parser16pt+1]
 //line parser_grammar_v16.y:327
 		{
-			xtracer.Trace("parser.p_top__top_class_symbol_objectargs_eq_lcb_optdo ENTER (top)")
+			xtracer.Trace("parser.p_top_class_symbol_eq_lcb_top_rcb ENTER (top)")
 			parser16VAL.accum = parser16Dollar[1].accum
 			lex := parser16lex.(*parser16LexAdapter)
 			objAccum := parser16Dollar[8].accum
@@ -4310,7 +4310,7 @@ parser16default:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
 //line parser_grammar_v16.y:2795
 		{
-			xtracer.Trace("parser.p_modifies_modofies_times ENTER (modifies)")
+			xtracer.Trace("parser.p_modifies_modifies_times ENTER (modifies)")
 			parser16VAL.nodes = nil
 		}
 	case 349:
