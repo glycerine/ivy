@@ -1308,7 +1308,7 @@ simpleact:
     }
     | PARSER16_TOK_CALL optactualreturns callatom
     {
-        xtracer.Trace("parser.p_action_call_callatom ENTER (simpleact)")
+        xtracer.Trace("parser.p_action_call_optreturns_callatom ENTER (simpleact)")
         callArgs := append([]Node{$3}, $2...)
         $$ = parser16Acfg(parser16lex).NewCallAction(callArgs...)
         $$.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))

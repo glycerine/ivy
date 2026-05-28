@@ -2626,7 +2626,7 @@ parser16default:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
 //line parser_grammar_v16.y:1310
 		{
-			xtracer.Trace("parser.p_action_call_callatom ENTER (simpleact)")
+			xtracer.Trace("parser.p_action_call_optreturns_callatom ENTER (simpleact)")
 			callArgs := append([]Node{parser16Dollar[3].node}, parser16Dollar[2].nodes...)
 			parser16VAL.node = parser16Acfg(parser16lex).NewCallAction(callArgs...)
 			parser16VAL.node.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
