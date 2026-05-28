@@ -419,7 +419,7 @@ def parse(s):
 # Build the parser
 import os
 tabdir = os.path.dirname(os.path.abspath(__file__))
-parser = yacc.yacc(tabmodule='ev_parsetab',errorlog=yacc.NullLogger(),outputdir=tabdir)
+parser = yacc.yacc(tabmodule=ivy_ply_patch.runtime_tabmodule('ev_parsetab'),errorlog=yacc.NullLogger(),outputdir=tabdir,write_tables=False)
 #parser = yacc.yacc(tabmodule='ev_parsetab',outputdir=tabdir)
 
 if __name__ == '__main__':

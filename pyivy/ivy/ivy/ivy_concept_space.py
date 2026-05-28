@@ -188,7 +188,7 @@ def p_error(p):
 # Build the parser
 import os
 tabdir = os.path.dirname(os.path.abspath(__file__))
-parser = yacc.yacc(tabmodule='concept_space_parsetab',errorlog=yacc.NullLogger(),outputdir=tabdir)
+parser = yacc.yacc(tabmodule=ivy_ply_patch.runtime_tabmodule('concept_space_parsetab'),errorlog=yacc.NullLogger(),outputdir=tabdir,write_tables=False)
 
 def to_concept_space(s):
     return parser.parse(s)

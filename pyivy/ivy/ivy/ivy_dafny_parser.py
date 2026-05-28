@@ -12,7 +12,7 @@ ivy_ply_patch.install(yacc)
 
 import os
 tabdir = os.path.dirname(os.path.abspath(__file__))
-parser = yacc.yacc(start='top',tabmodule='ivy_dafny_parsetab',errorlog=yacc.NullLogger(),outputdir=tabdir)
+parser = yacc.yacc(start='top',tabmodule=ivy_ply_patch.runtime_tabmodule('ivy_dafny_parsetab'),errorlog=yacc.NullLogger(),outputdir=tabdir,write_tables=False)
 
 def parse(s):
     return parse_with(s,parser,lexer)

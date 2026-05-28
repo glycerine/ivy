@@ -36,6 +36,6 @@ def p_error(token):
 
 import os
 tabdir = os.path.dirname(os.path.abspath(__file__))
-formula_parser = yacc.yacc(start = 'fmla', tabmodule='ivy_formulatab',errorlog=yacc.NullLogger(),outputdir=tabdir,debug=None)
+formula_parser = yacc.yacc(start = 'fmla', tabmodule=ivy_ply_patch.runtime_tabmodule('ivy_formulatab'),errorlog=yacc.NullLogger(),outputdir=tabdir,debug=None,write_tables=False)
 #formula_parser = yacc.yacc(start = 'fmla', tabmodule='ivy_formulatab')
-term_parser = yacc.yacc(start = 'term', tabmodule='ivy_termtab',errorlog=yacc.NullLogger(),outputdir=tabdir,debug=None)
+term_parser = yacc.yacc(start = 'term', tabmodule=ivy_ply_patch.runtime_tabmodule('ivy_termtab'),errorlog=yacc.NullLogger(),outputdir=tabdir,debug=None,write_tables=False)
