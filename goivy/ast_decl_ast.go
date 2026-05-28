@@ -2105,6 +2105,17 @@ func (d *ScenarioDecl) Clone(args []Node) Node {
 	return &ScenarioDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
 }
 func (d *ScenarioDecl) String() string { return "scenario" }
+func (d *ScenarioDecl) Defines() []string {
+	var res []string
+	for _, arg := range d.DeclArgs {
+		if sdef, ok := arg.(*ScenarioDef); ok {
+			for _, def := range sdef.Defines() {
+				res = append(res, def.Name)
+			}
+		}
+	}
+	return res
+}
 
 // PlaceList is a comma-separated list of places.
 type PlaceList struct {

@@ -1135,12 +1135,6 @@ func (t *Translator) translateVariable(v *LogicVariable) (smt.Z3Expr, error) {
 	if result := t.LookupNative(sortName, sort, "sort"); result != nil {
 		if zsVal, ok := result.(smt.Z3Sort); ok {
 			zs = &zsVal
-			// Cache the sort so TranslateSort finds it later via cache
-			sortKey := NodeKey(sortDisplayName(sort)) // Python: z3_sorts key is sort name
-			if _, ok := t.cache.sorts[sortKey]; !ok {
-				t.cache.sorts[sortKey] = zsVal
-				t.cache.sortsInv[zsVal.GetId()] = sort
-			}
 		}
 	}
 

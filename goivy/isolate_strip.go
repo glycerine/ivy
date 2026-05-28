@@ -195,11 +195,48 @@ func stripArgNode(node Node, stripMap StripMap, mod *Module,
 		}
 		return lf.Clone(newArgs)
 	}
+	if atom, ok := node.(*Atom); ok {
+		return stripAtomFull(atom, stripMap, mod, binding, isInit, initParams)
+	}
 	// Otherwise, treat as a logic expression and strip via stripNodeFull.
 	if expr, ok := node.(Expr); ok {
 		return stripNodeFull(expr, stripMap, mod, binding)
 	}
 	return node
+}
+
+func stripAtomFull(atom *Atom, stripMap StripMap, mod *Module,
+	binding map[NodeKey]string, isInit bool, initParams []string) Node {
+	args := atom.Args()
+	newArgs := make([]Node, len(args))
+	for i, arg := range args {
+		newArgs[i] = stripArgNode(arg, stripMap, mod, binding, isInit, initParams)
+	}
+
+	if mod.Sig != nil {
+		if _, isSort := mod.Sig.Sorts.Get2(atom.Rep); isSort {
+			return atom.Clone(newArgs)
+		}
+	}
+	stripParams := StripMapLookup(atom.Rep, stripMap, mod)
+	if len(stripParams) > 0 && len(newArgs) >= len(stripParams) {
+		matches := true
+		for i, sp := range stripParams {
+			expr, ok := args[i].(Expr)
+			if !ok {
+				matches = false
+				break
+			}
+			if got, ok := binding[Key(expr)]; !ok || got != sp {
+				matches = false
+				break
+			}
+		}
+		if matches {
+			return atom.Clone(newArgs[len(stripParams):])
+		}
+	}
+	return atom.Clone(newArgs)
 }
 
 // stripNodeFull recursively processes a logic node, stripping isolate parameters
@@ -399,7 +436,12 @@ func StripLabeledFormula(lf *LabeledFormula, stripMap StripMap, mod *Module) *La
 	// Python: lbl = lbl.clone(lbl.args[len(strip_map_lookup(lbl.rep, strip_map, with_dot=False)):])
 	newLabel := lf.Label
 	if lf.Label != nil {
-		if lblExpr, ok := lf.Label.(Expr); ok {
+		if atom, ok := lf.Label.(*Atom); ok {
+			sp := StripMapLookup(atom.Rep, stripMap, mod)
+			if len(sp) > 0 && len(atom.Terms) >= len(sp) {
+				newLabel = atom.Clone(atom.Terms[len(sp):])
+			}
+		} else if lblExpr, ok := lf.Label.(Expr); ok {
 			// Get the label's name for strip map lookup.
 			lblName := ""
 			switch l := lblExpr.(type) {
@@ -578,35 +620,30 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 		isAtomProv, isParamProv)
 
 	// Step 1: Variable isolate parameter substitution.
-	// Python lines 345-352: if any(isinstance(p, Variable) for p in ipl): substitute
+	// Python lines 374-382: if any(isinstance(p, Variable) for p in ipl),
+	// substitute each isolate variable parameter V with a zero-arg App named
+	// "iso:"+V. The Go isolate AST keeps the original nodes here, so the strip
+	// path uses this helper wherever Python would observe the substituted AST.
+	hasVarParams := false
 	if pp, ok := isolate.(isolateParamProvider); ok {
-		ipl := pp.Params()
-		hasVar := false
-		for _, p := range ipl {
+		for _, p := range pp.Params() {
 			if _, isVar := p.(*Variable); isVar {
-				hasVar = true
+				hasVarParams = true
 				break
 			}
 		}
-		if hasVar {
-			subst := make(map[string]Expr)
-			for _, p := range ipl {
-				if v, isVar := p.(*Variable); isVar {
-					var sort Sort
-					if mod.Sig != nil {
-						if s, ok := mod.Sig.Sorts.Get2(v.VSort); ok {
-							sort = s
-						}
-					}
-					newConst := NewConst("iso:"+v.Rep, sort)
-					subst[v.Rep] = newConst
-				}
-			}
-			// Apply substitution to isolate (would need SubstituteAst)
-			// For now, the names are adjusted; full AST substitution requires
-			// the concrete isolate type.
-			_ = subst
+	}
+	isoParamNameSort := func(node Node) (name, sortName string, ok bool) {
+		name, sortName, ok = isolateParamNameSort(node)
+		if !ok {
+			return "", "", false
 		}
+		if hasVarParams {
+			if _, isVar := node.(*Variable); isVar {
+				name = "iso:" + name
+			}
+		}
+		return name, sortName, true
 	}
 
 	// Compute NumIsolateParams from the actual parameters.
@@ -620,7 +657,7 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 	if pp, ok := isolate.(isolateParamProvider); ok {
 		ips := make(map[string]bool)
 		for _, p := range pp.Params() {
-			if name, _, ok := isolateParamNameSort(p); ok {
+			if name, _, ok := isoParamNameSort(p); ok {
 				ips[name] = true
 			}
 		}
@@ -628,7 +665,7 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 			for _, atom := range append(ap.Verified(), ap.Present()...) {
 				if a, ok3 := atom.(*Atom); ok3 {
 					for _, p := range a.Terms {
-						name, _, ok4 := isolateParamNameSort(p)
+						name, _, ok4 := isoParamNameSort(p)
 						if !ok4 || !ips[name] {
 							return fmt.Errorf("unbound isolate parameter: %s", name)
 						}
@@ -654,7 +691,7 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 			// the equivalent zero-arg parameter nodes by name.
 			params := make([]string, len(a.Terms))
 			for i, v := range a.Terms {
-				paramName, _, ok2 := isolateParamNameSort(v)
+				paramName, _, ok2 := isoParamNameSort(v)
 				if !ok2 {
 					return fmt.Errorf("bad isolate parameter in %s", name)
 				}
@@ -697,7 +734,7 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 			if node == nil {
 				continue
 			}
-			paramName, paramSortName, ok := isolateParamNameSort(node)
+			paramName, paramSortName, ok := isoParamNameSort(node)
 			if !ok {
 				continue
 			}

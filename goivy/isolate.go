@@ -1444,13 +1444,35 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		}
 	}
 
-	// Phase B: action bodies ONLY (not formals -- Python does them separately in Phase D)
+	// Phase B: action bodies. Python traverses the action object itself here.
+	// For generated parameterized actions, that traversal can surface formal
+	// symbols before the later explicit formal pass, so mirror that first-
+	// occurrence order by adding Go's separately stored formals immediately
+	// after the action body walk.
 	// Python: asts.extend(action for action in list(mod.actions.values()))
 	for name, act := range mod.Actions.All() {
 		if xtracer.Enabled {
 			xtracer.Trace("%s.phaseB_action %s", as2, name)
 		}
 		collectSymbolsInto(as2, act, allSyms2)
+		for _, p := range act.GetFormalParams() {
+			key := ConstSymKey(p)
+			if xtracer.Enabled {
+				if _, exists := allSyms2.Get2(key); !exists {
+					xtracer.Trace("%s.add %s", as2, PrettyFmla(p))
+				}
+			}
+			allSyms2.Set(key, p)
+		}
+		for _, r := range act.GetFormalReturns() {
+			key := ConstSymKey(r)
+			if xtracer.Enabled {
+				if _, exists := allSyms2.Get2(key); !exists {
+					xtracer.Trace("%s.add %s", as2, PrettyFmla(r))
+				}
+			}
+			allSyms2.Set(key, r)
+		}
 	}
 
 	// Phase C: params (if keep_destructors)
