@@ -707,7 +707,7 @@ func (c *checker) reportCycle(cycle []arc) error {
 	if len(cycle) == 0 {
 		return nil
 	}
-	xtracer.Trace("fragment/checker.reportCycle report cycle error\n stack: %v", stack())
+	xtracer.Trace("fragment/checker.reportCycle report cycle error")
 	var parts []string
 	for _, a := range cycle {
 		parts = append(parts, "  "+c.reportArc(a))

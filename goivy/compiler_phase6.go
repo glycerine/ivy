@@ -1907,15 +1907,17 @@ func ReorderProps(mod *Module, props []*LabeledFormula) []*LabeledFormula {
 	var iprops []ipropEntry
 	for _, prop := range props {
 		name := labeledFormulaName(prop)
-		specKey := mod.Cfg.IuCfg.ComposeNames(name, "spec")
-		if _, ok := mod.Attributes[specKey]; ok {
-			pc := mod.Cfg.IuCfg.ParentChildName(name)
-			parent := pc[0]
-			specprops[parent] = append(specprops[parent], prop)
-			iprops = append(iprops, ipropEntry{prop: prop, isSpec: true})
-		} else {
-			iprops = append(iprops, ipropEntry{prop: prop, isSpec: false})
+		if name != "" {
+			specKey := mod.Cfg.IuCfg.ComposeNames(name, "spec")
+			if _, ok := mod.Attributes[specKey]; ok {
+				pc := mod.Cfg.IuCfg.ParentChildName(name)
+				parent := pc[0]
+				specprops[parent] = append(specprops[parent], prop)
+				iprops = append(iprops, ipropEntry{prop: prop, isSpec: true})
+				continue
+			}
 		}
+		iprops = append(iprops, ipropEntry{prop: prop, isSpec: false})
 	}
 
 	// Build result in reverse, inserting spec properties at parent boundaries
@@ -1924,12 +1926,14 @@ func ReorderProps(mod *Module, props []*LabeledFormula) []*LabeledFormula {
 		entry := iprops[i]
 		name := labeledFormulaName(entry.prop)
 		var things []*LabeledFormula
-		for name != "this" {
-			pc := mod.Cfg.IuCfg.ParentChildName(name)
-			name = pc[0]
-			if specs, ok := specprops[name]; ok {
-				things = append(things, specs...)
-				delete(specprops, name)
+		if name != "" {
+			for name != "this" {
+				pc := mod.Cfg.IuCfg.ParentChildName(name)
+				name = pc[0]
+				if specs, ok := specprops[name]; ok {
+					things = append(things, specs...)
+					delete(specprops, name)
+				}
 			}
 		}
 		// Reverse things before appending
@@ -2443,8 +2447,10 @@ func CheckProperties(mod *Module) error {
 				// Update prover's last axiom and schemata with named-transformed prop
 				if prover != nil {
 					prover.SetLastAxiom(prop)
-					xtracer.Trace("compiler.CheckProperties.classify.prover schemata.insert key='%s'", prop.LabelName())
-					prover.SetSchema(prop.LabelName(), prop)
+					if prop.Label != nil {
+						xtracer.Trace("compiler.CheckProperties.classify.prover schemata.insert key='%s'", prop.LabelName())
+						prover.SetSchema(prop.LabelName(), prop)
+					}
 				}
 			}
 

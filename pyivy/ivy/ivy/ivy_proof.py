@@ -154,8 +154,9 @@ class ProofChecker(object):
             if __debug__: xtracer.trace("proof.AdmitProposition EXIT err=%s" % "goal does not match the given schema")
             raise NoMatch(proof,"goal does not match the given schema")
         self.axioms.append(prop)
-        if __debug__: xtracer.trace("proof.ProofChecker.admit_proposition schemata.insert key='%s' value=%s" % (prop.name, prop.canon()))
-        self.schemata[prop.name] = prop
+        if prop.label is not None:
+            if __debug__: xtracer.trace("proof.ProofChecker.admit_proposition schemata.insert key='%s' value=%s" % (prop.name, prop.canon()))
+            self.schemata[prop.name] = prop
         vocab = goal_vocab(prop)
         self.stale.update(vocab.symbols)
         if __debug__: xtracer.trace("proof.AdmitProposition EXIT nsubgoals=%d" % len(subgoals))

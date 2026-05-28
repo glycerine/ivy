@@ -2125,21 +2125,23 @@ def reorder_props(mod,props):
     specprops = defaultdict(list)
     iprops = []
     for prop in props:
-        if iu.compose_names(prop.name,'spec') in mod.attributes:
-            p,c = parent_child_name(prop.name)
+        prop_name = prop.name if prop.label is not None else None
+        if prop_name is not None and iu.compose_names(prop_name,'spec') in mod.attributes:
+            p,c = parent_child_name(prop_name)
             specprops[p].append(prop)
             iprops.append((prop,))  # a placeholder
         else:
             iprops.append(prop)
     rprops = []
     for prop in reversed(iprops):
-        name = prop[0].name if isinstance(prop,tuple) else prop.name
+        name = prop[0].name if isinstance(prop,tuple) else (prop.name if prop.label is not None else None)
         things = []
-        while name != 'this':
-            name,c = parent_child_name(name)
-            if name in specprops:
-                things.extend(specprops[name])
-                del specprops[name]
+        if name is not None:
+            while name != 'this':
+                name,c = parent_child_name(name)
+                if name in specprops:
+                    things.extend(specprops[name])
+                    del specprops[name]
         rprops.extend(reversed(things))
         if not isinstance(prop,tuple):
             rprops.append(prop)
@@ -2314,9 +2316,10 @@ def check_properties(mod):
             if not isinstance(prop.formula,ivy_logic.Definition):
                 prop = named_trans(prop)
                 prover.axioms[-1] = prop
-                if __debug__: xtracer.trace("compiler.CheckProperties.classify.prover schemata.insert key='%s'" % prop.name)
-                if __debug__: xtracer.trace("proof.ProofChecker.SetSchema schemata.insert key='%s' value=%s" % (prop.name, prop.canon()))
-                prover.schemata[prop.name] = prop
+                if prop.label is not None:
+                    if __debug__: xtracer.trace("compiler.CheckProperties.classify.prover schemata.insert key='%s'" % prop.name)
+                    if __debug__: xtracer.trace("proof.ProofChecker.SetSchema schemata.insert key='%s' value=%s" % (prop.name, prop.canon()))
+                    prover.schemata[prop.name] = prop
             if len(subgoals) == 0:
                 if not isinstance(prop.formula,ivy_ast.SchemaBody):
                     if isinstance(prop.formula,ivy_logic.Definition):

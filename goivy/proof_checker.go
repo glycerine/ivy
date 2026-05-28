@@ -559,8 +559,10 @@ func (pc *ProofChecker) AdmitProposition(prop *LabeledFormula, proof Node, exist
 		return nil, err
 	}
 	pc.Axioms = append(pc.Axioms, prop)
-	xtracer.Trace("proof.ProofChecker.admit_proposition schemata.insert key='%s' value=%s", prop.LabelName(), prop.Canon())
-	pc.Schemata.Set(prop.LabelName(), prop)
+	if prop.Label != nil {
+		xtracer.Trace("proof.ProofChecker.admit_proposition schemata.insert key='%s' value=%s", prop.LabelName(), prop.Canon())
+		pc.Schemata.Set(prop.LabelName(), prop)
+	}
 	vocab := GoalVocab(prop)
 	for _, sym := range vocab.Symbols {
 		pc.Stale[sym.Name] = true
