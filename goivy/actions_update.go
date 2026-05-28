@@ -1470,9 +1470,13 @@ func (a *LogicIfAction) IntUpdate(ctx *UpdateContext) *Update {
 	cond := a.Cond
 
 	// Python: if used_variables_ast(self.args[0]): raise IvyError(...)
-	freeVars := UsedVariablesAST(cond)
+	freeVars := VariablesAST(cond)
 	if len(freeVars) > 0 {
-		panic("variables in \"if\" conditions must be explicitly quantified")
+		fmt.Println(a)
+		panic(NewIvyError(a, fmt.Sprintf(
+			"variables in \"if\" conditions must be explicitly quantified; unquantified variable(s): %s",
+			logicVariableNames(freeVars),
+		)))
 	}
 
 	// Python: if not isinstance(self.args[0], ivy_ast.Some): ... else: subactions path
@@ -1482,7 +1486,7 @@ func (a *LogicIfAction) IntUpdate(ctx *UpdateContext) *Update {
 
 	// Python (ivy_actions.py:990): if not is_boolean(self.args[0]): raise IvyError("condition must be boolean")
 	if !IsBoolean(cond) {
-		panic("condition must be boolean")
+		panic(NewIvyError(a, "condition must be boolean"))
 	}
 
 	// Simple boolean condition
@@ -1513,6 +1517,17 @@ func (a *LogicIfAction) IntUpdate(ctx *UpdateContext) *Update {
 
 	axioms := ctx.BackgroundTheory()
 	return IteAction(cond, thenUpdate, elseUpdate, axioms)
+}
+
+func logicVariableNames(vars []*LogicVariable) string {
+	names := make([]string, 0, len(vars))
+	for _, v := range vars {
+		if v == nil {
+			continue
+		}
+		names = append(names, v.Name)
+	}
+	return strings.Join(names, ", ")
 }
 
 // intUpdateWithSubactions handles the Some/SomeMinMax case.
@@ -1884,9 +1899,6 @@ func (a *LogicBindOldsAction) IntUpdate(ctx *UpdateContext) *Update {
 func (a *LogicCallAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.CallAction.int_update ENTER")
 	calleeName := constName(a.Callee)
-	if xtracer.Enabled {
-		fmt.Printf("DIAG CallAction.int_update callee=%v\n", calleeName)
-	}
 	if calleeName == "" {
 		// Python (ivy_actions.py:1318): name = self.args[0].rep — would
 		// AttributeError if .rep is missing. Faithful port panics.

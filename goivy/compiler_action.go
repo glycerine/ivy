@@ -373,7 +373,7 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 
 	case *Ite:
 		// B2-R2: Delegate to CompileIf which uses ExprContext + SortifyWithInference + Extract
-		return c.CompileIf(n.Cond, n.Then, n.Else)
+		return c.compileIfAt(n.Cond, n.Then, n.Else, n.GetLineno())
 
 	case *InstantiateDecl:
 		// Instantiate action in action body: instantiate callatom
@@ -464,7 +464,7 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 	case *IfAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=IfAction")
 		// Python: compile_if_action — handles Some variant + ExprContext for plain if
-		return c.CompileIf(n.Cond, n.Then, n.Else)
+		return c.compileIfAt(n.Cond, n.Then, n.Else, n.GetLineno())
 
 	case *WhileAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=WhileAction")
@@ -1153,22 +1153,29 @@ func (c *Compiler) CompileLocal(localDecls []Node, body Node) (ActionsAction, er
 // CompileIf compiles an if/else action from AST nodes.
 // Python: compile_if_action (ivy_compiler.py:611-632)
 func (c *Compiler) CompileIf(condNode, thenNode Node, elseNode Node) (ActionsAction, error) {
+	return c.compileIfAt(condNode, thenNode, elseNode, condNode.GetLineno())
+}
+
+func (c *Compiler) compileIfAt(condNode, thenNode Node, elseNode Node, actionLoc Location) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_if_action ENTER")
+	if actionLoc == (Location{}) && condNode != nil {
+		actionLoc = condNode.GetLineno()
+	}
 	// NEW: Check if condition is an existential (Some/SomeMin/SomeMax)
 	// Python: if isinstance(self.args[0], ivy_ast.Some):
 	switch cond := condNode.(type) {
 	case *Some:
-		return c.compileIfSome(cond.Params, cond.Fmla, nil, "some", thenNode, elseNode, condNode)
+		return c.compileIfSome(cond.Params, cond.Fmla, nil, "some", thenNode, elseNode, condNode, actionLoc)
 	case *SomeMin:
-		return c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_min", thenNode, elseNode, condNode)
+		return c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_min", thenNode, elseNode, condNode, actionLoc)
 	case *SomeMax:
-		return c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_max", thenNode, elseNode, condNode)
+		return c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_max", thenNode, elseNode, condNode, actionLoc)
 	}
 
 	// R6: Create ExprContext for condition compilation
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
-	loc := condNode.GetLineno()
+	loc := actionLoc
 	ctx := &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
 	c.ExprCtx = ctx
 
@@ -1199,7 +1206,7 @@ func (c *Compiler) CompileIf(condNode, thenNode Node, elseNode Node) (ActionsAct
 	} else {
 		res = NewIfAction(cond, thenBody)
 	}
-	res.SetLineno(condNode.GetLineno())
+	res.SetLineno(actionLoc)
 
 	// Python: ctx.code.append(self.clone([cond]+rest)); res = ctx.extract()
 	ctx.Code = append(ctx.Code, res)
@@ -1212,7 +1219,7 @@ func (c *Compiler) CompileIf(condNode, thenNode Node, elseNode Node) (ActionsAct
 
 // compileIfSome compiles an existential-if (Some/SomeMin/SomeMax condition).
 // Python: compile_if_action when isinstance(self.args[0], ivy_ast.Some)
-func (c *Compiler) compileIfSome(params []Node, fmlaNode Node, indexNode Node, kind string, thenNode, elseNode, condNode Node) (ActionsAction, error) {
+func (c *Compiler) compileIfSome(params []Node, fmlaNode Node, indexNode Node, kind string, thenNode, elseNode, condNode Node, actionLoc Location) (ActionsAction, error) {
 	// 1. Copy sig
 	// Python: sig = ivy_logic.sig.copy(); with sig:
 	sigCopy := c.Sig.Copy()
@@ -1292,7 +1299,10 @@ func (c *Compiler) compileIfSome(params []Node, fmlaNode Node, indexNode Node, k
 		res = NewIfAction(someCond, thenBody)
 	}
 	res.AstCond = astCond
-	res.SetLineno(condNode.GetLineno())
+	if actionLoc == (Location{}) && condNode != nil {
+		actionLoc = condNode.GetLineno()
+	}
+	res.SetLineno(actionLoc)
 	return res, nil
 }
 
@@ -1316,7 +1326,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 	case *Some:
 		xtracer.Trace("compiler.CompileNode return case=default type=IfAction")
 		xtracer.Trace("compiler.compile_if_action ENTER")
-		res, err := c.compileIfSome(cond.Params, cond.Fmla, nil, "some", bodyNode, nil, condNode)
+		res, err := c.compileIfSome(cond.Params, cond.Fmla, nil, "some", bodyNode, nil, condNode, condNode.GetLineno())
 		if err != nil {
 			return nil, fmt.Errorf("compiling while some condition: %w", err)
 		}
@@ -1340,7 +1350,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 	case *SomeMin:
 		xtracer.Trace("compiler.CompileNode return case=default type=IfAction")
 		xtracer.Trace("compiler.compile_if_action ENTER")
-		res, err := c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_min", bodyNode, nil, condNode)
+		res, err := c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_min", bodyNode, nil, condNode, condNode.GetLineno())
 		if err != nil {
 			return nil, fmt.Errorf("compiling while some_min condition: %w", err)
 		}
@@ -1363,7 +1373,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 	case *SomeMax:
 		xtracer.Trace("compiler.CompileNode return case=default type=IfAction")
 		xtracer.Trace("compiler.compile_if_action ENTER")
-		res, err := c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_max", bodyNode, nil, condNode)
+		res, err := c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_max", bodyNode, nil, condNode, condNode.GetLineno())
 		if err != nil {
 			return nil, fmt.Errorf("compiling while some_max condition: %w", err)
 		}

@@ -13,7 +13,7 @@ type IvyError struct {
 
 func (e *IvyError) Error() string {
 	if e.HasLoc {
-		return fmt.Sprintf("%s: error: %s", e.Loc, e.Msg)
+		return fmt.Sprintf("%serror: %s", e.Loc, e.Msg)
 	}
 	return e.Msg
 }
@@ -39,7 +39,7 @@ type SortError struct {
 
 func (e *SortError) Error() string {
 	if e.HasLoc {
-		return fmt.Sprintf("%s: error: %s", e.Loc, e.Msg)
+		return fmt.Sprintf("%serror: %s", e.Loc, e.Msg)
 	}
 	return e.Msg
 }

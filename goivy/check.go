@@ -1363,7 +1363,7 @@ func MainWithConfig(args []string, cfg *Config) (code int) {
 	defer func() {
 		if r := recover(); r != nil {
 			if err, ok := r.(*IvyError); ok {
-				fmt.Fprintf(os.Stderr, "error: %v\n", err)
+				fmt.Fprintln(os.Stderr, err)
 				code = 1
 				return
 			}

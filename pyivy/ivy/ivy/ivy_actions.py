@@ -994,9 +994,11 @@ class IfAction(Action):
         if __debug__: xtracer.trace("actions.IfAction.int_update ENTER")
 #        update = self.args[1].int_update(domain,pvars)
 #        return condition_update_on_fmla(update,self.args[0],domain.relations)
-        if used_variables_ast(self.args[0]):
+        free_vars = used_variables_ast(self.args[0])
+        if free_vars:
             print (self)
-            raise IvyError(self,'variables in "if" conditions must be explicitly quantified')
+            free_var_names = ', '.join(v.name for v in free_vars)
+            raise IvyError(self,'variables in "if" conditions must be explicitly quantified; unquantified variable(s): {}'.format(free_var_names))
         if not isinstance(self.args[0],ivy_ast.Some):
             if not is_boolean(self.args[0]):
                 raise IvyError(self,'condition must be boolean')
@@ -1346,7 +1348,6 @@ class CallAction(Action):
     def int_update(self,domain,pvars):
         if __debug__: 
             xtracer.trace("actions.CallAction.int_update ENTER")
-            print("DIAG CallAction.int_update callee=%s" % self.args[0].rep)
 #        print "got here!"
         v = self.get_callee()
         if not isinstance(v,tuple):

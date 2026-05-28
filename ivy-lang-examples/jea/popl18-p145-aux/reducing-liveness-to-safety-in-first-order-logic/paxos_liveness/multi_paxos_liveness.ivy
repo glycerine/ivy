@@ -254,7 +254,7 @@ export cast_vote
                 ~w_send_one_a_r0 &
                 (forall N,R. ~w_rcv_one_a(N,R)) &
                 (forall N,R1,M. ~w_rcv_one_b_msg(N,R1,M)) &
-                (forall N,R,V. ~w_rcv_proposal(N,I,R,V)) &
+                (forall N,R,V. ~w_rcv_proposal(N,I,R,V)) & ## crashes here because I is not quantified. probably should be: "forall I,N,R,V" like line 324 ?
                 (forall I . ~w_r0_proposal(I)) &
                 ~w_process_join_acks_r0
                 ) {

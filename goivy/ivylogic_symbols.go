@@ -41,6 +41,18 @@ func SymbolsIluAst(node Expr) iter.Seq[Expr] {
 }
 
 func symbolsIluAstRec(node Expr, yield func(Expr) bool) bool {
+	switch t := node.(type) {
+	case *LogicAssumeAction:
+		return symbolsIluAstNodeArgsRec(t.Args(), yield)
+	case *LogicAssertAction:
+		return symbolsIluAstNodeArgsRec(t.Args(), yield)
+	case *LogicRequiresAction:
+		return symbolsIluAstNodeArgsRec(t.Args(), yield)
+	case *LogicEnsuresAction:
+		return symbolsIluAstNodeArgsRec(t.Args(), yield)
+	case *LogicSubgoalAction:
+		return symbolsIluAstNodeArgsRec(t.Args(), yield)
+	}
 	if IsApp(node) {
 		rep := IvyNodeRep(node)
 		if IsBinder(rep) {
@@ -59,6 +71,25 @@ func symbolsIluAstRec(node Expr, yield func(Expr) bool) bool {
 		}
 	}
 	return true
+}
+
+func symbolsIluAstNodeArgsRec(nodes []Node, yield func(Expr) bool) bool {
+	for _, node := range nodes {
+		if !symbolsIluAstNodeRec(node, yield) {
+			return false
+		}
+	}
+	return true
+}
+
+func symbolsIluAstNodeRec(node Node, yield func(Expr) bool) bool {
+	if node == nil {
+		return true
+	}
+	if expr, ok := node.(Expr); ok {
+		return symbolsIluAstRec(expr, yield)
+	}
+	return symbolsIluAstNodeArgsRec(node.Args(), yield)
 }
 
 // SymbolsAsts yields symbols from a list of ASTs.

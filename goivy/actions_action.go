@@ -405,11 +405,18 @@ func (a *LogicIfAction) ActionClone(args []Expr) ActionsAction {
 	return r
 }
 func (a *LogicIfAction) String() string {
-	res := "if " + fmt.Sprint(a.Cond) + " {" + fmt.Sprint(a.ThenBody) + "}"
+	res := "if " + fmt.Sprint(a.Cond) + " " + bracketActionExpr(a.ThenBody, 0)
 	if a.ElseBody != nil {
-		res += " else {" + fmt.Sprint(a.ElseBody) + "}"
+		res += "\nelse " + bracketActionExpr(a.ElseBody, 0)
 	}
 	return res
+}
+
+func bracketActionExpr(e Expr, depth int) string {
+	if act, ok := ToAction(e); ok {
+		return BracketAction(act, depth)
+	}
+	return "{" + MyStr(e, depth) + "}"
 }
 func (a *LogicIfAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
 func (a *LogicIfAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }
