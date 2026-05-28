@@ -1300,6 +1300,14 @@ func (c *Compiler) compileIfSome(params []Node, fmlaNode Node, indexNode Node, k
 // Python: compile_while_action (ivy_compiler.py:636-650)
 func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_while_action ENTER")
+	compileLoopAnnotation := func(inv Node) (Expr, error) {
+		if a, ok := inv.(*AssertAction); ok && len(a.Elems) > 0 {
+			if lf, ok := a.Elems[0].(*LabeledFormula); ok && lf.Label == nil {
+				return c.Thing(inv)
+			}
+		}
+		return c.SortifyWithInference(inv)
+	}
 	// Python: if isinstance(self.args[0], ivy_ast.Some):
 	//             res = compile_if_action(self.clone(self.args[:2]))
 	//             invars = list(map(sortify_with_inference, self.args[2:]))
@@ -1314,7 +1322,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 		}
 		var invs []Expr
 		for _, inv := range invNodes {
-			compiled, err := c.SortifyWithInference(inv)
+			compiled, err := compileLoopAnnotation(inv)
 			if err != nil {
 				return nil, fmt.Errorf("compiling while invariant: %w", err)
 			}
@@ -1338,7 +1346,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 		}
 		var invs []Expr
 		for _, inv := range invNodes {
-			compiled, err := c.SortifyWithInference(inv)
+			compiled, err := compileLoopAnnotation(inv)
 			if err != nil {
 				return nil, fmt.Errorf("compiling while invariant: %w", err)
 			}
@@ -1361,7 +1369,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 		}
 		var invs []Expr
 		for _, inv := range invNodes {
-			compiled, err := c.SortifyWithInference(inv)
+			compiled, err := compileLoopAnnotation(inv)
 			if err != nil {
 				return nil, fmt.Errorf("compiling while invariant: %w", err)
 			}
@@ -1394,7 +1402,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode Node, invNodes []Node) (Actio
 	// Compile invariants within same ExprContext
 	var invs []Expr
 	for _, inv := range invNodes {
-		compiled, err := c.SortifyWithInference(inv)
+		compiled, err := compileLoopAnnotation(inv)
 		if err != nil {
 			c.ExprCtx = savedCtx
 			return nil, fmt.Errorf("compiling while invariant: %w", err)

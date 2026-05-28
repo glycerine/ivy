@@ -763,17 +763,30 @@ def compile_if_action(self):
 
 IfAction.cmpl = compile_if_action
 
+def compile_loop_annotation(ast):
+        # Preserve the old sortify path except for the exact crash shape:
+        # an invariant parsed as AssertAction(LabeledFormula(None, formula)).
+        # sortify_with_inference compiles the assertion and then runs formula
+        # sort inference over the resulting action, which descends into the
+        # unlabeled formula's None label. Compile just this already-action
+        # annotation as an action; it remains nested in the WhileAction.
+        if (isinstance(ast,AssertAction) and ast.args and
+            isinstance(ast.args[0],ivy_ast.LabeledFormula) and
+            ast.args[0].label is None):
+            return ast.compile()
+        return sortify_with_inference(ast)
+
 def compile_while_action(self):
         if __debug__: xtracer.trace("compiler.CompileNode return case=default type=WhileAction")
         if __debug__: xtracer.trace("compiler.compile_while_action ENTER")
         if isinstance(self.args[0],ivy_ast.Some):
             res = compile_if_action(self.clone(self.args[:2]))
-            invars = list(map(sortify_with_inference,self.args[2:]))
+            invars = list(map(compile_loop_annotation,self.args[2:]))
             return res.clone(res.args+invars)
         ctx = ExprContext(lineno = self.lineno)
         with ctx:
             cond = sortify_with_inference(self.args[0])
-            invars = list(map(sortify_with_inference,self.args[2:]))
+            invars = list(map(compile_loop_annotation,self.args[2:]))
         body = self.args[1].compile()
         if ctx.code:
             raise iu.IvyError(self,'while condition may not contain action calls')
