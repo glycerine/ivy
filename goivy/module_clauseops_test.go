@@ -450,6 +450,34 @@ func TestModuleClauseOpsSubstituteConstantsAST(t *testing.T) {
 	}
 }
 
+func TestSubstituteConstantsActionSkipsNilLabeledFormulaLabel(t *testing.T) {
+	cfg := NewAstConfig()
+	p := moduleMkConst("p")
+	q := moduleMkConst("q")
+	lf := cfg.NewLabeledFormula(nil, &LogicNot{Body: p})
+	act := NewAssumeAction(lf.Formula.(Expr))
+	act.SetLF(lf)
+
+	result := SubstituteConstantsAction(act, map[NodeKey]Expr{Key(p): q})
+	assume, ok := result.(*LogicAssumeAction)
+	if !ok {
+		t.Fatalf("SubstituteConstantsAction = %T, want *LogicAssumeAction", result)
+	}
+	if assume.LF == nil {
+		t.Fatal("substituted assume action lost its LabeledFormula")
+	}
+	if assume.LF.Label != nil {
+		t.Fatalf("unlabeled LabeledFormula label = %v, want nil", assume.LF.Label)
+	}
+	not, ok := assume.LF.Formula.(*LogicNot)
+	if !ok {
+		t.Fatalf("substituted LabeledFormula formula = %T, want *LogicNot", assume.LF.Formula)
+	}
+	if !not.Body.Equal(q) {
+		t.Fatalf("substituted body = %v, want %v", not.Body, q)
+	}
+}
+
 func TestSubstituteConstantsActionPreservesNativeAtomExpr(t *testing.T) {
 	cfg := NewAstConfig()
 	act := NewNativeAction(

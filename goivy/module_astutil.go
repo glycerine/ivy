@@ -101,6 +101,12 @@ func moduleCopyStringSet(s map[string]struct{}) map[string]struct{} {
 // The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality
 // matching Python's recstruct-based Symbol lookup: subs.get(ast.rep, ast).
 func SubstituteConstantsAST(node Node, subs map[NodeKey]Expr) Node {
+	// Python: if ast is None: return None. This is required for optional
+	// AST slots such as an unlabeled LabeledFormula's label.
+	if node == nil {
+		return nil
+	}
+
 	// Python: if is_constant(ast): return subs.get(ast.rep, ast)
 	if sym, ok := node.(*Const); ok {
 		if rep, found := subs[Key(sym)]; found {
