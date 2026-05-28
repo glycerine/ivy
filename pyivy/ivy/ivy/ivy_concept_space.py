@@ -118,6 +118,9 @@ lexer = lex.lex()
 # Yacc example
 
 import ply.yacc as yacc
+from . import ivy_ply_patch
+
+ivy_ply_patch.install(yacc)
 
 def p_expr_lit(p):
     'expr : lit'
@@ -207,4 +210,3 @@ def clauses_to_concept(name,clauses):
     ps = [ProductSpace([NamedSpace(~lit) for lit in clause]) for clause in clauses.triv_clauses()]
     ss = ps[0] if len(ps) == 1 else SumSpace(ps)
     return (Atom(Symbol(name,RelationSort([v.sort for v in vars])),[v for v in vars]),ss)
-

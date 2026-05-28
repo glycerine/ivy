@@ -286,6 +286,9 @@ lexer = lex.lex()
 # Yacc example
 
 import ply.yacc as yacc
+from . import ivy_ply_patch
+
+ivy_ply_patch.install(yacc)
 
 def p_events(p):
     'events : '
@@ -440,4 +443,3 @@ if __name__ == '__main__':
            print('event: {} binding: {}'.format(e,list((n,str(v)) for n,v in b.items())))
            
            
-

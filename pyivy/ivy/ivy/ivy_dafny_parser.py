@@ -6,6 +6,9 @@ from .ivy_dafny_grammar import *
 from .ivy_utils import p_error, parse_with
 
 import ply.yacc as yacc
+from . import ivy_ply_patch
+
+ivy_ply_patch.install(yacc)
 
 import os
 tabdir = os.path.dirname(os.path.abspath(__file__))

@@ -17,7 +17,10 @@ _logic_sexp.install()
 
 
 import ply.yacc as yacc
+from . import ivy_ply_patch
 import string
+
+ivy_ply_patch.install(yacc)
 
 if not (iu.get_numeric_version() <= [1,2]):
 
