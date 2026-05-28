@@ -1444,36 +1444,17 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		}
 	}
 
-	// Phase B: action bodies. Python traverses the action object itself here.
-	// For generated parameterized actions, that traversal can surface formal
-	// symbols before the later explicit formal pass, so mirror that first-
-	// occurrence order by adding Go's separately stored formals immediately
-	// after the action body walk.
-	// Python: asts.extend(action for action in list(mod.actions.values()))
-	for name, act := range mod.Actions.All() {
-		if xtracer.Enabled {
-			xtracer.Trace("%s.phaseB_action %s", as2, name)
-		}
-		collectSymbolsInto(as2, act, allSyms2)
-		for _, p := range act.GetFormalParams() {
-			key := ConstSymKey(p)
+		// Phase B: action bodies.
+		// Python traverses only action.args here via lu.symbols_ilu_ast(action).
+		// The action.formal_params/formal_returns attributes are not in .args;
+		// they are handled by the explicit Phase D pass below.
+		// Python: _traced_add_syms(..., lu.symbols_ilu_ast(action))
+		for name, act := range mod.Actions.All() {
 			if xtracer.Enabled {
-				if _, exists := allSyms2.Get2(key); !exists {
-					xtracer.Trace("%s.add %s", as2, PrettyFmla(p))
-				}
+				xtracer.Trace("%s.phaseB_action %s", as2, name)
 			}
-			allSyms2.Set(key, p)
+			collectSymbolsInto(as2, act, allSyms2)
 		}
-		for _, r := range act.GetFormalReturns() {
-			key := ConstSymKey(r)
-			if xtracer.Enabled {
-				if _, exists := allSyms2.Get2(key); !exists {
-					xtracer.Trace("%s.add %s", as2, PrettyFmla(r))
-				}
-			}
-			allSyms2.Set(key, r)
-		}
-	}
 
 	// Phase C: params (if keep_destructors)
 	// Python: if opt_keep_destructors.get(): asts.extend(mod.params)
