@@ -560,10 +560,11 @@ func (a *LogicIfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfi
 				var leqApp, eqNode Expr
 				if isMin {
 					leqApp, _ = NewApply(leqSym, ivar, idx)
+					eqNode = NewEqualsNode(ivar, idx)
 				} else {
 					leqApp, _ = NewApply(leqSym, idx, ivar)
+					eqNode = NewEqualsNode(idx, ivar)
 				}
-				eqNode = NewEqualsNode(ivar, idx)
 				comp, _ := NewAnd(leqApp, &LogicNot{Body: eqNode})
 				notSfmlaComp, _ := NewAnd(sfmla, comp)
 				fmla, _ = NewAnd(fmla, &LogicNot{Body: notSfmlaComp})

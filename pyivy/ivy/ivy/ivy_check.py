@@ -427,7 +427,34 @@ def check_fcs_in_state(mod,ag,post,fcs):
     return not any(fc.failed for fc in fcs)
 
 def convert_postconds(state,postconds):
-    updated,postcond,pre = state.update
+    # Doing the goivy port, we changed the following behavior:
+    #
+    # This helper is called from check_conjs_in_state by two paths:
+    #
+    #   * action-postcondition checks, where ``postconds`` is non-empty and
+    #     ``state`` is a real post-state whose ``state.update`` triple is
+    #     needed to rename old-state symbols;
+    #   * initialization-invariant checks, where ``postconds`` is empty and
+    #     ``state`` is ag.states[0], the initial abstract state. That initial
+    #     state has no predecessor action, so ``state.update`` is None.
+    #
+    # The original Python code immediately unpacked ``state.update`` even when
+    # there was nothing to convert, which crashes on ivy1.6 specs such as
+    # leader_election_ring_repl.ivy during the initialization-invariant pass.
+    # Preserve the original Python side effect of reading ``state.update`` even
+    # when ``postconds`` is empty. State.update may lazily compute and cache an
+    # action update, and in xtrace builds that computation emits trace lines.
+    # Only the no-work/no-update case below is new: there are no postconditions
+    # to convert and no update triple to unpack.
+    #
+    # We deliberately do NOT treat ``state.update is None`` as a general no-op
+    # for non-empty postconditions. In that case the update triple is required
+    # for faithful old-symbol renaming, and a missing update should remain a
+    # visible bug instead of being silently papered over.
+    update = state.update
+    if not postconds and update is None:
+        return []
+    updated,postcond,pre = update
     renaming = dict((s,itr.old_of(s))
                     for s in lut.used_symbols_asts(x.formula for x in postconds)
                     if itr.is_old(s))
