@@ -1635,6 +1635,7 @@ scenariomixin:
         atom.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
         mixer := makeMixinNameV16(parser16Acfg(parser16lex), atom, "after")
         formals, returns := inferActionParams(parser16lex.(*parser16LexAdapter).accum, atom.Rep, $3, $4)
+        formals, returns = inferActionParams(parser16lex.(*parser16LexAdapter).accum, atom.Rep, formals, returns)
         adef := parser16Acfg(parser16lex).NewActionDef(atom, $5, formals, returns)
         sam := parser16Acfg(parser16lex).NewScenarioAfterMixin(mixer, adef)
         sam.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))

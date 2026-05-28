@@ -774,6 +774,7 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 		tr *ScenarioTransition
 	}
 	transsByAction := make(map[string][]transEntry)
+	var actionOrder []string
 	for _, tr := range scen.Transitions() {
 		var actionName string
 		switch m := tr.Action.(type) {
@@ -787,6 +788,9 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 			}
 		}
 		if actionName != "" {
+			if _, seen := transsByAction[actionName]; !seen {
+				actionOrder = append(actionOrder, actionName)
+			}
 			transsByAction[actionName] = append(transsByAction[actionName], transEntry{tr: tr})
 		}
 	}
@@ -825,7 +829,8 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 	}
 
 	// 4. For each action's transitions, create mixer actions
-	for _, trs := range transsByAction {
+	for _, actionName := range actionOrder {
+		trs := transsByAction[actionName]
 		var choices []interface{}
 		var params []*Const
 		var returns []*Const
@@ -973,14 +978,7 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 						}
 					}
 				}
-				var condExpr Expr
-				if len(conds) == 0 {
-					condExpr = &LogicAnd{}
-				} else if len(conds) == 1 {
-					condExpr = conds[0]
-				} else {
-					condExpr = &LogicAnd{Terms: conds}
-				}
+				condExpr := &LogicAnd{Terms: conds}
 				ifAct := NewIfAction(condExpr, seqAction)
 				ifAct.SetLineno(tr.GetLineno())
 
