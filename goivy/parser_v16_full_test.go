@@ -493,6 +493,10 @@ type pair = struct { first:color, second:idx }`
 }
 
 func TestParseV16TypeDeclTracesOptfiniteBeforeOptghost(t *testing.T) {
+	if !xtracer.Enabled {
+		t.Skip("xtrace is disabled in this build")
+	}
+
 	var parseErr error
 	out, err := captureParserTrace(func() {
 		_, parseErr = Parse("type key", Version{1, 6}, WithFilename("type_trace16.ivy"))

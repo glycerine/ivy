@@ -734,7 +734,10 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 			if node == nil {
 				continue
 			}
-			paramName, paramSortName, ok := isoParamNameSort(node)
+			// Preserve the source isolate parameter name in mod.params. The
+			// "iso:" rewrite above is for strip-map matching against the
+			// substituted isolate body, not for the exported module parameter.
+			paramName, paramSortName, ok := isolateParamNameSort(node)
 			if !ok {
 				continue
 			}
