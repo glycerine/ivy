@@ -295,5 +295,8 @@ func SmallModelClauses(cls *Clauses, finalCond []FinalCond, shrink bool, m *Modu
 	if err != nil {
 		panic(err)
 	}
+	if shrink && model != nil {
+		fmt.Println("searching for a small model... done")
+	}
 	return model, slv
 }

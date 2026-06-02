@@ -1429,6 +1429,44 @@ func TestTraceToLinesWithState(t *testing.T) {
 	}
 }
 
+func TestTraceDetailedIgnoresPluralLabelsLikePython(t *testing.T) {
+	x := NewConst("x", Boolean)
+	y := NewConst("y", Boolean)
+	action := NewAssignAction(x, y)
+	action.SetLabels([]string{"this"})
+
+	tb := NewTraceBase(nil, nil)
+	tb.AddTraceState([]Expr{&Eq{T1: x, T2: False}})
+	tb.LastAction = action
+	tb.AddTraceState([]Expr{&Eq{T1: x, T2: y}})
+
+	got := tb.String()
+	if strings.Contains(got, "\nthis\n") {
+		t.Fatalf("detailed trace rendered plural action metadata as a label:\n%s", got)
+	}
+	if !strings.Contains(got, "x := y") {
+		t.Fatalf("detailed trace should render the action text when no singular label is set:\n%s", got)
+	}
+}
+
+func TestTraceNewStateDoesNotTrackModelNumeralsAsStateSymbols(t *testing.T) {
+	num := NewConst("0:money", TopS)
+	x := NewConst("x", Boolean)
+	trace := NewTrace(nil, nil, traceTestModel{}, []Expr{num, x}, true)
+	trace.Eqs[Key(num)] = []Expr{&Eq{T1: num, T2: NewConst("1:money", TopS)}}
+	trace.Eqs[Key(x)] = []Expr{&Eq{T1: x, T2: True}}
+
+	trace.NewState(nil)
+
+	got := trace.String()
+	if strings.Contains(got, "0:money") {
+		t.Fatalf("trace state should not display model numerals as mutable symbols:\n%s", got)
+	}
+	if !strings.Contains(got, "x = true") {
+		t.Fatalf("trace state should still display ordinary program symbols:\n%s", got)
+	}
+}
+
 func TestTraceToLinesHidden(t *testing.T) {
 	tb := NewTraceBase(nil, nil)
 	eq := makeEq("hidden_sym", "val")

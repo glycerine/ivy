@@ -519,7 +519,7 @@ func checkFcsTracePath(mod *Module, ag *AnalysisGraph, post *State,
 		// Python: handler = ivy_trace.Trace(mclauses, model, vocab)
 		hm := NewHerbrandModel(modelSlv, model.Solver, model.Model, vocab)
 		handler := NewTraceForModule(mod.Cfg.IuCfg, mod, mclauses, hm, traceVocab, true)
-		if modClauses, err := modelSlv.ClausesModelToClausesWithModel(mclauses, model, nil, true); err == nil {
+		if modClauses, err := modelSlv.ClausesModelToClausesWithModel(mclauses, model, traceModelIgnore(modelSlv), true); err == nil {
 			handler.SetEqsFromClauses(modClauses)
 		}
 

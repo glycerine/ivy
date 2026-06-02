@@ -132,12 +132,6 @@ func traceActionLabel(action ActionsAction) (string, bool) {
 			return label, true
 		}
 	}
-	if labeler, ok := action.(interface{ GetLabels() []string }); ok {
-		labels := labeler.GetLabels()
-		if len(labels) > 0 && labels[0] != "" {
-			return labels[0], true
-		}
-	}
 	return "", false
 }
 
@@ -665,7 +659,12 @@ func (t *Trace) GetSymEqs(sym Expr) []Expr {
 
 // Clone creates a model-backed subtrace, matching Python Trace.clone.
 func (t *Trace) Clone() *Trace {
-	return NewTrace(t.cfg, t.Clauses, t.Model, t.Vocab, false)
+	clone := NewTraceForModule(t.cfg, t.Domain, t.Clauses, t.Model, t.Vocab, false)
+	clone.Eqs = make(map[NodeKey][]Expr, len(t.Eqs))
+	for key, eqs := range t.Eqs {
+		clone.Eqs[key] = append([]Expr(nil), eqs...)
+	}
+	return clone
 }
 
 // Handle processes an action during annotation-guided trace construction.
@@ -722,7 +721,7 @@ func (t *Trace) NewState(env map[NodeKey]Expr) {
 		if sym == nil {
 			continue
 		}
-		if _, inEnv := env[Key(sym)]; !inEnv && !traceIsNew(sym) && !t.IsSkolem(sym) {
+		if _, inEnv := env[Key(sym)]; !inEnv && t.ShouldTrackStateSymbol(sym) {
 			symPairs = append(symPairs, [2]Expr{sym, sym})
 		}
 	}
@@ -738,7 +737,7 @@ func (t *Trace) NewState(env map[NodeKey]Expr) {
 		if sym == nil {
 			continue
 		}
-		if !traceIsNew(sym) && !t.IsSkolem(sym) {
+		if t.ShouldTrackStateSymbol(sym) {
 			symPairs = append(symPairs, [2]Expr{sym, renamedSym})
 		}
 	}
@@ -770,7 +769,7 @@ func (t *Trace) FinalState() {
 		if sym == nil {
 			continue
 		}
-		if !traceIsNew(sym) && !t.IsSkolem(sym) {
+		if t.ShouldTrackStateSymbol(sym) {
 			symPairs = append(symPairs, [2]Expr{sym, sym})
 		}
 	}
@@ -808,6 +807,10 @@ func (t *Trace) IsSkolem(sym Expr) bool {
 	return TraceIsSkolem(c.Name)
 }
 
+func (t *Trace) ShouldTrackStateSymbol(sym Expr) bool {
+	return !traceIsNew(sym) && !t.IsSkolem(sym) && !IsNumeral(sym)
+}
+
 func traceIsNew(sym Expr) bool {
 	c, ok := sym.(*Const)
 	return ok && IsNew(c.Name)
@@ -825,6 +828,15 @@ func traceEqRep(lhs Expr) Expr {
 		return t
 	default:
 		return nil
+	}
+}
+
+func traceModelIgnore(slv *Solver) func(*Const) bool {
+	return func(sym *Const) bool {
+		if slv == nil || sym == nil {
+			return false
+		}
+		return slv.SolverName(sym) == ""
 	}
 }
 
@@ -1093,7 +1105,7 @@ func CheckVC(mod *Module, clauses *Clauses, action ActionsAction,
 			vocab = append(vocab, c)
 		}
 	}
-	modClauses, hm, err := slv.ClausesModelToClausesWithModelAndHerbrand(mclauses, model, nil, true)
+	modClauses, hm, err := slv.ClausesModelToClausesWithModelAndHerbrand(mclauses, model, traceModelIgnore(slv), true)
 	if err != nil {
 		fmt.Printf("CheckVC: model conversion error: %v\n", err)
 		return nil

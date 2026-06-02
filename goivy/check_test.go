@@ -1550,6 +1550,9 @@ conjecture [x_stays_false] ~x
 	if !strings.Contains(text, "FAIL") {
 		t.Fatalf("regression fixture should fail and print a trace, got:\n%s", text)
 	}
+	if !strings.Contains(text, "searching for a small model... done") {
+		t.Fatalf("trace failure should report Python-style small-model shrinking status, got:\n%s", text)
+	}
 	if strings.Contains(text, "annotation error:") {
 		t.Fatalf("external trace resolved the EnvAction annotation against the action body:\n%s", text)
 	}
