@@ -1707,6 +1707,14 @@ def sort_size(sort):
         return 1 # just a guess!
     return sort_card(sort)
 
+def bounded_for_header(sort,idx,lo,hi,declare=True):
+    ct = ctype(sort)
+    ct = 'int' if ct == 'bool' else ct if ct in int_ctypes else 'int'
+    if isinstance(sort,il.EnumeratedSort):
+        ct = ctype(sort)
+        return 'for ('+ ((ct + ' ') if declare else '') + idx + ' = (' + ct + ')' + lo + '; (int) ' + idx + ' < ' + hi + '; ' + idx + ' = (' + ct + ')(((int)' + idx + ') + 1)) {\n'
+    return 'for ('+ ((ct + ' ') if declare else '') + idx + ' = ' + lo + '; ' + idx + ' < ' + hi + '; ' + idx + '++) {\n'
+
 def open_loop(impl,vs,declare=True,bounds=None):
     global indent_level
     for num,idx in enumerate(vs):
@@ -1714,13 +1722,7 @@ def open_loop(impl,vs,declare=True,bounds=None):
         indent(impl)
         bds = bounds[num] if bounds else sort_bounds(idx.sort)
         vn = varname(idx.name)
-        ct = ctype(idx.sort)
-        ct = 'int' if ct == 'bool' else ct if ct in int_ctypes else 'int'
-        if isinstance(idx.sort,il.EnumeratedSort):
-            ct = ctype(idx.sort)
-            impl.append('for ('+ ((ct + ' ') if declare else '') + vn + ' = (' + ct + ')' +  bds[0] + '; (int) ' + vn + ' < ' + bds[1] + '; ' + vn + ' = (' + ct + ')(((int)' + vn + ') + 1)) {\n')
-        else:
-            impl.append('for ('+ ((ct + ' ') if declare else '') + vn + ' = ' + bds[0] + '; ' + vn + ' < ' + bds[1] + '; ' + vn + '++) {\n')
+        impl.append(bounded_for_header(idx.sort,vn,bds[0],bds[1],declare))
         indent_level += 1
 
 def close_loop(impl,vs):
@@ -3456,9 +3458,7 @@ def emit_quant(variables,body,header,code,exists=False):
         berr = get_bounds(header,v0,variables,body,exists)
         if not isinstance(berr,BoundsError) and is_any_integer_type(v0.sort):
             lo,hi = berr
-            ct = ctype(v0.sort)
-            ct = 'int' if ct == 'bool' else ct if ct in int_ctypes else 'int'
-            header.append('for (' + ct + ' ' + idx + ' = ' + lo + '; ' + idx + ' < ' + hi + '; ' + idx + '++) {\n')
+            header.append(bounded_for_header(v0.sort,idx,lo,hi))
         else:
             ebnds = []
             get_extensional_bound_exprs(v0,body,exists,ebnds)
@@ -3697,9 +3697,7 @@ def open_bounded_loops(variables,body,exists=True):
         berr = get_bounds(header,v0,variables,body,exists)
         if not isinstance(berr,BoundsError) and is_any_integer_type(v0.sort):
             lo,hi = berr
-            ct = ctype(v0.sort)
-            ct = 'int' if ct == 'bool' else ct if ct in int_ctypes else 'int'
-            header.append('for (' + ct + ' ' + idx + ' = ' + lo + '; ' + idx + ' < ' + hi + '; ' + idx + '++) {\n')
+            header.append(bounded_for_header(v0.sort,idx,lo,hi))
         else:
             ebnds = []
             get_extensional_bound_exprs(v0,body,exists,ebnds)
