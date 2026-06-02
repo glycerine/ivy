@@ -20,7 +20,7 @@ const ANALYSIS_COLUMNS: ColumnDef<AnalysisSpreadsheetRow>[] = [
   {
     id: 'comment',
     header: '#',
-    accessorFn: (row) => (lineIsCommented(row.line) ? '#' : ''),
+    accessorFn: (row) => (rowHasProtectedCommentMarker(row) ? '' : lineIsCommented(row.line) ? '#' : ''),
   },
   {
     id: 'line',
@@ -169,7 +169,7 @@ function renderAnalysisTableBody(app, table, doc: Document) {
         td.textContent = String(row.original.lineNumber);
       } else if (cell.column.id === 'comment') {
         td.className = 'analysis-comment-cell';
-        td.appendChild(renderCommentToggle(app, row.original, doc));
+        renderCommentCell(td, app, row.original, doc);
       } else {
         td.appendChild(renderLineInput(app, row.original, doc));
       }
@@ -180,6 +180,13 @@ function renderAnalysisTableBody(app, table, doc: Document) {
   return tbody;
 }
 
+function renderCommentCell(cell: HTMLTableCellElement, app, row: AnalysisSpreadsheetRow, doc: Document) {
+  cell.textContent = '';
+  if (!rowHasProtectedCommentMarker(row)) {
+    cell.appendChild(renderCommentToggle(app, row, doc));
+  }
+}
+
 function renderCommentToggle(app, row: AnalysisSpreadsheetRow, doc: Document) {
   var button = doc.createElement('button');
   button.type = 'button';
@@ -187,13 +194,7 @@ function renderCommentToggle(app, row: AnalysisSpreadsheetRow, doc: Document) {
   button.textContent = lineIsCommented(row.line) ? '#' : '';
   button.setAttribute('aria-label', 'Toggle comment on line ' + row.lineNumber);
   button.setAttribute('aria-pressed', lineIsCommented(row.line) ? 'true' : 'false');
-  if (rowHasProtectedCommentMarker(row)) {
-    button.disabled = true;
-    button.title = '#lang directive';
-    button.setAttribute('aria-disabled', 'true');
-  }
   button.addEventListener('click', () => {
-    if (rowHasProtectedCommentMarker(row)) return;
     toggleAnalysisSpreadsheetLineComment(app, row.lineNumber - 1, { doc });
   });
   return button;
@@ -210,23 +211,21 @@ function renderLineInput(app, row: AnalysisSpreadsheetRow, doc: Document) {
   input.addEventListener('input', () => {
     var lineIndex = Number(input.dataset.lineIndex || '0');
     applyAnalysisSpreadsheetLineEdit(app, lineIndex, input.value, { doc });
-    var toggle = input.closest('tr')?.querySelector('.analysis-comment-toggle') as HTMLButtonElement | null;
-    if (toggle) {
-      if (lineIndex === 0 && lineIsLanguageDirective(input.value)) {
-        toggle.textContent = '#';
-        toggle.disabled = true;
-        toggle.title = '#lang directive';
-        toggle.setAttribute('aria-disabled', 'true');
-        toggle.setAttribute('aria-pressed', 'true');
-        return;
-      }
-      var commented = lineIsCommented(input.value);
-      toggle.disabled = false;
-      toggle.title = '';
-      toggle.removeAttribute('aria-disabled');
-      toggle.textContent = commented ? '#' : '';
-      toggle.setAttribute('aria-pressed', commented ? 'true' : 'false');
+    var commentCell = input.closest('tr')?.querySelector('.analysis-comment-cell') as HTMLTableCellElement | null;
+    if (!commentCell) return;
+    var updatedRow = { ...row, line: input.value };
+    if (rowHasProtectedCommentMarker(updatedRow)) {
+      commentCell.textContent = '';
+      return;
     }
+    var toggle = commentCell.querySelector('.analysis-comment-toggle') as HTMLButtonElement | null;
+    if (!toggle) {
+      commentCell.appendChild(renderCommentToggle(app, updatedRow, doc));
+      return;
+    }
+    var commented = lineIsCommented(input.value);
+    toggle.textContent = commented ? '#' : '';
+    toggle.setAttribute('aria-pressed', commented ? 'true' : 'false');
   });
   return input;
 }

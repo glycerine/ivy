@@ -5,6 +5,7 @@ import {
   renderAnalysisSpreadsheet,
   rowsFromEditorContent,
   syncAnalysisSpreadsheetFromEditor,
+  toggleAnalysisSpreadsheetLineComment,
   toggleLineComment,
 } from './analysisSpreadsheetService.ts';
 
@@ -84,18 +85,20 @@ describe('analysisSpreadsheetService', () => {
     expect(document.querySelector<HTMLButtonElement>('.analysis-comment-toggle')!.textContent).toBe('#');
   });
 
-  it('disables the comment toggle for the first #lang directive row', () => {
+  it('omits the comment toggle for the first #lang directive row', () => {
     document.body.innerHTML = '<div id="analysis-spreadsheet-grid"></div>';
     const app = makeSpreadsheetApp('#lang ivy1.7\ntype client');
     syncAnalysisSpreadsheetFromEditor(app);
 
+    const commentCells = document.querySelectorAll<HTMLTableCellElement>('.analysis-comment-cell');
     const toggles = document.querySelectorAll<HTMLButtonElement>('.analysis-comment-toggle');
-    expect(toggles[0].disabled).toBe(true);
-    expect(toggles[0].textContent).toBe('#');
+    expect(commentCells[0].textContent).toBe('');
+    expect(commentCells[0].querySelector('.analysis-comment-toggle')).toBeNull();
+    expect(toggles).toHaveLength(1);
 
-    toggles[0].click();
+    toggleAnalysisSpreadsheetLineComment(app, 0);
 
     expect(app.currentContent()).toBe('#lang ivy1.7\ntype client');
-    expect(toggles[1].disabled).toBe(false);
+    expect(toggles[0].disabled).toBe(false);
   });
 });

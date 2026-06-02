@@ -495,20 +495,6 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     outline: none;
 }
 
-.analysis-comment-toggle:disabled {
-    border-color: #3f3f3f;
-    background: #151515;
-    color: #777;
-    cursor: default;
-}
-
-.analysis-comment-toggle:disabled:hover,
-.analysis-comment-toggle:disabled:focus-visible {
-    border-color: #3f3f3f;
-    background: #151515;
-    outline: none;
-}
-
 .analysis-line-input {
     display: block;
     width: 100%;
