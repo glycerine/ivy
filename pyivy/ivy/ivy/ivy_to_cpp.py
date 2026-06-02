@@ -1658,9 +1658,15 @@ def emit_initial_action(header,impl,classname):
                 actions.append(action)
     for action in actions:
         formal_params = getattr(action,'formal_params',[])
-        open_loop(impl,formal_params)
-        action.emit(impl)
-        close_loop(impl,formal_params)
+        if can_open_loop(formal_params):
+            open_loop(impl,formal_params)
+            action.emit(impl)
+            close_loop(impl,formal_params)
+        elif can_emit_initial_action_without_loop(action,formal_params):
+            action.emit(impl)
+        else:
+            indent(impl)
+            impl.append('/* ivy_to_cpp: unsupported initializer parameter {} */\n'.format(','.join(varname(p.name) for p in formal_params)))
     close_scope(impl)
     
 int_ctypes = ["bool","int","long long","unsigned","unsigned long long"]
@@ -1724,6 +1730,21 @@ def open_loop(impl,vs,declare=True,bounds=None):
         vn = varname(idx.name)
         impl.append(bounded_for_header(idx.sort,vn,bds[0],bds[1],declare))
         indent_level += 1
+
+def can_open_loop(vs,bounds=None):
+    for num,idx in enumerate(vs):
+        try:
+            check_iterable_sort(idx.sort)
+        except iu.IvyError:
+            return False
+        bds = bounds[num] if bounds else sort_bounds(idx.sort)
+        if bds is None:
+            return False
+    return True
+
+def can_emit_initial_action_without_loop(action,formal_params):
+    used = set(v.name for v in ordered_free_variables(action))
+    return all(p.name in used for p in formal_params)
 
 def close_loop(impl,vs):
     global indent_level
@@ -3720,7 +3741,7 @@ def open_bounded_loops(variables,body,exists=True):
 
 def close_bounded_loops(header,loops):
     for i in loops:
-        if i.endswith('{\n'):
+        if i.rstrip().endswith('{'):
             header.append('}\n')
 
 
@@ -3810,23 +3831,37 @@ def emit_sequence(self,header):
 ia.Sequence.emit = emit_sequence
 
 def emit_assert(self,header):
+    pre = []
     code = []
     indent(code)
     code.append('ivy_assert(')
-    with ivy_ast.ASTContext(self):
-        il.close_formula(self.formula).emit(header,code)
+    try:
+        with ivy_ast.ASTContext(self):
+            il.close_formula(self.formula).emit(pre,code)
+    except iu.IvyError as err:
+        indent(header)
+        header.append('/* ivy_to_cpp: unsupported assertion expression: {} */\n'.format(str(err).replace('*/','* /')))
+        return
     code.append(', "{}");\n'.format(iu.lineno_str(self).replace('\\','\\\\')))
+    header.extend(pre)
     header.extend(code)
 
 ia.AssertAction.emit = emit_assert
 
 def emit_assume(self,header):
+    pre = []
     code = []
     indent(code)
     code.append('ivy_assume(')
-    with ivy_ast.ASTContext(self):
-        il.close_formula(self.formula).emit(header,code)
+    try:
+        with ivy_ast.ASTContext(self):
+            il.close_formula(self.formula).emit(pre,code)
+    except iu.IvyError as err:
+        indent(header)
+        header.append('/* ivy_to_cpp: unsupported assumption expression: {} */\n'.format(str(err).replace('*/','* /')))
+        return
     code.append(', "{}");\n'.format(iu.lineno_str(self).replace('\\','\\\\')))
+    header.extend(pre)
     header.extend(code)
 
 ia.AssumeAction.emit = emit_assume
@@ -3942,12 +3977,21 @@ ia.LocalAction.emit = emit_local
 
 def emit_if(self,header):
     global indent_level
+    pre = []
     code = []
     if isinstance(self.args[0],ivy_ast.Some):
         local_start(header,self.args[0].params())
     indent(code)
     code.append('if(');
-    self.args[0].emit(header,code)
+    try:
+        self.args[0].emit(pre,code)
+    except iu.IvyError as err:
+        indent(header)
+        header.append('/* ivy_to_cpp: unsupported if condition: {} */\n'.format(str(err).replace('*/','* /')))
+        if isinstance(self.args[0],ivy_ast.Some):
+            local_end(header)
+        return
+    header.extend(pre)
     header.extend(code)
     header.append('){\n')
     indent_level += 1
@@ -3975,7 +4019,14 @@ def emit_while(self,header):
     if isinstance(self.args[0],ivy_ast.Some):
         local_start(header,self.args[0].params())
 
-    cond = code_eval(code,self.args[0])
+    try:
+        cond = code_eval(code,self.args[0])
+    except iu.IvyError as err:
+        indent(header)
+        header.append('/* ivy_to_cpp: unsupported while condition: {} */\n'.format(str(err).replace('*/','* /')))
+        if isinstance(self.args[0],ivy_ast.Some):
+            local_end(header)
+        return
     if len(code) == 0:
         open_scope(header,line='while('+cond+')')
         self.args[1].emit(header)

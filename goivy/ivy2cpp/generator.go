@@ -1251,22 +1251,57 @@ func (g *Generator) emitInit(w *cppWriter) {
 }
 
 func (g *Generator) emitInitialAction(w *cppWriter, act goivy.Action) {
-	loops := 0
+	var headers []string
 	for _, p := range act.GetFormalParams() {
 		if p == nil {
 			continue
 		}
 		header, err := g.loopHeaderForSort(p.CSort, varName(p.Name))
 		if err != nil {
-			g.unsupported(w, "unsupported initializer parameter %s:%s", varName(p.Name), err.Error())
-			g.closeAssignmentLoops(w, loops)
+			if initialActionCanEmitWithoutParamLoops(act) {
+				g.emitAction(w, act)
+			} else {
+				g.unsupported(w, "unsupported initializer parameter %s:%s", varName(p.Name), err.Error())
+			}
 			return
 		}
+		headers = append(headers, header)
+	}
+	for _, header := range headers {
 		w.open(header)
-		loops++
 	}
 	g.emitAction(w, act)
-	g.closeAssignmentLoops(w, loops)
+	g.closeAssignmentLoops(w, len(headers))
+}
+
+func initialActionCanEmitWithoutParamLoops(act goivy.Action) bool {
+	if act == nil {
+		return false
+	}
+	formals := act.GetFormalParams()
+	if len(formals) == 0 {
+		return true
+	}
+	varNames := map[string]bool{}
+	for _, sub := range act.IterSubactions() {
+		if sub == nil {
+			continue
+		}
+		for _, arg := range sub.ActionArgs() {
+			for _, v := range goivy.VariablesAstList(arg) {
+				varNames[v.Name] = true
+			}
+		}
+	}
+	for _, p := range formals {
+		if p == nil {
+			continue
+		}
+		if !varNames[p.Name] {
+			return false
+		}
+	}
+	return true
 }
 
 func (g *Generator) emitMethods(w *cppWriter) {

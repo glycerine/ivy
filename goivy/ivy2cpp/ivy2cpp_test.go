@@ -6585,6 +6585,53 @@ export set
 	compileGeneratedCPP(t, out)
 }
 
+func TestIssue73UnboundedInitializerUsesAssignmentFallback(t *testing.T) {
+	key := &goivy.UninterpretedSort{Name: "key"}
+	fnSort, err := goivy.NewFunctionSort(key, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	pending := goivy.NewConst("pending", fnSort)
+	k, err := goivy.NewVariable("K", key)
+	if err != nil {
+		t.Fatalf("NewVariable: %v", err)
+	}
+	assign := goivy.NewAssignAction(goivy.MustApply(pending, k), goivy.NewConst("false", goivy.Boolean))
+	assign.SetFormalParams([]*goivy.Const{goivy.NewConst("K", key)})
+
+	var w cppWriter
+	(&Generator{}).emitInitialAction(&w, assign)
+	got := normalizeCPP(w.String())
+	if strings.Contains(got, "unsupported initializer parameter") {
+		t.Fatalf("unbounded initializer should not be rejected before assignment fallback:\n%s", got)
+	}
+	if !strings.Contains(got, "pending = hash_thunk<int, bool>(new __thunk__0(") {
+		t.Fatalf("unbounded initializer should use the thunk assignment fallback:\n%s", got)
+	}
+}
+
+func TestIssue73UnboundedInitializerConcreteFormalStaysUnsupported(t *testing.T) {
+	key := &goivy.UninterpretedSort{Name: "key"}
+	fnSort, err := goivy.NewFunctionSort(key, goivy.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort: %v", err)
+	}
+	pending := goivy.NewConst("pending", fnSort)
+	formal := goivy.NewConst("prm:M", key)
+	assign := goivy.NewAssignAction(goivy.MustApply(pending, formal), goivy.NewConst("false", goivy.Boolean))
+	assign.SetFormalParams([]*goivy.Const{formal})
+
+	var w cppWriter
+	(&Generator{}).emitInitialAction(&w, assign)
+	got := normalizeCPP(w.String())
+	if !strings.Contains(got, "unsupported initializer parameter prm__M") {
+		t.Fatalf("concrete unbounded initializer formal should stay unsupported:\n%s", got)
+	}
+	if strings.Contains(got, "pending[prm__M]") {
+		t.Fatalf("concrete unbounded initializer formal must not be emitted unbound:\n%s", got)
+	}
+}
+
 func TestDestructorZ3ImplShape(t *testing.T) {
 	mod := compileIvySource(t, destructorMultiArgIvySource+`
 individual a : cell
