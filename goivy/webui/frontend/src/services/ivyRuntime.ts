@@ -1411,6 +1411,7 @@ class IvyRuntime {
         var sheetArea = document.getElementById('sheet-area');
         if (!sheetArea || sheetArea.__ivyPaneTogglesInstalled) return;
         sheetArea.__ivyPaneTogglesInstalled = true;
+        this._ensureSheetPaneResizeHandles(sheetArea);
         var self = this;
         sheetArea.addEventListener('click', function (e) {
             var target = e.target;
@@ -1429,6 +1430,18 @@ class IvyRuntime {
                 e.preventDefault();
             }
         });
+    }
+
+    _ensureSheetPaneResizeHandles(root: any = document) {
+        var panes = root.querySelectorAll ? root.querySelectorAll('.sheet-pane') : [];
+        for (var i = 0; i < panes.length; i++) {
+            if (panes[i].querySelector('.sheet-pane-resize-handle')) continue;
+            var handle = document.createElement('div');
+            handle.className = 'sheet-pane-resize-handle';
+            handle.setAttribute('aria-hidden', 'true');
+            handle.title = 'Drag to resize';
+            panes[i].appendChild(handle);
+        }
     }
 
     _toggleSheetPane(pane) {
@@ -1475,39 +1488,49 @@ class IvyRuntime {
         var isDragging = false;
         var startX = 0;
         var startWidth = 0;
-        var activeDivider = null;
+        var activeHandle = null;
         var activePanel = null;
         var activeContainer = null;
 
         sheetArea.addEventListener('mousedown', function (e) {
             var target = e.target;
+            var handle = target && target.closest ? target.closest('.sheet-pane-resize-handle') : null;
             var div = target && target.closest ? target.closest('.divider') : target;
-            if (!div || !div.classList || !div.classList.contains('divider') || !sheetArea.contains(div)) return;
-
-            var targetSide = div.getAttribute('data-resize-target');
+            var targetSide;
             var panel;
             var container;
-            if (targetSide) {
-                panel = targetSide === 'next'
-                    ? self._neighborResizablePane(div.nextElementSibling, 'next')
-                    : self._neighborResizablePane(div.previousElementSibling, 'previous');
-                container = div.closest('.sheet-workspace') || div.closest('.sheet-columns') || div.parentElement;
-            } else {
-                container = div.parentElement;
-                if (!container || !container.classList || !container.classList.contains('sheet-main')) return;
+
+            if (handle && sheetArea.contains(handle)) {
+                panel = handle.closest('.sheet-pane');
+                if (!panel || panel.classList.contains('sheet-pane-collapsed')) return;
+                container = panel.closest('.sheet-workspace') || panel.closest('.sheet-columns') || panel.parentElement;
                 targetSide = 'previous';
-                panel = div.previousElementSibling;
+            } else {
+                if (!div || !div.classList || !div.classList.contains('divider') || !sheetArea.contains(div)) return;
+                targetSide = div.getAttribute('data-resize-target');
+                handle = div;
+                if (targetSide) {
+                    panel = targetSide === 'next'
+                        ? self._neighborResizablePane(div.nextElementSibling, 'next')
+                        : self._neighborResizablePane(div.previousElementSibling, 'previous');
+                    container = div.closest('.sheet-workspace') || div.closest('.sheet-columns') || div.parentElement;
+                } else {
+                    container = div.parentElement;
+                    if (!container || !container.classList || !container.classList.contains('sheet-main')) return;
+                    targetSide = 'previous';
+                    panel = div.previousElementSibling;
+                }
             }
             if (!container || !panel) return;
 
             isDragging = true;
-            activeDivider = div;
+            activeHandle = handle;
             activePanel = panel;
             activeContainer = container;
-            activeDivider.__ivyResizeTargetSide = targetSide;
+            activeHandle.__ivyResizeTargetSide = targetSide;
             startX = e.clientX;
             startWidth = panel.offsetWidth;
-            div.classList.add('active');
+            activeHandle.classList.add('active');
             document.body.style.cursor = 'col-resize';
             document.body.style.userSelect = 'none';
             var canvases = document.querySelectorAll('.graph-container');
@@ -1517,7 +1540,7 @@ class IvyRuntime {
 
         document.addEventListener('mousemove', function (e) {
             if (!isDragging) return;
-            var targetSide = activeDivider && activeDivider.__ivyResizeTargetSide === 'next' ? 'next' : 'previous';
+            var targetSide = activeHandle && activeHandle.__ivyResizeTargetSide === 'next' ? 'next' : 'previous';
             var dx = targetSide === 'next' ? startX - e.clientX : e.clientX - startX;
             var newWidth = startWidth + dx;
             var minWidth = self._paneResizeMinimum(activePanel);
@@ -1534,14 +1557,14 @@ class IvyRuntime {
         document.addEventListener('mouseup', function () {
             if (isDragging) {
                 isDragging = false;
-                if (activeDivider) activeDivider.classList.remove('active');
+                if (activeHandle) activeHandle.classList.remove('active');
                 document.body.style.cursor = '';
                 document.body.style.userSelect = '';
                 var canvases = document.querySelectorAll('.graph-container');
                 for (var i = 0; i < canvases.length; i++) canvases[i].style.pointerEvents = '';
                 if (self.argGraph) self.argGraph.resize();
                 if (self.conceptGraph) self.conceptGraph.resize();
-                activeDivider = null;
+                activeHandle = null;
                 activePanel = null;
                 activeContainer = null;
             }
@@ -1812,6 +1835,7 @@ class IvyRuntime {
         var sheetArea = document.getElementById('sheet-area');
         var sheetPages = document.getElementById('sheet-pages') || sheetArea;
         sheetPages.appendChild(newSheet);
+        this._ensureSheetPaneResizeHandles(newSheet);
         this.setupDropdownMenus(newSheet);
         this._bindStaticMenuActions();
 
