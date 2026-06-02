@@ -416,6 +416,12 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     overflow: hidden;
 }
 
+#analysis-spreadsheet-panel .panel-header {
+    min-height: 0;
+    padding: 5px 10px 2px;
+    border-bottom: 0;
+}
+
 .analysis-spreadsheet-grid {
     flex: 1;
     min-height: 0;
@@ -426,15 +432,29 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 }
 
 .analysis-formula-bar {
+    display: flex;
+    align-items: center;
+    gap: 7px;
     flex: 0 0 auto;
-    padding: 5px 8px;
+    padding: 2px 8px 5px;
     border-bottom: 1px solid #3c3c3c;
     background: #202020;
 }
 
+.analysis-formula-cell-label {
+    flex: 0 0 36px;
+    overflow: hidden;
+    color: #6ec8ff;
+    font: 700 12px/18px Menlo, Consolas, monospace;
+    text-align: right;
+    white-space: nowrap;
+}
+
 .analysis-formula-input {
     display: block;
-    width: 100%;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
     height: 26px;
     box-sizing: border-box;
     padding: 3px 8px;
@@ -475,12 +495,21 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 
 .analysis-spreadsheet-table th.analysis-line-number-header,
 .analysis-spreadsheet-table td.analysis-line-number-cell {
+    position: sticky;
+    left: 0;
     width: 42px;
     padding: 0;
     text-align: right;
+    box-shadow: 1px 0 0 #3c3c3c;
+}
+
+.analysis-spreadsheet-table th.analysis-line-number-header {
+    z-index: 5;
+    background: #252526;
 }
 
 .analysis-spreadsheet-table td.analysis-line-number-cell {
+    z-index: 3;
     padding-right: 8px;
     background: #151515;
     color: #8a8a8a;

@@ -255,9 +255,11 @@ function renderLineInput(app, row: AnalysisSpreadsheetRow, doc: Document) {
   input.spellcheck = false;
   input.dataset.lineIndex = String(row.lineNumber - 1);
   input.setAttribute('aria-label', 'Spec line ' + row.lineNumber);
-  input.addEventListener('focus', () => {
+  var activate = () => {
     setAnalysisFormulaTarget(app, { kind: 'line', rowIndex: row.lineNumber - 1 }, input.value, doc);
-  });
+  };
+  input.addEventListener('focus', activate);
+  input.addEventListener('click', activate);
   input.addEventListener('input', () => {
     var lineIndex = Number(input.dataset.lineIndex || '0');
     applyAnalysisSpreadsheetLineEdit(app, lineIndex, input.value, { doc });
@@ -276,9 +278,11 @@ function renderAnalysisCellInput(app, row: AnalysisSpreadsheetRow, columnId: str
   input.dataset.lineIndex = String(row.lineNumber - 1);
   input.dataset.columnId = columnId;
   input.setAttribute('aria-label', 'Analysis cell ' + columnId + ' line ' + row.lineNumber);
-  input.addEventListener('focus', () => {
+  var activate = () => {
     setAnalysisFormulaTarget(app, { kind: 'cell', rowIndex: row.lineNumber - 1, columnId }, input.value, doc);
-  });
+  };
+  input.addEventListener('focus', activate);
+  input.addEventListener('click', activate);
   input.addEventListener('input', () => {
     var lineIndex = Number(input.dataset.lineIndex || '0');
     applyAnalysisSpreadsheetCellEdit(app, lineIndex, columnId, input.value);
@@ -293,19 +297,48 @@ function bindAnalysisFormulaInput(app, doc: Document) {
   formulaInput.oninput = () => {
     applyAnalysisFormulaEdit(app, formulaInput.value, doc);
   };
+  var grid = doc.getElementById('analysis-spreadsheet-grid') as (HTMLElement & {
+    __analysisFormulaFocusHandler?: (event: FocusEvent) => void;
+  }) | null;
+  if (grid) {
+    if (grid.__analysisFormulaFocusHandler) {
+      grid.removeEventListener('focusin', grid.__analysisFormulaFocusHandler);
+    }
+    grid.__analysisFormulaFocusHandler = (event: FocusEvent) => {
+      setAnalysisFormulaTargetFromInput(app, event.target as HTMLInputElement | null, doc);
+    };
+    grid.addEventListener('focusin', grid.__analysisFormulaFocusHandler);
+  }
+}
+
+function setAnalysisFormulaTargetFromInput(app, input: HTMLInputElement | null, doc: Document) {
+  if (!input || typeof input.value !== 'string' || !input.classList) return;
+  var rowIndex = Number(input.dataset.lineIndex || '0');
+  if (input.classList.contains('analysis-line-input')) {
+    setAnalysisFormulaTarget(app, { kind: 'line', rowIndex }, input.value, doc);
+    return;
+  }
+  if (input.classList.contains('analysis-cell-input') && input.dataset.columnId) {
+    setAnalysisFormulaTarget(app, { kind: 'cell', rowIndex, columnId: input.dataset.columnId }, input.value, doc);
+  }
 }
 
 function setAnalysisFormulaTarget(app, target: AnalysisFormulaTarget, value: string, doc: Document) {
   app._analysisSpreadsheetFormulaTarget = target;
   var formulaInput = analysisFormulaInput(doc);
   if (formulaInput) formulaInput.value = value;
+  updateAnalysisFormulaCellLabel(target, doc);
 }
 
 function refreshAnalysisFormulaInput(app, doc: Document) {
   var target = app?._analysisSpreadsheetFormulaTarget as AnalysisFormulaTarget | undefined;
   var formulaInput = analysisFormulaInput(doc);
-  if (!target || !formulaInput) return;
-  formulaInput.value = formulaValueForTarget(app, target);
+  if (!target) {
+    updateAnalysisFormulaCellLabel(null, doc);
+    return;
+  }
+  if (formulaInput) formulaInput.value = formulaValueForTarget(app, target);
+  updateAnalysisFormulaCellLabel(target, doc);
 }
 
 function applyAnalysisFormulaEdit(app, value: string, doc: Document) {
@@ -355,6 +388,16 @@ function formulaValueForTarget(app, target: AnalysisFormulaTarget) {
   return analysisSpreadsheetCells(app)[String(target.rowIndex + 1)]?.[target.columnId] || '';
 }
 
+function updateAnalysisFormulaCellLabel(target: AnalysisFormulaTarget | null, doc: Document) {
+  var label = analysisFormulaCellLabel(doc);
+  if (label) label.textContent = target ? formulaCellLabelForTarget(target) : '';
+}
+
+function formulaCellLabelForTarget(target: AnalysisFormulaTarget) {
+  if (target.kind === 'line') return 'spec' + String(target.rowIndex + 1);
+  return target.columnId + String(target.rowIndex + 1);
+}
+
 function rowFromLineInput(input: HTMLInputElement, line: string): AnalysisSpreadsheetRow {
   var lineNumber = Number(input.dataset.lineIndex || '0') + 1;
   return {
@@ -385,6 +428,10 @@ function syncCommentCellForLineInput(app, row: AnalysisSpreadsheetRow, input: HT
 
 function analysisFormulaInput(doc: Document) {
   return doc.getElementById('analysis-formula-input') as HTMLInputElement | null;
+}
+
+function analysisFormulaCellLabel(doc: Document) {
+  return doc.getElementById('analysis-formula-cell-label') as HTMLSpanElement | null;
 }
 
 function analysisSpreadsheetCells(app): Record<string, Record<string, string>> {

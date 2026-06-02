@@ -32,7 +32,10 @@ function makeSpreadsheetApp(initialContent = 'type client\nrelation link(X,Y)') 
 
 function mountSpreadsheetShell() {
   document.body.innerHTML = [
+    '<div class="analysis-formula-bar">',
+    '<span id="analysis-formula-cell-label"></span>',
     '<input id="analysis-formula-input">',
+    '</div>',
     '<div id="analysis-spreadsheet-grid"></div>',
   ].join('');
 }
@@ -103,15 +106,17 @@ describe('analysisSpreadsheetService', () => {
     syncAnalysisSpreadsheetFromEditor(app);
 
     const formula = document.getElementById('analysis-formula-input') as HTMLInputElement;
+    const label = document.getElementById('analysis-formula-cell-label') as HTMLSpanElement;
     const firstA = document.querySelector<HTMLInputElement>(
       '.analysis-cell-input[data-line-index="0"][data-column-id="a"]',
     )!;
 
     firstA.value = 'reachable';
-    firstA.dispatchEvent(new Event('focus'));
+    firstA.dispatchEvent(new Event('focusin', { bubbles: true }));
     firstA.dispatchEvent(new Event('input', { bubbles: true }));
 
     expect(formula.value).toBe('reachable');
+    expect(label.textContent).toBe('a1');
 
     formula.value = '=a1';
     formula.dispatchEvent(new Event('input', { bubbles: true }));
@@ -127,11 +132,13 @@ describe('analysisSpreadsheetService', () => {
     syncAnalysisSpreadsheetFromEditor(app);
 
     const formula = document.getElementById('analysis-formula-input') as HTMLInputElement;
+    const label = document.getElementById('analysis-formula-cell-label') as HTMLSpanElement;
     const lineInput = document.querySelector<HTMLInputElement>('.analysis-line-input')!;
 
-    lineInput.dispatchEvent(new Event('focus'));
+    lineInput.dispatchEvent(new Event('focusin', { bubbles: true }));
 
     expect(formula.value).toBe('type client');
+    expect(label.textContent).toBe('spec1');
 
     formula.value = 'type server';
     formula.dispatchEvent(new Event('input', { bubbles: true }));
