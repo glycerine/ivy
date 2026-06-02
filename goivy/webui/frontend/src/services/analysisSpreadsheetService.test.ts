@@ -4,6 +4,7 @@ import {
   lineIsLanguageDirective,
   renderAnalysisSpreadsheet,
   rowsFromEditorContent,
+  spreadsheetColumnLabel,
   syncAnalysisSpreadsheetFromEditor,
   toggleAnalysisSpreadsheetLineComment,
   toggleLineComment,
@@ -13,6 +14,7 @@ function makeSpreadsheetApp(initialContent = 'type client\nrelation link(X,Y)') 
   let content = initialContent;
   return {
     _persistedFileContent: content,
+    _analysisSpreadsheetCells: {},
     _updateEditorLabel: vi.fn(),
     _invalidateModelState: vi.fn(),
     cmEditor: {
@@ -38,6 +40,13 @@ describe('analysisSpreadsheetService', () => {
     expect(rowsFromEditorContent('a\nb').map((row) => row.lineNumber)).toEqual([1, 2]);
   });
 
+  it('generates lower-case spreadsheet column labels', () => {
+    expect(spreadsheetColumnLabel(0)).toBe('a');
+    expect(spreadsheetColumnLabel(25)).toBe('z');
+    expect(spreadsheetColumnLabel(26)).toBe('aa');
+    expect(spreadsheetColumnLabel(27)).toBe('ab');
+  });
+
   it('toggles a line comment marker at the first non-indent position', () => {
     expect(toggleLineComment('  action connect')).toBe('  #action connect');
     expect(toggleLineComment('  #action connect')).toBe('  action connect');
@@ -53,9 +62,32 @@ describe('analysisSpreadsheetService', () => {
     const headers = Array.from(document.querySelectorAll('th')).map((th) => th.textContent);
     const lineNumbers = Array.from(document.querySelectorAll('.analysis-line-number-cell')).map((cell) => cell.textContent);
     const inputs = Array.from(document.querySelectorAll<HTMLInputElement>('.analysis-line-input'));
-    expect(headers).toEqual(['Line', '#', 'Spec line']);
+    expect(headers.slice(0, 8)).toEqual(['Line', '#', 'Spec line', 'a', 'b', 'c', 'd', 'e']);
+    expect(headers.at(-1)).toBe('z');
+    expect(headers).toHaveLength(29);
     expect(lineNumbers).toEqual(['1', '2']);
     expect(inputs.map((input) => input.value)).toEqual(['type client', 'relation link(X,Y)']);
+  });
+
+  it('edits lettered analysis cells without changing the editor buffer', () => {
+    document.body.innerHTML = '<div id="analysis-spreadsheet-grid"></div>';
+    const app = makeSpreadsheetApp('type client\ntype server');
+    syncAnalysisSpreadsheetFromEditor(app);
+
+    const firstA = document.querySelector<HTMLInputElement>(
+      '.analysis-cell-input[data-line-index="0"][data-column-id="a"]',
+    )!;
+    firstA.value = 'reachable';
+    firstA.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(app.currentContent()).toBe('type client\ntype server');
+    expect(app._analysisSpreadsheetCells).toEqual({ '1': { a: 'reachable' } });
+
+    renderAnalysisSpreadsheet(app, app.currentContent());
+
+    expect(document.querySelector<HTMLInputElement>(
+      '.analysis-cell-input[data-line-index="0"][data-column-id="a"]',
+    )!.value).toBe('reachable');
   });
 
   it('updates the editor buffer when a spreadsheet line is edited', () => {

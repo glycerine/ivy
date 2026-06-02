@@ -9,7 +9,14 @@ export interface AnalysisSpreadsheetRow {
   id: string;
   lineNumber: number;
   line: string;
+  cells: Record<string, string>;
 }
+
+const ANALYSIS_DATA_COLUMN_COUNT = 26;
+const ANALYSIS_DATA_COLUMN_LABELS = Array.from(
+  { length: ANALYSIS_DATA_COLUMN_COUNT },
+  (_, index) => spreadsheetColumnLabel(index),
+);
 
 const ANALYSIS_COLUMNS: ColumnDef<AnalysisSpreadsheetRow>[] = [
   {
@@ -27,17 +34,36 @@ const ANALYSIS_COLUMNS: ColumnDef<AnalysisSpreadsheetRow>[] = [
     header: 'Spec line',
     accessorKey: 'line',
   },
+  ...ANALYSIS_DATA_COLUMN_LABELS.map((label) => ({
+    id: label,
+    header: label,
+    accessorFn: (row: AnalysisSpreadsheetRow) => row.cells[label] || '',
+  })),
 ];
+
+export function spreadsheetColumnLabel(index: number) {
+  var label = '';
+  var next = index;
+  do {
+    label = String.fromCharCode(97 + (next % 26)) + label;
+    next = Math.floor(next / 26) - 1;
+  } while (next >= 0);
+  return label;
+}
 
 export function linesFromEditorContent(content = '') {
   return content.length > 0 ? content.split('\n') : [''];
 }
 
-export function rowsFromEditorContent(content = ''): AnalysisSpreadsheetRow[] {
+export function rowsFromEditorContent(
+  content = '',
+  cellsByLine: Record<string, Record<string, string>> = {},
+): AnalysisSpreadsheetRow[] {
   return linesFromEditorContent(content).map((line, index) => ({
     id: String(index + 1),
     lineNumber: index + 1,
     line,
+    cells: { ...(cellsByLine[String(index + 1)] || {}) },
   }));
 }
 
@@ -79,7 +105,7 @@ export function renderAnalysisSpreadsheet(app, content = '', {
   var container = doc && doc.getElementById('analysis-spreadsheet-grid');
   if (!container) return false;
 
-  var rows = rowsFromEditorContent(content);
+  var rows = rowsFromEditorContent(content, analysisSpreadsheetCells(app));
   var table = createAnalysisTable(rows);
   container.textContent = '';
   container.appendChild(renderAnalysisTable(app, table, doc));
@@ -113,6 +139,14 @@ export function toggleAnalysisSpreadsheetLineComment(app, rowIndex, {
     doc,
     render: true,
   });
+}
+
+export function applyAnalysisSpreadsheetCellEdit(app, rowIndex: number, columnId: string, nextValue: string) {
+  var cells = analysisSpreadsheetCells(app);
+  var rowKey = String(rowIndex + 1);
+  cells[rowKey] = cells[rowKey] || {};
+  cells[rowKey][columnId] = nextValue;
+  return nextValue;
 }
 
 function createAnalysisTable(data: AnalysisSpreadsheetRow[]) {
@@ -150,6 +184,8 @@ function renderAnalysisTableHead(table, doc: Document) {
       th.textContent = header.isPlaceholder ? '' : String(header.column.columnDef.header || '');
       if (header.column.id === 'lineNumber') th.className = 'analysis-line-number-header';
       if (header.column.id === 'comment') th.className = 'analysis-comment-header';
+      if (header.column.id === 'line') th.className = 'analysis-line-header';
+      if (isAnalysisDataColumn(header.column.id)) th.className = 'analysis-data-header';
       rowEl.appendChild(th);
     }
     thead.appendChild(rowEl);
@@ -170,8 +206,12 @@ function renderAnalysisTableBody(app, table, doc: Document) {
       } else if (cell.column.id === 'comment') {
         td.className = 'analysis-comment-cell';
         renderCommentCell(td, app, row.original, doc);
-      } else {
+      } else if (cell.column.id === 'line') {
+        td.className = 'analysis-line-cell';
         td.appendChild(renderLineInput(app, row.original, doc));
+      } else {
+        td.className = 'analysis-data-cell';
+        td.appendChild(renderAnalysisCellInput(app, row.original, cell.column.id, doc));
       }
       tr.appendChild(td);
     }
@@ -228,6 +268,33 @@ function renderLineInput(app, row: AnalysisSpreadsheetRow, doc: Document) {
     toggle.setAttribute('aria-pressed', commented ? 'true' : 'false');
   });
   return input;
+}
+
+function renderAnalysisCellInput(app, row: AnalysisSpreadsheetRow, columnId: string, doc: Document) {
+  var input = doc.createElement('input');
+  input.type = 'text';
+  input.className = 'analysis-cell-input';
+  input.value = row.cells[columnId] || '';
+  input.spellcheck = false;
+  input.dataset.lineIndex = String(row.lineNumber - 1);
+  input.dataset.columnId = columnId;
+  input.setAttribute('aria-label', 'Analysis cell ' + columnId + ' line ' + row.lineNumber);
+  input.addEventListener('input', () => {
+    var lineIndex = Number(input.dataset.lineIndex || '0');
+    applyAnalysisSpreadsheetCellEdit(app, lineIndex, columnId, input.value);
+  });
+  return input;
+}
+
+function analysisSpreadsheetCells(app): Record<string, Record<string, string>> {
+  if (!app._analysisSpreadsheetCells || typeof app._analysisSpreadsheetCells !== 'object') {
+    app._analysisSpreadsheetCells = {};
+  }
+  return app._analysisSpreadsheetCells;
+}
+
+function isAnalysisDataColumn(columnId: string) {
+  return ANALYSIS_DATA_COLUMN_LABELS.includes(columnId);
 }
 
 function replaceEditorLineFromSpreadsheet(app, rowIndex, nextLine, nextContent) {
