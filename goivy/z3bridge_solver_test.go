@@ -1758,6 +1758,55 @@ func TestZ3BridgeRangeSortBoundsNoFallback(t *testing.T) {
 	}
 }
 
+type recordingFinalCond struct {
+	events *[]string
+	assume bool
+}
+
+func (f *recordingFinalCond) record(event string) {
+	*f.events = append(*f.events, event)
+}
+
+func (f *recordingFinalCond) Cond() *Clauses {
+	f.record("cond")
+	return TrueClauses(nil)
+}
+
+func (f *recordingFinalCond) Start() {
+	f.record("start")
+}
+
+func (f *recordingFinalCond) Sat() bool {
+	f.record("sat")
+	return false
+}
+
+func (f *recordingFinalCond) Unsat() bool {
+	f.record("unsat")
+	return true
+}
+
+func (f *recordingFinalCond) Assume() bool {
+	f.record("assume")
+	return f.assume
+}
+
+func TestGetSmallModelFinalCondAssumeOrderMatchesPython(t *testing.T) {
+	opts := DefaultSolverOptions()
+	opts.Incremental = false
+	slv := NewSolver(New(), opts)
+	events := []string{}
+	fc := &recordingFinalCond{events: &events, assume: true}
+
+	if _, err := slv.GetSmallModelWithCond(TrueClauses(nil), nil, nil, []FinalCond{fc}, false); err != nil {
+		t.Fatalf("GetSmallModelWithCond: %v", err)
+	}
+	want := "start,assume,cond,cond"
+	if got := strings.Join(events, ","); got != want {
+		t.Fatalf("final condition event order = %s, want %s", got, want)
+	}
+}
+
 // TestRangeSortBoundsNumeric verifies numeric bounds parse correctly.
 func TestZ3BridgeRangeSortBoundsNumeric(t *testing.T) {
 	rs := &RangeSort{

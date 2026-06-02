@@ -155,24 +155,25 @@ func (s *Solver) GetSmallModelWithCond(
 	overallResult := smt.Unsat
 	var assumes []*Clauses // track assumed conditions for non-incremental replay
 	// Python ivy_solver.py:1469-1512:
-	//   if final_cond is not None:    → Go: finalCond != nil
-	//       for fc in final_cond: ... (empty list ⇒ no-op, returns nil)
-	//   else:                          → Go: finalCond == nil
+	//   if final_cond is not None:    Go: finalCond != nil
+	//       for fc in final_cond: ... (empty list means no-op, returns nil)
+	//   else:                          Go: finalCond == nil
 	//       res = decide(s)
-	// nil finalCond ≡ Python None: caller did not request checker-driven
+	// nil finalCond matches Python None: caller did not request checker-driven
 	// verification, so we ask the solver if the state is satisfiable.
-	// Non-nil but empty finalCond ≡ Python []: caller had no checkers
-	// after filtering — there is nothing to check, so we return nil
+	// Non-nil but empty finalCond matches Python []: caller had no checkers
+	// after filtering - there is nothing to check, so we return nil
 	// without calling decide(), exactly like Python.
 	if finalCond != nil {
 		for _, fc := range finalCond {
-			// NON-INCREMENTAL: create fresh solver before each non-assumed check.
+			// NON-INCREMENTAL: create a fresh solver before each final
+			// condition, replaying prior assumptions.
 			// Python (ivy_solver.py:1226-1230):
 			//   if not opt_incremental.get():
 			//       s = z3.Solver()
 			//       s.add(clauses_to_z3(clauses))
 			//       for fmla in assumes: s.add(clauses_to_z3(fmla))
-			if !s.opts.Incremental && !fc.Assume() {
+			if !s.opts.Incremental {
 				z3solver = s.newZ3Solver()
 				zc, err = s.ClausesToZ3(clauses)
 				if err != nil {
@@ -189,23 +190,26 @@ func (s *Solver) GetSmallModelWithCond(
 			}
 
 			fc.Start()
-			cond := fc.Cond()
-			if cond == nil {
-				continue
-			}
-
 			if fc.Assume() {
 				// Assumed condition: add permanently to solver
+				cond := fc.Cond()
+				if cond == nil {
+					continue
+				}
 				zCond, err := s.ClausesToZ3(cond)
 				if err != nil {
 					continue
 				}
 				z3solver.Assert(zCond)
-				assumes = append(assumes, cond) // track for non-incremental replay
+				assumes = append(assumes, fc.Cond()) // track for non-incremental replay
 			} else {
 				// Checked condition.
 				// Python (ivy_solver.py:1240-1260): pop happens AFTER Sat()/Unsat()
 				// because callbacks may inspect the solver/model state.
+				cond := fc.Cond()
+				if cond == nil {
+					continue
+				}
 				zCond, err := s.ClausesToZ3(cond)
 				if err != nil {
 					continue
