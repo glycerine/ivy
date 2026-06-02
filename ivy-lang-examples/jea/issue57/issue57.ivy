@@ -1,0 +1,18 @@
+#lang ivy1.7
+
+type my_type_1
+type my_type_2 = { val1, val2 }
+type my_type_3
+
+interpret my_type_1 -> bv[2]
+interpret my_type_3 -> bv[8]
+
+object node(type_1:my_type_1) = {
+    relation voted(MY_TYPE_2:my_type_2, MY_TYPE_3:my_type_3)
+    after init {
+        # Removing this initialization removes the compilation bug.
+        require voted(MY_TYPE_2, MY_TYPE_3);
+    }
+}
+
+extract executable_runner = node
