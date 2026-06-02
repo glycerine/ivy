@@ -357,7 +357,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 				ag.Add(pre, nil)
 				// Execute action to get post-state
 				// Python uses EvalContext(check=False) here, so checkPrecond=false.
-				post, err := ag.Execute(false, action, pre, nil, actname)
+				post, err := ag.Execute(false, action, pre, nil, "")
 				if err != nil {
 					fmt.Printf("WARNING: Execute %s failed: %v\n", actname, err)
 					continue

@@ -3,6 +3,9 @@ package goivy
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"testing"
@@ -1508,6 +1511,78 @@ func TestCheckModuleReportsFailures(t *testing.T) {
 	}
 	if mod.Cfg.Failures != 3 {
 		t.Errorf("expected mod.Cfg.Failures=3 (propagated from isoMod copy), got %d", mod.Cfg.Failures)
+	}
+}
+
+func TestIssue74ExternalTraceDoesNotResolveEnvActionToBody(t *testing.T) {
+	const src = `#lang ivy1.8
+
+individual x : bool
+
+after init {
+    x := false
+}
+
+action flip = {
+    x := true
+}
+export flip
+
+conjecture [x_stays_false] ~x
+`
+	dir := t.TempDir()
+	ivyFile := filepath.Join(dir, "issue74_min.ivy")
+	if err := os.WriteFile(ivyFile, []byte(src), 0o600); err != nil {
+		t.Fatalf("write Ivy fixture: %v", err)
+	}
+
+	cmd := exec.Command(os.Args[0], "-test.run=^TestIssue74ExternalTraceHelper$", "-test.v")
+	cmd.Env = append(os.Environ(),
+		"GOIVY_ISSUE74_HELPER=1",
+		"GOIVY_ISSUE74_FILE="+ivyFile,
+		"XTRACE_OFF=1",
+	)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("issue74 helper failed: %v\n%s", err, out)
+	}
+	text := string(out)
+	if !strings.Contains(text, "FAIL") {
+		t.Fatalf("regression fixture should fail and print a trace, got:\n%s", text)
+	}
+	if strings.Contains(text, "annotation error:") {
+		t.Fatalf("external trace resolved the EnvAction annotation against the action body:\n%s", text)
+	}
+	if !strings.Contains(text, "call flip") {
+		t.Fatalf("trace should include the exported action call, got:\n%s", text)
+	}
+}
+
+func TestIssue74ExternalTraceHelper(t *testing.T) {
+	if os.Getenv("GOIVY_ISSUE74_HELPER") != "1" {
+		t.Skip("helper process only")
+	}
+	ivyFile := os.Getenv("GOIVY_ISSUE74_FILE")
+	if ivyFile == "" {
+		t.Fatal("GOIVY_ISSUE74_FILE is not set")
+	}
+	oldWD, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("getwd: %v", err)
+	}
+	if err := os.Chdir(filepath.Dir(ivyFile)); err != nil {
+		t.Fatalf("chdir fixture: %v", err)
+	}
+	defer func() {
+		if err := os.Chdir(oldWD); err != nil {
+			t.Fatalf("restore cwd: %v", err)
+		}
+	}()
+
+	cfg := NewConfig()
+	cfg.OptTrace = true
+	if err := Start([]string{filepath.Base(ivyFile)}, cfg); err != nil {
+		t.Fatalf("Start: %v", err)
 	}
 }
 
