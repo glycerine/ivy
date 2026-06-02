@@ -15,6 +15,8 @@ function makeSpreadsheetApp(initialContent = 'type client\nrelation link(X,Y)') 
   return {
     _persistedFileContent: content,
     _analysisSpreadsheetCells: {},
+    _analysisSpreadsheetColumnWidths: {},
+    _analysisSpreadsheetRowHeights: {},
     _updateEditorLabel: vi.fn(),
     _invalidateModelState: vi.fn(),
     cmEditor: {
@@ -98,6 +100,48 @@ describe('analysisSpreadsheetService', () => {
     expect(document.querySelector<HTMLInputElement>(
       '.analysis-cell-input[data-line-index="0"][data-column-id="a"]',
     )!.value).toBe('reachable');
+  });
+
+  it('resizes spreadsheet columns by dragging header dividers', () => {
+    document.body.innerHTML = '<div id="analysis-spreadsheet-grid"></div>';
+    const app = makeSpreadsheetApp('type client');
+    syncAnalysisSpreadsheetFromEditor(app);
+
+    const handle = document.querySelector<HTMLElement>(
+      '.analysis-line-header .analysis-column-resize-handle',
+    )!;
+    handle.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: 360 }));
+    document.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: 300 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(app._analysisSpreadsheetColumnWidths.line).toBe(300);
+    expect(document.querySelector<HTMLTableColElement>('col[data-column-id="line"]')!.style.width).toBe('300px');
+    expect(document.querySelector<HTMLElement>('td[data-column-id="line"]')!.style.width).toBe('300px');
+
+    renderAnalysisSpreadsheet(app, app.currentContent());
+
+    expect(document.querySelector<HTMLTableColElement>('col[data-column-id="line"]')!.style.width).toBe('300px');
+  });
+
+  it('resizes spreadsheet rows by dragging line-number dividers', () => {
+    document.body.innerHTML = '<div id="analysis-spreadsheet-grid"></div>';
+    const app = makeSpreadsheetApp('type client\ntype server');
+    syncAnalysisSpreadsheetFromEditor(app);
+
+    const handle = document.querySelector<HTMLElement>(
+      '.analysis-line-number-cell .analysis-row-resize-handle',
+    )!;
+    handle.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientY: 28 }));
+    document.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientY: 45 }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(app._analysisSpreadsheetRowHeights['1']).toBe(45);
+    expect(document.querySelector<HTMLElement>('tbody tr[data-line-index="0"]')!.style.height).toBe('45px');
+    expect(document.querySelector<HTMLElement>('td[data-column-id="lineNumber"]')!.style.height).toBe('45px');
+
+    renderAnalysisSpreadsheet(app, app.currentContent());
+
+    expect(document.querySelector<HTMLElement>('tbody tr[data-line-index="0"]')!.style.height).toBe('45px');
   });
 
   it('uses the formula bar to view and edit the selected analysis cell', () => {

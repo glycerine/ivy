@@ -103,6 +103,8 @@ describe('static analysis spreadsheet pane', () => {
     const headerRule = ivyCss.match(/#analysis-spreadsheet-panel \.panel-header\s*\{[^}]+\}/)?.[0] || '';
     const lineNumberRule = ivyCss.match(/\.analysis-spreadsheet-table th\.analysis-line-number-header,\s*\.analysis-spreadsheet-table td\.analysis-line-number-cell\s*\{[^}]+\}/)?.[0] || '';
     const lineNumberHeaderRule = ivyCss.match(/\.analysis-spreadsheet-table th\.analysis-line-number-header\s*\{[^}]+\}/)?.[0] || '';
+    const columnResizeRule = ivyCss.match(/\.analysis-column-resize-handle\s*\{[^}]+\}/)?.[0] || '';
+    const rowResizeRule = ivyCss.match(/\.analysis-row-resize-handle\s*\{[^}]+\}/)?.[0] || '';
 
     expect(children[0]?.classList.contains('panel-header')).toBe(true);
     expect(children[1]?.classList.contains('analysis-formula-bar')).toBe(true);
@@ -122,6 +124,10 @@ describe('static analysis spreadsheet pane', () => {
     expect(lineNumberRule).toContain('left: 0;');
     expect(lineNumberRule).toContain('box-shadow: 1px 0 0 #3c3c3c;');
     expect(lineNumberHeaderRule).toContain('z-index: 5;');
+    expect(columnResizeRule).toContain('cursor: col-resize;');
+    expect(columnResizeRule).toContain('right: -4px;');
+    expect(rowResizeRule).toContain('cursor: row-resize;');
+    expect(rowResizeRule).toContain('bottom: -3px;');
   });
 });
 

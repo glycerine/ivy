@@ -491,6 +491,14 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     text-align: left;
     font-weight: 700;
     white-space: nowrap;
+    overflow: visible;
+}
+
+.analysis-header-label {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .analysis-spreadsheet-table th.analysis-line-number-header,
@@ -514,6 +522,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     background: #151515;
     color: #8a8a8a;
     user-select: none;
+    overflow: visible;
 }
 
 .analysis-spreadsheet-table th.analysis-comment-header,
@@ -541,6 +550,52 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     background: #050505;
 }
 
+.analysis-column-resize-handle {
+    position: absolute;
+    top: 0;
+    right: -4px;
+    bottom: 0;
+    z-index: 8;
+    width: 8px;
+    cursor: col-resize;
+    touch-action: none;
+}
+
+.analysis-column-resize-handle:hover,
+.analysis-column-resize-handle:focus-visible {
+    background: rgba(110, 200, 255, 0.22);
+    outline: none;
+}
+
+.analysis-row-resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: -3px;
+    left: 0;
+    z-index: 7;
+    height: 6px;
+    cursor: row-resize;
+    touch-action: none;
+}
+
+.analysis-row-resize-handle:hover,
+.analysis-row-resize-handle:focus-visible {
+    background: rgba(110, 200, 255, 0.22);
+    outline: none;
+}
+
+.analysis-resizing-columns,
+.analysis-resizing-columns * {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
+.analysis-resizing-rows,
+.analysis-resizing-rows * {
+    cursor: row-resize !important;
+    user-select: none !important;
+}
+
 .analysis-comment-toggle {
     width: 22px;
     height: 22px;
@@ -564,7 +619,8 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 .analysis-cell-input {
     display: block;
     width: 100%;
-    height: 28px;
+    height: 100%;
+    min-height: 22px;
     box-sizing: border-box;
     padding: 3px 8px;
     border: 0;

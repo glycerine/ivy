@@ -16,11 +16,29 @@ type AnalysisFormulaTarget =
   | { kind: 'line'; rowIndex: number }
   | { kind: 'cell'; rowIndex: number; columnId: string };
 
+type AnalysisSpreadsheetColumnWidths = Record<string, number>;
+type AnalysisSpreadsheetRowHeights = Record<string, number>;
+
 const ANALYSIS_DATA_COLUMN_COUNT = 26;
 const ANALYSIS_DATA_COLUMN_LABELS = Array.from(
   { length: ANALYSIS_DATA_COLUMN_COUNT },
   (_, index) => spreadsheetColumnLabel(index),
 );
+const ANALYSIS_ROW_HEIGHT_DEFAULT = 28;
+const ANALYSIS_ROW_HEIGHT_MIN = 22;
+const ANALYSIS_ROW_HEIGHT_MAX = 220;
+const ANALYSIS_COLUMN_WIDTH_DEFAULTS: AnalysisSpreadsheetColumnWidths = {
+  lineNumber: 42,
+  comment: 34,
+  line: 360,
+  ...Object.fromEntries(ANALYSIS_DATA_COLUMN_LABELS.map((label) => [label, 104])),
+};
+const ANALYSIS_COLUMN_WIDTH_MIN: AnalysisSpreadsheetColumnWidths = {
+  lineNumber: 34,
+  comment: 28,
+  line: 120,
+};
+const ANALYSIS_COLUMN_WIDTH_MAX = 1400;
 
 const ANALYSIS_COLUMNS: ColumnDef<AnalysisSpreadsheetRow>[] = [
   {
@@ -177,22 +195,42 @@ function createAnalysisTable(data: AnalysisSpreadsheetRow[]) {
 function renderAnalysisTable(app, table, doc: Document) {
   var tableEl = doc.createElement('table');
   tableEl.className = 'analysis-spreadsheet-table';
-  tableEl.appendChild(renderAnalysisTableHead(table, doc));
+  var columnIds = table.getAllLeafColumns().map((column) => column.id);
+  tableEl.style.minWidth = String(totalAnalysisColumnWidth(app, columnIds)) + 'px';
+  tableEl.appendChild(renderAnalysisTableColgroup(app, columnIds, doc));
+  tableEl.appendChild(renderAnalysisTableHead(app, table, doc));
   tableEl.appendChild(renderAnalysisTableBody(app, table, doc));
   return tableEl;
 }
 
-function renderAnalysisTableHead(table, doc: Document) {
+function renderAnalysisTableColgroup(app, columnIds: string[], doc: Document) {
+  var colgroup = doc.createElement('colgroup');
+  for (var columnId of columnIds) {
+    var col = doc.createElement('col');
+    col.dataset.columnId = columnId;
+    col.style.width = String(analysisColumnWidth(app, columnId)) + 'px';
+    colgroup.appendChild(col);
+  }
+  return colgroup;
+}
+
+function renderAnalysisTableHead(app, table, doc: Document) {
   var thead = doc.createElement('thead');
   for (var headerGroup of table.getHeaderGroups()) {
     var rowEl = doc.createElement('tr');
     for (var header of headerGroup.headers) {
       var th = doc.createElement('th');
-      th.textContent = header.isPlaceholder ? '' : String(header.column.columnDef.header || '');
+      th.dataset.columnId = header.column.id;
+      th.style.width = String(analysisColumnWidth(app, header.column.id)) + 'px';
+      var label = doc.createElement('span');
+      label.className = 'analysis-header-label';
+      label.textContent = header.isPlaceholder ? '' : String(header.column.columnDef.header || '');
+      th.appendChild(label);
       if (header.column.id === 'lineNumber') th.className = 'analysis-line-number-header';
       if (header.column.id === 'comment') th.className = 'analysis-comment-header';
       if (header.column.id === 'line') th.className = 'analysis-line-header';
       if (isAnalysisDataColumn(header.column.id)) th.className = 'analysis-data-header';
+      th.appendChild(renderColumnResizeHandle(app, header.column.id, doc));
       rowEl.appendChild(th);
     }
     thead.appendChild(rowEl);
@@ -205,11 +243,16 @@ function renderAnalysisTableBody(app, table, doc: Document) {
   for (var row of table.getRowModel().rows) {
     var tr = doc.createElement('tr');
     tr.dataset.lineIndex = String(row.index);
+    tr.style.height = String(analysisRowHeight(app, row.index)) + 'px';
     for (var cell of row.getVisibleCells()) {
       var td = doc.createElement('td');
+      td.dataset.columnId = cell.column.id;
+      td.style.width = String(analysisColumnWidth(app, cell.column.id)) + 'px';
+      td.style.height = String(analysisRowHeight(app, row.index)) + 'px';
       if (cell.column.id === 'lineNumber') {
         td.className = 'analysis-line-number-cell';
         td.textContent = String(row.original.lineNumber);
+        td.appendChild(renderRowResizeHandle(app, row.index, doc));
       } else if (cell.column.id === 'comment') {
         td.className = 'analysis-comment-cell';
         renderCommentCell(td, app, row.original, doc);
@@ -245,6 +288,78 @@ function renderCommentToggle(app, row: AnalysisSpreadsheetRow, doc: Document) {
     toggleAnalysisSpreadsheetLineComment(app, row.lineNumber - 1, { doc });
   });
   return button;
+}
+
+function renderColumnResizeHandle(app, columnId: string, doc: Document) {
+  var handle = doc.createElement('span');
+  handle.className = 'analysis-column-resize-handle';
+  handle.setAttribute('role', 'separator');
+  handle.setAttribute('aria-label', 'Resize column ' + columnId);
+  handle.addEventListener('mousedown', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    startAnalysisColumnResize(app, columnId, event, doc);
+  });
+  return handle;
+}
+
+function renderRowResizeHandle(app, rowIndex: number, doc: Document) {
+  var handle = doc.createElement('span');
+  handle.className = 'analysis-row-resize-handle';
+  handle.setAttribute('role', 'separator');
+  handle.setAttribute('aria-label', 'Resize row ' + String(rowIndex + 1));
+  handle.addEventListener('mousedown', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    startAnalysisRowResize(app, rowIndex, event, doc);
+  });
+  return handle;
+}
+
+function startAnalysisColumnResize(app, columnId: string, event: MouseEvent, doc: Document) {
+  var startX = event.clientX;
+  var startWidth = analysisColumnWidth(app, columnId);
+  var body = doc.body;
+  body?.classList.add('analysis-resizing-columns');
+  var onMove = (moveEvent: MouseEvent) => {
+    var nextWidth = clampNumber(
+      Math.round(startWidth + moveEvent.clientX - startX),
+      analysisColumnMinWidth(columnId),
+      ANALYSIS_COLUMN_WIDTH_MAX,
+    );
+    setAnalysisColumnWidth(app, columnId, nextWidth);
+    applyAnalysisColumnWidths(app, doc);
+  };
+  var onUp = () => {
+    body?.classList.remove('analysis-resizing-columns');
+    doc.removeEventListener('mousemove', onMove);
+    doc.removeEventListener('mouseup', onUp);
+  };
+  doc.addEventListener('mousemove', onMove);
+  doc.addEventListener('mouseup', onUp);
+}
+
+function startAnalysisRowResize(app, rowIndex: number, event: MouseEvent, doc: Document) {
+  var startY = event.clientY;
+  var startHeight = analysisRowHeight(app, rowIndex);
+  var body = doc.body;
+  body?.classList.add('analysis-resizing-rows');
+  var onMove = (moveEvent: MouseEvent) => {
+    var nextHeight = clampNumber(
+      Math.round(startHeight + moveEvent.clientY - startY),
+      ANALYSIS_ROW_HEIGHT_MIN,
+      ANALYSIS_ROW_HEIGHT_MAX,
+    );
+    setAnalysisRowHeight(app, rowIndex, nextHeight);
+    applyAnalysisRowHeights(app, doc);
+  };
+  var onUp = () => {
+    body?.classList.remove('analysis-resizing-rows');
+    doc.removeEventListener('mousemove', onMove);
+    doc.removeEventListener('mouseup', onUp);
+  };
+  doc.addEventListener('mousemove', onMove);
+  doc.addEventListener('mouseup', onUp);
 }
 
 function renderLineInput(app, row: AnalysisSpreadsheetRow, doc: Document) {
@@ -432,6 +547,80 @@ function analysisFormulaInput(doc: Document) {
 
 function analysisFormulaCellLabel(doc: Document) {
   return doc.getElementById('analysis-formula-cell-label') as HTMLSpanElement | null;
+}
+
+function analysisColumnWidths(app): AnalysisSpreadsheetColumnWidths {
+  if (!app._analysisSpreadsheetColumnWidths || typeof app._analysisSpreadsheetColumnWidths !== 'object') {
+    app._analysisSpreadsheetColumnWidths = {};
+  }
+  return app._analysisSpreadsheetColumnWidths;
+}
+
+function analysisRowHeights(app): AnalysisSpreadsheetRowHeights {
+  if (!app._analysisSpreadsheetRowHeights || typeof app._analysisSpreadsheetRowHeights !== 'object') {
+    app._analysisSpreadsheetRowHeights = {};
+  }
+  return app._analysisSpreadsheetRowHeights;
+}
+
+function analysisColumnWidth(app, columnId: string) {
+  var stored = Number(analysisColumnWidths(app)[columnId]);
+  return Number.isFinite(stored) && stored > 0
+    ? stored
+    : ANALYSIS_COLUMN_WIDTH_DEFAULTS[columnId] || 104;
+}
+
+function setAnalysisColumnWidth(app, columnId: string, width: number) {
+  analysisColumnWidths(app)[columnId] = width;
+}
+
+function analysisColumnMinWidth(columnId: string) {
+  return ANALYSIS_COLUMN_WIDTH_MIN[columnId] || 48;
+}
+
+function analysisRowHeight(app, rowIndex: number) {
+  var stored = Number(analysisRowHeights(app)[String(rowIndex + 1)]);
+  return Number.isFinite(stored) && stored > 0 ? stored : ANALYSIS_ROW_HEIGHT_DEFAULT;
+}
+
+function setAnalysisRowHeight(app, rowIndex: number, height: number) {
+  analysisRowHeights(app)[String(rowIndex + 1)] = height;
+}
+
+function totalAnalysisColumnWidth(app, columnIds: string[]) {
+  return columnIds.reduce((total, columnId) => total + analysisColumnWidth(app, columnId), 0);
+}
+
+function applyAnalysisColumnWidths(app, doc: Document) {
+  var table = doc.querySelector('.analysis-spreadsheet-table') as HTMLTableElement | null;
+  if (!table) return;
+  var columnIds = Array.from(table.querySelectorAll<HTMLTableColElement>('col[data-column-id]'))
+    .map((col) => col.dataset.columnId || '')
+    .filter(Boolean);
+  table.style.minWidth = String(totalAnalysisColumnWidth(app, columnIds)) + 'px';
+  for (var columnId of columnIds) {
+    var width = String(analysisColumnWidth(app, columnId)) + 'px';
+    for (var element of table.querySelectorAll<HTMLElement>('[data-column-id="' + columnId + '"]')) {
+      element.style.width = width;
+    }
+  }
+}
+
+function applyAnalysisRowHeights(app, doc: Document) {
+  var table = doc.querySelector('.analysis-spreadsheet-table');
+  if (!table) return;
+  for (var row of table.querySelectorAll<HTMLTableRowElement>('tbody tr[data-line-index]')) {
+    var rowIndex = Number(row.dataset.lineIndex || '0');
+    var height = String(analysisRowHeight(app, rowIndex)) + 'px';
+    row.style.height = height;
+    for (var cell of row.querySelectorAll<HTMLElement>('td')) {
+      cell.style.height = height;
+    }
+  }
+}
+
+function clampNumber(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
 }
 
 function analysisSpreadsheetCells(app): Record<string, Record<string, string>> {
