@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   linesFromEditorContent,
+  lineIsLanguageDirective,
   renderAnalysisSpreadsheet,
   rowsFromEditorContent,
   syncAnalysisSpreadsheetFromEditor,
@@ -39,6 +40,7 @@ describe('analysisSpreadsheetService', () => {
   it('toggles a line comment marker at the first non-indent position', () => {
     expect(toggleLineComment('  action connect')).toBe('  #action connect');
     expect(toggleLineComment('  #action connect')).toBe('  action connect');
+    expect(lineIsLanguageDirective('#lang ivy1.7')).toBe(true);
   });
 
   it('renders a TanStack-backed editable table from the editor buffer', () => {
@@ -48,8 +50,10 @@ describe('analysisSpreadsheetService', () => {
     expect(renderAnalysisSpreadsheet(app, app.currentContent())).toBe(true);
 
     const headers = Array.from(document.querySelectorAll('th')).map((th) => th.textContent);
+    const lineNumbers = Array.from(document.querySelectorAll('.analysis-line-number-cell')).map((cell) => cell.textContent);
     const inputs = Array.from(document.querySelectorAll<HTMLInputElement>('.analysis-line-input'));
-    expect(headers).toEqual(['#', 'Spec line']);
+    expect(headers).toEqual(['Line', '#', 'Spec line']);
+    expect(lineNumbers).toEqual(['1', '2']);
     expect(inputs.map((input) => input.value)).toEqual(['type client', 'relation link(X,Y)']);
   });
 
@@ -78,5 +82,20 @@ describe('analysisSpreadsheetService', () => {
     expect(app.currentContent()).toBe('#type client');
     expect(document.querySelector<HTMLInputElement>('.analysis-line-input')!.value).toBe('#type client');
     expect(document.querySelector<HTMLButtonElement>('.analysis-comment-toggle')!.textContent).toBe('#');
+  });
+
+  it('disables the comment toggle for the first #lang directive row', () => {
+    document.body.innerHTML = '<div id="analysis-spreadsheet-grid"></div>';
+    const app = makeSpreadsheetApp('#lang ivy1.7\ntype client');
+    syncAnalysisSpreadsheetFromEditor(app);
+
+    const toggles = document.querySelectorAll<HTMLButtonElement>('.analysis-comment-toggle');
+    expect(toggles[0].disabled).toBe(true);
+    expect(toggles[0].textContent).toBe('#');
+
+    toggles[0].click();
+
+    expect(app.currentContent()).toBe('#lang ivy1.7\ntype client');
+    expect(toggles[1].disabled).toBe(false);
   });
 });

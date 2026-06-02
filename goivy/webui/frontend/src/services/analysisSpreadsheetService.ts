@@ -13,6 +13,11 @@ export interface AnalysisSpreadsheetRow {
 
 const ANALYSIS_COLUMNS: ColumnDef<AnalysisSpreadsheetRow>[] = [
   {
+    id: 'lineNumber',
+    header: 'Line',
+    accessorKey: 'lineNumber',
+  },
+  {
     id: 'comment',
     header: '#',
     accessorFn: (row) => (lineIsCommented(row.line) ? '#' : ''),
@@ -38,6 +43,14 @@ export function rowsFromEditorContent(content = ''): AnalysisSpreadsheetRow[] {
 
 export function lineIsCommented(line = '') {
   return /^\s*#/.test(line);
+}
+
+export function lineIsLanguageDirective(line = '') {
+  return /^\s*#lang\b/i.test(line);
+}
+
+export function rowHasProtectedCommentMarker(row: AnalysisSpreadsheetRow) {
+  return row.lineNumber === 1 && lineIsLanguageDirective(row.line);
 }
 
 export function toggleLineComment(line = '') {
@@ -93,6 +106,9 @@ export function toggleAnalysisSpreadsheetLineComment(app, rowIndex, {
 }: { doc?: Document } = {}) {
   var lines = linesFromEditorContent(editorContent(app));
   while (lines.length <= rowIndex) lines.push('');
+  if (rowIndex === 0 && lineIsLanguageDirective(lines[rowIndex])) {
+    return lines.join('\n');
+  }
   return applyAnalysisSpreadsheetLineEdit(app, rowIndex, toggleLineComment(lines[rowIndex]), {
     doc,
     render: true,
@@ -132,6 +148,7 @@ function renderAnalysisTableHead(table, doc: Document) {
     for (var header of headerGroup.headers) {
       var th = doc.createElement('th');
       th.textContent = header.isPlaceholder ? '' : String(header.column.columnDef.header || '');
+      if (header.column.id === 'lineNumber') th.className = 'analysis-line-number-header';
       if (header.column.id === 'comment') th.className = 'analysis-comment-header';
       rowEl.appendChild(th);
     }
@@ -147,7 +164,10 @@ function renderAnalysisTableBody(app, table, doc: Document) {
     tr.dataset.lineIndex = String(row.index);
     for (var cell of row.getVisibleCells()) {
       var td = doc.createElement('td');
-      if (cell.column.id === 'comment') {
+      if (cell.column.id === 'lineNumber') {
+        td.className = 'analysis-line-number-cell';
+        td.textContent = String(row.original.lineNumber);
+      } else if (cell.column.id === 'comment') {
         td.className = 'analysis-comment-cell';
         td.appendChild(renderCommentToggle(app, row.original, doc));
       } else {
@@ -167,7 +187,13 @@ function renderCommentToggle(app, row: AnalysisSpreadsheetRow, doc: Document) {
   button.textContent = lineIsCommented(row.line) ? '#' : '';
   button.setAttribute('aria-label', 'Toggle comment on line ' + row.lineNumber);
   button.setAttribute('aria-pressed', lineIsCommented(row.line) ? 'true' : 'false');
+  if (rowHasProtectedCommentMarker(row)) {
+    button.disabled = true;
+    button.title = '#lang directive';
+    button.setAttribute('aria-disabled', 'true');
+  }
   button.addEventListener('click', () => {
+    if (rowHasProtectedCommentMarker(row)) return;
     toggleAnalysisSpreadsheetLineComment(app, row.lineNumber - 1, { doc });
   });
   return button;
@@ -186,7 +212,18 @@ function renderLineInput(app, row: AnalysisSpreadsheetRow, doc: Document) {
     applyAnalysisSpreadsheetLineEdit(app, lineIndex, input.value, { doc });
     var toggle = input.closest('tr')?.querySelector('.analysis-comment-toggle') as HTMLButtonElement | null;
     if (toggle) {
+      if (lineIndex === 0 && lineIsLanguageDirective(input.value)) {
+        toggle.textContent = '#';
+        toggle.disabled = true;
+        toggle.title = '#lang directive';
+        toggle.setAttribute('aria-disabled', 'true');
+        toggle.setAttribute('aria-pressed', 'true');
+        return;
+      }
       var commented = lineIsCommented(input.value);
+      toggle.disabled = false;
+      toggle.title = '';
+      toggle.removeAttribute('aria-disabled');
       toggle.textContent = commented ? '#' : '';
       toggle.setAttribute('aria-pressed', commented ? 'true' : 'false');
     }

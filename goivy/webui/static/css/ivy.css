@@ -427,7 +427,7 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 
 .analysis-spreadsheet-table {
     width: 100%;
-    min-width: 420px;
+    min-width: 460px;
     border-collapse: collapse;
     table-layout: fixed;
 }
@@ -445,6 +445,20 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     text-align: left;
     font-weight: 700;
     white-space: nowrap;
+}
+
+.analysis-spreadsheet-table th.analysis-line-number-header,
+.analysis-spreadsheet-table td.analysis-line-number-cell {
+    width: 42px;
+    padding: 0;
+    text-align: right;
+}
+
+.analysis-spreadsheet-table td.analysis-line-number-cell {
+    padding-right: 8px;
+    background: #151515;
+    color: #8a8a8a;
+    user-select: none;
 }
 
 .analysis-spreadsheet-table th.analysis-comment-header,
@@ -478,6 +492,20 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
 .analysis-comment-toggle:focus-visible {
     border-color: #e0b83f;
     background: #2e2a18;
+    outline: none;
+}
+
+.analysis-comment-toggle:disabled {
+    border-color: #3f3f3f;
+    background: #151515;
+    color: #777;
+    cursor: default;
+}
+
+.analysis-comment-toggle:disabled:hover,
+.analysis-comment-toggle:disabled:focus-visible {
+    border-color: #3f3f3f;
+    background: #151515;
     outline: none;
 }
 
