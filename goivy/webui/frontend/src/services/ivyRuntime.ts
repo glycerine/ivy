@@ -605,6 +605,7 @@ class IvyRuntime {
         // Wire up all event handlers
         this.setupEventHandlers();
         this.setupTabs();
+        this._setupSheetPaneToggles();
         this.setupResizer();
         this.setupResizer2();
         this.setupResizer3();
@@ -1406,8 +1407,64 @@ class IvyRuntime {
         }
     }
 
+    _setupSheetPaneToggles() {
+        var sheetArea = document.getElementById('sheet-area');
+        if (!sheetArea || sheetArea.__ivyPaneTogglesInstalled) return;
+        sheetArea.__ivyPaneTogglesInstalled = true;
+        var self = this;
+        sheetArea.addEventListener('click', function (e) {
+            var target = e.target;
+            if (!target || !target.closest) return;
+
+            var tab = target.closest('.sheet-pane-tab');
+            if (tab && sheetArea.contains(tab)) {
+                self._toggleSheetPane(tab.closest('.sheet-pane'));
+                e.preventDefault();
+                return;
+            }
+
+            var title = target.closest('.sheet-pane .panel-header .column-title');
+            if (title && sheetArea.contains(title)) {
+                self._toggleSheetPane(title.closest('.sheet-pane'));
+                e.preventDefault();
+            }
+        });
+    }
+
+    _toggleSheetPane(pane) {
+        if (!pane) return;
+        var collapsed = !pane.classList.contains('sheet-pane-collapsed');
+        pane.classList.toggle('sheet-pane-collapsed', collapsed);
+        pane.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        var tab = pane.querySelector('.sheet-pane-tab');
+        if (tab) tab.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        this._refreshGraphsAndEditorLayout();
+    }
+
+    _paneResizeMinimum(panel) {
+        if (!panel || typeof window === 'undefined' || !window.getComputedStyle) return 160;
+        var styles = window.getComputedStyle(panel);
+        var cssMin = parseFloat(styles.getPropertyValue('--sheet-pane-min-width'));
+        var minWidth = parseFloat(styles.minWidth);
+        return Math.max(120, cssMin || minWidth || 160);
+    }
+
+    _neighborResizablePane(node, direction) {
+        while (node) {
+            if (
+                node.classList
+                && node.classList.contains('sheet-pane')
+                && !node.classList.contains('sheet-pane-collapsed')
+            ) {
+                return node;
+            }
+            node = direction === 'next' ? node.nextElementSibling : node.previousElementSibling;
+        }
+        return null;
+    }
+
     /**
-     * Set up resizable dividers between ARG and concept panels.
+     * Set up resizable dividers between sheet panes.
      * Uses event delegation on the sheet area so it works for ALL tabs,
      * including dynamically created ones.
      */
@@ -1422,18 +1479,32 @@ class IvyRuntime {
         var activePanel = null;
         var activeContainer = null;
 
-        // Delegation: any .divider inside a .sheet-main starts a drag
         sheetArea.addEventListener('mousedown', function (e) {
-            var div = e.target;
-            if (!div.classList.contains('divider')) return;
-            var container = div.parentElement; // .sheet-main
-            var panel = div.previousElementSibling; // ARG panel (left of divider)
+            var target = e.target;
+            var div = target && target.closest ? target.closest('.divider') : target;
+            if (!div || !div.classList || !div.classList.contains('divider') || !sheetArea.contains(div)) return;
+
+            var targetSide = div.getAttribute('data-resize-target');
+            var panel;
+            var container;
+            if (targetSide) {
+                panel = targetSide === 'next'
+                    ? self._neighborResizablePane(div.nextElementSibling, 'next')
+                    : self._neighborResizablePane(div.previousElementSibling, 'previous');
+                container = div.closest('.sheet-workspace') || div.closest('.sheet-columns') || div.parentElement;
+            } else {
+                container = div.parentElement;
+                if (!container || !container.classList || !container.classList.contains('sheet-main')) return;
+                targetSide = 'previous';
+                panel = div.previousElementSibling;
+            }
             if (!container || !panel) return;
 
             isDragging = true;
             activeDivider = div;
             activePanel = panel;
             activeContainer = container;
+            activeDivider.__ivyResizeTargetSide = targetSide;
             startX = e.clientX;
             startWidth = panel.offsetWidth;
             div.classList.add('active');
@@ -1446,15 +1517,18 @@ class IvyRuntime {
 
         document.addEventListener('mousemove', function (e) {
             if (!isDragging) return;
-            var dx = e.clientX - startX;
+            var targetSide = activeDivider && activeDivider.__ivyResizeTargetSide === 'next' ? 'next' : 'previous';
+            var dx = targetSide === 'next' ? startX - e.clientX : e.clientX - startX;
             var newWidth = startWidth + dx;
-            var containerWidth = activeContainer ? activeContainer.offsetWidth : 800;
-            newWidth = Math.max(150, Math.min(newWidth, containerWidth - 200));
-            if (!(activePanel.id === 'arg-panel' && self._setLayoutSize('setArgPanelWidth', newWidth))) {
-                activePanel.style.flex = '0 0 ' + newWidth + 'px';
-            }
+            var minWidth = self._paneResizeMinimum(activePanel);
+            var containerWidth = activeContainer ? Math.max(activeContainer.offsetWidth, activeContainer.scrollWidth || 0) : 1200;
+            var maxWidth = Math.max(minWidth, Math.min(1800, containerWidth + 600));
+            newWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
+            activePanel.style.flex = '0 0 ' + newWidth + 'px';
+            activePanel.style.width = newWidth + 'px';
             if (self.argGraph) self.argGraph.resize();
             if (self.conceptGraph) self.conceptGraph.resize();
+            self._refreshEditorLayout();
         });
 
         document.addEventListener('mouseup', function () {
@@ -1484,6 +1558,7 @@ class IvyRuntime {
     setupResizer2() {
         var divider2 = document.getElementById('divider2');
         if (!divider2) return;
+        if (divider2.hasAttribute('data-resize-target')) return;
         var rightSection = document.getElementById('state-panel');
         var topRow = divider2.parentElement;
         var self = this;
@@ -1536,6 +1611,7 @@ class IvyRuntime {
     setupResizer3() {
         var divider3 = document.getElementById('divider3');
         if (!divider3) return;
+        if (divider3.hasAttribute('data-resize-target')) return;
         var sheetArea = document.getElementById('sheet-area');
         var editorPanel = document.getElementById('editor-panel');
         var topRow = document.getElementById('top-row');
@@ -1732,9 +1808,10 @@ class IvyRuntime {
         }
         var infoHeader = newSheet.querySelector('#info-header');
         if (infoHeader) infoHeader.id = 'info-header-' + this._sheetCounter;
-        // Insert before the tutorial container
+        // Insert into the sheet page host; the editor pane is shared outside cloned sheets.
         var sheetArea = document.getElementById('sheet-area');
-        sheetArea.appendChild(newSheet);
+        var sheetPages = document.getElementById('sheet-pages') || sheetArea;
+        sheetPages.appendChild(newSheet);
         this.setupDropdownMenus(newSheet);
         this._bindStaticMenuActions();
 
@@ -1807,7 +1884,8 @@ class IvyRuntime {
             sheet = document.createElement('div');
             sheet.id = sheetId;
             sheet.className = 'sheet-content event-sheet';
-            sheetArea.appendChild(sheet);
+            var sheetPages = document.getElementById('sheet-pages') || sheetArea;
+            sheetPages.appendChild(sheet);
         }
 
         this.sheets[sheetId] = {
@@ -2288,46 +2366,43 @@ class IvyRuntime {
         var startHeight = 0;
         var activeHeader = null;
         var activePanel = null;
-        var activeSheetLeft = null;
+        var activeResizeHost = null;
         var activeSheetMain = null;
 
         sheetArea.addEventListener('mousedown', function (e) {
             var header = e.target.closest('.info-header, #info-header');
             if (!header || !sheetArea.contains(header)) return;
             var panel = header.closest('.info-panel') || header.parentElement;
-            var sheetLeft = panel ? panel.closest('.sheet-left') : null;
-            if (!panel || !sheetLeft) return;
+            var resizeHost = panel ? (panel.closest('.sheet-pane') || panel.closest('.sheet-left')) : null;
+            if (!panel || !resizeHost) return;
 
             isDragging = true;
             startY = e.clientY;
             startHeight = panel.offsetHeight;
             activeHeader = header;
             activePanel = panel;
-            activeSheetLeft = sheetLeft;
-            activeSheetMain = sheetLeft.querySelector('.sheet-main');
+            activeResizeHost = resizeHost;
+            activeSheetMain = resizeHost.querySelector('.sheet-main') || resizeHost.querySelector('.sheet-pane-content');
             header.classList.add('active');
             document.body.style.cursor = 'row-resize';
             document.body.style.userSelect = 'none';
-            var graphs = sheetLeft.querySelectorAll('.graph-container');
+            var graphs = resizeHost.querySelectorAll('.graph-container');
             for (var i = 0; i < graphs.length; i++) graphs[i].style.pointerEvents = 'none';
             e.preventDefault();
         });
 
         document.addEventListener('mousemove', function (e) {
-            if (!isDragging || !activePanel || !activeSheetLeft) return;
+            if (!isDragging || !activePanel || !activeResizeHost) return;
             var dy = startY - e.clientY;
             var minDetailsHeight = 72;
-            var minMainHeight = self._detailsResizerMinimumMainHeight(activeSheetLeft);
-            var maxHeight = Math.max(minDetailsHeight, activeSheetLeft.offsetHeight - minMainHeight);
+            var minMainHeight = self._detailsResizerMinimumMainHeight(activeResizeHost);
+            var maxHeight = Math.max(minDetailsHeight, activeResizeHost.offsetHeight - minMainHeight);
             var newHeight = Math.max(minDetailsHeight, Math.min(startHeight + dy, maxHeight));
             if (activeSheetMain) {
                 activeSheetMain.style.minHeight = minMainHeight + 'px';
             }
-            var primaryInfoPanel = document.getElementById('info-panel');
-            if (!(activePanel === primaryInfoPanel && self._setLayoutSize('setDetailsHeight', newHeight))) {
-                activePanel.style.flex = '0 0 ' + newHeight + 'px';
-                activePanel.style.height = newHeight + 'px';
-            }
+            activePanel.style.flex = '0 0 ' + newHeight + 'px';
+            activePanel.style.height = newHeight + 'px';
             if (self.argGraph) self.argGraph.resize();
             if (self.conceptGraph) self.conceptGraph.resize();
         });
@@ -2338,28 +2413,31 @@ class IvyRuntime {
             if (activeHeader) activeHeader.classList.remove('active');
             document.body.style.cursor = '';
             document.body.style.userSelect = '';
-            if (activeSheetLeft) {
-                var graphs = activeSheetLeft.querySelectorAll('.graph-container');
+            if (activeResizeHost) {
+                var graphs = activeResizeHost.querySelectorAll('.graph-container');
                 for (var i = 0; i < graphs.length; i++) graphs[i].style.pointerEvents = '';
             }
             if (self.argGraph) self.argGraph.resize();
             if (self.conceptGraph) self.conceptGraph.resize();
             activeHeader = null;
             activePanel = null;
-            activeSheetLeft = null;
+            activeResizeHost = null;
             activeSheetMain = null;
         });
     }
 
-    _detailsResizerMinimumMainHeight(sheetLeft) {
+    _detailsResizerMinimumMainHeight(resizeHost) {
         var fallback = 44;
-        if (!sheetLeft) return fallback;
-        var sheetMain = sheetLeft.querySelector('.sheet-main');
+        if (!resizeHost) return fallback;
+        var sheetMain = resizeHost.querySelector('.sheet-main') || resizeHost.querySelector('.sheet-pane-content');
         if (!sheetMain) return fallback;
         var headers = sheetMain.querySelectorAll('.panel-header');
         var height = fallback;
         for (var i = 0; i < headers.length; i++) {
             height = Math.max(height, headers[i].offsetHeight || 0);
+        }
+        if (resizeHost.classList && resizeHost.classList.contains('sheet-pane')) {
+            height += 80;
         }
         return height;
     }

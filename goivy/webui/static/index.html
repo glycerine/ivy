@@ -96,11 +96,13 @@
                 <div id="tab-bar">
                     <button class="sheet-tab active" data-sheet="sheet-1"><span>Sheet 1</span></button>
                 </div>
-                <div id="sheet-1" class="sheet-content active">
-                    <div class="sheet-columns">
-                        <div class="sheet-left">
-                            <div class="sheet-main">
-                                <div id="arg-panel" class="panel">
+                <div id="sheet-workspace" class="sheet-workspace">
+                    <div id="sheet-pages" class="sheet-pages">
+                        <div id="sheet-1" class="sheet-content active">
+                            <div class="sheet-columns sheet-pane-strip">
+                                <div id="arg-panel" class="panel sheet-pane" data-sheet-pane="reachability" data-pane-title="Reachability Graph" aria-expanded="true">
+                                    <button class="sheet-pane-tab" type="button" aria-expanded="true" title="Reachability Graph">Reachability Graph</button>
+                                    <div class="sheet-pane-content">
                                     <div class="panel-header">
                                         <strong class="column-title">Reachability Graph</strong>
                                         <div class="panel-header-actions">
@@ -125,9 +127,16 @@
                                         </div>
                                     </div>
                                     <div id="arg-graph" class="graph-container"></div>
+                                    <div id="info-panel" class="info-panel">
+                                        <div id="info-header" class="info-header" title="Drag to resize Details">Details</div>
+                                        <div id="info-content">Select a node or edge to see details</div>
+                                    </div>
                                 </div>
-                                <div id="divider" class="divider"></div>
-                                <div id="concept-panel" class="panel">
+                                </div>
+                                <div id="divider" class="divider" data-resize-target="previous"></div>
+                                <div id="concept-panel" class="panel sheet-pane" data-sheet-pane="concept" data-pane-title="Concept graph" aria-expanded="true">
+                                    <button class="sheet-pane-tab" type="button" aria-expanded="true" title="Concept graph">Concept graph</button>
+                                    <div class="sheet-pane-content">
                                     <div class="panel-header">
                                         <div class="panel-title-row">
                                             <strong class="column-title">Concept graph</strong>
@@ -182,60 +191,61 @@
                                     </div>
                                     <div id="concept-graph" class="graph-container"></div>
                                 </div>
-                            </div>
-
-                            <div id="info-panel" class="info-panel">
-                                <div id="info-header" class="info-header" title="Drag to resize Details">Details</div>
-                                <div id="info-content">Select a node or edge to see details</div>
-                            </div>
-                        </div>
-
-                        <div id="divider2" class="divider"></div>
-                        <div id="state-panel" class="panel">
-                            <div class="panel-header">
-                                <strong class="column-title">State/relations</strong>
-                                <div class="panel-header-actions">
-                                    <span id="state-label">State: 0</span>
+                                </div>
+                                <div id="divider2" class="divider" data-resize-target="next"></div>
+                                <div id="state-panel" class="panel sheet-pane" data-sheet-pane="state" data-pane-title="State/relations" aria-expanded="true">
+                                    <button class="sheet-pane-tab" type="button" aria-expanded="true" title="State/relations">State/relations</button>
+                                    <div class="sheet-pane-content">
+                                        <div class="panel-header">
+                                            <strong class="column-title">State/relations</strong>
+                                            <div class="panel-header-actions">
+                                                <span id="state-label">State: 0</span>
+                                            </div>
+                                        </div>
+                                        <div id="state-controls">
+                                            <table id="state-checkbox-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="chk-col">+</th>
+                                                        <th class="chk-col">?</th>
+                                                        <th class="chk-col">-</th>
+                                                        <th class="chk-col">T</th>
+                                                        <th class="name-col">Relation</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="state-checkbox-body"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div id="state-controls">
-                                <table id="state-checkbox-table">
-                                    <thead>
-                                        <tr>
-                                            <th class="chk-col">+</th>
-                                            <th class="chk-col">?</th>
-                                            <th class="chk-col">-</th>
-                                            <th class="chk-col">T</th>
-                                            <th class="name-col">Relation</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="state-checkbox-body"></tbody>
-                                </table>
+                        </div>
+                    </div>
+                    <div id="divider3" class="divider" data-resize-target="next"></div>
+                    <div id="editor-panel" class="panel sheet-pane" data-sheet-pane="editor" data-pane-title="Editor" aria-expanded="true">
+                        <button class="sheet-pane-tab" type="button" aria-expanded="true" title="Editor">Editor</button>
+                        <div class="sheet-pane-content">
+                            <div class="panel-header">
+                                <div class="editor-title-row">
+                                    <strong class="column-title">Editing:</strong>
+                                    <span id="model-editor-label" class="editor-path" title="Editing: (unsaved file)">(unsaved file)</span>
+                                </div>
+                                <div class="panel-header-actions">
+                                    <button id="file-close-current" class="editor-close-btn" title="Close current file">x</button>
+                                    <button id="file-reopen-last" class="reopen-last-btn" style="display: none;">Re-open last file</button>
+                                    <span class="keymap-radios">
+                                        <label><input type="radio" name="keymap" value="sublime"> Sublime</label>
+                                        <label><input type="radio" name="keymap" value="emacs" checked> Emacs-ish</label>
+                                        <label><input type="radio" name="keymap" value="vim"> Vim</label>
+                                        <a class="keymap-docs-link" href="https://codemirror.net/5/doc/manual.html#keymaps" target="_blank" rel="noopener noreferrer">keymap docs</a>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="editor-text-shell">
+                                <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..."></textarea>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div id="divider3" class="divider"></div>
-            <div id="editor-panel">
-                <div class="panel-header">
-                    <div class="editor-title-row">
-                        <strong class="column-title">Editing:</strong>
-                        <span id="model-editor-label" class="editor-path" title="Editing: (unsaved file)">(unsaved file)</span>
-                    </div>
-                    <div class="panel-header-actions">
-                        <button id="file-close-current" class="editor-close-btn" title="Close current file">x</button>
-                        <button id="file-reopen-last" class="reopen-last-btn" style="display: none;">Re-open last file</button>
-                        <span class="keymap-radios">
-                            <label><input type="radio" name="keymap" value="sublime"> Sublime</label>
-                            <label><input type="radio" name="keymap" value="emacs" checked> Emacs-ish</label>
-                            <label><input type="radio" name="keymap" value="vim"> Vim</label>
-                            <a class="keymap-docs-link" href="https://codemirror.net/5/doc/manual.html#keymaps" target="_blank" rel="noopener noreferrer">keymap docs</a>
-                        </span>
-                    </div>
-                </div>
-                <div class="editor-text-shell">
-                    <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..."></textarea>
                 </div>
             </div>
         </div>
