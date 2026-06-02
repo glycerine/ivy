@@ -1,0 +1,274 @@
+#lang ivy1.8
+
+# Connection Management: 
+# There are many clients, who share a server. They send connection-request messages. 
+# They receive connection accept or connection reject messages. 
+# By doing so, they move their state from disconnecteed to connected. 
+# We attempt to model this in IVy. 
+# There is NO DELAY in responding to the CONN-REQ. This can be changed later. 
+
+
+
+include numbers
+include network
+
+global{
+
+	instance client_id : iterable
+	instance procid_t :iterable
+	
+	type msg_t = {conn_req, conn_acc, conn_rej}
+
+	type namesOfProcedures={pingpong, dingdong}
+
+
+}
+
+process client(self:client_id)={
+	
+	export action hit(pid:procid_t, pname: namesOfProcedures) 					# enables entity to attempt to make a connection 
+	import action out(v:pkt)
+	import action recvin(v:pkt)
+
+
+	implementation{
+
+
+		common{
+
+			
+			class pkt ={
+				field kind : msg_t
+				field src_client : client_id
+				field proc_name : namesOfProcedures
+				field pid : procid_t
+			}
+
+			instance net :tcp.net(pkt)
+
+			process server={
+				import action out(v:pkt)
+				import action recvin(v:pkt)
+
+				var isConnected(X:client_id, Y:procid_t): bool
+
+				after init{
+					isConnected(X,Y) := false;
+				}
+
+				instance sock: net.socket
+
+
+				implement sock.recv(src:tcp.endpoint, val:pkt){
+
+					recvin(val);
+
+					var kind:msg_t := val.kind;
+					var clientid : client_id := val.src_client;
+					var proc_name : namesOfProcedures := val.proc_name;
+					var pid : procid_t := val.pid;
+
+					if (kind=conn_req & intf.connectionStatus(clientid,pid)=intf.requested_t& intf.entityOwner(clientid, pid) & intf.connection_procedures(pid, pingpong)){
+
+						if *{
+							# either accept the connection
+							intf.connection_accept(clientid, pid);
+							isConnected(clientid, pid) := true;
+
+							var msg:pkt;
+							msg.kind := conn_acc;
+							msg.src_client := clientid;
+							msg.proc_name := proc_name;
+							msg.pid := pid;
+							sock.send(client(clientid).sock.id, msg);
+							out(msg);
+
+
+						}else{
+							# reject the connection
+							intf.connection_reject(clientid,pid);
+							var msg:pkt;
+							msg.kind := conn_rej;
+							msg.src_client := clientid;
+							msg.proc_name := proc_name;
+							msg.pid := pid;
+							sock.send(client(clientid).sock.id, msg);
+							out(msg);
+						}
+						
+					}
+				}
+
+			}
+
+		}
+
+
+		var isConnected(X:procid_t):bool
+
+		after init{
+			isConnected(X) := false;
+		}
+
+		instance sock: net.socket
+
+		before hit{
+			require ~intf.allProcedures(pid);
+			require ~intf.entityOwner(self,pid) & ~intf.connection_procedures(pid, pname);
+		}
+
+		implement hit{
+			# Attempt to make a connection only if you're not already connected. 
+
+			if (~isConnected(pid) & intf.connectionStatus(self, pid)=intf.disconnected_t) {
+				
+				var msg:pkt;
+				msg.kind := conn_req;
+				msg.src_client := self;
+				
+				intf.connection_request(self, pid);
+
+				sock.send(server.sock.id, msg);			
+				out(msg);
+			}else if (isConnected(pid) & intf.connectionStatus(self, pid)=intf.connected_t) {
+			
+				if * {
+					# Randomly decide to disconnect
+				
+					isConnected(pid) := false;
+					intf.connection_failed(self, pid);
+				}else{
+					isConnected(pid) := true;
+				}
+			};
+		}
+
+		implement sock.recv(src:tcp.endpoint, val:pkt){
+			recvin(val);
+
+
+			var kind:msg_t := val.kind;
+			var clientid : client_id := val.src_client;
+			var proc_name : namesOfProcedures := val.proc_name;
+			var pid : procid_t := val.pid;
+
+
+			if(src=server.sock.id){
+				
+				if (kind=conn_acc & intf.connectionStatus(self, pid)=intf.accepted_t & intf.entityOwner(self, pid) & intf.connection_procedures(pid, pingpong)){
+					isConnected(pid) := true;	
+					intf.connection_success(self, pid);
+
+						
+				}else if (kind=conn_rej & intf.connectionStatus(self, pid)=intf.rejected_t){
+					intf.connection_failed(self, pid);
+
+				}
+			}
+			
+		}
+
+	}
+
+
+
+	common{
+		specification{
+
+		isolate intf ={
+
+			type connection_state_t = {requested_t, accepted_t, rejected_t, connected_t, disconnected_t}
+			relation connected_clients(X:client_id)
+
+			function connectionStatus(X:client_id, Y:procid_t) : connection_state_t
+
+			action connection_request(agent:client_id, pid:procid_t)
+			action connection_accept(agent:client_id, pid:procid_t)
+			action connection_reject(agent:client_id, pid:procid_t)
+			
+			action connection_success(agent:client_id, pid:procid_t)
+			action connection_failed(agent:client_id, pid:procid_t)
+
+			
+			relation allProcedures(X:procid_t)
+			relation entityOwner(X:client_id, Y:procid_t)
+			relation connection_procedures(X:procid_t, Y:namesOfProcedures)
+
+
+			before connection_request{
+			
+				require connectionStatus(agent, pid) = disconnected_t;
+	
+				connectionStatus(agent, pid) := requested_t;
+			}
+
+			before connection_accept{
+			
+				require connectionStatus(agent, pid) = requested_t;
+
+				require entityOwner(agent, pid) & connection_procedures(pid, pingpong);
+
+				connectionStatus(agent, pid) := accepted_t;
+
+			}
+
+			before connection_reject{
+				
+				require connectionStatus(agent, pid) = requested_t;
+
+				require entityOwner(agent, pid) & connection_procedures(pid, pingpong);
+
+				connectionStatus(agent, pid) := rejected_t;
+			}			
+
+			before connection_success{
+				require connectionStatus(agent, pid) = accepted_t;
+
+				require entityOwner(agent, pid) & connection_procedures(pid, pingpong);
+
+				connectionStatus(agent, pid) := connected_t;
+			}
+
+			before connection_failed{
+				require (connectionStatus(agent, pid) = rejected_t | connectionStatus(agent, pid) = connected_t );
+				
+				## clean-up history
+				connectionStatus(agent, pid) := disconnected_t;
+			}
+
+			after init{
+				connectionStatus(X,Y) := disconnected_t;
+				entityOwner(X,U) := false;
+				connection_procedures(X,Y) := false;
+			}
+
+
+			#invariant connected_clients(X) -> connectionRequested(X) & connectionAccepted(X) & ~connectionRejected(X)
+			#invariant connected_clients(X) -> client(X).isConnected & server.isConnected(X)
+
+			## constraints on the type of messages on network, and the direction. 
+			#invariant forall P:pkt. net.sent(client(X).sock.id, server.sock.id, I, P) -> P.kind = conn_req 
+			
+			#invariant forall P:pkt. net.sent(server.sock.id, client(X).sock.id, I, P) -> (P.kind = conn_acc | P.kind = conn_rej)
+
+			## Constraints on existence of packet of certain type, and the state of the protocol. 
+			#invariant forall D:pkt. net.sent(server.sock.id, client(X).sock.id, I, D) & D.kind = conn_acc -> connectionRequested(X) & connectionAccepted(X) & ~connectionRejected(X) 
+			
+			#invariant forall D:pkt. net.sent(server.sock.id, client(X).sock.id, I, D) & D.kind = conn_rej -> connectionRequested(X) & ~connectionAccepted(X) & connectionRejected(X) 
+			
+			#invariant forall D:pkt. net.sent( client(X).sock.id, server.sock.id, I, D) & D.kind = conn_req -> connectionRequested(X) & ~connectionAccepted(X) & ~connectionRejected(X) 
+
+
+		} #intf
+	}# specification
+
+	}#common
+
+
+}
+
+
+
+# Execution Instructions: 
+# ivyc target=test connection_mgmt.ivy
+# ivy_launch client_id.max=2 connection_mgmt
