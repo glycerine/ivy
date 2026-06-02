@@ -229,7 +229,7 @@ func (g *Generator) openAssignmentLoops(w *cppWriter, lhs goivy.Expr) (int, bool
 }
 
 func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label string) {
-	expr, err := g.emitExpr(f)
+	expr, err := g.emitExpr(closeFormula(f))
 	if err != nil {
 		g.unsupported(w, "unsupported assertion expression: %s", err.Error())
 		return
@@ -238,6 +238,13 @@ func (g *Generator) emitAssertLike(w *cppWriter, fn string, f goivy.Expr, label 
 		label = fn
 	}
 	w.linef(`%s(%s, "%s");`, fn, expr, escapeString(label))
+}
+
+func closeFormula(f goivy.Expr) goivy.Expr {
+	if f == nil {
+		return nil
+	}
+	return goivy.IvyForAll(goivy.FreeVariablesList(f), f)
 }
 
 // linenoStr mirrors Python ivy_utils.lineno_str (ivy_utils.py:285-291):

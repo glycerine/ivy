@@ -7672,6 +7672,59 @@ action check = {
 	compileGeneratedCPP(t, out)
 }
 
+func TestIssue57InitRequireClosesFreeVariables(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type my_type_1
+type my_type_2 = { val1, val2 }
+type my_type_3
+
+interpret my_type_1 -> bv[2]
+interpret my_type_3 -> bv[8]
+
+object node(type_1:my_type_1) = {
+    relation voted(MY_TYPE_2:my_type_2, MY_TYPE_3:my_type_3)
+    after init {
+        require voted(MY_TYPE_2, MY_TYPE_3);
+    }
+}
+
+extract executable_runner = node
+`)
+	out, err := Generate(mod, Config{ClassName: "issue57", Target: "test"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	initBody := generatedMethodBody(t, out.Impl, "void issue57::__init(){", "void issue57::__tick")
+	if !strings.Contains(initBody, "ivy_assert(([&]() {") && !strings.Contains(initBody, "ivy_assume(([&]() {") {
+		t.Fatalf("issue57 __init should close the require formula before emission:\n%s", initBody)
+	}
+	for _, want := range []string{
+		"for (unsigned prm__V0 = 0; prm__V0 < 4; prm__V0++) {",
+		"for (my_type_2 MY_TYPE_2 = (my_type_2)0; (int) MY_TYPE_2 < 2; MY_TYPE_2 = (my_type_2)(((int)MY_TYPE_2) + 1)) {",
+		"for (unsigned MY_TYPE_3 = 0; MY_TYPE_3 < 256; MY_TYPE_3++) {",
+		"node__voted[issue57::__tup__unsigned__my_type_2__unsigned(prm__V0, MY_TYPE_2, MY_TYPE_3)]",
+	} {
+		if !strings.Contains(initBody, want) {
+			t.Fatalf("issue57 __init missing %q:\n%s", want, initBody)
+		}
+	}
+	assertNoUnsupportedCPP(t, out)
+	compileGeneratedCPP(t, out)
+}
+
+func generatedMethodBody(t *testing.T, text, startMarker, endMarker string) string {
+	t.Helper()
+	start := strings.Index(text, startMarker)
+	if start < 0 {
+		t.Fatalf("missing method start %q:\n%s", startMarker, text)
+	}
+	end := strings.Index(text[start:], endMarker)
+	if end < 0 {
+		t.Fatalf("missing method end marker %q after %q:\n%s", endMarker, startMarker, text[start:])
+	}
+	return text[start : start+end]
+}
+
 // TestEmitSomeMinMaxBreakWhenIndexIsFirstParam asserts that the
 // generated `if some` minimizing the loop variable adds the early `break`
 // (Python emit_some:3539-3540).

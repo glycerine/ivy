@@ -1647,10 +1647,20 @@ def emit_initial_action(header,impl,classname):
     thunks = impl
     code_line(header,'void __init()')
     open_scope(impl,line = 'void ' + classname + '::__init()')
-    for action in im.module.initial_actions:
-        open_loop(impl,action.formal_params)
+    actions = list(im.module.initial_actions)
+    if not actions:
+        actions = [action for name,action in im.module.initializers]
+    if not actions and "init" in im.module.mixins:
+        for mixin in im.module.mixins["init"]:
+            name = mixin.mixer()
+            action = im.module.actions.get("ext:" + name,im.module.actions.get(name,None))
+            if action is not None:
+                actions.append(action)
+    for action in actions:
+        formal_params = getattr(action,'formal_params',[])
+        open_loop(impl,formal_params)
         action.emit(impl)
-        close_loop(impl,action.formal_params)
+        close_loop(impl,formal_params)
     close_scope(impl)
     
 int_ctypes = ["bool","int","long long","unsigned","unsigned long long"]

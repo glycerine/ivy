@@ -124,7 +124,16 @@ int issue57::___ivy_choose(int rng,const char *name,int id) {
         return ___ivy_gen->choose(rng,ss.str().c_str());
     }
 void issue57::__init(){
-    ivy_assume(node__voted[issue57::__tup__unsigned__my_type_2__unsigned(prm__V0, MY_TYPE_2, MY_TYPE_3)], "issue57.ivy: line 14");
+    for (unsigned prm__V0 = 0; prm__V0 < 4; prm__V0++) {
+        ivy_assume(([&]() {
+    for (my_type_2 MY_TYPE_2 = (my_type_2)0; (int) MY_TYPE_2 < 2; MY_TYPE_2 = (my_type_2)(((int)MY_TYPE_2) + 1)) {
+        for (unsigned MY_TYPE_3 = 0; MY_TYPE_3 < 256; MY_TYPE_3++) {
+            if (!(node__voted[issue57::__tup__unsigned__my_type_2__unsigned(prm__V0, MY_TYPE_2, MY_TYPE_3)])) return false;
+        }
+    }
+    return true;
+})(), "<IVY_EXAMPLES>/jea/issue57/issue57.ivy: line 14");
+    }
 }
 void issue57::__tick(int __timeout){
 }

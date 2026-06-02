@@ -1223,7 +1223,7 @@ func (g *Generator) emitInit(w *cppWriter) {
 	}
 	if len(g.Mod.InitialActions) > 0 {
 		for _, act := range g.Mod.InitialActions {
-			g.emitAction(w, act)
+			g.emitInitialAction(w, act)
 		}
 		w.close("")
 		if g.Config.Target != "test" {
@@ -1233,13 +1233,13 @@ func (g *Generator) emitInit(w *cppWriter) {
 	}
 	for _, na := range g.Mod.Initializers {
 		if act, ok := na.Action.(goivy.Action); ok {
-			g.emitAction(w, act)
+			g.emitInitialAction(w, act)
 		}
 	}
 	if len(g.Mod.Initializers) == 0 && g.Mod.Actions != nil && g.Mod.Mixins != nil {
 		for _, mixin := range g.Mod.Mixins.Get("init") {
 			if act, ok := g.Mod.Actions.Get2(mixin.Mixer()); ok {
-				g.emitAction(w, act)
+				g.emitInitialAction(w, act)
 			}
 		}
 	}
@@ -1247,6 +1247,25 @@ func (g *Generator) emitInit(w *cppWriter) {
 	if g.Config.Target != "test" {
 		w.blank()
 	}
+}
+
+func (g *Generator) emitInitialAction(w *cppWriter, act goivy.Action) {
+	loops := 0
+	for _, p := range act.GetFormalParams() {
+		if p == nil {
+			continue
+		}
+		header, err := g.loopHeaderForSort(p.CSort, varName(p.Name))
+		if err != nil {
+			g.unsupported(w, "unsupported initializer parameter %s:%s", varName(p.Name), err.Error())
+			g.closeAssignmentLoops(w, loops)
+			return
+		}
+		w.open(header)
+		loops++
+	}
+	g.emitAction(w, act)
+	g.closeAssignmentLoops(w, loops)
 }
 
 func (g *Generator) emitMethods(w *cppWriter) {
