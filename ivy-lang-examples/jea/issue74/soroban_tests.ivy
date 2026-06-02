@@ -1,0 +1,30 @@
+#lang ivy1.8
+
+include soroban
+
+type key
+type val
+
+instance kv: partial_map(key, val)
+
+action _save_restore_roundtrip = {
+    kv._save_state();
+    kv._restore_state();
+    ensure kv.pre(X) = (old kv.pre(X));
+    ensure kv.map(X, Y) = (old kv.map(X, Y));
+}
+export _save_restore_roundtrip
+
+conjecture [succ_lt] ledger.succ(X, Y) -> X < Y
+
+instance money : integer
+conjecture [m_succ_lt] money.succ(X, Y) -> X < Y
+conjecture [m_lteq_def]
+    forall X:money, Y:money.
+        X <= Y <-> (X < Y | X = Y)
+
+conjecture [m_lt_irreflexive]
+    forall X:money. ~(X < X)
+
+conjecture [wtf_1] 0:money = 0
+conjecture [wtf_2] 0:money < 0

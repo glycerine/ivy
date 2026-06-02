@@ -90,6 +90,24 @@ describe('static graph background controls', () => {
   });
 });
 
+describe('static analysis spreadsheet pane', () => {
+  it('places a full-width formula input between the title and grid', () => {
+    const doc = new DOMParser().parseFromString(indexHtml, 'text/html');
+    const paneContent = doc.querySelector('#analysis-spreadsheet-panel .sheet-pane-content');
+    const children = Array.from(paneContent?.children || []);
+    const formulaInput = doc.getElementById('analysis-formula-input') as HTMLInputElement | null;
+    const formulaRule = ivyCss.match(/\.analysis-formula-input\s*\{[^}]+\}/)?.[0] || '';
+
+    expect(children[0]?.classList.contains('panel-header')).toBe(true);
+    expect(children[1]?.classList.contains('analysis-formula-bar')).toBe(true);
+    expect(children[2]?.id).toBe('analysis-spreadsheet-grid');
+    expect(formulaInput?.type).toBe('text');
+    expect(formulaInput?.getAttribute('aria-label')).toBe('Formula bar');
+    expect(formulaRule).toContain('width: 100%;');
+    expect(formulaRule).toContain('box-sizing: border-box;');
+  });
+});
+
 describe('static CodeMirror includes', () => {
   it('loads the CodeMirror 5 search addons before keymaps so Emacs isearch initializes', () => {
     const coreIndex = indexHtml.indexOf('/codemirror.min.js');
