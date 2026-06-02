@@ -1,0 +1,223 @@
+import {
+  createTable,
+  getCoreRowModel,
+  type ColumnDef,
+} from '@tanstack/table-core';
+import { editorContent } from './editorService.ts';
+
+export interface AnalysisSpreadsheetRow {
+  id: string;
+  lineNumber: number;
+  line: string;
+}
+
+const ANALYSIS_COLUMNS: ColumnDef<AnalysisSpreadsheetRow>[] = [
+  {
+    id: 'comment',
+    header: '#',
+    accessorFn: (row) => (lineIsCommented(row.line) ? '#' : ''),
+  },
+  {
+    id: 'line',
+    header: 'Spec line',
+    accessorKey: 'line',
+  },
+];
+
+export function linesFromEditorContent(content = '') {
+  return content.length > 0 ? content.split('\n') : [''];
+}
+
+export function rowsFromEditorContent(content = ''): AnalysisSpreadsheetRow[] {
+  return linesFromEditorContent(content).map((line, index) => ({
+    id: String(index + 1),
+    lineNumber: index + 1,
+    line,
+  }));
+}
+
+export function lineIsCommented(line = '') {
+  return /^\s*#/.test(line);
+}
+
+export function toggleLineComment(line = '') {
+  var match = line.match(/^(\s*)#(.*)$/);
+  if (match) return match[1] + match[2];
+  var indent = line.match(/^\s*/)?.[0] || '';
+  return indent + '#' + line.slice(indent.length);
+}
+
+export function setupAnalysisSpreadsheet(app, {
+  doc = globalThis.document,
+}: { doc?: Document } = {}) {
+  return syncAnalysisSpreadsheetFromEditor(app, { doc });
+}
+
+export function syncAnalysisSpreadsheetFromEditor(app, {
+  doc = globalThis.document,
+}: { doc?: Document } = {}) {
+  if (!app || app._analysisSpreadsheetApplyingEdit) return false;
+  return renderAnalysisSpreadsheet(app, editorContent(app), { doc });
+}
+
+export function renderAnalysisSpreadsheet(app, content = '', {
+  doc = globalThis.document,
+}: { doc?: Document } = {}) {
+  var container = doc && doc.getElementById('analysis-spreadsheet-grid');
+  if (!container) return false;
+
+  var rows = rowsFromEditorContent(content);
+  var table = createAnalysisTable(rows);
+  container.textContent = '';
+  container.appendChild(renderAnalysisTable(app, table, doc));
+  return true;
+}
+
+export function applyAnalysisSpreadsheetLineEdit(app, rowIndex, nextLine, {
+  doc = globalThis.document,
+  render = false,
+}: { doc?: Document; render?: boolean } = {}) {
+  if (!app) return '';
+  var lines = linesFromEditorContent(editorContent(app));
+  while (lines.length <= rowIndex) lines.push('');
+  if (lines[rowIndex] === nextLine) return lines.join('\n');
+  lines[rowIndex] = nextLine;
+  var nextContent = lines.join('\n');
+  replaceEditorLineFromSpreadsheet(app, rowIndex, nextLine, nextContent);
+  if (render) renderAnalysisSpreadsheet(app, nextContent, { doc });
+  return nextContent;
+}
+
+export function toggleAnalysisSpreadsheetLineComment(app, rowIndex, {
+  doc = globalThis.document,
+}: { doc?: Document } = {}) {
+  var lines = linesFromEditorContent(editorContent(app));
+  while (lines.length <= rowIndex) lines.push('');
+  return applyAnalysisSpreadsheetLineEdit(app, rowIndex, toggleLineComment(lines[rowIndex]), {
+    doc,
+    render: true,
+  });
+}
+
+function createAnalysisTable(data: AnalysisSpreadsheetRow[]) {
+  var state: any = {};
+  var table = createTable({
+    data,
+    columns: ANALYSIS_COLUMNS,
+    state,
+    onStateChange: (updater) => {
+      state = typeof updater === 'function' ? updater(state) : updater;
+      table.setOptions((previous) => ({ ...previous, state }));
+    },
+    renderFallbackValue: null,
+    getCoreRowModel: getCoreRowModel(),
+  });
+  state = table.initialState;
+  table.setOptions((previous) => ({ ...previous, state }));
+  return table;
+}
+
+function renderAnalysisTable(app, table, doc: Document) {
+  var tableEl = doc.createElement('table');
+  tableEl.className = 'analysis-spreadsheet-table';
+  tableEl.appendChild(renderAnalysisTableHead(table, doc));
+  tableEl.appendChild(renderAnalysisTableBody(app, table, doc));
+  return tableEl;
+}
+
+function renderAnalysisTableHead(table, doc: Document) {
+  var thead = doc.createElement('thead');
+  for (var headerGroup of table.getHeaderGroups()) {
+    var rowEl = doc.createElement('tr');
+    for (var header of headerGroup.headers) {
+      var th = doc.createElement('th');
+      th.textContent = header.isPlaceholder ? '' : String(header.column.columnDef.header || '');
+      if (header.column.id === 'comment') th.className = 'analysis-comment-header';
+      rowEl.appendChild(th);
+    }
+    thead.appendChild(rowEl);
+  }
+  return thead;
+}
+
+function renderAnalysisTableBody(app, table, doc: Document) {
+  var tbody = doc.createElement('tbody');
+  for (var row of table.getRowModel().rows) {
+    var tr = doc.createElement('tr');
+    tr.dataset.lineIndex = String(row.index);
+    for (var cell of row.getVisibleCells()) {
+      var td = doc.createElement('td');
+      if (cell.column.id === 'comment') {
+        td.className = 'analysis-comment-cell';
+        td.appendChild(renderCommentToggle(app, row.original, doc));
+      } else {
+        td.appendChild(renderLineInput(app, row.original, doc));
+      }
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+  return tbody;
+}
+
+function renderCommentToggle(app, row: AnalysisSpreadsheetRow, doc: Document) {
+  var button = doc.createElement('button');
+  button.type = 'button';
+  button.className = 'analysis-comment-toggle';
+  button.textContent = lineIsCommented(row.line) ? '#' : '';
+  button.setAttribute('aria-label', 'Toggle comment on line ' + row.lineNumber);
+  button.setAttribute('aria-pressed', lineIsCommented(row.line) ? 'true' : 'false');
+  button.addEventListener('click', () => {
+    toggleAnalysisSpreadsheetLineComment(app, row.lineNumber - 1, { doc });
+  });
+  return button;
+}
+
+function renderLineInput(app, row: AnalysisSpreadsheetRow, doc: Document) {
+  var input = doc.createElement('input');
+  input.type = 'text';
+  input.className = 'analysis-line-input';
+  input.value = row.line;
+  input.spellcheck = false;
+  input.dataset.lineIndex = String(row.lineNumber - 1);
+  input.setAttribute('aria-label', 'Spec line ' + row.lineNumber);
+  input.addEventListener('input', () => {
+    var lineIndex = Number(input.dataset.lineIndex || '0');
+    applyAnalysisSpreadsheetLineEdit(app, lineIndex, input.value, { doc });
+    var toggle = input.closest('tr')?.querySelector('.analysis-comment-toggle') as HTMLButtonElement | null;
+    if (toggle) {
+      var commented = lineIsCommented(input.value);
+      toggle.textContent = commented ? '#' : '';
+      toggle.setAttribute('aria-pressed', commented ? 'true' : 'false');
+    }
+  });
+  return input;
+}
+
+function replaceEditorLineFromSpreadsheet(app, rowIndex, nextLine, nextContent) {
+  var editor = app && app.cmEditor;
+  app._analysisSpreadsheetApplyingEdit = true;
+  try {
+    if (editor && typeof editor.replaceRange === 'function') {
+      var previousLine = typeof editor.getLine === 'function'
+        ? editor.getLine(rowIndex) || ''
+        : linesFromEditorContent(editorContent(app))[rowIndex] || '';
+      var replace = () => {
+        editor.replaceRange(nextLine, { line: rowIndex, ch: 0 }, { line: rowIndex, ch: previousLine.length });
+      };
+      if (typeof editor.operation === 'function') {
+        editor.operation(replace);
+      } else {
+        replace();
+      }
+    } else if (editor && typeof editor.setValue === 'function') {
+      editor.setValue(nextContent);
+    }
+  } finally {
+    app._analysisSpreadsheetApplyingEdit = false;
+  }
+
+  app._persistedFileContent = nextContent;
+  if (typeof app._updateEditorLabel === 'function') app._updateEditorLabel();
+  if (typeof app._invalidateModelState === 'function') app._invalidateModelState('editor-change');
+}
