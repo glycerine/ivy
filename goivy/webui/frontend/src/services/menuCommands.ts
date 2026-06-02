@@ -14,8 +14,6 @@ export const MENU_COMMANDS = [
   'setupEventHandlers',
   'setupKeyboardShortcuts',
   'setupResizer',
-  'setupResizer2',
-  'setupResizer3',
   'setupResizerH',
   'setupTabs',
   'setupTutorialUrlBar',

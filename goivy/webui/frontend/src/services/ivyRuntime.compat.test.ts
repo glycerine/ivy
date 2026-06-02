@@ -55,6 +55,13 @@ function installSheetDom() {
   ].join('');
 }
 
+function setOffsetWidth(element: Element, width: number) {
+  Object.defineProperty(element, 'offsetWidth', {
+    configurable: true,
+    value: width,
+  });
+}
+
 afterEach(() => {
   resetIvyRuntimeDependencies();
   document.body.innerHTML = '';
@@ -63,6 +70,47 @@ afterEach(() => {
 });
 
 describe('ivyRuntime compatibility behavior', () => {
+  it('uses one divider path for the Concept and State boundary', () => {
+    document.body.innerHTML = [
+      '<div id="sheet-area">',
+      '  <div id="sheet-workspace" class="sheet-workspace">',
+      '    <div id="sheet-pages" class="sheet-pages">',
+      '      <div id="sheet-1" class="sheet-content active">',
+      '        <div class="sheet-columns">',
+      '          <div id="arg-panel" class="sheet-pane"></div>',
+      '          <div id="divider" class="divider" data-resize-target="previous"></div>',
+      '          <div id="concept-panel" class="sheet-pane" style="min-width: 120px"></div>',
+      '          <div id="divider2" class="divider" data-resize-target="previous"></div>',
+      '          <div id="state-panel" class="sheet-pane" style="min-width: 120px"></div>',
+      '        </div>',
+      '      </div>',
+      '    </div>',
+      '  </div>',
+      '</div>',
+    ].join('');
+    const runtime = makeRuntime();
+    runtime.argGraph = new FakeGraph();
+    runtime.conceptGraph = new FakeGraph();
+    runtime._refreshEditorLayout = vi.fn();
+    const columns = document.querySelector('.sheet-columns')!;
+    const concept = document.getElementById('concept-panel')!;
+    const state = document.getElementById('state-panel')!;
+    const divider = document.getElementById('divider2')!;
+    setOffsetWidth(columns, 1000);
+    setOffsetWidth(concept, 260);
+    setOffsetWidth(state, 220);
+
+    runtime.setupResizer();
+    divider.dispatchEvent(new MouseEvent('mousedown', { clientX: 300, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 250, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+
+    expect(concept.style.width).toBe('210px');
+    expect(concept.style.flex).toBe('0 0 210px');
+    expect(state.style.width).toBe('');
+    expect(state.style.flex).toBe('');
+  });
+
   it('maps the graph background slider from editor black through gray to white', () => {
     document.body.innerHTML = '<input id="graph-background-slider" type="range" min="0" max="100" value="0">';
     const runtime = makeRuntime();

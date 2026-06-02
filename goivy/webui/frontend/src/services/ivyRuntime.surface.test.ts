@@ -167,8 +167,6 @@ describe('ivyRuntime public surface', () => {
       'setupEventHandlers',
       'setupKeyboardShortcuts',
       'setupResizer',
-      'setupResizer2',
-      'setupResizer3',
       'setupResizerH',
       'setupTabs',
       'setupTutorialUrlBar',

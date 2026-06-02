@@ -1149,22 +1149,6 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     background: #1e1e1e;
 }
 
-.sheet-pane-resize-handle {
-    position: absolute;
-    top: 0;
-    right: -3px;
-    bottom: 0;
-    z-index: 30;
-    width: 7px;
-    cursor: col-resize;
-    background: transparent;
-}
-
-.sheet-pane-resize-handle:hover,
-.sheet-pane-resize-handle.active {
-    background: rgba(0, 122, 204, 0.35);
-}
-
 .sheet-pane-content {
     display: flex;
     flex: 1;
@@ -1214,10 +1198,6 @@ body[data-ui-mode="reachability"] .ui-mode-cti {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-}
-
-.sheet-pane.sheet-pane-collapsed .sheet-pane-resize-handle {
-    display: none;
 }
 
 .sheet-pane .panel-header .column-title {

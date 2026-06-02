@@ -607,8 +607,6 @@ class IvyRuntime {
         this.setupTabs();
         this._setupSheetPaneToggles();
         this.setupResizer();
-        this.setupResizer2();
-        this.setupResizer3();
         this.setupResizerH();
         this.setupDetailsResizer();
         this.setupTutorialUrlBar();
@@ -1411,7 +1409,6 @@ class IvyRuntime {
         var sheetArea = document.getElementById('sheet-area');
         if (!sheetArea || sheetArea.__ivyPaneTogglesInstalled) return;
         sheetArea.__ivyPaneTogglesInstalled = true;
-        this._ensureSheetPaneResizeHandles(sheetArea);
         var self = this;
         sheetArea.addEventListener('click', function (e) {
             var target = e.target;
@@ -1430,18 +1427,6 @@ class IvyRuntime {
                 e.preventDefault();
             }
         });
-    }
-
-    _ensureSheetPaneResizeHandles(root: any = document) {
-        var panes = root.querySelectorAll ? root.querySelectorAll('.sheet-pane') : [];
-        for (var i = 0; i < panes.length; i++) {
-            if (panes[i].querySelector('.sheet-pane-resize-handle')) continue;
-            var handle = document.createElement('div');
-            handle.className = 'sheet-pane-resize-handle';
-            handle.setAttribute('aria-hidden', 'true');
-            handle.title = 'Drag to resize';
-            panes[i].appendChild(handle);
-        }
     }
 
     _toggleSheetPane(pane) {
@@ -1484,6 +1469,8 @@ class IvyRuntime {
     setupResizer() {
         var sheetArea = document.getElementById('sheet-area');
         if (!sheetArea) return;
+        if (sheetArea.__ivyPaneResizerInstalled) return;
+        sheetArea.__ivyPaneResizerInstalled = true;
         var self = this;
         var isDragging = false;
         var startX = 0;
@@ -1494,37 +1481,28 @@ class IvyRuntime {
 
         sheetArea.addEventListener('mousedown', function (e) {
             var target = e.target;
-            var handle = target && target.closest ? target.closest('.sheet-pane-resize-handle') : null;
             var div = target && target.closest ? target.closest('.divider') : target;
             var targetSide;
             var panel;
             var container;
 
-            if (handle && sheetArea.contains(handle)) {
-                panel = handle.closest('.sheet-pane');
-                if (!panel || panel.classList.contains('sheet-pane-collapsed')) return;
-                container = panel.closest('.sheet-workspace') || panel.closest('.sheet-columns') || panel.parentElement;
-                targetSide = 'previous';
+            if (!div || !div.classList || !div.classList.contains('divider') || !sheetArea.contains(div)) return;
+            targetSide = div.getAttribute('data-resize-target');
+            activeHandle = div;
+            if (targetSide) {
+                panel = targetSide === 'next'
+                    ? self._neighborResizablePane(div.nextElementSibling, 'next')
+                    : self._neighborResizablePane(div.previousElementSibling, 'previous');
+                container = div.closest('.sheet-columns') || div.closest('.sheet-workspace') || div.parentElement;
             } else {
-                if (!div || !div.classList || !div.classList.contains('divider') || !sheetArea.contains(div)) return;
-                targetSide = div.getAttribute('data-resize-target');
-                handle = div;
-                if (targetSide) {
-                    panel = targetSide === 'next'
-                        ? self._neighborResizablePane(div.nextElementSibling, 'next')
-                        : self._neighborResizablePane(div.previousElementSibling, 'previous');
-                    container = div.closest('.sheet-workspace') || div.closest('.sheet-columns') || div.parentElement;
-                } else {
-                    container = div.parentElement;
-                    if (!container || !container.classList || !container.classList.contains('sheet-main')) return;
-                    targetSide = 'previous';
-                    panel = div.previousElementSibling;
-                }
+                container = div.parentElement;
+                if (!container || !container.classList || !container.classList.contains('sheet-main')) return;
+                targetSide = 'previous';
+                panel = div.previousElementSibling;
             }
             if (!container || !panel) return;
 
             isDragging = true;
-            activeHandle = handle;
             activePanel = panel;
             activeContainer = container;
             activeHandle.__ivyResizeTargetSide = targetSide;
@@ -1567,120 +1545,6 @@ class IvyRuntime {
                 activeHandle = null;
                 activePanel = null;
                 activeContainer = null;
-            }
-        });
-    }
-
-    /**
-     * Set up the resizable second divider between concept and state panels.
-     */
-    /**
-     * Resizer for divider2: between sheet-left (ARG+Concept+Details) and state-panel.
-     * Dragging left makes state panel wider; dragging right makes left wider.
-     */
-    setupResizer2() {
-        var divider2 = document.getElementById('divider2');
-        if (!divider2) return;
-        if (divider2.hasAttribute('data-resize-target')) return;
-        var rightSection = document.getElementById('state-panel');
-        var topRow = divider2.parentElement;
-        var self = this;
-        var isDragging = false;
-        var startX = 0;
-        var startWidth = 0;
-
-        divider2.addEventListener('mousedown', function (e) {
-            isDragging = true;
-            startX = e.clientX;
-            startWidth = rightSection.offsetWidth;
-            divider2.classList.add('active');
-            document.body.style.cursor = 'col-resize';
-            document.body.style.userSelect = 'none';
-            e.preventDefault();
-        });
-
-        document.addEventListener('mousemove', function (e) {
-            if (!isDragging) return;
-            var dx = startX - e.clientX; // drag left = right-section wider
-            var newWidth = startWidth + dx;
-            var maxW = topRow ? topRow.offsetWidth - 300 : 800;
-            newWidth = Math.max(200, Math.min(newWidth, maxW));
-            if (!self._setLayoutSize('setStatePanelWidth', newWidth)) {
-                rightSection.style.flex = '0 0 ' + newWidth + 'px';
-            }
-            self.argGraph.resize();
-            self.conceptGraph.resize();
-        });
-
-        document.addEventListener('mouseup', function () {
-            if (isDragging) {
-                isDragging = false;
-                divider2.classList.remove('active');
-                document.body.style.cursor = '';
-                document.body.style.userSelect = '';
-                self.argGraph.resize();
-                self.conceptGraph.resize();
-            }
-        });
-    }
-
-    /**
-     * Set up the resizable divider between State pane and Editor/Tutorial pane.
-     */
-    /**
-     * Resizer for divider3: between sheet-area and editor-panel.
-     * Dragging left makes editor wider; dragging right makes sheet area wider.
-     */
-    setupResizer3() {
-        var divider3 = document.getElementById('divider3');
-        if (!divider3) return;
-        if (divider3.hasAttribute('data-resize-target')) return;
-        var sheetArea = document.getElementById('sheet-area');
-        var editorPanel = document.getElementById('editor-panel');
-        var topRow = document.getElementById('top-row');
-        if (!sheetArea || !editorPanel || !topRow) return;
-        var self = this;
-        var isDragging = false;
-        var startX = 0;
-        var startWidth = 0;
-        var minEditorWidth = 200;
-        var minSheetAreaWidth = 400;
-
-        divider3.addEventListener('mousedown', function (e) {
-            isDragging = true;
-            startX = e.clientX;
-            startWidth = editorPanel.offsetWidth;
-            sheetArea.style.flex = '1 1 auto';
-            divider3.classList.add('active');
-            document.body.style.cursor = 'col-resize';
-            document.body.style.userSelect = 'none';
-            e.preventDefault();
-        });
-
-        document.addEventListener('mousemove', function (e) {
-            if (!isDragging) return;
-            var dx = startX - e.clientX; // drag left = editor wider
-            var newWidth = startWidth + dx;
-            var dividerWidth = divider3.offsetWidth || 4;
-            var maxW = Math.max(minEditorWidth, topRow.offsetWidth - dividerWidth - minSheetAreaWidth);
-            newWidth = Math.max(minEditorWidth, Math.min(newWidth, maxW));
-            if (!self._setLayoutSize('setEditorWidth', newWidth)) {
-                editorPanel.style.flex = '0 0 ' + newWidth + 'px';
-            }
-            if (self.argGraph) self.argGraph.resize();
-            if (self.conceptGraph) self.conceptGraph.resize();
-            self._refreshEditorLayout();
-        });
-
-        document.addEventListener('mouseup', function () {
-            if (isDragging) {
-                isDragging = false;
-                divider3.classList.remove('active');
-                document.body.style.cursor = '';
-                document.body.style.userSelect = '';
-                if (self.argGraph) self.argGraph.resize();
-                if (self.conceptGraph) self.conceptGraph.resize();
-                self._refreshEditorLayout();
             }
         });
     }
@@ -1835,7 +1699,6 @@ class IvyRuntime {
         var sheetArea = document.getElementById('sheet-area');
         var sheetPages = document.getElementById('sheet-pages') || sheetArea;
         sheetPages.appendChild(newSheet);
-        this._ensureSheetPaneResizeHandles(newSheet);
         this.setupDropdownMenus(newSheet);
         this._bindStaticMenuActions();
 
