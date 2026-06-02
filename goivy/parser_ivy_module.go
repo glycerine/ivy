@@ -97,6 +97,9 @@ func (m *ivyAccum) Canon() Canonical {
 func (m *ivyAccum) Rewrite(rewrite AstRewriter) Node {
 	if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok {
 		res := newIvyAccum(m.parent, "")
+		if res.astCfg == nil {
+			res.astCfg = m.astCfg
+		}
 		instMod(res, m, nil, sp.Subst, nil, "")
 		return res
 	}

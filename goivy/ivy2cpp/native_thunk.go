@@ -113,7 +113,7 @@ func (g *Generator) emitCallbackThunks(w *cppWriter) {
 //	struct thunk__name {
 //	    Class *__ivy;
 //	    <prm: members>
-//	    thunk__name(<prm: params>, Class *__ivy)
+//	    thunk__name(Class *__ivy, <prm: params>)
 //	        : __ivy(__ivy), <prm: init list> {}
 //	    Return operator()(<non-prm inputs>) const {
 //	        [return] __ivy->name(<all formals>);
@@ -137,15 +137,14 @@ func (g *Generator) emitCallbackThunk(w *cppWriter, name string, act goivy.Actio
 	for _, p := range prm {
 		w.linef("%s;", g.cppStorageDecl(p.Name, p.CSort, g.ClassName))
 	}
-	// Constructor. Python emits `<class> *__ivy` last in the parameter
-	// list (`extra = [classname + ' *__ivy']` passed to
-	// emit_param_decls); the initializer list always starts with
-	// `__ivy(__ivy)` followed by `prm(prm)` for each captured param.
+	// Constructor. Python emits the extra `<class> *__ivy` parameter
+	// before the captured `prm:` params; the initializer list always
+	// starts with `__ivy(__ivy)` followed by `prm(prm)` for each capture.
 	ctorParams := make([]string, 0, len(prm)+1)
+	ctorParams = append(ctorParams, fmt.Sprintf("%s *__ivy", g.ClassName))
 	for _, p := range prm {
 		ctorParams = append(ctorParams, g.cppStorageDecl(p.Name, p.CSort, g.ClassName))
 	}
-	ctorParams = append(ctorParams, fmt.Sprintf("%s *__ivy", g.ClassName))
 	inits := []string{"__ivy(__ivy)"}
 	for _, p := range prm {
 		v := varName(p.Name)

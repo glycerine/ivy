@@ -1290,7 +1290,7 @@ def emit_action_gen(header,impl,name,action,classname):
         if not psym.sort.dom:
             itp = il.sig.interp.get(psym.sort.name,None)
             if isinstance(itp,il.RangeSort) and psym in [itp.lb,itp.ub]:
-                pre_used.add(psym)
+                pre_used[psym] = None
     for sym in all_state_symbols():
         if sym in pre_used and sym not in old_pre_clauses.defidx: # skip symbols not used in constraint
             if slv.solver_name(il.normalize_symbol(sym)) != None: # skip interpreted symbols

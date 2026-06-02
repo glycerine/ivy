@@ -1100,14 +1100,18 @@ func (g *Generator) makePythonTestNondetThunk(w *cppWriter, domSorts []goivy.Sor
 	w.open(fmt.Sprintf("%s operator()(const %s &arg) {", rangeT, domT))
 	tmp := g.nextTemp("__tmp")
 	w.linef("%s %s;", rangeT, tmp)
-	g.mkNondetWithCType(w, tmp, name, uniqueID, rangeT)
+	g.mkNondetValueScoped(w, tmp, rngSort, name, uniqueID, g.ClassName)
 	w.linef("return %s;", tmp)
 	w.close("")
 	w.open("z3::expr to_z3(gen &g, const z3::expr &v) {")
 	ztmp := g.nextTemp("__tmp")
 	w.linef("%s %s;", rangeT, ztmp)
-	g.mkNondetWithCType(w, ztmp, name, uniqueID, rangeT)
-	w.linef("z3::expr res = v == %s;", g.pythonTestNondetZ3ValueExpr(rngSort, ztmp))
+	g.mkNondetValueScoped(w, ztmp, rngSort, name, uniqueID, g.ClassName)
+	if g.thunkFastPathUsesToSolver(rngSort) {
+		w.linef("z3::expr res = __to_solver(g, v, %s);", ztmp)
+	} else {
+		w.linef("z3::expr res = v == %s;", g.pythonTestNondetZ3ValueExpr(rngSort, ztmp))
+	}
 	w.line("return res;")
 	w.close("")
 	w.close(";")

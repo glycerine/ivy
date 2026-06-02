@@ -41,6 +41,7 @@ type nativeBlock struct {
 	rawTag      string        // tag text before classification (diagnostics)
 	code        string        // body code (post-split, before antiquote)
 	params      []goivy.Expr  // antiquote parameters
+	loopVars    []goivy.Expr  // native label args; used by <<< init >>> loops
 }
 
 // classifyNativeTag maps the raw tag (already antiquote-substituted for
@@ -106,6 +107,20 @@ func (g *Generator) buildNativeBlocks() ([]nativeBlock, error) {
 			}
 			params = append(params, expr)
 		}
+		loopVars := make([]goivy.Expr, 0)
+		if args[0] != nil {
+			label, err := nativeExpr(args[0])
+			if err != nil {
+				return nil, err
+			}
+			for _, arg := range label.Args() {
+				expr, err := nativeExpr(arg)
+				if err != nil {
+					return nil, err
+				}
+				loopVars = append(loopVars, expr)
+			}
+		}
 		// Python applies native_to_str(native, code=tag) before
 		// classifying an encode tag, so antiquote refs in the tag
 		// itself resolve. We do the same for ALL tags so that the
@@ -122,6 +137,7 @@ func (g *Generator) buildNativeBlocks() ([]nativeBlock, error) {
 			rawTag:      strings.TrimSpace(rawTag),
 			code:        body,
 			params:      params,
+			loopVars:    loopVars,
 		})
 	}
 	return blocks, nil
@@ -259,7 +275,7 @@ func (g *Generator) emitImplNatives(w *cppWriter) error {
 		default:
 			continue
 		}
-		rendered, err := g.renderNativeTemplate(b.code, b.params)
+		rendered, err := g.renderNativeTemplateWithClass(b.code, b.params, g.ClassName)
 		if err != nil {
 			return err
 		}
@@ -283,11 +299,28 @@ func (g *Generator) emitInitNatives(w *cppWriter) error {
 		if b.kind != nativeTagInit {
 			continue
 		}
+		loops := 0
+		loopFailed := false
+		for _, v := range b.loopVars {
+			header, err := g.loopHeaderForSort(v.NodeSort(), nativeLoopVarName(v))
+			if err != nil {
+				g.unsupported(w, "unsupported native initializer parameter %s:%s", nativeLoopVarName(v), err.Error())
+				loopFailed = true
+				break
+			}
+			w.open(header)
+			loops++
+		}
+		if loopFailed {
+			g.closeAssignmentLoops(w, loops)
+			continue
+		}
 		rendered, err := g.renderNativeTemplate(b.code, b.params)
 		if err != nil {
 			return err
 		}
 		emitNativeLines(w, rendered)
+		g.closeAssignmentLoops(w, loops)
 	}
 	return nil
 }
@@ -305,7 +338,7 @@ func (g *Generator) emitInlineNatives(w *cppWriter) error {
 		if b.kind != nativeTagInline {
 			continue
 		}
-		rendered, err := g.renderNativeTemplate(b.code, b.params)
+		rendered, err := g.renderNativeTemplateWithClass(b.code, b.params, g.ClassName)
 		if err != nil {
 			return err
 		}
@@ -349,6 +382,13 @@ func (g *Generator) renderNativeTemplate(code string, params []goivy.Expr) (stri
 		}
 	}
 	return strings.Join(fields, ""), nil
+}
+
+func (g *Generator) renderNativeTemplateWithClass(code string, params []goivy.Expr, className string) (string, error) {
+	old := g.nativeClassName
+	g.nativeClassName = className
+	defer func() { g.nativeClassName = old }()
+	return g.renderNativeTemplate(code, params)
 }
 
 func (g *Generator) nativeTypeFull(nt *goivy.NativeType) (string, error) {
@@ -400,25 +440,25 @@ func (g *Generator) nativeReferenceInType(node goivy.Node) (string, error) {
 		}
 	case *goivy.Atom:
 		if s, ok := g.sortByName(n.Rep); ok {
-			return g.cppType(s), nil
+			return g.nativeCppType(s), nil
 		}
 		return varName(n.Rep), nil
 	case *goivy.Symbol:
 		if s, ok := g.sortByName(n.Rep); ok {
-			return g.cppType(s), nil
+			return g.nativeCppType(s), nil
 		}
 		return varName(n.Rep), nil
 	case *goivy.Const:
 		if s, ok := g.sortByName(n.Name); ok {
-			return g.cppType(s), nil
+			return g.nativeCppType(s), nil
 		}
 		return varName(n.Name), nil
 	case *goivy.UninterpretedSort:
-		return g.cppType(n), nil
+		return g.nativeCppType(n), nil
 	case *goivy.LogicEnumeratedSort:
-		return g.cppType(n), nil
+		return g.nativeCppType(n), nil
 	case *goivy.RangeSort:
-		return g.cppType(n), nil
+		return g.nativeCppType(n), nil
 	}
 	return "", fmt.Errorf("ivy2cpp: native type antiquote %T is not supported", node)
 }
@@ -541,7 +581,7 @@ func (g *Generator) nativeReference(arg goivy.Expr) (string, error) {
 	switch a := arg.(type) {
 	case *goivy.Const:
 		if s, ok := g.sortByName(a.Name); ok {
-			return g.cppType(s), nil
+			return g.nativeCppType(s), nil
 		}
 		return varName(a.Name), nil
 	case *goivy.LogicVariable:
@@ -549,16 +589,16 @@ func (g *Generator) nativeReference(arg goivy.Expr) (string, error) {
 	case *goivy.Apply:
 		return g.emitExpr(a)
 	case *goivy.UninterpretedSort:
-		return g.cppType(a), nil
+		return g.nativeCppType(a), nil
 	case *goivy.LogicEnumeratedSort:
-		return g.cppType(a), nil
+		return g.nativeCppType(a), nil
 	case *goivy.RangeSort:
-		return g.cppType(a), nil
+		return g.nativeCppType(a), nil
 	}
 	if rn, ok := arg.(interface{ Relname() string }); ok {
 		name := rn.Relname()
 		if s, ok := g.sortByName(name); ok {
-			return g.cppType(s), nil
+			return g.nativeCppType(s), nil
 		}
 		res := varName(name)
 		for _, child := range arg.Args() {
@@ -581,7 +621,30 @@ func (g *Generator) nativeTypeOf(arg goivy.Expr) (string, error) {
 	if name, ok := g.isCallbackAction(arg); ok {
 		return "thunk__" + varName(name), nil
 	}
-	return g.cppType(arg.NodeSort()), nil
+	return g.nativeCppType(arg.NodeSort()), nil
+}
+
+func (g *Generator) nativeCppType(s goivy.Sort) string {
+	if g == nil {
+		return cppType(s)
+	}
+	if g != nil && g.nativeClassName != "" {
+		return g.cppQualifiedType(s, g.nativeClassName)
+	}
+	return g.cppType(s)
+}
+
+func nativeLoopVarName(v goivy.Expr) string {
+	switch x := v.(type) {
+	case *goivy.Const:
+		return varName(x.Name)
+	case *goivy.LogicVariable:
+		return varName(x.Name)
+	}
+	if rn, ok := v.(interface{ Relname() string }); ok {
+		return varName(rn.Relname())
+	}
+	return varName(fmt.Sprint(v))
 }
 
 func (g *Generator) nativeZ3Name(arg goivy.Expr) (string, error) {

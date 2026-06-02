@@ -83,7 +83,8 @@ type Generator struct {
 	// nativeOnceMemo dedups header/impl/inline/encode native bodies
 	// (Python `once_memo`, ivy_to_cpp.py:1974, 2270-2274, 2401-2403).
 	// Lives on Generator per CLAUDE.md section C — never a package var.
-	nativeOnceMemo map[string]bool
+	nativeOnceMemo  map[string]bool
+	nativeClassName string
 
 	// encodedSorts records sorts whose serialization/encoding is
 	// supplied by a `<<< encode <sort> ... >>>` native block. Python
@@ -395,9 +396,9 @@ func (g *Generator) emitImpl() error {
 		}
 	case "test":
 		g.emitAllCtuplesToSolver(bw)
-		g.emitDestructorArgDeserZ3Impls(bw)
 		g.emitEnumSortArgDeserImpls(bw)
 		g.emitZ3SolverConversions(bw)
+		g.emitDestructorArgDeserZ3Impls(bw)
 		g.emitReplSupport(bw)
 		if g.Config.EmitMain {
 			g.emitTestMain(bw)

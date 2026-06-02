@@ -21,11 +21,24 @@ func (g *Generator) enumSortsForArgSpecs() []*goivy.LogicEnumeratedSort {
 	}
 	encoded := g.encodedSortSet()
 	var out []*goivy.LogicEnumeratedSort
-	for _, name := range g.Mod.SortOrder {
+	names := append([]string{}, g.Mod.SortOrder...)
+	seen := make(map[string]bool, len(names))
+	for _, name := range names {
+		seen[name] = true
+	}
+	var rest []string
+	for name := range g.Mod.Sig.Sorts.All() {
+		if !seen[name] {
+			rest = append(rest, name)
+		}
+	}
+	sort.Strings(rest)
+	names = append(names, rest...)
+	for _, name := range names {
 		if encoded != nil && encoded[name] {
 			continue
 		}
-		if !g.sortNeededForRuntimeSpecs(name) {
+		if !g.sortNeededForRuntimeSpecs(name) && !g.sortNeededForEmittedDestructorSpecs(name) {
 			continue
 		}
 		s, ok := g.Mod.Sig.Sorts.Get2(name)
@@ -45,6 +58,22 @@ func (g *Generator) enumSortsForArgSpecs() []*goivy.LogicEnumeratedSort {
 		out = append(out, st)
 	}
 	return out
+}
+
+func (g *Generator) sortNeededForEmittedDestructorSpecs(name string) bool {
+	if g == nil || g.Mod == nil || g.Mod.Sig == nil || g.Mod.SortDestructors == nil {
+		return false
+	}
+	for dname := range g.Mod.SortDestructors.All() {
+		s, ok := g.Mod.Sig.Sorts.Get2(dname)
+		if !ok {
+			continue
+		}
+		if g.sortDependencyReferencesName(s, name, map[string]bool{}) {
+			return true
+		}
+	}
+	return false
 }
 
 // encodedSortSet returns the encoded-sort set for filtering, or nil if

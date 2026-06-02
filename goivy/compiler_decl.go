@@ -1179,11 +1179,17 @@ func (d *DomainSetup) compileBound(b Node, lhsName string, sort Sort, context No
 	rep := fmt.Sprint(b)
 	// Python: if not ivy_logic.is_numeral_name(b.rep): b.sort = lhs; self.parameter(b)
 	if !IsNumeralName(rep) {
-		if atom, ok := b.(*Atom); ok {
-			cfg := d.Compiler.Module.Cfg.AstCfg
-			atom.ASort = cfg.NewAtom(lhsName)
-			_ = d.Parameter(b)
+		cfg := d.Compiler.Module.Cfg.AstCfg
+		sortNode := cfg.NewAtom(lhsName)
+		switch x := b.(type) {
+		case *Atom:
+			x.ASort = sortNode
+		case *App:
+			x.ASort = sortNode
+		case *Symbol:
+			x.Sort = sortNode
 		}
+		_ = d.Parameter(b)
 	}
 	// Python: with top_sort_as_default(): res = b.compile()
 	tsDefault := TopSortAsDefault(d.Compiler.Sig)

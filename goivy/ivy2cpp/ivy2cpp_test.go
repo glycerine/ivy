@@ -3962,6 +3962,58 @@ export tick_native
 	compileGeneratedCPP(t, out)
 }
 
+func TestImplNativeTypeAntiquoteUsesClassQualifiedType(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type endpoint
+destructor port(E:endpoint): bool
+<<< impl
+`+"`endpoint`"+` native_endpoint_value;
+>>>
+`)
+	out, err := Generate(mod, Config{ClassName: "nativequal"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "nativequal::endpoint native_endpoint_value;") {
+		t.Fatalf("impl native type antiquote should be class-qualified:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, "\nendpoint native_endpoint_value;") {
+		t.Fatalf("impl native type antiquote was unqualified:\n%s", out.Impl)
+	}
+}
+
+func TestInitNativeInsideParameterizedObjectEmitsLoop(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.8
+type client_id
+
+module iterable = {
+    interpret this -> {0..max}
+}
+
+global {
+    instance client_id : iterable
+}
+
+object client(self:client_id) = {
+    <<< init
+    native_hits[V0] = true;
+    >>>
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "nativeinit"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"for (int V0 = 0; V0 < (client_id__max+1); V0++)",
+		"native_hits[V0] = true;",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("init native missing %q:\n%s", want, out.Impl)
+		}
+	}
+}
+
 func TestDuplicateOnceNativeHeaderEmitsOnce(t *testing.T) {
 	mod := compileIvySource(t, `#lang ivy1.7
 <<< once
@@ -4098,6 +4150,43 @@ export install
 	}
 	if !strings.Contains(out.Impl, "struct thunk__handler {") {
 		t.Fatalf("thunk struct should be emitted for native-action callback:\n%s", out.Impl)
+	}
+}
+
+func TestNativeCallbackThunkCapturedParamConstructorOrder(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.8
+type client_id
+
+module iterable = {
+    interpret this -> {0..max}
+}
+
+global {
+    instance client_id : iterable
+}
+
+object client(self:client_id) = {
+    action handler = {
+    }
+    <<< init
+    install(`+"`handler`"+`);
+    >>>
+}
+`)
+	out, err := Generate(mod, Config{ClassName: "cbprm"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"thunk__client__handler(cbprm *__ivy, int prm__V0)",
+		"install(thunk__client__handler(this, V0));",
+	} {
+		if !strings.Contains(out.Impl, want) {
+			t.Fatalf("callback thunk missing %q:\n%s", want, out.Impl)
+		}
+	}
+	if strings.Contains(out.Impl, "thunk__client__handler(int prm__V0, cbprm *__ivy)") {
+		t.Fatalf("callback thunk constructor parameters should match Python order:\n%s", out.Impl)
 	}
 }
 
@@ -6843,6 +6932,39 @@ export step
 	}
 }
 
+func TestEnumZ3SpecializationsPrecedeRecordDestructors(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type proto = {udp, tcp}
+type endpoint
+destructor protocol(E:endpoint): proto
+destructor port(E:endpoint): bool
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "enumrecord"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	enumIdx := strings.Index(out.Impl, "z3::expr  __to_solver<enumrecord::proto>")
+	if enumIdx < 0 {
+		t.Fatalf("missing enum __to_solver specialization:\n%s", out.Impl)
+	}
+	recordIdx := strings.Index(out.Impl, "template <> z3::expr __to_solver<enumrecord::endpoint>")
+	if recordIdx < 0 {
+		t.Fatalf("missing record __to_solver specialization:\n%s", out.Impl)
+	}
+	for _, terms := range [][]string{
+		{"enumrecord::proto", "_arg<enumrecord::proto>"},
+		{"void", "__ser<enumrecord::proto>"},
+		{"void", "__deser<enumrecord::proto>"},
+	} {
+		if !hasLineWithAllTerms(out.Impl, terms...) {
+			t.Fatalf("emitted record helpers require enum helper terms %v:\n%s", terms, out.Impl)
+		}
+	}
+	if enumIdx > recordIdx {
+		t.Fatalf("enum __to_solver must precede record __to_solver to avoid implicit template instantiation; enumIdx=%d recordIdx=%d\n%s", enumIdx, recordIdx, out.Impl)
+	}
+}
+
 // TestEmitSetSolverLargeTypeForall asserts that emit_set on a state
 // symbol whose function-sort domain is "large" (Python is_large_type at
 // ivy_to_cpp.py:445-449) emits a forall-quantified __to_solver
@@ -7710,6 +7832,128 @@ extract executable_runner = node
 	}
 	assertNoUnsupportedCPP(t, out)
 	compileGeneratedCPP(t, out)
+}
+
+func TestIssue60ParameterizedObjectWithNestedModuleInstanceDoesNotPanic(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.8
+type client_id
+type msg_t
+
+module net(msg_t) = {
+    module socket = {
+        action ping = {
+        }
+    }
+}
+
+object client(self:client_id) = {
+    common {
+        instance net_inst: net(msg_t)
+        instance sock: net_inst.socket
+    }
+}
+
+extract executable_runner = client
+`)
+	if mod == nil {
+		t.Fatal("compileIvySource returned nil module")
+	}
+}
+
+func TestIssue60ParameterizedRangeBoundVisibleToTheoryProperty(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.8
+type client_id
+
+module iterable = {
+    interpret this -> {0..max}
+    property 0 <= X:this & X <= max
+}
+
+global {
+    instance client_id : iterable
+}
+`)
+	if mod == nil {
+		t.Fatal("compileIvySource returned nil module")
+	}
+}
+
+func TestIssue60NestedModuleFieldReferenceKeepsOuterArity(t *testing.T) {
+	dir := t.TempDir()
+	spec := filepath.Join(dir, "issue60_head.ivy")
+	if err := os.WriteFile(spec, []byte(`#lang ivy1.8
+	type client_id
+	type tag = {zero}
+
+	object tcp = {
+    type endpoint
+
+    module net(msg_t) = {
+		specification {
+			relation sent(S:tcp.endpoint,D:tcp.endpoint,T:tag,M:msg_t)
+			function head(S:tcp.endpoint,D:tcp.endpoint): tag
+		}
+
+        module socket = {
+            parameter id:tcp.endpoint
+            action send(dst:tcp.endpoint, msg:msg_t)
+
+			specification {
+				before send {
+					net.sent(id,dst,net.head(id,dst),msg) := true;
+				}
+			}
+        }
+    }
+	}
+
+	object client(self:client_id) = {
+		common {
+			class pkt = {
+				field kind: tag
+			}
+
+			instance net: tcp.net(pkt)
+		}
+
+		instance sock: net.socket
+	}
+
+extract executable_runner = client
+`), 0o644); err != nil {
+		t.Fatalf("write spec: %v", err)
+	}
+	if _, err := CompileAndGenerateAll(spec, map[string]string{"target": "test", "classname": "issue60head"}, Config{}); err != nil {
+		t.Fatalf("CompileAndGenerateAll: %v", err)
+	}
+}
+
+func TestIssue60InterpretedRangeInitializerParamLoopUsesSymbolicBound(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.8
+type client_id
+
+module iterable = {
+    interpret this -> {0..max}
+}
+
+global {
+    instance client_id : iterable
+}
+
+object client(self:client_id) = {
+    var ready: bool
+    after init {
+        ready := false;
+    }
+}
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "issue60init"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	if !strings.Contains(out.Impl, "for (int prm__V0 = 0; prm__V0 < (client_id__max+1); prm__V0++)") {
+		t.Fatalf("interpreted range initializer loop missing symbolic bound:\n%s", out.Impl)
+	}
 }
 
 func generatedMethodBody(t *testing.T, text, startMarker, endMarker string) string {
@@ -8919,6 +9163,32 @@ export step
 		t.Fatalf("native-range input must not route through primitive randomize():\n%s", text)
 	}
 	assertNoUnsupportedCPP(t, out)
+}
+
+func TestPythonTestNondetThunkRecordRangeInitializesFields(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type key
+type idx = {0..3}
+type endpoint
+destructor addr(E:endpoint): idx
+destructor port(E:endpoint): idx
+function src(K:key): endpoint
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "nondetrec"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, field := range []string{".addr", ".port"} {
+		if !hasLineWithAllTerms(out.Impl, field, "___ivy_choose") {
+			t.Fatalf("record-range nondet thunk should initialize %s from ___ivy_choose:\n%s", field, out.Impl)
+		}
+	}
+	if !strings.Contains(out.Impl, "z3::expr res = __to_solver(g, v,") {
+		t.Fatalf("record-range nondet thunk should use __to_solver in to_z3:\n%s", out.Impl)
+	}
+	if strings.Contains(out.Impl, "(nondetrec::endpoint)___ivy_choose") {
+		t.Fatalf("record-range nondet thunk should initialize fields instead of casting int to struct:\n%s", out.Impl)
+	}
 }
 
 func TestRandomizeUninterpretedRangeErrorsLikePython(t *testing.T) {

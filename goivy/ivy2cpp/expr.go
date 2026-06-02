@@ -1372,10 +1372,14 @@ func (g *Generator) loopHeaderForSort(s goivy.Sort, name string) (string, error)
 	}
 	if rs, ok := g.rangeSortFor(s); ok {
 		lo, hi, ok := numericRangeBounds(rs)
-		if !ok {
-			return "", fmt.Errorf("ivy2cpp: cannot emit bounded loop over non-numeric range %s", sortName(s))
+		if ok {
+			return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppType(s), name, lo, name, hi, name), nil
 		}
-		return fmt.Sprintf("for (%s %s = %s; %s <= %s; %s++) {", g.cppType(s), name, lo, name, hi, name), nil
+		loExpr, hiExpr, ok := symbolicRangeLoopBounds(rs)
+		if ok {
+			return fmt.Sprintf("for (%s %s = %s; %s < (%s+1); %s++) {", g.cppType(s), name, loExpr, name, hiExpr, name), nil
+		}
+		return "", fmt.Errorf("ivy2cpp: cannot emit bounded loop over non-numeric range %s", sortName(s))
 	}
 	if cppIsAnyIntegerType(g, s) {
 		card := cppSortCard(g, s)
@@ -1385,6 +1389,35 @@ func (g *Generator) loopHeaderForSort(s goivy.Sort, name string) (string, error)
 		}
 	}
 	return "", fmt.Errorf("ivy2cpp: cannot emit bounded loop over %s", sortName(s))
+}
+
+func symbolicRangeLoopBounds(rs *goivy.RangeSort) (string, string, bool) {
+	if rs == nil || rs.Lb == nil || rs.Ub == nil {
+		return "", "", false
+	}
+	lo, ok := rangeLoopBoundExpr(rs.Lb)
+	if !ok {
+		return "", "", false
+	}
+	hi, ok := rangeLoopBoundExpr(rs.Ub)
+	if !ok {
+		return "", "", false
+	}
+	return lo, hi, true
+}
+
+func rangeLoopBoundExpr(b goivy.NumeralOrCompiledBound) (string, bool) {
+	if b == nil {
+		return "", false
+	}
+	text := b.BoundString()
+	if text == "" {
+		return "", false
+	}
+	if b.IsNumeral() {
+		return text, true
+	}
+	return varName(text), true
 }
 
 // loopHeaderForSortBounds mirrors Python `open_loop` when an explicit

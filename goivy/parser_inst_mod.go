@@ -173,7 +173,7 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]strin
 	//   for name,dfs in module.defined.items():
 	//       if any((df[1] is TypeDecl) or (df[1] is DestructorDecl) for df in dfs):
 	//           static.add(name)
-	static := collectStatic(module.decls)
+	static := collectStatic(module)
 
 	// Extract optional lineno parameter
 	var refLineno Location
@@ -490,11 +490,17 @@ func collectDefined(decls []Node) map[string]bool {
 	return defined
 }
 
-// collectStatic collects "static" names (types and destructors).
+// collectStatic collects module.static plus "static" names (types and destructors).
 // Matches Python module.static + the TypeDecl/DestructorDecl check in inst_mod.
-func collectStatic(decls []Node) map[string]bool {
+func collectStatic(module *ivyAccum) map[string]bool {
 	static := make(map[string]bool)
-	for _, d := range decls {
+	if module == nil {
+		return static
+	}
+	for name := range module.static {
+		static[name] = true
+	}
+	for _, d := range module.decls {
 		switch d.(type) {
 		case *TypeDecl, *DestructorDecl:
 			if definer, ok := d.(interface{ Defines() []string }); ok {
