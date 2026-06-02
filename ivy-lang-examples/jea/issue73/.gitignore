@@ -1,0 +1,6 @@
+ord
+*.h
+*~
+*.cpp
+*.dsc
+*.dSYM
