@@ -12,6 +12,10 @@ export interface AnalysisSpreadsheetRow {
   cells: Record<string, string>;
 }
 
+type AnalysisFormulaTarget =
+  | { kind: 'line'; rowIndex: number }
+  | { kind: 'cell'; rowIndex: number; columnId: string };
+
 const ANALYSIS_DATA_COLUMN_COUNT = 26;
 const ANALYSIS_DATA_COLUMN_LABELS = Array.from(
   { length: ANALYSIS_DATA_COLUMN_COUNT },
@@ -107,8 +111,10 @@ export function renderAnalysisSpreadsheet(app, content = '', {
 
   var rows = rowsFromEditorContent(content, analysisSpreadsheetCells(app));
   var table = createAnalysisTable(rows);
+  bindAnalysisFormulaInput(app, doc);
   container.textContent = '';
   container.appendChild(renderAnalysisTable(app, table, doc));
+  refreshAnalysisFormulaInput(app, doc);
   return true;
 }
 
@@ -142,6 +148,7 @@ export function toggleAnalysisSpreadsheetLineComment(app, rowIndex, {
 }
 
 export function applyAnalysisSpreadsheetCellEdit(app, rowIndex: number, columnId: string, nextValue: string) {
+  if (!app) return '';
   var cells = analysisSpreadsheetCells(app);
   var rowKey = String(rowIndex + 1);
   cells[rowKey] = cells[rowKey] || {};
@@ -248,24 +255,14 @@ function renderLineInput(app, row: AnalysisSpreadsheetRow, doc: Document) {
   input.spellcheck = false;
   input.dataset.lineIndex = String(row.lineNumber - 1);
   input.setAttribute('aria-label', 'Spec line ' + row.lineNumber);
+  input.addEventListener('focus', () => {
+    setAnalysisFormulaTarget(app, { kind: 'line', rowIndex: row.lineNumber - 1 }, input.value, doc);
+  });
   input.addEventListener('input', () => {
     var lineIndex = Number(input.dataset.lineIndex || '0');
     applyAnalysisSpreadsheetLineEdit(app, lineIndex, input.value, { doc });
-    var commentCell = input.closest('tr')?.querySelector('.analysis-comment-cell') as HTMLTableCellElement | null;
-    if (!commentCell) return;
-    var updatedRow = { ...row, line: input.value };
-    if (rowHasProtectedCommentMarker(updatedRow)) {
-      commentCell.textContent = '';
-      return;
-    }
-    var toggle = commentCell.querySelector('.analysis-comment-toggle') as HTMLButtonElement | null;
-    if (!toggle) {
-      commentCell.appendChild(renderCommentToggle(app, updatedRow, doc));
-      return;
-    }
-    var commented = lineIsCommented(input.value);
-    toggle.textContent = commented ? '#' : '';
-    toggle.setAttribute('aria-pressed', commented ? 'true' : 'false');
+    syncCommentCellForLineInput(app, row, input, doc);
+    updateAnalysisFormulaInputIfTargetMatches(app, { kind: 'line', rowIndex: lineIndex }, input.value, doc);
   });
   return input;
 }
@@ -279,11 +276,115 @@ function renderAnalysisCellInput(app, row: AnalysisSpreadsheetRow, columnId: str
   input.dataset.lineIndex = String(row.lineNumber - 1);
   input.dataset.columnId = columnId;
   input.setAttribute('aria-label', 'Analysis cell ' + columnId + ' line ' + row.lineNumber);
+  input.addEventListener('focus', () => {
+    setAnalysisFormulaTarget(app, { kind: 'cell', rowIndex: row.lineNumber - 1, columnId }, input.value, doc);
+  });
   input.addEventListener('input', () => {
     var lineIndex = Number(input.dataset.lineIndex || '0');
     applyAnalysisSpreadsheetCellEdit(app, lineIndex, columnId, input.value);
+    updateAnalysisFormulaInputIfTargetMatches(app, { kind: 'cell', rowIndex: lineIndex, columnId }, input.value, doc);
   });
   return input;
+}
+
+function bindAnalysisFormulaInput(app, doc: Document) {
+  var formulaInput = analysisFormulaInput(doc);
+  if (!formulaInput) return;
+  formulaInput.oninput = () => {
+    applyAnalysisFormulaEdit(app, formulaInput.value, doc);
+  };
+}
+
+function setAnalysisFormulaTarget(app, target: AnalysisFormulaTarget, value: string, doc: Document) {
+  app._analysisSpreadsheetFormulaTarget = target;
+  var formulaInput = analysisFormulaInput(doc);
+  if (formulaInput) formulaInput.value = value;
+}
+
+function refreshAnalysisFormulaInput(app, doc: Document) {
+  var target = app?._analysisSpreadsheetFormulaTarget as AnalysisFormulaTarget | undefined;
+  var formulaInput = analysisFormulaInput(doc);
+  if (!target || !formulaInput) return;
+  formulaInput.value = formulaValueForTarget(app, target);
+}
+
+function applyAnalysisFormulaEdit(app, value: string, doc: Document) {
+  var target = app?._analysisSpreadsheetFormulaTarget as AnalysisFormulaTarget | undefined;
+  if (!target) return;
+  if (target.kind === 'line') {
+    applyAnalysisSpreadsheetLineEdit(app, target.rowIndex, value, { doc });
+    var lineInput = doc.querySelector(
+      '.analysis-line-input[data-line-index="' + target.rowIndex + '"]',
+    ) as HTMLInputElement | null;
+    if (lineInput) {
+      lineInput.value = value;
+      syncCommentCellForLineInput(app, rowFromLineInput(lineInput, value), lineInput, doc);
+    }
+    return;
+  }
+  applyAnalysisSpreadsheetCellEdit(app, target.rowIndex, target.columnId, value);
+  var cellInput = doc.querySelector(
+    '.analysis-cell-input[data-line-index="' + target.rowIndex + '"][data-column-id="' + target.columnId + '"]',
+  ) as HTMLInputElement | null;
+  if (cellInput) cellInput.value = value;
+}
+
+function updateAnalysisFormulaInputIfTargetMatches(
+  app,
+  target: AnalysisFormulaTarget,
+  value: string,
+  doc: Document,
+) {
+  var currentTarget = app?._analysisSpreadsheetFormulaTarget as AnalysisFormulaTarget | undefined;
+  var formulaInput = analysisFormulaInput(doc);
+  if (formulaInput && currentTarget && analysisFormulaTargetsMatch(currentTarget, target)) {
+    formulaInput.value = value;
+  }
+}
+
+function analysisFormulaTargetsMatch(a: AnalysisFormulaTarget, b: AnalysisFormulaTarget) {
+  return a.kind === b.kind
+    && a.rowIndex === b.rowIndex
+    && (a.kind === 'line' || a.columnId === (b as { columnId: string }).columnId);
+}
+
+function formulaValueForTarget(app, target: AnalysisFormulaTarget) {
+  if (target.kind === 'line') {
+    return linesFromEditorContent(editorContent(app))[target.rowIndex] || '';
+  }
+  return analysisSpreadsheetCells(app)[String(target.rowIndex + 1)]?.[target.columnId] || '';
+}
+
+function rowFromLineInput(input: HTMLInputElement, line: string): AnalysisSpreadsheetRow {
+  var lineNumber = Number(input.dataset.lineIndex || '0') + 1;
+  return {
+    id: String(lineNumber),
+    lineNumber,
+    line,
+    cells: {},
+  };
+}
+
+function syncCommentCellForLineInput(app, row: AnalysisSpreadsheetRow, input: HTMLInputElement, doc: Document) {
+  var commentCell = input.closest('tr')?.querySelector('.analysis-comment-cell') as HTMLTableCellElement | null;
+  if (!commentCell) return;
+  var updatedRow = { ...row, line: input.value };
+  if (rowHasProtectedCommentMarker(updatedRow)) {
+    commentCell.textContent = '';
+    return;
+  }
+  var toggle = commentCell.querySelector('.analysis-comment-toggle') as HTMLButtonElement | null;
+  if (!toggle) {
+    commentCell.appendChild(renderCommentToggle(app, updatedRow, doc));
+    return;
+  }
+  var commented = lineIsCommented(input.value);
+  toggle.textContent = commented ? '#' : '';
+  toggle.setAttribute('aria-pressed', commented ? 'true' : 'false');
+}
+
+function analysisFormulaInput(doc: Document) {
+  return doc.getElementById('analysis-formula-input') as HTMLInputElement | null;
 }
 
 function analysisSpreadsheetCells(app): Record<string, Record<string, string>> {

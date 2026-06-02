@@ -30,6 +30,13 @@ function makeSpreadsheetApp(initialContent = 'type client\nrelation link(X,Y)') 
   };
 }
 
+function mountSpreadsheetShell() {
+  document.body.innerHTML = [
+    '<input id="analysis-formula-input">',
+    '<div id="analysis-spreadsheet-grid"></div>',
+  ].join('');
+}
+
 afterEach(() => {
   document.body.innerHTML = '';
 });
@@ -88,6 +95,49 @@ describe('analysisSpreadsheetService', () => {
     expect(document.querySelector<HTMLInputElement>(
       '.analysis-cell-input[data-line-index="0"][data-column-id="a"]',
     )!.value).toBe('reachable');
+  });
+
+  it('uses the formula bar to view and edit the selected analysis cell', () => {
+    mountSpreadsheetShell();
+    const app = makeSpreadsheetApp('type client');
+    syncAnalysisSpreadsheetFromEditor(app);
+
+    const formula = document.getElementById('analysis-formula-input') as HTMLInputElement;
+    const firstA = document.querySelector<HTMLInputElement>(
+      '.analysis-cell-input[data-line-index="0"][data-column-id="a"]',
+    )!;
+
+    firstA.value = 'reachable';
+    firstA.dispatchEvent(new Event('focus'));
+    firstA.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(formula.value).toBe('reachable');
+
+    formula.value = '=a1';
+    formula.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(firstA.value).toBe('=a1');
+    expect(app.currentContent()).toBe('type client');
+    expect(app._analysisSpreadsheetCells).toEqual({ '1': { a: '=a1' } });
+  });
+
+  it('uses the formula bar to view and edit the selected spec line cell', () => {
+    mountSpreadsheetShell();
+    const app = makeSpreadsheetApp('type client');
+    syncAnalysisSpreadsheetFromEditor(app);
+
+    const formula = document.getElementById('analysis-formula-input') as HTMLInputElement;
+    const lineInput = document.querySelector<HTMLInputElement>('.analysis-line-input')!;
+
+    lineInput.dispatchEvent(new Event('focus'));
+
+    expect(formula.value).toBe('type client');
+
+    formula.value = 'type server';
+    formula.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(lineInput.value).toBe('type server');
+    expect(app.currentContent()).toBe('type server');
   });
 
   it('updates the editor buffer when a spreadsheet line is edited', () => {
