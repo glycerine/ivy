@@ -89,6 +89,15 @@ func hasLineWithAllTerms(s string, terms ...string) bool {
 	return false
 }
 
+func lineStartsAtColumnZero(s, term string) bool {
+	for _, line := range strings.Split(s, "\n") {
+		if strings.Contains(line, term) {
+			return strings.HasPrefix(line, term)
+		}
+	}
+	return false
+}
+
 func compileGeneratedCPP(t *testing.T, out *Output) {
 	t.Helper()
 	compileGeneratedCPPWithPrefix(t, out, "")
@@ -6540,6 +6549,37 @@ func TestDestructorArgShape(t *testing.T) {
 	} {
 		if !strings.Contains(out.Impl, want) {
 			t.Fatalf("missing %q in impl:\n%s", want, out.Impl)
+		}
+	}
+	compileGeneratedCPP(t, out)
+}
+
+func TestDestructorArgElseIfDoesNotLeakIndent(t *testing.T) {
+	mod := compileIvySource(t, `#lang ivy1.7
+type color = {red, green, blue}
+type idx = {0..3}
+type rec
+parameter pick : idx
+destructor first(R:rec) : bool
+destructor second(R:rec) : color
+destructor third(R:rec) : idx
+individual saved : rec
+action set(r:rec) = {
+    saved := r
+}
+export set
+`)
+	out, err := Generate(mod, Config{Target: "test", ClassName: "indentrec"})
+	if err != nil {
+		t.Fatalf("Generate: %v", err)
+	}
+	for _, want := range []string{
+		"template <> void __deser<indentrec::rec>",
+		"class cmd_reader : public stdin_reader {",
+		"int main(int argc, char **argv) {",
+	} {
+		if !lineStartsAtColumnZero(out.Impl, want) {
+			t.Fatalf("line containing %q should start at column zero:\n%s", want, out.Impl)
 		}
 	}
 	compileGeneratedCPP(t, out)

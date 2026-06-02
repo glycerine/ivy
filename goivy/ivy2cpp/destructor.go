@@ -516,12 +516,18 @@ func (g *Generator) emitDestructorArgImpl(w *cppWriter, name, typeName string, d
 			continue
 		}
 		field := varName(memName(d.Name))
-		prefix := ""
-		if !first {
-			prefix = "} else "
+		if first {
+			first = false
+			w.open(fmt.Sprintf(`if (arg.fields[i].atom == "%s") {`, escapeString(field)))
+		} else {
+			// The leading `}` closes the previous branch while the trailing
+			// `{` opens this one, so keep the writer's indent level unchanged.
+			if w.indent > 0 {
+				w.indent--
+			}
+			w.linef(`} else if (arg.fields[i].atom == "%s") {`, escapeString(field))
+			w.indent++
 		}
-		first = false
-		w.open(fmt.Sprintf(`%sif (arg.fields[i].atom == "%s") {`, prefix, escapeString(field)))
 		// Per Python: per-index scope opens { ivy_value tmp = tmp_args[0]; size-check; for X__k { shadow tmp_args; ... } }
 		vs := make([]string, len(domain))
 		for k := range domain {
