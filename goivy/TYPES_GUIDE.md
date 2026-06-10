@@ -104,7 +104,7 @@ resolution — each AST class has its own `.cmpl` override. In Go,
 ### CompileNode — The Type Switch
 
 ```go
-// compiler/compiler.go
+// compiler.go
 func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error)
 ```
 
@@ -139,7 +139,7 @@ op_pairs = [
 ### SortifyWithInference — Compile + Sort-Infer
 
 ```go
-// compiler/compiler.go
+// compiler.go
 func (c *Compiler) SortifyWithInference(node ast.Node) (lg.Expr, error)
 ```
 

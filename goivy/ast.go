@@ -62,9 +62,9 @@ func safeLinenoAddRef(n Node, loc Location) Location {
 
 // Node is the interface implemented by all AST nodes.
 //
-// Note that the logic.Expr interface embeds the
-// ast.Node interface, so any lg.Expr is also an ast.Node.
-// See ~/goivy/logic/node.go for all details.
+// Note that the logic_node.go's Expr interface embeds the
+// ast.go's Node interface, so any Expr is also an Node.
+// See logic_node.go for all details.
 type Node interface {
 	// Args returns the child nodes for generic traversal.
 	Args() []Node
@@ -80,7 +80,7 @@ type Node interface {
 	// Canon returns a canonical (reproducible)
 	// compact s-expression string, safe for hashing.
 	// It must capture/represent all of the
-	// ast.Node internal state.
+	// Node's internal state.
 	Canon() Canonical
 
 	// GetAstConfig returns the AstConfig stored on the node's Base.
