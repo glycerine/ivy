@@ -312,10 +312,28 @@ func asIvyTranslator(arg zlisp.Sexp, name string) (*goivy.Translator, error) {
 
 func asIvyExpr(arg zlisp.Sexp, name string) (goivy.Expr, error) {
 	ref, ok := arg.(*IvyExprRef)
-	if !ok || ref.Expr == nil {
-		return nil, fmt.Errorf("%s: expected ivy-expr, got %T", name, arg)
+	if ok {
+		if ref.Expr == nil {
+			return nil, fmt.Errorf("%s: expected ivy-expr, got nil", name)
+		}
+		return ref.Expr, nil
 	}
-	return ref.Expr, nil
+	sortRef, ok := arg.(*IvySortRef)
+	if ok {
+		if sortRef.Sort == nil {
+			return nil, fmt.Errorf("%s: expected ivy-sort, got nil", name)
+		}
+		return sortRef.Sort, nil
+	}
+	return nil, fmt.Errorf("%s: expected ivy-expr, got %T", name, arg)
+}
+
+func asIvySort(arg zlisp.Sexp, name string) (goivy.Sort, error) {
+	ref, ok := arg.(*IvySortRef)
+	if !ok || ref.Sort == nil {
+		return nil, fmt.Errorf("%s: expected ivy-sort, got %T", name, arg)
+	}
+	return ref.Sort, nil
 }
 
 func asZ3Utils(arg zlisp.Sexp, name string) (*goivy.Z3Utils, error) {
@@ -374,6 +392,38 @@ func asStringSlice(arg zlisp.Sexp, name string) ([]string, error) {
 	return out, nil
 }
 
+func asIvyExprSlice(arg zlisp.Sexp, name string) ([]goivy.Expr, error) {
+	arr, ok := arg.(*zlisp.SexpArray)
+	if !ok {
+		return nil, fmt.Errorf("%s: expected array of ivy-expr, got %T", name, arg)
+	}
+	out := make([]goivy.Expr, len(arr.Val))
+	for i, item := range arr.Val {
+		expr, err := asIvyExpr(item, name)
+		if err != nil {
+			return nil, fmt.Errorf("%s[%d]: %w", name, i, err)
+		}
+		out[i] = expr
+	}
+	return out, nil
+}
+
+func asIvySortSlice(arg zlisp.Sexp, name string) ([]goivy.Sort, error) {
+	arr, ok := arg.(*zlisp.SexpArray)
+	if !ok {
+		return nil, fmt.Errorf("%s: expected array of ivy-sort, got %T", name, arg)
+	}
+	out := make([]goivy.Sort, len(arr.Val))
+	for i, item := range arr.Val {
+		sort, err := asIvySort(item, name)
+		if err != nil {
+			return nil, fmt.Errorf("%s[%d]: %w", name, i, err)
+		}
+		out[i] = sort
+	}
+	return out, nil
+}
+
 func wrapExprs(env *zlisp.Zlisp, exprs []smt.Z3Expr) zlisp.Sexp {
 	out := make([]zlisp.Sexp, len(exprs))
 	for i, expr := range exprs {
@@ -386,6 +436,14 @@ func wrapSorts(env *zlisp.Zlisp, sorts []smt.Z3Sort) zlisp.Sexp {
 	out := make([]zlisp.Sexp, len(sorts))
 	for i, sort := range sorts {
 		out[i] = &Z3SortRef{Sort: sort}
+	}
+	return sxArray(env, out)
+}
+
+func wrapBools(env *zlisp.Zlisp, bools []bool) zlisp.Sexp {
+	out := make([]zlisp.Sexp, len(bools))
+	for i, b := range bools {
+		out[i] = sxBool(b)
 	}
 	return sxArray(env, out)
 }
