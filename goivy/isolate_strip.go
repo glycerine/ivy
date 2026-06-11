@@ -20,7 +20,7 @@ func StripMapLookup(name string, stripMap StripMap, mod *Module) []string {
 	name = CanonAct(name)
 
 	// Global parameters are not stripped.
-	if _, ok := mod.Attributes[mod.Cfg.IuCfg.ComposeNames(name, "global_parameter")]; ok {
+	if _, ok := mod.Attributes.Get2(mod.Cfg.IuCfg.ComposeNames(name, "global_parameter")); ok {
 		return nil
 	}
 
@@ -42,7 +42,7 @@ func StripMapLookup(name string, stripMap StripMap, mod *Module) []string {
 		if strings.HasPrefix(name+cc, prefix+cc) {
 			// Check for "common" attribute override.
 			attr := mod.Cfg.IuCfg.ComposeNames(name, "common")
-			if commonVal, ok := mod.Attributes[attr]; ok {
+			if commonVal, ok := mod.Attributes.Get2(attr); ok {
 				if commonStr, ok := commonVal.(string); ok {
 					if strings.HasPrefix(commonStr+cc, prefix+cc) {
 						continue

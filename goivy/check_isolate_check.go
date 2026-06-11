@@ -1077,7 +1077,7 @@ func CheckModule(mod *Module) error {
 		saveMacroFinder := false
 		if isolate != "" {
 			attrKey := mod.Cfg.IuCfg.ComposeNames(isolate, "macro_finder")
-			if _, ok := mod.Attributes[attrKey]; ok {
+			if _, ok := mod.Attributes.Get2(attrKey); ok {
 				hasMFAttr = true
 				saveMacroFinder = mod.Cfg.SolverOpts.MacroFinder
 				if saveMacroFinder {
@@ -1287,13 +1287,13 @@ func GetIsolateAttr(isolate, attrName, defaultVal string, mod *Module) string {
 		return defaultVal
 	}
 	attr := mod.Cfg.IuCfg.ComposeNames(isolate, attrName)
-	val, ok := mod.Attributes[attr]
+	val, ok := mod.Attributes.Get2(attr)
 	if !ok {
 		pc := mod.Cfg.IuCfg.ParentChildName(isolate)
 		if pc[1] == "iso" {
 			attr = mod.Cfg.IuCfg.ComposeNames(pc[0], attrName)
 		}
-		val, ok = mod.Attributes[attr]
+		val, ok = mod.Attributes.Get2(attr)
 		if !ok {
 			return defaultVal
 		}

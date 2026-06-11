@@ -1087,7 +1087,7 @@ func (g *Generator) sortCardinalityAttr(s goivy.Sort) (string, bool) {
 		return "", false
 	}
 	attrKey := g.Mod.Cfg.IuCfg.ComposeNames(name, "cardinality")
-	val, ok := g.Mod.Attributes[attrKey]
+	val, ok := g.Mod.Attributes.Get2(attrKey)
 	if !ok {
 		return "", false
 	}
@@ -1144,7 +1144,7 @@ func (g *Generator) iterableSortFor(s goivy.Sort) (string, goivy.Sort, bool) {
 		return "", nil, false
 	}
 	attrKey := g.Mod.Cfg.IuCfg.ComposeNames(us.Name, "iterable")
-	if _, ok := g.Mod.Attributes[attrKey]; !ok {
+	if _, ok := g.Mod.Attributes.Get2(attrKey); !ok {
 		return "", nil, false
 	}
 	iterName := g.Mod.Cfg.IuCfg.ComposeNames(us.Name, "iter")

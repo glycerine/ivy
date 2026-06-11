@@ -1909,7 +1909,7 @@ func ReorderProps(mod *Module, props []*LabeledFormula) []*LabeledFormula {
 		name := labeledFormulaName(prop)
 		if name != "" {
 			specKey := mod.Cfg.IuCfg.ComposeNames(name, "spec")
-			if _, ok := mod.Attributes[specKey]; ok {
+			if _, ok := mod.Attributes.Get2(specKey); ok {
 				pc := mod.Cfg.IuCfg.ParentChildName(name)
 				parent := pc[0]
 				specprops[parent] = append(specprops[parent], prop)

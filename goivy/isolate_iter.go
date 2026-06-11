@@ -124,7 +124,7 @@ func hasAttribute(mod *Module, name string) bool {
 	if mod.Attributes == nil {
 		return false
 	}
-	_, ok := mod.Attributes[name]
+	_, ok := mod.Attributes.Get2(name)
 	return ok
 }
 

@@ -280,7 +280,7 @@ func crashModifiesRec(mod *Module, n string, dfnd map[string]bool, result *[]*Co
 			if mod.Cfg != nil && mod.Cfg.IuCfg != nil {
 				specName = mod.Cfg.IuCfg.ComposeNames(cname, "spec")
 			}
-			_, hasSpec := mod.Attributes[specName]
+			_, hasSpec := mod.Attributes.Get2(specName)
 			skipSpec := child == "spec" || hasSpec
 			xtracer.Trace("actions.CrashAction.modifies.recur child=%s cname=%s skip=%v", child, cname, skipSpec)
 			if child != "spec" {

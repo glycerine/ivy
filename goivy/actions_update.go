@@ -2210,7 +2210,7 @@ func collectCrashSyms(domain *Module, name string, result *[]*Const) {
 				// Check if child.spec is in attributes (skip spec-protected)
 				specName := fullName + ".spec"
 				if domain.Attributes != nil {
-					if _, ok := domain.Attributes[specName]; ok {
+					if _, ok := domain.Attributes.Get2(specName); ok {
 						continue
 					}
 				}

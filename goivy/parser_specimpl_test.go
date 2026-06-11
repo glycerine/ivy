@@ -183,7 +183,7 @@ func TestProcessAttributesStoresCommonAsString(t *testing.T) {
 	mod := New()
 	processAttributes(decl, mod)
 
-	got, ok := mod.Attributes["client.intf.common"]
+	got, ok := mod.Attributes.Get2("client.intf.common")
 	if !ok {
 		t.Fatalf("missing compiled common attribute; attributes=%v", mod.Attributes)
 	}

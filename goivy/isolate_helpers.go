@@ -150,7 +150,7 @@ func SetPrivatesFull(mod *Module, iso interface{}, suff string) {
 	}
 
 	// Handle explicit private attributes
-	for name := range mod.Attributes {
+	for name := range mod.Attributes.All() {
 		pc := mod.Cfg.IuCfg.ParentChildName(name)
 		p, c := pc[0], pc[1]
 		if c == "spec" || c == "impl" || c == "private" {
@@ -225,7 +225,7 @@ func setPrivatesPrefer(mod *Module, iso interface{}, preferred string) {
 
 func getPrivateFromAttributes(mod *Module, name string, suff string) string {
 	attrname := mod.Cfg.IuCfg.ComposeNames(name, mod.Cfg.IsolateCfg.IsolateMode)
-	if val, ok := mod.Attributes[attrname]; ok {
+	if val, ok := mod.Attributes.Get2(attrname); ok {
 		aval := fmt.Sprint(val)
 		switch aval {
 		case "priv":
@@ -288,7 +288,7 @@ func GetIsolateInfoFull(mod *Module, iso interface{}, kind string, extraWith []s
 		}
 	}
 
-	for name := range mod.Attributes {
+	for name := range mod.Attributes.All() {
 		pc := mod.Cfg.IuCfg.ParentChildName(name)
 		pName, c := pc[0], pc[1]
 		if c == kind || c == "private" {

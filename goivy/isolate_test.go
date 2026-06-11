@@ -767,7 +767,7 @@ func TestStripMapLookup(t *testing.T) {
 func TestStripMapLookupGlobalParam(t *testing.T) {
 	m := mkModule()
 	m.Sig = NewSig()
-	m.Attributes["x.global_parameter"] = true
+	m.SetAttribute("x.global_parameter", true)
 
 	sm := StripMap{"x": {"p"}}
 	result := StripMapLookup("x", sm, m)
@@ -915,7 +915,7 @@ with im.Module():
 	if err := IvyCompile(result.Decls, mod, false); err != nil {
 		t.Fatalf("IvyCompile: %v", err)
 	}
-	mod.Attributes["ping.private"] = "yes"
+	mod.SetAttribute("ping.private", "yes")
 	if err := CreateIsolate("", mod); err != nil {
 		t.Fatalf("CreateIsolate: %v", err)
 	}
@@ -929,7 +929,7 @@ with im.Module():
 	if strings.Join(imports, ",") != strings.Join(want.Imports, ",") {
 		t.Fatalf("wrapper imports differ from Python\nwant: %#v\ngot:  %#v", want.Imports, imports)
 	}
-	if got := mod.Attributes["imp__ping.private"]; got != want.ImpPrivate {
+	if got := mod.Attributes.Get("imp__ping.private"); got != want.ImpPrivate {
 		t.Fatalf("wrapper private attribute differs from Python\nwant: %q\ngot:  %q", want.ImpPrivate, got)
 	}
 	ping, ok := mod.Actions.Get2("ping")

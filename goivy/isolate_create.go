@@ -129,9 +129,9 @@ func createImportWrappers(iso string, mod *Module) ([]string, map[string][]strin
 		}
 		for _, attr := range []string{"spec", "impl", "private"} {
 			attrname := mod.Cfg.IuCfg.ComposeNames(impname, attr)
-			if val, ok := mod.Attributes[attrname]; ok {
+			if val, ok := mod.Attributes.Get2(attrname); ok {
 				extattrname := mod.Cfg.IuCfg.ComposeNames(extname, attr)
-				mod.Attributes[extattrname] = val
+				mod.SetAttribute(extattrname, val)
 			}
 		}
 

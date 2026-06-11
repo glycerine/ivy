@@ -14,7 +14,7 @@ action step(c:color) = {
 }
 export step
 `)
-	mod.Attributes["radix"] = "16"
+	mod.SetAttribute("radix", "16")
 	out, err := Generate(mod, Config{Target: "repl", ClassName: "tracelhshex", Trace: true})
 	if err != nil {
 		t.Fatalf("Generate: %v", err)

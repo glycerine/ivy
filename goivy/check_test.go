@@ -1095,7 +1095,7 @@ func TestGetIsolateAttrNotFound(t *testing.T) {
 
 func TestGetIsolateAttrStringValue(t *testing.T) {
 	mod := New()
-	mod.Attributes["myiso.method"] = "mc"
+	mod.SetAttribute("myiso.method", "mc")
 	result := GetIsolateAttr("myiso", "method", "ic", mod)
 	if result != "mc" {
 		t.Errorf("expected 'mc', got %q", result)
@@ -1105,7 +1105,7 @@ func TestGetIsolateAttrStringValue(t *testing.T) {
 func TestGetIsolateAttrFallbackParentIso(t *testing.T) {
 	mod := New()
 	// If child is "iso", fall back to parent.attrName
-	mod.Attributes["parent.method"] = "vmt"
+	mod.SetAttribute("parent.method", "vmt")
 	result := GetIsolateAttr("parent.iso", "method", "ic", mod)
 	if result != "vmt" {
 		t.Errorf("expected 'vmt' via parent fallback, got %q", result)
@@ -1114,7 +1114,7 @@ func TestGetIsolateAttrFallbackParentIso(t *testing.T) {
 
 func TestGetIsolateAttrNoFallbackNonIso(t *testing.T) {
 	mod := New()
-	mod.Attributes["parent.method"] = "vmt"
+	mod.SetAttribute("parent.method", "vmt")
 	// child is "other", not "iso", so no fallback
 	result := GetIsolateAttr("parent.other", "method", "ic", mod)
 	if result != "ic" {
@@ -1125,7 +1125,7 @@ func TestGetIsolateAttrNoFallbackNonIso(t *testing.T) {
 func TestGetIsolateAttrStringer(t *testing.T) {
 	mod := New()
 	// Use a fmt.Stringer value
-	mod.Attributes["myiso.method"] = stringerVal("bmc[10]")
+	mod.SetAttribute("myiso.method", stringerVal("bmc[10]"))
 	result := GetIsolateAttr("myiso", "method", "ic", mod)
 	if result != "bmc[10]" {
 		t.Errorf("expected 'bmc[10]' from Stringer, got %q", result)
@@ -1139,7 +1139,7 @@ func (s stringerVal) String() string { return string(s) }
 func TestGetIsolateAttrIntValue(t *testing.T) {
 	mod := New()
 	// Non-string, non-Stringer: uses fmt.Sprint
-	mod.Attributes["myiso.cardinality"] = 42
+	mod.SetAttribute("myiso.cardinality", 42)
 	result := GetIsolateAttr("myiso", "cardinality", "0", mod)
 	if result != "42" {
 		t.Errorf("expected '42' from Sprint, got %q", result)
@@ -1150,7 +1150,7 @@ func TestGetIsolateAttrIntValue(t *testing.T) {
 
 func TestGetIsolateMethodFromAttribute(t *testing.T) {
 	mod := New()
-	mod.Attributes["myiso.method"] = "vmt"
+	mod.SetAttribute("myiso.method", "vmt")
 	result := GetIsolateMethod("myiso", mod)
 	if result != "vmt" {
 		t.Errorf("expected 'vmt', got %q", result)
@@ -1165,7 +1165,7 @@ func TestGetIsolateMethodOptMCOverrides(t *testing.T) {
 	cfg.OptMC = true
 	defer func() { cfg.OptMC = oldVal }()
 
-	mod.Attributes["myiso.method"] = "vmt"
+	mod.SetAttribute("myiso.method", "vmt")
 	result := GetIsolateMethod("myiso", mod)
 	if result != "mc" {
 		t.Errorf("OptMC should override attribute, got %q", result)
@@ -1174,7 +1174,7 @@ func TestGetIsolateMethodOptMCOverrides(t *testing.T) {
 
 func TestGetIsolateMethodBMCFromAttribute(t *testing.T) {
 	mod := New()
-	mod.Attributes["myiso.method"] = "bmc[5]"
+	mod.SetAttribute("myiso.method", "bmc[5]")
 	result := GetIsolateMethod("myiso", mod)
 	if result != "bmc[5]" {
 		t.Errorf("expected 'bmc[5]', got %q", result)
@@ -1185,7 +1185,7 @@ func TestGetIsolateMethodBMCFromAttribute(t *testing.T) {
 
 func TestCheckSeparatelyFromAttribute(t *testing.T) {
 	mod := New()
-	mod.Attributes["myiso.separate"] = "true"
+	mod.SetAttribute("myiso.separate", "true")
 	if !CheckSeparately("myiso", mod) {
 		t.Error("should return true when attribute is 'true'")
 	}
@@ -1193,7 +1193,7 @@ func TestCheckSeparatelyFromAttribute(t *testing.T) {
 
 func TestCheckSeparatelyFalseAttribute(t *testing.T) {
 	mod := New()
-	mod.Attributes["myiso.separate"] = "false"
+	mod.SetAttribute("myiso.separate", "false")
 	if CheckSeparately("myiso", mod) {
 		t.Error("should return false when attribute is 'false'")
 	}
@@ -1209,7 +1209,7 @@ func TestCheckSeparatelyOptOverrides(t *testing.T) {
 	cfg.OptSeparateSet = true
 	defer func() { cfg.OptSeparate = oldVal; cfg.OptSeparateSet = oldSet }()
 
-	mod.Attributes["myiso.separate"] = "false"
+	mod.SetAttribute("myiso.separate", "false")
 	if !CheckSeparately("myiso", mod) {
 		t.Error("OptSeparate should override attribute")
 	}
@@ -1323,7 +1323,7 @@ func loadBMCFixture(t *testing.T, method string) *Module {
 	if method != "" {
 		// ComposeNames("this", "method") strips "this" and returns "method",
 		// so the attribute key for the implicit isolate is just "method".
-		mod.Attributes["method"] = method
+		mod.SetAttribute("method", method)
 	}
 	return mod
 }

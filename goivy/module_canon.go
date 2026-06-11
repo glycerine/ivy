@@ -160,7 +160,7 @@ func (m *Module) CanonSnapshot(label string) {
 
 	// Group 19: Other
 	xtracer.Trace("module.CanonSnapshot %s aliases=%s", label, canonStringMap(m.Aliases))
-	xtracer.Trace("module.CanonSnapshot %s attributes=%s", label, canonInterpMap(m.Attributes))
+	xtracer.Trace("module.CanonSnapshot %s attributes=%s", label, canonInsMapInterpMap(m.Attributes))
 	xtracer.Trace("module.CanonSnapshot %s extPreconds=%s", label, canonExprMap(m.ExtPreconds))
 	xtracer.Trace("module.CanonSnapshot %s conceptSpaces=%s", label, canonConceptSpaceSlice(m.ConceptSpaces))
 	xtracer.Trace("module.CanonSnapshot %s logics=%s", label, canonStringSlice(m.Logics))
@@ -256,6 +256,34 @@ func canonInterpMap(interp map[string]interface{}) string {
 	var parts []string
 	for _, k := range keys {
 		v := interp[k]
+		var vs string
+		switch val := v.(type) {
+		case string:
+			vs = fmt.Sprintf("%q", val)
+		case Canonizer:
+			vs = string(val.Canon())
+		case fmt.Stringer:
+			vs = val.String()
+		default:
+			vs = fmt.Sprintf("%v", val)
+		}
+		parts = append(parts, fmt.Sprintf("%s:%s", k, vs))
+	}
+	return fmt.Sprintf("(hash %s)", strings.Join(parts, " "))
+}
+
+func canonInsMapInterpMap(interp *InsMap[string, interface{}]) string {
+	if interp == nil || interp.Len() == 0 {
+		return "(hash)"
+	}
+	keys := make([]string, 0, interp.Len())
+	for k := range interp.All() {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	var parts []string
+	for _, k := range keys {
+		v := interp.Get(k)
 		var vs string
 		switch val := v.(type) {
 		case string:

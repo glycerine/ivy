@@ -8574,7 +8574,7 @@ action step(c:color) = {
 }
 import step
 `)
-	mod.Attributes["radix"] = "16"
+	mod.SetAttribute("radix", "16")
 	out, err := Generate(mod, Config{Target: "test", ClassName: "hexfmt"})
 	if err != nil {
 		t.Fatalf("Generate: %v", err)

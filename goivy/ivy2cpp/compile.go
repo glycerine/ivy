@@ -811,7 +811,7 @@ func moduleLibSpecs(mod *goivy.Module) []string {
 		return nil
 	}
 	var specs []string
-	for key, value := range mod.Attributes {
+	for key, value := range mod.Attributes.All() {
 		parts := strings.Split(key, ".")
 		if len(parts) == 0 || parts[len(parts)-1] != "libspec" {
 			continue

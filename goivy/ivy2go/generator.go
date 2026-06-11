@@ -506,7 +506,7 @@ func (g *Generator) actionWeight(name string) float64 {
 	if g.Mod == nil || g.Mod.Attributes == nil {
 		return 1.0
 	}
-	raw, ok := g.Mod.Attributes[username+".weight"]
+	raw, ok := g.Mod.Attributes.Get2(username + ".weight")
 	if !ok {
 		return 1.0
 	}

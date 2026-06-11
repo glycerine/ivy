@@ -236,24 +236,26 @@ func (s *InterpState) String() string {
 // Conjs returns the conjectures stored on the domain module.
 // In Python, conjectures are global via the module.
 func (s *InterpState) Conjs() []*Clauses {
-	conjs, _ := s.Domain.Attributes["__interp_conjs"].([]*Clauses)
+	raw, _ := s.Domain.Attributes.Get2("__interp_conjs")
+	conjs, _ := raw.([]*Clauses)
 	return conjs
 }
 
 // SetConjs sets the conjectures on the domain module.
 func (s *InterpState) SetConjs(conjs []*Clauses) {
-	s.Domain.Attributes["__interp_conjs"] = conjs
+	s.Domain.SetAttribute("__interp_conjs", conjs)
 }
 
 // Unders returns the under-approximations stored on the domain module.
 func (s *InterpState) Unders() []*InterpState {
-	unders, _ := s.Domain.Attributes["__interp_unders"].([]*InterpState)
+	raw, _ := s.Domain.Attributes.Get2("__interp_unders")
+	unders, _ := raw.([]*InterpState)
 	return unders
 }
 
 // SetUnders sets the under-approximations on the domain module.
 func (s *InterpState) SetUnders(unders []*InterpState) {
-	s.Domain.Attributes["__interp_unders"] = unders
+	s.Domain.SetAttribute("__interp_unders", unders)
 }
 
 // ---------------------------------------------------------------------------

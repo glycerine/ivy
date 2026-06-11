@@ -276,7 +276,7 @@ func declDefines(decl Node) []string {
 func addGlobalObjectsToIsolates(mod *Module) {
 	cfg := mod.Cfg.AstCfg
 	var globalObjects []Node
-	for _, name := range mod.AttributeNames() {
+	for name := range mod.Attributes.All() {
 		pc := mod.Cfg.IuCfg.ParentChildName(name)
 		p, c := pc[0], pc[1]
 		if c == "global" {
@@ -286,7 +286,7 @@ func addGlobalObjectsToIsolates(mod *Module) {
 			ppc := mod.Cfg.IuCfg.ParentChildName(p)
 			pp := ppc[0]
 			ppGlobal := mod.Cfg.IuCfg.ComposeNames(pp, "global")
-			_, hasParentGlobal := mod.Attributes[ppGlobal]
+			_, hasParentGlobal := mod.Attributes.Get2(ppGlobal)
 			if pp == "this" || !hasParentGlobal {
 				globalObjects = append(globalObjects, cfg.NewAtom(p))
 			}

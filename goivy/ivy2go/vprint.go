@@ -26,7 +26,7 @@ func (g *Generator) numberFormat() string {
 	// Scan module attributes for "radix" → "hex". Mirrors
 	// ivy2cpp/vprint.go's check.
 	if g.Mod != nil {
-		for k, attr := range g.Mod.Attributes {
+		for k, attr := range g.Mod.Attributes.All() {
 			if attr == nil {
 				continue
 			}
