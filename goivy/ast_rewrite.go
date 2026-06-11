@@ -396,11 +396,12 @@ func (r *AstRewriteSubstConstantsParams) RewriteAtom(atom *Atom, always bool) No
 // AstRewriteSubstPrefix substitutes and prefixes names.
 // Python: AstRewriteSubstPrefix
 type AstRewriteSubstPrefix struct {
-	Subst  map[string]string
-	Pref   *Atom           // prefix atom (nil for no prefix)
-	ToPref map[string]bool // names that should be prefixed (nil = all)
-	Static map[string]bool // static names (get prefix without args)
-	Local  bool            // set during SchemaBody rewriting
+	Subst      map[string]string
+	SubstNodes map[string]Node // Python subst values can be This objects.
+	Pref       *Atom           // prefix atom (nil for no prefix)
+	ToPref     map[string]bool // names that should be prefixed (nil = all)
+	Static     map[string]bool // static names (get prefix without args)
+	Local      bool            // set during SchemaBody rewriting
 }
 
 func NewAstRewriteSubstPrefix(subst map[string]string, pref *Atom) *AstRewriteSubstPrefix {
@@ -521,6 +522,124 @@ func RewriteSort(rewrite AstRewriter, origSort string, cfg *AstConfig) string {
 	return sort
 }
 
+// RewriteSortNode rewrites an AST sort annotation while preserving Python's
+// special This object when rewrite_sort leaves it unchanged.
+func RewriteSortNode(rewrite AstRewriter, origSort Node, cfg *AstConfig) Node {
+	if origSort == nil {
+		return nil
+	}
+	if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok && len(sp.SubstNodes) > 0 {
+		if res := RewriteSortNodeSubstPrefix(sp, origSort, cfg); res != nil {
+			return res
+		}
+	}
+	sortStr := fmt.Sprint(origSort)
+	newSort := RewriteSort(rewrite, sortStr, cfg)
+	if _, ok := origSort.(*This); ok && newSort == "this" {
+		return origSort
+	}
+	ss := &Symbol{Rep: newSort}
+	ss.Cfg = cfg
+	return ss
+}
+
+func RewriteSortNodeSubstPrefix(rewrite *AstRewriteSubstPrefix, origSort Node, cfg *AstConfig) Node {
+	sortNode, ok := substSubscriptsSortNode(origSort, rewrite.SubstNodes, cfg)
+	if !ok {
+		return nil
+	}
+	if baseNameDiffersNode(sortNode, origSort) {
+		return sortNode
+	}
+	if _, isThis := sortNode.(*This); isThis {
+		if rewrite.Pref == nil {
+			return sortNode
+		}
+		ss := &Symbol{Rep: rewrite.Pref.Rep}
+		ss.Cfg = cfg
+		return ss
+	}
+	sortStr := fmt.Sprint(sortNode)
+	tmpAtom := &Atom{Rep: sortStr}
+	tmpAtom.Cfg = cfg
+	rewritten := rewrite.RewriteAtom(tmpAtom, false)
+	if a, ok := rewritten.(*Atom); ok {
+		ss := &Symbol{Rep: a.Rep}
+		ss.Cfg = cfg
+		return ss
+	}
+	return sortNode
+}
+
+func substSubscriptsSortNode(origSort Node, subst map[string]Node, cfg *AstConfig) (Node, bool) {
+	if origSort == nil || len(subst) == 0 {
+		return nil, false
+	}
+	if _, ok := origSort.(*This); ok {
+		return origSort, true
+	}
+	sortStr := fmt.Sprint(origSort)
+	if strings.HasPrefix(sortStr, "\"") {
+		return origSort, true
+	}
+	if repl, ok := subst[sortStr]; ok {
+		return cloneSortSubstNode(repl, cfg), true
+	}
+	stringSubst := nodeSubstStrings(subst)
+	rewritten := SubstSubscripts(sortStr, stringSubst)
+	if rewritten == sortStr {
+		return nil, false
+	}
+	ss := &Symbol{Rep: rewritten}
+	ss.Cfg = cfg
+	return ss, true
+}
+
+func cloneSortSubstNode(n Node, cfg *AstConfig) Node {
+	switch v := n.(type) {
+	case *This:
+		t := cfg.NewThis()
+		t.Base = v.Base
+		return t
+	case *Symbol:
+		ss := &Symbol{Rep: v.Rep, Sort: v.Sort}
+		ss.Base = v.Base
+		if ss.Cfg == nil {
+			ss.Cfg = cfg
+		}
+		return ss
+	case *Atom:
+		ss := &Symbol{Rep: v.Rep}
+		ss.Cfg = cfg
+		return ss
+	case *App:
+		return cloneSortSubstNode(v.Rep, cfg)
+	default:
+		ss := &Symbol{Rep: fmt.Sprint(n)}
+		ss.Cfg = cfg
+		return ss
+	}
+}
+
+func nodeSubstStrings(subst map[string]Node) map[string]string {
+	out := make(map[string]string, len(subst))
+	for k, v := range subst {
+		out[k] = fmt.Sprint(v)
+	}
+	return out
+}
+
+func baseNameDiffersNode(x, y Node) bool {
+	if _, ok := x.(*This); ok {
+		_, yIsThis := y.(*This)
+		return !yIsThis
+	}
+	if _, ok := y.(*This); ok {
+		return true
+	}
+	return BaseNameDiffers(fmt.Sprint(x), fmt.Sprint(y))
+}
+
 // isTacticType returns true if the node is any Tactic subtype.
 // Python: isinstance(x, Tactic) matches all subclasses of Tactic.
 // Go has no inheritance, so we enumerate all tactic struct types.
@@ -589,10 +708,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		tmpAtom := &Atom{Rep: newRep}
 		tmpAtom.Cfg = n.Cfg
 		if n.Sort != nil {
-			sortStr := fmt.Sprint(n.Sort)
-			ss := &Symbol{Rep: RewriteSort(rewrite, sortStr, n.Cfg)}
-			ss.Cfg = n.Cfg
-			tmpAtom.ASort = ss
+			tmpAtom.ASort = RewriteSortNode(rewrite, n.Sort, n.Cfg)
 		}
 		if !BaseNameDiffers(n.Rep, newRep) {
 			rewritten := rewrite.RewriteAtom(tmpAtom, false)
@@ -630,11 +746,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		newAtom.Cfg = n.Cfg
 		CopyAttributesAstRef(n, newAtom)
 		if n.ASort != nil {
-			sortStr := fmt.Sprint(n.ASort)
-			newSortStr := RewriteSort(rewrite, sortStr, n.Cfg)
-			ss := &Symbol{Rep: newSortStr}
-			ss.Cfg = n.Cfg
-			newAtom.ASort = ss
+			newAtom.ASort = RewriteSortNode(rewrite, n.ASort, n.Cfg)
 		}
 		if BaseNameDiffers(n.Rep, newAtom.Rep) {
 			return newAtom
@@ -669,10 +781,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		newApp.Cfg = n.Cfg
 		CopyAttributesAstRef(n, newApp)
 		if n.ASort != nil {
-			sortStr := fmt.Sprint(n.ASort)
-			sortSym := &Symbol{Rep: RewriteSort(rewrite, sortStr, n.Cfg)}
-			sortSym.Cfg = n.Cfg
-			newApp.ASort = sortSym
+			newApp.ASort = RewriteSortNode(rewrite, n.ASort, n.Cfg)
 		}
 		if BaseNameDiffers(repStr, newRep) {
 			return newApp
@@ -853,6 +962,10 @@ func AstRewriteSlice(nodes []Node, rewrite AstRewriter) []Node {
 //	po = variables_distinct_ast(pref, ast) if pref else pref
 //	return ast_rewrite(ast, AstRewriteSubstPrefix(subst, po, to_pref, static=static))
 func SubstPrefixAtomsAst(node Node, subst map[string]string, pref *Atom, toPref map[string]bool, static map[string]bool) Node {
+	return SubstPrefixAtomsAstNodes(node, subst, nil, pref, toPref, static)
+}
+
+func SubstPrefixAtomsAstNodes(node Node, subst map[string]string, substNodes map[string]Node, pref *Atom, toPref map[string]bool, static map[string]bool) Node {
 	// Python: po = variables_distinct_ast(pref, ast) if pref else pref
 	var po *Atom = pref
 	if pref != nil {
@@ -865,10 +978,11 @@ func SubstPrefixAtomsAst(node Node, subst map[string]string, pref *Atom, toPref 
 		subst = map[string]string{}
 	}
 	rw := &AstRewriteSubstPrefix{
-		Subst:  subst,
-		Pref:   po,
-		ToPref: toPref,
-		Static: static,
+		Subst:      subst,
+		SubstNodes: substNodes,
+		Pref:       po,
+		ToPref:     toPref,
+		Static:     static,
 	}
 	return AstRewrite(node, rw)
 }

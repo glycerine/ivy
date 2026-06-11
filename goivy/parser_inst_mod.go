@@ -88,6 +88,7 @@ func doInsts(ivy *ivyAccum, insts []Node) {
 		// Python: subst = dict((x.rep,y.rep) for x,y in zip(fparams,aparams) if not isinstance(y,Variable))
 		// Python: vsubst = dict((x.rep,y) for x,y in zip(fparams,aparams) if isinstance(y,Variable))
 		subst := make(map[string]string)
+		substNodes := make(map[string]Node)
 		vsubst := make(map[string]*Variable)
 		for i := 0; i < len(formalParams) && i < len(actualArgs); i++ {
 			formalName := nodeRep(formalParams[i])
@@ -97,7 +98,9 @@ func doInsts(ivy *ivyAccum, insts []Node) {
 			if v, ok := actualArgs[i].(*Variable); ok {
 				vsubst[formalName] = v
 			} else {
-				subst[formalName] = nodeRep(actualArgs[i])
+				repNode := substRepNode(actualArgs[i], cfg)
+				subst[formalName] = nodeRep(repNode)
+				substNodes[formalName] = repNode
 			}
 		}
 
@@ -122,7 +125,7 @@ func doInsts(ivy *ivyAccum, insts []Node) {
 
 		// Python: inst_mod(ivy, module, pref, subst, vsubst, modname=inst.relname, lineno=instantiation.lineno)
 		instLineno := inst.GetLineno()
-		instMod(ivy, modAccum, prefAtom, subst, vsubst, modName, instLineno)
+		instMod(ivy, modAccum, prefAtom, subst, substNodes, vsubst, modName, instLineno)
 
 		// Python: if pref is None: ivy.objects.update(module.objects)
 		if pref == nil {
@@ -146,7 +149,7 @@ func doInsts(ivy *ivyAccum, insts []Node) {
 // at ivy_parser.py:135-201 EXACTLY.
 // The module parameter is the ivyAccum that was parsed for the module body,
 // matching Python where module is the Ivy class instance stored in Definition.Rhs.
-func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]string, vsubst map[string]*Variable, modname string, lineno ...Location) {
+func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]string, substNodes map[string]Node, vsubst map[string]*Variable, modname string, lineno ...Location) {
 	xtracer.Trace("parser.inst_mod ENTER name=%s", modname)
 
 	// Python line 154: set_always_clone_with_fresh_id(True)
@@ -182,10 +185,11 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]strin
 	}
 
 	// Python lines 146-159: inner function spaa(decl, subst, pref)
-	spaa := func(decl Node, subst map[string]string, spPref *Atom) Node {
+	spaa := func(decl Node, subst map[string]string, substNodes map[string]Node, spPref *Atom) Node {
 		xtracer.Trace("parser.spaa ENTER HASH decl.canon=%v pref=%v", decl.Canon(), spPref.Canon())
 
 		localSubst := subst
+		localSubstNodes := substNodes
 		// Python: if modname is not None and pref is not None and isinstance(decl, ModuleDecl):
 		//             subst = subst.copy()
 		//             p, c = iu.parent_child_name(modname)
@@ -200,13 +204,20 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]strin
 				pc := cfg.IuCfg.ParentChildName(modname)
 				c := pc[1]
 				localSubst[c] = spPref.Rep
+				if len(substNodes) > 0 {
+					localSubstNodes = make(map[string]Node, len(substNodes)+1)
+					for k, v := range substNodes {
+						localSubstNodes[k] = v
+					}
+					localSubstNodes[c] = cfg.NewSymbol(spPref.Rep, nil)
+				}
 			}
 		}
 		// Python: if lineno is not None: set_reference_lineno(lineno)
 		if refLineno != (Location{}) {
 			cfg.SetReferenceLineno(refLineno)
 		}
-		res := SubstPrefixAtomsAst(decl, localSubst, spPref, defined, static)
+		res := SubstPrefixAtomsAstNodes(decl, localSubst, localSubstNodes, spPref, defined, static)
 		// Python: if lineno is not None: set_reference_lineno(None)
 		if refLineno != (Location{}) {
 			cfg.SetReferenceLineno(Location{})
@@ -253,11 +264,11 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]strin
 			map1 := DistinctVariableRenaming(UsedVariablesAst(dpref), UsedVariablesAst(decl))
 			vpref := substAtomVars(dpref, map1)
 			vvsubst := buildVVSubst(dvsubst, map1)
-			idecl = spaa(decl, subst, vpref)
+			idecl = spaa(decl, subst, substNodes, vpref)
 			idecl = SubstituteConstantsAst2(idecl, vvsubst)
 		} else {
 			// Python line 179: idecl = spaa(decl, subst, dpref)
-			idecl = spaa(decl, subst, dpref)
+			idecl = spaa(decl, subst, substNodes, dpref)
 		}
 
 		// Python lines 180-183: common field handling
@@ -343,7 +354,7 @@ func InstModSubst(decls []Node, subst map[string]string, cfg *AstConfig) []Node 
 	// Python: ivy = Ivy() — this one correctly traces parser.__init__
 	ivy := newIvyAccum(nil, "")
 	ivy.astCfg = cfg
-	instMod(ivy, module, nil, subst, nil, "")
+	instMod(ivy, module, nil, subst, nil, nil, "")
 	return ivy.decls
 }
 
@@ -530,4 +541,21 @@ func nodeRep(n Node) string {
 		}
 	}
 	return fmt.Sprint(n)
+}
+
+// substRepNode extracts the Python-style y.rep value used by do_insts.
+func substRepNode(n Node, cfg *AstConfig) Node {
+	switch x := n.(type) {
+	case *App:
+		if x.Rep != nil {
+			return x.Rep
+		}
+	case *Atom:
+		return cfg.NewSymbol(x.Rep, nil)
+	case *Symbol, *This:
+		return x
+	case *Variable:
+		return cfg.NewSymbol(x.Rep, nil)
+	}
+	return cfg.NewSymbol(fmt.Sprint(n), nil)
 }

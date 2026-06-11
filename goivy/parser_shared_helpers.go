@@ -380,7 +380,7 @@ func createObject(cfg *AstConfig, top *ivyAccum, name *Atom, objectargs []Node, 
 		}
 	}
 
-	instMod(top, module, pref, map[string]string{}, vsubst, "", lineno)
+	instMod(top, module, pref, map[string]string{}, nil, vsubst, "", lineno)
 
 	xtracer.Trace("parser.create_object EXIT name=%s", name.Rep)
 }

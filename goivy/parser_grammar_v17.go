@@ -2260,7 +2260,6 @@ parser17default:
 			a2 := parser17Acfg(parser17lex).NewAtom(pref.Rep, parser17Dollar[4].nodes...)
 			elems := append([]Node{a1, a2}, parser17Dollar[9].nodes...)
 			idefInner := parser17Acfg(parser17lex).NewIsolateDef(elems, len(parser17Dollar[9].nodes)+1)
-			idefInner.IsObject = true
 			edef := parser17Acfg(parser17lex).NewExtractDef(*idefInner)
 			pdef := parser17Acfg(parser17lex).NewProcessDef(*edef)
 			pdef.Elems[0].SetLineno(tokLineno(lex, parser17Dollar[2].tok))
@@ -4683,18 +4682,20 @@ parser17default:
 //line parser_grammar_v17.y:3124
 		{
 			xtracer.Trace("parser.p_pname_symbol ENTER (pname)")
-			var rep string
 			switch v := parser17Dollar[1].node.(type) {
 			case *Symbol:
-				rep = v.Rep
+				n := parser17Acfg(parser17lex).NewApp(v)
+				n.SetLineno(nodeLineno(parser17Dollar[1].node))
+				parser17VAL.node = n
 			case *This:
-				rep = "this"
+				n := parser17Acfg(parser17lex).NewApp(v)
+				n.SetLineno(nodeLineno(parser17Dollar[1].node))
+				parser17VAL.node = n
 			default:
-				rep = fmt.Sprint(parser17Dollar[1].node)
+				n := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol(fmt.Sprint(parser17Dollar[1].node), nil))
+				n.SetLineno(nodeLineno(parser17Dollar[1].node))
+				parser17VAL.node = n
 			}
-			n := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol(rep, nil))
-			n.SetLineno(nodeLineno(parser17Dollar[1].node))
-			parser17VAL.node = n
 		}
 	case 320:
 		parser17Dollar = parser17S[parser17pt-1 : parser17pt+1]
@@ -4724,7 +4725,7 @@ parser17default:
 //line parser_grammar_v17.y:3157
 		{
 			xtracer.Trace("parser.p_pname_this ENTER (pname)")
-			parser17VAL.node = parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol("this", nil))
+			parser17VAL.node = parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewThis())
 			parser17VAL.node.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), parser17Dollar[1].tok))
 		}
 	case 324:

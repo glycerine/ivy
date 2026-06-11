@@ -194,7 +194,7 @@ func (r *DeclBase) Canon() Canonical {
 		}
 		s += "]"
 	}
-	s += fmt.Sprintf(" common:%v)", r.Common.Canon())
+	s += fmt.Sprintf(" common:%v)", commonCanon(r.Common))
 	return Canonical(s)
 }
 
@@ -202,7 +202,32 @@ func (r *DeclBase) Canon() Canonical {
 // parent Canon() output, promoting Base fields inline.
 func (d *DeclBase) canonFields() string {
 	return fmt.Sprintf("%v declArgs:%v attributes:%v common:%v",
-		d.Base.canonFields(), SliceCanon(d.DeclArgs), attrSliceCanon(d.Attributes), nodeCanon(d.Common))
+		d.Base.canonFields(), SliceCanon(d.DeclArgs), attrSliceCanon(d.Attributes), commonCanon(d.Common))
+}
+
+// commonCanon matches Python's decl.common field, which stores a bare string
+// such as "this" rather than an Atom node.
+func commonCanon(n Node) Canonical {
+	if n == nil {
+		return "nil"
+	}
+	switch v := n.(type) {
+	case *Atom:
+		if len(v.Terms) == 0 && v.ASort == nil {
+			return Canonical(v.Rep)
+		}
+	case *App:
+		if len(v.Terms) == 0 {
+			if sym, ok := v.Rep.(*Symbol); ok {
+				return Canonical(sym.Rep)
+			}
+		}
+	case *Symbol:
+		return Canonical(v.Rep)
+	case *This:
+		return "this"
+	}
+	return n.Canon()
 }
 
 // attrSliceCanon returns canonical form for attribute nodes as bare strings.
@@ -598,22 +623,14 @@ func rewriteParam(p Node, rw AstRewriter) Node {
 		res := &App{Rep: repSym}
 		res.Cfg = n.Cfg
 		if n.ASort != nil {
-			sortStr := fmt.Sprint(n.ASort)
-			newSort := RewriteSort(rw, sortStr, n.Cfg)
-			ss := &Symbol{Rep: newSort}
-			ss.Cfg = n.Cfg
-			res.ASort = ss
+			res.ASort = RewriteSortNode(rw, n.ASort, n.Cfg)
 		}
 		return res
 	case *Atom:
 		res := &Atom{Rep: n.Rep}
 		res.Cfg = n.Cfg
 		if n.ASort != nil {
-			sortStr := fmt.Sprint(n.ASort)
-			newSort := RewriteSort(rw, sortStr, n.Cfg)
-			ss := &Symbol{Rep: newSort}
-			ss.Cfg = n.Cfg
-			res.ASort = ss
+			res.ASort = RewriteSortNode(rw, n.ASort, n.Cfg)
 		}
 		return res
 	default:

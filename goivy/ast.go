@@ -241,6 +241,14 @@ func sortCanon(n Node) Canonical {
 	if sym, ok := n.(*Symbol); ok && sym.Sort == nil {
 		return Canonical(sym.Rep)
 	}
+	if atom, ok := n.(*Atom); ok && len(atom.Terms) == 0 && atom.ASort == nil {
+		return Canonical(atom.Rep)
+	}
+	if app, ok := n.(*App); ok && len(app.Terms) == 0 && app.ASort == nil {
+		if sym, ok := app.Rep.(*Symbol); ok && sym.Sort == nil {
+			return Canonical(sym.Rep)
+		}
+	}
 	return n.Canon()
 }
 

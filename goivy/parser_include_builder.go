@@ -69,7 +69,7 @@ func parserDeclareUsing(cfg *AstConfig, top *ivyAccum, importer ImporterFunc, na
 			}
 			pref := cfg.NewAtom(name)
 			pref.SetLineno(loc)
-			instMod(top, module, pref, map[string]string{}, nil, name, loc)
+			instMod(top, module, pref, map[string]string{}, nil, nil, name, loc)
 			for k, v := range mod.Included {
 				top.included[k] = v
 			}

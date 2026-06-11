@@ -276,7 +276,7 @@ func declDefines(decl Node) []string {
 func addGlobalObjectsToIsolates(mod *Module) {
 	cfg := mod.Cfg.AstCfg
 	var globalObjects []Node
-	for name := range mod.Attributes {
+	for _, name := range mod.AttributeNames() {
 		pc := mod.Cfg.IuCfg.ParentChildName(name)
 		p, c := pc[0], pc[1]
 		if c == "global" {
@@ -286,7 +286,8 @@ func addGlobalObjectsToIsolates(mod *Module) {
 			ppc := mod.Cfg.IuCfg.ParentChildName(p)
 			pp := ppc[0]
 			ppGlobal := mod.Cfg.IuCfg.ComposeNames(pp, "global")
-			if pp == "this" || mod.Attributes[ppGlobal] == nil {
+			_, hasParentGlobal := mod.Attributes[ppGlobal]
+			if pp == "this" || !hasParentGlobal {
 				globalObjects = append(globalObjects, cfg.NewAtom(p))
 			}
 		}
@@ -333,10 +334,15 @@ func processAttributes(decl Node, mod *Module) {
 	if len(names) == 0 {
 		return
 	}
-	// Get the common value if available
-	var commonVal Node
+	// Get the common value if available. Python stores decl.common as a
+	// plain string, so keep the compiled module attribute value stringly too.
+	var commonVal string
+	var hasCommonVal bool
 	if cp, ok := decl.(commonProvider); ok {
-		commonVal = cp.GetCommon()
+		if commonNode := cp.GetCommon(); commonNode != nil {
+			commonVal = NodeRep(commonNode)
+			hasCommonVal = true
+		}
 	}
 	for _, attrNode := range attrs {
 		attribute := compilerExtractSortRep(attrNode)
@@ -346,10 +352,10 @@ func processAttributes(decl Node, mod *Module) {
 		for _, name := range names {
 			key := mod.Cfg.IuCfg.ComposeNames(name, attribute)
 			// Python: decl.common if decl.common is not None and attribute == "common" else "yes"
-			if commonVal != nil && attribute == "common" {
-				mod.Attributes[key] = commonVal
+			if hasCommonVal && attribute == "common" {
+				mod.SetAttribute(key, commonVal)
 			} else {
-				mod.Attributes[key] = "yes"
+				mod.SetAttribute(key, "yes")
 			}
 		}
 	}
@@ -670,7 +676,7 @@ func (as *ARGSetup) ProcessDecls(decls []Node) error {
 			for _, arg := range n.DeclArgs {
 				if attrDef, ok := arg.(*AttributeDef); ok {
 					if nameAtom, ok := attrDef.Name.(*Atom); ok {
-						mod.Attributes[nameAtom.Rep] = attrDef.Value
+						mod.SetAttribute(nameAtom.Rep, attrDef.Value)
 					}
 				}
 			}

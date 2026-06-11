@@ -191,11 +191,11 @@ func TestIvyAccumImplementsNode(t *testing.T) {
 	var _ Node = (*ivyAccum)(nil)
 }
 
-// TestIvyAccumArgsReturnsNil verifies Args() returns nil, matching Python Ivy.args → [].
-func TestIvyAccumArgsReturnsNil(t *testing.T) {
+// TestIvyAccumArgsReturnsEmpty verifies Args() returns an empty slice, matching Python Ivy.args.
+func TestIvyAccumArgsReturnsEmpty(t *testing.T) {
 	m := newIvyAccum(nil, "")
-	if m.Args() != nil {
-		t.Error("expected nil Args")
+	if got := m.Args(); got == nil || len(got) != 0 {
+		t.Fatalf("expected empty Args, got %#v", got)
 	}
 }
 

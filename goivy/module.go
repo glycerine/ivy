@@ -6,6 +6,7 @@ package goivy
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 	"sync/atomic"
 
@@ -93,11 +94,12 @@ type Module struct {
 	ParamDefaults []Node // AST node (def.Rhs) or nil for "no default"; Python stores raw AST
 
 	// Other
-	Aliases       map[string]string // name → name
-	BeforeExport  *InsMap[string, Action]
-	Attributes    map[string]interface{}
-	ExtPreconds   map[string]Expr
-	ConceptSpaces []ConceptSpace
+	Aliases        map[string]string // name → name
+	BeforeExport   *InsMap[string, Action]
+	Attributes     map[string]interface{}
+	AttributeOrder []string
+	ExtPreconds    map[string]Expr
+	ConceptSpaces  []ConceptSpace
 
 	AbstractionPredicates []interface{}
 
@@ -303,6 +305,7 @@ func (m *Module) Clear() {
 	m.Aliases = make(map[string]string)
 	m.BeforeExport = NewInsMap[string, Action]()
 	m.Attributes = make(map[string]interface{})
+	m.AttributeOrder = nil
 	m.Variants = make(map[string][]Sort)
 	m.Supertypes = NewInsMap[string, Sort]()
 	m.ExtPreconds = make(map[string]Expr)
@@ -330,6 +333,45 @@ func (m *Module) Clear() {
 	//if m.Macros == nil {
 	m.Macros = make(map[string]*Definition)
 	//}
+}
+
+// SetAttribute stores a module attribute while preserving the first insertion
+// order Python's dict gives to im.module.attributes.
+func (m *Module) SetAttribute(name string, value interface{}) {
+	if m.Attributes == nil {
+		m.Attributes = make(map[string]interface{})
+	}
+	if _, ok := m.Attributes[name]; !ok {
+		m.AttributeOrder = append(m.AttributeOrder, name)
+	}
+	m.Attributes[name] = value
+}
+
+// AttributeNames returns attribute keys in Python insertion order. Keys written
+// directly to Attributes are appended in sorted order as a deterministic fallback.
+func (m *Module) AttributeNames() []string {
+	if len(m.Attributes) == 0 {
+		return nil
+	}
+	names := make([]string, 0, len(m.Attributes))
+	seen := make(map[string]bool, len(m.Attributes))
+	for _, name := range m.AttributeOrder {
+		if _, ok := m.Attributes[name]; ok && !seen[name] {
+			names = append(names, name)
+			seen[name] = true
+		}
+	}
+	if len(names) < len(m.Attributes) {
+		missing := make([]string, 0, len(m.Attributes)-len(names))
+		for name := range m.Attributes {
+			if !seen[name] {
+				missing = append(missing, name)
+			}
+		}
+		sort.Strings(missing)
+		names = append(names, missing...)
+	}
+	return names
 }
 
 // Copy creates a semi-shallow copy of the module.
@@ -413,6 +455,7 @@ func (m *Module) Copy() *Module {
 		c.BeforeExport.Set(k, v)
 	}
 	c.Attributes = copyMapIface(m.Attributes)
+	c.AttributeOrder = append([]string{}, m.AttributeOrder...)
 	c.PublicActions = NewInsMap[string, bool]()
 	for k, v := range m.PublicActions.All() {
 		c.PublicActions.Set(k, v)

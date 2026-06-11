@@ -883,7 +883,6 @@ top:
         a2 := parser17Acfg(parser17lex).NewAtom(pref.Rep, $4...)
         elems := append([]Node{a1, a2}, $9...)
         idefInner := parser17Acfg(parser17lex).NewIsolateDef(elems, len($9)+1)
-        idefInner.IsObject = true
         edef := parser17Acfg(parser17lex).NewExtractDef(*idefInner)
         pdef := parser17Acfg(parser17lex).NewProcessDef(*edef)
         pdef.Elems[0].SetLineno(tokLineno(lex, $2))
@@ -3123,18 +3122,20 @@ pname:
     atype
     {
         xtracer.Trace("parser.p_pname_symbol ENTER (pname)")
-        var rep string
         switch v := $1.(type) {
         case *Symbol:
-            rep = v.Rep
+            n := parser17Acfg(parser17lex).NewApp(v)
+            n.SetLineno(nodeLineno($1))
+            $$ = n
         case *This:
-            rep = "this"
+            n := parser17Acfg(parser17lex).NewApp(v)
+            n.SetLineno(nodeLineno($1))
+            $$ = n
         default:
-            rep = fmt.Sprint($1)
+            n := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol(fmt.Sprint($1), nil))
+            n.SetLineno(nodeLineno($1))
+            $$ = n
         }
-        n := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol(rep, nil))
-        n.SetLineno(nodeLineno($1))
-        $$ = n
     }
     | var
     {
@@ -3156,7 +3157,7 @@ pname:
     | PARSER_TOK_THIS
     {
         xtracer.Trace("parser.p_pname_this ENTER (pname)")
-        $$ = parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol("this", nil))
+        $$ = parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewThis())
         $$.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1))
     }
     | PARSER_TOK_TRUE

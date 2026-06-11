@@ -66,9 +66,15 @@ type ivyAccum struct {
 // Python's Ivy class IS stored as module body in Definition(name, ivy_instance).
 // Ivy.args returns [], Ivy.clone returns self (ivy_parser.py:393-399).
 
-func (m *ivyAccum) Args() []Node { return nil }
+func (m *ivyAccum) Args() []Node {
+	xtracer.Trace("parser.args ENTER")
+	return []Node{}
+}
 
-func (m *ivyAccum) Clone(args []Node) Node { return m }
+func (m *ivyAccum) Clone(args []Node) Node {
+	xtracer.Trace("parser.clone ENTER")
+	return m
+}
 
 func (m *ivyAccum) GetLineno() Location      { return Location{} }
 func (m *ivyAccum) SetLineno(loc Location)   {}
@@ -95,12 +101,13 @@ func (m *ivyAccum) Canon() Canonical {
 //	        return res
 //	    return self
 func (m *ivyAccum) Rewrite(rewrite AstRewriter) Node {
+	xtracer.Trace("parser.rewrite ENTER")
 	if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok {
 		res := newIvyAccum(m.parent, "")
 		if res.astCfg == nil {
 			res.astCfg = m.astCfg
 		}
-		instMod(res, m, nil, sp.Subst, nil, "")
+		instMod(res, m, nil, sp.Subst, sp.SubstNodes, nil, "")
 		return res
 	}
 	return m
