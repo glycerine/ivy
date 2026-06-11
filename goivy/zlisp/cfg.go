@@ -23,6 +23,7 @@ type ZlispConfig struct {
 	NoLiner bool
 	Prompt  string // default "ivy-repl> "
 
+	SetupHook func(*Zlisp)
 }
 
 func NewZlispConfig(cmdname string) *ZlispConfig {

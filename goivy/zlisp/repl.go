@@ -448,6 +448,9 @@ func ReplMain(cfg *ZlispConfig) {
 		env = NewZlisp()
 	}
 	env.StandardSetup()
+	if cfg.SetupHook != nil {
+		cfg.SetupHook(env)
+	}
 	if cfg.LoadDemoStructs {
 		// avoid data conflicts by only loading these in demo mode.
 		env.ImportDemoData()
