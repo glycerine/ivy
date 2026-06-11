@@ -1,0 +1,12 @@
+// assignment 
+(def a 10)
+// -- assignment through dotsym eliminated in favor of infix now.
+//(.a = 24)
+//(assert (== 24 a))
+
+// assignment with := works
+(b := 2)
+(assert (== b 2))
+
+(g:=2)
+(assert (== g 2))

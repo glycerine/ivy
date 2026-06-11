@@ -1,0 +1,102 @@
+// to point to non-records in a persistent fashion.
+(var a int64)
+(ptr = (& a))
+(assert (== 0 a))
+(assert (== a 0))
+
+(ptr2 = (&a))
+(assert (== ptr ptr2))
+
+
+(var s string)
+(assert (== s ""))
+(assert (== "" s))
+
+(sptr = (& s))
+&a
+&s
+
+(ptr2 = (& a))
+ptr2
+
+// derefSet is a setter that is equivalent to *ptr = 1 in Go.
+(derefSet ptr 1)
+(assert (== 1 a))
+
+// deref with only 1 argument is a getter; same as (* ptr)
+(assert (== 1 (deref ptr)))
+(assert (== 1 (deref ptr2)))
+(assert (== 1 (* ptr)))
+(assert (== 1 (* ptr2)))
+
+// set a string through a pointer
+(derefSet sptr "hiya")
+(assert (== s "hiya"))
+
+// cross type assignment doesn't type check
+(expectError "Error calling 'derefSet': type mismatch: value of type 'int64' is not assignable to type 'string'" (derefSet sptr 3))
+(expectError "Error calling 'derefSet': type mismatch: value of type 'string' is not assignable to 'int64'" (derefSet ptr "a-string"))
+
+
+// set a struct through a pointer
+(struct Dog [
+        (field Name:          string     e:0)
+        (field Number:          int64     e:1)
+        ])
+(def d (Dog Name:"Rover"))
+
+(pdog = (& d))
+(derefSet pdog (Dog Name:"Benicia"))
+(assert (== d.Name "Benicia"))
+
+(expectError "Error calling 'derefSet': cannot assign type 'Dog' to type 'string'" (derefSet sptr d))
+(expectError "Error calling 'derefSet': type mismatch: value of type 'string' is not assignable to 'Dog'" (derefSet pdog "hi"))
+(derefSet pdog (Dog Name:"Rov2"))
+
+(struct Cat [(field Name:string)])
+
+(expectError "Error calling 'derefSet': cannot assign type 'Cat' to type 'Dog'"
+              (derefSet pdog (Cat Name:"meower")))
+
+(var pcat (* Cat))
+(expectError "Error calling 'derefSet': cannot assign type 'Cat' to type '*Cat'"
+              (derefSet pcat (Cat Name:"James")))
+
+(pcat = (& (Cat Name:"Earl")))
+(assert (== (:Name (* pcat)) "Earl"))
+
+(expectError "Error calling 'derefSet': cannot assign type 'Dog' to type 'Cat'"
+              (derefSet pcat (Dog Name:"barker")))
+
+
+(def iii (& 34))
+(derefSet iii 5)
+(assert (== (deref iii) 5))
+
+(def sss (& "sad"))
+(derefSet sss "happy")
+(assert (== (* sss) "happy"))
+
+// derefSet doesn't work now...
+
+(def h (hash a:(& 1) b:2))
+(derefSet (* h.a) 45)
+(assert (== (* (* h.a)) 45))
+
+(def cat (Cat Name:"Claude"))
+(expectError "Error calling 'derefSet': derefSet only operates on pointers (*SexpPointer); we saw *ivyrepl.SexpStr instead"
+              (derefSet (:Name cat) "Jupiter"))
+
+(struct Kanga [(field roo: (* Cat))])
+
+(def kanga (Kanga roo: (& cat)))
+(assert (== (:Name (*(* kanga.roo))) "Claude"))
+(def jup (Cat Name:"Jupiter"))
+(derefSet (:roo kanga) jup)
+(assert (== (:Name (*(* kanga.roo))) "Jupiter"))
+
+(def sn1 (snoopy of:"charlie"))
+(def sn2 (snoopy of:"sarah"))
+(psnoop = (& sn1))
+(* psnoop)
+(derefSet psnoop sn2)

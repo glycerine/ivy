@@ -1,0 +1,44 @@
+// closure3.zy https://github.com/glycerine/zygomys/issues/23
+// anonymous functions as closures.
+//
+
+(def res (let [x 123] (fn [] ((fn [] x)))))
+
+(assert (== (res) 123))
+
+(def mypkg  (package "mypkg"
+            (defn Double [x]
+                    (+ x x))
+            (defn DoubleAll [xs]
+                       (println (Double 10))
+                       (map (fn [x] (Double x)) xs))))
+
+(def v [3, 4])
+(def w (mypkg.DoubleAll v))
+//error in __anon276:3: Error calling 'infix': Error calling 'map': symbol `Double` not found
+// assert that we get [6, 8] back.
+(assert (== (:0 w) 6))
+(assert (== (:1 w) 8))
+
+
+// check going through 3 functions
+(defn outer [x] (defn middle [] (defn inner [] x) inner) middle)
+(assert (== 7 (((outer 7)))))
+(assert (== 8 (((outer 8)))))
+
+// check that the let 'y' overrides the global 'y'.
+(def y 999)
+(assert (== 777 ((let [x 123] (fn [] (let [y 777] ((fn [] y))))))))
+
+
+// the let 'x' should override the global 'x'
+(def x 1)
+(assert (== 10 ((let [x 3] (fn [] (let [y 7] ((fn [] (+ y x)))))))))
+
+// going through 4 functions to find 'x89'
+(defn superOuter [x89] (defn outer [] (defn middle [] (defn inner [] x89) inner) middle) outer)
+(assert (== 7 ((((superOuter 7))))))
+
+// going through lots functions and lets to find 'x99'
+(defn ultimate [x99] (def ups -10) (let [stellar -2] (defn superDuper [] (let [z9 60] (defn outer [] (defn middle [] (def ups -8) (defn inner [] (+ z9 x99 stellar ups)) inner) middle) outer)) superDuper))
+(assert (== 57 (((((ultimate 7)))))))

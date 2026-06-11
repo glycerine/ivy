@@ -1,0 +1,9 @@
+//(defmap snoopy)
+(def s (snoopy))
+(assert (== 
+         ["EchoWeather func(*ivyrepl.Snoopy, *ivyrepl.Weather) *ivyrepl.Weather" "Fly func(*ivyrepl.Snoopy, *ivyrepl.Weather) (string, error)" "GetCry func(*ivyrepl.Snoopy) string" "Sideeffect func(*ivyrepl.Snoopy)"]
+         (methodls s)))
+
+(def f (fieldls s))
+(assert (== f ["Plane ivyrepl.Plane" "Wings ivyrepl.Wings embed-path<Plane>" "SpanCm int embed-path<Plane:Wings>" "ID int embed-path<Plane>" "Speed int embed-path<Plane>" "Chld ivyrepl.Flyer embed-path<Plane>" "Friends []ivyrepl.Flyer embed-path<Plane>" "Cry string" "Pack []int" "Carrying []ivyrepl.Flyer"]))
+

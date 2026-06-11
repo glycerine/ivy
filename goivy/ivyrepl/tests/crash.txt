@@ -1,0 +1,57 @@
+(goivy-venv) jaten@jbook ~/go/src/github.com/glycerine/zygomys/tests (dynscope) $ zygo
+zygo version v9.2.0/84710571b5d211020a311d4997d39ff3c6c1cb96
+press tab (repeatedly) to get completion suggestions. Shift-tab goes back. Ctrl-d to exit.
+zygo> (source "set.zy")
+(source "set.zy")
+4
+zygo> x
+x
+
+ about panic, since env.datastack.Size() < startingDataStackSize, here is env dump:
+PC: 0
+Instructions:
+DataStack (0xc0000d4820): (length 6)
+	nil
+	nil
+	nil
+	nil
+	nil
+	nil
+Linear stack: (length 1)
+ ========  env(0xc00019f040).linearstack is 1 deep: 
+ linearstack 0  global (0xc00007e780)
+     (global scope - omitting content for brevity)
+
+error in __main:13: Error calling 'infix': CallUserFunction caught panic during call of 'infix': 'we've shrunk the datastack during eval, don't be sloppy, fix it now! env.datastack.Size()=6. startingDataStackSize=7'
+ stack trace:
+goroutine 1 [running]:
+github.com/glycerine/zygomys/v9/zygo.(*Zlisp).CallUserFunction.func1.1()
+	/Users/jaten/go/src/github.com/glycerine/zygomys/zygo/environment.go:425 +0xc5
+panic({0x5beb9c0?, 0xc000309540?})
+	/usr/local/go/src/runtime/panic.go:783 +0x132
+github.com/glycerine/zygomys/v9/zygo.EvalFunction(0xc00019f040, {0xc00019f040?, 0x0?}, {0xc0003081d0?, 0x5c16300?, 0x0?})
+	/Users/jaten/go/src/github.com/glycerine/zygomys/zygo/functions.go:640 +0x488
+github.com/glycerine/zygomys/v9/zygo.InfixBuilder(0xc00019f040, {0x5b0d0f1, 0x5}, {0xc0003081a0, 0xc00003d728?, 0x5789d7f?})
+	/Users/jaten/go/src/github.com/glycerine/zygomys/zygo/pratt.go:365 +0x814
+github.com/glycerine/zygomys/v9/zygo.(*Zlisp).CallUserFunction.func1(0x573c37c?, 0x5fb79c0?, 0x1f0024?, 0xc00003d7d0?, 0x5729e97?, {0x5b0d0f1?, 0xc00031a000?}, {0xc0003081a0, 0x1, 0x1})
+	/Users/jaten/go/src/github.com/glycerine/zygomys/zygo/environment.go:431 +0x8c
+github.com/glycerine/zygomys/v9/zygo.(*Zlisp).CallUserFunction(0xc00019f040, 0xc0001da360, {0x5b0d0f1, 0x5}, 0x1)
+	/Users/jaten/go/src/github.com/glycerine/zygomys/zygo/environment.go:432 +0x305
+github.com/glycerine/zygomys/v9/zygo.DispatchInstr.Execute({0x5c85470?}, 0xc00019f040)
+	/Users/jaten/go/src/github.com/glycerine/zygomys/zygo/vm.go:336 +0xae
+github.com/glycerine/zygomys/v9/zygo.(*Zlisp).Run(0xc00019f040)
+	/Users/jaten/go/src/github.com/glycerine/zygomys/zygo/environment.go:710 +0x218
+github.com/glycerine/zygomys/v9/zygo.(*Zlisp).EvalExpressions(0xc00019f040, {0xc000308040?, 0x5bae198?, 0x1?})
+	/Users/jaten/go/src/github.com/glycerine/zygomys/zygo/environment.go:541 +0x4c
+github.com/glycerine/zygomys/v9/zygo.Repl(0xc00019f040, 0xc000187b20)
+	/Users/jaten/go/src/github.com/glycerine/zygomys/zygo/repl.go:283 +0xe1a
+github.com/glycerine/zygomys/v9/zygo.ReplMain(0xc000187b20)
+	/Users/jaten/go/src/github.com/glycerine/zygomys/zygo/repl.go:501 +0x405
+main.main()
+	/Users/jaten/go/src/github.com/glycerine/zygomys/cmd/zygo/main.go:37 +0x18f
+
+
+in __source:34
+in evalGeneratedFunction:2
+in infix:0
+in __main:10

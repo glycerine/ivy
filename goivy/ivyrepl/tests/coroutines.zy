@@ -1,0 +1,20 @@
+// warning: the race detector fires on (go (send ch %foo)) currently.
+// So we must comment this out while checking for other races.
+//
+// In fact, we should deprecate using the co/goroutines via (go)
+// because it is not goroutine safe. Comment this out in preparation for that.
+(expectError "symbol `go` not found" (go 1))
+
+/*
+(def ch (makeChan))
+
+// test that channels and symbol translation are working
+(go (send ch %foo))
+(assert (== %foo (<! ch)))
+
+// test that coroutines share the same global scope
+(def global "foo")
+(go (def global "bar") (send ch %()))
+(<! ch)
+(assert (== global "bar"))
+*/

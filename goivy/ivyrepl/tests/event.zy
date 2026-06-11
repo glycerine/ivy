@@ -1,0 +1,15 @@
+// defmap is automatically invoked for each GostructRegistry 
+//(defmap eventdemo)
+//(defmap persondemo)
+(def ev1 (eventdemo id:456 user: (persondemo first:"jay" last:"son") flight:"A" pilot:["u" "2"]))
+
+// togo has the side effect of decoding the Sexp into a predefined go Shadow
+// struct, waiting to be called.
+// The only advance requirement is that the struct be added to interpreter/makego.go's
+// registry.
+(def txt (togo ev1))
+
+(println txt)
+
+(assert (== txt `&ivyrepl.Event{Id:456, User:ivyrepl.Person{First:"jay", Last:"son"}, Flight:"A", Pilot:[]string{"u", "2"}, Cancelled:false}`))
+
