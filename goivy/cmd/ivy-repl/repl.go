@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/glycerine/ivy/goivy/ivyrepl"
 	"os"
+
+	"github.com/glycerine/ivy/goivy/ivyrepl"
 )
 
 func usage(myflags *flag.FlagSet) {
