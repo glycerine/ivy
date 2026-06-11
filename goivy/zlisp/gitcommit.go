@@ -1,2 +1,2 @@
 package zlisp
-func init() { GITLASTTAG = "v9.5.0"; GITLASTCOMMIT = "e439a7a6ef3bb2ce11e5bcb6892a730b5532fd43" }
+func init() { GITLASTTAG = "v9.5.1"; GITLASTCOMMIT = "7268cd59db0483b504fb8b500d5306918e9fece5" }

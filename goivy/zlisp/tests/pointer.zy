@@ -84,7 +84,7 @@ ptr2
 (assert (== (* (* h.a)) 45))
 
 (def cat (Cat Name:"Claude"))
-(expectError "Error calling 'derefSet': derefSet only operates on pointers (*SexpPointer); we saw *ivyrepl.SexpStr instead"
+(expectError "Error calling 'derefSet': derefSet only operates on pointers (*SexpPointer); we saw *zlisp.SexpStr instead"
               (derefSet (:Name cat) "Jupiter"))
 
 (struct Kanga [(field roo: (* Cat))])

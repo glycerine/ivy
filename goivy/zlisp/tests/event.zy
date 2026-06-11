@@ -11,5 +11,5 @@
 
 (println txt)
 
-(assert (== txt `&ivyrepl.Event{Id:456, User:ivyrepl.Person{First:"jay", Last:"son"}, Flight:"A", Pilot:[]string{"u", "2"}, Cancelled:false}`))
+(assert (== txt `&zlisp.Event{Id:456, User:zlisp.Person{First:"jay", Last:"son"}, Flight:"A", Pilot:[]string{"u", "2"}, Cancelled:false}`))
 

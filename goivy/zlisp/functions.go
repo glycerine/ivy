@@ -492,6 +492,108 @@ func LenFunction(env *Zlisp, name string, args []Sexp) (Sexp, error) {
 	return &SexpInt{}, fmt.Errorf("argument must be string, list, hash, or array")
 }
 
+func rangeIndexArg(args []Sexp) (int, error) {
+	if len(args) != 2 {
+		return 0, WrongNargs
+	}
+	posreq, isInt := args[1].(*SexpInt)
+	if !isInt {
+		return 0, fmt.Errorf("range index request must be an integer")
+	}
+	pos := int(posreq.Val)
+	if pos < 0 {
+		return 0, fmt.Errorf("range index request %d out of bounds", pos)
+	}
+	return pos, nil
+}
+
+func RangeLenFunction(env *Zlisp, name string, args []Sexp) (Sexp, error) {
+	if len(args) != 1 {
+		return SexpNull, WrongNargs
+	}
+
+	switch t := args[0].(type) {
+	case *SexpArray:
+		return &SexpInt{Val: int64(len(t.Val))}, nil
+	case *SexpHash:
+		return &SexpInt{Val: int64(HashCountKeys(t))}, nil
+	case *SexpInt:
+		if t.Val < 0 {
+			return &SexpInt{Val: 0}, nil
+		}
+		return &SexpInt{Val: t.Val}, nil
+	case *SexpUint64:
+		const maxInt64AsUint64 = uint64(1<<63 - 1)
+		if t.Val > maxInt64AsUint64 {
+			return SexpNull, fmt.Errorf("range length uint64 %d overflows int64", t.Val)
+		}
+		return &SexpInt{Val: int64(t.Val)}, nil
+	}
+	return SexpNull, fmt.Errorf("range expects array, hash, or integer; got %T", args[0])
+}
+
+func RangeKeyFunction(env *Zlisp, name string, args []Sexp) (Sexp, error) {
+	pos, err := rangeIndexArg(args)
+	if err != nil {
+		return SexpNull, err
+	}
+
+	switch seq := args[0].(type) {
+	case *SexpArray:
+		if pos >= len(seq.Val) {
+			return SexpNull, fmt.Errorf("range index request %d out of bounds", pos)
+		}
+		return &SexpInt{Val: int64(pos)}, nil
+	case *SexpHash:
+		if pos >= HashCountKeys(seq) {
+			return SexpNull, fmt.Errorf("range index request %d out of bounds", pos)
+		}
+		pair, err := seq.HashPairi(pos)
+		if err != nil {
+			return SexpNull, err
+		}
+		return pair.Head, nil
+	case *SexpInt:
+		limit := seq.Val
+		if limit < 0 {
+			limit = 0
+		}
+		if int64(pos) >= limit {
+			return SexpNull, fmt.Errorf("range index request %d out of bounds", pos)
+		}
+		return &SexpInt{Val: int64(pos)}, nil
+	case *SexpUint64:
+		if uint64(pos) >= seq.Val {
+			return SexpNull, fmt.Errorf("range index request %d out of bounds", pos)
+		}
+		return &SexpInt{Val: int64(pos)}, nil
+	}
+	return SexpNull, fmt.Errorf("range expects array, hash, or integer; got %T", args[0])
+}
+
+func RangePairFunction(env *Zlisp, name string, args []Sexp) (Sexp, error) {
+	pos, err := rangeIndexArg(args)
+	if err != nil {
+		return SexpNull, err
+	}
+
+	switch seq := args[0].(type) {
+	case *SexpArray:
+		if pos >= len(seq.Val) {
+			return SexpNull, fmt.Errorf("range index request %d out of bounds", pos)
+		}
+		return Cons(&SexpInt{Val: int64(pos)}, Cons(seq.Val[pos], SexpNull)), nil
+	case *SexpHash:
+		if pos >= HashCountKeys(seq) {
+			return SexpNull, fmt.Errorf("range index request %d out of bounds", pos)
+		}
+		return seq.HashPairi(pos)
+	case *SexpInt, *SexpUint64:
+		return SexpNull, fmt.Errorf("two-variable range over integer is not supported")
+	}
+	return SexpNull, fmt.Errorf("range expects array, hash, or integer; got %T", args[0])
+}
+
 func AppendFunction(name string) ZlispUserFunction {
 	return func(env *Zlisp, _ string, args []Sexp) (Sexp, error) {
 		if len(args) != 2 {
@@ -651,6 +753,11 @@ func TypeQueryFunction(name string) ZlispUserFunction {
 	return func(env *Zlisp, _ string, args []Sexp) (Sexp, error) {
 		if len(args) != 1 {
 			return SexpNull, WrongNargs
+		}
+		var err error
+		args, err = env.SubstituteRHS(args)
+		if err != nil {
+			return SexpNull, err
 		}
 
 		var result bool
@@ -1034,6 +1141,9 @@ func CoreFunctions() map[string]ZlispUserFunction {
 		"hdel":        HashAccessFunction("hdel"),
 		"keys":        HashAccessFunction("keys"),
 		"hpair":       GenericHpairFunction,
+		"__rangeLen":  RangeLenFunction,
+		"__rangeKey":  RangeKeyFunction,
+		"__rangePair": RangePairFunction,
 		"slice":       SliceFunction,
 		"len":         LenFunction,
 		"append":      AppendFunction("append"),
@@ -1298,14 +1408,18 @@ func AssignmentFunction(env *Zlisp, name string, args []Sexp) (Sexp, error) {
 	if narg != 2 {
 		return SexpNull, fmt.Errorf("assignment requires two arguments: a left-hand-side and a right-hand-side argument")
 	}
+	rhs, err := env.RValue(args[1])
+	if err != nil {
+		return SexpNull, err
+	}
 
 	var sym *SexpSymbol
 	switch s := args[0].(type) {
 	case *SexpSymbol:
 		sym = s
 	case Selector:
-		err := s.AssignToSelection(env, args[1])
-		return args[1], err
+		err := s.AssignToSelection(env, rhs)
+		return rhs, err
 
 	default:
 		return SexpNull, fmt.Errorf("assignment needs left-hand-side"+
@@ -1313,16 +1427,16 @@ func AssignmentFunction(env *Zlisp, name string, args []Sexp) (Sexp, error) {
 	}
 
 	if !sym.isDot {
-		//Q("assignment sees LHS symbol but is not dot, binding '%s' to '%s'\n", sym.name, args[1].SexpString(nil))
-		err := env.LexicalBindSymbol(sym, args[1])
+		//Q("assignment sees LHS symbol but is not dot, binding '%s' to '%s'\n", sym.name, rhs.SexpString(nil))
+		err := env.LexicalBindSymbol(sym, rhs)
 		if err != nil {
 			return SexpNull, err
 		}
-		return args[1], nil
+		return rhs, nil
 	}
 
 	//Q("assignment calling dotGetSetHelper()\n")
-	return dotGetSetHelper(env, sym.name, &args[1])
+	return dotGetSetHelper(env, sym.name, &rhs)
 }
 
 func JoinSymFunction(env *Zlisp, name string, args []Sexp) (Sexp, error) {
@@ -1771,19 +1885,26 @@ func stripAnyDotPrefix(s string) string {
 	return s
 }
 
+// RValue returns the value to use when expr appears in a right-hand-side
+// context. Selectors are addressable locations, so rvalue use dereferences
+// them to the selected value.
+func (env *Zlisp) RValue(expr Sexp) (Sexp, error) {
+	obj, hasRhs := expr.(Selector)
+	if !hasRhs {
+		return expr, nil
+	}
+	return obj.RHS(env)
+}
+
 // SubstituteRHS locates any SexpSelector(s) (Selector implementers, really)
-// and substitutes
-// the value of x.RHS() for each x in args.
+// and substitutes the value of x.RHS() for each x in args.
 func (env *Zlisp) SubstituteRHS(args []Sexp) ([]Sexp, error) {
 	for i := range args {
-		obj, hasRhs := args[i].(Selector)
-		if hasRhs {
-			sx, err := obj.RHS(env)
-			if err != nil {
-				return args, err
-			}
-			args[i] = sx
+		sx, err := env.RValue(args[i])
+		if err != nil {
+			return args, err
 		}
+		args[i] = sx
 	}
 	return args, nil
 }
