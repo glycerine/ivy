@@ -211,7 +211,7 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]strin
 		if refLineno != (Location{}) {
 			cfg.SetReferenceLineno(Location{})
 		}
-		xtracer.Trace("parser.spaa EXIT res=%v", res.Canon())
+		xtracer.Trace("parser.spaa EXIT HASH canon= res=%v", res.Canon())
 		return res
 	}
 

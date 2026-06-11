@@ -180,7 +180,7 @@ def inst_mod(ivy,module,pref,subst,vsubst,modname=None,lineno=None):
 #        print 'instmod done'
         if lineno is not None:
             set_reference_lineno(None)
-        if __debug__: xtracer.trace("parser.spaa EXIT res=%s" % res.canon())
+        if __debug__: xtracer.trace("parser.spaa EXIT HASH canon= res=%s" % res.canon())
         return res
     #if __debug__: xtracer.trace("parser.inst_mod.body name=%s ndecls=%d\n pref=%s" % (modname if modname else "", len(module.decls), pref))
     if __debug__: xtracer.trace("parser.inst_mod.body name=%s ndecls=%d" % (modname if modname else "", len(module.decls)))
