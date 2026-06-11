@@ -196,7 +196,7 @@ func Repl(env *Zlisp, cfg *ZlispConfig) {
 		if len(parts) == 0 {
 			continue
 		}
-		first := strings.Trim(parts[0], " ")
+		first := strings.TrimSpace(parts[0])
 
 		if first == ".quit" {
 			break
