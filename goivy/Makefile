@@ -187,6 +187,7 @@ webui/static/wasm/goivy-check-js.wasm: FORCE
 goivy-check-js-wasm: webui/static/wasm/goivy-check-js.wasm
 
 build: # grammer_gen
+	go install  -tags xtrace_off ./cmd/ivy-repl
 	go install  -tags xtrace_off ./cmd/ivyweb
 	go install  -tags xtrace_off ./cmd/goivy_check
 	go install  -tags xtrace_off ./cmd/whatwasm
