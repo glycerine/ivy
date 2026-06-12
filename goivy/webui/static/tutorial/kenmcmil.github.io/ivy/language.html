@@ -1733,7 +1733,7 @@ properties and monitors that are <em>visible</em> outside the
 isolate. Finally, we have the <em>implementation</em>.  It usually consists
 of variables, function definitions and action implementations that are
 <em>hidden</em>. An isolate may depend on the visible parts of other objects.
-This is declares using the keyword <code class="language-plaintext highlighter-rouge">with</code>. In this case <code class="language-plaintext highlighter-rouge">evens</code>
+This it declares using the keyword <code class="language-plaintext highlighter-rouge">with</code>. In this case <code class="language-plaintext highlighter-rouge">evens</code>
 depends on <code class="language-plaintext highlighter-rouge">odds</code> and <code class="language-plaintext highlighter-rouge">nat</code>.</p>
 
 <p>The isolate for <code class="language-plaintext highlighter-rouge">odds</code> is similar:</p>
@@ -1879,7 +1879,7 @@ assertion is the first to fail, so the original program is safe.</p>
 
 <p>The general rule is that a <code class="language-plaintext highlighter-rouge">require</code> assertion is a guarantee for the
 calling isolate and and assumption for the called isolate, while an <code class="language-plaintext highlighter-rouge">ensure</code> action is
-a guarantee for the called isolate and an assumption for the callinf isolate. When we
+a guarantee for the called isolate and an assumption for the calling isolate. When we
 verify an isolate, we check only those assertions that are gurantees
 for actions in the isolate.</p>
 

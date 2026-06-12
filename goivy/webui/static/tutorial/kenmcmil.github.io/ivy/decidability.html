@@ -498,7 +498,7 @@ reasoning about relations with is, especially about orders. For example,
 suppose we take the axioms of a partial order as assumptions:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forall X,Y,Z. X &lt; Y &amp; Y &lt; Z -&gt; X &lt; Z
-forall X,Y. ~(X &lt; Y &amp; Y &lt; Z)
+forall X,Y. ~(X &lt; Y &amp; Y &lt; X)
 </code></pre></div></div>
 
 <p>Notice these are in EPR. The VC for the following program is also in
