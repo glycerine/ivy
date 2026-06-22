@@ -21,6 +21,8 @@ and host/WASM calls.
 - Treat Go-junior as its own DSL, not as "almost all of Go".
 - Keep the language small enough that users can reason about every construct.
 - Preserve Go's readable expression and statement syntax where it helps.
+- Include core Go function-structuring idioms that matter for real libraries,
+  including `defer`, multiple return values, and named return values.
 - Make spreadsheet semantics first-class: cells, ranges, dependencies,
   recalculation, error values, deterministic execution, and bounded work.
 - Never emit raw user source into JavaScript. Parse, validate, typecheck, then
@@ -35,8 +37,8 @@ and host/WASM calls.
 ## Non-goals
 
 - Full Go compatibility.
-- Goroutines, `go`, `select`, channels, channel operations, `defer`, `panic`,
-  `recover`, reflection, unsafe, cgo, package-level initialization order, build
+- Goroutines, `go`, `select`, channels, channel operations, `panic`, `recover`,
+  reflection, unsafe, cgo, full Go package initialization semantics, build
   tags, or full Go module semantics.
 - Arbitrary ambient package loading. Source packages are allowed, but they must
   be Go-junior-compatible packages resolved through the in-browser package
@@ -54,8 +56,9 @@ and host/WASM calls.
 
 ```
 Go-junior source
-  -> scanner/parser
-  -> AST with source spans
+  -> Chevrotain lexer/token stream
+  -> Chevrotain CST parser with source spans
+  -> Go-junior AST builder
   -> resolver and typechecker
   -> package resolver and package compiler
   -> spreadsheet dependency extractor
@@ -68,6 +71,40 @@ Go-junior source
 
 The compiler package should be independent from the Ivy runtime. The Ivy webui
 integration should sit on top of the compiler and runtime packages.
+
+## Lexer and Parser Technology
+
+Use Chevrotain for the Go-junior lexer and parser instead of a hand-rolled
+scanner/parser. The goal is to rely on a mature TypeScript parsing toolkit for
+tokenization, source spans, grammar validation, error recovery, and CST
+generation while keeping all Go-junior semantics in our own compiler stages.
+
+Chevrotain should own:
+
+- token definitions and lexing
+- keyword/operator/delimiter recognition
+- source location tracking
+- parser grammar rules
+- concrete syntax tree production
+- syntax-level recovery and parser diagnostics
+- optional grammar diagrams for developer debugging
+
+Go-junior should still own:
+
+- CST-to-AST conversion
+- spreadsheet namespace resolution
+- typechecking
+- package resolution and package-state effects
+- dependency extraction
+- IR lowering
+- JavaScript source copy-and-patch emission
+- runtime evaluation and recalculation semantics
+
+The Chevrotain grammar should describe the Go-junior subset directly. It should
+not try to become a full Go parser by gradual accident. If the project later
+needs to ingest arbitrary full-Go packages, that should be a separate import
+path using the official Go parser or a Go parser compiled for the target
+environment, not a promise that the Chevrotain grammar can parse all Go.
 
 Implementation sequencing should be CLI-first:
 
@@ -84,8 +121,11 @@ Suggested frontend layout:
 goivy/webui/frontend/src/gojunior/
   ast.ts
   diagnostics.ts
-  scanner.ts
+  tokens.ts
+  lexer.ts
   parser.ts
+  cstToAst.ts
+  grammarDiagrams.ts
   resolver.ts
   types.ts
   ir.ts
@@ -120,13 +160,13 @@ Support two source forms:
 1. Cell expression form:
 
 ```go
-A1 + B1 * 2
+number(sheet.A1) + number(sheet.B1) * 2
 ```
 
 2. Function body form:
 
 ```go
-x := cell("A1") + cell("B1")
+x := number(sheet.A1) + number(sheet.B1)
 if x > 10 {
     return math.Sqrt(x)
 }
@@ -136,7 +176,7 @@ return x * 2
 The compiler should normalize both into an implicit function:
 
 ```go
-func cell(ctx Context) Value {
+func formula(ctx Context) Value {
     ...
 }
 ```
@@ -157,6 +197,8 @@ Start with a deliberately small static type system:
 - `number` as an internal convenience type if needed
 - `Value`, the spreadsheet value union
 - `Range`, an opaque spreadsheet range type
+- tuple types for multiple return values
+- `error`, for Go-style library APIs that return `(T, error)`
 - `Error`, an internal spreadsheet error type
 
 Open question for implementation: whether user-visible numeric types should
@@ -237,17 +279,78 @@ Support:
 - parentheses
 - function calls
 - selector calls for host namespaces, for example `math.Sqrt(x)`
-- cell references in explicit call form: `cell("A1")`
-- range references in explicit call form: `range("A1:B10")`
-- dynamic cell and range references where the address expression has type
-  `string`, for example `cell(prefix + string(row))`
+- current-sheet cell references through the reserved pseudo package `sheet`,
+  for example `sheet.A1`, `sheet.$A$1`, `sheet.A$1`, and `sheet.$A1`
+- current-sheet range references through `sheet`, with `sheet.A1:B10` as the
+  canonical static range syntax
+- cross-sheet cell and range references through sheet-name namespaces, for
+  example `Data.A1`, `Data.$A$1`, and `Data.A1:B10`
+- dynamic cell and range references through explicit sheet namespace calls
+  where the address expression has type `string`, for example
+  `sheet.Cell(prefix + string(row))`, `sheet.Range("A1:B10")`,
+  `Data.Cell(addr)`, and `Data.Range(start + ":" + end)`
 
 Optional after v1:
 
-- direct spreadsheet reference syntax like `A1` and `A1:B10`
 - array/slice literals
 - indexing
 - struct literals
+
+### Spreadsheet Reference Syntax
+
+Spreadsheet references must be explicit so local variables, package names, and
+cell names are never ambiguous. The reserved pseudo package `sheet` denotes the
+current sheet. Other sheets are exposed as sheet-name namespaces, using the
+same selector shape as Go package selectors:
+
+```go
+sheet.A1
+sheet.$A$1
+sheet.A$1
+sheet.$A1
+sheet.A1:B10
+sheet.$A$1:$B$10
+Data.A1
+Data.$A$1:$B$10
+sheet.Cell("A" + string(row))
+sheet.Range(start + ":" + end)
+Data.Cell(addr)
+Data.Range(start + ":" + end)
+```
+
+Rules:
+
+- Bare `A1` is an ordinary identifier candidate, not a cell reference.
+- The resolver reserves `sheet`; users cannot declare a local variable, source
+  package import alias, or package named `sheet` in Go-junior formula scope.
+- Sheet names are package namespaces. A selector namespace such as `Data` may
+  resolve to either a sheet namespace or an imported/source package namespace,
+  but not both in the same formula environment.
+- The current sheet is always available through the stable alias `sheet`; it
+  may also be available by its real sheet namespace when that namespace is valid
+  and not ambiguous.
+- A collision between a sheet name and a package import alias/source package
+  name is a compile-time diagnostic. A future alias mechanism can relax this,
+  but the initial implementation should reject ambiguity rather than guessing.
+- Sheet names used directly in formulas must be valid Go-junior identifiers.
+  Workbook UI can later provide aliases for display names that contain spaces,
+  punctuation, or other non-identifier characters.
+- Imported package exports keep normal Go selector syntax, for example
+  `stats.Mean` or `pkg.VariableName`.
+- `sheet.A1`, `Data.A1`, `sheet.A1:B10`, and `Data.A1:B10` are parsed by a
+  special spreadsheet-reference grammar after a resolved sheet namespace. They
+  are not general Go identifiers.
+- `$` marks absolute column and/or row, matching the familiar Excel idiom.
+- Non-`$` row/column parts are relative for formula copy/fill operations but
+  resolve to concrete addresses in the formula's current anchor cell.
+- The sheet namespace part is fixed during copy/fill. Relative row/column
+  parts remain relative to the formula's anchor cell, even when the target is a
+  different sheet namespace.
+- Static `sheet` references lower to the same runtime path as dynamic
+  `sheet.Cell` / `sheet.Range`, so observed dependency tracking is uniform.
+- Static cross-sheet references lower to the same runtime path as dynamic
+  `Namespace.Cell` / `Namespace.Range`, so dependency tracking always records
+  the concrete sheet namespace plus address or range.
 
 ### Statements
 
@@ -255,22 +358,34 @@ Support:
 
 - short variable declarations: `x := expr`
 - assignments to locals: `x = expr`
+- assignments to exported mutable package variables: `pkg.VariableName = expr`
 - `if`, `else if`, `else`
 - `return expr`
+- `return expr, expr` for multiple return values
+- naked `return` only inside functions with named return values
+- `defer call(...)`
 - expression statements only for calls whose return value can be ignored
 - bounded `for` loops in a later stage
 
-Keep ordinary formula cells pure by default: they calculate and return values.
-Effectful Go-junior programs should be modeled as command/action cells or
-explicit spreadsheet actions with declared capabilities. Those actions may
-write cells, produce graph artifacts, or request UI updates through the host
-effect API; formulas should not silently mutate browser or sheet state during
-dependency recalculation.
+Keep ordinary formula cells calculation-oriented by default: they calculate and
+return values. Go-junior source packages should still support Go-like mutable
+package variables from the start. Any formula that calls a package function
+known to read or write mutable package state should be marked `package-state`
+and recalculated with that effect classification rather than treated as a pure
+cacheable helper. Direct assignment to exported mutable package variables is
+also `package-state`. Assigning to `sheet.A1` or `Data.A1` is not package
+variable assignment; spreadsheet mutation must go through declared sheet-effect
+capabilities. Browser, sheet, graph, and UI mutations should be modeled as
+command/action cells or explicit spreadsheet actions with declared
+capabilities. Those actions may write cells, produce graph artifacts, or
+request UI updates through the host effect API; formulas should not silently
+mutate browser or sheet state during ordinary dependency recalculation.
 
 ### Functions
 
 Stage v1 can compile one implicit cell function. Stage v2 can add local helper
-functions:
+functions and source package functions. Go-junior functions should support
+single returns, multiple returns, and named returns.
 
 ```go
 func clamp(x float64, lo float64, hi float64) float64 {
@@ -282,11 +397,42 @@ func clamp(x float64, lo float64, hi float64) float64 {
     }
     return x
 }
-return clamp(cell("A1"), 0, 100)
+return clamp(number(sheet.A1), 0, 100)
 ```
 
-No closures in the first implementation. Local helper functions should be
-pure, deterministic, and compiled into private generated JavaScript functions.
+Multiple returns:
+
+```go
+func DivMod(x int, y int) (int, int) {
+    return x / y, x % y
+}
+
+q, r := DivMod(17, 5)
+```
+
+Named returns:
+
+```go
+func SplitTotal(x float64) (half float64, rest float64) {
+    half = x / 2
+    rest = x - half
+    return
+}
+```
+
+`defer` should follow Go's essential semantics:
+
+- a `defer` statement defers a function or method call
+- deferred call arguments are evaluated immediately
+- deferred calls execute in LIFO order when the surrounding function exits
+- deferred return values are ignored
+- named return values are assigned before defers run; future closure/pointer
+  support may allow deferred code to observe or mutate them exactly like Go
+- the first implementation can exclude closures while still supporting
+  `defer someCall(args...)`
+
+No closures in the first implementation. Local helper functions should be pure,
+deterministic, and compiled into private generated JavaScript functions.
 
 ### Source Packages
 
@@ -317,17 +463,27 @@ Package support should include:
 
 - `package name` declarations for package source units.
 - explicit imports by package path, for example `import "stats"`.
-- exported functions, constants, and later exported types.
+- exported functions, constants, mutable package variables, and later exported
+  types.
 - package-private helpers.
+- package-level `var` declarations with deterministic initializers.
+- Go-like mutable package variable reads and writes inside package functions.
+- a simplified deterministic package initialization order defined by the
+  Go-junior package graph, not the full Go specification.
 - topological compilation of package import graphs.
 - rejection of import cycles.
+- support for `defer`, multiple returns, and named returns inside package
+  functions.
 - rejection of excluded Go features inside packages.
-- package ABI metadata so formulas can typecheck calls before loading code.
+- package ABI metadata so formulas can typecheck calls and package variable
+  reads/writes before loading code.
+- package export metadata that marks functions and variables as pure,
+  package-state-reading, or package-state-mutating.
 
 Cell snippets should be able to call packages through the sheet environment:
 
 ```go
-return stats.Mean(range("A1:A10"))
+return stats.Mean(sheet.A1:A10)
 ```
 
 The package resolver should distinguish three sources:
@@ -356,7 +512,7 @@ over finite spreadsheet ranges should be supported as an early package-library
 feature:
 
 ```go
-for _, v := range range("A1:A10") {
+for _, v := range sheet.A1:A10 {
     sum = sum + number(v)
 }
 ```
@@ -411,6 +567,10 @@ Capability categories:
 - `pure`: deterministic calculation helpers. Safe in ordinary formula cells.
 - `wasm`: calls into allowlisted Go/WASM services. Safe in formulas if the
   binding is deterministic and side-effect-free.
+- `package-state`: reads or writes mutable Go-junior package variables. Legal
+  from the start so source packages match ordinary Go semantics, but formulas
+  that call package-state exports must be treated as effectful/volatile for
+  cache and recalculation purposes.
 - `dynamic-js`: JavaScript-backed helper functions supplied by the host. The
   helper implementation may use dynamic JavaScript, but Go-junior code sees
   only a typed function signature. A dynamic-JS binding can still be
@@ -424,12 +584,15 @@ Capability categories:
 - `ui-effect`: explicit UI requests, such as opening a panel, displaying a
   diagnostic, or focusing a result.
 
-Formula recalculation should run only `pure`, approved deterministic `wasm`,
-and approved formula-safe `dynamic-js` capabilities by default. Effect
-capabilities should require an action context, for example a user-triggered
-command, button, menu action, or explicitly marked command cell. This prevents
-normal dependency recomputation from repeatedly mutating sheets or redrawing
-browser state.
+Formula recalculation should run `pure`, approved deterministic `wasm`,
+approved formula-safe `dynamic-js`, and explicitly allowed `package-state`
+exports. A formula that uses `package-state` is not pure: it should not be
+common-subexpression cached, it should be evaluated in the scheduler's stable
+order, and its package state lifecycle must be deterministic. Browser and
+workbook effect capabilities should require an action context, for example a
+user-triggered command, button, menu action, or explicitly marked command cell.
+This prevents normal dependency recomputation from repeatedly mutating sheets
+or redrawing browser state.
 
 Example host declaration shape:
 
@@ -495,6 +658,7 @@ querying cache metadata becomes useful. Cache keys must include:
 Cached artifacts should include:
 
 - exported signature table
+- exported package variable table with mutability and effect metadata
 - package diagnostics, if compilation failed
 - generated JavaScript source or compiled function factory
 - future Wasm bytes or module metadata
@@ -513,10 +677,17 @@ Package linking rules:
 - formulas call package exports through generated package slots, not globals
 - packages call imported package exports through generated slots
 - package initialization should be minimal and deterministic
-- no hidden package-level mutable state in v1
 - package-level constants are allowed
-- package-level variables should be rejected at first unless we define exact
-  recalculation semantics for them
+- package-level variables are mutable by default, matching Go semantics
+- package variable initialization runs once per package instance using a
+  deterministic topological order over the package import graph
+- a workbook/runtime generation owns one package instance graph; source/cache
+  invalidation creates a new package instance graph
+- compiled package artifacts must not persist current mutable variable values as
+  executable artifacts; runtime state is separate from compiled code
+- formulas that call functions which read or write mutable package variables are
+  marked `package-state`, evaluated in stable scheduler order, and never
+  optimized as pure/idempotent helpers
 
 This model allows existing source libraries to be loaded when they are written
 in the Go-junior subset, while still keeping full-Go/WASM libraries available
@@ -554,8 +725,8 @@ Example generated JavaScript:
 ```js
 "use strict";
 return function _gj_cell(ctx, host, budget) {
-  let _v0 = ctx.cell("A1");
-  let _v1 = ctx.cell("B1");
+  let _v0 = ctx.cell("sheet", "A1");
+  let _v1 = ctx.cell("sheet", "B1");
   let _v2 = _v0 + _v1;
   if (_v2 > 10) {
     return host.math.Sqrt(_v2);
@@ -607,10 +778,15 @@ cell -> direct dependencies
 dependency -> reverse dependents
 ```
 
+Dependency records should always include the target sheet namespace or stable
+sheet ID plus the normalized address/range. Current-sheet `sheet.A1` and
+cross-sheet `Data.A1` should therefore have the same graph representation apart
+from the sheet namespace field.
+
 Each formula should track two dependency sets:
 
-- `declaredDeps`: dependencies that can be seen statically, such as literal
-  `cell("A1")` and `range("A1:B10")` calls.
+- `declaredDeps`: dependencies that can be seen statically, such as
+  `sheet.A1`, `sheet.A1:B10`, `Data.A1`, and `Data.A1:B10` references.
 - `observedDeps`: exact cells and ranges read during the most recent
   evaluation, including dynamic references.
 
@@ -636,8 +812,9 @@ When a cell changes:
 This makes dynamic references a first-class recalculation feature rather than a
 later retrofit.
 
-Direct references like `A1` can be syntax sugar for `cell("A1")` after the
-explicit API works.
+Bare direct references like `A1` are intentionally not cell references. Use
+explicit `sheet.A1` syntax so locals, packages, and cells remain easy for users
+and the compiler to distinguish.
 
 ## Circular References and Iterative Calculation
 
@@ -713,58 +890,105 @@ Tests:
 - Diagnostic spans round-trip line/column/offset accurately.
 - Spec examples are copied into parser/typechecker tests so docs cannot drift.
 - A "blocked Go feature" fixture list asserts that `go`, `select`, channels,
-  `defer`, `panic`, `recover`, `unsafe`, `package`, and `import` are rejected
-  with explicit diagnostic codes.
+  `panic`, `recover`, and `unsafe` are rejected with explicit diagnostic codes.
+- A "supported Go-junior Go idiom" fixture list asserts that `defer`, multiple
+  returns, named returns, and source package declarations/imports are accepted
+  in the contexts where the language supports them.
+- A "selector versus spreadsheet reference" fixture list asserts that bare
+  `A1`, `pkg.A1`, `sheet.A1`, `Data.A1`, and `Data.A1:B10` are parsed and
+  resolved according to namespace rules.
 
 Acceptance criteria:
 
 - The subset is explicit enough that parser and typechecker work can begin.
 - Tests can assert both successful normalized output and exact diagnostics.
 
-### Stage 1: Scanner
+### Stage 1: Chevrotain Lexer
 
-Implement a TypeScript scanner for Go-junior tokens.
+Implement the Go-junior token vocabulary with Chevrotain.
 
 Implementation tasks:
 
-- Recognize identifiers, keywords, numbers, strings, operators, delimiters,
-  comments, and whitespace.
-- Track source spans.
-- Support Go-like semicolon insertion only if needed. Prefer requiring braces
-  and explicit statement boundaries in parser logic rather than reproducing all
-  Go semicolon rules.
-- Reject unsupported tokens early.
+- Add Chevrotain as a frontend dependency for the webui TypeScript package.
+- Define token classes for identifiers, keywords, numbers, strings, operators,
+  delimiters, comments, whitespace, and newlines.
+- Use Chevrotain token categories for identifier-like names, keywords, and
+  spreadsheet-reference parts where useful.
+- Define lexer behavior for spreadsheet address fragments such as `A1`, `$A$1`,
+  `A$1`, `$A1`, and range separator `:`.
+- Treat `A1`-style tokens as both address-like and identifier-like where
+  needed, because bare `A1` is a legal ordinary identifier candidate until the
+  resolver proves a surrounding selector namespace is a sheet.
+- Keep enough newline information to support explicit statement boundaries or a
+  small Go-like semicolon insertion/token-normalization pass.
+- Decide whether comments and whitespace are skipped or retained for diagnostic
+  and formatting metadata.
+- Normalize Chevrotain token location data into Go-junior source spans.
+- Convert Chevrotain lexing errors into Go-junior diagnostics.
+- Reject unsupported tokens early, including channel receive/send syntax.
 
 Tests:
 
 - Tokenizes literals: decimal integers, floats, quoted strings, escaped
   strings, booleans.
 - Tokenizes operators and delimiters.
+- Tokenizes address-like fragments used in spreadsheet references, including
+  `$A$1`, `A$1`, `$A1`, and range separators.
+- Does not accidentally tokenize `A1foo` or `A1_foo` as a cell reference plus
+  trailing identifier.
+- Tokenizes `Data.A1:B10`, `sheet.$A$1`, and `Data.$A$1:$B$10` into stable
+  token sequences.
+- Allows bare `A1` to remain parseable as an identifier-like token.
+- Tokenizes selector-looking package references like `pkg.VariableName` without
+  assuming they are spreadsheet references.
 - Preserves source spans across newlines and comments.
 - Rejects unterminated strings with a useful span.
 - Rejects unsupported rune literals if they are not in v1.
 - Rejects channel operator `<-`.
 - Rejects malformed numbers.
+- Converts Chevrotain lexing errors into stable Go-junior diagnostic codes.
 - Snapshot tests for representative snippets.
 
 Acceptance criteria:
 
-- Scanner never throws for user input; it returns tokens plus diagnostics.
+- Lexer never throws for user input; it returns tokens plus diagnostics.
 - Every token has a stable span.
+- The token vocabulary is explicit enough for Chevrotain parser self-analysis
+  to run during parser construction.
 
-### Stage 2: Parser
+### Stage 2: Chevrotain Parser and AST Builder
 
-Implement a recursive-descent parser with Pratt expression parsing.
+Implement a Chevrotain `CstParser` for Go-junior and convert the CST into the
+compiler-owned AST.
 
 Implementation tasks:
 
+- Define Chevrotain parser rules for the Go-junior subset.
+- Run Chevrotain parser self-analysis at construction time and treat grammar
+  ambiguities as test failures.
 - Parse expression-form and function-body-form programs.
 - Parse statements: declarations, assignments, if/else, returns, expression
   statements.
+- Parse `defer` call statements.
+- Parse multiple return expressions.
+- Parse named return function signatures.
 - Parse calls and selector expressions.
+- Represent operator precedence with layered Chevrotain rules, for example
+  `or -> and -> equality -> compare -> add -> mul -> unary -> primary`.
+- Parse special current-sheet and cross-sheet cell/range references.
+- Parse ambiguous statement prefixes, such as assignment versus expression
+  statement, with explicit lookahead or factored grammar rules.
+- Represent `Name.A1` as a selector-or-cell-reference candidate in the AST
+  until resolver determines whether `Name` is a sheet namespace or a package
+  namespace.
+- Represent `Name.A1:B10` as a spreadsheet range candidate because the colon
+  form is not ordinary Go selector syntax.
 - Parse optional local helper functions after v1 expression/body support.
-- Preserve AST spans for all nodes.
-- Add error recovery sufficient to show multiple diagnostics.
+- Convert Chevrotain CST nodes into Go-junior AST nodes.
+- Preserve AST spans for all nodes by merging token/CST source ranges.
+- Convert Chevrotain parser errors into Go-junior diagnostics.
+- Enable and tune Chevrotain recovery where it improves multi-error reporting.
+- Optionally emit Chevrotain syntax diagrams in developer/debug builds.
 
 Tests:
 
@@ -773,18 +997,39 @@ Tests:
 - Parses unary and binary operations.
 - Parses `if`, `else if`, and `else`.
 - Parses short declarations and assignments.
+- Parses selector assignments like `pkg.VariableName = expr`.
 - Parses return statements.
+- Parses multiple return values.
+- Parses named return values and naked returns inside named-return functions.
+- Parses `defer` call statements.
 - Parses selector calls like `math.Sqrt(x)`.
-- Parses explicit cell/range calls.
+- Parses `sheet.A1`, `sheet.$A$1`, `sheet.A$1`, and `sheet.$A1`.
+- Parses `sheet.A1:B10` and `sheet.$A$1:$B$10`.
+- Parses cross-sheet `Data.A1`, `Data.$A$1`, `Data.A1:B10`, and
+  `Data.$A$1:$B$10`.
+- Parses dynamic `sheet.Cell(addr)` and `sheet.Range(addr)`.
+- Parses dynamic cross-sheet `Data.Cell(addr)` and `Data.Range(addr)`.
+- Parses spreadsheet references only when the selector namespace is syntactically
+  eligible; resolver later decides whether the namespace is a sheet or package.
+- Parses `pkg.A1` as a selector-or-cell candidate so the resolver can treat it
+  as a package export when `pkg` is a package namespace.
 - Rejects `go f()`, `select {}`, channel sends, receives, imports, package
-  declarations, labels, `goto`, `defer`, `panic`, `recover`, and `unsafe`.
+  declarations in cell snippets, labels, `goto`, `panic`, `recover`, and
+  `unsafe`.
+- Chevrotain self-analysis succeeds with no unresolved ambiguities.
+- Parser diagnostics wrap Chevrotain errors with stable Go-junior diagnostic
+  codes and source spans.
 - Error recovery reports multiple syntax errors in one source where possible.
+- CST-to-AST conversion preserves spans for expressions, statements,
+  spreadsheet references, and function signatures.
 - Golden AST tests for small valid programs.
 
 Acceptance criteria:
 
 - Valid v1 syntax produces a complete AST.
 - Invalid or unsupported syntax produces stable diagnostics without crashing.
+- Later compiler stages do not depend on Chevrotain CST shape; they consume
+  only Go-junior AST nodes and diagnostics.
 
 ### Stage 3: AST Normalization
 
@@ -794,6 +1039,7 @@ Implementation tasks:
 
 - Expression form becomes `return expr`.
 - Function body form becomes an implicit cell function.
+- Named returns normalize to explicit return locals.
 - Insert explicit return requirement checks where needed.
 - Normalize syntactic sugar into canonical AST nodes.
 
@@ -801,6 +1047,8 @@ Tests:
 
 - Expression source normalizes to one return statement.
 - Function body source preserves user statements.
+- Multiple return values normalize to tuple return IR shape.
+- Named return values normalize to local return slots.
 - Empty source produces a blank or diagnostic according to spec.
 - Missing return in a non-void body is reported.
 - Unreachable trailing code after unconditional return is diagnosed as warning
@@ -822,7 +1070,12 @@ Implementation tasks:
 - Reject use before declaration unless explicitly allowed.
 - Reject duplicate local declarations in the same scope.
 - Resolve host namespaces and functions against a typed host spec.
-- Resolve predeclared functions: `cell`, `range`, and conversion helpers.
+- Resolve the reserved `sheet` pseudo package and conversion helpers.
+- Resolve workbook sheet namespaces as package-like selector namespaces.
+- Reject collisions between sheet namespaces and imported/source package
+  namespaces unless a future explicit alias mechanism is present.
+- Reject local declarations, import aliases, or package names that collide with
+  reserved `sheet` in formula scope.
 - Generate stable symbol IDs for locals and functions.
 
 Tests:
@@ -832,8 +1085,25 @@ Tests:
 - Rejects duplicate declarations.
 - Rejects assignment to undeclared variables.
 - Rejects assignment to host symbols and predeclared functions.
+- Resolves assignment to exported mutable package variables.
+- Rejects assignment to package constants, unexported package variables, and
+  read-only host bindings.
+- Rejects assignment to `sheet.A1`, `Data.A1`, or other spreadsheet references
+  outside explicit sheet-effect APIs.
 - Resolves host calls with namespace and function names.
+- Resolves imported package exported variables with normal package selector
+  syntax.
+- Resolves `pkg.A1` as an exported package symbol, not a cell reference, when
+  `pkg` is a package namespace.
+- Resolves `sheet` references as spreadsheet references, not package variables.
+- Resolves cross-sheet references like `Data.A1` and `Data.A1:B10` as
+  spreadsheet references when `Data` is a known sheet namespace.
+- Rejects ambiguous selector namespaces when a sheet namespace and package alias
+  share the same name.
 - Rejects unknown host namespaces/functions.
+- Rejects unknown sheet namespaces in spreadsheet references.
+- Rejects local variables named `sheet`.
+- Rejects package imports or aliases named `sheet`.
 - Does not resolve against `window`, `document`, `globalThis`, or other browser
   globals.
 
@@ -849,8 +1119,14 @@ Implementation tasks:
 
 - Define type model and assignability rules.
 - Type arithmetic, comparisons, booleans, strings, and returns.
-- Type predeclared cell/range helpers.
+- Type current-sheet and cross-sheet cell/range references plus dynamic
+  `Namespace.Cell` / `Namespace.Range` helpers.
+- Type assignment to locals and exported mutable package variables.
 - Type host calls from the host spec.
+- Type tuple return values and tuple assignment from multiple-return calls.
+- Type named return values and naked returns.
+- Type `defer` statements; deferred expressions must be calls and their return
+  values are ignored.
 - Decide numeric coercion policy and implement it consistently.
 - Type local helper functions when added.
 
@@ -864,10 +1140,27 @@ Tests:
 - `if` conditions must be bool.
 - Return expression must match the implicit cell return type or be convertible
   to `Value`.
+- Multiple return expression count and types match the function signature.
+- Named return functions allow naked `return`.
+- Non-named-return functions reject naked `return`.
+- Tuple assignment from a multiple-return call binds each target type.
+- Assignment to an exported package variable requires assignability to that
+  package variable's declared type and marks the formula `package-state`.
+- Assignment to a package constant or read-only binding is rejected.
+- Assignment to a spreadsheet reference is rejected unless it goes through a
+  declared sheet-effect capability.
+- Deferred calls validate argument types and ignore return values.
+- Deferred non-call expressions are rejected.
 - Host calls validate arity and argument types.
 - Host return types flow into later expressions.
 - Cell values require explicit conversion when needed, if the type policy uses
   `Value`.
+- `sheet.A1` and `sheet.$A$1` produce `Value`.
+- `sheet.A1:B10` produces `Range`.
+- `Data.A1` and `Data.$A$1` produce `Value`.
+- `Data.A1:B10` produces `Range`.
+- `Data.Cell(addr)` and `Data.Range(addr)` require string addresses and produce
+  `Value` and `Range`.
 - Diagnostics point at the offending expression.
 
 Acceptance criteria:
@@ -882,11 +1175,12 @@ which formulas require runtime dependency observation.
 
 Implementation tasks:
 
-- Recognize `cell("A1")` and `range("A1:B10")`.
+- Recognize static current-sheet and cross-sheet cell/range references.
 - Validate cell and range addresses.
-- Record statically known direct dependencies in normalized address format.
-- Recognize dynamic `cell(expr)` and `range(expr)` calls where `expr` has type
-  `string`.
+- Record statically known direct dependencies in normalized
+  `(sheet namespace, address/range)` format.
+- Recognize dynamic `Namespace.Cell(expr)` and `Namespace.Range(expr)` calls
+  where `Namespace` is a sheet namespace and `expr` has type `string`.
 - Mark formulas with dynamic references as requiring observed dependency
   tracking.
 - Preserve enough source metadata to diagnose invalid literal references and
@@ -898,8 +1192,18 @@ Tests:
 - Extracts one cell dependency.
 - Extracts multiple dependencies from expressions and branches.
 - Extracts range dependencies.
-- Marks `cell(addr)` as dynamic when `addr` is a variable.
-- Marks `range(start + ":" + end)` as dynamic when the address is computed.
+- Extracts absolute and mixed absolute/relative references from `sheet.$A$1`,
+  `sheet.A$1`, and `sheet.$A1`.
+- Extracts range dependencies from `sheet.A1:B10` and
+  `sheet.$A$1:$B$10`.
+- Extracts cross-sheet dependencies from `Data.A1`, `Data.$A$1`, and
+  `Data.A1:B10`.
+- Preserves the sheet namespace in each dependency record.
+- Marks `sheet.Cell(addr)` as dynamic when `addr` is a variable.
+- Marks `sheet.Range(start + ":" + end)` as dynamic when the address is
+  computed.
+- Marks `Data.Cell(addr)` and `Data.Range(addr)` as dynamic cross-sheet
+  references.
 - Rejects invalid cell/range strings.
 - Handles duplicate dependencies by deduplicating.
 - Does not count strings passed to unrelated functions as dependencies.
@@ -919,7 +1223,8 @@ future WebAssembly backend.
 Implementation tasks:
 
 - Define IR nodes for constants, locals, arithmetic, comparisons, boolean ops,
-  branches, returns, calls, cell/range reads, and later loops.
+  branches, returns, tuple returns, named-return slots, defers, calls,
+  package-state reads/writes, cell/range reads, and later loops.
 - Preserve diagnostic/source mapping metadata.
 - Add optional constant folding for simple literals.
 - Add explicit conversions where needed.
@@ -931,9 +1236,14 @@ Tests:
 - Constant folding tests if implemented.
 - IR contains no raw user identifier names except for metadata.
 - IR host calls contain host binding IDs.
-- IR cell reads contain normalized addresses.
+- IR cell reads contain normalized sheet namespace plus address.
 - IR dynamic cell/range reads preserve the address expression and lower to
   runtime-observed `ctx.cell` / `ctx.range` calls.
+- IR package variable reads and writes carry package slot IDs, not raw selector
+  text.
+- IR multiple returns use an explicit tuple shape.
+- IR named returns use explicit local return slots.
+- IR defers preserve LIFO execution order and immediate argument evaluation.
 
 Acceptance criteria:
 
@@ -953,6 +1263,12 @@ Implementation tasks:
 - Build a package import graph and reject import cycles.
 - Typecheck package exports and internals.
 - Produce an exported signature table for each package.
+- Produce an exported package variable table with mutability, type, and effect
+  metadata.
+- Support package-level `var` declarations with deterministic initializers.
+- Support package variable reads and assignments inside package functions.
+- Mark package functions that read or write mutable package variables as
+  `package-state` exports.
 - Lower package functions to IR.
 - Emit package JavaScript using the same source copy-and-patch backend as
   formulas.
@@ -960,7 +1276,7 @@ Implementation tasks:
 - Persist compiled package artifacts in IndexedDB.
 - Invalidate package artifacts when source, transitive dependency, compiler
   version, backend, ABI version, host spec, or capability policy changes.
-- Reject package-level mutable state in the first implementation.
+- Keep compiled package artifacts separate from runtime package variable state.
 - Keep package compilation in the worker.
 
 Tests:
@@ -975,10 +1291,25 @@ Tests:
 - Rejects import cycles across two and three packages.
 - Typechecks exported functions before formula compilation.
 - Formula can call an exported package function.
+- Formula can read an exported package constant or mutable variable using
+  normal Go selector syntax, for example `pkg.VariableName`.
+- Formula can assign to an exported mutable package variable using normal Go
+  selector syntax, for example `pkg.VariableName = 10`.
+- Formula can call an exported package function that mutates package state, and
+  the formula is marked `package-state`.
+- Package functions can read and write exported and unexported package
+  variables according to Go visibility rules.
+- Package variable state persists across calls within one runtime/package
+  instance.
+- Package variable state resets when the runtime/package instance is recreated
+  by source or dependency invalidation.
 - Formula cannot call an unexported package helper.
+- Formula cannot read an unexported package variable.
+- Formula cannot assign to an unexported package variable or package constant.
 - Package can call an imported package export.
 - Package function using `Range` iterates over a finite range with fuel limits.
 - Package compilation emits a stable exported signature table.
+- Package compilation emits stable package variable metadata.
 - Package cache hits when source and transitive dependencies are unchanged.
 - Package cache misses when any package source file changes.
 - Package cache misses when a transitive dependency changes.
@@ -988,6 +1319,8 @@ Tests:
 - Worker package compile results are ignored if their generation token is stale.
 - Cached package artifacts never persist raw executable authority beyond the
   generated JS/Wasm and typed metadata.
+- Cached package artifacts do not persist current mutable package variable
+  values unless a separate explicit workbook-session state format is added.
 
 Acceptance criteria:
 
@@ -1013,15 +1346,25 @@ Implementation tasks:
 Tests:
 
 - Generated JS for simple arithmetic matches golden snapshots.
+- Generated JS for multiple return functions returns a stable tuple/array
+  representation.
+- Generated JS for named returns assigns return locals and emits a final return
+  tuple/value.
+- Generated JS for `defer` emits a LIFO defer stack and `try/finally` or
+  equivalent control flow.
 - Generated JS for a package function matches golden snapshots.
 - Formula-generated JS calls package exports through generated package slots.
 - Package-generated JS calls imported package exports through generated package
   slots.
+- Package-generated JS reads and writes package variables through generated
+  package state slots, not globals.
 - Generated JS never contains raw user variable names.
 - String literals are escaped with `JSON.stringify`.
 - Host calls route through `host` using resolved binding paths or IDs.
-- Cell reads route through `ctx.cell`.
-- Range reads route through `ctx.range`.
+- Static current-sheet and cross-sheet cell reads route through `ctx.cell`.
+- Static current-sheet and cross-sheet range reads route through `ctx.range`.
+- Dynamic `Namespace.Cell` reads route through `ctx.cell`.
+- Dynamic `Namespace.Range` reads route through `ctx.range`.
 - Unsupported IR nodes fail with internal compiler diagnostics.
 - Generated source parses via `new Function` in tests.
 - Malicious source snippets cannot break out through emitted JS:
@@ -1047,6 +1390,8 @@ Implementation tasks:
 - Include transitive package dependency keys for compiled package artifacts.
 - Store formula function artifacts in the worker memory cache.
 - Store package artifacts in worker memory and IndexedDB.
+- Store mutable package variable runtime state separately from compiled package
+  artifacts.
 - Compile with `new Function`.
 - Return structured compile errors if browser/CSP rejects dynamic compilation.
 - Add a development/debug option to expose generated source.
@@ -1061,6 +1406,10 @@ Tests:
 - Package artifact cache survives Node process restart by reloading from the
   filesystem cache.
 - Package artifact cache ignores incompatible ABI/backend artifacts.
+- Package artifact cache reload does not accidentally restore stale mutable
+  package variable values.
+- Package runtime state resets or restores only through an explicit runtime
+  state policy, never as a side effect of loading compiled code.
 - Compile failure returns diagnostic/error object.
 - Cached function returns same result as newly compiled function.
 
@@ -1075,10 +1424,14 @@ Implement the evaluator context and spreadsheet value conversion.
 
 Implementation tasks:
 
-- Define `ctx.cell(address)`, `ctx.range(address)`, and value conversion helpers.
+- Define `ctx.cell(sheetNamespace, address)`,
+  `ctx.range(sheetNamespace, address)`, and value conversion helpers.
 - Make `ctx.cell` and `ctx.range` validate normalized addresses at runtime.
 - Make every `ctx.cell` and `ctx.range` call record an observed dependency
   before returning or raising a reference diagnostic when possible.
+- Maintain package instance state for mutable package variables.
+- Evaluate `package-state` formulas in the scheduler's stable order and avoid
+  pure-result memoization for them.
 - Convert returned JS values to spreadsheet values.
 - Catch runtime exceptions.
 - Enforce fuel/budget for loops and optional call count.
@@ -1091,8 +1444,16 @@ Tests:
 - Evaluates conditionals.
 - Reads cells from a fake context.
 - Reads ranges from a fake context.
+- Reads cells and ranges from a fake cross-sheet context.
 - Records observed dependencies for literal and dynamic cell reads.
 - Records observed dependencies for literal and dynamic range reads.
+- Observed dependencies include sheet namespace for current-sheet and
+  cross-sheet reads.
+- Package variable mutation persists across calls in one runtime instance.
+- Direct assignment to an exported package variable from formula code mutates
+  package state and marks the formula `package-state`.
+- Package variable mutation is reset when the package instance graph is
+  recreated.
 - Produces `#REF!` for invalid dynamic addresses while preserving any
   dependencies read before the invalid reference was constructed.
 - Calls fake host functions.
@@ -1134,7 +1495,10 @@ Tests:
 - Node runtime evaluates a simple formula without DOM or browser APIs.
 - Node runtime evaluates a formula with dynamic dependencies and returns
   observed deps.
+- Node runtime evaluates formulas against multi-sheet fixture data.
 - Node runtime compiles and calls a source package.
+- Node runtime preserves mutable package variable state across calls in one
+  runtime session.
 - Node runtime reuses filesystem package cache on second run.
 - Node runtime invalidates cache when package source changes.
 - Node runtime can run without worker_threads for fast unit tests.
@@ -1199,6 +1563,8 @@ Implementation tasks:
 
 - Track formula cells, literal cells, dirty cells, `declaredDeps`,
   `observedDeps`, and reverse dependents.
+- Track dependencies across `(sheet namespace, cell address)` keys from the
+  start.
 - Topologically sort dirty acyclic subgraphs using current `observedDeps`.
 - Detect strongly connected components before evaluation.
 - Keep iterative calculation disabled by default.
@@ -1223,6 +1589,10 @@ Tests:
 - Recalculation order respects dependencies.
 - Diamond dependency graph recalculates each formula once.
 - Dynamic reference formula observes the concrete cell it reads.
+- Cross-sheet static reference formula observes the concrete sheet namespace and
+  cell it reads.
+- Cross-sheet dynamic reference formula updates observed dependencies when the
+  computed address changes.
 - Changing the address-driving cell reschedules the formula and moves the
   reverse dependency edge from the old referenced cell to the new one.
 - Branch-dependent formula observes only the executed branch plus the guard
@@ -1249,6 +1619,9 @@ Tests:
   values.
 - Dynamic dependencies inside an iterative component that do not stabilize
   report `#UNSTABLE_DEPS!`.
+- Package-state formulas in an iterative component are evaluated in stable order
+  and report diagnostics if package-state effects make convergence
+  non-deterministic under the configured policy.
 - Removing a formula removes old dependency edges.
 - Invalid formula source preserves previous value or produces error according
   to spec.
@@ -1346,6 +1719,10 @@ Implementation tasks:
 - Persist raw Go-junior source, not generated JavaScript.
 - Persist source package text/manifests, not generated package JavaScript or
   Wasm as authoritative workbook state.
+- Define whether mutable package variable current values are workbook-session
+  state, saved workbook state, or reset-on-open state. The initial
+  implementation should make this policy explicit and test it rather than
+  letting package caches decide implicitly.
 - Persisting `observedDeps` is optional cache data only; load must recompute
   observed dependencies from source and current sheet values before trusting
   recalculation edges.
@@ -1359,7 +1736,10 @@ Tests:
 
 - Save/load preserves raw formula text.
 - Save/load preserves workbook package source text and manifests.
+- Save/load handles mutable package variable state according to the explicit
+  workbook policy.
 - Save/load recalculates values from current literals.
+- Save/load recalculates cross-sheet dependencies from current sheet values.
 - Save/load with dynamic references rebuilds observed dependencies on load.
 - Save/load can reuse a valid package artifact cache but rebuilds packages when
   cache keys do not match.
@@ -1407,10 +1787,14 @@ Implementation tasks:
 - Confirm no raw user source enters generated JS.
 - Confirm worker has no unnecessary host capabilities.
 - Confirm host bindings are allowlisted and typed.
-- Confirm formula contexts receive only pure capabilities.
+- Confirm formula contexts receive only pure, approved deterministic WASM,
+  approved formula-safe dynamic-JS, and explicitly allowed package-state
+  capabilities.
 - Confirm action contexts receive only explicitly granted effect capabilities.
 - Confirm package imports resolve only through approved providers.
 - Confirm package cache artifacts are keyed and validated before execution.
+- Confirm mutable package variable state is isolated per workbook/runtime
+  generation and is not mixed across cache keys.
 - Add CSP compatibility fallback decision: interpreter or explicit unsupported
   message.
 - Add runtime budget defaults.
@@ -1418,7 +1802,7 @@ Implementation tasks:
 
 Tests:
 
-- Fuzz scanner/parser with random input.
+- Fuzz Chevrotain lexer/parser and CST-to-AST conversion with random input.
 - Property tests ensure generated JS contains only generated identifiers for
   user variables.
 - Malicious strings and identifiers cannot escape emission.
@@ -1431,7 +1815,11 @@ Tests:
   the host binding explicitly declares and tests that behavior.
 - Source packages cannot access browser globals directly.
 - Source packages cannot smuggle extra capabilities through package imports.
+- Mutable package variables cannot smuggle host, DOM, worker, or workbook
+  authority outside the typed capability model.
 - Tampered package cache entries are rejected by key/hash/ABI validation.
+- Tampered package variable runtime state is rejected or reset according to the
+  explicit state persistence policy.
 - A package compiled with action capabilities is rejected in formula context
   unless its exported function is explicitly formula-safe.
 - Long formulas hit size limits.
@@ -1450,8 +1838,9 @@ Measure compile and execution behavior before optimizing.
 
 Implementation tasks:
 
-- Add microbenchmarks for scanner, parser, typechecker, package resolver,
-  package compiler, emitter, `new Function` compile, and evaluation.
+- Add microbenchmarks for Chevrotain lexing, Chevrotain parsing, CST-to-AST
+  conversion, typechecker, package resolver, package compiler, emitter,
+  `new Function` compile, and evaluation.
 - Add spreadsheet recalculation benchmarks for common graph shapes.
 - Measure main-thread latency with worker enabled.
 - Measure Node CLI cold-start, warm-cache, and fixture-run latency.
@@ -1527,8 +1916,9 @@ Acceptance criteria:
 
 Use layered tests so failures identify the responsible compiler phase:
 
-- Scanner unit tests.
-- Parser AST golden tests.
+- Chevrotain lexer token snapshot tests.
+- Chevrotain parser self-analysis tests.
+- Parser CST-to-AST golden tests.
 - Resolver/typechecker diagnostic tests.
 - Package resolver/compiler/cache tests.
 - IR golden tests.
@@ -1540,7 +1930,8 @@ Use layered tests so failures identify the responsible compiler phase:
 - Webui service tests.
 - Browser/Playwright tests only for real UI behavior.
 - Differential tests between interpreter and JS backend if interpreter exists.
-- Fuzz/property tests for parser and emitter hardening.
+- Fuzz/property tests for lexer, parser, CST-to-AST conversion, and emitter
+  hardening.
 
 Every diagnostic-producing stage should test:
 
@@ -1561,35 +1952,47 @@ The first useful implementation should run under Node.js before any browser UI
 integration. This gives fast unit tests and lets users manually exercise the
 language from bash while the design is still fluid.
 
-1. Scanner and parser for expression form plus short declarations, `if`, and
-   `return`.
+1. Chevrotain lexer/parser for expression form plus short declarations, `if`,
+   and `return`, with CST-to-AST conversion.
 2. Types for bool, string, and number.
-3. Resolver/typechecker for locals, `cell`, and one fake host namespace.
-4. Dependency extraction for literal references and runtime observed dependency
-   tracking for dynamic references.
-5. One tiny Go-junior-compatible source package compiled by the Node runtime
-   and called from a formula.
-6. JS source copy-and-patch emitter.
-7. Runtime tests that evaluate formulas against a fake spreadsheet context in
+3. Parser/typechecker coverage for `defer`, multiple returns, and named
+   returns.
+4. Resolver/typechecker for locals, reserved `sheet`, sheet-name namespaces,
+   and one fake host namespace.
+5. Dependency extraction for literal current-sheet and cross-sheet references,
+   plus runtime observed dependency tracking for dynamic references.
+6. One tiny Go-junior-compatible source package compiled by the Node runtime
+   and called from a formula, including a mutable package variable.
+7. JS source copy-and-patch emitter.
+8. Runtime tests that evaluate formulas against a fake spreadsheet context in
    Node.
-8. A minimal Node CLI `eval`, `compile`, `run-fixture`, and `inspect-js` path
+9. A minimal Node CLI `eval`, `compile`, `run-fixture`, and `inspect-js` path
    for manual bash testing.
-9. Browser worker and webui service integration are deferred until the language
+10. Browser worker and webui service integration are deferred until the language
    and CLI semantics have been exercised.
 
 Example first formulas:
 
 ```go
-cell("A1") + cell("B1")
+number(sheet.A1) + number(sheet.B1)
 ```
 
 ```go
-row := cell("B1")
-return cell("A" + string(row))
+return number(Data.A1) + number(sheet.B1)
 ```
 
 ```go
-x := cell("A1") + cell("B1")
+row := number(sheet.B1)
+return sheet.Cell("A" + string(row))
+```
+
+```go
+addr := "A" + string(number(sheet.B1))
+return Data.Cell(addr)
+```
+
+```go
+x := number(sheet.A1) + number(sheet.B1)
 if x > 10 {
     return math.Sqrt(x)
 }
@@ -1597,26 +2000,29 @@ return x * 2
 ```
 
 ```go
-if cell("A1") == "" {
+if string(sheet.$A$1) == "" {
     return "missing"
 }
-return cell("A1")
+return sheet.$A$1
 ```
 
 Example first source package:
 
 ```go
-package stats
+package counter
 
-func Double(x float64) float64 {
-    return x * 2
+var Count int
+
+func Next() int {
+    Count = Count + 1
+    return Count
 }
 ```
 
 Formula calling it:
 
 ```go
-return stats.Double(number(cell("A1")))
+return counter.Next()
 ```
 
 ## Acceptance Criteria for the Full Project
@@ -1627,8 +2033,12 @@ return stats.Double(number(cell("A1")))
 - Statically visible dependencies are extracted without running formulas.
 - Dynamic dependencies are observed during evaluation and update the dependency
   graph automatically.
+- Current-sheet and cross-sheet dependencies use the same graph model with
+  explicit sheet namespaces.
 - Go-junior-compatible source packages compile, link, and cache in the browser.
 - Go-junior-compatible source packages compile, link, and cache in Node.js.
+- Mutable package variables follow documented Go-like runtime semantics without
+  being stored inside compiled package artifacts.
 - Formulas compile to JavaScript generated only from compiler-owned stencils.
 - Generated code runs in both browser worker-backed and Node.js runtimes.
 - Formula cells recalculate incrementally and detect cycles.
