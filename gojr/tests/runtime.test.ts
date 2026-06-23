@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test } from "./testHarness.js";
 import { evaluateSource, formatReplValue, GoJuniorSession } from "../src/index.js";
 
 function expectRuns(source: string, options = {}) {

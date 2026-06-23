@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test } from "./testHarness.js";
 import { scanSource } from "../src/front/scanner.js";
 import { TokenKind } from "../src/front/token.js";
 

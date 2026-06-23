@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test } from "./testHarness.js";
 import { parseRuntimeJson, parseSheetJson } from "../src/index.js";
 
 describe("CLI JSON runtime input", () => {

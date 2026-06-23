@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test } from "./testHarness.js";
 import { checkFrontSource } from "../src/front/checker.js";
 import {
   FuncObject,

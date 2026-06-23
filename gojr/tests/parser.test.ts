@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test } from "./testHarness.js";
 import { parseProgram } from "../src/index.js";
 
 function expectParses(source: string) {

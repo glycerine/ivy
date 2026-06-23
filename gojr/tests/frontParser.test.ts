@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test } from "./testHarness.js";
 import { parseFrontSource } from "../src/front/parser.js";
 import { TokenKind } from "../src/front/token.js";
 import { walk, type AstNode, type Expr, type Field, type FuncDecl, type GenDecl } from "../src/front/ast.js";
