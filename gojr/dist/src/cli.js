@@ -20,7 +20,7 @@ async function main(argv) {
         console.log(JSON.stringify(result.ast, jsonReplacer, 2));
         return result.diagnostics.some((diagnostic) => diagnostic.severity === "error") ? 1 : 0;
     }
-    const result = evaluateSource(source, {
+    const result = await evaluateSource(source, {
         filename,
         ...(options.sheet ? { sheet: options.sheet } : {}),
         ...(options.sheets ? { sheets: options.sheets } : {}),

@@ -200,8 +200,6 @@ function __gojrRequire(specifier, parent = "/src/index.js") {
 }
 
 const gojrModule = __gojrRequire("/src/index.js");
-const gojrAsyncSessionModule = __gojrRequire("/src/asyncSession.js");
-const gojrAsyncRuntimeModule = __gojrRequire("/src/asyncRuntime.js");
 
 function gojrRuntimeOptions(extra = {}) {
   const seed = globalThis.process?.env?.GOJR_RANDOM_SEED;
@@ -210,7 +208,7 @@ function gojrRuntimeOptions(extra = {}) {
     : { ...extra, randomSeed: seed };
 }
 
-const gojrSession = new gojrAsyncSessionModule.AsyncGoJuniorSession(gojrRuntimeOptions({ sheet: {} }));
+const gojrSession = new gojrModule.GoJuniorSession(gojrRuntimeOptions({ sheet: {} }));
 
 function gojrDiagnosticString(diagnostic) {
   const filename = diagnostic?.span?.filename || diagnostic?.filename || "gojr-repl.go";
@@ -231,7 +229,6 @@ function gojrFormatValue(value) {
     const name = value.name ? value.name.replace(/^_fn_/, "") : "";
     return name ? `<func ${name}>` : "<func>";
   }
-  if (value instanceof gojrAsyncRuntimeModule.AsyncGoChannel) return "chan";
   return gojrModule.formatReplValue(value);
 }
 
@@ -254,8 +251,8 @@ globalThis.__gojrEval = async function(source) {
   });
 };
 
-globalThis.__gojrEvalFiles = function(json) {
-  const result = gojrModule.evaluateSourceFiles(JSON.parse(json), gojrRuntimeOptions());
+globalThis.__gojrEvalFiles = async function(json) {
+  const result = await gojrModule.evaluateSourceFiles(JSON.parse(json), gojrRuntimeOptions());
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
@@ -267,8 +264,8 @@ globalThis.__gojrEvalFiles = function(json) {
   });
 };
 
-globalThis.__gojrTest = function(source) {
-  const result = gojrModule.testSource(source, gojrRuntimeOptions());
+globalThis.__gojrTest = async function(source) {
+  const result = await gojrModule.testSource(source, gojrRuntimeOptions());
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
@@ -280,8 +277,8 @@ globalThis.__gojrTest = function(source) {
   });
 };
 
-globalThis.__gojrTestFiles = function(json) {
-  const result = gojrModule.testSourceFiles(JSON.parse(json), gojrRuntimeOptions());
+globalThis.__gojrTestFiles = async function(json) {
+  const result = await gojrModule.testSourceFiles(JSON.parse(json), gojrRuntimeOptions());
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),

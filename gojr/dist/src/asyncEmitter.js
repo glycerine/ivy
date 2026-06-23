@@ -111,6 +111,8 @@ class AsyncEmitter {
         switch (statement.kind) {
             case "BlockStatement":
                 return `{\n${this.indent(this.emitBlockStatements(statement, scope, true), 1)}\n}`;
+            case "LabeledStatement":
+                return this.emitLabeled(statement, scope);
             case "VarDecl":
                 return statement.declarations.map((declaration) => {
                     const jsName = this.declare(scope, declaration.name);
@@ -131,6 +133,12 @@ class AsyncEmitter {
                 return this.emitSend(statement, scope);
             case "SelectStatement":
                 return this.emitSelect(statement, scope);
+            case "ForStatement":
+                return this.emitFor(statement, scope);
+            case "BranchStatement":
+                return this.emitBranch(statement);
+            case "IncDecStatement":
+                return this.emitIncDec(statement, scope);
             case "IfStatement": {
                 const condition = this.emitExpression(statement.condition, scope);
                 const thenBody = this.emitBlockStatements(statement.thenBlock, this.childScope(scope), false);
@@ -147,17 +155,21 @@ class AsyncEmitter {
         }
     }
     emitAssign(statement, scope) {
-        if (statement.operator !== "=") {
-            this.unsupported(`unsupported assignment operator in async emitter: ${statement.operator}`, statement.span);
-            return "";
-        }
         const receive = statement.values.length === 1 ? receiveChannelFromExpression(statement.values[0]) : undefined;
         if (receive && statement.targets.length > 1) {
             return this.emitReceiveAssign(statement, receive, scope);
         }
         return statement.targets.map((target, index) => {
             const value = statement.values[index] ? this.emitExpression(statement.values[index], scope) : "null";
-            return `${this.emitAssignableExpression(target, scope)} = ${value};`;
+            const targetText = this.emitAssignableExpression(target, scope);
+            if (statement.operator === "=")
+                return `${targetText} = ${value};`;
+            const binaryOperator = compoundAssignmentOperator(statement.operator);
+            if (!binaryOperator) {
+                this.unsupported(`unsupported assignment operator in async emitter: ${statement.operator}`, statement.span);
+                return "";
+            }
+            return `${targetText} = (${targetText} ${binaryOperator} ${value});`;
         }).join("\n");
     }
     emitShortVar(statement, scope) {
@@ -195,6 +207,89 @@ class AsyncEmitter {
             lines.push(`${this.emitAssignableExpression(target, scope)} = ${resultName}[${index}];`);
         }
         return lines.join("\n");
+    }
+    emitLabeled(statement, scope) {
+        const label = generatedLabelName(statement.label);
+        if (!statement.statement)
+            return `${label}: ;`;
+        return `${label}: ${this.emitStatement(statement.statement, scope)}`;
+    }
+    emitFor(statement, scope) {
+        if (statement.range)
+            return this.emitRangeFor(statement, scope);
+        const loopScope = this.childScope(scope);
+        const init = statement.init ? this.emitForHeaderStatement(statement.init, loopScope) : "";
+        const condition = statement.condition ? this.emitExpression(statement.condition, loopScope) : "";
+        const post = statement.post ? this.emitForHeaderStatement(statement.post, loopScope) : "";
+        const body = this.emitBlockStatements(statement.body, this.childScope(loopScope), false);
+        return `for (${init}; ${condition}; ${post}) {\n${this.indent(body, 1)}\n}`;
+    }
+    emitRangeFor(statement, scope) {
+        if (!statement.range)
+            return "";
+        const loopScope = this.childScope(scope);
+        const bodyScope = this.childScope(loopScope);
+        const sourceName = `_range${this.nextLocal++}`;
+        const indexName = `_rangeIndex${this.nextLocal++}`;
+        const bindLines = this.emitRangeBindings(statement, indexName, "undefined", bodyScope);
+        const body = this.emitBlockStatements(statement.body, bodyScope, false);
+        const loopBody = [bindLines, body].filter(Boolean).join("\n");
+        return [
+            `{`,
+            `  const ${sourceName} = ${this.emitExpression(statement.range.source, scope)};`,
+            `  for (let ${indexName} = 0n; ${indexName} < ${sourceName}; ${indexName}++) {`,
+            this.indent(loopBody, 2),
+            `  }`,
+            `}`
+        ].join("\n");
+    }
+    emitRangeBindings(statement, keyValue, elementValue, scope) {
+        const range = statement.range;
+        if (!range)
+            return "";
+        const lines = [];
+        if (range.keyName) {
+            const target = range.define ? this.declare(scope, range.keyName) : this.lookup(scope, range.keyName, statement.span);
+            lines.push(this.emitBindingInitialization(target, keyValue));
+        }
+        if (range.valueName) {
+            const target = range.define ? this.declare(scope, range.valueName) : this.lookup(scope, range.valueName, statement.span);
+            lines.push(this.emitBindingInitialization(target, elementValue));
+        }
+        return lines.join("\n");
+    }
+    emitForHeaderStatement(statement, scope) {
+        let emitted;
+        if (statement.kind === "ShortVarStatement")
+            emitted = stripStatementTerminator(this.emitShortVar(statement, scope));
+        else if (statement.kind === "AssignStatement")
+            emitted = stripStatementTerminator(this.emitAssign(statement, scope));
+        else if (statement.kind === "IncDecStatement")
+            emitted = stripStatementTerminator(this.emitIncDec(statement, scope));
+        else if (statement.kind === "ExpressionStatement")
+            emitted = this.emitExpression(statement.expression, scope);
+        else {
+            this.unsupported(`unsupported for-clause statement in async emitter: ${statement.kind}`, statement.span);
+            return "";
+        }
+        if (emitted.includes("\n")) {
+            this.unsupported("multi-statement for clauses are not in the async emitter slice yet", statement.span);
+            return "";
+        }
+        return emitted;
+    }
+    emitBranch(statement) {
+        if (statement.branch === "break") {
+            return statement.label ? `break ${generatedLabelName(statement.label)};` : `break;`;
+        }
+        if (statement.branch === "continue") {
+            return statement.label ? `continue ${generatedLabelName(statement.label)};` : `continue;`;
+        }
+        this.unsupported(`unsupported branch in async emitter: ${statement.branch}`, statement.span);
+        return "";
+    }
+    emitIncDec(statement, scope) {
+        return `${this.emitAssignableExpression(statement.target, scope)}${statement.operator};`;
     }
     emitReturn(statement, scope) {
         const values = statement.values.map((value) => this.emitExpression(value, scope));
@@ -465,11 +560,32 @@ export function emitAsyncJavaScript(program, options = {}) {
 function generatedFunctionName(name) {
     return `_fn_${sanitizeIdentifierPart(name)}`;
 }
+function generatedLabelName(name) {
+    return `_lbl_${sanitizeIdentifierPart(name)}`;
+}
 function sanitizeIdentifierPart(name) {
     const sanitized = name.replace(/[^A-Za-z0-9_$]/g, "_");
     if (/^[A-Za-z_$]/.test(sanitized))
         return sanitized || "_";
     return `_${sanitized}`;
+}
+function stripStatementTerminator(text) {
+    return text.trim().replace(/;$/, "");
+}
+function compoundAssignmentOperator(operator) {
+    switch (operator) {
+        case "+=": return "+";
+        case "-=": return "-";
+        case "*=": return "*";
+        case "/=": return "/";
+        case "%=": return "%";
+        case "&=": return "&";
+        case "|=": return "|";
+        case "^=": return "^";
+        case "<<=": return "<<";
+        case ">>=": return ">>";
+        default: return undefined;
+    }
 }
 function receiveChannelFromStatement(statement) {
     if (statement.kind === "ExpressionStatement") {

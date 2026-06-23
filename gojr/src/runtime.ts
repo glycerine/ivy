@@ -46,6 +46,14 @@ import {
 } from "./front/types.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
 import { DeterministicPrng } from "./prng.js";
+import {
+  AsyncGoChannel,
+  AsyncGoDeadlockError,
+  AsyncGoPanic,
+  AsyncGoScheduler,
+  asyncSelect
+} from "./asyncRuntime.js";
+import type { AsyncSelectCase, AsyncSelectResult } from "./asyncRuntime.js";
 
 export type RuntimeValue =
   | null
@@ -74,14 +82,14 @@ export interface RuntimeObject {
 export interface RuntimeCallable {
   kind: "HostCallable";
   name: string;
-  call(args: RuntimeValue[], context: EvaluationContext): RuntimeValue;
+  call(args: RuntimeValue[], context: EvaluationContext): MaybePromise<RuntimeValue>;
 }
 
 export interface GoJuniorFunction {
   kind: "GoJuniorFunction";
   name: string;
   declaration?: FunctionDecl;
-  call(args: RuntimeValue[], context: EvaluationContext): RuntimeValue;
+  call(args: RuntimeValue[], context: EvaluationContext): MaybePromise<RuntimeValue>;
 }
 
 export interface SheetData {
@@ -115,6 +123,8 @@ type Completion =
   | { kind: "continue"; label?: string }
   | { kind: "fallthrough" }
   | { kind: "goto"; label: string };
+
+type MaybePromise<T> = T | Promise<T>;
 
 interface Binding {
   value: RuntimeValue;
@@ -177,25 +187,61 @@ interface TestingTState {
   logs: string[];
 }
 
-export class EvaluationContext {
-  public readonly output: string[] = [];
-  private readonly rootScope = new Scope();
-  private currentScope = this.rootScope;
-  private readonly deferFrames: Array<Array<() => RuntimeValue>> = [[]];
-  private readonly types = new Map<string, StructTypeDef>();
-  private readonly interfaces = new Map<string, InterfaceTypeDef>();
-  private readonly aliases = new Map<string, string>();
-  private readonly methods = new Map<string, MethodDef>();
-  private readonly maxLoopIterations: number;
-  private readonly stdout: ((text: string) => void) | undefined;
-  private readonly random: DeterministicPrng;
+interface EvaluationSharedState {
+  output: string[];
+  rootScope: Scope;
+  types: Map<string, StructTypeDef>;
+  interfaces: Map<string, InterfaceTypeDef>;
+  aliases: Map<string, string>;
+  methods: Map<string, MethodDef>;
+  maxLoopIterations: number;
+  stdout?: (text: string) => void;
+  random: DeterministicPrng;
+  scheduler: AsyncGoScheduler;
+}
 
-  public constructor(private readonly options: EvaluationOptions = {}) {
-    this.maxLoopIterations = options.maxLoopIterations ?? 100_000;
-    this.stdout = options.stdout;
-    this.random = new DeterministicPrng(options.randomSeed);
+export class EvaluationContext {
+  private readonly shared: EvaluationSharedState;
+  private currentScope: Scope;
+  private readonly deferFrames: Array<Array<() => MaybePromise<RuntimeValue>>> = [[]];
+
+  public constructor(
+    private readonly options: EvaluationOptions = {},
+    shared?: EvaluationSharedState,
+    currentScope?: Scope
+  ) {
+    if (shared) {
+      this.shared = shared;
+      this.currentScope = currentScope ?? shared.rootScope;
+      return;
+    }
+    this.shared = {
+      output: [],
+      rootScope: new Scope(),
+      types: new Map(),
+      interfaces: new Map(),
+      aliases: new Map(),
+      methods: new Map(),
+      maxLoopIterations: options.maxLoopIterations ?? 100_000,
+      ...(options.stdout ? { stdout: options.stdout } : {}),
+      random: new DeterministicPrng(options.randomSeed),
+      scheduler: new AsyncGoScheduler(options.randomSeed === undefined ? {} : { randomSeed: options.randomSeed })
+    };
+    this.currentScope = this.shared.rootScope;
     installBuiltins(this);
     installAutomaticImports(this);
+  }
+
+  public get output(): string[] {
+    return this.shared.output;
+  }
+
+  public scheduler(): AsyncGoScheduler {
+    return this.shared.scheduler;
+  }
+
+  public fork(currentScope: Scope = this.shared.rootScope): EvaluationContext {
+    return new EvaluationContext(this.options, this.shared, currentScope);
   }
 
   public declare(name: string, value: RuntimeValue, mutable = true, type?: TypeNode | string): void {
@@ -207,12 +253,12 @@ export class EvaluationContext {
   public declareRoot(name: string, value: RuntimeValue, mutable = true, type?: TypeNode | string): void {
     const typeText = bindingTypeText(type);
     const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, this) : value;
-    this.rootScope.declare(name, stored, mutable, typeText);
+    this.shared.rootScope.declare(name, stored, mutable, typeText);
   }
 
   public declareOrAssignRoot(name: string, value: RuntimeValue, mutable = true, type?: TypeNode | string): void {
-    if (this.rootScope.hasLocal(name)) {
-      this.rootScope.assign(name, value, this.assignmentChecker());
+    if (this.shared.rootScope.hasLocal(name)) {
+      this.shared.rootScope.assign(name, value, this.assignmentChecker());
       return;
     }
     this.declareRoot(name, value, mutable, type);
@@ -267,7 +313,27 @@ export class EvaluationContext {
     }
   }
 
-  public pushDefer(callback: () => RuntimeValue): void {
+  public async childScopeAsync<T>(body: () => Promise<T>): Promise<T> {
+    const previous = this.currentScope;
+    this.currentScope = new Scope(previous);
+    try {
+      return await body();
+    } finally {
+      this.currentScope = previous;
+    }
+  }
+
+  public async withScopeAsync<T>(scope: Scope, body: () => Promise<T>): Promise<T> {
+    const previous = this.currentScope;
+    this.currentScope = scope;
+    try {
+      return await body();
+    } finally {
+      this.currentScope = previous;
+    }
+  }
+
+  public pushDefer(callback: () => MaybePromise<RuntimeValue>): void {
     this.currentDeferFrame().push(callback);
   }
 
@@ -275,6 +341,13 @@ export class EvaluationContext {
     const frame = this.currentDeferFrame();
     while (frame.length > 0) {
       frame.pop()?.();
+    }
+  }
+
+  public async runDefersAsync(): Promise<void> {
+    const frame = this.currentDeferFrame();
+    while (frame.length > 0) {
+      await frame.pop()?.();
     }
   }
 
@@ -291,17 +364,30 @@ export class EvaluationContext {
     }
   }
 
+  public async deferScopeAsync<T>(body: () => Promise<T>): Promise<T> {
+    this.deferFrames.push([]);
+    try {
+      return await body();
+    } finally {
+      try {
+        await this.runDefersAsync();
+      } finally {
+        this.deferFrames.pop();
+      }
+    }
+  }
+
   public write(text: string): void {
-    this.output.push(text);
-    this.stdout?.(text);
+    this.shared.output.push(text);
+    this.shared.stdout?.(text);
   }
 
   public loopLimit(): number {
-    return this.maxLoopIterations;
+    return this.shared.maxLoopIterations;
   }
 
   public randomIndex(length: number): number {
-    return this.random.nextIndex(length);
+    return this.shared.random.nextIndex(length);
   }
 
   public packages(): Record<string, RuntimeObject> {
@@ -318,15 +404,15 @@ export class EvaluationContext {
   }
 
   public registerType(spec: TypeSpec): void {
-    this.aliases.set(spec.name, spec.type.text);
+    this.shared.aliases.set(spec.name, spec.type.text);
     if (spec.structFields) {
-      this.types.set(spec.name, {
+      this.shared.types.set(spec.name, {
         name: spec.name,
         fields: spec.structFields
       });
     }
     if (spec.interfaceMethods || spec.interfaceEmbeds) {
-      this.interfaces.set(spec.name, {
+      this.shared.interfaces.set(spec.name, {
         name: spec.name,
         methods: this.flattenInterfaceMethods(spec.interfaceMethods ?? [], spec.interfaceEmbeds ?? []),
         embeds: spec.interfaceEmbeds ?? []
@@ -335,23 +421,23 @@ export class EvaluationContext {
   }
 
   public typeDef(name: string): StructTypeDef | undefined {
-    return this.types.get(name);
+    return this.shared.types.get(name);
   }
 
   public interfaceDef(name: string): InterfaceTypeDef | undefined {
-    return this.interfaces.get(name);
+    return this.shared.interfaces.get(name);
   }
 
   public aliasType(name: string): string | undefined {
-    return this.aliases.get(name);
+    return this.shared.aliases.get(name);
   }
 
   public isKnownType(name: string): boolean {
     const type = normalizeTypeText(name);
     return isPredeclaredType(type) ||
-      this.aliases.has(type) ||
-      this.types.has(type) ||
-      this.interfaces.has(type) ||
+      this.shared.aliases.has(type) ||
+      this.shared.types.has(type) ||
+      this.shared.interfaces.has(type) ||
       type.startsWith("*") ||
       type.startsWith("[]") ||
       /^\[[0-9.]*\]/.test(type) ||
@@ -363,7 +449,7 @@ export class EvaluationContext {
   public registerMethod(declaration: FunctionDecl): void {
     if (!declaration.receiver) return;
     const receiver = normalizeReceiverType(declaration.receiver.type.text);
-    this.methods.set(methodKey(receiver.baseType, declaration.name), {
+    this.shared.methods.set(methodKey(receiver.baseType, declaration.name), {
       declaration,
       receiverType: receiver.baseType,
       pointerReceiver: receiver.pointer
@@ -371,7 +457,7 @@ export class EvaluationContext {
   }
 
   public methodFor(typeName: string, methodName: string): MethodDef | undefined {
-    return this.methods.get(methodKey(typeName, methodName));
+    return this.shared.methods.get(methodKey(typeName, methodName));
   }
 
   private flattenInterfaceMethods(methods: NonNullable<TypeSpec["interfaceMethods"]>, embeds: TypeNode[]): NonNullable<TypeSpec["interfaceMethods"]> {
@@ -386,7 +472,7 @@ export class EvaluationContext {
     return flattened;
   }
 
-  private currentDeferFrame(): Array<() => RuntimeValue> {
+  private currentDeferFrame(): Array<() => MaybePromise<RuntimeValue>> {
     const frame = this.deferFrames[this.deferFrames.length - 1];
     if (!frame) throw new GoJuniorRuntimeError("internal error: missing defer frame");
     return frame;
@@ -603,54 +689,92 @@ export class RuntimeMap {
 }
 
 export class RuntimeChannel {
-  private readonly buffer: RuntimeValue[] = [];
-  private closed = false;
+  private readonly channel: AsyncGoChannel<RuntimeValue>;
 
   public constructor(
     public readonly elementType: string,
     public readonly capacity: number,
     private readonly context?: EvaluationContext
-  ) {}
+  ) {
+    this.channel = new AsyncGoChannel(
+      context?.scheduler() ?? new AsyncGoScheduler(),
+      capacity,
+      () => defaultValueForTypeText(elementType, context)
+    );
+  }
 
   public send(value: RuntimeValue): void {
-    if (this.closed) throw new GoJuniorPanic("send on closed channel");
-    if (!this.canSend()) throw new GoJuniorDeadlockError("send on channel would block");
-    this.buffer.push(prepareAssignableToType(value, this.elementType, "channel send", this.context));
+    try {
+      if (!this.channel.trySend(prepareAssignableToType(value, this.elementType, "channel send", this.context))) {
+        throw new GoJuniorDeadlockError("send on channel would block");
+      }
+    } catch (error) {
+      throw normalizeAsyncRuntimeError(error);
+    }
+  }
+
+  public async sendAsync(value: RuntimeValue): Promise<void> {
+    try {
+      await this.channel.send(prepareAssignableToType(value, this.elementType, "channel send", this.context));
+    } catch (error) {
+      if (isDeadlockError(error)) throw new GoJuniorDeadlockError("send on channel would block");
+      throw normalizeAsyncRuntimeError(error);
+    }
   }
 
   public receive(): [RuntimeValue, boolean] {
-    if (this.buffer.length > 0) return [this.buffer.shift() ?? null, true];
-    if (this.closed) return [defaultValueForTypeText(this.elementType, this.context), false];
-    throw new GoJuniorDeadlockError("receive from channel would block");
+    try {
+      const ready = this.channel.tryReceive();
+      if (!ready) throw new GoJuniorDeadlockError("receive from channel would block");
+      return ready;
+    } catch (error) {
+      throw normalizeAsyncRuntimeError(error);
+    }
+  }
+
+  public async receiveAsync(): Promise<[RuntimeValue, boolean]> {
+    try {
+      return await this.channel.receive();
+    } catch (error) {
+      if (isDeadlockError(error)) throw new GoJuniorDeadlockError("receive from channel would block");
+      throw normalizeAsyncRuntimeError(error);
+    }
   }
 
   public canSend(): boolean {
-    return !this.closed && this.buffer.length < this.capacity;
+    return this.channel.canSendNow();
   }
 
   public canReceive(): boolean {
-    return this.buffer.length > 0 || this.closed;
+    return this.channel.canReceiveNow();
   }
 
   public close(): void {
-    if (this.closed) throw new GoJuniorPanic("close of closed channel");
-    this.closed = true;
+    try {
+      this.channel.close();
+    } catch (error) {
+      throw normalizeAsyncRuntimeError(error);
+    }
   }
 
   public len(): number {
-    return this.buffer.length;
+    return this.channel.len();
   }
 
   public cap(): number {
     return this.capacity;
   }
+
+  public asyncChannel(): AsyncGoChannel<RuntimeValue> {
+    return this.channel;
+  }
 }
 
-export function evaluateSource(source: string, options: EvaluationOptions = {}): EvaluationResult {
+export async function evaluateSource(source: string, options: EvaluationOptions = {}): Promise<EvaluationResult> {
   return evaluateSourceFiles([sourceFileFromSource(source, options)], options);
 }
 
-export function evaluateSourceFiles(files: SourceFile[], options: EvaluationOptions = {}): EvaluationResult {
+export async function evaluateSourceFiles(files: SourceFile[], options: EvaluationOptions = {}): Promise<EvaluationResult> {
   const parsed = frontSourceFilesToAst(files);
   const ast = parsed.ast;
   if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
@@ -669,11 +793,11 @@ export function evaluateSourceFiles(files: SourceFile[], options: EvaluationOpti
   return evaluateProgram(ast, options);
 }
 
-export function testSource(source: string, options: EvaluationOptions = {}): EvaluationResult {
+export async function testSource(source: string, options: EvaluationOptions = {}): Promise<EvaluationResult> {
   return testSourceFiles([sourceFileFromSource(source, options)], options);
 }
 
-export function testSourceFiles(files: SourceFile[], options: EvaluationOptions = {}): EvaluationResult {
+export async function testSourceFiles(files: SourceFile[], options: EvaluationOptions = {}): Promise<EvaluationResult> {
   const parsed = frontSourceFilesToAst(files);
   const ast = parsed.ast;
   if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
@@ -709,51 +833,35 @@ function sourceFileFromSource(source: string, options: EvaluationOptions = {}): 
   };
 }
 
-export function evaluateProgram(ast: ProgramAst, options: EvaluationOptions = {}): EvaluationResult {
+export async function evaluateProgram(ast: ProgramAst, options: EvaluationOptions = {}): Promise<EvaluationResult> {
   const context = new EvaluationContext(options);
   try {
-    installSheets(context, options);
-    installImports(context, ast);
+    return await context.scheduler().runRoot(async () => {
+      installSheets(context, options);
+      installImports(context, ast);
 
-    for (const declaration of ast.functions) {
-      installFunctionDeclaration(context, declaration);
-    }
+      for (const declaration of ast.functions) {
+        installFunctionDeclaration(context, declaration);
+      }
 
-    const { declarations, statements } = splitTopLevelDeclarations(ast.body);
-    const declarationCompletion = executeTopLevelStatements(declarations, context);
-    expectNormalCompletion(declarationCompletion, "top-level declarations");
+      const { declarations, statements } = splitTopLevelDeclarations(ast.body);
+      const declarationCompletion = await executeTopLevelStatements(declarations, context);
+      expectNormalCompletion(declarationCompletion, "top-level declarations");
 
-    if (ast.kind === "function" && ast.functions[0] && ast.body.length === 0) {
-      const value = installedFunctionValue(context, ast.functions[0]);
-      return {
-        diagnostics: ast.diagnostics,
-        output: context.output,
-        ast,
-        value
-      };
-    }
+      if (ast.kind === "function" && ast.functions[0] && ast.body.length === 0) {
+        const value = installedFunctionValue(context, ast.functions[0]);
+        return {
+          diagnostics: ast.diagnostics,
+          output: context.output,
+          ast,
+          value
+        };
+      }
 
-    runInitFunctions(ast.functions, context);
-    const completion = executeTopLevelStatements(statements, context);
-
-    if (completion.kind === "return") {
-      return {
-        diagnostics: ast.diagnostics,
-        output: context.output,
-        ast,
-        values: completion.values,
-        ...(completion.values.length === 1 ? { value: completion.values[0] } : {})
-      };
-    }
-
-    if (completion.kind !== "normal") throw new GoJuniorRuntimeError(completionErrorMessage(completion));
-
-    return {
-      diagnostics: ast.diagnostics,
-      output: context.output,
-      ast,
-      ...(completion.value !== undefined ? { value: completion.value } : {})
-    };
+      await runInitFunctions(ast.functions, context);
+      const completion = await executeTopLevelStatements(statements, context);
+      return resultFromCompletion(ast, context.output, completion);
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     return {
@@ -767,38 +875,40 @@ export function evaluateProgram(ast: ProgramAst, options: EvaluationOptions = {}
   }
 }
 
-function testProgram(ast: ProgramAst, baseDiagnostics: Diagnostic[], options: EvaluationOptions): EvaluationResult {
+async function testProgram(ast: ProgramAst, baseDiagnostics: Diagnostic[], options: EvaluationOptions): Promise<EvaluationResult> {
   const context = new EvaluationContext(options);
   const diagnostics = [...baseDiagnostics];
   try {
-    installSheets(context, options);
-    installImports(context, ast);
+    return await context.scheduler().runRoot(async () => {
+      installSheets(context, options);
+      installImports(context, ast);
 
-    for (const declaration of ast.functions) {
-      installFunctionDeclaration(context, declaration);
-    }
+      for (const declaration of ast.functions) {
+        installFunctionDeclaration(context, declaration);
+      }
 
-    const { declarations, statements } = splitTopLevelDeclarations(ast.body);
-    const declarationCompletion = executeTopLevelStatements(declarations, context);
-    expectNormalCompletion(declarationCompletion, "top-level declarations");
+      const { declarations, statements } = splitTopLevelDeclarations(ast.body);
+      const declarationCompletion = await executeTopLevelStatements(declarations, context);
+      expectNormalCompletion(declarationCompletion, "top-level declarations");
 
-    runInitFunctions(ast.functions, context);
-    const topLevelCompletion = executeTopLevelStatements(statements, context);
-    expectNormalCompletion(topLevelCompletion, "top-level statements");
+      await runInitFunctions(ast.functions, context);
+      const topLevelCompletion = await executeTopLevelStatements(statements, context);
+      expectNormalCompletion(topLevelCompletion, "top-level statements");
 
-    const tests = ast.functions.filter(isTestFunctionDecl);
-    if (tests.length === 0) {
-      context.write("testing: warning: no tests to run\nPASS\n");
+      const tests = ast.functions.filter(isTestFunctionDecl);
+      if (tests.length === 0) {
+        context.write("testing: warning: no tests to run\nPASS\n");
+        return { diagnostics, output: context.output, ast };
+      }
+
+      let failed = false;
+      for (const declaration of tests) {
+        const testFailed = await runOneTest(declaration, context, diagnostics);
+        failed ||= testFailed;
+      }
+      context.write(failed ? "FAIL\n" : "PASS\n");
       return { diagnostics, output: context.output, ast };
-    }
-
-    let failed = false;
-    for (const declaration of tests) {
-      const testFailed = runOneTest(declaration, context, diagnostics);
-      failed ||= testFailed;
-    }
-    context.write(failed ? "FAIL\n" : "PASS\n");
-    return { diagnostics, output: context.output, ast };
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     return {
@@ -816,7 +926,7 @@ function isTestFunctionDecl(declaration: FunctionDecl): boolean {
   return !declaration.receiver && /^Test($|[^a-z])/.test(declaration.name);
 }
 
-function runOneTest(declaration: FunctionDecl, context: EvaluationContext, diagnostics: Diagnostic[]): boolean {
+async function runOneTest(declaration: FunctionDecl, context: EvaluationContext, diagnostics: Diagnostic[]): Promise<boolean> {
   context.write(`=== RUN   ${declaration.name}\n`);
   const signatureError = testSignatureError(declaration);
   if (signatureError) {
@@ -830,7 +940,7 @@ function runOneTest(declaration: FunctionDecl, context: EvaluationContext, diagn
   let runtimeFailure: string | undefined;
   try {
     const callee = context.lookup(declaration.name);
-    callRuntime(callee, testingT ? [testingT.value] : [], context);
+    await callRuntime(callee, testingT ? [testingT.value] : [], context);
   } catch (error) {
     if (error instanceof GoJuniorTestStop) {
       // The testing.T state already records whether this was FailNow or SkipNow.
@@ -895,8 +1005,19 @@ function runtimeDiagnostic(ast: ProgramAst, code: string, message: string): Diag
 
 function runtimeDiagnosticCode(error: unknown): string {
   if (error instanceof GoJuniorPanic) return "GOJR_PANIC001";
-  if (error instanceof GoJuniorDeadlockError) return "GOJR_DEADLOCK001";
+  if (error instanceof AsyncGoPanic) return "GOJR_PANIC001";
+  if (error instanceof GoJuniorDeadlockError || error instanceof AsyncGoDeadlockError) return "GOJR_DEADLOCK001";
   return "GOJR_RUNTIME001";
+}
+
+function normalizeAsyncRuntimeError(error: unknown): unknown {
+  if (error instanceof AsyncGoPanic) return new GoJuniorPanic(error.value as RuntimeValue);
+  if (error instanceof AsyncGoDeadlockError) return new GoJuniorDeadlockError(error.message);
+  return error;
+}
+
+function isDeadlockError(error: unknown): boolean {
+  return error instanceof GoJuniorDeadlockError || error instanceof AsyncGoDeadlockError;
 }
 
 function firstProgramSpan(ast: ProgramAst): SourceSpan | undefined {
@@ -1017,7 +1138,7 @@ export class GoJuniorSession {
     }
   }
 
-  public evaluate(source: string): EvaluationResult {
+  public async evaluate(source: string): Promise<EvaluationResult> {
     const sourceFile = sourceFileFromSource(source, { ...this.options, filename: this.options.filename ?? REPL_FILENAME });
     const parsed = frontSourceToAst(sourceFile.source, sourceFile.filename);
     const ast = parsed.ast;
@@ -1048,14 +1169,16 @@ export class GoJuniorSession {
 
     const outputStart = this.context.output.length;
     try {
-      installImports(this.context, ast);
-
-      for (const declaration of ast.functions) {
-        installFunctionDeclaration(this.context, declaration);
-      }
-
       const { declarations, statements } = splitTopLevelDeclarations(ast.body);
-      const declarationCompletion = executeTopLevelStatements(declarations, this.context);
+      const declarationCompletion = await this.context.scheduler().runRoot(async () => {
+        installImports(this.context, ast);
+
+        for (const declaration of ast.functions) {
+          installFunctionDeclaration(this.context, declaration);
+        }
+
+        return executeTopLevelStatements(declarations, this.context);
+      });
       expectNormalCompletion(declarationCompletion, "top-level declarations");
 
       if (ast.kind === "function" && ast.functions[0] && ast.body.length === 0) {
@@ -1069,8 +1192,10 @@ export class GoJuniorSession {
         };
       }
 
-      runInitFunctions(ast.functions, this.context);
-      const completion = executeTopLevelStatements(statements, this.context);
+      const completion = await this.context.scheduler().runRoot(async () => {
+        await runInitFunctions(ast.functions, this.context);
+        return executeTopLevelStatements(statements, this.context);
+      });
       const result = resultFromCompletion(ast, this.context.outputFrom(outputStart), completion);
       this.acceptedSources.push(ensureTrailingNewlineSourceFile(sourceFile));
       return result;
@@ -1394,18 +1519,18 @@ function splitTopLevelDeclarations(statements: Statement[]): { declarations: Sta
   return { declarations, statements: executable };
 }
 
-function runInitFunctions(functions: FunctionDecl[], context: EvaluationContext): void {
+async function runInitFunctions(functions: FunctionDecl[], context: EvaluationContext): Promise<void> {
   for (const declaration of functions) {
     if (declaration.name !== "init" || declaration.receiver) continue;
-    callRuntime(functionValue(declaration), [], context);
+    await callRuntime(functionValue(declaration), [], context);
   }
 }
 
-function executeTopLevelStatements(statements: Statement[], context: EvaluationContext): Completion {
+async function executeTopLevelStatements(statements: Statement[], context: EvaluationContext): Promise<Completion> {
   try {
-    return executeStatements(statements, context);
+    return await executeStatements(statements, context);
   } finally {
-    context.runDefers();
+    await context.runDefersAsync();
   }
 }
 
@@ -1421,9 +1546,9 @@ function goJuniorFunctionValue(
     kind: "GoJuniorFunction",
     name,
     ...(declaration ? { declaration } : {}),
-    call(args, parentContext) {
+    async call(args, parentContext) {
       const context = parentContext;
-      const invoke = () => context.childScope(() => context.deferScope(() => {
+      const invoke = () => context.childScopeAsync(() => context.deferScopeAsync(async () => {
         if (declaration?.receiver?.name) {
           context.declare(
             declaration.receiver.name,
@@ -1444,8 +1569,8 @@ function goJuniorFunctionValue(
             context.declare(result.name, defaultValueForDeclarationType(result.type, context), true, result.type);
           }
         }
-        const completion = executeBlock(body, context, false);
-        context.runDefers();
+        const completion = await executeBlock(body, context, false);
+        await context.runDefersAsync();
         if (completion.kind === "return") {
           const values = completion.values.length === 0
             ? namedReturnValues(signature, context)
@@ -1454,7 +1579,7 @@ function goJuniorFunctionValue(
         }
         return null;
       }));
-      return closureScope ? context.withScope(closureScope, invoke) : invoke();
+      return closureScope ? context.withScopeAsync(closureScope, invoke) : invoke();
     }
   };
 }
@@ -1515,13 +1640,13 @@ function pointerToReceiver(receiver: RuntimeValue, typeName: string): RuntimePoi
   throw new GoJuniorRuntimeError(`${formatValue(receiver)} is not addressable as *${typeName}`);
 }
 
-function executeStatements(statements: Statement[], context: EvaluationContext): Completion {
+async function executeStatements(statements: Statement[], context: EvaluationContext): Promise<Completion> {
   const labels = statementLabels(statements);
   let lastValue: RuntimeValue | undefined;
   for (let pc = 0; pc < statements.length; pc += 1) {
     const statement = statements[pc];
     if (!statement) continue;
-    const completion = executeStatement(statement, context);
+    const completion = await executeStatement(statement, context);
     if (completion.kind === "goto") {
       const target = labels.get(completion.label);
       if (target !== undefined) {
@@ -1563,12 +1688,12 @@ function statementLabels(statements: Statement[]): Map<string, number> {
   return labels;
 }
 
-function executeBlock(block: BlockStatement, context: EvaluationContext, createScope = true): Completion {
+async function executeBlock(block: BlockStatement, context: EvaluationContext, createScope = true): Promise<Completion> {
   if (!createScope) return executeStatements(block.statements, context);
-  return context.childScope(() => executeStatements(block.statements, context));
+  return context.childScopeAsync(() => executeStatements(block.statements, context));
 }
 
-function executeStatement(statement: Statement, context: EvaluationContext): Completion {
+async function executeStatement(statement: Statement, context: EvaluationContext): Promise<Completion> {
   switch (statement.kind) {
     case "BlockStatement":
       return executeBlock(statement, context);
@@ -1583,7 +1708,7 @@ function executeStatement(statement: Statement, context: EvaluationContext): Com
         const valueExpression = declaration.value ?? previousConstValue;
         const type = declaration.type ?? previousConstType;
         const value = valueExpression
-          ? evaluateConstExpression(valueExpression, BigInt(index), context)
+          ? await evaluateConstExpression(valueExpression, BigInt(index), context)
           : defaultValueForDeclarationType(type, context);
         context.declare(
           declaration.name,
@@ -1600,7 +1725,7 @@ function executeStatement(statement: Statement, context: EvaluationContext): Com
       for (const declaration of statement.declarations) {
         context.declare(
           declaration.name,
-          declaration.value ? evaluateExpression(declaration.value, context) : defaultValueForDeclarationType(declaration.type, context),
+          declaration.value ? await evaluateExpression(declaration.value, context) : defaultValueForDeclarationType(declaration.type, context),
           true,
           declaration.type
         );
@@ -1616,7 +1741,7 @@ function executeStatement(statement: Statement, context: EvaluationContext): Com
     case "ReturnStatement":
       return {
         kind: "return",
-        values: statement.values.map((expression) => evaluateExpression(expression, context))
+        values: await evaluateExpressionList(statement.values, context)
       };
 
     case "IfStatement":
@@ -1632,38 +1757,38 @@ function executeStatement(statement: Statement, context: EvaluationContext): Com
       return executeFor(statement, context);
 
     case "DeferStatement":
-      executeDefer(statement, context);
+      await executeDefer(statement, context);
       return { kind: "normal" };
 
     case "GoStatement":
-      executeGo(statement, context);
+      await executeGo(statement, context);
       return { kind: "normal" };
 
     case "SendStatement":
-      executeSend(statement, context);
+      await executeSend(statement, context);
       return { kind: "normal" };
 
     case "BranchStatement":
       return branchCompletion(statement);
 
     case "AssignStatement":
-      executeAssign(statement, context);
+      await executeAssign(statement, context);
       return { kind: "normal" };
 
     case "ShortVarStatement":
-      executeShortVar(statement, context);
+      await executeShortVar(statement, context);
       return { kind: "normal" };
 
     case "IncDecStatement":
-      executeIncDec(statement, context);
+      await executeIncDec(statement, context);
       return { kind: "normal" };
 
     case "ExpressionStatement":
-      return { kind: "normal", value: evaluateExpression(statement.expression, context) };
+      return { kind: "normal", value: await evaluateExpression(statement.expression, context) };
   }
 }
 
-function executeLabeledStatement(statement: Extract<Statement, { kind: "LabeledStatement" }>, context: EvaluationContext): Completion {
+async function executeLabeledStatement(statement: Extract<Statement, { kind: "LabeledStatement" }>, context: EvaluationContext): Promise<Completion> {
   if (!statement.statement) return { kind: "normal" };
   if (statement.statement.kind === "ForStatement") {
     return executeFor(statement.statement, context, statement.label);
@@ -1674,19 +1799,19 @@ function executeLabeledStatement(statement: Extract<Statement, { kind: "LabeledS
   return executeStatement(statement.statement, context);
 }
 
-function evaluateConstExpression(expression: Expression, iotaValue: bigint, context: EvaluationContext): RuntimeValue {
-  return context.childScope(() => {
+async function evaluateConstExpression(expression: Expression, iotaValue: bigint, context: EvaluationContext): Promise<RuntimeValue> {
+  return context.childScopeAsync(async () => {
     context.declare("iota", iotaValue, false, "int64");
     return evaluateExpression(expression, context);
   });
 }
 
-function executeIf(statement: IfStatement, context: EvaluationContext): Completion {
-  return context.childScope(() => {
+async function executeIf(statement: IfStatement, context: EvaluationContext): Promise<Completion> {
+  return context.childScopeAsync(async () => {
     if (statement.init) {
-      expectNormalCompletion(executeStatement(statement.init, context), "if init statement");
+      expectNormalCompletion(await executeStatement(statement.init, context), "if init statement");
     }
-    if (toBool(evaluateExpression(statement.condition, context))) {
+    if (toBool(await evaluateExpression(statement.condition, context))) {
       return executeBlock(statement.thenBlock, context);
     }
     if (!statement.elseBranch) return { kind: "normal" };
@@ -1696,10 +1821,10 @@ function executeIf(statement: IfStatement, context: EvaluationContext): Completi
   });
 }
 
-function executeSwitch(statement: SwitchStatement, context: EvaluationContext, label?: string): Completion {
-  return context.childScope(() => {
+async function executeSwitch(statement: SwitchStatement, context: EvaluationContext, label?: string): Promise<Completion> {
+  return context.childScopeAsync(async () => {
     if (statement.init) {
-      expectNormalCompletion(executeStatement(statement.init, context), "switch init statement");
+      expectNormalCompletion(await executeStatement(statement.init, context), "switch init statement");
     }
     if (statement.typeSwitch) return executeTypeSwitch(statement, context, label);
     validateValueSwitchFallthrough(statement);
@@ -1707,17 +1832,21 @@ function executeSwitch(statement: SwitchStatement, context: EvaluationContext, l
   });
 }
 
-function executeValueSwitch(statement: SwitchStatement, context: EvaluationContext, label?: string): Completion {
-  const switchValue = statement.expression ? evaluateExpression(statement.expression, context) : true;
+async function executeValueSwitch(statement: SwitchStatement, context: EvaluationContext, label?: string): Promise<Completion> {
+  const switchValue = statement.expression ? await evaluateExpression(statement.expression, context) : true;
   let matched = false;
 
   for (const clause of statement.clauses) {
     if (!matched) {
-      matched = clause.default || clause.values.some((value) => valueEqual(switchValue, evaluateExpression(value, context)));
+      matched = clause.default;
+      for (const value of clause.values) {
+        if (matched) break;
+        matched = valueEqual(switchValue, await evaluateExpression(value, context));
+      }
     }
     if (!matched) continue;
 
-    const completion = executeStatements(clause.statements, context);
+    const completion = await executeStatements(clause.statements, context);
     if (completion.kind === "fallthrough") {
       matched = true;
       continue;
@@ -1744,15 +1873,15 @@ function validateValueSwitchFallthrough(statement: SwitchStatement): void {
   }
 }
 
-function executeTypeSwitch(statement: SwitchStatement, context: EvaluationContext, label?: string): Completion {
+async function executeTypeSwitch(statement: SwitchStatement, context: EvaluationContext, label?: string): Promise<Completion> {
   if (!statement.typeSwitch) return { kind: "normal" };
-  const switchValue = evaluateExpression(statement.typeSwitch.expression, context);
+  const switchValue = await evaluateExpression(statement.typeSwitch.expression, context);
 
   for (const clause of statement.clauses) {
     const matched = clause.default || (clause.typeValues ?? []).some((type) => runtimeValueMatchesType(switchValue, type.text, context));
     if (!matched) continue;
 
-    const completion = context.childScope(() => {
+    const completion = await context.childScopeAsync(async () => {
       if (statement.typeSwitch?.name) {
         const bindingValue = typeSwitchBindingValue(switchValue, clause, context);
         if (statement.typeSwitch.define) {
@@ -1781,12 +1910,12 @@ function typeSwitchBindingValue(switchValue: RuntimeValue, clause: SwitchStateme
   return assertedRuntimeValue(switchValue, typeText, context);
 }
 
-function executeFor(statement: ForStatement, context: EvaluationContext, label?: string): Completion {
+async function executeFor(statement: ForStatement, context: EvaluationContext, label?: string): Promise<Completion> {
   if (statement.range) {
-    const source = evaluateExpression(statement.range.source, context);
-    const entries = rangeEntries(source, context);
+    const source = await evaluateExpression(statement.range.source, context);
+    const entries = await rangeEntries(source, context);
     for (const [index, value] of entries) {
-      const completion = context.childScope(() => {
+      const completion = await context.childScopeAsync(async () => {
         if (statement.range?.keyName) {
           if (statement.range.define) context.declare(statement.range.keyName, index, true, inferredTypeText(index));
           else context.assign(statement.range.keyName, index);
@@ -1804,31 +1933,31 @@ function executeFor(statement: ForStatement, context: EvaluationContext, label?:
     return { kind: "normal" };
   }
 
-  return context.childScope(() => {
+  return context.childScopeAsync(async () => {
     if (statement.init) {
-      expectNormalCompletion(executeStatement(statement.init, context), "for init statement");
+      expectNormalCompletion(await executeStatement(statement.init, context), "for init statement");
     }
     if (statement.post?.kind === "ShortVarStatement") {
       throw new GoJuniorRuntimeError("short variable declaration is not allowed in a for post statement");
     }
 
     for (let iteration = 0; iteration < context.loopLimit(); iteration += 1) {
-      if (statement.condition && !toBool(evaluateExpression(statement.condition, context))) {
+      if (statement.condition && !toBool(await evaluateExpression(statement.condition, context))) {
         return { kind: "normal" };
       }
 
-      const completion = executeBlock(statement.body, context);
+      const completion = await executeBlock(statement.body, context);
       if (completion.kind === "break" && labelMatches(completion.label, label)) return { kind: "normal" };
       if (completion.kind === "continue" && labelMatches(completion.label, label)) {
         if (statement.post) {
-          expectNormalCompletion(executeStatement(statement.post, context), "for post statement");
+          expectNormalCompletion(await executeStatement(statement.post, context), "for post statement");
         }
         continue;
       }
       if (completion.kind !== "normal") return completion;
 
       if (statement.post) {
-        expectNormalCompletion(executeStatement(statement.post, context), "for post statement");
+        expectNormalCompletion(await executeStatement(statement.post, context), "for post statement");
       }
     }
 
@@ -1857,10 +1986,10 @@ function completionDescription(completion: Exclude<Completion, { kind: "normal" 
   return completion.label ? `${completion.kind} ${completion.label}` : completion.kind;
 }
 
-function executeDefer(statement: DeferStatement, context: EvaluationContext): void {
+async function executeDefer(statement: DeferStatement, context: EvaluationContext): Promise<void> {
   if (statement.expression.kind === "CallExpression") {
-    const callee = evaluateExpression(statement.expression.callee, context);
-    const args = statement.expression.args.map((arg) => evaluateExpression(arg, context));
+    const callee = await evaluateExpression(statement.expression.callee, context);
+    const args = await evaluateExpressionList(statement.expression.args, context);
     context.pushDefer(() => callRuntime(callee, args, context));
     return;
   }
@@ -1868,63 +1997,77 @@ function executeDefer(statement: DeferStatement, context: EvaluationContext): vo
   context.pushDefer(() => evaluateExpression(statement.expression, context));
 }
 
-function executeGo(statement: GoStatement, context: EvaluationContext): void {
-  callRuntime(evaluateExpression(statement.call.callee, context), statement.call.args.map((arg) => evaluateExpression(arg, context)), context);
+async function executeGo(statement: GoStatement, context: EvaluationContext): Promise<void> {
+  const callee = await evaluateExpression(statement.call.callee, context);
+  const args = await evaluateExpressionList(statement.call.args, context);
+  const goroutineContext = context.fork();
+  context.scheduler().go(async () => {
+    await callRuntime(callee, statement.call.spreadLast ? spreadLastArgument(args) : args, goroutineContext);
+  });
 }
 
-function executeSend(statement: SendStatement, context: EvaluationContext): void {
-  const channel = evaluateExpression(statement.channel, context);
+async function executeSend(statement: SendStatement, context: EvaluationContext): Promise<void> {
+  const channel = await evaluateExpression(statement.channel, context);
   if (channel === null) throw new GoJuniorDeadlockError("send on nil channel would block");
   if (!(channel instanceof RuntimeChannel)) throw new GoJuniorRuntimeError(`${formatValue(channel)} is not a channel`);
-  channel.send(evaluateExpression(statement.value, context));
+  await channel.sendAsync(await evaluateExpression(statement.value, context));
 }
 
-function executeSelect(statement: SelectStatement, context: EvaluationContext): Completion {
-  const defaultClause = statement.clauses.find((clause) => clause.default);
-  const ready: Array<{ clause: SelectStatement["clauses"][number]; action: () => void }> = [];
-  for (const clause of statement.clauses) {
-    if (clause.default) continue;
-    const action = readySelectAction(clause, context);
-    if (!action) continue;
-    ready.push({ clause, action });
+async function executeSelect(statement: SelectStatement, context: EvaluationContext): Promise<Completion> {
+  const prepared = await Promise.all(statement.clauses.map((clause) => prepareSelectClause(clause, context)));
+  let selected: AsyncSelectResult<RuntimeValue>;
+  try {
+    selected = await asyncSelect(context.scheduler(), prepared.map((item) => item.selectCase));
+  } catch (error) {
+    if (isDeadlockError(error)) throw new GoJuniorDeadlockError("select would block");
+    throw normalizeAsyncRuntimeError(error);
   }
-  if (ready.length > 0) {
-    const selected = ready[context.randomIndex(ready.length)]!;
-    selected.action();
-    const completion = executeStatements(selected.clause.statements, context);
-    if (completion.kind === "break" && completion.label === undefined) return { kind: "normal" };
-    return completion;
-  }
-  if (defaultClause) {
-    const completion = executeStatements(defaultClause.statements, context);
-    if (completion.kind === "break" && completion.label === undefined) return { kind: "normal" };
-    return completion;
-  }
-  throw new GoJuniorDeadlockError("select would block");
+  const preparedClause = prepared[selected.index];
+  if (!preparedClause) return { kind: "normal" };
+  await applySelectResult(preparedClause.clause.comm, selected, context);
+  const completion = await executeStatements(preparedClause.clause.statements, context);
+  if (completion.kind === "break" && completion.label === undefined) return { kind: "normal" };
+  return completion;
 }
 
-function readySelectAction(clause: SelectStatement["clauses"][number], context: EvaluationContext): (() => void) | undefined {
+interface PreparedSelectClause {
+  clause: SelectStatement["clauses"][number];
+  selectCase: AsyncSelectCase<RuntimeValue>;
+}
+
+async function prepareSelectClause(
+  clause: SelectStatement["clauses"][number],
+  context: EvaluationContext
+): Promise<PreparedSelectClause> {
   const comm = clause.comm;
-  if (!comm) return () => undefined;
+  if (clause.default || !comm) return { clause, selectCase: { op: "default" } };
   if (comm.kind === "SendStatement") {
-    const channel = evaluateExpression(comm.channel, context);
-    const value = evaluateExpression(comm.value, context);
-    if (channel === null) return undefined;
+    const channel = await evaluateExpression(comm.channel, context);
+    const value = await evaluateExpression(comm.value, context);
+    if (channel === null) return { clause, selectCase: { op: "receive", channel: undefined } };
     if (!(channel instanceof RuntimeChannel)) throw new GoJuniorRuntimeError(`${formatValue(channel)} is not a channel`);
-    return channel.canSend() ? () => channel.send(value) : undefined;
+    return { clause, selectCase: { op: "send", channel: channel.asyncChannel(), value } };
   }
   const receive = selectReceiveExpression(comm);
   if (receive) {
-    const channel = evaluateExpression(receive, context);
-    if (channel === null) return undefined;
+    const channel = await evaluateExpression(receive, context);
+    if (channel === null) return { clause, selectCase: { op: "receive", channel: undefined } };
     if (!(channel instanceof RuntimeChannel)) throw new GoJuniorRuntimeError(`${formatValue(channel)} is not a channel`);
-    if (!channel.canReceive()) return undefined;
-    return () => assignSelectReceive(comm, channel.receive(), context);
+    return { clause, selectCase: { op: "receive", channel: channel.asyncChannel() } };
   }
-  return () => {
-    const completion = executeStatement(comm, context);
+  await executeStatement(comm, context).then((completion) => {
     expectNormalCompletion(completion, "select communication clause");
-  };
+  });
+  return { clause, selectCase: { op: "default" } };
+}
+
+async function applySelectResult(
+  statement: Statement | undefined,
+  result: AsyncSelectResult<RuntimeValue>,
+  context: EvaluationContext
+): Promise<void> {
+  if (result.op !== "receive" || !statement) return;
+  await assignSelectReceive(statement, [result.value, result.ok], context);
 }
 
 function selectReceiveExpression(statement: Statement): Expression | undefined {
@@ -1942,7 +2085,7 @@ function selectReceiveExpression(statement: Statement): Expression | undefined {
   return undefined;
 }
 
-function assignSelectReceive(statement: Statement, received: [RuntimeValue, boolean], context: EvaluationContext): void {
+async function assignSelectReceive(statement: Statement, received: [RuntimeValue, boolean], context: EvaluationContext): Promise<void> {
   if (statement.kind === "ExpressionStatement") return;
   if (statement.kind === "ShortVarStatement") {
     const values = selectReceiveValues(received, statement.names.length);
@@ -1955,7 +2098,7 @@ function assignSelectReceive(statement: Statement, received: [RuntimeValue, bool
       throw new GoJuniorRuntimeError(`assignment count mismatch: ${statement.targets.length} targets but ${values.length} values`);
     }
     for (const [index, target] of statement.targets.entries()) {
-      assignExpressionTarget(target, values[index] ?? null, context);
+      await assignExpressionTarget(target, values[index] ?? null, context);
     }
   }
 }
@@ -1976,24 +2119,24 @@ function branchCompletion(statement: BranchStatement): Completion {
   return { kind: "fallthrough" };
 }
 
-function executeAssign(statement: AssignStatement, context: EvaluationContext): void {
-  const values = evaluateAssignmentValues(statement.values, statement.targets.length, context);
+async function executeAssign(statement: AssignStatement, context: EvaluationContext): Promise<void> {
+  const values = await evaluateAssignmentValues(statement.values, statement.targets.length, context);
   if (values.length !== statement.targets.length) {
     throw new GoJuniorRuntimeError(`assignment count mismatch: ${statement.targets.length} targets but ${values.length} values`);
   }
   for (const [index, target] of statement.targets.entries()) {
     const value = values[index] ?? null;
     if (statement.operator && statement.operator !== "=") {
-      const current = evaluateExpression(target, context);
-      assignExpressionTarget(target, applyCompoundAssignment(statement.operator, current, value), context);
+      const current = await evaluateExpression(target, context);
+      await assignExpressionTarget(target, applyCompoundAssignment(statement.operator, current, value), context);
     } else {
-      assignExpressionTarget(target, value, context);
+      await assignExpressionTarget(target, value, context);
     }
   }
 }
 
-function executeShortVar(statement: ShortVarStatement, context: EvaluationContext): void {
-  const values = evaluateAssignmentValues(statement.values, statement.names.length, context);
+async function executeShortVar(statement: ShortVarStatement, context: EvaluationContext): Promise<void> {
+  const values = await evaluateAssignmentValues(statement.values, statement.names.length, context);
   declareOrAssignShortVars(statement.names, values, context);
 }
 
@@ -2017,19 +2160,19 @@ function declareOrAssignShortVars(names: string[], values: RuntimeValue[], conte
   }
 }
 
-function evaluateAssignmentValues(expressions: Expression[], targetCount: number, context: EvaluationContext): RuntimeValue[] {
+async function evaluateAssignmentValues(expressions: Expression[], targetCount: number, context: EvaluationContext): Promise<RuntimeValue[]> {
   if (targetCount === 2 && expressions.length === 1 && expressions[0]?.kind === "IndexExpression") {
-    const lookup = evaluateMapLookupWithPresence(expressions[0], context);
+    const lookup = await evaluateMapLookupWithPresence(expressions[0], context);
     if (lookup) return lookup;
   }
   if (targetCount === 2 && expressions.length === 1 && expressions[0]?.kind === "TypeAssertionExpression") {
     return evaluateTypeAssertionWithPresence(expressions[0], context);
   }
   if (expressions.length === 1 && expressions[0]?.kind === "UnaryExpression" && expressions[0].operator === "<-") {
-    const received = receiveFromChannel(evaluateExpression(expressions[0].operand, context));
+    const received = await receiveFromChannel(await evaluateExpression(expressions[0].operand, context));
     return targetCount === 2 ? [received[0], received[1]] : [received[0]];
   }
-  const values = expressions.map((expression) => evaluateExpression(expression, context));
+  const values = await evaluateExpressionList(expressions, context);
   if (targetCount > 1 && values.length === 1 && Array.isArray(values[0])) {
     return values[0];
   }
@@ -2053,38 +2196,38 @@ function applyCompoundAssignment(operator: NonNullable<AssignStatement["operator
   }
 }
 
-function evaluateMapLookupWithPresence(expression: IndexExpression, context: EvaluationContext): RuntimeValue[] | undefined {
-  const object = evaluateExpression(expression.object, context);
+async function evaluateMapLookupWithPresence(expression: IndexExpression, context: EvaluationContext): Promise<RuntimeValue[] | undefined> {
+  const object = await evaluateExpression(expression.object, context);
   if (!(object instanceof RuntimeMap)) return undefined;
-  const index = evaluateExpression(expression.index, context);
+  const index = await evaluateExpression(expression.index, context);
   const [value, ok] = object.getWithPresence(index);
   return [value, ok];
 }
 
-function executeIncDec(statement: IncDecStatement, context: EvaluationContext): void {
-  const current = evaluateExpression(statement.target, context);
+async function executeIncDec(statement: IncDecStatement, context: EvaluationContext): Promise<void> {
+  const current = await evaluateExpression(statement.target, context);
   const next = statement.operator === "++"
     ? addNumbers(current, 1n)
     : subtractNumbers(current, 1n);
-  assignExpressionTarget(statement.target, next, context);
+  await assignExpressionTarget(statement.target, next, context);
 }
 
-function assignExpressionTarget(target: Expression, value: RuntimeValue, context: EvaluationContext): void {
+async function assignExpressionTarget(target: Expression, value: RuntimeValue, context: EvaluationContext): Promise<void> {
   if (target.kind === "Identifier") {
     if (target.name === "_") return;
     context.assign(target.name, value);
     return;
   }
   if (target.kind === "SelectorExpression") {
-    setSelector(target, value, context);
+    await setSelector(target, value, context);
     return;
   }
   if (target.kind === "IndexExpression") {
-    setIndex(target, value, context);
+    await setIndex(target, value, context);
     return;
   }
   if (target.kind === "UnaryExpression" && target.operator === "*") {
-    const pointer = evaluateExpression(target.operand, context);
+    const pointer = await evaluateExpression(target.operand, context);
     if (!(pointer instanceof RuntimePointer)) {
       throw new GoJuniorRuntimeError(`${formatValue(pointer)} is not a pointer`);
     }
@@ -2094,7 +2237,7 @@ function assignExpressionTarget(target: Expression, value: RuntimeValue, context
   throw new GoJuniorRuntimeError("unsupported assignment target");
 }
 
-function evaluateExpression(expression: Expression, context: EvaluationContext): RuntimeValue {
+async function evaluateExpression(expression: Expression, context: EvaluationContext): Promise<RuntimeValue> {
   switch (expression.kind) {
     case "Identifier":
       return evaluateIdentifier(expression, context);
@@ -2133,14 +2276,14 @@ function evaluateExpression(expression: Expression, context: EvaluationContext):
       return evaluateCall(expression, context);
 
     case "IndexExpression":
-      return getIndex(evaluateExpression(expression.object, context), evaluateExpression(expression.index, context));
+      return getIndex(await evaluateExpression(expression.object, context), await evaluateExpression(expression.index, context));
 
     case "SliceExpression":
       return getSlice(
-        evaluateExpression(expression.object, context),
-        expression.start ? evaluateExpression(expression.start, context) : undefined,
-        expression.end ? evaluateExpression(expression.end, context) : undefined,
-        expression.max ? evaluateExpression(expression.max, context) : undefined
+        await evaluateExpression(expression.object, context),
+        expression.start ? await evaluateExpression(expression.start, context) : undefined,
+        expression.end ? await evaluateExpression(expression.end, context) : undefined,
+        expression.max ? await evaluateExpression(expression.max, context) : undefined
       );
 
     case "SpreadsheetRangeExpression":
@@ -2148,14 +2291,21 @@ function evaluateExpression(expression: Expression, context: EvaluationContext):
   }
 }
 
-function evaluateArrayLiteral(expression: ArrayLiteralExpression, context: EvaluationContext): RuntimeValue[] {
+async function evaluateExpressionList(expressions: Expression[], context: EvaluationContext): Promise<RuntimeValue[]> {
+  const values: RuntimeValue[] = [];
+  for (const expression of expressions) values.push(await evaluateExpression(expression, context));
+  return values;
+}
+
+async function evaluateArrayLiteral(expression: ArrayLiteralExpression, context: EvaluationContext): Promise<RuntimeValue[]> {
   const type = parseArrayOrSliceTypeText(expression.type.text);
   if (!type) {
     throw new GoJuniorRuntimeError(`${expression.type.text} is not an array or slice literal type`);
   }
-  const values = expression.elements.map((element) =>
-    prepareAssignableToType(evaluateExpression(element, context), type.elementType, "array element", context)
-  );
+  const values: RuntimeValue[] = [];
+  for (const element of expression.elements) {
+    values.push(prepareAssignableToType(await evaluateExpression(element, context), type.elementType, "array element", context));
+  }
   if (type.length !== undefined && values.length > type.length) {
     throw new GoJuniorRuntimeError(`array literal has ${values.length} elements but type ${expression.type.text} has length ${type.length}`);
   }
@@ -2173,7 +2323,7 @@ function makeRuntimeSlice(elementType: string, length: number, capacity: number,
   return values;
 }
 
-function evaluateStructLiteral(expression: StructLiteralExpression, context: EvaluationContext): RuntimeStruct {
+async function evaluateStructLiteral(expression: StructLiteralExpression, context: EvaluationContext): Promise<RuntimeStruct> {
   const typeDef = context.typeDef(expression.typeName);
   if (!typeDef) {
     throw new GoJuniorRuntimeError(`${expression.typeName} is not a declared struct type`);
@@ -2192,16 +2342,16 @@ function evaluateStructLiteral(expression: StructLiteralExpression, context: Eva
         ? `${expression.typeName} has no field ${field.name}`
         : `${expression.typeName} literal has too many values`);
     }
-    const value = evaluateExpression(field.value, context);
+    const value = await evaluateExpression(field.value, context);
     struct.set(declared.name, prepareAssignableToType(value, declared.type.text, `field ${field.name ?? declared.name}`, context));
   }
   return struct;
 }
 
-function evaluateMapLiteral(expression: MapLiteralExpression, context: EvaluationContext): RuntimeMap {
+async function evaluateMapLiteral(expression: MapLiteralExpression, context: EvaluationContext): Promise<RuntimeMap> {
   const map = new RuntimeMap(expression.keyType.text, expression.valueType.text, context);
   for (const entry of expression.entries) {
-    map.set(evaluateExpression(entry.key, context), evaluateExpression(entry.value, context));
+    map.set(await evaluateExpression(entry.key, context), await evaluateExpression(entry.value, context));
   }
   return map;
 }
@@ -2211,41 +2361,41 @@ function evaluateIdentifier(expression: IdentifierExpression, context: Evaluatio
   return context.lookup(expression.name);
 }
 
-function evaluateUnary(expression: UnaryExpression, context: EvaluationContext): RuntimeValue {
+async function evaluateUnary(expression: UnaryExpression, context: EvaluationContext): Promise<RuntimeValue> {
   switch (expression.operator) {
     case "+":
-      return numericIdentity(evaluateExpression(expression.operand, context));
+      return numericIdentity(await evaluateExpression(expression.operand, context));
     case "-":
-      return negateNumber(evaluateExpression(expression.operand, context));
+      return negateNumber(await evaluateExpression(expression.operand, context));
     case "!":
-      return !toBool(evaluateExpression(expression.operand, context));
+      return !toBool(await evaluateExpression(expression.operand, context));
     case "^":
-      return bitwiseComplement(evaluateExpression(expression.operand, context));
+      return bitwiseComplement(await evaluateExpression(expression.operand, context));
     case "&":
       return pointerToExpression(expression.operand, context);
     case "*":
-      return dereference(evaluateExpression(expression.operand, context));
+      return dereference(await evaluateExpression(expression.operand, context));
     case "<-":
-      return receiveFromChannel(evaluateExpression(expression.operand, context))[0];
+      return (await receiveFromChannel(await evaluateExpression(expression.operand, context)))[0];
   }
 }
 
-function receiveFromChannel(value: RuntimeValue): [RuntimeValue, boolean] {
+async function receiveFromChannel(value: RuntimeValue): Promise<[RuntimeValue, boolean]> {
   if (value === null) throw new GoJuniorDeadlockError("receive from nil channel would block");
   if (!(value instanceof RuntimeChannel)) throw new GoJuniorRuntimeError(`${formatValue(value)} is not a channel`);
-  return value.receive();
+  return value.receiveAsync();
 }
 
-function evaluateBinary(expression: BinaryExpression, context: EvaluationContext): RuntimeValue {
+async function evaluateBinary(expression: BinaryExpression, context: EvaluationContext): Promise<RuntimeValue> {
   if (expression.operator === "&&") {
-    return toBool(evaluateExpression(expression.left, context)) && toBool(evaluateExpression(expression.right, context));
+    return toBool(await evaluateExpression(expression.left, context)) && toBool(await evaluateExpression(expression.right, context));
   }
   if (expression.operator === "||") {
-    return toBool(evaluateExpression(expression.left, context)) || toBool(evaluateExpression(expression.right, context));
+    return toBool(await evaluateExpression(expression.left, context)) || toBool(await evaluateExpression(expression.right, context));
   }
 
-  const left = evaluateExpression(expression.left, context);
-  const right = evaluateExpression(expression.right, context);
+  const left = await evaluateExpression(expression.left, context);
+  const right = await evaluateExpression(expression.right, context);
 
   switch (expression.operator) {
     case "==":
@@ -2285,16 +2435,16 @@ function evaluateBinary(expression: BinaryExpression, context: EvaluationContext
   }
 }
 
-function evaluateTypeAssertion(expression: TypeAssertionExpression, context: EvaluationContext): RuntimeValue {
-  const value = evaluateExpression(expression.expression, context);
+async function evaluateTypeAssertion(expression: TypeAssertionExpression, context: EvaluationContext): Promise<RuntimeValue> {
+  const value = await evaluateExpression(expression.expression, context);
   if (!runtimeValueMatchesType(value, expression.type.text, context)) {
     throw new GoJuniorRuntimeError(`${formatValue(value)} does not have dynamic type ${normalizeTypeText(expression.type.text)}`);
   }
   return assertedRuntimeValue(value, expression.type.text, context);
 }
 
-function evaluateTypeAssertionWithPresence(expression: TypeAssertionExpression, context: EvaluationContext): RuntimeValue[] {
-  const value = evaluateExpression(expression.expression, context);
+async function evaluateTypeAssertionWithPresence(expression: TypeAssertionExpression, context: EvaluationContext): Promise<RuntimeValue[]> {
+  const value = await evaluateExpression(expression.expression, context);
   const typeText = normalizeTypeText(expression.type.text);
   if (runtimeValueMatchesType(value, typeText, context)) return [assertedRuntimeValue(value, typeText, context), true];
   return [defaultValueForTypeText(typeText, context), false];
@@ -2308,7 +2458,7 @@ function assertedRuntimeValue(value: RuntimeValue, typeText: string, context: Ev
   return dynamicValue;
 }
 
-function evaluateCall(expression: CallExpression, context: EvaluationContext): RuntimeValue {
+async function evaluateCall(expression: CallExpression, context: EvaluationContext): Promise<RuntimeValue> {
   if (expression.callee.kind === "Identifier" && expression.callee.name === "make") {
     return evaluateMake(expression, context);
   }
@@ -2320,10 +2470,10 @@ function evaluateCall(expression: CallExpression, context: EvaluationContext): R
     if (expression.args.length !== 1 || expression.spreadLast) {
       throw new GoJuniorRuntimeError(`conversion to ${conversionType} expects exactly one argument`);
     }
-    return convertValueToType(evaluateExpression(expression.args[0]!, context), conversionType, context);
+    return convertValueToType(await evaluateExpression(expression.args[0]!, context), conversionType, context);
   }
-  const callee = evaluateExpression(expression.callee, context);
-  const args = expression.args.map((arg) => evaluateExpression(arg, context));
+  const callee = await evaluateExpression(expression.callee, context);
+  const args = await evaluateExpressionList(expression.args, context);
   return callRuntime(callee, expression.spreadLast ? spreadLastArgument(args) : args, context);
 }
 
@@ -2349,7 +2499,7 @@ function evaluateNew(expression: CallExpression, context: EvaluationContext): Ru
   });
 }
 
-function evaluateMake(expression: CallExpression, context: EvaluationContext): RuntimeValue {
+async function evaluateMake(expression: CallExpression, context: EvaluationContext): Promise<RuntimeValue> {
   if (expression.spreadLast) throw new GoJuniorRuntimeError("make does not accept spread arguments");
   const typeArg = expression.args[0];
   if (!typeArg || typeArg.kind !== "TypeExpression") {
@@ -2359,7 +2509,7 @@ function evaluateMake(expression: CallExpression, context: EvaluationContext): R
   const mapType = parseMapTypeText(typeText);
   if (mapType) {
     if (expression.args.length > 2) throw new GoJuniorRuntimeError("make map accepts at most one size hint");
-    if (expression.args[1]) toNonNegativeLength(evaluateExpression(expression.args[1], context), "map size hint");
+    if (expression.args[1]) toNonNegativeLength(await evaluateExpression(expression.args[1], context), "map size hint");
     return new RuntimeMap(mapType.keyType, mapType.valueType, context);
   }
   const chanType = parseChanTypeText(typeText);
@@ -2367,7 +2517,7 @@ function evaluateMake(expression: CallExpression, context: EvaluationContext): R
     if (chanType.direction !== "both") throw new GoJuniorRuntimeError(`cannot make directional channel type ${typeText}`);
     if (expression.args.length > 2) throw new GoJuniorRuntimeError("make channel accepts at most one buffer size");
     const capacity = expression.args[1]
-      ? toNonNegativeLength(evaluateExpression(expression.args[1], context), "channel buffer size")
+      ? toNonNegativeLength(await evaluateExpression(expression.args[1], context), "channel buffer size")
       : 0;
     return new RuntimeChannel(chanType.elementType, capacity, context);
   }
@@ -2377,9 +2527,9 @@ function evaluateMake(expression: CallExpression, context: EvaluationContext): R
     if (expression.args.length < 2 || expression.args.length > 3) {
       throw new GoJuniorRuntimeError("make slice expects length and optional capacity");
     }
-    const length = toNonNegativeLength(evaluateExpression(expression.args[1]!, context), "slice length");
+    const length = toNonNegativeLength(await evaluateExpression(expression.args[1]!, context), "slice length");
     const capacity = expression.args[2]
-      ? toNonNegativeLength(evaluateExpression(expression.args[2], context), "slice capacity")
+      ? toNonNegativeLength(await evaluateExpression(expression.args[2], context), "slice capacity")
       : length;
     if (capacity < length) throw new GoJuniorRuntimeError("slice capacity is smaller than length");
     return makeRuntimeSlice(arrayType.elementType, length, capacity, context);
@@ -2443,15 +2593,15 @@ function minMaxValues(args: RuntimeValue[], mode: "min" | "max"): RuntimeValue {
   return best;
 }
 
-function callRuntime(callee: RuntimeValue, args: RuntimeValue[], context: EvaluationContext): RuntimeValue {
+async function callRuntime(callee: RuntimeValue, args: RuntimeValue[], context: EvaluationContext): Promise<RuntimeValue> {
   if (isRuntimeCallable(callee) || isGoJuniorFunction(callee)) {
-    return callee.call(args, context);
+    return await callee.call(args, context);
   }
   throw new GoJuniorRuntimeError(`${formatValue(callee)} is not callable`);
 }
 
-function getSelector(expression: SelectorExpression, context: EvaluationContext): RuntimeValue {
-  const object = evaluateExpression(expression.object, context);
+async function getSelector(expression: SelectorExpression, context: EvaluationContext): Promise<RuntimeValue> {
+  const object = await evaluateExpression(expression.object, context);
   if (object instanceof SheetBinding) {
     return object.get(expression.field);
   }
@@ -2492,8 +2642,8 @@ function getSelector(expression: SelectorExpression, context: EvaluationContext)
   throw new GoJuniorRuntimeError(`${formatValue(object)} has no selector ${expression.field}`);
 }
 
-function setSelector(expression: SelectorExpression, value: RuntimeValue, context: EvaluationContext): void {
-  const object = evaluateExpression(expression.object, context);
+async function setSelector(expression: SelectorExpression, value: RuntimeValue, context: EvaluationContext): Promise<void> {
+  const object = await evaluateExpression(expression.object, context);
   if (object instanceof SheetBinding) {
     object.set(expression.field, value);
     return;
@@ -2512,8 +2662,8 @@ function setSelector(expression: SelectorExpression, value: RuntimeValue, contex
   throw new GoJuniorRuntimeError(`${formatValue(object)} has no selector ${expression.field}`);
 }
 
-function getSpreadsheetRange(expression: SpreadsheetRangeExpression, context: EvaluationContext): RuntimeValue {
-  const sheet = evaluateExpression(expression.start.object, context);
+async function getSpreadsheetRange(expression: SpreadsheetRangeExpression, context: EvaluationContext): Promise<RuntimeValue> {
+  const sheet = await evaluateExpression(expression.start.object, context);
   if (!(sheet instanceof SheetBinding)) {
     throw new GoJuniorRuntimeError("spreadsheet ranges must start with a sheet namespace");
   }
@@ -2529,9 +2679,9 @@ function getIndex(object: RuntimeValue, index: RuntimeValue): RuntimeValue {
   throw new GoJuniorRuntimeError(`${formatValue(object)} is not indexable`);
 }
 
-function setIndex(expression: IndexExpression, value: RuntimeValue, context: EvaluationContext): void {
-  const object = evaluateExpression(expression.object, context);
-  const index = evaluateExpression(expression.index, context);
+async function setIndex(expression: IndexExpression, value: RuntimeValue, context: EvaluationContext): Promise<void> {
+  const object = await evaluateExpression(expression.object, context);
+  const index = await evaluateExpression(expression.index, context);
   if (object instanceof RuntimeMap) {
     object.set(index, value);
     return;
@@ -2548,9 +2698,9 @@ function setIndex(expression: IndexExpression, value: RuntimeValue, context: Eva
   throw new GoJuniorRuntimeError(`${formatValue(object)} is not indexable`);
 }
 
-function pointerToExpression(expression: Expression, context: EvaluationContext): RuntimePointer {
+async function pointerToExpression(expression: Expression, context: EvaluationContext): Promise<RuntimePointer> {
   if (expression.kind === "StructLiteralExpression" || expression.kind === "ArrayLiteralExpression" || expression.kind === "MapLiteralExpression") {
-    let value = evaluateExpression(expression, context);
+    let value = await evaluateExpression(expression, context);
     return new RuntimePointer(pointerTypeName(value), () => value, (next) => {
       value = next;
     });
@@ -2561,7 +2711,7 @@ function pointerToExpression(expression: Expression, context: EvaluationContext)
     return context.pointerToBinding(expression.name, typeName);
   }
   if (expression.kind === "SelectorExpression") {
-    const object = evaluateExpression(expression.object, context);
+    const object = await evaluateExpression(expression.object, context);
     const struct = structFromValue(object);
     if (!struct) throw new GoJuniorRuntimeError("address-of selector requires a struct value");
     const field = structFieldAccessor(struct, expression.field, context);
@@ -2573,8 +2723,8 @@ function pointerToExpression(expression: Expression, context: EvaluationContext)
     });
   }
   if (expression.kind === "IndexExpression") {
-    const object = evaluateExpression(expression.object, context);
-    const index = evaluateExpression(expression.index, context);
+    const object = await evaluateExpression(expression.object, context);
+    const index = await evaluateExpression(expression.index, context);
     if (!Array.isArray(object)) throw new GoJuniorRuntimeError("address-of index requires an array or slice value");
     const numericIndex = toNumber(index);
     const typeName = pointerTypeName(object[numericIndex] ?? null);
@@ -3552,7 +3702,7 @@ function interfaceAwareEqual(left: RuntimeValue, right: RuntimeValue): boolean {
   return false;
 }
 
-function rangeEntries(source: RuntimeValue, context: EvaluationContext): Array<[RuntimeValue, RuntimeValue]> {
+async function rangeEntries(source: RuntimeValue, context: EvaluationContext): Promise<Array<[RuntimeValue, RuntimeValue]>> {
   source = unwrapNamed(source);
   if (typeof source === "bigint" || typeof source === "number") {
     const count = toNonNegativeLength(source, "range count");
@@ -3576,7 +3726,7 @@ function rangeEntries(source: RuntimeValue, context: EvaluationContext): Array<[
   throw new GoJuniorRuntimeError(`${formatValue(source)} is not rangeable`);
 }
 
-function iteratorFunctionEntries(source: RuntimeCallable | GoJuniorFunction, context: EvaluationContext): Array<[RuntimeValue, RuntimeValue]> {
+async function iteratorFunctionEntries(source: RuntimeCallable | GoJuniorFunction, context: EvaluationContext): Promise<Array<[RuntimeValue, RuntimeValue]>> {
   const entries: Array<[RuntimeValue, RuntimeValue]> = [];
   let index = 0n;
   const yieldFn = hostCallable("yield", (args) => {
@@ -3590,7 +3740,7 @@ function iteratorFunctionEntries(source: RuntimeCallable | GoJuniorFunction, con
     }
     return true;
   });
-  callRuntime(source, [yieldFn], context);
+  await callRuntime(source, [yieldFn], context);
   return entries;
 }
 

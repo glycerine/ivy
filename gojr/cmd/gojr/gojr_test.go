@@ -244,6 +244,15 @@ return a, b
 		t.Fatalf("Eval(gotFromC) value = %q, want 1", result.Value)
 	}
 
+	_ = mustEval(t, rt, "loopC := make(chan int)")
+	_ = mustEval(t, rt, "go func() { for i := range 5 { loopC <- i } }()")
+	for _, want := range []string{"0", "1", "2", "3", "4"} {
+		result = mustEval(t, rt, "<-loopC")
+		if result.Value != want {
+			t.Fatalf("Eval(<-loopC) value = %q, want %s", result.Value, want)
+		}
+	}
+
 	_ = mustEval(t, rt, "dead := make(chan int)")
 	_ = mustEval(t, rt, "sink := 0")
 	result, err = rt.Eval("sink = <-dead")

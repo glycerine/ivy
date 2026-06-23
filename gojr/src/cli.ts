@@ -33,7 +33,7 @@ async function main(argv: string[]): Promise<number> {
     return result.diagnostics.some((diagnostic) => diagnostic.severity === "error") ? 1 : 0;
   }
 
-  const result = evaluateSource(source, {
+  const result = await evaluateSource(source, {
     filename,
     ...(options.sheet ? { sheet: options.sheet } : {}),
     ...(options.sheets ? { sheets: options.sheets } : {}),

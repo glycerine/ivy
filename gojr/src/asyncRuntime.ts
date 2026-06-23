@@ -116,6 +116,7 @@ export class AsyncGoScheduler {
       while (!done) {
         await Promise.resolve();
         this.throwFirstError();
+        if (done) break;
         if (this.blockedGoroutines >= this.liveGoroutines) {
           cancellationScope.cancel(new AsyncGoDeadlockError("all goroutines are asleep - deadlock"));
         }

@@ -1,6 +1,4 @@
 import { frontSourceToAst } from "./frontToAst.js";
-export { AsyncGoJuniorSession } from "./asyncSession.js";
-export { emitAsyncJavaScript } from "./asyncEmitter.js";
 export { analyzeEffects, functionEffectKey } from "./effects.js";
 export { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
 export { artifactPathForImportPath, buildPackage, buildPackages, resolveArtifactRoot } from "./build.js";
