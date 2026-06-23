@@ -184,21 +184,86 @@ class Scanner {
         this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
     }
     scanNumber(start) {
-        const match = goNumberPattern.exec(this.source.slice(this.offset));
-        if (!match) {
-            this.advance();
-            this.error("GOJR_SCAN002", "malformed numeric literal", start, this.position());
-            this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
-            return;
+        let kind = TokenKind.Illegal;
+        let base = 10;
+        let prefix = "";
+        let digsep = 0;
+        const invalid = { offset: -1 };
+        if (this.peek() !== ".") {
+            kind = TokenKind.IntLiteral;
+            if (this.peek() === "0") {
+                this.advance();
+                switch (lower(this.peek())) {
+                    case "x":
+                        this.advance();
+                        base = 16;
+                        prefix = "x";
+                        break;
+                    case "o":
+                        this.advance();
+                        base = 8;
+                        prefix = "o";
+                        break;
+                    case "b":
+                        this.advance();
+                        base = 2;
+                        prefix = "b";
+                        break;
+                    default:
+                        base = 8;
+                        prefix = "0";
+                        digsep = 1;
+                        break;
+                }
+            }
+            digsep |= this.digits(base, invalid);
         }
-        const text = match[0];
-        this.advanceMany(text.length);
-        const core = text.endsWith("i") ? text.slice(0, -1) : text;
-        const kind = text.endsWith("i")
-            ? TokenKind.ImagLiteral
-            : goFloatPattern.test(core)
-                ? TokenKind.FloatLiteral
-                : TokenKind.IntLiteral;
+        if (this.peek() === ".") {
+            kind = TokenKind.FloatLiteral;
+            if (prefix === "o" || prefix === "b") {
+                this.errorAt("GOJR_SCAN002", `invalid radix point in ${litname(prefix)}`, this.offset);
+            }
+            this.advance();
+            digsep |= this.digits(base, invalid);
+        }
+        if ((digsep & 1) === 0) {
+            this.errorAt("GOJR_SCAN002", `${litname(prefix)} has no digits`, this.offset);
+        }
+        const exponent = lower(this.peek());
+        if (exponent === "e" || exponent === "p") {
+            if (exponent === "e" && prefix !== "" && prefix !== "0") {
+                this.errorAt("GOJR_SCAN002", `'${this.peek()}' exponent requires decimal mantissa`, this.offset);
+            }
+            else if (exponent === "p" && prefix !== "x") {
+                this.errorAt("GOJR_SCAN002", `'${this.peek()}' exponent requires hexadecimal mantissa`, this.offset);
+            }
+            this.advance();
+            kind = TokenKind.FloatLiteral;
+            if (this.peek() === "+" || this.peek() === "-")
+                this.advance();
+            const exponentDigits = this.digits(10, undefined);
+            digsep |= exponentDigits;
+            if ((exponentDigits & 1) === 0) {
+                this.errorAt("GOJR_SCAN002", "exponent has no digits", this.offset);
+            }
+        }
+        else if (prefix === "x" && kind === TokenKind.FloatLiteral) {
+            this.errorAt("GOJR_SCAN002", "hexadecimal mantissa requires a 'p' exponent", this.offset);
+        }
+        if (this.peek() === "i") {
+            kind = TokenKind.ImagLiteral;
+            this.advance();
+        }
+        const text = this.sliceFrom(start);
+        if (kind === TokenKind.IntLiteral && invalid.offset >= 0) {
+            this.errorAt("GOJR_SCAN002", `invalid digit '${this.source[invalid.offset]}' in ${litname(prefix)}`, invalid.offset);
+        }
+        if ((digsep & 2) !== 0) {
+            const badSeparator = invalidSep(text);
+            if (badSeparator >= 0) {
+                this.errorAt("GOJR_SCAN002", "'_' must separate successive digits", start.offset + badSeparator);
+            }
+        }
         this.emit(kind, text, start, this.position());
     }
     scanIdentifierOrCell(start) {
@@ -316,6 +381,41 @@ class Scanner {
             column: this.column
         };
     }
+    positionAt(offset) {
+        let line = 1;
+        let column = 1;
+        for (let index = 0; index < offset && index < this.source.length;) {
+            const char = this.source[index] ?? "";
+            if (char === "\r") {
+                if (this.source[index + 1] === "\n")
+                    index += 2;
+                else
+                    index += 1;
+                line += 1;
+                column = 1;
+                continue;
+            }
+            if (char === "\n") {
+                index += 1;
+                line += 1;
+                column = 1;
+                continue;
+            }
+            const codePoint = this.source.codePointAt(index);
+            const text = codePoint === undefined ? "" : String.fromCodePoint(codePoint);
+            index += Math.max(1, text.length);
+            column += 1;
+        }
+        return {
+            filename: this.filename,
+            offset,
+            line,
+            column
+        };
+    }
+    errorAt(code, message, offset) {
+        this.error(code, message, this.positionAt(offset), this.positionAt(Math.min(this.source.length, offset + 1)));
+    }
     sliceFrom(start) {
         return this.source.slice(start.offset, this.offset);
     }
@@ -351,6 +451,31 @@ class Scanner {
         }
         this.line += 1;
         this.column = 1;
+    }
+    digits(base, invalid) {
+        let digsep = 0;
+        if (base <= 10) {
+            const max = String.fromCharCode("0".charCodeAt(0) + base);
+            while (isDecimal(this.peek()) || this.peek() === "_") {
+                let ds = 1;
+                if (this.peek() === "_") {
+                    ds = 2;
+                }
+                else if (this.peek() >= max && invalid && invalid.offset < 0) {
+                    invalid.offset = this.offset;
+                }
+                digsep |= ds;
+                this.advance();
+            }
+        }
+        else {
+            while (isHex(this.peek()) || this.peek() === "_") {
+                const ds = this.peek() === "_" ? 2 : 1;
+                digsep |= ds;
+                this.advance();
+            }
+        }
+        return digsep;
     }
 }
 function spanBetween(start, end) {
@@ -425,16 +550,6 @@ function oneCharToken(text) {
         default: return undefined;
     }
 }
-const decimalDigits = String.raw `(?:[0-9](?:_?[0-9])*)`;
-const binaryDigits = String.raw `(?:[01](?:_?[01])*)`;
-const octalDigits = String.raw `(?:[0-7](?:_?[0-7])*)`;
-const hexDigits = String.raw `(?:[0-9A-Fa-f](?:_?[0-9A-Fa-f])*)`;
-const decimalFloat = String.raw `(?:(?:${decimalDigits}\.${decimalDigits}?|${decimalDigits}\.|\.(?:${decimalDigits}))(?:[eE][+-]?${decimalDigits})?|${decimalDigits}[eE][+-]?${decimalDigits})`;
-const hexMantissa = String.raw `(?:${hexDigits}(?:\.${hexDigits}?)?|\.${hexDigits})`;
-const hexFloat = String.raw `(?:0[xX]_?${hexMantissa}[pP][+-]?${decimalDigits})`;
-const integer = String.raw `(?:0[bB]_?${binaryDigits}|0[oO]_?${octalDigits}|0[xX]_?${hexDigits}|${decimalDigits})`;
-const goNumberPattern = new RegExp(`^(?:${hexFloat}|${decimalFloat}|${integer})(?:i)?`);
-const goFloatPattern = new RegExp(`^(?:${hexFloat}|${decimalFloat})$`);
 function isIdentifierStart(text) {
     return text === "_" || /^\p{L}$/u.test(text);
 }
@@ -443,4 +558,65 @@ function isIdentifierPart(text) {
 }
 function isDigit(text) {
     return /^[0-9]$/.test(text);
+}
+function digitVal(text) {
+    if ("0" <= text && text <= "9")
+        return text.charCodeAt(0) - "0".charCodeAt(0);
+    const lowered = lower(text);
+    if ("a" <= lowered && lowered <= "f")
+        return lowered.charCodeAt(0) - "a".charCodeAt(0) + 10;
+    return 16;
+}
+function lower(text) {
+    if (text.length === 0)
+        return "";
+    const code = text.charCodeAt(0);
+    return code >= 65 && code <= 90 ? String.fromCharCode(code + 32) : text[0] ?? "";
+}
+function isDecimal(text) {
+    return text.length === 1 && "0" <= text && text <= "9";
+}
+function isHex(text) {
+    const lowered = lower(text);
+    return isDecimal(text) || ("a" <= lowered && lowered <= "f");
+}
+function litname(prefix) {
+    switch (prefix) {
+        case "x": return "hexadecimal literal";
+        case "o":
+        case "0": return "octal literal";
+        case "b": return "binary literal";
+        default: return "decimal literal";
+    }
+}
+function invalidSep(text) {
+    let prefix = " ";
+    let digit = ".";
+    let index = 0;
+    if (text.length >= 2 && text[0] === "0") {
+        prefix = lower(text[1] ?? "");
+        if (prefix === "x" || prefix === "o" || prefix === "b") {
+            digit = "0";
+            index = 2;
+        }
+    }
+    for (; index < text.length; index += 1) {
+        const previous = digit;
+        digit = text[index] ?? "";
+        if (digit === "_") {
+            if (previous !== "0")
+                return index;
+        }
+        else if (isDecimal(digit) || (prefix === "x" && isHex(digit))) {
+            digit = "0";
+        }
+        else {
+            if (previous === "_")
+                return index - 1;
+            digit = ".";
+        }
+    }
+    if (digit === "_")
+        return text.length - 1;
+    return -1;
 }

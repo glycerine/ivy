@@ -129,6 +129,22 @@ describe("Go-junior TypeScript front scanner", () => {
     ]);
   });
 
+  test("reports Go numeric literal diagnostics while preserving tokens", () => {
+    const result = scan("a:=0x\nb:=0b2\nc:=1__2\nd:=1e\ne:=0x1.2\nf:=0b1.0");
+
+    expect(result.tokens
+      .filter((token) => token.kind === TokenKind.IntLiteral || token.kind === TokenKind.FloatLiteral)
+      .map((token) => token.lexeme)).toEqual(["0x", "0b2", "1__2", "1e", "0x1.2", "0b1.0"]);
+    expect(result.diagnostics.map((diagnostic) => diagnostic.message)).toEqual([
+      "hexadecimal literal has no digits",
+      "invalid digit '2' in binary literal",
+      "'_' must separate successive digits",
+      "exponent has no digits",
+      "hexadecimal mantissa requires a 'p' exponent",
+      "invalid radix point in binary literal"
+    ]);
+  });
+
   test("scans Go raw string literals across newlines", () => {
     const result = scan("s := `hi\nthere`\nx := 1");
 
