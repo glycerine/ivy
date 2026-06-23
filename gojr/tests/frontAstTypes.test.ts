@@ -5,11 +5,34 @@ import {
   ident,
   IsExported,
   IsGenerated,
+  FileExports,
+  FilterFuncDuplicates,
+  FilterImportDuplicates,
+  Fprint,
+  collapse,
+  MergePackageFiles,
   NewIdent,
+  NewObj,
+  NewPackage,
+  NewScope,
+  NotNilFilter,
+  ObjKind,
   ParseDirective,
+  Pkg,
+  SortImports,
+  Var as AstVar,
+  importComment,
+  importName,
+  importPath,
   parseCellAddress,
+  Inspect,
+  Preorder,
+  PreorderStack,
   Unparen,
+  Walk,
   walk,
+  type AstNode,
+  type ImportSpec,
   type File
 } from "../src/front/ast.js";
 import {
@@ -106,6 +129,35 @@ describe("Go-junior Go-style AST", () => {
     expect(seen).toContain("FuncDecl");
     expect(seen).toContain("BinaryExpr");
     expect(seen.filter((kind) => kind === "Ident")).toHaveLength(6);
+
+    const visitorSeen: string[] = [];
+    Walk({
+      Visit(node: AstNode | undefined) {
+        visitorSeen.push(node?.kind ?? "<nil>");
+        return node?.kind === "FuncDecl" ? undefined : this;
+      }
+    }, file);
+    expect(visitorSeen).toContain("File");
+    expect(visitorSeen).toContain("FuncDecl");
+    expect(visitorSeen).toContain("<nil>");
+    expect(visitorSeen).not.toContain("ReturnStmt");
+
+    const inspected: string[] = [];
+    Inspect(file, (node) => {
+      inspected.push(node?.kind ?? "<nil>");
+      return node?.kind !== "FuncDecl";
+    });
+    expect(inspected).toEqual(visitorSeen);
+
+    expect([...Preorder(file)].map((node) => node.kind).slice(0, 3)).toEqual(["File", "Ident", "FuncDecl"]);
+
+    const stacks: string[] = [];
+    PreorderStack(file, [], (node, stack) => {
+      stacks.push(`${node.kind}:${stack.map((entry) => entry.kind).join("/")}`);
+      return true;
+    });
+    expect(stacks[0]).toBe("File:");
+    expect(stacks).toContain("FuncDecl:File");
   });
 
   test("transliterates go/ast comment and identifier helpers", () => {
@@ -172,6 +224,223 @@ describe("Go-junior Go-style AST", () => {
 
     expect(ParseDirective(0, "//not a directive")[1]).toBe(false);
     expect(ParseDirective(0, "/*go:generate nope*/")[1]).toBe(false);
+  });
+
+  test("transliterates go/ast export filtering and package merging", () => {
+    const file: File = {
+      kind: "File",
+      name: ident("p"),
+      declarations: [
+        {
+          kind: "FuncDecl",
+          name: ident("Exported"),
+          type: { kind: "FuncType", params: { kind: "FieldList", fields: [] } }
+        },
+        {
+          kind: "FuncDecl",
+          name: ident("hidden"),
+          type: { kind: "FuncType", params: { kind: "FieldList", fields: [] } }
+        },
+        {
+          kind: "GenDecl",
+          token: TokenKind.Type,
+          grouped: false,
+          specs: [{
+            kind: "TypeSpec",
+            name: ident("Thing"),
+            alias: false,
+            type: {
+              kind: "StructType",
+              fields: {
+                kind: "FieldList",
+                fields: [
+                  { kind: "Field", names: [ident("Public")], type: ident("int") },
+                  { kind: "Field", names: [ident("private")], type: ident("int") }
+                ]
+              }
+            }
+          }]
+        }
+      ],
+      imports: [],
+      unresolved: [],
+      comments: []
+    };
+
+    expect(FileExports(file)).toBe(true);
+    expect(file.declarations.map((decl) => decl.kind === "FuncDecl" ? decl.name.name : "type")).toEqual(["Exported", "type"]);
+    const typeDecl = file.declarations[1];
+    if (typeDecl?.kind !== "GenDecl" || typeDecl.specs[0]?.kind !== "TypeSpec" || typeDecl.specs[0].type.kind !== "StructType") {
+      throw new Error("expected filtered struct type");
+    }
+    expect(typeDecl.specs[0].type.fields.fields.map((field) => field.names[0]?.name)).toEqual(["Public"]);
+
+    const merged = MergePackageFiles({
+      kind: "Package",
+      name: "p",
+      files: [
+        file,
+        {
+          kind: "File",
+          name: ident("p"),
+          declarations: [
+            {
+              kind: "FuncDecl",
+              name: ident("Exported"),
+              type: { kind: "FuncType", params: { kind: "FieldList", fields: [] } }
+            },
+            {
+              kind: "GenDecl",
+              token: TokenKind.Import,
+              grouped: false,
+              specs: [
+                { kind: "ImportSpec", path: { kind: "BasicLit", token: TokenKind.StringLiteral, value: "\"fmt\"" } },
+                { kind: "ImportSpec", path: { kind: "BasicLit", token: TokenKind.StringLiteral, value: "\"fmt\"" } }
+              ]
+            }
+          ],
+          imports: [],
+          unresolved: [],
+          comments: []
+        }
+      ]
+    }, FilterFuncDuplicates | FilterImportDuplicates);
+
+    expect(merged.declarations.filter((decl) => decl.kind === "FuncDecl" && decl.name.name === "Exported")).toHaveLength(1);
+    expect(merged.imports.map((spec) => spec.path.value)).toEqual(["\"fmt\""]);
+  });
+
+  test("transliterates go/ast import sorting helpers", () => {
+    const spec = (value: string, line: number, offset: number, name?: string, comment?: string): ImportSpec => ({
+      kind: "ImportSpec",
+      ...(name ? { name: ident(name, { filename: "imports.go", offset, length: name.length, line, column: 8 }) } : {}),
+      path: {
+        kind: "BasicLit",
+        token: TokenKind.StringLiteral,
+        value,
+        span: { filename: "imports.go", offset, length: value.length, line, column: name ? 14 : 8 }
+      },
+      ...(comment ? { comment: { kind: "CommentGroup", list: [{ kind: "Comment", text: comment }] } } : {}),
+      span: { filename: "imports.go", offset, length: value.length + (name?.length ?? 0), line, column: 2 }
+    });
+
+    const z1 = spec("\"z\"", 2, 20);
+    const a = spec("\"a\"", 3, 30, "alias");
+    const z2 = spec("\"z\"", 4, 40);
+    const m = spec("`m`", 5, 50);
+    const withComment = spec("\"z\"", 6, 60, undefined, "// keep");
+    const decl = {
+      kind: "GenDecl" as const,
+      token: TokenKind.Import as const,
+      grouped: true,
+      specs: [z1, a, z2, m, withComment],
+      span: { filename: "imports.go", offset: 10, length: 70, line: 1, column: 1 }
+    };
+    const file: File = {
+      kind: "File",
+      name: ident("p"),
+      declarations: [decl],
+      imports: [z1, a, z2, m, withComment],
+      unresolved: [],
+      comments: []
+    };
+
+    expect(importPath(a)).toBe("a");
+    expect(importPath(m)).toBe("m");
+    expect(importName(a)).toBe("alias");
+    expect(importComment(withComment)).toBe("keep\n");
+    expect(collapse(z1, z2)).toBe(true);
+    expect(collapse(withComment, z2)).toBe(false);
+
+    SortImports(undefined, file);
+
+    expect(decl.specs.map((s) => s.kind === "ImportSpec" ? [importName(s), importPath(s), importComment(s)] : [])).toEqual([
+      ["alias", "a", ""],
+      ["", "m", ""],
+      ["", "z", "keep\n"]
+    ]);
+    expect(file.imports).toEqual(decl.specs);
+    expect(a.path.span?.offset).toBe(20);
+    expect(m.path.span?.offset).toBe(30);
+    expect(withComment.path.span?.offset).toBe(40);
+  });
+
+  test("transliterates go/ast scope and package resolution helpers", () => {
+    const scope = NewScope();
+    const xName = ident("X", { filename: "p.go", offset: 12, length: 1, line: 2, column: 5 });
+    const xSpec = { kind: "ValueSpec" as const, names: [xName], values: [] };
+    const xObj = NewObj(AstVar, "X");
+    xObj.Decl = xSpec;
+
+    expect(scope.Lookup("X")).toBeUndefined();
+    expect(scope.Insert(xObj)).toBeUndefined();
+    expect(scope.Lookup("X")).toBe(xObj);
+    expect(scope.Insert(NewObj(AstVar, "X"))).toBe(xObj);
+    expect(xObj.Pos()).toBe(12);
+    expect(ObjKind.String(AstVar)).toBe("var");
+    expect(scope.String()).toContain("var X");
+
+    const fileScope = NewScope();
+    fileScope.Insert(xObj);
+    const unresolvedX = ident("X", { filename: "p.go", offset: 30, length: 1, line: 4, column: 2 });
+    const unresolvedFmt = ident("fmt", { filename: "p.go", offset: 40, length: 3, line: 5, column: 2 });
+    const unresolvedMissing = ident("Missing", { filename: "p.go", offset: 50, length: 7, line: 6, column: 2 });
+    const fmtImport: ImportSpec = {
+      kind: "ImportSpec",
+      path: { kind: "BasicLit", token: TokenKind.StringLiteral, value: "\"fmt\"", span: { filename: "p.go", offset: 20, length: 5, line: 3, column: 8 } }
+    };
+    const file: File = {
+      kind: "File",
+      name: ident("p"),
+      declarations: [],
+      imports: [fmtImport],
+      unresolved: [unresolvedX, unresolvedFmt, unresolvedMissing],
+      comments: [],
+      scope: fileScope
+    };
+    const fmtPkg = NewObj(Pkg, "fmt");
+    fmtPkg.Data = NewScope();
+
+    const [pkg, err] = NewPackage(undefined, new Map([["p.go", file]]), () => [fmtPkg, undefined], NewScope());
+
+    expect(pkg.name).toBe("p");
+    expect(err?.message).toContain("undeclared name: Missing");
+    expect(unresolvedX.Obj).toBe(xObj);
+    expect(unresolvedFmt.Obj?.Kind).toBe(Pkg);
+    expect(file.unresolved.map((id) => id.name)).toEqual(["Missing"]);
+  });
+
+  test("transliterates go/ast print helpers", () => {
+    const chunks: string[] = [];
+    const err = Fprint({
+      write(data: string): void {
+        chunks.push(data);
+      }
+    }, undefined, {
+      kind: "Ident",
+      name: "x",
+      missing: undefined,
+      nested: [ident("y")]
+    }, NotNilFilter);
+
+    expect(err).toBeUndefined();
+    const printed = chunks.join("");
+    expect(printed).toContain("Ident {");
+    expect(printed).toContain("kind: \"Ident\"");
+    expect(printed).toContain("name: \"x\"");
+    expect(printed).toContain("nested: Array (len = 1)");
+    expect(printed).not.toContain("missing:");
+
+    const nilChunks: string[] = [];
+    expect(Fprint({ write: (data: string) => nilChunks.push(data) }, undefined, undefined, NotNilFilter)).toBeUndefined();
+    expect(nilChunks.join("")).toContain("nil");
+
+    const writeErr = Fprint({
+      write(): void {
+        throw new Error("write failed");
+      }
+    }, undefined, ident("z"), NotNilFilter);
+    expect(writeErr?.message).toBe("write failed");
   });
 });
 

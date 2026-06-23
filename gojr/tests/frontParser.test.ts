@@ -1,5 +1,14 @@
 import { describe, expect, test } from "./testHarness.js";
-import { parseFrontSource } from "../src/front/parser.js";
+import {
+  ImportsOnly,
+  PackageClauseOnly,
+  ParseDir,
+  ParseExpr,
+  ParseExprFrom,
+  ParseFile,
+  parseFrontSource,
+  readSource
+} from "../src/front/parser.js";
 import { TokenKind } from "../src/front/token.js";
 import { walk, type AstNode, type Expr, type Field, type FuncDecl, type GenDecl, type TypeSpec } from "../src/front/ast.js";
 
@@ -27,6 +36,56 @@ function collectNodes(source: string): AstNode[] {
 }
 
 describe("Go-junior TypeScript front parser", () => {
+  test("transliterates parser interface entry points", () => {
+    expect(readSource("x.go", "package p\n")[0]).toBe("package p\n");
+    expect(readSource("x.go", new Uint8Array([112, 97, 99, 107, 97, 103, 101, 32, 112]))[0]).toBe("package p");
+    expect(readSource("x.go", { Bytes: () => new Uint8Array([49, 43, 50]) })[0]).toBe("1+2");
+
+    const [file, fileErr] = ParseFile({}, "x.go", "package p\nimport \"fmt\"\nvar X = 1\n", 0);
+    expect(fileErr).toBeUndefined();
+    expect(file?.name?.name).toBe("p");
+    expect(file?.imports.map((spec) => spec.path.value)).toEqual(["\"fmt\""]);
+
+    const [packageOnly] = ParseFile({}, "x.go", "package p\nvar X = 1\n", PackageClauseOnly);
+    expect(packageOnly?.declarations).toEqual([]);
+
+    const [importsOnly] = ParseFile({}, "x.go", "package p\nimport \"fmt\"\nvar X = 1\n", ImportsOnly);
+    expect(importsOnly?.declarations).toHaveLength(1);
+    expect(importsOnly?.imports.map((spec) => spec.path.value)).toEqual(["\"fmt\""]);
+
+    const [expr, exprErr] = ParseExpr("1 + 2*3");
+    expect(exprErr).toBeUndefined();
+    expect(expr?.kind).toBe("BinaryExpr");
+
+    const [exprFromBytes] = ParseExprFrom({}, "expr.go", new Uint8Array([52, 50]));
+    expect(exprFromBytes?.kind).toBe("BasicLit");
+
+    const host = globalThis as typeof globalThis & {
+      __gojrReadFile?: (filename: string) => string;
+      __gojrReadDir?: (path: string) => Array<{ name: string; isFile: boolean }>;
+    };
+    const oldReadFile = host.__gojrReadFile;
+    const oldReadDir = host.__gojrReadDir;
+    host.__gojrReadDir = () => [{ name: "a.go", isFile: true }, { name: "note.txt", isFile: true }];
+    host.__gojrReadFile = (filename: string) => filename.endsWith("a.go") ? "package hooked\n" : "";
+    try {
+      const [pkgs, dirErr] = ParseDir({}, "/tmp/pkg", undefined, 0);
+      expect(dirErr).toBeUndefined();
+      expect([...(pkgs?.keys() ?? [])]).toEqual(["hooked"]);
+    } finally {
+      if (oldReadFile) {
+        host.__gojrReadFile = oldReadFile;
+      } else {
+        delete host.__gojrReadFile;
+      }
+      if (oldReadDir) {
+        host.__gojrReadDir = oldReadDir;
+      } else {
+        delete host.__gojrReadDir;
+      }
+    }
+  });
+
   test("parses packages, imports, grouped parameters, named results, and varargs", () => {
     const file = parseOk(`
 package stats
