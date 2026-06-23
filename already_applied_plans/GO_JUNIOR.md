@@ -1400,8 +1400,10 @@ CLI `gojr build` artifact layout:
 
 - `gojr build <pkg>` compiles the package and any stale dependencies into
   `~/go/pkg/gojr_js/` by default.
-- Tests and explicit developer workflows may override the root with a CLI flag
-  such as `-pkgdir`, an environment variable, or an injected runtime option.
+- Tests and explicit developer workflows may override either the package-cache
+  parent directory, such as `~/go/pkg`, or the exact artifact root. If a
+  package-cache parent is supplied, append `gojr_js`; if an exact artifact root
+  is supplied, use it directly.
 - The output path is derived from the package import path, preserving the
   package namespace directory layout and ending in `.js`.
 - A package artifact may store metadata in an embedded header, a sibling
@@ -2526,8 +2528,8 @@ Implementation tasks:
 - Store formula function artifacts in the worker memory cache.
 - Store Node/CLI package artifacts under `~/go/pkg/gojr_js/` by default, using
   import-path directory layout and `.js` file suffixes.
-- Support a package artifact root override for tests, CI, and explicit CLI
-  workflows.
+- Support a package-cache parent override and an exact package artifact root
+  override for tests, CI, and explicit CLI workflows.
 - Store browser package artifacts in OPFS, using IndexedDB only for optional
   indexes/manifests.
 - Store hot package artifacts in worker memory as a first-level cache.
@@ -2550,8 +2552,8 @@ Tests:
 - Formula cache misses when a linked package artifact changes.
 - Node package artifacts write to
   `~/go/pkg/gojr_js/<import/path>.js` by default.
-- Node package artifact root override writes to a temp fake GOPATH/pkg root in
-  tests.
+- Node package-cache parent override writes to a temp fake GOPATH/pkg root plus
+  `gojr_js` in tests.
 - Node package artifacts use atomic write/rename and never leave a partial
   `.js` file visible after a simulated failure.
 - `gojr build <pkg>` builds the requested package and stale dependencies into
@@ -2698,8 +2700,9 @@ Implementation tasks:
   - `run-fixture`: run a spreadsheet/recalculation fixture
   - `inspect-js`: print generated JavaScript for a formula or package
   - `cache`: inspect, clear, or warm package cache entries
-- `gojr build` should accept an override for the package artifact root so tests
-  can use a temp directory instead of the real `~/go/pkg/gojr_js/`.
+- `gojr build` should accept an override for the package-cache parent or exact
+  package artifact root so tests can use a temp directory instead of the real
+  `~/go/pkg/gojr_js/`.
 - Keep CLI output machine-readable with a JSON mode and human-readable by
   default.
 
@@ -2732,7 +2735,10 @@ Tests:
 - CLI `build` invokes the JavaScript `buildPackage`/`buildPackages` API through
   embedded Node/V8.
 - CLI `build` writes generated package artifacts under
-  `<pkgroot>/gojr_js/<import/path>.js` when a test package root override is
+  `<fake-gopath-pkg>/gojr_js/<import/path>.js` when a test package-cache parent
+  override is supplied.
+- CLI `build` writes generated package artifacts under
+  `<artifact-root>/<import/path>.js` when an exact artifact root override is
   supplied.
 - CLI `build` writes generated package artifacts under
   `~/go/pkg/gojr_js/<import/path>.js` by default.
