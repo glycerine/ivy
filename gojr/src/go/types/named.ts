@@ -46,6 +46,7 @@ export class Named implements Type {
   public TypeArgs(): TypeList | null { return null; }
   public NumMethods(): number { return this.methods_.length; }
   public Method(i: number): Func { return this.methods_[i]!; }
+  public AddMethod(m: Func): void { this.methods_.push(m); }
   public Underlying(): Type { return this.underlying ?? this; }
   public String(): string { return TypeString(this, null); }
 }

@@ -96,7 +96,7 @@ export function Id(pkg: Package | null, name: string): string {
 }
 
 // An object implements the common parts of an Object.
-export class object implements Object {
+export class object_ implements Object {
   public constructor(
     public parent: Scope | null,
     public pos: Pos,
@@ -162,8 +162,8 @@ export class object implements Object {
   }
 
   // cmp reports whether object a is ordered before object b.
-  public cmp(b: object | null): number {
-    const a: object | null = this;
+  public cmp(b: object_ | null): number {
+    const a: object_ | null = this;
     if (a === b) {
       return 0;
     }
@@ -200,7 +200,7 @@ export class object implements Object {
 
 // A PkgName represents an imported Go package.
 // PkgNames don't have a type.
-export class PkgName extends object {
+export class PkgName extends object_ {
   public constructor(pos: Pos, pkg: Package | null, name: string, public imported: Package) {
     super(null, pos, pkg, name, Typ[Invalid]!, 0, nopos);
   }
@@ -219,7 +219,7 @@ export function NewPkgName(pos: Pos, pkg: Package | null, name: string, imported
 }
 
 // A Const represents a declared constant.
-export class Const extends object {
+export class Const extends object_ {
   public constructor(pos: Pos, pkg: Package | null, name: string, typ: Type | null, public val: unknown) {
     super(null, pos, pkg, name, typ, 0, nopos);
   }
@@ -242,7 +242,7 @@ export function NewConst(pos: Pos, pkg: Package | null, name: string, typ: Type 
 // an alias type ([Alias]),
 // a type parameter ([TypeParam]),
 // or a predeclared type such as int or error.
-export class TypeName extends object {
+export class TypeName extends object_ {
   public constructor(pos: Pos, pkg: Package | null, name: string, typ: Type | null) {
     super(null, pos, pkg, name, typ, 0, nopos);
   }
@@ -297,7 +297,7 @@ export function _NewTypeNameLazy(pos: Pos, pkg: Package | null, name: string, lo
 }
 
 // A Var represents a declared variable (including function parameters and results, and struct fields).
-export class Var extends object {
+export class Var extends object_ {
   public origin: Var | null = null; // if non-nil, the Var from which this one was instantiated
   public kind: VarKind;
   public embedded = false; // if set, the variable is an embedded struct field, and name is the type name
@@ -401,7 +401,7 @@ export function newVar(kind: VarKind, pos: Pos, pkg: Package | null, name: strin
 // A Func represents a declared function, concrete method, or abstract
 // (interface) method. Its Type() is always a *Signature.
 // An abstract method may belong to many interfaces due to embedding.
-export class Func extends object {
+export class Func extends object_ {
   public origin: Func | null = null; // if non-nil, the Func from which this one was instantiated
   public hasPtrRecv_ = false; // only valid for methods that don't have a type yet; use hasPtrRecv() to read
   public nointerface = false;
@@ -493,7 +493,7 @@ export function NewFunc(pos: Pos, pkg: Package | null, name: string, sig: Signat
 
 // A Label represents a declared label.
 // Labels don't have a type.
-export class Label extends object {
+export class Label extends object_ {
   public used = false; // set if the label was used
 
   public constructor(pos: Pos, pkg: Package | null, name: string) {
@@ -510,7 +510,7 @@ export function NewLabel(pos: Pos, pkg: Package | null, name: string): Label {
 
 // A Builtin represents a built-in function.
 // Builtins don't have a valid type.
-export class Builtin extends object {
+export class Builtin extends object_ {
   public constructor(public id: builtinId) {
     super(null, nopos, null, predeclaredFuncs[id]!.name, Typ[Invalid]!, 0, nopos);
   }
@@ -523,7 +523,7 @@ export function newBuiltin(id: builtinId): Builtin {
 }
 
 // Nil represents the predeclared value nil.
-export class Nil extends object {
+export class Nil extends object_ {
   public constructor() {
     super(null, nopos, null, "nil", Typ[BasicKind.UntypedNil]!, 0, nopos);
   }

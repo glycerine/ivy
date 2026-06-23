@@ -105,7 +105,9 @@ function receiverNames(recv = "") {
   const bare = recv.replace(/^\*/, "");
   return [...new Set([
     bare,
+    `${bare}_`,
     bare.replace(/_$/, ""),
+    `${bare.replace(/_$/, "")}_`,
     `${bare}Type`,
     `${bare.replace(/_$/, "")}Type`
   ])];
@@ -119,7 +121,7 @@ function presentFor(name, category, recv = "") {
   if (category === "method" && recv) {
     return receiverNames(recv).flatMap((receiver) => hitsFor(`${receiver}.${name}`, category));
   }
-  return hitsFor(name, category);
+  return [...new Set([name, `${name}_`])].flatMap((candidate) => hitsFor(candidate, category));
 }
 
 function shapeText(shape) {

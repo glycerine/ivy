@@ -23,3 +23,12 @@ contract-like mechanical converstion described above. There no
 room for deviation from the original source logic or naming
 in this "port". Exact behavior and symbol level naming must
 be preserved.
+
+## on completeness
+
+Go wide, finish an entire layer when translating. Do not defer work or bugs.
+When encountering bugs, fix them immediately. When encounting work
+that needs doing as a dependency, pause the current task and implement
+the dependency, then return to the current task. Otherwise we risk
+difficult to detect heisenbugs from quietly missing functionality.
+Do not create new TODOs, rather work on them immediately.

@@ -12,23 +12,7 @@ import { TypeString } from "./typestring.js";
 import { Named } from "./named.js";
 import { Signature } from "./signature.js";
 import { newVar, VarKind, type Func } from "./object.js";
-
-export class _TypeSet {
-  public constructor(
-    public methods: Func[] = [],
-    public all = true,
-    public comparable = false,
-    public methodSet = true
-  ) {}
-
-  public NumMethods(): number { return this.methods.length; }
-  public Method(i: number): Func { return this.methods[i]!; }
-  public IsAll(): boolean { return this.all; }
-  public IsComparable(_seen: unknown): boolean { return this.comparable; }
-  public IsMethodSet(): boolean { return this.methodSet; }
-}
-
-export const topTypeSet = new _TypeSet([], true, false, true);
+import { _TypeSet, topTypeSet, computeInterfaceTypeSet, sortMethods } from "./typeset.js";
 
 // An Interface represents an interface type.
 export class Interface implements Type {
@@ -166,13 +150,4 @@ export function NewInterfaceType(methods: Func[] | null, embeddeds: Type[] | nul
   return typ;
 }
 
-export function computeInterfaceTypeSet(_check: Checker | null, _pos: Pos, ityp: Interface): _TypeSet {
-  if (ityp.tset === null) {
-    ityp.tset = new _TypeSet(ityp.methods, ityp.embeddeds.length === 0, false, true);
-  }
-  return ityp.tset;
-}
-
-export function sortMethods(methods: Func[]): void {
-  methods.sort((a, b) => a.Id().localeCompare(b.Id()));
-}
+export { _TypeSet, topTypeSet, computeInterfaceTypeSet, sortMethods };
