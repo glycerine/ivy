@@ -702,19 +702,6 @@ return sum
 `);
         expect(result.value).toBe(8n);
     });
-    test("supports multi-variable for init and assignment post clauses", () => {
-        const result = expectRuns(`
-sum := 0
-for i, j := 0, 3; i < 3; i, j = i + 1, j - 1 {
-  if i == 1 {
-    continue
-  }
-  sum = sum + i + j
-}
-return sum
-`);
-        expect(result.value).toBe(6n);
-    });
     test("supports REPL entry of labeled nested loops with labeled break", () => {
         const session = new GoJuniorSession();
         const lines = [

@@ -425,37 +425,19 @@ export class GoJuniorParser extends CstParser {
             $.OPTION3(() => $.SUBRULE(this.forPostClause));
         });
         this.forInitClause = $.RULE("forInitClause", () => {
-            $.SUBRULE(this.expressionList);
-            $.OPTION(() => {
-                $.OR([
-                    {
-                        ALT: () => {
-                            $.OR2([
-                                { ALT: () => $.CONSUME(Define) },
-                                { ALT: () => $.CONSUME(Assign) }
-                            ]);
-                            $.SUBRULE2(this.expressionList);
-                        }
-                    },
-                    { ALT: () => $.CONSUME(PlusPlus) },
-                    { ALT: () => $.CONSUME(MinusMinus) }
-                ]);
-            });
+            $.SUBRULE(this.name);
+            $.OR([
+                { ALT: () => $.CONSUME(Define) },
+                { ALT: () => $.CONSUME(Assign) }
+            ]);
+            $.SUBRULE(this.expression);
         });
         this.forPostClause = $.RULE("forPostClause", () => {
-            $.SUBRULE(this.expressionList);
-            $.OPTION(() => {
-                $.OR([
-                    {
-                        ALT: () => {
-                            $.CONSUME(Assign);
-                            $.SUBRULE2(this.expressionList);
-                        }
-                    },
-                    { ALT: () => $.CONSUME(PlusPlus) },
-                    { ALT: () => $.CONSUME(MinusMinus) }
-                ]);
-            });
+            $.SUBRULE(this.expression);
+            $.OR([
+                { ALT: () => $.CONSUME(PlusPlus) },
+                { ALT: () => $.CONSUME(MinusMinus) }
+            ]);
         });
         this.rangeClause = $.RULE("rangeClause", () => {
             $.OPTION(() => {

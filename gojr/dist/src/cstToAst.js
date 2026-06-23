@@ -302,12 +302,12 @@ function forClauseToAst(node) {
     const condition = firstChildNode(node, "expression");
     const result = {};
     if (init)
-        result.init = simpleStmtToAst(init);
+        result.init = forInitClauseToAst(init);
     if (condition) {
         result.condition = expressionToAst(condition);
     }
     if (post)
-        result.post = simpleStmtToAst(post);
+        result.post = forPostClauseToAst(post);
     return result;
 }
 function forInitClauseToAst(node) {
