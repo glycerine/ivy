@@ -88,6 +88,43 @@ describe("Go-junior TypeScript front parser", () => {
     }
   });
 
+  test("transliterates parser object resolution hooks", () => {
+    const source = `
+package p
+
+var x = 1
+
+func f() {
+  y := x
+  _ = y
+}
+`;
+    const [file, fileErr] = ParseFile({}, "resolve.go", source, 0);
+    expect(fileErr).toBeUndefined();
+    expect(file?.scope?.Lookup("x")?.Name).toBe("x");
+    expect(file?.scope?.Lookup("f")?.Name).toBe("f");
+
+    const fn = file?.declarations.find((decl): decl is FuncDecl => decl.kind === "FuncDecl");
+    const first = fn?.body?.statements[0];
+    const second = fn?.body?.statements[1];
+    const xUse = first?.kind === "AssignStmt" && first.rhs[0]?.kind === "Ident" ? first.rhs[0] : undefined;
+    const yDecl = first?.kind === "AssignStmt" && first.lhs[0]?.kind === "Ident" ? first.lhs[0] : undefined;
+    const yUse = second?.kind === "AssignStmt" && second.rhs[0]?.kind === "Ident" ? second.rhs[0] : undefined;
+    expect(xUse?.Obj).toBe(file?.scope?.Lookup("x"));
+    expect(yUse?.Obj).toBe(yDecl?.Obj);
+    expect(file?.unresolved).toEqual([]);
+
+    const [, dupErr] = ParseFile({}, "dup.go", "package p\nvar x int\nvar x int\n", DeclarationErrors);
+    expect(dupErr?.message).toContain("x redeclared in this block");
+
+    const [skipped] = ParseFile({}, "skip.go", source, SkipObjectResolution);
+    const skippedFn = skipped?.declarations.find((decl): decl is FuncDecl => decl.kind === "FuncDecl");
+    const skippedFirst = skippedFn?.body?.statements[0];
+    const skippedXUse = skippedFirst?.kind === "AssignStmt" && skippedFirst.rhs[0]?.kind === "Ident" ? skippedFirst.rhs[0] : undefined;
+    expect(skipped?.scope).toBeUndefined();
+    expect(skippedXUse?.Obj).toBeUndefined();
+  });
+
   test("parses packages, imports, grouped parameters, named results, and varargs", () => {
     const file = parseOk(`
 package stats
