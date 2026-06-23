@@ -92,6 +92,15 @@ function blockToAst(node) {
     }, node);
 }
 function statementToAst(node) {
+    const labelTokens = childTokens(node, "Identifier").sort(byOffset);
+    const statement = unlabeledStatementToAst(node);
+    return labelTokens.reduceRight((inner, label) => withSpan({
+        kind: "LabeledStatement",
+        label: label.image,
+        statement: inner
+    }, label), statement);
+}
+function unlabeledStatementToAst(node) {
     const labeledStmt = firstChildNode(node, "labeledStmt");
     if (labeledStmt)
         return labeledStmtToAst(labeledStmt);

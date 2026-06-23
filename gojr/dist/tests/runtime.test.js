@@ -134,6 +134,21 @@ return fmt.Sprintf("%#v %#v %#v", "x", 1.5, true)
         expect(result.output).toEqual(["i = int64(7)\n"]);
         expect(result.value).toBe(`string("x") float64(1.5) bool(true)`);
     });
+    test("automatically imports fmt in scripts and REPL sessions", () => {
+        const script = expectRuns(`
+fmt.Printf("auto %v\\n", 7)
+return fmt.Sprintf("ok %v", 8)
+`);
+        expect(script.output).toEqual(["auto 7\n"]);
+        expect(script.value).toBe("ok 8");
+        const session = new GoJuniorSession();
+        const define = session.evaluate(`f := func() { fmt.Printf("hiya\\n") }`);
+        expect(define.diagnostics).toEqual([]);
+        const call = session.evaluate("f()");
+        expect(call.diagnostics).toEqual([]);
+        expect(call.output).toEqual(["hiya\n"]);
+        expect(call.value).toBeNull();
+    });
     test("supports declared maps with typed string and integer keys", () => {
         const stringKeyed = expectRuns(`
 var m map[string]int
@@ -348,6 +363,12 @@ if true {
         expect(result.diagnostics.length).toBeGreaterThan(0);
         expect(result.diagnostics[0]?.message).not.toContain("':='");
     });
+    test("keeps bare labels pending until their statement is entered", () => {
+        const session = new GoJuniorSession();
+        const result = session.evaluate("top:");
+        expect(result.incomplete).toBe(true);
+        expect(result.diagnostics.length).toBeGreaterThan(0);
+    });
     test("executes Go-style for init condition and post clauses", () => {
         const result = expectRuns(`
 sum := 0
@@ -370,6 +391,31 @@ for b := 0; b < 5; b++ {
 return sum
 `);
         expect(result.value).toBe(8n);
+    });
+    test("supports REPL entry of labeled nested loops with labeled break", () => {
+        const session = new GoJuniorSession();
+        const lines = [
+            "top:",
+            "for i := 0; i < 5; i++ {",
+            "  inner:",
+            "  for j := 0; j < 10; j++ {",
+            "    fmt.Printf(\"i=%v j=%v\\n\", i, j)",
+            "    break top",
+            "  }",
+            "}",
+        ];
+        let source = "";
+        for (const [index, line] of lines.entries()) {
+            source += `${line}\n`;
+            const result = session.evaluate(source);
+            if (index < lines.length - 1) {
+                expect(result.incomplete).toBe(true);
+            }
+            else {
+                expect(result.diagnostics).toEqual([]);
+                expect(result.output).toEqual(["i=0 j=0\n"]);
+            }
+        }
     });
     test("supports goto to forward and backward labels", () => {
         const forward = expectRuns(`

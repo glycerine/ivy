@@ -309,8 +309,11 @@ export class GoJuniorParser extends CstParser {
     });
 
     this.statement = $.RULE("statement", () => {
+      $.MANY(() => {
+        $.CONSUME(Identifier);
+        $.CONSUME(Colon);
+      });
       $.OR([
-        { GATE: () => this.nextTokensAreLabel(), ALT: () => $.SUBRULE(this.labeledStmt) },
         { ALT: () => $.SUBRULE(this.constDecl) },
         { ALT: () => $.SUBRULE(this.varDecl) },
         { ALT: () => $.SUBRULE(this.typeDecl) },
@@ -327,7 +330,7 @@ export class GoJuniorParser extends CstParser {
     this.labeledStmt = $.RULE("labeledStmt", () => {
       $.CONSUME(Identifier);
       $.CONSUME(Colon);
-      $.OPTION(() => $.SUBRULE(this.statement));
+      $.SUBRULE(this.statement);
     });
 
     this.constDecl = $.RULE("constDecl", () => {

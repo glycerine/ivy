@@ -27,6 +27,7 @@ export class EvaluationContext {
         this.maxLoopIterations = options.maxLoopIterations ?? 100_000;
         this.stdout = options.stdout;
         installBuiltins(this);
+        installAutomaticImports(this);
     }
     declare(name, value, mutable = true) {
         this.currentScope.declare(name, value, mutable);
@@ -373,7 +374,7 @@ function resultFromCompletion(ast, output, completion) {
 function diagnosticsLookIncomplete(diagnostics) {
     const errors = diagnostics.filter((diagnostic) => diagnostic.severity === "error");
     return errors.length > 0 && errors.every((diagnostic) => diagnostic.code === "GJPARSE001" &&
-        /found\s+-->\s*''\s*<--/.test(diagnostic.message));
+        (/found\s+-->\s*''\s*<--/.test(diagnostic.message) || /but found:\s*''/.test(diagnostic.message)));
 }
 function installBuiltins(context) {
     context.declareRoot("panic", hostCallable("panic", (args) => {
@@ -396,10 +397,7 @@ function installSheets(context, options) {
     }
 }
 function installImports(context, ast) {
-    const packages = {
-        fmt: fmtPackage(),
-        ...context.packages()
-    };
+    const packages = availablePackages(context);
     for (const imported of ast.imports) {
         const defaultName = imported.path.split("/").filter(Boolean).at(-1) ?? imported.path;
         const name = imported.alias ?? defaultName;
@@ -409,6 +407,15 @@ function installImports(context, ast) {
         }
         context.declareOrAssignRoot(name, pkg, true);
     }
+}
+function installAutomaticImports(context) {
+    context.declareRoot("fmt", availablePackages(context).fmt ?? fmtPackage(), true);
+}
+function availablePackages(context) {
+    return {
+        fmt: fmtPackage(),
+        ...context.packages()
+    };
 }
 function fmtPackage() {
     return {

@@ -120,6 +120,7 @@ export class EvaluationContext {
     this.maxLoopIterations = options.maxLoopIterations ?? 100_000;
     this.stdout = options.stdout;
     installBuiltins(this);
+    installAutomaticImports(this);
   }
 
   public declare(name: string, value: RuntimeValue, mutable = true): void {
@@ -508,7 +509,7 @@ function diagnosticsLookIncomplete(diagnostics: Diagnostic[]): boolean {
   const errors = diagnostics.filter((diagnostic) => diagnostic.severity === "error");
   return errors.length > 0 && errors.every((diagnostic) =>
     diagnostic.code === "GJPARSE001" &&
-    /found\s+-->\s*''\s*<--/.test(diagnostic.message)
+    (/found\s+-->\s*''\s*<--/.test(diagnostic.message) || /but found:\s*''/.test(diagnostic.message))
   );
 }
 
@@ -535,10 +536,7 @@ function installSheets(context: EvaluationContext, options: EvaluationOptions): 
 }
 
 function installImports(context: EvaluationContext, ast: ProgramAst): void {
-  const packages: Record<string, RuntimeObject> = {
-    fmt: fmtPackage(),
-    ...context.packages()
-  };
+  const packages = availablePackages(context);
   for (const imported of ast.imports) {
     const defaultName = imported.path.split("/").filter(Boolean).at(-1) ?? imported.path;
     const name = imported.alias ?? defaultName;
@@ -548,6 +546,17 @@ function installImports(context: EvaluationContext, ast: ProgramAst): void {
     }
     context.declareOrAssignRoot(name, pkg, true);
   }
+}
+
+function installAutomaticImports(context: EvaluationContext): void {
+  context.declareRoot("fmt", availablePackages(context).fmt ?? fmtPackage(), true);
+}
+
+function availablePackages(context: EvaluationContext): Record<string, RuntimeObject> {
+  return {
+    fmt: fmtPackage(),
+    ...context.packages()
+  };
 }
 
 function fmtPackage(): RuntimeObject {
