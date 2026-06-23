@@ -119,6 +119,33 @@ describe("Go-junior TypeScript front scanner", () => {
     expect(result.tokens[4]?.span).toMatchObject({ line: 3, column: 1 });
   });
 
+  test("scans Unicode identifiers and ignores a leading BOM like go/scanner", () => {
+    const result = scan("\uFEFFπ := 3\n变量 := π");
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.tokens.map((token) => [token.kind, token.lexeme])).toEqual([
+      [TokenKind.Identifier, "π"],
+      [TokenKind.Define, ":="],
+      [TokenKind.IntLiteral, "3"],
+      [TokenKind.Semicolon, ";"],
+      [TokenKind.Identifier, "变量"],
+      [TokenKind.Define, ":="],
+      [TokenKind.Identifier, "π"],
+      [TokenKind.Semicolon, ";"],
+      [TokenKind.EOF, ""]
+    ]);
+  });
+
+  test("reports NUL and non-leading BOM characters", () => {
+    const result = scan("a\u0000b\nc\uFEFFd");
+
+    expect(result.diagnostics.map((diagnostic) => diagnostic.message)).toEqual([
+      "illegal character NUL",
+      "illegal byte order mark"
+    ]);
+    expect(result.tokens.some((token) => token.kind === TokenKind.Illegal)).toBe(true);
+  });
+
   test("scans channel arrows and malformed strings", () => {
     const channel = scan("x <- y");
     expect(channel.diagnostics).toEqual([]);

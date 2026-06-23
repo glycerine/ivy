@@ -32,6 +32,7 @@ class Scanner {
   ) {}
 
   public scan(): ScanResult {
+    if (this.offset === 0 && this.currentChar() === "\uFEFF") this.advanceChar();
     while (!this.emittedEOF) {
       this.scanOne();
     }
@@ -57,7 +58,20 @@ class Scanner {
     }
 
     const start = this.position();
-    const char = this.peek();
+    const char = this.currentChar();
+
+    if (char === "\u0000") {
+      this.advanceChar();
+      this.error("GOJR_SCAN005", "illegal character NUL", start, this.position());
+      this.emit(TokenKind.Illegal, char, start, this.position());
+      return;
+    }
+    if (char === "\uFEFF") {
+      this.advanceChar();
+      this.error("GOJR_SCAN005", "illegal byte order mark", start, this.position());
+      this.emit(TokenKind.Illegal, char, start, this.position());
+      return;
+    }
 
     if (char === "\"" ) {
       this.scanString(start);
@@ -224,8 +238,8 @@ class Scanner {
       return;
     }
 
-    this.advance();
-    while (isIdentifierPart(this.peek())) this.advance();
+    this.advanceChar();
+    while (isIdentifierPart(this.currentChar())) this.advanceChar();
     const text = this.sliceFrom(start);
     this.emit(keywordKind(text) ?? TokenKind.Identifier, text, start, this.position());
   }
@@ -344,12 +358,23 @@ class Scanner {
     return this.source[this.offset + ahead] ?? "";
   }
 
+  private currentChar(ahead = 0): string {
+    const codePoint = this.source.codePointAt(this.offset + ahead);
+    return codePoint === undefined ? "" : String.fromCodePoint(codePoint);
+  }
+
   private isEOF(): boolean {
     return this.offset >= this.source.length;
   }
 
   private advance(): void {
     this.offset += 1;
+    this.column += 1;
+  }
+
+  private advanceChar(): void {
+    const char = this.currentChar();
+    this.offset += Math.max(1, char.length);
     this.column += 1;
   }
 
@@ -457,11 +482,11 @@ const goNumberPattern = new RegExp(`^(?:${hexFloat}|${decimalFloat}|${integer})(
 const goFloatPattern = new RegExp(`^(?:${hexFloat}|${decimalFloat})$`);
 
 function isIdentifierStart(text: string): boolean {
-  return /^[A-Za-z_]$/.test(text);
+  return text === "_" || /^\p{L}$/u.test(text);
 }
 
 function isIdentifierPart(text: string): boolean {
-  return /^[A-Za-z0-9_]$/.test(text);
+  return text === "_" || /^\p{L}$/u.test(text) || /^\p{Nd}$/u.test(text);
 }
 
 function isDigit(text: string): boolean {

@@ -2631,6 +2631,24 @@ return a, b, c, d, e, f
     expect(result.values).toEqual([42n, "hi", 7n, 2.5, 7n, 3.75]);
   });
 
+  test("supports erased generic functions with multiple type arguments", async () => {
+    const result = await expectRuns(`
+type Pair[A, B any] struct {
+  A A
+  B B
+}
+
+func Make[A, B any](a A, b B) Pair[A, B] {
+  return Pair[A, B]{A: a, B: b}
+}
+
+p := Make[int, string](7, "seven")
+return p.A, p.B
+`);
+
+    expect(result.values).toEqual([7n, "seven"]);
+  });
+
   test("REPL checker accepts keyed generic struct literals", async () => {
     const session = new GoJuniorSession();
 

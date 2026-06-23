@@ -18,6 +18,8 @@ class Scanner {
         this.filename = filename;
     }
     scan() {
+        if (this.offset === 0 && this.currentChar() === "\uFEFF")
+            this.advanceChar();
         while (!this.emittedEOF) {
             this.scanOne();
         }
@@ -41,7 +43,19 @@ class Scanner {
             return;
         }
         const start = this.position();
-        const char = this.peek();
+        const char = this.currentChar();
+        if (char === "\u0000") {
+            this.advanceChar();
+            this.error("GOJR_SCAN005", "illegal character NUL", start, this.position());
+            this.emit(TokenKind.Illegal, char, start, this.position());
+            return;
+        }
+        if (char === "\uFEFF") {
+            this.advanceChar();
+            this.error("GOJR_SCAN005", "illegal byte order mark", start, this.position());
+            this.emit(TokenKind.Illegal, char, start, this.position());
+            return;
+        }
         if (char === "\"") {
             this.scanString(start);
             return;
@@ -200,9 +214,9 @@ class Scanner {
             this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
             return;
         }
-        this.advance();
-        while (isIdentifierPart(this.peek()))
-            this.advance();
+        this.advanceChar();
+        while (isIdentifierPart(this.currentChar()))
+            this.advanceChar();
         const text = this.sliceFrom(start);
         this.emit(keywordKind(text) ?? TokenKind.Identifier, text, start, this.position());
     }
@@ -308,11 +322,20 @@ class Scanner {
     peek(ahead = 0) {
         return this.source[this.offset + ahead] ?? "";
     }
+    currentChar(ahead = 0) {
+        const codePoint = this.source.codePointAt(this.offset + ahead);
+        return codePoint === undefined ? "" : String.fromCodePoint(codePoint);
+    }
     isEOF() {
         return this.offset >= this.source.length;
     }
     advance() {
         this.offset += 1;
+        this.column += 1;
+    }
+    advanceChar() {
+        const char = this.currentChar();
+        this.offset += Math.max(1, char.length);
         this.column += 1;
     }
     advanceMany(count) {
@@ -413,10 +436,10 @@ const integer = String.raw `(?:0[bB]${binaryDigits}|0[oO]${octalDigits}|0[xX]${h
 const goNumberPattern = new RegExp(`^(?:${hexFloat}|${decimalFloat}|${integer})(?:i)?`);
 const goFloatPattern = new RegExp(`^(?:${hexFloat}|${decimalFloat})$`);
 function isIdentifierStart(text) {
-    return /^[A-Za-z_]$/.test(text);
+    return text === "_" || /^\p{L}$/u.test(text);
 }
 function isIdentifierPart(text) {
-    return /^[A-Za-z0-9_]$/.test(text);
+    return text === "_" || /^\p{L}$/u.test(text) || /^\p{Nd}$/u.test(text);
 }
 function isDigit(text) {
     return /^[0-9]$/.test(text);

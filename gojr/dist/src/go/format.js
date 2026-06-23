@@ -238,6 +238,8 @@ function formatExpr(expr, parentPrecedence = 0) {
             return `${formatExpr(expr.object, 8)}.${expr.selector.name}`;
         case "IndexExpr":
             return `${formatExpr(expr.object, 8)}[${formatExpr(expr.index)}]`;
+        case "IndexListExpr":
+            return `${formatExpr(expr.object, 8)}[${expr.indices.map((index) => formatExpr(index)).join(", ")}]`;
         case "SliceExpr":
             return `${formatExpr(expr.object, 8)}[${expr.low ? formatExpr(expr.low) : ""}:${expr.high ? formatExpr(expr.high) : ""}${expr.max ? `:${formatExpr(expr.max)}` : ""}]`;
         case "TypeAssertExpr":
@@ -497,6 +499,7 @@ function isExpr(node) {
         "ParenExpr",
         "SelectorExpr",
         "IndexExpr",
+        "IndexListExpr",
         "SliceExpr",
         "TypeAssertExpr",
         "CallExpr",

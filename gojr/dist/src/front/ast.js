@@ -94,6 +94,8 @@ export function childNodes(node) {
             return [node.object, node.selector];
         case "IndexExpr":
             return [node.object, node.index];
+        case "IndexListExpr":
+            return [node.object, ...node.indices];
         case "SliceExpr":
             return [node.object, ...(node.low ? [node.low] : []), ...(node.high ? [node.high] : []), ...(node.max ? [node.max] : [])];
         case "TypeAssertExpr":

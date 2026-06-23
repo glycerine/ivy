@@ -857,6 +857,7 @@ class FrontParser {
       }
 
       if (this.match(TokenKind.LBracket)) {
+        const open = this.previous();
         const low = this.at(TokenKind.Colon) || this.at(TokenKind.RBracket)
           ? undefined
           : this.withExpressionLevel(() => this.withBareIdentifierComposites(true, () => this.parseRhsExpression()));
@@ -876,6 +877,26 @@ class FrontParser {
             ...(max ? { max } : {}),
             span: mergeSpans(expression.span, close.span)
           };
+        } else if (this.match(TokenKind.Comma)) {
+          const indices = [low ?? badExpr(open.span)];
+          while (!this.at(TokenKind.RBracket) && !this.at(TokenKind.EOF)) {
+            indices.push(this.withExpressionLevel(() => this.parseType()));
+            if (!this.match(TokenKind.Comma)) break;
+          }
+          const close = this.expect(TokenKind.RBracket, "expected ']' after type arguments");
+          expression = indices.length === 1
+            ? {
+              kind: "IndexExpr",
+              object: expression,
+              index: indices[0]!,
+              span: mergeSpans(expression.span, close.span)
+            }
+            : {
+              kind: "IndexListExpr",
+              object: expression,
+              indices,
+              span: mergeSpans(expression.span, close.span)
+            };
         } else {
           const close = this.expect(TokenKind.RBracket, "expected ']' after index");
           expression = {
@@ -939,7 +960,8 @@ class FrontParser {
     if (
       (expression.kind === "Ident" && !["true", "false", "nil"].includes(expression.name)) ||
       expression.kind === "SelectorExpr" ||
-      expression.kind === "IndexExpr"
+      expression.kind === "IndexExpr" ||
+      expression.kind === "IndexListExpr"
     ) {
       return this.exprLev >= 0 && this.allowBareIdentifierComposite;
     }
@@ -1072,16 +1094,32 @@ class FrontParser {
       };
     }
     if (this.match(TokenKind.LBracket)) {
-      const index = this.parseType();
-      const close = this.expect(TokenKind.RBracket, "expected ']' after type arguments");
-      expression = {
+      const { indices, close } = this.parseTypeArgumentList();
+      expression = indices.length === 1 ? {
         kind: "IndexExpr",
         object: expression,
-        index,
+        index: indices[0]!,
+        span: mergeSpans(expression.span, close.span)
+      } : {
+        kind: "IndexListExpr",
+        object: expression,
+        indices,
         span: mergeSpans(expression.span, close.span)
       };
     }
     return expression;
+  }
+
+  private parseTypeArgumentList(): { indices: Expr[]; close: FrontToken } {
+    const indices: Expr[] = [];
+    while (!this.at(TokenKind.RBracket) && !this.at(TokenKind.EOF)) {
+      indices.push(this.withExpressionLevel(() => this.parseType()));
+      if (!this.match(TokenKind.Comma)) break;
+    }
+    return {
+      indices: indices.length > 0 ? indices : [badExpr(this.peek().span)],
+      close: this.expect(TokenKind.RBracket, "expected ']' after type arguments")
+    };
   }
 
   private parseStructType(start: SourceSpan): Expr {

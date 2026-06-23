@@ -405,6 +405,15 @@ function expressionToAst(expr) {
                 object: expressionToAst(expr.object),
                 index: expressionToAst(expr.index)
             }, expr.span);
+        case "IndexListExpr":
+            return withSpan({
+                kind: "IndexExpression",
+                object: expressionToAst(expr.object),
+                index: withSpan({
+                    kind: "TypeExpression",
+                    type: { text: expr.indices.map(typeText).join(", ") }
+                }, expr.span)
+            }, expr.span);
         case "SliceExpr":
             return withSpan({
                 kind: "SliceExpression",
@@ -582,6 +591,8 @@ function typeText(expr) {
             return `${typeText(expr.object)}.${expr.selector.name}`;
         case "IndexExpr":
             return `${typeText(expr.object)}[${typeText(expr.index)}]`;
+        case "IndexListExpr":
+            return `${typeText(expr.object)}[${expr.indices.map(typeText).join(", ")}]`;
         case "StarExpr":
             return `*${typeText(expr.expr)}`;
         case "UnaryExpr":

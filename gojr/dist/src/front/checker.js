@@ -452,6 +452,9 @@ class FrontChecker {
             case "IndexExpr":
                 result = this.checkIndex(expr, scope);
                 break;
+            case "IndexListExpr":
+                result = this.checkIndexList(expr, scope);
+                break;
             case "SliceExpr":
                 result = this.checkSlice(expr, scope);
                 break;
@@ -731,6 +734,16 @@ class FrontChecker {
         this.error("cannot index value", expr.span);
         return { mode: "invalid", type: this.universe.basic.invalid };
     }
+    checkIndexList(expr, scope) {
+        const objectValue = this.checkExpr(expr.object, scope);
+        for (const index of expr.indices)
+            this.resolveType(index, scope);
+        if (objectValue.type instanceof SignatureType || objectValue.mode === "type") {
+            return { mode: objectValue.mode === "type" ? "type" : "value", type: objectValue.type };
+        }
+        this.error("cannot use multiple indices except as type arguments", expr.span);
+        return { mode: "invalid", type: this.universe.basic.invalid };
+    }
     checkSlice(expr, scope) {
         const objectValue = this.checkExpr(expr.object, scope);
         const object = objectValue.type.underlying();
@@ -828,6 +841,10 @@ class FrontChecker {
             }
             case "IndexExpr":
                 this.resolveType(expr.index, scope);
+                return this.resolveType(expr.object, scope);
+            case "IndexListExpr":
+                for (const index of expr.indices)
+                    this.resolveType(index, scope);
                 return this.resolveType(expr.object, scope);
             case "UnaryExpr":
                 if (expr.op === TokenKind.Tilde)

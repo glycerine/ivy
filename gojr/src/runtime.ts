@@ -5135,7 +5135,28 @@ function genericBaseTypeName(typeText: string): string {
 
 function isTypeArgumentExpression(expression: Expression, context: EvaluationContext): boolean {
   const typeText = typeArgumentText(expression);
-  return typeText !== undefined && context.isKnownType(typeText);
+  if (typeText === undefined) return false;
+  const parts = splitTopLevelTypeArguments(typeText);
+  return parts.length > 1
+    ? parts.every((part) => context.isKnownType(part))
+    : context.isKnownType(typeText);
+}
+
+function splitTopLevelTypeArguments(typeText: string): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let index = 0; index < typeText.length; index += 1) {
+    const char = typeText[index];
+    if (char === "[" || char === "(" || char === "{") depth += 1;
+    else if (char === "]" || char === ")" || char === "}") depth -= 1;
+    else if (char === "," && depth === 0) {
+      parts.push(typeText.slice(start, index).trim());
+      start = index + 1;
+    }
+  }
+  parts.push(typeText.slice(start).trim());
+  return parts.filter((part) => part.length > 0);
 }
 
 function typeArgumentText(expression: Expression): string | undefined {

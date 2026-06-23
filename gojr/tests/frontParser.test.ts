@@ -111,6 +111,25 @@ var answer = Identity[int](42)
     if (call?.kind === "CallExpr") expect(call.fun.kind).toBe("IndexExpr");
   });
 
+  test("parses multiple type arguments as Go ast IndexListExpr", () => {
+    const nodes = collectNodes(`
+package generic
+
+type Pair[A, B any] struct {
+  A A
+  B B
+}
+
+func Make[A, B any](a A, b B) Pair[A, B] {
+  return Pair[A, B]{A: a, B: b}
+}
+
+var value = Make[int, string](1, "one")
+`);
+
+    expect(nodes.some((node) => node.kind === "IndexListExpr")).toBe(true);
+  });
+
   test("keeps slice and array type declarations distinct from type parameter lists", () => {
     const file = parseOk(`
 package slices
