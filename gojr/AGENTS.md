@@ -19,7 +19,7 @@ a legal contract -- every clause must appear in the output,
 even redundant or awkward ones.
 
 If the user says "port" this should be taken as the transliteration
-contract mechanical converstion described above. There no
+contract-like mechanical converstion described above. There no
 room for deviation from the original source logic or naming
 in this "port". Exact behavior and symbol level naming must
 be preserved.
