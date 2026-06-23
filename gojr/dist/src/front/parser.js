@@ -210,16 +210,10 @@ class FrontParser {
                 : { kind: "CallExpr", fun: expression, args: [], ellipsis: false, span: mergeSpans(expression.span, expression.span) };
             return { kind: "DeferStmt", call, span: mergeSpans(start.span, call.span) };
         }
-        if (this.at(TokenKind.Go) || this.at(TokenKind.Select)) {
-            const token = this.advance();
-            this.error(`${token.lexeme} is not supported in Go-junior`, token.span, "GOJR_PARSE_UNSUPPORTED");
-            return {
-                kind: "UnsupportedStmt",
-                token: token.kind,
-                reason: `${token.lexeme} is not supported`,
-                span: token.span
-            };
-        }
+        if (this.at(TokenKind.Go))
+            return this.parseGoStmt();
+        if (this.at(TokenKind.Select))
+            return this.parseSelectStmt();
         if (this.at(TokenKind.For))
             return this.parseForStmt();
         if (this.at(TokenKind.If))
@@ -240,6 +234,18 @@ class FrontParser {
     }
     parseSimpleStmt() {
         const lhs = this.parseExpressionList();
+        if (this.match(TokenKind.Arrow)) {
+            if (lhs.length !== 1) {
+                this.error("send statement expects one channel expression", lhs[1]?.span ?? lhs[0]?.span);
+            }
+            const value = this.parseExpression();
+            return {
+                kind: "SendStmt",
+                channel: lhs[0] ?? badExpr(value.span),
+                value,
+                span: mergeSpans(lhs[0]?.span, value.span)
+            };
+        }
         if (isAssignmentToken(this.peek().kind)) {
             const token = this.advance();
             const rhs = this.parseExpressionList();
@@ -261,6 +267,19 @@ class FrontParser {
             };
         }
         return { kind: "ExprStmt", expr: lhs[0] ?? badExpr(this.peek().span), span: mergeSpans(lhs[0]?.span, lhs[0]?.span) };
+    }
+    parseGoStmt() {
+        const start = this.expect(TokenKind.Go, "expected go");
+        const expression = this.parseExpression();
+        if (expression.kind !== "CallExpr") {
+            this.error("go statement requires function call", expression.span);
+            return {
+                kind: "GoStmt",
+                call: { kind: "CallExpr", fun: expression, args: [], ellipsis: false, span: mergeSpans(expression.span, expression.span) },
+                span: mergeSpans(start.span, expression.span)
+            };
+        }
+        return { kind: "GoStmt", call: expression, span: mergeSpans(start.span, expression.span) };
     }
     parseIfStmt() {
         const start = this.expect(TokenKind.If, "expected if");
@@ -416,6 +435,51 @@ class FrontParser {
         }
         const end = this.expect(TokenKind.RBrace, "expected '}' after switch body");
         return { clauses, span: mergeSpans(start.span, end.span) };
+    }
+    parseSelectStmt() {
+        const start = this.expect(TokenKind.Select, "expected select");
+        const open = this.expect(TokenKind.LBrace, "expected '{' after select");
+        const clauses = [];
+        while (!this.at(TokenKind.RBrace) && !this.at(TokenKind.EOF)) {
+            this.skipSemis();
+            if (this.at(TokenKind.RBrace))
+                break;
+            if (this.at(TokenKind.Case) || this.at(TokenKind.Default)) {
+                clauses.push(this.parseCommClause());
+            }
+            else {
+                const token = this.peek();
+                this.error("expected case or default in select body", token.span);
+                this.advance();
+            }
+        }
+        const close = this.expect(TokenKind.RBrace, "expected '}' after select body");
+        return {
+            kind: "SelectStmt",
+            body: clauses,
+            span: mergeSpans(start.span, close.span ?? open.span)
+        };
+    }
+    parseCommClause() {
+        const start = this.advance();
+        const isDefault = start.kind === TokenKind.Default;
+        const comm = isDefault || this.at(TokenKind.Colon) ? undefined : this.parseSimpleStmt();
+        this.expect(TokenKind.Colon, "expected ':' after select case");
+        const body = [];
+        while (!this.atAny(TokenKind.Case, TokenKind.Default, TokenKind.RBrace, TokenKind.EOF)) {
+            this.skipSemis();
+            if (this.atAny(TokenKind.Case, TokenKind.Default, TokenKind.RBrace, TokenKind.EOF))
+                break;
+            body.push(this.parseStatement());
+            this.consumeSemi();
+        }
+        return {
+            kind: "CommClause",
+            ...(comm ? { comm } : {}),
+            body,
+            default: isDefault,
+            span: mergeSpans(start.span, body[body.length - 1]?.span ?? comm?.span ?? start.span)
+        };
     }
     parseCaseClause() {
         const start = this.advance();
@@ -654,7 +718,7 @@ class FrontParser {
             const close = this.expect(TokenKind.RParen, "expected ')'");
             return { kind: "ParenExpr", expr, span: mergeSpans(start.span, close.span) };
         }
-        if (this.atAny(TokenKind.LBracket, TokenKind.Map, TokenKind.Struct, TokenKind.Interface))
+        if (this.atAny(TokenKind.LBracket, TokenKind.Map, TokenKind.Struct, TokenKind.Interface, TokenKind.Chan))
             return this.parseType();
         if (this.match(TokenKind.Func)) {
             const start = this.previous();
@@ -708,6 +772,11 @@ class FrontParser {
     }
     parseType() {
         const start = this.peek();
+        if (this.match(TokenKind.Arrow)) {
+            const chan = this.expect(TokenKind.Chan, "expected chan after '<-' in channel type");
+            const value = this.parseType();
+            return { kind: "ChanType", direction: "receive", value, span: mergeSpans(start.span, value.span ?? chan.span) };
+        }
         if (this.match(TokenKind.Star)) {
             const expr = this.parseType();
             return { kind: "StarExpr", expr, span: mergeSpans(start.span, expr.span) };
@@ -737,6 +806,16 @@ class FrontParser {
             this.expect(TokenKind.RBracket, "expected ']' after map key type");
             const value = this.parseType();
             return { kind: "MapType", key, value, span: mergeSpans(start.span, value.span) };
+        }
+        if (this.match(TokenKind.Chan)) {
+            const sendOnly = this.match(TokenKind.Arrow);
+            const value = this.parseType();
+            return {
+                kind: "ChanType",
+                direction: sendOnly ? "send" : "both",
+                value,
+                span: mergeSpans(start.span, value.span)
+            };
         }
         if (this.match(TokenKind.Struct))
             return this.parseStructType(start.span);
@@ -904,6 +983,8 @@ class FrontParser {
             kind === TokenKind.Star ||
             kind === TokenKind.LBracket ||
             kind === TokenKind.Map ||
+            kind === TokenKind.Chan ||
+            kind === TokenKind.Arrow ||
             kind === TokenKind.Struct ||
             kind === TokenKind.Interface ||
             kind === TokenKind.Func;

@@ -43,11 +43,15 @@ export type NodeKind =
   | "BlockStmt"
   | "IfStmt"
   | "CaseClause"
+  | "CommClause"
   | "SwitchStmt"
   | "TypeSwitchStmt"
+  | "SelectStmt"
   | "ForStmt"
   | "RangeStmt"
   | "DeferStmt"
+  | "GoStmt"
+  | "SendStmt"
   | "UnsupportedStmt"
   | "ImportSpec"
   | "ValueSpec"
@@ -342,6 +346,13 @@ export interface CaseClause extends Node {
   default: boolean;
 }
 
+export interface CommClause extends Node {
+  kind: "CommClause";
+  comm?: Stmt;
+  body: Stmt[];
+  default: boolean;
+}
+
 export interface SwitchStmt extends Node {
   kind: "SwitchStmt";
   init?: Stmt;
@@ -354,6 +365,11 @@ export interface TypeSwitchStmt extends Node {
   init?: Stmt;
   assign: Stmt;
   body: CaseClause[];
+}
+
+export interface SelectStmt extends Node {
+  kind: "SelectStmt";
+  body: CommClause[];
 }
 
 export interface ForStmt extends Node {
@@ -378,6 +394,17 @@ export interface DeferStmt extends Node {
   call: CallExpr;
 }
 
+export interface GoStmt extends Node {
+  kind: "GoStmt";
+  call: CallExpr;
+}
+
+export interface SendStmt extends Node {
+  kind: "SendStmt";
+  channel: Expr;
+  value: Expr;
+}
+
 export interface UnsupportedStmt extends Node {
   kind: "UnsupportedStmt";
   token: TokenKind.Go | TokenKind.Select;
@@ -397,11 +424,15 @@ export type Stmt =
   | BlockStmt
   | IfStmt
   | CaseClause
+  | CommClause
   | SwitchStmt
   | TypeSwitchStmt
+  | SelectStmt
   | ForStmt
   | RangeStmt
   | DeferStmt
+  | GoStmt
+  | SendStmt
   | UnsupportedStmt;
 
 export interface Field extends Node {
@@ -563,16 +594,24 @@ export function childNodes(node: AstNode): AstNode[] {
       return [...(node.init ? [node.init] : []), node.condition, node.body, ...(node.else ? [node.else] : [])];
     case "CaseClause":
       return [...node.list, ...node.body];
+    case "CommClause":
+      return [...(node.comm ? [node.comm] : []), ...node.body];
     case "SwitchStmt":
       return [...(node.init ? [node.init] : []), ...(node.tag ? [node.tag] : []), ...node.body];
     case "TypeSwitchStmt":
       return [...(node.init ? [node.init] : []), node.assign, ...node.body];
+    case "SelectStmt":
+      return [...node.body];
     case "ForStmt":
       return [...(node.init ? [node.init] : []), ...(node.condition ? [node.condition] : []), ...(node.post ? [node.post] : []), node.body];
     case "RangeStmt":
       return [...(node.key ? [node.key] : []), ...(node.value ? [node.value] : []), node.source, node.body];
     case "DeferStmt":
       return [node.call];
+    case "GoStmt":
+      return [node.call];
+    case "SendStmt":
+      return [node.channel, node.value];
     case "Ellipsis":
       return node.element ? [node.element] : [];
     case "FuncLit":

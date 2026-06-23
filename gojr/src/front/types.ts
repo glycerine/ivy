@@ -8,6 +8,7 @@ export enum TypeKind {
   Signature = "Signature",
   Interface = "Interface",
   Map = "Map",
+  Chan = "Chan",
   Named = "Named"
 }
 
@@ -223,6 +224,30 @@ export class MapType implements Type {
 
   public typeString(): string {
     return `map[${this.key.typeString()}]${this.value.typeString()}`;
+  }
+}
+
+export class ChanType implements Type {
+  public readonly kind = TypeKind.Chan;
+
+  public constructor(
+    public readonly element: Type,
+    public readonly direction: "send" | "receive" | "both" = "both"
+  ) {}
+
+  public underlying(): Type {
+    return this;
+  }
+
+  public typeString(): string {
+    switch (this.direction) {
+      case "send":
+        return `chan<- ${this.element.typeString()}`;
+      case "receive":
+        return `<-chan ${this.element.typeString()}`;
+      default:
+        return `chan ${this.element.typeString()}`;
+    }
   }
 }
 
@@ -479,7 +504,7 @@ export function newUniverse(): Universe {
     tuple(varOf("", basic.any)),
     true
   ), scope));
-  for (const name of ["new", "delete", "clear", "copy", "min", "max", "complex", "real", "imag", "print", "println"]) {
+  for (const name of ["new", "delete", "clear", "copy", "min", "max", "complex", "real", "imag", "print", "println", "close"]) {
     scope.insert(new BuiltinObject(name, new SignatureType(undefined, tuple(varOf("args", new SliceType(basic.any))), tuple(varOf("", basic.any)), true), scope));
   }
 

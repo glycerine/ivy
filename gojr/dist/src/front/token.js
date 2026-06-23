@@ -31,6 +31,7 @@ export var TokenKind;
     TokenKind["Struct"] = "Struct";
     TokenKind["Interface"] = "Interface";
     TokenKind["Map"] = "Map";
+    TokenKind["Chan"] = "Chan";
     TokenKind["Go"] = "Go";
     TokenKind["Select"] = "Select";
     TokenKind["True"] = "True";
@@ -107,6 +108,7 @@ const keywords = new Map([
     ["struct", TokenKind.Struct],
     ["interface", TokenKind.Interface],
     ["map", TokenKind.Map],
+    ["chan", TokenKind.Chan],
     ["go", TokenKind.Go],
     ["select", TokenKind.Select],
     ["true", TokenKind.True],

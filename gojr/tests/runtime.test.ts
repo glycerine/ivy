@@ -327,7 +327,7 @@ missingName
 package pkg
 
 func Bad() {
-  x <- y
+  return )
 }
 `
       }
@@ -1242,6 +1242,136 @@ return n, ys[0], ys[2], before, len(m), *p
 
     expect(result.output).toEqual(["v=", "4", " ok\n"]);
     expect(result.values).toEqual([3n, 1n, 3n, 1n, 0n, 4n]);
+  });
+
+  test("supports buffered channels, close, len cap, and receive ok values", () => {
+    const result = expectRuns(`
+ch := make(chan int, 2)
+ch <- 7
+ch <- 8
+a := <-ch
+b, ok := <-ch
+close(ch)
+c, ok2 := <-ch
+return a, b, ok, c, ok2, len(ch), cap(ch)
+`);
+
+    expect(result.values).toEqual([7n, 8n, true, 0n, false, 0n, 2n]);
+  });
+
+  test("supports deterministic select choice from the configured runtime seed", () => {
+    const source = `
+ch1 := make(chan int, 2)
+ch2 := make(chan int, 2)
+ch1 <- 1
+ch1 <- 3
+ch2 <- 2
+ch2 <- 4
+a := 0
+b := 0
+select {
+case a = <-ch1:
+case a = <-ch2:
+}
+select {
+case b = <-ch1:
+case b = <-ch2:
+}
+return a, b
+`;
+
+    const first = expectRuns(source, { randomSeed: "gojr-select-seed" });
+    const second = expectRuns(source, { randomSeed: "gojr-select-seed" });
+    const other = expectRuns(source, { randomSeed: "gojr-other-select-seed" });
+
+    expect(first.values).toEqual(second.values);
+    expect(first.values).toEqual([2n, 1n]);
+    expect(other.values).toEqual([1n, 2n]);
+  });
+
+  test("supports select default and reports would-block channel operations", () => {
+    const result = expectRuns(`
+ch := make(chan int, 1)
+out := 3
+select {
+case out = <-ch:
+default:
+  out = 9
+}
+return out
+`);
+    expect(result.value).toBe(9n);
+
+    const send = evaluateSource(`
+ch := make(chan int)
+ch <- 1
+`);
+    expect(send.diagnostics).toHaveLength(1);
+    expect(send.diagnostics[0]?.code).toBe("GOJR_DEADLOCK001");
+    expect(send.diagnostics[0]?.message).toContain("send on channel would block");
+
+    const receive = evaluateSource(`
+ch := make(chan int)
+return <-ch
+`);
+    expect(receive.diagnostics).toHaveLength(1);
+    expect(receive.diagnostics[0]?.code).toBe("GOJR_DEADLOCK001");
+    expect(receive.diagnostics[0]?.message).toContain("receive from channel would block");
+  });
+
+  test("supports nil channel blocking and disabled nil-channel select cases", () => {
+    const selectedDefault = expectRuns(`
+var ch chan int
+side := 0
+next := func() int {
+  side++
+  return 1
+}
+select {
+case ch <- next():
+  side = 100
+case v := <-ch:
+  side = 200 + v
+default:
+  side += 10
+}
+return side
+`);
+    expect(selectedDefault.value).toBe(11n);
+
+    const send = evaluateSource(`
+var ch chan int
+ch <- 1
+`);
+    expect(send.diagnostics).toHaveLength(1);
+    expect(send.diagnostics[0]?.code).toBe("GOJR_DEADLOCK001");
+    expect(send.diagnostics[0]?.message).toContain("send on nil channel would block");
+
+    const receive = evaluateSource(`
+var ch chan int
+return <-ch
+`);
+    expect(receive.diagnostics).toHaveLength(1);
+    expect(receive.diagnostics[0]?.code).toBe("GOJR_DEADLOCK001");
+    expect(receive.diagnostics[0]?.message).toContain("receive from nil channel would block");
+
+    const blockedSelect = evaluateSource(`
+var ch chan int
+select {
+case <-ch:
+}
+`);
+    expect(blockedSelect.diagnostics).toHaveLength(1);
+    expect(blockedSelect.diagnostics[0]?.code).toBe("GOJR_DEADLOCK001");
+    expect(blockedSelect.diagnostics[0]?.message).toContain("select would block");
+
+    const closeNil = evaluateSource(`
+var ch chan int
+close(ch)
+`);
+    expect(closeNil.diagnostics).toHaveLength(1);
+    expect(closeNil.diagnostics[0]?.code).toBe("GOJR_PANIC001");
+    expect(closeNil.diagnostics[0]?.message).toContain("close of nil channel");
   });
 
   test("supports methods on named non-struct types and two-value type assertions", () => {

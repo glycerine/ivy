@@ -98,11 +98,16 @@ describe("Go-junior TypeScript front scanner", () => {
     expect(result.tokens[4]?.span).toMatchObject({ line: 3, column: 1 });
   });
 
-  test("reports unsupported channels and malformed strings", () => {
+  test("scans channel arrows and malformed strings", () => {
     const channel = scan("x <- y");
-    expect(channel.diagnostics).toHaveLength(1);
-    expect(channel.diagnostics[0]?.message).toContain("channels");
-    expect(channel.diagnostics[0]?.filename).toBe(TEST_FILENAME);
+    expect(channel.diagnostics).toEqual([]);
+    expect(channel.tokens.map((token) => [token.kind, token.lexeme])).toEqual([
+      [TokenKind.Identifier, "x"],
+      [TokenKind.Arrow, "<-"],
+      [TokenKind.Identifier, "y"],
+      [TokenKind.Semicolon, ";"],
+      [TokenKind.EOF, ""]
+    ]);
 
     const string = scan("\"unterminated\nnext");
     expect(string.diagnostics).toHaveLength(1);

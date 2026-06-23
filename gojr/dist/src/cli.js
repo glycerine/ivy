@@ -24,6 +24,7 @@ async function main(argv) {
         filename,
         ...(options.sheet ? { sheet: options.sheet } : {}),
         ...(options.sheets ? { sheets: options.sheets } : {}),
+        ...(options.randomSeed !== undefined ? { randomSeed: options.randomSeed } : {}),
         stdout: (text) => {
             process.stdout.write(text);
         }
@@ -67,6 +68,13 @@ function parseArgs(argv) {
             options.sheets = parseSheetsJson(args.shift() ?? "{}");
             continue;
         }
+        if (arg === "--seed" || arg === "--random-seed") {
+            const seed = args.shift();
+            if (seed === undefined)
+                throw new Error(`${arg} expects a seed value`);
+            options.randomSeed = seed;
+            continue;
+        }
         if (arg.startsWith("--")) {
             throw new Error(`unknown option: ${arg}`);
         }
@@ -107,8 +115,8 @@ function jsonReplacer(_key, value) {
 }
 function printUsage() {
     console.log(`gojr parse [file]
-gojr run [file] [--sheet-json '{"A1":1}']
-gojr eval <source> [--sheet-json '{"A1":1}']
+gojr run [file] [--sheet-json '{"A1":1}'] [--seed replay-seed]
+gojr eval <source> [--sheet-json '{"A1":1}'] [--seed replay-seed]
 
 Use "-" or omit file to read from stdin. JSON strings are always strings.
 JSON integers become exact integer values. JSON numbers with a decimal point

@@ -9,6 +9,7 @@ export var TypeKind;
     TypeKind["Signature"] = "Signature";
     TypeKind["Interface"] = "Interface";
     TypeKind["Map"] = "Map";
+    TypeKind["Chan"] = "Chan";
     TypeKind["Named"] = "Named";
 })(TypeKind || (TypeKind = {}));
 export var BasicKind;
@@ -199,6 +200,28 @@ export class MapType {
     }
     typeString() {
         return `map[${this.key.typeString()}]${this.value.typeString()}`;
+    }
+}
+export class ChanType {
+    element;
+    direction;
+    kind = TypeKind.Chan;
+    constructor(element, direction = "both") {
+        this.element = element;
+        this.direction = direction;
+    }
+    underlying() {
+        return this;
+    }
+    typeString() {
+        switch (this.direction) {
+            case "send":
+                return `chan<- ${this.element.typeString()}`;
+            case "receive":
+                return `<-chan ${this.element.typeString()}`;
+            default:
+                return `chan ${this.element.typeString()}`;
+        }
     }
 }
 export class NamedType {
@@ -404,7 +427,7 @@ export function newUniverse() {
     scope.insert(new BuiltinObject("cap", new SignatureType(undefined, tuple(varOf("", basic.any)), tuple(varOf("", basic.int64)), false), scope));
     scope.insert(new BuiltinObject("append", new SignatureType(undefined, tuple(varOf("slice", new SliceType(basic.any)), varOf("values", new SliceType(basic.any))), tuple(varOf("", new SliceType(basic.any))), true), scope));
     scope.insert(new BuiltinObject("make", new SignatureType(undefined, tuple(varOf("type", basic.any), varOf("size", new SliceType(basic.any))), tuple(varOf("", basic.any)), true), scope));
-    for (const name of ["new", "delete", "clear", "copy", "min", "max", "complex", "real", "imag", "print", "println"]) {
+    for (const name of ["new", "delete", "clear", "copy", "min", "max", "complex", "real", "imag", "print", "println", "close"]) {
         scope.insert(new BuiltinObject(name, new SignatureType(undefined, tuple(varOf("args", new SliceType(basic.any))), tuple(varOf("", basic.any)), true), scope));
     }
     return { scope, basic };

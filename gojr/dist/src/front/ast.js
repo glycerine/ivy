@@ -64,16 +64,24 @@ export function childNodes(node) {
             return [...(node.init ? [node.init] : []), node.condition, node.body, ...(node.else ? [node.else] : [])];
         case "CaseClause":
             return [...node.list, ...node.body];
+        case "CommClause":
+            return [...(node.comm ? [node.comm] : []), ...node.body];
         case "SwitchStmt":
             return [...(node.init ? [node.init] : []), ...(node.tag ? [node.tag] : []), ...node.body];
         case "TypeSwitchStmt":
             return [...(node.init ? [node.init] : []), node.assign, ...node.body];
+        case "SelectStmt":
+            return [...node.body];
         case "ForStmt":
             return [...(node.init ? [node.init] : []), ...(node.condition ? [node.condition] : []), ...(node.post ? [node.post] : []), node.body];
         case "RangeStmt":
             return [...(node.key ? [node.key] : []), ...(node.value ? [node.value] : []), node.source, node.body];
         case "DeferStmt":
             return [node.call];
+        case "GoStmt":
+            return [node.call];
+        case "SendStmt":
+            return [node.channel, node.value];
         case "Ellipsis":
             return node.element ? [node.element] : [];
         case "FuncLit":

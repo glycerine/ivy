@@ -4,6 +4,7 @@ import {
   BlockStatement,
   BranchStatement,
   CallExpression,
+  CommClause,
   ConstDeclStatement,
   DeclarationSpec,
   DeferStatement,
@@ -12,6 +13,7 @@ import {
   ForStatement,
   FunctionDecl,
   FunctionLiteralExpression,
+  GoStatement,
   IdentifierExpression,
   IfStatement,
   IncDecStatement,
@@ -25,6 +27,8 @@ import {
   ReceiverDecl,
   ReturnStatement,
   SelectorExpression,
+  SelectStatement,
+  SendStatement,
   ShortVarStatement,
   Signature,
   SliceExpression,
@@ -327,11 +331,24 @@ function statementToAst(statement: Stmt): Statement {
       return switchStmtToAst(statement);
     case "TypeSwitchStmt":
       return typeSwitchStmtToAst(statement);
+    case "SelectStmt":
+      return selectStmtToAst(statement);
     case "DeferStmt":
       return withSpan({
         kind: "DeferStatement",
         expression: expressionToAst(statement.call)
       } satisfies DeferStatement, statement.span);
+    case "GoStmt":
+      return withSpan({
+        kind: "GoStatement",
+        call: expressionToAst(statement.call) as CallExpression
+      } satisfies GoStatement, statement.span);
+    case "SendStmt":
+      return withSpan({
+        kind: "SendStatement",
+        channel: expressionToAst(statement.channel),
+        value: expressionToAst(statement.value)
+      } satisfies SendStatement, statement.span);
     default:
       return expressionStatement(missingExpression(), statement.span);
   }
@@ -387,6 +404,22 @@ function typeSwitchStmtToAst(statement: Extract<Stmt, { kind: "TypeSwitchStmt" }
     typeSwitch: typeSwitchGuardToAst(statement.assign),
     clauses: statement.body.map((clause) => caseClauseToAst(clause, true))
   } satisfies SwitchStatement, statement.span);
+}
+
+function selectStmtToAst(statement: Extract<Stmt, { kind: "SelectStmt" }>): SelectStatement {
+  return withSpan({
+    kind: "SelectStatement",
+    clauses: statement.body.map(commClauseToAst)
+  } satisfies SelectStatement, statement.span);
+}
+
+function commClauseToAst(clause: Extract<Stmt, { kind: "CommClause" }>): CommClause {
+  return {
+    kind: "CommClause",
+    ...(clause.comm ? { comm: statementToAst(clause.comm) } : {}),
+    default: clause.default,
+    statements: clause.body.map(statementToAst)
+  };
 }
 
 function typeSwitchGuardToAst(statement: Stmt) {
@@ -510,6 +543,11 @@ function expressionToAst(expr: Expr): Expression {
         kind: "TypeExpression",
         type: typeNode(expr)
       } satisfies TypeExpression, expr.span);
+    case "ChanType":
+      return withSpan({
+        kind: "TypeExpression",
+        type: typeNode(expr)
+      } satisfies TypeExpression, expr.span);
     default:
       return missingExpression(expr.span);
   }
@@ -619,6 +657,10 @@ function typeText(expr: Expr): string {
       return `${arrayLengthText(expr)}${typeText(expr.element)}`;
     case "MapType":
       return `map[${typeText(expr.key)}]${typeText(expr.value)}`;
+    case "ChanType":
+      if (expr.direction === "send") return `chan<- ${typeText(expr.value)}`;
+      if (expr.direction === "receive") return `<-chan ${typeText(expr.value)}`;
+      return `chan ${typeText(expr.value)}`;
     case "StructType":
       return `struct{${fieldsText(expr.fields)}}`;
     case "InterfaceType":
@@ -677,6 +719,7 @@ function expressionText(expr: Expr): string {
 }
 
 function unaryOperator(kind: TokenKind): UnaryExpression["operator"] {
+  if (kind === TokenKind.Arrow) return "<-";
   if (kind === TokenKind.Minus) return "-";
   if (kind === TokenKind.Bang) return "!";
   if (kind === TokenKind.Caret) return "^";

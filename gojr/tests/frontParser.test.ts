@@ -168,19 +168,31 @@ func Classify(x int, any interface{}) string {
     expect(nodes.some((node) => node.kind === "BranchStmt" && node.token === TokenKind.Fallthrough)).toBe(true);
   });
 
-  test("reports unsupported go and select statements", () => {
-    const result = parseFrontSource(`
-package unsupported
+  test("parses goroutines, channel types, sends, receives, and select clauses", () => {
+    const nodes = collectNodes(`
+package concurrent
 
-func F() {
-  go F()
-  select {}
+func F(ch chan int, send chan<- int, recv <-chan int, done chan struct{}) {
+  go F(ch, send, recv, done)
+  ch <- 1
+  x := <-recv
+  _ = x
+  select {
+  case send <- x:
+  case y, ok := <-ch:
+    _, _ = y, ok
+  case <-done:
+    return
+  default:
+  }
 }
-`, TEST_FILENAME);
+`);
 
-    expect(result.diagnostics.map((item) => item.code)).toEqual([
-      "GOJR_PARSE_UNSUPPORTED",
-      "GOJR_PARSE_UNSUPPORTED"
-    ]);
+    expect(nodes.filter((node) => node.kind === "ChanType")).toHaveLength(4);
+    expect(nodes.some((node) => node.kind === "GoStmt")).toBe(true);
+    expect(nodes.some((node) => node.kind === "SendStmt")).toBe(true);
+    expect(nodes.some((node) => node.kind === "SelectStmt")).toBe(true);
+    expect(nodes.filter((node) => node.kind === "CommClause")).toHaveLength(4);
+    expect(nodes.some((node) => node.kind === "UnaryExpr" && node.op === TokenKind.Arrow)).toBe(true);
   });
 });

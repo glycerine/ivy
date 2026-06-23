@@ -242,10 +242,23 @@ function statementToAst(statement) {
             return switchStmtToAst(statement);
         case "TypeSwitchStmt":
             return typeSwitchStmtToAst(statement);
+        case "SelectStmt":
+            return selectStmtToAst(statement);
         case "DeferStmt":
             return withSpan({
                 kind: "DeferStatement",
                 expression: expressionToAst(statement.call)
+            }, statement.span);
+        case "GoStmt":
+            return withSpan({
+                kind: "GoStatement",
+                call: expressionToAst(statement.call)
+            }, statement.span);
+        case "SendStmt":
+            return withSpan({
+                kind: "SendStatement",
+                channel: expressionToAst(statement.channel),
+                value: expressionToAst(statement.value)
             }, statement.span);
         default:
             return expressionStatement(missingExpression(), statement.span);
@@ -299,6 +312,20 @@ function typeSwitchStmtToAst(statement) {
         typeSwitch: typeSwitchGuardToAst(statement.assign),
         clauses: statement.body.map((clause) => caseClauseToAst(clause, true))
     }, statement.span);
+}
+function selectStmtToAst(statement) {
+    return withSpan({
+        kind: "SelectStatement",
+        clauses: statement.body.map(commClauseToAst)
+    }, statement.span);
+}
+function commClauseToAst(clause) {
+    return {
+        kind: "CommClause",
+        ...(clause.comm ? { comm: statementToAst(clause.comm) } : {}),
+        default: clause.default,
+        statements: clause.body.map(statementToAst)
+    };
 }
 function typeSwitchGuardToAst(statement) {
     if (statement.kind === "AssignStmt") {
@@ -420,6 +447,11 @@ function expressionToAst(expr) {
                 kind: "TypeExpression",
                 type: typeNode(expr)
             }, expr.span);
+        case "ChanType":
+            return withSpan({
+                kind: "TypeExpression",
+                type: typeNode(expr)
+            }, expr.span);
         default:
             return missingExpression(expr.span);
     }
@@ -522,6 +554,12 @@ function typeText(expr) {
             return `${arrayLengthText(expr)}${typeText(expr.element)}`;
         case "MapType":
             return `map[${typeText(expr.key)}]${typeText(expr.value)}`;
+        case "ChanType":
+            if (expr.direction === "send")
+                return `chan<- ${typeText(expr.value)}`;
+            if (expr.direction === "receive")
+                return `<-chan ${typeText(expr.value)}`;
+            return `chan ${typeText(expr.value)}`;
         case "StructType":
             return `struct{${fieldsText(expr.fields)}}`;
         case "InterfaceType":
@@ -578,6 +616,8 @@ function expressionText(expr) {
     return typeText(expr);
 }
 function unaryOperator(kind) {
+    if (kind === TokenKind.Arrow)
+        return "<-";
     if (kind === TokenKind.Minus)
         return "-";
     if (kind === TokenKind.Bang)

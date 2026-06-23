@@ -13,6 +13,7 @@ char* gojr_node_eval_files(gojr_node_runtime* runtime, const char* json, char** 
 char* gojr_node_test(gojr_node_runtime* runtime, const char* source, char** error_out);
 char* gojr_node_test_files(gojr_node_runtime* runtime, const char* json, char** error_out);
 char* gojr_node_set_sheet(gojr_node_runtime* runtime, const char* json, char** error_out);
+char* gojr_node_build(gojr_node_runtime* runtime, const char* json, char** error_out);
 void gojr_node_free(gojr_node_runtime* runtime);
 void gojr_string_free(char* value);
 

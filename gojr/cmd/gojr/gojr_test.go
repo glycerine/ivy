@@ -106,6 +106,52 @@ func TestReadPackageDirRejectsPackageMismatch(t *testing.T) {
 	}
 }
 
+func TestReadBuildTargetKeepsPackageClausesAndSkipsTestFiles(t *testing.T) {
+	dir := t.TempDir()
+	writeTestFile(t, filepath.Join(dir, "b.go"), "package demo\n\nfunc B() {}\n")
+	writeTestFile(t, filepath.Join(dir, "a.go"), "package demo\n\nfunc A() {}\n")
+	writeTestFile(t, filepath.Join(dir, "a_test.go"), "package demo\n\nfunc TestA() {}\n")
+
+	files, err := readBuildTarget(dir)
+	if err != nil {
+		t.Fatalf("readBuildTarget() error = %v", err)
+	}
+	if len(files) != 2 || filepath.Base(files[0].Filename) != "a.go" || filepath.Base(files[1].Filename) != "b.go" {
+		t.Fatalf("files are not sorted package files: %#v", files)
+	}
+	combined := combinedTestSource(files)
+	if !strings.Contains(combined, "package demo") {
+		t.Fatalf("build source should retain package clause:\n%s", combined)
+	}
+	if strings.Contains(combined, "TestA") {
+		t.Fatalf("build source included _test.go:\n%s", combined)
+	}
+}
+
+func TestDeriveBuildImportPathUsesGOPATHSrc(t *testing.T) {
+	old := os.Getenv("GOPATH")
+	t.Cleanup(func() {
+		if old == "" {
+			_ = os.Unsetenv("GOPATH")
+		} else {
+			_ = os.Setenv("GOPATH", old)
+		}
+	})
+
+	gopath := t.TempDir()
+	if err := os.Setenv("GOPATH", gopath); err != nil {
+		t.Fatalf("Setenv GOPATH error = %v", err)
+	}
+	dir := filepath.Join(gopath, "src", "example.com", "demo")
+	if err := os.MkdirAll(dir, 0o700); err != nil {
+		t.Fatalf("MkdirAll() error = %v", err)
+	}
+	got := deriveBuildImportPath(dir, "demo")
+	if got != "example.com/demo" {
+		t.Fatalf("deriveBuildImportPath() = %q, want example.com/demo", got)
+	}
+}
+
 func TestReadTestTargetDirectoryIncludesTestFiles(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, filepath.Join(dir, "a.go"), "package demo\n\nfunc A() int { return 1 }\n")
@@ -141,6 +187,56 @@ func TestReadTestTargetTestFileIncludesSiblingPackageFiles(t *testing.T) {
 	if strings.Contains(combined, "func TestC()") {
 		t.Fatalf("combined test source included another _test.go file:\n%s", combined)
 	}
+}
+
+func TestNodeRuntimeUsesEnvironmentRandomSeed(t *testing.T) {
+	source := `ch1 := make(chan int, 2)
+ch2 := make(chan int, 2)
+ch1 <- 1
+ch1 <- 3
+ch2 <- 2
+ch2 <- 4
+a := 0
+b := 0
+select {
+case a = <-ch1:
+case a = <-ch2:
+}
+select {
+case b = <-ch1:
+case b = <-ch2:
+}
+return a, b
+`
+
+	result := evalWithRandomSeed(t, "gojr-select-seed", source)
+	if result.Value != "2, 1" {
+		t.Fatalf("GOJR_RANDOM_SEED gojr-select-seed value = %q, want 2, 1", result.Value)
+	}
+}
+
+func evalWithRandomSeed(t *testing.T, seed string, source string) evalResult {
+	t.Helper()
+
+	t.Setenv("GOJR_RANDOM_SEED", seed)
+	moduleBundle, err := runtimeModuleBundle()
+	if err != nil {
+		t.Fatalf("runtimeModuleBundle() error = %v", err)
+	}
+	rt, err := newNodeRuntime(moduleBundle)
+	if err != nil {
+		t.Fatalf("newNodeRuntime() error = %v", err)
+	}
+	t.Cleanup(rt.Close)
+
+	result, err := rt.Eval(source)
+	if err != nil {
+		t.Fatalf("Eval() error = %v", err)
+	}
+	if !result.OK {
+		t.Fatalf("Eval() diagnostics = %v", result.Diagnostics)
+	}
+	return result
 }
 
 func combinedTestSource(files []sourceFile) string {

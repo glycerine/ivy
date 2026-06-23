@@ -22,9 +22,11 @@ and host/WASM calls.
 - Treat Go-junior as full Go language semantics plus deliberate spreadsheet
   extensions, not as a smaller Go-like DSL. Any deviation from Go must be
   named, tested, and justified by the spreadsheet/browser target.
-- Keep execution deterministic where the spreadsheet host needs determinism,
-  while still supporting Go's concurrency surface (`go`, channels, `select`,
-  `close`, and `recover`) through a deterministic runtime scheduler.
+- Keep execution deterministic where the spreadsheet host needs determinism.
+  All random-looking runtime choices must draw from one configurable seeded
+  pseudo-random generator, including `select` choosing among multiple ready
+  channel cases. Go's concurrency surface (`go`, channels, `select`, `close`,
+  and `recover`) runs through that deterministic runtime scheduler.
 - Preserve Go's readable expression and statement syntax where it helps.
 - Include core Go function-structuring idioms that matter for real libraries,
   including `defer`, multiple return values, and named return values.
@@ -63,6 +65,9 @@ This protects:
   `globalThis`, cookies, local storage, network APIs, or other browser globals.
 - Determinism: the recalculation engine needs to know whether a call is pure,
   package-stateful, volatile, or effectful.
+- Reproducibility: any randomness must be pseudo-random from a workbook/runtime
+  seed, so tests, CLI sessions, and spreadsheet recalculation can replay the
+  same execution, including `select` choices.
 - Dependency tracking: if code can read arbitrary browser state, the
   spreadsheet graph cannot know what should trigger recomputation.
 - Worker portability: formulas should run in Node tests and browser workers;
@@ -244,8 +249,10 @@ Initial concurrency runtime semantics:
 
 - Goroutines are cooperative tasks scheduled by the Go-junior runtime.
 - The default production scheduler should be deterministic for a fixed
-  workbook/runtime seed. A separate randomized/fairness stress mode should be
-  available in tests.
+  workbook/runtime seed. A single global scheduler PRNG owns all pseudo-random
+  choices; ready `select` case choice samples that PRNG when multiple channel
+  cases are simultaneously ready. A separate randomized/fairness stress mode
+  should be available in tests and remain replayable by seed.
 - Unbuffered channels pair one sender with one receiver.
 - Buffered channels maintain FIFO element order.
 - Sends to closed channels panic.
@@ -921,8 +928,10 @@ Semantics:
 - `select` disables nil-channel cases, runs `default` immediately if no case is
   ready, and otherwise chooses one ready case through the scheduler's policy.
 - The default scheduler policy should be deterministic for reproducible
-  spreadsheet recalculation and CLI tests. A seeded randomized/fairness mode
-  should exist for stress testing.
+  spreadsheet recalculation and CLI tests. All pseudo-random choices use one
+  configurable runtime PRNG seed, and `select` among multiple ready channel
+  cases must sample that same PRNG. A seeded randomized/fairness mode should
+  exist for stress testing and remain replayable by seed.
 - Deadlock detection reports a structured diagnostic when all goroutines are
   blocked and no host or worker wakeup can occur.
 - Goroutine roots must report panics with goroutine stack traces and source
@@ -951,7 +960,9 @@ Tests:
 - Nil channel send/receive block and are disabled inside `select`.
 - `select` with default runs default when no case is ready.
 - `select` receives from ready closed channels.
-- Multiple ready `select` cases follow deterministic scheduler policy.
+- Multiple ready `select` cases follow deterministic scheduler policy and
+  consume exactly one sample from the runtime's global seeded PRNG per
+  selection.
 - Deadlock is detected with useful goroutine stack diagnostics.
 - `recover` succeeds in a deferred function and fails outside that context.
 - Goroutine panic reports goroutine ID, source file/line, and stack.
@@ -2473,7 +2484,9 @@ Implementation tasks:
 - Implement panic propagation through frames and goroutine roots.
 - Implement `recover` during deferred calls.
 - Implement deadlock detection.
-- Implement deterministic scheduler seed/policy and randomized stress policy.
+- Implement deterministic scheduler seed/policy, one global runtime PRNG used
+  by every pseudo-random runtime choice, and randomized stress policy that is
+  still replayable by seed.
 - Implement structured runtime diagnostics with source filenames, line/column,
   static types, goroutine stacks, and scheduler state summaries.
 - Expose a Node test harness for running scheduler programs without the REPL.
@@ -2494,8 +2507,9 @@ Tests:
 - Nil channel send/receive block and participate in deadlock detection.
 - `select` with default runs default when nothing is ready.
 - `select` with one ready receive runs that receive.
-- `select` with multiple ready cases follows deterministic policy under test
-  seed and exercises randomized policy in stress tests.
+- `select` with multiple ready cases follows deterministic policy under a
+  configurable seed, consumes the shared scheduler PRNG, and exercises a
+  replayable randomized policy in stress tests.
 - `select` unregisters losing cases so later sends/receives do not wake stale
   waiters.
 - `select` on nil channel cases ignores those cases.

@@ -128,4 +128,45 @@ var bad = d + a
     expect(result.diagnostics[0]?.message).toContain("invalid operation: string + int64");
     expect(result.pkg.scope.lookup("good")?.type.typeString()).toBe("string");
   });
+
+  test("types channel directions, sends, receives, goroutines, and select clauses", () => {
+    const result = check(`
+package concurrent
+
+func Worker(ch chan int, send chan<- int, recv <-chan int, done chan struct{}) {
+  go Worker(ch, send, recv, done)
+  ch <- 1
+  send <- <-recv
+  select {
+  case ch <- 2:
+  case value := <-recv:
+    _ = value
+  case <-done:
+  default:
+  }
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
+  test("rejects invalid channel sends and receives", () => {
+    const result = check(`
+package concurrent
+
+func Bad(send chan<- int, recv <-chan int, n int) {
+  recv <- 1
+  _ = <-send
+  n <- 2
+  send <- "bad"
+}
+`);
+
+    expect(result.diagnostics.map((item) => item.message)).toEqual([
+      "cannot send to receive-only channel <-chan int",
+      "cannot receive from send-only channel chan<- int",
+      "cannot send to non-channel int",
+      "cannot send untyped string as int"
+    ]);
+  });
 });

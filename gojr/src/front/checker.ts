@@ -7,6 +7,7 @@ import {
   BlockStmt,
   CallExpr,
   CellRefExpr,
+  ChanType as ChanTypeNode,
   CompositeLit,
   Decl,
   Expr,
@@ -36,6 +37,7 @@ import {
   ArrayType,
   BasicKind,
   BasicType,
+  ChanType,
   BuiltinObject,
   ConstObject,
   FuncObject,
@@ -355,8 +357,36 @@ class FrontChecker {
       case "DeferStmt":
         this.checkExpr(statement.call, scope);
         break;
+      case "GoStmt":
+        this.checkExpr(statement.call, scope);
+        break;
+      case "SendStmt":
+        this.checkSend(statement, scope);
+        break;
+      case "SelectStmt":
+        for (const clause of statement.body) {
+          if (clause.comm) this.checkStmt(clause.comm, scope, signature);
+          for (const item of clause.body) this.checkStmt(item, scope, signature);
+        }
+        break;
       default:
         break;
+    }
+  }
+
+  private checkSend(statement: Extract<Stmt, { kind: "SendStmt" }>, scope: Scope): void {
+    const channel = this.checkExpr(statement.channel, scope).type.underlying();
+    const value = this.checkExpr(statement.value, scope).type;
+    if (!(channel instanceof ChanType)) {
+      this.error(`cannot send to non-channel ${channel.typeString()}`, statement.channel.span);
+      return;
+    }
+    if (channel.direction === "receive") {
+      this.error(`cannot send to receive-only channel ${channel.typeString()}`, statement.channel.span);
+      return;
+    }
+    if (!assignableTo(value, channel.element)) {
+      this.error(`cannot send ${value.typeString()} as ${channel.element.typeString()}`, statement.value.span);
     }
   }
 
@@ -364,10 +394,12 @@ class FrontChecker {
     const rhs = statement.rhs.map((expr) => this.checkExpr(expr, scope).type);
     for (const [index, lhs] of statement.lhs.entries()) {
       if (statement.token === TokenKind.Define && lhs.kind === "Ident") {
+        if (lhs.name === "_") continue;
         const type = defaultType(rhs[index] ?? rhs[0], this.universe) ?? this.universe.basic.invalid;
         this.insert(scope, new VarObject(lhs.name, type, false, scope, this.pkg), lhs);
         continue;
       }
+      if (lhs.kind === "Ident" && lhs.name === "_") continue;
       const lhsType = this.checkExpr(lhs, scope).type;
       if (statement.rhs[index]) this.checkAssignable(statement.rhs[index]!, lhsType, scope);
     }
@@ -382,8 +414,8 @@ class FrontChecker {
     if (source instanceof BasicType && source.basicKind === BasicKind.String) valueType = this.universe.basic.string;
 
     if (statement.token === TokenKind.Define) {
-      if (statement.key?.kind === "Ident") this.insert(scope, new VarObject(statement.key.name, keyType, false, scope, this.pkg), statement.key);
-      if (statement.value?.kind === "Ident") this.insert(scope, new VarObject(statement.value.name, valueType, false, scope, this.pkg), statement.value);
+      if (statement.key?.kind === "Ident" && statement.key.name !== "_") this.insert(scope, new VarObject(statement.key.name, keyType, false, scope, this.pkg), statement.key);
+      if (statement.value?.kind === "Ident" && statement.value.name !== "_") this.insert(scope, new VarObject(statement.value.name, valueType, false, scope, this.pkg), statement.value);
     } else {
       if (statement.key) this.checkExpr(statement.key, scope);
       if (statement.value) this.checkExpr(statement.value, scope);
@@ -458,6 +490,7 @@ class FrontChecker {
       case "FuncType":
       case "InterfaceType":
       case "MapType":
+      case "ChanType":
       case "StarExpr":
       case "Ellipsis":
         result = { mode: "type", type: this.resolveType(expr, scope) };
@@ -505,8 +538,16 @@ class FrontChecker {
     const operand = this.checkExpr(expr.expr, scope);
     if (expr.op === TokenKind.Amp) return { mode: "value", type: new PointerType(operand.type) };
     if (expr.op === TokenKind.Arrow) {
-      this.error("channels are not supported in Go-junior", expr.span, "GOJR_TYPE_UNSUPPORTED");
-      return { mode: "invalid", type: this.universe.basic.invalid };
+      const channel = operand.type.underlying();
+      if (!(channel instanceof ChanType)) {
+        this.error(`cannot receive from non-channel ${channel.typeString()}`, expr.span);
+        return { mode: "invalid", type: this.universe.basic.invalid };
+      }
+      if (channel.direction === "send") {
+        this.error(`cannot receive from send-only channel ${channel.typeString()}`, expr.span);
+        return { mode: "invalid", type: this.universe.basic.invalid };
+      }
+      return { mode: "value", type: channel.element };
     }
     return { mode: operand.mode === "constant" ? "constant" : "value", type: operand.type };
   }
@@ -609,6 +650,7 @@ class FrontChecker {
       case "println":
       case "delete":
       case "clear":
+      case "close":
         return { mode: "value", type: this.universe.basic.untypedNil };
       default:
         return undefined;
@@ -677,6 +719,8 @@ class FrontChecker {
         return this.resolveArrayType(expr, scope);
       case "MapType":
         return new MapType(this.resolveType(expr.key, scope), this.resolveType(expr.value, scope));
+      case "ChanType":
+        return this.resolveChanType(expr, scope);
       case "StructType":
         return this.resolveStructType(expr, scope);
       case "InterfaceType":
@@ -699,6 +743,10 @@ class FrontChecker {
     }
     this.checkExpr(expr.length, scope);
     return new ArrayType(expr.inferredLength ? -1 : 0, element);
+  }
+
+  private resolveChanType(expr: ChanTypeNode, scope: Scope): Type {
+    return new ChanType(this.resolveType(expr.value, scope), expr.direction);
   }
 
   private resolveStructType(expr: StructTypeNode, scope: Scope): Type {

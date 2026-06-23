@@ -8,6 +8,7 @@ import {
 } from "../src/front/ast.js";
 import {
   assignableTo,
+  ChanType,
   FuncObject,
   InterfaceType,
   MapType,
@@ -136,6 +137,9 @@ describe("Go-junior Go-style types", () => {
 
     expect(signature.typeString()).toBe("func(format string, args ...any) (int64, error)");
     expect(new MapType(universe.basic.string, universe.basic.int64).typeString()).toBe("map[string]int64");
+    expect(new ChanType(universe.basic.int64).typeString()).toBe("chan int64");
+    expect(new ChanType(universe.basic.string, "send").typeString()).toBe("chan<- string");
+    expect(new ChanType(universe.basic.bool, "receive").typeString()).toBe("<-chan bool");
   });
 
   test("checks assignability for untyped constants, nil, named types, and method-set interfaces", () => {

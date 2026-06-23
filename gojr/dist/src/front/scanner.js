@@ -224,10 +224,7 @@ class Scanner {
         if (twoKind) {
             this.advanceMany(2);
             this.emit(twoKind, two, start, this.position());
-            if (two === "<-") {
-                this.error("GOJR_SCAN004", "channels and channel operations are not supported", start, this.position());
-            }
-            else if (two === "->") {
+            if (two === "->") {
                 this.error("GOJR_SCAN006", "C/C++ pointer selector syntax is not supported; use Go-style '.' method calls", start, this.position());
             }
             return;
@@ -365,7 +362,7 @@ function twoCharToken(text) {
         case "->": return TokenKind.Arrow;
         case "++": return TokenKind.PlusPlus;
         case "--": return TokenKind.MinusMinus;
-        case "<-": return TokenKind.Illegal;
+        case "<-": return TokenKind.Arrow;
         default: return undefined;
     }
 }

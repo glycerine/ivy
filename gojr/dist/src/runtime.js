@@ -8,6 +8,12 @@ export class GoJuniorRuntimeError extends Error {
         this.name = "GoJuniorRuntimeError";
     }
 }
+export class GoJuniorDeadlockError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "GoJuniorDeadlockError";
+    }
+}
 export class GoJuniorPanic extends Error {
     value;
     constructor(value) {
@@ -24,6 +30,32 @@ class GoJuniorTestStop extends Error {
         this.name = "GoJuniorTestStop";
     }
 }
+class DeterministicPrng {
+    state;
+    constructor(seed) {
+        this.state = normalizeRandomSeed(seed);
+    }
+    nextIndex(length) {
+        if (length <= 0)
+            throw new GoJuniorRuntimeError("cannot sample from empty random set");
+        this.state = (this.state * 6364136223846793005n + 1442695040888963407n) & 0xffffffffffffffffn;
+        return Number(this.state % BigInt(length));
+    }
+}
+function normalizeRandomSeed(seed) {
+    if (seed === undefined)
+        return 0x6a09e667f3bcc909n;
+    if (typeof seed === "bigint")
+        return seed & 0xffffffffffffffffn;
+    if (typeof seed === "number")
+        return BigInt(Math.trunc(seed)) & 0xffffffffffffffffn;
+    let hash = 0xcbf29ce484222325n;
+    for (let index = 0; index < seed.length; index += 1) {
+        hash ^= BigInt(seed.charCodeAt(index));
+        hash = (hash * 0x100000001b3n) & 0xffffffffffffffffn;
+    }
+    return hash;
+}
 export class EvaluationContext {
     options;
     output = [];
@@ -36,10 +68,12 @@ export class EvaluationContext {
     methods = new Map();
     maxLoopIterations;
     stdout;
+    random;
     constructor(options = {}) {
         this.options = options;
         this.maxLoopIterations = options.maxLoopIterations ?? 100_000;
         this.stdout = options.stdout;
+        this.random = new DeterministicPrng(options.randomSeed);
         installBuiltins(this);
         installAutomaticImports(this);
     }
@@ -132,6 +166,9 @@ export class EvaluationContext {
     loopLimit() {
         return this.maxLoopIterations;
     }
+    randomIndex(length) {
+        return this.random.nextIndex(length);
+    }
     packages() {
         return this.options.packages ?? {};
     }
@@ -178,6 +215,7 @@ export class EvaluationContext {
             type.startsWith("[]") ||
             /^\[[0-9.]*\]/.test(type) ||
             type.startsWith("map[") ||
+            parseChanTypeText(type) !== undefined ||
             type.startsWith("func(");
     }
     registerMethod(declaration) {
@@ -397,6 +435,49 @@ export class RuntimeMap {
         return this.entries.size;
     }
 }
+export class RuntimeChannel {
+    elementType;
+    capacity;
+    context;
+    buffer = [];
+    closed = false;
+    constructor(elementType, capacity, context) {
+        this.elementType = elementType;
+        this.capacity = capacity;
+        this.context = context;
+    }
+    send(value) {
+        if (this.closed)
+            throw new GoJuniorPanic("send on closed channel");
+        if (!this.canSend())
+            throw new GoJuniorDeadlockError("send on channel would block");
+        this.buffer.push(prepareAssignableToType(value, this.elementType, "channel send", this.context));
+    }
+    receive() {
+        if (this.buffer.length > 0)
+            return [this.buffer.shift() ?? null, true];
+        if (this.closed)
+            return [defaultValueForTypeText(this.elementType, this.context), false];
+        throw new GoJuniorDeadlockError("receive from channel would block");
+    }
+    canSend() {
+        return !this.closed && this.buffer.length < this.capacity;
+    }
+    canReceive() {
+        return this.buffer.length > 0 || this.closed;
+    }
+    close() {
+        if (this.closed)
+            throw new GoJuniorPanic("close of closed channel");
+        this.closed = true;
+    }
+    len() {
+        return this.buffer.length;
+    }
+    cap() {
+        return this.capacity;
+    }
+}
 export function evaluateSource(source, options = {}) {
     return evaluateSourceFiles([sourceFileFromSource(source, options)], options);
 }
@@ -498,7 +579,7 @@ export function evaluateProgram(ast, options = {}) {
         return {
             diagnostics: [
                 ...ast.diagnostics,
-                runtimeDiagnostic(ast, error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001", message)
+                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
             ],
             output: context.output,
             ast
@@ -538,7 +619,7 @@ function testProgram(ast, baseDiagnostics, options) {
         return {
             diagnostics: [
                 ...diagnostics,
-                runtimeDiagnostic(ast, error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001", message)
+                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
             ],
             output: context.output,
             ast
@@ -622,6 +703,13 @@ function runtimeDiagnostic(ast, code, message) {
         message,
         ...(span ? { span } : {})
     };
+}
+function runtimeDiagnosticCode(error) {
+    if (error instanceof GoJuniorPanic)
+        return "GOJR_PANIC001";
+    if (error instanceof GoJuniorDeadlockError)
+        return "GOJR_DEADLOCK001";
+    return "GOJR_RUNTIME001";
 }
 function firstProgramSpan(ast) {
     return ast.body[0]?.span ?? ast.functions[0]?.span;
@@ -790,7 +878,7 @@ export class GoJuniorSession {
             return {
                 diagnostics: [
                     ...ast.diagnostics,
-                    runtimeDiagnostic(ast, error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001", message)
+                    runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
                 ],
                 output: this.context.outputFrom(outputStart),
                 ast
@@ -947,6 +1035,15 @@ function installBuiltins(context) {
         if (!(target instanceof RuntimeMap))
             throw new GoJuniorRuntimeError("delete expects a map");
         target.delete(args[1] ?? null);
+        return null;
+    }));
+    context.declareRoot("close", hostCallable("close", (args) => {
+        const target = args[0] ?? null;
+        if (target === null)
+            throw new GoJuniorPanic("close of nil channel");
+        if (!(target instanceof RuntimeChannel))
+            throw new GoJuniorRuntimeError("close expects a channel");
+        target.close();
         return null;
     }));
     context.declareRoot("clear", hostCallable("clear", (args) => {
@@ -1279,10 +1376,18 @@ function executeStatement(statement, context) {
             return executeIf(statement, context);
         case "SwitchStatement":
             return executeSwitch(statement, context);
+        case "SelectStatement":
+            return executeSelect(statement, context);
         case "ForStatement":
             return executeFor(statement, context);
         case "DeferStatement":
             executeDefer(statement, context);
+            return { kind: "normal" };
+        case "GoStatement":
+            executeGo(statement, context);
+            return { kind: "normal" };
+        case "SendStatement":
+            executeSend(statement, context);
             return { kind: "normal" };
         case "BranchStatement":
             return branchCompletion(statement);
@@ -1501,6 +1606,110 @@ function executeDefer(statement, context) {
     }
     context.pushDefer(() => evaluateExpression(statement.expression, context));
 }
+function executeGo(statement, context) {
+    callRuntime(evaluateExpression(statement.call.callee, context), statement.call.args.map((arg) => evaluateExpression(arg, context)), context);
+}
+function executeSend(statement, context) {
+    const channel = evaluateExpression(statement.channel, context);
+    if (channel === null)
+        throw new GoJuniorDeadlockError("send on nil channel would block");
+    if (!(channel instanceof RuntimeChannel))
+        throw new GoJuniorRuntimeError(`${formatValue(channel)} is not a channel`);
+    channel.send(evaluateExpression(statement.value, context));
+}
+function executeSelect(statement, context) {
+    const defaultClause = statement.clauses.find((clause) => clause.default);
+    const ready = [];
+    for (const clause of statement.clauses) {
+        if (clause.default)
+            continue;
+        const action = readySelectAction(clause, context);
+        if (!action)
+            continue;
+        ready.push({ clause, action });
+    }
+    if (ready.length > 0) {
+        const selected = ready[context.randomIndex(ready.length)];
+        selected.action();
+        const completion = executeStatements(selected.clause.statements, context);
+        if (completion.kind === "break" && completion.label === undefined)
+            return { kind: "normal" };
+        return completion;
+    }
+    if (defaultClause) {
+        const completion = executeStatements(defaultClause.statements, context);
+        if (completion.kind === "break" && completion.label === undefined)
+            return { kind: "normal" };
+        return completion;
+    }
+    throw new GoJuniorDeadlockError("select would block");
+}
+function readySelectAction(clause, context) {
+    const comm = clause.comm;
+    if (!comm)
+        return () => undefined;
+    if (comm.kind === "SendStatement") {
+        const channel = evaluateExpression(comm.channel, context);
+        const value = evaluateExpression(comm.value, context);
+        if (channel === null)
+            return undefined;
+        if (!(channel instanceof RuntimeChannel))
+            throw new GoJuniorRuntimeError(`${formatValue(channel)} is not a channel`);
+        return channel.canSend() ? () => channel.send(value) : undefined;
+    }
+    const receive = selectReceiveExpression(comm);
+    if (receive) {
+        const channel = evaluateExpression(receive, context);
+        if (channel === null)
+            return undefined;
+        if (!(channel instanceof RuntimeChannel))
+            throw new GoJuniorRuntimeError(`${formatValue(channel)} is not a channel`);
+        if (!channel.canReceive())
+            return undefined;
+        return () => assignSelectReceive(comm, channel.receive(), context);
+    }
+    return () => {
+        const completion = executeStatement(comm, context);
+        expectNormalCompletion(completion, "select communication clause");
+    };
+}
+function selectReceiveExpression(statement) {
+    if (statement.kind === "ExpressionStatement" &&
+        statement.expression.kind === "UnaryExpression" &&
+        statement.expression.operator === "<-") {
+        return statement.expression.operand;
+    }
+    if ((statement.kind === "ShortVarStatement" || statement.kind === "AssignStatement") &&
+        statement.values.length === 1 &&
+        statement.values[0]?.kind === "UnaryExpression" &&
+        statement.values[0].operator === "<-") {
+        return statement.values[0].operand;
+    }
+    return undefined;
+}
+function assignSelectReceive(statement, received, context) {
+    if (statement.kind === "ExpressionStatement")
+        return;
+    if (statement.kind === "ShortVarStatement") {
+        const values = selectReceiveValues(received, statement.names.length);
+        declareOrAssignShortVars(statement.names, values, context);
+        return;
+    }
+    if (statement.kind === "AssignStatement") {
+        const values = selectReceiveValues(received, statement.targets.length);
+        if (values.length !== statement.targets.length) {
+            throw new GoJuniorRuntimeError(`assignment count mismatch: ${statement.targets.length} targets but ${values.length} values`);
+        }
+        for (const [index, target] of statement.targets.entries()) {
+            assignExpressionTarget(target, values[index] ?? null, context);
+        }
+    }
+}
+function selectReceiveValues(received, targetCount) {
+    if (targetCount === 2)
+        return [received[0], received[1]];
+    return [received[0]];
+}
 function branchCompletion(statement) {
     if (statement.branch === "break") {
         return statement.label ? { kind: "break", label: statement.label } : { kind: "break" };
@@ -1530,14 +1739,17 @@ function executeAssign(statement, context) {
 }
 function executeShortVar(statement, context) {
     const values = evaluateAssignmentValues(statement.values, statement.names.length, context);
-    if (values.length !== statement.names.length) {
-        throw new GoJuniorRuntimeError(`short declaration count mismatch: ${statement.names.length} names but ${values.length} values`);
+    declareOrAssignShortVars(statement.names, values, context);
+}
+function declareOrAssignShortVars(names, values, context) {
+    if (values.length !== names.length) {
+        throw new GoJuniorRuntimeError(`short declaration count mismatch: ${names.length} names but ${values.length} values`);
     }
-    const hasNewName = statement.names.some((name) => name !== "_" && name !== "<invalid>" && !context.hasLocal(name));
+    const hasNewName = names.some((name) => name !== "_" && name !== "<invalid>" && !context.hasLocal(name));
     if (!hasNewName) {
         throw new GoJuniorRuntimeError("short declaration has no new variables");
     }
-    for (const [index, name] of statement.names.entries()) {
+    for (const [index, name] of names.entries()) {
         if (name === "_")
             continue;
         if (name === "<invalid>")
@@ -1559,6 +1771,10 @@ function evaluateAssignmentValues(expressions, targetCount, context) {
     }
     if (targetCount === 2 && expressions.length === 1 && expressions[0]?.kind === "TypeAssertionExpression") {
         return evaluateTypeAssertionWithPresence(expressions[0], context);
+    }
+    if (expressions.length === 1 && expressions[0]?.kind === "UnaryExpression" && expressions[0].operator === "<-") {
+        const received = receiveFromChannel(evaluateExpression(expressions[0].operand, context));
+        return targetCount === 2 ? [received[0], received[1]] : [received[0]];
     }
     const values = expressions.map((expression) => evaluateExpression(expression, context));
     if (targetCount > 1 && values.length === 1 && Array.isArray(values[0])) {
@@ -1726,7 +1942,16 @@ function evaluateUnary(expression, context) {
             return pointerToExpression(expression.operand, context);
         case "*":
             return dereference(evaluateExpression(expression.operand, context));
+        case "<-":
+            return receiveFromChannel(evaluateExpression(expression.operand, context))[0];
     }
+}
+function receiveFromChannel(value) {
+    if (value === null)
+        throw new GoJuniorDeadlockError("receive from nil channel would block");
+    if (!(value instanceof RuntimeChannel))
+        throw new GoJuniorRuntimeError(`${formatValue(value)} is not a channel`);
+    return value.receive();
 }
 function evaluateBinary(expression, context) {
     if (expression.operator === "&&") {
@@ -1853,6 +2078,17 @@ function evaluateMake(expression, context) {
         if (expression.args[1])
             toNonNegativeLength(evaluateExpression(expression.args[1], context), "map size hint");
         return new RuntimeMap(mapType.keyType, mapType.valueType, context);
+    }
+    const chanType = parseChanTypeText(typeText);
+    if (chanType) {
+        if (chanType.direction !== "both")
+            throw new GoJuniorRuntimeError(`cannot make directional channel type ${typeText}`);
+        if (expression.args.length > 2)
+            throw new GoJuniorRuntimeError("make channel accepts at most one buffer size");
+        const capacity = expression.args[1]
+            ? toNonNegativeLength(evaluateExpression(expression.args[1], context), "channel buffer size")
+            : 0;
+        return new RuntimeChannel(chanType.elementType, capacity, context);
     }
     const arrayType = parseArrayOrSliceTypeText(typeText);
     if (arrayType) {
@@ -2253,6 +2489,8 @@ function inferredTypeText(value) {
         return "bool";
     if (Array.isArray(value))
         return undefined;
+    if (value instanceof RuntimeChannel)
+        return `chan ${value.elementType}`;
     if (value instanceof RuntimeMap)
         return `map[${value.keyType}]${value.valueType}`;
     if (value instanceof RuntimeStruct)
@@ -2288,6 +2526,8 @@ function defaultValueForTypeText(typeText, context) {
     const mapType = parseMapTypeText(typeText);
     if (mapType)
         return new RuntimeMap(mapType.keyType, mapType.valueType, context);
+    if (parseChanTypeText(typeText))
+        return null;
     const arrayType = parseArrayOrSliceTypeText(typeText);
     if (arrayType) {
         if (arrayType.length === undefined || arrayType.inferLength)
@@ -2456,6 +2696,13 @@ function prepareAssignableToType(value, typeText, role, context) {
         }
         return value;
     }
+    const chanType = parseChanTypeText(type);
+    if (chanType) {
+        if (!(value instanceof RuntimeChannel) || normalizeTypeText(value.elementType) !== normalizeTypeText(chanType.elementType)) {
+            throwTypeError(value, type, role);
+        }
+        return value;
+    }
     if (type.startsWith("*")) {
         if (!(value instanceof RuntimePointer) || value.typeName !== type.slice(1))
             throwTypeError(value, type, role);
@@ -2603,6 +2850,10 @@ function runtimeValueMatchesType(value, typeText, context) {
             normalizeTypeText(value.keyType) === normalizeTypeText(mapType.keyType) &&
             normalizeTypeText(value.valueType) === normalizeTypeText(mapType.valueType));
     }
+    if (value instanceof RuntimeChannel) {
+        const chanType = parseChanTypeText(type);
+        return Boolean(chanType && normalizeTypeText(value.elementType) === normalizeTypeText(chanType.elementType));
+    }
     if (type.startsWith("[]") || /^\[[0-9]*\]/.test(type))
         return Array.isArray(value);
     if (type.startsWith("func("))
@@ -2614,11 +2865,15 @@ function valueLength(value) {
         return value.length;
     if (value instanceof RuntimeMap)
         return value.size();
+    if (value instanceof RuntimeChannel)
+        return value.len();
     throw new GoJuniorRuntimeError(`${formatValue(value)} has no len`);
 }
 function valueCapacity(value) {
     if (Array.isArray(value))
         return sliceCapacity(value);
+    if (value instanceof RuntimeChannel)
+        return value.cap();
     throw new GoJuniorRuntimeError(`${formatValue(value)} has no cap`);
 }
 function sliceCapacity(value) {
@@ -2654,6 +2909,21 @@ function parseMapTypeText(typeText) {
                 return { keyType, valueType };
             }
         }
+    }
+    return undefined;
+}
+function parseChanTypeText(typeText) {
+    const type = normalizeTypeText(typeText);
+    if (type.startsWith("chan<-")) {
+        const elementType = type.slice("chan<-".length);
+        return elementType ? { elementType, direction: "send" } : undefined;
+    }
+    if (type.startsWith("<-chan")) {
+        const elementType = type.slice("<-chan".length);
+        return elementType ? { elementType, direction: "receive" } : undefined;
+    }
+    if (type.startsWith("chan") && type.length > "chan".length) {
+        return { elementType: type.slice("chan".length), direction: "both" };
     }
     return undefined;
 }
@@ -2725,6 +2995,7 @@ function isNilAssignableType(type) {
         type.startsWith("*") ||
         type.startsWith("[]") ||
         type.startsWith("map[") ||
+        parseChanTypeText(type) !== undefined ||
         type.startsWith("func(");
 }
 function assertComparableType(typeText, context) {
@@ -2972,6 +3243,7 @@ function isComplexValue(value) {
         typeof value === "object" &&
         !Array.isArray(value) &&
         !(value instanceof RuntimeMap) &&
+        !(value instanceof RuntimeChannel) &&
         !(value instanceof RuntimeStruct) &&
         !(value instanceof RuntimePointer) &&
         !(value instanceof RuntimeNamedValue) &&
@@ -3152,6 +3424,8 @@ export function formatValue(value) {
         return String(value);
     if (Array.isArray(value))
         return `[${value.map(formatValue).join(" ")}]`;
+    if (value instanceof RuntimeChannel)
+        return `chan ${value.elementType}`;
     if (value instanceof RuntimeMap)
         return formatRuntimeMap(value);
     if (value instanceof RuntimeStruct)
@@ -3184,6 +3458,8 @@ export function formatReplValue(value) {
         return formatReplString(value);
     if (Array.isArray(value))
         return `[${value.map(formatReplValue).join(" ")}]`;
+    if (value instanceof RuntimeChannel)
+        return `chan ${value.elementType}`;
     if (value instanceof RuntimeMap)
         return formatReplMap(value);
     if (value instanceof RuntimeStruct)
@@ -3218,6 +3494,8 @@ function formatGoSyntaxValue(value) {
         return `string(${JSON.stringify(value)})`;
     if (Array.isArray(value))
         return `[]interface{}{${value.map(formatGoSyntaxValue).join(", ")}}`;
+    if (value instanceof RuntimeChannel)
+        return `chan ${value.elementType}`;
     if (value instanceof RuntimeMap)
         return formatGoSyntaxMap(value);
     if (value instanceof RuntimeStruct)

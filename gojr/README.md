@@ -22,6 +22,7 @@ through CGO and calls the TypeScript Go-junior runtime in-process.
 ```sh
 npm run build
 CXX=/usr/local/opt/llvm/bin/clang++ go run ./cmd/gojr
+CXX=/usr/local/opt/llvm/bin/clang++ go run ./cmd/gojr build -importpath example.com/demo ./path/to/pkg
 ```
 
 From the repository root, use:
@@ -29,6 +30,7 @@ From the repository root, use:
 ```sh
 npm run build --prefix gojr
 CXX=/usr/local/opt/llvm/bin/clang++ go run ./gojr/cmd/gojr
+CXX=/usr/local/opt/llvm/bin/clang++ go run ./gojr/cmd/gojr build -importpath example.com/demo ./gojr/test/pkg
 ```
 
 The current bridge links `/usr/local/lib/libnode.141.dylib`, matching the
@@ -39,23 +41,34 @@ is needed, the prompt changes to `....>` and keeps the pending multi-line input;
 use `.clear` to discard pending input and `.sheet {"A1":40}` to seed
 spreadsheet cells.
 
+`gojr build` compiles a package through the embedded JavaScript build API and
+writes a generated `.js` package artifact. By default artifacts go under
+`~/go/pkg/gojr_js/<import/path>.js`, mirroring Go's `~/go/pkg/<goos>_<goarch>/`
+layout. Use `-pkgdir DIR` to supply a package-cache parent where `gojr_js` is
+appended, or `-artifact-root DIR` to supply the exact artifact root.
+
 Implemented in this first runtime slice:
 
-- Chevrotain parse validation plus a typed AST conversion pass.
 - Script evaluation for literals, arithmetic, comparisons, locals, assignment,
   returns, `if`, `switch`, simple `for`, `for range`, `break`, `continue`,
   labeled `break` and `continue`, `fallthrough`, labels, `goto`, `defer`,
   `panic`, and `panicOn`.
+- Pointers, structs, methods, interfaces, closures, multi-assignment,
+  type checking, map/slice builtins, complex numbers, init functions, and
+  package/file test execution.
 - Explicit spreadsheet refs such as `sheet.A1`, `sheet.$A$1`, cross-sheet
   namespaces such as `Budget.B2`, and ranges such as `sheet.A1:B10`.
 - Import-bound host packages, with an early `fmt` package supporting
   `Printf`, `Sprintf`, and `Println`.
+- A `testing` package sufficient for the current `.test` and `gojr test`
+  workflows.
+- Package artifact build envelopes through `gojr build`.
 - CLI JSON input keeps quoted values as strings, parses integer number tokens
   as exact integers, and parses decimal/exponent number tokens as float64.
 
-Pointers, structs, methods, interfaces, closures, multi-assignment, package
-state, type checking, and browser/cache integration are still planned stages,
-not part of this initial runtime slice.
+Full Go lowering to executable package JS, import graph builds, browser OPFS
+integration, goroutines, channels, `select`, and `recover` remain planned
+stages.
 
 ## Control Flow Spec
 

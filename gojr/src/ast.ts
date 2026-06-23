@@ -54,8 +54,11 @@ export type Statement =
   | ReturnStatement
   | IfStatement
   | SwitchStatement
+  | SelectStatement
   | ForStatement
   | DeferStatement
+  | GoStatement
+  | SendStatement
   | BranchStatement
   | AssignStatement
   | ShortVarStatement
@@ -157,6 +160,19 @@ export interface SwitchStatement {
   span?: SourceSpan;
 }
 
+export interface CommClause {
+  kind: "CommClause";
+  comm?: Statement;
+  default: boolean;
+  statements: Statement[];
+}
+
+export interface SelectStatement {
+  kind: "SelectStatement";
+  clauses: CommClause[];
+  span?: SourceSpan;
+}
+
 export interface ForStatement {
   kind: "ForStatement";
   init?: Statement;
@@ -177,6 +193,19 @@ export interface RangeClause {
 export interface DeferStatement {
   kind: "DeferStatement";
   expression: Expression;
+  span?: SourceSpan;
+}
+
+export interface GoStatement {
+  kind: "GoStatement";
+  call: CallExpression;
+  span?: SourceSpan;
+}
+
+export interface SendStatement {
+  kind: "SendStatement";
+  channel: Expression;
+  value: Expression;
   span?: SourceSpan;
 }
 
@@ -300,7 +329,7 @@ export interface MapLiteralExpression {
 
 export interface UnaryExpression {
   kind: "UnaryExpression";
-  operator: "+" | "-" | "!" | "^" | "&" | "*";
+  operator: "+" | "-" | "!" | "^" | "&" | "*" | "<-";
   operand: Expression;
   span?: SourceSpan;
 }

@@ -3,6 +3,19 @@ import type { ProgramAst } from "./ast.js";
 import type { Diagnostic } from "./diagnostics.js";
 import type { ParseFrontResult } from "./front/parser.js";
 
+export {
+  artifactPathForImportPath,
+  buildPackage,
+  buildPackages,
+  resolveArtifactRoot
+} from "./build.js";
+export type {
+  BuildArtifactReport,
+  BuildArtifactStore,
+  BuildExport,
+  BuildPackageReport,
+  BuildPackageRequest
+} from "./build.js";
 export type { Diagnostic, SourceFile, SourceSpan } from "./diagnostics.js";
 export type { ImportDecl, ProgramAst, ProgramKind } from "./ast.js";
 export { childNodes, ident, parseCellAddress, walk } from "./front/ast.js";
@@ -16,6 +29,7 @@ export {
   BasicKind,
   BasicType,
   BuiltinObject,
+  ChanType,
   ConstObject,
   FuncObject,
   implementsInterface,
@@ -73,9 +87,11 @@ export {
   formatReplValue,
   formatValue,
   GoJuniorSession,
+  GoJuniorDeadlockError,
   GoJuniorPanic,
   GoJuniorRuntimeError,
   RuntimeMap,
+  RuntimeChannel,
   evaluateSourceFiles,
   testSource,
   testSourceFiles

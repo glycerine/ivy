@@ -182,7 +182,15 @@ function __gojrRequire(specifier, parent = "/src/index.js") {
 }
 
 const gojrModule = __gojrRequire("/src/index.js");
-const gojrSession = new gojrModule.GoJuniorSession({ sheet: {} });
+
+function gojrRuntimeOptions(extra = {}) {
+  const seed = globalThis.process?.env?.GOJR_RANDOM_SEED;
+  return seed === undefined || seed === ""
+    ? { ...extra }
+    : { ...extra, randomSeed: seed };
+}
+
+const gojrSession = new gojrModule.GoJuniorSession(gojrRuntimeOptions({ sheet: {} }));
 
 function gojrDiagnosticString(diagnostic) {
   const filename = diagnostic?.span?.filename || diagnostic?.filename || "gojr-repl.go";
@@ -218,7 +226,7 @@ globalThis.__gojrEval = function(source) {
 };
 
 globalThis.__gojrEvalFiles = function(json) {
-  const result = gojrModule.evaluateSourceFiles(JSON.parse(json));
+  const result = gojrModule.evaluateSourceFiles(JSON.parse(json), gojrRuntimeOptions());
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
@@ -231,7 +239,7 @@ globalThis.__gojrEvalFiles = function(json) {
 };
 
 globalThis.__gojrTest = function(source) {
-  const result = gojrModule.testSource(source);
+  const result = gojrModule.testSource(source, gojrRuntimeOptions());
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
@@ -244,7 +252,7 @@ globalThis.__gojrTest = function(source) {
 };
 
 globalThis.__gojrTestFiles = function(json) {
-  const result = gojrModule.testSourceFiles(JSON.parse(json));
+  const result = gojrModule.testSourceFiles(JSON.parse(json), gojrRuntimeOptions());
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
@@ -259,6 +267,44 @@ globalThis.__gojrTestFiles = function(json) {
 globalThis.__gojrSetSheet = function(json) {
   gojrSession.setSheet(gojrModule.parseSheetJson(json));
   return JSON.stringify({ ok: true, value: "sheet loaded" });
+};
+
+function gojrDefaultPackageCacheParent() {
+  const os = require("node:os");
+  const path = require("node:path");
+  return path.join(os.homedir(), "go", "pkg");
+}
+
+function gojrNodeArtifactStore() {
+  const fs = require("node:fs");
+  const path = require("node:path");
+  return {
+    writeAtomic(artifactPath, source) {
+      const dir = path.dirname(artifactPath);
+      fs.mkdirSync(dir, { recursive: true });
+      const tmp = path.join(dir, `.${path.basename(artifactPath)}.${Date.now()}.${Math.random().toString(16).slice(2)}.tmp`);
+      fs.writeFileSync(tmp, source, "utf8");
+      fs.renameSync(tmp, artifactPath);
+    }
+  };
+}
+
+globalThis.__gojrBuild = function(json) {
+  const request = JSON.parse(json);
+  if (!request.artifactRoot && !request.packageCacheParent) {
+    request.packageCacheParent = gojrDefaultPackageCacheParent();
+  }
+  const result = gojrModule.buildPackages(request, gojrNodeArtifactStore());
+  const diagnostics = result.diagnostics || [];
+  return JSON.stringify({
+    ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
+    incomplete: false,
+    diagnostics: diagnostics.map(gojrDiagnosticString),
+    output: "",
+    artifacts: result.artifacts || [],
+    built: result.built || [],
+    skipped: result.skipped || []
+  });
 };
 )JS";
 }
@@ -395,6 +441,10 @@ extern "C" char* gojr_node_test_files(gojr_node_runtime* runtime, const char* js
 
 extern "C" char* gojr_node_set_sheet(gojr_node_runtime* runtime, const char* json, char** error_out) {
   return call_global_string_function(runtime, "__gojrSetSheet", json, error_out);
+}
+
+extern "C" char* gojr_node_build(gojr_node_runtime* runtime, const char* json, char** error_out) {
+  return call_global_string_function(runtime, "__gojrBuild", json, error_out);
 }
 
 extern "C" void gojr_node_free(gojr_node_runtime* runtime) {
