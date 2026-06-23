@@ -3,6 +3,8 @@ package main
 /*
 #cgo darwin CXXFLAGS: -std=c++20 -I/usr/local/include/node -DNODE_SHARED_MODE
 #cgo darwin LDFLAGS: -L/usr/local/lib -lnode.141 -Wl,-rpath,/usr/local/lib
+#cgo linux CXXFLAGS: -std=c++20 -I/usr/local/include/node -DNODE_SHARED_MODE
+#cgo linux LDFLAGS: -L/usr/local/lib -lnode -Wl,-rpath,/usr/local/lib
 #include <stdlib.h>
 #include "node_bridge.h"
 */

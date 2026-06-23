@@ -3,11 +3,21 @@ SHELL := /bin/bash
 GO ?= go
 NPM ?= npm
 
+# Pick a default C++ compiler per-OS. macOS uses Homebrew LLVM clang++;
+# elsewhere (Linux) use the system c++. An explicitly set CXX (env or
+# command line) always wins; only make's implicit/unset value is overridden.
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+CXX_DEFAULT := /usr/local/opt/llvm/bin/clang++
+else
+CXX_DEFAULT := c++
+endif
+
 ifeq ($(origin CXX),default)
-CXX := /usr/local/opt/llvm/bin/clang++
+CXX := $(CXX_DEFAULT)
 endif
 ifeq ($(origin CXX),undefined)
-CXX := /usr/local/opt/llvm/bin/clang++
+CXX := $(CXX_DEFAULT)
 endif
 
 GOBIN_VALUE := $(shell $(GO) env GOBIN)
