@@ -145,6 +145,11 @@ function __gojrTransformModule(source, filename) {
     (_match, imports, specifier) => `const { ${__gojrImportListToDestructure(imports)} } = __gojrRequire(${JSON.stringify(specifier)}, __filename);`);
   source = source.replace(/^export\s+\{([^}]+)\}\s+from\s+["']([^"']+)["'];\s*$/gm,
     (_match, exportsList, specifier) => `__gojrReExport(${JSON.stringify(specifier)}, ${JSON.stringify(__gojrExportList(exportsList))}, exports, __filename);`);
+  source = source.replace(/^export\s+async\s+function\s+([A-Za-z_$][\w$]*)/gm,
+    (_match, name) => {
+      exportedNames.push(name);
+      return `async function ${name}`;
+    });
   source = source.replace(/^export\s+(function|class)\s+([A-Za-z_$][\w$]*)/gm,
     (_match, kind, name) => {
       exportedNames.push(name);

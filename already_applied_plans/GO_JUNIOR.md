@@ -282,10 +282,11 @@ Implementation strategy:
 2. Add a typed effect pass that marks expressions/statements/functions as
    direct, may-panic, may-defer, may-suspend, package-state, diagnostic-effect,
    sheet-effect, graph-effect, or UI-effect.
-3. Lower only functions containing `go`, channel operations, `select`,
-   `recover`, or may-suspend calls to async/await at first.
-4. Once stable, lower all package/formula code through async functions so one
-   runtime path handles defers, panics, channels, and stack traces.
+3. Lower all package/formula functions to async JavaScript functions from the
+   start so one runtime path handles defers, panics, channels, and stack traces.
+4. Keep direct synchronous host helpers available behind typed bindings, but
+   always call them through an async-aware bridge so a capability can later
+   suspend without changing Go-junior source semantics.
 5. Preserve the existing Node REPL as the fastest manual test surface. The REPL
    must parse/typecheck/evaluate with source filename `gojr-repl.go`.
 
@@ -2402,7 +2403,7 @@ Implementation tasks:
   calls.
 - Generate hygienic local names.
 - Emit strict mode function source.
-- Emit scheduler-compatible async functions for may-suspend functions.
+- Emit scheduler-compatible async functions for every Go function.
 - Emit optional budget checks at function entry and loop backedges.
 - Emit source map or diagnostic mapping metadata if practical.
 - Expose compiler API returning generated source for debugging and tests.

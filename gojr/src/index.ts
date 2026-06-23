@@ -4,6 +4,22 @@ import type { Diagnostic } from "./diagnostics.js";
 import type { ParseFrontResult } from "./front/parser.js";
 
 export {
+  emitAsyncJavaScript
+} from "./asyncEmitter.js";
+export type {
+  AsyncEmitResult
+} from "./asyncEmitter.js";
+export {
+  analyzeEffects,
+  functionEffectKey
+} from "./effects.js";
+export type {
+  EffectReason,
+  EffectReasonKind,
+  FunctionEffectSummary,
+  ProgramEffectAnalysis
+} from "./effects.js";
+export {
   AsyncGoChannel,
   AsyncGoDeadlockError,
   AsyncGoPanic,
