@@ -82,6 +82,7 @@ class FrontParser {
   // expression lists, "=" is treated as equality for tolerant parsing.
   private inRhs = false;
   private allowBareIdentifierComposite = true;
+  private allowSpreadsheetRanges = true;
   private readonly diagnostics: Diagnostic[];
 
   public constructor(
@@ -513,7 +514,7 @@ class FrontParser {
       let typeSwitch = false;
 
       if (!this.at(TokenKind.LBrace)) {
-        const first = this.parseSimpleStmt("basic");
+        const first = this.at(TokenKind.Semicolon) ? undefined : this.parseSimpleStmt("basic");
         if (this.match(TokenKind.Semicolon)) {
           init = first;
           if (!this.at(TokenKind.LBrace)) {
@@ -527,12 +528,12 @@ class FrontParser {
               this.error("expected switch expression or type switch guard after ';'", second.span);
             }
           }
-        } else if (this.isTypeSwitchGuard(first)) {
+        } else if (first && this.isTypeSwitchGuard(first)) {
           assign = first;
           typeSwitch = true;
-        } else if (first.kind === "ExprStmt") {
+        } else if (first?.kind === "ExprStmt") {
           tag = first.expr;
-        } else {
+        } else if (first) {
           this.error("expected ';' after switch init statement", first.span);
           init = first;
         }
@@ -655,7 +656,7 @@ class FrontParser {
   private parseCaseClause(): CaseClause {
     const start = this.advance();
     const isDefault = start.kind === TokenKind.Default;
-    const list = isDefault ? [] : this.parseExpressionList(true);
+    const list = isDefault ? [] : this.withSpreadsheetRanges(false, () => this.parseExpressionList(true));
     this.expect(TokenKind.Colon, "expected ':' after switch case");
     const body: Stmt[] = [];
     while (!this.atAny(TokenKind.Case, TokenKind.Default, TokenKind.RBrace, TokenKind.EOF)) {
@@ -790,17 +791,14 @@ class FrontParser {
           continue;
         }
 
-        if (this.at(TokenKind.CellAddress) && expression.kind === "Ident") {
+        const cellCandidate = this.peek();
+        const cellStart = (cellCandidate.kind === TokenKind.CellAddress || cellCandidate.kind === TokenKind.Identifier)
+          ? parseCellAddress(cellCandidate.lexeme)
+          : undefined;
+        if (cellStart && expression.kind === "Ident" && (cellCandidate.kind === TokenKind.CellAddress || (this.allowSpreadsheetRanges && this.peek(1).kind === TokenKind.Colon))) {
           const cellToken = this.advance();
-          const start = parseCellAddress(cellToken.lexeme);
-          if (!start) {
-            this.error("malformed spreadsheet cell address", cellToken.span);
-            expression = badExpr(cellToken.span);
-            continue;
-          }
           if (this.match(TokenKind.Colon)) {
-            const endToken = this.expect(TokenKind.CellAddress, "expected cell address after ':'");
-            const end = parseCellAddress(endToken.lexeme);
+            const { token: endToken, address: end } = this.expectCellAddress("expected cell address after ':'");
             if (!end) {
               this.error("malformed spreadsheet range end", endToken.span);
               expression = badExpr(endToken.span);
@@ -808,7 +806,7 @@ class FrontParser {
               expression = {
                 kind: "RangeRefExpr",
                 namespace: expression,
-                start,
+                start: cellStart,
                 end,
                 span: mergeSpans(expression.span, endToken.span)
               };
@@ -817,7 +815,7 @@ class FrontParser {
             expression = {
               kind: "CellRefExpr",
               namespace: expression,
-              address: start,
+              address: cellStart,
               span: mergeSpans(expression.span, cellToken.span)
             };
           }
@@ -1242,6 +1240,20 @@ class FrontParser {
     return ident("<missing>", token.span);
   }
 
+  private expectCellAddress(message: string): { token: FrontToken; address?: CellAddress } {
+    const token = this.peek();
+    if (token.kind === TokenKind.CellAddress || token.kind === TokenKind.Identifier) {
+      this.advance();
+      const address = parseCellAddress(token.lexeme);
+      if (address) return { token, address };
+      this.error(message, token.span);
+      return { token };
+    }
+    this.error(message, token.span);
+    this.advance();
+    return { token };
+  }
+
   private expectBasicLit(kind: BasicLit["token"], message: string): BasicLit {
     const token = this.peek();
     if (this.match(kind)) {
@@ -1335,6 +1347,16 @@ class FrontParser {
       return fn();
     } finally {
       this.inRhs = previous;
+    }
+  }
+
+  private withSpreadsheetRanges<T>(enabled: boolean, fn: () => T): T {
+    const previous = this.allowSpreadsheetRanges;
+    this.allowSpreadsheetRanges = enabled;
+    try {
+      return fn();
+    } finally {
+      this.allowSpreadsheetRanges = previous;
     }
   }
 

@@ -54,9 +54,9 @@ describe("Go-junior TypeScript front scanner", () => {
     expect(result.tokens.map((token) => [token.kind, token.lexeme])).toEqual([
       [TokenKind.Identifier, "Data"],
       [TokenKind.Dot, "."],
-      [TokenKind.CellAddress, "A1"],
+      [TokenKind.Identifier, "A1"],
       [TokenKind.Colon, ":"],
-      [TokenKind.CellAddress, "B10"],
+      [TokenKind.Identifier, "B10"],
       [TokenKind.Semicolon, ";"],
       [TokenKind.Identifier, "sheet"],
       [TokenKind.Dot, "."],
@@ -68,6 +68,22 @@ describe("Go-junior TypeScript front scanner", () => {
       [TokenKind.Semicolon, ";"],
       [TokenKind.EOF, ""]
     ]);
+  });
+
+  test("keeps Go identifiers that look like relative cells as identifiers", () => {
+    const result = scan("func (S) M1(x I1) S2 { return S2{} }");
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.tokens.filter((token) => ["S", "M1", "I1", "S2"].includes(token.lexeme)).map((token) => token.kind))
+      .toEqual([TokenKind.Identifier, TokenKind.Identifier, TokenKind.Identifier, TokenKind.Identifier, TokenKind.Identifier]);
+  });
+
+  test("scans true false and nil as predeclared identifiers, not keywords", () => {
+    const result = scan("var true = false\nvar nil = 1");
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.tokens.filter((token) => ["true", "false", "nil"].includes(token.lexeme)).map((token) => token.kind))
+      .toEqual([TokenKind.Identifier, TokenKind.Identifier, TokenKind.Identifier]);
   });
 
   test("scans literals and skips comments while preserving spans", () => {

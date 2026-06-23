@@ -224,14 +224,13 @@ class Scanner {
   }
 
   private scanIdentifierOrCell(start: Position): void {
-    const cell = this.matchCellAddressAt(this.offset);
-    if (cell) {
-      this.advanceMany(cell.length);
-      this.emit(TokenKind.CellAddress, cell, start, this.position());
-      return;
-    }
-
     if (this.peek() === "$") {
+      const cell = this.matchCellAddressAt(this.offset);
+      if (cell) {
+        this.advanceMany(cell.length);
+        this.emit(TokenKind.CellAddress, cell, start, this.position());
+        return;
+      }
       this.advance();
       this.error("GOJR_SCAN003", "malformed spreadsheet cell address", start, this.position());
       this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());

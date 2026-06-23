@@ -32,7 +32,8 @@ import {
   TypeAssertExpr,
   TypeSpec,
   UnaryExpr,
-  ValueSpec
+  ValueSpec,
+  parseCellAddress
 } from "./ast.js";
 import { parseFrontSource, parseFrontSourceFiles } from "./parser.js";
 import { TokenKind } from "./token.js";
@@ -706,6 +707,11 @@ class FrontChecker {
 
   private checkSelector(expr: SelectorExpr, scope: Scope): TypeAndValue {
     if (expr.object.kind === "Ident") {
+      const sheetCell = parseCellAddress(expr.selector.name);
+      const sheetNamespace = this.config.sheetNamespaces?.[expr.object.name];
+      if (sheetCell && sheetNamespace) {
+        return { mode: "value", type: sheetNamespace.cells?.[sheetCell.raw] ?? sheetNamespace.defaultType ?? this.universe.basic.any };
+      }
       const object = scope.lookupParent(expr.object.name)?.object;
       if (object instanceof PackageNameObject) {
         this.info.uses.set(expr.object, object);

@@ -228,6 +228,7 @@ func F(m map[T][1]byte) {
 package workbook
 
 var x = sheet.$A$1
+var y = sheet.A1
 var r = Data.A1:B10
 `);
 
@@ -245,6 +246,24 @@ var r = Data.A1:B10
       start: { raw: "A1" },
       end: { raw: "B10" }
     });
+    expect(nodes.some((node) => node.kind === "SelectorExpr" && node.selector.name === "A1")).toBe(true);
+  });
+
+  test("does not confuse ordinary Go selectors with spreadsheet cells", () => {
+    const nodes = collectNodes(`
+package selectors
+
+func F(i1 one.I1) {
+  switch v := i1.(type) {
+  case two.S2:
+    one.F1(v)
+  }
+}
+`);
+
+    expect(nodes.filter((node) => node.kind === "RangeRefExpr")).toHaveLength(0);
+    expect(nodes.filter((node) => node.kind === "CellRefExpr")).toHaveLength(0);
+    expect(nodes.some((node) => node.kind === "SelectorExpr" && node.selector.name === "F1")).toBe(true);
   });
 
   test("keeps operator precedence and parses control flow labels and range loops", () => {
@@ -405,6 +424,24 @@ func Classify(x int, any interface{}) string {
     expect(cases).toHaveLength(5);
     expect(cases.filter((node) => node.kind === "CaseClause" && node.default)).toHaveLength(2);
     expect(nodes.some((node) => node.kind === "BranchStmt" && node.token === TokenKind.Fallthrough)).toBe(true);
+  });
+
+  test("parses switches with an empty init statement before semicolon", () => {
+    const nodes = collectNodes(`
+package switches
+
+func F() {
+  switch ; {
+  case true:
+    return
+  default:
+    return
+  }
+}
+`);
+
+    expect(nodes.some((node) => node.kind === "SwitchStmt")).toBe(true);
+    expect(nodes.filter((node) => node.kind === "CaseClause")).toHaveLength(2);
   });
 
   test("keeps control-clause block braces out of composite literal parsing", () => {

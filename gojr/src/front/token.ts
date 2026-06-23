@@ -123,10 +123,7 @@ const keywords = new Map<string, TokenKind>([
   ["map", TokenKind.Map],
   ["chan", TokenKind.Chan],
   ["go", TokenKind.Go],
-  ["select", TokenKind.Select],
-  ["true", TokenKind.True],
-  ["false", TokenKind.False],
-  ["nil", TokenKind.Nil]
+  ["select", TokenKind.Select]
 ]);
 
 export function keywordKind(text: string): TokenKind | undefined {
