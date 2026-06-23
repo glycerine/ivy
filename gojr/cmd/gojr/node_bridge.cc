@@ -198,7 +198,11 @@ char* call_global_string_function(
 extern "C" gojr_node_runtime* gojr_node_new(const char* module_path, char** error_out) {
   auto* runtime = new gojr_node_runtime();
 
-  std::vector<std::string> args = {"gojr-embedded-node"};
+  // --disable-warning=ExperimentalWarning silences the (expected) notice that
+  // the embedded CommonJS bootstrap loads the ESM dist/ module via require().
+  // It is scoped to experimental warnings only; other warnings still print.
+  std::vector<std::string> args = {"gojr-embedded-node",
+                                   "--disable-warning=ExperimentalWarning"};
   runtime->initialization = node::InitializeOncePerProcess(
       args,
       {node::ProcessInitializationFlags::kNoStdioInitialization,

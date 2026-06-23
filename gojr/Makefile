@@ -30,7 +30,7 @@ endif
 GOJR_EXE := $(GOJR_BINDIR)/gojr
 NPM_STAMP := node_modules/.gojr-npm-ci.stamp
 
-.PHONY: all npm-deps js install typecheck test repl print-bin clean
+.PHONY: all npm-deps js install typecheck test repl print-bin clean build-node-js
 
 all: install
 
@@ -60,6 +60,12 @@ repl: install
 
 print-bin:
 	@printf '%s\n' "$(GOJR_EXE)"
+
+# Build + install the shared libnode that the Linux cgo build links against
+# (see scripts/setup-libnode-linux.sh). One-time per machine; the script is
+# idempotent and skips the build when the matching version is already present.
+build-node-js:
+	scripts/setup-libnode-linux.sh
 
 clean:
 	rm -rf dist "$(NPM_STAMP)"
