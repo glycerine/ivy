@@ -59,8 +59,14 @@ class FrontChecker {
     declareImports(file) {
         for (const spec of file.imports) {
             const path = unquote(spec.path.value);
-            const imported = this.config.importer?.import(path) ?? (path === "fmt" ? fmtPackageInfo(this.universe) : new PackageInfo(path, importName(path), this.universe.scope));
+            const imported = this.config.importer?.import(path) ?? standardPackageInfo(path, this.universe) ?? new PackageInfo(path, importName(path), this.universe.scope);
             const localName = spec.name?.name === "." ? imported.name : spec.name?.name ?? imported.name;
+            const existing = this.pkg.scope.lookup(localName);
+            if (existing instanceof PackageNameObject && existing.imported.path === imported.path) {
+                if (spec.name)
+                    this.info.defs.set(spec.name, existing);
+                continue;
+            }
             const object = new PackageNameObject(localName, this.universe.basic.any, imported, this.pkg.scope, this.pkg);
             this.insert(this.pkg.scope, object, spec.name ?? spec.path);
             if (spec.name)
@@ -898,6 +904,46 @@ function fmtPackageInfo(universe) {
     scope.insert(new FuncObject("Sprintf", new SignatureType(undefined, tuple(varOf("format", universe.basic.string), varOf("args", new SliceType(universe.basic.any))), tuple(varOf("", universe.basic.string)), true), scope, pkg));
     scope.insert(new FuncObject("Println", new SignatureType(undefined, tuple(varOf("args", new SliceType(universe.basic.any))), tuple(varOf("", universe.basic.int64)), true), scope, pkg));
     return pkg;
+}
+function testingPackageInfo(universe) {
+    const pkg = new PackageInfo("testing", "testing", universe.scope);
+    const scope = pkg.scope;
+    const typeName = new TypeNameObject("T", universe.basic.invalid, scope, pkg);
+    const tType = new NamedType(typeName, new StructType([]));
+    typeName.setType(tType);
+    scope.insert(typeName);
+    const receiver = varOf("", new PointerType(tType));
+    const noResults = tuple();
+    const addMethod = (name, params = tuple(), results = noResults, variadic = false) => {
+        tType.addMethod(new FuncObject(name, new SignatureType(receiver, params, results, variadic), scope, pkg));
+    };
+    const anyArgs = tuple(varOf("args", new SliceType(universe.basic.any)));
+    const formattedArgs = tuple(varOf("format", universe.basic.string), varOf("args", new SliceType(universe.basic.any)));
+    addMethod("Fail");
+    addMethod("FailNow");
+    addMethod("Failed", tuple(), tuple(varOf("", universe.basic.bool)));
+    addMethod("Fatal", anyArgs, noResults, true);
+    addMethod("Fatalf", formattedArgs, noResults, true);
+    addMethod("Error", anyArgs, noResults, true);
+    addMethod("Errorf", formattedArgs, noResults, true);
+    addMethod("Log", anyArgs, noResults, true);
+    addMethod("Logf", formattedArgs, noResults, true);
+    addMethod("Name", tuple(), tuple(varOf("", universe.basic.string)));
+    addMethod("Helper");
+    addMethod("Skip", anyArgs, noResults, true);
+    addMethod("Skipf", formattedArgs, noResults, true);
+    addMethod("SkipNow");
+    addMethod("Skipped", tuple(), tuple(varOf("", universe.basic.bool)));
+    scope.insert(new FuncObject("Short", new SignatureType(undefined, tuple(), tuple(varOf("", universe.basic.bool))), scope, pkg));
+    scope.insert(new FuncObject("Verbose", new SignatureType(undefined, tuple(), tuple(varOf("", universe.basic.bool))), scope, pkg));
+    return pkg;
+}
+function standardPackageInfo(path, universe) {
+    if (path === "fmt")
+        return fmtPackageInfo(universe);
+    if (path === "testing")
+        return testingPackageInfo(universe);
+    return undefined;
 }
 function promoteNumeric(left, right, universe) {
     if (left instanceof BasicType && (left.basicKind === BasicKind.Complex64 || left.basicKind === BasicKind.Complex128))

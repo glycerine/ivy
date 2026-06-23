@@ -75,7 +75,8 @@ export {
   GoJuniorSession,
   GoJuniorPanic,
   GoJuniorRuntimeError,
-  RuntimeMap
+  RuntimeMap,
+  testSource
 } from "./runtime.js";
 export type {
   EvaluationOptions,

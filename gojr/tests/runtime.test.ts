@@ -1,5 +1,5 @@
 import { describe, expect, test } from "./testHarness.js";
-import { evaluateSource, formatReplValue, GoJuniorSession } from "../src/index.js";
+import { evaluateSource, formatReplValue, GoJuniorSession, testSource } from "../src/index.js";
 
 function expectRuns(source: string, options = {}) {
   const result = evaluateSource(source, options);
@@ -171,6 +171,90 @@ return fmt.Sprintf("ok %v", 8)
     expect(call.diagnostics).toEqual([]);
     expect(call.output).toEqual(["hiya\n"]);
     expect(call.value).toBeNull();
+  });
+
+  test("supports importing the testing package", () => {
+    const script = expectRuns(`
+import "testing"
+
+return testing.Short(), testing.Verbose()
+`);
+    expect(script.values).toEqual([false, false]);
+
+    const session = new GoJuniorSession();
+    const define = session.evaluate(`
+import "testing"
+
+func TestThing(t *testing.T) {
+  t.Helper()
+  t.Logf("x=%v", 1)
+  if testing.Short() {
+    t.SkipNow()
+  }
+}
+`);
+    expect(define.diagnostics).toEqual([]);
+  });
+
+  test("runs Go-junior tests with testing.T", () => {
+    const result = testSource(`
+import "testing"
+
+func Add(a, b int) int { return a + b }
+
+func TestAdd(t *testing.T) {
+  t.Helper()
+  t.Logf("sum=%v", Add(2, 3))
+  if Add(2, 3) != 5 {
+    t.Fatalf("bad sum")
+  }
+}
+
+func TestNoArg() {}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output.join("")).toContain("=== RUN   TestAdd\n");
+    expect(result.output.join("")).toContain("    sum=5\n");
+    expect(result.output.join("")).toContain("--- PASS: TestAdd\n");
+    expect(result.output.join("")).toContain("--- PASS: TestNoArg\n");
+    expect(result.output.join("")).toContain("PASS\n");
+  });
+
+  test("reports failing and skipped Go-junior tests", () => {
+    const result = testSource(`
+import "testing"
+
+func TestFail(t *testing.T) {
+  t.Errorf("bad %v", 3)
+}
+
+func TestSkip(t *testing.T) {
+  t.Skipf("skip %v", 4)
+}
+`);
+
+    const output = result.output.join("");
+    expect(result.diagnostics).toHaveLength(1);
+    expect(result.diagnostics[0]?.code).toBe("GOJR_TEST001");
+    expect(output).toContain("=== RUN   TestFail\n");
+    expect(output).toContain("    bad 3\n");
+    expect(output).toContain("--- FAIL: TestFail\n");
+    expect(output).toContain("=== RUN   TestSkip\n");
+    expect(output).toContain("    skip 4\n");
+    expect(output).toContain("--- SKIP: TestSkip\n");
+    expect(output).toContain("FAIL\n");
+  });
+
+  test("validates Go-junior test signatures", () => {
+    const result = testSource(`
+func TestBad(t int) {}
+`);
+
+    expect(result.diagnostics).toHaveLength(1);
+    expect(result.diagnostics[0]?.code).toBe("GOJR_TEST001");
+    expect(result.diagnostics[0]?.message).toContain("func TestX(t *testing.T)");
+    expect(result.output.join("")).toContain("--- FAIL: TestBad\n");
   });
 
   test("supports declared maps with typed string and integer keys", () => {

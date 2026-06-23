@@ -216,6 +216,19 @@ globalThis.__gojrEval = function(source) {
   });
 };
 
+globalThis.__gojrTest = function(source) {
+  const result = gojrModule.testSource(source);
+  const diagnostics = result.diagnostics || [];
+  return JSON.stringify({
+    ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
+    incomplete: false,
+    diagnostics: diagnostics.map(gojrDiagnosticString),
+    output: (result.output || []).join(""),
+    value: gojrFormatResult(result),
+    valueIsNil: gojrResultValueIsNil(result)
+  });
+};
+
 globalThis.__gojrSetSheet = function(json) {
   gojrSession.setSheet(gojrModule.parseSheetJson(json));
   return JSON.stringify({ ok: true, value: "sheet loaded" });
@@ -339,6 +352,10 @@ extern "C" gojr_node_runtime* gojr_node_new(const char* module_bundle_json, char
 
 extern "C" char* gojr_node_eval(gojr_node_runtime* runtime, const char* source, char** error_out) {
   return call_global_string_function(runtime, "__gojrEval", source, error_out);
+}
+
+extern "C" char* gojr_node_test(gojr_node_runtime* runtime, const char* source, char** error_out) {
+  return call_global_string_function(runtime, "__gojrTest", source, error_out);
 }
 
 extern "C" char* gojr_node_set_sheet(gojr_node_runtime* runtime, const char* json, char** error_out) {

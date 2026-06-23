@@ -149,6 +149,20 @@ export class GoJuniorPanic extends Error {
   }
 }
 
+class GoJuniorTestStop extends Error {
+  public constructor(public readonly action: "failNow" | "skipNow") {
+    super(action);
+    this.name = "GoJuniorTestStop";
+  }
+}
+
+interface TestingTState {
+  name: string;
+  failed: boolean;
+  skipped: boolean;
+  logs: string[];
+}
+
 export class EvaluationContext {
   public readonly output: string[] = [];
   private readonly rootScope = new Scope();
@@ -586,6 +600,35 @@ export function evaluateSource(source: string, options: EvaluationOptions = {}):
   return evaluateProgram(ast, options);
 }
 
+export function testSource(source: string, options: EvaluationOptions = {}): EvaluationResult {
+  const parsed = frontSourceToAst(source);
+  const ast = parsed.ast;
+  if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+    return {
+      diagnostics: parsed.diagnostics,
+      output: [],
+      ...(ast ? { ast } : {})
+    };
+  }
+  if (!ast) {
+    return {
+      diagnostics: parsed.diagnostics,
+      output: []
+    };
+  }
+
+  const checked = checkFrontSource(source, typeCheckConfig(options));
+  if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+    return {
+      diagnostics: checked.diagnostics,
+      output: [],
+      ast
+    };
+  }
+
+  return testProgram(ast, checked.diagnostics, options);
+}
+
 export function evaluateProgram(ast: ProgramAst, options: EvaluationOptions = {}): EvaluationResult {
   const context = new EvaluationContext(options);
   try {
@@ -646,6 +689,219 @@ export function evaluateProgram(ast: ProgramAst, options: EvaluationOptions = {}
       ast
     };
   }
+}
+
+function testProgram(ast: ProgramAst, baseDiagnostics: Diagnostic[], options: EvaluationOptions): EvaluationResult {
+  const context = new EvaluationContext(options);
+  const diagnostics = [...baseDiagnostics];
+  try {
+    installSheets(context, options);
+    installImports(context, ast);
+
+    for (const declaration of ast.functions) {
+      installFunctionDeclaration(context, declaration);
+    }
+
+    const { declarations, statements } = splitTopLevelDeclarations(ast.body);
+    const declarationCompletion = executeTopLevelStatements(declarations, context);
+    expectNormalCompletion(declarationCompletion, "top-level declarations");
+
+    runInitFunctions(ast.functions, context);
+    const topLevelCompletion = executeTopLevelStatements(statements, context);
+    expectNormalCompletion(topLevelCompletion, "top-level statements");
+
+    const tests = ast.functions.filter(isTestFunctionDecl);
+    if (tests.length === 0) {
+      context.write("testing: warning: no tests to run\nPASS\n");
+      return { diagnostics, output: context.output, ast };
+    }
+
+    let failed = false;
+    for (const declaration of tests) {
+      const testFailed = runOneTest(declaration, context, diagnostics);
+      failed ||= testFailed;
+    }
+    context.write(failed ? "FAIL\n" : "PASS\n");
+    return { diagnostics, output: context.output, ast };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      diagnostics: [
+        ...diagnostics,
+        {
+          code: error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001",
+          severity: "error",
+          message
+        }
+      ],
+      output: context.output,
+      ast
+    };
+  }
+}
+
+function isTestFunctionDecl(declaration: FunctionDecl): boolean {
+  return !declaration.receiver && /^Test($|[^a-z])/.test(declaration.name);
+}
+
+function runOneTest(declaration: FunctionDecl, context: EvaluationContext, diagnostics: Diagnostic[]): boolean {
+  context.write(`=== RUN   ${declaration.name}\n`);
+  const signatureError = testSignatureError(declaration);
+  if (signatureError) {
+    context.write(`    ${signatureError}\n`);
+    context.write(`--- FAIL: ${declaration.name}\n`);
+    diagnostics.push(testDiagnostic(declaration, `${declaration.name}: ${signatureError}`));
+    return true;
+  }
+
+  const testingT = declaration.signature.parameters.length === 0 ? undefined : makeTestingT(declaration.name);
+  let runtimeFailure: string | undefined;
+  try {
+    const callee = context.lookup(declaration.name);
+    callRuntime(callee, testingT ? [testingT.value] : [], context);
+  } catch (error) {
+    if (error instanceof GoJuniorTestStop) {
+      // The testing.T state already records whether this was FailNow or SkipNow.
+    } else {
+      runtimeFailure = error instanceof Error ? error.message : String(error);
+      if (testingT) {
+        testingT.state.failed = true;
+        testingT.state.logs.push(runtimeFailure);
+      }
+    }
+  }
+
+  if (testingT) emitTestingLogs(context, testingT.state);
+  if (runtimeFailure && !testingT) {
+    context.write(indentTestingLog(runtimeFailure));
+  }
+
+  const state = testingT?.state;
+  if (runtimeFailure || state?.failed) {
+    context.write(`--- FAIL: ${declaration.name}\n`);
+    diagnostics.push(testDiagnostic(declaration, runtimeFailure ? `${declaration.name}: ${runtimeFailure}` : `${declaration.name} failed`));
+    return true;
+  }
+  if (state?.skipped) {
+    context.write(`--- SKIP: ${declaration.name}\n`);
+    return false;
+  }
+  context.write(`--- PASS: ${declaration.name}\n`);
+  return false;
+}
+
+function testSignatureError(declaration: FunctionDecl): string | undefined {
+  if (declaration.signature.results.length !== 0) return "test function must not return values";
+  const parameters = declaration.signature.parameters;
+  if (parameters.length === 0) return undefined;
+  if (parameters.length === 1 && !parameters[0]?.variadic && normalizeTypeText(parameters[0]?.type.text ?? "") === "*testing.T") {
+    return undefined;
+  }
+  return "test function must have signature func TestX() or func TestX(t *testing.T)";
+}
+
+function testDiagnostic(declaration: FunctionDecl, message: string): Diagnostic {
+  return {
+    code: "GOJR_TEST001",
+    severity: "error",
+    message,
+    ...(declaration.span ? { span: declaration.span } : {})
+  };
+}
+
+function makeTestingT(name: string): { value: RuntimePointer; state: TestingTState } {
+  const state: TestingTState = {
+    name,
+    failed: false,
+    skipped: false,
+    logs: []
+  };
+  const object: RuntimeObject = {
+    Fail: hostCallable("testing.(*T).Fail", () => {
+      state.failed = true;
+      return null;
+    }),
+    FailNow: hostCallable("testing.(*T).FailNow", () => {
+      state.failed = true;
+      throw new GoJuniorTestStop("failNow");
+    }),
+    Failed: hostCallable("testing.(*T).Failed", () => state.failed),
+    Fatal: hostCallable("testing.(*T).Fatal", (args) => {
+      appendTestingLog(state, testingSprint(args));
+      state.failed = true;
+      throw new GoJuniorTestStop("failNow");
+    }),
+    Fatalf: hostCallable("testing.(*T).Fatalf", (args) => {
+      appendTestingLog(state, testingSprintf(args));
+      state.failed = true;
+      throw new GoJuniorTestStop("failNow");
+    }),
+    Error: hostCallable("testing.(*T).Error", (args) => {
+      appendTestingLog(state, testingSprint(args));
+      state.failed = true;
+      return null;
+    }),
+    Errorf: hostCallable("testing.(*T).Errorf", (args) => {
+      appendTestingLog(state, testingSprintf(args));
+      state.failed = true;
+      return null;
+    }),
+    Log: hostCallable("testing.(*T).Log", (args) => {
+      appendTestingLog(state, testingSprint(args));
+      return null;
+    }),
+    Logf: hostCallable("testing.(*T).Logf", (args) => {
+      appendTestingLog(state, testingSprintf(args));
+      return null;
+    }),
+    Name: hostCallable("testing.(*T).Name", () => state.name),
+    Helper: hostCallable("testing.(*T).Helper", () => null),
+    Skip: hostCallable("testing.(*T).Skip", (args) => {
+      appendTestingLog(state, testingSprint(args));
+      state.skipped = true;
+      throw new GoJuniorTestStop("skipNow");
+    }),
+    Skipf: hostCallable("testing.(*T).Skipf", (args) => {
+      appendTestingLog(state, testingSprintf(args));
+      state.skipped = true;
+      throw new GoJuniorTestStop("skipNow");
+    }),
+    SkipNow: hostCallable("testing.(*T).SkipNow", () => {
+      state.skipped = true;
+      throw new GoJuniorTestStop("skipNow");
+    }),
+    Skipped: hostCallable("testing.(*T).Skipped", () => state.skipped)
+  };
+  return {
+    value: new RuntimePointer("testing.T", () => object, () => {
+      throw new GoJuniorRuntimeError("cannot assign to testing.T");
+    }),
+    state
+  };
+}
+
+function testingSprint(args: RuntimeValue[]): string {
+  return args.map(formatValue).join(" ");
+}
+
+function testingSprintf(args: RuntimeValue[]): string {
+  return sprintf(toStringValue(args[0] ?? ""), args.slice(1));
+}
+
+function appendTestingLog(state: TestingTState, text: string): void {
+  state.logs.push(text.endsWith("\n") ? text : `${text}\n`);
+}
+
+function emitTestingLogs(context: EvaluationContext, state: TestingTState): void {
+  for (const log of state.logs) {
+    context.write(indentTestingLog(log));
+  }
+}
+
+function indentTestingLog(text: string): string {
+  const lineText = text.endsWith("\n") ? text.slice(0, -1) : text;
+  if (lineText === "") return "    \n";
+  return lineText.split("\n").map((line) => `    ${line}\n`).join("");
 }
 
 export class GoJuniorSession {
@@ -969,6 +1225,7 @@ function installAutomaticImports(context: EvaluationContext): void {
 function availablePackages(context: EvaluationContext): Record<string, RuntimeObject> {
   return {
     fmt: fmtPackage(),
+    testing: testingPackage(),
     ...context.packages()
   };
 }
@@ -990,6 +1247,13 @@ function fmtPackage(): RuntimeObject {
       context.write(text);
       return BigInt(text.length);
     })
+  };
+}
+
+function testingPackage(): RuntimeObject {
+  return {
+    Short: hostCallable("testing.Short", () => false),
+    Verbose: hostCallable("testing.Verbose", () => false)
   };
 }
 
@@ -1982,8 +2246,9 @@ function getSelector(expression: SelectorExpression, context: EvaluationContext)
       return boundMethodValue(method, receiver);
     }
   }
-  if (isRuntimeObject(object)) {
-    const value = object[expression.field];
+  const runtimeObject = dereferenceIfPointer(object);
+  if (isRuntimeObject(runtimeObject)) {
+    const value = runtimeObject[expression.field];
     if (value !== undefined) return value;
   }
   throw new GoJuniorRuntimeError(`${formatValue(object)} has no selector ${expression.field}`);
