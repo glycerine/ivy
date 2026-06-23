@@ -7,10 +7,12 @@ Plan only. No implementation changes in this document.
 Build a TypeScript implementation of Go-junior, now targeting full Go language
 compatibility for source parsing, typechecking, and execution, plus explicit
 spreadsheet syntax extensions. Go-junior should compile to browser-runnable
-JavaScript using a compiler-owned CPS/state-machine backend with source-level
-copy-and-patch templates where useful. It should be able to call Go-compatible
-source packages compiled in-browser or in Node, and it should be able to call
-allowlisted Go packages compiled to WebAssembly through typed host wrappers.
+JavaScript using compiler-owned async/await lowering with source-level
+copy-and-patch templates where useful. Potentially blocking Go operations lower
+to `await` points over a deterministic cooperative scheduler. It should be able
+to call Go-compatible source packages compiled in-browser or in Node, and it
+should be able to call allowlisted Go packages compiled to WebAssembly through
+typed host wrappers.
 
 The first production target is the Ivy webui analysis spreadsheet. The current
 spreadsheet-like pane can then evolve from an editable mock grid into a real
@@ -34,9 +36,10 @@ and host/WASM calls.
   recalculation, error values, deterministic execution, and bounded work.
 - Never emit raw user source into JavaScript. Parse, validate, typecheck, then
   emit compiler-owned JavaScript stencils with sanitized holes.
-- Keep the compiler backend replaceable. Start with a JavaScript CPS/state
-  machine backend that preserves source spans and types. Leave a path to a
-  future WebAssembly stencil backend.
+- Keep the compiler backend replaceable. Start with JavaScript async/await
+  lowering that preserves source spans and types and maps goroutine suspension
+  to native Promise/microtask machinery. Leave a path to a future WebAssembly
+  stencil backend.
 - Go-junior code cannot directly import arbitrary JavaScript or reach ambient
   browser globals; JavaScript, browser, sheet, graph, UI, and WASM
   functionality must be exposed through explicit typed host capabilities.
@@ -142,9 +145,9 @@ Go-junior source
   -> resolver and typechecker
   -> package resolver and package compiler
   -> spreadsheet dependency extractor
-  -> typed IR
-  -> CPS/state-machine lowering for suspendable code
-  -> JavaScript source copy-and-patch emitter and runtime scheduler
+  -> typed IR and effect metadata
+  -> async/await lowering for functions that can suspend
+  -> JavaScript source copy-and-patch emitter plus runtime scheduler
   -> function/package compiler cache
   -> worker-backed runtime
   -> typed package and host/WASM bindings
@@ -193,7 +196,7 @@ a runtime/REPL bootstrap. New language front-end work should go into the
 standard-Go-style TypeScript front end and migrate existing parser tests toward
 that implementation.
 
-## Full Go and CPS Runtime Pivot
+## Full Go and Async Runtime Pivot
 
 The project now needs enough full Go support to parse, typecheck, run, and test
 existing Go source packages in the CLI and browser worker. The old
@@ -209,7 +212,7 @@ Required language additions:
   and unbuffered channels
 - `select`, including default cases, receive cases, send cases, closed-channel
   behavior, nil-channel disabling, fairness policy, and deterministic test mode
-- `defer`, `panic`, and `recover` across goroutine and CPS suspension
+- `defer`, `panic`, and `recover` across goroutine and async suspension
 - labels and `goto`, including Go's goto restrictions
 - generics: type parameter lists, constraints, type sets, instantiation,
   inference, method sets involving type parameters, and export metadata
@@ -218,27 +221,34 @@ Required language additions:
 - `unsafe` package surface sufficient for typechecking normal source; runtime
   support is phased and may be restricted by target capability policy
 
-The runtime backend must be a compiler-owned CPS/state-machine transform over
-typed Go-junior AST/IR, not a TypeScript AST transform. TypeScript compiler API
-or ts-morph may be studied for implementation patterns, but Go-junior's
-transform must preserve Go-junior source filenames, spans, types, package
-symbols, and spreadsheet dependency metadata.
+The runtime backend should use compiler-owned async/await lowering over typed
+Go-junior AST/IR, not a TypeScript AST transform. TypeScript compiler API or
+ts-morph may be studied for implementation patterns, but Go-junior's transform
+must preserve Go-junior source filenames, spans, types, package symbols, and
+spreadsheet dependency metadata.
 
-CPS lowering requirements:
+Async lowering requirements:
 
-- Every potentially suspending operation lowers to an explicit state transition:
-  channel send, channel receive, select, goroutine yield, async host call,
-  worker/package RPC, and future asynchronous sheet/graph capabilities.
-- Non-suspending code may remain direct JS inside a state body for speed.
-- Function calls are annotated as direct or may-suspend from type/effect data.
-- Defers are represented in explicit runtime frames and run correctly on
-  return, panic, and goroutine exit.
+- Every Go function is emitted as an `async` JavaScript function. This avoids a
+  transitive "sync versus async" split and lets channel, goroutine, host, worker,
+  package, WASM, and future sheet/graph suspension points use native `await`.
+- Calls between Go-junior functions are emitted with `await`. Direct synchronous
+  host helpers may return plain values, but the call bridge accepts either plain
+  values or Promises so capabilities can become asynchronous without changing
+  source semantics.
+- Channel send, channel receive, `select`, goroutine yield, async host call,
+  worker/package RPC, and future asynchronous sheet/graph capabilities lower to
+  `await scheduler...` operations.
+- Defers live in runtime frame objects attached to the async function activation
+  and run correctly on return, panic, and goroutine exit.
 - `recover` observes the innermost active deferred call exactly where Go permits
   it.
 - Named returns, multiple returns, panics, gotos, labeled break/continue, and
-  loops lower to explicit state-machine control edges.
-- Each state and emitted operation carries source span and static type metadata
-  for diagnostics and runtime stack traces.
+  loops are emitted as ordinary structured JavaScript where possible. Goto-heavy
+  functions may still lower to a small compiler-owned state loop inside one
+  async function, but not to a general CPS continuation chain.
+- Each emitted operation carries source span and static type metadata for
+  diagnostics and runtime stack traces.
 - The scheduler owns goroutine queues, channel wait queues, timers/future async
   waits, panic propagation, deadlock detection, fuel/time budgets, and
   deterministic test hooks.
@@ -267,15 +277,15 @@ Initial concurrency runtime semantics:
 Implementation strategy:
 
 1. Keep the current direct interpreter/backend for non-concurrent smoke tests
-   while building the typed CPS IR in parallel.
+   while building the async scheduler runtime and async lowering path in
+   parallel.
 2. Add a typed effect pass that marks expressions/statements/functions as
    direct, may-panic, may-defer, may-suspend, package-state, diagnostic-effect,
    sheet-effect, graph-effect, or UI-effect.
 3. Lower only functions containing `go`, channel operations, `select`,
-   `recover`, or may-suspend calls to CPS at first.
-4. Once stable, lower all package/formula code through the same state-machine
-   backend so one runtime path handles defers, panics, channels, and stack
-   traces.
+   `recover`, or may-suspend calls to async/await at first.
+4. Once stable, lower all package/formula code through async functions so one
+   runtime path handles defers, panics, channels, and stack traces.
 5. Preserve the existing Node REPL as the fastest manual test surface. The REPL
    must parse/typecheck/evaluate with source filename `gojr-repl.go`.
 
@@ -941,10 +951,11 @@ Semantics:
 Implementation notes:
 
 - Channel operations and `select` are may-suspend operations in the typed effect
-  pass.
-- Functions containing may-suspend operations, or calling may-suspend
-  functions, must lower through CPS/state-machine IR.
-- Defers live in explicit runtime frames so they survive suspension.
+  pass and lower to `await` calls into the scheduler/channel runtime.
+- All Go-junior functions emit as async functions. The compiler emits `await`
+  for Go-junior function calls and for host calls whose binding is marked
+  asynchronous or may-suspend.
+- Defers live in async activation runtime frames so they survive suspension.
 - The runtime scheduler must be shared between Node tests and browser workers.
 - Spreadsheet formula contexts may restrict goroutine/channel use by policy
   later, but the language/runtime must support them so source packages can be
@@ -1261,11 +1272,11 @@ know whether a host function is implemented in JavaScript, Go WASM, TinyGo
 WASM, or a web worker RPC.
 
 Host calls may be synchronous or asynchronous. Asynchronous host calls are
-may-suspend operations and must use the same CPS/runtime scheduler path as
+may-suspend operations and must use the same async runtime scheduler path as
 channel operations and goroutine blocking. Pure synchronous calculation helpers
 remain preferable for ordinary formulas, but the compiler/runtime must be able
 to suspend and resume a goroutine around host, worker, package, or WASM calls
-from the start of the CPS backend.
+from the start of the async/await backend.
 
 ## Capability and Effect Model
 
@@ -1469,13 +1480,13 @@ and runtime environment requirements are available to Go-junior, while keeping
 cgo/native or otherwise target-specific libraries available through typed
 host/WASM bindings until equivalent runtime services exist.
 
-## CPS State-machine and Source-level Copy-and-Patch JavaScript Emission
+## Async/Await and Source-level Copy-and-Patch JavaScript Emission
 
-Use a compiler-owned CPS/state-machine backend. JavaScript source stencils are
-still useful for emitting individual state bodies and runtime helper calls, but
-the generated program is not merely a direct JavaScript function when it may
-suspend. A stencil is a compiler-owned JavaScript text fragment with typed
-holes. For example:
+Use compiler-owned async/await lowering. JavaScript source stencils are still
+useful for emitting expressions, statements, runtime helper calls, and small
+structured control-flow templates, but suspending Go code becomes native
+JavaScript async functions instead of explicit continuation chains. A stencil is
+a compiler-owned JavaScript text fragment with typed holes. For example:
 
 ```ts
 const jsStencils = {
@@ -1498,10 +1509,9 @@ Emission rules:
   formulas receive a pure host view.
 - Literal and dynamic cell/range reads both route through `ctx` so dependency
   observation is uniform.
-- May-suspend operations lower to explicit scheduler calls and continuation
-  states.
+- May-suspend operations lower to `await` calls into runtime helpers.
 - Direct non-suspending runs may be optimized to straight-line JavaScript, but
-  the observable runtime behavior must match the state-machine path.
+  the observable runtime behavior must match the async/await path.
 - Generated runtime frames include source filenames, spans, static types,
   function names, goroutine IDs, defer stacks, and panic/recover state.
 
@@ -2217,9 +2227,9 @@ Implementation tasks:
   panic/unwind, recover, goroutine launch, channels, send, receive,
   two-value receive, close, select, suspend/resume, Go-junior function cell
   calls, and cell/range reads.
-- Define a CPS/state-machine IR layer with explicit frames, program counters,
-  continuation edges, goroutine roots, defer stacks, panic/recover slots,
-  channel wait records, and scheduler operations.
+- Define an async lowering IR layer with explicit activation frames, goroutine
+  roots, defer stacks, panic/recover slots, channel wait records, and scheduler
+  operations.
 - Preserve diagnostic/source mapping metadata.
 - Add optional constant folding for simple literals.
 - Add explicit conversions where needed.
@@ -2263,8 +2273,8 @@ Tests:
   source span, and may-suspend effect.
 - IR select nodes carry ordered cases, default case metadata, send/receive case
   operations, nil-channel disabling behavior, and scheduler selection policy.
-- CPS IR golden tests assert state labels, continuation targets, and source
-  spans for send/receive/select/defer/panic/recover combinations.
+- Async lowering golden tests assert `await` scheduler calls and source spans
+  for send/receive/select/defer/panic/recover combinations.
 - IR function-cell calls carry the target sheet namespace/cell ID and expected
   function signature.
 
@@ -2380,10 +2390,11 @@ Acceptance criteria:
   host/WASM bindings or trusted precompiled package providers until equivalent
   runtime services exist.
 
-### Stage 8: JavaScript CPS State-machine Copy-and-Patch Emitter
+### Stage 8: JavaScript Async/Await Copy-and-Patch Emitter
 
-Emit JavaScript from direct IR and CPS/state-machine IR using compiler-owned
-stencils.
+Emit JavaScript from typed IR using compiler-owned stencils. All Go functions
+emit as async JavaScript functions; may-suspend operations are emitted as
+`await` calls into runtime helpers.
 
 Implementation tasks:
 
@@ -2391,8 +2402,7 @@ Implementation tasks:
   calls.
 - Generate hygienic local names.
 - Emit strict mode function source.
-- Emit scheduler-compatible frame/state-machine source for may-suspend
-  functions.
+- Emit scheduler-compatible async functions for may-suspend functions.
 - Emit optional budget checks at function entry and loop backedges.
 - Emit source map or diagnostic mapping metadata if practical.
 - Expose compiler API returning generated source for debugging and tests.
@@ -2415,8 +2425,8 @@ Tests:
   and never busy-waits.
 - Generated JS for nil-channel operations, closed-channel receives, close, and
   send-to-closed behavior delegates to tested runtime helpers.
-- Generated JS for may-suspend calls stores all live locals in frame slots and
-  resumes at the correct continuation state.
+- Generated JS for may-suspend calls preserves live locals across `await` and
+  resumes with ordinary async function semantics.
 - Generated JS for closures emits captured environments with correct mutation
   semantics.
 - Generated JS for structs, methods, and interface dispatch uses generated
@@ -2462,16 +2472,15 @@ Acceptance criteria:
 
 - Safe, valid JavaScript is produced for all valid v1 IR programs.
 
-### Stage 8A: Goroutine Scheduler and Channel Runtime
+### Stage 8A: Async Goroutine Scheduler and Channel Runtime
 
-Implement the shared Node/browser runtime that executes CPS state machines,
-goroutines, channels, `select`, `close`, panic/recover, and asynchronous host
-wakeups.
+Implement the shared Node/browser runtime that executes async goroutine roots,
+channels, `select`, `close`, panic/recover, and asynchronous host wakeups.
 
 Implementation tasks:
 
-- Define runtime frame shape: function ID, goroutine ID, program counter, live
-  locals, return slots, defer stack, panic state, source span stack, and budget.
+- Define runtime frame shape: function ID, goroutine ID, live locals, return
+  slots, defer stack, panic state, source span stack, and budget.
 - Define scheduler queues: runnable goroutines, blocked senders, blocked
   receivers, blocked selects, async host waits, and completed goroutines.
 - Implement goroutine launch and lifecycle.
@@ -2524,9 +2533,9 @@ Tests:
 
 Acceptance criteria:
 
-- Compiled CPS programs with channels, goroutines, select, defer, panic, and
-  recover run identically in Node and browser worker adapters for deterministic
-  scheduler seeds.
+- Compiled async/await programs with channels, goroutines, select, defer,
+  panic, and recover run identically in Node and browser worker adapters for
+  deterministic scheduler seeds.
 
 ### Stage 9: Function and Package Artifact Compilation Cache
 
@@ -3270,14 +3279,14 @@ typecheck, and execute representative Go files that use goroutines, channels,
 5. Typed effect analysis marking direct, may-panic, may-defer, may-suspend,
    package-state, diagnostic-effect, sheet-effect, graph-effect, and UI-effect
    code paths.
-6. CPS/state-machine IR for may-suspend functions, preserving source filenames,
+6. Async lowering IR for may-suspend functions, preserving source filenames,
    spans, static types, live locals, defer stacks, panic/recover state, and
    goroutine metadata.
 7. Shared scheduler/channel runtime in Node: goroutine launch, unbuffered and
    buffered channels, `select`, `close`, deadlock detection, deterministic
    scheduler policy, panic/recover, and runtime stack diagnostics.
-8. JavaScript CPS copy-and-patch emitter that can run the scheduler tests and
-   direct formula tests.
+8. JavaScript async/await copy-and-patch emitter that can run the scheduler
+   tests and direct formula tests.
 9. One representative Go source package compiled by `gojr build` through the
    JavaScript build API into `~/go/pkg/gojr_js/`, then called from a formula,
    including mutable package state and a channel/goroutine smoke path.
@@ -3384,7 +3393,7 @@ return counter.Next()
   slicing, blank/dot imports, package `init`, and current Go range forms over
   integers and iterator functions.
 - Go-junior supports goroutines, channels, channel operations, `select`,
-  `close`, `panic`, and `recover` through the shared CPS scheduler.
+  `close`, `panic`, and `recover` through the shared async scheduler.
 - Go-junior supports Go generics: type parameters, constraints, type sets,
   instantiation, and inference.
 - Go-junior supports pointer types, address-of, dereference, pointer receiver
