@@ -665,6 +665,9 @@ function withSpan<T extends object>(node: T, span?: SourceSpan): T {
 }
 
 function unquote(value: string): string {
+  if (value.length >= 2 && value.startsWith("`") && value.endsWith("`")) {
+    return value.slice(1, -1).replace(/\r/g, "");
+  }
   if (value.length >= 2 && value.startsWith("\"") && value.endsWith("\"")) {
     try {
       return JSON.parse(value) as string;

@@ -302,12 +302,16 @@ m[5] = "there"
 var empty map[int]string
 var multi map[int]string
 multi[9] = "hello\\nthere"
-return empty, m, multi
+var quoted map[int]string
+quoted[1] = "he said \\"hi\\""
+quoted[2] = "tick \` and \\"quote\\""
+return empty, m, multi, quoted
 `);
         expect(result.values?.map(formatReplValue)).toEqual([
             `map[int]string{}`,
             `map[int]string{3:"hi", 5:"there"}`,
-            "map[int]string{9:`hello\nthere`}"
+            "map[int]string{9:`hello\nthere`}",
+            "map[int]string{1:`he said \"hi\"`, 2:`tick \\` and \"quote\"`}"
         ]);
     });
     test("evaluates struct literals, zero values, field mutation, and fmt verbs", () => {

@@ -59,6 +59,10 @@ class Scanner {
       this.scanString(start);
       return;
     }
+    if (char === "`") {
+      this.scanRawString(start);
+      return;
+    }
     if (isDigit(char) || (char === "." && isDigit(this.peek(1)))) {
       this.scanNumber(start);
       return;
@@ -130,6 +134,25 @@ class Scanner {
     }
     this.error("GJSCAN001", "unterminated string literal", start, this.position());
     this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
+  }
+
+  private scanRawString(start: Position): void {
+    this.advance();
+    while (!this.isEOF()) {
+      const char = this.peek();
+      if (char === "`") {
+        this.advance();
+        this.emit(TokenKind.StringLiteral, this.sliceFrom(start), start, this.position());
+        return;
+      }
+      if (char === "\n" || char === "\r") {
+        this.advanceNewline();
+        continue;
+      }
+      this.advance();
+    }
+    this.error("GJSCAN001", "unterminated raw string literal", start, this.position());
+    this.emit(TokenKind.StringLiteral, this.sliceFrom(start), start, this.position());
   }
 
   private scanNumber(start: Position): void {

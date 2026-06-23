@@ -1937,8 +1937,8 @@ function formatReplStruct(value) {
     return `${value.typeName}{${fields}}`;
 }
 function formatReplString(value) {
-    if (value.includes("\n") && !value.includes("`"))
-        return `\`${value}\``;
+    if (value.includes("\n") || value.includes("\""))
+        return `\`${value.replace(/`/g, "\\`")}\``;
     return JSON.stringify(value);
 }
 function formatGoSyntaxMap(value) {

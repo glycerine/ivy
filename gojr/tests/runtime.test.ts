@@ -636,6 +636,12 @@ panicOn("bad")
     expect(result.value).toBe(12n);
   });
 
+  test("evaluates Go raw string literals", () => {
+    const result = expectRuns("a := `hi\nthere`\nreturn a");
+
+    expect(result.value).toBe("hi\nthere");
+  });
+
   test("supports Go-style increment and decrement statements in sessions", () => {
     const session = new GoJuniorSession();
 
@@ -838,6 +844,15 @@ if true {
 
     expect(complete.diagnostics).toEqual([]);
     expect(complete.value).toBe(1n);
+  });
+
+  test("keeps incomplete raw strings pending in REPL input", () => {
+    const session = new GoJuniorSession();
+    const incomplete = session.evaluate("a := ` hi there");
+
+    expect(incomplete.incomplete).toBe(true);
+    expect(incomplete.diagnostics.length).toBeGreaterThan(0);
+    expect(incomplete.diagnostics[0]?.message).toContain("unterminated raw string");
   });
 
   test("keeps for blocks with increment statements pending until closed", () => {

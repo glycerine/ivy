@@ -649,6 +649,9 @@ function diagnosticsLookIncomplete(diagnostics: Diagnostic[]): boolean {
     if (diagnostic.code === "GJPARSE001") {
       return /found\s+-->\s*''\s*<--/.test(diagnostic.message) || /but found:\s*''/.test(diagnostic.message);
     }
+    if (diagnostic.code === "GJSCAN001") {
+      return /unterminated .*string literal/i.test(diagnostic.message);
+    }
     if (diagnostic.code !== "GJPARSE_FRONT001") return false;
     return diagnostic.span?.length === 0 &&
       (/expected/i.test(diagnostic.message) || /found EOF/i.test(diagnostic.message));

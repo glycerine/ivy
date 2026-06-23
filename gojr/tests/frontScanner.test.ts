@@ -74,6 +74,24 @@ describe("Go-junior TypeScript front scanner", () => {
     expect(result.tokens[4]?.span).toMatchObject({ line: 2, column: 1 });
   });
 
+  test("scans Go raw string literals across newlines", () => {
+    const result = scanSource("s := `hi\nthere`\nx := 1");
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.tokens.map((token) => [token.kind, token.lexeme])).toEqual([
+      [TokenKind.Identifier, "s"],
+      [TokenKind.Define, ":="],
+      [TokenKind.StringLiteral, "`hi\nthere`"],
+      [TokenKind.Semicolon, ";"],
+      [TokenKind.Identifier, "x"],
+      [TokenKind.Define, ":="],
+      [TokenKind.IntLiteral, "1"],
+      [TokenKind.Semicolon, ";"],
+      [TokenKind.EOF, ""]
+    ]);
+    expect(result.tokens[4]?.span).toMatchObject({ line: 3, column: 1 });
+  });
+
   test("reports unsupported channels and malformed strings", () => {
     const channel = scanSource("x <- y");
     expect(channel.diagnostics).toHaveLength(1);
@@ -82,5 +100,9 @@ describe("Go-junior TypeScript front scanner", () => {
     const string = scanSource("\"unterminated\nnext");
     expect(string.diagnostics).toHaveLength(1);
     expect(string.diagnostics[0]?.message).toContain("unterminated string");
+
+    const raw = scanSource("a := `unterminated");
+    expect(raw.diagnostics).toHaveLength(1);
+    expect(raw.diagnostics[0]?.message).toContain("unterminated raw string");
   });
 });
