@@ -158,10 +158,10 @@ function __gojrTransformModule(source, filename) {
     (_match, imports, specifier) => `const { ${__gojrImportListToDestructure(imports)} } = __gojrRequire(${JSON.stringify(specifier)}, __filename);`);
   source = source.replace(/^export\s+\{([^}]+)\}\s+from\s+["']([^"']+)["'];\s*$/gm,
     (_match, exportsList, specifier) => `__gojrReExport(${JSON.stringify(specifier)}, ${JSON.stringify(__gojrExportList(exportsList))}, exports, __filename);`);
-  source = source.replace(/^export\s+async\s+function\s+([A-Za-z_$][\w$]*)/gm,
-    (_match, name) => {
+  source = source.replace(/^export\s+(async\s+)?function(\*)?\s+([A-Za-z_$][\w$]*)/gm,
+    (_match, asyncPrefix, generatorMarker, name) => {
       exportedNames.push(name);
-      return `async function ${name}`;
+      return `${asyncPrefix || ""}function${generatorMarker || ""} ${name}`;
     });
   source = source.replace(/^export\s+(function|class)\s+([A-Za-z_$][\w$]*)/gm,
     (_match, kind, name) => {
@@ -174,7 +174,7 @@ function __gojrTransformModule(source, filename) {
       return `${kind} ${name}`;
     });
   if (exportedNames.length > 0) {
-    source += `\nObject.assign(exports, { ${[...new Set(exportedNames)].join(", ")} });\n`;
+    source += `\nglobalThis.Object.assign(exports, { ${[...new Set(exportedNames)].join(", ")} });\n`;
   }
   return source + `\n//# sourceURL=embedded-gojr:${filename}\n`;
 }
