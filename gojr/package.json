@@ -6,7 +6,7 @@
     "gojr": "./dist/src/cli.js"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
     "run": "node dist/src/cli.js run",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json"
