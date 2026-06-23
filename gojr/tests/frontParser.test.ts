@@ -167,6 +167,9 @@ package slices
 type Slice []int
 type Array [3]int
 type UnsafeArray [unsafe.Sizeof(byte(0))]*byte
+type RuntimeMask [MaxObjsPerSpan / (goarch.PtrSize * 8)]uintptr
+type RuntimeBits [pallocChunkPages / 64]uint64
+type ArenaPointer [UserArenaChunkBytes/unsafe.Sizeof(&smallPointer{}) + 1]*smallPointer
 type Box[T any] struct { Value T }
 `);
 
@@ -174,11 +177,17 @@ type Box[T any] struct { Value T }
     const slice = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "Slice");
     const array = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "Array");
     const unsafeArray = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "UnsafeArray");
+    const runtimeMask = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "RuntimeMask");
+    const runtimeBits = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "RuntimeBits");
+    const arenaPointer = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "ArenaPointer");
     const box = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "Box");
 
     expect(slice?.kind === "TypeSpec" ? slice.type.kind : undefined).toBe("ArrayType");
     expect(array?.kind === "TypeSpec" ? array.type.kind : undefined).toBe("ArrayType");
     expect(unsafeArray?.kind === "TypeSpec" ? unsafeArray.type.kind : undefined).toBe("ArrayType");
+    expect(runtimeMask?.kind === "TypeSpec" ? runtimeMask.type.kind : undefined).toBe("ArrayType");
+    expect(runtimeBits?.kind === "TypeSpec" ? runtimeBits.type.kind : undefined).toBe("ArrayType");
+    expect(arenaPointer?.kind === "TypeSpec" ? arenaPointer.type.kind : undefined).toBe("ArrayType");
     expect(box?.kind === "TypeSpec" ? box.typeParams?.fields[0]?.names.map((name) => name.name) : undefined).toEqual(["T"]);
   });
 

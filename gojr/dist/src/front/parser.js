@@ -163,26 +163,17 @@ class FrontParser {
             return false;
         if (this.peek(2).kind === TokenKind.Dot)
             return false;
-        let depth = 1;
-        let sawConstraint = false;
-        for (let offset = 1;; offset += 1) {
-            const token = this.peek(offset);
-            if (token.kind === TokenKind.EOF)
-                return false;
-            if (token.kind === TokenKind.LBracket) {
-                depth += 1;
+        let offset = 1;
+        while (isIdentifierLike(this.peek(offset).kind)) {
+            offset += 1;
+            if (this.peek(offset).kind === TokenKind.Comma && isIdentifierLike(this.peek(offset + 1).kind)) {
+                offset += 1;
                 continue;
             }
-            if (token.kind === TokenKind.RBracket) {
-                depth -= 1;
-                if (depth === 0)
-                    return sawConstraint;
-                continue;
-            }
-            if (depth === 1 && offset > 1 && token.kind !== TokenKind.Comma) {
-                sawConstraint = true;
-            }
+            break;
         }
+        const constraintStart = this.peek(offset).kind;
+        return this.startsType(constraintStart);
     }
     parseValueSpec() {
         const names = this.parseIdentList();

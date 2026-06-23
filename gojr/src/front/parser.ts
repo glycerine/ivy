@@ -201,9 +201,35 @@ class FrontParser {
 
   private parseTypeSpec(): TypeSpec {
     const name = this.parseIdent("expected type name");
-    const typeParams = this.startsTypeParamList() ? this.parseTypeParamList() : undefined;
-    const alias = this.match(TokenKind.Assign);
-    const type = this.parseType();
+    let typeParams: FieldList | undefined;
+    let alias = false;
+    let type: Expr;
+
+    if (this.match(TokenKind.LBracket)) {
+      const open = this.previous();
+      if (isIdentifierLike(this.peek().kind)) {
+        const firstName = this.parseIdent("expected type parameter name or array length");
+        let expression: Expr = firstName;
+        if (!this.at(TokenKind.LBracket)) {
+          this.withExpressionLevel(() => {
+            expression = this.parseBinaryExpression(this.parsePrimaryFrom(expression), 1);
+          });
+        }
+        const { name: paramName, type: paramType } = extractName(expression, this.at(TokenKind.Comma));
+        if (paramName && (paramType || !this.at(TokenKind.RBracket))) {
+          typeParams = this.parseTypeParameterListAfterOpen(open, paramName, paramType);
+          alias = this.match(TokenKind.Assign);
+          type = this.parseType();
+        } else {
+          type = this.parseArrayTypeAfterOpen(open, expression);
+        }
+      } else {
+        type = this.parseArrayTypeAfterOpen(open);
+      }
+    } else {
+      alias = this.match(TokenKind.Assign);
+      type = this.parseType();
+    }
     return {
       kind: "TypeSpec",
       name,
@@ -212,30 +238,6 @@ class FrontParser {
       alias,
       span: mergeSpans(name.span, type.span)
     };
-  }
-
-  private startsTypeParamList(): boolean {
-    if (!this.at(TokenKind.LBracket)) return false;
-    if (!isIdentifierLike(this.peek(1).kind)) return false;
-    if (this.peek(2).kind === TokenKind.Dot) return false;
-    let depth = 1;
-    let sawConstraint = false;
-    for (let offset = 1; ; offset += 1) {
-      const token = this.peek(offset);
-      if (token.kind === TokenKind.EOF) return false;
-      if (token.kind === TokenKind.LBracket) {
-        depth += 1;
-        continue;
-      }
-      if (token.kind === TokenKind.RBracket) {
-        depth -= 1;
-        if (depth === 0) return sawConstraint;
-        continue;
-      }
-      if (depth === 1 && offset > 1 && token.kind !== TokenKind.Comma) {
-        sawConstraint = true;
-      }
-    }
   }
 
   private parseValueSpec(): ValueSpec {
