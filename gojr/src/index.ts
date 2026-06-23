@@ -4,6 +4,18 @@ import type { Diagnostic } from "./diagnostics.js";
 import type { ParseFrontResult } from "./front/parser.js";
 
 export {
+  AsyncGoChannel,
+  AsyncGoDeadlockError,
+  AsyncGoPanic,
+  AsyncGoScheduler,
+  asyncSelect
+} from "./asyncRuntime.js";
+export type {
+  AsyncGoSchedulerOptions,
+  AsyncSelectCase,
+  AsyncSelectResult
+} from "./asyncRuntime.js";
+export {
   artifactPathForImportPath,
   buildPackage,
   buildPackages,

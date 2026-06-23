@@ -1,4 +1,5 @@
 import { frontSourceToAst } from "./frontToAst.js";
+export { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
 export { artifactPathForImportPath, buildPackage, buildPackages, resolveArtifactRoot } from "./build.js";
 export { childNodes, ident, parseCellAddress, walk } from "./front/ast.js";
 export { checkFrontFiles, checkFrontSource } from "./front/checker.js";
