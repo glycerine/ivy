@@ -192,6 +192,7 @@ export interface ExpressionStatement {
 export type Expression =
   | IdentifierExpression
   | LiteralExpression
+  | MapLiteralExpression
   | UnaryExpression
   | BinaryExpression
   | SelectorExpression
@@ -213,6 +214,19 @@ export interface LiteralExpression {
   literalKind: "int" | "float" | "string" | "bool" | "nil";
   value: LiteralValue;
   raw: string;
+  span?: SourceSpan;
+}
+
+export interface MapEntryExpression {
+  key: Expression;
+  value: Expression;
+}
+
+export interface MapLiteralExpression {
+  kind: "MapLiteralExpression";
+  keyType: TypeNode;
+  valueType: TypeNode;
+  entries: MapEntryExpression[];
   span?: SourceSpan;
 }
 

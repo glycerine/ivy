@@ -19,6 +19,8 @@ import {
   IndexExpression,
   LabeledStatement,
   LiteralExpression,
+  MapEntryExpression,
+  MapLiteralExpression,
   ParameterDecl,
   ProgramAst,
   ReceiverDecl,
@@ -722,6 +724,9 @@ function selectorStart(expression: Expression): SelectorExpression {
 }
 
 function atomToAst(node: CstNode): Expression {
+  const mapLiteral = firstChildNode(node, "mapLiteral");
+  if (mapLiteral) return mapLiteralToAst(mapLiteral);
+
   const literal = firstChildNode(node, "literal");
   if (literal) return literalToAst(literal);
 
@@ -730,6 +735,27 @@ function atomToAst(node: CstNode): Expression {
 
   const expression = firstChildNode(node, "expression");
   return expression ? expressionToAst(expression) : missingExpression();
+}
+
+function mapLiteralToAst(node: CstNode): MapLiteralExpression {
+  const types = childNodes(node, "typeExpression");
+  return withSpan(
+    {
+      kind: "MapLiteralExpression",
+      keyType: types[0] ? typeToAst(types[0]) : { text: "<missing>" },
+      valueType: types[1] ? typeToAst(types[1]) : { text: "<missing>" },
+      entries: childNodes(node, "mapElement").map(mapElementToAst)
+    } satisfies MapLiteralExpression,
+    node
+  );
+}
+
+function mapElementToAst(node: CstNode): MapEntryExpression {
+  const expressions = childNodes(node, "expression");
+  return {
+    key: expressions[0] ? expressionToAst(expressions[0]) : missingExpression(),
+    value: expressions[1] ? expressionToAst(expressions[1]) : missingExpression()
+  };
 }
 
 function qualifiedNameToAst(node: CstNode): Expression {

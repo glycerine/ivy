@@ -77,6 +77,55 @@ return fmt.Sprintf("%#v %#v %#v", "x", 1.5, true)
         expect(result.output).toEqual(["i = int64(7)\n"]);
         expect(result.value).toBe(`string("x") float64(1.5) bool(true)`);
     });
+    test("supports declared maps with typed string and integer keys", () => {
+        const stringKeyed = expectRuns(`
+var m map[string]int
+m["hi"] = 3
+return m["hi"]
+`);
+        expect(stringKeyed.value).toBe(3n);
+        const intKeyed = expectRuns(`
+var mm map[int]string
+mm[3] = "hi"
+return mm[3]
+`);
+        expect(intKeyed.value).toBe("hi");
+    });
+    test("reports map key and value type mismatches without numeric-index coercion", () => {
+        const badKey = evaluateSource(`
+var mm map[int]string
+mm["hi"] = 3
+`);
+        expect(badKey.diagnostics).toHaveLength(1);
+        expect(badKey.diagnostics[0]?.message).toContain("map key hi is not assignable to int");
+        expect(badKey.diagnostics[0]?.message).not.toContain("numeric");
+        const badValue = evaluateSource(`
+var m map[string]int
+m["hi"] = "three"
+`);
+        expect(badValue.diagnostics).toHaveLength(1);
+        expect(badValue.diagnostics[0]?.message).toContain("map value three is not assignable to int");
+    });
+    test("evaluates map literals, missing-key zero values, and insertion-order range", () => {
+        const result = expectRuns(`
+counts := map[string]int64{"a": 1, "b": 2}
+out := ""
+for k, v := range counts {
+  out = out + k + ":" + v + ";"
+}
+return counts["a"] + counts["b"] + counts["missing"], out
+`);
+        expect(result.values).toEqual([3n, "a:1;b:2;"]);
+    });
+    test("formats typed maps with fmt verbs", () => {
+        const result = expectRuns(`
+import "fmt"
+
+counts := map[string]int64{"a": 1, "b": 2}
+return fmt.Sprintf("%v | %#v", counts, counts)
+`);
+        expect(result.value).toBe(`map[a:1 b:2] | map[string]int64{string("a"): int64(1), string("b"): int64(2)}`);
+    });
     test("reports panicOn failures as runtime diagnostics", () => {
         const result = evaluateSource(`
 panicOn("bad")

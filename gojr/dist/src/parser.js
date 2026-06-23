@@ -45,6 +45,8 @@ export class GoJuniorParser extends CstParser {
     unaryExpr;
     primaryExpr;
     atom;
+    mapLiteral;
+    mapElement;
     functionLiteral;
     arguments;
     expressionList;
@@ -534,6 +536,7 @@ export class GoJuniorParser extends CstParser {
         });
         this.atom = $.RULE("atom", () => {
             $.OR([
+                { ALT: () => $.SUBRULE(this.mapLiteral) },
                 { ALT: () => $.SUBRULE(this.literal) },
                 { ALT: () => $.SUBRULE(this.qualifiedName) },
                 {
@@ -544,6 +547,28 @@ export class GoJuniorParser extends CstParser {
                     }
                 }
             ]);
+        });
+        this.mapLiteral = $.RULE("mapLiteral", () => {
+            $.CONSUME(MapTok);
+            $.CONSUME(LBracket);
+            $.SUBRULE(this.typeExpression);
+            $.CONSUME(RBracket);
+            $.SUBRULE2(this.typeExpression);
+            $.CONSUME(LBrace);
+            $.OPTION(() => {
+                $.SUBRULE(this.mapElement);
+                $.MANY(() => {
+                    $.CONSUME(Comma);
+                    $.SUBRULE2(this.mapElement);
+                });
+                $.OPTION2(() => $.CONSUME2(Comma));
+            });
+            $.CONSUME(RBrace);
+        });
+        this.mapElement = $.RULE("mapElement", () => {
+            $.SUBRULE(this.expression);
+            $.CONSUME(Colon);
+            $.SUBRULE2(this.expression);
         });
         this.functionLiteral = $.RULE("functionLiteral", () => {
             $.CONSUME(Func);

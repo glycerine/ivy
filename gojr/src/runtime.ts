@@ -12,11 +12,13 @@ import {
   IfStatement,
   IncDecStatement,
   IndexExpression,
+  MapLiteralExpression,
   ProgramAst,
   SelectorExpression,
   SpreadsheetRangeExpression,
   Statement,
   SwitchStatement,
+  TypeNode,
   UnaryExpression
 } from "./ast.js";
 import { cstToAst } from "./cstToAst.js";
@@ -30,6 +32,7 @@ export type RuntimeValue =
   | number
   | bigint
   | RuntimeValue[]
+  | RuntimeMap
   | RuntimeObject
   | RuntimeCallable
   | GoJuniorFunction
@@ -260,6 +263,38 @@ class SheetBinding {
     }
 
     return values;
+  }
+}
+
+interface RuntimeMapEntry {
+  key: RuntimeValue;
+  value: RuntimeValue;
+}
+
+const objectMapKeyIds = new WeakMap<object, number>();
+let nextObjectMapKeyId = 1;
+
+export class RuntimeMap {
+  private readonly entries = new Map<string, RuntimeMapEntry>();
+
+  public constructor(
+    public readonly keyType: string,
+    public readonly valueType: string
+  ) {}
+
+  public get(key: RuntimeValue): RuntimeValue {
+    const entry = this.entries.get(runtimeMapKeyId(key));
+    return entry ? entry.value : zeroValueForMapValue(this.valueType);
+  }
+
+  public set(key: RuntimeValue, value: RuntimeValue): void {
+    assertAssignableToType(key, this.keyType, "map key");
+    assertAssignableToType(value, this.valueType, "map value");
+    this.entries.set(runtimeMapKeyId(key), { key, value });
+  }
+
+  public orderedEntries(): Array<[RuntimeValue, RuntimeValue]> {
+    return [...this.entries.values()].map((entry) => [entry.key, entry.value]);
   }
 }
 
@@ -584,13 +619,21 @@ function executeStatement(statement: Statement, context: EvaluationContext): Com
 
     case "ConstDecl":
       for (const declaration of statement.declarations) {
-        context.declare(declaration.name, declaration.value ? evaluateExpression(declaration.value, context) : null, false);
+        context.declare(
+          declaration.name,
+          declaration.value ? evaluateExpression(declaration.value, context) : defaultValueForDeclarationType(declaration.type),
+          false
+        );
       }
       return { kind: "normal" };
 
     case "VarDecl":
       for (const declaration of statement.declarations) {
-        context.declare(declaration.name, declaration.value ? evaluateExpression(declaration.value, context) : null, true);
+        context.declare(
+          declaration.name,
+          declaration.value ? evaluateExpression(declaration.value, context) : defaultValueForDeclarationType(declaration.type),
+          true
+        );
       }
       return { kind: "normal" };
 
@@ -810,6 +853,9 @@ function evaluateExpression(expression: Expression, context: EvaluationContext):
     case "Literal":
       return expression.value;
 
+    case "MapLiteralExpression":
+      return evaluateMapLiteral(expression, context);
+
     case "UnaryExpression":
       return evaluateUnary(expression, context);
 
@@ -835,6 +881,14 @@ function evaluateExpression(expression: Expression, context: EvaluationContext):
     case "SpreadsheetRangeExpression":
       return getSpreadsheetRange(expression, context);
   }
+}
+
+function evaluateMapLiteral(expression: MapLiteralExpression, context: EvaluationContext): RuntimeMap {
+  const map = new RuntimeMap(expression.keyType.text, expression.valueType.text);
+  for (const entry of expression.entries) {
+    map.set(evaluateExpression(entry.key, context), evaluateExpression(entry.value, context));
+  }
+  return map;
 }
 
 function evaluateIdentifier(expression: IdentifierExpression, context: EvaluationContext): RuntimeValue {
@@ -943,23 +997,28 @@ function getSpreadsheetRange(expression: SpreadsheetRangeExpression, context: Ev
 }
 
 function getIndex(object: RuntimeValue, index: RuntimeValue): RuntimeValue {
+  if (object instanceof RuntimeMap) return object.get(index);
+  if (isRuntimeObject(object)) return object[String(index)] ?? null;
   const numericIndex = toNumber(index);
   if (Array.isArray(object)) return object[numericIndex] ?? null;
   if (typeof object === "string") return object[numericIndex] ?? "";
-  if (isRuntimeObject(object)) return object[String(index)] ?? null;
   throw new GoJuniorRuntimeError(`${formatValue(object)} is not indexable`);
 }
 
 function setIndex(expression: IndexExpression, value: RuntimeValue, context: EvaluationContext): void {
   const object = evaluateExpression(expression.object, context);
   const index = evaluateExpression(expression.index, context);
-  const numericIndex = toNumber(index);
-  if (Array.isArray(object)) {
-    object[numericIndex] = value;
+  if (object instanceof RuntimeMap) {
+    object.set(index, value);
     return;
   }
   if (isRuntimeObject(object)) {
     object[String(index)] = value;
+    return;
+  }
+  const numericIndex = toNumber(index);
+  if (Array.isArray(object)) {
+    object[numericIndex] = value;
     return;
   }
   throw new GoJuniorRuntimeError(`${formatValue(object)} is not indexable`);
@@ -971,6 +1030,160 @@ function getSlice(object: RuntimeValue, start: RuntimeValue | undefined, end: Ru
   if (Array.isArray(object)) return object.slice(startIndex, endIndex);
   if (typeof object === "string") return object.slice(startIndex, endIndex);
   throw new GoJuniorRuntimeError(`${formatValue(object)} is not sliceable`);
+}
+
+function defaultValueForDeclarationType(type: TypeNode | undefined): RuntimeValue {
+  const mapType = type ? parseMapTypeText(type.text) : undefined;
+  if (mapType) return new RuntimeMap(mapType.keyType, mapType.valueType);
+  return null;
+}
+
+function zeroValueForMapValue(typeText: string): RuntimeValue {
+  const type = normalizeTypeText(typeText);
+  if (isIntegerType(type)) return 0n;
+  if (isFloatType(type)) return 0;
+  if (type === "string") return "";
+  if (type === "bool") return false;
+  return null;
+}
+
+function assertAssignableToType(value: RuntimeValue, typeText: string, role: string): void {
+  const type = normalizeTypeText(typeText);
+  if (!type || type === "<missing>" || type === "any" || type === "interface{}") return;
+
+  if (value === null) {
+    if (isNilAssignableType(type)) return;
+    throw new GoJuniorRuntimeError(`${role} nil is not assignable to ${type}`);
+  }
+
+  if (type === "string") {
+    if (typeof value !== "string") throwTypeError(value, type, role);
+    return;
+  }
+  if (type === "bool") {
+    if (typeof value !== "boolean") throwTypeError(value, type, role);
+    return;
+  }
+  if (isIntegerType(type)) {
+    if (typeof value !== "bigint" || !integerInRange(value, type)) throwTypeError(value, type, role);
+    return;
+  }
+  if (isFloatType(type)) {
+    if (typeof value !== "number") throwTypeError(value, type, role);
+    return;
+  }
+  if (parseMapTypeText(type)) {
+    if (!(value instanceof RuntimeMap)) throwTypeError(value, type, role);
+    return;
+  }
+  if (type.startsWith("[]") || /^\[[0-9]*\]/.test(type)) {
+    if (!Array.isArray(value)) throwTypeError(value, type, role);
+    return;
+  }
+  if (type.startsWith("func(")) {
+    if (!isRuntimeCallable(value) && !isGoJuniorFunction(value)) throwTypeError(value, type, role);
+    return;
+  }
+}
+
+function throwTypeError(value: RuntimeValue, type: string, role: string): never {
+  throw new GoJuniorRuntimeError(`${role} ${formatValue(value)} is not assignable to ${type}`);
+}
+
+function parseMapTypeText(typeText: string): { keyType: string; valueType: string } | undefined {
+  const type = normalizeTypeText(typeText);
+  if (!type.startsWith("map[")) return undefined;
+
+  let depth = 0;
+  for (let index = 3; index < type.length; index += 1) {
+    const char = type[index];
+    if (char === "[") {
+      depth += 1;
+      continue;
+    }
+    if (char === "]") {
+      depth -= 1;
+      if (depth === 0) {
+        const keyType = type.slice(4, index);
+        const valueType = type.slice(index + 1);
+        if (!keyType || !valueType) return undefined;
+        return { keyType, valueType };
+      }
+    }
+  }
+  return undefined;
+}
+
+function normalizeTypeText(typeText: string): string {
+  return typeText.replace(/\s+/g, "");
+}
+
+function runtimeMapKeyId(key: RuntimeValue): string {
+  if (key === null) return "nil";
+  if (typeof key === "boolean") return `b:${key}`;
+  if (typeof key === "string") return `s:${key}`;
+  if (typeof key === "bigint") return `i:${key}`;
+  if (typeof key === "number") return `f:${Object.is(key, -0) ? "-0" : String(key)}`;
+  return `o:${objectIdentityId(key)}`;
+}
+
+function objectIdentityId(value: object): number {
+  const existing = objectMapKeyIds.get(value);
+  if (existing !== undefined) return existing;
+  const id = nextObjectMapKeyId;
+  nextObjectMapKeyId += 1;
+  objectMapKeyIds.set(value, id);
+  return id;
+}
+
+function isNilAssignableType(type: string): boolean {
+  return type === "error" ||
+    type === "any" ||
+    type === "interface{}" ||
+    type.startsWith("*") ||
+    type.startsWith("[]") ||
+    type.startsWith("map[") ||
+    type.startsWith("func(");
+}
+
+function isIntegerType(type: string): boolean {
+  return /^(?:u?int(?:8|16|32|64)?|byte|rune)$/.test(type);
+}
+
+function isFloatType(type: string): boolean {
+  return type === "float32" || type === "float64";
+}
+
+function integerInRange(value: bigint, type: string): boolean {
+  const bounds = integerTypeBounds(type);
+  return !bounds || (value >= bounds.min && value <= bounds.max);
+}
+
+function integerTypeBounds(type: string): { min: bigint; max: bigint } | undefined {
+  switch (type) {
+    case "uint8":
+    case "byte":
+      return { min: 0n, max: 255n };
+    case "int8":
+      return { min: -128n, max: 127n };
+    case "uint16":
+      return { min: 0n, max: 65535n };
+    case "int16":
+      return { min: -32768n, max: 32767n };
+    case "uint32":
+      return { min: 0n, max: 4294967295n };
+    case "int32":
+    case "rune":
+      return { min: -2147483648n, max: 2147483647n };
+    case "uint":
+    case "uint64":
+      return { min: 0n, max: 18446744073709551615n };
+    case "int":
+    case "int64":
+      return { min: -9223372036854775808n, max: 9223372036854775807n };
+    default:
+      return undefined;
+  }
 }
 
 function addNumbers(left: RuntimeValue, right: RuntimeValue): RuntimeValue {
@@ -1055,6 +1268,9 @@ function rangeEntries(source: RuntimeValue): Array<[RuntimeValue, RuntimeValue]>
   if (typeof source === "string") {
     return [...source].map((value, index) => [BigInt(index), value]);
   }
+  if (source instanceof RuntimeMap) {
+    return source.orderedEntries();
+  }
   if (isRuntimeObject(source)) {
     return Object.entries(source).map(([key, value]) => [key, value]);
   }
@@ -1096,6 +1312,7 @@ export function formatValue(value: RuntimeValue): string {
   if (typeof value === "bigint") return value.toString();
   if (typeof value === "number" || typeof value === "boolean" || typeof value === "string") return String(value);
   if (Array.isArray(value)) return `[${value.map(formatValue).join(" ")}]`;
+  if (value instanceof RuntimeMap) return formatRuntimeMap(value);
   if (isRuntimeCallable(value) || isGoJuniorFunction(value)) return `<func ${value.name}>`;
   if (value instanceof SheetBinding) return `<sheet ${value.name}>`;
   return `{${Object.entries(value).map(([key, item]) => `${key}:${formatValue(item)}`).join(" ")}}`;
@@ -1108,11 +1325,26 @@ function formatGoSyntaxValue(value: RuntimeValue): string {
   if (typeof value === "boolean") return `bool(${value})`;
   if (typeof value === "string") return `string(${JSON.stringify(value)})`;
   if (Array.isArray(value)) return `[]interface{}{${value.map(formatGoSyntaxValue).join(", ")}}`;
+  if (value instanceof RuntimeMap) return formatGoSyntaxMap(value);
   if (isRuntimeCallable(value) || isGoJuniorFunction(value)) return `<func ${value.name}>`;
   if (value instanceof SheetBinding) return `<sheet ${value.name}>`;
   return `map[string]interface{}{${Object.entries(value)
     .map(([key, item]) => `${JSON.stringify(key)}: ${formatGoSyntaxValue(item)}`)
     .join(", ")}}`;
+}
+
+function formatRuntimeMap(value: RuntimeMap): string {
+  const entries = value.orderedEntries()
+    .map(([key, item]) => `${formatValue(key)}:${formatValue(item)}`)
+    .join(" ");
+  return `map[${entries}]`;
+}
+
+function formatGoSyntaxMap(value: RuntimeMap): string {
+  const entries = value.orderedEntries()
+    .map(([key, item]) => `${formatGoSyntaxValue(key)}: ${formatGoSyntaxValue(item)}`)
+    .join(", ");
+  return `map[${value.keyType}]${value.valueType}{${entries}}`;
 }
 
 function integerTypeName(value: bigint): "int64" | "bigint" {
@@ -1127,7 +1359,15 @@ function formatFloat(value: number): string {
 }
 
 function isRuntimeObject(value: RuntimeValue): value is RuntimeObject {
-  return Boolean(value && typeof value === "object" && !Array.isArray(value) && !isRuntimeCallable(value) && !isGoJuniorFunction(value));
+  return Boolean(
+    value &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    !(value instanceof RuntimeMap) &&
+    !(value instanceof SheetBinding) &&
+    !isRuntimeCallable(value) &&
+    !isGoJuniorFunction(value)
+  );
 }
 
 function isRuntimeCallable(value: RuntimeValue): value is RuntimeCallable {

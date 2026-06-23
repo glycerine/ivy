@@ -42,6 +42,12 @@ panicOn(err)
 panic("boom")
 `);
     });
+    test("parses map types and literals", () => {
+        expectParses(`
+var m map[string]int
+m = map[string]int{"a": 1, "b": 2}
+`);
+    });
     test("parses Go-junior function cell source", () => {
         const result = expectParses(`
 import "fmt"

@@ -12,7 +12,8 @@ export {
   formatValue,
   GoJuniorSession,
   GoJuniorPanic,
-  GoJuniorRuntimeError
+  GoJuniorRuntimeError,
+  RuntimeMap
 } from "./runtime.js";
 export type {
   EvaluationOptions,
