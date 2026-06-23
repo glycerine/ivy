@@ -4,9 +4,13 @@ import type { Diagnostic } from "./diagnostics.js";
 import type { ParseFrontResult } from "./front/parser.js";
 
 export {
+  AsyncGoJuniorSession
+} from "./asyncSession.js";
+export {
   emitAsyncJavaScript
 } from "./asyncEmitter.js";
 export type {
+  AsyncEmitOptions,
   AsyncEmitResult
 } from "./asyncEmitter.js";
 export {

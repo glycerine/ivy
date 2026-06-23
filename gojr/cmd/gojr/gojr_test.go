@@ -190,6 +190,17 @@ func TestReadTestTargetTestFileIncludesSiblingPackageFiles(t *testing.T) {
 }
 
 func TestNodeRuntimeUsesEnvironmentRandomSeed(t *testing.T) {
+	t.Setenv("GOJR_RANDOM_SEED", "gojr-select-seed")
+	moduleBundle, err := runtimeModuleBundle()
+	if err != nil {
+		t.Fatalf("runtimeModuleBundle() error = %v", err)
+	}
+	rt, err := newNodeRuntime(moduleBundle)
+	if err != nil {
+		t.Fatalf("newNodeRuntime() error = %v", err)
+	}
+	t.Cleanup(rt.Close)
+
 	source := `ch1 := make(chan int, 2)
 ch2 := make(chan int, 2)
 ch1 <- 1
@@ -209,25 +220,33 @@ case b = <-ch2:
 return a, b
 `
 
-	result := evalWithRandomSeed(t, "gojr-select-seed", source)
+	result := mustEval(t, rt, source)
 	if result.Value != "2, 1" {
 		t.Fatalf("GOJR_RANDOM_SEED gojr-select-seed value = %q, want 2, 1", result.Value)
 	}
+
+	for _, source := range []string{
+		"c := make(chan int)",
+		"go func() { c <- 1 }()",
+		"gotFromC := <-c",
+	} {
+		result, err := rt.Eval(source)
+		if err != nil {
+			t.Fatalf("Eval(%q) error = %v", source, err)
+		}
+		if !result.OK {
+			t.Fatalf("Eval(%q) diagnostics = %v", source, result.Diagnostics)
+		}
+	}
+
+	result = mustEval(t, rt, "gotFromC")
+	if result.Value != "1" {
+		t.Fatalf("Eval(gotFromC) value = %q, want 1", result.Value)
+	}
 }
 
-func evalWithRandomSeed(t *testing.T, seed string, source string) evalResult {
+func mustEval(t *testing.T, rt *nodeRuntime, source string) evalResult {
 	t.Helper()
-
-	t.Setenv("GOJR_RANDOM_SEED", seed)
-	moduleBundle, err := runtimeModuleBundle()
-	if err != nil {
-		t.Fatalf("runtimeModuleBundle() error = %v", err)
-	}
-	rt, err := newNodeRuntime(moduleBundle)
-	if err != nil {
-		t.Fatalf("newNodeRuntime() error = %v", err)
-	}
-	t.Cleanup(rt.Close)
 
 	result, err := rt.Eval(source)
 	if err != nil {

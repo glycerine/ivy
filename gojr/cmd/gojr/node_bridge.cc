@@ -59,6 +59,19 @@ std::string exception_to_string(v8::Isolate* isolate, v8::TryCatch& try_catch) {
   return out.str();
 }
 
+std::string value_exception_to_string(v8::Isolate* isolate, v8::Local<v8::Value> value) {
+  if (value->IsNativeError()) return v8_to_string(isolate, value);
+  if (value->IsObject()) {
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+    v8::Local<v8::String> stack_name = v8::String::NewFromUtf8Literal(isolate, "stack");
+    v8::Local<v8::Value> stack;
+    if (value.As<v8::Object>()->Get(context, stack_name).ToLocal(&stack) && !stack->IsUndefined()) {
+      return v8_to_string(isolate, stack);
+    }
+  }
+  return v8_to_string(isolate, value);
+}
+
 std::string js_string_literal(const std::string& text) {
   std::ostringstream out;
   out << '"';
@@ -187,6 +200,8 @@ function __gojrRequire(specifier, parent = "/src/index.js") {
 }
 
 const gojrModule = __gojrRequire("/src/index.js");
+const gojrAsyncSessionModule = __gojrRequire("/src/asyncSession.js");
+const gojrAsyncRuntimeModule = __gojrRequire("/src/asyncRuntime.js");
 
 function gojrRuntimeOptions(extra = {}) {
   const seed = globalThis.process?.env?.GOJR_RANDOM_SEED;
@@ -195,7 +210,7 @@ function gojrRuntimeOptions(extra = {}) {
     : { ...extra, randomSeed: seed };
 }
 
-const gojrSession = new gojrModule.GoJuniorSession(gojrRuntimeOptions({ sheet: {} }));
+const gojrSession = new gojrAsyncSessionModule.AsyncGoJuniorSession(gojrRuntimeOptions({ sheet: {} }));
 
 function gojrDiagnosticString(diagnostic) {
   const filename = diagnostic?.span?.filename || diagnostic?.filename || "gojr-repl.go";
@@ -206,9 +221,18 @@ function gojrDiagnosticString(diagnostic) {
 }
 
 function gojrFormatResult(result) {
-  if (result.values) return result.values.map((value) => gojrModule.formatReplValue(value)).join(", ");
-  if (Object.prototype.hasOwnProperty.call(result, "value")) return gojrModule.formatReplValue(result.value);
+  if (result.values) return result.values.map((value) => gojrFormatValue(value)).join(", ");
+  if (Object.prototype.hasOwnProperty.call(result, "value")) return gojrFormatValue(result.value);
   return "";
+}
+
+function gojrFormatValue(value) {
+  if (typeof value === "function") {
+    const name = value.name ? value.name.replace(/^_fn_/, "") : "";
+    return name ? `<func ${name}>` : "<func>";
+  }
+  if (value instanceof gojrAsyncRuntimeModule.AsyncGoChannel) return "chan";
+  return gojrModule.formatReplValue(value);
 }
 
 function gojrResultValueIsNil(result) {
@@ -217,8 +241,8 @@ function gojrResultValueIsNil(result) {
   return false;
 }
 
-globalThis.__gojrEval = function(source) {
-  const result = gojrSession.evaluate(source);
+globalThis.__gojrEval = async function(source) {
+  const result = await gojrSession.evaluate(source);
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
@@ -367,6 +391,29 @@ char* call_global_string_function(
   if (!function->Call(context, context->Global(), 1, argv).ToLocal(&result)) {
     set_error(error_out, exception_to_string(isolate, try_catch));
     return nullptr;
+  }
+
+  if (result->IsPromise()) {
+    v8::Local<v8::Promise> promise = result.As<v8::Promise>();
+    while (promise->State() == v8::Promise::kPending) {
+      isolate->PerformMicrotaskCheckpoint();
+      if (promise->State() != v8::Promise::kPending) break;
+      v8::Maybe<int> spun = node::SpinEventLoop(runtime->setup->env());
+      if (spun.IsNothing()) {
+        set_error(error_out, exception_to_string(isolate, try_catch));
+        return nullptr;
+      }
+      isolate->PerformMicrotaskCheckpoint();
+      if (promise->State() == v8::Promise::kPending) {
+        set_error(error_out, std::string(function_name) + " returned a Promise that did not settle");
+        return nullptr;
+      }
+    }
+    if (promise->State() == v8::Promise::kRejected) {
+      set_error(error_out, value_exception_to_string(isolate, promise->Result()));
+      return nullptr;
+    }
+    result = promise->Result();
   }
 
   v8::Local<v8::String> result_string;

@@ -2,11 +2,13 @@ import { REPL_FILENAME } from "./diagnostics.js";
 import { analyzeEffects } from "./effects.js";
 class AsyncEmitter {
     program;
+    options;
     diagnostics = [];
     functions = new Map();
     nextLocal = 0;
-    constructor(program) {
+    constructor(program, options = {}) {
         this.program = program;
+        this.options = options;
         for (const declaration of program.functions) {
             if (declaration.receiver) {
                 this.unsupported("method emission is not in the async emitter slice yet", declaration.span);
@@ -34,21 +36,26 @@ class AsyncEmitter {
         lines.push(`  const __scheduler = __runtime.scheduler;`);
         lines.push(`  const __AsyncGoChannel = __runtime.AsyncGoChannel;`);
         lines.push(`  const __asyncSelect = __runtime.asyncSelect;`);
+        lines.push(`  const __state = __runtime.state ?? Object.create(null);`);
         lines.push(`  const __makeChannel = (capacity, zeroValue) => new __AsyncGoChannel(__scheduler, Number(capacity ?? 0), zeroValue);`);
         lines.push(`  const __functions = Object.create(null);`);
         lines.push(`  const __effects = ${JSON.stringify(effects)};`);
         for (const info of this.functions.values()) {
             lines.push(this.indent(this.emitFunction(info), 1));
             lines.push(`  __functions[${JSON.stringify(info.declaration.name)}] = ${info.jsName};`);
+            if (this.options.sessionState) {
+                lines.push(`  __state[${JSON.stringify(info.declaration.name)}] = ${info.jsName};`);
+            }
         }
         lines.push(this.indent(this.emitMain(), 1));
-        lines.push(`  return { functions: __functions, main: __main, effects: __effects };`);
+        lines.push(this.indent(this.emitRun(), 1));
+        lines.push(`  return { functions: __functions, main: __main, run: __run, effects: __effects };`);
         lines.push(`})(arguments[0] ?? {});`);
         lines.push(`return __gojr;`);
         return lines.join("\n");
     }
     emitFunction(info) {
-        const scope = this.rootScope();
+        const scope = this.rootScope(false);
         const params = [];
         for (const [index, parameter] of info.declaration.signature.parameters.entries()) {
             const sourceName = parameter.name ?? `_arg${index}`;
@@ -63,20 +70,37 @@ class AsyncEmitter {
         ].join("\n");
     }
     emitMain() {
-        const scope = this.rootScope();
-        const body = this.emitStatements(this.program.body, scope);
+        const scope = this.rootScope(true);
+        const body = this.emitStatements(this.program.body, scope, this.options.returnLastExpression === true);
         return [
             `async function __main() {`,
             this.indent(body || `return null;`, 1),
             `}`
         ].join("\n");
     }
+    emitRun() {
+        return [
+            `async function __run() {`,
+            `  if (!__scheduler) return __main();`,
+            `  let __result = undefined;`,
+            `  __scheduler.go(async () => {`,
+            `    __result = await __main();`,
+            `  });`,
+            `  await __scheduler.run();`,
+            `  return __result;`,
+            `}`
+        ].join("\n");
+    }
     emitBlockStatements(block, scope, createScope) {
         return this.emitStatements(block.statements, createScope ? this.childScope(scope) : scope);
     }
-    emitStatements(statements, scope) {
+    emitStatements(statements, scope, returnLastExpression = false) {
         const lines = [];
-        for (const statement of statements) {
+        for (const [index, statement] of statements.entries()) {
+            if (returnLastExpression && index === statements.length - 1 && statement.kind === "ExpressionStatement") {
+                lines.push(`return ${this.emitExpression(statement.expression, scope)};`);
+                continue;
+            }
             const emitted = this.emitStatement(statement, scope);
             if (emitted)
                 lines.push(emitted);
@@ -91,14 +115,10 @@ class AsyncEmitter {
                 return statement.declarations.map((declaration) => {
                     const jsName = this.declare(scope, declaration.name);
                     const value = declaration.value ? this.emitExpression(declaration.value, scope) : "null";
-                    return `let ${jsName} = ${value};`;
+                    return this.emitBindingInitialization(jsName, value);
                 }).join("\n");
             case "ShortVarStatement":
-                return statement.names.map((name, index) => {
-                    const jsName = this.declare(scope, name);
-                    const value = statement.values[index] ? this.emitExpression(statement.values[index], scope) : "null";
-                    return `let ${jsName} = ${value};`;
-                }).join("\n");
+                return this.emitShortVar(statement, scope);
             case "AssignStatement":
                 return this.emitAssign(statement, scope);
             case "ReturnStatement":
@@ -131,10 +151,50 @@ class AsyncEmitter {
             this.unsupported(`unsupported assignment operator in async emitter: ${statement.operator}`, statement.span);
             return "";
         }
+        const receive = statement.values.length === 1 ? receiveChannelFromExpression(statement.values[0]) : undefined;
+        if (receive && statement.targets.length > 1) {
+            return this.emitReceiveAssign(statement, receive, scope);
+        }
         return statement.targets.map((target, index) => {
             const value = statement.values[index] ? this.emitExpression(statement.values[index], scope) : "null";
             return `${this.emitAssignableExpression(target, scope)} = ${value};`;
         }).join("\n");
+    }
+    emitShortVar(statement, scope) {
+        const receive = statement.values.length === 1 ? receiveChannelFromExpression(statement.values[0]) : undefined;
+        if (receive && statement.names.length > 1) {
+            return this.emitReceiveShortVar(statement, receive, scope);
+        }
+        return statement.names.map((name, index) => {
+            const jsName = this.declare(scope, name);
+            const value = statement.values[index] ? this.emitExpression(statement.values[index], scope) : "null";
+            return this.emitBindingInitialization(jsName, value);
+        }).join("\n");
+    }
+    emitReceiveShortVar(statement, channel, scope) {
+        if (statement.names.length !== 2) {
+            this.unsupported("channel receive short declaration must bind one or two names", statement.span);
+            return "";
+        }
+        const resultName = `_recv${this.nextLocal++}`;
+        const lines = [`const ${resultName} = await ${this.emitExpression(channel, scope)}.receive();`];
+        for (const [index, name] of statement.names.entries()) {
+            const jsName = this.declare(scope, name);
+            lines.push(this.emitBindingInitialization(jsName, `${resultName}[${index}]`));
+        }
+        return lines.join("\n");
+    }
+    emitReceiveAssign(statement, channel, scope) {
+        if (statement.targets.length !== 2) {
+            this.unsupported("channel receive assignment must bind one or two targets", statement.span);
+            return "";
+        }
+        const resultName = `_recv${this.nextLocal++}`;
+        const lines = [`const ${resultName} = await ${this.emitExpression(channel, scope)}.receive();`];
+        for (const [index, target] of statement.targets.entries()) {
+            lines.push(`${this.emitAssignableExpression(target, scope)} = ${resultName}[${index}];`);
+        }
+        return lines.join("\n");
     }
     emitReturn(statement, scope) {
         const values = statement.values.map((value) => this.emitExpression(value, scope));
@@ -230,7 +290,36 @@ class AsyncEmitter {
         if (expression.callee.kind === "Identifier" && expression.callee.name === "make") {
             return this.emitMake(expression, scope);
         }
+        const builtin = this.emitBuiltinCall(expression, scope);
+        if (builtin !== undefined)
+            return builtin;
         return `(await ${this.emitInvocation(expression, scope)})`;
+    }
+    emitBuiltinCall(expression, scope) {
+        if (expression.callee.kind !== "Identifier")
+            return undefined;
+        if (expression.callee.name === "close") {
+            if (expression.args.length !== 1) {
+                this.unsupported("close expects exactly one argument", expression.span);
+                return "undefined";
+            }
+            return `(${this.emitExpression(expression.args[0], scope)}.close(), null)`;
+        }
+        if (expression.callee.name === "len") {
+            if (expression.args.length !== 1) {
+                this.unsupported("len expects exactly one argument", expression.span);
+                return "undefined";
+            }
+            return `BigInt(${this.emitExpression(expression.args[0], scope)}.len())`;
+        }
+        if (expression.callee.name === "cap") {
+            if (expression.args.length !== 1) {
+                this.unsupported("cap expects exactly one argument", expression.span);
+                return "undefined";
+            }
+            return `BigInt(${this.emitExpression(expression.args[0], scope)}.cap())`;
+        }
+        return undefined;
     }
     emitInvocation(expression, scope) {
         if (expression.callee.kind !== "Identifier") {
@@ -244,6 +333,11 @@ class AsyncEmitter {
         }
         const target = this.functions.get(expression.callee.name);
         if (!target) {
+            if (this.options.sessionState) {
+                const callee = this.lookup(scope, expression.callee.name, expression.callee.span);
+                const args = expression.args.map((arg) => this.emitExpression(arg, scope)).join(", ");
+                return `${callee}(${args})`;
+            }
             this.unsupported(`unknown function call in async emitter: ${expression.callee.name}`, expression.callee.span);
             return "undefined";
         }
@@ -314,16 +408,24 @@ class AsyncEmitter {
         this.unsupported("type assertion emission is not in the first async emitter slice", expression.span);
         return this.emitExpression(expression.expression, scope);
     }
-    rootScope() {
-        return { bindings: new Map() };
+    rootScope(topLevel) {
+        return { bindings: new Map(), topLevel };
     }
     childScope(parent) {
         return { parent, bindings: new Map() };
     }
     declare(scope, name) {
+        if (this.options.sessionState && scope.topLevel) {
+            const jsName = `__state[${JSON.stringify(name)}]`;
+            scope.bindings.set(name, jsName);
+            return jsName;
+        }
         const jsName = `_v${this.nextLocal++}_${sanitizeIdentifierPart(name)}`;
         scope.bindings.set(name, jsName);
         return jsName;
+    }
+    emitBindingInitialization(target, value) {
+        return target.startsWith("__state[") ? `${target} = ${value};` : `let ${target} = ${value};`;
     }
     lookup(scope, name, span) {
         let cursor = scope;
@@ -336,6 +438,8 @@ class AsyncEmitter {
         const functionInfo = this.functions.get(name);
         if (functionInfo)
             return functionInfo.jsName;
+        if (this.options.sessionState)
+            return `__state[${JSON.stringify(name)}]`;
         this.unsupported(`unknown identifier in async emitter: ${name}`, span);
         return "undefined";
     }
@@ -355,8 +459,8 @@ class AsyncEmitter {
         return text.split("\n").map((line) => line ? `${prefix}${line}` : line).join("\n");
     }
 }
-export function emitAsyncJavaScript(program) {
-    return new AsyncEmitter(program).emit();
+export function emitAsyncJavaScript(program, options = {}) {
+    return new AsyncEmitter(program, options).emit();
 }
 function generatedFunctionName(name) {
     return `_fn_${sanitizeIdentifierPart(name)}`;

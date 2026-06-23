@@ -1,7 +1,12 @@
 import { describe, expect, test } from "./testHarness.js";
 import { emitAsyncJavaScript, parseProgram } from "../src/index.js";
 import type { ProgramAst } from "../src/index.js";
-import { AsyncGoChannel, AsyncGoScheduler, asyncSelect } from "../src/asyncRuntime.js";
+import { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoScheduler, asyncSelect } from "../src/asyncRuntime.js";
+
+interface GeneratedModule {
+  main: () => Promise<unknown>;
+  run: () => Promise<unknown>;
+}
 
 function parse(source: string): ProgramAst {
   const result = parseProgram(source, "async-emitter-test.go");
@@ -11,8 +16,17 @@ function parse(source: string): ProgramAst {
 }
 
 async function runGenerated(source: string, runtime?: unknown): Promise<unknown> {
-  const module = new Function(source)(runtime) as { main: () => Promise<unknown> };
+  const module = generatedModule(source, runtime);
   return module.main();
+}
+
+async function runGeneratedProgram(source: string, runtime?: unknown): Promise<unknown> {
+  const module = generatedModule(source, runtime);
+  return module.run();
+}
+
+function generatedModule(source: string, runtime?: unknown): GeneratedModule {
+  return new Function(source)(runtime) as GeneratedModule;
 }
 
 function runtime(seed?: string): unknown {
@@ -81,7 +95,7 @@ return <-ch
 
     expect(emitted.diagnostics).toEqual([]);
     expect(emitted.effects.functions.send?.maySuspend).toBe(true);
-    expect(await runGenerated(emitted.source, runtime())).toBe(9n);
+    expect(await runGeneratedProgram(emitted.source, runtime())).toBe(9n);
   });
 
   test("emits select default and receive cases", async () => {
@@ -104,7 +118,48 @@ default:
     const emitted = emitAsyncJavaScript(ast);
 
     expect(emitted.diagnostics).toEqual([]);
-    expect(await runGenerated(emitted.source, runtime("select-smoke"))).toBe(7n);
+    expect(await runGeneratedProgram(emitted.source, runtime("select-smoke"))).toBe(7n);
+  });
+
+  test("emits two-value channel receives", async () => {
+    const ast = parse(`
+ch := make(chan int, 1)
+ch <- 3
+v, ok := <-ch
+return v, ok
+`);
+
+    const emitted = emitAsyncJavaScript(ast);
+
+    expect(emitted.diagnostics).toEqual([]);
+    expect(await runGeneratedProgram(emitted.source, runtime())).toEqual([3n, true]);
+  });
+
+  test("emits close and closed-channel zero receives", async () => {
+    const ast = parse(`
+ch := make(chan string)
+close(ch)
+v, ok := <-ch
+return v, ok
+`);
+
+    const emitted = emitAsyncJavaScript(ast);
+
+    expect(emitted.diagnostics).toEqual([]);
+    expect(await runGeneratedProgram(emitted.source, runtime())).toEqual(["", false]);
+  });
+
+  test("emits len and cap for channels", async () => {
+    const ast = parse(`
+ch := make(chan int, 2)
+ch <- 1
+return len(ch), cap(ch)
+`);
+
+    const emitted = emitAsyncJavaScript(ast);
+
+    expect(emitted.diagnostics).toEqual([]);
+    expect(await runGeneratedProgram(emitted.source, runtime())).toEqual([1n, 2n]);
   });
 
   test("emits function literals used as goroutine roots", async () => {
@@ -117,7 +172,25 @@ return <-ch
     const emitted = emitAsyncJavaScript(ast);
 
     expect(emitted.diagnostics).toEqual([]);
-    expect(await runGenerated(emitted.source, runtime())).toBe(4n);
+    expect(await runGeneratedProgram(emitted.source, runtime())).toBe(4n);
+  });
+
+  test("generated run detects main goroutine channel deadlocks", async () => {
+    const ast = parse(`
+ch := make(chan int)
+return <-ch
+`);
+
+    const emitted = emitAsyncJavaScript(ast);
+
+    expect(emitted.diagnostics).toEqual([]);
+    let thrown: unknown;
+    try {
+      await runGeneratedProgram(emitted.source, runtime());
+    } catch (error) {
+      thrown = error;
+    }
+    expect(thrown).toBeInstanceOf(AsyncGoDeadlockError);
   });
 
   test("emits channel receive expressions with effect metadata", async () => {
