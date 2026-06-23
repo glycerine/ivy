@@ -756,6 +756,7 @@ export async function evaluatePackageSourceFiles(files, options = {}) {
             if (statements.length > 0) {
                 throw new GoJuniorRuntimeError("package source cannot contain top-level executable statements");
             }
+            predeclareTopLevelTypes(declarations, context);
             const declarationCompletion = await executeTopLevelStatements(declarations, context);
             expectNormalCompletion(declarationCompletion, "package declarations");
             await runInitFunctions(ast.functions, context);
@@ -833,6 +834,7 @@ export async function evaluateProgram(ast, options = {}) {
                 installFunctionDeclaration(context, declaration);
             }
             const { declarations, statements } = splitTopLevelDeclarations(ast.body);
+            predeclareTopLevelTypes(declarations, context);
             const declarationCompletion = await executeTopLevelStatements(declarations, context);
             expectNormalCompletion(declarationCompletion, "top-level declarations");
             if (ast.kind === "function" && ast.functions[0] && ast.body.length === 0) {
@@ -888,6 +890,7 @@ async function testProgram(ast, baseDiagnostics, options) {
                 installFunctionDeclaration(context, declaration);
             }
             const { declarations, statements } = splitTopLevelDeclarations(ast.body);
+            predeclareTopLevelTypes(declarations, context);
             const declarationCompletion = await executeTopLevelStatements(declarations, context);
             expectNormalCompletion(declarationCompletion, "top-level declarations");
             await runInitFunctions(ast.functions, context);
@@ -1172,6 +1175,7 @@ export class GoJuniorSession {
                 for (const declaration of ast.functions) {
                     installFunctionDeclaration(this.context, declaration);
                 }
+                predeclareTopLevelTypes(declarations, this.context);
                 return executeTopLevelStatements(declarations, this.context);
             });
             expectNormalCompletion(declarationCompletion, "top-level declarations");
@@ -1588,6 +1592,15 @@ function splitTopLevelDeclarations(statements) {
         }
     }
     return { declarations, statements: executable };
+}
+function predeclareTopLevelTypes(statements, context) {
+    for (const statement of statements) {
+        if (statement.kind !== "TypeDecl")
+            continue;
+        for (const declaration of statement.declarations) {
+            context.registerType(declaration);
+        }
+    }
 }
 async function runInitFunctions(functions, context) {
     for (const declaration of functions) {
@@ -2902,7 +2915,7 @@ function methodExpressionForSelector(expression, context) {
     const interfaceMethod = interfaceMethodForType(receiver.baseType, expression.field, context);
     if (interfaceMethod)
         return dynamicMethodExpressionValue(receiver.argumentType, expression.field, interfaceMethod.signature);
-    if (promotedMethodAvailableForType(receiver.baseType, expression.field, context)) {
+    if (promotedMethodAvailableForType(receiver.baseType, expression.field, context, receiver.pointer)) {
         return dynamicMethodExpressionValue(receiver.argumentType, expression.field);
     }
     return undefined;
@@ -2948,7 +2961,7 @@ function interfaceMethodForType(typeText, methodName, context) {
     const interfaceType = interfaceTarget(typeText, context);
     return interfaceType?.methods.find((method) => method.name === methodName);
 }
-function promotedMethodAvailableForType(typeText, methodName, context, seen = new Set()) {
+function promotedMethodAvailableForType(typeText, methodName, context, addressable = false, seen = new Set()) {
     const receiver = normalizeReceiverType(typeText);
     const baseType = receiver.baseType;
     if (seen.has(baseType))
@@ -2960,9 +2973,10 @@ function promotedMethodAvailableForType(typeText, methodName, context, seen = ne
     for (const field of typeDef.fields.filter((candidate) => candidate.embedded)) {
         const embedded = normalizeReceiverType(field.type.text);
         const direct = context.methodFor(embedded.baseType, methodName);
-        if (direct && (!direct.pointerReceiver || embedded.pointer))
+        const embeddedAddressable = addressable || receiver.pointer || embedded.pointer;
+        if (direct && (!direct.pointerReceiver || embeddedAddressable))
             return true;
-        if (promotedMethodAvailableForType(embedded.baseType, methodName, context, seen))
+        if (promotedMethodAvailableForType(embedded.baseType, methodName, context, embeddedAddressable, seen))
             return true;
     }
     return false;
@@ -3144,6 +3158,7 @@ function methodForValue(value, methodName, context) {
             return undefined;
         return methodForValue(value.value, methodName, context);
     }
+    const addressable = value instanceof RuntimePointer;
     const actual = dereferenceIfPointer(value);
     const receiverType = actual instanceof RuntimeStruct
         ? actual.typeName
@@ -3158,10 +3173,10 @@ function methodForValue(value, methodName, context) {
             return { method: direct, receiver: value };
     }
     if (actual instanceof RuntimeStruct)
-        return promotedMethodForStruct(actual, methodName, context);
+        return promotedMethodForStruct(actual, methodName, context, addressable);
     return undefined;
 }
-function promotedMethodForStruct(struct, methodName, context, seen = new Set()) {
+function promotedMethodForStruct(struct, methodName, context, addressable = false, seen = new Set()) {
     if (seen.has(struct.typeName))
         return undefined;
     seen.add(struct.typeName);
@@ -3180,24 +3195,38 @@ function promotedMethodForStruct(struct, methodName, context, seen = new Set()) 
                 continue;
             }
         }
-        const receiverType = receiverTypeName(receiver);
+        const embeddedReceiver = normalizeReceiverType(field.type.text);
+        const receiverType = receiverTypeName(receiver) ?? embeddedReceiver.baseType;
         if (receiverType) {
             const direct = context.methodFor(receiverType, methodName);
             if (direct) {
-                matches.push({ method: direct, receiver });
+                if (!direct.pointerReceiver || receiver instanceof RuntimePointer || isTypedNilPointer(receiver)) {
+                    matches.push({ method: direct, receiver });
+                    continue;
+                }
+                if (addressable) {
+                    matches.push({ method: direct, receiver: pointerToStructField(struct, field, context) });
+                }
                 continue;
             }
         }
         const embedded = structFromValue(receiver);
         if (!embedded)
             continue;
-        const promoted = promotedMethodForStruct(embedded, methodName, context, seen);
+        const embeddedAddressable = addressable || receiver instanceof RuntimePointer || isTypedNilPointer(receiver);
+        const promoted = promotedMethodForStruct(embedded, methodName, context, embeddedAddressable, seen);
         if (promoted)
             matches.push(promoted);
     }
     if (matches.length > 1)
         throw new GoJuniorRuntimeError(`ambiguous promoted method ${methodName}`);
     return matches[0];
+}
+function pointerToStructField(struct, field, context) {
+    const typeName = normalizeReceiverType(field.type.text).baseType;
+    return new RuntimePointer(typeName, () => struct.get(field.name) ?? defaultValueForDeclarationType(field.type, context), (next) => {
+        struct.set(field.name, prepareAssignableToType(next, field.type.text, `field ${field.name}`, context));
+    });
 }
 function receiverTypeName(value) {
     if (value instanceof RuntimeInterfaceValue)

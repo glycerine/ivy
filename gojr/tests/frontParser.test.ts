@@ -330,6 +330,57 @@ func Classify(x int, any interface{}) string {
     expect(nodes.some((node) => node.kind === "BranchStmt" && node.token === TokenKind.Fallthrough)).toBe(true);
   });
 
+  test("keeps control-clause block braces out of composite literal parsing", () => {
+    const nodes = collectNodes(`
+package switches
+
+func source(item interface{}) error {
+  var err error
+  var sourceItem func(item Sexp) error
+
+  sourceItem = func(item Sexp) error {
+    switch t := item.(type) {
+    case *SexpArray:
+      for _, v := range t.Val {
+        if err := sourceItem(v); err != nil {
+          return err
+        }
+      }
+    case *SexpPair:
+      expr := item
+      for expr != SexpNull {
+        list := expr.(*SexpPair)
+        if err := sourceItem(list.Head); err != nil {
+          return err
+        }
+        expr = list.Tail
+      }
+    case *SexpStr:
+      _ = t
+    default:
+      _ = err
+    }
+    return nil
+  }
+  return sourceItem(item)
+}
+
+type Sexp interface{}
+type SexpArray struct{ Val []Sexp }
+type SexpPair struct{ Head Sexp; Tail Sexp }
+type SexpStr struct{ S string }
+var SexpNull Sexp
+`);
+
+    const typeSwitch = nodes.find((node) => node.kind === "TypeSwitchStmt");
+    const range = nodes.find((node) => node.kind === "RangeStmt");
+    const cases = nodes.filter((node) => node.kind === "CaseClause");
+
+    expect(typeSwitch).toMatchObject({ kind: "TypeSwitchStmt" });
+    expect(range).toMatchObject({ kind: "RangeStmt" });
+    expect(cases).toHaveLength(4);
+  });
+
   test("parses goroutines, channel types, sends, receives, and select clauses", () => {
     const nodes = collectNodes(`
 package concurrent

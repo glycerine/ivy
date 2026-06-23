@@ -20,6 +20,12 @@ class FrontParser {
     tokens;
     filename;
     index = 0;
+    // Faithful port of go/parser.parser.exprLev:
+    // exprLev < 0 means we are parsing an if/for/switch control clause, where
+    // a following "{" may be the statement body rather than a composite literal.
+    // Parenthesized/call/index subexpressions increment it back into expression
+    // context, exactly like the standard parser.
+    exprLev = 0;
     allowBareIdentifierComposite = true;
     diagnostics;
     constructor(tokens, diagnostics, filename) {
@@ -312,16 +318,18 @@ class FrontParser {
     }
     parseIfStmt() {
         const start = this.expect(TokenKind.If, "expected if");
-        const first = this.withBareIdentifierComposites(false, () => this.parseSimpleStmt());
-        let init;
-        let condition;
-        if (this.match(TokenKind.Semicolon)) {
-            init = first;
-            condition = this.withBareIdentifierComposites(false, () => this.parseExpression());
-        }
-        else {
-            condition = first.kind === "ExprStmt" ? first.expr : badExpr(first.span);
-        }
+        const { init, condition } = this.withControlClause(() => {
+            const first = this.parseSimpleStmt();
+            if (this.match(TokenKind.Semicolon)) {
+                return {
+                    init: first,
+                    condition: this.parseExpression()
+                };
+            }
+            return {
+                condition: first.kind === "ExprStmt" ? first.expr : badExpr(first.span)
+            };
+        });
         const body = this.parseBlock();
         let elseStmt;
         if (this.match(TokenKind.Else)) {
@@ -343,21 +351,28 @@ class FrontParser {
             return { kind: "ForStmt", body, span: mergeSpans(start.span, body.span) };
         }
         if (this.looksLikeRangeClause()) {
-            let key;
-            let value;
-            let token = TokenKind.Assign;
-            if (!this.at(TokenKind.Range)) {
-                const lhs = this.parseExpressionList();
-                const assign = this.expectAny([TokenKind.Assign, TokenKind.Define], "expected '=' or ':=' before range");
-                token = assign.kind === TokenKind.Define ? TokenKind.Define : TokenKind.Assign;
-                this.expect(TokenKind.Range, "expected range");
-                key = lhs[0];
-                value = lhs[1];
-            }
-            else {
-                this.advance();
-            }
-            const source = this.withBareIdentifierComposites(false, () => this.parseExpression());
+            const { key, value, token, source } = this.withControlClause(() => {
+                let key;
+                let value;
+                let token = TokenKind.Assign;
+                if (!this.at(TokenKind.Range)) {
+                    const lhs = this.parseExpressionList();
+                    const assign = this.expectAny([TokenKind.Assign, TokenKind.Define], "expected '=' or ':=' before range");
+                    token = assign.kind === TokenKind.Define ? TokenKind.Define : TokenKind.Assign;
+                    this.expect(TokenKind.Range, "expected range");
+                    key = lhs[0];
+                    value = lhs[1];
+                }
+                else {
+                    this.advance();
+                }
+                return {
+                    key,
+                    value,
+                    token,
+                    source: this.parseExpression()
+                };
+            });
             const body = this.parseBlock();
             return {
                 kind: "RangeStmt",
@@ -370,9 +385,12 @@ class FrontParser {
             };
         }
         if (this.match(TokenKind.Semicolon)) {
-            const condition = this.at(TokenKind.Semicolon) ? undefined : this.parseExpression();
-            this.expect(TokenKind.Semicolon, "expected ';' in for clause");
-            const post = this.at(TokenKind.LBrace) ? undefined : this.parseSimpleStmt();
+            const { condition, post } = this.withControlClause(() => {
+                const condition = this.at(TokenKind.Semicolon) ? undefined : this.parseExpression();
+                this.expect(TokenKind.Semicolon, "expected ';' in for clause");
+                const post = this.at(TokenKind.LBrace) ? undefined : this.parseSimpleStmt();
+                return { condition, post };
+            });
             const body = this.parseBlock();
             return {
                 kind: "ForStmt",
@@ -382,17 +400,23 @@ class FrontParser {
                 span: mergeSpans(start.span, body.span)
             };
         }
-        const first = this.parseSimpleStmt();
-        if (this.match(TokenKind.Semicolon)) {
-            const condition = this.at(TokenKind.Semicolon) ? undefined : this.parseExpression();
-            this.expect(TokenKind.Semicolon, "expected ';' in for clause");
-            const post = this.at(TokenKind.LBrace) ? undefined : this.parseSimpleStmt();
+        const header = this.withControlClause(() => {
+            const first = this.parseSimpleStmt();
+            if (this.match(TokenKind.Semicolon)) {
+                const condition = this.at(TokenKind.Semicolon) ? undefined : this.parseExpression();
+                this.expect(TokenKind.Semicolon, "expected ';' in for clause");
+                const post = this.at(TokenKind.LBrace) ? undefined : this.parseSimpleStmt();
+                return { first, condition, post, clause: true };
+            }
+            return { first, clause: false };
+        });
+        if (header.clause) {
             const body = this.parseBlock();
             return {
                 kind: "ForStmt",
-                init: first,
-                ...(condition ? { condition } : {}),
-                ...(post ? { post } : {}),
+                init: header.first,
+                ...(header.condition ? { condition: header.condition } : {}),
+                ...(header.post ? { post: header.post } : {}),
                 body,
                 span: mergeSpans(start.span, body.span)
             };
@@ -400,47 +424,50 @@ class FrontParser {
         const body = this.parseBlock();
         return {
             kind: "ForStmt",
-            condition: first.kind === "ExprStmt" ? first.expr : badExpr(first.span),
+            condition: header.first.kind === "ExprStmt" ? header.first.expr : badExpr(header.first.span),
             body,
             span: mergeSpans(start.span, body.span)
         };
     }
     parseSwitchStmt() {
         const start = this.expect(TokenKind.Switch, "expected switch");
-        let init;
-        let tag;
-        let assign;
-        let typeSwitch = false;
-        if (!this.at(TokenKind.LBrace)) {
-            const first = this.withBareIdentifierComposites(false, () => this.parseSimpleStmt());
-            if (this.match(TokenKind.Semicolon)) {
-                init = first;
-                if (!this.at(TokenKind.LBrace)) {
-                    const second = this.withBareIdentifierComposites(false, () => this.parseSimpleStmt());
-                    if (this.isTypeSwitchGuard(second)) {
-                        assign = second;
-                        typeSwitch = true;
-                    }
-                    else if (second.kind === "ExprStmt") {
-                        tag = second.expr;
-                    }
-                    else {
-                        this.error("expected switch expression or type switch guard after ';'", second.span);
+        const { init, tag, assign, typeSwitch } = this.withControlClause(() => {
+            let init;
+            let tag;
+            let assign;
+            let typeSwitch = false;
+            if (!this.at(TokenKind.LBrace)) {
+                const first = this.parseSimpleStmt();
+                if (this.match(TokenKind.Semicolon)) {
+                    init = first;
+                    if (!this.at(TokenKind.LBrace)) {
+                        const second = this.parseSimpleStmt();
+                        if (this.isTypeSwitchGuard(second)) {
+                            assign = second;
+                            typeSwitch = true;
+                        }
+                        else if (second.kind === "ExprStmt") {
+                            tag = second.expr;
+                        }
+                        else {
+                            this.error("expected switch expression or type switch guard after ';'", second.span);
+                        }
                     }
                 }
+                else if (this.isTypeSwitchGuard(first)) {
+                    assign = first;
+                    typeSwitch = true;
+                }
+                else if (first.kind === "ExprStmt") {
+                    tag = first.expr;
+                }
+                else {
+                    this.error("expected ';' after switch init statement", first.span);
+                    init = first;
+                }
             }
-            else if (this.isTypeSwitchGuard(first)) {
-                assign = first;
-                typeSwitch = true;
-            }
-            else if (first.kind === "ExprStmt") {
-                tag = first.expr;
-            }
-            else {
-                this.error("expected ';' after switch init statement", first.span);
-                init = first;
-            }
-        }
+            return { init, tag, assign, typeSwitch };
+        });
         const { clauses, span } = this.parseSwitchBody();
         if (typeSwitch) {
             return {
@@ -689,11 +716,11 @@ class FrontParser {
                 const args = [];
                 let ellipsis = false;
                 if (!this.at(TokenKind.RParen)) {
-                    args.push(this.withBareIdentifierComposites(true, () => this.parseExpression()));
+                    args.push(this.withExpressionLevel(() => this.withBareIdentifierComposites(true, () => this.parseExpression())));
                     if (this.match(TokenKind.Ellipsis))
                         ellipsis = true;
                     while (this.match(TokenKind.Comma) && !this.at(TokenKind.RParen)) {
-                        args.push(this.withBareIdentifierComposites(true, () => this.parseExpression()));
+                        args.push(this.withExpressionLevel(() => this.withBareIdentifierComposites(true, () => this.parseExpression())));
                         if (this.match(TokenKind.Ellipsis))
                             ellipsis = true;
                     }
@@ -711,13 +738,13 @@ class FrontParser {
             if (this.match(TokenKind.LBracket)) {
                 const low = this.at(TokenKind.Colon) || this.at(TokenKind.RBracket)
                     ? undefined
-                    : this.withBareIdentifierComposites(true, () => this.parseExpression());
+                    : this.withExpressionLevel(() => this.withBareIdentifierComposites(true, () => this.parseExpression()));
                 if (this.match(TokenKind.Colon)) {
                     const high = this.at(TokenKind.Colon) || this.at(TokenKind.RBracket)
                         ? undefined
-                        : this.withBareIdentifierComposites(true, () => this.parseExpression());
+                        : this.withExpressionLevel(() => this.withBareIdentifierComposites(true, () => this.parseExpression()));
                     const max = this.match(TokenKind.Colon)
-                        ? this.withBareIdentifierComposites(true, () => this.parseExpression())
+                        ? this.withExpressionLevel(() => this.withBareIdentifierComposites(true, () => this.parseExpression()))
                         : undefined;
                     const close = this.expect(TokenKind.RBracket, "expected ']' after slice");
                     expression = {
@@ -762,7 +789,7 @@ class FrontParser {
         }
         if (this.match(TokenKind.LParen)) {
             const start = this.previous();
-            const expr = this.withBareIdentifierComposites(true, () => this.parseExpression());
+            const expr = this.withExpressionLevel(() => this.withBareIdentifierComposites(true, () => this.parseExpression()));
             const close = this.expect(TokenKind.RParen, "expected ')'");
             return { kind: "ParenExpr", expr, span: mergeSpans(start.span, close.span) };
         }
@@ -782,12 +809,15 @@ class FrontParser {
         return badExpr(token.span);
     }
     canUseCompositeLiteralType(expression) {
-        return expression.kind === "ArrayType" ||
-            expression.kind === "MapType" ||
-            expression.kind === "StructType" ||
-            (this.allowBareIdentifierComposite && ((expression.kind === "Ident" && !["true", "false", "nil"].includes(expression.name)) ||
-                expression.kind === "SelectorExpr" ||
-                expression.kind === "IndexExpr"));
+        if (expression.kind === "ArrayType" || expression.kind === "MapType" || expression.kind === "StructType") {
+            return true;
+        }
+        if ((expression.kind === "Ident" && !["true", "false", "nil"].includes(expression.name)) ||
+            expression.kind === "SelectorExpr" ||
+            expression.kind === "IndexExpr") {
+            return this.exprLev >= 0 && this.allowBareIdentifierComposite;
+        }
+        return false;
     }
     finishCompositeLiteral(type, startSpan = type?.span) {
         const elements = [];
@@ -868,7 +898,7 @@ class FrontParser {
                 inferredLength = true;
             }
             else if (!this.at(TokenKind.RBracket)) {
-                length = this.parseExpression();
+                length = this.withExpressionLevel(() => this.parseExpression());
             }
             this.expect(TokenKind.RBracket, "expected ']' in array or slice type");
             const element = this.parseType();
@@ -1110,6 +1140,26 @@ class FrontParser {
         }
         finally {
             this.allowBareIdentifierComposite = previous;
+        }
+    }
+    withControlClause(fn) {
+        const previous = this.exprLev;
+        this.exprLev = -1;
+        try {
+            return fn();
+        }
+        finally {
+            this.exprLev = previous;
+        }
+    }
+    withExpressionLevel(fn) {
+        const previous = this.exprLev;
+        this.exprLev += 1;
+        try {
+            return fn();
+        }
+        finally {
+            this.exprLev = previous;
         }
     }
     consumeSemi() {

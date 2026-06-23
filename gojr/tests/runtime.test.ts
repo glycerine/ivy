@@ -723,6 +723,41 @@ func Bad() {
     expect(result.diagnostics[0]?.span?.line).toBe(5);
   });
 
+  test("predeclares top-level types before variable initializers", async () => {
+    const result = await expectRuns(`
+var p = S1{
+  F1: complex(float64(2.5), float64(-0.25)),
+  F2: S2{F1: 9},
+  F3: 103050709,
+}
+
+var d Derived = Box{X: 5}
+
+type S1 struct {
+  F1 complex128
+  F2 S2
+  F3 uint64
+}
+
+type S2 struct {
+  F1 uint64
+  F2 empty
+}
+
+type empty struct{}
+
+type Derived interface { Base }
+type Base interface { String() string }
+
+type Box struct { X int }
+func (b Box) String() string { return fmt.Sprintf("Box(%v)", b.X) }
+
+return p.F2.F1, p.F3, d.String()
+`);
+
+    expect(result.values).toEqual([9n, 103050709n, "Box(5)"]);
+  });
+
   test("enforces declared and inferred local variable types", async () => {
     const declared = await evaluateSource(`
 var x int
@@ -1068,6 +1103,28 @@ return got, h(&Outer{&Inner{"hello"}})
 `);
 
     expect(result.values).toEqual(["m;m1(a);m1(b);m2;", "hello"]);
+  });
+
+  test("supports promoted pointer receiver method expressions", async () => {
+    const result = await expectRuns(`
+type Scalar int
+
+func (s *Scalar) M(a int, x [2]int, b float64, y [2]float64) (Scalar, int, [2]int, float64, [2]float64) {
+  return *s, a, x, b, y
+}
+
+type Wrapper struct {
+  Scalar
+}
+
+var scalar Scalar = 42
+var wrapper = &Wrapper{Scalar: scalar}
+fn := (*Wrapper).M
+s1, a1, x1, b1, y1 := fn(wrapper, 123, [2]int{456, 789}, 1.2, [2]float64{3.4, 5.6})
+return s1 == scalar && a1 == 123 && x1 == [2]int{456, 789} && b1 == 1.2 && y1 == [2]float64{3.4, 5.6}
+`);
+
+    expect(result.value).toBe(true);
   });
 
   test("REPL sessions typecheck interface method expressions from earlier declarations", async () => {
