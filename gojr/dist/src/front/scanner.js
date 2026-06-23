@@ -431,8 +431,8 @@ const octalDigits = String.raw `(?:[0-7](?:_?[0-7])*)`;
 const hexDigits = String.raw `(?:[0-9A-Fa-f](?:_?[0-9A-Fa-f])*)`;
 const decimalFloat = String.raw `(?:(?:${decimalDigits}\.${decimalDigits}?|${decimalDigits}\.|\.(?:${decimalDigits}))(?:[eE][+-]?${decimalDigits})?|${decimalDigits}[eE][+-]?${decimalDigits})`;
 const hexMantissa = String.raw `(?:${hexDigits}(?:\.${hexDigits}?)?|\.${hexDigits})`;
-const hexFloat = String.raw `(?:0[xX]${hexMantissa}[pP][+-]?${decimalDigits})`;
-const integer = String.raw `(?:0[bB]${binaryDigits}|0[oO]${octalDigits}|0[xX]${hexDigits}|${decimalDigits})`;
+const hexFloat = String.raw `(?:0[xX]_?${hexMantissa}[pP][+-]?${decimalDigits})`;
+const integer = String.raw `(?:0[bB]_?${binaryDigits}|0[oO]_?${octalDigits}|0[xX]_?${hexDigits}|${decimalDigits})`;
 const goNumberPattern = new RegExp(`^(?:${hexFloat}|${decimalFloat}|${integer})(?:i)?`);
 const goFloatPattern = new RegExp(`^(?:${hexFloat}|${decimalFloat})$`);
 function isIdentifierStart(text) {

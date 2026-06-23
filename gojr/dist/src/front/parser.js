@@ -161,6 +161,8 @@ class FrontParser {
             return false;
         if (!isIdentifierLike(this.peek(1).kind))
             return false;
+        if (this.peek(2).kind === TokenKind.Dot)
+            return false;
         let depth = 1;
         let sawConstraint = false;
         for (let offset = 1;; offset += 1) {
@@ -221,6 +223,9 @@ class FrontParser {
     }
     parseStatement() {
         this.skipSemis();
+        if (this.at(TokenKind.RBrace)) {
+            return { kind: "EmptyStmt", implicit: true, span: this.peek().span };
+        }
         if (this.at(TokenKind.LBrace))
             return this.parseBlock();
         if (this.atAny(TokenKind.Const, TokenKind.Type, TokenKind.Var)) {
@@ -1033,6 +1038,11 @@ class FrontParser {
             return this.parseInterfaceType(start.span);
         if (this.match(TokenKind.Func))
             return this.parseSignature(start.span);
+        if (this.match(TokenKind.LParen)) {
+            const type = this.parseType();
+            const close = this.expect(TokenKind.RParen, "expected ')' after type");
+            return { kind: "ParenExpr", expr: type, span: mergeSpans(start.span, close.span) };
+        }
         return this.parseTypeName();
     }
     parseTypeName() {
@@ -1162,10 +1172,38 @@ class FrontParser {
             offset += 2;
         }
         const afterNames = this.peek(offset).kind;
+        if (offset === 1 && afterNames === TokenKind.LBracket) {
+            const afterBracket = this.kindAfterBalancedBrackets(offset);
+            if (afterBracket === close ||
+                afterBracket === TokenKind.Semicolon ||
+                afterBracket === TokenKind.RBrace ||
+                afterBracket === TokenKind.RParen ||
+                afterBracket === TokenKind.RBracket ||
+                afterBracket === TokenKind.StringLiteral ||
+                afterBracket === TokenKind.Comma ||
+                afterBracket === TokenKind.EOF) {
+                return false;
+            }
+        }
         if (afterNames === close || afterNames === TokenKind.Semicolon || afterNames === TokenKind.RBrace || afterNames === TokenKind.RParen || afterNames === TokenKind.RBracket) {
             return false;
         }
         return this.startsType(afterNames) || afterNames === TokenKind.Ellipsis;
+    }
+    kindAfterBalancedBrackets(openOffset) {
+        let depth = 0;
+        for (let offset = openOffset;; offset += 1) {
+            const kind = this.peek(offset).kind;
+            if (kind === TokenKind.EOF)
+                return TokenKind.EOF;
+            if (kind === TokenKind.LBracket)
+                depth += 1;
+            if (kind === TokenKind.RBracket) {
+                depth -= 1;
+                if (depth === 0)
+                    return this.peek(offset + 1).kind;
+            }
+        }
     }
     parseIdentList() {
         const names = [this.parseIdent("expected identifier")];

@@ -130,22 +130,55 @@ var value = Make[int, string](1, "one")
     expect(nodes.some((node) => node.kind === "IndexListExpr")).toBe(true);
   });
 
+  test("parses embedded instantiated generic fields", () => {
+    const nodes = collectNodes(`
+package generic
+
+type A[T any] struct {
+  B[T]
+}
+
+type B[T any] struct {
+  val T
+}
+`);
+
+    expect(nodes.some((node) => node.kind === "IndexExpr")).toBe(true);
+    const fields = nodes.filter((node): node is Field => node.kind === "Field");
+    expect(fields.some((field) => field.names.length === 0 && field.type.kind === "IndexExpr")).toBe(true);
+  });
+
+  test("parses parenthesized types in channel and function result types", () => {
+    const nodes = collectNodes(`
+package types
+
+var C chan<- (chan int)
+var F func() (func())
+`);
+
+    expect(nodes.some((node) => node.kind === "ParenExpr")).toBe(true);
+    expect(nodes.filter((node) => node.kind === "ChanType")).toHaveLength(2);
+  });
+
   test("keeps slice and array type declarations distinct from type parameter lists", () => {
     const file = parseOk(`
 package slices
 
 type Slice []int
 type Array [3]int
+type UnsafeArray [unsafe.Sizeof(byte(0))]*byte
 type Box[T any] struct { Value T }
 `);
 
     const specs = file.declarations.flatMap((decl) => decl.kind === "GenDecl" ? decl.specs : []);
     const slice = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "Slice");
     const array = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "Array");
+    const unsafeArray = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "UnsafeArray");
     const box = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "Box");
 
     expect(slice?.kind === "TypeSpec" ? slice.type.kind : undefined).toBe("ArrayType");
     expect(array?.kind === "TypeSpec" ? array.type.kind : undefined).toBe("ArrayType");
+    expect(unsafeArray?.kind === "TypeSpec" ? unsafeArray.type.kind : undefined).toBe("ArrayType");
     expect(box?.kind === "TypeSpec" ? box.typeParams?.fields[0]?.names.map((name) => name.name) : undefined).toEqual(["T"]);
   });
 
@@ -375,6 +408,20 @@ top:
 
     expect(nodes.filter((node) => node.kind === "LabeledStmt")).toHaveLength(2);
     expect(nodes.filter((node) => node.kind === "BranchStmt")).toHaveLength(2);
+  });
+
+  test("parses labels immediately before closing braces", () => {
+    const nodes = collectNodes(`
+package labels
+
+func F() {
+  goto done
+done:
+}
+`);
+
+    expect(nodes.some((node) => node.kind === "LabeledStmt")).toBe(true);
+    expect(nodes.some((node) => node.kind === "EmptyStmt")).toBe(true);
   });
 
   test("treats '=' as equality while parsing right-hand-side lists", () => {
