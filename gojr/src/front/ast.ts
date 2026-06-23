@@ -16,6 +16,7 @@ export type NodeKind =
   | "ParenExpr"
   | "SelectorExpr"
   | "IndexExpr"
+  | "IndexListExpr"
   | "SliceExpr"
   | "TypeAssertExpr"
   | "CallExpr"
@@ -113,6 +114,12 @@ export interface IndexExpr extends Node {
   kind: "IndexExpr";
   object: Expr;
   index: Expr;
+}
+
+export interface IndexListExpr extends Node {
+  kind: "IndexListExpr";
+  object: Expr;
+  indices: Expr[];
 }
 
 export interface SliceExpr extends Node {
@@ -249,6 +256,7 @@ export type Expr =
   | ParenExpr
   | SelectorExpr
   | IndexExpr
+  | IndexListExpr
   | SliceExpr
   | TypeAssertExpr
   | CallExpr
@@ -626,6 +634,8 @@ export function childNodes(node: AstNode): AstNode[] {
       return [node.object, node.selector];
     case "IndexExpr":
       return [node.object, node.index];
+    case "IndexListExpr":
+      return [node.object, ...node.indices];
     case "SliceExpr":
       return [node.object, ...(node.low ? [node.low] : []), ...(node.high ? [node.high] : []), ...(node.max ? [node.max] : [])];
     case "TypeAssertExpr":

@@ -296,6 +296,64 @@ func F() int {
     expect(loops[1]?.kind === "ForStmt" ? loops[1].post?.kind : undefined).toBe("IncDecStmt");
   });
 
+  test("parses standard for-range headers without lookahead specialization", () => {
+    const nodes = collectNodes(`
+package control
+
+func F(xs []int) {
+  for range xs {
+  }
+  for i := range xs {
+    _ = i
+  }
+  for i, v = range xs {
+    _, _ = i, v
+  }
+}
+`);
+
+    const ranges = nodes.filter((node) => node.kind === "RangeStmt");
+    expect(ranges).toHaveLength(3);
+    expect(ranges[0]?.kind === "RangeStmt" ? ranges[0].key : undefined).toBeUndefined();
+    expect(ranges[1]?.kind === "RangeStmt" ? ranges[1].token : undefined).toBe(TokenKind.Define);
+    expect(ranges[2]?.kind === "RangeStmt" ? ranges[2].token : undefined).toBe(TokenKind.Assign);
+  });
+
+  test("parses labels through simple statement mode", () => {
+    const nodes = collectNodes(`
+package labels
+
+func F() {
+top:
+  for {
+  inner:
+    for {
+      break inner
+    }
+    continue top
+  }
+}
+`);
+
+    expect(nodes.filter((node) => node.kind === "LabeledStmt")).toHaveLength(2);
+    expect(nodes.filter((node) => node.kind === "BranchStmt")).toHaveLength(2);
+  });
+
+  test("treats '=' as equality while parsing right-hand-side lists", () => {
+    const nodes = collectNodes(`
+package rhs
+
+func F(x, y int) {
+  switch {
+  case x = y:
+  }
+}
+`);
+
+    const binary = nodes.find((node) => node.kind === "BinaryExpr");
+    expect(binary?.kind === "BinaryExpr" ? binary.op : undefined).toBe(TokenKind.Equal);
+  });
+
   test("parses value switches and type switches with case clauses", () => {
     const nodes = collectNodes(`
 package switches
