@@ -127,6 +127,7 @@ export interface GoJuniorFunction {
   name: string;
   signature?: FunctionDecl["signature"];
   declaration?: FunctionDecl;
+  source?: string;
   call(args: RuntimeValue[], context: EvaluationContext): MaybePromise<RuntimeValue>;
 }
 
@@ -138,6 +139,7 @@ export interface EvaluationOptions {
   filename?: string;
   packages?: Record<string, RuntimeObject>;
   packageInfos?: Record<string, PackageInfo>;
+  env?: Record<string, string>;
   sheet?: SheetData;
   sheets?: Record<string, SheetData>;
   currentSheetName?: string;
@@ -310,12 +312,14 @@ export class EvaluationContext {
   }
 
   public declare(name: string, value: RuntimeValue, mutable = true, type?: TypeNode | string): void {
+    if (name === "_") return;
     const typeText = bindingTypeText(type);
     const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, this) : value;
     this.currentScope.declare(name, stored, mutable, typeText ? resolvedDeclaredTypeText(typeText, this) : undefined);
   }
 
   public declareRoot(name: string, value: RuntimeValue, mutable = true, type?: TypeNode | string): void {
+    if (name === "_") return;
     const typeText = bindingTypeText(type);
     const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, this) : value;
     this.shared.rootScope.declare(name, stored, mutable, typeText ? resolvedDeclaredTypeText(typeText, this) : undefined);
@@ -368,6 +372,10 @@ export class EvaluationContext {
 
   public observedDeps(): SpreadsheetDependency[] {
     return [...this.shared.observedDeps.values()];
+  }
+
+  public getenv(name: string): string {
+    return this.options.env?.[name] ?? "";
   }
 
   public recordSheetCellRead(sheet: string, cell: string): void {
@@ -1805,24 +1813,24 @@ function availablePackages(context: EvaluationContext): Record<string, RuntimeOb
 
 function fmtPackage(): RuntimeObject {
   return {
-    Printf: hostCallable("fmt.Printf", (args, context) => {
-      const format = toStringValue(args[0] ?? "");
-      const text = sprintf(format, args.slice(1));
+    Printf: hostCallable("fmt.Printf", async (args, context) => {
+      const format = await toStringValueAsync(args[0] ?? "", context);
+      const text = await sprintfAsync(format, args.slice(1), context);
       context.write(text);
       return BigInt(text.length);
     }),
-    Sprintf: hostCallable("fmt.Sprintf", (args) => {
-      const format = toStringValue(args[0] ?? "");
-      return sprintf(format, args.slice(1));
+    Sprintf: hostCallable("fmt.Sprintf", async (args, context) => {
+      const format = await toStringValueAsync(args[0] ?? "", context);
+      return sprintfAsync(format, args.slice(1), context);
     }),
-    Sprint: hostCallable("fmt.Sprint", (args) => {
-      return sprint(args);
+    Sprint: hostCallable("fmt.Sprint", (args, context) => {
+      return sprintAsync(args, context);
     }),
-    Sprintln: hostCallable("fmt.Sprintln", (args) => {
-      return sprintln(args);
+    Sprintln: hostCallable("fmt.Sprintln", (args, context) => {
+      return sprintlnAsync(args, context);
     }),
-    Println: hostCallable("fmt.Println", (args, context) => {
-      const text = sprintln(args);
+    Println: hostCallable("fmt.Println", async (args, context) => {
+      const text = await sprintlnAsync(args, context);
       context.write(text);
       return BigInt(text.length);
     })
@@ -1859,13 +1867,16 @@ function osPackage(): RuntimeObject {
     Exit: hostCallable("os.Exit", (args) => {
       const code = toNumber(args[0] ?? 0);
       throw new GoJuniorRuntimeError(`os.Exit(${code})`);
+    }),
+    Getenv: hostCallable("os.Getenv", (args, context) => {
+      return context.getenv(toStringValue(args[0] ?? ""));
     })
   };
 }
 
 function hostCallable(
   name: string,
-  call: (args: RuntimeValue[], context: EvaluationContext) => RuntimeValue
+  call: (args: RuntimeValue[], context: EvaluationContext) => MaybePromise<RuntimeValue>
 ): RuntimeCallable {
   return {
     kind: "HostCallable",
@@ -1879,7 +1890,7 @@ function functionValue(declaration: FunctionDecl): GoJuniorFunction {
 }
 
 function functionLiteralValue(expression: FunctionLiteralExpression, context: EvaluationContext): GoJuniorFunction {
-  return goJuniorFunctionValue("<closure>", expression.signature, expression.body, context.captureScope());
+  return goJuniorFunctionValue("<closure>", expression.signature, expression.body, context.captureScope(), undefined, undefined, expression.source);
 }
 
 function splitTopLevelDeclarations(statements: Statement[]): { declarations: Statement[]; statements: Statement[] } {
@@ -1913,13 +1924,16 @@ function goJuniorFunctionValue(
   body: FunctionDecl["body"],
   closureScope?: Scope,
   declaration?: FunctionDecl,
-  boundReceiver?: RuntimeValue
+  boundReceiver?: RuntimeValue,
+  source?: string
 ): GoJuniorFunction {
+  const formattedSource = source ?? declaration?.source;
   return {
     kind: "GoJuniorFunction",
     name,
     signature,
     ...(declaration ? { declaration } : {}),
+    ...(formattedSource ? { source: formattedSource } : {}),
     async call(args, parentContext) {
       const context = parentContext;
       const invoke = () => context.functionCallAsync(() => context.childScopeAsync(async () => {
@@ -2010,6 +2024,7 @@ function methodExpressionValue(method: MethodDef, receiverTypeText: string): GoJ
       results: method.declaration.signature.results
     },
     declaration: method.declaration,
+    ...(method.declaration.source ? { source: method.declaration.source } : {}),
     async call(args, context) {
       const receiver = args[0] ?? null;
       const methodArgs = args.slice(1);
@@ -2141,9 +2156,10 @@ async function executeStatement(statement: Statement, context: EvaluationContext
         const value = valueExpression
           ? await evaluateConstExpression(valueExpression, BigInt(declaration.iotaIndex ?? index), context)
           : defaultValueForDeclarationType(type, context);
+        const typedValue = type ? convertValueToType(value, type.text, context, expressionDeclaredTypeText(valueExpression, context, value)) : value;
         context.declare(
           declaration.name,
-          value,
+          typedValue,
           false,
           type
         );
@@ -3070,9 +3086,22 @@ async function evaluateCall(expression: CallExpression, context: EvaluationConte
 }
 
 function conversionTargetType(callee: Expression, context: EvaluationContext): string | undefined {
+  const typeText = conversionTargetTypeText(callee, context);
+  return typeText && runtimeKnowsTypeText(typeText, context) ? typeText : undefined;
+}
+
+function conversionTargetTypeText(callee: Expression, context: EvaluationContext): string | undefined {
   if (callee.kind === "TypeExpression") return callee.type.text;
-  if (callee.kind === "Identifier" && context.isKnownType(callee.name)) return callee.name;
-  return undefined;
+  if (callee.kind === "Identifier") {
+    if (context.hasBinding(callee.name)) return undefined;
+    return context.isKnownType(callee.name) ? callee.name : undefined;
+  }
+  if (callee.kind === "UnaryExpression" && callee.operator === "*") {
+    const operand = conversionTargetTypeText(callee.operand, context);
+    return operand ? `*${operand}` : undefined;
+  }
+  const typeText = typeArgumentText(callee);
+  return typeText && context.isKnownType(typeText) ? typeText : undefined;
 }
 
 async function evaluateNew(expression: CallExpression, context: EvaluationContext): Promise<RuntimeValue> {
@@ -4200,21 +4229,21 @@ function prepareAssignableToType(value: RuntimeValue, typeText: string, role: st
   const mapType = parseMapTypeText(type);
   if (mapType) {
     if (!(value instanceof RuntimeMap)) throwTypeError(value, type, role);
-    if (normalizeTypeText(value.keyType) !== normalizeTypeText(mapType.keyType) ||
-      normalizeTypeText(value.valueType) !== normalizeTypeText(mapType.valueType)) {
+    if (!runtimeTypeAssignableMatch(value.keyType, mapType.keyType) ||
+      !runtimeTypeAssignableMatch(value.valueType, mapType.valueType)) {
       throwTypeError(value, type, role);
     }
     return value;
   }
   const chanType = parseChanTypeText(type);
   if (chanType) {
-    if (!(value instanceof RuntimeChannel) || normalizeTypeText(value.elementType) !== normalizeTypeText(chanType.elementType)) {
+    if (!(value instanceof RuntimeChannel) || !runtimeTypeAssignableMatch(value.elementType, chanType.elementType)) {
       throwTypeError(value, type, role);
     }
     return value;
   }
   if (type.startsWith("*")) {
-    if (!(value instanceof RuntimePointer) || value.typeName !== type.slice(1)) throwTypeError(value, type, role);
+    if (!(value instanceof RuntimePointer) || !runtimeTypeAssignableMatch(value.typeName, type.slice(1))) throwTypeError(value, type, role);
     return value;
   }
   const structType = context?.typeDef(type);
@@ -4341,24 +4370,24 @@ function runtimeValueMatchesType(value: RuntimeValue, typeText: string, context?
     return canonicalRuntimeTypeName(normalizeTypeText(value.typeName)) === canonicalRuntimeTypeName(type);
   }
   if (value instanceof RuntimeTypedNilValue) {
-    if (type.startsWith("*")) return value.typeName === type;
+    if (type.startsWith("*")) return runtimeTypeAssignableMatch(value.typeName, type);
   }
   if (type === "string") return isRuntimeString(value);
   if (type === "bool") return typeof value === "boolean";
   if (isIntegerType(type)) return type === "int64" && typeof value === "bigint" && integerInRange(value, type);
   if (isFloatType(type)) return typeof value === "number";
   if (isComplexType(type)) return isComplexValue(value);
-  if (type.startsWith("*")) return value instanceof RuntimePointer && value.typeName === type.slice(1);
+  if (type.startsWith("*")) return value instanceof RuntimePointer && runtimeTypeAssignableMatch(value.typeName, type.slice(1));
   if (value instanceof RuntimeStruct) return value.typeName === type;
   if (value instanceof RuntimeMap) {
     const mapType = parseMapTypeText(type);
     return Boolean(mapType &&
-      normalizeTypeText(value.keyType) === normalizeTypeText(mapType.keyType) &&
-      normalizeTypeText(value.valueType) === normalizeTypeText(mapType.valueType));
+      runtimeTypeAssignableMatch(value.keyType, mapType.keyType) &&
+      runtimeTypeAssignableMatch(value.valueType, mapType.valueType));
   }
   if (value instanceof RuntimeChannel) {
     const chanType = parseChanTypeText(type);
-    return Boolean(chanType && normalizeTypeText(value.elementType) === normalizeTypeText(chanType.elementType));
+    return Boolean(chanType && runtimeTypeAssignableMatch(value.elementType, chanType.elementType));
   }
   if (type.startsWith("[]") || /^\[[0-9]*\]/.test(type)) return Array.isArray(value);
   if (type.startsWith("func(")) return isRuntimeCallable(value) || isGoJuniorFunction(value);
@@ -4374,6 +4403,21 @@ function canonicalRuntimeTypeName(type: string): string {
     default:
       return type;
   }
+}
+
+function runtimeTypeAssignableMatch(actual: string, expected: string): boolean {
+  return assignmentRuntimeTypeName(actual) === assignmentRuntimeTypeName(expected);
+}
+
+function assignmentRuntimeTypeName(type: string): string {
+  const normalized = canonicalRuntimeTypeName(normalizeTypeText(type));
+  if (normalized === "int") return "int64";
+  if (normalized.startsWith("*")) return `*${assignmentRuntimeTypeName(normalized.slice(1))}`;
+  const mapType = parseMapTypeText(normalized);
+  if (mapType) return `map[${assignmentRuntimeTypeName(mapType.keyType)}]${assignmentRuntimeTypeName(mapType.valueType)}`;
+  const chanType = parseChanTypeText(normalized);
+  if (chanType) return `${chanType.direction === "receive" ? "<-" : chanType.direction === "send" ? "chan<-" : "chan"}${assignmentRuntimeTypeName(chanType.elementType)}`;
+  return normalized;
 }
 
 function valueLength(value: RuntimeValue): number {
@@ -5445,10 +5489,7 @@ function compareValues(left: RuntimeValue, right: RuntimeValue): number {
   left = unwrapNamed(left);
   right = unwrapNamed(right);
   if ((typeof left === "bigint" || typeof left === "number") && (typeof right === "bigint" || typeof right === "number")) {
-    const leftNumber = toFloat(left);
-    const rightNumber = toFloat(right);
-    if (Number.isNaN(leftNumber) || Number.isNaN(rightNumber)) return Number.NaN;
-    return leftNumber === rightNumber ? 0 : leftNumber < rightNumber ? -1 : 1;
+    return compareNumericValues(left, right);
   }
   if (isRuntimeString(left) && isRuntimeString(right)) {
     return compareGoStrings(left, right);
@@ -5469,7 +5510,7 @@ function valueEqual(left: RuntimeValue, right: RuntimeValue): boolean {
   left = unwrapNamed(left);
   right = unwrapNamed(right);
   if ((typeof left === "bigint" || typeof left === "number") && (typeof right === "bigint" || typeof right === "number")) {
-    return toFloat(left) === toFloat(right);
+    return compareNumericValues(left, right) === 0;
   }
   if (isComplexValue(left) || isComplexValue(right)) {
     const a = toComplex(left);
@@ -5493,6 +5534,16 @@ function valueEqual(left: RuntimeValue, right: RuntimeValue): boolean {
       });
   }
   return left === right;
+}
+
+function compareNumericValues(left: bigint | number, right: bigint | number): number {
+  if (typeof left === "bigint" && typeof right === "bigint") {
+    return left === right ? 0 : left < right ? -1 : 1;
+  }
+  const leftNumber = typeof left === "bigint" ? Number(left) : left;
+  const rightNumber = typeof right === "bigint" ? Number(right) : right;
+  if (Number.isNaN(leftNumber) || Number.isNaN(rightNumber)) return Number.NaN;
+  return leftNumber === rightNumber ? 0 : leftNumber < rightNumber ? -1 : 1;
 }
 
 function interfaceAwareEqual(left: RuntimeValue, right: RuntimeValue): boolean {
@@ -5587,6 +5638,56 @@ function sprintf(format: string, args: RuntimeValue[]): string {
   });
 }
 
+async function sprintfAsync(format: string, args: RuntimeValue[], context: EvaluationContext): Promise<string> {
+  let argIndex = 0;
+  let text = "";
+  const pattern = /%(#)?[%vdsft]/g;
+  let lastIndex = 0;
+  for (const match of format.matchAll(pattern)) {
+    text += format.slice(lastIndex, match.index);
+    lastIndex = (match.index ?? 0) + match[0].length;
+    if (match[0] === "%%") {
+      text += "%";
+      continue;
+    }
+    const value = args[argIndex++] ?? null;
+    text += await formatFmtValue(match[0], match[1] === "#", value, context);
+  }
+  return text + format.slice(lastIndex);
+}
+
+async function formatFmtValue(verb: string, goSyntax: boolean, value: RuntimeValue, context: EvaluationContext): Promise<string> {
+  if (!goSyntax) {
+    const stringer = await fmtStringerValue(value, context);
+    if (stringer !== undefined && (verb === "%v" || verb === "%s")) return stringer;
+  }
+  switch (verb) {
+    case "%d":
+      return String(toNumber(value));
+    case "%f":
+      return String(toFloat(value));
+    case "%s":
+      return toStringValue(value);
+    case "%t":
+      return String(toBool(value));
+    case "%v":
+      return formatValue(value);
+    case "%#v":
+      return formatGoSyntaxValue(value);
+    default:
+      return goSyntax ? formatGoSyntaxValue(value) : formatValue(value);
+  }
+}
+
+async function fmtStringerValue(value: RuntimeValue, context: EvaluationContext): Promise<string | undefined> {
+  const method = methodForValue(value, "String", context);
+  if (!method || method.method.declaration.signature.parameters.length !== 0) return undefined;
+  const results = method.method.declaration.signature.results;
+  if (results.length !== 1 || normalizeTypeText(results[0]?.type.text ?? "") !== "string") return undefined;
+  const result = await callRuntime(boundMethodValue(method.method, method.receiver), [], context);
+  return toStringValue(result);
+}
+
 function sprint(args: RuntimeValue[]): string {
   let text = "";
   let previousWasString = false;
@@ -5599,8 +5700,24 @@ function sprint(args: RuntimeValue[]): string {
   return text;
 }
 
+async function sprintAsync(args: RuntimeValue[], context: EvaluationContext): Promise<string> {
+  let text = "";
+  let previousWasString = false;
+  for (const arg of args) {
+    const currentIsString = runtimeValueIsString(arg);
+    if (text && !previousWasString && !currentIsString) text += " ";
+    text += await formatFmtValue("%v", false, arg, context);
+    previousWasString = currentIsString;
+  }
+  return text;
+}
+
 function sprintln(args: RuntimeValue[]): string {
   return `${args.map(formatValue).join(" ")}\n`;
+}
+
+async function sprintlnAsync(args: RuntimeValue[], context: EvaluationContext): Promise<string> {
+  return `${(await Promise.all(args.map((arg) => formatFmtValue("%v", false, arg, context)))).join(" ")}\n`;
 }
 
 function runtimeValueIsString(value: RuntimeValue): boolean {
@@ -5612,6 +5729,11 @@ function runtimeValueIsString(value: RuntimeValue): boolean {
 function toStringValue(value: RuntimeValue): string {
   if (isRuntimeString(value)) return goStringText(value);
   return formatValue(value);
+}
+
+async function toStringValueAsync(value: RuntimeValue, context: EvaluationContext): Promise<string> {
+  if (isRuntimeString(value)) return goStringText(value);
+  return await fmtStringerValue(value, context) ?? formatValue(value);
 }
 
 export function formatValue(value: RuntimeValue): string {
@@ -5628,7 +5750,8 @@ export function formatValue(value: RuntimeValue): string {
   if (value instanceof RuntimeMap) return formatRuntimeMap(value);
   if (value instanceof RuntimeStruct) return formatRuntimeStruct(value);
   if (value instanceof RuntimePointer) return `&${formatValue(value.get())}`;
-  if (isRuntimeCallable(value) || isGoJuniorFunction(value)) return `<func ${value.name}>`;
+  if (isGoJuniorFunction(value)) return formatFunctionValue(value);
+  if (isRuntimeCallable(value)) return `<func ${value.name}>`;
   if (value instanceof SheetBinding) return `<sheet ${value.name}>`;
   return `{${Object.entries(value).map(([key, item]) => `${key}:${formatValue(item)}`).join(" ")}}`;
 }
@@ -5649,7 +5772,8 @@ export function formatReplValue(value: RuntimeValue): string {
   if (value instanceof RuntimeMap) return formatReplMap(value);
   if (value instanceof RuntimeStruct) return formatReplStruct(value);
   if (value instanceof RuntimePointer) return `&${formatReplValue(value.get())}`;
-  if (isRuntimeCallable(value) || isGoJuniorFunction(value)) return `<func ${value.name}>`;
+  if (isGoJuniorFunction(value)) return formatFunctionValue(value);
+  if (isRuntimeCallable(value)) return `<func ${value.name}>`;
   if (value instanceof SheetBinding) return `<sheet ${value.name}>`;
   return `{${Object.entries(value).map(([key, item]) => `${key}:${formatReplValue(item)}`).join(" ")}}`;
 }
@@ -5675,7 +5799,8 @@ function formatGoSyntaxValue(value: RuntimeValue): string {
   if (value instanceof RuntimeMap) return formatGoSyntaxMap(value);
   if (value instanceof RuntimeStruct) return formatGoSyntaxStruct(value);
   if (value instanceof RuntimePointer) return `&${formatGoSyntaxValue(value.get())}`;
-  if (isRuntimeCallable(value) || isGoJuniorFunction(value)) return `<func ${value.name}>`;
+  if (isGoJuniorFunction(value)) return formatFunctionValue(value);
+  if (isRuntimeCallable(value)) return `<func ${value.name}>`;
   if (value instanceof SheetBinding) return `<sheet ${value.name}>`;
   return `map[string]interface{}{${Object.entries(value)
     .map(([key, item]) => `${JSON.stringify(key)}: ${formatGoSyntaxValue(item)}`)
@@ -5687,6 +5812,10 @@ function formatRuntimeMap(value: RuntimeMap): string {
     .map(([key, item]) => `${formatValue(key)}:${formatValue(item)}`)
     .join(" ");
   return `map[${value.keyType}]${value.valueType}{${entries}}`;
+}
+
+function formatFunctionValue(value: GoJuniorFunction): string {
+  return value.source?.trimEnd() || `<func ${value.name}>`;
 }
 
 function formatRuntimeStruct(value: RuntimeStruct): string {

@@ -1084,6 +1084,10 @@ class FrontChecker {
   }
 
   private insert(scope: Scope, object: TypeObject, identNode?: Ident | BasicLit): void {
+    if (object.name === "_") {
+      if (identNode && identNode.kind === "Ident") this.info.defs.set(identNode, undefined);
+      return;
+    }
     const existing = scope.insert(object);
     if (identNode && identNode.kind === "Ident") this.info.defs.set(identNode, existing ? undefined : object);
     if (existing && identNode) this.error(`${object.name} already declared`, identNode.span);
@@ -1549,6 +1553,17 @@ function testingPackageInfo(universe: Universe): PackageInfo {
 function osPackageInfo(universe: Universe): PackageInfo {
   const pkg = new PackageInfo("os", "os", universe.scope);
   const scope = pkg.scope;
+  scope.insert(new FuncObject(
+    "Getenv",
+    new SignatureType(
+      undefined,
+      tuple(varOf("key", universe.basic.string)),
+      tuple(varOf("", universe.basic.string)),
+      false
+    ),
+    scope,
+    pkg
+  ));
   scope.insert(new FuncObject(
     "Exit",
     new SignatureType(

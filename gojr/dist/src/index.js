@@ -12,6 +12,7 @@ export { frontSourceToAst, frontToProgramAst } from "./frontToAst.js";
 export { scanSource } from "./front/scanner.js";
 export { ArrayType, assignableTo, BasicKind, BasicType, BuiltinObject, ChanType, ConstObject, FuncObject, implementsInterface, InterfaceType, isNilAssignable, MapType, methodSet, NamedType, newUniverse, ObjectKind, PackageInfo, PointerType, Scope, SignatureType, SliceType, StructType, tuple, TypeKind, TypeNameObject, VarObject, varOf } from "./front/types.js";
 export { TokenKind } from "./front/token.js";
+export { Node as formatGoNode, Source as formatGoSource } from "./go/format.js";
 export { parseRuntimeJson, parseSheetJson, parseSheetsJson } from "./jsonInput.js";
 export { evaluateProgram, evaluateSource, formatReplValue, formatValue, GoJuniorSession, GoJuniorDeadlockError, GoJuniorPanic, GoJuniorRuntimeError, RuntimeMap, RuntimeChannel, evaluatePackageSourceFiles, evaluateSourceFiles, testSource, testSourceFiles, typeCheckConfig } from "./runtime.js";
 export function parseProgram(source, filename) {

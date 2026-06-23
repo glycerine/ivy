@@ -4,8 +4,11 @@ import {
   evaluatePackageSourceFiles,
   evaluateSource,
   evaluateSourceFiles,
+  formatGoNode,
+  formatGoSource,
   formatReplValue,
   GoJuniorSession,
+  parseProgram,
   rangeDependency,
   testSource,
   testSourceFiles
@@ -261,6 +264,28 @@ return fmt.Sprint("signed ", 1), fmt.Sprint(1, 2), fmt.Sprint("a", "b"), fmt.Spr
     expect(result.values).toEqual(["signed 1", "1 2", "ab", "1a2", "a 1 b\n"]);
   });
 
+  test("formats Go source through the TypeScript go/format port", () => {
+    const expected = "func f(a int) int {\n\treturn a + 1\n}";
+    expect(formatGoSource("func f(a int)int{return a+1}").trimEnd()).toBe(expected);
+
+    const parsed = parseProgram("func f(a int)int{return a+1}", "format-node.go");
+    const declaration = parsed.parsed.file?.declarations[0];
+    expect(declaration ? formatGoNode(declaration) : "").toBe(expected);
+  });
+
+  test("displays saved formatted source for Go-junior function values", async () => {
+    const session = new GoJuniorSession();
+    const define = await session.evaluate("func f(a int)int{return a+1}");
+    expect(define.diagnostics).toEqual([]);
+
+    const lookup = await session.evaluate("f");
+    expect(lookup.diagnostics).toEqual([]);
+    expect(formatReplValue(lookup.value ?? null)).toBe("func f(a int) int {\n\treturn a + 1\n}");
+
+    const closure = await expectRuns("f := func(a,b int)int{return a+b}\nreturn f");
+    expect(formatReplValue(closure.value ?? null)).toBe("func(a, b int) int {\n\treturn a + b\n}");
+  });
+
   test("automatically imports fmt in scripts and REPL sessions", async () => {
     const script = await expectRuns(`
 fmt.Printf("auto %v\\n", 7)
@@ -321,6 +346,24 @@ os.Exit(3)
     expect(exit.diagnostics).toHaveLength(1);
     expect(exit.diagnostics[0]?.code).toBe("GOJR_RUNTIME001");
     expect(exit.diagnostics[0]?.message).toBe("os.Exit(3)");
+  });
+
+  test("supports explicit deterministic os.Getenv bindings", async () => {
+    const empty = await expectRuns(`
+import "os"
+return os.Getenv("MISSING")
+`);
+    expect(empty.value).toBe("");
+
+    const configured = await expectRuns(`
+import "os"
+return os.Getenv("GOJR_MODE")
+`, {
+      env: {
+        GOJR_MODE: "test"
+      }
+    });
+    expect(configured.value).toBe("test");
   });
 
   test("supports importing math.NaN for float map keys and clear", async () => {
@@ -721,6 +764,18 @@ return s + " there"
     expect(strings.value).toBe("hi there");
   });
 
+  test("compares huge untyped integer constants without losing precision", async () => {
+    const result = await expectRuns(`
+const (
+  chuge = 1 << 100
+  chuge_1 = chuge - 1
+)
+return chuge > chuge_1, chuge == chuge_1, chuge_1 + 1 == chuge
+`);
+
+    expect(result.values).toEqual([true, false, true]);
+  });
+
   test("supports Go-style const groups with iota and repeated expressions", async () => {
     const result = await expectRuns(`
 const Single = iota
@@ -1087,6 +1142,17 @@ return describe(p), describe(&p), describe(nil), describe(3), describe("x")
 `);
 
     expect(result.values).toEqual(["point:7", "ptr:7", "nil", "int:3", "other"]);
+  });
+
+  test("supports typed nil pointer conversions", async () => {
+    const result = await expectRuns(`
+var p *int
+var five = 5
+accept := func(p *int) bool { return p != nil }
+return (*int)(nil) == p, fmt.Sprintf("%#v", (*int)(nil)), accept(&five)
+`);
+
+    expect(result.values).toEqual([true, "*int(nil)", true]);
   });
 
   test("preserves concrete dynamic numeric types inside interfaces", async () => {

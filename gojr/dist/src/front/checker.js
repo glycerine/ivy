@@ -993,6 +993,11 @@ class FrontChecker {
         }
     }
     insert(scope, object, identNode) {
+        if (object.name === "_") {
+            if (identNode && identNode.kind === "Ident")
+                this.info.defs.set(identNode, undefined);
+            return;
+        }
         const existing = scope.insert(object);
         if (identNode && identNode.kind === "Ident")
             this.info.defs.set(identNode, existing ? undefined : object);
@@ -1387,6 +1392,7 @@ function testingPackageInfo(universe) {
 function osPackageInfo(universe) {
     const pkg = new PackageInfo("os", "os", universe.scope);
     const scope = pkg.scope;
+    scope.insert(new FuncObject("Getenv", new SignatureType(undefined, tuple(varOf("key", universe.basic.string)), tuple(varOf("", universe.basic.string)), false), scope, pkg));
     scope.insert(new FuncObject("Exit", new SignatureType(undefined, tuple(varOf("code", universe.basic.int64)), tuple(), false), scope, pkg));
     return pkg;
 }

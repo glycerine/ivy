@@ -21,6 +21,7 @@ export interface FunctionDecl {
   receiver?: ReceiverDecl;
   signature: Signature;
   body: BlockStatement;
+  source?: string;
   span?: SourceSpan;
 }
 
@@ -296,6 +297,7 @@ export interface FunctionLiteralExpression {
   kind: "FunctionLiteralExpression";
   signature: Signature;
   body: BlockStatement;
+  source?: string;
   span?: SourceSpan;
 }
 

@@ -1,5 +1,6 @@
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
+import { Node as formatNode } from "./go/format.js";
 export function frontSourceToAst(source, filename) {
     const parsed = parseFrontSource(source, filename);
     const ast = parsed.file ? frontToProgramAst(parsed.file, parsed.diagnostics, parsed.statements) : undefined;
@@ -141,7 +142,8 @@ function functionDeclToAst(declaration) {
         name: declaration.name.name,
         ...(declaration.receiver ? { receiver: receiverToAst(declaration.receiver) } : {}),
         signature: signatureToAst(declaration.type),
-        body: declaration.body ? blockToAst(declaration.body) : { kind: "BlockStatement", statements: [] }
+        body: declaration.body ? blockToAst(declaration.body) : { kind: "BlockStatement", statements: [] },
+        source: formatNode(declaration).trimEnd()
     }, declaration.span);
 }
 function receiverToAst(list) {
@@ -380,7 +382,8 @@ function expressionToAst(expr) {
             return withSpan({
                 kind: "FunctionLiteralExpression",
                 signature: signatureToAst(expr.type),
-                body: blockToAst(expr.body)
+                body: blockToAst(expr.body),
+                source: formatNode(expr).trimEnd()
             }, expr.span);
         case "CompositeLit":
             return compositeLitToAst(expr);

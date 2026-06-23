@@ -163,6 +163,10 @@ export type { CheckConfig, CheckInfo, CheckResult, Importer, SheetNamespace, Typ
 export type { ParseFrontResult } from "./front/parser.js";
 export type { FrontToken } from "./front/token.js";
 export type { Type as FrontType, TypeObject } from "./front/types.js";
+export {
+  Node as formatGoNode,
+  Source as formatGoSource
+} from "./go/format.js";
 export { parseRuntimeJson, parseSheetJson, parseSheetsJson } from "./jsonInput.js";
 export {
   evaluateProgram,

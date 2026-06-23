@@ -23,6 +23,8 @@ describe("Go toolchain corpus smoke tests", () => {
       { path: "closure1.go", output: [] },
       { path: "closure2.go", output: [] },
       { path: "compos.go", output: [] },
+      { path: "const.go", output: [] },
+      { path: "const3.go", output: [] },
       { path: "const8.go", output: [] },
       { path: "func.go", output: [] },
       { path: "func4.go", output: [] },

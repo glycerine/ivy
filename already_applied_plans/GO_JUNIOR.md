@@ -346,9 +346,15 @@ Current Go toolchain corpus note:
   as `0xe1` are classified as integer literals rather than floats.
   `iota.go` guards typed numeric constant materialization into float and
   complex targets plus Go's rule that `iota` increments once per const-spec
-  line, not once per name inside a multi-name const spec. `const8.go` guards
-  the additional Go rule that a real const named `iota` in the current scope
-  shadows the magic `iota`, including repeated implicit RHS expressions.
+  line, not once per name inside a multi-name const spec. `const.go` guards
+  blank identifier declarations, exact huge untyped integer comparisons,
+  explicit `os.Getenv` host capability behavior, pointer conversions such as
+  `(*int)(nil)`, and precision-sensitive typed float/complex constants.
+  `const3.go` guards typed repeated const specs preserving a named integer type
+  across implicit RHS reuse, including `fmt.Stringer` dispatch for typed
+  constants. `const8.go` guards the additional Go rule that a real const named
+  `iota` in the current scope shadows the magic `iota`, including repeated
+  implicit RHS expressions.
   `literal.go` guards literal syntax for basic types plus Go's observable
   `float32` and `complex64` rounding at assignment, conversion, and typed
   expression-result boundaries.
@@ -3775,6 +3781,10 @@ return counter.Next()
 - `break`, `continue`, and `fallthrough` match Go semantics.
 - Go-junior function cells store editable source, expose typed callable
   function values, and can be called by other formulas.
+- Go-junior function values retain formatted source text produced by the
+  TypeScript `go/format` port's AST-oriented `format.Node` equivalent, so CLI,
+  REPL, browser spreadsheet cells, and package/function-cell values display
+  useful Go source instead of opaque placeholders such as `<func f>`.
 - Go-junior supports Go-style type switches over interfaces and switches on
   interface-typed expressions.
 - Spreadsheet-cell Go-junior functions support Go-style imports and import
