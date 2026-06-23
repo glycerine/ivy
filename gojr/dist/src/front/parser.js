@@ -144,9 +144,37 @@ class FrontParser {
     }
     parseTypeSpec() {
         const name = this.parseIdent("expected type name");
-        const typeParams = this.startsTypeParamList() ? this.parseTypeParamList() : undefined;
-        const alias = this.match(TokenKind.Assign);
-        const type = this.parseType();
+        let typeParams;
+        let alias = false;
+        let type;
+        if (this.match(TokenKind.LBracket)) {
+            const open = this.previous();
+            if (isIdentifierLike(this.peek().kind)) {
+                const firstName = this.parseIdent("expected type parameter name or array length");
+                let expression = firstName;
+                if (!this.at(TokenKind.LBracket)) {
+                    this.withExpressionLevel(() => {
+                        expression = this.parseBinaryExpression(this.parsePrimaryFrom(expression), 1);
+                    });
+                }
+                const { name: paramName, type: paramType } = extractName(expression, this.at(TokenKind.Comma));
+                if (paramName && (paramType || !this.at(TokenKind.RBracket))) {
+                    typeParams = this.parseTypeParameterListAfterOpen(open, paramName, paramType);
+                    alias = this.match(TokenKind.Assign);
+                    type = this.parseType();
+                }
+                else {
+                    type = this.parseArrayTypeAfterOpen(open, expression);
+                }
+            }
+            else {
+                type = this.parseArrayTypeAfterOpen(open);
+            }
+        }
+        else {
+            alias = this.match(TokenKind.Assign);
+            type = this.parseType();
+        }
         return {
             kind: "TypeSpec",
             name,
@@ -155,25 +183,6 @@ class FrontParser {
             alias,
             span: mergeSpans(name.span, type.span)
         };
-    }
-    startsTypeParamList() {
-        if (!this.at(TokenKind.LBracket))
-            return false;
-        if (!isIdentifierLike(this.peek(1).kind))
-            return false;
-        if (this.peek(2).kind === TokenKind.Dot)
-            return false;
-        let offset = 1;
-        while (isIdentifierLike(this.peek(offset).kind)) {
-            offset += 1;
-            if (this.peek(offset).kind === TokenKind.Comma && isIdentifierLike(this.peek(offset + 1).kind)) {
-                offset += 1;
-                continue;
-            }
-            break;
-        }
-        const constraintStart = this.peek(offset).kind;
-        return this.startsType(constraintStart);
     }
     parseValueSpec() {
         const names = this.parseIdentList();
@@ -668,7 +677,11 @@ class FrontParser {
         return this.withRhs(true, () => this.parseExpression());
     }
     parseExpression(minPrecedence = 1) {
-        let left = this.parseUnary();
+        const left = this.parseUnary();
+        return this.parseBinaryExpression(left, minPrecedence);
+    }
+    parseBinaryExpression(leftOperand, minPrecedence = 1) {
+        let left = leftOperand;
         while (true) {
             const operatorKind = this.inRhs && this.peek().kind === TokenKind.Assign
                 ? TokenKind.Equal
@@ -716,7 +729,10 @@ class FrontParser {
         return this.parsePrimary();
     }
     parsePrimary() {
-        let expression = this.parseOperand();
+        return this.parsePrimaryFrom(this.parseOperand());
+    }
+    parsePrimaryFrom(start) {
+        let expression = start;
         while (true) {
             if (this.match(TokenKind.Dot)) {
                 const dot = this.previous();

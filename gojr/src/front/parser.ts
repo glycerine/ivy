@@ -54,6 +54,11 @@ interface SimpleStmtResult {
   isRange: boolean;
 }
 
+interface ParamDecl {
+  name?: Ident;
+  type?: Expr;
+}
+
 export function parseFrontSource(source: string, filename: string): ParseFrontResult {
   const scanned = scanSource(source, filename);
   const parser = new FrontParser(scanned.tokens, scanned.diagnostics, filename);
@@ -721,7 +726,12 @@ class FrontParser {
   }
 
   private parseExpression(minPrecedence = 1): Expr {
-    let left = this.parseUnary();
+    const left = this.parseUnary();
+    return this.parseBinaryExpression(left, minPrecedence);
+  }
+
+  private parseBinaryExpression(leftOperand: Expr, minPrecedence = 1): Expr {
+    let left = leftOperand;
     while (true) {
       const operatorKind = this.inRhs && this.peek().kind === TokenKind.Assign
         ? TokenKind.Equal
@@ -769,8 +779,11 @@ class FrontParser {
   }
 
   private parsePrimary(): Expr {
-    let expression = this.parseOperand();
+    return this.parsePrimaryFrom(this.parseOperand());
+  }
 
+  private parsePrimaryFrom(start: Expr): Expr {
+    let expression = start;
     while (true) {
       if (this.match(TokenKind.Dot)) {
         const dot = this.previous();
@@ -1046,22 +1059,7 @@ class FrontParser {
       return { kind: "StarExpr", expr, span: mergeSpans(start.span, expr.span) };
     }
     if (this.match(TokenKind.LBracket)) {
-      let length: Expr | undefined;
-      let inferredLength = false;
-      if (this.match(TokenKind.Ellipsis)) {
-        inferredLength = true;
-      } else if (!this.at(TokenKind.RBracket)) {
-        length = this.withExpressionLevel(() => this.parseRhsExpression());
-      }
-      this.expect(TokenKind.RBracket, "expected ']' in array or slice type");
-      const element = this.parseType();
-      return {
-        kind: "ArrayType",
-        ...(length ? { length } : {}),
-        element,
-        inferredLength,
-        span: mergeSpans(start.span, element.span)
-      } satisfies ArrayType;
+      return this.parseArrayTypeAfterOpen(this.previous());
     }
     if (this.match(TokenKind.Map)) {
       this.expect(TokenKind.LBracket, "expected '[' after map");
@@ -1117,6 +1115,32 @@ class FrontParser {
       };
     }
     return expression;
+  }
+
+  private parseArrayTypeAfterOpen(open: FrontToken, parsedLength?: Expr): ArrayType {
+    let length = parsedLength;
+    let inferredLength = false;
+    if (!length) {
+      this.withExpressionLevel(() => {
+        if (this.match(TokenKind.Ellipsis)) {
+          inferredLength = true;
+        } else if (!this.at(TokenKind.RBracket)) {
+          length = this.parseRhsExpression();
+        }
+      });
+    }
+    if (this.match(TokenKind.Comma)) {
+      this.error("unexpected comma; expecting ]", this.previous().span);
+    }
+    this.expect(TokenKind.RBracket, "expected ']' in array or slice type");
+    const element = this.parseType();
+    return {
+      kind: "ArrayType",
+      ...(length ? { length } : {}),
+      element,
+      inferredLength,
+      span: mergeSpans(open.span, element.span)
+    } satisfies ArrayType;
   }
 
   private parseTypeArgumentList(): { indices: Expr[]; close: FrontToken } {
