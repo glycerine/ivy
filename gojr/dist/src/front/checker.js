@@ -45,6 +45,9 @@ class FrontChecker {
         const packageName = this.config.packageName ?? firstName ?? "main";
         const packagePath = this.config.packagePath ?? packageName;
         this.pkg = new PackageInfo(packagePath, packageName, this.universe.scope);
+        for (const object of this.config.predeclaredPackageObjects ?? []) {
+            this.pkg.scope.insert(object);
+        }
         for (const file of files) {
             this.info.scopes.set(file, this.pkg.scope);
             this.declareImports(file);
@@ -558,6 +561,8 @@ class FrontChecker {
             case "real":
             case "imag":
                 return { mode: "value", type: this.universe.basic.float64 };
+            case "recover":
+                return { mode: "value", type: this.universe.basic.any };
             case "min":
             case "max": {
                 const first = expr.args[0] ? this.checkExpr(expr.args[0], scope).type : this.universe.basic.invalid;

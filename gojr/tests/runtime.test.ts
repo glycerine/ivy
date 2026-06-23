@@ -143,6 +143,66 @@ func boom() {
     expect(result.diagnostics[0]?.code).toBe("GOJR_PANIC001");
   });
 
+  test("supports Go recover only from direct deferred function calls", async () => {
+    const recovered = await expectRuns(`
+func f() (out string) {
+  defer func() {
+    if r := recover(); r != nil {
+      out = r.(string)
+    }
+  }()
+  panic("caught")
+}
+return f(), recover() == nil
+`);
+
+    expect(recovered.values).toEqual(["caught", true]);
+
+    const helper = await evaluateSource(`
+func helper() interface{} { return recover() }
+func f() {
+  defer func() { _ = helper() }()
+  panic("boom")
+}
+f()
+`);
+    expect(helper.diagnostics).toHaveLength(1);
+    expect(helper.diagnostics[0]?.code).toBe("GOJR_PANIC001");
+    expect(helper.diagnostics[0]?.message).toContain("boom");
+
+    const directDefer = await evaluateSource(`
+func f() {
+  defer recover()
+  panic("boom")
+}
+f()
+`);
+    expect(directDefer.diagnostics).toHaveLength(1);
+    expect(directDefer.diagnostics[0]?.code).toBe("GOJR_PANIC001");
+    expect(directDefer.diagnostics[0]?.message).toContain("boom");
+  });
+
+  test("returns named values and zero unnamed values after recover", async () => {
+    const result = await expectRuns(`
+func named() (x int) {
+  defer func() {
+    recover()
+    x = 7
+  }()
+  panic("named")
+}
+
+func unnamed() int {
+  defer func() { recover() }()
+  panic("unnamed")
+}
+
+return named(), unnamed()
+`);
+
+    expect(result.values).toEqual([7n, 0n]);
+  });
+
   test("formats Go-junior values with fmt %#v", async () => {
     const result = await expectRuns(`
 import "fmt"
@@ -1282,6 +1342,36 @@ return a, b, ok, c, ok2, len(ch), cap(ch)
       expect(result.diagnostics).toEqual([]);
       expect(result.value).toBe(expected);
     }
+  });
+
+  test("lets later REPL function declarations use earlier top-level variables", async () => {
+    const session = new GoJuniorSession();
+
+    expect((await session.evaluate("c := make(chan int)")).diagnostics).toEqual([]);
+    expect((await session.evaluate("func f() { for i := range 5 { c <- i } }")).diagnostics).toEqual([]);
+    expect((await session.evaluate("go f()")).diagnostics).toEqual([]);
+
+    for (const expected of [0n, 1n, 2n, 3n, 4n]) {
+      const result = await session.evaluate("<-c");
+      expect(result.diagnostics).toEqual([]);
+      expect(result.value).toBe(expected);
+    }
+  });
+
+  test("compiled REPL functions observe later top-level variable value changes", async () => {
+    const session = new GoJuniorSession();
+
+    expect((await session.evaluate("x := 1")).diagnostics).toEqual([]);
+    expect((await session.evaluate("func readX() int { return x }")).diagnostics).toEqual([]);
+
+    let result = await session.evaluate("readX()");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(1n);
+
+    expect((await session.evaluate("x = 7")).diagnostics).toEqual([]);
+    result = await session.evaluate("readX()");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(7n);
   });
 
   test("reports REPL deadlocks and keeps the session usable without zombie receives", async () => {

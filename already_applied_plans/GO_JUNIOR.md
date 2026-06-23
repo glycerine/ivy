@@ -560,8 +560,17 @@ Function-cell rules:
   cell-import rules as formula cells.
 - Function cells can capture only explicit lexical state from their source and
   declared imports, not arbitrary workbook globals.
-- Changing a function cell's source invalidates callers that depend on its
-  signature or implementation.
+- Function cells, package-level functions, and REPL top-level functions should
+  be installed into stable binding slots. Callers invoke through the slot rather
+  than capturing a stale JavaScript function object. Updating the function
+  implementation updates the slot so ordinary calls see the new function
+  without recompiling callers when the signature and metadata shape are
+  unchanged.
+- Captured mutable variables are also stable binding cells. Changing a captured
+  value does not force recompilation; compiled code observes the updated value
+  through the binding cell. Recompilation is reserved for source changes that
+  alter signatures, exported/type metadata, capability/effect metadata, or the
+  spreadsheet dependency shape.
 - Function cells participate in dependency tracking like formulas: calls to the
   function record a dependency on the function cell, and any cell/range reads
   performed by the function are observed during evaluation.
@@ -1463,6 +1472,11 @@ Package linking rules:
 
 - formulas call package exports through generated package slots, not globals
 - packages call imported package exports through generated slots
+- package and REPL top-level variables are represented as mutable binding
+  cells, so closures observe current values without recompilation
+- package and REPL top-level functions are represented as mutable binding
+  slots, so replacing a compatible implementation updates future calls without
+  recompiling callers
 - package initialization should be minimal and deterministic
 - package-level constants are allowed
 - package-level variables are mutable by default, matching Go semantics
@@ -1472,9 +1486,52 @@ Package linking rules:
   invalidation creates a new package instance graph
 - compiled package artifacts must not persist current mutable variable values as
   executable artifacts; runtime state is separate from compiled code
+- already-compiled package and function bodies are not reparsed or re-typechecked
+  merely because later code is entered in the REPL, another package imports
+  them, or a spreadsheet cell value changes; later compilation consumes their
+  exported/type metadata
+- invalidation is metadata-driven: rebuild/re-typecheck dependents when source
+  hashes, function signatures, exported type metadata, capability/effect
+  metadata, host specs, compiler version, or dependency cache keys change
 - formulas that call functions which read or write mutable package variables are
   marked `package-state`, evaluated in stable scheduler order, and never
   optimized as pure/idempotent helpers
+
+## Binding Slots and Recompile Boundaries
+
+The REPL, source packages, Go-junior function cells, and ordinary spreadsheet
+formula cells should share one recompilation model:
+
+- Stable runtime values live in binding cells/slots. Variables, package
+  variables, function declarations, function-cell callables, and spreadsheet
+  cells are referenced through stable indirections rather than copied into
+  compiled code.
+- Ordinary value changes dirty dependent calculations but do not by themselves
+  require recompilation. If `sheet.A1` changes from `3` to `4`, or a captured
+  package variable changes value, dependents rerun against the same compiled
+  code when the static type/dependency shape remains valid.
+- Program-shape changes can require recompilation. Editing a function body,
+  changing a function signature, changing exported package metadata, changing a
+  formula's static references, changing a host capability contract, or changing
+  a cell's declared/inferred type can invalidate compiled artifacts or force
+  dependent callers to be re-typechecked.
+- Dynamic spreadsheet dependencies are observed during evaluation and update the
+  reverse dependency graph after the run. If the observed edge set changes,
+  affected formulas are rescheduled until values and dependency edges stabilize
+  or the dependency-stabilization budget is exhausted.
+- The JavaScript environment should do the natural closure work for mutable
+  values: generated code captures binding cells/slots, not stale primitive
+  snapshots. The compiler/runtime still owns metadata invalidation because
+  JavaScript cannot know Go signatures, package exports, spreadsheet dependency
+  edges, or capability/effect contracts.
+- A compiled artifact stores code plus metadata only: source hashes, signatures,
+  exported names, type metadata, effect/capability metadata, dependency cache
+  keys, and source maps/spans. It must not store current mutable variable values
+  or spreadsheet cell values.
+
+This is the same "what do we recompile?" logic used by spreadsheet
+recalculation. Value changes rerun dependent compiled functions; shape changes
+rebuild or re-typecheck the affected compiled functions before rerunning them.
 
 This model allows existing Go source libraries to be loaded when their imports
 and runtime environment requirements are available to Go-junior, while keeping

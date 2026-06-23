@@ -111,6 +111,7 @@ describe("Go-junior Go-style types", () => {
     expect(universe.scope.lookup("true")?.kind).toBe(ObjectKind.Const);
     expect(universe.scope.lookup("nil")?.kind).toBe(ObjectKind.Nil);
     expect(universe.scope.lookup("panic")?.kind).toBe(ObjectKind.Builtin);
+    expect(universe.scope.lookup("recover")?.kind).toBe(ObjectKind.Builtin);
     expect(universe.scope.names()).toContain("append");
   });
 

@@ -4,6 +4,7 @@ import { BasicKind, BasicType, MapType as CheckerMapType, SliceType as CheckerSl
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
 import { DeterministicPrng } from "./prng.js";
 import { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
+const RECOVERED_PANIC = Symbol("recovered panic");
 export class GoJuniorRuntimeError extends Error {
     constructor(message) {
         super(message);
@@ -37,6 +38,10 @@ export class EvaluationContext {
     shared;
     currentScope;
     deferFrames = [[]];
+    callDepth = 0;
+    activeRecoverPanic;
+    recoverCallDepth;
+    recoveredActivePanic = false;
     constructor(options = {}, shared, currentScope) {
         this.options = options;
         if (shared) {
@@ -151,17 +156,72 @@ export class EvaluationContext {
     pushDefer(callback) {
         this.currentDeferFrame().push(callback);
     }
+    async functionCallAsync(body) {
+        this.callDepth += 1;
+        try {
+            return await body();
+        }
+        finally {
+            this.callDepth -= 1;
+        }
+    }
+    recover() {
+        if (this.activeRecoverPanic &&
+            this.recoverCallDepth === this.callDepth &&
+            !this.recoveredActivePanic) {
+            this.recoveredActivePanic = true;
+            return this.activeRecoverPanic.value;
+        }
+        return null;
+    }
     runDefers() {
         const frame = this.currentDeferFrame();
         while (frame.length > 0) {
             frame.pop()?.();
         }
     }
-    async runDefersAsync() {
+    async runDefersAsync(panic) {
         const frame = this.currentDeferFrame();
+        let activePanic = panic;
         while (frame.length > 0) {
-            await frame.pop()?.();
+            const callback = frame.pop();
+            if (!callback)
+                continue;
+            const previousRecoverPanic = this.activeRecoverPanic;
+            const previousRecoverCallDepth = this.recoverCallDepth;
+            const previousRecoveredActivePanic = this.recoveredActivePanic;
+            if (activePanic) {
+                this.activeRecoverPanic = activePanic;
+                this.recoverCallDepth = this.callDepth + 1;
+                this.recoveredActivePanic = false;
+            }
+            else {
+                this.activeRecoverPanic = undefined;
+                this.recoverCallDepth = undefined;
+                this.recoveredActivePanic = false;
+            }
+            try {
+                await callback();
+            }
+            catch (error) {
+                const normalized = normalizeAsyncRuntimeError(error);
+                if (normalized instanceof GoJuniorPanic) {
+                    activePanic = normalized;
+                }
+                else {
+                    throw normalized;
+                }
+            }
+            finally {
+                if (this.recoveredActivePanic) {
+                    activePanic = undefined;
+                }
+                this.activeRecoverPanic = previousRecoverPanic;
+                this.recoverCallDepth = previousRecoverCallDepth;
+                this.recoveredActivePanic = previousRecoveredActivePanic;
+            }
         }
+        return activePanic;
     }
     deferScope(body) {
         this.deferFrames.push([]);
@@ -180,15 +240,27 @@ export class EvaluationContext {
     async deferScopeAsync(body) {
         this.deferFrames.push([]);
         try {
-            return await body();
+            const value = await body();
+            const panic = await this.runDefersAsync();
+            if (panic)
+                throw panic;
+            return value;
+        }
+        catch (error) {
+            const normalized = normalizeAsyncRuntimeError(error);
+            if (normalized instanceof GoJuniorPanic) {
+                const panic = await this.runDefersAsync(normalized);
+                if (panic)
+                    throw panic;
+                return RECOVERED_PANIC;
+            }
+            const panic = await this.runDefersAsync();
+            if (panic)
+                throw panic;
+            throw normalized;
         }
         finally {
-            try {
-                await this.runDefersAsync();
-            }
-            finally {
-                this.deferFrames.pop();
-            }
+            this.deferFrames.pop();
         }
     }
     write(text) {
@@ -872,7 +944,7 @@ function indentTestingLog(text) {
 export class GoJuniorSession {
     options;
     context;
-    acceptedSources = [];
+    acceptedPackageObjects = [];
     constructor(options = {}) {
         this.options = options;
         this.context = new EvaluationContext(options);
@@ -905,10 +977,10 @@ export class GoJuniorSession {
                 output: []
             };
         }
-        const typeDiagnostics = this.checkSource(sourceFile);
-        if (typeDiagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+        const checked = this.checkSource(sourceFile);
+        if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
             return {
-                diagnostics: typeDiagnostics,
+                diagnostics: checked.diagnostics,
                 output: [],
                 ast
             };
@@ -926,7 +998,7 @@ export class GoJuniorSession {
             expectNormalCompletion(declarationCompletion, "top-level declarations");
             if (ast.kind === "function" && ast.functions[0] && ast.body.length === 0) {
                 const value = installedFunctionValue(this.context, ast.functions[0]);
-                this.acceptedSources.push(ensureTrailingNewlineSourceFile(sourceFile));
+                this.acceptTypeInfo(checked);
                 return {
                     diagnostics: ast.diagnostics,
                     output: this.context.outputFrom(outputStart),
@@ -939,7 +1011,7 @@ export class GoJuniorSession {
                 return executeTopLevelStatements(statements, this.context);
             });
             const result = resultFromCompletion(ast, this.context.outputFrom(outputStart), completion);
-            this.acceptedSources.push(ensureTrailingNewlineSourceFile(sourceFile));
+            this.acceptTypeInfo(checked);
             return result;
         }
         catch (error) {
@@ -955,8 +1027,14 @@ export class GoJuniorSession {
         }
     }
     checkSource(source) {
-        const checked = checkFrontSourceFiles([...this.acceptedSources, ensureTrailingNewlineSourceFile(source)], typeCheckConfig(this.options));
-        return checked.diagnostics;
+        const checked = checkFrontSourceFiles([ensureTrailingNewlineSourceFile(source)], {
+            ...typeCheckConfig(this.options),
+            predeclaredPackageObjects: this.acceptedPackageObjects
+        });
+        return checked;
+    }
+    acceptTypeInfo(checked) {
+        this.acceptedPackageObjects = checked.pkg.scope.children();
     }
 }
 function ensureTrailingNewline(source) {
@@ -1086,6 +1164,9 @@ function installBuiltins(context) {
             throw new GoJuniorPanic(err);
         }
         return null;
+    }));
+    context.declareRoot("recover", hostCallable("recover", (_args, context) => {
+        return context.recover();
     }));
     context.declareRoot("len", hostCallable("len", (args) => {
         return BigInt(valueLength(args[0] ?? null));
@@ -1255,12 +1336,8 @@ async function runInitFunctions(functions, context) {
     }
 }
 async function executeTopLevelStatements(statements, context) {
-    try {
-        return await executeStatements(statements, context);
-    }
-    finally {
-        await context.runDefersAsync();
-    }
+    const outcome = await context.deferScopeAsync(() => executeStatements(statements, context));
+    return outcome === RECOVERED_PANIC ? { kind: "normal" } : outcome;
 }
 function goJuniorFunctionValue(name, signature, body, closureScope, declaration, boundReceiver) {
     return {
@@ -1269,7 +1346,7 @@ function goJuniorFunctionValue(name, signature, body, closureScope, declaration,
         ...(declaration ? { declaration } : {}),
         async call(args, parentContext) {
             const context = parentContext;
-            const invoke = () => context.childScopeAsync(() => context.deferScopeAsync(async () => {
+            const invoke = () => context.functionCallAsync(() => context.childScopeAsync(async () => {
                 if (declaration?.receiver?.name) {
                     context.declare(declaration.receiver.name, prepareReceiverBinding(declaration.receiver.type.text, boundReceiver), true, declaration.receiver.type);
                 }
@@ -1286,8 +1363,10 @@ function goJuniorFunctionValue(name, signature, body, closureScope, declaration,
                         context.declare(result.name, defaultValueForDeclarationType(result.type, context), true, result.type);
                     }
                 }
-                const completion = await executeBlock(body, context, false);
-                await context.runDefersAsync();
+                const outcome = await context.deferScopeAsync(() => executeBlock(body, context, false));
+                const completion = outcome === RECOVERED_PANIC
+                    ? { kind: "return", values: namedReturnValuesOrZero(signature, context) }
+                    : outcome;
                 if (completion.kind === "return") {
                     const values = completion.values.length === 0
                         ? namedReturnValues(signature, context)
@@ -1305,6 +1384,11 @@ function namedReturnValues(signature, context) {
     if (namedResults.length === 0)
         return [];
     return namedResults.map((result) => result.name ? context.lookup(result.name) : defaultValueForDeclarationType(result.type, context));
+}
+function namedReturnValuesOrZero(signature, context) {
+    if (signature.results.length === 0)
+        return [];
+    return signature.results.map((result) => result.name ? context.lookup(result.name) : defaultValueForDeclarationType(result.type, context));
 }
 function normalizeReceiverType(typeText) {
     const type = normalizeTypeText(typeText);
