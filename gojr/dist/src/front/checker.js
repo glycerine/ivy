@@ -33,6 +33,8 @@ class FrontChecker {
         scopes: new Map(),
         selections: new Map()
     };
+    predeclaredPackageObjectNames = new Set();
+    redeclaredPredeclaredFunctions = new Set();
     pkg;
     constructor(config, parserDiagnostics) {
         this.config = config;
@@ -47,6 +49,7 @@ class FrontChecker {
         this.pkg = new PackageInfo(packagePath, packageName, this.universe.scope);
         for (const object of this.config.predeclaredPackageObjects ?? []) {
             this.pkg.scope.insert(object);
+            this.predeclaredPackageObjectNames.add(object.name);
         }
         for (const file of files) {
             this.info.scopes.set(file, this.pkg.scope);
@@ -132,7 +135,8 @@ class FrontChecker {
             : new TypeNameObject(spec.name.name, this.universe.basic.invalid, scope, this.pkg);
         if (!(object instanceof TypeNameObject))
             this.insert(scope, typeName, spec.name);
-        const underlying = this.resolveType(spec.type, scope);
+        const typeScope = spec.typeParams ? this.scopeWithTypeParams(spec.typeParams, scope) : scope;
+        const underlying = this.resolveType(spec.type, typeScope);
         if (typeName.type instanceof NamedType && !spec.alias) {
             typeName.type.setUnderlying(underlying);
         }
@@ -166,14 +170,34 @@ class FrontChecker {
             this.info.defs.set(declaration.name, object);
             return;
         }
+        const existing = this.pkg.scope.lookup(declaration.name.name);
+        if (existing) {
+            const canReplacePredeclaredFunction = this.predeclaredPackageObjectNames.has(declaration.name.name) &&
+                !this.redeclaredPredeclaredFunctions.has(declaration.name.name) &&
+                existing instanceof FuncObject &&
+                sameSignature(existing.signature, signature);
+            if (canReplacePredeclaredFunction) {
+                this.redeclaredPredeclaredFunctions.add(declaration.name.name);
+                this.info.defs.set(declaration.name, existing);
+                return;
+            }
+            this.info.defs.set(declaration.name, undefined);
+            if (this.predeclaredPackageObjectNames.has(declaration.name.name) && existing instanceof FuncObject) {
+                this.error(`cannot redeclare ${declaration.name.name} with different signature`, declaration.name.span);
+                return;
+            }
+            this.error(`${declaration.name.name} already declared`, declaration.name.span);
+            return;
+        }
         this.insert(this.pkg.scope, object, declaration.name);
     }
     checkTopLevelBodies(file) {
         for (const declaration of file.declarations) {
             if (declaration.kind === "FuncDecl" && declaration.body) {
                 const receiver = declaration.receiver ? this.receiverVar(declaration.receiver) : undefined;
-                const signature = this.signatureFromFuncType(declaration.type, this.pkg.scope, receiver);
-                const scope = new Scope(this.pkg.scope, `func ${declaration.name.name}`);
+                const parent = declaration.type.typeParams ? this.scopeWithTypeParams(declaration.type.typeParams, this.pkg.scope) : this.pkg.scope;
+                const signature = this.signatureFromFuncType(declaration.type, parent, receiver);
+                const scope = new Scope(parent, `func ${declaration.name.name}`);
                 this.info.scopes.set(declaration.body, scope);
                 if (receiver && declaration.receiver)
                     this.insert(scope, receiver, firstName(declaration.receiver));
@@ -582,7 +606,15 @@ class FrontChecker {
         }
     }
     checkIndex(expr, scope) {
-        const object = this.checkExpr(expr.object, scope).type.underlying();
+        const objectValue = this.checkExpr(expr.object, scope);
+        const object = objectValue.type.underlying();
+        if (object instanceof SignatureType) {
+            const typeArg = this.resolveType(expr.index, scope);
+            if (typeArg instanceof BasicType && typeArg.basicKind === BasicKind.Invalid) {
+                return { mode: "invalid", type: this.universe.basic.invalid };
+            }
+            return { mode: "value", type: objectValue.type };
+        }
         this.checkExpr(expr.index, scope);
         if (object instanceof ArrayType || object instanceof SliceType)
             return { mode: "value", type: object.element };
@@ -602,9 +634,12 @@ class FrontChecker {
     }
     checkCompositeLit(expr, scope) {
         const type = expr.type ? this.resolveType(expr.type, scope) : this.universe.basic.invalid;
+        const literalType = type.underlying();
         for (const element of expr.elements) {
             if (element.kind === "KeyValueExpr") {
-                this.checkExpr(element.key, scope);
+                if (!(literalType instanceof StructType && element.key.kind === "Ident")) {
+                    this.checkExpr(element.key, scope);
+                }
                 this.checkExpr(element.value, scope);
             }
             else {
@@ -640,6 +675,22 @@ class FrontChecker {
                 const selected = this.checkSelector(expr, scope);
                 return selected.type;
             }
+            case "IndexExpr":
+                this.resolveType(expr.index, scope);
+                return this.resolveType(expr.object, scope);
+            case "UnaryExpr":
+                if (expr.op === TokenKind.Tilde)
+                    return this.resolveType(expr.expr, scope);
+                this.error("expected type", expr.span);
+                return this.universe.basic.invalid;
+            case "BinaryExpr":
+                if (expr.op === TokenKind.Or) {
+                    this.resolveType(expr.left, scope);
+                    this.resolveType(expr.right, scope);
+                    return this.universe.basic.any;
+                }
+                this.error("expected type", expr.span);
+                return this.universe.basic.invalid;
             case "StarExpr":
                 return new PointerType(this.resolveType(expr.expr, scope));
             case "ArrayType":
@@ -695,11 +746,22 @@ class FrontChecker {
         return new InterfaceType(methods).complete();
     }
     signatureFromFuncType(expr, scope, receiver) {
-        const params = this.fieldListTuple(expr.params, scope, true);
-        const results = expr.results ? this.fieldListTuple(expr.results, scope, false) : tuple();
+        const typeScope = expr.typeParams ? this.scopeWithTypeParams(expr.typeParams, scope) : scope;
+        const params = this.fieldListTuple(expr.params, typeScope, true);
+        const results = expr.results ? this.fieldListTuple(expr.results, typeScope, false) : tuple();
         const variadic = params.variables[params.variables.length - 1]?.type instanceof SliceType &&
             expr.params.fields[expr.params.fields.length - 1]?.type.kind === "Ellipsis";
         return new SignatureType(receiver, params, results, variadic);
+    }
+    scopeWithTypeParams(typeParams, parent) {
+        const scope = new Scope(parent, "type parameters");
+        for (const field of typeParams.fields) {
+            this.resolveType(field.type, parent);
+            for (const name of field.names) {
+                this.insert(scope, new TypeNameObject(name.name, this.universe.basic.any, scope, this.pkg), name);
+            }
+        }
+        return scope;
     }
     fieldListTuple(list, scope, params) {
         const variables = [];
@@ -883,6 +945,19 @@ function importName(path) {
 }
 function firstName(list) {
     return list.fields[0]?.names[0];
+}
+function sameSignature(left, right) {
+    return sameVarTuple(left.params, right.params) &&
+        sameVarTuple(left.results, right.results) &&
+        left.variadic === right.variadic &&
+        typeString(left.receiver?.type) === typeString(right.receiver?.type);
+}
+function sameVarTuple(left, right) {
+    return left.variables.length === right.variables.length &&
+        left.variables.every((variable, index) => typeString(variable.type) === typeString(right.variables[index]?.type));
+}
+function typeString(type) {
+    return type?.typeString() ?? "";
 }
 function embeddedFieldName(expr) {
     if (expr.kind === "Ident")

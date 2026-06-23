@@ -9,7 +9,8 @@ export enum TypeKind {
   Interface = "Interface",
   Map = "Map",
   Chan = "Chan",
-  Named = "Named"
+  Named = "Named",
+  TypeParam = "TypeParam"
 }
 
 export enum BasicKind {
@@ -188,7 +189,10 @@ export class InterfaceType implements Type {
   public readonly kind = TypeKind.Interface;
   private completed = false;
 
-  public constructor(public readonly methods: FuncObject[] = []) {}
+  public constructor(
+    public readonly methods: FuncObject[] = [],
+    public readonly typeSet: TypeSetInfo = emptyTypeSet()
+  ) {}
 
   public complete(): this {
     this.methods.sort((left, right) => left.name.localeCompare(right.name));
@@ -207,6 +211,41 @@ export class InterfaceType implements Type {
   public typeString(): string {
     if (this.methods.length === 0) return "interface{}";
     return `interface{${this.methods.map((method) => method.name + method.type.typeString().replace(/^func/, "")).join("; ")}}`;
+  }
+}
+
+export interface TypeSetInfo {
+  readonly addable: boolean;
+  readonly numeric: boolean;
+  readonly integer: boolean;
+  readonly ordered: boolean;
+  readonly comparable: boolean;
+}
+
+export function emptyTypeSet(): TypeSetInfo {
+  return {
+    addable: false,
+    numeric: false,
+    integer: false,
+    ordered: false,
+    comparable: false
+  };
+}
+
+export class TypeParamType implements Type {
+  public readonly kind = TypeKind.TypeParam;
+
+  public constructor(
+    public readonly name: string,
+    public readonly constraint: TypeSetInfo = emptyTypeSet()
+  ) {}
+
+  public underlying(): Type {
+    return this;
+  }
+
+  public typeString(): string {
+    return this.name;
   }
 }
 
@@ -478,7 +517,8 @@ export function newUniverse(): Universe {
     ["complex128", basic.complex128],
     ["string", basic.string],
     ["error", basic.error],
-    ["any", basic.any]
+    ["any", basic.any],
+    ["comparable", basic.any]
   ] as const) {
     scope.insert(new TypeNameObject(name, type, scope));
   }
@@ -527,6 +567,7 @@ export function sameType(left: Type, right: Type): boolean {
   }
   if (left.kind !== right.kind) return false;
   if (left instanceof BasicType && right instanceof BasicType) return left.basicKind === right.basicKind;
+  if (left instanceof TypeParamType && right instanceof TypeParamType) return left === right || left.name === right.name;
   if (left instanceof ArrayType && right instanceof ArrayType) {
     return left.length === right.length && sameType(left.element, right.element);
   }

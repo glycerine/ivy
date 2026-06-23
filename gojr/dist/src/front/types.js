@@ -413,7 +413,8 @@ export function newUniverse() {
         ["complex128", basic.complex128],
         ["string", basic.string],
         ["error", basic.error],
-        ["any", basic.any]
+        ["any", basic.any],
+        ["comparable", basic.any]
     ]) {
         scope.insert(new TypeNameObject(name, type, scope));
     }

@@ -69,6 +69,7 @@ export var TokenKind;
     TokenKind["Percent"] = "Percent";
     TokenKind["Or"] = "Or";
     TokenKind["Caret"] = "Caret";
+    TokenKind["Tilde"] = "Tilde";
     TokenKind["Shl"] = "Shl";
     TokenKind["Shr"] = "Shr";
     TokenKind["BitClear"] = "BitClear";

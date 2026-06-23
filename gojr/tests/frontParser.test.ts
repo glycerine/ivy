@@ -57,6 +57,60 @@ func PairAndLog(a, b, c int, rest ...string) (left, right int) {
     expect(fn?.type.results?.fields[0]?.names.map((name) => name.name)).toEqual(["left", "right"]);
   });
 
+  test("parses generic function and type parameter lists", () => {
+    const file = parseOk(`
+package generic
+
+type Box[T any] struct {
+  Value T
+}
+
+type Number interface {
+  ~int | ~float64
+}
+
+func Identity[T any](value T) T {
+  return value
+}
+
+func Pick[T Number](value T) T {
+  return value
+}
+
+var answer = Identity[int](42)
+`);
+
+    const typeDecl = file.declarations.find((decl): decl is GenDecl => decl.kind === "GenDecl");
+    const typeSpec = typeDecl?.specs[0];
+    expect(typeSpec?.kind).toBe("TypeSpec");
+    if (typeSpec?.kind === "TypeSpec") {
+      expect(typeSpec.typeParams?.fields[0]?.names.map((name) => name.name)).toEqual(["T"]);
+      expect((typeSpec.typeParams?.fields[0]?.type as Expr | undefined)?.kind).toBe("Ident");
+    }
+
+    const fn = file.declarations.find((decl): decl is FuncDecl => decl.kind === "FuncDecl");
+    expect(fn?.type.typeParams?.fields[0]?.names.map((name) => name.name)).toEqual(["T"]);
+    expect(fn?.type.params.fields[0]?.type.kind).toBe("Ident");
+    expect(fn?.type.results?.fields[0]?.type.kind).toBe("Ident");
+    const numberSpec = file.declarations.flatMap((decl) => decl.kind === "GenDecl" ? decl.specs : [])
+      .find((spec) => spec.kind === "TypeSpec" && spec.name.name === "Number");
+    const term = numberSpec?.kind === "TypeSpec" && numberSpec.type.kind === "InterfaceType"
+      ? numberSpec.type.methods.fields[0]?.type
+      : undefined;
+    expect(term?.kind).toBe("BinaryExpr");
+    if (term?.kind === "BinaryExpr") {
+      expect(term.left.kind).toBe("UnaryExpr");
+      expect(term.right.kind).toBe("UnaryExpr");
+    }
+    const varDecl = file.declarations.find((decl): decl is GenDecl =>
+      decl.kind === "GenDecl" && decl.specs.some((spec) => spec.kind === "ValueSpec")
+    );
+    const valueSpec = varDecl?.specs.find((spec) => spec.kind === "ValueSpec");
+    const call = valueSpec?.kind === "ValueSpec" ? valueSpec.values[0] : undefined;
+    expect(call?.kind).toBe("CallExpr");
+    if (call?.kind === "CallExpr") expect(call.fun.kind).toBe("IndexExpr");
+  });
+
   test("parses structs, interfaces, maps, function literals, and composite literals", () => {
     const kinds = collectKinds(`
 package model

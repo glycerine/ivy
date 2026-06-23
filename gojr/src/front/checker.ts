@@ -54,11 +54,14 @@ import {
   SliceType,
   StructType,
   Type,
+  TypeParamType,
   TypeNameObject,
   TypeObject,
+  TypeSetInfo,
   Universe,
   VarObject,
   assignableTo,
+  emptyTypeSet,
   methodSet,
   tuple,
   varOf
@@ -144,6 +147,8 @@ class FrontChecker {
     scopes: new Map(),
     selections: new Map()
   };
+  private readonly predeclaredPackageObjectNames = new Set<string>();
+  private readonly redeclaredPredeclaredFunctions = new Set<string>();
   private pkg: PackageInfo;
 
   public constructor(
@@ -162,6 +167,7 @@ class FrontChecker {
     this.pkg = new PackageInfo(packagePath, packageName, this.universe.scope);
     for (const object of this.config.predeclaredPackageObjects ?? []) {
       this.pkg.scope.insert(object);
+      this.predeclaredPackageObjectNames.add(object.name);
     }
 
     for (const file of files) {
@@ -244,7 +250,8 @@ class FrontChecker {
       : new TypeNameObject(spec.name.name, this.universe.basic.invalid, scope, this.pkg);
     if (!(object instanceof TypeNameObject)) this.insert(scope, typeName, spec.name);
 
-    const underlying = this.resolveType(spec.type, scope);
+    const typeScope = spec.typeParams ? this.scopeWithTypeParams(spec.typeParams, scope) : scope;
+    const underlying = this.resolveType(spec.type, typeScope);
     if (typeName.type instanceof NamedType && !spec.alias) {
       typeName.type.setUnderlying(underlying);
     } else {
@@ -278,6 +285,25 @@ class FrontChecker {
       this.info.defs.set(declaration.name, object);
       return;
     }
+    const existing = this.pkg.scope.lookup(declaration.name.name);
+    if (existing) {
+      const canReplacePredeclaredFunction = this.predeclaredPackageObjectNames.has(declaration.name.name) &&
+        !this.redeclaredPredeclaredFunctions.has(declaration.name.name) &&
+        existing instanceof FuncObject &&
+        sameSignature(existing.signature, signature);
+      if (canReplacePredeclaredFunction) {
+        this.redeclaredPredeclaredFunctions.add(declaration.name.name);
+        this.info.defs.set(declaration.name, existing);
+        return;
+      }
+      this.info.defs.set(declaration.name, undefined);
+      if (this.predeclaredPackageObjectNames.has(declaration.name.name) && existing instanceof FuncObject) {
+        this.error(`cannot redeclare ${declaration.name.name} with different signature`, declaration.name.span);
+        return;
+      }
+      this.error(`${declaration.name.name} already declared`, declaration.name.span);
+      return;
+    }
     this.insert(this.pkg.scope, object, declaration.name);
   }
 
@@ -285,8 +311,9 @@ class FrontChecker {
     for (const declaration of file.declarations) {
       if (declaration.kind === "FuncDecl" && declaration.body) {
         const receiver = declaration.receiver ? this.receiverVar(declaration.receiver) : undefined;
-        const signature = this.signatureFromFuncType(declaration.type, this.pkg.scope, receiver);
-        const scope = new Scope(this.pkg.scope, `func ${declaration.name.name}`);
+        const parent = declaration.type.typeParams ? this.scopeWithTypeParams(declaration.type.typeParams, this.pkg.scope) : this.pkg.scope;
+        const signature = this.signatureFromFuncType(declaration.type, parent, receiver);
+        const scope = new Scope(parent, `func ${declaration.name.name}`);
         this.info.scopes.set(declaration.body, scope);
         if (receiver && declaration.receiver) this.insert(scope, receiver, firstName(declaration.receiver));
         for (const param of signature.params.variables) this.insert(scope, param);
@@ -562,6 +589,8 @@ class FrontChecker {
   private checkBinary(expr: BinaryExpr, scope: Scope): TypeAndValue {
     const left = this.checkExpr(expr.left, scope).type;
     const right = this.checkExpr(expr.right, scope).type;
+    const typeParam = sameTypeParam(left, right);
+    if (typeParam) return this.checkTypeParamBinary(expr, typeParam);
     if ([TokenKind.Equal, TokenKind.NotEqual, TokenKind.Less, TokenKind.LessEqual, TokenKind.Greater, TokenKind.GreaterEqual].includes(expr.op)) {
       return { mode: "value", type: this.universe.basic.bool };
     }
@@ -580,6 +609,36 @@ class FrontChecker {
       }
     }
     return { mode: isUntyped(left) && isUntyped(right) ? "constant" : "value", type: promoteNumeric(left, right, this.universe) };
+  }
+
+  private checkTypeParamBinary(expr: BinaryExpr, type: TypeParamType): TypeAndValue {
+    const constraint = type.constraint;
+    if ([TokenKind.Equal, TokenKind.NotEqual].includes(expr.op)) {
+      if (constraint.comparable) return { mode: "value", type: this.universe.basic.bool };
+      this.error(`invalid operation: ${type.typeString()} ${operatorText(expr.op)} ${type.typeString()} (type parameter is not comparable)`, expr.span);
+      return { mode: "invalid", type: this.universe.basic.invalid };
+    }
+    if ([TokenKind.Less, TokenKind.LessEqual, TokenKind.Greater, TokenKind.GreaterEqual].includes(expr.op)) {
+      if (constraint.ordered) return { mode: "value", type: this.universe.basic.bool };
+      this.error(`invalid operation: ${type.typeString()} ${operatorText(expr.op)} ${type.typeString()} (type parameter is not ordered)`, expr.span);
+      return { mode: "invalid", type: this.universe.basic.invalid };
+    }
+    if (expr.op === TokenKind.Plus) {
+      if (constraint.addable) return { mode: "value", type };
+      this.error(`invalid operation: ${type.typeString()} + ${type.typeString()} (operator + not permitted by constraint)`, expr.span);
+      return { mode: "invalid", type: this.universe.basic.invalid };
+    }
+    if ([TokenKind.Minus, TokenKind.Star, TokenKind.Slash].includes(expr.op)) {
+      if (constraint.numeric) return { mode: "value", type };
+      this.error(`invalid operation: ${type.typeString()} ${operatorText(expr.op)} ${type.typeString()} (operator not permitted by constraint)`, expr.span);
+      return { mode: "invalid", type: this.universe.basic.invalid };
+    }
+    if ([TokenKind.Percent, TokenKind.Or, TokenKind.Caret, TokenKind.Amp, TokenKind.BitClear, TokenKind.Shl, TokenKind.Shr].includes(expr.op)) {
+      if (constraint.integer) return { mode: "value", type };
+      this.error(`invalid operation: ${type.typeString()} ${operatorText(expr.op)} ${type.typeString()} (integer operator not permitted by constraint)`, expr.span);
+      return { mode: "invalid", type: this.universe.basic.invalid };
+    }
+    return { mode: "value", type };
   }
 
   private checkSelector(expr: SelectorExpr, scope: Scope): TypeAndValue {
@@ -667,7 +726,15 @@ class FrontChecker {
   }
 
   private checkIndex(expr: IndexExpr, scope: Scope): TypeAndValue {
-    const object = this.checkExpr(expr.object, scope).type.underlying();
+    const objectValue = this.checkExpr(expr.object, scope);
+    const object = objectValue.type.underlying();
+    if (object instanceof SignatureType) {
+      const typeArg = this.resolveType(expr.index, scope);
+      if (typeArg instanceof BasicType && typeArg.basicKind === BasicKind.Invalid) {
+        return { mode: "invalid", type: this.universe.basic.invalid };
+      }
+      return { mode: "value", type: objectValue.type };
+    }
     this.checkExpr(expr.index, scope);
     if (object instanceof ArrayType || object instanceof SliceType) return { mode: "value", type: object.element };
     if (object instanceof MapType) return { mode: "value", type: object.value };
@@ -685,9 +752,12 @@ class FrontChecker {
 
   private checkCompositeLit(expr: CompositeLit, scope: Scope): TypeAndValue {
     const type = expr.type ? this.resolveType(expr.type, scope) : this.universe.basic.invalid;
+    const literalType = type.underlying();
     for (const element of expr.elements) {
       if (element.kind === "KeyValueExpr") {
-        this.checkExpr(element.key, scope);
+        if (!(literalType instanceof StructType && element.key.kind === "Ident")) {
+          this.checkExpr(element.key, scope);
+        }
         this.checkExpr(element.value, scope);
       } else {
         this.checkExpr(element, scope);
@@ -722,6 +792,21 @@ class FrontChecker {
         const selected = this.checkSelector(expr, scope);
         return selected.type;
       }
+      case "IndexExpr":
+        this.resolveType(expr.index, scope);
+        return this.resolveType(expr.object, scope);
+      case "UnaryExpr":
+        if (expr.op === TokenKind.Tilde) return this.resolveType(expr.expr, scope);
+        this.error("expected type", expr.span);
+        return this.universe.basic.invalid;
+      case "BinaryExpr":
+        if (expr.op === TokenKind.Or) {
+          this.resolveType(expr.left, scope);
+          this.resolveType(expr.right, scope);
+          return this.universe.basic.any;
+        }
+        this.error("expected type", expr.span);
+        return this.universe.basic.invalid;
       case "StarExpr":
         return new PointerType(this.resolveType(expr.expr, scope));
       case "ArrayType":
@@ -769,22 +854,36 @@ class FrontChecker {
   }
 
   private resolveInterfaceType(expr: InterfaceTypeNode, scope: Scope): Type {
+    const typeSets: TypeSetInfo[] = [];
     const methods = expr.methods.fields.flatMap((field): FuncObject[] => {
       if (field.type.kind !== "FuncType") {
+        typeSets.push(this.typeSetInfoForExpr(field.type, scope));
         const embedded = this.resolveType(field.type, scope).underlying();
         return embedded instanceof InterfaceType ? embedded.methods : [];
       }
       return field.names.map((name) => new FuncObject(name.name, this.signatureFromFuncType(field.type as FuncType, scope), scope, this.pkg));
     });
-    return new InterfaceType(methods).complete();
+    return new InterfaceType(methods, intersectTypeSets(typeSets)).complete();
   }
 
   private signatureFromFuncType(expr: FuncType, scope: Scope, receiver?: VarObject): SignatureType {
-    const params = this.fieldListTuple(expr.params, scope, true);
-    const results = expr.results ? this.fieldListTuple(expr.results, scope, false) : tuple();
+    const typeScope = expr.typeParams ? this.scopeWithTypeParams(expr.typeParams, scope) : scope;
+    const params = this.fieldListTuple(expr.params, typeScope, true);
+    const results = expr.results ? this.fieldListTuple(expr.results, typeScope, false) : tuple();
     const variadic = params.variables[params.variables.length - 1]?.type instanceof SliceType &&
       expr.params.fields[expr.params.fields.length - 1]?.type.kind === "Ellipsis";
     return new SignatureType(receiver, params, results, variadic);
+  }
+
+  private scopeWithTypeParams(typeParams: FieldList, parent: Scope): Scope {
+    const scope = new Scope(parent, "type parameters");
+    for (const field of typeParams.fields) {
+      const constraint = this.typeSetInfoForExpr(field.type, parent);
+      for (const name of field.names) {
+        this.insert(scope, new TypeNameObject(name.name, new TypeParamType(name.name, constraint), scope, this.pkg), name);
+      }
+    }
+    return scope;
   }
 
   private fieldListTuple(list: FieldList, scope: Scope, params: boolean): ReturnType<typeof tuple> {
@@ -808,6 +907,25 @@ class FrontChecker {
       return new SliceType(field.type.element ? this.resolveType(field.type.element, scope) : this.universe.basic.invalid);
     }
     return this.resolveType(field.type, scope);
+  }
+
+  private typeSetInfoForExpr(expr: Expr, scope: Scope): TypeSetInfo {
+    if (expr.kind === "UnaryExpr" && expr.op === TokenKind.Tilde) return this.typeSetInfoForExpr(expr.expr, scope);
+    if (expr.kind === "BinaryExpr" && expr.op === TokenKind.Or) {
+      return intersectTypeSets([
+        this.typeSetInfoForExpr(expr.left, scope),
+        this.typeSetInfoForExpr(expr.right, scope)
+      ]);
+    }
+    return this.typeSetInfoForType(this.resolveType(expr, scope));
+  }
+
+  private typeSetInfoForType(type: Type): TypeSetInfo {
+    if (type instanceof TypeParamType) return type.constraint;
+    if (type instanceof NamedType) return this.typeSetInfoForType(type.underlying());
+    if (type instanceof InterfaceType) return type.typeSet;
+    if (type instanceof BasicType) return basicTypeSetInfo(type);
+    return emptyTypeSet();
   }
 
   private receiverVar(list: FieldList): VarObject | undefined {
@@ -959,6 +1077,112 @@ function importName(path: string): string {
 
 function firstName(list: FieldList): Ident | undefined {
   return list.fields[0]?.names[0];
+}
+
+function sameSignature(left: SignatureType, right: SignatureType): boolean {
+  return sameVarTuple(left.params, right.params) &&
+    sameVarTuple(left.results, right.results) &&
+    left.variadic === right.variadic &&
+    typeString(left.receiver?.type) === typeString(right.receiver?.type);
+}
+
+function sameVarTuple(left: { variables: VarObject[] }, right: { variables: VarObject[] }): boolean {
+  return left.variables.length === right.variables.length &&
+    left.variables.every((variable, index) => typeString(variable.type) === typeString(right.variables[index]?.type));
+}
+
+function typeString(type: Type | undefined): string {
+  return type?.typeString() ?? "";
+}
+
+function sameTypeParam(left: Type, right: Type): TypeParamType | undefined {
+  return left instanceof TypeParamType && right instanceof TypeParamType && left.name === right.name ? left : undefined;
+}
+
+function operatorText(kind: TokenKind): string {
+  switch (kind) {
+    case TokenKind.Equal: return "==";
+    case TokenKind.NotEqual: return "!=";
+    case TokenKind.Less: return "<";
+    case TokenKind.LessEqual: return "<=";
+    case TokenKind.Greater: return ">";
+    case TokenKind.GreaterEqual: return ">=";
+    case TokenKind.Plus: return "+";
+    case TokenKind.Minus: return "-";
+    case TokenKind.Star: return "*";
+    case TokenKind.Slash: return "/";
+    case TokenKind.Percent: return "%";
+    case TokenKind.Or: return "|";
+    case TokenKind.Caret: return "^";
+    case TokenKind.Amp: return "&";
+    case TokenKind.BitClear: return "&^";
+    case TokenKind.Shl: return "<<";
+    case TokenKind.Shr: return ">>";
+    default: return kind;
+  }
+}
+
+function intersectTypeSets(typeSets: TypeSetInfo[]): TypeSetInfo {
+  if (typeSets.length === 0) return emptyTypeSet();
+  return {
+    addable: typeSets.every((set) => set.addable),
+    numeric: typeSets.every((set) => set.numeric),
+    integer: typeSets.every((set) => set.integer),
+    ordered: typeSets.every((set) => set.ordered),
+    comparable: typeSets.every((set) => set.comparable)
+  };
+}
+
+function basicTypeSetInfo(type: BasicType): TypeSetInfo {
+  const actual = defaultBasicKind(type.basicKind);
+  const integer = isIntegerBasicKind(actual);
+  const float = actual === BasicKind.Float32 || actual === BasicKind.Float64;
+  const complex = actual === BasicKind.Complex64 || actual === BasicKind.Complex128;
+  const numeric = integer || float || complex;
+  const string = actual === BasicKind.String;
+  const bool = actual === BasicKind.Bool;
+  return {
+    addable: numeric || string,
+    numeric,
+    integer,
+    ordered: integer || float || string,
+    comparable: numeric || string || bool
+  };
+}
+
+function defaultBasicKind(kind: BasicKind): BasicKind {
+  switch (kind) {
+    case BasicKind.UntypedInt:
+      return BasicKind.Int64;
+    case BasicKind.UntypedFloat:
+      return BasicKind.Float64;
+    case BasicKind.UntypedComplex:
+      return BasicKind.Complex128;
+    case BasicKind.UntypedString:
+      return BasicKind.String;
+    case BasicKind.UntypedBool:
+      return BasicKind.Bool;
+    default:
+      return kind;
+  }
+}
+
+function isIntegerBasicKind(kind: BasicKind): boolean {
+  return [
+    BasicKind.Int,
+    BasicKind.Int8,
+    BasicKind.Int16,
+    BasicKind.Int32,
+    BasicKind.Int64,
+    BasicKind.Uint,
+    BasicKind.Uint8,
+    BasicKind.Uint16,
+    BasicKind.Uint32,
+    BasicKind.Uint64,
+    BasicKind.Uintptr,
+    BasicKind.Byte,
+    BasicKind.Rune
+  ].includes(kind);
 }
 
 function embeddedFieldName(expr: Expr): string {

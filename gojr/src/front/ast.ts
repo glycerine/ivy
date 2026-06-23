@@ -144,7 +144,7 @@ export interface StarExpr extends Node {
 
 export interface UnaryExpr extends Node {
   kind: "UnaryExpr";
-  op: TokenKind.Plus | TokenKind.Minus | TokenKind.Bang | TokenKind.Caret | TokenKind.Amp | TokenKind.Arrow;
+  op: TokenKind.Plus | TokenKind.Minus | TokenKind.Bang | TokenKind.Caret | TokenKind.Tilde | TokenKind.Amp | TokenKind.Arrow;
   expr: Expr;
 }
 
@@ -217,6 +217,7 @@ export interface StructType extends Node {
 
 export interface FuncType extends Node {
   kind: "FuncType";
+  typeParams?: FieldList;
   params: FieldList;
   results?: FieldList;
 }
@@ -463,6 +464,7 @@ export interface ValueSpec extends Node {
 export interface TypeSpec extends Node {
   kind: "TypeSpec";
   name: Ident;
+  typeParams?: FieldList;
   type: Expr;
   alias: boolean;
 }
@@ -571,9 +573,9 @@ export function childNodes(node: AstNode): AstNode[] {
     case "ValueSpec":
       return [...node.names, ...(node.type ? [node.type] : []), ...node.values];
     case "TypeSpec":
-      return [node.name, node.type];
+      return [node.name, ...(node.typeParams ? [node.typeParams] : []), node.type];
     case "FuncType":
-      return [node.params, ...(node.results ? [node.results] : [])];
+      return [...(node.typeParams ? [node.typeParams] : []), node.params, ...(node.results ? [node.results] : [])];
     case "BlockStmt":
       return node.statements;
     case "DeclStmt":

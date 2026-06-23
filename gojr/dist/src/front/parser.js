@@ -134,11 +134,13 @@ class FrontParser {
     }
     parseTypeSpec() {
         const name = this.parseIdent("expected type name");
+        const typeParams = this.at(TokenKind.LBracket) ? this.parseTypeParamList() : undefined;
         const alias = this.match(TokenKind.Assign);
         const type = this.parseType();
         return {
             kind: "TypeSpec",
             name,
+            ...(typeParams ? { typeParams } : {}),
             type,
             alias,
             span: mergeSpans(name.span, type.span)
@@ -169,7 +171,8 @@ class FrontParser {
             receiver = this.parseFieldList(TokenKind.LParen, TokenKind.RParen);
         }
         const name = this.parseIdent("expected function name");
-        const type = this.parseSignature(start.span);
+        const typeParams = this.at(TokenKind.LBracket) ? this.parseTypeParamList() : undefined;
+        const type = this.parseSignature(start.span, typeParams);
         const body = this.at(TokenKind.LBrace) ? this.parseBlock() : undefined;
         return {
             kind: "FuncDecl",
@@ -738,7 +741,8 @@ class FrontParser {
             expression.kind === "MapType" ||
             expression.kind === "StructType" ||
             (this.allowBareIdentifierComposite && ((expression.kind === "Ident" && !["true", "false", "nil"].includes(expression.name)) ||
-                expression.kind === "SelectorExpr"));
+                expression.kind === "SelectorExpr" ||
+                expression.kind === "IndexExpr"));
     }
     finishCompositeLiteral(type) {
         const elements = [];
@@ -771,7 +775,31 @@ class FrontParser {
         };
     }
     parseType() {
+        let left = this.parseTypeTerm();
+        while (this.match(TokenKind.Or)) {
+            const operator = this.previous();
+            const right = this.parseTypeTerm();
+            left = {
+                kind: "BinaryExpr",
+                left,
+                op: operator.kind,
+                right,
+                span: mergeSpans(left.span, right.span)
+            };
+        }
+        return left;
+    }
+    parseTypeTerm() {
         const start = this.peek();
+        if (this.match(TokenKind.Tilde)) {
+            const expr = this.parseTypeTerm();
+            return {
+                kind: "UnaryExpr",
+                op: TokenKind.Tilde,
+                expr,
+                span: mergeSpans(start.span, expr.span)
+            };
+        }
         if (this.match(TokenKind.Arrow)) {
             const chan = this.expect(TokenKind.Chan, "expected chan after '<-' in channel type");
             const value = this.parseType();
@@ -836,6 +864,16 @@ class FrontParser {
                 span: mergeSpans(expression.span, selector.span)
             };
         }
+        if (this.match(TokenKind.LBracket)) {
+            const index = this.parseType();
+            const close = this.expect(TokenKind.RBracket, "expected ']' after type arguments");
+            expression = {
+                kind: "IndexExpr",
+                object: expression,
+                index,
+                span: mergeSpans(expression.span, close.span)
+            };
+        }
         return expression;
     }
     parseStructType(start) {
@@ -846,7 +884,7 @@ class FrontParser {
         const methods = this.parseFieldList(TokenKind.LBrace, TokenKind.RBrace);
         return { kind: "InterfaceType", methods, span: mergeSpans(start, methods.span) };
     }
-    parseSignature(start) {
+    parseSignature(start, typeParams) {
         const params = this.parseFieldList(TokenKind.LParen, TokenKind.RParen);
         let results;
         if (this.at(TokenKind.LParen)) {
@@ -862,13 +900,17 @@ class FrontParser {
         }
         return {
             kind: "FuncType",
+            ...(typeParams ? { typeParams } : {}),
             params,
             ...(results ? { results } : {}),
             span: mergeSpans(start, results?.span ?? params.span)
         };
     }
+    parseTypeParamList() {
+        return this.parseFieldList(TokenKind.LBracket, TokenKind.RBracket);
+    }
     parseFieldList(open, close) {
-        const start = this.expect(open, `expected '${open === TokenKind.LParen ? "(" : "{"}'`);
+        const start = this.expect(open, `expected '${tokenDisplay(open)}'`);
         const fields = [];
         while (!this.at(close) && !this.at(TokenKind.EOF)) {
             this.skipSemis();
@@ -878,7 +920,7 @@ class FrontParser {
             if (!this.match(TokenKind.Comma))
                 this.consumeSemi();
         }
-        const end = this.expect(close, `expected '${close === TokenKind.RParen ? ")" : "}"}'`);
+        const end = this.expect(close, `expected '${tokenDisplay(close)}'`);
         return { kind: "FieldList", fields, span: mergeSpans(start.span, end.span) };
     }
     parseField(close) {
@@ -922,7 +964,7 @@ class FrontParser {
             offset += 2;
         }
         const afterNames = this.peek(offset).kind;
-        if (afterNames === close || afterNames === TokenKind.Semicolon || afterNames === TokenKind.RBrace || afterNames === TokenKind.RParen) {
+        if (afterNames === close || afterNames === TokenKind.Semicolon || afterNames === TokenKind.RBrace || afterNames === TokenKind.RParen || afterNames === TokenKind.RBracket) {
             return false;
         }
         return this.startsType(afterNames) || afterNames === TokenKind.Ellipsis;
@@ -981,6 +1023,7 @@ class FrontParser {
     startsType(kind = this.peek().kind) {
         return isIdentifierLike(kind) ||
             kind === TokenKind.Star ||
+            kind === TokenKind.Tilde ||
             kind === TokenKind.LBracket ||
             kind === TokenKind.Map ||
             kind === TokenKind.Chan ||
@@ -1102,6 +1145,24 @@ function mergeSpans(start, end) {
         line: start.line,
         column: start.column
     };
+}
+function tokenDisplay(kind) {
+    switch (kind) {
+        case TokenKind.LParen:
+            return "(";
+        case TokenKind.RParen:
+            return ")";
+        case TokenKind.LBrace:
+            return "{";
+        case TokenKind.RBrace:
+            return "}";
+        case TokenKind.LBracket:
+            return "[";
+        case TokenKind.RBracket:
+            return "]";
+        default:
+            return kind;
+    }
 }
 function eofToken() {
     return {

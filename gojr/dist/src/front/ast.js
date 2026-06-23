@@ -41,9 +41,9 @@ export function childNodes(node) {
         case "ValueSpec":
             return [...node.names, ...(node.type ? [node.type] : []), ...node.values];
         case "TypeSpec":
-            return [node.name, node.type];
+            return [node.name, ...(node.typeParams ? [node.typeParams] : []), node.type];
         case "FuncType":
-            return [node.params, ...(node.results ? [node.results] : [])];
+            return [...(node.typeParams ? [node.typeParams] : []), node.params, ...(node.results ? [node.results] : [])];
         case "BlockStmt":
             return node.statements;
         case "DeclStmt":

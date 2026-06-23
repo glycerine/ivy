@@ -651,8 +651,16 @@ function typeText(expr: Expr): string {
       return expr.name;
     case "SelectorExpr":
       return `${typeText(expr.object)}.${expr.selector.name}`;
+    case "IndexExpr":
+      return `${typeText(expr.object)}[${typeText(expr.index)}]`;
     case "StarExpr":
       return `*${typeText(expr.expr)}`;
+    case "UnaryExpr":
+      if (expr.op === TokenKind.Tilde) return `~${typeText(expr.expr)}`;
+      return `${unaryOperator(expr.op)}${typeText(expr.expr)}`;
+    case "BinaryExpr":
+      if (expr.op === TokenKind.Or) return `${typeText(expr.left)} | ${typeText(expr.right)}`;
+      return `${typeText(expr.left)} ${binaryOperator(expr.op)} ${typeText(expr.right)}`;
     case "ArrayType":
       return `${arrayLengthText(expr)}${typeText(expr.element)}`;
     case "MapType":

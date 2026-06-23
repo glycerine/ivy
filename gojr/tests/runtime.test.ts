@@ -1374,6 +1374,37 @@ return a, b, ok, c, ok2, len(ch), cap(ch)
     expect(result.value).toBe(7n);
   });
 
+  test("compatible REPL function redefinition updates existing callers through the function slot", async () => {
+    const session = new GoJuniorSession();
+
+    expect((await session.evaluate("func f() int { return 1 }")).diagnostics).toEqual([]);
+    expect((await session.evaluate("func g() int { return f() }")).diagnostics).toEqual([]);
+
+    let result = await session.evaluate("g()");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(1n);
+
+    expect((await session.evaluate("func f() int { return 2 }")).diagnostics).toEqual([]);
+    result = await session.evaluate("g()");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(2n);
+  });
+
+  test("incompatible REPL function redefinition is rejected and keeps the old slot value", async () => {
+    const session = new GoJuniorSession();
+
+    expect((await session.evaluate("func f() int { return 1 }")).diagnostics).toEqual([]);
+
+    const replacement = await session.evaluate("func f(x int) int { return x }");
+    expect(replacement.diagnostics).toHaveLength(1);
+    expect(replacement.diagnostics[0]?.code).toBe("GOJR_TYPE001");
+    expect(replacement.diagnostics[0]?.message).toContain("cannot redeclare f with different signature");
+
+    const result = await session.evaluate("f()");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(1n);
+  });
+
   test("reports REPL deadlocks and keeps the session usable without zombie receives", async () => {
     const session = new GoJuniorSession();
 
@@ -1526,7 +1557,51 @@ bad, badOK := x.(string)
 return ok, v.Double(), bad, badOK
 `);
 
-    expect(result.values).toEqual([true, 10n, "", false]);
+  expect(result.values).toEqual([true, 10n, "", false]);
+  });
+
+  test("supports erased generic functions and generic struct declarations", async () => {
+    const result = await expectRuns(`
+type Box[T any] struct {
+  Value T
+}
+
+type Number interface {
+  ~int | ~float64
+}
+
+func Identity[T any](value T) T {
+  var copy T = value
+  return copy
+}
+
+func Pick[T Number](value T) T {
+  return value
+}
+
+func Unbox[T any](box Box[T]) T {
+  return box.Value
+}
+
+a := Identity[int](42)
+b := Identity[string]("hi")
+c := Unbox[int](Box[int]{Value: 7})
+d := Pick[float64](2.5)
+return a, b, c, d
+`);
+
+    expect(result.values).toEqual([42n, "hi", 7n, 2.5]);
+  });
+
+  test("REPL checker accepts keyed generic struct literals", async () => {
+    const session = new GoJuniorSession();
+
+    expect((await session.evaluate("type Box[T any] struct { Value T }")).diagnostics).toEqual([]);
+    expect((await session.evaluate("func Unbox[T any](box Box[T]) T { return box.Value }")).diagnostics).toEqual([]);
+
+    const result = await session.evaluate("Unbox[int](Box[int]{Value: 7})");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(7n);
   });
 
   test("supports address-of composite literals and three-index slicing capacity", async () => {

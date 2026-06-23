@@ -491,23 +491,27 @@ export class EvaluationContext {
   }
 
   public typeDef(name: string): StructTypeDef | undefined {
-    return this.shared.types.get(name);
+    return this.shared.types.get(name) ?? this.shared.types.get(genericBaseTypeName(name));
   }
 
   public interfaceDef(name: string): InterfaceTypeDef | undefined {
-    return this.shared.interfaces.get(name);
+    return this.shared.interfaces.get(name) ?? this.shared.interfaces.get(genericBaseTypeName(name));
   }
 
   public aliasType(name: string): string | undefined {
-    return this.shared.aliases.get(name);
+    return this.shared.aliases.get(name) ?? this.shared.aliases.get(genericBaseTypeName(name));
   }
 
   public isKnownType(name: string): boolean {
     const type = normalizeTypeText(name);
+    const genericBase = genericBaseTypeName(type);
     return isPredeclaredType(type) ||
       this.shared.aliases.has(type) ||
       this.shared.types.has(type) ||
       this.shared.interfaces.has(type) ||
+      this.shared.aliases.has(genericBase) ||
+      this.shared.types.has(genericBase) ||
+      this.shared.interfaces.has(genericBase) ||
       type.startsWith("*") ||
       type.startsWith("[]") ||
       /^\[[0-9.]*\]/.test(type) ||
@@ -527,7 +531,8 @@ export class EvaluationContext {
   }
 
   public methodFor(typeName: string, methodName: string): MethodDef | undefined {
-    return this.shared.methods.get(methodKey(typeName, methodName));
+    return this.shared.methods.get(methodKey(typeName, methodName)) ??
+      this.shared.methods.get(methodKey(genericBaseTypeName(typeName), methodName));
   }
 
   private flattenInterfaceMethods(methods: NonNullable<TypeSpec["interfaceMethods"]>, embeds: TypeNode[]): NonNullable<TypeSpec["interfaceMethods"]> {
@@ -2361,8 +2366,13 @@ async function evaluateExpression(expression: Expression, context: EvaluationCon
     case "CallExpression":
       return evaluateCall(expression, context);
 
-    case "IndexExpression":
-      return getIndex(await evaluateExpression(expression.object, context), await evaluateExpression(expression.index, context));
+    case "IndexExpression": {
+      const object = await evaluateExpression(expression.object, context);
+      if ((isRuntimeCallable(object) || isGoJuniorFunction(object)) && isTypeArgumentExpression(expression.index, context)) {
+        return object;
+      }
+      return getIndex(object, await evaluateExpression(expression.index, context));
+    }
 
     case "SliceExpression":
       return getSlice(
@@ -2415,7 +2425,7 @@ async function evaluateStructLiteral(expression: StructLiteralExpression, contex
     throw new GoJuniorRuntimeError(`${expression.typeName} is not a declared struct type`);
   }
 
-  const struct = new RuntimeStruct(expression.typeName);
+  const struct = new RuntimeStruct(typeDef.name);
   for (const field of typeDef.fields) {
     struct.set(field.name, defaultValueForTypeText(field.type.text, context));
   }
@@ -3400,6 +3410,38 @@ function parseArrayOrSliceTypeText(typeText: string): { elementType: string; len
 
 function normalizeTypeText(typeText: string): string {
   return typeText.replace(/\s+/g, "");
+}
+
+function genericBaseTypeName(typeText: string): string {
+  const type = normalizeTypeText(typeText);
+  if (type.startsWith("[") || type.startsWith("map[") || !type.endsWith("]")) return type;
+  const bracket = type.indexOf("[");
+  return bracket > 0 ? type.slice(0, bracket) : type;
+}
+
+function isTypeArgumentExpression(expression: Expression, context: EvaluationContext): boolean {
+  const typeText = typeArgumentText(expression);
+  return typeText !== undefined && context.isKnownType(typeText);
+}
+
+function typeArgumentText(expression: Expression): string | undefined {
+  switch (expression.kind) {
+    case "TypeExpression":
+      return expression.type.text;
+    case "Identifier":
+      return expression.name;
+    case "SelectorExpression": {
+      const object = typeArgumentText(expression.object);
+      return object ? `${object}.${expression.field}` : undefined;
+    }
+    case "IndexExpression": {
+      const object = typeArgumentText(expression.object);
+      const index = typeArgumentText(expression.index);
+      return object && index ? `${object}[${index}]` : undefined;
+    }
+    default:
+      return undefined;
+  }
 }
 
 function runtimeMapKeyId(key: RuntimeValue): string {

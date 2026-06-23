@@ -386,6 +386,7 @@ function oneCharToken(text) {
         case "%": return TokenKind.Percent;
         case "|": return TokenKind.Or;
         case "^": return TokenKind.Caret;
+        case "~": return TokenKind.Tilde;
         case "!": return TokenKind.Bang;
         case "&": return TokenKind.Amp;
         case ".": return TokenKind.Dot;

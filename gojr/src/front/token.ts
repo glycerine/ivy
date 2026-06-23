@@ -73,6 +73,7 @@ export enum TokenKind {
   Percent = "Percent",
   Or = "Or",
   Caret = "Caret",
+  Tilde = "Tilde",
   Shl = "Shl",
   Shr = "Shr",
   BitClear = "BitClear",

@@ -23,6 +23,53 @@ function check(source: string, config: CheckConfig = {}) {
 }
 
 describe("Go-junior TypeScript front checker", () => {
+  test("scopes generic type parameters for functions and type declarations", () => {
+    const result = check(`
+package generic
+
+type Box[T any] struct {
+  Value T
+}
+
+type Number interface {
+  ~int | ~float64
+}
+
+func Identity[T any](value T) T {
+  var copy T = value
+  return copy
+}
+
+func Pick[T Number](value T) T {
+  return value
+}
+
+var A = Identity[int](1)
+var B = Pick[int](2)
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    const identity = result.pkg.scope.lookup("Identity");
+    expect(identity?.type.typeString()).toBe("func(value any) any");
+    const box = result.pkg.scope.lookup("Box");
+    expect(box?.type.typeString()).toBe("generic.Box");
+  });
+
+  test("rejects generic function instantiation with non-type arguments", () => {
+    const result = check(`
+package generic
+
+func Identity[T any](value T) T {
+  return value
+}
+
+var notAType = 3
+var A = Identity[notAType](1)
+`);
+
+    expect(result.diagnostics.map((diagnostic) => diagnostic.message)).toContain("notAType is not a type");
+  });
+
   test("builds package scopes, imports, methods, local scopes, and range variable types", () => {
     const universe = newUniverse();
     const fmt = new PackageInfo("fmt", "fmt", universe.scope);

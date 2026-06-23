@@ -301,20 +301,24 @@ export class EvaluationContext {
         }
     }
     typeDef(name) {
-        return this.shared.types.get(name);
+        return this.shared.types.get(name) ?? this.shared.types.get(genericBaseTypeName(name));
     }
     interfaceDef(name) {
-        return this.shared.interfaces.get(name);
+        return this.shared.interfaces.get(name) ?? this.shared.interfaces.get(genericBaseTypeName(name));
     }
     aliasType(name) {
-        return this.shared.aliases.get(name);
+        return this.shared.aliases.get(name) ?? this.shared.aliases.get(genericBaseTypeName(name));
     }
     isKnownType(name) {
         const type = normalizeTypeText(name);
+        const genericBase = genericBaseTypeName(type);
         return isPredeclaredType(type) ||
             this.shared.aliases.has(type) ||
             this.shared.types.has(type) ||
             this.shared.interfaces.has(type) ||
+            this.shared.aliases.has(genericBase) ||
+            this.shared.types.has(genericBase) ||
+            this.shared.interfaces.has(genericBase) ||
             type.startsWith("*") ||
             type.startsWith("[]") ||
             /^\[[0-9.]*\]/.test(type) ||
@@ -333,7 +337,8 @@ export class EvaluationContext {
         });
     }
     methodFor(typeName, methodName) {
-        return this.shared.methods.get(methodKey(typeName, methodName));
+        return this.shared.methods.get(methodKey(typeName, methodName)) ??
+            this.shared.methods.get(methodKey(genericBaseTypeName(typeName), methodName));
     }
     flattenInterfaceMethods(methods, embeds) {
         const flattened = [...methods];
@@ -2023,8 +2028,13 @@ async function evaluateExpression(expression, context) {
             return getSelector(expression, context);
         case "CallExpression":
             return evaluateCall(expression, context);
-        case "IndexExpression":
-            return getIndex(await evaluateExpression(expression.object, context), await evaluateExpression(expression.index, context));
+        case "IndexExpression": {
+            const object = await evaluateExpression(expression.object, context);
+            if ((isRuntimeCallable(object) || isGoJuniorFunction(object)) && isTypeArgumentExpression(expression.index, context)) {
+                return object;
+            }
+            return getIndex(object, await evaluateExpression(expression.index, context));
+        }
         case "SliceExpression":
             return getSlice(await evaluateExpression(expression.object, context), expression.start ? await evaluateExpression(expression.start, context) : undefined, expression.end ? await evaluateExpression(expression.end, context) : undefined, expression.max ? await evaluateExpression(expression.max, context) : undefined);
         case "SpreadsheetRangeExpression":
@@ -2066,7 +2076,7 @@ async function evaluateStructLiteral(expression, context) {
     if (!typeDef) {
         throw new GoJuniorRuntimeError(`${expression.typeName} is not a declared struct type`);
     }
-    const struct = new RuntimeStruct(expression.typeName);
+    const struct = new RuntimeStruct(typeDef.name);
     for (const field of typeDef.fields) {
         struct.set(field.name, defaultValueForTypeText(field.type.text, context));
     }
@@ -3118,6 +3128,36 @@ function parseArrayOrSliceTypeText(typeText) {
 }
 function normalizeTypeText(typeText) {
     return typeText.replace(/\s+/g, "");
+}
+function genericBaseTypeName(typeText) {
+    const type = normalizeTypeText(typeText);
+    if (type.startsWith("[") || type.startsWith("map[") || !type.endsWith("]"))
+        return type;
+    const bracket = type.indexOf("[");
+    return bracket > 0 ? type.slice(0, bracket) : type;
+}
+function isTypeArgumentExpression(expression, context) {
+    const typeText = typeArgumentText(expression);
+    return typeText !== undefined && context.isKnownType(typeText);
+}
+function typeArgumentText(expression) {
+    switch (expression.kind) {
+        case "TypeExpression":
+            return expression.type.text;
+        case "Identifier":
+            return expression.name;
+        case "SelectorExpression": {
+            const object = typeArgumentText(expression.object);
+            return object ? `${object}.${expression.field}` : undefined;
+        }
+        case "IndexExpression": {
+            const object = typeArgumentText(expression.object);
+            const index = typeArgumentText(expression.index);
+            return object && index ? `${object}[${index}]` : undefined;
+        }
+        default:
+            return undefined;
+    }
 }
 function runtimeMapKeyId(key) {
     const actual = unwrapNamed(key);
