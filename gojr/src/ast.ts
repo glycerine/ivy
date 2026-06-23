@@ -47,6 +47,7 @@ export interface TypeNode {
 
 export type Statement =
   | BlockStatement
+  | LabeledStatement
   | ConstDeclStatement
   | VarDeclStatement
   | TypeDeclStatement
@@ -64,6 +65,13 @@ export type Statement =
 export interface BlockStatement {
   kind: "BlockStatement";
   statements: Statement[];
+  span?: SourceSpan;
+}
+
+export interface LabeledStatement {
+  kind: "LabeledStatement";
+  label: string;
+  statement?: Statement;
   span?: SourceSpan;
 }
 
@@ -149,7 +157,8 @@ export interface DeferStatement {
 
 export interface BranchStatement {
   kind: "BranchStatement";
-  branch: "break" | "continue" | "fallthrough";
+  branch: "break" | "continue" | "fallthrough" | "goto";
+  label?: string;
   span?: SourceSpan;
 }
 

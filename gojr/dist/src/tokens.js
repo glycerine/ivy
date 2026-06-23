@@ -39,6 +39,7 @@ export const Switch = keyword("Switch", "switch");
 export const Case = keyword("Case", "case");
 export const Default = keyword("Default", "default");
 export const Fallthrough = keyword("Fallthrough", "fallthrough");
+export const Goto = keyword("Goto", "goto");
 export const For = keyword("For", "for");
 export const Range = keyword("Range", "range");
 export const Break = keyword("Break", "break");
@@ -114,6 +115,7 @@ export const allTokens = [
     Case,
     Default,
     Fallthrough,
+    Goto,
     For,
     Range,
     Break,

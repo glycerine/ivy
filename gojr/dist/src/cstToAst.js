@@ -87,6 +87,9 @@ function blockToAst(node) {
     }, node);
 }
 function statementToAst(node) {
+    const labeledStmt = firstChildNode(node, "labeledStmt");
+    if (labeledStmt)
+        return labeledStmtToAst(labeledStmt);
     const constDecl = firstChildNode(node, "constDecl");
     if (constDecl)
         return constDeclToAst(constDecl);
@@ -111,7 +114,7 @@ function statementToAst(node) {
     const deferStmt = firstChildNode(node, "deferStmt");
     if (deferStmt)
         return deferStmtToAst(deferStmt);
-    const branch = branchToken(node);
+    const branch = firstChildNode(node, "branchStmt");
     if (branch)
         return branchToAst(branch);
     const simpleStmt = firstChildNode(node, "simpleStmt");
@@ -120,6 +123,15 @@ function statementToAst(node) {
     return withSpan({
         kind: "ExpressionStatement",
         expression: missingExpression()
+    }, node);
+}
+function labeledStmtToAst(node) {
+    const label = firstChildToken(node, "Identifier")?.image ?? "<missing>";
+    const statement = firstChildNode(node, "statement");
+    return withSpan({
+        kind: "LabeledStatement",
+        label,
+        ...(statement ? { statement: statementToAst(statement) } : {})
     }, node);
 }
 function constDeclToAst(node) {
@@ -269,12 +281,15 @@ function deferStmtToAst(node) {
         expression: expression ? expressionToAst(expression) : missingExpression()
     }, node);
 }
-function branchToAst(token) {
-    const image = token.image;
+function branchToAst(node) {
+    const token = firstChildTokenAny(node, ["Break", "Continue", "Fallthrough", "Goto"]);
+    const image = token?.image;
+    const label = firstChildToken(node, "Identifier")?.image;
     return withSpan({
         kind: "BranchStatement",
-        branch: image
-    }, token);
+        branch: image,
+        ...(label ? { label } : {})
+    }, node);
 }
 function simpleStmtToAst(node) {
     const expressions = childNodes(node, "expression").map(expressionToAst);
@@ -568,9 +583,6 @@ function nameText(node) {
 }
 function nameToken(node) {
     return firstChildToken(node, "Identifier") ?? firstChildToken(node, "CellAddress");
-}
-function branchToken(node) {
-    return firstChildTokenAny(node, ["Break", "Continue", "Fallthrough"]);
 }
 function unaryOperatorImage(token) {
     if (!token)

@@ -1,6 +1,6 @@
 import { CstParser } from "chevrotain";
 import { spanFromToken } from "./diagnostics.js";
-import { allTokens, Amp, AndAnd, Assign, Bang, Break, Case, CellAddress, Colon, Comma, Const, Continue, Default, Defer, Define, Dot, Ellipsis, Else, Equal, Fallthrough, False, FloatLiteral, For, Func, Greater, GreaterEqual, Identifier, If, Import, IntLiteral, Interface, LBrace, LBracket, Less, LessEqual, LParen, MapTok, Minus, MinusMinus, Nil, NotEqual, OrOr, Percent, Plus, PlusPlus, Range, Return, RBrace, RBracket, RParen, Semicolon, Slash, Star, StringLiteral, Struct, Switch, True, Type, Var, goJuniorLexer } from "./tokens.js";
+import { allTokens, Amp, AndAnd, Assign, Bang, Break, Case, CellAddress, Colon, Comma, Const, Continue, Default, Defer, Define, Dot, Ellipsis, Else, Equal, Fallthrough, False, FloatLiteral, For, Func, Goto, Greater, GreaterEqual, Identifier, If, Import, IntLiteral, Interface, LBrace, LBracket, Less, LessEqual, LParen, MapTok, Minus, MinusMinus, Nil, NotEqual, OrOr, Percent, Plus, PlusPlus, Range, Return, RBrace, RBracket, RParen, Semicolon, Slash, Star, StringLiteral, Struct, Switch, True, Type, Var, goJuniorLexer } from "./tokens.js";
 export class GoJuniorParser extends CstParser {
     program;
     importDecl;
@@ -17,6 +17,7 @@ export class GoJuniorParser extends CstParser {
     fieldDecl;
     block;
     statement;
+    labeledStmt;
     constDecl;
     varDecl;
     typeDecl;
@@ -30,6 +31,7 @@ export class GoJuniorParser extends CstParser {
     forPostClause;
     rangeClause;
     deferStmt;
+    branchStmt;
     declarationSpec;
     simpleStmt;
     expressionStatement;
@@ -202,6 +204,7 @@ export class GoJuniorParser extends CstParser {
         });
         this.statement = $.RULE("statement", () => {
             $.OR([
+                { GATE: () => this.nextTokensAreLabel(), ALT: () => $.SUBRULE(this.labeledStmt) },
                 { ALT: () => $.SUBRULE(this.constDecl) },
                 { ALT: () => $.SUBRULE(this.varDecl) },
                 { ALT: () => $.SUBRULE(this.typeDecl) },
@@ -210,11 +213,14 @@ export class GoJuniorParser extends CstParser {
                 { ALT: () => $.SUBRULE(this.switchStmt) },
                 { ALT: () => $.SUBRULE(this.forStmt) },
                 { ALT: () => $.SUBRULE(this.deferStmt) },
-                { ALT: () => $.CONSUME(Break) },
-                { ALT: () => $.CONSUME(Continue) },
-                { ALT: () => $.CONSUME(Fallthrough) },
+                { ALT: () => $.SUBRULE(this.branchStmt) },
                 { ALT: () => $.SUBRULE(this.simpleStmt) }
             ]);
+        });
+        this.labeledStmt = $.RULE("labeledStmt", () => {
+            $.CONSUME(Identifier);
+            $.CONSUME(Colon);
+            $.OPTION(() => $.SUBRULE(this.statement));
         });
         this.constDecl = $.RULE("constDecl", () => {
             $.CONSUME(Const);
@@ -363,6 +369,29 @@ export class GoJuniorParser extends CstParser {
             $.CONSUME(Defer);
             $.SUBRULE(this.expression);
         });
+        this.branchStmt = $.RULE("branchStmt", () => {
+            $.OR([
+                {
+                    ALT: () => {
+                        $.CONSUME(Break);
+                        $.OPTION(() => $.CONSUME(Identifier));
+                    }
+                },
+                {
+                    ALT: () => {
+                        $.CONSUME(Continue);
+                        $.OPTION2(() => $.CONSUME2(Identifier));
+                    }
+                },
+                { ALT: () => $.CONSUME(Fallthrough) },
+                {
+                    ALT: () => {
+                        $.CONSUME(Goto);
+                        $.CONSUME3(Identifier);
+                    }
+                }
+            ]);
+        });
         this.declarationSpec = $.RULE("declarationSpec", () => {
             $.SUBRULE(this.name);
             $.OPTION(() => $.SUBRULE(this.typeExpression));
@@ -498,10 +527,10 @@ export class GoJuniorParser extends CstParser {
                     { ALT: () => $.SUBRULE(this.arguments) }
                 ]);
             });
-            $.OPTION4(() => {
-                $.CONSUME2(Colon);
-                $.SUBRULE3(this.selectorName);
-            });
+            $.OPTION4({ GATE: () => this.nextTokensAreSpreadsheetRangeSuffix(), DEF: () => {
+                    $.CONSUME2(Colon);
+                    $.SUBRULE3(this.selectorName);
+                } });
         });
         this.atom = $.RULE("atom", () => {
             $.OR([
@@ -565,6 +594,13 @@ export class GoJuniorParser extends CstParser {
             ]);
         });
         this.performSelfAnalysis();
+    }
+    nextTokensAreLabel() {
+        return this.LA(1).tokenType === Identifier && this.LA(2).tokenType === Colon;
+    }
+    nextTokensAreSpreadsheetRangeSuffix() {
+        return this.LA(1).tokenType === Colon &&
+            (this.LA(2).tokenType === Identifier || this.LA(2).tokenType === CellAddress);
     }
 }
 export const goJuniorParser = new GoJuniorParser();

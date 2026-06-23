@@ -44,7 +44,8 @@ Implemented in this first runtime slice:
 - Chevrotain parse validation plus a typed AST conversion pass.
 - Script evaluation for literals, arithmetic, comparisons, locals, assignment,
   returns, `if`, `switch`, simple `for`, `for range`, `break`, `continue`,
-  `fallthrough`, `defer`, `panic`, and `panicOn`.
+  labeled `break` and `continue`, `fallthrough`, labels, `goto`, `defer`,
+  `panic`, and `panicOn`.
 - Explicit spreadsheet refs such as `sheet.A1`, `sheet.$A$1`, cross-sheet
   namespaces such as `Budget.B2`, and ranges such as `sheet.A1:B10`.
 - Import-bound host packages, with an early `fmt` package supporting
@@ -55,3 +56,38 @@ Implemented in this first runtime slice:
 Pointers, structs, methods, interfaces, closures, multi-assignment, package
 state, type checking, and browser/cache integration are still planned stages,
 not part of this initial runtime slice.
+
+## Control Flow Spec
+
+Go-junior supports Go-style labels and branch statements:
+
+```go
+Start:
+goto Done
+
+Outer:
+for i := 0; i < 10; i++ {
+    switch i {
+    case 5:
+        continue Outer
+    case 8:
+        break Outer
+    }
+}
+
+Done:
+return 0
+```
+
+- A label is an identifier followed by `:` and labels the following statement.
+- `goto Label` jumps to a label in the active statement scope chain.
+- `break` exits the innermost `switch` or `for`.
+- `break Label` exits the matching labeled `switch` or `for`.
+- `continue` continues the innermost containing `for`, including from inside a
+  nested `switch`.
+- `continue Label` continues the matching labeled `for`.
+
+The current interpreter treats the AST statement graph as the executable IR.
+Future lower IR/codegen stages should preserve the same completion records:
+`normal`, `return`, `break(label?)`, `continue(label?)`, `fallthrough`, and
+`goto(label)`.

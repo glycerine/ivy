@@ -202,9 +202,8 @@ export function evaluateProgram(ast, options = {}) {
                 ...(completion.values.length === 1 ? { value: completion.values[0] } : {})
             };
         }
-        if (completion.kind !== "normal") {
-            throw new GoJuniorRuntimeError(`${completion.kind} used outside a loop or switch`);
-        }
+        if (completion.kind !== "normal")
+            throw new GoJuniorRuntimeError(completionErrorMessage(completion));
         return {
             diagnostics: ast.diagnostics,
             output: context.output,
@@ -308,9 +307,8 @@ function resultFromCompletion(ast, output, completion) {
             ...(completion.values.length === 1 ? { value: completion.values[0] } : {})
         };
     }
-    if (completion.kind !== "normal") {
-        throw new GoJuniorRuntimeError(`${completion.kind} used outside a loop or switch`);
-    }
+    if (completion.kind !== "normal")
+        throw new GoJuniorRuntimeError(completionErrorMessage(completion));
     return {
         diagnostics: ast.diagnostics,
         output,
@@ -408,15 +406,36 @@ function functionValue(declaration) {
     };
 }
 function executeStatements(statements, context) {
+    const labels = statementLabels(statements);
     let lastValue;
-    for (const statement of statements) {
+    for (let pc = 0; pc < statements.length; pc += 1) {
+        const statement = statements[pc];
+        if (!statement)
+            continue;
         const completion = executeStatement(statement, context);
+        if (completion.kind === "goto") {
+            const target = labels.get(completion.label);
+            if (target !== undefined) {
+                pc = target - 1;
+                lastValue = undefined;
+                continue;
+            }
+        }
         if (completion.kind !== "normal")
             return completion;
         if (completion.value !== undefined)
             lastValue = completion.value;
     }
     return lastValue === undefined ? { kind: "normal" } : { kind: "normal", value: lastValue };
+}
+function statementLabels(statements) {
+    const labels = new Map();
+    for (const [index, statement] of statements.entries()) {
+        if (statement.kind === "LabeledStatement") {
+            labels.set(statement.label, index);
+        }
+    }
+    return labels;
 }
 function executeBlock(block, context, createScope = true) {
     if (!createScope)
@@ -427,6 +446,8 @@ function executeStatement(statement, context) {
     switch (statement.kind) {
         case "BlockStatement":
             return executeBlock(statement, context);
+        case "LabeledStatement":
+            return executeLabeledStatement(statement, context);
         case "ConstDecl":
             for (const declaration of statement.declarations) {
                 context.declare(declaration.name, declaration.value ? evaluateExpression(declaration.value, context) : null, false);
@@ -468,6 +489,17 @@ function executeStatement(statement, context) {
             return { kind: "normal", value: evaluateExpression(statement.expression, context) };
     }
 }
+function executeLabeledStatement(statement, context) {
+    if (!statement.statement)
+        return { kind: "normal" };
+    if (statement.statement.kind === "ForStatement") {
+        return executeFor(statement.statement, context, statement.label);
+    }
+    if (statement.statement.kind === "SwitchStatement") {
+        return executeSwitch(statement.statement, context, statement.label);
+    }
+    return executeStatement(statement.statement, context);
+}
 function executeIf(statement, context) {
     if (toBool(evaluateExpression(statement.condition, context))) {
         return executeBlock(statement.thenBlock, context);
@@ -478,7 +510,7 @@ function executeIf(statement, context) {
         ? executeIf(statement.elseBranch, context)
         : executeBlock(statement.elseBranch, context);
 }
-function executeSwitch(statement, context) {
+function executeSwitch(statement, context, label) {
     const switchValue = statement.expression ? evaluateExpression(statement.expression, context) : true;
     let matched = false;
     for (const clause of statement.clauses) {
@@ -492,13 +524,13 @@ function executeSwitch(statement, context) {
             matched = true;
             continue;
         }
-        if (completion.kind === "break")
+        if (completion.kind === "break" && labelMatches(completion.label, label))
             return { kind: "normal" };
         return completion;
     }
     return { kind: "normal" };
 }
-function executeFor(statement, context) {
+function executeFor(statement, context, label) {
     if (statement.range) {
         const source = evaluateExpression(statement.range.source, context);
         const entries = rangeEntries(source);
@@ -518,9 +550,9 @@ function executeFor(statement, context) {
                 }
                 return executeBlock(statement.body, context, false);
             });
-            if (completion.kind === "break")
+            if (completion.kind === "break" && labelMatches(completion.label, label))
                 return { kind: "normal" };
-            if (completion.kind === "continue")
+            if (completion.kind === "continue" && labelMatches(completion.label, label))
                 continue;
             if (completion.kind !== "normal")
                 return completion;
@@ -536,9 +568,9 @@ function executeFor(statement, context) {
                 return { kind: "normal" };
             }
             const completion = executeBlock(statement.body, context);
-            if (completion.kind === "break")
+            if (completion.kind === "break" && labelMatches(completion.label, label))
                 return { kind: "normal" };
-            if (completion.kind === "continue") {
+            if (completion.kind === "continue" && labelMatches(completion.label, label)) {
                 if (statement.post) {
                     expectNormalCompletion(executeStatement(statement.post, context), "for post statement");
                 }
@@ -555,8 +587,23 @@ function executeFor(statement, context) {
 }
 function expectNormalCompletion(completion, label) {
     if (completion.kind !== "normal") {
-        throw new GoJuniorRuntimeError(`${completion.kind} used in ${label}`);
+        throw new GoJuniorRuntimeError(`${completionDescription(completion)} used in ${label}`);
     }
+}
+function labelMatches(completionLabel, activeLabel) {
+    return completionLabel === undefined || completionLabel === activeLabel;
+}
+function completionErrorMessage(completion) {
+    if (completion.kind === "goto")
+        return `unresolved goto label ${completion.label}`;
+    return `${completionDescription(completion)} used outside a matching loop or switch`;
+}
+function completionDescription(completion) {
+    if (completion.kind === "return")
+        return "return";
+    if (completion.kind === "fallthrough")
+        return "fallthrough";
+    return completion.label ? `${completion.kind} ${completion.label}` : completion.kind;
 }
 function executeDefer(statement, context) {
     if (statement.expression.kind === "CallExpression") {
@@ -568,10 +615,14 @@ function executeDefer(statement, context) {
     context.pushDefer(() => evaluateExpression(statement.expression, context));
 }
 function branchCompletion(statement) {
-    if (statement.branch === "break")
-        return { kind: "break" };
-    if (statement.branch === "continue")
-        return { kind: "continue" };
+    if (statement.branch === "break") {
+        return statement.label ? { kind: "break", label: statement.label } : { kind: "break" };
+    }
+    if (statement.branch === "continue") {
+        return statement.label ? { kind: "continue", label: statement.label } : { kind: "continue" };
+    }
+    if (statement.branch === "goto")
+        return { kind: "goto", label: statement.label ?? "<missing>" };
     return { kind: "fallthrough" };
 }
 function assignTarget(statement, value, context) {
@@ -838,10 +889,11 @@ function rangeEntries(source) {
 }
 function sprintf(format, args) {
     let argIndex = 0;
-    return format.replace(/%[%vdsft]/g, (match) => {
+    return format.replace(/%(#)?[%vdsft]/g, (match, alternate) => {
         if (match === "%%")
             return "%";
         const value = args[argIndex++] ?? null;
+        const goSyntax = alternate === "#";
         switch (match) {
             case "%d":
                 return String(toNumber(value));
@@ -852,8 +904,11 @@ function sprintf(format, args) {
             case "%t":
                 return String(toBool(value));
             case "%v":
-            default:
                 return formatValue(value);
+            case "%#v":
+                return formatGoSyntaxValue(value);
+            default:
+                return goSyntax ? formatGoSyntaxValue(value) : formatValue(value);
         }
     });
 }
@@ -876,6 +931,39 @@ export function formatValue(value) {
     if (value instanceof SheetBinding)
         return `<sheet ${value.name}>`;
     return `{${Object.entries(value).map(([key, item]) => `${key}:${formatValue(item)}`).join(" ")}}`;
+}
+function formatGoSyntaxValue(value) {
+    if (value === null)
+        return "nil";
+    if (typeof value === "bigint")
+        return `${integerTypeName(value)}(${value.toString()})`;
+    if (typeof value === "number")
+        return `float64(${formatFloat(value)})`;
+    if (typeof value === "boolean")
+        return `bool(${value})`;
+    if (typeof value === "string")
+        return `string(${JSON.stringify(value)})`;
+    if (Array.isArray(value))
+        return `[]interface{}{${value.map(formatGoSyntaxValue).join(", ")}}`;
+    if (isRuntimeCallable(value) || isGoJuniorFunction(value))
+        return `<func ${value.name}>`;
+    if (value instanceof SheetBinding)
+        return `<sheet ${value.name}>`;
+    return `map[string]interface{}{${Object.entries(value)
+        .map(([key, item]) => `${JSON.stringify(key)}: ${formatGoSyntaxValue(item)}`)
+        .join(", ")}}`;
+}
+function integerTypeName(value) {
+    return value >= -9223372036854775808n && value <= 9223372036854775807n ? "int64" : "bigint";
+}
+function formatFloat(value) {
+    if (Number.isNaN(value))
+        return "NaN";
+    if (value === Infinity)
+        return "+Inf";
+    if (value === -Infinity)
+        return "-Inf";
+    return Number.isInteger(value) ? `${value}.0` : String(value);
 }
 function isRuntimeObject(value) {
     return Boolean(value && typeof value === "object" && !Array.isArray(value) && !isRuntimeCallable(value) && !isGoJuniorFunction(value));

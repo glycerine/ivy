@@ -30,6 +30,7 @@ import {
   FloatLiteral,
   For,
   Func,
+  Goto,
   Greater,
   GreaterEqual,
   Identifier,
@@ -86,6 +87,7 @@ export class GoJuniorParser extends CstParser {
   private fieldDecl!: Rule;
   private block!: Rule;
   private statement!: Rule;
+  private labeledStmt!: Rule;
   private constDecl!: Rule;
   private varDecl!: Rule;
   private typeDecl!: Rule;
@@ -99,6 +101,7 @@ export class GoJuniorParser extends CstParser {
   private forPostClause!: Rule;
   private rangeClause!: Rule;
   private deferStmt!: Rule;
+  private branchStmt!: Rule;
   private declarationSpec!: Rule;
   private simpleStmt!: Rule;
   private expressionStatement!: Rule;
@@ -288,6 +291,7 @@ export class GoJuniorParser extends CstParser {
 
     this.statement = $.RULE("statement", () => {
       $.OR([
+        { GATE: () => this.nextTokensAreLabel(), ALT: () => $.SUBRULE(this.labeledStmt) },
         { ALT: () => $.SUBRULE(this.constDecl) },
         { ALT: () => $.SUBRULE(this.varDecl) },
         { ALT: () => $.SUBRULE(this.typeDecl) },
@@ -296,11 +300,15 @@ export class GoJuniorParser extends CstParser {
         { ALT: () => $.SUBRULE(this.switchStmt) },
         { ALT: () => $.SUBRULE(this.forStmt) },
         { ALT: () => $.SUBRULE(this.deferStmt) },
-        { ALT: () => $.CONSUME(Break) },
-        { ALT: () => $.CONSUME(Continue) },
-        { ALT: () => $.CONSUME(Fallthrough) },
+        { ALT: () => $.SUBRULE(this.branchStmt) },
         { ALT: () => $.SUBRULE(this.simpleStmt) }
       ]);
+    });
+
+    this.labeledStmt = $.RULE("labeledStmt", () => {
+      $.CONSUME(Identifier);
+      $.CONSUME(Colon);
+      $.OPTION(() => $.SUBRULE(this.statement));
     });
 
     this.constDecl = $.RULE("constDecl", () => {
@@ -463,6 +471,30 @@ export class GoJuniorParser extends CstParser {
       $.SUBRULE(this.expression);
     });
 
+    this.branchStmt = $.RULE("branchStmt", () => {
+      $.OR([
+        {
+          ALT: () => {
+            $.CONSUME(Break);
+            $.OPTION(() => $.CONSUME(Identifier));
+          }
+        },
+        {
+          ALT: () => {
+            $.CONSUME(Continue);
+            $.OPTION2(() => $.CONSUME2(Identifier));
+          }
+        },
+        { ALT: () => $.CONSUME(Fallthrough) },
+        {
+          ALT: () => {
+            $.CONSUME(Goto);
+            $.CONSUME3(Identifier);
+          }
+        }
+      ]);
+    });
+
     this.declarationSpec = $.RULE("declarationSpec", () => {
       $.SUBRULE(this.name);
       $.OPTION(() => $.SUBRULE(this.typeExpression));
@@ -610,10 +642,10 @@ export class GoJuniorParser extends CstParser {
           { ALT: () => $.SUBRULE(this.arguments) }
         ]);
       });
-      $.OPTION4(() => {
+      $.OPTION4({ GATE: () => this.nextTokensAreSpreadsheetRangeSuffix(), DEF: () => {
         $.CONSUME2(Colon);
         $.SUBRULE3(this.selectorName);
-      });
+      } });
     });
 
     this.atom = $.RULE("atom", () => {
@@ -685,6 +717,15 @@ export class GoJuniorParser extends CstParser {
     });
 
     this.performSelfAnalysis();
+  }
+
+  private nextTokensAreLabel(): boolean {
+    return this.LA(1).tokenType === Identifier && this.LA(2).tokenType === Colon;
+  }
+
+  private nextTokensAreSpreadsheetRangeSuffix(): boolean {
+    return this.LA(1).tokenType === Colon &&
+      (this.LA(2).tokenType === Identifier || this.LA(2).tokenType === CellAddress);
   }
 
 }

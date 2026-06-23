@@ -67,6 +67,16 @@ fmt.Printf("first")
 `);
         expect(result.output).toEqual(["first", " second ", "third"]);
     });
+    test("formats Go-junior values with fmt %#v", () => {
+        const result = expectRuns(`
+import "fmt"
+
+fmt.Printf("i = %#v\\n", 7)
+return fmt.Sprintf("%#v %#v %#v", "x", 1.5, true)
+`);
+        expect(result.output).toEqual(["i = int64(7)\n"]);
+        expect(result.value).toBe(`string("x") float64(1.5) bool(true)`);
+    });
     test("reports panicOn failures as runtime diagnostics", () => {
         const result = evaluateSource(`
 panicOn("bad")
@@ -154,5 +164,89 @@ for b := 0; b < 5; b++ {
 return sum
 `);
         expect(result.value).toBe(8n);
+    });
+    test("supports goto to forward and backward labels", () => {
+        const forward = expectRuns(`
+i := 0
+goto Done
+i = 99
+Done:
+return i
+`);
+        expect(forward.value).toBe(0n);
+        const backward = expectRuns(`
+i := 0
+Loop:
+i++
+if i < 3 {
+  goto Loop
+}
+return i
+`);
+        expect(backward.value).toBe(3n);
+    });
+    test("supports labeled break out of nested loops", () => {
+        const result = expectRuns(`
+count := 0
+Outer:
+for i := 0; i < 3; i++ {
+  for j := 0; j < 3; j++ {
+    count = count + 1
+    break Outer
+  }
+}
+return count
+`);
+        expect(result.value).toBe(1n);
+    });
+    test("supports labeled continue from inside a switch to an outer for", () => {
+        const result = expectRuns(`
+sum := 0
+Outer:
+for i := 0; i < 4; i++ {
+  switch i {
+  case 2:
+    continue Outer
+  }
+  sum = sum + i
+}
+return sum
+`);
+        expect(result.value).toBe(4n);
+    });
+    test("keeps unlabeled break scoped to switch inside for", () => {
+        const result = expectRuns(`
+sum := 0
+for i := 0; i < 3; i++ {
+  switch i {
+  case 1:
+    break
+  }
+  sum = sum + 1
+}
+return sum
+`);
+        expect(result.value).toBe(3n);
+    });
+    test("lets unlabeled continue inside switch continue the containing for", () => {
+        const result = expectRuns(`
+sum := 0
+for i := 0; i < 3; i++ {
+  switch i {
+  case 1:
+    continue
+  }
+  sum = sum + 1
+}
+return sum
+`);
+        expect(result.value).toBe(2n);
+    });
+    test("reports unresolved goto labels", () => {
+        const result = evaluateSource(`
+goto Missing
+`);
+        expect(result.diagnostics).toHaveLength(1);
+        expect(result.diagnostics[0]?.message).toContain("unresolved goto label Missing");
     });
 });

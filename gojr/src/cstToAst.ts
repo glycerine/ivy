@@ -17,6 +17,7 @@ import {
   IncDecStatement,
   ImportDecl,
   IndexExpression,
+  LabeledStatement,
   LiteralExpression,
   ParameterDecl,
   ProgramAst,
@@ -151,6 +152,9 @@ function blockToAst(node: CstNode): BlockStatement {
 }
 
 function statementToAst(node: CstNode): Statement {
+  const labeledStmt = firstChildNode(node, "labeledStmt");
+  if (labeledStmt) return labeledStmtToAst(labeledStmt);
+
   const constDecl = firstChildNode(node, "constDecl");
   if (constDecl) return constDeclToAst(constDecl);
 
@@ -175,7 +179,7 @@ function statementToAst(node: CstNode): Statement {
   const deferStmt = firstChildNode(node, "deferStmt");
   if (deferStmt) return deferStmtToAst(deferStmt);
 
-  const branch = branchToken(node);
+  const branch = firstChildNode(node, "branchStmt");
   if (branch) return branchToAst(branch);
 
   const simpleStmt = firstChildNode(node, "simpleStmt");
@@ -186,6 +190,19 @@ function statementToAst(node: CstNode): Statement {
       kind: "ExpressionStatement",
       expression: missingExpression()
     } satisfies ExpressionStatement,
+    node
+  );
+}
+
+function labeledStmtToAst(node: CstNode): LabeledStatement {
+  const label = firstChildToken(node, "Identifier")?.image ?? "<missing>";
+  const statement = firstChildNode(node, "statement");
+  return withSpan(
+    {
+      kind: "LabeledStatement",
+      label,
+      ...(statement ? { statement: statementToAst(statement) } : {})
+    } satisfies LabeledStatement,
     node
   );
 }
@@ -388,14 +405,17 @@ function deferStmtToAst(node: CstNode): DeferStatement {
   );
 }
 
-function branchToAst(token: IToken): BranchStatement {
-  const image = token.image as "break" | "continue" | "fallthrough";
+function branchToAst(node: CstNode): BranchStatement {
+  const token = firstChildTokenAny(node, ["Break", "Continue", "Fallthrough", "Goto"]);
+  const image = token?.image as "break" | "continue" | "fallthrough" | "goto";
+  const label = firstChildToken(node, "Identifier")?.image;
   return withSpan(
     {
       kind: "BranchStatement",
-      branch: image
+      branch: image,
+      ...(label ? { label } : {})
     } satisfies BranchStatement,
-    token
+    node
   );
 }
 
@@ -807,10 +827,6 @@ function nameText(node: CstNode): string {
 
 function nameToken(node: CstNode): IToken | undefined {
   return firstChildToken(node, "Identifier") ?? firstChildToken(node, "CellAddress");
-}
-
-function branchToken(node: CstNode): IToken | undefined {
-  return firstChildTokenAny(node, ["Break", "Continue", "Fallthrough"]);
 }
 
 function unaryOperatorImage(token: IToken | undefined): UnaryOperator {
