@@ -58,6 +58,7 @@ export type Statement =
   | BranchStatement
   | AssignStatement
   | ShortVarStatement
+  | IncDecStatement
   | ExpressionStatement;
 
 export interface BlockStatement {
@@ -161,6 +162,13 @@ export interface ShortVarStatement {
   kind: "ShortVarStatement";
   name: string;
   value: Expression;
+  span?: SourceSpan;
+}
+
+export interface IncDecStatement {
+  kind: "IncDecStatement";
+  target: Expression;
+  operator: "++" | "--";
   span?: SourceSpan;
 }
 

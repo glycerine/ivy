@@ -33,9 +33,11 @@ CXX=/usr/local/opt/llvm/bin/clang++ go run ./gojr/cmd/gojr
 
 The current bridge links `/usr/local/lib/libnode.141.dylib`, matching the
 installed Node 25 ABI. Apple clang 15 cannot parse the current V8 headers, so
-Homebrew LLVM is required for now. Inside the REPL, normal input is appended to
-the current source buffer and re-evaluated; use `.clear` for a fresh buffer and
-`.sheet {"A1":40}` to seed spreadsheet cells.
+Homebrew LLVM is required for now. Inside the REPL, normal input is evaluated
+eagerly against a persistent session. If parsing reaches EOF while more syntax
+is needed, the prompt changes to `....>` and keeps the pending multi-line input;
+use `.clear` to discard pending input and `.sheet {"A1":40}` to seed
+spreadsheet cells.
 
 Implemented in this first runtime slice:
 

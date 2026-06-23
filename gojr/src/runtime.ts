@@ -10,6 +10,7 @@ import {
   FunctionDecl,
   IdentifierExpression,
   IfStatement,
+  IncDecStatement,
   IndexExpression,
   ProgramAst,
   SelectorExpression,
@@ -70,6 +71,7 @@ export interface EvaluationResult {
   ast?: ProgramAst;
   value?: RuntimeValue;
   values?: RuntimeValue[];
+  incomplete?: boolean;
 }
 
 type Completion =
@@ -123,12 +125,24 @@ export class EvaluationContext {
     this.rootScope.declare(name, value, mutable);
   }
 
+  public declareOrAssignRoot(name: string, value: RuntimeValue, mutable = true): void {
+    if (this.rootScope.hasLocal(name)) {
+      this.rootScope.assign(name, value);
+      return;
+    }
+    this.rootScope.declare(name, value, mutable);
+  }
+
   public assign(name: string, value: RuntimeValue): void {
     this.currentScope.assign(name, value);
   }
 
   public lookup(name: string): RuntimeValue {
     return this.currentScope.lookup(name);
+  }
+
+  public outputFrom(offset: number): string[] {
+    return this.output.slice(offset);
   }
 
   public childScope<T>(body: () => T): T {
@@ -185,6 +199,10 @@ class Scope {
       throw new GoJuniorRuntimeError(`${name} already declared`);
     }
     this.bindings.set(name, { value, mutable });
+  }
+
+  public hasLocal(name: string): boolean {
+    return this.bindings.has(name);
   }
 
   public assign(name: string, value: RuntimeValue): void {
@@ -323,6 +341,113 @@ export function evaluateProgram(ast: ProgramAst, options: EvaluationOptions = {}
   }
 }
 
+export class GoJuniorSession {
+  private readonly context: EvaluationContext;
+
+  public constructor(private readonly options: EvaluationOptions = {}) {
+    this.context = new EvaluationContext(options);
+    installSheets(this.context, options);
+  }
+
+  public setSheet(sheet: SheetData): void {
+    this.context.declareOrAssignRoot("sheet", new SheetBinding("sheet", sheet), true);
+  }
+
+  public setSheets(sheets: Record<string, SheetData>): void {
+    for (const [name, data] of Object.entries(sheets)) {
+      this.context.declareOrAssignRoot(name, new SheetBinding(name, data), true);
+    }
+  }
+
+  public evaluate(source: string): EvaluationResult {
+    const parsed = parseGoJunior(source);
+    const ast = parsed.cst ? cstToAst(parsed.cst, parsed.diagnostics) : undefined;
+    const hasError = parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error");
+    if (hasError) {
+      return {
+        diagnostics: parsed.diagnostics,
+        output: [],
+        incomplete: diagnosticsLookIncomplete(parsed.diagnostics),
+        ...(ast ? { ast } : {})
+      };
+    }
+    if (!ast) {
+      return {
+        diagnostics: parsed.diagnostics,
+        output: []
+      };
+    }
+
+    const outputStart = this.context.output.length;
+    try {
+      installImports(this.context, ast);
+
+      for (const declaration of ast.functions) {
+        this.context.declareOrAssignRoot(declaration.name, functionValue(declaration), true);
+      }
+
+      if (ast.kind === "function" && ast.functions[0] && ast.body.length === 0) {
+        const value = this.context.lookup(ast.functions[0].name);
+        return {
+          diagnostics: ast.diagnostics,
+          output: this.context.outputFrom(outputStart),
+          ast,
+          value
+        };
+      }
+
+      const completion = executeStatements(ast.body, this.context);
+      this.context.runDefers();
+      return resultFromCompletion(ast, this.context.outputFrom(outputStart), completion);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return {
+        diagnostics: [
+          ...ast.diagnostics,
+          {
+            code: error instanceof GoJuniorPanic ? "GJPANIC001" : "GJRUNTIME001",
+            severity: "error",
+            message
+          }
+        ],
+        output: this.context.outputFrom(outputStart),
+        ast
+      };
+    }
+  }
+}
+
+function resultFromCompletion(ast: ProgramAst, output: string[], completion: Completion): EvaluationResult {
+  if (completion.kind === "return") {
+    return {
+      diagnostics: ast.diagnostics,
+      output,
+      ast,
+      values: completion.values,
+      ...(completion.values.length === 1 ? { value: completion.values[0] } : {})
+    };
+  }
+
+  if (completion.kind !== "normal") {
+    throw new GoJuniorRuntimeError(`${completion.kind} used outside a loop or switch`);
+  }
+
+  return {
+    diagnostics: ast.diagnostics,
+    output,
+    ast,
+    ...(completion.value !== undefined ? { value: completion.value } : {})
+  };
+}
+
+function diagnosticsLookIncomplete(diagnostics: Diagnostic[]): boolean {
+  const errors = diagnostics.filter((diagnostic) => diagnostic.severity === "error");
+  return errors.length > 0 && errors.every((diagnostic) =>
+    diagnostic.code === "GJPARSE001" &&
+    /found\s+-->\s*''\s*<--/.test(diagnostic.message)
+  );
+}
+
 function installBuiltins(context: EvaluationContext): void {
   context.declareRoot("panic", hostCallable("panic", (args) => {
     throw new GoJuniorPanic(args[0] ?? null);
@@ -337,10 +462,10 @@ function installBuiltins(context: EvaluationContext): void {
 }
 
 function installSheets(context: EvaluationContext, options: EvaluationOptions): void {
-  context.declareRoot("sheet", new SheetBinding("sheet", options.sheet ?? {}), true);
+  context.declareOrAssignRoot("sheet", new SheetBinding("sheet", options.sheet ?? {}), true);
   for (const [name, data] of Object.entries(options.sheets ?? {})) {
     if (name !== "sheet") {
-      context.declareRoot(name, new SheetBinding(name, data), true);
+      context.declareOrAssignRoot(name, new SheetBinding(name, data), true);
     }
   }
 }
@@ -357,7 +482,7 @@ function installImports(context: EvaluationContext, ast: ProgramAst): void {
     if (!pkg) {
       throw new GoJuniorRuntimeError(`package ${imported.path} is not available`);
     }
-    context.declareRoot(name, pkg, true);
+    context.declareOrAssignRoot(name, pkg, true);
   }
 }
 
@@ -481,6 +606,10 @@ function executeStatement(statement: Statement, context: EvaluationContext): Com
       context.declare(statement.name, evaluateExpression(statement.value, context), true);
       return { kind: "normal" };
 
+    case "IncDecStatement":
+      executeIncDec(statement, context);
+      return { kind: "normal" };
+
     case "ExpressionStatement":
       return { kind: "normal", value: evaluateExpression(statement.expression, context) };
   }
@@ -572,16 +701,28 @@ function branchCompletion(statement: BranchStatement): Completion {
 }
 
 function assignTarget(statement: AssignStatement, value: RuntimeValue, context: EvaluationContext): void {
-  if (statement.target.kind === "Identifier") {
-    context.assign(statement.target.name, value);
+  assignExpressionTarget(statement.target, value, context);
+}
+
+function executeIncDec(statement: IncDecStatement, context: EvaluationContext): void {
+  const current = evaluateExpression(statement.target, context);
+  const next = statement.operator === "++"
+    ? addNumbers(current, 1n)
+    : subtractNumbers(current, 1n);
+  assignExpressionTarget(statement.target, next, context);
+}
+
+function assignExpressionTarget(target: Expression, value: RuntimeValue, context: EvaluationContext): void {
+  if (target.kind === "Identifier") {
+    context.assign(target.name, value);
     return;
   }
-  if (statement.target.kind === "SelectorExpression") {
-    setSelector(statement.target, value, context);
+  if (target.kind === "SelectorExpression") {
+    setSelector(target, value, context);
     return;
   }
-  if (statement.target.kind === "IndexExpression") {
-    setIndex(statement.target, value, context);
+  if (target.kind === "IndexExpression") {
+    setIndex(target, value, context);
     return;
   }
   throw new GoJuniorRuntimeError("unsupported assignment target");

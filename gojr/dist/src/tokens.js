@@ -79,6 +79,8 @@ export const GreaterEqual = createToken({ name: "GreaterEqual", pattern: />=/ })
 export const AndAnd = createToken({ name: "AndAnd", pattern: /&&/ });
 export const OrOr = createToken({ name: "OrOr", pattern: /\|\|/ });
 export const Arrow = createToken({ name: "Arrow", pattern: /->/ });
+export const PlusPlus = createToken({ name: "PlusPlus", pattern: /\+\+/ });
+export const MinusMinus = createToken({ name: "MinusMinus", pattern: /--/ });
 export const Assign = createToken({ name: "Assign", pattern: /=/ });
 export const Less = createToken({ name: "Less", pattern: /</ });
 export const Greater = createToken({ name: "Greater", pattern: />/ });
@@ -140,6 +142,8 @@ export const allTokens = [
     AndAnd,
     OrOr,
     Arrow,
+    PlusPlus,
+    MinusMinus,
     Assign,
     Less,
     Greater,

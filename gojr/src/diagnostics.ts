@@ -20,11 +20,16 @@ export function spanFromToken(token: {
   startLine?: number;
   startColumn?: number;
 }): SourceSpan {
-  const endOffset = token.endOffset ?? token.startOffset;
+  const startOffset = finiteOr(token.startOffset, 0);
+  const endOffset = finiteOr(token.endOffset, startOffset);
   return {
-    offset: token.startOffset,
-    length: Math.max(0, endOffset - token.startOffset + 1),
-    line: token.startLine ?? 1,
-    column: token.startColumn ?? 1
+    offset: startOffset,
+    length: Math.max(0, endOffset - startOffset + 1),
+    line: finiteOr(token.startLine, 1),
+    column: finiteOr(token.startColumn, 1)
   };
+}
+
+function finiteOr(value: number | undefined, fallback: number): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }

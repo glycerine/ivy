@@ -249,6 +249,14 @@ function simpleStmtToAst(node) {
             value
         }, node);
     }
+    const incDecToken = firstChildTokenAny(node, ["PlusPlus", "MinusMinus"]);
+    if (incDecToken) {
+        return withSpan({
+            kind: "IncDecStatement",
+            target,
+            operator: incDecToken.tokenType.name === "PlusPlus" ? "++" : "--"
+        }, node);
+    }
     return withSpan({
         kind: "ExpressionStatement",
         expression: target
@@ -598,12 +606,13 @@ function spanFromNode(node) {
     };
 }
 function spanFromToken(token) {
-    const endOffset = tokenEnd(token);
+    const startOffset = finiteOr(token.startOffset, 0);
+    const endOffset = finiteOr(tokenEnd(token), startOffset);
     return {
-        offset: token.startOffset,
-        length: Math.max(0, endOffset - token.startOffset + 1),
-        line: token.startLine ?? 1,
-        column: token.startColumn ?? 1
+        offset: startOffset,
+        length: Math.max(0, endOffset - startOffset + 1),
+        line: finiteOr(token.startLine, 1),
+        column: finiteOr(token.startColumn, 1)
     };
 }
 function withSpan(value, source) {
@@ -624,6 +633,9 @@ function byOffset(left, right) {
 }
 function tokenEnd(token) {
     return token.endOffset ?? token.startOffset + token.image.length - 1;
+}
+function finiteOr(value, fallback) {
+    return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 function isCstNode(value) {
     return Boolean(value && typeof value === "object" && "children" in value);

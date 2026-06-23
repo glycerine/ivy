@@ -44,11 +44,13 @@ import {
   LParen,
   MapTok,
   Minus,
+  MinusMinus,
   Nil,
   NotEqual,
   OrOr,
   Percent,
   Plus,
+  PlusPlus,
   Range,
   Return,
   RBrace,
@@ -124,11 +126,23 @@ export class GoJuniorParser extends CstParser {
     const $ = this;
 
     this.program = $.RULE("program", () => {
-      $.MANY(() => $.SUBRULE(this.importDecl));
-      $.OR([
-        { ALT: () => $.SUBRULE(this.functionDecl) },
-        { ALT: () => $.MANY1(() => $.SUBRULE(this.statement)) }
-      ]);
+      $.MANY(() => {
+        $.SUBRULE(this.importDecl);
+        $.OPTION(() => $.CONSUME(Semicolon));
+      });
+      $.OPTION2(() => {
+        $.OR([
+          { ALT: () => $.SUBRULE(this.functionDecl) },
+          {
+            ALT: () => {
+              $.MANY1(() => {
+                $.SUBRULE(this.statement);
+                $.OPTION3(() => $.CONSUME2(Semicolon));
+              });
+            }
+          }
+        ]);
+      });
     });
 
     this.importDecl = $.RULE("importDecl", () => {
@@ -380,7 +394,10 @@ export class GoJuniorParser extends CstParser {
         { ALT: () => $.CONSUME(Default) }
       ]);
       $.CONSUME(Colon);
-      $.MANY(() => $.SUBRULE(this.statement));
+      $.MANY(() => {
+        $.SUBRULE(this.statement);
+        $.OPTION(() => $.CONSUME(Semicolon));
+      });
     });
 
     this.forStmt = $.RULE("forStmt", () => {
@@ -430,10 +447,18 @@ export class GoJuniorParser extends CstParser {
       $.SUBRULE(this.expression);
       $.OPTION(() => {
         $.OR([
-          { ALT: () => $.CONSUME(Define) },
-          { ALT: () => $.CONSUME(Assign) }
+          {
+            ALT: () => {
+              $.OR2([
+                { ALT: () => $.CONSUME(Define) },
+                { ALT: () => $.CONSUME(Assign) }
+              ]);
+              $.SUBRULE2(this.expression);
+            }
+          },
+          { ALT: () => $.CONSUME(PlusPlus) },
+          { ALT: () => $.CONSUME(MinusMinus) }
         ]);
-        $.SUBRULE2(this.expression);
       });
     });
 

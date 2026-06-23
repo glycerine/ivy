@@ -1,6 +1,6 @@
 import { CstParser } from "chevrotain";
 import { spanFromToken } from "./diagnostics.js";
-import { allTokens, Amp, AndAnd, Assign, Bang, Break, Case, CellAddress, Colon, Comma, Const, Continue, Default, Defer, Define, Dot, Ellipsis, Else, Equal, Fallthrough, False, FloatLiteral, For, Func, Greater, GreaterEqual, Identifier, If, Import, IntLiteral, Interface, LBrace, LBracket, Less, LessEqual, LParen, MapTok, Minus, Nil, NotEqual, OrOr, Percent, Plus, Range, Return, RBrace, RBracket, RParen, Semicolon, Slash, Star, StringLiteral, Struct, Switch, True, Type, Var, goJuniorLexer } from "./tokens.js";
+import { allTokens, Amp, AndAnd, Assign, Bang, Break, Case, CellAddress, Colon, Comma, Const, Continue, Default, Defer, Define, Dot, Ellipsis, Else, Equal, Fallthrough, False, FloatLiteral, For, Func, Greater, GreaterEqual, Identifier, If, Import, IntLiteral, Interface, LBrace, LBracket, Less, LessEqual, LParen, MapTok, Minus, MinusMinus, Nil, NotEqual, OrOr, Percent, Plus, PlusPlus, Range, Return, RBrace, RBracket, RParen, Semicolon, Slash, Star, StringLiteral, Struct, Switch, True, Type, Var, goJuniorLexer } from "./tokens.js";
 export class GoJuniorParser extends CstParser {
     program;
     importDecl;
@@ -54,11 +54,23 @@ export class GoJuniorParser extends CstParser {
         });
         const $ = this;
         this.program = $.RULE("program", () => {
-            $.MANY(() => $.SUBRULE(this.importDecl));
-            $.OR([
-                { ALT: () => $.SUBRULE(this.functionDecl) },
-                { ALT: () => $.MANY1(() => $.SUBRULE(this.statement)) }
-            ]);
+            $.MANY(() => {
+                $.SUBRULE(this.importDecl);
+                $.OPTION(() => $.CONSUME(Semicolon));
+            });
+            $.OPTION2(() => {
+                $.OR([
+                    { ALT: () => $.SUBRULE(this.functionDecl) },
+                    {
+                        ALT: () => {
+                            $.MANY1(() => {
+                                $.SUBRULE(this.statement);
+                                $.OPTION3(() => $.CONSUME2(Semicolon));
+                            });
+                        }
+                    }
+                ]);
+            });
         });
         this.importDecl = $.RULE("importDecl", () => {
             $.CONSUME(Import);
@@ -289,7 +301,10 @@ export class GoJuniorParser extends CstParser {
                 { ALT: () => $.CONSUME(Default) }
             ]);
             $.CONSUME(Colon);
-            $.MANY(() => $.SUBRULE(this.statement));
+            $.MANY(() => {
+                $.SUBRULE(this.statement);
+                $.OPTION(() => $.CONSUME(Semicolon));
+            });
         });
         this.forStmt = $.RULE("forStmt", () => {
             $.CONSUME(For);
@@ -334,10 +349,18 @@ export class GoJuniorParser extends CstParser {
             $.SUBRULE(this.expression);
             $.OPTION(() => {
                 $.OR([
-                    { ALT: () => $.CONSUME(Define) },
-                    { ALT: () => $.CONSUME(Assign) }
+                    {
+                        ALT: () => {
+                            $.OR2([
+                                { ALT: () => $.CONSUME(Define) },
+                                { ALT: () => $.CONSUME(Assign) }
+                            ]);
+                            $.SUBRULE2(this.expression);
+                        }
+                    },
+                    { ALT: () => $.CONSUME(PlusPlus) },
+                    { ALT: () => $.CONSUME(MinusMinus) }
                 ]);
-                $.SUBRULE2(this.expression);
             });
         });
         this.expressionStatement = $.RULE("expressionStatement", () => {

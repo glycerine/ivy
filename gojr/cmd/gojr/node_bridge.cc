@@ -89,7 +89,7 @@ std::string bootstrap_source(const std::string& module_path) {
 const { createRequire } = require('node:module');
 const gojrRequire = createRequire(process.cwd() + '/gojr-embedded-repl.js');
 const gojrModule = gojrRequire()JS" + js_string_literal(module_path) + R"JS();
-let gojrSheet = {};
+const gojrSession = new gojrModule.GoJuniorSession({ sheet: {} });
 
 function gojrDiagnosticString(diagnostic) {
   const location = diagnostic && diagnostic.span
@@ -105,10 +105,11 @@ function gojrFormatResult(result) {
 }
 
 globalThis.__gojrEval = function(source) {
-  const result = gojrModule.evaluateSource(source, { sheet: gojrSheet });
+  const result = gojrSession.evaluate(source);
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
+    incomplete: result.incomplete === true,
     diagnostics: diagnostics.map(gojrDiagnosticString),
     output: (result.output || []).join(""),
     value: gojrFormatResult(result)
@@ -116,7 +117,7 @@ globalThis.__gojrEval = function(source) {
 };
 
 globalThis.__gojrSetSheet = function(json) {
-  gojrSheet = gojrModule.parseSheetJson(json);
+  gojrSession.setSheet(gojrModule.parseSheetJson(json));
   return JSON.stringify({ ok: true, value: "sheet loaded" });
 };
 )JS";

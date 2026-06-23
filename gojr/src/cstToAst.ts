@@ -14,6 +14,7 @@ import {
   FunctionDecl,
   IdentifierExpression,
   IfStatement,
+  IncDecStatement,
   ImportDecl,
   IndexExpression,
   LiteralExpression,
@@ -339,7 +340,7 @@ function branchToAst(token: IToken): BranchStatement {
   );
 }
 
-function simpleStmtToAst(node: CstNode): AssignStatement | ShortVarStatement | ExpressionStatement {
+function simpleStmtToAst(node: CstNode): AssignStatement | ShortVarStatement | IncDecStatement | ExpressionStatement {
   const expressions = childNodes(node, "expression").map(expressionToAst);
   const target = expressions[0] ?? missingExpression();
   const value = expressions[1];
@@ -362,6 +363,18 @@ function simpleStmtToAst(node: CstNode): AssignStatement | ShortVarStatement | E
         target,
         value
       } satisfies AssignStatement,
+      node
+    );
+  }
+
+  const incDecToken = firstChildTokenAny(node, ["PlusPlus", "MinusMinus"]);
+  if (incDecToken) {
+    return withSpan(
+      {
+        kind: "IncDecStatement",
+        target,
+        operator: incDecToken.tokenType.name === "PlusPlus" ? "++" : "--"
+      } satisfies IncDecStatement,
       node
     );
   }
@@ -828,12 +841,13 @@ function spanFromNode(node: CstNode): SourceSpan | undefined {
 }
 
 function spanFromToken(token: IToken): SourceSpan {
-  const endOffset = tokenEnd(token);
+  const startOffset = finiteOr(token.startOffset, 0);
+  const endOffset = finiteOr(tokenEnd(token), startOffset);
   return {
-    offset: token.startOffset,
-    length: Math.max(0, endOffset - token.startOffset + 1),
-    line: token.startLine ?? 1,
-    column: token.startColumn ?? 1
+    offset: startOffset,
+    length: Math.max(0, endOffset - startOffset + 1),
+    line: finiteOr(token.startLine, 1),
+    column: finiteOr(token.startColumn, 1)
   };
 }
 
@@ -859,6 +873,10 @@ function byOffset(left: IToken, right: IToken): number {
 
 function tokenEnd(token: IToken): number {
   return token.endOffset ?? token.startOffset + token.image.length - 1;
+}
+
+function finiteOr(value: number | undefined, fallback: number): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 
 function isCstNode(value: unknown): value is CstNode {

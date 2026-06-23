@@ -2,7 +2,7 @@ package main
 
 /*
 #cgo darwin CXXFLAGS: -std=c++20 -I/usr/local/include/node -DNODE_SHARED_MODE
-#cgo darwin LDFLAGS: -L/usr/local/lib -lnode.141 -lc++ -Wl,-rpath,/usr/local/lib
+#cgo darwin LDFLAGS: -L/usr/local/lib -lnode.141 -Wl,-rpath,/usr/local/lib
 #include <stdlib.h>
 #include "node_bridge.h"
 */
@@ -25,6 +25,7 @@ type nodeRuntime struct {
 
 type evalResult struct {
 	OK          bool     `json:"ok"`
+	Incomplete  bool     `json:"incomplete"`
 	Diagnostics []string `json:"diagnostics"`
 	Output      string   `json:"output"`
 	Value       string   `json:"value"`
@@ -89,9 +90,14 @@ func repl(rt *nodeRuntime) error {
 		result, err := rt.Eval(source.String())
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "embedded node error: %v\n", err)
+			source.Reset()
+			continue
+		}
+		if result.Incomplete {
 			continue
 		}
 		printResult(result)
+		source.Reset()
 	}
 }
 
@@ -131,6 +137,9 @@ func handleCommand(rt *nodeRuntime, source *strings.Builder, command string) (bo
 			return false, err
 		}
 		printResult(result)
+		if !result.Incomplete {
+			source.Reset()
+		}
 	default:
 		return false, fmt.Errorf("unknown command %q", command)
 	}
@@ -141,13 +150,14 @@ func printHelp() {
 	fmt.Println(`Commands:
   .help          show this help
   .clear         clear the accumulated Go-junior source buffer
-  .source        print the accumulated source buffer
+  .source        print the pending multi-line source buffer
   .sheet JSON    replace the current sheet, e.g. .sheet {"A1":40,"B1":2.5}
   .load PATH     append a Go-junior source file and evaluate the buffer
   .quit          exit
 
-Normal input is appended to the current source buffer and the whole buffer is
-evaluated after each line. Use .clear when you want a fresh experiment.`)
+Normal input is evaluated eagerly. If the parser reaches EOF while expecting
+more input, the line is kept as pending multi-line source and the prompt changes
+to ....>. Use .clear to discard pending input.`)
 }
 
 func printResult(result evalResult) {

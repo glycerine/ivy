@@ -10,6 +10,7 @@ export {
   evaluateProgram,
   evaluateSource,
   formatValue,
+  GoJuniorSession,
   GoJuniorPanic,
   GoJuniorRuntimeError
 } from "./runtime.js";
