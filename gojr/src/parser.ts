@@ -209,9 +209,26 @@ export class GoJuniorParser extends CstParser {
     });
 
     this.parameter = $.RULE("parameter", () => {
-      $.OPTION(() => $.SUBRULE(this.name));
-      $.OPTION2(() => $.CONSUME(Ellipsis));
-      $.SUBRULE(this.typeExpression);
+      $.OR([
+        {
+          GATE: () => this.nextTokensAreNamedParameter(),
+          ALT: () => {
+            $.SUBRULE(this.name);
+            $.MANY(() => {
+              $.CONSUME(Comma);
+              $.SUBRULE2(this.name);
+            });
+            $.OPTION(() => $.CONSUME(Ellipsis));
+            $.SUBRULE(this.typeExpression);
+          }
+        },
+        {
+          ALT: () => {
+            $.OPTION2(() => $.CONSUME2(Ellipsis));
+            $.SUBRULE2(this.typeExpression);
+          }
+        }
+      ]);
     });
 
     this.result = $.RULE("result", () => {
@@ -753,6 +770,37 @@ export class GoJuniorParser extends CstParser {
   private nextTokensAreSpreadsheetRangeSuffix(): boolean {
     return this.LA(1).tokenType === Colon &&
       (this.LA(2).tokenType === Identifier || this.LA(2).tokenType === CellAddress);
+  }
+
+  private nextTokensAreNamedParameter(): boolean {
+    const first = this.LA(1).tokenType;
+    const second = this.LA(2).tokenType;
+    if (!this.isNameToken(first)) return false;
+    if (second === Ellipsis || this.isTypeStartToken(second)) return true;
+    if (second !== Comma) return false;
+
+    let offset = 2;
+    while (this.LA(offset).tokenType === Comma && this.isNameToken(this.LA(offset + 1).tokenType)) {
+      offset += 2;
+    }
+
+    const afterNames = this.LA(offset).tokenType;
+    return afterNames === Ellipsis || this.isTypeStartToken(afterNames);
+  }
+
+  private isNameToken(tokenType: IToken["tokenType"]): boolean {
+    return tokenType === Identifier || tokenType === CellAddress;
+  }
+
+  private isTypeStartToken(tokenType: IToken["tokenType"]): boolean {
+    return tokenType === Star ||
+      tokenType === LBracket ||
+      tokenType === MapTok ||
+      tokenType === Struct ||
+      tokenType === Interface ||
+      tokenType === Func ||
+      tokenType === Identifier ||
+      tokenType === CellAddress;
   }
 
 }

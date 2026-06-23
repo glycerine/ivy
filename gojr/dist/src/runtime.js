@@ -415,18 +415,35 @@ function functionValue(declaration) {
             return context.childScope(() => {
                 for (const [index, parameter] of declaration.signature.parameters.entries()) {
                     if (parameter.name) {
-                        context.declare(parameter.name, args[index] ?? null, true);
+                        const value = parameter.variadic ? args.slice(index) : args[index] ?? null;
+                        context.declare(parameter.name, value, true);
+                        if (parameter.variadic)
+                            break;
+                    }
+                }
+                for (const result of declaration.signature.results) {
+                    if (result.name) {
+                        context.declare(result.name, defaultValueForDeclarationType(result.type), true);
                     }
                 }
                 const completion = executeBlock(declaration.body, context, false);
                 context.runDefers();
                 if (completion.kind === "return") {
-                    return completion.values.length === 1 ? completion.values[0] ?? null : completion.values;
+                    const values = completion.values.length === 0
+                        ? namedReturnValues(declaration, context)
+                        : completion.values;
+                    return values.length === 1 ? values[0] ?? null : values;
                 }
                 return null;
             });
         }
     };
+}
+function namedReturnValues(declaration, context) {
+    const namedResults = declaration.signature.results.filter((result) => result.name);
+    if (namedResults.length === 0)
+        return [];
+    return namedResults.map((result) => result.name ? context.lookup(result.name) : defaultValueForDeclarationType(result.type));
 }
 function executeStatements(statements, context) {
     const labels = statementLabels(statements);
@@ -763,7 +780,16 @@ function evaluateBinary(expression, context) {
 function evaluateCall(expression, context) {
     const callee = evaluateExpression(expression.callee, context);
     const args = expression.args.map((arg) => evaluateExpression(arg, context));
-    return callRuntime(callee, args, context);
+    return callRuntime(callee, expression.spreadLast ? spreadLastArgument(args) : args, context);
+}
+function spreadLastArgument(args) {
+    if (args.length === 0)
+        return args;
+    const last = args[args.length - 1];
+    if (!Array.isArray(last)) {
+        throw new GoJuniorRuntimeError(`${formatValue(last ?? null)} is not spreadable`);
+    }
+    return [...args.slice(0, -1), ...last];
 }
 function callRuntime(callee, args, context) {
     if (isRuntimeCallable(callee) || isGoJuniorFunction(callee)) {
@@ -842,10 +868,11 @@ function getSlice(object, start, end) {
     throw new GoJuniorRuntimeError(`${formatValue(object)} is not sliceable`);
 }
 function defaultValueForDeclarationType(type) {
-    const mapType = type ? parseMapTypeText(type.text) : undefined;
+    const typeText = type?.text ?? "";
+    const mapType = parseMapTypeText(typeText);
     if (mapType)
         return new RuntimeMap(mapType.keyType, mapType.valueType);
-    return null;
+    return zeroValueForMapValue(typeText);
 }
 function zeroValueForMapValue(typeText) {
     const type = normalizeTypeText(typeText);

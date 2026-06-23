@@ -50,16 +50,21 @@ function signatureToAst(node) {
     };
 }
 function parameterListToAst(node) {
-    return childNodes(node, "parameter").map(parameterToAst);
+    return childNodes(node, "parameter").flatMap(parameterToAst);
 }
 function parameterToAst(node) {
-    const paramName = firstChildNode(node, "name");
+    const names = childNodes(node, "name");
     const typeNode = firstChildNode(node, "typeExpression");
-    return {
-        ...(paramName ? { name: nameText(paramName) } : {}),
+    const base = {
         type: typeNode ? typeToAst(typeNode) : { text: "<missing>" },
         variadic: childTokens(node, "Ellipsis").length > 0
     };
+    if (names.length === 0)
+        return [base];
+    return names.map((name) => ({
+        name: nameText(name),
+        ...base
+    }));
 }
 function resultToAst(node) {
     const typeNode = firstChildNode(node, "typeExpression");

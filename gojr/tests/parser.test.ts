@@ -57,6 +57,39 @@ m = map[string]int{"a": 1, "b": 2}
 `);
   });
 
+  test("parses grouped parameter names and variadic parameters", () => {
+    const grouped = expectParses(`
+func F(a, b, c int) (x, y, z int) {
+  return a, b, c
+}
+`);
+    expect(grouped.ast?.functions[0]?.signature.parameters.map((param) => param.name)).toEqual(["a", "b", "c"]);
+    expect(grouped.ast?.functions[0]?.signature.parameters.map((param) => param.type.text)).toEqual(["int", "int", "int"]);
+    expect(grouped.ast?.functions[0]?.signature.results.map((param) => param.name)).toEqual(["x", "y", "z"]);
+    expect(grouped.ast?.functions[0]?.signature.results.map((param) => param.type.text)).toEqual(["int", "int", "int"]);
+
+    const variadic = expectParses(`
+func Sum(prefix string, vals ...int) int {
+  return 0
+}
+`);
+    expect(variadic.ast?.functions[0]?.signature.parameters.map((param) => param.name)).toEqual(["prefix", "vals"]);
+    expect(variadic.ast?.functions[0]?.signature.parameters.map((param) => param.variadic)).toEqual([false, true]);
+  });
+
+  test("keeps comma-separated unnamed type parameters distinct", () => {
+    const result = expectParses(`
+func F(int, string, bool) {
+}
+`);
+
+    expect(result.ast?.functions[0]?.signature.parameters).toEqual([
+      { type: { text: "int", span: expect.any(Object) }, variadic: false },
+      { type: { text: "string", span: expect.any(Object) }, variadic: false },
+      { type: { text: "bool", span: expect.any(Object) }, variadic: false }
+    ]);
+  });
+
   test("parses Go-junior function cell source", () => {
     const result = expectParses(`
 import "fmt"

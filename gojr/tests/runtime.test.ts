@@ -193,6 +193,61 @@ panicOn("bad")
     expect(session.evaluate("a := 1").output).toEqual([]);
   });
 
+  test("defines and calls functions with grouped names in REPL sessions", () => {
+    const session = new GoJuniorSession();
+
+    const define = session.evaluate("func f(a, b, c int) (x, y, z int) { return a, b, c }");
+    expect(define.diagnostics).toEqual([]);
+
+    const call = session.evaluate("f(1, 2, 3)");
+    expect(call.diagnostics).toEqual([]);
+    expect(call.value).toEqual([1n, 2n, 3n]);
+  });
+
+  test("supports named result variables and naked returns in REPL functions", () => {
+    const session = new GoJuniorSession();
+
+    const define = session.evaluate(`
+func swap(a, b int) (left, right int) {
+  left = b
+  right = a
+  return
+}
+`);
+    expect(define.diagnostics).toEqual([]);
+
+    const call = session.evaluate("swap(1, 2)");
+    expect(call.diagnostics).toEqual([]);
+    expect(call.value).toEqual([2n, 1n]);
+  });
+
+  test("supports variadic parameters and spread calls in REPL functions", () => {
+    const session = new GoJuniorSession({
+      sheet: {
+        A1: [4n, 5n, 6n]
+      }
+    });
+
+    const define = session.evaluate(`
+func sum(vals ...int) int {
+  total := 0
+  for _, v := range vals {
+    total = total + v
+  }
+  return total
+}
+`);
+    expect(define.diagnostics).toEqual([]);
+
+    const direct = session.evaluate("sum(1, 2, 3)");
+    expect(direct.diagnostics).toEqual([]);
+    expect(direct.value).toBe(6n);
+
+    const spread = session.evaluate("sum(sheet.A1...)");
+    expect(spread.diagnostics).toEqual([]);
+    expect(spread.value).toBe(15n);
+  });
+
   test("marks incomplete REPL input without executing it", () => {
     const session = new GoJuniorSession();
     const incomplete = session.evaluate("if true {");
