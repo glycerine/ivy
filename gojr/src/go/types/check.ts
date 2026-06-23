@@ -7,7 +7,7 @@
 import { NoPos, type Pos } from "./token.js";
 import type { Type } from "./type.js";
 import { Basic } from "./basic.js";
-import type { Object, PkgName, TypeName, Var } from "./object.js";
+import type { Func, Object, PkgName, TypeName, Var } from "./object.js";
 import type { Package } from "./package.js";
 import { Unsafe } from "./universe.js";
 import { Named } from "./named.js";
@@ -205,7 +205,7 @@ export class Checker extends environment {
     this.usedPkgNames = new Map();
   }
 
-  public newNamed(obj: TypeName, underlying: Type | null, methods: unknown[] | null): Named {
+  public newNamed(obj: TypeName, underlying: Type | null, methods: Func[] | null): Named {
     return new Named(this, obj, underlying, methods);
   }
 

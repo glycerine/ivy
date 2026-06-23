@@ -27,61 +27,6 @@ import { Signature } from "./signature.js";
 
 export type Cause = { value: string };
 
-declare module "./named.js" {
-  interface Named {
-    methodIndex(name: string, foldCase: boolean): number;
-    lookupMethod(pkg: Package | null, name: string, foldCase: boolean): [number, Func | null];
-  }
-}
-
-Named.prototype.methodIndex = function methodIndex(name: string, foldCase: boolean): number {
-  if (name === "_") {
-    return -1;
-  }
-  if (foldCase) {
-    for (let i = 0; i < this.methods_.length; i++) {
-      const m = this.methods_[i]!;
-      if (m.name.toLocaleLowerCase() === name.toLocaleLowerCase()) {
-        return i;
-      }
-    }
-  } else {
-    for (let i = 0; i < this.methods_.length; i++) {
-      const m = this.methods_[i]!;
-      if (m.name === name) {
-        return i;
-      }
-    }
-  }
-  return -1;
-};
-
-Named.prototype.lookupMethod = function lookupMethod(pkg: Package | null, name: string, foldCase: boolean): [number, Func | null] {
-  if (samePkgForNamed(this.obj.pkg, pkg) || isExportedForNamed(name) || foldCase) {
-    // If n is an instance, we may not have yet instantiated all of its methods.
-    // Look up the method index in orig, and only instantiate method at the
-    // matching index (if any).
-    const i = this.Origin().methodIndex(name, foldCase);
-    if (i >= 0) {
-      // For instances, m.Method(i) will be different from the orig method.
-      return [i, this.Method(i)];
-    }
-  }
-  return [-1, null];
-};
-
-function samePkgForNamed(a: Package | null, b: Package | null): boolean {
-  if (a === null || b === null) {
-    return a === b;
-  }
-  return a.path === b.path;
-}
-
-function isExportedForNamed(name: string): boolean {
-  const ch = Array.from(name)[0] ?? "";
-  return ch.toLocaleUpperCase() === ch && ch.toLocaleLowerCase() !== ch;
-}
-
 // LookupSelection selects the field or method whose ID is Id(pkg,
 // name), on a value of type T. If addressable is set, T is the type
 // of an addressable variable (this matters only for method lookups).
@@ -648,7 +593,7 @@ export function funcString(check: Checker | null, f: Func, pkgInfo: boolean): st
   const buf: string[] = [f.name];
   let qf: Qualifier | null = null;
   if (check !== null && !pkgInfo) {
-    qf = (pkg) => check.qualifier(pkg);
+    qf = (pkg) => check.qualifier(pkg as Package);
   }
   WriteSignature(buf, f.typ as Signature, qf);
   return buf.join("");

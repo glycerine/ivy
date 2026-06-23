@@ -5,11 +5,22 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import type { Checker } from "./check.js";
+import type { Pos } from "./token.js";
+import { Checker, debug } from "./check.js";
 import type { Type } from "./type.js";
 import { TypeString } from "./typestring.js";
-import type { TypeName, Func } from "./object.js";
-import type { TypeList, TypeParamList } from "./typelists.js";
+import { Func, NewTypeName, type TypeName } from "./object.js";
+import { TypeList, TypeParamList, bindTParams, newTypeList } from "./typelists.js";
+import { TypeParam } from "./typeparam.js";
+import { assert } from "./util.js";
+import { Alias, asNamed, unalias } from "./alias.js";
+import { NewContext, type Context } from "./context.js";
+import { makeSubstMap, replaceRecvType, subst as substType, cloneFunc, cloneVar } from "./subst.js";
+import { Signature } from "./signature.js";
+import { NewPointer } from "./pointer.js";
+import { Typ } from "./universe.js";
+import { BasicKind } from "./basic.js";
+import { Interface } from "./interface.js";
 
 // A Named represents a named (defined) type.
 export class Named implements Type {
@@ -18,39 +29,621 @@ export class Named implements Type {
 
   public allowNilRHS = false; // may be true from creation via [NewNamed] until [Named.SetUnderlying]
 
-  public inst: unknown | null = null; // information for instantiated types; nil otherwise
+  public inst: instance | null = null; // information for instantiated types; nil otherwise
 
   public state_ = 0; // the current state of this type; must only be accessed atomically or when mu is held
   public fromRHS: Type | null = null; // the declaration RHS this type is derived from
   public tparams: TypeParamList | null = null; // type parameters, or nil
   public underlying: Type | null = null; // underlying type, or nil
-  public methods_: Func[] = []; // methods declared for this type (not the method set of this type); signatures are type-checked lazily
-  public loader: ((named: Named) => [unknown[] | null, Type | null, Func[] | null, (() => void)[] | null]) | null = null;
+  public varSize = false; // whether the type has variable size
 
-  public constructor(check: Checker | null, obj: TypeName, underlying: Type | null, methods: unknown[] | null) {
+  // methods declared for this type (not the method set of this type)
+  // Signatures are type-checked lazily.
+  public methods: Func[] = [];
+
+  // loader may be provided to lazily load type parameters, underlying type, methods, and delayed functions
+  public loader: ((named: Named) => [TypeParam[] | null, Type | null, Func[] | null, (() => void)[] | null]) | null = null;
+
+  public constructor(check: Checker | null, obj: TypeName, fromRHS: Type | null, methods: Func[] | null) {
     this.check = check;
     this.obj = obj;
-    this.underlying = underlying;
-    this.fromRHS = underlying;
+    this.fromRHS = fromRHS;
+    this.underlying = fromRHS;
     if (methods !== null) {
-      this.methods_ = methods as Func[];
+      this.methods = methods;
     }
     if (obj.typ === null) {
       obj.typ = this;
     }
   }
 
-  public Obj(): TypeName { return this.obj; }
-  public Origin(): Named { return this; }
-  public TypeParams(): TypeParamList | null { return this.tparams; }
-  public TypeArgs(): TypeList | null { return null; }
-  public NumMethods(): number { return this.methods_.length; }
-  public Method(i: number): Func { return this.methods_[i]!; }
-  public AddMethod(m: Func): void { this.methods_.push(m); }
-  public Underlying(): Type { return this.underlying ?? this; }
+  public get methods_(): Func[] { return this.methods; }
+  public set methods_(x: Func[]) { this.methods = x; }
+
+  // unpack populates the type parameters, methods, and RHS of n.
+  public unpack(): Named {
+    if (this.stateHas(lazyLoaded | unpacked)) { // avoid locking below
+      return this;
+    }
+
+    // only atomic for consistency; we are holding the mutex
+    if (this.stateHas(lazyLoaded | unpacked)) {
+      return this;
+    }
+
+    // underlying comes after unpacking, do not set it
+    const finish = () => { assert(!this.stateHas(hasUnder)); };
+
+    if (this.inst !== null) {
+      assert(this.fromRHS === null); // instantiated types are not declared types
+      assert(this.loader === null); // cannot import an instantiation
+
+      const orig = this.inst.orig;
+      orig.unpack();
+
+      this.fromRHS = this.expandRHS();
+      this.tparams = orig.tparams;
+
+      if (orig.methods.length === 0) {
+        this.setState(lazyLoaded | unpacked | hasMethods); // nothing further to do
+        this.inst.ctxt = null;
+      } else {
+        this.setState(lazyLoaded | unpacked);
+      }
+      finish();
+      return this;
+    }
+
+    // TODO(mdempsky): Since we're passing n to the loader anyway
+    // (necessary because types2 expects the receiver type for methods
+    // on defined interface types to be the Named rather than the
+    // underlying Interface), maybe it should just handle calling
+    // SetTypeParams, SetUnderlying, and AddMethod instead?  Those
+    // methods would need to support reentrant calls though. It would
+    // also make the API more future-proof towards further extensions.
+    if (this.loader !== null) {
+      assert(this.fromRHS === null); // not loaded yet
+      assert(this.inst === null); // cannot import an instantiation
+
+      const [tparams, underlying, methods, delayed] = this.loader(this);
+      this.loader = null;
+
+      this.tparams = bindTParams(tparams ?? []);
+      this.fromRHS = underlying; // for cycle detection
+      this.methods = methods ?? [];
+
+      this.setState(lazyLoaded); // avoid deadlock calling delayed functions
+      for (const f of delayed ?? []) {
+        f();
+      }
+    }
+
+    this.setState(lazyLoaded | unpacked | hasMethods);
+    finish();
+    return this;
+  }
+
+  // stateHas atomically determines whether the current state includes any active bit in sm.
+  public stateHas(m: stateMask): boolean {
+    return (this.state_ & m) !== 0;
+  }
+
+  // setState atomically sets the current state to include each active bit in sm.
+  // Must only be called while holding n.mu.
+  public setState(m: stateMask): void {
+    this.state_ |= m;
+    // verify state transitions
+    if (debug) {
+      const mm = this.state_;
+      const u = (mm & unpacked) !== 0;
+      // unpacked => lazyLoaded
+      if (u) {
+        assert((mm & lazyLoaded) !== 0);
+      }
+      // hasMethods => unpacked
+      if ((mm & hasMethods) !== 0) {
+        assert(u);
+      }
+      // hasUnder => unpacked
+      if ((mm & hasUnder) !== 0) {
+        assert(u);
+      }
+      // hasVarSize => unpacked
+      if ((mm & hasVarSize) !== 0) {
+        assert(u);
+      }
+    }
+  }
+
+  public cleanup(): void {
+    // Instances can have a nil underlying at the end of type checking — they
+    // will lazily expand it as needed. All other types must have one.
+    if (this.inst === null) {
+      this.Underlying();
+    }
+    this.check = null;
+  }
+
+  // Obj returns the type name for the declaration defining the named type t. For
+  // instantiated types, this is same as the type name of the origin type.
+  public Obj(): TypeName {
+    if (this.inst === null) {
+      return this.obj;
+    }
+    return this.inst.orig.obj;
+  }
+
+  // Origin returns the generic type from which the named type t is
+  // instantiated. If t is not an instantiated type, the result is t.
+  public Origin(): Named {
+    if (this.inst === null) {
+      return this;
+    }
+    return this.inst.orig;
+  }
+
+  // TypeParams returns the type parameters of the named type t, or nil.
+  // The result is non-nil for an (originally) generic type even if it is instantiated.
+  public TypeParams(): TypeParamList | null { return this.unpack().tparams; }
+
+  // SetTypeParams sets the type parameters of the named type t.
+  // t must not have type arguments.
+  public SetTypeParams(tparams: TypeParam[]): void {
+    assert(this.inst === null);
+    this.unpack().tparams = bindTParams(tparams);
+  }
+
+  // TypeArgs returns the type arguments used to instantiate the named type t.
+  public TypeArgs(): TypeList | null {
+    if (this.inst === null) {
+      return null;
+    }
+    return this.inst.targs;
+  }
+
+  // NumMethods returns the number of explicit methods defined for t.
+  public NumMethods(): number {
+    return this.Origin().unpack().methods.length;
+  }
+
+  // Method returns the i'th method of named type t for 0 <= i < t.NumMethods().
+  public Method(i: number): Func {
+    this.unpack();
+
+    if (this.stateHas(hasMethods)) {
+      return this.methods[i]!;
+    }
+
+    assert(this.inst !== null); // only instances should have unexpanded methods
+    const orig = this.inst.orig;
+
+    if (this.methods.length !== orig.methods.length) {
+      assert(this.methods.length === 0);
+      this.methods = new Array<Func>(orig.methods.length);
+    }
+
+    if (this.methods[i] === undefined || this.methods[i] === null) {
+      assert(this.inst.ctxt !== null); // we should still have a context remaining from the resolution phase
+      this.methods[i] = this.expandMethod(i);
+      this.inst.expandedMethods++;
+
+      // Check if we've created all methods at this point. If we have, mark the
+      // type as having all of its methods.
+      if (this.inst.expandedMethods === orig.methods.length) {
+        this.setState(hasMethods);
+        this.inst.ctxt = null; // no need for a context anymore
+      }
+    }
+
+    return this.methods[i]!;
+  }
+
+  // expandMethod substitutes type arguments in the i'th method for an
+  // instantiated receiver. A returned Func's Signature never has
+  // receiver type parameters.
+  public expandMethod(i: number): Func {
+    assert(this.inst !== null);
+    // t.orig.methods is not lazy. orig is the declared function on t, which
+    // must have receiver type parameters (since t is generic).
+    const orig = this.inst.orig.Method(i);
+    assert(orig !== null);
+
+    const check = this.check;
+    // Ensure that the original method is type-checked.
+    if (check !== null) {
+      check.objDecl(orig);
+    }
+
+    const oldSig = orig.typ as Signature;
+    const rtpars = oldSig.rparams?.list() ?? [];
+    const rtargs = this.inst.targs?.list() ?? [];
+
+    // We can only substitute if we have a correspondence between type arguments
+    // and type parameters. This check is necessary in the presence of invalid
+    // code.
+    let newSig = oldSig;
+    if (rtpars.length === rtargs.length) {
+      const smap = makeSubstMap(rtpars, rtargs);
+      let ctxt: Context | null = null;
+      if (check !== null) {
+        ctxt = check.context();
+      }
+      newSig = substType(check, orig.pos, oldSig, smap, this, ctxt) as Signature;
+    }
+
+    if (newSig === oldSig) {
+      // No substitution occurred, but we still need to create a new signature to
+      // hold the instantiated receiver.
+      newSig = Object.assign(Object.create(Object.getPrototypeOf(oldSig)), oldSig) as Signature;
+    }
+
+    let rtyp: Type;
+    if (orig.hasPtrRecv()) {
+      rtyp = NewPointer(this);
+    } else {
+      rtyp = this;
+    }
+
+    newSig.recv = cloneVar(oldSig.recv!, rtyp);
+    newSig.rparams = null;
+
+    return cloneFunc(orig, newSig);
+  }
+
+  // SetUnderlying sets the underlying type and marks t as complete.
+  // t must not have type arguments.
+  public SetUnderlying(u: Type): void {
+    assert(this.inst === null);
+    if (u === null) {
+      throw new Error("underlying type must not be nil");
+    }
+    if (asNamed(u) !== null) {
+      throw new Error("underlying type must not be *Named");
+    }
+    // be careful to uphold the state invariants
+    this.fromRHS = u;
+    this.allowNilRHS = false;
+    this.setState(lazyLoaded | unpacked | hasMethods); // TODO(markfreeman): Why hasMethods?
+
+    this.underlying = u;
+    this.setState(hasUnder);
+  }
+
+  // AddMethod adds method m unless it is already in the method list.
+  // The method must be in the same package as t, and t must not have
+  // type arguments.
+  public AddMethod(m: Func): void {
+    assert(samePkgLocal(this.obj.pkg, m.pkg));
+    assert(this.inst === null);
+    this.unpack();
+    if (this.methodIndex(m.name, false) < 0) {
+      this.methods.push(m);
+    }
+  }
+
+  // methodIndex returns the index of the method with the given name.
+  // If foldCase is set, capitalization in the name is ignored.
+  // The result is negative if no such method exists.
+  public methodIndex(name: string, foldCase: boolean): number {
+    if (name === "_") {
+      return -1;
+    }
+    if (foldCase) {
+      for (let i = 0; i < this.methods.length; i++) {
+        const m = this.methods[i]!;
+        if (m.name.toLocaleLowerCase() === name.toLocaleLowerCase()) {
+          return i;
+        }
+      }
+    } else {
+      for (let i = 0; i < this.methods.length; i++) {
+        const m = this.methods[i]!;
+        if (m.name === name) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+
+  // rhs returns [Named.fromRHS].
+  public rhs(): Type | null {
+    if (debug) {
+      assert(this.stateHas(lazyLoaded | unpacked));
+    }
+    return this.fromRHS;
+  }
+
+  // Underlying returns the [underlying type] of the named type t, resolving all
+  // forwarding declarations. Underlying types are never Named, TypeParam, or
+  // Alias types.
+  public Underlying(): Type {
+    this.unpack();
+
+    // The gccimporter depends on writing a nil underlying via NewNamed and
+    // immediately reading it back. Rather than putting that in Named.under
+    // and complicating things there, we just check for that special case here.
+    if (this.rhs() === null) {
+      assert(this.allowNilRHS);
+      return null as unknown as Type;
+    }
+
+    if (!this.stateHas(hasUnder)) { // minor performance optimization
+      this.resolveUnderlying();
+    }
+
+    return this.underlying!;
+  }
+
   public String(): string { return TypeString(this, null); }
+
+  // resolveUnderlying computes the underlying type of n. If n already has an
+  // underlying type, nothing happens.
+  public resolveUnderlying(): void {
+    assert(this.stateHas(lazyLoaded | unpacked));
+
+    const seen = new Map<Named, boolean>(); // for debugging only
+
+    const path: Named[] = [];
+    let u: Type | null = null;
+    let rhs: Type = this;
+    while (u === null) {
+      if (rhs instanceof Alias) {
+        rhs = unalias(rhs)!;
+      } else if (rhs instanceof Named) {
+        if (debug) {
+          assert(!seen.get(rhs));
+          seen.set(rhs, true);
+        }
+
+        // don't recalculate the underlying
+        if (rhs.stateHas(hasUnder)) {
+          u = rhs.underlying;
+          break;
+        }
+
+        if (debug) {
+          seen.set(rhs, true);
+        }
+        path.push(rhs);
+
+        rhs.unpack();
+        rhs = rhs.rhs()!;
+        assert(rhs !== null);
+      } else {
+        u = rhs; // any type literal or predeclared type works
+      }
+    }
+
+    for (const t of path) {
+      // Careful, t.underlying has lock-free readers. Since we might be racing
+      // another call to resolveUnderlying, we have to avoid overwriting
+      // t.underlying. Otherwise, the race detector will be tripped.
+      if (!t.stateHas(hasUnder)) {
+        t.underlying = u;
+        t.setState(hasUnder);
+      }
+    }
+  }
+
+  public lookupMethod(pkg: import("./package.js").Package | null, name: string, foldCase: boolean): [number, Func | null] {
+    this.unpack();
+    if (samePkgLocal(this.obj.pkg, pkg) || isExportedLocal(name) || foldCase) {
+      // If n is an instance, we may not have yet instantiated all of its methods.
+      // Look up the method index in orig, and only instantiate method at the
+      // matching index (if any).
+      const i = this.Origin().methodIndex(name, foldCase);
+      if (i >= 0) {
+        // For instances, m.Method(i) will be different from the orig method.
+        return [i, this.Method(i)];
+      }
+    }
+    return [-1, null];
+  }
+
+  // expandRHS crafts a synthetic RHS for an instantiated type using the RHS of
+  // its origin type (which must be a generic type).
+  public expandRHS(): Type {
+    const check = this.check;
+    if (check !== null && check.conf._Trace) {
+      check.trace(this.obj.pos, "-- Named.expandRHS %s", this);
+      check.indent++;
+      try {
+        return this.expandRHSBody();
+      } finally {
+        check.indent--;
+        check.trace(this.obj.pos, "=> %s (rhs = %s)", this, this.fromRHS);
+      }
+    }
+    return this.expandRHSBody();
+  }
+
+  private expandRHSBody(): Type {
+    const check = this.check;
+    assert(!this.stateHas(unpacked));
+    assert(this.inst !== null && this.inst.orig.stateHas(lazyLoaded | unpacked));
+
+    if (this.inst.ctxt === null) {
+      this.inst.ctxt = NewContext();
+    }
+
+    let ctxt = this.inst.ctxt;
+    const orig = this.inst.orig;
+
+    const targs = this.inst.targs;
+    const tpars = orig.tparams;
+
+    if ((targs?.Len() ?? 0) !== (tpars?.Len() ?? 0)) {
+      return Typ[BasicKind.Invalid]!;
+    }
+
+    const h = ctxt.instanceHash(orig, targs!.list());
+    const u = ctxt.update(h, orig, targs!.list(), this); // block fixed point infinite instantiation
+    assert(this === u);
+
+    const m = makeSubstMap(tpars!.list(), targs!.list());
+    if (check !== null) {
+      ctxt = check.context();
+    }
+
+    let rhs = substType(check, this.obj.pos, orig.rhs(), m, this, ctxt)!;
+
+    // TODO(markfreeman): Can we handle this in substitution?
+    // If the RHS is an interface, we must set the receiver of interface methods
+    // to the named type.
+    if (rhs instanceof Interface) {
+      let iface = rhs;
+      const [methods, copied] = replaceRecvType(iface.methods, orig, this);
+      if (copied) {
+        // If the RHS doesn't use type parameters, it may not have been
+        // substituted; we need to craft a new interface first.
+        if (iface === orig.rhs()) {
+          assert(iface.complete); // otherwise we are copying incomplete data
+
+          const crafted = check?.newInterface() ?? new Interface(null);
+          crafted.complete = true;
+          crafted.implicit = false;
+          crafted.embeddeds = iface.embeddeds;
+
+          iface = crafted;
+        }
+        iface.methods = methods;
+        iface.tset = null; // recompute type set with new methods
+
+        // go.dev/issue/61561: We have to complete the interface even without a checker.
+        if (check === null) {
+          iface.typeSet();
+        }
+
+        return iface;
+      }
+    }
+
+    return rhs;
+  }
 }
 
+// instance holds information that is only necessary for instantiated named
+// types.
+export class instance {
+  public constructor(
+    public orig: Named, // original, uninstantiated type
+    public targs: TypeList | null, // type arguments
+    public expandedMethods = 0, // number of expanded methods; expandedMethods <= len(orig.methods)
+    public ctxt: Context | null = null // local Context; set to nil after full expansion
+  ) {}
+}
+
+// stateMask represents each state in the lifecycle of a named type.
+export type stateMask = number;
+
+// initially, type parameters, RHS, underlying, and methods might be unavailable
+export const lazyLoaded: stateMask = 1 << 0; // methods are available, but constraints might be unexpanded (for generic types)
+export const unpacked: stateMask = 1 << 1; // methods might be unexpanded (for instances)
+export const hasMethods: stateMask = 1 << 2; // methods are all expanded (for instances)
+export const hasUnder: stateMask = 1 << 3; // underlying type is available
+export const hasVarSize: stateMask = 1 << 4; // varSize is available
+
+// NewNamed returns a new named type for the given type name, underlying type, and associated methods.
+// If the given type name obj doesn't have a type yet, its type is set to the returned named type.
+// The underlying type must not be a *Named.
 export function NewNamed(obj: TypeName, underlying: Type | null, methods: Func[] | null): Named {
-  return new Named(null, obj, underlying, methods);
+  if (asNamed(underlying) !== null) {
+    throw new Error("underlying type must not be *Named");
+  }
+  const n = newNamed(null, obj, underlying, methods);
+  if (underlying === null) {
+    n.allowNilRHS = true;
+  } else {
+    n.SetUnderlying(underlying);
+  }
+  return n;
+}
+
+declare module "./check.js" {
+  interface Checker {
+    newNamed(obj: TypeName, fromRHS: Type | null, methods: Func[] | null): Named;
+    newNamedInstance(pos: Pos, orig: Named, targs: Type[], expanding: Named | null): Named;
+    context(): Context;
+  }
+}
+
+Checker.prototype.newNamed = function newNamedMethod(obj: TypeName, fromRHS: Type | null, methods: Func[] | null): Named {
+  return newNamed(this, obj, fromRHS, methods);
+};
+
+// newNamed is like NewNamed but with a *Checker receiver.
+export function newNamed(check: Checker | null, obj: TypeName, fromRHS: Type | null, methods: Func[] | null): Named {
+  const typ = new Named(check, obj, fromRHS, methods);
+  if (obj.typ === null) {
+    obj.typ = typ;
+  }
+  // Ensure that typ is always sanity-checked.
+  if (check !== null) {
+    check.needsCleanup(typ);
+  }
+  return typ;
+}
+
+Checker.prototype.newNamedInstance = function newNamedInstanceMethod(pos: Pos, orig: Named, targs: Type[], expanding: Named | null): Named {
+  return newNamedInstance(this, pos, orig, targs, expanding);
+};
+
+// newNamedInstance creates a new named instance for the given origin and type
+// arguments, recording pos as the position of its synthetic object (for error
+// reporting).
+export function newNamedInstance(check: Checker | null, pos: Pos, orig: Named, targs: Type[], expanding: Named | null): Named {
+  assert(targs.length > 0);
+
+  const obj = NewTypeName(pos, orig.obj.pkg, orig.obj.name, null);
+  const inst = new instance(orig, newTypeList(targs));
+
+  // Only pass the expanding context to the new instance if their packages
+  // match. Since type reference cycles are only possible within a single
+  // package, this is sufficient for the purposes of short-circuiting cycles.
+  // Avoiding passing the context in other cases prevents unnecessary coupling
+  // of types across packages.
+  if (expanding !== null && expanding.Obj().pkg === obj.pkg) {
+    inst.ctxt = expanding.inst?.ctxt ?? null;
+  }
+  const typ = new Named(check, obj, null, null);
+  typ.inst = inst;
+  obj.typ = typ;
+  // Ensure that typ is always sanity-checked.
+  if (check !== null) {
+    check.needsCleanup(typ);
+  }
+  return typ;
+}
+
+// context returns the type-checker context.
+Checker.prototype.context = function context(): Context {
+  if (this.ctxt === null) {
+    this.ctxt = NewContext();
+  }
+  return this.ctxt;
+};
+
+// safeUnderlying returns the underlying type of typ without expanding
+// instances, to avoid infinite recursion.
+//
+// TODO(rfindley): eliminate this function or give it a better name.
+export function safeUnderlying(typ: Type): Type | null {
+  const t = asNamed(typ);
+  if (t !== null) {
+    return t.underlying;
+  }
+  return typ.Underlying();
+}
+
+function samePkgLocal(a: import("./package.js").Package | null, b: import("./package.js").Package | null): boolean {
+  if (a === null || b === null) {
+    return a === b;
+  }
+  return a.path === b.path;
+}
+
+function isExportedLocal(name: string): boolean {
+  const ch = Array.from(name)[0] ?? "";
+  return ch.toLocaleUpperCase() === ch && ch.toLocaleLowerCase() !== ch;
 }

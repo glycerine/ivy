@@ -157,7 +157,7 @@ export function hasEmptyTypeset(t: Type): boolean {
   return false;
 }
 
-export function safeUnderlying(t: Type): Type {
+function safeUnderlying(t: Type): Type {
   return t.Underlying();
 }
 

@@ -427,7 +427,7 @@ export function computeUnionTypeSet(check: Checker | null, unionSets: Map<Union,
 
 // methodIndex returns the index of and method with matching package and name, or (-1, nil).
 // See Object.sameId for the meaning of foldCase.
-export function methodIndex(methods: Func[], pkg: Package | null, name: string, foldCase: boolean): [number, Func | null] {
+function methodIndex(methods: Func[], pkg: Package | null, name: string, foldCase: boolean): [number, Func | null] {
   if (name !== "_") {
     for (let i = 0; i < methods.length; i++) {
       const m = methods[i]!;

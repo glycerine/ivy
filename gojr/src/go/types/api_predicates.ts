@@ -9,27 +9,40 @@
 
 import type { Type } from "./type.js";
 import { Interface } from "./interface.js";
-import { isValid, Identical } from "./predicates.js";
+import { comparer, isValid, Identical } from "./predicates.js";
+import { operand, value } from "./operand.js";
+import { newAssertableTo } from "./lookup.js";
+import { implements_ } from "./instantiate.js";
 
 // AssertableTo reports whether a value of type V can be asserted to have type T.
-export function AssertableTo(_V: Interface, T: Type): boolean {
+export function AssertableTo(V: Interface, T: Type): boolean {
   // Checker.newAssertableTo suppresses errors for invalid types, so we need special
   // handling here.
   if (!isValid(T.Underlying())) {
     return false;
   }
-  return true;
+  return newAssertableTo(null, V, T, null);
 }
 
 // AssignableTo reports whether a value of type V is assignable to a variable
 // of type T.
 export function AssignableTo(V: Type, T: Type): boolean {
+  const x = new operand(value, null, V);
+  const fn = x as unknown as { assignableTo?: (check: unknown, T: Type, cause: unknown) => [boolean, unknown] };
+  if (typeof fn.assignableTo === "function") {
+    return fn.assignableTo(null, T, null)[0];
+  }
   return Identical(V, T);
 }
 
 // ConvertibleTo reports whether a value of type V is convertible to a value of
 // type T.
 export function ConvertibleTo(V: Type, T: Type): boolean {
+  const x = new operand(value, null, V);
+  const fn = x as unknown as { convertibleTo?: (check: unknown, T: Type, cause: unknown) => boolean };
+  if (typeof fn.convertibleTo === "function") {
+    return fn.convertibleTo(null, T, null);
+  }
   return Identical(V, T);
 }
 
@@ -44,16 +57,18 @@ export function Implements(V: Type, T: Interface): boolean {
   if (!isValid(V.Underlying())) {
     return false;
   }
-  return false;
+  return implements_(null, V, T, false, null);
 }
 
 // Satisfies reports whether type V satisfies the constraint T.
 export function Satisfies(V: Type, T: Interface): boolean {
-  return Implements(V, T);
+  return implements_(null, V, T, true, null);
 }
 
 // IdenticalIgnoreTags reports whether x and y are identical types if tags are ignored.
 // Receivers of [Signature] types are ignored.
 export function IdenticalIgnoreTags(x: Type, y: Type): boolean {
-  return Identical(x, y);
+  const c = new comparer();
+  c.ignoreTags = true;
+  return c.identical(x, y, null);
 }
