@@ -13,12 +13,38 @@ export class AsyncGoPanic extends Error {
         this.name = "AsyncGoPanic";
     }
 }
+class AsyncGoCancellationScope {
+    callbacks = new Set();
+    cancelled = false;
+    cancellationError;
+    register(callback) {
+        if (this.cancelled) {
+            callback(this.cancellationError);
+            return () => undefined;
+        }
+        this.callbacks.add(callback);
+        return () => {
+            this.callbacks.delete(callback);
+        };
+    }
+    cancel(error) {
+        if (this.cancelled)
+            return;
+        this.cancelled = true;
+        this.cancellationError = error;
+        const callbacks = [...this.callbacks];
+        this.callbacks.clear();
+        for (const callback of callbacks)
+            callback(error);
+    }
+}
 export class AsyncGoScheduler {
     prng;
     liveGoroutines = 0;
     blockedGoroutines = 0;
     errors = [];
     signalWaiters = [];
+    currentCancellationScope;
     constructor(options = {}) {
         this.prng = new DeterministicPrng(options.randomSeed);
     }
@@ -49,16 +75,65 @@ export class AsyncGoScheduler {
             await this.waitForSignal();
         }
     }
-    blockOn(promise) {
+    async runRoot(fn) {
+        let done = false;
+        let value;
+        let failure;
+        const previousCancellationScope = this.currentCancellationScope;
+        const cancellationScope = new AsyncGoCancellationScope();
+        this.currentCancellationScope = cancellationScope;
+        try {
+            this.liveGoroutines += 1;
+            queueMicrotask(() => {
+                Promise.resolve()
+                    .then(fn)
+                    .then((result) => {
+                    value = result;
+                }, (error) => {
+                    failure = error;
+                })
+                    .finally(() => {
+                    done = true;
+                    this.liveGoroutines -= 1;
+                    this.signal();
+                });
+            });
+            this.signal();
+            while (!done) {
+                await Promise.resolve();
+                this.throwFirstError();
+                if (this.blockedGoroutines >= this.liveGoroutines) {
+                    cancellationScope.cancel(new AsyncGoDeadlockError("all goroutines are asleep - deadlock"));
+                }
+                await this.waitForSignal();
+            }
+            this.throwFirstError();
+            if (failure !== undefined)
+                throw failure;
+            return value;
+        }
+        finally {
+            this.currentCancellationScope = previousCancellationScope;
+        }
+    }
+    blockOn(promise, cancel) {
         this.blockedGoroutines += 1;
         this.signal();
+        const unregister = cancel && this.currentCancellationScope
+            ? this.currentCancellationScope.register(cancel)
+            : undefined;
         return promise.finally(() => {
+            unregister?.();
             this.blockedGoroutines -= 1;
             this.signal();
         });
     }
     blockForever() {
-        return this.blockOn(new Promise(() => undefined));
+        let cancel;
+        const pending = new Promise((_resolve, reject) => {
+            cancel = reject;
+        });
+        return this.blockOn(pending, (error) => cancel?.(error));
     }
     randomIndex(length) {
         return this.prng.nextIndex(length);
@@ -99,21 +174,35 @@ export class AsyncGoChannel {
     send(value) {
         if (this.trySend(value))
             return Promise.resolve();
+        let waiter;
         const pending = new Promise((resolve, reject) => {
-            this.sendWaiters.push({ value, resolve, reject });
+            waiter = { value, resolve, reject };
+            this.sendWaiters.push(waiter);
             this.notifyChange();
         });
-        return this.scheduler.blockOn(pending);
+        return this.scheduler.blockOn(pending, (error) => {
+            if (waiter && removeWaiter(this.sendWaiters, waiter)) {
+                waiter.reject(error);
+                this.notifyChange();
+            }
+        });
     }
     receive() {
         const ready = this.tryReceive();
         if (ready)
             return Promise.resolve(ready);
+        let waiter;
         const pending = new Promise((resolve, reject) => {
-            this.receiveWaiters.push({ resolve, reject });
+            waiter = { resolve, reject };
+            this.receiveWaiters.push(waiter);
             this.notifyChange();
         });
-        return this.scheduler.blockOn(pending);
+        return this.scheduler.blockOn(pending, (error) => {
+            if (waiter && removeWaiter(this.receiveWaiters, waiter)) {
+                waiter.reject(error);
+                this.notifyChange();
+            }
+        });
     }
     close() {
         if (this.closed)
@@ -250,19 +339,41 @@ export async function asyncSelect(scheduler, cases) {
             return { index: defaultIndex, op: "default" };
         if (watchedChannels.size === 0)
             return scheduler.blockForever();
-        await scheduler.blockOn(waitForAnyChannelChange(watchedChannels));
+        const wait = waitForAnyChannelChange(watchedChannels);
+        await scheduler.blockOn(wait.promise, wait.cancel);
     }
 }
 function waitForAnyChannelChange(channels) {
-    return new Promise((resolve) => {
-        const unsubscribers = [];
-        const done = () => {
-            for (const unsubscribe of unsubscribers.splice(0))
-                unsubscribe();
-            resolve();
-        };
-        for (const channel of channels) {
-            unsubscribers.push(channel.onChange(done));
-        }
+    const unsubscribers = [];
+    let settle;
+    let rejectWait;
+    const cleanup = () => {
+        for (const unsubscribe of unsubscribers.splice(0))
+            unsubscribe();
+    };
+    const promise = new Promise((resolve, reject) => {
+        settle = resolve;
+        rejectWait = reject;
     });
+    const done = () => {
+        cleanup();
+        settle?.();
+    };
+    for (const channel of channels) {
+        unsubscribers.push(channel.onChange(done));
+    }
+    return {
+        promise,
+        cancel(error) {
+            cleanup();
+            rejectWait?.(error);
+        }
+    };
+}
+function removeWaiter(items, item) {
+    const index = items.indexOf(item);
+    if (index < 0)
+        return false;
+    items.splice(index, 1);
+    return true;
 }

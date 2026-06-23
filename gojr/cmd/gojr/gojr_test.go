@@ -243,6 +243,30 @@ return a, b
 	if result.Value != "1" {
 		t.Fatalf("Eval(gotFromC) value = %q, want 1", result.Value)
 	}
+
+	_ = mustEval(t, rt, "dead := make(chan int)")
+	_ = mustEval(t, rt, "sink := 0")
+	result, err = rt.Eval("sink = <-dead")
+	if err != nil {
+		t.Fatalf("Eval(deadlock) error = %v", err)
+	}
+	if result.OK {
+		t.Fatalf("Eval(deadlock) succeeded; want deadlock diagnostic")
+	}
+	if len(result.Diagnostics) != 1 || !strings.Contains(result.Diagnostics[0], "GOJR_DEADLOCK001") {
+		t.Fatalf("Eval(deadlock) diagnostics = %v, want GOJR_DEADLOCK001", result.Diagnostics)
+	}
+
+	_ = mustEval(t, rt, "go func() { dead <- 3 }()")
+	result = mustEval(t, rt, "sink")
+	if result.Value != "0" {
+		t.Fatalf("Eval(sink) after deadlock value = %q, want 0", result.Value)
+	}
+	_ = mustEval(t, rt, "sink = <-dead")
+	result = mustEval(t, rt, "sink")
+	if result.Value != "3" {
+		t.Fatalf("Eval(sink) after fresh receive value = %q, want 3", result.Value)
+	}
 }
 
 func mustEval(t *testing.T, rt *nodeRuntime, source string) evalResult {

@@ -1,6 +1,6 @@
 import { REPL_FILENAME } from "./diagnostics.js";
 import { emitAsyncJavaScript } from "./asyncEmitter.js";
-import { AsyncGoChannel, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
+import { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
 import { checkFrontSourceFiles } from "./front/checker.js";
 import { newUniverse } from "./front/types.js";
 import { frontSourceToAst } from "./frontToAst.js";
@@ -53,7 +53,7 @@ export class AsyncGoJuniorSession {
             const module = new Function(emitted.source)(this.runtime());
             const value = ast.kind === "function" && ast.functions[0] && ast.body.length === 0
                 ? module.functions?.[ast.functions[0].name]
-                : await module.main();
+                : await this.scheduler.runRoot(() => module.main());
             this.acceptedSources.push(ensureTrailingNewlineSourceFile(sourceFile));
             return {
                 diagnostics: ast.diagnostics,
@@ -66,7 +66,7 @@ export class AsyncGoJuniorSession {
             return {
                 diagnostics: [
                     ...ast.diagnostics,
-                    runtimeDiagnostic(ast, error instanceof Error ? error.message : String(error))
+                    runtimeDiagnostic(ast, error)
                 ],
                 output: [],
                 ast
@@ -123,15 +123,23 @@ function diagnosticsLookIncomplete(diagnostics) {
             (/expected/i.test(diagnostic.message) || /found EOF/i.test(diagnostic.message));
     });
 }
-function runtimeDiagnostic(ast, message) {
+function runtimeDiagnostic(ast, error) {
     const span = ast.body?.[0]?.span ?? ast.functions?.[0]?.span;
+    const message = error instanceof Error ? error.message : String(error);
     return {
         filename: span?.filename ?? REPL_FILENAME,
-        code: "GOJR_RUNTIME001",
+        code: runtimeDiagnosticCode(error),
         severity: "error",
         message,
         ...(span ? { span } : {})
     };
+}
+function runtimeDiagnosticCode(error) {
+    if (error instanceof AsyncGoPanic)
+        return "GOJR_PANIC001";
+    if (error instanceof AsyncGoDeadlockError)
+        return "GOJR_DEADLOCK001";
+    return "GOJR_RUNTIME001";
 }
 function typeCheckConfig(options) {
     const universe = newUniverse();

@@ -378,7 +378,10 @@ class FrontChecker {
     const channel = this.checkExpr(statement.channel, scope).type.underlying();
     const value = this.checkExpr(statement.value, scope).type;
     if (!(channel instanceof ChanType)) {
-      this.error(`cannot send to non-channel ${channel.typeString()}`, statement.channel.span);
+      const hint = value.underlying() instanceof ChanType
+        ? "; `<-` between expressions is a send, use `x = <-ch` to receive into an existing variable"
+        : "";
+      this.error(`cannot send to non-channel ${channel.typeString()}${hint}`, statement.channel.span);
       return;
     }
     if (channel.direction === "receive") {

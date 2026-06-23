@@ -158,6 +158,7 @@ func Bad(send chan<- int, recv <-chan int, n int) {
   recv <- 1
   _ = <-send
   n <- 2
+  n <- recv
   send <- "bad"
 }
 `);
@@ -166,6 +167,7 @@ func Bad(send chan<- int, recv <-chan int, n int) {
       "cannot send to receive-only channel <-chan int",
       "cannot receive from send-only channel chan<- int",
       "cannot send to non-channel int",
+      "cannot send to non-channel int; `<-` between expressions is a send, use `x = <-ch` to receive into an existing variable",
       "cannot send untyped string as int"
     ]);
   });

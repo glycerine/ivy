@@ -21,12 +21,39 @@ export class AsyncGoPanic extends Error {
   }
 }
 
+class AsyncGoCancellationScope {
+  private readonly callbacks = new Set<(error: unknown) => void>();
+  private cancelled = false;
+  private cancellationError: unknown;
+
+  public register(callback: (error: unknown) => void): () => void {
+    if (this.cancelled) {
+      callback(this.cancellationError);
+      return () => undefined;
+    }
+    this.callbacks.add(callback);
+    return () => {
+      this.callbacks.delete(callback);
+    };
+  }
+
+  public cancel(error: unknown): void {
+    if (this.cancelled) return;
+    this.cancelled = true;
+    this.cancellationError = error;
+    const callbacks = [...this.callbacks];
+    this.callbacks.clear();
+    for (const callback of callbacks) callback(error);
+  }
+}
+
 export class AsyncGoScheduler {
   private readonly prng: DeterministicPrng;
   private liveGoroutines = 0;
   private blockedGoroutines = 0;
   private readonly errors: unknown[] = [];
   private readonly signalWaiters: Array<() => void> = [];
+  private currentCancellationScope: AsyncGoCancellationScope | undefined;
 
   public constructor(options: AsyncGoSchedulerOptions = {}) {
     this.prng = new DeterministicPrng(options.randomSeed);
@@ -60,17 +87,68 @@ export class AsyncGoScheduler {
     }
   }
 
-  public blockOn<T>(promise: Promise<T>): Promise<T> {
+  public async runRoot<T>(fn: () => Promise<T> | T): Promise<T> {
+    let done = false;
+    let value: T | undefined;
+    let failure: unknown;
+    const previousCancellationScope = this.currentCancellationScope;
+    const cancellationScope = new AsyncGoCancellationScope();
+    this.currentCancellationScope = cancellationScope;
+
+    try {
+      this.liveGoroutines += 1;
+      queueMicrotask(() => {
+        Promise.resolve()
+          .then(fn)
+          .then((result) => {
+            value = result;
+          }, (error: unknown) => {
+            failure = error;
+          })
+          .finally(() => {
+            done = true;
+            this.liveGoroutines -= 1;
+            this.signal();
+          });
+      });
+      this.signal();
+
+      while (!done) {
+        await Promise.resolve();
+        this.throwFirstError();
+        if (this.blockedGoroutines >= this.liveGoroutines) {
+          cancellationScope.cancel(new AsyncGoDeadlockError("all goroutines are asleep - deadlock"));
+        }
+        await this.waitForSignal();
+      }
+
+      this.throwFirstError();
+      if (failure !== undefined) throw failure;
+      return value as T;
+    } finally {
+      this.currentCancellationScope = previousCancellationScope;
+    }
+  }
+
+  public blockOn<T>(promise: Promise<T>, cancel?: (error: unknown) => void): Promise<T> {
     this.blockedGoroutines += 1;
     this.signal();
+    const unregister = cancel && this.currentCancellationScope
+      ? this.currentCancellationScope.register(cancel)
+      : undefined;
     return promise.finally(() => {
+      unregister?.();
       this.blockedGoroutines -= 1;
       this.signal();
     });
   }
 
   public blockForever<T>(): Promise<T> {
-    return this.blockOn(new Promise<T>(() => undefined));
+    let cancel: ((error: unknown) => void) | undefined;
+    const pending = new Promise<T>((_resolve, reject) => {
+      cancel = reject;
+    });
+    return this.blockOn(pending, (error) => cancel?.(error));
   }
 
   public randomIndex(length: number): number {
@@ -124,21 +202,35 @@ export class AsyncGoChannel<T> {
 
   public send(value: T): Promise<void> {
     if (this.trySend(value)) return Promise.resolve();
+    let waiter: SendWaiter<T> | undefined;
     const pending = new Promise<void>((resolve, reject) => {
-      this.sendWaiters.push({ value, resolve, reject });
+      waiter = { value, resolve, reject };
+      this.sendWaiters.push(waiter);
       this.notifyChange();
     });
-    return this.scheduler.blockOn(pending);
+    return this.scheduler.blockOn(pending, (error) => {
+      if (waiter && removeWaiter(this.sendWaiters, waiter)) {
+        waiter.reject(error);
+        this.notifyChange();
+      }
+    });
   }
 
   public receive(): Promise<[T, boolean]> {
     const ready = this.tryReceive();
     if (ready) return Promise.resolve(ready);
+    let waiter: ReceiveWaiter<T> | undefined;
     const pending = new Promise<[T, boolean]>((resolve, reject) => {
-      this.receiveWaiters.push({ resolve, reject });
+      waiter = { resolve, reject };
+      this.receiveWaiters.push(waiter);
       this.notifyChange();
     });
-    return this.scheduler.blockOn(pending);
+    return this.scheduler.blockOn(pending, (error) => {
+      if (waiter && removeWaiter(this.receiveWaiters, waiter)) {
+        waiter.reject(error);
+        this.notifyChange();
+      }
+    });
   }
 
   public close(): void {
@@ -295,19 +387,44 @@ export async function asyncSelect<T>(
     if (defaultIndex !== undefined) return { index: defaultIndex, op: "default" };
     if (watchedChannels.size === 0) return scheduler.blockForever();
 
-    await scheduler.blockOn(waitForAnyChannelChange(watchedChannels));
+    const wait = waitForAnyChannelChange(watchedChannels);
+    await scheduler.blockOn(wait.promise, wait.cancel);
   }
 }
 
-function waitForAnyChannelChange<T>(channels: Iterable<AsyncGoChannel<T>>): Promise<void> {
-  return new Promise((resolve) => {
-    const unsubscribers: Array<() => void> = [];
-    const done = () => {
-      for (const unsubscribe of unsubscribers.splice(0)) unsubscribe();
-      resolve();
-    };
-    for (const channel of channels) {
-      unsubscribers.push(channel.onChange(done));
-    }
+function waitForAnyChannelChange<T>(channels: Iterable<AsyncGoChannel<T>>): {
+  promise: Promise<void>;
+  cancel: (error: unknown) => void;
+} {
+  const unsubscribers: Array<() => void> = [];
+  let settle: (() => void) | undefined;
+  let rejectWait: ((error: unknown) => void) | undefined;
+  const cleanup = () => {
+    for (const unsubscribe of unsubscribers.splice(0)) unsubscribe();
+  };
+  const promise = new Promise<void>((resolve, reject) => {
+    settle = resolve;
+    rejectWait = reject;
   });
+  const done = () => {
+    cleanup();
+    settle?.();
+  };
+  for (const channel of channels) {
+    unsubscribers.push(channel.onChange(done));
+  }
+  return {
+    promise,
+    cancel(error) {
+      cleanup();
+      rejectWait?.(error);
+    }
+  };
+}
+
+function removeWaiter<T>(items: T[], item: T): boolean {
+  const index = items.indexOf(item);
+  if (index < 0) return false;
+  items.splice(index, 1);
+  return true;
 }
