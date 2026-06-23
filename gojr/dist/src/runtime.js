@@ -212,6 +212,9 @@ export class RuntimeMap {
     orderedEntries() {
         return [...this.entries.values()].map((entry) => [entry.key, entry.value]);
     }
+    size() {
+        return this.entries.size;
+    }
 }
 export function evaluateSource(source, options = {}) {
     const parsed = parseGoJunior(source);
@@ -386,6 +389,19 @@ function installBuiltins(context) {
             throw new GoJuniorPanic(err);
         }
         return null;
+    }));
+    context.declareRoot("len", hostCallable("len", (args) => {
+        return BigInt(valueLength(args[0] ?? null));
+    }));
+    context.declareRoot("cap", hostCallable("cap", (args) => {
+        return BigInt(valueCapacity(args[0] ?? null));
+    }));
+    context.declareRoot("append", hostCallable("append", (args) => {
+        const target = args[0] ?? null;
+        if (target !== null && !Array.isArray(target)) {
+            throw new GoJuniorRuntimeError(`${formatValue(target)} is not appendable`);
+        }
+        return [...(target ?? []), ...args.slice(1)];
     }));
 }
 function installSheets(context, options) {
@@ -570,10 +586,10 @@ function executeStatement(statement, context) {
         case "BranchStatement":
             return branchCompletion(statement);
         case "AssignStatement":
-            assignTarget(statement, evaluateExpression(statement.value, context), context);
+            executeAssign(statement, context);
             return { kind: "normal" };
         case "ShortVarStatement":
-            context.declare(statement.name, evaluateExpression(statement.value, context), true);
+            executeShortVar(statement, context);
             return { kind: "normal" };
         case "IncDecStatement":
             executeIncDec(statement, context);
@@ -718,8 +734,34 @@ function branchCompletion(statement) {
         return { kind: "goto", label: statement.label ?? "<missing>" };
     return { kind: "fallthrough" };
 }
-function assignTarget(statement, value, context) {
-    assignExpressionTarget(statement.target, value, context);
+function executeAssign(statement, context) {
+    const values = evaluateAssignmentValues(statement.values, statement.targets.length, context);
+    if (values.length !== statement.targets.length) {
+        throw new GoJuniorRuntimeError(`assignment count mismatch: ${statement.targets.length} targets but ${values.length} values`);
+    }
+    for (const [index, target] of statement.targets.entries()) {
+        assignExpressionTarget(target, values[index] ?? null, context);
+    }
+}
+function executeShortVar(statement, context) {
+    const values = evaluateAssignmentValues(statement.values, statement.names.length, context);
+    if (values.length !== statement.names.length) {
+        throw new GoJuniorRuntimeError(`short declaration count mismatch: ${statement.names.length} names but ${values.length} values`);
+    }
+    for (const [index, name] of statement.names.entries()) {
+        if (name === "_")
+            continue;
+        if (name === "<invalid>")
+            throw new GoJuniorRuntimeError("non-identifier used in short declaration");
+        context.declare(name, values[index] ?? null, true);
+    }
+}
+function evaluateAssignmentValues(expressions, targetCount, context) {
+    const values = expressions.map((expression) => evaluateExpression(expression, context));
+    if (targetCount > 1 && values.length === 1 && Array.isArray(values[0])) {
+        return values[0];
+    }
+    return values;
 }
 function executeIncDec(statement, context) {
     const current = evaluateExpression(statement.target, context);
@@ -730,6 +772,8 @@ function executeIncDec(statement, context) {
 }
 function assignExpressionTarget(target, value, context) {
     if (target.kind === "Identifier") {
+        if (target.name === "_")
+            return;
         context.assign(target.name, value);
         return;
     }
@@ -751,6 +795,8 @@ function evaluateExpression(expression, context) {
             return expression.value;
         case "FunctionLiteralExpression":
             return functionLiteralValue(expression, context);
+        case "ArrayLiteralExpression":
+            return evaluateArrayLiteral(expression, context);
         case "MapLiteralExpression":
             return evaluateMapLiteral(expression, context);
         case "UnaryExpression":
@@ -768,6 +814,25 @@ function evaluateExpression(expression, context) {
         case "SpreadsheetRangeExpression":
             return getSpreadsheetRange(expression, context);
     }
+}
+function evaluateArrayLiteral(expression, context) {
+    const type = parseArrayOrSliceTypeText(expression.type.text);
+    if (!type) {
+        throw new GoJuniorRuntimeError(`${expression.type.text} is not an array or slice literal type`);
+    }
+    const values = expression.elements.map((element) => evaluateExpression(element, context));
+    for (const value of values) {
+        assertAssignableToType(value, type.elementType, "array element");
+    }
+    if (type.length !== undefined && values.length > type.length) {
+        throw new GoJuniorRuntimeError(`array literal has ${values.length} elements but type ${expression.type.text} has length ${type.length}`);
+    }
+    if (type.length !== undefined && !type.inferLength) {
+        while (values.length < type.length) {
+            values.push(defaultValueForTypeText(type.elementType));
+        }
+    }
+    return values;
 }
 function evaluateMapLiteral(expression, context) {
     const map = new RuntimeMap(expression.keyType.text, expression.valueType.text);
@@ -923,10 +988,18 @@ function getSlice(object, start, end) {
     throw new GoJuniorRuntimeError(`${formatValue(object)} is not sliceable`);
 }
 function defaultValueForDeclarationType(type) {
-    const typeText = type?.text ?? "";
+    return defaultValueForTypeText(type?.text ?? "");
+}
+function defaultValueForTypeText(typeText) {
     const mapType = parseMapTypeText(typeText);
     if (mapType)
         return new RuntimeMap(mapType.keyType, mapType.valueType);
+    const arrayType = parseArrayOrSliceTypeText(typeText);
+    if (arrayType) {
+        if (arrayType.length === undefined || arrayType.inferLength)
+            return [];
+        return Array.from({ length: arrayType.length }, () => defaultValueForTypeText(arrayType.elementType));
+    }
     return zeroValueForMapValue(typeText);
 }
 function zeroValueForMapValue(typeText) {
@@ -986,6 +1059,18 @@ function assertAssignableToType(value, typeText, role) {
         return;
     }
 }
+function valueLength(value) {
+    if (typeof value === "string" || Array.isArray(value))
+        return value.length;
+    if (value instanceof RuntimeMap)
+        return value.size();
+    throw new GoJuniorRuntimeError(`${formatValue(value)} has no len`);
+}
+function valueCapacity(value) {
+    if (Array.isArray(value))
+        return value.length;
+    throw new GoJuniorRuntimeError(`${formatValue(value)} has no cap`);
+}
 function throwTypeError(value, type, role) {
     throw new GoJuniorRuntimeError(`${role} ${formatValue(value)} is not assignable to ${type}`);
 }
@@ -1012,6 +1097,27 @@ function parseMapTypeText(typeText) {
         }
     }
     return undefined;
+}
+function parseArrayOrSliceTypeText(typeText) {
+    const type = normalizeTypeText(typeText);
+    if (!type.startsWith("["))
+        return undefined;
+    const close = type.indexOf("]");
+    if (close < 0)
+        return undefined;
+    const lengthText = type.slice(1, close);
+    const elementType = type.slice(close + 1);
+    if (!elementType)
+        return undefined;
+    if (lengthText === "") {
+        return { elementType, inferLength: false };
+    }
+    if (lengthText === "...") {
+        return { elementType, inferLength: true };
+    }
+    if (!/^(0|[1-9][0-9]*)$/.test(lengthText))
+        return undefined;
+    return { elementType, length: Number(lengthText), inferLength: false };
 }
 function normalizeTypeText(typeText) {
     return typeText.replace(/\s+/g, "");

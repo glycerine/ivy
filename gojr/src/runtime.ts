@@ -1,5 +1,6 @@
 import {
   AssignStatement,
+  ArrayLiteralExpression,
   BinaryExpression,
   BlockStatement,
   BranchStatement,
@@ -16,6 +17,7 @@ import {
   MapLiteralExpression,
   ProgramAst,
   SelectorExpression,
+  ShortVarStatement,
   SpreadsheetRangeExpression,
   Statement,
   SwitchStatement,
@@ -331,6 +333,10 @@ export class RuntimeMap {
   public orderedEntries(): Array<[RuntimeValue, RuntimeValue]> {
     return [...this.entries.values()].map((entry) => [entry.key, entry.value]);
   }
+
+  public size(): number {
+    return this.entries.size;
+  }
 }
 
 export function evaluateSource(source: string, options: EvaluationOptions = {}): EvaluationResult {
@@ -523,6 +529,19 @@ function installBuiltins(context: EvaluationContext): void {
       throw new GoJuniorPanic(err);
     }
     return null;
+  }));
+  context.declareRoot("len", hostCallable("len", (args) => {
+    return BigInt(valueLength(args[0] ?? null));
+  }));
+  context.declareRoot("cap", hostCallable("cap", (args) => {
+    return BigInt(valueCapacity(args[0] ?? null));
+  }));
+  context.declareRoot("append", hostCallable("append", (args) => {
+    const target = args[0] ?? null;
+    if (target !== null && !Array.isArray(target)) {
+      throw new GoJuniorRuntimeError(`${formatValue(target)} is not appendable`);
+    }
+    return [...(target ?? []), ...args.slice(1)];
   }));
 }
 
@@ -743,11 +762,11 @@ function executeStatement(statement: Statement, context: EvaluationContext): Com
       return branchCompletion(statement);
 
     case "AssignStatement":
-      assignTarget(statement, evaluateExpression(statement.value, context), context);
+      executeAssign(statement, context);
       return { kind: "normal" };
 
     case "ShortVarStatement":
-      context.declare(statement.name, evaluateExpression(statement.value, context), true);
+      executeShortVar(statement, context);
       return { kind: "normal" };
 
     case "IncDecStatement":
@@ -897,8 +916,34 @@ function branchCompletion(statement: BranchStatement): Completion {
   return { kind: "fallthrough" };
 }
 
-function assignTarget(statement: AssignStatement, value: RuntimeValue, context: EvaluationContext): void {
-  assignExpressionTarget(statement.target, value, context);
+function executeAssign(statement: AssignStatement, context: EvaluationContext): void {
+  const values = evaluateAssignmentValues(statement.values, statement.targets.length, context);
+  if (values.length !== statement.targets.length) {
+    throw new GoJuniorRuntimeError(`assignment count mismatch: ${statement.targets.length} targets but ${values.length} values`);
+  }
+  for (const [index, target] of statement.targets.entries()) {
+    assignExpressionTarget(target, values[index] ?? null, context);
+  }
+}
+
+function executeShortVar(statement: ShortVarStatement, context: EvaluationContext): void {
+  const values = evaluateAssignmentValues(statement.values, statement.names.length, context);
+  if (values.length !== statement.names.length) {
+    throw new GoJuniorRuntimeError(`short declaration count mismatch: ${statement.names.length} names but ${values.length} values`);
+  }
+  for (const [index, name] of statement.names.entries()) {
+    if (name === "_") continue;
+    if (name === "<invalid>") throw new GoJuniorRuntimeError("non-identifier used in short declaration");
+    context.declare(name, values[index] ?? null, true);
+  }
+}
+
+function evaluateAssignmentValues(expressions: Expression[], targetCount: number, context: EvaluationContext): RuntimeValue[] {
+  const values = expressions.map((expression) => evaluateExpression(expression, context));
+  if (targetCount > 1 && values.length === 1 && Array.isArray(values[0])) {
+    return values[0];
+  }
+  return values;
 }
 
 function executeIncDec(statement: IncDecStatement, context: EvaluationContext): void {
@@ -911,6 +956,7 @@ function executeIncDec(statement: IncDecStatement, context: EvaluationContext): 
 
 function assignExpressionTarget(target: Expression, value: RuntimeValue, context: EvaluationContext): void {
   if (target.kind === "Identifier") {
+    if (target.name === "_") return;
     context.assign(target.name, value);
     return;
   }
@@ -935,6 +981,9 @@ function evaluateExpression(expression: Expression, context: EvaluationContext):
 
     case "FunctionLiteralExpression":
       return functionLiteralValue(expression, context);
+
+    case "ArrayLiteralExpression":
+      return evaluateArrayLiteral(expression, context);
 
     case "MapLiteralExpression":
       return evaluateMapLiteral(expression, context);
@@ -964,6 +1013,26 @@ function evaluateExpression(expression: Expression, context: EvaluationContext):
     case "SpreadsheetRangeExpression":
       return getSpreadsheetRange(expression, context);
   }
+}
+
+function evaluateArrayLiteral(expression: ArrayLiteralExpression, context: EvaluationContext): RuntimeValue[] {
+  const type = parseArrayOrSliceTypeText(expression.type.text);
+  if (!type) {
+    throw new GoJuniorRuntimeError(`${expression.type.text} is not an array or slice literal type`);
+  }
+  const values = expression.elements.map((element) => evaluateExpression(element, context));
+  for (const value of values) {
+    assertAssignableToType(value, type.elementType, "array element");
+  }
+  if (type.length !== undefined && values.length > type.length) {
+    throw new GoJuniorRuntimeError(`array literal has ${values.length} elements but type ${expression.type.text} has length ${type.length}`);
+  }
+  if (type.length !== undefined && !type.inferLength) {
+    while (values.length < type.length) {
+      values.push(defaultValueForTypeText(type.elementType));
+    }
+  }
+  return values;
 }
 
 function evaluateMapLiteral(expression: MapLiteralExpression, context: EvaluationContext): RuntimeMap {
@@ -1125,9 +1194,17 @@ function getSlice(object: RuntimeValue, start: RuntimeValue | undefined, end: Ru
 }
 
 function defaultValueForDeclarationType(type: TypeNode | undefined): RuntimeValue {
-  const typeText = type?.text ?? "";
+  return defaultValueForTypeText(type?.text ?? "");
+}
+
+function defaultValueForTypeText(typeText: string): RuntimeValue {
   const mapType = parseMapTypeText(typeText);
   if (mapType) return new RuntimeMap(mapType.keyType, mapType.valueType);
+  const arrayType = parseArrayOrSliceTypeText(typeText);
+  if (arrayType) {
+    if (arrayType.length === undefined || arrayType.inferLength) return [];
+    return Array.from({ length: arrayType.length }, () => defaultValueForTypeText(arrayType.elementType));
+  }
   return zeroValueForMapValue(typeText);
 }
 
@@ -1179,6 +1256,17 @@ function assertAssignableToType(value: RuntimeValue, typeText: string, role: str
   }
 }
 
+function valueLength(value: RuntimeValue): number {
+  if (typeof value === "string" || Array.isArray(value)) return value.length;
+  if (value instanceof RuntimeMap) return value.size();
+  throw new GoJuniorRuntimeError(`${formatValue(value)} has no len`);
+}
+
+function valueCapacity(value: RuntimeValue): number {
+  if (Array.isArray(value)) return value.length;
+  throw new GoJuniorRuntimeError(`${formatValue(value)} has no cap`);
+}
+
 function throwTypeError(value: RuntimeValue, type: string, role: string): never {
   throw new GoJuniorRuntimeError(`${role} ${formatValue(value)} is not assignable to ${type}`);
 }
@@ -1205,6 +1293,26 @@ function parseMapTypeText(typeText: string): { keyType: string; valueType: strin
     }
   }
   return undefined;
+}
+
+function parseArrayOrSliceTypeText(typeText: string): { elementType: string; length?: number; inferLength: boolean } | undefined {
+  const type = normalizeTypeText(typeText);
+  if (!type.startsWith("[")) return undefined;
+
+  const close = type.indexOf("]");
+  if (close < 0) return undefined;
+  const lengthText = type.slice(1, close);
+  const elementType = type.slice(close + 1);
+  if (!elementType) return undefined;
+
+  if (lengthText === "") {
+    return { elementType, inferLength: false };
+  }
+  if (lengthText === "...") {
+    return { elementType, inferLength: true };
+  }
+  if (!/^(0|[1-9][0-9]*)$/.test(lengthText)) return undefined;
+  return { elementType, length: Number(lengthText), inferLength: false };
 }
 
 function normalizeTypeText(typeText: string): string {

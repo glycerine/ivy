@@ -164,15 +164,15 @@ export interface BranchStatement {
 
 export interface AssignStatement {
   kind: "AssignStatement";
-  target: Expression;
-  value: Expression;
+  targets: Expression[];
+  values: Expression[];
   span?: SourceSpan;
 }
 
 export interface ShortVarStatement {
   kind: "ShortVarStatement";
-  name: string;
-  value: Expression;
+  names: string[];
+  values: Expression[];
   span?: SourceSpan;
 }
 
@@ -193,6 +193,7 @@ export type Expression =
   | IdentifierExpression
   | LiteralExpression
   | FunctionLiteralExpression
+  | ArrayLiteralExpression
   | MapLiteralExpression
   | UnaryExpression
   | BinaryExpression
@@ -222,6 +223,13 @@ export interface FunctionLiteralExpression {
   kind: "FunctionLiteralExpression";
   signature: Signature;
   body: BlockStatement;
+  span?: SourceSpan;
+}
+
+export interface ArrayLiteralExpression {
+  kind: "ArrayLiteralExpression";
+  type: TypeNode;
+  elements: Expression[];
   span?: SourceSpan;
 }
 

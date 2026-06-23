@@ -57,6 +57,14 @@ m = map[string]int{"a": 1, "b": 2}
 `);
   });
 
+  test("parses array and slice literals", () => {
+    expectParses(`
+xs := []int{1, 2, 3}
+ys := [3]string{"a", "b"}
+zs := [...]bool{true, false}
+`);
+  });
+
   test("parses grouped parameter names and variadic parameters", () => {
     const grouped = expectParses(`
 func F(a, b, c int) (x, y, z int) {

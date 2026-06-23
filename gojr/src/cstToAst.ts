@@ -1,6 +1,7 @@
 import { CstNode, IToken } from "chevrotain";
 import {
   AssignStatement,
+  ArrayLiteralExpression,
   BinaryExpression,
   BlockStatement,
   BranchStatement,
@@ -374,8 +375,8 @@ function forInitClauseToAst(node: CstNode): ShortVarStatement | AssignStatement 
     return withSpan(
       {
         kind: "ShortVarStatement",
-        name: target.name,
-        value: value ? expressionToAst(value) : missingExpression()
+        names: [target.name],
+        values: [value ? expressionToAst(value) : missingExpression()]
       } satisfies ShortVarStatement,
       node
     );
@@ -384,8 +385,8 @@ function forInitClauseToAst(node: CstNode): ShortVarStatement | AssignStatement 
   return withSpan(
     {
       kind: "AssignStatement",
-      target,
-      value: value ? expressionToAst(value) : missingExpression()
+      targets: [target],
+      values: [value ? expressionToAst(value) : missingExpression()]
     } satisfies AssignStatement,
     node
   );
@@ -441,27 +442,28 @@ function branchToAst(node: CstNode): BranchStatement {
 }
 
 function simpleStmtToAst(node: CstNode): AssignStatement | ShortVarStatement | IncDecStatement | ExpressionStatement {
-  const expressions = childNodes(node, "expression").map(expressionToAst);
-  const target = expressions[0] ?? missingExpression();
-  const value = expressions[1];
+  const lists = childNodes(node, "expressionList").map(expressionListToAst);
+  const targets = lists[0] ?? [missingExpression()];
+  const values = lists[1] ?? [];
+  const target = targets[0] ?? missingExpression();
 
-  if (value && childTokens(node, "Define").length > 0) {
+  if (values.length > 0 && childTokens(node, "Define").length > 0) {
     return withSpan(
       {
         kind: "ShortVarStatement",
-        name: target.kind === "Identifier" ? target.name : "<invalid>",
-        value
+        names: targets.map((item) => item.kind === "Identifier" ? item.name : "<invalid>"),
+        values
       } satisfies ShortVarStatement,
       node
     );
   }
 
-  if (value && childTokens(node, "Assign").length > 0) {
+  if (values.length > 0 && childTokens(node, "Assign").length > 0) {
     return withSpan(
       {
         kind: "AssignStatement",
-        target,
-        value
+        targets,
+        values
       } satisfies AssignStatement,
       node
     );
@@ -746,6 +748,9 @@ function atomToAst(node: CstNode): Expression {
   const functionLiteral = firstChildNode(node, "functionLiteral");
   if (functionLiteral) return functionLiteralToAst(functionLiteral);
 
+  const arrayLiteral = firstChildNode(node, "arrayLiteral");
+  if (arrayLiteral) return arrayLiteralToAst(arrayLiteral);
+
   const mapLiteral = firstChildNode(node, "mapLiteral");
   if (mapLiteral) return mapLiteralToAst(mapLiteral);
 
@@ -768,6 +773,29 @@ function functionLiteralToAst(node: CstNode): FunctionLiteralExpression {
     } satisfies FunctionLiteralExpression,
     node
   );
+}
+
+function arrayLiteralToAst(node: CstNode): ArrayLiteralExpression {
+  return withSpan(
+    {
+      kind: "ArrayLiteralExpression",
+      type: arrayLiteralTypeToAst(node),
+      elements: childNodes(node, "expression").map(expressionToAst)
+    } satisfies ArrayLiteralExpression,
+    node
+  );
+}
+
+function arrayLiteralTypeToAst(node: CstNode): TypeNode {
+  const elementType = firstChildNode(node, "typeExpression");
+  const lengthToken = firstChildToken(node, "IntLiteral");
+  const inferToken = firstChildToken(node, "Ellipsis");
+  const prefix = lengthToken ? `[${lengthToken.image}]` : inferToken ? "[...]" : "[]";
+  const span = spanFromNode(node);
+  return {
+    text: `${prefix}${elementType ? typeToAst(elementType).text : "<missing>"}`,
+    ...(span ? { span } : {})
+  };
 }
 
 function mapLiteralToAst(node: CstNode): MapLiteralExpression {

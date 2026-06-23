@@ -259,14 +259,14 @@ function forInitClauseToAst(node) {
     if (childTokens(node, "Define").length > 0) {
         return withSpan({
             kind: "ShortVarStatement",
-            name: target.name,
-            value: value ? expressionToAst(value) : missingExpression()
+            names: [target.name],
+            values: [value ? expressionToAst(value) : missingExpression()]
         }, node);
     }
     return withSpan({
         kind: "AssignStatement",
-        target,
-        value: value ? expressionToAst(value) : missingExpression()
+        targets: [target],
+        values: [value ? expressionToAst(value) : missingExpression()]
     }, node);
 }
 function forPostClauseToAst(node) {
@@ -306,21 +306,22 @@ function branchToAst(node) {
     }, node);
 }
 function simpleStmtToAst(node) {
-    const expressions = childNodes(node, "expression").map(expressionToAst);
-    const target = expressions[0] ?? missingExpression();
-    const value = expressions[1];
-    if (value && childTokens(node, "Define").length > 0) {
+    const lists = childNodes(node, "expressionList").map(expressionListToAst);
+    const targets = lists[0] ?? [missingExpression()];
+    const values = lists[1] ?? [];
+    const target = targets[0] ?? missingExpression();
+    if (values.length > 0 && childTokens(node, "Define").length > 0) {
         return withSpan({
             kind: "ShortVarStatement",
-            name: target.kind === "Identifier" ? target.name : "<invalid>",
-            value
+            names: targets.map((item) => item.kind === "Identifier" ? item.name : "<invalid>"),
+            values
         }, node);
     }
-    if (value && childTokens(node, "Assign").length > 0) {
+    if (values.length > 0 && childTokens(node, "Assign").length > 0) {
         return withSpan({
             kind: "AssignStatement",
-            target,
-            value
+            targets,
+            values
         }, node);
     }
     const incDecToken = firstChildTokenAny(node, ["PlusPlus", "MinusMinus"]);
@@ -527,6 +528,9 @@ function atomToAst(node) {
     const functionLiteral = firstChildNode(node, "functionLiteral");
     if (functionLiteral)
         return functionLiteralToAst(functionLiteral);
+    const arrayLiteral = firstChildNode(node, "arrayLiteral");
+    if (arrayLiteral)
+        return arrayLiteralToAst(arrayLiteral);
     const mapLiteral = firstChildNode(node, "mapLiteral");
     if (mapLiteral)
         return mapLiteralToAst(mapLiteral);
@@ -545,6 +549,24 @@ function functionLiteralToAst(node) {
         signature: signatureToAst(requiredChildNode(node, "signature")),
         body: blockToAst(requiredChildNode(node, "block"))
     }, node);
+}
+function arrayLiteralToAst(node) {
+    return withSpan({
+        kind: "ArrayLiteralExpression",
+        type: arrayLiteralTypeToAst(node),
+        elements: childNodes(node, "expression").map(expressionToAst)
+    }, node);
+}
+function arrayLiteralTypeToAst(node) {
+    const elementType = firstChildNode(node, "typeExpression");
+    const lengthToken = firstChildToken(node, "IntLiteral");
+    const inferToken = firstChildToken(node, "Ellipsis");
+    const prefix = lengthToken ? `[${lengthToken.image}]` : inferToken ? "[...]" : "[]";
+    const span = spanFromNode(node);
+    return {
+        text: `${prefix}${elementType ? typeToAst(elementType).text : "<missing>"}`,
+        ...(span ? { span } : {})
+    };
 }
 function mapLiteralToAst(node) {
     const types = childNodes(node, "typeExpression");

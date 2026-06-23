@@ -230,6 +230,58 @@ return fmt.Sprintf("%v | %#v", counts, counts)
     expect(result.value).toBe(`map[a:1 b:2] | map[string]int64{string("a"): int64(1), string("b"): int64(2)}`);
   });
 
+  test("evaluates array and slice literals with indexing, slicing, and range", () => {
+    const result = expectRuns(`
+xs := []int{1, 2, 3}
+ys := [4]int{4, 5}
+zs := [...]string{"a", "b", "c"}
+sum := 0
+for _, v := range xs {
+  sum = sum + v
+}
+return xs[1], xs[1:3], ys, len(zs), sum
+`);
+
+    expect(result.values).toEqual([
+      2n,
+      [2n, 3n],
+      [4n, 5n, 0n, 0n],
+      3n,
+      6n
+    ]);
+  });
+
+  test("supports len, cap, append, and default slice/array declarations", () => {
+    const result = expectRuns(`
+var xs []int
+var ys [3]string
+xs = append(xs, 1, 2)
+more := []int{3, 4}
+xs = append(xs, more...)
+return xs, len(xs), cap(xs), len(ys), ys[0]
+`);
+
+    expect(result.values).toEqual([[1n, 2n, 3n, 4n], 4n, 4n, 3n, ""]);
+  });
+
+  test("reports typed array and slice literal element mismatches", () => {
+    const result = evaluateSource(`
+xs := []int{1, "bad"}
+`);
+
+    expect(result.diagnostics).toHaveLength(1);
+    expect(result.diagnostics[0]?.message).toContain("array element bad is not assignable to int");
+  });
+
+  test("supports len on strings and maps", () => {
+    const result = expectRuns(`
+m := map[string]int{"a": 1, "b": 2}
+return len("hiya"), len(m)
+`);
+
+    expect(result.values).toEqual([4n, 2n]);
+  });
+
   test("reports panicOn failures as runtime diagnostics", () => {
     const result = evaluateSource(`
 panicOn("bad")
@@ -330,6 +382,40 @@ func sum(vals ...int) int {
     const spread = session.evaluate("sum(sheet.A1...)");
     expect(spread.diagnostics).toEqual([]);
     expect(spread.value).toBe(15n);
+  });
+
+  test("supports multiple short declarations and assignments", () => {
+    const result = expectRuns(`
+a, b := 1, 2
+a, b = b, a
+return a, b
+`);
+
+    expect(result.values).toEqual([2n, 1n]);
+  });
+
+  test("supports destructuring multiple function returns", () => {
+    const result = expectRuns(`
+func divmod(x, y int) (int, int) {
+  return x / y, x % y
+}
+
+q, r := divmod(17, 5)
+_, onlyR := divmod(19, 5)
+return q, r, onlyR
+`);
+
+    expect(result.values).toEqual([3n, 2n, 4n]);
+  });
+
+  test("supports multi-assignment to index targets after evaluating rhs", () => {
+    const result = expectRuns(`
+xs := []int{1, 2}
+xs[0], xs[1] = xs[1], xs[0]
+return xs
+`);
+
+    expect(result.value).toEqual([2n, 1n]);
   });
 
   test("defines and calls function literals with grouped names in REPL sessions", () => {

@@ -115,6 +115,7 @@ export class GoJuniorParser extends CstParser {
   private unaryExpr!: Rule;
   private primaryExpr!: Rule;
   private atom!: Rule;
+  private arrayLiteral!: Rule;
   private mapLiteral!: Rule;
   private mapElement!: Rule;
   private functionLiteral!: Rule;
@@ -139,17 +140,13 @@ export class GoJuniorParser extends CstParser {
         $.OPTION(() => $.CONSUME(Semicolon));
       });
       $.OPTION2(() => {
-        $.OR([
-          { GATE: () => this.nextTokensStartFunctionDecl(), ALT: () => $.SUBRULE(this.functionDecl) },
-          {
-            ALT: () => {
-              $.MANY1(() => {
-                $.SUBRULE(this.statement);
-                $.OPTION3(() => $.CONSUME2(Semicolon));
-              });
-            }
-          }
-        ]);
+        $.MANY1(() => {
+          $.OR([
+            { GATE: () => this.nextTokensStartFunctionDecl(), ALT: () => $.SUBRULE(this.functionDecl) },
+            { ALT: () => $.SUBRULE(this.statement) }
+          ]);
+          $.OPTION3(() => $.CONSUME2(Semicolon));
+        });
       });
     });
 
@@ -249,7 +246,12 @@ export class GoJuniorParser extends CstParser {
         {
           ALT: () => {
             $.CONSUME(LBracket);
-            $.OPTION(() => $.CONSUME(IntLiteral));
+            $.OPTION(() => {
+              $.OR2([
+                { ALT: () => $.CONSUME(IntLiteral) },
+                { ALT: () => $.CONSUME(Ellipsis) }
+              ]);
+            });
             $.CONSUME(RBracket);
             $.SUBRULE2(this.typeExpression);
           }
@@ -527,7 +529,7 @@ export class GoJuniorParser extends CstParser {
     });
 
     this.simpleStmt = $.RULE("simpleStmt", () => {
-      $.SUBRULE(this.expression);
+      $.SUBRULE(this.expressionList);
       $.OPTION(() => {
         $.OR([
           {
@@ -536,7 +538,7 @@ export class GoJuniorParser extends CstParser {
                 { ALT: () => $.CONSUME(Define) },
                 { ALT: () => $.CONSUME(Assign) }
               ]);
-              $.SUBRULE2(this.expression);
+              $.SUBRULE2(this.expressionList);
             }
           },
           { ALT: () => $.CONSUME(PlusPlus) },
@@ -673,6 +675,7 @@ export class GoJuniorParser extends CstParser {
     this.atom = $.RULE("atom", () => {
       $.OR([
         { ALT: () => $.SUBRULE(this.functionLiteral) },
+        { GATE: () => this.LA(1).tokenType === LBracket, ALT: () => $.SUBRULE(this.arrayLiteral) },
         { ALT: () => $.SUBRULE(this.mapLiteral) },
         { ALT: () => $.SUBRULE(this.literal) },
         { ALT: () => $.SUBRULE(this.qualifiedName) },
@@ -684,6 +687,28 @@ export class GoJuniorParser extends CstParser {
           }
         }
       ]);
+    });
+
+    this.arrayLiteral = $.RULE("arrayLiteral", () => {
+      $.CONSUME(LBracket);
+      $.OPTION(() => {
+        $.OR2([
+          { ALT: () => $.CONSUME(IntLiteral) },
+          { ALT: () => $.CONSUME(Ellipsis) }
+        ]);
+      });
+      $.CONSUME(RBracket);
+      $.SUBRULE(this.typeExpression);
+      $.CONSUME(LBrace);
+      $.OPTION2(() => {
+        $.SUBRULE(this.expression);
+        $.MANY(() => {
+          $.CONSUME(Comma);
+          $.SUBRULE2(this.expression);
+        });
+        $.OPTION3(() => $.CONSUME2(Comma));
+      });
+      $.CONSUME(RBrace);
     });
 
     this.mapLiteral = $.RULE("mapLiteral", () => {
