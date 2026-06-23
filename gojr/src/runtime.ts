@@ -670,17 +670,39 @@ function executeFor(statement: ForStatement, context: EvaluationContext): Comple
     return { kind: "normal" };
   }
 
-  for (let iteration = 0; iteration < context.loopLimit(); iteration += 1) {
-    if (statement.condition && !toBool(evaluateExpression(statement.condition, context))) {
-      return { kind: "normal" };
+  return context.childScope(() => {
+    if (statement.init) {
+      expectNormalCompletion(executeStatement(statement.init, context), "for init statement");
     }
-    const completion = executeBlock(statement.body, context);
-    if (completion.kind === "break") return { kind: "normal" };
-    if (completion.kind === "continue") continue;
-    if (completion.kind !== "normal") return completion;
-  }
 
-  throw new GoJuniorRuntimeError(`loop exceeded ${context.loopLimit()} iterations`);
+    for (let iteration = 0; iteration < context.loopLimit(); iteration += 1) {
+      if (statement.condition && !toBool(evaluateExpression(statement.condition, context))) {
+        return { kind: "normal" };
+      }
+
+      const completion = executeBlock(statement.body, context);
+      if (completion.kind === "break") return { kind: "normal" };
+      if (completion.kind === "continue") {
+        if (statement.post) {
+          expectNormalCompletion(executeStatement(statement.post, context), "for post statement");
+        }
+        continue;
+      }
+      if (completion.kind !== "normal") return completion;
+
+      if (statement.post) {
+        expectNormalCompletion(executeStatement(statement.post, context), "for post statement");
+      }
+    }
+
+    throw new GoJuniorRuntimeError(`loop exceeded ${context.loopLimit()} iterations`);
+  });
+}
+
+function expectNormalCompletion(completion: Completion, label: string): void {
+  if (completion.kind !== "normal") {
+    throw new GoJuniorRuntimeError(`${completion.kind} used in ${label}`);
+  }
 }
 
 function executeDefer(statement: DeferStatement, context: EvaluationContext): void {

@@ -125,4 +125,34 @@ if true {
         expect(result.diagnostics[0]?.span?.line).not.toBeNaN();
         expect(result.diagnostics[0]?.span?.column).not.toBeNaN();
     });
+    test("keeps Go-style for clauses pending until the block is closed", () => {
+        const session = new GoJuniorSession();
+        const result = session.evaluate("for b := 0; b < 10; b++ {");
+        expect(result.incomplete).toBe(true);
+        expect(result.diagnostics.length).toBeGreaterThan(0);
+        expect(result.diagnostics[0]?.message).not.toContain("':='");
+    });
+    test("executes Go-style for init condition and post clauses", () => {
+        const result = expectRuns(`
+sum := 0
+for b := 0; b < 10; b++ {
+  sum = sum + b
+}
+return sum
+`);
+        expect(result.value).toBe(45n);
+    });
+    test("runs for post clause after continue", () => {
+        const result = expectRuns(`
+sum := 0
+for b := 0; b < 5; b++ {
+  if b == 2 {
+    continue
+  }
+  sum = sum + b
+}
+return sum
+`);
+        expect(result.value).toBe(8n);
+    });
 });

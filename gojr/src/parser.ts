@@ -94,6 +94,9 @@ export class GoJuniorParser extends CstParser {
   private switchStmt!: Rule;
   private switchClause!: Rule;
   private forStmt!: Rule;
+  private forClause!: Rule;
+  private forInitClause!: Rule;
+  private forPostClause!: Rule;
   private rangeClause!: Rule;
   private deferStmt!: Rule;
   private declarationSpec!: Rule;
@@ -404,6 +407,7 @@ export class GoJuniorParser extends CstParser {
       $.CONSUME(For);
       $.OR([
         { GATE: $.BACKTRACK(this.rangeClause), ALT: () => $.SUBRULE(this.rangeClause) },
+        { GATE: $.BACKTRACK(this.forClause), ALT: () => $.SUBRULE(this.forClause) },
         {
           ALT: () => {
             $.OPTION(() => $.SUBRULE(this.expression));
@@ -411,6 +415,31 @@ export class GoJuniorParser extends CstParser {
         }
       ]);
       $.SUBRULE(this.block);
+    });
+
+    this.forClause = $.RULE("forClause", () => {
+      $.OPTION(() => $.SUBRULE(this.forInitClause));
+      $.CONSUME(Semicolon);
+      $.OPTION2(() => $.SUBRULE(this.expression));
+      $.CONSUME2(Semicolon);
+      $.OPTION3(() => $.SUBRULE(this.forPostClause));
+    });
+
+    this.forInitClause = $.RULE("forInitClause", () => {
+      $.SUBRULE(this.name);
+      $.OR([
+        { ALT: () => $.CONSUME(Define) },
+        { ALT: () => $.CONSUME(Assign) }
+      ]);
+      $.SUBRULE(this.expression);
+    });
+
+    this.forPostClause = $.RULE("forPostClause", () => {
+      $.SUBRULE(this.expression);
+      $.OR([
+        { ALT: () => $.CONSUME(PlusPlus) },
+        { ALT: () => $.CONSUME(MinusMinus) }
+      ]);
     });
 
     this.rangeClause = $.RULE("rangeClause", () => {
@@ -657,6 +686,7 @@ export class GoJuniorParser extends CstParser {
 
     this.performSelfAnalysis();
   }
+
 }
 
 export const goJuniorParser = new GoJuniorParser();

@@ -126,7 +126,9 @@ export interface SwitchStatement {
 
 export interface ForStatement {
   kind: "ForStatement";
+  init?: Statement;
   condition?: Expression;
+  post?: Statement;
   range?: RangeClause;
   body: BlockStatement;
   span?: SourceSpan;

@@ -198,13 +198,58 @@ function switchClauseToAst(node) {
 }
 function forStmtToAst(node) {
     const range = firstChildNode(node, "rangeClause");
+    const forClause = firstChildNode(node, "forClause");
     const condition = firstChildNode(node, "expression");
     const body = firstChildNode(node, "block");
     return withSpan({
         kind: "ForStatement",
         ...(range ? { range: rangeClauseToAst(range) } : {}),
+        ...(forClause ? forClauseToAst(forClause) : {}),
         ...(!range && condition ? { condition: expressionToAst(condition) } : {}),
         body: body ? blockToAst(body) : emptyBlock()
+    }, node);
+}
+function forClauseToAst(node) {
+    const init = firstChildNode(node, "forInitClause");
+    const post = firstChildNode(node, "forPostClause");
+    const condition = firstChildNode(node, "expression");
+    const result = {};
+    if (init)
+        result.init = forInitClauseToAst(init);
+    if (condition) {
+        result.condition = expressionToAst(condition);
+    }
+    if (post)
+        result.post = forPostClauseToAst(post);
+    return result;
+}
+function forInitClauseToAst(node) {
+    const name = firstChildNode(node, "name");
+    const value = firstChildNode(node, "expression");
+    const target = {
+        kind: "Identifier",
+        name: name ? nameText(name) : "<missing>"
+    };
+    if (childTokens(node, "Define").length > 0) {
+        return withSpan({
+            kind: "ShortVarStatement",
+            name: target.name,
+            value: value ? expressionToAst(value) : missingExpression()
+        }, node);
+    }
+    return withSpan({
+        kind: "AssignStatement",
+        target,
+        value: value ? expressionToAst(value) : missingExpression()
+    }, node);
+}
+function forPostClauseToAst(node) {
+    const target = firstChildNode(node, "expression");
+    const operator = childTokens(node, "PlusPlus").length > 0 ? "++" : "--";
+    return withSpan({
+        kind: "IncDecStatement",
+        target: target ? expressionToAst(target) : missingExpression(),
+        operator
     }, node);
 }
 function rangeClauseToAst(node) {
