@@ -19,7 +19,7 @@ export class EvaluationContext {
     output = [];
     rootScope = new Scope();
     currentScope = this.rootScope;
-    deferred = [];
+    deferFrames = [[]];
     maxLoopIterations;
     stdout;
     constructor(options = {}) {
@@ -60,14 +60,41 @@ export class EvaluationContext {
             this.currentScope = previous;
         }
     }
+    captureScope() {
+        return this.currentScope;
+    }
+    withScope(scope, body) {
+        const previous = this.currentScope;
+        this.currentScope = scope;
+        try {
+            return body();
+        }
+        finally {
+            this.currentScope = previous;
+        }
+    }
     pushDefer(callback) {
-        this.deferred.push(callback);
+        this.currentDeferFrame().push(callback);
     }
     runDefers() {
-        for (let index = this.deferred.length - 1; index >= 0; index -= 1) {
-            this.deferred[index]?.();
+        const frame = this.currentDeferFrame();
+        while (frame.length > 0) {
+            frame.pop()?.();
         }
-        this.deferred.length = 0;
+    }
+    deferScope(body) {
+        this.deferFrames.push([]);
+        try {
+            return body();
+        }
+        finally {
+            try {
+                this.runDefers();
+            }
+            finally {
+                this.deferFrames.pop();
+            }
+        }
     }
     write(text) {
         this.output.push(text);
@@ -86,6 +113,12 @@ export class EvaluationContext {
         if (name === "sheet")
             return this.options.sheet ?? this.options.sheets?.[this.currentSheetName()] ?? {};
         return this.options.sheets?.[name] ?? {};
+    }
+    currentDeferFrame() {
+        const frame = this.deferFrames[this.deferFrames.length - 1];
+        if (!frame)
+            throw new GoJuniorRuntimeError("internal error: missing defer frame");
+        return frame;
     }
 }
 class Scope {
@@ -214,8 +247,7 @@ export function evaluateProgram(ast, options = {}) {
                 value
             };
         }
-        const completion = executeStatements(ast.body, context);
-        context.runDefers();
+        const completion = executeTopLevelStatements(ast.body, context);
         if (completion.kind === "return") {
             return {
                 diagnostics: ast.diagnostics,
@@ -299,8 +331,7 @@ export class GoJuniorSession {
                     value
                 };
             }
-            const completion = executeStatements(ast.body, this.context);
-            this.context.runDefers();
+            const completion = executeTopLevelStatements(ast.body, this.context);
             return resultFromCompletion(ast, this.context.outputFrom(outputStart), completion);
         }
         catch (error) {
@@ -406,14 +437,28 @@ function hostCallable(name, call) {
     };
 }
 function functionValue(declaration) {
+    return goJuniorFunctionValue(declaration.name, declaration.signature, declaration.body, undefined, declaration);
+}
+function functionLiteralValue(expression, context) {
+    return goJuniorFunctionValue("<closure>", expression.signature, expression.body, context.captureScope());
+}
+function executeTopLevelStatements(statements, context) {
+    try {
+        return executeStatements(statements, context);
+    }
+    finally {
+        context.runDefers();
+    }
+}
+function goJuniorFunctionValue(name, signature, body, closureScope, declaration) {
     return {
         kind: "GoJuniorFunction",
-        name: declaration.name,
-        declaration,
+        name,
+        ...(declaration ? { declaration } : {}),
         call(args, parentContext) {
             const context = parentContext;
-            return context.childScope(() => {
-                for (const [index, parameter] of declaration.signature.parameters.entries()) {
+            const invoke = () => context.childScope(() => context.deferScope(() => {
+                for (const [index, parameter] of signature.parameters.entries()) {
                     if (parameter.name) {
                         const value = parameter.variadic ? args.slice(index) : args[index] ?? null;
                         context.declare(parameter.name, value, true);
@@ -421,26 +466,27 @@ function functionValue(declaration) {
                             break;
                     }
                 }
-                for (const result of declaration.signature.results) {
+                for (const result of signature.results) {
                     if (result.name) {
                         context.declare(result.name, defaultValueForDeclarationType(result.type), true);
                     }
                 }
-                const completion = executeBlock(declaration.body, context, false);
+                const completion = executeBlock(body, context, false);
                 context.runDefers();
                 if (completion.kind === "return") {
                     const values = completion.values.length === 0
-                        ? namedReturnValues(declaration, context)
+                        ? namedReturnValues(signature, context)
                         : completion.values;
                     return values.length === 1 ? values[0] ?? null : values;
                 }
                 return null;
-            });
+            }));
+            return closureScope ? context.withScope(closureScope, invoke) : invoke();
         }
     };
 }
-function namedReturnValues(declaration, context) {
-    const namedResults = declaration.signature.results.filter((result) => result.name);
+function namedReturnValues(signature, context) {
+    const namedResults = signature.results.filter((result) => result.name);
     if (namedResults.length === 0)
         return [];
     return namedResults.map((result) => result.name ? context.lookup(result.name) : defaultValueForDeclarationType(result.type));
@@ -696,6 +742,8 @@ function evaluateExpression(expression, context) {
             return evaluateIdentifier(expression, context);
         case "Literal":
             return expression.value;
+        case "FunctionLiteralExpression":
+            return functionLiteralValue(expression, context);
         case "MapLiteralExpression":
             return evaluateMapLiteral(expression, context);
         case "UnaryExpression":

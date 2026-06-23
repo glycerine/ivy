@@ -67,7 +67,7 @@ export class GoJuniorParser extends CstParser {
             });
             $.OPTION2(() => {
                 $.OR([
-                    { ALT: () => $.SUBRULE(this.functionDecl) },
+                    { GATE: () => this.nextTokensStartFunctionDecl(), ALT: () => $.SUBRULE(this.functionDecl) },
                     {
                         ALT: () => {
                             $.MANY1(() => {
@@ -553,6 +553,7 @@ export class GoJuniorParser extends CstParser {
         });
         this.atom = $.RULE("atom", () => {
             $.OR([
+                { ALT: () => $.SUBRULE(this.functionLiteral) },
                 { ALT: () => $.SUBRULE(this.mapLiteral) },
                 { ALT: () => $.SUBRULE(this.literal) },
                 { ALT: () => $.SUBRULE(this.qualifiedName) },
@@ -639,6 +640,31 @@ export class GoJuniorParser extends CstParser {
     }
     nextTokensAreLabel() {
         return this.LA(1).tokenType === Identifier && this.LA(2).tokenType === Colon;
+    }
+    nextTokensStartFunctionDecl() {
+        if (this.LA(1).tokenType !== Func)
+            return false;
+        if (this.LA(2).tokenType === Identifier)
+            return true;
+        if (this.LA(2).tokenType !== LParen)
+            return false;
+        let depth = 0;
+        for (let offset = 2; offset < 64; offset += 1) {
+            const tokenType = this.LA(offset).tokenType;
+            if (tokenType === LParen) {
+                depth += 1;
+                continue;
+            }
+            if (tokenType === RParen) {
+                depth -= 1;
+                if (depth === 0) {
+                    return this.LA(offset + 1).tokenType === Identifier;
+                }
+            }
+            if (tokenType.name === "EOF")
+                return false;
+        }
+        return false;
     }
     nextTokensAreSpreadsheetRangeSuffix() {
         return this.LA(1).tokenType === Colon &&

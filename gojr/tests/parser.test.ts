@@ -77,6 +77,14 @@ func Sum(prefix string, vals ...int) int {
     expect(variadic.ast?.functions[0]?.signature.parameters.map((param) => param.variadic)).toEqual([false, true]);
   });
 
+  test("parses function literals as expressions", () => {
+    const result = expectParses(`
+f := func(a, b, c int) (d, e, f int) { return b, c, a }
+`);
+
+    expect(result.ast?.body[0]?.kind).toBe("ShortVarStatement");
+  });
+
   test("keeps comma-separated unnamed type parameters distinct", () => {
     const result = expectParses(`
 func F(int, string, bool) {

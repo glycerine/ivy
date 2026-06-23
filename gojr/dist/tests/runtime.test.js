@@ -67,6 +67,63 @@ fmt.Printf("first")
 `);
         expect(result.output).toEqual(["first", " second ", "third"]);
     });
+    test("keeps function defer stacks scoped and last-in-first-out", () => {
+        const session = new GoJuniorSession();
+        expect(session.evaluate(`import "fmt"`).diagnostics).toEqual([]);
+        expect(session.evaluate(`
+func inner() {
+  defer fmt.Printf("inner defer\\n")
+  fmt.Printf("inner body\\n")
+}
+`).diagnostics).toEqual([]);
+        expect(session.evaluate(`
+func outer() {
+  defer fmt.Printf("outer first\\n")
+  defer fmt.Printf("outer second\\n")
+  inner()
+  fmt.Printf("after inner\\n")
+}
+`).diagnostics).toEqual([]);
+        const result = session.evaluate("outer()");
+        expect(result.diagnostics).toEqual([]);
+        expect(result.output).toEqual([
+            "inner body\n",
+            "inner defer\n",
+            "after inner\n",
+            "outer second\n",
+            "outer first\n"
+        ]);
+    });
+    test("runs deferred closures before reading named return values", () => {
+        const session = new GoJuniorSession();
+        const define = session.evaluate(`
+func f() (x int) {
+  defer func() {
+    x = 2
+  }()
+  x = 1
+  return
+}
+`);
+        expect(define.diagnostics).toEqual([]);
+        const result = session.evaluate("f()");
+        expect(result.diagnostics).toEqual([]);
+        expect(result.value).toBe(2n);
+    });
+    test("runs function defers while panicking", () => {
+        const session = new GoJuniorSession();
+        expect(session.evaluate(`import "fmt"`).diagnostics).toEqual([]);
+        expect(session.evaluate(`
+func boom() {
+  defer fmt.Printf("cleanup\\n")
+  panic("bad")
+}
+`).diagnostics).toEqual([]);
+        const result = session.evaluate("boom()");
+        expect(result.output).toEqual(["cleanup\n"]);
+        expect(result.diagnostics).toHaveLength(1);
+        expect(result.diagnostics[0]?.code).toBe("GJPANIC001");
+    });
     test("formats Go-junior values with fmt %#v", () => {
         const result = expectRuns(`
 import "fmt"
@@ -205,6 +262,61 @@ func sum(vals ...int) int {
         const spread = session.evaluate("sum(sheet.A1...)");
         expect(spread.diagnostics).toEqual([]);
         expect(spread.value).toBe(15n);
+    });
+    test("defines and calls function literals with grouped names in REPL sessions", () => {
+        const session = new GoJuniorSession();
+        const define = session.evaluate("f := func(a, b, c int) (d, e, f int) { return b, c, a }");
+        expect(define.diagnostics).toEqual([]);
+        const call = session.evaluate("f(1, 2, 3)");
+        expect(call.diagnostics).toEqual([]);
+        expect(call.value).toEqual([2n, 3n, 1n]);
+    });
+    test("closures capture lexical variables by reference", () => {
+        const session = new GoJuniorSession();
+        expect(session.evaluate("base := 10").diagnostics).toEqual([]);
+        expect(session.evaluate("addBase := func(x int) int { return base + x }").diagnostics).toEqual([]);
+        expect(session.evaluate("base = 20").diagnostics).toEqual([]);
+        const call = session.evaluate("addBase(2)");
+        expect(call.diagnostics).toEqual([]);
+        expect(call.value).toBe(22n);
+    });
+    test("returned closures keep their defining function scope alive", () => {
+        const session = new GoJuniorSession();
+        const define = session.evaluate(`
+func makeAdder(base int) func(int) int {
+  return func(x int) int {
+    return base + x
+  }
+}
+`);
+        expect(define.diagnostics).toEqual([]);
+        expect(session.evaluate("add5 := makeAdder(5)").diagnostics).toEqual([]);
+        const call = session.evaluate("add5(3)");
+        expect(call.diagnostics).toEqual([]);
+        expect(call.value).toBe(8n);
+    });
+    test("function literals support variadic parameters and spread calls", () => {
+        const session = new GoJuniorSession({
+            sheet: {
+                A1: [7n, 8n, 9n]
+            }
+        });
+        const define = session.evaluate(`
+sum := func(vals ...int) int {
+  total := 0
+  for _, v := range vals {
+    total = total + v
+  }
+  return total
+}
+`);
+        expect(define.diagnostics).toEqual([]);
+        const direct = session.evaluate("sum(1, 2, 3)");
+        expect(direct.diagnostics).toEqual([]);
+        expect(direct.value).toBe(6n);
+        const spread = session.evaluate("sum(sheet.A1...)");
+        expect(spread.diagnostics).toEqual([]);
+        expect(spread.value).toBe(24n);
     });
     test("marks incomplete REPL input without executing it", () => {
         const session = new GoJuniorSession();

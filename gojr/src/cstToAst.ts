@@ -12,6 +12,7 @@ import {
   ExpressionStatement,
   ForStatement,
   FunctionDecl,
+  FunctionLiteralExpression,
   IdentifierExpression,
   IfStatement,
   IncDecStatement,
@@ -728,6 +729,9 @@ function selectorStart(expression: Expression): SelectorExpression {
 }
 
 function atomToAst(node: CstNode): Expression {
+  const functionLiteral = firstChildNode(node, "functionLiteral");
+  if (functionLiteral) return functionLiteralToAst(functionLiteral);
+
   const mapLiteral = firstChildNode(node, "mapLiteral");
   if (mapLiteral) return mapLiteralToAst(mapLiteral);
 
@@ -739,6 +743,17 @@ function atomToAst(node: CstNode): Expression {
 
   const expression = firstChildNode(node, "expression");
   return expression ? expressionToAst(expression) : missingExpression();
+}
+
+function functionLiteralToAst(node: CstNode): FunctionLiteralExpression {
+  return withSpan(
+    {
+      kind: "FunctionLiteralExpression",
+      signature: signatureToAst(requiredChildNode(node, "signature")),
+      body: blockToAst(requiredChildNode(node, "block"))
+    } satisfies FunctionLiteralExpression,
+    node
+  );
 }
 
 function mapLiteralToAst(node: CstNode): MapLiteralExpression {

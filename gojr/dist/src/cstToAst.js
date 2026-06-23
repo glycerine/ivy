@@ -515,6 +515,9 @@ function selectorStart(expression) {
     };
 }
 function atomToAst(node) {
+    const functionLiteral = firstChildNode(node, "functionLiteral");
+    if (functionLiteral)
+        return functionLiteralToAst(functionLiteral);
     const mapLiteral = firstChildNode(node, "mapLiteral");
     if (mapLiteral)
         return mapLiteralToAst(mapLiteral);
@@ -526,6 +529,13 @@ function atomToAst(node) {
         return qualifiedNameToAst(qualified);
     const expression = firstChildNode(node, "expression");
     return expression ? expressionToAst(expression) : missingExpression();
+}
+function functionLiteralToAst(node) {
+    return withSpan({
+        kind: "FunctionLiteralExpression",
+        signature: signatureToAst(requiredChildNode(node, "signature")),
+        body: blockToAst(requiredChildNode(node, "block"))
+    }, node);
 }
 function mapLiteralToAst(node) {
     const types = childNodes(node, "typeExpression");
