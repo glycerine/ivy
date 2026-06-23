@@ -1,8 +1,10 @@
 import { describe, expect, test } from "./testHarness.js";
 import { parseProgram } from "../src/index.js";
 
+const TEST_FILENAME = "parser-test.go";
+
 function expectParses(source: string) {
-  const result = parseProgram(source);
+  const result = parseProgram(source, TEST_FILENAME);
   expect(result.diagnostics).toEqual([]);
   expect(result.ast).toBeDefined();
   return result;
@@ -38,7 +40,7 @@ func (p *Point) Scale(k float64) {
   test("rejects C and C++ style pointer selector syntax", () => {
     const result = parseProgram(`
 p->Scale(2.0)
-`);
+`, TEST_FILENAME);
 
     expect(result.diagnostics.length).toBeGreaterThan(0);
   });

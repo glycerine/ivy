@@ -14,6 +14,13 @@ import {
   tuple,
   varOf
 } from "../src/front/types.js";
+import type { CheckConfig } from "../src/front/checker.js";
+
+const TEST_FILENAME = "front-checker-test.go";
+
+function check(source: string, config: CheckConfig = {}) {
+  return checkFrontSource(source, TEST_FILENAME, config);
+}
 
 describe("Go-junior TypeScript front checker", () => {
   test("builds package scopes, imports, methods, local scopes, and range variable types", () => {
@@ -31,7 +38,7 @@ describe("Go-junior TypeScript front checker", () => {
       fmt
     ));
 
-    const result = checkFrontSource(`
+    const result = check(`
 package model
 
 import f "fmt"
@@ -79,7 +86,7 @@ func Sum(xs []int64) int64 {
 
   test("types spreadsheet cell and range references through configured namespaces", () => {
     const universe = newUniverse();
-    const result = checkFrontSource(`
+    const result = check(`
 package workbook
 
 var a = sheet.A1 + sheet.B1
@@ -108,7 +115,7 @@ var r = Data.A1:B2
   });
 
   test("rejects mixed string and numeric addition", () => {
-    const result = checkFrontSource(`
+    const result = check(`
 package workbook
 
 var a = 10

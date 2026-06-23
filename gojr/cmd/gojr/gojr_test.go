@@ -73,21 +73,22 @@ func TestReadPackageDirCombinesNonTestGoFiles(t *testing.T) {
 	writeTestFile(t, filepath.Join(dir, "a.go"), "package demo\n\nimport \"fmt\"\n\nfunc A() int { return 1 }\n")
 	writeTestFile(t, filepath.Join(dir, "a_test.go"), "package demo\n\nfunc TestIgnored() {}\n")
 
-	source, err := readPackageDir(dir)
+	files, err := readPackageDir(dir)
 	if err != nil {
 		t.Fatalf("readPackageDir() error = %v", err)
 	}
-	if strings.Contains(source, "package demo") {
-		t.Fatalf("combined source still contains package clause:\n%s", source)
+	combined := combinedTestSource(files)
+	if strings.Contains(combined, "package demo") {
+		t.Fatalf("combined source still contains package clause:\n%s", combined)
 	}
-	if !strings.Contains(source, "func A() int") || !strings.Contains(source, "func B() string") {
-		t.Fatalf("combined source missing package files:\n%s", source)
+	if !strings.Contains(combined, "func A() int") || !strings.Contains(combined, "func B() string") {
+		t.Fatalf("combined source missing package files:\n%s", combined)
 	}
-	if strings.Contains(source, "TestIgnored") {
-		t.Fatalf("combined source included _test.go:\n%s", source)
+	if strings.Contains(combined, "TestIgnored") {
+		t.Fatalf("combined source included _test.go:\n%s", combined)
 	}
-	if strings.Index(source, "a.go") > strings.Index(source, "b.go") {
-		t.Fatalf("combined source is not sorted by filename:\n%s", source)
+	if len(files) != 2 || filepath.Base(files[0].Filename) != "a.go" || filepath.Base(files[1].Filename) != "b.go" {
+		t.Fatalf("files are not sorted by filename: %#v", files)
 	}
 }
 
@@ -110,15 +111,16 @@ func TestReadTestTargetDirectoryIncludesTestFiles(t *testing.T) {
 	writeTestFile(t, filepath.Join(dir, "a.go"), "package demo\n\nfunc A() int { return 1 }\n")
 	writeTestFile(t, filepath.Join(dir, "a_test.go"), "package demo\n\nfunc TestA() {}\n")
 
-	source, err := readTestTarget(dir)
+	files, err := readTestTarget(dir)
 	if err != nil {
 		t.Fatalf("readTestTarget(dir) error = %v", err)
 	}
-	if strings.Contains(source, "package demo") {
-		t.Fatalf("combined source still contains package clause:\n%s", source)
+	combined := combinedTestSource(files)
+	if strings.Contains(combined, "package demo") {
+		t.Fatalf("combined source still contains package clause:\n%s", combined)
 	}
-	if !strings.Contains(source, "func A() int") || !strings.Contains(source, "func TestA()") {
-		t.Fatalf("combined test source missing package or test files:\n%s", source)
+	if !strings.Contains(combined, "func A() int") || !strings.Contains(combined, "func TestA()") {
+		t.Fatalf("combined test source missing package or test files:\n%s", combined)
 	}
 }
 
@@ -128,16 +130,26 @@ func TestReadTestTargetTestFileIncludesSiblingPackageFiles(t *testing.T) {
 	writeTestFile(t, filepath.Join(dir, "b_test.go"), "package demo\n\nfunc TestB() { _ = A() }\n")
 	writeTestFile(t, filepath.Join(dir, "c_test.go"), "package demo\n\nfunc TestC() {}\n")
 
-	source, err := readTestTarget(filepath.Join(dir, "b_test.go"))
+	files, err := readTestTarget(filepath.Join(dir, "b_test.go"))
 	if err != nil {
 		t.Fatalf("readTestTarget(file) error = %v", err)
 	}
-	if !strings.Contains(source, "func A() int") || !strings.Contains(source, "func TestB()") {
-		t.Fatalf("combined test source missing target test or package files:\n%s", source)
+	combined := combinedTestSource(files)
+	if !strings.Contains(combined, "func A() int") || !strings.Contains(combined, "func TestB()") {
+		t.Fatalf("combined test source missing target test or package files:\n%s", combined)
 	}
-	if strings.Contains(source, "func TestC()") {
-		t.Fatalf("combined test source included another _test.go file:\n%s", source)
+	if strings.Contains(combined, "func TestC()") {
+		t.Fatalf("combined test source included another _test.go file:\n%s", combined)
 	}
+}
+
+func combinedTestSource(files []sourceFile) string {
+	var out strings.Builder
+	for _, file := range files {
+		out.WriteString(file.Source)
+		out.WriteByte('\n')
+	}
+	return out.String()
 }
 
 func writeTestFile(t *testing.T, path string, data string) {

@@ -3,8 +3,10 @@ import { parseFrontSource } from "../src/front/parser.js";
 import { TokenKind } from "../src/front/token.js";
 import { walk, type AstNode, type Expr, type Field, type FuncDecl, type GenDecl } from "../src/front/ast.js";
 
+const TEST_FILENAME = "front-parser-test.go";
+
 function parseOk(source: string) {
-  const result = parseFrontSource(source);
+  const result = parseFrontSource(source, TEST_FILENAME);
   expect(result.diagnostics).toEqual([]);
   expect(result.file).toBeDefined();
   return result.file!;
@@ -174,7 +176,7 @@ func F() {
   go F()
   select {}
 }
-`);
+`, TEST_FILENAME);
 
     expect(result.diagnostics.map((item) => item.code)).toEqual([
       "GOJR_PARSE_UNSUPPORTED",

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "./testHarness.js";
-import { evaluateSource, formatReplValue, GoJuniorSession, testSource } from "../src/index.js";
+import { evaluateSource, evaluateSourceFiles, formatReplValue, GoJuniorSession, testSource } from "../src/index.js";
 
 function expectRuns(source: string, options = {}) {
   const result = evaluateSource(source, options);
@@ -317,6 +317,26 @@ missingName
     expect(result.diagnostics).toHaveLength(1);
     expect(result.diagnostics[0]?.code).toBe("GOJR_RUNTIME001");
     expect(result.diagnostics[0]?.message).toContain("missingName is not declared");
+  });
+
+  test("keeps filenames on source-file diagnostics", () => {
+    const result = evaluateSourceFiles([
+      {
+        filename: "pkg/bad.go",
+        source: `
+package pkg
+
+func Bad() {
+  x <- y
+}
+`
+      }
+    ]);
+
+    expect(result.diagnostics.length).toBeGreaterThan(0);
+    expect(result.diagnostics[0]?.filename).toBe("pkg/bad.go");
+    expect(result.diagnostics[0]?.span?.filename).toBe("pkg/bad.go");
+    expect(result.diagnostics[0]?.span?.line).toBe(5);
   });
 
   test("enforces declared and inferred local variable types", () => {

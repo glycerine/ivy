@@ -43,7 +43,7 @@ import {
   UnaryExpression,
   VarDeclStatement
 } from "./ast.js";
-import { Diagnostic, SourceSpan } from "./diagnostics.js";
+import { Diagnostic, SourceFile, SourceSpan } from "./diagnostics.js";
 import {
   ArrayType,
   BasicLit,
@@ -71,11 +71,11 @@ import {
   TypeSpec as FrontTypeSpec,
   ValueSpec
 } from "./front/ast.js";
-import { ParseFrontResult, parseFrontSource } from "./front/parser.js";
+import { ParseFrontFilesResult, ParseFrontResult, parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
 
-export function frontSourceToAst(source: string): { ast?: ProgramAst; diagnostics: Diagnostic[]; parsed: ParseFrontResult } {
-  const parsed = parseFrontSource(source);
+export function frontSourceToAst(source: string, filename: string): { ast?: ProgramAst; diagnostics: Diagnostic[]; parsed: ParseFrontResult } {
+  const parsed = parseFrontSource(source, filename);
   const ast = parsed.file ? frontToProgramAst(parsed.file, parsed.diagnostics, parsed.statements) : undefined;
   return {
     diagnostics: parsed.diagnostics,
@@ -84,17 +84,31 @@ export function frontSourceToAst(source: string): { ast?: ProgramAst; diagnostic
   };
 }
 
+export function frontSourceFilesToAst(files: SourceFile[]): { ast?: ProgramAst; diagnostics: Diagnostic[]; parsed: ParseFrontFilesResult } {
+  const parsed = parseFrontSourceFiles(files);
+  const ast = parsed.files.length > 0 ? frontFilesToProgramAst(parsed.files, parsed.diagnostics, parsed.statements) : undefined;
+  return {
+    diagnostics: parsed.diagnostics,
+    parsed,
+    ...(ast ? { ast } : {})
+  };
+}
+
 export function frontToProgramAst(file: File, diagnostics: Diagnostic[] = [], statements: Stmt[] = []): ProgramAst {
+  return frontFilesToProgramAst([file], diagnostics, statements);
+}
+
+export function frontFilesToProgramAst(files: File[], diagnostics: Diagnostic[] = [], statements: Stmt[] = []): ProgramAst {
   const body: Statement[] = [
-    ...file.declarations.flatMap(declarationToBodyStatement),
+    ...files.flatMap((file) => file.declarations.flatMap(declarationToBodyStatement)),
     ...statements.map(statementToAst)
   ];
-  const functions = file.declarations.flatMap((declaration) =>
+  const functions = files.flatMap((file) => file.declarations).flatMap((declaration) =>
     declaration.kind === "FuncDecl" ? [functionDeclToAst(declaration)] : []
   );
   return {
     kind: functions.length > 0 && body.length === 0 ? "function" : "script",
-    imports: file.imports.map(importSpecToAst),
+    imports: files.flatMap((file) => file.imports.map(importSpecToAst)),
     diagnostics,
     body,
     functions

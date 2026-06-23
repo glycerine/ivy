@@ -1,4 +1,4 @@
-import { Diagnostic, SourceSpan } from "../diagnostics.js";
+import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan, diagnosticFilename } from "../diagnostics.js";
 import {
   ArrayType,
   BasicLit,
@@ -40,10 +40,27 @@ export interface ParseFrontResult {
   tokens: FrontToken[];
 }
 
-export function parseFrontSource(source: string): ParseFrontResult {
-  const scanned = scanSource(source);
-  const parser = new FrontParser(scanned.tokens, scanned.diagnostics);
+export interface ParseFrontFilesResult {
+  files: File[];
+  statements: Stmt[];
+  diagnostics: Diagnostic[];
+  results: ParseFrontResult[];
+}
+
+export function parseFrontSource(source: string, filename: string): ParseFrontResult {
+  const scanned = scanSource(source, filename);
+  const parser = new FrontParser(scanned.tokens, scanned.diagnostics, filename);
   return parser.parseFile();
+}
+
+export function parseFrontSourceFiles(files: SourceFile[]): ParseFrontFilesResult {
+  const results = files.map((file) => parseFrontSource(file.source, file.filename));
+  return {
+    files: results.flatMap((result) => result.file ? [result.file] : []),
+    statements: results.flatMap((result) => result.statements),
+    diagnostics: results.flatMap((result) => result.diagnostics),
+    results
+  };
 }
 
 class FrontParser {
@@ -53,7 +70,8 @@ class FrontParser {
 
   public constructor(
     private readonly tokens: FrontToken[],
-    diagnostics: Diagnostic[]
+    diagnostics: Diagnostic[],
+    private readonly filename: string
   ) {
     this.diagnostics = [...diagnostics];
   }
@@ -1017,6 +1035,7 @@ class FrontParser {
 
   private error(message: string, span: SourceSpan | undefined, code = "GOJR_PARSE_FRONT001"): void {
     this.diagnostics.push({
+      filename: diagnosticFilename(span, this.filename),
       code,
       severity: "error",
       message,
@@ -1064,6 +1083,7 @@ function mergeSpans(start: SourceSpan | undefined, end: SourceSpan | undefined):
   if (!end) return start;
   const endOffset = end.offset + end.length;
   return {
+    filename: start.filename,
     offset: start.offset,
     length: Math.max(0, endOffset - start.offset),
     line: start.line,
@@ -1075,6 +1095,6 @@ function eofToken(): FrontToken {
   return {
     kind: TokenKind.EOF,
     lexeme: "",
-    span: { offset: 0, length: 0, line: 1, column: 1 }
+    span: { filename: REPL_FILENAME, offset: 0, length: 0, line: 1, column: 1 }
   };
 }

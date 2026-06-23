@@ -185,9 +185,10 @@ const gojrModule = __gojrRequire("/src/index.js");
 const gojrSession = new gojrModule.GoJuniorSession({ sheet: {} });
 
 function gojrDiagnosticString(diagnostic) {
+  const filename = diagnostic?.span?.filename || diagnostic?.filename || "gojr-repl.go";
   const location = diagnostic && diagnostic.span
-    ? `${diagnostic.span.line}:${diagnostic.span.column}: `
-    : "";
+    ? `${filename}:${diagnostic.span.line}:${diagnostic.span.column}: `
+    : `${filename}: `;
   return `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}`;
 }
 
@@ -216,8 +217,34 @@ globalThis.__gojrEval = function(source) {
   });
 };
 
+globalThis.__gojrEvalFiles = function(json) {
+  const result = gojrModule.evaluateSourceFiles(JSON.parse(json));
+  const diagnostics = result.diagnostics || [];
+  return JSON.stringify({
+    ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
+    incomplete: result.incomplete === true,
+    diagnostics: diagnostics.map(gojrDiagnosticString),
+    output: (result.output || []).join(""),
+    value: gojrFormatResult(result),
+    valueIsNil: gojrResultValueIsNil(result)
+  });
+};
+
 globalThis.__gojrTest = function(source) {
   const result = gojrModule.testSource(source);
+  const diagnostics = result.diagnostics || [];
+  return JSON.stringify({
+    ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
+    incomplete: false,
+    diagnostics: diagnostics.map(gojrDiagnosticString),
+    output: (result.output || []).join(""),
+    value: gojrFormatResult(result),
+    valueIsNil: gojrResultValueIsNil(result)
+  });
+};
+
+globalThis.__gojrTestFiles = function(json) {
+  const result = gojrModule.testSourceFiles(JSON.parse(json));
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
@@ -354,8 +381,16 @@ extern "C" char* gojr_node_eval(gojr_node_runtime* runtime, const char* source, 
   return call_global_string_function(runtime, "__gojrEval", source, error_out);
 }
 
+extern "C" char* gojr_node_eval_files(gojr_node_runtime* runtime, const char* json, char** error_out) {
+  return call_global_string_function(runtime, "__gojrEvalFiles", json, error_out);
+}
+
 extern "C" char* gojr_node_test(gojr_node_runtime* runtime, const char* source, char** error_out) {
   return call_global_string_function(runtime, "__gojrTest", source, error_out);
+}
+
+extern "C" char* gojr_node_test_files(gojr_node_runtime* runtime, const char* json, char** error_out) {
+  return call_global_string_function(runtime, "__gojrTestFiles", json, error_out);
 }
 
 extern "C" char* gojr_node_set_sheet(gojr_node_runtime* runtime, const char* json, char** error_out) {

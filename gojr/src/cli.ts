@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { readFile } from "node:fs/promises";
 import { parseProgram } from "./index.js";
+import { REPL_FILENAME } from "./diagnostics.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
 import { evaluateSource, formatReplValue, SheetData } from "./runtime.js";
 
@@ -22,15 +23,17 @@ async function main(argv: string[]): Promise<number> {
   const source = options.command === "eval"
     ? options.expression ?? ""
     : await readSource(options.file);
+  const filename = options.command === "eval" ? REPL_FILENAME : options.file && options.file !== "-" ? options.file : REPL_FILENAME;
 
   if (options.command === "parse") {
-    const result = parseProgram(source);
+    const result = parseProgram(source, filename);
     printDiagnostics(result.diagnostics);
     console.log(JSON.stringify(result.ast, jsonReplacer, 2));
     return result.diagnostics.some((diagnostic) => diagnostic.severity === "error") ? 1 : 0;
   }
 
   const result = evaluateSource(source, {
+    filename,
     ...(options.sheet ? { sheet: options.sheet } : {}),
     ...(options.sheets ? { sheets: options.sheets } : {}),
     stdout: (text) => {
@@ -100,9 +103,11 @@ async function readSource(file: string | undefined): Promise<string> {
   return Buffer.concat(chunks).toString("utf8");
 }
 
-function printDiagnostics(diagnostics: Array<{ severity: string; code: string; message: string; span?: { line: number; column: number } }>): void {
+function printDiagnostics(diagnostics: Array<{ filename: string; severity: string; code: string; message: string; span?: { filename: string; line: number; column: number } }>): void {
   for (const diagnostic of diagnostics) {
-    const location = diagnostic.span ? `${diagnostic.span.line}:${diagnostic.span.column}: ` : "";
+    const location = diagnostic.span
+      ? `${diagnostic.span.filename}:${diagnostic.span.line}:${diagnostic.span.column}: `
+      : `${diagnostic.filename}: `;
     const line = `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}`;
     if (diagnostic.severity === "error") {
       console.error(line);

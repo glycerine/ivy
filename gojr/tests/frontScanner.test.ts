@@ -2,12 +2,18 @@ import { describe, expect, test } from "./testHarness.js";
 import { scanSource } from "../src/front/scanner.js";
 import { TokenKind } from "../src/front/token.js";
 
+const TEST_FILENAME = "front-scanner-test.go";
+
+function scan(source: string) {
+  return scanSource(source, TEST_FILENAME);
+}
+
 function kinds(source: string): TokenKind[] {
-  return scanSource(source).tokens.map((token) => token.kind);
+  return scan(source).tokens.map((token) => token.kind);
 }
 
 function lexemes(source: string): string[] {
-  return scanSource(source).tokens.map((token) => token.lexeme);
+  return scan(source).tokens.map((token) => token.lexeme);
 }
 
 describe("Go-junior TypeScript front scanner", () => {
@@ -32,7 +38,7 @@ describe("Go-junior TypeScript front scanner", () => {
   });
 
   test("inserts Go-style semicolons at newlines and EOF", () => {
-    const result = scanSource("a := 1\nb := 2\nx := 1 +\n2");
+    const result = scan("a := 1\nb := 2\nx := 1 +\n2");
 
     expect(result.diagnostics).toEqual([]);
     expect(result.tokens
@@ -42,7 +48,7 @@ describe("Go-junior TypeScript front scanner", () => {
   });
 
   test("scans spreadsheet cell and range tokens without confusing identifiers", () => {
-    const result = scanSource(`Data.A1:B10\nsheet.$A$1:$B$10\nA1foo`);
+    const result = scan(`Data.A1:B10\nsheet.$A$1:$B$10\nA1foo`);
 
     expect(result.diagnostics).toEqual([]);
     expect(result.tokens.map((token) => [token.kind, token.lexeme])).toEqual([
@@ -65,7 +71,7 @@ describe("Go-junior TypeScript front scanner", () => {
   });
 
   test("scans literals and skips comments while preserving spans", () => {
-    const result = scanSource("x := 1.5e2 // comment\ns := \"hi\\nthere\"");
+    const result = scan("x := 1.5e2 // comment\ns := \"hi\\nthere\"");
 
     expect(result.diagnostics).toEqual([]);
     expect(result.tokens.map((token) => token.lexeme)).toEqual([
@@ -75,7 +81,7 @@ describe("Go-junior TypeScript front scanner", () => {
   });
 
   test("scans Go raw string literals across newlines", () => {
-    const result = scanSource("s := `hi\nthere`\nx := 1");
+    const result = scan("s := `hi\nthere`\nx := 1");
 
     expect(result.diagnostics).toEqual([]);
     expect(result.tokens.map((token) => [token.kind, token.lexeme])).toEqual([
@@ -93,15 +99,16 @@ describe("Go-junior TypeScript front scanner", () => {
   });
 
   test("reports unsupported channels and malformed strings", () => {
-    const channel = scanSource("x <- y");
+    const channel = scan("x <- y");
     expect(channel.diagnostics).toHaveLength(1);
     expect(channel.diagnostics[0]?.message).toContain("channels");
+    expect(channel.diagnostics[0]?.filename).toBe(TEST_FILENAME);
 
-    const string = scanSource("\"unterminated\nnext");
+    const string = scan("\"unterminated\nnext");
     expect(string.diagnostics).toHaveLength(1);
     expect(string.diagnostics[0]?.message).toContain("unterminated string");
 
-    const raw = scanSource("a := `unterminated");
+    const raw = scan("a := `unterminated");
     expect(raw.diagnostics).toHaveLength(1);
     expect(raw.diagnostics[0]?.message).toContain("unterminated raw string");
   });

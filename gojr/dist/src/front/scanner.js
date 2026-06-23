@@ -1,9 +1,11 @@
+import { REPL_FILENAME } from "../diagnostics.js";
 import { keywordKind, tokenCanEndStatement, TokenKind } from "./token.js";
-export function scanSource(source) {
-    return new Scanner(source).scan();
+export function scanSource(source, filename) {
+    return new Scanner(source, filename).scan();
 }
 class Scanner {
     source;
+    filename;
     offset = 0;
     line = 1;
     column = 1;
@@ -11,8 +13,9 @@ class Scanner {
     emittedEOF = false;
     tokens = [];
     diagnostics = [];
-    constructor(source) {
+    constructor(source, filename) {
         this.source = source;
+        this.filename = filename;
     }
     scan() {
         while (!this.emittedEOF) {
@@ -278,6 +281,7 @@ class Scanner {
     }
     error(code, message, start, end) {
         this.diagnostics.push({
+            filename: start.filename,
             code,
             severity: "error",
             message,
@@ -295,6 +299,7 @@ class Scanner {
     }
     position() {
         return {
+            filename: this.filename,
             offset: this.offset,
             line: this.line,
             column: this.column
@@ -330,6 +335,7 @@ class Scanner {
 }
 function spanBetween(start, end) {
     return {
+        filename: start.filename || end.filename || REPL_FILENAME,
         offset: start.offset,
         length: Math.max(0, end.offset - start.offset),
         line: start.line,

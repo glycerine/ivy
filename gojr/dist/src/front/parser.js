@@ -1,18 +1,30 @@
+import { REPL_FILENAME, diagnosticFilename } from "../diagnostics.js";
 import { parseCellAddress, ident } from "./ast.js";
 import { scanSource } from "./scanner.js";
 import { isAssignmentToken, isIdentifierLike, TokenKind } from "./token.js";
-export function parseFrontSource(source) {
-    const scanned = scanSource(source);
-    const parser = new FrontParser(scanned.tokens, scanned.diagnostics);
+export function parseFrontSource(source, filename) {
+    const scanned = scanSource(source, filename);
+    const parser = new FrontParser(scanned.tokens, scanned.diagnostics, filename);
     return parser.parseFile();
+}
+export function parseFrontSourceFiles(files) {
+    const results = files.map((file) => parseFrontSource(file.source, file.filename));
+    return {
+        files: results.flatMap((result) => result.file ? [result.file] : []),
+        statements: results.flatMap((result) => result.statements),
+        diagnostics: results.flatMap((result) => result.diagnostics),
+        results
+    };
 }
 class FrontParser {
     tokens;
+    filename;
     index = 0;
     allowBareIdentifierComposite = true;
     diagnostics;
-    constructor(tokens, diagnostics) {
+    constructor(tokens, diagnostics, filename) {
         this.tokens = tokens;
+        this.filename = filename;
         this.diagnostics = [...diagnostics];
     }
     parseFile() {
@@ -955,6 +967,7 @@ class FrontParser {
     }
     error(message, span, code = "GOJR_PARSE_FRONT001") {
         this.diagnostics.push({
+            filename: diagnosticFilename(span, this.filename),
             code,
             severity: "error",
             message,
@@ -1002,6 +1015,7 @@ function mergeSpans(start, end) {
         return start;
     const endOffset = end.offset + end.length;
     return {
+        filename: start.filename,
         offset: start.offset,
         length: Math.max(0, endOffset - start.offset),
         line: start.line,
@@ -1012,6 +1026,6 @@ function eofToken() {
     return {
         kind: TokenKind.EOF,
         lexeme: "",
-        span: { offset: 0, length: 0, line: 1, column: 1 }
+        span: { filename: REPL_FILENAME, offset: 0, length: 0, line: 1, column: 1 }
     };
 }

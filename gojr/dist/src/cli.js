@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { readFile } from "node:fs/promises";
 import { parseProgram } from "./index.js";
+import { REPL_FILENAME } from "./diagnostics.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
 import { evaluateSource, formatReplValue } from "./runtime.js";
 async function main(argv) {
@@ -12,13 +13,15 @@ async function main(argv) {
     const source = options.command === "eval"
         ? options.expression ?? ""
         : await readSource(options.file);
+    const filename = options.command === "eval" ? REPL_FILENAME : options.file && options.file !== "-" ? options.file : REPL_FILENAME;
     if (options.command === "parse") {
-        const result = parseProgram(source);
+        const result = parseProgram(source, filename);
         printDiagnostics(result.diagnostics);
         console.log(JSON.stringify(result.ast, jsonReplacer, 2));
         return result.diagnostics.some((diagnostic) => diagnostic.severity === "error") ? 1 : 0;
     }
     const result = evaluateSource(source, {
+        filename,
         ...(options.sheet ? { sheet: options.sheet } : {}),
         ...(options.sheets ? { sheets: options.sheets } : {}),
         stdout: (text) => {
@@ -87,7 +90,9 @@ async function readSource(file) {
 }
 function printDiagnostics(diagnostics) {
     for (const diagnostic of diagnostics) {
-        const location = diagnostic.span ? `${diagnostic.span.line}:${diagnostic.span.column}: ` : "";
+        const location = diagnostic.span
+            ? `${diagnostic.span.filename}:${diagnostic.span.line}:${diagnostic.span.column}: `
+            : `${diagnostic.filename}: `;
         const line = `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}`;
         if (diagnostic.severity === "error") {
             console.error(line);

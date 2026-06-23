@@ -30,8 +30,8 @@ import {
   TypeSpec,
   UnaryExpression
 } from "./ast.js";
-import { Diagnostic } from "./diagnostics.js";
-import { checkFrontSource, CheckConfig, SheetNamespace } from "./front/checker.js";
+import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan } from "./diagnostics.js";
+import { checkFrontSource, checkFrontSourceFiles, CheckConfig, SheetNamespace } from "./front/checker.js";
 import {
   BasicKind,
   BasicType,
@@ -41,7 +41,7 @@ import {
   Universe,
   newUniverse
 } from "./front/types.js";
-import { frontSourceToAst } from "./frontToAst.js";
+import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
 
 export type RuntimeValue =
   | null
@@ -84,6 +84,7 @@ export interface SheetData {
 }
 
 export interface EvaluationOptions {
+  filename?: string;
   packages?: Record<string, RuntimeObject>;
   sheet?: SheetData;
   sheets?: Record<string, SheetData>;
@@ -582,7 +583,11 @@ export class RuntimeMap {
 }
 
 export function evaluateSource(source: string, options: EvaluationOptions = {}): EvaluationResult {
-  const parsed = frontSourceToAst(source);
+  return evaluateSourceFiles([sourceFileFromSource(source, options)], options);
+}
+
+export function evaluateSourceFiles(files: SourceFile[], options: EvaluationOptions = {}): EvaluationResult {
+  const parsed = frontSourceFilesToAst(files);
   const ast = parsed.ast;
   if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     return {
@@ -601,7 +606,11 @@ export function evaluateSource(source: string, options: EvaluationOptions = {}):
 }
 
 export function testSource(source: string, options: EvaluationOptions = {}): EvaluationResult {
-  const parsed = frontSourceToAst(source);
+  return testSourceFiles([sourceFileFromSource(source, options)], options);
+}
+
+export function testSourceFiles(files: SourceFile[], options: EvaluationOptions = {}): EvaluationResult {
+  const parsed = frontSourceFilesToAst(files);
   const ast = parsed.ast;
   if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     return {
@@ -617,7 +626,7 @@ export function testSource(source: string, options: EvaluationOptions = {}): Eva
     };
   }
 
-  const checked = checkFrontSource(source, typeCheckConfig(options));
+  const checked = checkFrontSourceFiles(files, typeCheckConfig(options));
   if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     return {
       diagnostics: checked.diagnostics,
@@ -627,6 +636,13 @@ export function testSource(source: string, options: EvaluationOptions = {}): Eva
   }
 
   return testProgram(ast, checked.diagnostics, options);
+}
+
+function sourceFileFromSource(source: string, options: EvaluationOptions = {}): SourceFile {
+  return {
+    filename: options.filename ?? REPL_FILENAME,
+    source
+  };
 }
 
 export function evaluateProgram(ast: ProgramAst, options: EvaluationOptions = {}): EvaluationResult {
@@ -679,11 +695,7 @@ export function evaluateProgram(ast: ProgramAst, options: EvaluationOptions = {}
     return {
       diagnostics: [
         ...ast.diagnostics,
-        {
-          code: error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001",
-          severity: "error",
-          message
-        }
+        runtimeDiagnostic(ast, error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001", message)
       ],
       output: context.output,
       ast
@@ -728,11 +740,7 @@ function testProgram(ast: ProgramAst, baseDiagnostics: Diagnostic[], options: Ev
     return {
       diagnostics: [
         ...diagnostics,
-        {
-          code: error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001",
-          severity: "error",
-          message
-        }
+        runtimeDiagnostic(ast, error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001", message)
       ],
       output: context.output,
       ast
@@ -802,11 +810,27 @@ function testSignatureError(declaration: FunctionDecl): string | undefined {
 
 function testDiagnostic(declaration: FunctionDecl, message: string): Diagnostic {
   return {
+    filename: declaration.span?.filename ?? REPL_FILENAME,
     code: "GOJR_TEST001",
     severity: "error",
     message,
     ...(declaration.span ? { span: declaration.span } : {})
   };
+}
+
+function runtimeDiagnostic(ast: ProgramAst, code: string, message: string): Diagnostic {
+  const span = firstProgramSpan(ast);
+  return {
+    filename: span?.filename ?? REPL_FILENAME,
+    code,
+    severity: "error",
+    message,
+    ...(span ? { span } : {})
+  };
+}
+
+function firstProgramSpan(ast: ProgramAst): SourceSpan | undefined {
+  return ast.body[0]?.span ?? ast.functions[0]?.span;
 }
 
 function makeTestingT(name: string): { value: RuntimePointer; state: TestingTState } {
@@ -906,7 +930,7 @@ function indentTestingLog(text: string): string {
 
 export class GoJuniorSession {
   private readonly context: EvaluationContext;
-  private readonly acceptedSources: string[] = [];
+  private readonly acceptedSources: SourceFile[] = [];
 
   public constructor(private readonly options: EvaluationOptions = {}) {
     this.context = new EvaluationContext(options);
@@ -924,7 +948,8 @@ export class GoJuniorSession {
   }
 
   public evaluate(source: string): EvaluationResult {
-    const parsed = frontSourceToAst(source);
+    const sourceFile = sourceFileFromSource(source, { ...this.options, filename: this.options.filename ?? REPL_FILENAME });
+    const parsed = frontSourceToAst(sourceFile.source, sourceFile.filename);
     const ast = parsed.ast;
     const hasError = parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error");
     if (hasError) {
@@ -942,7 +967,7 @@ export class GoJuniorSession {
       };
     }
 
-    const typeDiagnostics = this.checkSource(source);
+    const typeDiagnostics = this.checkSource(sourceFile);
     if (typeDiagnostics.some((diagnostic) => diagnostic.severity === "error")) {
       return {
         diagnostics: typeDiagnostics,
@@ -965,7 +990,7 @@ export class GoJuniorSession {
 
       if (ast.kind === "function" && ast.functions[0] && ast.body.length === 0) {
         const value = installedFunctionValue(this.context, ast.functions[0]);
-        this.acceptedSources.push(ensureTrailingNewline(source));
+        this.acceptedSources.push(ensureTrailingNewlineSourceFile(sourceFile));
         return {
           diagnostics: ast.diagnostics,
           output: this.context.outputFrom(outputStart),
@@ -977,18 +1002,14 @@ export class GoJuniorSession {
       runInitFunctions(ast.functions, this.context);
       const completion = executeTopLevelStatements(statements, this.context);
       const result = resultFromCompletion(ast, this.context.outputFrom(outputStart), completion);
-      this.acceptedSources.push(ensureTrailingNewline(source));
+      this.acceptedSources.push(ensureTrailingNewlineSourceFile(sourceFile));
       return result;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return {
         diagnostics: [
           ...ast.diagnostics,
-          {
-            code: error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001",
-            severity: "error",
-            message
-          }
+          runtimeDiagnostic(ast, error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001", message)
         ],
         output: this.context.outputFrom(outputStart),
         ast
@@ -996,14 +1017,21 @@ export class GoJuniorSession {
     }
   }
 
-  private checkSource(source: string): Diagnostic[] {
-    const checked = checkFrontSource(this.acceptedSources.join("") + ensureTrailingNewline(source), typeCheckConfig(this.options));
+  private checkSource(source: SourceFile): Diagnostic[] {
+    const checked = checkFrontSourceFiles([...this.acceptedSources, ensureTrailingNewlineSourceFile(source)], typeCheckConfig(this.options));
     return checked.diagnostics;
   }
 }
 
 function ensureTrailingNewline(source: string): string {
   return source.endsWith("\n") ? source : `${source}\n`;
+}
+
+function ensureTrailingNewlineSourceFile(file: SourceFile): SourceFile {
+  return {
+    filename: file.filename,
+    source: ensureTrailingNewline(file.source)
+  };
 }
 
 function typeCheckConfig(options: EvaluationOptions): CheckConfig {

@@ -1,6 +1,7 @@
-import { checkFrontSource } from "./front/checker.js";
+import { REPL_FILENAME } from "./diagnostics.js";
+import { checkFrontSourceFiles } from "./front/checker.js";
 import { BasicKind, BasicType, MapType as CheckerMapType, SliceType as CheckerSliceType, newUniverse } from "./front/types.js";
-import { frontSourceToAst } from "./frontToAst.js";
+import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
 export class GoJuniorRuntimeError extends Error {
     constructor(message) {
         super(message);
@@ -397,7 +398,10 @@ export class RuntimeMap {
     }
 }
 export function evaluateSource(source, options = {}) {
-    const parsed = frontSourceToAst(source);
+    return evaluateSourceFiles([sourceFileFromSource(source, options)], options);
+}
+export function evaluateSourceFiles(files, options = {}) {
+    const parsed = frontSourceFilesToAst(files);
     const ast = parsed.ast;
     if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
         return {
@@ -415,7 +419,10 @@ export function evaluateSource(source, options = {}) {
     return evaluateProgram(ast, options);
 }
 export function testSource(source, options = {}) {
-    const parsed = frontSourceToAst(source);
+    return testSourceFiles([sourceFileFromSource(source, options)], options);
+}
+export function testSourceFiles(files, options = {}) {
+    const parsed = frontSourceFilesToAst(files);
     const ast = parsed.ast;
     if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
         return {
@@ -430,7 +437,7 @@ export function testSource(source, options = {}) {
             output: []
         };
     }
-    const checked = checkFrontSource(source, typeCheckConfig(options));
+    const checked = checkFrontSourceFiles(files, typeCheckConfig(options));
     if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
         return {
             diagnostics: checked.diagnostics,
@@ -439,6 +446,12 @@ export function testSource(source, options = {}) {
         };
     }
     return testProgram(ast, checked.diagnostics, options);
+}
+function sourceFileFromSource(source, options = {}) {
+    return {
+        filename: options.filename ?? REPL_FILENAME,
+        source
+    };
 }
 export function evaluateProgram(ast, options = {}) {
     const context = new EvaluationContext(options);
@@ -485,11 +498,7 @@ export function evaluateProgram(ast, options = {}) {
         return {
             diagnostics: [
                 ...ast.diagnostics,
-                {
-                    code: error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001",
-                    severity: "error",
-                    message
-                }
+                runtimeDiagnostic(ast, error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001", message)
             ],
             output: context.output,
             ast
@@ -529,11 +538,7 @@ function testProgram(ast, baseDiagnostics, options) {
         return {
             diagnostics: [
                 ...diagnostics,
-                {
-                    code: error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001",
-                    severity: "error",
-                    message
-                }
+                runtimeDiagnostic(ast, error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001", message)
             ],
             output: context.output,
             ast
@@ -601,11 +606,25 @@ function testSignatureError(declaration) {
 }
 function testDiagnostic(declaration, message) {
     return {
+        filename: declaration.span?.filename ?? REPL_FILENAME,
         code: "GOJR_TEST001",
         severity: "error",
         message,
         ...(declaration.span ? { span: declaration.span } : {})
     };
+}
+function runtimeDiagnostic(ast, code, message) {
+    const span = firstProgramSpan(ast);
+    return {
+        filename: span?.filename ?? REPL_FILENAME,
+        code,
+        severity: "error",
+        message,
+        ...(span ? { span } : {})
+    };
+}
+function firstProgramSpan(ast) {
+    return ast.body[0]?.span ?? ast.functions[0]?.span;
 }
 function makeTestingT(name) {
     const state = {
@@ -715,7 +734,8 @@ export class GoJuniorSession {
         }
     }
     evaluate(source) {
-        const parsed = frontSourceToAst(source);
+        const sourceFile = sourceFileFromSource(source, { ...this.options, filename: this.options.filename ?? REPL_FILENAME });
+        const parsed = frontSourceToAst(sourceFile.source, sourceFile.filename);
         const ast = parsed.ast;
         const hasError = parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error");
         if (hasError) {
@@ -732,7 +752,7 @@ export class GoJuniorSession {
                 output: []
             };
         }
-        const typeDiagnostics = this.checkSource(source);
+        const typeDiagnostics = this.checkSource(sourceFile);
         if (typeDiagnostics.some((diagnostic) => diagnostic.severity === "error")) {
             return {
                 diagnostics: typeDiagnostics,
@@ -751,7 +771,7 @@ export class GoJuniorSession {
             expectNormalCompletion(declarationCompletion, "top-level declarations");
             if (ast.kind === "function" && ast.functions[0] && ast.body.length === 0) {
                 const value = installedFunctionValue(this.context, ast.functions[0]);
-                this.acceptedSources.push(ensureTrailingNewline(source));
+                this.acceptedSources.push(ensureTrailingNewlineSourceFile(sourceFile));
                 return {
                     diagnostics: ast.diagnostics,
                     output: this.context.outputFrom(outputStart),
@@ -762,7 +782,7 @@ export class GoJuniorSession {
             runInitFunctions(ast.functions, this.context);
             const completion = executeTopLevelStatements(statements, this.context);
             const result = resultFromCompletion(ast, this.context.outputFrom(outputStart), completion);
-            this.acceptedSources.push(ensureTrailingNewline(source));
+            this.acceptedSources.push(ensureTrailingNewlineSourceFile(sourceFile));
             return result;
         }
         catch (error) {
@@ -770,11 +790,7 @@ export class GoJuniorSession {
             return {
                 diagnostics: [
                     ...ast.diagnostics,
-                    {
-                        code: error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001",
-                        severity: "error",
-                        message
-                    }
+                    runtimeDiagnostic(ast, error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001", message)
                 ],
                 output: this.context.outputFrom(outputStart),
                 ast
@@ -782,12 +798,18 @@ export class GoJuniorSession {
         }
     }
     checkSource(source) {
-        const checked = checkFrontSource(this.acceptedSources.join("") + ensureTrailingNewline(source), typeCheckConfig(this.options));
+        const checked = checkFrontSourceFiles([...this.acceptedSources, ensureTrailingNewlineSourceFile(source)], typeCheckConfig(this.options));
         return checked.diagnostics;
     }
 }
 function ensureTrailingNewline(source) {
     return source.endsWith("\n") ? source : `${source}\n`;
+}
+function ensureTrailingNewlineSourceFile(file) {
+    return {
+        filename: file.filename,
+        source: ensureTrailingNewline(file.source)
+    };
 }
 function typeCheckConfig(options) {
     const universe = newUniverse();

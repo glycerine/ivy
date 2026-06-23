@@ -1,4 +1,4 @@
-import { Diagnostic, SourceSpan } from "../diagnostics.js";
+import { Diagnostic, REPL_FILENAME, SourceSpan } from "../diagnostics.js";
 import { FrontToken, keywordKind, tokenCanEndStatement, TokenKind } from "./token.js";
 
 export interface ScanResult {
@@ -7,13 +7,14 @@ export interface ScanResult {
 }
 
 interface Position {
+  filename: string;
   offset: number;
   line: number;
   column: number;
 }
 
-export function scanSource(source: string): ScanResult {
-  return new Scanner(source).scan();
+export function scanSource(source: string, filename: string): ScanResult {
+  return new Scanner(source, filename).scan();
 }
 
 class Scanner {
@@ -25,7 +26,10 @@ class Scanner {
   private readonly tokens: FrontToken[] = [];
   private readonly diagnostics: Diagnostic[] = [];
 
-  public constructor(private readonly source: string) {}
+  public constructor(
+    private readonly source: string,
+    private readonly filename: string
+  ) {}
 
   public scan(): ScanResult {
     while (!this.emittedEOF) {
@@ -308,6 +312,7 @@ class Scanner {
 
   private error(code: string, message: string, start: Position, end: Position): void {
     this.diagnostics.push({
+      filename: start.filename,
       code,
       severity: "error",
       message,
@@ -326,6 +331,7 @@ class Scanner {
 
   private position(): Position {
     return {
+      filename: this.filename,
       offset: this.offset,
       line: this.line,
       column: this.column
@@ -366,6 +372,7 @@ class Scanner {
 
 function spanBetween(start: Position, end: Position): SourceSpan {
   return {
+    filename: start.filename || end.filename || REPL_FILENAME,
     offset: start.offset,
     length: Math.max(0, end.offset - start.offset),
     line: start.line,

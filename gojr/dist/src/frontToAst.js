@@ -1,7 +1,7 @@
-import { parseFrontSource } from "./front/parser.js";
+import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
-export function frontSourceToAst(source) {
-    const parsed = parseFrontSource(source);
+export function frontSourceToAst(source, filename) {
+    const parsed = parseFrontSource(source, filename);
     const ast = parsed.file ? frontToProgramAst(parsed.file, parsed.diagnostics, parsed.statements) : undefined;
     return {
         diagnostics: parsed.diagnostics,
@@ -9,15 +9,27 @@ export function frontSourceToAst(source) {
         ...(ast ? { ast } : {})
     };
 }
+export function frontSourceFilesToAst(files) {
+    const parsed = parseFrontSourceFiles(files);
+    const ast = parsed.files.length > 0 ? frontFilesToProgramAst(parsed.files, parsed.diagnostics, parsed.statements) : undefined;
+    return {
+        diagnostics: parsed.diagnostics,
+        parsed,
+        ...(ast ? { ast } : {})
+    };
+}
 export function frontToProgramAst(file, diagnostics = [], statements = []) {
+    return frontFilesToProgramAst([file], diagnostics, statements);
+}
+export function frontFilesToProgramAst(files, diagnostics = [], statements = []) {
     const body = [
-        ...file.declarations.flatMap(declarationToBodyStatement),
+        ...files.flatMap((file) => file.declarations.flatMap(declarationToBodyStatement)),
         ...statements.map(statementToAst)
     ];
-    const functions = file.declarations.flatMap((declaration) => declaration.kind === "FuncDecl" ? [functionDeclToAst(declaration)] : []);
+    const functions = files.flatMap((file) => file.declarations).flatMap((declaration) => declaration.kind === "FuncDecl" ? [functionDeclToAst(declaration)] : []);
     return {
         kind: functions.length > 0 && body.length === 0 ? "function" : "script",
-        imports: file.imports.map(importSpecToAst),
+        imports: files.flatMap((file) => file.imports.map(importSpecToAst)),
         diagnostics,
         body,
         functions

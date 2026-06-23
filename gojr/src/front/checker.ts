@@ -1,4 +1,4 @@
-import { Diagnostic, SourceSpan } from "../diagnostics.js";
+import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan, diagnosticFilename } from "../diagnostics.js";
 import {
   ArrayType as ArrayTypeNode,
   AstNode,
@@ -30,7 +30,7 @@ import {
   UnaryExpr,
   ValueSpec
 } from "./ast.js";
-import { parseFrontSource } from "./parser.js";
+import { parseFrontSource, parseFrontSourceFiles } from "./parser.js";
 import { TokenKind } from "./token.js";
 import {
   ArrayType,
@@ -103,12 +103,21 @@ export interface CheckResult {
   universe: Universe;
 }
 
-export function checkFrontSource(source: string, config: CheckConfig = {}): CheckResult & { file?: File } {
-  const parsed = parseFrontSource(source);
+export function checkFrontSource(source: string, filename: string, config: CheckConfig = {}): CheckResult & { file?: File } {
+  const parsed = parseFrontSource(source, filename);
   const result = checkFrontFiles(parsed.file ? [parsed.file] : [], config, parsed.diagnostics, parsed.statements);
   return {
     ...result,
     ...(parsed.file ? { file: parsed.file } : {})
+  };
+}
+
+export function checkFrontSourceFiles(sourceFiles: SourceFile[], config: CheckConfig = {}): CheckResult & { files: File[] } {
+  const parsed = parseFrontSourceFiles(sourceFiles);
+  const result = checkFrontFiles(parsed.files, config, parsed.diagnostics, parsed.statements);
+  return {
+    ...result,
+    files: parsed.files
   };
 }
 
@@ -782,6 +791,7 @@ class FrontChecker {
 
   private error(message: string, span?: SourceSpan, code = "GOJR_TYPE001"): void {
     this.diagnostics.push({
+      filename: diagnosticFilename(span, REPL_FILENAME),
       code,
       severity: "error",
       message,

@@ -4,12 +4,13 @@ Plan only. No implementation changes in this document.
 
 ## Goal
 
-Build a TypeScript implementation of Go-junior, a deliberately small,
-spreadsheet-oriented language with Go-like syntax and deterministic
-single-threaded execution. Go-junior should compile to browser-runnable
-JavaScript using source-level copy-and-patch templates, and it should be able
-to call allowlisted Go packages compiled to WebAssembly through typed host
-wrappers.
+Build a TypeScript implementation of Go-junior, now targeting full Go language
+compatibility for source parsing, typechecking, and execution, plus explicit
+spreadsheet syntax extensions. Go-junior should compile to browser-runnable
+JavaScript using a compiler-owned CPS/state-machine backend with source-level
+copy-and-patch templates where useful. It should be able to call Go-compatible
+source packages compiled in-browser or in Node, and it should be able to call
+allowlisted Go packages compiled to WebAssembly through typed host wrappers.
 
 The first production target is the Ivy webui analysis spreadsheet. The current
 spreadsheet-like pane can then evolve from an editable mock grid into a real
@@ -18,10 +19,12 @@ and host/WASM calls.
 
 ## Design Principles
 
-- Treat Go-junior as its own DSL, not as "almost all of Go".
-- Keep the language deterministic and explicit enough that users can reason
-  about every construct, while preserving the Go idioms needed for real
-  libraries.
+- Treat Go-junior as full Go language semantics plus deliberate spreadsheet
+  extensions, not as a smaller Go-like DSL. Any deviation from Go must be
+  named, tested, and justified by the spreadsheet/browser target.
+- Keep execution deterministic where the spreadsheet host needs determinism,
+  while still supporting Go's concurrency surface (`go`, channels, `select`,
+  `close`, and `recover`) through a deterministic runtime scheduler.
 - Preserve Go's readable expression and statement syntax where it helps.
 - Include core Go function-structuring idioms that matter for real libraries,
   including `defer`, multiple return values, and named return values.
@@ -29,8 +32,9 @@ and host/WASM calls.
   recalculation, error values, deterministic execution, and bounded work.
 - Never emit raw user source into JavaScript. Parse, validate, typecheck, then
   emit compiler-owned JavaScript stencils with sanitized holes.
-- Keep the compiler backend replaceable. Start with JavaScript source
-  copy-and-patch. Leave a path to a future WebAssembly stencil backend.
+- Keep the compiler backend replaceable. Start with a JavaScript CPS/state
+  machine backend that preserves source spans and types. Leave a path to a
+  future WebAssembly stencil backend.
 - Go-junior code cannot directly import arbitrary JavaScript or reach ambient
   browser globals; JavaScript, browser, sheet, graph, UI, and WASM
   functionality must be exposed through explicit typed host capabilities.
@@ -40,10 +44,11 @@ and host/WASM calls.
 ## Rationale
 
 Spreadsheet formulas are not ordinary scripts. The spreadsheet engine may rerun
-them automatically, many times, in dependency order, in a worker, from Node CLI
-tests, or inside iterative recalculation for circular references. The runtime
-therefore needs to know what a formula can read, what it can mutate, and
-whether a call is pure, stateful, volatile, or effectful.
+them automatically, many times, in dependency order, in a worker, from Node
+runtime tests, through the Go `gojr` CLI backed by embedded Node/V8, or inside
+iterative recalculation for circular references. The runtime therefore needs
+to know what a formula can read, what it can mutate, and whether a call is
+pure, stateful, volatile, or effectful.
 
 Typed host capabilities preserve useful power without granting ambient
 authority. Go-junior should be able to call JavaScript-backed helpers, draw
@@ -62,7 +67,8 @@ This protects:
   spreadsheet graph cannot know what should trigger recomputation.
 - Worker portability: formulas should run in Node tests and browser workers;
   direct DOM/global APIs break that portability.
-- Testing: typed bindings are easy to fake in Node CLI and unit tests.
+- Testing: typed bindings are easy to fake in the Node runtime, the Go `gojr`
+  CLI, and unit tests.
 - Caching: compiled formulas and packages can be cached only if their host
   capability contract is explicit.
 - Backend flexibility: the same typed IR can later run in an interpreter or
@@ -101,16 +107,6 @@ The distinction is not "no JavaScript". It is "no ambient JavaScript authority".
 
 ## Non-goals
 
-- Full Go compatibility.
-- Goroutines, `go`, `select`, channels, channel operations, `recover`,
-  reflection, unsafe, cgo, full Go package initialization semantics, build
-  tags, or full Go module semantics.
-- Go generics: type parameters, generic function/type declarations, generic
-  instantiation syntax, and generic constraint solving are deliberately out of
-  scope.
-- Arbitrary ambient package loading. Source packages are allowed, but they must
-  be Go-junior-compatible packages resolved through the in-browser package
-  registry/cache or a trusted host package provider.
 - Native machine-code JIT in the browser.
 - Ambient access to arbitrary JavaScript or browser globals. Dynamic
   JavaScript-backed helpers are allowed only through explicit typed
@@ -119,6 +115,16 @@ The distinction is not "no JavaScript". It is "no ambient JavaScript authority".
   UI effects through declared host capabilities, but it should not reach
   `window`, `document`, `globalThis`, or DOM APIs directly.
 - Long-running unbounded calculations on the main UI thread.
+- Browser-native cgo execution. cgo packages may be represented through typed
+  host/WASM bindings or trusted precompiled adapters, but the TypeScript
+  runtime does not execute arbitrary native cgo.
+- Exact Go runtime implementation details that are not observable by ordinary
+  source programs, such as native stack layout, OS thread scheduling,
+  preemptive scheduling timing, or machine pointer identity. Observable Go
+  language semantics remain in scope.
+- Arbitrary ambient package loading. Source packages are allowed, but they must
+  be resolved through the in-browser package registry/cache or a trusted host
+  package provider.
 
 ## High-level Architecture
 
@@ -127,12 +133,13 @@ Go-junior source
   -> TypeScript Go-style scanner/token stream
   -> TypeScript Go-style parser and AST with source spans
   -> TypeScript Go-style resolver/typechecker front end
-  -> Go-junior subset validator and spreadsheet syntax validator
+  -> Go language compatibility validator and spreadsheet syntax validator
   -> resolver and typechecker
   -> package resolver and package compiler
   -> spreadsheet dependency extractor
   -> typed IR
-  -> JavaScript source copy-and-patch emitter
+  -> CPS/state-machine lowering for suspendable code
+  -> JavaScript source copy-and-patch emitter and runtime scheduler
   -> function/package compiler cache
   -> worker-backed runtime
   -> typed package and host/WASM bindings
@@ -149,9 +156,12 @@ strategy should now follow the Go standard front-end architecture directly:
 
 - scanner/token stream modeled on `go/scanner` and `go/token`
 - parser and AST modeled on `go/parser` and `go/ast`
-- resolver/typechecker modeled on the useful subset of `go/types`
+- resolver/typechecker modeled on `go/types`, including interfaces, method
+  sets, constants, generics, channels, `go`, `select`, `recover`, and package
+  initialization semantics needed by normal Go source files
 - package/export metadata sufficient for browser and Node package resolution
-- Go-junior subset validation after parsing/typechecking
+- Go compatibility validation after parsing/typechecking, with diagnostics only
+  for runtime/environment limitations such as unsupported cgo/native adapters
 - spreadsheet syntax handled as deliberate scanner/parser extensions
 
 The rationale for the pivot is semantic correctness. A CST-only parser or an
@@ -178,10 +188,107 @@ a runtime/REPL bootstrap. New language front-end work should go into the
 standard-Go-style TypeScript front end and migrate existing parser tests toward
 that implementation.
 
+## Full Go and CPS Runtime Pivot
+
+The project now needs enough full Go support to parse, typecheck, run, and test
+existing Go source packages in the CLI and browser worker. The old
+"single-threaded subset" strategy is no longer sufficient. The implementation
+must support the Go language surface first, then layer spreadsheet semantics and
+capability policy on top.
+
+Required language additions:
+
+- `go` statements and goroutine scheduling
+- channel types, send statements, receive expressions, two-value receives,
+  `close`, closed-channel behavior, nil-channel blocking semantics, buffered
+  and unbuffered channels
+- `select`, including default cases, receive cases, send cases, closed-channel
+  behavior, nil-channel disabling, fairness policy, and deterministic test mode
+- `defer`, `panic`, and `recover` across goroutine and CPS suspension
+- labels and `goto`, including Go's goto restrictions
+- generics: type parameter lists, constraints, type sets, instantiation,
+  inference, method sets involving type parameters, and export metadata
+- full package initialization order: package variable initialization,
+  `init` functions, import graph order, and panic behavior during init
+- `unsafe` package surface sufficient for typechecking normal source; runtime
+  support is phased and may be restricted by target capability policy
+
+The runtime backend must be a compiler-owned CPS/state-machine transform over
+typed Go-junior AST/IR, not a TypeScript AST transform. TypeScript compiler API
+or ts-morph may be studied for implementation patterns, but Go-junior's
+transform must preserve Go-junior source filenames, spans, types, package
+symbols, and spreadsheet dependency metadata.
+
+CPS lowering requirements:
+
+- Every potentially suspending operation lowers to an explicit state transition:
+  channel send, channel receive, select, goroutine yield, async host call,
+  worker/package RPC, and future asynchronous sheet/graph capabilities.
+- Non-suspending code may remain direct JS inside a state body for speed.
+- Function calls are annotated as direct or may-suspend from type/effect data.
+- Defers are represented in explicit runtime frames and run correctly on
+  return, panic, and goroutine exit.
+- `recover` observes the innermost active deferred call exactly where Go permits
+  it.
+- Named returns, multiple returns, panics, gotos, labeled break/continue, and
+  loops lower to explicit state-machine control edges.
+- Each state and emitted operation carries source span and static type metadata
+  for diagnostics and runtime stack traces.
+- The scheduler owns goroutine queues, channel wait queues, timers/future async
+  waits, panic propagation, deadlock detection, fuel/time budgets, and
+  deterministic test hooks.
+- Browser and Node runtimes share the same scheduler semantics. Node runtime
+  tests and the Go `gojr` CLI can run the scheduler without a browser.
+
+Initial concurrency runtime semantics:
+
+- Goroutines are cooperative tasks scheduled by the Go-junior runtime.
+- The default production scheduler should be deterministic for a fixed
+  workbook/runtime seed. A separate randomized/fairness stress mode should be
+  available in tests.
+- Unbuffered channels pair one sender with one receiver.
+- Buffered channels maintain FIFO element order.
+- Sends to closed channels panic.
+- Receives from closed drained channels return zero value and `ok == false`.
+- `close(nil)` and closing an already closed channel panic.
+- Send/receive on nil channels block forever unless disabled in `select`.
+- `select` with no ready cases blocks; with default it runs default
+  immediately; with multiple ready cases it chooses via the scheduler policy.
+- Runtime deadlock detection reports a structured Go-junior deadlock diagnostic
+  when all goroutines are blocked and no host/worker wakeup can occur.
+
+Implementation strategy:
+
+1. Keep the current direct interpreter/backend for non-concurrent smoke tests
+   while building the typed CPS IR in parallel.
+2. Add a typed effect pass that marks expressions/statements/functions as
+   direct, may-panic, may-defer, may-suspend, package-state, diagnostic-effect,
+   sheet-effect, graph-effect, or UI-effect.
+3. Lower only functions containing `go`, channel operations, `select`,
+   `recover`, or may-suspend calls to CPS at first.
+4. Once stable, lower all package/formula code through the same state-machine
+   backend so one runtime path handles defers, panics, channels, and stack
+   traces.
+5. Preserve the existing Node REPL as the fastest manual test surface. The REPL
+   must parse/typecheck/evaluate with source filename `gojr-repl.go`.
+
+Test strategy for the pivot:
+
+- Start with Go distribution language tests that do not require native cgo or
+  target-specific OS behavior.
+- Import `/usr/local/go1.26.4/test` fixtures incrementally, tagging expected
+  unsupported environment features separately from language failures.
+- Add Go-junior-specific spreadsheet/reference tests on top of the Go language
+  fixtures.
+- Add scheduler model tests for every channel/select edge case before browser
+  integration.
+- Add randomized scheduler stress tests under a deterministic seed so failures
+  are reproducible.
+
 Implementation sequencing should be CLI-first:
 
 1. Build the shared language/compiler/recalculation core.
-2. Build the Node runtime and `gojunior` CLI.
+2. Build the Node runtime and the Go `gojr` CLI backed by embedded Node/V8.
 3. Use CLI tests and manual bash sessions to refine syntax, package calls,
    dynamic dependencies, circular-reference behavior, and graph-value semantics.
 4. Add the browser worker adapter after the language semantics are stable.
@@ -200,7 +307,7 @@ goivy/webui/frontend/src/gojunior/
   front/resolver.ts
   front/checker.ts
   front/exportData.ts
-  front/subset.ts
+  front/compatibility.ts
   resolver.ts
   types.ts
   ir.ts
@@ -275,13 +382,13 @@ need explicit `number(...)` casts for statically known numeric cells.
 
 Go-junior functions live in spreadsheet cells. Cell snippets should not require
 users to write package declarations, but they can declare their own imports and
-import aliases using Go syntax. Cell imports resolve through the same
-Go-junior-compatible package resolver used by source package units.
+import aliases using Go syntax. Cell imports resolve through the same Go
+package resolver used by source package units.
 
 ### Initial Types
 
-Start with a Go-like static type system, intentionally excluding generics and
-concurrency:
+Use a Go-compatible static type system, extended with spreadsheet namespaces
+and values:
 
 - `bool`
 - `int`, `int8`, `int16`, `int32`, `int64`
@@ -300,7 +407,10 @@ concurrency:
 - structs and named struct types
 - pointers, for example `*Point`
 - interfaces and method sets
+- type parameters, constraints, instantiated named types/functions, and type
+  inference metadata
 - function types, function literals, and closures
+- channel types, including directional channels
 - tuple-like multiple return values
 - `error`, the single Go-style error type
 - `Value`, an internal spreadsheet value union for dynamic/unknown host
@@ -310,23 +420,22 @@ There should be no Go-junior `number` type. Numeric lowering may still use
 JavaScript's numeric representation internally where appropriate, but the
 language-level types should be `int64` and `float64`.
 
-Before source package compilation work begins, Go-junior should complete a
-single-threaded Go compatibility pass. The language should continue to exclude
-`go`, `select`, channels/channel operations, `recover`, `unsafe`, cgo, and
-generics, but ordinary single-threaded Go library code should not be blocked by
-avoidable syntax/runtime gaps. Required compatibility work includes:
+Before source package compilation work is treated as complete, Go-junior should
+complete a full Go language compatibility pass. Ordinary Go library code should
+not be blocked by avoidable syntax, typechecker, package initialization,
+concurrency, or runtime gaps. Required compatibility work includes:
 
 - explicit conversions such as `int(x)`, `float64(i)`, `string(b)`, named type
   conversions, and conversion diagnostics for unsupported cases
-- the full non-channel operator surface: `|`, `^`, binary `&`, `&^`, `<<`,
+- the full Go operator surface: `|`, `^`, binary `&`, `&^`, `<<`,
   `>>`, unary `^`, and compound assignments such as `+=`, `-=`, `*=`, `/=`,
   `%=`, `&=`, `|=`, `^=`, `&^=`, `<<=`, and `>>=`
 - Go numeric literal forms: binary, octal, hexadecimal, underscores,
   hexadecimal floating-point literals, rune literals, imaginary literals, and
   the standard Go string/rune escape forms
 - the predeclared built-ins `new`, `delete`, `copy`, `clear`, `min`, `max`,
-  `complex`, `real`, `imag`, plus `print` and `println` for Go compatibility;
-  `close` remains unsupported because channels are unsupported
+  `complex`, `real`, `imag`, `close`, `recover`, plus `print` and `println`
+  for Go compatibility
 - Go-style `if init; condition {}` and validation of Go control-flow rules,
   including short-declaration redeclaration, `for` post-statement restrictions,
   `fallthrough` placement, and `goto` restrictions
@@ -341,8 +450,14 @@ avoidable syntax/runtime gaps. Required compatibility work includes:
 - address-of composite literals, for example `&Point{X: 1}`
 - three-index slicing with capacity semantics
 - blank imports and dot imports
-- package `init` functions for Go-junior-compatible source packages
+- package `init` functions for Go source packages
 - current Go range forms over integers and iterator functions
+- channel sends, receives, two-value receives, `go`, `select`, `close`, and
+  `recover`
+- generic type/function declarations, constraint interfaces/type sets,
+  instantiation, and type inference
+- package initialization order, including package variable dependencies and
+  multiple `init` functions
 
 Go-junior intentionally keeps one spreadsheet ergonomics deviation from Go:
 declared but uninitialized maps may auto-initialize on first assignment or map
@@ -461,7 +576,7 @@ Browser target:
 
 - production webui execution
 - Web Worker isolation
-- IndexedDB package artifact cache
+- OPFS package artifact cache, with IndexedDB only for optional indexes
 - browser-safe host/WASM bindings
 
 Node target:
@@ -498,6 +613,7 @@ Support:
 - parentheses
 - function calls
 - function literals and closures
+- channel receive expressions: `<-ch`
 - address-of and dereference expressions: `&x` and `*p`
 - indexing and slicing for arrays, slices, maps, strings where supported, and
   spreadsheet ranges where appropriate
@@ -517,9 +633,8 @@ Support:
 
 Deliberately excluded:
 
-- generic type or function syntax
-- channel send/receive expressions
-- `go` and `select`
+- cgo-only syntax/build behavior in browser execution
+- ambient JavaScript/global access
 
 ### Spreadsheet Reference Syntax
 
@@ -627,6 +742,9 @@ Support:
 - `return expr, expr` for multiple return values
 - naked `return` only inside functions with named return values
 - `defer call(...)`
+- `go f(...)`
+- channel send statements: `ch <- value`
+- `select` statements with send, receive, assignment, and default cases
 - expression statements only for calls whose return value can be ignored
 - full Go-style `for` loops: `for {}`, `for cond {}`,
   `for init; cond; post {}`
@@ -634,6 +752,7 @@ Support:
   supported, and spreadsheet ranges
 - `break`, `continue`, and `fallthrough`, matching Go switch and loop
   semantics
+- labels and `goto`, matching Go restrictions
 
 Keep ordinary formula cells calculation-oriented by default: they calculate and
 return values. Go-junior source packages should still support Go-like mutable
@@ -683,22 +802,23 @@ func panicOn(err error) {
 }
 ```
 
-`panic` should follow Go's essential unwinding semantics: deferred calls run in
-LIFO order as the stack unwinds. Go-junior does not include `recover` unless a
-future explicit decision adds it, so a panic that escapes the top-level formula,
-function cell, or package call becomes a `#PANIC!` spreadsheet error. The panic
-diagnostic should include the panic value, source span if available, and a
+`panic` and `recover` should follow Go's essential unwinding semantics:
+deferred calls run in LIFO order as the stack unwinds, and `recover` succeeds
+only when called directly by a deferred function in the panicking goroutine. A
+panic that escapes the top-level formula, function cell, package call, or
+goroutine root becomes a `#PANIC!` spreadsheet error or a structured goroutine
+panic diagnostic, depending on execution context. The panic diagnostic should
+include the panic value, source span if available, goroutine ID, and a
 Go-junior stack trace.
 
 `panicOn(err)` is a required predeclared helper because `(T, error)` APIs are
 common and spreadsheet formulas need a compact way to fail fast during
 interactive exploration.
 
-The rest of the single-threaded Go built-in surface should be added before
-source package compilation is treated as complete: `append`, `cap`, `clear`,
+The rest of the Go built-in surface should be added before source package
+compilation is treated as complete: `append`, `cap`, `clear`, `close`,
 `complex`, `copy`, `delete`, `imag`, `len`, `make`, `max`, `min`, `new`,
-`panic`, `print`, `println`, and `real`. `recover` and `close` are deliberately
-unsupported unless the concurrency/recovery design is reopened later.
+`panic`, `print`, `println`, `real`, and `recover`.
 
 ### Functions
 
@@ -757,6 +877,86 @@ return values used with `defer`.
 
 Variadic functions should follow Go's call-shape rules closely enough for
 `fmt.Printf(format, args...)` style APIs and ordinary variadic calls.
+
+### Goroutines, Channels, Select, and Recover
+
+Full Go concurrency is required. Go-junior should support goroutines, channels,
+`select`, `close`, and `recover` using a deterministic cooperative scheduler in
+the TypeScript runtime.
+
+Required syntax and type support:
+
+```go
+ch := make(chan int)
+done := make(chan struct{})
+
+go func() {
+    defer close(done)
+    ch <- 3
+}()
+
+select {
+case v := <-ch:
+    fmt.Printf("value=%v\n", v)
+case <-done:
+    return
+default:
+    fmt.Printf("not ready\n")
+}
+```
+
+Semantics:
+
+- `make(chan T)` creates an unbuffered channel; `make(chan T, n)` creates a
+  buffered channel with capacity `n`.
+- Directional channel types (`<-chan T`, `chan<- T`) are supported and enforced
+  by the typechecker.
+- Send to a nil channel blocks; receive from a nil channel blocks.
+- Send to a closed channel panics.
+- Receive from a closed and drained channel returns the element zero value; the
+  two-value receive returns `ok == false`.
+- `close` wakes blocked receivers and future receives observe closed-channel
+  semantics.
+- Closing nil or already closed channels panics.
+- `select` disables nil-channel cases, runs `default` immediately if no case is
+  ready, and otherwise chooses one ready case through the scheduler's policy.
+- The default scheduler policy should be deterministic for reproducible
+  spreadsheet recalculation and CLI tests. A seeded randomized/fairness mode
+  should exist for stress testing.
+- Deadlock detection reports a structured diagnostic when all goroutines are
+  blocked and no host or worker wakeup can occur.
+- Goroutine roots must report panics with goroutine stack traces and source
+  spans.
+- `recover` works only during deferred-call unwinding in the same goroutine.
+
+Implementation notes:
+
+- Channel operations and `select` are may-suspend operations in the typed effect
+  pass.
+- Functions containing may-suspend operations, or calling may-suspend
+  functions, must lower through CPS/state-machine IR.
+- Defers live in explicit runtime frames so they survive suspension.
+- The runtime scheduler must be shared between Node tests and browser workers.
+- Spreadsheet formula contexts may restrict goroutine/channel use by policy
+  later, but the language/runtime must support them so source packages can be
+  tested and run.
+
+Tests:
+
+- Unbuffered send/receive handoff between two goroutines.
+- Buffered channel FIFO behavior and capacity blocking.
+- Two-value receive from open, closed non-drained, and closed drained channels.
+- Send to closed channel panics and runs defers.
+- Close nil and double close panic.
+- Nil channel send/receive block and are disabled inside `select`.
+- `select` with default runs default when no case is ready.
+- `select` receives from ready closed channels.
+- Multiple ready `select` cases follow deterministic scheduler policy.
+- Deadlock is detected with useful goroutine stack diagnostics.
+- `recover` succeeds in a deferred function and fails outside that context.
+- Goroutine panic reports goroutine ID, source file/line, and stack.
+- Channel element types and directional channel assignments are enforced by the
+  typechecker.
 
 ### Structs, Interfaces, Methods, and Closures
 
@@ -861,10 +1061,10 @@ Go-like.
 
 ### Source Packages
 
-Go-junior should support Go-junior-compatible source packages so formulas can
-call reusable libraries without those libraries being built into the core host
-API. These packages are source Go-like packages constrained to the Go-junior
-language subset.
+Go-junior should support Go-compatible source packages so formulas can call
+reusable libraries without those libraries being built into the core host API.
+These packages are parsed and typechecked as Go source with spreadsheet-aware
+extensions only where explicitly allowed by formula/cell context.
 
 Supported package shape:
 
@@ -903,9 +1103,14 @@ Package support should include:
 - rejection of import cycles.
 - support for `defer`, multiple returns, and named returns inside package
   functions.
+- support for `go`, channels, channel operations, `select`, `close`, `panic`,
+  and `recover` inside package functions.
+- support for generics, constraints, type sets, instantiation, and inference.
 - support for closures, `switch`, full `for`, `for range`, array/slice/map
   literals, indexing, and struct literals inside package functions.
-- rejection of excluded Go features inside packages.
+- rejection only of environment features that cannot run in the selected target,
+  such as cgo/native execution in browser, with explicit diagnostics and host
+  adapter alternatives.
 - package ABI metadata so formulas can typecheck calls and package variable
   reads/writes before loading code.
 - package export metadata that marks functions and variables as pure,
@@ -923,10 +1128,12 @@ The package resolver should distinguish three sources:
 - user/workbook packages stored with the sheet or in browser storage
 - trusted host packages that are already compiled to JavaScript or WASM
 
-Full arbitrary Go packages are not a v1 target. A package can be used as source
-only if it stays inside the Go-junior subset. Existing full-Go libraries that
-use goroutines, channels, reflection, unsafe, or unsupported runtime features
-should be exposed through typed host/WASM bindings instead.
+Full arbitrary Go modules are still a packaging and environment project, but
+the language implementation target is full Go. A package can be used as source
+when its imports and environment requirements are available to the Go-junior
+runtime. Packages requiring cgo, native syscalls, OS-specific services, or
+unimplemented standard-library internals should be exposed through typed
+host/WASM bindings until those runtime services exist.
 
 ### Built-in fmt Package
 
@@ -945,10 +1152,10 @@ func Println(args ...interface{}) (int64, error)
 ```
 
 `fmt.Printf` writes to the runtime diagnostic/log sink rather than directly to
-browser globals or Node process globals. In the Node CLI, that sink can render
-to stdout or structured JSON output. In the browser worker, it should be
-returned with the cell evaluation result and displayed in the UI diagnostics or
-trace panel.
+browser globals or Node process globals. In the Go `gojr` CLI, that sink can
+render to stdout or structured JSON output. In the browser worker, it should
+be returned with the cell evaluation result and displayed in the UI diagnostics
+or trace panel.
 
 The implementation can lean on trusted JavaScript reflection internally to
 format Go-junior values, structs, maps, slices, interfaces, errors, spreadsheet
@@ -1042,9 +1249,12 @@ JavaScript through `wasm_exec.js` or a narrower wrapper. Go-junior should not
 know whether a host function is implemented in JavaScript, Go WASM, TinyGo
 WASM, or a web worker RPC.
 
-For expensive host calls, the host binding can be asynchronous in a later
-stage. The initial version should prefer synchronous calculation functions so
-that spreadsheet recalculation remains simple.
+Host calls may be synchronous or asynchronous. Asynchronous host calls are
+may-suspend operations and must use the same CPS/runtime scheduler path as
+channel operations and goroutine blocking. Pure synchronous calculation helpers
+remain preferable for ordinary formulas, but the compiler/runtime must be able
+to suspend and resume a goroutine around host, worker, package, or WASM calls
+from the start of the CPS backend.
 
 ## Capability and Effect Model
 
@@ -1126,7 +1336,7 @@ spreadsheet host grants those capabilities for that invocation.
 
 ## Source Package Compilation and Code Cache
 
-The runtime should be able to JIT compile Go-junior-compatible source packages
+The runtime should be able to JIT compile Go source packages
 in the browser and cache the compiled output. This lets the spreadsheet behave
 like a scripting environment with reusable libraries.
 
@@ -1139,14 +1349,31 @@ package sources
   -> resolve imports
   -> typecheck package exports and internals
   -> emit JS package module or future Wasm package module
-  -> persist compiled package artifact in browser cache
+  -> persist compiled package artifact in the target artifact cache
 ```
 
-The package cache should live in IndexedDB in the browser and in a filesystem
-cache for Node.js. Cache Storage is optional in the browser for large auxiliary
-artifacts. Node's default cache can be a content-addressed directory under a
-user-provided path or a temp test directory; later it can move to SQLite if
-querying cache metadata becomes useful. Cache keys must include:
+The package artifact cache has two durable targets:
+
+- Node/CLI: `~/go/pkg/gojr_js/` by default. This mirrors Go's compiled package
+  cache layout under directories such as `~/go/pkg/darwin_amd64/`, except the
+  package artifacts are JavaScript source/module files with a `.js` suffix
+  instead of `.a` archives.
+- Browser: OPFS (Origin Private File System). OPFS is the durable artifact store
+  for generated `.js` package artifacts and metadata inside the browser.
+
+IndexedDB may still be used in the browser for small indexes, package manifests,
+or queryable metadata, but the generated package artifacts themselves should
+live in OPFS. Worker memory remains the first-level cache in both browser and
+Node runtimes.
+
+CLI artifact examples:
+
+```text
+~/go/pkg/gojr_js/golang.org/x/crypto/scrypt.js
+~/go/pkg/gojr_js/github.com/user/project/pkg/name.js
+```
+
+Cache keys must include:
 
 - package path and package version/name
 - content hashes of all package source files
@@ -1154,6 +1381,7 @@ querying cache metadata becomes useful. Cache keys must include:
 - compiler version
 - target backend, for example `js-source` or `wasm-stencil`
 - package ABI version
+- artifact layout version
 - host spec version for host/WASM calls used by the package
 - capability policy, because formula-safe and action-capable packages have
   different authority
@@ -1168,12 +1396,43 @@ Cached artifacts should include:
 - source map or source-span metadata
 - dependency metadata for imported packages
 
+CLI `gojr build` artifact layout:
+
+- `gojr build <pkg>` compiles the package and any stale dependencies into
+  `~/go/pkg/gojr_js/` by default.
+- Tests and explicit developer workflows may override the root with a CLI flag
+  such as `-pkgdir`, an environment variable, or an injected runtime option.
+- The output path is derived from the package import path, preserving the
+  package namespace directory layout and ending in `.js`.
+- A package artifact may store metadata in an embedded header, a sibling
+  `.gojr.json` sidecar, or a cache manifest, but the stable user-facing artifact
+  is the import-path-derived `.js` file.
+- Rebuilds are required when source hashes, dependency artifact hashes,
+  compiler version, package ABI version, host spec, capability policy, target
+  backend, or artifact layout version change.
+- Writes must be atomic: write to a temp artifact in the target directory,
+  fsync where appropriate, rename into place, then update sidecar/manifest
+  metadata after the `.js` artifact succeeds.
+- Compiled artifacts must not persist mutable package variable values. They
+  contain generated code, export metadata, type metadata, source-span metadata,
+  and dependency metadata only.
+- The build report should be machine-readable and include built/skipped
+  packages, artifact paths, cache keys, dependency edges, and diagnostics.
+
 Package compilation should run in the browser worker for the webui and in the
 Node runtime or a Node `worker_threads` worker for command-line use. Formula
 compilation may request a package by path; the runtime resolves, compiles,
 caches, and links it before compiling the formula that imports or references
 it. Stale package compilations must be ignored by generation token just like
 stale formula evaluations.
+
+The JavaScript compiler/runtime owns the build API, for example
+`gojr.buildPackage(...)` or `gojr.buildPackages(...)`. The Go `gojr` binary
+invokes this JavaScript method through embedded Node/V8 for `gojr build`,
+`.load`, `.source`, and `.test` workflows. The Go binary should marshal CLI
+arguments, package roots, cache roots, stdin/stdout, and diagnostics across the
+embedding boundary; it should not reimplement package parsing, typechecking,
+code generation, or artifact-cache invalidation in Go.
 
 Package linking rules:
 
@@ -1192,14 +1451,18 @@ Package linking rules:
   marked `package-state`, evaluated in stable scheduler order, and never
   optimized as pure/idempotent helpers
 
-This model allows existing source libraries to be loaded when they are written
-in the Go-junior subset, while still keeping full-Go/WASM libraries available
-through typed host bindings.
+This model allows existing Go source libraries to be loaded when their imports
+and runtime environment requirements are available to Go-junior, while keeping
+cgo/native or otherwise target-specific libraries available through typed
+host/WASM bindings until equivalent runtime services exist.
 
-## Source-level Copy-and-Patch JavaScript Emission
+## CPS State-machine and Source-level Copy-and-Patch JavaScript Emission
 
-Use source stencils instead of native binary stencils. A stencil is a compiler
-owned JavaScript text fragment with typed holes. For example:
+Use a compiler-owned CPS/state-machine backend. JavaScript source stencils are
+still useful for emitting individual state bodies and runtime helper calls, but
+the generated program is not merely a direct JavaScript function when it may
+suspend. A stencil is a compiler-owned JavaScript text fragment with typed
+holes. For example:
 
 ```ts
 const jsStencils = {
@@ -1222,19 +1485,30 @@ Emission rules:
   formulas receive a pure host view.
 - Literal and dynamic cell/range reads both route through `ctx` so dependency
   observation is uniform.
+- May-suspend operations lower to explicit scheduler calls and continuation
+  states.
+- Direct non-suspending runs may be optimized to straight-line JavaScript, but
+  the observable runtime behavior must match the state-machine path.
+- Generated runtime frames include source filenames, spans, static types,
+  function names, goroutine IDs, defer stacks, and panic/recover state.
 
 Example generated JavaScript:
 
 ```js
 "use strict";
-return function _gj_cell(ctx, host, budget) {
-  let _v0 = ctx.cell("sheet", "A1", "float64");
-  let _v1 = ctx.cell("sheet", "B1", "float64");
-  let _v2 = _v0 + _v1;
-  if (_v2 > 10) {
-    return host.math.Sqrt(_v2);
-  }
-  return _v2 * 2;
+return function _gj_entry(runtime, ctx, host) {
+  return runtime.start(function _gj_step(frame) {
+    switch (frame.pc) {
+      case 0:
+        frame.v0 = ctx.cell("sheet", "A1", "float64");
+        frame.v1 = ctx.cell("sheet", "B1", "float64");
+        frame.v2 = frame.v0 + frame.v1;
+        if (frame.v2 > 10) { frame.pc = 10; return runtime.cont(frame); }
+        return runtime.return(frame, frame.v2 * 2);
+      case 10:
+        return runtime.return(frame, host.math.Sqrt(frame.v2));
+    }
+  });
 }
 ```
 
@@ -1252,6 +1526,12 @@ Runtime responsibilities:
 - cache compiled functions by source hash plus host spec version
 - compile source packages and cache compiled package artifacts
 - evaluate cells in dependency order
+- run the cooperative goroutine scheduler
+- manage channel queues, select waits, close wakeups, async host wakeups, and
+  goroutine lifecycle
+- detect goroutine deadlock and convert it into structured diagnostics
+- preserve source filename/line/type metadata in runtime frames and stack
+  traces
 - detect dependency cycles
 - enforce execution budget/fuel
 - convert thrown exceptions into spreadsheet error values
@@ -1377,8 +1657,8 @@ graph with that final value.
 ### Stage 0: Specification and Fixtures
 
 Write a small language spec in the new Go-junior package or docs area. Define
-syntax, excluded Go features, types, errors, host binding shape, and runtime
-limits.
+syntax, Go compatibility scope, spreadsheet extensions, types, errors, host
+binding shape, scheduler behavior, and runtime limits.
 
 Implementation tasks:
 
@@ -1394,10 +1674,16 @@ Tests:
 - Golden fixture loader reads valid and invalid cases.
 - Diagnostic spans round-trip line/column/offset accurately.
 - Spec examples are copied into parser/typechecker tests so docs cannot drift.
-- A "blocked Go feature" fixture list asserts that `go`, `select`, channels,
-  `recover`, and `unsafe` are rejected with explicit diagnostic codes.
+- A "Go concurrency" fixture list asserts that `go`, `select`, channels,
+  `close`, send/receive, and `recover` parse, typecheck, and execute according
+  to the scheduler model.
+- An "environment-limited Go feature" fixture list asserts that cgo/native-only
+  packages and target-unavailable `unsafe` operations produce explicit
+  environment diagnostics, not parser/typechecker gaps.
 - A "panic" fixture list asserts that `panic(value)` parses, typechecks, runs
   defers during unwind, and becomes `#PANIC!` when unrecovered.
+- A "recover" fixture list asserts that `recover()` works only inside a
+  deferred call during panic unwinding and returns nil elsewhere.
 - A "panicOn" fixture list asserts that `panicOn(nil)` returns normally and
   `panicOn(err)` becomes `#PANIC!`.
 - A "supported Go-junior Go idiom" fixture list asserts that `defer`, multiple
@@ -1417,7 +1703,8 @@ Tests:
 
 Acceptance criteria:
 
-- The subset is explicit enough that parser and typechecker work can begin.
+- The Go compatibility target and spreadsheet extensions are explicit enough
+  that parser and typechecker work can begin.
 - Tests can assert both successful normalized output and exact diagnostics.
 
 ### Stage 1: TypeScript Go-style Scanner
@@ -1445,7 +1732,9 @@ Implementation tasks:
   and formatting metadata.
 - Normalize scanner token location data into Go-junior source spans.
 - Convert scanner errors into Go-junior diagnostics.
-- Reject unsupported tokens early, including channel receive/send syntax.
+- Tokenize channel receive/send syntax (`<-`) and all operators required by
+  full Go. Scanner diagnostics should be reserved for malformed tokens, not
+  supported language constructs.
 
 Tests:
 
@@ -1463,8 +1752,8 @@ Tests:
   assuming they are spreadsheet references.
 - Preserves source spans across newlines and comments.
 - Rejects unterminated strings with a useful span.
-- Rejects unsupported rune literals if they are not in v1.
-- Rejects channel operator `<-`.
+- Tokenizes rune literals and preserves their spans.
+- Tokenizes channel operator `<-` with source spans.
 - Rejects malformed numbers.
 - Converts scanner errors into stable Go-junior diagnostic codes.
 - Snapshot tests for representative snippets.
@@ -1484,7 +1773,8 @@ spreadsheet extensions.
 
 Implementation tasks:
 
-- Define AST node types aligned with the useful subset of Go's AST.
+- Define AST node types aligned with Go's AST, plus explicit spreadsheet
+  extension nodes.
 - Parse with Go-like precedence and statement grammar instead of a CST
   conversion layer.
 - Keep parser diagnostics stable and source-spanned.
@@ -1494,9 +1784,16 @@ Implementation tasks:
 - Parse statements: declarations, assignments, if/else, switch, full for loops,
   for-range loops, break/continue, returns, and expression statements.
 - Parse `defer` call statements.
+- Parse `go` statements.
+- Parse channel types, directional channel types, send statements, receive
+  expressions, and `select` statements.
+- Parse `close` and `recover` calls as ordinary predeclared built-in calls.
 - Parse multiple return expressions.
 - Parse named return function signatures.
 - Parse variadic parameter syntax, for example `args ...interface{}`.
+- Parse generic type/function declarations, type parameter lists, constraints,
+  type sets, instantiations, and generic method receiver forms where Go
+  permits them.
 - Parse type expressions used in signatures, including arrays, slices, maps,
   pointers, structs, interfaces, named types, and function types.
 - Parse `const`, `var`, and `type` declarations, including grouped
@@ -1570,9 +1867,13 @@ Tests:
 - Parses `pkg.A1` as a selector-or-cell candidate so the resolver can treat it
   as a package export when `pkg` is a package namespace.
 - Parses calls to predeclared `panic(...)` and `panicOn(err)`.
-- Rejects `go f()`, `select {}`, channel sends, receives, package
-  declarations in cell snippets, generic type parameters, generic
-  instantiations, labels, `goto`, `recover`, and `unsafe`.
+- Parses `go f()`, `select {}`, channel sends, receives, labels, `goto`,
+  `recover`, generic type parameters, and generic instantiations.
+- Rejects package declarations in cell snippets when the snippet form does not
+  allow package units.
+- Parses `unsafe` package imports and selectors as ordinary imports/selectors;
+  target/runtime policy later decides whether a specific unsafe operation can
+  execute.
 - Parser diagnostics use stable Go-junior diagnostic codes and source spans.
 - Error recovery reports multiple syntax errors in one source where possible.
 - AST construction preserves spans for expressions, statements, spreadsheet
@@ -1582,7 +1883,8 @@ Tests:
 Acceptance criteria:
 
 - Valid v1 syntax produces a complete AST.
-- Invalid or unsupported syntax produces stable diagnostics without crashing.
+- Invalid syntax and target/environment-unavailable constructs produce stable
+  diagnostics without crashing.
 - Later compiler stages consume only Go-junior AST nodes, type information, and
   diagnostics.
 
@@ -1709,6 +2011,12 @@ Implementation tasks:
 - Type arrays, slices, maps, structs, pointers, interfaces, methods, function
   literals, closures, indexing, slicing, address-of, dereference, and composite
   literals.
+- Type channel types, directional channels, `make(chan T, cap)`, send
+  statements, receive expressions, two-value receives, `select` cases, and
+  `close`.
+- Type `go` statements and mark launched calls as goroutine roots.
+- Type generic declarations, constraints, type sets, instantiations, and
+  inference following Go's type parameter model.
 - Type Go-style const declarations, including grouped declarations, implicit
   expression repetition, and `iota`.
 - Type expression switches, type switches, full `for` loops, and `for range`
@@ -1719,6 +2027,8 @@ Implementation tasks:
 - Type built-in `fmt` package calls, including `fmt.Printf`,
   `fmt.Sprintf`, and `fmt.Println`.
 - Type predeclared `panic(v interface{})` and `panicOn(err error)`.
+- Type predeclared `recover()` and its `interface{}` result; runtime legality
+  is enforced by defer/panic state.
 - Type current-sheet and cross-sheet cell/range references from the
   workbook/sheet type environment.
 - Type dynamic `Namespace.Cell` / `Namespace.Range` helpers with contextual
@@ -1796,6 +2106,15 @@ Tests:
   non-returning call for control-flow analysis.
 - `panicOn(err)` accepts exactly `error`, returns normally only when `err ==
   nil`, and is treated as potentially non-returning for control-flow analysis.
+- Channel send requires an assignable element value and a send-capable channel.
+- Channel receive requires a receive-capable channel and returns either the
+  element value or `(element, ok bool)` in two-value receive contexts.
+- `close(ch)` requires a bidirectional or send-capable channel.
+- `select` case guards must be send or receive operations; default appears at
+  most once.
+- `go f(args...)` requires a valid call expression; return values are ignored.
+- Generic functions/types instantiate with explicit type arguments or inferred
+  type arguments and reject unsatisfied constraints.
 - Full `for` and `for range` loops typecheck init/condition/post statements,
   range variables, `break`, `continue`, and Go-style `fallthrough` legality in
   switch statements.
@@ -1882,7 +2201,12 @@ Implementation tasks:
   fields, pointers, address-of, dereference, methods, interface dispatch,
   arrays, slices, maps, indexing, package-state reads/writes,
   diagnostic-effect calls, variadic calls, type-switch narrowing,
-  panic/unwind, Go-junior function cell calls, and cell/range reads.
+  panic/unwind, recover, goroutine launch, channels, send, receive,
+  two-value receive, close, select, suspend/resume, Go-junior function cell
+  calls, and cell/range reads.
+- Define a CPS/state-machine IR layer with explicit frames, program counters,
+  continuation edges, goroutine roots, defer stacks, panic/recover slots,
+  channel wait records, and scheduler operations.
 - Preserve diagnostic/source mapping metadata.
 - Add optional constant folding for simple literals.
 - Add explicit conversions where needed.
@@ -1918,6 +2242,16 @@ Tests:
   process globals.
 - IR panic nodes carry panic value expression, source span, and defer-unwind
   metadata.
+- IR recover nodes carry deferred-call context metadata and return nil when not
+  in a recoverable panic frame.
+- IR goroutine launch nodes carry callee, arguments, source span, parent
+  goroutine metadata, and ignored return metadata.
+- IR channel operations carry channel element type, direction, buffer metadata,
+  source span, and may-suspend effect.
+- IR select nodes carry ordered cases, default case metadata, send/receive case
+  operations, nil-channel disabling behavior, and scheduler selection policy.
+- CPS IR golden tests assert state labels, continuation targets, and source
+  spans for send/receive/select/defer/panic/recover combinations.
 - IR function-cell calls carry the target sheet namespace/cell ID and expected
   function signature.
 
@@ -1954,7 +2288,8 @@ Implementation tasks:
 - Emit package JavaScript using the same source copy-and-patch backend as
   formulas.
 - Link formulas to package exports through generated package slots.
-- Persist compiled package artifacts in IndexedDB.
+- Persist compiled package artifacts in OPFS for browser runtimes and under
+  `~/go/pkg/gojr_js/` for Node/CLI builds by default.
 - Invalidate package artifacts when source, transitive dependency, compiler
   version, backend, ABI version, host spec, or capability policy changes.
 - Keep compiled package artifacts separate from runtime package variable state.
@@ -1965,7 +2300,10 @@ Tests:
 - Parses a single-file package with one exported function.
 - Parses a multi-file package and merges package scope correctly.
 - Rejects mixed package names in one package unit.
-- Rejects unsupported Go features in package source.
+- Accepts full Go language constructs in package source, including generics,
+  channels, `go`, `select`, `close`, `panic`, and `recover`.
+- Rejects only target/environment-unavailable requirements such as browser cgo
+  execution with explicit diagnostics and host/WASM adapter guidance.
 - Resolves imports from a fake built-in package provider.
 - Resolves the real built-in `fmt` package and its `Printf`, `Sprintf`, and
   `Println` exports.
@@ -2001,6 +2339,12 @@ Tests:
 - Package map iteration is deterministic insertion order.
 - Package functions can call predeclared `panic` and `panicOn`.
 - Package panic escapes to the calling formula as `#PANIC!` after defers run.
+- Package functions can launch goroutines and communicate with channels through
+  the runtime scheduler.
+- Package functions can use `select` and recover panics according to Go
+  semantics.
+- Package generic functions/types export instantiated signature metadata and
+  constraint metadata so formula callers can typecheck them.
 - Package compilation emits a stable exported signature table.
 - Package compilation emits stable package variable metadata.
 - Package cache hits when source and transitive dependencies are unchanged.
@@ -2017,14 +2361,16 @@ Tests:
 
 Acceptance criteria:
 
-- Go-junior formulas can call Go-junior-compatible source packages compiled and
-  cached in the browser.
-- Full-Go packages outside the Go-junior subset remain available only through
-  typed host/WASM bindings or trusted precompiled package providers.
+- Go-junior formulas can call Go source packages compiled and cached in the
+  browser when their imports and runtime requirements are available.
+- cgo/native or target-specific packages remain available through typed
+  host/WASM bindings or trusted precompiled package providers until equivalent
+  runtime services exist.
 
-### Stage 8: JavaScript Source Copy-and-Patch Emitter
+### Stage 8: JavaScript CPS State-machine Copy-and-Patch Emitter
 
-Emit JavaScript from IR using stencils.
+Emit JavaScript from direct IR and CPS/state-machine IR using compiler-owned
+stencils.
 
 Implementation tasks:
 
@@ -2032,6 +2378,8 @@ Implementation tasks:
   calls.
 - Generate hygienic local names.
 - Emit strict mode function source.
+- Emit scheduler-compatible frame/state-machine source for may-suspend
+  functions.
 - Emit optional budget checks at function entry and loop backedges.
 - Emit source map or diagnostic mapping metadata if practical.
 - Expose compiler API returning generated source for debugging and tests.
@@ -2047,6 +2395,15 @@ Tests:
   equivalent control flow.
 - Generated JS for `panic` unwinds defers in LIFO order and converts escaping
   panics into structured runtime panic objects.
+- Generated JS for `recover` observes only valid deferred panic frames.
+- Generated JS for `go f()` creates a scheduler goroutine root and ignores
+  return values.
+- Generated JS for channel send/receive/select uses scheduler/channel helpers
+  and never busy-waits.
+- Generated JS for nil-channel operations, closed-channel receives, close, and
+  send-to-closed behavior delegates to tested runtime helpers.
+- Generated JS for may-suspend calls stores all live locals in frame slots and
+  resumes at the correct continuation state.
 - Generated JS for closures emits captured environments with correct mutation
   semantics.
 - Generated JS for structs, methods, and interface dispatch uses generated
@@ -2092,6 +2449,69 @@ Acceptance criteria:
 
 - Safe, valid JavaScript is produced for all valid v1 IR programs.
 
+### Stage 8A: Goroutine Scheduler and Channel Runtime
+
+Implement the shared Node/browser runtime that executes CPS state machines,
+goroutines, channels, `select`, `close`, panic/recover, and asynchronous host
+wakeups.
+
+Implementation tasks:
+
+- Define runtime frame shape: function ID, goroutine ID, program counter, live
+  locals, return slots, defer stack, panic state, source span stack, and budget.
+- Define scheduler queues: runnable goroutines, blocked senders, blocked
+  receivers, blocked selects, async host waits, and completed goroutines.
+- Implement goroutine launch and lifecycle.
+- Implement unbuffered channel handoff.
+- Implement buffered channel FIFO queueing and capacity blocking.
+- Implement channel close, closed receive, send-to-closed panic, nil channel
+  blocking, and double-close/nil-close panic.
+- Implement `select` registration, wakeup, cancellation of losing cases,
+  default cases, nil-channel disabling, and deterministic ready-case selection.
+- Implement panic propagation through frames and goroutine roots.
+- Implement `recover` during deferred calls.
+- Implement deadlock detection.
+- Implement deterministic scheduler seed/policy and randomized stress policy.
+- Implement structured runtime diagnostics with source filenames, line/column,
+  static types, goroutine stacks, and scheduler state summaries.
+- Expose a Node test harness for running scheduler programs without the REPL.
+- Expose a browser worker adapter that runs the same scheduler and reports
+  structured events/results.
+
+Tests:
+
+- A goroutine starts, runs, returns, and is reaped.
+- Goroutine return values are ignored for `go f()`.
+- Unbuffered send blocks until receive; receive blocks until send.
+- Buffered channel preserves FIFO order and blocks when full.
+- `len(ch)` and `cap(ch)` report buffer length/capacity.
+- Receive from closed buffered channel drains buffered values before zero/false.
+- Receive from closed unbuffered channel returns zero/false.
+- Send to closed channel panics and runs defers.
+- Close nil and double close panic and run defers.
+- Nil channel send/receive block and participate in deadlock detection.
+- `select` with default runs default when nothing is ready.
+- `select` with one ready receive runs that receive.
+- `select` with multiple ready cases follows deterministic policy under test
+  seed and exercises randomized policy in stress tests.
+- `select` unregisters losing cases so later sends/receives do not wake stale
+  waiters.
+- `select` on nil channel cases ignores those cases.
+- Deadlock reports all blocked goroutines and source spans.
+- Panic in child goroutine reports goroutine stack and source span.
+- `recover` in deferred call stops panic and resumes normal return.
+- `recover` outside deferred panic returns nil.
+- Deferred calls run LIFO across suspension points.
+- Named return values can be modified by deferred closures after suspension.
+- Scheduler budget/fuel stops runaway goroutine creation or infinite loops with
+  a structured timeout diagnostic.
+
+Acceptance criteria:
+
+- Compiled CPS programs with channels, goroutines, select, defer, panic, and
+  recover run identically in Node and browser worker adapters for deterministic
+  scheduler seeds.
+
 ### Stage 9: Function and Package Artifact Compilation Cache
 
 Compile generated JavaScript to callable formula/package functions and cache
@@ -2104,9 +2524,20 @@ Implementation tasks:
 - Include package artifact keys for formulas that link source packages.
 - Include transitive package dependency keys for compiled package artifacts.
 - Store formula function artifacts in the worker memory cache.
-- Store package artifacts in worker memory and IndexedDB.
+- Store Node/CLI package artifacts under `~/go/pkg/gojr_js/` by default, using
+  import-path directory layout and `.js` file suffixes.
+- Support a package artifact root override for tests, CI, and explicit CLI
+  workflows.
+- Store browser package artifacts in OPFS, using IndexedDB only for optional
+  indexes/manifests.
+- Store hot package artifacts in worker memory as a first-level cache.
 - Store mutable package variable runtime state separately from compiled package
   artifacts.
+- Expose a JavaScript build API such as `buildPackage` and `buildPackages` that
+  owns package graph loading, typechecking, emission, artifact writes, and
+  invalidation.
+- Have the Go `gojr build` command invoke the JavaScript build API through the
+  embedded Node/V8 runtime.
 - Compile with `new Function`.
 - Return structured compile errors if browser/CSP rejects dynamic compilation.
 - Add a development/debug option to expose generated source.
@@ -2117,7 +2548,23 @@ Tests:
 - Host spec version changes invalidate cache.
 - Compiler version changes invalidate cache.
 - Formula cache misses when a linked package artifact changes.
-- Package artifact cache survives worker restart by reloading from IndexedDB.
+- Node package artifacts write to
+  `~/go/pkg/gojr_js/<import/path>.js` by default.
+- Node package artifact root override writes to a temp fake GOPATH/pkg root in
+  tests.
+- Node package artifacts use atomic write/rename and never leave a partial
+  `.js` file visible after a simulated failure.
+- `gojr build <pkg>` builds the requested package and stale dependencies into
+  the artifact root.
+- `gojr build <pkg>` skips fresh artifacts and reports them as cache hits.
+- `gojr build <pkg>` rebuilds when source content, dependency content,
+  compiler version, backend ABI, host spec, capability policy, or artifact
+  layout version changes.
+- Package artifact metadata maps import paths to generated `.js` artifacts and
+  includes dependency edges.
+- Browser package artifact cache survives worker restart by reloading from
+  OPFS.
+- Browser OPFS artifact metadata remains consistent after interrupted writes.
 - Package artifact cache survives Node process restart by reloading from the
   filesystem cache.
 - Package artifact cache ignores incompatible ABI/backend artifacts.
@@ -2131,7 +2578,7 @@ Tests:
 Acceptance criteria:
 
 - Repeated recalculation does not repeatedly parse and compile unchanged cells
-  or unchanged Go-junior-compatible packages.
+  or unchanged Go source packages.
 
 ### Stage 10: Runtime Evaluation
 
@@ -2222,7 +2669,7 @@ Acceptance criteria:
 
 - A compiled formula can run against a fake spreadsheet context in unit tests.
 
-### Stage 11: Node.js Runtime and CLI
+### Stage 11: Node.js Runtime and Go `gojr` CLI
 
 Implement the Node.js runtime target first so language design can be exercised
 quickly from bash before browser integration begins.
@@ -2235,14 +2682,24 @@ Implementation tasks:
 - Implement Node-safe host binding providers for tests.
 - Support optional `worker_threads` isolation, but allow direct in-process
   execution for fast unit tests.
-- Add a `gojunior` CLI entry point under the frontend package scripts or a
-  small Node bin.
+- Expose JavaScript runtime/build methods callable from embedded Node/V8:
+  `evaluate`, `compile`, `buildPackage`, `buildPackages`, `testPackage`,
+  `testFile`, and `inspectGeneratedJS`.
+- Keep the Go `gojr` binary as the primary user-facing CLI. It should invoke
+  JavaScript runtime/build methods through the embedded Node/V8 runtime rather
+  than duplicating compiler logic in Go.
 - CLI subcommands should include:
   - `eval`: evaluate one formula with JSON-provided cells and packages
   - `compile`: compile formula or package and print diagnostics
+  - `build`: compile a package graph into the artifact cache root, defaulting
+    to `~/go/pkg/gojr_js/`
+  - `test`: run Go-junior tests for a file or package path, equivalent in
+    spirit to `go test`
   - `run-fixture`: run a spreadsheet/recalculation fixture
   - `inspect-js`: print generated JavaScript for a formula or package
   - `cache`: inspect, clear, or warm package cache entries
+- `gojr build` should accept an override for the package artifact root so tests
+  can use a temp directory instead of the real `~/go/pkg/gojr_js/`.
 - Keep CLI output machine-readable with a JSON mode and human-readable by
   default.
 
@@ -2272,6 +2729,20 @@ Tests:
 - CLI `eval` returns captured `fmt.Printf` output with source cell/evaluation
   metadata.
 - CLI `compile` returns package/formula diagnostics without evaluation.
+- CLI `build` invokes the JavaScript `buildPackage`/`buildPackages` API through
+  embedded Node/V8.
+- CLI `build` writes generated package artifacts under
+  `<pkgroot>/gojr_js/<import/path>.js` when a test package root override is
+  supplied.
+- CLI `build` writes generated package artifacts under
+  `~/go/pkg/gojr_js/<import/path>.js` by default.
+- CLI `build` emits a build report with built packages, skipped packages,
+  artifact paths, cache keys, dependency edges, and diagnostics.
+- CLI `build` leaves mutable package state out of generated artifacts.
+- CLI `build` invalidates generated artifacts on source, dependency, compiler,
+  ABI, host spec, capability policy, and artifact-layout changes.
+- CLI `test` runs tests from a single file.
+- CLI `test` runs tests from a package directory.
 - CLI `run-fixture` executes a multi-cell dependency graph.
 - CLI `inspect-js` prints generated JS without executing it.
 - CLI `cache clear` removes package artifacts from the chosen cache directory.
@@ -2279,8 +2750,9 @@ Tests:
 
 Acceptance criteria:
 
-- Developers can run Go-junior formulas, packages, and spreadsheet fixtures
-  from bash through Node.js.
+- Developers can run Go-junior formulas, packages, tests, builds, and
+  spreadsheet fixtures from bash through the Go `gojr` binary backed by the
+  embedded JavaScript runtime.
 - The Node target uses the same compiler, IR, emitter, typechecker, and
   recalculation engine as the browser target.
 
@@ -2299,12 +2771,19 @@ Implementation tasks:
 - Keep host/WASM services behind explicit RPC endpoints.
 - Support cancellation by generation token.
 - Ensure stale results are ignored by the main thread.
+- Implement an OPFS-backed browser `PackageArtifactCache` for generated `.js`
+  package artifacts and metadata.
+- Use IndexedDB only for optional browser-side artifact indexes/manifests when
+  OPFS directory scans are not enough.
 
 Tests:
 
 - Browser worker compiles valid formulas.
 - Browser worker compiles valid source packages.
 - Browser worker links formula compilation against cached package artifacts.
+- Browser worker persists generated package artifacts in OPFS.
+- Browser worker reloads OPFS package artifacts after worker termination and
+  restart.
 - Browser worker reports diagnostics for invalid formulas.
 - Browser worker reports diagnostics for invalid source packages.
 - Browser worker evaluates a batch in dependency order provided by the main
@@ -2645,7 +3124,8 @@ Implementation tasks:
   `new Function` compile, and evaluation.
 - Add spreadsheet recalculation benchmarks for common graph shapes.
 - Measure main-thread latency with worker enabled.
-- Measure Node CLI cold-start, warm-cache, and fixture-run latency.
+- Measure Go `gojr` CLI cold-start, warm-cache, build-cache, and fixture-run
+  latency.
 - Add cache hit/miss counters.
 
 Tests and benchmarks:
@@ -2653,12 +3133,13 @@ Tests and benchmarks:
 - 1,000 simple formulas compile within target budget.
 - 1,000 cached formulas recalculate without recompilation.
 - A workbook package graph compiles within target budget on cold cache.
-- The same workbook package graph links from IndexedDB cache within target
+- The same workbook package graph links from OPFS package artifact cache within
   budget after worker restart.
-- The same workbook package graph links from Node filesystem cache within
-  target budget after process restart.
-- Node CLI can run representative fixtures fast enough for ordinary unit-test
-  loops.
+- The same workbook package graph links from Node/CLI
+  `~/go/pkg/gojr_js/` filesystem cache within target budget after process
+  restart.
+- The Go `gojr` CLI can run representative fixtures fast enough for ordinary
+  unit-test loops.
 - Dependency graph update scales with changed subgraph size.
 - Worker batch evaluation avoids per-cell message overhead.
 - Generated JS outperforms a simple interpreter on arithmetic-heavy formulas.
@@ -2752,40 +3233,41 @@ Every successful compiler stage should test:
 The first useful implementation should run under Node.js before any browser UI
 integration. This gives fast unit tests and lets users manually exercise the
 language from bash while the design is still fluid. This slice should not be
-considered usable until `fmt.Printf` works through the Node diagnostic sink.
+considered usable for current source-package testing until the CLI can parse,
+typecheck, and execute representative Go files that use goroutines, channels,
+`select`, `defer`, `panic`, `recover`, package `init`, and `fmt.Printf`.
 
-1. TypeScript Go-style scanner/parser for cell imports, expression form,
-   function-body form, short declarations, `if`, `switch`, and `return`, with
-   AST construction and source spans.
-2. Types for bool, string, int64, float64, Go-junior function cells, typed
-   static cell references, and typed ranges.
-3. Parser/typechecker coverage for `defer`, multiple returns, named returns,
-   closures, consts, structs, pointers, pointer receivers, interfaces, methods,
-   arrays, slices, maps, switch, Go-style type switches, full for loops,
-   for-range loops, `panic`, and `panicOn`.
-4. Parser/typechecker/runtime coverage for the required single-threaded Go
-   compatibility pass: conversions, full non-channel operators, compound
-   assignments, Go literal forms, complex numbers, additional predeclared
-   built-ins, `if init; condition`, two-value type assertions, comparability,
-   address-of composite literals, three-index slicing, blank/dot imports,
-   package `init`, and current Go range forms over integers and iterator
-   functions.
-5. Resolver/typechecker for locals, reserved `sheet`, sheet-name namespaces,
-   cell-level imports/import aliases, and one fake host namespace.
-6. Dependency extraction for literal current-sheet and cross-sheet references,
-   plus runtime observed dependency tracking for dynamic references and
-   Go-junior function cell calls.
-7. Built-in `fmt` package with `fmt.Printf`, `fmt.Sprintf`, and `fmt.Println`
+1. TypeScript Go-style scanner/parser for package files and cell snippets,
+   including filenames on every token/span/diagnostic.
+2. Go-compatible resolver/typechecker for locals, packages, constants, method
+   sets, interfaces, generics, channels, `go`, `select`, `panic`, `recover`,
+   and package initialization.
+3. Spreadsheet extensions layered on top: reserved `sheet`, sheet-name
+   namespaces, typed cell/range references, imports/import aliases, and
+   dependency extraction.
+4. Built-in `fmt` package with `fmt.Printf`, `fmt.Sprintf`, and `fmt.Println`
    working in the Node runtime diagnostic sink.
-8. One tiny Go-junior-compatible source package compiled by the Node runtime
-   and called from a formula, including a mutable package variable.
-9. JS source copy-and-patch emitter.
+5. Typed effect analysis marking direct, may-panic, may-defer, may-suspend,
+   package-state, diagnostic-effect, sheet-effect, graph-effect, and UI-effect
+   code paths.
+6. CPS/state-machine IR for may-suspend functions, preserving source filenames,
+   spans, static types, live locals, defer stacks, panic/recover state, and
+   goroutine metadata.
+7. Shared scheduler/channel runtime in Node: goroutine launch, unbuffered and
+   buffered channels, `select`, `close`, deadlock detection, deterministic
+   scheduler policy, panic/recover, and runtime stack diagnostics.
+8. JavaScript CPS copy-and-patch emitter that can run the scheduler tests and
+   direct formula tests.
+9. One representative Go source package compiled by `gojr build` through the
+   JavaScript build API into `~/go/pkg/gojr_js/`, then called from a formula,
+   including mutable package state and a channel/goroutine smoke path.
 10. Runtime tests that evaluate formulas against a fake spreadsheet context in
-   Node.
-11. A minimal Node CLI `eval`, `compile`, `run-fixture`, and `inspect-js` path
-   for manual bash testing.
-12. Browser worker and webui service integration are deferred until the language
-   and CLI semantics have been exercised.
+    Node and package tests against named source files.
+11. A minimal Go `gojr` CLI/REPL path for manual bash testing: `.load`,
+    `.source`, `.test`, `eval`, `compile`, `build`, `run-fixture`, and
+    `inspect-js`.
+12. Browser worker and webui service integration remain deferred until the full
+    Go language and CLI scheduler semantics have been exercised.
 
 Example first formulas:
 
@@ -2867,25 +3349,30 @@ return counter.Next()
 
 ## Acceptance Criteria for the Full Project
 
-- Go-junior has a documented, tested subset of Go-like syntax.
+- Go-junior has documented, tested full Go language syntax and semantics plus
+  explicit spreadsheet extensions.
 - Go-junior has no user-facing `number` type; integer defaults are `int64` and
   floating-point defaults are `float64`.
 - Go-junior has one Go-style `error` type.
-- Go-junior supports Go-style consts, structs, interfaces, methods, closures,
-  arrays, slices, maps, indexing, switch, full for loops, and for-range loops.
-- Go-junior supports single-threaded Go compatibility features before package
-  integration: explicit conversions, the full non-channel operator surface,
-  compound assignments, Go literal forms, complex numbers, additional
-  predeclared built-ins, `if init; condition`, methods on named non-struct
-  types, embedded fields/method promotion, interface embedding, struct tags,
-  two-value type assertions, comparability, map-key comparability enforcement,
-  address-of composite literals, three-index slicing, blank/dot imports,
-  package `init`, and current Go range forms over integers and iterator
-  functions.
+- Go-junior supports Go consts, structs, interfaces, methods, closures,
+  arrays, slices, maps, indexing, switch, full for loops, for-range loops,
+  conversions, all Go operators, compound assignments, Go literal forms,
+  complex numbers, predeclared built-ins, `if init; condition`, methods on
+  named non-struct types, embedded fields/method promotion, interface
+  embedding, struct tags, two-value type assertions, comparability, map-key
+  comparability enforcement, address-of composite literals, three-index
+  slicing, blank/dot imports, package `init`, and current Go range forms over
+  integers and iterator functions.
+- Go-junior supports goroutines, channels, channel operations, `select`,
+  `close`, `panic`, and `recover` through the shared CPS scheduler.
+- Go-junior supports Go generics: type parameters, constraints, type sets,
+  instantiation, and inference.
 - Go-junior supports pointer types, address-of, dereference, pointer receiver
   methods, and Go-like method-set rules.
-- Go-junior supports predeclared `panic` and `panicOn(err error)`, with defers
-  running during unwind and escaping panics reported as `#PANIC!`.
+- Go-junior supports predeclared `panic`, `recover`, and
+  `panicOn(err error)`, with defers running during unwind, valid recover calls
+  stopping panics, and escaping panics reported as `#PANIC!` or structured
+  goroutine panic diagnostics.
 - `break`, `continue`, and `fallthrough` match Go semantics.
 - Go-junior function cells store editable source, expose typed callable
   function values, and can be called by other formulas.
@@ -2899,16 +3386,17 @@ return counter.Next()
 - Declared zero-value maps auto-initialize on first assignment for spreadsheet
   ergonomics while preserving Go-like typed map reads, delete/clear behavior,
   and deterministic insertion-order iteration.
-- Go generics are rejected explicitly and remain out of scope.
-- Unsupported Go features are rejected explicitly.
+- Target/environment limitations such as browser cgo/native execution are
+  reported explicitly with diagnostics and host/WASM adapter guidance.
 - Valid formulas typecheck before execution.
 - Statically visible dependencies are extracted without running formulas.
 - Dynamic dependencies are observed during evaluation and update the dependency
   graph automatically.
 - Current-sheet and cross-sheet dependencies use the same graph model with
   explicit sheet namespaces.
-- Go-junior-compatible source packages compile, link, and cache in the browser.
-- Go-junior-compatible source packages compile, link, and cache in Node.js.
+- Go source packages compile, link, and cache in the browser when their imports
+  and runtime requirements are available.
+- Go source packages compile, link, and cache in Node.js.
 - Mutable package variables follow documented Go-like runtime semantics without
   being stored inside compiled package artifacts.
 - Formulas compile to JavaScript generated only from compiler-owned stencils.

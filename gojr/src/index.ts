@@ -3,7 +3,7 @@ import type { ProgramAst } from "./ast.js";
 import type { Diagnostic } from "./diagnostics.js";
 import type { ParseFrontResult } from "./front/parser.js";
 
-export type { Diagnostic, SourceSpan } from "./diagnostics.js";
+export type { Diagnostic, SourceFile, SourceSpan } from "./diagnostics.js";
 export type { ImportDecl, ProgramAst, ProgramKind } from "./ast.js";
 export { childNodes, ident, parseCellAddress, walk } from "./front/ast.js";
 export { checkFrontFiles, checkFrontSource } from "./front/checker.js";
@@ -76,7 +76,9 @@ export {
   GoJuniorPanic,
   GoJuniorRuntimeError,
   RuntimeMap,
-  testSource
+  evaluateSourceFiles,
+  testSource,
+  testSourceFiles
 } from "./runtime.js";
 export type {
   EvaluationOptions,
@@ -94,8 +96,8 @@ export interface ParseProgramResult {
   ast?: ProgramAst;
 }
 
-export function parseProgram(source: string): ParseProgramResult {
-  const result = frontSourceToAst(source);
+export function parseProgram(source: string, filename: string): ParseProgramResult {
+  const result = frontSourceToAst(source, filename);
   return {
     diagnostics: result.diagnostics,
     parsed: result.parsed,

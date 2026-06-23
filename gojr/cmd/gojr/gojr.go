@@ -33,8 +33,10 @@ type nodeCallMode int
 
 const (
 	nodeCallEval nodeCallMode = iota
+	nodeCallEvalFiles
 	nodeCallSetSheet
 	nodeCallTest
+	nodeCallTestFiles
 )
 
 type evalResult struct {
@@ -53,6 +55,11 @@ type embeddedModuleBundle struct {
 type embeddedModule struct {
 	Path   string `json:"path"`
 	Source string `json:"source"`
+}
+
+type sourceFile struct {
+	Filename string `json:"filename"`
+	Source   string `json:"source"`
 }
 
 func main() {
@@ -138,11 +145,11 @@ func handleCommand(rt *nodeRuntime, source *strings.Builder, command string) (bo
 		return false, fmt.Errorf("usage: .source PATH")
 	case strings.HasPrefix(command, ".source "):
 		path := strings.TrimSpace(strings.TrimPrefix(command, ".source "))
-		data, err := readSourceFile(path)
+		file, err := readSourceFile(path)
 		if err != nil {
 			return false, err
 		}
-		return false, evalLoadedSource(rt, source, data)
+		return false, evalLoadedSourceFiles(rt, source, []sourceFile{file})
 	case strings.HasPrefix(command, ".sheet "):
 		result, err := rt.SetSheet(strings.TrimSpace(strings.TrimPrefix(command, ".sheet ")))
 		if err != nil {
@@ -153,20 +160,20 @@ func handleCommand(rt *nodeRuntime, source *strings.Builder, command string) (bo
 		return false, fmt.Errorf("usage: .load DIR")
 	case strings.HasPrefix(command, ".load "):
 		dir := strings.TrimSpace(strings.TrimPrefix(command, ".load "))
-		data, err := readPackageDir(dir)
+		files, err := readPackageDir(dir)
 		if err != nil {
 			return false, err
 		}
-		return false, evalLoadedSource(rt, source, data)
+		return false, evalLoadedSourceFiles(rt, source, files)
 	case command == ".test":
 		return false, fmt.Errorf("usage: .test PATH")
 	case strings.HasPrefix(command, ".test "):
 		target := strings.TrimSpace(strings.TrimPrefix(command, ".test "))
-		data, err := readTestTarget(target)
+		files, err := readTestTarget(target)
 		if err != nil {
 			return false, err
 		}
-		return false, testLoadedSource(rt, source, data)
+		return false, testLoadedSourceFiles(rt, source, files)
 	default:
 		return false, fmt.Errorf("unknown command %q", command)
 	}
@@ -188,11 +195,11 @@ more input, the line is kept as pending multi-line source and the prompt changes
 to ....>. Use .clear to discard pending input.`)
 }
 
-func evalLoadedSource(rt *nodeRuntime, pending *strings.Builder, data string) error {
+func evalLoadedSourceFiles(rt *nodeRuntime, pending *strings.Builder, files []sourceFile) error {
 	if pending.Len() > 0 {
 		return fmt.Errorf("cannot load while multi-line input is pending; use .clear first")
 	}
-	result, err := rt.Eval(data)
+	result, err := rt.EvalFiles(files)
 	if err != nil {
 		return err
 	}
@@ -200,11 +207,11 @@ func evalLoadedSource(rt *nodeRuntime, pending *strings.Builder, data string) er
 	return nil
 }
 
-func testLoadedSource(rt *nodeRuntime, pending *strings.Builder, data string) error {
+func testLoadedSourceFiles(rt *nodeRuntime, pending *strings.Builder, files []sourceFile) error {
 	if pending.Len() > 0 {
 		return fmt.Errorf("cannot run tests while multi-line input is pending; use .clear first")
 	}
-	result, err := rt.Test(data)
+	result, err := rt.TestFiles(files)
 	if err != nil {
 		return err
 	}
@@ -212,31 +219,35 @@ func testLoadedSource(rt *nodeRuntime, pending *strings.Builder, data string) er
 	return nil
 }
 
-func readSourceFile(path string) (string, error) {
+func readSourceFile(path string) (sourceFile, error) {
 	info, err := os.Stat(path)
 	if err != nil {
-		return "", err
+		return sourceFile{}, err
 	}
 	if info.IsDir() {
-		return "", fmt.Errorf("%s is a directory; use .load DIR for packages", path)
+		return sourceFile{}, fmt.Errorf("%s is a directory; use .load DIR for packages", path)
 	}
 	data, err := os.ReadFile(path)
 	if err != nil {
-		return "", err
+		return sourceFile{}, err
 	}
-	return stripPackageClausePreservingLines(string(data))
+	source, err := stripPackageClausePreservingLines(string(data))
+	if err != nil {
+		return sourceFile{}, err
+	}
+	return sourceFile{Filename: filepath.Clean(path), Source: source}, nil
 }
 
-func readPackageDir(dir string) (string, error) {
+func readPackageDir(dir string) ([]sourceFile, error) {
 	return readPackageDirMatching(dir, func(name string) bool {
 		return !strings.HasSuffix(name, "_test.go")
 	}, "non-test .go files")
 }
 
-func readTestTarget(target string) (string, error) {
+func readTestTarget(target string) ([]sourceFile, error) {
 	info, err := os.Stat(target)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	if info.IsDir() {
 		return readPackageDirMatching(target, func(string) bool {
@@ -244,7 +255,7 @@ func readTestTarget(target string) (string, error) {
 		}, ".go files")
 	}
 	if !strings.HasSuffix(target, ".go") {
-		return "", fmt.Errorf("%s is not a .go file or directory", target)
+		return nil, fmt.Errorf("%s is not a .go file or directory", target)
 	}
 	dir := filepath.Dir(target)
 	base := filepath.Base(target)
@@ -258,18 +269,18 @@ func readTestTarget(target string) (string, error) {
 	}, ".go files")
 }
 
-func readPackageDirMatching(dir string, include func(name string) bool, emptyDescription string) (string, error) {
+func readPackageDirMatching(dir string, include func(name string) bool, emptyDescription string) ([]sourceFile, error) {
 	info, err := os.Stat(dir)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	if !info.IsDir() {
-		return "", fmt.Errorf("%s is not a directory; use .source PATH for a single file", dir)
+		return nil, fmt.Errorf("%s is not a directory; use .source PATH for a single file", dir)
 	}
 
 	entries, err := os.ReadDir(dir)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	var files []string
 	for _, entry := range entries {
@@ -284,38 +295,32 @@ func readPackageDirMatching(dir string, include func(name string) bool, emptyDes
 	}
 	sort.Strings(files)
 	if len(files) == 0 {
-		return "", fmt.Errorf("%s contains no %s", dir, emptyDescription)
+		return nil, fmt.Errorf("%s contains no %s", dir, emptyDescription)
 	}
 
 	var packageName string
-	var combined strings.Builder
+	var out []sourceFile
 	for _, name := range files {
 		path := filepath.Join(dir, name)
 		data, err := os.ReadFile(path)
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 		source, found, nextPackageName, err := stripPackageClausePreservingLinesWithName(string(data))
 		if err != nil {
-			return "", fmt.Errorf("%s: %w", path, err)
+			return nil, fmt.Errorf("%s: %w", path, err)
 		}
 		if !found {
-			return "", fmt.Errorf("%s: missing package clause", path)
+			return nil, fmt.Errorf("%s: missing package clause", path)
 		}
 		if packageName == "" {
 			packageName = nextPackageName
 		} else if nextPackageName != packageName {
-			return "", fmt.Errorf("%s: package %s does not match package %s", path, nextPackageName, packageName)
+			return nil, fmt.Errorf("%s: package %s does not match package %s", path, nextPackageName, packageName)
 		}
-		combined.WriteString("\n// ---- ")
-		combined.WriteString(name)
-		combined.WriteString(" ----\n")
-		combined.WriteString(source)
-		if !strings.HasSuffix(source, "\n") {
-			combined.WriteByte('\n')
-		}
+		out = append(out, sourceFile{Filename: filepath.Clean(path), Source: source})
 	}
-	return combined.String(), nil
+	return out, nil
 }
 
 func stripPackageClausePreservingLines(source string) (string, error) {
@@ -478,12 +483,28 @@ func (rt *nodeRuntime) Eval(source string) (evalResult, error) {
 	return rt.call(source, nodeCallEval)
 }
 
+func (rt *nodeRuntime) EvalFiles(files []sourceFile) (evalResult, error) {
+	data, err := json.Marshal(files)
+	if err != nil {
+		return evalResult{}, err
+	}
+	return rt.call(string(data), nodeCallEvalFiles)
+}
+
 func (rt *nodeRuntime) SetSheet(json string) (evalResult, error) {
 	return rt.call(json, nodeCallSetSheet)
 }
 
 func (rt *nodeRuntime) Test(source string) (evalResult, error) {
 	return rt.call(source, nodeCallTest)
+}
+
+func (rt *nodeRuntime) TestFiles(files []sourceFile) (evalResult, error) {
+	data, err := json.Marshal(files)
+	if err != nil {
+		return evalResult{}, err
+	}
+	return rt.call(string(data), nodeCallTestFiles)
 }
 
 func (rt *nodeRuntime) call(input string, mode nodeCallMode) (evalResult, error) {
@@ -493,10 +514,14 @@ func (rt *nodeRuntime) call(input string, mode nodeCallMode) (evalResult, error)
 	var cErr *C.char
 	var cResult *C.char
 	switch mode {
+	case nodeCallEvalFiles:
+		cResult = C.gojr_node_eval_files(rt.ptr, cInput, &cErr)
 	case nodeCallSetSheet:
 		cResult = C.gojr_node_set_sheet(rt.ptr, cInput, &cErr)
 	case nodeCallTest:
 		cResult = C.gojr_node_test(rt.ptr, cInput, &cErr)
+	case nodeCallTestFiles:
+		cResult = C.gojr_node_test_files(rt.ptr, cInput, &cErr)
 	default:
 		cResult = C.gojr_node_eval(rt.ptr, cInput, &cErr)
 	}
