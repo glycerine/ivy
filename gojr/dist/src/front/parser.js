@@ -763,7 +763,12 @@ class FrontParser {
                 const cellStart = (cellCandidate.kind === TokenKind.CellAddress || cellCandidate.kind === TokenKind.Identifier)
                     ? parseCellAddress(cellCandidate.lexeme)
                     : undefined;
-                if (cellStart && expression.kind === "Ident" && (cellCandidate.kind === TokenKind.CellAddress || (this.allowSpreadsheetRanges && this.peek(1).kind === TokenKind.Colon))) {
+                const rangeEndCandidate = this.peek(2);
+                const hasSpreadsheetRangeEnd = this.allowSpreadsheetRanges &&
+                    this.peek(1).kind === TokenKind.Colon &&
+                    (rangeEndCandidate.kind === TokenKind.CellAddress || rangeEndCandidate.kind === TokenKind.Identifier) &&
+                    !!parseCellAddress(rangeEndCandidate.lexeme);
+                if (cellStart && expression.kind === "Ident" && (cellCandidate.kind === TokenKind.CellAddress || hasSpreadsheetRangeEnd)) {
                     const cellToken = this.advance();
                     if (this.match(TokenKind.Colon)) {
                         const { token: endToken, address: end } = this.expectCellAddress("expected cell address after ':'");
@@ -910,7 +915,7 @@ class FrontParser {
             const start = this.previous();
             const type = this.parseSignature(start.span);
             if (this.at(TokenKind.LBrace)) {
-                const body = this.parseBlock();
+                const body = this.withExpressionLevel(() => this.parseBlock());
                 return { kind: "FuncLit", type, body, span: mergeSpans(start.span, body.span) };
             }
             return type;
@@ -933,26 +938,28 @@ class FrontParser {
     }
     finishCompositeLiteral(type, startSpan = type?.span) {
         const elements = [];
-        while (!this.at(TokenKind.RBrace) && !this.at(TokenKind.EOF)) {
-            this.skipSemis();
-            if (this.at(TokenKind.RBrace))
-                break;
-            const first = this.parseCompositeLiteralElement();
-            if (this.match(TokenKind.Colon)) {
-                const value = this.parseCompositeLiteralElement();
-                elements.push({
-                    kind: "KeyValueExpr",
-                    key: first,
-                    value,
-                    span: mergeSpans(first.span, value.span)
-                });
+        this.withExpressionLevel(() => {
+            while (!this.at(TokenKind.RBrace) && !this.at(TokenKind.EOF)) {
+                this.skipSemis();
+                if (this.at(TokenKind.RBrace))
+                    break;
+                const first = this.parseCompositeLiteralElement();
+                if (this.match(TokenKind.Colon)) {
+                    const value = this.parseCompositeLiteralElement();
+                    elements.push({
+                        kind: "KeyValueExpr",
+                        key: first,
+                        value,
+                        span: mergeSpans(first.span, value.span)
+                    });
+                }
+                else {
+                    elements.push(first);
+                }
+                this.match(TokenKind.Comma);
+                this.consumeSemi();
             }
-            else {
-                elements.push(first);
-            }
-            this.match(TokenKind.Comma);
-            this.consumeSemi();
-        }
+        });
         const close = this.expect(TokenKind.RBrace, "expected '}' after composite literal");
         return {
             kind: "CompositeLit",
@@ -1004,23 +1011,7 @@ class FrontParser {
             return { kind: "StarExpr", expr, span: mergeSpans(start.span, expr.span) };
         }
         if (this.match(TokenKind.LBracket)) {
-            let length;
-            let inferredLength = false;
-            if (this.match(TokenKind.Ellipsis)) {
-                inferredLength = true;
-            }
-            else if (!this.at(TokenKind.RBracket)) {
-                length = this.withExpressionLevel(() => this.parseRhsExpression());
-            }
-            this.expect(TokenKind.RBracket, "expected ']' in array or slice type");
-            const element = this.parseType();
-            return {
-                kind: "ArrayType",
-                ...(length ? { length } : {}),
-                element,
-                inferredLength,
-                span: mergeSpans(start.span, element.span)
-            };
+            return this.parseArrayTypeAfterOpen(this.previous());
         }
         if (this.match(TokenKind.Map)) {
             this.expect(TokenKind.LBracket, "expected '[' after map");
@@ -1079,6 +1070,32 @@ class FrontParser {
         }
         return expression;
     }
+    parseArrayTypeAfterOpen(open, parsedLength) {
+        let length = parsedLength;
+        let inferredLength = false;
+        if (!length) {
+            this.withExpressionLevel(() => {
+                if (this.match(TokenKind.Ellipsis)) {
+                    inferredLength = true;
+                }
+                else if (!this.at(TokenKind.RBracket)) {
+                    length = this.parseRhsExpression();
+                }
+            });
+        }
+        if (this.match(TokenKind.Comma)) {
+            this.error("unexpected comma; expecting ]", this.previous().span);
+        }
+        this.expect(TokenKind.RBracket, "expected ']' in array or slice type");
+        const element = this.parseType();
+        return {
+            kind: "ArrayType",
+            ...(length ? { length } : {}),
+            element,
+            inferredLength,
+            span: mergeSpans(open.span, element.span)
+        };
+    }
     parseTypeArgumentList() {
         const indices = [];
         while (!this.at(TokenKind.RBracket) && !this.at(TokenKind.EOF)) {
@@ -1123,6 +1140,186 @@ class FrontParser {
     }
     parseTypeParamList() {
         return this.parseFieldList(TokenKind.LBracket, TokenKind.RBracket);
+    }
+    parseTypeParameterListAfterOpen(open, firstName, firstType) {
+        const fields = this.parseParameterList(TokenKind.RBracket, firstName, firstType, false);
+        const close = this.expect(TokenKind.RBracket, "expected ']'");
+        if (fields.length === 0)
+            this.error("empty type parameter list", close.span);
+        return { kind: "FieldList", fields, span: mergeSpans(open.span, close.span) };
+    }
+    parseParameterList(closing, firstName, firstType, allowEllipsis = false) {
+        const typeParams = closing === TokenKind.RBracket;
+        const params = [];
+        let name0 = firstName;
+        let type0 = firstType;
+        let named = 0;
+        let typed = 0;
+        while (name0 || (!this.at(closing) && !this.at(TokenKind.EOF))) {
+            let param;
+            if (type0) {
+                param = { ...(name0 ? { name: name0 } : {}), type: typeParams ? this.embeddedElem(type0) : type0 };
+            }
+            else {
+                param = this.parseParamDecl(name0, typeParams);
+            }
+            name0 = undefined;
+            type0 = undefined;
+            if (param.name || param.type) {
+                params.push(param);
+                if (param.name && param.type)
+                    named += 1;
+                if (param.type)
+                    typed += 1;
+            }
+            if (this.at(closing) || this.at(TokenKind.EOF))
+                break;
+            if (!this.match(TokenKind.Comma))
+                break;
+        }
+        if (params.length === 0)
+            return [];
+        if (named === 0) {
+            for (const param of params) {
+                if (param.name && !param.type) {
+                    param.type = param.name;
+                    delete param.name;
+                }
+            }
+            if (typeParams) {
+                const message = named === typed ? "missing type constraint" : `missing type parameter name${params.length === 1 ? " or invalid array length" : ""}`;
+                this.error(message, this.peek().span);
+            }
+        }
+        else if (named !== params.length) {
+            let type;
+            let errorSpan;
+            for (let index = params.length - 1; index >= 0; index -= 1) {
+                const param = params[index];
+                if (param.type) {
+                    type = param.type;
+                    if (!param.name) {
+                        errorSpan = param.type.span;
+                        param.name = ident("_", errorSpan);
+                    }
+                }
+                else if (type) {
+                    param.type = type;
+                }
+                else {
+                    errorSpan = param.name?.span;
+                    param.type = badExpr(errorSpan);
+                }
+            }
+            if (errorSpan) {
+                const message = named === typed
+                    ? (typeParams ? "missing type constraint" : "missing parameter type")
+                    : (typeParams ? `missing type parameter name${params.length === 1 ? " or invalid array length" : ""}` : "missing parameter name");
+                this.error(message, errorSpan);
+            }
+        }
+        let reportedEllipsis = false;
+        for (let index = 0; index < params.length; index += 1) {
+            const param = params[index];
+            if (param.type?.kind === "Ellipsis" && (!allowEllipsis || index + 1 < params.length)) {
+                if (!reportedEllipsis) {
+                    this.error(allowEllipsis ? "can only use ... with final parameter" : "invalid use of ...", param.type.span);
+                    reportedEllipsis = true;
+                }
+                param.type = badExpr(param.type.span);
+            }
+        }
+        if (named === 0) {
+            return params.map((param) => ({
+                kind: "Field",
+                names: [],
+                type: param.type ?? badExpr(param.name?.span),
+                span: mergeSpans(param.type?.span ?? param.name?.span, param.type?.span ?? param.name?.span)
+            }));
+        }
+        const fields = [];
+        let names = [];
+        let currentType;
+        const flush = () => {
+            if (!currentType || names.length === 0)
+                return;
+            fields.push({
+                kind: "Field",
+                names,
+                type: currentType,
+                span: mergeSpans(names[0]?.span, currentType.span)
+            });
+            names = [];
+        };
+        for (const param of params) {
+            if (param.type !== currentType) {
+                flush();
+                currentType = param.type;
+            }
+            names.push(param.name ?? ident("_", param.type?.span));
+        }
+        flush();
+        return fields;
+    }
+    parseParamDecl(name0, typeSetsOK) {
+        let name = name0;
+        let type;
+        if (name || isIdentifierLike(this.peek().kind)) {
+            if (!name)
+                name = this.parseIdent("expected parameter name or type");
+            if (this.startsType() || this.at(TokenKind.LParen)) {
+                type = this.parseType();
+            }
+            else if (this.match(TokenKind.Ellipsis)) {
+                const dots = this.previous();
+                type = { kind: "Ellipsis", element: this.parseType(), span: dots.span };
+            }
+            else if (this.match(TokenKind.Dot)) {
+                const selector = this.parseIdent("expected selector in qualified type");
+                type = {
+                    kind: "SelectorExpr",
+                    object: name,
+                    selector,
+                    span: mergeSpans(name.span, selector.span)
+                };
+                name = undefined;
+            }
+            else if (typeSetsOK && this.at(TokenKind.Or)) {
+                type = this.embeddedElem(name);
+                name = undefined;
+            }
+        }
+        else if (this.startsType() || this.at(TokenKind.LParen)) {
+            type = this.parseType();
+        }
+        else if (this.match(TokenKind.Ellipsis)) {
+            const dots = this.previous();
+            type = { kind: "Ellipsis", element: this.parseType(), span: dots.span };
+        }
+        else {
+            this.error(`expected parameter name or type, found ${this.peek().lexeme || this.peek().kind}`, this.peek().span);
+            this.advance();
+            return { type: badExpr(this.previous().span) };
+        }
+        if (typeSetsOK && type && this.at(TokenKind.Or)) {
+            type = this.embeddedElem(type);
+        }
+        return { ...(name ? { name } : {}), ...(type ? { type } : {}) };
+    }
+    embeddedElem(initial) {
+        let expr = initial;
+        while (this.match(TokenKind.Or)) {
+            const operator = this.previous();
+            const right = this.parseTypeTerm();
+            expr = {
+                kind: "BinaryExpr",
+                left: expr,
+                op: operator.kind,
+                right,
+                span: mergeSpans(expr.span, right.span)
+            };
+        }
+        return expr;
     }
     parseFieldList(open, close) {
         const start = this.expect(open, `expected '${tokenDisplay(open)}'`);
@@ -1305,7 +1502,8 @@ class FrontParser {
             kind === TokenKind.Arrow ||
             kind === TokenKind.Struct ||
             kind === TokenKind.Interface ||
-            kind === TokenKind.Func;
+            kind === TokenKind.Func ||
+            kind === TokenKind.LParen;
     }
     withBareIdentifierComposites(enabled, fn) {
         const previous = this.allowBareIdentifierComposite;
@@ -1440,6 +1638,68 @@ function binaryPrecedence(kind) {
             return 5;
         default:
             return 0;
+    }
+}
+function extractName(expr, force) {
+    if (expr.kind === "Ident") {
+        return { name: expr };
+    }
+    if (expr.kind === "BinaryExpr") {
+        if (expr.op === TokenKind.Star && expr.left.kind === "Ident" && (force || isTypeElem(expr.right))) {
+            return {
+                name: expr.left,
+                type: {
+                    kind: "StarExpr",
+                    expr: expr.right,
+                    span: mergeSpans(expr.left.span, expr.right.span)
+                }
+            };
+        }
+        if (expr.op === TokenKind.Or) {
+            const split = extractName(expr.left, force || isTypeElem(expr.right));
+            if (split.name && split.type) {
+                return {
+                    name: split.name,
+                    type: {
+                        kind: "BinaryExpr",
+                        left: split.type,
+                        op: TokenKind.Or,
+                        right: expr.right,
+                        span: mergeSpans(split.type.span, expr.right.span)
+                    }
+                };
+            }
+        }
+    }
+    if (expr.kind === "CallExpr" && expr.fun.kind === "Ident" && expr.args.length === 1 && !expr.ellipsis && (force || isTypeElem(expr.args[0]))) {
+        return {
+            name: expr.fun,
+            type: {
+                kind: "ParenExpr",
+                expr: expr.args[0],
+                span: mergeSpans(expr.fun.span, expr.span)
+            }
+        };
+    }
+    return { type: expr };
+}
+function isTypeElem(expr) {
+    switch (expr.kind) {
+        case "ArrayType":
+        case "StructType":
+        case "FuncType":
+        case "InterfaceType":
+        case "MapType":
+        case "ChanType":
+            return true;
+        case "BinaryExpr":
+            return isTypeElem(expr.left) || isTypeElem(expr.right);
+        case "UnaryExpr":
+            return expr.op === TokenKind.Tilde;
+        case "ParenExpr":
+            return isTypeElem(expr.expr);
+        default:
+            return false;
     }
 }
 function badExpr(span) {

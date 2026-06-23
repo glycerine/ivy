@@ -1,7 +1,7 @@
 import { describe, expect, test } from "./testHarness.js";
 import { parseFrontSource } from "../src/front/parser.js";
 import { TokenKind } from "../src/front/token.js";
-import { walk, type AstNode, type Expr, type Field, type FuncDecl, type GenDecl } from "../src/front/ast.js";
+import { walk, type AstNode, type Expr, type Field, type FuncDecl, type GenDecl, type TypeSpec } from "../src/front/ast.js";
 
 const TEST_FILENAME = "front-parser-test.go";
 
@@ -191,6 +191,32 @@ type Box[T any] struct { Value T }
     expect(box?.kind === "TypeSpec" ? box.typeParams?.fields[0]?.names.map((name) => name.name) : undefined).toEqual(["T"]);
   });
 
+  test("follows Go parser type-spec bracket disambiguation", () => {
+    const file = parseOk(`
+package ambiguous
+
+type E int
+type ArrayName [P]E
+type ArrayProduct [P * E]E
+type ArrayCall [P(E)]E
+type GenericSliceConstraint[P []E] struct{}
+type GenericStarConstraint[P *E,] struct{}
+type GenericParenConstraint[P ([]E)] struct{}
+type GenericUnion[P ~int | ~string] struct{}
+`);
+
+    const specs = file.declarations.flatMap((decl) => decl.kind === "GenDecl" ? decl.specs : []);
+    const typeSpec = (name: string) => specs.find((spec): spec is TypeSpec => spec.kind === "TypeSpec" && spec.name.name === name);
+
+    expect(typeSpec("ArrayName")?.kind === "TypeSpec" ? typeSpec("ArrayName")?.type.kind : undefined).toBe("ArrayType");
+    expect(typeSpec("ArrayProduct")?.kind === "TypeSpec" ? typeSpec("ArrayProduct")?.type.kind : undefined).toBe("ArrayType");
+    expect(typeSpec("ArrayCall")?.kind === "TypeSpec" ? typeSpec("ArrayCall")?.type.kind : undefined).toBe("ArrayType");
+    expect(typeSpec("GenericSliceConstraint")?.kind === "TypeSpec" ? typeSpec("GenericSliceConstraint")?.typeParams?.fields[0]?.type.kind : undefined).toBe("ArrayType");
+    expect(typeSpec("GenericStarConstraint")?.kind === "TypeSpec" ? typeSpec("GenericStarConstraint")?.typeParams?.fields[0]?.type.kind : undefined).toBe("StarExpr");
+    expect(typeSpec("GenericParenConstraint")?.kind === "TypeSpec" ? typeSpec("GenericParenConstraint")?.typeParams?.fields[0]?.type.kind : undefined).toBe("ParenExpr");
+    expect(typeSpec("GenericUnion")?.kind === "TypeSpec" ? typeSpec("GenericUnion")?.typeParams?.fields[0]?.type.kind : undefined).toBe("BinaryExpr");
+  });
+
   test("parses structs, interfaces, maps, function literals, and composite literals", () => {
     const kinds = collectKinds(`
 package model
@@ -300,6 +326,10 @@ func F(i1 one.I1) {
   case two.S2:
     one.F1(v)
   }
+  prefixes := map[crypto.Hash]asn1.ObjectIdentifier{
+    crypto.MD5: {1, 2, 840, 113549, 2, 5},
+  }
+  _ = prefixes
 }
 `);
 
@@ -397,6 +427,32 @@ func F(xs []int) {
     expect(ranges[0]?.kind === "RangeStmt" ? ranges[0].key : undefined).toBeUndefined();
     expect(ranges[1]?.kind === "RangeStmt" ? ranges[1].token : undefined).toBe(TokenKind.Define);
     expect(ranges[2]?.kind === "RangeStmt" ? ranges[2].token : undefined).toBe(TokenKind.Assign);
+  });
+
+  test("keeps expression context inside composite and function literals in control clauses", () => {
+    const nodes = collectNodes(`
+package control
+
+type Attr struct { Key string; Value int }
+
+func F() {
+  for _, test := range []struct{
+    replace func(Attr) Attr
+  }{
+    {
+      replace: func(a Attr) Attr {
+        return Attr{"bad", 1}
+      },
+    },
+  } {
+    _ = test
+  }
+}
+`);
+
+    expect(nodes.some((node) => node.kind === "CompositeLit")).toBe(true);
+    expect(nodes.some((node) => node.kind === "FuncLit")).toBe(true);
+    expect(nodes.filter((node) => node.kind === "RangeStmt")).toHaveLength(1);
   });
 
   test("parses labels through simple statement mode", () => {
