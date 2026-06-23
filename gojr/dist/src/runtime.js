@@ -1728,6 +1728,8 @@ function prepareReceiverBinding(receiverTypeText, receiver) {
 function pointerToReceiver(receiver, typeName) {
     if (receiver instanceof RuntimePointer)
         return receiver;
+    if (receiver instanceof RuntimeTypedNilValue && runtimeTypeAssignableMatch(receiver.typeName, `*${typeName}`))
+        return receiver;
     if (receiver instanceof RuntimeStruct && receiver.typeName === typeName) {
         return new RuntimePointer(typeName, () => receiver, (value) => {
             if (!(value instanceof RuntimeStruct) || value.typeName !== typeName) {
@@ -2412,13 +2414,13 @@ async function evaluateCallArguments(callee, expressions, spreadLast, context) {
                 const expression = spreadLast && argIndex >= expressions.length - 1
                     ? expressions[expressions.length - 1]
                     : expressions[argIndex];
-                prepared[argIndex] = prepareValueForTargetType(prepared[argIndex] ?? null, parameter.type.text, expression, context, `argument ${argIndex + 1}`);
+                prepared[argIndex] = prepareValueForParameterType(prepared[argIndex] ?? null, parameter.type.text, expression, context, `argument ${argIndex + 1}`);
             }
             break;
         }
         if (index >= prepared.length)
             break;
-        prepared[index] = prepareValueForTargetType(prepared[index] ?? null, parameter.type.text, expressions[index], context, `argument ${index + 1}`);
+        prepared[index] = prepareValueForParameterType(prepared[index] ?? null, parameter.type.text, expressions[index], context, `argument ${index + 1}`);
     }
     return prepared;
 }
@@ -3171,6 +3173,13 @@ function promotedMethodForStruct(struct, methodName, context, seen = new Set()) 
         const receiver = struct.get(field.name);
         if (receiver === undefined || receiver === null)
             continue;
+        if (receiver instanceof RuntimeInterfaceValue) {
+            const promoted = methodForValue(receiver, methodName, context);
+            if (promoted) {
+                matches.push(promoted);
+                continue;
+            }
+        }
         const receiverType = receiverTypeName(receiver);
         if (receiverType) {
             const direct = context.methodFor(receiverType, methodName);
@@ -3510,6 +3519,15 @@ function prepareValueForTargetType(value, targetTypeText, source, context, role 
         return value;
     const dynamicType = expressionDynamicTypeText(source, context, value);
     return prepareInterfaceAssignment(value, targetType, interfaceType, role, context, dynamicType);
+}
+function prepareValueForParameterType(value, targetTypeText, source, context, role) {
+    const targetType = targetTypeText ? normalizeTypeText(targetTypeText) : "";
+    if (!targetType)
+        return value;
+    if (interfaceTarget(targetType, context)) {
+        return prepareValueForTargetType(value, targetType, source, context, role);
+    }
+    return prepareAssignableToType(value, targetType, role, context);
 }
 function expressionDynamicTypeText(expression, context, value) {
     if (!expression)
@@ -3933,7 +3951,9 @@ function valueImplementsInterface(value, interfaceType, context) {
         const candidate = methodForValue(value, method.name, context);
         if (!candidate)
             return false;
-        if (candidate.method.pointerReceiver && !(value instanceof RuntimePointer) && !isTypedNilPointer(value))
+        if (candidate.method.pointerReceiver &&
+            !(candidate.receiver instanceof RuntimePointer) &&
+            !isTypedNilPointer(candidate.receiver))
             return false;
         if (!signaturesCompatible(candidate.method.declaration.signature, method.signature))
             return false;

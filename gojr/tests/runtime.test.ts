@@ -830,7 +830,7 @@ func f(x int) int { return x }
 return f("bad")
 `);
     expect(badParam.diagnostics).toHaveLength(1);
-    expect(badParam.diagnostics[0]?.message).toContain("variable x bad is not assignable to int");
+    expect(badParam.diagnostics[0]?.message).toContain("bad is not assignable to int");
 
     const badArray = await evaluateSource(`
 var xs []int
@@ -1155,6 +1155,24 @@ return (*int)(nil) == p, fmt.Sprintf("%#v", (*int)(nil)), accept(&five)
     expect(result.values).toEqual([true, "*int(nil)", true]);
   });
 
+  test("allows methods with pointer receivers on typed nil pointers", async () => {
+    const result = await expectRuns(`
+type T []T
+
+func (*T) Sum(args ...int) int {
+  s := 0
+  for _, v := range args {
+    s += v
+  }
+  return s
+}
+
+return ((*T)(nil)).Sum(1, 3, 5, 7), (*T).Sum(nil, 1, 3, 5, 6)
+`);
+
+    expect(result.values).toEqual([16n, 15n]);
+  });
+
   test("preserves concrete dynamic numeric types inside interfaces", async () => {
     const result = await expectRuns(`
 type Duration int
@@ -1372,6 +1390,30 @@ m.Mutate()
 return b.X
 `);
     expect(pointerOk.value).toBe(2n);
+
+    const promotedPointerOk = await expectRuns(`
+type Summable interface {
+  Sum(...int) int
+}
+
+type T []T
+func (*T) Sum(args ...int) int {
+  total := 0
+  for _, v := range args {
+    total += v
+  }
+  return total
+}
+
+type U struct { *T }
+
+var u U
+var s Summable = u
+var holder struct { Summable }
+holder.Summable = &u
+return s.Sum(2, 3, 5, 6), holder.Sum(2, 3, 5, 8)
+`);
+    expect(promotedPointerOk.values).toEqual([16n, 18n]);
   });
 
   test("represents interfaces as typed runtime values with dynamic nil state", async () => {

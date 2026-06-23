@@ -309,15 +309,15 @@ Current Go toolchain corpus note:
   distribution `test/` tree, and `gojr/tests/goToolchainCorpus.test.ts` now
   executes a small active `// run` smoke set from that corpus:
   `alias1.go`, `bigmap.go`, `align.go`, `char_lit.go`, `clear.go`, `decl.go`,
-  `defer.go`, `divide.go`, `floatcmp.go`, `helloworld.go`, `for.go`, `closure1.go`,
-  `closure2.go`, `compos.go`, `const8.go`, `func.go`, `func4.go`,
+  `defer.go`, `ddd.go`, `divide.go`, `floatcmp.go`, `helloworld.go`, `for.go`, `closure1.go`,
+  `closure2.go`, `compos.go`, `const.go`, `const3.go`, `const8.go`, `func.go`, `func4.go`,
   `func6.go`, `func7.go`, `func8.go`, `if.go`, `intcvt.go`,
   `initcomma.go`, `range3.go`, `range4.go`, `typeswitch1.go`, `varinit.go`,
   `mapclear.go`, `map.go`,
   `abi/convF_criteria.go`,
   `abi/convT64_criteria.go`,
   `abi/defer_aggregate.go`, `abi/double_nested_addressed_struct.go`,
-  `abi/double_nested_struct.go`, `abi/f_ret_z_not.go`, and
+  `abi/double_nested_struct.go`, `abi/f_ret_z_not.go`, `abi/named_results.go`, and
   `iota.go`, `literal.go`, `method3.go`, `method7.go`, `newexpr.go`, `print.go`,
   `string_lit.go`, `ken/array.go`, `ken/complit.go`, `ken/for.go`,
   `ken/interbasic.go`, `ken/interfun.go`, `ken/intervar.go`,
@@ -355,6 +355,11 @@ Current Go toolchain corpus note:
   constants. `const8.go` guards the additional Go rule that a real const named
   `iota` in the current scope shadows the magic `iota`, including repeated
   implicit RHS expressions.
+  `ddd.go` guards variadic functions and spread calls, nil pointer receiver
+  method calls, method expressions, promoted embedded pointer receiver methods,
+  and embedded interface method promotion. `abi/named_results.go` guards named
+  result slots, naked returns, and deferred mutations of named returns across a
+  larger upstream fixture.
   `literal.go` guards literal syntax for basic types plus Go's observable
   `float32` and `complex64` rounding at assignment, conversion, and typed
   expression-result boundaries.
