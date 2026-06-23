@@ -280,6 +280,7 @@ export class RuntimePointer {
     }
 }
 const objectMapKeyIds = new WeakMap();
+const arrayCapacities = new WeakMap();
 let nextObjectMapKeyId = 1;
 export class RuntimeMap {
     keyType;
@@ -497,11 +498,7 @@ function installBuiltins(context) {
         return BigInt(valueCapacity(args[0] ?? null));
     }));
     context.declareRoot("append", hostCallable("append", (args) => {
-        const target = args[0] ?? null;
-        if (target !== null && !Array.isArray(target)) {
-            throw new GoJuniorRuntimeError(`${formatValue(target)} is not appendable`);
-        }
-        return [...(target ?? []), ...args.slice(1)];
+        return appendValues(args[0] ?? null, args.slice(1));
     }));
 }
 function installSheets(context, options) {
@@ -1023,6 +1020,8 @@ function evaluateExpression(expression, context) {
     switch (expression.kind) {
         case "Identifier":
             return evaluateIdentifier(expression, context);
+        case "TypeExpression":
+            throw new GoJuniorRuntimeError(`${expression.type.text} is a type, not a value`);
         case "Literal":
             return expression.value;
         case "FunctionLiteralExpression":
@@ -1068,6 +1067,11 @@ function evaluateArrayLiteral(expression, context) {
             values.push(defaultValueForTypeText(type.elementType, context));
         }
     }
+    return values;
+}
+function makeRuntimeSlice(elementType, length, capacity, context) {
+    const values = Array.from({ length }, () => defaultValueForTypeText(elementType, context));
+    arrayCapacities.set(values, capacity);
     return values;
 }
 function evaluateStructLiteral(expression, context) {
@@ -1164,9 +1168,45 @@ function evaluateTypeAssertion(expression, context) {
     return value;
 }
 function evaluateCall(expression, context) {
+    if (expression.callee.kind === "Identifier" && expression.callee.name === "make") {
+        return evaluateMake(expression, context);
+    }
     const callee = evaluateExpression(expression.callee, context);
     const args = expression.args.map((arg) => evaluateExpression(arg, context));
     return callRuntime(callee, expression.spreadLast ? spreadLastArgument(args) : args, context);
+}
+function evaluateMake(expression, context) {
+    if (expression.spreadLast)
+        throw new GoJuniorRuntimeError("make does not accept spread arguments");
+    const typeArg = expression.args[0];
+    if (!typeArg || typeArg.kind !== "TypeExpression") {
+        throw new GoJuniorRuntimeError("make expects a map or slice type as its first argument");
+    }
+    const typeText = normalizeTypeText(typeArg.type.text);
+    const mapType = parseMapTypeText(typeText);
+    if (mapType) {
+        if (expression.args.length > 2)
+            throw new GoJuniorRuntimeError("make map accepts at most one size hint");
+        if (expression.args[1])
+            toNonNegativeLength(evaluateExpression(expression.args[1], context), "map size hint");
+        return new RuntimeMap(mapType.keyType, mapType.valueType);
+    }
+    const arrayType = parseArrayOrSliceTypeText(typeText);
+    if (arrayType) {
+        if (arrayType.length !== undefined)
+            throw new GoJuniorRuntimeError(`cannot make array type ${typeText}; use a slice type`);
+        if (expression.args.length < 2 || expression.args.length > 3) {
+            throw new GoJuniorRuntimeError("make slice expects length and optional capacity");
+        }
+        const length = toNonNegativeLength(evaluateExpression(expression.args[1], context), "slice length");
+        const capacity = expression.args[2]
+            ? toNonNegativeLength(evaluateExpression(expression.args[2], context), "slice capacity")
+            : length;
+        if (capacity < length)
+            throw new GoJuniorRuntimeError("slice capacity is smaller than length");
+        return makeRuntimeSlice(arrayType.elementType, length, capacity, context);
+    }
+    throw new GoJuniorRuntimeError(`cannot make ${typeText}`);
 }
 function spreadLastArgument(args) {
     if (args.length === 0)
@@ -1176,6 +1216,17 @@ function spreadLastArgument(args) {
         throw new GoJuniorRuntimeError(`${formatValue(last ?? null)} is not spreadable`);
     }
     return [...args.slice(0, -1), ...last];
+}
+function appendValues(target, values) {
+    if (target !== null && !Array.isArray(target)) {
+        throw new GoJuniorRuntimeError(`${formatValue(target)} is not appendable`);
+    }
+    const base = target ?? [];
+    const appended = [...base, ...values];
+    const previousCapacity = sliceCapacity(base);
+    const needed = appended.length;
+    arrayCapacities.set(appended, Math.max(previousCapacity, needed));
+    return appended;
 }
 function callRuntime(callee, args, context) {
     if (isRuntimeCallable(callee) || isGoJuniorFunction(callee)) {
@@ -1543,8 +1594,17 @@ function valueLength(value) {
 }
 function valueCapacity(value) {
     if (Array.isArray(value))
-        return value.length;
+        return sliceCapacity(value);
     throw new GoJuniorRuntimeError(`${formatValue(value)} has no cap`);
+}
+function sliceCapacity(value) {
+    return arrayCapacities.get(value) ?? value.length;
+}
+function toNonNegativeLength(value, role) {
+    const length = toNumber(value);
+    if (length < 0)
+        throw new GoJuniorRuntimeError(`${role} must be non-negative`);
+    return length;
 }
 function throwTypeError(value, type, role) {
     throw new GoJuniorRuntimeError(`${role} ${formatValue(value)} is not assignable to ${type}`);
@@ -1833,7 +1893,7 @@ function formatRuntimeMap(value) {
     const entries = value.orderedEntries()
         .map(([key, item]) => `${formatValue(key)}:${formatValue(item)}`)
         .join(" ");
-    return `map[${entries}]`;
+    return `map[${value.keyType}]${value.valueType}{${entries}}`;
 }
 function formatRuntimeStruct(value) {
     const fields = value.orderedFields()

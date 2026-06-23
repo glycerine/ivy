@@ -36,6 +36,7 @@ import {
   SwitchClause,
   SwitchStatement,
   TypeAssertionExpression,
+  TypeExpression,
   TypeDeclStatement,
   TypeNode,
   TypeSpec,
@@ -462,6 +463,15 @@ function expressionToAst(expr: Expr): Expression {
         left: expressionToAst(expr.left),
         right: expressionToAst(expr.right)
       } satisfies BinaryExpression, expr.span);
+    case "ArrayType":
+    case "MapType":
+    case "StructType":
+    case "InterfaceType":
+    case "FuncType":
+      return withSpan({
+        kind: "TypeExpression",
+        type: typeNode(expr)
+      } satisfies TypeExpression, expr.span);
     default:
       return missingExpression(expr.span);
   }

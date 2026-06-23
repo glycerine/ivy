@@ -435,6 +435,12 @@ export function newUniverse(): Universe {
     tuple(varOf("", new SliceType(basic.any))),
     true
   ), scope));
+  scope.insert(new BuiltinObject("make", new SignatureType(
+    undefined,
+    tuple(varOf("type", basic.any), varOf("size", new SliceType(basic.any))),
+    tuple(varOf("", basic.any)),
+    true
+  ), scope));
 
   return { scope, basic };
 }

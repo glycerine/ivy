@@ -367,6 +367,7 @@ export function newUniverse() {
     scope.insert(new BuiltinObject("len", new SignatureType(undefined, tuple(varOf("", basic.any)), tuple(varOf("", basic.int64)), false), scope));
     scope.insert(new BuiltinObject("cap", new SignatureType(undefined, tuple(varOf("", basic.any)), tuple(varOf("", basic.int64)), false), scope));
     scope.insert(new BuiltinObject("append", new SignatureType(undefined, tuple(varOf("slice", new SliceType(basic.any)), varOf("values", new SliceType(basic.any))), tuple(varOf("", new SliceType(basic.any))), true), scope));
+    scope.insert(new BuiltinObject("make", new SignatureType(undefined, tuple(varOf("type", basic.any), varOf("size", new SliceType(basic.any))), tuple(varOf("", basic.any)), true), scope));
     return { scope, basic };
 }
 export function tuple(...variables) {

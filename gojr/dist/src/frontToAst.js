@@ -374,6 +374,15 @@ function expressionToAst(expr) {
                 left: expressionToAst(expr.left),
                 right: expressionToAst(expr.right)
             }, expr.span);
+        case "ArrayType":
+        case "MapType":
+        case "StructType":
+        case "InterfaceType":
+        case "FuncType":
+            return withSpan({
+                kind: "TypeExpression",
+                type: typeNode(expr)
+            }, expr.span);
         default:
             return missingExpression(expr.span);
     }

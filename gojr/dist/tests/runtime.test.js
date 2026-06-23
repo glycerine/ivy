@@ -178,6 +178,23 @@ return a, ok
 `);
         expect(present.values).toEqual(["hi", true]);
     });
+    test("supports standard Go make for maps and slices", () => {
+        const mapResult = expectRuns(`
+m := make(map[int]int)
+missing, missingOK := m[3]
+m[3] = 9
+present, presentOK := m[3]
+return missing, missingOK, present, presentOK
+`);
+        expect(mapResult.values).toEqual([0n, false, 9n, true]);
+        const sliceResult = expectRuns(`
+slc := make([]int, 20, 50)
+slc = append(slc, 7)
+slc2 := make([]string, 3)
+return len(slc), cap(slc), slc[0], slc[20], len(slc2), cap(slc2), slc2[0]
+`);
+        expect(sliceResult.values).toEqual([21n, 50n, 0n, 7n, 3n, 3n, ""]);
+    });
     test("reports ordinary runtime failures with GoJr-prefixed diagnostic codes", () => {
         const result = evaluateSource(`
 missingName
@@ -270,9 +287,12 @@ return counts["a"] + counts["b"] + counts["missing"], out
 import "fmt"
 
 counts := map[string]int64{"a": 1, "b": 2}
-return fmt.Sprintf("%v | %#v", counts, counts)
+var floats map[int]float64
+empty := fmt.Sprintf("%v", floats)
+floats[39] = 3.2
+return fmt.Sprintf("%v | %#v | %v | %v", counts, counts, empty, floats)
 `);
-        expect(result.value).toBe(`map[a:1 b:2] | map[string]int64{string("a"): int64(1), string("b"): int64(2)}`);
+        expect(result.value).toBe(`map[string]int64{a:1 b:2} | map[string]int64{string("a"): int64(1), string("b"): int64(2)} | map[int]float64{} | map[int]float64{39:3.2}`);
     });
     test("evaluates struct literals, zero values, field mutation, and fmt verbs", () => {
         const result = expectRuns(`

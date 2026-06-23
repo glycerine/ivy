@@ -211,6 +211,7 @@ export interface ExpressionStatement {
 
 export type Expression =
   | IdentifierExpression
+  | TypeExpression
   | LiteralExpression
   | FunctionLiteralExpression
   | ArrayLiteralExpression
@@ -228,6 +229,12 @@ export type Expression =
 export interface IdentifierExpression {
   kind: "Identifier";
   name: string;
+  span?: SourceSpan;
+}
+
+export interface TypeExpression {
+  kind: "TypeExpression";
+  type: TypeNode;
   span?: SourceSpan;
 }
 
