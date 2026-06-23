@@ -3,15 +3,15 @@ import { TokenKind } from "./token.js";
 import { ArrayType, BasicKind, BasicType, ConstObject, FuncObject, InterfaceType, MapType, NamedType, newUniverse, ObjectKind, PackageInfo, PackageNameObject, PointerType, Scope, SignatureType, SliceType, StructType, TypeNameObject, VarObject, assignableTo, methodSet, tuple, varOf } from "./types.js";
 export function checkFrontSource(source, config = {}) {
     const parsed = parseFrontSource(source);
-    const result = checkFrontFiles(parsed.file ? [parsed.file] : [], config, parsed.diagnostics);
+    const result = checkFrontFiles(parsed.file ? [parsed.file] : [], config, parsed.diagnostics, parsed.statements);
     return {
         ...result,
         ...(parsed.file ? { file: parsed.file } : {})
     };
 }
-export function checkFrontFiles(files, config = {}, parserDiagnostics = []) {
+export function checkFrontFiles(files, config = {}, parserDiagnostics = [], statements = []) {
     const checker = new FrontChecker(config, parserDiagnostics);
-    return checker.check(files);
+    return checker.check(files, statements);
 }
 class FrontChecker {
     config;
@@ -31,7 +31,7 @@ class FrontChecker {
         this.diagnostics = [...parserDiagnostics];
         this.pkg = new PackageInfo(config.packagePath ?? "", config.packageName ?? "main", this.universe.scope);
     }
-    check(files) {
+    check(files, statements = []) {
         const firstName = files.find((file) => file.name)?.name?.name;
         const packageName = this.config.packageName ?? firstName ?? "main";
         const packagePath = this.config.packagePath ?? packageName;
@@ -40,12 +40,15 @@ class FrontChecker {
             this.info.scopes.set(file, this.pkg.scope);
             this.declareImports(file);
         }
+        this.declareAutomaticImports();
         for (const file of files)
             this.declareTopLevelTypeNames(file);
         for (const file of files)
             this.declareTopLevelObjects(file);
         for (const file of files)
             this.checkTopLevelBodies(file);
+        for (const statement of statements)
+            this.checkStmt(statement, this.pkg.scope);
         return {
             pkg: this.pkg,
             info: this.info,
@@ -56,13 +59,19 @@ class FrontChecker {
     declareImports(file) {
         for (const spec of file.imports) {
             const path = unquote(spec.path.value);
-            const imported = this.config.importer?.import(path) ?? new PackageInfo(path, importName(path), this.universe.scope);
+            const imported = this.config.importer?.import(path) ?? (path === "fmt" ? fmtPackageInfo(this.universe) : new PackageInfo(path, importName(path), this.universe.scope));
             const localName = spec.name?.name === "." ? imported.name : spec.name?.name ?? imported.name;
             const object = new PackageNameObject(localName, this.universe.basic.any, imported, this.pkg.scope, this.pkg);
             this.insert(this.pkg.scope, object, spec.name ?? spec.path);
             if (spec.name)
                 this.info.defs.set(spec.name, object);
         }
+    }
+    declareAutomaticImports() {
+        if (this.pkg.scope.lookup("fmt"))
+            return;
+        const fmt = fmtPackageInfo(this.universe);
+        this.insert(this.pkg.scope, new PackageNameObject("fmt", this.universe.basic.any, fmt, this.pkg.scope, this.pkg));
     }
     declareTopLevelTypeNames(file) {
         for (const declaration of file.declarations) {
@@ -118,7 +127,7 @@ class FrontChecker {
         const explicitType = spec.type ? this.resolveType(spec.type, scope) : undefined;
         for (const [index, name] of spec.names.entries()) {
             const valueType = spec.values[index] ? this.checkExpr(spec.values[index], scope).type : undefined;
-            const type = explicitType ?? valueType ?? this.universe.basic.invalid;
+            const type = explicitType ?? (token === TokenKind.Const ? valueType : defaultType(valueType, this.universe)) ?? this.universe.basic.invalid;
             const object = token === TokenKind.Const
                 ? new ConstObject(name.name, type, undefined, scope, this.pkg)
                 : new VarObject(name.name, type, false, scope, this.pkg);
@@ -244,7 +253,7 @@ class FrontChecker {
         const rhs = statement.rhs.map((expr) => this.checkExpr(expr, scope).type);
         for (const [index, lhs] of statement.lhs.entries()) {
             if (statement.token === TokenKind.Define && lhs.kind === "Ident") {
-                const type = rhs[index] ?? rhs[0] ?? this.universe.basic.invalid;
+                const type = defaultType(rhs[index] ?? rhs[0], this.universe) ?? this.universe.basic.invalid;
                 this.insert(scope, new VarObject(lhs.name, type, false, scope, this.pkg), lhs);
                 continue;
             }
@@ -408,8 +417,18 @@ class FrontChecker {
         }
         if (expr.op === TokenKind.AndAnd || expr.op === TokenKind.OrOr)
             return { mode: "value", type: this.universe.basic.bool };
-        if (expr.op === TokenKind.Plus && (isStringLike(left) || isStringLike(right))) {
-            return { mode: "value", type: isUntyped(left) && isUntyped(right) ? this.universe.basic.untypedString : this.universe.basic.string };
+        if (expr.op === TokenKind.Plus) {
+            if (isStringLike(left) || isStringLike(right)) {
+                if (isStringLike(left) && isStringLike(right)) {
+                    return { mode: "value", type: isUntyped(left) && isUntyped(right) ? this.universe.basic.untypedString : this.universe.basic.string };
+                }
+                this.error(`invalid operation: ${left.typeString()} + ${right.typeString()} (mismatched types ${left.typeString()} and ${right.typeString()})`, expr.span);
+                return { mode: "invalid", type: this.universe.basic.invalid };
+            }
+            if (!isNumericLike(left) || !isNumericLike(right)) {
+                this.error(`invalid operation: ${left.typeString()} + ${right.typeString()} (operator + not defined for those types)`, expr.span);
+                return { mode: "invalid", type: this.universe.basic.invalid };
+            }
         }
         return { mode: isUntyped(left) && isUntyped(right) ? "constant" : "value", type: promoteNumeric(left, right, this.universe) };
     }
@@ -424,6 +443,8 @@ class FrontChecker {
                     this.info.selections.set(expr, selected);
                     return { mode: selected.kind === ObjectKind.TypeName ? "type" : "value", type: selected.type };
                 }
+                if (object.imported.scope.names().length === 0)
+                    return { mode: "value", type: this.universe.basic.any };
             }
         }
         const base = this.checkExpr(expr.object, scope).type;
@@ -437,9 +458,16 @@ class FrontChecker {
         return { mode: "invalid", type: this.universe.basic.invalid };
     }
     checkCall(expr, scope) {
-        const fun = this.checkExpr(expr.fun, scope).type;
+        const callee = this.checkExpr(expr.fun, scope);
         for (const arg of expr.args)
             this.checkExpr(arg, scope);
+        if (callee.mode === "type")
+            return { mode: "value", type: callee.type };
+        const builtin = expr.fun.kind === "Ident" ? expr.fun.name : undefined;
+        const special = builtin ? this.checkBuiltinCall(builtin, expr, scope) : undefined;
+        if (special)
+            return special;
+        const fun = callee.type;
         if (fun instanceof SignatureType) {
             const results = fun.results.variables;
             if (results.length === 0)
@@ -452,6 +480,40 @@ class FrontChecker {
             return { mode: "value", type: this.universe.basic.any };
         this.error("cannot call non-function value", expr.fun.span);
         return { mode: "invalid", type: this.universe.basic.invalid };
+    }
+    checkBuiltinCall(name, expr, scope) {
+        switch (name) {
+            case "make":
+                return { mode: "value", type: expr.args[0] ? this.resolveType(expr.args[0], scope) : this.universe.basic.invalid };
+            case "new":
+                return { mode: "value", type: new PointerType(expr.args[0] ? this.resolveType(expr.args[0], scope) : this.universe.basic.invalid) };
+            case "append":
+                return { mode: "value", type: expr.args[0] ? this.checkExpr(expr.args[0], scope).type : this.universe.basic.invalid };
+            case "len":
+            case "cap":
+            case "copy":
+                return { mode: "value", type: this.universe.basic.int64 };
+            case "complex":
+                return { mode: "value", type: this.universe.basic.complex128 };
+            case "real":
+            case "imag":
+                return { mode: "value", type: this.universe.basic.float64 };
+            case "min":
+            case "max": {
+                const first = expr.args[0] ? this.checkExpr(expr.args[0], scope).type : this.universe.basic.invalid;
+                const second = expr.args[1] ? this.checkExpr(expr.args[1], scope).type : first;
+                return { mode: "value", type: defaultType(promoteNumeric(first, second, this.universe), this.universe) ?? this.universe.basic.invalid };
+            }
+            case "panic":
+            case "panicOn":
+            case "print":
+            case "println":
+            case "delete":
+            case "clear":
+                return { mode: "value", type: this.universe.basic.untypedNil };
+            default:
+                return undefined;
+        }
     }
     checkIndex(expr, scope) {
         const object = this.checkExpr(expr.object, scope).type.underlying();
@@ -769,7 +831,12 @@ function lookupFieldOrMethod(type, name) {
         if (promoted)
             return promoted;
     }
-    return methodSet(type).find((method) => method.name === name);
+    const directMethod = methodSet(type).find((method) => method.name === name);
+    if (directMethod)
+        return directMethod;
+    if (type instanceof NamedType)
+        return type.methodSet().find((method) => method.name === name);
+    return undefined;
 }
 function promotedFieldOrMethod(type, name, seen = new Set()) {
     if (seen.has(type))
@@ -800,8 +867,37 @@ function promotedFieldOrMethod(type, name, seen = new Set()) {
 function isStringLike(type) {
     return type instanceof BasicType && (type.basicKind === BasicKind.String || type.basicKind === BasicKind.UntypedString);
 }
+function isNumericLike(type) {
+    return type instanceof BasicType && type.info.has("numeric");
+}
 function isUntyped(type) {
     return type instanceof BasicType && type.info.has("untyped");
+}
+function defaultType(type, universe) {
+    if (!(type instanceof BasicType))
+        return type;
+    switch (type.basicKind) {
+        case BasicKind.UntypedBool:
+            return universe.basic.bool;
+        case BasicKind.UntypedInt:
+            return universe.basic.int64;
+        case BasicKind.UntypedFloat:
+            return universe.basic.float64;
+        case BasicKind.UntypedComplex:
+            return universe.basic.complex128;
+        case BasicKind.UntypedString:
+            return universe.basic.string;
+        default:
+            return type;
+    }
+}
+function fmtPackageInfo(universe) {
+    const pkg = new PackageInfo("fmt", "fmt", universe.scope);
+    const scope = pkg.scope;
+    scope.insert(new FuncObject("Printf", new SignatureType(undefined, tuple(varOf("format", universe.basic.string), varOf("args", new SliceType(universe.basic.any))), tuple(varOf("", universe.basic.int64)), true), scope, pkg));
+    scope.insert(new FuncObject("Sprintf", new SignatureType(undefined, tuple(varOf("format", universe.basic.string), varOf("args", new SliceType(universe.basic.any))), tuple(varOf("", universe.basic.string)), true), scope, pkg));
+    scope.insert(new FuncObject("Println", new SignatureType(undefined, tuple(varOf("args", new SliceType(universe.basic.any))), tuple(varOf("", universe.basic.int64)), true), scope, pkg));
+    return pkg;
 }
 function promoteNumeric(left, right, universe) {
     if (left instanceof BasicType && (left.basicKind === BasicKind.Complex64 || left.basicKind === BasicKind.Complex128))

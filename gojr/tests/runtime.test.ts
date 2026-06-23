@@ -251,6 +251,31 @@ x = "bad"
     expect(inferred.diagnostics[0]?.message).toContain("variable x bad is not assignable to int64");
   });
 
+  test("rejects mixed string and numeric addition", () => {
+    const direct = evaluateSource(`
+d := \` hi there\`
+a := 10
+return d + a
+`);
+    expect(direct.diagnostics).toHaveLength(1);
+    expect(direct.diagnostics[0]?.code).toBe("GOJR_RUNTIME001");
+    expect(direct.diagnostics[0]?.message).toContain("invalid operation: string + int64");
+
+    const session = new GoJuniorSession();
+    expect(session.evaluate("a := 10").diagnostics).toEqual([]);
+    expect(session.evaluate("d := ` hi there`").diagnostics).toEqual([]);
+    const mixed = session.evaluate("d + a");
+    expect(mixed.diagnostics).toHaveLength(1);
+    expect(mixed.diagnostics[0]?.code).toBe("GJTYPE001");
+    expect(mixed.diagnostics[0]?.message).toContain("invalid operation: string + int64");
+
+    const strings = expectRuns(`
+s := "hi"
+return s + " there"
+`);
+    expect(strings.value).toBe("hi there");
+  });
+
   test("supports Go-style const groups with iota and repeated expressions", () => {
     const result = expectRuns(`
 const Single = iota
@@ -318,7 +343,7 @@ m["hi"] = "three"
 counts := map[string]int64{"a": 1, "b": 2}
 out := ""
 for k, v := range counts {
-  out = out + k + ":" + v + ";"
+  out = out + k + ":" + fmt.Sprintf("%v", v) + ";"
 }
 return counts["a"] + counts["b"] + counts["missing"], out
 `);

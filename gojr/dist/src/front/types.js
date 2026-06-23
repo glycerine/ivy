@@ -452,6 +452,8 @@ export function assignableTo(source, target) {
     if (source instanceof BasicType && source.basicKind === BasicKind.UntypedNil)
         return isNilAssignable(target);
     if (source instanceof BasicType && target instanceof BasicType) {
+        if (source.info.has("integer") && target.info.has("integer"))
+            return true;
         if (source.info.has("untyped") && target.info.has("numeric") && source.info.has("numeric"))
             return true;
         if (source.info.has("untyped") && target.info.has("string") && source.info.has("string"))

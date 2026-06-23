@@ -1,3 +1,5 @@
+import { checkFrontSource } from "./front/checker.js";
+import { BasicKind, BasicType, MapType as CheckerMapType, SliceType as CheckerSliceType, newUniverse } from "./front/types.js";
 import { frontSourceToAst } from "./frontToAst.js";
 export class GoJuniorRuntimeError extends Error {
     constructor(message) {
@@ -463,6 +465,7 @@ export function evaluateProgram(ast, options = {}) {
 export class GoJuniorSession {
     options;
     context;
+    acceptedSources = [];
     constructor(options = {}) {
         this.options = options;
         this.context = new EvaluationContext(options);
@@ -494,6 +497,14 @@ export class GoJuniorSession {
                 output: []
             };
         }
+        const typeDiagnostics = this.checkSource(source);
+        if (typeDiagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+            return {
+                diagnostics: typeDiagnostics,
+                output: [],
+                ast
+            };
+        }
         const outputStart = this.context.output.length;
         try {
             installImports(this.context, ast);
@@ -505,6 +516,7 @@ export class GoJuniorSession {
             expectNormalCompletion(declarationCompletion, "top-level declarations");
             if (ast.kind === "function" && ast.functions[0] && ast.body.length === 0) {
                 const value = installedFunctionValue(this.context, ast.functions[0]);
+                this.acceptedSources.push(ensureTrailingNewline(source));
                 return {
                     diagnostics: ast.diagnostics,
                     output: this.context.outputFrom(outputStart),
@@ -514,7 +526,9 @@ export class GoJuniorSession {
             }
             runInitFunctions(ast.functions, this.context);
             const completion = executeTopLevelStatements(statements, this.context);
-            return resultFromCompletion(ast, this.context.outputFrom(outputStart), completion);
+            const result = resultFromCompletion(ast, this.context.outputFrom(outputStart), completion);
+            this.acceptedSources.push(ensureTrailingNewline(source));
+            return result;
         }
         catch (error) {
             const message = error instanceof Error ? error.message : String(error);
@@ -531,6 +545,87 @@ export class GoJuniorSession {
                 ast
             };
         }
+    }
+    checkSource(source) {
+        const checked = checkFrontSource(this.acceptedSources.join("") + ensureTrailingNewline(source), typeCheckConfig(this.options));
+        return checked.diagnostics;
+    }
+}
+function ensureTrailingNewline(source) {
+    return source.endsWith("\n") ? source : `${source}\n`;
+}
+function typeCheckConfig(options) {
+    const universe = newUniverse();
+    return {
+        universe,
+        sheetNamespaces: sheetNamespacesForOptions(options, universe)
+    };
+}
+function sheetNamespacesForOptions(options, universe) {
+    const namespaces = {
+        sheet: sheetNamespaceForData(options.sheet ?? options.sheets?.[options.currentSheetName ?? "sheet"] ?? {}, universe)
+    };
+    for (const [name, data] of Object.entries(options.sheets ?? {})) {
+        namespaces[name] = sheetNamespaceForData(data, universe);
+    }
+    return namespaces;
+}
+function sheetNamespaceForData(data, universe) {
+    const cells = {};
+    for (const [cell, value] of Object.entries(data)) {
+        cells[normalizeCell(cell)] = checkerTypeForRuntimeValue(value, universe);
+    }
+    return {
+        cells,
+        defaultType: universe.basic.any
+    };
+}
+function checkerTypeForRuntimeValue(value, universe) {
+    const actual = unwrapNamed(value);
+    if (typeof actual === "bigint")
+        return universe.basic.int64;
+    if (typeof actual === "number")
+        return universe.basic.float64;
+    if (typeof actual === "string")
+        return universe.basic.string;
+    if (typeof actual === "boolean")
+        return universe.basic.bool;
+    if (isComplexValue(actual))
+        return universe.basic.complex128;
+    if (Array.isArray(actual))
+        return new CheckerSliceType(universe.basic.any);
+    if (actual instanceof RuntimeMap) {
+        return new CheckerMapType(checkerTypeFromText(actual.keyType, universe), checkerTypeFromText(actual.valueType, universe));
+    }
+    return universe.basic.any;
+}
+function checkerTypeFromText(typeText, universe) {
+    const type = normalizeTypeText(typeText);
+    switch (type) {
+        case "bool": return universe.basic.bool;
+        case "string": return universe.basic.string;
+        case "float32":
+        case "float64": return universe.basic.float64;
+        case "complex64":
+        case "complex128": return universe.basic.complex128;
+        case "int":
+        case "int8":
+        case "int16":
+        case "int32":
+        case "int64":
+        case "uint":
+        case "uint8":
+        case "uint16":
+        case "uint32":
+        case "uint64":
+        case "uintptr":
+        case "byte":
+        case "rune":
+            return universe.basic.int64;
+        default:
+            if (type.startsWith("[]"))
+                return new CheckerSliceType(checkerTypeFromText(type.slice(2), universe));
+            return new BasicType(BasicKind.Any);
     }
 }
 function resultFromCompletion(ast, output, completion) {
@@ -2466,9 +2561,15 @@ function integerTypeBounds(type) {
 function addValues(left, right) {
     const actualLeft = unwrapNamed(left);
     const actualRight = unwrapNamed(right);
-    if (typeof actualLeft === "string" || typeof actualRight === "string")
-        return `${formatValue(actualLeft)}${formatValue(actualRight)}`;
+    if (typeof actualLeft === "string" || typeof actualRight === "string") {
+        if (typeof actualLeft === "string" && typeof actualRight === "string")
+            return actualLeft + actualRight;
+        throw new GoJuniorRuntimeError(`invalid operation: ${runtimeTypeText(actualLeft)} + ${runtimeTypeText(actualRight)} (mismatched types ${runtimeTypeText(actualLeft)} and ${runtimeTypeText(actualRight)})`);
+    }
     return addNumbers(actualLeft, actualRight);
+}
+function runtimeTypeText(value) {
+    return inferredTypeText(value) ?? pointerTypeName(value);
 }
 function addNumbers(left, right) {
     left = unwrapNamed(left);

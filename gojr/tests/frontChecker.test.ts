@@ -106,4 +106,19 @@ var r = Data.A1:B2
     expect(range?.kind).toBe(TypeKind.Slice);
     expect(range?.typeString()).toBe("[]float64");
   });
+
+  test("rejects mixed string and numeric addition", () => {
+    const result = checkFrontSource(`
+package workbook
+
+var a = 10
+var d = "hi"
+var good = d + " there"
+var bad = d + a
+`);
+
+    expect(result.diagnostics).toHaveLength(1);
+    expect(result.diagnostics[0]?.message).toContain("invalid operation: string + int64");
+    expect(result.pkg.scope.lookup("good")?.type.typeString()).toBe("string");
+  });
 });
