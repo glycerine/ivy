@@ -19,7 +19,9 @@ and host/WASM calls.
 ## Design Principles
 
 - Treat Go-junior as its own DSL, not as "almost all of Go".
-- Keep the language small enough that users can reason about every construct.
+- Keep the language deterministic and explicit enough that users can reason
+  about every construct, while preserving the Go idioms needed for real
+  libraries.
 - Preserve Go's readable expression and statement syntax where it helps.
 - Include core Go function-structuring idioms that matter for real libraries,
   including `defer`, multiple return values, and named return values.
@@ -29,17 +31,83 @@ and host/WASM calls.
   emit compiler-owned JavaScript stencils with sanitized holes.
 - Keep the compiler backend replaceable. Start with JavaScript source
   copy-and-patch. Leave a path to a future WebAssembly stencil backend.
-- All external capability goes through typed host bindings. Go-junior code
-  cannot import arbitrary JavaScript or global browser APIs. Go-junior package
-  imports resolve through an explicit package resolver, package manifest, and
-  compiled-code cache.
+- Go-junior code cannot directly import arbitrary JavaScript or reach ambient
+  browser globals; JavaScript, browser, sheet, graph, UI, and WASM
+  functionality must be exposed through explicit typed host capabilities.
+  Go-junior package imports resolve through an explicit package resolver,
+  package manifest, and compiled-code cache.
+
+## Rationale
+
+Spreadsheet formulas are not ordinary scripts. The spreadsheet engine may rerun
+them automatically, many times, in dependency order, in a worker, from Node CLI
+tests, or inside iterative recalculation for circular references. The runtime
+therefore needs to know what a formula can read, what it can mutate, and
+whether a call is pure, stateful, volatile, or effectful.
+
+Typed host capabilities preserve useful power without granting ambient
+authority. Go-junior should be able to call JavaScript-backed helpers, draw
+graphs, request UI actions, mutate sheets through explicit actions, call Go/WASM
+services, and use compiled package libraries. The rule is that those operations
+must pass through a typed, auditable contract instead of reaching invisible
+global state directly.
+
+This protects:
+
+- Security: workbook code should not directly reach `window`, `document`,
+  `globalThis`, cookies, local storage, network APIs, or other browser globals.
+- Determinism: the recalculation engine needs to know whether a call is pure,
+  package-stateful, volatile, or effectful.
+- Dependency tracking: if code can read arbitrary browser state, the
+  spreadsheet graph cannot know what should trigger recomputation.
+- Worker portability: formulas should run in Node tests and browser workers;
+  direct DOM/global APIs break that portability.
+- Testing: typed bindings are easy to fake in Node CLI and unit tests.
+- Caching: compiled formulas and packages can be cached only if their host
+  capability contract is explicit.
+- Backend flexibility: the same typed IR can later run in an interpreter or
+  Wasm backend if external calls are abstracted.
+
+Direct ambient access should be rejected:
+
+```go
+window.document.body.innerHTML = "..."
+globalThis.fetch(...)
+eval(userText)
+```
+
+Declared host capabilities are allowed:
+
+```go
+graph.Show(spec)
+sheet.SetCell("A1", value)
+js.TrustedRenderChart(spec)
+math.Sqrt(x)
+ivy.Parse(source)
+```
+
+Each binding should declare its type and authority:
+
+```ts
+{
+  args: ["GraphSpec"],
+  returns: "Value",
+  capability: "graph-effect",
+  formulaSafe: false,
+}
+```
+
+The distinction is not "no JavaScript". It is "no ambient JavaScript authority".
 
 ## Non-goals
 
 - Full Go compatibility.
-- Goroutines, `go`, `select`, channels, channel operations, `panic`, `recover`,
+- Goroutines, `go`, `select`, channels, channel operations, `recover`,
   reflection, unsafe, cgo, full Go package initialization semantics, build
   tags, or full Go module semantics.
+- Go generics: type parameters, generic function/type declarations, generic
+  instantiation syntax, and generic constraint solving are deliberately out of
+  scope.
 - Arbitrary ambient package loading. Source packages are allowed, but they must
   be Go-junior-compatible packages resolved through the in-browser package
   registry/cache or a trusted host package provider.
@@ -160,64 +228,157 @@ Support two source forms:
 1. Cell expression form:
 
 ```go
-number(sheet.A1) + number(sheet.B1) * 2
+sheet.A1 + sheet.B1 * 2
 ```
 
 2. Function body form:
 
 ```go
-x := number(sheet.A1) + number(sheet.B1)
+x := sheet.A1 + sheet.B1
 if x > 10 {
     return math.Sqrt(x)
 }
 return x * 2
 ```
 
+Both forms may begin with Go-style imports, including grouped imports and
+import aliases:
+
+```go
+import (
+    "fmt"
+    stats "workbook/stats"
+)
+
+fmt.Printf("A1=%v\n", sheet.A1)
+return stats.Mean(sheet.A1:A10)
+```
+
 The compiler should normalize both into an implicit function:
 
 ```go
-func formula(ctx Context) Value {
+func formula(ctx Context) T {
     ...
 }
 ```
 
-Cell snippets should not require users to write package declarations. They may
-use prebound packages from the sheet/package environment. Source package units
-should support explicit package declarations and imports using the
-Go-junior-compatible package resolver.
+The implicit return type `T` is inferred from the formula body and then boxed
+into the spreadsheet runtime value representation. Ordinary formulas should not
+need explicit `number(...)` casts for statically known numeric cells.
+
+Go-junior functions live in spreadsheet cells. Cell snippets should not require
+users to write package declarations, but they can declare their own imports and
+import aliases using Go syntax. Cell imports resolve through the same
+Go-junior-compatible package resolver used by source package units.
 
 ### Initial Types
 
-Start with a deliberately small static type system:
+Start with a Go-like static type system, intentionally excluding generics:
 
 - `bool`
 - `string`
-- `int`
-- `float64`
-- `number` as an internal convenience type if needed
-- `Value`, the spreadsheet value union
-- `Range`, an opaque spreadsheet range type
-- tuple types for multiple return values
-- `error`, for Go-style library APIs that return `(T, error)`
-- `Error`, an internal spreadsheet error type
+- `int64`; untyped integer constants default to `int64`
+- `float64`; untyped floating-point constants default to `float64`
+- arrays, for example `[3]float64`
+- slices, for example `[]float64`
+- maps, for example `map[string]int64`
+- structs and named struct types
+- pointers, for example `*Point`
+- interfaces and method sets
+- function types, function literals, and closures
+- tuple-like multiple return values
+- `error`, the single Go-style error type
+- `Value`, an internal spreadsheet value union for dynamic/unknown host
+  boundaries, not a type users should need in ordinary formulas
 
-Open question for implementation: whether user-visible numeric types should
-distinguish `int` and `float64` in v1. A pragmatic first release can parse both
-but lower both to JavaScript number unless a host binding requires an integer.
+There should be no Go-junior `number` type. Numeric lowering may still use
+JavaScript's numeric representation internally where appropriate, but the
+language-level types should be `int64` and `float64`.
+
+Static spreadsheet references should be strongly typed. The compiler should
+receive a workbook/sheet type environment that maps literal cells, formula
+cells, ranges, named regions, and sheet namespaces to declared or inferred
+types. `sheet.A1` should have the type recorded for `A1`, such as `int64`,
+`float64`, `string`, or `bool`; it should not default to `Value` merely because
+it came from the spreadsheet. `sheet.A1:B10` is a spreadsheet range expression
+with internal element-type metadata. It can be ranged over directly, or
+contextually converted to an ordinary Go-junior slice such as `[]float64` when
+all cells in the range share a compatible element type.
+
+`Value` remains useful at dynamic and integration boundaries: dynamic
+`Namespace.Cell(addr)` calls whose address cannot be statically constrained,
+mixed/untyped ranges, host APIs that deliberately traffic in spreadsheet
+values, and runtime error propagation. The common static formula path should be
+typed enough that users can write `sheet.A1 + sheet.B1` directly.
 
 ### Spreadsheet Values
 
-Runtime cells should represent:
+Runtime cells should represent both a value and a declared or inferred static
+cell type. The runtime value domain includes:
 
 - blank
 - bool
-- number
+- int64
+- float64
 - string
 - error
+- Go-junior function
+
+The type environment should be updated as formulas are edited and typechecked:
+
+- literal cells infer their type from their literal value unless the user or
+  schema declares a stronger type
+- formula cells infer their output type from the formula body unless the user
+  or schema declares an expected result type
+- Go-junior function cells store editable Go-junior source plus a compiled
+  callable function value
+- declared cell/range types are checked against literal values and formula
+  return types
+- blank cells can be typed by schema or remain untyped until written
+- runtime errors are values but do not erase the cell's declared/inferred type
 
 Errors should propagate predictably. A cell formula that fails typechecking
 should not compile. A cell formula that fails at runtime should produce a
 spreadsheet error value with a stable code and message.
+
+### Go-junior Function Cells
+
+One spreadsheet cell type should be "Go-junior function". A function cell
+contains editable Go-junior source and compiles to a callable function value
+that other formulas can reference and call.
+
+Example:
+
+```go
+// Cell Lib.Double, type: Go-junior function
+func Double(x float64) float64 {
+    return x * 2
+}
+```
+
+```go
+// Another cell
+return Lib.Double(sheet.A1)
+```
+
+Function-cell rules:
+
+- The cell stores raw editable source as authoritative workbook state.
+- The cell's runtime value is a callable function pointer/closure produced by
+  compiling that source.
+- The type environment records the function signature so callers can typecheck
+  before evaluation.
+- Function cells can declare their own imports and aliases using the same
+  cell-import rules as formula cells.
+- Function cells can capture only explicit lexical state from their source and
+  declared imports, not arbitrary workbook globals.
+- Changing a function cell's source invalidates callers that depend on its
+  signature or implementation.
+- Function cells participate in dependency tracking like formulas: calls to the
+  function record a dependency on the function cell, and any cell/range reads
+  performed by the function are observed during evaluation.
+- Persisted workbooks store the function source and declared cell type, not the
+  compiled function object.
 
 Initial error codes:
 
@@ -227,6 +388,8 @@ Initial error codes:
 - `#NAME?` for unknown symbols in formulas loaded from persisted state
 - `#REF!` for invalid cell or range references, including invalid dynamic
   references produced at runtime
+- `#PANIC!` for an unrecovered `panic` value escaping a formula, function cell,
+  or package call
 - `#CYCLE!` for dependency cycles when iterative calculation is disabled
 - `#DIVERGE!` for iterative components that fail to converge
 - `#OSCILLATE!` for iterative components that repeat prior states or switch
@@ -270,7 +433,8 @@ targets. Environment-specific code should sit behind adapters:
 
 Support:
 
-- literals: numbers, strings, booleans
+- literals: integer, floating-point, string, boolean, array, slice, map, and
+  struct literals
 - identifiers
 - unary operators: `+`, `-`, `!`
 - binary arithmetic: `+`, `-`, `*`, `/`, `%`
@@ -278,6 +442,12 @@ Support:
 - boolean operators: `&&`, `||`
 - parentheses
 - function calls
+- function literals and closures
+- address-of and dereference expressions: `&x` and `*p`
+- indexing and slicing for arrays, slices, maps, strings where supported, and
+  spreadsheet ranges where appropriate
+- field selectors and method calls on structs
+- interface method calls
 - selector calls for host namespaces, for example `math.Sqrt(x)`
 - current-sheet cell references through the reserved pseudo package `sheet`,
   for example `sheet.A1`, `sheet.$A$1`, `sheet.A$1`, and `sheet.$A1`
@@ -290,11 +460,11 @@ Support:
   `sheet.Cell(prefix + string(row))`, `sheet.Range("A1:B10")`,
   `Data.Cell(addr)`, and `Data.Range(start + ":" + end)`
 
-Optional after v1:
+Deliberately excluded:
 
-- array/slice literals
-- indexing
-- struct literals
+- generic type or function syntax
+- channel send/receive expressions
+- `go` and `select`
 
 ### Spreadsheet Reference Syntax
 
@@ -352,20 +522,63 @@ Rules:
   `Namespace.Cell` / `Namespace.Range`, so dependency tracking always records
   the concrete sheet namespace plus address or range.
 
+### Cell Imports
+
+Spreadsheet-cell Go-junior functions may declare imports before the expression
+or function body:
+
+```go
+import "fmt"
+```
+
+```go
+import (
+    f "fmt"
+    stats "workbook/stats"
+)
+```
+
+Rules:
+
+- Cell imports are scoped to the containing cell function.
+- Cell imports use Go import syntax, including grouped imports and explicit
+  aliases.
+- The imported package name or alias enters the same selector namespace as
+  sheet namespaces and prebound packages.
+- `sheet` remains reserved; an import alias named `sheet` is rejected.
+- A cell import alias that collides with a sheet namespace or another package
+  namespace is a compile-time diagnostic.
+- If no alias is provided, the default selector name is the imported package's
+  declared package name, matching Go.
+- Imported packages resolve through the built-in, workbook, browser-cache, and
+  trusted host package providers used by source packages.
+
 ### Statements
 
 Support:
 
 - short variable declarations: `x := expr`
+- `var` declarations, including grouped declarations
+- Go-style `const` declarations, including grouped declarations, implicit
+  expression repetition, and `iota`
+- `type` declarations for structs, interfaces, named arrays, named slices, and
+  named maps
 - assignments to locals: `x = expr`
 - assignments to exported mutable package variables: `pkg.VariableName = expr`
 - `if`, `else if`, `else`
+- expression `switch` statements
+- type `switch` statements when interfaces are available
 - `return expr`
 - `return expr, expr` for multiple return values
 - naked `return` only inside functions with named return values
 - `defer call(...)`
 - expression statements only for calls whose return value can be ignored
-- bounded `for` loops in a later stage
+- full Go-style `for` loops: `for {}`, `for cond {}`,
+  `for init; cond; post {}`
+- Go-style `for range` loops over arrays, slices, maps, strings where
+  supported, and spreadsheet ranges
+- `break`, `continue`, and `fallthrough`, matching Go switch and loop
+  semantics
 
 Keep ordinary formula cells calculation-oriented by default: they calculate and
 return values. Go-junior source packages should still support Go-like mutable
@@ -381,11 +594,58 @@ capabilities. Those actions may write cells, produce graph artifacts, or
 request UI updates through the host effect API; formulas should not silently
 mutate browser or sheet state during ordinary dependency recalculation.
 
+### Constants
+
+Go-junior should support Go-style `const` declarations:
+
+```go
+const Pi = 3.14159
+
+const (
+    A = iota
+    B
+    C
+)
+```
+
+Constants are compile-time values. Grouped declarations, implicit expression
+repetition, and `iota` should match Go's useful semantics. Untyped integer
+constants default to `int64`; untyped floating-point constants default to
+`float64` when a concrete type is required.
+
+### Predeclared Built-ins
+
+Go-junior should include a small predeclared built-in surface. Required early
+built-ins include:
+
+```go
+func panic(v interface{})
+
+func panicOn(err error) {
+    if err != nil {
+        panic(err)
+    }
+}
+```
+
+`panic` should follow Go's essential unwinding semantics: deferred calls run in
+LIFO order as the stack unwinds. Go-junior does not include `recover` unless a
+future explicit decision adds it, so a panic that escapes the top-level formula,
+function cell, or package call becomes a `#PANIC!` spreadsheet error. The panic
+diagnostic should include the panic value, source span if available, and a
+Go-junior stack trace.
+
+`panicOn(err)` is a required predeclared helper because `(T, error)` APIs are
+common and spreadsheet formulas need a compact way to fail fast during
+interactive exploration.
+
 ### Functions
 
-Stage v1 can compile one implicit cell function. Stage v2 can add local helper
-functions and source package functions. Go-junior functions should support
-single returns, multiple returns, and named returns.
+Stage v1 can compile one implicit cell function. Go-junior functions should
+support local helper functions, source package functions, function literals,
+closures, methods on structs, single returns, multiple returns, and named
+returns. Variadic parameters are required so built-ins such as `fmt.Printf`
+can use Go-style `args ...interface{}` signatures.
 
 ```go
 func clamp(x float64, lo float64, hi float64) float64 {
@@ -397,13 +657,13 @@ func clamp(x float64, lo float64, hi float64) float64 {
     }
     return x
 }
-return clamp(number(sheet.A1), 0, 100)
+return clamp(sheet.A1, 0, 100)
 ```
 
 Multiple returns:
 
 ```go
-func DivMod(x int, y int) (int, int) {
+func DivMod(x int64, y int64) (int64, int64) {
     return x / y, x % y
 }
 
@@ -426,13 +686,110 @@ func SplitTotal(x float64) (half float64, rest float64) {
 - deferred call arguments are evaluated immediately
 - deferred calls execute in LIFO order when the surrounding function exits
 - deferred return values are ignored
-- named return values are assigned before defers run; future closure/pointer
-  support may allow deferred code to observe or mutate them exactly like Go
-- the first implementation can exclude closures while still supporting
-  `defer someCall(args...)`
+- named return values are assigned before defers run; closures can observe or
+  mutate captured named return values according to the Go-junior closure model
+- deferred closures and deferred ordinary function/method calls are supported
 
-No closures in the first implementation. Local helper functions should be pure,
-deterministic, and compiled into private generated JavaScript functions.
+Closures are available. The implementation must define capture semantics
+clearly and test mutations through captured locals, including captured named
+return values used with `defer`.
+
+Variadic functions should follow Go's call-shape rules closely enough for
+`fmt.Printf(format, args...)` style APIs and ordinary variadic calls.
+
+### Structs, Interfaces, Methods, and Closures
+
+Go-junior should support struct and interface declarations, struct literals,
+field selection, methods on named struct types, interface method-set checking,
+and interface method calls:
+
+```go
+type Point struct {
+    X float64
+    Y float64
+}
+
+func (p Point) Len2() float64 {
+    return p.X*p.X + p.Y*p.Y
+}
+
+func (p *Point) Scale(k float64) {
+    p.X = p.X * k
+    p.Y = p.Y * k
+}
+
+type HasLen2 interface {
+    Len2() float64
+}
+```
+
+Struct values should have deterministic value semantics. Interface satisfaction
+should be structural by method set, following the Go model. Methods on structs
+and pointer receivers are required. Go-junior should support pointer types,
+address-of expressions, dereference expressions, field/method selection through
+pointers, and Go-like method-set rules for `T` and `*T`. Nil pointer values
+should be representable and nil dereference should produce a runtime
+spreadsheet error rather than crashing the worker.
+
+Method and field selection should use Go's single selector syntax. Values and
+pointers both use `x.Method()` and `x.Field`; Go-junior must not introduce a
+C/C++-style `x->Method()` or `x->Field` syntax. The typechecker should perform
+the same automatic dereference and address-taking for method calls that Go
+permits.
+
+Go-style type switches on interface values are required:
+
+```go
+func Describe(x interface{}) string {
+    switch v := x.(type) {
+    case string:
+        return "string: " + v
+    case float64:
+        return fmt.Sprintf("float64: %v", v)
+    case HasLen2:
+        return fmt.Sprintf("len2: %v", v.Len2())
+    default:
+        return "unknown"
+    }
+}
+```
+
+Switches on interface-typed expressions are also required, subject to
+Go-junior's comparable-type rules.
+
+Function literals and closures are required:
+
+```go
+scale := 2.0
+double := func(x float64) float64 {
+    return x * scale
+}
+```
+
+Captured locals should have clear mutation semantics and must work with
+`defer` and named returns.
+
+### Arrays, Slices, Maps, and Indexing
+
+Arrays, slices, indexing, slicing, and composite literals are required:
+
+```go
+xs := []float64{1, 2, 3}
+ys := [3]int64{1, 2, 3}
+return xs[0] + float64(ys[1])
+```
+
+Maps are required with Go-style type and literal syntax:
+
+```go
+counts := map[string]int64{"a": 1, "b": 2}
+counts["c"] = 3
+```
+
+Map iteration differs intentionally from Go: Go-junior maps iterate in
+deterministic insertion order like Python `dict`. Updating an existing key does
+not move it; deleting and reinserting a key appends it at the new insertion
+position.
 
 ### Source Packages
 
@@ -446,13 +803,11 @@ Supported package shape:
 ```go
 package stats
 
-import "mathx"
-
-func Mean(r Range) float64 {
+func Mean(xs []float64) float64 {
     total := 0.0
     n := 0
-    for _, v := range r {
-        total = total + number(v)
+    for _, v := range xs {
+        total = total + v
         n = n + 1
     }
     return total / float64(n)
@@ -463,10 +818,16 @@ Package support should include:
 
 - `package name` declarations for package source units.
 - explicit imports by package path, for example `import "stats"`.
-- exported functions, constants, mutable package variables, and later exported
-  types.
+- exported functions, constants, mutable package variables, types, structs,
+  interfaces, methods, arrays, slices, maps, and closures.
 - package-private helpers.
+- package-level `const` declarations, including grouped declarations and
+  `iota`.
 - package-level `var` declarations with deterministic initializers.
+- package-level `type` declarations for structs, interfaces, arrays, slices,
+  maps, pointers, and function types.
+- methods on named struct types, pointer receiver methods, plus interface
+  method-set checking.
 - Go-like mutable package variable reads and writes inside package functions.
 - a simplified deterministic package initialization order defined by the
   Go-junior package graph, not the full Go specification.
@@ -474,6 +835,8 @@ Package support should include:
 - rejection of import cycles.
 - support for `defer`, multiple returns, and named returns inside package
   functions.
+- support for closures, `switch`, full `for`, `for range`, array/slice/map
+  literals, indexing, and struct literals inside package functions.
 - rejection of excluded Go features inside packages.
 - package ABI metadata so formulas can typecheck calls and package variable
   reads/writes before loading code.
@@ -497,9 +860,47 @@ only if it stays inside the Go-junior subset. Existing full-Go libraries that
 use goroutines, channels, reflection, unsafe, or unsupported runtime features
 should be exposed through typed host/WASM bindings instead.
 
-### Bounded Loops
+### Built-in fmt Package
 
-When loops are added, support only bounded forms:
+`fmt` should be one of the first built-in Go-junior packages implemented
+because printing is the diagnostic keystone for CLI usability, spreadsheet-cell
+debugging, and language development.
+
+Initial package surface:
+
+```go
+package fmt
+
+func Printf(format string, args ...interface{}) (int64, error)
+func Sprintf(format string, args ...interface{}) string
+func Println(args ...interface{}) (int64, error)
+```
+
+`fmt.Printf` writes to the runtime diagnostic/log sink rather than directly to
+browser globals or Node process globals. In the Node CLI, that sink can render
+to stdout or structured JSON output. In the browser worker, it should be
+returned with the cell evaluation result and displayed in the UI diagnostics or
+trace panel.
+
+The implementation can lean on trusted JavaScript reflection internally to
+format Go-junior values, structs, maps, slices, interfaces, errors, spreadsheet
+values, and host values. That reflection is implementation authority of the
+built-in package, not ambient authority exposed to user code.
+
+Diagnostic output rules:
+
+- `fmt.Printf` is a `diagnostic-effect`, not a sheet/UI mutation.
+- Output is tagged with workbook, sheet, cell, evaluation generation, and
+  recalculation pass.
+- Output is bounded by per-evaluation byte and call-count limits.
+- Recalculation may rerun a formula and therefore rerun `fmt.Printf`; the UI
+  should make generation/pass information visible enough to avoid confusion.
+- `fmt.Sprintf` is pure and returns a string.
+- Formatting of maps must use Go-junior's deterministic insertion order.
+
+### Loops and Ordered Maps
+
+Go-junior should support the ordinary Go `for` family:
 
 ```go
 for i := 0; i < 10; i = i + 1 {
@@ -507,18 +908,40 @@ for i := 0; i < 10; i = i + 1 {
 }
 ```
 
-Runtime should enforce a fuel counter regardless of static bounds. Range loops
-over finite spreadsheet ranges should be supported as an early package-library
-feature:
-
 ```go
-for _, v := range sheet.A1:A10 {
-    sum = sum + number(v)
+for i < limit {
+    i = i + 1
 }
 ```
 
-The runtime must bound range iteration by the concrete range size and the same
-fuel counter used for all loops.
+```go
+for {
+    break
+}
+```
+
+Range loops over finite spreadsheet ranges, arrays, slices, maps, and strings
+where supported should be available:
+
+```go
+for _, v := range sheet.A1:A10 {
+    sum = sum + v
+}
+```
+
+The typechecker should infer `v` from the static range/slice/array/map element
+type, for example `float64` for a spreadsheet range contextually typed as
+`[]float64`.
+
+Maps use Go-style `map[K]V` type syntax and map literal syntax, but their
+iteration order is deterministic insertion order, matching Python `dict`
+behavior rather than Go's intentionally randomized map iteration. Updating an
+existing key does not move it; deleting and reinserting a key appends it at the
+new insertion position.
+
+The runtime must enforce a fuel counter for all loops, including `for {}` and
+data-dependent loops. Loop syntax is full Go-style; loop execution is still
+bounded by runtime fuel so spreadsheet recalculation cannot hang indefinitely.
 
 ## Host and WebAssembly Calls
 
@@ -576,6 +999,11 @@ Capability categories:
   only a typed function signature. A dynamic-JS binding can still be
   formula-safe if it is declared deterministic, side-effect-free, and approved
   for formula context.
+- `diagnostic-effect`: writes to the evaluation diagnostic/log sink, such as
+  `fmt.Printf`. This is allowed in formula context because diagnostics are a
+  first-class development workflow, but output should be tagged with cell ID,
+  evaluation generation, and recalculation pass so repeated formula evaluation
+  is understandable and bounded.
 - `sheet-effect`: explicit mutations to spreadsheet state, such as setting a
   cell, adding a sheet, or creating a named output object.
 - `graph-effect`: graph production and rendering requests, such as emitting
@@ -585,14 +1013,15 @@ Capability categories:
   diagnostic, or focusing a result.
 
 Formula recalculation should run `pure`, approved deterministic `wasm`,
-approved formula-safe `dynamic-js`, and explicitly allowed `package-state`
-exports. A formula that uses `package-state` is not pure: it should not be
-common-subexpression cached, it should be evaluated in the scheduler's stable
-order, and its package state lifecycle must be deterministic. Browser and
-workbook effect capabilities should require an action context, for example a
-user-triggered command, button, menu action, or explicitly marked command cell.
-This prevents normal dependency recomputation from repeatedly mutating sheets
-or redrawing browser state.
+approved formula-safe `dynamic-js`, approved `diagnostic-effect`, and
+explicitly allowed `package-state` exports. A formula that uses `package-state`
+is not pure: it should not be common-subexpression cached, it should be
+evaluated in the scheduler's stable order, and its package state lifecycle must
+be deterministic. Browser and workbook mutation capabilities should require an
+action context, for example a user-triggered command, button, menu action, or
+explicitly marked command cell. This prevents normal dependency recomputation
+from repeatedly mutating sheets or redrawing browser state while still allowing
+formula-local diagnostic printing.
 
 Example host declaration shape:
 
@@ -604,6 +1033,12 @@ const hostSpec = {
   js: {
     EvalTrustedHelper: fn(["string"], "Value", {
       capability: "dynamic-js",
+      formulaSafe: true,
+    }),
+  },
+  diag: {
+    Printf: fn(["string", "...interface{}"], "int64,error", {
+      capability: "diagnostic-effect",
       formulaSafe: true,
     }),
   },
@@ -725,8 +1160,8 @@ Example generated JavaScript:
 ```js
 "use strict";
 return function _gj_cell(ctx, host, budget) {
-  let _v0 = ctx.cell("sheet", "A1");
-  let _v1 = ctx.cell("sheet", "B1");
+  let _v0 = ctx.cell("sheet", "A1", "float64");
+  let _v1 = ctx.cell("sheet", "B1", "float64");
   let _v2 = _v0 + _v1;
   if (_v2 > 10) {
     return host.math.Sqrt(_v2);
@@ -883,6 +1318,8 @@ Implementation tasks:
 - Define diagnostic object shape with code, message, severity, source span,
   and optional help text.
 - Define source span conventions: line, column, offset, and length.
+- Define workbook/sheet type environment shape for cells, ranges, named
+  regions, sheet namespaces, and formula result types.
 
 Tests:
 
@@ -890,13 +1327,25 @@ Tests:
 - Diagnostic spans round-trip line/column/offset accurately.
 - Spec examples are copied into parser/typechecker tests so docs cannot drift.
 - A "blocked Go feature" fixture list asserts that `go`, `select`, channels,
-  `panic`, `recover`, and `unsafe` are rejected with explicit diagnostic codes.
+  `recover`, and `unsafe` are rejected with explicit diagnostic codes.
+- A "panic" fixture list asserts that `panic(value)` parses, typechecks, runs
+  defers during unwind, and becomes `#PANIC!` when unrecovered.
+- A "panicOn" fixture list asserts that `panicOn(nil)` returns normally and
+  `panicOn(err)` becomes `#PANIC!`.
 - A "supported Go-junior Go idiom" fixture list asserts that `defer`, multiple
   returns, named returns, and source package declarations/imports are accepted
   in the contexts where the language supports them.
+- A "cell import" fixture list asserts that spreadsheet-cell functions accept
+  `import "fmt"`, grouped imports, and Go-style import aliases such as
+  `import ( f "fmt" )`.
+- A "fmt diagnostic" fixture list asserts that `fmt.Printf` output is captured
+  as evaluation diagnostics in Node and browser-style runtimes.
 - A "selector versus spreadsheet reference" fixture list asserts that bare
   `A1`, `pkg.A1`, `sheet.A1`, `Data.A1`, and `Data.A1:B10` are parsed and
   resolved according to namespace rules.
+- Typed-cell fixtures assert that `sheet.A1 + sheet.B1` typechecks when both
+  cells are numeric and fails with a span diagnostic when a referenced cell is
+  typed as `string` or `bool`.
 
 Acceptance criteria:
 
@@ -910,8 +1359,12 @@ Implement the Go-junior token vocabulary with Chevrotain.
 Implementation tasks:
 
 - Add Chevrotain as a frontend dependency for the webui TypeScript package.
-- Define token classes for identifiers, keywords, numbers, strings, operators,
-  delimiters, comments, whitespace, and newlines.
+- Define token classes for identifiers, keywords, integer literals,
+  floating-point literals, strings, operators, delimiters, comments,
+  whitespace, and newlines.
+- Include Go-junior keywords for `const`, `type`, `struct`, `interface`,
+  `switch`, `case`, `default`, `fallthrough`, `for`, `range`, `break`,
+  `continue`, `map`, and `func`.
 - Use Chevrotain token categories for identifier-like names, keywords, and
   spreadsheet-reference parts where useful.
 - Define lexer behavior for spreadsheet address fragments such as `A1`, `$A$1`,
@@ -967,12 +1420,25 @@ Implementation tasks:
 - Run Chevrotain parser self-analysis at construction time and treat grammar
   ambiguities as test failures.
 - Parse expression-form and function-body-form programs.
-- Parse statements: declarations, assignments, if/else, returns, expression
-  statements.
+- Parse optional cell-level import declarations before expression-form or
+  function-body-form programs, including grouped imports and explicit aliases.
+- Parse statements: declarations, assignments, if/else, switch, full for loops,
+  for-range loops, break/continue, returns, and expression statements.
 - Parse `defer` call statements.
 - Parse multiple return expressions.
 - Parse named return function signatures.
+- Parse variadic parameter syntax, for example `args ...interface{}`.
+- Parse type expressions used in signatures, including arrays, slices, maps,
+  pointers, structs, interfaces, named types, and function types.
+- Parse `const`, `var`, and `type` declarations, including grouped
+  declarations.
+- Parse struct type declarations, interface type declarations, and method
+  declarations with receivers.
+- Parse function literals and closures.
 - Parse calls and selector expressions.
+- Parse address-of and dereference expressions: `&x` and `*p`.
+- Parse indexing and slicing expressions.
+- Parse array, slice, map, and struct composite literals.
 - Represent operator precedence with layered Chevrotain rules, for example
   `or -> and -> equality -> compare -> add -> mul -> unary -> primary`.
 - Parse special current-sheet and cross-sheet cell/range references.
@@ -983,7 +1449,6 @@ Implementation tasks:
   namespace.
 - Represent `Name.A1:B10` as a spreadsheet range candidate because the colon
   form is not ordinary Go selector syntax.
-- Parse optional local helper functions after v1 expression/body support.
 - Convert Chevrotain CST nodes into Go-junior AST nodes.
 - Preserve AST spans for all nodes by merging token/CST source ranges.
 - Convert Chevrotain parser errors into Go-junior diagnostics.
@@ -993,14 +1458,38 @@ Implementation tasks:
 Tests:
 
 - Parses arithmetic precedence correctly.
+- Parses cell-level `import "fmt"` before expression form and function-body
+  form.
+- Parses grouped cell imports with aliases, for example
+  `import ( f "fmt"; stats "workbook/stats" )`.
 - Parses nested parentheses.
 - Parses unary and binary operations.
 - Parses `if`, `else if`, and `else`.
 - Parses short declarations and assignments.
+- Parses `var`, grouped `var`, `const`, grouped `const`, and `iota` syntax.
+- Parses `type` declarations for structs, interfaces, arrays, slices, maps,
+  pointers, and function types.
+- Parses method declarations with value and pointer receivers.
+- Parses address-of and dereference expressions.
+- Parses method and field selection through values and pointers using `.`.
+- Rejects C/C++-style `->` selector syntax.
+- Parses function literals and closures.
 - Parses selector assignments like `pkg.VariableName = expr`.
+- Parses indexing and slicing expressions.
+- Parses array, slice, map, and struct literals.
+- Parses expression switches and type switches.
+- Parses full `for` loops: `for {}`, `for cond {}`, and
+  `for init; cond; post {}`.
+- Parses `for range` loops over range expressions.
+- Parses `break`, `continue`, and `fallthrough` in legal contexts.
+- Rejects `fallthrough` outside a switch case or in the final switch case,
+  matching Go semantics.
 - Parses return statements.
 - Parses multiple return values.
 - Parses named return values and naked returns inside named-return functions.
+- Parses variadic signatures such as
+  `func Printf(format string, args ...interface{}) (int64, error)`.
+- Parses slice signatures like `func Mean(xs []float64) float64`.
 - Parses `defer` call statements.
 - Parses selector calls like `math.Sqrt(x)`.
 - Parses `sheet.A1`, `sheet.$A$1`, `sheet.A$1`, and `sheet.$A1`.
@@ -1013,9 +1502,10 @@ Tests:
   eligible; resolver later decides whether the namespace is a sheet or package.
 - Parses `pkg.A1` as a selector-or-cell candidate so the resolver can treat it
   as a package export when `pkg` is a package namespace.
-- Rejects `go f()`, `select {}`, channel sends, receives, imports, package
-  declarations in cell snippets, labels, `goto`, `panic`, `recover`, and
-  `unsafe`.
+- Parses calls to predeclared `panic(...)` and `panicOn(err)`.
+- Rejects `go f()`, `select {}`, channel sends, receives, package
+  declarations in cell snippets, generic type parameters, generic
+  instantiations, labels, `goto`, `recover`, and `unsafe`.
 - Chevrotain self-analysis succeeds with no unresolved ambiguities.
 - Parser diagnostics wrap Chevrotain errors with stable Go-junior diagnostic
   codes and source spans.
@@ -1039,7 +1529,12 @@ Implementation tasks:
 
 - Expression form becomes `return expr`.
 - Function body form becomes an implicit cell function.
+- Cell import declarations attach to the implicit cell function compile unit.
 - Named returns normalize to explicit return locals.
+- Const groups expand implicit expression repetition and `iota` values.
+- Switch statements normalize to explicit branch structures while preserving
+  Go switch semantics.
+- Function literals receive explicit closure capture metadata.
 - Insert explicit return requirement checks where needed.
 - Normalize syntactic sugar into canonical AST nodes.
 
@@ -1047,8 +1542,12 @@ Tests:
 
 - Expression source normalizes to one return statement.
 - Function body source preserves user statements.
+- Cell import declarations are preserved as compile-unit imports.
 - Multiple return values normalize to tuple return IR shape.
 - Named return values normalize to local return slots.
+- Const declarations normalize repeated expressions and `iota` correctly.
+- Switch statements normalize without changing case order or default behavior.
+- Function literals normalize with explicit capture lists.
 - Empty source produces a blank or diagnostic according to spec.
 - Missing return in a non-void body is reported.
 - Unreachable trailing code after unconditional return is diagnosed as warning
@@ -1067,11 +1566,17 @@ Implementation tasks:
 
 - Implement lexical scopes.
 - Resolve local declarations and uses.
+- Resolve const, var, type, function, method, field, and interface names.
+- Resolve cell-level imports and import aliases through the package resolver.
+- Resolve closure captures and distinguish captured locals from package state.
 - Reject use before declaration unless explicitly allowed.
 - Reject duplicate local declarations in the same scope.
 - Resolve host namespaces and functions against a typed host spec.
 - Resolve the reserved `sheet` pseudo package and conversion helpers.
+- Resolve predeclared built-ins, including `panic` and `panicOn`.
 - Resolve workbook sheet namespaces as package-like selector namespaces.
+- Resolve static cell and range references against the workbook/sheet type
+  environment.
 - Reject collisions between sheet namespaces and imported/source package
   namespaces unless a future explicit alias mechanism is present.
 - Reject local declarations, import aliases, or package names that collide with
@@ -1081,6 +1586,17 @@ Implementation tasks:
 Tests:
 
 - Resolves locals in nested `if` blocks.
+- Resolves locals and captures inside function literals.
+- Resolves const declarations, grouped consts, and `iota`.
+- Resolves cell-level imports, grouped imports, and import aliases.
+- Resolves `import f "fmt"` so `f.Printf` binds to the built-in `fmt` package.
+- Rejects unknown cell imports with source-span diagnostics.
+- Resolves predeclared `panic` and `panicOn`.
+- Resolves struct fields, method declarations, method calls, and interface
+  method names.
+- Resolves value receiver and pointer receiver methods into the appropriate
+  method sets.
+- Resolves array, slice, map, pointer, and function type names.
 - Rejects unknown identifiers.
 - Rejects duplicate declarations.
 - Rejects assignment to undeclared variables.
@@ -1098,12 +1614,16 @@ Tests:
 - Resolves `sheet` references as spreadsheet references, not package variables.
 - Resolves cross-sheet references like `Data.A1` and `Data.A1:B10` as
   spreadsheet references when `Data` is a known sheet namespace.
+- Resolves static cell/range references to type-environment entries.
+- Reports unknown static cell/range references with source-span diagnostics.
 - Rejects ambiguous selector namespaces when a sheet namespace and package alias
   share the same name.
 - Rejects unknown host namespaces/functions.
 - Rejects unknown sheet namespaces in spreadsheet references.
 - Rejects local variables named `sheet`.
 - Rejects package imports or aliases named `sheet`.
+- Rejects cell import aliases that collide with sheet namespaces, package
+  namespaces, or other imports.
 - Does not resolve against `window`, `document`, `globalThis`, or other browser
   globals.
 
@@ -1119,11 +1639,31 @@ Implementation tasks:
 
 - Define type model and assignability rules.
 - Type arithmetic, comparisons, booleans, strings, and returns.
-- Type current-sheet and cross-sheet cell/range references plus dynamic
-  `Namespace.Cell` / `Namespace.Range` helpers.
+- Type untyped integer constants as `int64` by default and untyped
+  floating-point constants as `float64` by default.
+- Type arrays, slices, maps, structs, pointers, interfaces, methods, function
+  literals, closures, indexing, slicing, address-of, dereference, and composite
+  literals.
+- Type Go-style const declarations, including grouped declarations, implicit
+  expression repetition, and `iota`.
+- Type expression switches, type switches, full `for` loops, and `for range`
+  loops.
+- Type Go-style type switches over interface values and switch cases involving
+  interface-typed expressions.
+- Type variadic calls and variadic function declarations.
+- Type built-in `fmt` package calls, including `fmt.Printf`,
+  `fmt.Sprintf`, and `fmt.Println`.
+- Type predeclared `panic(v interface{})` and `panicOn(err error)`.
+- Type current-sheet and cross-sheet cell/range references from the
+  workbook/sheet type environment.
+- Type dynamic `Namespace.Cell` / `Namespace.Range` helpers with contextual
+  typing when the expected type is known, otherwise as `Value` or an untyped
+  spreadsheet range value.
 - Type assignment to locals and exported mutable package variables.
 - Type host calls from the host spec.
 - Type tuple return values and tuple assignment from multiple-return calls.
+- Type Go-junior function cells as callable function values using their
+  recorded signatures.
 - Type named return values and naked returns.
 - Type `defer` statements; deferred expressions must be calls and their return
   values are ignored.
@@ -1133,14 +1673,21 @@ Implementation tasks:
 Tests:
 
 - Arithmetic accepts compatible numeric operands.
+- Integer literals default to `int64`; floating-point literals default to
+  `float64`.
+- There is no accepted `number` type annotation or conversion helper.
 - String concatenation policy is enforced, either allowed only for strings or
   rejected in v1.
 - Boolean operators reject non-bool operands.
 - Comparisons reject incompatible types.
 - `if` conditions must be bool.
-- Return expression must match the implicit cell return type or be convertible
-  to `Value`.
+- Return expression must match the declared cell result type when one exists,
+  or establish the inferred formula result type when the cell is inferred.
+  Runtime boxing into spreadsheet values happens after typechecking.
 - Multiple return expression count and types match the function signature.
+- A formula can call a Go-junior function cell through its sheet namespace and
+  typechecks against the function cell signature.
+- Changing a function cell signature invalidates dependent formula typechecks.
 - Named return functions allow naked `return`.
 - Non-named-return functions reject naked `return`.
 - Tuple assignment from a multiple-return call binds each target type.
@@ -1153,14 +1700,56 @@ Tests:
 - Deferred non-call expressions are rejected.
 - Host calls validate arity and argument types.
 - Host return types flow into later expressions.
-- Cell values require explicit conversion when needed, if the type policy uses
-  `Value`.
-- `sheet.A1` and `sheet.$A$1` produce `Value`.
-- `sheet.A1:B10` produces `Range`.
-- `Data.A1` and `Data.$A$1` produce `Value`.
-- `Data.A1:B10` produces `Range`.
+- Arrays and slices typecheck literals, indexing, slicing, append-like helper
+  calls if supported, and range loops.
+- Maps typecheck literals, indexing, assignment, deletion if supported, and
+  insertion-order range loops.
+- Struct literals typecheck field names and field types.
+- Pointer types typecheck address-of, dereference, nil assignability, field
+  selection through pointers, and nil pointer checks.
+- Method calls typecheck value receivers, pointer receivers, automatic
+  address-taking where Go permits it, and argument types.
+- Values and pointers both call methods with `x.Method()`; pointer receiver
+  calls through addressable values and value receiver calls through pointers
+  follow Go selector rules.
+- Interfaces typecheck method sets and assignments from implementing structs
+  and pointers to structs according to Go method-set rules.
+- Closures typecheck captured locals and captured mutation.
+- Const groups and `iota` produce expected `int64` or contextual constant
+  values.
+- Switch cases typecheck against the switch expression or type-switch guard.
+- Type switches require an interface-typed guard and narrow the case variable
+  according to the selected case type.
+- Switches on interface-typed expressions compare according to the Go-junior
+  comparable-type rules and reject non-comparable dynamic cases.
+- Variadic calls typecheck ordinary arguments and `args...` expansion.
+- `fmt.Printf` accepts `format string, args ...interface{}` and returns
+  `(int64, error)`.
+- `fmt.Sprintf` is pure and returns `string`.
+- `fmt.Println` emits a diagnostic effect and returns `(int64, error)`.
+- `panic(v)` accepts any value assignable to `interface{}` and is treated as a
+  non-returning call for control-flow analysis.
+- `panicOn(err)` accepts exactly `error`, returns normally only when `err ==
+  nil`, and is treated as potentially non-returning for control-flow analysis.
+- Full `for` and `for range` loops typecheck init/condition/post statements,
+  range variables, `break`, `continue`, and Go-style `fallthrough` legality in
+  switch statements.
+- `break`, `continue`, and `fallthrough` match Go semantics, including
+  rejected `fallthrough` in type switches and final switch clauses.
+- Static numeric cell references can be used directly in arithmetic without
+  `number(...)` casts.
+- `sheet.A1` and `Data.A1` produce the declared or inferred type for that cell,
+  for example `float64`, `string`, or `bool`.
+- `sheet.A1:B10` and `Data.A1:B10` produce typed ranges such as
+  `[]float64` in a contextual slice position when the range has a compatible
+  common element type.
+- Mixed static ranges produce diagnostics unless the callee explicitly accepts
+  dynamic spreadsheet `Value` elements.
 - `Data.Cell(addr)` and `Data.Range(addr)` require string addresses and produce
-  `Value` and `Range`.
+  contextually typed values when possible, otherwise `Value` and
+  an untyped spreadsheet range value.
+- Unknown or untyped static cell references produce diagnostics when used where
+  a concrete type is required.
 - Diagnostics point at the offending expression.
 
 Acceptance criteria:
@@ -1223,8 +1812,12 @@ future WebAssembly backend.
 Implementation tasks:
 
 - Define IR nodes for constants, locals, arithmetic, comparisons, boolean ops,
-  branches, returns, tuple returns, named-return slots, defers, calls,
-  package-state reads/writes, cell/range reads, and later loops.
+  branches, switches, loops, range loops, returns, tuple returns,
+  named-return slots, defers, calls, closures/captured environments, structs,
+  fields, pointers, address-of, dereference, methods, interface dispatch,
+  arrays, slices, maps, indexing, package-state reads/writes,
+  diagnostic-effect calls, variadic calls, type-switch narrowing,
+  panic/unwind, Go-junior function cell calls, and cell/range reads.
 - Preserve diagnostic/source mapping metadata.
 - Add optional constant folding for simple literals.
 - Add explicit conversions where needed.
@@ -1236,7 +1829,10 @@ Tests:
 - Constant folding tests if implemented.
 - IR contains no raw user identifier names except for metadata.
 - IR host calls contain host binding IDs.
-- IR cell reads contain normalized sheet namespace plus address.
+- IR cell reads contain normalized sheet namespace, address, and resolved cell
+  type.
+- IR range reads contain normalized sheet namespace, address bounds, and
+  resolved range element type.
 - IR dynamic cell/range reads preserve the address expression and lower to
   runtime-observed `ctx.cell` / `ctx.range` calls.
 - IR package variable reads and writes carry package slot IDs, not raw selector
@@ -1244,6 +1840,21 @@ Tests:
 - IR multiple returns use an explicit tuple shape.
 - IR named returns use explicit local return slots.
 - IR defers preserve LIFO execution order and immediate argument evaluation.
+- IR closures carry explicit captured environment slots.
+- IR pointer operations carry explicit lvalue/reference metadata rather than
+  raw JavaScript object/property access.
+- IR map iteration preserves insertion-order semantics.
+- IR loops carry fuel-check points for entry and backedges.
+- IR type switches carry explicit interface type-test cases and narrowed case
+  bindings.
+- IR variadic calls carry ordinary argument lists plus optional spread
+  expansion metadata.
+- IR diagnostic-effect calls carry diagnostic sink IDs, not direct console or
+  process globals.
+- IR panic nodes carry panic value expression, source span, and defer-unwind
+  metadata.
+- IR function-cell calls carry the target sheet namespace/cell ID and expected
+  function signature.
 
 Acceptance criteria:
 
@@ -1258,11 +1869,16 @@ Implementation tasks:
 
 - Define package manifest and package source file shapes.
 - Parse package declarations and import declarations for source package units.
+- Parse and resolve Go-style import aliases in package source units.
 - Resolve package imports through built-in, workbook, browser-cache, and trusted
   host providers.
+- Provide the built-in `fmt` package through the built-in package provider as
+  an early required package.
 - Build a package import graph and reject import cycles.
 - Typecheck package exports and internals.
 - Produce an exported signature table for each package.
+- Produce exported type metadata for structs, interfaces, methods, arrays,
+  slices, maps, function types, and constants.
 - Produce an exported package variable table with mutability, type, and effect
   metadata.
 - Support package-level `var` declarations with deterministic initializers.
@@ -1286,10 +1902,16 @@ Tests:
 - Rejects mixed package names in one package unit.
 - Rejects unsupported Go features in package source.
 - Resolves imports from a fake built-in package provider.
+- Resolves the real built-in `fmt` package and its `Printf`, `Sprintf`, and
+  `Println` exports.
+- Resolves aliased imports such as `import f "fmt"` and grouped import aliases.
 - Resolves imports from a fake workbook package provider.
 - Rejects unknown imports with source-span diagnostics.
 - Rejects import cycles across two and three packages.
 - Typechecks exported functions before formula compilation.
+- Typechecks exported structs, interfaces, methods, constants, arrays, slices,
+  maps, pointers, pointer receiver methods, and function types before formula
+  compilation.
 - Formula can call an exported package function.
 - Formula can read an exported package constant or mutable variable using
   normal Go selector syntax, for example `pkg.VariableName`.
@@ -1307,7 +1929,13 @@ Tests:
 - Formula cannot read an unexported package variable.
 - Formula cannot assign to an unexported package variable or package constant.
 - Package can call an imported package export.
-- Package function using `Range` iterates over a finite range with fuel limits.
+- Package function accepting `[]float64` can be called with a compatible static
+  spreadsheet range such as `sheet.A1:A10`.
+- Package function using `for range` iterates over arrays, slices, maps, and
+  finite spreadsheet ranges with fuel limits.
+- Package map iteration is deterministic insertion order.
+- Package functions can call predeclared `panic` and `panicOn`.
+- Package panic escapes to the calling formula as `#PANIC!` after defers run.
 - Package compilation emits a stable exported signature table.
 - Package compilation emits stable package variable metadata.
 - Package cache hits when source and transitive dependencies are unchanged.
@@ -1352,6 +1980,24 @@ Tests:
   tuple/value.
 - Generated JS for `defer` emits a LIFO defer stack and `try/finally` or
   equivalent control flow.
+- Generated JS for `panic` unwinds defers in LIFO order and converts escaping
+  panics into structured runtime panic objects.
+- Generated JS for closures emits captured environments with correct mutation
+  semantics.
+- Generated JS for structs, methods, and interface dispatch uses generated
+  slots and tables, not raw user property names where that would be unsafe.
+- Generated JS for pointer operations uses compiler-owned reference cells or
+  equivalent safe lvalue objects for address-of, dereference, field selection
+  through pointers, and pointer receiver calls.
+- Generated JS for type switches over interfaces performs runtime type tests
+  through compiler-owned helpers.
+- Generated JS for variadic calls packs ordinary arguments and expands `args...`
+  consistently.
+- Generated JS for `fmt.Printf` routes output through the diagnostic sink, not
+  `console.log`, `process.stdout`, or browser globals directly.
+- Generated JS for arrays, slices, maps, indexing, slicing, switch, full loops,
+  and for-range loops matches golden snapshots.
+- Generated JS for maps preserves insertion-order iteration.
 - Generated JS for a package function matches golden snapshots.
 - Formula-generated JS calls package exports through generated package slots.
 - Package-generated JS calls imported package exports through generated package
@@ -1361,10 +2007,14 @@ Tests:
 - Generated JS never contains raw user variable names.
 - String literals are escaped with `JSON.stringify`.
 - Host calls route through `host` using resolved binding paths or IDs.
-- Static current-sheet and cross-sheet cell reads route through `ctx.cell`.
-- Static current-sheet and cross-sheet range reads route through `ctx.range`.
-- Dynamic `Namespace.Cell` reads route through `ctx.cell`.
-- Dynamic `Namespace.Range` reads route through `ctx.range`.
+- Static current-sheet and cross-sheet cell reads route through `ctx.cell` with
+  resolved expected cell type metadata.
+- Static current-sheet and cross-sheet range reads route through `ctx.range`
+  with resolved expected element type metadata.
+- Dynamic `Namespace.Cell` reads route through `ctx.cell` with contextual type
+  metadata when available.
+- Dynamic `Namespace.Range` reads route through `ctx.range` with contextual
+  element type metadata when available.
 - Unsupported IR nodes fail with internal compiler diagnostics.
 - Generated source parses via `new Function` in tests.
 - Malicious source snippets cannot break out through emitted JS:
@@ -1424,17 +2074,31 @@ Implement the evaluator context and spreadsheet value conversion.
 
 Implementation tasks:
 
-- Define `ctx.cell(sheetNamespace, address)`,
-  `ctx.range(sheetNamespace, address)`, and value conversion helpers.
+- Define `ctx.cell(sheetNamespace, address, expectedType)`,
+  `ctx.range(sheetNamespace, address, expectedElementType)`, and value
+  conversion helpers.
 - Make `ctx.cell` and `ctx.range` validate normalized addresses at runtime.
 - Make every `ctx.cell` and `ctx.range` call record an observed dependency
   before returning or raising a reference diagnostic when possible.
+- Validate returned runtime cell values against resolved static cell/range
+  types and convert mismatches into `#TYPE!` values.
 - Maintain package instance state for mutable package variables.
 - Evaluate `package-state` formulas in the scheduler's stable order and avoid
   pure-result memoization for them.
 - Convert returned JS values to spreadsheet values.
 - Catch runtime exceptions.
+- Implement Go-junior panic runtime objects, defer unwinding, and conversion of
+  escaping panics to `#PANIC!` spreadsheet errors.
 - Enforce fuel/budget for loops and optional call count.
+- Implement runtime representations for arrays, slices, ordered maps, structs,
+  pointers, interfaces, methods, pointer receivers, closures, and captured
+  environments.
+- Implement runtime interface type tests and type-switch dispatch.
+- Implement variadic call packing and `args...` expansion.
+- Implement runtime representation for Go-junior function cell values and
+  callable function pointers.
+- Implement the diagnostic/log sink used by `fmt.Printf` and `fmt.Println`.
+- Preserve insertion-order map iteration.
 - Define division by zero behavior.
 - Add deterministic math behavior where possible.
 
@@ -1445,6 +2109,8 @@ Tests:
 - Reads cells from a fake context.
 - Reads ranges from a fake context.
 - Reads cells and ranges from a fake cross-sheet context.
+- Reads statically typed numeric cells and uses them directly in arithmetic.
+- Produces `#TYPE!` if a runtime value violates the resolved static cell type.
 - Records observed dependencies for literal and dynamic cell reads.
 - Records observed dependencies for literal and dynamic range reads.
 - Observed dependencies include sheet namespace for current-sheet and
@@ -1459,7 +2125,32 @@ Tests:
 - Calls fake host functions.
 - Converts return values to spreadsheet values.
 - Propagates runtime errors as spreadsheet error values.
+- `panic(value)` runs deferred calls, aborts the current evaluation, and
+  produces `#PANIC!` with panic value and stack metadata when it escapes.
+- `panicOn(nil)` returns normally.
+- `panicOn(err)` panics with that error value and produces `#PANIC!` if it
+  escapes.
+- Deferred calls run during panic unwind and can themselves panic; the runtime
+  records the final panic according to the Go-junior panic policy.
 - Enforces budget on artificial loops once loops exist.
+- Evaluates closures with captured reads and writes.
+- Evaluates structs, methods, interface calls, arrays, slices, indexing,
+  slicing, maps, switch, full for loops, and for-range loops.
+- Evaluates address-of, dereference, field selection through pointers, pointer
+  receiver calls, nil pointer comparisons, and nil pointer runtime errors.
+- Evaluates `x.Method()` consistently for value and pointer receivers without
+  any separate pointer-call syntax.
+- Evaluates Go-style type switches over interface values and switch statements
+  on interface-typed expressions.
+- Evaluates `break`, `continue`, and `fallthrough` with Go switch/loop
+  semantics.
+- Evaluates variadic calls and `args...` expansion.
+- Evaluates calls to Go-junior function cells and records dependencies on the
+  function cell plus any observed reads performed by the called function.
+- Captures `fmt.Printf` output as tagged diagnostic output with cell ID,
+  generation, and recalculation pass metadata.
+- Map `for range` order follows insertion order, including update,
+  delete-if-supported, and reinsert cases.
 - Division by zero gives expected error or value according to spec.
 
 Acceptance criteria:
@@ -1497,6 +2188,15 @@ Tests:
   observed deps.
 - Node runtime evaluates formulas against multi-sheet fixture data.
 - Node runtime compiles and calls a source package.
+- Node runtime evaluates fixtures covering const/iota, structs, interfaces,
+  methods, pointer receivers, pointers, closures, arrays, slices, maps, switch,
+  full for loops, and for-range loops.
+- Node runtime evaluates fixtures covering type switches over interfaces and
+  switches on interface-typed expressions.
+- Node runtime evaluates formulas with cell-level imports and import aliases.
+- Node runtime captures `fmt.Printf` and `fmt.Println` output in CLI human mode
+  and JSON mode.
+- Node runtime preserves insertion-order map iteration.
 - Node runtime preserves mutable package variable state across calls in one
   runtime session.
 - Node runtime reuses filesystem package cache on second run.
@@ -1504,6 +2204,8 @@ Tests:
 - Node runtime can run without worker_threads for fast unit tests.
 - Node runtime can run with worker_threads for isolation tests.
 - CLI `eval` returns value, diagnostics, and observed dependencies.
+- CLI `eval` returns captured `fmt.Printf` output with source cell/evaluation
+  metadata.
 - CLI `compile` returns package/formula diagnostics without evaluation.
 - CLI `run-fixture` executes a multi-cell dependency graph.
 - CLI `inspect-js` prints generated JS without executing it.
@@ -1527,8 +2229,8 @@ Implementation tasks:
 - Define browser worker protocol: compile, evaluateCell, evaluateBatch,
   disposeCache, updateHostSpec, compilePackage, resolvePackage,
   disposePackageCache, and diagnostics messages.
-- Include `observedDeps`, runtime diagnostics, value version, and dependency
-  generation in evaluation responses.
+- Include `observedDeps`, runtime diagnostics, captured `fmt` diagnostic output,
+  value version, and dependency generation in evaluation responses.
 - Keep host/WASM services behind explicit RPC endpoints.
 - Support cancellation by generation token.
 - Ensure stale results are ignored by the main thread.
@@ -1544,6 +2246,8 @@ Tests:
   thread.
 - Browser worker evaluation returns observed dependencies for each evaluated
   formula.
+- Browser worker evaluation returns captured `fmt.Printf` output for each
+  evaluated formula.
 - Main thread can ignore stale observed dependency results by generation token.
 - Cancellation token suppresses stale results.
 - Browser worker survives a formula runtime exception.
@@ -1563,6 +2267,10 @@ Implementation tasks:
 
 - Track formula cells, literal cells, dirty cells, `declaredDeps`,
   `observedDeps`, and reverse dependents.
+- Track declared/inferred cell types and update the workbook/sheet type
+  environment as formulas and literals change.
+- Track Go-junior function cells, their editable source, compiled callable
+  values, signatures, and dependents.
 - Track dependencies across `(sheet namespace, cell address)` keys from the
   start.
 - Topologically sort dirty acyclic subgraphs using current `observedDeps`.
@@ -1586,6 +2294,10 @@ Tests:
 
 - Single formula cell recalculates from literals.
 - Changing one literal marks dependents dirty.
+- Changing a literal or formula result type marks type-dependent formulas dirty.
+- Changing a Go-junior function cell implementation marks call dependents dirty.
+- Changing a Go-junior function cell signature reparses/retypechecks dependent
+  callers before evaluation.
 - Recalculation order respects dependencies.
 - Diamond dependency graph recalculates each formula once.
 - Dynamic reference formula observes the concrete cell it reads.
@@ -1642,12 +2354,20 @@ Implementation tasks:
 
 - Add service layer for formula source, calculated value, selected cell, and
   diagnostics.
+- Add service layer support for declared/inferred cell types, typed ranges, and
+  workbook/sheet type-environment updates.
+- Add service layer support for Go-junior function cells: editable source,
+  compiled callable value, signature metadata, and call dependents.
 - Decide which cells mirror Ivy source lines and which cells are free formula
   cells.
+- Provide UI affordances or schema hooks for declaring cell/range types where
+  inference is not enough.
 - Wire formula bar editing to Go-junior source.
 - Show calculated values in grid cells while preserving raw source in formula
   bar.
 - Surface parse/type/runtime diagnostics near the selected cell.
+- Surface captured `fmt.Printf` / `fmt.Println` diagnostic output near the
+  selected cell and in any developer trace panel.
 - Keep editor-line synchronization for the existing "spec line" column if that
   workflow remains.
 
@@ -1656,7 +2376,15 @@ Tests:
 - Editing a formula cell stores raw source and displays calculated value.
 - Selecting a cell shows raw formula source in the formula bar.
 - Editing formula bar updates selected cell.
+- Editing a Go-junior function cell updates its raw source, recompiles the
+  callable value, and invalidates callers.
+- Selecting a Go-junior function cell shows its editable source and signature.
 - Formula diagnostics appear for invalid formulas.
+- `fmt.Printf` output from a formula appears with cell and evaluation metadata.
+- Numeric typed cells can be referenced directly in formulas without
+  `number(...)` casts.
+- Type mismatches between declared cell types, literals, and formula results
+  surface as diagnostics.
 - Editing Ivy source lines still updates the editor buffer where supported.
 - Spreadsheet recalculation does not mutate Ivy source except through explicit
   spec-line cells.
@@ -1715,8 +2443,12 @@ Persist formulas, calculated values, diagnostics, and engine metadata.
 Implementation tasks:
 
 - Define persisted formula cell shape.
+- Define persisted Go-junior function cell shape, including declared cell type,
+  raw editable source, inferred/declared signature metadata, and diagnostics.
 - Define persisted workbook package source shape.
 - Persist raw Go-junior source, not generated JavaScript.
+- Persist Go-junior function cell source and signature metadata, not compiled
+  function objects.
 - Persist source package text/manifests, not generated package JavaScript or
   Wasm as authoritative workbook state.
 - Define whether mutable package variable current values are workbook-session
@@ -1735,6 +2467,9 @@ Implementation tasks:
 Tests:
 
 - Save/load preserves raw formula text.
+- Save/load preserves Go-junior function cell source, declared cell type, and
+  signature metadata.
+- Save/load recompiles Go-junior function cells before dependent callers run.
 - Save/load preserves workbook package source text and manifests.
 - Save/load handles mutable package variable state according to the explicit
   workbook policy.
@@ -1788,8 +2523,8 @@ Implementation tasks:
 - Confirm worker has no unnecessary host capabilities.
 - Confirm host bindings are allowlisted and typed.
 - Confirm formula contexts receive only pure, approved deterministic WASM,
-  approved formula-safe dynamic-JS, and explicitly allowed package-state
-  capabilities.
+  approved formula-safe dynamic-JS, approved diagnostic-effect, and explicitly
+  allowed package-state capabilities.
 - Confirm action contexts receive only explicitly granted effect capabilities.
 - Confirm package imports resolve only through approved providers.
 - Confirm package cache artifacts are keyed and validated before execution.
@@ -1809,6 +2544,8 @@ Tests:
 - Formulas cannot access browser globals directly.
 - Formula contexts reject graph, sheet, UI, and dynamic-JS capabilities unless
   explicitly configured as formula-safe.
+- Formula contexts allow `fmt.Printf` only through the built-in diagnostic sink,
+  not through direct `console`, `process`, `window`, or DOM access.
 - Action contexts can produce graph and sheet effects only through the typed
   effect host.
 - Dynamic JavaScript-backed helpers cannot receive raw Go-junior source unless
@@ -1950,49 +2687,81 @@ Every successful compiler stage should test:
 
 The first useful implementation should run under Node.js before any browser UI
 integration. This gives fast unit tests and lets users manually exercise the
-language from bash while the design is still fluid.
+language from bash while the design is still fluid. This slice should not be
+considered usable until `fmt.Printf` works through the Node diagnostic sink.
 
-1. Chevrotain lexer/parser for expression form plus short declarations, `if`,
-   and `return`, with CST-to-AST conversion.
-2. Types for bool, string, and number.
-3. Parser/typechecker coverage for `defer`, multiple returns, and named
-   returns.
+1. Chevrotain lexer/parser for cell imports, expression form, function-body
+   form, short declarations, `if`, `switch`, and `return`, with CST-to-AST
+   conversion.
+2. Types for bool, string, int64, float64, Go-junior function cells, typed
+   static cell references, and typed ranges.
+3. Parser/typechecker coverage for `defer`, multiple returns, named returns,
+   closures, consts, structs, pointers, pointer receivers, interfaces, methods,
+   arrays, slices, maps, switch, Go-style type switches, full for loops,
+   for-range loops, `panic`, and `panicOn`.
 4. Resolver/typechecker for locals, reserved `sheet`, sheet-name namespaces,
-   and one fake host namespace.
+   cell-level imports/import aliases, and one fake host namespace.
 5. Dependency extraction for literal current-sheet and cross-sheet references,
-   plus runtime observed dependency tracking for dynamic references.
-6. One tiny Go-junior-compatible source package compiled by the Node runtime
+   plus runtime observed dependency tracking for dynamic references and
+   Go-junior function cell calls.
+6. Built-in `fmt` package with `fmt.Printf`, `fmt.Sprintf`, and `fmt.Println`
+   working in the Node runtime diagnostic sink.
+7. One tiny Go-junior-compatible source package compiled by the Node runtime
    and called from a formula, including a mutable package variable.
-7. JS source copy-and-patch emitter.
-8. Runtime tests that evaluate formulas against a fake spreadsheet context in
+8. JS source copy-and-patch emitter.
+9. Runtime tests that evaluate formulas against a fake spreadsheet context in
    Node.
-9. A minimal Node CLI `eval`, `compile`, `run-fixture`, and `inspect-js` path
+10. A minimal Node CLI `eval`, `compile`, `run-fixture`, and `inspect-js` path
    for manual bash testing.
-10. Browser worker and webui service integration are deferred until the language
+11. Browser worker and webui service integration are deferred until the language
    and CLI semantics have been exercised.
 
 Example first formulas:
 
 ```go
-number(sheet.A1) + number(sheet.B1)
+import "fmt"
+
+fmt.Printf("A1=%v B1=%v\n", sheet.A1, sheet.B1)
+sheet.A1 + sheet.B1
 ```
 
 ```go
-return number(Data.A1) + number(sheet.B1)
+// Cell Lib.Double, type: Go-junior function
+func Double(x float64) float64 {
+    return x * 2
+}
 ```
 
 ```go
-row := number(sheet.B1)
+return Lib.Double(sheet.A1)
+```
+
+```go
+import (
+    f "fmt"
+    stats "workbook/stats"
+)
+
+f.Printf("mean input starts at %v\n", sheet.A1)
+return stats.Mean(sheet.A1:A10)
+```
+
+```go
+return Data.A1 + sheet.B1
+```
+
+```go
+row := sheet.B1
 return sheet.Cell("A" + string(row))
 ```
 
 ```go
-addr := "A" + string(number(sheet.B1))
+addr := "A" + string(sheet.B1)
 return Data.Cell(addr)
 ```
 
 ```go
-x := number(sheet.A1) + number(sheet.B1)
+x := sheet.A1 + sheet.B1
 if x > 10 {
     return math.Sqrt(x)
 }
@@ -2000,7 +2769,7 @@ return x * 2
 ```
 
 ```go
-if string(sheet.$A$1) == "" {
+if sheet.$A$1 == "" {
     return "missing"
 }
 return sheet.$A$1
@@ -2011,9 +2780,9 @@ Example first source package:
 ```go
 package counter
 
-var Count int
+var Count int64
 
-func Next() int {
+func Next() int64 {
     Count = Count + 1
     return Count
 }
@@ -2028,6 +2797,26 @@ return counter.Next()
 ## Acceptance Criteria for the Full Project
 
 - Go-junior has a documented, tested subset of Go-like syntax.
+- Go-junior has no user-facing `number` type; integer defaults are `int64` and
+  floating-point defaults are `float64`.
+- Go-junior has one Go-style `error` type.
+- Go-junior supports Go-style consts, structs, interfaces, methods, closures,
+  arrays, slices, maps, indexing, switch, full for loops, and for-range loops.
+- Go-junior supports pointer types, address-of, dereference, pointer receiver
+  methods, and Go-like method-set rules.
+- Go-junior supports predeclared `panic` and `panicOn(err error)`, with defers
+  running during unwind and escaping panics reported as `#PANIC!`.
+- `break`, `continue`, and `fallthrough` match Go semantics.
+- Go-junior function cells store editable source, expose typed callable
+  function values, and can be called by other formulas.
+- Go-junior supports Go-style type switches over interfaces and switches on
+  interface-typed expressions.
+- Spreadsheet-cell Go-junior functions support Go-style imports and import
+  aliases.
+- The built-in `fmt` package supports `Printf`, `Sprintf`, and `Println` early,
+  with `Printf`/`Println` routed through the diagnostic sink.
+- Go-junior maps iterate in deterministic insertion order.
+- Go generics are rejected explicitly and remain out of scope.
 - Unsupported Go features are rejected explicitly.
 - Valid formulas typecheck before execution.
 - Statically visible dependencies are extracted without running formulas.
