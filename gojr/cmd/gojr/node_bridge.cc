@@ -104,6 +104,12 @@ function gojrFormatResult(result) {
   return "";
 }
 
+function gojrResultValueIsNil(result) {
+  if (Array.isArray(result.values)) return result.values.length === 1 && result.values[0] === null;
+  if (Object.prototype.hasOwnProperty.call(result, "value")) return result.value === null;
+  return false;
+}
+
 globalThis.__gojrEval = function(source) {
   const result = gojrSession.evaluate(source);
   const diagnostics = result.diagnostics || [];
@@ -112,7 +118,8 @@ globalThis.__gojrEval = function(source) {
     incomplete: result.incomplete === true,
     diagnostics: diagnostics.map(gojrDiagnosticString),
     output: (result.output || []).join(""),
-    value: gojrFormatResult(result)
+    value: gojrFormatResult(result),
+    valueIsNil: gojrResultValueIsNil(result)
   });
 };
 

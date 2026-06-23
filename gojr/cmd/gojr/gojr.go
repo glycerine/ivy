@@ -29,6 +29,7 @@ type evalResult struct {
 	Diagnostics []string `json:"diagnostics"`
 	Output      string   `json:"output"`
 	Value       string   `json:"value"`
+	ValueIsNil  bool     `json:"valueIsNil"`
 }
 
 func main() {
@@ -171,9 +172,13 @@ func printResult(result evalResult) {
 	if result.Output != "" {
 		fmt.Print(result.Output)
 	}
-	if result.Value != "" {
+	if shouldPrintValue(result) {
 		fmt.Println(result.Value)
 	}
+}
+
+func shouldPrintValue(result evalResult) bool {
+	return result.Value != "" && !result.ValueIsNil
 }
 
 func newNodeRuntime(modulePath string) (*nodeRuntime, error) {
