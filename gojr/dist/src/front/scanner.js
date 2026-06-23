@@ -106,7 +106,7 @@ class Scanner {
                 return;
             }
             if (char === "\n" || char === "\r") {
-                this.error("GJSCAN001", "unterminated string literal", start, this.position());
+                this.error("GOJR_SCAN001", "unterminated string literal", start, this.position());
                 this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
                 return;
             }
@@ -118,7 +118,7 @@ class Scanner {
             }
             this.advance();
         }
-        this.error("GJSCAN001", "unterminated string literal", start, this.position());
+        this.error("GOJR_SCAN001", "unterminated string literal", start, this.position());
         this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
     }
     scanRawString(start) {
@@ -136,7 +136,7 @@ class Scanner {
             }
             this.advance();
         }
-        this.error("GJSCAN001", "unterminated raw string literal", start, this.position());
+        this.error("GOJR_SCAN001", "unterminated raw string literal", start, this.position());
         this.emit(TokenKind.StringLiteral, this.sliceFrom(start), start, this.position());
     }
     scanRune(start) {
@@ -150,7 +150,7 @@ class Scanner {
                 return;
             }
             if (char === "\n" || char === "\r") {
-                this.error("GJSCAN001", "unterminated rune literal", start, this.position());
+                this.error("GOJR_SCAN001", "unterminated rune literal", start, this.position());
                 this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
                 return;
             }
@@ -163,14 +163,14 @@ class Scanner {
             }
             this.advance();
         }
-        this.error("GJSCAN001", sawContent ? "unterminated rune literal" : "empty rune literal", start, this.position());
+        this.error("GOJR_SCAN001", sawContent ? "unterminated rune literal" : "empty rune literal", start, this.position());
         this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
     }
     scanNumber(start) {
         const match = goNumberPattern.exec(this.source.slice(this.offset));
         if (!match) {
             this.advance();
-            this.error("GJSCAN002", "malformed numeric literal", start, this.position());
+            this.error("GOJR_SCAN002", "malformed numeric literal", start, this.position());
             this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
             return;
         }
@@ -193,7 +193,7 @@ class Scanner {
         }
         if (this.peek() === "$") {
             this.advance();
-            this.error("GJSCAN003", "malformed spreadsheet cell address", start, this.position());
+            this.error("GOJR_SCAN003", "malformed spreadsheet cell address", start, this.position());
             this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
             return;
         }
@@ -222,10 +222,10 @@ class Scanner {
             this.advanceMany(2);
             this.emit(twoKind, two, start, this.position());
             if (two === "<-") {
-                this.error("GJSCAN004", "channels and channel operations are not supported", start, this.position());
+                this.error("GOJR_SCAN004", "channels and channel operations are not supported", start, this.position());
             }
             else if (two === "->") {
-                this.error("GJSCAN006", "C/C++ pointer selector syntax is not supported; use Go-style '.' method calls", start, this.position());
+                this.error("GOJR_SCAN006", "C/C++ pointer selector syntax is not supported; use Go-style '.' method calls", start, this.position());
             }
             return;
         }
@@ -237,7 +237,7 @@ class Scanner {
             return;
         }
         this.advance();
-        this.error("GJSCAN005", `unexpected character ${JSON.stringify(one)}`, start, this.position());
+        this.error("GOJR_SCAN005", `unexpected character ${JSON.stringify(one)}`, start, this.position());
         this.emit(TokenKind.Illegal, one, start, this.position());
     }
     skipLineComment() {
@@ -260,7 +260,7 @@ class Scanner {
             }
             this.advance();
         }
-        this.error("GJSCAN006", "unterminated block comment", start, this.position());
+        this.error("GOJR_SCAN006", "unterminated block comment", start, this.position());
         return hadNewline;
     }
     emit(kind, lexeme, start, end, inserted) {

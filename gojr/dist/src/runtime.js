@@ -452,7 +452,7 @@ export function evaluateProgram(ast, options = {}) {
             diagnostics: [
                 ...ast.diagnostics,
                 {
-                    code: error instanceof GoJuniorPanic ? "GJPANIC001" : "GOJR_RUNTIME001",
+                    code: error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001",
                     severity: "error",
                     message
                 }
@@ -536,7 +536,7 @@ export class GoJuniorSession {
                 diagnostics: [
                     ...ast.diagnostics,
                     {
-                        code: error instanceof GoJuniorPanic ? "GJPANIC001" : "GOJR_RUNTIME001",
+                        code: error instanceof GoJuniorPanic ? "GOJR_PANIC001" : "GOJR_RUNTIME001",
                         severity: "error",
                         message
                     }
@@ -650,13 +650,13 @@ function resultFromCompletion(ast, output, completion) {
 function diagnosticsLookIncomplete(diagnostics) {
     const errors = diagnostics.filter((diagnostic) => diagnostic.severity === "error");
     return errors.length > 0 && errors.every((diagnostic) => {
-        if (diagnostic.code === "GJPARSE001") {
+        if (diagnostic.code === "GOJR_PARSE001") {
             return /found\s+-->\s*''\s*<--/.test(diagnostic.message) || /but found:\s*''/.test(diagnostic.message);
         }
-        if (diagnostic.code === "GJSCAN001") {
+        if (diagnostic.code === "GOJR_SCAN001") {
             return /unterminated .*string literal/i.test(diagnostic.message);
         }
-        if (diagnostic.code !== "GJPARSE_FRONT001")
+        if (diagnostic.code !== "GOJR_PARSE_FRONT001")
             return false;
         return diagnostic.span?.length === 0 &&
             (/expected/i.test(diagnostic.message) || /found EOF/i.test(diagnostic.message));

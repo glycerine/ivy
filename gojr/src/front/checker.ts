@@ -491,7 +491,7 @@ class FrontChecker {
     const operand = this.checkExpr(expr.expr, scope);
     if (expr.op === TokenKind.Amp) return { mode: "value", type: new PointerType(operand.type) };
     if (expr.op === TokenKind.Arrow) {
-      this.error("channels are not supported in Go-junior", expr.span, "GJTYPE_UNSUPPORTED");
+      this.error("channels are not supported in Go-junior", expr.span, "GOJR_TYPE_UNSUPPORTED");
       return { mode: "invalid", type: this.universe.basic.invalid };
     }
     return { mode: operand.mode === "constant" ? "constant" : "value", type: operand.type };
@@ -775,7 +775,7 @@ class FrontChecker {
     if (existing && identNode) this.error(`${object.name} already declared`, identNode.span);
   }
 
-  private error(message: string, span?: SourceSpan, code = "GJTYPE001"): void {
+  private error(message: string, span?: SourceSpan, code = "GOJR_TYPE001"): void {
     this.diagnostics.push({
       code,
       severity: "error",

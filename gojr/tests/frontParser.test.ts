@@ -177,8 +177,8 @@ func F() {
 `);
 
     expect(result.diagnostics.map((item) => item.code)).toEqual([
-      "GJPARSE_UNSUPPORTED",
-      "GJPARSE_UNSUPPORTED"
+      "GOJR_PARSE_UNSUPPORTED",
+      "GOJR_PARSE_UNSUPPORTED"
     ]);
   });
 });

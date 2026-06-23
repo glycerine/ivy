@@ -200,7 +200,7 @@ class FrontParser {
         }
         if (this.at(TokenKind.Go) || this.at(TokenKind.Select)) {
             const token = this.advance();
-            this.error(`${token.lexeme} is not supported in Go-junior`, token.span, "GJPARSE_UNSUPPORTED");
+            this.error(`${token.lexeme} is not supported in Go-junior`, token.span, "GOJR_PARSE_UNSUPPORTED");
             return {
                 kind: "UnsupportedStmt",
                 token: token.kind,
@@ -953,7 +953,7 @@ class FrontParser {
     peek(ahead = 0) {
         return this.tokens[this.index + ahead] ?? this.tokens[this.tokens.length - 1] ?? eofToken();
     }
-    error(message, span, code = "GJPARSE_FRONT001") {
+    error(message, span, code = "GOJR_PARSE_FRONT001") {
         this.diagnostics.push({
             code,
             severity: "error",

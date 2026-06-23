@@ -140,7 +140,7 @@ func boom() {
     const result = session.evaluate("boom()");
     expect(result.output).toEqual(["cleanup\n"]);
     expect(result.diagnostics).toHaveLength(1);
-    expect(result.diagnostics[0]?.code).toBe("GJPANIC001");
+    expect(result.diagnostics[0]?.code).toBe("GOJR_PANIC001");
   });
 
   test("formats Go-junior values with fmt %#v", () => {
@@ -266,7 +266,7 @@ return d + a
     expect(session.evaluate("d := ` hi there`").diagnostics).toEqual([]);
     const mixed = session.evaluate("d + a");
     expect(mixed.diagnostics).toHaveLength(1);
-    expect(mixed.diagnostics[0]?.code).toBe("GJTYPE001");
+    expect(mixed.diagnostics[0]?.code).toBe("GOJR_TYPE001");
     expect(mixed.diagnostics[0]?.message).toContain("invalid operation: string + int64");
 
     const strings = expectRuns(`
@@ -690,7 +690,7 @@ panicOn("bad")
 `);
 
     expect(result.diagnostics).toHaveLength(1);
-    expect(result.diagnostics[0]?.code).toBe("GJPANIC001");
+    expect(result.diagnostics[0]?.code).toBe("GOJR_PANIC001");
   });
 
   test("keeps REPL session locals across eager evaluations", () => {
