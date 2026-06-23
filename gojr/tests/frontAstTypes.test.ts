@@ -1,8 +1,14 @@
 import { describe, expect, test } from "./testHarness.js";
 import {
   childNodes,
+  commentGroupText,
   ident,
+  IsExported,
+  IsGenerated,
+  NewIdent,
+  ParseDirective,
   parseCellAddress,
+  Unparen,
   walk,
   type File
 } from "../src/front/ast.js";
@@ -100,6 +106,72 @@ describe("Go-junior Go-style AST", () => {
     expect(seen).toContain("FuncDecl");
     expect(seen).toContain("BinaryExpr");
     expect(seen.filter((kind) => kind === "Ident")).toHaveLength(6);
+  });
+
+  test("transliterates go/ast comment and identifier helpers", () => {
+    expect(NewIdent("Thing")).toEqual({ kind: "Ident", name: "Thing" });
+    expect(IsExported("Thing")).toBe(true);
+    expect(IsExported("thing")).toBe(false);
+
+    expect(commentGroupText({
+      kind: "CommentGroup",
+      list: [
+        { kind: "Comment", text: "// first  " },
+        { kind: "Comment", text: "//go:noinline" },
+        { kind: "Comment", text: "/*\nsecond\n\n*/" }
+      ]
+    })).toEqual("first\n\nsecond\n");
+
+    const wrapped = {
+      kind: "ParenExpr" as const,
+      expr: {
+        kind: "ParenExpr" as const,
+        expr: ident("x")
+      }
+    };
+    expect(Unparen(wrapped)).toEqual(ident("x"));
+  });
+
+  test("detects generated source comments before the package clause", () => {
+    const file: File = {
+      kind: "File",
+      name: ident("main", { filename: "generated.go", offset: 100, length: 4, line: 4, column: 9 }),
+      declarations: [],
+      imports: [],
+      unresolved: [],
+      comments: [{
+        kind: "CommentGroup",
+        list: [{
+          kind: "Comment",
+          text: "// Code generated gojr-test DO NOT EDIT.",
+          span: { filename: "generated.go", offset: 0, length: 40, line: 1, column: 1 }
+        }]
+      }]
+    };
+    expect(IsGenerated(file)).toBe(true);
+  });
+
+  test("transliterates go/ast directive parsing", () => {
+    const [directive, ok] = ParseDirective(10, "//go:generate stringer -type Op `raw arg` \"quoted arg\"");
+    expect(ok).toBe(true);
+    expect(directive.Tool).toBe("go");
+    expect(directive.Name).toBe("generate");
+    expect(directive.Args).toBe("stringer -type Op `raw arg` \"quoted arg\"");
+    expect(directive.Pos()).toBe(10);
+    expect(directive.End()).toBe(10 + "//go:generate ".length + directive.Args.length);
+
+    const [args, err] = directive.ParseArgs();
+    expect(err).toBeUndefined();
+    expect(args.map((arg) => [arg.Arg, arg.Pos])).toEqual([
+      ["stringer", 24],
+      ["-type", 33],
+      ["Op", 39],
+      ["raw arg", 42],
+      ["quoted arg", 52]
+    ]);
+
+    expect(ParseDirective(0, "//not a directive")[1]).toBe(false);
+    expect(ParseDirective(0, "/*go:generate nope*/")[1]).toBe(false);
   });
 });
 

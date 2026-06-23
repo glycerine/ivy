@@ -1,6 +1,12 @@
 import { SourceSpan } from "../diagnostics.js";
 import { TokenKind } from "./token.js";
 
+export type Pos = number;
+export type ChanDir = number;
+
+export const SEND: ChanDir = 1 << 0;
+export const RECV: ChanDir = 1 << 1;
+
 export interface Node {
   kind: NodeKind;
   span?: SourceSpan;
@@ -525,6 +531,91 @@ export interface CommentGroup extends Node {
   list: Comment[];
 }
 
+export function isWhitespace(ch: string): boolean {
+  return ch === " " || ch === "\t" || ch === "\n" || ch === "\r";
+}
+
+export function stripTrailingWhitespace(s: string): string {
+  let i = s.length;
+  while (i > 0 && isWhitespace(s[i - 1] ?? "")) {
+    i -= 1;
+  }
+  return s.slice(0, i);
+}
+
+export function isDirective(c: string): boolean {
+  if (c.startsWith("line ") || c.startsWith("extern ") || c.startsWith("export ")) {
+    return true;
+  }
+
+  const colon = c.indexOf(":");
+  if (colon <= 0 || colon + 1 >= c.length) {
+    return false;
+  }
+  for (let i = 0; i <= colon + 1; i += 1) {
+    if (i === colon) {
+      continue;
+    }
+    const b = c[i] ?? "";
+    if (!(("a" <= b && b <= "z") || ("0" <= b && b <= "9"))) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export function commentGroupText(group: CommentGroup | undefined): string {
+  if (!group) {
+    return "";
+  }
+  const comments = group.list.map((comment) => comment.text);
+  const lines: string[] = [];
+  for (let comment of comments) {
+    switch (comment[1]) {
+      case "/":
+        comment = comment.slice(2);
+        if (comment.length === 0) {
+          break;
+        }
+        if (comment[0] === " ") {
+          comment = comment.slice(1);
+          break;
+        }
+        if (isDirective(comment)) {
+          continue;
+        }
+        break;
+      case "*":
+        comment = comment.slice(2, -2);
+        break;
+      default:
+        break;
+    }
+    for (const line of comment.split("\n")) {
+      lines.push(stripTrailingWhitespace(line));
+    }
+  }
+
+  let n = 0;
+  for (const line of lines) {
+    if (line !== "" || (n > 0 && lines[n - 1] !== "")) {
+      lines[n] = line;
+      n += 1;
+    }
+  }
+  lines.length = n;
+  if (n > 0 && lines[n - 1] !== "") {
+    lines.push("");
+  }
+  return lines.join("\n");
+}
+
+export namespace CommentGroup {
+  export function Text(group: CommentGroup | undefined): string {
+    return commentGroupText(group);
+  }
+}
+
 export type AstNode =
   | Expr
   | Stmt
@@ -539,6 +630,220 @@ export type AstNode =
 
 export function ident(name: string, span?: SourceSpan): Ident {
   return { kind: "Ident", name, ...(span ? { span } : {}) };
+}
+
+export function NewIdent(name: string): Ident {
+  return ident(name);
+}
+
+export function IsExported(name: string): boolean {
+  const first = Array.from(name)[0] ?? "";
+  return /^\p{Lu}$/u.test(first);
+}
+
+export namespace Ident {
+  export function IsExported(id: Ident | undefined): boolean {
+    return id ? astIsExported(id.name) : false;
+  }
+
+  export function String(id: Ident | undefined): string {
+    if (id) {
+      return id.name;
+    }
+    return "<nil>";
+  }
+}
+
+export function astIsExported(name: string): boolean {
+  return IsExported(name);
+}
+
+export function IsGenerated(file: File): boolean {
+  return generator(file)[1];
+}
+
+export function generator(file: File): [string, boolean] {
+  const packageOffset = file.name?.span?.offset ?? Number.POSITIVE_INFINITY;
+  for (const group of file.comments) {
+    for (const comment of group.list) {
+      if ((comment.span?.offset ?? 0) > packageOffset) {
+        break;
+      }
+      const prefix = "// Code generated ";
+      if (comment.text.includes(prefix)) {
+        for (const line of comment.text.split("\n")) {
+          if (line.startsWith(prefix) && line.endsWith(" DO NOT EDIT.")) {
+            return [line.slice(prefix.length, -" DO NOT EDIT.".length), true];
+          }
+        }
+      }
+    }
+  }
+  return ["", false];
+}
+
+export function Unparen(e: Expr): Expr {
+  let expr = e;
+  while (expr.kind === "ParenExpr") {
+    expr = expr.expr;
+  }
+  return expr;
+}
+
+export class Directive {
+  public constructor(
+    public Tool: string,
+    public Name: string,
+    public Args: string,
+    public Slash: Pos,
+    public ArgsPos: Pos
+  ) {}
+
+  public Pos(): Pos {
+    return this.Slash;
+  }
+
+  public End(): Pos {
+    return this.ArgsPos + this.Args.length;
+  }
+
+  public ParseArgs(): [DirectiveArg[], Error | undefined] {
+    const args = new directiveScanner(this.Args, this.ArgsPos);
+    const list: DirectiveArg[] = [];
+    for (args.skipSpace(); args.str !== ""; args.skipSpace()) {
+      let arg: string;
+      const argPos = args.pos;
+      switch (args.str[0]) {
+        default:
+          arg = args.takeNonSpace();
+          break;
+        case "`":
+        case "\"": {
+          const quoted = quotedPrefix(args.str);
+          if (!quoted) {
+            return [[], new globalThis.Error(`invalid quoted string in //${this.Tool}:${this.Name}: ${args.str}`)];
+          }
+          arg = unquoteDirectiveArg(args.take(quoted.length));
+          if (args.str !== "" && !/^\s/u.test(args.str)) {
+            return [[], new globalThis.Error(`invalid quoted string in //${this.Tool}:${this.Name}: ${args.str}`)];
+          }
+          break;
+        }
+      }
+      list.push(new DirectiveArg(arg, argPos));
+    }
+    return [list, undefined];
+  }
+}
+
+export class DirectiveArg {
+  public constructor(
+    public Arg: string,
+    public Pos: Pos
+  ) {}
+}
+
+export function ParseDirective(pos: Pos, c: string): [Directive, boolean] {
+  if (!(c.length >= 3 && c[0] === "/" && c[1] === "/" && isalnum(c[2] ?? ""))) {
+    return [new Directive("", "", "", 0, 0), false];
+  }
+
+  const buf = new directiveScanner(c, pos);
+  buf.skip("//".length);
+
+  const colon = buf.str.indexOf(":");
+  if (colon <= 0 || colon + 1 >= buf.str.length) {
+    return [new Directive("", "", "", 0, 0), false];
+  }
+  for (let i = 0; i <= colon + 1; i += 1) {
+    if (i === colon) {
+      continue;
+    }
+    if (!isalnum(buf.str[i] ?? "")) {
+      return [new Directive("", "", "", 0, 0), false];
+    }
+  }
+  const tool = buf.take(colon);
+  buf.skip(":".length);
+
+  const name = buf.takeNonSpace();
+  buf.skipSpace();
+  const argsPos = buf.pos;
+  const args = trimRightUnicodeSpace(buf.str);
+
+  return [new Directive(tool, name, args, pos, argsPos), true];
+}
+
+export function isalnum(b: string): boolean {
+  return ("a" <= b && b <= "z") || ("0" <= b && b <= "9");
+}
+
+class directiveScanner {
+  public constructor(
+    public str: string,
+    public pos: Pos
+  ) {}
+
+  public skip(n: number): void {
+    this.pos += n;
+    this.str = this.str.slice(n);
+  }
+
+  public take(n: number): string {
+    const res = this.str.slice(0, n);
+    this.skip(n);
+    return res;
+  }
+
+  public takeNonSpace(): string {
+    const match = /\s/u.exec(this.str);
+    let i = match?.index ?? -1;
+    if (i === -1) {
+      i = this.str.length;
+    }
+    return this.take(i);
+  }
+
+  public skipSpace(): void {
+    const trim = this.str.replace(/^\s+/u, "");
+    this.skip(this.str.length - trim.length);
+  }
+}
+
+function quotedPrefix(text: string): string | undefined {
+  const quote = text[0];
+  if (quote === "`") {
+    const end = text.indexOf("`", 1);
+    return end >= 0 ? text.slice(0, end + 1) : undefined;
+  }
+  if (quote !== "\"") return undefined;
+  let escaped = false;
+  for (let index = 1; index < text.length; index += 1) {
+    const char = text[index] ?? "";
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+    if (char === "\\") {
+      escaped = true;
+      continue;
+    }
+    if (char === "\"") {
+      return text.slice(0, index + 1);
+    }
+  }
+  return undefined;
+}
+
+function unquoteDirectiveArg(text: string): string {
+  if (text.startsWith("`")) {
+    return text.slice(1, -1);
+  }
+  return JSON.parse(text) as string;
+}
+
+function trimRightUnicodeSpace(text: string): string {
+  return text.replace(/\s+$/u, "");
 }
 
 export function parseCellAddress(raw: string): CellAddress | undefined {

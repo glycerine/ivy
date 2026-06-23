@@ -1,5 +1,5 @@
 import { describe, expect, test } from "./testHarness.js";
-import { scanSource } from "../src/front/scanner.js";
+import { ErrorList, PrintError, scanSource } from "../src/front/scanner.js";
 import { TokenKind } from "../src/front/token.js";
 
 const TEST_FILENAME = "front-scanner-test.go";
@@ -17,6 +17,35 @@ function lexemes(source: string): string[] {
 }
 
 describe("Go-junior TypeScript front scanner", () => {
+  test("transliterates go/scanner ErrorList behavior", () => {
+    const list = new ErrorList();
+    list.Add({ filename: "b.go", offset: 20, line: 2, column: 4 }, "second");
+    list.Add({ filename: "a.go", offset: 10, line: 1, column: 8 }, "first");
+    list.Add({ filename: "a.go", offset: 11, line: 1, column: 9 }, "same line");
+    list.Sort();
+
+    expect(Array.from(list, (item) => item.Error())).toEqual([
+      "a.go:1:8: first",
+      "a.go:1:9: same line",
+      "b.go:2:4: second"
+    ]);
+    expect(list.Error()).toEqual("a.go:1:8: first (and 2 more errors)");
+    list.RemoveMultiples();
+    expect(Array.from(list, (item) => item.Error())).toEqual([
+      "a.go:1:8: first",
+      "b.go:2:4: second"
+    ]);
+
+    let output = "";
+    PrintError((text: string) => {
+      output += text;
+    }, list);
+    expect(output).toEqual("a.go:1:8: first\nb.go:2:4: second\n");
+    list.Reset();
+    expect(list.Err()).toEqual(undefined);
+    expect(list.Error()).toEqual("no errors");
+  });
+
   test("scans Go-like declarations, keywords, and operators", () => {
     expect(kinds(`func f(x int) int { return x + 1 }`)).toEqual([
       TokenKind.Func,
