@@ -34,15 +34,13 @@ export class EvaluationContext {
     }
     declare(name, value, mutable = true, type) {
         const typeText = bindingTypeText(type);
-        if (typeText)
-            assertAssignableToType(value, typeText, `variable ${name}`, this);
-        this.currentScope.declare(name, value, mutable, typeText);
+        const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, this) : value;
+        this.currentScope.declare(name, stored, mutable, typeText);
     }
     declareRoot(name, value, mutable = true, type) {
         const typeText = bindingTypeText(type);
-        if (typeText)
-            assertAssignableToType(value, typeText, `variable ${name}`, this);
-        this.rootScope.declare(name, value, mutable, typeText);
+        const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, this) : value;
+        this.rootScope.declare(name, stored, mutable, typeText);
     }
     declareOrAssignRoot(name, value, mutable = true, type) {
         if (this.rootScope.hasLocal(name)) {
@@ -204,7 +202,7 @@ export class EvaluationContext {
         return frame;
     }
     assignmentChecker() {
-        return (value, typeText, role) => assertAssignableToType(value, typeText, role, this);
+        return (value, typeText, role) => prepareAssignableToType(value, typeText, role, this);
     }
 }
 class Scope {
@@ -229,7 +227,7 @@ class Scope {
                 throw new GoJuniorRuntimeError(`${name} is const`);
             }
             if (binding.typeText) {
-                checker?.(value, binding.typeText, `variable ${name}`);
+                value = checker ? checker(value, binding.typeText, `variable ${name}`) : value;
             }
             binding.value = value;
             return;
@@ -330,16 +328,35 @@ export class RuntimeNamedValue {
         this.value = value;
     }
 }
+export class RuntimeInterfaceValue {
+    interfaceType;
+    value;
+    constructor(interfaceType, value) {
+        this.interfaceType = interfaceType;
+        this.value = value;
+    }
+    isNil() {
+        return this.value === null;
+    }
+}
+export class RuntimeTypedNilValue {
+    typeName;
+    constructor(typeName) {
+        this.typeName = typeName;
+    }
+}
 const objectMapKeyIds = new WeakMap();
 const arrayCapacities = new WeakMap();
 let nextObjectMapKeyId = 1;
 export class RuntimeMap {
     keyType;
     valueType;
+    context;
     entries = new Map();
     constructor(keyType, valueType, context) {
         this.keyType = keyType;
         this.valueType = valueType;
+        this.context = context;
         assertComparableType(keyType, context);
     }
     get(key) {
@@ -351,9 +368,9 @@ export class RuntimeMap {
         return entry ? [entry.value, true] : [zeroValueForMapValue(this.valueType), false];
     }
     set(key, value) {
-        assertAssignableToType(key, this.keyType, "map key");
+        key = prepareAssignableToType(key, this.keyType, "map key", this.context);
         assertComparableValue(key, "map key");
-        assertAssignableToType(value, this.valueType, "map value");
+        value = prepareAssignableToType(value, this.valueType, "map value", this.context);
         this.entries.set(runtimeMapKeyId(key), { key, value });
     }
     delete(key) {
@@ -1009,11 +1026,12 @@ function executeTypeSwitch(statement, context, label) {
             continue;
         const completion = context.childScope(() => {
             if (statement.typeSwitch?.name) {
+                const bindingValue = typeSwitchBindingValue(switchValue, clause, context);
                 if (statement.typeSwitch.define) {
-                    context.declare(statement.typeSwitch.name, switchValue, true);
+                    context.declare(statement.typeSwitch.name, bindingValue, true);
                 }
                 else {
-                    context.assign(statement.typeSwitch.name, switchValue);
+                    context.assign(statement.typeSwitch.name, bindingValue);
                 }
             }
             return executeStatements(clause.statements, context);
@@ -1026,6 +1044,16 @@ function executeTypeSwitch(statement, context, label) {
         return completion;
     }
     return { kind: "normal" };
+}
+function typeSwitchBindingValue(switchValue, clause, context) {
+    if (clause.default || (clause.typeValues?.length ?? 0) !== 1)
+        return switchValue;
+    const typeText = clause.typeValues?.[0]?.text;
+    if (!typeText)
+        return switchValue;
+    if (normalizeTypeText(typeText) === "nil")
+        return null;
+    return assertedRuntimeValue(switchValue, typeText, context);
 }
 function executeFor(statement, context, label) {
     if (statement.range) {
@@ -1274,10 +1302,7 @@ function evaluateArrayLiteral(expression, context) {
     if (!type) {
         throw new GoJuniorRuntimeError(`${expression.type.text} is not an array or slice literal type`);
     }
-    const values = expression.elements.map((element) => evaluateExpression(element, context));
-    for (const value of values) {
-        assertAssignableToType(value, type.elementType, "array element", context);
-    }
+    const values = expression.elements.map((element) => prepareAssignableToType(evaluateExpression(element, context), type.elementType, "array element", context));
     if (type.length !== undefined && values.length > type.length) {
         throw new GoJuniorRuntimeError(`array literal has ${values.length} elements but type ${expression.type.text} has length ${type.length}`);
     }
@@ -1312,8 +1337,7 @@ function evaluateStructLiteral(expression, context) {
                 : `${expression.typeName} literal has too many values`);
         }
         const value = evaluateExpression(field.value, context);
-        assertAssignableToType(value, declared.type.text, `field ${field.name ?? declared.name}`, context);
-        struct.set(declared.name, value);
+        struct.set(declared.name, prepareAssignableToType(value, declared.type.text, `field ${field.name ?? declared.name}`, context));
     }
     return struct;
 }
@@ -1396,14 +1420,22 @@ function evaluateTypeAssertion(expression, context) {
     if (!runtimeValueMatchesType(value, expression.type.text, context)) {
         throw new GoJuniorRuntimeError(`${formatValue(value)} does not have dynamic type ${normalizeTypeText(expression.type.text)}`);
     }
-    return value;
+    return assertedRuntimeValue(value, expression.type.text, context);
 }
 function evaluateTypeAssertionWithPresence(expression, context) {
     const value = evaluateExpression(expression.expression, context);
     const typeText = normalizeTypeText(expression.type.text);
     if (runtimeValueMatchesType(value, typeText, context))
-        return [value, true];
+        return [assertedRuntimeValue(value, typeText, context), true];
     return [defaultValueForTypeText(typeText, context), false];
+}
+function assertedRuntimeValue(value, typeText, context) {
+    const type = normalizeTypeText(typeText);
+    const dynamicValue = value instanceof RuntimeInterfaceValue ? value.value : value;
+    const targetInterface = interfaceTarget(type, context);
+    if (targetInterface)
+        return prepareInterfaceAssignment(dynamicValue, type, targetInterface, "type assertion", context);
+    return dynamicValue;
 }
 function evaluateCall(expression, context) {
     if (expression.callee.kind === "Identifier" && expression.callee.name === "make") {
@@ -1598,8 +1630,7 @@ function setSelector(expression, value, context) {
         const field = structFieldAccessor(struct, expression.field, context);
         if (!field)
             throw new GoJuniorRuntimeError(`${struct.typeName} has no field ${expression.field}`);
-        assertAssignableToType(value, field.type.type.text, `field ${expression.field}`, context);
-        field.set(value);
+        field.set(prepareAssignableToType(value, field.type.type.text, `field ${expression.field}`, context));
         return;
     }
     if (isRuntimeObject(object)) {
@@ -1668,8 +1699,7 @@ function pointerToExpression(expression, context) {
         const current = field.get();
         const typeName = pointerTypeName(current ?? null);
         return new RuntimePointer(typeName, () => field.get() ?? null, (next) => {
-            assertAssignableToType(next, field.type.type.text, `field ${expression.field}`, context);
-            field.set(next);
+            field.set(prepareAssignableToType(next, field.type.type.text, `field ${expression.field}`, context));
         });
     }
     if (expression.kind === "IndexExpression") {
@@ -1686,6 +1716,9 @@ function pointerToExpression(expression, context) {
     throw new GoJuniorRuntimeError("expression is not addressable");
 }
 function dereference(value) {
+    if (value instanceof RuntimeTypedNilValue && value.typeName.startsWith("*")) {
+        throw new GoJuniorRuntimeError("nil pointer dereference");
+    }
     if (!(value instanceof RuntimePointer))
         throw new GoJuniorRuntimeError(`${formatValue(value)} is not a pointer`);
     return value.get();
@@ -1740,12 +1773,19 @@ function promotedFieldAccessor(struct, fieldName, context, seen = new Set()) {
     return matches[0];
 }
 function methodForValue(value, methodName, context) {
+    if (value instanceof RuntimeInterfaceValue) {
+        if (value.value === null)
+            return undefined;
+        return methodForValue(value.value, methodName, context);
+    }
     const actual = dereferenceIfPointer(value);
     const receiverType = actual instanceof RuntimeStruct
         ? actual.typeName
         : actual instanceof RuntimeNamedValue
             ? actual.typeName
-            : undefined;
+            : actual instanceof RuntimeTypedNilValue
+                ? nilReceiverTypeName(actual)
+                : undefined;
     if (receiverType) {
         const direct = context.methodFor(receiverType, methodName);
         if (direct)
@@ -1787,12 +1827,22 @@ function promotedMethodForStruct(struct, methodName, context, seen = new Set()) 
     return matches[0];
 }
 function receiverTypeName(value) {
+    if (value instanceof RuntimeInterfaceValue)
+        return value.value === null ? undefined : receiverTypeName(value.value);
     const actual = dereferenceIfPointer(value);
     if (actual instanceof RuntimeStruct)
         return actual.typeName;
     if (actual instanceof RuntimeNamedValue)
         return actual.typeName;
+    if (actual instanceof RuntimeTypedNilValue)
+        return nilReceiverTypeName(actual);
     return undefined;
+}
+function nilReceiverTypeName(value) {
+    return value.typeName.startsWith("*") ? value.typeName.slice(1) : value.typeName;
+}
+function isTypedNilPointer(value) {
+    return value instanceof RuntimeTypedNilValue && value.typeName.startsWith("*");
 }
 function assertAssignableToStructField(struct, fieldName, value, context) {
     const field = structFieldAccessor(struct, fieldName, context);
@@ -1802,6 +1852,10 @@ function assertAssignableToStructField(struct, fieldName, value, context) {
 }
 function pointerTypeName(value) {
     const actual = dereferenceIfPointer(value);
+    if (actual instanceof RuntimeInterfaceValue)
+        return actual.interfaceType;
+    if (actual instanceof RuntimeTypedNilValue)
+        return actual.typeName;
     if (actual instanceof RuntimeNamedValue)
         return actual.typeName;
     if (actual instanceof RuntimeStruct)
@@ -1822,6 +1876,10 @@ function inferredTypeText(value) {
     if (value === null)
         return undefined;
     if (value instanceof RuntimeNamedValue)
+        return value.typeName;
+    if (value instanceof RuntimeInterfaceValue)
+        return value.interfaceType;
+    if (value instanceof RuntimeTypedNilValue)
         return value.typeName;
     if (typeof value === "bigint")
         return "int64";
@@ -1877,6 +1935,11 @@ function defaultValueForTypeText(typeText, context) {
         return Array.from({ length: arrayType.length }, () => defaultValueForTypeText(arrayType.elementType, context));
     }
     const type = normalizeTypeText(typeText);
+    const interfaceType = interfaceTarget(type, context);
+    if (interfaceType)
+        return new RuntimeInterfaceValue(type, null);
+    if (type.startsWith("*"))
+        return new RuntimeTypedNilValue(type);
     const typeDef = context?.typeDef(type);
     if (typeDef) {
         const struct = new RuntimeStruct(typeDef.name);
@@ -1908,6 +1971,9 @@ function zeroValueForMapValue(typeText) {
 }
 function convertValueToType(value, typeText, context) {
     const type = normalizeTypeText(typeText);
+    const targetInterface = interfaceTarget(type, context);
+    if (targetInterface)
+        return prepareInterfaceAssignment(value, type, targetInterface, "conversion", context);
     const alias = context.aliasType(type);
     if (alias && alias !== type) {
         return new RuntimeNamedValue(type, convertValueToType(value, alias, context));
@@ -1960,54 +2026,65 @@ function convertValueToType(value, typeText, context) {
     }
     if (context.typeDef(type) && actual instanceof RuntimeStruct && actual.typeName === type)
         return actual;
+    if (actual === null && type.startsWith("*"))
+        return new RuntimeTypedNilValue(type);
     if (actual === null && isNilAssignableType(type))
         return null;
     throw new GoJuniorRuntimeError(`unsupported conversion to ${type}`);
 }
-function assertAssignableToType(value, typeText, role, context) {
+function prepareAssignableToType(value, typeText, role, context) {
     const type = normalizeTypeText(typeText);
-    if (!type || type === "<missing>" || type === "any" || type === "interface{}")
-        return;
+    if (!type || type === "<missing>")
+        return value;
+    const interfaceType = interfaceTarget(type, context);
+    if (interfaceType)
+        return prepareInterfaceAssignment(value, type, interfaceType, role, context);
     if (value instanceof RuntimeNamedValue) {
         if (value.typeName === type)
-            return;
+            return value;
         value = value.value;
     }
     const alias = context?.aliasType(type);
     if (alias && alias !== type && !context?.typeDef(type) && !context?.interfaceDef(type)) {
-        assertAssignableToType(value, alias, role, context);
-        return;
+        prepareAssignableToType(value, alias, role, context);
+        return value;
     }
-    const interfaceType = context?.interfaceDef(type);
     if (value === null) {
-        if (isNilAssignableType(type) || interfaceType)
-            return;
+        if (type.startsWith("*"))
+            return new RuntimeTypedNilValue(type);
+        if (isNilAssignableType(type))
+            return value;
         throw new GoJuniorRuntimeError(`${role} nil is not assignable to ${type}`);
+    }
+    if (value instanceof RuntimeTypedNilValue) {
+        if (value.typeName === type || isNilAssignableType(type))
+            return value;
+        throwTypeError(value, type, role);
     }
     if (type === "string") {
         if (typeof value !== "string")
             throwTypeError(value, type, role);
-        return;
+        return value;
     }
     if (type === "bool") {
         if (typeof value !== "boolean")
             throwTypeError(value, type, role);
-        return;
+        return value;
     }
     if (isIntegerType(type)) {
         if (typeof value !== "bigint" || !integerInRange(value, type))
             throwTypeError(value, type, role);
-        return;
+        return value;
     }
     if (isFloatType(type)) {
         if (typeof value !== "number")
             throwTypeError(value, type, role);
-        return;
+        return value;
     }
     if (isComplexType(type)) {
         if (!isComplexValue(value))
             throwTypeError(value, type, role);
-        return;
+        return value;
     }
     const mapType = parseMapTypeText(type);
     if (mapType) {
@@ -2017,28 +2094,23 @@ function assertAssignableToType(value, typeText, role, context) {
             normalizeTypeText(value.valueType) !== normalizeTypeText(mapType.valueType)) {
             throwTypeError(value, type, role);
         }
-        return;
+        return value;
     }
     if (type.startsWith("*")) {
         if (!(value instanceof RuntimePointer) || value.typeName !== type.slice(1))
             throwTypeError(value, type, role);
-        return;
+        return value;
     }
     const structType = context?.typeDef(type);
     if (structType) {
         if (!(value instanceof RuntimeStruct) || value.typeName !== structType.name)
             throwTypeError(value, type, role);
-        return;
-    }
-    if (interfaceType && context) {
-        if (!valueImplementsInterface(value, interfaceType, context))
-            throwTypeError(value, type, role);
-        return;
+        return value;
     }
     if (value instanceof RuntimeStruct) {
         if (value.typeName !== type)
             throwTypeError(value, type, role);
-        return;
+        return value;
     }
     const arrayType = parseArrayOrSliceTypeText(type);
     if (arrayType) {
@@ -2050,28 +2122,57 @@ function assertAssignableToType(value, typeText, role, context) {
         for (const item of value) {
             assertAssignableToType(item, arrayType.elementType, `${role} element`, context);
         }
-        return;
+        return value;
     }
     if (type.startsWith("func(")) {
         if (!isRuntimeCallable(value) && !isGoJuniorFunction(value))
             throwTypeError(value, type, role);
-        return;
+        return value;
     }
+    return value;
+}
+function assertAssignableToType(value, typeText, role, context) {
+    prepareAssignableToType(value, typeText, role, context);
+}
+function interfaceTarget(type, context) {
+    if (type === "any" || type === "interface{}")
+        return { name: type, methods: [], embeds: [] };
+    return context?.interfaceDef(type);
+}
+function prepareInterfaceAssignment(value, type, interfaceType, role, context) {
+    if (value instanceof RuntimeInterfaceValue) {
+        const dynamicValue = value.value;
+        if (dynamicValue === null)
+            return new RuntimeInterfaceValue(type, null);
+        if (context && !valueImplementsInterface(dynamicValue, interfaceType, context))
+            throwTypeError(value, type, role);
+        return new RuntimeInterfaceValue(type, dynamicValue);
+    }
+    if (value === null)
+        return new RuntimeInterfaceValue(type, null);
+    if (context && !valueImplementsInterface(value, interfaceType, context))
+        throwTypeError(value, type, role);
+    return new RuntimeInterfaceValue(type, value);
 }
 function valueImplementsInterface(value, interfaceType, context) {
+    if (value instanceof RuntimeInterfaceValue) {
+        return value.value === null || valueImplementsInterface(value.value, interfaceType, context);
+    }
     const receiver = dereferenceIfPointer(value);
     const receiverType = receiver instanceof RuntimeStruct
         ? receiver.typeName
         : receiver instanceof RuntimeNamedValue
             ? receiver.typeName
-            : undefined;
+            : receiver instanceof RuntimeTypedNilValue
+                ? nilReceiverTypeName(receiver)
+                : undefined;
     if (!receiverType)
         return interfaceType.methods.length === 0;
     for (const method of interfaceType.methods) {
         const candidate = methodForValue(value, method.name, context);
         if (!candidate)
             return false;
-        if (candidate.method.pointerReceiver && !(value instanceof RuntimePointer))
+        if (candidate.method.pointerReceiver && !(value instanceof RuntimePointer) && !isTypedNilPointer(value))
             return false;
         if (!signaturesCompatible(candidate.method.declaration.signature, method.signature))
             return false;
@@ -2097,12 +2198,23 @@ function signaturesCompatible(actual, expected) {
 }
 function runtimeValueMatchesType(value, typeText, context) {
     const type = normalizeTypeText(typeText);
+    if (value instanceof RuntimeInterfaceValue) {
+        if (type === "nil")
+            return value.value === null;
+        if (value.value === null)
+            return false;
+        return runtimeValueMatchesType(value.value, type, context);
+    }
     if (type === "nil")
         return value === null;
     if (value === null)
         return false;
     if (value instanceof RuntimeNamedValue) {
         return value.typeName === type || runtimeValueMatchesType(value.value, type, context);
+    }
+    if (value instanceof RuntimeTypedNilValue) {
+        if (type.startsWith("*"))
+            return value.typeName === type;
     }
     if (!type || type === "<missing>")
         return false;
@@ -2213,6 +2325,13 @@ function runtimeMapKeyId(key) {
     const actual = unwrapNamed(key);
     if (actual === null)
         return "nil";
+    if (actual instanceof RuntimeInterfaceValue) {
+        return actual.value === null
+            ? `iface:${actual.interfaceType}:nil`
+            : `iface:${actual.interfaceType}:${runtimeMapKeyId(actual.value)}`;
+    }
+    if (actual instanceof RuntimeTypedNilValue)
+        return `typednil:${actual.typeName}`;
     if (typeof actual === "boolean")
         return `b:${actual}`;
     if (typeof actual === "string")
@@ -2274,6 +2393,13 @@ function assertComparableType(typeText, context) {
 }
 function assertComparableValue(value, role) {
     value = unwrapNamed(value);
+    if (value instanceof RuntimeInterfaceValue) {
+        if (value.value !== null)
+            assertComparableValue(value.value, role);
+        return;
+    }
+    if (value instanceof RuntimeTypedNilValue)
+        return;
     if (value instanceof RuntimeMap || isRuntimeCallable(value) || isGoJuniorFunction(value)) {
         throw new GoJuniorRuntimeError(`${role} ${formatValue(value)} is not comparable`);
     }
@@ -2483,6 +2609,8 @@ function isComplexValue(value) {
         !(value instanceof RuntimeStruct) &&
         !(value instanceof RuntimePointer) &&
         !(value instanceof RuntimeNamedValue) &&
+        !(value instanceof RuntimeInterfaceValue) &&
+        !(value instanceof RuntimeTypedNilValue) &&
         "real" in value &&
         "imag" in value &&
         typeof value.real === "number" &&
@@ -2511,6 +2639,16 @@ function compareValues(left, right) {
     throw new GoJuniorRuntimeError(`cannot compare ${formatValue(left)} and ${formatValue(right)}`);
 }
 function valueEqual(left, right) {
+    if (left instanceof RuntimeInterfaceValue || right instanceof RuntimeInterfaceValue) {
+        return interfaceAwareEqual(left, right);
+    }
+    if (left instanceof RuntimeTypedNilValue || right instanceof RuntimeTypedNilValue) {
+        if (left === null || right === null)
+            return true;
+        return left instanceof RuntimeTypedNilValue &&
+            right instanceof RuntimeTypedNilValue &&
+            left.typeName === right.typeName;
+    }
     left = unwrapNamed(left);
     right = unwrapNamed(right);
     if ((typeof left === "bigint" || typeof left === "number") && (typeof right === "bigint" || typeof right === "number")) {
@@ -2536,6 +2674,28 @@ function valueEqual(left, right) {
             });
     }
     return left === right;
+}
+function interfaceAwareEqual(left, right) {
+    if (left instanceof RuntimeInterfaceValue && right === null)
+        return left.value === null;
+    if (right instanceof RuntimeInterfaceValue && left === null)
+        return right.value === null;
+    if (left instanceof RuntimeInterfaceValue && right instanceof RuntimeInterfaceValue) {
+        if (left.value === null || right.value === null)
+            return left.value === null && right.value === null;
+        return valueEqual(left.value, right.value);
+    }
+    if (left instanceof RuntimeInterfaceValue) {
+        if (left.value === null)
+            return false;
+        return valueEqual(left.value, right);
+    }
+    if (right instanceof RuntimeInterfaceValue) {
+        if (right.value === null)
+            return false;
+        return valueEqual(left, right.value);
+    }
+    return false;
 }
 function rangeEntries(source, context) {
     source = unwrapNamed(source);
@@ -2612,6 +2772,10 @@ function toStringValue(value) {
 export function formatValue(value) {
     if (value instanceof RuntimeNamedValue)
         return formatValue(value.value);
+    if (value instanceof RuntimeInterfaceValue)
+        return value.value === null ? "<nil>" : formatValue(value.value);
+    if (value instanceof RuntimeTypedNilValue)
+        return "<nil>";
     if (value === null)
         return "<nil>";
     if (typeof value === "bigint")
@@ -2637,6 +2801,11 @@ export function formatValue(value) {
 export function formatReplValue(value) {
     if (value instanceof RuntimeNamedValue)
         return formatReplValue(value.value);
+    if (value instanceof RuntimeInterfaceValue) {
+        return value.value === null ? `${value.interfaceType}(nil)` : formatReplValue(value.value);
+    }
+    if (value instanceof RuntimeTypedNilValue)
+        return `${value.typeName}(nil)`;
     if (value === null)
         return "<nil>";
     if (typeof value === "bigint")
@@ -2664,6 +2833,11 @@ export function formatReplValue(value) {
 function formatGoSyntaxValue(value) {
     if (value instanceof RuntimeNamedValue)
         return `${value.typeName}(${formatGoSyntaxValue(value.value)})`;
+    if (value instanceof RuntimeInterfaceValue) {
+        return value.value === null ? `${value.interfaceType}(nil)` : formatGoSyntaxValue(value.value);
+    }
+    if (value instanceof RuntimeTypedNilValue)
+        return `${value.typeName}(nil)`;
     if (value === null)
         return "nil";
     if (typeof value === "bigint")
@@ -2753,6 +2927,8 @@ function isRuntimeObject(value) {
         !(value instanceof RuntimeStruct) &&
         !(value instanceof RuntimePointer) &&
         !(value instanceof RuntimeNamedValue) &&
+        !(value instanceof RuntimeInterfaceValue) &&
+        !(value instanceof RuntimeTypedNilValue) &&
         !(value instanceof SheetBinding) &&
         !isComplexValue(value) &&
         !isRuntimeCallable(value) &&

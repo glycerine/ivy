@@ -565,6 +565,48 @@ return b.X
     expect(pointerOk.value).toBe(2n);
   });
 
+  test("represents interfaces as typed runtime values with dynamic nil state", () => {
+    const nilInterface = expectRuns(`
+type I interface {
+  fun()
+}
+
+var i I
+return i, i == nil
+`);
+
+    expect(nilInterface.values?.map(formatReplValue)).toEqual(["I(nil)", "true"]);
+
+    const typedNilPointer = expectRuns(`
+type I interface {
+  fun()
+}
+
+type Box struct { X int }
+func (b *Box) fun() {}
+
+var p *Box
+var i I = p
+q, ok := i.(*Box)
+return i == nil, p == nil, q == nil, ok, i
+`);
+
+    expect(typedNilPointer.values?.slice(0, 4)).toEqual([false, true, true, true]);
+    expect(formatReplValue(typedNilPointer.values?.[4] ?? null)).toBe("*Box(nil)");
+
+    const empty = expectRuns(`
+type I interface {
+  fun()
+}
+
+var i I
+var x interface{} = i
+return x, x == nil
+`);
+
+    expect(empty.values?.map(formatReplValue)).toEqual(["interface{}(nil)", "true"]);
+  });
+
   test("evaluates array and slice literals with indexing, slicing, and range", () => {
     const result = expectRuns(`
 xs := []int{1, 2, 3}
