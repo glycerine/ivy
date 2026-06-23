@@ -1,4 +1,4 @@
-import { CstParser } from "chevrotain";
+import { createTokenInstance, CstParser } from "chevrotain";
 import { spanFromToken } from "./diagnostics.js";
 import { allTokens, Amp, AndAnd, Assign, Bang, Break, Case, CellAddress, Colon, Comma, Const, Continue, Default, Defer, Define, Dot, Ellipsis, Else, Equal, Fallthrough, False, FloatLiteral, For, Func, Goto, Greater, GreaterEqual, Identifier, If, Import, IntLiteral, Interface, LBrace, LBracket, Less, LessEqual, LParen, MapTok, Minus, MinusMinus, Nil, NotEqual, OrOr, Percent, Plus, PlusPlus, Range, Return, RBrace, RBracket, RParen, Semicolon, Slash, Star, StringLiteral, Struct, Switch, True, Type, Var, goJuniorLexer } from "./tokens.js";
 export class GoJuniorParser extends CstParser {
@@ -24,7 +24,10 @@ export class GoJuniorParser extends CstParser {
     returnStmt;
     ifStmt;
     switchStmt;
+    typeSwitchHeader;
     switchClause;
+    typeSwitchClause;
+    typeSwitchType;
     forStmt;
     forClause;
     forInitClause;
@@ -46,6 +49,8 @@ export class GoJuniorParser extends CstParser {
     primaryExpr;
     atom;
     arrayLiteral;
+    structLiteral;
+    structLiteralField;
     mapLiteral;
     mapElement;
     functionLiteral;
@@ -202,6 +207,10 @@ export class GoJuniorParser extends CstParser {
         });
         this.fieldDecl = $.RULE("fieldDecl", () => {
             $.SUBRULE(this.name);
+            $.MANY(() => {
+                $.CONSUME(Comma);
+                $.SUBRULE2(this.name);
+            });
             $.SUBRULE(this.typeExpression);
             $.OPTION(() => $.CONSUME(Semicolon));
         });
@@ -318,10 +327,40 @@ export class GoJuniorParser extends CstParser {
         });
         this.switchStmt = $.RULE("switchStmt", () => {
             $.CONSUME(Switch);
-            $.OPTION(() => $.SUBRULE(this.expression));
-            $.CONSUME(LBrace);
-            $.MANY(() => $.SUBRULE(this.switchClause));
-            $.CONSUME(RBrace);
+            $.OR([
+                {
+                    GATE: $.BACKTRACK(this.typeSwitchHeader),
+                    ALT: () => {
+                        $.SUBRULE(this.typeSwitchHeader);
+                        $.CONSUME(LBrace);
+                        $.MANY(() => $.SUBRULE(this.typeSwitchClause));
+                        $.CONSUME(RBrace);
+                    }
+                },
+                {
+                    ALT: () => {
+                        $.OPTION(() => $.SUBRULE(this.expression));
+                        $.CONSUME2(LBrace);
+                        $.MANY2(() => $.SUBRULE(this.switchClause));
+                        $.CONSUME2(RBrace);
+                    }
+                }
+            ]);
+        });
+        this.typeSwitchHeader = $.RULE("typeSwitchHeader", () => {
+            $.OPTION({ GATE: () => this.isNameToken(this.LA(1).tokenType) &&
+                    (this.LA(2).tokenType === Define || this.LA(2).tokenType === Assign), DEF: () => {
+                    $.SUBRULE(this.name);
+                    $.OR([
+                        { ALT: () => $.CONSUME(Define) },
+                        { ALT: () => $.CONSUME(Assign) }
+                    ]);
+                } });
+            $.SUBRULE(this.qualifiedName);
+            $.CONSUME(Dot);
+            $.CONSUME(LParen);
+            $.CONSUME(Type);
+            $.CONSUME(RParen);
         });
         this.switchClause = $.RULE("switchClause", () => {
             $.OR([
@@ -339,11 +378,37 @@ export class GoJuniorParser extends CstParser {
                 $.OPTION(() => $.CONSUME(Semicolon));
             });
         });
+        this.typeSwitchClause = $.RULE("typeSwitchClause", () => {
+            $.OR([
+                {
+                    ALT: () => {
+                        $.CONSUME(Case);
+                        $.SUBRULE(this.typeSwitchType);
+                        $.MANY(() => {
+                            $.CONSUME(Comma);
+                            $.SUBRULE2(this.typeSwitchType);
+                        });
+                    }
+                },
+                { ALT: () => $.CONSUME(Default) }
+            ]);
+            $.CONSUME(Colon);
+            $.MANY2(() => {
+                $.SUBRULE(this.statement);
+                $.OPTION(() => $.CONSUME(Semicolon));
+            });
+        });
+        this.typeSwitchType = $.RULE("typeSwitchType", () => {
+            $.OR([
+                { ALT: () => $.CONSUME(Nil) },
+                { ALT: () => $.SUBRULE(this.typeExpression) }
+            ]);
+        });
         this.forStmt = $.RULE("forStmt", () => {
             $.CONSUME(For);
             $.OR([
-                { GATE: $.BACKTRACK(this.rangeClause), ALT: () => $.SUBRULE(this.rangeClause) },
-                { GATE: $.BACKTRACK(this.forClause), ALT: () => $.SUBRULE(this.forClause) },
+                { GATE: () => this.nextTokensStartRangeClause(), ALT: () => $.SUBRULE(this.rangeClause) },
+                { GATE: () => this.nextTokensStartForClause(), ALT: () => $.SUBRULE(this.forClause) },
                 {
                     ALT: () => {
                         $.OPTION(() => $.SUBRULE(this.expression));
@@ -360,19 +425,37 @@ export class GoJuniorParser extends CstParser {
             $.OPTION3(() => $.SUBRULE(this.forPostClause));
         });
         this.forInitClause = $.RULE("forInitClause", () => {
-            $.SUBRULE(this.name);
-            $.OR([
-                { ALT: () => $.CONSUME(Define) },
-                { ALT: () => $.CONSUME(Assign) }
-            ]);
-            $.SUBRULE(this.expression);
+            $.SUBRULE(this.expressionList);
+            $.OPTION(() => {
+                $.OR([
+                    {
+                        ALT: () => {
+                            $.OR2([
+                                { ALT: () => $.CONSUME(Define) },
+                                { ALT: () => $.CONSUME(Assign) }
+                            ]);
+                            $.SUBRULE2(this.expressionList);
+                        }
+                    },
+                    { ALT: () => $.CONSUME(PlusPlus) },
+                    { ALT: () => $.CONSUME(MinusMinus) }
+                ]);
+            });
         });
         this.forPostClause = $.RULE("forPostClause", () => {
-            $.SUBRULE(this.expression);
-            $.OR([
-                { ALT: () => $.CONSUME(PlusPlus) },
-                { ALT: () => $.CONSUME(MinusMinus) }
-            ]);
+            $.SUBRULE(this.expressionList);
+            $.OPTION(() => {
+                $.OR([
+                    {
+                        ALT: () => {
+                            $.CONSUME(Assign);
+                            $.SUBRULE2(this.expressionList);
+                        }
+                    },
+                    { ALT: () => $.CONSUME(PlusPlus) },
+                    { ALT: () => $.CONSUME(MinusMinus) }
+                ]);
+            });
         });
         this.rangeClause = $.RULE("rangeClause", () => {
             $.OPTION(() => {
@@ -539,6 +622,14 @@ export class GoJuniorParser extends CstParser {
                     },
                     {
                         ALT: () => {
+                            $.CONSUME2(Dot);
+                            $.CONSUME(LParen);
+                            $.SUBRULE(this.typeExpression);
+                            $.CONSUME(RParen);
+                        }
+                    },
+                    {
+                        ALT: () => {
                             $.CONSUME(LBracket);
                             $.OPTION(() => $.SUBRULE(this.expression));
                             $.OPTION2(() => {
@@ -561,6 +652,7 @@ export class GoJuniorParser extends CstParser {
                 { ALT: () => $.SUBRULE(this.functionLiteral) },
                 { GATE: () => this.LA(1).tokenType === LBracket, ALT: () => $.SUBRULE(this.arrayLiteral) },
                 { ALT: () => $.SUBRULE(this.mapLiteral) },
+                { GATE: $.BACKTRACK(this.structLiteral), ALT: () => $.SUBRULE(this.structLiteral) },
                 { ALT: () => $.SUBRULE(this.literal) },
                 { ALT: () => $.SUBRULE(this.qualifiedName) },
                 {
@@ -592,6 +684,32 @@ export class GoJuniorParser extends CstParser {
                 $.OPTION3(() => $.CONSUME2(Comma));
             });
             $.CONSUME(RBrace);
+        });
+        this.structLiteral = $.RULE("structLiteral", () => {
+            $.SUBRULE(this.qualifiedName);
+            $.CONSUME(LBrace);
+            $.OPTION(() => {
+                $.SUBRULE(this.structLiteralField);
+                $.MANY(() => {
+                    $.CONSUME(Comma);
+                    $.SUBRULE2(this.structLiteralField);
+                });
+                $.OPTION2(() => $.CONSUME2(Comma));
+            });
+            $.CONSUME(RBrace);
+        });
+        this.structLiteralField = $.RULE("structLiteralField", () => {
+            $.OR([
+                {
+                    GATE: () => this.nextTokensAreStructLiteralKey(),
+                    ALT: () => {
+                        $.SUBRULE(this.selectorName);
+                        $.CONSUME(Colon);
+                        $.SUBRULE(this.expression);
+                    }
+                },
+                { ALT: () => $.SUBRULE2(this.expression) }
+            ]);
         });
         this.mapLiteral = $.RULE("mapLiteral", () => {
             $.CONSUME(MapTok);
@@ -636,10 +754,10 @@ export class GoJuniorParser extends CstParser {
         });
         this.qualifiedName = $.RULE("qualifiedName", () => {
             $.SUBRULE(this.name);
-            $.MANY(() => {
-                $.CONSUME(Dot);
-                $.SUBRULE2(this.selectorName);
-            });
+            $.MANY({ GATE: () => this.LA(1).tokenType === Dot && this.isNameToken(this.LA(2).tokenType), DEF: () => {
+                    $.CONSUME(Dot);
+                    $.SUBRULE2(this.selectorName);
+                } });
         });
         this.selectorName = $.RULE("selectorName", () => {
             $.OR([
@@ -697,6 +815,39 @@ export class GoJuniorParser extends CstParser {
         return this.LA(1).tokenType === Colon &&
             (this.LA(2).tokenType === Identifier || this.LA(2).tokenType === CellAddress);
     }
+    nextTokensAreStructLiteralKey() {
+        return this.isNameToken(this.LA(1).tokenType) && this.LA(2).tokenType === Colon;
+    }
+    nextTokensStartForClause() {
+        return this.nextTopLevelTokenBeforeForBody(Semicolon);
+    }
+    nextTokensStartRangeClause() {
+        return this.nextTopLevelTokenBeforeForBody(Range);
+    }
+    nextTopLevelTokenBeforeForBody(target) {
+        let parenDepth = 0;
+        let bracketDepth = 0;
+        for (let offset = 1; offset < 128; offset += 1) {
+            const tokenType = this.LA(offset).tokenType;
+            if (tokenType.name === "EOF")
+                return false;
+            if (tokenType === LParen)
+                parenDepth += 1;
+            if (tokenType === RParen)
+                parenDepth = Math.max(0, parenDepth - 1);
+            if (tokenType === LBracket)
+                bracketDepth += 1;
+            if (tokenType === RBracket)
+                bracketDepth = Math.max(0, bracketDepth - 1);
+            if (parenDepth === 0 && bracketDepth === 0) {
+                if (tokenType === target)
+                    return true;
+                if (tokenType === LBrace)
+                    return false;
+            }
+        }
+        return false;
+    }
     nextTokensAreNamedParameter() {
         const first = this.LA(1).tokenType;
         const second = this.LA(2).tokenType;
@@ -730,13 +881,91 @@ export class GoJuniorParser extends CstParser {
 export const goJuniorParser = new GoJuniorParser();
 export function parseGoJunior(source) {
     const lexResult = goJuniorLexer.tokenize(source);
-    goJuniorParser.input = lexResult.tokens;
+    const tokens = insertImplicitSemicolons(lexResult.tokens);
+    goJuniorParser.input = tokens;
     const cst = goJuniorParser.program();
     const diagnostics = [
         ...lexResult.errors.map((error) => lexDiagnostic(error)),
         ...goJuniorParser.errors.map(parserDiagnostic)
     ];
-    return { cst, diagnostics, tokens: lexResult.tokens };
+    return { cst, diagnostics, tokens };
+}
+function insertImplicitSemicolons(tokens) {
+    if (tokens.length === 0)
+        return tokens;
+    const result = [];
+    for (let index = 0; index < tokens.length; index += 1) {
+        const token = tokens[index];
+        const next = tokens[index + 1];
+        result.push(token);
+        if (!next)
+            continue;
+        if (!shouldInsertSemicolon(token, next))
+            continue;
+        const endOffset = token.endOffset ?? token.startOffset;
+        const line = token.endLine ?? token.startLine ?? 1;
+        const column = token.endColumn ?? token.startColumn ?? 1;
+        result.push(createTokenInstance(Semicolon, ";", endOffset + 1, endOffset + 1, line, line, column + 1, column + 1));
+    }
+    return result;
+}
+function shouldInsertSemicolon(token, next) {
+    if ((next.startLine ?? token.endLine ?? 1) <= (token.endLine ?? token.startLine ?? 1))
+        return false;
+    return canEndStatement(token.tokenType) && canStartImplicitlySeparatedStatement(next.tokenType);
+}
+function canEndStatement(tokenType) {
+    return tokenType === Identifier ||
+        tokenType === CellAddress ||
+        tokenType === IntLiteral ||
+        tokenType === FloatLiteral ||
+        tokenType === StringLiteral ||
+        tokenType === True ||
+        tokenType === False ||
+        tokenType === Nil ||
+        tokenType === Break ||
+        tokenType === Continue ||
+        tokenType === Fallthrough ||
+        tokenType === Return ||
+        tokenType === PlusPlus ||
+        tokenType === MinusMinus ||
+        tokenType === RParen ||
+        tokenType === RBracket ||
+        tokenType === RBrace;
+}
+function canStartImplicitlySeparatedStatement(tokenType) {
+    return tokenType === Identifier ||
+        tokenType === CellAddress ||
+        tokenType === StringLiteral ||
+        tokenType === FloatLiteral ||
+        tokenType === IntLiteral ||
+        tokenType === True ||
+        tokenType === False ||
+        tokenType === Nil ||
+        tokenType === Func ||
+        tokenType === MapTok ||
+        tokenType === LBracket ||
+        tokenType === LParen ||
+        tokenType === Plus ||
+        tokenType === Minus ||
+        tokenType === Bang ||
+        tokenType === Amp ||
+        tokenType === Star ||
+        tokenType === Return ||
+        tokenType === If ||
+        tokenType === Switch ||
+        tokenType === For ||
+        tokenType === Defer ||
+        tokenType === Break ||
+        tokenType === Continue ||
+        tokenType === Fallthrough ||
+        tokenType === Goto ||
+        tokenType === Var ||
+        tokenType === Const ||
+        tokenType === Type ||
+        tokenType === Case ||
+        tokenType === Default ||
+        tokenType === RBrace;
 }
 function lexDiagnostic(error) {
     return {

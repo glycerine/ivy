@@ -17,6 +17,7 @@ import {
   IdentifierExpression,
   IfStatement,
   IncDecStatement,
+  InterfaceMethodDecl,
   ImportDecl,
   IndexExpression,
   LabeledStatement,
@@ -33,8 +34,12 @@ import {
   SliceExpression,
   SpreadsheetRangeExpression,
   Statement,
+  StructFieldDecl,
+  StructLiteralExpression,
+  StructLiteralField,
   SwitchClause,
   SwitchStatement,
+  TypeAssertionExpression,
   TypeDeclStatement,
   TypeNode,
   TypeSpec,
@@ -265,7 +270,9 @@ function typeDeclToAst(node: CstNode): TypeDeclStatement {
   const types = childNodes(node, "typeExpression");
   const declarations: TypeSpec[] = names.map((nameNode, index) => ({
     name: nameText(nameNode),
-    type: types[index] ? typeToAst(types[index]) : { text: "<missing>" }
+    type: types[index] ? typeToAst(types[index]) : { text: "<missing>" },
+    ...(types[index] ? structFieldsFromTypeExpression(types[index]) : {}),
+    ...(types[index] ? interfaceMethodsFromTypeExpression(types[index]) : {})
   }));
 
   return withSpan(
@@ -275,6 +282,36 @@ function typeDeclToAst(node: CstNode): TypeDeclStatement {
     } satisfies TypeDeclStatement,
     node
   );
+}
+
+function structFieldsFromTypeExpression(node: CstNode): { structFields: StructFieldDecl[] } | {} {
+  const structType = firstChildNode(node, "structType");
+  if (!structType) return {};
+  return {
+    structFields: childNodes(structType, "fieldDecl").flatMap(fieldDeclToAst)
+  };
+}
+
+function fieldDeclToAst(node: CstNode): StructFieldDecl[] {
+  const fieldNames = childNodes(node, "name");
+  const typeNode = firstChildNode(node, "typeExpression");
+  return fieldNames.map((fieldName) => ({
+    name: nameText(fieldName),
+    type: typeNode ? typeToAst(typeNode) : { text: "<missing>" }
+  }));
+}
+
+function interfaceMethodsFromTypeExpression(node: CstNode): { interfaceMethods: InterfaceMethodDecl[] } | {} {
+  const interfaceType = firstChildNode(node, "interfaceType");
+  if (!interfaceType) return {};
+  const names = childNodes(interfaceType, "name");
+  const signatures = childNodes(interfaceType, "signature");
+  return {
+    interfaceMethods: names.map((nameNode, index) => ({
+      name: nameText(nameNode),
+      signature: signatures[index] ? signatureToAst(signatures[index]) : { parameters: [], results: [] }
+    }))
+  };
 }
 
 function returnStmtToAst(node: CstNode): ReturnStatement {
@@ -311,14 +348,28 @@ function ifStmtToAst(node: CstNode): IfStatement {
 
 function switchStmtToAst(node: CstNode): SwitchStatement {
   const expression = firstChildNode(node, "expression");
+  const typeSwitch = firstChildNode(node, "typeSwitchHeader");
   return withSpan(
     {
       kind: "SwitchStatement",
       ...(expression ? { expression: expressionToAst(expression) } : {}),
-      clauses: childNodes(node, "switchClause").map(switchClauseToAst)
+      ...(typeSwitch ? { typeSwitch: typeSwitchHeaderToAst(typeSwitch) } : {}),
+      clauses: typeSwitch
+        ? childNodes(node, "typeSwitchClause").map(typeSwitchClauseToAst)
+        : childNodes(node, "switchClause").map(switchClauseToAst)
     } satisfies SwitchStatement,
     node
   );
+}
+
+function typeSwitchHeaderToAst(node: CstNode) {
+  const name = firstChildNode(node, "name");
+  const expression = firstChildNode(node, "qualifiedName");
+  return {
+    ...(name ? { name: nameText(name) } : {}),
+    define: childTokens(node, "Define").length > 0,
+    expression: expression ? qualifiedNameToAst(expression) : missingExpression()
+  };
 }
 
 function switchClauseToAst(node: CstNode): SwitchClause {
@@ -329,6 +380,25 @@ function switchClauseToAst(node: CstNode): SwitchClause {
     default: childTokens(node, "Default").length > 0,
     statements: childNodes(node, "statement").map(statementToAst)
   };
+}
+
+function typeSwitchClauseToAst(node: CstNode): SwitchClause {
+  return {
+    kind: "SwitchClause",
+    values: [],
+    typeValues: childNodes(node, "typeSwitchType").map(typeSwitchTypeToAst),
+    default: childTokens(node, "Default").length > 0,
+    statements: childNodes(node, "statement").map(statementToAst)
+  };
+}
+
+function typeSwitchTypeToAst(node: CstNode): TypeNode {
+  if (childTokens(node, "Nil").length > 0) {
+    const span = spanFromNode(node);
+    return { text: "nil", ...(span ? { span } : {}) };
+  }
+  const typeNode = firstChildNode(node, "typeExpression");
+  return typeNode ? typeToAst(typeNode) : { text: "<missing>" };
 }
 
 function forStmtToAst(node: CstNode): ForStatement {
@@ -625,6 +695,18 @@ function primaryExprToAst(node: CstNode): Expression {
       continue;
     }
 
+    if (event.kind === "typeAssertion") {
+      expression = withSpan(
+        {
+          kind: "TypeAssertionExpression",
+          expression,
+          type: event.type
+        } satisfies TypeAssertionExpression,
+        event.node
+      );
+      continue;
+    }
+
     if (event.kind === "range") {
       expression = withSpan(
         {
@@ -645,6 +727,7 @@ type PrimaryEvent =
   | { kind: "call"; offset: number; node: CstNode }
   | { kind: "index"; offset: number; token: IToken; index: Expression }
   | { kind: "slice"; offset: number; token: IToken; start?: Expression; end?: Expression }
+  | { kind: "typeAssertion"; offset: number; node: CstNode; type: TypeNode }
   | { kind: "range"; offset: number; token: IToken; endCell: string };
 
 function primaryEvents(node: CstNode): PrimaryEvent[] {
@@ -655,7 +738,7 @@ function primaryEvents(node: CstNode): PrimaryEvent[] {
 
   for (const dot of childTokens(node, "Dot")) {
     const selector = selectorNodes.find(
-      (candidate) => !usedSelectors.has(candidate) && nodeOffset(candidate) > tokenEnd(dot)
+      (candidate) => !usedSelectors.has(candidate) && nodeOffset(candidate) === tokenEnd(dot) + 1
     );
     if (!selector) continue;
     usedSelectors.add(selector);
@@ -699,6 +782,15 @@ function primaryEvents(node: CstNode): PrimaryEvent[] {
         index: expressions[0]
       });
     }
+  }
+
+  for (const typeNode of childNodes(node, "typeExpression")) {
+    events.push({
+      kind: "typeAssertion",
+      offset: nodeOffset(typeNode),
+      node: typeNode,
+      type: typeToAst(typeNode)
+    });
   }
 
   const bracketRanges = brackets.map((bracket) => [bracket.left.startOffset, bracket.right.startOffset] as const);
@@ -753,6 +845,9 @@ function atomToAst(node: CstNode): Expression {
 
   const mapLiteral = firstChildNode(node, "mapLiteral");
   if (mapLiteral) return mapLiteralToAst(mapLiteral);
+
+  const structLiteral = firstChildNode(node, "structLiteral");
+  if (structLiteral) return structLiteralToAst(structLiteral);
 
   const literal = firstChildNode(node, "literal");
   if (literal) return literalToAst(literal);
@@ -817,6 +912,35 @@ function mapElementToAst(node: CstNode): MapEntryExpression {
     key: expressions[0] ? expressionToAst(expressions[0]) : missingExpression(),
     value: expressions[1] ? expressionToAst(expressions[1]) : missingExpression()
   };
+}
+
+function structLiteralToAst(node: CstNode): StructLiteralExpression {
+  const typeName = firstChildNode(node, "qualifiedName");
+  return withSpan(
+    {
+      kind: "StructLiteralExpression",
+      typeName: typeName ? qualifiedNameText(typeName) : "<missing>",
+      fields: childNodes(node, "structLiteralField").map(structLiteralFieldToAst)
+    } satisfies StructLiteralExpression,
+    node
+  );
+}
+
+function structLiteralFieldToAst(node: CstNode): StructLiteralField {
+  const fieldName = firstChildNode(node, "selectorName");
+  const value = firstChildNode(node, "expression");
+  return {
+    ...(fieldName ? { name: nameText(fieldName) } : {}),
+    value: value ? expressionToAst(value) : missingExpression()
+  };
+}
+
+function qualifiedNameText(node: CstNode): string {
+  const baseName = firstChildNode(node, "name");
+  const selectors = childNodes(node, "selectorName")
+    .sort(byNodeOffset)
+    .map(nameText);
+  return [baseName ? nameText(baseName) : "<missing>", ...selectors].join(".");
 }
 
 function qualifiedNameToAst(node: CstNode): Expression {

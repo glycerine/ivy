@@ -124,9 +124,10 @@ The distinction is not "no JavaScript". It is "no ambient JavaScript authority".
 
 ```
 Go-junior source
-  -> Chevrotain lexer/token stream
-  -> Chevrotain CST parser with source spans
-  -> Go-junior AST builder
+  -> TypeScript Go-style scanner/token stream
+  -> TypeScript Go-style parser and AST with source spans
+  -> TypeScript Go-style resolver/typechecker front end
+  -> Go-junior subset validator and spreadsheet syntax validator
   -> resolver and typechecker
   -> package resolver and package compiler
   -> spreadsheet dependency extractor
@@ -140,39 +141,42 @@ Go-junior source
 The compiler package should be independent from the Ivy runtime. The Ivy webui
 integration should sit on top of the compiler and runtime packages.
 
-## Lexer and Parser Technology
+## Front-end Technology Pivot
 
-Use Chevrotain for the Go-junior lexer and parser instead of a hand-rolled
-scanner/parser. The goal is to rely on a mature TypeScript parsing toolkit for
-tokenization, source spans, grammar validation, error recovery, and CST
-generation while keeping all Go-junior semantics in our own compiler stages.
+Do not continue expanding the Chevrotain prototype into a Go parser. The
+browser target still requires a TypeScript implementation, but the implementation
+strategy should now follow the Go standard front-end architecture directly:
 
-Chevrotain should own:
+- scanner/token stream modeled on `go/scanner` and `go/token`
+- parser and AST modeled on `go/parser` and `go/ast`
+- resolver/typechecker modeled on the useful subset of `go/types`
+- package/export metadata sufficient for browser and Node package resolution
+- Go-junior subset validation after parsing/typechecking
+- spreadsheet syntax handled as deliberate scanner/parser extensions
 
-- token definitions and lexing
-- keyword/operator/delimiter recognition
-- source location tracking
-- parser grammar rules
-- concrete syntax tree production
-- syntax-level recovery and parser diagnostics
-- optional grammar diagrams for developer debugging
+The rationale for the pivot is semantic correctness. A CST-only parser or an
+off-the-shelf JavaScript grammar is not enough for Go-junior because selectors,
+method expressions/calls, conversions, type assertions, interfaces, constants,
+imports, package scopes, and package export data all require type information.
+Continuing to grow a Go-like Chevrotain grammar would recreate the Go compiler
+front end one ambiguity at a time.
 
-Go-junior should still own:
+Spreadsheet syntax should be integrated into the scanner/parser rather than
+rewritten as source text:
 
-- CST-to-AST conversion
-- spreadsheet namespace resolution
-- typechecking
-- package resolution and package-state effects
-- dependency extraction
-- IR lowering
-- JavaScript source copy-and-patch emission
-- runtime evaluation and recalculation semantics
+- `sheet.A1` is a sheet-cell selector candidate.
+- `sheet.$A$1`, `sheet.A$1`, and `sheet.$A1` are sheet-cell selectors with
+  explicit absolute row/column flags.
+- `sheet.A1:B10` and `sheet.$A$1:$B$10` are range expressions.
+- Cross-sheet forms such as `Budget.A1` and `Budget.$A$1:$B$10` use the same
+  AST shape with a different namespace.
+- The resolver decides whether the selector namespace is a sheet namespace, an
+  imported package, or an error.
 
-The Chevrotain grammar should describe the Go-junior subset directly. It should
-not try to become a full Go parser by gradual accident. If the project later
-needs to ingest arbitrary full-Go packages, that should be a separate import
-path using the official Go parser or a Go parser compiled for the target
-environment, not a promise that the Chevrotain grammar can parse all Go.
+The existing Chevrotain-based code is a prototype and may remain temporarily as
+a runtime/REPL bootstrap. New language front-end work should go into the
+standard-Go-style TypeScript front end and migrate existing parser tests toward
+that implementation.
 
 Implementation sequencing should be CLI-first:
 
@@ -189,11 +193,14 @@ Suggested frontend layout:
 goivy/webui/frontend/src/gojunior/
   ast.ts
   diagnostics.ts
-  tokens.ts
-  lexer.ts
-  parser.ts
-  cstToAst.ts
-  grammarDiagrams.ts
+  front/token.ts
+  front/scanner.ts
+  front/ast.ts
+  front/parser.ts
+  front/resolver.ts
+  front/checker.ts
+  front/exportData.ts
+  front/subset.ts
   resolver.ts
   types.ts
   ir.ts
@@ -1352,21 +1359,20 @@ Acceptance criteria:
 - The subset is explicit enough that parser and typechecker work can begin.
 - Tests can assert both successful normalized output and exact diagnostics.
 
-### Stage 1: Chevrotain Lexer
+### Stage 1: TypeScript Go-style Scanner
 
-Implement the Go-junior token vocabulary with Chevrotain.
+Implement the Go-junior scanner in TypeScript, modeled on Go's scanner/token
+front end rather than on Chevrotain.
 
 Implementation tasks:
 
-- Add Chevrotain as a frontend dependency for the webui TypeScript package.
-- Define token classes for identifiers, keywords, integer literals,
+- Define token kinds for identifiers, keywords, integer literals,
   floating-point literals, strings, operators, delimiters, comments,
   whitespace, and newlines.
 - Include Go-junior keywords for `const`, `type`, `struct`, `interface`,
   `switch`, `case`, `default`, `fallthrough`, `for`, `range`, `break`,
   `continue`, `map`, and `func`.
-- Use Chevrotain token categories for identifier-like names, keywords, and
-  spreadsheet-reference parts where useful.
+- Implement Go-like semicolon insertion in the scanner/token stream.
 - Define lexer behavior for spreadsheet address fragments such as `A1`, `$A$1`,
   `A$1`, `$A1`, and range separator `:`.
 - Treat `A1`-style tokens as both address-like and identifier-like where
@@ -1376,8 +1382,8 @@ Implementation tasks:
   small Go-like semicolon insertion/token-normalization pass.
 - Decide whether comments and whitespace are skipped or retained for diagnostic
   and formatting metadata.
-- Normalize Chevrotain token location data into Go-junior source spans.
-- Convert Chevrotain lexing errors into Go-junior diagnostics.
+- Normalize scanner token location data into Go-junior source spans.
+- Convert scanner errors into Go-junior diagnostics.
 - Reject unsupported tokens early, including channel receive/send syntax.
 
 Tests:
@@ -1399,26 +1405,28 @@ Tests:
 - Rejects unsupported rune literals if they are not in v1.
 - Rejects channel operator `<-`.
 - Rejects malformed numbers.
-- Converts Chevrotain lexing errors into stable Go-junior diagnostic codes.
+- Converts scanner errors into stable Go-junior diagnostic codes.
 - Snapshot tests for representative snippets.
 
 Acceptance criteria:
 
 - Lexer never throws for user input; it returns tokens plus diagnostics.
 - Every token has a stable span.
-- The token vocabulary is explicit enough for Chevrotain parser self-analysis
-  to run during parser construction.
+- The token vocabulary is close enough to Go's token model that parser and
+  typechecker work can follow the Go front-end architecture.
 
-### Stage 2: Chevrotain Parser and AST Builder
+### Stage 2: TypeScript Go-style Parser and AST
 
-Implement a Chevrotain `CstParser` for Go-junior and convert the CST into the
-compiler-owned AST.
+Implement a recursive-descent parser and AST in TypeScript, modeled on Go's
+parser and AST. The parser owns a Go-compatible syntax shape plus Go-junior's
+spreadsheet extensions.
 
 Implementation tasks:
 
-- Define Chevrotain parser rules for the Go-junior subset.
-- Run Chevrotain parser self-analysis at construction time and treat grammar
-  ambiguities as test failures.
+- Define AST node types aligned with the useful subset of Go's AST.
+- Parse with Go-like precedence and statement grammar instead of a CST
+  conversion layer.
+- Keep parser diagnostics stable and source-spanned.
 - Parse expression-form and function-body-form programs.
 - Parse optional cell-level import declarations before expression-form or
   function-body-form programs, including grouped imports and explicit aliases.
@@ -1439,8 +1447,7 @@ Implementation tasks:
 - Parse address-of and dereference expressions: `&x` and `*p`.
 - Parse indexing and slicing expressions.
 - Parse array, slice, map, and struct composite literals.
-- Represent operator precedence with layered Chevrotain rules, for example
-  `or -> and -> equality -> compare -> add -> mul -> unary -> primary`.
+- Represent operator precedence with Go-style expression parsing.
 - Parse special current-sheet and cross-sheet cell/range references.
 - Parse ambiguous statement prefixes, such as assignment versus expression
   statement, with explicit lookahead or factored grammar rules.
@@ -1449,11 +1456,10 @@ Implementation tasks:
   namespace.
 - Represent `Name.A1:B10` as a spreadsheet range candidate because the colon
   form is not ordinary Go selector syntax.
-- Convert Chevrotain CST nodes into Go-junior AST nodes.
-- Preserve AST spans for all nodes by merging token/CST source ranges.
-- Convert Chevrotain parser errors into Go-junior diagnostics.
-- Enable and tune Chevrotain recovery where it improves multi-error reporting.
-- Optionally emit Chevrotain syntax diagrams in developer/debug builds.
+- Preserve AST spans for all nodes from token source ranges.
+- Convert parser errors into Go-junior diagnostics.
+- Add parser recovery where it improves multi-error reporting without
+  compromising correctness.
 
 Tests:
 
@@ -1506,20 +1512,18 @@ Tests:
 - Rejects `go f()`, `select {}`, channel sends, receives, package
   declarations in cell snippets, generic type parameters, generic
   instantiations, labels, `goto`, `recover`, and `unsafe`.
-- Chevrotain self-analysis succeeds with no unresolved ambiguities.
-- Parser diagnostics wrap Chevrotain errors with stable Go-junior diagnostic
-  codes and source spans.
+- Parser diagnostics use stable Go-junior diagnostic codes and source spans.
 - Error recovery reports multiple syntax errors in one source where possible.
-- CST-to-AST conversion preserves spans for expressions, statements,
-  spreadsheet references, and function signatures.
+- AST construction preserves spans for expressions, statements, spreadsheet
+  references, and function signatures.
 - Golden AST tests for small valid programs.
 
 Acceptance criteria:
 
 - Valid v1 syntax produces a complete AST.
 - Invalid or unsupported syntax produces stable diagnostics without crashing.
-- Later compiler stages do not depend on Chevrotain CST shape; they consume
-  only Go-junior AST nodes and diagnostics.
+- Later compiler stages consume only Go-junior AST nodes, type information, and
+  diagnostics.
 
 ### Stage 3: AST Normalization
 
@@ -2537,7 +2541,7 @@ Implementation tasks:
 
 Tests:
 
-- Fuzz Chevrotain lexer/parser and CST-to-AST conversion with random input.
+- Fuzz the TypeScript scanner, parser, and AST construction with random input.
 - Property tests ensure generated JS contains only generated identifiers for
   user variables.
 - Malicious strings and identifiers cannot escape emission.
@@ -2575,8 +2579,8 @@ Measure compile and execution behavior before optimizing.
 
 Implementation tasks:
 
-- Add microbenchmarks for Chevrotain lexing, Chevrotain parsing, CST-to-AST
-  conversion, typechecker, package resolver, package compiler, emitter,
+- Add microbenchmarks for scanning, parsing, AST construction, typechecker,
+  package resolver, package compiler, emitter,
   `new Function` compile, and evaluation.
 - Add spreadsheet recalculation benchmarks for common graph shapes.
 - Measure main-thread latency with worker enabled.
@@ -2653,9 +2657,8 @@ Acceptance criteria:
 
 Use layered tests so failures identify the responsible compiler phase:
 
-- Chevrotain lexer token snapshot tests.
-- Chevrotain parser self-analysis tests.
-- Parser CST-to-AST golden tests.
+- Scanner token snapshot tests.
+- Parser AST golden tests.
 - Resolver/typechecker diagnostic tests.
 - Package resolver/compiler/cache tests.
 - IR golden tests.
@@ -2667,7 +2670,7 @@ Use layered tests so failures identify the responsible compiler phase:
 - Webui service tests.
 - Browser/Playwright tests only for real UI behavior.
 - Differential tests between interpreter and JS backend if interpreter exists.
-- Fuzz/property tests for lexer, parser, CST-to-AST conversion, and emitter
+- Fuzz/property tests for scanner, parser, AST construction, and emitter
   hardening.
 
 Every diagnostic-producing stage should test:
@@ -2690,9 +2693,9 @@ integration. This gives fast unit tests and lets users manually exercise the
 language from bash while the design is still fluid. This slice should not be
 considered usable until `fmt.Printf` works through the Node diagnostic sink.
 
-1. Chevrotain lexer/parser for cell imports, expression form, function-body
-   form, short declarations, `if`, `switch`, and `return`, with CST-to-AST
-   conversion.
+1. TypeScript Go-style scanner/parser for cell imports, expression form,
+   function-body form, short declarations, `if`, `switch`, and `return`, with
+   AST construction and source spans.
 2. Types for bool, string, int64, float64, Go-junior function cells, typed
    static cell references, and typed ranges.
 3. Parser/typechecker coverage for `defer`, multiple returns, named returns,

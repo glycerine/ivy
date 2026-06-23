@@ -55,6 +55,62 @@ ys := [3]string{"a", "b"}
 zs := [...]bool{true, false}
 `);
     });
+    test("parses struct declarations and keyed, positional, and empty literals", () => {
+        const result = expectParses(`
+type Point struct {
+  X, Y int
+  Name string
+}
+
+a := Point{X: 1, Y: 2, Name: "home"}
+b := Point{3, 4, "away"}
+c := Point{}
+`);
+        const typeDecl = result.ast?.body[0];
+        expect(typeDecl?.kind).toBe("TypeDecl");
+        if (typeDecl?.kind === "TypeDecl") {
+            expect(typeDecl.declarations[0]?.structFields?.map((field) => field.name)).toEqual(["X", "Y", "Name"]);
+        }
+    });
+    test("parses interface declarations with method signatures", () => {
+        const result = expectParses(`
+type Reader interface {
+  Read([]byte) int
+  String() string
+}
+`);
+        const typeDecl = result.ast?.body[0];
+        expect(typeDecl?.kind).toBe("TypeDecl");
+        if (typeDecl?.kind === "TypeDecl") {
+            expect(typeDecl.declarations[0]?.interfaceMethods?.map((method) => method.name)).toEqual(["Read", "String"]);
+        }
+    });
+    test("parses Go type switches", () => {
+        const result = expectParses(`
+switch v := x.(type) {
+case nil:
+  return "nil"
+case *Point, Point:
+  return fmt.Sprintf("%#v", v)
+default:
+  return "other"
+}
+`);
+        const statement = result.ast?.body[0];
+        expect(statement?.kind).toBe("SwitchStatement");
+        if (statement?.kind === "SwitchStatement") {
+            expect(statement.typeSwitch?.name).toBe("v");
+            expect(statement.typeSwitch?.define).toBe(true);
+            expect(statement.clauses[1]?.typeValues?.map((type) => type.text)).toEqual(["*Point", "Point"]);
+        }
+    });
+    test("parses Go type assertions as primary expression suffixes", () => {
+        const result = expectParses(`
+v := x.(Point).X
+p := y.(*Point)
+`);
+        expect(result.ast?.body).toHaveLength(2);
+    });
     test("parses grouped parameter names and variadic parameters", () => {
         const grouped = expectParses(`
 func F(a, b, c int) (x, y, z int) {

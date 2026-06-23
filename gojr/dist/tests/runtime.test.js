@@ -163,6 +163,59 @@ return mm[3]
 `);
         expect(intKeyed.value).toBe("hi");
     });
+    test("enforces declared and inferred local variable types", () => {
+        const declared = evaluateSource(`
+var x int
+x = "bad"
+`);
+        expect(declared.diagnostics).toHaveLength(1);
+        expect(declared.diagnostics[0]?.message).toContain("variable x bad is not assignable to int");
+        const inferred = evaluateSource(`
+x := 1
+x = "bad"
+`);
+        expect(inferred.diagnostics).toHaveLength(1);
+        expect(inferred.diagnostics[0]?.message).toContain("variable x bad is not assignable to int64");
+    });
+    test("supports Go-style const groups with iota and repeated expressions", () => {
+        const result = expectRuns(`
+const Single = iota
+const (
+  A = iota
+  B
+  C int = iota
+  D
+)
+return Single, A, B, C, D
+`);
+        expect(result.values).toEqual([0n, 0n, 1n, 2n, 3n]);
+        const immutable = evaluateSource(`
+const X = 1
+X = 2
+`);
+        expect(immutable.diagnostics).toHaveLength(1);
+        expect(immutable.diagnostics[0]?.message).toContain("X is const");
+    });
+    test("enforces function parameter and typed collection assignments", () => {
+        const badParam = evaluateSource(`
+func f(x int) int { return x }
+return f("bad")
+`);
+        expect(badParam.diagnostics).toHaveLength(1);
+        expect(badParam.diagnostics[0]?.message).toContain("variable x bad is not assignable to int");
+        const badArray = evaluateSource(`
+var xs []int
+xs = []string{"bad"}
+`);
+        expect(badArray.diagnostics).toHaveLength(1);
+        expect(badArray.diagnostics[0]?.message).toContain("variable xs element bad is not assignable to int");
+        const badMap = evaluateSource(`
+var m map[string]int
+m = map[int]string{1: "bad"}
+`);
+        expect(badMap.diagnostics).toHaveLength(1);
+        expect(badMap.diagnostics[0]?.message).toContain("variable m");
+    });
     test("reports map key and value type mismatches without numeric-index coercion", () => {
         const badKey = evaluateSource(`
 var mm map[int]string
@@ -197,6 +250,191 @@ counts := map[string]int64{"a": 1, "b": 2}
 return fmt.Sprintf("%v | %#v", counts, counts)
 `);
         expect(result.value).toBe(`map[a:1 b:2] | map[string]int64{string("a"): int64(1), string("b"): int64(2)}`);
+    });
+    test("evaluates struct literals, zero values, field mutation, and fmt verbs", () => {
+        const result = expectRuns(`
+type Point struct {
+  X, Y int
+  Name string
+}
+
+a := Point{X: 1, Y: 2, Name: "home"}
+b := Point{3, 4, "away"}
+c := Point{}
+a.X = a.X + b.Y
+return a.X, c.Y, fmt.Sprintf("%v | %#v", a, a)
+`);
+        expect(result.values).toEqual([
+            5n,
+            0n,
+            `Point{X:5 Y:2 Name:home} | Point{X: int64(5), Y: int64(2), Name: string("home")}`
+        ]);
+    });
+    test("supports value and pointer receiver methods with Go selector syntax", () => {
+        const session = new GoJuniorSession();
+        expect(session.evaluate(`
+type Point struct {
+  X, Y int
+}
+`).diagnostics).toEqual([]);
+        const valueMethod = session.evaluate(`
+func (p Point) Sum() int {
+  return p.X + p.Y
+}
+`);
+        expect(valueMethod.diagnostics).toEqual([]);
+        const pointerMethod = session.evaluate(`
+func (p *Point) Scale(k int) {
+  p.X = p.X * k
+  p.Y = p.Y * k
+}
+`);
+        expect(pointerMethod.diagnostics).toEqual([]);
+        const call = session.evaluate(`
+p := Point{2, 3}
+before := p.Sum()
+p.Scale(4)
+return before, p.X, p.Y, p.Sum()
+`);
+        expect(call.diagnostics).toEqual([]);
+        expect(call.values).toEqual([5n, 8n, 12n, 20n]);
+    });
+    test("supports address-of and dereference assignment for structs and fields", () => {
+        const result = expectRuns(`
+type Box struct {
+  X int
+}
+
+b := Box{X: 1}
+p := &b
+(*p).X = 9
+q := &b.X
+*q = *q + 1
+return b.X, (*p).X
+`);
+        expect(result.values).toEqual([10n, 10n]);
+    });
+    test("executes Go type switches over structs, pointers, nil, and basic values", () => {
+        const result = expectRuns(`
+type Point struct {
+  X int
+}
+
+describe := func(x interface{}) string {
+  switch v := x.(type) {
+  case nil:
+    return "nil"
+  case *Point:
+    return fmt.Sprintf("ptr:%v", v.X)
+  case Point:
+    return fmt.Sprintf("point:%v", v.X)
+  case int:
+    return fmt.Sprintf("int:%v", v)
+  default:
+    return "other"
+  }
+}
+
+p := Point{X: 7}
+return describe(p), describe(&p), describe(nil), describe(3), describe("x")
+`);
+        expect(result.values).toEqual(["point:7", "ptr:7", "nil", "int:3", "other"]);
+    });
+    test("executes unbound type switches and rejects fallthrough", () => {
+        const ok = expectRuns(`
+x := "hello"
+out := ""
+switch x.(type) {
+case string:
+  out = "string"
+default:
+  out = "other"
+}
+return out
+`);
+        expect(ok.value).toBe("string");
+        const bad = evaluateSource(`
+x := 1
+switch x.(type) {
+case int:
+  fallthrough
+default:
+  return "bad"
+}
+`);
+        expect(bad.diagnostics).toHaveLength(1);
+        expect(bad.diagnostics[0]?.message).toContain("fallthrough is not allowed in type switches");
+    });
+    test("evaluates Go type assertions and reports mismatches", () => {
+        const ok = expectRuns(`
+type Point struct {
+  X int
+}
+
+asPoint := func(x interface{}) int {
+  return x.(Point).X
+}
+
+p := Point{X: 11}
+ptr := &p
+return asPoint(p), ptr.(*Point).X
+`);
+        expect(ok.values).toEqual([11n, 11n]);
+        const bad = evaluateSource(`
+x := "hello"
+return x.(int)
+`);
+        expect(bad.diagnostics).toHaveLength(1);
+        expect(bad.diagnostics[0]?.message).toContain("does not have dynamic type int");
+    });
+    test("enforces named interface method sets on typed variables", () => {
+        const ok = expectRuns(`
+type Stringer interface {
+  String() string
+}
+
+type Point struct {
+  X int
+}
+
+func (p Point) String() string {
+  return fmt.Sprintf("Point(%v)", p.X)
+}
+
+var s Stringer
+s = Point{X: 5}
+return s.String()
+`);
+        expect(ok.value).toBe("Point(5)");
+        const pointerOnly = evaluateSource(`
+type Mutator interface {
+  Mutate()
+}
+
+type Box struct { X int }
+func (b *Box) Mutate() { b.X++ }
+
+var m Mutator
+b := Box{X: 1}
+m = b
+`);
+        expect(pointerOnly.diagnostics).toHaveLength(1);
+        expect(pointerOnly.diagnostics[0]?.message).toContain("variable m");
+        const pointerOk = expectRuns(`
+type Mutator interface {
+  Mutate()
+}
+
+type Box struct { X int }
+func (b *Box) Mutate() { b.X++ }
+
+var m Mutator
+b := Box{X: 1}
+m = &b
+m.Mutate()
+return b.X
+`);
+        expect(pointerOk.value).toBe(2n);
     });
     test("evaluates array and slice literals with indexing, slicing, and range", () => {
         const result = expectRuns(`
@@ -463,6 +701,19 @@ for b := 0; b < 5; b++ {
 return sum
 `);
         expect(result.value).toBe(8n);
+    });
+    test("supports multi-variable for init and assignment post clauses", () => {
+        const result = expectRuns(`
+sum := 0
+for i, j := 0, 3; i < 3; i, j = i + 1, j - 1 {
+  if i == 1 {
+    continue
+  }
+  sum = sum + i + j
+}
+return sum
+`);
+        expect(result.value).toBe(6n);
     });
     test("supports REPL entry of labeled nested loops with labeled break", () => {
         const session = new GoJuniorSession();

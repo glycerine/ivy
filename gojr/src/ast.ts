@@ -96,6 +96,18 @@ export interface VarDeclStatement {
 export interface TypeSpec {
   name: string;
   type: TypeNode;
+  structFields?: StructFieldDecl[];
+  interfaceMethods?: InterfaceMethodDecl[];
+}
+
+export interface StructFieldDecl {
+  name: string;
+  type: TypeNode;
+}
+
+export interface InterfaceMethodDecl {
+  name: string;
+  signature: Signature;
 }
 
 export interface TypeDeclStatement {
@@ -121,13 +133,21 @@ export interface IfStatement {
 export interface SwitchClause {
   kind: "SwitchClause";
   values: Expression[];
+  typeValues?: TypeNode[];
   default: boolean;
   statements: Statement[];
+}
+
+export interface TypeSwitchGuard {
+  name?: string;
+  define: boolean;
+  expression: Expression;
 }
 
 export interface SwitchStatement {
   kind: "SwitchStatement";
   expression?: Expression;
+  typeSwitch?: TypeSwitchGuard;
   clauses: SwitchClause[];
   span?: SourceSpan;
 }
@@ -194,9 +214,11 @@ export type Expression =
   | LiteralExpression
   | FunctionLiteralExpression
   | ArrayLiteralExpression
+  | StructLiteralExpression
   | MapLiteralExpression
   | UnaryExpression
   | BinaryExpression
+  | TypeAssertionExpression
   | SelectorExpression
   | CallExpression
   | IndexExpression
@@ -233,6 +255,18 @@ export interface ArrayLiteralExpression {
   span?: SourceSpan;
 }
 
+export interface StructLiteralField {
+  name?: string;
+  value: Expression;
+}
+
+export interface StructLiteralExpression {
+  kind: "StructLiteralExpression";
+  typeName: string;
+  fields: StructLiteralField[];
+  span?: SourceSpan;
+}
+
 export interface MapEntryExpression {
   key: Expression;
   value: Expression;
@@ -258,6 +292,13 @@ export interface BinaryExpression {
   operator: "||" | "&&" | "==" | "!=" | "<" | "<=" | ">" | ">=" | "+" | "-" | "*" | "/" | "%";
   left: Expression;
   right: Expression;
+  span?: SourceSpan;
+}
+
+export interface TypeAssertionExpression {
+  kind: "TypeAssertionExpression";
+  expression: Expression;
+  type: TypeNode;
   span?: SourceSpan;
 }
 
