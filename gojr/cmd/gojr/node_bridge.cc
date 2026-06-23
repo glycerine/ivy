@@ -99,8 +99,8 @@ function gojrDiagnosticString(diagnostic) {
 }
 
 function gojrFormatResult(result) {
-  if (result.values) return result.values.map((value) => gojrModule.formatValue(value)).join(", ");
-  if (Object.prototype.hasOwnProperty.call(result, "value")) return gojrModule.formatValue(result.value);
+  if (result.values) return result.values.map((value) => gojrModule.formatReplValue(value)).join(", ");
+  if (Object.prototype.hasOwnProperty.call(result, "value")) return gojrModule.formatReplValue(result.value);
   return "";
 }
 

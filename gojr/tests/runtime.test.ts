@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { evaluateSource, GoJuniorSession } from "../src/index.js";
+import { evaluateSource, formatReplValue, GoJuniorSession } from "../src/index.js";
 
 function expectRuns(source: string, options = {}) {
   const result = evaluateSource(source, options);
@@ -338,6 +338,28 @@ return fmt.Sprintf("%v | %#v | %v | %v", counts, counts, empty, floats)
 `);
 
     expect(result.value).toBe(`map[string]int64{a:1 b:2} | map[string]int64{string("a"): int64(1), string("b"): int64(2)} | map[int]float64{} | map[int]float64{39:3.2}`);
+  });
+
+  test("formats REPL map string values as Go literals", () => {
+    const result = expectRuns(`
+var m map[int]string
+m[3] = "hi"
+m[5] = "there"
+var empty map[int]string
+var multi map[int]string
+multi[9] = "hello\\nthere"
+var quoted map[int]string
+quoted[1] = "he said \\"hi\\""
+quoted[2] = "tick \` and \\"quote\\""
+return empty, m, multi, quoted
+`);
+
+    expect(result.values?.map(formatReplValue)).toEqual([
+      `map[int]string{}`,
+      `map[int]string{3:"hi", 5:"there"}`,
+      "map[int]string{9:`hello\nthere`}",
+      "map[int]string{1:`he said \"hi\"`, 2:`tick \\` and \"quote\"`}"
+    ]);
   });
 
   test("evaluates struct literals, zero values, field mutation, and fmt verbs", () => {

@@ -2081,6 +2081,20 @@ export function formatValue(value: RuntimeValue): string {
   return `{${Object.entries(value).map(([key, item]) => `${key}:${formatValue(item)}`).join(" ")}}`;
 }
 
+export function formatReplValue(value: RuntimeValue): string {
+  if (value === null) return "<nil>";
+  if (typeof value === "bigint") return value.toString();
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (typeof value === "string") return formatReplString(value);
+  if (Array.isArray(value)) return `[${value.map(formatReplValue).join(" ")}]`;
+  if (value instanceof RuntimeMap) return formatReplMap(value);
+  if (value instanceof RuntimeStruct) return formatReplStruct(value);
+  if (value instanceof RuntimePointer) return `&${formatReplValue(value.get())}`;
+  if (isRuntimeCallable(value) || isGoJuniorFunction(value)) return `<func ${value.name}>`;
+  if (value instanceof SheetBinding) return `<sheet ${value.name}>`;
+  return `{${Object.entries(value).map(([key, item]) => `${key}:${formatReplValue(item)}`).join(" ")}}`;
+}
+
 function formatGoSyntaxValue(value: RuntimeValue): string {
   if (value === null) return "nil";
   if (typeof value === "bigint") return `${integerTypeName(value)}(${value.toString()})`;
@@ -2110,6 +2124,25 @@ function formatRuntimeStruct(value: RuntimeStruct): string {
     .map(([key, item]) => `${key}:${formatValue(item)}`)
     .join(" ");
   return `${value.typeName}{${fields}}`;
+}
+
+function formatReplMap(value: RuntimeMap): string {
+  const entries = value.orderedEntries()
+    .map(([key, item]) => `${formatReplValue(key)}:${formatReplValue(item)}`)
+    .join(", ");
+  return `map[${value.keyType}]${value.valueType}{${entries}}`;
+}
+
+function formatReplStruct(value: RuntimeStruct): string {
+  const fields = value.orderedFields()
+    .map(([key, item]) => `${key}:${formatReplValue(item)}`)
+    .join(", ");
+  return `${value.typeName}{${fields}}`;
+}
+
+function formatReplString(value: string): string {
+  if (value.includes("\n") || value.includes("\"")) return `\`${value.replace(/`/g, "\\`")}\``;
+  return JSON.stringify(value);
 }
 
 function formatGoSyntaxMap(value: RuntimeMap): string {

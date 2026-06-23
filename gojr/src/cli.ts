@@ -2,7 +2,7 @@
 import { readFile } from "node:fs/promises";
 import { parseProgram } from "./index.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
-import { evaluateSource, formatValue, SheetData } from "./runtime.js";
+import { evaluateSource, formatReplValue, SheetData } from "./runtime.js";
 
 interface CliOptions {
   command: "parse" | "run" | "eval" | "help";
@@ -44,12 +44,12 @@ async function main(argv: string[]): Promise<number> {
 
   if (options.command === "eval") {
     if (result.values) {
-      console.log(result.values.map(formatValue).join(", "));
+      console.log(result.values.map(formatReplValue).join(", "));
     } else if (result.value !== undefined) {
-      console.log(formatValue(result.value));
+      console.log(formatReplValue(result.value));
     }
   } else if (result.values) {
-    console.log(result.values.map(formatValue).join(", "));
+    console.log(result.values.map(formatReplValue).join(", "));
   }
 
   return 0;

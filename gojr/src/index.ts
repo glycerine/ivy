@@ -70,6 +70,7 @@ export { parseRuntimeJson, parseSheetJson, parseSheetsJson } from "./jsonInput.j
 export {
   evaluateProgram,
   evaluateSource,
+  formatReplValue,
   formatValue,
   GoJuniorSession,
   GoJuniorPanic,
