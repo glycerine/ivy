@@ -16,6 +16,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -42,19 +43,58 @@ const (
 )
 
 type evalResult struct {
-	OK          bool     `json:"ok"`
-	Incomplete  bool     `json:"incomplete"`
-	Diagnostics []string `json:"diagnostics"`
-	Output      string   `json:"output"`
-	Value       string   `json:"value"`
-	ValueIsNil  bool     `json:"valueIsNil"`
+	OK           bool                 `json:"ok"`
+	Incomplete   bool                 `json:"incomplete"`
+	Diagnostics  []string             `json:"diagnostics"`
+	Output       string               `json:"output"`
+	Value        string               `json:"value"`
+	ValueIsNil   bool                 `json:"valueIsNil"`
+	ObservedDeps []observedDependency `json:"observedDeps"`
+}
+
+type observedDependency struct {
+	Kind  string `json:"kind"`
+	Sheet string `json:"sheet"`
+	Cell  string `json:"cell,omitempty"`
+	Start string `json:"start,omitempty"`
+	End   string `json:"end,omitempty"`
 }
 
 type buildRequest struct {
-	ImportPath         string       `json:"importPath,omitempty"`
-	Files              []sourceFile `json:"files"`
-	ArtifactRoot       string       `json:"artifactRoot,omitempty"`
-	PackageCacheParent string       `json:"packageCacheParent,omitempty"`
+	ImportPath         string         `json:"importPath,omitempty"`
+	Files              []sourceFile   `json:"files"`
+	PackageSources     packageSources `json:"packageSources,omitempty"`
+	SourceRoots        []string       `json:"sourceRoots,omitempty"`
+	ArtifactRoot       string         `json:"artifactRoot,omitempty"`
+	PackageCacheParent string         `json:"packageCacheParent,omitempty"`
+}
+
+type compileRequest struct {
+	Files       []sourceFile         `json:"files"`
+	SheetJSON   string               `json:"sheetJSON,omitempty"`
+	SheetsJSON  string               `json:"sheetsJSON,omitempty"`
+	Packages    []runtimePackageSpec `json:"packages,omitempty"`
+	SourceRoots []string             `json:"sourceRoots,omitempty"`
+}
+
+type evalWithPackagesRequest struct {
+	Source      string               `json:"source,omitempty"`
+	Files       []sourceFile         `json:"files,omitempty"`
+	SheetJSON   string               `json:"sheetJSON,omitempty"`
+	Packages    []runtimePackageSpec `json:"packages,omitempty"`
+	SourceRoots []string             `json:"sourceRoots,omitempty"`
+}
+
+type runtimePackageSpec struct {
+	ImportPath  string       `json:"importPath"`
+	PackageName string       `json:"packageName,omitempty"`
+	Files       []sourceFile `json:"files"`
+}
+
+type compileResult struct {
+	OK          bool     `json:"ok"`
+	Diagnostics []string `json:"diagnostics"`
+	Output      string   `json:"output"`
 }
 
 type buildResult struct {
@@ -66,13 +106,94 @@ type buildResult struct {
 	Skipped     []string        `json:"skipped"`
 }
 
+type inspectJSResult struct {
+	OK          bool            `json:"ok"`
+	Diagnostics []string        `json:"diagnostics"`
+	Output      string          `json:"output"`
+	Artifacts   []buildArtifact `json:"artifacts"`
+	Built       []string        `json:"built"`
+	Skipped     []string        `json:"skipped"`
+	Source      string          `json:"source"`
+}
+
+type cacheResult struct {
+	OK          bool         `json:"ok"`
+	Diagnostics []string     `json:"diagnostics"`
+	Action      string       `json:"action"`
+	Root        string       `json:"root"`
+	Entries     []cacheEntry `json:"entries,omitempty"`
+	Cleared     []string     `json:"cleared,omitempty"`
+}
+
+type cacheEntry struct {
+	Path                string        `json:"path"`
+	ImportPath          string        `json:"importPath"`
+	Size                int64         `json:"size"`
+	PackageName         string        `json:"packageName,omitempty"`
+	CacheKey            string        `json:"cacheKey,omitempty"`
+	SourceHash          string        `json:"sourceHash,omitempty"`
+	LayoutVersion       string        `json:"layoutVersion,omitempty"`
+	CompilerVersion     string        `json:"compilerVersion,omitempty"`
+	Backend             string        `json:"backend,omitempty"`
+	HostSpecVersion     string        `json:"hostSpecVersion,omitempty"`
+	CapabilityPolicy    string        `json:"capabilityPolicy,omitempty"`
+	Dependencies        []string      `json:"dependencies,omitempty"`
+	DependencyCacheKeys []string      `json:"dependencyCacheKeys,omitempty"`
+	Exports             []buildExport `json:"exports,omitempty"`
+}
+
+type cacheArtifactEnvelope struct {
+	LayoutVersion       string        `json:"layoutVersion"`
+	CompilerVersion     string        `json:"compilerVersion"`
+	Backend             string        `json:"backend"`
+	HostSpecVersion     string        `json:"hostSpecVersion"`
+	CapabilityPolicy    string        `json:"capabilityPolicy"`
+	ImportPath          string        `json:"importPath"`
+	PackageName         string        `json:"packageName"`
+	SourceHash          string        `json:"sourceHash"`
+	CacheKey            string        `json:"cacheKey"`
+	Dependencies        []string      `json:"dependencies"`
+	DependencyCacheKeys []string      `json:"dependencyCacheKeys"`
+	Exports             []buildExport `json:"exports"`
+}
+
+type fixtureResult struct {
+	OK           bool                            `json:"ok"`
+	Unstable     bool                            `json:"unstable"`
+	Diagnostics  []string                        `json:"diagnostics"`
+	Evaluated    []fixtureCellRef                `json:"evaluated"`
+	Sheets       map[string]map[string]string    `json:"sheets"`
+	ObservedDeps map[string][]observedDependency `json:"observedDeps"`
+}
+
+type fixtureWithPackagesRequest struct {
+	FixtureJSON string               `json:"fixtureJSON"`
+	Packages    []runtimePackageSpec `json:"packages,omitempty"`
+	SourceRoots []string             `json:"sourceRoots,omitempty"`
+}
+
+type fixtureCellRef struct {
+	Sheet string `json:"sheet"`
+	Cell  string `json:"cell"`
+}
+
 type buildArtifact struct {
-	ImportPath   string `json:"importPath"`
-	PackageName  string `json:"packageName"`
-	ArtifactPath string `json:"artifactPath"`
-	Action       string `json:"action"`
-	SourceHash   string `json:"sourceHash"`
-	CacheKey     string `json:"cacheKey"`
+	ImportPath          string        `json:"importPath"`
+	PackageName         string        `json:"packageName"`
+	ArtifactPath        string        `json:"artifactPath"`
+	Action              string        `json:"action"`
+	SourceHash          string        `json:"sourceHash"`
+	CacheKey            string        `json:"cacheKey"`
+	Dependencies        []string      `json:"dependencies,omitempty"`
+	DependencyCacheKeys []string      `json:"dependencyCacheKeys,omitempty"`
+	Exports             []buildExport `json:"exports,omitempty"`
+}
+
+type buildExport struct {
+	Name               string `json:"name"`
+	Kind               string `json:"kind"`
+	TypeText           string `json:"typeText"`
+	UnderlyingTypeText string `json:"underlyingTypeText,omitempty"`
 }
 
 type embeddedModuleBundle struct {
@@ -89,7 +210,44 @@ type sourceFile struct {
 	Source   string `json:"source"`
 }
 
+type packageSources map[string][]sourceFile
+
+type packageFlag []string
+
+func (flags *packageFlag) String() string {
+	return strings.Join(*flags, ",")
+}
+
+func (flags *packageFlag) Set(value string) error {
+	*flags = append(*flags, value)
+	return nil
+}
+
 func main() {
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "help", "-h", "--help":
+			printTopLevelUsage()
+			return
+		case "cache":
+			ok, err := runCache(os.Args[2:])
+			if err != nil {
+				fatal(err)
+			}
+			if !ok {
+				os.Exit(1)
+			}
+			return
+		}
+		if seed, ok, err := seedFromArgs(os.Args[2:]); err != nil {
+			fatal(err)
+		} else if ok {
+			if err := os.Setenv("GOJR_RANDOM_SEED", seed); err != nil {
+				fatal(err)
+			}
+		}
+	}
+
 	moduleBundle, err := runtimeModuleBundle()
 	if err != nil {
 		fatal(err)
@@ -103,6 +261,42 @@ func main() {
 
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
+		case "eval":
+			ok, err := runEval(rt, os.Args[2:])
+			if err != nil {
+				fatal(err)
+			}
+			if !ok {
+				os.Exit(1)
+			}
+			return
+		case "run":
+			ok, err := runSource(rt, os.Args[2:])
+			if err != nil {
+				fatal(err)
+			}
+			if !ok {
+				os.Exit(1)
+			}
+			return
+		case "compile":
+			ok, err := runCompile(rt, os.Args[2:])
+			if err != nil {
+				fatal(err)
+			}
+			if !ok {
+				os.Exit(1)
+			}
+			return
+		case "test":
+			ok, err := runTest(rt, os.Args[2:])
+			if err != nil {
+				fatal(err)
+			}
+			if !ok {
+				os.Exit(1)
+			}
+			return
 		case "build":
 			ok, err := runBuild(rt, os.Args[2:])
 			if err != nil {
@@ -112,8 +306,23 @@ func main() {
 				os.Exit(1)
 			}
 			return
-		case "help", "-h", "--help":
-			printTopLevelUsage()
+		case "inspect-js":
+			ok, err := runInspectJS(rt, os.Args[2:])
+			if err != nil {
+				fatal(err)
+			}
+			if !ok {
+				os.Exit(1)
+			}
+			return
+		case "run-fixture":
+			ok, err := runFixture(rt, os.Args[2:])
+			if err != nil {
+				fatal(err)
+			}
+			if !ok {
+				os.Exit(1)
+			}
 			return
 		default:
 			fatal(fmt.Errorf("unknown command %q", os.Args[1]))
@@ -129,20 +338,223 @@ func main() {
 	}
 }
 
+func runEval(rt *nodeRuntime, args []string) (bool, error) {
+	flags := flag.NewFlagSet("gojr eval", flag.ContinueOnError)
+	flags.SetOutput(os.Stderr)
+	sheetJSON := flags.String("sheet-json", "", "current sheet data as JSON")
+	seed := flags.String("seed", "", "deterministic scheduler/random seed; must appear before Node starts")
+	randomSeed := flags.String("random-seed", "", "deterministic scheduler/random seed; alias for --seed")
+	jsonMode := flags.Bool("json", false, "print a machine-readable JSON result")
+	var packageFlags packageFlag
+	flags.Var(&packageFlags, "pkg", "Go-junior source package, import/path=DIR; may be repeated")
+	var sourceRootFlags packageFlag
+	flags.Var(&sourceRootFlags, "srcroot", "filesystem source root for resolving imported Go-junior packages; may be repeated")
+	if err := flags.Parse(args); err != nil {
+		return false, err
+	}
+	_ = seed
+	_ = randomSeed
+	if flags.NArg() == 0 {
+		return false, fmt.Errorf("usage: gojr eval [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] SOURCE")
+	}
+	packages, err := readRuntimePackageSpecs(packageFlags)
+	if err != nil {
+		return false, err
+	}
+	sourceRoots := buildSourceRoots("", "", sourceRootFlags)
+	if len(packages) > 0 || len(sourceRoots) > 0 {
+		result, err := rt.EvalWithPackages(evalWithPackagesRequest{
+			Source:      strings.Join(flags.Args(), " "),
+			SheetJSON:   strings.TrimSpace(*sheetJSON),
+			Packages:    packages,
+			SourceRoots: sourceRoots,
+		})
+		if err != nil {
+			return false, err
+		}
+		printEvalResult(result, *jsonMode)
+		return result.OK && !result.Incomplete, nil
+	}
+	if err := applySheetJSON(rt, strings.TrimSpace(*sheetJSON)); err != nil {
+		return false, err
+	}
+	result, err := rt.Eval(strings.Join(flags.Args(), " "))
+	if err != nil {
+		return false, err
+	}
+	printEvalResult(result, *jsonMode)
+	return result.OK && !result.Incomplete, nil
+}
+
+func runSource(rt *nodeRuntime, args []string) (bool, error) {
+	flags := flag.NewFlagSet("gojr run", flag.ContinueOnError)
+	flags.SetOutput(os.Stderr)
+	sheetJSON := flags.String("sheet-json", "", "current sheet data as JSON")
+	seed := flags.String("seed", "", "deterministic scheduler/random seed; must appear before Node starts")
+	randomSeed := flags.String("random-seed", "", "deterministic scheduler/random seed; alias for --seed")
+	jsonMode := flags.Bool("json", false, "print a machine-readable JSON result")
+	var packageFlags packageFlag
+	flags.Var(&packageFlags, "pkg", "Go-junior source package, import/path=DIR; may be repeated")
+	var sourceRootFlags packageFlag
+	flags.Var(&sourceRootFlags, "srcroot", "filesystem source root for resolving imported Go-junior packages; may be repeated")
+	if err := flags.Parse(args); err != nil {
+		return false, err
+	}
+	_ = seed
+	_ = randomSeed
+	if flags.NArg() > 1 {
+		return false, fmt.Errorf("usage: gojr run [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] [FILE|-]")
+	}
+	sourcePath := optionalArg(flags.Args())
+	source, err := readRunSource(sourcePath)
+	if err != nil {
+		return false, err
+	}
+	packages, err := readRuntimePackageSpecs(packageFlags)
+	if err != nil {
+		return false, err
+	}
+	sourceRoots := buildSourceRoots(sourcePath, "", sourceRootFlags)
+	if len(packages) > 0 || len(sourceRoots) > 0 {
+		result, err := rt.EvalFilesWithPackages(evalWithPackagesRequest{
+			Files:       []sourceFile{source},
+			SheetJSON:   strings.TrimSpace(*sheetJSON),
+			Packages:    packages,
+			SourceRoots: sourceRoots,
+		})
+		if err != nil {
+			return false, err
+		}
+		printEvalResult(result, *jsonMode)
+		return result.OK && !result.Incomplete, nil
+	}
+	if err := applySheetJSON(rt, strings.TrimSpace(*sheetJSON)); err != nil {
+		return false, err
+	}
+	result, err := rt.EvalFiles([]sourceFile{source})
+	if err != nil {
+		return false, err
+	}
+	printEvalResult(result, *jsonMode)
+	return result.OK && !result.Incomplete, nil
+}
+
+func runCompile(rt *nodeRuntime, args []string) (bool, error) {
+	flags := flag.NewFlagSet("gojr compile", flag.ContinueOnError)
+	flags.SetOutput(os.Stderr)
+	sheetJSON := flags.String("sheet-json", "", "current sheet data as JSON")
+	sheetsJSON := flags.String("sheets-json", "", "named sheet data as JSON object of objects")
+	expr := flags.String("expr", "", "compile one Go-junior expression or statement list")
+	jsonMode := flags.Bool("json", false, "print a machine-readable JSON result")
+	var packageFlags packageFlag
+	flags.Var(&packageFlags, "pkg", "Go-junior source package dependency, import/path=DIR; may be repeated")
+	var sourceRootFlags packageFlag
+	flags.Var(&sourceRootFlags, "srcroot", "filesystem source root for resolving imported Go-junior packages; may be repeated")
+	if err := flags.Parse(args); err != nil {
+		return false, err
+	}
+	if *expr != "" && flags.NArg() != 0 {
+		return false, fmt.Errorf("usage: gojr compile [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--expr SOURCE] [FILE|DIR|-]")
+	}
+
+	var files []sourceFile
+	var err error
+	target := optionalArg(flags.Args())
+	if *expr != "" {
+		files = []sourceFile{{Filename: "gojr-repl.go", Source: *expr}}
+	} else {
+		files, err = readCompileTarget(target)
+		if err != nil {
+			return false, err
+		}
+	}
+	packages, err := readRuntimePackageSpecs(packageFlags)
+	if err != nil {
+		return false, err
+	}
+
+	result, err := rt.Compile(compileRequest{
+		Files:       files,
+		SheetJSON:   strings.TrimSpace(*sheetJSON),
+		SheetsJSON:  strings.TrimSpace(*sheetsJSON),
+		Packages:    packages,
+		SourceRoots: buildSourceRoots(target, "", sourceRootFlags),
+	})
+	if err != nil {
+		return false, err
+	}
+	printCompileResult(result, *jsonMode)
+	return result.OK, nil
+}
+
+func runTest(rt *nodeRuntime, args []string) (bool, error) {
+	flags := flag.NewFlagSet("gojr test", flag.ContinueOnError)
+	flags.SetOutput(os.Stderr)
+	seed := flags.String("seed", "", "deterministic scheduler/random seed; must appear before Node starts")
+	randomSeed := flags.String("random-seed", "", "deterministic scheduler/random seed; alias for --seed")
+	jsonMode := flags.Bool("json", false, "print a machine-readable JSON result")
+	var packageFlags packageFlag
+	flags.Var(&packageFlags, "pkg", "Go-junior source package dependency, import/path=DIR; may be repeated")
+	var sourceRootFlags packageFlag
+	flags.Var(&sourceRootFlags, "srcroot", "filesystem source root for resolving imported Go-junior packages; may be repeated")
+	if err := flags.Parse(args); err != nil {
+		return false, err
+	}
+	_ = seed
+	_ = randomSeed
+	if flags.NArg() != 1 {
+		return false, fmt.Errorf("usage: gojr test [--pkg import=DIR] [--srcroot DIR] [--seed SEED] PATH")
+	}
+	target := flags.Arg(0)
+	files, err := readTestTarget(target)
+	if err != nil {
+		return false, err
+	}
+	packages, err := readRuntimePackageSpecs(packageFlags)
+	if err != nil {
+		return false, err
+	}
+	sourceRoots := buildSourceRoots(target, "", sourceRootFlags)
+	var result evalResult
+	if len(packages) > 0 || len(sourceRoots) > 0 {
+		result, err = rt.TestFilesWithPackages(evalWithPackagesRequest{
+			Files:       files,
+			Packages:    packages,
+			SourceRoots: sourceRoots,
+		})
+	} else {
+		result, err = rt.TestFiles(files)
+	}
+	if err != nil {
+		return false, err
+	}
+	printTestResult(result, *jsonMode)
+	return result.OK, nil
+}
+
 func runBuild(rt *nodeRuntime, args []string) (bool, error) {
 	flags := flag.NewFlagSet("gojr build", flag.ContinueOnError)
 	flags.SetOutput(os.Stderr)
 	importPath := flags.String("importpath", "", "package import path for the generated artifact")
 	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; gojr_js is appended")
 	artifactRoot := flags.String("artifact-root", "", "exact gojr_js artifact root directory")
+	jsonMode := flags.Bool("json", false, "print a machine-readable JSON build report")
+	var packageFlags packageFlag
+	flags.Var(&packageFlags, "pkg", "Go-junior source package dependency, import/path=DIR; may be repeated")
+	var sourceRootFlags packageFlag
+	flags.Var(&sourceRootFlags, "srcroot", "filesystem source root for resolving imported Go-junior packages; may be repeated")
 	if err := flags.Parse(args); err != nil {
 		return false, err
 	}
 	if flags.NArg() != 1 {
-		return false, fmt.Errorf("usage: gojr build [-importpath PATH] [-pkgdir DIR|-artifact-root DIR] TARGET")
+		return false, fmt.Errorf("usage: gojr build [-importpath PATH] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] TARGET")
 	}
 	target := flags.Arg(0)
 	files, err := readBuildTarget(target)
+	if err != nil {
+		return false, err
+	}
+	packageSpecs, err := readRuntimePackageSpecs(packageFlags)
 	if err != nil {
 		return false, err
 	}
@@ -153,24 +565,187 @@ func runBuild(rt *nodeRuntime, args []string) (bool, error) {
 	result, err := rt.Build(buildRequest{
 		ImportPath:         resolvedImportPath,
 		Files:              files,
+		PackageSources:     packageSourceMap(packageSpecs),
+		SourceRoots:        buildSourceRoots(target, resolvedImportPath, sourceRootFlags),
 		ArtifactRoot:       strings.TrimSpace(*artifactRoot),
 		PackageCacheParent: strings.TrimSpace(*packageCacheParent),
 	})
 	if err != nil {
 		return false, err
 	}
-	printBuildResult(result)
+	printBuildResult(result, *jsonMode)
 	return result.OK, nil
+}
+
+func runInspectJS(rt *nodeRuntime, args []string) (bool, error) {
+	flags := flag.NewFlagSet("gojr inspect-js", flag.ContinueOnError)
+	flags.SetOutput(os.Stderr)
+	importPath := flags.String("importpath", "", "package import path for the generated artifact")
+	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; gojr_js is appended")
+	artifactRoot := flags.String("artifact-root", "", "exact gojr_js artifact root directory")
+	jsonMode := flags.Bool("json", false, "print a machine-readable JSON inspect report")
+	var packageFlags packageFlag
+	flags.Var(&packageFlags, "pkg", "Go-junior source package dependency, import/path=DIR; may be repeated")
+	var sourceRootFlags packageFlag
+	flags.Var(&sourceRootFlags, "srcroot", "filesystem source root for resolving imported Go-junior packages; may be repeated")
+	if err := flags.Parse(args); err != nil {
+		return false, err
+	}
+	if flags.NArg() != 1 {
+		return false, fmt.Errorf("usage: gojr inspect-js [--json] [-importpath PATH] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] TARGET")
+	}
+	target := flags.Arg(0)
+	files, err := readBuildTarget(target)
+	if err != nil {
+		return false, err
+	}
+	packageSpecs, err := readRuntimePackageSpecs(packageFlags)
+	if err != nil {
+		return false, err
+	}
+	resolvedImportPath := strings.TrimSpace(*importPath)
+	if resolvedImportPath == "" {
+		resolvedImportPath = deriveBuildImportPath(target, packageNameFromSourceFiles(files))
+	}
+	result, err := rt.InspectJS(buildRequest{
+		ImportPath:         resolvedImportPath,
+		Files:              files,
+		PackageSources:     packageSourceMap(packageSpecs),
+		SourceRoots:        buildSourceRoots(target, resolvedImportPath, sourceRootFlags),
+		ArtifactRoot:       strings.TrimSpace(*artifactRoot),
+		PackageCacheParent: strings.TrimSpace(*packageCacheParent),
+	})
+	if err != nil {
+		return false, err
+	}
+	printInspectJSResult(result, *jsonMode)
+	return result.OK, nil
+}
+
+func runCache(args []string) (bool, error) {
+	if len(args) == 0 {
+		return false, fmt.Errorf("usage: gojr cache path|list|clear [--json] [-pkgdir DIR|-artifact-root DIR] [--yes]")
+	}
+	action := args[0]
+	flags := flag.NewFlagSet("gojr cache "+action, flag.ContinueOnError)
+	flags.SetOutput(os.Stderr)
+	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; gojr_js is appended")
+	artifactRoot := flags.String("artifact-root", "", "exact gojr_js artifact root directory")
+	jsonMode := flags.Bool("json", false, "print a machine-readable JSON cache report")
+	yes := flags.Bool("yes", false, "confirm destructive cache clear")
+	if err := flags.Parse(args[1:]); err != nil {
+		return false, err
+	}
+	if flags.NArg() != 0 {
+		return false, fmt.Errorf("usage: gojr cache %s [--json] [-pkgdir DIR|-artifact-root DIR] [--yes]", action)
+	}
+	root, err := resolveCacheRoot(strings.TrimSpace(*packageCacheParent), strings.TrimSpace(*artifactRoot))
+	if err != nil {
+		return false, err
+	}
+
+	var result cacheResult
+	switch action {
+	case "path":
+		result = cacheResult{OK: true, Diagnostics: []string{}, Action: action, Root: root}
+	case "list":
+		entries, err := listCacheEntries(root)
+		if err != nil {
+			return false, err
+		}
+		result = cacheResult{OK: true, Diagnostics: []string{}, Action: action, Root: root, Entries: entries}
+	case "clear":
+		if !*yes {
+			return false, fmt.Errorf("gojr cache clear requires --yes")
+		}
+		cleared, err := clearCacheRoot(root)
+		if err != nil {
+			return false, err
+		}
+		result = cacheResult{OK: true, Diagnostics: []string{}, Action: action, Root: root, Cleared: cleared}
+	default:
+		return false, fmt.Errorf("unknown cache command %q", action)
+	}
+	printCacheResult(result, *jsonMode)
+	return result.OK, nil
+}
+
+func runFixture(rt *nodeRuntime, args []string) (bool, error) {
+	flags := flag.NewFlagSet("gojr run-fixture", flag.ContinueOnError)
+	flags.SetOutput(os.Stderr)
+	seed := flags.String("seed", "", "deterministic scheduler/random seed; must appear before Node starts")
+	randomSeed := flags.String("random-seed", "", "deterministic scheduler/random seed; alias for --seed")
+	jsonMode := flags.Bool("json", false, "print a machine-readable JSON fixture report")
+	var packageFlags packageFlag
+	flags.Var(&packageFlags, "pkg", "Go-junior source package dependency, import/path=DIR; may be repeated")
+	var sourceRootFlags packageFlag
+	flags.Var(&sourceRootFlags, "srcroot", "filesystem source root for resolving imported Go-junior packages; may be repeated")
+	if err := flags.Parse(args); err != nil {
+		return false, err
+	}
+	_ = seed
+	_ = randomSeed
+	if flags.NArg() != 1 {
+		return false, fmt.Errorf("usage: gojr run-fixture [--json] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] FIXTURE.json|-")
+	}
+	target := flags.Arg(0)
+	fixtureJSON, err := readFixtureJSON(target)
+	if err != nil {
+		return false, err
+	}
+	packages, err := readRuntimePackageSpecs(packageFlags)
+	if err != nil {
+		return false, err
+	}
+	sourceRoots := buildSourceRoots(target, "", sourceRootFlags)
+	var result fixtureResult
+	if len(packages) > 0 || len(sourceRoots) > 0 {
+		result, err = rt.RunFixtureWithPackages(fixtureWithPackagesRequest{
+			FixtureJSON: fixtureJSON,
+			Packages:    packages,
+			SourceRoots: sourceRoots,
+		})
+	} else {
+		result, err = rt.RunFixture(fixtureJSON)
+	}
+	if err != nil {
+		return false, err
+	}
+	printFixtureResult(result, *jsonMode)
+	return result.OK && !result.Unstable, nil
 }
 
 func printTopLevelUsage() {
 	fmt.Println(`gojr
   start the interactive Go-junior REPL
 
-gojr build [-importpath PATH] [-pkgdir DIR|-artifact-root DIR] TARGET
+gojr eval [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] SOURCE
+  evaluate one Go-junior expression or statement list
+
+gojr run [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] [FILE|-]
+  run a Go-junior source file or stdin
+
+gojr compile [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--expr SOURCE] [FILE|DIR|-]
+  parse and typecheck Go-junior source without executing it
+
+gojr test [--json] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] PATH
+  run Go-junior tests from a .go file or package directory
+
+gojr build [--json] [-importpath PATH] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] TARGET
   compile a Go-junior package into the package artifact cache
 
-By default build artifacts are written under ~/go/pkg/gojr_js/.`)
+gojr inspect-js [--json] [-importpath PATH] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] TARGET
+  print generated JavaScript for a Go-junior package without writing the cache
+
+gojr cache path|list|clear [--json] [-pkgdir DIR|-artifact-root DIR] [--yes]
+  inspect or clear the Go-junior package artifact cache
+
+gojr run-fixture [--json] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] FIXTURE.json|-
+  run a spreadsheet fixture whose formula cells contain Go-junior source
+
+By default build artifacts are written under ~/go/pkg/gojr_js/.
+JSON strings are always strings. JSON integers become exact integer values.
+JSON numbers with a decimal point or exponent become float64 values.`)
 }
 
 func repl(rt *nodeRuntime) error {
@@ -305,8 +880,179 @@ func testLoadedSourceFiles(rt *nodeRuntime, pending *strings.Builder, files []so
 	if err != nil {
 		return err
 	}
-	printTestResult(result)
+	printTestResult(result, false)
 	return nil
+}
+
+func applySheetJSON(rt *nodeRuntime, sheetJSON string) error {
+	if sheetJSON == "" {
+		return nil
+	}
+	result, err := rt.SetSheet(sheetJSON)
+	if err != nil {
+		return err
+	}
+	if !result.OK {
+		printResult(result)
+		return errors.New("sheet JSON was rejected")
+	}
+	return nil
+}
+
+func optionalArg(args []string) string {
+	if len(args) == 0 {
+		return ""
+	}
+	return args[0]
+}
+
+func readRunSource(path string) (sourceFile, error) {
+	if path == "" || path == "-" {
+		data, err := io.ReadAll(os.Stdin)
+		if err != nil {
+			return sourceFile{}, err
+		}
+		source, err := stripPackageClausePreservingLines(string(data))
+		if err != nil {
+			return sourceFile{}, err
+		}
+		return sourceFile{Filename: "stdin.go", Source: source}, nil
+	}
+	return readSourceFile(path)
+}
+
+func readCompileTarget(path string) ([]sourceFile, error) {
+	if path == "" || path == "-" {
+		data, err := io.ReadAll(os.Stdin)
+		if err != nil {
+			return nil, err
+		}
+		return []sourceFile{{Filename: "stdin.go", Source: string(data)}}, nil
+	}
+	return readBuildTarget(path)
+}
+
+func readRuntimePackageSpecs(values []string) ([]runtimePackageSpec, error) {
+	var packages []runtimePackageSpec
+	for _, value := range values {
+		importPath, target, found := strings.Cut(value, "=")
+		importPath = strings.TrimSpace(importPath)
+		target = strings.TrimSpace(target)
+		if !found || importPath == "" || target == "" {
+			return nil, fmt.Errorf("--pkg expects import/path=DIR")
+		}
+		files, err := readBuildTarget(target)
+		if err != nil {
+			return nil, err
+		}
+		packages = append(packages, runtimePackageSpec{
+			ImportPath:  importPath,
+			PackageName: packageNameFromSourceFiles(files),
+			Files:       files,
+		})
+	}
+	return packages, nil
+}
+
+func packageSourceMap(specs []runtimePackageSpec) packageSources {
+	if len(specs) == 0 {
+		return nil
+	}
+	sources := make(packageSources, len(specs))
+	for _, spec := range specs {
+		sources[spec.ImportPath] = spec.Files
+	}
+	return sources
+}
+
+func buildSourceRoots(target string, importPath string, explicitRoots []string) []string {
+	if len(explicitRoots) == 0 && strings.TrimSpace(importPath) == "" {
+		return nil
+	}
+	var roots []string
+	seen := map[string]bool{}
+	add := func(path string) {
+		path = strings.TrimSpace(expandHome(path))
+		if path == "" {
+			return
+		}
+		if abs, err := filepath.Abs(path); err == nil {
+			path = abs
+		}
+		path = filepath.Clean(path)
+		if seen[path] {
+			return
+		}
+		seen[path] = true
+		roots = append(roots, path)
+	}
+
+	for _, root := range explicitRoots {
+		add(root)
+	}
+
+	if packageDir := buildTargetDir(target); packageDir != "" {
+		if root := sourceRootFromImportPath(packageDir, importPath); root != "" {
+			add(root)
+		}
+	}
+
+	for _, gopath := range candidateGOPATHs() {
+		add(filepath.Join(gopath, "src"))
+	}
+	return roots
+}
+
+func buildTargetDir(target string) string {
+	if target == "" || target == "-" {
+		return ""
+	}
+	info, err := os.Stat(target)
+	if err != nil {
+		return ""
+	}
+	dir := target
+	if !info.IsDir() {
+		dir = filepath.Dir(target)
+	}
+	if abs, err := filepath.Abs(dir); err == nil {
+		dir = abs
+	}
+	return filepath.Clean(dir)
+}
+
+func sourceRootFromImportPath(packageDir string, importPath string) string {
+	importPath = strings.Trim(filepath.ToSlash(strings.TrimSpace(importPath)), "/")
+	if importPath == "" {
+		return ""
+	}
+	parts := strings.Split(importPath, "/")
+	candidate := filepath.Clean(packageDir)
+	for index := len(parts) - 1; index >= 0; index-- {
+		if filepath.Base(candidate) != parts[index] {
+			return ""
+		}
+		parent := filepath.Dir(candidate)
+		if parent == candidate {
+			return ""
+		}
+		candidate = parent
+	}
+	return candidate
+}
+
+func readFixtureJSON(path string) (string, error) {
+	var data []byte
+	var err error
+	if path == "-" {
+		data, err = io.ReadAll(os.Stdin)
+	} else {
+		data, err = os.ReadFile(path)
+	}
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
 }
 
 func readSourceFile(path string) (sourceFile, error) {
@@ -377,6 +1123,27 @@ func readBuildTarget(target string) ([]sourceFile, error) {
 		return nil, err
 	}
 	return []sourceFile{{Filename: filepath.Clean(target), Source: string(data)}}, nil
+}
+
+func seedFromArgs(args []string) (string, bool, error) {
+	for index := 0; index < len(args); index++ {
+		arg := args[index]
+		if arg == "--" {
+			return "", false, nil
+		}
+		if arg == "--seed" || arg == "--random-seed" {
+			if index+1 >= len(args) {
+				return "", false, fmt.Errorf("%s expects a seed value", arg)
+			}
+			return args[index+1], true, nil
+		}
+		for _, prefix := range []string{"--seed=", "--random-seed="} {
+			if strings.HasPrefix(arg, prefix) {
+				return strings.TrimPrefix(arg, prefix), true, nil
+			}
+		}
+	}
+	return "", false, nil
 }
 
 func readPackageDirRaw(dir string, include func(name string) bool, emptyDescription string) ([]sourceFile, error) {
@@ -450,6 +1217,147 @@ func deriveBuildImportPath(target string, packageName string) string {
 	}
 	base := filepath.Base(packagePath)
 	return strings.TrimSuffix(base, ".go")
+}
+
+func resolveCacheRoot(packageCacheParent string, artifactRoot string) (string, error) {
+	if packageCacheParent != "" && artifactRoot != "" {
+		return "", fmt.Errorf("-pkgdir and -artifact-root are mutually exclusive")
+	}
+	if artifactRoot != "" {
+		return filepath.Clean(expandHome(artifactRoot)), nil
+	}
+	if packageCacheParent != "" {
+		return filepath.Join(filepath.Clean(expandHome(packageCacheParent)), "gojr_js"), nil
+	}
+	home, err := os.UserHomeDir()
+	if err != nil || home == "" {
+		return "", fmt.Errorf("could not determine home directory for default cache root")
+	}
+	return filepath.Join(home, "go", "pkg", "gojr_js"), nil
+}
+
+func listCacheEntries(root string) ([]cacheEntry, error) {
+	info, err := os.Stat(root)
+	if errors.Is(err, os.ErrNotExist) {
+		return []cacheEntry{}, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	if !info.IsDir() {
+		return nil, fmt.Errorf("%s is not a directory", root)
+	}
+
+	var entries []cacheEntry
+	if err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".js") {
+			return nil
+		}
+		info, err := entry.Info()
+		if err != nil {
+			return err
+		}
+		cacheEntry := cacheEntry{
+			Path:       filepath.Clean(path),
+			ImportPath: cacheImportPath(root, path),
+			Size:       info.Size(),
+		}
+		if metadata, err := readCacheArtifactEnvelope(path); err == nil && metadata != nil {
+			applyCacheArtifactMetadata(&cacheEntry, *metadata)
+		}
+		entries = append(entries, cacheEntry)
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+	sort.Slice(entries, func(i, j int) bool {
+		return entries[i].Path < entries[j].Path
+	})
+	return entries, nil
+}
+
+func readCacheArtifactEnvelope(path string) (*cacheArtifactEnvelope, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	const prefix = "export const gojrPackageArtifact = "
+	source := string(data)
+	start := strings.Index(source, prefix)
+	if start < 0 {
+		return nil, nil
+	}
+	jsonText := strings.TrimSpace(source[start+len(prefix):])
+	jsonText = strings.TrimSuffix(jsonText, ";")
+	jsonText = strings.TrimSpace(jsonText)
+	if jsonText == "" {
+		return nil, nil
+	}
+	var envelope cacheArtifactEnvelope
+	if err := json.Unmarshal([]byte(jsonText), &envelope); err != nil {
+		return nil, err
+	}
+	return &envelope, nil
+}
+
+func applyCacheArtifactMetadata(entry *cacheEntry, metadata cacheArtifactEnvelope) {
+	if metadata.ImportPath != "" {
+		entry.ImportPath = metadata.ImportPath
+	}
+	entry.PackageName = metadata.PackageName
+	entry.CacheKey = metadata.CacheKey
+	entry.SourceHash = metadata.SourceHash
+	entry.LayoutVersion = metadata.LayoutVersion
+	entry.CompilerVersion = metadata.CompilerVersion
+	entry.Backend = metadata.Backend
+	entry.HostSpecVersion = metadata.HostSpecVersion
+	entry.CapabilityPolicy = metadata.CapabilityPolicy
+	entry.Dependencies = metadata.Dependencies
+	entry.DependencyCacheKeys = metadata.DependencyCacheKeys
+	entry.Exports = metadata.Exports
+}
+
+func clearCacheRoot(root string) ([]string, error) {
+	entries, err := listCacheEntries(root)
+	if err != nil {
+		return nil, err
+	}
+	if len(entries) == 0 {
+		return []string{}, nil
+	}
+	if err := os.RemoveAll(root); err != nil {
+		return nil, err
+	}
+	cleared := make([]string, 0, len(entries))
+	for _, entry := range entries {
+		cleared = append(cleared, entry.Path)
+	}
+	return cleared, nil
+}
+
+func cacheImportPath(root string, path string) string {
+	rel, err := filepath.Rel(root, path)
+	if err != nil {
+		return strings.TrimSuffix(filepath.ToSlash(filepath.Base(path)), ".js")
+	}
+	return strings.TrimSuffix(filepath.ToSlash(rel), ".js")
+}
+
+func expandHome(path string) string {
+	if path == "~" {
+		if home, err := os.UserHomeDir(); err == nil && home != "" {
+			return home
+		}
+	}
+	if strings.HasPrefix(path, "~/") {
+		if home, err := os.UserHomeDir(); err == nil && home != "" {
+			return filepath.Join(home, path[2:])
+		}
+	}
+	return path
 }
 
 func candidateGOPATHs() []string {
@@ -653,7 +1561,19 @@ func printLoadResult(result evalResult) {
 	}
 }
 
-func printTestResult(result evalResult) {
+func printEvalResult(result evalResult, jsonMode bool) {
+	if jsonMode {
+		printJSON(result)
+		return
+	}
+	printResult(result)
+}
+
+func printTestResult(result evalResult, jsonMode bool) {
+	if jsonMode {
+		printJSON(result)
+		return
+	}
 	if result.Output != "" {
 		fmt.Print(result.Output)
 	}
@@ -666,7 +1586,31 @@ func printTestResult(result evalResult) {
 	}
 }
 
-func printBuildResult(result buildResult) {
+func printCompileResult(result compileResult, jsonMode bool) {
+	if jsonMode {
+		printJSON(result)
+		return
+	}
+	if result.Output != "" {
+		fmt.Print(result.Output)
+	}
+	for _, diagnostic := range result.Diagnostics {
+		if result.OK {
+			fmt.Println(diagnostic)
+		} else {
+			fmt.Fprintln(os.Stderr, diagnostic)
+		}
+	}
+	if result.OK && len(result.Diagnostics) == 0 {
+		fmt.Println("ok")
+	}
+}
+
+func printBuildResult(result buildResult, jsonMode bool) {
+	if jsonMode {
+		printJSON(result)
+		return
+	}
 	if result.Output != "" {
 		fmt.Print(result.Output)
 	}
@@ -683,6 +1627,100 @@ func printBuildResult(result buildResult) {
 		}
 		fmt.Printf("%s %s\n", artifact.Action, artifact.ArtifactPath)
 	}
+}
+
+func printInspectJSResult(result inspectJSResult, jsonMode bool) {
+	if jsonMode {
+		printJSON(result)
+		return
+	}
+	for _, diagnostic := range result.Diagnostics {
+		if result.OK {
+			fmt.Println(diagnostic)
+		} else {
+			fmt.Fprintln(os.Stderr, diagnostic)
+		}
+	}
+	if result.Output != "" {
+		fmt.Print(result.Output)
+	}
+	if result.Source != "" {
+		fmt.Print(result.Source)
+		if !strings.HasSuffix(result.Source, "\n") {
+			fmt.Println()
+		}
+	}
+}
+
+func printCacheResult(result cacheResult, jsonMode bool) {
+	if jsonMode {
+		printJSON(result)
+		return
+	}
+	for _, diagnostic := range result.Diagnostics {
+		if result.OK {
+			fmt.Println(diagnostic)
+		} else {
+			fmt.Fprintln(os.Stderr, diagnostic)
+		}
+	}
+	if len(result.Entries) > 0 {
+		for _, entry := range result.Entries {
+			if entry.CacheKey != "" {
+				fmt.Printf("%s %s %d %s\n", entry.ImportPath, entry.CacheKey, entry.Size, entry.Path)
+			} else {
+				fmt.Printf("%s %d %s\n", entry.ImportPath, entry.Size, entry.Path)
+			}
+		}
+		return
+	}
+	if len(result.Cleared) > 0 {
+		for _, path := range result.Cleared {
+			fmt.Printf("removed %s\n", path)
+		}
+		return
+	}
+	if result.Action == "path" || result.Action == "clear" {
+		fmt.Println(result.Root)
+	}
+}
+
+func printFixtureResult(result fixtureResult, jsonMode bool) {
+	if jsonMode {
+		printJSON(result)
+		return
+	}
+	for _, diagnostic := range result.Diagnostics {
+		if result.OK {
+			fmt.Println(diagnostic)
+		} else {
+			fmt.Fprintln(os.Stderr, diagnostic)
+		}
+	}
+	for _, sheetName := range sortedStringKeys(result.Sheets) {
+		cells := result.Sheets[sheetName]
+		for _, cell := range sortedStringKeys(cells) {
+			fmt.Printf("%s!%s = %s\n", sheetName, cell, cells[cell])
+		}
+	}
+}
+
+func sortedStringKeys[V any](values map[string]V) []string {
+	keys := make([]string, 0, len(values))
+	for key := range values {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func printJSON(value any) {
+	data, err := json.MarshalIndent(value, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		return
+	}
+	fmt.Println(string(data))
 }
 
 func shouldPrintValue(result evalResult) bool {
@@ -717,6 +1755,58 @@ func (rt *nodeRuntime) EvalFiles(files []sourceFile) (evalResult, error) {
 	return rt.call(string(data), nodeCallEvalFiles)
 }
 
+func (rt *nodeRuntime) EvalWithPackages(request evalWithPackagesRequest) (evalResult, error) {
+	data, err := json.Marshal(request)
+	if err != nil {
+		return evalResult{}, err
+	}
+	cInput := C.CString(string(data))
+	defer C.free(unsafe.Pointer(cInput))
+
+	var cErr *C.char
+	cResult := C.gojr_node_eval_with_packages(rt.ptr, cInput, &cErr)
+	if cErr != nil {
+		defer C.gojr_string_free(cErr)
+		return evalResult{}, errors.New(C.GoString(cErr))
+	}
+	if cResult == nil {
+		return evalResult{}, errors.New("embedded Node package eval returned nil")
+	}
+	defer C.gojr_string_free(cResult)
+
+	var result evalResult
+	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
+		return evalResult{}, err
+	}
+	return result, nil
+}
+
+func (rt *nodeRuntime) EvalFilesWithPackages(request evalWithPackagesRequest) (evalResult, error) {
+	data, err := json.Marshal(request)
+	if err != nil {
+		return evalResult{}, err
+	}
+	cInput := C.CString(string(data))
+	defer C.free(unsafe.Pointer(cInput))
+
+	var cErr *C.char
+	cResult := C.gojr_node_eval_files_with_packages(rt.ptr, cInput, &cErr)
+	if cErr != nil {
+		defer C.gojr_string_free(cErr)
+		return evalResult{}, errors.New(C.GoString(cErr))
+	}
+	if cResult == nil {
+		return evalResult{}, errors.New("embedded Node package file eval returned nil")
+	}
+	defer C.gojr_string_free(cResult)
+
+	var result evalResult
+	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
+		return evalResult{}, err
+	}
+	return result, nil
+}
+
 func (rt *nodeRuntime) SetSheet(json string) (evalResult, error) {
 	return rt.call(json, nodeCallSetSheet)
 }
@@ -731,6 +1821,58 @@ func (rt *nodeRuntime) TestFiles(files []sourceFile) (evalResult, error) {
 		return evalResult{}, err
 	}
 	return rt.call(string(data), nodeCallTestFiles)
+}
+
+func (rt *nodeRuntime) TestFilesWithPackages(request evalWithPackagesRequest) (evalResult, error) {
+	data, err := json.Marshal(request)
+	if err != nil {
+		return evalResult{}, err
+	}
+	cInput := C.CString(string(data))
+	defer C.free(unsafe.Pointer(cInput))
+
+	var cErr *C.char
+	cResult := C.gojr_node_test_files_with_packages(rt.ptr, cInput, &cErr)
+	if cErr != nil {
+		defer C.gojr_string_free(cErr)
+		return evalResult{}, errors.New(C.GoString(cErr))
+	}
+	if cResult == nil {
+		return evalResult{}, errors.New("embedded Node package test returned nil")
+	}
+	defer C.gojr_string_free(cResult)
+
+	var result evalResult
+	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
+		return evalResult{}, err
+	}
+	return result, nil
+}
+
+func (rt *nodeRuntime) Compile(request compileRequest) (compileResult, error) {
+	data, err := json.Marshal(request)
+	if err != nil {
+		return compileResult{}, err
+	}
+	cInput := C.CString(string(data))
+	defer C.free(unsafe.Pointer(cInput))
+
+	var cErr *C.char
+	cResult := C.gojr_node_compile(rt.ptr, cInput, &cErr)
+	if cErr != nil {
+		defer C.gojr_string_free(cErr)
+		return compileResult{}, errors.New(C.GoString(cErr))
+	}
+	if cResult == nil {
+		return compileResult{}, errors.New("embedded Node compile returned nil")
+	}
+	defer C.gojr_string_free(cResult)
+
+	var result compileResult
+	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
+		return compileResult{}, err
+	}
+	return result, nil
 }
 
 func (rt *nodeRuntime) Build(request buildRequest) (buildResult, error) {
@@ -755,6 +1897,80 @@ func (rt *nodeRuntime) Build(request buildRequest) (buildResult, error) {
 	var result buildResult
 	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
 		return buildResult{}, err
+	}
+	return result, nil
+}
+
+func (rt *nodeRuntime) InspectJS(request buildRequest) (inspectJSResult, error) {
+	data, err := json.Marshal(request)
+	if err != nil {
+		return inspectJSResult{}, err
+	}
+	cInput := C.CString(string(data))
+	defer C.free(unsafe.Pointer(cInput))
+
+	var cErr *C.char
+	cResult := C.gojr_node_inspect_js(rt.ptr, cInput, &cErr)
+	if cErr != nil {
+		defer C.gojr_string_free(cErr)
+		return inspectJSResult{}, errors.New(C.GoString(cErr))
+	}
+	if cResult == nil {
+		return inspectJSResult{}, errors.New("embedded Node inspect-js returned nil")
+	}
+	defer C.gojr_string_free(cResult)
+
+	var result inspectJSResult
+	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
+		return inspectJSResult{}, err
+	}
+	return result, nil
+}
+
+func (rt *nodeRuntime) RunFixture(fixtureJSON string) (fixtureResult, error) {
+	cInput := C.CString(fixtureJSON)
+	defer C.free(unsafe.Pointer(cInput))
+
+	var cErr *C.char
+	cResult := C.gojr_node_run_fixture(rt.ptr, cInput, &cErr)
+	if cErr != nil {
+		defer C.gojr_string_free(cErr)
+		return fixtureResult{}, errors.New(C.GoString(cErr))
+	}
+	if cResult == nil {
+		return fixtureResult{}, errors.New("embedded Node fixture run returned nil")
+	}
+	defer C.gojr_string_free(cResult)
+
+	var result fixtureResult
+	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
+		return fixtureResult{}, err
+	}
+	return result, nil
+}
+
+func (rt *nodeRuntime) RunFixtureWithPackages(request fixtureWithPackagesRequest) (fixtureResult, error) {
+	data, err := json.Marshal(request)
+	if err != nil {
+		return fixtureResult{}, err
+	}
+	cInput := C.CString(string(data))
+	defer C.free(unsafe.Pointer(cInput))
+
+	var cErr *C.char
+	cResult := C.gojr_node_run_fixture_with_packages(rt.ptr, cInput, &cErr)
+	if cErr != nil {
+		defer C.gojr_string_free(cErr)
+		return fixtureResult{}, errors.New(C.GoString(cErr))
+	}
+	if cResult == nil {
+		return fixtureResult{}, errors.New("embedded Node package fixture run returned nil")
+	}
+	defer C.gojr_string_free(cResult)
+
+	var result fixtureResult
+	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
+		return fixtureResult{}, err
 	}
 	return result, nil
 }

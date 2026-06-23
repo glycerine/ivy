@@ -152,6 +152,38 @@ func TestDeriveBuildImportPathUsesGOPATHSrc(t *testing.T) {
 	}
 }
 
+func TestBuildSourceRootsUsesExplicitInferredAndGOPATHRoots(t *testing.T) {
+	old := os.Getenv("GOPATH")
+	t.Cleanup(func() {
+		if old == "" {
+			_ = os.Unsetenv("GOPATH")
+		} else {
+			_ = os.Setenv("GOPATH", old)
+		}
+	})
+
+	gopath := t.TempDir()
+	if err := os.Setenv("GOPATH", gopath); err != nil {
+		t.Fatalf("Setenv GOPATH error = %v", err)
+	}
+	workspace := t.TempDir()
+	targetDir := filepath.Join(workspace, "example.com", "app")
+	if err := os.MkdirAll(targetDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll() error = %v", err)
+	}
+	explicit := filepath.Join(workspace, "manual-root")
+
+	roots := buildSourceRoots(targetDir, "example.com/app", []string{explicit, explicit})
+	want := []string{
+		filepath.Clean(explicit),
+		filepath.Clean(workspace),
+		filepath.Join(gopath, "src"),
+	}
+	if len(roots) < len(want) || strings.Join(roots[:len(want)], "\n") != strings.Join(want, "\n") {
+		t.Fatalf("buildSourceRoots() = %#v, want prefix %#v", roots, want)
+	}
+}
+
 func TestReadTestTargetDirectoryIncludesTestFiles(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, filepath.Join(dir, "a.go"), "package demo\n\nfunc A() int { return 1 }\n")
@@ -189,6 +221,50 @@ func TestReadTestTargetTestFileIncludesSiblingPackageFiles(t *testing.T) {
 	}
 }
 
+func TestCacheRootListAndClear(t *testing.T) {
+	parent := t.TempDir()
+	root, err := resolveCacheRoot(parent, "")
+	if err != nil {
+		t.Fatalf("resolveCacheRoot(parent) error = %v", err)
+	}
+	if root != filepath.Join(parent, "gojr_js") {
+		t.Fatalf("resolveCacheRoot(parent) = %q, want gojr_js child", root)
+	}
+	if _, err := resolveCacheRoot(parent, filepath.Join(parent, "exact")); err == nil {
+		t.Fatalf("resolveCacheRoot accepted both parent and artifact root")
+	}
+
+	if err := os.MkdirAll(filepath.Join(root, "example.com"), 0o700); err != nil {
+		t.Fatalf("MkdirAll(cache) error = %v", err)
+	}
+	writeTestFile(t, filepath.Join(root, "example.com", "demo.js"), "artifact")
+	writeTestFile(t, filepath.Join(root, "example.com", "ignored.txt"), "nope")
+	writeTestFile(t, filepath.Join(root, "top.js"), "top")
+
+	entries, err := listCacheEntries(root)
+	if err != nil {
+		t.Fatalf("listCacheEntries() error = %v", err)
+	}
+	if len(entries) != 2 {
+		t.Fatalf("listCacheEntries() = %#v, want 2 js entries", entries)
+	}
+	if entries[0].ImportPath != "example.com/demo" || entries[1].ImportPath != "top" {
+		t.Fatalf("cache import paths = %#v, want example.com/demo and top", entries)
+	}
+	if ok, err := runCache([]string{"list", "-artifact-root", root}); err != nil || !ok {
+		t.Fatalf("runCache(list) ok=%v err=%v, want success", ok, err)
+	}
+	if ok, err := runCache([]string{"clear", "-artifact-root", root}); err == nil || ok {
+		t.Fatalf("runCache(clear without --yes) ok=%v err=%v, want confirmation error", ok, err)
+	}
+	if ok, err := runCache([]string{"clear", "-artifact-root", root, "--yes"}); err != nil || !ok {
+		t.Fatalf("runCache(clear) ok=%v err=%v, want success", ok, err)
+	}
+	if _, err := os.Stat(root); !os.IsNotExist(err) {
+		t.Fatalf("cache root still exists after clear, stat err=%v", err)
+	}
+}
+
 func TestNodeRuntimeUsesEnvironmentRandomSeed(t *testing.T) {
 	t.Setenv("GOJR_RANDOM_SEED", "gojr-select-seed")
 	moduleBundle, err := runtimeModuleBundle()
@@ -200,6 +276,12 @@ func TestNodeRuntimeUsesEnvironmentRandomSeed(t *testing.T) {
 		t.Fatalf("newNodeRuntime() error = %v", err)
 	}
 	t.Cleanup(rt.Close)
+
+	assertNodeRuntimeBuildSkipsFreshDiskArtifact(t, rt)
+	assertNodeRuntimeBuildsSourcePackageGraph(t, rt)
+	assertNodeRuntimeEvaluatesSourcePackageGraphFromSourceRoot(t, rt)
+	assertNodeRuntimeRunsFixtureWithSourcePackageGraph(t, rt)
+	assertTopLevelCommandsUseNodeRuntime(t, rt)
 
 	source := `ch1 := make(chan int, 2)
 ch2 := make(chan int, 2)
@@ -278,6 +360,415 @@ return a, b
 	}
 }
 
+func assertTopLevelCommandsUseNodeRuntime(t *testing.T, rt *nodeRuntime) {
+	t.Helper()
+
+	if ok, err := runEval(rt, []string{"--sheet-json", `{"A1":40}`, "sheet.A1 + 2"}); err != nil || !ok {
+		t.Fatalf("runEval() ok=%v err=%v, want success", ok, err)
+	}
+	evalResult, err := rt.Eval("sheet.A1 + 2")
+	if err != nil {
+		t.Fatalf("Eval(sheet.A1 + 2) error = %v", err)
+	}
+	if !evalResult.OK || evalResult.Value != "42" {
+		t.Fatalf("Eval(sheet.A1 + 2) = ok %v value %q diagnostics %v, want 42", evalResult.OK, evalResult.Value, evalResult.Diagnostics)
+	}
+	if len(evalResult.ObservedDeps) != 1 || evalResult.ObservedDeps[0].Kind != "cell" || evalResult.ObservedDeps[0].Sheet != "sheet" || evalResult.ObservedDeps[0].Cell != "A1" {
+		t.Fatalf("Eval(sheet.A1 + 2) observed deps = %#v, want sheet A1", evalResult.ObservedDeps)
+	}
+	iotaResult := mustEval(t, rt, "const (\n  abit, amask = 1 << iota, 1<<iota - 1\n  bbit, bmask\n)\nreturn abit, amask, bbit, bmask")
+	if iotaResult.Value != "1, 0, 2, 1" {
+		t.Fatalf("Eval(iota const group) value = %q diagnostics %v, want 1, 0, 2, 1", iotaResult.Value, iotaResult.Diagnostics)
+	}
+
+	runFile := filepath.Join(t.TempDir(), "run.go")
+	writeTestFile(t, runFile, "package demo\n\nreturn 6 * 7\n")
+	if ok, err := runSource(rt, []string{runFile}); err != nil || !ok {
+		t.Fatalf("runSource() ok=%v err=%v, want success", ok, err)
+	}
+
+	pkgDir := t.TempDir()
+	writeTestFile(t, filepath.Join(pkgDir, "counter.go"), `package counter
+
+var Count int
+
+func init() {
+	Count = 40
+}
+
+func Next() int {
+	Count++
+	return Count
+}
+`)
+	if ok, err := runEval(rt, []string{"--pkg", "example.com/counter=" + pkgDir, `import counter "example.com/counter"; return counter.Next()`}); err != nil || !ok {
+		t.Fatalf("runEval(--pkg) ok=%v err=%v, want success", ok, err)
+	}
+	pkgSpec, err := readRuntimePackageSpecs([]string{"example.com/counter=" + pkgDir})
+	if err != nil {
+		t.Fatalf("readRuntimePackageSpecs() error = %v", err)
+	}
+	pkgResult, err := rt.EvalWithPackages(evalWithPackagesRequest{
+		Source:   `import counter "example.com/counter"; return counter.Next()`,
+		Packages: pkgSpec,
+	})
+	if err != nil {
+		t.Fatalf("EvalWithPackages() error = %v", err)
+	}
+	if !pkgResult.OK || pkgResult.Value != "41" {
+		t.Fatalf("EvalWithPackages() ok=%v value=%q diagnostics=%v, want 41", pkgResult.OK, pkgResult.Value, pkgResult.Diagnostics)
+	}
+
+	if ok, err := runCompile(rt, []string{"--sheet-json", `{"A1":40}`, "--expr", "sheet.A1 + 2"}); err != nil || !ok {
+		t.Fatalf("runCompile(expr) ok=%v err=%v, want success", ok, err)
+	}
+	compileResult, err := rt.Compile(compileRequest{
+		Files: []sourceFile{{
+			Filename: "bad.go",
+			Source:   "var a = 10\nvar s = \"hi\"\nreturn a + s\n",
+		}},
+	})
+	if err != nil {
+		t.Fatalf("Compile(bad) error = %v", err)
+	}
+	if compileResult.OK || len(compileResult.Diagnostics) != 1 || !strings.Contains(compileResult.Diagnostics[0], "GOJR_TYPE001") {
+		t.Fatalf("Compile(bad) = ok %v diagnostics %v, want GOJR_TYPE001", compileResult.OK, compileResult.Diagnostics)
+	}
+
+	testDir := t.TempDir()
+	writeTestFile(t, filepath.Join(testDir, "calc.go"), "package calc\n\nfunc Add(a, b int) int { return a + b }\n")
+	writeTestFile(t, filepath.Join(testDir, "calc_test.go"), "package calc\n\nimport \"testing\"\n\nfunc TestAdd(t *testing.T) { if Add(2, 5) != 7 { t.Fatalf(\"bad add\") } }\n")
+	if ok, err := runCompile(rt, []string{testDir}); err != nil || !ok {
+		t.Fatalf("runCompile(dir) ok=%v err=%v, want success", ok, err)
+	}
+	if ok, err := runTest(rt, []string{testDir}); err != nil || !ok {
+		t.Fatalf("runTest() ok=%v err=%v, want success", ok, err)
+	}
+}
+
+func assertNodeRuntimeBuildSkipsFreshDiskArtifact(t *testing.T, rt *nodeRuntime) {
+	t.Helper()
+
+	artifactRoot := filepath.ToSlash(t.TempDir())
+	request := buildRequest{
+		ImportPath:   "example.com/cache",
+		ArtifactRoot: artifactRoot,
+		Files: []sourceFile{{
+			Filename: "cache.go",
+			Source:   "package cache\nfunc F() int { return 1 }\n",
+		}},
+	}
+	artifactPath := artifactRoot + "/example.com/cache.js"
+
+	first, err := rt.Build(request)
+	if err != nil {
+		t.Fatalf("Build(first) error = %v", err)
+	}
+	if !first.OK {
+		t.Fatalf("Build(first) diagnostics = %v", first.Diagnostics)
+	}
+	if len(first.Built) != 1 || first.Built[0] != artifactPath {
+		t.Fatalf("Build(first).Built = %#v, want %s", first.Built, artifactPath)
+	}
+	if len(first.Artifacts) != 1 || first.Artifacts[0].Action != "built" {
+		t.Fatalf("Build(first).Artifacts = %#v, want built artifact", first.Artifacts)
+	}
+	if _, err := os.Stat(filepath.FromSlash(artifactPath)); err != nil {
+		t.Fatalf("built artifact missing: %v", err)
+	}
+
+	second, err := rt.Build(request)
+	if err != nil {
+		t.Fatalf("Build(second) error = %v", err)
+	}
+	if !second.OK {
+		t.Fatalf("Build(second) diagnostics = %v", second.Diagnostics)
+	}
+	if len(second.Built) != 0 || len(second.Skipped) != 1 || second.Skipped[0] != artifactPath {
+		t.Fatalf("Build(second) built=%#v skipped=%#v, want skip %s", second.Built, second.Skipped, artifactPath)
+	}
+	if len(second.Artifacts) != 1 || second.Artifacts[0].Action != "skipped" {
+		t.Fatalf("Build(second).Artifacts = %#v, want skipped artifact", second.Artifacts)
+	}
+
+	inspectRoot := filepath.ToSlash(t.TempDir())
+	inspectRequest := buildRequest{
+		ImportPath:   "example.com/inspect",
+		ArtifactRoot: inspectRoot,
+		Files: []sourceFile{{
+			Filename: "inspect.go",
+			Source:   "package inspect\nfunc Answer() int { return 42 }\n",
+		}},
+	}
+	inspect, err := rt.InspectJS(inspectRequest)
+	if err != nil {
+		t.Fatalf("InspectJS() error = %v", err)
+	}
+	if !inspect.OK {
+		t.Fatalf("InspectJS() diagnostics = %v", inspect.Diagnostics)
+	}
+	if !strings.Contains(inspect.Source, "gojrPackageArtifact") || !strings.Contains(inspect.Source, "example.com/inspect") {
+		t.Fatalf("InspectJS().Source missing artifact envelope:\n%s", inspect.Source)
+	}
+	inspectArtifact := filepath.FromSlash(inspectRoot + "/example.com/inspect.js")
+	if _, err := os.Stat(inspectArtifact); !os.IsNotExist(err) {
+		t.Fatalf("InspectJS wrote artifact %s, stat err=%v", inspectArtifact, err)
+	}
+}
+
+func assertNodeRuntimeBuildsSourcePackageGraph(t *testing.T, rt *nodeRuntime) {
+	t.Helper()
+
+	artifactRoot := filepath.ToSlash(t.TempDir())
+	request := buildRequest{
+		ImportPath:   "example.com/app",
+		ArtifactRoot: artifactRoot,
+		PackageSources: packageSources{
+			"example.com/lib": []sourceFile{{
+				Filename: "lib.go",
+				Source:   "package lib\n\nfunc One() int { return 1 }\n",
+			}},
+		},
+		Files: []sourceFile{{
+			Filename: "app.go",
+			Source:   "package app\n\nimport lib \"example.com/lib\"\n\nfunc Two() int { return lib.One() + 1 }\n",
+		}},
+	}
+	result, err := rt.Build(request)
+	if err != nil {
+		t.Fatalf("Build(graph) error = %v", err)
+	}
+	if !result.OK {
+		t.Fatalf("Build(graph) diagnostics = %v", result.Diagnostics)
+	}
+	wantBuilt := []string{
+		artifactRoot + "/example.com/lib.js",
+		artifactRoot + "/example.com/app.js",
+	}
+	if strings.Join(result.Built, "\n") != strings.Join(wantBuilt, "\n") {
+		t.Fatalf("Build(graph).Built = %#v, want %#v", result.Built, wantBuilt)
+	}
+	if len(result.Artifacts) != 2 || result.Artifacts[0].ImportPath != "example.com/lib" || result.Artifacts[1].ImportPath != "example.com/app" {
+		t.Fatalf("Build(graph).Artifacts = %#v, want lib then app", result.Artifacts)
+	}
+	if len(result.Artifacts[1].DependencyCacheKeys) != 1 || !strings.HasPrefix(result.Artifacts[1].DependencyCacheKeys[0], "example.com/lib:") {
+		t.Fatalf("Build(graph) app dependency cache keys = %#v", result.Artifacts[1].DependencyCacheKeys)
+	}
+	cacheEntries, err := listCacheEntries(filepath.FromSlash(artifactRoot))
+	if err != nil {
+		t.Fatalf("listCacheEntries(graph) error = %v", err)
+	}
+	if len(cacheEntries) != 2 {
+		t.Fatalf("listCacheEntries(graph) = %#v, want lib and app", cacheEntries)
+	}
+	var appEntry cacheEntry
+	for _, entry := range cacheEntries {
+		if entry.ImportPath == "example.com/app" {
+			appEntry = entry
+		}
+	}
+	if appEntry.ImportPath != "example.com/app" || appEntry.PackageName != "app" || appEntry.CacheKey == "" {
+		t.Fatalf("app cache metadata = %#v, want package app with cache key", appEntry)
+	}
+	if strings.Join(appEntry.Dependencies, ",") != "example.com/lib" || len(appEntry.DependencyCacheKeys) != 1 {
+		t.Fatalf("app cache dependencies = deps %#v keys %#v, want lib dependency", appEntry.Dependencies, appEntry.DependencyCacheKeys)
+	}
+	if len(appEntry.Exports) != 1 || appEntry.Exports[0].Name != "Two" || appEntry.Exports[0].Kind != "func" {
+		t.Fatalf("app cache exports = %#v, want exported func Two", appEntry.Exports)
+	}
+
+	libDir := t.TempDir()
+	appDir := t.TempDir()
+	cliRoot := filepath.ToSlash(t.TempDir())
+	writeTestFile(t, filepath.Join(libDir, "lib.go"), "package lib\n\nfunc One() int { return 1 }\n")
+	writeTestFile(t, filepath.Join(appDir, "app.go"), "package app\n\nimport lib \"example.com/lib\"\n\nfunc Two() int { return lib.One() + 1 }\n")
+	if ok, err := runBuild(rt, []string{
+		"--pkg", "example.com/lib=" + libDir,
+		"-importpath", "example.com/app",
+		"-artifact-root", cliRoot,
+		appDir,
+	}); err != nil || !ok {
+		t.Fatalf("runBuild(--pkg) ok=%v err=%v, want success", ok, err)
+	}
+	if _, err := os.Stat(filepath.FromSlash(cliRoot + "/example.com/lib.js")); err != nil {
+		t.Fatalf("runBuild(--pkg) missing lib artifact: %v", err)
+	}
+	if _, err := os.Stat(filepath.FromSlash(cliRoot + "/example.com/app.js")); err != nil {
+		t.Fatalf("runBuild(--pkg) missing app artifact: %v", err)
+	}
+
+	srcRoot := t.TempDir()
+	providerRoot := filepath.ToSlash(t.TempDir())
+	libProviderDir := filepath.Join(srcRoot, "example.com", "lib")
+	appProviderDir := filepath.Join(srcRoot, "example.com", "app")
+	if err := os.MkdirAll(libProviderDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(libProviderDir) error = %v", err)
+	}
+	if err := os.MkdirAll(appProviderDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(appProviderDir) error = %v", err)
+	}
+	writeTestFile(t, filepath.Join(libProviderDir, "lib.go"), "package lib\n\nfunc One() int { return 1 }\n")
+	writeTestFile(t, filepath.Join(appProviderDir, "app.go"), "package app\n\nimport lib \"example.com/lib\"\n\nfunc Two() int { return lib.One() + 1 }\n")
+	if ok, err := runBuild(rt, []string{
+		"--srcroot", srcRoot,
+		"-importpath", "example.com/app",
+		"-artifact-root", providerRoot,
+		appProviderDir,
+	}); err != nil || !ok {
+		t.Fatalf("runBuild(--srcroot) ok=%v err=%v, want success", ok, err)
+	}
+	if _, err := os.Stat(filepath.FromSlash(providerRoot + "/example.com/lib.js")); err != nil {
+		t.Fatalf("runBuild(--srcroot) missing lib artifact: %v", err)
+	}
+	if _, err := os.Stat(filepath.FromSlash(providerRoot + "/example.com/app.js")); err != nil {
+		t.Fatalf("runBuild(--srcroot) missing app artifact: %v", err)
+	}
+}
+
+func assertNodeRuntimeEvaluatesSourcePackageGraphFromSourceRoot(t *testing.T, rt *nodeRuntime) {
+	t.Helper()
+
+	srcRoot := t.TempDir()
+	libDir := filepath.Join(srcRoot, "example.com", "lib")
+	appDir := filepath.Join(srcRoot, "example.com", "app")
+	if err := os.MkdirAll(libDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(libDir) error = %v", err)
+	}
+	if err := os.MkdirAll(appDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(appDir) error = %v", err)
+	}
+	writeTestFile(t, filepath.Join(libDir, "lib.go"), "package lib\n\nfunc One() int { return 1 }\n")
+	writeTestFile(t, filepath.Join(appDir, "app.go"), "package app\n\nimport lib \"example.com/lib\"\n\nfunc Two() int { return lib.One() + 1 }\n")
+
+	result, err := rt.EvalWithPackages(evalWithPackagesRequest{
+		Source:      `import app "example.com/app"; return app.Two()`,
+		SourceRoots: []string{srcRoot},
+	})
+	if err != nil {
+		t.Fatalf("EvalWithPackages(srcroot) error = %v", err)
+	}
+	if !result.OK || result.Value != "2" {
+		t.Fatalf("EvalWithPackages(srcroot) ok=%v value=%q diagnostics=%v, want 2", result.OK, result.Value, result.Diagnostics)
+	}
+
+	if ok, err := runEval(rt, []string{
+		"--srcroot", srcRoot,
+		`import app "example.com/app"; return app.Two()`,
+	}); err != nil || !ok {
+		t.Fatalf("runEval(--srcroot) ok=%v err=%v, want success", ok, err)
+	}
+
+	script := filepath.Join(t.TempDir(), "script.go")
+	writeTestFile(t, script, `import app "example.com/app"
+
+return app.Two()
+`)
+	if ok, err := runSource(rt, []string{"--srcroot", srcRoot, script}); err != nil || !ok {
+		t.Fatalf("runSource(--srcroot) ok=%v err=%v, want success", ok, err)
+	}
+
+	testDir := t.TempDir()
+	writeTestFile(t, filepath.Join(testDir, "use_app_test.go"), `package useapp
+
+import (
+	app "example.com/app"
+	"testing"
+)
+
+func TestTwo(t *testing.T) {
+	if app.Two() != 2 {
+		t.Fatalf("bad Two")
+	}
+}
+`)
+	testResult, err := rt.TestFilesWithPackages(evalWithPackagesRequest{
+		Files:       mustReadTestTarget(t, testDir),
+		SourceRoots: []string{srcRoot},
+	})
+	if err != nil {
+		t.Fatalf("TestFilesWithPackages(srcroot) error = %v", err)
+	}
+	if !testResult.OK || !strings.Contains(testResult.Output, "PASS") {
+		t.Fatalf("TestFilesWithPackages(srcroot) ok=%v output=%q diagnostics=%v, want PASS", testResult.OK, testResult.Output, testResult.Diagnostics)
+	}
+	if ok, err := runTest(rt, []string{"--srcroot", srcRoot, testDir}); err != nil || !ok {
+		t.Fatalf("runTest(--srcroot) ok=%v err=%v, want success", ok, err)
+	}
+
+	compileResult, err := rt.Compile(compileRequest{
+		Files: []sourceFile{{
+			Filename: "formula.go",
+			Source:   `import app "example.com/app"; return app.Two()`,
+		}},
+		SourceRoots: []string{srcRoot},
+	})
+	if err != nil {
+		t.Fatalf("Compile(srcroot) error = %v", err)
+	}
+	if !compileResult.OK {
+		t.Fatalf("Compile(srcroot) diagnostics = %v, want success", compileResult.Diagnostics)
+	}
+	badCompile, err := rt.Compile(compileRequest{
+		Files: []sourceFile{{
+			Filename: "bad_formula.go",
+			Source:   `import app "example.com/app"; return app.Nope()`,
+		}},
+		SourceRoots: []string{srcRoot},
+	})
+	if err != nil {
+		t.Fatalf("Compile(bad srcroot) error = %v", err)
+	}
+	if badCompile.OK || len(badCompile.Diagnostics) == 0 || !strings.Contains(badCompile.Diagnostics[0], "Nope") {
+		t.Fatalf("Compile(bad srcroot) ok=%v diagnostics=%v, want missing selector diagnostic", badCompile.OK, badCompile.Diagnostics)
+	}
+	if ok, err := runCompile(rt, []string{
+		"--srcroot", srcRoot,
+		"--expr", `import app "example.com/app"; return app.Two()`,
+	}); err != nil || !ok {
+		t.Fatalf("runCompile(--srcroot) ok=%v err=%v, want success", ok, err)
+	}
+}
+
+func assertNodeRuntimeRunsFixtureWithSourcePackageGraph(t *testing.T, rt *nodeRuntime) {
+	t.Helper()
+
+	srcRoot := t.TempDir()
+	pkgDir := filepath.Join(srcRoot, "example.com", "mathx")
+	if err := os.MkdirAll(pkgDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(pkgDir) error = %v", err)
+	}
+	writeTestFile(t, filepath.Join(pkgDir, "mathx.go"), `package mathx
+
+func Add(a, b int) int {
+	return a + b
+}
+`)
+	fixtureJSON := `{
+  "cells": {
+    "A1": 40,
+    "B1": {
+      "formula": "import mathx \"example.com/mathx\"\nreturn mathx.Add(sheet.A1, 2)"
+    }
+  }
+}`
+	result, err := rt.RunFixtureWithPackages(fixtureWithPackagesRequest{
+		FixtureJSON: fixtureJSON,
+		SourceRoots: []string{srcRoot},
+	})
+	if err != nil {
+		t.Fatalf("RunFixtureWithPackages() error = %v", err)
+	}
+	if !result.OK || result.Sheets["sheet"]["B1"] != "42" {
+		t.Fatalf("RunFixtureWithPackages() ok=%v sheets=%#v diagnostics=%v, want B1=42", result.OK, result.Sheets, result.Diagnostics)
+	}
+
+	fixtureFile := filepath.Join(t.TempDir(), "fixture.json")
+	writeTestFile(t, fixtureFile, fixtureJSON)
+	if ok, err := runFixture(rt, []string{"--srcroot", srcRoot, fixtureFile}); err != nil || !ok {
+		t.Fatalf("runFixture(--srcroot) ok=%v err=%v, want success", ok, err)
+	}
+}
+
 func mustEval(t *testing.T, rt *nodeRuntime, source string) evalResult {
 	t.Helper()
 
@@ -289,6 +780,16 @@ func mustEval(t *testing.T, rt *nodeRuntime, source string) evalResult {
 		t.Fatalf("Eval() diagnostics = %v", result.Diagnostics)
 	}
 	return result
+}
+
+func mustReadTestTarget(t *testing.T, target string) []sourceFile {
+	t.Helper()
+
+	files, err := readTestTarget(target)
+	if err != nil {
+		t.Fatalf("readTestTarget(%s) error = %v", target, err)
+	}
+	return files
 }
 
 func combinedTestSource(files []sourceFile) string {

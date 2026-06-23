@@ -29,15 +29,76 @@ export {
   artifactPathForImportPath,
   buildPackage,
   buildPackages,
+  collectSourceImportPaths,
+  inspectPackageJavaScript,
   resolveArtifactRoot
 } from "./build.js";
+export {
+  compilePackageSourceFiles,
+  compileSource,
+  compileSourceFiles
+} from "./compile.js";
+export type {
+  CompilePackageOptions,
+  CompilePackageResult,
+  CompileResult
+} from "./compile.js";
+export {
+  collectSpreadsheetFixtureFormulaSourceFiles,
+  parseSpreadsheetFixtureJson,
+  runSpreadsheetFixture,
+  runSpreadsheetFixtureJson
+} from "./fixture.js";
+export type {
+  SpreadsheetFixture,
+  SpreadsheetFixtureCellInput,
+  SpreadsheetFixtureCellSpec,
+  SpreadsheetFixtureRunOptions,
+  SpreadsheetFixtureRunResult
+} from "./fixture.js";
+export {
+  SpreadsheetEngine,
+  SpreadsheetFormulaCompilerCache,
+  cellDependency,
+  rangeDependency,
+  spreadsheetFormulaCacheKey,
+  spreadsheetFormulaEvaluation,
+  spreadsheetError
+} from "./spreadsheet.js";
 export type {
   BuildArtifactReport,
   BuildArtifactStore,
   BuildExport,
   BuildPackageReport,
-  BuildPackageRequest
+  BuildSourcePackageProvider,
+  InspectPackageJavaScriptReport,
+  BuildPackageRequest,
+  SourceImportPathsResult
 } from "./build.js";
+export type {
+  IterativeCalculationOptions,
+  SetFormulaOptions,
+  SetLiteralOptions,
+  SpreadsheetFormulaCompileInput,
+  SpreadsheetFormulaCompiler,
+  SpreadsheetFormulaCompilerCacheInstallOptions,
+  SpreadsheetFormulaCompilerCacheInstallResult,
+  SpreadsheetFormulaCacheKeyInput,
+  SpreadsheetCellDependency,
+  SpreadsheetCellRef,
+  SpreadsheetDependency,
+  SpreadsheetDiagnostic,
+  SpreadsheetEngineOptions,
+  SpreadsheetErrorCode,
+  SpreadsheetErrorValue,
+  SpreadsheetFormulaContext,
+  SpreadsheetFormulaEvaluation,
+  SpreadsheetFormulaEvaluator,
+  SpreadsheetRangeDependency,
+  SpreadsheetRecalculationResult,
+  SpreadsheetSetFormulaResult,
+  SpreadsheetValue
+} from "./spreadsheet.js";
 export type { Diagnostic, SourceFile, SourceSpan } from "./diagnostics.js";
 export type { ImportDecl, ProgramAst, ProgramKind } from "./ast.js";
 export { childNodes, ident, parseCellAddress, walk } from "./front/ast.js";
@@ -114,14 +175,18 @@ export {
   GoJuniorRuntimeError,
   RuntimeMap,
   RuntimeChannel,
+  evaluatePackageSourceFiles,
   evaluateSourceFiles,
   testSource,
-  testSourceFiles
+  testSourceFiles,
+  typeCheckConfig
 } from "./runtime.js";
 export type {
   EvaluationOptions,
   EvaluationResult,
   GoJuniorFunction,
+  PackageEvaluationOptions,
+  PackageEvaluationResult,
   RuntimeCallable,
   RuntimeObject,
   RuntimeValue,

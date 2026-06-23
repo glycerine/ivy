@@ -303,6 +303,150 @@ Test strategy for the pivot:
 - Add randomized scheduler stress tests under a deterministic seed so failures
   are reproducible.
 
+Current Go toolchain corpus note:
+
+- `gojr/test/go-toolchain/test` contains an imported copy of the Go
+  distribution `test/` tree, and `gojr/tests/goToolchainCorpus.test.ts` now
+  executes a small active `// run` smoke set from that corpus:
+  `alias1.go`, `bigmap.go`, `align.go`, `char_lit.go`, `clear.go`, `decl.go`,
+  `defer.go`, `divide.go`, `floatcmp.go`, `helloworld.go`, `for.go`, `closure1.go`,
+  `closure2.go`, `compos.go`, `const8.go`, `func.go`, `func4.go`,
+  `func6.go`, `func7.go`, `func8.go`, `if.go`, `intcvt.go`,
+  `initcomma.go`, `range3.go`, `range4.go`, `typeswitch1.go`, `varinit.go`,
+  `mapclear.go`, `map.go`,
+  `abi/convF_criteria.go`,
+  `abi/convT64_criteria.go`,
+  `abi/defer_aggregate.go`, `abi/double_nested_addressed_struct.go`,
+  `abi/double_nested_struct.go`, `abi/f_ret_z_not.go`, and
+  `iota.go`, `literal.go`, `method3.go`, `method7.go`, `newexpr.go`, `print.go`,
+  `string_lit.go`, `ken/array.go`, `ken/complit.go`, `ken/for.go`,
+  `ken/interbasic.go`, `ken/interfun.go`, `ken/intervar.go`,
+  `ken/litfun.go`, `ken/range.go`, `ken/ptrvar.go`, `ken/robfor.go`,
+  `ken/sliceslice.go`, `ken/simparray.go`, `ken/simpbool.go`,
+  `ken/simpconv.go`, `ken/simpfun.go`,
+  `ken/strvar.go`, and `ken/string.go`.
+- This active smoke path has already forced compatibility fixes for
+  non-identifier range assignment targets, blank identifiers in range
+  assignments, `fmt.Sprint` operand spacing, switch `default` selection when
+  `default` appears before matching cases, and concrete dynamic type identity
+  for values boxed into `interface{}`. It also now guards the scanner/parser
+  rule that spreadsheet-looking names such as `F1` and `F2` remain ordinary
+  identifiers in Go declaration contexts, including before array types such as
+  `F2 [0]struct{}`. `for.go` additionally guards anonymous empty `struct{}`
+  zero values, literals, array assignment, and range-loop behavior.
+  `range3.go` guards Go 1.22+ integer range semantics, including negative
+  integer ranges executing zero iterations and short-declared range variables
+  taking the source expression's type such as `rune` for `range 'a'`.
+  Front-checker range variables declared with `:=` now live in the range
+  statement scope rather than the surrounding block, so separate `for i :=
+  range ...` statements can redeclare `i` like Go.
+  `ken/string.go` guards Go string operations, conversion from integer values
+  to strings, conversion from byte/rune slices to strings, and array-pointer
+  indexing/slicing. The scanner now also guards that hex integer literals such
+  as `0xe1` are classified as integer literals rather than floats.
+  `iota.go` guards typed numeric constant materialization into float and
+  complex targets plus Go's rule that `iota` increments once per const-spec
+  line, not once per name inside a multi-name const spec. `const8.go` guards
+  the additional Go rule that a real const named `iota` in the current scope
+  shadows the magic `iota`, including repeated implicit RHS expressions.
+  `literal.go` guards literal syntax for basic types plus Go's observable
+  `float32` and `complex64` rounding at assignment, conversion, and typed
+  expression-result boundaries.
+  `divide.go` guards typed integer arithmetic result materialization,
+  including signed minimum integer division by `-1`, and keeps untyped
+  constant identifiers exact for masks such as `ci8 & 0xffffffffffffffff`.
+  `ken/ptrvar.go` guards non-empty anonymous struct zero values, grouped
+  anonymous struct fields, pointers to anonymous struct variables, and Go's
+  pointer selector sugar. `ken/intervar.go`, `ken/interbasic.go`,
+  `ken/interfun.go`, `ken/simparray.go`, and `ken/simpfun.go` add compact
+  coverage for interface assignment, basic-type dynamic identity through
+  interface containers, interface-to-interface assertions, pointer receiver
+  method sets, array behavior, and simple function calls. `ken/array.go`
+  guards Go slice backing
+  storage created by `make([]T, len, cap)`, reslicing up to capacity,
+  pointer-to-array slicing, and `len`/`cap` on pointers to arrays.
+  `ken/sliceslice.go` adds nested slice slicing coverage, and
+  `ken/simpconv.go` adds compact conversion coverage. `ken/range.go` guards
+  array, slice, and map range behavior over values whose array length is
+  declared through a constant identifier such as `const size = 16; var a
+  [size]byte`.
+  `ken/complit.go` guards composite literals across named structs, arrays,
+  slices, and named map types, including preserving keyed composite-literal
+  expressions until runtime evaluation.
+  `alias1.go` guards Go's basic type
+  aliases in dynamic interface checks, especially `byte == uint8` and
+  `rune == int32`. `intcvt.go` guards explicit integer conversion wraparound
+  across signed and unsigned widths while keeping typed assignment
+  representability checks separate. `method3.go` guards named slice type
+  declarations, named slice composite literals, named-value `len`/selector
+  behavior, and Go method expressions such as `T.Len(t)` and `(*T).Len(&t)`.
+  `method7.go` guards named and literal interface method expressions, promoted
+  method expressions on anonymous structs, and promoted pointer method
+  expressions such as `(*Outer).M`. `newexpr.go` guards Go 1.26 `new(expr)`
+  semantics for untyped constants, ordinary expression values, composite
+  values, boolean expressions, and top-level initialized pointer variables.
+  `bigmap.go` guards large array map key/value behavior, indexing array values
+  returned from map lookups, and composite literal operands inside `if` header
+  index expressions without confusing the following block braces.
+  `align.go`, `char_lit.go`, `defer.go`, and `varinit.go` add active coverage
+  for nested positional composite literals, broad rune literal syntax, LIFO
+  defer execution with variadic interface arguments, and Go's self-referential
+  variable initializer scoping rule.
+  `clear.go` guards the typed `math.NaN` package surface needed by real
+  fixtures, Go's non-reflexive NaN map-key behavior, and `clear` on both maps
+  and typed slices, including zeroing slice views through their backing store.
+  `floatcmp.go` guards Go's unordered NaN comparison semantics, so all ordered
+  comparisons involving NaN are false while equality remains false and
+  inequality remains true. `mapclear.go` guards map range behavior while
+  deleting keys and confirms side effects during range evaluation still occur.
+  `map.go` guards broad Go map behavior, including `strconv.Itoa`, map
+  construction and comma-ok lookups across key/value types, array bounds that
+  use constant expressions such as `[2*count]`, nested map/slice/pointer map
+  values, float bit helpers, Go's `+0`/`-0` map-key equality, and
+  non-reflexive NaN map keys.
+  `print.go` guards built-in print/println coverage for nil interfaces,
+  nil maps, typed nil slices, signed and unsigned integers, floats, complex
+  values, booleans, strings, spacing, and deferred print execution.
+  `string_lit.go` guards Go string byte-sequence semantics, including escaped
+  raw byte literals such as `\xf4`, string indexing/slicing by byte offset,
+  and conversions between strings, byte slices, and rune slices.
+  `func.go`, `func4.go`, `func7.go`, `func8.go`, `if.go`, and
+  `initcomma.go` add lightweight coverage for ordinary function/control-flow
+  fixtures that already fit the current runtime.
+- Recent copy/slice compatibility work added omitted-init Go for clauses such
+  as `for ; i < n; i++`, a typed but non-ambient `os.Exit` host package,
+  inferred runtime type metadata for `var x = make(T, ...)`, named slice
+  conversions, byte/rune slice-to-string alias resolution, `copy([]byte,
+  string)` byte semantics, byte-oriented internal Go string values, string
+  indexing/slicing by byte offset, string-to-`[]byte`/`[]rune` slice
+  conversions, typed nil slice conversions with Go `len`/`cap` behavior, and
+  backing-storage propagation for sliced array
+  reads/writes and `copy` destinations. The upstream `copy.go` fixture now
+  reaches the long full verification loop instead of early parser/runtime
+  failures, but it is not yet in the active smoke corpus because it exceeds the
+  fast-test budget under the current interpreter path.
+  Address-of identifier expressions now prefer declared binding type metadata
+  over inferred runtime value shape, so pointers such as `&i` inside typed
+  range loops have Go's source-level type rather than a widened runtime type.
+  Front-checker constants now retain their constant values, array types resolve
+  constant identifier lengths, and the runtime normalizes resolved array type
+  metadata such as `[size]byte` to `[16]byte` when the constant is available.
+  Named map composite literals now evaluate through the alias's map type while
+  retaining named runtime metadata, and named map values unwrap correctly for
+  indexing, assignment, comma-ok lookup, `len`, and range.
+  The active corpus harness treats `os.Exit(0)` as successful program
+  termination while preserving nonzero `os.Exit` calls as diagnostics.
+- Interface boxing now preserves explicit dynamic numeric and named scalar
+  types for function-call arguments, variable declarations, and assignments, so
+  `int(1)`, `int64(1)`, `uint(1)`, and named integer types remain
+  distinguishable in type switches and assertions. Remaining dynamic-type work
+  should extend the same exactness through containers, host boundaries, and
+  exported package ABI metadata.
+- The corpus importer still reflects its original concurrency/recover skip
+  filter in `MANIFEST.json`. As full Go support matures, regenerate or relax
+  that importer so channel, `select`, goroutine, and `recover` fixtures can
+  become active too.
+
 Implementation sequencing should be CLI-first:
 
 1. Build the shared language/compiler/recalculation core.
@@ -576,6 +720,35 @@ Function-cell rules:
   performed by the function are observed during evaluation.
 - Persisted workbooks store the function source and declared cell type, not the
   compiled function object.
+
+### Compilation and Recalculation Cache Model
+
+Use the same mental model for package functions, REPL functions, function cells,
+and spreadsheet formula cells:
+
+- Stable JavaScript binding slots carry mutable values and callable function
+  objects. Existing compiled code reads through those slots, so ordinary value
+  changes do not force recompilation.
+- Those JavaScript slots solve live binding inside already-compiled functions;
+  they do not replace the spreadsheet graph, which still owns dirty marking,
+  observed dependency rewiring, and deciding which compiled functions rerun.
+- A source unit is recompiled only when its static shape changes: source text,
+  declared type/signature, import/package cache keys, capability/effect policy,
+  host spec version, compiler/backend version, or declared dependency shape.
+- Spreadsheet value changes mark dependents dirty and trigger recalculation,
+  not recompilation. The existing compiled evaluator should run again against
+  the updated binding/cell values.
+- Dynamic cell/range references are observed at evaluation time. If the
+  observed dependency set changes, the recalculation graph updates its reverse
+  edges and reevaluates until the dependency set stabilizes or reports
+  `#UNSTABLE_DEPS!`.
+- Function-cell calls record a dependency on the function cell. Updating a
+  function implementation installs a new callable into the stable slot; callers
+  only recompile if the function's static metadata shape changes. Otherwise
+  they are dirtied and reevaluated through the normal spreadsheet graph.
+- Compiled formula and package artifacts are keyed by deterministic cache keys,
+  not by current runtime values. Returning to a previous static shape can reuse
+  the previous compiled artifact.
 
 Initial error codes:
 
@@ -1497,6 +1670,59 @@ Package linking rules:
   marked `package-state`, evaluated in stable scheduler order, and never
   optimized as pure/idempotent helpers
 
+Current source-package execution note:
+
+- The Node/CLI runtime has an initial interpreter-backed source package path:
+  `gojr eval --pkg import/path=DIR ...` and `gojr run --pkg import/path=DIR ...`
+  parse, typecheck, initialize, and expose exported runtime values from source
+  package directories before evaluating the caller.
+- `gojr eval` and `gojr run` also support repeated `--srcroot DIR` flags. The
+  embedded Node runtime parses the caller imports, loads source package
+  directories from those roots, recursively initializes source package imports
+  in dependency order, and then evaluates the caller.
+- Runtime source package evaluation now returns package export/type metadata
+  alongside runtime values, and dependent source packages use that metadata
+  while typechecking imports.
+- `gojr test` supports repeated `--pkg import/path=DIR` and `--srcroot DIR`
+  flags as well. Test files can import source packages from the same runtime
+  package graph, and the test typechecker uses package export metadata rather
+  than treating imported package selectors as `any`.
+- `gojr compile` supports repeated `--pkg import/path=DIR` and `--srcroot DIR`
+  flags too. It recursively loads and typechecks source package dependencies
+  to collect export metadata, but does not initialize packages or execute user
+  code before checking the caller.
+- `gojr run-fixture` supports repeated `--pkg import/path=DIR` and
+  `--srcroot DIR` flags. The fixture runner collects formula cell source files,
+  preloads the source package graph, and evaluates spreadsheet formulas with
+  the same runtime package values and export metadata.
+- This path is intentionally a semantic proving path for package scope,
+  package `init`, exported functions, exported mutable variables, import
+  aliases, and CLI ergonomics. It does not replace the planned emitted
+  JavaScript package artifact path.
+- The full package build/link path still needs generated package slots,
+  exported ABI/effect metadata, dependency graph loading, artifact validation,
+  and durable package artifact reuse from `~/go/pkg/gojr_js/` or OPFS.
+
+Current package build graph note:
+
+- `buildPackages` now accepts explicit source package dependencies by import
+  path and builds those dependencies before the requested root package.
+- `buildPackages` also accepts a source package provider hook. The Node CLI
+  implementation uses this to load package directories from filesystem source
+  roots while leaving browser/workbook/OPFS providers to implement the same
+  hook later.
+- Source dependency cache keys are included in dependent package cache keys, so
+  changing a supplied dependency invalidates and rebuilds its dependents.
+- Unknown non-built-in imports and source package import cycles are reported as
+  `GOJR_BUILD001` diagnostics before artifacts are written.
+- `gojr cache list --json` reads generated artifact envelopes from disk and
+  reports cache keys, source hashes, layout/backend versions, dependency edges,
+  dependency cache keys, package names, and exported symbol metadata. Plain
+  non-envelope `.js` files still appear as path-derived cache entries.
+- This is still an artifact-envelope graph. Trusted package providers, OPFS
+  graph loading, workspace/workbook package registries, and generated
+  executable package slots remain planned work.
+
 ## Binding Slots and Recompile Boundaries
 
 The REPL, source packages, Go-junior function cells, and ordinary spreadsheet
@@ -1533,6 +1759,22 @@ This is the same "what do we recompile?" logic used by spreadsheet
 recalculation. Value changes rerun dependent compiled functions; shape changes
 rebuild or re-typecheck the affected compiled functions before rerunning them.
 
+Current implementation note:
+
+- `SpreadsheetEngine.setFormula` accepts a formula cache key and skips
+  reinstalling an unchanged formula shape. Existing dependency edges and the
+  existing compiled/evaluator callable are retained; later literal value
+  changes still dirty dependents and rerun that callable.
+- Changing the formula cache key reinstalls the formula, marks dependents
+  dirty, and lets downstream formulas recompute from the changed shape.
+- `spreadsheetFormulaCacheKey(...)` provides the shared stable key input for
+  formula source, filename, declared dependencies, package metadata, compiler
+  version, host spec, and capability policy.
+- REPL/session typechecking consumes accepted top-level metadata from previous
+  successful entries, so later function declarations can refer to existing
+  top-level variables such as channels without reparsing or re-typechecking
+  older source.
+
 This model allows existing Go source libraries to be loaded when their imports
 and runtime environment requirements are available to Go-junior, while keeping
 cgo/native or otherwise target-specific libraries available through typed
@@ -1558,7 +1800,9 @@ Emission rules:
 
 - User source text is never copied directly.
 - Identifier names are generated, for example `_v0`, `_v1`, `_fn0`.
-- String literals are emitted with `JSON.stringify`.
+- String literals are decoded as Go byte sequences and emitted through
+  compiler-owned byte-array/helper stencils, not as JavaScript code-unit
+  strings.
 - Numeric literals are validated before emission.
 - Host calls are emitted only from resolved binding IDs.
 - Cell and range accesses are emitted only through runtime calls.
@@ -1675,6 +1919,34 @@ When a cell changes:
 
 This makes dynamic references a first-class recalculation feature rather than a
 later retrofit.
+
+Current implementation note:
+
+- `SpreadsheetEngine` supports literal cells, formula cells, declared
+  dependencies, observed dependencies, reverse-dependent edge rewiring, dynamic
+  dependency stabilization, default-off circular reference diagnostics, and
+  opt-in iterative calculation.
+- Formula installation uses cache keys to decide what must be recompiled:
+  unchanged formula source/type/dependency metadata skips installation and keeps
+  the existing compiled evaluator and dependency edges; changed cache keys
+  install the new evaluator and dirty downstream dependents. Literal cell
+  changes only dirty formulas reachable through the reverse-dependency graph;
+  they do not recompile formulas.
+- Go-junior evaluation records observed spreadsheet cell and range reads.
+- `runSpreadsheetFixture` wires Go-junior formula source strings into
+  `SpreadsheetEngine`, using the Go-junior evaluator's observed dependency
+  list as the active graph edge set after evaluation.
+- Spreadsheet ranges are typed and evaluated as row-major two-dimensional
+  values (`[][]T`), so formulas can assign a range to a local variable and
+  index it with ordinary Go-style indexing, for example
+  `rows := sheet.A1:B2; rows[0][0]`.
+- Formula cells that return range values can be consumed by later formulas as
+  nested slice values when the runtime can infer a common element type.
+- Fixture JSON is parsed with the Go-junior runtime JSON parser, preserving the
+  rule that quoted values are strings, integer tokens are exact integer values,
+  and decimal/exponent tokens are float64 values.
+- The Go `gojr` binary exposes `run-fixture`, invoking the JavaScript fixture
+  runner through embedded Node/V8, with human and JSON output.
 
 Bare direct references like `A1` are intentionally not cell references. Use
 explicit `sheet.A1` syntax so locals, packages, and cells remain easy for users
@@ -2508,7 +2780,8 @@ Tests:
 - Package-generated JS reads and writes package variables through generated
   package state slots, not globals.
 - Generated JS never contains raw user variable names.
-- String literals are escaped with `JSON.stringify`.
+- String literals are emitted through byte-preserving runtime helpers; golden
+  tests should reject JavaScript code-unit indexing/slicing semantics.
 - Host calls route through `host` using resolved binding paths or IDs.
 - Static current-sheet and cross-sheet cell reads route through `ctx.cell` with
   resolved expected cell type metadata.
@@ -2786,6 +3059,45 @@ Implementation tasks:
   `~/go/pkg/gojr_js/`.
 - Keep CLI output machine-readable with a JSON mode and human-readable by
   default.
+
+Current implementation note:
+
+- The embedded Go CLI currently supports `eval`, `run`, `compile`, `test`,
+  `build`, `inspect-js`, and `run-fixture`.
+- `eval` and `run` support repeated `--pkg import/path=DIR` flags. The Go CLI
+  reads the package source files, the embedded JavaScript runtime parses,
+  typechecks, initializes, and exports package runtime values, and the caller
+  can import the package by path or alias using ordinary Go import syntax.
+- `build` and `inspect-js` support repeated `--pkg import/path=DIR` flags for
+  explicit source package dependencies. The JavaScript build API compiles the
+  dependency artifacts first, records dependency edges/cache keys, and then
+  builds or inspects the root package artifact.
+- `build` and `inspect-js` support repeated `--srcroot DIR` flags. The embedded
+  Node provider resolves missing non-built-in imports by looking under those
+  source roots, plus an inferred root from `-importpath` and the target path,
+  plus GOPATH `src` roots. It loads sorted non-test `.go` files and leaves
+  parsing/typechecking/graph diagnostics to the JavaScript compiler.
+- `compile` parses and typechecks formula snippets, stdin, files, or package
+  directories through the shared TypeScript frontend without executing user
+  code. It supports human output, JSON output, and typed `--sheet-json` /
+  `--sheets-json` environments for formula checks.
+- `run-fixture` accepts a spreadsheet fixture JSON file or stdin, evaluates
+  multi-cell formula graphs through the shared TypeScript runtime, and reports
+  final cell values, diagnostics, evaluated cells, and observed dependencies.
+- `run-fixture` is intentionally a proving harness for the browser integration:
+  the same formula/runtime/spreadsheet engine path should be reused by the
+  worker target.
+- `inspect-js` currently prints the package artifact JavaScript envelope without
+  writing the artifact cache. It is the CLI/debugging surface that the future
+  full formula/package JavaScript emitter should reuse.
+- `cache path`, `cache list`, and guarded `cache clear --yes` are implemented
+  in the Go CLI as filesystem operations over the resolved package artifact
+  root. `clear` requires explicit confirmation to avoid accidental deletion of
+  `~/go/pkg/gojr_js`.
+- `cache list --json` now parses generated package artifact envelopes and
+  includes artifact metadata, dependency edges, dependency cache keys, and
+  exports in the returned entries.
+- Cache warming remains planned work.
 
 Tests:
 

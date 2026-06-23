@@ -11,6 +11,7 @@ export var TypeKind;
     TypeKind["Map"] = "Map";
     TypeKind["Chan"] = "Chan";
     TypeKind["Named"] = "Named";
+    TypeKind["TypeParam"] = "TypeParam";
 })(TypeKind || (TypeKind = {}));
 export var BasicKind;
 (function (BasicKind) {
@@ -165,10 +166,12 @@ export class SignatureType {
 }
 export class InterfaceType {
     methods;
+    typeSet;
     kind = TypeKind.Interface;
     completed = false;
-    constructor(methods = []) {
+    constructor(methods = [], typeSet = emptyTypeSet()) {
         this.methods = methods;
+        this.typeSet = typeSet;
     }
     complete() {
         this.methods.sort((left, right) => left.name.localeCompare(right.name));
@@ -185,6 +188,30 @@ export class InterfaceType {
         if (this.methods.length === 0)
             return "interface{}";
         return `interface{${this.methods.map((method) => method.name + method.type.typeString().replace(/^func/, "")).join("; ")}}`;
+    }
+}
+export function emptyTypeSet() {
+    return {
+        addable: false,
+        numeric: false,
+        integer: false,
+        ordered: false,
+        comparable: false
+    };
+}
+export class TypeParamType {
+    name;
+    constraint;
+    kind = TypeKind.TypeParam;
+    constructor(name, constraint = emptyTypeSet()) {
+        this.name = name;
+        this.constraint = constraint;
+    }
+    underlying() {
+        return this;
+    }
+    typeString() {
+        return this.name;
     }
 }
 export class MapType {
@@ -450,6 +477,8 @@ export function sameType(left, right) {
         return false;
     if (left instanceof BasicType && right instanceof BasicType)
         return left.basicKind === right.basicKind;
+    if (left instanceof TypeParamType && right instanceof TypeParamType)
+        return left === right || left.name === right.name;
     if (left instanceof ArrayType && right instanceof ArrayType) {
         return left.length === right.length && sameType(left.element, right.element);
     }

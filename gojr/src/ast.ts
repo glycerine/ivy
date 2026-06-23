@@ -82,6 +82,8 @@ export interface DeclarationSpec {
   name: string;
   type?: TypeNode;
   value?: Expression;
+  iotaIndex?: number;
+  valueIndex?: number;
 }
 
 export interface ConstDeclStatement {
@@ -185,7 +187,9 @@ export interface ForStatement {
 
 export interface RangeClause {
   keyName?: string;
+  keyTarget?: Expression;
   valueName?: string;
+  valueTarget?: Expression;
   define: boolean;
   source: Expression;
 }
@@ -304,6 +308,7 @@ export interface ArrayLiteralExpression {
 
 export interface StructLiteralField {
   name?: string;
+  key?: Expression;
   value: Expression;
 }
 

@@ -80,6 +80,27 @@ describe("Go-junior TypeScript front scanner", () => {
     expect(result.tokens[4]?.span).toMatchObject({ line: 2, column: 1 });
   });
 
+  test("classifies hex integers with e digits separately from hex floats", () => {
+    const result = scan("a := 0xe1\nb := 0xE1\nc := 0x1p2");
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.tokens.map((token) => [token.kind, token.lexeme])).toEqual([
+      [TokenKind.Identifier, "a"],
+      [TokenKind.Define, ":="],
+      [TokenKind.IntLiteral, "0xe1"],
+      [TokenKind.Semicolon, ";"],
+      [TokenKind.Identifier, "b"],
+      [TokenKind.Define, ":="],
+      [TokenKind.IntLiteral, "0xE1"],
+      [TokenKind.Semicolon, ";"],
+      [TokenKind.Identifier, "c"],
+      [TokenKind.Define, ":="],
+      [TokenKind.FloatLiteral, "0x1p2"],
+      [TokenKind.Semicolon, ";"],
+      [TokenKind.EOF, ""]
+    ]);
+  });
+
   test("scans Go raw string literals across newlines", () => {
     const result = scan("s := `hi\nthere`\nx := 1");
 

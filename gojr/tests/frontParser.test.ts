@@ -111,16 +111,39 @@ var answer = Identity[int](42)
     if (call?.kind === "CallExpr") expect(call.fun.kind).toBe("IndexExpr");
   });
 
+  test("keeps slice and array type declarations distinct from type parameter lists", () => {
+    const file = parseOk(`
+package slices
+
+type Slice []int
+type Array [3]int
+type Box[T any] struct { Value T }
+`);
+
+    const specs = file.declarations.flatMap((decl) => decl.kind === "GenDecl" ? decl.specs : []);
+    const slice = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "Slice");
+    const array = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "Array");
+    const box = specs.find((spec) => spec.kind === "TypeSpec" && spec.name.name === "Box");
+
+    expect(slice?.kind === "TypeSpec" ? slice.type.kind : undefined).toBe("ArrayType");
+    expect(array?.kind === "TypeSpec" ? array.type.kind : undefined).toBe("ArrayType");
+    expect(box?.kind === "TypeSpec" ? box.typeParams?.fields[0]?.names.map((name) => name.name) : undefined).toEqual(["T"]);
+  });
+
   test("parses structs, interfaces, maps, function literals, and composite literals", () => {
     const kinds = collectKinds(`
 package model
 
 type Point struct {
   X, Y float64
+  F0 [0]struct{}
+  F1 float32
+  F2 [0]struct{}
 }
 
 type Stringer interface {
   String() string
+  F1() int
 }
 
 var counts = map[string]int64{"a": 1, "b": 2}
@@ -133,6 +156,52 @@ var f = func(a, b, c int) (d, e, f int) { return b, c, a }
     expect(kinds).toContain("CompositeLit");
     expect(kinds).toContain("FuncLit");
     expect(kinds.filter((kind) => kind === "KeyValueExpr")).toHaveLength(2);
+  });
+
+  test("parses elided composite literals inside typed composite literals", () => {
+    const nodes = collectNodes(`
+package model
+
+var rows = []struct {
+  name string
+  vals []int
+}{
+  {"a", []int{1, 2}},
+  {"b", nil},
+}
+
+type Point struct{ X, Y int }
+var lookup = map[Point]Point{
+  {X: 1}: {Y: 2},
+}
+`);
+
+    const literals = nodes.filter((node) => node.kind === "CompositeLit");
+    expect(literals.length).toBeGreaterThan(5);
+    expect(literals.some((node) => node.kind === "CompositeLit" && !node.type)).toBe(true);
+  });
+
+  test("parses composite literal operands inside if header indexes and calls", () => {
+    const nodes = collectNodes(`
+package headers
+
+type T [1]byte
+
+func ok(T) bool { return true }
+
+func F(m map[T][1]byte) {
+  if x, y := m[T{}][0], m[T{1}][0]; x != y {
+  }
+  if ok(T{}) {
+  }
+  if (T{}) == (T{}) {
+  }
+}
+`);
+
+    expect(nodes.filter((node) => node.kind === "IfStmt")).toHaveLength(3);
+    expect(nodes.filter((node) => node.kind === "CompositeLit").length).toBeGreaterThan(4);
+    expect(nodes.filter((node) => node.kind === "IndexExpr").length).toBeGreaterThan(3);
   });
 
   test("parses spreadsheet cell and range references as explicit AST nodes", () => {
@@ -171,6 +240,13 @@ top:
     }
     _ = v + i * 2
   }
+  var a [2]int
+  q := 0
+  for a[func() int {
+    q++
+    return 0
+  }()] = range [2]int{} {
+  }
   return 0
 }
 `);
@@ -186,6 +262,38 @@ top:
     const right = rhs?.kind === "BinaryExpr" ? rhs.right : undefined;
     expect(right?.kind).toBe("BinaryExpr");
     expect(right?.kind === "BinaryExpr" ? right.op : undefined).toBe(TokenKind.Star);
+    expect(nodes.filter((node) => node.kind === "RangeStmt")).toHaveLength(2);
+  });
+
+  test("parses Go for clauses with omitted init statements", () => {
+    const nodes = collectNodes(`
+package control
+
+func F() int {
+  i := 0
+  sum := 0
+  for ; i < 5; i++ {
+    sum += i
+  }
+  for ; ; i-- {
+    if i == 0 {
+      break
+    }
+  }
+  return sum
+}
+`);
+
+    const loops = nodes.filter((node) => node.kind === "ForStmt");
+    expect(loops).toHaveLength(2);
+    expect(loops[0]).toMatchObject({ kind: "ForStmt" });
+    expect(loops[0]?.kind === "ForStmt" ? loops[0].init : undefined).toBeUndefined();
+    expect(loops[0]?.kind === "ForStmt" ? loops[0].condition?.kind : undefined).toBe("BinaryExpr");
+    expect(loops[0]?.kind === "ForStmt" ? loops[0].post?.kind : undefined).toBe("IncDecStmt");
+    expect(loops[1]).toMatchObject({ kind: "ForStmt" });
+    expect(loops[1]?.kind === "ForStmt" ? loops[1].init : undefined).toBeUndefined();
+    expect(loops[1]?.kind === "ForStmt" ? loops[1].condition : undefined).toBeUndefined();
+    expect(loops[1]?.kind === "ForStmt" ? loops[1].post?.kind : undefined).toBe("IncDecStmt");
   });
 
   test("parses value switches and type switches with case clauses", () => {

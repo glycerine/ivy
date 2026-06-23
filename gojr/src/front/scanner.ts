@@ -203,7 +203,7 @@ class Scanner {
     const core = text.endsWith("i") ? text.slice(0, -1) : text;
     const kind = text.endsWith("i")
       ? TokenKind.ImagLiteral
-      : /[.eEpP]/.test(core)
+      : goFloatPattern.test(core)
         ? TokenKind.FloatLiteral
         : TokenKind.IntLiteral;
     this.emit(kind, text, start, this.position());
@@ -454,6 +454,7 @@ const hexMantissa = String.raw`(?:${hexDigits}(?:\.${hexDigits}?)?|\.${hexDigits
 const hexFloat = String.raw`(?:0[xX]${hexMantissa}[pP][+-]?${decimalDigits})`;
 const integer = String.raw`(?:0[bB]${binaryDigits}|0[oO]${octalDigits}|0[xX]${hexDigits}|${decimalDigits})`;
 const goNumberPattern = new RegExp(`^(?:${hexFloat}|${decimalFloat}|${integer})(?:i)?`);
+const goFloatPattern = new RegExp(`^(?:${hexFloat}|${decimalFloat})$`);
 
 function isIdentifierStart(text: string): boolean {
   return /^[A-Za-z_]$/.test(text);

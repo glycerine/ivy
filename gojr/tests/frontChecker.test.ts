@@ -1,6 +1,7 @@
 import { describe, expect, test } from "./testHarness.js";
 import { checkFrontSource } from "../src/front/checker.js";
 import {
+  ArrayType,
   FuncObject,
   NamedType,
   PackageInfo,
@@ -44,15 +45,33 @@ func Pick[T Number](value T) T {
   return value
 }
 
+func Add[T Number](left, right T) T {
+  return left + right
+}
+
 var A = Identity[int](1)
 var B = Pick[int](2)
+var C = Add[int](3, 4)
+var D = Add[float64](1.25, 2.5)
 `);
 
     expect(result.diagnostics).toEqual([]);
     const identity = result.pkg.scope.lookup("Identity");
-    expect(identity?.type.typeString()).toBe("func(value any) any");
+    expect(identity?.type.typeString()).toBe("func(value T) T");
     const box = result.pkg.scope.lookup("Box");
     expect(box?.type.typeString()).toBe("generic.Box");
+  });
+
+  test("rejects type parameter operators not permitted by the constraint", () => {
+    const result = check(`
+package generic
+
+func Bad[T any](left, right T) T {
+  return left + right
+}
+`);
+
+    expect(result.diagnostics.map((diagnostic) => diagnostic.message)).toContain("invalid operation: T + T (operator + not permitted by constraint)");
   });
 
   test("rejects generic function instantiation with non-type arguments", () => {
@@ -138,6 +157,7 @@ package workbook
 
 var a = sheet.A1 + sheet.B1
 var r = Data.A1:B2
+var first = r[0][0]
 `, {
       universe,
       sheetNamespaces: {
@@ -158,7 +178,57 @@ var r = Data.A1:B2
 
     const range = result.pkg.scope.lookup("r")?.type;
     expect(range?.kind).toBe(TypeKind.Slice);
-    expect(range?.typeString()).toBe("[]float64");
+    expect(range?.typeString()).toBe("[][]float64");
+    expect(result.pkg.scope.lookup("first")?.type.typeString()).toBe("float64");
+  });
+
+  test("scopes range variables to the for statement and preserves integer range key types", () => {
+    const result = check(`
+package rangescope
+
+func R() {
+  for i := range -1 {
+    _ = i
+  }
+  for i := range 'a' {
+    var _ *rune = &i
+  }
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    const defs = [...result.info.defs.entries()].filter(([ident]) => ident.name === "i");
+    expect(defs.map(([, object]) => object?.type.typeString())).toEqual(["int64", "rune"]);
+  });
+
+  test("types array pointer indexing and slicing like Go", () => {
+    const result = check(`
+package arrayptr
+
+var p = new([3]byte)
+var b = p[0]
+var s = p[0:]
+var text = string(s)
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.pkg.scope.lookup("b")?.type.typeString()).toBe("byte");
+    expect(result.pkg.scope.lookup("s")?.type.typeString()).toBe("[]byte");
+    expect(result.pkg.scope.lookup("text")?.type.typeString()).toBe("string");
+  });
+
+  test("resolves constant identifiers in array lengths", () => {
+    const result = check(`
+package arraylen
+
+const size = 16
+var a [size]byte
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    const aType = result.pkg.scope.lookup("a")?.type;
+    expect(aType).toBeInstanceOf(ArrayType);
+    expect(aType?.typeString()).toBe("[16]byte");
   });
 
   test("rejects mixed string and numeric addition", () => {

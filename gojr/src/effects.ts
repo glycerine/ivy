@@ -320,7 +320,10 @@ function analyzeExpression(
       for (const element of expression.elements) analyzeExpression(element, summary, functionKeys);
       return;
     case "StructLiteralExpression":
-      for (const field of expression.fields) analyzeExpression(field.value, summary, functionKeys);
+      for (const field of expression.fields) {
+        if (field.key) analyzeExpression(field.key, summary, functionKeys);
+        analyzeExpression(field.value, summary, functionKeys);
+      }
       return;
     case "MapLiteralExpression":
       analyzeMapLiteral(expression, summary, functionKeys);

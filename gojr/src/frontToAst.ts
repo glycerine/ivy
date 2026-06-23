@@ -72,6 +72,7 @@ import {
   RangeStmt,
   Spec,
   Stmt,
+  StructType,
   TypeSpec as FrontTypeSpec,
   ValueSpec
 } from "./front/ast.js";
@@ -137,13 +138,13 @@ function genDeclToStatement(declaration: GenDecl): ConstDeclStatement | VarDeclS
   if (declaration.token === TokenKind.Const) {
     return withSpan({
       kind: "ConstDecl",
-      declarations: declaration.specs.flatMap(valueSpecToDeclarations)
+      declarations: declaration.specs.flatMap((spec, index) => valueSpecToDeclarations(spec, index))
     } satisfies ConstDeclStatement, declaration.span);
   }
   if (declaration.token === TokenKind.Var) {
     return withSpan({
       kind: "VarDecl",
-      declarations: declaration.specs.flatMap(valueSpecToDeclarations)
+      declarations: declaration.specs.flatMap((spec) => valueSpecToDeclarations(spec))
     } satisfies VarDeclStatement, declaration.span);
   }
   if (declaration.token === TokenKind.Type) {
@@ -155,12 +156,14 @@ function genDeclToStatement(declaration: GenDecl): ConstDeclStatement | VarDeclS
   return undefined;
 }
 
-function valueSpecToDeclarations(spec: Spec): DeclarationSpec[] {
+function valueSpecToDeclarations(spec: Spec, iotaIndex?: number): DeclarationSpec[] {
   if (spec.kind !== "ValueSpec") return [];
   return spec.names.map((name, index) => ({
     name: name.name,
     ...(spec.type ? { type: typeNode(spec.type) } : {}),
-    ...(spec.values[index] ? { value: expressionToAst(spec.values[index]!) } : {})
+    ...(spec.values[index] ? { value: expressionToAst(spec.values[index]!) } : {}),
+    ...(iotaIndex !== undefined ? { iotaIndex } : {}),
+    valueIndex: index
   }));
 }
 
@@ -380,7 +383,9 @@ function rangeStmtToAst(statement: RangeStmt): ForStatement {
     kind: "ForStatement",
     range: {
       ...(statement.key?.kind === "Ident" ? { keyName: statement.key.name } : {}),
+      ...(statement.key && statement.key.kind !== "Ident" ? { keyTarget: expressionToAst(statement.key) } : {}),
       ...(statement.value?.kind === "Ident" ? { valueName: statement.value.name } : {}),
+      ...(statement.value && statement.value.kind !== "Ident" ? { valueTarget: expressionToAst(statement.value) } : {}),
       define: statement.token === TokenKind.Define,
       source: expressionToAst(statement.source)
     },
@@ -574,47 +579,75 @@ function literal(value: LiteralExpression["value"], literalKind: LiteralExpressi
   } satisfies LiteralExpression, span);
 }
 
-function compositeLitToAst(expr: CompositeLit): Expression {
-  const type = expr.type;
+function compositeLitToAst(expr: CompositeLit, expectedType?: Expr): Expression {
+  const type = expr.type ?? expectedType;
   if (type?.kind === "MapType") {
     return withSpan({
       kind: "MapLiteralExpression",
       keyType: typeNode(type.key),
       valueType: typeNode(type.value),
-      entries: expr.elements.flatMap(mapEntryToAst)
+      entries: expr.elements.flatMap((element) => mapEntryToAst(element, type.key, type.value))
     } satisfies MapLiteralExpression, expr.span);
   }
   if (type?.kind === "ArrayType") {
     return withSpan({
       kind: "ArrayLiteralExpression",
       type: typeNode(type),
-      elements: expr.elements.map(elementValueToAst)
+      elements: expr.elements.map((element) => elementValueToAst(element, type.element))
     }, expr.span);
   }
+  const structFieldTypes = type?.kind === "StructType" ? expandedStructFieldTypes(type) : [];
   return withSpan({
     kind: "StructLiteralExpression",
     typeName: type ? typeText(type) : "<missing>",
-    fields: expr.elements.map(structFieldToAst)
+    fields: expr.elements.map((element, index) => structFieldToAst(element, structFieldTypeForElement(element, index, structFieldTypes)))
   } satisfies StructLiteralExpression, expr.span);
 }
 
-function mapEntryToAst(expr: Expr): MapEntryExpression[] {
+function mapEntryToAst(expr: Expr, keyType?: Expr, valueType?: Expr): MapEntryExpression[] {
   if (expr.kind !== "KeyValueExpr") return [];
-  return [{ key: expressionToAst(expr.key), value: expressionToAst(expr.value) }];
+  return [{ key: expressionToAstWithExpectedType(expr.key, keyType), value: expressionToAstWithExpectedType(expr.value, valueType) }];
 }
 
-function structFieldToAst(expr: Expr): StructLiteralField {
+function structFieldToAst(expr: Expr, expectedType?: Expr): StructLiteralField {
   if (expr.kind === "KeyValueExpr") {
     return {
       ...(expr.key.kind === "Ident" ? { name: expr.key.name } : {}),
-      value: expressionToAst(expr.value)
+      key: expressionToAst(expr.key),
+      value: expressionToAstWithExpectedType(expr.value, expectedType)
     };
   }
-  return { value: expressionToAst(expr) };
+  return { value: expressionToAstWithExpectedType(expr, expectedType) };
 }
 
-function elementValueToAst(expr: Expr): Expression {
-  return expr.kind === "KeyValueExpr" ? expressionToAst(expr.value) : expressionToAst(expr);
+function elementValueToAst(expr: Expr, expectedType?: Expr): Expression {
+  return expr.kind === "KeyValueExpr" ? expressionToAstWithExpectedType(expr.value, expectedType) : expressionToAstWithExpectedType(expr, expectedType);
+}
+
+function expressionToAstWithExpectedType(expr: Expr, expectedType?: Expr): Expression {
+  return expr.kind === "CompositeLit" && !expr.type ? compositeLitToAst(expr, expectedType) : expressionToAst(expr);
+}
+
+function expandedStructFieldTypes(type: StructType): Array<{ name?: string; type: Expr }> {
+  const fields: Array<{ name?: string; type: Expr }> = [];
+  for (const field of type.fields.fields) {
+    if (field.names.length === 0) {
+      fields.push({ type: field.type });
+      continue;
+    }
+    for (const name of field.names) {
+      fields.push({ name: name.name, type: field.type });
+    }
+  }
+  return fields;
+}
+
+function structFieldTypeForElement(expr: Expr, index: number, fields: Array<{ name?: string; type: Expr }>): Expr | undefined {
+  if (expr.kind === "KeyValueExpr" && expr.key.kind === "Ident") {
+    const keyName = expr.key.name;
+    return fields.find((field) => field.name === keyName)?.type;
+  }
+  return fields[index]?.type;
 }
 
 function cellRefToSelector(expr: CellRefExpr): SelectorExpression {

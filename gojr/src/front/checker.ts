@@ -24,6 +24,8 @@ import {
   MapType as MapTypeNode,
   RangeRefExpr,
   SelectorExpr,
+  SliceExpr,
+  StarExpr,
   Stmt,
   StructType as StructTypeNode,
   TypeAssertExpr,
@@ -234,11 +236,19 @@ class FrontChecker {
   }
 
   private declareGenDecl(declaration: GenDecl, scope: Scope, topLevel: boolean): void {
-    for (const spec of declaration.specs) {
+    let previousConstValues: Expr[] = [];
+    let previousConstType: Expr | undefined;
+    for (const [index, spec] of declaration.specs.entries()) {
       if (spec.kind === "TypeSpec") {
         this.bindTypeSpec(spec, scope);
       } else if (spec.kind === "ValueSpec") {
-        this.bindValueSpec(spec, scope, declaration.token, topLevel);
+        this.bindValueSpec(spec, scope, declaration.token, topLevel, declaration.token === TokenKind.Const
+          ? { iotaIndex: index, previousValues: previousConstValues, previousType: previousConstType }
+          : undefined);
+        if (declaration.token === TokenKind.Const && spec.values.length > 0) {
+          previousConstValues = spec.values;
+          previousConstType = spec.type;
+        }
       }
     }
   }
@@ -260,19 +270,37 @@ class FrontChecker {
     this.info.defs.set(spec.name, typeName);
   }
 
-  private bindValueSpec(spec: ValueSpec, scope: Scope, token: TokenKind, topLevel: boolean): void {
-    const explicitType = spec.type ? this.resolveType(spec.type, scope) : undefined;
+  private bindValueSpec(
+    spec: ValueSpec,
+    scope: Scope,
+    token: TokenKind,
+    topLevel: boolean,
+    constContext?: { iotaIndex: number; previousValues: Expr[]; previousType?: Expr | undefined }
+  ): void {
+    const typeExpression = spec.type ?? constContext?.previousType;
+    const explicitType = typeExpression ? this.resolveType(typeExpression, scope) : undefined;
+    const valueScope = constContext ? this.constSpecScope(scope, constContext.iotaIndex) : scope;
     for (const [index, name] of spec.names.entries()) {
-      const valueType = spec.values[index] ? this.checkExpr(spec.values[index]!, scope).type : undefined;
+      const valueExpression = spec.values[index] ?? constContext?.previousValues[index];
+      const checkedValue = valueExpression ? this.checkExpr(valueExpression, valueScope) : undefined;
+      const valueType = checkedValue?.type;
       const type = explicitType ?? (token === TokenKind.Const ? valueType : defaultType(valueType, this.universe)) ?? this.universe.basic.invalid;
       const object = token === TokenKind.Const
-        ? new ConstObject(name.name, type, undefined, scope, this.pkg)
+        ? new ConstObject(name.name, type, checkedValue?.value, scope, this.pkg)
         : new VarObject(name.name, type, false, scope, this.pkg);
       this.insert(scope, object, name);
-      if (!topLevel && spec.values[index]) {
-        this.checkAssignable(spec.values[index]!, type, scope);
+      if (!topLevel && valueExpression) {
+        this.checkAssignable(valueExpression, type, valueScope);
       }
     }
+  }
+
+  private constSpecScope(parent: Scope, iotaIndex: number): Scope {
+    const scope = new Scope(parent, "const");
+    if (!parent.lookup("iota")) {
+      scope.insert(new ConstObject("iota", this.universe.basic.untypedInt, BigInt(iotaIndex), scope, this.pkg));
+    }
+    return scope;
   }
 
   private declareFuncDecl(declaration: FuncDecl): void {
@@ -354,37 +382,47 @@ class FrontChecker {
       case "ReturnStmt":
         this.checkReturn(statement.results, scope, signature);
         break;
-      case "IfStmt":
-        if (statement.init) this.checkStmt(statement.init, scope, signature);
-        this.checkExpr(statement.condition, scope);
-        this.checkBlock(statement.body, new Scope(scope, "if"), signature);
-        if (statement.else) this.checkStmt(statement.else, scope, signature);
+      case "IfStmt": {
+        const ifScope = new Scope(scope, "if statement");
+        if (statement.init) this.checkStmt(statement.init, ifScope, signature);
+        this.checkExpr(statement.condition, ifScope);
+        this.checkBlock(statement.body, new Scope(ifScope, "if"), signature);
+        if (statement.else) this.checkStmt(statement.else, ifScope, signature);
         break;
-      case "ForStmt":
-        if (statement.init) this.checkStmt(statement.init, scope, signature);
-        if (statement.condition) this.checkExpr(statement.condition, scope);
-        if (statement.post) this.checkStmt(statement.post, scope, signature);
-        this.checkBlock(statement.body, new Scope(scope, "for"), signature);
+      }
+      case "ForStmt": {
+        const forScope = new Scope(scope, "for statement");
+        if (statement.init) this.checkStmt(statement.init, forScope, signature);
+        if (statement.condition) this.checkExpr(statement.condition, forScope);
+        if (statement.post) this.checkStmt(statement.post, forScope, signature);
+        this.checkBlock(statement.body, new Scope(forScope, "for"), signature);
         break;
+      }
       case "RangeStmt":
         this.checkRange(statement, scope, signature);
         break;
-      case "SwitchStmt":
-        if (statement.init) this.checkStmt(statement.init, scope, signature);
-        if (statement.tag) this.checkExpr(statement.tag, scope);
+      case "SwitchStmt": {
+        const switchScope = new Scope(scope, "switch statement");
+        if (statement.init) this.checkStmt(statement.init, switchScope, signature);
+        if (statement.tag) this.checkExpr(statement.tag, switchScope);
         for (const clause of statement.body) {
-          for (const item of clause.list) this.checkExpr(item, scope);
-          for (const item of clause.body) this.checkStmt(item, scope, signature);
+          const clauseScope = new Scope(switchScope, "switch clause");
+          for (const item of clause.list) this.checkExpr(item, switchScope);
+          for (const item of clause.body) this.checkStmt(item, clauseScope, signature);
         }
         break;
-      case "TypeSwitchStmt":
-        if (statement.init) this.checkStmt(statement.init, scope, signature);
-        this.checkStmt(statement.assign, scope, signature);
+      }
+      case "TypeSwitchStmt": {
+        const switchScope = new Scope(scope, "type switch statement");
+        if (statement.init) this.checkStmt(statement.init, switchScope, signature);
+        this.checkStmt(statement.assign, switchScope, signature);
         for (const clause of statement.body) {
-          for (const item of clause.list) this.resolveType(item, scope);
-          for (const item of clause.body) this.checkStmt(item, scope, signature);
+          const clauseScope = new Scope(switchScope, "type switch clause");
+          for (const item of clause.list) this.resolveType(item, switchScope);
+          for (const item of clause.body) this.checkStmt(item, clauseScope, signature);
         }
         break;
+      }
       case "DeferStmt":
         this.checkExpr(statement.call, scope);
         break;
@@ -396,8 +434,9 @@ class FrontChecker {
         break;
       case "SelectStmt":
         for (const clause of statement.body) {
-          if (clause.comm) this.checkStmt(clause.comm, scope, signature);
-          for (const item of clause.body) this.checkStmt(item, scope, signature);
+          const clauseScope = new Scope(scope, "select clause");
+          if (clause.comm) this.checkStmt(clause.comm, clauseScope, signature);
+          for (const item of clause.body) this.checkStmt(item, clauseScope, signature);
         }
         break;
       default:
@@ -440,21 +479,33 @@ class FrontChecker {
   }
 
   private checkRange(statement: Extract<Stmt, { kind: "RangeStmt" }>, scope: Scope, signature?: SignatureType): void {
-    const source = this.checkExpr(statement.source, scope).type.underlying();
-    const keyType = this.universe.basic.int64;
+    const sourceValue = this.checkExpr(statement.source, scope);
+    const source = sourceValue.type.underlying();
+    const rangeScope = new Scope(scope, "range");
+    let keyType = this.namedUniverseType("int") ?? this.universe.basic.int64;
     let valueType: Type = this.universe.basic.any;
     if (source instanceof SliceType || source instanceof ArrayType) valueType = source.element;
-    if (source instanceof MapType) valueType = source.value;
-    if (source instanceof BasicType && source.basicKind === BasicKind.String) valueType = this.universe.basic.string;
+    if (source instanceof MapType) {
+      keyType = source.key;
+      valueType = source.value;
+    }
+    if (source instanceof BasicType && source.basicKind === BasicKind.String) valueType = this.namedUniverseType("rune") ?? this.universe.basic.int64;
+    if (source instanceof BasicType && source.info.has("integer")) keyType = defaultType(sourceValue.type, this.universe) ?? sourceValue.type;
+    if (statement.source.kind === "BasicLit" && statement.source.token === TokenKind.RuneLiteral) keyType = this.namedUniverseType("rune") ?? keyType;
 
     if (statement.token === TokenKind.Define) {
-      if (statement.key?.kind === "Ident" && statement.key.name !== "_") this.insert(scope, new VarObject(statement.key.name, keyType, false, scope, this.pkg), statement.key);
-      if (statement.value?.kind === "Ident" && statement.value.name !== "_") this.insert(scope, new VarObject(statement.value.name, valueType, false, scope, this.pkg), statement.value);
+      if (statement.key?.kind === "Ident" && statement.key.name !== "_") this.insert(rangeScope, new VarObject(statement.key.name, keyType, false, rangeScope, this.pkg), statement.key);
+      if (statement.value?.kind === "Ident" && statement.value.name !== "_") this.insert(rangeScope, new VarObject(statement.value.name, valueType, false, rangeScope, this.pkg), statement.value);
     } else {
-      if (statement.key) this.checkExpr(statement.key, scope);
-      if (statement.value) this.checkExpr(statement.value, scope);
+      if (statement.key && !(statement.key.kind === "Ident" && statement.key.name === "_")) this.checkExpr(statement.key, scope);
+      if (statement.value && !(statement.value.kind === "Ident" && statement.value.name === "_")) this.checkExpr(statement.value, scope);
     }
-    this.checkBlock(statement.body, new Scope(scope, "range"), signature);
+    this.checkBlock(statement.body, rangeScope, signature);
+  }
+
+  private namedUniverseType(name: string): Type | undefined {
+    const object = this.universe.scope.lookup(name);
+    return object instanceof TypeNameObject ? object.type : undefined;
   }
 
   private checkReturn(results: Expr[], scope: Scope, signature?: SignatureType): void {
@@ -484,7 +535,7 @@ class FrontChecker {
         result = { mode: "value", type: this.cellType(expr) };
         break;
       case "RangeRefExpr":
-        result = { mode: "value", type: new SliceType(this.rangeElementType(expr)) };
+        result = { mode: "value", type: new SliceType(new SliceType(this.rangeElementType(expr))) };
         break;
       case "ParenExpr":
         result = this.checkExpr(expr.expr, scope);
@@ -505,10 +556,7 @@ class FrontChecker {
         result = this.checkIndex(expr, scope);
         break;
       case "SliceExpr":
-        result = { mode: "value", type: this.checkExpr(expr.object, scope).type };
-        if (expr.low) this.checkExpr(expr.low, scope);
-        if (expr.high) this.checkExpr(expr.high, scope);
-        if (expr.max) this.checkExpr(expr.max, scope);
+        result = this.checkSlice(expr, scope);
         break;
       case "TypeAssertExpr":
         result = this.checkTypeAssert(expr, scope);
@@ -525,9 +573,11 @@ class FrontChecker {
       case "InterfaceType":
       case "MapType":
       case "ChanType":
-      case "StarExpr":
       case "Ellipsis":
         result = { mode: "type", type: this.resolveType(expr, scope) };
+        break;
+      case "StarExpr":
+        result = this.checkStarExpr(expr, scope);
         break;
       default:
         result = { mode: "invalid", type: this.universe.basic.invalid };
@@ -584,6 +634,15 @@ class FrontChecker {
       return { mode: "value", type: channel.element };
     }
     return { mode: operand.mode === "constant" ? "constant" : "value", type: operand.type };
+  }
+
+  private checkStarExpr(expr: StarExpr, scope: Scope): TypeAndValue {
+    const operand = this.checkExpr(expr.expr, scope);
+    if (operand.mode === "type") return { mode: "type", type: new PointerType(operand.type) };
+    const type = operand.type.underlying();
+    if (type instanceof PointerType) return { mode: "value", type: type.base };
+    this.error(`cannot indirect ${operand.type.typeString()}`, expr.span);
+    return { mode: "invalid", type: this.universe.basic.invalid };
   }
 
   private checkBinary(expr: BinaryExpr, scope: Scope): TypeAndValue {
@@ -656,8 +715,19 @@ class FrontChecker {
       }
     }
 
-    const base = this.checkExpr(expr.object, scope).type;
-    const field = lookupFieldOrMethod(base, expr.selector.name);
+    const baseValue = this.checkExpr(expr.object, scope);
+    if (baseValue.mode === "type") {
+      const methodExpression = methodExpressionObject(baseValue.type, expr.selector.name);
+      if (methodExpression) {
+        this.info.uses.set(expr.selector, methodExpression);
+        this.info.selections.set(expr, methodExpression);
+        return { mode: "value", type: methodExpression.type };
+      }
+      this.error(`${expr.selector.name} is not a method`, expr.selector.span);
+      return { mode: "invalid", type: this.universe.basic.invalid };
+    }
+
+    const field = lookupFieldOrMethod(baseValue.type, expr.selector.name);
     if (field) {
       this.info.uses.set(expr.selector, field);
       this.info.selections.set(expr, field);
@@ -692,7 +762,7 @@ class FrontChecker {
       case "make":
         return { mode: "value", type: expr.args[0] ? this.resolveType(expr.args[0], scope) : this.universe.basic.invalid };
       case "new":
-        return { mode: "value", type: new PointerType(expr.args[0] ? this.resolveType(expr.args[0], scope) : this.universe.basic.invalid) };
+        return { mode: "value", type: new PointerType(this.newArgumentType(expr.args[0], scope)) };
       case "append":
         return { mode: "value", type: expr.args[0] ? this.checkExpr(expr.args[0], scope).type : this.universe.basic.invalid };
       case "len":
@@ -725,6 +795,13 @@ class FrontChecker {
     }
   }
 
+  private newArgumentType(arg: Expr | undefined, scope: Scope): Type {
+    if (!arg) return this.universe.basic.invalid;
+    const checked = this.checkExpr(arg, scope);
+    if (checked.mode === "type") return checked.type;
+    return defaultType(checked.type, this.universe) ?? checked.type;
+  }
+
   private checkIndex(expr: IndexExpr, scope: Scope): TypeAndValue {
     const objectValue = this.checkExpr(expr.object, scope);
     const object = objectValue.type.underlying();
@@ -736,10 +813,31 @@ class FrontChecker {
       return { mode: "value", type: objectValue.type };
     }
     this.checkExpr(expr.index, scope);
-    if (object instanceof ArrayType || object instanceof SliceType) return { mode: "value", type: object.element };
+    const indexable = object instanceof PointerType && object.base.underlying() instanceof ArrayType
+      ? object.base.underlying()
+      : object;
+    if (indexable instanceof ArrayType || indexable instanceof SliceType) return { mode: "value", type: indexable.element };
     if (object instanceof MapType) return { mode: "value", type: object.value };
     if (object instanceof BasicType && object.basicKind === BasicKind.String) return { mode: "value", type: this.universe.basic.string };
     this.error("cannot index value", expr.span);
+    return { mode: "invalid", type: this.universe.basic.invalid };
+  }
+
+  private checkSlice(expr: SliceExpr, scope: Scope): TypeAndValue {
+    const objectValue = this.checkExpr(expr.object, scope);
+    const object = objectValue.type.underlying();
+    if (expr.low) this.checkExpr(expr.low, scope);
+    if (expr.high) this.checkExpr(expr.high, scope);
+    if (expr.max) this.checkExpr(expr.max, scope);
+
+    if (object instanceof BasicType && object.basicKind === BasicKind.String) return { mode: "value", type: this.universe.basic.string };
+    if (object instanceof SliceType) return { mode: "value", type: object };
+    if (object instanceof ArrayType) return { mode: "value", type: new SliceType(object.element) };
+    if (object instanceof PointerType) {
+      const base = object.base.underlying();
+      if (base instanceof ArrayType) return { mode: "value", type: new SliceType(base.element) };
+    }
+    this.error("cannot slice value", expr.span);
     return { mode: "invalid", type: this.universe.basic.invalid };
   }
 
@@ -752,18 +850,42 @@ class FrontChecker {
 
   private checkCompositeLit(expr: CompositeLit, scope: Scope): TypeAndValue {
     const type = expr.type ? this.resolveType(expr.type, scope) : this.universe.basic.invalid;
+    this.checkCompositeLitElements(expr, type, scope);
+    return { mode: "value", type };
+  }
+
+  private checkCompositeLitElements(expr: CompositeLit, type: Type, scope: Scope): void {
     const literalType = type.underlying();
+    let positionalIndex = 0;
     for (const element of expr.elements) {
       if (element.kind === "KeyValueExpr") {
         if (!(literalType instanceof StructType && element.key.kind === "Ident")) {
-          this.checkExpr(element.key, scope);
+          this.checkExprWithExpectedType(element.key, literalType instanceof MapType ? literalType.key : undefined, scope);
         }
-        this.checkExpr(element.value, scope);
+        let expected = literalType instanceof MapType ? literalType.value : undefined;
+        if (!expected && literalType instanceof StructType && element.key.kind === "Ident") {
+          const keyName = element.key.name;
+          expected = literalType.fields.find((field) => field.name === keyName)?.type;
+        }
+        this.checkExprWithExpectedType(element.value, expected, scope);
       } else {
-        this.checkExpr(element, scope);
+        const expected = literalType instanceof ArrayType || literalType instanceof SliceType
+          ? literalType.element
+          : literalType instanceof StructType
+            ? literalType.fields[positionalIndex]?.type
+            : undefined;
+        this.checkExprWithExpectedType(element, expected, scope);
+        positionalIndex += 1;
       }
     }
-    return { mode: "value", type };
+  }
+
+  private checkExprWithExpectedType(expr: Expr, expected: Type | undefined, scope: Scope): TypeAndValue {
+    if (expr.kind === "CompositeLit" && !expr.type && expected) {
+      this.checkCompositeLitElements(expr, expected, scope);
+      return { mode: "value", type: expected };
+    }
+    return this.checkExpr(expr, scope);
   }
 
   private checkFuncLit(expr: FuncLit, scope: Scope): TypeAndValue {
@@ -835,7 +957,10 @@ class FrontChecker {
     if (expr.length.kind === "BasicLit" && expr.length.token === TokenKind.IntLiteral) {
       return new ArrayType(Number(expr.length.value), element);
     }
-    this.checkExpr(expr.length, scope);
+    const length = this.checkExpr(expr.length, scope);
+    if (length.mode === "constant" && typeof length.value === "bigint" && length.value >= 0n && length.value <= BigInt(Number.MAX_SAFE_INTEGER)) {
+      return new ArrayType(Number(length.value), element);
+    }
     return new ArrayType(expr.inferredLength ? -1 : 0, element);
   }
 
@@ -1206,6 +1331,29 @@ function lookupFieldOrMethod(type: Type, name: string): TypeObject | undefined {
   return undefined;
 }
 
+function methodExpressionObject(receiverType: Type, name: string): FuncObject | undefined {
+  const method = lookupMethodForExpression(receiverType, name);
+  if (!method) return undefined;
+  const receiver = method.signature.receiver?.type;
+  if (receiver instanceof PointerType && !(receiverType instanceof PointerType)) return undefined;
+  return new FuncObject(
+    name,
+    new SignatureType(
+      undefined,
+      tuple(varOf("", receiverType), ...method.signature.params.variables),
+      method.signature.results,
+      method.signature.variadic
+    )
+  );
+}
+
+function lookupMethodForExpression(type: Type, name: string): FuncObject | undefined {
+  const actual = type.underlying();
+  if (actual instanceof InterfaceType) return actual.methods.find((method) => method.name === name);
+  const selected = lookupFieldOrMethod(type, name);
+  return selected instanceof FuncObject ? selected : undefined;
+}
+
 function promotedFieldOrMethod(type: StructType, name: string, seen = new Set<StructType>()): TypeObject | undefined {
   if (seen.has(type)) return undefined;
   seen.add(type);
@@ -1286,12 +1434,75 @@ function fmtPackageInfo(universe: Universe): PackageInfo {
     pkg
   ));
   scope.insert(new FuncObject(
+    "Sprint",
+    new SignatureType(
+      undefined,
+      tuple(varOf("args", new SliceType(universe.basic.any))),
+      tuple(varOf("", universe.basic.string)),
+      true
+    ),
+    scope,
+    pkg
+  ));
+  scope.insert(new FuncObject(
+    "Sprintln",
+    new SignatureType(
+      undefined,
+      tuple(varOf("args", new SliceType(universe.basic.any))),
+      tuple(varOf("", universe.basic.string)),
+      true
+    ),
+    scope,
+    pkg
+  ));
+  scope.insert(new FuncObject(
     "Println",
     new SignatureType(
       undefined,
       tuple(varOf("args", new SliceType(universe.basic.any))),
       tuple(varOf("", universe.basic.int64)),
       true
+    ),
+    scope,
+    pkg
+  ));
+  return pkg;
+}
+
+function mathPackageInfo(universe: Universe): PackageInfo {
+  const pkg = new PackageInfo("math", "math", universe.scope);
+  const scope = pkg.scope;
+  const float32 = universeType(universe, "float32", universe.basic.float64);
+  const uint32 = universeType(universe, "uint32", universe.basic.int64);
+  const uint64 = universeType(universe, "uint64", universe.basic.int64);
+  const addFunc = (name: string, params: VarObject[], result: Type): void => {
+    scope.insert(new FuncObject(
+      name,
+      new SignatureType(undefined, tuple(...params), tuple(varOf("", result)), false),
+      scope,
+      pkg
+    ));
+  };
+  addFunc("NaN", [], universe.basic.float64);
+  addFunc("Inf", [varOf("sign", universeType(universe, "int", universe.basic.int64))], universe.basic.float64);
+  addFunc("IsNaN", [varOf("f", universe.basic.float64)], universe.basic.bool);
+  addFunc("Float32bits", [varOf("f", float32)], uint32);
+  addFunc("Float32frombits", [varOf("b", uint32)], float32);
+  addFunc("Float64bits", [varOf("f", universe.basic.float64)], uint64);
+  addFunc("Float64frombits", [varOf("b", uint64)], universe.basic.float64);
+  return pkg;
+}
+
+function strconvPackageInfo(universe: Universe): PackageInfo {
+  const pkg = new PackageInfo("strconv", "strconv", universe.scope);
+  const scope = pkg.scope;
+  scope.insert(new FuncObject(
+    "Itoa",
+    new SignatureType(
+      undefined,
+      tuple(varOf("i", universeType(universe, "int", universe.basic.int64))),
+      tuple(varOf("", universe.basic.string)),
+      false
     ),
     scope,
     pkg
@@ -1335,10 +1546,35 @@ function testingPackageInfo(universe: Universe): PackageInfo {
   return pkg;
 }
 
+function osPackageInfo(universe: Universe): PackageInfo {
+  const pkg = new PackageInfo("os", "os", universe.scope);
+  const scope = pkg.scope;
+  scope.insert(new FuncObject(
+    "Exit",
+    new SignatureType(
+      undefined,
+      tuple(varOf("code", universe.basic.int64)),
+      tuple(),
+      false
+    ),
+    scope,
+    pkg
+  ));
+  return pkg;
+}
+
 function standardPackageInfo(path: string, universe: Universe): PackageInfo | undefined {
   if (path === "fmt") return fmtPackageInfo(universe);
+  if (path === "math") return mathPackageInfo(universe);
+  if (path === "os") return osPackageInfo(universe);
+  if (path === "strconv") return strconvPackageInfo(universe);
   if (path === "testing") return testingPackageInfo(universe);
   return undefined;
+}
+
+function universeType(universe: Universe, name: string, fallback: Type): Type {
+  const object = universe.scope.lookup(name);
+  return object instanceof TypeNameObject ? object.type : fallback;
 }
 
 function promoteNumeric(left: Type, right: Type, universe: Universe): Type {

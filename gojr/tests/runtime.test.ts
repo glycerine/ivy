@@ -1,5 +1,15 @@
 import { describe, expect, test } from "./testHarness.js";
-import { evaluateSource, evaluateSourceFiles, formatReplValue, GoJuniorSession, testSource } from "../src/index.js";
+import {
+  cellDependency,
+  evaluatePackageSourceFiles,
+  evaluateSource,
+  evaluateSourceFiles,
+  formatReplValue,
+  GoJuniorSession,
+  rangeDependency,
+  testSource,
+  testSourceFiles
+} from "../src/index.js";
 
 async function expectRuns(source: string, options = {}) {
   const result = await evaluateSource(source, options);
@@ -49,7 +59,8 @@ return Budget.B2 + sheet.$A$1
 
   test("evaluates spreadsheet ranges as row-major two-dimensional arrays", async () => {
     const result = await expectRuns(`
-return sheet.A1:B2
+rows := sheet.A1:B2
+return rows[0][0] + rows[1][1], rows
 `, {
       sheet: {
         A1: 1n,
@@ -59,9 +70,36 @@ return sheet.A1:B2
       }
     });
 
-    expect(result.value).toEqual([
+    expect(result.values?.[0]).toBe(5n);
+    expect(result.values?.[1]).toEqual([
       [1n, 2n],
       [3n, 4n]
+    ]);
+  });
+
+  test("records observed spreadsheet cell and range dependencies", async () => {
+    const result = await expectRuns(`
+_ = sheet.$A$1
+_ = Budget.B2
+return sheet.A1:B2
+`, {
+      sheet: {
+        A1: 1n,
+        B1: 2n,
+        A2: 3n,
+        B2: 4n
+      },
+      sheets: {
+        Budget: {
+          B2: 5n
+        }
+      }
+    });
+
+    expect(result.observedDeps).toEqual([
+      cellDependency({ sheet: "sheet", cell: "A1" }),
+      cellDependency({ sheet: "Budget", cell: "B2" }),
+      rangeDependency("sheet", "A1", "B2")
     ]);
   });
 
@@ -215,6 +253,14 @@ return fmt.Sprintf("%#v %#v %#v", "x", 1.5, true)
     expect(result.value).toBe(`string("x") float64(1.5) bool(true)`);
   });
 
+  test("formats fmt.Sprint with Go operand spacing", async () => {
+    const result = await expectRuns(`
+return fmt.Sprint("signed ", 1), fmt.Sprint(1, 2), fmt.Sprint("a", "b"), fmt.Sprint(1, "a", 2), fmt.Sprintln("a", 1, "b")
+`);
+
+    expect(result.values).toEqual(["signed 1", "1 2", "ab", "1a2", "a 1 b\n"]);
+  });
+
   test("automatically imports fmt in scripts and REPL sessions", async () => {
     const script = await expectRuns(`
 fmt.Printf("auto %v\\n", 7)
@@ -254,6 +300,241 @@ func TestThing(t *testing.T) {
 }
 `);
     expect(define.diagnostics).toEqual([]);
+  });
+
+  test("supports importing os.Exit without ambient process authority", async () => {
+    const script = await expectRuns(`
+import "os"
+
+if false {
+  os.Exit(1)
+}
+return 7
+`);
+    expect(script.value).toBe(7n);
+
+    const exit = await evaluateSource(`
+import "os"
+
+os.Exit(3)
+`);
+    expect(exit.diagnostics).toHaveLength(1);
+    expect(exit.diagnostics[0]?.code).toBe("GOJR_RUNTIME001");
+    expect(exit.diagnostics[0]?.message).toBe("os.Exit(3)");
+  });
+
+  test("supports importing math.NaN for float map keys and clear", async () => {
+    const script = await expectRuns(`
+import "math"
+
+m := make(map[float64]int)
+m[math.NaN()] = 1
+m[math.NaN()] = 2
+before := len(m)
+clear(m)
+return before, len(m)
+`);
+
+    expect(script.values).toEqual([2n, 0n]);
+  });
+
+  test("supports strconv.Itoa and math float bit helpers", async () => {
+    const script = await expectRuns(`
+import "math"
+import "strconv"
+
+f32 := math.Float32frombits(1 << 31)
+f64 := math.Float64frombits(1 << 63)
+return strconv.Itoa(-12), strconv.Itoa(34), math.Float32bits(f32), math.Float64bits(f64), math.IsNaN(math.NaN())
+`);
+
+    expect(script.values).toEqual(["-12", "34", 2147483648n, 9223372036854775808n, true]);
+  });
+
+  test("matches Go float map-key semantics for signed zero and NaN", async () => {
+    const script = await expectRuns(`
+import "math"
+
+positiveZero := 0.0
+negativeZero := math.Float64frombits(1 << 63)
+m := map[float64]string{positiveZero: "+0"}
+before := m[negativeZero]
+m[negativeZero] = "-0"
+
+nanA := math.NaN()
+nanB := math.Float64frombits(math.Float64bits(nanA) ^ 2)
+m[nanA] = "nan-a"
+m[nanB] = "nan-b"
+_, okA := m[nanA]
+_, okB := m[nanB]
+return before, m[positiveZero], len(m), okA, okB, math.IsNaN(nanB)
+`);
+
+    expect(script.values).toEqual(["+0", "-0", 3n, false, false, true]);
+  });
+
+  test("converts map lookup and delete keys to the declared key type", async () => {
+    const script = await expectRuns(`
+mf := map[float64]string{0: "zero", 1.0: "one"}
+before := mf[0]
+_, okBefore := mf[1]
+delete(mf, 1)
+_, okAfter := mf[1.0]
+
+mi := map[int]string{0.0: "int-zero"}
+return before, okBefore, okAfter, mi[0.0]
+`);
+
+    expect(script.values).toEqual(["zero", true, false, "int-zero"]);
+  });
+
+  test("compares NaN values with Go ordered-comparison semantics", async () => {
+    const script = await expectRuns(`
+import "math"
+
+nan := math.NaN()
+f := 1.0
+return nan == nan, nan != nan, nan < nan, nan <= nan, nan > nan, nan >= nan,
+  f < nan, f <= nan, f > nan, f >= nan,
+  nan < f, nan <= f, nan > f, nan >= f
+`);
+
+    expect(script.values).toEqual([
+      false, true, false, false, false, false,
+      false, false, false, false,
+      false, false, false, false
+    ]);
+  });
+
+  test("evaluates source packages and lets formulas import their exported runtime values", async () => {
+    const pkg = await evaluatePackageSourceFiles([{
+      filename: "counter.go",
+      source: `package counter
+
+var Count int
+
+func init() {
+  Count = 40
+}
+
+func Next() int {
+  Count++
+  return Count
+}
+`
+    }], { importPath: "example.com/counter" });
+
+    expect(pkg.diagnostics).toEqual([]);
+    expect(pkg.package).toBeDefined();
+
+    const first = await expectRuns(`
+import counter "example.com/counter"
+return counter.Next()
+`, {
+      packages: {
+        "example.com/counter": pkg.package ?? {}
+      }
+    });
+    const second = await expectRuns(`
+import counter "example.com/counter"
+return counter.Next()
+`, {
+      packages: {
+        "example.com/counter": pkg.package ?? {}
+      }
+    });
+
+    expect(first.value).toBe(41n);
+    expect(second.value).toBe(42n);
+  });
+
+  test("typechecks and evaluates source packages that import other source packages", async () => {
+    const lib = await evaluatePackageSourceFiles([{
+      filename: "lib.go",
+      source: `package lib
+
+func One() int {
+  return 1
+}
+`
+    }], { importPath: "example.com/lib" });
+    expect(lib.diagnostics).toEqual([]);
+    expect(lib.package).toBeDefined();
+    expect(lib.packageInfo).toBeDefined();
+
+    const app = await evaluatePackageSourceFiles([{
+      filename: "app.go",
+      source: `package app
+
+import lib "example.com/lib"
+
+func Two() int {
+  return lib.One() + 1
+}
+`
+    }], {
+      importPath: "example.com/app",
+      packages: {
+        "example.com/lib": lib.package ?? {}
+      },
+      packageInfos: {
+        "example.com/lib": lib.packageInfo!
+      }
+    });
+    expect(app.diagnostics).toEqual([]);
+    expect(app.package).toBeDefined();
+
+    const result = await expectRuns(`
+import app "example.com/app"
+return app.Two()
+`, {
+      packages: {
+        "example.com/app": app.package ?? {},
+        "example.com/lib": lib.package ?? {}
+      }
+    });
+    expect(result.value).toBe(2n);
+  });
+
+  test("runs Go-junior tests that import source package metadata", async () => {
+    const app = await evaluatePackageSourceFiles([{
+      filename: "app.go",
+      source: `package app
+
+func Two() int {
+  return 2
+}
+`
+    }], { importPath: "example.com/app" });
+    expect(app.diagnostics).toEqual([]);
+    expect(app.package).toBeDefined();
+    expect(app.packageInfo).toBeDefined();
+
+    const result = await testSourceFiles([{
+      filename: "use_app_test.go",
+      source: `package useapp
+
+import (
+  app "example.com/app"
+  "testing"
+)
+
+func TestTwo(t *testing.T) {
+  if app.Two() != 2 {
+    t.Fatalf("bad Two")
+  }
+}
+`
+    }], {
+      packages: {
+        "example.com/app": app.package ?? {}
+      },
+      packageInfos: {
+        "example.com/app": app.packageInfo!
+      }
+    });
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output.join("")).toContain("PASS");
   });
 
   test("runs Go-junior tests with testing.T", async () => {
@@ -449,10 +730,36 @@ const (
   C int = iota
   D
 )
-return Single, A, B, C, D
+const (
+  F float32 = 2 * iota
+  G complex128 = iota
+)
+const (
+  abit, amask = 1 << iota, 1<<iota - 1
+  bbit, bmask
+)
+const (
+  PackageX = 2
+)
+func shadowConst() (int, int, int, int, int, int) {
+  const (
+    First = iota
+    iota = iota
+    ShadowedA
+    ShadowedB
+  )
+  const (
+    PackageX = PackageX + PackageX
+    LocalY
+    LocalZ = iota
+  )
+  return First, ShadowedA, ShadowedB, PackageX, LocalY, LocalZ
+}
+First, ShadowedA, ShadowedB, LocalX, LocalY, LocalZ := shadowConst()
+return Single, A, B, C, D, F, G, abit, amask, bbit, bmask, First, ShadowedA, ShadowedB, LocalX, LocalY, LocalZ
 `);
 
-    expect(result.values).toEqual([0n, 0n, 1n, 2n, 3n]);
+    expect(result.values).toEqual([0n, 0n, 1n, 2n, 3n, 0, { real: 1, imag: 0 }, 1n, 0n, 2n, 1n, 0n, 1n, 1n, 4n, 8n, 1n]);
 
     const immutable = await evaluateSource(`
 const X = 1
@@ -515,6 +822,19 @@ return counts["a"] + counts["b"] + counts["missing"], out
     expect(result.values).toEqual([3n, "a:1;b:2;"]);
   });
 
+  test("evaluates named map composite literals", async () => {
+    const result = await expectRuns(`
+type M map[int]int
+m := M{0: 10, 1: 20}
+m[2] = 30
+v, ok := m[1]
+missing, missingOK := m[3]
+return m[0] + v + m[2] + missing, ok, missingOK, len(m)
+`);
+
+    expect(result.values).toEqual([60n, true, false, 3n]);
+  });
+
   test("formats typed maps with fmt verbs", async () => {
     const result = await expectRuns(`
 import "fmt"
@@ -572,6 +892,25 @@ return a.X, c.Y, fmt.Sprintf("%v | %#v", a, a)
     ]);
   });
 
+  test("evaluates elided composite literals in typed array and map literals", async () => {
+    const result = await expectRuns(`
+type Point struct{ X, Y int }
+rows := []struct {
+  Name string
+  Pos Point
+}{
+  {"a", Point{1, 2}},
+  {"b", {Y: 4}},
+}
+lookup := map[Point]Point{
+  {X: 1}: {Y: 2},
+}
+return rows[0].Name, rows[1].Pos.Y, lookup[Point{X: 1}].Y
+`);
+
+    expect(result.values).toEqual(["a", 4n, 2n]);
+  });
+
   test("supports value and pointer receiver methods with Go selector syntax", async () => {
     const session = new GoJuniorSession();
 
@@ -604,6 +943,105 @@ return before, p.X, p.Y, p.Sum()
 `);
     expect(call.diagnostics).toEqual([]);
     expect(call.values).toEqual([5n, 8n, 12n, 20n]);
+  });
+
+  test("supports Go method expressions on named receiver types", async () => {
+    const result = await expectRuns(`
+type T []int
+
+func (t T) Len() int {
+  return len(t)
+}
+
+type Counter int
+
+func (c *Counter) IncBy(k int) {
+  *c = *c + Counter(k)
+}
+
+var t T = T{0, 1, 2, 3, 4}
+var c Counter
+f := T.Len
+g := (*T).Len
+h := (*Counter).IncBy
+h(&c, 3)
+return T.Len(t), f(t), g(&t), c
+`);
+
+    expect(result.values).toEqual([5n, 5n, 5n, 3n]);
+  });
+
+  test("supports interface and promoted method expressions", async () => {
+    const result = await expectRuns(`
+got := ""
+
+type I interface {
+  m()
+}
+
+type S struct{}
+
+func (S) m() {
+  got += "m;"
+}
+
+func (S) m1(s string) {
+  got += "m1(" + s + ");"
+}
+
+type T int
+
+func (T) m2() {
+  got += "m2;"
+}
+
+type Outer struct { *Inner }
+type Inner struct { s string }
+
+func (i Inner) M() string {
+  return i.s
+}
+
+I.m(S{})
+f := interface{ m1(string) }.m1
+f(S{}, "a")
+interface{ m1(string) }.m1(S{}, "b")
+g := struct{ T }.m2
+g(struct{ T }{})
+h := (*Outer).M
+return got, h(&Outer{&Inner{"hello"}})
+`);
+
+    expect(result.values).toEqual(["m;m1(a);m1(b);m2;", "hello"]);
+  });
+
+  test("REPL sessions typecheck interface method expressions from earlier declarations", async () => {
+    const session = new GoJuniorSession();
+
+    expect((await session.evaluate(`got := ""`)).diagnostics).toEqual([]);
+    expect((await session.evaluate(`type I interface { m() }`)).diagnostics).toEqual([]);
+    expect((await session.evaluate(`type S struct{}`)).diagnostics).toEqual([]);
+    expect((await session.evaluate(`func (S) m() { got += "m" }`)).diagnostics).toEqual([]);
+    expect((await session.evaluate(`I.m(S{})`)).diagnostics).toEqual([]);
+
+    const result = await session.evaluate("got");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe("m");
+  });
+
+  test("keeps value selectors ahead of type method expressions when a type name is shadowed", async () => {
+    const result = await expectRuns(`
+type T struct { X int }
+
+func (t T) XPlus(k int) int {
+  return t.X + k
+}
+
+T := T{X: 7}
+return T.X
+`);
+
+    expect(result.value).toBe(7n);
   });
 
   test("supports address-of and dereference assignment for structs and fields", async () => {
@@ -651,6 +1089,97 @@ return describe(p), describe(&p), describe(nil), describe(3), describe("x")
     expect(result.values).toEqual(["point:7", "ptr:7", "nil", "int:3", "other"]);
   });
 
+  test("preserves concrete dynamic numeric types inside interfaces", async () => {
+    const result = await expectRuns(`
+type Duration int
+
+describe := func(x interface{}) string {
+  switch x.(type) {
+  case int:
+    return "int"
+  case int64:
+    return "int64"
+  case uint:
+    return "uint"
+  case Duration:
+    return "duration"
+  default:
+    return "other"
+  }
+}
+
+var d interface{} = Duration(5)
+sameDuration, okDuration := d.(Duration)
+_, okInt := d.(int)
+
+return describe(1), describe(int64(1)), describe(uint(1)), describe(Duration(1)), okDuration, int(sameDuration), okInt
+`);
+
+    expect(result.values).toEqual(["int", "int64", "uint", "duration", true, 5n, false]);
+  });
+
+  test("preserves interface dynamic types through index assignments", async () => {
+    const result = await expectRuns(`
+type Duration int
+
+var xs [3]interface{}
+xs[0] = 1
+xs[1] = int64(2)
+xs[2] = Duration(3)
+_, xs0Int := xs[0].(int)
+_, xs0Int64 := xs[0].(int64)
+_, xs1Int64 := xs[1].(int64)
+_, xs2Duration := xs[2].(Duration)
+
+slc := make([]interface{}, 1)
+slc[0] = 4
+_, slcInt := slc[0].(int)
+
+var m map[string]interface{}
+m["x"] = 5
+m["y"] = int64(6)
+_, mapInt := m["x"].(int)
+_, mapInt64 := m["y"].(int64)
+
+return xs0Int, xs0Int64, xs1Int64, xs2Duration, slcInt, mapInt, mapInt64
+`);
+
+    expect(result.values).toEqual([true, false, true, true, true, true, true]);
+  });
+
+  test("treats byte and rune as aliases in interface type switches", async () => {
+    const result = await expectRuns(`
+var x interface{}
+x = byte(1)
+byteIsUint8 := false
+switch x.(type) {
+case uint8:
+  byteIsUint8 = true
+}
+x = uint8(2)
+uint8IsByte := false
+switch x.(type) {
+case byte:
+  uint8IsByte = true
+}
+x = rune(3)
+runeIsInt32 := false
+switch x.(type) {
+case int32:
+  runeIsInt32 = true
+}
+x = int32(4)
+int32IsRune := false
+switch x.(type) {
+case rune:
+  int32IsRune = true
+}
+return byteIsUint8, uint8IsByte, runeIsInt32, int32IsRune
+`);
+
+    expect(result.values).toEqual([true, true, true, true]);
+  });
+
   test("executes unbound type switches and rejects fallthrough", async () => {
     const ok = await expectRuns(`
 x := "hello"
@@ -666,7 +1195,7 @@ return out
     expect(ok.value).toBe("string");
 
     const bad = await evaluateSource(`
-x := 1
+var x interface{} = 1
 switch x.(type) {
 case int:
   fallthrough
@@ -676,6 +1205,31 @@ default:
 `);
     expect(bad.diagnostics).toHaveLength(1);
     expect(bad.diagnostics[0]?.message).toContain("fallthrough is not allowed in type switches");
+  });
+
+  test("runs switch default only after checking non-default cases", async () => {
+    const result = await expectRuns(`
+value := ""
+switch 2 {
+default:
+  value = "default"
+case 2:
+  value = "case"
+}
+
+typed := ""
+var x interface{} = 1
+switch x.(type) {
+default:
+  typed = "default"
+case int:
+  typed = "int"
+}
+
+return value, typed
+`);
+
+    expect(result.values).toEqual(["case", "int"]);
   });
 
   test("evaluates Go type assertions and reports mismatches", async () => {
@@ -830,6 +1384,42 @@ return xs, len(xs), cap(xs), len(ys), ys[0]
     expect(result.values).toEqual([[1n, 2n, 3n, 4n], 4n, 4n, 3n, ""]);
   });
 
+  test("supports reslicing make slices up to capacity with zero-filled backing storage", async () => {
+    const result = await expectRuns(`
+s := make([]int, 2, 5)
+s[0] = 7
+grown := s[0:5]
+grown[3] = 11
+again := s[0:5]
+return len(s), cap(s), len(grown), cap(grown), grown[0], grown[1], grown[3], again[3]
+`);
+
+    expect(result.values).toEqual([2n, 5n, 5n, 5n, 7n, 0n, 11n, 11n]);
+  });
+
+  test("supports len and cap on pointers to arrays", async () => {
+    const result = await expectRuns(`
+p := new([4]int)
+var nilp *[3]string
+return len(p), cap(p), len(nilp), cap(nilp)
+`);
+
+    expect(result.values).toEqual([4n, 4n, 3n, 3n]);
+  });
+
+  test("supports constant identifiers in array lengths", async () => {
+    const result = await expectRuns(`
+const size = 4
+var a [size]byte
+for k := range a {
+  a[k] = byte(k + 1)
+}
+return len(a), a[0], a[3]
+`);
+
+    expect(result.values).toEqual([4n, 1n, 4n]);
+  });
+
   test("reports typed array and slice literal element mismatches", async () => {
     const result = await evaluateSource(`
 xs := []int{1, "bad"}
@@ -865,6 +1455,40 @@ panicOn("bad")
 
     expect(result.diagnostics).toEqual([]);
     expect(result.value).toBe(12n);
+  });
+
+  test("checks REPL const groups with scoped iota", async () => {
+    const session = new GoJuniorSession();
+
+    const result = await session.evaluate(`
+const (
+  abit, amask = 1 << iota, 1<<iota - 1
+  bbit, bmask
+)
+return abit, amask, bbit, bmask
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.values).toEqual([1n, 0n, 2n, 1n]);
+  });
+
+  test("updates REPL sheet type environment when sheet data changes", async () => {
+    const session = new GoJuniorSession();
+
+    session.setSheet({ A1: 40n });
+    const result = await session.evaluate("sheet.A1 + 2");
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(42n);
+    expect(result.observedDeps).toEqual([
+      cellDependency({ sheet: "sheet", cell: "A1" })
+    ]);
+
+    const next = await session.evaluate("sheet.A1:B1");
+    expect(next.diagnostics).toEqual([]);
+    expect(next.observedDeps).toEqual([
+      rangeDependency("sheet", "A1", "B1")
+    ]);
   });
 
   test("evaluates Go raw string literals", async () => {
@@ -1013,6 +1637,22 @@ return xs
     expect(call.value).toBe(22n);
   });
 
+  test("keeps REPL top-level channel variables visible to later function declarations", async () => {
+    const session = new GoJuniorSession();
+
+    expect((await session.evaluate("c := make(chan int)")).diagnostics).toEqual([]);
+    expect((await session.evaluate("func f() { for i := range 5 { c <- i } }")).diagnostics).toEqual([]);
+    expect((await session.evaluate("go f()")).diagnostics).toEqual([]);
+
+    const first = await session.evaluate("<-c");
+    const second = await session.evaluate("<-c");
+
+    expect(first.diagnostics).toEqual([]);
+    expect(second.diagnostics).toEqual([]);
+    expect(first.value).toBe(0n);
+    expect(second.value).toBe(1n);
+  });
+
   test("returned closures keep their defining function scope alive", async () => {
     const session = new GoJuniorSession();
 
@@ -1123,6 +1763,28 @@ return sum
 `);
 
     expect(result.value).toBe(45n);
+  });
+
+  test("executes Go-style for clauses with omitted init statements", async () => {
+    const result = await expectRuns(`
+sum := 0
+b := 0
+for ; b < 5; b++ {
+  if b == 2 {
+    continue
+  }
+  sum += b
+}
+for ; ; b-- {
+  if b == 0 {
+    break
+  }
+  sum++
+}
+return sum
+`);
+
+    expect(result.value).toBe(13n);
   });
 
   test("runs for post clause after continue", async () => {
@@ -1265,6 +1927,177 @@ return a, b, c, d, real(z), imag(z), 3i + 2i
     expect(result.values).toEqual([10n, 16n, 65n, 7n, 10, 2.5, { real: 0, imag: 5 }]);
   });
 
+  test("rounds float32 assignments, conversions, and expression results like Go", async () => {
+    const result = await expectRuns(`
+func f32(v float64) float32 { return float32(v) }
+
+var f09 float32 = 1e-10
+var f10 float32 = 1e+10
+var f13 float32 = .1e-10
+var f14 float32 = .1e+10
+var c64 complex64 = complex(1.1, .1e-10)
+return f13 == f09/10.0, f14 == f10/10.0, float64(float32(1.1)) == float64(f32(1.1)), real(c64) == f32(1.1)
+`);
+
+    expect(result.values).toEqual([true, true, true, true]);
+  });
+
+  test("wraps typed integer expression results like Go", async () => {
+    const result = await expectRuns(`
+func f8(x, y int8) (int8, int8) {
+  return x / y, x % y
+}
+func f16(x, y int16) (int16, int16) {
+  return x / y, x % y
+}
+
+q8, r8 := f8(-1<<7, -1)
+q16, r16 := f16(-1<<15, -1)
+return q8, r8, q16, r16
+`);
+
+    expect(result.values).toEqual([-128n, 0n, -32768n, 0n]);
+  });
+
+  test("preserves named numeric expression result identity", async () => {
+    const result = await expectRuns(`
+type A int
+var a A = 1
+
+_, plusA := interface{}(+a).(A)
+_, addA := interface{}(a + 0).(A)
+_, addInt := interface{}(a + 0).(int)
+return plusA, addA, addInt
+`);
+
+    expect(result.values).toEqual([true, true, false]);
+  });
+
+  test("wraps explicit integer conversions like Go", async () => {
+    const result = await expectRuns(`
+a := int8(-32668)
+b := uint8(-1)
+c := int16(65535)
+d := int32(uint32(0xffffffff))
+e := uint64(-1)
+return a, b, c, d, e
+`);
+
+    expect(result.values).toEqual([100n, 255n, -1n, -1n, 18446744073709551615n]);
+
+    const assignment = await evaluateSource(`
+var x int8 = 128
+`);
+    expect(assignment.diagnostics).toHaveLength(1);
+    expect(assignment.diagnostics[0]?.message).toContain("not assignable to int8");
+  });
+
+  test("supports Go string conversions from byte and rune slices", async () => {
+    const result = await expectRuns(`
+bs := []byte{0xe1, 0x88, 0xb4}
+rs := []rune{'a', '\\u1234', 'c'}
+p := new([3]byte)
+p[0] = 'x'
+p[1] = 'y'
+p[2] = 'z'
+return string(bs), string(rs), string(p[0:])
+`);
+
+    expect(result.values).toEqual(["\u1234", "a\u1234c", "xyz"]);
+  });
+
+  test("treats Go strings as byte sequences for len index slice and escapes", async () => {
+    const result = await expectRuns(`
+s := "aä本☺"
+largest := string(0x10ffff)
+encoded := "\\xf4\\x8f\\xbf\\xbf"
+bad := "\\xff\\xff"
+return len(s), s[1], s[1:3], largest == encoded, []rune(bad), string([]byte(bad))
+`);
+
+    expect(result.values).toEqual([9n, 195n, "ä", true, [65533n, 65533n], "\ufffd\ufffd"]);
+  });
+
+  test("supports Go byte and rune slice conversions from strings", async () => {
+    const result = await expectRuns(`
+type Bytes []byte
+type Runes []rune
+s := "aä本☺"
+bs := []byte(s)
+rs := []rune(s)
+nbs := Bytes(s)
+nrs := Runes(s)
+return bs, rs, string(bs), string(rs), string(nbs), string(nrs)
+`);
+
+    expect(result.values).toEqual([
+      [97n, 195n, 164n, 230n, 156n, 172n, 226n, 152n, 186n],
+      [97n, 228n, 26412n, 9786n],
+      "aä本☺",
+      "aä本☺",
+      "aä本☺",
+      "aä本☺"
+    ]);
+  });
+
+  test("supports typed nil slice conversions with Go len and cap", async () => {
+    const result = await expectRuns(`
+type Ints []int
+s := []int(nil)
+named := Ints(nil)
+return len(s), cap(s), len(named), cap(named), fmt.Sprintf("%v", s), fmt.Sprintf("%#v", named)
+`);
+
+    expect(result.values).toEqual([0n, 0n, 0n, 0n, "<nil>", "Ints(nil)"]);
+  });
+
+  test("keeps inferred var declaration types for later conversions", async () => {
+    const result = await expectRuns(`
+var bs = make([]uint8, 3)
+bs[0] = 'x'
+bs[1] = 'y'
+bs[2] = 'z'
+return string(bs)
+`);
+
+    expect(result.value).toBe("xyz");
+  });
+
+  test("supports conversions to named slice types with matching underlying type", async () => {
+    const result = await expectRuns(`
+type Bytes []uint8
+var bs = make([]uint8, 2)
+named := Bytes(bs)
+named[0] = 'o'
+named[1] = 'k'
+return string(bs), string(named)
+`);
+
+    expect(result.values).toEqual(["ok", "ok"]);
+  });
+
+  test("slices share backing storage for index assignment and copy", async () => {
+    const result = await expectRuns(`
+xs := []int{1, 2, 3, 4}
+ys := xs[1:3]
+ys[0] = 20
+n := copy(xs[2:], []int{30, 40})
+return xs, ys[0], n
+`);
+
+    expect(result.values).toEqual([[1n, 20n, 30n, 40n], 20n, 2n]);
+  });
+
+  test("copy from strings writes UTF-8 bytes into byte slices", async () => {
+    const result = await expectRuns(`
+buf := make([]uint8, 4)
+n := copy(buf, "abc")
+return n, buf, string(buf[:3])
+`);
+
+    expect(result.values).toEqual([3n, [97n, 98n, 99n, 0n], "abc"]);
+  });
+
   test("supports bitwise, shift, unary complement, and compound assignment operators", async () => {
     const result = await expectRuns(`
 x := 0b1010
@@ -1287,6 +2120,7 @@ return x, y, ^0, s
 xs := []int{1, 2, 3}
 ys := make([]int, 3)
 n := copy(ys, xs)
+clear(ys[1:3])
 m := map[string]int{"a": 1, "b": 2}
 delete(m, "a")
 before := len(m)
@@ -1297,11 +2131,44 @@ if v := *p; v == 4 {
   print("v=", v)
   println(" ok")
 }
-return n, ys[0], ys[2], before, len(m), *p
+return n, ys[0], ys[1], ys[2], before, len(m), *p
 `);
 
     expect(result.output).toEqual(["v=", "4", " ok\n"]);
-    expect(result.values).toEqual([3n, 1n, 3n, 1n, 0n, 4n]);
+    expect(result.values).toEqual([3n, 1n, 0n, 0n, 1n, 0n, 4n]);
+  });
+
+  test("supports Go 1.26 new with expression arguments", async () => {
+    const result = await expectRuns(`
+p := new(123)
+x := [2]int{123, 456}
+q := new(x)
+x[0] = 999
+i := 0
+next := func() int { i++; return i }
+r := new(next())
+b := new(i > 10)
+return *p, (*q)[0], (*q)[1], *r, i, *b
+`);
+
+    expect(result.values).toEqual([123n, 123n, 456n, 1n, 1n, false]);
+  });
+
+  test("REPL typechecker treats star expressions as dereferences when the operand is a value", async () => {
+    const session = new GoJuniorSession();
+
+    expect((await session.evaluate("x := 42")).diagnostics).toEqual([]);
+    expect((await session.evaluate("p := new(x)")).diagnostics).toEqual([]);
+    let result = await session.evaluate("*p");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(42n);
+
+    expect((await session.evaluate("arr := [2]int{1, 2}")).diagnostics).toEqual([]);
+    expect((await session.evaluate("q := new(arr)")).diagnostics).toEqual([]);
+    expect((await session.evaluate("arr[0] = 9")).diagnostics).toEqual([]);
+    result = await session.evaluate("(*q)[0]");
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(1n);
   });
 
   test("supports buffered channels, close, len cap, and receive ok values", async () => {
@@ -1579,6 +2446,10 @@ func Pick[T Number](value T) T {
   return value
 }
 
+func Add[T Number](left, right T) T {
+  return left + right
+}
+
 func Unbox[T any](box Box[T]) T {
   return box.Value
 }
@@ -1587,10 +2458,12 @@ a := Identity[int](42)
 b := Identity[string]("hi")
 c := Unbox[int](Box[int]{Value: 7})
 d := Pick[float64](2.5)
-return a, b, c, d
+e := Add[int](3, 4)
+f := Add[float64](1.25, 2.5)
+return a, b, c, d, e, f
 `);
 
-    expect(result.values).toEqual([42n, "hi", 7n, 2.5]);
+    expect(result.values).toEqual([42n, "hi", 7n, 2.5, 7n, 3.75]);
   });
 
   test("REPL checker accepts keyed generic struct literals", async () => {
@@ -1635,6 +2508,43 @@ _ = m
     expect(bad.diagnostics[0]?.message).toContain("map key type []int is not comparable");
   });
 
+  test("supports anonymous empty struct zero values, literals, and array range assignment", async () => {
+    const result = await expectRuns(`
+var xs [3]struct{}
+for i := range xs {
+  xs[i] = struct{}{}
+}
+return xs[0] == struct{}{}, xs == [3]struct{}{}
+`);
+
+    expect(result.values).toEqual([true, true]);
+  });
+
+  test("supports non-empty anonymous struct zero values and pointer selectors", async () => {
+    const result = await expectRuns(`
+type x2 struct { a, b, c int; d int }
+var g1 x2
+var g2 struct { a, b, c int; d x2 }
+
+s1 := &g1
+s2 := &g2
+s1.a = 1
+s1.b = 2
+s1.c = 3
+s1.d = 5
+s2.a = 7
+s2.b = 11
+s2.c = 13
+s2.d.a = 17
+s2.d.b = 19
+s2.d.c = 23
+s2.d.d = 20
+return s2.d.c, g2.d.c, s1.a + s1.b + s1.c + s1.d + s2.a + s2.b + s2.c + s2.d.a + s2.d.b + s2.d.c + s2.d.d
+`);
+
+    expect(result.values).toEqual([23n, 23n, 121n]);
+  });
+
   test("supports blank imports, dot imports, init functions, and range over integers and iterator functions", async () => {
     const result = await expectRuns(`
 import . "fmt"
@@ -1662,10 +2572,40 @@ for k, v := range iter {
   out += Sprintf("%v:%v;", k, v)
 }
 
-return total, out
+xs := [2]int{}
+q := 0
+for xs[func() int {
+  q++
+  return 0
+}()] = range [2]int{} {
+}
+
+yieldOnce := func(yield func(int) bool) {
+  yield(1)
+}
+
+for _ = range yieldOnce {
+  total++
+}
+
+neg := 0
+for i := range -1 {
+  neg += i
+  total += 1000
+}
+
+runeCount := 0
+var last rune
+for i := range 'a' {
+  var _ *rune = &i
+  last = i
+  runeCount++
+}
+
+return total, out, q, xs[0], neg, runeCount, last
 `);
 
-    expect(result.values).toEqual([8n, "10:a;20:b;"]);
+    expect(result.values).toEqual([9n, "10:a;20:b;", 2n, 1n, 0n, 97n, 96n]);
   });
 
   test("supports embedded fields, promoted methods, interface embedding, and struct tags", async () => {
@@ -1733,6 +2673,54 @@ return x, y, out
 `);
 
     expect(result.values).toEqual([2n, 3n, 5n]);
+  });
+
+  test("scopes statement init and clause short declarations like Go", async () => {
+    const result = await expectRuns(`
+total := 0
+for i := 0; i < 2; i++ {
+  total += i
+}
+for i := 0; i < 2; i++ {
+  total += i * 10
+}
+
+if _, ok := map[int]int{}[1]; !ok {
+  total += 100
+}
+if _, ok := map[int]int{1: 1}[1]; ok {
+  total += 1000
+}
+
+switch x := 1; x {
+case 1:
+  y := 2
+  total += y
+case 2:
+  y := 3
+  total += y
+}
+
+ch := make(chan int)
+select {
+case v := <-ch:
+  total += v
+default:
+  v := 7
+  total += v
+}
+select {
+case v := <-ch:
+  total += v
+default:
+  v := 8
+  total += v
+}
+
+return total
+`);
+
+    expect(result.value).toBe(1128n);
   });
 
   test("rejects invalid short declarations, for posts, fallthrough, and gotos over variables", async () => {
