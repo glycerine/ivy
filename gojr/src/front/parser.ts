@@ -450,9 +450,17 @@ class parser {
         }
         const { name: paramName, type: paramType } = extractName(expression, this.at(TokenKind.Comma));
         if (paramName && (paramType || !this.at(TokenKind.RBracket))) {
-          typeParams = this.parseTypeParameterListAfterOpen(open, paramName, paramType);
-          alias = this.match(TokenKind.Assign);
-          type = this.parseType();
+          const spec: TypeSpec = {
+            kind: "TypeSpec",
+            name,
+            type: badExpr(open.span),
+            alias: false
+          };
+          this.parseGenericType(spec, open, paramName, paramType);
+          return {
+            ...spec,
+            span: mergeSpans(name.span, spec.type.span)
+          };
         } else {
           type = this.parseArrayTypeAfterOpen(open, expression);
         }
@@ -471,6 +479,12 @@ class parser {
       alias,
       span: mergeSpans(name.span, type.span)
     };
+  }
+
+  private parseGenericType(spec: TypeSpec, open: FrontToken, name0: Ident, typ0?: Expr): void {
+    spec.typeParams = this.parseTypeParameterListAfterOpen(open, name0, typ0);
+    spec.alias = this.match(TokenKind.Assign);
+    spec.type = this.parseType();
   }
 
   private parseValueSpec(): ValueSpec {
@@ -647,31 +661,33 @@ class parser {
     return { kind: "GoStmt", call: expression, span: mergeSpans(start.span, expression.span) };
   }
 
+  private parseIfHeader(): { init?: Stmt; condition: Expr } {
+    let init: Stmt | undefined;
+    let conditionStatement: Stmt | undefined;
+    if (this.at(TokenKind.LBrace)) {
+      this.error("missing condition in if statement", this.peek().span);
+      return { condition: badExpr(this.peek().span) };
+    }
+    if (!this.at(TokenKind.Semicolon)) {
+      if (this.match(TokenKind.Var)) this.error("var declaration not allowed in if initializer", this.previous().span);
+      init = this.parseSimpleStmt("basic");
+    }
+    if (!this.at(TokenKind.LBrace)) {
+      this.expect(TokenKind.Semicolon, "expected ';' after if init statement");
+      if (!this.at(TokenKind.LBrace)) conditionStatement = this.parseSimpleStmt("basic");
+    } else {
+      conditionStatement = init;
+      init = undefined;
+    }
+    return {
+      ...(init ? { init } : {}),
+      condition: this.statementExpression(conditionStatement, "boolean expression") ?? badExpr(this.peek().span)
+    };
+  }
+
   private parseIfStmt(): Stmt {
     const start = this.expect(TokenKind.If, "expected if");
-    const { init, condition } = this.withControlClause(() => {
-      let init: Stmt | undefined;
-      let conditionStatement: Stmt | undefined;
-      if (this.at(TokenKind.LBrace)) {
-        this.error("missing condition in if statement", this.peek().span);
-        return { condition: badExpr(this.peek().span) };
-      }
-      if (!this.at(TokenKind.Semicolon)) {
-        if (this.match(TokenKind.Var)) this.error("var declaration not allowed in if initializer", this.previous().span);
-        init = this.parseSimpleStmt("basic");
-      }
-      if (!this.at(TokenKind.LBrace)) {
-        this.expect(TokenKind.Semicolon, "expected ';' after if init statement");
-        if (!this.at(TokenKind.LBrace)) conditionStatement = this.parseSimpleStmt("basic");
-      } else {
-        conditionStatement = init;
-        init = undefined;
-      }
-      return {
-        ...(init ? { init } : {}),
-        condition: this.statementExpression(conditionStatement, "boolean expression") ?? badExpr(this.peek().span)
-      };
-    });
+    const { init, condition } = this.withControlClause(() => this.parseIfHeader());
     const body = this.parseBlock();
     let elseStmt: Stmt | undefined;
     if (this.match(TokenKind.Else)) {
@@ -1188,15 +1204,7 @@ class parser {
       return { kind: "ParenExpr", expr, span: mergeSpans(start.span, close.span) };
     }
     if (this.atAny(TokenKind.LBracket, TokenKind.Map, TokenKind.Struct, TokenKind.Interface, TokenKind.Chan)) return this.parseType();
-    if (this.match(TokenKind.Func)) {
-      const start = this.previous();
-      const type = this.parseSignature(start.span);
-      if (this.at(TokenKind.LBrace)) {
-        const body = this.withExpressionLevel(() => this.parseBlock());
-        return { kind: "FuncLit", type, body, span: mergeSpans(start.span, body.span) } satisfies FuncLit;
-      }
-      return type;
-    }
+    if (this.at(TokenKind.Func)) return this.parseFuncTypeOrLit();
 
     this.error(`expected expression, found ${token.lexeme || token.kind}`, token.span);
     this.advance();
@@ -1315,7 +1323,7 @@ class parser {
     }
     if (this.match(TokenKind.Struct)) return this.parseStructType(start.span);
     if (this.match(TokenKind.Interface)) return this.parseInterfaceType(start.span);
-    if (this.match(TokenKind.Func)) return this.parseSignature(start.span);
+    if (this.at(TokenKind.Func)) return this.parseFuncType();
     if (this.match(TokenKind.LParen)) {
       const type = this.parseType();
       const close = this.expect(TokenKind.RParen, "expected ')' after type");
@@ -1420,6 +1428,25 @@ class parser {
       ...(results ? { results } : {}),
       span: mergeSpans(start, results?.span ?? params.span)
     };
+  }
+
+  private parseFuncType(): FuncType {
+    const start = this.expect(TokenKind.Func, "expected func");
+    if (this.at(TokenKind.LBracket)) {
+      const typeParams = this.parseTypeParamList();
+      this.error("function type must have no type parameters", typeParams.span);
+    }
+    return this.parseSignature(start.span);
+  }
+
+  private parseFuncTypeOrLit(): Expr {
+    const type = this.parseFuncType();
+    if (!this.at(TokenKind.LBrace)) {
+      return type;
+    }
+
+    const body = this.withExpressionLevel(() => this.parseBlock());
+    return { kind: "FuncLit", type, body, span: mergeSpans(type.span, body.span) } satisfies FuncLit;
   }
 
   private parseTypeParamList(): FieldList {

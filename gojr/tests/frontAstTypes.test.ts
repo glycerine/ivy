@@ -2,6 +2,7 @@ import { describe, expect, test } from "./testHarness.js";
 import {
   childNodes,
   commentGroupText,
+  CommentMap,
   ident,
   IsExported,
   IsGenerated,
@@ -11,6 +12,7 @@ import {
   Fprint,
   collapse,
   MergePackageFiles,
+  NewCommentMap,
   NewIdent,
   NewObj,
   NewPackage,
@@ -20,6 +22,7 @@ import {
   ParseDirective,
   Pkg,
   SortImports,
+  summary,
   Var as AstVar,
   importComment,
   importName,
@@ -32,6 +35,7 @@ import {
   Walk,
   walk,
   type AstNode,
+  type CommentGroup,
   type ImportSpec,
   type File
 } from "../src/front/ast.js";
@@ -201,6 +205,43 @@ describe("Go-junior Go-style AST", () => {
       }]
     };
     expect(IsGenerated(file)).toBe(true);
+  });
+
+  test("transliterates go/ast comment map helpers", () => {
+    const target = ident("x", { filename: "commentmap.go", offset: 10, length: 1, line: 1, column: 11 });
+    const replacement = ident("y", { filename: "commentmap.go", offset: 40, length: 1, line: 4, column: 1 });
+    const trailing: CommentGroup = {
+      kind: "CommentGroup",
+      list: [{
+        kind: "Comment",
+        text: "// trailing",
+        span: { filename: "commentmap.go", offset: 12, length: 11, line: 1, column: 13 }
+      }]
+    };
+    const earlier: CommentGroup = {
+      kind: "CommentGroup",
+      list: [{
+        kind: "Comment",
+        text: "/* earlier\ncomment */",
+        span: { filename: "commentmap.go", offset: 2, length: 21, line: 1, column: 3 }
+      }]
+    };
+
+    const cmap = NewCommentMap(undefined, target, [trailing]);
+    expect(cmap?.get(target)).toEqual([trailing]);
+    expect(cmap?.Comments()).toEqual([trailing]);
+    expect(cmap?.Update(target, replacement)).toBe(replacement);
+    expect(cmap?.get(target)).toBeUndefined();
+    expect(cmap?.get(replacement)).toEqual([trailing]);
+
+    const manual = new CommentMap();
+    manual.addComment(replacement, trailing);
+    manual.addComment(replacement, earlier);
+    expect(manual.Comments()).toEqual([earlier, trailing]);
+    expect(manual.Filter(replacement).get(replacement)).toEqual([trailing, earlier]);
+    expect(summary([earlier])).toBe("/* earlier comment */");
+    expect(manual.String()).toContain("CommentMap");
+    expect(NewCommentMap(undefined, target, [])).toBeUndefined();
   });
 
   test("transliterates go/ast directive parsing", () => {

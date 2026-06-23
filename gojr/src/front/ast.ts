@@ -1466,6 +1466,336 @@ export function MergePackageFiles(pkg: Package, mode: MergeMode): File {
   };
 }
 
+interface commentPosition {
+  Offset: number;
+  Line: number;
+}
+
+interface positionFileSet {
+  Position(pos: Pos): { Offset?: number; offset?: number; Line?: number; line?: number };
+}
+
+function sortComments(list: CommentGroup[]): void {
+  list.sort((a, b) => CommentGroup.Pos(a) - CommentGroup.Pos(b));
+}
+
+export class CommentMap extends Map<AstNode, CommentGroup[]> {
+  public addComment(n: AstNode, c: CommentGroup): void {
+    let list = this.get(n);
+    if (list === undefined || list.length === 0) {
+      list = [c];
+    } else {
+      list = [...list, c];
+    }
+    this.set(n, list);
+  }
+
+  public Update(old: AstNode, replacement: AstNode): AstNode {
+    const list = this.get(old);
+    if (list !== undefined && list.length > 0) {
+      this.delete(old);
+      this.set(replacement, [...(this.get(replacement) ?? []), ...list]);
+    }
+    return replacement;
+  }
+
+  public Filter(node: AstNode): CommentMap {
+    const umap = new CommentMap();
+    Inspect(node, (n) => {
+      if (n !== undefined) {
+        const groups = this.get(n);
+        if (groups !== undefined && groups.length > 0) {
+          umap.set(n, groups);
+        }
+      }
+      return true;
+    });
+    return umap;
+  }
+
+  public Comments(): CommentGroup[] {
+    const list: CommentGroup[] = [];
+    for (const entry of this.values()) {
+      list.push(...entry);
+    }
+    sortComments(list);
+    return list;
+  }
+
+  public String(): string {
+    const nodes = [...this.keys()];
+    nodes.sort((a, b) => {
+      const r = PosOf(a) - PosOf(b);
+      if (r !== 0) {
+        return r;
+      }
+      return EndOf(a) - EndOf(b);
+    });
+
+    let out = "CommentMap {\n";
+    for (const node of nodes) {
+      const comments = this.get(node) ?? [];
+      const s = node.kind === "Ident" ? node.name : node.kind;
+      out += `\t${commentMapNodeAddress(node)}  ${s.padStart(20)}:  ${summary(comments)}\n`;
+    }
+    out += "}\n";
+    return out;
+  }
+}
+
+export function nodeList(n: AstNode): AstNode[] {
+  const list: AstNode[] = [];
+  Inspect(n, (node) => {
+    if (node === undefined) {
+      return false;
+    }
+    switch (node.kind) {
+      case "CommentGroup":
+      case "Comment":
+        return false;
+      default:
+        list.push(node);
+        return true;
+    }
+  });
+  return list;
+}
+
+export class commentListReader {
+  public index = 0;
+  public comment: CommentGroup | undefined;
+  public pos: commentPosition = { Offset: 0, Line: 0 };
+  public end: commentPosition = { Offset: 0, Line: 0 };
+
+  public constructor(
+    public fset: unknown,
+    public list: CommentGroup[]
+  ) {}
+
+  public eol(): boolean {
+    return this.index >= this.list.length;
+  }
+
+  public next(): void {
+    if (!this.eol()) {
+      const comment = this.list[this.index];
+      if (comment === undefined) {
+        return;
+      }
+      this.comment = comment;
+      this.pos = sourcePosition(this.fset, this.comment, false);
+      this.end = sourcePosition(this.fset, this.comment, true);
+      this.index += 1;
+    }
+  }
+}
+
+export class nodeStack {
+  private readonly list: AstNode[] = [];
+
+  public push(n: AstNode): void {
+    this.pop(PosOf(n));
+    this.list.push(n);
+  }
+
+  public pop(pos: Pos): AstNode | undefined {
+    let top: AstNode | undefined;
+    let i = this.list.length;
+    while (i > 0 && EndOf(this.list[i - 1]) <= pos) {
+      top = this.list[i - 1];
+      i -= 1;
+    }
+    this.list.length = i;
+    return top;
+  }
+}
+
+export function NewCommentMap(fset: unknown, node: AstNode, comments: CommentGroup[]): CommentMap | undefined {
+  if (comments.length === 0) {
+    return undefined;
+  }
+
+  const cmap = new CommentMap();
+  const tmp = comments.slice();
+  sortComments(tmp);
+  const r = new commentListReader(fset, tmp);
+  r.next();
+
+  const nodes: Array<AstNode | undefined> = nodeList(node);
+  nodes.push(undefined);
+
+  let p: AstNode | undefined;
+  let pend: commentPosition = { Offset: 0, Line: 0 };
+  let pg: AstNode | undefined;
+  let pgend: commentPosition = { Offset: 0, Line: 0 };
+  const stack = new nodeStack();
+
+  for (const q of nodes) {
+    let qpos: commentPosition;
+    if (q !== undefined) {
+      qpos = sourcePosition(fset, q, false);
+    } else {
+      const infinity = 1 << 30;
+      qpos = { Offset: infinity, Line: infinity };
+    }
+
+    while (r.comment !== undefined && r.end.Offset <= qpos.Offset) {
+      const top = stack.pop(CommentGroup.Pos(r.comment));
+      if (top !== undefined) {
+        pg = top;
+        pgend = sourcePosition(fset, pg, true);
+      }
+
+      let assoc: AstNode | undefined;
+      if (
+        pg !== undefined &&
+        (
+          pgend.Line === r.pos.Line ||
+          (pgend.Line + 1 === r.pos.Line && r.end.Line + 1 < qpos.Line)
+        )
+      ) {
+        assoc = pg;
+      } else if (
+        p !== undefined &&
+        (
+          pend.Line === r.pos.Line ||
+          (pend.Line + 1 === r.pos.Line && r.end.Line + 1 < qpos.Line) ||
+          q === undefined
+        )
+      ) {
+        assoc = p;
+      } else {
+        if (q === undefined) {
+          throw new globalThis.Error("internal error: no comments should be associated with sentinel");
+        }
+        assoc = q;
+      }
+
+      cmap.addComment(assoc, r.comment);
+      if (r.eol()) {
+        return cmap;
+      }
+      r.next();
+    }
+
+    if (q === undefined) {
+      break;
+    }
+    p = q;
+    pend = sourcePosition(fset, p, true);
+
+    if (isCommentNodeGroup(q)) {
+      stack.push(q);
+    }
+  }
+
+  return cmap;
+}
+
+export function summary(list: CommentGroup[]): string {
+  const maxLen = 40;
+  let buf = "";
+
+  commentLoop:
+  for (const group of list) {
+    for (const comment of group.list) {
+      if (buf.length >= maxLen) {
+        break commentLoop;
+      }
+      buf += comment.text;
+    }
+  }
+
+  if (buf.length > maxLen) {
+    buf = `${buf.slice(0, maxLen - 3)}...`;
+  }
+
+  return buf.replace(/[\t\n\r]/g, " ");
+}
+
+const commentMapIds = new WeakMap<AstNode, number>();
+let nextCommentMapID = 1;
+
+function commentMapNodeAddress(node: AstNode): string {
+  let id = commentMapIds.get(node);
+  if (id === undefined) {
+    id = nextCommentMapID;
+    nextCommentMapID += 1;
+    commentMapIds.set(node, id);
+  }
+  return `0x${id.toString(16)}`;
+}
+
+function sourcePosition(fset: unknown, node: AstNode, end: boolean): commentPosition {
+  const pos = end ? EndOf(node) : PosOf(node);
+  const fsetPosition = (fset as Partial<positionFileSet> | undefined)?.Position;
+  if (typeof fsetPosition === "function") {
+    const got = fsetPosition.call(fset, pos);
+    const offset = got.Offset ?? got.offset ?? pos;
+    const line = got.Line ?? got.line ?? fallbackLine(node, end);
+    return { Offset: offset, Line: line };
+  }
+  return { Offset: pos, Line: fallbackLine(node, end) };
+}
+
+function fallbackLine(node: AstNode, end: boolean): number {
+  if (node.kind === "CommentGroup") {
+    const comment = end ? node.list[node.list.length - 1] : node.list[0];
+    return comment ? fallbackLine(comment, end) : 0;
+  }
+  if (node.kind === "Comment" && end) {
+    return (node.span?.line ?? 0) + countLinesAfterFirst(node.text);
+  }
+  return node.span?.line ?? 0;
+}
+
+function countLinesAfterFirst(text: string): number {
+  let n = 0;
+  for (const ch of text) {
+    if (ch === "\n") {
+      n += 1;
+    }
+  }
+  return n;
+}
+
+function isCommentNodeGroup(node: AstNode): boolean {
+  switch (node.kind) {
+    case "File":
+    case "Field":
+    case "ImportSpec":
+    case "ValueSpec":
+    case "TypeSpec":
+    case "BadDecl":
+    case "GenDecl":
+    case "FuncDecl":
+    case "BadStmt":
+    case "DeclStmt":
+    case "EmptyStmt":
+    case "LabeledStmt":
+    case "ExprStmt":
+    case "AssignStmt":
+    case "IncDecStmt":
+    case "ReturnStmt":
+    case "BranchStmt":
+    case "BlockStmt":
+    case "IfStmt":
+    case "CaseClause":
+    case "CommClause":
+    case "SwitchStmt":
+    case "TypeSwitchStmt":
+    case "SelectStmt":
+    case "ForStmt":
+    case "RangeStmt":
+    case "DeferStmt":
+    case "GoStmt":
+    case "SendStmt":
+      return true;
+    default:
+      return false;
+  }
+}
+
 export class posSpan {
   public constructor(
     public Start: Pos,
