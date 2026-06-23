@@ -325,10 +325,11 @@ export class Scope {
 export class PackageInfo {
     path;
     name;
-    scope = new Scope(undefined, "package");
-    constructor(path, name) {
+    scope;
+    constructor(path, name, parent) {
         this.path = path;
         this.name = name;
+        this.scope = new Scope(parent, "package");
     }
 }
 export function newUniverse() {

@@ -1,5 +1,4 @@
-import { cstToAst } from "./cstToAst.js";
-import { parseGoJunior } from "./parser.js";
+import { frontSourceToAst } from "./frontToAst.js";
 export class GoJuniorRuntimeError extends Error {
     constructor(message) {
         super(message);
@@ -294,6 +293,10 @@ export class RuntimeMap {
         const entry = this.entries.get(runtimeMapKeyId(key));
         return entry ? entry.value : zeroValueForMapValue(this.valueType);
     }
+    getWithPresence(key) {
+        const entry = this.entries.get(runtimeMapKeyId(key));
+        return entry ? [entry.value, true] : [zeroValueForMapValue(this.valueType), false];
+    }
     set(key, value) {
         assertAssignableToType(key, this.keyType, "map key");
         assertAssignableToType(value, this.valueType, "map value");
@@ -307,8 +310,8 @@ export class RuntimeMap {
     }
 }
 export function evaluateSource(source, options = {}) {
-    const parsed = parseGoJunior(source);
-    const ast = parsed.cst ? cstToAst(parsed.cst, parsed.diagnostics) : undefined;
+    const parsed = frontSourceToAst(source);
+    const ast = parsed.ast;
     if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
         return {
             diagnostics: parsed.diagnostics,
@@ -366,7 +369,7 @@ export function evaluateProgram(ast, options = {}) {
             diagnostics: [
                 ...ast.diagnostics,
                 {
-                    code: error instanceof GoJuniorPanic ? "GJPANIC001" : "GJRUNTIME001",
+                    code: error instanceof GoJuniorPanic ? "GJPANIC001" : "GOJR_RUNTIME001",
                     severity: "error",
                     message
                 }
@@ -393,8 +396,8 @@ export class GoJuniorSession {
         }
     }
     evaluate(source) {
-        const parsed = parseGoJunior(source);
-        const ast = parsed.cst ? cstToAst(parsed.cst, parsed.diagnostics) : undefined;
+        const parsed = frontSourceToAst(source);
+        const ast = parsed.ast;
         const hasError = parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error");
         if (hasError) {
             return {
@@ -434,7 +437,7 @@ export class GoJuniorSession {
                 diagnostics: [
                     ...ast.diagnostics,
                     {
-                        code: error instanceof GoJuniorPanic ? "GJPANIC001" : "GJRUNTIME001",
+                        code: error instanceof GoJuniorPanic ? "GJPANIC001" : "GOJR_RUNTIME001",
                         severity: "error",
                         message
                     }
@@ -466,8 +469,15 @@ function resultFromCompletion(ast, output, completion) {
 }
 function diagnosticsLookIncomplete(diagnostics) {
     const errors = diagnostics.filter((diagnostic) => diagnostic.severity === "error");
-    return errors.length > 0 && errors.every((diagnostic) => diagnostic.code === "GJPARSE001" &&
-        (/found\s+-->\s*''\s*<--/.test(diagnostic.message) || /but found:\s*''/.test(diagnostic.message)));
+    return errors.length > 0 && errors.every((diagnostic) => {
+        if (diagnostic.code === "GJPARSE001") {
+            return /found\s+-->\s*''\s*<--/.test(diagnostic.message) || /but found:\s*''/.test(diagnostic.message);
+        }
+        if (diagnostic.code !== "GJPARSE_FRONT001")
+            return false;
+        return diagnostic.span?.length === 0 &&
+            (/expected/i.test(diagnostic.message) || /found EOF/i.test(diagnostic.message));
+    });
 }
 function installBuiltins(context) {
     context.declareRoot("panic", hostCallable("panic", (args) => {
@@ -958,11 +968,24 @@ function executeShortVar(statement, context) {
     }
 }
 function evaluateAssignmentValues(expressions, targetCount, context) {
+    if (targetCount === 2 && expressions.length === 1 && expressions[0]?.kind === "IndexExpression") {
+        const lookup = evaluateMapLookupWithPresence(expressions[0], context);
+        if (lookup)
+            return lookup;
+    }
     const values = expressions.map((expression) => evaluateExpression(expression, context));
     if (targetCount > 1 && values.length === 1 && Array.isArray(values[0])) {
         return values[0];
     }
     return values;
+}
+function evaluateMapLookupWithPresence(expression, context) {
+    const object = evaluateExpression(expression.object, context);
+    if (!(object instanceof RuntimeMap))
+        return undefined;
+    const index = evaluateExpression(expression.index, context);
+    const [value, ok] = object.getWithPresence(index);
+    return [value, ok];
 }
 function executeIncDec(statement, context) {
     const current = evaluateExpression(statement.target, context);

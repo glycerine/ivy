@@ -28,9 +28,8 @@ import {
   TypeSpec,
   UnaryExpression
 } from "./ast.js";
-import { cstToAst } from "./cstToAst.js";
 import { Diagnostic } from "./diagnostics.js";
-import { parseGoJunior } from "./parser.js";
+import { frontSourceToAst } from "./frontToAst.js";
 
 export type RuntimeValue =
   | null
@@ -450,6 +449,11 @@ export class RuntimeMap {
     return entry ? entry.value : zeroValueForMapValue(this.valueType);
   }
 
+  public getWithPresence(key: RuntimeValue): [RuntimeValue, boolean] {
+    const entry = this.entries.get(runtimeMapKeyId(key));
+    return entry ? [entry.value, true] : [zeroValueForMapValue(this.valueType), false];
+  }
+
   public set(key: RuntimeValue, value: RuntimeValue): void {
     assertAssignableToType(key, this.keyType, "map key");
     assertAssignableToType(value, this.valueType, "map value");
@@ -466,8 +470,8 @@ export class RuntimeMap {
 }
 
 export function evaluateSource(source: string, options: EvaluationOptions = {}): EvaluationResult {
-  const parsed = parseGoJunior(source);
-  const ast = parsed.cst ? cstToAst(parsed.cst, parsed.diagnostics) : undefined;
+  const parsed = frontSourceToAst(source);
+  const ast = parsed.ast;
   if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     return {
       diagnostics: parsed.diagnostics,
@@ -530,7 +534,7 @@ export function evaluateProgram(ast: ProgramAst, options: EvaluationOptions = {}
       diagnostics: [
         ...ast.diagnostics,
         {
-          code: error instanceof GoJuniorPanic ? "GJPANIC001" : "GJRUNTIME001",
+          code: error instanceof GoJuniorPanic ? "GJPANIC001" : "GOJR_RUNTIME001",
           severity: "error",
           message
         }
@@ -560,8 +564,8 @@ export class GoJuniorSession {
   }
 
   public evaluate(source: string): EvaluationResult {
-    const parsed = parseGoJunior(source);
-    const ast = parsed.cst ? cstToAst(parsed.cst, parsed.diagnostics) : undefined;
+    const parsed = frontSourceToAst(source);
+    const ast = parsed.ast;
     const hasError = parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error");
     if (hasError) {
       return {
@@ -604,7 +608,7 @@ export class GoJuniorSession {
         diagnostics: [
           ...ast.diagnostics,
           {
-            code: error instanceof GoJuniorPanic ? "GJPANIC001" : "GJRUNTIME001",
+            code: error instanceof GoJuniorPanic ? "GJPANIC001" : "GOJR_RUNTIME001",
             severity: "error",
             message
           }
@@ -639,10 +643,14 @@ function resultFromCompletion(ast: ProgramAst, output: string[], completion: Com
 
 function diagnosticsLookIncomplete(diagnostics: Diagnostic[]): boolean {
   const errors = diagnostics.filter((diagnostic) => diagnostic.severity === "error");
-  return errors.length > 0 && errors.every((diagnostic) =>
-    diagnostic.code === "GJPARSE001" &&
-    (/found\s+-->\s*''\s*<--/.test(diagnostic.message) || /but found:\s*''/.test(diagnostic.message))
-  );
+  return errors.length > 0 && errors.every((diagnostic) => {
+    if (diagnostic.code === "GJPARSE001") {
+      return /found\s+-->\s*''\s*<--/.test(diagnostic.message) || /but found:\s*''/.test(diagnostic.message);
+    }
+    if (diagnostic.code !== "GJPARSE_FRONT001") return false;
+    return diagnostic.span?.length === 0 &&
+      (/expected/i.test(diagnostic.message) || /found EOF/i.test(diagnostic.message));
+  });
 }
 
 function installBuiltins(context: EvaluationContext): void {
@@ -1194,11 +1202,23 @@ function executeShortVar(statement: ShortVarStatement, context: EvaluationContex
 }
 
 function evaluateAssignmentValues(expressions: Expression[], targetCount: number, context: EvaluationContext): RuntimeValue[] {
+  if (targetCount === 2 && expressions.length === 1 && expressions[0]?.kind === "IndexExpression") {
+    const lookup = evaluateMapLookupWithPresence(expressions[0], context);
+    if (lookup) return lookup;
+  }
   const values = expressions.map((expression) => evaluateExpression(expression, context));
   if (targetCount > 1 && values.length === 1 && Array.isArray(values[0])) {
     return values[0];
   }
   return values;
+}
+
+function evaluateMapLookupWithPresence(expression: IndexExpression, context: EvaluationContext): RuntimeValue[] | undefined {
+  const object = evaluateExpression(expression.object, context);
+  if (!(object instanceof RuntimeMap)) return undefined;
+  const index = evaluateExpression(expression.index, context);
+  const [value, ok] = object.getWithPresence(index);
+  return [value, ok];
 }
 
 function executeIncDec(statement: IncDecStatement, context: EvaluationContext): void {

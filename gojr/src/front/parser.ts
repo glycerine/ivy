@@ -704,7 +704,7 @@ class FrontParser {
       expression.kind === "MapType" ||
       expression.kind === "StructType" ||
       (this.allowBareIdentifierComposite && (
-        expression.kind === "Ident" ||
+        (expression.kind === "Ident" && !["true", "false", "nil"].includes(expression.name)) ||
         expression.kind === "SelectorExpr"
       ));
   }

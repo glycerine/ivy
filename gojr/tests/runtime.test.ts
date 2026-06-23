@@ -189,6 +189,33 @@ return mm[3]
     expect(intKeyed.value).toBe("hi");
   });
 
+  test("supports Go two-value map lookups for key presence", () => {
+    const missing = expectRuns(`
+var m map[int]int
+a, ok := m[3]
+return a, ok
+`);
+    expect(missing.values).toEqual([0n, false]);
+
+    const present = expectRuns(`
+var m map[int]string
+m[3] = "hi"
+a, ok := m[3]
+return a, ok
+`);
+    expect(present.values).toEqual(["hi", true]);
+  });
+
+  test("reports ordinary runtime failures with GoJr-prefixed diagnostic codes", () => {
+    const result = evaluateSource(`
+missingName
+`);
+
+    expect(result.diagnostics).toHaveLength(1);
+    expect(result.diagnostics[0]?.code).toBe("GOJR_RUNTIME001");
+    expect(result.diagnostics[0]?.message).toContain("missingName is not declared");
+  });
+
   test("enforces declared and inferred local variable types", () => {
     const declared = evaluateSource(`
 var x int

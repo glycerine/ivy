@@ -1,12 +1,14 @@
-import { cstToAst } from "./cstToAst.js";
-import { parseGoJunior } from "./parser.js";
+import { frontSourceToAst } from "./frontToAst.js";
+import type { ProgramAst } from "./ast.js";
+import type { Diagnostic } from "./diagnostics.js";
+import type { ParseFrontResult } from "./front/parser.js";
 
 export type { Diagnostic, SourceSpan } from "./diagnostics.js";
 export type { ImportDecl, ProgramAst, ProgramKind } from "./ast.js";
-export { cstToAst } from "./cstToAst.js";
 export { childNodes, ident, parseCellAddress, walk } from "./front/ast.js";
 export { checkFrontFiles, checkFrontSource } from "./front/checker.js";
 export { parseFrontSource } from "./front/parser.js";
+export { frontSourceToAst, frontToProgramAst } from "./frontToAst.js";
 export { scanSource } from "./front/scanner.js";
 export {
   ArrayType,
@@ -65,7 +67,6 @@ export type { ParseFrontResult } from "./front/parser.js";
 export type { FrontToken } from "./front/token.js";
 export type { Type as FrontType, TypeObject } from "./front/types.js";
 export { parseRuntimeJson, parseSheetJson, parseSheetsJson } from "./jsonInput.js";
-export { parseGoJunior } from "./parser.js";
 export {
   evaluateProgram,
   evaluateSource,
@@ -85,10 +86,17 @@ export type {
   SheetData
 } from "./runtime.js";
 
-export function parseProgram(source: string) {
-  const result = parseGoJunior(source);
+export interface ParseProgramResult {
+  diagnostics: Diagnostic[];
+  parsed: ParseFrontResult;
+  ast?: ProgramAst;
+}
+
+export function parseProgram(source: string): ParseProgramResult {
+  const result = frontSourceToAst(source);
   return {
-    ...result,
-    ast: result.cst ? cstToAst(result.cst, result.diagnostics) : undefined
+    diagnostics: result.diagnostics,
+    parsed: result.parsed,
+    ...(result.ast ? { ast: result.ast } : {})
   };
 }

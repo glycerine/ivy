@@ -176,6 +176,9 @@ class Scanner {
             if (two === "<-") {
                 this.error("GJSCAN004", "channels and channel operations are not supported", start, this.position());
             }
+            else if (two === "->") {
+                this.error("GJSCAN006", "C/C++ pointer selector syntax is not supported; use Go-style '.' method calls", start, this.position());
+            }
             return;
         }
         const one = this.peek();
