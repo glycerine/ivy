@@ -1,0 +1,2 @@
+(def w (trim (system "echo welcome home")))
+(assert (== w "welcome home"))

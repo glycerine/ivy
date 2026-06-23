@@ -1,0 +1,12 @@
+// For R-like capture of user argument names
+// we have lazy argument evaluation that is opt-in using
+// hash prefixed formal arguments like: #x 
+(defn lazy [#x]
+  (printf "the name of your actual argument was: '%v', and its value: %v\n" (str (substitute #x)) (force #x)))
+
+(def who 7)
+(lazy who)
+// the name of your actual argument was: 'who', and its value: 7
+
+(lazy (+ 2 3))
+// the name of your actual argument was: '(+ 2 3)', and its value: 5

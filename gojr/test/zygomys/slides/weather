@@ -1,0 +1,4 @@
+// Go:
+type Weather struct {
+	Type    string
+}
