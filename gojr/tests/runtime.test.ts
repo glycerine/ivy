@@ -1021,6 +1021,278 @@ return sum
     expect(result.value).toBe(2n);
   });
 
+  test("supports Go conversions, numeric literals, rune literals, imaginary literals, and complex builtins", () => {
+    const result = expectRuns(`
+a := int(0b1010)
+b := int64(0x10)
+c := rune('A')
+d := byte(0o7)
+z := complex(float64(a), 2.5)
+return a, b, c, d, real(z), imag(z), 3i + 2i
+`);
+
+    expect(result.values).toEqual([10n, 16n, 65n, 7n, 10, 2.5, { real: 0, imag: 5 }]);
+  });
+
+  test("supports bitwise, shift, unary complement, and compound assignment operators", () => {
+    const result = expectRuns(`
+x := 0b1010
+x |= 0b0101
+y := x & 0b1100
+y ^= 0b0010
+y &^= 0b0100
+y <<= 2
+y >>= 1
+s := "hi"
+s += "!"
+return x, y, ^0, s
+`);
+
+    expect(result.values).toEqual([15n, 20n, -1n, "hi!"]);
+  });
+
+  test("supports if init statements and Go-style builtins new delete clear copy min max print println", () => {
+    const result = expectRuns(`
+xs := []int{1, 2, 3}
+ys := make([]int, 3)
+n := copy(ys, xs)
+m := map[string]int{"a": 1, "b": 2}
+delete(m, "a")
+before := len(m)
+clear(m)
+p := new(int)
+*p = max(3, min(7, 4))
+if v := *p; v == 4 {
+  print("v=", v)
+  println(" ok")
+}
+return n, ys[0], ys[2], before, len(m), *p
+`);
+
+    expect(result.output).toEqual(["v=", "4", " ok\n"]);
+    expect(result.values).toEqual([3n, 1n, 3n, 1n, 0n, 4n]);
+  });
+
+  test("supports methods on named non-struct types and two-value type assertions", () => {
+    const result = expectRuns(`
+type Duration int
+
+func (d Duration) Double() Duration {
+  return d + d
+}
+
+var x interface{} = Duration(5)
+v, ok := x.(Duration)
+bad, badOK := x.(string)
+return ok, v.Double(), bad, badOK
+`);
+
+    expect(result.values).toEqual([true, 10n, "", false]);
+  });
+
+  test("supports address-of composite literals and three-index slicing capacity", () => {
+    const result = expectRuns(`
+type Point struct { X int }
+p := &Point{X: 7}
+xs := make([]int, 5, 8)
+ys := xs[1:3:4]
+return p.X, len(ys), cap(ys)
+`);
+
+    expect(result.values).toEqual([7n, 2n, 3n]);
+  });
+
+  test("enforces comparable map keys and supports array and struct comparability", () => {
+    const ok = expectRuns(`
+type Point struct { X int; Y string }
+a := [2]int{1, 2}
+b := [2]int{1, 2}
+p := Point{X: 1, Y: "a"}
+q := Point{X: 1, Y: "a"}
+return a == b, p == q
+`);
+    expect(ok.values).toEqual([true, true]);
+
+    const bad = evaluateSource(`
+m := map[[]int]int{}
+_ = m
+`);
+    expect(bad.diagnostics).toHaveLength(1);
+    expect(bad.diagnostics[0]?.message).toContain("map key type []int is not comparable");
+  });
+
+  test("supports blank imports, dot imports, init functions, and range over integers and iterator functions", () => {
+    const result = expectRuns(`
+import . "fmt"
+import _ "fmt"
+
+var total int
+
+func init() {
+  total = 2
+}
+
+for i := range 4 {
+  total += i
+}
+
+iter := func(yield func(int, string) bool) {
+  if !yield(10, "a") {
+    return
+  }
+  yield(20, "b")
+}
+
+out := ""
+for k, v := range iter {
+  out += Sprintf("%v:%v;", k, v)
+}
+
+return total, out
+`);
+
+    expect(result.values).toEqual([8n, "10:a;20:b;"]);
+  });
+
+  test("supports embedded fields, promoted methods, interface embedding, and struct tags", () => {
+    const result = expectRuns(`
+type Inner struct {
+  X int
+}
+
+func (i Inner) Double() int {
+  return i.X * 2
+}
+
+type Doubler interface {
+  Double() int
+}
+
+type NamedDoubler interface {
+  Doubler
+}
+
+type Outer struct {
+  Inner \`json:"inner"\`
+  Name string \`json:"name"\`
+}
+
+o := Outer{Inner: Inner{X: 3}, Name: "n"}
+o.X = 4
+var d NamedDoubler
+d = o
+return o.X, o.Double(), d.Double()
+`);
+
+    expect(result.values).toEqual([4n, 8n, 8n]);
+  });
+
+  test("supports pointer receivers on named scalar types", () => {
+    const result = expectRuns(`
+type Counter int
+
+func (c *Counter) Inc() {
+  *c = *c + 1
+}
+
+var c Counter
+c.Inc()
+c.Inc()
+return c
+`);
+
+    expect(result.value).toBe(2n);
+  });
+
+  test("supports switch init statements and short redeclarations", () => {
+    const result = expectRuns(`
+x := 1
+x, y := 2, 3
+out := 0
+switch z := x + y; z {
+case 5:
+  out = z
+default:
+  out = 99
+}
+return x, y, out
+`);
+
+    expect(result.values).toEqual([2n, 3n, 5n]);
+  });
+
+  test("rejects invalid short declarations, for posts, fallthrough, and gotos over variables", () => {
+    const noNew = evaluateSource(`
+x := 1
+x := 2
+`);
+    expect(noNew.diagnostics).toHaveLength(1);
+    expect(noNew.diagnostics[0]?.message).toContain("short declaration has no new variables");
+
+    const badPost = evaluateSource(`
+for i := 0; i < 2; i := i + 1 {
+}
+`);
+    expect(badPost.diagnostics).toHaveLength(1);
+    expect(badPost.diagnostics[0]?.message).toContain("for post");
+
+    const badFallthroughMiddle = evaluateSource(`
+switch 1 {
+case 1:
+  fallthrough
+  fmt.Printf("nope")
+default:
+}
+`);
+    expect(badFallthroughMiddle.diagnostics).toHaveLength(1);
+    expect(badFallthroughMiddle.diagnostics[0]?.message).toContain("fallthrough must be the final statement");
+
+    const badFallthroughFinal = evaluateSource(`
+switch 1 {
+case 1:
+  fallthrough
+}
+`);
+    expect(badFallthroughFinal.diagnostics).toHaveLength(1);
+    expect(badFallthroughFinal.diagnostics[0]?.message).toContain("final switch clause");
+
+    const badGoto = evaluateSource(`
+goto Done
+x := 1
+Done:
+return x
+`);
+    expect(badGoto.diagnostics).toHaveLength(1);
+    expect(badGoto.diagnostics[0]?.message).toContain("jumps over variable declaration");
+  });
+
+  test("decodes Go string and rune escapes", () => {
+    const result = expectRuns(`
+s := "\\x41\\101\\u0042\\U00000043"
+r := '\\n'
+return s, r
+`);
+
+    expect(result.values).toEqual(["AABC", 10n]);
+  });
+
+  test("enforces recursive map-key comparability for arrays and structs", () => {
+    const ok = expectRuns(`
+type Key struct { A [2]int; B string }
+m := map[Key]int{}
+m[Key{A: [2]int{1, 2}, B: "x"}] = 7
+return m[Key{A: [2]int{1, 2}, B: "x"}]
+`);
+    expect(ok.value).toBe(7n);
+
+    const badStruct = evaluateSource(`
+type Bad struct { A []int }
+_ = map[Bad]int{}
+`);
+    expect(badStruct.diagnostics).toHaveLength(1);
+    expect(badStruct.diagnostics[0]?.message).toContain("map key type []int is not comparable");
+  });
+
   test("reports unresolved goto labels", () => {
     const result = evaluateSource(`
 goto Missing

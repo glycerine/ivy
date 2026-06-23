@@ -8,6 +8,8 @@ export enum TokenKind {
   CellAddress = "CellAddress",
   IntLiteral = "IntLiteral",
   FloatLiteral = "FloatLiteral",
+  ImagLiteral = "ImagLiteral",
+  RuneLiteral = "RuneLiteral",
   StringLiteral = "StringLiteral",
 
   Import = "Import",
@@ -41,6 +43,17 @@ export enum TokenKind {
   Ellipsis = "Ellipsis",
   Define = "Define",
   Assign = "Assign",
+  PlusAssign = "PlusAssign",
+  MinusAssign = "MinusAssign",
+  StarAssign = "StarAssign",
+  SlashAssign = "SlashAssign",
+  PercentAssign = "PercentAssign",
+  AmpAssign = "AmpAssign",
+  OrAssign = "OrAssign",
+  CaretAssign = "CaretAssign",
+  ShlAssign = "ShlAssign",
+  ShrAssign = "ShrAssign",
+  BitClearAssign = "BitClearAssign",
   Equal = "Equal",
   NotEqual = "NotEqual",
   Less = "Less",
@@ -57,6 +70,11 @@ export enum TokenKind {
   Star = "Star",
   Slash = "Slash",
   Percent = "Percent",
+  Or = "Or",
+  Caret = "Caret",
+  Shl = "Shl",
+  Shr = "Shr",
+  BitClear = "BitClear",
   Bang = "Bang",
   Amp = "Amp",
   Dot = "Dot",
@@ -121,6 +139,8 @@ export function tokenCanEndStatement(kind: TokenKind): boolean {
     kind === TokenKind.CellAddress ||
     kind === TokenKind.IntLiteral ||
     kind === TokenKind.FloatLiteral ||
+    kind === TokenKind.ImagLiteral ||
+    kind === TokenKind.RuneLiteral ||
     kind === TokenKind.StringLiteral ||
     kind === TokenKind.True ||
     kind === TokenKind.False ||
@@ -134,4 +154,35 @@ export function tokenCanEndStatement(kind: TokenKind): boolean {
     kind === TokenKind.RParen ||
     kind === TokenKind.RBracket ||
     kind === TokenKind.RBrace;
+}
+
+export type AssignmentToken =
+  | TokenKind.Assign
+  | TokenKind.Define
+  | TokenKind.PlusAssign
+  | TokenKind.MinusAssign
+  | TokenKind.StarAssign
+  | TokenKind.SlashAssign
+  | TokenKind.PercentAssign
+  | TokenKind.AmpAssign
+  | TokenKind.OrAssign
+  | TokenKind.CaretAssign
+  | TokenKind.ShlAssign
+  | TokenKind.ShrAssign
+  | TokenKind.BitClearAssign;
+
+export function isAssignmentToken(kind: TokenKind): kind is AssignmentToken {
+  return kind === TokenKind.Assign ||
+    kind === TokenKind.Define ||
+    kind === TokenKind.PlusAssign ||
+    kind === TokenKind.MinusAssign ||
+    kind === TokenKind.StarAssign ||
+    kind === TokenKind.SlashAssign ||
+    kind === TokenKind.PercentAssign ||
+    kind === TokenKind.AmpAssign ||
+    kind === TokenKind.OrAssign ||
+    kind === TokenKind.CaretAssign ||
+    kind === TokenKind.ShlAssign ||
+    kind === TokenKind.ShrAssign ||
+    kind === TokenKind.BitClearAssign;
 }

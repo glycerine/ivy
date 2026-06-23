@@ -6,6 +6,8 @@ export var TokenKind;
     TokenKind["CellAddress"] = "CellAddress";
     TokenKind["IntLiteral"] = "IntLiteral";
     TokenKind["FloatLiteral"] = "FloatLiteral";
+    TokenKind["ImagLiteral"] = "ImagLiteral";
+    TokenKind["RuneLiteral"] = "RuneLiteral";
     TokenKind["StringLiteral"] = "StringLiteral";
     TokenKind["Import"] = "Import";
     TokenKind["Package"] = "Package";
@@ -37,6 +39,17 @@ export var TokenKind;
     TokenKind["Ellipsis"] = "Ellipsis";
     TokenKind["Define"] = "Define";
     TokenKind["Assign"] = "Assign";
+    TokenKind["PlusAssign"] = "PlusAssign";
+    TokenKind["MinusAssign"] = "MinusAssign";
+    TokenKind["StarAssign"] = "StarAssign";
+    TokenKind["SlashAssign"] = "SlashAssign";
+    TokenKind["PercentAssign"] = "PercentAssign";
+    TokenKind["AmpAssign"] = "AmpAssign";
+    TokenKind["OrAssign"] = "OrAssign";
+    TokenKind["CaretAssign"] = "CaretAssign";
+    TokenKind["ShlAssign"] = "ShlAssign";
+    TokenKind["ShrAssign"] = "ShrAssign";
+    TokenKind["BitClearAssign"] = "BitClearAssign";
     TokenKind["Equal"] = "Equal";
     TokenKind["NotEqual"] = "NotEqual";
     TokenKind["Less"] = "Less";
@@ -53,6 +66,11 @@ export var TokenKind;
     TokenKind["Star"] = "Star";
     TokenKind["Slash"] = "Slash";
     TokenKind["Percent"] = "Percent";
+    TokenKind["Or"] = "Or";
+    TokenKind["Caret"] = "Caret";
+    TokenKind["Shl"] = "Shl";
+    TokenKind["Shr"] = "Shr";
+    TokenKind["BitClear"] = "BitClear";
     TokenKind["Bang"] = "Bang";
     TokenKind["Amp"] = "Amp";
     TokenKind["Dot"] = "Dot";
@@ -106,6 +124,8 @@ export function tokenCanEndStatement(kind) {
         kind === TokenKind.CellAddress ||
         kind === TokenKind.IntLiteral ||
         kind === TokenKind.FloatLiteral ||
+        kind === TokenKind.ImagLiteral ||
+        kind === TokenKind.RuneLiteral ||
         kind === TokenKind.StringLiteral ||
         kind === TokenKind.True ||
         kind === TokenKind.False ||
@@ -119,4 +139,19 @@ export function tokenCanEndStatement(kind) {
         kind === TokenKind.RParen ||
         kind === TokenKind.RBracket ||
         kind === TokenKind.RBrace;
+}
+export function isAssignmentToken(kind) {
+    return kind === TokenKind.Assign ||
+        kind === TokenKind.Define ||
+        kind === TokenKind.PlusAssign ||
+        kind === TokenKind.MinusAssign ||
+        kind === TokenKind.StarAssign ||
+        kind === TokenKind.SlashAssign ||
+        kind === TokenKind.PercentAssign ||
+        kind === TokenKind.AmpAssign ||
+        kind === TokenKind.OrAssign ||
+        kind === TokenKind.CaretAssign ||
+        kind === TokenKind.ShlAssign ||
+        kind === TokenKind.ShrAssign ||
+        kind === TokenKind.BitClearAssign;
 }

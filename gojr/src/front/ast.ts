@@ -78,7 +78,7 @@ export interface Ellipsis extends Node {
 
 export interface BasicLit extends Node {
   kind: "BasicLit";
-  token: TokenKind.IntLiteral | TokenKind.FloatLiteral | TokenKind.StringLiteral;
+  token: TokenKind.IntLiteral | TokenKind.FloatLiteral | TokenKind.ImagLiteral | TokenKind.RuneLiteral | TokenKind.StringLiteral;
   value: string;
 }
 
@@ -140,7 +140,7 @@ export interface StarExpr extends Node {
 
 export interface UnaryExpr extends Node {
   kind: "UnaryExpr";
-  op: TokenKind.Plus | TokenKind.Minus | TokenKind.Bang | TokenKind.Amp | TokenKind.Arrow;
+  op: TokenKind.Plus | TokenKind.Minus | TokenKind.Bang | TokenKind.Caret | TokenKind.Amp | TokenKind.Arrow;
   expr: Expr;
 }
 
@@ -162,9 +162,15 @@ export type BinaryOperator =
   | TokenKind.GreaterEqual
   | TokenKind.Plus
   | TokenKind.Minus
+  | TokenKind.Or
+  | TokenKind.Caret
   | TokenKind.Star
   | TokenKind.Slash
-  | TokenKind.Percent;
+  | TokenKind.Percent
+  | TokenKind.Shl
+  | TokenKind.Shr
+  | TokenKind.Amp
+  | TokenKind.BitClear;
 
 export interface KeyValueExpr extends Node {
   kind: "KeyValueExpr";
@@ -282,7 +288,20 @@ export interface ExprStmt extends Node {
 export interface AssignStmt extends Node {
   kind: "AssignStmt";
   lhs: Expr[];
-  token: TokenKind.Assign | TokenKind.Define;
+  token:
+    | TokenKind.Assign
+    | TokenKind.Define
+    | TokenKind.PlusAssign
+    | TokenKind.MinusAssign
+    | TokenKind.StarAssign
+    | TokenKind.SlashAssign
+    | TokenKind.PercentAssign
+    | TokenKind.AmpAssign
+    | TokenKind.OrAssign
+    | TokenKind.CaretAssign
+    | TokenKind.ShlAssign
+    | TokenKind.ShrAssign
+    | TokenKind.BitClearAssign;
   rhs: Expr[];
 }
 

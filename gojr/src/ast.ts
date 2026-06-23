@@ -98,11 +98,14 @@ export interface TypeSpec {
   type: TypeNode;
   structFields?: StructFieldDecl[];
   interfaceMethods?: InterfaceMethodDecl[];
+  interfaceEmbeds?: TypeNode[];
 }
 
 export interface StructFieldDecl {
   name: string;
   type: TypeNode;
+  embedded?: boolean;
+  tag?: string;
 }
 
 export interface InterfaceMethodDecl {
@@ -124,6 +127,7 @@ export interface ReturnStatement {
 
 export interface IfStatement {
   kind: "IfStatement";
+  init?: Statement;
   condition: Expression;
   thenBlock: BlockStatement;
   elseBranch?: IfStatement | BlockStatement;
@@ -146,6 +150,7 @@ export interface TypeSwitchGuard {
 
 export interface SwitchStatement {
   kind: "SwitchStatement";
+  init?: Statement;
   expression?: Expression;
   typeSwitch?: TypeSwitchGuard;
   clauses: SwitchClause[];
@@ -185,6 +190,7 @@ export interface BranchStatement {
 export interface AssignStatement {
   kind: "AssignStatement";
   targets: Expression[];
+  operator: "=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" | "&^=" | "<<=" | ">>=";
   values: Expression[];
   span?: SourceSpan;
 }
@@ -238,11 +244,16 @@ export interface TypeExpression {
   span?: SourceSpan;
 }
 
-export type LiteralValue = bigint | number | string | boolean | null;
+export interface ComplexLiteralValue {
+  real: number;
+  imag: number;
+}
+
+export type LiteralValue = bigint | number | ComplexLiteralValue | string | boolean | null;
 
 export interface LiteralExpression {
   kind: "Literal";
-  literalKind: "int" | "float" | "string" | "bool" | "nil";
+  literalKind: "int" | "float" | "imag" | "rune" | "string" | "bool" | "nil";
   value: LiteralValue;
   raw: string;
   span?: SourceSpan;
@@ -289,14 +300,14 @@ export interface MapLiteralExpression {
 
 export interface UnaryExpression {
   kind: "UnaryExpression";
-  operator: "+" | "-" | "!" | "&" | "*";
+  operator: "+" | "-" | "!" | "^" | "&" | "*";
   operand: Expression;
   span?: SourceSpan;
 }
 
 export interface BinaryExpression {
   kind: "BinaryExpression";
-  operator: "||" | "&&" | "==" | "!=" | "<" | "<=" | ">" | ">=" | "+" | "-" | "*" | "/" | "%";
+  operator: "||" | "&&" | "==" | "!=" | "<" | "<=" | ">" | ">=" | "+" | "-" | "|" | "^" | "*" | "/" | "%" | "<<" | ">>" | "&" | "&^";
   left: Expression;
   right: Expression;
   span?: SourceSpan;
@@ -336,6 +347,7 @@ export interface SliceExpression {
   object: Expression;
   start?: Expression;
   end?: Expression;
+  max?: Expression;
   span?: SourceSpan;
 }
 

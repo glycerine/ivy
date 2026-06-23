@@ -15,14 +15,30 @@ export var BasicKind;
 (function (BasicKind) {
     BasicKind["Invalid"] = "invalid";
     BasicKind["Bool"] = "bool";
+    BasicKind["Int"] = "int";
+    BasicKind["Int8"] = "int8";
+    BasicKind["Int16"] = "int16";
+    BasicKind["Int32"] = "int32";
     BasicKind["Int64"] = "int64";
+    BasicKind["Uint"] = "uint";
+    BasicKind["Uint8"] = "uint8";
+    BasicKind["Uint16"] = "uint16";
+    BasicKind["Uint32"] = "uint32";
+    BasicKind["Uint64"] = "uint64";
+    BasicKind["Uintptr"] = "uintptr";
+    BasicKind["Byte"] = "byte";
+    BasicKind["Rune"] = "rune";
+    BasicKind["Float32"] = "float32";
     BasicKind["Float64"] = "float64";
+    BasicKind["Complex64"] = "complex64";
+    BasicKind["Complex128"] = "complex128";
     BasicKind["String"] = "string";
     BasicKind["Error"] = "error";
     BasicKind["Any"] = "any";
     BasicKind["UntypedBool"] = "untyped bool";
     BasicKind["UntypedInt"] = "untyped int";
     BasicKind["UntypedFloat"] = "untyped float";
+    BasicKind["UntypedComplex"] = "untyped complex";
     BasicKind["UntypedString"] = "untyped string";
     BasicKind["UntypedNil"] = "untyped nil";
 })(BasicKind || (BasicKind = {}));
@@ -339,19 +355,39 @@ export function newUniverse() {
         bool: new BasicType(BasicKind.Bool, new Set(["bool"])),
         int64: new BasicType(BasicKind.Int64, new Set(["integer", "numeric"])),
         float64: new BasicType(BasicKind.Float64, new Set(["float", "numeric"])),
+        complex128: new BasicType(BasicKind.Complex128, new Set(["complex", "numeric"])),
         string: new BasicType(BasicKind.String, new Set(["string"])),
         error: new BasicType(BasicKind.Error),
         any: new BasicType(BasicKind.Any),
         untypedBool: new BasicType(BasicKind.UntypedBool, new Set(["bool", "untyped"])),
         untypedInt: new BasicType(BasicKind.UntypedInt, new Set(["integer", "numeric", "untyped"])),
         untypedFloat: new BasicType(BasicKind.UntypedFloat, new Set(["float", "numeric", "untyped"])),
+        untypedComplex: new BasicType(BasicKind.UntypedComplex, new Set(["complex", "numeric", "untyped"])),
         untypedString: new BasicType(BasicKind.UntypedString, new Set(["string", "untyped"])),
         untypedNil: new BasicType(BasicKind.UntypedNil, new Set(["nil", "untyped"]))
     };
+    const integerInfo = new Set(["integer", "numeric"]);
+    const floatInfo = new Set(["float", "numeric"]);
+    const complexInfo = new Set(["complex", "numeric"]);
     for (const [name, type] of [
         ["bool", basic.bool],
+        ["int", new BasicType(BasicKind.Int, integerInfo)],
+        ["int8", new BasicType(BasicKind.Int8, integerInfo)],
+        ["int16", new BasicType(BasicKind.Int16, integerInfo)],
+        ["int32", new BasicType(BasicKind.Int32, integerInfo)],
         ["int64", basic.int64],
+        ["uint", new BasicType(BasicKind.Uint, integerInfo)],
+        ["uint8", new BasicType(BasicKind.Uint8, integerInfo)],
+        ["uint16", new BasicType(BasicKind.Uint16, integerInfo)],
+        ["uint32", new BasicType(BasicKind.Uint32, integerInfo)],
+        ["uint64", new BasicType(BasicKind.Uint64, integerInfo)],
+        ["uintptr", new BasicType(BasicKind.Uintptr, integerInfo)],
+        ["byte", new BasicType(BasicKind.Byte, integerInfo)],
+        ["rune", new BasicType(BasicKind.Rune, integerInfo)],
+        ["float32", new BasicType(BasicKind.Float32, floatInfo)],
         ["float64", basic.float64],
+        ["complex64", new BasicType(BasicKind.Complex64, complexInfo)],
+        ["complex128", basic.complex128],
         ["string", basic.string],
         ["error", basic.error],
         ["any", basic.any]
@@ -368,6 +404,9 @@ export function newUniverse() {
     scope.insert(new BuiltinObject("cap", new SignatureType(undefined, tuple(varOf("", basic.any)), tuple(varOf("", basic.int64)), false), scope));
     scope.insert(new BuiltinObject("append", new SignatureType(undefined, tuple(varOf("slice", new SliceType(basic.any)), varOf("values", new SliceType(basic.any))), tuple(varOf("", new SliceType(basic.any))), true), scope));
     scope.insert(new BuiltinObject("make", new SignatureType(undefined, tuple(varOf("type", basic.any), varOf("size", new SliceType(basic.any))), tuple(varOf("", basic.any)), true), scope));
+    for (const name of ["new", "delete", "clear", "copy", "min", "max", "complex", "real", "imag", "print", "println"]) {
+        scope.insert(new BuiltinObject(name, new SignatureType(undefined, tuple(varOf("args", new SliceType(basic.any))), tuple(varOf("", basic.any)), true), scope));
+    }
     return { scope, basic };
 }
 export function tuple(...variables) {

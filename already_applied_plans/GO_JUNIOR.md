@@ -280,12 +280,20 @@ Go-junior-compatible package resolver used by source package units.
 
 ### Initial Types
 
-Start with a Go-like static type system, intentionally excluding generics:
+Start with a Go-like static type system, intentionally excluding generics and
+concurrency:
 
 - `bool`
+- `int`, `int8`, `int16`, `int32`, `int64`
+- `uint`, `uint8`, `uint16`, `uint32`, `uint64`, `uintptr`
+- `byte` as an alias for `uint8`
+- `rune` as an alias for `int32`
 - `string`
 - `int64`; untyped integer constants default to `int64`
+- `float32`
 - `float64`; untyped floating-point constants default to `float64`
+- `complex64` and `complex128`; imaginary literals are supported and untyped
+  complex constants default to `complex128` when a concrete type is required
 - arrays, for example `[3]float64`
 - slices, for example `[]float64`
 - maps, for example `map[string]int64`
@@ -301,6 +309,46 @@ Start with a Go-like static type system, intentionally excluding generics:
 There should be no Go-junior `number` type. Numeric lowering may still use
 JavaScript's numeric representation internally where appropriate, but the
 language-level types should be `int64` and `float64`.
+
+Before source package compilation work begins, Go-junior should complete a
+single-threaded Go compatibility pass. The language should continue to exclude
+`go`, `select`, channels/channel operations, `recover`, `unsafe`, cgo, and
+generics, but ordinary single-threaded Go library code should not be blocked by
+avoidable syntax/runtime gaps. Required compatibility work includes:
+
+- explicit conversions such as `int(x)`, `float64(i)`, `string(b)`, named type
+  conversions, and conversion diagnostics for unsupported cases
+- the full non-channel operator surface: `|`, `^`, binary `&`, `&^`, `<<`,
+  `>>`, unary `^`, and compound assignments such as `+=`, `-=`, `*=`, `/=`,
+  `%=`, `&=`, `|=`, `^=`, `&^=`, `<<=`, and `>>=`
+- Go numeric literal forms: binary, octal, hexadecimal, underscores,
+  hexadecimal floating-point literals, rune literals, imaginary literals, and
+  the standard Go string/rune escape forms
+- the predeclared built-ins `new`, `delete`, `copy`, `clear`, `min`, `max`,
+  `complex`, `real`, `imag`, plus `print` and `println` for Go compatibility;
+  `close` remains unsupported because channels are unsupported
+- Go-style `if init; condition {}` and validation of Go control-flow rules,
+  including short-declaration redeclaration, `for` post-statement restrictions,
+  `fallthrough` placement, and `goto` restrictions
+- methods on any named non-pointer, non-interface type, not only named struct
+  types
+- embedded struct fields, promoted fields/methods, interface embedding, and
+  struct tags
+- two-value type assertions, for example `v, ok := x.(T)`
+- array and struct comparability, map-key comparability enforcement, and Go's
+  special nil-comparison rules for slices, maps, functions, pointers, and
+  interfaces
+- address-of composite literals, for example `&Point{X: 1}`
+- three-index slicing with capacity semantics
+- blank imports and dot imports
+- package `init` functions for Go-junior-compatible source packages
+- current Go range forms over integers and iterator functions
+
+Go-junior intentionally keeps one spreadsheet ergonomics deviation from Go:
+declared but uninitialized maps may auto-initialize on first assignment or map
+literal-like use. This avoids a common spreadsheet-scripting annoyance while
+the type system still records `map[K]V` and map reads still produce Go-like
+zero values plus optional presence booleans.
 
 Static spreadsheet references should be strongly typed. The compiler should
 receive a workbook/sheet type environment that maps literal cells, formula
@@ -646,6 +694,12 @@ Go-junior stack trace.
 common and spreadsheet formulas need a compact way to fail fast during
 interactive exploration.
 
+The rest of the single-threaded Go built-in surface should be added before
+source package compilation is treated as complete: `append`, `cap`, `clear`,
+`complex`, `copy`, `delete`, `imag`, `len`, `make`, `max`, `min`, `new`,
+`panic`, `print`, `println`, and `real`. `recover` and `close` are deliberately
+unsupported unless the concurrency/recovery design is reopened later.
+
 ### Functions
 
 Stage v1 can compile one implicit cell function. Go-junior functions should
@@ -797,6 +851,13 @@ Map iteration differs intentionally from Go: Go-junior maps iterate in
 deterministic insertion order like Python `dict`. Updating an existing key does
 not move it; deleting and reinserting a key appends it at the new insertion
 position.
+
+Map keys must be Go-comparable. Slices, maps, functions, and other
+non-comparable values are rejected as map keys, except for Go's explicit nil
+comparison rules where applicable. Declared zero-value maps may auto-initialize
+on first assignment for spreadsheet ergonomics, but `delete`, `clear`,
+two-value lookup, range order, and missing-key zero values should otherwise be
+Go-like.
 
 ### Source Packages
 
@@ -2702,21 +2763,28 @@ considered usable until `fmt.Printf` works through the Node diagnostic sink.
    closures, consts, structs, pointers, pointer receivers, interfaces, methods,
    arrays, slices, maps, switch, Go-style type switches, full for loops,
    for-range loops, `panic`, and `panicOn`.
-4. Resolver/typechecker for locals, reserved `sheet`, sheet-name namespaces,
+4. Parser/typechecker/runtime coverage for the required single-threaded Go
+   compatibility pass: conversions, full non-channel operators, compound
+   assignments, Go literal forms, complex numbers, additional predeclared
+   built-ins, `if init; condition`, two-value type assertions, comparability,
+   address-of composite literals, three-index slicing, blank/dot imports,
+   package `init`, and current Go range forms over integers and iterator
+   functions.
+5. Resolver/typechecker for locals, reserved `sheet`, sheet-name namespaces,
    cell-level imports/import aliases, and one fake host namespace.
-5. Dependency extraction for literal current-sheet and cross-sheet references,
+6. Dependency extraction for literal current-sheet and cross-sheet references,
    plus runtime observed dependency tracking for dynamic references and
    Go-junior function cell calls.
-6. Built-in `fmt` package with `fmt.Printf`, `fmt.Sprintf`, and `fmt.Println`
+7. Built-in `fmt` package with `fmt.Printf`, `fmt.Sprintf`, and `fmt.Println`
    working in the Node runtime diagnostic sink.
-7. One tiny Go-junior-compatible source package compiled by the Node runtime
+8. One tiny Go-junior-compatible source package compiled by the Node runtime
    and called from a formula, including a mutable package variable.
-8. JS source copy-and-patch emitter.
-9. Runtime tests that evaluate formulas against a fake spreadsheet context in
+9. JS source copy-and-patch emitter.
+10. Runtime tests that evaluate formulas against a fake spreadsheet context in
    Node.
-10. A minimal Node CLI `eval`, `compile`, `run-fixture`, and `inspect-js` path
+11. A minimal Node CLI `eval`, `compile`, `run-fixture`, and `inspect-js` path
    for manual bash testing.
-11. Browser worker and webui service integration are deferred until the language
+12. Browser worker and webui service integration are deferred until the language
    and CLI semantics have been exercised.
 
 Example first formulas:
@@ -2805,6 +2873,15 @@ return counter.Next()
 - Go-junior has one Go-style `error` type.
 - Go-junior supports Go-style consts, structs, interfaces, methods, closures,
   arrays, slices, maps, indexing, switch, full for loops, and for-range loops.
+- Go-junior supports single-threaded Go compatibility features before package
+  integration: explicit conversions, the full non-channel operator surface,
+  compound assignments, Go literal forms, complex numbers, additional
+  predeclared built-ins, `if init; condition`, methods on named non-struct
+  types, embedded fields/method promotion, interface embedding, struct tags,
+  two-value type assertions, comparability, map-key comparability enforcement,
+  address-of composite literals, three-index slicing, blank/dot imports,
+  package `init`, and current Go range forms over integers and iterator
+  functions.
 - Go-junior supports pointer types, address-of, dereference, pointer receiver
   methods, and Go-like method-set rules.
 - Go-junior supports predeclared `panic` and `panicOn(err error)`, with defers
@@ -2819,6 +2896,9 @@ return counter.Next()
 - The built-in `fmt` package supports `Printf`, `Sprintf`, and `Println` early,
   with `Printf`/`Println` routed through the diagnostic sink.
 - Go-junior maps iterate in deterministic insertion order.
+- Declared zero-value maps auto-initialize on first assignment for spreadsheet
+  ergonomics while preserving Go-like typed map reads, delete/clear behavior,
+  and deterministic insertion-order iteration.
 - Go generics are rejected explicitly and remain out of scope.
 - Unsupported Go features are rejected explicitly.
 - Valid formulas typecheck before execution.

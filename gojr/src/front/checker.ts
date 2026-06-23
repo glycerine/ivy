@@ -471,8 +471,10 @@ class FrontChecker {
   }
 
   private checkBasicLit(expr: BasicLit): TypeAndValue {
-    if (expr.token === TokenKind.IntLiteral) return { mode: "constant", type: this.universe.basic.untypedInt, value: BigInt(expr.value) };
-    if (expr.token === TokenKind.FloatLiteral) return { mode: "constant", type: this.universe.basic.untypedFloat, value: Number(expr.value) };
+    if (expr.token === TokenKind.IntLiteral) return { mode: "constant", type: this.universe.basic.untypedInt, value: parseGoIntLiteral(expr.value) };
+    if (expr.token === TokenKind.FloatLiteral) return { mode: "constant", type: this.universe.basic.untypedFloat, value: parseGoFloatLiteral(expr.value) };
+    if (expr.token === TokenKind.ImagLiteral) return { mode: "constant", type: this.universe.basic.untypedComplex, value: expr.value };
+    if (expr.token === TokenKind.RuneLiteral) return { mode: "constant", type: this.universe.basic.untypedInt, value: parseGoRuneLiteral(expr.value) };
     return { mode: "constant", type: this.universe.basic.untypedString, value: unquote(expr.value) };
   }
 
@@ -628,15 +630,19 @@ class FrontChecker {
   private resolveStructType(expr: StructTypeNode, scope: Scope): Type {
     const fields = expr.fields.fields.flatMap((field) => {
       const type = this.resolveType(field.type, scope);
-      if (field.names.length === 0) return [{ name: embeddedFieldName(field.type), type, embedded: true }];
-      return field.names.map((name) => ({ name: name.name, type, embedded: false }));
+      const tag = field.tag ? unquote(field.tag.value) : undefined;
+      if (field.names.length === 0) return [{ name: embeddedFieldName(field.type), type, embedded: true, ...(tag ? { tag } : {}) }];
+      return field.names.map((name) => ({ name: name.name, type, embedded: false, ...(tag ? { tag } : {}) }));
     });
     return new StructType(fields);
   }
 
   private resolveInterfaceType(expr: InterfaceTypeNode, scope: Scope): Type {
-    const methods = expr.methods.fields.flatMap((field) => {
-      if (field.type.kind !== "FuncType") return [];
+    const methods = expr.methods.fields.flatMap((field): FuncObject[] => {
+      if (field.type.kind !== "FuncType") {
+        const embedded = this.resolveType(field.type, scope).underlying();
+        return embedded instanceof InterfaceType ? embedded.methods : [];
+      }
       return field.names.map((name) => new FuncObject(name.name, this.signatureFromFuncType(field.type as FuncType, scope), scope, this.pkg));
     });
     return new InterfaceType(methods).complete();
@@ -724,13 +730,94 @@ function unquote(value: string): string {
     return value.slice(1, -1).replace(/\r/g, "");
   }
   if (value.length >= 2 && value.startsWith("\"") && value.endsWith("\"")) {
-    try {
-      return JSON.parse(value) as string;
-    } catch {
-      return value.slice(1, -1);
-    }
+    return decodeGoEscaped(value.slice(1, -1));
   }
   return value;
+}
+
+function parseGoIntLiteral(value: string): bigint {
+  const text = value.replace(/_/g, "");
+  if (/^0[0-7]+$/.test(text)) return BigInt(`0o${text.slice(1)}`);
+  return BigInt(text);
+}
+
+function parseGoFloatLiteral(value: string): number {
+  const text = value.replace(/_/g, "");
+  const hex = /^0[xX]([0-9a-fA-F]*)(?:\.([0-9a-fA-F]*))?[pP]([+-]?[0-9]+)$/.exec(text);
+  if (!hex) return Number(text);
+  const whole = hex[1] || "0";
+  const frac = hex[2] || "";
+  const exponent = Number(hex[3]);
+  const wholeValue = Number.parseInt(whole, 16);
+  let fracValue = 0;
+  for (let index = 0; index < frac.length; index += 1) {
+    fracValue += Number.parseInt(frac[index] ?? "0", 16) / 16 ** (index + 1);
+  }
+  return (wholeValue + fracValue) * 2 ** exponent;
+}
+
+function parseGoRuneLiteral(value: string): bigint {
+  const decoded = decodeGoEscaped(value.slice(1, -1));
+  return BigInt([...decoded][0]?.codePointAt(0) ?? 0);
+}
+
+function decodeGoEscaped(value: string): string {
+  let decoded = "";
+  for (let index = 0; index < value.length; index += 1) {
+    const char = value[index] ?? "";
+    if (char !== "\\") {
+      decoded += char;
+      continue;
+    }
+    const next = value[index + 1] ?? "";
+    index += 1;
+    switch (next) {
+      case "a": decoded += "\x07"; break;
+      case "b": decoded += "\b"; break;
+      case "f": decoded += "\f"; break;
+      case "n": decoded += "\n"; break;
+      case "r": decoded += "\r"; break;
+      case "t": decoded += "\t"; break;
+      case "v": decoded += "\x0b"; break;
+      case "\\":
+      case "\"":
+      case "'":
+        decoded += next;
+        break;
+      case "x":
+        decoded += codePointFromEscape(value.slice(index + 1, index + 3), 16);
+        index += 2;
+        break;
+      case "u":
+        decoded += codePointFromEscape(value.slice(index + 1, index + 5), 16);
+        index += 4;
+        break;
+      case "U":
+        decoded += codePointFromEscape(value.slice(index + 1, index + 9), 16);
+        index += 8;
+        break;
+      default:
+        if (/^[0-7]$/.test(next)) {
+          const digits = next + value.slice(index + 1, index + 3);
+          decoded += codePointFromEscape(digits, 8);
+          index += 2;
+        } else {
+          decoded += next;
+        }
+        break;
+    }
+  }
+  return decoded;
+}
+
+function codePointFromEscape(digits: string, radix: number): string {
+  const value = Number.parseInt(digits, radix);
+  if (!Number.isFinite(value)) return "";
+  try {
+    return String.fromCodePoint(value);
+  } catch {
+    return "";
+  }
 }
 
 function importName(path: string): string {
@@ -754,8 +841,34 @@ function lookupFieldOrMethod(type: Type, name: string): TypeObject | undefined {
   if (actual instanceof StructType) {
     const field = actual.fields.find((item) => item.name === name);
     if (field) return new VarObject(field.name, field.type, field.embedded);
+    const promoted = promotedFieldOrMethod(actual, name);
+    if (promoted) return promoted;
   }
   return methodSet(type).find((method) => method.name === name);
+}
+
+function promotedFieldOrMethod(type: StructType, name: string, seen = new Set<StructType>()): TypeObject | undefined {
+  if (seen.has(type)) return undefined;
+  seen.add(type);
+  const matches: TypeObject[] = [];
+  for (const field of type.fields.filter((item) => item.embedded)) {
+    const fieldType = field.type instanceof PointerType ? field.type.base : field.type;
+    const directMethod = methodSet(field.type).find((method) => method.name === name);
+    if (directMethod) {
+      matches.push(directMethod);
+      continue;
+    }
+    const underlying = fieldType.underlying();
+    if (!(underlying instanceof StructType)) continue;
+    const directField = underlying.fields.find((item) => item.name === name);
+    if (directField) {
+      matches.push(new VarObject(directField.name, directField.type, directField.embedded));
+      continue;
+    }
+    const promoted = promotedFieldOrMethod(underlying, name, seen);
+    if (promoted) matches.push(promoted);
+  }
+  return matches.length === 1 ? matches[0] : undefined;
 }
 
 function isStringLike(type: Type): boolean {
@@ -767,6 +880,10 @@ function isUntyped(type: Type): boolean {
 }
 
 function promoteNumeric(left: Type, right: Type, universe: Universe): Type {
+  if (left instanceof BasicType && (left.basicKind === BasicKind.Complex64 || left.basicKind === BasicKind.Complex128)) return left;
+  if (right instanceof BasicType && (right.basicKind === BasicKind.Complex64 || right.basicKind === BasicKind.Complex128)) return right;
+  if (left instanceof BasicType && left.basicKind === BasicKind.UntypedComplex) return left;
+  if (right instanceof BasicType && right.basicKind === BasicKind.UntypedComplex) return right;
   if (left instanceof BasicType && left.basicKind === BasicKind.Float64) return left;
   if (right instanceof BasicType && right.basicKind === BasicKind.Float64) return right;
   if (left instanceof BasicType && left.basicKind === BasicKind.UntypedFloat) return left;

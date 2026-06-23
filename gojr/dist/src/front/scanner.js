@@ -43,6 +43,10 @@ class Scanner {
             this.scanString(start);
             return;
         }
+        if (char === "'") {
+            this.scanRune(start);
+            return;
+        }
         if (char === "`") {
             this.scanRawString(start);
             return;
@@ -135,34 +139,50 @@ class Scanner {
         this.error("GJSCAN001", "unterminated raw string literal", start, this.position());
         this.emit(TokenKind.StringLiteral, this.sliceFrom(start), start, this.position());
     }
+    scanRune(start) {
+        this.advance();
+        let sawContent = false;
+        while (!this.isEOF()) {
+            const char = this.peek();
+            if (char === "'") {
+                this.advance();
+                this.emit(TokenKind.RuneLiteral, this.sliceFrom(start), start, this.position());
+                return;
+            }
+            if (char === "\n" || char === "\r") {
+                this.error("GJSCAN001", "unterminated rune literal", start, this.position());
+                this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
+                return;
+            }
+            sawContent = true;
+            if (char === "\\") {
+                this.advance();
+                if (!this.isEOF())
+                    this.advance();
+                continue;
+            }
+            this.advance();
+        }
+        this.error("GJSCAN001", sawContent ? "unterminated rune literal" : "empty rune literal", start, this.position());
+        this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
+    }
     scanNumber(start) {
-        let kind = TokenKind.IntLiteral;
-        if (this.peek() === ".") {
-            kind = TokenKind.FloatLiteral;
+        const match = goNumberPattern.exec(this.source.slice(this.offset));
+        if (!match) {
             this.advance();
-            this.consumeDigits();
+            this.error("GJSCAN002", "malformed numeric literal", start, this.position());
+            this.emit(TokenKind.Illegal, this.sliceFrom(start), start, this.position());
+            return;
         }
-        else {
-            this.consumeDigits();
-            if (this.peek() === ".") {
-                kind = TokenKind.FloatLiteral;
-                this.advance();
-                this.consumeDigits();
-            }
-        }
-        if (this.peek().toLowerCase() === "e") {
-            kind = TokenKind.FloatLiteral;
-            this.advance();
-            if (this.peek() === "+" || this.peek() === "-")
-                this.advance();
-            if (!isDigit(this.peek())) {
-                this.error("GJSCAN002", "malformed exponent in numeric literal", start, this.position());
-            }
-            else {
-                this.consumeDigits();
-            }
-        }
-        this.emit(kind, this.sliceFrom(start), start, this.position());
+        const text = match[0];
+        this.advanceMany(text.length);
+        const core = text.endsWith("i") ? text.slice(0, -1) : text;
+        const kind = text.endsWith("i")
+            ? TokenKind.ImagLiteral
+            : /[.eEpP]/.test(core)
+                ? TokenKind.FloatLiteral
+                : TokenKind.IntLiteral;
+        this.emit(kind, text, start, this.position());
     }
     scanIdentifierOrCell(start) {
         const cell = this.matchCellAddressAt(this.offset);
@@ -184,13 +204,19 @@ class Scanner {
         this.emit(keywordKind(text) ?? TokenKind.Identifier, text, start, this.position());
     }
     scanOperatorOrDelimiter(start) {
-        const two = this.source.slice(this.offset, this.offset + 2);
         const three = this.source.slice(this.offset, this.offset + 3);
         if (three === "...") {
             this.advanceMany(3);
             this.emit(TokenKind.Ellipsis, three, start, this.position());
             return;
         }
+        const threeKind = threeCharToken(three);
+        if (threeKind) {
+            this.advanceMany(3);
+            this.emit(threeKind, three, start, this.position());
+            return;
+        }
+        const two = this.source.slice(this.offset, this.offset + 2);
         const twoKind = twoCharToken(two);
         if (twoKind) {
             this.advanceMany(2);
@@ -213,10 +239,6 @@ class Scanner {
         this.advance();
         this.error("GJSCAN005", `unexpected character ${JSON.stringify(one)}`, start, this.position());
         this.emit(TokenKind.Illegal, one, start, this.position());
-    }
-    consumeDigits() {
-        while (isDigit(this.peek()))
-            this.advance();
     }
     skipLineComment() {
         while (!this.isEOF() && this.peek() !== "\n" && this.peek() !== "\r") {
@@ -317,6 +339,17 @@ function spanBetween(start, end) {
 function twoCharToken(text) {
     switch (text) {
         case ":=": return TokenKind.Define;
+        case "+=": return TokenKind.PlusAssign;
+        case "-=": return TokenKind.MinusAssign;
+        case "*=": return TokenKind.StarAssign;
+        case "/=": return TokenKind.SlashAssign;
+        case "%=": return TokenKind.PercentAssign;
+        case "&=": return TokenKind.AmpAssign;
+        case "|=": return TokenKind.OrAssign;
+        case "^=": return TokenKind.CaretAssign;
+        case "<<": return TokenKind.Shl;
+        case ">>": return TokenKind.Shr;
+        case "&^": return TokenKind.BitClear;
         case "==": return TokenKind.Equal;
         case "!=": return TokenKind.NotEqual;
         case "<=": return TokenKind.LessEqual;
@@ -330,6 +363,14 @@ function twoCharToken(text) {
         default: return undefined;
     }
 }
+function threeCharToken(text) {
+    switch (text) {
+        case "<<=": return TokenKind.ShlAssign;
+        case ">>=": return TokenKind.ShrAssign;
+        case "&^=": return TokenKind.BitClearAssign;
+        default: return undefined;
+    }
+}
 function oneCharToken(text) {
     switch (text) {
         case "=": return TokenKind.Assign;
@@ -340,6 +381,8 @@ function oneCharToken(text) {
         case "*": return TokenKind.Star;
         case "/": return TokenKind.Slash;
         case "%": return TokenKind.Percent;
+        case "|": return TokenKind.Or;
+        case "^": return TokenKind.Caret;
         case "!": return TokenKind.Bang;
         case "&": return TokenKind.Amp;
         case ".": return TokenKind.Dot;
@@ -355,6 +398,15 @@ function oneCharToken(text) {
         default: return undefined;
     }
 }
+const decimalDigits = String.raw `(?:[0-9](?:_?[0-9])*)`;
+const binaryDigits = String.raw `(?:[01](?:_?[01])*)`;
+const octalDigits = String.raw `(?:[0-7](?:_?[0-7])*)`;
+const hexDigits = String.raw `(?:[0-9A-Fa-f](?:_?[0-9A-Fa-f])*)`;
+const decimalFloat = String.raw `(?:(?:${decimalDigits}\.${decimalDigits}?|${decimalDigits}\.|\.(?:${decimalDigits}))(?:[eE][+-]?${decimalDigits})?|${decimalDigits}[eE][+-]?${decimalDigits})`;
+const hexMantissa = String.raw `(?:${hexDigits}(?:\.${hexDigits}?)?|\.${hexDigits})`;
+const hexFloat = String.raw `(?:0[xX]${hexMantissa}[pP][+-]?${decimalDigits})`;
+const integer = String.raw `(?:0[bB]${binaryDigits}|0[oO]${octalDigits}|0[xX]${hexDigits}|${decimalDigits})`;
+const goNumberPattern = new RegExp(`^(?:${hexFloat}|${decimalFloat}|${integer})(?:i)?`);
 function isIdentifierStart(text) {
     return /^[A-Za-z_]$/.test(text);
 }

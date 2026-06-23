@@ -1,6 +1,6 @@
 import { parseCellAddress, ident } from "./ast.js";
 import { scanSource } from "./scanner.js";
-import { isIdentifierLike, TokenKind } from "./token.js";
+import { isAssignmentToken, isIdentifierLike, TokenKind } from "./token.js";
 export function parseFrontSource(source) {
     const scanned = scanSource(source);
     const parser = new FrontParser(scanned.tokens, scanned.diagnostics);
@@ -228,7 +228,7 @@ class FrontParser {
     }
     parseSimpleStmt() {
         const lhs = this.parseExpressionList();
-        if (this.at(TokenKind.Define) || this.at(TokenKind.Assign)) {
+        if (isAssignmentToken(this.peek().kind)) {
             const token = this.advance();
             const rhs = this.parseExpressionList();
             return {
@@ -252,7 +252,16 @@ class FrontParser {
     }
     parseIfStmt() {
         const start = this.expect(TokenKind.If, "expected if");
-        const condition = this.parseExpression();
+        const first = this.withBareIdentifierComposites(false, () => this.parseSimpleStmt());
+        let init;
+        let condition;
+        if (this.match(TokenKind.Semicolon)) {
+            init = first;
+            condition = this.parseExpression();
+        }
+        else {
+            condition = first.kind === "ExprStmt" ? first.expr : badExpr(first.span);
+        }
         const body = this.parseBlock();
         let elseStmt;
         if (this.match(TokenKind.Else)) {
@@ -260,6 +269,7 @@ class FrontParser {
         }
         return {
             kind: "IfStmt",
+            ...(init ? { init } : {}),
             condition,
             body,
             ...(elseStmt ? { else: elseStmt } : {}),
@@ -468,7 +478,7 @@ class FrontParser {
         return left;
     }
     parseUnary() {
-        if (this.atAny(TokenKind.Plus, TokenKind.Minus, TokenKind.Bang, TokenKind.Amp, TokenKind.Arrow)) {
+        if (this.atAny(TokenKind.Plus, TokenKind.Minus, TokenKind.Bang, TokenKind.Caret, TokenKind.Amp, TokenKind.Arrow)) {
             const operator = this.advance();
             const expr = this.parseUnary();
             return {
@@ -623,7 +633,7 @@ class FrontParser {
             const keyword = this.advance();
             return ident(keyword.lexeme, keyword.span);
         }
-        if (this.at(TokenKind.IntLiteral) || this.at(TokenKind.FloatLiteral) || this.at(TokenKind.StringLiteral)) {
+        if (this.at(TokenKind.IntLiteral) || this.at(TokenKind.FloatLiteral) || this.at(TokenKind.ImagLiteral) || this.at(TokenKind.RuneLiteral) || this.at(TokenKind.StringLiteral)) {
             return this.expectBasicLit(this.peek().kind, "expected literal");
         }
         if (this.match(TokenKind.LParen)) {
@@ -797,17 +807,20 @@ class FrontParser {
             const type = this.match(TokenKind.Ellipsis)
                 ? { kind: "Ellipsis", element: this.parseType(), span: start.span }
                 : this.parseType();
+            const tag = this.at(TokenKind.StringLiteral) ? this.expectBasicLit(TokenKind.StringLiteral, "expected struct tag") : undefined;
             return {
                 kind: "Field",
                 names,
                 type,
-                span: mergeSpans(names[0]?.span, type.span)
+                ...(tag ? { tag } : {}),
+                span: mergeSpans(names[0]?.span, tag?.span ?? type.span)
             };
         }
         const type = this.match(TokenKind.Ellipsis)
             ? { kind: "Ellipsis", element: this.parseType(), span: start.span }
             : this.parseType();
-        return { kind: "Field", names: [], type, span: mergeSpans(type.span, type.span) };
+        const tag = this.at(TokenKind.StringLiteral) ? this.expectBasicLit(TokenKind.StringLiteral, "expected struct tag") : undefined;
+        return { kind: "Field", names: [], type, ...(tag ? { tag } : {}), span: mergeSpans(type.span, tag?.span ?? type.span) };
     }
     fieldHasExplicitNames(close) {
         let offset = 0;
@@ -962,10 +975,16 @@ function binaryPrecedence(kind) {
             return 3;
         case TokenKind.Plus:
         case TokenKind.Minus:
+        case TokenKind.Or:
+        case TokenKind.Caret:
             return 4;
         case TokenKind.Star:
         case TokenKind.Slash:
         case TokenKind.Percent:
+        case TokenKind.Shl:
+        case TokenKind.Shr:
+        case TokenKind.Amp:
+        case TokenKind.BitClear:
             return 5;
         default:
             return 0;

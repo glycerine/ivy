@@ -80,25 +80,45 @@ function structFieldsFromType(spec) {
     if (spec.type.kind !== "StructType")
         return {};
     return {
-        structFields: spec.type.fields.fields.flatMap((field) => field.names.map((name) => ({
-            name: name.name,
-            type: typeNode(field.type)
-        })))
+        structFields: spec.type.fields.fields.flatMap((field) => {
+            const tag = field.tag ? unquote(field.tag.value) : undefined;
+            if (field.names.length === 0) {
+                return [{
+                        name: embeddedFieldName(field.type),
+                        type: typeNode(field.type),
+                        embedded: true,
+                        ...(tag !== undefined ? { tag } : {})
+                    }];
+            }
+            return field.names.map((name) => ({
+                name: name.name,
+                type: typeNode(field.type),
+                ...(tag !== undefined ? { tag } : {})
+            }));
+        })
     };
 }
 function interfaceMethodsFromType(spec) {
     if (spec.type.kind !== "InterfaceType")
         return {};
-    return {
-        interfaceMethods: spec.type.methods.fields.flatMap((field) => {
-            const methodType = field.type;
-            if (methodType.kind !== "FuncType")
-                return [];
-            return field.names.map((name) => ({
+    const interfaceMethods = [];
+    const interfaceEmbeds = [];
+    for (const field of spec.type.methods.fields) {
+        const methodType = field.type;
+        if (methodType.kind !== "FuncType") {
+            interfaceEmbeds.push(typeNode(methodType));
+            continue;
+        }
+        for (const name of field.names) {
+            interfaceMethods.push({
                 name: name.name,
                 signature: signatureToAst(methodType)
-            }));
-        })
+            });
+        }
+    }
+    return {
+        interfaceMethods,
+        ...(interfaceEmbeds.length > 0 ? { interfaceEmbeds } : {})
     };
 }
 function functionDeclToAst(declaration) {
@@ -172,6 +192,7 @@ function statementToAst(statement) {
             return withSpan({
                 kind: "AssignStatement",
                 targets: statement.lhs.map(expressionToAst),
+                operator: assignmentOperator(statement.token),
                 values: statement.rhs.map(expressionToAst)
             }, statement.span);
         case "IncDecStmt":
@@ -190,6 +211,7 @@ function statementToAst(statement) {
         case "IfStmt":
             return withSpan({
                 kind: "IfStatement",
+                ...(statement.init ? { init: statementToAst(statement.init) } : {}),
                 condition: expressionToAst(statement.condition),
                 thenBlock: blockToAst(statement.body),
                 ...(statement.else ? { elseBranch: elseBranchToAst(statement.else) } : {})
@@ -253,6 +275,7 @@ function rangeStmtToAst(statement) {
 function switchStmtToAst(statement) {
     return withSpan({
         kind: "SwitchStatement",
+        ...(statement.init ? { init: statementToAst(statement.init) } : {}),
         ...(statement.tag ? { expression: expressionToAst(statement.tag) } : {}),
         clauses: statement.body.map((clause) => caseClauseToAst(clause, false))
     }, statement.span);
@@ -260,6 +283,7 @@ function switchStmtToAst(statement) {
 function typeSwitchStmtToAst(statement) {
     return withSpan({
         kind: "SwitchStatement",
+        ...(statement.init ? { init: statementToAst(statement.init) } : {}),
         typeSwitch: typeSwitchGuardToAst(statement.assign),
         clauses: statement.body.map((clause) => caseClauseToAst(clause, true))
     }, statement.span);
@@ -340,7 +364,8 @@ function expressionToAst(expr) {
                 kind: "SliceExpression",
                 object: expressionToAst(expr.object),
                 ...(expr.low ? { start: expressionToAst(expr.low) } : {}),
-                ...(expr.high ? { end: expressionToAst(expr.high) } : {})
+                ...(expr.high ? { end: expressionToAst(expr.high) } : {}),
+                ...(expr.max ? { max: expressionToAst(expr.max) } : {})
             }, expr.span);
         case "TypeAssertExpr":
             return withSpan({
@@ -389,9 +414,16 @@ function expressionToAst(expr) {
 }
 function basicLitToAst(expr) {
     if (expr.token === TokenKind.IntLiteral)
-        return literal(BigInt(expr.value), "int", expr.value, expr.span);
+        return literal(parseGoIntLiteral(expr.value), "int", expr.value, expr.span);
     if (expr.token === TokenKind.FloatLiteral)
-        return literal(Number(expr.value), "float", expr.value, expr.span);
+        return literal(parseGoFloatLiteral(expr.value), "float", expr.value, expr.span);
+    if (expr.token === TokenKind.ImagLiteral) {
+        const raw = expr.value.slice(0, -1);
+        const imag = /[.eEpP]/.test(raw) ? parseGoFloatLiteral(raw) : Number(parseGoIntLiteral(raw));
+        return literal({ real: 0, imag }, "imag", expr.value, expr.span);
+    }
+    if (expr.token === TokenKind.RuneLiteral)
+        return literal(parseGoRuneLiteral(expr.value), "rune", expr.value, expr.span);
     return literal(unquote(expr.value), "string", expr.value, expr.span);
 }
 function literal(value, literalKind, raw, span) {
@@ -500,12 +532,15 @@ function arrayLengthText(expr) {
 function fieldsText(fields) {
     return fields.fields.map((field) => {
         const names = field.names.map((name) => name.name).join(", ");
-        return `${names ? `${names} ` : ""}${typeText(field.type)}`;
+        const tag = field.tag ? ` ${field.tag.value}` : "";
+        return `${names ? `${names} ` : ""}${typeText(field.type)}${tag}`;
     }).join("; ");
 }
 function interfaceText(fields) {
     return fields.fields.map((field) => {
         const names = field.names.map((name) => name.name).join(", ");
+        if (!names && field.type.kind !== "FuncType")
+            return typeText(field.type);
         return `${names}${field.type.kind === "FuncType" ? `(${paramsText(field.type.params)})${resultsText(field.type.results)}` : ` ${typeText(field.type)}`}`;
     }).join("; ");
 }
@@ -535,6 +570,8 @@ function unaryOperator(kind) {
         return "-";
     if (kind === TokenKind.Bang)
         return "!";
+    if (kind === TokenKind.Caret)
+        return "^";
     if (kind === TokenKind.Amp)
         return "&";
     if (kind === TokenKind.Star)
@@ -552,11 +589,68 @@ function binaryOperator(kind) {
         case TokenKind.Greater: return ">";
         case TokenKind.GreaterEqual: return ">=";
         case TokenKind.Minus: return "-";
+        case TokenKind.Or: return "|";
+        case TokenKind.Caret: return "^";
         case TokenKind.Star: return "*";
         case TokenKind.Slash: return "/";
         case TokenKind.Percent: return "%";
+        case TokenKind.Shl: return "<<";
+        case TokenKind.Shr: return ">>";
+        case TokenKind.Amp: return "&";
+        case TokenKind.BitClear: return "&^";
         default: return "+";
     }
+}
+function assignmentOperator(kind) {
+    switch (kind) {
+        case TokenKind.PlusAssign: return "+=";
+        case TokenKind.MinusAssign: return "-=";
+        case TokenKind.StarAssign: return "*=";
+        case TokenKind.SlashAssign: return "/=";
+        case TokenKind.PercentAssign: return "%=";
+        case TokenKind.AmpAssign: return "&=";
+        case TokenKind.OrAssign: return "|=";
+        case TokenKind.CaretAssign: return "^=";
+        case TokenKind.BitClearAssign: return "&^=";
+        case TokenKind.ShlAssign: return "<<=";
+        case TokenKind.ShrAssign: return ">>=";
+        default: return "=";
+    }
+}
+function parseGoIntLiteral(value) {
+    const text = value.replace(/_/g, "");
+    if (/^0[0-7]+$/.test(text))
+        return BigInt(`0o${text.slice(1)}`);
+    return BigInt(text);
+}
+function parseGoFloatLiteral(value) {
+    const text = value.replace(/_/g, "");
+    const hex = /^0[xX]([0-9a-fA-F]*)(?:\.([0-9a-fA-F]*))?[pP]([+-]?[0-9]+)$/.exec(text);
+    if (!hex)
+        return Number(text);
+    const whole = hex[1] || "0";
+    const frac = hex[2] || "";
+    const exponent = Number(hex[3]);
+    const wholeValue = Number.parseInt(whole, 16);
+    let fracValue = 0;
+    for (let index = 0; index < frac.length; index += 1) {
+        fracValue += Number.parseInt(frac[index] ?? "0", 16) / 16 ** (index + 1);
+    }
+    return (wholeValue + fracValue) * 2 ** exponent;
+}
+function parseGoRuneLiteral(value) {
+    const body = value.slice(1, -1);
+    const decoded = decodeGoEscaped(body);
+    return BigInt([...decoded][0]?.codePointAt(0) ?? 0);
+}
+function embeddedFieldName(expr) {
+    if (expr.kind === "Ident")
+        return expr.name;
+    if (expr.kind === "SelectorExpr")
+        return expr.selector.name;
+    if (expr.kind === "StarExpr")
+        return embeddedFieldName(expr.expr);
+    return "";
 }
 function missingExpression(span) {
     return withSpan({ kind: "Identifier", name: "<missing>" }, span);
@@ -569,12 +663,84 @@ function unquote(value) {
         return value.slice(1, -1).replace(/\r/g, "");
     }
     if (value.length >= 2 && value.startsWith("\"") && value.endsWith("\"")) {
-        try {
-            return JSON.parse(value);
-        }
-        catch {
-            return value.slice(1, -1);
-        }
+        return decodeGoEscaped(value.slice(1, -1));
     }
     return value;
+}
+function decodeGoEscaped(value) {
+    let decoded = "";
+    for (let index = 0; index < value.length; index += 1) {
+        const char = value[index] ?? "";
+        if (char !== "\\") {
+            decoded += char;
+            continue;
+        }
+        const next = value[index + 1] ?? "";
+        index += 1;
+        switch (next) {
+            case "a":
+                decoded += "\x07";
+                break;
+            case "b":
+                decoded += "\b";
+                break;
+            case "f":
+                decoded += "\f";
+                break;
+            case "n":
+                decoded += "\n";
+                break;
+            case "r":
+                decoded += "\r";
+                break;
+            case "t":
+                decoded += "\t";
+                break;
+            case "v":
+                decoded += "\x0b";
+                break;
+            case "\\":
+            case "\"":
+            case "'":
+                decoded += next;
+                break;
+            case "x": {
+                decoded += codePointFromEscape(value.slice(index + 1, index + 3), 16);
+                index += 2;
+                break;
+            }
+            case "u": {
+                decoded += codePointFromEscape(value.slice(index + 1, index + 5), 16);
+                index += 4;
+                break;
+            }
+            case "U": {
+                decoded += codePointFromEscape(value.slice(index + 1, index + 9), 16);
+                index += 8;
+                break;
+            }
+            default:
+                if (/^[0-7]$/.test(next)) {
+                    const digits = next + value.slice(index + 1, index + 3);
+                    decoded += codePointFromEscape(digits, 8);
+                    index += 2;
+                }
+                else {
+                    decoded += next;
+                }
+                break;
+        }
+    }
+    return decoded;
+}
+function codePointFromEscape(digits, radix) {
+    const value = Number.parseInt(digits, radix);
+    if (!Number.isFinite(value))
+        return "";
+    try {
+        return String.fromCodePoint(value);
+    }
+    catch {
+        return "";
+    }
 }
