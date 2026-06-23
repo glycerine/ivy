@@ -966,6 +966,8 @@ class FrontChecker {
         return this.resolveType(field.type, scope);
     }
     typeSetInfoForExpr(expr, scope) {
+        if (expr.kind === "Ident" && expr.name === "comparable")
+            return comparableTypeSet();
         if (expr.kind === "UnaryExpr" && expr.op === TokenKind.Tilde)
             return this.typeSetInfoForExpr(expr.expr, scope);
         if (expr.kind === "BinaryExpr" && expr.op === TokenKind.Or) {
@@ -1199,6 +1201,12 @@ function intersectTypeSets(typeSets) {
         integer: typeSets.every((set) => set.integer),
         ordered: typeSets.every((set) => set.ordered),
         comparable: typeSets.every((set) => set.comparable)
+    };
+}
+function comparableTypeSet() {
+    return {
+        ...emptyTypeSet(),
+        comparable: true
     };
 }
 function basicTypeSetInfo(type) {

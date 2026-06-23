@@ -99,9 +99,6 @@ export const dontInsertSemis = 1 << 1;
 const bom = 0xFEFF;
 const eof = -1;
 const prefix = "line ";
-function init() {
-    return;
-}
 function compareScannerErrors(left, right) {
     if (left.Pos.filename !== right.Pos.filename)
         return left.Pos.filename < right.Pos.filename ? -1 : 1;
@@ -158,6 +155,7 @@ export class Scanner {
     diagnostics = [];
     err;
     mode = 0;
+    lastEnd;
     ErrorCount = 0;
     constructor(source, filename) {
         this.source = source;
@@ -175,9 +173,13 @@ export class Scanner {
         this.emittedEOF = false;
         this.tokens = [];
         this.diagnostics = [];
+        this.lastEnd = undefined;
         this.ErrorCount = 0;
         if (this.offset === 0 && this.currentChar() === String.fromCodePoint(bom))
             this.advanceChar();
+    }
+    End() {
+        return this.lastEnd;
     }
     Scan() {
         return this.scan();
@@ -723,6 +725,7 @@ export class Scanner {
             ...(inserted ? { inserted } : {})
         };
         this.tokens.push(token);
+        this.lastEnd = end;
         this.insertSemi = tokenCanEndStatement(kind);
     }
     emitSyntheticSemicolon(position, inserted) {
@@ -1030,6 +1033,5 @@ function trailingDigits(text) {
     }
     return { index: index + 1, value: Number.parseInt(digits, 10), ok: true };
 }
-void init;
 void eof;
 void isLetter;

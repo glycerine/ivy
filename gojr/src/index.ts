@@ -29,7 +29,11 @@ export {
   artifactPathForImportPath,
   buildPackage,
   buildPackages,
+  buildStandardLibraryPackage,
   collectSourceImportPaths,
+  createStandardLibrarySourcePackageProvider,
+  GOJR_GOARCH,
+  GOJR_GOOS,
   inspectPackageJavaScript,
   resolveArtifactRoot
 } from "./build.js";
@@ -70,9 +74,12 @@ export type {
   BuildArtifactStore,
   BuildExport,
   BuildPackageReport,
+  BuildStandardLibraryPackageRequest,
   BuildSourcePackageProvider,
   InspectPackageJavaScriptReport,
   BuildPackageRequest,
+  StandardLibrarySourceHost,
+  StandardLibrarySourcePackageProviderOptions,
   SourceImportPathsResult
 } from "./build.js";
 export type {

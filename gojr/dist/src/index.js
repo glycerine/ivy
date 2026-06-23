@@ -1,7 +1,7 @@
 import { frontSourceToAst } from "./frontToAst.js";
 export { analyzeEffects, functionEffectKey } from "./effects.js";
 export { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
-export { artifactPathForImportPath, buildPackage, buildPackages, collectSourceImportPaths, inspectPackageJavaScript, resolveArtifactRoot } from "./build.js";
+export { artifactPathForImportPath, buildPackage, buildPackages, buildStandardLibraryPackage, collectSourceImportPaths, createStandardLibrarySourcePackageProvider, GOJR_GOARCH, GOJR_GOOS, inspectPackageJavaScript, resolveArtifactRoot } from "./build.js";
 export { compilePackageSourceFiles, compileSource, compileSourceFiles } from "./compile.js";
 export { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture, runSpreadsheetFixtureJson } from "./fixture.js";
 export { SpreadsheetEngine, SpreadsheetFormulaCompilerCache, cellDependency, rangeDependency, spreadsheetFormulaCacheKey, spreadsheetFormulaEvaluation, spreadsheetError } from "./spreadsheet.js";

@@ -2204,8 +2204,9 @@ class parser {
     }
     expectBasicLit(kind, message) {
         const token = this.peek();
+        const end = this.end(token);
         if (this.match(kind)) {
-            return { kind: "BasicLit", token: kind, value: token.lexeme, span: token.span };
+            return { kind: "BasicLit", token: kind, value: token.lexeme, span: mergeSpans(token.span, end) };
         }
         this.error(message, token.span);
         return { kind: "BasicLit", token: kind, value: "", span: token.span };
@@ -2593,6 +2594,16 @@ class parser {
     }
     currentSpan() {
         return this.peek().span;
+    }
+    end(token = this.peek()) {
+        if (!token.span)
+            return undefined;
+        return {
+            ...token.span,
+            offset: token.span.offset + token.span.length,
+            length: 0,
+            column: token.span.column + token.span.length
+        };
     }
     error(message, span, code = "GOJR_PARSE_FRONT001") {
         this.diagnostics.push({

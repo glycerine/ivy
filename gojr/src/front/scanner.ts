@@ -132,10 +132,6 @@ const bom = 0xFEFF;
 const eof = -1;
 const prefix = "line ";
 
-function init(): void {
-  return;
-}
-
 function compareScannerErrors(left: Error, right: Error): number {
   if (left.Pos.filename !== right.Pos.filename) return left.Pos.filename < right.Pos.filename ? -1 : 1;
   if (left.Pos.line !== right.Pos.line) return left.Pos.line - right.Pos.line;
@@ -188,6 +184,7 @@ export class Scanner {
   private diagnostics: Diagnostic[] = [];
   private err: ErrorHandler | undefined;
   private mode: Mode = 0;
+  private lastEnd: Position | undefined;
   public ErrorCount = 0;
 
   public constructor(
@@ -207,8 +204,13 @@ export class Scanner {
     this.emittedEOF = false;
     this.tokens = [];
     this.diagnostics = [];
+    this.lastEnd = undefined;
     this.ErrorCount = 0;
     if (this.offset === 0 && this.currentChar() === String.fromCodePoint(bom)) this.advanceChar();
+  }
+
+  public End(): Position | undefined {
+    return this.lastEnd;
   }
 
   public Scan(): ScanResult {
@@ -786,6 +788,7 @@ export class Scanner {
       ...(inserted ? { inserted } : {})
     };
     this.tokens.push(token);
+    this.lastEnd = end;
     this.insertSemi = tokenCanEndStatement(kind);
   }
 
@@ -1112,6 +1115,5 @@ function trailingDigits(text: string): { index: number; value: number; ok: boole
   return { index: index + 1, value: Number.parseInt(digits, 10), ok: true };
 }
 
-void init;
 void eof;
 void isLetter;

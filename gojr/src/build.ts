@@ -11,14 +11,19 @@ export interface BuildPackageRequest {
   sourcePackageProvider?: BuildSourcePackageProvider;
   artifactRoot?: string;
   packageCacheParent?: string;
+  goos?: string;
+  goarch?: string;
+  buildTags?: string[];
   compilerVersion?: string;
   backend?: string;
   hostSpecVersion?: string;
   capabilityPolicy?: string;
+  standardLibraryPackages?: string[];
 }
 
 export interface BuildSourcePackageProvider {
   load(importPath: string): SourceFile[] | undefined;
+  isStandardLibraryPackage?(importPath: string): boolean;
 }
 
 export interface BuildArtifactStore {
@@ -62,7 +67,27 @@ export interface SourceImportPathsResult {
   imports: string[];
 }
 
+export interface StandardLibrarySourceHost {
+  readDir(path: string): Array<string | { name: string; isFile?: boolean }>;
+  readFile(path: string): string;
+}
+
+export interface StandardLibrarySourcePackageProviderOptions {
+  sourceRoot: string;
+  host: StandardLibrarySourceHost;
+  goos?: string;
+  goarch?: string;
+  buildTags?: string[];
+}
+
+export interface BuildStandardLibraryPackageRequest extends Omit<BuildPackageRequest, "files"> {
+  importPath: string;
+  standardLibrary: StandardLibrarySourcePackageProviderOptions;
+}
+
 const ARTIFACT_LAYOUT_VERSION = "gojr-js-v2";
+export const GOJR_GOOS = "gojr";
+export const GOJR_GOARCH = "js";
 const DEFAULT_COMPILER_VERSION = "gojr-dev";
 const DEFAULT_BACKEND = "js-source-envelope";
 const DEFAULT_HOST_SPEC_VERSION = "host-v0";
@@ -74,6 +99,67 @@ export function buildPackage(request: BuildPackageRequest, store?: BuildArtifact
 
 export function buildPackages(request: BuildPackageRequest, store?: BuildArtifactStore): BuildPackageReport {
   return new PackageGraphBuilder(request, store).build();
+}
+
+export function buildStandardLibraryPackage(request: BuildStandardLibraryPackageRequest, store?: BuildArtifactStore): BuildPackageReport {
+  const provider = request.sourcePackageProvider ?? createStandardLibrarySourcePackageProvider(request.standardLibrary);
+  const files = provider.load(request.importPath);
+  if (!files) {
+    return emptyBuildReport([buildDiagnostic(
+      request.importPath,
+      `standard library package ${request.importPath} is not available under ${request.standardLibrary.sourceRoot}`
+    )]);
+  }
+  const { standardLibrary, ...rest } = request;
+  const buildTags = request.buildTags ?? standardLibrary.buildTags;
+  return buildPackages({
+    ...rest,
+    files,
+    sourcePackageProvider: provider,
+    goos: request.goos ?? standardLibrary.goos ?? GOJR_GOOS,
+    goarch: request.goarch ?? standardLibrary.goarch ?? GOJR_GOARCH,
+    ...(buildTags ? { buildTags } : {}),
+    standardLibraryPackages: uniqueSorted([...(request.standardLibraryPackages ?? []), request.importPath])
+  }, store);
+}
+
+export function createStandardLibrarySourcePackageProvider(options: StandardLibrarySourcePackageProviderOptions): BuildSourcePackageProvider {
+  const sourceRoot = trimTrailingSlash(options.sourceRoot);
+  const goos = options.goos ?? GOJR_GOOS;
+  const goarch = options.goarch ?? GOJR_GOARCH;
+  const tags = buildTagSet(goos, goarch, options.buildTags);
+  return {
+    load(importPath: string): SourceFile[] | undefined {
+      const parts = importPathParts(importPath);
+      if (!parts) throw new Error(`invalid import path: ${importPath}`);
+      const dir = joinSlash(sourceRoot, ...parts);
+      let entries: Array<string | { name: string; isFile?: boolean }>;
+      try {
+        entries = options.host.readDir(dir);
+      } catch {
+        return undefined;
+      }
+      const names = entries
+        .map((entry) => typeof entry === "string" ? { name: entry, isFile: true } : entry)
+        .filter((entry) => entry.isFile !== false)
+        .map((entry) => entry.name)
+        .filter((name) => !name.startsWith(".") && !name.startsWith("_") && name.endsWith(".go") && !name.endsWith("_test.go"))
+        .sort();
+      const files: SourceFile[] = [];
+      for (const name of names) {
+        const filename = joinSlash(dir, name);
+        const source = options.host.readFile(filename);
+        if (goSourceMatchesBuildConstraints(source, tags)) {
+          files.push({ filename, source });
+        }
+      }
+      if (files.length === 0) throw new Error(`${dir} contains no Go source files matching GOOS=${goos} GOARCH=${goarch}`);
+      return files;
+    },
+    isStandardLibraryPackage(importPath: string): boolean {
+      return importPathParts(importPath) !== undefined;
+    }
+  };
 }
 
 export function inspectPackageJavaScript(request: BuildPackageRequest): InspectPackageJavaScriptReport {
@@ -120,6 +206,7 @@ class PackageGraphBuilder {
   private readonly nodes = new Map<string, PackageBuildNode>();
   private readonly visiting = new Set<string>();
   private readonly failedPackageLoads = new Set<string>();
+  private readonly standardLibraryPackages = new Set<string>();
   private readonly diagnostics: Diagnostic[] = [];
 
   public constructor(
@@ -128,6 +215,9 @@ class PackageGraphBuilder {
   ) {
     for (const [importPath, files] of Object.entries(request.packageSources ?? {})) {
       this.packageSources.set(importPath, files.map(ensureSourceFile));
+    }
+    for (const importPath of request.standardLibraryPackages ?? []) {
+      this.standardLibraryPackages.add(importPath);
     }
   }
 
@@ -211,6 +301,10 @@ class PackageGraphBuilder {
       });
       this.diagnostics.push(...checked.diagnostics);
       if (!this.hasErrors()) {
+        const goos = this.request.goos ?? GOJR_GOOS;
+        const goarch = this.request.goarch ?? GOJR_GOARCH;
+        const buildTags = resolvedBuildTags(this.request);
+        const standardLibrary = this.standardLibraryPackages.has(importPath);
         const sourceHash = hashSourceFiles(files);
         const dependencyCacheKeys = sourceDependencies.map((dependency) => `${dependency.importPath}:${dependency.cacheKey}`).sort();
         const exports = uniqueExports(checked.pkg.scope.children());
@@ -220,6 +314,10 @@ class PackageGraphBuilder {
           this.request.backend ?? DEFAULT_BACKEND,
           this.request.hostSpecVersion ?? DEFAULT_HOST_SPEC_VERSION,
           this.request.capabilityPolicy ?? DEFAULT_CAPABILITY_POLICY,
+          goos,
+          goarch,
+          buildTags.join("\n"),
+          standardLibrary ? "stdlib" : "workspace",
           importPath,
           sourceHash,
           dependencies.join("\n"),
@@ -232,6 +330,10 @@ class PackageGraphBuilder {
           backend: this.request.backend ?? DEFAULT_BACKEND,
           hostSpecVersion: this.request.hostSpecVersion ?? DEFAULT_HOST_SPEC_VERSION,
           capabilityPolicy: this.request.capabilityPolicy ?? DEFAULT_CAPABILITY_POLICY,
+          goos,
+          goarch,
+          buildTags,
+          standardLibrary,
           importPath,
           packageName,
           sourceHash,
@@ -273,6 +375,9 @@ class PackageGraphBuilder {
       if (!loaded) return undefined;
       const files = loaded.map(ensureSourceFile);
       this.packageSources.set(importPath, files);
+      if (this.request.sourcePackageProvider?.isStandardLibraryPackage?.(importPath)) {
+        this.standardLibraryPackages.add(importPath);
+      }
       return files;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -332,8 +437,8 @@ function parseGeneratedArtifactSource(source: string): { layoutVersion?: string;
 }
 
 export function artifactPathForImportPath(artifactRoot: string, importPath: string): string {
-  const parts = importPath.split("/").filter(Boolean);
-  if (parts.length === 0 || parts.some((part) => part === "." || part === "..")) {
+  const parts = importPathParts(importPath);
+  if (!parts) {
     throw new Error(`invalid import path: ${importPath}`);
   }
   return joinSlash(artifactRoot, ...parts) + ".js";
@@ -343,6 +448,106 @@ export function resolveArtifactRoot(request: Pick<BuildPackageRequest, "artifact
   if (request.artifactRoot && request.artifactRoot.trim() !== "") return trimTrailingSlash(request.artifactRoot);
   if (request.packageCacheParent && request.packageCacheParent.trim() !== "") return joinSlash(request.packageCacheParent, "gojr_js");
   return "~/go/pkg/gojr_js";
+}
+
+function resolvedBuildTags(request: Pick<BuildPackageRequest, "goos" | "goarch" | "buildTags">): string[] {
+  return [...buildTagSet(request.goos ?? GOJR_GOOS, request.goarch ?? GOJR_GOARCH, request.buildTags)].sort();
+}
+
+function buildTagSet(goos: string, goarch: string, extra: string[] | undefined): Set<string> {
+  const tags = new Set<string>();
+  tags.add(goos);
+  tags.add(goarch);
+  for (let minor = 1; minor <= 27; minor += 1) {
+    tags.add(`go1.${minor}`);
+  }
+  for (const tag of extra ?? []) {
+    const text = tag.trim();
+    if (text !== "") tags.add(text);
+  }
+  return tags;
+}
+
+function goSourceMatchesBuildConstraints(source: string, tags: Set<string>): boolean {
+  const lines = leadingCommentAndBlankLines(source);
+  const goBuild = lines
+    .map((line) => line.match(/^\/\/go:build\s+(.+)$/)?.[1]?.trim())
+    .filter((line): line is string => !!line);
+  if (goBuild.length > 0) {
+    return goBuild.every((expr) => evaluateGoBuildExpression(expr, tags));
+  }
+  const plusBuild = lines
+    .map((line) => line.match(/^\/\/\s*\+build\s+(.+)$/)?.[1]?.trim())
+    .filter((line): line is string => !!line);
+  return plusBuild.length === 0 || plusBuild.every((line) => evaluatePlusBuildLine(line, tags));
+}
+
+function leadingCommentAndBlankLines(source: string): string[] {
+  const out: string[] = [];
+  for (const line of source.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (trimmed === "" || trimmed.startsWith("//")) {
+      out.push(trimmed);
+      continue;
+    }
+    break;
+  }
+  return out;
+}
+
+function evaluatePlusBuildLine(line: string, tags: Set<string>): boolean {
+  return line.split(/\s+/)
+    .filter((option) => option !== "")
+    .some((option) => option.split(",").every((term) => {
+      if (term.startsWith("!")) return !tags.has(term.slice(1));
+      return tags.has(term);
+    }));
+}
+
+function evaluateGoBuildExpression(expr: string, tags: Set<string>): boolean {
+  const tokens = expr.match(/[A-Za-z0-9_.]+|&&|\|\||!|\(|\)/g) ?? [];
+  let index = 0;
+
+  const parseOr = (): boolean => {
+    let value = parseAnd();
+    while (tokens[index] === "||") {
+      index += 1;
+      value = parseAnd() || value;
+    }
+    return value;
+  };
+
+  const parseAnd = (): boolean => {
+    let value = parseUnary();
+    while (tokens[index] === "&&") {
+      index += 1;
+      value = parseUnary() && value;
+    }
+    return value;
+  };
+
+  const parseUnary = (): boolean => {
+    const token = tokens[index];
+    if (token === "!") {
+      index += 1;
+      return !parseUnary();
+    }
+    if (token === "(") {
+      index += 1;
+      const value = parseOr();
+      if (tokens[index] === ")") index += 1;
+      return value;
+    }
+    if (token && /^[A-Za-z0-9_.]+$/.test(token)) {
+      index += 1;
+      return tags.has(token);
+    }
+    index += 1;
+    return false;
+  };
+
+  const value = parseOr();
+  return index >= tokens.length && value;
 }
 
 function packageDiagnostics(files: File[], sourceFiles: SourceFile[]): Diagnostic[] {
@@ -476,6 +681,14 @@ function unquoteStringLiteral(value: string): string {
 
 function uniqueSorted(values: string[]): string[] {
   return [...new Set(values)].sort();
+}
+
+function importPathParts(importPath: string): string[] | undefined {
+  const text = importPath.trim();
+  if (text === "" || text.startsWith("/") || text.includes("\\") || text.includes("//")) return undefined;
+  const parts = text.split("/");
+  if (parts.length === 0 || parts.some((part) => part === "" || part === "." || part === "..")) return undefined;
+  return parts;
 }
 
 function joinSlash(first: string, ...rest: string[]): string {

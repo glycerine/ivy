@@ -125,6 +125,22 @@ func f() {
     expect(skippedXUse?.Obj).toBeUndefined();
   });
 
+  test("keeps parsed literal spans anchored to token ends", () => {
+    const source = "package p\nvar text = `hi\nthere`\n";
+    const file = parseOk(source);
+    const declaration = file.declarations.find((decl): decl is GenDecl => decl.kind === "GenDecl");
+    const spec = declaration?.specs[0];
+    const literal = spec?.kind === "ValueSpec" ? spec.values[0] : undefined;
+
+    expect(literal?.kind).toBe("BasicLit");
+    expect(literal?.span).toMatchObject({
+      offset: source.indexOf("`hi"),
+      length: "`hi\nthere`".length,
+      line: 2,
+      column: 12
+    });
+  });
+
   test("parses packages, imports, grouped parameters, named results, and varargs", () => {
     const file = parseOk(`
 package stats

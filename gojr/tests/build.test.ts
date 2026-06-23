@@ -1,5 +1,16 @@
 import { describe, expect, test } from "./testHarness.js";
-import { artifactPathForImportPath, buildPackages, BuildArtifactStore, collectSourceImportPaths, inspectPackageJavaScript, resolveArtifactRoot } from "../src/index.js";
+import fs from "node:fs";
+import path from "node:path";
+import {
+  artifactPathForImportPath,
+  buildPackages,
+  buildStandardLibraryPackage,
+  BuildArtifactStore,
+  collectSourceImportPaths,
+  createStandardLibrarySourcePackageProvider,
+  inspectPackageJavaScript,
+  resolveArtifactRoot
+} from "../src/index.js";
 
 class MemoryArtifactStore implements BuildArtifactStore {
   public readonly writes = new Map<string, string>();
@@ -14,6 +25,24 @@ class MemoryArtifactStore implements BuildArtifactStore {
     this.writes.set(path, source);
   }
 }
+
+function artifactJSON(source: string | undefined): Record<string, unknown> {
+  const match = /export const gojrPackageArtifact = ([\s\S]*);\s*$/.exec(source ?? "");
+  if (!match?.[1]) throw new Error("missing gojrPackageArtifact envelope");
+  return JSON.parse(match[1]) as Record<string, unknown>;
+}
+
+const nodeSourceHost = {
+  readDir(dir: string) {
+    return fs.readdirSync(dir, { withFileTypes: true }).map((entry) => ({
+      name: entry.name,
+      isFile: entry.isFile()
+    }));
+  },
+  readFile(filename: string) {
+    return fs.readFileSync(filename, "utf8");
+  }
+};
 
 describe("Go-junior package build artifacts", () => {
   test("maps import paths to gojr_js package artifacts under a package-cache parent", () => {
@@ -93,6 +122,95 @@ func hidden() {}
     expect(resolveArtifactRoot({ packageCacheParent: "/home/me/go/pkg" })).toBe("/home/me/go/pkg/gojr_js");
     expect(resolveArtifactRoot({ artifactRoot: "/tmp/gojr_js" })).toBe("/tmp/gojr_js");
     expect(artifactPathForImportPath("/home/me/go/pkg/gojr_js", "github.com/u/p")).toBe("/home/me/go/pkg/gojr_js/github.com/u/p.js");
+  });
+
+  test("builds leaf standard-library packages into the GOPATH-style gojr_js cache", () => {
+    const goSourceRoot = "/usr/local/go1.27rc1/src";
+    expect(fs.existsSync(path.join(goSourceRoot, "cmp"))).toBe(true);
+    expect(fs.existsSync(path.join(goSourceRoot, "unsafe"))).toBe(true);
+
+    const store = new MemoryArtifactStore();
+    const provider = createStandardLibrarySourcePackageProvider({
+      sourceRoot: goSourceRoot,
+      host: nodeSourceHost
+    });
+
+    const cmpFirst = buildStandardLibraryPackage({
+      importPath: "cmp",
+      packageCacheParent: "/tmp/gopath/pkg",
+      standardLibrary: {
+        sourceRoot: goSourceRoot,
+        host: nodeSourceHost
+      },
+      sourcePackageProvider: provider
+    }, store);
+    const unsafeFirst = buildStandardLibraryPackage({
+      importPath: "unsafe",
+      packageCacheParent: "/tmp/gopath/pkg",
+      standardLibrary: {
+        sourceRoot: goSourceRoot,
+        host: nodeSourceHost
+      },
+      sourcePackageProvider: provider
+    }, store);
+    const cmpSecond = buildStandardLibraryPackage({
+      importPath: "cmp",
+      packageCacheParent: "/tmp/gopath/pkg",
+      standardLibrary: {
+        sourceRoot: goSourceRoot,
+        host: nodeSourceHost
+      },
+      sourcePackageProvider: provider
+    }, store);
+    const unsafeSecond = buildStandardLibraryPackage({
+      importPath: "unsafe",
+      packageCacheParent: "/tmp/gopath/pkg",
+      standardLibrary: {
+        sourceRoot: goSourceRoot,
+        host: nodeSourceHost
+      },
+      sourcePackageProvider: provider
+    }, store);
+
+    expect(cmpFirst.diagnostics).toEqual([]);
+    expect(cmpFirst.ok).toBe(true);
+    expect(cmpFirst.artifacts).toHaveLength(1);
+    expect(cmpFirst.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/cmp.js");
+    expect(cmpFirst.artifacts[0]?.dependencies).toEqual([]);
+    expect(cmpFirst.artifacts[0]?.exports.map((item) => item.name)).toEqual(["Compare", "Less", "Or", "Ordered"]);
+    expect(unsafeFirst.diagnostics).toEqual([]);
+    expect(unsafeFirst.ok).toBe(true);
+    expect(unsafeFirst.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/unsafe.js");
+    expect(unsafeFirst.artifacts[0]?.exports.map((item) => item.name)).toContain("Pointer");
+    expect(unsafeFirst.artifacts[0]?.exports.map((item) => item.name)).toContain("Sizeof");
+    expect(cmpSecond.artifacts[0]?.action).toBe("skipped");
+    expect(unsafeSecond.artifacts[0]?.action).toBe("skipped");
+    expect(store.writeCount).toBe(2);
+
+    const artifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/gojr_js/cmp.js"));
+    expect(artifact.goos).toBe("gojr");
+    expect(artifact.goarch).toBe("js");
+    expect(artifact.importPath).toBe("cmp");
+    expect(artifact.standardLibrary).toBe(true);
+    expect(artifact.buildTags).toEqual(expect.any(Array));
+    expect(artifact.sources).toEqual([
+      {
+        filename: "/usr/local/go1.27rc1/src/cmp/cmp.go",
+        hash: expect.any(String)
+      }
+    ]);
+
+    const unsafeArtifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/gojr_js/unsafe.js"));
+    expect(unsafeArtifact.goos).toBe("gojr");
+    expect(unsafeArtifact.goarch).toBe("js");
+    expect(unsafeArtifact.importPath).toBe("unsafe");
+    expect(unsafeArtifact.standardLibrary).toBe(true);
+    expect(unsafeArtifact.sources).toEqual([
+      {
+        filename: "/usr/local/go1.27rc1/src/unsafe/unsafe.go",
+        hash: expect.any(String)
+      }
+    ]);
   });
 
   test("inspects package artifact JavaScript without a cache store", () => {

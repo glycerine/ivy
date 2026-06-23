@@ -1,5 +1,5 @@
 import { describe, expect, test } from "./testHarness.js";
-import { ErrorList, PrintError, scanSource } from "../src/front/scanner.js";
+import { ErrorList, PrintError, Scanner, scanSource } from "../src/front/scanner.js";
 import { TokenKind } from "../src/front/token.js";
 
 const TEST_FILENAME = "front-scanner-test.go";
@@ -123,6 +123,22 @@ describe("Go-junior TypeScript front scanner", () => {
       "x", ":=", "1.5e2", ";", "s", ":=", "\"hi\\nthere\"", ";", ""
     ]);
     expect(result.tokens[4]?.span).toMatchObject({ line: 2, column: 1 });
+  });
+
+  test("tracks the end position of the most recently scanned token", () => {
+    const source = "x := 123";
+    const scanner = new Scanner(source, TEST_FILENAME);
+
+    expect(scanner.End()).toBeUndefined();
+    const result = scanner.Scan();
+
+    expect(result.diagnostics).toEqual([]);
+    expect(scanner.End()).toMatchObject({
+      filename: TEST_FILENAME,
+      offset: source.length,
+      line: 1,
+      column: source.length + 1
+    });
   });
 
   test("classifies hex integers with e digits separately from hex floats", () => {

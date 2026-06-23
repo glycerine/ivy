@@ -3821,3 +3821,106 @@ return counter.Next()
 - Security tests cover injection, globals access, runaway execution, and host
   authority boundaries.
 - Performance tests show interactive compile/recalculate latency.
+
+## Package Artifact Cache Policy
+
+Native Go keeps standard-library source under `GOROOT/src`, tool binaries under
+`GOROOT/pkg/tool/$GOHOSTOS_$GOHOSTARCH`, and compiled build outputs in the Go
+build cache. If `GOCACHE` is not set, the Go command chooses its default cache
+directory, such as `~/Library/Caches/go-build` on macOS. Go-junior deliberately
+uses a different public artifact layout for JavaScript output.
+
+Go-junior package artifacts use an old-school GOPATH-style import-path tree:
+
+```text
+$GOPATH/pkg/gojr_js/encoding/binary.js
+$GOPATH/pkg/gojr_js/io.js
+$GOPATH/pkg/gojr_js/github.com/user/project/pkg.js
+```
+
+The conceptual target tuple for these artifacts is:
+
+```text
+GOOS=gojr
+GOARCH=js
+```
+
+Browser persistence mirrors the same logical tree in OPFS, so a browser cache
+path corresponds directly to the local-disk path shape:
+
+```text
+/opfs/go/pkg/gojr_js/encoding/binary.js
+```
+
+The import-path layout is the stable public index: resolving
+`import "encoding/binary"` maps directly to `encoding/binary.js`. This keeps the
+cache understandable, inspectable, easy to clear, and consistent across Node.js,
+CLI, and browser OPFS environments.
+
+Correctness still comes from content-addressed metadata inside each artifact.
+Every generated package artifact must include enough metadata to decide whether
+it is fresh before reusing it:
+
+- artifact layout version
+- Go-junior compiler version
+- backend/lowering version
+- `GOOS=gojr` and `GOARCH=js`
+- source hash
+- build tags / target constraints used to select files
+- host capability policy version
+- dependency cache keys
+- exported type/runtime metadata needed by importers
+
+If the metadata matches the current request, the artifact is reused. If any
+field differs, the artifact is rebuilt and overwritten atomically at the same
+import-path location.
+
+Reasons for this policy:
+
+- It preserves the simple GOPATH mental model: source under `GOROOT/src` or a
+  workspace source root, compiled Go-junior JavaScript under
+  `$GOPATH/pkg/gojr_js`.
+- It makes failures easy to debug because `encoding/binary` has exactly one
+  obvious public artifact path.
+- It maps cleanly to OPFS without reproducing Go's private native build-cache
+  implementation.
+- It avoids treating Go's native `.a` archive cache layout as a distribution
+  format for JavaScript package artifacts.
+- It still prevents stale reuse through explicit cache-key metadata.
+
+Tradeoffs:
+
+- Go-junior owns invalidation policy rather than inheriting native `GOCACHE`
+  behavior.
+- Build variants must be represented in artifact metadata, not merely by path.
+- Concurrent builders must use atomic writes.
+- Old artifacts may accumulate and should be clearable through `gojr cache`.
+
+The standard library is compiled from `GOROOT/src` into the same
+`$GOPATH/pkg/gojr_js` cache as user packages. The first priority standard
+library package for this policy is `encoding/binary`, including its selected
+non-test source files and its translated upstream tests.
+
+## Type Checker Transliteration Policy
+
+The Go-junior type checker must follow the same policy as the scanner, AST, and
+parser ports: it is a mechanical transliteration of the standard Go type
+checker into TypeScript, not a condensed reimplementation.
+
+The source of truth is the current Go toolchain's `go/types` implementation and
+its required support packages. Every exported and unexported type, function,
+method, constant, variable, and important helper in the upstream checker must be
+inventoried and ported symbol by symbol. Control flow should remain visibly
+isomorphic to the Go source: conditionals, loops, switch cases, error paths,
+and helper boundaries should be preserved rather than merged or rewritten into a
+different TypeScript design.
+
+This policy matters because standard-library packages rely on subtle type-system
+details such as predeclared constraint interfaces, type sets, comparability,
+generic inference, builtin special cases, unsafe intrinsics, constant
+representability, method sets, aliases, and import/package identity. Small
+approximations accumulate into false diagnostics when compiling real packages.
+
+Temporary checker fixes are allowed only as short-lived unblockers. They should
+be treated as debt to be replaced by the faithful `go/types` transliteration
+rather than as the long-term architecture.
