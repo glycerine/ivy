@@ -15,10 +15,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/fs"
 	"os"
-	"path/filepath"
+	"sort"
 	"strings"
 	"unsafe"
+
+	gojr "github.com/glycerine/ivy/gojr"
 )
 
 type nodeRuntime struct {
@@ -34,20 +37,29 @@ type evalResult struct {
 	ValueIsNil  bool     `json:"valueIsNil"`
 }
 
+type embeddedModuleBundle struct {
+	Modules []embeddedModule `json:"modules"`
+}
+
+type embeddedModule struct {
+	Path   string `json:"path"`
+	Source string `json:"source"`
+}
+
 func main() {
-	modulePath, err := findRuntimeModule()
+	moduleBundle, err := runtimeModuleBundle()
 	if err != nil {
 		fatal(err)
 	}
 
-	rt, err := newNodeRuntime(modulePath)
+	rt, err := newNodeRuntime(moduleBundle)
 	if err != nil {
 		fatal(err)
 	}
 	defer rt.Close()
 
 	fmt.Printf("Go-junior REPL (embedded Node/V8)\n")
-	fmt.Printf("runtime: %s\n", modulePath)
+	fmt.Printf("runtime: embedded dist/src/index.js\n")
 	fmt.Printf("commands: .help .clear .source .sheet JSON .load PATH .quit\n")
 
 	if err := repl(rt); err != nil {
@@ -183,12 +195,12 @@ func shouldPrintValue(result evalResult) bool {
 	return result.Value != "" && !result.ValueIsNil
 }
 
-func newNodeRuntime(modulePath string) (*nodeRuntime, error) {
-	cModulePath := C.CString(modulePath)
-	defer C.free(unsafe.Pointer(cModulePath))
+func newNodeRuntime(moduleBundleJSON string) (*nodeRuntime, error) {
+	cModuleBundle := C.CString(moduleBundleJSON)
+	defer C.free(unsafe.Pointer(cModuleBundle))
 
 	var cErr *C.char
-	ptr := C.gojr_node_new(cModulePath, &cErr)
+	ptr := C.gojr_node_new(cModuleBundle, &cErr)
 	if cErr != nil {
 		defer C.gojr_string_free(cErr)
 		return nil, errors.New(C.GoString(cErr))
@@ -241,40 +253,38 @@ func (rt *nodeRuntime) Close() {
 	}
 }
 
-func findRuntimeModule() (string, error) {
-	if explicit := os.Getenv("GOJR_NODE_MODULE"); explicit != "" {
-		return filepath.Abs(explicit)
+func runtimeModuleBundle() (string, error) {
+	var modules []embeddedModule
+	if err := fs.WalkDir(gojr.EmbeddedDist, "dist", func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if entry.IsDir() || !strings.HasSuffix(path, ".js") {
+			return nil
+		}
+		data, err := gojr.EmbeddedDist.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		modules = append(modules, embeddedModule{
+			Path:   strings.TrimPrefix(path, "dist"),
+			Source: string(data),
+		})
+		return nil
+	}); err != nil {
+		return "", err
 	}
-
-	wd, err := os.Getwd()
+	sort.Slice(modules, func(i, j int) bool {
+		return modules[i].Path < modules[j].Path
+	})
+	if len(modules) == 0 {
+		return "", errors.New("embedded Go-junior dist is empty; run `make` from ~/ivy/gojr to rebuild")
+	}
+	bundle, err := json.Marshal(embeddedModuleBundle{Modules: modules})
 	if err != nil {
 		return "", err
 	}
-
-	candidates := []string{
-		filepath.Join(wd, "dist", "src", "index.js"),
-		filepath.Join(wd, "gojr", "dist", "src", "index.js"),
-	}
-	if exe, err := os.Executable(); err == nil {
-		exeDir := filepath.Dir(exe)
-		candidates = append(candidates,
-			filepath.Join(exeDir, "dist", "src", "index.js"),
-			filepath.Join(exeDir, "..", "..", "dist", "src", "index.js"),
-			filepath.Join(exeDir, "..", "..", "..", "dist", "src", "index.js"),
-		)
-	}
-
-	for _, candidate := range candidates {
-		abs, err := filepath.Abs(candidate)
-		if err != nil {
-			continue
-		}
-		if _, err := os.Stat(abs); err == nil {
-			return abs, nil
-		}
-	}
-
-	return "", errors.New("could not find gojr/dist/src/index.js; run `npm run build` in ~/ivy/gojr or set GOJR_NODE_MODULE")
+	return string(bundle), nil
 }
 
 func fatal(err error) {

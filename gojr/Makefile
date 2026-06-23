@@ -50,7 +50,7 @@ install: js
 typecheck: npm-deps
 	$(NPM) run typecheck
 
-test: npm-deps
+test: npm-deps js
 	$(NPM) run typecheck
 	$(NPM) test
 	CXX="$(CXX)" $(GO) test ./cmd/gojr

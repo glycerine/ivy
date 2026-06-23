@@ -84,11 +84,104 @@ std::string js_string_literal(const std::string& text) {
   return out.str();
 }
 
-std::string bootstrap_source(const std::string& module_path) {
+std::string bootstrap_source(const std::string& module_bundle_json) {
   return R"JS(
-const { createRequire } = require('node:module');
-const gojrRequire = createRequire(process.cwd() + '/gojr-embedded-repl.js');
-const gojrModule = gojrRequire()JS" + js_string_literal(module_path) + R"JS();
+const __gojrEmbeddedModules = new Map(
+  JSON.parse()JS" + js_string_literal(module_bundle_json) + R"JS().modules.map((module) => [module.path, module.source])
+);
+const __gojrEmbeddedCache = new Map();
+
+function __gojrDirname(path) {
+  const index = path.lastIndexOf("/");
+  return index <= 0 ? "/" : path.slice(0, index);
+}
+
+function __gojrNormalizePath(path) {
+  const parts = [];
+  for (const part of path.split("/")) {
+    if (!part || part === ".") continue;
+    if (part === "..") {
+      parts.pop();
+      continue;
+    }
+    parts.push(part);
+  }
+  return "/" + parts.join("/");
+}
+
+function __gojrResolveModule(specifier, parent) {
+  if (!specifier.startsWith(".") && !specifier.startsWith("/")) return specifier;
+  const base = specifier.startsWith("/") ? specifier : `${__gojrDirname(parent)}/${specifier}`;
+  return __gojrNormalizePath(base);
+}
+
+function __gojrImportListToDestructure(list) {
+  return list.split(",")
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((item) => {
+      const match = /^([A-Za-z_$][\w$]*)(?:\s+as\s+([A-Za-z_$][\w$]*))?$/.exec(item);
+      if (!match) throw new Error(`unsupported embedded import specifier: ${item}`);
+      return match[2] ? `${match[1]}: ${match[2]}` : match[1];
+    })
+    .join(", ");
+}
+
+function __gojrExportList(list) {
+  return list.split(",")
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((item) => {
+      const match = /^([A-Za-z_$][\w$]*)(?:\s+as\s+([A-Za-z_$][\w$]*))?$/.exec(item);
+      if (!match) throw new Error(`unsupported embedded export specifier: ${item}`);
+      return [match[1], match[2] || match[1]];
+    });
+}
+
+function __gojrTransformModule(source, filename) {
+  const exportedNames = [];
+  source = source.replace(/^export\s+\{\s*\};\s*$/gm, "");
+  source = source.replace(/^import\s+\{([^}]+)\}\s+from\s+["']([^"']+)["'];\s*$/gm,
+    (_match, imports, specifier) => `const { ${__gojrImportListToDestructure(imports)} } = __gojrRequire(${JSON.stringify(specifier)}, __filename);`);
+  source = source.replace(/^export\s+\{([^}]+)\}\s+from\s+["']([^"']+)["'];\s*$/gm,
+    (_match, exportsList, specifier) => `__gojrReExport(${JSON.stringify(specifier)}, ${JSON.stringify(__gojrExportList(exportsList))}, exports, __filename);`);
+  source = source.replace(/^export\s+(function|class)\s+([A-Za-z_$][\w$]*)/gm,
+    (_match, kind, name) => {
+      exportedNames.push(name);
+      return `${kind} ${name}`;
+    });
+  source = source.replace(/^export\s+(const|let|var)\s+([A-Za-z_$][\w$]*)/gm,
+    (_match, kind, name) => {
+      exportedNames.push(name);
+      return `${kind} ${name}`;
+    });
+  if (exportedNames.length > 0) {
+    source += `\nObject.assign(exports, { ${[...new Set(exportedNames)].join(", ")} });\n`;
+  }
+  return source + `\n//# sourceURL=embedded-gojr:${filename}\n`;
+}
+
+function __gojrReExport(specifier, names, target, parent) {
+  const module = __gojrRequire(specifier, parent);
+  for (const [sourceName, exportName] of names) target[exportName] = module[sourceName];
+}
+
+function __gojrRequire(specifier, parent = "/src/index.js") {
+  if (!specifier.startsWith(".") && !specifier.startsWith("/")) return require(specifier);
+  const filename = __gojrResolveModule(specifier, parent);
+  const cached = __gojrEmbeddedCache.get(filename);
+  if (cached) return cached.exports;
+  const source = __gojrEmbeddedModules.get(filename);
+  if (source === undefined) throw new Error(`embedded Go-junior module not found: ${filename}`);
+  const module = { exports: {} };
+  __gojrEmbeddedCache.set(filename, module);
+  const transformed = __gojrTransformModule(source, filename);
+  const fn = new Function("exports", "module", "__gojrRequire", "__gojrReExport", "__filename", "__dirname", transformed);
+  fn(module.exports, module, __gojrRequire, __gojrReExport, filename, __gojrDirname(filename));
+  return module.exports;
+}
+
+const gojrModule = __gojrRequire("/src/index.js");
 const gojrSession = new gojrModule.GoJuniorSession({ sheet: {} });
 
 function gojrDiagnosticString(diagnostic) {
@@ -130,7 +223,7 @@ globalThis.__gojrSetSheet = function(json) {
 )JS";
 }
 
-bool run_bootstrap(gojr_node_runtime* runtime, const std::string& module_path, std::string* error) {
+bool run_bootstrap(gojr_node_runtime* runtime, const std::string& module_bundle_json, std::string* error) {
   v8::Isolate* isolate = runtime->setup->isolate();
   v8::Locker locker(isolate);
   v8::Isolate::Scope isolate_scope(isolate);
@@ -139,7 +232,7 @@ bool run_bootstrap(gojr_node_runtime* runtime, const std::string& module_path, s
   v8::Context::Scope context_scope(context);
   v8::TryCatch try_catch(isolate);
 
-  std::string source = bootstrap_source(module_path);
+  std::string source = bootstrap_source(module_bundle_json);
   if (std::getenv("GOJR_DEBUG_BOOTSTRAP") != nullptr) {
     std::fprintf(stderr, "%s\n", source.c_str());
   }
@@ -195,12 +288,9 @@ char* call_global_string_function(
 
 }  // namespace
 
-extern "C" gojr_node_runtime* gojr_node_new(const char* module_path, char** error_out) {
+extern "C" gojr_node_runtime* gojr_node_new(const char* module_bundle_json, char** error_out) {
   auto* runtime = new gojr_node_runtime();
 
-  // --disable-warning=ExperimentalWarning silences the (expected) notice that
-  // the embedded CommonJS bootstrap loads the ESM dist/ module via require().
-  // It is scoped to experimental warnings only; other warnings still print.
   std::vector<std::string> args = {"gojr-embedded-node",
                                    "--disable-warning=ExperimentalWarning"};
   runtime->initialization = node::InitializeOncePerProcess(
@@ -238,7 +328,7 @@ extern "C" gojr_node_runtime* gojr_node_new(const char* module_path, char** erro
   }
 
   std::string error;
-  if (!run_bootstrap(runtime, module_path == nullptr ? "" : module_path, &error)) {
+  if (!run_bootstrap(runtime, module_bundle_json == nullptr ? "" : module_bundle_json, &error)) {
     delete runtime;
     set_error(error_out, "Go-junior bootstrap failed: " + error);
     return nullptr;
