@@ -2,10 +2,96 @@ import { REPL_FILENAME, diagnosticFilename } from "../diagnostics.js";
 import { parseCellAddress, ident } from "./ast.js";
 import { scanSource } from "./scanner.js";
 import { isAssignmentToken, isIdentifierLike, TokenKind } from "./token.js";
+export const basic = "basic";
+export const labelOk = "labelOk";
+export const rangeOk = "rangeOk";
+export const maxNestLev = 1e5;
+export const declStart = new Set([TokenKind.Import, TokenKind.Const, TokenKind.Type, TokenKind.Var, TokenKind.Func]);
+export const stmtStart = new Set([
+    TokenKind.Break,
+    TokenKind.Const,
+    TokenKind.Continue,
+    TokenKind.Defer,
+    TokenKind.Fallthrough,
+    TokenKind.For,
+    TokenKind.Go,
+    TokenKind.Goto,
+    TokenKind.If,
+    TokenKind.Return,
+    TokenKind.Select,
+    TokenKind.Switch,
+    TokenKind.Type,
+    TokenKind.Var
+]);
+export const exprEnd = new Set([TokenKind.Comma, TokenKind.Semicolon, TokenKind.Colon, TokenKind.RParen, TokenKind.RBracket, TokenKind.RBrace]);
+export class bailout {
+    pos;
+    msg;
+    constructor(pos, msg = "") {
+        this.pos = pos;
+        this.msg = msg;
+    }
+}
+export function assert(condition, message = "assertion failed") {
+    if (!condition) {
+        throw new Error(message);
+    }
+}
+export function trace(p, msg) {
+    p.printTrace(msg, "(");
+    p.indent += 1;
+    return p;
+}
+export function un(p) {
+    p.indent -= 1;
+    p.printTrace(")");
+}
+export function incNestLev(p) {
+    p.nestLev += 1;
+    if (p.nestLev > maxNestLev) {
+        p.error("exceeded max nesting depth", p.currentSpan());
+        throw new bailout();
+    }
+    return p;
+}
+export function decNestLev(p) {
+    p.nestLev -= 1;
+}
+export function isTypeSwitchAssert(x) {
+    return x.kind === "TypeAssertExpr" && x.typeSwitch;
+}
+export function packIndexExpr(x, _lbrack, exprs, rbrack) {
+    switch (exprs.length) {
+        case 0:
+            throw new Error("internal error: packIndexExpr with empty expr slice");
+        case 1:
+            return {
+                kind: "IndexExpr",
+                object: x,
+                index: exprs[0],
+                span: mergeSpans(x.span, rbrack ?? exprs[0]?.span)
+            };
+        default:
+            return {
+                kind: "IndexListExpr",
+                object: x,
+                indices: exprs,
+                span: mergeSpans(x.span, rbrack ?? exprs[exprs.length - 1]?.span)
+            };
+    }
+}
+export const PackageClauseOnly = 1 << 0;
+export const ImportsOnly = 1 << 1;
+export const ParseComments = 1 << 2;
+export const Trace = 1 << 3;
+export const DeclarationErrors = 1 << 4;
+export const SpuriousErrors = 1 << 5;
+export const SkipObjectResolution = 1 << 6;
+export const AllErrors = SpuriousErrors;
 export function parseFrontSource(source, filename) {
     const scanned = scanSource(source, filename);
-    const parser = new FrontParser(scanned.tokens, scanned.diagnostics, filename);
-    return parser.parseFile();
+    const p = new parser(scanned.tokens, scanned.diagnostics, filename);
+    return p.parseFile();
 }
 export function parseFrontSourceFiles(files) {
     const results = files.map((file) => parseFrontSource(file.source, file.filename));
@@ -16,10 +102,125 @@ export function parseFrontSourceFiles(files) {
         results
     };
 }
-class FrontParser {
+export function readSource(filename, src) {
+    if (src !== null && src !== undefined) {
+        if (typeof src === "string") {
+            return [src, undefined];
+        }
+        if (src instanceof Uint8Array) {
+            return [new TextDecoder().decode(src), undefined];
+        }
+        if (src instanceof ArrayBuffer) {
+            return [new TextDecoder().decode(src), undefined];
+        }
+        if (hasBytes(src)) {
+            return [new TextDecoder().decode(src.Bytes()), undefined];
+        }
+        if (hasRead(src)) {
+            const text = src.Read();
+            if (typeof text === "string") {
+                return [text, undefined];
+            }
+            if (text instanceof Uint8Array) {
+                return [new TextDecoder().decode(text), undefined];
+            }
+        }
+        return [undefined, new Error("invalid source")];
+    }
+    const reader = hostReadFile();
+    if (!reader) {
+        return [undefined, new Error(`could not read ${filename}: no host file reader available`)];
+    }
+    try {
+        return [reader(filename), undefined];
+    }
+    catch (err) {
+        return [undefined, err instanceof Error ? err : new Error(String(err))];
+    }
+}
+export function ParseFile(_fset, filename, src, mode = 0) {
+    if (_fset === null || _fset === undefined) {
+        throw new Error("parser.ParseFile: no token.FileSet provided (fset == nil)");
+    }
+    const [text, readErr] = readSource(filename, src);
+    if (readErr || text === undefined) {
+        return [undefined, readErr];
+    }
+    const result = parseFrontSource(text, filename);
+    let file = result.file;
+    if (!file) {
+        file = {
+            kind: "File",
+            name: ident(""),
+            declarations: [],
+            imports: [],
+            unresolved: [],
+            comments: []
+        };
+    }
+    if ((mode & PackageClauseOnly) !== 0) {
+        file = { ...file, declarations: [], imports: [], unresolved: [] };
+    }
+    else if ((mode & ImportsOnly) !== 0) {
+        const declarations = file.declarations.filter((decl) => decl.kind === "GenDecl" && decl.token === TokenKind.Import);
+        file = { ...file, declarations, imports: declarations.flatMap((decl) => decl.kind === "GenDecl" ? decl.specs.filter((spec) => spec.kind === "ImportSpec") : []) };
+    }
+    return [file, diagnosticAsError(result.diagnostics[0])];
+}
+export function ParseDir(fset, path, filter, mode = 0) {
+    const reader = hostReadDir();
+    if (!reader) {
+        return [undefined, new Error(`could not read directory ${path}: no host directory reader available`)];
+    }
+    const packages = new Map();
+    let first;
+    for (const entry of reader(path)) {
+        if (!entry.isFile || !entry.name.endsWith(".go")) {
+            continue;
+        }
+        if (filter && !filter(entry)) {
+            continue;
+        }
+        const filename = `${path.replace(/\/$/u, "")}/${entry.name}`;
+        const [src, err] = ParseFile(fset, filename, undefined, mode);
+        if (src && !err) {
+            const name = src.name?.name ?? "";
+            let pkg = packages.get(name);
+            if (!pkg) {
+                pkg = { kind: "Package", name, files: [] };
+                packages.set(name, pkg);
+            }
+            pkg.files.push(src);
+        }
+        else if (!first) {
+            first = err;
+        }
+    }
+    return [packages, first];
+}
+export function ParseExprFrom(fset, filename, src, mode = 0) {
+    if (fset === null || fset === undefined) {
+        throw new Error("parser.ParseExprFrom: no token.FileSet provided (fset == nil)");
+    }
+    const [text, readErr] = readSource(filename, src);
+    if (readErr || text === undefined) {
+        return [undefined, readErr];
+    }
+    const result = parseFrontSource(`package p\nvar _ = ${text}`, filename || REPL_FILENAME);
+    const declaration = result.file?.declarations.find((decl) => decl.kind === "GenDecl" && decl.token === TokenKind.Var);
+    const spec = declaration?.kind === "GenDecl" ? declaration.specs[0] : undefined;
+    const expr = spec?.kind === "ValueSpec" ? spec.values[0] : undefined;
+    return [expr, diagnosticAsError(result.diagnostics[0])];
+}
+export function ParseExpr(x) {
+    return ParseExprFrom({}, "", x, 0);
+}
+class parser {
     tokens;
     filename;
     index = 0;
+    indent = 0;
+    nestLev = 0;
     // Faithful port of go/parser.parser.exprLev:
     // exprLev < 0 means we are parsing an if/for/switch control clause, where
     // a following "{" may be the statement body rather than a composite literal.
@@ -159,9 +360,17 @@ class FrontParser {
                 }
                 const { name: paramName, type: paramType } = extractName(expression, this.at(TokenKind.Comma));
                 if (paramName && (paramType || !this.at(TokenKind.RBracket))) {
-                    typeParams = this.parseTypeParameterListAfterOpen(open, paramName, paramType);
-                    alias = this.match(TokenKind.Assign);
-                    type = this.parseType();
+                    const spec = {
+                        kind: "TypeSpec",
+                        name,
+                        type: badExpr(open.span),
+                        alias: false
+                    };
+                    this.parseGenericType(spec, open, paramName, paramType);
+                    return {
+                        ...spec,
+                        span: mergeSpans(name.span, spec.type.span)
+                    };
                 }
                 else {
                     type = this.parseArrayTypeAfterOpen(open, expression);
@@ -183,6 +392,11 @@ class FrontParser {
             alias,
             span: mergeSpans(name.span, type.span)
         };
+    }
+    parseGenericType(spec, open, name0, typ0) {
+        spec.typeParams = this.parseTypeParameterListAfterOpen(open, name0, typ0);
+        spec.alias = this.match(TokenKind.Assign);
+        spec.type = this.parseType();
     }
     parseValueSpec() {
         const names = this.parseIdentList();
@@ -359,34 +573,35 @@ class FrontParser {
         }
         return { kind: "GoStmt", call: expression, span: mergeSpans(start.span, expression.span) };
     }
+    parseIfHeader() {
+        let init;
+        let conditionStatement;
+        if (this.at(TokenKind.LBrace)) {
+            this.error("missing condition in if statement", this.peek().span);
+            return { condition: badExpr(this.peek().span) };
+        }
+        if (!this.at(TokenKind.Semicolon)) {
+            if (this.match(TokenKind.Var))
+                this.error("var declaration not allowed in if initializer", this.previous().span);
+            init = this.parseSimpleStmt("basic");
+        }
+        if (!this.at(TokenKind.LBrace)) {
+            this.expect(TokenKind.Semicolon, "expected ';' after if init statement");
+            if (!this.at(TokenKind.LBrace))
+                conditionStatement = this.parseSimpleStmt("basic");
+        }
+        else {
+            conditionStatement = init;
+            init = undefined;
+        }
+        return {
+            ...(init ? { init } : {}),
+            condition: this.statementExpression(conditionStatement, "boolean expression") ?? badExpr(this.peek().span)
+        };
+    }
     parseIfStmt() {
         const start = this.expect(TokenKind.If, "expected if");
-        const { init, condition } = this.withControlClause(() => {
-            let init;
-            let conditionStatement;
-            if (this.at(TokenKind.LBrace)) {
-                this.error("missing condition in if statement", this.peek().span);
-                return { condition: badExpr(this.peek().span) };
-            }
-            if (!this.at(TokenKind.Semicolon)) {
-                if (this.match(TokenKind.Var))
-                    this.error("var declaration not allowed in if initializer", this.previous().span);
-                init = this.parseSimpleStmt("basic");
-            }
-            if (!this.at(TokenKind.LBrace)) {
-                this.expect(TokenKind.Semicolon, "expected ';' after if init statement");
-                if (!this.at(TokenKind.LBrace))
-                    conditionStatement = this.parseSimpleStmt("basic");
-            }
-            else {
-                conditionStatement = init;
-                init = undefined;
-            }
-            return {
-                ...(init ? { init } : {}),
-                condition: this.statementExpression(conditionStatement, "boolean expression") ?? badExpr(this.peek().span)
-            };
-        });
+        const { init, condition } = this.withControlClause(() => this.parseIfHeader());
         const body = this.parseBlock();
         let elseStmt;
         if (this.match(TokenKind.Else)) {
@@ -911,15 +1126,8 @@ class FrontParser {
         }
         if (this.atAny(TokenKind.LBracket, TokenKind.Map, TokenKind.Struct, TokenKind.Interface, TokenKind.Chan))
             return this.parseType();
-        if (this.match(TokenKind.Func)) {
-            const start = this.previous();
-            const type = this.parseSignature(start.span);
-            if (this.at(TokenKind.LBrace)) {
-                const body = this.withExpressionLevel(() => this.parseBlock());
-                return { kind: "FuncLit", type, body, span: mergeSpans(start.span, body.span) };
-            }
-            return type;
-        }
+        if (this.at(TokenKind.Func))
+            return this.parseFuncTypeOrLit();
         this.error(`expected expression, found ${token.lexeme || token.kind}`, token.span);
         this.advance();
         return badExpr(token.span);
@@ -1034,8 +1242,8 @@ class FrontParser {
             return this.parseStructType(start.span);
         if (this.match(TokenKind.Interface))
             return this.parseInterfaceType(start.span);
-        if (this.match(TokenKind.Func))
-            return this.parseSignature(start.span);
+        if (this.at(TokenKind.Func))
+            return this.parseFuncType();
         if (this.match(TokenKind.LParen)) {
             const type = this.parseType();
             const close = this.expect(TokenKind.RParen, "expected ')' after type");
@@ -1137,6 +1345,22 @@ class FrontParser {
             ...(results ? { results } : {}),
             span: mergeSpans(start, results?.span ?? params.span)
         };
+    }
+    parseFuncType() {
+        const start = this.expect(TokenKind.Func, "expected func");
+        if (this.at(TokenKind.LBracket)) {
+            const typeParams = this.parseTypeParamList();
+            this.error("function type must have no type parameters", typeParams.span);
+        }
+        return this.parseSignature(start.span);
+    }
+    parseFuncTypeOrLit() {
+        const type = this.parseFuncType();
+        if (!this.at(TokenKind.LBrace)) {
+            return type;
+        }
+        const body = this.withExpressionLevel(() => this.parseBlock());
+        return { kind: "FuncLit", type, body, span: mergeSpans(type.span, body.span) };
     }
     parseTypeParamList() {
         return this.parseFieldList(TokenKind.LBracket, TokenKind.RBracket);
@@ -1555,6 +1779,233 @@ class FrontParser {
             this.allowSpreadsheetRanges = previous;
         }
     }
+    printTrace(...args) {
+        const dots = ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ";
+        const prefix = dots.slice(0, Math.min(dots.length, 2 * this.indent));
+        globalThis.console?.log(`${this.peek().span?.line ?? 0}:${this.peek().span?.column ?? 0}: ${prefix}${args.join(" ")}`);
+    }
+    init(_file, _text, _mode) {
+    }
+    next0() {
+        this.advance();
+    }
+    next() {
+        this.advance();
+    }
+    lineFor(pos) {
+        return pos?.line ?? 0;
+    }
+    atComma(_context, _follow) {
+        if (this.at(TokenKind.Comma)) {
+            return true;
+        }
+        if (this.at(TokenKind.Semicolon)) {
+            this.error("missing ',' before newline in composite literal", this.peek().span);
+            return true;
+        }
+        return false;
+    }
+    errorExpected(pos, msg) {
+        this.error(`expected ${msg}`, pos);
+    }
+    expect2(kind) {
+        const token = this.expect(kind, `expected ${tokenDisplay(kind)}`);
+        return [token.span, token.lexeme];
+    }
+    expectClosing(kind, context) {
+        return this.expect(kind, `expected ${tokenDisplay(kind)} closing ${context}`).span;
+    }
+    expectSemi() {
+        switch (this.peek().kind) {
+            case TokenKind.Semicolon:
+            case TokenKind.RParen:
+            case TokenKind.RBrace:
+                this.consumeSemi();
+                return;
+            default:
+                this.error("expected ';'", this.peek().span);
+        }
+    }
+    consumeComment() {
+    }
+    consumeCommentGroup() {
+    }
+    tokPrec() {
+        let kind = this.peek().kind;
+        if (this.inRhs && kind === TokenKind.Assign) {
+            kind = TokenKind.Equal;
+        }
+        return [kind, binaryPrecedence(kind)];
+    }
+    makeExpr(statement, want) {
+        return this.statementExpression(statement, want);
+    }
+    parseStmt() {
+        return this.parseStatement();
+    }
+    parseStmtList() {
+        const list = [];
+        while (!this.atAny(TokenKind.Case, TokenKind.Default, TokenKind.RBrace, TokenKind.EOF)) {
+            list.push(this.parseStatement());
+            this.consumeSemi();
+        }
+        return list;
+    }
+    parseBlockStmt() {
+        return this.parseBlock();
+    }
+    parseBody() {
+        return this.parseBlock();
+    }
+    parseReturnStmt() {
+        if (!this.at(TokenKind.Return)) {
+            this.error("expected return", this.peek().span);
+        }
+        return this.parseStatement();
+    }
+    parseBranchStmt() {
+        return this.parseStatement();
+    }
+    parseDeferStmt() {
+        return this.parseStatement();
+    }
+    parseGoStmtAlias() {
+        return this.parseGoStmt();
+    }
+    parseExpr() {
+        return this.parseExpression();
+    }
+    parseRhs() {
+        return this.parseRhsExpression();
+    }
+    parseBinaryExpr(x, prec1 = 1) {
+        return this.parseBinaryExpression(x ?? this.parseUnary(), prec1);
+    }
+    parseUnaryExpr() {
+        return this.parseUnary();
+    }
+    parsePrimaryExpr(x) {
+        return x ? this.parsePrimaryFrom(x) : this.parsePrimary();
+    }
+    parseCallExpr(fun) {
+        return this.parsePrimaryFrom(fun);
+    }
+    parseCallOrConversion(fun) {
+        return this.parsePrimaryFrom(fun);
+    }
+    parseSelector(x) {
+        if (!this.at(TokenKind.Dot)) {
+            return x;
+        }
+        const dot = this.advance();
+        const selector = this.parseIdent("expected selector");
+        return { kind: "SelectorExpr", object: x, selector, span: mergeSpans(x.span, selector.span ?? dot.span) };
+    }
+    parseTypeAssertion(x) {
+        return this.parsePrimaryFrom(x);
+    }
+    parseIndexOrSliceOrInstance(x) {
+        return this.parsePrimaryFrom(x);
+    }
+    parseTypeInstance(x) {
+        return this.parsePrimaryFrom(x);
+    }
+    parseElement() {
+        return this.parseCompositeLiteralElement();
+    }
+    parseElementList() {
+        const list = [];
+        while (!this.atAny(TokenKind.RBrace, TokenKind.EOF)) {
+            list.push(this.parseElement());
+            if (!this.match(TokenKind.Comma)) {
+                break;
+            }
+        }
+        return list;
+    }
+    parseLiteralValue(type) {
+        const open = this.expect(TokenKind.LBrace, "expected literal value");
+        const elements = this.parseElementList();
+        const close = this.expect(TokenKind.RBrace, "expected '}' after literal value");
+        return { kind: "CompositeLit", ...(type ? { type } : {}), elements, span: mergeSpans(open.span, close.span) };
+    }
+    parseValue() {
+        return this.parseRhsExpression();
+    }
+    parseExprList() {
+        return this.parseExpressionList(false);
+    }
+    parseList(inRhs) {
+        return this.parseExpressionList(inRhs);
+    }
+    parsePointerType() {
+        const star = this.expect(TokenKind.Star, "expected '*'");
+        const expr = this.parseType();
+        return { kind: "StarExpr", expr, span: mergeSpans(star.span, expr.span) };
+    }
+    parseDotsType() {
+        const dots = this.expect(TokenKind.Ellipsis, "expected '...'");
+        const element = this.parseType();
+        return { kind: "Ellipsis", element, span: mergeSpans(dots.span, element.span) };
+    }
+    parseArrayType() {
+        const open = this.expect(TokenKind.LBracket, "expected '['");
+        return this.parseArrayTypeAfterOpen(open);
+    }
+    parseArrayFieldOrTypeInstance(name) {
+        const open = this.expect(TokenKind.LBracket, "expected '['");
+        const type = this.parseArrayTypeAfterOpen(open, name);
+        return [name, type];
+    }
+    parseMapType() {
+        const start = this.expect(TokenKind.Map, "expected map");
+        this.expect(TokenKind.LBracket, "expected '[' after map");
+        const key = this.parseType();
+        this.expect(TokenKind.RBracket, "expected ']' after map key");
+        const value = this.parseType();
+        return { kind: "MapType", key, value, span: mergeSpans(start.span, value.span) };
+    }
+    parseChanType() {
+        return this.parseTypeTerm();
+    }
+    parseQualifiedIdent(name) {
+        const object = name ?? this.parseIdent("expected identifier");
+        if (this.match(TokenKind.Dot)) {
+            const selector = this.parseIdent("expected selector");
+            return { kind: "SelectorExpr", object, selector, span: mergeSpans(object.span, selector.span) };
+        }
+        return object;
+    }
+    tryIdentOrType() {
+        if (isIdentifierLike(this.peek().kind)) {
+            return this.parseTypeName();
+        }
+        if (this.startsType()) {
+            return this.parseType();
+        }
+        return undefined;
+    }
+    embeddedTerm() {
+        return this.parseTypeTerm();
+    }
+    parseFieldDecl() {
+        return this.parseField(TokenKind.RBrace);
+    }
+    parseMethodSpec() {
+        return this.parseField(TokenKind.RBrace);
+    }
+    parseParameters(acceptTParams = false) {
+        if (this.at(TokenKind.LParen)) {
+            return this.parseFieldList(TokenKind.LParen, TokenKind.RParen);
+        }
+        if (acceptTParams && this.at(TokenKind.LBracket)) {
+            return this.parseFieldList(TokenKind.LBracket, TokenKind.RBracket);
+        }
+        return undefined;
+    }
+    parseTypeParameters() {
+        return this.at(TokenKind.LBracket) ? this.parseTypeParamList() : undefined;
+    }
     consumeSemi() {
         this.match(TokenKind.Semicolon);
     }
@@ -1601,6 +2052,9 @@ class FrontParser {
     }
     peek(ahead = 0) {
         return this.tokens[this.index + ahead] ?? this.tokens[this.tokens.length - 1] ?? eofToken();
+    }
+    currentSpan() {
+        return this.peek().span;
     }
     error(message, span, code = "GOJR_PARSE_FRONT001") {
         this.diagnostics.push({
@@ -1745,4 +2199,24 @@ function eofToken() {
         lexeme: "",
         span: { filename: REPL_FILENAME, offset: 0, length: 0, line: 1, column: 1 }
     };
+}
+function hasBytes(value) {
+    return typeof value === "object" && value !== null && "Bytes" in value && typeof value.Bytes === "function";
+}
+function hasRead(value) {
+    return typeof value === "object" && value !== null && "Read" in value && typeof value.Read === "function";
+}
+function diagnosticAsError(diagnostic) {
+    if (!diagnostic) {
+        return undefined;
+    }
+    return new Error(`${diagnostic.filename}:${diagnostic.span?.line ?? 0}:${diagnostic.span?.column ?? 0}: ${diagnostic.message}`);
+}
+function hostReadFile() {
+    const host = globalThis;
+    return host.__gojrReadFile;
+}
+function hostReadDir() {
+    const host = globalThis;
+    return host.__gojrReadDir;
 }

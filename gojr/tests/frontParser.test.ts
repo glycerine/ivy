@@ -1,11 +1,13 @@
 import { describe, expect, test } from "./testHarness.js";
 import {
+  DeclarationErrors,
   ImportsOnly,
   PackageClauseOnly,
   ParseDir,
   ParseExpr,
   ParseExprFrom,
   ParseFile,
+  SkipObjectResolution,
   parseFrontSource,
   readSource
 } from "../src/front/parser.js";

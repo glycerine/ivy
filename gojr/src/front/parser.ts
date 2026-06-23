@@ -170,6 +170,574 @@ export const SpuriousErrors: Mode = 1 << 5;
 export const SkipObjectResolution: Mode = 1 << 6;
 export const AllErrors: Mode = SpuriousErrors;
 
+export const debugResolve = false;
+export const maxScopeDepth = 1e3;
+export const unresolved = NewObj(Bad, "");
+
+type declarationErrorHandler = (pos: Pos, message: string) => void;
+
+export function resolveFile(file: File, handle: unknown, declErr?: declarationErrorHandler): void {
+  const pkgScope = NewScope();
+  const r = new resolver(handle, declErr, pkgScope, pkgScope, 1);
+
+  for (const decl of file.declarations) {
+    Walk(r, decl);
+  }
+
+  r.closeScope();
+  assert(r.topScope === undefined, "unbalanced scopes");
+  assert(r.labelScope === undefined, "unbalanced label scopes");
+
+  let i = 0;
+  for (const identNode of r.unresolved) {
+    assert(identNode.Obj === unresolved, "object already resolved");
+    const obj = r.pkgScope.Lookup(identNode.name);
+    if (obj === undefined) {
+      delete identNode.Obj;
+      r.unresolved[i] = identNode;
+      i += 1;
+    } else if (debugResolve) {
+      identNode.Obj = obj;
+      r.trace("resolved %s@%v to package object %v", identNode.name, identNode.span?.offset ?? 0, identNode.Obj.Pos());
+    } else {
+      identNode.Obj = obj;
+    }
+  }
+  file.scope = r.pkgScope;
+  file.unresolved = r.unresolved.slice(0, i);
+}
+
+export class resolver implements Visitor {
+  public unresolved: Ident[] = [];
+  public labelScope: Scope | undefined;
+  public targetStack: Ident[][] = [];
+
+  public constructor(
+    public handle: unknown,
+    public declErr: declarationErrorHandler | undefined,
+    public topScope: Scope | undefined,
+    public pkgScope: Scope,
+    public depth: number
+  ) {}
+
+  public trace(format: string, ...args: unknown[]): void {
+    globalThis.console?.log(`${". ".repeat(this.depth)}${this.sprintf(format, ...args)}`);
+  }
+
+  public sprintf(format: string, ...args: unknown[]): string {
+    return resolverSprintf(format, args);
+  }
+
+  public openScope(pos: Pos): void {
+    this.depth += 1;
+    if (this.depth > maxScopeDepth) {
+      throw new bailout(posSpanForResolver(this.handle, pos), "exceeded max scope depth during object resolution");
+    }
+    if (debugResolve) {
+      this.trace("opening scope @%v", pos);
+    }
+    this.topScope = NewScope(this.topScope);
+  }
+
+  public closeScope(): void {
+    this.depth -= 1;
+    if (debugResolve) {
+      this.trace("closing scope");
+    }
+    this.topScope = this.topScope?.Outer;
+  }
+
+  public openLabelScope(): void {
+    this.labelScope = NewScope(this.labelScope);
+    this.targetStack.push([]);
+  }
+
+  public closeLabelScope(): void {
+    const n = this.targetStack.length - 1;
+    const scope = this.labelScope;
+    for (const identNode of this.targetStack[n] ?? []) {
+      const obj = scope?.Lookup(identNode.name);
+      if (obj === undefined && this.declErr) {
+        delete identNode.Obj;
+        this.declErr(identPos(identNode), `label ${identNode.name} undefined`);
+      } else if (obj !== undefined) {
+        identNode.Obj = obj;
+      }
+    }
+    this.targetStack.length = Math.max(0, n);
+    this.labelScope = this.labelScope?.Outer;
+  }
+
+  public declare(decl: unknown, data: unknown, scope: Scope | undefined, kind: number, ...idents: Ident[]): void {
+    if (scope === undefined) {
+      return;
+    }
+    for (const identNode of idents) {
+      if (identNode.Obj !== undefined) {
+        throw new globalThis.Error(`${identPos(identNode)}: identifier ${identNode.name} already declared or resolved`);
+      }
+      const obj = NewObj(kind, identNode.name);
+      obj.Decl = decl;
+      obj.Data = data;
+      if (!isIdentNode(decl)) {
+        identNode.Obj = obj;
+      }
+      if (identNode.name !== "_") {
+        if (debugResolve) {
+          this.trace("declaring %s@%v", identNode.name, identPos(identNode));
+        }
+        const alt = scope.Insert(obj);
+        if (alt !== undefined && this.declErr) {
+          let prevDecl = "";
+          const pos = alt.Pos();
+          if (pos !== 0) {
+            prevDecl = this.sprintf("\n\tprevious declaration at %v", pos);
+          }
+          this.declErr(identPos(identNode), `${identNode.name} redeclared in this block${prevDecl}`);
+        }
+      }
+    }
+  }
+
+  public shortVarDecl(decl: AssignStmt): void {
+    let n = 0;
+    for (const x of decl.lhs) {
+      if (x.kind === "Ident") {
+        assert(x.Obj === undefined, "identifier already declared or resolved");
+        const obj = NewObj(Var, x.name);
+        obj.Decl = decl;
+        x.Obj = obj;
+        if (x.name !== "_") {
+          if (debugResolve) {
+            this.trace("declaring %s@%v", x.name, identPos(x));
+          }
+          const alt = this.topScope?.Insert(obj);
+          if (alt !== undefined) {
+            x.Obj = alt;
+          } else {
+            n += 1;
+          }
+        }
+      }
+    }
+    if (n === 0 && this.declErr && decl.lhs[0]) {
+      this.declErr(nodePosForResolver(decl.lhs[0]), "no new variables on left side of :=");
+    }
+  }
+
+  public resolve(identNode: Ident, collectUnresolved: boolean): void {
+    if (identNode.Obj !== undefined) {
+      throw new globalThis.Error(this.sprintf("%v: identifier %s already declared or resolved", identPos(identNode), identNode.name));
+    }
+    if (identNode.name === "_") {
+      return;
+    }
+    for (let s = this.topScope; s !== undefined; s = s.Outer) {
+      const obj = s.Lookup(identNode.name);
+      if (obj !== undefined) {
+        if (debugResolve) {
+          this.trace("resolved %v:%s to %v", identPos(identNode), identNode.name, obj.Name);
+        }
+        assert(obj.Name !== "", "obj with no name");
+        if (!isIdentNode(obj.Decl)) {
+          identNode.Obj = obj;
+        }
+        return;
+      }
+    }
+    if (collectUnresolved) {
+      identNode.Obj = unresolved;
+      this.unresolved.push(identNode);
+    }
+  }
+
+  public walkExprs(list: Expr[]): void {
+    for (const node of list) {
+      Walk(this, node);
+    }
+  }
+
+  public walkLHS(list: Expr[]): void {
+    for (const expr of list) {
+      const node = Unparen(expr);
+      if (node.kind !== "Ident") {
+        Walk(this, node);
+      }
+    }
+  }
+
+  public walkStmts(list: Stmt[]): void {
+    for (const stmt of list) {
+      Walk(this, stmt);
+    }
+  }
+
+  public Visit(node: AstNode | undefined): Visitor | undefined {
+    if (debugResolve && node !== undefined) {
+      this.trace("node %s@%v", node.kind, nodePosForResolver(node));
+    }
+
+    if (node === undefined) {
+      return undefined;
+    }
+
+    switch (node.kind) {
+      case "Ident":
+        this.resolve(node, true);
+        break;
+
+      case "FuncLit":
+        this.openScope(nodePosForResolver(node));
+        this.walkFuncType(node.type);
+        this.walkBody(node.body);
+        this.closeScope();
+        break;
+
+      case "SelectorExpr":
+        Walk(this, node.object);
+        break;
+
+      case "StructType":
+        this.openScope(nodePosForResolver(node));
+        this.walkFieldList(node.fields, Var);
+        this.closeScope();
+        break;
+
+      case "FuncType":
+        this.openScope(nodePosForResolver(node));
+        this.walkFuncType(node);
+        this.closeScope();
+        break;
+
+      case "CompositeLit":
+        if (node.type !== undefined) {
+          Walk(this, node.type);
+        }
+        for (const element of node.elements) {
+          if (element.kind === "KeyValueExpr") {
+            if (element.key.kind === "Ident") {
+              this.resolve(element.key, false);
+            } else {
+              Walk(this, element.key);
+            }
+            Walk(this, element.value);
+          } else {
+            Walk(this, element);
+          }
+        }
+        break;
+
+      case "InterfaceType":
+        this.openScope(nodePosForResolver(node));
+        this.walkFieldList(node.methods, Fun);
+        this.closeScope();
+        break;
+
+      case "LabeledStmt":
+        this.declare(node, undefined, this.labelScope, Lbl, node.label);
+        Walk(this, node.stmt);
+        break;
+
+      case "AssignStmt":
+        this.walkExprs(node.rhs);
+        if (node.token === TokenKind.Define) {
+          this.shortVarDecl(node);
+        } else {
+          this.walkExprs(node.lhs);
+        }
+        break;
+
+      case "BranchStmt":
+        if (node.token !== TokenKind.Fallthrough && node.label !== undefined && this.targetStack.length > 0) {
+          this.targetStack[this.targetStack.length - 1]?.push(node.label);
+        }
+        break;
+
+      case "BlockStmt":
+        this.openScope(nodePosForResolver(node));
+        this.walkStmts(node.statements);
+        this.closeScope();
+        break;
+
+      case "IfStmt":
+        this.openScope(nodePosForResolver(node));
+        if (node.init !== undefined) {
+          Walk(this, node.init);
+        }
+        Walk(this, node.condition);
+        Walk(this, node.body);
+        if (node.else !== undefined) {
+          Walk(this, node.else);
+        }
+        this.closeScope();
+        break;
+
+      case "CaseClause":
+        this.walkExprs(node.list);
+        this.openScope(nodePosForResolver(node));
+        this.walkStmts(node.body);
+        this.closeScope();
+        break;
+
+      case "SwitchStmt":
+        this.openScope(nodePosForResolver(node));
+        if (node.init !== undefined) {
+          Walk(this, node.init);
+        }
+        if (node.tag !== undefined) {
+          if (node.init !== undefined) {
+            this.openScope(nodePosForResolver(node.tag));
+            Walk(this, node.tag);
+            this.closeScope();
+          } else {
+            Walk(this, node.tag);
+          }
+        }
+        this.walkStmts(node.body);
+        this.closeScope();
+        break;
+
+      case "TypeSwitchStmt":
+        if (node.init !== undefined) {
+          this.openScope(nodePosForResolver(node));
+          Walk(this, node.init);
+          this.closeScope();
+        }
+        this.openScope(nodePosForResolver(node.assign));
+        Walk(this, node.assign);
+        this.walkStmts(node.body);
+        this.closeScope();
+        break;
+
+      case "CommClause":
+        this.openScope(nodePosForResolver(node));
+        if (node.comm !== undefined) {
+          Walk(this, node.comm);
+        }
+        this.walkStmts(node.body);
+        this.closeScope();
+        break;
+
+      case "SelectStmt":
+        this.walkStmts(node.body);
+        break;
+
+      case "ForStmt":
+        this.openScope(nodePosForResolver(node));
+        if (node.init !== undefined) {
+          Walk(this, node.init);
+        }
+        if (node.condition !== undefined) {
+          Walk(this, node.condition);
+        }
+        if (node.post !== undefined) {
+          Walk(this, node.post);
+        }
+        Walk(this, node.body);
+        this.closeScope();
+        break;
+
+      case "RangeStmt": {
+        this.openScope(nodePosForResolver(node));
+        Walk(this, node.source);
+        const lhs = [node.key, node.value].filter((expr): expr is Expr => expr !== undefined);
+        if (lhs.length > 0) {
+          if (node.token === TokenKind.Define) {
+            const as: AssignStmt = {
+              kind: "AssignStmt",
+              lhs,
+              token: TokenKind.Define,
+              rhs: [node.source],
+              ...(node.span ? { span: node.span } : {})
+            };
+            this.walkLHS(lhs);
+            this.shortVarDecl(as);
+          } else {
+            this.walkExprs(lhs);
+          }
+        }
+        Walk(this, node.body);
+        this.closeScope();
+        break;
+      }
+
+      case "GenDecl":
+        switch (node.token) {
+          case TokenKind.Const:
+          case TokenKind.Var:
+            for (let i = 0; i < node.specs.length; i += 1) {
+              const spec = node.specs[i];
+              if (spec?.kind !== "ValueSpec") {
+                continue;
+              }
+              const kind = node.token === TokenKind.Var ? Var : Con;
+              this.walkExprs(spec.values);
+              if (spec.type !== undefined) {
+                Walk(this, spec.type);
+              }
+              this.declare(spec, i, this.topScope, kind, ...spec.names);
+            }
+            break;
+          case TokenKind.Type:
+            for (const spec of node.specs) {
+              if (spec.kind !== "TypeSpec") {
+                continue;
+              }
+              this.declare(spec, undefined, this.topScope, Typ, spec.name);
+              if (spec.typeParams !== undefined) {
+                this.openScope(nodePosForResolver(spec));
+                this.walkTParams(spec.typeParams);
+                this.closeScope();
+              }
+              Walk(this, spec.type);
+            }
+            break;
+        }
+        break;
+
+      case "FuncDecl":
+        this.openScope(nodePosForResolver(node));
+        this.walkRecv(node.receiver);
+        if (node.type.typeParams !== undefined) {
+          this.walkTParams(node.type.typeParams);
+        }
+        this.resolveList(node.type.params);
+        this.resolveList(node.type.results);
+        this.declareList(node.receiver, Var);
+        this.declareList(node.type.params, Var);
+        this.declareList(node.type.results, Var);
+        this.walkBody(node.body);
+        if (node.receiver === undefined && node.name.name !== "init") {
+          this.declare(node, undefined, this.pkgScope, Fun, node.name);
+        }
+        this.closeScope();
+        break;
+
+      default:
+        return this;
+    }
+
+    return undefined;
+  }
+
+  public walkFuncType(typ: FuncType): void {
+    this.resolveList(typ.params);
+    this.resolveList(typ.results);
+    this.declareList(typ.params, Var);
+    this.declareList(typ.results, Var);
+  }
+
+  public resolveList(list: FieldList | undefined): void {
+    if (list === undefined) {
+      return;
+    }
+    for (const field of list.fields) {
+      Walk(this, field.type);
+    }
+  }
+
+  public declareList(list: FieldList | undefined, kind: number): void {
+    if (list === undefined) {
+      return;
+    }
+    for (const field of list.fields) {
+      this.declare(field, undefined, this.topScope, kind, ...field.names);
+    }
+  }
+
+  public walkRecv(recv: FieldList | undefined): void {
+    if (recv === undefined || recv.fields.length === 0) {
+      return;
+    }
+    let typ = recv.fields[0]?.type;
+    if (typ?.kind === "StarExpr") {
+      typ = typ.expr;
+    }
+
+    let declareExprs: Expr[] = [];
+    let resolveExprs: Expr[] = [];
+    switch (typ?.kind) {
+      case "IndexExpr":
+        declareExprs = [typ.index];
+        resolveExprs.push(typ.object);
+        break;
+      case "IndexListExpr":
+        declareExprs = typ.indices;
+        resolveExprs.push(typ.object);
+        break;
+      default:
+        if (typ !== undefined) {
+          resolveExprs.push(typ);
+        }
+        break;
+    }
+
+    for (const expr of declareExprs) {
+      if (expr.kind === "Ident") {
+        this.declare(expr, undefined, this.topScope, Typ, expr);
+      } else {
+        resolveExprs.push(expr);
+      }
+    }
+    for (const expr of resolveExprs) {
+      Walk(this, expr);
+    }
+    for (const field of recv.fields.slice(1)) {
+      Walk(this, field.type);
+    }
+  }
+
+  public walkFieldList(list: FieldList | undefined, kind: number): void {
+    if (list === undefined) {
+      return;
+    }
+    this.resolveList(list);
+    this.declareList(list, kind);
+  }
+
+  public walkTParams(list: FieldList): void {
+    this.declareList(list, Typ);
+    this.resolveList(list);
+  }
+
+  public walkBody(body: BlockStmt | undefined): void {
+    if (body === undefined) {
+      return;
+    }
+    this.openLabelScope();
+    this.walkStmts(body.statements);
+    this.closeLabelScope();
+  }
+}
+
+function resolverSprintf(format: string, args: unknown[]): string {
+  let i = 0;
+  return format.replace(/%[sv]/g, () => String(args[i++]));
+}
+
+function posSpanForResolver(handle: unknown, pos: Pos): SourceSpan {
+  const position = (handle as { Position?: (pos: Pos) => { filename?: string; Filename?: string; offset?: number; Offset?: number; line?: number; Line?: number; column?: number; Column?: number } } | undefined)?.Position?.(pos);
+  return {
+    filename: position?.filename ?? position?.Filename ?? REPL_FILENAME,
+    offset: position?.offset ?? position?.Offset ?? pos,
+    length: 0,
+    line: position?.line ?? position?.Line ?? 1,
+    column: position?.column ?? position?.Column ?? 1
+  };
+}
+
+function nodePosForResolver(node: AstNode): Pos {
+  return node.span?.offset ?? 0;
+}
+
+function identPos(node: Ident): Pos {
+  return node.span?.offset ?? 0;
+}
+
+function isIdentNode(value: unknown): value is Ident {
+  return typeof value === "object" && value !== null && "kind" in value && value.kind === "Ident";
+}
+
 interface SimpleStmtResult {
   statement: Stmt;
   isRange: boolean;
@@ -259,6 +827,22 @@ export function ParseFile(_fset: unknown, filename: string, src: unknown, mode: 
   } else if ((mode & ImportsOnly) !== 0) {
     const declarations = file.declarations.filter((decl) => decl.kind === "GenDecl" && decl.token === TokenKind.Import);
     file = { ...file, declarations, imports: declarations.flatMap((decl) => decl.kind === "GenDecl" ? decl.specs.filter((spec): spec is ImportSpec => spec.kind === "ImportSpec") : []) };
+  }
+
+  if ((mode & SkipObjectResolution) === 0 && (mode & PackageClauseOnly) === 0) {
+    const declErr = (mode & DeclarationErrors) !== 0
+      ? (pos: Pos, message: string) => {
+        const span = posSpanForResolver(_fset, pos);
+        result.diagnostics.push({
+          filename: diagnosticFilename(span, filename),
+          code: "GOJR_PARSE_FRONT001",
+          severity: "error",
+          message,
+          span
+        });
+      }
+      : undefined;
+    resolveFile(file, _fset, declErr);
   }
 
   return [file, diagnosticAsError(result.diagnostics[0])];
