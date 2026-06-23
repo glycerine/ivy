@@ -12,11 +12,11 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "chevrotain": "^11.0.3"
+    "chevrotain": "^12.0.0"
   },
   "devDependencies": {
     "@types/node": "^26.0.0",
     "typescript": "^5.6.3",
-    "vitest": "^2.1.9"
+    "vitest": "^4.1.9"
   }
 }
