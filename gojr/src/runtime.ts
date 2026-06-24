@@ -3301,7 +3301,8 @@ function functionValue(declaration: FunctionDecl): GoJuniorFunction {
 }
 
 function functionLiteralValue(expression: FunctionLiteralExpression, context: EvaluationContext): GoJuniorFunction {
-  return goJuniorFunctionValue("<closure>", resolveRuntimeSignatureTypeImports(expression.signature, context), expression.body, context.captureScope(), undefined, undefined, expression.source);
+  const closureContext = context.importPath() ? context : undefined;
+  return goJuniorFunctionValue("<closure>", resolveRuntimeSignatureTypeImports(expression.signature, context), expression.body, context.captureScope(), undefined, undefined, expression.source, closureContext);
 }
 
 function splitTopLevelDeclarations(statements: Statement[]): { declarations: Statement[]; statements: Statement[] } {
@@ -5180,8 +5181,7 @@ async function pointerToExpression(expression: Expression, context: EvaluationCo
     if (!struct) throw new GoJuniorRuntimeError("address-of selector requires a struct value");
     const field = structFieldAccessor(struct, expression.field, context);
     if (!field) throw new GoJuniorRuntimeError(`${struct.typeName} has no field ${expression.field}`);
-    const current = field.get();
-    const typeName = pointerTypeName(current ?? null);
+    const typeName = normalizeTypeText(field.type.type.text);
     return new RuntimePointer(typeName, () => field.get() ?? null, (next) => {
       field.set(prepareAssignableToType(next, field.type.type.text, `field ${expression.field}`, context));
     });
@@ -5191,7 +5191,8 @@ async function pointerToExpression(expression: Expression, context: EvaluationCo
     const index = await evaluateExpression(expression.index, context);
     if (!Array.isArray(object)) throw new GoJuniorRuntimeError("address-of index requires an array or slice value");
     const numericIndex = toNumber(index);
-    const typeName = pointerTypeName(getArrayElement(object, numericIndex));
+    const typeName = indexResultTypeText(expressionDeclaredTypeText(expression.object, context)) ??
+      pointerTypeName(getArrayElement(object, numericIndex));
     return new RuntimePointer(typeName, () => getArrayElement(object, numericIndex), (next) => {
       setArrayElement(object, numericIndex, next);
     });
@@ -5489,7 +5490,7 @@ function defaultIntrinsicNamedValue(type: string, context?: EvaluationContext): 
   if (type === "sync.Map") return new RuntimeNamedValue(type, syncMapValue());
   if (type === "sync.Once") return new RuntimeNamedValue(type, syncOnceValue());
   if (type === "sync.Pool") return new RuntimeNamedValue(type, syncPoolValue());
-  if (type === "sync.Mutex" || type === "sync.RWMutex") return new RuntimeNamedValue(type, syncMutexValue(type));
+  if (type === "sync.Mutex" || type === "sync.RWMutex" || type === "internal/sync.Mutex") return new RuntimeNamedValue(type, syncMutexValue(type));
   if (type === "atomic.Bool" || type === "sync/atomic.Bool") return new RuntimeNamedValue(type, atomicBoolValue());
   if (type === "atomic.Int32" || type === "sync/atomic.Int32") return new RuntimeNamedValue(type, atomicInt32Value());
   if (type === "atomic.Uint64" || type === "sync/atomic.Uint64") return new RuntimeNamedValue(type, atomicUint64Value());
@@ -6786,7 +6787,7 @@ function parseAnonymousStructField(text: string): StructFieldDecl[] {
   const field = text.trim();
   if (!field) return [];
   const withoutTag = stripStructFieldTag(field);
-  const split = lastTopLevelWhitespace(withoutTag);
+  const split = firstAnonymousStructFieldNameTypeSplit(withoutTag);
   if (split < 0) {
     return [{
       name: embeddedFieldNameFromTypeText(withoutTag),
@@ -6800,6 +6801,27 @@ function parseAnonymousStructField(text: string): StructFieldDecl[] {
     .map((name) => name.trim())
     .filter(Boolean)
     .map((name) => ({ name, type: { text: typeText } }));
+}
+
+function firstAnonymousStructFieldNameTypeSplit(field: string): number {
+  let depth = 0;
+  for (let index = 0; index < field.length; index++) {
+    const char = field[index] ?? "";
+    if (char === "[" || char === "(" || char === "{") depth++;
+    if (char === "]" || char === ")" || char === "}") depth--;
+    if (depth !== 0 || !/\s/.test(char)) continue;
+    const namesText = field.slice(0, index).trim();
+    if (!anonymousStructFieldNameList(namesText)) continue;
+    let next = index;
+    while (next < field.length && /\s/.test(field[next]!)) next++;
+    if (next < field.length) return index;
+  }
+  return -1;
+}
+
+function anonymousStructFieldNameList(namesText: string): boolean {
+  const names = splitTopLevel(namesText, ",").map((name) => name.trim());
+  return names.length > 0 && names.every((name) => /^[A-Za-z_]\w*$/.test(name));
 }
 
 function parseAnonymousInterfaceTypeText(typeText: string): InterfaceTypeDef | undefined {

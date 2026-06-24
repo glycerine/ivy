@@ -2842,7 +2842,8 @@ function functionValue(declaration) {
     return goJuniorFunctionValue(declaration.name, declaration.signature, declaration.body, undefined, declaration);
 }
 function functionLiteralValue(expression, context) {
-    return goJuniorFunctionValue("<closure>", resolveRuntimeSignatureTypeImports(expression.signature, context), expression.body, context.captureScope(), undefined, undefined, expression.source);
+    const closureContext = context.importPath() ? context : undefined;
+    return goJuniorFunctionValue("<closure>", resolveRuntimeSignatureTypeImports(expression.signature, context), expression.body, context.captureScope(), undefined, undefined, expression.source, closureContext);
 }
 function splitTopLevelDeclarations(statements) {
     const declarations = [];
@@ -4337,7 +4338,12 @@ async function getSelector(expression, context) {
     if (fmtError !== undefined) {
         return hostCallable("fmt.errorString.Error", () => fmtError);
     }
-    const method = methodForValue(object, expression.field, context);
+    let method = methodForValue(object, expression.field, context);
+    if (!method) {
+        const pointer = await pointerToExpressionIfAddressable(expression.object, context);
+        if (pointer)
+            method = methodForValue(pointer, expression.field, context);
+    }
     if (method) {
         let receiver = method.receiver;
         if (method.method.pointerReceiver && expression.object.kind === "Identifier") {
@@ -4360,6 +4366,19 @@ async function getSelector(expression, context) {
         }
     }
     throw new GoJuniorRuntimeError(`${formatValue(object)} has no selector ${expression.field}`);
+}
+async function pointerToExpressionIfAddressable(expression, context) {
+    if (expression.kind !== "Identifier" &&
+        expression.kind !== "SelectorExpression" &&
+        expression.kind !== "IndexExpression") {
+        return undefined;
+    }
+    try {
+        return await pointerToExpression(expression, context);
+    }
+    catch {
+        return undefined;
+    }
 }
 function methodExpressionForSelector(expression, context) {
     const receiver = methodExpressionReceiverType(expression.object, context);
@@ -4532,8 +4551,7 @@ async function pointerToExpression(expression, context) {
         const field = structFieldAccessor(struct, expression.field, context);
         if (!field)
             throw new GoJuniorRuntimeError(`${struct.typeName} has no field ${expression.field}`);
-        const current = field.get();
-        const typeName = pointerTypeName(current ?? null);
+        const typeName = normalizeTypeText(field.type.type.text);
         return new RuntimePointer(typeName, () => field.get() ?? null, (next) => {
             field.set(prepareAssignableToType(next, field.type.type.text, `field ${expression.field}`, context));
         });
@@ -4544,7 +4562,8 @@ async function pointerToExpression(expression, context) {
         if (!Array.isArray(object))
             throw new GoJuniorRuntimeError("address-of index requires an array or slice value");
         const numericIndex = toNumber(index);
-        const typeName = pointerTypeName(getArrayElement(object, numericIndex));
+        const typeName = indexResultTypeText(expressionDeclaredTypeText(expression.object, context)) ??
+            pointerTypeName(getArrayElement(object, numericIndex));
         return new RuntimePointer(typeName, () => getArrayElement(object, numericIndex), (next) => {
             setArrayElement(object, numericIndex, next);
         });
@@ -4860,7 +4879,7 @@ function defaultIntrinsicNamedValue(type, context) {
         return new RuntimeNamedValue(type, syncOnceValue());
     if (type === "sync.Pool")
         return new RuntimeNamedValue(type, syncPoolValue());
-    if (type === "sync.Mutex" || type === "sync.RWMutex")
+    if (type === "sync.Mutex" || type === "sync.RWMutex" || type === "internal/sync.Mutex")
         return new RuntimeNamedValue(type, syncMutexValue(type));
     if (type === "atomic.Bool" || type === "sync/atomic.Bool")
         return new RuntimeNamedValue(type, atomicBoolValue());
@@ -6212,7 +6231,7 @@ function parseAnonymousStructField(text) {
     if (!field)
         return [];
     const withoutTag = stripStructFieldTag(field);
-    const split = lastTopLevelWhitespace(withoutTag);
+    const split = firstAnonymousStructFieldNameTypeSplit(withoutTag);
     if (split < 0) {
         return [{
                 name: embeddedFieldNameFromTypeText(withoutTag),
@@ -6226,6 +6245,31 @@ function parseAnonymousStructField(text) {
         .map((name) => name.trim())
         .filter(Boolean)
         .map((name) => ({ name, type: { text: typeText } }));
+}
+function firstAnonymousStructFieldNameTypeSplit(field) {
+    let depth = 0;
+    for (let index = 0; index < field.length; index++) {
+        const char = field[index] ?? "";
+        if (char === "[" || char === "(" || char === "{")
+            depth++;
+        if (char === "]" || char === ")" || char === "}")
+            depth--;
+        if (depth !== 0 || !/\s/.test(char))
+            continue;
+        const namesText = field.slice(0, index).trim();
+        if (!anonymousStructFieldNameList(namesText))
+            continue;
+        let next = index;
+        while (next < field.length && /\s/.test(field[next]))
+            next++;
+        if (next < field.length)
+            return index;
+    }
+    return -1;
+}
+function anonymousStructFieldNameList(namesText) {
+    const names = splitTopLevel(namesText, ",").map((name) => name.trim());
+    return names.length > 0 && names.every((name) => /^[A-Za-z_]\w*$/.test(name));
 }
 function parseAnonymousInterfaceTypeText(typeText) {
     const name = normalizeTypeText(typeText);

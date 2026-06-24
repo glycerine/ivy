@@ -1145,6 +1145,125 @@ var Out = T{}.M()
     expect(result.package?.Out).toBe(7n);
   });
 
+  test("imported closures keep their defining package method context", async () => {
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "example.com/once",
+      files: [{
+        filename: "/workspace/once/once.go",
+        source: `package once
+
+type Once struct {
+  done bool
+}
+
+func (o *Once) Do(f func()) {
+  if !o.done {
+    o.done = true
+    f()
+  }
+}
+
+func Make() func() int {
+  d := struct {
+    once Once
+    result int
+  }{}
+  return func() int {
+    d.once.Do(func() {
+      d.result = 9
+    })
+    return d.result
+  }
+}
+`
+      }]
+    }]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import once "example.com/once"
+f := once.Make()
+return f(), f()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+    expect(result.values).toEqual([9n, 9n]);
+  });
+
+  test("uses host mutex primitives for internal sync fields", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/sync",
+        files: [{
+          filename: "/usr/local/go/src/internal/sync/mutex.go",
+          source: `package sync
+
+type Mutex struct{}
+
+func (m *Mutex) Lock() {}
+func (m *Mutex) Unlock() {}
+`
+        }]
+      },
+      {
+        importPath: "sync",
+        files: [{
+          filename: "/usr/local/go/src/sync/once.go",
+          source: `package sync
+
+import isync "internal/sync"
+
+type Mutex struct {
+  mu isync.Mutex
+}
+
+func (m *Mutex) Lock() {
+  m.mu.Lock()
+}
+
+func (m *Mutex) Unlock() {
+  m.mu.Unlock()
+}
+
+type Once struct {
+  done bool
+  m Mutex
+}
+
+func (o *Once) Do(f func()) {
+  o.m.Lock()
+  defer o.m.Unlock()
+  if !o.done {
+    defer func() { o.done = true }()
+    f()
+  }
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "sync"
+
+var once sync.Once
+hits := 0
+once.Do(func() { hits++ })
+once.Do(func() { hits++ })
+return hits
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+    expect(result.value).toBe(1n);
+  });
+
   test("imported package methods externalize private helper return types", async () => {
     const graph = await evaluateSourcePackageGraph([
       {
@@ -1904,6 +2023,35 @@ return b.X, (*p).X
 `);
 
     expect(result.values).toEqual([10n, 10n]);
+  });
+
+  test("uses declared field and element types for address expressions", async () => {
+    const result = await expectRuns(`
+func compareAndSwapInt32(addr *int32, old, next int32) bool {
+  if *addr == old {
+    *addr = next
+    return true
+  }
+  return false
+}
+
+type Int32 struct {
+  v int32
+}
+
+func (x *Int32) CompareAndSwap(old, next int32) bool {
+  return compareAndSwapInt32(&x.v, old, next)
+}
+
+var x Int32
+ok := x.CompareAndSwap(0, 1)
+items := []int32{3}
+p := &items[0]
+*p = *p + 4
+return ok, x.v, items[0]
+`);
+
+    expect(result.values).toEqual([true, 1n, 7n]);
   });
 
   test("executes Go type switches over structs, pointers, nil, and basic values", async () => {
@@ -3741,6 +3889,27 @@ return p.A, p.B
 
     const result = await session.evaluate("Unbox[int](Box[int]{Value: 7})");
     expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(7n);
+  });
+
+  test("evaluates generic anonymous structs with function and result-typed fields", async () => {
+    const result = await expectRuns(`
+func OnceValue[T any](f func() T) func() T {
+  d := struct {
+    f      func() T
+    result T
+  }{
+    f: f,
+  }
+  return func() T {
+    d.result = d.f()
+    return d.result
+  }
+}
+
+f := OnceValue[int](func() int { return 7 })
+return f()
+`);
     expect(result.value).toBe(7n);
   });
 
