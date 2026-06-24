@@ -54,6 +54,8 @@ test: npm-deps js
 	$(NPM) run typecheck
 	$(NPM) test
 	CXX="$(CXX)" $(GO) test ./cmd/gojr
+	CXX="$(CXX)" $(GO) install ./cmd/gojr
+	@printf 'installed %s\n' "$(GOJR_EXE)"
 
 repl: install
 	"$(GOJR_EXE)"

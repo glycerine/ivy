@@ -976,6 +976,54 @@ return osish.Read()
     expect(result.value).toBe(5n);
   });
 
+  test("uses declaring package type context for imported function tuple results", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/props",
+        files: [{
+          filename: "/workspace/props/props.go",
+          source: `package props
+
+type Properties struct { Entry uint8 }
+
+func Lookup() (Properties, int) {
+  return Properties{Entry: 11}, 1
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/rules",
+        files: [{
+          filename: "/workspace/rules/rules.go",
+          source: `package rules
+
+import "example.com/props"
+
+func Entry() int {
+  p, _ := props.Lookup()
+  var q props.Properties = p
+  return int(q.Entry)
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/rules"
+return rules.Entry()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe(11n);
+  });
+
   test("keeps named array pointer types for same-package calls", async () => {
     const graph = await evaluateSourcePackageGraph([
       {

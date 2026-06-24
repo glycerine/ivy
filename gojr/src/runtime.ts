@@ -7074,8 +7074,12 @@ function callExpressionResultTypeText(expression: CallExpression, context: Evalu
   if (!isGoJuniorFunction(callee)) return undefined;
   const result = callee.signature?.results[resultIndex];
   if (!result) return undefined;
+  const packageName = callee.callContext?.importPath();
+  const resultTypeText = packageName && packageName !== context.importPath()
+    ? qualifyLocalRuntimeTypeName(result.type.text, packageName)
+    : result.type.text;
   const typeArgumentBindings = inferRuntimeCallTypeArgumentBindings(callee, [], callTypeArguments(expression.callee, context), context);
-  const typeText = normalizeTypeText(substituteTypeArgumentBindings(result.type.text, typeArgumentBindings));
+  const typeText = normalizeTypeText(substituteTypeArgumentBindings(resultTypeText, typeArgumentBindings));
   return typeTextContainsAnyTypeParameter(typeText, callee.declaration?.typeParameters ?? []) ? undefined : typeText;
 }
 
