@@ -265,7 +265,7 @@ namespace go_types_util {
         case TokenKind.IntLiteral:
           return parseGoIntLiteral(lit);
         case TokenKind.FloatLiteral:
-          return parseGoFloatLiteral(lit);
+          return makeFloatConstant(parseGoFloatLiteral(lit), parseExactIntegerNumericLiteral(lit));
         case TokenKind.ImagLiteral: {
           const raw = lit.endsWith("i") ? lit.slice(0, -1) : lit;
           const im = /[.eEpP]/.test(raw) ? parseGoFloatLiteral(raw) : globalThis.Number(parseGoIntLiteral(raw));
@@ -306,6 +306,52 @@ namespace go_types_util {
       fracValue += globalThis.Number.parseInt(frac[index] ?? "0", 16) / 16 ** (index + 1);
     }
     return (wholeValue + fracValue) * 2 ** exponent;
+  }
+
+  function parseExactIntegerNumericLiteral(value: string): bigint | null {
+    const text = value.replace(/_/g, "");
+    const hex = /^0[xX]([0-9a-fA-F]*)(?:\.([0-9a-fA-F]*))?[pP]([+-]?[0-9]+)$/.exec(text);
+    if (hex !== null) {
+      const whole = hex[1] ?? "";
+      const frac = hex[2] ?? "";
+      const digits = whole + frac;
+      const mant = digits === "" ? 0n : globalThis.BigInt(`0x${digits}`);
+      const exp = globalThis.Number(hex[3]) - 4 * frac.length;
+      if (exp >= 0) {
+        return mant << globalThis.BigInt(exp);
+      }
+      const denom = 1n << globalThis.BigInt(-exp);
+      return mant % denom === 0n ? mant / denom : null;
+    }
+    const dec = /^([0-9]*)(?:\.([0-9]*))?(?:[eE]([+-]?[0-9]+))?$/.exec(text);
+    if (dec === null) {
+      return null;
+    }
+    const whole = dec[1] ?? "";
+    const frac = dec[2] ?? "";
+    const digits = whole + frac;
+    const mant = digits === "" ? 0n : globalThis.BigInt(digits);
+    const exp = globalThis.Number(dec[3] ?? "0") - frac.length;
+    if (exp >= 0) {
+      return mant * (10n ** globalThis.BigInt(exp));
+    }
+    const denom = 10n ** globalThis.BigInt(-exp);
+    return mant % denom === 0n ? mant / denom : null;
+  }
+
+  function makeFloatConstant(value: number, exactInt: bigint | null = null): unknown {
+    const result: { kind: string; value: number; exactInt?: bigint; toBigInt?: () => bigint; toString: () => string } = {
+      kind: "Float",
+      value,
+      toString() {
+        return globalThis.String(value);
+      }
+    };
+    if (exactInt !== null) {
+      result.exactInt = exactInt;
+      result.toBigInt = () => exactInt;
+    }
+    return result;
   }
 
   function parseGoRuneLiteral(value: string): bigint {
@@ -4313,7 +4359,7 @@ namespace go_types_conversions {
           codepoint = Number(i);
         }
         if (val !== null) {
-          val.value = String.fromCodePoint(codepoint);
+          val.value = globalThis.String.fromCodePoint(codepoint);
         }
         return true;
       }
@@ -6522,8 +6568,19 @@ namespace go_types_const {
     if (typeof x === "number" && globalThis.Number.isInteger(x)) {
       return globalThis.BigInt(x);
     }
-    const xo = x as { toBigInt?: () => bigint; value?: unknown } | null;
+    const xo = x as { exactInt?: bigint; kind?: string; toBigInt?: () => bigint; value?: unknown } | null;
     if (xo !== null && typeof xo === "object") {
+      if (typeof xo.kind === "string" && xo.kind.toLowerCase().includes("float")) {
+        if (typeof xo.exactInt === "bigint") {
+          return xo.exactInt;
+        }
+        if (typeof xo.value === "number" &&
+          globalThis.Number.isFinite(xo.value) &&
+          globalThis.Number.isSafeInteger(xo.value)) {
+          return globalThis.BigInt(xo.value);
+        }
+        return null;
+      }
       if (typeof xo.toBigInt === "function") {
         return xo.toBigInt();
       }
@@ -6576,6 +6633,21 @@ namespace go_types_const {
 
   export function makeComplex(re: unknown, im: unknown): complexValue {
     return { re, im };
+  }
+
+  export function makeFloat(value: number, exactInt: bigint | null = null): unknown {
+    const result: { kind: string; value: number; exactInt?: bigint; toBigInt?: () => bigint; toString: () => string } = {
+      kind: "Float",
+      value,
+      toString() {
+        return globalThis.String(value);
+      }
+    };
+    if (exactInt !== null) {
+      result.exactInt = exactInt;
+      result.toBigInt = () => exactInt;
+    }
+    return result;
   }
 
   function fitsInt64(x: bigint): boolean {
@@ -8577,12 +8649,13 @@ namespace go_types_expr {
         if (c !== null && go_types_const.constantKindOf(val) === "complex") {
           return go_types_const.makeComplex(-globalThis.Number(go_types_const.real(c)), -globalThis.Number(go_types_const.imag(c)));
         }
-        const i = go_types_const.toInt(val);
-        if (i !== null && go_types_const.constantKindOf(val) === "int") {
-          return -i;
-        }
-        const f = go_types_const.toFloat(val);
-        return f === null ? go_types_const.makeUnknown() : -f;
+	        const i = go_types_const.toInt(val);
+	        if (i !== null && go_types_const.constantKindOf(val) === "int") {
+	          return -i;
+	        }
+	        const f = go_types_const.toFloat(val);
+          const exact = go_types_const.constantKindOf(val) === "float" ? go_types_const.toInt(val) : null;
+	        return f === null ? go_types_const.makeUnknown() : go_types_const.makeFloat(-f, exact !== null ? -exact : null);
       }
       case TokenKind.Caret: {
         const i = go_types_const.toInt(val);
@@ -8715,9 +8788,8 @@ namespace go_types_expr {
         case TokenKind.Star:
           return xi * yi;
         case TokenKind.SlashAssign:
-          return xi / yi;
         case TokenKind.Slash:
-          return globalThis.Number(xi) / globalThis.Number(yi);
+          return xi / yi;
         case TokenKind.Percent:
           return xi % yi;
         case TokenKind.Amp:
@@ -8733,15 +8805,36 @@ namespace go_types_expr {
 
     const xf = globalThis.Number(go_types_const.toFloat(x));
     const yf = globalThis.Number(go_types_const.toFloat(y));
-    switch (op) {
-      case TokenKind.Plus:
-        return xf + yf;
-      case TokenKind.Minus:
-        return xf - yf;
-      case TokenKind.Star:
-        return xf * yf;
-      case TokenKind.Slash:
-        return xf / yf;
+    const xExact = go_types_const.toInt(x);
+    const yExact = go_types_const.toInt(y);
+    const exactFloatOp = (op: TokenKind): bigint | null => {
+      if (xExact === null || yExact === null) {
+        return null;
+      }
+      switch (op) {
+        case TokenKind.Plus:
+          return xExact + yExact;
+        case TokenKind.Minus:
+          return xExact - yExact;
+        case TokenKind.Star:
+          return xExact * yExact;
+        case TokenKind.Slash:
+          if (yExact !== 0n && xExact % yExact === 0n) {
+            return xExact / yExact;
+          }
+          return null;
+      }
+      return null;
+    };
+	    switch (op) {
+	      case TokenKind.Plus:
+	        return go_types_const.makeFloat(xf + yf, exactFloatOp(op));
+	      case TokenKind.Minus:
+	        return go_types_const.makeFloat(xf - yf, exactFloatOp(op));
+	      case TokenKind.Star:
+	        return go_types_const.makeFloat(xf * yf, exactFloatOp(op));
+	      case TokenKind.Slash:
+	        return go_types_const.makeFloat(xf / yf, exactFloatOp(op));
     }
     return go_types_const.makeUnknown();
   }
@@ -15041,7 +15134,8 @@ namespace go_types_builtins {
             }
           } else {
             x.mode_ = go_types_operand.constant_;
-            x.val = id === go_types_universe.builtinId._Alignof ? globalThis.BigInt(this.conf.Sizes?.Alignof(x.typ()!) ?? 1) : globalThis.BigInt(this.conf.Sizes?.Sizeof(x.typ()!) ?? 0);
+            const sizes = this.conf.Sizes ?? go_types_sizes.stdSizes;
+            x.val = id === go_types_universe.builtinId._Alignof ? globalThis.BigInt(sizes.Alignof(x.typ()!)) : globalThis.BigInt(sizes.Sizeof(x.typ()!));
           }
           x.typ_ = go_types_universe.Typ[go_types_basic.Uintptr]!;
           break;
@@ -18538,9 +18632,9 @@ namespace go_types_resolver {
   go_types_check.registerCheckerMethod("unpackRecv", function unpackRecv(rtyp: unknown, _unpackParams: boolean): [boolean, unknown, unknown] {
     const expr = rtyp as { kind?: string; X?: unknown; expr?: unknown };
     if (expr?.kind === "StarExpr") {
-      return [true, expr.X ?? expr.expr, null];
+      return [true, receiverBaseTypeExpr(expr.X ?? expr.expr), null];
     }
-    return [false, rtyp, null];
+    return [false, receiverBaseTypeExpr(rtyp), null];
   });
 
   go_types_check.registerCheckerMethod("resolveBaseTypeName", function resolveBaseTypeName(_ptr: boolean, recv: unknown): go_types_object.TypeName | null {
@@ -18550,9 +18644,39 @@ namespace go_types_resolver {
   });
 
   go_types_check.registerCheckerMethod("packageObjects", function packageObjects(): void {
+    // add new methods to already type-checked types (from a prior Checker.Files call)
     for (const obj of this.objList) {
+      if (obj instanceof go_types_object.TypeName && obj.typ !== null) {
+        (this as unknown as { collectMethods: (obj: go_types_object.TypeName) => void }).collectMethods(obj);
+      }
+    }
+
+    // To avoid problems with cycles, process non-alias type declarations first,
+    // followed by alias declarations, and then everything else.
+    const aliasList: go_types_object.TypeName[] = [];
+    const othersList: go_types_object.Object[] = [];
+    for (const obj of this.objList) {
+      if (obj instanceof go_types_object.TypeName) {
+        const tdecl = this.objMap.get(obj)?.tdecl;
+        if (typeSpecIsAlias(tdecl)) {
+          aliasList.push(obj);
+        } else {
+          (this as unknown as { objDecl: (obj: go_types_object.Object) => void }).objDecl(obj);
+        }
+      } else {
+        othersList.push(obj);
+      }
+    }
+    for (const obj of aliasList) {
       (this as unknown as { objDecl: (obj: go_types_object.Object) => void }).objDecl(obj);
     }
+    for (const obj of othersList) {
+      (this as unknown as { objDecl: (obj: go_types_object.Object) => void }).objDecl(obj);
+    }
+
+    // At this point we may have a non-empty methods map because some receiver
+    // base types could not be resolved. Go discards that map here.
+    this.methods = null;
   });
 
   go_types_check.registerCheckerMethod("unusedImports", function unusedImports(): void {
@@ -18591,6 +18715,32 @@ namespace go_types_resolver {
   function isIdentNode(node: unknown): boolean {
     const n = node as { kind?: string; Name?: unknown; Value?: unknown; name?: unknown } | null;
     return n?.kind === "Ident" || n?.Name !== undefined || n?.Value !== undefined || n?.name !== undefined;
+  }
+
+  function receiverBaseTypeExpr(node: unknown): unknown {
+    let current = node as {
+      kind?: string;
+      X?: unknown;
+      expr?: unknown;
+      object?: unknown;
+    } | null;
+    while (current !== null && current !== undefined) {
+      if (current.kind === "ParenExpr") {
+        current = (current.X ?? current.expr) as typeof current;
+        continue;
+      }
+      if (current.kind === "IndexExpr" || current.kind === "IndexListExpr") {
+        current = (current.X ?? current.expr ?? current.object) as typeof current;
+        continue;
+      }
+      break;
+    }
+    return current;
+  }
+
+  function typeSpecIsAlias(spec: unknown): boolean {
+    const s = spec as { Assign?: { IsValid?: () => boolean }; alias?: boolean } | null;
+    return s?.Assign?.IsValid?.() ?? s?.alias === true;
   }
 }
 
@@ -18691,8 +18841,17 @@ namespace go_types_decl {
 
         // save/restore current environment and set up object environment
         const saved = globalThis.Object.assign(new go_types_check.environment(), this);
+        this.decl = null;
         this.scope = d!.file;
         this.version = d!.version;
+        this.iota = null;
+        this.errpos = null;
+        this.inTParamList = false;
+        this.sig = null;
+        this.isPanic = null;
+        this.hasLabel = false;
+        this.hasCallOrRecv = false;
+        this.exprPos = go_types_check.nopos;
 
         try {
           if (obj instanceof go_types_object.Const) {

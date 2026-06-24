@@ -54,6 +54,12 @@ describe("Go-junior package build artifacts", () => {
     const result = buildPackages({
       importPath: "example.com/demo/math",
       packageCacheParent: "/tmp/gopath/pkg",
+      packageSources: {
+        fmt: [{
+          filename: "/workspace/fmt/print.go",
+          source: "package fmt\n\nfunc Printf(format string, args ...any) (n int, err error) { return 0, nil }\n"
+        }]
+      },
       files: [
         {
           filename: "/tmp/demo/math/math.go",
@@ -75,10 +81,13 @@ func hidden() {}
 
     expect(result.diagnostics).toEqual([]);
     expect(result.ok).toBe(true);
-    expect(result.artifacts).toHaveLength(1);
-    expect(result.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a");
-    expect(result.artifacts[0]?.dependencies).toEqual(["fmt"]);
-    expect(result.artifacts[0]?.exports).toEqual([
+    expect(result.artifacts).toHaveLength(2);
+    expect(result.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/fmt.a");
+    expect(result.artifacts[0]?.dependencies).toEqual([]);
+    expect(result.artifacts[1]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a");
+    expect(result.artifacts[1]?.dependencies).toEqual(["fmt"]);
+    expect(result.artifacts[1]?.dependencyCacheKeys).toEqual([`fmt:${result.artifacts[0]?.cacheKey}`]);
+    expect(result.artifacts[1]?.exports).toEqual([
       { name: "Add", kind: "func", typeText: "func(a int, b int) int" },
       { name: "Answer", kind: "const", typeText: "untyped int" },
       { name: "Box", kind: "type", typeText: "Box", underlyingTypeText: "struct{Value T}" },
@@ -86,6 +95,7 @@ func hidden() {}
       { name: "Identity", kind: "func", typeText: "func[T any](value T) T" },
       { name: "Point", kind: "type", typeText: "Point", underlyingTypeText: "struct{X int}" }
     ]);
+    expect(store.writes.has("/tmp/gopath/pkg/gojr_js/fmt.a")).toBe(true);
     expect(store.writes.has("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a")).toBe(true);
     expect(parseGoJuniorPackageArchive(store.writes.get("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a") ?? "")?.members[0]?.name).toBe("__.PKGDEF");
   });
@@ -450,7 +460,104 @@ func Two() int { return lib.One() + 1 }
     ]);
   });
 
-  test("builds provider-supplied ambient packages before the root", () => {
+  test("builds ambient standard runtime imports as cached dependency artifacts", () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/app",
+      artifactRoot: "/tmp/gojr-stdlib",
+      sourcePackageProvider: {
+        load(importPath) {
+          if (importPath !== "runtime") return undefined;
+          return [{
+            filename: "/usr/local/go/src/runtime/alg.go",
+            source: "package runtime\nconst _ = 1 / 0\n"
+          }];
+        },
+        isStandardLibraryPackage(importPath) {
+          return importPath === "runtime";
+        }
+      },
+      files: [{
+        filename: "/workspace/example.com/app/app.go",
+        source: `package app
+
+import "runtime"
+
+var OS = runtime.GOOS
+var Arch = runtime.GOARCH
+
+func Capture(buf []byte) int {
+  pc, file, line, ok := runtime.Caller(0)
+  if ok && pc > 0 && line > 0 && file != "" {
+    return runtime.Stack(buf, false) + runtime.Callers(0, []uintptr{pc})
+  }
+  frames := runtime.CallersFrames([]uintptr{})
+  _, _ = frames.Next()
+  marker := ""
+  runtime.AddCleanup(&marker, func(name string) {}, "marker").Stop()
+  return runtime.Stack(buf, false)
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual(["runtime", "example.com/app"]);
+    expect(result.artifacts[0]?.artifactPath).toBe("/tmp/gojr-stdlib/runtime.a");
+    expect(result.artifacts[0]?.dependencies).toEqual([]);
+    const runtimeExports = result.artifacts[0]?.exports.map((item) => item.name) ?? [];
+    for (const name of [
+      "AddCleanup",
+      "Caller",
+      "Callers",
+      "CallersFrames",
+      "Cleanup",
+      "Error",
+      "Frame",
+      "Frames",
+      "FuncForPC",
+      "Func",
+      "GOARCH",
+      "GOOS",
+      "Stack"
+    ]) {
+      expect(runtimeExports).toContain(name);
+    }
+    expect(result.artifacts[1]?.dependencies).toEqual(["runtime"]);
+    expect(result.artifacts[1]?.dependencyCacheKeys).toEqual([`runtime:${result.artifacts[0]?.cacheKey}`]);
+    expect([...store.writes.keys()]).toEqual([
+      "/tmp/gojr-stdlib/runtime.a",
+      "/tmp/gojr-stdlib/example.com/app.a"
+    ]);
+  });
+
+  test("builds source packages without auto-importing fmt into package scope", () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "fmt",
+      artifactRoot: "/tmp/gojr-no-auto-fmt",
+      files: [{
+        filename: "/usr/local/go/src/fmt/format.go",
+        source: `package fmt
+
+type fmt struct {
+  buf []byte
+}
+
+func (f *fmt) write(s string) {
+  f.buf = append(f.buf, s...)
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual(["fmt"]);
+  });
+
+  test("builds provider-supplied ordinary stdlib packages before the root", () => {
     const store = new MemoryArtifactStore();
     const loaded: string[] = [];
     const result = buildPackages({

@@ -246,7 +246,7 @@ var go_types_util;
                 case TokenKind.IntLiteral:
                     return parseGoIntLiteral(lit);
                 case TokenKind.FloatLiteral:
-                    return parseGoFloatLiteral(lit);
+                    return makeFloatConstant(parseGoFloatLiteral(lit), parseExactIntegerNumericLiteral(lit));
                 case TokenKind.ImagLiteral: {
                     const raw = lit.endsWith("i") ? lit.slice(0, -1) : lit;
                     const im = /[.eEpP]/.test(raw) ? parseGoFloatLiteral(raw) : globalThis.Number(parseGoIntLiteral(raw));
@@ -287,6 +287,50 @@ var go_types_util;
             fracValue += globalThis.Number.parseInt(frac[index] ?? "0", 16) / 16 ** (index + 1);
         }
         return (wholeValue + fracValue) * 2 ** exponent;
+    }
+    function parseExactIntegerNumericLiteral(value) {
+        const text = value.replace(/_/g, "");
+        const hex = /^0[xX]([0-9a-fA-F]*)(?:\.([0-9a-fA-F]*))?[pP]([+-]?[0-9]+)$/.exec(text);
+        if (hex !== null) {
+            const whole = hex[1] ?? "";
+            const frac = hex[2] ?? "";
+            const digits = whole + frac;
+            const mant = digits === "" ? 0n : globalThis.BigInt(`0x${digits}`);
+            const exp = globalThis.Number(hex[3]) - 4 * frac.length;
+            if (exp >= 0) {
+                return mant << globalThis.BigInt(exp);
+            }
+            const denom = 1n << globalThis.BigInt(-exp);
+            return mant % denom === 0n ? mant / denom : null;
+        }
+        const dec = /^([0-9]*)(?:\.([0-9]*))?(?:[eE]([+-]?[0-9]+))?$/.exec(text);
+        if (dec === null) {
+            return null;
+        }
+        const whole = dec[1] ?? "";
+        const frac = dec[2] ?? "";
+        const digits = whole + frac;
+        const mant = digits === "" ? 0n : globalThis.BigInt(digits);
+        const exp = globalThis.Number(dec[3] ?? "0") - frac.length;
+        if (exp >= 0) {
+            return mant * (10n ** globalThis.BigInt(exp));
+        }
+        const denom = 10n ** globalThis.BigInt(-exp);
+        return mant % denom === 0n ? mant / denom : null;
+    }
+    function makeFloatConstant(value, exactInt = null) {
+        const result = {
+            kind: "Float",
+            value,
+            toString() {
+                return globalThis.String(value);
+            }
+        };
+        if (exactInt !== null) {
+            result.exactInt = exactInt;
+            result.toBigInt = () => exactInt;
+        }
+        return result;
     }
     function parseGoRuneLiteral(value) {
         const body = value.slice(1, -1);
@@ -3931,7 +3975,7 @@ var go_types_conversions;
                     codepoint = Number(i);
                 }
                 if (val !== null) {
-                    val.value = String.fromCodePoint(codepoint);
+                    val.value = globalThis.String.fromCodePoint(codepoint);
                 }
                 return true;
             }
@@ -6042,6 +6086,17 @@ var go_types_const;
         }
         const xo = x;
         if (xo !== null && typeof xo === "object") {
+            if (typeof xo.kind === "string" && xo.kind.toLowerCase().includes("float")) {
+                if (typeof xo.exactInt === "bigint") {
+                    return xo.exactInt;
+                }
+                if (typeof xo.value === "number" &&
+                    globalThis.Number.isFinite(xo.value) &&
+                    globalThis.Number.isSafeInteger(xo.value)) {
+                    return globalThis.BigInt(xo.value);
+                }
+                return null;
+            }
             if (typeof xo.toBigInt === "function") {
                 return xo.toBigInt();
             }
@@ -6095,6 +6150,21 @@ var go_types_const;
         return { re, im };
     }
     go_types_const.makeComplex = makeComplex;
+    function makeFloat(value, exactInt = null) {
+        const result = {
+            kind: "Float",
+            value,
+            toString() {
+                return globalThis.String(value);
+            }
+        };
+        if (exactInt !== null) {
+            result.exactInt = exactInt;
+            result.toBigInt = () => exactInt;
+        }
+        return result;
+    }
+    go_types_const.makeFloat = makeFloat;
     function fitsInt64(x) {
         return -(1n << 63n) <= x && x <= (1n << 63n) - 1n;
     }
@@ -7970,7 +8040,8 @@ var go_types_expr;
                     return -i;
                 }
                 const f = go_types_const.toFloat(val);
-                return f === null ? go_types_const.makeUnknown() : -f;
+                const exact = go_types_const.constantKindOf(val) === "float" ? go_types_const.toInt(val) : null;
+                return f === null ? go_types_const.makeUnknown() : go_types_const.makeFloat(-f, exact !== null ? -exact : null);
             }
             case TokenKind.Caret: {
                 const i = go_types_const.toInt(val);
@@ -8096,9 +8167,8 @@ var go_types_expr;
                 case TokenKind.Star:
                     return xi * yi;
                 case TokenKind.SlashAssign:
-                    return xi / yi;
                 case TokenKind.Slash:
-                    return globalThis.Number(xi) / globalThis.Number(yi);
+                    return xi / yi;
                 case TokenKind.Percent:
                     return xi % yi;
                 case TokenKind.Amp:
@@ -8113,15 +8183,36 @@ var go_types_expr;
         }
         const xf = globalThis.Number(go_types_const.toFloat(x));
         const yf = globalThis.Number(go_types_const.toFloat(y));
+        const xExact = go_types_const.toInt(x);
+        const yExact = go_types_const.toInt(y);
+        const exactFloatOp = (op) => {
+            if (xExact === null || yExact === null) {
+                return null;
+            }
+            switch (op) {
+                case TokenKind.Plus:
+                    return xExact + yExact;
+                case TokenKind.Minus:
+                    return xExact - yExact;
+                case TokenKind.Star:
+                    return xExact * yExact;
+                case TokenKind.Slash:
+                    if (yExact !== 0n && xExact % yExact === 0n) {
+                        return xExact / yExact;
+                    }
+                    return null;
+            }
+            return null;
+        };
         switch (op) {
             case TokenKind.Plus:
-                return xf + yf;
+                return go_types_const.makeFloat(xf + yf, exactFloatOp(op));
             case TokenKind.Minus:
-                return xf - yf;
+                return go_types_const.makeFloat(xf - yf, exactFloatOp(op));
             case TokenKind.Star:
-                return xf * yf;
+                return go_types_const.makeFloat(xf * yf, exactFloatOp(op));
             case TokenKind.Slash:
-                return xf / yf;
+                return go_types_const.makeFloat(xf / yf, exactFloatOp(op));
         }
         return go_types_const.makeUnknown();
     }
@@ -13943,7 +14034,8 @@ var go_types_builtins;
                     }
                     else {
                         x.mode_ = go_types_operand.constant_;
-                        x.val = id === go_types_universe.builtinId._Alignof ? globalThis.BigInt(this.conf.Sizes?.Alignof(x.typ()) ?? 1) : globalThis.BigInt(this.conf.Sizes?.Sizeof(x.typ()) ?? 0);
+                        const sizes = this.conf.Sizes ?? go_types_sizes.stdSizes;
+                        x.val = id === go_types_universe.builtinId._Alignof ? globalThis.BigInt(sizes.Alignof(x.typ())) : globalThis.BigInt(sizes.Sizeof(x.typ()));
                     }
                     x.typ_ = go_types_universe.Typ[go_types_basic.Uintptr];
                     break;
@@ -17315,9 +17407,9 @@ var go_types_resolver;
     go_types_check.registerCheckerMethod("unpackRecv", function unpackRecv(rtyp, _unpackParams) {
         const expr = rtyp;
         if (expr?.kind === "StarExpr") {
-            return [true, expr.X ?? expr.expr, null];
+            return [true, receiverBaseTypeExpr(expr.X ?? expr.expr), null];
         }
-        return [false, rtyp, null];
+        return [false, receiverBaseTypeExpr(rtyp), null];
     });
     go_types_check.registerCheckerMethod("resolveBaseTypeName", function resolveBaseTypeName(_ptr, recv) {
         const id = recv;
@@ -17325,9 +17417,39 @@ var go_types_resolver;
         return obj instanceof go_types_object.NewTypeName(go_types_check.nopos, null, "", null).constructor ? obj : null;
     });
     go_types_check.registerCheckerMethod("packageObjects", function packageObjects() {
+        // add new methods to already type-checked types (from a prior Checker.Files call)
         for (const obj of this.objList) {
+            if (obj instanceof go_types_object.TypeName && obj.typ !== null) {
+                this.collectMethods(obj);
+            }
+        }
+        // To avoid problems with cycles, process non-alias type declarations first,
+        // followed by alias declarations, and then everything else.
+        const aliasList = [];
+        const othersList = [];
+        for (const obj of this.objList) {
+            if (obj instanceof go_types_object.TypeName) {
+                const tdecl = this.objMap.get(obj)?.tdecl;
+                if (typeSpecIsAlias(tdecl)) {
+                    aliasList.push(obj);
+                }
+                else {
+                    this.objDecl(obj);
+                }
+            }
+            else {
+                othersList.push(obj);
+            }
+        }
+        for (const obj of aliasList) {
             this.objDecl(obj);
         }
+        for (const obj of othersList) {
+            this.objDecl(obj);
+        }
+        // At this point we may have a non-empty methods map because some receiver
+        // base types could not be resolved. Go discards that map here.
+        this.methods = null;
     });
     go_types_check.registerCheckerMethod("unusedImports", function unusedImports() {
         for (const obj of this.imports ?? []) {
@@ -17361,6 +17483,25 @@ var go_types_resolver;
     function isIdentNode(node) {
         const n = node;
         return n?.kind === "Ident" || n?.Name !== undefined || n?.Value !== undefined || n?.name !== undefined;
+    }
+    function receiverBaseTypeExpr(node) {
+        let current = node;
+        while (current !== null && current !== undefined) {
+            if (current.kind === "ParenExpr") {
+                current = (current.X ?? current.expr);
+                continue;
+            }
+            if (current.kind === "IndexExpr" || current.kind === "IndexListExpr") {
+                current = (current.X ?? current.expr ?? current.object);
+                continue;
+            }
+            break;
+        }
+        return current;
+    }
+    function typeSpecIsAlias(spec) {
+        const s = spec;
+        return s?.Assign?.IsValid?.() ?? s?.alias === true;
     }
 })(go_types_resolver || (go_types_resolver = {}));
 // ---- decl.ts ----
@@ -17457,8 +17598,17 @@ var go_types_decl;
                 go_types_util.assert(d !== undefined);
                 // save/restore current environment and set up object environment
                 const saved = globalThis.Object.assign(new go_types_check.environment(), this);
+                this.decl = null;
                 this.scope = d.file;
                 this.version = d.version;
+                this.iota = null;
+                this.errpos = null;
+                this.inTParamList = false;
+                this.sig = null;
+                this.isPanic = null;
+                this.hasLabel = false;
+                this.hasCallOrRecv = false;
+                this.exprPos = go_types_check.nopos;
                 try {
                     if (obj instanceof go_types_object.Const) {
                         this.decl = d; // new package-level const decl

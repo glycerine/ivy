@@ -1,6 +1,7 @@
 import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan } from "./diagnostics.js";
 import { File, ImportSpec } from "./front/ast.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
+import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import {
   Builtin as GoTypesBuiltin,
@@ -323,9 +324,18 @@ class PackageGraphBuilder {
     const dependencies = uniqueSorted(parsed.files.flatMap((file) => file.imports.map(importPathFromSpec)));
     const sourceDependencies: PackageBuildNode[] = [];
     for (const dependencyPath of dependencies) {
+      if (preferAmbientBuildImport(dependencyPath)) {
+        const dependency = this.buildAmbientStandardPackage(dependencyPath);
+        if (dependency) sourceDependencies.push(dependency);
+        continue;
+      }
       const dependencyFiles = this.sourceFilesForImport(dependencyPath, files[0]?.filename ?? REPL_FILENAME);
       if (!dependencyFiles) {
-        if (isAmbientBuildImport(dependencyPath)) continue;
+        if (isAmbientBuildImport(dependencyPath)) {
+          const dependency = this.buildAmbientStandardPackage(dependencyPath);
+          if (dependency) sourceDependencies.push(dependency);
+          continue;
+        }
         if (!this.failedPackageLoads.has(dependencyPath)) {
           this.diagnostics.push(buildDiagnostic(
             files[0]?.filename ?? REPL_FILENAME,
@@ -344,6 +354,7 @@ class PackageGraphBuilder {
         : checkGoJuniorFiles(parsed.files, parsed.statements, [], {
           packageName,
           packagePath: importPath,
+          autoImportFmt: false,
           importer: {
             import: (path) => this.packageInfos.get(path)
           }
@@ -414,6 +425,85 @@ class PackageGraphBuilder {
 
     this.visiting.delete(importPath);
     return this.nodes.get(importPath);
+  }
+
+  private buildAmbientStandardPackage(importPath: string): PackageBuildNode | undefined {
+    const existing = this.nodes.get(importPath);
+    if (existing) return existing;
+    const pkg = standardTypePackage(importPath);
+    if (!pkg) return undefined;
+    this.standardLibraryPackages.add(importPath);
+    this.packageInfos.set(importPath, pkg);
+
+    const packageName = pkg.Name();
+    const goos = this.request.goos ?? GOJR_GOOS;
+    const goarch = this.request.goarch ?? GOJR_GOARCH;
+    const buildTags = resolvedBuildTags(this.request);
+    const dependencies: string[] = [];
+    const dependencyCacheKeys: string[] = [];
+    const exports = uniqueExports(packageScopeObjects(pkg));
+    const sourceHash = stableHash([
+      "ambient-stdlib",
+      importPath,
+      packageName,
+      JSON.stringify(exports)
+    ].join("\0"));
+    const cacheKey = stableHash([
+      ARTIFACT_LAYOUT_VERSION,
+      this.request.compilerVersion ?? DEFAULT_COMPILER_VERSION,
+      this.request.backend ?? DEFAULT_BACKEND,
+      this.request.hostSpecVersion ?? DEFAULT_HOST_SPEC_VERSION,
+      this.request.capabilityPolicy ?? DEFAULT_CAPABILITY_POLICY,
+      goos,
+      goarch,
+      buildTags.join("\n"),
+      "stdlib",
+      importPath,
+      sourceHash,
+      "",
+      ""
+    ].join("\0"));
+    const artifactPath = artifactPathForImportPath(resolveArtifactRoot(this.request), importPath);
+    const syntheticFile = {
+      filename: `gojr:stdlib/${importPath}`,
+      source: `package ${packageName}\n`
+    };
+    const pkgdef = packageExportData({
+      layoutVersion: ARTIFACT_LAYOUT_VERSION,
+      compilerVersion: this.request.compilerVersion ?? DEFAULT_COMPILER_VERSION,
+      backend: this.request.backend ?? DEFAULT_BACKEND,
+      hostSpecVersion: this.request.hostSpecVersion ?? DEFAULT_HOST_SPEC_VERSION,
+      capabilityPolicy: this.request.capabilityPolicy ?? DEFAULT_CAPABILITY_POLICY,
+      goos,
+      goarch,
+      buildTags,
+      standardLibrary: true,
+      importPath,
+      packageName,
+      sourceHash,
+      cacheKey,
+      dependencies,
+      dependencyCacheKeys,
+      exports,
+      sources: [{
+        filename: syntheticFile.filename,
+        hash: stableHash(syntheticFile.source)
+      }]
+    });
+    const node: PackageBuildNode = {
+      importPath,
+      packageName,
+      files: [syntheticFile],
+      sourceHash,
+      cacheKey,
+      dependencies,
+      dependencyCacheKeys,
+      exports,
+      artifactPath,
+      artifactSource: generatedArtifactSource(pkgdef)
+    };
+    this.nodes.set(importPath, node);
+    return node;
   }
 
   private sourceFilesForImport(importPath: string, filename: string): SourceFile[] | undefined {
@@ -670,7 +760,11 @@ const knownGOARCH = new Set([
 ]);
 
 function isAmbientBuildImport(path: string): boolean {
-  return standardTypePackage(path) !== undefined;
+  return isIntrinsicPackageImport(path);
+}
+
+function preferAmbientBuildImport(path: string): boolean {
+  return isIntrinsicPackageImport(path);
 }
 
 function buildDiagnostic(filename: string, message: string, span?: SourceSpan): Diagnostic {

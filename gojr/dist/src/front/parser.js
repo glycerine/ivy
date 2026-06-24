@@ -1833,7 +1833,7 @@ class parser {
             this.error("unexpected comma; expecting ]", this.previous().span);
         }
         this.expect(TokenKind.RBracket, "expected ']' in array or slice type");
-        const element = this.parseType();
+        const element = this.parseTypeTerm();
         return {
             kind: "ArrayType",
             ...(length ? { length } : {}),

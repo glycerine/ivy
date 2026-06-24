@@ -1,7 +1,7 @@
 import { REPL_FILENAME, diagnosticFilename } from "./diagnostics.js";
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
-import { Config, Info, Int, Int8, Int16, Int32, Int64, Uint, Uint8, Uint16, Uint32, Uint64, Uintptr, Float32, Float64, Bool, NewChecker, NewFunc, NewInterfaceType, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTerm, NewTypeName, NewTypeParam, NewTuple, NewUnion, NewVar, NoPos, String as GoString, Typ, emptyInterface, ensureUniverseInitialized, UniverseLookup, Unsafe } from "./go/types/index.js";
+import { Config, Info, Int, Int8, Int16, Int32, Int64, Uint, Uint8, Uint16, Uint32, Uint64, Uintptr, Float32, Float64, Bool, NewArray, NewChecker, NewConst, NewField, NewFunc, NewInterfaceType, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTerm, NewTypeName, NewTypeParam, NewTuple, NewUnion, NewVar, NoPos, String as GoString, Typ, emptyInterface, ensureUniverseInitialized, UniverseLookup, Unsafe } from "./go/types/index.js";
 export const GOJR_SYNTHETIC_CHECK_PREFIX = "__gojr_check_statements";
 export function isGoJuniorSyntheticCheckName(name) {
     return name === GOJR_SYNTHETIC_CHECK_PREFIX || name.startsWith(`${GOJR_SYNTHETIC_CHECK_PREFIX}_`);
@@ -240,12 +240,15 @@ function seedPackageScope(pkg, config) {
     }
 }
 export function standardTypePackage(path) {
+    ensureUniverseInitialized();
     if (path === "cmp")
         return cmpPackage();
     if (path === "fmt")
         return fmtPackage();
     if (path === "math")
         return mathPackage();
+    if (path === "runtime")
+        return runtimePackage();
     if (path === "testing")
         return testingPackage();
     if (path === "unsafe")
@@ -327,6 +330,130 @@ function fmtPackage() {
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Printf", printfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Sprintf", sprintfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Println", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "args", argsType)), null, true)));
+    pkg.MarkComplete();
+    return pkg;
+}
+function runtimePackage() {
+    const pkg = NewPackage("runtime", "runtime");
+    if (pkg.Scope().Lookup("GOOS") !== null)
+        return pkg;
+    const intType = Typ[Int];
+    const boolType = Typ[Bool];
+    const stringType = Typ[GoString];
+    const uintptrType = Typ[Uintptr];
+    const uint32Type = Typ[Uint32];
+    const uint64Type = Typ[Uint64];
+    const float64Type = Typ[Float64];
+    const byteSliceType = NewSlice(Typ[Uint8]);
+    const uintptrSliceType = NewSlice(uintptrType);
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "GOOS", stringType, "gojr"));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "GOARCH", stringType, "js"));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "Compiler", stringType, "gojr"));
+    pkg.Scope().Insert(NewVar(NoPos, pkg, "MemProfileRate", intType));
+    const funcName = NewTypeName(NoPos, pkg, "Func", null);
+    const funcType = NewNamed(funcName, NewStruct([], null), null);
+    funcName.setType(funcType);
+    pkg.Scope().Insert(funcName);
+    const funcRecv = NewVar(NoPos, pkg, "f", NewPointer(funcType));
+    funcType.AddMethod(NewFunc(NoPos, pkg, "Entry", NewSignatureType(funcRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", uintptrType)), false)));
+    funcType.AddMethod(NewFunc(NoPos, pkg, "FileLine", NewSignatureType(funcRecv, null, null, NewTuple(NewVar(NoPos, pkg, "pc", uintptrType)), NewTuple(NewVar(NoPos, pkg, "file", stringType), NewVar(NoPos, pkg, "line", intType)), false)));
+    funcType.AddMethod(NewFunc(NoPos, pkg, "Name", NewSignatureType(funcRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", stringType)), false)));
+    const frameName = NewTypeName(NoPos, pkg, "Frame", null);
+    const frameType = NewNamed(frameName, NewStruct([
+        NewField(NoPos, pkg, "PC", uintptrType, false),
+        NewField(NoPos, pkg, "Func", NewPointer(funcType), false),
+        NewField(NoPos, pkg, "Function", stringType, false),
+        NewField(NoPos, pkg, "File", stringType, false),
+        NewField(NoPos, pkg, "Line", intType, false),
+        NewField(NoPos, pkg, "Entry", uintptrType, false)
+    ], null), null);
+    frameName.setType(frameType);
+    pkg.Scope().Insert(frameName);
+    const framesName = NewTypeName(NoPos, pkg, "Frames", null);
+    const framesType = NewNamed(framesName, NewStruct([], null), null);
+    framesName.setType(framesType);
+    pkg.Scope().Insert(framesName);
+    const framesRecv = NewVar(NoPos, pkg, "ci", NewPointer(framesType));
+    framesType.AddMethod(NewFunc(NoPos, pkg, "Next", NewSignatureType(framesRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "frame", frameType), NewVar(NoPos, pkg, "more", boolType)), false)));
+    const errorObject = UniverseLookup("error");
+    const errorType = errorObject?.Type?.() ?? null;
+    if (errorType === null) {
+        throw new Error("go/types: predeclared error is not initialized");
+    }
+    const runtimeErrorInterface = NewInterfaceType([
+        NewFunc(NoPos, pkg, "RuntimeError", NewSignatureType(null, null, null, null, null, false))
+    ], [errorType]).Complete();
+    const runtimeErrorName = NewTypeName(NoPos, pkg, "Error", null);
+    const runtimeErrorType = NewNamed(runtimeErrorName, runtimeErrorInterface, null);
+    runtimeErrorName.setType(runtimeErrorType);
+    pkg.Scope().Insert(runtimeErrorName);
+    const cleanupName = NewTypeName(NoPos, pkg, "Cleanup", null);
+    const cleanupType = NewNamed(cleanupName, NewStruct([], null), null);
+    cleanupName.setType(cleanupType);
+    pkg.Scope().Insert(cleanupName);
+    const cleanupRecv = NewVar(NoPos, pkg, "c", cleanupType);
+    cleanupType.AddMethod(NewFunc(NoPos, pkg, "Stop", NewSignatureType(cleanupRecv, null, null, null, null, false)));
+    const memStatsName = NewTypeName(NoPos, pkg, "MemStats", null);
+    const bySizeStruct = NewStruct([
+        NewField(NoPos, pkg, "Size", uint32Type, false),
+        NewField(NoPos, pkg, "Mallocs", uint64Type, false),
+        NewField(NoPos, pkg, "Frees", uint64Type, false)
+    ], null);
+    const memStatsType = NewNamed(memStatsName, NewStruct([
+        NewField(NoPos, pkg, "Alloc", uint64Type, false),
+        NewField(NoPos, pkg, "TotalAlloc", uint64Type, false),
+        NewField(NoPos, pkg, "Sys", uint64Type, false),
+        NewField(NoPos, pkg, "Lookups", uint64Type, false),
+        NewField(NoPos, pkg, "Mallocs", uint64Type, false),
+        NewField(NoPos, pkg, "Frees", uint64Type, false),
+        NewField(NoPos, pkg, "HeapAlloc", uint64Type, false),
+        NewField(NoPos, pkg, "HeapSys", uint64Type, false),
+        NewField(NoPos, pkg, "HeapIdle", uint64Type, false),
+        NewField(NoPos, pkg, "HeapInuse", uint64Type, false),
+        NewField(NoPos, pkg, "HeapReleased", uint64Type, false),
+        NewField(NoPos, pkg, "HeapObjects", uint64Type, false),
+        NewField(NoPos, pkg, "StackInuse", uint64Type, false),
+        NewField(NoPos, pkg, "StackSys", uint64Type, false),
+        NewField(NoPos, pkg, "MSpanInuse", uint64Type, false),
+        NewField(NoPos, pkg, "MSpanSys", uint64Type, false),
+        NewField(NoPos, pkg, "MCacheInuse", uint64Type, false),
+        NewField(NoPos, pkg, "MCacheSys", uint64Type, false),
+        NewField(NoPos, pkg, "BuckHashSys", uint64Type, false),
+        NewField(NoPos, pkg, "GCSys", uint64Type, false),
+        NewField(NoPos, pkg, "OtherSys", uint64Type, false),
+        NewField(NoPos, pkg, "NextGC", uint64Type, false),
+        NewField(NoPos, pkg, "LastGC", uint64Type, false),
+        NewField(NoPos, pkg, "PauseTotalNs", uint64Type, false),
+        NewField(NoPos, pkg, "NumGC", uint32Type, false),
+        NewField(NoPos, pkg, "NumForcedGC", uint32Type, false),
+        NewField(NoPos, pkg, "GCCPUFraction", float64Type, false),
+        NewField(NoPos, pkg, "EnableGC", boolType, false),
+        NewField(NoPos, pkg, "DebugGC", boolType, false),
+        NewField(NoPos, pkg, "BySize", NewArray(bySizeStruct, 61), false)
+    ], null), null);
+    memStatsName.setType(memStatsType);
+    pkg.Scope().Insert(memStatsName);
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Caller", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "skip", intType)), NewTuple(NewVar(NoPos, pkg, "pc", uintptrType), NewVar(NoPos, pkg, "file", stringType), NewVar(NoPos, pkg, "line", intType), NewVar(NoPos, pkg, "ok", boolType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Callers", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "skip", intType), NewVar(NoPos, pkg, "pc", uintptrSliceType)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "CallersFrames", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "callers", uintptrSliceType)), NewTuple(NewVar(NoPos, pkg, "", NewPointer(framesType))), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "FuncForPC", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "pc", uintptrType)), NewTuple(NewVar(NoPos, pkg, "", NewPointer(funcType))), false)));
+    const cleanupT = NewTypeParam(NewTypeName(NoPos, pkg, "T", null), emptyInterface);
+    const cleanupS = NewTypeParam(NewTypeName(NoPos, pkg, "S", null), emptyInterface);
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "AddCleanup", NewSignatureType(null, null, [cleanupT, cleanupS], NewTuple(NewVar(NoPos, pkg, "ptr", NewPointer(cleanupT)), NewVar(NoPos, pkg, "cleanup", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "", cleanupS)), null, false)), NewVar(NoPos, pkg, "arg", cleanupS)), NewTuple(NewVar(NoPos, pkg, "", cleanupType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "GC", NewSignatureType(null, null, null, null, null, false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "GOMAXPROCS", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "n", intType)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "GOROOT", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", stringType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Goexit", NewSignatureType(null, null, null, null, null, false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Gosched", NewSignatureType(null, null, null, null, null, false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "KeepAlive", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "x", emptyInterface)), null, false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "NumCPU", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "NumGoroutine", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "ReadMemStats", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "m", NewPointer(memStatsType))), null, false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "SetBlockProfileRate", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "rate", intType)), null, false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "SetFinalizer", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "obj", emptyInterface), NewVar(NoPos, pkg, "finalizer", emptyInterface)), null, false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "SetMutexProfileFraction", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "rate", intType)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Stack", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "buf", byteSliceType), NewVar(NoPos, pkg, "all", boolType)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Version", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", stringType)), false)));
     pkg.MarkComplete();
     return pkg;
 }

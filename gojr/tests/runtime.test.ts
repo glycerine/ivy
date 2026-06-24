@@ -364,6 +364,41 @@ return unsafe.Sizeof(x), unsafe.Alignof(x)
     expect(script.values).toEqual([8n, 8n]);
   });
 
+  test("supports importing runtime and evaluating stack/caller helpers", async () => {
+    const script = await expectRuns(`
+import "runtime"
+
+buf := make([]byte, 64)
+n := runtime.Stack(buf, false)
+pc, file, line, ok := runtime.Caller(0)
+pcs := make([]uintptr, 2)
+calls := runtime.Callers(0, pcs)
+frames := runtime.CallersFrames(pcs[:calls])
+frame, more := frames.Next()
+fn := runtime.FuncForPC(0)
+return runtime.GOOS, runtime.GOARCH, n > 0, pc, file, line, ok, calls, frame.Function, more, fn.Name()
+`);
+
+    expect(script.values).toEqual(["gojr", "js", true, 0n, "", 0n, false, 0n, "", false, ""]);
+  });
+
+  test("supports runtime cleanup handles as no-op host values", async () => {
+    const script = await expectRuns(`
+import "runtime"
+
+type file struct {
+  name string
+}
+
+f := file{name: "tmp"}
+cleanup := runtime.AddCleanup(&f, func(name string) {}, f.name)
+cleanup.Stop()
+return true
+`);
+
+    expect(script.values).toEqual([true]);
+  });
+
   test("supports importing os.Exit without ambient process authority", async () => {
     const script = await expectRuns(`
 import "os"

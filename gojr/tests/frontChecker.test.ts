@@ -24,6 +24,23 @@ describe("Go-junior TypeScript go/types checker", () => {
     expect(result.diagnostics).toEqual([]);
   });
 
+  test("imports runtime error and cleanup APIs through the static checker", () => {
+    const result = check(`
+package runtimeuser
+
+import "runtime"
+
+func Use(e any) bool {
+  _, ok := e.(runtime.Error)
+  value := ""
+  runtime.AddCleanup(&value, func(name string) {}, value).Stop()
+  return ok
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
   test("records named-type constant declarations", () => {
     const result = check(`
 package constants
@@ -75,6 +92,50 @@ var D = Add[float64](1.25, 2.5)
     expect(box?.Type()?.String()).toBe("Box");
   });
 
+  test("attaches methods declared on generic receiver instantiations", () => {
+    const result = check(`
+package generic
+
+type Box[T any] struct {
+  Value T
+}
+
+func (b *Box[T]) Get() T {
+  return b.Value
+}
+
+func UseConcrete(b *Box[int]) int {
+  return b.Get()
+}
+
+func UseParameterized[T any](b *Box[T]) T {
+  return b.Get()
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    const box = result.pkg.Scope().Lookup("Box")?.Type();
+    expect(box).toBeInstanceOf(GoTypesNamed);
+    const methodSet = NewMethodSet(NewPointer(box as GoTypesNamed));
+    expect(Array.from({ length: methodSet.Len() }, (_, index) => methodSet.At(index).Obj().Name())).toEqual(["Get"]);
+  });
+
+  test("resolves later generic constraints while collecting type parameters", () => {
+    const result = check(`
+package generic
+
+type Curve[P Point[P]] struct {
+  Value P
+}
+
+type Point[P any] interface {
+  Set(P) P
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
   test("rejects type parameter operators not permitted by the constraint", () => {
     const result = check(`
 package generic
@@ -97,6 +158,18 @@ func HashStr[T string | []byte](sep T) uint32 {
     hash = hash*16777619 + uint32(sep[i])
   }
   return hash
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
+  test("accepts named type parameters constrained to byte slices or strings", () => {
+    const result = check(`
+package generic
+
+func IsDigit[bytes []byte | string](s bytes, i int) bool {
+  return s[i] >= '0' && s[i] <= '9'
 }
 `);
 
@@ -128,6 +201,62 @@ var _ = bool(1)
     const messages = result.diagnostics.map((diagnostic) => diagnostic.message);
     expect(messages.some((message) => message.includes("constant 1000 overflows int8"))).toBe(true);
     expect(messages.some((message) => message.includes("cannot convert") && message.includes("type bool"))).toBe(true);
+  });
+
+  test("keeps integer-valued float literals classified as floats", () => {
+    const result = check(`
+package floats
+
+const MaxFloat64 = 0x1p1023 * (1 + (1 - 0x1p-52))
+
+var _ float64 = MaxFloat64
+var _ float64 = 1.79769313486231570814527423731704357e+308
+`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
+  test("permits integer-valued untyped float constants in integer contexts", () => {
+    const result = check(`
+package floats
+
+const starvationThresholdNs = 1e6
+
+func Starving(waitStartTime int64, runtimeNanotime int64) bool {
+  return runtimeNanotime-waitStartTime > starvationThresholdNs
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
+  test("keeps exact numeric constants representable in uint64 contexts", () => {
+    const result = check(`
+package constants
+
+var uint64pow10 = [...]uint64{
+  1, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9,
+  1e10, 1e11, 1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19,
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
+  test("uses standard sizes for unsafe Sizeof constants without explicit config sizes", () => {
+    const result = check(`
+package constants
+
+import "unsafe"
+
+const wordSize = unsafe.Sizeof(uintptr(0))
+
+func Words(n int) uintptr {
+  return uintptr(n) / wordSize
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
   });
 
   test("keeps single basic type parameter constraints precise", () => {

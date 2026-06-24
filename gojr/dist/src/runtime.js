@@ -1672,6 +1672,7 @@ function availablePackages(context) {
         fmt: fmtPackage(),
         math: mathPackage(),
         os: osPackage(),
+        runtime: runtimePackage(),
         strconv: strconvPackage(),
         testing: testingPackage(),
         unsafe: unsafePackage(),
@@ -1725,6 +1726,77 @@ function strconvPackage() {
     return {
         Itoa: hostCallable("strconv.Itoa", (args) => toBigInt(args[0] ?? 0n).toString())
     };
+}
+function runtimePackage() {
+    return {
+        GOOS: "gojr",
+        GOARCH: "js",
+        Compiler: "gojr",
+        MemProfileRate: 0n,
+        AddCleanup: hostCallable("runtime.AddCleanup", () => runtimeCleanupValue()),
+        Caller: hostCallable("runtime.Caller", () => [0n, "", 0n, false]),
+        Callers: hostCallable("runtime.Callers", () => 0n),
+        CallersFrames: hostCallable("runtime.CallersFrames", () => runtimeFramesValue()),
+        FuncForPC: hostCallable("runtime.FuncForPC", () => runtimeFuncValue()),
+        GC: hostCallable("runtime.GC", () => null),
+        GOMAXPROCS: hostCallable("runtime.GOMAXPROCS", () => 1n),
+        GOROOT: hostCallable("runtime.GOROOT", () => ""),
+        Goexit: hostCallable("runtime.Goexit", () => null),
+        Gosched: hostCallable("runtime.Gosched", () => null),
+        KeepAlive: hostCallable("runtime.KeepAlive", () => null),
+        NumCPU: hostCallable("runtime.NumCPU", () => 1n),
+        NumGoroutine: hostCallable("runtime.NumGoroutine", () => 1n),
+        ReadMemStats: hostCallable("runtime.ReadMemStats", () => null),
+        SetBlockProfileRate: hostCallable("runtime.SetBlockProfileRate", () => null),
+        SetFinalizer: hostCallable("runtime.SetFinalizer", () => null),
+        SetMutexProfileFraction: hostCallable("runtime.SetMutexProfileFraction", () => 0n),
+        Stack: hostCallable("runtime.Stack", (args) => {
+            const buffer = unwrapNamed(args[0] ?? null);
+            if (!Array.isArray(buffer))
+                return 0n;
+            const text = "goroutine 1 [running]:\nruntime.Stack(...)\n";
+            const bytes = new TextEncoder().encode(text);
+            const count = Math.min(buffer.length, bytes.length);
+            for (let index = 0; index < count; index += 1) {
+                setArrayElement(buffer, index, BigInt(bytes[index] ?? 0));
+            }
+            return BigInt(count);
+        }),
+        Version: hostCallable("runtime.Version", () => "gojr")
+    };
+}
+function runtimeCleanupValue() {
+    return {
+        Stop: hostCallable("runtime.Cleanup.Stop", () => null)
+    };
+}
+function runtimeFuncValue() {
+    return {
+        Entry: hostCallable("runtime.(*Func).Entry", () => 0n),
+        FileLine: hostCallable("runtime.(*Func).FileLine", () => ["", 0n]),
+        Name: hostCallable("runtime.(*Func).Name", () => "")
+    };
+}
+function runtimeFramesValue() {
+    let consumed = false;
+    return {
+        Next: hostCallable("runtime.(*Frames).Next", () => {
+            if (consumed)
+                return [runtimeFrameValue(), false];
+            consumed = true;
+            return [runtimeFrameValue(), false];
+        })
+    };
+}
+function runtimeFrameValue() {
+    return new RuntimeStruct("runtime.Frame", [
+        ["PC", 0n],
+        ["Func", null],
+        ["Function", ""],
+        ["File", ""],
+        ["Line", 0n],
+        ["Entry", 0n]
+    ]);
 }
 function testingPackage() {
     return {

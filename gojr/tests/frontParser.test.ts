@@ -317,6 +317,7 @@ type GenericSliceConstraint[P []E] struct{}
 type GenericStarConstraint[P *E,] struct{}
 type GenericParenConstraint[P ([]E)] struct{}
 type GenericUnion[P ~int | ~string] struct{}
+type GenericByteStringConstraint[bytes []byte | string] struct{}
 `);
 
     const specs = file.declarations.flatMap((decl) => decl.kind === "GenDecl" ? decl.specs : []);
@@ -329,6 +330,9 @@ type GenericUnion[P ~int | ~string] struct{}
     expect(typeSpec("GenericStarConstraint")?.kind === "TypeSpec" ? typeSpec("GenericStarConstraint")?.typeParams?.fields[0]?.type.kind : undefined).toBe("StarExpr");
     expect(typeSpec("GenericParenConstraint")?.kind === "TypeSpec" ? typeSpec("GenericParenConstraint")?.typeParams?.fields[0]?.type.kind : undefined).toBe("ParenExpr");
     expect(typeSpec("GenericUnion")?.kind === "TypeSpec" ? typeSpec("GenericUnion")?.typeParams?.fields[0]?.type.kind : undefined).toBe("BinaryExpr");
+    const byteString = typeSpec("GenericByteStringConstraint")?.typeParams?.fields[0]?.type;
+    expect(byteString?.kind).toBe("BinaryExpr");
+    expect(byteString?.kind === "BinaryExpr" ? byteString.left.kind : undefined).toBe("ArrayType");
   });
 
   test("parses structs, interfaces, maps, function literals, and composite literals", () => {

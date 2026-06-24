@@ -5,8 +5,8 @@ import { buildTagSetForContext, buildPackages, collectSourceImportPaths, GOJR_GO
 import { hasErrorDiagnostics, REPL_FILENAME } from "./diagnostics.js";
 import { compilePackageSourceFiles, compileSourceFiles } from "./compile.js";
 import { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture } from "./fixture.js";
+import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
-import { standardTypePackage } from "./typecheck.js";
 import { evaluateSource, evaluateSourceFiles, evaluateSourcePackageGraph, testSourceFiles } from "./runtime.js";
 export function defaultPackageCacheParent() {
     return join(homedir(), "go", "pkg");
@@ -451,7 +451,7 @@ function compileSourcePackagesForRootFilesOnNode(rootFiles, specs = [], baseOpti
     return { packageInfos, diagnostics };
 }
 function isAmbientSourceImport(importPath) {
-    return standardTypePackage(importPath) !== undefined;
+    return isIntrinsicPackageImport(importPath);
 }
 function rootSourceFilesFromRequest(request) {
     if (request.files && request.files.length > 0)
