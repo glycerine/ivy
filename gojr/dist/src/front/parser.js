@@ -1753,7 +1753,7 @@ class parser {
             return { kind: "ChanType", direction: "receive", value, span: mergeSpans(start.span, value.span ?? chan.span) };
         }
         if (this.match(TokenKind.Star)) {
-            const expr = this.parseType();
+            const expr = this.parseTypeTerm();
             return { kind: "StarExpr", expr, span: mergeSpans(start.span, expr.span) };
         }
         if (this.match(TokenKind.LBracket)) {

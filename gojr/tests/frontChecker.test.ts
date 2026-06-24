@@ -136,6 +136,21 @@ type Point[P any] interface {
     expect(result.diagnostics).toEqual([]);
   });
 
+  test("parses pointer terms in interface unions independently", () => {
+    const result = check(`
+package generic
+
+type A struct{}
+type B struct{}
+
+type PointerConstraint interface {
+  *A | *B
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
   test("rejects type parameter operators not permitted by the constraint", () => {
     const result = check(`
 package generic
