@@ -288,6 +288,12 @@ func assertNodeRuntimeCacheRootListAndClear(t *testing.T, rt *nodeRuntime) {
 
 func TestNodeRuntimeUsesEnvironmentRandomSeed(t *testing.T) {
 	t.Setenv("GOJR_RANDOM_SEED", "gojr-select-seed")
+	oldProgramVersion := gojrProgramBlake3Version
+	gojrProgramBlake3Version = "gojr-test-toolchain-version"
+	t.Cleanup(func() {
+		gojrProgramBlake3Version = oldProgramVersion
+	})
+
 	bootstrapSource, err := runtimeBootstrapSource()
 	if err != nil {
 		t.Fatalf("runtimeBootstrapSource() error = %v", err)
@@ -576,8 +582,9 @@ func assertNodeRuntimeBuildSkipsFreshDiskArtifact(t *testing.T, rt *nodeRuntime)
 
 	artifactRoot := filepath.ToSlash(t.TempDir())
 	request := buildRequest{
-		ImportPath:   "example.com/cache",
-		ArtifactRoot: artifactRoot,
+		ImportPath:      "example.com/cache",
+		ArtifactRoot:    artifactRoot,
+		CompilerVersion: "compiler-a",
 		Files: []sourceFile{{
 			Filename: "cache.go",
 			Source:   "package cache\nfunc F() int { return 1 }\n",
@@ -614,6 +621,22 @@ func assertNodeRuntimeBuildSkipsFreshDiskArtifact(t *testing.T, rt *nodeRuntime)
 	}
 	if len(second.Artifacts) != 1 || second.Artifacts[0].Action != "skipped" {
 		t.Fatalf("Build(second).Artifacts = %#v, want skipped artifact", second.Artifacts)
+	}
+
+	compilerChangedRequest := request
+	compilerChangedRequest.CompilerVersion = "compiler-b"
+	compilerChanged, err := rt.Build(compilerChangedRequest)
+	if err != nil {
+		t.Fatalf("Build(compilerChanged) error = %v", err)
+	}
+	if !compilerChanged.OK {
+		t.Fatalf("Build(compilerChanged) diagnostics = %v", compilerChanged.Diagnostics)
+	}
+	if len(compilerChanged.Built) != 1 || compilerChanged.Built[0] != artifactPath || len(compilerChanged.Skipped) != 0 {
+		t.Fatalf("Build(compilerChanged) built=%#v skipped=%#v, want rebuild %s", compilerChanged.Built, compilerChanged.Skipped, artifactPath)
+	}
+	if len(compilerChanged.Artifacts) != 1 || compilerChanged.Artifacts[0].Action != "built" {
+		t.Fatalf("Build(compilerChanged).Artifacts = %#v, want rebuilt artifact", compilerChanged.Artifacts)
 	}
 
 	inspectRoot := filepath.ToSlash(t.TempDir())
@@ -721,6 +744,19 @@ func assertNodeRuntimeBuildsSourcePackageGraph(t *testing.T, rt *nodeRuntime) {
 	}
 	if _, err := os.Stat(filepath.FromSlash(cliRoot + "/example.com/app.a")); err != nil {
 		t.Fatalf("runBuild(--pkg) missing app artifact: %v", err)
+	}
+	cliCache, err := rt.Cache(cacheRequest{Action: "list", ArtifactRoot: cliRoot})
+	if err != nil {
+		t.Fatalf("Cache(list cliRoot) error = %v", err)
+	}
+	var cliApp cacheEntry
+	for _, entry := range cliCache.Entries {
+		if entry.ImportPath == "example.com/app" {
+			cliApp = entry
+		}
+	}
+	if cliApp.CompilerVersion != toolchainCompilerVersion() {
+		t.Fatalf("runBuild artifact compilerVersion = %q, want %q", cliApp.CompilerVersion, toolchainCompilerVersion())
 	}
 
 	srcRoot := t.TempDir()

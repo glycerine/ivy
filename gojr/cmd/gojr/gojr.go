@@ -68,6 +68,7 @@ type buildRequest struct {
 	SourceRoots        []string       `json:"sourceRoots,omitempty"`
 	ArtifactRoot       string         `json:"artifactRoot,omitempty"`
 	PackageCacheParent string         `json:"packageCacheParent,omitempty"`
+	CompilerVersion    string         `json:"compilerVersion,omitempty"`
 	Progress           bool           `json:"progress,omitempty"`
 }
 
@@ -96,6 +97,7 @@ type evalWithPackagesRequest struct {
 	SourceRoots        []string             `json:"sourceRoots,omitempty"`
 	ArtifactRoot       string               `json:"artifactRoot,omitempty"`
 	PackageCacheParent string               `json:"packageCacheParent,omitempty"`
+	CompilerVersion    string               `json:"compilerVersion,omitempty"`
 	Progress           bool                 `json:"progress,omitempty"`
 	Argv               []string             `json:"argv,omitempty"`
 	TestVerbose        bool                 `json:"testVerbose"`
@@ -242,8 +244,8 @@ func (flags *packageFlag) Set(value string) error {
 
 func blake3HashOfSingleFile(path string) string {
 	cfg := b3.Blake3SummerConfig{
-		Quiet:       true,
-		ModTimeHash: true,
+		Quiet: true,
+		//ModTimeHash: true,
 		//Globs:       []string{path},
 		SingleFilePath: path,
 	}
@@ -253,6 +255,13 @@ func blake3HashOfSingleFile(path string) string {
 }
 
 var gojrProgramBlake3Version string
+
+func toolchainCompilerVersion() string {
+	if gojrProgramBlake3Version != "" {
+		return gojrProgramBlake3Version
+	}
+	return "gojr-dev"
+}
 
 func main() {
 	if len(os.Args) > 1 {
@@ -471,6 +480,7 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 			SourceRoots:        sourceRoots,
 			ArtifactRoot:       strings.TrimSpace(*artifactRoot),
 			PackageCacheParent: strings.TrimSpace(*packageCacheParent),
+			CompilerVersion:    toolchainCompilerVersion(),
 			Progress:           !*jsonMode,
 			Argv:               argv,
 		})
@@ -485,11 +495,12 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 	sourceRoots := buildSourceRoots(sourcePath, "", sourceRootFlags)
 	if len(packages) > 0 || len(sourceRoots) > 0 {
 		result, err := rt.EvalFilesWithPackages(evalWithPackagesRequest{
-			Files:       []sourceFile{source},
-			SheetJSON:   strings.TrimSpace(*sheetJSON),
-			Packages:    packages,
-			SourceRoots: sourceRoots,
-			Argv:        argv,
+			Files:           []sourceFile{source},
+			SheetJSON:       strings.TrimSpace(*sheetJSON),
+			Packages:        packages,
+			SourceRoots:     sourceRoots,
+			CompilerVersion: toolchainCompilerVersion(),
+			Argv:            argv,
 		})
 		if err != nil {
 			return false, err
@@ -499,9 +510,10 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 	}
 	if len(programArgs) > 0 {
 		result, err := rt.EvalFilesWithPackages(evalWithPackagesRequest{
-			Files:     []sourceFile{source},
-			SheetJSON: strings.TrimSpace(*sheetJSON),
-			Argv:      argv,
+			Files:           []sourceFile{source},
+			SheetJSON:       strings.TrimSpace(*sheetJSON),
+			CompilerVersion: toolchainCompilerVersion(),
+			Argv:            argv,
 		})
 		if err != nil {
 			return false, err
@@ -661,6 +673,7 @@ func runBuild(rt *nodeRuntime, args []string) (bool, error) {
 		SourceRoots:        buildSourceRoots(target, resolvedImportPath, sourceRootFlags),
 		ArtifactRoot:       strings.TrimSpace(*artifactRoot),
 		PackageCacheParent: strings.TrimSpace(*packageCacheParent),
+		CompilerVersion:    toolchainCompilerVersion(),
 		Progress:           !*jsonMode,
 	})
 	if err != nil {
@@ -707,6 +720,7 @@ func runInspectJS(rt *nodeRuntime, args []string) (bool, error) {
 		SourceRoots:        buildSourceRoots(target, resolvedImportPath, sourceRootFlags),
 		ArtifactRoot:       strings.TrimSpace(*artifactRoot),
 		PackageCacheParent: strings.TrimSpace(*packageCacheParent),
+		CompilerVersion:    toolchainCompilerVersion(),
 	})
 	if err != nil {
 		return false, err
@@ -947,8 +961,9 @@ func evalLoadedSourceFiles(rt *nodeRuntime, pending *strings.Builder, target str
 		return fmt.Errorf("cannot load while multi-line input is pending; use .clear first")
 	}
 	result, err := rt.EvalFilesWithPackages(evalWithPackagesRequest{
-		Files:       files,
-		SourceRoots: buildSourceRoots(target, packageNameFromSourceFiles(files), nil),
+		Files:           files,
+		SourceRoots:     buildSourceRoots(target, packageNameFromSourceFiles(files), nil),
+		CompilerVersion: toolchainCompilerVersion(),
 	})
 	if err != nil {
 		return err
@@ -1421,12 +1436,13 @@ func runOneGoTestTarget(rt *nodeRuntime, target testPackageTarget, packageSpecs 
 		files := append([]sourceFile{}, target.LibraryFiles...)
 		files = append(files, target.InternalTestFiles...)
 		result, err := rt.TestFilesWithPackages(evalWithPackagesRequest{
-			ImportPath:  target.ImportPath,
-			PackageName: target.PackageName,
-			Files:       files,
-			Packages:    packageSpecs,
-			SourceRoots: sourceRoots,
-			TestVerbose: verbose,
+			ImportPath:      target.ImportPath,
+			PackageName:     target.PackageName,
+			Files:           files,
+			Packages:        packageSpecs,
+			SourceRoots:     sourceRoots,
+			CompilerVersion: toolchainCompilerVersion(),
+			TestVerbose:     verbose,
 		})
 		if err != nil {
 			return nil, err
@@ -1443,10 +1459,11 @@ func runOneGoTestTarget(rt *nodeRuntime, target testPackageTarget, packageSpecs 
 			})
 		}
 		result, err := rt.TestFilesWithPackages(evalWithPackagesRequest{
-			Files:       target.ExternalTestFiles,
-			Packages:    packages,
-			SourceRoots: sourceRoots,
-			TestVerbose: verbose,
+			Files:           target.ExternalTestFiles,
+			Packages:        packages,
+			SourceRoots:     sourceRoots,
+			CompilerVersion: toolchainCompilerVersion(),
+			TestVerbose:     verbose,
 		})
 		if err != nil {
 			return nil, err

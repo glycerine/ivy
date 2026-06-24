@@ -135,7 +135,9 @@ class PackageGraphBuilder {
             const reportArtifact = this.reportArtifact(node, "built");
             const existing = this.store?.read?.(node.artifactPath);
             const existingArtifact = existing === undefined ? undefined : parseGeneratedArtifactSource(existing);
-            if (existingArtifact?.cacheKey === node.cacheKey && existingArtifact.layoutVersion === ARTIFACT_LAYOUT_VERSION) {
+            if (existingArtifact?.cacheKey === node.cacheKey &&
+                existingArtifact.layoutVersion === ARTIFACT_LAYOUT_VERSION &&
+                existingArtifact.compilerVersion === (this.request.compilerVersion ?? DEFAULT_COMPILER_VERSION)) {
                 this.progress({
                     action: "cached",
                     importPath: node.importPath,
@@ -468,6 +470,7 @@ function parseGeneratedArtifactSource(source) {
     if (archive) {
         return {
             layoutVersion: archive.pkgdef.layoutVersion,
+            compilerVersion: archive.pkgdef.compilerVersion,
             cacheKey: archive.pkgdef.cacheKey
         };
     }
@@ -478,6 +481,7 @@ function parseGeneratedArtifactSource(source) {
         const value = JSON.parse(artifactJSON);
         return {
             ...(typeof value.layoutVersion === "string" ? { layoutVersion: value.layoutVersion } : {}),
+            ...(typeof value.compilerVersion === "string" ? { compilerVersion: value.compilerVersion } : {}),
             ...(typeof value.cacheKey === "string" ? { cacheKey: value.cacheKey } : {})
         };
     }

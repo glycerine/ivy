@@ -306,7 +306,11 @@ class PackageGraphBuilder {
       const reportArtifact = this.reportArtifact(node, "built");
       const existing = this.store?.read?.(node.artifactPath);
       const existingArtifact = existing === undefined ? undefined : parseGeneratedArtifactSource(existing);
-      if (existingArtifact?.cacheKey === node.cacheKey && existingArtifact.layoutVersion === ARTIFACT_LAYOUT_VERSION) {
+      if (
+        existingArtifact?.cacheKey === node.cacheKey &&
+        existingArtifact.layoutVersion === ARTIFACT_LAYOUT_VERSION &&
+        existingArtifact.compilerVersion === (this.request.compilerVersion ?? DEFAULT_COMPILER_VERSION)
+      ) {
         this.progress({
           action: "cached",
           importPath: node.importPath,
@@ -638,20 +642,22 @@ class PackageGraphBuilder {
   }
 }
 
-function parseGeneratedArtifactSource(source: string): { layoutVersion?: string; cacheKey?: string } | undefined {
+function parseGeneratedArtifactSource(source: string): { layoutVersion?: string; compilerVersion?: string; cacheKey?: string } | undefined {
   const archive = parseGoJuniorPackageArchive(source);
   if (archive) {
     return {
       layoutVersion: archive.pkgdef.layoutVersion,
+      compilerVersion: archive.pkgdef.compilerVersion,
       cacheKey: archive.pkgdef.cacheKey
     };
   }
   const artifactJSON = exportedConstJSON(source, "gojrPackageArtifact");
   if (!artifactJSON) return undefined;
   try {
-    const value = JSON.parse(artifactJSON) as { layoutVersion?: unknown; cacheKey?: unknown };
+    const value = JSON.parse(artifactJSON) as { layoutVersion?: unknown; compilerVersion?: unknown; cacheKey?: unknown };
     return {
       ...(typeof value.layoutVersion === "string" ? { layoutVersion: value.layoutVersion } : {}),
+      ...(typeof value.compilerVersion === "string" ? { compilerVersion: value.compilerVersion } : {}),
       ...(typeof value.cacheKey === "string" ? { cacheKey: value.cacheKey } : {})
     };
   } catch {

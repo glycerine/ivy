@@ -61,6 +61,7 @@ export interface NodeSourcePackageRequest {
   sourceRoots?: string[];
   artifactRoot?: string;
   packageCacheParent?: string;
+  compilerVersion?: string;
   progress?: boolean;
   argv?: string[];
   sheetJSON?: string;
@@ -423,6 +424,7 @@ export async function runMainSourceFilesWithPackagesOnNode(request: NodeSourcePa
   if (packageSources) buildRequest.packageSources = packageSources;
   if (request.artifactRoot) buildRequest.artifactRoot = request.artifactRoot;
   if (request.packageCacheParent) buildRequest.packageCacheParent = request.packageCacheParent;
+  if (request.compilerVersion) buildRequest.compilerVersion = request.compilerVersion;
   if (request.progress) buildRequest.progress = request.progress;
   const build = buildPackagesOnNode(buildRequest);
   if (!build.ok || hasErrorDiagnostics(build.diagnostics)) {

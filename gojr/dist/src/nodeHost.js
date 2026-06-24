@@ -304,6 +304,8 @@ export async function runMainSourceFilesWithPackagesOnNode(request) {
         buildRequest.artifactRoot = request.artifactRoot;
     if (request.packageCacheParent)
         buildRequest.packageCacheParent = request.packageCacheParent;
+    if (request.compilerVersion)
+        buildRequest.compilerVersion = request.compilerVersion;
     if (request.progress)
         buildRequest.progress = request.progress;
     const build = buildPackagesOnNode(buildRequest);

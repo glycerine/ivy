@@ -3946,6 +3946,14 @@ The second cache check is content addressed:
   canonical function for converting already-available raw BLAKE3 `Hasher.Sum`
   bytes into the Go-junior cache hash string format. Call sites should use the
   wrapper helpers in `cmd/gojr/blake3.go`, not ad hoc BLAKE3 formatting.
+- Native `gojr` computes its compiler/toolchain identity once at startup as
+  `gojrProgramBlake3Version` in `cmd/gojr/gojr.go`. Because the runtime
+  JavaScript bundle is embedded in the executable, this string represents both
+  the native wrapper and the embedded compiler/runtime tree. Every artifact the
+  CLI asks the JavaScript builder to write must embed that exact string as
+  `compilerVersion`; cache reads must compare it before accepting a hit. A
+  different executable therefore forces rewrites without inventing a second
+  compiler hash scheme.
 - The JavaScript runtime gets its own BLAKE3-compatible implementation for
   browser/OPFS and Node fallback paths. Browser correctness must not depend on
   the Go wrapper, but browser performance may trail the native wrapper.
