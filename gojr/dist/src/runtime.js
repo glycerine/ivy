@@ -766,7 +766,8 @@ export async function evaluatePackageSourceFiles(files, options = {}) {
             diagnostics: checked.diagnostics,
             output: context.output,
             package: pkg,
-            packageInfo: checked.pkg
+            packageInfo: checked.pkg,
+            context
         };
     }
     catch (error) {

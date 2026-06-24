@@ -176,6 +176,7 @@ export interface PackageEvaluationResult {
   output: string[];
   package?: RuntimeObject;
   packageInfo?: GoTypesPackage;
+  context?: EvaluationContext;
 }
 
 export interface SourcePackageProvider {
@@ -1062,7 +1063,8 @@ export async function evaluatePackageSourceFiles(files: SourceFile[], options: P
       diagnostics: checked.diagnostics,
       output: context.output,
       package: pkg,
-      packageInfo: checked.pkg
+      packageInfo: checked.pkg,
+      context
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
