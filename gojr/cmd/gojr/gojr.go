@@ -240,16 +240,19 @@ func (flags *packageFlag) Set(value string) error {
 	return nil
 }
 
-func Blake3HashOfDir(path string) string {
+func blake3HashOfSingleFile(path string) string {
 	cfg := b3.Blake3SummerConfig{
 		Quiet:       true,
 		ModTimeHash: true,
-		Globs:       []string{path},
+		//Globs:       []string{path},
+		SingleFilePath: path,
 	}
 	r, err := b3.DirTreeBlake3Hash(&cfg)
 	panicOn(err)
 	return r.TopBlake3
 }
+
+var gojrProgramBlake3Version string
 
 func main() {
 	if len(os.Args) > 1 {
@@ -266,6 +269,11 @@ func main() {
 			}
 		}
 	}
+
+	ourPath, err := os.Executable()
+	panicOn(err)
+	gojrProgramBlake3Version = blake3HashOfSingleFile(ourPath)
+	fmt.Printf("gojr version %v\n", gojrProgramBlake3Version)
 
 	bootstrapSource, err := runtimeBootstrapSource()
 	if err != nil {
