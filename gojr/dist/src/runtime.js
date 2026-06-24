@@ -1,7 +1,8 @@
 import { REPL_FILENAME } from "./diagnostics.js";
 import { checkGoJuniorSourceFiles, GOJR_SYNTHETIC_CHECK_PREFIX, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
-import { ensureUniverseInitialized, NewPackage, NewPkgName, NoPos } from "./go/types/index.js";
+import { Const as GoTypesConst, ensureUniverseInitialized, NewPackage, NewPkgName, NoPos } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
+import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { DeterministicPrng } from "./prng.js";
 import { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
 import { cellDependency, rangeDependency } from "./spreadsheet.js";
@@ -752,8 +753,12 @@ export async function evaluatePackageSourceFiles(files, options = {}) {
                 throw new GoJuniorRuntimeError("package source cannot contain top-level executable statements");
             }
             predeclareTopLevelTypes(declarations, context);
-            const declarationCompletion = await executeTopLevelStatements(declarations, context);
+            predeclarePackageConstants(checked.pkg, context);
+            predeclarePackageVariables(declarations, context);
+            const runtimeDeclarations = declarations.filter((declaration) => declaration.kind === "TypeDecl");
+            const declarationCompletion = await executeTopLevelStatements(runtimeDeclarations, context);
             expectNormalCompletion(declarationCompletion, "package declarations");
+            await executePackageVarInitializers(declarations, checked.info.InitOrder, context);
             await runInitFunctions(ast.functions, context);
             return exportedRuntimePackageObject(packageScopeObjects(checked.pkg), context);
         });
@@ -857,6 +862,8 @@ class SourcePackageGraphEvaluator {
         const imports = uniqueSortedSourceImports(parsed.ast?.imports.map((imported) => imported.path) ?? []);
         this.importsByPath.set(importPath, imports);
         for (const dependency of imports) {
+            if (isIntrinsicPackageImport(dependency))
+                continue;
             if (this.packages[dependency])
                 continue;
             if (!this.specsByPath.has(dependency)) {
@@ -1673,6 +1680,7 @@ function availablePackages(context) {
         math: mathPackage(),
         os: osPackage(),
         runtime: runtimePackage(),
+        "runtime/pprof": runtimePprofPackage(),
         strconv: strconvPackage(),
         testing: testingPackage(),
         unsafe: unsafePackage(),
@@ -1734,6 +1742,7 @@ function runtimePackage() {
         Compiler: "gojr",
         MemProfileRate: 0n,
         AddCleanup: hostCallable("runtime.AddCleanup", () => runtimeCleanupValue()),
+        BlockProfile: gojrNotImplementedCallable("runtime.BlockProfile"),
         Caller: hostCallable("runtime.Caller", () => [0n, "", 0n, false]),
         Callers: hostCallable("runtime.Callers", () => 0n),
         CallersFrames: hostCallable("runtime.CallersFrames", () => runtimeFramesValue()),
@@ -1744,12 +1753,16 @@ function runtimePackage() {
         Goexit: hostCallable("runtime.Goexit", () => null),
         Gosched: hostCallable("runtime.Gosched", () => null),
         KeepAlive: hostCallable("runtime.KeepAlive", () => null),
+        GoroutineProfile: gojrNotImplementedCallable("runtime.GoroutineProfile"),
+        MemProfile: gojrNotImplementedCallable("runtime.MemProfile"),
+        MutexProfile: gojrNotImplementedCallable("runtime.MutexProfile"),
         NumCPU: hostCallable("runtime.NumCPU", () => 1n),
         NumGoroutine: hostCallable("runtime.NumGoroutine", () => 1n),
         ReadMemStats: hostCallable("runtime.ReadMemStats", () => null),
-        SetBlockProfileRate: hostCallable("runtime.SetBlockProfileRate", () => null),
+        SetBlockProfileRate: gojrNotImplementedCallable("runtime.SetBlockProfileRate"),
+        SetCPUProfileRate: gojrNotImplementedCallable("runtime.SetCPUProfileRate"),
         SetFinalizer: hostCallable("runtime.SetFinalizer", () => null),
-        SetMutexProfileFraction: hostCallable("runtime.SetMutexProfileFraction", () => 0n),
+        SetMutexProfileFraction: gojrNotImplementedCallable("runtime.SetMutexProfileFraction"),
         Stack: hostCallable("runtime.Stack", (args) => {
             const buffer = unwrapNamed(args[0] ?? null);
             if (!Array.isArray(buffer))
@@ -1762,7 +1775,24 @@ function runtimePackage() {
             }
             return BigInt(count);
         }),
+        ThreadCreateProfile: gojrNotImplementedCallable("runtime.ThreadCreateProfile"),
         Version: hostCallable("runtime.Version", () => "gojr")
+    };
+}
+function runtimePprofPackage() {
+    return {
+        NewProfile: gojrNotImplementedCallable("runtime/pprof.NewProfile"),
+        Lookup: gojrNotImplementedCallable("runtime/pprof.Lookup"),
+        Profiles: gojrNotImplementedCallable("runtime/pprof.Profiles"),
+        WriteHeapProfile: gojrNotImplementedCallable("runtime/pprof.WriteHeapProfile"),
+        StartCPUProfile: gojrNotImplementedCallable("runtime/pprof.StartCPUProfile"),
+        StopCPUProfile: gojrNotImplementedCallable("runtime/pprof.StopCPUProfile"),
+        WithLabels: gojrNotImplementedCallable("runtime/pprof.WithLabels"),
+        Labels: gojrNotImplementedCallable("runtime/pprof.Labels"),
+        Label: gojrNotImplementedCallable("runtime/pprof.Label"),
+        ForLabels: gojrNotImplementedCallable("runtime/pprof.ForLabels"),
+        SetGoroutineLabels: gojrNotImplementedCallable("runtime/pprof.SetGoroutineLabels"),
+        Do: gojrNotImplementedCallable("runtime/pprof.Do")
     };
 }
 function runtimeCleanupValue() {
@@ -1855,6 +1885,11 @@ function hostCallable(name, call) {
         call
     };
 }
+function gojrNotImplementedCallable(name) {
+    return hostCallable(name, () => {
+        throw new GoJuniorPanic(`gojr error: ${name} not implemented`);
+    });
+}
 function functionValue(declaration) {
     return goJuniorFunctionValue(declaration.name, declaration.signature, declaration.body, undefined, declaration);
 }
@@ -1882,6 +1917,80 @@ function predeclareTopLevelTypes(statements, context) {
             context.registerType(declaration);
         }
     }
+}
+function predeclarePackageConstants(pkg, context) {
+    for (const object of packageScopeObjects(pkg)) {
+        if (!(object instanceof GoTypesConst))
+            continue;
+        context.declareRoot(object.Name(), runtimeValueFromCheckedConstant(object.Val()), false);
+    }
+}
+function predeclarePackageVariables(declarations, context) {
+    for (const statement of declarations) {
+        if (statement.kind !== "VarDecl")
+            continue;
+        for (const declaration of statement.declarations) {
+            if (declaration.name === "_")
+                continue;
+            const typeText = declaration.type?.text;
+            context.declareRoot(declaration.name, typeText ? defaultValueForTypeText(typeText, context) : null, true, typeText);
+        }
+    }
+}
+function runtimeValueFromCheckedConstant(value) {
+    if (value === null ||
+        typeof value === "boolean" ||
+        typeof value === "string" ||
+        typeof value === "number" ||
+        typeof value === "bigint") {
+        return value;
+    }
+    return value;
+}
+async function executePackageVarInitializers(declarations, initOrder, context) {
+    const declarationsByName = packageVarDeclarationsByName(declarations);
+    const initialized = new Set();
+    for (const initializer of initOrder ?? []) {
+        const names = initializer.Lhs.map((object) => object.Name()).filter((name) => name !== "_");
+        for (const name of names) {
+            const declaration = declarationsByName.get(name);
+            if (!declaration)
+                continue;
+            await assignPackageVarDeclaration(declaration, context);
+            initialized.add(name);
+        }
+    }
+    for (const [name, declaration] of declarationsByName) {
+        if (initialized.has(name) || !declaration.value)
+            continue;
+        await assignPackageVarDeclaration(declaration, context);
+    }
+}
+function packageVarDeclarationsByName(declarations) {
+    const vars = new Map();
+    for (const statement of declarations) {
+        if (statement.kind !== "VarDecl")
+            continue;
+        for (const declaration of statement.declarations) {
+            if (declaration.name !== "_")
+                vars.set(declaration.name, declaration);
+        }
+    }
+    return vars;
+}
+async function assignPackageVarDeclaration(declaration, context) {
+    const value = declaration.value
+        ? prepareValueForTargetType(await evaluateExpression(declaration.value, context), declaration.type?.text, declaration.value, context, `variable ${declaration.name}`)
+        : defaultValueForDeclarationType(declaration.type, context);
+    if (context.hasLocal(declaration.name)) {
+        context.assign(declaration.name, value);
+        return;
+    }
+    const typeText = declaration.type ??
+        (declaration.value
+            ? expressionDeclaredTypeText(declaration.value, context, value) ?? inferredTypeText(value)
+            : undefined);
+    context.declare(declaration.name, value, true, typeText);
 }
 async function runInitFunctions(functions, context) {
     for (const declaration of functions) {
@@ -4594,7 +4703,12 @@ class ArrayLengthConstantParser {
     lookupIdentifier(name) {
         if (!this.context)
             return undefined;
-        const value = unwrapNamed(this.context.lookup(name));
+        let value = unwrapNamed(this.context.lookup(name.split(".")[0] ?? name));
+        for (const part of name.split(".").slice(1)) {
+            if (!isRuntimeObject(value))
+                return undefined;
+            value = unwrapNamed(value[part] ?? null);
+        }
         if (typeof value === "bigint")
             return value;
         if (typeof value === "number" && Number.isSafeInteger(value))
@@ -4645,6 +4759,23 @@ class ArrayLengthConstantParser {
     }
     consumeIdentifier() {
         this.skipSpace();
+        const first = this.consumeIdentifierSegment();
+        if (!first)
+            return undefined;
+        let name = first;
+        while (this.text[this.offset] === ".") {
+            const dot = this.offset;
+            this.offset += 1;
+            const next = this.consumeIdentifierSegment();
+            if (!next) {
+                this.offset = dot;
+                break;
+            }
+            name += `.${next}`;
+        }
+        return name;
+    }
+    consumeIdentifierSegment() {
         const start = this.offset;
         if (start >= this.text.length || !/[A-Za-z_]/.test(this.text[start]))
             return undefined;

@@ -594,6 +594,69 @@ func F() { fmt.Println("hi") }
     ]);
   });
 
+  test("builds runtime/pprof from Go-junior stub source before consulting providers", () => {
+    const store = new MemoryArtifactStore();
+    const loaded: string[] = [];
+    const result = buildPackages({
+      importPath: "example.com/app",
+      artifactRoot: "/tmp/gojr-pprof-stub",
+      sourcePackageProvider: {
+        load(importPath) {
+          loaded.push(importPath);
+          if (importPath === "context") {
+            return [{
+              filename: "/workspace/context/context.go",
+              source: "package context\n\ntype Context interface{}\n"
+            }];
+          }
+          if (importPath === "io") {
+            return [{
+              filename: "/workspace/io/io.go",
+              source: "package io\n\ntype Writer interface { Write([]byte) (int, error) }\n"
+            }];
+          }
+          if (importPath === "runtime/pprof") {
+            return [{
+              filename: "/usr/local/go/src/runtime/pprof/pprof.go",
+              source: "package pprof\n\nconst _ = 1 / 0\n"
+            }];
+          }
+          return undefined;
+        },
+        isStandardLibraryPackage(importPath) {
+          return importPath === "context" || importPath === "io" || importPath === "runtime/pprof";
+        }
+      },
+      files: [{
+        filename: "/workspace/example.com/app/app.go",
+        source: `package app
+
+import "runtime/pprof"
+
+func F() { _ = pprof.Lookup("heap") }
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    expect(loaded).toEqual(["context", "io"]);
+    expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual([
+      "context",
+      "io",
+      "runtime/pprof",
+      "example.com/app"
+    ]);
+    const pprof = artifactJSON(store.writes.get("/tmp/gojr-pprof-stub/runtime/pprof.a"));
+    expect(pprof.importPath).toBe("runtime/pprof");
+    expect(pprof.standardLibrary).toBe(true);
+    expect(pprof.sources).toEqual([{
+      filename: "gojr:stub/runtime/pprof/pprof.go",
+      hash: expect.any(String)
+    }]);
+    expect(result.artifacts.find((artifact) => artifact.importPath === "runtime/pprof")?.exports.map((item) => item.name)).toContain("StartCPUProfile");
+  });
+
   test("node source provider filters files excluded by build constraints", () => {
     const root = fs.mkdtempSync(path.join("/tmp", "gojr-srcroot-"));
     const depDir = path.join(root, "example.com", "dep");

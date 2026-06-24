@@ -339,6 +339,7 @@ function runtimePackage() {
         return pkg;
     const intType = Typ[Int];
     const boolType = Typ[Bool];
+    const int64Type = Typ[Int64];
     const stringType = Typ[GoString];
     const uintptrType = Typ[Uintptr];
     const uint32Type = Typ[Uint32];
@@ -375,6 +376,35 @@ function runtimePackage() {
     pkg.Scope().Insert(framesName);
     const framesRecv = NewVar(NoPos, pkg, "ci", NewPointer(framesType));
     framesType.AddMethod(NewFunc(NoPos, pkg, "Next", NewSignatureType(framesRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "frame", frameType), NewVar(NoPos, pkg, "more", boolType)), false)));
+    const stackRecordName = NewTypeName(NoPos, pkg, "StackRecord", null);
+    const stackRecordType = NewNamed(stackRecordName, NewStruct([
+        NewField(NoPos, pkg, "Stack0", NewArray(uintptrType, 32), false)
+    ], null), null);
+    stackRecordName.setType(stackRecordType);
+    pkg.Scope().Insert(stackRecordName);
+    stackRecordType.AddMethod(NewFunc(NoPos, pkg, "Stack", NewSignatureType(NewVar(NoPos, pkg, "r", NewPointer(stackRecordType)), null, null, null, NewTuple(NewVar(NoPos, pkg, "", uintptrSliceType)), false)));
+    const memProfileRecordName = NewTypeName(NoPos, pkg, "MemProfileRecord", null);
+    const memProfileRecordType = NewNamed(memProfileRecordName, NewStruct([
+        NewField(NoPos, pkg, "AllocBytes", int64Type, false),
+        NewField(NoPos, pkg, "FreeBytes", int64Type, false),
+        NewField(NoPos, pkg, "AllocObjects", int64Type, false),
+        NewField(NoPos, pkg, "FreeObjects", int64Type, false),
+        NewField(NoPos, pkg, "Stack0", NewArray(uintptrType, 32), false)
+    ], null), null);
+    memProfileRecordName.setType(memProfileRecordType);
+    pkg.Scope().Insert(memProfileRecordName);
+    const memProfileRecordRecv = NewVar(NoPos, pkg, "r", NewPointer(memProfileRecordType));
+    memProfileRecordType.AddMethod(NewFunc(NoPos, pkg, "InUseBytes", NewSignatureType(memProfileRecordRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", int64Type)), false)));
+    memProfileRecordType.AddMethod(NewFunc(NoPos, pkg, "InUseObjects", NewSignatureType(memProfileRecordRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", int64Type)), false)));
+    memProfileRecordType.AddMethod(NewFunc(NoPos, pkg, "Stack", NewSignatureType(memProfileRecordRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", uintptrSliceType)), false)));
+    const blockProfileRecordName = NewTypeName(NoPos, pkg, "BlockProfileRecord", null);
+    const blockProfileRecordType = NewNamed(blockProfileRecordName, NewStruct([
+        NewField(NoPos, pkg, "Count", int64Type, false),
+        NewField(NoPos, pkg, "Cycles", int64Type, false),
+        NewField(NoPos, pkg, "StackRecord", stackRecordType, true)
+    ], null), null);
+    blockProfileRecordName.setType(blockProfileRecordType);
+    pkg.Scope().Insert(blockProfileRecordName);
     const errorObject = UniverseLookup("error");
     const errorType = errorObject?.Type?.() ?? null;
     if (errorType === null) {
@@ -439,6 +469,7 @@ function runtimePackage() {
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Callers", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "skip", intType), NewVar(NoPos, pkg, "pc", uintptrSliceType)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "CallersFrames", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "callers", uintptrSliceType)), NewTuple(NewVar(NoPos, pkg, "", NewPointer(framesType))), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "FuncForPC", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "pc", uintptrType)), NewTuple(NewVar(NoPos, pkg, "", NewPointer(funcType))), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "BlockProfile", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "p", NewSlice(blockProfileRecordType))), NewTuple(NewVar(NoPos, pkg, "n", intType), NewVar(NoPos, pkg, "ok", boolType)), false)));
     const cleanupT = NewTypeParam(NewTypeName(NoPos, pkg, "T", null), emptyInterface);
     const cleanupS = NewTypeParam(NewTypeName(NoPos, pkg, "S", null), emptyInterface);
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "AddCleanup", NewSignatureType(null, null, [cleanupT, cleanupS], NewTuple(NewVar(NoPos, pkg, "ptr", NewPointer(cleanupT)), NewVar(NoPos, pkg, "cleanup", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "", cleanupS)), null, false)), NewVar(NoPos, pkg, "arg", cleanupS)), NewTuple(NewVar(NoPos, pkg, "", cleanupType)), false)));
@@ -446,14 +477,19 @@ function runtimePackage() {
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "GOMAXPROCS", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "n", intType)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "GOROOT", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", stringType)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Goexit", NewSignatureType(null, null, null, null, null, false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "GoroutineProfile", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "p", NewSlice(stackRecordType))), NewTuple(NewVar(NoPos, pkg, "n", intType), NewVar(NoPos, pkg, "ok", boolType)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Gosched", NewSignatureType(null, null, null, null, null, false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "KeepAlive", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "x", emptyInterface)), null, false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "MemProfile", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "p", NewSlice(memProfileRecordType)), NewVar(NoPos, pkg, "inuseZero", boolType)), NewTuple(NewVar(NoPos, pkg, "n", intType), NewVar(NoPos, pkg, "ok", boolType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "MutexProfile", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "p", NewSlice(blockProfileRecordType))), NewTuple(NewVar(NoPos, pkg, "n", intType), NewVar(NoPos, pkg, "ok", boolType)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "NumCPU", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "NumGoroutine", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "ReadMemStats", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "m", NewPointer(memStatsType))), null, false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "SetBlockProfileRate", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "rate", intType)), null, false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "SetCPUProfileRate", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "hz", intType)), null, false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "SetFinalizer", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "obj", emptyInterface), NewVar(NoPos, pkg, "finalizer", emptyInterface)), null, false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "SetMutexProfileFraction", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "rate", intType)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "ThreadCreateProfile", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "p", NewSlice(stackRecordType))), NewTuple(NewVar(NoPos, pkg, "n", intType), NewVar(NoPos, pkg, "ok", boolType)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Stack", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "buf", byteSliceType), NewVar(NoPos, pkg, "all", boolType)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Version", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", stringType)), false)));
     pkg.MarkComplete();

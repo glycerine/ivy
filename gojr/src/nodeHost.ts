@@ -31,6 +31,7 @@ import {
   type SpreadsheetFixtureRunResult
 } from "./fixture.js";
 import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
+import { stubSourcePackageFiles } from "./stubPackages.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
 import {
   evaluateSource,
@@ -407,7 +408,7 @@ export async function loadSourcePackagesForRootFilesOnNode(
     for (const importPath of rootImports.imports) {
       if (explicit.has(importPath)) continue;
       if (isAmbientSourceImport(importPath)) continue;
-      const files = loadSourcePackageFromProvider(provider, importPath, rootFiles[0]?.filename ?? REPL_FILENAME, diagnostics);
+      const files = loadStubOrSourcePackageFromProvider(provider, importPath, rootFiles[0]?.filename ?? REPL_FILENAME, diagnostics);
       if (!files) continue;
       const spec = { importPath, files };
       explicit.set(importPath, spec);
@@ -528,7 +529,7 @@ function compileSourcePackagesForRootFilesOnNode(
         loaded.add(importPath);
         return;
       }
-      const files = loadSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics);
+      const files = loadStubOrSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics);
       if (files) {
         spec = { importPath, files };
         explicit.set(importPath, spec);
@@ -606,6 +607,15 @@ function loadSourcePackageFromProvider(
     diagnostics.push(nodeDiagnostic(requestedFrom, "GOJR_BUILD001", `could not load package ${importPath}: ${message}`));
     return undefined;
   }
+}
+
+function loadStubOrSourcePackageFromProvider(
+  provider: BuildSourcePackageProvider | undefined,
+  importPath: string,
+  requestedFrom: string,
+  diagnostics: Diagnostic[]
+): SourceFile[] | undefined {
+  return stubSourcePackageFiles(importPath) ?? loadSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics);
 }
 
 function sourcePackageFilename(spec: SourcePackageSpec): string {

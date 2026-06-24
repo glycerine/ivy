@@ -6,6 +6,7 @@ import { hasErrorDiagnostics, REPL_FILENAME } from "./diagnostics.js";
 import { compilePackageSourceFiles, compileSourceFiles } from "./compile.js";
 import { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture } from "./fixture.js";
 import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
+import { stubSourcePackageFiles } from "./stubPackages.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
 import { evaluateSource, evaluateSourceFiles, evaluateSourcePackageGraph, testSourceFiles } from "./runtime.js";
 export function defaultPackageCacheParent() {
@@ -290,7 +291,7 @@ export async function loadSourcePackagesForRootFilesOnNode(rootFiles, specs = []
                 continue;
             if (isAmbientSourceImport(importPath))
                 continue;
-            const files = loadSourcePackageFromProvider(provider, importPath, rootFiles[0]?.filename ?? REPL_FILENAME, diagnostics);
+            const files = loadStubOrSourcePackageFromProvider(provider, importPath, rootFiles[0]?.filename ?? REPL_FILENAME, diagnostics);
             if (!files)
                 continue;
             const spec = { importPath, files };
@@ -406,7 +407,7 @@ function compileSourcePackagesForRootFilesOnNode(rootFiles, specs = [], baseOpti
                 loaded.add(importPath);
                 return;
             }
-            const files = loadSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics);
+            const files = loadStubOrSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics);
             if (files) {
                 spec = { importPath, files };
                 explicit.set(importPath, spec);
@@ -480,6 +481,9 @@ function loadSourcePackageFromProvider(provider, importPath, requestedFrom, diag
         diagnostics.push(nodeDiagnostic(requestedFrom, "GOJR_BUILD001", `could not load package ${importPath}: ${message}`));
         return undefined;
     }
+}
+function loadStubOrSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics) {
+    return stubSourcePackageFiles(importPath) ?? loadSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics);
 }
 function sourcePackageFilename(spec) {
     return spec.files[0]?.filename ?? REPL_FILENAME;

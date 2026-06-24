@@ -726,6 +726,8 @@ function typeText(expr: Expr): string {
       return `...${expr.element ? typeText(expr.element) : ""}`;
     case "BasicLit":
       return expr.value;
+    case "ParenExpr":
+      return `(${typeText(expr.expr)})`;
     default:
       return "<missing>";
   }
@@ -770,6 +772,7 @@ function resultsText(results: FieldList | undefined): string {
 function expressionText(expr: Expr): string {
   if (expr.kind === "BasicLit") return expr.value;
   if (expr.kind === "Ident") return expr.name;
+  if (expr.kind === "ParenExpr") return `(${expressionText(expr.expr)})`;
   return typeText(expr);
 }
 

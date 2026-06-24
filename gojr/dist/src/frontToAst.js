@@ -623,6 +623,8 @@ function typeText(expr) {
             return `...${expr.element ? typeText(expr.element) : ""}`;
         case "BasicLit":
             return expr.value;
+        case "ParenExpr":
+            return `(${typeText(expr.expr)})`;
         default:
             return "<missing>";
     }
@@ -666,6 +668,8 @@ function expressionText(expr) {
         return expr.value;
     if (expr.kind === "Ident")
         return expr.name;
+    if (expr.kind === "ParenExpr")
+        return `(${expressionText(expr.expr)})`;
     return typeText(expr);
 }
 function unaryOperator(kind) {

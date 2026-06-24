@@ -2,6 +2,7 @@ import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan } from "./diagnostics
 import { File, ImportSpec } from "./front/ast.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
 import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
+import { stubSourcePackageFiles } from "./stubPackages.js";
 import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import {
   Builtin as GoTypesBuiltin,
@@ -509,6 +510,13 @@ class PackageGraphBuilder {
   private sourceFilesForImport(importPath: string, filename: string): SourceFile[] | undefined {
     const explicit = this.packageSources.get(importPath);
     if (explicit) return explicit;
+    const stub = stubSourcePackageFiles(importPath);
+    if (stub) {
+      const files = stub.map(ensureSourceFile);
+      this.packageSources.set(importPath, files);
+      this.standardLibraryPackages.add(importPath);
+      return files;
+    }
     try {
       const loaded = this.request.sourcePackageProvider?.load(importPath);
       if (!loaded) return undefined;

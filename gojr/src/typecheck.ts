@@ -354,7 +354,6 @@ export function standardTypePackage(path: string): GoTypesPackage | undefined {
   if (path === "fmt") return fmtPackage();
   if (path === "math") return mathPackage();
   if (path === "runtime") return runtimePackage();
-  if (path === "runtime/pprof") return runtimePprofPackage();
   if (path === "testing") return testingPackage();
   if (path === "unsafe") return Unsafe;
   return undefined;
@@ -935,6 +934,14 @@ function runtimePackage(): GoTypesPackage {
     null,
     NewTuple(NewVar(NoPos, pkg, "rate", intType)),
     NewTuple(NewVar(NoPos, pkg, "", intType)),
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "ThreadCreateProfile", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "p", NewSlice(stackRecordType))),
+    NewTuple(NewVar(NoPos, pkg, "n", intType), NewVar(NoPos, pkg, "ok", boolType)),
     false
   )));
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "Stack", NewSignatureType(

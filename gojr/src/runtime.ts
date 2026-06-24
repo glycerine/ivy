@@ -6,6 +6,7 @@ import {
   BranchStatement,
   CallExpression,
   ComplexLiteralValue,
+  DeclarationSpec,
   DeferStatement,
   Expression,
   ForStatement,
@@ -44,6 +45,7 @@ import {
   type GoJuniorCheckResult
 } from "./typecheck.js";
 import {
+  Const as GoTypesConst,
   ensureUniverseInitialized,
   NewPackage,
   NewPkgName,
@@ -53,6 +55,7 @@ import {
   type Package as GoTypesPackage
 } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
+import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { DeterministicPrng } from "./prng.js";
 import {
   AsyncGoChannel,
@@ -1046,8 +1049,12 @@ export async function evaluatePackageSourceFiles(files: SourceFile[], options: P
         throw new GoJuniorRuntimeError("package source cannot contain top-level executable statements");
       }
       predeclareTopLevelTypes(declarations, context);
-      const declarationCompletion = await executeTopLevelStatements(declarations, context);
+      predeclarePackageConstants(checked.pkg, context);
+      predeclarePackageVariables(declarations, context);
+      const runtimeDeclarations = declarations.filter((declaration) => declaration.kind === "TypeDecl");
+      const declarationCompletion = await executeTopLevelStatements(runtimeDeclarations, context);
       expectNormalCompletion(declarationCompletion, "package declarations");
+      await executePackageVarInitializers(declarations, checked.info.InitOrder, context);
       await runInitFunctions(ast.functions, context);
       return exportedRuntimePackageObject(packageScopeObjects(checked.pkg), context);
     });
@@ -1166,6 +1173,7 @@ class SourcePackageGraphEvaluator {
     const imports = uniqueSortedSourceImports(parsed.ast?.imports.map((imported) => imported.path) ?? []);
     this.importsByPath.set(importPath, imports);
     for (const dependency of imports) {
+      if (isIntrinsicPackageImport(dependency)) continue;
       if (this.packages[dependency]) continue;
       if (!this.specsByPath.has(dependency)) {
         let loaded: SourceFile[] | undefined;
@@ -2036,6 +2044,7 @@ function availablePackages(context: EvaluationContext): Record<string, RuntimeOb
     math: mathPackage(),
     os: osPackage(),
     runtime: runtimePackage(),
+    "runtime/pprof": runtimePprofPackage(),
     strconv: strconvPackage(),
     testing: testingPackage(),
     unsafe: unsafePackage(),
@@ -2102,6 +2111,7 @@ function runtimePackage(): RuntimeObject {
     Compiler: "gojr",
     MemProfileRate: 0n,
     AddCleanup: hostCallable("runtime.AddCleanup", () => runtimeCleanupValue()),
+    BlockProfile: gojrNotImplementedCallable("runtime.BlockProfile"),
     Caller: hostCallable("runtime.Caller", () => [0n, "", 0n, false]),
     Callers: hostCallable("runtime.Callers", () => 0n),
     CallersFrames: hostCallable("runtime.CallersFrames", () => runtimeFramesValue()),
@@ -2112,12 +2122,16 @@ function runtimePackage(): RuntimeObject {
     Goexit: hostCallable("runtime.Goexit", () => null),
     Gosched: hostCallable("runtime.Gosched", () => null),
     KeepAlive: hostCallable("runtime.KeepAlive", () => null),
+    GoroutineProfile: gojrNotImplementedCallable("runtime.GoroutineProfile"),
+    MemProfile: gojrNotImplementedCallable("runtime.MemProfile"),
+    MutexProfile: gojrNotImplementedCallable("runtime.MutexProfile"),
     NumCPU: hostCallable("runtime.NumCPU", () => 1n),
     NumGoroutine: hostCallable("runtime.NumGoroutine", () => 1n),
     ReadMemStats: hostCallable("runtime.ReadMemStats", () => null),
-    SetBlockProfileRate: hostCallable("runtime.SetBlockProfileRate", () => null),
+    SetBlockProfileRate: gojrNotImplementedCallable("runtime.SetBlockProfileRate"),
+    SetCPUProfileRate: gojrNotImplementedCallable("runtime.SetCPUProfileRate"),
     SetFinalizer: hostCallable("runtime.SetFinalizer", () => null),
-    SetMutexProfileFraction: hostCallable("runtime.SetMutexProfileFraction", () => 0n),
+    SetMutexProfileFraction: gojrNotImplementedCallable("runtime.SetMutexProfileFraction"),
     Stack: hostCallable("runtime.Stack", (args) => {
       const buffer = unwrapNamed(args[0] ?? null);
       if (!Array.isArray(buffer)) return 0n;
@@ -2129,7 +2143,25 @@ function runtimePackage(): RuntimeObject {
       }
       return BigInt(count);
     }),
+    ThreadCreateProfile: gojrNotImplementedCallable("runtime.ThreadCreateProfile"),
     Version: hostCallable("runtime.Version", () => "gojr")
+  };
+}
+
+function runtimePprofPackage(): RuntimeObject {
+  return {
+    NewProfile: gojrNotImplementedCallable("runtime/pprof.NewProfile"),
+    Lookup: gojrNotImplementedCallable("runtime/pprof.Lookup"),
+    Profiles: gojrNotImplementedCallable("runtime/pprof.Profiles"),
+    WriteHeapProfile: gojrNotImplementedCallable("runtime/pprof.WriteHeapProfile"),
+    StartCPUProfile: gojrNotImplementedCallable("runtime/pprof.StartCPUProfile"),
+    StopCPUProfile: gojrNotImplementedCallable("runtime/pprof.StopCPUProfile"),
+    WithLabels: gojrNotImplementedCallable("runtime/pprof.WithLabels"),
+    Labels: gojrNotImplementedCallable("runtime/pprof.Labels"),
+    Label: gojrNotImplementedCallable("runtime/pprof.Label"),
+    ForLabels: gojrNotImplementedCallable("runtime/pprof.ForLabels"),
+    SetGoroutineLabels: gojrNotImplementedCallable("runtime/pprof.SetGoroutineLabels"),
+    Do: gojrNotImplementedCallable("runtime/pprof.Do")
   };
 }
 
@@ -2230,6 +2262,12 @@ function hostCallable(
   };
 }
 
+function gojrNotImplementedCallable(name: string): RuntimeCallable {
+  return hostCallable(name, () => {
+    throw new GoJuniorPanic(`gojr error: ${name} not implemented`);
+  });
+}
+
 function functionValue(declaration: FunctionDecl): GoJuniorFunction {
   return goJuniorFunctionValue(declaration.name, declaration.signature, declaration.body, undefined, declaration);
 }
@@ -2258,6 +2296,96 @@ function predeclareTopLevelTypes(statements: Statement[], context: EvaluationCon
       context.registerType(declaration);
     }
   }
+}
+
+function predeclarePackageConstants(pkg: GoTypesPackage, context: EvaluationContext): void {
+  for (const object of packageScopeObjects(pkg)) {
+    if (!(object instanceof GoTypesConst)) continue;
+    context.declareRoot(object.Name(), runtimeValueFromCheckedConstant(object.Val()), false);
+  }
+}
+
+function predeclarePackageVariables(declarations: Statement[], context: EvaluationContext): void {
+  for (const statement of declarations) {
+    if (statement.kind !== "VarDecl") continue;
+    for (const declaration of statement.declarations) {
+      if (declaration.name === "_") continue;
+      const typeText = declaration.type?.text;
+      context.declareRoot(
+        declaration.name,
+        typeText ? defaultValueForTypeText(typeText, context) : null,
+        true,
+        typeText
+      );
+    }
+  }
+}
+
+function runtimeValueFromCheckedConstant(value: unknown): RuntimeValue {
+  if (
+    value === null ||
+    typeof value === "boolean" ||
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "bigint"
+  ) {
+    return value;
+  }
+  return value as RuntimeValue;
+}
+
+async function executePackageVarInitializers(
+  declarations: Statement[],
+  initOrder: GoJuniorCheckResult["info"]["InitOrder"],
+  context: EvaluationContext
+): Promise<void> {
+  const declarationsByName = packageVarDeclarationsByName(declarations);
+  const initialized = new Set<string>();
+  for (const initializer of initOrder ?? []) {
+    const names = initializer.Lhs.map((object) => object.Name()).filter((name) => name !== "_");
+    for (const name of names) {
+      const declaration = declarationsByName.get(name);
+      if (!declaration) continue;
+      await assignPackageVarDeclaration(declaration, context);
+      initialized.add(name);
+    }
+  }
+  for (const [name, declaration] of declarationsByName) {
+    if (initialized.has(name) || !declaration.value) continue;
+    await assignPackageVarDeclaration(declaration, context);
+  }
+}
+
+function packageVarDeclarationsByName(declarations: Statement[]): Map<string, DeclarationSpec> {
+  const vars = new Map<string, DeclarationSpec>();
+  for (const statement of declarations) {
+    if (statement.kind !== "VarDecl") continue;
+    for (const declaration of statement.declarations) {
+      if (declaration.name !== "_") vars.set(declaration.name, declaration);
+    }
+  }
+  return vars;
+}
+
+async function assignPackageVarDeclaration(declaration: DeclarationSpec, context: EvaluationContext): Promise<void> {
+  const value = declaration.value
+    ? prepareValueForTargetType(
+      await evaluateExpression(declaration.value, context),
+      declaration.type?.text,
+      declaration.value,
+      context,
+      `variable ${declaration.name}`
+    )
+    : defaultValueForDeclarationType(declaration.type, context);
+  if (context.hasLocal(declaration.name)) {
+    context.assign(declaration.name, value);
+    return;
+  }
+  const typeText = declaration.type ??
+    (declaration.value
+      ? expressionDeclaredTypeText(declaration.value, context, value) ?? inferredTypeText(value)
+      : undefined);
+  context.declare(declaration.name, value, true, typeText);
 }
 
 async function runInitFunctions(functions: FunctionDecl[], context: EvaluationContext): Promise<void> {
@@ -5042,7 +5170,11 @@ class ArrayLengthConstantParser {
 
   private lookupIdentifier(name: string): bigint | undefined {
     if (!this.context) return undefined;
-    const value = unwrapNamed(this.context.lookup(name));
+    let value = unwrapNamed(this.context.lookup(name.split(".")[0] ?? name));
+    for (const part of name.split(".").slice(1)) {
+      if (!isRuntimeObject(value)) return undefined;
+      value = unwrapNamed(value[part] ?? null);
+    }
     if (typeof value === "bigint") return value;
     if (typeof value === "number" && Number.isSafeInteger(value)) return BigInt(value);
     return undefined;
@@ -5085,6 +5217,23 @@ class ArrayLengthConstantParser {
 
   private consumeIdentifier(): string | undefined {
     this.skipSpace();
+    const first = this.consumeIdentifierSegment();
+    if (!first) return undefined;
+    let name = first;
+    while (this.text[this.offset] === ".") {
+      const dot = this.offset;
+      this.offset += 1;
+      const next = this.consumeIdentifierSegment();
+      if (!next) {
+        this.offset = dot;
+        break;
+      }
+      name += `.${next}`;
+    }
+    return name;
+  }
+
+  private consumeIdentifierSegment(): string | undefined {
     const start = this.offset;
     if (start >= this.text.length || !/[A-Za-z_]/.test(this.text[start]!)) return undefined;
     this.offset += 1;

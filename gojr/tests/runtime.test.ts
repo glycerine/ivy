@@ -396,7 +396,25 @@ cleanup.Stop()
 return true
 `);
 
-    expect(script.values).toEqual([true]);
+  expect(script.values).toEqual([true]);
+  });
+
+  test("panics when unimplemented runtime profiling stubs are called", async () => {
+    const script = await expectRuns(`
+import "runtime"
+
+func call() (caught any) {
+  defer func() {
+    caught = recover()
+  }()
+  runtime.SetCPUProfileRate(100)
+  return "not reached"
+}
+
+return call().(string) + ""
+`);
+
+    expect(script.values).toEqual(["gojr error: runtime.SetCPUProfileRate not implemented"]);
   });
 
   test("supports importing os.Exit without ambient process authority", async () => {
