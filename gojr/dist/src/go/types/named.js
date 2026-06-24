@@ -4,7 +4,7 @@ import { debug, registerCheckerMethod } from "./check.js";
 import { NewTypeName, setObjectNamedConstructor } from "./object.js";
 import { bindTParams, newTypeList } from "./typelists.js";
 import { assert } from "./util.js";
-import { Alias, asNamed, unalias } from "./alias.js";
+import * as aliasTypes from "./alias.js";
 import { NewContext } from "./context.js";
 import { NewPointer } from "./pointer.js";
 import { Basic, BasicKind } from "./basic.js";
@@ -266,7 +266,7 @@ export class Named {
         if (u === null) {
             throw new Error("underlying type must not be nil");
         }
-        if (asNamed(u) !== null) {
+        if (aliasTypes.asNamed(u) !== null) {
             throw new Error("underlying type must not be *Named");
         }
         // be careful to uphold the state invariants
@@ -346,8 +346,8 @@ export class Named {
         let u = null;
         let rhs = this;
         while (u === null) {
-            if (rhs instanceof Alias) {
-                rhs = unalias(rhs);
+            if (rhs instanceof aliasTypes.Alias) {
+                rhs = aliasTypes.unalias(rhs);
             }
             else if (rhs instanceof Named) {
                 if (debug) {
@@ -496,7 +496,7 @@ export const hasVarSize = 1 << 4; // varSize is available
 // If the given type name obj doesn't have a type yet, its type is set to the returned named type.
 // The underlying type must not be a *Named.
 export function NewNamed(obj, underlying, methods) {
-    if (asNamed(underlying) !== null) {
+    if (aliasTypes.asNamed(underlying) !== null) {
         throw new Error("underlying type must not be *Named");
     }
     const n = newNamed(null, obj, underlying, methods);
@@ -562,7 +562,7 @@ registerCheckerMethod("context", function context() {
 //
 // TODO(rfindley): eliminate this function or give it a better name.
 export function safeUnderlying(typ) {
-    const t = asNamed(typ);
+    const t = aliasTypes.asNamed(typ);
     if (t !== null) {
         return t.underlying;
     }

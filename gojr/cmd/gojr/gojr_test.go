@@ -367,18 +367,18 @@ return a, b
 func assertTopLevelCommandsUseNodeRuntime(t *testing.T, rt *nodeRuntime) {
 	t.Helper()
 
-	if ok, err := runEval(rt, []string{"--sheet-json", `{"A1":40}`, "sheet.A1 + 2"}); err != nil || !ok {
+	if ok, err := runEval(rt, []string{"--sheet-json", `{"A1":40}`, "sheet.A1.(int64) + 2"}); err != nil || !ok {
 		t.Fatalf("runEval() ok=%v err=%v, want success", ok, err)
 	}
-	evalResult, err := rt.Eval("sheet.A1 + 2")
+	evalResult, err := rt.Eval("sheet.A1.(int64) + 2")
 	if err != nil {
-		t.Fatalf("Eval(sheet.A1 + 2) error = %v", err)
+		t.Fatalf("Eval(sheet.A1.(int64) + 2) error = %v", err)
 	}
 	if !evalResult.OK || evalResult.Value != "42" {
-		t.Fatalf("Eval(sheet.A1 + 2) = ok %v value %q diagnostics %v, want 42", evalResult.OK, evalResult.Value, evalResult.Diagnostics)
+		t.Fatalf("Eval(sheet.A1.(int64) + 2) = ok %v value %q diagnostics %v, want 42", evalResult.OK, evalResult.Value, evalResult.Diagnostics)
 	}
 	if len(evalResult.ObservedDeps) != 1 || evalResult.ObservedDeps[0].Kind != "cell" || evalResult.ObservedDeps[0].Sheet != "sheet" || evalResult.ObservedDeps[0].Cell != "A1" {
-		t.Fatalf("Eval(sheet.A1 + 2) observed deps = %#v, want sheet A1", evalResult.ObservedDeps)
+		t.Fatalf("Eval(sheet.A1.(int64) + 2) observed deps = %#v, want sheet A1", evalResult.ObservedDeps)
 	}
 	iotaResult := mustEval(t, rt, "const (\n  abit, amask = 1 << iota, 1<<iota - 1\n  bbit, bmask\n)\nreturn abit, amask, bbit, bmask")
 	if iotaResult.Value != "1, 0, 2, 1" {
@@ -423,7 +423,7 @@ func Next() int {
 		t.Fatalf("EvalWithPackages() ok=%v value=%q diagnostics=%v, want 41", pkgResult.OK, pkgResult.Value, pkgResult.Diagnostics)
 	}
 
-	if ok, err := runCompile(rt, []string{"--sheet-json", `{"A1":40}`, "--expr", "sheet.A1 + 2"}); err != nil || !ok {
+	if ok, err := runCompile(rt, []string{"--sheet-json", `{"A1":40}`, "--expr", "sheet.A1.(int64) + 2"}); err != nil || !ok {
 		t.Fatalf("runCompile(expr) ok=%v err=%v, want success", ok, err)
 	}
 	compileResult, err := rt.Compile(compileRequest{
@@ -752,7 +752,7 @@ func Add(a, b int) int {
   "cells": {
     "A1": 40,
     "B1": {
-      "formula": "import mathx \"example.com/mathx\"\nreturn mathx.Add(sheet.A1, 2)"
+      "formula": "import mathx \"example.com/mathx\"\nreturn mathx.Add(int(sheet.A1.(int64)), 2)"
     }
   }
 }`

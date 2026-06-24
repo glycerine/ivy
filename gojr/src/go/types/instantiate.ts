@@ -13,20 +13,20 @@ import type { Type } from "./type.js";
 import { Checker, atPos, nopos , registerCheckerMethod } from "./check.js";
 import type { Context } from "./context.js";
 import { NewContext } from "./context.js";
-import { TypeParam } from "./typeparam.js";
-import { Named } from "./named.js";
-import { Alias } from "./alias.js";
-import { Signature } from "./signature.js";
-import { Typ } from "./universe.js";
+import * as typeparamTypes from "./typeparam.js";
+import * as namedTypes from "./named.js";
+import * as aliasTypes from "./alias.js";
+import * as signatureTypes from "./signature.js";
+import * as universeTypes from "./universe.js";
 import { BasicKind } from "./basic.js";
 import { assert } from "./util.js";
 import { makeSubstMap } from "./subst.js";
 import { comparableType, Identical, isValid } from "./predicates.js";
-import { Interface } from "./interface.js";
-import { Pointer } from "./pointer.js";
+import * as interfaceTypes from "./interface.js";
+import * as pointerTypes from "./pointer.js";
 import { hasAllMethods, isInterfacePtr, type Cause } from "./lookup.js";
 import { go1_20 } from "./version.js";
-import { Union } from "./union.js";
+import * as unionTypes from "./union.js";
 import { ArgumentError } from "./api.js";
 
 // A genericType implements access to its type parameters.
@@ -71,20 +71,20 @@ function isGenericType(t: Type): t is genericType {
 
 declare module "./check.js" {
   interface Checker {
-    instance(pos: Pos, orig: genericType, targs: Type[], expanding: Named | null, ctxt: Context | null): Type;
+    instance(pos: Pos, orig: genericType, targs: Type[], expanding: namedTypes.Named | null, ctxt: Context | null): Type;
     validateTArgLen(pos: Pos, name: string, want: number, got: number): boolean;
-    verify(pos: Pos, tparams: TypeParam[], targs: Type[], ctxt: Context): [number, Error | null];
+    verify(pos: Pos, tparams: typeparamTypes.TypeParam[], targs: Type[], ctxt: Context): [number, Error | null];
     implements(V: Type, T: Type, constraint: boolean, cause: Cause | null): boolean;
   }
 }
 
-registerCheckerMethod("instance", function instanceMethod(pos: Pos, orig: genericType, targs: Type[], expanding: Named | null, ctxt: Context | null): Type {
+registerCheckerMethod("instance", function instanceMethod(pos: Pos, orig: genericType, targs: Type[], expanding: namedTypes.Named | null, ctxt: Context | null): Type {
   return instance(this, pos, orig, targs, expanding, ctxt);
 });
 
 // instance instantiates the given original (generic) function or type with the
 // provided type arguments and returns the resulting instance.
-function instance(check: Checker | null, pos: Pos, orig: genericType, targs: Type[], expanding: Named | null, ctxt: Context | null): Type {
+function instance(check: Checker | null, pos: Pos, orig: genericType, targs: Type[], expanding: namedTypes.Named | null, ctxt: Context | null): Type {
   // The order of the contexts below matters: we always prefer instances in the
   // expanding instance context in order to preserve reference cycles.
   const ctxts: Context[] = [];
@@ -125,10 +125,10 @@ function instance(check: Checker | null, pos: Pos, orig: genericType, targs: Typ
   }
 
   let res: Type;
-  if (orig instanceof Named) {
-    const fn = check as unknown as { newNamedInstance?: (pos: Pos, orig: Named, targs: Type[], expanding: Named | null) => Named } | null;
-    res = fn?.newNamedInstance?.(pos, orig, targs, expanding) ?? new Named(check, orig.obj, orig.underlying, orig.methods_);
-  } else if (orig instanceof Alias) {
+  if (orig instanceof namedTypes.Named) {
+    const fn = check as unknown as { newNamedInstance?: (pos: Pos, orig: namedTypes.Named, targs: Type[], expanding: namedTypes.Named | null) => namedTypes.Named } | null;
+    res = fn?.newNamedInstance?.(pos, orig, targs, expanding) ?? new namedTypes.Named(check, orig.obj, orig.underlying, orig.methods_);
+  } else if (orig instanceof aliasTypes.Alias) {
     // verify type parameter count (see go.dev/issue/71198 for a test case)
     const tparams = orig.TypeParams();
     if (!validateTArgLen(check, pos, orig.obj.Name(), tparams?.Len() ?? 0, targs.length)) {
@@ -136,15 +136,15 @@ function instance(check: Checker | null, pos: Pos, orig: genericType, targs: Typ
       //           underlying (aliased) type to match behavior of *Named
       //           types. Then this function will never return an invalid
       //           result.
-      return Typ[BasicKind.Invalid]!;
+      return universeTypes.Typ[BasicKind.Invalid]!;
     }
     if ((tparams?.Len() ?? 0) === 0) {
       return orig; // nothing to do (minor optimization)
     }
 
-    const fn = check as unknown as { newAliasInstance?: (pos: Pos, orig: Alias, targs: Type[], expanding: Named | null, ctxt: Context | null) => Type } | null;
+    const fn = check as unknown as { newAliasInstance?: (pos: Pos, orig: aliasTypes.Alias, targs: Type[], expanding: namedTypes.Named | null, ctxt: Context | null) => Type } | null;
     res = fn?.newAliasInstance?.(pos, orig, targs, expanding, ctxt) ?? orig;
-  } else if (orig instanceof Signature) {
+  } else if (orig instanceof signatureTypes.Signature) {
     assert(expanding === null); // function instances cannot be reached from Named types
     // Note that orig may be a generic method on a generic type. In that case, orig
     // is an instantiated type. It will not have receiver type parameters, but will
@@ -155,17 +155,17 @@ function instance(check: Checker | null, pos: Pos, orig: genericType, targs: Typ
     const tparams = orig.TypeParams()!;
     // TODO(gri) investigate if this is needed (type argument and parameter count seem to be correct here)
     if (!validateTArgLen(check, pos, orig.String(), tparams.Len(), targs.length)) {
-      return Typ[BasicKind.Invalid]!;
+      return universeTypes.Typ[BasicKind.Invalid]!;
     }
     if (tparams.Len() === 0) {
       return orig; // nothing to do (minor optimization)
     }
-    let sig = (check?.subst(pos, orig, makeSubstMap(tparams.list(), targs), null, ctxt) ?? orig) as Signature;
+    let sig = (check?.subst(pos, orig, makeSubstMap(tparams.list(), targs), null, ctxt) ?? orig) as signatureTypes.Signature;
     // If the signature doesn't use its type parameters, subst
     // will not make a copy. In that case, make a copy now (so
     // we can set tparams to nil w/o causing side-effects).
     if (sig === orig) {
-      sig = Object.assign(Object.create(Object.getPrototypeOf(sig)), sig) as Signature;
+      sig = Object.assign(Object.create(Object.getPrototypeOf(sig)), sig) as signatureTypes.Signature;
     }
     // After instantiating a generic signature, it is not generic
     // anymore; we need to set tparams to nil.
@@ -209,12 +209,12 @@ export function validateTArgLen(check: Checker | null, pos: Pos, name: string, w
   throw new Error(`${pos}: ${msg}`);
 }
 
-registerCheckerMethod("verify", function verifyMethod(pos: Pos, tparams: TypeParam[], targs: Type[], ctxt: Context): [number, Error | null] {
+registerCheckerMethod("verify", function verifyMethod(pos: Pos, tparams: typeparamTypes.TypeParam[], targs: Type[], ctxt: Context): [number, Error | null] {
   return verify(this, pos, tparams, targs, ctxt);
 });
 
 // check may be nil; pos is used only if check is non-nil.
-export function verify(check: Checker | null, pos: Pos, tparams: TypeParam[], targs: Type[], ctxt: Context): [number, Error | null] {
+export function verify(check: Checker | null, pos: Pos, tparams: typeparamTypes.TypeParam[], targs: Type[], ctxt: Context): [number, Error | null] {
   const smap = makeSubstMap(tparams, targs);
   for (let i = 0; i < tparams.length; i++) {
     const tpar = tparams[i]!;
@@ -249,7 +249,7 @@ export function implements_(check: Checker | null, V: Type, T: Type, constraint:
   if (!isValid(Vu) || !isValid(Tu)) {
     return true; // avoid follow-on errors
   }
-  if (Vu instanceof Pointer && !isValid(Vu.base.Underlying())) {
+  if (Vu instanceof pointerTypes.Pointer && !isValid(Vu.base.Underlying())) {
     return true; // avoid follow-on errors (see go.dev/issue/49541 for an example)
   }
 
@@ -258,7 +258,7 @@ export function implements_(check: Checker | null, V: Type, T: Type, constraint:
     verb = "satisfy";
   }
 
-  const Ti = Tu instanceof Interface ? Tu : null;
+  const Ti = Tu instanceof interfaceTypes.Interface ? Tu : null;
   if (Ti === null) {
     if (cause !== null) {
       let detail: string;
@@ -280,7 +280,7 @@ export function implements_(check: Checker | null, V: Type, T: Type, constraint:
 
   // An interface V with an empty type set satisfies any interface.
   // (The empty set is a subset of any set.)
-  const Vi = Vu instanceof Interface ? Vu : null;
+  const Vi = Vu instanceof interfaceTypes.Interface ? Vu : null;
   if (Vi !== null && Vi.typeSet().IsEmpty()) {
     return true;
   }
@@ -392,13 +392,13 @@ export function implements_(check: Checker | null, V: Type, T: Type, constraint:
 // mentions reports whether type T "mentions" typ in an (embedded) element or term
 // of T (whether typ is in the type set of T or not). For better error messages.
 export function mentions(T: Type, typ: Type): boolean {
-  if (T instanceof Interface) {
+  if (T instanceof interfaceTypes.Interface) {
     for (const e of T.embeddeds) {
       if (mentions(e, typ)) {
         return true;
       }
     }
-  } else if (T instanceof Union) {
+  } else if (T instanceof unionTypes.Union) {
     for (const t of T.terms) {
       if (mentions(t.typ!, typ)) {
         return true;

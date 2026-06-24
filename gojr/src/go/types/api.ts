@@ -87,8 +87,8 @@ export interface ImporterFrom extends Importer {
 }
 
 export interface GoJuniorSheetNamespace {
-  cells?: Record<string, Type>;
-  defaultType?: Type;
+  // Presence-only Go-junior spreadsheet namespace. Cell and range values are
+  // external dynamic values and always type-check as the predeclared any alias.
 }
 
 // A Config specifies the configuration for type checking.

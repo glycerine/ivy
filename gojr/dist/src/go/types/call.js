@@ -9,7 +9,7 @@ import { atPos, debug, noposn, registerCheckerMethod } from "./check.js";
 import { invalidOp } from "./errors.js";
 import { newTarget } from "./expr.js";
 import { enableReverseTypeInference, isParameterized } from "./infer.js";
-import { Interface, emptyInterface } from "./interface.js";
+import { Interface } from "./interface.js";
 import { isInterfacePtr, lookupFieldOrMethod } from "./lookup.js";
 import { Func, Const, Builtin, NewParam, PkgName, TypeName, Var } from "./object.js";
 import { operand, builtin, cgofunc, commaerr, constant_, invalid, novalue, typexpr, value, variable } from "./operand.js";
@@ -22,6 +22,7 @@ import { Tuple, NewTuple } from "./tuple.js";
 import { TypeParamList } from "./typelists.js";
 import { commonUnder, typeErrorf } from "./under.js";
 import { exprKind, predeclaredFuncs, Typ } from "./universe.js";
+import * as universeTypes from "./universe.js";
 import { go1_18, go1_21 } from "./version.js";
 import { assert } from "./util.js";
 export const cgoPrefixes = [
@@ -1052,8 +1053,11 @@ function goJuniorSheetSelectorType(check, namespace, selector) {
     if (ns === undefined) {
         return null;
     }
-    const cell = selector.toUpperCase().replace(/\$/g, "");
-    return ns.cells?.[cell] ?? ns.defaultType ?? emptyInterface;
+    void selector;
+    return goJuniorSheetValueType();
+}
+function goJuniorSheetValueType() {
+    return universeTypes.UniverseAnyType();
 }
 function selectorError(check, x, e) {
     x.invalidate();

@@ -52,9 +52,11 @@ export function checkGoJuniorFiles(files, statements = [], parserDiagnostics = [
             filename: diagnosticFilename(undefined, firstFilename(files)),
             code: "GOJR_TYPE001",
             severity: "error",
-            message: error instanceof Error ? error.message : String(error)
+            message: error instanceof Error ? error.message : String(error),
+            ...(error instanceof Error && error.stack ? { stack: error.stack } : {})
         });
     }
+    filterTopLevelExpressionUnusedDiagnostics(diagnostics, statements);
     return {
         pkg,
         info,
@@ -62,6 +64,18 @@ export function checkGoJuniorFiles(files, statements = [], parserDiagnostics = [
         files,
         statements
     };
+}
+function filterTopLevelExpressionUnusedDiagnostics(diagnostics, statements) {
+    const expressionOffsets = new Set(statements
+        .filter((statement) => statement.kind === "ExprStmt" && statement.span !== undefined)
+        .map((statement) => statement.span.offset));
+    if (expressionOffsets.size === 0)
+        return;
+    const kept = diagnostics.filter((diagnostic) => !(diagnostic.code === "GOJR_TYPE001" &&
+        / is not used$/.test(diagnostic.message) &&
+        diagnostic.span !== undefined &&
+        expressionOffsets.has(diagnostic.span.offset)));
+    diagnostics.splice(0, diagnostics.length, ...kept);
 }
 class FrontFileSet {
     files;
@@ -140,9 +154,11 @@ function shortDeclarationAsVar(statement, names) {
     };
 }
 function syntheticFunctionDecl(statements, span) {
+    const resultCount = maxReturnValueCount(statements);
     const type = {
         kind: "FuncType",
         params: { kind: "FieldList", fields: [], ...(span ? { span } : {}) },
+        ...(resultCount > 0 ? { results: syntheticAnyResults(resultCount, span) } : {}),
         ...(span ? { span } : {})
     };
     return {
@@ -156,6 +172,47 @@ function syntheticFunctionDecl(statements, span) {
         },
         ...(span ? { span } : {})
     };
+}
+function syntheticAnyResults(count, span) {
+    return {
+        kind: "FieldList",
+        fields: globalThis.Array.from({ length: count }, () => ({
+            kind: "Field",
+            names: [],
+            type: ident("any", span),
+            ...(span ? { span } : {})
+        })),
+        ...(span ? { span } : {})
+    };
+}
+function maxReturnValueCount(statements) {
+    let max = 0;
+    for (const statement of statements) {
+        max = Math.max(max, returnValueCount(statement));
+    }
+    return max;
+}
+function returnValueCount(statement) {
+    switch (statement.kind) {
+        case "ReturnStmt":
+            return statement.results.length;
+        case "BlockStmt":
+            return maxReturnValueCount(statement.statements);
+        case "LabeledStmt":
+            return returnValueCount(statement.stmt);
+        case "IfStmt":
+            return Math.max(statement.body ? returnValueCount(statement.body) : 0, statement.else ? returnValueCount(statement.else) : 0);
+        case "SwitchStmt":
+        case "TypeSwitchStmt":
+            return Math.max(0, ...statement.body.map((clause) => maxReturnValueCount(clause.body)));
+        case "SelectStmt":
+            return Math.max(0, ...statement.body.map((clause) => maxReturnValueCount(clause.body)));
+        case "ForStmt":
+        case "RangeStmt":
+            return returnValueCount(statement.body);
+        default:
+            return 0;
+    }
 }
 function importDeclarations(files) {
     return files.flatMap((file) => file.declarations.filter((decl) => decl.kind === "GenDecl" && decl.token === TokenKind.Import));

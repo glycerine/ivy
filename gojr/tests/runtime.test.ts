@@ -21,9 +21,9 @@ async function expectRuns(source: string, options = {}) {
 }
 
 describe("Go-junior runtime slice", () => {
-  test("evaluates sheet arithmetic without number casts", async () => {
+  test("evaluates sheet arithmetic with explicit dynamic type assertions", async () => {
     const result = await expectRuns(`
-var x = sheet.A1 + sheet.B1 * 2
+var x = sheet.A1.(int64) + sheet.B1.(int64) * 2
 if x > 10 {
   return x
 }
@@ -44,7 +44,7 @@ return x * 2
 import f "fmt"
 
 f.Printf("A1=%v\\n", sheet.$A$1)
-return Budget.B2 + sheet.$A$1
+return Budget.B2.(int64) + sheet.$A$1.(int64)
 `, {
       sheet: {
         A1: 2n
@@ -63,7 +63,7 @@ return Budget.B2 + sheet.$A$1
   test("evaluates spreadsheet ranges as row-major two-dimensional arrays", async () => {
     const result = await expectRuns(`
 rows := sheet.A1:B2
-return rows[0][0] + rows[1][1], rows
+return rows[0][0].(int64) + rows[1][1].(int64), rows
 `, {
       sheet: {
         A1: 1n,
@@ -1637,11 +1637,11 @@ return abit, amask, bbit, bmask
     expect(result.values).toEqual([1n, 0n, 2n, 1n]);
   });
 
-  test("updates REPL sheet type environment when sheet data changes", async () => {
+  test("tracks REPL sheet dependencies when sheet data changes", async () => {
     const session = new GoJuniorSession();
 
     session.setSheet({ A1: 40n });
-    const result = await session.evaluate("sheet.A1 + 2");
+    const result = await session.evaluate("sheet.A1.(int64) + 2");
 
     expect(result.diagnostics).toEqual([]);
     expect(result.value).toBe(42n);
@@ -1740,7 +1740,7 @@ func sum(vals ...int) int {
     expect(direct.diagnostics).toEqual([]);
     expect(direct.value).toBe(6n);
 
-    const spread = await session.evaluate("sum(sheet.A1...)");
+    const spread = await session.evaluate("sum(sheet.A1.([]int64)...)");
     expect(spread.diagnostics).toEqual([]);
     expect(spread.value).toBe(15n);
   });
@@ -1858,7 +1858,7 @@ sum := func(vals ...int) int {
     expect(direct.diagnostics).toEqual([]);
     expect(direct.value).toBe(6n);
 
-    const spread = await session.evaluate("sum(sheet.A1...)");
+    const spread = await session.evaluate("sum(sheet.A1.([]int64)...)");
     expect(spread.diagnostics).toEqual([]);
     expect(spread.value).toBe(24n);
   });

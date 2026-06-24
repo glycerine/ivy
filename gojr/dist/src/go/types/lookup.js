@@ -2,14 +2,14 @@
 // Source: ../../cmd/compile/internal/types2/lookup.go
 import { Checker, debug, registerCheckerMethod } from "./check.js";
 import { assert } from "./util.js";
-import { asNamed, Unalias } from "./alias.js";
-import { Pointer } from "./pointer.js";
-import { Interface } from "./interface.js";
-import { Struct } from "./struct.js";
-import { Func, Var } from "./object.js";
+import * as aliasTypes from "./alias.js";
+import * as pointerTypes from "./pointer.js";
+import * as interfaceTypes from "./interface.js";
+import * as structTypes from "./struct.js";
+import * as objectTypes from "./object.js";
 import { Identical, isTypeParam, isValid, IsInterface } from "./predicates.js";
 import { commonUnder } from "./under.js";
-import { Typ } from "./universe.js";
+import * as universeTypes from "./universe.js";
 import { BasicKind } from "./basic.js";
 import { Selection, SelectionKind } from "./selection.js";
 import { WriteSignature } from "./typestring.js";
@@ -23,10 +23,10 @@ export function LookupSelection(T, addressable, pkg, name) {
     if (obj === null) {
         return [new Selection(SelectionKind.FieldVal, null, dummyObject(), [], false), false];
     }
-    else if (obj instanceof Func) {
+    else if (obj instanceof objectTypes.Func) {
         kind = SelectionKind.MethodVal;
     }
-    else if (obj instanceof Var) {
+    else if (obj instanceof objectTypes.Var) {
         kind = SelectionKind.FieldVal;
     }
     else {
@@ -74,12 +74,12 @@ export function lookupFieldOrMethod(T, addressable, pkg, name, foldCase) {
     // Thus, if we have a named pointer type, proceed with the underlying
     // pointer type but discard the result if it is a method since we would
     // not have found it for T (see also go.dev/issue/8590).
-    const t = asNamed(T);
+    const t = aliasTypes.asNamed(T);
     if (t !== null) {
         const p = t.Underlying();
-        if (p instanceof Pointer) {
+        if (p instanceof pointerTypes.Pointer) {
             const [obj, index, indirect] = lookupFieldOrMethodImpl(p, false, pkg, name, foldCase);
-            if (obj instanceof Func) {
+            if (obj instanceof objectTypes.Func) {
                 return [null, null, false];
             }
             return [obj, index, indirect];
@@ -95,7 +95,7 @@ export function lookupFieldOrMethod(T, addressable, pkg, name, foldCase) {
         const [tt] = commonUnder(T, null);
         if (tt !== null) {
             [obj, index, indirect] = lookupFieldOrMethodImpl(tt, addressable, pkg, name, foldCase);
-            if (!(obj instanceof Var)) {
+            if (!(obj instanceof objectTypes.Var)) {
                 obj = null;
                 index = null;
                 indirect = false; // accept fields (variables) only
@@ -118,7 +118,7 @@ export function lookupFieldOrMethodImpl(T, addressable, pkg, name, foldCase) {
     let typ = typ0;
     // *typ where typ is an interface (incl. a type parameter) has no methods.
     if (isPtr) {
-        if (typ.Underlying() instanceof Interface) {
+        if (typ.Underlying() instanceof interfaceTypes.Interface) {
             return [null, null, false];
         }
     }
@@ -138,7 +138,7 @@ export function lookupFieldOrMethodImpl(T, addressable, pkg, name, foldCase) {
             typ = e.typ;
             // If we have a named type, we may have associated methods.
             // Look for those first.
-            const named = asNamed(typ);
+            const named = aliasTypes.asNamed(typ);
             if (named !== null) {
                 const alt = seen.lookup(named);
                 if (alt !== null) {
@@ -165,7 +165,7 @@ export function lookupFieldOrMethodImpl(T, addressable, pkg, name, foldCase) {
                 }
             }
             const u = typ.Underlying();
-            if (u instanceof Struct) {
+            if (u instanceof structTypes.Struct) {
                 // look for a matching field and collect embedded types
                 for (let i = 0; i < (u.fields?.length ?? 0); i++) {
                     const f = u.fields[i];
@@ -197,7 +197,7 @@ export function lookupFieldOrMethodImpl(T, addressable, pkg, name, foldCase) {
                     }
                 }
             }
-            else if (u instanceof Interface) {
+            else if (u instanceof interfaceTypes.Interface) {
                 // look for a matching method (interface may be a type parameter)
                 const [i, m] = u.typeSet().LookupMethod(pkg, name, foldCase);
                 if (m !== null) {
@@ -213,7 +213,7 @@ export function lookupFieldOrMethodImpl(T, addressable, pkg, name, foldCase) {
         }
         if (obj !== null) {
             // found a potential match
-            if (obj instanceof Func) {
+            if (obj instanceof objectTypes.Func) {
                 // determine if method has a pointer receiver
                 if (obj.hasPtrRecv() && !indirect && !addressable) {
                     return [null, null, true]; // pointer/addressable receiver required
@@ -338,7 +338,7 @@ export function missingMethod(check, V, T, static_, equivalent, cause) {
     let m = null; // method on T we're trying to implement
     let f = null; // method on V, if found (state is one of ok, wrongName, wrongSig)
     const u = V.Underlying();
-    if (u instanceof Interface) {
+    if (u instanceof interfaceTypes.Interface) {
         const tset = u.typeSet();
         for (m of methods) {
             [, f] = tset.LookupMethod(m.pkg, m.name, false);
@@ -370,7 +370,7 @@ export function missingMethod(check, V, T, static_, equivalent, cause) {
                     default:
                         state = notFound;
                         [obj] = lookupFieldOrMethodImpl(V, false, m.pkg, m.name, true /* fold case */);
-                        f = obj instanceof Func ? obj : null;
+                        f = obj instanceof objectTypes.Func ? obj : null;
                         if (f !== null) {
                             state = wrongName;
                             if (f.name === m.name) {
@@ -383,7 +383,7 @@ export function missingMethod(check, V, T, static_, equivalent, cause) {
                 break;
             }
             // we must have a method (not a struct field)
-            f = obj instanceof Func ? obj : null;
+            f = obj instanceof objectTypes.Func ? obj : null;
             if (f === null) {
                 state = field;
                 break;
@@ -491,7 +491,7 @@ export function hasAllMethods(check, V, T, static_, equivalent, cause) {
 // (directly or indirectly) embedded fields with invalid types.
 export function hasInvalidEmbeddedFields(T, seen) {
     const S = derefStructPtr(T).Underlying();
-    if (S instanceof Struct && !seen?.get(S)) {
+    if (S instanceof structTypes.Struct && !seen?.get(S)) {
         if (seen === null) {
             seen = new Map();
         }
@@ -506,7 +506,7 @@ export function hasInvalidEmbeddedFields(T, seen) {
 }
 export function isInterfacePtr(T) {
     const p = T.Underlying();
-    return p instanceof Pointer && IsInterface(p.base);
+    return p instanceof pointerTypes.Pointer && IsInterface(p.base);
 }
 registerCheckerMethod("interfacePtrError", function interfacePtrErrorMethod(T) {
     return interfacePtrError(this, T);
@@ -568,14 +568,14 @@ function implementsForLookup(V, T, constraint, cause) {
 // with an underlying pointer type!) and returns its base and true.
 // Otherwise it returns (typ, false).
 export function deref(typ) {
-    const p = Unalias(typ);
-    if (p instanceof Pointer) {
+    const p = aliasTypes.Unalias(typ);
+    if (p instanceof pointerTypes.Pointer) {
         // p.base should never be nil, but be conservative
         if (p.base === null) {
             if (debug) {
                 throw new Error("pointer with nil base type (possibly due to an invalid cyclic declaration)");
             }
-            return [Typ[BasicKind.Invalid], true];
+            return [universeTypes.Typ[BasicKind.Invalid], true];
         }
         return [p.base, true];
     }
@@ -585,8 +585,8 @@ export function deref(typ) {
 // (named or unnamed) struct and returns its base. Otherwise it returns typ.
 export function derefStructPtr(typ) {
     const p = typ.Underlying();
-    if (p instanceof Pointer) {
-        if (p.base.Underlying() instanceof Struct) {
+    if (p instanceof pointerTypes.Pointer) {
+        if (p.base.Underlying() instanceof structTypes.Struct) {
             return p.base;
         }
     }
@@ -621,7 +621,7 @@ export function fieldPath(typ0, index) {
     let typ = typ0;
     for (const i of index) {
         const u = derefStructPtr(typ).Underlying();
-        if (!(u instanceof Struct)) {
+        if (!(u instanceof structTypes.Struct)) {
             // should not happen if index is valid for typ
             break;
         }

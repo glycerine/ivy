@@ -101,7 +101,8 @@ function printDiagnostics(diagnostics) {
         const location = diagnostic.span
             ? `${diagnostic.span.filename}:${diagnostic.span.line}:${diagnostic.span.column}: `
             : `${diagnostic.filename}: `;
-        const line = `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}`;
+        const stack = diagnostic.stack ? `\n${diagnostic.stack}` : "";
+        const line = `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}${stack}`;
         if (diagnostic.severity === "error") {
             console.error(line);
         }

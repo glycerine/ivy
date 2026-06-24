@@ -2,13 +2,10 @@ import { describe, expect, test } from "./testHarness.js";
 import { checkGoJuniorSource } from "../src/typecheck.js";
 import {
   Array as GoTypesArray,
-  Float64,
-  Int64,
   Named as GoTypesNamed,
   NewMethodSet,
   NewPointer,
   Slice as GoTypesSlice,
-  Typ,
   Var as GoTypesVar,
   type GoJuniorSheetNamespace
 } from "../src/go/types/index.js";
@@ -129,20 +126,14 @@ func Sum(xs []int64) int64 {
 
   test("types spreadsheet cell and range references through configured namespaces", () => {
     const sheetNamespaces: Record<string, GoJuniorSheetNamespace> = {
-      sheet: {
-        cells: {
-          A1: Typ[Int64]!,
-          B1: Typ[Int64]!
-        }
-      },
-      Data: {
-        defaultType: Typ[Float64]!
-      }
+      sheet: {},
+      Data: {}
     };
     const result = check(`
 package workbook
 
-var a = sheet.A1 + sheet.B1
+var a = sheet.A1
+var b = sheet.B1
 var r = Data.A1:B2
 var first = r[0][0]
 `, {
@@ -150,12 +141,29 @@ var first = r[0][0]
     });
 
     expect(result.diagnostics).toEqual([]);
-    expect(result.pkg.Scope().Lookup("a")?.Type()?.String()).toBe("int64");
+    expect(result.pkg.Scope().Lookup("a")?.Type()?.String()).toBe("any");
+    expect(result.pkg.Scope().Lookup("b")?.Type()?.String()).toBe("any");
 
     const range = result.pkg.Scope().Lookup("r")?.Type();
     expect(range).toBeInstanceOf(GoTypesSlice);
-    expect(range?.String()).toBe("[][]float64");
-    expect(result.pkg.Scope().Lookup("first")?.Type()?.String()).toBe("float64");
+    expect(range?.String()).toBe("[][]any");
+    expect(result.pkg.Scope().Lookup("first")?.Type()?.String()).toBe("any");
+  });
+
+  test("loads predeclared any before checking ordinary packages", () => {
+    const result = check(`
+package builtins
+
+var x any
+
+func Echo(v any) any {
+  return v
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.pkg.Scope().Lookup("x")?.Type()?.String()).toBe("any");
+    expect(result.pkg.Scope().Lookup("Echo")?.Type()?.String()).toBe("func(v any) any");
   });
 
   test("scopes range variables to the for statement and preserves integer range key types", () => {

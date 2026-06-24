@@ -250,7 +250,7 @@ describe("Go-junior spreadsheet dependency engine", () => {
     const deps = [cellDependency(ref("A1"))];
     const cacheKey = spreadsheetFormulaCacheKey({
       filename: "sheet!B1.gojr",
-      source: "sheet.A1 + 1",
+      source: "sheet.A1.(int64) + 1",
       declaredDeps: deps
     });
     let evaluations = 0;
@@ -288,12 +288,12 @@ describe("Go-junior spreadsheet dependency engine", () => {
     const deps = [cellDependency(ref("A1"))];
     const firstKey = spreadsheetFormulaCacheKey({
       filename: "sheet!B1.gojr",
-      source: "sheet.A1 + 1",
+      source: "sheet.A1.(int64) + 1",
       declaredDeps: deps
     });
     const secondKey = spreadsheetFormulaCacheKey({
       filename: "sheet!B1.gojr",
-      source: "sheet.A1 + 10",
+      source: "sheet.A1.(int64) + 10",
       declaredDeps: deps
     });
     const order: string[] = [];
@@ -342,7 +342,7 @@ describe("Go-junior spreadsheet dependency engine", () => {
     engine.setLiteral(ref("A1"), 1);
     const first = await cache.install(engine, ref("B1"), {
       filename: "sheet!B1.gojr",
-      source: "sheet.A1 + 1",
+      source: "sheet.A1.(int64) + 1",
       declaredDeps: deps,
       compiler
     });
@@ -350,13 +350,13 @@ describe("Go-junior spreadsheet dependency engine", () => {
 
     await engine.recalculate();
     expect(engine.value(ref("B1"))).toBe(2);
-    expect(compiled).toEqual(["sheet.A1 + 1"]);
-    expect(evaluated).toEqual(["sheet.A1 + 1"]);
+    expect(compiled).toEqual(["sheet.A1.(int64) + 1"]);
+    expect(evaluated).toEqual(["sheet.A1.(int64) + 1"]);
 
     engine.setLiteral(ref("A1"), 2);
     const unchanged = await cache.install(engine, ref("B1"), {
       filename: "sheet!B1.gojr",
-      source: "sheet.A1 + 1",
+      source: "sheet.A1.(int64) + 1",
       declaredDeps: deps,
       compiler: async () => {
         throw new Error("unchanged formula should not compile");
@@ -366,23 +366,23 @@ describe("Go-junior spreadsheet dependency engine", () => {
 
     await engine.recalculate();
     expect(engine.value(ref("B1"))).toBe(3);
-    expect(compiled).toEqual(["sheet.A1 + 1"]);
-    expect(evaluated).toEqual(["sheet.A1 + 1", "sheet.A1 + 1"]);
+    expect(compiled).toEqual(["sheet.A1.(int64) + 1"]);
+    expect(evaluated).toEqual(["sheet.A1.(int64) + 1", "sheet.A1.(int64) + 1"]);
 
     const changed = await cache.install(engine, ref("B1"), {
       filename: "sheet!B1.gojr",
-      source: "sheet.A1 + 10",
+      source: "sheet.A1.(int64) + 10",
       declaredDeps: deps,
       compiler
     });
     expect(changed).toMatchObject({ action: "installed", compileAction: "compiled" });
     await engine.recalculate();
     expect(engine.value(ref("B1"))).toBe(12);
-    expect(compiled).toEqual(["sheet.A1 + 1", "sheet.A1 + 10"]);
+    expect(compiled).toEqual(["sheet.A1.(int64) + 1", "sheet.A1.(int64) + 10"]);
 
     const reverted = await cache.install(engine, ref("B1"), {
       filename: "sheet!B1.gojr",
-      source: "sheet.A1 + 1",
+      source: "sheet.A1.(int64) + 1",
       declaredDeps: deps,
       compiler: async () => {
         throw new Error("previously compiled formula should be reused");
@@ -391,7 +391,7 @@ describe("Go-junior spreadsheet dependency engine", () => {
     expect(reverted).toMatchObject({ action: "installed", compileAction: "reused" });
     await engine.recalculate();
     expect(engine.value(ref("B1"))).toBe(3);
-    expect(compiled).toEqual(["sheet.A1 + 1", "sheet.A1 + 10"]);
+    expect(compiled).toEqual(["sheet.A1.(int64) + 1", "sheet.A1.(int64) + 10"]);
   });
 
   test("compiler cache includes package cache keys in formula recompilation decisions", async () => {
@@ -407,7 +407,7 @@ describe("Go-junior spreadsheet dependency engine", () => {
     engine.setLiteral(ref("A1"), 10);
     const first = await cache.install(engine, ref("B1"), {
       filename: "sheet!B1.gojr",
-      source: "return lib.Add(sheet.A1)",
+      source: "return lib.Add(sheet.A1.(int64))",
       declaredDeps: deps,
       packageCacheKeys: ["example.com/lib:v1"],
       compiler
@@ -417,7 +417,7 @@ describe("Go-junior spreadsheet dependency engine", () => {
 
     const samePackage = await cache.install(engine, ref("B1"), {
       filename: "sheet!B1.gojr",
-      source: "return lib.Add(sheet.A1)",
+      source: "return lib.Add(sheet.A1.(int64))",
       declaredDeps: deps,
       packageCacheKeys: ["example.com/lib:v1"],
       compiler: async () => {
@@ -428,7 +428,7 @@ describe("Go-junior spreadsheet dependency engine", () => {
 
     const changedPackage = await cache.install(engine, ref("B1"), {
       filename: "sheet!B1.gojr",
-      source: "return lib.Add(sheet.A1)",
+      source: "return lib.Add(sheet.A1.(int64))",
       declaredDeps: deps,
       packageCacheKeys: ["example.com/lib:v2"],
       compiler

@@ -11,19 +11,20 @@ import type { Type } from "./type.js";
 import type { Package } from "./package.js";
 import { Checker, debug , registerCheckerMethod } from "./check.js";
 import { assert } from "./util.js";
-import { asNamed, Unalias } from "./alias.js";
-import { Pointer } from "./pointer.js";
-import { Interface } from "./interface.js";
-import { Struct } from "./struct.js";
-import { Func, Id, Var, type Object } from "./object.js";
-import { Named } from "./named.js";
+import * as aliasTypes from "./alias.js";
+import * as pointerTypes from "./pointer.js";
+import * as interfaceTypes from "./interface.js";
+import * as structTypes from "./struct.js";
+import * as objectTypes from "./object.js";
+import type { Object } from "./object.js";
+import * as namedTypes from "./named.js";
 import { Identical, isTypeParam, isValid, IsInterface } from "./predicates.js";
 import { commonUnder } from "./under.js";
-import { Typ } from "./universe.js";
+import * as universeTypes from "./universe.js";
 import { BasicKind } from "./basic.js";
 import { Selection, SelectionKind } from "./selection.js";
 import { WriteSignature, type Qualifier } from "./typestring.js";
-import { Signature } from "./signature.js";
+import * as signatureTypes from "./signature.js";
 
 export type Cause = { value: string };
 
@@ -36,9 +37,9 @@ export function LookupSelection(T: Type, addressable: boolean, pkg: Package | nu
   let kind: SelectionKind;
   if (obj === null) {
     return [new Selection(SelectionKind.FieldVal, null, dummyObject(), [], false), false];
-  } else if (obj instanceof Func) {
+  } else if (obj instanceof objectTypes.Func) {
     kind = SelectionKind.MethodVal;
-  } else if (obj instanceof Var) {
+  } else if (obj instanceof objectTypes.Var) {
     kind = SelectionKind.FieldVal;
   } else {
     throw new Error(String(obj)); // can't happen
@@ -88,12 +89,12 @@ export function lookupFieldOrMethod(T: Type, addressable: boolean, pkg: Package 
   // Thus, if we have a named pointer type, proceed with the underlying
   // pointer type but discard the result if it is a method since we would
   // not have found it for T (see also go.dev/issue/8590).
-  const t = asNamed(T);
+  const t = aliasTypes.asNamed(T);
   if (t !== null) {
     const p = t.Underlying();
-    if (p instanceof Pointer) {
+    if (p instanceof pointerTypes.Pointer) {
       const [obj, index, indirect] = lookupFieldOrMethodImpl(p, false, pkg, name, foldCase);
-      if (obj instanceof Func) {
+      if (obj instanceof objectTypes.Func) {
         return [null, null, false];
       }
       return [obj, index, indirect];
@@ -111,7 +112,7 @@ export function lookupFieldOrMethod(T: Type, addressable: boolean, pkg: Package 
     const [tt] = commonUnder(T, null);
     if (tt !== null) {
       [obj, index, indirect] = lookupFieldOrMethodImpl(tt, addressable, pkg, name, foldCase);
-      if (!(obj instanceof Var)) {
+      if (!(obj instanceof objectTypes.Var)) {
         obj = null;
         index = null;
         indirect = false; // accept fields (variables) only
@@ -138,7 +139,7 @@ export function lookupFieldOrMethodImpl(T: Type, addressable: boolean, pkg: Pack
 
   // *typ where typ is an interface (incl. a type parameter) has no methods.
   if (isPtr) {
-    if (typ.Underlying() instanceof Interface) {
+    if (typ.Underlying() instanceof interfaceTypes.Interface) {
       return [null, null, false];
     }
   }
@@ -163,7 +164,7 @@ export function lookupFieldOrMethodImpl(T: Type, addressable: boolean, pkg: Pack
 
       // If we have a named type, we may have associated methods.
       // Look for those first.
-      const named = asNamed(typ);
+      const named = aliasTypes.asNamed(typ);
       if (named !== null) {
         const alt = seen.lookup(named);
         if (alt !== null) {
@@ -192,7 +193,7 @@ export function lookupFieldOrMethodImpl(T: Type, addressable: boolean, pkg: Pack
       }
 
       const u = typ.Underlying();
-      if (u instanceof Struct) {
+      if (u instanceof structTypes.Struct) {
         // look for a matching field and collect embedded types
         for (let i = 0; i < (u.fields?.length ?? 0); i++) {
           const f = u.fields![i]!;
@@ -223,7 +224,7 @@ export function lookupFieldOrMethodImpl(T: Type, addressable: boolean, pkg: Pack
             next.push(new embeddedType(typ2, concat(e.index, i), e.indirect || isPtr2, e.multiples));
           }
         }
-      } else if (u instanceof Interface) {
+      } else if (u instanceof interfaceTypes.Interface) {
         // look for a matching method (interface may be a type parameter)
         const [i, m] = u.typeSet().LookupMethod(pkg, name, foldCase);
         if (m !== null) {
@@ -240,7 +241,7 @@ export function lookupFieldOrMethodImpl(T: Type, addressable: boolean, pkg: Pack
 
     if (obj !== null) {
       // found a potential match
-      if (obj instanceof Func) {
+      if (obj instanceof objectTypes.Func) {
         // determine if method has a pointer receiver
         if (obj.hasPtrRecv() && !indirect && !addressable) {
           return [null, null, true]; // pointer/addressable receiver required
@@ -308,10 +309,10 @@ export function lookupType(m: Map<Type, number>, typ: Type): [number, boolean] {
 export class instanceLookup {
   // buf is used to avoid allocating the map m in the common case of a small
   // number of instances.
-  public buf: (Named | null)[] = [null, null, null];
-  public m: Map<Named, Named[]> | null = null;
+  public buf: (namedTypes.Named | null)[] = [null, null, null];
+  public m: Map<namedTypes.Named, namedTypes.Named[]> | null = null;
 
-  public lookup(inst: Named): Named | null {
+  public lookup(inst: namedTypes.Named): namedTypes.Named | null {
     for (const t of this.buf) {
       if (t !== null && Identical(inst, t)) {
         return t;
@@ -325,7 +326,7 @@ export class instanceLookup {
     return null;
   }
 
-  public add(inst: Named): void {
+  public add(inst: namedTypes.Named): void {
     for (let i = 0; i < this.buf.length; i++) {
       const t = this.buf[i];
       if (t === null) {
@@ -345,27 +346,27 @@ export class instanceLookup {
 // MissingMethod returns (nil, false) if V implements T, otherwise it
 // returns a missing method required by T and whether it is missing or
 // just has the wrong type: either a pointer receiver or wrong signature.
-export function MissingMethod(V: Type, T: Interface, static_: boolean): [Func | null, boolean] {
+export function MissingMethod(V: Type, T: interfaceTypes.Interface, static_: boolean): [objectTypes.Func | null, boolean] {
   return missingMethod(null, V, T, static_, Identical, null);
 }
 
 declare module "./check.js" {
   interface Checker {
-    missingMethod(V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): [Func | null, boolean];
+    missingMethod(V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): [objectTypes.Func | null, boolean];
     hasAllMethods(V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): boolean;
     interfacePtrError(T: Type): string;
-    funcString(f: Func, pkgInfo: boolean): string;
+    funcString(f: objectTypes.Func, pkgInfo: boolean): string;
     assertableTo(V: Type, T: Type, cause: Cause | null): boolean;
     newAssertableTo(V: Type, T: Type, cause: Cause | null): boolean;
   }
 }
 
-registerCheckerMethod("missingMethod", function missingMethodMethod(V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): [Func | null, boolean] {
+registerCheckerMethod("missingMethod", function missingMethodMethod(V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): [objectTypes.Func | null, boolean] {
   return missingMethod(this, V, T, static_, equivalent, cause);
 });
 
-export function missingMethod(check: Checker | null, V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): [Func | null, boolean] {
-  const methods = (T.Underlying() as Interface).typeSet().methods; // T must be an interface
+export function missingMethod(check: Checker | null, V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): [objectTypes.Func | null, boolean] {
+  const methods = (T.Underlying() as interfaceTypes.Interface).typeSet().methods; // T must be an interface
   if (methods.length === 0) {
     return [null, false];
   }
@@ -381,11 +382,11 @@ export function missingMethod(check: Checker | null, V: Type, T: Type, static_: 
   const nointerface = 8;
 
   let state = ok;
-  let m: Func | null = null; // method on T we're trying to implement
-  let f: Func | null = null; // method on V, if found (state is one of ok, wrongName, wrongSig)
+  let m: objectTypes.Func | null = null; // method on T we're trying to implement
+  let f: objectTypes.Func | null = null; // method on V, if found (state is one of ok, wrongName, wrongSig)
 
   const u = V.Underlying();
-  if (u instanceof Interface) {
+  if (u instanceof interfaceTypes.Interface) {
     const tset = u.typeSet();
     for (m of methods) {
       [, f] = tset.LookupMethod(m.pkg, m.name, false);
@@ -419,7 +420,7 @@ export function missingMethod(check: Checker | null, V: Type, T: Type, static_: 
           default:
             state = notFound;
             [obj] = lookupFieldOrMethodImpl(V, false, m.pkg, m.name, true /* fold case */);
-            f = obj instanceof Func ? obj : null;
+            f = obj instanceof objectTypes.Func ? obj : null;
             if (f !== null) {
               state = wrongName;
               if (f.name === m.name) {
@@ -433,7 +434,7 @@ export function missingMethod(check: Checker | null, V: Type, T: Type, static_: 
       }
 
       // we must have a method (not a struct field)
-      f = obj instanceof Func ? obj : null;
+      f = obj instanceof objectTypes.Func ? obj : null;
       if (f === null) {
         state = field;
         break;
@@ -548,9 +549,9 @@ export function hasAllMethods(check: Checker | null, V: Type, T: Type, static_: 
 
 // hasInvalidEmbeddedFields reports whether T is a struct (or a pointer to a struct) that contains
 // (directly or indirectly) embedded fields with invalid types.
-export function hasInvalidEmbeddedFields(T: Type, seen: Map<Struct, boolean> | null): boolean {
+export function hasInvalidEmbeddedFields(T: Type, seen: Map<structTypes.Struct, boolean> | null): boolean {
   const S = derefStructPtr(T).Underlying();
-  if (S instanceof Struct && !seen?.get(S)) {
+  if (S instanceof structTypes.Struct && !seen?.get(S)) {
     if (seen === null) {
       seen = new Map();
     }
@@ -566,7 +567,7 @@ export function hasInvalidEmbeddedFields(T: Type, seen: Map<Struct, boolean> | n
 
 export function isInterfacePtr(T: Type): boolean {
   const p = T.Underlying();
-  return p instanceof Pointer && IsInterface(p.base);
+  return p instanceof pointerTypes.Pointer && IsInterface(p.base);
 }
 
 registerCheckerMethod("interfacePtrError", function interfacePtrErrorMethod(T: Type): string {
@@ -576,26 +577,26 @@ registerCheckerMethod("interfacePtrError", function interfacePtrErrorMethod(T: T
 // check may be nil.
 export function interfacePtrError(check: Checker | null, T: Type): string {
   assert(isInterfacePtr(T));
-  const p = T.Underlying() as Pointer;
+  const p = T.Underlying() as pointerTypes.Pointer;
   if (isTypeParam(p.base)) {
     return sprintfCheck(check, "type %s is pointer to type parameter, not type parameter", T);
   }
   return sprintfCheck(check, "type %s is pointer to interface, not interface", T);
 }
 
-registerCheckerMethod("funcString", function funcStringMethod(f: Func, pkgInfo: boolean): string {
+registerCheckerMethod("funcString", function funcStringMethod(f: objectTypes.Func, pkgInfo: boolean): string {
   return funcString(this, f, pkgInfo);
 });
 
 // funcString returns a string of the form name + signature for f.
 // check may be nil.
-export function funcString(check: Checker | null, f: Func, pkgInfo: boolean): string {
+export function funcString(check: Checker | null, f: objectTypes.Func, pkgInfo: boolean): string {
   const buf: string[] = [f.name];
   let qf: Qualifier | null = null;
   if (check !== null && !pkgInfo) {
     qf = (pkg) => check.qualifier(pkg as Package);
   }
-  WriteSignature(buf, f.typ as Signature, qf);
+  WriteSignature(buf, f.typ as signatureTypes.Signature, qf);
   return buf.join("");
 }
 
@@ -638,14 +639,14 @@ function implementsForLookup(V: Type, T: Type, constraint: boolean, cause: Cause
 // with an underlying pointer type!) and returns its base and true.
 // Otherwise it returns (typ, false).
 export function deref(typ: Type): [Type, boolean] {
-  const p = Unalias(typ);
-  if (p instanceof Pointer) {
+  const p = aliasTypes.Unalias(typ);
+  if (p instanceof pointerTypes.Pointer) {
     // p.base should never be nil, but be conservative
     if (p.base === null) {
       if (debug) {
         throw new Error("pointer with nil base type (possibly due to an invalid cyclic declaration)");
       }
-      return [Typ[BasicKind.Invalid]!, true];
+      return [universeTypes.Typ[BasicKind.Invalid]!, true];
     }
     return [p.base, true];
   }
@@ -656,8 +657,8 @@ export function deref(typ: Type): [Type, boolean] {
 // (named or unnamed) struct and returns its base. Otherwise it returns typ.
 export function derefStructPtr(typ: Type): Type {
   const p = typ.Underlying();
-  if (p instanceof Pointer) {
-    if (p.base.Underlying() instanceof Struct) {
+  if (p instanceof pointerTypes.Pointer) {
+    if (p.base.Underlying() instanceof structTypes.Struct) {
       return p.base;
     }
   }
@@ -675,7 +676,7 @@ export function concat(list: number[] | null, i: number): number[] {
 
 // methodIndex returns the index of and method with matching package and name, or (-1, nil).
 // See Object.sameId for the meaning of foldCase.
-export function methodIndex(methods: Func[], pkg: Package | null, name: string, foldCase: boolean): [number, Func | null] {
+export function methodIndex(methods: objectTypes.Func[], pkg: Package | null, name: string, foldCase: boolean): [number, objectTypes.Func | null] {
   if (name !== "_") {
     for (let i = 0; i < methods.length; i++) {
       const m = methods[i]!;
@@ -695,7 +696,7 @@ export function fieldPath(typ0: Type, index: number[]): string {
   let typ = typ0;
   for (const i of index) {
     const u = derefStructPtr(typ).Underlying();
-    if (!(u instanceof Struct)) {
+    if (!(u instanceof structTypes.Struct)) {
       // should not happen if index is valid for typ
       break;
     }

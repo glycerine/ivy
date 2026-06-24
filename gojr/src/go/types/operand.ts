@@ -12,19 +12,19 @@ import { TokenKind } from "../../front/token.js";
 import { nopos, type Checker } from "./check.js";
 import type { Type } from "./type.js";
 import type { builtinId } from "./universe.js";
-import { Typ } from "./universe.js";
+import * as universeTypes from "./universe.js";
 import { Basic, BasicKind } from "./basic.js";
-import { Array } from "./array.js";
-import { Chan, ChanDir } from "./chan.js";
-import { Interface } from "./interface.js";
-import { Map as MapType } from "./map.js";
-import { Pointer } from "./pointer.js";
-import { Signature } from "./signature.js";
-import { Slice } from "./slice.js";
-import { Struct } from "./struct.js";
-import { Tuple } from "./tuple.js";
-import { TypeParam } from "./typeparam.js";
-import { Union } from "./union.js";
+import * as arrayTypes from "./array.js";
+import * as chanTypes from "./chan.js";
+import * as interfaceTypes from "./interface.js";
+import * as mapTypes from "./map.js";
+import * as pointerTypes from "./pointer.js";
+import * as signatureTypes from "./signature.js";
+import * as sliceTypes from "./slice.js";
+import * as structTypes from "./struct.js";
+import * as tupleTypes from "./tuple.js";
+import * as typeparamTypes from "./typeparam.js";
+import * as unionTypes from "./union.js";
 import { Identical, hasName, isUntyped, isValid } from "./predicates.js";
 import { Unalias } from "./alias.js";
 import { isInterfacePtr, type Cause } from "./lookup.js";
@@ -136,17 +136,17 @@ export class operand {
     const val = makeFromLiteral(lit, k);
     if ((val as { kind?: string }).kind === "Unknown") {
       this.invalidate();
-      this.typ_ = Typ[BasicKind.Invalid]!;
+      this.typ_ = universeTypes.Typ[BasicKind.Invalid]!;
       return;
     }
     this.mode_ = constant_;
-    this.typ_ = Typ[kind]!;
+    this.typ_ = universeTypes.Typ[kind]!;
     this.val = val;
   }
 
   // isNil reports whether x is the (untyped) nil value.
   public isNil(): boolean {
-    return this.mode() === operandMode.nilvalue || this.mode() === operandMode.value && this.typ() === Typ[BasicKind.UntypedNil];
+    return this.mode() === operandMode.nilvalue || this.mode() === operandMode.value && this.typ() === universeTypes.Typ[BasicKind.UntypedNil];
   }
 
   // assignableTo reports whether x is assignable to a variable of type T. If the
@@ -171,8 +171,8 @@ export class operand {
 
     const Vu = V.Underlying();
     const Tu = T.Underlying();
-    const Vp = V instanceof TypeParam ? V : null;
-    const Tp = T instanceof TypeParam ? T : null;
+    const Vp = V instanceof typeparamTypes.TypeParam ? V : null;
+    const Tp = T instanceof typeparamTypes.TypeParam ? T : null;
 
     // x is an untyped value representable by a value of type T.
     if (isUntyped(Vu)) {
@@ -206,7 +206,7 @@ export class operand {
     // T is an interface type, but not a type parameter, and V implements T.
     // Also handle the case where T is a pointer to an interface so that we get
     // the Checker.implements error cause.
-    if ((Tu instanceof Interface && Tp === null) || isInterfacePtr(Tu)) {
+    if ((Tu instanceof interfaceTypes.Interface && Tp === null) || isInterfacePtr(Tu)) {
       if (implements_(check, V, T, false, cause)) {
         return [true, 0];
       }
@@ -221,7 +221,7 @@ export class operand {
     }
 
     // If V is an interface, check if a missing type assertion is the problem.
-    if (Vu instanceof Interface && Vp === null) {
+    if (Vu instanceof interfaceTypes.Interface && Vp === null) {
       if (implements_(check, T, V, false, null)) {
         // T implements V, so give hint about type assertion.
         if (cause !== null) {
@@ -234,8 +234,8 @@ export class operand {
     // x is a bidirectional channel value, T is a channel
     // type, x's type V and T have identical element types,
     // and at least one of V or T is not a named type.
-    if (Vu instanceof Chan && Vu.dir === ChanDir.SendRecv) {
-      if (Tu instanceof Chan && Identical(Vu.elem, Tu.elem)) {
+    if (Vu instanceof chanTypes.Chan && Vu.dir === chanTypes.ChanDir.SendRecv) {
+      if (Tu instanceof chanTypes.Chan && Identical(Vu.elem, Tu.elem)) {
         return [!hasName(V) || !hasName(T), "InvalidChanAssign"];
       }
     }
@@ -309,11 +309,11 @@ export class operand {
 }
 
 export function operandString(x: operand, _qf: unknown): string {
-  if (x.mode() === operandMode.nilvalue || x.mode() === operandMode.value && x.typ() === Typ[BasicKind.UntypedNil]) {
-    if (x.typ() === null || x.typ() === Typ[BasicKind.Invalid]) {
+  if (x.mode() === operandMode.nilvalue || x.mode() === operandMode.value && x.typ() === universeTypes.Typ[BasicKind.UntypedNil]) {
+    if (x.typ() === null || x.typ() === universeTypes.Typ[BasicKind.Invalid]) {
       return "nil (with invalid type)";
     }
-    if (x.typ() === Typ[BasicKind.UntypedNil]) {
+    if (x.typ() === universeTypes.Typ[BasicKind.UntypedNil]) {
       return "nil";
     }
     return `nil (of type ${x.typ()})`;
@@ -337,34 +337,34 @@ export function compositeKind(typ: Type): string {
   if (t instanceof Basic) {
     return "";
   }
-  if (t instanceof Array) {
+  if (t instanceof arrayTypes.Array) {
     return "array";
   }
-  if (t instanceof Slice) {
+  if (t instanceof sliceTypes.Slice) {
     return "slice";
   }
-  if (t instanceof Struct) {
+  if (t instanceof structTypes.Struct) {
     return "struct";
   }
-  if (t instanceof Pointer) {
+  if (t instanceof pointerTypes.Pointer) {
     return "pointer";
   }
-  if (t instanceof Signature) {
+  if (t instanceof signatureTypes.Signature) {
     return "func";
   }
-  if (t instanceof Interface) {
+  if (t instanceof interfaceTypes.Interface) {
     return "interface";
   }
-  if (t instanceof MapType) {
+  if (t instanceof mapTypes.Map) {
     return "map";
   }
-  if (t instanceof Chan) {
+  if (t instanceof chanTypes.Chan) {
     return "chan";
   }
-  if (t instanceof Tuple) {
+  if (t instanceof tupleTypes.Tuple) {
     return "tuple";
   }
-  if (t instanceof Union) {
+  if (t instanceof unionTypes.Union) {
     return "union";
   }
   throw new Error("unreachable");
@@ -375,13 +375,13 @@ function implicitTypeAndValue(check: Checker | null, x: operand, target: Type): 
   if (fn !== null && typeof fn.implicitTypeAndValue === "function") {
     return fn.implicitTypeAndValue(x, target);
   }
-  if (x.typ() === Typ[BasicKind.UntypedNil]) {
+  if (x.typ() === universeTypes.Typ[BasicKind.UntypedNil]) {
     return [null, null, "UntypedNilUse"];
   }
   return [target, x.val, 0];
 }
 
-function assertNoTypeParam(t: TypeParam | null): void {
+function assertNoTypeParam(t: typeparamTypes.TypeParam | null): void {
   if (t !== null) {
     throw new Error("assertion failed");
   }

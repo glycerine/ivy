@@ -7,7 +7,7 @@ import {
 
 describe("Go-junior static compile API", () => {
   test("typechecks formula snippets without evaluating them", () => {
-    const result = compileSource("sheet.A1 + 2", {
+    const result = compileSource("sheet.A1.(int64) + 2", {
       sheet: {
         A1: 40n
       }
@@ -25,7 +25,7 @@ return a + s
 `);
 
     expect(result.diagnostics.map((diagnostic) => diagnostic.code)).toEqual(["GOJR_TYPE001"]);
-    expect(result.diagnostics[0]?.message).toContain("mismatched types int64 and string");
+    expect(result.diagnostics[0]?.message).toContain("mismatched types int and string");
   });
 
   test("typechecks package source files", () => {
@@ -81,7 +81,7 @@ return app.Nope()
         "example.com/app": app.packageInfo
       }
     });
-    expect(bad.diagnostics.map((diagnostic) => diagnostic.code)).toEqual(["GOJR_TYPE001", "GOJR_TYPE001"]);
+    expect(bad.diagnostics.map((diagnostic) => diagnostic.code)).toEqual(["GOJR_TYPE001"]);
     expect(bad.diagnostics.map((diagnostic) => diagnostic.message).join("\n")).toContain("Nope");
   });
 });

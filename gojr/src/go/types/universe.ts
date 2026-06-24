@@ -291,6 +291,15 @@ export function init(): void {
   universeComparable = Universe.Lookup("comparable")!;
 }
 
+export function UniverseAnyType(): Type {
+  init();
+  const typ = universeAny?.Type?.() ?? null;
+  if (typ === null) {
+    throw new Error("go/types: predeclared any is not initialized");
+  }
+  return typ;
+}
+
 // Objects with names containing blanks are internal and not entered into
 // a scope. Objects with exported names are inserted in the unsafe package
 // scope; other objects are inserted in the universe scope.

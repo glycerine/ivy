@@ -8,19 +8,19 @@
 import type { Package } from "./package.js";
 import type { Type } from "./type.js";
 import { Basic, BasicKind, IsBoolean, IsComplex, IsConstType, IsFloat, IsInteger, IsNumeric, IsOrdered, IsString, IsUnsigned, IsUntyped, type BasicInfo } from "./basic.js";
-import { Array } from "./array.js";
-import { Slice } from "./slice.js";
-import { Struct } from "./struct.js";
-import { Pointer } from "./pointer.js";
-import { Tuple } from "./tuple.js";
-import { Signature } from "./signature.js";
-import { Map as MapType } from "./map.js";
-import { Chan } from "./chan.js";
-import { Alias, asNamed, Unalias } from "./alias.js";
-import { Named } from "./named.js";
-import { TypeParam } from "./typeparam.js";
-import { Interface } from "./interface.js";
-import { Union } from "./union.js";
+import * as arrayTypes from "./array.js";
+import * as sliceTypes from "./slice.js";
+import * as structTypes from "./struct.js";
+import * as pointerTypes from "./pointer.js";
+import * as tupleTypes from "./tuple.js";
+import * as signatureTypes from "./signature.js";
+import * as mapTypes from "./map.js";
+import * as chanTypes from "./chan.js";
+import * as aliasTypes from "./alias.js";
+import * as namedTypes from "./named.js";
+import * as typeparamTypes from "./typeparam.js";
+import * as interfaceTypes from "./interface.js";
+import * as unionTypes from "./union.js";
 import { typeError, typeErrorf, underIs } from "./under.js";
 import { Typ, universeRune } from "./universe.js";
 import { debug, nopos } from "./check.js";
@@ -32,7 +32,7 @@ import { setIdenticalForTypeTerms } from "./typeterm.js";
 import { assert } from "./util.js";
 
 // isValid reports whether t is a valid type.
-export function isValid(t: Type | null): boolean { return Unalias(t) !== Typ[BasicKind.Invalid]; }
+export function isValid(t: Type | null): boolean { return aliasTypes.Unalias(t) !== Typ[BasicKind.Invalid]; }
 
 // The isX predicates below report whether t is an X.
 // If t is a type parameter the result is false; i.e.,
@@ -72,8 +72,8 @@ export function allNumericOrString(t: Type): boolean { return allBasic(t, IsNume
 // If t is a type parameter, the result is true if isBasic(t, info) is true
 // for all specific types of the type parameter's type set.
 export function allBasic(t: Type, info: BasicInfo): boolean {
-  const tpar = Unalias(t);
-  if (tpar instanceof TypeParam) {
+  const tpar = aliasTypes.Unalias(t);
+  if (tpar instanceof typeparamTypes.TypeParam) {
     return tpar.iface().typeSet().is((t) => t !== null && isBasic(t.typ!, info));
   }
   return isBasic(t, info);
@@ -83,11 +83,11 @@ export function allBasic(t: Type, info: BasicInfo): boolean {
 // predeclared types, defined types, and type parameters.
 // hasName may be called with types that are not fully set up.
 export function hasName(t: Type): boolean {
-  const u = Unalias(t);
+  const u = aliasTypes.Unalias(t);
   switch (true) {
     case u instanceof Basic:
-    case u instanceof Named:
-    case u instanceof TypeParam:
+    case u instanceof namedTypes.Named:
+    case u instanceof typeparamTypes.TypeParam:
       return true;
   }
   return false;
@@ -97,10 +97,10 @@ export function hasName(t: Type): boolean {
 // This includes all non-defined types, but also basic types.
 // isTypeLit may be called with types that are not fully set up.
 export function isTypeLit(t: Type): boolean {
-  const u = Unalias(t);
+  const u = aliasTypes.Unalias(t);
   switch (true) {
-    case u instanceof Named:
-    case u instanceof TypeParam:
+    case u instanceof namedTypes.Named:
+    case u instanceof typeparamTypes.TypeParam:
       return false;
   }
   return true;
@@ -133,7 +133,7 @@ export function isUntypedNumeric(t: Type): boolean {
 
 // IsInterface reports whether t is an interface type.
 export function IsInterface(t: Type): boolean {
-  return t.Underlying() instanceof Interface;
+  return t.Underlying() instanceof interfaceTypes.Interface;
 }
 
 // isNonTypeParamInterface reports whether t is an interface type but not a type parameter.
@@ -143,7 +143,7 @@ export function isNonTypeParamInterface(t: Type): boolean {
 
 // isTypeParam reports whether t is a type parameter.
 export function isTypeParam(t: Type): boolean {
-  return Unalias(t) instanceof TypeParam;
+  return aliasTypes.Unalias(t) instanceof typeparamTypes.TypeParam;
 }
 
 // hasEmptyTypeset reports whether t is a type parameter with an empty type set.
@@ -151,10 +151,10 @@ export function isTypeParam(t: Type): boolean {
 // use anywhere, but it may report a false negative if the type set has not been
 // computed yet.
 export function hasEmptyTypeset(t: Type): boolean {
-  const tpar = Unalias(t);
-  if (tpar instanceof TypeParam && tpar.bound !== null) {
+  const tpar = aliasTypes.Unalias(t);
+  if (tpar instanceof typeparamTypes.TypeParam && tpar.bound !== null) {
     const iface = safeUnderlying(tpar.bound);
-    return iface instanceof Interface && iface.tset !== null && iface.tset.IsEmpty();
+    return iface instanceof interfaceTypes.Interface && iface.tset !== null && iface.tset.IsEmpty();
   }
   return false;
 }
@@ -168,10 +168,10 @@ function safeUnderlying(t: Type): Type {
 // TODO(gri) should we include signatures or assert that they are not present?
 export function isGeneric(t: Type): boolean {
   // A parameterized type is only generic if it doesn't have an instantiation already.
-  if (t instanceof Alias && t.tparams !== null && t.targs === null) {
+  if (t instanceof aliasTypes.Alias && t.tparams !== null && t.targs === null) {
     return true;
   }
-  const named = asNamed(t);
+  const named = aliasTypes.asNamed(t);
   return named !== null && named.obj !== null && named.inst === null && (named.TypeParams()?.Len() ?? 0) > 0;
 }
 
@@ -198,19 +198,19 @@ export function comparableType(T: Type, dynamic: boolean, seen: Map<Type, boolea
     if (t.kind === BasicKind.UntypedNil) {
       return typeErrorf("");
     }
-  } else if (t instanceof Pointer || t instanceof Chan) {
+  } else if (t instanceof pointerTypes.Pointer || t instanceof chanTypes.Chan) {
     // always comparable
-  } else if (t instanceof Struct) {
+  } else if (t instanceof structTypes.Struct) {
     for (const f of t.fields ?? []) {
       if (comparableType(f.typ!, dynamic, seen) !== null) {
         return typeErrorf("struct containing %s cannot be compared", f.typ);
       }
     }
-  } else if (t instanceof Array) {
+  } else if (t instanceof arrayTypes.Array) {
     if (comparableType(t.elem, dynamic, seen) !== null) {
       return typeErrorf("%s cannot be compared", T);
     }
-  } else if (t instanceof Interface) {
+  } else if (t instanceof interfaceTypes.Interface) {
     if ((dynamic && !isTypeParam(T)) || t.typeSet().IsComparable(seen)) {
       return null;
     }
@@ -234,10 +234,10 @@ export function hasNil(t: Type): boolean {
   if (u instanceof Basic) {
     return u.kind === BasicKind.UnsafePointer;
   }
-  if (u instanceof Slice || u instanceof Pointer || u instanceof Signature || u instanceof MapType || u instanceof Chan) {
+  if (u instanceof sliceTypes.Slice || u instanceof pointerTypes.Pointer || u instanceof signatureTypes.Signature || u instanceof mapTypes.Map || u instanceof chanTypes.Chan) {
     return true;
   }
-  if (u instanceof Interface) {
+  if (u instanceof interfaceTypes.Interface) {
     return !isTypeParam(t) || underIs(t, (u) => u !== null && hasNil(u));
   }
   return false;
@@ -256,8 +256,8 @@ export function samePkg(a: Package | null, b: Package | null): boolean {
 // An ifacePair is a node in a stack of interface type pairs compared for identity.
 export class ifacePair {
   public constructor(
-    public x: Interface,
-    public y: Interface,
+    public x: interfaceTypes.Interface,
+    public y: interfaceTypes.Interface,
     public prev: ifacePair | null
   ) {}
 
@@ -273,8 +273,8 @@ export class comparer {
 
   // For changes to this code the corresponding changes should be made to unifier.nify.
   public identical(x0: Type | null, y0: Type | null, p: ifacePair | null): boolean {
-    let x = Unalias(x0);
-    let y = Unalias(y0);
+    let x = aliasTypes.Unalias(x0);
+    let y = aliasTypes.Unalias(y0);
 
     if (x === y) {
       return true;
@@ -291,25 +291,25 @@ export class comparer {
       if (y instanceof Basic) {
         return x.kind === y.kind;
       }
-    } else if (x instanceof Array) {
+    } else if (x instanceof arrayTypes.Array) {
       // Two array types are identical if they have identical element types
       // and the same array length.
-      if (y instanceof Array) {
+      if (y instanceof arrayTypes.Array) {
         // If one or both array lengths are unknown (< 0) due to some error,
         // assume they are the same to avoid spurious follow-on errors.
         return (x.len < 0 || y.len < 0 || x.len === y.len) && this.identical(x.elem, y.elem, p);
       }
-    } else if (x instanceof Slice) {
+    } else if (x instanceof sliceTypes.Slice) {
       // Two slice types are identical if they have identical element types.
-      if (y instanceof Slice) {
+      if (y instanceof sliceTypes.Slice) {
         return this.identical(x.elem, y.elem, p);
       }
-    } else if (x instanceof Struct) {
+    } else if (x instanceof structTypes.Struct) {
       // Two struct types are identical if they have the same sequence of fields,
       // and if corresponding fields have the same names, and identical types,
       // and identical tags. Two embedded fields are considered to have the same
       // name. Lower-case field names from different packages are always different.
-      if (y instanceof Struct) {
+      if (y instanceof structTypes.Struct) {
         if (x.NumFields() === y.NumFields()) {
           for (let i = 0; i < (x.fields?.length ?? 0); i++) {
             const f = x.fields![i]!;
@@ -324,15 +324,15 @@ export class comparer {
           return true;
         }
       }
-    } else if (x instanceof Pointer) {
+    } else if (x instanceof pointerTypes.Pointer) {
       // Two pointer types are identical if they have identical base types.
-      if (y instanceof Pointer) {
+      if (y instanceof pointerTypes.Pointer) {
         return this.identical(x.base, y.base, p);
       }
-    } else if (x instanceof Tuple) {
+    } else if (x instanceof tupleTypes.Tuple) {
       // Two tuples types are identical if they have the same number of elements
       // and corresponding elements have identical types.
-      if (y instanceof Tuple) {
+      if (y instanceof tupleTypes.Tuple) {
         if (x.Len() === y.Len()) {
           if (x !== null) {
             for (let i = 0; i < x.vars.length; i++) {
@@ -346,8 +346,8 @@ export class comparer {
           return true;
         }
       }
-    } else if (x instanceof Signature) {
-      if (!(y instanceof Signature)) {
+    } else if (x instanceof signatureTypes.Signature) {
+      if (!(y instanceof signatureTypes.Signature)) {
         return false;
       }
 
@@ -389,23 +389,23 @@ export class comparer {
           }
         }
 
-        yparams = substType(null, nopos, y.params, smap, null, ctxt) as Tuple | null;
-        yresults = substType(null, nopos, y.results, smap, null, ctxt) as Tuple | null;
+        yparams = substType(null, nopos, y.params, smap, null, ctxt) as tupleTypes.Tuple | null;
+        yresults = substType(null, nopos, y.results, smap, null, ctxt) as tupleTypes.Tuple | null;
       }
 
       return x.variadic === y.variadic &&
         this.identical(x.params, yparams, p) &&
         this.identical(x.results, yresults, p);
-    } else if (x instanceof Union) {
-      if (y instanceof Union) {
+    } else if (x instanceof unionTypes.Union) {
+      if (y instanceof unionTypes.Union) {
         // TODO(rfindley): can this be reached during type checking? If so,
         // consider passing a type set map.
-        const unionSets = new Map<Union, import("./typeset.js")._TypeSet>();
+        const unionSets = new Map<unionTypes.Union, import("./typeset.js")._TypeSet>();
         const xset = computeUnionTypeSet(null, unionSets, nopos, x);
         const yset = computeUnionTypeSet(null, unionSets, nopos, y);
         return xset.terms.equal(yset.terms);
       }
-    } else if (x instanceof Interface) {
+    } else if (x instanceof interfaceTypes.Interface) {
       // Two interface types are identical if they describe the same type sets.
       // With the existing implementation restriction, this simplifies to:
       //
@@ -413,7 +413,7 @@ export class comparer {
       // the same names and identical function types, and if any type restrictions
       // are the same. Lower-case method names from different packages are always
       // different. The order of the methods is irrelevant.
-      if (y instanceof Interface) {
+      if (y instanceof interfaceTypes.Interface) {
         const xset = x.typeSet();
         const yset = y.typeSet();
         if (xset.comparable !== yset.comparable) {
@@ -467,22 +467,22 @@ export class comparer {
           return true;
         }
       }
-    } else if (x instanceof MapType) {
+    } else if (x instanceof mapTypes.Map) {
       // Two map types are identical if they have identical key and value types.
-      if (y instanceof MapType) {
+      if (y instanceof mapTypes.Map) {
         return this.identical(x.key, y.key, p) && this.identical(x.elem, y.elem, p);
       }
-    } else if (x instanceof Chan) {
+    } else if (x instanceof chanTypes.Chan) {
       // Two channel types are identical if they have identical value types
       // and the same direction.
-      if (y instanceof Chan) {
+      if (y instanceof chanTypes.Chan) {
         return x.dir === y.dir && this.identical(x.elem, y.elem, p);
       }
-    } else if (x instanceof Named) {
+    } else if (x instanceof namedTypes.Named) {
       // Two named types are identical if their type names originate
       // in the same type declaration; if they are instantiated they
       // must have identical type argument lists.
-      const yn = asNamed(y);
+      const yn = aliasTypes.asNamed(y);
       if (yn !== null) {
         // check type arguments before origins to match unifier
         // (for correct source code we need to do all checks so
@@ -499,7 +499,7 @@ export class comparer {
         }
         return identicalOrigin(x, yn);
       }
-    } else if (x instanceof TypeParam) {
+    } else if (x instanceof typeparamTypes.TypeParam) {
       // nothing to do (x and y being equal is caught in the very beginning of this function)
     } else if (x === null) {
       // avoid a crash in case of nil type
@@ -512,7 +512,7 @@ export class comparer {
 }
 
 // identicalOrigin reports whether x and y originated in the same declaration.
-export function identicalOrigin(x: Named, y: Named): boolean {
+export function identicalOrigin(x: namedTypes.Named, y: namedTypes.Named): boolean {
   // TODO(gri) is this correct?
   return x.Origin().obj === y.Origin().obj;
 }

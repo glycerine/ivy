@@ -111,12 +111,13 @@ async function readSource(file: string | undefined): Promise<string> {
   return Buffer.concat(chunks).toString("utf8");
 }
 
-function printDiagnostics(diagnostics: Array<{ filename: string; severity: string; code: string; message: string; span?: { filename: string; line: number; column: number } }>): void {
+function printDiagnostics(diagnostics: Array<{ filename: string; severity: string; code: string; message: string; stack?: string; span?: { filename: string; line: number; column: number } }>): void {
   for (const diagnostic of diagnostics) {
     const location = diagnostic.span
       ? `${diagnostic.span.filename}:${diagnostic.span.line}:${diagnostic.span.column}: `
       : `${diagnostic.filename}: `;
-    const line = `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}`;
+    const stack = diagnostic.stack ? `\n${diagnostic.stack}` : "";
+    const line = `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}${stack}`;
     if (diagnostic.severity === "error") {
       console.error(line);
     } else {

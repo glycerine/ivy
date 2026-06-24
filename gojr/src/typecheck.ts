@@ -1,5 +1,5 @@
 import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan, diagnosticFilename } from "./diagnostics.js";
-import { AssignStmt, Decl, Expr, File, FuncDecl, FuncType, GenDecl, Ident, Stmt } from "./front/ast.js";
+import { AssignStmt, Decl, Expr, Field, File, FuncDecl, FuncType, GenDecl, Ident, Stmt } from "./front/ast.js";
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
 import {
@@ -112,9 +112,11 @@ export function checkGoJuniorFiles(
       filename: diagnosticFilename(undefined, firstFilename(files)),
       code: "GOJR_TYPE001",
       severity: "error",
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
+      ...(error instanceof Error && error.stack ? { stack: error.stack } : {})
     });
   }
+  filterTopLevelExpressionUnusedDiagnostics(diagnostics, statements);
 
   return {
     pkg,
@@ -123,6 +125,22 @@ export function checkGoJuniorFiles(
     files,
     statements
   };
+}
+
+function filterTopLevelExpressionUnusedDiagnostics(diagnostics: Diagnostic[], statements: Stmt[]): void {
+  const expressionOffsets = new Set(
+    statements
+      .filter((statement) => statement.kind === "ExprStmt" && statement.span !== undefined)
+      .map((statement) => statement.span!.offset)
+  );
+  if (expressionOffsets.size === 0) return;
+  const kept = diagnostics.filter((diagnostic) =>
+    !(diagnostic.code === "GOJR_TYPE001" &&
+      / is not used$/.test(diagnostic.message) &&
+      diagnostic.span !== undefined &&
+      expressionOffsets.has(diagnostic.span.offset))
+  );
+  diagnostics.splice(0, diagnostics.length, ...kept);
 }
 
 class FrontFileSet {
@@ -212,9 +230,11 @@ function shortDeclarationAsVar(statement: AssignStmt, names: Ident[]): GenDecl {
 }
 
 function syntheticFunctionDecl(statements: Stmt[], span: SourceSpan | undefined): FuncDecl {
+  const resultCount = maxReturnValueCount(statements);
   const type: FuncType = {
     kind: "FuncType",
     params: { kind: "FieldList", fields: [], ...(span ? { span } : {}) },
+    ...(resultCount > 0 ? { results: syntheticAnyResults(resultCount, span) } : {}),
     ...(span ? { span } : {})
   };
   return {
@@ -228,6 +248,53 @@ function syntheticFunctionDecl(statements: Stmt[], span: SourceSpan | undefined)
     },
     ...(span ? { span } : {})
   };
+}
+
+function syntheticAnyResults(count: number, span: SourceSpan | undefined): { kind: "FieldList"; fields: Field[]; span?: SourceSpan } {
+  return {
+    kind: "FieldList",
+    fields: globalThis.Array.from({ length: count }, () => ({
+      kind: "Field",
+      names: [],
+      type: ident("any", span),
+      ...(span ? { span } : {})
+    })),
+    ...(span ? { span } : {})
+  };
+}
+
+function maxReturnValueCount(statements: Stmt[]): number {
+  let max = 0;
+  for (const statement of statements) {
+    max = Math.max(max, returnValueCount(statement));
+  }
+  return max;
+}
+
+function returnValueCount(statement: Stmt): number {
+  switch (statement.kind) {
+    case "ReturnStmt":
+      return statement.results.length;
+    case "BlockStmt":
+      return maxReturnValueCount(statement.statements);
+    case "LabeledStmt":
+      return returnValueCount(statement.stmt);
+    case "IfStmt":
+      return Math.max(
+        statement.body ? returnValueCount(statement.body) : 0,
+        statement.else ? returnValueCount(statement.else) : 0
+      );
+    case "SwitchStmt":
+    case "TypeSwitchStmt":
+      return Math.max(0, ...statement.body.map((clause) => maxReturnValueCount(clause.body)));
+    case "SelectStmt":
+      return Math.max(0, ...statement.body.map((clause) => maxReturnValueCount(clause.body)));
+    case "ForStmt":
+    case "RangeStmt":
+      return returnValueCount(statement.body);
+    default:
+      return 0;
+  }
 }
 
 function importDeclarations(files: File[]): GenDecl[] {

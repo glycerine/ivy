@@ -9,7 +9,8 @@
 
 import type { Type } from "./type.js";
 import { Checker , registerCheckerMethod } from "./check.js";
-import { operand, constant_, value } from "./operand.js";
+import type { operand } from "./operand.js";
+import * as operandTypes from "./operand.js";
 import { Identical, isComplex, isConstType, isInteger, isIntegerOrFloat, isString, isTypeParam, isUntyped, allString } from "./predicates.js";
 import { Unalias } from "./alias.js";
 import { TypeParam } from "./typeparam.js";
@@ -36,7 +37,7 @@ registerCheckerMethod("conversion", function checkerConversion(x: operand, T: Ty
 });
 
 export function conversion(check: Checker, x: operand, T: Type): void {
-  const constArg = x.mode() === constant_;
+  const constArg = x.mode() === operandTypes.constant_;
 
   const constConvertibleTo = (T: Type, _val: { value: unknown } | null): boolean => {
     const t = T.Underlying();
@@ -73,12 +74,12 @@ export function conversion(check: Checker, x: operand, T: Type): void {
         }
         return true;
       });
-      x.mode_ = value;
+      x.mode_ = operandTypes.value;
       break;
     case convertibleTo(x, check, T, cause):
       // non-constant conversion
       ok = true;
-      x.mode_ = value;
+      x.mode_ = operandTypes.value;
       break;
   }
 
@@ -98,7 +99,7 @@ export function conversion(check: Checker, x: operand, T: Type): void {
     let final = T;
     if (isNonTypeParamInterfaceLocal(T) || constArg && !isConstType(T) || x.isNil()) {
       final = Default(x.typ()!); // default type of untyped nil is untyped nil
-    } else if (x.mode() === constant_ && isInteger(x.typ()!) && allString(T)) {
+    } else if (x.mode() === operandTypes.constant_ && isInteger(x.typ()!) && allString(T)) {
       final = x.typ()!;
     }
     const fn = check as unknown as { updateExprType?: (expr: unknown, typ: Type, final: boolean) => void };

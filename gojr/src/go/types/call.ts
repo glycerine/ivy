@@ -15,7 +15,7 @@ import { newTarget, type target } from "./expr.js";
 import type { indexedExpr } from "./index_expr.js";
 import type { genericType } from "./instantiate.js";
 import { enableReverseTypeInference, isParameterized } from "./infer.js";
-import { Interface, emptyInterface } from "./interface.js";
+import { Interface } from "./interface.js";
 import { isInterfacePtr, lookupFieldOrMethod } from "./lookup.js";
 import { Func, Const, Builtin, NewParam, PkgName, TypeName, Var, type Object } from "./object.js";
 import { operand, builtin, cgofunc, commaerr, constant_, invalid, novalue, typexpr, value, variable } from "./operand.js";
@@ -30,6 +30,7 @@ import { TypeParam } from "./typeparam.js";
 import { TypeParamList } from "./typelists.js";
 import { commonUnder, typeErrorf } from "./under.js";
 import { builtinId, exprKind, predeclaredFuncs, Typ } from "./universe.js";
+import * as universeTypes from "./universe.js";
 import { go1_18, go1_21 } from "./version.js";
 import { assert } from "./util.js";
 
@@ -1124,8 +1125,12 @@ function goJuniorSheetSelectorType(check: Checker, namespace: string, selector: 
   if (ns === undefined) {
     return null;
   }
-  const cell = selector.toUpperCase().replace(/\$/g, "");
-  return ns.cells?.[cell] ?? ns.defaultType ?? emptyInterface;
+  void selector;
+  return goJuniorSheetValueType();
+}
+
+function goJuniorSheetValueType(): Type {
+  return universeTypes.UniverseAnyType();
 }
 
 function selectorError(check: Checker, x: operand, e: SelectorExpr): void {

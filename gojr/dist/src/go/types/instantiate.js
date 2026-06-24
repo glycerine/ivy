@@ -2,19 +2,19 @@
 // Source: ../../cmd/compile/internal/types2/instantiate.go
 import { atPos, nopos, registerCheckerMethod } from "./check.js";
 import { NewContext } from "./context.js";
-import { Named } from "./named.js";
-import { Alias } from "./alias.js";
-import { Signature } from "./signature.js";
-import { Typ } from "./universe.js";
+import * as namedTypes from "./named.js";
+import * as aliasTypes from "./alias.js";
+import * as signatureTypes from "./signature.js";
+import * as universeTypes from "./universe.js";
 import { BasicKind } from "./basic.js";
 import { assert } from "./util.js";
 import { makeSubstMap } from "./subst.js";
 import { comparableType, Identical, isValid } from "./predicates.js";
-import { Interface } from "./interface.js";
-import { Pointer } from "./pointer.js";
+import * as interfaceTypes from "./interface.js";
+import * as pointerTypes from "./pointer.js";
 import { hasAllMethods, isInterfacePtr } from "./lookup.js";
 import { go1_20 } from "./version.js";
-import { Union } from "./union.js";
+import * as unionTypes from "./union.js";
 import { ArgumentError } from "./api.js";
 // Instantiate instantiates the type orig with the given type arguments targs.
 export function Instantiate(ctxt, orig, targs, validate) {
@@ -89,11 +89,11 @@ function instance(check, pos, orig, targs, expanding, ctxt) {
         }
     }
     let res;
-    if (orig instanceof Named) {
+    if (orig instanceof namedTypes.Named) {
         const fn = check;
-        res = fn?.newNamedInstance?.(pos, orig, targs, expanding) ?? new Named(check, orig.obj, orig.underlying, orig.methods_);
+        res = fn?.newNamedInstance?.(pos, orig, targs, expanding) ?? new namedTypes.Named(check, orig.obj, orig.underlying, orig.methods_);
     }
-    else if (orig instanceof Alias) {
+    else if (orig instanceof aliasTypes.Alias) {
         // verify type parameter count (see go.dev/issue/71198 for a test case)
         const tparams = orig.TypeParams();
         if (!validateTArgLen(check, pos, orig.obj.Name(), tparams?.Len() ?? 0, targs.length)) {
@@ -101,7 +101,7 @@ function instance(check, pos, orig, targs, expanding, ctxt) {
             //           underlying (aliased) type to match behavior of *Named
             //           types. Then this function will never return an invalid
             //           result.
-            return Typ[BasicKind.Invalid];
+            return universeTypes.Typ[BasicKind.Invalid];
         }
         if ((tparams?.Len() ?? 0) === 0) {
             return orig; // nothing to do (minor optimization)
@@ -109,7 +109,7 @@ function instance(check, pos, orig, targs, expanding, ctxt) {
         const fn = check;
         res = fn?.newAliasInstance?.(pos, orig, targs, expanding, ctxt) ?? orig;
     }
-    else if (orig instanceof Signature) {
+    else if (orig instanceof signatureTypes.Signature) {
         assert(expanding === null); // function instances cannot be reached from Named types
         // Note that orig may be a generic method on a generic type. In that case, orig
         // is an instantiated type. It will not have receiver type parameters, but will
@@ -119,7 +119,7 @@ function instance(check, pos, orig, targs, expanding, ctxt) {
         const tparams = orig.TypeParams();
         // TODO(gri) investigate if this is needed (type argument and parameter count seem to be correct here)
         if (!validateTArgLen(check, pos, orig.String(), tparams.Len(), targs.length)) {
-            return Typ[BasicKind.Invalid];
+            return universeTypes.Typ[BasicKind.Invalid];
         }
         if (tparams.Len() === 0) {
             return orig; // nothing to do (minor optimization)
@@ -205,14 +205,14 @@ export function implements_(check, V, T, constraint, cause) {
     if (!isValid(Vu) || !isValid(Tu)) {
         return true; // avoid follow-on errors
     }
-    if (Vu instanceof Pointer && !isValid(Vu.base.Underlying())) {
+    if (Vu instanceof pointerTypes.Pointer && !isValid(Vu.base.Underlying())) {
         return true; // avoid follow-on errors (see go.dev/issue/49541 for an example)
     }
     let verb = "implement";
     if (constraint) {
         verb = "satisfy";
     }
-    const Ti = Tu instanceof Interface ? Tu : null;
+    const Ti = Tu instanceof interfaceTypes.Interface ? Tu : null;
     if (Ti === null) {
         if (cause !== null) {
             let detail;
@@ -233,7 +233,7 @@ export function implements_(check, V, T, constraint, cause) {
     // T is not the empty interface (i.e., the type set of T is restricted)
     // An interface V with an empty type set satisfies any interface.
     // (The empty set is a subset of any set.)
-    const Vi = Vu instanceof Interface ? Vu : null;
+    const Vi = Vu instanceof interfaceTypes.Interface ? Vu : null;
     if (Vi !== null && Vi.typeSet().IsEmpty()) {
         return true;
     }
@@ -337,14 +337,14 @@ export function implements_(check, V, T, constraint, cause) {
 // mentions reports whether type T "mentions" typ in an (embedded) element or term
 // of T (whether typ is in the type set of T or not). For better error messages.
 export function mentions(T, typ) {
-    if (T instanceof Interface) {
+    if (T instanceof interfaceTypes.Interface) {
         for (const e of T.embeddeds) {
             if (mentions(e, typ)) {
                 return true;
             }
         }
     }
-    else if (T instanceof Union) {
+    else if (T instanceof unionTypes.Union) {
         for (const t of T.terms) {
             if (mentions(t.typ, typ)) {
                 return true;

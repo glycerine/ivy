@@ -13,8 +13,8 @@ describe("Go-junior spreadsheet fixture integration", () => {
     const result = await runSpreadsheetFixture({
       cells: {
         A1: 40n,
-        B1: { formula: "sheet.A1 + 2" },
-        C1: { formula: "sheet.B1 * 2" }
+        B1: { formula: "sheet.A1.(int64) + 2" },
+        C1: { formula: "sheet.B1.(int64) * 2" }
       }
     });
 
@@ -31,7 +31,7 @@ describe("Go-junior spreadsheet fixture integration", () => {
         A1: true,
         B1: 10n,
         C1: 100n,
-        D1: { formula: "if sheet.A1 { return sheet.B1 }\nreturn sheet.C1" }
+        D1: { formula: "if sheet.A1.(bool) { return sheet.B1 }\nreturn sheet.C1" }
       }
     });
 
@@ -46,7 +46,7 @@ describe("Go-junior spreadsheet fixture integration", () => {
         A1: false,
         B1: 10n,
         C1: 100n,
-        D1: { formula: "if sheet.A1 { return sheet.B1 }\nreturn sheet.C1" }
+        D1: { formula: "if sheet.A1.(bool) { return sheet.B1 }\nreturn sheet.C1" }
       }
     });
 
@@ -66,7 +66,7 @@ describe("Go-junior spreadsheet fixture integration", () => {
           A2: 2n
         },
         Report: {
-          A1: { formula: "rows := Data.A1:A2\nreturn rows[0][0] + rows[1][0]" }
+          A1: { formula: "rows := Data.A1:A2\nreturn rows[0][0].(int64) + rows[1][0].(int64)" }
         }
       }
     });
@@ -82,7 +82,7 @@ describe("Go-junior spreadsheet fixture integration", () => {
         A1: 1n,
         A2: 2n,
         B1: { formula: "return sheet.A1:A2" },
-        C1: { formula: "return sheet.B1[0][0] + sheet.B1[1][0]" }
+        C1: { formula: "rows := sheet.B1.([][]any)\nreturn rows[0][0].(int64) + rows[1][0].(int64)" }
       }
     });
 
@@ -108,12 +108,12 @@ func Add(a, b int) int {
     const fixture = {
       cells: {
         A1: 40n,
-        B1: { formula: `import mathx "example.com/mathx"\nreturn mathx.Add(sheet.A1, 2)` }
+        B1: { formula: `import mathx "example.com/mathx"\nreturn mathx.Add(int(sheet.A1.(int64)), 2)` }
       }
     };
     expect(collectSpreadsheetFixtureFormulaSourceFiles(fixture)).toEqual([{
       filename: "sheet!B1.gojr",
-      source: `import mathx "example.com/mathx"\nreturn mathx.Add(sheet.A1, 2)`
+      source: `import mathx "example.com/mathx"\nreturn mathx.Add(int(sheet.A1.(int64)), 2)`
     }]);
 
     const result = await runSpreadsheetFixture(fixture, {
@@ -134,7 +134,7 @@ func Add(a, b int) int {
     const fixture = parseSpreadsheetFixtureJson(`{
       "cells": {
         "A1": 40,
-        "B1": { "formula": "sheet.A1 + 2" }
+        "B1": { "formula": "sheet.A1.(int64) + 2" }
       }
     }`);
     const result = await runSpreadsheetFixture(fixture);

@@ -6,24 +6,24 @@
 // This file implements typechecking of expressions.
 import { NewIdent, PosOf, Unparen } from "../../front/ast.js";
 import { TokenKind } from "../../front/token.js";
-import { Alias } from "./alias.js";
+import * as aliasTypes from "./alias.js";
 import { UntypedBool, UntypedInt, Uint } from "./basic.js";
-import { Chan, ChanDir } from "./chan.js";
+import * as chanTypes from "./chan.js";
 import { nopos, registerCheckerMethod } from "./check.js";
 import { constantKindOf, imag, makeComplex, makeUnknown, real, sign, toComplex, toFloat, toInt } from "./const.js";
 import { isPointer } from "./conversions.js";
-import { emptyInterface, Interface } from "./interface.js";
-import { Map as MapType } from "./map.js";
-import { Named } from "./named.js";
+import * as interfaceTypes from "./interface.js";
+import * as mapTypes from "./map.js";
+import * as namedTypes from "./named.js";
 import { operand, invalid, novalue, builtin, typexpr, constant_, variable, mapindex, value, commaok, commaerr, compositeKind } from "./operand.js";
-import { Pointer } from "./pointer.js";
+import * as pointerTypes from "./pointer.js";
 import { allBoolean, allInteger, allNumeric, allNumericOrString, allOrdered, allString, allUnsigned, Comparable, comparableType, Default, hasNil, Identical, isComplex, isGeneric, isInteger, isNonTypeParamInterface, isTypeParam, isTyped, isUntyped, isValid } from "./predicates.js";
-import { Signature } from "./signature.js";
-import { NewSlice, Slice } from "./slice.js";
+import * as signatureTypes from "./signature.js";
+import * as sliceTypes from "./slice.js";
 import { stdSizes } from "./sizes.js";
-import { Tuple } from "./tuple.js";
+import * as tupleTypes from "./tuple.js";
 import { commonUnder, typeErrorf, underIs } from "./under.js";
-import { exprKind, Typ, universeError } from "./universe.js";
+import * as universeTypes from "./universe.js";
 import { assert } from "./util.js";
 import { go1_13 } from "./version.js";
 export const unaryOpPredicates = new Map([
@@ -110,7 +110,7 @@ registerCheckerMethod("unary", function unary(x, e0) {
                 return;
             }
             x.mode_ = value;
-            x.typ_ = new Pointer(x.typ());
+            x.typ_ = new pointerTypes.Pointer(x.typ());
             return;
         case TokenKind.Arrow:
             // We cannot receive a value with an incomplete type; make sure it's complete.
@@ -166,14 +166,14 @@ registerCheckerMethod("chanElem", function chanElem(pos, x, recv) {
         if (u === null) {
             return typeErrorf("no specific channel type");
         }
-        const ch = u instanceof Chan ? u : null;
+        const ch = u instanceof chanTypes.Chan ? u : null;
         if (ch === null) {
             return typeErrorf("non-channel %s", t);
         }
-        if (recv && ch.dir === ChanDir.SendOnly) {
+        if (recv && ch.dir === chanTypes.ChanDir.SendOnly) {
             return typeErrorf("send-only channel %s", t);
         }
-        if (!recv && ch.dir === ChanDir.RecvOnly) {
+        if (!recv && ch.dir === chanTypes.ChanDir.RecvOnly) {
             return typeErrorf("receive-only channel %s", t);
         }
         return null;
@@ -317,13 +317,13 @@ registerCheckerMethod("comparison", function comparison(x, y, op, switchCase) {
     }
     // spec: "Comparison operators compare two operands and yield
     //        an untyped boolean value."
-    x.typ_ = Typ[UntypedBool];
+    x.typ_ = universeTypes.Typ[UntypedBool];
 });
 // incomparableCause returns a more specific cause why typ is not comparable.
 // If there is no more specific cause, the result is "".
 registerCheckerMethod("incomparableCause", function incomparableCause(typ) {
     const u = typ.Underlying();
-    if (u instanceof Slice || u instanceof Signature || u instanceof MapType) {
+    if (u instanceof sliceTypes.Slice || u instanceof signatureTypes.Signature || u instanceof mapTypes.Map) {
         return compositeKind(typ) + " can only be compared to nil";
     }
     // see if we can extract a more specific error
@@ -362,7 +362,7 @@ registerCheckerMethod("shift", function shift(x, y, e, op) {
         if (isUntyped(y.typ())) {
             // Caution: Check for representability here, rather than in the switch
             // below, because isInteger includes untyped integers (was bug go.dev/issue/43697).
-            this.representable(y, Typ[Uint]);
+            this.representable(y, universeTypes.Typ[Uint]);
             if (!y.isValid()) {
                 x.invalidate();
                 return;
@@ -381,7 +381,7 @@ registerCheckerMethod("shift", function shift(x, y, e, op) {
             case isUntyped(y.typ()):
                 // This is incorrect, but preserves pre-existing behavior.
                 // See also go.dev/issue/47410.
-                this.convertUntyped(y, Typ[Uint]);
+                this.convertUntyped(y, universeTypes.Typ[Uint]);
                 if (!y.isValid()) {
                     x.invalidate();
                     return;
@@ -400,7 +400,7 @@ registerCheckerMethod("shift", function shift(x, y, e, op) {
                 x.val = makeUnknown();
                 // ensure the correct type - see comment below
                 if (!isInteger(x.typ())) {
-                    x.typ_ = Typ[UntypedInt];
+                    x.typ_ = universeTypes.Typ[UntypedInt];
                 }
                 return;
             }
@@ -416,7 +416,7 @@ registerCheckerMethod("shift", function shift(x, y, e, op) {
             // non-integer numeric constants. Correct the type so that the shift
             // result is of integer type.
             if (!isInteger(x.typ())) {
-                x.typ_ = Typ[UntypedInt];
+                x.typ_ = universeTypes.Typ[UntypedInt];
             }
             // x is a constant so xval != nil and it must be of Int kind.
             x.val = constantShift(xval, op, Number(yval));
@@ -757,7 +757,7 @@ registerCheckerMethod("updateExprVal", function updateExprVal(x, val) {
 export function newTarget(typ, desc) {
     if (typ !== null) {
         const [u] = commonUnder(typ, null);
-        if (u !== null && u instanceof Signature) {
+        if (u !== null && u instanceof signatureTypes.Signature) {
             return new target(u, desc);
         }
     }
@@ -800,13 +800,13 @@ registerCheckerMethod("nonGeneric", function nonGeneric(T, x) {
     let what = "";
     const t = x.typ();
     switch (true) {
-        case t instanceof Alias:
-        case t instanceof Named:
+        case t instanceof aliasTypes.Alias:
+        case t instanceof namedTypes.Named:
             if (isGeneric(t)) {
                 what = "type";
             }
             break;
-        case t instanceof Signature:
+        case t instanceof signatureTypes.Signature:
             if (t.tparams !== null) {
                 if (enableReverseTypeInferenceLocal && T !== null) {
                     this.funcInst?.(T, x.Pos(), x, null, true);
@@ -819,7 +819,7 @@ registerCheckerMethod("nonGeneric", function nonGeneric(T, x) {
     if (what !== "") {
         this.errorf(x.expr, "WrongTypeArgCount", "cannot use generic %s %s without instantiation", what, x.expr);
         x.invalidate();
-        x.typ_ = Typ[0];
+        x.typ_ = universeTypes.Typ[0];
     }
 });
 // exprInternal contains the core of type checking of expressions.
@@ -829,7 +829,7 @@ registerCheckerMethod("exprInternal", function exprInternal(T, x, e, hint) {
     // make sure x has a valid state in case of bailout
     // (was go.dev/issue/5770)
     x.invalidate();
-    x.typ_ = Typ[0];
+    x.typ_ = universeTypes.Typ[0];
     const node = e;
     switch (node?.kind) {
         case "BadExpr":
@@ -924,13 +924,13 @@ registerCheckerMethod("exprInternal", function exprInternal(T, x, e, hint) {
                 this.errorf(x, "InvalidAssert", invalidOp + "cannot use type assertion on type parameter value %s", x);
                 return errorExpr(x, e);
             }
-            if (!(x.typ().Underlying() instanceof Interface)) {
+            if (!(x.typ().Underlying() instanceof interfaceTypes.Interface)) {
                 this.errorf(x, "InvalidAssert", invalidOp + "%s is not an interface", x);
                 return errorExpr(x, e);
             }
             {
                 const TT = this.varType?.(node.type);
-                if (TT === null || TT === undefined || TT === Typ[0]) {
+                if (TT === null || TT === undefined || TT === universeTypes.Typ[0]) {
                     return errorExpr(x, e);
                 }
                 // We cannot assert to an incomplete type; make sure it's complete.
@@ -943,7 +943,7 @@ registerCheckerMethod("exprInternal", function exprInternal(T, x, e, hint) {
             }
             break;
         case "CallExpr":
-            return this.callExpr?.(x, node) ?? exprKind.statement;
+            return this.callExpr?.(x, node) ?? universeTypes.exprKind.statement;
         case "StarExpr":
             this.exprOrType(x, node.expr, false);
             switch (x.mode()) {
@@ -951,12 +951,12 @@ registerCheckerMethod("exprInternal", function exprInternal(T, x, e, hint) {
                     return errorExpr(x, e);
                 case typexpr:
                     this.validVarType?.(node.expr, x.typ());
-                    x.typ_ = new Pointer(x.typ());
+                    x.typ_ = new pointerTypes.Pointer(x.typ());
                     break;
                 default: {
                     let base = null;
                     if (!underIs(x.typ(), (u) => {
-                        const p = u instanceof Pointer ? u : null;
+                        const p = u instanceof pointerTypes.Pointer ? u : null;
                         if (p === null) {
                             this.errorf(x, "InvalidIndirection", invalidOp + "cannot indirect %s", x);
                             return false;
@@ -987,7 +987,7 @@ registerCheckerMethod("exprInternal", function exprInternal(T, x, e, hint) {
             }
             if (node.op === TokenKind.Arrow) {
                 x.expr = e;
-                return exprKind.statement; // receive operations may appear in statement context
+                return universeTypes.exprKind.statement; // receive operations may appear in statement context
             }
             break;
         case "BinaryExpr":
@@ -1007,7 +1007,7 @@ registerCheckerMethod("exprInternal", function exprInternal(T, x, e, hint) {
         case "MapType":
         case "ChanType":
             x.mode_ = typexpr;
-            x.typ_ = this.typ?.(node) ?? Typ[0];
+            x.typ_ = this.typ?.(node) ?? universeTypes.Typ[0];
             // Note: rawExpr (caller of exprInternal) will call check.recordTypeAndValue
             // even though check.typ has already called it. This is fine as both
             // times the same expression and type are recorded. It is also not a
@@ -1019,32 +1019,31 @@ registerCheckerMethod("exprInternal", function exprInternal(T, x, e, hint) {
     }
     // everything went well
     x.expr = e;
-    return exprKind.expression;
+    return universeTypes.exprKind.expression;
 });
 function goJuniorSheetCellType(check, node) {
     const expr = node;
     const namespace = expr.namespace?.name ?? "sheet";
-    const raw = expr.address?.raw ?? "";
     const ns = check.conf.GoJuniorSheetNamespaces?.[namespace];
     if (ns === undefined) {
         check.errorf(node, "UndeclaredName", "undefined: %s", namespace);
         return null;
     }
-    const cell = raw.toUpperCase().replace(/\$/g, "");
-    return ns.cells?.[cell] ?? ns.defaultType ?? emptyInterface;
+    return goJuniorSheetValueType();
 }
 function goJuniorSheetRangeType(check, node) {
     const expr = node;
     const namespace = expr.namespace?.name ?? "sheet";
-    const raw = expr.start?.raw ?? "";
     const ns = check.conf.GoJuniorSheetNamespaces?.[namespace];
     if (ns === undefined) {
         check.errorf(node, "UndeclaredName", "undefined: %s", namespace);
         return null;
     }
-    const cell = raw.toUpperCase().replace(/\$/g, "");
-    const elem = ns.cells?.[cell] ?? ns.defaultType ?? emptyInterface;
-    return NewSlice(NewSlice(elem));
+    const elem = goJuniorSheetValueType();
+    return sliceTypes.NewSlice(sliceTypes.NewSlice(elem));
+}
+function goJuniorSheetValueType() {
+    return universeTypes.UniverseAnyType();
 }
 // keyVal maps a complex, float, integer, string or boolean constant value
 // to the corresponding complex128, float64, int64, uint64, string, or bool
@@ -1110,7 +1109,7 @@ registerCheckerMethod("multiExpr", function multiExpr(e, allowCommaOk) {
     const x = new operand();
     this.rawExpr(null, x, e, null, false);
     this.exclude(x, (1 << novalue) | (1 << builtin) | (1 << typexpr));
-    if (x.typ() instanceof Tuple && x.isValid()) {
+    if (x.typ() instanceof tupleTypes.Tuple && x.isValid()) {
         const t = x.typ();
         // multiple values
         const list = new globalThis.Array(t.Len());
@@ -1128,10 +1127,10 @@ registerCheckerMethod("multiExpr", function multiExpr(e, allowCommaOk) {
     let commaOk = false;
     if (allowCommaOk && (x.mode() === mapindex || x.mode() === commaok || x.mode() === commaerr)) {
         let what = "ok value of (comma, ok) expression";
-        let typ = Typ[20];
+        let typ = universeTypes.Typ[20];
         if (x.mode() === commaerr) {
             what = "err value of (comma, err) expression";
-            typ = universeError;
+            typ = universeTypes.universeError;
         }
         // create a dummy expression (in place of e) for better error messages
         const dummy = NewIdent(what);
@@ -1206,7 +1205,7 @@ registerCheckerMethod("exclude", function exclude(x, modeset) {
 registerCheckerMethod("singleValue", function singleValue(x) {
     if (x.mode() === value) {
         // tuple types are never named - no need for underlying type below
-        if (x.typ() instanceof Tuple) {
+        if (x.typ() instanceof tupleTypes.Tuple) {
             const t = x.typ();
             assert(t.Len() !== 1);
             this.errorf(x, "TooManyValues", "multiple-value %s in single-value context", x);
@@ -1446,5 +1445,5 @@ function normalizeComparableConst(x) {
 function errorExpr(x, e) {
     x.invalidate();
     x.expr = e;
-    return exprKind.statement; // avoid follow-up errors
+    return universeTypes.exprKind.statement; // avoid follow-up errors
 }

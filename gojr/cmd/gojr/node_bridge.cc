@@ -204,14 +204,22 @@ function __gojrTransformModule(source, filename) {
 
 function __gojrReExport(specifier, names, target, parent) {
   const module = __gojrRequire(specifier, parent);
-  for (const [sourceName, exportName] of names) target[exportName] = module[sourceName];
+  for (const [sourceName, exportName] of names) {
+    globalThis.Object.defineProperty(target, exportName, {
+      enumerable: true,
+      get() { return module[sourceName]; }
+    });
+  }
 }
 
 function __gojrExportAll(specifier, target, parent) {
   const module = __gojrRequire(specifier, parent);
   for (const key of globalThis.Object.keys(module)) {
     if (key === "default" || globalThis.Object.prototype.hasOwnProperty.call(target, key)) continue;
-    target[key] = module[key];
+    globalThis.Object.defineProperty(target, key, {
+      enumerable: true,
+      get() { return module[key]; }
+    });
   }
 }
 
@@ -246,7 +254,10 @@ function gojrDiagnosticString(diagnostic) {
   const location = diagnostic && diagnostic.span
     ? `${filename}:${diagnostic.span.line}:${diagnostic.span.column}: `
     : `${filename}: `;
-  return `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}`;
+  const stack = typeof diagnostic?.stack === "string" && diagnostic.stack !== ""
+    ? `\n${diagnostic.stack}`
+    : "";
+  return `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}${stack}`;
 }
 
 function gojrFormatResult(result) {

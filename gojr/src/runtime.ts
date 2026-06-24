@@ -41,21 +41,9 @@ import {
   type GoJuniorCheckResult
 } from "./typecheck.js";
 import {
-  Bool as GoTypesBool,
-  ChanDir as GoTypesChanDir,
-  Complex128 as GoTypesComplex128,
-  Float64 as GoTypesFloat64,
-  Int64 as GoTypesInt64,
-  NewChan as newGoTypesChan,
-  NewMap as newGoTypesMap,
-  NewSlice as newGoTypesSlice,
-  String as GoTypesString,
-  Typ as goTypesTyp,
-  emptyInterface,
   type GoJuniorSheetNamespace,
   type Object as GoTypesObject,
-  type Package as GoTypesPackage,
-  type Type as GoTypesType
+  type Package as GoTypesPackage
 } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
 import { DeterministicPrng } from "./prng.js";
@@ -1568,78 +1556,8 @@ function sheetNamespacesForOptions(options: EvaluationOptions): Record<string, G
 }
 
 function sheetNamespaceForData(data: SheetData): GoJuniorSheetNamespace {
-  const cells: Record<string, GoTypesType> = {};
-  for (const [cell, value] of Object.entries(data)) {
-    cells[normalizeCell(cell)] = goTypesTypeForRuntimeValue(value);
-  }
-  return {
-    cells,
-    defaultType: emptyInterface
-  };
-}
-
-function goTypesTypeForRuntimeValue(value: RuntimeValue): GoTypesType {
-  const actual = unwrapNamed(value);
-  if (typeof actual === "bigint") return goTypesTyp[GoTypesInt64]!;
-  if (typeof actual === "number") return goTypesTyp[GoTypesFloat64]!;
-  if (isRuntimeString(actual)) return goTypesTyp[GoTypesString]!;
-  if (typeof actual === "boolean") return goTypesTyp[GoTypesBool]!;
-  if (isComplexValue(actual)) return goTypesTyp[GoTypesComplex128]!;
-  if (Array.isArray(actual)) return goTypesSliceTypeForRuntimeArray(actual);
-  if (actual instanceof RuntimeMap) {
-    return newGoTypesMap(goTypesTypeFromText(actual.keyType), goTypesTypeFromText(actual.valueType));
-  }
-  if (actual instanceof RuntimeChannel) {
-    return newGoTypesChan(GoTypesChanDir.SendRecv, goTypesTypeFromText(actual.elementType));
-  }
-  return emptyInterface;
-}
-
-function goTypesSliceTypeForRuntimeArray(values: RuntimeValue[]): GoTypesType {
-  const elementType = commonRuntimeValueType(values) ?? emptyInterface;
-  return newGoTypesSlice(elementType);
-}
-
-function commonRuntimeValueType(values: RuntimeValue[]): GoTypesType | undefined {
-  let common: GoTypesType | undefined;
-  for (const value of values) {
-    const next = goTypesTypeForRuntimeValue(value);
-    if (!common) {
-      common = next;
-      continue;
-    }
-    if (common.String() !== next.String()) return emptyInterface;
-  }
-  return common;
-}
-
-function goTypesTypeFromText(typeText: string): GoTypesType {
-  const type = normalizeTypeText(typeText);
-  switch (type) {
-    case "bool": return goTypesTyp[GoTypesBool]!;
-    case "string": return goTypesTyp[GoTypesString]!;
-    case "float32":
-    case "float64": return goTypesTyp[GoTypesFloat64]!;
-    case "complex64":
-    case "complex128": return goTypesTyp[GoTypesComplex128]!;
-    case "int":
-    case "int8":
-    case "int16":
-    case "int32":
-    case "int64":
-    case "uint":
-    case "uint8":
-    case "uint16":
-    case "uint32":
-    case "uint64":
-    case "uintptr":
-    case "byte":
-    case "rune":
-      return goTypesTyp[GoTypesInt64]!;
-    default:
-      if (type.startsWith("[]")) return newGoTypesSlice(goTypesTypeFromText(type.slice(2)));
-      return emptyInterface;
-  }
+  void data;
+  return {};
 }
 
 function resultFromCompletion(ast: ProgramAst, output: string[], completion: Completion): EvaluationResult {

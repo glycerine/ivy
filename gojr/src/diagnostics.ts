@@ -20,6 +20,7 @@ export interface Diagnostic {
   code: string;
   severity: DiagnosticSeverity;
   message: string;
+  stack?: string;
   span?: SourceSpan;
 }
 
