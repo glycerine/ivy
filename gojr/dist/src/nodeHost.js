@@ -287,8 +287,29 @@ export async function testSourceFilesWithPackagesOnNode(request) {
 }
 export async function runMainSourceFilesWithPackagesOnNode(request) {
     const options = evaluationOptionsFromNodeRequest(request);
+    const rootFiles = rootSourceFilesFromRequest(request);
+    const packageSources = packageSourceMapFromSpecs(request.packages ?? []);
+    const buildRequest = {
+        files: rootFiles,
+        sourceRoots: request.sourceRoots ?? []
+    };
+    if (request.importPath)
+        buildRequest.importPath = request.importPath;
+    if (packageSources)
+        buildRequest.packageSources = packageSources;
+    if (request.artifactRoot)
+        buildRequest.artifactRoot = request.artifactRoot;
+    if (request.packageCacheParent)
+        buildRequest.packageCacheParent = request.packageCacheParent;
+    const build = buildPackagesOnNode(buildRequest);
+    if (!build.ok || hasErrorDiagnostics(build.diagnostics)) {
+        return {
+            diagnostics: build.diagnostics,
+            output: []
+        };
+    }
     const provider = createNodeSourcePackageProvider(request.sourceRoots ?? []);
-    const result = await runMainSourcePackageFiles(rootSourceFilesFromRequest(request), {
+    const result = await runMainSourcePackageFiles(rootFiles, {
         ...options,
         ...(request.importPath ? { importPath: request.importPath } : {}),
         ...(request.packageName ? { packageName: request.packageName } : {}),
@@ -296,6 +317,17 @@ export async function runMainSourceFilesWithPackagesOnNode(request) {
         ...(provider ? { sourcePackageProvider: provider } : {})
     });
     return result;
+}
+function packageSourceMapFromSpecs(specs) {
+    if (specs.length === 0)
+        return undefined;
+    const sources = {};
+    for (const spec of specs) {
+        if (!spec?.importPath)
+            continue;
+        sources[spec.importPath] = spec.files ?? [];
+    }
+    return Object.keys(sources).length === 0 ? undefined : sources;
 }
 export function compileSourceFilesWithPackagesOnNode(request) {
     const options = evaluationOptionsFromNodeRequest(request);

@@ -6,6 +6,7 @@ import { type AssignStmt, type File as AstFile, type AstNode, type BasicLit, typ
 import { AllErrors, type Mode, ParseComments, ParseExprFrom, ParseFile, SkipObjectResolution, Trace } from "../../front/parser.js";
 import { PrintError } from "../../front/scanner.js";
 import { TokenKind } from "../../front/token.js";
+import { Token as GoToken } from "../token/index.js";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
@@ -495,20 +496,24 @@ namespace go_types_astcompat {
   }
 
   export function genDeclTok(decl: unknown): string {
-    const tok = (decl as { Tok?: unknown; token?: unknown } | null)?.Tok ??
-      (decl as { Tok?: unknown; token?: unknown } | null)?.token;
+    const tok = (decl as { Tok?: unknown; token?: unknown } | null)?.token ??
+      (decl as { Tok?: unknown; token?: unknown } | null)?.Tok;
     switch (tok) {
       case "CONST":
       case TokenKind.Const:
+      case GoToken.CONST:
         return "CONST";
       case "VAR":
       case TokenKind.Var:
+      case GoToken.VAR:
         return "VAR";
       case "TYPE":
       case TokenKind.Type:
+      case GoToken.TYPE:
         return "TYPE";
       case "IMPORT":
       case TokenKind.Import:
+      case GoToken.IMPORT:
         return "IMPORT";
       default:
         return globalThis.String(tok ?? "");
@@ -18534,10 +18539,13 @@ namespace go_types_resolver {
             const names = go_types_astcompat.specNames(vd.spec);
             const values = go_types_astcompat.specValues(vd.spec);
             const lhs = names.map((name) => go_types_object.NewVar(go_types_astcompat.nodePos(name) || pos, pkg, go_types_astcompat.identName(name), null));
+            const sharedInfo = values.length === 1
+              ? new declInfo({ file: fileScope, version: this.version, lhs, vtyp: go_types_astcompat.specType(vd.spec), init: values[0] })
+              : null;
             for (let i = 0; i < names.length; i++) {
-              const init = values.length === 1 ? values[0] : (i < values.length ? values[i] : null);
-              const sharedLhs = values.length === 1 ? lhs : null;
-              this.declarePkgObj(names[i], lhs[i]!, new declInfo({ file: fileScope, version: this.version, lhs: sharedLhs, vtyp: go_types_astcompat.specType(vd.spec), init }));
+              const init = i < values.length ? values[i] : null;
+              const info = sharedInfo ?? new declInfo({ file: fileScope, version: this.version, vtyp: go_types_astcompat.specType(vd.spec), init });
+              this.declarePkgObj(names[i], lhs[i]!, info);
             }
             break;
           }
@@ -19379,10 +19387,10 @@ namespace go_types_decl {
     const expr = x as { kind?: string; Op?: string; op?: string };
     switch (expr.kind) {
       case "UnaryExpr":
-        wrap = expr.Op === "TILDE" || expr.op === TokenKind.Tilde;
+        wrap = expr.Op === "TILDE" || expr.Op === GoToken.TILDE || expr.op === TokenKind.Tilde;
         break;
       case "BinaryExpr":
-        wrap = expr.Op === "OR" || expr.op === TokenKind.Or;
+        wrap = expr.Op === "OR" || expr.Op === GoToken.OR || expr.op === TokenKind.Or;
         break;
     }
     if (wrap) {
@@ -21960,18 +21968,92 @@ namespace go_types_labels {
   // Use of this source code is governed by a BSD-style
   // license that can be found in the LICENSE file.
 
+  function labelIdent(s: unknown): Ident | null {
+    const stmt = s as { Label?: Ident | null; label?: Ident | null };
+    return stmt.Label ?? stmt.label ?? null;
+  }
+
+  function identName(id: unknown): string {
+    const ident = id as { Name?: string; name?: string } | null | undefined;
+    return ident?.Name ?? ident?.name ?? "";
+  }
+
+  function stmtField(s: unknown): unknown {
+    const stmt = s as { Stmt?: unknown; stmt?: unknown };
+    return stmt.Stmt ?? stmt.stmt ?? null;
+  }
+
+  function bodyField(s: unknown): unknown {
+    const stmt = s as { Body?: unknown; body?: unknown };
+    if (stmt.Body !== undefined) {
+      return stmt.Body;
+    }
+    if (globalThis.Array.isArray(stmt.body)) {
+      return { kind: "BlockStmt", List: stmt.body };
+    }
+    return stmt.body ?? null;
+  }
+
+  function listField(block: unknown): unknown[] {
+    const b = block as { List?: unknown[]; statements?: unknown[] } | null | undefined;
+    return b?.List ?? b?.statements ?? [];
+  }
+
+  function clauseBodyList(s: unknown): unknown[] {
+    const stmt = s as { Body?: unknown[]; body?: unknown[] };
+    const body = stmt.Body ?? stmt.body ?? [];
+    return globalThis.Array.isArray(body) ? body : listField(body);
+  }
+
+  function elseField(s: unknown): unknown {
+    const stmt = s as { Else?: unknown; else?: unknown };
+    return stmt.Else ?? stmt.else ?? null;
+  }
+
+  function declField(s: unknown): unknown {
+    const stmt = s as { Decl?: unknown; decl?: unknown };
+    return stmt.Decl ?? stmt.decl ?? null;
+  }
+
+  function tokField(s: unknown): unknown {
+    const stmt = s as { Tok?: unknown; token?: unknown };
+    return stmt.Tok ?? stmt.token;
+  }
+
+  function isTok(tok: unknown, goTok: GoToken, frontTok: TokenKind, name: string): boolean {
+    return tok === goTok || tok === frontTok || tok === name;
+  }
+
+  function isVarDecl(decl: unknown): boolean {
+    const d = decl as { kind?: string; Tok?: unknown; token?: unknown } | null | undefined;
+    return d?.kind === "GenDecl" && isTok(tokField(d), GoToken.VAR, TokenKind.Var, "VAR");
+  }
+
+  function labelStmtTargetKind(s: unknown): string {
+    return ((stmtField(s) as { kind?: string } | null | undefined)?.kind) ?? "";
+  }
+
+  function branchTargetName(s: unknown): string {
+    return identName(labelIdent(s));
+  }
+
+  function labelPos(id: unknown): number {
+    const label = id as { Pos?: () => number } | null | undefined;
+    return label?.Pos?.() ?? PosOf(id as AstNode);
+  }
+
   // labels checks correct label use in body.
   go_types_check.registerCheckerMethod("labels", function labels(body: unknown): void {
     const b = body as { Pos?: () => number; End?: () => number; List?: unknown[] };
     const all = go_types_scope.NewScope(null, b.Pos?.() ?? 0, b.End?.() ?? 0, "label");
 
-    const fwdJumps = this.blockBranches(all, null, null, b.List ?? []);
+    const fwdJumps = this.blockBranches(all, null, null, listField(body));
 
     for (const jmp of fwdJumps) {
       const j = jmp as { Label?: { Name?: string } };
       let msg: string;
       let code: string;
-      const name = j.Label?.Name ?? "";
+      const name = branchTargetName(jmp);
       const alt = all.Lookup(name);
       if (alt !== null) {
         msg = "goto %s jumps into block";
@@ -21981,7 +22063,7 @@ namespace go_types_labels {
         msg = "label %s not declared";
         code = "UndeclaredLabel";
       }
-      this.errorf(j.Label, code, msg, name);
+      this.errorf(labelIdent(jmp), code, msg, name);
     }
 
     for (const name of all.Names()) {
@@ -22004,7 +22086,7 @@ namespace go_types_labels {
     // insert records a new label declaration for the current block.
     // The label must not have been declared before in any block.
     public insert(s: unknown): void {
-      const name = (s as { Label?: { Name?: string } }).Label?.Name ?? "";
+      const name = branchTargetName(s);
       if (go_types_check.debug) {
         go_types_util.assert(this.gotoTarget(name) === null);
       }
@@ -22032,8 +22114,8 @@ namespace go_types_labels {
     // statement with the given label name, or nil.
     public enclosingTarget(name: string): unknown | null {
       for (let s: block | null = this; s !== null; s = s.parent) {
-        const t = s.lstmt as { Label?: { Name?: string } } | null;
-        if (t !== null && t.Label?.Name === name) {
+        const t = s.lstmt;
+        if (t !== null && branchTargetName(t) === name) {
           return t;
         }
       }
@@ -22044,15 +22126,37 @@ namespace go_types_labels {
   // blockBranches processes a block's statement list and returns the set of outgoing forward jumps.
   go_types_check.registerCheckerMethod("blockBranches", function blockBranches(all: go_types_scope.Scope, parent: block | null, lstmt: unknown, list: unknown[]): unknown[] {
     const b = new block(parent, lstmt);
+    let varDeclPos = 0;
     const fwdJumps: unknown[] = [];
+    let badJumps: unknown[] = [];
+
+    const recordVarDecl = (pos: number): void => {
+      varDeclPos = pos;
+      badJumps = fwdJumps.slice();
+    };
+
+    const jumpsOverVarDecl = (jmp: unknown): boolean => {
+      return varDeclPos !== 0 && badJumps.includes(jmp);
+    };
+
+    const nestedBlockBranches = (labeled: unknown, nestedList: unknown[]): void => {
+      fwdJumps.push(...this.blockBranches(all, b, labeled, nestedList));
+    };
 
     const stmtBranches = (lstmt: unknown, s: unknown): void => {
-      const stmt = s as { kind?: string; Label?: { Name?: string; Pos?: () => number }; Stmt?: unknown; Body?: { List?: unknown[] }; Else?: unknown; Tok?: string };
+      const stmt = s as { kind?: string; Label?: { Name?: string; Pos?: () => number }; Stmt?: unknown; Body?: { List?: unknown[] }; Else?: unknown; Tok?: string; Init?: unknown };
       switch (stmt.kind) {
+        case "DeclStmt":
+          if (isVarDecl(declField(s))) {
+            recordVarDecl(PosOf(declField(s) as AstNode));
+          }
+          break;
+
         case "LabeledStmt": {
-          const name = stmt.Label?.Name ?? "";
+          const label = labelIdent(s);
+          const name = identName(label);
           if (name !== "_") {
-            const lbl = go_types_object.NewLabel(stmt.Label?.Pos?.() ?? 0, this.pkg, name);
+            const lbl = go_types_object.NewLabel(labelPos(label), this.pkg, name);
             const alt = all.Insert(lbl);
             if (alt !== null) {
               const err = this.newError("DuplicateLabel");
@@ -22062,41 +22166,110 @@ namespace go_types_labels {
               err.report();
             } else {
               b.insert(s);
-              this.recordDef(stmt.Label, lbl);
+              this.recordDef(label, lbl);
             }
+            let i = 0;
+            for (const jmp of fwdJumps) {
+              if (branchTargetName(jmp) === name) {
+                lbl.used = true;
+                this.recordUse(labelIdent(jmp), lbl);
+                if (jumpsOverVarDecl(jmp)) {
+                  const line = this.fset?.Position?.(varDeclPos)?.Line ?? varDeclPos;
+                  this.softErrorf(labelIdent(jmp), "JumpOverDecl", "goto %s jumps over variable declaration at line %d", name, line);
+                }
+              } else {
+                fwdJumps[i] = jmp;
+                i++;
+              }
+            }
+            fwdJumps.length = i;
             lstmt = s;
           }
-          stmtBranches(lstmt, stmt.Stmt);
+          stmtBranches(lstmt, stmtField(s));
           break;
         }
         case "BranchStmt": {
-          if (stmt.Label === null || stmt.Label === undefined) {
+          const label = labelIdent(s);
+          if (label === null || label === undefined) {
             return;
           }
-          const name = stmt.Label.Name ?? "";
-          if (stmt.Tok === "GOTO" && b.gotoTarget(name) === null) {
-            fwdJumps.push(s);
+          const name = identName(label);
+          const tok = tokField(s);
+          if (isTok(tok, GoToken.BREAK, TokenKind.Break, "BREAK")) {
+            let valid = false;
+            const target = b.enclosingTarget(name);
+            switch (labelStmtTargetKind(target)) {
+              case "SwitchStmt":
+              case "TypeSwitchStmt":
+              case "SelectStmt":
+              case "ForStmt":
+              case "RangeStmt":
+                valid = true;
+                break;
+            }
+            if (!valid) {
+              this.errorf(label, "MisplacedLabel", "invalid break label %s", name);
+              return;
+            }
+          } else if (isTok(tok, GoToken.CONTINUE, TokenKind.Continue, "CONTINUE")) {
+            let valid = false;
+            const target = b.enclosingTarget(name);
+            switch (labelStmtTargetKind(target)) {
+              case "ForStmt":
+              case "RangeStmt":
+                valid = true;
+                break;
+            }
+            if (!valid) {
+              this.errorf(label, "MisplacedLabel", "invalid continue label %s", name);
+              return;
+            }
+          } else if (isTok(tok, GoToken.GOTO, TokenKind.Goto, "GOTO")) {
+            if (b.gotoTarget(name) === null) {
+              fwdJumps.push(s);
+              return;
+            }
+          } else {
+            this.errorf(s, "InvalidSyntaxTree", "branch statement: %s %s", String(tok), name);
             return;
           }
           const obj = all.Lookup(name);
           if (obj !== null) {
             (obj as go_types_object.Label).used = true;
-            this.recordUse(stmt.Label, obj);
+            this.recordUse(label, obj);
           }
           break;
         }
-        case "BlockStmt":
-          fwdJumps.push(...this.blockBranches(all, b, lstmt, stmt.Body?.List ?? []));
-          break;
-        case "IfStmt":
-          stmtBranches(lstmt, stmt.Body);
-          if (stmt.Else !== null && stmt.Else !== undefined) {
-            stmtBranches(lstmt, stmt.Else);
+        case "AssignStmt":
+          if (isTok(tokField(s), GoToken.DEFINE, TokenKind.Define, "DEFINE")) {
+            recordVarDecl(PosOf(s as AstNode));
           }
           break;
+        case "BlockStmt":
+          nestedBlockBranches(lstmt, listField(s));
+          break;
+        case "IfStmt":
+          stmtBranches(lstmt, bodyField(s));
+          if (elseField(s) !== null && elseField(s) !== undefined) {
+            stmtBranches(lstmt, elseField(s));
+          }
+          break;
+        case "CaseClause":
+          nestedBlockBranches(null, clauseBodyList(s));
+          break;
+        case "SwitchStmt":
+        case "TypeSwitchStmt":
+        case "SelectStmt":
+        case "ForStmt":
+        case "RangeStmt":
+          stmtBranches(lstmt, bodyField(s));
+          break;
+        case "CommClause":
+          nestedBlockBranches(null, clauseBodyList(s));
+          break;
         default:
-          if (stmt.Body?.List) {
-            fwdJumps.push(...this.blockBranches(all, b, null, stmt.Body.List));
+          if (bodyField(s)) {
+            nestedBlockBranches(null, listField(bodyField(s)));
           }
       }
     };

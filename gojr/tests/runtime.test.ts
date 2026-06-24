@@ -272,6 +272,25 @@ return fmt.Sprint("signed ", 1),
     expect(result.values).toEqual(["signed 1", "1 2", "ab", "1a2", "a 1 b\n", "x=1", "n=2", "a 1\n"]);
   });
 
+  test("formats fmt.Fprintf to io.Writer-shaped values", async () => {
+    const result = await expectRuns(`
+type writer struct {
+  text string
+}
+
+func (w *writer) Write(p []byte) (int, error) {
+  w.text += string(p)
+  return len(p), nil
+}
+
+var w writer
+n, err := fmt.Fprintf(&w, "x=%v", 7)
+return n, err == nil, w.text
+`);
+
+    expect(result.values).toEqual([3n, true, "x=7"]);
+  });
+
   test("formats fmt.Errorf as a Go error value", async () => {
     const result = await expectRuns(`
 var e error = fmt.Errorf("bad %v", 3)
@@ -716,10 +735,10 @@ import "strconv"
 
 f32 := math.Float32frombits(1 << 31)
 f64 := math.Float64frombits(1 << 63)
-return strconv.Itoa(-12), strconv.Itoa(34), math.Float32bits(f32), math.Float64bits(f64), math.IsNaN(math.NaN()), math.MaxFloat32 > 1e38, math.MaxFloat64 > 1e300, math.MaxInt32, math.MaxUint16
+return strconv.Itoa(-12), strconv.Itoa(34), math.Float32bits(f32), math.Float64bits(f64), math.IsNaN(math.NaN()), math.MaxFloat32 > 1e38, math.MaxFloat64 > 1e300, math.MaxInt32, math.MaxUint16, math.MaxUint64
 `);
 
-    expect(script.values).toEqual(["-12", "34", 2147483648n, 9223372036854775808n, true, true, true, 2147483647n, 65535n]);
+    expect(script.values).toEqual(["-12", "34", 2147483648n, 9223372036854775808n, true, true, true, 2147483647n, 65535n, 18446744073709551615n]);
   });
 
   test("matches Go float map-key semantics for signed zero and NaN", async () => {
@@ -903,6 +922,225 @@ return dup.New(3).Value()
       packageContexts: graph.packageContexts
     });
     expect(packageClauseBinding.value).toBe(3n);
+  });
+
+  test("uses declaring package type context for imported function parameters", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/syscallish",
+        files: [{
+          filename: "/workspace/syscallish/stat.go",
+          source: `package syscallish
+
+type Stat_t struct { N int }
+
+func Stat(name string, st *Stat_t) error {
+  st.N = len(name)
+  return nil
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/osish",
+        files: [{
+          filename: "/workspace/osish/os.go",
+          source: `package osish
+
+import sc "example.com/syscallish"
+
+func Read() int {
+  var st sc.Stat_t
+  err := sc.Stat("hello", &st)
+  if err != nil {
+    return -1
+  }
+  return st.N
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import osish "example.com/osish"
+return osish.Read()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe(5n);
+  });
+
+  test("keeps named array pointer types for same-package calls", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/namedarray",
+        files: [{
+          filename: "/workspace/namedarray/table.go",
+          source: `package namedarray
+
+type Table [4]uint32
+
+func Fill(t *Table) {
+  t[2] = 7
+}
+
+func Make() *Table {
+  t := new(Table)
+  Fill(t)
+  return t
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import namedarray "example.com/namedarray"
+return namedarray.Make()[2]
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe(7n);
+  });
+
+  test("recognizes imported qualified type names in new calls", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/field",
+        files: [{
+          filename: "/workspace/field/field.go",
+          source: `package field
+
+type Element struct { N int }
+
+func (v *Element) One() *Element {
+  v.N = 1
+  return v
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import f "example.com/field"
+
+var X = new(f.Element).One()
+
+func Value() int {
+  return X.N
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import app "example.com/app"
+return app.Value()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe(1n);
+  });
+
+  test("distributes grouped var initializers and keeps package init dependencies", async () => {
+    const local = await expectRuns(`
+func pair() (int, string) { return 3, "ok" }
+var a, b = pair()
+return a, b
+`);
+    expect(local.values).toEqual([3n, "ok"]);
+
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/initvars",
+        files: [{
+          filename: "/workspace/initvars/initvars.go",
+          source: `package initvars
+
+type T struct { N int }
+
+var A, _ = new(T).F()
+var B = &T{N: 41}
+
+func (t *T) F() (*T, error) {
+  return B, nil
+}
+
+func Value() int {
+  return A.N + 1
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import initvars "example.com/initvars"
+return initvars.Value()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe(42n);
+  });
+
+  test("intrinsicifies crypto internal constanttime boolToUint8", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "crypto/internal/constanttime",
+        files: [{
+          filename: "/usr/local/go/src/crypto/internal/constanttime/constant_time.go",
+          source: `package constanttime
+
+func ByteEq(x, y uint8) int {
+  return int(boolToUint8(x == y))
+}
+
+func boolToUint8(b bool) uint8 {
+  panic("unreachable; must be intrinsicified")
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import constanttime "crypto/internal/constanttime"
+return constanttime.ByteEq(7, 7), constanttime.ByteEq(7, 8)
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.values).toEqual([1n, 0n]);
   });
 
   test("runs multiple package init functions in source file sequence order", async () => {
@@ -1573,6 +1811,20 @@ func Bad() {
     expect(result.diagnostics[0]?.filename).toBe("pkg/bad.go");
     expect(result.diagnostics[0]?.span?.filename).toBe("pkg/bad.go");
     expect(result.diagnostics[0]?.span?.line).toBe(5);
+  });
+
+  test("keeps selector runtime diagnostics on the selector span", async () => {
+    const result = await evaluateSource(`
+type S struct{}
+s := S{}
+_ = s.missing
+`, { filename: "pkg/select.go" });
+
+    expect(result.diagnostics).toHaveLength(1);
+    expect(result.diagnostics[0]?.filename).toBe("pkg/select.go");
+    expect(result.diagnostics[0]?.span?.filename).toBe("pkg/select.go");
+    expect(result.diagnostics[0]?.span?.line).toBe(4);
+    expect(result.diagnostics[0]?.message).toContain("has no selector missing");
   });
 
   test("predeclares top-level types before variable initializers", async () => {
@@ -2373,6 +2625,22 @@ return b.X
 `);
     expect(pointerOk.value).toBe(2n);
 
+    const aliasSignatureOk = await expectRuns(`
+type BaseMode uint32
+type FileMode = BaseMode
+
+type FileInfo interface {
+  Mode() BaseMode
+}
+
+type fileStat struct{}
+func (*fileStat) Mode() FileMode { return 7 }
+
+var info FileInfo = &fileStat{}
+return info.Mode()
+`);
+    expect(aliasSignatureOk.value).toBe(7n);
+
     const promotedPointerOk = await expectRuns(`
 type Summable interface {
   Sum(...int) int
@@ -3000,6 +3268,22 @@ return q, r, onlyR
     expect(result.values).toEqual([3n, 2n, 4n]);
   });
 
+  test("expands a single multi-result call into another call argument list", async () => {
+    const result = await expectRuns(`
+func pair() (int, int) {
+  return 3, 4
+}
+
+func add(a, b int) int {
+  return a + b
+}
+
+return add(pair())
+`);
+
+    expect(result.value).toBe(7n);
+  });
+
   test("supports multi-assignment to index targets after evaluating rhs", async () => {
     const result = await expectRuns(`
 xs := []int{1, 2}
@@ -3206,6 +3490,7 @@ return sum
       "  inner:",
       "  for j := 0; j < 10; j++ {",
       "    fmt.Printf(\"i=%v j=%v\\n\", i, j)",
+      "    if j == 0 { continue inner }",
       "    break top",
       "  }",
       "}",
@@ -3218,7 +3503,7 @@ return sum
         expect(result.incomplete).toBe(true);
       } else {
         expect(result.diagnostics).toEqual([]);
-        expect(result.output).toEqual(["i=0 j=0\n"]);
+        expect(result.output).toEqual(["i=0 j=0\n", "i=0 j=1\n"]);
       }
     }
   });
@@ -3353,6 +3638,34 @@ return q8, r8, q16, r16
 `);
 
     expect(result.values).toEqual([-128n, 0n, -32768n, 0n]);
+  });
+
+  test("infers selector-based uint64 shift expressions from field types", async () => {
+    const result = await expectRuns(`
+type T struct {
+  U uint64
+  V uint64
+}
+
+t := T{U: 2251799813685249, V: 1}
+u0 := t.U<<51 | t.V
+return u0
+`);
+
+    expect(result.value).toBe(2251799813685249n);
+  });
+
+  test("infers short var types from single-result function signatures", async () => {
+    const result = await expectRuns(`
+func mask64Bits(cond int) uint64 {
+  return ^(uint64(cond) - 1)
+}
+
+m := mask64Bits(1)
+return m
+`);
+
+    expect(result.value).toBe(18446744073709551615n);
   });
 
   test("preserves named numeric expression result identity", async () => {
@@ -3906,6 +4219,44 @@ return p.A, p.B
     expect(result.values).toEqual([7n, "seven"]);
   });
 
+  test("binds generic type parameters for new and zero values", async () => {
+    const result = await expectRuns(`
+func Ptr[T any](value T) *T {
+  p := new(T)
+  *p = value
+  return p
+}
+
+func Zero[T any]() T {
+  var zero T
+  return zero
+}
+
+i := Ptr[int](42)
+s := Ptr[string]("hi")
+return *i, *s, Zero[int]()
+`);
+
+    expect(result.values).toEqual([42n, "hi", 0n]);
+  });
+
+  test("infers generic type parameters from function argument signatures", async () => {
+    const result = await expectRuns(`
+func do[T any](fn func() (T, error)) (T, error) {
+  return fn()
+}
+
+func noerr() (int, error) {
+  return 7, nil
+}
+
+v, err := do(noerr)
+return v, err == nil
+`);
+
+    expect(result.values).toEqual([7n, true]);
+  });
+
   test("supports methods on erased generic receiver types", async () => {
     const result = await expectRuns(`
 type Box[T any] struct {
@@ -3926,6 +4277,330 @@ return box.Get()
 `);
 
     expect(result.value).toBe(9n);
+  });
+
+  test("instantiates generic receiver method parameters from imported named receiver types", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/atomic",
+        files: [{
+          filename: "/workspace/atomic/atomic.go",
+          source: `package atomic
+
+type Pointer[T any] struct {
+  v *T
+}
+
+func (x *Pointer[T]) Load() *T {
+  return x.v
+}
+
+func (x *Pointer[T]) CompareAndSwap(old, new *T) bool {
+  if x.v == old {
+    x.v = new
+    return true
+  }
+  return false
+}
+`
+        }]
+      },
+      {
+        importPath: "app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "example.com/atomic"
+
+type dirInfo struct {
+  dir int
+}
+
+type file struct {
+  dirinfo atomic.Pointer[dirInfo]
+}
+
+var F file
+var Swapped bool
+var Dir int
+
+func init() {
+  next := &dirInfo{dir: 7}
+  Swapped = F.dirinfo.CompareAndSwap(nil, next)
+  Dir = F.dirinfo.Load().dir
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages.app?.Swapped).toBe(true);
+    expect(graph.packages.app?.Dir).toBe(7n);
+  });
+
+  test("compares named unsafe typed nils in atomic pointer compare-and-swap", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "sync/atomic",
+        files: [{
+          filename: "/usr/local/go/src/sync/atomic/type.go",
+          source: `package atomic
+
+import "unsafe"
+
+type Pointer[T any] struct {
+  v unsafe.Pointer
+}
+
+func LoadPointer(addr *unsafe.Pointer) unsafe.Pointer
+func StorePointer(addr *unsafe.Pointer, val unsafe.Pointer)
+func CompareAndSwapPointer(addr *unsafe.Pointer, old, new unsafe.Pointer) bool
+
+func (x *Pointer[T]) Load() *T {
+  return (*T)(LoadPointer(&x.v))
+}
+
+func (x *Pointer[T]) CompareAndSwap(old, new *T) bool {
+  return CompareAndSwapPointer(&x.v, unsafe.Pointer(old), unsafe.Pointer(new))
+}
+`
+        }]
+      },
+      {
+        importPath: "app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "sync/atomic"
+
+type D struct {
+  v int
+}
+
+var P atomic.Pointer[D]
+var OK bool
+var Seen int
+
+func init() {
+  d := &D{v: 9}
+  OK = P.CompareAndSwap(nil, d)
+  Seen = P.Load().v
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages.app?.OK).toBe(true);
+    expect(graph.packages.app?.Seen).toBe(9n);
+  });
+
+  test("keeps caller package identity for generic atomic pointer method results", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "sync/atomic",
+        files: [{
+          filename: "/usr/local/go/src/sync/atomic/type.go",
+          source: `package atomic
+
+import "unsafe"
+
+type Pointer[T any] struct {
+  v unsafe.Pointer
+}
+
+func LoadPointer(addr *unsafe.Pointer) unsafe.Pointer
+func StorePointer(addr *unsafe.Pointer, val unsafe.Pointer)
+func SwapPointer(addr *unsafe.Pointer, new unsafe.Pointer) unsafe.Pointer
+
+func (x *Pointer[T]) Load() *T {
+  return (*T)(LoadPointer(&x.v))
+}
+
+func (x *Pointer[T]) Store(val *T) {
+  StorePointer(&x.v, unsafe.Pointer(val))
+}
+
+func (x *Pointer[T]) Swap(new *T) *T {
+  return (*T)(SwapPointer(&x.v, unsafe.Pointer(new)))
+}
+`
+        }]
+      },
+      {
+        importPath: "app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "sync/atomic"
+
+type dirInfo struct {
+  dir uintptr
+}
+
+func (d *dirInfo) close() {
+  Closed = true
+}
+
+type file struct {
+  dirinfo atomic.Pointer[dirInfo]
+}
+
+var F file
+var Closed bool
+
+func init() {
+  F.dirinfo.Store(&dirInfo{dir: 7})
+  old := F.dirinfo.Swap(nil)
+  old.close()
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages.app?.Closed).toBe(true);
+  });
+
+  test("preserves caller-owned struct values through imported generic receiver methods", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "box",
+        files: [{
+          filename: "/workspace/box/box.go",
+          source: `package box
+
+type Box[T any] struct{}
+
+func (b *Box[T]) Id(x T) T {
+  return x
+}
+`
+        }]
+      },
+      {
+        importPath: "g",
+        files: [{
+          filename: "/workspace/g/g.go",
+          source: `package g
+
+import "box"
+
+type value struct {
+  text string
+}
+
+var b box.Box[value]
+
+func Run() string {
+  v := b.Id(value{text:"ok"})
+  return v.text
+}
+`
+        }]
+      },
+      {
+        importPath: "app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "g"
+
+var Seen string
+
+func init() {
+  Seen = g.Run()
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages.app?.Seen).toBe("ok");
+  });
+
+  test("preserves unsafe pointer payloads for imported generic atomic pointers", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "sync/atomic",
+        files: [{
+          filename: "/usr/local/go/src/sync/atomic/type.go",
+          source: `package atomic
+
+import "unsafe"
+
+type Pointer[T any] struct {
+  _ [0]*T
+  v unsafe.Pointer
+}
+
+func LoadPointer(addr *unsafe.Pointer) unsafe.Pointer
+func StorePointer(addr *unsafe.Pointer, val unsafe.Pointer)
+
+func (x *Pointer[T]) Load() *T {
+  return (*T)(LoadPointer(&x.v))
+}
+
+func (x *Pointer[T]) Store(val *T) {
+  StorePointer(&x.v, unsafe.Pointer(val))
+}
+`
+        }]
+      },
+      {
+        importPath: "g",
+        files: [{
+          filename: "/workspace/g/g.go",
+          source: `package g
+
+import "sync/atomic"
+
+type setting struct {
+  value atomic.Pointer[value]
+}
+
+type value struct {
+  text string
+}
+
+var empty = value{text:"ok"}
+
+func Run() string {
+  s := new(setting)
+  s.value.Store(&empty)
+  return (*s.value.Load()).text
+}
+`
+        }]
+      },
+      {
+        importPath: "app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "g"
+
+var Seen string
+
+func init() {
+  Seen = g.Run()
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages.app?.Seen).toBe("ok");
   });
 
   test("REPL checker accepts keyed generic struct literals", async () => {
@@ -4313,5 +4988,20 @@ goto Missing
 
     expect(result.diagnostics).toHaveLength(1);
     expect(result.diagnostics[0]?.message).toContain("unresolved goto label Missing");
+  });
+
+  test("reports loop-limit diagnostics at the for statement span", async () => {
+    const result = await evaluateSource(`
+x := 1
+for {
+  x++
+}
+`, { filename: "loop.go", maxLoopIterations: 2 });
+
+    expect(result.diagnostics).toHaveLength(1);
+    expect(result.diagnostics[0]?.filename).toBe("loop.go");
+    expect(result.diagnostics[0]?.span?.filename).toBe("loop.go");
+    expect(result.diagnostics[0]?.span?.line).toBe(3);
+    expect(result.diagnostics[0]?.message).toContain("loop exceeded 2 iterations");
   });
 });

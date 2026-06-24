@@ -313,8 +313,21 @@ function mathPackage() {
     const intType = Typ[Int];
     const untypedIntType = Typ[UntypedInt];
     const boolType = Typ[Bool];
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxInt", untypedIntType, 9223372036854775807n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MinInt", untypedIntType, -9223372036854775808n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxInt8", untypedIntType, 127n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MinInt8", untypedIntType, -128n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxInt16", untypedIntType, 32767n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MinInt16", untypedIntType, -32768n));
     pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxInt32", untypedIntType, 2147483647n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MinInt32", untypedIntType, -2147483648n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxInt64", untypedIntType, 9223372036854775807n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MinInt64", untypedIntType, -9223372036854775808n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxUint", untypedIntType, 18446744073709551615n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxUint8", untypedIntType, 255n));
     pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxUint16", untypedIntType, 65535n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxUint32", untypedIntType, 4294967295n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxUint64", untypedIntType, 18446744073709551615n));
     pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxFloat32", float64Type, 3.4028234663852886e38));
     pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxFloat64", float64Type, Number.MAX_VALUE));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "NaN", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
@@ -343,8 +356,13 @@ function fmtPackage() {
     if (errorType === null) {
         throw new Error("go/types: predeclared error is not initialized");
     }
+    const writerType = NewInterfaceType([
+        NewFunc(NoPos, pkg, "Write", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "p", byteSliceType)), NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)), false))
+    ], null).Complete();
     const printfSig = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", intType)), true);
     const sprintfSig = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", stringType)), true);
+    const fprintfSig = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "w", writerType), NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)), true);
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Fprintf", fprintfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Printf", printfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Sprintf", sprintfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Errorf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", errorType)), true)));

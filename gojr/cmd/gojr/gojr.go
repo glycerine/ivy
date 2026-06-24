@@ -85,13 +85,15 @@ type compileRequest struct {
 }
 
 type evalWithPackagesRequest struct {
-	ImportPath  string               `json:"importPath,omitempty"`
-	PackageName string               `json:"packageName,omitempty"`
-	Source      string               `json:"source,omitempty"`
-	Files       []sourceFile         `json:"files,omitempty"`
-	SheetJSON   string               `json:"sheetJSON,omitempty"`
-	Packages    []runtimePackageSpec `json:"packages,omitempty"`
-	SourceRoots []string             `json:"sourceRoots,omitempty"`
+	ImportPath         string               `json:"importPath,omitempty"`
+	PackageName        string               `json:"packageName,omitempty"`
+	Source             string               `json:"source,omitempty"`
+	Files              []sourceFile         `json:"files,omitempty"`
+	SheetJSON          string               `json:"sheetJSON,omitempty"`
+	Packages           []runtimePackageSpec `json:"packages,omitempty"`
+	SourceRoots        []string             `json:"sourceRoots,omitempty"`
+	ArtifactRoot       string               `json:"artifactRoot,omitempty"`
+	PackageCacheParent string               `json:"packageCacheParent,omitempty"`
 }
 
 type runtimePackageSpec struct {
@@ -397,6 +399,8 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 	sheetJSON := flags.String("sheet-json", "", "current sheet data as JSON")
 	seed := flags.String("seed", "", "deterministic scheduler/random seed; must appear before Node starts")
 	randomSeed := flags.String("random-seed", "", "deterministic scheduler/random seed; alias for --seed")
+	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; gojr_js is appended")
+	artifactRoot := flags.String("artifact-root", "", "exact gojr_js artifact root directory")
 	jsonMode := flags.Bool("json", false, "print a machine-readable JSON result")
 	var packageFlags packageFlag
 	flags.Var(&packageFlags, "pkg", "Go-junior source package, import/path=DIR; may be repeated")
@@ -408,7 +412,7 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 	_ = seed
 	_ = randomSeed
 	if flags.NArg() > 1 {
-		return false, fmt.Errorf("usage: gojr run [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] [FILE|DIR|-]")
+		return false, fmt.Errorf("usage: gojr run [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] [FILE|DIR|-]")
 	}
 	sourcePath := optionalArg(flags.Args())
 	target, err := readRunTarget(sourcePath)
@@ -423,12 +427,14 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 	if target.Package {
 		sourceRoots := buildSourceRoots(sourcePath, target.ImportPath, sourceRootFlags)
 		result, err := rt.RunMainFilesWithPackages(evalWithPackagesRequest{
-			ImportPath:  target.ImportPath,
-			PackageName: target.PackageName,
-			Files:       target.Files,
-			SheetJSON:   strings.TrimSpace(*sheetJSON),
-			Packages:    packages,
-			SourceRoots: sourceRoots,
+			ImportPath:         target.ImportPath,
+			PackageName:        target.PackageName,
+			Files:              target.Files,
+			SheetJSON:          strings.TrimSpace(*sheetJSON),
+			Packages:           packages,
+			SourceRoots:        sourceRoots,
+			ArtifactRoot:       strings.TrimSpace(*artifactRoot),
+			PackageCacheParent: strings.TrimSpace(*packageCacheParent),
 		})
 		if err != nil {
 			return false, err
@@ -735,7 +741,7 @@ func printTopLevelUsage() {
 gojr eval [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] SOURCE
   evaluate one Go-junior expression or statement list
 
-gojr run [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] [FILE|DIR|-]
+gojr run [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] [FILE|DIR|-]
   run a Go-junior source file, package directory, or stdin
 
 gojr compile [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--expr SOURCE] [FILE|DIR|-]

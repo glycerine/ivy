@@ -5,6 +5,7 @@ import { EndOf, NewIdent, PosOf, Print, Unparen } from "../ast/index.js";
 import { AllErrors, ParseComments, ParseExprFrom, ParseFile, SkipObjectResolution, Trace } from "../../front/parser.js";
 import { PrintError } from "../../front/scanner.js";
 import { TokenKind } from "../../front/token.js";
+import { Token as GoToken } from "../token/index.js";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 // ---- token.ts ----
@@ -471,20 +472,24 @@ var go_types_astcompat;
     }
     go_types_astcompat.genDeclSpecs = genDeclSpecs;
     function genDeclTok(decl) {
-        const tok = decl?.Tok ??
-            decl?.token;
+        const tok = decl?.token ??
+            decl?.Tok;
         switch (tok) {
             case "CONST":
             case TokenKind.Const:
+            case GoToken.CONST:
                 return "CONST";
             case "VAR":
             case TokenKind.Var:
+            case GoToken.VAR:
                 return "VAR";
             case "TYPE":
             case TokenKind.Type:
+            case GoToken.TYPE:
                 return "TYPE";
             case "IMPORT":
             case TokenKind.Import:
+            case GoToken.IMPORT:
                 return "IMPORT";
             default:
                 return globalThis.String(tok ?? "");
@@ -17311,10 +17316,13 @@ var go_types_resolver;
                         const names = go_types_astcompat.specNames(vd.spec);
                         const values = go_types_astcompat.specValues(vd.spec);
                         const lhs = names.map((name) => go_types_object.NewVar(go_types_astcompat.nodePos(name) || pos, pkg, go_types_astcompat.identName(name), null));
+                        const sharedInfo = values.length === 1
+                            ? new declInfo({ file: fileScope, version: this.version, lhs, vtyp: go_types_astcompat.specType(vd.spec), init: values[0] })
+                            : null;
                         for (let i = 0; i < names.length; i++) {
-                            const init = values.length === 1 ? values[0] : (i < values.length ? values[i] : null);
-                            const sharedLhs = values.length === 1 ? lhs : null;
-                            this.declarePkgObj(names[i], lhs[i], new declInfo({ file: fileScope, version: this.version, lhs: sharedLhs, vtyp: go_types_astcompat.specType(vd.spec), init }));
+                            const init = i < values.length ? values[i] : null;
+                            const info = sharedInfo ?? new declInfo({ file: fileScope, version: this.version, vtyp: go_types_astcompat.specType(vd.spec), init });
+                            this.declarePkgObj(names[i], lhs[i], info);
                         }
                         break;
                     }
@@ -18117,10 +18125,10 @@ var go_types_decl;
         const expr = x;
         switch (expr.kind) {
             case "UnaryExpr":
-                wrap = expr.Op === "TILDE" || expr.op === TokenKind.Tilde;
+                wrap = expr.Op === "TILDE" || expr.Op === GoToken.TILDE || expr.op === TokenKind.Tilde;
                 break;
             case "BinaryExpr":
-                wrap = expr.Op === "OR" || expr.op === TokenKind.Or;
+                wrap = expr.Op === "OR" || expr.Op === GoToken.OR || expr.op === TokenKind.Or;
                 break;
         }
         if (wrap) {
@@ -20511,16 +20519,76 @@ var go_types_labels;
     // Copyright 2013 The Go Authors. All rights reserved.
     // Use of this source code is governed by a BSD-style
     // license that can be found in the LICENSE file.
+    function labelIdent(s) {
+        const stmt = s;
+        return stmt.Label ?? stmt.label ?? null;
+    }
+    function identName(id) {
+        const ident = id;
+        return ident?.Name ?? ident?.name ?? "";
+    }
+    function stmtField(s) {
+        const stmt = s;
+        return stmt.Stmt ?? stmt.stmt ?? null;
+    }
+    function bodyField(s) {
+        const stmt = s;
+        if (stmt.Body !== undefined) {
+            return stmt.Body;
+        }
+        if (globalThis.Array.isArray(stmt.body)) {
+            return { kind: "BlockStmt", List: stmt.body };
+        }
+        return stmt.body ?? null;
+    }
+    function listField(block) {
+        const b = block;
+        return b?.List ?? b?.statements ?? [];
+    }
+    function clauseBodyList(s) {
+        const stmt = s;
+        const body = stmt.Body ?? stmt.body ?? [];
+        return globalThis.Array.isArray(body) ? body : listField(body);
+    }
+    function elseField(s) {
+        const stmt = s;
+        return stmt.Else ?? stmt.else ?? null;
+    }
+    function declField(s) {
+        const stmt = s;
+        return stmt.Decl ?? stmt.decl ?? null;
+    }
+    function tokField(s) {
+        const stmt = s;
+        return stmt.Tok ?? stmt.token;
+    }
+    function isTok(tok, goTok, frontTok, name) {
+        return tok === goTok || tok === frontTok || tok === name;
+    }
+    function isVarDecl(decl) {
+        const d = decl;
+        return d?.kind === "GenDecl" && isTok(tokField(d), GoToken.VAR, TokenKind.Var, "VAR");
+    }
+    function labelStmtTargetKind(s) {
+        return (stmtField(s)?.kind) ?? "";
+    }
+    function branchTargetName(s) {
+        return identName(labelIdent(s));
+    }
+    function labelPos(id) {
+        const label = id;
+        return label?.Pos?.() ?? PosOf(id);
+    }
     // labels checks correct label use in body.
     go_types_check.registerCheckerMethod("labels", function labels(body) {
         const b = body;
         const all = go_types_scope.NewScope(null, b.Pos?.() ?? 0, b.End?.() ?? 0, "label");
-        const fwdJumps = this.blockBranches(all, null, null, b.List ?? []);
+        const fwdJumps = this.blockBranches(all, null, null, listField(body));
         for (const jmp of fwdJumps) {
             const j = jmp;
             let msg;
             let code;
-            const name = j.Label?.Name ?? "";
+            const name = branchTargetName(jmp);
             const alt = all.Lookup(name);
             if (alt !== null) {
                 msg = "goto %s jumps into block";
@@ -20531,7 +20599,7 @@ var go_types_labels;
                 msg = "label %s not declared";
                 code = "UndeclaredLabel";
             }
-            this.errorf(j.Label, code, msg, name);
+            this.errorf(labelIdent(jmp), code, msg, name);
         }
         for (const name of all.Names()) {
             const obj = go_types_scope.resolve(name, all.elems.get(name) ?? null);
@@ -20553,7 +20621,7 @@ var go_types_labels;
         // insert records a new label declaration for the current block.
         // The label must not have been declared before in any block.
         insert(s) {
-            const name = s.Label?.Name ?? "";
+            const name = branchTargetName(s);
             if (go_types_check.debug) {
                 go_types_util.assert(this.gotoTarget(name) === null);
             }
@@ -20580,7 +20648,7 @@ var go_types_labels;
         enclosingTarget(name) {
             for (let s = this; s !== null; s = s.parent) {
                 const t = s.lstmt;
-                if (t !== null && t.Label?.Name === name) {
+                if (t !== null && branchTargetName(t) === name) {
                     return t;
                 }
             }
@@ -20591,14 +20659,32 @@ var go_types_labels;
     // blockBranches processes a block's statement list and returns the set of outgoing forward jumps.
     go_types_check.registerCheckerMethod("blockBranches", function blockBranches(all, parent, lstmt, list) {
         const b = new block(parent, lstmt);
+        let varDeclPos = 0;
         const fwdJumps = [];
+        let badJumps = [];
+        const recordVarDecl = (pos) => {
+            varDeclPos = pos;
+            badJumps = fwdJumps.slice();
+        };
+        const jumpsOverVarDecl = (jmp) => {
+            return varDeclPos !== 0 && badJumps.includes(jmp);
+        };
+        const nestedBlockBranches = (labeled, nestedList) => {
+            fwdJumps.push(...this.blockBranches(all, b, labeled, nestedList));
+        };
         const stmtBranches = (lstmt, s) => {
             const stmt = s;
             switch (stmt.kind) {
+                case "DeclStmt":
+                    if (isVarDecl(declField(s))) {
+                        recordVarDecl(PosOf(declField(s)));
+                    }
+                    break;
                 case "LabeledStmt": {
-                    const name = stmt.Label?.Name ?? "";
+                    const label = labelIdent(s);
+                    const name = identName(label);
                     if (name !== "_") {
-                        const lbl = go_types_object.NewLabel(stmt.Label?.Pos?.() ?? 0, this.pkg, name);
+                        const lbl = go_types_object.NewLabel(labelPos(label), this.pkg, name);
                         const alt = all.Insert(lbl);
                         if (alt !== null) {
                             const err = this.newError("DuplicateLabel");
@@ -20609,41 +20695,114 @@ var go_types_labels;
                         }
                         else {
                             b.insert(s);
-                            this.recordDef(stmt.Label, lbl);
+                            this.recordDef(label, lbl);
                         }
+                        let i = 0;
+                        for (const jmp of fwdJumps) {
+                            if (branchTargetName(jmp) === name) {
+                                lbl.used = true;
+                                this.recordUse(labelIdent(jmp), lbl);
+                                if (jumpsOverVarDecl(jmp)) {
+                                    const line = this.fset?.Position?.(varDeclPos)?.Line ?? varDeclPos;
+                                    this.softErrorf(labelIdent(jmp), "JumpOverDecl", "goto %s jumps over variable declaration at line %d", name, line);
+                                }
+                            }
+                            else {
+                                fwdJumps[i] = jmp;
+                                i++;
+                            }
+                        }
+                        fwdJumps.length = i;
                         lstmt = s;
                     }
-                    stmtBranches(lstmt, stmt.Stmt);
+                    stmtBranches(lstmt, stmtField(s));
                     break;
                 }
                 case "BranchStmt": {
-                    if (stmt.Label === null || stmt.Label === undefined) {
+                    const label = labelIdent(s);
+                    if (label === null || label === undefined) {
                         return;
                     }
-                    const name = stmt.Label.Name ?? "";
-                    if (stmt.Tok === "GOTO" && b.gotoTarget(name) === null) {
-                        fwdJumps.push(s);
+                    const name = identName(label);
+                    const tok = tokField(s);
+                    if (isTok(tok, GoToken.BREAK, TokenKind.Break, "BREAK")) {
+                        let valid = false;
+                        const target = b.enclosingTarget(name);
+                        switch (labelStmtTargetKind(target)) {
+                            case "SwitchStmt":
+                            case "TypeSwitchStmt":
+                            case "SelectStmt":
+                            case "ForStmt":
+                            case "RangeStmt":
+                                valid = true;
+                                break;
+                        }
+                        if (!valid) {
+                            this.errorf(label, "MisplacedLabel", "invalid break label %s", name);
+                            return;
+                        }
+                    }
+                    else if (isTok(tok, GoToken.CONTINUE, TokenKind.Continue, "CONTINUE")) {
+                        let valid = false;
+                        const target = b.enclosingTarget(name);
+                        switch (labelStmtTargetKind(target)) {
+                            case "ForStmt":
+                            case "RangeStmt":
+                                valid = true;
+                                break;
+                        }
+                        if (!valid) {
+                            this.errorf(label, "MisplacedLabel", "invalid continue label %s", name);
+                            return;
+                        }
+                    }
+                    else if (isTok(tok, GoToken.GOTO, TokenKind.Goto, "GOTO")) {
+                        if (b.gotoTarget(name) === null) {
+                            fwdJumps.push(s);
+                            return;
+                        }
+                    }
+                    else {
+                        this.errorf(s, "InvalidSyntaxTree", "branch statement: %s %s", String(tok), name);
                         return;
                     }
                     const obj = all.Lookup(name);
                     if (obj !== null) {
                         obj.used = true;
-                        this.recordUse(stmt.Label, obj);
+                        this.recordUse(label, obj);
                     }
                     break;
                 }
-                case "BlockStmt":
-                    fwdJumps.push(...this.blockBranches(all, b, lstmt, stmt.Body?.List ?? []));
-                    break;
-                case "IfStmt":
-                    stmtBranches(lstmt, stmt.Body);
-                    if (stmt.Else !== null && stmt.Else !== undefined) {
-                        stmtBranches(lstmt, stmt.Else);
+                case "AssignStmt":
+                    if (isTok(tokField(s), GoToken.DEFINE, TokenKind.Define, "DEFINE")) {
+                        recordVarDecl(PosOf(s));
                     }
                     break;
+                case "BlockStmt":
+                    nestedBlockBranches(lstmt, listField(s));
+                    break;
+                case "IfStmt":
+                    stmtBranches(lstmt, bodyField(s));
+                    if (elseField(s) !== null && elseField(s) !== undefined) {
+                        stmtBranches(lstmt, elseField(s));
+                    }
+                    break;
+                case "CaseClause":
+                    nestedBlockBranches(null, clauseBodyList(s));
+                    break;
+                case "SwitchStmt":
+                case "TypeSwitchStmt":
+                case "SelectStmt":
+                case "ForStmt":
+                case "RangeStmt":
+                    stmtBranches(lstmt, bodyField(s));
+                    break;
+                case "CommClause":
+                    nestedBlockBranches(null, clauseBodyList(s));
+                    break;
                 default:
-                    if (stmt.Body?.List) {
-                        fwdJumps.push(...this.blockBranches(all, b, null, stmt.Body.List));
+                    if (bodyField(s)) {
+                        nestedBlockBranches(null, listField(bodyField(s)));
                     }
             }
         };

@@ -496,6 +496,29 @@ var bad = d + a
     expect(result.pkg.Scope().Lookup("good")?.Type()?.String()).toBe("string");
   });
 
+  test("marks labeled break and continue targets as used through nested control flow", () => {
+    const result = check(`
+package labels
+
+func BreakLoop(msg []byte) int {
+  off := 0
+Loop:
+  for {
+    switch msg[off] {
+    case 0:
+      break Loop
+    default:
+      off++
+      continue Loop
+    }
+  }
+  return off
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
   test("types channel directions, sends, receives, goroutines, and select clauses", () => {
     const result = check(`
 package concurrent

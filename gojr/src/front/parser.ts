@@ -876,7 +876,9 @@ export function ParseDir(fset: unknown, path: string, filter: ((info: { name: st
         pkg = { kind: "Package", name, files: [] };
         packages.set(name, pkg);
       }
-      pkg.files.push(src);
+      if (Array.isArray(pkg.files)) {
+        pkg.files.push(src);
+      }
     } else if (!first) {
       first = err;
     }

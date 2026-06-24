@@ -441,11 +441,13 @@ func main() {
 		t.Fatalf("readBuildTarget(mainFile) error = %v", err)
 	}
 	mainImportPath := deriveBuildImportPath(mainFile, packageNameFromSourceFiles(mainFiles))
+	runCacheParent := t.TempDir()
 	runMainResult, err := rt.RunMainFilesWithPackages(evalWithPackagesRequest{
-		ImportPath:  mainImportPath,
-		PackageName: "main",
-		Files:       mainFiles,
-		SourceRoots: buildSourceRoots(mainFile, mainImportPath, nil),
+		ImportPath:         mainImportPath,
+		PackageName:        "main",
+		Files:              mainFiles,
+		SourceRoots:        buildSourceRoots(mainFile, mainImportPath, nil),
+		PackageCacheParent: runCacheParent,
 	})
 	if err != nil {
 		t.Fatalf("RunMainFilesWithPackages() error = %v", err)
@@ -453,11 +455,17 @@ func main() {
 	if !runMainResult.OK || runMainResult.Output != "hello gorj!\n" {
 		t.Fatalf("RunMainFilesWithPackages() ok=%v output=%q diagnostics=%v, want hello gorj", runMainResult.OK, runMainResult.Output, runMainResult.Diagnostics)
 	}
-	if ok, err := runSource(rt, []string{mainFile}); err != nil || !ok {
+	if ok, err := runSource(rt, []string{"-pkgdir", runCacheParent, mainFile}); err != nil || !ok {
 		t.Fatalf("runSource(main.go) ok=%v err=%v, want success", ok, err)
 	}
-	if ok, err := runSource(rt, []string{cmdDir}); err != nil || !ok {
+	if ok, err := runSource(rt, []string{"-pkgdir", runCacheParent, cmdDir}); err != nil || !ok {
 		t.Fatalf("runSource(dir) ok=%v err=%v, want success", ok, err)
+	}
+	if _, err := os.Stat(filepath.Join(runCacheParent, "gojr_js", "example.com", "runmod", "msg.a")); err != nil {
+		t.Fatalf("runSource package main missing dependency artifact: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(runCacheParent, "gojr_js", "example.com", "runmod", "cmd", "hello.a")); err != nil {
+		t.Fatalf("runSource package main missing main artifact: %v", err)
 	}
 
 	pkgDir := t.TempDir()

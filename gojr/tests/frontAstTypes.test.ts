@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, test } from "./testHarness.js";
 import {
   childNodes,
@@ -11,6 +13,8 @@ import {
   FilterImportDuplicates,
   Fprint,
   collapse,
+  EndOf,
+  filterCompositeLit,
   MergePackageFiles,
   NewCommentMap,
   NewIdent,
@@ -29,6 +33,8 @@ import {
   importPath,
   parseCellAddress,
   Inspect,
+  Ident as AstIdent,
+  PosOf,
   Preorder,
   PreorderStack,
   Unparen,
@@ -36,10 +42,14 @@ import {
   walk,
   type AstNode,
   type CommentGroup,
+  type CompositeLit,
+  type FuncDecl,
   type ImportSpec,
+  type Package,
   type File
 } from "../src/go/ast/index.js";
 import { parseFrontSource } from "../src/front/parser.js";
+import { NewFileSet, Token as GoToken } from "../src/go/token/index.js";
 import {
 	  AssignableTo,
 	  Byte,
@@ -81,6 +91,28 @@ import {
 import { TokenKind } from "../src/front/token.js";
 
 describe("Go-junior Go-style AST", () => {
+  test("keeps every upstream go/ast node struct field in the TypeScript AST", () => {
+    const upstream = readFileSync("/usr/local/go1.27rc1/src/go/ast/ast.go", "utf8");
+    const translated = readFileSync(join(process.cwd(), "src", "go", "ast", "index.ts"), "utf8");
+    const upstreamStructs = parseGoStructFields(upstream);
+    const translatedInterfaces = parseTypeScriptInterfaceFields(translated);
+    const mismatches: string[] = [];
+
+    for (const [name, fields] of upstreamStructs) {
+      const translatedFields = translatedInterfaces.get(name);
+      if (translatedFields === undefined) {
+        mismatches.push(`${name}: missing interface`);
+        continue;
+      }
+      const missing = fields.filter((field) => !translatedFields.has(field));
+      if (missing.length > 0) {
+        mismatches.push(`${name}: missing ${missing.join(", ")}`);
+      }
+    }
+
+    expect(mismatches).toEqual([]);
+  });
+
   test("parses spreadsheet cell addresses into absolute row and column flags", () => {
     expect(parseCellAddress("$A$1")).toEqual({
       raw: "$A$1",
@@ -186,6 +218,8 @@ describe("Go-junior Go-style AST", () => {
 
   test("transliterates go/ast comment and identifier helpers", () => {
     expect(NewIdent("Thing")).toEqual({ kind: "Ident", name: "Thing" });
+    expect(NewIdent("Thing").Name).toBe("Thing");
+    expect(NewIdent("Thing").NamePos).toBe(0);
     expect(IsExported("Thing")).toBe(true);
     expect(IsExported("thing")).toBe(false);
 
@@ -223,7 +257,143 @@ describe("Go-junior Go-style AST", () => {
     expect(decl.Type?.Params?.List).toHaveLength(1);
     expect(decl.Type?.Results?.List).toHaveLength(1);
     expect(decl.Body?.List).toHaveLength(1);
+    const returnStmt = decl.Body?.List?.[0] as { Results?: Array<{ Op?: GoToken; Y?: { Kind?: GoToken } }> };
+    expect(returnStmt.Results?.[0]?.Op).toBe(GoToken.ADD);
+    expect(returnStmt.Results?.[0]?.Y?.Kind).toBe(GoToken.INT);
     expect(globalThis.Object.keys(parsed.file!)).not.toContain("Decls");
+  });
+
+  test("walks and positions standard-shaped go/ast nodes", () => {
+    const file = {
+      kind: "File",
+      Name: { kind: "Ident", NamePos: 9, Name: "main" },
+      Decls: [{
+        kind: "GenDecl",
+        TokPos: 14,
+        Tok: GoToken.VAR,
+        Specs: [{
+          kind: "ValueSpec",
+          Names: [{ kind: "Ident", NamePos: 18, Name: "x" }],
+          Type: { kind: "Ident", NamePos: 20, Name: "int" },
+          Values: [{
+            kind: "BasicLit",
+            ValuePos: 26,
+            Kind: GoToken.INT,
+            Value: "3"
+          }]
+        }]
+      }],
+      Imports: [],
+      Unresolved: [],
+      Comments: [],
+      FileStart: 1,
+      Package: 1,
+      FileEnd: 27
+    } as unknown as File;
+
+    const names: string[] = [];
+    Inspect(file, (node) => {
+      if (node?.kind === "Ident") names.push(AstIdent.String(node));
+      return true;
+    });
+    expect(names).toEqual(["main", "x", "int"]);
+    expect(childNodes(file)).toHaveLength(2);
+    expect(PosOf(file)).toBe(1);
+    expect(EndOf(file)).toBe(27);
+    expect(PosOf(file.Name)).toBe(9);
+    expect(EndOf(file.Name)).toBe(13);
+
+    expect(EndOf({
+      kind: "BasicLit",
+      ValuePos: 30,
+      ValueEnd: 37,
+      Kind: GoToken.STRING,
+      Value: "`a\r\nb`"
+    } as unknown as AstNode)).toBe(37);
+    expect(EndOf({
+      kind: "BlockStmt",
+      Lbrace: 40,
+      List: [],
+      Rbrace: 44
+    } as unknown as AstNode)).toBe(45);
+    expect(EndOf({
+      kind: "BranchStmt",
+      TokPos: 50,
+      Tok: GoToken.BREAK
+    } as unknown as AstNode)).toBe(55);
+    expect(EndOf({
+      kind: "ImportSpec",
+      Path: {
+        kind: "BasicLit",
+        ValuePos: 60,
+        ValueEnd: 65,
+        Kind: GoToken.STRING,
+        Value: "\"fmt\""
+      },
+      EndPos: 70
+    } as unknown as AstNode)).toBe(70);
+    expect(EndOf({
+      kind: "File",
+      Name: { kind: "Ident", NamePos: 80, Name: "main" },
+      Decls: [],
+      FileEnd: 999
+    } as unknown as AstNode)).toBe(84);
+    expect(childNodes({
+      kind: "Package",
+      Name: "p",
+      Files: new Map([
+        ["a.go", file]
+      ])
+    } as unknown as AstNode)).toEqual([file]);
+  });
+
+  test("Walk follows standard go/ast File children", () => {
+    const doc: CommentGroup = {
+      kind: "CommentGroup",
+      List: [{ kind: "Comment", Text: "// package doc", text: "// package doc" }],
+      list: [{ kind: "Comment", Text: "// package doc", text: "// package doc" }]
+    };
+    const imp: ImportSpec = {
+      kind: "ImportSpec",
+      Path: { kind: "BasicLit", ValuePos: 30, Kind: GoToken.STRING, Value: "\"fmt\"", token: TokenKind.StringLiteral, value: "\"fmt\"" },
+      path: { kind: "BasicLit", ValuePos: 30, Kind: GoToken.STRING, Value: "\"fmt\"", token: TokenKind.StringLiteral, value: "\"fmt\"" }
+    };
+    const unresolved = { kind: "Ident" as const, NamePos: 90, Name: "Missing" };
+    const looseComment: CommentGroup = {
+      kind: "CommentGroup",
+      List: [{ kind: "Comment", Text: "// loose", text: "// loose" }],
+      list: [{ kind: "Comment", Text: "// loose", text: "// loose" }]
+    };
+    const file = {
+      kind: "File" as const,
+      Doc: doc,
+      Package: 1,
+      Name: { kind: "Ident" as const, NamePos: 9, Name: "p" },
+      Decls: [{
+        kind: "GenDecl" as const,
+        TokPos: 20,
+        Tok: GoToken.IMPORT,
+        Specs: [imp]
+      }],
+      Imports: [imp],
+      Unresolved: [unresolved],
+      Comments: [looseComment]
+    } as unknown as File;
+
+    const seen: string[] = [];
+    Walk({
+      Visit(node: AstNode | undefined) {
+        if (node) seen.push(node.kind);
+        return this;
+      }
+    }, file);
+
+    expect(seen).toContain("CommentGroup");
+    expect(seen).toContain("GenDecl");
+    expect(seen).toContain("ImportSpec");
+    expect(seen).not.toContain("Missing");
+    expect(seen.filter((kind) => kind === "CommentGroup")).toHaveLength(1);
+    expect(childNodes(file).map((node) => node.kind)).toEqual(["CommentGroup", "Ident", "GenDecl"]);
   });
 
   test("detects generated source comments before the package clause", () => {
@@ -353,6 +523,18 @@ describe("Go-junior Go-style AST", () => {
       throw new Error("expected filtered struct type");
     }
     expect(typeDecl.specs[0].type.fields.fields.map((field) => field.names[0]?.name)).toEqual(["Public"]);
+    expect(typeDecl.specs[0].type.Incomplete).toBe(true);
+
+    const lit: CompositeLit = {
+      kind: "CompositeLit",
+      elements: [
+        { kind: "KeyValueExpr", key: ident("Hidden"), value: ident("x") },
+        { kind: "KeyValueExpr", key: ident("Public"), value: ident("y") }
+      ]
+    };
+    filterCompositeLit(lit, (name) => name === "Public", true);
+    expect(lit.elements).toHaveLength(1);
+    expect(lit.Incomplete).toBe(true);
 
     const merged = MergePackageFiles({
       kind: "Package",
@@ -378,7 +560,10 @@ describe("Go-junior Go-style AST", () => {
               ]
             }
           ],
-          imports: [],
+          imports: [
+            { kind: "ImportSpec", path: { kind: "BasicLit", token: TokenKind.StringLiteral, value: "\"fmt\"" } },
+            { kind: "ImportSpec", path: { kind: "BasicLit", token: TokenKind.StringLiteral, value: "\"fmt\"" } }
+          ],
           unresolved: [],
           comments: []
         }
@@ -387,6 +572,74 @@ describe("Go-junior Go-style AST", () => {
 
     expect(merged.declarations.filter((decl) => decl.kind === "FuncDecl" && decl.name.name === "Exported")).toHaveLength(1);
     expect(merged.imports.map((spec) => spec.path.value)).toEqual(["\"fmt\""]);
+  });
+
+  test("MergePackageFiles preserves package docs, file range, comments, and filename order", () => {
+    const docA: CommentGroup = { kind: "CommentGroup", List: [{ kind: "Comment", Text: "// doc a", text: "// doc a" }], list: [{ kind: "Comment", Text: "// doc a", text: "// doc a" }] };
+    const docB: CommentGroup = { kind: "CommentGroup", List: [{ kind: "Comment", Text: "// doc b", text: "// doc b" }], list: [{ kind: "Comment", Text: "// doc b", text: "// doc b" }] };
+    const commentA: CommentGroup = { kind: "CommentGroup", List: [{ kind: "Comment", Text: "// comment a", text: "// comment a" }], list: [{ kind: "Comment", Text: "// comment a", text: "// comment a" }] };
+    const commentB: CommentGroup = { kind: "CommentGroup", List: [{ kind: "Comment", Text: "// comment b", text: "// comment b" }], list: [{ kind: "Comment", Text: "// comment b", text: "// comment b" }] };
+    const fmtImport: ImportSpec = {
+      kind: "ImportSpec",
+      Path: { kind: "BasicLit", Value: "\"fmt\"", token: TokenKind.StringLiteral, value: "\"fmt\"" },
+      path: { kind: "BasicLit", Value: "\"fmt\"", token: TokenKind.StringLiteral, value: "\"fmt\"" }
+    };
+    const stringsImport: ImportSpec = {
+      kind: "ImportSpec",
+      Path: { kind: "BasicLit", Value: "\"strings\"", token: TokenKind.StringLiteral, value: "\"strings\"" },
+      path: { kind: "BasicLit", Value: "\"strings\"", token: TokenKind.StringLiteral, value: "\"strings\"" }
+    };
+    const declA: FuncDecl = {
+      kind: "FuncDecl",
+      Name: { kind: "Ident", Name: "A", NamePos: 40 },
+      Type: { kind: "FuncType", Params: { kind: "FieldList", List: [] } },
+      name: ident("A"),
+      type: { kind: "FuncType", params: { kind: "FieldList", fields: [] } }
+    } as unknown as FuncDecl;
+    const declB: FuncDecl = {
+      kind: "FuncDecl",
+      Name: { kind: "Ident", Name: "B", NamePos: 20 },
+      Type: { kind: "FuncType", Params: { kind: "FieldList", List: [] } },
+      name: ident("B"),
+      type: { kind: "FuncType", params: { kind: "FieldList", fields: [] } }
+    } as unknown as FuncDecl;
+    const merged = MergePackageFiles({
+      kind: "Package",
+      Name: "p",
+      Files: new Map([
+        ["b.go", {
+          kind: "File",
+          Doc: docB,
+          Package: 10,
+          Name: { kind: "Ident", Name: "p", NamePos: 18 },
+          Decls: [declB],
+          FileStart: 10,
+          FileEnd: 30,
+          Imports: [stringsImport, fmtImport],
+          Comments: [commentB]
+        } as unknown as File],
+        ["a.go", {
+          kind: "File",
+          Doc: docA,
+          Package: 50,
+          Name: { kind: "Ident", Name: "p", NamePos: 58 },
+          Decls: [declA],
+          FileStart: 5,
+          FileEnd: 90,
+          Imports: [fmtImport],
+          Comments: [commentA]
+        } as unknown as File]
+      ])
+    } as unknown as Package, FilterImportDuplicates);
+
+    expect(merged.Package).toBe(50);
+    expect(merged.FileStart).toBe(5);
+    expect(merged.FileEnd).toBe(90);
+    expect(merged.Doc?.List?.map((comment) => comment.Text)).toEqual(["// doc a", "//", "// doc b"]);
+    expect(merged.Decls?.map((decl) => decl.kind === "FuncDecl" ? decl.Name?.Name : "")).toEqual(["A", "B"]);
+    expect(merged.Imports?.map((spec) => spec.Path?.Value)).toEqual(["\"fmt\"", "\"strings\""]);
+    expect(merged.Comments).toEqual([commentA, commentB]);
+    expect(merged.Name?.Name).toBe("p");
   });
 
   test("transliterates go/ast import sorting helpers", () => {
@@ -442,6 +695,65 @@ describe("Go-junior Go-style AST", () => {
     expect(a.path.span?.offset).toBe(20);
     expect(m.path.span?.offset).toBe(30);
     expect(withComment.path.span?.offset).toBe(40);
+  });
+
+  test("SortImports uses translated token.FileSet line operations", () => {
+    const source = "package p\nimport (\n\t\"z\"\n\t\"a\"\n\t\"z\"\n)\n";
+    const fset = NewFileSet();
+    const tokenFile = fset.AddFile("imports.go", -1, source.length);
+    tokenFile.SetLinesForContent(source);
+    const lit = (value: string, nth: number): ImportSpec => {
+      let at = -1;
+      let from = -1;
+      for (let i = 0; i <= nth; i += 1) {
+        from = source.indexOf(value, from + 1);
+        at = from;
+      }
+      const start = tokenFile.Pos(at);
+      const path = {
+        kind: "BasicLit" as const,
+        ValuePos: start,
+        ValueEnd: start + value.length,
+        Kind: GoToken.STRING,
+        Value: value,
+        token: TokenKind.StringLiteral as const,
+        value
+      };
+      return {
+        kind: "ImportSpec",
+        Path: path,
+        path
+      };
+    };
+    const z1 = lit("\"z\"", 0);
+    const a = lit("\"a\"", 0);
+    const z2 = lit("\"z\"", 1);
+    const decl = {
+      kind: "GenDecl" as const,
+      TokPos: tokenFile.Pos(source.indexOf("import")),
+      Tok: GoToken.IMPORT,
+      Lparen: tokenFile.Pos(source.indexOf("(")),
+      Specs: [z1, a, z2],
+      Rparen: tokenFile.Pos(source.lastIndexOf(")"))
+    };
+    const file = {
+      kind: "File" as const,
+      Package: tokenFile.Pos(source.indexOf("package")),
+      Name: { kind: "Ident" as const, NamePos: tokenFile.Pos(source.indexOf("p")), Name: "p" },
+      Decls: [decl],
+      Imports: [z1, a, z2],
+      Unresolved: [],
+      Comments: []
+    } as unknown as File;
+    const beforeLines = tokenFile.LineCount();
+
+    SortImports(fset, file);
+
+    expect(decl.Specs?.map((spec) => spec.kind === "ImportSpec" ? importPath(spec) : "")).toEqual(["a", "z"]);
+    expect(file.Imports?.map(importPath)).toEqual(["a", "z"]);
+    expect(beforeLines - tokenFile.LineCount()).toBeGreaterThan(0);
+    expect(a.Path?.ValuePos).toBe(z1.Path?.ValuePos);
+    expect(z2.EndPos).toBeDefined();
   });
 
   test("transliterates go/ast scope and package resolution helpers", () => {
@@ -522,6 +834,50 @@ describe("Go-junior Go-style AST", () => {
     expect(writeErr?.message).toBe("write failed");
   });
 });
+
+function parseGoStructFields(source: string): Map<string, string[]> {
+  const stripped = stripGoComments(source);
+  const structs = new Map<string, string[]>();
+  for (const block of stripped.matchAll(/^type\s*\(([\s\S]*?)^\)/gm)) {
+    for (const match of block[1]!.matchAll(/^\s*(\w+)\s+struct\s*\{([\s\S]*?)^\s*\}/gm)) {
+      structs.set(match[1]!, parseGoStructBodyFields(match[2]!));
+    }
+  }
+  for (const match of stripped.matchAll(/^type\s+(\w+)\s+struct\s*\{([\s\S]*?)^\}/gm)) {
+    structs.set(match[1]!, parseGoStructBodyFields(match[2]!));
+  }
+  return structs;
+}
+
+function parseGoStructBodyFields(body: string): string[] {
+  const fields: string[] = [];
+  for (let line of body.split("\n")) {
+    line = line.trim().replace(/`[^`]*`/g, "").trim();
+    if (line === "") continue;
+    const match = /^([A-Za-z_]\w*(?:\s*,\s*[A-Za-z_]\w*)*)\s+/.exec(line);
+    if (match) {
+      fields.push(...match[1]!.split(/\s*,\s*/));
+    }
+  }
+  return fields;
+}
+
+function parseTypeScriptInterfaceFields(source: string): Map<string, Set<string>> {
+  const interfaces = new Map<string, Set<string>>();
+  for (const match of source.matchAll(/^export\s+interface\s+(\w+)\s+(?:extends\s+\w+\s+)?\{([\s\S]*?)^\}/gm)) {
+    const fields = new Set<string>();
+    for (const line of match[2]!.split("\n")) {
+      const field = /^\s*([A-Za-z_]\w*)\??\s*:/.exec(line);
+      if (field) fields.add(field[1]!);
+    }
+    interfaces.set(match[1]!, fields);
+  }
+  return interfaces;
+}
+
+function stripGoComments(source: string): string {
+  return source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+}
 
   describe("Go-junior Go-style types", () => {
     test("builds a universe scope with predeclared types, constants, nil, and builtins", () => {

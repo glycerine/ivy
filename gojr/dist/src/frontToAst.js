@@ -53,13 +53,13 @@ function genDeclToStatement(declaration) {
     if (declaration.token === TokenKind.Const) {
         return withSpan({
             kind: "ConstDecl",
-            declarations: declaration.specs.flatMap((spec, index) => valueSpecToDeclarations(spec, index))
+            declarations: declaration.specs.flatMap((spec, index) => valueSpecToDeclarations(spec, index, index))
         }, declaration.span);
     }
     if (declaration.token === TokenKind.Var) {
         return withSpan({
             kind: "VarDecl",
-            declarations: declaration.specs.flatMap((spec) => valueSpecToDeclarations(spec))
+            declarations: declaration.specs.flatMap((spec, index) => valueSpecToDeclarations(spec, undefined, index))
         }, declaration.span);
     }
     if (declaration.token === TokenKind.Type) {
@@ -70,26 +70,38 @@ function genDeclToStatement(declaration) {
     }
     return undefined;
 }
-function valueSpecToDeclarations(spec, iotaIndex) {
+function valueSpecToDeclarations(spec, iotaIndex, valueGroup) {
     if (spec.kind !== "ValueSpec")
         return [];
+    const values = spec.values.map((value) => expressionToAst(value));
+    const sharedSingleValue = values.length === 1 && spec.names.length > 1 ? values[0] : undefined;
     return spec.names.map((name, index) => ({
         name: name.name,
         ...(spec.type ? { type: typeNode(spec.type) } : {}),
-        ...(spec.values[index] ? { value: expressionToAst(spec.values[index]) } : {}),
+        ...((values[index] ?? sharedSingleValue) ? { value: (values[index] ?? sharedSingleValue) } : {}),
+        ...(valueGroup !== undefined ? { valueGroup } : {}),
         ...(iotaIndex !== undefined ? { iotaIndex } : {}),
-        valueIndex: index
+        valueIndex: index,
+        valueCount: values.length,
+        groupNameCount: spec.names.length
     }));
 }
 function typeSpecToAst(spec) {
     if (spec.kind !== "TypeSpec")
         return [];
+    const typeParameters = typeSpecTypeParameterNames(spec);
     return [{
             name: spec.name.name,
+            ...(typeParameters.length > 0 ? { typeParameters } : {}),
             type: typeNode(spec.type),
             ...structFieldsFromType(spec),
             ...interfaceMethodsFromType(spec)
         }];
+}
+function typeSpecTypeParameterNames(spec) {
+    const names = new Set();
+    addFieldListNames(spec.typeParams, names);
+    return [...names];
 }
 function structFieldsFromType(spec) {
     if (spec.type.kind !== "StructType")
@@ -137,14 +149,62 @@ function interfaceMethodsFromType(spec) {
     };
 }
 function functionDeclToAst(declaration) {
+    const typeParameters = functionTypeParameterNames(declaration);
     return withSpan({
         kind: "FunctionDecl",
         name: declaration.name.name,
         ...(declaration.receiver ? { receiver: receiverToAst(declaration.receiver) } : {}),
+        ...(typeParameters.length > 0 ? { typeParameters } : {}),
         signature: signatureToAst(declaration.type),
         body: declaration.body ? blockToAst(declaration.body) : { kind: "BlockStatement", statements: [] },
         source: formatNode(declaration).trimEnd()
     }, declaration.span);
+}
+function functionTypeParameterNames(declaration) {
+    const names = new Set();
+    addFieldListNames(declaration.type.typeParams, names);
+    if (declaration.receiver)
+        addReceiverTypeParameterNames(declaration.receiver, names);
+    return [...names];
+}
+function addFieldListNames(fields, names) {
+    if (!fields)
+        return;
+    for (const field of fields.fields) {
+        for (const name of field.names) {
+            if (name.name !== "_")
+                names.add(name.name);
+        }
+    }
+}
+function addReceiverTypeParameterNames(receiver, names) {
+    const field = receiver.fields[0];
+    if (!field)
+        return;
+    collectReceiverTypeParameterNames(field.type, names);
+}
+function collectReceiverTypeParameterNames(expr, names) {
+    switch (expr.kind) {
+        case "StarExpr":
+            collectReceiverTypeParameterNames(expr.expr, names);
+            return;
+        case "IndexExpr":
+            addReceiverTypeArgumentName(expr.index, names);
+            return;
+        case "IndexListExpr":
+            for (const index of expr.indices)
+                addReceiverTypeArgumentName(index, names);
+            return;
+        case "ParenExpr":
+            collectReceiverTypeParameterNames(expr.expr, names);
+            return;
+        default:
+            return;
+    }
+}
+function addReceiverTypeArgumentName(expr, names) {
+    if (expr.kind === "Ident" && expr.name !== "_")
+        names.add(expr.name);
 }
 function receiverToAst(list) {
     const field = list.fields[0];

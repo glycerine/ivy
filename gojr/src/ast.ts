@@ -19,6 +19,7 @@ export interface FunctionDecl {
   kind: "FunctionDecl";
   name: string;
   receiver?: ReceiverDecl;
+  typeParameters?: string[];
   signature: Signature;
   body: BlockStatement;
   source?: string;
@@ -83,8 +84,11 @@ export interface DeclarationSpec {
   name: string;
   type?: TypeNode;
   value?: Expression;
+  valueGroup?: number;
   iotaIndex?: number;
   valueIndex?: number;
+  valueCount?: number;
+  groupNameCount?: number;
 }
 
 export interface ConstDeclStatement {
@@ -101,6 +105,7 @@ export interface VarDeclStatement {
 
 export interface TypeSpec {
   name: string;
+  typeParameters?: string[];
   type: TypeNode;
   structFields?: StructFieldDecl[];
   interfaceMethods?: InterfaceMethodDecl[];
