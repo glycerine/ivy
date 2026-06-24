@@ -565,7 +565,7 @@ function fmtPackage(): GoTypesPackage {
     null,
     null,
     NewTuple(NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)),
-    NewTuple(NewVar(NoPos, pkg, "", intType)),
+    NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)),
     true
   );
   const sprintfSig = NewSignatureType(
@@ -584,7 +584,26 @@ function fmtPackage(): GoTypesPackage {
     NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)),
     true
   );
+  const printSig = NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "args", argsType)),
+    NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)),
+    true
+  );
+  const fprintSig = NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "w", writerType), NewVar(NoPos, pkg, "args", argsType)),
+    NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)),
+    true
+  );
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "Fprint", fprintSig));
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "Fprintf", fprintfSig));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "Fprintln", fprintSig));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "Print", printSig));
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "Printf", printfSig));
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "Sprintf", sprintfSig));
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "Errorf", NewSignatureType(
@@ -640,7 +659,7 @@ function fmtPackage(): GoTypesPackage {
     null,
     null,
     NewTuple(NewVar(NoPos, pkg, "args", argsType)),
-    null,
+    NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)),
     true
   )));
   pkg.MarkComplete();

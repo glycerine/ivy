@@ -515,13 +515,31 @@ export class EvaluationContext {
         return rewriteRuntimeTypeText(typeText, (qualifier) => this.shared.importPathsByLocalName.get(qualifier));
     }
     methodFor(typeName, methodName) {
-        const localTypeName = this.options.importPath
-            ? unqualifyLocalRuntimeTypeName(typeName, this.options.importPath)
-            : typeName;
-        return this.shared.methods.get(methodKey(typeName, methodName)) ??
-            this.shared.methods.get(methodKey(genericBaseTypeName(typeName), methodName)) ??
-            this.shared.methods.get(methodKey(localTypeName, methodName)) ??
-            this.shared.methods.get(methodKey(genericBaseTypeName(localTypeName), methodName));
+        const candidates = [];
+        const add = (candidate) => {
+            const type = normalizeTypeText(candidate ?? "");
+            if (type && !candidates.includes(type))
+                candidates.push(type);
+        };
+        const addType = (candidate) => {
+            add(candidate);
+            add(genericBaseTypeName(candidate));
+            if (this.options.importPath) {
+                const local = unqualifyLocalRuntimeTypeName(candidate, this.options.importPath);
+                add(local);
+                add(genericBaseTypeName(local));
+            }
+        };
+        addType(typeName);
+        const aliasType = resolveRuntimeAliasTypeText(typeName, this);
+        if (aliasType !== normalizeTypeText(typeName))
+            addType(aliasType);
+        for (const candidate of candidates) {
+            const method = this.shared.methods.get(methodKey(candidate, methodName));
+            if (method)
+                return method;
+        }
+        return undefined;
     }
     flattenInterfaceMethods(methods, embeds) {
         const flattened = [...methods];
@@ -2492,19 +2510,23 @@ function fmtPackage() {
             const format = await toStringValueAsync(args[0] ?? "", context);
             const text = await sprintfAsync(format, args.slice(1), context);
             context.write(text);
-            return BigInt(text.length);
-        }),
+            return [BigInt(text.length), null];
+        }, { tupleResult: true }),
         Fprintf: hostCallable("fmt.Fprintf", async (args, context) => {
             const writer = args[0] ?? null;
             const format = await toStringValueAsync(args[1] ?? "", context);
-            const text = await sprintfAsync(format, args.slice(2), context);
-            const bytes = [...new TextEncoder().encode(text)].map((byte) => BigInt(byte));
-            markArrayType(bytes, "[]byte");
-            const writeMethod = methodForValue(writer, "Write", context);
-            if (writeMethod) {
-                await callRuntime(boundMethodValue(writeMethod.method, writeMethod.receiver, context), [bytes], context);
-            }
-            return [BigInt(bytes.length), null];
+            return fmtWriteToWriter(writer, await sprintfAsync(format, args.slice(2), context), context);
+        }, { tupleResult: true }),
+        Print: hostCallable("fmt.Print", async (args, context) => {
+            const text = await sprintAsync(args, context);
+            context.write(text);
+            return [BigInt(text.length), null];
+        }, { tupleResult: true }),
+        Fprint: hostCallable("fmt.Fprint", async (args, context) => {
+            return fmtWriteToWriter(args[0] ?? null, await sprintAsync(args.slice(1), context), context);
+        }, { tupleResult: true }),
+        Fprintln: hostCallable("fmt.Fprintln", async (args, context) => {
+            return fmtWriteToWriter(args[0] ?? null, await sprintlnAsync(args.slice(1), context), context);
         }, { tupleResult: true }),
         Sprintf: hostCallable("fmt.Sprintf", async (args, context) => {
             const format = await toStringValueAsync(args[0] ?? "", context);
@@ -2533,9 +2555,20 @@ function fmtPackage() {
         Println: hostCallable("fmt.Println", async (args, context) => {
             const text = await sprintlnAsync(args, context);
             context.write(text);
-            return BigInt(text.length);
-        })
+            return [BigInt(text.length), null];
+        }, { tupleResult: true })
     };
+}
+async function fmtWriteToWriter(writer, text, context) {
+    const bytes = [...new TextEncoder().encode(text)].map((byte) => BigInt(byte));
+    markArrayType(bytes, "[]byte");
+    const writeMethod = methodForValue(writer, "Write", context);
+    if (writeMethod) {
+        const result = await callRuntime(boundMethodValue(writeMethod.method, writeMethod.receiver, context), [bytes], context);
+        if (isTupleValues(result))
+            return result;
+    }
+    return [BigInt(bytes.length), null];
 }
 function fmtErrorValue(message) {
     return new RuntimeInterfaceValue("error", new RuntimeNamedValue(fmtErrorStringType, RuntimeGoString.fromUtf8Text(message)));
@@ -4784,7 +4817,12 @@ async function evaluateStructLiteral(expression, context) {
     const intrinsic = await evaluateIntrinsicNamedStructLiteral(resolvedExpression, context);
     if (intrinsic)
         return intrinsic;
-    const typeDef = context.typeDef(typeName) ?? parseAnonymousStructTypeText(typeName);
+    let typeDef = context.typeDef(typeName) ?? parseAnonymousStructTypeText(typeName);
+    if (!typeDef) {
+        const alias = context.aliasType(typeName);
+        const aliasType = alias ? normalizeTypeText(context.resolveImportedTypeText(alias)) : undefined;
+        typeDef = aliasType ? context.typeDef(aliasType) ?? parseAnonymousStructTypeText(aliasType) : undefined;
+    }
     if (!typeDef) {
         const alias = context.aliasType(typeName);
         const arrayType = alias ? parseArrayOrSliceTypeText(alias, context) : undefined;

@@ -359,10 +359,15 @@ function fmtPackage() {
     const writerType = NewInterfaceType([
         NewFunc(NoPos, pkg, "Write", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "p", byteSliceType)), NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)), false))
     ], null).Complete();
-    const printfSig = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", intType)), true);
+    const printfSig = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)), true);
     const sprintfSig = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", stringType)), true);
     const fprintfSig = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "w", writerType), NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)), true);
+    const printSig = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)), true);
+    const fprintSig = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "w", writerType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)), true);
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Fprint", fprintSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Fprintf", fprintfSig));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Fprintln", fprintSig));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Print", printSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Printf", printfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Sprintf", sprintfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Errorf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", errorType)), true)));
@@ -371,7 +376,7 @@ function fmtPackage() {
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Append", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "b", byteSliceType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", byteSliceType)), true)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Appendf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "b", byteSliceType), NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", byteSliceType)), true)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Appendln", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "b", byteSliceType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", byteSliceType)), true)));
-    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Println", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "args", argsType)), null, true)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Println", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", intType), NewVar(NoPos, pkg, "", errorType)), true)));
     pkg.MarkComplete();
     return pkg;
 }

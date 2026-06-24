@@ -1106,6 +1106,63 @@ return hi, lo
     expect(result.values).toEqual([128n, 10254876495507714224n]);
   });
 
+  test("constructs imported struct aliases with composite literals", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/base",
+        files: [{
+          filename: "/workspace/base/base.go",
+          source: `package base
+
+type PathError struct {
+  Op string
+  Path string
+}
+
+func (e *PathError) Error() string {
+  return e.Op + " " + e.Path
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/alias",
+        files: [{
+          filename: "/workspace/alias/alias.go",
+          source: `package alias
+
+import "example.com/base"
+
+type PathError = base.PathError
+
+func New() *PathError {
+  return &PathError{Op: "open", Path: "file"}
+}
+
+func Message() string {
+  var err error = New()
+  return err.Error()
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/alias"
+err := alias.New()
+return err.Op, err.Path, alias.Message()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.values).toEqual(["open", "file", "open file"]);
+  });
+
   test("keeps named array pointer types for same-package calls", async () => {
     const graph = await evaluateSourcePackageGraph([
       {
