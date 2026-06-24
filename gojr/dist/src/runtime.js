@@ -176,6 +176,10 @@ export class EvaluationContext {
     getenv(name) {
         return this.options.env?.[name] ?? "";
     }
+    argv(defaultName = "gojr") {
+        const argv = this.options.argv;
+        return argv && argv.length > 0 ? argv.map(String) : [defaultName];
+    }
     recordSheetCellRead(sheet, cell) {
         const dependency = cellDependency({ sheet, cell });
         this.shared.observedDeps.set(dependencyKey(dependency), dependency);
@@ -1174,6 +1178,7 @@ export async function runMainSourcePackageFiles(files, options = {}) {
     }
     const outputOffset = context.output.length;
     try {
+        installMainProgramArgs(graph, options, importPath);
         const main = context.lookup("main");
         await context.scheduler().runRoot(async () => {
             await callRuntime(main, [], context);
@@ -1288,6 +1293,23 @@ function exportedRuntimePackageObject(objects, context, importPath) {
         }
     }
     return pkg;
+}
+function installMainProgramArgs(graph, options, mainImportPath) {
+    const args = runtimeStringSlice(runtimeArgv(options, mainImportPath));
+    const osContext = graph.packageContexts.os;
+    if (osContext)
+        osContext.declareOrAssignRoot("Args", args, true, "[]string");
+    const osPackageObject = graph.packages.os;
+    if (osPackageObject)
+        osPackageObject.Args = args;
+}
+function runtimeArgv(options, defaultName = "gojr") {
+    return options.argv && options.argv.length > 0 ? options.argv.map(String) : [defaultName];
+}
+function runtimeStringSlice(values) {
+    const slice = values.map((value) => RuntimeGoString.fromUtf8Text(value));
+    markArrayType(slice, "[]string");
+    return slice;
 }
 function packageScopeObjects(pkg) {
     return pkg.Scope().Names().flatMap((name) => {
@@ -2447,7 +2469,7 @@ function availablePackages(context) {
         fmt: fmtPackage(),
         "internal/reflectlite": reflectlitePackage(),
         math: mathPackage(),
-        os: osPackage(),
+        os: osPackage(context),
         runtime: runtimePackage(),
         "runtime/pprof": runtimePprofPackage(),
         strconv: strconvPackage(),
@@ -2853,8 +2875,9 @@ function reflectliteValuePayload(value) {
     }
     return value;
 }
-function osPackage() {
+function osPackage(context) {
     return {
+        Args: runtimeStringSlice(context?.argv() ?? ["gojr"]),
         Exit: hostCallable("os.Exit", (args) => {
             const code = toNumber(args[0] ?? 0);
             throw new GoJuniorRuntimeError(`os.Exit(${code})`);

@@ -155,7 +155,7 @@ export interface BuildStandardLibraryPackageRequest extends Omit<BuildPackageReq
   standardLibrary: StandardLibrarySourcePackageProviderOptions;
 }
 
-const ARTIFACT_LAYOUT_VERSION = "gojr-js-v3";
+const ARTIFACT_LAYOUT_VERSION = "gojr-js-v4";
 export const GOJR_GOOS = "gojr";
 export const GOJR_GOARCH = "js";
 const DEFAULT_COMPILER_VERSION = "gojr-dev";

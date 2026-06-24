@@ -96,6 +96,7 @@ type evalWithPackagesRequest struct {
 	ArtifactRoot       string               `json:"artifactRoot,omitempty"`
 	PackageCacheParent string               `json:"packageCacheParent,omitempty"`
 	Progress           bool                 `json:"progress,omitempty"`
+	Argv               []string             `json:"argv,omitempty"`
 }
 
 type runtimePackageSpec struct {
@@ -413,14 +414,17 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 	}
 	_ = seed
 	_ = randomSeed
-	if flags.NArg() > 1 {
-		return false, fmt.Errorf("usage: gojr run [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] [FILE|DIR|-]")
+	remaining := flags.Args()
+	sourcePath := optionalArg(remaining)
+	programArgs := []string(nil)
+	if len(remaining) > 1 {
+		programArgs = remaining[1:]
 	}
-	sourcePath := optionalArg(flags.Args())
 	target, err := readRunTarget(sourcePath)
 	if err != nil {
 		return false, err
 	}
+	argv := runProgramArgv(sourcePath, programArgs)
 	packages, err := readRuntimePackageSpecs(packageFlags)
 	if err != nil {
 		return false, err
@@ -438,6 +442,7 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 			ArtifactRoot:       strings.TrimSpace(*artifactRoot),
 			PackageCacheParent: strings.TrimSpace(*packageCacheParent),
 			Progress:           !*jsonMode,
+			Argv:               argv,
 		})
 		if err != nil {
 			return false, err
@@ -454,6 +459,19 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 			SheetJSON:   strings.TrimSpace(*sheetJSON),
 			Packages:    packages,
 			SourceRoots: sourceRoots,
+			Argv:        argv,
+		})
+		if err != nil {
+			return false, err
+		}
+		printEvalResult(result, *jsonMode)
+		return result.OK && !result.Incomplete, nil
+	}
+	if len(programArgs) > 0 {
+		result, err := rt.EvalFilesWithPackages(evalWithPackagesRequest{
+			Files:     []sourceFile{source},
+			SheetJSON: strings.TrimSpace(*sheetJSON),
+			Argv:      argv,
 		})
 		if err != nil {
 			return false, err
@@ -745,7 +763,7 @@ func printTopLevelUsage() {
 gojr eval [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] SOURCE
   evaluate one Go-junior expression or statement list
 
-gojr run [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] [FILE|DIR|-]
+gojr run [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] [FILE|DIR|-] [ARG ...]
   run a Go-junior source file, package directory, or stdin
 
 gojr compile [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--expr SOURCE] [FILE|DIR|-]
@@ -927,6 +945,19 @@ func optionalArg(args []string) string {
 		return ""
 	}
 	return args[0]
+}
+
+func runProgramArgv(sourcePath string, args []string) []string {
+	name := strings.TrimSpace(sourcePath)
+	if name == "" || name == "-" {
+		name = "gojr"
+	} else {
+		name = filepath.Clean(name)
+	}
+	argv := make([]string, 0, 1+len(args))
+	argv = append(argv, name)
+	argv = append(argv, args...)
+	return argv
 }
 
 func readRunSource(path string) (sourceFile, error) {

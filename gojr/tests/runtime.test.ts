@@ -11,6 +11,7 @@ import {
   GoJuniorSession,
   parseProgram,
   rangeDependency,
+  runMainSourcePackageFiles,
   testSource,
   testSourceFiles
 } from "../src/index.js";
@@ -713,6 +714,41 @@ return os.Getenv("GOJR_MODE")
     expect(configured.value).toBe("test");
   });
 
+  test("supports os.Args for ambient and source-built os packages", async () => {
+    const ambient = await expectRuns(`
+import "os"
+return os.Args[0], os.Args[1]
+`, {
+      argv: ["gojr-test", "-ambient"]
+    });
+    expect(ambient.values).toEqual(["gojr-test", "-ambient"]);
+
+    const sourceBuilt = await runMainSourcePackageFiles([{
+      filename: "/workspace/cmd/app/main.go",
+      source: `package main
+
+import "os"
+
+func main() {
+  print(os.Args[0] + "|" + os.Args[1] + "\\n")
+}
+`
+    }], {
+      importPath: "example.com/app",
+      argv: ["app", "-source"],
+      sourcePackages: [{
+        importPath: "os",
+        files: [{
+          filename: "/workspace/os/os.go",
+          source: "package os\n\nvar Args []string\n"
+        }]
+      }]
+    });
+
+    expect(sourceBuilt.diagnostics).toEqual([]);
+    expect(sourceBuilt.output).toEqual(["app|-source\n"]);
+  });
+
   test("supports importing math.NaN for float map keys and clear", async () => {
     const script = await expectRuns(`
 import "math"
@@ -1022,6 +1058,52 @@ return rules.Entry()
     });
 
     expect(result.value).toBe(11n);
+  });
+
+  test("preserves imported uint64 tuple result types above int64 range", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/words",
+        files: [{
+          filename: "/workspace/words/words.go",
+          source: `package words
+
+func Pair() (uint64, uint64) {
+  return uint64(128), uint64(10254876495507714224)
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/user",
+        files: [{
+          filename: "/workspace/user/user.go",
+          source: `package user
+
+import "example.com/words"
+
+func Values() (uint64, uint64) {
+  hi, lo := words.Pair()
+  return hi, lo
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/user"
+hi, lo := user.Values()
+return hi, lo
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.values).toEqual([128n, 10254876495507714224n]);
   });
 
   test("keeps named array pointer types for same-package calls", async () => {

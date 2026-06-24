@@ -5,7 +5,7 @@ import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { stubSourcePackageFiles } from "./stubPackages.js";
 import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import { Builtin as GoTypesBuiltin, Const as GoTypesConst, Func as GoTypesFunc, TypeName as GoTypesTypeName, Unsafe as GoTypesUnsafe, Var as GoTypesVar } from "./go/types/index.js";
-const ARTIFACT_LAYOUT_VERSION = "gojr-js-v3";
+const ARTIFACT_LAYOUT_VERSION = "gojr-js-v4";
 export const GOJR_GOOS = "gojr";
 export const GOJR_GOARCH = "js";
 const DEFAULT_COMPILER_VERSION = "gojr-dev";

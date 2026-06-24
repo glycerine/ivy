@@ -156,6 +156,7 @@ export interface EvaluationOptions {
   packages?: Record<string, RuntimeObject>;
   packageInfos?: Record<string, GoTypesPackage>;
   packageContexts?: Record<string, EvaluationContext>;
+  argv?: string[];
   env?: Record<string, string>;
   sheet?: SheetData;
   sheets?: Record<string, SheetData>;
@@ -448,6 +449,11 @@ export class EvaluationContext {
 
   public getenv(name: string): string {
     return this.options.env?.[name] ?? "";
+  }
+
+  public argv(defaultName = "gojr"): string[] {
+    const argv = this.options.argv;
+    return argv && argv.length > 0 ? argv.map(String) : [defaultName];
   }
 
   public recordSheetCellRead(sheet: string, cell: string): void {
@@ -1547,6 +1553,7 @@ export async function runMainSourcePackageFiles(
 
   const outputOffset = context.output.length;
   try {
+    installMainProgramArgs(graph, options, importPath);
     const main = context.lookup("main");
     await context.scheduler().runRoot(async () => {
       await callRuntime(main, [], context);
@@ -1669,6 +1676,28 @@ function exportedRuntimePackageObject(objects: GoTypesObject[], context: Evaluat
     }
   }
   return pkg;
+}
+
+function installMainProgramArgs(
+  graph: SourcePackageGraphEvaluationResult,
+  options: MainPackageRunOptions,
+  mainImportPath: string
+): void {
+  const args = runtimeStringSlice(runtimeArgv(options, mainImportPath));
+  const osContext = graph.packageContexts.os;
+  if (osContext) osContext.declareOrAssignRoot("Args", args, true, "[]string");
+  const osPackageObject = graph.packages.os;
+  if (osPackageObject) osPackageObject.Args = args;
+}
+
+function runtimeArgv(options: EvaluationOptions, defaultName = "gojr"): string[] {
+  return options.argv && options.argv.length > 0 ? options.argv.map(String) : [defaultName];
+}
+
+function runtimeStringSlice(values: string[]): RuntimeValue[] {
+  const slice = values.map((value) => RuntimeGoString.fromUtf8Text(value));
+  markArrayType(slice, "[]string");
+  return slice;
 }
 
 function packageScopeObjects(pkg: GoTypesPackage): GoTypesObject[] {
@@ -2876,7 +2905,7 @@ function availablePackages(context: EvaluationContext): Record<string, RuntimeOb
     fmt: fmtPackage(),
     "internal/reflectlite": reflectlitePackage(),
     math: mathPackage(),
-    os: osPackage(),
+    os: osPackage(context),
     runtime: runtimePackage(),
     "runtime/pprof": runtimePprofPackage(),
     strconv: strconvPackage(),
@@ -3318,8 +3347,9 @@ function reflectliteValuePayload(value: RuntimeValue): RuntimeValue {
   return value;
 }
 
-function osPackage(): RuntimeObject {
+function osPackage(context?: EvaluationContext): RuntimeObject {
   return {
+    Args: runtimeStringSlice(context?.argv() ?? ["gojr"]),
     Exit: hostCallable("os.Exit", (args) => {
       const code = toNumber(args[0] ?? 0);
       throw new GoJuniorRuntimeError(`os.Exit(${code})`);

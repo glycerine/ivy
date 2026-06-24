@@ -468,6 +468,30 @@ func main() {
 		t.Fatalf("runSource package main missing main artifact: %v", err)
 	}
 
+	osDir := filepath.Join(moduleRoot, "fakeos")
+	argsDir := filepath.Join(moduleRoot, "cmd", "args")
+	if err := os.MkdirAll(osDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(osDir) error = %v", err)
+	}
+	if err := os.MkdirAll(argsDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(argsDir) error = %v", err)
+	}
+	writeTestFile(t, filepath.Join(osDir, "os.go"), "package os\n\nvar Args []string\n")
+	argsMainFile := filepath.Join(argsDir, "main.go")
+	writeTestFile(t, argsMainFile, `package main
+
+import "os"
+
+func main() {
+	if len(os.Args) != 2 || os.Args[1] != "--ok" {
+		panic("bad argv")
+	}
+}
+`)
+	if ok, err := runSource(rt, []string{"-pkgdir", runCacheParent, "--pkg", "os=" + osDir, argsMainFile, "--ok"}); err != nil || !ok {
+		t.Fatalf("runSource(main.go --ok) ok=%v err=%v, want argv success", ok, err)
+	}
+
 	pkgDir := t.TempDir()
 	writeTestFile(t, filepath.Join(pkgDir, "counter.go"), `package counter
 

@@ -574,6 +574,8 @@ function evaluationOptionsFromNodeRequest(request) {
         options.sheet = parseSheetJson(request.sheetJSON);
     if (request.sheetsJSON)
         options.sheets = parseSheetsJson(request.sheetsJSON);
+    if (request.argv)
+        options.argv = request.argv;
     return options;
 }
 function loadSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics) {

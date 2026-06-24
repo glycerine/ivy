@@ -62,6 +62,7 @@ export interface NodeSourcePackageRequest {
   artifactRoot?: string;
   packageCacheParent?: string;
   progress?: boolean;
+  argv?: string[];
   sheetJSON?: string;
   sheetsJSON?: string;
 }
@@ -702,6 +703,7 @@ function evaluationOptionsFromNodeRequest(request: NodeSourcePackageRequest): Ev
   const options: EvaluationOptions = {};
   if (request.sheetJSON) options.sheet = parseSheetJson(request.sheetJSON);
   if (request.sheetsJSON) options.sheets = parseSheetsJson(request.sheetsJSON);
+  if (request.argv) options.argv = request.argv;
   return options;
 }
 
