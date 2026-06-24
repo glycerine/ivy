@@ -17,14 +17,14 @@ import { Checker, nopos , registerCheckerMethod } from "./check.js";
 import { constantKindOf, imag, makeComplex, makeUnknown, real, sign, toComplex, toFloat, toInt } from "./const.js";
 import { isPointer } from "./conversions.js";
 import type { indexedExpr } from "./index_expr.js";
-import { Interface } from "./interface.js";
+import { emptyInterface, Interface } from "./interface.js";
 import { Map as MapType } from "./map.js";
 import { Named } from "./named.js";
 import { operand, invalid, novalue, builtin, typexpr, constant_, variable, mapindex, value, commaok, commaerr, compositeKind } from "./operand.js";
 import { Pointer } from "./pointer.js";
 import { allBoolean, allInteger, allNumeric, allNumericOrString, allOrdered, allString, allUnsigned, Comparable, comparableType, Default, hasNil, Identical, isComplex, isGeneric, isInteger, isNonTypeParamInterface, isTypeParam, isTyped, isUntyped, isValid } from "./predicates.js";
 import { Signature } from "./signature.js";
-import { Slice } from "./slice.js";
+import { NewSlice, Slice } from "./slice.js";
 import { stdSizes } from "./sizes.js";
 import { Tuple } from "./tuple.js";
 import { commonUnder, typeErrorf, underIs } from "./under.js";
@@ -1024,6 +1024,28 @@ registerCheckerMethod("exprInternal", function exprInternal(T: target | null, x:
       this.selector?.(x, node, false);
       break;
 
+    case "CellRefExpr": {
+      const typ = goJuniorSheetCellType(this, node);
+      if (typ === null) {
+        x.invalidate();
+        return errorExpr(x, e);
+      }
+      x.mode_ = variable;
+      x.typ_ = typ;
+      break;
+    }
+
+    case "RangeRefExpr": {
+      const typ = goJuniorSheetRangeType(this, node);
+      if (typ === null) {
+        x.invalidate();
+        return errorExpr(x, e);
+      }
+      x.mode_ = value;
+      x.typ_ = typ;
+      break;
+    }
+
     case "IndexExpr":
     case "IndexListExpr": {
       const ix = this.unpackIndexedExpr(node)!;
@@ -1167,6 +1189,33 @@ registerCheckerMethod("exprInternal", function exprInternal(T: target | null, x:
   x.expr = e;
   return exprKind.expression;
 });
+
+function goJuniorSheetCellType(check: Checker, node: unknown): Type | null {
+  const expr = node as { namespace?: { name?: string }; address?: { raw?: string } };
+  const namespace = expr.namespace?.name ?? "sheet";
+  const raw = expr.address?.raw ?? "";
+  const ns = check.conf.GoJuniorSheetNamespaces?.[namespace];
+  if (ns === undefined) {
+    check.errorf(node, "UndeclaredName", "undefined: %s", namespace);
+    return null;
+  }
+  const cell = raw.toUpperCase().replace(/\$/g, "");
+  return ns.cells?.[cell] ?? ns.defaultType ?? emptyInterface;
+}
+
+function goJuniorSheetRangeType(check: Checker, node: unknown): Type | null {
+  const expr = node as { namespace?: { name?: string }; start?: { raw?: string } };
+  const namespace = expr.namespace?.name ?? "sheet";
+  const raw = expr.start?.raw ?? "";
+  const ns = check.conf.GoJuniorSheetNamespaces?.[namespace];
+  if (ns === undefined) {
+    check.errorf(node, "UndeclaredName", "undefined: %s", namespace);
+    return null;
+  }
+  const cell = raw.toUpperCase().replace(/\$/g, "");
+  const elem = ns.cells?.[cell] ?? ns.defaultType ?? emptyInterface;
+  return NewSlice(NewSlice(elem));
+}
 
 // keyVal maps a complex, float, integer, string or boolean constant value
 // to the corresponding complex128, float64, int64, uint64, string, or bool

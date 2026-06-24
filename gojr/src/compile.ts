@@ -1,12 +1,11 @@
 import { REPL_FILENAME, SourceFile } from "./diagnostics.js";
-import { checkFrontSourceFiles } from "./front/checker.js";
-import type { CheckResult } from "./front/checker.js";
-import type { PackageInfo } from "./front/types.js";
+import { checkGoJuniorSourceFiles, type GoJuniorCheckResult } from "./typecheck.js";
+import type { Package as GoTypesPackage } from "./go/types/index.js";
 import { EvaluationOptions, typeCheckConfig } from "./runtime.js";
 
 export interface CompileResult {
-  readonly diagnostics: CheckResult["diagnostics"];
-  readonly checked: CheckResult;
+  readonly diagnostics: GoJuniorCheckResult["diagnostics"];
+  readonly checked: GoJuniorCheckResult;
 }
 
 export interface CompilePackageOptions extends EvaluationOptions {
@@ -15,7 +14,7 @@ export interface CompilePackageOptions extends EvaluationOptions {
 }
 
 export interface CompilePackageResult extends CompileResult {
-  readonly packageInfo: PackageInfo;
+  readonly packageInfo: GoTypesPackage;
 }
 
 export function compileSource(source: string, options: EvaluationOptions = {}): CompileResult {
@@ -26,7 +25,7 @@ export function compileSource(source: string, options: EvaluationOptions = {}): 
 }
 
 export function compileSourceFiles(files: SourceFile[], options: EvaluationOptions = {}): CompileResult {
-  const checked = checkFrontSourceFiles(files, typeCheckConfig(options));
+  const checked = checkGoJuniorSourceFiles(files, typeCheckConfig(options));
   return {
     diagnostics: checked.diagnostics,
     checked
@@ -35,7 +34,7 @@ export function compileSourceFiles(files: SourceFile[], options: EvaluationOptio
 
 export function compilePackageSourceFiles(files: SourceFile[], options: CompilePackageOptions = {}): CompilePackageResult {
   const packageName = options.packageName ?? packageNameFromSourceFiles(files) ?? "main";
-  const checked = checkFrontSourceFiles(files, {
+  const checked = checkGoJuniorSourceFiles(files, {
     ...typeCheckConfig(options),
     packageName,
     packagePath: options.importPath ?? packageName

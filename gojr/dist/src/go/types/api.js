@@ -73,6 +73,7 @@ export class Config {
     Sizes = null;
     DisableUnusedImportCheck = false;
     _ErrorURL = "";
+    GoJuniorSheetNamespaces = null;
     // Check type-checks a package and returns the resulting package object and
     // the first error if any. Additionally, if info != nil, Check populates each
     // of the non-nil maps in the [Info] struct.

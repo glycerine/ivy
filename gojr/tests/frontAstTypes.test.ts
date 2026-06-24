@@ -40,24 +40,39 @@ import {
   type File
 } from "../src/front/ast.js";
 import {
-  assignableTo,
-  ChanType,
-  FuncObject,
-  InterfaceType,
-  MapType,
-  NamedType,
-  newUniverse,
-  ObjectKind,
-  PackageInfo,
-  PointerType,
-  Scope,
-  SignatureType,
-  SliceType,
-  StructType,
-  tuple,
-  TypeNameObject,
-  varOf
-} from "../src/front/types.js";
+  AssignableTo,
+  Builtin,
+  ChanDir,
+  Const,
+  Func as GoTypesFunc,
+  Int64,
+  Float64,
+  Map as GoTypesMap,
+  NewChan,
+  NewField,
+  NewFunc,
+  NewInterfaceType,
+  NewMap,
+  NewNamed,
+  NewPackage as NewGoTypesPackage,
+  NewPointer,
+  NewScope as NewGoTypesScope,
+  NewSignatureType,
+  NewSlice,
+  NewStruct,
+  NewTuple,
+  NewTypeName,
+  NewVar,
+  Nil,
+  NoPos,
+  String as GoTypesString,
+  Typ,
+  Universe,
+  UntypedInt,
+  UntypedNil,
+  init as initGoTypesUniverse,
+  type Type
+} from "../src/go/types/index.js";
 import { TokenKind } from "../src/front/token.js";
 
 describe("Go-junior Go-style AST", () => {
@@ -487,86 +502,95 @@ describe("Go-junior Go-style AST", () => {
 
 describe("Go-junior Go-style types", () => {
   test("builds a universe scope with predeclared types, constants, nil, and builtins", () => {
-    const universe = newUniverse();
+    initGoTypesUniverse();
 
-    expect(universe.scope.lookup("int64")?.kind).toBe(ObjectKind.TypeName);
-    expect(universe.scope.lookup("true")?.kind).toBe(ObjectKind.Const);
-    expect(universe.scope.lookup("nil")?.kind).toBe(ObjectKind.Nil);
-    expect(universe.scope.lookup("panic")?.kind).toBe(ObjectKind.Builtin);
-    expect(universe.scope.lookup("recover")?.kind).toBe(ObjectKind.Builtin);
-    expect(universe.scope.names()).toContain("append");
+    expect(Universe.Lookup("int64")?.constructor.name).toBe("TypeName");
+    expect(Universe.Lookup("true")).toBeInstanceOf(Const);
+    expect(Universe.Lookup("nil")).toBeInstanceOf(Nil);
+    expect(Universe.Lookup("panic")).toBeInstanceOf(Builtin);
+    expect(Universe.Lookup("recover")).toBeInstanceOf(Builtin);
+    expect(Universe.Names()).toContain("append");
   });
 
   test("supports nested scopes and duplicate detection", () => {
-    const universe = newUniverse();
-    const child = new Scope(universe.scope, "function");
-    const first = varOf("x", universe.basic.int64);
-    const duplicate = varOf("x", universe.basic.string);
+    initGoTypesUniverse();
+    const child = NewGoTypesScope(Universe, NoPos, NoPos, "function");
+    const first = NewVar(NoPos, null, "x", Typ[Int64]!);
+    const duplicate = NewVar(NoPos, null, "x", Typ[GoTypesString]!);
 
-    expect(child.insert(first)).toBeUndefined();
-    expect(child.insert(duplicate)).toBe(first);
-    expect(child.lookupParent("x")?.object).toBe(first);
-    expect(child.lookupParent("string")?.object.kind).toBe(ObjectKind.TypeName);
+    expect(child.Insert(first)).toBeNull();
+    expect(child.Insert(duplicate)).toBe(first);
+    expect(child.LookupParent("x", NoPos)[1]).toBe(first);
+    expect(child.LookupParent("string", NoPos)[1]?.constructor.name).toBe("TypeName");
   });
 
   test("formats signatures and compound types", () => {
-    const universe = newUniverse();
-    const signature = new SignatureType(
-      undefined,
-      tuple(varOf("format", universe.basic.string), varOf("args", new SliceType(universe.basic.any))),
-      tuple(varOf("", universe.basic.int64), varOf("", universe.basic.error)),
+    initGoTypesUniverse();
+    const signature = NewSignatureType(
+      null,
+      null,
+      null,
+      NewTuple(NewVar(NoPos, null, "format", Typ[GoTypesString]!), NewVar(NoPos, null, "args", NewSlice(Universe.Lookup("any")!.Type()!))),
+      NewTuple(NewVar(NoPos, null, "", Typ[Int64]!), NewVar(NoPos, null, "", Universe.Lookup("error")!.Type()!)),
       true
     );
 
-    expect(signature.typeString()).toBe("func(format string, args ...any) (int64, error)");
-    expect(new MapType(universe.basic.string, universe.basic.int64).typeString()).toBe("map[string]int64");
-    expect(new ChanType(universe.basic.int64).typeString()).toBe("chan int64");
-    expect(new ChanType(universe.basic.string, "send").typeString()).toBe("chan<- string");
-    expect(new ChanType(universe.basic.bool, "receive").typeString()).toBe("<-chan bool");
+    expect(signature.String()).toBe("func(format string, args ...any) (int64, error)");
+    expect(NewMap(Typ[GoTypesString]!, Typ[Int64]!).String()).toBe("map[string]int64");
+    expect(NewChan(ChanDir.SendRecv, Typ[Int64]!).String()).toBe("chan int64");
+    expect(NewChan(ChanDir.SendOnly, Typ[GoTypesString]!).String()).toBe("chan<- string");
+    expect(NewChan(ChanDir.RecvOnly, Typ[Float64]!).String()).toBe("<-chan float64");
   });
 
   test("checks assignability for untyped constants, nil, named types, and method-set interfaces", () => {
-    const universe = newUniverse();
-    const pkg = new PackageInfo("workbook/geom", "geom");
-    const pointName = new TypeNameObject("Point", universe.basic.invalid, pkg.scope, pkg);
-    const point = new NamedType(pointName, new StructType([
-      { name: "X", type: universe.basic.float64, embedded: false },
-      { name: "Y", type: universe.basic.float64, embedded: false }
-    ]));
-    pointName.setType(point);
+    initGoTypesUniverse();
+    const pkg = NewGoTypesPackage("workbook/geom", "geom");
+    const pointName = NewTypeName(NoPos, pkg, "Point", null);
+    const point = NewNamed(pointName, NewStruct([
+      NewField(NoPos, pkg, "X", Typ[Float64]!, false),
+      NewField(NoPos, pkg, "Y", Typ[Float64]!, false)
+    ], null), null);
 
-    const lenSig = new SignatureType(
-      varOf("p", point),
-      tuple(),
-      tuple(varOf("", universe.basic.float64)),
+    const lenSig = NewSignatureType(
+      NewVar(NoPos, pkg, "p", point),
+      null,
+      null,
+      null,
+      NewTuple(NewVar(NoPos, pkg, "", Typ[Float64]!)),
       false
     );
-    const scaleSig = new SignatureType(
-      varOf("p", new PointerType(point)),
-      tuple(varOf("k", universe.basic.float64)),
-      tuple(),
+    const scaleSig = NewSignatureType(
+      NewVar(NoPos, pkg, "p", NewPointer(point)),
+      null,
+      null,
+      NewTuple(NewVar(NoPos, pkg, "k", Typ[Float64]!)),
+      null,
       false
     );
-    point.addMethod(new FuncObject("Len2", lenSig));
-    point.addMethod(new FuncObject("Scale", scaleSig));
+    point.AddMethod(NewFunc(NoPos, pkg, "Len2", lenSig));
+    point.AddMethod(NewFunc(NoPos, pkg, "Scale", scaleSig));
 
-    const hasLen = new InterfaceType([new FuncObject("Len2", new SignatureType(
-      undefined,
-      tuple(),
-      tuple(varOf("", universe.basic.float64)),
+    const hasLen = NewInterfaceType([NewFunc(NoPos, pkg, "Len2", NewSignatureType(
+      null,
+      null,
+      null,
+      null,
+      NewTuple(NewVar(NoPos, pkg, "", Typ[Float64]!)),
       false
-    ))]).complete();
-    const hasScale = new InterfaceType([new FuncObject("Scale", new SignatureType(
-      undefined,
-      tuple(varOf("k", universe.basic.float64)),
-      tuple(),
+    ))], null).Complete();
+    const hasScale = NewInterfaceType([NewFunc(NoPos, pkg, "Scale", NewSignatureType(
+      null,
+      null,
+      null,
+      NewTuple(NewVar(NoPos, pkg, "k", Typ[Float64]!)),
+      null,
       false
-    ))]).complete();
+    ))], null).Complete();
 
-    expect(assignableTo(universe.basic.untypedInt, universe.basic.int64)).toBe(true);
-    expect(assignableTo(universe.basic.untypedNil, new SliceType(universe.basic.string))).toBe(true);
-    expect(assignableTo(point, hasLen)).toBe(true);
-    expect(assignableTo(point, hasScale)).toBe(false);
-    expect(assignableTo(new PointerType(point), hasScale)).toBe(true);
+    expect(AssignableTo(Typ[UntypedInt]!, Typ[Int64]!)).toBe(true);
+    expect(AssignableTo(Typ[UntypedNil]!, NewSlice(Typ[GoTypesString]!))).toBe(true);
+    expect(AssignableTo(point, hasLen)).toBe(true);
+    expect(AssignableTo(point, hasScale)).toBe(false);
+    expect(AssignableTo(NewPointer(point), hasScale)).toBe(true);
   });
 });

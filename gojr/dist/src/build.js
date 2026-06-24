@@ -1,7 +1,7 @@
 import { REPL_FILENAME } from "./diagnostics.js";
-import { checkFrontFiles } from "./front/checker.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
-import { newUniverse, ObjectKind } from "./front/types.js";
+import { checkGoJuniorFiles } from "./typecheck.js";
+import { Const as GoTypesConst, Func as GoTypesFunc, TypeName as GoTypesTypeName, Var as GoTypesVar } from "./go/types/index.js";
 const ARTIFACT_LAYOUT_VERSION = "gojr-js-v2";
 export const GOJR_GOOS = "gojr";
 export const GOJR_GOARCH = "js";
@@ -99,7 +99,6 @@ export function collectSourceImportPaths(files) {
 class PackageGraphBuilder {
     request;
     store;
-    universe = newUniverse();
     packageSources = new Map();
     packageInfos = new Map();
     nodes = new Map();
@@ -183,8 +182,7 @@ class PackageGraphBuilder {
                 sourceDependencies.push(dependency);
         }
         if (!this.hasErrors()) {
-            const checked = checkFrontFiles(parsed.files, {
-                universe: this.universe,
+            const checked = checkGoJuniorFiles(parsed.files, parsed.statements, [], {
                 packageName,
                 packagePath: importPath,
                 importer: {
@@ -199,7 +197,7 @@ class PackageGraphBuilder {
                 const standardLibrary = this.standardLibraryPackages.has(importPath);
                 const sourceHash = hashSourceFiles(files);
                 const dependencyCacheKeys = sourceDependencies.map((dependency) => `${dependency.importPath}:${dependency.cacheKey}`).sort();
-                const exports = uniqueExports(checked.pkg.scope.children());
+                const exports = uniqueExports(packageScopeObjects(checked.pkg));
                 const cacheKey = stableHash([
                     ARTIFACT_LAYOUT_VERSION,
                     this.request.compilerVersion ?? DEFAULT_COMPILER_VERSION,
@@ -487,32 +485,41 @@ function emptyBuildReport(diagnostics) {
 function importPathFromSpec(spec) {
     return unquoteStringLiteral(spec.path.value);
 }
+function packageScopeObjects(pkg) {
+    return pkg.Scope().Names().flatMap((name) => {
+        const object = pkg.Scope().Lookup(name);
+        return object === null ? [] : [object];
+    });
+}
 function uniqueExports(objects) {
     const exports = new Map();
     for (const object of objects) {
-        const kind = exportKindForObject(object.kind);
-        if (!kind || !object.exported())
+        const kind = exportKindForObject(object);
+        if (!kind || !object.Exported())
             continue;
+        const typ = object.Type();
         const item = {
-            name: object.name,
+            name: object.Name(),
             kind,
-            typeText: object.type.typeString()
+            typeText: typ?.String() ?? "<nil>"
         };
         if (kind === "type") {
-            item.underlyingTypeText = object.type.underlying().typeString();
+            item.underlyingTypeText = typ?.Underlying().String() ?? "<nil>";
         }
-        exports.set(`${kind}:${object.name}`, item);
+        exports.set(`${kind}:${object.Name()}`, item);
     }
     return [...exports.values()].sort((left, right) => left.name.localeCompare(right.name) || left.kind.localeCompare(right.kind));
 }
-function exportKindForObject(kind) {
-    switch (kind) {
-        case ObjectKind.Const: return "const";
-        case ObjectKind.Func: return "func";
-        case ObjectKind.TypeName: return "type";
-        case ObjectKind.Var: return "var";
-        default: return undefined;
-    }
+function exportKindForObject(object) {
+    if (object instanceof GoTypesConst)
+        return "const";
+    if (object instanceof GoTypesFunc)
+        return "func";
+    if (object instanceof GoTypesTypeName)
+        return "type";
+    if (object instanceof GoTypesVar)
+        return "var";
+    return undefined;
 }
 function generatedArtifactSource(artifact) {
     return [

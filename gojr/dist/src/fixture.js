@@ -172,10 +172,12 @@ function packageInfoKeys(packageInfos) {
         return [];
     return Object.entries(packageInfos)
         .map(([path, info]) => {
-        const exports = info.scope.children()
-            .map((object) => `${object.kind}:${object.name}:${object.type.typeString()}`)
+        const exports = info.Scope().Names()
+            .map((name) => info.Scope().Lookup(name))
+            .filter((object) => object !== null)
+            .map((object) => `${object.constructor.name}:${object.Name()}:${object.Type()?.String() ?? "<nil>"}`)
             .join(",");
-        return `${path}:${info.name}:${exports}`;
+        return `${path}:${info.Name()}:${exports}`;
     });
 }
 function normalizeFixtureSheets(fixture, currentSheetName) {

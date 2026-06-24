@@ -115,7 +115,7 @@ registerCheckerMethod("funcType", function funcType(sig, recvPar, ftyp) {
         // collect method receiver, if any
         let recv = null;
         let rparams = null;
-        if (recvPar !== undefined && recvPar.fields.length > 0) {
+        if (recvPar !== null && recvPar !== undefined && recvPar.fields.length > 0) {
             // We have at least one receiver; make sure we don't have more than one.
             const n = recvPar.fields.length;
             if (n > 1) {
@@ -127,7 +127,7 @@ registerCheckerMethod("funcType", function funcType(sig, recvPar, ftyp) {
             [recv, rparams] = this.collectRecv(recvPar.fields[0], scopePos);
         }
         // collect and declare function type parameters
-        if (ftyp.typeParams !== undefined) {
+        if (ftyp.typeParams !== null && ftyp.typeParams !== undefined) {
             const dst = { value: sig.tparams };
             this.collectTypeParams(dst, ftyp.typeParams);
             sig.tparams = dst.value;
@@ -352,7 +352,7 @@ registerCheckerMethod("collectParams", function collectParams(kind, list) {
     const names = [];
     const params = [];
     let variadic = false;
-    if (list === undefined) {
+    if (list === null || list === undefined) {
         return [names, params, variadic];
     }
     let named = false;

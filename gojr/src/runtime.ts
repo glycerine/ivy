@@ -35,18 +35,28 @@ import {
   UnaryExpression
 } from "./ast.js";
 import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan } from "./diagnostics.js";
-import { checkFrontSourceFiles, CheckConfig, CheckResult, SheetNamespace } from "./front/checker.js";
 import {
-  BasicKind,
-  BasicType,
-  MapType as CheckerMapType,
-  PackageInfo,
-  SliceType as CheckerSliceType,
-  Type as CheckerType,
-  TypeObject,
-  Universe,
-  newUniverse
-} from "./front/types.js";
+  checkGoJuniorSourceFiles,
+  type GoJuniorCheckConfig,
+  type GoJuniorCheckResult
+} from "./typecheck.js";
+import {
+  Bool as GoTypesBool,
+  ChanDir as GoTypesChanDir,
+  Complex128 as GoTypesComplex128,
+  Float64 as GoTypesFloat64,
+  Int64 as GoTypesInt64,
+  NewChan as newGoTypesChan,
+  NewMap as newGoTypesMap,
+  NewSlice as newGoTypesSlice,
+  String as GoTypesString,
+  Typ as goTypesTyp,
+  emptyInterface,
+  type GoJuniorSheetNamespace,
+  type Object as GoTypesObject,
+  type Package as GoTypesPackage,
+  type Type as GoTypesType
+} from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
 import { DeterministicPrng } from "./prng.js";
 import {
@@ -138,7 +148,7 @@ export interface SheetData {
 export interface EvaluationOptions {
   filename?: string;
   packages?: Record<string, RuntimeObject>;
-  packageInfos?: Record<string, PackageInfo>;
+  packageInfos?: Record<string, GoTypesPackage>;
   env?: Record<string, string>;
   sheet?: SheetData;
   sheets?: Record<string, SheetData>;
@@ -167,7 +177,7 @@ export interface PackageEvaluationResult {
   diagnostics: Diagnostic[];
   output: string[];
   package?: RuntimeObject;
-  packageInfo?: PackageInfo;
+  packageInfo?: GoTypesPackage;
 }
 
 type Completion =
@@ -992,15 +1002,10 @@ export async function evaluatePackageSourceFiles(files: SourceFile[], options: P
   }
 
   const packageName = options.packageName ?? packageNameFromSourceFiles(files) ?? "main";
-  const checked = checkFrontSourceFiles(files, {
+  const checked = checkGoJuniorSourceFiles(files, {
     ...typeCheckConfig(options),
     packageName,
-    packagePath: options.importPath ?? packageName,
-    ...(options.packageInfos ? {
-      importer: {
-        import: (path) => options.packageInfos?.[path]
-      }
-    } : {})
+    packagePath: options.importPath ?? packageName
   });
   if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     return {
@@ -1022,7 +1027,7 @@ export async function evaluatePackageSourceFiles(files: SourceFile[], options: P
       const declarationCompletion = await executeTopLevelStatements(declarations, context);
       expectNormalCompletion(declarationCompletion, "package declarations");
       await runInitFunctions(ast.functions, context);
-      return exportedRuntimePackageObject(checked.pkg.scope.children(), context);
+      return exportedRuntimePackageObject(packageScopeObjects(checked.pkg), context);
     });
     return {
       diagnostics: checked.diagnostics,
@@ -1063,7 +1068,7 @@ export async function testSourceFiles(files: SourceFile[], options: EvaluationOp
     };
   }
 
-  const checked = checkFrontSourceFiles(files, typeCheckConfig(options));
+  const checked = checkGoJuniorSourceFiles(files, typeCheckConfig(options));
   if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     return {
       diagnostics: checked.diagnostics,
@@ -1135,17 +1140,26 @@ export async function evaluateProgram(ast: ProgramAst, options: EvaluationOption
   }
 }
 
-function exportedRuntimePackageObject(objects: TypeObject[], context: EvaluationContext): RuntimeObject {
+function exportedRuntimePackageObject(objects: GoTypesObject[], context: EvaluationContext): RuntimeObject {
   const pkg: RuntimeObject = {};
   for (const object of objects) {
-    if (!object.exported()) continue;
+    if (!object.Exported()) continue;
     try {
-      pkg[object.name] = context.lookup(object.name);
+      pkg[object.Name()] = context.lookup(object.Name());
     } catch {
       // Type-only exports have no runtime value in the interpreter package object.
     }
   }
   return pkg;
+}
+
+function packageScopeObjects(pkg: GoTypesPackage): GoTypesObject[] {
+  return pkg.Scope().Names().flatMap((name) => {
+    if (name === "__gojr_check_statements" || name === "fmt") return [];
+    const object = pkg.Scope().Lookup(name);
+    if (object === null || object.constructor.name === "PkgName") return [];
+    return [object];
+  });
 }
 
 async function testProgram(ast: ProgramAst, baseDiagnostics: Diagnostic[], options: EvaluationOptions): Promise<EvaluationResult> {
@@ -1397,7 +1411,7 @@ function indentTestingLog(text: string): string {
 
 export class GoJuniorSession {
   private readonly context: EvaluationContext;
-  private acceptedPackageObjects: TypeObject[] = [];
+  private acceptedPackageObjects: GoTypesObject[] = [];
   private sessionSheet: SheetData | undefined;
   private sessionSheets: Record<string, SheetData> | undefined;
 
@@ -1499,16 +1513,16 @@ export class GoJuniorSession {
     }
   }
 
-  private checkSource(source: SourceFile): CheckResult {
-    const checked = checkFrontSourceFiles([ensureTrailingNewlineSourceFile(source)], {
+  private checkSource(source: SourceFile): GoJuniorCheckResult {
+    const checked = checkGoJuniorSourceFiles([ensureTrailingNewlineSourceFile(source)], {
       ...typeCheckConfig(this.currentOptions()),
       predeclaredPackageObjects: this.acceptedPackageObjects
     });
     return checked;
   }
 
-  private acceptTypeInfo(checked: CheckResult): void {
-    this.acceptedPackageObjects = checked.pkg.scope.children();
+  private acceptTypeInfo(checked: GoJuniorCheckResult): void {
+    this.acceptedPackageObjects = packageScopeObjects(checked.pkg);
   }
 
   private currentOptions(): EvaluationOptions {
@@ -1531,81 +1545,82 @@ function ensureTrailingNewlineSourceFile(file: SourceFile): SourceFile {
   };
 }
 
-export function typeCheckConfig(options: EvaluationOptions): CheckConfig {
-  const universe = newUniverse();
+export function typeCheckConfig(options: EvaluationOptions): GoJuniorCheckConfig {
   return {
-    universe,
-    sheetNamespaces: sheetNamespacesForOptions(options, universe),
+    sheetNamespaces: sheetNamespacesForOptions(options),
     ...(options.packageInfos ? {
       importer: {
-        import: (path) => options.packageInfos?.[path]
+        import: (path: string) => options.packageInfos?.[path]
       }
     } : {})
   };
 }
 
-function sheetNamespacesForOptions(options: EvaluationOptions, universe: Universe): Record<string, SheetNamespace> {
-  const namespaces: Record<string, SheetNamespace> = {
-    sheet: sheetNamespaceForData(options.sheet ?? options.sheets?.[options.currentSheetName ?? "sheet"] ?? {}, universe)
+function sheetNamespacesForOptions(options: EvaluationOptions): Record<string, GoJuniorSheetNamespace> {
+  const namespaces: Record<string, GoJuniorSheetNamespace> = {
+    sheet: sheetNamespaceForData(options.sheet ?? options.sheets?.[options.currentSheetName ?? "sheet"] ?? {})
   };
   for (const [name, data] of Object.entries(options.sheets ?? {})) {
-    namespaces[name] = sheetNamespaceForData(data, universe);
+    namespaces[name] = sheetNamespaceForData(data);
   }
   return namespaces;
 }
 
-function sheetNamespaceForData(data: SheetData, universe: Universe): SheetNamespace {
-  const cells: Record<string, CheckerType> = {};
+function sheetNamespaceForData(data: SheetData): GoJuniorSheetNamespace {
+  const cells: Record<string, GoTypesType> = {};
   for (const [cell, value] of Object.entries(data)) {
-    cells[normalizeCell(cell)] = checkerTypeForRuntimeValue(value, universe);
+    cells[normalizeCell(cell)] = goTypesTypeForRuntimeValue(value);
   }
   return {
     cells,
-    defaultType: universe.basic.any
+    defaultType: emptyInterface
   };
 }
 
-function checkerTypeForRuntimeValue(value: RuntimeValue, universe: Universe): CheckerType {
+function goTypesTypeForRuntimeValue(value: RuntimeValue): GoTypesType {
   const actual = unwrapNamed(value);
-  if (typeof actual === "bigint") return universe.basic.int64;
-  if (typeof actual === "number") return universe.basic.float64;
-  if (isRuntimeString(actual)) return universe.basic.string;
-  if (typeof actual === "boolean") return universe.basic.bool;
-  if (isComplexValue(actual)) return universe.basic.complex128;
-  if (Array.isArray(actual)) return checkerSliceTypeForRuntimeArray(actual, universe);
+  if (typeof actual === "bigint") return goTypesTyp[GoTypesInt64]!;
+  if (typeof actual === "number") return goTypesTyp[GoTypesFloat64]!;
+  if (isRuntimeString(actual)) return goTypesTyp[GoTypesString]!;
+  if (typeof actual === "boolean") return goTypesTyp[GoTypesBool]!;
+  if (isComplexValue(actual)) return goTypesTyp[GoTypesComplex128]!;
+  if (Array.isArray(actual)) return goTypesSliceTypeForRuntimeArray(actual);
   if (actual instanceof RuntimeMap) {
-    return new CheckerMapType(checkerTypeFromText(actual.keyType, universe), checkerTypeFromText(actual.valueType, universe));
+    return newGoTypesMap(goTypesTypeFromText(actual.keyType), goTypesTypeFromText(actual.valueType));
   }
-  return universe.basic.any;
+  if (actual instanceof RuntimeChannel) {
+    return newGoTypesChan(GoTypesChanDir.SendRecv, goTypesTypeFromText(actual.elementType));
+  }
+  return emptyInterface;
 }
 
-function checkerSliceTypeForRuntimeArray(values: RuntimeValue[], universe: Universe): CheckerSliceType {
-  const elementType = commonRuntimeValueType(values, universe) ?? universe.basic.any;
-  return new CheckerSliceType(elementType);
+function goTypesSliceTypeForRuntimeArray(values: RuntimeValue[]): GoTypesType {
+  const elementType = commonRuntimeValueType(values) ?? emptyInterface;
+  return newGoTypesSlice(elementType);
 }
 
-function commonRuntimeValueType(values: RuntimeValue[], universe: Universe): CheckerType | undefined {
-  let common: CheckerType | undefined;
+function commonRuntimeValueType(values: RuntimeValue[]): GoTypesType | undefined {
+  let common: GoTypesType | undefined;
   for (const value of values) {
-    const next = checkerTypeForRuntimeValue(value, universe);
+    const next = goTypesTypeForRuntimeValue(value);
     if (!common) {
       common = next;
       continue;
     }
-    if (common.typeString() !== next.typeString()) return universe.basic.any;
+    if (common.String() !== next.String()) return emptyInterface;
   }
   return common;
 }
 
-function checkerTypeFromText(typeText: string, universe: Universe): CheckerType {
+function goTypesTypeFromText(typeText: string): GoTypesType {
   const type = normalizeTypeText(typeText);
   switch (type) {
-    case "bool": return universe.basic.bool;
-    case "string": return universe.basic.string;
+    case "bool": return goTypesTyp[GoTypesBool]!;
+    case "string": return goTypesTyp[GoTypesString]!;
     case "float32":
-    case "float64": return universe.basic.float64;
+    case "float64": return goTypesTyp[GoTypesFloat64]!;
     case "complex64":
-    case "complex128": return universe.basic.complex128;
+    case "complex128": return goTypesTyp[GoTypesComplex128]!;
     case "int":
     case "int8":
     case "int16":
@@ -1619,10 +1634,10 @@ function checkerTypeFromText(typeText: string, universe: Universe): CheckerType 
     case "uintptr":
     case "byte":
     case "rune":
-      return universe.basic.int64;
+      return goTypesTyp[GoTypesInt64]!;
     default:
-      if (type.startsWith("[]")) return new CheckerSliceType(checkerTypeFromText(type.slice(2), universe));
-      return new BasicType(BasicKind.Any);
+      if (type.startsWith("[]")) return newGoTypesSlice(goTypesTypeFromText(type.slice(2)));
+      return emptyInterface;
   }
 }
 

@@ -15,7 +15,7 @@ import { newTarget, type target } from "./expr.js";
 import type { indexedExpr } from "./index_expr.js";
 import type { genericType } from "./instantiate.js";
 import { enableReverseTypeInference, isParameterized } from "./infer.js";
-import { Interface } from "./interface.js";
+import { Interface, emptyInterface } from "./interface.js";
 import { isInterfacePtr, lookupFieldOrMethod } from "./lookup.js";
 import { Func, Const, Builtin, NewParam, PkgName, TypeName, Var, type Object } from "./object.js";
 import { operand, builtin, cgofunc, commaerr, constant_, invalid, novalue, typexpr, value, variable } from "./operand.js";
@@ -769,6 +769,13 @@ registerCheckerMethod("selector", function selector(x: operand, e0: unknown, wan
   // can only appear in qualified identifiers which are mapped to
   // selector expressions.
   if (e.object.kind === "Ident") {
+    const sheetType = goJuniorSheetSelectorType(this, e.object.name, e.selector.name);
+    if (sheetType !== null) {
+      x.mode_ = variable;
+      x.typ_ = sheetType;
+      x.expr = e;
+      return;
+    }
     const looked = this.lookup(e.object.name);
     const pname = looked instanceof PkgName ? looked : null;
     if (pname !== null) {
@@ -1110,6 +1117,15 @@ function varTypesLocal(list: Var[]): Type[] {
     res[i] = list[i]!.typ!;
   }
   return res;
+}
+
+function goJuniorSheetSelectorType(check: Checker, namespace: string, selector: string): Type | null {
+  const ns = check.conf.GoJuniorSheetNamespaces?.[namespace];
+  if (ns === undefined) {
+    return null;
+  }
+  const cell = selector.toUpperCase().replace(/\$/g, "");
+  return ns.cells?.[cell] ?? ns.defaultType ?? emptyInterface;
 }
 
 function selectorError(check: Checker, x: operand, e: SelectorExpr): void {

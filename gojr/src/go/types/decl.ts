@@ -25,6 +25,7 @@ import { go1_18, go1_23, go1_9 } from "./version.js";
 import { operand } from "./operand.js";
 import { fieldListNumFields, funcDeclBody, funcDeclName, funcDeclRecv, funcDeclType, genDeclSpecs, genDeclTok, identName, nodeEnd, nodeKind, nodePos, specName, specNames, specType, specValues } from "./astcompat.js";
 import { TypeString } from "./typestring.js";
+import { TokenKind } from "../../front/token.js";
 
 declare module "./check.js" {
   interface Checker {
@@ -497,6 +498,36 @@ registerCheckerMethod("isImportedConstraint", function isImportedConstraint(typ:
   return u instanceof Interface && !u.IsMethodSet();
 });
 
+function typeSpecTypeParams(spec: unknown): unknown {
+  const s = spec as { TypeParams?: unknown; typeParams?: unknown } | null;
+  return s?.TypeParams ?? s?.typeParams ?? null;
+}
+
+function typeSpecType(spec: unknown): unknown {
+  const s = spec as { Type?: unknown; type?: unknown } | null;
+  return s?.Type ?? s?.type ?? null;
+}
+
+function typeSpecIsAlias(spec: unknown): boolean {
+  const s = spec as { Assign?: { IsValid?: () => boolean }; alias?: boolean } | null;
+  return s?.Assign?.IsValid?.() ?? s?.alias === true;
+}
+
+function fieldListFields(list: unknown): unknown[] {
+  const l = list as { List?: unknown[]; fields?: unknown[] } | null;
+  return l?.List ?? l?.fields ?? [];
+}
+
+function fieldNames(field: unknown): unknown[] {
+  const f = field as { Names?: unknown[]; names?: unknown[] } | null;
+  return f?.Names ?? f?.names ?? [];
+}
+
+function fieldType(field: unknown): unknown {
+  const f = field as { Type?: unknown; type?: unknown } | null;
+  return f?.Type ?? f?.type ?? null;
+}
+
 registerCheckerMethod("typeDecl", function typeDeclMethod(obj: TypeName, tdecl: unknown): void {
   assert(obj.typ === null);
 
@@ -507,15 +538,16 @@ registerCheckerMethod("typeDecl", function typeDeclMethod(obj: TypeName, tdecl: 
     if (t !== null) {
       (this as unknown as { validType: (t: Named) => void }).validType(t);
     }
-    const td = tdecl as { Type?: unknown };
-    void (!versionErr && this.isImportedConstraint(rhs) && this.verifyVersionf(td.Type as positioner, go1_18, "using type constraint %s", rhs));
+    const tdType = typeSpecType(tdecl);
+    void (!versionErr && this.isImportedConstraint(rhs) && this.verifyVersionf(tdType as positioner, go1_18, "using type constraint %s", rhs));
   }).describef(obj, "validType(%s)", obj.Name());
 
-  const td = tdecl as { TypeParams?: { NumFields?: () => number; List?: unknown[] }; Assign?: { IsValid?: () => boolean }; Type?: unknown };
-  const tparam0 = (td.TypeParams?.NumFields?.() ?? 0) > 0 ? td.TypeParams?.List?.[0] : null;
+  const typeParams = typeSpecTypeParams(tdecl);
+  const tdType = typeSpecType(tdecl);
+  const tparam0 = fieldListNumFields(typeParams) > 0 ? fieldListFields(typeParams)[0] : null;
 
   // alias declaration
-  if (td.Assign?.IsValid?.()) {
+  if (typeSpecIsAlias(tdecl)) {
     if (!versionErr && tparam0 !== null && tparam0 !== undefined && !this.verifyVersionf(tparam0 as positioner, go1_23, "generic type alias")) {
       versionErr = true;
     }
@@ -526,23 +558,30 @@ registerCheckerMethod("typeDecl", function typeDeclMethod(obj: TypeName, tdecl: 
     const alias = this.newAlias(obj, null);
 
     try {
+      let closeTypeParamScope = false;
       if (tparam0 !== null && tparam0 !== undefined) {
         (this as unknown as { openScope: (node: unknown, comment: string) => void; closeScope: () => void }).openScope(tdecl, "type parameters");
-        try {
+        closeTypeParamScope = true;
+      }
+      try {
+        if (tparam0 !== null && tparam0 !== undefined) {
           const dst = { value: alias.tparams };
-          this.collectTypeParams(dst, td.TypeParams);
+          this.collectTypeParams(dst, typeParams);
           alias.tparams = dst.value;
-        } finally {
+        }
+
+        rhs = (this as unknown as { declaredType: (x: unknown, def: TypeName) => Type }).declaredType(tdType, obj);
+      } finally {
+        if (closeTypeParamScope) {
           (this as unknown as { closeScope: () => void }).closeScope();
         }
       }
 
-      rhs = (this as unknown as { declaredType: (x: unknown, def: TypeName) => Type }).declaredType(td.Type, obj);
       assert(rhs !== null);
       alias.fromRHS = rhs;
 
       if (rhs instanceof TypeParam && alias.tparams !== null && alias.tparams.list().includes(rhs)) {
-        (this as unknown as { error: (at: unknown, code: unknown, msg: string) => void }).error(td.Type, "MisplacedTypeParam", "cannot use type parameter declared in alias declaration as RHS");
+        (this as unknown as { error: (at: unknown, code: unknown, msg: string) => void }).error(tdType, "MisplacedTypeParam", "cannot use type parameter declared in alias declaration as RHS");
         alias.fromRHS = Typ[Invalid]!;
       }
     } finally {
@@ -561,33 +600,39 @@ registerCheckerMethod("typeDecl", function typeDeclMethod(obj: TypeName, tdecl: 
   }
 
   const named = this.newNamed(obj, null, null);
-  if (td.TypeParams !== null && td.TypeParams !== undefined) {
+  let closeTypeParamScope = false;
+  if (typeParams !== null && typeParams !== undefined) {
     (this as unknown as { openScope: (node: unknown, comment: string) => void; closeScope: () => void }).openScope(tdecl, "type parameters");
-    try {
+    closeTypeParamScope = true;
+  }
+  try {
+    if (typeParams !== null && typeParams !== undefined) {
       const dst = { value: named.tparams };
-      this.collectTypeParams(dst, td.TypeParams);
+      this.collectTypeParams(dst, typeParams);
       named.tparams = dst.value;
-    } finally {
+    }
+
+    rhs = (this as unknown as { declaredType: (x: unknown, def: TypeName) => Type }).declaredType(tdType, obj);
+  } finally {
+    if (closeTypeParamScope) {
       (this as unknown as { closeScope: () => void }).closeScope();
     }
   }
-
-  rhs = (this as unknown as { declaredType: (x: unknown, def: TypeName) => Type }).declaredType(td.Type, obj);
   assert(rhs !== null);
   named.fromRHS = rhs;
 
   if (isTypeParam(rhs)) {
-    (this as unknown as { error: (at: unknown, code: unknown, msg: string) => void }).error(td.Type, "MisplacedTypeParam", "cannot use a type parameter as RHS in type declaration");
+    (this as unknown as { error: (at: unknown, code: unknown, msg: string) => void }).error(tdType, "MisplacedTypeParam", "cannot use a type parameter as RHS in type declaration");
     named.fromRHS = Typ[Invalid]!;
   }
 });
 
 registerCheckerMethod("collectTypeParams", function collectTypeParams(dst: { value: TypeParamList | null }, list: unknown): void {
   const tparams: TypeParam[] = [];
-  const fields = (list as { Pos?: () => number; List?: unknown[] }).List ?? [];
-  const scopePos = (list as { Pos?: () => number }).Pos?.() ?? nopos;
+  const fields = fieldListFields(list);
+  const scopePos = nodePos(list) || nopos;
   for (const f of fields) {
-    for (const name of (f as { Names?: unknown[] }).Names ?? []) {
+    for (const name of fieldNames(f)) {
       tparams.push(this.declareTypeParam(name, scopePos));
     }
   }
@@ -600,16 +645,17 @@ registerCheckerMethod("collectTypeParams", function collectTypeParams(dst: { val
     let index = 0;
     for (const f of fields) {
       let bound: Type;
-      if ((f as { Type?: unknown }).Type !== null && (f as { Type?: unknown }).Type !== undefined) {
-        bound = this.bound((f as { Type?: unknown }).Type);
+      const ftype = fieldType(f);
+      if (ftype !== null && ftype !== undefined) {
+        bound = this.bound(ftype);
         if (isTypeParam(bound)) {
-          (this as unknown as { error: (at: unknown, code: unknown, msg: string) => void }).error((f as { Type?: unknown }).Type, "MisplacedTypeParam", "cannot use a type parameter as constraint");
+          (this as unknown as { error: (at: unknown, code: unknown, msg: string) => void }).error(ftype, "MisplacedTypeParam", "cannot use a type parameter as constraint");
           bound = Typ[Invalid]!;
         }
       } else {
         bound = Typ[Invalid]!;
       }
-      const names = (f as { Names?: unknown[] }).Names ?? [];
+      const names = fieldNames(f);
       for (let i = 0; i < names.length; i++) {
         tparams[index + i]!.bound = bound;
       }
@@ -622,17 +668,17 @@ registerCheckerMethod("collectTypeParams", function collectTypeParams(dst: { val
 
 registerCheckerMethod("bound", function bound(x: unknown): Type {
   let wrap = false;
-  const expr = x as { kind?: string; Op?: string };
+  const expr = x as { kind?: string; Op?: string; op?: string };
   switch (expr.kind) {
     case "UnaryExpr":
-      wrap = expr.Op === "TILDE";
+      wrap = expr.Op === "TILDE" || expr.op === TokenKind.Tilde;
       break;
     case "BinaryExpr":
-      wrap = expr.Op === "OR";
+      wrap = expr.Op === "OR" || expr.op === TokenKind.Or;
       break;
   }
   if (wrap) {
-    const t = (this as unknown as { typ: (x: unknown) => Type }).typ({ kind: "InterfaceType", Methods: { List: [{ Type: x }] } });
+    const t = (this as unknown as { typ: (x: unknown) => Type }).typ({ kind: "InterfaceType", methods: { kind: "FieldList", fields: [{ kind: "Field", names: [], type: x }] } });
     if (t instanceof Interface) {
       t.implicit = true;
     }
@@ -642,8 +688,7 @@ registerCheckerMethod("bound", function bound(x: unknown): Type {
 });
 
 registerCheckerMethod("declareTypeParam", function declareTypeParam(name: unknown, scopePos: number): TypeParam {
-  const ident = name as { Pos?: () => number; Name?: string };
-  const tname = NewTypeName(ident.Pos?.() ?? nopos, this.pkg, ident.Name ?? "", null);
+  const tname = NewTypeName(nodePos(name) || nopos, this.pkg, identName(name), null);
   const tpar = this.newTypeParam(tname, Typ[Invalid]!); // assigns type to tname as a side-effect
   this.declare(this.scope!, name, tname, scopePos);
   return tpar;

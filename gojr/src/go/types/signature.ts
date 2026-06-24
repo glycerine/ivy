@@ -136,7 +136,7 @@ export function NewSignatureType(recv: Var | null, recvTypeParams: TypeParam[] |
 // Implementation
 
 // funcType type-checks a function or method type.
-registerCheckerMethod("funcType", function funcType(sig: Signature, recvPar: FieldList | undefined, ftyp: FuncType): void {
+registerCheckerMethod("funcType", function funcType(sig: Signature, recvPar: FieldList | null | undefined, ftyp: FuncType): void {
   this.openScope(ftyp, "function");
   this.scope!.isFunc = true;
   this.recordScope(ftyp, this.scope!);
@@ -145,7 +145,7 @@ registerCheckerMethod("funcType", function funcType(sig: Signature, recvPar: Fie
     // collect method receiver, if any
     let recv: Var | null = null;
     let rparams: TypeParamList | null = null;
-    if (recvPar !== undefined && recvPar.fields.length > 0) {
+    if (recvPar !== null && recvPar !== undefined && recvPar.fields.length > 0) {
       // We have at least one receiver; make sure we don't have more than one.
       const n = recvPar.fields.length;
       if (n > 1) {
@@ -158,7 +158,7 @@ registerCheckerMethod("funcType", function funcType(sig: Signature, recvPar: Fie
     }
 
     // collect and declare function type parameters
-    if (ftyp.typeParams !== undefined) {
+    if (ftyp.typeParams !== null && ftyp.typeParams !== undefined) {
       const dst = { value: sig.tparams };
       this.collectTypeParams(dst, ftyp.typeParams);
       sig.tparams = dst.value;
@@ -389,11 +389,11 @@ registerCheckerMethod("recordParenthesizedRecvTypes", function recordParenthesiz
 // variables of list and returns the list of names and corresponding
 // variables, and whether the (parameter) list is variadic.
 // Anonymous parameters are recorded with nil names.
-registerCheckerMethod("collectParams", function collectParams(kind: VarKind, list: FieldList | undefined): [Array<Ident | null>, Var[], boolean] {
+registerCheckerMethod("collectParams", function collectParams(kind: VarKind, list: FieldList | null | undefined): [Array<Ident | null>, Var[], boolean] {
   const names: Array<Ident | null> = [];
   const params: Var[] = [];
   let variadic = false;
-  if (list === undefined) {
+  if (list === null || list === undefined) {
     return [names, params, variadic];
   }
 

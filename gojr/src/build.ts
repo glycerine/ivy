@@ -1,8 +1,15 @@
 import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan } from "./diagnostics.js";
 import { File, ImportSpec } from "./front/ast.js";
-import { checkFrontFiles } from "./front/checker.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
-import { newUniverse, ObjectKind, PackageInfo, TypeObject, Universe } from "./front/types.js";
+import { checkGoJuniorFiles } from "./typecheck.js";
+import {
+  Const as GoTypesConst,
+  Func as GoTypesFunc,
+  TypeName as GoTypesTypeName,
+  Var as GoTypesVar,
+  type Object as GoTypesObject,
+  type Package as GoTypesPackage
+} from "./go/types/index.js";
 
 export interface BuildPackageRequest {
   importPath?: string;
@@ -200,9 +207,8 @@ interface PackageBuildNode {
 }
 
 class PackageGraphBuilder {
-  private readonly universe: Universe = newUniverse();
   private readonly packageSources = new Map<string, SourceFile[]>();
-  private readonly packageInfos = new Map<string, PackageInfo>();
+  private readonly packageInfos = new Map<string, GoTypesPackage>();
   private readonly nodes = new Map<string, PackageBuildNode>();
   private readonly visiting = new Set<string>();
   private readonly failedPackageLoads = new Set<string>();
@@ -291,8 +297,7 @@ class PackageGraphBuilder {
     }
 
     if (!this.hasErrors()) {
-      const checked = checkFrontFiles(parsed.files, {
-        universe: this.universe,
+      const checked = checkGoJuniorFiles(parsed.files, parsed.statements, [], {
         packageName,
         packagePath: importPath,
         importer: {
@@ -307,7 +312,7 @@ class PackageGraphBuilder {
         const standardLibrary = this.standardLibraryPackages.has(importPath);
         const sourceHash = hashSourceFiles(files);
         const dependencyCacheKeys = sourceDependencies.map((dependency) => `${dependency.importPath}:${dependency.cacheKey}`).sort();
-        const exports = uniqueExports(checked.pkg.scope.children());
+        const exports = uniqueExports(packageScopeObjects(checked.pkg));
         const cacheKey = stableHash([
           ARTIFACT_LAYOUT_VERSION,
           this.request.compilerVersion ?? DEFAULT_COMPILER_VERSION,
@@ -613,32 +618,38 @@ function importPathFromSpec(spec: ImportSpec): string {
   return unquoteStringLiteral(spec.path.value);
 }
 
-function uniqueExports(objects: TypeObject[]): BuildExport[] {
+function packageScopeObjects(pkg: GoTypesPackage): GoTypesObject[] {
+  return pkg.Scope().Names().flatMap((name) => {
+    const object = pkg.Scope().Lookup(name);
+    return object === null ? [] : [object];
+  });
+}
+
+function uniqueExports(objects: GoTypesObject[]): BuildExport[] {
   const exports = new Map<string, BuildExport>();
   for (const object of objects) {
-    const kind = exportKindForObject(object.kind);
-    if (!kind || !object.exported()) continue;
+    const kind = exportKindForObject(object);
+    if (!kind || !object.Exported()) continue;
+    const typ = object.Type();
     const item: BuildExport = {
-      name: object.name,
+      name: object.Name(),
       kind,
-      typeText: object.type.typeString()
+      typeText: typ?.String() ?? "<nil>"
     };
     if (kind === "type") {
-      item.underlyingTypeText = object.type.underlying().typeString();
+      item.underlyingTypeText = typ?.Underlying().String() ?? "<nil>";
     }
-    exports.set(`${kind}:${object.name}`, item);
+    exports.set(`${kind}:${object.Name()}`, item);
   }
   return [...exports.values()].sort((left, right) => left.name.localeCompare(right.name) || left.kind.localeCompare(right.kind));
 }
 
-function exportKindForObject(kind: ObjectKind): BuildExport["kind"] | undefined {
-  switch (kind) {
-    case ObjectKind.Const: return "const";
-    case ObjectKind.Func: return "func";
-    case ObjectKind.TypeName: return "type";
-    case ObjectKind.Var: return "var";
-    default: return undefined;
-  }
+function exportKindForObject(object: GoTypesObject): BuildExport["kind"] | undefined {
+  if (object instanceof GoTypesConst) return "const";
+  if (object instanceof GoTypesFunc) return "func";
+  if (object instanceof GoTypesTypeName) return "type";
+  if (object instanceof GoTypesVar) return "var";
+  return undefined;
 }
 
 function generatedArtifactSource(artifact: unknown): string {

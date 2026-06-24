@@ -1,5 +1,5 @@
 import { REPL_FILENAME } from "./diagnostics.js";
-import { checkFrontSourceFiles } from "./front/checker.js";
+import { checkGoJuniorSourceFiles } from "./typecheck.js";
 import { typeCheckConfig } from "./runtime.js";
 export function compileSource(source, options = {}) {
     return compileSourceFiles([{
@@ -8,7 +8,7 @@ export function compileSource(source, options = {}) {
         }], options);
 }
 export function compileSourceFiles(files, options = {}) {
-    const checked = checkFrontSourceFiles(files, typeCheckConfig(options));
+    const checked = checkGoJuniorSourceFiles(files, typeCheckConfig(options));
     return {
         diagnostics: checked.diagnostics,
         checked
@@ -16,7 +16,7 @@ export function compileSourceFiles(files, options = {}) {
 }
 export function compilePackageSourceFiles(files, options = {}) {
     const packageName = options.packageName ?? packageNameFromSourceFiles(files) ?? "main";
-    const checked = checkFrontSourceFiles(files, {
+    const checked = checkGoJuniorSourceFiles(files, {
         ...typeCheckConfig(options),
         packageName,
         packagePath: options.importPath ?? packageName

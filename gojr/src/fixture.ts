@@ -1,5 +1,5 @@
 import type { Diagnostic, SourceFile } from "./diagnostics.js";
-import type { PackageInfo } from "./front/types.js";
+import type { Package as GoTypesPackage } from "./go/types/index.js";
 import { parseRuntimeJson } from "./jsonInput.js";
 import {
   GoJuniorSession,
@@ -41,7 +41,7 @@ export interface SpreadsheetFixture {
 export interface SpreadsheetFixtureRunOptions {
   readonly randomSeed?: number | string | bigint;
   readonly packages?: Record<string, RuntimeObject>;
-  readonly packageInfos?: Record<string, PackageInfo>;
+  readonly packageInfos?: Record<string, GoTypesPackage>;
 }
 
 export interface SpreadsheetFixtureRunResult {
@@ -248,14 +248,16 @@ function spreadsheetOptions(fixture: SpreadsheetFixture): SpreadsheetEngineOptio
   };
 }
 
-function packageInfoKeys(packageInfos: Record<string, PackageInfo> | undefined): string[] {
+function packageInfoKeys(packageInfos: Record<string, GoTypesPackage> | undefined): string[] {
   if (!packageInfos) return [];
   return Object.entries(packageInfos)
     .map(([path, info]) => {
-      const exports = info.scope.children()
-        .map((object) => `${object.kind}:${object.name}:${object.type.typeString()}`)
+      const exports = info.Scope().Names()
+        .map((name) => info.Scope().Lookup(name))
+        .filter((object) => object !== null)
+        .map((object) => `${object.constructor.name}:${object.Name()}:${object.Type()?.String() ?? "<nil>"}`)
         .join(",");
-      return `${path}:${info.name}:${exports}`;
+      return `${path}:${info.Name()}:${exports}`;
     });
 }
 

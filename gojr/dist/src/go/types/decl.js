@@ -19,6 +19,7 @@ import { go1_18, go1_23, go1_9 } from "./version.js";
 import { operand } from "./operand.js";
 import { fieldListNumFields, funcDeclBody, funcDeclName, funcDeclRecv, funcDeclType, genDeclSpecs, genDeclTok, identName, nodeEnd, nodeKind, nodePos, specName, specNames, specType, specValues } from "./astcompat.js";
 import { TypeString } from "./typestring.js";
+import { TokenKind } from "../../front/token.js";
 registerCheckerMethod("declare", function declare(scope, id, obj, pos) {
     // spec: "The blank identifier, represented by the underscore
     // character _, may be used in a declaration like any other
@@ -457,6 +458,30 @@ registerCheckerMethod("isImportedConstraint", function isImportedConstraint(typ)
     const u = named.Underlying();
     return u instanceof Interface && !u.IsMethodSet();
 });
+function typeSpecTypeParams(spec) {
+    const s = spec;
+    return s?.TypeParams ?? s?.typeParams ?? null;
+}
+function typeSpecType(spec) {
+    const s = spec;
+    return s?.Type ?? s?.type ?? null;
+}
+function typeSpecIsAlias(spec) {
+    const s = spec;
+    return s?.Assign?.IsValid?.() ?? s?.alias === true;
+}
+function fieldListFields(list) {
+    const l = list;
+    return l?.List ?? l?.fields ?? [];
+}
+function fieldNames(field) {
+    const f = field;
+    return f?.Names ?? f?.names ?? [];
+}
+function fieldType(field) {
+    const f = field;
+    return f?.Type ?? f?.type ?? null;
+}
 registerCheckerMethod("typeDecl", function typeDeclMethod(obj, tdecl) {
     assert(obj.typ === null);
     let versionErr = false;
@@ -466,13 +491,14 @@ registerCheckerMethod("typeDecl", function typeDeclMethod(obj, tdecl) {
         if (t !== null) {
             this.validType(t);
         }
-        const td = tdecl;
-        void (!versionErr && this.isImportedConstraint(rhs) && this.verifyVersionf(td.Type, go1_18, "using type constraint %s", rhs));
+        const tdType = typeSpecType(tdecl);
+        void (!versionErr && this.isImportedConstraint(rhs) && this.verifyVersionf(tdType, go1_18, "using type constraint %s", rhs));
     }).describef(obj, "validType(%s)", obj.Name());
-    const td = tdecl;
-    const tparam0 = (td.TypeParams?.NumFields?.() ?? 0) > 0 ? td.TypeParams?.List?.[0] : null;
+    const typeParams = typeSpecTypeParams(tdecl);
+    const tdType = typeSpecType(tdecl);
+    const tparam0 = fieldListNumFields(typeParams) > 0 ? fieldListFields(typeParams)[0] : null;
     // alias declaration
-    if (td.Assign?.IsValid?.()) {
+    if (typeSpecIsAlias(tdecl)) {
         if (!versionErr && tparam0 !== null && tparam0 !== undefined && !this.verifyVersionf(tparam0, go1_23, "generic type alias")) {
             versionErr = true;
         }
@@ -481,22 +507,28 @@ registerCheckerMethod("typeDecl", function typeDeclMethod(obj, tdecl) {
         }
         const alias = this.newAlias(obj, null);
         try {
+            let closeTypeParamScope = false;
             if (tparam0 !== null && tparam0 !== undefined) {
                 this.openScope(tdecl, "type parameters");
-                try {
+                closeTypeParamScope = true;
+            }
+            try {
+                if (tparam0 !== null && tparam0 !== undefined) {
                     const dst = { value: alias.tparams };
-                    this.collectTypeParams(dst, td.TypeParams);
+                    this.collectTypeParams(dst, typeParams);
                     alias.tparams = dst.value;
                 }
-                finally {
+                rhs = this.declaredType(tdType, obj);
+            }
+            finally {
+                if (closeTypeParamScope) {
                     this.closeScope();
                 }
             }
-            rhs = this.declaredType(td.Type, obj);
             assert(rhs !== null);
             alias.fromRHS = rhs;
             if (rhs instanceof TypeParam && alias.tparams !== null && alias.tparams.list().includes(rhs)) {
-                this.error(td.Type, "MisplacedTypeParam", "cannot use type parameter declared in alias declaration as RHS");
+                this.error(tdType, "MisplacedTypeParam", "cannot use type parameter declared in alias declaration as RHS");
                 alias.fromRHS = Typ[Invalid];
             }
         }
@@ -513,31 +545,37 @@ registerCheckerMethod("typeDecl", function typeDeclMethod(obj, tdecl) {
         versionErr = true;
     }
     const named = this.newNamed(obj, null, null);
-    if (td.TypeParams !== null && td.TypeParams !== undefined) {
+    let closeTypeParamScope = false;
+    if (typeParams !== null && typeParams !== undefined) {
         this.openScope(tdecl, "type parameters");
-        try {
+        closeTypeParamScope = true;
+    }
+    try {
+        if (typeParams !== null && typeParams !== undefined) {
             const dst = { value: named.tparams };
-            this.collectTypeParams(dst, td.TypeParams);
+            this.collectTypeParams(dst, typeParams);
             named.tparams = dst.value;
         }
-        finally {
+        rhs = this.declaredType(tdType, obj);
+    }
+    finally {
+        if (closeTypeParamScope) {
             this.closeScope();
         }
     }
-    rhs = this.declaredType(td.Type, obj);
     assert(rhs !== null);
     named.fromRHS = rhs;
     if (isTypeParam(rhs)) {
-        this.error(td.Type, "MisplacedTypeParam", "cannot use a type parameter as RHS in type declaration");
+        this.error(tdType, "MisplacedTypeParam", "cannot use a type parameter as RHS in type declaration");
         named.fromRHS = Typ[Invalid];
     }
 });
 registerCheckerMethod("collectTypeParams", function collectTypeParams(dst, list) {
     const tparams = [];
-    const fields = list.List ?? [];
-    const scopePos = list.Pos?.() ?? nopos;
+    const fields = fieldListFields(list);
+    const scopePos = nodePos(list) || nopos;
     for (const f of fields) {
-        for (const name of f.Names ?? []) {
+        for (const name of fieldNames(f)) {
             tparams.push(this.declareTypeParam(name, scopePos));
         }
     }
@@ -548,17 +586,18 @@ registerCheckerMethod("collectTypeParams", function collectTypeParams(dst, list)
         let index = 0;
         for (const f of fields) {
             let bound;
-            if (f.Type !== null && f.Type !== undefined) {
-                bound = this.bound(f.Type);
+            const ftype = fieldType(f);
+            if (ftype !== null && ftype !== undefined) {
+                bound = this.bound(ftype);
                 if (isTypeParam(bound)) {
-                    this.error(f.Type, "MisplacedTypeParam", "cannot use a type parameter as constraint");
+                    this.error(ftype, "MisplacedTypeParam", "cannot use a type parameter as constraint");
                     bound = Typ[Invalid];
                 }
             }
             else {
                 bound = Typ[Invalid];
             }
-            const names = f.Names ?? [];
+            const names = fieldNames(f);
             for (let i = 0; i < names.length; i++) {
                 tparams[index + i].bound = bound;
             }
@@ -574,14 +613,14 @@ registerCheckerMethod("bound", function bound(x) {
     const expr = x;
     switch (expr.kind) {
         case "UnaryExpr":
-            wrap = expr.Op === "TILDE";
+            wrap = expr.Op === "TILDE" || expr.op === TokenKind.Tilde;
             break;
         case "BinaryExpr":
-            wrap = expr.Op === "OR";
+            wrap = expr.Op === "OR" || expr.op === TokenKind.Or;
             break;
     }
     if (wrap) {
-        const t = this.typ({ kind: "InterfaceType", Methods: { List: [{ Type: x }] } });
+        const t = this.typ({ kind: "InterfaceType", methods: { kind: "FieldList", fields: [{ kind: "Field", names: [], type: x }] } });
         if (t instanceof Interface) {
             t.implicit = true;
         }
@@ -590,8 +629,7 @@ registerCheckerMethod("bound", function bound(x) {
     return this.typ(x);
 });
 registerCheckerMethod("declareTypeParam", function declareTypeParam(name, scopePos) {
-    const ident = name;
-    const tname = NewTypeName(ident.Pos?.() ?? nopos, this.pkg, ident.Name ?? "", null);
+    const tname = NewTypeName(nodePos(name) || nopos, this.pkg, identName(name), null);
     const tpar = this.newTypeParam(tname, Typ[Invalid]); // assigns type to tname as a side-effect
     this.declare(this.scope, name, tname, scopePos);
     return tpar;

@@ -86,6 +86,11 @@ export interface ImporterFrom extends Importer {
   ImportFrom(path: string, dir: string, mode: ImportMode): [Package | null, unknown];
 }
 
+export interface GoJuniorSheetNamespace {
+  cells?: Record<string, Type>;
+  defaultType?: Type;
+}
+
 // A Config specifies the configuration for type checking.
 // The zero value for Config is a ready-to-use default configuration.
 export class Config {
@@ -100,6 +105,7 @@ export class Config {
   public Sizes: Sizes | null = null;
   public DisableUnusedImportCheck = false;
   public _ErrorURL = "";
+  public GoJuniorSheetNamespaces: Record<string, GoJuniorSheetNamespace> | null = null;
 
   // Check type-checks a package and returns the resulting package object and
   // the first error if any. Additionally, if info != nil, Check populates each
