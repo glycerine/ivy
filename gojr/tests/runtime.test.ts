@@ -1915,6 +1915,46 @@ return s.Sum(2, 3, 5, 6), holder.Sum(2, 3, 5, 8)
     expect(promotedPointerOk.values).toEqual([16n, 18n]);
   });
 
+  test("assigns package-defined value receiver types to predeclared error", async () => {
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "example.com/deadline",
+      files: [{
+        filename: "/workspace/deadline/deadline.go",
+        source: `package deadline
+
+var DeadlineExceeded error = deadlineExceededError{}
+
+type deadlineExceededError struct{}
+
+func (deadlineExceededError) Error() string { return "context deadline exceeded" }
+`
+      }]
+    }]);
+
+    expect(graph.diagnostics).toEqual([]);
+  });
+
+  test("assigns typed named integer constants to predeclared error", async () => {
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "example.com/errno",
+      files: [{
+        filename: "/workspace/errno/errno.go",
+        source: `package errno
+
+type Errno uintptr
+
+const EAGAIN Errno = 11
+
+var errEAGAIN error = EAGAIN
+
+func (e Errno) Error() string { return "try again" }
+`
+      }]
+    }]);
+
+    expect(graph.diagnostics).toEqual([]);
+  });
+
   test("represents interfaces as typed runtime values with dynamic nil state", async () => {
     const nilInterface = await expectRuns(`
 type I interface {

@@ -1,6 +1,6 @@
 import { REPL_FILENAME } from "./diagnostics.js";
 import { checkGoJuniorSourceFiles, GOJR_SYNTHETIC_CHECK_PREFIX, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
-import { Const as GoTypesConst, ensureUniverseInitialized, NewPackage, NewPkgName, NoPos } from "./go/types/index.js";
+import { Const as GoTypesConst, ensureUniverseInitialized, NewPackage, NewPkgName, NoPos, RelativeTo as GoTypesRelativeTo, TypeString as GoTypesTypeString } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
 import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
 import { DeterministicPrng } from "./prng.js";
@@ -36,6 +36,17 @@ export class RuntimeGoString {
 const RECOVERED_PANIC = Symbol("recovered panic");
 const anonymousStructTypeCache = new Map();
 const anonymousInterfaceTypeCache = new Map();
+const errorInterfaceType = {
+    name: "error",
+    methods: [{
+            name: "Error",
+            signature: {
+                parameters: [],
+                results: [{ type: { text: "string" }, variadic: false }]
+            }
+        }],
+    embeds: []
+};
 export class GoJuniorRuntimeError extends Error {
     constructor(message) {
         super(message);
@@ -2600,8 +2611,15 @@ function predeclarePackageConstants(pkg, context) {
     for (const object of packageScopeObjects(pkg)) {
         if (!(object instanceof GoTypesConst))
             continue;
-        context.declareRoot(object.Name(), runtimeValueFromCheckedConstant(object.Val()), false);
+        context.declareRoot(object.Name(), runtimeValueFromCheckedConstant(object.Val()), false, checkedConstantTypeText(object, pkg));
     }
+}
+function checkedConstantTypeText(object, pkg) {
+    const type = object.Type();
+    if (!type)
+        return undefined;
+    const text = GoTypesTypeString(type, GoTypesRelativeTo(pkg));
+    return text.startsWith("untyped ") ? undefined : text;
 }
 function predeclarePackageVariables(declarations, context) {
     for (const statement of declarations) {
@@ -5219,6 +5237,8 @@ function assertAssignableToType(value, typeText, role, context) {
 function interfaceTarget(type, context) {
     if (type === "any" || type === "interface{}")
         return { name: type, methods: [], embeds: [] };
+    if (type === "error")
+        return errorInterfaceType;
     return context?.interfaceDef(type) ?? parseAnonymousInterfaceTypeText(type);
 }
 function prepareInterfaceAssignment(value, type, interfaceType, role, context, dynamicType) {
@@ -5232,9 +5252,10 @@ function prepareInterfaceAssignment(value, type, interfaceType, role, context, d
     }
     if (value === null)
         return new RuntimeInterfaceValue(type, null);
-    if (context && !valueImplementsInterface(value, interfaceType, context))
+    const dynamicValue = boxDynamicInterfaceValue(value, dynamicType);
+    if (context && !valueImplementsInterface(dynamicValue, interfaceType, context))
         throwTypeError(value, type, role);
-    return new RuntimeInterfaceValue(type, boxDynamicInterfaceValue(value, dynamicType));
+    return new RuntimeInterfaceValue(type, dynamicValue);
 }
 function boxDynamicInterfaceValue(value, dynamicType) {
     if (!dynamicType || value instanceof RuntimeNamedValue || value instanceof RuntimeTypedNilValue)

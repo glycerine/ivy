@@ -50,9 +50,11 @@ import {
   NewPackage,
   NewPkgName,
   NoPos,
+  RelativeTo as GoTypesRelativeTo,
   type GoJuniorSheetNamespace,
   type Object as GoTypesObject,
-  type Package as GoTypesPackage
+  type Package as GoTypesPackage,
+  TypeString as GoTypesTypeString
 } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
 import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
@@ -252,7 +254,7 @@ const errorInterfaceType: InterfaceTypeDef = {
     name: "Error",
     signature: {
       parameters: [],
-      results: [{ type: { text: "string" } }]
+      results: [{ type: { text: "string" }, variadic: false }]
     }
   }],
   embeds: []
@@ -3038,8 +3040,15 @@ function predeclareTopLevelTypes(statements: Statement[], context: EvaluationCon
 function predeclarePackageConstants(pkg: GoTypesPackage, context: EvaluationContext): void {
   for (const object of packageScopeObjects(pkg)) {
     if (!(object instanceof GoTypesConst)) continue;
-    context.declareRoot(object.Name(), runtimeValueFromCheckedConstant(object.Val()), false);
+    context.declareRoot(object.Name(), runtimeValueFromCheckedConstant(object.Val()), false, checkedConstantTypeText(object, pkg));
   }
+}
+
+function checkedConstantTypeText(object: GoTypesConst, pkg: GoTypesPackage): string | undefined {
+  const type = object.Type();
+  if (!type) return undefined;
+  const text = GoTypesTypeString(type, GoTypesRelativeTo(pkg));
+  return text.startsWith("untyped ") ? undefined : text;
 }
 
 function predeclarePackageVariables(declarations: Statement[], context: EvaluationContext): void {
@@ -5774,8 +5783,9 @@ function prepareInterfaceAssignment(
     return new RuntimeInterfaceValue(type, dynamicValue);
   }
   if (value === null) return new RuntimeInterfaceValue(type, null);
-  if (context && !valueImplementsInterface(value, interfaceType, context)) throwTypeError(value, type, role);
-  return new RuntimeInterfaceValue(type, boxDynamicInterfaceValue(value, dynamicType));
+  const dynamicValue = boxDynamicInterfaceValue(value, dynamicType);
+  if (context && !valueImplementsInterface(dynamicValue, interfaceType, context)) throwTypeError(value, type, role);
+  return new RuntimeInterfaceValue(type, dynamicValue);
 }
 
 function boxDynamicInterfaceValue(value: RuntimeValue, dynamicType: string | undefined): RuntimeValue {
