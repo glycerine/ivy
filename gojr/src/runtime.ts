@@ -2109,11 +2109,60 @@ function installPackageFunctionDeclaration(context: EvaluationContext, declarati
     context.registerMethod(declaration);
     return;
   }
+  const intrinsic = bodylessPackageFunctionIntrinsic(declaration);
   context.declareOrAssignRoot(
     declaration.name,
-    goJuniorFunctionValue(declaration.name, declaration.signature, declaration.body, context.captureScope(), declaration, undefined, undefined, context),
+    intrinsic ?? goJuniorFunctionValue(declaration.name, declaration.signature, declaration.body, context.captureScope(), declaration, undefined, undefined, context),
     true
   );
+}
+
+function bodylessPackageFunctionIntrinsic(declaration: FunctionDecl): GoJuniorFunction | undefined {
+  if (!isBodylessFunctionDeclaration(declaration)) return undefined;
+  const intrinsic = bodylessRuntimeIntrinsic(declaration.name, declaration.signature);
+  return intrinsic
+    ? {
+      ...intrinsic,
+      ...(declaration.source ? { source: declaration.source } : {}),
+      declaration
+    }
+    : undefined;
+}
+
+function isBodylessFunctionDeclaration(declaration: FunctionDecl): boolean {
+  return declaration.body.statements.length === 0 && declaration.source !== undefined && !declaration.source.includes("{");
+}
+
+function bodylessRuntimeIntrinsic(name: string, signature: FunctionDecl["signature"]): GoJuniorFunction | undefined {
+  const functionValue = (
+    result: RuntimeValue | RuntimeValue[],
+    intrinsicName = name
+  ): GoJuniorFunction => ({
+    kind: "GoJuniorFunction",
+    name: intrinsicName,
+    signature,
+    async call() {
+      return result;
+    }
+  });
+  switch (name) {
+    case "now":
+    case "runtimeNow":
+      return functionValue([0n, 0n, 1n]);
+    case "runtimeNano":
+      return functionValue(1n);
+    case "runtimeIsBubbled":
+      return functionValue(false);
+    case "Sleep":
+      return functionValue(null);
+    case "newTimer":
+      return functionValue(null);
+    case "stopTimer":
+    case "resetTimer":
+      return functionValue(false);
+    default:
+      return undefined;
+  }
 }
 
 function installedFunctionValue(context: EvaluationContext, declaration: FunctionDecl): RuntimeValue {
@@ -2408,6 +2457,7 @@ function reflectliteType(typeText: string, context: EvaluationContext): Reflectl
   }
   object[REFLECTLITE_TYPE_INFO] = info;
   object.Kind = hostCallable("internal/reflectlite.Type.Kind", () => info.kind);
+  object.String = hostCallable("internal/reflectlite.Type.String", () => info.typeText);
   object.Elem = hostCallable("internal/reflectlite.Type.Elem", () => {
     if (!info.elem) throw new GoJuniorRuntimeError(`reflectlite: Elem of ${type}`);
     return info.elem;
@@ -4984,6 +5034,7 @@ function defaultIntrinsicNamedValue(type: string, context?: EvaluationContext): 
   if (type === "sync.Pool") return new RuntimeNamedValue(type, syncPoolValue());
   if (type === "sync.Mutex" || type === "sync.RWMutex") return new RuntimeNamedValue(type, syncMutexValue(type));
   if (type === "atomic.Bool" || type === "sync/atomic.Bool") return new RuntimeNamedValue(type, atomicBoolValue());
+  if (type === "atomic.Int32" || type === "sync/atomic.Int32") return new RuntimeNamedValue(type, atomicInt32Value());
   if (type === "atomic.Uint64" || type === "sync/atomic.Uint64") return new RuntimeNamedValue(type, atomicUint64Value());
   const atomicPointer = /^(?:atomic|sync\/atomic)\.Pointer(?:\[[\s\S]*\])?$/.exec(type);
   if (atomicPointer) return new RuntimeNamedValue(type, atomicPointerValue());
@@ -5107,6 +5158,34 @@ function atomicBoolValue(): RuntimeObject {
     Swap: hostCallable("sync/atomic.Bool.Swap", (args) => {
       const previous = value;
       value = toBool(args[0] ?? false);
+      return previous;
+    })
+  };
+}
+
+function atomicInt32Value(): RuntimeObject {
+  let value = 0n;
+  return {
+    Add: hostCallable("sync/atomic.Int32.Add", (args) => {
+      value = BigInt.asIntN(32, value + toBigInt(args[0] ?? 0n));
+      return value;
+    }),
+    CompareAndSwap: hostCallable("sync/atomic.Int32.CompareAndSwap", (args) => {
+      const oldValue = BigInt.asIntN(32, toBigInt(args[0] ?? 0n));
+      if (value === oldValue) {
+        value = BigInt.asIntN(32, toBigInt(args[1] ?? 0n));
+        return true;
+      }
+      return false;
+    }),
+    Load: hostCallable("sync/atomic.Int32.Load", () => value),
+    Store: hostCallable("sync/atomic.Int32.Store", (args) => {
+      value = BigInt.asIntN(32, toBigInt(args[0] ?? 0n));
+      return null;
+    }),
+    Swap: hostCallable("sync/atomic.Int32.Swap", (args) => {
+      const previous = value;
+      value = BigInt.asIntN(32, toBigInt(args[0] ?? 0n));
       return previous;
     })
   };

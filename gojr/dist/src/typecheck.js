@@ -363,7 +363,8 @@ function reflectlitePackage() {
         NewFunc(NoPos, pkg, "Comparable", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", boolType)), false)),
         NewFunc(NoPos, pkg, "Elem", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", typeType)), false)),
         NewFunc(NoPos, pkg, "Implements", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "u", typeType)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false)),
-        NewFunc(NoPos, pkg, "Kind", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", kindType)), false))
+        NewFunc(NoPos, pkg, "Kind", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", kindType)), false)),
+        NewFunc(NoPos, pkg, "String", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", Typ[GoString])), false))
     ];
     typeType.SetUnderlying(NewInterfaceType(typeMethods, null).Complete());
     const valueName = NewTypeName(NoPos, pkg, "Value", null);

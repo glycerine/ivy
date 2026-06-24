@@ -390,10 +390,10 @@ t := reflectlite.TypeOf((*error)(nil)).Elem()
 xs := []int{3, 1}
 swap := reflectlite.Swapper(xs)
 swap(0, 1)
-return t.Kind() == reflectlite.Interface, t.Comparable(), reflectlite.ValueOf(xs).Len(), xs[0], xs[1]
+return t.Kind() == reflectlite.Interface, t.Comparable(), t.String(), reflectlite.ValueOf(xs).Len(), xs[0], xs[1]
 `);
 
-    expect(script.values).toEqual([true, true, 2n, 1n, 3n]);
+    expect(script.values).toEqual([true, true, "error", 2n, 1n, 3n]);
 
     const graph = await evaluateSourcePackageGraph([{
       importPath: "errors",
@@ -473,6 +473,13 @@ func (x *Bool) CompareAndSwap(old, new bool) bool { return false }
 func (x *Bool) Load() bool { return false }
 func (x *Bool) Store(val bool) {}
 func (x *Bool) Swap(new bool) bool { return false }
+
+type Int32 struct{}
+func (x *Int32) Add(delta int32) int32 { return 0 }
+func (x *Int32) CompareAndSwap(old, new int32) bool { return false }
+func (x *Int32) Load() int32 { return 0 }
+func (x *Int32) Store(val int32) {}
+func (x *Int32) Swap(new int32) int32 { return 0 }
 `
         }]
       },
@@ -490,14 +497,21 @@ var once sync.Once
 var mu sync.Mutex
 var pool = sync.Pool{New: func() any { return 9 }}
 var flag atomic.Bool
+var hits atomic.Int32
 var Seen any
 var Flag bool
+var HitCount int32
 
 func init() {
   mu.Lock()
   mu.Unlock()
   flag.Store(true)
   Flag = flag.Load()
+  hits.Add(1)
+  hits.Store(hits.Add(2))
+  _ = hits.CompareAndSwap(3, 5)
+  _ = hits.Swap(hits.Add(1))
+  HitCount = hits.Load()
   once.Do(func() { cache.Store("x", 4) })
   pool.Put(7)
   _ = pool.Get()
@@ -512,6 +526,7 @@ func init() {
     expect(graph.diagnostics).toEqual([]);
     expect(formatReplValue(graph.packages.app?.Seen ?? null)).toBe("4");
     expect(graph.packages.app?.Flag).toBe(true);
+    expect(graph.packages.app?.HitCount).toBe(6n);
   });
 
   test("supports runtime cleanup handles as no-op host values", async () => {
@@ -878,6 +893,39 @@ return trace.Snapshot()
     });
 
     expect(formatReplValue(result.value ?? null)).toBe(`["trace" "shared" "left" "right" "app"]`);
+  });
+
+  test("supports bodyless runtime intrinsics during package initialization", async () => {
+    const result = await evaluateSourcePackageGraph([{
+      importPath: "clock",
+      files: [{
+        filename: "clock.go",
+        source: `package clock
+
+func runtimeNano() int64
+func runtimeNow() (sec int64, nsec int32, mono int64)
+
+var Start = runtimeNano() - 1
+
+func Grab() (int64, int32, int64) {
+  return runtimeNow()
+}
+`
+      }]
+    }]);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.packages.clock?.Start).toBe(0n);
+
+    const script = await expectRuns(`
+import "clock"
+sec, nsec, mono := clock.Grab()
+return sec, nsec, mono
+`, {
+      packages: result.packages,
+      packageInfos: result.packageInfos
+    });
+    expect(script.values).toEqual([0n, 0n, 1n]);
   });
 
   test("typechecks and evaluates source packages that import other source packages", async () => {

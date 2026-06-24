@@ -617,6 +617,14 @@ function reflectlitePackage(): GoTypesPackage {
       null,
       NewTuple(NewVar(NoPos, pkg, "", kindType)),
       false
+    )),
+    NewFunc(NoPos, pkg, "String", NewSignatureType(
+      null,
+      null,
+      null,
+      null,
+      NewTuple(NewVar(NoPos, pkg, "", Typ[GoString]!)),
+      false
     ))
   ];
   typeType.SetUnderlying(NewInterfaceType(typeMethods, null).Complete());
