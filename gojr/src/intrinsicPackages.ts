@@ -1,5 +1,6 @@
 export function isIntrinsicPackageImport(importPath: string): boolean {
-  return importPath === "runtime" ||
+  return importPath === "iter" ||
+    importPath === "runtime" ||
     importPath === "syscall/js" ||
     importPath === "unsafe" ||
     importPath === "internal/reflectlite";
