@@ -1572,10 +1572,10 @@ The package artifact cache has two durable targets:
 
 - Node/CLI: `~/go/pkg/gojr_js/` by default. This mirrors Go's compiled package
   cache layout under directories such as `~/go/pkg/darwin_amd64/`, except the
-  package artifacts are JavaScript source/module files with a `.js` suffix
-  instead of `.a` archives.
+  package artifacts are Go-junior `.a` archives containing `__.PKGDEF` export
+  data and a `_gojr.js` generated JavaScript member.
 - Browser: OPFS (Origin Private File System). OPFS is the durable artifact store
-  for generated `.js` package artifacts and metadata inside the browser.
+  for generated `.a` package artifacts and metadata inside the browser.
 
 IndexedDB may still be used in the browser for small indexes, package manifests,
 or queryable metadata, but the generated package artifacts themselves should
@@ -1585,8 +1585,8 @@ Node runtimes.
 CLI artifact examples:
 
 ```text
-~/go/pkg/gojr_js/golang.org/x/crypto/scrypt.js
-~/go/pkg/gojr_js/github.com/user/project/pkg/name.js
+~/go/pkg/gojr_js/golang.org/x/crypto/scrypt.a
+~/go/pkg/gojr_js/github.com/user/project/pkg/name.a
 ```
 
 Cache keys must include:
@@ -2892,7 +2892,7 @@ Implementation tasks:
 - Include transitive package dependency keys for compiled package artifacts.
 - Store formula function artifacts in the worker memory cache.
 - Store Node/CLI package artifacts under `~/go/pkg/gojr_js/` by default, using
-  import-path directory layout and `.js` file suffixes.
+  import-path directory layout and `.a` archive suffixes.
 - Support a package-cache parent override and an exact package artifact root
   override for tests, CI, and explicit CLI workflows.
 - Store browser package artifacts in OPFS, using IndexedDB only for optional
@@ -2916,11 +2916,11 @@ Tests:
 - Compiler version changes invalidate cache.
 - Formula cache misses when a linked package artifact changes.
 - Node package artifacts write to
-  `~/go/pkg/gojr_js/<import/path>.js` by default.
+  `~/go/pkg/gojr_js/<import/path>.a` by default.
 - Node package-cache parent override writes to a temp fake GOPATH/pkg root plus
   `gojr_js` in tests.
 - Node package artifacts use atomic write/rename and never leave a partial
-  `.js` file visible after a simulated failure.
+  `.a` file visible after a simulated failure.
 - `gojr build <pkg>` builds the requested package and stale dependencies into
   the artifact root.
 - `gojr build <pkg>` skips fresh artifacts and reports them as cache hits.
@@ -3139,13 +3139,13 @@ Tests:
 - CLI `build` invokes the JavaScript `buildPackage`/`buildPackages` API through
   embedded Node/V8.
 - CLI `build` writes generated package artifacts under
-  `<fake-gopath-pkg>/gojr_js/<import/path>.js` when a test package-cache parent
+  `<fake-gopath-pkg>/gojr_js/<import/path>.a` when a test package-cache parent
   override is supplied.
 - CLI `build` writes generated package artifacts under
-  `<artifact-root>/<import/path>.js` when an exact artifact root override is
+  `<artifact-root>/<import/path>.a` when an exact artifact root override is
   supplied.
 - CLI `build` writes generated package artifacts under
-  `~/go/pkg/gojr_js/<import/path>.js` by default.
+  `~/go/pkg/gojr_js/<import/path>.a` by default.
 - CLI `build` emits a build report with built packages, skipped packages,
   artifact paths, cache keys, dependency edges, and diagnostics.
 - CLI `build` leaves mutable package state out of generated artifacts.
@@ -3833,9 +3833,9 @@ uses a different public artifact layout for JavaScript output.
 Go-junior package artifacts use an old-school GOPATH-style import-path tree:
 
 ```text
-$GOPATH/pkg/gojr_js/encoding/binary.js
-$GOPATH/pkg/gojr_js/io.js
-$GOPATH/pkg/gojr_js/github.com/user/project/pkg.js
+$GOPATH/pkg/gojr_js/encoding/binary.a
+$GOPATH/pkg/gojr_js/io.a
+$GOPATH/pkg/gojr_js/github.com/user/project/pkg.a
 ```
 
 The conceptual target tuple for these artifacts is:
@@ -3849,11 +3849,11 @@ Browser persistence mirrors the same logical tree in OPFS, so a browser cache
 path corresponds directly to the local-disk path shape:
 
 ```text
-/opfs/go/pkg/gojr_js/encoding/binary.js
+/opfs/go/pkg/gojr_js/encoding/binary.a
 ```
 
 The import-path layout is the stable public index: resolving
-`import "encoding/binary"` maps directly to `encoding/binary.js`. This keeps the
+`import "encoding/binary"` maps directly to `encoding/binary.a`. This keeps the
 cache understandable, inspectable, easy to clear, and consistent across Node.js,
 CLI, and browser OPFS environments.
 
@@ -3900,6 +3900,115 @@ The standard library is compiled from `GOROOT/src` into the same
 `$GOPATH/pkg/gojr_js` cache as user packages. The first priority standard
 library package for this policy is `encoding/binary`, including its selected
 non-test source files and its translated upstream tests.
+
+## Aggressive Build Cache Performance Policy
+
+Interactive `gojr run`, `gojr build`, and `gojr test` must treat a warm package
+graph as a sub-second operation. The compiler should not parse, typecheck,
+emit, hash full archives, or read full source files when the filesystem can
+prove that the package artifact is already newer than its inputs.
+
+The first and hottest cache check is timestamp based:
+
+- If every selected source input for package `P` is older than
+  `$GOPATH/pkg/gojr_js/<import/path>.a`, aggressively assume `P`'s own source is
+  up to date.
+- For dependency correctness, a dependency artifact is also an input. `P` is
+  timestamp-fresh only if every dependency artifact that `P` records is older
+  than or the same age as `P`'s `.a` artifact.
+- "Input" includes the selected `.go` files, relevant source-selection metadata
+  such as `go.mod`, `go.sum`, and build tags when they affect package loading,
+  and dependency `.a` files. Test builds include selected `_test.go` files and
+  test-main metadata.
+- On timestamp-fresh hits, the native CLI path should skip reading source file
+  contents, skip parsing, skip typechecking, skip JavaScript emission, and skip
+  reading the `_gojr.js` archive member. It may read only a tiny manifest/header
+  needed to identify the package, dependency list, and export data.
+
+This timestamp rule is intentionally aggressive. It is the same practical
+assumption developers expect from fast local build tools: editing source moves
+mtime forward; a newer output means no work is needed. Content hashes are the
+fallback for correctness when timestamps are missing, equal at coarse
+resolution, suspicious, or when a cache entry is moved between machines.
+
+The second cache check is content addressed:
+
+- Use BLAKE3 for all source, dependency, manifest, and artifact content hashes.
+  The old FNV-style JavaScript hash is acceptable only for tests that do not
+  exercise durable package-cache correctness.
+- Native `gojr` gets a Go implementation using
+  `import "github.com/glycerine/blake3"` so filesystem hashing is as fast as
+  practical for human-interactive CLI work.
+- The JavaScript runtime gets its own BLAKE3-compatible implementation for
+  browser/OPFS and Node fallback paths. Browser correctness must not depend on
+  the Go wrapper, but browser performance may trail the native wrapper.
+- Both implementations must produce identical hex digests for the same bytes
+  and must share test vectors.
+
+The native and JavaScript implementations should share a small logical cache
+protocol rather than sharing all code:
+
+- `StatPackageInputs(importPath, buildContext) -> PackageInputSnapshot`
+- `ReadArtifactHeader(artifactPath) -> ArtifactHeader`
+- `FastFresh(snapshot, header, dependencyHeaders) -> true|false|unknown`
+- `HashInputs(snapshot) -> blake3 digest`
+- `BuildOrReusePackage(...) -> built|cached|stale diagnostics`
+
+Native CLI fast path:
+
+1. Resolve package directories and candidate files with filesystem metadata.
+2. Read the package's sidecar manifest or the first `__.PKGDEF` archive member
+   only. Do not read `_gojr.js` on a freshness check.
+3. If manifest/header layout version, compiler version, target tuple, build
+   tags, host capability policy, source file list, source mtimes, and dependency
+   artifact mtimes are fresh, return a cache hit immediately.
+4. If timestamps are inconclusive, BLAKE3-hash only the inputs whose size/mtime
+   changed or whose manifest entry is missing.
+5. Only when the fast and hash checks fail should the JavaScript compiler parse
+   and typecheck the package.
+
+JavaScript/browser fast path:
+
+1. Use OPFS metadata where available for mtime-like checks.
+2. Maintain a compact OPFS package manifest beside each `.a` artifact or inside
+   a small index file. IndexedDB may mirror this index for lookup speed, but
+   OPFS remains the durable artifact store.
+3. Use JavaScript BLAKE3 when OPFS metadata is not strong enough to prove a hit.
+4. Reuse the same artifact header parser after bytes are read from disk or OPFS.
+
+Artifact and manifest requirements:
+
+- `.a` files remain the user-facing artifact. They contain `__.PKGDEF` export
+  data and `_gojr.js` generated JavaScript.
+- A compact sidecar manifest is allowed and encouraged for speed, as long as
+  the `.a` header remains authoritative and the sidecar can be regenerated from
+  the archive.
+- The manifest records import path, package name, artifact layout version,
+  compiler/backend versions, target tuple, build tags, source file paths, source
+  sizes, source mtimes, source BLAKE3 hashes when known, dependency artifact
+  paths, dependency mtimes, dependency BLAKE3 hashes when known, export-data
+  hash, JavaScript payload hash, and full artifact hash.
+- Atomic writes update the `.a` first, then the sidecar/index. Interrupted
+  writes must never leave an executable partial artifact that can be mistaken
+  for fresh.
+- `gojr cache verify` should eventually walk the cache and confirm that sidecar
+  manifests match `.a` headers and BLAKE3 hashes.
+
+Performance acceptance tests:
+
+- A cold build of a large package graph writes all package artifacts and
+  manifests with BLAKE3 metadata.
+- A second `gojr build ./cmd/zygo`, `gojr run ./cmd/zygo`, or `gojr test -v`
+  over the same graph reports timestamp cache hits and performs no package
+  parsing/typechecking for fresh packages.
+- Touching one leaf source file rebuilds that package and only the stale
+  reverse dependency chain.
+- Touching a dependency artifact newer than its dependent marks the dependent
+  stale even if the dependent's own source files are older than its `.a`.
+- Moving a cache between filesystems with unreliable mtimes falls back to
+  BLAKE3 validation.
+- Native and JavaScript BLAKE3 implementations agree on shared source,
+  manifest, export-data, JavaScript-payload, and full-archive test vectors.
 
 ## Type Checker Transliteration Policy
 
