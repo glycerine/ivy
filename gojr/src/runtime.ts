@@ -37,6 +37,7 @@ import {
   UnaryExpression
 } from "./ast.js";
 import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan } from "./diagnostics.js";
+import { blake3RawBytes } from "./blake3.js";
 import {
   checkGoJuniorSourceFiles,
   GOJR_SYNTHETIC_CHECK_PREFIX,
@@ -71,6 +72,8 @@ import {
 import type { AsyncSelectCase, AsyncSelectResult } from "./asyncRuntime.js";
 import { cellDependency, rangeDependency } from "./spreadsheet.js";
 import type { SpreadsheetDependency } from "./spreadsheet.js";
+
+const runtimeHashEncoder = new TextEncoder();
 
 export type RuntimeValue =
   | null
@@ -2626,12 +2629,13 @@ function internalAbiSizeForType(typeText: string, context?: EvaluationContext): 
 }
 
 function internalAbiTypeHash(typeText: string): number {
-  let hash = 2166136261;
-  for (let index = 0; index < typeText.length; index += 1) {
-    hash ^= typeText.charCodeAt(index);
-    hash = Math.imul(hash, 16777619) >>> 0;
-  }
-  return hash;
+  const digest = blake3RawBytes(runtimeHashEncoder.encode(typeText), 4);
+  return (
+    digest[0]! |
+    (digest[1]! << 8) |
+    (digest[2]! << 16) |
+    (digest[3]! << 24)
+  ) >>> 0;
 }
 
 function bodylessZeroResultFunction(declaration: FunctionDecl, importPath?: string): GoJuniorFunction {
