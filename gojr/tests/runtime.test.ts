@@ -387,10 +387,13 @@ return runtime.GOOS, runtime.GOARCH, n > 0, pc, file, line, ok, calls, frame.Fun
 import "internal/reflectlite"
 
 t := reflectlite.TypeOf((*error)(nil)).Elem()
-return t.Kind() == reflectlite.Interface, t.Comparable()
+xs := []int{3, 1}
+swap := reflectlite.Swapper(xs)
+swap(0, 1)
+return t.Kind() == reflectlite.Interface, t.Comparable(), reflectlite.ValueOf(xs).Len(), xs[0], xs[1]
 `);
 
-    expect(script.values).toEqual([true, true]);
+    expect(script.values).toEqual([true, true, 2n, 1n, 3n]);
 
     const graph = await evaluateSourcePackageGraph([{
       importPath: "errors",
@@ -414,6 +417,101 @@ var errorType = reflectlite.TypeOf((*error)(nil)).Elem()
     expect(graph.diagnostics).toEqual([]);
     expect(graph.initializedImportPaths).toEqual(["errors"]);
     expect(Object.keys(graph.packages.errors ?? {})).toContain("New");
+  });
+
+  test("supports host-resolved syscall/js without running wasm package source", async () => {
+    const script = await expectRuns(`
+import "syscall/js"
+
+g := js.Global()
+g.Set("__gojr_syscall_js_test", 7)
+v := g.Get("__gojr_syscall_js_test")
+src := js.ValueOf([]any{65, 66, 67})
+dst := make([]byte, 2)
+n := js.CopyBytesToGo(dst, src)
+return v.Int(), v.Type() == js.TypeNumber, js.TypeNumber.String(), js.ValueOf("hi").String(), n, dst[0], dst[1]
+`);
+
+    expect(script.values).toEqual([7n, true, "number", "hi", 2n, 65n, 66n]);
+  });
+
+  test("initializes imported sync and atomic named zero values with host behavior", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "sync",
+        files: [{
+          filename: "/usr/local/go/src/sync/sync.go",
+          source: `package sync
+
+type Map struct{}
+func (m *Map) Load(key any) (any, bool) { return nil, false }
+func (m *Map) LoadOrStore(key, value any) (any, bool) { return value, false }
+func (m *Map) Store(key, value any) {}
+func (m *Map) Range(f func(key, value any) bool) {}
+
+type Once struct{}
+func (o *Once) Do(f func()) {}
+
+type Mutex struct{}
+func (m *Mutex) Lock() {}
+func (m *Mutex) Unlock() {}
+
+type Pool struct{ New func() any }
+func (p *Pool) Get() any { return nil }
+func (p *Pool) Put(x any) {}
+`
+        }]
+      },
+      {
+        importPath: "sync/atomic",
+        files: [{
+          filename: "/usr/local/go/src/sync/atomic/type.go",
+          source: `package atomic
+
+type Bool struct{}
+func (x *Bool) CompareAndSwap(old, new bool) bool { return false }
+func (x *Bool) Load() bool { return false }
+func (x *Bool) Store(val bool) {}
+func (x *Bool) Swap(new bool) bool { return false }
+`
+        }]
+      },
+      {
+        importPath: "app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "sync"
+import "sync/atomic"
+
+var cache sync.Map
+var once sync.Once
+var mu sync.Mutex
+var pool = sync.Pool{New: func() any { return 9 }}
+var flag atomic.Bool
+var Seen any
+var Flag bool
+
+func init() {
+  mu.Lock()
+  mu.Unlock()
+  flag.Store(true)
+  Flag = flag.Load()
+  once.Do(func() { cache.Store("x", 4) })
+  pool.Put(7)
+  _ = pool.Get()
+  _ = pool.Get()
+  Seen, _ = cache.Load("x")
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(formatReplValue(graph.packages.app?.Seen ?? null)).toBe("4");
+    expect(graph.packages.app?.Flag).toBe(true);
   });
 
   test("supports runtime cleanup handles as no-op host values", async () => {
@@ -499,10 +597,10 @@ m[math.NaN()] = 1
 m[math.NaN()] = 2
 before := len(m)
 clear(m)
-return before, len(m)
+return before, len(m), math.Floor(math.Exp(math.Log(3.5)))
 `);
 
-    expect(script.values).toEqual([2n, 0n]);
+    expect(script.values).toEqual([2n, 0n, 3]);
   });
 
   test("supports strconv.Itoa and math float bit helpers", async () => {

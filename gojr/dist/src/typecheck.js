@@ -245,10 +245,14 @@ export function standardTypePackage(path) {
         return cmpPackage();
     if (path === "fmt")
         return fmtPackage();
+    if (path === "internal/reflectlite")
+        return reflectlitePackage();
     if (path === "math")
         return mathPackage();
     if (path === "runtime")
         return runtimePackage();
+    if (path === "syscall/js")
+        return syscallJSPackage();
     if (path === "testing")
         return testingPackage();
     if (path === "unsafe")
@@ -310,7 +314,10 @@ function mathPackage() {
     const boolType = Typ[Bool];
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "NaN", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Inf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "sign", intType)), NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Exp", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "x", float64Type)), NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Floor", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "x", float64Type)), NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "IsNaN", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "f", float64Type)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Log", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "x", float64Type)), NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Float32bits", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "f", Typ[Float32])), NewTuple(NewVar(NoPos, pkg, "", uint32Type)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Float32frombits", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "b", uint32Type)), NewTuple(NewVar(NoPos, pkg, "", Typ[Float32])), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Float64bits", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "f", float64Type)), NewTuple(NewVar(NoPos, pkg, "", uint64Type)), false)));
@@ -330,6 +337,139 @@ function fmtPackage() {
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Printf", printfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Sprintf", sprintfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Println", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "args", argsType)), null, true)));
+    pkg.MarkComplete();
+    return pkg;
+}
+function reflectlitePackage() {
+    const pkg = NewPackage("internal/reflectlite", "reflectlite");
+    if (pkg.Scope().Lookup("TypeOf") !== null)
+        return pkg;
+    const boolType = Typ[Bool];
+    const intType = Typ[Int];
+    const anyType = emptyInterface;
+    const kindName = NewTypeName(NoPos, pkg, "Kind", null);
+    const kindType = NewNamed(kindName, intType, null);
+    kindName.setType(kindType);
+    pkg.Scope().Insert(kindName);
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "Invalid", kindType, 0n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "Interface", kindType, 20n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "Ptr", kindType, 22n));
+    const typeName = NewTypeName(NoPos, pkg, "Type", null);
+    const typeType = NewNamed(typeName, NewInterfaceType(null, null).Complete(), null);
+    typeName.setType(typeType);
+    pkg.Scope().Insert(typeName);
+    const typeMethods = [
+        NewFunc(NoPos, pkg, "AssignableTo", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "u", typeType)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false)),
+        NewFunc(NoPos, pkg, "Comparable", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", boolType)), false)),
+        NewFunc(NoPos, pkg, "Elem", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", typeType)), false)),
+        NewFunc(NoPos, pkg, "Implements", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "u", typeType)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false)),
+        NewFunc(NoPos, pkg, "Kind", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", kindType)), false))
+    ];
+    typeType.SetUnderlying(NewInterfaceType(typeMethods, null).Complete());
+    const valueName = NewTypeName(NoPos, pkg, "Value", null);
+    const valueType = NewNamed(valueName, NewStruct([], null), null);
+    valueName.setType(valueType);
+    pkg.Scope().Insert(valueName);
+    const valueRecv = NewVar(NoPos, pkg, "v", valueType);
+    valueType.AddMethod(NewFunc(NoPos, pkg, "Elem", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", valueType)), false)));
+    valueType.AddMethod(NewFunc(NoPos, pkg, "IsNil", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", boolType)), false)));
+    valueType.AddMethod(NewFunc(NoPos, pkg, "Kind", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", kindType)), false)));
+    valueType.AddMethod(NewFunc(NoPos, pkg, "Len", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
+    valueType.AddMethod(NewFunc(NoPos, pkg, "Set", NewSignatureType(valueRecv, null, null, NewTuple(NewVar(NoPos, pkg, "x", valueType)), null, false)));
+    valueType.AddMethod(NewFunc(NoPos, pkg, "Type", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", typeType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "TypeOf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "i", anyType)), NewTuple(NewVar(NoPos, pkg, "", typeType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Swapper", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "slice", anyType)), NewTuple(NewVar(NoPos, pkg, "", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "i", intType), NewVar(NoPos, pkg, "j", intType)), null, false))), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "ValueOf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "i", anyType)), NewTuple(NewVar(NoPos, pkg, "", valueType)), false)));
+    pkg.MarkComplete();
+    return pkg;
+}
+function syscallJSPackage() {
+    const pkg = NewPackage("syscall/js", "js");
+    if (pkg.Scope().Lookup("Value") !== null)
+        return pkg;
+    const anyType = emptyInterface;
+    const boolType = Typ[Bool];
+    const float64Type = Typ[Float64];
+    const intType = Typ[Int];
+    const stringType = Typ[GoString];
+    const byteSliceType = NewSlice(Typ[Uint8]);
+    const typeName = NewTypeName(NoPos, pkg, "Type", null);
+    const typeType = NewNamed(typeName, intType, null);
+    typeName.setType(typeType);
+    pkg.Scope().Insert(typeName);
+    typeType.AddMethod(NewFunc(NoPos, pkg, "String", NewSignatureType(NewVar(NoPos, pkg, "t", typeType), null, null, null, NewTuple(NewVar(NoPos, pkg, "", stringType)), false)));
+    [
+        "TypeUndefined",
+        "TypeNull",
+        "TypeBoolean",
+        "TypeNumber",
+        "TypeString",
+        "TypeSymbol",
+        "TypeObject",
+        "TypeFunction"
+    ].forEach((name, index) => {
+        pkg.Scope().Insert(NewConst(NoPos, pkg, name, typeType, BigInt(index)));
+    });
+    const valueName = NewTypeName(NoPos, pkg, "Value", null);
+    const valueType = NewNamed(valueName, NewStruct([], null), null);
+    valueName.setType(valueType);
+    pkg.Scope().Insert(valueName);
+    const valueRecv = NewVar(NoPos, pkg, "v", valueType);
+    const valueMethods = [
+        ["Bool", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", boolType)), false)],
+        ["Call", NewSignatureType(valueRecv, null, null, NewTuple(NewVar(NoPos, pkg, "m", stringType), NewVar(NoPos, pkg, "args", NewSlice(anyType))), NewTuple(NewVar(NoPos, pkg, "", valueType)), true)],
+        ["Delete", NewSignatureType(valueRecv, null, null, NewTuple(NewVar(NoPos, pkg, "p", stringType)), null, false)],
+        ["Equal", NewSignatureType(valueRecv, null, null, NewTuple(NewVar(NoPos, pkg, "w", valueType)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false)],
+        ["Float", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)],
+        ["Get", NewSignatureType(valueRecv, null, null, NewTuple(NewVar(NoPos, pkg, "p", stringType)), NewTuple(NewVar(NoPos, pkg, "", valueType)), false)],
+        ["Index", NewSignatureType(valueRecv, null, null, NewTuple(NewVar(NoPos, pkg, "i", intType)), NewTuple(NewVar(NoPos, pkg, "", valueType)), false)],
+        ["InstanceOf", NewSignatureType(valueRecv, null, null, NewTuple(NewVar(NoPos, pkg, "t", valueType)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false)],
+        ["Int", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", intType)), false)],
+        ["Invoke", NewSignatureType(valueRecv, null, null, NewTuple(NewVar(NoPos, pkg, "args", NewSlice(anyType))), NewTuple(NewVar(NoPos, pkg, "", valueType)), true)],
+        ["IsNaN", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", boolType)), false)],
+        ["IsNull", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", boolType)), false)],
+        ["IsUndefined", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", boolType)), false)],
+        ["Length", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", intType)), false)],
+        ["New", NewSignatureType(valueRecv, null, null, NewTuple(NewVar(NoPos, pkg, "args", NewSlice(anyType))), NewTuple(NewVar(NoPos, pkg, "", valueType)), true)],
+        ["Set", NewSignatureType(valueRecv, null, null, NewTuple(NewVar(NoPos, pkg, "p", stringType), NewVar(NoPos, pkg, "x", anyType)), null, false)],
+        ["SetIndex", NewSignatureType(valueRecv, null, null, NewTuple(NewVar(NoPos, pkg, "i", intType), NewVar(NoPos, pkg, "x", anyType)), null, false)],
+        ["String", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", stringType)), false)],
+        ["Truthy", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", boolType)), false)],
+        ["Type", NewSignatureType(valueRecv, null, null, null, NewTuple(NewVar(NoPos, pkg, "", typeType)), false)]
+    ];
+    for (const [name, signature] of valueMethods) {
+        valueType.AddMethod(NewFunc(NoPos, pkg, name, signature));
+    }
+    const funcName = NewTypeName(NoPos, pkg, "Func", null);
+    const funcType = NewNamed(funcName, NewStruct([
+        NewField(NoPos, pkg, "Value", valueType, true)
+    ], null), null);
+    funcName.setType(funcType);
+    pkg.Scope().Insert(funcName);
+    funcType.AddMethod(NewFunc(NoPos, pkg, "Release", NewSignatureType(NewVar(NoPos, pkg, "c", funcType), null, null, null, null, false)));
+    const errorName = NewTypeName(NoPos, pkg, "Error", null);
+    const errorType = NewNamed(errorName, NewStruct([
+        NewField(NoPos, pkg, "Value", valueType, true)
+    ], null), null);
+    errorName.setType(errorType);
+    pkg.Scope().Insert(errorName);
+    errorType.AddMethod(NewFunc(NoPos, pkg, "Error", NewSignatureType(NewVar(NoPos, pkg, "e", errorType), null, null, null, NewTuple(NewVar(NoPos, pkg, "", stringType)), false)));
+    const valueErrorName = NewTypeName(NoPos, pkg, "ValueError", null);
+    const valueErrorType = NewNamed(valueErrorName, NewStruct([
+        NewField(NoPos, pkg, "Method", stringType, false),
+        NewField(NoPos, pkg, "Type", typeType, false)
+    ], null), null);
+    valueErrorName.setType(valueErrorType);
+    pkg.Scope().Insert(valueErrorName);
+    valueErrorType.AddMethod(NewFunc(NoPos, pkg, "Error", NewSignatureType(NewVar(NoPos, pkg, "e", NewPointer(valueErrorType)), null, null, null, NewTuple(NewVar(NoPos, pkg, "", stringType)), false)));
+    const funcOfParam = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "this", valueType), NewVar(NoPos, pkg, "args", NewSlice(valueType))), NewTuple(NewVar(NoPos, pkg, "", anyType)), false);
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "FuncOf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "fn", funcOfParam)), NewTuple(NewVar(NoPos, pkg, "", funcType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Global", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", valueType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Null", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", valueType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Undefined", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", valueType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "ValueOf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "x", anyType)), NewTuple(NewVar(NoPos, pkg, "", valueType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "CopyBytesToGo", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "dst", byteSliceType), NewVar(NoPos, pkg, "src", valueType)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "CopyBytesToJS", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "dst", valueType), NewVar(NoPos, pkg, "src", byteSliceType)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
     pkg.MarkComplete();
     return pkg;
 }

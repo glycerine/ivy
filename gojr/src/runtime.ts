@@ -2111,7 +2111,7 @@ function installPackageFunctionDeclaration(context: EvaluationContext, declarati
   }
   context.declareOrAssignRoot(
     declaration.name,
-    goJuniorFunctionValue(declaration.name, declaration.signature, declaration.body, context.captureScope(), declaration),
+    goJuniorFunctionValue(declaration.name, declaration.signature, declaration.body, context.captureScope(), declaration, undefined, undefined, context),
     true
   );
 }
@@ -2144,6 +2144,7 @@ function availablePackages(context: EvaluationContext): Record<string, RuntimeOb
     runtime: runtimePackage(),
     "runtime/pprof": runtimePprofPackage(),
     strconv: strconvPackage(),
+    "syscall/js": syscallJSPackage(),
     testing: testingPackage(),
     unsafe: unsafePackage(),
     ...context.packages()
@@ -2188,7 +2189,10 @@ function mathPackage(): RuntimeObject {
   return {
     NaN: hostCallable("math.NaN", () => Number.NaN),
     Inf: hostCallable("math.Inf", (args) => toFloat(args[0] ?? 1) < 0 ? -Infinity : Infinity),
+    Exp: hostCallable("math.Exp", (args) => Math.exp(toFloat(args[0] ?? 0))),
+    Floor: hostCallable("math.Floor", (args) => Math.floor(toFloat(args[0] ?? 0))),
     IsNaN: hostCallable("math.IsNaN", (args) => Number.isNaN(toFloat(args[0] ?? 0))),
+    Log: hostCallable("math.Log", (args) => Math.log(toFloat(args[0] ?? 0))),
     Float32bits: hostCallable("math.Float32bits", (args) => float32Bits(toFloat(args[0] ?? 0))),
     Float32frombits: hostCallable("math.Float32frombits", (args) => float32FromBits(toBigInt(args[0] ?? 0n))),
     Float64bits: hostCallable("math.Float64bits", (args) => float64Bits(toFloat(args[0] ?? 0))),
@@ -2374,6 +2378,9 @@ function reflectlitePackage(): RuntimeObject {
     TypeOf: hostCallable("internal/reflectlite.TypeOf", (args, context) =>
       reflectliteTypeOf(args[0] ?? null, context)
     ),
+    Swapper: hostCallable("internal/reflectlite.Swapper", (args) =>
+      reflectliteSwapper(args[0] ?? null)
+    ),
     ValueOf: hostCallable("internal/reflectlite.ValueOf", (args, context) =>
       reflectliteValueOf(args[0] ?? null, context)
     )
@@ -2424,6 +2431,7 @@ function reflectliteValue(value: RuntimeValue, context: EvaluationContext, set?:
   object[REFLECTLITE_VALUE_INFO] = info;
   object.Type = hostCallable("internal/reflectlite.Value.Type", () => info.type);
   object.Kind = hostCallable("internal/reflectlite.Value.Kind", () => reflectliteTypeInfo(info.type)?.kind ?? reflectliteKind.Invalid);
+  object.Len = hostCallable("internal/reflectlite.Value.Len", () => BigInt(valueLength(reflectliteValuePayload(info.value))));
   object.IsNil = hostCallable("internal/reflectlite.Value.IsNil", () => reflectliteIsNil(info.value));
   object.Elem = hostCallable("internal/reflectlite.Value.Elem", () => {
     const actual = info.value instanceof RuntimeInterfaceValue && info.value.value !== null ? info.value.value : info.value;
@@ -2441,6 +2449,23 @@ function reflectliteValue(value: RuntimeValue, context: EvaluationContext, set?:
     return null;
   });
   return object;
+}
+
+function reflectliteSwapper(value: RuntimeValue): GoJuniorFunction {
+  const actual = reflectliteValuePayload(value);
+  if (!Array.isArray(actual)) throw new GoJuniorRuntimeError("reflectlite.Swapper expects a slice or array");
+  return {
+    kind: "GoJuniorFunction",
+    name: "internal/reflectlite.Swapper.func",
+    async call(args) {
+      const i = toNumber(args[0] ?? 0n);
+      const j = toNumber(args[1] ?? 0n);
+      const tmp = actual[i] ?? null;
+      actual[i] = actual[j] ?? null;
+      actual[j] = tmp;
+      return null;
+    }
+  };
 }
 
 function reflectliteTypeTextOfValue(value: RuntimeValue): string {
@@ -2502,6 +2527,277 @@ function osPackage(): RuntimeObject {
       return context.getenv(toStringValue(args[0] ?? ""));
     })
   };
+}
+
+const SYSCALL_JS_VALUE_INFO = Symbol("gojr syscall/js value");
+const syscallJSTypeNames = [
+  "undefined",
+  "null",
+  "boolean",
+  "number",
+  "string",
+  "symbol",
+  "object",
+  "function"
+] as const;
+
+interface SyscallJSValueObject extends RuntimeObject {
+  [SYSCALL_JS_VALUE_INFO]: unknown;
+}
+
+function syscallJSPackage(): RuntimeObject {
+  return {
+    TypeUndefined: syscallJSTypeValue(0n),
+    TypeNull: syscallJSTypeValue(1n),
+    TypeBoolean: syscallJSTypeValue(2n),
+    TypeNumber: syscallJSTypeValue(3n),
+    TypeString: syscallJSTypeValue(4n),
+    TypeSymbol: syscallJSTypeValue(5n),
+    TypeObject: syscallJSTypeValue(6n),
+    TypeFunction: syscallJSTypeValue(7n),
+    CopyBytesToGo: hostCallable("syscall/js.CopyBytesToGo", (args) => syscallJSCopyBytesToGo(args[0] ?? null, args[1] ?? null)),
+    CopyBytesToJS: hostCallable("syscall/js.CopyBytesToJS", (args) => syscallJSCopyBytesToJS(args[0] ?? null, args[1] ?? null)),
+    FuncOf: hostCallable("syscall/js.FuncOf", (args) => syscallJSFuncOf(args[0] ?? null)),
+    Global: hostCallable("syscall/js.Global", () => syscallJSValue(globalThis)),
+    Null: hostCallable("syscall/js.Null", () => syscallJSValue(null)),
+    Undefined: hostCallable("syscall/js.Undefined", () => syscallJSValue(undefined)),
+    ValueOf: hostCallable("syscall/js.ValueOf", (args) => syscallJSValue(syscallJSRawFromRuntime(args[0] ?? null)))
+  };
+}
+
+function syscallJSValue(raw: unknown): RuntimeNamedValue {
+  const object = {} as SyscallJSValueObject;
+  object[SYSCALL_JS_VALUE_INFO] = raw;
+  object.Bool = hostCallable("syscall/js.Value.Bool", () => {
+    if (typeof raw !== "boolean") throw new GoJuniorRuntimeError(`syscall/js: call of Value.Bool on ${syscallJSTypeName(raw)}`);
+    return raw;
+  });
+  object.Call = hostCallable("syscall/js.Value.Call", async (args, context) => {
+    const property = toStringValue(args[0] ?? "");
+    const target = syscallJSObject(raw, "Value.Call");
+    const fn = target[property as keyof typeof target];
+    if (typeof fn !== "function") throw new GoJuniorRuntimeError(`syscall/js: Value.Call: property ${property} is not a function`);
+    return syscallJSValue(await Reflect.apply(fn, target, syscallJSRawArgs(args.slice(1), context)));
+  });
+  object.Delete = hostCallable("syscall/js.Value.Delete", (args) => {
+    const target = syscallJSObject(raw, "Value.Delete");
+    delete target[toStringValue(args[0] ?? "")];
+    return null;
+  });
+  object.Equal = hostCallable("syscall/js.Value.Equal", (args) =>
+    Object.is(raw, syscallJSRawValue(args[0] ?? null))
+  );
+  object.Float = hostCallable("syscall/js.Value.Float", () => {
+    if (typeof raw !== "number") throw new GoJuniorRuntimeError(`syscall/js: call of Value.Float on ${syscallJSTypeName(raw)}`);
+    return raw;
+  });
+  object.Get = hostCallable("syscall/js.Value.Get", (args) => {
+    const target = syscallJSObject(raw, "Value.Get");
+    return syscallJSValue(target[toStringValue(args[0] ?? "")]);
+  });
+  object.Index = hostCallable("syscall/js.Value.Index", (args) => {
+    const target = syscallJSObject(raw, "Value.Index");
+    return syscallJSValue(target[toNumber(args[0] ?? 0n)]);
+  });
+  object.InstanceOf = hostCallable("syscall/js.Value.InstanceOf", (args) => {
+    const ctor = syscallJSRawValue(args[0] ?? null);
+    return typeof ctor === "function" && raw instanceof ctor;
+  });
+  object.Int = hostCallable("syscall/js.Value.Int", () => {
+    if (typeof raw !== "number") throw new GoJuniorRuntimeError(`syscall/js: call of Value.Int on ${syscallJSTypeName(raw)}`);
+    return BigInt(Math.trunc(raw));
+  });
+  object.Invoke = hostCallable("syscall/js.Value.Invoke", async (args, context) => {
+    if (typeof raw !== "function") throw new GoJuniorRuntimeError(`syscall/js: call of Value.Invoke on ${syscallJSTypeName(raw)}`);
+    return syscallJSValue(await raw(...syscallJSRawArgs(args, context)));
+  });
+  object.IsNaN = hostCallable("syscall/js.Value.IsNaN", () => typeof raw === "number" && Number.isNaN(raw));
+  object.IsNull = hostCallable("syscall/js.Value.IsNull", () => raw === null);
+  object.IsUndefined = hostCallable("syscall/js.Value.IsUndefined", () => raw === undefined);
+  object.Length = hostCallable("syscall/js.Value.Length", () => {
+    const target = syscallJSObject(raw, "Value.Length");
+    return BigInt(Number((target as { length?: unknown }).length ?? 0));
+  });
+  object.New = hostCallable("syscall/js.Value.New", (args, context) => {
+    if (typeof raw !== "function") throw new GoJuniorRuntimeError(`syscall/js: call of Value.New on ${syscallJSTypeName(raw)}`);
+    return syscallJSValue(Reflect.construct(raw, syscallJSRawArgs(args, context)));
+  });
+  object.Set = hostCallable("syscall/js.Value.Set", (args, context) => {
+    const target = syscallJSObject(raw, "Value.Set");
+    target[toStringValue(args[0] ?? "")] = syscallJSRawFromRuntime(args[1] ?? null, context);
+    return null;
+  });
+  object.SetIndex = hostCallable("syscall/js.Value.SetIndex", (args, context) => {
+    const target = syscallJSObject(raw, "Value.SetIndex");
+    target[toNumber(args[0] ?? 0n)] = syscallJSRawFromRuntime(args[1] ?? null, context);
+    return null;
+  });
+  object.String = hostCallable("syscall/js.Value.String", () => syscallJSString(raw));
+  object.Truthy = hostCallable("syscall/js.Value.Truthy", () => Boolean(raw));
+  object.Type = hostCallable("syscall/js.Value.Type", () => syscallJSTypeValue(syscallJSType(raw)));
+  return new RuntimeNamedValue("js.Value", object);
+}
+
+function syscallJSFuncOf(fn: RuntimeValue): RuntimeNamedValue {
+  const raw = (...args: unknown[]) => {
+    throw new GoJuniorRuntimeError("syscall/js.FuncOf callbacks must be invoked from Go-junior runtime context");
+  };
+  const value = syscallJSValue(raw);
+  const object: RuntimeObject = {
+    Value: value,
+    Release: hostCallable("syscall/js.Func.Release", () => null)
+  };
+  const valueObject = unwrapNamed(value);
+  if (isRuntimeObject(valueObject)) {
+    for (const [name, method] of Object.entries(valueObject)) object[name] = method;
+  }
+  object.Invoke = hostCallable("syscall/js.Func.Invoke", async (args, context) => {
+    const jsArgs = args.map((arg) => syscallJSValue(syscallJSRawFromRuntime(arg, context)));
+    return syscallJSValue(syscallJSRawFromRuntime(await callRuntime(fn, [syscallJSValue(undefined), jsArgs], context), context));
+  });
+  return new RuntimeNamedValue("js.Func", object);
+}
+
+function syscallJSTypeSelector(value: RuntimeValue, field: string): RuntimeValue | undefined {
+  if (!(value instanceof RuntimeNamedValue) || value.typeName !== "js.Type") return undefined;
+  if (field === "String") {
+    return hostCallable("syscall/js.Type.String", () => syscallJSTypeNames[Number(toBigInt(value.value))] ?? "unknown");
+  }
+  return undefined;
+}
+
+function syscallJSTypeValue(kind: bigint): RuntimeNamedValue {
+  return new RuntimeNamedValue("js.Type", kind);
+}
+
+function syscallJSType(raw: unknown): bigint {
+  if (raw === undefined) return 0n;
+  if (raw === null) return 1n;
+  switch (typeof raw) {
+    case "boolean":
+      return 2n;
+    case "number":
+    case "bigint":
+      return 3n;
+    case "string":
+      return 4n;
+    case "symbol":
+      return 5n;
+    case "function":
+      return 7n;
+    default:
+      return 6n;
+  }
+}
+
+function syscallJSTypeName(raw: unknown): string {
+  return syscallJSTypeNames[Number(syscallJSType(raw))] ?? "unknown";
+}
+
+function syscallJSString(raw: unknown): string {
+  switch (syscallJSType(raw)) {
+    case 0n:
+      return "<undefined>";
+    case 1n:
+      return "<null>";
+    case 2n:
+      return `<boolean: ${String(raw)}>`;
+    case 3n:
+      return `<number: ${String(raw)}>`;
+    case 4n:
+      return String(raw);
+    case 5n:
+      return "<symbol>";
+    case 6n:
+      return "<object>";
+    case 7n:
+      return "<function>";
+    default:
+      return "<unknown>";
+  }
+}
+
+function syscallJSObject(raw: unknown, method: string): Record<PropertyKey, unknown> {
+  if ((typeof raw !== "object" && typeof raw !== "function") || raw === null) {
+    throw new GoJuniorRuntimeError(`syscall/js: call of ${method} on ${syscallJSTypeName(raw)}`);
+  }
+  return raw as Record<PropertyKey, unknown>;
+}
+
+function syscallJSRawArgs(args: RuntimeValue[], context: EvaluationContext): unknown[] {
+  return args.map((arg) => syscallJSRawFromRuntime(arg, context));
+}
+
+function syscallJSRawValue(value: RuntimeValue): unknown {
+  value = unwrapNamed(value);
+  if (isRuntimeObject(value)) {
+    const object = value as Partial<SyscallJSValueObject>;
+    if (SYSCALL_JS_VALUE_INFO in object) return object[SYSCALL_JS_VALUE_INFO];
+    const field = value.Value;
+    if (field !== undefined) return syscallJSRawValue(field);
+  }
+  return undefined;
+}
+
+function syscallJSRawFromRuntime(value: RuntimeValue, context?: EvaluationContext): unknown {
+  value = unwrapNamed(value);
+  if (value instanceof RuntimeInterfaceValue) return value.value === null ? null : syscallJSRawFromRuntime(value.value, context);
+  if (value instanceof RuntimeTypedNilValue || value === null) return null;
+  if (isRuntimeObject(value)) {
+    const object = value as Partial<SyscallJSValueObject>;
+    if (SYSCALL_JS_VALUE_INFO in object) return object[SYSCALL_JS_VALUE_INFO];
+  }
+  if (isRuntimeString(value)) return goStringText(value);
+  if (typeof value === "bigint") return Number(value);
+  if (typeof value === "number" || typeof value === "boolean") return value;
+  if (Array.isArray(value)) return value.map((item) => syscallJSRawFromRuntime(item, context));
+  if (value instanceof RuntimeMap) {
+    const object: Record<string, unknown> = {};
+    for (const [key, item] of value.orderedEntries()) {
+      object[toStringValue(key)] = syscallJSRawFromRuntime(item, context);
+    }
+    return object;
+  }
+  if (value instanceof RuntimeStruct) {
+    const object: Record<string, unknown> = {};
+    for (const [name, item] of value.orderedFields()) object[name] = syscallJSRawFromRuntime(item, context);
+    return object;
+  }
+  return value;
+}
+
+function syscallJSCopyBytesToGo(dst: RuntimeValue, src: RuntimeValue): bigint {
+  const target = unwrapNamed(dst);
+  if (!Array.isArray(target)) throw new GoJuniorRuntimeError("syscall/js: CopyBytesToGo: expected dst to be a byte slice");
+  const source = syscallJSRawValue(src);
+  const bytes = syscallJSBytes(source);
+  const count = Math.min(target.length, bytes.length);
+  for (let index = 0; index < count; index += 1) target[index] = BigInt(bytes[index] ?? 0);
+  return BigInt(count);
+}
+
+function syscallJSCopyBytesToJS(dst: RuntimeValue, src: RuntimeValue): bigint {
+  const target = syscallJSRawValue(dst);
+  const bytes = unwrapNamed(src);
+  if (!Array.isArray(bytes)) throw new GoJuniorRuntimeError("syscall/js: CopyBytesToJS: expected src to be a byte slice");
+  if (!syscallJSWritableBytes(target)) {
+    throw new GoJuniorRuntimeError("syscall/js: CopyBytesToJS: expected dst to be a Uint8Array or Uint8ClampedArray");
+  }
+  const count = Math.min(target.length, bytes.length);
+  for (let index = 0; index < count; index += 1) target[index] = Number(toBigInt(bytes[index] ?? 0n)) & 0xff;
+  return BigInt(count);
+}
+
+function syscallJSBytes(value: unknown): ArrayLike<number> {
+  if (value instanceof Uint8Array || value instanceof Uint8ClampedArray) return value;
+  if (Array.isArray(value) && value.every((item) => typeof item === "number")) return value;
+  throw new GoJuniorRuntimeError("syscall/js: CopyBytesToGo: expected src to be a Uint8Array or Uint8ClampedArray");
+}
+
+function syscallJSWritableBytes(value: unknown): value is Uint8Array | Uint8ClampedArray | number[] {
+  return value instanceof Uint8Array ||
+    value instanceof Uint8ClampedArray ||
+    (Array.isArray(value) && value.every((item) => typeof item === "number"));
 }
 
 function hostCallable(
@@ -2660,7 +2956,8 @@ function goJuniorFunctionValue(
   closureScope?: Scope,
   declaration?: FunctionDecl,
   boundReceiver?: RuntimeValue,
-  source?: string
+  source?: string,
+  closureContext?: EvaluationContext
 ): GoJuniorFunction {
   const formattedSource = source ?? declaration?.source;
   return {
@@ -2670,7 +2967,7 @@ function goJuniorFunctionValue(
     ...(declaration ? { declaration } : {}),
     ...(formattedSource ? { source: formattedSource } : {}),
     async call(args, parentContext) {
-      const context = parentContext;
+      const context = closureContext ?? parentContext;
       const invoke = () => context.functionCallAsync(() => context.childScopeAsync(async () => {
         if (declaration?.receiver?.name) {
           context.declare(
@@ -3620,9 +3917,11 @@ async function evaluateStructLiteral(expression: StructLiteralExpression, contex
       return new RuntimeNamedValue(expression.typeName, values);
     }
     const mapType = alias ? parseMapTypeText(alias) : undefined;
-    if (mapType) {
+  if (mapType) {
       return new RuntimeNamedValue(expression.typeName, await evaluateNamedMapLiteralFields(expression, mapType, context));
     }
+    const intrinsic = await evaluateIntrinsicNamedStructLiteral(expression, context);
+    if (intrinsic) return intrinsic;
     throw new GoJuniorRuntimeError(`${expression.typeName} is not a declared struct type`);
   }
 
@@ -3643,6 +3942,18 @@ async function evaluateStructLiteral(expression: StructLiteralExpression, contex
     struct.set(declared.name, prepareAssignableToType(value, declared.type.text, `field ${field.name ?? declared.name}`, context));
   }
   return struct;
+}
+
+async function evaluateIntrinsicNamedStructLiteral(expression: StructLiteralExpression, context: EvaluationContext): Promise<RuntimeValue | undefined> {
+  const type = normalizeTypeText(expression.typeName);
+  if (type !== "sync.Pool") return undefined;
+  let newFn: RuntimeValue | undefined;
+  for (const field of expression.fields) {
+    if (field.name === "New") {
+      newFn = await evaluateExpression(field.value, context);
+    }
+  }
+  return new RuntimeNamedValue(type, syncPoolValue(newFn));
 }
 
 async function evaluateArrayLiteralFields(
@@ -4015,6 +4326,8 @@ async function getSelector(expression: SelectorExpression, context: EvaluationCo
     context.recordSheetCellRead(object.name, expression.field);
     return object.get(expression.field);
   }
+  const syscallJSTypeMethod = syscallJSTypeSelector(object, expression.field);
+  if (syscallJSTypeMethod) return syscallJSTypeMethod;
   const struct = structFromValue(object);
   if (struct) {
     const fieldValue = struct.get(expression.field);
@@ -4044,7 +4357,7 @@ async function getSelector(expression: SelectorExpression, context: EvaluationCo
       return boundMethodValue(method, receiver);
     }
   }
-  const runtimeObject = dereferenceIfPointer(object);
+  const runtimeObject = unwrapNamed(dereferenceIfPointer(object));
   if (isRuntimeObject(runtimeObject)) {
     const value = runtimeObject[expression.field];
     if (value !== undefined) return value;
@@ -4496,6 +4809,8 @@ function defaultValueForTypeText(typeText: string, context?: EvaluationContext):
     return values;
   }
   const type = normalizeTypeText(typeText);
+  const intrinsic = defaultIntrinsicNamedValue(type, context);
+  if (intrinsic) return intrinsic;
   const interfaceType = interfaceTarget(type, context);
   if (interfaceType) return new RuntimeInterfaceValue(type, null);
   if (type.startsWith("*")) return new RuntimeTypedNilValue(type);
@@ -4521,6 +4836,158 @@ function defaultValueForTypeText(typeText: string, context?: EvaluationContext):
     return new RuntimeNamedValue(type, base);
   }
   return zeroValueForMapValue(typeText);
+}
+
+function defaultIntrinsicNamedValue(type: string, context?: EvaluationContext): RuntimeValue | undefined {
+  if (type === "js.Value" || type === "syscall/js.Value") return syscallJSValue(undefined);
+  if (type === "js.Func" || type === "syscall/js.Func") return syscallJSFuncOf(null);
+  if (type === "js.Type" || type === "syscall/js.Type") return syscallJSTypeValue(0n);
+  if (type === "sync.Map") return new RuntimeNamedValue(type, syncMapValue());
+  if (type === "sync.Once") return new RuntimeNamedValue(type, syncOnceValue());
+  if (type === "sync.Pool") return new RuntimeNamedValue(type, syncPoolValue());
+  if (type === "sync.Mutex" || type === "sync.RWMutex") return new RuntimeNamedValue(type, syncMutexValue(type));
+  if (type === "atomic.Bool" || type === "sync/atomic.Bool") return new RuntimeNamedValue(type, atomicBoolValue());
+  if (type === "atomic.Uint64" || type === "sync/atomic.Uint64") return new RuntimeNamedValue(type, atomicUint64Value());
+  const atomicPointer = /^(?:atomic|sync\/atomic)\.Pointer(?:\[[\s\S]*\])?$/.exec(type);
+  if (atomicPointer) return new RuntimeNamedValue(type, atomicPointerValue());
+  return undefined;
+}
+
+function syncMapValue(): RuntimeObject {
+  const entries = new Map<string, RuntimeMapEntry>();
+  return {
+    Load: hostCallable("sync.Map.Load", (args) => {
+      const key = args[0] ?? null;
+      const entry = entries.get(runtimeMapKeyId(key));
+      return entry ? [entry.value, true] : [null, false];
+    }),
+    LoadOrStore: hostCallable("sync.Map.LoadOrStore", (args) => {
+      const key = args[0] ?? null;
+      const value = args[1] ?? null;
+      const id = runtimeMapKeyId(key);
+      const existing = entries.get(id);
+      if (existing) return [existing.value, true];
+      entries.set(id, { key, value });
+      return [value, false];
+    }),
+    Store: hostCallable("sync.Map.Store", (args) => {
+      const key = args[0] ?? null;
+      entries.set(runtimeMapKeyId(key), { key, value: args[1] ?? null });
+      return null;
+    }),
+    Range: hostCallable("sync.Map.Range", async (args, context) => {
+      const fn = args[0] ?? null;
+      for (const entry of entries.values()) {
+        if (!toBool(await callRuntime(fn, [entry.key, entry.value], context))) break;
+      }
+      return null;
+    }),
+    Delete: hostCallable("sync.Map.Delete", (args) => {
+      entries.delete(runtimeMapKeyId(args[0] ?? null));
+      return null;
+    })
+  };
+}
+
+function syncOnceValue(): RuntimeObject {
+  let done = false;
+  return {
+    Do: hostCallable("sync.Once.Do", async (args, context) => {
+      if (!done) {
+        done = true;
+        await callRuntime(args[0] ?? null, [], context);
+      }
+      return null;
+    })
+  };
+}
+
+function syncPoolValue(newFn?: RuntimeValue): RuntimeObject {
+  const values: RuntimeValue[] = [];
+  return {
+    Get: hostCallable("sync.Pool.Get", async (_args, context) => {
+      const value = values.pop();
+      if (value !== undefined) return value;
+      if (newFn !== undefined) return callRuntime(newFn, [], context);
+      return null;
+    }),
+    Put: hostCallable("sync.Pool.Put", (args) => {
+      const value = args[0] ?? null;
+      if (value !== null) values.push(value);
+      return null;
+    })
+  };
+}
+
+function syncMutexValue(name: string): RuntimeObject {
+  return {
+    Lock: hostCallable(`${name}.Lock`, () => null),
+    Unlock: hostCallable(`${name}.Unlock`, () => null),
+    RLock: hostCallable(`${name}.RLock`, () => null),
+    RUnlock: hostCallable(`${name}.RUnlock`, () => null)
+  };
+}
+
+function atomicPointerValue(): RuntimeObject {
+  let value: RuntimeValue = null;
+  return {
+    Load: hostCallable("sync/atomic.Pointer.Load", () => value),
+    Store: hostCallable("sync/atomic.Pointer.Store", (args) => {
+      value = args[0] ?? null;
+      return null;
+    }),
+    Swap: hostCallable("sync/atomic.Pointer.Swap", (args) => {
+      const previous = value;
+      value = args[0] ?? null;
+      return previous;
+    }),
+    CompareAndSwap: hostCallable("sync/atomic.Pointer.CompareAndSwap", (args) => {
+      if (valueEqual(value, args[0] ?? null)) {
+        value = args[1] ?? null;
+        return true;
+      }
+      return false;
+    })
+  };
+}
+
+function atomicBoolValue(): RuntimeObject {
+  let value = false;
+  return {
+    CompareAndSwap: hostCallable("sync/atomic.Bool.CompareAndSwap", (args) => {
+      const oldValue = toBool(args[0] ?? false);
+      if (value === oldValue) {
+        value = toBool(args[1] ?? false);
+        return true;
+      }
+      return false;
+    }),
+    Load: hostCallable("sync/atomic.Bool.Load", () => value),
+    Store: hostCallable("sync/atomic.Bool.Store", (args) => {
+      value = toBool(args[0] ?? false);
+      return null;
+    }),
+    Swap: hostCallable("sync/atomic.Bool.Swap", (args) => {
+      const previous = value;
+      value = toBool(args[0] ?? false);
+      return previous;
+    })
+  };
+}
+
+function atomicUint64Value(): RuntimeObject {
+  let value = 0n;
+  return {
+    Add: hostCallable("sync/atomic.Uint64.Add", (args) => {
+      value = BigInt.asUintN(64, value + toBigInt(args[0] ?? 0n));
+      return value;
+    }),
+    Load: hostCallable("sync/atomic.Uint64.Load", () => value),
+    Store: hostCallable("sync/atomic.Uint64.Store", (args) => {
+      value = BigInt.asUintN(64, toBigInt(args[0] ?? 0n));
+      return null;
+    })
+  };
 }
 
 function zeroValueForMapValue(typeText: string): RuntimeValue {

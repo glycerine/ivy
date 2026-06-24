@@ -1,5 +1,8 @@
 export function isIntrinsicPackageImport(importPath) {
-    return importPath === "runtime" || importPath === "unsafe";
+    return importPath === "runtime" ||
+        importPath === "syscall/js" ||
+        importPath === "unsafe" ||
+        importPath === "internal/reflectlite";
 }
 export function isHostResolvedSourceImport(importPath) {
     return isIntrinsicPackageImport(importPath) ||
