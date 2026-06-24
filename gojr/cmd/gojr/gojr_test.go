@@ -1,11 +1,67 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
 )
+
+func TestGojrMainHelperProcess(t *testing.T) {
+	if os.Getenv("GOJR_MAIN_HELPER") != "1" {
+		return
+	}
+	var args []string
+	if err := json.Unmarshal([]byte(os.Getenv("GOJR_MAIN_ARGS")), &args); err != nil {
+		panic(err)
+	}
+	os.Args = append([]string{os.Args[0]}, args...)
+	main()
+	os.Exit(0)
+}
+
+func TestCLIJSONOutputAllowsStartupVersionLine(t *testing.T) {
+	args, err := json.Marshal([]string{"eval", "--json", "1+1"})
+	if err != nil {
+		t.Fatalf("Marshal helper args error = %v", err)
+	}
+	cmd := exec.Command(os.Args[0], "-test.run=^TestGojrMainHelperProcess$")
+	cmd.Env = append(os.Environ(),
+		"GOJR_MAIN_HELPER=1",
+		"GOJR_MAIN_ARGS="+string(args),
+	)
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	output, err := cmd.Output()
+	if err != nil {
+		t.Fatalf("helper gojr eval --json error = %v stderr=%s stdout=%s", err, stderr.String(), string(output))
+	}
+	text := string(output)
+	if !strings.HasPrefix(text, "gojr version ") {
+		t.Fatalf("helper output missing startup version line:\n%s", text)
+	}
+	var result evalResult
+	if err := json.Unmarshal([]byte(stripGojrStartupVersionLine(text)), &result); err != nil {
+		t.Fatalf("Unmarshal filtered helper output error = %v output:\n%s", err, text)
+	}
+	if !result.OK || result.Value != "2" {
+		t.Fatalf("helper JSON result = ok %v value %q diagnostics %v, want 2", result.OK, result.Value, result.Diagnostics)
+	}
+}
+
+func stripGojrStartupVersionLine(output string) string {
+	if !strings.HasPrefix(output, "gojr version ") {
+		return output
+	}
+	lineEnd := strings.IndexByte(output, '\n')
+	if lineEnd < 0 {
+		return ""
+	}
+	return output[lineEnd+1:]
+}
 
 func TestShouldPrintValueSuppressesOnlyActualNil(t *testing.T) {
 	tests := []struct {
