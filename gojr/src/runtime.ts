@@ -246,6 +246,17 @@ interface InterfaceTypeDef {
 }
 
 const anonymousInterfaceTypeCache = new Map<string, InterfaceTypeDef>();
+const errorInterfaceType: InterfaceTypeDef = {
+  name: "error",
+  methods: [{
+    name: "Error",
+    signature: {
+      parameters: [],
+      results: [{ type: { text: "string" } }]
+    }
+  }],
+  embeds: []
+};
 
 interface MethodDef {
   declaration: FunctionDecl;
@@ -5744,6 +5755,7 @@ function assertAssignableToType(value: RuntimeValue, typeText: string, role: str
 
 function interfaceTarget(type: string, context?: EvaluationContext): InterfaceTypeDef | undefined {
   if (type === "any" || type === "interface{}") return { name: type, methods: [], embeds: [] };
+  if (type === "error") return errorInterfaceType;
   return context?.interfaceDef(type) ?? parseAnonymousInterfaceTypeText(type);
 }
 
