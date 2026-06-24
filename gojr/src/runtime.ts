@@ -1301,10 +1301,16 @@ export async function runMainSourcePackageFiles(
 
   const importPath = options.importPath ?? packageName;
   const sourcePackages = (options.sourcePackages ?? []).filter((spec) => spec.importPath !== importPath);
+  const {
+    importPath: _rootImportPath,
+    packageName: _rootPackageName,
+    sourcePackages: _sourcePackages,
+    ...graphOptions
+  } = options;
   const graph = await evaluateSourcePackageGraph([
     ...sourcePackages,
     { importPath, packageName, files }
-  ], options);
+  ], graphOptions);
   if (graph.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     return {
       diagnostics: graph.diagnostics,

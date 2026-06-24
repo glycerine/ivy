@@ -8,7 +8,7 @@ import { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJso
 import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
 import { stubSourcePackageFiles } from "./stubPackages.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
-import { evaluateSource, evaluateSourceFiles, evaluateSourcePackageGraph, testSourceFiles } from "./runtime.js";
+import { evaluateSource, evaluateSourceFiles, evaluateSourcePackageGraph, runMainSourcePackageFiles, testSourceFiles } from "./runtime.js";
 export function defaultPackageCacheParent() {
     return join(homedir(), "go", "pkg");
 }
@@ -261,6 +261,18 @@ export async function testSourceFilesWithPackagesOnNode(request) {
         ...result,
         packageOutput: loaded.output
     };
+}
+export async function runMainSourceFilesWithPackagesOnNode(request) {
+    const options = evaluationOptionsFromNodeRequest(request);
+    const provider = createNodeSourcePackageProvider(request.sourceRoots ?? []);
+    const result = await runMainSourcePackageFiles(rootSourceFilesFromRequest(request), {
+        ...options,
+        ...(request.importPath ? { importPath: request.importPath } : {}),
+        ...(request.packageName ? { packageName: request.packageName } : {}),
+        sourcePackages: request.packages ?? [],
+        ...(provider ? { sourcePackageProvider: provider } : {})
+    });
+    return result;
 }
 export function compileSourceFilesWithPackagesOnNode(request) {
     const options = evaluationOptionsFromNodeRequest(request);

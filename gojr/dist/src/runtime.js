@@ -793,6 +793,7 @@ class SourcePackageGraphEvaluator {
     output = [];
     packages;
     packageInfos;
+    packageContexts = {};
     initialized = new Set();
     initializedImportPaths = [];
     constructor(specs, options) {
@@ -912,6 +913,9 @@ class SourcePackageGraphEvaluator {
         if (result.packageInfo) {
             this.packageInfos[importPath] = result.packageInfo;
         }
+        if (result.context) {
+            this.packageContexts[importPath] = result.context;
+        }
         this.initialized.add(importPath);
         this.initializedImportPaths.push(importPath);
     }
@@ -924,6 +928,7 @@ class SourcePackageGraphEvaluator {
             output: this.output,
             packages: this.packages,
             packageInfos: this.packageInfos,
+            packageContexts: this.packageContexts,
             initializedImportPaths: this.initializedImportPaths
         };
     }
@@ -941,6 +946,76 @@ function packageGraphDiagnostic(filename, message) {
         severity: "error",
         message
     };
+}
+export async function runMainSourcePackageFiles(files, options = {}) {
+    const parsed = frontSourceFilesToAst(files);
+    const ast = parsed.ast;
+    if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+        return {
+            diagnostics: parsed.diagnostics,
+            output: [],
+            ...(ast ? { ast } : {})
+        };
+    }
+    if (!ast) {
+        return {
+            diagnostics: [packageGraphDiagnostic(files[0]?.filename ?? REPL_FILENAME, "no package source files supplied")],
+            output: []
+        };
+    }
+    const packageName = options.packageName ?? packageNameFromSourceFiles(files) ?? "main";
+    if (packageName !== "main") {
+        return {
+            diagnostics: [packageGraphDiagnostic(files[0]?.filename ?? REPL_FILENAME, `gojr run requires package main, found package ${packageName}`)],
+            output: [],
+            ast
+        };
+    }
+    const importPath = options.importPath ?? packageName;
+    const sourcePackages = (options.sourcePackages ?? []).filter((spec) => spec.importPath !== importPath);
+    const { importPath: _rootImportPath, packageName: _rootPackageName, sourcePackages: _sourcePackages, ...graphOptions } = options;
+    const graph = await evaluateSourcePackageGraph([
+        ...sourcePackages,
+        { importPath, packageName, files }
+    ], graphOptions);
+    if (graph.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+        return {
+            diagnostics: graph.diagnostics,
+            output: graph.output,
+            ast
+        };
+    }
+    const context = graph.packageContexts[importPath];
+    if (!context) {
+        return {
+            diagnostics: [packageGraphDiagnostic(files[0]?.filename ?? REPL_FILENAME, `package ${importPath} did not produce a runtime context`)],
+            output: graph.output,
+            ast
+        };
+    }
+    const outputOffset = context.output.length;
+    try {
+        const main = context.lookup("main");
+        await context.scheduler().runRoot(async () => {
+            await callRuntime(main, [], context);
+        });
+        return {
+            diagnostics: graph.diagnostics,
+            output: [...graph.output, ...context.output.slice(outputOffset)],
+            ast
+        };
+    }
+    catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        return {
+            diagnostics: [
+                ...graph.diagnostics,
+                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+            ],
+            output: [...graph.output, ...context.output.slice(outputOffset)],
+            ast
+        };
+    }
 }
 export async function testSource(source, options = {}) {
     return testSourceFiles([sourceFileFromSource(source, options)], options);

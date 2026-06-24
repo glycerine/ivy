@@ -171,6 +171,10 @@
             const result = await gojrModule.evaluateSourceFilesWithPackagesOnNode(JSON.parse(json));
             return evaluationJSON(result, result.packageOutput || []);
         };
+        root.__gojrRunMainFilesWithPackages = async function (json) {
+            const result = await gojrModule.runMainSourceFilesWithPackagesOnNode(JSON.parse(json));
+            return evaluationJSON({ ...result, incomplete: false }, result.packageOutput || []);
+        };
         root.__gojrTestFilesWithPackages = async function (json) {
             const result = await gojrModule.testSourceFilesWithPackagesOnNode(JSON.parse(json));
             return evaluationJSON(result, result.packageOutput || []);

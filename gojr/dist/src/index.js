@@ -3,7 +3,7 @@ export { formatDiagnostic, hasErrorDiagnostics, diagnosticFilename, spanFromToke
 export { analyzeEffects, functionEffectKey } from "./effects.js";
 export { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
 export { artifactPathForImportPath, buildPackage, buildPackages, buildStandardLibraryPackage, collectSourceImportPaths, createStandardLibrarySourcePackageProvider, GOJR_GOARCH, GOJR_GOOS, inspectPackageJavaScript, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
-export { buildPackagesOnNode, clearPackageArtifactCache, createNodeArtifactStore, createNodeSourcePackageProvider, defaultPackageCacheParent, evaluateSourceFilesWithPackagesOnNode, evaluateSourceWithPackagesOnNode, compileSourceFilesWithPackagesOnNode, inspectPackageJavaScriptOnNode, listPackageArtifactCache, loadSourcePackagesForRootFilesOnNode, packageCacheOnNode, runSpreadsheetFixtureWithPackagesOnNode, testSourceFilesWithPackagesOnNode } from "./nodeHost.js";
+export { buildPackagesOnNode, clearPackageArtifactCache, createNodeArtifactStore, createNodeSourcePackageProvider, defaultPackageCacheParent, evaluateSourceFilesWithPackagesOnNode, evaluateSourceWithPackagesOnNode, compileSourceFilesWithPackagesOnNode, inspectPackageJavaScriptOnNode, listPackageArtifactCache, loadSourcePackagesForRootFilesOnNode, packageCacheOnNode, runMainSourceFilesWithPackagesOnNode, runSpreadsheetFixtureWithPackagesOnNode, testSourceFilesWithPackagesOnNode } from "./nodeHost.js";
 export { compilePackageSourceFiles, compileSource, compileSourceFiles } from "./compile.js";
 export { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture, runSpreadsheetFixtureJson } from "./fixture.js";
 export { buildReportToHostJSON, buildReportToHostPayload, compileResultToHostJSON, compileResultToHostPayload, evaluationResultToHostJSON, evaluationResultToHostPayload, formatFixtureSheets, hostFormatResult, hostFormatValue, hostResultValueIsNil, inspectPackageJavaScriptReportToHostJSON, inspectPackageJavaScriptReportToHostPayload, runtimeOptionsFromEnvironment, spreadsheetDiagnosticToHostString, spreadsheetFixtureResultToHostJSON, spreadsheetFixtureResultToHostPayload } from "./hostProtocol.js";
@@ -17,7 +17,7 @@ export * as GoTypes from "./go/types/index.js";
 export { TokenKind } from "./front/token.js";
 export { Node as formatGoNode, Source as formatGoSource } from "./go/format.js";
 export { parseRuntimeJson, parseSheetJson, parseSheetsJson } from "./jsonInput.js";
-export { evaluateProgram, evaluateSource, formatReplValue, formatValue, GoJuniorSession, GoJuniorDeadlockError, GoJuniorPanic, GoJuniorRuntimeError, RuntimeMap, RuntimeChannel, evaluatePackageSourceFiles, evaluateSourcePackageGraph, evaluateSourceFiles, testSource, testSourceFiles, typeCheckConfig } from "./runtime.js";
+export { evaluateProgram, evaluateSource, formatReplValue, formatValue, GoJuniorSession, GoJuniorDeadlockError, GoJuniorPanic, GoJuniorRuntimeError, RuntimeMap, RuntimeChannel, evaluatePackageSourceFiles, evaluateSourcePackageGraph, evaluateSourceFiles, runMainSourcePackageFiles, testSource, testSourceFiles, typeCheckConfig } from "./runtime.js";
 export function parseProgram(source, filename) {
     const result = frontSourceToAst(source, filename);
     return {
