@@ -8,6 +8,6 @@ require (
 )
 
 require (
-	github.com/glycerine/b3 v0.0.59 // indirect
+	github.com/glycerine/b3 v0.1.2 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 )

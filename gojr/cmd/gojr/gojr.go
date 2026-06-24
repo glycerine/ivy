@@ -240,6 +240,17 @@ func (flags *packageFlag) Set(value string) error {
 	return nil
 }
 
+func Blake3HashOfDir(path string) string {
+	cfg := b3.Blake3SummerConfig{
+		Quiet:       true,
+		ModTimeHash: true,
+		Globs:       []string{path},
+	}
+	r, err := b3.DirTreeBlake3Hash(&cfg)
+	panicOn(err)
+	return r.TopBlake3
+}
+
 func main() {
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
@@ -2319,4 +2330,10 @@ func runtimeBootstrapSource() (string, error) {
 func fatal(err error) {
 	fmt.Fprintf(os.Stderr, "gojr: %v\n", err)
 	os.Exit(1)
+}
+
+func panicOn(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
