@@ -14,7 +14,7 @@ import {
   type BuildSourcePackageProvider,
   type InspectPackageJavaScriptReport
 } from "./build.js";
-import { REPL_FILENAME, type Diagnostic, type SourceFile } from "./diagnostics.js";
+import { hasErrorDiagnostics, REPL_FILENAME, type Diagnostic, type SourceFile } from "./diagnostics.js";
 import {
   compilePackageSourceFiles,
   compileSourceFiles,
@@ -518,10 +518,6 @@ function nodeDiagnostic(filename: string, code: string, message: string): Diagno
     severity: "error",
     message
   };
-}
-
-function hasErrorDiagnostics(diagnostics: readonly Diagnostic[]): boolean {
-  return diagnostics.some((diagnostic) => diagnostic.severity === "error");
 }
 
 function normalizeNodeBuildRequest(request: NodeBuildPackageRequest): BuildPackageRequest {

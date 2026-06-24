@@ -1,10 +1,12 @@
 import { frontSourceToAst } from "./frontToAst.js";
+export { formatDiagnostic, hasErrorDiagnostics, diagnosticFilename, spanFromToken, REPL_FILENAME } from "./diagnostics.js";
 export { analyzeEffects, functionEffectKey } from "./effects.js";
 export { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
 export { artifactPathForImportPath, buildPackage, buildPackages, buildStandardLibraryPackage, collectSourceImportPaths, createStandardLibrarySourcePackageProvider, GOJR_GOARCH, GOJR_GOOS, inspectPackageJavaScript, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
 export { buildPackagesOnNode, clearPackageArtifactCache, createNodeArtifactStore, createNodeSourcePackageProvider, defaultPackageCacheParent, evaluateSourceFilesWithPackagesOnNode, evaluateSourceWithPackagesOnNode, compileSourceFilesWithPackagesOnNode, inspectPackageJavaScriptOnNode, listPackageArtifactCache, loadSourcePackagesForRootFilesOnNode, packageCacheOnNode, runSpreadsheetFixtureWithPackagesOnNode, testSourceFilesWithPackagesOnNode } from "./nodeHost.js";
 export { compilePackageSourceFiles, compileSource, compileSourceFiles } from "./compile.js";
 export { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture, runSpreadsheetFixtureJson } from "./fixture.js";
+export { buildReportToHostJSON, buildReportToHostPayload, compileResultToHostJSON, compileResultToHostPayload, evaluationResultToHostJSON, evaluationResultToHostPayload, formatFixtureSheets, hostFormatResult, hostFormatValue, hostResultValueIsNil, inspectPackageJavaScriptReportToHostJSON, inspectPackageJavaScriptReportToHostPayload, runtimeOptionsFromEnvironment, spreadsheetDiagnosticToHostString, spreadsheetFixtureResultToHostJSON, spreadsheetFixtureResultToHostPayload } from "./hostProtocol.js";
 export { SpreadsheetEngine, SpreadsheetFormulaCompilerCache, cellDependency, rangeDependency, spreadsheetFormulaCacheKey, spreadsheetFormulaEvaluation, spreadsheetError } from "./spreadsheet.js";
 export { childNodes, ident, parseCellAddress, walk } from "./front/ast.js";
 export { checkGoJuniorFiles, checkGoJuniorSource, checkGoJuniorSourceFiles } from "./typecheck.js";

@@ -1,3 +1,4 @@
+import { formatDiagnostic } from "./diagnostics.js";
 import { parseRuntimeJson } from "./jsonInput.js";
 import { GoJuniorSession } from "./runtime.js";
 import { SpreadsheetEngine, spreadsheetFormulaCacheKey, spreadsheetFormulaEvaluation } from "./spreadsheet.js";
@@ -89,7 +90,7 @@ async function evaluateFormulaCell(source, ref, engine, knownRefs, currentSheetN
     const result = await session.evaluate(source);
     const errors = result.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
     if (errors.length > 0) {
-        throw new Error(errors.map(diagnosticString).join("\n"));
+        throw new Error(errors.map(formatDiagnostic).join("\n"));
     }
     return {
         value: runtimeValueFromResult(result),
@@ -228,13 +229,6 @@ function runtimeValueFromResult(result) {
         return result.values;
     }
     return result.value ?? null;
-}
-function diagnosticString(diagnostic) {
-    const span = diagnostic.span;
-    const location = span
-        ? `${span.filename}:${span.line}:${span.column}`
-        : diagnostic.filename;
-    return `${location}: ${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}`;
 }
 function looksLikeCellSpec(value) {
     return Object.prototype.hasOwnProperty.call(value, "formula") ||

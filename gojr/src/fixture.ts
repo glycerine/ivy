@@ -1,4 +1,4 @@
-import type { Diagnostic, SourceFile } from "./diagnostics.js";
+import { formatDiagnostic, type SourceFile } from "./diagnostics.js";
 import type { Package as GoTypesPackage } from "./go/types/index.js";
 import { parseRuntimeJson } from "./jsonInput.js";
 import {
@@ -160,7 +160,7 @@ async function evaluateFormulaCell(
   const result = await session.evaluate(source);
   const errors = result.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
   if (errors.length > 0) {
-    throw new Error(errors.map(diagnosticString).join("\n"));
+    throw new Error(errors.map(formatDiagnostic).join("\n"));
   }
   return {
     value: runtimeValueFromResult(result),
@@ -319,14 +319,6 @@ function runtimeValueFromResult(result: { value?: RuntimeValue; values?: Runtime
     return result.values;
   }
   return result.value ?? null;
-}
-
-function diagnosticString(diagnostic: Diagnostic): string {
-  const span = diagnostic.span;
-  const location = span
-    ? `${span.filename}:${span.line}:${span.column}`
-    : diagnostic.filename;
-  return `${location}: ${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}`;
 }
 
 function looksLikeCellSpec(value: RuntimeObject): boolean {

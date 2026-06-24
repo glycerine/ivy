@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, s
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { homedir } from "node:os";
 import { buildPackages, collectSourceImportPaths, inspectPackageJavaScript, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
-import { REPL_FILENAME } from "./diagnostics.js";
+import { hasErrorDiagnostics, REPL_FILENAME } from "./diagnostics.js";
 import { compilePackageSourceFiles, compileSourceFiles } from "./compile.js";
 import { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture } from "./fixture.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
@@ -401,9 +401,6 @@ function nodeDiagnostic(filename, code, message) {
         severity: "error",
         message
     };
-}
-function hasErrorDiagnostics(diagnostics) {
-    return diagnostics.some((diagnostic) => diagnostic.severity === "error");
 }
 function normalizeNodeBuildRequest(request) {
     const normalized = { ...request };

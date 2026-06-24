@@ -13,6 +13,19 @@ export function spanFromToken(token) {
 export function diagnosticFilename(span, filename = REPL_FILENAME) {
     return span?.filename ?? filename;
 }
+export function formatDiagnostic(diagnostic) {
+    const filename = diagnostic.span?.filename ?? diagnostic.filename ?? REPL_FILENAME;
+    const location = diagnostic.span
+        ? `${filename}:${diagnostic.span.line}:${diagnostic.span.column}: `
+        : `${filename}: `;
+    const stack = typeof diagnostic.stack === "string" && diagnostic.stack !== ""
+        ? `\n${diagnostic.stack}`
+        : "";
+    return `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}${stack}`;
+}
+export function hasErrorDiagnostics(diagnostics) {
+    return diagnostics.some((diagnostic) => diagnostic.severity === "error");
+}
 function finiteOr(value, fallback) {
     return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }

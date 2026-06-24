@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { readFile } from "node:fs/promises";
 import { parseProgram } from "./index.js";
-import { REPL_FILENAME } from "./diagnostics.js";
+import { formatDiagnostic, REPL_FILENAME } from "./diagnostics.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
 import { evaluateSource, formatReplValue } from "./runtime.js";
 async function main(argv) {
@@ -98,11 +98,7 @@ async function readSource(file) {
 }
 function printDiagnostics(diagnostics) {
     for (const diagnostic of diagnostics) {
-        const location = diagnostic.span
-            ? `${diagnostic.span.filename}:${diagnostic.span.line}:${diagnostic.span.column}: `
-            : `${diagnostic.filename}: `;
-        const stack = diagnostic.stack ? `\n${diagnostic.stack}` : "";
-        const line = `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}${stack}`;
+        const line = formatDiagnostic(diagnostic);
         if (diagnostic.severity === "error") {
             console.error(line);
         }

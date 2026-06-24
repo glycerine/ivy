@@ -4,6 +4,13 @@ import type { Diagnostic } from "./diagnostics.js";
 import type { ParseFrontResult } from "./front/parser.js";
 
 export {
+  formatDiagnostic,
+  hasErrorDiagnostics,
+  diagnosticFilename,
+  spanFromToken,
+  REPL_FILENAME
+} from "./diagnostics.js";
+export {
   analyzeEffects,
   functionEffectKey
 } from "./effects.js";
@@ -70,6 +77,32 @@ export {
   runSpreadsheetFixture,
   runSpreadsheetFixtureJson
 } from "./fixture.js";
+export {
+  buildReportToHostJSON,
+  buildReportToHostPayload,
+  compileResultToHostJSON,
+  compileResultToHostPayload,
+  evaluationResultToHostJSON,
+  evaluationResultToHostPayload,
+  formatFixtureSheets,
+  hostFormatResult,
+  hostFormatValue,
+  hostResultValueIsNil,
+  inspectPackageJavaScriptReportToHostJSON,
+  inspectPackageJavaScriptReportToHostPayload,
+  runtimeOptionsFromEnvironment,
+  spreadsheetDiagnosticToHostString,
+  spreadsheetFixtureResultToHostJSON,
+  spreadsheetFixtureResultToHostPayload
+} from "./hostProtocol.js";
+export type {
+  HostBuildPayload,
+  HostCompilePayload,
+  HostEvaluationPayload,
+  HostInspectJavaScriptPayload,
+  HostRuntimeEnvironment,
+  HostSpreadsheetFixturePayload
+} from "./hostProtocol.js";
 export type {
   SpreadsheetFixture,
   SpreadsheetFixtureCellInput,

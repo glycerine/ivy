@@ -174,83 +174,19 @@
     return embeddedRequire;
   }
 
-  function runtimeOptions(extra: AnyRecord = {}): AnyRecord {
+  function processEnvironment(): { GOJR_RANDOM_SEED?: string | undefined } | undefined {
     const processEnv = (root.process as { env?: Record<string, string | undefined> } | undefined)?.env;
-    const seed = processEnv?.GOJR_RANDOM_SEED;
-    return seed === undefined || seed === ""
-      ? { ...extra }
-      : { ...extra, randomSeed: seed };
-  }
-
-  function diagnosticString(diagnostic: any): string {
-    const filename = diagnostic?.span?.filename || diagnostic?.filename || "gojr-repl.go";
-    const location = diagnostic && diagnostic.span
-      ? `${filename}:${diagnostic.span.line}:${diagnostic.span.column}: `
-      : `${filename}: `;
-    const stack = typeof diagnostic?.stack === "string" && diagnostic.stack !== ""
-      ? `\n${diagnostic.stack}`
-      : "";
-    return `${location}${diagnostic.severity} ${diagnostic.code}: ${diagnostic.message}${stack}`;
-  }
-
-  function spreadsheetDiagnosticString(diagnostic: any): string {
-    const cell = diagnostic && diagnostic.cell
-      ? `${diagnostic.cell.sheet}!${diagnostic.cell.cell}`
-      : "spreadsheet";
-    return `${cell}: error ${diagnostic.code}: ${diagnostic.message}`;
+    return processEnv === undefined ? undefined : { GOJR_RANDOM_SEED: processEnv.GOJR_RANDOM_SEED };
   }
 
   function installEmbeddedRuntime(moduleBundleJson: string): void {
     const embeddedRequire = createEmbeddedModuleLoader(moduleBundleJson);
     const gojrModule = embeddedRequire("/src/index.js");
+    const runtimeOptions = (extra: AnyRecord = {}) => gojrModule.runtimeOptionsFromEnvironment(processEnvironment(), extra);
     const gojrSession = new gojrModule.GoJuniorSession(runtimeOptions({ sheet: {} }));
 
-    function formatValue(value: any): string {
-      if (typeof value === "function") {
-        const name = value.name ? value.name.replace(/^_fn_/, "") : "";
-        return name ? `<func ${name}>` : "<func>";
-      }
-      return gojrModule.formatReplValue(value);
-    }
-
-    function formatResult(result: any): string {
-      if (result.values) return result.values.map((value: any) => formatValue(value)).join(", ");
-      if (Object.prototype.hasOwnProperty.call(result, "value")) return formatValue(result.value);
-      return "";
-    }
-
-    function resultValueIsNil(result: any): boolean {
-      if (Array.isArray(result.values)) return result.values.length === 1 && result.values[0] === null;
-      if (Object.prototype.hasOwnProperty.call(result, "value")) return result.value === null;
-      return false;
-    }
-
-    function observedDeps(result: any): any[] {
-      return Array.isArray(result.observedDeps) ? result.observedDeps : [];
-    }
-
     function evaluationJSON(result: any, extraOutput: string[] = []): string {
-      const diagnostics = result.diagnostics || [];
-      return JSON.stringify({
-        ok: !diagnostics.some((diagnostic: any) => diagnostic.severity === "error"),
-        incomplete: result.incomplete === true,
-        diagnostics: diagnostics.map(diagnosticString),
-        output: [...extraOutput, ...(result.output || [])].join(""),
-        value: formatResult(result),
-        valueIsNil: resultValueIsNil(result),
-        observedDeps: observedDeps(result)
-      });
-    }
-
-    function formatFixtureSheets(sheets: any): AnyRecord {
-      const formatted: AnyRecord = {};
-      for (const [sheetName, cells] of Object.entries((sheets || {}) as AnyRecord)) {
-        formatted[sheetName] = {};
-        for (const [cell, value] of Object.entries((cells || {}) as AnyRecord)) {
-          formatted[sheetName][cell] = formatValue(value);
-        }
-      }
-      return formatted;
+      return gojrModule.evaluationResultToHostJSON(result, extraOutput);
     }
 
     root.__gojrEval = async function(source: string): Promise<string> {
@@ -280,40 +216,17 @@
 
     root.__gojrCompile = function(json: string): string {
       const result = gojrModule.compileSourceFilesWithPackagesOnNode(JSON.parse(json));
-      const diagnostics = result.diagnostics || [];
-      return JSON.stringify({
-        ok: !diagnostics.some((diagnostic: any) => diagnostic.severity === "error"),
-        diagnostics: diagnostics.map(diagnosticString),
-        output: ""
-      });
+      return gojrModule.compileResultToHostJSON(result);
     };
 
     root.__gojrTest = async function(source: string): Promise<string> {
       const result = await gojrModule.testSource(source, runtimeOptions());
-      const diagnostics = result.diagnostics || [];
-      return JSON.stringify({
-        ok: !diagnostics.some((diagnostic: any) => diagnostic.severity === "error"),
-        incomplete: false,
-        diagnostics: diagnostics.map(diagnosticString),
-        output: (result.output || []).join(""),
-        value: formatResult(result),
-        valueIsNil: resultValueIsNil(result),
-        observedDeps: observedDeps(result)
-      });
+      return evaluationJSON({ ...result, incomplete: false });
     };
 
     root.__gojrTestFiles = async function(json: string): Promise<string> {
       const result = await gojrModule.testSourceFiles(JSON.parse(json), runtimeOptions());
-      const diagnostics = result.diagnostics || [];
-      return JSON.stringify({
-        ok: !diagnostics.some((diagnostic: any) => diagnostic.severity === "error"),
-        incomplete: false,
-        diagnostics: diagnostics.map(diagnosticString),
-        output: (result.output || []).join(""),
-        value: formatResult(result),
-        valueIsNil: resultValueIsNil(result),
-        observedDeps: observedDeps(result)
-      });
+      return evaluationJSON({ ...result, incomplete: false });
     };
 
     root.__gojrSetSheet = function(json: string): string {
@@ -324,32 +237,13 @@
     root.__gojrBuild = function(json: string): string {
       const request = JSON.parse(json);
       const result = gojrModule.buildPackagesOnNode(request);
-      const diagnostics = result.diagnostics || [];
-      return JSON.stringify({
-        ok: !diagnostics.some((diagnostic: any) => diagnostic.severity === "error"),
-        incomplete: false,
-        diagnostics: diagnostics.map(diagnosticString),
-        output: "",
-        artifacts: result.artifacts || [],
-        built: result.built || [],
-        skipped: result.skipped || []
-      });
+      return gojrModule.buildReportToHostJSON(result);
     };
 
     root.__gojrInspectJS = function(json: string): string {
       const request = JSON.parse(json);
       const result = gojrModule.inspectPackageJavaScriptOnNode(request);
-      const diagnostics = result.diagnostics || [];
-      return JSON.stringify({
-        ok: !diagnostics.some((diagnostic: any) => diagnostic.severity === "error"),
-        incomplete: false,
-        diagnostics: diagnostics.map(diagnosticString),
-        output: "",
-        artifacts: result.artifacts || [],
-        built: result.built || [],
-        skipped: result.skipped || [],
-        source: result.source || ""
-      });
+      return gojrModule.inspectPackageJavaScriptReportToHostJSON(result);
     };
 
     root.__gojrCache = function(json: string): string {
@@ -359,39 +253,12 @@
 
     root.__gojrRunFixture = async function(json: string): Promise<string> {
       const result = await gojrModule.runSpreadsheetFixtureJson(json, runtimeOptions());
-      const diagnostics = result.diagnostics || [];
-      return JSON.stringify({
-        ok: result.ok === true && !diagnostics.length,
-        unstable: result.unstable === true,
-        diagnostics: diagnostics.map(spreadsheetDiagnosticString),
-        evaluated: result.evaluated || [],
-        sheets: formatFixtureSheets(result.sheets || {}),
-        observedDeps: result.observedDeps || {}
-      });
+      return gojrModule.spreadsheetFixtureResultToHostJSON(result);
     };
 
     root.__gojrRunFixtureWithPackages = async function(json: string): Promise<string> {
       const result = await gojrModule.runSpreadsheetFixtureWithPackagesOnNode(JSON.parse(json));
-      const packageDiagnostics = result.packageDiagnostics || [];
-      if (packageDiagnostics.some((diagnostic: any) => diagnostic.severity === "error")) {
-        return JSON.stringify({
-          ok: false,
-          unstable: false,
-          diagnostics: packageDiagnostics.map(diagnosticString),
-          evaluated: [],
-          sheets: {},
-          observedDeps: {}
-        });
-      }
-      const diagnostics = result.diagnostics || [];
-      return JSON.stringify({
-        ok: result.ok === true && !diagnostics.length,
-        unstable: result.unstable === true,
-        diagnostics: diagnostics.map(spreadsheetDiagnosticString),
-        evaluated: result.evaluated || [],
-        sheets: formatFixtureSheets(result.sheets || {}),
-        observedDeps: result.observedDeps || {}
-      });
+      return gojrModule.spreadsheetFixtureResultToHostJSON(result);
     };
   }
 
