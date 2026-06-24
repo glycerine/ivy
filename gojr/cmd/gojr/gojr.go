@@ -24,6 +24,7 @@ import (
 	"strings"
 	"unsafe"
 
+	"github.com/glycerine/b3"
 	gojr "github.com/glycerine/gojr"
 )
 
@@ -97,7 +98,7 @@ type evalWithPackagesRequest struct {
 	PackageCacheParent string               `json:"packageCacheParent,omitempty"`
 	Progress           bool                 `json:"progress,omitempty"`
 	Argv               []string             `json:"argv,omitempty"`
-	TestVerbose        bool                 `json:"testVerbose,omitempty"`
+	TestVerbose        bool                 `json:"testVerbose"`
 }
 
 type runtimePackageSpec struct {
@@ -580,12 +581,14 @@ func runTest(rt *nodeRuntime, args []string) (bool, error) {
 	results := make([]evalResult, 0, len(targets)*2)
 	ok := true
 	for _, testTarget := range targets {
-		result, err := runOneGoTestTarget(rt, testTarget, packages, sourceRootFlags, *verbose)
+		targetResults, err := runOneGoTestTarget(rt, testTarget, packages, sourceRootFlags, *verbose)
 		if err != nil {
 			return false, err
 		}
-		results = append(results, result)
-		ok = ok && result.OK
+		for _, result := range targetResults {
+			results = append(results, result)
+			ok = ok && result.OK
+		}
 	}
 
 	if *jsonMode {
@@ -874,7 +877,7 @@ func handleCommand(rt *nodeRuntime, source *strings.Builder, command string) (bo
 		if err != nil {
 			return false, err
 		}
-		return false, evalLoadedSourceFiles(rt, source, []sourceFile{file})
+		return false, evalLoadedSourceFiles(rt, source, path, []sourceFile{file})
 	case strings.HasPrefix(command, ".sheet "):
 		result, err := rt.SetSheet(strings.TrimSpace(strings.TrimPrefix(command, ".sheet ")))
 		if err != nil {
@@ -889,16 +892,16 @@ func handleCommand(rt *nodeRuntime, source *strings.Builder, command string) (bo
 		if err != nil {
 			return false, err
 		}
-		return false, evalLoadedSourceFiles(rt, source, files)
+		return false, evalLoadedSourceFiles(rt, source, dir, files)
 	case command == ".test":
 		return false, fmt.Errorf("usage: .test PATH")
 	case strings.HasPrefix(command, ".test "):
 		target := strings.TrimSpace(strings.TrimPrefix(command, ".test "))
-		files, err := readTestTarget(target)
+		targets, err := readGoTestTargets(target)
 		if err != nil {
 			return false, err
 		}
-		return false, testLoadedSourceFiles(rt, source, files)
+		return false, testLoadedSourceFiles(rt, source, targets)
 	default:
 		return false, fmt.Errorf("unknown command %q", command)
 	}
@@ -920,11 +923,14 @@ more input, the line is kept as pending multi-line source and the prompt changes
 to ....>. Use .clear to discard pending input.`)
 }
 
-func evalLoadedSourceFiles(rt *nodeRuntime, pending *strings.Builder, files []sourceFile) error {
+func evalLoadedSourceFiles(rt *nodeRuntime, pending *strings.Builder, target string, files []sourceFile) error {
 	if pending.Len() > 0 {
 		return fmt.Errorf("cannot load while multi-line input is pending; use .clear first")
 	}
-	result, err := rt.EvalFiles(files)
+	result, err := rt.EvalFilesWithPackages(evalWithPackagesRequest{
+		Files:       files,
+		SourceRoots: buildSourceRoots(target, packageNameFromSourceFiles(files), nil),
+	})
 	if err != nil {
 		return err
 	}
@@ -932,15 +938,19 @@ func evalLoadedSourceFiles(rt *nodeRuntime, pending *strings.Builder, files []so
 	return nil
 }
 
-func testLoadedSourceFiles(rt *nodeRuntime, pending *strings.Builder, files []sourceFile) error {
+func testLoadedSourceFiles(rt *nodeRuntime, pending *strings.Builder, targets []testPackageTarget) error {
 	if pending.Len() > 0 {
 		return fmt.Errorf("cannot run tests while multi-line input is pending; use .clear first")
 	}
-	result, err := rt.TestFiles(files)
-	if err != nil {
-		return err
+	for _, target := range targets {
+		results, err := runOneGoTestTarget(rt, target, nil, nil, true)
+		if err != nil {
+			return err
+		}
+		for _, result := range results {
+			printTestResult(result, false)
+		}
 	}
-	printTestResult(result, false)
 	return nil
 }
 
@@ -996,9 +1006,16 @@ func readRunTarget(path string) (runSourceTarget, error) {
 		if err != nil {
 			return runSourceTarget{}, err
 		}
-		source, err := stripPackageClausePreservingLines(string(data))
-		if err != nil {
+		source := string(data)
+		if name, _, _, found, err := findPackageClause(source); err != nil {
 			return runSourceTarget{}, err
+		} else if found && name == "main" {
+			return runSourceTarget{
+				Files:       []sourceFile{{Filename: "stdin.go", Source: source}},
+				Package:     true,
+				ImportPath:  "main",
+				PackageName: name,
+			}, nil
 		}
 		return runSourceTarget{Files: []sourceFile{{Filename: "stdin.go", Source: source}}}, nil
 	}
@@ -1037,11 +1054,7 @@ func readRunTarget(path string) (runSourceTarget, error) {
 			PackageName: name,
 		}, nil
 	}
-	source, err := stripPackageClausePreservingLines(string(data))
-	if err != nil {
-		return runSourceTarget{}, err
-	}
-	return runSourceTarget{Files: []sourceFile{{Filename: filepath.Clean(path), Source: source}}}, nil
+	return runSourceTarget{Files: []sourceFile{{Filename: filepath.Clean(path), Source: string(data)}}}, nil
 }
 
 func readCompileTarget(path string) ([]sourceFile, error) {
@@ -1193,42 +1206,244 @@ func readSourceFile(path string) (sourceFile, error) {
 	if err != nil {
 		return sourceFile{}, err
 	}
-	source, err := stripPackageClausePreservingLines(string(data))
-	if err != nil {
-		return sourceFile{}, err
-	}
-	return sourceFile{Filename: filepath.Clean(path), Source: source}, nil
+	return sourceFile{Filename: filepath.Clean(path), Source: string(data)}, nil
 }
 
 func readPackageDir(dir string) ([]sourceFile, error) {
-	return readPackageDirMatching(dir, func(name string) bool {
-		return !strings.HasSuffix(name, "_test.go")
-	}, "non-test .go files")
-}
-
-func readTestTarget(target string) ([]sourceFile, error) {
-	info, err := os.Stat(target)
+	info, err := os.Stat(dir)
 	if err != nil {
 		return nil, err
 	}
+	if !info.IsDir() {
+		return nil, fmt.Errorf("%s is not a directory; use .source PATH for a single file", dir)
+	}
+	return readBuildTarget(dir)
+}
+
+func readGoTestTargets(target string) ([]testPackageTarget, error) {
+	if isAllPackagesPattern(target) {
+		return readGoTestPatternTargets(target)
+	}
+	testTarget, err := readGoTestTarget(target)
+	if err != nil {
+		return nil, err
+	}
+	return []testPackageTarget{testTarget}, nil
+}
+
+func readGoTestPatternTargets(pattern string) ([]testPackageTarget, error) {
+	root := allPackagesPatternRoot(pattern)
+	var targets []testPackageTarget
+	err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !entry.IsDir() {
+			return nil
+		}
+		if path != root && shouldSkipGoTestWalkDir(entry.Name()) {
+			return filepath.SkipDir
+		}
+		names, err := goSourceFileNamesInDir(path, func(string) bool { return true })
+		if err != nil {
+			return err
+		}
+		if len(names) == 0 {
+			return nil
+		}
+		target, err := readGoTestPackageDir(path, "")
+		if err != nil {
+			return err
+		}
+		targets = append(targets, target)
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	if len(targets) == 0 {
+		return nil, fmt.Errorf("%s matched no Go packages", pattern)
+	}
+	return targets, nil
+}
+
+func isAllPackagesPattern(target string) bool {
+	target = filepath.ToSlash(strings.TrimSpace(target))
+	return target == "..." || strings.HasSuffix(target, "/...")
+}
+
+func allPackagesPatternRoot(pattern string) string {
+	pattern = strings.TrimSpace(pattern)
+	if filepath.ToSlash(pattern) == "..." {
+		return "."
+	}
+	return filepath.Clean(pattern[:len(pattern)-len("/...")])
+}
+
+func shouldSkipGoTestWalkDir(name string) bool {
+	return name == "vendor" || strings.HasPrefix(name, ".") || strings.HasPrefix(name, "_")
+}
+
+func readGoTestTarget(target string) (testPackageTarget, error) {
+	info, err := os.Stat(target)
+	if err != nil {
+		return testPackageTarget{}, err
+	}
 	if info.IsDir() {
-		return readPackageDirMatching(target, func(string) bool {
-			return true
-		}, ".go files")
+		return readGoTestPackageDir(target, "")
 	}
 	if !strings.HasSuffix(target, ".go") {
-		return nil, fmt.Errorf("%s is not a .go file or directory", target)
+		return testPackageTarget{}, fmt.Errorf("%s is not a .go file or directory", target)
 	}
-	dir := filepath.Dir(target)
-	base := filepath.Base(target)
-	if strings.HasSuffix(base, "_test.go") {
-		return readPackageDirMatching(dir, func(name string) bool {
-			return !strings.HasSuffix(name, "_test.go") || name == base
-		}, ".go files")
+	return readGoTestPackageDir(filepath.Dir(target), filepath.Base(target))
+}
+
+func readGoTestPackageDir(dir string, onlyFile string) (testPackageTarget, error) {
+	names, err := goSourceFileNamesInDir(dir, func(name string) bool {
+		if onlyFile == "" {
+			return true
+		}
+		if strings.HasSuffix(onlyFile, "_test.go") {
+			return !strings.HasSuffix(name, "_test.go") || name == onlyFile
+		}
+		return name == onlyFile
+	})
+	if err != nil {
+		return testPackageTarget{}, err
 	}
-	return readPackageDirMatching(dir, func(string) bool {
-		return true
-	}, ".go files")
+	if len(names) == 0 {
+		if onlyFile != "" {
+			return testPackageTarget{}, fmt.Errorf("%s contains no matching .go files for %s", dir, onlyFile)
+		}
+		return testPackageTarget{}, fmt.Errorf("%s contains no .go files", dir)
+	}
+
+	type packageFile struct {
+		file        sourceFile
+		packageName string
+		testFile    bool
+	}
+	var parsed []packageFile
+	for _, name := range names {
+		path := filepath.Join(dir, name)
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return testPackageTarget{}, err
+		}
+		source := string(data)
+		packageName, _, _, found, err := findPackageClause(source)
+		if err != nil {
+			return testPackageTarget{}, fmt.Errorf("%s: %w", path, err)
+		}
+		if !found || packageName == "" {
+			return testPackageTarget{}, fmt.Errorf("%s: missing package clause", path)
+		}
+		parsed = append(parsed, packageFile{
+			file:        sourceFile{Filename: filepath.Clean(path), Source: source},
+			packageName: packageName,
+			testFile:    strings.HasSuffix(name, "_test.go"),
+		})
+	}
+
+	packageName := ""
+	for _, item := range parsed {
+		if !item.testFile {
+			packageName = item.packageName
+			break
+		}
+	}
+	if packageName == "" {
+		for _, item := range parsed {
+			if item.testFile && !strings.HasSuffix(item.packageName, "_test") {
+				packageName = item.packageName
+				break
+			}
+		}
+	}
+	if packageName == "" {
+		for _, item := range parsed {
+			if item.testFile && strings.HasSuffix(item.packageName, "_test") {
+				packageName = strings.TrimSuffix(item.packageName, "_test")
+				break
+			}
+		}
+	}
+	if packageName == "" {
+		return testPackageTarget{}, fmt.Errorf("%s: could not determine package name", dir)
+	}
+
+	target := testPackageTarget{
+		Dir:         filepath.Clean(dir),
+		ImportPath:  deriveBuildImportPath(dir, packageName),
+		PackageName: packageName,
+	}
+	for _, item := range parsed {
+		switch {
+		case !item.testFile:
+			if item.packageName != packageName {
+				return testPackageTarget{}, fmt.Errorf("%s: package %s does not match package %s", item.file.Filename, item.packageName, packageName)
+			}
+			target.LibraryFiles = append(target.LibraryFiles, item.file)
+		case item.packageName == packageName:
+			target.InternalTestFiles = append(target.InternalTestFiles, item.file)
+		case item.packageName == packageName+"_test":
+			target.ExternalTestFiles = append(target.ExternalTestFiles, item.file)
+		default:
+			return testPackageTarget{}, fmt.Errorf("%s: package %s does not match package %s or %s_test", item.file.Filename, item.packageName, packageName, packageName)
+		}
+	}
+	return target, nil
+}
+
+func runOneGoTestTarget(rt *nodeRuntime, target testPackageTarget, packageSpecs []runtimePackageSpec, explicitRoots []string, verbose bool) ([]evalResult, error) {
+	sourceRoots := buildSourceRoots(target.Dir, target.ImportPath, explicitRoots)
+	var results []evalResult
+	if len(target.InternalTestFiles) > 0 || len(target.ExternalTestFiles) == 0 {
+		files := append([]sourceFile{}, target.LibraryFiles...)
+		files = append(files, target.InternalTestFiles...)
+		result, err := rt.TestFilesWithPackages(evalWithPackagesRequest{
+			ImportPath:  target.ImportPath,
+			PackageName: target.PackageName,
+			Files:       files,
+			Packages:    packageSpecs,
+			SourceRoots: sourceRoots,
+			TestVerbose: verbose,
+		})
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, result)
+	}
+	if len(target.ExternalTestFiles) > 0 {
+		packages := append([]runtimePackageSpec{}, packageSpecs...)
+		if len(target.LibraryFiles) > 0 && !runtimePackageSpecsContain(packages, target.ImportPath) {
+			packages = append(packages, runtimePackageSpec{
+				ImportPath:  target.ImportPath,
+				PackageName: target.PackageName,
+				Files:       target.LibraryFiles,
+			})
+		}
+		result, err := rt.TestFilesWithPackages(evalWithPackagesRequest{
+			Files:       target.ExternalTestFiles,
+			Packages:    packages,
+			SourceRoots: sourceRoots,
+			TestVerbose: verbose,
+		})
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, result)
+	}
+	return results, nil
+}
+
+func runtimePackageSpecsContain(specs []runtimePackageSpec, importPath string) bool {
+	for _, spec := range specs {
+		if spec.ImportPath == importPath {
+			return true
+		}
+	}
+	return false
 }
 
 func readBuildTarget(target string) ([]sourceFile, error) {
@@ -1273,6 +1488,27 @@ func seedFromArgs(args []string) (string, bool, error) {
 }
 
 func readPackageDirRaw(dir string, include func(name string) bool, emptyDescription string) ([]sourceFile, error) {
+	names, err := goSourceFileNamesInDir(dir, include)
+	if err != nil {
+		return nil, err
+	}
+	if len(names) == 0 {
+		return nil, fmt.Errorf("%s contains no %s", dir, emptyDescription)
+	}
+
+	files := make([]sourceFile, 0, len(names))
+	for _, name := range names {
+		path := filepath.Join(dir, name)
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return nil, err
+		}
+		files = append(files, sourceFile{Filename: filepath.Clean(path), Source: string(data)})
+	}
+	return files, nil
+}
+
+func goSourceFileNamesInDir(dir string, include func(name string) bool) ([]string, error) {
 	info, err := os.Stat(dir)
 	if err != nil {
 		return nil, err
@@ -1297,20 +1533,7 @@ func readPackageDirRaw(dir string, include func(name string) bool, emptyDescript
 		names = append(names, name)
 	}
 	sort.Strings(names)
-	if len(names) == 0 {
-		return nil, fmt.Errorf("%s contains no %s", dir, emptyDescription)
-	}
-
-	files := make([]sourceFile, 0, len(names))
-	for _, name := range names {
-		path := filepath.Join(dir, name)
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return nil, err
-		}
-		files = append(files, sourceFile{Filename: filepath.Clean(path), Source: string(data)})
-	}
-	return files, nil
+	return names, nil
 }
 
 func packageNameFromSourceFiles(files []sourceFile) string {
@@ -1430,78 +1653,6 @@ func candidateGOPATHs() []string {
 		out = append(out, clean)
 	}
 	return out
-}
-
-func readPackageDirMatching(dir string, include func(name string) bool, emptyDescription string) ([]sourceFile, error) {
-	info, err := os.Stat(dir)
-	if err != nil {
-		return nil, err
-	}
-	if !info.IsDir() {
-		return nil, fmt.Errorf("%s is not a directory; use .source PATH for a single file", dir)
-	}
-
-	entries, err := os.ReadDir(dir)
-	if err != nil {
-		return nil, err
-	}
-	var files []string
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-		name := entry.Name()
-		if strings.HasPrefix(name, ".") || !strings.HasSuffix(name, ".go") || !include(name) {
-			continue
-		}
-		files = append(files, name)
-	}
-	sort.Strings(files)
-	if len(files) == 0 {
-		return nil, fmt.Errorf("%s contains no %s", dir, emptyDescription)
-	}
-
-	var packageName string
-	var out []sourceFile
-	for _, name := range files {
-		path := filepath.Join(dir, name)
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return nil, err
-		}
-		source, found, nextPackageName, err := stripPackageClausePreservingLinesWithName(string(data))
-		if err != nil {
-			return nil, fmt.Errorf("%s: %w", path, err)
-		}
-		if !found {
-			return nil, fmt.Errorf("%s: missing package clause", path)
-		}
-		if packageName == "" {
-			packageName = nextPackageName
-		} else if nextPackageName != packageName {
-			return nil, fmt.Errorf("%s: package %s does not match package %s", path, nextPackageName, packageName)
-		}
-		out = append(out, sourceFile{Filename: filepath.Clean(path), Source: source})
-	}
-	return out, nil
-}
-
-func stripPackageClausePreservingLines(source string) (string, error) {
-	stripped, _, _, err := stripPackageClausePreservingLinesWithName(source)
-	return stripped, err
-}
-
-func stripPackageClausePreservingLinesWithName(source string) (string, bool, string, error) {
-	name, start, end, found, err := findPackageClause(source)
-	if err != nil || !found {
-		return source, found, name, err
-	}
-	var out strings.Builder
-	out.Grow(len(source))
-	out.WriteString(source[:start])
-	out.WriteString(strings.Repeat(" ", end-start))
-	out.WriteString(source[end:])
-	return out.String(), true, name, nil
 }
 
 func findPackageClause(source string) (name string, start int, end int, found bool, err error) {

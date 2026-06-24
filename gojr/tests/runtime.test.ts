@@ -1882,6 +1882,27 @@ func TestNoArg() {}
     expect(result.output.join("")).toContain("PASS\n");
   });
 
+  test("honors testing.Verbose from test options", async () => {
+    const source = `
+import "testing"
+
+func TestVerbose(t *testing.T) {
+  if !testing.Verbose() {
+    t.Fatalf("not verbose")
+  }
+}
+`;
+    const quiet = await testSource(source, { testVerbose: false });
+    expect(quiet.diagnostics).toHaveLength(1);
+    expect(quiet.output.join("")).not.toContain("=== RUN   TestVerbose\n");
+    expect(quiet.output.join("")).toContain("--- FAIL: TestVerbose\n");
+
+    const verbose = await testSource(source, { testVerbose: true });
+    expect(verbose.diagnostics).toEqual([]);
+    expect(verbose.output.join("")).toContain("=== RUN   TestVerbose\n");
+    expect(verbose.output.join("")).toContain("--- PASS: TestVerbose\n");
+  });
+
   test("reports failing and skipped Go-junior tests", async () => {
     const result = await testSource(`
 import "testing"

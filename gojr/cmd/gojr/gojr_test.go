@@ -60,11 +60,11 @@ func TestDeriveBuildImportPathFromGoMod(t *testing.T) {
 	}
 }
 
-func TestStripPackageClausePreservesLineNumbers(t *testing.T) {
+func TestFindPackageClause(t *testing.T) {
 	source := "// doc\npackage demo // comment\n\nfunc F() int { return 1 }\n"
-	stripped, found, name, err := stripPackageClausePreservingLinesWithName(source)
+	name, start, end, found, err := findPackageClause(source)
 	if err != nil {
-		t.Fatalf("stripPackageClausePreservingLinesWithName() error = %v", err)
+		t.Fatalf("findPackageClause() error = %v", err)
 	}
 	if !found {
 		t.Fatalf("package clause not found")
@@ -72,18 +72,12 @@ func TestStripPackageClausePreservesLineNumbers(t *testing.T) {
 	if name != "demo" {
 		t.Fatalf("package name = %q, want demo", name)
 	}
-	if strings.Contains(stripped, "package demo") {
-		t.Fatalf("package clause was not stripped:\n%s", stripped)
-	}
-	if got, want := strings.Count(stripped, "\n"), strings.Count(source, "\n"); got != want {
-		t.Fatalf("newline count = %d, want %d", got, want)
-	}
-	if !strings.Contains(stripped, "func F() int") {
-		t.Fatalf("function body missing after strip:\n%s", stripped)
+	if got := source[start:end]; !strings.HasPrefix(got, "package demo") {
+		t.Fatalf("package clause span = %q, want package demo prefix", got)
 	}
 }
 
-func TestReadPackageDirCombinesNonTestGoFiles(t *testing.T) {
+func TestReadPackageDirKeepsPackageClausesAndSkipsTestFiles(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, filepath.Join(dir, "b.go"), "package demo\n\nimport \"fmt\"\n\nfunc B() string { return fmt.Sprintf(\"%v\", 2) }\n")
 	writeTestFile(t, filepath.Join(dir, "a.go"), "package demo\n\nimport \"fmt\"\n\nfunc A() int { return 1 }\n")
@@ -94,8 +88,8 @@ func TestReadPackageDirCombinesNonTestGoFiles(t *testing.T) {
 		t.Fatalf("readPackageDir() error = %v", err)
 	}
 	combined := combinedTestSource(files)
-	if strings.Contains(combined, "package demo") {
-		t.Fatalf("combined source still contains package clause:\n%s", combined)
+	if strings.Count(combined, "package demo") != 2 {
+		t.Fatalf("combined source should keep package clauses:\n%s", combined)
 	}
 	if !strings.Contains(combined, "func A() int") || !strings.Contains(combined, "func B() string") {
 		t.Fatalf("combined source missing package files:\n%s", combined)
@@ -108,17 +102,17 @@ func TestReadPackageDirCombinesNonTestGoFiles(t *testing.T) {
 	}
 }
 
-func TestReadPackageDirRejectsPackageMismatch(t *testing.T) {
+func TestReadGoTestTargetRejectsPackageMismatch(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, filepath.Join(dir, "a.go"), "package one\n\nfunc A() {}\n")
 	writeTestFile(t, filepath.Join(dir, "b.go"), "package two\n\nfunc B() {}\n")
 
-	_, err := readPackageDir(dir)
+	_, err := readGoTestTarget(dir)
 	if err == nil {
-		t.Fatalf("readPackageDir() succeeded; want package mismatch error")
+		t.Fatalf("readGoTestTarget() succeeded; want package mismatch error")
 	}
 	if !strings.Contains(err.Error(), "does not match") {
-		t.Fatalf("readPackageDir() error = %v, want package mismatch", err)
+		t.Fatalf("readGoTestTarget() error = %v, want package mismatch", err)
 	}
 }
 
@@ -200,36 +194,44 @@ func TestBuildSourceRootsUsesExplicitInferredAndGOPATHRoots(t *testing.T) {
 	}
 }
 
-func TestReadTestTargetDirectoryIncludesTestFiles(t *testing.T) {
+func TestReadGoTestTargetDirectorySplitsInternalAndExternalTests(t *testing.T) {
 	dir := t.TempDir()
+	writeTestFile(t, filepath.Join(dir, "go.mod"), "module example.com/demo\n\ngo 1.27\n")
 	writeTestFile(t, filepath.Join(dir, "a.go"), "package demo\n\nfunc A() int { return 1 }\n")
 	writeTestFile(t, filepath.Join(dir, "a_test.go"), "package demo\n\nfunc TestA() {}\n")
+	writeTestFile(t, filepath.Join(dir, "external_test.go"), "package demo_test\n\nimport demo \"example.com/demo\"\n\nfunc TestExternal() { _ = demo.A() }\n")
 
-	files, err := readTestTarget(dir)
+	target, err := readGoTestTarget(dir)
 	if err != nil {
-		t.Fatalf("readTestTarget(dir) error = %v", err)
+		t.Fatalf("readGoTestTarget(dir) error = %v", err)
 	}
-	combined := combinedTestSource(files)
-	if strings.Contains(combined, "package demo") {
-		t.Fatalf("combined source still contains package clause:\n%s", combined)
+	if target.ImportPath != "example.com/demo" || target.PackageName != "demo" {
+		t.Fatalf("target import=%q package=%q, want example.com/demo demo", target.ImportPath, target.PackageName)
 	}
-	if !strings.Contains(combined, "func A() int") || !strings.Contains(combined, "func TestA()") {
-		t.Fatalf("combined test source missing package or test files:\n%s", combined)
+	if len(target.LibraryFiles) != 1 || len(target.InternalTestFiles) != 1 || len(target.ExternalTestFiles) != 1 {
+		t.Fatalf("target split = lib %d internal %d external %d, want 1/1/1", len(target.LibraryFiles), len(target.InternalTestFiles), len(target.ExternalTestFiles))
+	}
+	combined := combinedTestSource(append(append(append([]sourceFile{}, target.LibraryFiles...), target.InternalTestFiles...), target.ExternalTestFiles...))
+	if !strings.Contains(combined, "package demo\n\nfunc A() int") ||
+		!strings.Contains(combined, "package demo\n\nfunc TestA()") ||
+		!strings.Contains(combined, "package demo_test") {
+		t.Fatalf("combined source should keep package clauses:\n%s", combined)
 	}
 }
 
-func TestReadTestTargetTestFileIncludesSiblingPackageFiles(t *testing.T) {
+func TestReadGoTestTargetTestFileIncludesSiblingPackageFiles(t *testing.T) {
 	dir := t.TempDir()
 	writeTestFile(t, filepath.Join(dir, "a.go"), "package demo\n\nfunc A() int { return 1 }\n")
 	writeTestFile(t, filepath.Join(dir, "b_test.go"), "package demo\n\nfunc TestB() { _ = A() }\n")
 	writeTestFile(t, filepath.Join(dir, "c_test.go"), "package demo\n\nfunc TestC() {}\n")
 
-	files, err := readTestTarget(filepath.Join(dir, "b_test.go"))
+	target, err := readGoTestTarget(filepath.Join(dir, "b_test.go"))
 	if err != nil {
-		t.Fatalf("readTestTarget(file) error = %v", err)
+		t.Fatalf("readGoTestTarget(file) error = %v", err)
 	}
+	files := append(append([]sourceFile{}, target.LibraryFiles...), target.InternalTestFiles...)
 	combined := combinedTestSource(files)
-	if !strings.Contains(combined, "func A() int") || !strings.Contains(combined, "func TestB()") {
+	if !strings.Contains(combined, "package demo") || !strings.Contains(combined, "func A() int") || !strings.Contains(combined, "func TestB()") {
 		t.Fatalf("combined test source missing target test or package files:\n%s", combined)
 	}
 	if strings.Contains(combined, "func TestC()") {
@@ -548,6 +550,24 @@ func Next() int {
 	}
 	if ok, err := runTest(rt, []string{testDir}); err != nil || !ok {
 		t.Fatalf("runTest() ok=%v err=%v, want success", ok, err)
+	}
+
+	verboseDir := t.TempDir()
+	writeTestFile(t, filepath.Join(verboseDir, "verbose.go"), "package verbose\n\nfunc Ready() bool { return true }\n")
+	writeTestFile(t, filepath.Join(verboseDir, "verbose_test.go"), "package verbose\n\nimport \"testing\"\n\nfunc TestVerbose(t *testing.T) { if !testing.Verbose() { t.Fatalf(\"not verbose\") } }\n")
+	if ok, err := runTest(rt, []string{verboseDir}); err != nil || ok {
+		t.Fatalf("runTest(non-verbose) ok=%v err=%v, want test failure without command error", ok, err)
+	}
+	if ok, err := runTest(rt, []string{"-v", verboseDir}); err != nil || !ok {
+		t.Fatalf("runTest(-v) ok=%v err=%v, want success", ok, err)
+	}
+
+	externalDir := t.TempDir()
+	writeTestFile(t, filepath.Join(externalDir, "go.mod"), "module example.com/xtest\n\ngo 1.27\n")
+	writeTestFile(t, filepath.Join(externalDir, "xtest.go"), "package xtest\n\nfunc Add(a, b int) int { return a + b }\n")
+	writeTestFile(t, filepath.Join(externalDir, "xtest_external_test.go"), "package xtest_test\n\nimport (\n\txtest \"example.com/xtest\"\n\t\"testing\"\n)\n\nfunc TestExternal(t *testing.T) { if xtest.Add(2, 5) != 7 { t.Fatalf(\"bad external add\") } }\n")
+	if ok, err := runTest(rt, []string{"-v", externalDir}); err != nil || !ok {
+		t.Fatalf("runTest(external package) ok=%v err=%v, want success", ok, err)
 	}
 }
 
@@ -917,10 +937,13 @@ func mustEval(t *testing.T, rt *nodeRuntime, source string) evalResult {
 func mustReadTestTarget(t *testing.T, target string) []sourceFile {
 	t.Helper()
 
-	files, err := readTestTarget(target)
+	testTarget, err := readGoTestTarget(target)
 	if err != nil {
-		t.Fatalf("readTestTarget(%s) error = %v", target, err)
+		t.Fatalf("readGoTestTarget(%s) error = %v", target, err)
 	}
+	files := append([]sourceFile{}, testTarget.LibraryFiles...)
+	files = append(files, testTarget.InternalTestFiles...)
+	files = append(files, testTarget.ExternalTestFiles...)
 	return files
 }
 

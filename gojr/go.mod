@@ -7,4 +7,7 @@ require (
 	github.com/glycerine/blake3 v1.5.2
 )
 
-require github.com/klauspost/cpuid/v2 v2.0.9 // indirect
+require (
+	github.com/glycerine/b3 v0.0.59 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
+)

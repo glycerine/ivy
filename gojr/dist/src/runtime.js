@@ -121,6 +121,9 @@ export class EvaluationContext {
     scheduler() {
         return this.shared.scheduler;
     }
+    testingVerbose() {
+        return this.options.testVerbose ?? false;
+    }
     fork(currentScope = this.shared.rootScope) {
         return new EvaluationContext(this.options, this.shared, currentScope);
     }
@@ -1235,6 +1238,7 @@ export async function testSource(source, options = {}) {
     return testSourceFiles([sourceFileFromSource(source, options)], options);
 }
 export async function testSourceFiles(files, options = {}) {
+    const testOptions = { testVerbose: true, ...options };
     const parsed = frontSourceFilesToAst(files);
     const ast = parsed.ast;
     if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
@@ -1250,7 +1254,7 @@ export async function testSourceFiles(files, options = {}) {
             output: []
         };
     }
-    const checked = checkGoJuniorSourceFiles(files, typeCheckConfig(options));
+    const checked = checkGoJuniorSourceFiles(files, typeCheckConfig(testOptions));
     if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
         return {
             diagnostics: checked.diagnostics,
@@ -1258,7 +1262,7 @@ export async function testSourceFiles(files, options = {}) {
             ast
         };
     }
-    return testProgram(ast, checked.diagnostics, options);
+    return testProgram(ast, checked.diagnostics, testOptions);
 }
 function sourceFileFromSource(source, options = {}) {
     return {
@@ -1378,7 +1382,7 @@ async function testProgram(ast, baseDiagnostics, options) {
             }
             let failed = false;
             for (const declaration of tests) {
-                const testFailed = await runOneTest(declaration, context, diagnostics);
+                const testFailed = await runOneTest(declaration, context, diagnostics, options.testVerbose ?? false);
                 failed ||= testFailed;
             }
             context.write(failed ? "FAIL\n" : "PASS\n");
@@ -1401,8 +1405,9 @@ async function testProgram(ast, baseDiagnostics, options) {
 function isTestFunctionDecl(declaration) {
     return !declaration.receiver && /^Test($|[^a-z])/.test(declaration.name);
 }
-async function runOneTest(declaration, context, diagnostics) {
-    context.write(`=== RUN   ${declaration.name}\n`);
+async function runOneTest(declaration, context, diagnostics, verbose) {
+    if (verbose)
+        context.write(`=== RUN   ${declaration.name}\n`);
     const signatureError = testSignatureError(declaration);
     if (signatureError) {
         context.write(`    ${signatureError}\n`);
@@ -1428,12 +1433,12 @@ async function runOneTest(declaration, context, diagnostics) {
             }
         }
     }
-    if (testingT)
+    const state = testingT?.state;
+    if (testingT && (verbose || runtimeFailure || state?.failed || state?.skipped))
         emitTestingLogs(context, testingT.state);
     if (runtimeFailure && !testingT) {
         context.write(indentTestingLog(runtimeFailure));
     }
-    const state = testingT?.state;
     if (runtimeFailure || state?.failed) {
         context.write(`--- FAIL: ${declaration.name}\n`);
         diagnostics.push(testDiagnostic(declaration, runtimeFailure ? `${declaration.name}: ${runtimeFailure}` : `${declaration.name} failed`));
@@ -1443,7 +1448,8 @@ async function runOneTest(declaration, context, diagnostics) {
         context.write(`--- SKIP: ${declaration.name}\n`);
         return false;
     }
-    context.write(`--- PASS: ${declaration.name}\n`);
+    if (verbose)
+        context.write(`--- PASS: ${declaration.name}\n`);
     return false;
 }
 function testSignatureError(declaration) {
@@ -2503,7 +2509,7 @@ function availablePackages(context) {
         "runtime/pprof": runtimePprofPackage(),
         strconv: strconvPackage(),
         "syscall/js": syscallJSPackage(),
-        testing: testingPackage(),
+        testing: testingPackage(context),
         unsafe: unsafePackage(),
         ...context.packages()
     };
@@ -2730,10 +2736,10 @@ function runtimeFrameValue() {
         ["Entry", 0n]
     ]);
 }
-function testingPackage() {
+function testingPackage(context) {
     return {
         Short: hostCallable("testing.Short", () => false),
-        Verbose: hostCallable("testing.Verbose", () => false)
+        Verbose: hostCallable("testing.Verbose", () => context.testingVerbose())
     };
 }
 function unsafePackage() {
