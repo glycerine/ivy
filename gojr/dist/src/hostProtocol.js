@@ -68,6 +68,18 @@ export function buildReportToHostPayload(result) {
 export function buildReportToHostJSON(result) {
     return JSON.stringify(buildReportToHostPayload(result));
 }
+export function formatBuildProgressEvent(event) {
+    const prefix = event.action === "checking"
+        ? "checking"
+        : event.action === "cached"
+            ? "cached"
+            : "built";
+    const detail = event.artifactPath ? ` -> ${event.artifactPath}` : "";
+    const stdlib = event.standardLibrary ? " stdlib" : "";
+    const files = event.fileCount === undefined ? "" : ` files=${event.fileCount}`;
+    const deps = event.dependencyCount === undefined ? "" : ` deps=${event.dependencyCount}`;
+    return `gojr: ${prefix}${stdlib} ${event.importPath}${detail}${files}${deps}`;
+}
 export function inspectPackageJavaScriptReportToHostPayload(result) {
     return {
         ...buildReportToHostPayload(result),

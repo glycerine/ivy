@@ -67,6 +67,7 @@ type buildRequest struct {
 	SourceRoots        []string       `json:"sourceRoots,omitempty"`
 	ArtifactRoot       string         `json:"artifactRoot,omitempty"`
 	PackageCacheParent string         `json:"packageCacheParent,omitempty"`
+	Progress           bool           `json:"progress,omitempty"`
 }
 
 type cacheRequest struct {
@@ -94,6 +95,7 @@ type evalWithPackagesRequest struct {
 	SourceRoots        []string             `json:"sourceRoots,omitempty"`
 	ArtifactRoot       string               `json:"artifactRoot,omitempty"`
 	PackageCacheParent string               `json:"packageCacheParent,omitempty"`
+	Progress           bool                 `json:"progress,omitempty"`
 }
 
 type runtimePackageSpec struct {
@@ -435,6 +437,7 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 			SourceRoots:        sourceRoots,
 			ArtifactRoot:       strings.TrimSpace(*artifactRoot),
 			PackageCacheParent: strings.TrimSpace(*packageCacheParent),
+			Progress:           !*jsonMode,
 		})
 		if err != nil {
 			return false, err
@@ -599,6 +602,7 @@ func runBuild(rt *nodeRuntime, args []string) (bool, error) {
 		SourceRoots:        buildSourceRoots(target, resolvedImportPath, sourceRootFlags),
 		ArtifactRoot:       strings.TrimSpace(*artifactRoot),
 		PackageCacheParent: strings.TrimSpace(*packageCacheParent),
+		Progress:           !*jsonMode,
 	})
 	if err != nil {
 		return false, err

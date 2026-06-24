@@ -3282,6 +3282,20 @@ return q, r, onlyR
     expect(result.values).toEqual([3n, 2n, 4n]);
   });
 
+  test("infers tuple result slot types for short and var declarations", async () => {
+    const result = await expectRuns(`
+func words() (uint64, uint64) {
+  return 7, uint64(10254876495507714224)
+}
+
+hi, lo := words()
+var a, b = words()
+return hi, lo, a, b
+`);
+
+    expect(result.values).toEqual([7n, 10254876495507714224n, 7n, 10254876495507714224n]);
+  });
+
   test("expands a single multi-result call into another call argument list", async () => {
     const result = await expectRuns(`
 func pair() (int, int) {

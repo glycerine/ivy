@@ -1,4 +1,4 @@
-import type { BuildPackageReport, InspectPackageJavaScriptReport } from "./build.js";
+import type { BuildPackageReport, BuildProgressEvent, InspectPackageJavaScriptReport } from "./build.js";
 import type { CompileResult } from "./compile.js";
 import { formatDiagnostic, hasErrorDiagnostics, type Diagnostic } from "./diagnostics.js";
 import type { SpreadsheetFixtureRunResult } from "./fixture.js";
@@ -126,6 +126,19 @@ export function buildReportToHostPayload(result: BuildPackageReport): HostBuildP
 
 export function buildReportToHostJSON(result: BuildPackageReport): string {
   return JSON.stringify(buildReportToHostPayload(result));
+}
+
+export function formatBuildProgressEvent(event: BuildProgressEvent): string {
+  const prefix = event.action === "checking"
+    ? "checking"
+    : event.action === "cached"
+      ? "cached"
+      : "built";
+  const detail = event.artifactPath ? ` -> ${event.artifactPath}` : "";
+  const stdlib = event.standardLibrary ? " stdlib" : "";
+  const files = event.fileCount === undefined ? "" : ` files=${event.fileCount}`;
+  const deps = event.dependencyCount === undefined ? "" : ` deps=${event.dependencyCount}`;
+  return `gojr: ${prefix}${stdlib} ${event.importPath}${detail}${files}${deps}`;
 }
 
 export function inspectPackageJavaScriptReportToHostPayload(result: InspectPackageJavaScriptReport): HostInspectJavaScriptPayload {

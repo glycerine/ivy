@@ -7,10 +7,12 @@ import {
   buildPackages,
   buildStandardLibraryPackage,
   BuildArtifactStore,
+  BuildProgressEvent,
   collectSourceImportPaths,
   createNodeSourcePackageProvider,
   createStandardLibrarySourcePackageProvider,
   evaluatePackageSourceFiles,
+  formatBuildProgressEvent,
   inspectPackageJavaScript,
   parseGoJuniorPackageArchive,
   resolveArtifactRoot
@@ -482,6 +484,55 @@ func Two() int { return lib.One() + 1 }
     expect(changedDependency.artifacts[0]?.cacheKey).not.toBe(first.artifacts[0]?.cacheKey);
     expect(changedDependency.artifacts[1]?.cacheKey).not.toBe(first.artifacts[1]?.cacheKey);
     expect(changedDependency.artifacts[1]?.dependencyCacheKeys).toEqual([`example.com/lib:${changedDependency.artifacts[0]?.cacheKey}`]);
+  });
+
+  test("reports package build progress for dependency checking and cache writes", () => {
+    const store = new MemoryArtifactStore();
+    const events: BuildProgressEvent[] = [];
+    const request = {
+      importPath: "example.com/app",
+      artifactRoot: "/tmp/gojr-progress",
+      onProgress: (event: BuildProgressEvent) => events.push(event),
+      packageSources: {
+        "example.com/lib": [{
+          filename: "lib.go",
+          source: "package lib\n\nfunc One() int { return 1 }\n"
+        }]
+      },
+      files: [{
+        filename: "app.go",
+        source: `package app
+
+import "example.com/lib"
+
+func Two() int { return lib.One() + 1 }
+`
+      }]
+    };
+
+    const first = buildPackages(request, store);
+    const firstEvents = [...events];
+    events.length = 0;
+    const second = buildPackages(request, store);
+
+    expect(first.diagnostics).toEqual([]);
+    expect(first.ok).toBe(true);
+    expect(firstEvents.map((event) => `${event.action}:${event.importPath}`)).toEqual([
+      "checking:example.com/app",
+      "checking:example.com/lib",
+      "built:example.com/lib",
+      "built:example.com/app"
+    ]);
+    expect(firstEvents[0]?.dependencyCount).toBe(1);
+    expect(formatBuildProgressEvent(firstEvents[2]!)).toBe("gojr: built example.com/lib -> /tmp/gojr-progress/example.com/lib.a files=1 deps=0");
+
+    expect(second.ok).toBe(true);
+    expect(events.map((event) => `${event.action}:${event.importPath}`)).toEqual([
+      "checking:example.com/app",
+      "checking:example.com/lib",
+      "cached:example.com/lib",
+      "cached:example.com/app"
+    ]);
   });
 
   test("rejects unknown source package imports before writing artifacts", () => {

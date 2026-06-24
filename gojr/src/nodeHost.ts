@@ -19,6 +19,7 @@ import {
   type InspectPackageJavaScriptReport
 } from "./build.js";
 import { hasErrorDiagnostics, REPL_FILENAME, type Diagnostic, type SourceFile } from "./diagnostics.js";
+import { formatBuildProgressEvent } from "./hostProtocol.js";
 import {
   compilePackageSourceFiles,
   compileSourceFiles,
@@ -48,6 +49,7 @@ import type { Package as GoTypesPackage } from "./go/types/index.js";
 
 export interface NodeBuildPackageRequest extends BuildPackageRequest {
   sourceRoots?: string[];
+  progress?: boolean;
 }
 
 export interface NodeSourcePackageRequest {
@@ -59,6 +61,7 @@ export interface NodeSourcePackageRequest {
   sourceRoots?: string[];
   artifactRoot?: string;
   packageCacheParent?: string;
+  progress?: boolean;
   sheetJSON?: string;
   sheetsJSON?: string;
 }
@@ -416,6 +419,7 @@ export async function runMainSourceFilesWithPackagesOnNode(request: NodeSourcePa
   if (packageSources) buildRequest.packageSources = packageSources;
   if (request.artifactRoot) buildRequest.artifactRoot = request.artifactRoot;
   if (request.packageCacheParent) buildRequest.packageCacheParent = request.packageCacheParent;
+  if (request.progress) buildRequest.progress = request.progress;
   const build = buildPackagesOnNode(buildRequest);
   if (!build.ok || hasErrorDiagnostics(build.diagnostics)) {
     return {
@@ -748,6 +752,12 @@ function normalizeNodeBuildRequest(request: NodeBuildPackageRequest): BuildPacka
   if (normalized.packageCacheParent) normalized.packageCacheParent = expandHome(normalized.packageCacheParent);
   const provider = createNodeSourcePackageProvider(normalized.sourceRoots ?? []);
   if (provider) normalized.sourcePackageProvider = provider;
+  if (normalized.progress) {
+    normalized.onProgress = (event) => {
+      const line = formatBuildProgressEvent(event);
+      if (line) process.stderr.write(`${line}\n`);
+    };
+  }
   return normalized;
 }
 

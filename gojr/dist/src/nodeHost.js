@@ -3,6 +3,7 @@ import { basename, delimiter, dirname, isAbsolute, join, relative, resolve, sep 
 import { arch as nodeArch, homedir, platform as nodePlatform } from "node:os";
 import { buildTagSetForContext, buildPackages, collectSourceImportPaths, GOJR_GOARCH, GOJR_GOOS, goSourceFileMatchesBuildContext, inspectPackageJavaScript, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
 import { hasErrorDiagnostics, REPL_FILENAME } from "./diagnostics.js";
+import { formatBuildProgressEvent } from "./hostProtocol.js";
 import { compilePackageSourceFiles, compileSourceFiles } from "./compile.js";
 import { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture } from "./fixture.js";
 import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
@@ -301,6 +302,8 @@ export async function runMainSourceFilesWithPackagesOnNode(request) {
         buildRequest.artifactRoot = request.artifactRoot;
     if (request.packageCacheParent)
         buildRequest.packageCacheParent = request.packageCacheParent;
+    if (request.progress)
+        buildRequest.progress = request.progress;
     const build = buildPackagesOnNode(buildRequest);
     if (!build.ok || hasErrorDiagnostics(build.diagnostics)) {
         return {
@@ -611,6 +614,13 @@ function normalizeNodeBuildRequest(request) {
     const provider = createNodeSourcePackageProvider(normalized.sourceRoots ?? []);
     if (provider)
         normalized.sourcePackageProvider = provider;
+    if (normalized.progress) {
+        normalized.onProgress = (event) => {
+            const line = formatBuildProgressEvent(event);
+            if (line)
+                process.stderr.write(`${line}\n`);
+        };
+    }
     return normalized;
 }
 function resolveNodeArtifactRoot(request) {

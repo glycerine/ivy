@@ -135,11 +135,29 @@ class PackageGraphBuilder {
             const existing = this.store?.read?.(node.artifactPath);
             const existingArtifact = existing === undefined ? undefined : parseGeneratedArtifactSource(existing);
             if (existingArtifact?.cacheKey === node.cacheKey && existingArtifact.layoutVersion === ARTIFACT_LAYOUT_VERSION) {
+                this.progress({
+                    action: "cached",
+                    importPath: node.importPath,
+                    packageName: node.packageName,
+                    artifactPath: node.artifactPath,
+                    dependencyCount: node.dependencies.length,
+                    fileCount: node.files.length,
+                    standardLibrary: this.standardLibraryPackages.has(node.importPath)
+                });
                 artifacts.push({ ...reportArtifact, action: "skipped" });
                 skipped.push(node.artifactPath);
                 continue;
             }
             this.store?.writeAtomic(node.artifactPath, node.artifactSource);
+            this.progress({
+                action: "built",
+                importPath: node.importPath,
+                packageName: node.packageName,
+                artifactPath: node.artifactPath,
+                dependencyCount: node.dependencies.length,
+                fileCount: node.files.length,
+                standardLibrary: this.standardLibraryPackages.has(node.importPath)
+            });
             artifacts.push(reportArtifact);
             built.push(node.artifactPath);
         }
@@ -173,6 +191,14 @@ class PackageGraphBuilder {
         }
         this.visiting.add(importPath);
         const dependencies = uniqueSorted(parsed.files.flatMap((file) => file.imports.map(importPathFromSpec)));
+        this.progress({
+            action: "checking",
+            importPath,
+            packageName,
+            dependencyCount: dependencies.length,
+            fileCount: files.length,
+            standardLibrary: this.standardLibraryPackages.has(importPath)
+        });
         const sourceDependencies = [];
         for (const dependencyPath of dependencies) {
             if (preferAmbientBuildImport(dependencyPath)) {
@@ -290,6 +316,14 @@ class PackageGraphBuilder {
         const goarch = this.request.goarch ?? GOJR_GOARCH;
         const buildTags = resolvedBuildTags(this.request);
         const dependencies = [];
+        this.progress({
+            action: "checking",
+            importPath,
+            packageName,
+            dependencyCount: dependencies.length,
+            fileCount: 1,
+            standardLibrary: true
+        });
         const dependencyCacheKeys = [];
         const exports = uniqueExports(packageScopeObjects(pkg));
         const sourceHash = stableHash([
@@ -354,6 +388,14 @@ class PackageGraphBuilder {
         };
         this.nodes.set(importPath, node);
         return node;
+    }
+    progress(event) {
+        try {
+            this.request.onProgress?.(event);
+        }
+        catch {
+            // Progress sinks are observability hooks and must not affect compilation.
+        }
     }
     sourceFilesForImport(importPath, filename) {
         const explicit = this.packageSources.get(importPath);
