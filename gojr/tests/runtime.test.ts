@@ -1384,10 +1384,15 @@ rows := []struct {
 lookup := map[Point]Point{
   {X: 1}: {Y: 2},
 }
-return rows[0].Name, rows[1].Pos.Y, lookup[Point{X: 1}].Y
+type Node struct{ X int }
+ptrs := map[int]*Node{
+  0: {X: 7},
+  1: {},
+}
+return rows[0].Name, rows[1].Pos.Y, lookup[Point{X: 1}].Y, ptrs[0].X, ptrs[1].X
 `);
 
-    expect(result.values).toEqual(["a", 4n, 2n]);
+    expect(result.values).toEqual(["a", 4n, 2n, 7n, 0n]);
   });
 
   test("supports value and pointer receiver methods with Go selector syntax", async () => {

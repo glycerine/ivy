@@ -2557,8 +2557,8 @@ function syscallJSPackage(): RuntimeObject {
     TypeFunction: syscallJSTypeValue(7n),
     CopyBytesToGo: hostCallable("syscall/js.CopyBytesToGo", (args) => syscallJSCopyBytesToGo(args[0] ?? null, args[1] ?? null)),
     CopyBytesToJS: hostCallable("syscall/js.CopyBytesToJS", (args) => syscallJSCopyBytesToJS(args[0] ?? null, args[1] ?? null)),
-    FuncOf: hostCallable("syscall/js.FuncOf", (args) => syscallJSFuncOf(args[0] ?? null)),
-    Global: hostCallable("syscall/js.Global", () => syscallJSValue(globalThis)),
+    FuncOf: hostCallable("syscall/js.FuncOf", (args, context) => syscallJSFuncOf(args[0] ?? null, context)),
+    Global: hostCallable("syscall/js.Global", () => syscallJSValue(syscallJSGlobalObject())),
     Null: hostCallable("syscall/js.Null", () => syscallJSValue(null)),
     Undefined: hostCallable("syscall/js.Undefined", () => syscallJSValue(undefined)),
     ValueOf: hostCallable("syscall/js.ValueOf", (args) => syscallJSValue(syscallJSRawFromRuntime(args[0] ?? null)))
@@ -2638,9 +2638,12 @@ function syscallJSValue(raw: unknown): RuntimeNamedValue {
   return new RuntimeNamedValue("js.Value", object);
 }
 
-function syscallJSFuncOf(fn: RuntimeValue): RuntimeNamedValue {
+function syscallJSFuncOf(fn: RuntimeValue, context?: EvaluationContext): RuntimeNamedValue {
   const raw = (...args: unknown[]) => {
-    throw new GoJuniorRuntimeError("syscall/js.FuncOf callbacks must be invoked from Go-junior runtime context");
+    if (!context) return undefined;
+    const goArgs = args.map((arg) => syscallJSValue(arg));
+    void callRuntime(fn, [syscallJSValue(undefined), goArgs], context);
+    return undefined;
   };
   const value = syscallJSValue(raw);
   const object: RuntimeObject = {
@@ -2746,6 +2749,8 @@ function syscallJSRawFromRuntime(value: RuntimeValue, context?: EvaluationContex
   if (isRuntimeObject(value)) {
     const object = value as Partial<SyscallJSValueObject>;
     if (SYSCALL_JS_VALUE_INFO in object) return object[SYSCALL_JS_VALUE_INFO];
+    const field = value.Value;
+    if (field !== undefined) return syscallJSRawValue(field);
   }
   if (isRuntimeString(value)) return goStringText(value);
   if (typeof value === "bigint") return Number(value);
@@ -2764,6 +2769,128 @@ function syscallJSRawFromRuntime(value: RuntimeValue, context?: EvaluationContex
     return object;
   }
   return value;
+}
+
+let syscallJSGlobalCache: Record<PropertyKey, unknown> | undefined;
+
+function syscallJSGlobalObject(): Record<PropertyKey, unknown> {
+  if (syscallJSGlobalCache) return syscallJSGlobalCache;
+  const base = globalThis as Record<PropertyKey, unknown>;
+  const globalObject = Object.create(base) as Record<PropertyKey, unknown>;
+  globalObject.process = base.process ?? syscallJSProcessObject();
+  globalObject.path = base.path ?? syscallJSPathObject();
+  globalObject.fs = base.fs ?? syscallJSFSObject();
+  globalObject.Uint8Array = base.Uint8Array ?? Uint8Array;
+  globalObject.Array = base.Array ?? Array;
+  globalObject.Object = base.Object ?? Object;
+  globalObject.Function = base.Function ?? Function;
+  globalObject.Symbol = base.Symbol ?? Symbol;
+  globalObject.eval = base.eval ?? ((source: string) => {
+    throw new GoJuniorRuntimeError(`syscall/js eval is not available: ${source}`);
+  });
+  syscallJSGlobalCache = globalObject;
+  return globalObject;
+}
+
+function syscallJSProcessObject(): Record<string, unknown> {
+  const processLike = (globalThis as { process?: { cwd?: () => string; chdir?: (path: string) => void; argv?: string[] } }).process;
+  let cwd = "/";
+  return {
+    argv: processLike?.argv ?? ["gojr"],
+    cwd: () => processLike?.cwd?.() ?? cwd,
+    chdir: (path: string) => {
+      if (processLike?.chdir) processLike.chdir(path);
+      else cwd = syscallJSResolvePath(cwd, path);
+    }
+  };
+}
+
+function syscallJSPathObject(): Record<string, unknown> {
+  return {
+    resolve: (...parts: unknown[]) => {
+      const processObject = syscallJSGlobalObject().process as { cwd?: () => string };
+      const cwd = processObject.cwd?.() ?? "/";
+      return parts.reduce<string>((current, part) => syscallJSResolvePath(current, String(part)), cwd);
+    }
+  };
+}
+
+function syscallJSResolvePath(cwd: string, path: string): string {
+  const raw = path.startsWith("/") ? path : `${cwd.replace(/\/+$/, "")}/${path}`;
+  const stack: string[] = [];
+  for (const part of raw.split("/")) {
+    if (part === "" || part === ".") continue;
+    if (part === "..") stack.pop();
+    else stack.push(part);
+  }
+  return `/${stack.join("/")}`;
+}
+
+function syscallJSFSObject(): Record<string, unknown> {
+  const constants = {
+    O_WRONLY: 1,
+    O_RDWR: 2,
+    O_CREAT: 64,
+    O_TRUNC: 512,
+    O_APPEND: 1024,
+    O_EXCL: 128,
+    O_DIRECTORY: 65536
+  };
+  const statObject = (directory = false) => ({
+    dev: 0,
+    ino: 1,
+    mode: directory ? 0o040755 : 0o100644,
+    nlink: 1,
+    uid: 0,
+    gid: 0,
+    rdev: 0,
+    size: 0,
+    blksize: 4096,
+    blocks: 0,
+    atimeMs: 0,
+    mtimeMs: 0,
+    ctimeMs: 0,
+    isDirectory: () => directory
+  });
+  const callback = (args: unknown[]): ((err: unknown, value?: unknown) => void) | undefined => {
+    const last = args[args.length - 1];
+    return typeof last === "function" ? last as (err: unknown, value?: unknown) => void : undefined;
+  };
+  const ok = (args: unknown[], value?: unknown): void => {
+    callback(args)?.(null, value);
+  };
+  return {
+    constants,
+    open: (...args: unknown[]) => ok(args, 3),
+    close: (...args: unknown[]) => ok(args),
+    mkdir: (...args: unknown[]) => ok(args),
+    fstat: (...args: unknown[]) => ok(args, statObject(false)),
+    stat: (...args: unknown[]) => ok(args, statObject(false)),
+    lstat: (...args: unknown[]) => ok(args, statObject(false)),
+    readdir: (...args: unknown[]) => ok(args, []),
+    unlink: (...args: unknown[]) => ok(args),
+    rmdir: (...args: unknown[]) => ok(args),
+    chmod: (...args: unknown[]) => ok(args),
+    fchmod: (...args: unknown[]) => ok(args),
+    chown: (...args: unknown[]) => ok(args),
+    fchown: (...args: unknown[]) => ok(args),
+    lchown: (...args: unknown[]) => ok(args),
+    utimes: (...args: unknown[]) => ok(args),
+    rename: (...args: unknown[]) => ok(args),
+    truncate: (...args: unknown[]) => ok(args),
+    ftruncate: (...args: unknown[]) => ok(args),
+    readlink: (...args: unknown[]) => ok(args, ""),
+    link: (...args: unknown[]) => ok(args),
+    symlink: (...args: unknown[]) => ok(args),
+    fsync: (...args: unknown[]) => ok(args),
+    read: (...args: unknown[]) => ok(args, 0),
+    write: (...args: unknown[]) => ok(args, syscallJSWriteLength(args))
+  };
+}
+
+function syscallJSWriteLength(args: unknown[]): number {
+  const length = args[3];
+  return typeof length === "number" ? length : 0;
 }
 
 function syscallJSCopyBytesToGo(dst: RuntimeValue, src: RuntimeValue): bigint {
@@ -3908,6 +4035,16 @@ function makeRuntimeSlice(elementType: string, length: number, capacity: number,
 }
 
 async function evaluateStructLiteral(expression: StructLiteralExpression, context: EvaluationContext): Promise<RuntimeValue> {
+  const pointerTarget = normalizeTypeText(expression.typeName).startsWith("*")
+    ? normalizeTypeText(expression.typeName).slice(1)
+    : undefined;
+  if (pointerTarget) {
+    let value = await evaluateStructLiteral({ ...expression, typeName: pointerTarget }, context);
+    return new RuntimePointer(pointerTarget, () => value, (next) => {
+      value = prepareAssignableToType(next, pointerTarget, `*${pointerTarget} literal`, context);
+    });
+  }
+
   const typeDef = context.typeDef(expression.typeName) ?? parseAnonymousStructTypeText(expression.typeName);
   if (!typeDef) {
     const alias = context.aliasType(expression.typeName);
