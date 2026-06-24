@@ -6,9 +6,22 @@ import {
   Config,
   Info,
   Int,
+  Int8,
+  Int16,
+  Int32,
+  Int64,
+  Uint,
+  Uint8,
+  Uint16,
+  Uint32,
+  Uint64,
+  Uintptr,
+  Float32,
+  Float64,
   Bool,
   NewChecker,
   NewFunc,
+  NewInterfaceType,
   NewNamed,
   NewPackage,
   NewPointer,
@@ -16,14 +29,18 @@ import {
   NewSignatureType,
   NewSlice,
   NewStruct,
+  NewTerm,
   NewTypeName,
+  NewTypeParam,
   NewTuple,
+  NewUnion,
   NewVar,
   NoPos,
   String as GoString,
   Typ,
   emptyInterface,
   ensureUniverseInitialized,
+  universeComparable,
   Unsafe,
   type GoJuniorSheetNamespace,
   type Object as GoTypesObject,
@@ -329,10 +346,140 @@ function seedPackageScope(pkg: GoTypesPackage, config: GoJuniorCheckConfig): voi
 }
 
 function standardPackage(path: string): GoTypesPackage | undefined {
+  if (path === "cmp") return cmpPackage();
   if (path === "fmt") return fmtPackage();
+  if (path === "math") return mathPackage();
   if (path === "testing") return testingPackage();
   if (path === "unsafe") return Unsafe;
   return undefined;
+}
+
+function cmpPackage(): GoTypesPackage {
+  const pkg = NewPackage("cmp", "cmp");
+  if (pkg.Scope().Lookup("Compare") !== null) return pkg;
+  const intType = Typ[Int]!;
+  const boolType = Typ[Bool]!;
+  const orderedConstraint = NewInterfaceType(null, [NewUnion([
+    NewTerm(true, Typ[Int]!),
+    NewTerm(true, Typ[Int8]!),
+    NewTerm(true, Typ[Int16]!),
+    NewTerm(true, Typ[Int32]!),
+    NewTerm(true, Typ[Int64]!),
+    NewTerm(true, Typ[Uint]!),
+    NewTerm(true, Typ[Uint8]!),
+    NewTerm(true, Typ[Uint16]!),
+    NewTerm(true, Typ[Uint32]!),
+    NewTerm(true, Typ[Uint64]!),
+    NewTerm(true, Typ[Uintptr]!),
+    NewTerm(true, Typ[Float32]!),
+    NewTerm(true, Typ[Float64]!),
+    NewTerm(true, Typ[GoString]!)
+  ])]).Complete();
+  const orderedName = NewTypeName(NoPos, pkg, "Ordered", null);
+  const orderedType = NewNamed(orderedName, orderedConstraint, null);
+  orderedName.setType(orderedType);
+  pkg.Scope().Insert(orderedName);
+  const orderedTypeParam = (): ReturnType<typeof NewTypeParam> =>
+    NewTypeParam(NewTypeName(NoPos, pkg, "T", null), orderedType);
+  const comparableTypeParam = (): ReturnType<typeof NewTypeParam> =>
+    NewTypeParam(NewTypeName(NoPos, pkg, "T", null), universeComparable.Type());
+  const compareT = orderedTypeParam();
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "Compare", NewSignatureType(
+    null,
+    null,
+    [compareT],
+    NewTuple(NewVar(NoPos, pkg, "x", compareT), NewVar(NoPos, pkg, "y", compareT)),
+    NewTuple(NewVar(NoPos, pkg, "", intType)),
+    false
+  )));
+  const lessT = orderedTypeParam();
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "Less", NewSignatureType(
+    null,
+    null,
+    [lessT],
+    NewTuple(NewVar(NoPos, pkg, "x", lessT), NewVar(NoPos, pkg, "y", lessT)),
+    NewTuple(NewVar(NoPos, pkg, "", boolType)),
+    false
+  )));
+  const orT = comparableTypeParam();
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "Or", NewSignatureType(
+    null,
+    null,
+    [orT],
+    NewTuple(NewVar(NoPos, pkg, "vals", NewSlice(orT))),
+    NewTuple(NewVar(NoPos, pkg, "", orT)),
+    true
+  )));
+  pkg.MarkComplete();
+  return pkg;
+}
+
+function mathPackage(): GoTypesPackage {
+  const pkg = NewPackage("math", "math");
+  if (pkg.Scope().Lookup("NaN") !== null) return pkg;
+  const float64Type = Typ[Float64]!;
+  const uint32Type = Typ[Uint32]!;
+  const uint64Type = Typ[Uint64]!;
+  const intType = Typ[Int]!;
+  const boolType = Typ[Bool]!;
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "NaN", NewSignatureType(
+    null,
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "", float64Type)),
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "Inf", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "sign", intType)),
+    NewTuple(NewVar(NoPos, pkg, "", float64Type)),
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "IsNaN", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "f", float64Type)),
+    NewTuple(NewVar(NoPos, pkg, "", boolType)),
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "Float32bits", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "f", Typ[Float32]!)),
+    NewTuple(NewVar(NoPos, pkg, "", uint32Type)),
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "Float32frombits", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "b", uint32Type)),
+    NewTuple(NewVar(NoPos, pkg, "", Typ[Float32]!)),
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "Float64bits", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "f", float64Type)),
+    NewTuple(NewVar(NoPos, pkg, "", uint64Type)),
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "Float64frombits", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "b", uint64Type)),
+    NewTuple(NewVar(NoPos, pkg, "", float64Type)),
+    false
+  )));
+  pkg.MarkComplete();
+  return pkg;
 }
 
 function fmtPackage(): GoTypesPackage {

@@ -921,7 +921,8 @@ function sourcePackageDefaultName(importPath) {
     return importPath.split("/").filter(Boolean).at(-1) ?? importPath;
 }
 function isRuntimeBuiltinImport(importPath) {
-    return importPath === "fmt" ||
+    return importPath === "cmp" ||
+        importPath === "fmt" ||
         importPath === "testing" ||
         importPath === "unsafe" ||
         importPath === "math" ||
@@ -1648,12 +1649,21 @@ function installAutomaticImports(context) {
 }
 function availablePackages(context) {
     return {
+        cmp: cmpPackage(),
         fmt: fmtPackage(),
         math: mathPackage(),
         os: osPackage(),
         strconv: strconvPackage(),
         testing: testingPackage(),
+        unsafe: unsafePackage(),
         ...context.packages()
+    };
+}
+function cmpPackage() {
+    return {
+        Compare: hostCallable("cmp.Compare", (args) => BigInt(cmpCompare(args[0] ?? null, args[1] ?? null))),
+        Less: hostCallable("cmp.Less", (args) => cmpLess(args[0] ?? null, args[1] ?? null)),
+        Or: hostCallable("cmp.Or", (args) => args.find((arg) => !isRuntimeZeroValue(arg)) ?? zeroValueLike(args[0] ?? null))
     };
 }
 function fmtPackage() {
@@ -1701,6 +1711,39 @@ function testingPackage() {
     return {
         Short: hostCallable("testing.Short", () => false),
         Verbose: hostCallable("testing.Verbose", () => false)
+    };
+}
+function unsafePackage() {
+    return {
+        Add: hostCallable("unsafe.Add", (args) => args[0] ?? null),
+        Alignof: hostCallable("unsafe.Alignof", (args) => BigInt(runtimeAlignof(args[0] ?? null))),
+        Offsetof: hostCallable("unsafe.Offsetof", () => 0n),
+        Sizeof: hostCallable("unsafe.Sizeof", (args) => BigInt(runtimeSizeof(args[0] ?? null))),
+        Slice: hostCallable("unsafe.Slice", (args) => {
+            const length = toNonNegativeLength(args[1] ?? 0n, "unsafe.Slice length");
+            if ((args[0] ?? null) === null) {
+                if (length === 0)
+                    return null;
+                throw new GoJuniorRuntimeError("unsafe.Slice: ptr is nil and len is not zero");
+            }
+            return Array.from({ length }, () => null);
+        }),
+        SliceData: hostCallable("unsafe.SliceData", (args) => {
+            const slice = unwrapNamed(args[0] ?? null);
+            if (slice === null)
+                return null;
+            if (!Array.isArray(slice))
+                throw new GoJuniorRuntimeError(`${formatValue(args[0] ?? null)} is not a slice`);
+            return slice.length > 0 ? new RuntimePointer(pointerTypeName(slice[0] ?? null), () => slice[0] ?? null, (next) => {
+                slice[0] = next;
+            }) : null;
+        }),
+        String: hostCallable("unsafe.String", () => {
+            throw new GoJuniorRuntimeError("unsafe.String is not supported by the Go-junior runtime");
+        }),
+        StringData: hostCallable("unsafe.StringData", () => {
+            throw new GoJuniorRuntimeError("unsafe.StringData is not supported by the Go-junior runtime");
+        })
     };
 }
 function osPackage() {
@@ -5406,6 +5449,98 @@ function compareNumericValues(left, right) {
     if (Number.isNaN(leftNumber) || Number.isNaN(rightNumber))
         return Number.NaN;
     return leftNumber === rightNumber ? 0 : leftNumber < rightNumber ? -1 : 1;
+}
+function cmpCompare(left, right) {
+    left = unwrapNamed(left);
+    right = unwrapNamed(right);
+    const leftNaN = isRuntimeNaN(left);
+    const rightNaN = isRuntimeNaN(right);
+    if (leftNaN)
+        return rightNaN ? 0 : -1;
+    if (rightNaN)
+        return 1;
+    const compared = compareValues(left, right);
+    if (Number.isNaN(compared))
+        return 0;
+    return compared < 0 ? -1 : compared > 0 ? 1 : 0;
+}
+function cmpLess(left, right) {
+    left = unwrapNamed(left);
+    right = unwrapNamed(right);
+    return (isRuntimeNaN(left) && !isRuntimeNaN(right)) || compareValues(left, right) < 0;
+}
+function isRuntimeNaN(value) {
+    value = unwrapNamed(value);
+    return typeof value === "number" && Number.isNaN(value);
+}
+function isRuntimeZeroValue(value) {
+    value = unwrapNamed(value);
+    if (value === null)
+        return true;
+    if (value instanceof RuntimeInterfaceValue)
+        return value.value === null;
+    if (value instanceof RuntimeTypedNilValue)
+        return true;
+    if (typeof value === "boolean")
+        return !value;
+    if (typeof value === "bigint")
+        return value === 0n;
+    if (typeof value === "number")
+        return Object.is(value, 0) || Object.is(value, -0);
+    if (isRuntimeString(value))
+        return goStringBytes(value).length === 0;
+    if (isComplexValue(value))
+        return value.real === 0 && value.imag === 0;
+    return false;
+}
+function zeroValueLike(value) {
+    value = unwrapNamed(value);
+    if (typeof value === "boolean")
+        return false;
+    if (typeof value === "bigint")
+        return 0n;
+    if (typeof value === "number")
+        return 0;
+    if (isRuntimeString(value))
+        return "";
+    if (isComplexValue(value))
+        return complexValue(0, 0);
+    return null;
+}
+function runtimeAlignof(value) {
+    return Math.max(1, Math.min(8, runtimeSizeof(value)));
+}
+function runtimeSizeof(value) {
+    value = unwrapNamed(value);
+    if (value === null)
+        return 0;
+    if (typeof value === "boolean")
+        return 1;
+    if (typeof value === "bigint" || typeof value === "number")
+        return 8;
+    if (isComplexValue(value))
+        return 16;
+    if (isRuntimeString(value))
+        return 16;
+    if (value instanceof RuntimePointer || value instanceof RuntimeChannel || value instanceof RuntimeMap)
+        return 8;
+    if (isRuntimeCallable(value))
+        return 8;
+    if (value instanceof RuntimeInterfaceValue)
+        return 16;
+    if (value instanceof RuntimeTypedNilValue)
+        return value.typeName.startsWith("*") ? 8 : 0;
+    if (Array.isArray(value))
+        return 24;
+    if (value instanceof RuntimeStruct) {
+        let size = 0;
+        for (const [, field] of value.orderedFields())
+            size += runtimeSizeof(field);
+        return size;
+    }
+    if (typeof value === "object")
+        return 8;
+    return 0;
 }
 function interfaceAwareEqual(left, right) {
     if (left instanceof RuntimeInterfaceValue && right === null)

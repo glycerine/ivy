@@ -1,7 +1,7 @@
 import { REPL_FILENAME, diagnosticFilename } from "./diagnostics.js";
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
-import { Config, Info, Int, Bool, NewChecker, NewFunc, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTypeName, NewTuple, NewVar, NoPos, String as GoString, Typ, emptyInterface, ensureUniverseInitialized, Unsafe } from "./go/types/index.js";
+import { Config, Info, Int, Int8, Int16, Int32, Int64, Uint, Uint8, Uint16, Uint32, Uint64, Uintptr, Float32, Float64, Bool, NewChecker, NewFunc, NewInterfaceType, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTerm, NewTypeName, NewTypeParam, NewTuple, NewUnion, NewVar, NoPos, String as GoString, Typ, emptyInterface, ensureUniverseInitialized, universeComparable, Unsafe } from "./go/types/index.js";
 export const GOJR_SYNTHETIC_CHECK_PREFIX = "__gojr_check_statements";
 export function isGoJuniorSyntheticCheckName(name) {
     return name === GOJR_SYNTHETIC_CHECK_PREFIX || name.startsWith(`${GOJR_SYNTHETIC_CHECK_PREFIX}_`);
@@ -240,13 +240,73 @@ function seedPackageScope(pkg, config) {
     }
 }
 function standardPackage(path) {
+    if (path === "cmp")
+        return cmpPackage();
     if (path === "fmt")
         return fmtPackage();
+    if (path === "math")
+        return mathPackage();
     if (path === "testing")
         return testingPackage();
     if (path === "unsafe")
         return Unsafe;
     return undefined;
+}
+function cmpPackage() {
+    const pkg = NewPackage("cmp", "cmp");
+    if (pkg.Scope().Lookup("Compare") !== null)
+        return pkg;
+    const intType = Typ[Int];
+    const boolType = Typ[Bool];
+    const orderedConstraint = NewInterfaceType(null, [NewUnion([
+            NewTerm(true, Typ[Int]),
+            NewTerm(true, Typ[Int8]),
+            NewTerm(true, Typ[Int16]),
+            NewTerm(true, Typ[Int32]),
+            NewTerm(true, Typ[Int64]),
+            NewTerm(true, Typ[Uint]),
+            NewTerm(true, Typ[Uint8]),
+            NewTerm(true, Typ[Uint16]),
+            NewTerm(true, Typ[Uint32]),
+            NewTerm(true, Typ[Uint64]),
+            NewTerm(true, Typ[Uintptr]),
+            NewTerm(true, Typ[Float32]),
+            NewTerm(true, Typ[Float64]),
+            NewTerm(true, Typ[GoString])
+        ])]).Complete();
+    const orderedName = NewTypeName(NoPos, pkg, "Ordered", null);
+    const orderedType = NewNamed(orderedName, orderedConstraint, null);
+    orderedName.setType(orderedType);
+    pkg.Scope().Insert(orderedName);
+    const orderedTypeParam = () => NewTypeParam(NewTypeName(NoPos, pkg, "T", null), orderedType);
+    const comparableTypeParam = () => NewTypeParam(NewTypeName(NoPos, pkg, "T", null), universeComparable.Type());
+    const compareT = orderedTypeParam();
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Compare", NewSignatureType(null, null, [compareT], NewTuple(NewVar(NoPos, pkg, "x", compareT), NewVar(NoPos, pkg, "y", compareT)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
+    const lessT = orderedTypeParam();
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Less", NewSignatureType(null, null, [lessT], NewTuple(NewVar(NoPos, pkg, "x", lessT), NewVar(NoPos, pkg, "y", lessT)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false)));
+    const orT = comparableTypeParam();
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Or", NewSignatureType(null, null, [orT], NewTuple(NewVar(NoPos, pkg, "vals", NewSlice(orT))), NewTuple(NewVar(NoPos, pkg, "", orT)), true)));
+    pkg.MarkComplete();
+    return pkg;
+}
+function mathPackage() {
+    const pkg = NewPackage("math", "math");
+    if (pkg.Scope().Lookup("NaN") !== null)
+        return pkg;
+    const float64Type = Typ[Float64];
+    const uint32Type = Typ[Uint32];
+    const uint64Type = Typ[Uint64];
+    const intType = Typ[Int];
+    const boolType = Typ[Bool];
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "NaN", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Inf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "sign", intType)), NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "IsNaN", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "f", float64Type)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Float32bits", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "f", Typ[Float32])), NewTuple(NewVar(NoPos, pkg, "", uint32Type)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Float32frombits", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "b", uint32Type)), NewTuple(NewVar(NoPos, pkg, "", Typ[Float32])), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Float64bits", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "f", float64Type)), NewTuple(NewVar(NoPos, pkg, "", uint64Type)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Float64frombits", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "b", uint64Type)), NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
+    pkg.MarkComplete();
+    return pkg;
 }
 function fmtPackage() {
     const pkg = NewPackage("fmt", "fmt");

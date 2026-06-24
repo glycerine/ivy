@@ -328,6 +328,42 @@ func TestThing(t *testing.T) {
     expect(define.diagnostics).toEqual([]);
   });
 
+  test("supports importing cmp and evaluating its ordering helpers", async () => {
+    const script = await expectRuns(`
+import "cmp"
+import "math"
+
+return cmp.Compare(1, 2),
+  cmp.Compare(2, 1),
+  cmp.Compare("a", "a"),
+  cmp.Less(math.NaN(), 0.0),
+  cmp.Compare(math.NaN(), math.NaN()),
+  cmp.Or("", "fallback")
+`);
+
+    expect(script.values).toEqual([-1n, 1n, 0n, true, 0n, "fallback"]);
+
+    const invalid = await evaluateSource(`
+import "cmp"
+
+return cmp.Compare([]int{1}, []int{2})
+`);
+    expect(invalid.diagnostics.some((diagnostic) =>
+      diagnostic.severity === "error" && diagnostic.message.includes("cannot compare")
+    )).toBe(true);
+  });
+
+  test("supports importing unsafe and evaluating size/alignment helpers", async () => {
+    const script = await expectRuns(`
+import "unsafe"
+
+var x int64
+return unsafe.Sizeof(x), unsafe.Alignof(x)
+`);
+
+    expect(script.values).toEqual([8n, 8n]);
+  });
+
   test("supports importing os.Exit without ambient process authority", async () => {
     const script = await expectRuns(`
 import "os"

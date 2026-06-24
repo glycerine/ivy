@@ -317,11 +317,12 @@ function gojrPackageSourceFilename(spec) {
     : "gojr-repl.go";
 }
 
-function gojrRuntimeBuiltinImport(importPath) {
-  return importPath === "fmt" ||
-    importPath === "testing" ||
-    importPath === "unsafe" ||
-    importPath === "math" ||
+  function gojrRuntimeBuiltinImport(importPath) {
+    return importPath === "cmp" ||
+      importPath === "fmt" ||
+      importPath === "testing" ||
+      importPath === "unsafe" ||
+      importPath === "math" ||
     importPath === "strconv" ||
     importPath === "os";
 }
