@@ -1,6 +1,7 @@
 # Go-junior
 
-TypeScript implementation area for the Go-junior spreadsheet language.
+TypeScript implementation area for the Go-junior spreadsheet language,
+which is a superset of standard Go.
 
 This package starts CLI-first: lexer/parser, diagnostics, type/value metadata,
 and Node-focused tests live here before browser worker integration.
