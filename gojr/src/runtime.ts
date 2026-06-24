@@ -6592,6 +6592,7 @@ function convertValueToType(
   if (type.startsWith("*")) {
     if (actual === null) return new RuntimeTypedNilValue(type);
     if (actual instanceof RuntimeTypedNilValue && isUnsafePointerType(actual.typeName)) return new RuntimeTypedNilValue(type);
+    if (sourceIsUnsafePointer && actual instanceof RuntimeTypedNilValue && actual.typeName.startsWith("*")) return new RuntimeTypedNilValue(type);
     if (actual instanceof RuntimePointer) {
       const targetType = type.slice(1);
       if (runtimeTypeAssignableMatch(actual.typeName, targetType)) return actual;

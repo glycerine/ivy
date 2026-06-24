@@ -5878,6 +5878,8 @@ function convertValueToType(value, typeText, context, sourceTypeText) {
             return new RuntimeTypedNilValue(type);
         if (actual instanceof RuntimeTypedNilValue && isUnsafePointerType(actual.typeName))
             return new RuntimeTypedNilValue(type);
+        if (sourceIsUnsafePointer && actual instanceof RuntimeTypedNilValue && actual.typeName.startsWith("*"))
+            return new RuntimeTypedNilValue(type);
         if (actual instanceof RuntimePointer) {
             const targetType = type.slice(1);
             if (runtimeTypeAssignableMatch(actual.typeName, targetType))

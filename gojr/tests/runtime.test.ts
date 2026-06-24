@@ -2389,6 +2389,20 @@ return b != nil, b.ok()
     expect(result.values).toEqual([true, true]);
   });
 
+  test("converts nil unsafe pointers back to typed pointers", async () => {
+    const result = await expectRuns(`
+import "unsafe"
+
+type A struct{}
+type B struct{}
+
+p := (*B)(unsafe.Pointer((*A)(nil)))
+return p == nil, fmt.Sprintf("%#v", p)
+`);
+
+    expect(result.values).toEqual([true, "*B(nil)"]);
+  });
+
   test("allows methods with pointer receivers on typed nil pointers", async () => {
     const result = await expectRuns(`
 type T []T
