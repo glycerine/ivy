@@ -2638,8 +2638,8 @@ function appendFormattedBytes(base, text) {
 }
 function runtimePackage() {
     return {
-        GOOS: "gojr",
-        GOARCH: "js",
+        GOOS: "js",
+        GOARCH: "gojr",
         Compiler: "gojr",
         MemProfileRate: 0n,
         AddCleanup: hostCallable("runtime.AddCleanup", () => runtimeCleanupValue()),

@@ -6,8 +6,8 @@ import { isStubSourcePackageStandardLibrary, stubSourcePackageFiles } from "./st
 import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import { Builtin as GoTypesBuiltin, Const as GoTypesConst, Func as GoTypesFunc, TypeName as GoTypesTypeName, Unsafe as GoTypesUnsafe, Var as GoTypesVar } from "./go/types/index.js";
 const ARTIFACT_LAYOUT_VERSION = "gojr-js-v4";
-export const GOJR_GOOS = "gojr";
-export const GOJR_GOARCH = "js";
+export const GOJR_GOOS = "js";
+export const GOJR_GOARCH = "gojr";
 const DEFAULT_COMPILER_VERSION = "gojr-dev";
 const DEFAULT_BACKEND = "js-source-envelope";
 const DEFAULT_HOST_SPEC_VERSION = "host-v0";

@@ -465,7 +465,7 @@ fn := runtime.FuncForPC(0)
 return runtime.GOOS, runtime.GOARCH, n > 0, pc, file, line, ok, calls, frame.Function, more, fn.Name()
 `);
 
-    expect(script.values).toEqual(["gojr", "js", true, 0n, "", 0n, false, 0n, "", false, ""]);
+    expect(script.values).toEqual(["js", "gojr", true, 0n, "", 0n, false, 0n, "", false, ""]);
   });
 
   test("supports intrinsic internal/reflectlite for standard-library error initialization", async () => {

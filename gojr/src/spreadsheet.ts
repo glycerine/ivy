@@ -1,3 +1,5 @@
+import { blake3HashString } from "./blake3.js";
+
 export type SpreadsheetValue = unknown;
 
 export type SpreadsheetErrorCode =
@@ -971,12 +973,5 @@ function stableStringify(value: SpreadsheetValue): string {
 }
 
 function stableSpreadsheetHash(text: string): string {
-  let hash = 0xcbf29ce484222325n;
-  const prime = 0x100000001b3n;
-  const mask = 0xffffffffffffffffn;
-  for (let index = 0; index < text.length; index++) {
-    hash ^= BigInt(text.charCodeAt(index));
-    hash = (hash * prime) & mask;
-  }
-  return hash.toString(16).padStart(16, "0");
+  return blake3HashString(text);
 }

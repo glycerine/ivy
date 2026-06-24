@@ -1,7 +1,8 @@
 # Go-junior
 
 TypeScript implementation area for the Go-junior spreadsheet language,
-which is a superset of standard Go.
+which is a superset of standard Go. It compiles as: GOOS=js and GOARCH=gojr
+and uses $GOPATH to store javascript packages in classic .a archive format.
 
 This package starts CLI-first: lexer/parser, diagnostics, type/value metadata,
 and Node-focused tests live here before browser worker integration.

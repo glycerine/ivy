@@ -1,5 +1,6 @@
 import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan } from "./diagnostics.js";
 import type { FunctionDecl } from "./ast.js";
+import { blake3HashString } from "./blake3.js";
 import { File, ImportSpec } from "./front/ast.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
 import { frontFilesToProgramAst } from "./frontToAst.js";
@@ -156,8 +157,8 @@ export interface BuildStandardLibraryPackageRequest extends Omit<BuildPackageReq
 }
 
 const ARTIFACT_LAYOUT_VERSION = "gojr-js-v4";
-export const GOJR_GOOS = "gojr";
-export const GOJR_GOARCH = "js";
+export const GOJR_GOOS = "js";
+export const GOJR_GOARCH = "gojr";
 const DEFAULT_COMPILER_VERSION = "gojr-dev";
 const DEFAULT_BACKEND = "js-source-envelope";
 const DEFAULT_HOST_SPEC_VERSION = "host-v0";
@@ -1163,14 +1164,7 @@ function hashSourceFiles(files: SourceFile[]): string {
 }
 
 function stableHash(text: string): string {
-  let hash = 0xcbf29ce484222325n;
-  const prime = 0x100000001b3n;
-  const mask = 0xffffffffffffffffn;
-  for (let index = 0; index < text.length; index++) {
-    hash ^= BigInt(text.charCodeAt(index));
-    hash = (hash * prime) & mask;
-  }
-  return hash.toString(16).padStart(16, "0");
+  return blake3HashString(text);
 }
 
 function unquoteStringLiteral(value: string): string {

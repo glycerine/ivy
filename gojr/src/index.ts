@@ -33,6 +33,11 @@ export type {
   AsyncSelectResult
 } from "./asyncRuntime.js";
 export {
+  blake3HashBytes,
+  blake3HashString,
+  blake3RawBytes
+} from "./blake3.js";
+export {
   artifactPathForImportPath,
   buildPackage,
   buildPackages,

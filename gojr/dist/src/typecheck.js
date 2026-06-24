@@ -528,8 +528,8 @@ function runtimePackage() {
     const float64Type = Typ[Float64];
     const byteSliceType = NewSlice(Typ[Uint8]);
     const uintptrSliceType = NewSlice(uintptrType);
-    pkg.Scope().Insert(NewConst(NoPos, pkg, "GOOS", stringType, "gojr"));
-    pkg.Scope().Insert(NewConst(NoPos, pkg, "GOARCH", stringType, "js"));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "GOOS", stringType, "js"));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "GOARCH", stringType, "gojr"));
     pkg.Scope().Insert(NewConst(NoPos, pkg, "Compiler", stringType, "gojr"));
     pkg.Scope().Insert(NewVar(NoPos, pkg, "MemProfileRate", intType));
     const funcName = NewTypeName(NoPos, pkg, "Func", null);

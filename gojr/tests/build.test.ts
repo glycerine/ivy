@@ -291,8 +291,8 @@ func hidden() {}
     expect(store.writeCount).toBe(2);
 
     const artifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/js_gojr/cmp.a"));
-    expect(artifact.goos).toBe("gojr");
-    expect(artifact.goarch).toBe("js");
+    expect(artifact.goos).toBe("js");
+    expect(artifact.goarch).toBe("gojr");
     expect(artifact.importPath).toBe("cmp");
     expect(artifact.standardLibrary).toBe(true);
     expect(artifact.buildTags).toEqual(expect.any(Array));
@@ -304,8 +304,8 @@ func hidden() {}
     ]);
 
     const unsafeArtifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/js_gojr/unsafe.a"));
-    expect(unsafeArtifact.goos).toBe("gojr");
-    expect(unsafeArtifact.goarch).toBe("js");
+    expect(unsafeArtifact.goos).toBe("js");
+    expect(unsafeArtifact.goarch).toBe("gojr");
     expect(unsafeArtifact.importPath).toBe("unsafe");
     expect(unsafeArtifact.standardLibrary).toBe(true);
     expect(unsafeArtifact.sources).toEqual([

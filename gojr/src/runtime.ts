@@ -3081,8 +3081,8 @@ function appendFormattedBytes(base: RuntimeValue, text: string): RuntimeValue[] 
 
 function runtimePackage(): RuntimeObject {
   return {
-    GOOS: "gojr",
-    GOARCH: "js",
+    GOOS: "js",
+    GOARCH: "gojr",
     Compiler: "gojr",
     MemProfileRate: 0n,
     AddCleanup: hostCallable("runtime.AddCleanup", () => runtimeCleanupValue()),
