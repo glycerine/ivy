@@ -24,7 +24,7 @@ import (
 	"strings"
 	"unsafe"
 
-	gojr "github.com/glycerine/ivy/gojr"
+	gojr "github.com/glycerine/gojr"
 )
 
 type nodeRuntime struct {

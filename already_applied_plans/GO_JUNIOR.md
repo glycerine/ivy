@@ -1621,16 +1621,16 @@ CLI `gojr build` artifact layout:
   package-cache parent is supplied, append `gojr_js`; if an exact artifact root
   is supplied, use it directly.
 - The output path is derived from the package import path, preserving the
-  package namespace directory layout and ending in `.js`.
+  package namespace directory layout and ending in `.a`.
 - A package artifact may store metadata in an embedded header, a sibling
   `.gojr.json` sidecar, or a cache manifest, but the stable user-facing artifact
-  is the import-path-derived `.js` file.
+  is the import-path-derived `.a` archive.
 - Rebuilds are required when source hashes, dependency artifact hashes,
   compiler version, package ABI version, host spec, capability policy, target
   backend, or artifact layout version change.
 - Writes must be atomic: write to a temp artifact in the target directory,
   fsync where appropriate, rename into place, then update sidecar/manifest
-  metadata after the `.js` artifact succeeds.
+  metadata after the `.a` artifact succeeds.
 - Compiled artifacts must not persist mutable package variable values. They
   contain generated code, export metadata, type metadata, source-span metadata,
   and dependency metadata only.
@@ -1649,8 +1649,11 @@ The JavaScript compiler/runtime owns the build API, for example
 invokes this JavaScript method through embedded Node/V8 for `gojr build`,
 `.load`, `.source`, and `.test` workflows. The Go binary should marshal CLI
 arguments, package roots, cache roots, stdin/stdout, and diagnostics across the
-embedding boundary; it should not reimplement package parsing, typechecking,
-code generation, or artifact-cache invalidation in Go.
+embedding boundary. The Go binary may implement native filesystem fast paths
+for stat snapshots, timestamp freshness, sidecar/header reads, and BLAKE3
+hashing, but it must not reimplement package parsing, typechecking, code
+generation, export-data semantics, or browser-visible artifact validation in
+Go.
 
 Package linking rules:
 
@@ -1729,7 +1732,7 @@ Current package build graph note:
 - `gojr cache list --json` reads generated artifact envelopes from disk and
   reports cache keys, source hashes, layout/backend versions, dependency edges,
   dependency cache keys, package names, and exported symbol metadata. Plain
-  non-envelope `.js` files still appear as path-derived cache entries.
+  non-envelope `.a` files still appear as path-derived cache entries.
 - This is still an artifact-envelope graph. Trusted package providers, OPFS
   graph loading, workspace/workbook package registries, and generated
   executable package slots remain planned work.
@@ -3936,9 +3939,13 @@ The second cache check is content addressed:
 - Use BLAKE3 for all source, dependency, manifest, and artifact content hashes.
   The old FNV-style JavaScript hash is acceptable only for tests that do not
   exercise durable package-cache correctness.
-- Native `gojr` gets a Go implementation using
-  `import "github.com/glycerine/blake3"` so filesystem hashing is as fast as
-  practical for human-interactive CLI work.
+- Native `gojr` uses the existing `cmd/gojr/blake3.go` helpers. In particular,
+  file hashing call sites should use `Blake3OfFile()` for pure content hashes
+  and `Blake3OfFileWithModtime()` when the cache key intentionally includes the
+  file modification time as a staleness signal. `RawSumBytesToString` is the
+  canonical function for converting already-available raw BLAKE3 `Hasher.Sum`
+  bytes into the Go-junior cache hash string format. Call sites should use the
+  wrapper helpers in `cmd/gojr/blake3.go`, not ad hoc BLAKE3 formatting.
 - The JavaScript runtime gets its own BLAKE3-compatible implementation for
   browser/OPFS and Node fallback paths. Browser correctness must not depend on
   the Go wrapper, but browser performance may trail the native wrapper.
@@ -3963,7 +3970,9 @@ Native CLI fast path:
    tags, host capability policy, source file list, source mtimes, and dependency
    artifact mtimes are fresh, return a cache hit immediately.
 4. If timestamps are inconclusive, BLAKE3-hash only the inputs whose size/mtime
-   changed or whose manifest entry is missing.
+   changed or whose manifest entry is missing. Use `Blake3OfFileWithModtime()`
+   for staleness-oriented entries and `Blake3OfFile()` for portable
+   content-only artifact identity.
 5. Only when the fast and hash checks fail should the JavaScript compiler parse
    and typecheck the package.
 
