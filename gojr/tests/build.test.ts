@@ -770,6 +770,32 @@ func F() { _ = pprof.Lookup("heap") }
     expect(files.map((file) => path.basename(file.filename))).toEqual(["dep.go"]);
   });
 
+  test("package names come from parsed package clauses, not package comments", async () => {
+    const result = await evaluatePackageSourceFiles([
+      {
+        filename: "/tmp/os/signal/doc.go",
+        source: `/*
+Package signal documents behavior for package on Unix systems.
+*/
+package signal
+
+var X = 1
+`
+      },
+      {
+        filename: "/tmp/os/signal/signal.go",
+        source: `package signal
+
+var Y = 2
+`
+      }
+    ], { importPath: "os/signal" });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.package?.X).toBe(1n);
+    expect(result.package?.Y).toBe(2n);
+  });
+
   test("node source provider resolves packages from module roots", () => {
     const root = fs.mkdtempSync(path.join("/tmp", "gojr-module-root-"));
     const depDir = path.join(root, "sub", "pkg");

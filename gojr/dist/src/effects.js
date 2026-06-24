@@ -190,8 +190,11 @@ function analyzeExpression(expression, summary, functionKeys) {
             analyzeFunctionLiteral(expression, summary, functionKeys);
             return;
         case "ArrayLiteralExpression":
-            for (const element of expression.elements)
-                analyzeExpression(element, summary, functionKeys);
+            for (const element of expression.elements) {
+                if (element.key)
+                    analyzeExpression(element.key, summary, functionKeys);
+                analyzeExpression(element.value, summary, functionKeys);
+            }
             return;
         case "StructLiteralExpression":
             for (const field of expression.fields) {

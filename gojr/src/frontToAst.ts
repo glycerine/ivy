@@ -605,7 +605,7 @@ function compositeLitToAst(expr: CompositeLit, expectedType?: Expr): Expression 
     return withSpan({
       kind: "ArrayLiteralExpression",
       type: typeNode(type),
-      elements: expr.elements.map((element) => elementValueToAst(element, type.element))
+      elements: expr.elements.map((element) => arrayElementToAst(element, type.element))
     }, expr.span);
   }
   const structFieldTypes = type?.kind === "StructType" ? expandedStructFieldTypes(type) : [];
@@ -634,6 +634,16 @@ function structFieldToAst(expr: Expr, expectedType?: Expr): StructLiteralField {
 
 function elementValueToAst(expr: Expr, expectedType?: Expr): Expression {
   return expr.kind === "KeyValueExpr" ? expressionToAstWithExpectedType(expr.value, expectedType) : expressionToAstWithExpectedType(expr, expectedType);
+}
+
+function arrayElementToAst(expr: Expr, expectedType?: Expr) {
+  if (expr.kind === "KeyValueExpr") {
+    return {
+      key: expressionToAst(expr.key),
+      value: expressionToAstWithExpectedType(expr.value, expectedType)
+    };
+  }
+  return { value: expressionToAstWithExpectedType(expr, expectedType) };
 }
 
 function expressionToAstWithExpectedType(expr: Expr, expectedType?: Expr): Expression {

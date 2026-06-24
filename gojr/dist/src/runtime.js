@@ -47,6 +47,7 @@ const errorInterfaceType = {
         }],
     embeds: []
 };
+const fmtErrorStringType = "fmt.errorString";
 export class GoJuniorRuntimeError extends Error {
     constructor(message) {
         super(message);
@@ -383,6 +384,7 @@ export class EvaluationContext {
         const type = normalizeTypeText(name);
         const genericBase = genericBaseTypeName(type);
         return isPredeclaredType(type) ||
+            isUnsafePointerType(type) ||
             this.shared.aliases.has(type) ||
             this.shared.types.has(type) ||
             this.shared.interfaces.has(type) ||
@@ -405,6 +407,44 @@ export class EvaluationContext {
             receiverType: receiver.baseType,
             pointerReceiver: receiver.pointer
         });
+    }
+    importPackageMethods(packageName, source) {
+        for (const method of source.shared.methods.values()) {
+            const receiverType = qualifyLocalRuntimeTypeName(method.receiverType, packageName);
+            const declaration = qualifyRuntimeMethodDeclaration(method.declaration, packageName);
+            this.shared.methods.set(methodKey(receiverType, method.declaration.name), {
+                declaration,
+                receiverType,
+                pointerReceiver: method.pointerReceiver
+            });
+        }
+    }
+    importPackageDefinitions(packageName, source) {
+        for (const [name, target] of source.shared.aliases.entries()) {
+            this.shared.aliases.set(qualifyLocalRuntimeTypeName(name, packageName), qualifyLocalRuntimeTypeName(target, packageName));
+        }
+        for (const [name, typeDef] of source.shared.types.entries()) {
+            this.shared.types.set(qualifyLocalRuntimeTypeName(name, packageName), {
+                name: qualifyLocalRuntimeTypeName(typeDef.name, packageName),
+                fields: typeDef.fields.map((field) => ({
+                    ...field,
+                    type: { text: qualifyLocalRuntimeTypeName(field.type.text, packageName) }
+                }))
+            });
+        }
+        for (const [name, interfaceDef] of source.shared.interfaces.entries()) {
+            this.shared.interfaces.set(qualifyLocalRuntimeTypeName(name, packageName), {
+                name: qualifyLocalRuntimeTypeName(interfaceDef.name, packageName),
+                methods: interfaceDef.methods.map((method) => ({
+                    ...method,
+                    signature: qualifyRuntimeSignature(method.signature, packageName)
+                })),
+                embeds: interfaceDef.embeds.map((embed) => ({ text: qualifyLocalRuntimeTypeName(embed.text, packageName) }))
+            });
+        }
+    }
+    packageContext(importPath, defaultName) {
+        return this.options.packageContexts?.[importPath] ?? this.options.packageContexts?.[defaultName];
     }
     methodFor(typeName, methodName) {
         return this.shared.methods.get(methodKey(typeName, methodName)) ??
@@ -741,7 +781,7 @@ export async function evaluatePackageSourceFiles(files, options = {}) {
             output: []
         };
     }
-    const packageName = options.packageName ?? packageNameFromSourceFiles(files) ?? "main";
+    const packageName = options.packageName ?? packageNameFromParsedFiles(parsed.parsed.files) ?? "main";
     const checked = checkGoJuniorSourceFiles(files, {
         ...typeCheckConfig(options),
         packageName,
@@ -764,14 +804,14 @@ export async function evaluatePackageSourceFiles(files, options = {}) {
                 throw new GoJuniorRuntimeError("package source cannot contain top-level executable statements");
             }
             predeclareTopLevelTypes(declarations, context);
-            predeclarePackageConstants(checked.pkg, context);
+            predeclarePackageConstants(checked.pkg, declarations, context);
             predeclarePackageVariables(declarations, context);
             const runtimeDeclarations = declarations.filter((declaration) => declaration.kind === "TypeDecl");
             const declarationCompletion = await executeTopLevelStatements(runtimeDeclarations, context);
             expectNormalCompletion(declarationCompletion, "package declarations");
             await executePackageVarInitializers(declarations, checked.info.InitOrder, context);
             await runInitFunctions(ast.functions, context);
-            return exportedRuntimePackageObject(packageScopeObjects(checked.pkg), context);
+            return exportedRuntimePackageObject(packageScopeObjects(checked.pkg), context, packageName);
         });
         return {
             diagnostics: checked.diagnostics,
@@ -909,7 +949,8 @@ class SourcePackageGraphEvaluator {
             importPath,
             ...(spec.packageName ? { packageName: spec.packageName } : {}),
             packages: this.packages,
-            packageInfos: this.packageInfos
+            packageInfos: this.packageInfos,
+            packageContexts: this.packageContexts
         });
         this.output.push(...result.output);
         this.diagnostics.push(...result.diagnostics);
@@ -974,7 +1015,7 @@ export async function runMainSourcePackageFiles(files, options = {}) {
             output: []
         };
     }
-    const packageName = options.packageName ?? packageNameFromSourceFiles(files) ?? "main";
+    const packageName = options.packageName ?? packageNameFromParsedFiles(parsed.parsed.files) ?? "main";
     if (packageName !== "main") {
         return {
             diagnostics: [packageGraphDiagnostic(files[0]?.filename ?? REPL_FILENAME, `gojr run requires package main, found package ${packageName}`)],
@@ -1063,13 +1104,8 @@ function sourceFileFromSource(source, options = {}) {
         source
     };
 }
-function packageNameFromSourceFiles(files) {
-    for (const file of files) {
-        const match = /^\s*package\s+([A-Za-z_]\w*)/m.exec(file.source);
-        if (match?.[1])
-            return match[1];
-    }
-    return undefined;
+function packageNameFromParsedFiles(files) {
+    return files.find((file) => file.name)?.name?.name;
 }
 export async function evaluateProgram(ast, options = {}) {
     const context = new EvaluationContext(options);
@@ -1112,13 +1148,13 @@ export async function evaluateProgram(ast, options = {}) {
         }, context);
     }
 }
-function exportedRuntimePackageObject(objects, context) {
+function exportedRuntimePackageObject(objects, context, packageName) {
     const pkg = {};
     for (const object of objects) {
         if (!object.Exported())
             continue;
         try {
-            pkg[object.Name()] = context.lookup(object.Name());
+            pkg[object.Name()] = externalizePackageRuntimeValue(context.lookup(object.Name()), packageName);
         }
         catch {
             // Type-only exports have no runtime value in the interpreter package object.
@@ -1716,6 +1752,11 @@ function installImports(context, ast) {
         if (!pkg) {
             throw new GoJuniorRuntimeError(`package ${imported.path} is not available`);
         }
+        const importedContext = context.packageContext(imported.path, defaultName);
+        if (importedContext) {
+            context.importPackageDefinitions(defaultName, importedContext);
+            context.importPackageMethods(defaultName, importedContext);
+        }
         if (name === "_")
             continue;
         if (name === ".") {
@@ -1840,11 +1881,25 @@ function fmtPackage() {
             const format = await toStringValueAsync(args[0] ?? "", context);
             return sprintfAsync(format, args.slice(1), context);
         }),
+        Errorf: hostCallable("fmt.Errorf", async (args, context) => {
+            const format = await toStringValueAsync(args[0] ?? "", context);
+            return fmtErrorValue(await sprintfAsync(format, args.slice(1), context));
+        }),
         Sprint: hostCallable("fmt.Sprint", (args, context) => {
             return sprintAsync(args, context);
         }),
         Sprintln: hostCallable("fmt.Sprintln", (args, context) => {
             return sprintlnAsync(args, context);
+        }),
+        Append: hostCallable("fmt.Append", async (args, context) => {
+            return appendFormattedBytes(args[0] ?? null, await sprintAsync(args.slice(1), context));
+        }),
+        Appendf: hostCallable("fmt.Appendf", async (args, context) => {
+            const format = await toStringValueAsync(args[1] ?? "", context);
+            return appendFormattedBytes(args[0] ?? null, await sprintfAsync(format, args.slice(2), context));
+        }),
+        Appendln: hostCallable("fmt.Appendln", async (args, context) => {
+            return appendFormattedBytes(args[0] ?? null, await sprintlnAsync(args.slice(1), context));
         }),
         Println: hostCallable("fmt.Println", async (args, context) => {
             const text = await sprintlnAsync(args, context);
@@ -1853,8 +1908,24 @@ function fmtPackage() {
         })
     };
 }
+function fmtErrorValue(message) {
+    return new RuntimeInterfaceValue("error", new RuntimeNamedValue(fmtErrorStringType, RuntimeGoString.fromUtf8Text(message)));
+}
+function fmtErrorMessage(value) {
+    if (value instanceof RuntimeInterfaceValue) {
+        return value.value === null ? undefined : fmtErrorMessage(value.value);
+    }
+    if (!(value instanceof RuntimeNamedValue) || value.typeName !== fmtErrorStringType)
+        return undefined;
+    const actual = unwrapNamed(value);
+    return isRuntimeString(actual) ? goStringText(actual) : formatValue(actual);
+}
 function mathPackage() {
     return {
+        MaxInt32: 2147483647n,
+        MaxUint16: 65535n,
+        MaxFloat32: 3.4028234663852886e38,
+        MaxFloat64: Number.MAX_VALUE,
         NaN: hostCallable("math.NaN", () => Number.NaN),
         Inf: hostCallable("math.Inf", (args) => toFloat(args[0] ?? 1) < 0 ? -Infinity : Infinity),
         Exp: hostCallable("math.Exp", (args) => Math.exp(toFloat(args[0] ?? 0))),
@@ -1871,6 +1942,14 @@ function strconvPackage() {
     return {
         Itoa: hostCallable("strconv.Itoa", (args) => toBigInt(args[0] ?? 0n).toString())
     };
+}
+function appendFormattedBytes(base, text) {
+    const actual = unwrapNamed(base);
+    const values = Array.isArray(actual) ? [...actual] : [];
+    for (const byte of new TextEncoder().encode(text))
+        values.push(BigInt(byte));
+    markArrayType(values, "[]byte");
+    return values;
 }
 function runtimePackage() {
     return {
@@ -2607,11 +2686,13 @@ function predeclareTopLevelTypes(statements, context) {
         }
     }
 }
-function predeclarePackageConstants(pkg, context) {
+function predeclarePackageConstants(pkg, declarations, context) {
+    const sourceStringConstants = sourceStringConstantValues(declarations);
     for (const object of packageScopeObjects(pkg)) {
         if (!(object instanceof GoTypesConst))
             continue;
-        context.declareRoot(object.Name(), runtimeValueFromCheckedConstant(object.Val()), false, checkedConstantTypeText(object, pkg));
+        const typeText = checkedConstantTypeText(object, pkg);
+        context.declareRoot(object.Name(), typedCheckedConstantValue(object.Val(), typeText, context, sourceStringConstants.get(object.Name())), false, typeText);
     }
 }
 function checkedConstantTypeText(object, pkg) {
@@ -2620,6 +2701,50 @@ function checkedConstantTypeText(object, pkg) {
         return undefined;
     const text = GoTypesTypeString(type, GoTypesRelativeTo(pkg));
     return text.startsWith("untyped ") ? undefined : text;
+}
+function typedCheckedConstantValue(value, typeText, context, sourceValue) {
+    const runtimeValue = sourceValue ?? runtimeValueFromCheckedConstant(value);
+    if (!typeText)
+        return runtimeValue;
+    const type = normalizeTypeText(typeText);
+    const alias = context.aliasType(type);
+    if (alias && alias !== type && !context.typeDef(type) && !context.interfaceDef(type)) {
+        return new RuntimeNamedValue(type, convertValueToType(runtimeValue, alias, context));
+    }
+    return materializeValueForType(runtimeValue, type, context);
+}
+function sourceStringConstantValues(declarations) {
+    const values = new Map();
+    for (const statement of declarations) {
+        if (statement.kind !== "ConstDecl")
+            continue;
+        let previousConstValues = [];
+        for (const declaration of statement.declarations) {
+            const valueExpression = declaration.value ?? previousConstValues[declaration.valueIndex ?? 0];
+            const value = sourceStringConstantValue(valueExpression);
+            if (value !== undefined)
+                values.set(declaration.name, value);
+            if (declaration.value)
+                previousConstValues[declaration.valueIndex ?? 0] = declaration.value;
+        }
+    }
+    return values;
+}
+function sourceStringConstantValue(expression) {
+    if (!expression)
+        return undefined;
+    if (expression.kind === "Literal" && expression.literalKind === "string") {
+        return goStringFromLiteralRaw(expression.raw);
+    }
+    if (expression.kind === "BinaryExpression" && expression.operator === "+") {
+        const left = sourceStringConstantValue(expression.left);
+        const right = sourceStringConstantValue(expression.right);
+        return left && right ? left.concat(right) : undefined;
+    }
+    if (expression.kind === "UnaryExpression" && expression.operator === "+") {
+        return sourceStringConstantValue(expression.operand);
+    }
+    return undefined;
 }
 function predeclarePackageVariables(declarations, context) {
     for (const statement of declarations) {
@@ -3540,19 +3665,31 @@ async function evaluateArrayLiteral(expression, context) {
     if (!type) {
         throw new GoJuniorRuntimeError(`${expression.type.text} is not an array or slice literal type`);
     }
-    const values = [];
-    for (const element of expression.elements) {
-        values.push(prepareAssignableToType(await evaluateExpression(element, context), type.elementType, "array element", context));
-    }
-    if (type.length !== undefined && values.length > type.length) {
-        throw new GoJuniorRuntimeError(`array literal has ${values.length} elements but type ${expression.type.text} has length ${type.length}`);
-    }
-    if (type.length !== undefined && !type.inferLength) {
-        while (values.length < type.length) {
-            values.push(defaultValueForTypeText(type.elementType, context));
-        }
-    }
+    const values = await evaluateArrayLiteralEntries(expression.elements, type.elementType, type.length, Boolean(type.inferLength), expression.type.text, context);
     markArrayType(values, type.typeText);
+    return values;
+}
+async function evaluateArrayLiteralEntries(elements, elementType, length, inferLength, displayType, context) {
+    const values = [];
+    let nextIndex = 0;
+    for (const element of elements) {
+        const index = element.key ? toNumber(await evaluateExpression(element.key, context)) : nextIndex;
+        if (!Number.isInteger(index) || index < 0)
+            throw new GoJuniorRuntimeError(`${displayType} array literal has invalid index ${index}`);
+        if (length !== undefined && !inferLength && index >= length) {
+            throw new GoJuniorRuntimeError(`${displayType} array literal index ${index} out of bounds`);
+        }
+        values[index] = prepareAssignableToType(await evaluateExpression(element.value, context), elementType, "array element", context);
+        nextIndex = index + 1;
+    }
+    if (length !== undefined && values.length > length) {
+        throw new GoJuniorRuntimeError(`array literal has ${values.length} elements but type ${displayType} has length ${length}`);
+    }
+    const targetLength = length !== undefined && !inferLength ? length : values.length;
+    for (let index = 0; index < targetLength; index += 1) {
+        if (values[index] === undefined)
+            values[index] = defaultValueForTypeText(elementType, context);
+    }
     return values;
 }
 function makeRuntimeSlice(elementType, length, capacity, context, typeText = `[]${elementType}`) {
@@ -3580,6 +3717,9 @@ async function evaluateStructLiteral(expression, context) {
             value = prepareAssignableToType(next, pointerTarget, `*${pointerTarget} literal`, context);
         });
     }
+    const intrinsic = await evaluateIntrinsicNamedStructLiteral(expression, context);
+    if (intrinsic)
+        return intrinsic;
     const typeDef = context.typeDef(expression.typeName) ?? parseAnonymousStructTypeText(expression.typeName);
     if (!typeDef) {
         const alias = context.aliasType(expression.typeName);
@@ -3592,9 +3732,6 @@ async function evaluateStructLiteral(expression, context) {
         if (mapType) {
             return new RuntimeNamedValue(expression.typeName, await evaluateNamedMapLiteralFields(expression, mapType, context));
         }
-        const intrinsic = await evaluateIntrinsicNamedStructLiteral(expression, context);
-        if (intrinsic)
-            return intrinsic;
         throw new GoJuniorRuntimeError(`${expression.typeName} is not a declared struct type`);
     }
     const struct = new RuntimeStruct(typeDef.name);
@@ -3628,20 +3765,7 @@ async function evaluateIntrinsicNamedStructLiteral(expression, context) {
     return new RuntimeNamedValue(type, syncPoolValue(newFn));
 }
 async function evaluateArrayLiteralFields(expression, type, context) {
-    const values = [];
-    for (const field of expression.fields) {
-        if (field.name)
-            throw new GoJuniorRuntimeError(`${expression.typeName} array literal uses unsupported keyed field ${field.name}`);
-        values.push(prepareAssignableToType(await evaluateExpression(field.value, context), type.elementType, "array element", context));
-    }
-    if (type.length !== undefined && values.length > type.length) {
-        throw new GoJuniorRuntimeError(`array literal has ${values.length} elements but type ${expression.typeName} has length ${type.length}`);
-    }
-    if (type.length !== undefined && !type.inferLength) {
-        while (values.length < type.length) {
-            values.push(defaultValueForTypeText(type.elementType, context));
-        }
-    }
+    const values = await evaluateArrayLiteralEntries(expression.fields.map((field) => ({ ...(field.key ? { key: field.key } : {}), value: field.value })), type.elementType, type.length, Boolean(type.inferLength), expression.typeName, context);
     markArrayType(values, expression.typeName);
     return values;
 }
@@ -3778,7 +3902,8 @@ async function evaluateCall(expression, context) {
             throw new GoJuniorRuntimeError(`conversion to ${conversionType} expects exactly one argument`);
         }
         const argument = expression.args[0];
-        return convertValueToType(await evaluateExpression(argument, context), conversionType, context, expressionDeclaredTypeText(argument, context));
+        const value = await evaluateExpression(argument, context);
+        return convertValueToType(value, conversionType, context, expressionDeclaredTypeText(argument, context, value));
     }
     const callee = await evaluateExpression(expression.callee, context);
     const args = await evaluateCallArguments(callee, expression.args, expression.spreadLast, context);
@@ -3906,21 +4031,25 @@ function spreadLastArgument(args) {
     if (args.length === 0)
         return args;
     const last = args[args.length - 1];
+    if (last instanceof RuntimeTypedNilValue && parseArrayOrSliceTypeText(last.typeName)) {
+        return args.slice(0, -1);
+    }
     if (!Array.isArray(last)) {
         throw new GoJuniorRuntimeError(`${formatValue(last ?? null)} is not spreadable`);
     }
     return [...args.slice(0, -1), ...last];
 }
 function appendValues(target, values) {
-    if (target !== null && !Array.isArray(target)) {
+    const typedNilSlice = target instanceof RuntimeTypedNilValue && parseArrayOrSliceTypeText(target.typeName);
+    if (target !== null && !typedNilSlice && !Array.isArray(target)) {
         throw new GoJuniorRuntimeError(`${formatValue(target)} is not appendable`);
     }
-    const base = target ?? [];
+    const base = Array.isArray(target) ? target : [];
     const appended = [...base, ...values];
     const previousCapacity = sliceCapacity(base);
     const needed = appended.length;
     arrayCapacities.set(appended, Math.max(previousCapacity, needed));
-    const typeText = Array.isArray(target) ? arrayTypeTexts.get(target) : undefined;
+    const typeText = Array.isArray(target) ? arrayTypeTexts.get(target) : typedNilSlice ? target.typeName : undefined;
     if (typeText)
         markArrayType(appended, typeText);
     return appended;
@@ -3997,6 +4126,16 @@ async function getSelector(expression, context) {
         if (promotedField)
             return promotedField.get() ?? null;
     }
+    const runtimeObject = unwrapNamed(dereferenceIfPointer(object));
+    if (isRuntimeObject(runtimeObject)) {
+        const value = runtimeObject[expression.field];
+        if (value !== undefined)
+            return value;
+    }
+    const fmtError = expression.field === "Error" ? fmtErrorMessage(object) : undefined;
+    if (fmtError !== undefined) {
+        return hostCallable("fmt.errorString.Error", () => fmtError);
+    }
     const method = methodForValue(object, expression.field, context);
     if (method) {
         let receiver = method.receiver;
@@ -4018,12 +4157,6 @@ async function getSelector(expression, context) {
                 : object;
             return boundMethodValue(method, receiver);
         }
-    }
-    const runtimeObject = unwrapNamed(dereferenceIfPointer(object));
-    if (isRuntimeObject(runtimeObject)) {
-        const value = runtimeObject[expression.field];
-        if (value !== undefined)
-            return value;
     }
     throw new GoJuniorRuntimeError(`${formatValue(object)} has no selector ${expression.field}`);
 }
@@ -4441,8 +4574,9 @@ function getSlice(object, start, end, max) {
         const low = startIndex ?? 0;
         const high = endIndex ?? object.length;
         const capEnd = maxIndex ?? sliceCapacity(object);
-        if (capEnd < high)
-            throw new GoJuniorRuntimeError("slice max is smaller than high bound");
+        if (capEnd < high) {
+            throw new GoJuniorRuntimeError(`slice max is smaller than high bound (len=${object.length}, cap=${sliceCapacity(object)}, high=${high}, max=${capEnd}, type=${arrayTypeTexts.get(object) ?? "[]"})`);
+        }
         const result = Array.from({ length: Math.max(0, high - low) }, (_item, index) => getArrayElement(object, low + index));
         arrayCapacities.set(result, Math.max(0, capEnd - low));
         const view = arrayViews.get(object);
@@ -4469,6 +4603,8 @@ function defaultValueForTypeText(typeText, context) {
         return null;
     const arrayType = parseArrayOrSliceTypeText(typeText, context);
     if (arrayType) {
+        if (arrayType.length === undefined && !arrayType.inferLength)
+            return new RuntimeTypedNilValue(arrayType.typeText);
         const values = arrayType.length === undefined || arrayType.inferLength
             ? []
             : Array.from({ length: arrayType.length }, () => defaultValueForTypeText(arrayType.elementType, context));
@@ -4482,6 +4618,8 @@ function defaultValueForTypeText(typeText, context) {
     const interfaceType = interfaceTarget(type, context);
     if (interfaceType)
         return new RuntimeInterfaceValue(type, null);
+    if (isUnsafePointerType(type))
+        return new RuntimeTypedNilValue(type);
     if (type.startsWith("*"))
         return new RuntimeTypedNilValue(type);
     const anonymousStruct = parseAnonymousStructTypeText(typeText);
@@ -4718,13 +4856,30 @@ function convertValueToType(value, typeText, context, sourceTypeText) {
     if (alias && alias !== type) {
         return new RuntimeNamedValue(type, convertValueToType(value, alias, context, sourceTypeText));
     }
+    const sourceIsUnsafePointer = value instanceof RuntimeNamedValue && isUnsafePointerType(value.typeName) ||
+        Boolean(sourceTypeText && isUnsafePointerType(sourceTypeText));
     const actual = unwrapNamed(value);
+    if (isUnsafePointerType(type)) {
+        if (actual === null)
+            return new RuntimeTypedNilValue(type);
+        if (actual instanceof RuntimeTypedNilValue) {
+            if (actual.typeName.startsWith("*") || isUnsafePointerType(actual.typeName))
+                return new RuntimeNamedValue(type, actual);
+            throwTypeError(actual, type, "conversion");
+        }
+        if (actual instanceof RuntimePointer || typeof actual === "bigint")
+            return new RuntimeNamedValue(type, actual);
+        throwTypeError(actual, type, "conversion");
+    }
     if (type === "any" || type === "interface{}")
         return actual;
     if (type === "bool") {
         if (typeof actual !== "boolean")
             throwTypeError(actual, type, "conversion");
         return actual;
+    }
+    if (type === "uintptr" && sourceIsUnsafePointer) {
+        return uintptrFromUnsafePointer(actual);
     }
     if (isIntegerType(type)) {
         if (typeof actual === "bigint") {
@@ -4786,11 +4941,57 @@ function convertValueToType(value, typeText, context, sourceTypeText) {
     }
     if (context.typeDef(type) && actual instanceof RuntimeStruct && actual.typeName === type)
         return actual;
-    if (actual === null && type.startsWith("*"))
-        return new RuntimeTypedNilValue(type);
+    if (type.startsWith("*")) {
+        if (actual === null)
+            return new RuntimeTypedNilValue(type);
+        if (actual instanceof RuntimeTypedNilValue && isUnsafePointerType(actual.typeName))
+            return new RuntimeTypedNilValue(type);
+        if (actual instanceof RuntimePointer) {
+            const targetType = type.slice(1);
+            if (runtimeTypeAssignableMatch(actual.typeName, targetType))
+                return actual;
+            return reinterpretUnsafePointer(actual, targetType, context);
+        }
+        if (sourceIsUnsafePointer && typeof actual === "bigint") {
+            if (actual === 0n)
+                return new RuntimeTypedNilValue(type);
+            return opaqueUnsafeAddressPointer(type.slice(1), context);
+        }
+    }
     if (actual === null && isNilAssignableType(type))
         return null;
     throw new GoJuniorRuntimeError(`unsupported conversion to ${type}`);
+}
+function uintptrFromUnsafePointer(value) {
+    if (value === null)
+        return 0n;
+    if (value instanceof RuntimeTypedNilValue && (isUnsafePointerType(value.typeName) || value.typeName.startsWith("*")))
+        return 0n;
+    if (typeof value === "bigint")
+        return BigInt.asUintN(64, value);
+    if (value instanceof RuntimePointer)
+        return BigInt(objectIdentityId(value));
+    throwTypeError(value, "uintptr", "conversion");
+}
+function reinterpretUnsafePointer(pointer, targetType, context) {
+    let fallback;
+    const currentValue = () => {
+        const value = pointer.get();
+        if (runtimeValueMatchesType(value, targetType, context))
+            return value;
+        if (fallback === undefined)
+            fallback = defaultValueForTypeText(targetType, context);
+        return fallback;
+    };
+    return new RuntimePointer(targetType, currentValue, (next) => {
+        fallback = prepareAssignableToType(next, targetType, `*${targetType}`, context);
+    });
+}
+function opaqueUnsafeAddressPointer(targetType, context) {
+    let value = defaultValueForTypeText(targetType, context);
+    return new RuntimePointer(targetType, () => value, (next) => {
+        value = prepareAssignableToType(next, targetType, `*${targetType}`, context);
+    });
 }
 function integerArrayFromString(source, targetTypeText, context) {
     const arrayType = parseArrayOrSliceTypeText(targetTypeText, context);
@@ -4806,7 +5007,7 @@ function integerArrayFromString(source, targetTypeText, context) {
     return undefined;
 }
 function stringFromIntegerArray(values, sourceTypeText, context) {
-    const elementType = integerSequenceElementType(sourceTypeText, context);
+    const elementType = integerSequenceElementType(sourceTypeText ?? arrayTypeTexts.get(values), context);
     if (elementType !== "byte" && elementType !== "rune") {
         throwTypeError(values, "string", "conversion");
     }
@@ -5115,6 +5316,8 @@ function inferredConcreteDynamicType(value) {
         return "string";
     if (typeof value === "boolean")
         return "bool";
+    if (Array.isArray(value))
+        return arrayTypeTexts.get(value);
     if (value instanceof RuntimeChannel)
         return `chan ${value.elementType}`;
     if (value instanceof RuntimeMap)
@@ -5297,6 +5500,12 @@ function valueImplementsInterface(value, interfaceType, context) {
     if (value instanceof RuntimeInterfaceValue) {
         return value.value === null || valueImplementsInterface(value.value, interfaceType, context);
     }
+    if (fmtErrorMessage(value) !== undefined) {
+        return interfaceType.methods.every((method) => method.name === "Error" &&
+            method.signature.parameters.length === 0 &&
+            method.signature.results.length === 1 &&
+            normalizeTypeText(method.signature.results[0]?.type.text ?? "") === "string");
+    }
     const receiver = dereferenceIfPointer(value);
     const receiverType = receiver instanceof RuntimeStruct
         ? receiver.typeName
@@ -5361,9 +5570,13 @@ function runtimeValueMatchesType(value, typeText, context) {
         return canonicalRuntimeTypeName(normalizeTypeText(value.typeName)) === canonicalRuntimeTypeName(type);
     }
     if (value instanceof RuntimeTypedNilValue) {
+        if (isUnsafePointerType(type))
+            return isUnsafePointerType(value.typeName) || value.typeName.startsWith("*");
         if (type.startsWith("*"))
             return runtimeTypeAssignableMatch(value.typeName, type);
     }
+    if (isUnsafePointerType(type))
+        return value instanceof RuntimeNamedValue && isUnsafePointerType(value.typeName);
     if (type === "string")
         return isRuntimeString(value);
     if (type === "bool")
@@ -6124,6 +6337,79 @@ function externalizeRuntimeValue(value) {
     }
     return value;
 }
+function externalizePackageRuntimeValue(value, packageName) {
+    if (value instanceof RuntimeGoString)
+        return value.text();
+    if (value instanceof RuntimeNamedValue) {
+        return new RuntimeNamedValue(qualifyLocalRuntimeTypeName(value.typeName, packageName), externalizePackageRuntimeValue(value.value, packageName));
+    }
+    if (value instanceof RuntimeInterfaceValue) {
+        return new RuntimeInterfaceValue(qualifyLocalRuntimeTypeName(value.interfaceType, packageName), value.value === null ? null : externalizePackageRuntimeValue(value.value, packageName));
+    }
+    if (value instanceof RuntimePointer) {
+        return new RuntimePointer(qualifyLocalRuntimeTypeName(value.typeName, packageName), () => externalizePackageRuntimeValue(value.get(), packageName), (next) => value.set(next));
+    }
+    if (Array.isArray(value))
+        return value.map((item) => externalizePackageRuntimeValue(item, packageName));
+    if (value instanceof RuntimeStruct) {
+        const struct = new RuntimeStruct(qualifyLocalRuntimeTypeName(value.typeName, packageName));
+        for (const [name, item] of value.orderedFields())
+            struct.set(name, externalizePackageRuntimeValue(item, packageName));
+        return struct;
+    }
+    return value;
+}
+function qualifyLocalRuntimeTypeName(typeName, packageName) {
+    const type = normalizeTypeText(typeName);
+    if (!type || !packageName || isPredeclaredType(type) || /^[A-Za-z_]\w*\.[A-Za-z_]\w*(?:\[.*\])?$/.test(type))
+        return type;
+    if (type.startsWith("*"))
+        return `*${qualifyLocalRuntimeTypeName(type.slice(1), packageName)}`;
+    if (type.startsWith("[]"))
+        return `[]${qualifyLocalRuntimeTypeName(type.slice(2), packageName)}`;
+    const array = /^\[([0-9.]*)\]([\s\S]+)$/.exec(type);
+    if (array)
+        return `[${array[1] ?? ""}]${qualifyLocalRuntimeTypeName(array[2] ?? "", packageName)}`;
+    const mapType = parseMapTypeText(type);
+    if (mapType) {
+        return `map[${qualifyLocalRuntimeTypeName(mapType.keyType, packageName)}]${qualifyLocalRuntimeTypeName(mapType.valueType, packageName)}`;
+    }
+    const chanType = parseChanTypeText(type);
+    if (chanType) {
+        const prefix = chanType.direction === "receive" ? "<-chan " : chanType.direction === "send" ? "chan<- " : "chan ";
+        return `${prefix}${qualifyLocalRuntimeTypeName(chanType.elementType, packageName)}`;
+    }
+    if (type.startsWith("func(") || type.startsWith("interface{") || type.startsWith("struct{"))
+        return type;
+    const generic = /^([A-Za-z_]\w*)\[(.*)\]$/.exec(type);
+    if (generic)
+        return `${packageName}.${generic[1]}[${generic[2]}]`;
+    return /^[A-Za-z_]\w*$/.test(type) ? `${packageName}.${type}` : type;
+}
+function qualifyRuntimeSignature(signature, packageName) {
+    return {
+        parameters: signature.parameters.map((parameter) => ({
+            ...parameter,
+            type: { text: qualifyLocalRuntimeTypeName(parameter.type.text, packageName) }
+        })),
+        results: signature.results.map((result) => ({
+            ...result,
+            type: { text: qualifyLocalRuntimeTypeName(result.type.text, packageName) }
+        }))
+    };
+}
+function qualifyRuntimeMethodDeclaration(declaration, packageName) {
+    return {
+        ...declaration,
+        signature: qualifyRuntimeSignature(declaration.signature, packageName),
+        ...(declaration.receiver ? {
+            receiver: {
+                ...declaration.receiver,
+                type: { text: qualifyLocalRuntimeTypeName(declaration.receiver.type.text, packageName) }
+            }
+        } : {})
+    };
+}
 function genericBaseTypeName(typeText) {
     const type = normalizeTypeText(typeText);
     if (type.startsWith("[") || type.startsWith("map[") || !type.endsWith("]"))
@@ -6229,6 +6515,7 @@ function isNilAssignableType(type) {
     return type === "error" ||
         type === "any" ||
         type === "interface{}" ||
+        isUnsafePointerType(type) ||
         type.startsWith("*") ||
         type.startsWith("[]") ||
         type.startsWith("map[") ||
@@ -6295,6 +6582,9 @@ function isFloatType(type) {
 }
 function isComplexType(type) {
     return type === "complex64" || type === "complex128";
+}
+function isUnsafePointerType(type) {
+    return normalizeTypeText(type) === "unsafe.Pointer";
 }
 function isPredeclaredType(type) {
     return type === "bool" ||
@@ -6550,7 +6840,9 @@ function toComplex(value) {
     return complexValue(toFloat(value), 0);
 }
 function unwrapNamed(value) {
-    return value instanceof RuntimeNamedValue ? value.value : value;
+    while (value instanceof RuntimeNamedValue)
+        value = value.value;
+    return value;
 }
 function compareValues(left, right) {
     left = unwrapNamed(left);

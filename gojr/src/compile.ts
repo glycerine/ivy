@@ -2,6 +2,7 @@ import { REPL_FILENAME, SourceFile } from "./diagnostics.js";
 import { checkGoJuniorSourceFiles, type GoJuniorCheckResult } from "./typecheck.js";
 import type { Package as GoTypesPackage } from "./go/types/index.js";
 import { EvaluationOptions, typeCheckConfig } from "./runtime.js";
+import { parseFrontSourceFiles } from "./front/parser.js";
 
 export interface CompileResult {
   readonly diagnostics: GoJuniorCheckResult["diagnostics"];
@@ -47,9 +48,5 @@ export function compilePackageSourceFiles(files: SourceFile[], options: CompileP
 }
 
 function packageNameFromSourceFiles(files: SourceFile[]): string | undefined {
-  for (const file of files) {
-    const match = /^\s*package\s+([A-Za-z_]\w*)/m.exec(file.source);
-    if (match?.[1]) return match[1];
-  }
-  return undefined;
+  return parseFrontSourceFiles(files).files.find((file) => file.name)?.name?.name;
 }

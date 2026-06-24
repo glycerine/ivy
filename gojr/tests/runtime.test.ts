@@ -259,10 +259,27 @@ return fmt.Sprintf("%#v %#v %#v", "x", 1.5, true)
 
   test("formats fmt.Sprint with Go operand spacing", async () => {
     const result = await expectRuns(`
-return fmt.Sprint("signed ", 1), fmt.Sprint(1, 2), fmt.Sprint("a", "b"), fmt.Sprint(1, "a", 2), fmt.Sprintln("a", 1, "b")
+return fmt.Sprint("signed ", 1),
+  fmt.Sprint(1, 2),
+  fmt.Sprint("a", "b"),
+  fmt.Sprint(1, "a", 2),
+  fmt.Sprintln("a", 1, "b"),
+  string(fmt.Append([]byte("x"), "=", 1)),
+  string(fmt.Appendf(nil, "n=%v", 2)),
+  string(fmt.Appendln(nil, "a", 1))
 `);
 
-    expect(result.values).toEqual(["signed 1", "1 2", "ab", "1a2", "a 1 b\n"]);
+    expect(result.values).toEqual(["signed 1", "1 2", "ab", "1a2", "a 1 b\n", "x=1", "n=2", "a 1\n"]);
+  });
+
+  test("formats fmt.Errorf as a Go error value", async () => {
+    const result = await expectRuns(`
+var e error = fmt.Errorf("bad %v", 3)
+err := fmt.Errorf("worse %v", 4)
+return e.Error(), fmt.Sprint(e), err.Error()
+`);
+
+    expect(result.values).toEqual(["bad 3", "bad 3", "worse 4"]);
   });
 
   test("formats Go source through the TypeScript go/format port", () => {
@@ -328,6 +345,23 @@ func TestThing(t *testing.T) {
     expect(define.diagnostics).toEqual([]);
   });
 
+  test("supports grouped dot imports of fmt in package source", async () => {
+    const pkg = await evaluatePackageSourceFiles([{
+      filename: "/workspace/app/app.go",
+      source: `package app
+
+import (
+  . "fmt"
+)
+
+var Message = Sprintf("x=%v", 7)
+`
+    }], { importPath: "example.com/app" });
+
+    expect(pkg.diagnostics).toEqual([]);
+    expect(pkg.package?.Message).toBe("x=7");
+  });
+
   test("supports importing cmp and evaluating its ordering helpers", async () => {
     const script = await expectRuns(`
 import "cmp"
@@ -358,10 +392,42 @@ return cmp.Compare([]int{1}, []int{2})
 import "unsafe"
 
 var x int64
-return unsafe.Sizeof(x), unsafe.Alignof(x)
+type box struct {
+  x int
+}
+b := &box{x: 7}
+p := unsafe.Pointer(b)
+roundTrip := (*box)(p)
+var zero unsafe.Pointer
+var nilBox *box
+nilPointer := unsafe.Pointer(nilBox)
+zeroBox := (*box)(unsafe.Pointer(uintptr(0)))
+opaqueBox := (*box)(unsafe.Pointer(uintptr(42)))
+return unsafe.Sizeof(x), unsafe.Alignof(x), p != nil, roundTrip.x, uintptr(zero), uintptr(p) != 0, uintptr(nilPointer), zeroBox == nil, opaqueBox != nil
 `);
 
-    expect(script.values).toEqual([8n, 8n]);
+    expect(script.values).toEqual([8n, 8n, true, 7n, 0n, true, 0n, true, true]);
+  });
+
+  test("supports unsafe pointer reinterpretation used by reflect headers", async () => {
+    const script = await expectRuns(`
+import "unsafe"
+
+type emptyInterface struct {
+  Type unsafe.Pointer
+  Data unsafe.Pointer
+}
+
+func header(a any) emptyInterface {
+  eface := *(*emptyInterface)(unsafe.Pointer(&a))
+  return eface
+}
+
+h := header(12)
+return h.Type == nil, h.Data == nil
+`);
+
+    expect(script.values).toEqual([true, true]);
   });
 
   test("supports importing runtime and evaluating stack/caller helpers", async () => {
@@ -625,10 +691,10 @@ import "strconv"
 
 f32 := math.Float32frombits(1 << 31)
 f64 := math.Float64frombits(1 << 63)
-return strconv.Itoa(-12), strconv.Itoa(34), math.Float32bits(f32), math.Float64bits(f64), math.IsNaN(math.NaN())
+return strconv.Itoa(-12), strconv.Itoa(34), math.Float32bits(f32), math.Float64bits(f64), math.IsNaN(math.NaN()), math.MaxFloat32 > 1e38, math.MaxFloat64 > 1e300, math.MaxInt32, math.MaxUint16
 `);
 
-    expect(script.values).toEqual(["-12", "34", 2147483648n, 9223372036854775808n, true]);
+    expect(script.values).toEqual(["-12", "34", 2147483648n, 9223372036854775808n, true, true, true, 2147483647n, 65535n]);
   });
 
   test("matches Go float map-key semantics for signed zero and NaN", async () => {
@@ -926,6 +992,29 @@ return sec, nsec, mono
       packageInfos: result.packageInfos
     });
     expect(script.values).toEqual([0n, 0n, 1n]);
+  });
+
+  test("package methods capture sibling package functions", async () => {
+    const result = await evaluatePackageSourceFiles([{
+      filename: "/workspace/p/p.go",
+      source: `package p
+
+type T struct{}
+
+func helper() int {
+  return 7
+}
+
+func (T) M() int {
+  return helper()
+}
+
+var Out = T{}.M()
+`
+    }], { importPath: "example.com/p" });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.package?.Out).toBe(7n);
   });
 
   test("typechecks and evaluates source packages that import other source packages", async () => {
@@ -1654,6 +1743,25 @@ return (*int)(nil) == p, fmt.Sprintf("%#v", (*int)(nil)), accept(&five)
     expect(result.values).toEqual([true, "*int(nil)", true]);
   });
 
+  test("supports pointer conversions between named types after typechecking", async () => {
+    const result = await expectRuns(`
+type A struct {
+  name string
+}
+type B A
+
+func (b *B) ok() bool {
+  return b != nil
+}
+
+a := &A{name: "x"}
+b := (*B)(a)
+return b != nil, b.ok()
+`);
+
+    expect(result.values).toEqual([true, true]);
+  });
+
   test("allows methods with pointer receivers on typed nil pointers", async () => {
     const result = await expectRuns(`
 type T []T
@@ -1992,6 +2100,90 @@ var ErrVarintOverflow = DecodingError{errors.New("varint integer overflow")}
     expect(graph.diagnostics).toEqual([]);
   });
 
+  test("assigns imported named integer constants to local interfaces", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "syscall",
+        files: [{
+          filename: "/usr/local/go/src/syscall/syscall_js.go",
+          source: `package syscall
+
+type Signal int
+
+const (
+  _ Signal = iota
+  SIGCHLD
+  SIGINT
+)
+
+func (s Signal) Signal() {}
+`
+        }]
+      },
+      {
+        importPath: "os",
+        files: [{
+          filename: "/usr/local/go/src/os/exec_posix.go",
+          source: `package os
+
+import "syscall"
+
+type Signal interface {
+  Signal()
+}
+
+var Interrupt Signal = syscall.SIGINT
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+  });
+
+  test("evaluates composite literals for imported struct types", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/poll",
+        files: [{
+          filename: "/usr/local/go/src/internal/poll/fd_unix.go",
+          source: `package poll
+
+type fdMutex struct{}
+
+type FD struct {
+  fdmu fdMutex
+  Sysfd int
+  IsStream bool
+}
+
+func (fd *FD) Init() {
+  fd.Sysfd = 2
+}
+`
+        }]
+      },
+      {
+        importPath: "os",
+        files: [{
+          filename: "/usr/local/go/src/os/file_unix.go",
+          source: `package os
+
+import "internal/poll"
+
+var PFD = poll.FD{Sysfd: 1, IsStream: true}
+
+func init() {
+  PFD.Init()
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+  });
+
   test("represents interfaces as typed runtime values with dynamic nil state", async () => {
     const nilInterface = await expectRuns(`
 type I interface {
@@ -2055,17 +2247,38 @@ return xs[1], xs[1:3], ys, len(zs), sum
     ]);
   });
 
+  test("evaluates keyed array literals with named integer keys and inferred length", async () => {
+    const result = await expectRuns(`
+type Token int
+const (
+  zero Token = iota
+  one
+  two
+)
+tokens := [...]string{
+  two: "two",
+  zero: "zero",
+}
+return len(tokens), tokens[0], tokens[1], tokens[2]
+`);
+
+    expect(result.values).toEqual([3n, "zero", "", "two"]);
+  });
+
   test("supports len, cap, append, and default slice/array declarations", async () => {
     const result = await expectRuns(`
 var xs []int
 var ys [3]string
+nilBefore := xs == nil
+lenBefore := len(xs)
+capBefore := cap(xs)
 xs = append(xs, 1, 2)
 more := []int{3, 4}
 xs = append(xs, more...)
-return xs, len(xs), cap(xs), len(ys), ys[0]
+return nilBefore, lenBefore, capBefore, xs, len(xs), cap(xs), len(ys), ys[0]
 `);
 
-    expect(result.values).toEqual([[1n, 2n, 3n, 4n], 4n, 4n, 3n, ""]);
+    expect(result.values).toEqual([true, 0n, 0n, [1n, 2n, 3n, 4n], 4n, 4n, 3n, ""]);
   });
 
   test("supports reslicing make slices up to capacity with zero-filled backing storage", async () => {
@@ -2692,6 +2905,32 @@ return string(bs), string(rs), string(p[0:])
 `);
 
     expect(result.values).toEqual(["\u1234", "a\u1234c", "xyz"]);
+  });
+
+  test("preserves package string constant byte escapes during var initialization", async () => {
+    const result = await evaluatePackageSourceFiles([{
+      filename: "p.go",
+      source: `package p
+
+const encodedBytes = "\\xff\\xff"
+
+type Box struct {
+  data [2]uint8
+}
+
+func NewBox() *Box {
+  b := new(Box)
+  copy(b.data[:], encodedBytes)
+  return b
+}
+
+var B = NewBox()
+var First = B.data[0]
+`
+    }], { importPath: "example.com/p" });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.package?.First).toBe(255n);
   });
 
   test("treats Go strings as byte sequences for len index slice and escapes", async () => {

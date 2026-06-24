@@ -1,7 +1,7 @@
 import { REPL_FILENAME, diagnosticFilename } from "./diagnostics.js";
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
-import { Config, Info, Int, Int8, Int16, Int32, Int64, Uint, Uint8, Uint16, Uint32, Uint64, Uintptr, Float32, Float64, Bool, NewArray, NewChecker, NewConst, NewField, NewFunc, NewInterfaceType, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTerm, NewTypeName, NewTypeParam, NewTuple, NewUnion, NewVar, NoPos, String as GoString, Typ, emptyInterface, ensureUniverseInitialized, UniverseLookup, Unsafe } from "./go/types/index.js";
+import { Config, Info, Int, Int8, Int16, Int32, Int64, UntypedInt, Uint, Uint8, Uint16, Uint32, Uint64, Uintptr, Float32, Float64, Bool, NewArray, NewChecker, NewConst, NewField, NewFunc, NewInterfaceType, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTerm, NewTypeName, NewTypeParam, NewTuple, NewUnion, NewVar, NoPos, String as GoString, Typ, emptyInterface, ensureUniverseInitialized, UniverseLookup, Unsafe } from "./go/types/index.js";
 export const GOJR_SYNTHETIC_CHECK_PREFIX = "__gojr_check_statements";
 export function isGoJuniorSyntheticCheckName(name) {
     return name === GOJR_SYNTHETIC_CHECK_PREFIX || name.startsWith(`${GOJR_SYNTHETIC_CHECK_PREFIX}_`);
@@ -311,7 +311,12 @@ function mathPackage() {
     const uint32Type = Typ[Uint32];
     const uint64Type = Typ[Uint64];
     const intType = Typ[Int];
+    const untypedIntType = Typ[UntypedInt];
     const boolType = Typ[Bool];
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxInt32", untypedIntType, 2147483647n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxUint16", untypedIntType, 65535n));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxFloat32", float64Type, 3.4028234663852886e38));
+    pkg.Scope().Insert(NewConst(NoPos, pkg, "MaxFloat64", float64Type, Number.MAX_VALUE));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "NaN", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Inf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "sign", intType)), NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Exp", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "x", float64Type)), NewTuple(NewVar(NoPos, pkg, "", float64Type)), false)));
@@ -331,11 +336,23 @@ function fmtPackage() {
         return pkg;
     const stringType = Typ[GoString];
     const intType = Typ[Int];
+    const byteSliceType = NewSlice(Typ[Uint8]);
     const argsType = NewSlice(emptyInterface);
+    const errorObject = UniverseLookup("error");
+    const errorType = errorObject?.Type?.() ?? null;
+    if (errorType === null) {
+        throw new Error("go/types: predeclared error is not initialized");
+    }
     const printfSig = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", intType)), true);
     const sprintfSig = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", stringType)), true);
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Printf", printfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Sprintf", sprintfSig));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Errorf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", errorType)), true)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Sprint", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", stringType)), true)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Sprintln", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", stringType)), true)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Append", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "b", byteSliceType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", byteSliceType)), true)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Appendf", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "b", byteSliceType), NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", byteSliceType)), true)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Appendln", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "b", byteSliceType), NewVar(NoPos, pkg, "args", argsType)), NewTuple(NewVar(NoPos, pkg, "", byteSliceType)), true)));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Println", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "args", argsType)), null, true)));
     pkg.MarkComplete();
     return pkg;

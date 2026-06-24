@@ -1,6 +1,7 @@
 import { REPL_FILENAME } from "./diagnostics.js";
 import { checkGoJuniorSourceFiles } from "./typecheck.js";
 import { typeCheckConfig } from "./runtime.js";
+import { parseFrontSourceFiles } from "./front/parser.js";
 export function compileSource(source, options = {}) {
     return compileSourceFiles([{
             filename: options.filename ?? REPL_FILENAME,
@@ -28,10 +29,5 @@ export function compilePackageSourceFiles(files, options = {}) {
     };
 }
 function packageNameFromSourceFiles(files) {
-    for (const file of files) {
-        const match = /^\s*package\s+([A-Za-z_]\w*)/m.exec(file.source);
-        if (match?.[1])
-            return match[1];
-    }
-    return undefined;
+    return parseFrontSourceFiles(files).files.find((file) => file.name)?.name?.name;
 }

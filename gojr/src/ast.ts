@@ -304,8 +304,13 @@ export interface FunctionLiteralExpression {
 export interface ArrayLiteralExpression {
   kind: "ArrayLiteralExpression";
   type: TypeNode;
-  elements: Expression[];
+  elements: ArrayLiteralElement[];
   span?: SourceSpan;
+}
+
+export interface ArrayLiteralElement {
+  key?: Expression;
+  value: Expression;
 }
 
 export interface StructLiteralField {
