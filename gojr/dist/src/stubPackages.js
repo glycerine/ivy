@@ -1,5 +1,10 @@
 export function stubSourcePackageFiles(importPath) {
     switch (importPath) {
+        case "github.com/klauspost/cpuid/v2":
+            return [{
+                    filename: "gojr:stub/github.com/klauspost/cpuid/v2/cpuid.go",
+                    source: klauspostCpuidV2StubSource
+                }];
         case "runtime/pprof":
             return [{
                     filename: "gojr:stub/runtime/pprof/pprof.go",
@@ -12,6 +17,30 @@ export function stubSourcePackageFiles(importPath) {
 export function isStubSourcePackageImport(importPath) {
     return stubSourcePackageFiles(importPath) !== undefined;
 }
+export function isStubSourcePackageStandardLibrary(importPath) {
+    return importPath === "runtime/pprof";
+}
+const klauspostCpuidV2StubSource = `package cpuid
+
+// FeatureID is the ID of a specific CPU feature. Go-junior deliberately
+// exposes a deterministic JavaScript target profile rather than probing native
+// hardware.
+type FeatureID int
+
+const (
+  UNKNOWN FeatureID = -1
+  AVX2 FeatureID = 8
+  AVX512F FeatureID = 16
+)
+
+type CPUInfo struct{}
+
+var CPU CPUInfo
+
+func (c CPUInfo) Supports(features ...FeatureID) bool {
+  return false
+}
+`;
 const runtimePprofStubSource = `package pprof
 
 import (

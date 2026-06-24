@@ -2,7 +2,7 @@ import { REPL_FILENAME } from "./diagnostics.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
 import { frontFilesToProgramAst } from "./frontToAst.js";
 import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
-import { stubSourcePackageFiles } from "./stubPackages.js";
+import { isStubSourcePackageStandardLibrary, stubSourcePackageFiles } from "./stubPackages.js";
 import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import { Builtin as GoTypesBuiltin, Const as GoTypesConst, Func as GoTypesFunc, TypeName as GoTypesTypeName, Unsafe as GoTypesUnsafe, Var as GoTypesVar } from "./go/types/index.js";
 const ARTIFACT_LAYOUT_VERSION = "gojr-js-v4";
@@ -405,7 +405,9 @@ class PackageGraphBuilder {
         if (stub) {
             const files = stub.map(ensureSourceFile);
             this.packageSources.set(importPath, files);
-            this.standardLibraryPackages.add(importPath);
+            if (isStubSourcePackageStandardLibrary(importPath)) {
+                this.standardLibraryPackages.add(importPath);
+            }
             return files;
         }
         try {
