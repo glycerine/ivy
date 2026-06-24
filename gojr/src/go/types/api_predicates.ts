@@ -13,6 +13,7 @@ import { comparer, isValid, Identical } from "./predicates.js";
 import { operand, value } from "./operand.js";
 import { newAssertableTo } from "./lookup.js";
 import { implements_ } from "./instantiate.js";
+import { convertibleTo } from "./conversions.js";
 
 // AssertableTo reports whether a value of type V can be asserted to have type T.
 export function AssertableTo(V: Interface, T: Type): boolean {
@@ -28,22 +29,14 @@ export function AssertableTo(V: Interface, T: Type): boolean {
 // of type T.
 export function AssignableTo(V: Type, T: Type): boolean {
   const x = new operand(value, null, V);
-  const fn = x as unknown as { assignableTo?: (check: unknown, T: Type, cause: unknown) => [boolean, unknown] };
-  if (typeof fn.assignableTo === "function") {
-    return fn.assignableTo(null, T, null)[0];
-  }
-  return Identical(V, T);
+  return x.assignableTo(null, T, null)[0];
 }
 
 // ConvertibleTo reports whether a value of type V is convertible to a value of
 // type T.
 export function ConvertibleTo(V: Type, T: Type): boolean {
   const x = new operand(value, null, V);
-  const fn = x as unknown as { convertibleTo?: (check: unknown, T: Type, cause: unknown) => boolean };
-  if (typeof fn.convertibleTo === "function") {
-    return fn.convertibleTo(null, T, null);
-  }
-  return Identical(V, T);
+  return convertibleTo(x, null, T, null);
 }
 
 // Implements reports whether type V implements interface T.

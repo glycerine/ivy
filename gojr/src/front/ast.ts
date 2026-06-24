@@ -1006,7 +1006,7 @@ export namespace Package {
   export function End(_x: Package): Pos { return 0; }
 }
 
-function PosOf(node: AstNode | undefined): Pos {
+export function PosOf(node: AstNode | undefined): Pos {
   switch (node?.kind) {
     case "BadExpr": return BadExpr.Pos(node);
     case "Ident": return Ident.Pos(node);
@@ -1068,7 +1068,7 @@ function PosOf(node: AstNode | undefined): Pos {
   }
 }
 
-function EndOf(node: AstNode | undefined): Pos {
+export function EndOf(node: AstNode | undefined): Pos {
   switch (node?.kind) {
     case "BadExpr": return BadExpr.End(node);
     case "Ident": return Ident.End(node);

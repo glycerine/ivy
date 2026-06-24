@@ -13,7 +13,7 @@ import { TypeString } from "./typestring.js";
 // An Array represents an array type.
 export class Array implements Type {
   public constructor(
-    public readonly len: number,
+    public len: number,
     public readonly elem: Type
   ) {}
 

@@ -11,6 +11,7 @@ import { TypeString } from "./typestring.js";
 import type { TypeName } from "./object.js";
 import { Interface, emptyInterface, NewInterfaceType } from "./interface.js";
 import { Basic } from "./basic.js";
+import type { term } from "./typeterm.js";
 
 // Note: This is a uint32 rather than a uint64 because the
 // respective 64 bit atomic instructions are not available
@@ -98,6 +99,21 @@ export class TypeParam implements Type {
 
     // compute type set if necessary
     return ityp.Complete();
+  }
+
+  // is calls f with the specific type terms of t's constraint and reports whether
+  // all calls to f returned true. If there are no specific terms, is
+  // returns the result of f(nil).
+  public is(f: (t: term | null) => boolean): boolean {
+    return this.iface().typeSet().is(f);
+  }
+
+  // typeset reports whether f(t, y) is true for all (type/underlying type) pairs of the
+  // specific type terms of t's constraint.
+  // If there are no specific terms, typeset returns f(nil, nil).
+  // In any case, typeset is guaranteed to call f at least once.
+  public typeset(f: (t: Type | null, u: Type | null) => boolean): boolean {
+    return this.iface().typeSet().all(f);
   }
 }
 

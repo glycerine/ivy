@@ -706,10 +706,6 @@ export function fieldPath(typ0: Type, index: number[]): string {
   return names.join(".");
 }
 
-export function isPointer(typ: Type): boolean {
-  return typ.Underlying() instanceof Pointer;
-}
-
 function sprintfCheck(check: Checker | null, format: string, ...args: unknown[]): string {
   if (check !== null) {
     return check.sprintf(format, ...args);

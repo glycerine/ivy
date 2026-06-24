@@ -11,7 +11,8 @@ import { Selection, SelectionKind } from "./selection.js";
 import { asNamed } from "./alias.js";
 import { Interface } from "./interface.js";
 import { Struct } from "./struct.js";
-import { concat, consolidateMultiples, deref, embeddedType, instanceLookup, isPointer } from "./lookup.js";
+import { concat, consolidateMultiples, deref, embeddedType, instanceLookup } from "./lookup.js";
+import { isPointer } from "./conversions.js";
 import { IsInterface } from "./predicates.js";
 
 // A MethodSet is an ordered set of concrete or abstract (interface) methods;
