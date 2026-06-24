@@ -1,5 +1,7 @@
 export function isIntrinsicPackageImport(importPath: string): boolean {
-  return importPath === "runtime" || importPath === "unsafe";
+  return importPath === "runtime" ||
+    importPath === "unsafe" ||
+    importPath === "internal/reflectlite";
 }
 
 export function isHostResolvedSourceImport(importPath: string): boolean {

@@ -775,7 +775,7 @@ export async function evaluatePackageSourceFiles(files, options = {}) {
         return {
             diagnostics: [
                 ...checked.diagnostics,
-                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
             ],
             output: context.output
         };
@@ -1010,7 +1010,7 @@ export async function runMainSourcePackageFiles(files, options = {}) {
         return {
             diagnostics: [
                 ...graph.diagnostics,
-                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
             ],
             output: [...graph.output, ...context.output.slice(outputOffset)],
             ast
@@ -1094,7 +1094,7 @@ export async function evaluateProgram(ast, options = {}) {
         return withObservedDeps({
             diagnostics: [
                 ...ast.diagnostics,
-                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
             ],
             output: context.output,
             ast
@@ -1165,7 +1165,7 @@ async function testProgram(ast, baseDiagnostics, options) {
         return withObservedDeps({
             diagnostics: [
                 ...diagnostics,
-                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
             ],
             output: context.output,
             ast
@@ -1240,13 +1240,14 @@ function testDiagnostic(declaration, message) {
         ...(declaration.span ? { span: declaration.span } : {})
     };
 }
-function runtimeDiagnostic(ast, code, message) {
+function runtimeDiagnostic(ast, code, message, error) {
     const span = firstProgramSpan(ast);
     return {
         filename: span?.filename ?? REPL_FILENAME,
         code,
         severity: "error",
         message,
+        ...(error instanceof Error && error.stack ? { stack: error.stack } : {}),
         ...(span ? { span } : {})
     };
 }
@@ -1464,7 +1465,7 @@ export class GoJuniorSession {
             return withObservedDeps({
                 diagnostics: [
                     ...ast.diagnostics,
-                    runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+                    runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
                 ],
                 output: this.context.outputFrom(outputStart),
                 ast

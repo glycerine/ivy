@@ -352,6 +352,7 @@ export function standardTypePackage(path: string): GoTypesPackage | undefined {
   ensureUniverseInitialized();
   if (path === "cmp") return cmpPackage();
   if (path === "fmt") return fmtPackage();
+  if (path === "internal/reflectlite") return reflectlitePackage();
   if (path === "math") return mathPackage();
   if (path === "runtime") return runtimePackage();
   if (path === "testing") return testingPackage();
@@ -525,6 +526,139 @@ function fmtPackage(): GoTypesPackage {
     null,
     true
   )));
+  pkg.MarkComplete();
+  return pkg;
+}
+
+function reflectlitePackage(): GoTypesPackage {
+  const pkg = NewPackage("internal/reflectlite", "reflectlite");
+  if (pkg.Scope().Lookup("TypeOf") !== null) return pkg;
+
+  const boolType = Typ[Bool]!;
+  const intType = Typ[Int]!;
+  const anyType = emptyInterface;
+
+  const kindName = NewTypeName(NoPos, pkg, "Kind", null);
+  const kindType = NewNamed(kindName, intType, null);
+  kindName.setType(kindType);
+  pkg.Scope().Insert(kindName);
+
+  pkg.Scope().Insert(NewConst(NoPos, pkg, "Invalid", kindType, 0n));
+  pkg.Scope().Insert(NewConst(NoPos, pkg, "Interface", kindType, 20n));
+  pkg.Scope().Insert(NewConst(NoPos, pkg, "Ptr", kindType, 22n));
+
+  const typeName = NewTypeName(NoPos, pkg, "Type", null);
+  const typeType = NewNamed(typeName, NewInterfaceType(null, null).Complete(), null);
+  typeName.setType(typeType);
+  pkg.Scope().Insert(typeName);
+
+  const typeMethods = [
+    NewFunc(NoPos, pkg, "AssignableTo", NewSignatureType(
+      null,
+      null,
+      null,
+      NewTuple(NewVar(NoPos, pkg, "u", typeType)),
+      NewTuple(NewVar(NoPos, pkg, "", boolType)),
+      false
+    )),
+    NewFunc(NoPos, pkg, "Comparable", NewSignatureType(
+      null,
+      null,
+      null,
+      null,
+      NewTuple(NewVar(NoPos, pkg, "", boolType)),
+      false
+    )),
+    NewFunc(NoPos, pkg, "Elem", NewSignatureType(
+      null,
+      null,
+      null,
+      null,
+      NewTuple(NewVar(NoPos, pkg, "", typeType)),
+      false
+    )),
+    NewFunc(NoPos, pkg, "Implements", NewSignatureType(
+      null,
+      null,
+      null,
+      NewTuple(NewVar(NoPos, pkg, "u", typeType)),
+      NewTuple(NewVar(NoPos, pkg, "", boolType)),
+      false
+    )),
+    NewFunc(NoPos, pkg, "Kind", NewSignatureType(
+      null,
+      null,
+      null,
+      null,
+      NewTuple(NewVar(NoPos, pkg, "", kindType)),
+      false
+    ))
+  ];
+  typeType.SetUnderlying(NewInterfaceType(typeMethods, null).Complete());
+
+  const valueName = NewTypeName(NoPos, pkg, "Value", null);
+  const valueType = NewNamed(valueName, NewStruct([], null), null);
+  valueName.setType(valueType);
+  pkg.Scope().Insert(valueName);
+  const valueRecv = NewVar(NoPos, pkg, "v", valueType);
+  valueType.AddMethod(NewFunc(NoPos, pkg, "Elem", NewSignatureType(
+    valueRecv,
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "", valueType)),
+    false
+  )));
+  valueType.AddMethod(NewFunc(NoPos, pkg, "IsNil", NewSignatureType(
+    valueRecv,
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "", boolType)),
+    false
+  )));
+  valueType.AddMethod(NewFunc(NoPos, pkg, "Kind", NewSignatureType(
+    valueRecv,
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "", kindType)),
+    false
+  )));
+  valueType.AddMethod(NewFunc(NoPos, pkg, "Set", NewSignatureType(
+    valueRecv,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "x", valueType)),
+    null,
+    false
+  )));
+  valueType.AddMethod(NewFunc(NoPos, pkg, "Type", NewSignatureType(
+    valueRecv,
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "", typeType)),
+    false
+  )));
+
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "TypeOf", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "i", anyType)),
+    NewTuple(NewVar(NoPos, pkg, "", typeType)),
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "ValueOf", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "i", anyType)),
+    NewTuple(NewVar(NoPos, pkg, "", valueType)),
+    false
+  )));
+
   pkg.MarkComplete();
   return pkg;
 }

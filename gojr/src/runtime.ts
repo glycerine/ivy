@@ -1078,7 +1078,7 @@ export async function evaluatePackageSourceFiles(files: SourceFile[], options: P
     return {
       diagnostics: [
         ...checked.diagnostics,
-        runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+        runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
       ],
       output: context.output
     };
@@ -1344,7 +1344,7 @@ export async function runMainSourcePackageFiles(
     return {
       diagnostics: [
         ...graph.diagnostics,
-        runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+        runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
       ],
       output: [...graph.output, ...context.output.slice(outputOffset)],
       ast
@@ -1437,7 +1437,7 @@ export async function evaluateProgram(ast: ProgramAst, options: EvaluationOption
     return withObservedDeps({
       diagnostics: [
         ...ast.diagnostics,
-        runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+        runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
       ],
       output: context.output,
       ast
@@ -1510,7 +1510,7 @@ async function testProgram(ast: ProgramAst, baseDiagnostics: Diagnostic[], optio
     return withObservedDeps({
       diagnostics: [
         ...diagnostics,
-        runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+        runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
       ],
       output: context.output,
       ast
@@ -1588,13 +1588,14 @@ function testDiagnostic(declaration: FunctionDecl, message: string): Diagnostic 
   };
 }
 
-function runtimeDiagnostic(ast: ProgramAst, code: string, message: string): Diagnostic {
+function runtimeDiagnostic(ast: ProgramAst, code: string, message: string, error?: unknown): Diagnostic {
   const span = firstProgramSpan(ast);
   return {
     filename: span?.filename ?? REPL_FILENAME,
     code,
     severity: "error",
     message,
+    ...(error instanceof Error && error.stack ? { stack: error.stack } : {}),
     ...(span ? { span } : {})
   };
 }
@@ -1825,7 +1826,7 @@ export class GoJuniorSession {
       return withObservedDeps({
         diagnostics: [
           ...ast.diagnostics,
-          runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+          runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
         ],
         output: this.context.outputFrom(outputStart),
         ast
@@ -2137,6 +2138,7 @@ function availablePackages(context: EvaluationContext): Record<string, RuntimeOb
   return {
     cmp: cmpPackage(),
     fmt: fmtPackage(),
+    "internal/reflectlite": reflectlitePackage(),
     math: mathPackage(),
     os: osPackage(),
     runtime: runtimePackage(),
@@ -2333,6 +2335,154 @@ function unsafePackage(): RuntimeObject {
       throw new GoJuniorRuntimeError("unsafe.StringData is not supported by the Go-junior runtime");
     })
   };
+}
+
+const REFLECTLITE_TYPE_INFO = Symbol("gojr reflectlite type");
+const REFLECTLITE_VALUE_INFO = Symbol("gojr reflectlite value");
+
+const reflectliteKind = {
+  Invalid: 0n,
+  Interface: 20n,
+  Ptr: 22n
+} as const;
+
+interface ReflectliteTypeInfo {
+  typeText: string;
+  kind: bigint;
+  elem?: ReflectliteTypeObject;
+}
+
+interface ReflectliteTypeObject extends RuntimeObject {
+  [REFLECTLITE_TYPE_INFO]: ReflectliteTypeInfo;
+}
+
+interface ReflectliteValueInfo {
+  value: RuntimeValue;
+  type: ReflectliteTypeObject;
+  set?: (value: RuntimeValue) => void;
+}
+
+interface ReflectliteValueObject extends RuntimeObject {
+  [REFLECTLITE_VALUE_INFO]: ReflectliteValueInfo;
+}
+
+function reflectlitePackage(): RuntimeObject {
+  return {
+    Invalid: reflectliteKind.Invalid,
+    Interface: reflectliteKind.Interface,
+    Ptr: reflectliteKind.Ptr,
+    TypeOf: hostCallable("internal/reflectlite.TypeOf", (args, context) =>
+      reflectliteTypeOf(args[0] ?? null, context)
+    ),
+    ValueOf: hostCallable("internal/reflectlite.ValueOf", (args, context) =>
+      reflectliteValueOf(args[0] ?? null, context)
+    )
+  };
+}
+
+function reflectliteTypeOf(value: RuntimeValue, context: EvaluationContext): RuntimeValue {
+  if (value === null) return null;
+  return reflectliteType(reflectliteTypeTextOfValue(value), context);
+}
+
+function reflectliteValueOf(value: RuntimeValue, context: EvaluationContext): ReflectliteValueObject {
+  return reflectliteValue(value, context);
+}
+
+function reflectliteType(typeText: string, context: EvaluationContext): ReflectliteTypeObject {
+  const type = normalizeTypeText(typeText);
+  const object = {} as ReflectliteTypeObject;
+  const info: ReflectliteTypeInfo = {
+    typeText: type,
+    kind: reflectliteKindForType(type, context)
+  };
+  if (type.startsWith("*")) {
+    info.elem = reflectliteType(type.slice(1), context);
+  }
+  object[REFLECTLITE_TYPE_INFO] = info;
+  object.Kind = hostCallable("internal/reflectlite.Type.Kind", () => info.kind);
+  object.Elem = hostCallable("internal/reflectlite.Type.Elem", () => {
+    if (!info.elem) throw new GoJuniorRuntimeError(`reflectlite: Elem of ${type}`);
+    return info.elem;
+  });
+  object.Comparable = hostCallable("internal/reflectlite.Type.Comparable", () => true);
+  object.AssignableTo = hostCallable("internal/reflectlite.Type.AssignableTo", (args) => {
+    const target = reflectliteTypeInfo(args[0] ?? null);
+    return Boolean(target && reflectliteAssignableTo(info, target, context));
+  });
+  object.Implements = hostCallable("internal/reflectlite.Type.Implements", (args) => {
+    const target = reflectliteTypeInfo(args[0] ?? null);
+    return Boolean(target && reflectliteAssignableTo(info, target, context));
+  });
+  return object;
+}
+
+function reflectliteValue(value: RuntimeValue, context: EvaluationContext, set?: (value: RuntimeValue) => void): ReflectliteValueObject {
+  const type = reflectliteType(reflectliteTypeTextOfValue(value), context);
+  const object = {} as ReflectliteValueObject;
+  const info: ReflectliteValueInfo = { value, type, ...(set ? { set } : {}) };
+  object[REFLECTLITE_VALUE_INFO] = info;
+  object.Type = hostCallable("internal/reflectlite.Value.Type", () => info.type);
+  object.Kind = hostCallable("internal/reflectlite.Value.Kind", () => reflectliteTypeInfo(info.type)?.kind ?? reflectliteKind.Invalid);
+  object.IsNil = hostCallable("internal/reflectlite.Value.IsNil", () => isRuntimeNil(info.value));
+  object.Elem = hostCallable("internal/reflectlite.Value.Elem", () => {
+    const actual = info.value instanceof RuntimeInterfaceValue && info.value.value !== null ? info.value.value : info.value;
+    if (actual instanceof RuntimePointer) {
+      return reflectliteValue(actual.get(), context, (next) => actual.set(next));
+    }
+    if (actual instanceof RuntimeTypedNilValue && actual.typeName.startsWith("*")) {
+      return reflectliteValue(defaultValueForTypeText(actual.typeName.slice(1), context), context);
+    }
+    throw new GoJuniorRuntimeError(`reflectlite: Elem of ${formatValue(info.value)}`);
+  });
+  object.Set = hostCallable("internal/reflectlite.Value.Set", (args) => {
+    if (!info.set) throw new GoJuniorRuntimeError("reflectlite: Set using unaddressable value");
+    info.set(reflectliteValuePayload(args[0] ?? null));
+    return null;
+  });
+  return object;
+}
+
+function reflectliteTypeTextOfValue(value: RuntimeValue): string {
+  if (value instanceof RuntimeInterfaceValue && value.value !== null) {
+    return reflectliteTypeTextOfValue(value.value);
+  }
+  return inferredConcreteDynamicType(value) ?? inferredTypeText(value) ?? "interface{}";
+}
+
+function reflectliteKindForType(typeText: string, context?: EvaluationContext): bigint {
+  const type = normalizeTypeText(typeText);
+  if (type.startsWith("*")) return reflectliteKind.Ptr;
+  if (type === "error" || type === "any" || type === "interface{}" || context?.interfaceDef(type) || parseAnonymousInterfaceTypeText(type)) {
+    return reflectliteKind.Interface;
+  }
+  return reflectliteKind.Invalid;
+}
+
+function reflectliteAssignableTo(source: ReflectliteTypeInfo, target: ReflectliteTypeInfo, context: EvaluationContext): boolean {
+  if (runtimeTypeAssignableMatch(source.typeText, target.typeText)) return true;
+  if (target.typeText === "any" || target.typeText === "interface{}") return true;
+  if (target.typeText === "error") return true;
+  const targetInterface = interfaceTarget(target.typeText, context);
+  if (targetInterface) return true;
+  return false;
+}
+
+function reflectliteTypeInfo(value: RuntimeValue): ReflectliteTypeInfo | undefined {
+  if (isRuntimeObject(value)) {
+    const typeObject = value as Partial<ReflectliteTypeObject>;
+    return typeObject[REFLECTLITE_TYPE_INFO];
+  }
+  return undefined;
+}
+
+function reflectliteValuePayload(value: RuntimeValue): RuntimeValue {
+  if (isRuntimeObject(value)) {
+    const valueObject = value as Partial<ReflectliteValueObject>;
+    const info = valueObject[REFLECTLITE_VALUE_INFO];
+    if (info) return info.value;
+  }
+  return value;
 }
 
 function osPackage(): RuntimeObject {
