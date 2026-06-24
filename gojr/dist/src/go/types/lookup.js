@@ -631,9 +631,6 @@ export function fieldPath(typ0, index) {
     }
     return names.join(".");
 }
-export function isPointer(typ) {
-    return typ.Underlying() instanceof Pointer;
-}
 function sprintfCheck(check, format, ...args) {
     if (check !== null) {
         return check.sprintf(format, ...args);

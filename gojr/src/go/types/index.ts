@@ -24,6 +24,7 @@ export * from "./builtins.js";
 export * from "./instantiate.js";
 export * from "./interface.js";
 export * from "./labels.js";
+export * from "./literals.js";
 export * from "./lookup.js";
 export * from "./map.js";
 export * from "./methodset.js";

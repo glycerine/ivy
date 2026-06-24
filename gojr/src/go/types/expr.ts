@@ -7,7 +7,7 @@
 
 // This file implements typechecking of expressions.
 
-import { EndOf, NewIdent, PosOf, Unparen, type BinaryExpr, type Expr, type UnaryExpr } from "../../front/ast.js";
+import { EndOf, NewIdent, PosOf, Unparen, type BasicLit, type BinaryExpr, type CompositeLit, type Expr, type FuncLit, type UnaryExpr } from "../../front/ast.js";
 import { TokenKind } from "../../front/token.js";
 import type { Type } from "./type.js";
 import { Alias } from "./alias.js";
@@ -126,9 +126,9 @@ declare module "./check.js" {
     singleValue(x: operand): void;
     funcInst(T: target | null, pos: number, x: operand, ix: indexedExpr | null, infer: boolean): Type[] | null;
     ident(x: operand, e: unknown, def: boolean): void;
-    basicLit?: (x: operand, e: unknown) => void;
-    funcLit?: (x: operand, e: unknown) => void;
-    compositeLit?: (x: operand, e: unknown, hint: Type | null) => void;
+    basicLit(x: operand, e: BasicLit): void;
+    funcLit(x: operand, e: FuncLit): void;
+    compositeLit(x: operand, e: CompositeLit, hint: Type | null): void;
     selector(x: operand, e: unknown, def: boolean): void;
     varType(e: unknown): Type;
     callExpr(x: operand, e: unknown): exprKind;

@@ -610,7 +610,7 @@ export var Package;
     function End(_x) { return 0; }
     Package.End = End;
 })(Package || (Package = {}));
-function PosOf(node) {
+export function PosOf(node) {
     switch (node?.kind) {
         case "BadExpr": return BadExpr.Pos(node);
         case "Ident": return Ident.Pos(node);
@@ -671,7 +671,7 @@ function PosOf(node) {
         default: return nodePos(node);
     }
 }
-function EndOf(node) {
+export function EndOf(node) {
     switch (node?.kind) {
         case "BadExpr": return BadExpr.End(node);
         case "Ident": return Ident.End(node);
