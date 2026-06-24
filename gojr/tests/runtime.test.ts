@@ -1748,6 +1748,26 @@ return before, p.X, p.Y, p.Sum()
     expect(call.values).toEqual([5n, 8n, 12n, 20n]);
   });
 
+  test("calls pointer receiver methods through addressable struct selectors", async () => {
+    const result = await expectRuns(`
+type Counter struct {
+  N int
+}
+
+func (c *Counter) Inc() {
+  c.N++
+}
+
+holder := struct {
+  C Counter
+}{}
+holder.C.Inc()
+holder.C.Inc()
+return holder.C.N
+`);
+    expect(result.value).toBe(2n);
+  });
+
   test("supports Go method expressions on named receiver types", async () => {
     const result = await expectRuns(`
 type T []int
@@ -2540,6 +2560,83 @@ return maps.Len()
       packageContexts: graph.packageContexts
     });
     expect(result.value).toBe(4n);
+  });
+
+  test("supports internal abi function entry intrinsics as uintptr values", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/abi",
+        files: [{
+          filename: "/usr/local/go/src/internal/abi/funcpc.go",
+          source: `package abi
+
+func FuncPCABI0(f any) uintptr
+func FuncPCABIInternal(f any) uintptr
+`
+        }]
+      },
+      {
+        importPath: "example.com/trap",
+        files: [{
+          filename: "/workspace/trap/trap.go",
+          source: `package trap
+
+import "internal/abi"
+
+func trampoline()
+
+var P0 = abi.FuncPCABI0(trampoline)
+var P1 = abi.FuncPCABIInternal(trampoline)
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import trap "example.com/trap"
+return trap.P0 != 0, trap.P1 != 0
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+    expect(result.values).toEqual([true, true]);
+  });
+
+  test("bodyless package functions return declared zero result values", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/bodyless",
+        files: [{
+          filename: "/workspace/bodyless/bodyless.go",
+          source: `package bodyless
+
+type Errno uintptr
+
+func rawSyscall(fn, a1, a2, a3 uintptr) (r1, r2 uintptr, err Errno)
+
+func Call() (uintptr, uintptr, Errno) {
+  return rawSyscall(1, 2, 3, 4)
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import bodyless "example.com/bodyless"
+r1, r2, err := bodyless.Call()
+return r1, r2, uintptr(err), err == 0
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+    expect(result.values).toEqual([0n, 0n, 0n, true]);
   });
 
   test("reports typed array and slice literal element mismatches", async () => {

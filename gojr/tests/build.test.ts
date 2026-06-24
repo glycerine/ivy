@@ -807,6 +807,10 @@ func F() { _ = pprof.Lookup("heap") }
       path.join(depDir, "target_gojr_js.go"),
       "package bytealg\n\nfunc TargetTag() int { return 2 }\n"
     );
+    fs.writeFileSync(
+      path.join(depDir, `target_${["w", "a", "s", "m"].join("")}.go`),
+      "package bytealg\n\nfunc OtherTargetTag() int { return 4 }\n"
+    );
 
     const previousGOROOT = process.env.GOROOT;
     process.env.GOROOT = goroot;

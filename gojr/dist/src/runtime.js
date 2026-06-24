@@ -1843,6 +1843,7 @@ function bodylessPackageFunctionIntrinsic(declaration, importPath) {
     if (!isBodylessFunctionDeclaration(declaration))
         return undefined;
     const intrinsic = bodylessBytealgIntrinsic(importPath, declaration.name, declaration.signature) ??
+        bodylessAbiIntrinsic(importPath, declaration.name, declaration.signature) ??
         bodylessRuntimeIntrinsic(declaration.name, declaration.signature);
     return intrinsic
         ? {
@@ -1850,7 +1851,7 @@ function bodylessPackageFunctionIntrinsic(declaration, importPath) {
             ...(declaration.source ? { source: declaration.source } : {}),
             declaration
         }
-        : undefined;
+        : bodylessZeroResultFunction(declaration, importPath);
 }
 function isBodylessFunctionDeclaration(declaration) {
     return declaration.body.statements.length === 0 && declaration.source !== undefined && !declaration.source.includes("{");
@@ -1882,6 +1883,38 @@ function bodylessRuntimeIntrinsic(name, signature) {
         default:
             return undefined;
     }
+}
+function bodylessAbiIntrinsic(importPath, name, signature) {
+    if (importPath !== "internal/abi")
+        return undefined;
+    if (name !== "FuncPCABI0" && name !== "FuncPCABIInternal")
+        return undefined;
+    return {
+        kind: "GoJuniorFunction",
+        name: `${importPath}.${name}`,
+        signature,
+        async call(args) {
+            const value = unwrapNamed(args[0] ?? null);
+            if (value === null)
+                return 0n;
+            if (typeof value === "object")
+                return BigInt(objectIdentityId(value));
+            return BigInt(runtimeMapKeyId(value).length);
+        }
+    };
+}
+function bodylessZeroResultFunction(declaration, importPath) {
+    return {
+        kind: "GoJuniorFunction",
+        name: importPath ? `${importPath}.${declaration.name}` : declaration.name,
+        signature: declaration.signature,
+        ...(declaration.source ? { source: declaration.source } : {}),
+        declaration,
+        async call(_args, context) {
+            const values = declaration.signature.results.map((result) => defaultValueForDeclarationType(result.type, context));
+            return values.length === 0 ? null : values.length === 1 ? values[0] ?? null : values;
+        }
+    };
 }
 function bodylessBytealgIntrinsic(importPath, name, signature) {
     if (importPath !== "internal/bytealg")

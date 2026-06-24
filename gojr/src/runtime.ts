@@ -2246,6 +2246,7 @@ function installPackageFunctionDeclaration(context: EvaluationContext, declarati
 function bodylessPackageFunctionIntrinsic(declaration: FunctionDecl, importPath?: string): GoJuniorFunction | undefined {
   if (!isBodylessFunctionDeclaration(declaration)) return undefined;
   const intrinsic = bodylessBytealgIntrinsic(importPath, declaration.name, declaration.signature) ??
+    bodylessAbiIntrinsic(importPath, declaration.name, declaration.signature) ??
     bodylessRuntimeIntrinsic(declaration.name, declaration.signature);
   return intrinsic
     ? {
@@ -2253,7 +2254,7 @@ function bodylessPackageFunctionIntrinsic(declaration: FunctionDecl, importPath?
       ...(declaration.source ? { source: declaration.source } : {}),
       declaration
     }
-    : undefined;
+    : bodylessZeroResultFunction(declaration, importPath);
 }
 
 function isBodylessFunctionDeclaration(declaration: FunctionDecl): boolean {
@@ -2290,6 +2291,40 @@ function bodylessRuntimeIntrinsic(name: string, signature: FunctionDecl["signatu
     default:
       return undefined;
   }
+}
+
+function bodylessAbiIntrinsic(
+  importPath: string | undefined,
+  name: string,
+  signature: FunctionDecl["signature"]
+): GoJuniorFunction | undefined {
+  if (importPath !== "internal/abi") return undefined;
+  if (name !== "FuncPCABI0" && name !== "FuncPCABIInternal") return undefined;
+  return {
+    kind: "GoJuniorFunction",
+    name: `${importPath}.${name}`,
+    signature,
+    async call(args) {
+      const value = unwrapNamed(args[0] ?? null);
+      if (value === null) return 0n;
+      if (typeof value === "object") return BigInt(objectIdentityId(value));
+      return BigInt(runtimeMapKeyId(value).length);
+    }
+  };
+}
+
+function bodylessZeroResultFunction(declaration: FunctionDecl, importPath?: string): GoJuniorFunction {
+  return {
+    kind: "GoJuniorFunction",
+    name: importPath ? `${importPath}.${declaration.name}` : declaration.name,
+    signature: declaration.signature,
+    ...(declaration.source ? { source: declaration.source } : {}),
+    declaration,
+    async call(_args, context) {
+      const values = declaration.signature.results.map((result) => defaultValueForDeclarationType(result.type, context));
+      return values.length === 0 ? null : values.length === 1 ? values[0] ?? null : values;
+    }
+  };
 }
 
 function bodylessBytealgIntrinsic(
@@ -4925,7 +4960,11 @@ async function getSelector(expression: SelectorExpression, context: EvaluationCo
   if (fmtError !== undefined) {
     return hostCallable("fmt.errorString.Error", () => fmtError);
   }
-  const method = methodForValue(object, expression.field, context);
+  let method = methodForValue(object, expression.field, context);
+  if (!method) {
+    const pointer = await pointerToExpressionIfAddressable(expression.object, context);
+    if (pointer) method = methodForValue(pointer, expression.field, context);
+  }
   if (method) {
     let receiver = method.receiver;
     if (method.method.pointerReceiver && expression.object.kind === "Identifier") {
@@ -4948,6 +4987,21 @@ async function getSelector(expression: SelectorExpression, context: EvaluationCo
     }
   }
   throw new GoJuniorRuntimeError(`${formatValue(object)} has no selector ${expression.field}`);
+}
+
+async function pointerToExpressionIfAddressable(expression: Expression, context: EvaluationContext): Promise<RuntimePointer | undefined> {
+  if (
+    expression.kind !== "Identifier" &&
+    expression.kind !== "SelectorExpression" &&
+    expression.kind !== "IndexExpression"
+  ) {
+    return undefined;
+  }
+  try {
+    return await pointerToExpression(expression, context);
+  } catch {
+    return undefined;
+  }
 }
 
 function methodExpressionForSelector(expression: SelectorExpression, context: EvaluationContext): GoJuniorFunction | undefined {
