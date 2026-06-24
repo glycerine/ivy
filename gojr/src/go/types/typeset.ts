@@ -237,8 +237,8 @@ function computeInterfaceTypeSetBody(check: Checker | null, pos: Pos, ityp: Inte
       case explicit:
         if (check !== null) {
           const err = check.newError("DuplicateDecl");
-          err.addf(atPos(pos), "duplicate method %s", m.name);
-          err.addf(atPos(mpos.get(other as Func) ?? nopos), "other declaration of method %s", m.name);
+          err.addf(new atPos(pos), "duplicate method %s", m.name);
+          err.addf(new atPos(mpos.get(other as Func) ?? nopos), "other declaration of method %s", m.name);
           err.report();
         }
         break;
@@ -252,11 +252,11 @@ function computeInterfaceTypeSetBody(check: Checker | null, pos: Pos, ityp: Inte
           check.later(() => {
             if ((pos !== nopos && !check.allowVersion(go1_14)) || !Identical(m.typ!, other!.Type()!)) {
               const err = check.newError("DuplicateDecl");
-              err.addf(atPos(pos), "duplicate method %s", m.name);
-              err.addf(atPos(mpos.get(other as Func) ?? nopos), "other declaration of method %s", m.name);
+              err.addf(new atPos(pos), "duplicate method %s", m.name);
+              err.addf(new atPos(mpos.get(other as Func) ?? nopos), "other declaration of method %s", m.name);
               err.report();
             }
-          }).describef(atPos(pos), "duplicate method check for %s", m.name);
+          }).describef(new atPos(pos), "duplicate method check for %s", m.name);
         }
     }
   };
@@ -284,7 +284,7 @@ function computeInterfaceTypeSetBody(check: Checker | null, pos: Pos, ityp: Inte
       assert(!isTypeParam(typ));
       const tset = computeInterfaceTypeSet(check, pos, u);
       // If typ is local, an error was already reported where typ is specified/defined.
-      if (pos !== nopos && check !== null && check.isImportedConstraint(typ) && !check.verifyVersionf(atPos(pos), go1_18, "embedding constraint interface %s", typ)) {
+      if (pos !== nopos && check !== null && check.isImportedConstraint(typ) && !check.verifyVersionf(new atPos(pos), go1_18, "embedding constraint interface %s", typ)) {
         continue;
       }
       comparable = tset.comparable;
@@ -293,7 +293,7 @@ function computeInterfaceTypeSetBody(check: Checker | null, pos: Pos, ityp: Inte
       }
       terms = tset.terms;
     } else if (u instanceof Union) {
-      if (pos !== nopos && check !== null && !check.verifyVersionf(atPos(pos), go1_18, "embedding interface element %s", u)) {
+      if (pos !== nopos && check !== null && !check.verifyVersionf(new atPos(pos), go1_18, "embedding interface element %s", u)) {
         continue;
       }
       const tset = computeUnionTypeSet(check, unionSets, pos, u);
@@ -307,7 +307,7 @@ function computeInterfaceTypeSetBody(check: Checker | null, pos: Pos, ityp: Inte
       if (!isValid(u)) {
         continue;
       }
-      if (pos !== nopos && check !== null && !check.verifyVersionf(atPos(pos), go1_18, "embedding non-interface type %s", typ)) {
+      if (pos !== nopos && check !== null && !check.verifyVersionf(new atPos(pos), go1_18, "embedding non-interface type %s", typ)) {
         continue;
       }
       terms = new termlist([new term(false, typ)]);
@@ -414,7 +414,7 @@ export function computeUnionTypeSet(check: Checker | null, unionSets: Map<Union,
     allTerms = allTerms.union(terms);
     if (allTerms.length > maxTermCount) {
       if (check !== null) {
-        check.errorf(atPos(pos), "InvalidUnion", "cannot handle more than %d union terms (implementation limitation)", maxTermCount);
+        check.errorf(new atPos(pos), "InvalidUnion", "cannot handle more than %d union terms (implementation limitation)", maxTermCount);
       }
       unionSets.set(utyp, invalidTypeSet);
       return unionSets.get(utyp)!;

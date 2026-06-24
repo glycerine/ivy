@@ -228,7 +228,7 @@ Checker.prototype.builtin = function builtin(x, call0, id0) {
             }
             case builtinId._Clear:
                 // clear(m)
-                this.verifyVersionf(atPos(PosOf(call.fun)), go1_21, "clear");
+                this.verifyVersionf(new atPos(PosOf(call.fun)), go1_21, "clear");
                 if (!underIs(x.typ(), (u) => {
                     if (u instanceof MapType || u instanceof Slice) {
                         return true;
@@ -530,7 +530,7 @@ Checker.prototype.builtin = function builtin(x, call0, id0) {
             case builtinId._Min: {
                 // max(x, ...)
                 // min(x, ...)
-                this.verifyVersionf(atPos(PosOf(call.fun)), go1_21, "built-in %s", bin.name);
+                this.verifyVersionf(new atPos(PosOf(call.fun)), go1_21, "built-in %s", bin.name);
                 for (let i = 0; i < args.length; i++) {
                     const a = args[i];
                     if (!a.isValid()) {
@@ -592,7 +592,7 @@ Checker.prototype.builtin = function builtin(x, call0, id0) {
                             }
                             assert(!isUntyped(x.typ()));
                         }
-                        this.verifyVersionf(atPos(PosOf(call.fun)), go1_26, "new(%s)", arg);
+                        this.verifyVersionf(new atPos(PosOf(call.fun)), go1_26, "new(%s)", arg);
                         break;
                 }
                 const T = x.typ();
@@ -652,7 +652,7 @@ Checker.prototype.builtin = function builtin(x, call0, id0) {
                 break;
             case builtinId._Add: {
                 // unsafe.Add(ptr unsafe.Pointer, len IntegerType) unsafe.Pointer
-                this.verifyVersionf(atPos(PosOf(call.fun)), go1_17, "unsafe.Add");
+                this.verifyVersionf(new atPos(PosOf(call.fun)), go1_17, "unsafe.Add");
                 this.assignment(x, Typ[UnsafePointer], "argument to unsafe.Add");
                 if (!x.isValid()) {
                     return false;
@@ -738,7 +738,7 @@ Checker.prototype.builtin = function builtin(x, call0, id0) {
             }
             case builtinId._Slice: {
                 // unsafe.Slice(ptr *T, len IntegerType) []T
-                this.verifyVersionf(atPos(PosOf(call.fun)), go1_17, "unsafe.Slice");
+                this.verifyVersionf(new atPos(PosOf(call.fun)), go1_17, "unsafe.Slice");
                 const [u] = commonUnder(x.typ(), null);
                 const ptr = u instanceof Pointer ? u : null;
                 if (ptr === null) {
@@ -758,7 +758,7 @@ Checker.prototype.builtin = function builtin(x, call0, id0) {
             }
             case builtinId._SliceData: {
                 // unsafe.SliceData(slice []T) *T
-                this.verifyVersionf(atPos(PosOf(call.fun)), go1_20, "unsafe.SliceData");
+                this.verifyVersionf(new atPos(PosOf(call.fun)), go1_20, "unsafe.SliceData");
                 const [u] = commonUnder(x.typ(), null);
                 const slice = u instanceof Slice ? u : null;
                 if (slice === null) {
@@ -774,7 +774,7 @@ Checker.prototype.builtin = function builtin(x, call0, id0) {
             }
             case builtinId._String: {
                 // unsafe.String(ptr *byte, len IntegerType) string
-                this.verifyVersionf(atPos(PosOf(call.fun)), go1_20, "unsafe.String");
+                this.verifyVersionf(new atPos(PosOf(call.fun)), go1_20, "unsafe.String");
                 this.assignment(x, NewPointer(universeByte), "argument to unsafe.String");
                 if (!x.isValid()) {
                     return false;
@@ -792,7 +792,7 @@ Checker.prototype.builtin = function builtin(x, call0, id0) {
             }
             case builtinId._StringData:
                 // unsafe.StringData(str string) *byte
-                this.verifyVersionf(atPos(PosOf(call.fun)), go1_20, "unsafe.StringData");
+                this.verifyVersionf(new atPos(PosOf(call.fun)), go1_20, "unsafe.StringData");
                 this.assignment(x, Typ[StringKind], "argument to unsafe.StringData");
                 if (!x.isValid()) {
                     return false;

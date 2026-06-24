@@ -12,8 +12,15 @@ import { Config, Info } from "./api.js";
 import { asGoVersion, go_current, go1_21 } from "./version.js";
 import { assert } from "./util.js";
 import { NoPos as zeroPos } from "./token.js";
-export function atPos(pos) {
-    return { Pos: () => pos };
+// atPos wraps a token.Pos to implement the positioner interface.
+export class atPos {
+    s;
+    constructor(s) {
+        this.s = s;
+    }
+    Pos() {
+        return this.s;
+    }
 }
 function posIsValid(pos) {
     return pos !== NoPos;
@@ -21,7 +28,7 @@ function posIsValid(pos) {
 export function cmpPos(p, q) { return p - q; }
 // nopos, noposn indicate an unknown position
 export const nopos = zeroPos;
-export const noposn = atPos(nopos);
+export const noposn = new atPos(nopos);
 // debugging/development support
 export const debug = false; // leave on during development
 // position tracing for panics during type checking
@@ -304,7 +311,7 @@ export class Checker extends environment {
                     this.files = [...(this.files ?? []), file];
                     break;
                 default:
-                    this.errorf(atPos(f.Package ?? nopos), "MismatchedPkgName", "package %s; expected package %s", name, pkg.name);
+                    this.errorf(new atPos(f.Package ?? nopos), "MismatchedPkgName", "package %s; expected package %s", name, pkg.name);
                 // ignore this file
             }
         }

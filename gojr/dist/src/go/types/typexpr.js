@@ -179,7 +179,7 @@ Checker.prototype.validVarType = function validVarType(e, typ) {
                 }
             }
         }
-    }).describef(atPos(PosOf(e)), "check var type %s", typ);
+    }).describef(new atPos(PosOf(e)), "check var type %s", typ);
 };
 // declaredType is like typ but also accepts a type name def.
 // If def != nil, e is the type specification for the [Alias] or [Named] type
@@ -273,7 +273,7 @@ Checker.prototype.typInternal = function typInternal(e0, def) {
             case "IndexExpr":
             case "IndexListExpr": {
                 const ix = this.unpackIndexedExpr?.(e) ?? e;
-                this.verifyVersionf(atPos(PosOf(e)), go1_18, "type instantiation");
+                this.verifyVersionf(new atPos(PosOf(e)), go1_18, "type instantiation");
                 return this.instantiatedType(ix);
             }
             case "ParenExpr":
@@ -350,7 +350,7 @@ Checker.prototype.typInternal = function typInternal(e0, def) {
                         }
                         this.errorf(e.key, "IncomparableMapKey", "invalid map key type %s%s", typ.key, why);
                     }
-                }).describef(atPos(PosOf(e.key)), "check map key %s", typ.key);
+                }).describef(new atPos(PosOf(e.key)), "check map key %s", typ.key);
                 return typ;
             }
             case "ChanType": {
@@ -451,13 +451,13 @@ Checker.prototype.instantiatedType = function instantiatedType(ix) {
                     if (i >= 0 && i < indices.length) {
                         pos = PosOf(indices[i]);
                     }
-                    this.softErrorf(atPos(pos), "InvalidTypeArg", "%v", err);
+                    this.softErrorf(new atPos(pos), "InvalidTypeArg", "%v", err);
                 }
                 else {
                     this.mono?.recordInstance?.(this.pkg, PosOf(ix.orig), tparamsList, targs, ix.indices ?? []);
                 }
             }
-        }).describef(atPos(PosOf(ix.orig)), "verify instantiation %s", inst);
+        }).describef(new atPos(PosOf(ix.orig)), "verify instantiation %s", inst);
         res = inst;
         return inst;
     }

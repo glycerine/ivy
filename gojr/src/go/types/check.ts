@@ -27,8 +27,13 @@ export interface positioner {
   Pos(): Pos;
 }
 
-export function atPos(pos: Pos): positioner {
-  return { Pos: () => pos };
+// atPos wraps a token.Pos to implement the positioner interface.
+export class atPos implements positioner {
+  public constructor(public s: Pos) {}
+
+  public Pos(): Pos {
+    return this.s;
+  }
 }
 
 function posIsValid(pos: Pos): boolean {
@@ -39,7 +44,7 @@ export function cmpPos(p: Pos, q: Pos): number { return p - q; }
 
 // nopos, noposn indicate an unknown position
 export const nopos: Pos = zeroPos;
-export const noposn = atPos(nopos);
+export const noposn = new atPos(nopos);
 
 // debugging/development support
 export const debug = false; // leave on during development
@@ -334,7 +339,7 @@ export class Checker extends environment {
           break;
 
         default:
-          (this as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(atPos(f.Package ?? nopos), "MismatchedPkgName", "package %s; expected package %s", name, pkg.name);
+          (this as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(new atPos(f.Package ?? nopos), "MismatchedPkgName", "package %s; expected package %s", name, pkg.name);
           // ignore this file
       }
     }

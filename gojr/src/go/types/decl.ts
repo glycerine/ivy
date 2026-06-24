@@ -84,7 +84,7 @@ export function pathString(path: Object[]): string {
 // objDecl type-checks the declaration of obj in its respective (file) environment.
 Checker.prototype.objDecl = function objDecl(obj: Object): void {
   if (tracePos) {
-    this.pushPos(atPos(obj.Pos()));
+    this.pushPos(new atPos(obj.Pos()));
   }
   try {
     if (this.conf._Trace && obj.Type() === null) {
@@ -437,7 +437,7 @@ Checker.prototype.constDecl = function constDeclMethod(obj: Const, typ: unknown,
     const x = new operand();
     if (init !== null && init !== undefined) {
       if (inherited) {
-        this.errpos = atPos(obj.pos);
+        this.errpos = new atPos(obj.pos);
       }
       (this as unknown as { expr: (target: unknown, x: operand, init: unknown) => void }).expr(null, x, init);
     }
@@ -519,7 +519,7 @@ Checker.prototype.typeDecl = function typeDeclMethod(obj: TypeName, tdecl: unkno
     if (!versionErr && tparam0 !== null && tparam0 !== undefined && !this.verifyVersionf(tparam0 as positioner, go1_23, "generic type alias")) {
       versionErr = true;
     }
-    if (!versionErr && !this.verifyVersionf(atPos(nopos), go1_9, "type alias")) {
+    if (!versionErr && !this.verifyVersionf(new atPos(nopos), go1_9, "type alias")) {
       versionErr = true;
     }
 

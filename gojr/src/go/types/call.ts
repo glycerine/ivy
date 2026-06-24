@@ -88,10 +88,10 @@ Checker.prototype.funcInst = function funcInst(T: target | null, pos: number, x:
 
   let instErrPos: positioner;
   if (ix !== null) {
-    instErrPos = atPos(ix.lbrack);
+    instErrPos = new atPos(ix.lbrack);
     x.expr = ix.orig; // if we don't have an index expression, keep the existing expression of x
   } else {
-    instErrPos = atPos(pos);
+    instErrPos = new atPos(pos);
   }
   const versionErr = !this.verifyVersionf(instErrPos, go1_18, "function instantiation");
 
@@ -162,7 +162,7 @@ Checker.prototype.funcInst = function funcInst(T: target | null, pos: number, x:
     const [tparams, params2] = this.renameTParams(pos, sig.TypeParams()!.list(), NewTuple(...params) ?? new Tuple([]));
 
     const err = this.newError("CannotInferTypeArgs");
-    const inferred = this.infer(atPos(pos), tparams, targs ?? [], params2 as Tuple, args, reverse, err);
+    const inferred = this.infer(new atPos(pos), tparams, targs ?? [], params2 as Tuple, args, reverse, err);
     if (inferred === null) {
       if (!err.empty()) {
         err.report();
@@ -211,11 +211,11 @@ Checker.prototype.instantiateSignature = function instantiateSignature(pos: numb
         if (xlist !== null && i < xlist.length) {
           pos2 = PosOf(xlist[i] as Expr);
         }
-        this.softErrorf(atPos(pos2), "InvalidTypeArg", "%s", err);
+        this.softErrorf(new atPos(pos2), "InvalidTypeArg", "%s", err);
       } else {
         (this.mono as { recordInstance(pkg: unknown, pos: number, tparams: TypeParam[], targs: Type[], xlist: unknown[]): void }).recordInstance(this.pkg, pos, tparams, targs, xlist ?? []);
       }
-    }).describef(atPos(pos), "verify instantiation");
+    }).describef(new atPos(pos), "verify instantiation");
 
     res = inst;
   } finally {
@@ -268,7 +268,7 @@ Checker.prototype.callExpr = function callExpr(x: operand, call0: unknown): expr
       }
       switch (call.args.length) {
         case 0:
-          this.errorf(atPos(PosOf(call)), "WrongArgCount", "missing argument in conversion to %s", T);
+          this.errorf(new atPos(PosOf(call)), "WrongArgCount", "missing argument in conversion to %s", T);
           break;
         case 1:
           this.expr(newTarget(T, "conversion"), x, call.args[0]);
@@ -365,7 +365,7 @@ Checker.prototype.callExpr = function callExpr(x: operand, call0: unknown): expr
     // is an error checking its arguments (for example, if an incorrect number
     // of arguments is supplied).
     if (got === want && want > 0) {
-      this.verifyVersionf(atPos(ix.lbrack), go1_18, "function instantiation");
+      this.verifyVersionf(new atPos(ix.lbrack), go1_18, "function instantiation");
       sig = this.instantiateSignature(ix.Pos(), ix.orig, sig, targs, xlist);
       // targs have been consumed; proceed with checking arguments of the
       // non-generic signature.
@@ -620,7 +620,7 @@ Checker.prototype.arguments = function arguments_(call0: unknown, sig: Signature
       at = args[npars]?.expr ?? call; // report at first extra argument
       qualifier = "too many";
     } else {
-      at = atPos(PosOf(call)); // report at closing )
+      at = new atPos(PosOf(call)); // report at closing )
     }
     // take care of empty parameter lists represented by nil tuples
     const params = sig.params?.vars ?? [];
@@ -641,9 +641,9 @@ Checker.prototype.arguments = function arguments_(call0: unknown, sig: Signature
     if (!this.allowVersion(go1_18)) {
       if (call.fun.kind === "IndexExpr" || call.fun.kind === "IndexListExpr") {
         const ix = this.unpackIndexedExpr(call.fun)!;
-        this.versionErrorf(atPos(ix.lbrack), go1_18, "function instantiation");
+        this.versionErrorf(new atPos(ix.lbrack), go1_18, "function instantiation");
       } else {
-        this.versionErrorf(atPos(PosOf(call)), go1_18, "implicit function instantiation");
+        this.versionErrorf(new atPos(PosOf(call)), go1_18, "implicit function instantiation");
       }
     }
     // rename type parameters to avoid problems with recursive calls

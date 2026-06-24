@@ -8,6 +8,7 @@
 import type { Type } from "./type.js";
 import { assert } from "./util.js";
 import { Identical } from "./predicates.js";
+import { newTypeHasher } from "./typestring.js";
 
 // This file contains a definition of the type-checking context; an opaque type
 // that may be supplied by users during instantiation.
@@ -26,15 +27,21 @@ export class Context {
   public instanceHash(orig: Type, targs: Type[]): string {
     assert(this !== null);
     assert(orig !== null);
-    const parts: string[] = [];
+    const buf: string[] = [];
 
-    parts.push(String(this.getID(orig)));
-    parts.push(orig.String());
+    const h = newTypeHasher(buf, this);
+    h.string(String(this.getID(orig)));
+    // Because we've already written the unique origin ID this call to h.typ is
+    // unnecessary, but we leave it for hash readability. It can be removed later
+    // if performance is an issue.
+    h.typ(orig);
     if (targs.length > 0) {
-      parts.push(targs.map((t) => t.String()).join(","));
+      // TODO(rfindley): consider asserting on isGeneric(typ) here, if and when
+      // isGeneric handles *Signature types.
+      h.typeList(targs);
     }
 
-    return parts.join(" ").replaceAll(" ", "#");
+    return buf.join("").replaceAll(" ", "#");
   }
 
   // lookup returns an existing instantiation of orig with targs, if it exists.

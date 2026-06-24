@@ -1,8 +1,21 @@
 // Copyright 2021 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+// ----------------------------------------------------------------------------
+// API
+import { NewIdent, PosOf } from "../../front/ast.js";
+import { TokenKind } from "../../front/token.js";
+import { Basic, Invalid, UnsafePointer } from "./basic.js";
+import { Checker, atPos } from "./check.js";
+import { deref } from "./lookup.js";
+import { Interface } from "./interface.js";
+import { Pointer } from "./pointer.js";
 import { TypeString } from "./typestring.js";
+import { NewField } from "./object.js";
 import { objset } from "./objset.js";
+import { isTypeParam, isValid } from "./predicates.js";
+import { Typ } from "./universe.js";
+import { makeFromLiteral } from "./util.js";
 // A Struct represents a struct type.
 export class Struct {
     fields = null; // fields != nil indicates the struct is set up (possibly with len(fields) == 0)
@@ -50,3 +63,152 @@ export function NewStruct(fields, tags) {
     s.markComplete();
     return s;
 }
+Checker.prototype.structType = function structType(styp, e) {
+    const list = e.fields;
+    if (list === undefined || list.fields.length === 0) {
+        styp.markComplete();
+        return;
+    }
+    // struct fields and tags
+    const fields = [];
+    let tags = null;
+    // for double-declaration checks
+    const fset = new objset();
+    // current field typ and tag
+    let typ = Typ[Invalid];
+    let tag = "";
+    const add = (ident, embedded) => {
+        if (tag !== "" && tags === null) {
+            tags = new Array(fields.length).fill("");
+        }
+        if (tags !== null) {
+            tags.push(tag);
+        }
+        const pos = PosOf(ident);
+        const name = ident.name;
+        const fld = NewField(pos, this.pkg, name, typ, embedded);
+        // spec: "Within a struct, non-blank field names must be unique."
+        if (name === "_" || this.declareInSet(fset, pos, fld)) {
+            fields.push(fld);
+            this.recordDef(ident, fld);
+        }
+    };
+    // addInvalid adds an embedded field of invalid type to the struct for
+    // fields with errors; this keeps the number of struct fields in sync
+    // with the source as long as the fields are _ or have different names
+    // (go.dev/issue/25627).
+    const addInvalid = (ident) => {
+        typ = Typ[Invalid];
+        tag = "";
+        add(ident, true);
+    };
+    for (const f of list.fields) {
+        typ = this.varType(f.type);
+        tag = this.tag(f.tag);
+        if (f.names.length > 0) {
+            // named fields
+            for (const name of f.names) {
+                add(name, false);
+            }
+        }
+        else {
+            // embedded field
+            // spec: "An embedded type must be specified as a type name T or as a
+            // pointer to a non-interface type name *T, and T itself may not be a
+            // pointer type."
+            const pos = PosOf(f.type); // position of type, for errors
+            let name = embeddedFieldIdent(f.type);
+            if (name === null) {
+                this.errorf(new atPos(PosOf(f.type)), "InvalidSyntaxTree", "embedded field type %s has no name", f.type);
+                name = NewIdent("_");
+                if (f.type.span !== undefined) {
+                    name.span = f.type.span;
+                }
+                addInvalid(name);
+                continue;
+            }
+            add(name, true); // struct{p.T} field has position of T
+            // Because we have a name, typ must be of the form T or *T, where T is the name
+            // of a (named or alias) type, and t (= deref(typ)) must be the type of T.
+            // We must delay this check to the end because we don't want to instantiate
+            // (via t.Underlying()) a possibly incomplete type.
+            // for use in the closure below
+            const embeddedTyp = typ;
+            const embeddedPos = f.type;
+            this.later(() => {
+                const [t, isPtr] = deref(embeddedTyp);
+                const u = t.Underlying();
+                if (u instanceof Basic) {
+                    if (!isValid(t)) {
+                        // error was reported before
+                        return;
+                    }
+                    // unsafe.Pointer is treated like a regular pointer
+                    if (u.kind === UnsafePointer) {
+                        this.error(new atPos(PosOf(embeddedPos)), "InvalidPtrEmbed", "embedded field type cannot be unsafe.Pointer");
+                    }
+                }
+                else if (u instanceof Pointer) {
+                    this.error(new atPos(PosOf(embeddedPos)), "InvalidPtrEmbed", "embedded field type cannot be a pointer");
+                }
+                else if (u instanceof Interface) {
+                    if (isTypeParam(t)) {
+                        // The error code here is inconsistent with other error codes for
+                        // invalid embedding, because this restriction may be relaxed in the
+                        // future, and so it did not warrant a new error code.
+                        this.error(new atPos(PosOf(embeddedPos)), "MisplacedTypeParam", "embedded field type cannot be a (pointer to a) type parameter");
+                    }
+                    else if (isPtr) {
+                        this.error(new atPos(PosOf(embeddedPos)), "InvalidPtrEmbed", "embedded field type cannot be a pointer to an interface");
+                    }
+                }
+            }).describef(new atPos(PosOf(embeddedPos)), "check embedded type %s", embeddedTyp);
+            void pos;
+        }
+    }
+    styp.fields = fields;
+    styp.tags = tags;
+    styp.markComplete();
+};
+export function embeddedFieldIdent(e) {
+    switch (e.kind) {
+        case "Ident":
+            return e;
+        case "StarExpr":
+            // *T is valid, but **T is not
+            if (e.expr.kind !== "StarExpr") {
+                return embeddedFieldIdent(e.expr);
+            }
+            break;
+        case "SelectorExpr":
+            return e.selector;
+        case "IndexExpr":
+            return embeddedFieldIdent(e.object);
+        case "IndexListExpr":
+            return embeddedFieldIdent(e.object);
+    }
+    return null; // invalid embedded field
+}
+Checker.prototype.declareInSet = function declareInSet(oset, pos, obj) {
+    const alt = oset.insert(obj);
+    if (alt !== null) {
+        const err = this.newError("DuplicateDecl");
+        err.addf(new atPos(pos), "%s redeclared", obj.Name());
+        err.addAltDecl(alt);
+        err.report();
+        return false;
+    }
+    return true;
+};
+Checker.prototype.tag = function tag(t) {
+    if (t !== undefined) {
+        if (t.token === TokenKind.StringLiteral) {
+            const val = makeFromLiteral(t.value, t.token);
+            if (typeof val === "string") {
+                return val;
+            }
+        }
+        this.errorf(new atPos(PosOf(t)), "InvalidSyntaxTree", "incorrect tag syntax: %q", t.value);
+    }
+    return "";
+};

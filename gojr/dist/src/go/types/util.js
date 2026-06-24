@@ -1,5 +1,7 @@
 // Mechanical TypeScript transliteration support for go/types/util.go fragments.
+import { EndOf, PosOf } from "../../front/ast.js";
 import { TokenKind } from "../../front/token.js";
+import { atPos } from "./check.js";
 export function assert(condition, message = "assertion failed") {
     if (!condition) {
         throw new Error(message);
@@ -9,6 +11,15 @@ export function unreachable() {
     throw new Error("unreachable");
 }
 export const isTypes2 = false;
+// hasDots reports whether the last argument in the call is followed by ...
+export function hasDots(call) {
+    return call.ellipsis;
+}
+// dddErrPos returns the positioner for reporting an invalid ... use in a call.
+export function dddErrPos(call) {
+    const last = call.args[call.args.length - 1];
+    return new atPos(last !== undefined ? EndOf(last) : EndOf(call));
+}
 // isdddArray reports whether atyp is of the form [...]E.
 export function isdddArray(atyp) {
     const a = atyp;
@@ -16,6 +27,18 @@ export function isdddArray(atyp) {
         return a.inferredLength === true || (a.length?.kind === "Ellipsis" && a.length.element === undefined);
     }
     return false;
+}
+// argErrPos returns positioner for reporting an invalid argument count.
+export function argErrPos(call) {
+    return new atPos(EndOf(call));
+}
+// startPos returns the start position of node n.
+export function startPos(n) {
+    return PosOf(n);
+}
+// endPos returns the position of the first character immediately after node n.
+export function endPos(n) {
+    return EndOf(n);
 }
 // makeFromLiteral returns the constant value for the given literal string and kind.
 export function makeFromLiteral(lit, kind) {

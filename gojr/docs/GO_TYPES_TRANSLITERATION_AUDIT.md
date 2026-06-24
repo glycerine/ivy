@@ -4,11 +4,11 @@ This file is the audit baseline for the fresh symbol-by-symbol TypeScript transl
 
 Target TypeScript files currently included in the inventory are only files under `gojr/src/go/types/`. The legacy frontend checker is deliberately excluded and must not count as the `go/types` port.
 
-Current same-kind exact-symbol audit: 986/1121 upstream go/types declarations have a matching symbol in the current TypeScript inventory; 135 are missing by exact symbol name.
+Current same-kind exact-symbol audit: 1121/1121 upstream go/types declarations have a matching symbol in the current TypeScript inventory; 0 are missing by exact symbol name.
 
 Rule for this pass: every upstream `go/types` declaration must have a corresponding same-kind TypeScript declaration, and function bodies must be ported with visibly isomorphic control flow before being marked complete. `Present` means a same-kind exact or receiver-qualified symbol name exists in the fresh port; it does not prove faithful logic yet. `Missing` means the fresh port has not yet reached symbol-level correspondence.
 
-Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScript symbols were collected with the TypeScript compiler API from 65 fresh-port files.
+Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScript symbols were collected with the TypeScript compiler API from 76 fresh-port files.
 
 ## go/types
 
@@ -33,7 +33,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `*Alias.TypeArgs` @ /usr/local/go1.27rc1/src/go/types/alias.go:75:1 - Present: Method Alias.TypeArgs (gojr/src/go/types/alias.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Alias.Rhs` @ /usr/local/go1.27rc1/src/go/types/alias.go:79:1 - Present: Method Alias.Rhs (gojr/src/go/types/alias.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Checker.newAlias` @ /usr/local/go1.27rc1/src/go/types/alias.go:116:1 - Present: Method Checker.newAlias (gojr/src/go/types/check.ts) - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=5, return=1, defer=0, go=0, call=2, binary=2, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.newAliasInstance` @ /usr/local/go1.27rc1/src/go/types/alias.go:136:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=6, return=1, defer=0, go=0, call=9, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.newAliasInstance` @ /usr/local/go1.27rc1/src/go/types/alias.go:136:1 - Present: Method Checker.newAliasInstance interface method (gojr/src/go/types/alias_instance.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=6, return=1, defer=0, go=0, call=9, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Alias.cleanup` @ /usr/local/go1.27rc1/src/go/types/alias.go:147:1 - Present: Method Alias.cleanup (gojr/src/go/types/alias.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### api.go
@@ -44,7 +44,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `Importer` (interface) - Present: InterfaceDeclaration Importer (gojr/src/go/types/api.ts) - structure: not yet 1:1-audited
 - `ImportMode` (*ast.Ident) - Present: TypeAliasDeclaration ImportMode (gojr/src/go/types/api.ts) - structure: not yet 1:1-audited
 - `ImporterFrom` (interface) - Present: InterfaceDeclaration ImporterFrom (gojr/src/go/types/api.ts) - structure: not yet 1:1-audited
-- `Config` (struct) - Present: ClassDeclaration Config (gojr/src/go/types/api.ts) - structure: not yet 1:1-audited
+- `Config` (struct) - Present: ClassDeclaration Config (gojr/src/go/types/api.ts); InterfaceDeclaration Config (gojr/src/go/types/sizes.ts) - structure: not yet 1:1-audited
 - `Info` (struct) - Present: ClassDeclaration Info (gojr/src/go/types/api.ts) - structure: not yet 1:1-audited
 - `TypeAndValue` (struct) - Present: ClassDeclaration TypeAndValue (gojr/src/go/types/api.ts) - structure: not yet 1:1-audited
 - `Instance` (struct) - Present: ClassDeclaration Instance (gojr/src/go/types/api.ts) - structure: not yet 1:1-audited
@@ -121,7 +121,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### badlinkname.go
 
 #### Functions
-- `badlinkname_Checker_infer` @ /usr/local/go1.27rc1/src/go/types/badlinkname.go:20:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `badlinkname_Checker_infer` @ /usr/local/go1.27rc1/src/go/types/badlinkname.go:20:1 - Present: FunctionDeclaration badlinkname_Checker_infer (gojr/src/go/types/badlinkname.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### basic.go
 
@@ -244,9 +244,9 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `dotImportKey` (struct) - Present: ClassDeclaration dotImportKey (gojr/src/go/types/check.ts) - structure: not yet 1:1-audited
 - `action` (struct) - Present: ClassDeclaration action (gojr/src/go/types/check.ts) - structure: not yet 1:1-audited
 - `actionDesc` (struct) - Present: ClassDeclaration actionDesc (gojr/src/go/types/check.ts) - structure: not yet 1:1-audited
-- `Checker` (struct) - Present: InterfaceDeclaration Checker (gojr/src/go/types/assignments.ts); InterfaceDeclaration Checker (gojr/src/go/types/builtins.ts); InterfaceDeclaration Checker (gojr/src/go/types/call.ts); ClassDeclaration Checker (gojr/src/go/types/check.ts); InterfaceDeclaration Checker (gojr/src/go/types/const.ts); InterfaceDeclaration Checker (gojr/src/go/types/conversions.ts); InterfaceDeclaration Checker (gojr/src/go/types/cycles.ts); InterfaceDeclaration Checker (gojr/src/go/types/decl.ts); InterfaceDeclaration Checker (gojr/src/go/types/errors.ts); InterfaceDeclaration Checker (gojr/src/go/types/errsupport.ts); InterfaceDeclaration Checker (gojr/src/go/types/expr.ts); InterfaceDeclaration Checker (gojr/src/go/types/format.ts); InterfaceDeclaration Checker (gojr/src/go/types/index_expr.ts); InterfaceDeclaration Checker (gojr/src/go/types/infer.ts); InterfaceDeclaration Checker (gojr/src/go/types/initorder.ts); InterfaceDeclaration Checker (gojr/src/go/types/instantiate.ts); InterfaceDeclaration Checker (gojr/src/go/types/labels.ts); InterfaceDeclaration Checker (gojr/src/go/types/literals.ts); InterfaceDeclaration Checker (gojr/src/go/types/lookup.ts); InterfaceDeclaration Checker (gojr/src/go/types/mono.ts); InterfaceDeclaration Checker (gojr/src/go/types/named.ts); InterfaceDeclaration Checker (gojr/src/go/types/recording.ts); InterfaceDeclaration Checker (gojr/src/go/types/resolver.ts); InterfaceDeclaration Checker (gojr/src/go/types/subst.ts); InterfaceDeclaration Checker (gojr/src/go/types/typexpr.ts) - structure: not yet 1:1-audited
+- `Checker` (struct) - Present: InterfaceDeclaration Checker (gojr/src/go/types/alias_instance.ts); InterfaceDeclaration Checker (gojr/src/go/types/assignments.ts); InterfaceDeclaration Checker (gojr/src/go/types/builtins.ts); InterfaceDeclaration Checker (gojr/src/go/types/call.ts); ClassDeclaration Checker (gojr/src/go/types/check.ts); InterfaceDeclaration Checker (gojr/src/go/types/const.ts); InterfaceDeclaration Checker (gojr/src/go/types/conversions.ts); InterfaceDeclaration Checker (gojr/src/go/types/cycles.ts); InterfaceDeclaration Checker (gojr/src/go/types/decl.ts); InterfaceDeclaration Checker (gojr/src/go/types/errors.ts); InterfaceDeclaration Checker (gojr/src/go/types/errsupport.ts); InterfaceDeclaration Checker (gojr/src/go/types/expr.ts); InterfaceDeclaration Checker (gojr/src/go/types/format.ts); InterfaceDeclaration Checker (gojr/src/go/types/index_expr.ts); InterfaceDeclaration Checker (gojr/src/go/types/infer.ts); InterfaceDeclaration Checker (gojr/src/go/types/initorder.ts); InterfaceDeclaration Checker (gojr/src/go/types/instantiate.ts); InterfaceDeclaration Checker (gojr/src/go/types/labels.ts); InterfaceDeclaration Checker (gojr/src/go/types/literals.ts); InterfaceDeclaration Checker (gojr/src/go/types/lookup.ts); InterfaceDeclaration Checker (gojr/src/go/types/mono.ts); InterfaceDeclaration Checker (gojr/src/go/types/named.ts); InterfaceDeclaration Checker (gojr/src/go/types/range.ts); InterfaceDeclaration Checker (gojr/src/go/types/recording.ts); InterfaceDeclaration Checker (gojr/src/go/types/resolver.ts); InterfaceDeclaration Checker (gojr/src/go/types/return.ts); InterfaceDeclaration Checker (gojr/src/go/types/signature.ts); InterfaceDeclaration Checker (gojr/src/go/types/stmt.ts); InterfaceDeclaration Checker (gojr/src/go/types/struct.ts); InterfaceDeclaration Checker (gojr/src/go/types/subst.ts); InterfaceDeclaration Checker (gojr/src/go/types/typexpr.ts); InterfaceDeclaration Checker (gojr/src/go/types/validtype.ts); InterfaceDeclaration Checker (gojr/src/go/types/validtype.ts) - structure: not yet 1:1-audited
 - `cleaner` (interface) - Present: InterfaceDeclaration cleaner (gojr/src/go/types/check.ts) - structure: not yet 1:1-audited
-- `bailout` (struct) - Present: ClassDeclaration bailout (gojr/src/go/types/check.ts) - structure: not yet 1:1-audited
+- `bailout` (struct) - Present: ClassDeclaration bailout (gojr/src/go/types/check.ts); ClassDeclaration bailout (gojr/src/go/types/gotype.ts) - structure: not yet 1:1-audited
 
 #### Functions
 - `NewChecker` @ /usr/local/go1.27rc1/src/go/types/check.go:236:1 - Present: FunctionDeclaration NewChecker (gojr/src/go/types/check.ts) - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=6, binary=2, unary=1, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
@@ -339,7 +339,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `firstInSrc` @ /usr/local/go1.27rc1/src/go/types/decl.go:303:1 - Present: FunctionDeclaration firstInSrc (gojr/src/go/types/decl.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=4, binary=2, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 #### Methods
-- `*Checker.declare` @ /usr/local/go1.27rc1/src/go/types/decl.go:16:1 - Present: Method Checker.declare interface method (gojr/src/go/types/decl.ts) - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=9, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.declare` @ /usr/local/go1.27rc1/src/go/types/decl.go:16:1 - Present: Method Checker.declare interface method (gojr/src/go/types/decl.ts); Method Checker.declare interface method (gojr/src/go/types/range.ts) - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=9, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Checker.objDecl` @ /usr/local/go1.27rc1/src/go/types/decl.go:49:1 - Present: Method Checker.objDecl interface method (gojr/src/go/types/call.ts); Method Checker.objDecl interface method (gojr/src/go/types/decl.ts) - control-flow shape: if=9, for=0, range=0, switch=0, typeSwitch=2, select=0, branch=0, assign=9, return=2, defer=4, go=0, call=35, binary=8, unary=3, composite=1, funcLiteral=3 - logic: not yet 1:1-audited
 - `*Checker.validCycle` @ /usr/local/go1.27rc1/src/go/types/decl.go:171:1 - Present: Method Checker.validCycle interface method (gojr/src/go/types/decl.ts) - control-flow shape: if=10, for=0, range=1, switch=0, typeSwitch=1, select=0, branch=1, assign=10, return=4, defer=1, go=0, call=25, binary=12, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
 - `*Checker.cycleError` @ /usr/local/go1.27rc1/src/go/types/decl.go:254:1 - Present: Method Checker.cycleError interface method (gojr/src/go/types/decl.ts) - control-flow shape: if=6, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=9, return=3, defer=0, go=0, call=22, binary=11, unary=0, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
@@ -372,7 +372,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `errorDesc` (struct) - Present: ClassDeclaration errorDesc (gojr/src/go/types/errors.ts) - structure: not yet 1:1-audited
 - `error_` (struct) - Present: ClassDeclaration error_ (gojr/src/go/types/errors.ts) - structure: not yet 1:1-audited
 - `positioner` (interface) - Present: InterfaceDeclaration positioner (gojr/src/go/types/check.ts) - structure: not yet 1:1-audited
-- `atPos` (*ast.SelectorExpr) - Missing from current checker same-kind exact-symbol inventory - structure: not yet 1:1-audited
+- `atPos` (*ast.SelectorExpr) - Present: ClassDeclaration atPos (gojr/src/go/types/check.ts) - structure: not yet 1:1-audited
 - `posSpan` (struct) - Present: ClassDeclaration posSpan (gojr/src/go/types/errors.ts) - structure: not yet 1:1-audited
 
 #### Functions
@@ -393,7 +393,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `*Checker.errorf` @ /usr/local/go1.27rc1/src/go/types/errors.go:240:1 - Present: Method Checker.errorf interface method (gojr/src/go/types/errors.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=0, defer=0, go=0, call=3, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Checker.softErrorf` @ /usr/local/go1.27rc1/src/go/types/errors.go:246:1 - Present: Method Checker.softErrorf interface method (gojr/src/go/types/errors.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=0, defer=0, go=0, call=3, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Checker.versionErrorf` @ /usr/local/go1.27rc1/src/go/types/errors.go:253:1 - Present: Method Checker.versionErrorf interface method (gojr/src/go/types/errors.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=0, defer=0, go=0, call=4, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `atPos.Pos` @ /usr/local/go1.27rc1/src/go/types/errors.go:263:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `atPos.Pos` @ /usr/local/go1.27rc1/src/go/types/errors.go:263:1 - Present: Method atPos.Pos (gojr/src/go/types/check.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `posSpan.Pos` @ /usr/local/go1.27rc1/src/go/types/errors.go:276:1 - Present: Method posSpan.Pos (gojr/src/go/types/errors.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### errsupport.go
@@ -407,8 +407,8 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### eval.go
 
 #### Functions
-- `Eval` @ /usr/local/go1.27rc1/src/go/types/eval.go:24:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=2, defer=0, go=0, call=3, binary=1, unary=1, composite=2, funcLiteral=0 - logic: not yet 1:1-audited
-- `CheckExpr` @ /usr/local/go1.27rc1/src/go/types/eval.go:56:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=5, for=1, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=9, return=2, defer=1, go=0, call=9, binary=8, unary=3, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `Eval` @ /usr/local/go1.27rc1/src/go/types/eval.go:24:1 - Present: FunctionDeclaration Eval (gojr/src/go/types/eval.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=2, defer=0, go=0, call=3, binary=1, unary=1, composite=2, funcLiteral=0 - logic: not yet 1:1-audited
+- `CheckExpr` @ /usr/local/go1.27rc1/src/go/types/eval.go:56:1 - Present: FunctionDeclaration CheckExpr (gojr/src/go/types/eval.ts) - control-flow shape: if=5, for=1, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=9, return=2, defer=1, go=0, call=9, binary=8, unary=3, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### expr.go
 
@@ -467,10 +467,10 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 #### Functions
 - `ExprString` @ /usr/local/go1.27rc1/src/go/types/exprstring.go:18:1 - Present: FunctionDeclaration ExprString (gojr/src/go/types/exprstring.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=2, binary=0, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `WriteExpr` @ /usr/local/go1.27rc1/src/go/types/exprstring.go:27:1 - Present: FunctionDeclaration WriteExpr (gojr/src/go/types/exprstring.ts) - control-flow shape: if=8, for=0, range=0, switch=1, typeSwitch=1, select=0, branch=0, assign=5, return=0, defer=0, go=0, call=71, binary=6, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `writeSigExpr` @ /usr/local/go1.27rc1/src/go/types/exprstring.go:170:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=10, binary=4, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `writeFieldList` @ /usr/local/go1.27rc1/src/go/types/exprstring.go:195:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=3, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=1, return=0, defer=0, go=0, call=6, binary=4, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `writeIdentList` @ /usr/local/go1.27rc1/src/go/types/exprstring.go:221:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `writeExprList` @ /usr/local/go1.27rc1/src/go/types/exprstring.go:230:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `writeSigExpr` @ /usr/local/go1.27rc1/src/go/types/exprstring.go:170:1 - Present: FunctionDeclaration writeSigExpr (gojr/src/go/types/exprstring.ts) - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=10, binary=4, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `writeFieldList` @ /usr/local/go1.27rc1/src/go/types/exprstring.go:195:1 - Present: FunctionDeclaration writeFieldList (gojr/src/go/types/exprstring.ts) - control-flow shape: if=3, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=1, return=0, defer=0, go=0, call=6, binary=4, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `writeIdentList` @ /usr/local/go1.27rc1/src/go/types/exprstring.go:221:1 - Present: FunctionDeclaration writeIdentList (gojr/src/go/types/exprstring.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `writeExprList` @ /usr/local/go1.27rc1/src/go/types/exprstring.go:230:1 - Present: FunctionDeclaration writeExprList (gojr/src/go/types/exprstring.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### format.go
 
@@ -500,8 +500,8 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `gcSizesFor` @ /usr/local/go1.27rc1/src/go/types/gcsizes.go:168:1 - Present: FunctionDeclaration gcSizesFor (gojr/src/go/types/sizes.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=2, defer=0, go=0, call=0, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 #### Methods
-- `*gcSizes.Alignof` @ /usr/local/go1.27rc1/src/go/types/gcsizes.go:15:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=6, for=0, range=1, switch=0, typeSwitch=1, select=0, branch=0, assign=6, return=8, defer=1, go=0, call=14, binary=8, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*gcSizes.Offsetsof` @ /usr/local/go1.27rc1/src/go/types/gcsizes.go:79:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=2, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=8, return=1, defer=0, go=0, call=5, binary=4, unary=2, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*gcSizes.Alignof` @ /usr/local/go1.27rc1/src/go/types/gcsizes.go:15:1 - Present: Method gcSizes.Alignof (gojr/src/go/types/sizes.ts) - control-flow shape: if=6, for=0, range=1, switch=0, typeSwitch=1, select=0, branch=0, assign=6, return=8, defer=1, go=0, call=14, binary=8, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*gcSizes.Offsetsof` @ /usr/local/go1.27rc1/src/go/types/gcsizes.go:79:1 - Present: Method gcSizes.Offsetsof (gojr/src/go/types/sizes.ts) - control-flow shape: if=2, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=8, return=1, defer=0, go=0, call=5, binary=4, unary=2, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*gcSizes.Sizeof` @ /usr/local/go1.27rc1/src/go/types/gcsizes.go:101:1 - Present: Method gcSizes.Sizeof (gojr/src/go/types/sizes.ts) - control-flow shape: if=10, for=0, range=0, switch=0, typeSwitch=1, select=0, branch=0, assign=10, return=13, defer=0, go=0, call=15, binary=24, unary=4, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### generate.go
@@ -509,60 +509,60 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### gotype.go
 
 #### Constants
-- `usageString` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
+- `usageString` - Present: Variable usageString (gojr/src/go/types/gotype.ts) - logic: declaration-only
 
 #### Variables
-- `testFiles` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `xtestFiles` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `allErrors` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `verbose` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `compiler` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `printAST` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `printTrace` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `parseComments` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `panicOnError` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `fset` - Present: Property fset on Checker (gojr/src/go/types/check.ts); Variable fset (gojr/src/go/types/format.ts); Variable fset (gojr/src/go/types/methodset.ts); Variable fset (gojr/src/go/types/struct.ts) - logic: declaration-only
-- `errorCount` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `sequential` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `parserMode` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
+- `testFiles` - Present: Variable testFiles (gojr/src/go/types/gotype.ts) - logic: declaration-only
+- `xtestFiles` - Present: Variable xtestFiles (gojr/src/go/types/gotype.ts) - logic: declaration-only
+- `allErrors` - Present: Variable allErrors (gojr/src/go/types/gotype.ts) - logic: declaration-only
+- `verbose` - Present: Variable verbose (gojr/src/go/types/gotype.ts) - logic: declaration-only
+- `compiler` - Present: Variable compiler (gojr/src/go/types/gotype.ts) - logic: declaration-only
+- `printAST` - Present: Variable printAST (gojr/src/go/types/gotype.ts) - logic: declaration-only
+- `printTrace` - Present: Variable printTrace (gojr/src/go/types/gotype.ts) - logic: declaration-only
+- `parseComments` - Present: Variable parseComments (gojr/src/go/types/gotype.ts) - logic: declaration-only
+- `panicOnError` - Present: Variable panicOnError (gojr/src/go/types/gotype.ts) - logic: declaration-only
+- `fset` - Present: Property fset on Checker (gojr/src/go/types/check.ts); Variable fset (gojr/src/go/types/format.ts); Variable fset (gojr/src/go/types/gotype.ts); Variable fset (gojr/src/go/types/methodset.ts); Variable fset (gojr/src/go/types/struct.ts); Variable fset (gojr/src/go/types/struct.ts) - logic: declaration-only
+- `errorCount` - Present: Variable errorCount (gojr/src/go/types/gotype.ts) - logic: declaration-only
+- `sequential` - Present: Variable sequential (gojr/src/go/types/gotype.ts) - logic: declaration-only
+- `parserMode` - Present: Variable parserMode (gojr/src/go/types/gotype.ts) - logic: declaration-only
 
 #### Functions
-- `initParserMode` @ /usr/local/go1.27rc1/src/go/types/gotype.go:122:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=4, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=6, return=0, defer=0, go=0, call=0, binary=2, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `usage` @ /usr/local/go1.27rc1/src/go/types/gotype.go:166:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=3, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `report` @ /usr/local/go1.27rc1/src/go/types/gotype.go:172:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=3, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `parse` @ /usr/local/go1.27rc1/src/go/types/gotype.go:185:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=1, defer=0, go=0, call=3, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `parseStdin` @ /usr/local/go1.27rc1/src/go/types/gotype.go:196:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=2, defer=0, go=0, call=2, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `parseFiles` @ /usr/local/go1.27rc1/src/go/types/gotype.go:204:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=3, for=0, range=3, switch=0, typeSwitch=0, select=0, branch=1, assign=7, return=1, defer=1, go=1, call=11, binary=2, unary=0, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `parseDir` @ /usr/local/go1.27rc1/src/go/types/gotype.go:247:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=5, return=3, defer=0, go=0, call=5, binary=2, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `getPkgFiles` @ /usr/local/go1.27rc1/src/go/types/gotype.go:265:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=5, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=5, defer=0, go=0, call=7, binary=4, unary=0, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
-- `checkPkgFiles` @ /usr/local/go1.27rc1/src/go/types/gotype.go:291:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=1, select=0, branch=0, assign=2, return=0, defer=1, go=0, call=8, binary=2, unary=1, composite=2, funcLiteral=2 - logic: not yet 1:1-audited
-- `printStats` @ /usr/local/go1.27rc1/src/go/types/gotype.go:321:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=1, defer=0, go=0, call=6, binary=1, unary=0, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `main` @ /usr/local/go1.27rc1/src/go/types/gotype.go:336:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=0, defer=0, go=0, call=10, binary=2, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `initParserMode` @ /usr/local/go1.27rc1/src/go/types/gotype.go:122:1 - Present: FunctionDeclaration initParserMode (gojr/src/go/types/gotype.ts) - control-flow shape: if=4, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=6, return=0, defer=0, go=0, call=0, binary=2, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `usage` @ /usr/local/go1.27rc1/src/go/types/gotype.go:166:1 - Present: FunctionDeclaration usage (gojr/src/go/types/gotype.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=3, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `report` @ /usr/local/go1.27rc1/src/go/types/gotype.go:172:1 - Present: FunctionDeclaration report (gojr/src/go/types/gotype.ts) - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=3, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `parse` @ /usr/local/go1.27rc1/src/go/types/gotype.go:185:1 - Present: FunctionDeclaration parse (gojr/src/go/types/gotype.ts) - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=1, defer=0, go=0, call=3, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `parseStdin` @ /usr/local/go1.27rc1/src/go/types/gotype.go:196:1 - Present: FunctionDeclaration parseStdin (gojr/src/go/types/gotype.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=2, defer=0, go=0, call=2, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `parseFiles` @ /usr/local/go1.27rc1/src/go/types/gotype.go:204:1 - Present: FunctionDeclaration parseFiles (gojr/src/go/types/gotype.ts) - control-flow shape: if=3, for=0, range=3, switch=0, typeSwitch=0, select=0, branch=1, assign=7, return=1, defer=1, go=1, call=11, binary=2, unary=0, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `parseDir` @ /usr/local/go1.27rc1/src/go/types/gotype.go:247:1 - Present: FunctionDeclaration parseDir (gojr/src/go/types/gotype.ts) - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=5, return=3, defer=0, go=0, call=5, binary=2, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `getPkgFiles` @ /usr/local/go1.27rc1/src/go/types/gotype.go:265:1 - Present: FunctionDeclaration getPkgFiles (gojr/src/go/types/gotype.ts) - control-flow shape: if=5, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=5, defer=0, go=0, call=7, binary=4, unary=0, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
+- `checkPkgFiles` @ /usr/local/go1.27rc1/src/go/types/gotype.go:291:1 - Present: FunctionDeclaration checkPkgFiles (gojr/src/go/types/gotype.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=1, select=0, branch=0, assign=2, return=0, defer=1, go=0, call=8, binary=2, unary=1, composite=2, funcLiteral=2 - logic: not yet 1:1-audited
+- `printStats` @ /usr/local/go1.27rc1/src/go/types/gotype.go:321:1 - Present: FunctionDeclaration printStats (gojr/src/go/types/gotype.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=1, defer=0, go=0, call=6, binary=1, unary=0, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `main` @ /usr/local/go1.27rc1/src/go/types/gotype.go:336:1 - Present: FunctionDeclaration main (gojr/src/go/types/gotype.ts) - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=0, defer=0, go=0, call=10, binary=2, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### hash.go
 
 #### Variables
-- `_` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `_` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
+- `_` - Present: Variable _ (gojr/src/go/types/hash.ts) - logic: declaration-only
+- `_` - Present: Variable _ (gojr/src/go/types/hash.ts) - logic: declaration-only
 
 #### Types
-- `Hasher` (struct) - Missing from current checker same-kind exact-symbol inventory - structure: not yet 1:1-audited
-- `HasherIgnoreTags` (struct) - Missing from current checker same-kind exact-symbol inventory - structure: not yet 1:1-audited
-- `hasher` (struct) - Missing from current checker same-kind exact-symbol inventory - structure: not yet 1:1-audited
+- `Hasher` (struct) - Present: ClassDeclaration Hasher (gojr/src/go/types/hash.ts) - structure: not yet 1:1-audited
+- `HasherIgnoreTags` (struct) - Present: ClassDeclaration HasherIgnoreTags (gojr/src/go/types/hash.ts) - structure: not yet 1:1-audited
+- `hasher` (struct) - Present: ClassDeclaration hasher (gojr/src/go/types/hash.ts) - structure: not yet 1:1-audited
 
 #### Functions
-- `btoi` @ /usr/local/go1.27rc1/src/go/types/hash.go:303:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=2, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `btoi` @ /usr/local/go1.27rc1/src/go/types/hash.go:303:1 - Present: FunctionDeclaration btoi (gojr/src/go/types/hash.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=2, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 #### Methods
-- `Hasher.Hash` @ /usr/local/go1.27rc1/src/go/types/hash.go:30:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=0, unary=0, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
-- `HasherIgnoreTags.Hash` @ /usr/local/go1.27rc1/src/go/types/hash.go:38:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=0, unary=0, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
-- `Hasher.Equal` @ /usr/local/go1.27rc1/src/go/types/hash.go:43:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `HasherIgnoreTags.Equal` @ /usr/local/go1.27rc1/src/go/types/hash.go:44:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `hasher.hash` @ /usr/local/go1.27rc1/src/go/types/hash.go:51:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=4, switch=0, typeSwitch=1, select=0, branch=0, assign=7, return=0, defer=0, go=0, call=76, binary=1, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `hasher.hashTuple` @ /usr/local/go1.27rc1/src/go/types/hash.go:171:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=7, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `hasher.hashTypeParam` @ /usr/local/go1.27rc1/src/go/types/hash.go:189:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=6, binary=0, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `hasher.hashTypeName` @ /usr/local/go1.27rc1/src/go/types/hash.go:210:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `hasher.shallowHash` @ /usr/local/go1.27rc1/src/go/types/hash.go:231:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=1, switch=0, typeSwitch=1, select=0, branch=0, assign=1, return=0, defer=0, go=0, call=39, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `Hasher.Hash` @ /usr/local/go1.27rc1/src/go/types/hash.go:30:1 - Present: Method Hasher.Hash (gojr/src/go/types/hash.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=0, unary=0, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
+- `HasherIgnoreTags.Hash` @ /usr/local/go1.27rc1/src/go/types/hash.go:38:1 - Present: Method HasherIgnoreTags.Hash (gojr/src/go/types/hash.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=0, unary=0, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
+- `Hasher.Equal` @ /usr/local/go1.27rc1/src/go/types/hash.go:43:1 - Present: Method Hasher.Equal (gojr/src/go/types/hash.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `HasherIgnoreTags.Equal` @ /usr/local/go1.27rc1/src/go/types/hash.go:44:1 - Present: Method HasherIgnoreTags.Equal (gojr/src/go/types/hash.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `hasher.hash` @ /usr/local/go1.27rc1/src/go/types/hash.go:51:1 - Present: Method hasher.hash (gojr/src/go/types/hash.ts) - control-flow shape: if=1, for=0, range=4, switch=0, typeSwitch=1, select=0, branch=0, assign=7, return=0, defer=0, go=0, call=76, binary=1, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `hasher.hashTuple` @ /usr/local/go1.27rc1/src/go/types/hash.go:171:1 - Present: Method hasher.hashTuple (gojr/src/go/types/hash.ts) - control-flow shape: if=0, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=7, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `hasher.hashTypeParam` @ /usr/local/go1.27rc1/src/go/types/hash.go:189:1 - Present: Method hasher.hashTypeParam (gojr/src/go/types/hash.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=6, binary=0, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `hasher.hashTypeName` @ /usr/local/go1.27rc1/src/go/types/hash.go:210:1 - Present: Method hasher.hashTypeName (gojr/src/go/types/hash.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `hasher.shallowHash` @ /usr/local/go1.27rc1/src/go/types/hash.go:231:1 - Present: Method hasher.shallowHash (gojr/src/go/types/hash.ts) - control-flow shape: if=0, for=0, range=1, switch=0, typeSwitch=1, select=0, branch=0, assign=1, return=0, defer=0, go=0, call=39, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### index.go
 
@@ -647,7 +647,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `emptyInterface` - Present: Variable emptyInterface (gojr/src/go/types/interface.ts) - logic: declaration-only
 
 #### Types
-- `Interface` (struct) - Present: ClassDeclaration Interface (gojr/src/go/types/interface.ts) - structure: not yet 1:1-audited
+- `Interface` (struct) - Present: ClassDeclaration Interface (gojr/src/go/types/interface.ts); InterfaceDeclaration Interface (gojr/src/go/types/iter.ts) - structure: not yet 1:1-audited
 
 #### Functions
 - `NewInterface` @ /usr/local/go1.27rc1/src/go/types/interface.go:39:1 - Present: FunctionDeclaration NewInterface (gojr/src/go/types/interface.ts) - control-flow shape: if=0, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=3, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
@@ -677,17 +677,17 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### iter.go
 
 #### Methods
-- `*Interface.Methods` @ /usr/local/go1.27rc1/src/go/types/iter.go:20:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*Interface.ExplicitMethods` @ /usr/local/go1.27rc1/src/go/types/iter.go:34:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*Interface.EmbeddedTypes` @ /usr/local/go1.27rc1/src/go/types/iter.go:47:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*Named.Methods` @ /usr/local/go1.27rc1/src/go/types/iter.go:60:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*Scope.Children` @ /usr/local/go1.27rc1/src/go/types/iter.go:73:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*Struct.Fields` @ /usr/local/go1.27rc1/src/go/types/iter.go:86:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*Tuple.Variables` @ /usr/local/go1.27rc1/src/go/types/iter.go:99:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*MethodSet.Methods` @ /usr/local/go1.27rc1/src/go/types/iter.go:112:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*Union.Terms` @ /usr/local/go1.27rc1/src/go/types/iter.go:125:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*TypeParamList.TypeParams` @ /usr/local/go1.27rc1/src/go/types/iter.go:138:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*TypeList.Types` @ /usr/local/go1.27rc1/src/go/types/iter.go:151:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Interface.Methods` @ /usr/local/go1.27rc1/src/go/types/iter.go:20:1 - Present: Method Interface.Methods interface method (gojr/src/go/types/iter.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Interface.ExplicitMethods` @ /usr/local/go1.27rc1/src/go/types/iter.go:34:1 - Present: Method Interface.ExplicitMethods interface method (gojr/src/go/types/iter.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Interface.EmbeddedTypes` @ /usr/local/go1.27rc1/src/go/types/iter.go:47:1 - Present: Method Interface.EmbeddedTypes interface method (gojr/src/go/types/iter.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Named.Methods` @ /usr/local/go1.27rc1/src/go/types/iter.go:60:1 - Present: Method Named.Methods interface method (gojr/src/go/types/iter.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Scope.Children` @ /usr/local/go1.27rc1/src/go/types/iter.go:73:1 - Present: Method Scope.Children interface method (gojr/src/go/types/iter.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Struct.Fields` @ /usr/local/go1.27rc1/src/go/types/iter.go:86:1 - Present: Method Struct.Fields interface method (gojr/src/go/types/iter.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Tuple.Variables` @ /usr/local/go1.27rc1/src/go/types/iter.go:99:1 - Present: Method Tuple.Variables interface method (gojr/src/go/types/iter.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*MethodSet.Methods` @ /usr/local/go1.27rc1/src/go/types/iter.go:112:1 - Present: Method MethodSet.Methods interface method (gojr/src/go/types/iter.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Union.Terms` @ /usr/local/go1.27rc1/src/go/types/iter.go:125:1 - Present: Method Union.Terms interface method (gojr/src/go/types/iter.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*TypeParamList.TypeParams` @ /usr/local/go1.27rc1/src/go/types/iter.go:138:1 - Present: Method TypeParamList.TypeParams interface method (gojr/src/go/types/iter.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*TypeList.Types` @ /usr/local/go1.27rc1/src/go/types/iter.go:151:1 - Present: Method TypeList.Types interface method (gojr/src/go/types/iter.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=0, return=1, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
 
 ### labels.go
 
@@ -762,7 +762,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `emptyMethodSet` - Present: Variable emptyMethodSet (gojr/src/go/types/methodset.ts) - logic: declaration-only
 
 #### Types
-- `MethodSet` (struct) - Present: ClassDeclaration MethodSet (gojr/src/go/types/methodset.ts) - structure: not yet 1:1-audited
+- `MethodSet` (struct) - Present: InterfaceDeclaration MethodSet (gojr/src/go/types/iter.ts); ClassDeclaration MethodSet (gojr/src/go/types/methodset.ts) - structure: not yet 1:1-audited
 - `methodSet` (*ast.MapType) - Present: ClassDeclaration methodSet (gojr/src/go/types/methodset.ts) - structure: not yet 1:1-audited
 
 #### Functions
@@ -803,7 +803,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `hasVarSize` - Present: Variable hasVarSize (gojr/src/go/types/named.ts) - logic: declaration-only
 
 #### Types
-- `Named` (struct) - Present: ClassDeclaration Named (gojr/src/go/types/named.ts) - structure: not yet 1:1-audited
+- `Named` (struct) - Present: InterfaceDeclaration Named (gojr/src/go/types/iter.ts); ClassDeclaration Named (gojr/src/go/types/named.ts) - structure: not yet 1:1-audited
 - `instance` (struct) - Present: ClassDeclaration instance (gojr/src/go/types/named.ts) - structure: not yet 1:1-audited
 - `stateMask` (*ast.Ident) - Present: TypeAliasDeclaration stateMask (gojr/src/go/types/named.ts) - structure: not yet 1:1-audited
 
@@ -840,7 +840,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### object.go
 
 #### Constants
-- `_` - Present: EnumMember _ in VarKind (gojr/src/go/types/object.ts) - logic: declaration-only
+- `_` - Present: Variable _ (gojr/src/go/types/hash.ts); EnumMember _ in VarKind (gojr/src/go/types/object.ts) - logic: declaration-only
 - `PackageVar` - Present: EnumMember PackageVar in VarKind (gojr/src/go/types/object.ts); Variable PackageVar (gojr/src/go/types/object.ts) - logic: declaration-only
 - `LocalVar` - Present: EnumMember LocalVar in VarKind (gojr/src/go/types/object.ts); Variable LocalVar (gojr/src/go/types/object.ts) - logic: declaration-only
 - `RecvVar` - Present: EnumMember RecvVar in VarKind (gojr/src/go/types/object.ts); Variable RecvVar (gojr/src/go/types/object.ts) - logic: declaration-only
@@ -858,7 +858,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `Const` (struct) - Present: ClassDeclaration Const (gojr/src/go/types/object.ts) - structure: not yet 1:1-audited
 - `TypeName` (struct) - Present: ClassDeclaration TypeName (gojr/src/go/types/object.ts) - structure: not yet 1:1-audited
 - `Var` (struct) - Present: ClassDeclaration Var (gojr/src/go/types/object.ts) - structure: not yet 1:1-audited
-- `VarKind` (*ast.Ident) - Present: EnumDeclaration VarKind (gojr/src/go/types/object.ts) - structure: not yet 1:1-audited
+- `VarKind` (*ast.Ident) - Present: EnumDeclaration VarKind (gojr/src/go/types/object.ts); ClassDeclaration VarKind_ (gojr/src/go/types/object.ts) - structure: not yet 1:1-audited
 - `Func` (struct) - Present: ClassDeclaration Func (gojr/src/go/types/object.ts) - structure: not yet 1:1-audited
 - `Label` (struct) - Present: ClassDeclaration Label (gojr/src/go/types/object.ts) - structure: not yet 1:1-audited
 - `Builtin` (struct) - Present: ClassDeclaration Builtin (gojr/src/go/types/object.ts) - structure: not yet 1:1-audited
@@ -905,7 +905,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `*Const.Val` @ /usr/local/go1.27rc1/src/go/types/object.go:233:1 - Present: Method Const.Val (gojr/src/go/types/object.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Const.isDependency` @ /usr/local/go1.27rc1/src/go/types/object.go:235:1 - Present: Method Const.isDependency (gojr/src/go/types/object.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*TypeName.IsAlias` @ /usr/local/go1.27rc1/src/go/types/object.go:267:1 - Present: Method TypeName.IsAlias (gojr/src/go/types/object.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=1, select=0, branch=0, assign=1, return=6, defer=0, go=0, call=0, binary=10, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `VarKind.String` @ /usr/local/go1.27rc1/src/go/types/object.go:325:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=2, defer=0, go=0, call=3, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `VarKind.String` @ /usr/local/go1.27rc1/src/go/types/object.go:325:1 - Present: Method VarKind_.String (gojr/src/go/types/object.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=2, defer=0, go=0, call=3, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Var.Kind` @ /usr/local/go1.27rc1/src/go/types/object.go:333:1 - Present: Method Var.Kind (gojr/src/go/types/object.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Var.SetKind` @ /usr/local/go1.27rc1/src/go/types/object.go:337:1 - Present: Method Var.SetKind (gojr/src/go/types/object.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=0, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Var.Anonymous` @ /usr/local/go1.27rc1/src/go/types/object.go:373:1 - Present: Method Var.Anonymous (gojr/src/go/types/object.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
@@ -947,7 +947,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `constant_` - Present: EnumMember constant_ in operandMode (gojr/src/go/types/operand.ts); Variable constant_ (gojr/src/go/types/operand.ts) - logic: declaration-only
 - `variable` - Present: EnumMember variable in operandMode (gojr/src/go/types/operand.ts); Variable variable (gojr/src/go/types/operand.ts) - logic: declaration-only
 - `mapindex` - Present: EnumMember mapindex in operandMode (gojr/src/go/types/operand.ts); Variable mapindex (gojr/src/go/types/operand.ts) - logic: declaration-only
-- `value` - Present: EnumMember value in operandMode (gojr/src/go/types/operand.ts); Variable value (gojr/src/go/types/operand.ts); Variable value (gojr/src/go/types/typestring.ts) - logic: declaration-only
+- `value` - Present: EnumMember value in operandMode (gojr/src/go/types/operand.ts); Variable value (gojr/src/go/types/operand.ts) - logic: declaration-only
 - `nilvalue` - Present: EnumMember nilvalue in operandMode (gojr/src/go/types/operand.ts); Variable nilvalue (gojr/src/go/types/operand.ts) - logic: declaration-only
 - `commaok` - Present: EnumMember commaok in operandMode (gojr/src/go/types/operand.ts); Variable commaok (gojr/src/go/types/operand.ts) - logic: declaration-only
 - `commaerr` - Present: EnumMember commaerr in operandMode (gojr/src/go/types/operand.ts); Variable commaerr (gojr/src/go/types/operand.ts) - logic: declaration-only
@@ -1062,10 +1062,10 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### range.go
 
 #### Functions
-- `rangeKeyVal` @ /usr/local/go1.27rc1/src/go/types/range.go:205:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=10, for=0, range=0, switch=2, typeSwitch=1, select=0, branch=0, assign=8, return=22, defer=0, go=0, call=60, binary=22, unary=3, composite=0, funcLiteral=2 - logic: not yet 1:1-audited
+- `rangeKeyVal` @ /usr/local/go1.27rc1/src/go/types/range.go:205:1 - Present: FunctionDeclaration rangeKeyVal (gojr/src/go/types/range.ts) - control-flow shape: if=10, for=0, range=0, switch=2, typeSwitch=1, select=0, branch=0, assign=8, return=22, defer=0, go=0, call=60, binary=22, unary=3, composite=0, funcLiteral=2 - logic: not yet 1:1-audited
 
 #### Methods
-- `*Checker.rangeStmt` @ /usr/local/go1.27rc1/src/go/types/range.go:26:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=17, for=1, range=3, switch=1, typeSwitch=0, select=0, branch=5, assign=25, return=1, defer=1, go=0, call=46, binary=30, unary=18, composite=3, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Checker.rangeStmt` @ /usr/local/go1.27rc1/src/go/types/range.go:26:1 - Present: Method Checker.rangeStmt interface method (gojr/src/go/types/range.ts) - control-flow shape: if=17, for=1, range=3, switch=1, typeSwitch=0, select=0, branch=5, assign=25, return=1, defer=1, go=0, call=46, binary=30, unary=18, composite=3, funcLiteral=1 - logic: not yet 1:1-audited
 
 ### recording.go
 
@@ -1109,18 +1109,18 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### return.go
 
 #### Functions
-- `hasBreak` @ /usr/local/go1.27rc1/src/go/types/return.go:110:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=9, for=0, range=0, switch=0, typeSwitch=1, select=0, branch=0, assign=1, return=13, defer=0, go=0, call=12, binary=16, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `hasBreakList` @ /usr/local/go1.27rc1/src/go/types/return.go:177:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=2, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `hasBreak` @ /usr/local/go1.27rc1/src/go/types/return.go:110:1 - Present: FunctionDeclaration hasBreak (gojr/src/go/types/return.ts) - control-flow shape: if=9, for=0, range=0, switch=0, typeSwitch=1, select=0, branch=0, assign=1, return=13, defer=0, go=0, call=12, binary=16, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `hasBreakList` @ /usr/local/go1.27rc1/src/go/types/return.go:177:1 - Present: FunctionDeclaration hasBreakList (gojr/src/go/types/return.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=2, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 #### Methods
-- `*Checker.isTerminating` @ /usr/local/go1.27rc1/src/go/types/return.go:17:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=5, for=0, range=1, switch=0, typeSwitch=1, select=0, branch=0, assign=3, return=12, defer=0, go=0, call=11, binary=10, unary=2, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.isTerminatingList` @ /usr/local/go1.27rc1/src/go/types/return.go:79:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=2, binary=2, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.isTerminatingSwitch` @ /usr/local/go1.27rc1/src/go/types/return.go:89:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=2, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=2, defer=0, go=0, call=2, binary=2, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.isTerminating` @ /usr/local/go1.27rc1/src/go/types/return.go:17:1 - Present: Method Checker.isTerminating interface method (gojr/src/go/types/return.ts); Method Checker.isTerminating interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=5, for=0, range=1, switch=0, typeSwitch=1, select=0, branch=0, assign=3, return=12, defer=0, go=0, call=11, binary=10, unary=2, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.isTerminatingList` @ /usr/local/go1.27rc1/src/go/types/return.go:79:1 - Present: Method Checker.isTerminatingList interface method (gojr/src/go/types/return.ts) - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=2, binary=2, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.isTerminatingSwitch` @ /usr/local/go1.27rc1/src/go/types/return.go:89:1 - Present: Method Checker.isTerminatingSwitch interface method (gojr/src/go/types/return.ts) - control-flow shape: if=2, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=2, defer=0, go=0, call=2, binary=2, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### scope.go
 
 #### Types
-- `Scope` (struct) - Present: ClassDeclaration Scope (gojr/src/go/types/scope.ts) - structure: not yet 1:1-audited
+- `Scope` (struct) - Present: InterfaceDeclaration Scope (gojr/src/go/types/iter.ts); ClassDeclaration Scope (gojr/src/go/types/scope.ts); InterfaceDeclaration Scope (gojr/src/go/types/scope2.ts) - structure: not yet 1:1-audited
 - `lazyObject` (struct) - Present: ClassDeclaration lazyObject (gojr/src/go/types/scope.ts) - structure: not yet 1:1-audited
 
 #### Functions
@@ -1159,11 +1159,11 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### scope2.go
 
 #### Methods
-- `*Scope.LookupParent` @ /usr/local/go1.27rc1/src/go/types/scope2.go:24:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=4, binary=5, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Scope.Pos` @ /usr/local/go1.27rc1/src/go/types/scope2.go:37:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Scope.End` @ /usr/local/go1.27rc1/src/go/types/scope2.go:38:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Scope.Contains` @ /usr/local/go1.27rc1/src/go/types/scope2.go:43:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=2, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Scope.Innermost` @ /usr/local/go1.27rc1/src/go/types/scope2.go:52:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=4, for=0, range=2, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=4, defer=0, go=0, call=4, binary=2, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Scope.LookupParent` @ /usr/local/go1.27rc1/src/go/types/scope2.go:24:1 - Present: Method Scope.LookupParent interface method (gojr/src/go/types/scope2.ts) - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=4, binary=5, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Scope.Pos` @ /usr/local/go1.27rc1/src/go/types/scope2.go:37:1 - Present: Method Scope.Pos interface method (gojr/src/go/types/scope2.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Scope.End` @ /usr/local/go1.27rc1/src/go/types/scope2.go:38:1 - Present: Method Scope.End interface method (gojr/src/go/types/scope2.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Scope.Contains` @ /usr/local/go1.27rc1/src/go/types/scope2.go:43:1 - Present: Method Scope.Contains interface method (gojr/src/go/types/scope2.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=2, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Scope.Innermost` @ /usr/local/go1.27rc1/src/go/types/scope2.go:52:1 - Present: Method Scope.Innermost interface method (gojr/src/go/types/scope2.ts) - control-flow shape: if=4, for=0, range=2, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=4, defer=0, go=0, call=4, binary=2, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### selection.go
 
@@ -1199,8 +1199,8 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 #### Functions
 - `NewSignature` @ /usr/local/go1.27rc1/src/go/types/signature.go:58:1 - Present: FunctionDeclaration NewSignature (gojr/src/go/types/signature.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `NewSignatureType` @ /usr/local/go1.27rc1/src/go/types/signature.go:76:1 - Present: FunctionDeclaration NewSignatureType (gojr/src/go/types/signature.ts) - control-flow shape: if=10, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=2, assign=9, return=1, defer=0, go=0, call=15, binary=10, unary=2, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
-- `unpointer` @ /usr/local/go1.27rc1/src/go/types/signature.go:357:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=0, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `isCGoTypeObj` @ /usr/local/go1.27rc1/src/go/types/signature.go:514:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=5, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `unpointer` @ /usr/local/go1.27rc1/src/go/types/signature.go:357:1 - Present: FunctionDeclaration unpointer (gojr/src/go/types/signature.ts) - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=0, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `isCGoTypeObj` @ /usr/local/go1.27rc1/src/go/types/signature.go:514:1 - Present: FunctionDeclaration isCGoTypeObj (gojr/src/go/types/signature.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=5, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 #### Methods
 - `*Signature.Recv` @ /usr/local/go1.27rc1/src/go/types/signature.go:136:1 - Present: Method Signature.Recv (gojr/src/go/types/signature.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
@@ -1211,12 +1211,12 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `*Signature.Variadic` @ /usr/local/go1.27rc1/src/go/types/signature.go:152:1 - Present: Method Signature.Variadic (gojr/src/go/types/signature.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Signature.Underlying` @ /usr/local/go1.27rc1/src/go/types/signature.go:154:1 - Present: Method Signature.Underlying (gojr/src/go/types/signature.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=0, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Signature.String` @ /usr/local/go1.27rc1/src/go/types/signature.go:155:1 - Present: Method Signature.String (gojr/src/go/types/signature.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.funcType` @ /usr/local/go1.27rc1/src/go/types/signature.go:161:1 - Present: Method Checker.funcType interface method (gojr/src/go/types/typexpr.ts) - control-flow shape: if=4, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=13, return=0, defer=1, go=0, call=17, binary=9, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.collectRecv` @ /usr/local/go1.27rc1/src/go/types/signature.go:209:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=11, for=1, range=3, switch=0, typeSwitch=1, select=0, branch=1, assign=27, return=1, defer=0, go=0, call=50, binary=15, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
-- `*Checker.recordParenthesizedRecvTypes` @ /usr/local/go1.27rc1/src/go/types/signature.go:377:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=1, select=0, branch=0, assign=5, return=2, defer=0, go=0, call=1, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.collectParams` @ /usr/local/go1.27rc1/src/go/types/signature.go:402:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=7, for=0, range=2, switch=0, typeSwitch=0, select=0, branch=0, assign=15, return=2, defer=0, go=0, call=19, binary=13, unary=1, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.declareParams` @ /usr/local/go1.27rc1/src/go/types/signature.go:463:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=1, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.validRecv` @ /usr/local/go1.27rc1/src/go/types/signature.go:473:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=4, for=0, range=0, switch=0, typeSwitch=2, select=0, branch=1, assign=6, return=1, defer=0, go=0, call=10, binary=4, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.funcType` @ /usr/local/go1.27rc1/src/go/types/signature.go:161:1 - Present: Method Checker.funcType interface method (gojr/src/go/types/signature.ts); Method Checker.funcType interface method (gojr/src/go/types/typexpr.ts) - control-flow shape: if=4, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=13, return=0, defer=1, go=0, call=17, binary=9, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.collectRecv` @ /usr/local/go1.27rc1/src/go/types/signature.go:209:1 - Present: Method Checker.collectRecv interface method (gojr/src/go/types/signature.ts) - control-flow shape: if=11, for=1, range=3, switch=0, typeSwitch=1, select=0, branch=1, assign=27, return=1, defer=0, go=0, call=50, binary=15, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Checker.recordParenthesizedRecvTypes` @ /usr/local/go1.27rc1/src/go/types/signature.go:377:1 - Present: Method Checker.recordParenthesizedRecvTypes interface method (gojr/src/go/types/signature.ts) - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=1, select=0, branch=0, assign=5, return=2, defer=0, go=0, call=1, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.collectParams` @ /usr/local/go1.27rc1/src/go/types/signature.go:402:1 - Present: Method Checker.collectParams interface method (gojr/src/go/types/signature.ts) - control-flow shape: if=7, for=0, range=2, switch=0, typeSwitch=0, select=0, branch=0, assign=15, return=2, defer=0, go=0, call=19, binary=13, unary=1, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.declareParams` @ /usr/local/go1.27rc1/src/go/types/signature.go:463:1 - Present: Method Checker.declareParams interface method (gojr/src/go/types/signature.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=1, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.validRecv` @ /usr/local/go1.27rc1/src/go/types/signature.go:473:1 - Present: Method Checker.validRecv interface method (gojr/src/go/types/signature.ts) - control-flow shape: if=4, for=0, range=0, switch=0, typeSwitch=2, select=0, branch=1, assign=6, return=1, defer=0, go=0, call=10, binary=4, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### sizes.go
 
@@ -1238,10 +1238,10 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `*StdSizes.Alignof` @ /usr/local/go1.27rc1/src/go/types/sizes.go:53:1 - Present: Method StdSizes.Alignof (gojr/src/go/types/sizes.ts) - control-flow shape: if=6, for=0, range=1, switch=0, typeSwitch=1, select=0, branch=0, assign=6, return=8, defer=1, go=0, call=14, binary=8, unary=1, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
 - `*StdSizes.Offsetsof` @ /usr/local/go1.27rc1/src/go/types/sizes.go:129:1 - Present: Method StdSizes.Offsetsof (gojr/src/go/types/sizes.ts) - control-flow shape: if=2, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=8, return=1, defer=0, go=0, call=5, binary=4, unary=2, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*StdSizes.Sizeof` @ /usr/local/go1.27rc1/src/go/types/sizes.go:167:1 - Present: Method StdSizes.Sizeof (gojr/src/go/types/sizes.ts) - control-flow shape: if=10, for=0, range=0, switch=0, typeSwitch=1, select=0, branch=0, assign=12, return=14, defer=0, go=0, call=15, binary=26, unary=5, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Config.alignof` @ /usr/local/go1.27rc1/src/go/types/sizes.go:277:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=1, defer=0, go=0, call=2, binary=2, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Config.offsetsof` @ /usr/local/go1.27rc1/src/go/types/sizes.go:288:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=1, defer=0, go=0, call=5, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Config.offsetof` @ /usr/local/go1.27rc1/src/go/types/sizes.go:310:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=2, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=4, return=3, defer=0, go=0, call=2, binary=2, unary=2, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Config.sizeof` @ /usr/local/go1.27rc1/src/go/types/sizes.go:329:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=1, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Config.alignof` @ /usr/local/go1.27rc1/src/go/types/sizes.go:277:1 - Present: Method Config.alignof interface method (gojr/src/go/types/sizes.ts) - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=1, defer=0, go=0, call=2, binary=2, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Config.offsetsof` @ /usr/local/go1.27rc1/src/go/types/sizes.go:288:1 - Present: Method Config.offsetsof interface method (gojr/src/go/types/sizes.ts) - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=1, defer=0, go=0, call=5, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Config.offsetof` @ /usr/local/go1.27rc1/src/go/types/sizes.go:310:1 - Present: Method Config.offsetof interface method (gojr/src/go/types/sizes.ts) - control-flow shape: if=2, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=4, return=3, defer=0, go=0, call=2, binary=2, unary=2, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Config.sizeof` @ /usr/local/go1.27rc1/src/go/types/sizes.go:329:1 - Present: Method Config.sizeof interface method (gojr/src/go/types/sizes.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=1, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### slice.go
 
@@ -1259,45 +1259,45 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### stmt.go
 
 #### Constants
-- `breakOk` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `continueOk` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `fallthroughOk` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `finalSwitchCase` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
-- `inTypeSwitch` - Missing from current checker same-kind exact-symbol inventory - logic: declaration-only
+- `breakOk` - Present: Variable breakOk (gojr/src/go/types/stmt.ts) - logic: declaration-only
+- `continueOk` - Present: Variable continueOk (gojr/src/go/types/stmt.ts) - logic: declaration-only
+- `fallthroughOk` - Present: Variable fallthroughOk (gojr/src/go/types/stmt.ts) - logic: declaration-only
+- `finalSwitchCase` - Present: Variable finalSwitchCase (gojr/src/go/types/stmt.ts) - logic: declaration-only
+- `inTypeSwitch` - Present: Variable inTypeSwitch (gojr/src/go/types/stmt.ts) - logic: declaration-only
 
 #### Types
-- `stmtContext` (*ast.Ident) - Missing from current checker same-kind exact-symbol inventory - structure: not yet 1:1-audited
-- `valueMap` (*ast.MapType) - Missing from current checker same-kind exact-symbol inventory - structure: not yet 1:1-audited
-- `valueType` (struct) - Missing from current checker same-kind exact-symbol inventory - structure: not yet 1:1-audited
+- `stmtContext` (*ast.Ident) - Present: TypeAliasDeclaration stmtContext (gojr/src/go/types/range.ts); TypeAliasDeclaration stmtContext (gojr/src/go/types/stmt.ts) - structure: not yet 1:1-audited
+- `valueMap` (*ast.MapType) - Present: TypeAliasDeclaration valueMap (gojr/src/go/types/stmt.ts) - structure: not yet 1:1-audited
+- `valueType` (struct) - Present: ClassDeclaration valueType (gojr/src/go/types/stmt.ts) - structure: not yet 1:1-audited
 
 #### Functions
-- `trimTrailingEmptyStmts` @ /usr/local/go1.27rc1/src/go/types/stmt.go:107:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=1, binary=2, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `assignOp` @ /usr/local/go1.27rc1/src/go/types/stmt.go:165:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=2, defer=0, go=0, call=0, binary=5, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `goVal` @ /usr/local/go1.27rc1/src/go/types/stmt.go:196:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=4, for=0, range=0, switch=1, typeSwitch=0, select=0, branch=0, assign=3, return=6, defer=0, go=0, call=5, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `trimTrailingEmptyStmts` @ /usr/local/go1.27rc1/src/go/types/stmt.go:107:1 - Present: FunctionDeclaration trimTrailingEmptyStmts (gojr/src/go/types/stmt.ts) - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=1, binary=2, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `assignOp` @ /usr/local/go1.27rc1/src/go/types/stmt.go:165:1 - Present: FunctionDeclaration assignOp (gojr/src/go/types/stmt.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=2, defer=0, go=0, call=0, binary=5, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `goVal` @ /usr/local/go1.27rc1/src/go/types/stmt.go:196:1 - Present: FunctionDeclaration goVal (gojr/src/go/types/stmt.ts) - control-flow shape: if=4, for=0, range=0, switch=1, typeSwitch=0, select=0, branch=0, assign=3, return=6, defer=0, go=0, call=5, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 #### Methods
-- `*Checker.funcBody` @ /usr/local/go1.27rc1/src/go/types/stmt.go:18:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=4, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=4, return=0, defer=1, go=0, call=11, binary=2, unary=1, composite=1, funcLiteral=1 - logic: not yet 1:1-audited
-- `*Checker.usage` @ /usr/local/go1.27rc1/src/go/types/stmt.go:57:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=2, for=0, range=3, switch=0, typeSwitch=0, select=0, branch=0, assign=4, return=2, defer=0, go=0, call=7, binary=8, unary=3, composite=0, funcLiteral=2 - logic: not yet 1:1-audited
-- `*Checker.simpleStmt` @ /usr/local/go1.27rc1/src/go/types/stmt.go:101:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=1, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.stmtList` @ /usr/local/go1.27rc1/src/go/types/stmt.go:116:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=5, return=0, defer=0, go=0, call=3, binary=6, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.multipleDefaults` @ /usr/local/go1.27rc1/src/go/types/stmt.go:129:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=4, for=0, range=1, switch=0, typeSwitch=1, select=0, branch=0, assign=4, return=0, defer=0, go=0, call=5, binary=4, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.openScope` @ /usr/local/go1.27rc1/src/go/types/stmt.go:155:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=0, defer=0, go=0, call=4, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.closeScope` @ /usr/local/go1.27rc1/src/go/types/stmt.go:161:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=0, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.suspendedCall` @ /usr/local/go1.27rc1/src/go/types/stmt.go:173:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=1, typeSwitch=0, select=0, branch=0, assign=5, return=1, defer=0, go=0, call=3, binary=1, unary=3, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.caseValues` @ /usr/local/go1.27rc1/src/go/types/stmt.go:237:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=6, for=0, range=2, switch=0, typeSwitch=0, select=0, branch=5, assign=4, return=0, defer=0, go=0, call=20, binary=3, unary=9, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.isNil` @ /usr/local/go1.27rc1/src/go/types/stmt.go:277:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=2, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.caseTypes` @ /usr/local/go1.27rc1/src/go/types/stmt.go:307:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=7, for=0, range=2, switch=0, typeSwitch=0, select=0, branch=2, assign=8, return=1, defer=0, go=0, call=14, binary=17, unary=2, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.caseTypes_currently_unused` @ /usr/local/go1.27rc1/src/go/types/stmt.go:359:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=7, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=2, assign=10, return=1, defer=0, go=0, call=14, binary=8, unary=2, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.stmt` @ /usr/local/go1.27rc1/src/go/types/stmt.go:411:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=47, for=0, range=5, switch=5, typeSwitch=4, select=0, branch=4, assign=63, return=15, defer=7, go=0, call=152, binary=71, unary=40, composite=2, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Checker.funcBody` @ /usr/local/go1.27rc1/src/go/types/stmt.go:18:1 - Present: Method Checker.funcBody interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=4, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=4, return=0, defer=1, go=0, call=11, binary=2, unary=1, composite=1, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Checker.usage` @ /usr/local/go1.27rc1/src/go/types/stmt.go:57:1 - Present: Method Checker.usage interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=2, for=0, range=3, switch=0, typeSwitch=0, select=0, branch=0, assign=4, return=2, defer=0, go=0, call=7, binary=8, unary=3, composite=0, funcLiteral=2 - logic: not yet 1:1-audited
+- `*Checker.simpleStmt` @ /usr/local/go1.27rc1/src/go/types/stmt.go:101:1 - Present: Method Checker.simpleStmt interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=1, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.stmtList` @ /usr/local/go1.27rc1/src/go/types/stmt.go:116:1 - Present: Method Checker.stmtList interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=5, return=0, defer=0, go=0, call=3, binary=6, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.multipleDefaults` @ /usr/local/go1.27rc1/src/go/types/stmt.go:129:1 - Present: Method Checker.multipleDefaults interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=4, for=0, range=1, switch=0, typeSwitch=1, select=0, branch=0, assign=4, return=0, defer=0, go=0, call=5, binary=4, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.openScope` @ /usr/local/go1.27rc1/src/go/types/stmt.go:155:1 - Present: Method Checker.openScope interface method (gojr/src/go/types/range.ts); Method Checker.openScope interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=0, defer=0, go=0, call=4, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.closeScope` @ /usr/local/go1.27rc1/src/go/types/stmt.go:161:1 - Present: Method Checker.closeScope interface method (gojr/src/go/types/range.ts); Method Checker.closeScope interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=0, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.suspendedCall` @ /usr/local/go1.27rc1/src/go/types/stmt.go:173:1 - Present: Method Checker.suspendedCall interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=1, for=0, range=0, switch=1, typeSwitch=0, select=0, branch=0, assign=5, return=1, defer=0, go=0, call=3, binary=1, unary=3, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.caseValues` @ /usr/local/go1.27rc1/src/go/types/stmt.go:237:1 - Present: Method Checker.caseValues interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=6, for=0, range=2, switch=0, typeSwitch=0, select=0, branch=5, assign=4, return=0, defer=0, go=0, call=20, binary=3, unary=9, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.isNil` @ /usr/local/go1.27rc1/src/go/types/stmt.go:277:1 - Present: Method Checker.isNil interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=2, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.caseTypes` @ /usr/local/go1.27rc1/src/go/types/stmt.go:307:1 - Present: Method Checker.caseTypes interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=7, for=0, range=2, switch=0, typeSwitch=0, select=0, branch=2, assign=8, return=1, defer=0, go=0, call=14, binary=17, unary=2, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.caseTypes_currently_unused` @ /usr/local/go1.27rc1/src/go/types/stmt.go:359:1 - Present: Method Checker.caseTypes_currently_unused interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=7, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=2, assign=10, return=1, defer=0, go=0, call=14, binary=8, unary=2, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.stmt` @ /usr/local/go1.27rc1/src/go/types/stmt.go:411:1 - Present: Method Checker.stmt interface method (gojr/src/go/types/range.ts); Method Checker.stmt interface method (gojr/src/go/types/stmt.ts) - control-flow shape: if=47, for=0, range=5, switch=5, typeSwitch=4, select=0, branch=4, assign=63, return=15, defer=7, go=0, call=152, binary=71, unary=40, composite=2, funcLiteral=1 - logic: not yet 1:1-audited
 
 ### struct.go
 
 #### Types
-- `Struct` (struct) - Present: ClassDeclaration Struct (gojr/src/go/types/struct.ts) - structure: not yet 1:1-audited
+- `Struct` (struct) - Present: InterfaceDeclaration Struct (gojr/src/go/types/iter.ts); ClassDeclaration Struct (gojr/src/go/types/struct.ts) - structure: not yet 1:1-audited
 
 #### Functions
 - `NewStruct` @ /usr/local/go1.27rc1/src/go/types/struct.go:27:1 - Present: FunctionDeclaration NewStruct (gojr/src/go/types/struct.ts) - control-flow shape: if=2, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=1, defer=0, go=0, call=6, binary=4, unary=1, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
-- `embeddedFieldIdent` @ /usr/local/go1.27rc1/src/go/types/struct.go:181:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=1, select=0, branch=0, assign=2, return=6, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `embeddedFieldIdent` @ /usr/local/go1.27rc1/src/go/types/struct.go:181:1 - Present: FunctionDeclaration embeddedFieldIdent (gojr/src/go/types/struct.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=1, select=0, branch=0, assign=2, return=6, defer=0, go=0, call=3, binary=0, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 #### Methods
 - `*Struct.NumFields` @ /usr/local/go1.27rc1/src/go/types/struct.go:43:1 - Present: Method Struct.NumFields (gojr/src/go/types/struct.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
@@ -1307,8 +1307,8 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `*Struct.String` @ /usr/local/go1.27rc1/src/go/types/struct.go:57:1 - Present: Method Struct.String (gojr/src/go/types/struct.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Struct.markComplete` @ /usr/local/go1.27rc1/src/go/types/struct.go:62:1 - Present: Method Struct.markComplete (gojr/src/go/types/struct.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=0, defer=0, go=0, call=1, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*Checker.structType` @ /usr/local/go1.27rc1/src/go/types/struct.go:68:1 - Present: Method Checker.structType interface method (gojr/src/go/types/typexpr.ts) - control-flow shape: if=10, for=0, range=2, switch=0, typeSwitch=1, select=0, branch=2, assign=23, return=2, defer=0, go=0, call=31, binary=10, unary=2, composite=0, funcLiteral=3 - logic: not yet 1:1-audited
-- `*Checker.declareInSet` @ /usr/local/go1.27rc1/src/go/types/struct.go:200:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=7, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.tag` @ /usr/local/go1.27rc1/src/go/types/struct.go:211:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=2, defer=0, go=0, call=2, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.declareInSet` @ /usr/local/go1.27rc1/src/go/types/struct.go:200:1 - Present: Method Checker.declareInSet interface method (gojr/src/go/types/struct.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=2, defer=0, go=0, call=7, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.tag` @ /usr/local/go1.27rc1/src/go/types/struct.go:211:1 - Present: Method Checker.tag interface method (gojr/src/go/types/struct.ts) - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=2, defer=0, go=0, call=2, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### subst.go
 
@@ -1370,7 +1370,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### tuple.go
 
 #### Types
-- `Tuple` (struct) - Present: ClassDeclaration Tuple (gojr/src/go/types/tuple.ts) - structure: not yet 1:1-audited
+- `Tuple` (struct) - Present: InterfaceDeclaration Tuple (gojr/src/go/types/iter.ts); ClassDeclaration Tuple (gojr/src/go/types/tuple.ts) - structure: not yet 1:1-audited
 
 #### Functions
 - `NewTuple` @ /usr/local/go1.27rc1/src/go/types/tuple.go:18:1 - Present: FunctionDeclaration NewTuple (gojr/src/go/types/tuple.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=2, defer=0, go=0, call=1, binary=1, unary=1, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
@@ -1389,8 +1389,8 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### typelists.go
 
 #### Types
-- `TypeParamList` (struct) - Present: ClassDeclaration TypeParamList (gojr/src/go/types/typelists.ts) - structure: not yet 1:1-audited
-- `TypeList` (struct) - Present: ClassDeclaration TypeList (gojr/src/go/types/typelists.ts) - structure: not yet 1:1-audited
+- `TypeParamList` (struct) - Present: InterfaceDeclaration TypeParamList (gojr/src/go/types/iter.ts); ClassDeclaration TypeParamList (gojr/src/go/types/typelists.ts) - structure: not yet 1:1-audited
+- `TypeList` (struct) - Present: InterfaceDeclaration TypeList (gojr/src/go/types/iter.ts); ClassDeclaration TypeList (gojr/src/go/types/typelists.ts) - structure: not yet 1:1-audited
 
 #### Functions
 - `newTypeList` @ /usr/local/go1.27rc1/src/go/types/typelists.go:49:1 - Present: FunctionDeclaration newTypeList (gojr/src/go/types/typelists.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=2, defer=0, go=0, call=1, binary=1, unary=1, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
@@ -1466,28 +1466,28 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 
 #### Types
 - `Qualifier` (func) - Present: TypeAliasDeclaration Qualifier (gojr/src/go/types/typestring.ts) - structure: not yet 1:1-audited
-- `typeWriter` (struct) - Missing from current checker same-kind exact-symbol inventory - structure: not yet 1:1-audited
+- `typeWriter` (struct) - Present: ClassDeclaration typeWriter (gojr/src/go/types/typestring.ts) - structure: not yet 1:1-audited
 
 #### Functions
-- `RelativeTo` @ /usr/local/go1.27rc1/src/go/types/typestring.go:35:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=4, defer=0, go=0, call=1, binary=2, unary=0, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `RelativeTo` @ /usr/local/go1.27rc1/src/go/types/typestring.go:35:1 - Present: FunctionDeclaration RelativeTo (gojr/src/go/types/typestring.ts) - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=4, defer=0, go=0, call=1, binary=2, unary=0, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
 - `TypeString` @ /usr/local/go1.27rc1/src/go/types/typestring.go:50:1 - Present: FunctionDeclaration TypeString (gojr/src/go/types/typestring.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=2, binary=0, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `WriteType` @ /usr/local/go1.27rc1/src/go/types/typestring.go:59:1 - Present: FunctionDeclaration WriteType (gojr/src/go/types/typestring.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `WriteSignature` @ /usr/local/go1.27rc1/src/go/types/typestring.go:66:1 - Present: FunctionDeclaration WriteSignature (gojr/src/go/types/typestring.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `newTypeWriter` @ /usr/local/go1.27rc1/src/go/types/typestring.go:81:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=1, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
-- `newTypeHasher` @ /usr/local/go1.27rc1/src/go/types/typestring.go:85:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=2, binary=1, unary=1, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
-- `subscript` @ /usr/local/go1.27rc1/src/go/types/typestring.go:503:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=0, select=0, branch=1, assign=3, return=1, defer=0, go=0, call=5, binary=4, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `newTypeWriter` @ /usr/local/go1.27rc1/src/go/types/typestring.go:81:1 - Present: FunctionDeclaration newTypeWriter (gojr/src/go/types/typestring.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=1, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
+- `newTypeHasher` @ /usr/local/go1.27rc1/src/go/types/typestring.go:85:1 - Present: FunctionDeclaration newTypeHasher (gojr/src/go/types/typestring.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=2, binary=1, unary=1, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
+- `subscript` @ /usr/local/go1.27rc1/src/go/types/typestring.go:503:1 - Present: FunctionDeclaration subscript (gojr/src/go/types/typestring.ts) - control-flow shape: if=1, for=1, range=0, switch=0, typeSwitch=0, select=0, branch=1, assign=3, return=1, defer=0, go=0, call=5, binary=4, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 #### Methods
-- `*typeWriter.byte` @ /usr/local/go1.27rc1/src/go/types/typestring.go:90:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=1, defer=0, go=0, call=3, binary=5, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*typeWriter.string` @ /usr/local/go1.27rc1/src/go/types/typestring.go:104:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*typeWriter.error` @ /usr/local/go1.27rc1/src/go/types/typestring.go:108:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*typeWriter.typ` @ /usr/local/go1.27rc1/src/go/types/typestring.go:115:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=32, for=0, range=4, switch=1, typeSwitch=1, select=0, branch=5, assign=17, return=1, defer=1, go=0, call=102, binary=35, unary=4, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*typeWriter.typeSet` @ /usr/local/go1.27rc1/src/go/types/typestring.go:353:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=3, for=0, range=2, switch=1, typeSwitch=0, select=0, branch=0, assign=3, return=0, defer=0, go=0, call=17, binary=1, unary=3, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*typeWriter.typeList` @ /usr/local/go1.27rc1/src/go/types/typestring.go:388:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=4, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*typeWriter.tParamList` @ /usr/local/go1.27rc1/src/go/types/typestring.go:399:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=4, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=1, return=0, defer=0, go=0, call=9, binary=4, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*typeWriter.typeName` @ /usr/local/go1.27rc1/src/go/types/typestring.go:428:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=3, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*typeWriter.tuple` @ /usr/local/go1.27rc1/src/go/types/typestring.go:433:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=5, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=0, defer=0, go=0, call=11, binary=9, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*typeWriter.signature` @ /usr/local/go1.27rc1/src/go/types/typestring.go:471:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=4, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=2, defer=1, go=0, call=13, binary=9, unary=0, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*typeWriter.byte` @ /usr/local/go1.27rc1/src/go/types/typestring.go:90:1 - Present: Method typeWriter.byte (gojr/src/go/types/typestring.ts) - control-flow shape: if=3, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=1, defer=0, go=0, call=3, binary=5, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*typeWriter.string` @ /usr/local/go1.27rc1/src/go/types/typestring.go:104:1 - Present: Method typeWriter.string (gojr/src/go/types/typestring.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*typeWriter.error` @ /usr/local/go1.27rc1/src/go/types/typestring.go:108:1 - Present: Method typeWriter.error (gojr/src/go/types/typestring.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=2, binary=3, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*typeWriter.typ` @ /usr/local/go1.27rc1/src/go/types/typestring.go:115:1 - Present: Method typeWriter.typ (gojr/src/go/types/typestring.ts) - control-flow shape: if=32, for=0, range=4, switch=1, typeSwitch=1, select=0, branch=5, assign=17, return=1, defer=1, go=0, call=102, binary=35, unary=4, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*typeWriter.typeSet` @ /usr/local/go1.27rc1/src/go/types/typestring.go:353:1 - Present: Method typeWriter.typeSet (gojr/src/go/types/typestring.ts) - control-flow shape: if=3, for=0, range=2, switch=1, typeSwitch=0, select=0, branch=0, assign=3, return=0, defer=0, go=0, call=17, binary=1, unary=3, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*typeWriter.typeList` @ /usr/local/go1.27rc1/src/go/types/typestring.go:388:1 - Present: Method typeWriter.typeList (gojr/src/go/types/typestring.ts) - control-flow shape: if=1, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=4, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*typeWriter.tParamList` @ /usr/local/go1.27rc1/src/go/types/typestring.go:399:1 - Present: Method typeWriter.tParamList (gojr/src/go/types/typestring.ts) - control-flow shape: if=4, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=1, assign=1, return=0, defer=0, go=0, call=9, binary=4, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*typeWriter.typeName` @ /usr/local/go1.27rc1/src/go/types/typestring.go:428:1 - Present: Method typeWriter.typeName (gojr/src/go/types/typestring.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=3, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*typeWriter.tuple` @ /usr/local/go1.27rc1/src/go/types/typestring.go:433:1 - Present: Method typeWriter.tuple (gojr/src/go/types/typestring.ts) - control-flow shape: if=5, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=0, defer=0, go=0, call=11, binary=9, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*typeWriter.signature` @ /usr/local/go1.27rc1/src/go/types/typestring.go:471:1 - Present: Method typeWriter.signature (gojr/src/go/types/typestring.ts) - control-flow shape: if=4, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=3, return=2, defer=1, go=0, call=13, binary=9, unary=0, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
 
 ### typeterm.go
 
@@ -1506,7 +1506,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 ### typexpr.go
 
 #### Functions
-- `goTypeName` @ /usr/local/go1.27rc1/src/go/types/typexpr.go:215:1 - Present: FunctionDeclaration goTypeName (gojr/src/go/types/typexpr.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=2, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `goTypeName` @ /usr/local/go1.27rc1/src/go/types/typexpr.go:215:1 - Present: FunctionDeclaration goTypeName (gojr/src/go/types/typestring.ts); FunctionDeclaration goTypeName (gojr/src/go/types/typexpr.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=2, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 #### Methods
 - `*Checker.ident` @ /usr/local/go1.27rc1/src/go/types/typexpr.go:20:1 - Present: Method Checker.ident interface method (gojr/src/go/types/expr.ts); Method Checker.ident interface method (gojr/src/go/types/typexpr.ts) - control-flow shape: if=12, for=0, range=0, switch=1, typeSwitch=1, select=0, branch=0, assign=21, return=7, defer=0, go=0, call=25, binary=16, unary=4, composite=1, funcLiteral=0 - logic: not yet 1:1-audited
@@ -1550,7 +1550,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 
 #### Types
 - `unifier` (struct) - Present: ClassDeclaration unifier (gojr/src/go/types/unify.ts) - structure: not yet 1:1-audited
-- `unifyMode` (*ast.Ident) - Present: TypeAliasDeclaration unifyMode (gojr/src/go/types/unify.ts) - structure: not yet 1:1-audited
+- `unifyMode` (*ast.Ident) - Present: TypeAliasDeclaration unifyMode (gojr/src/go/types/unify.ts); ClassDeclaration unifyMode_ (gojr/src/go/types/unify.ts) - structure: not yet 1:1-audited
 - `typeParamsById` (*ast.ArrayType) - Present: ClassDeclaration typeParamsById (gojr/src/go/types/unify.ts) - structure: not yet 1:1-audited
 
 #### Functions
@@ -1558,7 +1558,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `asInterface` @ /usr/local/go1.27rc1/src/go/types/unify.go:276:1 - Present: FunctionDeclaration asInterface (gojr/src/go/types/unify.ts) - control-flow shape: if=1, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=2, binary=0, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 #### Methods
-- `unifyMode.String` @ /usr/local/go1.27rc1/src/go/types/unify.go:127:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=1, typeSwitch=0, select=0, branch=0, assign=0, return=5, defer=0, go=0, call=1, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `unifyMode.String` @ /usr/local/go1.27rc1/src/go/types/unify.go:127:1 - Present: Method unifyMode_.String (gojr/src/go/types/unify.ts) - control-flow shape: if=0, for=0, range=0, switch=1, typeSwitch=0, select=0, branch=0, assign=0, return=5, defer=0, go=0, call=1, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*unifier.unify` @ /usr/local/go1.27rc1/src/go/types/unify.go:144:1 - Present: Method unifier.unify (gojr/src/go/types/unify.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*unifier.tracef` @ /usr/local/go1.27rc1/src/go/types/unify.go:148:1 - Present: Method unifier.tracef (gojr/src/go/types/unify.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=3, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `*unifier.String` @ /usr/local/go1.27rc1/src/go/types/unify.go:155:1 - Present: Method unifier.String (gojr/src/go/types/unify.ts) - control-flow shape: if=1, for=0, range=2, switch=0, typeSwitch=0, select=0, branch=0, assign=4, return=1, defer=0, go=0, call=12, binary=1, unary=1, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
@@ -1580,7 +1580,7 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 - `maxTermCount` - Present: Variable maxTermCount (gojr/src/go/types/union.ts) - logic: declaration-only
 
 #### Types
-- `Union` (struct) - Present: ClassDeclaration Union (gojr/src/go/types/union.ts) - structure: not yet 1:1-audited
+- `Union` (struct) - Present: InterfaceDeclaration Union (gojr/src/go/types/iter.ts); ClassDeclaration Union (gojr/src/go/types/union.ts) - structure: not yet 1:1-audited
 - `Term` (*ast.Ident) - Present: ClassDeclaration Term (gojr/src/go/types/union.ts) - structure: not yet 1:1-audited
 
 #### Functions
@@ -1666,22 +1666,22 @@ Generated from Go source using /private/tmp/go_types_inventory_127.json; TypeScr
 
 #### Functions
 - `cmpPos` @ /usr/local/go1.27rc1/src/go/types/util.go:28:1 - Present: FunctionDeclaration cmpPos (gojr/src/go/types/check.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=1, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `hasDots` @ /usr/local/go1.27rc1/src/go/types/util.go:31:1 - Present: FunctionDeclaration hasDots (gojr/src/go/types/call.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `dddErrPos` @ /usr/local/go1.27rc1/src/go/types/util.go:34:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `hasDots` @ /usr/local/go1.27rc1/src/go/types/util.go:31:1 - Present: FunctionDeclaration hasDots (gojr/src/go/types/call.ts); FunctionDeclaration hasDots (gojr/src/go/types/util.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `dddErrPos` @ /usr/local/go1.27rc1/src/go/types/util.go:34:1 - Present: FunctionDeclaration dddErrPos (gojr/src/go/types/util.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `isdddArray` @ /usr/local/go1.27rc1/src/go/types/util.go:37:1 - Present: FunctionDeclaration isdddArray (gojr/src/go/types/util.ts) - control-flow shape: if=2, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=1, return=2, defer=0, go=0, call=0, binary=4, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `argErrPos` @ /usr/local/go1.27rc1/src/go/types/util.go:47:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `startPos` @ /usr/local/go1.27rc1/src/go/types/util.go:50:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `endPos` @ /usr/local/go1.27rc1/src/go/types/util.go:53:1 - Present: FunctionDeclaration endPos (gojr/src/go/types/assignments.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `argErrPos` @ /usr/local/go1.27rc1/src/go/types/util.go:47:1 - Present: FunctionDeclaration argErrPos (gojr/src/go/types/util.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `startPos` @ /usr/local/go1.27rc1/src/go/types/util.go:50:1 - Present: FunctionDeclaration startPos (gojr/src/go/types/util.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `endPos` @ /usr/local/go1.27rc1/src/go/types/util.go:53:1 - Present: FunctionDeclaration endPos (gojr/src/go/types/assignments.ts); FunctionDeclaration endPos (gojr/src/go/types/util.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 - `makeFromLiteral` @ /usr/local/go1.27rc1/src/go/types/util.go:56:1 - Present: FunctionDeclaration makeFromLiteral (gojr/src/go/types/util.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=1, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 ### validtype.go
 
 #### Functions
-- `makeObjList` @ /usr/local/go1.27rc1/src/go/types/validtype.go:190:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=2, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `makeObjList` @ /usr/local/go1.27rc1/src/go/types/validtype.go:190:1 - Present: FunctionDeclaration makeObjList (gojr/src/go/types/validtype.ts) - control-flow shape: if=0, for=0, range=1, switch=0, typeSwitch=0, select=0, branch=0, assign=2, return=1, defer=0, go=0, call=2, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
 
 #### Methods
-- `*Checker.validType` @ /usr/local/go1.27rc1/src/go/types/validtype.go:16:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
-- `*Checker.validType0` @ /usr/local/go1.27rc1/src/go/types/validtype.go:30:1 - Missing from current checker same-kind exact-symbol inventory - control-flow shape: if=11, for=0, range=6, switch=0, typeSwitch=1, select=0, branch=0, assign=10, return=8, defer=1, go=0, call=36, binary=10, unary=4, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
+- `*Checker.validType` @ /usr/local/go1.27rc1/src/go/types/validtype.go:16:1 - Present: Method Checker.validType interface method (gojr/src/go/types/validtype.ts) - control-flow shape: if=0, for=0, range=0, switch=0, typeSwitch=0, select=0, branch=0, assign=0, return=0, defer=0, go=0, call=1, binary=0, unary=0, composite=0, funcLiteral=0 - logic: not yet 1:1-audited
+- `*Checker.validType0` @ /usr/local/go1.27rc1/src/go/types/validtype.go:30:1 - Present: Method Checker.validType0 interface method (gojr/src/go/types/validtype.ts) - control-flow shape: if=11, for=0, range=6, switch=0, typeSwitch=1, select=0, branch=0, assign=10, return=8, defer=1, go=0, call=36, binary=10, unary=4, composite=0, funcLiteral=1 - logic: not yet 1:1-audited
 
 ### version.go
 

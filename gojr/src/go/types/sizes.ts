@@ -8,15 +8,27 @@
 // This file implements Sizes.
 
 import type { Type } from "./type.js";
+import { Config } from "./api.js";
 import { Array } from "./array.js";
 import { Basic, Bool, Complex128, Complex64, Float32, Float64, Int16, Int32, Int64, Int8, IsString, String as StringKind, Uint16, Uint32, Uint64, Uint8 } from "./basic.js";
 import { Slice } from "./slice.js";
 import { Struct } from "./struct.js";
 import { Interface } from "./interface.js";
 import { TypeParam } from "./typeparam.js";
+import { Union } from "./union.js";
 import { asNamed } from "./alias.js";
 import type { Var } from "./object.js";
+import { isTypeParam, isTyped } from "./predicates.js";
 import { assert } from "./util.js";
+
+declare module "./api.js" {
+  interface Config {
+    alignof(T: Type): number;
+    offsetsof(T: Struct): number[];
+    offsetof(T: Type, index: number[]): number;
+    sizeof(T: Type): number;
+  }
+}
 
 // Sizes defines the sizing functions for package unsafe.
 export interface Sizes {
@@ -64,10 +76,11 @@ export class StdSizes implements Sizes {
         result = max;
       }
     } else if (t instanceof Slice || t instanceof Interface) {
+      assert(!isTypeParam(T));
       result = this.WordSize;
     } else if (t instanceof Basic && (t.Info() & IsString) !== 0) {
       result = this.WordSize;
-    } else if (t instanceof TypeParam) {
+    } else if (t instanceof TypeParam || t instanceof Union) {
       throw new Error("unreachable");
     } else {
       let a = this.Sizeof(T); // may be 0 or negative
@@ -118,6 +131,7 @@ export class StdSizes implements Sizes {
   public Sizeof(T: Type): number {
     const t = T.Underlying();
     if (t instanceof Basic) {
+      assert(isTyped(T));
       const k = t.kind;
       if (k < basicSizes.length) {
         const s = basicSizes[k] ?? 0;
@@ -169,8 +183,9 @@ export class StdSizes implements Sizes {
       }
       return offs + size; // may overflow to < 0 which is ok
     } else if (t instanceof Interface) {
+      assert(!isTypeParam(T));
       return this.WordSize * 2;
-    } else if (t instanceof TypeParam) {
+    } else if (t instanceof TypeParam || t instanceof Union) {
       throw new Error("unreachable");
     }
     return this.WordSize; // catch-all
@@ -205,6 +220,103 @@ basicSizes[Complex64] = 8;
 basicSizes[Complex128] = 16;
 
 export class gcSizes extends StdSizes {
+  public Alignof(T: Type): number {
+    let result: number;
+
+    // For arrays and structs, alignment is defined in terms
+    // of alignment of the elements and fields, respectively.
+    const t = T.Underlying();
+    if (t instanceof Array) {
+      // spec: "For a variable x of array type: unsafe.Alignof(x)
+      // is the same as unsafe.Alignof(x[0]), but at least 1."
+      result = this.Alignof(t.elem);
+    } else if (t instanceof Struct) {
+      if ((t.fields?.length ?? 0) === 0 && _IsSyncAtomicAlign64(T)) {
+        // Special case: sync/atomic.align64 is an
+        // empty struct we recognize as a signal that
+        // the struct it contains must be
+        // 64-bit-aligned.
+        //
+        // This logic is equivalent to the logic in
+        // cmd/compile/internal/types/size.go:calcStructOffset
+        result = 8;
+      } else {
+        // spec: "For a variable x of struct type: unsafe.Alignof(x)
+        // is the largest of the values unsafe.Alignof(x.f) for each
+        // field f of x, but at least 1."
+        let max = 1;
+        for (const f of t.fields ?? []) {
+          const a = this.Alignof(f.typ!);
+          if (a > max) {
+            max = a;
+          }
+        }
+        result = max;
+      }
+    } else if (t instanceof Slice || t instanceof Interface) {
+      // Multiword data structures are effectively structs
+      // in which each element has size WordSize.
+      // Type parameters lead to variable sizes/alignments;
+      // StdSizes.Alignof won't be called for them.
+      assert(!isTypeParam(T));
+      result = this.WordSize;
+    } else if (t instanceof Basic) {
+      // Strings are like slices and interfaces.
+      if ((t.Info() & IsString) !== 0) {
+        result = this.WordSize;
+      } else {
+        result = this.alignofDefault(T);
+      }
+    } else if (t instanceof TypeParam || t instanceof Union) {
+      throw new Error("unreachable");
+    } else {
+      result = this.alignofDefault(T);
+    }
+
+    assert(result >= 1);
+    return result;
+  }
+
+  private alignofDefault(T: Type): number {
+    let a = this.Sizeof(T); // may be 0 or negative
+    // spec: "For a variable x of any type: unsafe.Alignof(x) is at least 1."
+    if (a < 1) {
+      return 1;
+    }
+    // complex{64,128} are aligned like [2]float{32,64}.
+    if (isComplex(T)) {
+      a /= 2;
+    }
+    if (a > this.MaxAlign) {
+      return this.MaxAlign;
+    }
+    return a;
+  }
+
+  public Offsetsof(fields: Var[]): number[] {
+    const offsets = new globalThis.Array<number>(fields.length);
+    let offs = 0;
+    for (let i = 0; i < fields.length; i++) {
+      const f = fields[i]!;
+      if (offs < 0) {
+        // all remaining offsets are too large
+        offsets[i] = -1;
+        continue;
+      }
+      // offs >= 0
+      const a = this.Alignof(f.typ!);
+      offs = align(offs, a); // possibly < 0 if align overflows
+      offsets[i] = offs;
+      const d = this.Sizeof(f.typ!);
+      if (d >= 0 && offs >= 0) {
+        offs += d; // ok to overflow to < 0
+      } else {
+        offs = -1; // f.typ or offs is too large
+      }
+    }
+    return offsets;
+  }
+
   public Sizeof(T: Type): number {
     const t = T.Underlying();
     if (t instanceof Array) {
@@ -299,12 +411,73 @@ export function SizesFor(compiler: string, arch: string): Sizes | null {
 // stdSizes is used if Config.Sizes == nil.
 export const stdSizes = SizesFor("gc", "amd64")!;
 
+Config.prototype.alignof = function alignof(T: Type): number {
+  let f = stdSizes.Alignof.bind(stdSizes);
+  if (this.Sizes !== null) {
+    f = this.Sizes.Alignof.bind(this.Sizes);
+  }
+  const a = f(T);
+  if (a >= 1) {
+    return a;
+  }
+  throw new Error("implementation of alignof returned an alignment < 1");
+};
+
+Config.prototype.offsetsof = function offsetsof(T: Struct): number[] {
+  let offsets: number[] = [];
+  if (T.NumFields() > 0) {
+    // compute offsets on demand
+    let f = stdSizes.Offsetsof.bind(stdSizes);
+    if (this.Sizes !== null) {
+      f = this.Sizes.Offsetsof.bind(this.Sizes);
+    }
+    offsets = f(T.fields ?? []);
+    // sanity checks
+    if (offsets.length !== T.NumFields()) {
+      throw new Error("implementation of offsetsof returned the wrong number of offsets");
+    }
+  }
+  return offsets;
+};
+
+// offsetof returns the offset of the field specified via
+// the index sequence relative to T. All embedded fields
+// must be structs (rather than pointers to structs).
+// If the offset is too large (because T is too large),
+// the result is negative.
+Config.prototype.offsetof = function offsetof(T: Type, index: number[]): number {
+  let offs = 0;
+  for (const i of index) {
+    const s = T.Underlying() as Struct;
+    const d = this.offsetsof(s)[i]!;
+    if (d < 0) {
+      return -1;
+    }
+    offs += d;
+    if (offs < 0) {
+      return -1;
+    }
+    T = s.fields![i]!.typ!;
+  }
+  return offs;
+};
+
+// sizeof returns the size of T.
+// If T is too large, the result is negative.
+Config.prototype.sizeof = function sizeof(T: Type): number {
+  let f = stdSizes.Sizeof.bind(stdSizes);
+  if (this.Sizes !== null) {
+    f = this.Sizes.Sizeof.bind(this.Sizes);
+  }
+  return f(T);
+};
+
 // align returns the smallest y >= x such that y % a == 0.
 // a must be within 1 and 8 and it must be a power of 2.
 // The result may be negative due to overflow.
 export function align(x: number, a: number): number {
   assert(x >= 0 && 1 <= a && a <= 8 && (a & (a - 1)) === 0);
-  return (x + a - 1) & ~(a - 1);
+  return Math.floor((x + a - 1) / a) * a;
 }
 
 // gcSizesFor returns the Sizes used by gc for an architecture.

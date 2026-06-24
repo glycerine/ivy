@@ -846,6 +846,24 @@ export function unifyModeString(m: unifyMode): string {
   return sprintf(null, null, true, "mode %d", m);
 }
 
+export class unifyMode_ {
+  public constructor(public m: unifyMode) {}
+
+  public String(): string {
+    switch (this.m) {
+      case 0:
+        return "inexact";
+      case assign:
+        return "assign";
+      case exact:
+        return "exact";
+      case assign | exact:
+        return "assign, exact";
+    }
+    return sprintf(null, null, true, "mode %d", this.m);
+  }
+}
+
 export class typeParamsById extends Array<TypeParam> {
   public Len(): number { return this.length; }
   public Less(i: number, j: number): boolean { return this[i]!.id < this[j]!.id; }

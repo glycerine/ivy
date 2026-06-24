@@ -267,7 +267,7 @@ Checker.prototype.compositeLit = function compositeLit(x, e, hint) {
                             break;
                         }
                     }
-                    this.errorf(atPos(EndOf(e)), "InvalidStructLit", "too few values in struct literal of type %s%s", base, hintText);
+                    this.errorf(new atPos(EndOf(e)), "InvalidStructLit", "too few values in struct literal of type %s%s", base, hintText);
                     // ok to continue
                 }
             }
@@ -423,7 +423,7 @@ Checker.prototype.indexedElts = function indexedElts(elts, typ, length) {
     return max;
 };
 function atNode(node) {
-    return atPos(PosOf(node));
+    return new atPos(PosOf(node));
 }
 function isKeyValueExpr(expr) {
     return expr.kind === "KeyValueExpr";

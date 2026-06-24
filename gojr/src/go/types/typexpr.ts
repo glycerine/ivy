@@ -218,7 +218,7 @@ Checker.prototype.validVarType = function validVarType(e: unknown, typ: Type | n
         }
       }
     }
-  }).describef(atPos(PosOf(e as Expr)), "check var type %s", typ);
+  }).describef(new atPos(PosOf(e as Expr)), "check var type %s", typ);
 };
 
 // declaredType is like typ but also accepts a type name def.
@@ -321,7 +321,7 @@ Checker.prototype.typInternal = function typInternal(e0: unknown, def: TypeName 
       case "IndexExpr":
       case "IndexListExpr": {
         const ix = this.unpackIndexedExpr?.(e) ?? e;
-        this.verifyVersionf(atPos(PosOf(e)), go1_18, "type instantiation");
+        this.verifyVersionf(new atPos(PosOf(e)), go1_18, "type instantiation");
         return this.instantiatedType(ix);
       }
 
@@ -407,7 +407,7 @@ Checker.prototype.typInternal = function typInternal(e0: unknown, def: TypeName 
             }
             this.errorf(e.key, "IncomparableMapKey", "invalid map key type %s%s", typ.key, why);
           }
-        }).describef(atPos(PosOf(e.key)), "check map key %s", typ.key);
+        }).describef(new atPos(PosOf(e.key)), "check map key %s", typ.key);
 
         return typ;
       }
@@ -516,12 +516,12 @@ Checker.prototype.instantiatedType = function instantiatedType(ix: unknown): Typ
           if (i >= 0 && i < indices.length) {
             pos = PosOf(indices[i]);
           }
-          this.softErrorf(atPos(pos), "InvalidTypeArg", "%v", err);
+          this.softErrorf(new atPos(pos), "InvalidTypeArg", "%v", err);
         } else {
           (this.mono as { recordInstance?: (pkg: unknown, pos: number, tparams: unknown[], targs: Type[], xlist: unknown[]) => void } | null)?.recordInstance?.(this.pkg, PosOf((ix as { orig?: Expr }).orig), tparamsList, targs, (ix as { indices?: unknown[] }).indices ?? []);
         }
       }
-    }).describef(atPos(PosOf((ix as { orig?: Expr }).orig)), "verify instantiation %s", inst);
+    }).describef(new atPos(PosOf((ix as { orig?: Expr }).orig)), "verify instantiation %s", inst);
 
     res = inst;
     return inst;

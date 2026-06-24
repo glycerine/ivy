@@ -372,6 +372,17 @@ export function VarKindString(kind: VarKind): string {
   return `VarKind(${kind})`;
 }
 
+export class VarKind_ {
+  public constructor(public kind: VarKind) {}
+
+  public String(): string {
+    if (0 <= this.kind && Number(this.kind) < varKindNames.length) {
+      return varKindNames[this.kind]!;
+    }
+    return `VarKind(${this.kind})`;
+  }
+}
+
 // NewVar returns a new variable.
 // The arguments set the attributes found with all Objects.
 export function NewVar(pos: Pos, pkg: Package | null, name: string, typ: Type | null): Var {

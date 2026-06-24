@@ -127,7 +127,7 @@ Checker.prototype.reportInstanceLoop = function reportInstanceLoop(v) {
     for (const v of stack) {
         const edge = graph.edges[graph.vertices[v].pre];
         const obj = graph.vertices[edge.dst].obj;
-        err.addf(atPos(edge.pos), "%s instantiated as %s", obj.Name(), edge.typ);
+        err.addf(new atPos(edge.pos), "%s instantiated as %s", obj.Name(), edge.typ);
     }
     err.report();
 };

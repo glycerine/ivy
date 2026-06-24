@@ -202,7 +202,7 @@ export function validateTArgLen(check: Checker | null, pos: Pos, name: string, w
 
   const msg = sprintfCheck(check, "%s type arguments for type %s: have %d, want %d", qual, name, got, want);
   if (check !== null) {
-    check.error(atPos(pos), "WrongTypeArgCount", msg);
+    check.error(new atPos(pos), "WrongTypeArgCount", msg);
     return false;
   }
 

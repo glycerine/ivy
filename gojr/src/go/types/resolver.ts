@@ -311,7 +311,7 @@ Checker.prototype.collectObjects = function collectObjects(): void {
             (this as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(spec.Path, "BadImportPath", "invalid import path (%s)", err);
             return;
           }
-          const imp = this.importPackage(atPos(pos), path, fileDir);
+          const imp = this.importPackage(new atPos(pos), path, fileDir);
           if (imp === null) {
             return;
           }

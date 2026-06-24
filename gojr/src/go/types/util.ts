@@ -1,6 +1,8 @@
 // Mechanical TypeScript transliteration support for go/types/util.go fragments.
 
+import { EndOf, PosOf, type AstNode, type CallExpr } from "../../front/ast.js";
 import { TokenKind } from "../../front/token.js";
+import { atPos, type positioner } from "./check.js";
 
 export function assert(condition: boolean, message = "assertion failed"): asserts condition {
   if (!condition) {
@@ -14,6 +16,17 @@ export function unreachable(): never {
 
 export const isTypes2 = false;
 
+// hasDots reports whether the last argument in the call is followed by ...
+export function hasDots(call: CallExpr): boolean {
+  return call.ellipsis;
+}
+
+// dddErrPos returns the positioner for reporting an invalid ... use in a call.
+export function dddErrPos(call: CallExpr): positioner {
+  const last = call.args[call.args.length - 1];
+  return new atPos(last !== undefined ? EndOf(last) : EndOf(call));
+}
+
 // isdddArray reports whether atyp is of the form [...]E.
 export function isdddArray(atyp: unknown): boolean {
   const a = atyp as { kind?: string; inferredLength?: boolean; length?: unknown } | null;
@@ -21,6 +34,21 @@ export function isdddArray(atyp: unknown): boolean {
     return a.inferredLength === true || ((a.length as { kind?: string; element?: unknown } | undefined)?.kind === "Ellipsis" && (a.length as { element?: unknown }).element === undefined);
   }
   return false;
+}
+
+// argErrPos returns positioner for reporting an invalid argument count.
+export function argErrPos(call: CallExpr): positioner {
+  return new atPos(EndOf(call));
+}
+
+// startPos returns the start position of node n.
+export function startPos(n: AstNode): number {
+  return PosOf(n);
+}
+
+// endPos returns the position of the first character immediately after node n.
+export function endPos(n: AstNode): number {
+  return EndOf(n);
 }
 
 // makeFromLiteral returns the constant value for the given literal string and kind.

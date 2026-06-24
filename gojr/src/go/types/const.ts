@@ -42,7 +42,7 @@ Checker.prototype.overflow = function overflow(x: operand, opPos: number): void 
     // TODO(gri) We should report exactly what went wrong. At the
     //           moment we don't have the (go/constant) API for that.
     //           See also TODO in go/constant/value.go.
-    this.error(atPos(opPos), "InvalidConstVal", "constant result is not representable");
+    this.error(new atPos(opPos), "InvalidConstVal", "constant result is not representable");
     return;
   }
 
@@ -62,7 +62,7 @@ Checker.prototype.overflow = function overflow(x: operand, opPos: number): void 
     if (op !== "") {
       op += " ";
     }
-    this.errorf(atPos(opPos), "InvalidConstVal", "constant %soverflow", op);
+    this.errorf(new atPos(opPos), "InvalidConstVal", "constant %soverflow", op);
     x.val = makeUnknown();
     return;
   }
@@ -72,7 +72,7 @@ Checker.prototype.overflow = function overflow(x: operand, opPos: number): void 
   if (constantKindOf(x.val) === "string") {
     const len = String(x.val).length;
     if (len > maxLen) {
-      this.errorf(atPos(opPos), "InvalidConstVal", "constant string too long (%d bytes > %d bytes)", len, maxLen);
+      this.errorf(new atPos(opPos), "InvalidConstVal", "constant string too long (%d bytes > %d bytes)", len, maxLen);
       x.val = makeUnknown();
       return;
     }
