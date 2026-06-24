@@ -501,7 +501,7 @@ return v.Int(), v.Type() == js.TypeNumber, js.TypeNumber.String(), js.ValueOf("h
     expect(script.values).toEqual([7n, true, "number", "hi", 2n, 65n, 66n]);
   });
 
-  test("initializes imported sync and atomic named zero values with host behavior", async () => {
+  test("initializes imported sync values and compiled atomic named zero values", async () => {
     const graph = await evaluateSourcePackageGraph([
       {
         importPath: "sync",
@@ -515,8 +515,15 @@ func (m *Map) LoadOrStore(key, value any) (any, bool) { return value, false }
 func (m *Map) Store(key, value any) {}
 func (m *Map) Range(f func(key, value any) bool) {}
 
-type Once struct{}
-func (o *Once) Do(f func()) {}
+type Once struct {
+  done bool
+}
+func (o *Once) Do(f func()) {
+  if !o.done {
+    o.done = true
+    f()
+  }
+}
 
 type Mutex struct{}
 func (m *Mutex) Lock() {}
@@ -534,18 +541,36 @@ func (p *Pool) Put(x any) {}
           filename: "/usr/local/go/src/sync/atomic/type.go",
           source: `package atomic
 
-type Bool struct{}
-func (x *Bool) CompareAndSwap(old, new bool) bool { return false }
-func (x *Bool) Load() bool { return false }
-func (x *Bool) Store(val bool) {}
-func (x *Bool) Swap(new bool) bool { return false }
+func LoadUint32(addr *uint32) uint32
+func StoreUint32(addr *uint32, val uint32)
+func SwapUint32(addr *uint32, new uint32) uint32
+func CompareAndSwapUint32(addr *uint32, old, new uint32) bool
 
-type Int32 struct{}
-func (x *Int32) Add(delta int32) int32 { return 0 }
-func (x *Int32) CompareAndSwap(old, new int32) bool { return false }
-func (x *Int32) Load() int32 { return 0 }
-func (x *Int32) Store(val int32) {}
-func (x *Int32) Swap(new int32) int32 { return 0 }
+func b32(b bool) uint32 {
+  if b {
+    return 1
+  }
+  return 0
+}
+
+type Bool struct{ v uint32 }
+func (x *Bool) CompareAndSwap(old, new bool) bool { return CompareAndSwapUint32(&x.v, b32(old), b32(new)) }
+func (x *Bool) Load() bool { return LoadUint32(&x.v) != 0 }
+func (x *Bool) Store(val bool) { StoreUint32(&x.v, b32(val)) }
+func (x *Bool) Swap(new bool) bool { return SwapUint32(&x.v, b32(new)) != 0 }
+
+func LoadInt32(addr *int32) int32
+func StoreInt32(addr *int32, val int32)
+func SwapInt32(addr *int32, new int32) int32
+func CompareAndSwapInt32(addr *int32, old, new int32) bool
+func AddInt32(addr *int32, delta int32) int32
+
+type Int32 struct{ v int32 }
+func (x *Int32) Add(delta int32) int32 { return AddInt32(&x.v, delta) }
+func (x *Int32) CompareAndSwap(old, new int32) bool { return CompareAndSwapInt32(&x.v, old, new) }
+func (x *Int32) Load() int32 { return LoadInt32(&x.v) }
+func (x *Int32) Store(val int32) { StoreInt32(&x.v, val) }
+func (x *Int32) Swap(new int32) int32 { return SwapInt32(&x.v, new) }
 `
         }]
       },
@@ -3881,6 +3906,28 @@ return p.A, p.B
     expect(result.values).toEqual([7n, "seven"]);
   });
 
+  test("supports methods on erased generic receiver types", async () => {
+    const result = await expectRuns(`
+type Box[T any] struct {
+  value T
+}
+
+func (b *Box[T]) Set(value T) {
+  b.value = value
+}
+
+func (b *Box[T]) Get() T {
+  return b.value
+}
+
+var box Box[int]
+box.Set(9)
+return box.Get()
+`);
+
+    expect(result.value).toBe(9n);
+  });
+
   test("REPL checker accepts keyed generic struct literals", async () => {
     const session = new GoJuniorSession();
 
@@ -3911,6 +3958,34 @@ f := OnceValue[int](func() int { return 7 })
 return f()
 `);
     expect(result.value).toBe(7n);
+  });
+
+  test("ranges typed nil slices as zero iterations inside once closures", async () => {
+    const result = await expectRuns(`
+var envs []string
+var env map[string]int
+
+onceFunc := func(f func()) func() {
+  done := false
+  return func() {
+    if !done {
+      done = true
+      f()
+    }
+  }
+}
+
+copyenv := onceFunc(func() {
+  env = make(map[string]int)
+  for i, s := range envs {
+    env[s] = i
+  }
+})
+copyenv()
+_, ok := env["x"]
+return ok, len(env)
+`);
+    expect(result.values).toEqual([false, 0n]);
   });
 
   test("supports address-of composite literals and three-index slicing capacity", async () => {
