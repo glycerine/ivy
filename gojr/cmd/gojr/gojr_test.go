@@ -411,6 +411,55 @@ func assertTopLevelCommandsUseNodeRuntime(t *testing.T, rt *nodeRuntime) {
 		t.Fatalf("runSource() ok=%v err=%v, want success", ok, err)
 	}
 
+	moduleRoot := t.TempDir()
+	writeTestFile(t, filepath.Join(moduleRoot, "go.mod"), "module example.com/runmod\n\ngo 1.27\n")
+	msgDir := filepath.Join(moduleRoot, "msg")
+	cmdDir := filepath.Join(moduleRoot, "cmd", "hello")
+	if err := os.MkdirAll(msgDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(msgDir) error = %v", err)
+	}
+	if err := os.MkdirAll(cmdDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(cmdDir) error = %v", err)
+	}
+	writeTestFile(t, filepath.Join(msgDir, "msg.go"), `package msg
+
+func Text() string {
+	return "hello gorj!"
+}
+`)
+	mainFile := filepath.Join(cmdDir, "main.go")
+	writeTestFile(t, mainFile, `package main
+
+import "example.com/runmod/msg"
+
+func main() {
+	print(msg.Text() + "\n")
+}
+`)
+	mainFiles, err := readBuildTarget(mainFile)
+	if err != nil {
+		t.Fatalf("readBuildTarget(mainFile) error = %v", err)
+	}
+	mainImportPath := deriveBuildImportPath(mainFile, packageNameFromSourceFiles(mainFiles))
+	runMainResult, err := rt.RunMainFilesWithPackages(evalWithPackagesRequest{
+		ImportPath:  mainImportPath,
+		PackageName: "main",
+		Files:       mainFiles,
+		SourceRoots: buildSourceRoots(mainFile, mainImportPath, nil),
+	})
+	if err != nil {
+		t.Fatalf("RunMainFilesWithPackages() error = %v", err)
+	}
+	if !runMainResult.OK || runMainResult.Output != "hello gorj!\n" {
+		t.Fatalf("RunMainFilesWithPackages() ok=%v output=%q diagnostics=%v, want hello gorj", runMainResult.OK, runMainResult.Output, runMainResult.Diagnostics)
+	}
+	if ok, err := runSource(rt, []string{mainFile}); err != nil || !ok {
+		t.Fatalf("runSource(main.go) ok=%v err=%v, want success", ok, err)
+	}
+	if ok, err := runSource(rt, []string{cmdDir}); err != nil || !ok {
+		t.Fatalf("runSource(dir) ok=%v err=%v, want success", ok, err)
+	}
+
 	pkgDir := t.TempDir()
 	writeTestFile(t, filepath.Join(pkgDir, "counter.go"), `package counter
 

@@ -198,7 +198,14 @@ export interface SourcePackageGraphEvaluationResult {
   output: string[];
   packages: Record<string, RuntimeObject>;
   packageInfos: Record<string, GoTypesPackage>;
+  packageContexts: Record<string, EvaluationContext>;
   initializedImportPaths: string[];
+}
+
+export interface MainPackageRunOptions extends SourcePackageGraphOptions {
+  importPath?: string;
+  packageName?: string;
+  sourcePackages?: SourcePackageSpec[];
 }
 
 type Completion =
@@ -1093,6 +1100,7 @@ class SourcePackageGraphEvaluator {
   private readonly output: string[] = [];
   private readonly packages: Record<string, RuntimeObject>;
   private readonly packageInfos: Record<string, GoTypesPackage>;
+  private readonly packageContexts: Record<string, EvaluationContext> = {};
   private readonly initialized = new Set<string>();
   private readonly initializedImportPaths: string[] = [];
 
@@ -1222,6 +1230,9 @@ class SourcePackageGraphEvaluator {
     if (result.packageInfo) {
       this.packageInfos[importPath] = result.packageInfo;
     }
+    if (result.context) {
+      this.packageContexts[importPath] = result.context;
+    }
     this.initialized.add(importPath);
     this.initializedImportPaths.push(importPath);
   }
@@ -1236,6 +1247,7 @@ class SourcePackageGraphEvaluator {
       output: this.output,
       packages: this.packages,
       packageInfos: this.packageInfos,
+      packageContexts: this.packageContexts,
       initializedImportPaths: this.initializedImportPaths
     };
   }
@@ -1256,6 +1268,82 @@ function packageGraphDiagnostic(filename: string, message: string): Diagnostic {
     severity: "error",
     message
   };
+}
+
+export async function runMainSourcePackageFiles(
+  files: SourceFile[],
+  options: MainPackageRunOptions = {}
+): Promise<EvaluationResult> {
+  const parsed = frontSourceFilesToAst(files);
+  const ast = parsed.ast;
+  if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+    return {
+      diagnostics: parsed.diagnostics,
+      output: [],
+      ...(ast ? { ast } : {})
+    };
+  }
+  if (!ast) {
+    return {
+      diagnostics: [packageGraphDiagnostic(files[0]?.filename ?? REPL_FILENAME, "no package source files supplied")],
+      output: []
+    };
+  }
+
+  const packageName = options.packageName ?? packageNameFromSourceFiles(files) ?? "main";
+  if (packageName !== "main") {
+    return {
+      diagnostics: [packageGraphDiagnostic(files[0]?.filename ?? REPL_FILENAME, `gojr run requires package main, found package ${packageName}`)],
+      output: [],
+      ast
+    };
+  }
+
+  const importPath = options.importPath ?? packageName;
+  const sourcePackages = (options.sourcePackages ?? []).filter((spec) => spec.importPath !== importPath);
+  const graph = await evaluateSourcePackageGraph([
+    ...sourcePackages,
+    { importPath, packageName, files }
+  ], options);
+  if (graph.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+    return {
+      diagnostics: graph.diagnostics,
+      output: graph.output,
+      ast
+    };
+  }
+
+  const context = graph.packageContexts[importPath];
+  if (!context) {
+    return {
+      diagnostics: [packageGraphDiagnostic(files[0]?.filename ?? REPL_FILENAME, `package ${importPath} did not produce a runtime context`)],
+      output: graph.output,
+      ast
+    };
+  }
+
+  const outputOffset = context.output.length;
+  try {
+    const main = context.lookup("main");
+    await context.scheduler().runRoot(async () => {
+      await callRuntime(main, [], context);
+    });
+    return {
+      diagnostics: graph.diagnostics,
+      output: [...graph.output, ...context.output.slice(outputOffset)],
+      ast
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      diagnostics: [
+        ...graph.diagnostics,
+        runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message)
+      ],
+      output: [...graph.output, ...context.output.slice(outputOffset)],
+      ast
+    };
+  }
 }
 
 export async function testSource(source: string, options: EvaluationOptions = {}): Promise<EvaluationResult> {

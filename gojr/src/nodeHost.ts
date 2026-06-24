@@ -37,6 +37,7 @@ import {
   evaluateSource,
   evaluateSourceFiles,
   evaluateSourcePackageGraph,
+  runMainSourcePackageFiles,
   testSourceFiles,
   type EvaluationOptions,
   type EvaluationResult,
@@ -50,6 +51,8 @@ export interface NodeBuildPackageRequest extends BuildPackageRequest {
 }
 
 export interface NodeSourcePackageRequest {
+  importPath?: string;
+  packageName?: string;
   source?: string;
   files?: SourceFile[];
   packages?: SourcePackageSpec[];
@@ -371,6 +374,19 @@ export async function testSourceFilesWithPackagesOnNode(request: NodeSourcePacka
     ...result,
     packageOutput: loaded.output
   };
+}
+
+export async function runMainSourceFilesWithPackagesOnNode(request: NodeSourcePackageRequest): Promise<NodeEvaluationWithPackagesResult> {
+  const options = evaluationOptionsFromNodeRequest(request);
+  const provider = createNodeSourcePackageProvider(request.sourceRoots ?? []);
+  const result = await runMainSourcePackageFiles(rootSourceFilesFromRequest(request), {
+    ...options,
+    ...(request.importPath ? { importPath: request.importPath } : {}),
+    ...(request.packageName ? { packageName: request.packageName } : {}),
+    sourcePackages: request.packages ?? [],
+    ...(provider ? { sourcePackageProvider: provider } : {})
+  });
+  return result;
 }
 
 export function compileSourceFilesWithPackagesOnNode(request: NodeSourcePackageRequest): NodeCompileWithPackagesResult {

@@ -12,6 +12,7 @@ char* gojr_node_eval(gojr_node_runtime* runtime, const char* source, char** erro
 char* gojr_node_eval_files(gojr_node_runtime* runtime, const char* json, char** error_out);
 char* gojr_node_eval_with_packages(gojr_node_runtime* runtime, const char* json, char** error_out);
 char* gojr_node_eval_files_with_packages(gojr_node_runtime* runtime, const char* json, char** error_out);
+char* gojr_node_run_main_files_with_packages(gojr_node_runtime* runtime, const char* json, char** error_out);
 char* gojr_node_compile(gojr_node_runtime* runtime, const char* json, char** error_out);
 char* gojr_node_test(gojr_node_runtime* runtime, const char* source, char** error_out);
 char* gojr_node_test_files(gojr_node_runtime* runtime, const char* json, char** error_out);

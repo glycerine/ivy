@@ -58,6 +58,7 @@ export {
   listPackageArtifactCache,
   loadSourcePackagesForRootFilesOnNode,
   packageCacheOnNode,
+  runMainSourceFilesWithPackagesOnNode,
   runSpreadsheetFixtureWithPackagesOnNode,
   testSourceFilesWithPackagesOnNode
 } from "./nodeHost.js";
@@ -228,6 +229,7 @@ export {
   evaluatePackageSourceFiles,
   evaluateSourcePackageGraph,
   evaluateSourceFiles,
+  runMainSourcePackageFiles,
   testSource,
   testSourceFiles,
   typeCheckConfig
@@ -238,6 +240,7 @@ export type {
   GoJuniorFunction,
   PackageEvaluationOptions,
   PackageEvaluationResult,
+  MainPackageRunOptions,
   RuntimeCallable,
   RuntimeObject,
   RuntimeValue,

@@ -85,6 +85,8 @@ type compileRequest struct {
 }
 
 type evalWithPackagesRequest struct {
+	ImportPath  string               `json:"importPath,omitempty"`
+	PackageName string               `json:"packageName,omitempty"`
 	Source      string               `json:"source,omitempty"`
 	Files       []sourceFile         `json:"files,omitempty"`
 	SheetJSON   string               `json:"sheetJSON,omitempty"`
@@ -200,6 +202,13 @@ type embeddedModule struct {
 type sourceFile struct {
 	Filename string `json:"filename"`
 	Source   string `json:"source"`
+}
+
+type runSourceTarget struct {
+	Files       []sourceFile
+	Package     bool
+	ImportPath  string
+	PackageName string
 }
 
 type packageSources map[string][]sourceFile
@@ -402,7 +411,7 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 		return false, fmt.Errorf("usage: gojr run [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] [FILE|-]")
 	}
 	sourcePath := optionalArg(flags.Args())
-	source, err := readRunSource(sourcePath)
+	target, err := readRunTarget(sourcePath)
 	if err != nil {
 		return false, err
 	}
@@ -410,6 +419,25 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+
+	if target.Package {
+		sourceRoots := buildSourceRoots(sourcePath, target.ImportPath, sourceRootFlags)
+		result, err := rt.RunMainFilesWithPackages(evalWithPackagesRequest{
+			ImportPath:  target.ImportPath,
+			PackageName: target.PackageName,
+			Files:       target.Files,
+			SheetJSON:   strings.TrimSpace(*sheetJSON),
+			Packages:    packages,
+			SourceRoots: sourceRoots,
+		})
+		if err != nil {
+			return false, err
+		}
+		printEvalResult(result, *jsonMode)
+		return result.OK && !result.Incomplete, nil
+	}
+
+	source := target.Files[0]
 	sourceRoots := buildSourceRoots(sourcePath, "", sourceRootFlags)
 	if len(packages) > 0 || len(sourceRoots) > 0 {
 		result, err := rt.EvalFilesWithPackages(evalWithPackagesRequest{
@@ -892,18 +920,68 @@ func optionalArg(args []string) string {
 }
 
 func readRunSource(path string) (sourceFile, error) {
+	target, err := readRunTarget(path)
+	if err != nil {
+		return sourceFile{}, err
+	}
+	if target.Package {
+		return sourceFile{}, fmt.Errorf("%s is a package main target; use gojr run through runSourceTarget", path)
+	}
+	return target.Files[0], nil
+}
+
+func readRunTarget(path string) (runSourceTarget, error) {
 	if path == "" || path == "-" {
 		data, err := io.ReadAll(os.Stdin)
 		if err != nil {
-			return sourceFile{}, err
+			return runSourceTarget{}, err
 		}
 		source, err := stripPackageClausePreservingLines(string(data))
 		if err != nil {
-			return sourceFile{}, err
+			return runSourceTarget{}, err
 		}
-		return sourceFile{Filename: "stdin.go", Source: source}, nil
+		return runSourceTarget{Files: []sourceFile{{Filename: "stdin.go", Source: source}}}, nil
 	}
-	return readSourceFile(path)
+	info, err := os.Stat(path)
+	if err != nil {
+		return runSourceTarget{}, err
+	}
+	if info.IsDir() {
+		files, err := readBuildTarget(path)
+		if err != nil {
+			return runSourceTarget{}, err
+		}
+		packageName := packageNameFromSourceFiles(files)
+		return runSourceTarget{
+			Files:       files,
+			Package:     true,
+			ImportPath:  deriveBuildImportPath(path, packageName),
+			PackageName: packageName,
+		}, nil
+	}
+	if !strings.HasSuffix(path, ".go") {
+		return runSourceTarget{}, fmt.Errorf("%s is not a .go file or directory", path)
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return runSourceTarget{}, err
+	}
+	if name, _, _, found, err := findPackageClause(string(data)); err != nil {
+		return runSourceTarget{}, err
+	} else if found && name == "main" {
+		file := sourceFile{Filename: filepath.Clean(path), Source: string(data)}
+		return runSourceTarget{
+			Files:       []sourceFile{file},
+			Package:     true,
+			ImportPath:  deriveBuildImportPath(path, name),
+			PackageName: name,
+		}, nil
+	}
+	source, err := stripPackageClausePreservingLines(string(data))
+	if err != nil {
+		return runSourceTarget{}, err
+	}
+	return runSourceTarget{Files: []sourceFile{{Filename: filepath.Clean(path), Source: source}}}, nil
 }
 
 func readCompileTarget(path string) ([]sourceFile, error) {
@@ -951,7 +1029,7 @@ func packageSourceMap(specs []runtimePackageSpec) packageSources {
 }
 
 func buildSourceRoots(target string, importPath string, explicitRoots []string) []string {
-	if len(explicitRoots) == 0 && strings.TrimSpace(importPath) == "" {
+	if len(explicitRoots) == 0 && strings.TrimSpace(importPath) == "" && buildTargetDir(target) == "" {
 		return nil
 	}
 	var roots []string
@@ -1709,6 +1787,32 @@ func (rt *nodeRuntime) EvalFilesWithPackages(request evalWithPackagesRequest) (e
 	}
 	if cResult == nil {
 		return evalResult{}, errors.New("embedded Node package file eval returned nil")
+	}
+	defer C.gojr_string_free(cResult)
+
+	var result evalResult
+	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
+		return evalResult{}, err
+	}
+	return result, nil
+}
+
+func (rt *nodeRuntime) RunMainFilesWithPackages(request evalWithPackagesRequest) (evalResult, error) {
+	data, err := json.Marshal(request)
+	if err != nil {
+		return evalResult{}, err
+	}
+	cInput := C.CString(string(data))
+	defer C.free(unsafe.Pointer(cInput))
+
+	var cErr *C.char
+	cResult := C.gojr_node_run_main_files_with_packages(rt.ptr, cInput, &cErr)
+	if cErr != nil {
+		defer C.gojr_string_free(cErr)
+		return evalResult{}, errors.New(C.GoString(cErr))
+	}
+	if cResult == nil {
+		return evalResult{}, errors.New("embedded Node package main run returned nil")
 	}
 	defer C.gojr_string_free(cResult)
 

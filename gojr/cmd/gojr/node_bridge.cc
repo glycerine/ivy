@@ -271,6 +271,10 @@ extern "C" char* gojr_node_eval_files_with_packages(gojr_node_runtime* runtime, 
   return call_global_string_function(runtime, "__gojrEvalFilesWithPackages", json, error_out);
 }
 
+extern "C" char* gojr_node_run_main_files_with_packages(gojr_node_runtime* runtime, const char* json, char** error_out) {
+  return call_global_string_function(runtime, "__gojrRunMainFilesWithPackages", json, error_out);
+}
+
 extern "C" char* gojr_node_compile(gojr_node_runtime* runtime, const char* json, char** error_out) {
   return call_global_string_function(runtime, "__gojrCompile", json, error_out);
 }
