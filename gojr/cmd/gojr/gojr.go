@@ -977,6 +977,9 @@ func buildSourceRoots(target string, importPath string, explicitRoots []string) 
 	}
 
 	if packageDir := buildTargetDir(target); packageDir != "" {
+		if moduleRoot, _ := moduleRootAndPathForDir(packageDir); moduleRoot != "" {
+			add(moduleRoot)
+		}
 		if root := sourceRootFromImportPath(packageDir, importPath); root != "" {
 			add(root)
 		}
@@ -1190,6 +1193,16 @@ func deriveBuildImportPath(target string, packageName string) string {
 	if abs, err := filepath.Abs(packagePath); err == nil {
 		packagePath = abs
 	}
+	if moduleRoot, modulePath := moduleRootAndPathForDir(packagePath); moduleRoot != "" && modulePath != "" {
+		if rel, err := filepath.Rel(moduleRoot, packagePath); err == nil {
+			if rel == "." {
+				return modulePath
+			}
+			if !strings.HasPrefix(rel, ".."+string(filepath.Separator)) && rel != ".." {
+				return strings.TrimSuffix(modulePath+"/"+filepath.ToSlash(rel), "/")
+			}
+		}
+	}
 	for _, gopath := range candidateGOPATHs() {
 		srcRoot := filepath.Join(gopath, "src")
 		rel, err := filepath.Rel(srcRoot, packagePath)
@@ -1202,6 +1215,45 @@ func deriveBuildImportPath(target string, packageName string) string {
 	}
 	base := filepath.Base(packagePath)
 	return strings.TrimSuffix(base, ".go")
+}
+
+func moduleRootAndPathForDir(dir string) (string, string) {
+	if dir == "" {
+		return "", ""
+	}
+	if abs, err := filepath.Abs(dir); err == nil {
+		dir = abs
+	}
+	dir = filepath.Clean(dir)
+	for {
+		goMod := filepath.Join(dir, "go.mod")
+		data, err := os.ReadFile(goMod)
+		if err == nil {
+			if modulePath := parseGoModModule(string(data)); modulePath != "" {
+				return dir, modulePath
+			}
+		}
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			return "", ""
+		}
+		dir = parent
+	}
+}
+
+func parseGoModModule(source string) string {
+	for _, line := range strings.Split(source, "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "//") {
+			continue
+		}
+		fields := strings.Fields(line)
+		if len(fields) == 2 && fields[0] == "module" {
+			return fields[1]
+		}
+		return ""
+	}
+	return ""
 }
 
 func expandHome(path string) string {

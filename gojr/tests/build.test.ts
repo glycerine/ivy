@@ -97,6 +97,7 @@ func hidden() {}
     ]);
     expect(store.writes.has("/tmp/gopath/pkg/gojr_js/fmt.a")).toBe(true);
     expect(store.writes.has("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a")).toBe(true);
+    expect((store.writes.get("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a") ?? "").slice(8, 24).trim()).toBe("__.PKGDEF");
     expect(parseGoJuniorPackageArchive(store.writes.get("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a") ?? "")?.members[0]?.name).toBe("__.PKGDEF");
   });
 
@@ -668,6 +669,20 @@ func F() { _ = pprof.Lookup("heap") }
     const files = provider?.load("example.com/dep") ?? [];
 
     expect(files.map((file) => path.basename(file.filename))).toEqual(["dep.go"]);
+  });
+
+  test("node source provider resolves packages from module roots", () => {
+    const root = fs.mkdtempSync(path.join("/tmp", "gojr-module-root-"));
+    const depDir = path.join(root, "sub", "pkg");
+    fs.mkdirSync(depDir, { recursive: true });
+    fs.writeFileSync(path.join(root, "go.mod"), "module example.com/mod/v2\n\ngo 1.27\n");
+    fs.writeFileSync(path.join(depDir, "pkg.go"), "package pkg\n\nfunc One() int { return 1 }\n");
+
+    const provider = createNodeSourcePackageProvider([root]);
+    const files = provider?.load("example.com/mod/v2/sub/pkg") ?? [];
+
+    expect(files.map((file) => path.relative(root, file.filename))).toEqual([path.join("sub", "pkg", "pkg.go")]);
+    expect(provider?.load("example.com/other/sub/pkg")).toBe(undefined);
   });
 
   test("reports source package provider failures as build diagnostics", () => {

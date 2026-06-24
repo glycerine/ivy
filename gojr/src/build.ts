@@ -903,7 +903,7 @@ function writeArArchive(members: Array<{ name: string; data: string }>): string 
 }
 
 function writeArMember(name: string, data: string): string {
-  const arName = name.endsWith("/") ? name : `${name}/`;
+  const arName = name;
   if (arName.length > 16) throw new Error(`ar member name is too long: ${name}`);
   const header = [
     arName.padEnd(16, " "),

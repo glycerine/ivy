@@ -735,7 +735,7 @@ function writeArArchive(members) {
     return AR_MAGIC + members.map((member) => writeArMember(member.name, member.data)).join("");
 }
 function writeArMember(name, data) {
-    const arName = name.endsWith("/") ? name : `${name}/`;
+    const arName = name;
     if (arName.length > 16)
         throw new Error(`ar member name is too long: ${name}`);
     const header = [

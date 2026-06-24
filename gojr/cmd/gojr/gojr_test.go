@@ -44,6 +44,22 @@ func TestShouldPrintValueSuppressesOnlyActualNil(t *testing.T) {
 	}
 }
 
+func TestDeriveBuildImportPathFromGoMod(t *testing.T) {
+	root := t.TempDir()
+	writeTestFile(t, filepath.Join(root, "go.mod"), "module example.com/mod/v2\n\ngo 1.27\n")
+	pkgDir := filepath.Join(root, "sub", "pkg")
+	if err := os.MkdirAll(pkgDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(pkgDir) error = %v", err)
+	}
+	if got := deriveBuildImportPath(pkgDir, "pkg"); got != "example.com/mod/v2/sub/pkg" {
+		t.Fatalf("deriveBuildImportPath(module pkg) = %q, want module path", got)
+	}
+	roots := buildSourceRoots(pkgDir, "example.com/mod/v2/sub/pkg", nil)
+	if len(roots) == 0 || roots[0] != filepath.Clean(root) {
+		t.Fatalf("buildSourceRoots(module pkg) = %#v, want module root first", roots)
+	}
+}
+
 func TestStripPackageClausePreservesLineNumbers(t *testing.T) {
 	source := "// doc\npackage demo // comment\n\nfunc F() int { return 1 }\n"
 	stripped, found, name, err := stripPackageClausePreservingLinesWithName(source)
@@ -631,6 +647,32 @@ func assertNodeRuntimeBuildsSourcePackageGraph(t *testing.T, rt *nodeRuntime) {
 	}
 	if _, err := os.Stat(filepath.FromSlash(providerRoot + "/example.com/app.a")); err != nil {
 		t.Fatalf("runBuild(--srcroot) missing app artifact: %v", err)
+	}
+
+	moduleRoot := t.TempDir()
+	moduleArtifactRoot := filepath.ToSlash(t.TempDir())
+	moduleLibDir := filepath.Join(moduleRoot, "lib")
+	moduleAppDir := filepath.Join(moduleRoot, "cmd", "app")
+	if err := os.MkdirAll(moduleLibDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(moduleLibDir) error = %v", err)
+	}
+	if err := os.MkdirAll(moduleAppDir, 0o700); err != nil {
+		t.Fatalf("MkdirAll(moduleAppDir) error = %v", err)
+	}
+	writeTestFile(t, filepath.Join(moduleRoot, "go.mod"), "module example.com/mod/v2\n\ngo 1.27\n")
+	writeTestFile(t, filepath.Join(moduleLibDir, "lib.go"), "package lib\n\nfunc One() int { return 1 }\n")
+	writeTestFile(t, filepath.Join(moduleAppDir, "main.go"), "package app\n\nimport lib \"example.com/mod/v2/lib\"\n\nfunc Two() int { return lib.One() + 1 }\n")
+	if ok, err := runBuild(rt, []string{
+		"-artifact-root", moduleArtifactRoot,
+		moduleAppDir,
+	}); err != nil || !ok {
+		t.Fatalf("runBuild(module) ok=%v err=%v, want success", ok, err)
+	}
+	if _, err := os.Stat(filepath.FromSlash(moduleArtifactRoot + "/example.com/mod/v2/lib.a")); err != nil {
+		t.Fatalf("runBuild(module) missing module lib artifact: %v", err)
+	}
+	if _, err := os.Stat(filepath.FromSlash(moduleArtifactRoot + "/example.com/mod/v2/cmd/app.a")); err != nil {
+		t.Fatalf("runBuild(module) missing module app artifact: %v", err)
 	}
 }
 

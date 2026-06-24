@@ -44,9 +44,8 @@ export function createNodeSourcePackageProvider(sourceRoots = []) {
                 throw new Error(`invalid import path: ${importPath}`);
             }
             for (const root of roots) {
-                const dir = resolve(root.path, ...parts);
-                const rel = relative(root.path, dir);
-                if (rel === "" || rel.startsWith("..") || isAbsolute(rel))
+                const dir = nodeSourcePackageDir(root, importPath, parts);
+                if (!dir)
                     continue;
                 let stat;
                 try {
@@ -85,9 +84,8 @@ export function createNodeSourcePackageProvider(sourceRoots = []) {
             return roots.some((root) => {
                 if (!root.standardLibrary)
                     return false;
-                const dir = resolve(root.path, ...parts);
-                const rel = relative(root.path, dir);
-                if (rel === "" || rel.startsWith("..") || isAbsolute(rel))
+                const dir = nodeSourcePackageDir(root, importPath, parts);
+                if (!dir)
                     return false;
                 try {
                     return statSync(dir).isDirectory();
@@ -126,7 +124,8 @@ function nodeSourceRoots(sourceRoots) {
             standardLibrary,
             goos,
             goarch,
-            tags: buildTagSetForContext(goos, goarch, [])
+            tags: buildTagSetForContext(goos, goarch, []),
+            ...(standardLibrary ? {} : moduleSourceRoot(path))
         };
         seen.set(path, entry);
         roots.push(entry);
@@ -138,6 +137,43 @@ function nodeSourceRoots(sourceRoots) {
     for (const root of candidateGOPATHSourceRoots())
         add(root, false);
     return roots;
+}
+function nodeSourcePackageDir(root, importPath, parts) {
+    if (root.modulePath) {
+        if (importPath !== root.modulePath && !importPath.startsWith(`${root.modulePath}/`))
+            return undefined;
+        const suffix = importPath === root.modulePath ? "" : importPath.slice(root.modulePath.length + 1);
+        const suffixParts = suffix === "" ? [] : suffix.split("/").filter(Boolean);
+        const dir = resolve(root.path, ...suffixParts);
+        return isWithinRoot(root.path, dir) ? dir : undefined;
+    }
+    const dir = resolve(root.path, ...parts);
+    return isWithinRoot(root.path, dir) ? dir : undefined;
+}
+function isWithinRoot(root, dir) {
+    const rel = relative(root, dir);
+    return rel === "" || (!rel.startsWith("..") && !isAbsolute(rel));
+}
+function moduleSourceRoot(root) {
+    try {
+        const modulePath = parseGoModModule(readFileSync(join(root, "go.mod"), "utf8"));
+        return modulePath ? { modulePath } : {};
+    }
+    catch {
+        return {};
+    }
+}
+function parseGoModModule(source) {
+    for (const line of source.split(/\r?\n/)) {
+        const trimmed = line.trim();
+        if (trimmed === "" || trimmed.startsWith("//"))
+            continue;
+        const match = /^module\s+(\S+)\s*$/.exec(trimmed);
+        if (match?.[1])
+            return match[1];
+        return undefined;
+    }
+    return undefined;
 }
 function candidateGOROOTSourceRoots() {
     const roots = [];
