@@ -826,6 +826,59 @@ func F() { _ = pprof.Lookup("heap") }
     expect(result.artifacts.find((artifact) => artifact.importPath === "runtime/pprof")?.exports.map((item) => item.name)).toContain("StartCPUProfile");
   });
 
+  test("builds klauspost cpuid from deterministic Go-junior host override", () => {
+    const store = new MemoryArtifactStore();
+    const loaded: string[] = [];
+    const result = buildPackages({
+      importPath: "example.com/app",
+      artifactRoot: "/tmp/gojr-cpuid-stub",
+      sourcePackageProvider: {
+        load(importPath) {
+          loaded.push(importPath);
+          if (importPath === "github.com/klauspost/cpuid/v2") {
+            return [{
+              filename: "/workspace/cpuid/cpuid.go",
+              source: "package cpuid\n\nconst _ = 1 / 0\n"
+            }];
+          }
+          return undefined;
+        }
+      },
+      files: [{
+        filename: "/workspace/example.com/app/app.go",
+        source: `package app
+
+import "github.com/klauspost/cpuid/v2"
+
+var HaveAVX2 = cpuid.CPU.Supports(cpuid.AVX2)
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    expect(loaded).toEqual([]);
+    expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual([
+      "github.com/klauspost/cpuid/v2",
+      "example.com/app"
+    ]);
+    const cpuid = artifactJSON(store.writes.get("/tmp/gojr-cpuid-stub/github.com/klauspost/cpuid/v2.a"));
+    expect(cpuid.importPath).toBe("github.com/klauspost/cpuid/v2");
+    expect(cpuid.standardLibrary).toBe(false);
+    expect(cpuid.sources).toEqual([{
+      filename: "gojr:stub/github.com/klauspost/cpuid/v2/cpuid.go",
+      hash: expect.any(String)
+    }]);
+    expect(result.artifacts.find((artifact) => artifact.importPath === "github.com/klauspost/cpuid/v2")?.exports.map((item) => item.name)).toEqual([
+      "AVX2",
+      "AVX512F",
+      "CPU",
+      "CPUInfo",
+      "FeatureID",
+      "UNKNOWN"
+    ]);
+  });
+
   test("node source provider filters files excluded by build constraints", () => {
     const root = fs.mkdtempSync(path.join("/tmp", "gojr-srcroot-"));
     const depDir = path.join(root, "example.com", "dep");

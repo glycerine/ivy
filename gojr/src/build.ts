@@ -4,7 +4,7 @@ import { File, ImportSpec } from "./front/ast.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
 import { frontFilesToProgramAst } from "./frontToAst.js";
 import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
-import { stubSourcePackageFiles } from "./stubPackages.js";
+import { isStubSourcePackageStandardLibrary, stubSourcePackageFiles } from "./stubPackages.js";
 import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import {
   Builtin as GoTypesBuiltin,
@@ -580,7 +580,9 @@ class PackageGraphBuilder {
     if (stub) {
       const files = stub.map(ensureSourceFile);
       this.packageSources.set(importPath, files);
-      this.standardLibraryPackages.add(importPath);
+      if (isStubSourcePackageStandardLibrary(importPath)) {
+        this.standardLibraryPackages.add(importPath);
+      }
       return files;
     }
     try {

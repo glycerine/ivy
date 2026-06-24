@@ -3937,8 +3937,8 @@ resolution, suspicious, or when a cache entry is moved between machines.
 The second cache check is content addressed:
 
 - Use BLAKE3 for all source, dependency, manifest, and artifact content hashes.
-  The old FNV-style JavaScript hash is acceptable only for tests that do not
-  exercise durable package-cache correctness.
+  The old FNV-style JavaScript hash is a bug and must be updated immediately.
+  Residual use must be corrected to use blake3 consistently, everywhere.
 - Native `gojr` uses the existing `cmd/gojr/blake3.go` helpers. In particular,
   file hashing call sites should use `Blake3OfFile()` for pure content hashes
   and `Blake3OfFileWithModtime()` when the cache key intentionally includes the

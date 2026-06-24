@@ -4,7 +4,7 @@ import { describe, expect, test } from "./testHarness.js";
 import { evaluateSourceFiles } from "../src/index.js";
 import type { EvaluationResult } from "../src/index.js";
 
-const corpusRoot = join(process.cwd(), "test", "go-toolchain", "test");
+const corpusRoot = join(process.cwd(), "_test", "go-toolchain", "test");
 
 describe("Go toolchain corpus smoke tests", () => {
   test("executes selected Go distribution // run fixtures", async () => {
