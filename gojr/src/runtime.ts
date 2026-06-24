@@ -167,6 +167,7 @@ export interface EvaluationOptions {
   stdout?: (text: string) => void;
   maxLoopIterations?: number;
   randomSeed?: number | string | bigint;
+  testVerbose?: boolean;
 }
 
 export interface EvaluationResult {
@@ -383,6 +384,10 @@ export class EvaluationContext {
 
   public scheduler(): AsyncGoScheduler {
     return this.shared.scheduler;
+  }
+
+  public testingVerbose(): boolean {
+    return this.options.testVerbose ?? false;
   }
 
   public fork(currentScope: Scope = this.shared.rootScope): EvaluationContext {
@@ -1613,6 +1618,7 @@ export async function testSource(source: string, options: EvaluationOptions = {}
 }
 
 export async function testSourceFiles(files: SourceFile[], options: EvaluationOptions = {}): Promise<EvaluationResult> {
+  const testOptions: EvaluationOptions = { testVerbose: true, ...options };
   const parsed = frontSourceFilesToAst(files);
   const ast = parsed.ast;
   if (parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
@@ -1629,7 +1635,7 @@ export async function testSourceFiles(files: SourceFile[], options: EvaluationOp
     };
   }
 
-  const checked = checkGoJuniorSourceFiles(files, typeCheckConfig(options));
+  const checked = checkGoJuniorSourceFiles(files, typeCheckConfig(testOptions));
   if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     return {
       diagnostics: checked.diagnostics,
@@ -1638,7 +1644,7 @@ export async function testSourceFiles(files: SourceFile[], options: EvaluationOp
     };
   }
 
-  return testProgram(ast, checked.diagnostics, options);
+  return testProgram(ast, checked.diagnostics, testOptions);
 }
 
 function sourceFileFromSource(source: string, options: EvaluationOptions = {}): SourceFile {
@@ -1772,7 +1778,7 @@ async function testProgram(ast: ProgramAst, baseDiagnostics: Diagnostic[], optio
 
       let failed = false;
       for (const declaration of tests) {
-        const testFailed = await runOneTest(declaration, context, diagnostics);
+        const testFailed = await runOneTest(declaration, context, diagnostics, options.testVerbose ?? false);
         failed ||= testFailed;
       }
       context.write(failed ? "FAIL\n" : "PASS\n");
@@ -1796,8 +1802,8 @@ function isTestFunctionDecl(declaration: FunctionDecl): boolean {
   return !declaration.receiver && /^Test($|[^a-z])/.test(declaration.name);
 }
 
-async function runOneTest(declaration: FunctionDecl, context: EvaluationContext, diagnostics: Diagnostic[]): Promise<boolean> {
-  context.write(`=== RUN   ${declaration.name}\n`);
+async function runOneTest(declaration: FunctionDecl, context: EvaluationContext, diagnostics: Diagnostic[], verbose: boolean): Promise<boolean> {
+  if (verbose) context.write(`=== RUN   ${declaration.name}\n`);
   const signatureError = testSignatureError(declaration);
   if (signatureError) {
     context.write(`    ${signatureError}\n`);
@@ -1823,12 +1829,12 @@ async function runOneTest(declaration: FunctionDecl, context: EvaluationContext,
     }
   }
 
-  if (testingT) emitTestingLogs(context, testingT.state);
+  const state = testingT?.state;
+  if (testingT && (verbose || runtimeFailure || state?.failed || state?.skipped)) emitTestingLogs(context, testingT.state);
   if (runtimeFailure && !testingT) {
     context.write(indentTestingLog(runtimeFailure));
   }
 
-  const state = testingT?.state;
   if (runtimeFailure || state?.failed) {
     context.write(`--- FAIL: ${declaration.name}\n`);
     diagnostics.push(testDiagnostic(declaration, runtimeFailure ? `${declaration.name}: ${runtimeFailure}` : `${declaration.name} failed`));
@@ -1838,7 +1844,7 @@ async function runOneTest(declaration: FunctionDecl, context: EvaluationContext,
     context.write(`--- SKIP: ${declaration.name}\n`);
     return false;
   }
-  context.write(`--- PASS: ${declaration.name}\n`);
+  if (verbose) context.write(`--- PASS: ${declaration.name}\n`);
   return false;
 }
 
@@ -2943,7 +2949,7 @@ function availablePackages(context: EvaluationContext): Record<string, RuntimeOb
     "runtime/pprof": runtimePprofPackage(),
     strconv: strconvPackage(),
     "syscall/js": syscallJSPackage(),
-    testing: testingPackage(),
+    testing: testingPackage(context),
     unsafe: unsafePackage(),
     ...context.packages()
   };
@@ -3180,10 +3186,10 @@ function runtimeFrameValue(): RuntimeStruct {
   ]);
 }
 
-function testingPackage(): RuntimeObject {
+function testingPackage(context: EvaluationContext): RuntimeObject {
   return {
     Short: hostCallable("testing.Short", () => false),
-    Verbose: hostCallable("testing.Verbose", () => false)
+    Verbose: hostCallable("testing.Verbose", () => context.testingVerbose())
   };
 }
 

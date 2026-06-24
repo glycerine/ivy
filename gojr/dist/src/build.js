@@ -1,4 +1,5 @@
 import { REPL_FILENAME } from "./diagnostics.js";
+import { blake3HashString } from "./blake3.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
 import { frontFilesToProgramAst } from "./frontToAst.js";
 import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
@@ -961,14 +962,7 @@ function hashSourceFiles(files) {
         .join("\0"));
 }
 function stableHash(text) {
-    let hash = 0xcbf29ce484222325n;
-    const prime = 0x100000001b3n;
-    const mask = 0xffffffffffffffffn;
-    for (let index = 0; index < text.length; index++) {
-        hash ^= BigInt(text.charCodeAt(index));
-        hash = (hash * prime) & mask;
-    }
-    return hash.toString(16).padStart(16, "0");
+    return blake3HashString(text);
 }
 function unquoteStringLiteral(value) {
     if (value.length < 2)

@@ -1,3 +1,5 @@
+import { blake3RawBytes } from "./blake3.js";
+const seedEncoder = new TextEncoder();
 export class DeterministicPrng {
     state;
     constructor(seed) {
@@ -17,10 +19,10 @@ export function normalizeRandomSeed(seed) {
         return seed & 0xffffffffffffffffn;
     if (typeof seed === "number")
         return BigInt(Math.trunc(seed)) & 0xffffffffffffffffn;
-    let hash = 0xcbf29ce484222325n;
-    for (let index = 0; index < seed.length; index += 1) {
-        hash ^= BigInt(seed.charCodeAt(index));
-        hash = (hash * 0x100000001b3n) & 0xffffffffffffffffn;
+    const digest = blake3RawBytes(seedEncoder.encode(seed), 8);
+    let value = 0n;
+    for (let index = 0; index < digest.length; index += 1) {
+        value |= BigInt(digest[index]) << BigInt(index * 8);
     }
-    return hash;
+    return value;
 }

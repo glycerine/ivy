@@ -97,6 +97,7 @@ type evalWithPackagesRequest struct {
 	PackageCacheParent string               `json:"packageCacheParent,omitempty"`
 	Progress           bool                 `json:"progress,omitempty"`
 	Argv               []string             `json:"argv,omitempty"`
+	TestVerbose        bool                 `json:"testVerbose,omitempty"`
 }
 
 type runtimePackageSpec struct {
@@ -214,6 +215,15 @@ type runSourceTarget struct {
 	Package     bool
 	ImportPath  string
 	PackageName string
+}
+
+type testPackageTarget struct {
+	Dir               string
+	ImportPath        string
+	PackageName       string
+	LibraryFiles      []sourceFile
+	InternalTestFiles []sourceFile
+	ExternalTestFiles []sourceFile
 }
 
 type packageSources map[string][]sourceFile
@@ -544,6 +554,7 @@ func runTest(rt *nodeRuntime, args []string) (bool, error) {
 	seed := flags.String("seed", "", "deterministic scheduler/random seed; must appear before Node starts")
 	randomSeed := flags.String("random-seed", "", "deterministic scheduler/random seed; alias for --seed")
 	jsonMode := flags.Bool("json", false, "print a machine-readable JSON result")
+	verbose := flags.Bool("v", false, "verbose test output")
 	var packageFlags packageFlag
 	flags.Var(&packageFlags, "pkg", "Go-junior source package dependency, import/path=DIR; may be repeated")
 	var sourceRootFlags packageFlag
@@ -554,10 +565,10 @@ func runTest(rt *nodeRuntime, args []string) (bool, error) {
 	_ = seed
 	_ = randomSeed
 	if flags.NArg() != 1 {
-		return false, fmt.Errorf("usage: gojr test [--pkg import=DIR] [--srcroot DIR] [--seed SEED] PATH")
+		return false, fmt.Errorf("usage: gojr test [-v] [--json] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] PATH")
 	}
 	target := flags.Arg(0)
-	files, err := readTestTarget(target)
+	targets, err := readGoTestTargets(target)
 	if err != nil {
 		return false, err
 	}
@@ -565,22 +576,30 @@ func runTest(rt *nodeRuntime, args []string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	sourceRoots := buildSourceRoots(target, "", sourceRootFlags)
-	var result evalResult
-	if len(packages) > 0 || len(sourceRoots) > 0 {
-		result, err = rt.TestFilesWithPackages(evalWithPackagesRequest{
-			Files:       files,
-			Packages:    packages,
-			SourceRoots: sourceRoots,
-		})
-	} else {
-		result, err = rt.TestFiles(files)
+
+	results := make([]evalResult, 0, len(targets)*2)
+	ok := true
+	for _, testTarget := range targets {
+		result, err := runOneGoTestTarget(rt, testTarget, packages, sourceRootFlags, *verbose)
+		if err != nil {
+			return false, err
+		}
+		results = append(results, result)
+		ok = ok && result.OK
 	}
-	if err != nil {
-		return false, err
+
+	if *jsonMode {
+		if len(results) == 1 {
+			printJSON(results[0])
+		} else {
+			printJSON(results)
+		}
+		return ok, nil
 	}
-	printTestResult(result, *jsonMode)
-	return result.OK, nil
+	for _, result := range results {
+		printTestResult(result, false)
+	}
+	return ok, nil
 }
 
 func runBuild(rt *nodeRuntime, args []string) (bool, error) {

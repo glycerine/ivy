@@ -65,6 +65,7 @@ export interface NodeSourcePackageRequest {
   argv?: string[];
   sheetJSON?: string;
   sheetsJSON?: string;
+  testVerbose?: boolean;
 }
 
 export type NodeEvaluationWithPackagesResult = EvaluationResult & {
@@ -389,8 +390,9 @@ export async function evaluateSourceFilesWithPackagesOnNode(request: NodeSourceP
 }
 
 export async function testSourceFilesWithPackagesOnNode(request: NodeSourcePackageRequest): Promise<NodeEvaluationWithPackagesResult> {
+  const options = evaluationOptionsFromNodeRequest(request);
   const rootFiles = rootSourceFilesFromRequest(request);
-  const loaded = await loadSourcePackagesForRootFilesOnNode(rootFiles, request.packages ?? [], {}, request.sourceRoots ?? []);
+  const loaded = await loadSourcePackagesForRootFilesOnNode(rootFiles, request.packages ?? [], options, request.sourceRoots ?? []);
   if (hasErrorDiagnostics(loaded.diagnostics)) {
     return {
       diagnostics: loaded.diagnostics,
@@ -399,6 +401,7 @@ export async function testSourceFilesWithPackagesOnNode(request: NodeSourcePacka
     };
   }
   const result = await testSourceFiles(request.files ?? [], {
+    ...options,
     packages: loaded.packages,
     packageInfos: loaded.packageInfos
   });
@@ -704,6 +707,7 @@ function evaluationOptionsFromNodeRequest(request: NodeSourcePackageRequest): Ev
   if (request.sheetJSON) options.sheet = parseSheetJson(request.sheetJSON);
   if (request.sheetsJSON) options.sheets = parseSheetsJson(request.sheetsJSON);
   if (request.argv) options.argv = request.argv;
+  if (typeof request.testVerbose === "boolean") options.testVerbose = request.testVerbose;
   return options;
 }
 

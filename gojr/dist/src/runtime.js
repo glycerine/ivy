@@ -1,4 +1,5 @@
 import { REPL_FILENAME } from "./diagnostics.js";
+import { blake3RawBytes } from "./blake3.js";
 import { checkGoJuniorSourceFiles, GOJR_SYNTHETIC_CHECK_PREFIX, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import { Const as GoTypesConst, ensureUniverseInitialized, NewPackage, NewPkgName, NoPos, RelativeTo as GoTypesRelativeTo, TypeString as GoTypesTypeString } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
@@ -6,6 +7,7 @@ import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
 import { DeterministicPrng } from "./prng.js";
 import { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
 import { cellDependency, rangeDependency } from "./spreadsheet.js";
+const runtimeHashEncoder = new TextEncoder();
 export class RuntimeGoString {
     bytes;
     constructor(bytes) {
@@ -2218,12 +2220,11 @@ function internalAbiSizeForType(typeText, context) {
     return 8n;
 }
 function internalAbiTypeHash(typeText) {
-    let hash = 2166136261;
-    for (let index = 0; index < typeText.length; index += 1) {
-        hash ^= typeText.charCodeAt(index);
-        hash = Math.imul(hash, 16777619) >>> 0;
-    }
-    return hash;
+    const digest = blake3RawBytes(runtimeHashEncoder.encode(typeText), 4);
+    return (digest[0] |
+        (digest[1] << 8) |
+        (digest[2] << 16) |
+        (digest[3] << 24)) >>> 0;
 }
 function bodylessZeroResultFunction(declaration, importPath) {
     return {

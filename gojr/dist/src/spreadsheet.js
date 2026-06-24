@@ -1,3 +1,4 @@
+import { blake3HashString } from "./blake3.js";
 const DEFAULT_SHEET = "sheet";
 const DEFAULT_DEPENDENCY_STABILIZATION_LIMIT = 20;
 const DEFAULT_MAX_ITERATIONS = 100;
@@ -779,12 +780,5 @@ function stableStringify(value) {
     return String(value);
 }
 function stableSpreadsheetHash(text) {
-    let hash = 0xcbf29ce484222325n;
-    const prime = 0x100000001b3n;
-    const mask = 0xffffffffffffffffn;
-    for (let index = 0; index < text.length; index++) {
-        hash ^= BigInt(text.charCodeAt(index));
-        hash = (hash * prime) & mask;
-    }
-    return hash.toString(16).padStart(16, "0");
+    return blake3HashString(text);
 }
