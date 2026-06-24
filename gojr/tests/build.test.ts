@@ -98,7 +98,14 @@ func hidden() {}
     expect(store.writes.has("/tmp/gopath/pkg/gojr_js/fmt.a")).toBe(true);
     expect(store.writes.has("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a")).toBe(true);
     expect((store.writes.get("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a") ?? "").slice(8, 24).trim()).toBe("__.PKGDEF");
-    expect(parseGoJuniorPackageArchive(store.writes.get("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a") ?? "")?.members[0]?.name).toBe("__.PKGDEF");
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a") ?? "");
+    expect(archive?.members.map((member) => member.name)).toEqual(["__.PKGDEF", "_gojr.js"]);
+    const pkgdefMember = archive?.members.find((member) => member.name === "__.PKGDEF")?.data ?? "";
+    const javascriptMember = archive?.members.find((member) => member.name === "_gojr.js")?.data ?? "";
+    expect(javascriptMember).not.toBe(pkgdefMember);
+    expect(javascriptMember).toContain("export const gojrPackageSources =");
+    expect(javascriptMember).toContain("export async function instantiateGoJrPackage");
+    expect(javascriptMember).toContain("func Add(a, b int) int");
   });
 
   test("uses an exact artifact root override directly", () => {
@@ -238,8 +245,11 @@ func hidden() {}
     expect(result.ok).toBe(true);
     expect(result.built).toEqual(["/tmp/gojr-inspect/example.com/inspect.a"]);
     expect(result.source).toContain("export const gojrPackageArtifact =");
+    expect(result.source).toContain("export const gojrPackageSources =");
+    expect(result.source).toContain("export async function instantiateGoJrPackage");
     expect(result.source).toContain("\"importPath\": \"example.com/inspect\"");
     expect(result.source).toContain("\"name\": \"Answer\"");
+    expect(result.source).toContain("func Answer() int { return 42 }");
   });
 
   test("skips fresh package artifacts with the same cache key", () => {

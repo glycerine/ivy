@@ -126,6 +126,7 @@ export type {
   GoJuniorPackageArchive,
   GoJuniorPackageExportData,
   GoJuniorPackageExportIndexEntry,
+  GoJuniorPackageSourcePayload,
   BuildPackageReport,
   BuildStandardLibraryPackageRequest,
   BuildSourcePackageProvider,
