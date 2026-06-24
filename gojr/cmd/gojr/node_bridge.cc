@@ -153,15 +153,35 @@ function __gojrExportList(list) {
 
 function __gojrTransformModule(source, filename) {
   const exportedNames = [];
+  const earlyFunctionExports = [];
+  source.replace(/^export\s+(async\s+)?function(\*)?\s+([A-Za-z_$][\w$]*)/gm,
+    (_match, _asyncPrefix, _generatorMarker, name) => {
+      earlyFunctionExports.push(name);
+      return _match;
+    });
   source = source.replace(/^export\s+\{\s*\};\s*$/gm, "");
   source = source.replace(/^import\s+\{([^}]+)\}\s+from\s+["']([^"']+)["'];\s*$/gm,
     (_match, imports, specifier) => `const { ${__gojrImportListToDestructure(imports)} } = __gojrRequire(${JSON.stringify(specifier)}, __filename);`);
+  source = source.replace(/^import\s+\*\s+as\s+([A-Za-z_$][\w$]*)\s+from\s+["']([^"']+)["'];\s*$/gm,
+    (_match, name, specifier) => `const ${name} = __gojrRequire(${JSON.stringify(specifier)}, __filename);`);
+  source = source.replace(/^import\s+["']([^"']+)["'];\s*$/gm,
+    (_match, specifier) => `__gojrRequire(${JSON.stringify(specifier)}, __filename);`);
   source = source.replace(/^export\s+\{([^}]+)\}\s+from\s+["']([^"']+)["'];\s*$/gm,
     (_match, exportsList, specifier) => `__gojrReExport(${JSON.stringify(specifier)}, ${JSON.stringify(__gojrExportList(exportsList))}, exports, __filename);`);
+  source = source.replace(/^export\s+\*\s+as\s+([A-Za-z_$][\w$]*)\s+from\s+["']([^"']+)["'];\s*$/gm,
+    (_match, name, specifier) => `exports[${JSON.stringify(name)}] = __gojrRequire(${JSON.stringify(specifier)}, __filename);`);
+  source = source.replace(/^export\s+\*\s+from\s+["']([^"']+)["'];\s*$/gm,
+    (_match, specifier) => `__gojrExportAll(${JSON.stringify(specifier)}, exports, __filename);`);
+  source = source.replace(/^export\s+\{([^}]*)\};\s*$/gm,
+    (_match, exportsList) => {
+      const names = __gojrExportList(exportsList);
+      if (names.length === 0) return "";
+      return `globalThis.Object.assign(exports, { ${names.map(([sourceName, exportName]) => `${JSON.stringify(exportName)}: ${sourceName}`).join(", ")} });`;
+    });
   source = source.replace(/^export\s+(async\s+)?function(\*)?\s+([A-Za-z_$][\w$]*)/gm,
     (_match, asyncPrefix, generatorMarker, name) => {
       exportedNames.push(name);
-      return `${asyncPrefix || ""}function${generatorMarker || ""} ${name}`;
+      return `exports[${JSON.stringify(name)}] = ${name};\n${asyncPrefix || ""}function${generatorMarker || ""} ${name}`;
     });
   source = source.replace(/^export\s+(function|class)\s+([A-Za-z_$][\w$]*)/gm,
     (_match, kind, name) => {
@@ -176,12 +196,23 @@ function __gojrTransformModule(source, filename) {
   if (exportedNames.length > 0) {
     source += `\nglobalThis.Object.assign(exports, { ${[...new Set(exportedNames)].join(", ")} });\n`;
   }
+  if (earlyFunctionExports.length > 0) {
+    source = `${[...new Set(earlyFunctionExports)].map((name) => `exports[${JSON.stringify(name)}] = ${name};`).join("\n")}\n${source}`;
+  }
   return source + `\n//# sourceURL=embedded-gojr:${filename}\n`;
 }
 
 function __gojrReExport(specifier, names, target, parent) {
   const module = __gojrRequire(specifier, parent);
   for (const [sourceName, exportName] of names) target[exportName] = module[sourceName];
+}
+
+function __gojrExportAll(specifier, target, parent) {
+  const module = __gojrRequire(specifier, parent);
+  for (const key of globalThis.Object.keys(module)) {
+    if (key === "default" || globalThis.Object.prototype.hasOwnProperty.call(target, key)) continue;
+    target[key] = module[key];
+  }
 }
 
 function __gojrRequire(specifier, parent = "/src/index.js") {
@@ -194,8 +225,8 @@ function __gojrRequire(specifier, parent = "/src/index.js") {
   const module = { exports: {} };
   __gojrEmbeddedCache.set(filename, module);
   const transformed = __gojrTransformModule(source, filename);
-  const fn = new Function("exports", "module", "__gojrRequire", "__gojrReExport", "__filename", "__dirname", transformed);
-  fn(module.exports, module, __gojrRequire, __gojrReExport, filename, __gojrDirname(filename));
+  const fn = new Function("exports", "module", "__gojrRequire", "__gojrReExport", "__gojrExportAll", "__filename", "__dirname", transformed);
+  fn(module.exports, module, __gojrRequire, __gojrReExport, __gojrExportAll, filename, __gojrDirname(filename));
   return module.exports;
 }
 
@@ -595,84 +626,20 @@ globalThis.__gojrSetSheet = function(json) {
 };
 
 function gojrDefaultPackageCacheParent() {
-  const os = require("node:os");
-  const path = require("node:path");
-  return path.join(os.homedir(), "go", "pkg");
+  return gojrModule.defaultPackageCacheParent();
 }
 
 function gojrNodeArtifactStore() {
-  const fs = require("node:fs");
-  const path = require("node:path");
-  return {
-    read(artifactPath) {
-      try {
-        return fs.readFileSync(artifactPath, "utf8");
-      } catch (error) {
-        if (error && error.code === "ENOENT") return undefined;
-        throw error;
-      }
-    },
-    writeAtomic(artifactPath, source) {
-      const dir = path.dirname(artifactPath);
-      fs.mkdirSync(dir, { recursive: true });
-      const tmp = path.join(dir, `.${path.basename(artifactPath)}.${process.pid}.tmp`);
-      fs.writeFileSync(tmp, source, "utf8");
-      fs.renameSync(tmp, artifactPath);
-    }
-  };
+  return gojrModule.createNodeArtifactStore();
 }
 
 function gojrNodeSourcePackageProvider(sourceRoots) {
-  const fs = require("node:fs");
-  const path = require("node:path");
-  const roots = [...new Set((sourceRoots || [])
-    .map((root) => String(root || "").trim())
-    .filter((root) => root !== "")
-    .map((root) => path.resolve(root)))];
-  if (roots.length === 0) return undefined;
-  return {
-    load(importPath) {
-      const parts = String(importPath || "").split("/").filter(Boolean);
-      if (parts.length === 0 || parts.some((part) => part === "." || part === ".." || part.includes(path.sep))) {
-        throw new Error(`invalid import path: ${importPath}`);
-      }
-      for (const root of roots) {
-        const dir = path.resolve(root, ...parts);
-        const relative = path.relative(root, dir);
-        if (relative === "" || relative.startsWith("..") || path.isAbsolute(relative)) continue;
-        let stat;
-        try {
-          stat = fs.statSync(dir);
-        } catch (error) {
-          if (error && error.code === "ENOENT") continue;
-          throw error;
-        }
-        if (!stat.isDirectory()) throw new Error(`${dir} is not a directory`);
-        const names = fs.readdirSync(dir)
-          .filter((name) => !name.startsWith(".") && name.endsWith(".go") && !name.endsWith("_test.go"))
-          .sort();
-        if (names.length === 0) throw new Error(`${dir} contains no non-test .go files`);
-        return names.map((name) => {
-          const filename = path.join(dir, name);
-          return {
-            filename,
-            source: fs.readFileSync(filename, "utf8")
-          };
-        });
-      }
-      return undefined;
-    }
-  };
+  return gojrModule.createNodeSourcePackageProvider(sourceRoots || []);
 }
 
 globalThis.__gojrBuild = function(json) {
   const request = JSON.parse(json);
-  if (!request.artifactRoot && !request.packageCacheParent) {
-    request.packageCacheParent = gojrDefaultPackageCacheParent();
-  }
-  const provider = gojrNodeSourcePackageProvider(request.sourceRoots || []);
-  if (provider) request.sourcePackageProvider = provider;
-  const result = gojrModule.buildPackages(request, gojrNodeArtifactStore());
+  const result = gojrModule.buildPackagesOnNode(request);
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
@@ -687,12 +654,7 @@ globalThis.__gojrBuild = function(json) {
 
 globalThis.__gojrInspectJS = function(json) {
   const request = JSON.parse(json);
-  if (!request.artifactRoot && !request.packageCacheParent) {
-    request.packageCacheParent = gojrDefaultPackageCacheParent();
-  }
-  const provider = gojrNodeSourcePackageProvider(request.sourceRoots || []);
-  if (provider) request.sourcePackageProvider = provider;
-  const result = gojrModule.inspectPackageJavaScript(request);
+  const result = gojrModule.inspectPackageJavaScriptOnNode(request);
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
@@ -704,6 +666,11 @@ globalThis.__gojrInspectJS = function(json) {
     skipped: result.skipped || [],
     source: result.source || ""
   });
+};
+
+globalThis.__gojrCache = function(json) {
+  const result = gojrModule.packageCacheOnNode(JSON.parse(json));
+  return JSON.stringify(result);
 };
 
 globalThis.__gojrRunFixture = async function(json) {
@@ -930,6 +897,10 @@ extern "C" char* gojr_node_build(gojr_node_runtime* runtime, const char* json, c
 
 extern "C" char* gojr_node_inspect_js(gojr_node_runtime* runtime, const char* json, char** error_out) {
   return call_global_string_function(runtime, "__gojrInspectJS", json, error_out);
+}
+
+extern "C" char* gojr_node_cache(gojr_node_runtime* runtime, const char* json, char** error_out) {
+  return call_global_string_function(runtime, "__gojrCache", json, error_out);
 }
 
 extern "C" char* gojr_node_run_fixture(gojr_node_runtime* runtime, const char* json, char** error_out) {

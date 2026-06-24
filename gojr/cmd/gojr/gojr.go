@@ -69,6 +69,13 @@ type buildRequest struct {
 	PackageCacheParent string         `json:"packageCacheParent,omitempty"`
 }
 
+type cacheRequest struct {
+	Action             string `json:"action"`
+	PackageCacheParent string `json:"packageCacheParent,omitempty"`
+	ArtifactRoot       string `json:"artifactRoot,omitempty"`
+	Yes                bool   `json:"yes,omitempty"`
+}
+
 type compileRequest struct {
 	Files       []sourceFile         `json:"files"`
 	SheetJSON   string               `json:"sheetJSON,omitempty"`
@@ -140,21 +147,6 @@ type cacheEntry struct {
 	Dependencies        []string      `json:"dependencies,omitempty"`
 	DependencyCacheKeys []string      `json:"dependencyCacheKeys,omitempty"`
 	Exports             []buildExport `json:"exports,omitempty"`
-}
-
-type cacheArtifactEnvelope struct {
-	LayoutVersion       string        `json:"layoutVersion"`
-	CompilerVersion     string        `json:"compilerVersion"`
-	Backend             string        `json:"backend"`
-	HostSpecVersion     string        `json:"hostSpecVersion"`
-	CapabilityPolicy    string        `json:"capabilityPolicy"`
-	ImportPath          string        `json:"importPath"`
-	PackageName         string        `json:"packageName"`
-	SourceHash          string        `json:"sourceHash"`
-	CacheKey            string        `json:"cacheKey"`
-	Dependencies        []string      `json:"dependencies"`
-	DependencyCacheKeys []string      `json:"dependencyCacheKeys"`
-	Exports             []buildExport `json:"exports"`
 }
 
 type fixtureResult struct {
@@ -229,15 +221,6 @@ func main() {
 		case "help", "-h", "--help":
 			printTopLevelUsage()
 			return
-		case "cache":
-			ok, err := runCache(os.Args[2:])
-			if err != nil {
-				fatal(err)
-			}
-			if !ok {
-				os.Exit(1)
-			}
-			return
 		}
 		if seed, ok, err := seedFromArgs(os.Args[2:]); err != nil {
 			fatal(err)
@@ -308,6 +291,15 @@ func main() {
 			return
 		case "inspect-js":
 			ok, err := runInspectJS(rt, os.Args[2:])
+			if err != nil {
+				fatal(err)
+			}
+			if !ok {
+				os.Exit(1)
+			}
+			return
+		case "cache":
+			ok, err := runCache(rt, os.Args[2:])
 			if err != nil {
 				fatal(err)
 			}
@@ -622,7 +614,7 @@ func runInspectJS(rt *nodeRuntime, args []string) (bool, error) {
 	return result.OK, nil
 }
 
-func runCache(args []string) (bool, error) {
+func runCache(rt *nodeRuntime, args []string) (bool, error) {
 	if len(args) == 0 {
 		return false, fmt.Errorf("usage: gojr cache path|list|clear [--json] [-pkgdir DIR|-artifact-root DIR] [--yes]")
 	}
@@ -639,32 +631,21 @@ func runCache(args []string) (bool, error) {
 	if flags.NArg() != 0 {
 		return false, fmt.Errorf("usage: gojr cache %s [--json] [-pkgdir DIR|-artifact-root DIR] [--yes]", action)
 	}
-	root, err := resolveCacheRoot(strings.TrimSpace(*packageCacheParent), strings.TrimSpace(*artifactRoot))
+
+	if action != "path" && action != "list" && action != "clear" {
+		return false, fmt.Errorf("unknown cache command %q", action)
+	}
+	result, err := rt.Cache(cacheRequest{
+		Action:             action,
+		PackageCacheParent: strings.TrimSpace(*packageCacheParent),
+		ArtifactRoot:       strings.TrimSpace(*artifactRoot),
+		Yes:                *yes,
+	})
 	if err != nil {
 		return false, err
 	}
-
-	var result cacheResult
-	switch action {
-	case "path":
-		result = cacheResult{OK: true, Diagnostics: []string{}, Action: action, Root: root}
-	case "list":
-		entries, err := listCacheEntries(root)
-		if err != nil {
-			return false, err
-		}
-		result = cacheResult{OK: true, Diagnostics: []string{}, Action: action, Root: root, Entries: entries}
-	case "clear":
-		if !*yes {
-			return false, fmt.Errorf("gojr cache clear requires --yes")
-		}
-		cleared, err := clearCacheRoot(root)
-		if err != nil {
-			return false, err
-		}
-		result = cacheResult{OK: true, Diagnostics: []string{}, Action: action, Root: root, Cleared: cleared}
-	default:
-		return false, fmt.Errorf("unknown cache command %q", action)
+	if !result.OK && len(result.Diagnostics) > 0 {
+		return false, errors.New(strings.Join(result.Diagnostics, "\n"))
 	}
 	printCacheResult(result, *jsonMode)
 	return result.OK, nil
@@ -1217,133 +1198,6 @@ func deriveBuildImportPath(target string, packageName string) string {
 	}
 	base := filepath.Base(packagePath)
 	return strings.TrimSuffix(base, ".go")
-}
-
-func resolveCacheRoot(packageCacheParent string, artifactRoot string) (string, error) {
-	if packageCacheParent != "" && artifactRoot != "" {
-		return "", fmt.Errorf("-pkgdir and -artifact-root are mutually exclusive")
-	}
-	if artifactRoot != "" {
-		return filepath.Clean(expandHome(artifactRoot)), nil
-	}
-	if packageCacheParent != "" {
-		return filepath.Join(filepath.Clean(expandHome(packageCacheParent)), "gojr_js"), nil
-	}
-	home, err := os.UserHomeDir()
-	if err != nil || home == "" {
-		return "", fmt.Errorf("could not determine home directory for default cache root")
-	}
-	return filepath.Join(home, "go", "pkg", "gojr_js"), nil
-}
-
-func listCacheEntries(root string) ([]cacheEntry, error) {
-	info, err := os.Stat(root)
-	if errors.Is(err, os.ErrNotExist) {
-		return []cacheEntry{}, nil
-	}
-	if err != nil {
-		return nil, err
-	}
-	if !info.IsDir() {
-		return nil, fmt.Errorf("%s is not a directory", root)
-	}
-
-	var entries []cacheEntry
-	if err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".js") {
-			return nil
-		}
-		info, err := entry.Info()
-		if err != nil {
-			return err
-		}
-		cacheEntry := cacheEntry{
-			Path:       filepath.Clean(path),
-			ImportPath: cacheImportPath(root, path),
-			Size:       info.Size(),
-		}
-		if metadata, err := readCacheArtifactEnvelope(path); err == nil && metadata != nil {
-			applyCacheArtifactMetadata(&cacheEntry, *metadata)
-		}
-		entries = append(entries, cacheEntry)
-		return nil
-	}); err != nil {
-		return nil, err
-	}
-	sort.Slice(entries, func(i, j int) bool {
-		return entries[i].Path < entries[j].Path
-	})
-	return entries, nil
-}
-
-func readCacheArtifactEnvelope(path string) (*cacheArtifactEnvelope, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	const prefix = "export const gojrPackageArtifact = "
-	source := string(data)
-	start := strings.Index(source, prefix)
-	if start < 0 {
-		return nil, nil
-	}
-	jsonText := strings.TrimSpace(source[start+len(prefix):])
-	jsonText = strings.TrimSuffix(jsonText, ";")
-	jsonText = strings.TrimSpace(jsonText)
-	if jsonText == "" {
-		return nil, nil
-	}
-	var envelope cacheArtifactEnvelope
-	if err := json.Unmarshal([]byte(jsonText), &envelope); err != nil {
-		return nil, err
-	}
-	return &envelope, nil
-}
-
-func applyCacheArtifactMetadata(entry *cacheEntry, metadata cacheArtifactEnvelope) {
-	if metadata.ImportPath != "" {
-		entry.ImportPath = metadata.ImportPath
-	}
-	entry.PackageName = metadata.PackageName
-	entry.CacheKey = metadata.CacheKey
-	entry.SourceHash = metadata.SourceHash
-	entry.LayoutVersion = metadata.LayoutVersion
-	entry.CompilerVersion = metadata.CompilerVersion
-	entry.Backend = metadata.Backend
-	entry.HostSpecVersion = metadata.HostSpecVersion
-	entry.CapabilityPolicy = metadata.CapabilityPolicy
-	entry.Dependencies = metadata.Dependencies
-	entry.DependencyCacheKeys = metadata.DependencyCacheKeys
-	entry.Exports = metadata.Exports
-}
-
-func clearCacheRoot(root string) ([]string, error) {
-	entries, err := listCacheEntries(root)
-	if err != nil {
-		return nil, err
-	}
-	if len(entries) == 0 {
-		return []string{}, nil
-	}
-	if err := os.RemoveAll(root); err != nil {
-		return nil, err
-	}
-	cleared := make([]string, 0, len(entries))
-	for _, entry := range entries {
-		cleared = append(cleared, entry.Path)
-	}
-	return cleared, nil
-}
-
-func cacheImportPath(root string, path string) string {
-	rel, err := filepath.Rel(root, path)
-	if err != nil {
-		return strings.TrimSuffix(filepath.ToSlash(filepath.Base(path)), ".js")
-	}
-	return strings.TrimSuffix(filepath.ToSlash(rel), ".js")
 }
 
 func expandHome(path string) string {
@@ -1923,6 +1777,32 @@ func (rt *nodeRuntime) InspectJS(request buildRequest) (inspectJSResult, error) 
 	var result inspectJSResult
 	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
 		return inspectJSResult{}, err
+	}
+	return result, nil
+}
+
+func (rt *nodeRuntime) Cache(request cacheRequest) (cacheResult, error) {
+	data, err := json.Marshal(request)
+	if err != nil {
+		return cacheResult{}, err
+	}
+	cInput := C.CString(string(data))
+	defer C.free(unsafe.Pointer(cInput))
+
+	var cErr *C.char
+	cResult := C.gojr_node_cache(rt.ptr, cInput, &cErr)
+	if cErr != nil {
+		defer C.gojr_string_free(cErr)
+		return cacheResult{}, errors.New(C.GoString(cErr))
+	}
+	if cResult == nil {
+		return cacheResult{}, errors.New("embedded Node cache returned nil")
+	}
+	defer C.gojr_string_free(cResult)
+
+	var result cacheResult
+	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
+		return cacheResult{}, err
 	}
 	return result, nil
 }

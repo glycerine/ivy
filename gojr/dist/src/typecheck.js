@@ -1,7 +1,7 @@
 import { REPL_FILENAME, diagnosticFilename } from "./diagnostics.js";
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
-import { Config, Info, Int, NewChecker, NewFunc, NewPackage, NewPkgName, NewSignatureType, NewSlice, NewTuple, NewVar, NoPos, String as GoString, Typ, emptyInterface, init as initGoTypesUniverse } from "./go/types/index.js";
+import { Config, Info, Int, Bool, NewChecker, NewFunc, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTypeName, NewTuple, NewVar, NoPos, String as GoString, Typ, emptyInterface, init as initGoTypesUniverse, Unsafe } from "./go/types/index.js";
 export function checkGoJuniorSource(source, filename, config = {}) {
     const parsed = parseFrontSource(source, filename);
     const result = checkGoJuniorFiles(parsed.file ? [parsed.file] : [], parsed.statements, parsed.diagnostics, config);
@@ -165,6 +165,8 @@ function seedPackageScope(pkg, config) {
         pkg.Scope().Insert(NewPkgName(NoPos, pkg, "fmt", fmtPackage()));
     }
     for (const object of config.predeclaredPackageObjects ?? []) {
+        if (object.Pkg() !== pkg)
+            continue;
         if (pkg.Scope().Lookup(object.Name()) === null)
             pkg.Scope().Insert(object);
     }
@@ -172,6 +174,10 @@ function seedPackageScope(pkg, config) {
 function standardPackage(path) {
     if (path === "fmt")
         return fmtPackage();
+    if (path === "testing")
+        return testingPackage();
+    if (path === "unsafe")
+        return Unsafe;
     return undefined;
 }
 function fmtPackage() {
@@ -186,6 +192,43 @@ function fmtPackage() {
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Printf", printfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Sprintf", sprintfSig));
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Println", NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "args", argsType)), null, true)));
+    pkg.MarkComplete();
+    return pkg;
+}
+function testingPackage() {
+    const pkg = NewPackage("testing", "testing");
+    if (pkg.Scope().Lookup("T") !== null)
+        return pkg;
+    const boolType = Typ[Bool];
+    const stringType = Typ[GoString];
+    const argsType = NewSlice(emptyInterface);
+    const tName = NewTypeName(NoPos, pkg, "T", null);
+    const tType = NewNamed(tName, NewStruct([], null), null);
+    const tPtr = NewPointer(tType);
+    const recv = NewVar(NoPos, pkg, "t", tPtr);
+    pkg.Scope().Insert(tName);
+    const addMethod = (name, result, parameters = [], variadic = false) => {
+        const params = NewTuple(...parameters);
+        const results = result === null ? null : NewTuple(NewVar(NoPos, pkg, "", result));
+        tType.AddMethod(NewFunc(NoPos, pkg, name, NewSignatureType(recv, null, null, params, results, variadic)));
+    };
+    addMethod("Fail", null);
+    addMethod("FailNow", null);
+    addMethod("Failed", boolType);
+    addMethod("Fatal", null, [NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod("Fatalf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod("Error", null, [NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod("Errorf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod("Log", null, [NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod("Logf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod("Name", stringType);
+    addMethod("Helper", null);
+    addMethod("Skip", null, [NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod("Skipf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod("SkipNow", null);
+    addMethod("Skipped", boolType);
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Short", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", boolType)), false)));
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Verbose", NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "", boolType)), false)));
     pkg.MarkComplete();
     return pkg;
 }

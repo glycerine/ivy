@@ -13,7 +13,7 @@ import { NewScope, setScopeUniverse, type Scope } from "./scope.js";
 import { Package, NewPackage } from "./package.js";
 import { NoPos as nopos } from "./token.js";
 import { NewAlias } from "./alias.js";
-import { NewInterfaceType, emptyInterface, Interface, _TypeSet } from "./interface.js";
+import * as interfaceTypes from "./interface.js";
 import { allTermlist } from "./termlist.js";
 import { NewNamed } from "./named.js";
 import { NewTuple } from "./tuple.js";
@@ -109,7 +109,7 @@ export function defPredeclaredTypes(): void {
     const err = NewFunc(nopos, null, "Error", sig);
 
     // interface{ Error() string }
-    const ityp = new Interface(null);
+    const ityp = new interfaceTypes.Interface(null);
     ityp.methods = [err];
     ityp.complete = true;
 
@@ -121,16 +121,16 @@ export function defPredeclaredTypes(): void {
   // type any = interface{}
   {
     const obj = NewTypeName(nopos, null, "any", null);
-    NewAlias(obj, emptyInterface);
+    NewAlias(obj, interfaceTypes.emptyInterface);
     def(obj);
   }
 
   // type comparable interface{} // marked as comparable
   {
     const obj = NewTypeName(nopos, null, "comparable", null);
-    const iface = new Interface(null);
+    const iface = new interfaceTypes.Interface(null);
     iface.complete = true;
-    iface.tset = new _TypeSet([], allTermlist, true);
+    iface.tset = new interfaceTypes._TypeSet([], allTermlist, true);
     NewNamed(obj, iface, null);
     def(obj);
   }

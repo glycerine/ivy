@@ -221,43 +221,46 @@ func TestReadTestTargetTestFileIncludesSiblingPackageFiles(t *testing.T) {
 	}
 }
 
-func TestCacheRootListAndClear(t *testing.T) {
+func assertNodeRuntimeCacheRootListAndClear(t *testing.T, rt *nodeRuntime) {
+	t.Helper()
 	parent := t.TempDir()
-	root, err := resolveCacheRoot(parent, "")
+	pathResult, err := rt.Cache(cacheRequest{Action: "path", PackageCacheParent: parent})
 	if err != nil {
-		t.Fatalf("resolveCacheRoot(parent) error = %v", err)
+		t.Fatalf("Cache(path) error = %v", err)
 	}
+	root := pathResult.Root
 	if root != filepath.Join(parent, "gojr_js") {
-		t.Fatalf("resolveCacheRoot(parent) = %q, want gojr_js child", root)
+		t.Fatalf("Cache(path).Root = %q, want gojr_js child", root)
 	}
-	if _, err := resolveCacheRoot(parent, filepath.Join(parent, "exact")); err == nil {
-		t.Fatalf("resolveCacheRoot accepted both parent and artifact root")
+	if ok, err := runCache(rt, []string{"path", "-pkgdir", parent, "-artifact-root", filepath.Join(parent, "exact")}); err == nil || ok {
+		t.Fatalf("runCache(path with both roots) ok=%v err=%v, want error", ok, err)
 	}
 
 	if err := os.MkdirAll(filepath.Join(root, "example.com"), 0o700); err != nil {
 		t.Fatalf("MkdirAll(cache) error = %v", err)
 	}
-	writeTestFile(t, filepath.Join(root, "example.com", "demo.js"), "artifact")
+	writeTestFile(t, filepath.Join(root, "example.com", "demo.a"), "artifact")
 	writeTestFile(t, filepath.Join(root, "example.com", "ignored.txt"), "nope")
-	writeTestFile(t, filepath.Join(root, "top.js"), "top")
+	writeTestFile(t, filepath.Join(root, "top.a"), "top")
 
-	entries, err := listCacheEntries(root)
+	listResult, err := rt.Cache(cacheRequest{Action: "list", ArtifactRoot: root})
 	if err != nil {
-		t.Fatalf("listCacheEntries() error = %v", err)
+		t.Fatalf("Cache(list) error = %v", err)
 	}
+	entries := listResult.Entries
 	if len(entries) != 2 {
-		t.Fatalf("listCacheEntries() = %#v, want 2 js entries", entries)
+		t.Fatalf("Cache(list).Entries = %#v, want 2 archive entries", entries)
 	}
 	if entries[0].ImportPath != "example.com/demo" || entries[1].ImportPath != "top" {
 		t.Fatalf("cache import paths = %#v, want example.com/demo and top", entries)
 	}
-	if ok, err := runCache([]string{"list", "-artifact-root", root}); err != nil || !ok {
+	if ok, err := runCache(rt, []string{"list", "-artifact-root", root}); err != nil || !ok {
 		t.Fatalf("runCache(list) ok=%v err=%v, want success", ok, err)
 	}
-	if ok, err := runCache([]string{"clear", "-artifact-root", root}); err == nil || ok {
+	if ok, err := runCache(rt, []string{"clear", "-artifact-root", root}); err == nil || ok {
 		t.Fatalf("runCache(clear without --yes) ok=%v err=%v, want confirmation error", ok, err)
 	}
-	if ok, err := runCache([]string{"clear", "-artifact-root", root, "--yes"}); err != nil || !ok {
+	if ok, err := runCache(rt, []string{"clear", "-artifact-root", root, "--yes"}); err != nil || !ok {
 		t.Fatalf("runCache(clear) ok=%v err=%v, want success", ok, err)
 	}
 	if _, err := os.Stat(root); !os.IsNotExist(err) {
@@ -279,6 +282,7 @@ func TestNodeRuntimeUsesEnvironmentRandomSeed(t *testing.T) {
 
 	assertNodeRuntimeBuildSkipsFreshDiskArtifact(t, rt)
 	assertNodeRuntimeBuildsSourcePackageGraph(t, rt)
+	assertNodeRuntimeCacheRootListAndClear(t, rt)
 	assertNodeRuntimeEvaluatesSourcePackageGraphFromSourceRoot(t, rt)
 	assertNodeRuntimeRunsFixtureWithSourcePackageGraph(t, rt)
 	assertTopLevelCommandsUseNodeRuntime(t, rt)
@@ -458,7 +462,7 @@ func assertNodeRuntimeBuildSkipsFreshDiskArtifact(t *testing.T, rt *nodeRuntime)
 			Source:   "package cache\nfunc F() int { return 1 }\n",
 		}},
 	}
-	artifactPath := artifactRoot + "/example.com/cache.js"
+	artifactPath := artifactRoot + "/example.com/cache.a"
 
 	first, err := rt.Build(request)
 	if err != nil {
@@ -510,7 +514,7 @@ func assertNodeRuntimeBuildSkipsFreshDiskArtifact(t *testing.T, rt *nodeRuntime)
 	if !strings.Contains(inspect.Source, "gojrPackageArtifact") || !strings.Contains(inspect.Source, "example.com/inspect") {
 		t.Fatalf("InspectJS().Source missing artifact envelope:\n%s", inspect.Source)
 	}
-	inspectArtifact := filepath.FromSlash(inspectRoot + "/example.com/inspect.js")
+	inspectArtifact := filepath.FromSlash(inspectRoot + "/example.com/inspect.a")
 	if _, err := os.Stat(inspectArtifact); !os.IsNotExist(err) {
 		t.Fatalf("InspectJS wrote artifact %s, stat err=%v", inspectArtifact, err)
 	}
@@ -542,8 +546,8 @@ func assertNodeRuntimeBuildsSourcePackageGraph(t *testing.T, rt *nodeRuntime) {
 		t.Fatalf("Build(graph) diagnostics = %v", result.Diagnostics)
 	}
 	wantBuilt := []string{
-		artifactRoot + "/example.com/lib.js",
-		artifactRoot + "/example.com/app.js",
+		artifactRoot + "/example.com/lib.a",
+		artifactRoot + "/example.com/app.a",
 	}
 	if strings.Join(result.Built, "\n") != strings.Join(wantBuilt, "\n") {
 		t.Fatalf("Build(graph).Built = %#v, want %#v", result.Built, wantBuilt)
@@ -554,12 +558,13 @@ func assertNodeRuntimeBuildsSourcePackageGraph(t *testing.T, rt *nodeRuntime) {
 	if len(result.Artifacts[1].DependencyCacheKeys) != 1 || !strings.HasPrefix(result.Artifacts[1].DependencyCacheKeys[0], "example.com/lib:") {
 		t.Fatalf("Build(graph) app dependency cache keys = %#v", result.Artifacts[1].DependencyCacheKeys)
 	}
-	cacheEntries, err := listCacheEntries(filepath.FromSlash(artifactRoot))
+	cacheResult, err := rt.Cache(cacheRequest{Action: "list", ArtifactRoot: artifactRoot})
 	if err != nil {
-		t.Fatalf("listCacheEntries(graph) error = %v", err)
+		t.Fatalf("Cache(list graph) error = %v", err)
 	}
+	cacheEntries := cacheResult.Entries
 	if len(cacheEntries) != 2 {
-		t.Fatalf("listCacheEntries(graph) = %#v, want lib and app", cacheEntries)
+		t.Fatalf("Cache(list graph).Entries = %#v, want lib and app", cacheEntries)
 	}
 	var appEntry cacheEntry
 	for _, entry := range cacheEntries {
@@ -590,10 +595,10 @@ func assertNodeRuntimeBuildsSourcePackageGraph(t *testing.T, rt *nodeRuntime) {
 	}); err != nil || !ok {
 		t.Fatalf("runBuild(--pkg) ok=%v err=%v, want success", ok, err)
 	}
-	if _, err := os.Stat(filepath.FromSlash(cliRoot + "/example.com/lib.js")); err != nil {
+	if _, err := os.Stat(filepath.FromSlash(cliRoot + "/example.com/lib.a")); err != nil {
 		t.Fatalf("runBuild(--pkg) missing lib artifact: %v", err)
 	}
-	if _, err := os.Stat(filepath.FromSlash(cliRoot + "/example.com/app.js")); err != nil {
+	if _, err := os.Stat(filepath.FromSlash(cliRoot + "/example.com/app.a")); err != nil {
 		t.Fatalf("runBuild(--pkg) missing app artifact: %v", err)
 	}
 
@@ -617,10 +622,10 @@ func assertNodeRuntimeBuildsSourcePackageGraph(t *testing.T, rt *nodeRuntime) {
 	}); err != nil || !ok {
 		t.Fatalf("runBuild(--srcroot) ok=%v err=%v, want success", ok, err)
 	}
-	if _, err := os.Stat(filepath.FromSlash(providerRoot + "/example.com/lib.js")); err != nil {
+	if _, err := os.Stat(filepath.FromSlash(providerRoot + "/example.com/lib.a")); err != nil {
 		t.Fatalf("runBuild(--srcroot) missing lib artifact: %v", err)
 	}
-	if _, err := os.Stat(filepath.FromSlash(providerRoot + "/example.com/app.js")); err != nil {
+	if _, err := os.Stat(filepath.FromSlash(providerRoot + "/example.com/app.a")); err != nil {
 		t.Fatalf("runBuild(--srcroot) missing app artifact: %v", err)
 	}
 }

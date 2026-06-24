@@ -39,6 +39,16 @@ export {
   resolveArtifactRoot
 } from "./build.js";
 export {
+  buildPackagesOnNode,
+  clearPackageArtifactCache,
+  createNodeArtifactStore,
+  createNodeSourcePackageProvider,
+  defaultPackageCacheParent,
+  inspectPackageJavaScriptOnNode,
+  listPackageArtifactCache,
+  packageCacheOnNode
+} from "./nodeHost.js";
+export {
   compilePackageSourceFiles,
   compileSource,
   compileSourceFiles
@@ -86,6 +96,12 @@ export type {
   StandardLibrarySourcePackageProviderOptions,
   SourceImportPathsResult
 } from "./build.js";
+export type {
+  NodeBuildPackageRequest,
+  PackageArtifactCacheEntry,
+  PackageArtifactCacheRequest,
+  PackageArtifactCacheResult
+} from "./nodeHost.js";
 export type {
   IterativeCalculationOptions,
   SetFormulaOptions,

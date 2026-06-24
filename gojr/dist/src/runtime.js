@@ -880,6 +880,8 @@ function packageScopeObjects(pkg) {
         const object = pkg.Scope().Lookup(name);
         if (object === null || object.constructor.name === "PkgName")
             return [];
+        if (object.Pkg() !== pkg)
+            return [];
         return [object];
     });
 }
