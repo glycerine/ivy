@@ -1,7 +1,7 @@
 // @ts-nocheck
 // Checked-in package unit for the transliterated go/types package.
 // Files from one Go package share one compiled source file here; do not reintroduce same-package ES imports.
-import { EndOf, NewIdent, PosOf, Print, Unparen } from "../../front/ast.js";
+import { EndOf, NewIdent, PosOf, Print, Unparen } from "../ast/index.js";
 import { AllErrors, ParseComments, ParseExprFrom, ParseFile, SkipObjectResolution, Trace } from "../../front/parser.js";
 import { PrintError } from "../../front/scanner.js";
 import { TokenKind } from "../../front/token.js";

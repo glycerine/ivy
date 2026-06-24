@@ -29,6 +29,7 @@ import {
   Lbl,
   NewObj,
   NewScope,
+  NormalizeAst,
   Object as AstObject,
   Package,
   Pos,
@@ -751,7 +752,10 @@ interface ParamDecl {
 export function parseFrontSource(source: string, filename: string): ParseFrontResult {
   const scanned = scanSource(source, filename);
   const p = new parser(scanned.tokens, scanned.diagnostics, filename);
-  return p.parseFile();
+  const result = p.parseFile();
+  if (result.file) NormalizeAst(result.file);
+  for (const statement of result.statements) NormalizeAst(statement);
+  return result;
 }
 
 export function parseFrontSourceFiles(files: SourceFile[]): ParseFrontFilesResult {

@@ -25,7 +25,7 @@ import type {
   Stmt,
   TypeSpec,
   ValueSpec
-} from "../front/ast.js";
+} from "./ast/index.js";
 import { parseFrontSource } from "../front/parser.js";
 import { TokenKind } from "../front/token.js";
 

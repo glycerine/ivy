@@ -1,5 +1,5 @@
 import { REPL_FILENAME, diagnosticFilename } from "../diagnostics.js";
-import { Bad, Fun, Lbl, NewObj, NewScope, parseCellAddress, Typ, Unparen, Var, Walk, Con, ident } from "./ast.js";
+import { Bad, Fun, Lbl, NewObj, NewScope, NormalizeAst, parseCellAddress, Typ, Unparen, Var, Walk, Con, ident } from "./ast.js";
 import { scanSource } from "./scanner.js";
 import { isAssignmentToken, isIdentifierLike, TokenKind } from "./token.js";
 export const basic = "basic";
@@ -614,7 +614,12 @@ function isIdentNode(value) {
 export function parseFrontSource(source, filename) {
     const scanned = scanSource(source, filename);
     const p = new parser(scanned.tokens, scanned.diagnostics, filename);
-    return p.parseFile();
+    const result = p.parseFile();
+    if (result.file)
+        NormalizeAst(result.file);
+    for (const statement of result.statements)
+        NormalizeAst(statement);
+    return result;
 }
 export function parseFrontSourceFiles(files) {
     const results = files.map((file) => parseFrontSource(file.source, file.filename));

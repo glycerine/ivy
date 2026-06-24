@@ -2,7 +2,7 @@
 // Checked-in package unit for the transliterated go/types package.
 // Files from one Go package share one compiled source file here; do not reintroduce same-package ES imports.
 
-import { type AssignStmt, type File as AstFile, type AstNode, type BasicLit, type BinaryExpr, type BlockStmt, type CallExpr, type CaseClause, type CommClause, type CompositeLit, EndOf, type Expr, type Field, type FieldList, type FuncLit, type FuncType, type Ident, type KeyValueExpr, NewIdent, PosOf, Print, type RangeStmt, type SelectorExpr, type Stmt, type StructType, type TypeAssertExpr, type UnaryExpr, Unparen } from "../../front/ast.js";
+import { type AssignStmt, type File as AstFile, type AstNode, type BasicLit, type BinaryExpr, type BlockStmt, type CallExpr, type CaseClause, type CommClause, type CompositeLit, EndOf, type Expr, type Field, type FieldList, type FuncLit, type FuncType, type Ident, type KeyValueExpr, NewIdent, PosOf, Print, type RangeStmt, type SelectorExpr, type Stmt, type StructType, type TypeAssertExpr, type UnaryExpr, Unparen } from "../ast/index.js";
 import { AllErrors, type Mode, ParseComments, ParseExprFrom, ParseFile, SkipObjectResolution, Trace } from "../../front/parser.js";
 import { PrintError } from "../../front/scanner.js";
 import { TokenKind } from "../../front/token.js";
@@ -24315,7 +24315,7 @@ namespace go_types_stmt {
           try {
             this.simpleStmt(s.init);
 
-            let lhs: import("../../front/ast.js").Ident | null = null; // lhs identifier or nil
+            let lhs: import("../ast/index.js").Ident | null = null; // lhs identifier or nil
             let rhs: Expr;
             switch (s.assign.kind) {
               case "ExprStmt":
@@ -24327,7 +24327,7 @@ namespace go_types_stmt {
                   return;
                 }
 
-                lhs = s.assign.lhs[0]!.kind === "Ident" ? s.assign.lhs[0] as import("../../front/ast.js").Ident : null;
+                lhs = s.assign.lhs[0]!.kind === "Ident" ? s.assign.lhs[0] as import("../ast/index.js").Ident : null;
                 if (lhs === null) {
                   this.error(s, "InvalidSyntaxTree", "incorrect form of type switch guard");
                   return;

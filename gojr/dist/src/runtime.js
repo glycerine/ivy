@@ -395,6 +395,12 @@ export class EvaluationContext {
     aliasType(name) {
         return this.shared.aliases.get(name) ?? this.shared.aliases.get(genericBaseTypeName(name));
     }
+    registerErasedTypeParameter(name) {
+        if (!name || name === "_")
+            return;
+        if (!this.shared.aliases.has(name))
+            this.shared.aliases.set(name, name);
+    }
     isKnownType(name) {
         const type = normalizeTypeText(name);
         const genericBase = genericBaseTypeName(type);

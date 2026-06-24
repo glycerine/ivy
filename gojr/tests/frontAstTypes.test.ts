@@ -38,7 +38,8 @@ import {
   type CommentGroup,
   type ImportSpec,
   type File
-} from "../src/front/ast.js";
+} from "../src/go/ast/index.js";
+import { parseFrontSource } from "../src/front/parser.js";
 import {
 	  AssignableTo,
 	  Byte,
@@ -205,6 +206,24 @@ describe("Go-junior Go-style AST", () => {
       }
     };
     expect(Unparen(wrapped)).toEqual(ident("x"));
+  });
+
+  test("parsed nodes expose standard go/ast field names", () => {
+    const parsed = parseFrontSource("package main\nfunc F(x int) int { return x + 1 }\n", "std-fields.go");
+    expect(parsed.file === undefined).toBe(false);
+    const file = parsed.file!;
+    expect(file.Name?.Name).toBe("main");
+    expect(file.Imports).toEqual([]);
+    expect(file.Decls).toHaveLength(1);
+    expect(typeof file.Pos).toBe("function");
+    expect(typeof file.End).toBe("function");
+
+    const decl = file.Decls![0] as Extract<NonNullable<File["Decls"]>[number], { kind: "FuncDecl" }>;
+    expect(decl.Name?.Name).toBe("F");
+    expect(decl.Type?.Params?.List).toHaveLength(1);
+    expect(decl.Type?.Results?.List).toHaveLength(1);
+    expect(decl.Body?.List).toHaveLength(1);
+    expect(globalThis.Object.keys(parsed.file!)).not.toContain("Decls");
   });
 
   test("detects generated source comments before the package clause", () => {
