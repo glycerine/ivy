@@ -3,7 +3,7 @@
 // Copyright 2021 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-import { Checker, atPos } from "./check.js";
+import { atPos, registerCheckerMethod } from "./check.js";
 export class monoGraph {
     vertices = [];
     edges = [];
@@ -83,7 +83,7 @@ export class monoEdge {
         this.typ = typ;
     }
 }
-Checker.prototype.monomorph = function monomorph() {
+registerCheckerMethod("monomorph", function monomorph() {
     if (!(this.mono instanceof monoGraph)) {
         this.mono = new monoGraph();
     }
@@ -108,8 +108,8 @@ Checker.prototype.monomorph = function monomorph() {
             again = true;
         }
     }
-};
-Checker.prototype.reportInstanceLoop = function reportInstanceLoop(v) {
+});
+registerCheckerMethod("reportInstanceLoop", function reportInstanceLoop(v) {
     const graph = this.mono;
     const stack = [];
     const seen = new Array(graph.vertices.length).fill(false);
@@ -130,4 +130,4 @@ Checker.prototype.reportInstanceLoop = function reportInstanceLoop(v) {
         err.addf(new atPos(edge.pos), "%s instantiated as %s", obj.Name(), edge.typ);
     }
     err.report();
-};
+});

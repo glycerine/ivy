@@ -1,12 +1,12 @@
 // Copyright 2013 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-import { Checker, debug } from "./check.js";
+import { debug, registerCheckerMethod } from "./check.js";
 import { NewLabel } from "./object.js";
 import { NewScope, resolve } from "./scope.js";
 import { assert } from "./util.js";
 // labels checks correct label use in body.
-Checker.prototype.labels = function labels(body) {
+registerCheckerMethod("labels", function labels(body) {
     const b = body;
     const all = NewScope(null, b.Pos?.() ?? 0, b.End?.() ?? 0, "label");
     const fwdJumps = this.blockBranches(all, null, null, b.List ?? []);
@@ -34,7 +34,7 @@ Checker.prototype.labels = function labels(body) {
             this.softErrorf(lbl, "UnusedLabel", "label %s declared and not used", lbl.name);
         }
     }
-};
+});
 // A block tracks label declarations in a block and its enclosing blocks.
 export class block {
     parent;
@@ -82,7 +82,7 @@ export class block {
     }
 }
 // blockBranches processes a block's statement list and returns the set of outgoing forward jumps.
-Checker.prototype.blockBranches = function blockBranches(all, parent, lstmt, list) {
+registerCheckerMethod("blockBranches", function blockBranches(all, parent, lstmt, list) {
     const b = new block(parent, lstmt);
     const fwdJumps = [];
     const stmtBranches = (lstmt, s) => {
@@ -144,4 +144,4 @@ Checker.prototype.blockBranches = function blockBranches(all, parent, lstmt, lis
         stmtBranches(null, s);
     }
     return fwdJumps;
-};
+});

@@ -9,7 +9,7 @@ import { TokenKind } from "../../front/token.js";
 import { Alias } from "./alias.js";
 import { UntypedBool, UntypedInt, Uint } from "./basic.js";
 import { Chan, ChanDir } from "./chan.js";
-import { Checker, nopos } from "./check.js";
+import { nopos, registerCheckerMethod } from "./check.js";
 import { constantKindOf, imag, makeComplex, makeUnknown, real, sign, toComplex, toFloat, toInt } from "./const.js";
 import { isPointer } from "./conversions.js";
 import { Interface } from "./interface.js";
@@ -55,7 +55,7 @@ export class target {
 }
 const invalidOp = "invalid operation: ";
 const enableReverseTypeInferenceLocal = true;
-Checker.prototype.op = function op(m, x, op) {
+registerCheckerMethod("op", function op(m, x, op) {
     const pred = m.get(op);
     if (pred !== undefined) {
         if (!pred(x.typ())) {
@@ -68,7 +68,7 @@ Checker.prototype.op = function op(m, x, op) {
         return false;
     }
     return true;
-};
+});
 // opPos returns the position of the operator if x is an operation;
 // otherwise it returns the start position of x.
 export function opPos(x) {
@@ -93,7 +93,7 @@ export function opName(e) {
     return "";
 }
 // The unary expression e may be nil. It's passed in for better error messages only.
-Checker.prototype.unary = function unary(x, e0) {
+registerCheckerMethod("unary", function unary(x, e0) {
     const e = e0;
     this.expr(null, x, e.expr);
     if (!x.isValid()) {
@@ -156,11 +156,11 @@ Checker.prototype.unary = function unary(x, e0) {
     }
     x.mode_ = value;
     // x.typ remains unchanged
-};
+});
 // chanElem returns the channel element type of x for a receive from x (recv == true)
 // or send to x (recv == false) operation. If the operation is not valid, chanElem
 // reports an error and returns nil.
-Checker.prototype.chanElem = function chanElem(pos, x, recv) {
+registerCheckerMethod("chanElem", function chanElem(pos, x, recv) {
     const [u, err] = commonUnder(x.typ(), (_t, u) => {
         const t = _t;
         if (u === null) {
@@ -201,7 +201,7 @@ Checker.prototype.chanElem = function chanElem(pos, x, recv) {
         }
     }
     return null;
-};
+});
 export function isShift(op) {
     return op === TokenKind.Shl || op === TokenKind.Shr;
 }
@@ -218,7 +218,7 @@ export function isComparison(op) {
     return false;
 }
 // If switchCase is true, the operator op is ignored.
-Checker.prototype.comparison = function comparison(x, y, op, switchCase) {
+registerCheckerMethod("comparison", function comparison(x, y, op, switchCase) {
     // Avoid spurious errors if any of the operands has an invalid type (go.dev/issue/54405).
     if (!isValid(x.typ()) || !isValid(y.typ())) {
         x.invalidate();
@@ -318,19 +318,19 @@ Checker.prototype.comparison = function comparison(x, y, op, switchCase) {
     // spec: "Comparison operators compare two operands and yield
     //        an untyped boolean value."
     x.typ_ = Typ[UntypedBool];
-};
+});
 // incomparableCause returns a more specific cause why typ is not comparable.
 // If there is no more specific cause, the result is "".
-Checker.prototype.incomparableCause = function incomparableCause(typ) {
+registerCheckerMethod("incomparableCause", function incomparableCause(typ) {
     const u = typ.Underlying();
     if (u instanceof Slice || u instanceof Signature || u instanceof MapType) {
         return compositeKind(typ) + " can only be compared to nil";
     }
     // see if we can extract a more specific error
     return comparableType(typ, true, null)?.format(this) ?? "";
-};
+});
 // If e != nil, it must be the shift expression; it may be nil for non-constant shifts.
-Checker.prototype.shift = function shift(x, y, e, op) {
+registerCheckerMethod("shift", function shift(x, y, e, op) {
     // TODO(gri) This function seems overly complex. Revisit.
     let xval = null;
     if (x.mode() === constant_) {
@@ -462,7 +462,7 @@ Checker.prototype.shift = function shift(x, y, e, op) {
         return;
     }
     x.mode_ = value;
-};
+});
 export const binaryOpPredicates = new Map([
     [TokenKind.Plus, allNumericOrString],
     [TokenKind.Minus, allNumeric],
@@ -478,7 +478,7 @@ export const binaryOpPredicates = new Map([
 ]);
 // If e != nil, it must be the binary expression; it may be nil for non-constant expressions
 // (when invoked for an assignment operation where the binary expression is implicit).
-Checker.prototype.binary = function binary(x, e, lhs, rhs, op, opPos_) {
+registerCheckerMethod("binary", function binary(x, e, lhs, rhs, op, opPos_) {
     const y = new operand();
     this.expr(null, x, lhs);
     this.expr(null, y, rhs);
@@ -565,10 +565,10 @@ Checker.prototype.binary = function binary(x, e, lhs, rhs, op, opPos_) {
     }
     x.mode_ = value;
     // x.typ is unchanged
-};
+});
 // matchTypes attempts to convert any untyped types x and y such that they match.
 // If an error occurs, x.mode is set to invalid.
-Checker.prototype.matchTypes = function matchTypes(x, y) {
+registerCheckerMethod("matchTypes", function matchTypes(x, y) {
     // mayConvert reports whether the operands x and y may
     // possibly have matching types after converting one
     // untyped operand to the type of the other.
@@ -627,7 +627,7 @@ Checker.prototype.matchTypes = function matchTypes(x, y) {
             return;
         }
     }
-};
+});
 // updateExprType updates the type of x to typ and invokes itself
 // recursively for the operands of x, depending on expression kind.
 // If typ is still an untyped and not the final type, updateExprType
@@ -637,7 +637,7 @@ Checker.prototype.matchTypes = function matchTypes(x, y) {
 // Also, if x is a constant, it must be representable as a value of typ,
 // and if x is the (formerly untyped) lhs operand of a non-constant
 // shift, it must be an integer value.
-Checker.prototype.updateExprType = function updateExprType(x, typ, final) {
+registerCheckerMethod("updateExprType", function updateExprType(x, typ, final) {
     const old = this.untyped?.get(x);
     if (old === undefined) {
         return; // nothing to do
@@ -743,15 +743,15 @@ Checker.prototype.updateExprType = function updateExprType(x, typ, final) {
     }
     // Everything's fine, record final type and value for x.
     this.recordTypeAndValue(x, old.mode, typ, old.val);
-};
+});
 // updateExprVal updates the value of x to val.
-Checker.prototype.updateExprVal = function updateExprVal(x, val) {
+registerCheckerMethod("updateExprVal", function updateExprVal(x, val) {
     const info = this.untyped?.get(x);
     if (info !== undefined) {
         info.val = val;
         this.untyped?.set(x, info);
     }
-};
+});
 // newTarget creates a new target for the given type and description.
 // The result is nil if typ is not a signature.
 export function newTarget(typ, desc) {
@@ -770,7 +770,7 @@ export function newTarget(typ, desc) {
 // If hint != nil, it is the type of a composite literal element.
 // If allowGeneric is set, the operand type may be an uninstantiated
 // parameterized type or function value.
-Checker.prototype.rawExpr = function rawExpr(T, x, e, hint, allowGeneric) {
+registerCheckerMethod("rawExpr", function rawExpr(T, x, e, hint, allowGeneric) {
     if (this.conf._Trace) {
         this.trace?.(PosOf(e), "-- expr %s", e);
         this.indent++;
@@ -789,11 +789,11 @@ Checker.prototype.rawExpr = function rawExpr(T, x, e, hint, allowGeneric) {
             this.trace?.(PosOf(e), "=> %s", x);
         }
     }
-};
+});
 // If x is a generic type, or a generic function whose type arguments cannot be inferred
 // from a non-nil target T, nonGeneric reports an error and invalidates x.mode and x.typ.
 // Otherwise it leaves x alone.
-Checker.prototype.nonGeneric = function nonGeneric(T, x) {
+registerCheckerMethod("nonGeneric", function nonGeneric(T, x) {
     if (!x.isValid() || x.mode() === novalue) {
         return;
     }
@@ -821,11 +821,11 @@ Checker.prototype.nonGeneric = function nonGeneric(T, x) {
         x.invalidate();
         x.typ_ = Typ[0];
     }
-};
+});
 // exprInternal contains the core of type checking of expressions.
 // Must only be called by rawExpr.
 // (See rawExpr for an explanation of the parameters.)
-Checker.prototype.exprInternal = function exprInternal(T, x, e, hint) {
+registerCheckerMethod("exprInternal", function exprInternal(T, x, e, hint) {
     // make sure x has a valid state in case of bailout
     // (was go.dev/issue/5770)
     x.invalidate();
@@ -1000,7 +1000,7 @@ Checker.prototype.exprInternal = function exprInternal(T, x, e, hint) {
     // everything went well
     x.expr = e;
     return exprKind.expression;
-};
+});
 // keyVal maps a complex, float, integer, string or boolean constant value
 // to the corresponding complex128, float64, int64, uint64, string, or bool
 // Go value if possible; otherwise it returns x.
@@ -1028,7 +1028,7 @@ export function keyVal(x) {
     return x;
 }
 // typeAssertion checks x.(T). The type of x must be an interface.
-Checker.prototype.typeAssertion = function typeAssertion(e, x, T, typeSwitch) {
+registerCheckerMethod("typeAssertion", function typeAssertion(e, x, T, typeSwitch) {
     const cause = { value: "" };
     const V = x.typ();
     if (V !== null && this.assertableTo?.(V, T, cause)) {
@@ -1039,29 +1039,29 @@ Checker.prototype.typeAssertion = function typeAssertion(e, x, T, typeSwitch) {
         return;
     }
     this.errorf(e, "ImpossibleAssert", "impossible type assertion: %s\n\t%s does not implement %s %s", e, T, x.typ(), cause.value);
-};
+});
 // expr typechecks expression e and initializes x with the expression value.
 // If a non-nil target T is given and e is a generic function or
 // a function call, T is used to infer the type arguments for e.
 // The result must be a single value.
 // If an error occurred, x.mode is set to invalid.
-Checker.prototype.expr = function expr(T, x, e) {
+registerCheckerMethod("expr", function expr(T, x, e) {
     this.rawExpr(T, x, e, null, false);
     this.exclude(x, (1 << novalue) | (1 << builtin) | (1 << typexpr));
     this.singleValue?.(x);
-};
+});
 // genericExpr is like expr but the result may also be generic.
-Checker.prototype.genericExpr = function genericExpr(x, e, hint) {
+registerCheckerMethod("genericExpr", function genericExpr(x, e, hint) {
     this.rawExpr(null, x, e, hint, true);
     this.exclude(x, (1 << novalue) | (1 << builtin) | (1 << typexpr));
     this.singleValue?.(x);
-};
+});
 // multiExpr typechecks e and returns its value (or values) in list.
 // If allowCommaOk is set and e is a map index, comma-ok, or comma-err
 // expression, the result is a two-element list containing the value
 // of e, and an untyped bool value or an error value, respectively.
 // If an error occurred, list[0] is not valid.
-Checker.prototype.multiExpr = function multiExpr(e, allowCommaOk) {
+registerCheckerMethod("multiExpr", function multiExpr(e, allowCommaOk) {
     const x = new operand();
     this.rawExpr(null, x, e, null, false);
     this.exclude(x, (1 << novalue) | (1 << builtin) | (1 << typexpr));
@@ -1096,7 +1096,7 @@ Checker.prototype.multiExpr = function multiExpr(e, allowCommaOk) {
         commaOk = true;
     }
     return [list, commaOk];
-};
+});
 // nth returns a string of the form "nth " + what, where nth
 // stands for 1st, 2nd, 3rd, 4th, etc. depending on n.
 export function nth(n, what) {
@@ -1121,14 +1121,14 @@ export function nth(n, what) {
 // If allowGeneric is set, the operand type may be an uninstantiated parameterized type or function
 // value.
 // If an error occurred, x.mode is set to invalid.
-Checker.prototype.exprOrType = function exprOrType(x, e, allowGeneric) {
+registerCheckerMethod("exprOrType", function exprOrType(x, e, allowGeneric) {
     this.rawExpr(null, x, e, null, allowGeneric);
     this.exclude(x, 1 << novalue);
     this.singleValue?.(x);
-};
+});
 // exclude reports an error if x.mode is in modeset and sets x.mode to invalid.
 // The modeset may contain any of 1<<novalue, 1<<builtin, 1<<typexpr.
-Checker.prototype.exclude = function exclude(x, modeset) {
+registerCheckerMethod("exclude", function exclude(x, modeset) {
     if ((modeset & (1 << x.mode())) !== 0) {
         let msg;
         let code;
@@ -1156,9 +1156,9 @@ Checker.prototype.exclude = function exclude(x, modeset) {
         this.errorf(x, code, msg, x);
         x.invalidate();
     }
-};
+});
 // singleValue reports an error if x describes a tuple and sets x.mode to invalid.
-Checker.prototype.singleValue = function singleValue(x) {
+registerCheckerMethod("singleValue", function singleValue(x) {
     if (x.mode() === value) {
         // tuple types are never named - no need for underlying type below
         if (x.typ() instanceof Tuple) {
@@ -1168,7 +1168,7 @@ Checker.prototype.singleValue = function singleValue(x) {
             x.invalidate();
         }
     }
-};
+});
 function comparisonError(check, x, y, errOp, code, op, switchCase, cause) {
     // We have an offending operand errOp and possibly an error cause.
     if (cause === "") {

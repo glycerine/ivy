@@ -9,16 +9,15 @@
 
 import type { Type } from "./type.js";
 import { Basic, BasicKind, Bool, Byte, Complex128, Complex64, Float32, Float64, Int, Int16, Int32, Int64, Int8, Invalid, IsBoolean, IsComplex, IsFloat, IsInteger, IsString, IsUnsigned, IsUntyped, Rune, String, Uint, Uint16, Uint32, Uint64, Uint8, Uintptr, UnsafePointer, UntypedBool, UntypedComplex, UntypedFloat, UntypedInt, UntypedNil, UntypedRune, UntypedString } from "./basic.js";
-import { NewScope, type Scope } from "./scope.js";
+import { NewScope, setScopeUniverse, type Scope } from "./scope.js";
 import { Package, NewPackage } from "./package.js";
-import { nopos } from "./check.js";
+import { NoPos as nopos } from "./token.js";
 import { NewAlias } from "./alias.js";
-import { asNamed } from "./alias.js";
 import { NewInterfaceType, emptyInterface, Interface, _TypeSet } from "./interface.js";
 import { allTermlist } from "./termlist.js";
 import { NewNamed } from "./named.js";
 import { NewTuple } from "./tuple.js";
-import { NewConst, NewFunc, NewTypeName, newBuiltin, newVar, Nil, RecvVar, ResultVar, type Object } from "./object.js";
+import { NewConst, NewFunc, NewTypeName, newBuiltin, newVar, Nil, RecvVar, ResultVar, setObjectUniverseDeps, type Object } from "./object.js";
 import { NewSignatureType } from "./signature.js";
 import { assert } from "./util.js";
 
@@ -37,6 +36,16 @@ export let universeRune: Type; // int32 alias, but has name "rune"
 export let universeError: Type;
 export let universeAny: Object;
 export let universeComparable: Object;
+
+let universeSetup = false;
+let universePopulated = false;
+let objectDeps: {
+  Typ: Basic[];
+  Universe: Scope;
+  universeByte: Type | null;
+  universeRune: Type | null;
+  predeclaredFuncs: typeof predeclaredFuncs;
+} | null = null;
 
 // Typ contains the predeclared *Basic types indexed by their
 // corresponding BasicKind.
@@ -240,10 +249,31 @@ export function DefPredeclaredTestFuncs(): void {
   def(newBuiltin(builtinId._Trace));
 }
 
-export function init(): void {
+export function initCore(): void {
+  if (universeSetup) {
+    return;
+  }
+  universeSetup = true;
   Universe = NewScope(null, nopos, nopos, "universe");
+  setScopeUniverse(Universe);
   Unsafe = NewPackage("unsafe", "unsafe");
   Unsafe.complete = true;
+  objectDeps = {
+    Typ,
+    Universe,
+    universeByte: null as Type | null,
+    universeRune: null as Type | null,
+    predeclaredFuncs
+  };
+  setObjectUniverseDeps(objectDeps);
+}
+
+export function init(): void {
+  initCore();
+  if (universePopulated) {
+    return;
+  }
+  universePopulated = true;
 
   defPredeclaredTypes();
   defPredeclaredConsts();
@@ -254,6 +284,8 @@ export function init(): void {
   universeBool = Universe.Lookup("bool")!.Type()!;
   universeByte = Universe.Lookup("byte")!.Type()!;
   universeRune = Universe.Lookup("rune")!.Type()!;
+  objectDeps!.universeByte = universeByte;
+  objectDeps!.universeRune = universeRune;
   universeError = Universe.Lookup("error")!.Type()!;
   universeAny = Universe.Lookup("any")!;
   universeComparable = Universe.Lookup("comparable")!;
@@ -269,9 +301,9 @@ export function def(obj: Object): void {
     return; // nothing to do
   }
   // fix Obj link for named types
-  const typ = asNamed(obj.Type());
-  if (typ !== null) {
-    typ.obj = obj as import("./object.js").TypeName;
+  const typ = obj.Type();
+  if (typ !== null && (typ as { constructor?: { name?: string } }).constructor?.name === "Named") {
+    (typ as unknown as { obj: import("./object.js").TypeName }).obj = obj as import("./object.js").TypeName;
   }
   // exported identifiers go into package unsafe
   let scope = Universe;
@@ -289,4 +321,4 @@ export function def(obj: Object): void {
   }
 }
 
-init();
+initCore();

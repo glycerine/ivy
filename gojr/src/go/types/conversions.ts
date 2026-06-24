@@ -8,7 +8,7 @@
 // This file implements typechecking of conversions.
 
 import type { Type } from "./type.js";
-import { Checker } from "./check.js";
+import { Checker , registerCheckerMethod } from "./check.js";
 import { operand, constant_, value } from "./operand.js";
 import { Identical, isComplex, isConstType, isInteger, isIntegerOrFloat, isString, isTypeParam, isUntyped, allString } from "./predicates.js";
 import { Unalias } from "./alias.js";
@@ -31,9 +31,9 @@ declare module "./check.js" {
 
 // conversion type-checks the conversion T(x).
 // The result is in x.
-Checker.prototype.conversion = function checkerConversion(x: operand, T: Type): void {
+registerCheckerMethod("conversion", function checkerConversion(x: operand, T: Type): void {
   conversion(this, x, T);
-};
+});
 
 export function conversion(check: Checker, x: operand, T: Type): void {
   const constArg = x.mode() === constant_;

@@ -9,7 +9,7 @@
 
 import type { Type } from "./type.js";
 import type { Package } from "./package.js";
-import { Checker, debug } from "./check.js";
+import { Checker, debug , registerCheckerMethod } from "./check.js";
 import { assert } from "./util.js";
 import { asNamed, Unalias } from "./alias.js";
 import { Pointer } from "./pointer.js";
@@ -360,9 +360,9 @@ declare module "./check.js" {
   }
 }
 
-Checker.prototype.missingMethod = function missingMethodMethod(V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): [Func | null, boolean] {
+registerCheckerMethod("missingMethod", function missingMethodMethod(V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): [Func | null, boolean] {
   return missingMethod(this, V, T, static_, equivalent, cause);
-};
+});
 
 export function missingMethod(check: Checker | null, V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): [Func | null, boolean] {
   const methods = (T.Underlying() as Interface).typeSet().methods; // T must be an interface
@@ -534,9 +534,9 @@ export function missingMethod(check: Checker | null, V: Type, T: Type, static_: 
   return [m, state === wrongSig || state === ptrRecv];
 }
 
-Checker.prototype.hasAllMethods = function hasAllMethodsMethod(V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): boolean {
+registerCheckerMethod("hasAllMethods", function hasAllMethodsMethod(V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): boolean {
   return hasAllMethods(this, V, T, static_, equivalent, cause);
-};
+});
 
 export function hasAllMethods(check: Checker | null, V: Type, T: Type, static_: boolean, equivalent: (x: Type | null, y: Type | null) => boolean, cause: Cause | null): boolean {
   if (!isValid(V)) {
@@ -569,9 +569,9 @@ export function isInterfacePtr(T: Type): boolean {
   return p instanceof Pointer && IsInterface(p.base);
 }
 
-Checker.prototype.interfacePtrError = function interfacePtrErrorMethod(T: Type): string {
+registerCheckerMethod("interfacePtrError", function interfacePtrErrorMethod(T: Type): string {
   return interfacePtrError(this, T);
-};
+});
 
 // check may be nil.
 export function interfacePtrError(check: Checker | null, T: Type): string {
@@ -583,9 +583,9 @@ export function interfacePtrError(check: Checker | null, T: Type): string {
   return sprintfCheck(check, "type %s is pointer to interface, not interface", T);
 }
 
-Checker.prototype.funcString = function funcStringMethod(f: Func, pkgInfo: boolean): string {
+registerCheckerMethod("funcString", function funcStringMethod(f: Func, pkgInfo: boolean): string {
   return funcString(this, f, pkgInfo);
-};
+});
 
 // funcString returns a string of the form name + signature for f.
 // check may be nil.
@@ -599,9 +599,9 @@ export function funcString(check: Checker | null, f: Func, pkgInfo: boolean): st
   return buf.join("");
 }
 
-Checker.prototype.assertableTo = function assertableToMethod(V: Type, T: Type, cause: Cause | null): boolean {
+registerCheckerMethod("assertableTo", function assertableToMethod(V: Type, T: Type, cause: Cause | null): boolean {
   return assertableTo(this, V, T, cause);
-};
+});
 
 // assertableTo reports whether a value of type V can be asserted to have type T.
 export function assertableTo(check: Checker | null, V: Type, T: Type, cause: Cause | null): boolean {
@@ -615,9 +615,9 @@ export function assertableTo(check: Checker | null, V: Type, T: Type, cause: Cau
   return hasAllMethods(check, T, V, false, Identical, cause);
 }
 
-Checker.prototype.newAssertableTo = function newAssertableToMethod(V: Type, T: Type, cause: Cause | null): boolean {
+registerCheckerMethod("newAssertableTo", function newAssertableToMethod(V: Type, T: Type, cause: Cause | null): boolean {
   return newAssertableTo(this, V, T, cause);
-};
+});
 
 // newAssertableTo reports whether a value of type V can be asserted to have type T.
 export function newAssertableTo(check: Checker | null, V: Type, T: Type, cause: Cause | null): boolean {

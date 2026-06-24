@@ -4,8 +4,7 @@
 // This file implements go/types-specific scope methods.
 // These methods do not exist in types2.
 import { cmpPos } from "./check.js";
-import { Scope } from "./scope.js";
-import { Universe } from "./universe.js";
+import { Scope, scopeUniverse } from "./scope.js";
 // LookupParent follows the parent chain of scopes starting with s until
 // it finds a scope where Lookup(name) returns a non-nil object, and then
 // returns that scope and object. If a valid position pos is provided,
@@ -47,7 +46,7 @@ Scope.prototype.Contains = function Contains(pos) {
 Scope.prototype.Innermost = function Innermost(pos) {
     // Package scopes do not have extents since they may be
     // discontiguous, so iterate over the package's files.
-    if (this.parent === Universe) {
+    if (this.parent === scopeUniverse()) {
         for (const s of this.children) {
             const inner = s.Innermost(pos);
             if (inner !== null) {

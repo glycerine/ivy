@@ -6,7 +6,7 @@
 import { NewIdent, PosOf } from "../../front/ast.js";
 import { TokenKind } from "../../front/token.js";
 import { Basic, Invalid, UnsafePointer } from "./basic.js";
-import { Checker, atPos } from "./check.js";
+import { atPos, registerCheckerMethod } from "./check.js";
 import { deref } from "./lookup.js";
 import { Interface } from "./interface.js";
 import { Pointer } from "./pointer.js";
@@ -63,7 +63,7 @@ export function NewStruct(fields, tags) {
     s.markComplete();
     return s;
 }
-Checker.prototype.structType = function structType(styp, e) {
+registerCheckerMethod("structType", function structType(styp, e) {
     const list = e.fields;
     if (list === undefined || list.fields.length === 0) {
         styp.markComplete();
@@ -169,7 +169,7 @@ Checker.prototype.structType = function structType(styp, e) {
     styp.fields = fields;
     styp.tags = tags;
     styp.markComplete();
-};
+});
 export function embeddedFieldIdent(e) {
     switch (e.kind) {
         case "Ident":
@@ -189,7 +189,7 @@ export function embeddedFieldIdent(e) {
     }
     return null; // invalid embedded field
 }
-Checker.prototype.declareInSet = function declareInSet(oset, pos, obj) {
+registerCheckerMethod("declareInSet", function declareInSet(oset, pos, obj) {
     const alt = oset.insert(obj);
     if (alt !== null) {
         const err = this.newError("DuplicateDecl");
@@ -199,8 +199,8 @@ Checker.prototype.declareInSet = function declareInSet(oset, pos, obj) {
         return false;
     }
     return true;
-};
-Checker.prototype.tag = function tag(t) {
+});
+registerCheckerMethod("tag", function tag(t) {
     if (t !== undefined) {
         if (t.token === TokenKind.StringLiteral) {
             const val = makeFromLiteral(t.value, t.token);
@@ -211,4 +211,4 @@ Checker.prototype.tag = function tag(t) {
         this.errorf(new atPos(PosOf(t)), "InvalidSyntaxTree", "incorrect tag syntax: %q", t.value);
     }
     return "";
-};
+});

@@ -8,7 +8,7 @@
 // This file implements recording of type information
 // in the types2.Info maps.
 
-import { Checker, instantiatedIdent } from "./check.js";
+import { Checker, instantiatedIdent , registerCheckerMethod } from "./check.js";
 import { Basic, IsConstType } from "./basic.js";
 import type { Type } from "./type.js";
 import { Typ, universeError } from "./universe.js";
@@ -38,7 +38,7 @@ declare module "./check.js" {
   }
 }
 
-Checker.prototype.record = function record(x: operand): void {
+registerCheckerMethod("record", function record(x: operand): void {
   let typ: Type | null;
   let val: unknown = null;
   switch (x.mode()) {
@@ -62,9 +62,9 @@ Checker.prototype.record = function record(x: operand): void {
   } else {
     this.recordTypeAndValue(x.expr, x.mode(), typ, val);
   }
-};
+});
 
-Checker.prototype.recordUntyped = function recordUntyped(): void {
+registerCheckerMethod("recordUntyped", function recordUntyped(): void {
   if (!this.Info.recordTypes()) {
     return; // nothing to do
   }
@@ -72,9 +72,9 @@ Checker.prototype.recordUntyped = function recordUntyped(): void {
   for (const [x, info] of this.untyped ?? []) {
     this.recordTypeAndValue(x, info.mode, info.typ, info.val);
   }
-};
+});
 
-Checker.prototype.recordTypeAndValue = function recordTypeAndValue(x: unknown, mode: operandMode, typ: Type, val: unknown): void {
+registerCheckerMethod("recordTypeAndValue", function recordTypeAndValue(x: unknown, mode: operandMode, typ: Type, val: unknown): void {
   assert(x !== null && x !== undefined);
   assert(typ !== null);
   if (mode === invalid) {
@@ -89,9 +89,9 @@ Checker.prototype.recordTypeAndValue = function recordTypeAndValue(x: unknown, m
     m.set(x, new TypeAndValue(mode, typ, val));
   }
   this.recordTypeAndValueInSyntax(x, mode, typ, val);
-};
+});
 
-Checker.prototype.recordBuiltinType = function recordBuiltinType(f: unknown, sig: Signature): void {
+registerCheckerMethod("recordBuiltinType", function recordBuiltinType(f: unknown, sig: Signature): void {
   for (;;) {
     this.recordTypeAndValue(f, builtin, sig, null);
     const node = f as { kind?: string; X?: unknown };
@@ -106,9 +106,9 @@ Checker.prototype.recordBuiltinType = function recordBuiltinType(f: unknown, sig
         throw new Error("unreachable");
     }
   }
-};
+});
 
-Checker.prototype.recordCommaOkTypes = function recordCommaOkTypes(x: unknown, a: operand[]): void {
+registerCheckerMethod("recordCommaOkTypes", function recordCommaOkTypes(x: unknown, a: operand[]): void {
   assert(x !== null && x !== undefined);
   assert(a.length === 2);
   if (a[0]!.mode() === invalid) {
@@ -136,9 +136,9 @@ Checker.prototype.recordCommaOkTypes = function recordCommaOkTypes(x: unknown, a
     }
   }
   this.recordCommaOkTypesInSyntax(x, t0, t1);
-};
+});
 
-Checker.prototype.recordInstance = function recordInstance(expr: unknown, targs: Type[], typ: Type): void {
+registerCheckerMethod("recordInstance", function recordInstance(expr: unknown, targs: Type[], typ: Type): void {
   const ident = instantiatedIdent(expr);
   assert(ident !== null && ident !== undefined);
   assert(typ !== null);
@@ -162,51 +162,51 @@ Checker.prototype.recordInstance = function recordInstance(expr: unknown, targs:
     }
     m.set(ident, new Instance(newTypeList(targs), typ));
   }
-};
+});
 
-Checker.prototype.recordDef = function recordDef(id: unknown, obj: Object | null): void {
+registerCheckerMethod("recordDef", function recordDef(id: unknown, obj: Object | null): void {
   assert(id !== null && id !== undefined);
   const m = this.Info.Defs;
   if (m !== null) {
     m.set(id, obj);
   }
-};
+});
 
-Checker.prototype.recordUse = function recordUse(id: unknown, obj: Object): void {
+registerCheckerMethod("recordUse", function recordUse(id: unknown, obj: Object): void {
   assert(id !== null && id !== undefined);
   assert(obj !== null);
   const m = this.Info.Uses;
   if (m !== null) {
     m.set(id, obj);
   }
-};
+});
 
-Checker.prototype.recordImplicit = function recordImplicit(node: unknown, obj: Object): void {
+registerCheckerMethod("recordImplicit", function recordImplicit(node: unknown, obj: Object): void {
   assert(node !== null && node !== undefined);
   assert(obj !== null);
   const m = this.Info.Implicits;
   if (m !== null) {
     m.set(node, obj);
   }
-};
+});
 
-Checker.prototype.recordSelection = function recordSelection(x: unknown, kind: unknown, recv: Type | null, obj: Object, index: number[], indirect: boolean): void {
+registerCheckerMethod("recordSelection", function recordSelection(x: unknown, kind: unknown, recv: Type | null, obj: Object, index: number[], indirect: boolean): void {
   assert(obj !== null && (recv === null || index.length > 0));
   this.recordUse((x as { Sel?: unknown }).Sel, obj);
   const m = this.Info.Selections;
   if (m !== null) {
     m.set(x, { kind, recv, obj, index, indirect } as never);
   }
-};
+});
 
-Checker.prototype.recordScope = function recordScope(node: unknown, scope: Scope): void {
+registerCheckerMethod("recordScope", function recordScope(node: unknown, scope: Scope): void {
   assert(node !== null && node !== undefined);
   assert(scope !== null);
   const m = this.Info.Scopes;
   if (m !== null) {
     m.set(node, scope);
   }
-};
+});
 
 function isUntyped(typ: Type): boolean {
   return typ instanceof Basic && (typ.info & 64) !== 0;

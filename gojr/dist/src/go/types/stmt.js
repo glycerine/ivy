@@ -4,7 +4,7 @@
 // This file implements typechecking of statements.
 import { EndOf, PosOf, Unparen } from "../../front/ast.js";
 import { TokenKind } from "../../front/token.js";
-import { Checker, atPos, cmpPos, debug, environment } from "./check.js";
+import { atPos, cmpPos, debug, environment, registerCheckerMethod } from "./check.js";
 import { NewScope, resolve } from "./scope.js";
 import { LocalVar, Nil, ParamVar, RecvVar, ResultVar, Var, newVar } from "./object.js";
 import { allBoolean, allNumeric, Comparable, hasNil, Identical, isTypeParam, IsInterface, isValid } from "./predicates.js";
@@ -15,7 +15,7 @@ import { constantKindOf, toInt } from "./const.js";
 import { TypeString } from "./typestring.js";
 import { assert } from "./util.js";
 // decl may be nil
-Checker.prototype.funcBody = function funcBody(decl, name, sig, body, iota) {
+registerCheckerMethod("funcBody", function funcBody(decl, name, sig, body, iota) {
     if (this.conf.IgnoreFuncBodies) {
         throw new Error("function body not ignored");
     }
@@ -75,8 +75,8 @@ Checker.prototype.funcBody = function funcBody(decl, name, sig, body, iota) {
         this.exprPos = env.exprPos;
         this.indent = indent;
     }
-};
-Checker.prototype.usage = function usage(scope) {
+});
+registerCheckerMethod("usage", function usage(scope) {
     if (scope === null) {
         return;
     }
@@ -102,7 +102,7 @@ Checker.prototype.usage = function usage(scope) {
             this.usage(child);
         }
     }
-};
+});
 // permissible control-flow statements
 export const breakOk = 1 << 0;
 export const continueOk = 1 << 1;
@@ -110,11 +110,11 @@ export const fallthroughOk = 1 << 2;
 // additional context information
 export const finalSwitchCase = 1 << 3;
 export const inTypeSwitch = 1 << 4;
-Checker.prototype.simpleStmt = function simpleStmt(s) {
+registerCheckerMethod("simpleStmt", function simpleStmt(s) {
     if (s !== null && s !== undefined) {
         this.stmt(0, s);
     }
-};
+});
 export function trimTrailingEmptyStmts(list) {
     for (let i = list.length; i > 0; i--) {
         if (list[i - 1].kind !== "EmptyStmt") {
@@ -123,7 +123,7 @@ export function trimTrailingEmptyStmts(list) {
     }
     return [];
 }
-Checker.prototype.stmtList = function stmtList(ctxt, list) {
+registerCheckerMethod("stmtList", function stmtList(ctxt, list) {
     const ok = (ctxt & fallthroughOk) !== 0;
     let inner = ctxt & ~fallthroughOk;
     list = trimTrailingEmptyStmts(list); // trailing empty statements are "invisible" to fallthrough analysis
@@ -134,8 +134,8 @@ Checker.prototype.stmtList = function stmtList(ctxt, list) {
         }
         this.stmt(inner2, list[i]);
     }
-};
-Checker.prototype.multipleDefaults = function multipleDefaults(list) {
+});
+registerCheckerMethod("multipleDefaults", function multipleDefaults(list) {
     let first = null;
     for (const s of list) {
         let d = null;
@@ -163,15 +163,15 @@ Checker.prototype.multipleDefaults = function multipleDefaults(list) {
             }
         }
     }
-};
-Checker.prototype.openScope = function openScope(node, comment) {
+});
+registerCheckerMethod("openScope", function openScope(node, comment) {
     const scope = NewScope(this.scope, PosOf(node), EndOf(node), comment);
     this.recordScope(node, scope);
     this.scope = scope;
-};
-Checker.prototype.closeScope = function closeScope() {
+});
+registerCheckerMethod("closeScope", function closeScope() {
     this.scope = this.scope?.Parent() ?? null;
-};
+});
 export function assignOp(op) {
     switch (op) {
         case TokenKind.PlusAssign:
@@ -199,7 +199,7 @@ export function assignOp(op) {
     }
     return TokenKind.Illegal;
 }
-Checker.prototype.suspendedCall = function suspendedCall(keyword, call) {
+registerCheckerMethod("suspendedCall", function suspendedCall(keyword, call) {
     const x = new operand();
     let msg = "";
     let code;
@@ -218,7 +218,7 @@ Checker.prototype.suspendedCall = function suspendedCall(keyword, call) {
             throw new Error("unreachable");
     }
     this.errorf(x, code, "%s %s %s", keyword, msg, x);
-};
+});
 // goVal returns the Go value for val, or nil.
 export function goVal(val) {
     // val should exist, but be conservative and check
@@ -247,7 +247,7 @@ export class valueType {
         this.typ = typ;
     }
 }
-Checker.prototype.caseValues = function caseValues(x, values, seen) {
+registerCheckerMethod("caseValues", function caseValues(x, values, seen) {
     L: for (const e of values) {
         const v = new operand();
         this.expr(null, v, e);
@@ -287,16 +287,16 @@ Checker.prototype.caseValues = function caseValues(x, values, seen) {
             seen.set(key, bucket);
         }
     }
-};
-Checker.prototype.isNil = function isNil(e) {
+});
+registerCheckerMethod("isNil", function isNil(e) {
     // The only way to express the nil value is by literally writing nil (possibly in parentheses).
     const name = Unparen(e);
     if (name.kind === "Ident") {
         return this.lookup(name.name) instanceof Nil;
     }
     return false;
-};
-Checker.prototype.caseTypes = function caseTypes(x, types, seen) {
+});
+registerCheckerMethod("caseTypes", function caseTypes(x, types, seen) {
     let T = null;
     const dummy = new operand();
     L: for (const e of types) {
@@ -342,10 +342,10 @@ Checker.prototype.caseTypes = function caseTypes(x, types, seen) {
     }
     assert(T !== null);
     return T;
-};
+});
 // TODO(gri) Once we are certain that typeHash is correct in all situations, use this version of caseTypes instead.
 // (Currently it may be possible that different types have identical names and import paths due to ImporterFrom.)
-Checker.prototype.caseTypes_currently_unused = function caseTypes_currently_unused(x, _xtyp, types, seen) {
+registerCheckerMethod("caseTypes_currently_unused", function caseTypes_currently_unused(x, _xtyp, types, seen) {
     let T = null;
     const dummy = new operand();
     L: for (const e of types) {
@@ -392,9 +392,9 @@ Checker.prototype.caseTypes_currently_unused = function caseTypes_currently_unus
     }
     assert(T !== null);
     return T;
-};
+});
 // stmt typechecks statement s.
-Checker.prototype.stmt = function stmt(ctxt, s) {
+registerCheckerMethod("stmt", function stmt(ctxt, s) {
     // statements must end with the same top scope as they started with
     const scope = this.scope;
     // process collected function literals before scope changes
@@ -877,7 +877,7 @@ Checker.prototype.stmt = function stmt(ctxt, s) {
             assert(scope === this.scope);
         }
     }
-};
+});
 function caseValueKey(x) {
     if (typeof x === "bigint") {
         return `i:${x}`;

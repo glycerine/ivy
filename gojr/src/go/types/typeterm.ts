@@ -6,8 +6,22 @@
 // license that can be found in the LICENSE file.
 
 import type { Type } from "./type.js";
-import { debug } from "./check.js";
-import { Identical } from "./predicates.js";
+
+const debug = false;
+
+type identicalFunc = (x: Type | null, y: Type | null) => boolean;
+let identical: identicalFunc | null = null;
+
+export function setIdenticalForTypeTerms(fn: identicalFunc): void {
+  identical = fn;
+}
+
+function Identical(x: Type | null, y: Type | null): boolean {
+  if (identical === null) {
+    throw new Error("go/types: Identical not initialized for type terms");
+  }
+  return identical(x, y);
+}
 
 // A term describes elementary type sets:
 //

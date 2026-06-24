@@ -7,7 +7,7 @@
 import { EndOf, PosOf } from "../../front/ast.js";
 import { Array as ArrayType } from "./array.js";
 import { Basic, Int, String as StringKind } from "./basic.js";
-import { Checker } from "./check.js";
+import { registerCheckerMethod } from "./check.js";
 import { representableConst } from "./const.js";
 import { Interface } from "./interface.js";
 import { Map as MapType } from "./map.js";
@@ -24,7 +24,7 @@ const invalidOp = "invalid operation: ";
 // If e is a valid function instantiation, indexExpr returns true.
 // In that case x represents the uninstantiated function value and
 // it is the caller's responsibility to instantiate the function.
-Checker.prototype.indexExpr = function indexExpr(x, e) {
+registerCheckerMethod("indexExpr", function indexExpr(x, e) {
     this.exprOrType(x, e.x, true);
     // x may be generic
     switch (x.mode()) {
@@ -237,8 +237,8 @@ Checker.prototype.indexExpr = function indexExpr(x, e) {
     }
     this.index(index, length);
     return false;
-};
-Checker.prototype.sliceExpr = function sliceExpr(x, e0) {
+});
+registerCheckerMethod("sliceExpr", function sliceExpr(x, e0) {
     const e = e0;
     this.expr(null, x, e.object);
     if (!x.isValid()) {
@@ -400,11 +400,11 @@ Checker.prototype.sliceExpr = function sliceExpr(x, e0) {
             }
         }
     }
-};
+});
 // singleIndex returns the (single) index from the index expression e.
 // If the index is missing, or if there are multiple indices, an error
 // is reported and the result is nil.
-Checker.prototype.singleIndex = function singleIndex(expr) {
+registerCheckerMethod("singleIndex", function singleIndex(expr) {
     if (expr.indices.length === 0) {
         this.errorf(expr.orig, "InvalidSyntaxTree", "index expression %v with 0 indices", expr);
         return null;
@@ -414,12 +414,12 @@ Checker.prototype.singleIndex = function singleIndex(expr) {
         this.error(expr.indices[1], "InvalidIndex", invalidOp + "more than one index");
     }
     return expr.indices[0];
-};
+});
 // index checks an index expression for validity.
 // If max >= 0, it is the upper bound for index.
 // If the result typ is != Typ[Invalid], index is valid and typ is its (possibly named) integer type.
 // If the result val >= 0, index is valid and val is its constant int value.
-Checker.prototype.index = function index(index, max) {
+registerCheckerMethod("index", function index(index, max) {
     let typ = Typ[0];
     let val = -1;
     const x = new operand();
@@ -443,8 +443,8 @@ Checker.prototype.index = function index(index, max) {
     typ = x.typ();
     val = Number(v);
     return [typ, val];
-};
-Checker.prototype.isValidIndex = function isValidIndex(x, code, what, allowNegative) {
+});
+registerCheckerMethod("isValidIndex", function isValidIndex(x, code, what, allowNegative) {
     if (!x.isValid()) {
         return false;
     }
@@ -474,7 +474,7 @@ Checker.prototype.isValidIndex = function isValidIndex(x, code, what, allowNegat
         x.val = rounded.value;
     }
     return true;
-};
+});
 // indexedExpr wraps an ast.IndexExpr or ast.IndexListExpr.
 //
 // Orig holds the original ast.Expr from which this indexedExpr was derived.
@@ -516,9 +516,9 @@ export function unpackIndexedExpr(n) {
     }
     return null;
 }
-Checker.prototype.unpackIndexedExpr = function unpackIndexedExprMethod(e) {
+registerCheckerMethod("unpackIndexedExpr", function unpackIndexedExprMethod(e) {
     return unpackIndexedExpr(e);
-};
+});
 function toInt(x) {
     if (typeof x === "bigint") {
         return x;

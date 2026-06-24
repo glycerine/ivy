@@ -10,7 +10,7 @@
 import { EndOf, PosOf, Unparen, type Expr, type Stmt } from "../../front/ast.js";
 import type { Type } from "./type.js";
 import { Basic, UntypedBool, UntypedComplex, UntypedFloat, UntypedInt, UntypedNil, UntypedRune, UntypedString } from "./basic.js";
-import { Checker, noposn, type positioner } from "./check.js";
+import { Checker, noposn, type positioner , registerCheckerMethod } from "./check.js";
 import { operand, invalid, constant_, variable, mapindex, value, commaok, commaerr, nilvalue } from "./operand.js";
 import { Typ } from "./universe.js";
 import { Invalid } from "./basic.js";
@@ -59,7 +59,7 @@ declare module "./check.js" {
 //
 // If x is a constant operand, the returned constant.Value will be the
 // representation of x in this context.
-Checker.prototype.implicitTypeAndValue = function implicitTypeAndValue(x: operand, target: Type): [Type | null, unknown, unknown] {
+registerCheckerMethod("implicitTypeAndValue", function implicitTypeAndValue(x: operand, target: Type): [Type | null, unknown, unknown] {
   if (!x.isValid() || isTyped(x.typ()!) || !isValid(target)) {
     return [x.typ(), null, 0];
   }
@@ -158,14 +158,14 @@ Checker.prototype.implicitTypeAndValue = function implicitTypeAndValue(x: operan
     return [null, null, "InvalidUntypedConversion"];
   }
   return [target, null, 0];
-};
+});
 
 // assignment reports whether x can be assigned to a variable of type T,
 // if necessary by attempting to convert untyped values to the appropriate
 // type. context describes the context in which the assignment takes place.
 // Use T == nil to indicate assignment to an untyped blank identifier.
 // If the assignment check fails, x.mode is set to invalid.
-Checker.prototype.assignment = function assignment(x: operand, T: Type | null, context: string): void {
+registerCheckerMethod("assignment", function assignment(x: operand, T: Type | null, context: string): void {
   this.singleValue?.(x);
 
   switch (x.mode()) {
@@ -258,9 +258,9 @@ Checker.prototype.assignment = function assignment(x: operand, T: Type | null, c
     }
     x.invalidate();
   }
-};
+});
 
-Checker.prototype.initConst = function initConst(lhs: Const, x: operand): void {
+registerCheckerMethod("initConst", function initConst(lhs: Const, x: operand): void {
   if (!x.isValid() || !isValid(x.typ()) || !isValid(lhs.typ)) {
     if (lhs.typ === null) {
       lhs.typ = Typ[Invalid]!;
@@ -289,13 +289,13 @@ Checker.prototype.initConst = function initConst(lhs: Const, x: operand): void {
   }
 
   lhs.val = x.val;
-};
+});
 
 // initVar checks the initialization lhs = x in a variable declaration.
 // If lhs doesn't have a type yet, it is given the type of x,
 // or Typ[Invalid] in case of an error.
 // If the initialization check fails, x.mode is set to invalid.
-Checker.prototype.initVar = function initVar(lhs: Var, x: operand, context: string): void {
+registerCheckerMethod("initVar", function initVar(lhs: Var, x: operand, context: string): void {
   if (!x.isValid() || !isValid(x.typ()) || !isValid(lhs.typ)) {
     if (lhs.typ === null) {
       lhs.typ = Typ[Invalid]!;
@@ -321,13 +321,13 @@ Checker.prototype.initVar = function initVar(lhs: Var, x: operand, context: stri
   }
 
   this.assignment(x, lhs.typ, context);
-};
+});
 
 // lhsVar checks a lhs variable in an assignment and returns its type.
 // lhsVar takes care of not counting a lhs identifier as a "use" of
 // that identifier. The result is nil if it is the blank identifier,
 // and Typ[Invalid] if it is an invalid lhs expression.
-Checker.prototype.lhsVar = function lhsVar(lhs: Expr): Type | null {
+registerCheckerMethod("lhsVar", function lhsVar(lhs: Expr): Type | null {
   // Determine if the lhs is a (possibly parenthesized) identifier.
   const unparen = Unparen(lhs);
   const ident = unparen.kind === "Ident" ? unparen : null;
@@ -392,12 +392,12 @@ Checker.prototype.lhsVar = function lhsVar(lhs: Expr): Type | null {
   }
 
   return x.typ();
-};
+});
 
 // assignVar checks the assignment lhs = rhs (if x == nil), or lhs = x (if x != nil).
 // If x != nil, it must be the evaluation of rhs (and rhs will be ignored).
 // If the assignment check fails and x != nil, x.mode is set to invalid.
-Checker.prototype.assignVar = function assignVar(lhs: Expr, rhs: Expr | null, x: operand | null, context: string): void {
+registerCheckerMethod("assignVar", function assignVar(lhs: Expr, rhs: Expr | null, x: operand | null, context: string): void {
   const T = this.lhsVar(lhs); // nil if lhs is _
   if (!isValid(T)) {
     if (x !== null) {
@@ -424,7 +424,7 @@ Checker.prototype.assignVar = function assignVar(lhs: Expr, rhs: Expr | null, x:
     context = "assignment to _ identifier";
   }
   this.assignment(x, T, context);
-};
+});
 
 // operandTypes returns the list of types for the given operands.
 export function operandTypes(list: operand[]): Type[] {
@@ -451,7 +451,7 @@ export function varTypes(list: Var[]): Type[] {
 // If hasDots is set, the last argument string is of the form "T..."
 // where T is the last type.
 // Only one of variadic and hasDots may be set.
-Checker.prototype.typesSummary = function typesSummary(list: Type[], variadic: boolean, hasDots: boolean): string {
+registerCheckerMethod("typesSummary", function typesSummary(list: Type[], variadic: boolean, hasDots: boolean): string {
   assert(!(variadic && hasDots));
   const res: string[] = [];
   for (let i = 0; i < list.length; i++) {
@@ -498,7 +498,7 @@ Checker.prototype.typesSummary = function typesSummary(list: Type[], variadic: b
     res.push(s);
   }
   return "(" + res.join(", ") + ")";
-};
+});
 
 export function measure(x: number, unit: string): string {
   if (x !== 1) {
@@ -507,7 +507,7 @@ export function measure(x: number, unit: string): string {
   return `${x} ${unit}`;
 }
 
-Checker.prototype.assignError = function assignError(rhs: Expr[], l: number, r: number): void {
+registerCheckerMethod("assignError", function assignError(rhs: Expr[], l: number, r: number): void {
   const vars = measure(l, "variable");
   const vals = measure(r, "value");
   const rhs0 = rhs[0]!;
@@ -520,9 +520,9 @@ Checker.prototype.assignError = function assignError(rhs: Expr[], l: number, r: 
     }
   }
   this.errorf(rhs0, "WrongAssignCount", "assignment mismatch: %s but %s", vars, vals);
-};
+});
 
-Checker.prototype.returnError = function returnError(at: positioner, lhs: Var[], rhs: operand[]): void {
+registerCheckerMethod("returnError", function returnError(at: positioner, lhs: Var[], rhs: operand[]): void {
   const l = lhs.length;
   const r = rhs.length;
   let qualifier = "not enough";
@@ -537,13 +537,13 @@ Checker.prototype.returnError = function returnError(at: positioner, lhs: Var[],
   err.addf(noposn, "have %s", this.typesSummary(operandTypes(rhs), false, false));
   err.addf(noposn, "want %s", this.typesSummary(varTypes(lhs), false, false));
   err.report();
-};
+});
 
 // initVars type-checks assignments of initialization expressions orig_rhs
 // to variables lhs.
 // If returnStmt is non-nil, initVars type-checks the implicit assignment
 // of result expressions orig_rhs to function result parameters lhs.
-Checker.prototype.initVars = function initVars(lhs: Var[], orig_rhs: Expr[], returnStmt: Stmt | null): void {
+registerCheckerMethod("initVars", function initVars(lhs: Var[], orig_rhs: Expr[], returnStmt: Stmt | null): void {
   const l = lhs.length;
   let r = orig_rhs.length;
 
@@ -628,10 +628,10 @@ Checker.prototype.initVars = function initVars(lhs: Var[], orig_rhs: Expr[], ret
     }
   }
   // orig_rhs[0] was already evaluated
-};
+});
 
 // assignVars type-checks assignments of expressions orig_rhs to variables lhs.
-Checker.prototype.assignVars = function assignVars(lhs: Expr[], orig_rhs: Expr[]): void {
+registerCheckerMethod("assignVars", function assignVars(lhs: Expr[], orig_rhs: Expr[]): void {
   const l = lhs.length;
   let r = orig_rhs.length;
 
@@ -689,9 +689,9 @@ Checker.prototype.assignVars = function assignVars(lhs: Expr[], orig_rhs: Expr[]
   }
   this.useLHS(...lhs);
   // orig_rhs[0] was already evaluated
-};
+});
 
-Checker.prototype.shortVarDecl = function shortVarDecl(pos: positioner, lhs: Expr[], rhs: Expr[]): void {
+registerCheckerMethod("shortVarDecl", function shortVarDecl(pos: positioner, lhs: Expr[], rhs: Expr[]): void {
   const top = this.delayed.length;
   const scope = this.scope!;
 
@@ -773,7 +773,7 @@ Checker.prototype.shortVarDecl = function shortVarDecl(pos: positioner, lhs: Exp
   for (const obj of newVars) {
     this.declare(scope, null, obj, scopePos); // id = nil: recordDef already called
   }
-};
+});
 
 function isTypeParamLocal(t: Type): boolean {
   return isTypeParam(t);

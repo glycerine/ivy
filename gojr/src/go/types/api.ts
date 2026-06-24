@@ -9,13 +9,33 @@ import type { Object, PkgName, Var } from "./object.js";
 import type { Scope } from "./scope.js";
 import type { Selection } from "./selection.js";
 import type { TypeList } from "./typelists.js";
-import { Typ } from "./universe.js";
+import { init as initUniverse, Typ } from "./universe.js";
 import { UntypedNil } from "./basic.js";
 import { operandMode, novalue, typexpr, builtin, constant_, variable, mapindex, value, commaok, commaerr } from "./operand.js";
 import type { Sizes } from "./sizes.js";
 import type { Context } from "./context.js";
 import { NewChecker } from "./check.js";
 import { WriteExpr } from "./exprstring.js";
+
+type configCtor = { prototype: any };
+type configMethodRecord = [string, Function];
+
+function configMethodQueue(): configMethodRecord[] {
+  const g = globalThis as typeof globalThis & { __gojrPendingConfigMethods?: configMethodRecord[] };
+  if (g.__gojrPendingConfigMethods === undefined) {
+    g.__gojrPendingConfigMethods = [];
+  }
+  return g.__gojrPendingConfigMethods;
+}
+
+function installPendingConfigMethods(ctor: configCtor): void {
+  const g = globalThis as typeof globalThis & { __gojrConfigCtor?: configCtor };
+  g.__gojrConfigCtor = ctor;
+  for (const [name, fn] of configMethodQueue()) {
+    ctor.prototype[name] = fn;
+  }
+  configMethodQueue().length = 0;
+}
 
 // An Error describes a type-checking error; it implements the error interface.
 export class Error extends globalThis.Error {
@@ -85,10 +105,13 @@ export class Config {
   // the first error if any. Additionally, if info != nil, Check populates each
   // of the non-nil maps in the [Info] struct.
   public Check(path: string, fset: unknown, files: unknown[], info: Info | null): [Package, unknown] {
+    initUniverse();
     const pkg = NewPackage(path, "");
     return [pkg, NewChecker(this, fset, pkg, info).Files(files)];
   }
 }
+
+installPendingConfigMethods(Config);
 
 // Linkname for use from srcimporter.
 //go:linkname srcimporter_setUsesCgo

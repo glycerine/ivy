@@ -5,7 +5,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import { Checker, atPos } from "./check.js";
+import { Checker, atPos , registerCheckerMethod } from "./check.js";
 import type { Package } from "./package.js";
 import type { Type } from "./type.js";
 import { TypeName } from "./object.js";
@@ -100,7 +100,7 @@ declare module "./check.js" {
   }
 }
 
-Checker.prototype.monomorph = function monomorph(): void {
+registerCheckerMethod("monomorph", function monomorph(): void {
   if (!(this.mono instanceof monoGraph)) {
     this.mono = new monoGraph();
   }
@@ -129,9 +129,9 @@ Checker.prototype.monomorph = function monomorph(): void {
       again = true;
     }
   }
-};
+});
 
-Checker.prototype.reportInstanceLoop = function reportInstanceLoop(v: number): void {
+registerCheckerMethod("reportInstanceLoop", function reportInstanceLoop(v: number): void {
   const graph = this.mono as monoGraph;
   const stack: number[] = [];
   const seen = new Array<boolean>(graph.vertices.length).fill(false);
@@ -156,4 +156,4 @@ Checker.prototype.reportInstanceLoop = function reportInstanceLoop(v: number): v
     err.addf(new atPos(edge.pos), "%s instantiated as %s", obj.Name(), edge.typ);
   }
   err.report();
-};
+});

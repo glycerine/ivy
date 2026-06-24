@@ -8,7 +8,7 @@ import { PosOf, Unparen } from "../../front/ast.js";
 import { Array as ArrayType } from "./array.js";
 import { Basic, Complex128, Complex64, Float32, Float64, Int, String as StringKind, Uintptr, UnsafePointer, UntypedComplex, UntypedFloat } from "./basic.js";
 import { Chan, ChanDir } from "./chan.js";
-import { Checker, atPos, nopos } from "./check.js";
+import { atPos, nopos, registerCheckerMethod } from "./check.js";
 import { imag, makeComplex, real } from "./const.js";
 import { invalidArg, invalidOp } from "./errors.js";
 import { Interface, emptyInterface, NewInterfaceType } from "./interface.js";
@@ -31,14 +31,14 @@ import { builtinId, predeclaredFuncs, Typ, universeByte } from "./universe.js";
 import { go1_17, go1_20, go1_21, go1_26 } from "./version.js";
 import { Unalias } from "./alias.js";
 import { assert } from "./util.js";
-Checker.prototype.recordTypes = function recordTypes() {
+registerCheckerMethod("recordTypes", function recordTypes() {
     return this.Info.recordTypes();
-};
+});
 // builtin type-checks a call to the built-in specified by id and
 // reports whether the call is valid, with *x holding the result;
 // but x.expr is not set. If the call is invalid, the result is
 // false, and *x is undefined.
-Checker.prototype.builtin = function builtin(x, call0, id0) {
+registerCheckerMethod("builtin", function builtin(x, call0, id0) {
     assert(id0 !== null);
     const id = id0;
     const call = call0;
@@ -844,7 +844,7 @@ Checker.prototype.builtin = function builtin(x, call0, id0) {
             this.hasCallOrRecv = savedHasCallOrRecv;
         }
     }
-};
+});
 // sliceElem returns the slice element type for a slice operand x
 // or a type error if x is not a slice (or a type set of slices).
 export function sliceElem(x) {
@@ -871,7 +871,7 @@ export function sliceElem(x) {
 // hasVarSize reports if the size of type t is variable due to type parameters
 // or if the type is infinitely-sized due to a cycle for which the type has not
 // yet been checked.
-Checker.prototype.hasVarSize = function hasVarSize(t0) {
+registerCheckerMethod("hasVarSize", function hasVarSize(t0) {
     // Note: We could use Underlying here, but passing through the RHS may yield
     // better error messages and allows us to stash the result on each traversed
     // Named type.
@@ -893,7 +893,7 @@ Checker.prototype.hasVarSize = function hasVarSize(t0) {
         return true;
     }
     return false;
-};
+});
 // applyTypeFunc applies f to x. If x is a type parameter,
 // the result is a type parameter constrained by a new
 // interface bound. The type bounds for that interface
@@ -901,7 +901,7 @@ Checker.prototype.hasVarSize = function hasVarSize(t0) {
 // of x. If any of these applications of f return nil,
 // applyTypeFunc returns nil.
 // If x is not a type parameter, the result is f(x).
-Checker.prototype.applyTypeFunc = function applyTypeFunc(f, x, id) {
+registerCheckerMethod("applyTypeFunc", function applyTypeFunc(f, x, id) {
     const tp = Unalias(x.typ()) instanceof TypeParam ? Unalias(x.typ()) : null;
     if (tp !== null) {
         // Test if t satisfies the requirements for the argument
@@ -941,7 +941,7 @@ Checker.prototype.applyTypeFunc = function applyTypeFunc(f, x, id) {
         return ptyp;
     }
     return f(x.typ());
-};
+});
 // makeSig makes a signature for the given argument and result types.
 // Default types are used for untyped arguments, and res may be nil.
 export function makeSig(res, ...args) {

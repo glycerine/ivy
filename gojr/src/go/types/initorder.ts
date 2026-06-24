@@ -5,7 +5,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import { Checker } from "./check.js";
+import { Checker , registerCheckerMethod } from "./check.js";
 import { Initializer } from "./api.js";
 import { Const, Func, Var, type Object } from "./object.js";
 import { declInfo } from "./resolver.js";
@@ -18,7 +18,7 @@ declare module "./check.js" {
 }
 
 // initOrder computes the Info.InitOrder for package variables.
-Checker.prototype.initOrder = function initOrder(): void {
+registerCheckerMethod("initOrder", function initOrder(): void {
   // An InitOrder may already have been computed if a package is
   // built from several calls to (*Checker).Files. Clear it.
   this.Info.InitOrder = [];
@@ -60,7 +60,7 @@ Checker.prototype.initOrder = function initOrder(): void {
     const init = new Initializer(infoLhs, info.init);
     this.Info.InitOrder?.push(init);
   }
-};
+});
 
 // findPath returns the (reversed) list of objects []Object{to, ... from}
 // such that there is a path of object dependencies from 'from' to 'to'.
@@ -88,7 +88,7 @@ export function findPath(objMap: Map<Object, declInfo>, from: Object, to: Object
 }
 
 // reportCycle reports an error for the given cycle.
-Checker.prototype.reportCycle = function reportCycle(cycle: Object[]): void {
+registerCheckerMethod("reportCycle", function reportCycle(cycle: Object[]): void {
   let obj = cycle[0]!;
 
   if (cycle.length === 1) {
@@ -104,7 +104,7 @@ Checker.prototype.reportCycle = function reportCycle(cycle: Object[]): void {
     obj = next;
   }
   err.report();
-};
+});
 
 // A dependency is an object that may be a dependency in an initialization
 // expression. Only constants, variables, and functions can be dependencies.

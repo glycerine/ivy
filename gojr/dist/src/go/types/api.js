@@ -2,11 +2,26 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 import { NewPackage } from "./package.js";
-import { Typ } from "./universe.js";
+import { init as initUniverse, Typ } from "./universe.js";
 import { UntypedNil } from "./basic.js";
 import { novalue, typexpr, builtin, constant_, variable, mapindex, value, commaok, commaerr } from "./operand.js";
 import { NewChecker } from "./check.js";
 import { WriteExpr } from "./exprstring.js";
+function configMethodQueue() {
+    const g = globalThis;
+    if (g.__gojrPendingConfigMethods === undefined) {
+        g.__gojrPendingConfigMethods = [];
+    }
+    return g.__gojrPendingConfigMethods;
+}
+function installPendingConfigMethods(ctor) {
+    const g = globalThis;
+    g.__gojrConfigCtor = ctor;
+    for (const [name, fn] of configMethodQueue()) {
+        ctor.prototype[name] = fn;
+    }
+    configMethodQueue().length = 0;
+}
 // An Error describes a type-checking error; it implements the error interface.
 export class Error extends globalThis.Error {
     Fset;
@@ -62,10 +77,12 @@ export class Config {
     // the first error if any. Additionally, if info != nil, Check populates each
     // of the non-nil maps in the [Info] struct.
     Check(path, fset, files, info) {
+        initUniverse();
         const pkg = NewPackage(path, "");
         return [pkg, NewChecker(this, fset, pkg, info).Files(files)];
     }
 }
+installPendingConfigMethods(Config);
 // Linkname for use from srcimporter.
 //go:linkname srcimporter_setUsesCgo
 export function srcimporter_setUsesCgo(conf) {

@@ -6,7 +6,7 @@
 // This file implements initialization and assignment checks.
 import { EndOf, PosOf, Unparen } from "../../front/ast.js";
 import { Basic, UntypedBool, UntypedComplex, UntypedFloat, UntypedInt, UntypedNil, UntypedRune, UntypedString } from "./basic.js";
-import { Checker, noposn } from "./check.js";
+import { noposn, registerCheckerMethod } from "./check.js";
 import { operand, invalid, constant_, variable, mapindex, value, commaok, commaerr, nilvalue } from "./operand.js";
 import { Typ } from "./universe.js";
 import { Invalid } from "./basic.js";
@@ -28,7 +28,7 @@ import { assert } from "./util.js";
 //
 // If x is a constant operand, the returned constant.Value will be the
 // representation of x in this context.
-Checker.prototype.implicitTypeAndValue = function implicitTypeAndValue(x, target) {
+registerCheckerMethod("implicitTypeAndValue", function implicitTypeAndValue(x, target) {
     if (!x.isValid() || isTyped(x.typ()) || !isValid(target)) {
         return [x.typ(), null, 0];
     }
@@ -129,13 +129,13 @@ Checker.prototype.implicitTypeAndValue = function implicitTypeAndValue(x, target
         return [null, null, "InvalidUntypedConversion"];
     }
     return [target, null, 0];
-};
+});
 // assignment reports whether x can be assigned to a variable of type T,
 // if necessary by attempting to convert untyped values to the appropriate
 // type. context describes the context in which the assignment takes place.
 // Use T == nil to indicate assignment to an untyped blank identifier.
 // If the assignment check fails, x.mode is set to invalid.
-Checker.prototype.assignment = function assignment(x, T, context) {
+registerCheckerMethod("assignment", function assignment(x, T, context) {
     this.singleValue?.(x);
     switch (x.mode()) {
         case invalid:
@@ -224,8 +224,8 @@ Checker.prototype.assignment = function assignment(x, T, context) {
         }
         x.invalidate();
     }
-};
-Checker.prototype.initConst = function initConst(lhs, x) {
+});
+registerCheckerMethod("initConst", function initConst(lhs, x) {
     if (!x.isValid() || !isValid(x.typ()) || !isValid(lhs.typ)) {
         if (lhs.typ === null) {
             lhs.typ = Typ[Invalid];
@@ -250,12 +250,12 @@ Checker.prototype.initConst = function initConst(lhs, x) {
         return;
     }
     lhs.val = x.val;
-};
+});
 // initVar checks the initialization lhs = x in a variable declaration.
 // If lhs doesn't have a type yet, it is given the type of x,
 // or Typ[Invalid] in case of an error.
 // If the initialization check fails, x.mode is set to invalid.
-Checker.prototype.initVar = function initVar(lhs, x, context) {
+registerCheckerMethod("initVar", function initVar(lhs, x, context) {
     if (!x.isValid() || !isValid(x.typ()) || !isValid(lhs.typ)) {
         if (lhs.typ === null) {
             lhs.typ = Typ[Invalid];
@@ -279,12 +279,12 @@ Checker.prototype.initVar = function initVar(lhs, x, context) {
         lhs.typ = typ;
     }
     this.assignment(x, lhs.typ, context);
-};
+});
 // lhsVar checks a lhs variable in an assignment and returns its type.
 // lhsVar takes care of not counting a lhs identifier as a "use" of
 // that identifier. The result is nil if it is the blank identifier,
 // and Typ[Invalid] if it is an invalid lhs expression.
-Checker.prototype.lhsVar = function lhsVar(lhs) {
+registerCheckerMethod("lhsVar", function lhsVar(lhs) {
     // Determine if the lhs is a (possibly parenthesized) identifier.
     const unparen = Unparen(lhs);
     const ident = unparen.kind === "Ident" ? unparen : null;
@@ -342,11 +342,11 @@ Checker.prototype.lhsVar = function lhsVar(lhs) {
         }
     }
     return x.typ();
-};
+});
 // assignVar checks the assignment lhs = rhs (if x == nil), or lhs = x (if x != nil).
 // If x != nil, it must be the evaluation of rhs (and rhs will be ignored).
 // If the assignment check fails and x != nil, x.mode is set to invalid.
-Checker.prototype.assignVar = function assignVar(lhs, rhs, x, context) {
+registerCheckerMethod("assignVar", function assignVar(lhs, rhs, x, context) {
     const T = this.lhsVar(lhs); // nil if lhs is _
     if (!isValid(T)) {
         if (x !== null) {
@@ -372,7 +372,7 @@ Checker.prototype.assignVar = function assignVar(lhs, rhs, x, context) {
         context = "assignment to _ identifier";
     }
     this.assignment(x, T, context);
-};
+});
 // operandTypes returns the list of types for the given operands.
 export function operandTypes(list) {
     const res = [];
@@ -396,7 +396,7 @@ export function varTypes(list) {
 // If hasDots is set, the last argument string is of the form "T..."
 // where T is the last type.
 // Only one of variadic and hasDots may be set.
-Checker.prototype.typesSummary = function typesSummary(list, variadic, hasDots) {
+registerCheckerMethod("typesSummary", function typesSummary(list, variadic, hasDots) {
     assert(!(variadic && hasDots));
     const res = [];
     for (let i = 0; i < list.length; i++) {
@@ -444,14 +444,14 @@ Checker.prototype.typesSummary = function typesSummary(list, variadic, hasDots) 
         res.push(s);
     }
     return "(" + res.join(", ") + ")";
-};
+});
 export function measure(x, unit) {
     if (x !== 1) {
         unit += "s";
     }
     return `${x} ${unit}`;
 }
-Checker.prototype.assignError = function assignError(rhs, l, r) {
+registerCheckerMethod("assignError", function assignError(rhs, l, r) {
     const vars = measure(l, "variable");
     const vals = measure(r, "value");
     const rhs0 = rhs[0];
@@ -463,8 +463,8 @@ Checker.prototype.assignError = function assignError(rhs, l, r) {
         }
     }
     this.errorf(rhs0, "WrongAssignCount", "assignment mismatch: %s but %s", vars, vals);
-};
-Checker.prototype.returnError = function returnError(at, lhs, rhs) {
+});
+registerCheckerMethod("returnError", function returnError(at, lhs, rhs) {
     const l = lhs.length;
     const r = rhs.length;
     let qualifier = "not enough";
@@ -480,12 +480,12 @@ Checker.prototype.returnError = function returnError(at, lhs, rhs) {
     err.addf(noposn, "have %s", this.typesSummary(operandTypes(rhs), false, false));
     err.addf(noposn, "want %s", this.typesSummary(varTypes(lhs), false, false));
     err.report();
-};
+});
 // initVars type-checks assignments of initialization expressions orig_rhs
 // to variables lhs.
 // If returnStmt is non-nil, initVars type-checks the implicit assignment
 // of result expressions orig_rhs to function result parameters lhs.
-Checker.prototype.initVars = function initVars(lhs, orig_rhs, returnStmt) {
+registerCheckerMethod("initVars", function initVars(lhs, orig_rhs, returnStmt) {
     const l = lhs.length;
     let r = orig_rhs.length;
     let context = "assignment";
@@ -567,9 +567,9 @@ Checker.prototype.initVars = function initVars(lhs, orig_rhs, returnStmt) {
         }
     }
     // orig_rhs[0] was already evaluated
-};
+});
 // assignVars type-checks assignments of expressions orig_rhs to variables lhs.
-Checker.prototype.assignVars = function assignVars(lhs, orig_rhs) {
+registerCheckerMethod("assignVars", function assignVars(lhs, orig_rhs) {
     const l = lhs.length;
     let r = orig_rhs.length;
     let context = "assignment";
@@ -621,8 +621,8 @@ Checker.prototype.assignVars = function assignVars(lhs, orig_rhs) {
     }
     this.useLHS(...lhs);
     // orig_rhs[0] was already evaluated
-};
-Checker.prototype.shortVarDecl = function shortVarDecl(pos, lhs, rhs) {
+});
+registerCheckerMethod("shortVarDecl", function shortVarDecl(pos, lhs, rhs) {
     const top = this.delayed.length;
     const scope = this.scope;
     // collect lhs variables
@@ -696,7 +696,7 @@ Checker.prototype.shortVarDecl = function shortVarDecl(pos, lhs, rhs) {
     for (const obj of newVars) {
         this.declare(scope, null, obj, scopePos); // id = nil: recordDef already called
     }
-};
+});
 function isTypeParamLocal(t) {
     return isTypeParam(t);
 }

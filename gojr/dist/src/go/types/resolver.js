@@ -1,12 +1,13 @@
 // Copyright 2013 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-import { Checker, atPos, importKey, nopos } from "./check.js";
+import { atPos, importKey, nopos, registerCheckerMethod } from "./check.js";
 import { asGoVersion } from "./version.js";
 import { NewPackage } from "./package.js";
 import { NewScope } from "./scope.js";
-import { NewPkgName, NewTypeName } from "./object.js";
+import { NewConst, NewFunc, NewPkgName, NewTypeName, NewVar } from "./object.js";
 import { assert } from "./util.js";
+import { basicLitValue, fileDecls, fileName, funcDeclBody, funcDeclName, funcDeclRecv, identName, nodeEnd, nodePos, specName, specNames, specPath, specType, specValues } from "./astcompat.js";
 // A declInfo describes a package-level const, type, var, or func declaration.
 export class declInfo {
     file = null; // scope of file containing this declaration
@@ -42,42 +43,41 @@ export class declInfo {
 // have the appropriate number of names and init exprs. For const
 // decls, init is the value spec providing the init exprs; for
 // var decls, init is nil (the init exprs are in s in this case).
-Checker.prototype.arityMatch = function arityMatch(s, init) {
-    const spec = s;
+registerCheckerMethod("arityMatch", function arityMatch(s, init) {
     const initSpec = init;
-    const l = spec.Names?.length ?? 0;
-    let r = spec.Values?.length ?? 0;
+    const l = specNames(s).length;
+    let r = specValues(s).length;
     if (initSpec !== null && initSpec !== undefined) {
-        r = initSpec.Values?.length ?? 0;
+        r = specValues(initSpec).length;
     }
     const code = "WrongAssignCount";
     switch (true) {
         case init === null && r === 0:
             // var decl w/o init expr
-            if (spec.Type === null || spec.Type === undefined) {
+            if (specType(s) === null || specType(s) === undefined) {
                 this.error(s, code, "missing type or init expr");
             }
             break;
         case l < r:
-            if (l < (spec.Values?.length ?? 0)) {
+            if (l < specValues(s).length) {
                 // init exprs from s
-                const n = spec.Values[l];
+                const n = specValues(s)[l];
                 this.errorf(n, code, "extra init expr %s", n);
                 // TODO(gri) avoid declared and not used error here
             }
             else {
                 // init exprs "inherited"
-                this.errorf(s, code, "extra init expr at %s", String(initSpec?.Pos?.() ?? ""));
+                this.errorf(s, code, "extra init expr at %s", String(nodePos(initSpec) ?? ""));
                 // TODO(gri) avoid declared and not used error here
             }
             break;
         case l > r && (init !== null || r !== 1): {
-            const n = spec.Names[r];
+            const n = specNames(s)[r];
             this.errorf(n, code, "missing init expr for %s", n);
             break;
         }
     }
-};
+});
 export function validatedImportPath(path) {
     let s;
     try {
@@ -102,35 +102,35 @@ function isGraphic(r) {
 }
 // declarePkgObj declares obj in the package scope, records its ident -> obj mapping,
 // and updates check.objMap. The object must not be a function or method.
-Checker.prototype.declarePkgObj = function declarePkgObj(ident, obj, d) {
-    const id = ident;
-    assert(id.Name === obj.Name());
+registerCheckerMethod("declarePkgObj", function declarePkgObj(ident, obj, d) {
+    const name = identName(ident);
+    assert(name === obj.Name());
     // spec: "A package-scope or file-scope identifier with name init
     // may only be declared to be a function with this (func()) signature."
-    if (id.Name === "init") {
+    if (name === "init") {
         this.error(ident, "InvalidInitDecl", "cannot declare init - must be func");
         return;
     }
     // spec: "The main package must have package name main and declare
     // a function main that takes no arguments and returns no value."
-    if (id.Name === "main" && this.pkg.name === "main") {
+    if (name === "main" && this.pkg.name === "main") {
         this.error(ident, "InvalidMainDecl", "cannot declare main - must be func");
         return;
     }
     this.declare(this.pkg.scope, ident, obj, nopos);
     this.objMap.set(obj, d);
     obj.setOrder(this.objMap.size);
-};
+});
 // filename returns a filename suitable for debugging output.
-Checker.prototype.filename = function filename(fileNo) {
+registerCheckerMethod("filename", function filename(fileNo) {
     const file = this.files?.[fileNo];
     const pos = file?.Pos?.() ?? 0;
     if (pos !== 0) {
         return file?.filename ?? `file[${fileNo}]`;
     }
     return `file[${fileNo}]`;
-};
-Checker.prototype.importPackage = function importPackage(at, path, dir_) {
+});
+registerCheckerMethod("importPackage", function importPackage(at, path, dir_) {
     // If we already have a package for the given (path, dir)
     // pair, use it instead of doing a full import.
     // Checker.impMap only caches packages that are marked Complete
@@ -212,11 +212,11 @@ Checker.prototype.importPackage = function importPackage(at, path, dir_) {
     }
     // something went wrong (importer may have returned incomplete package without error)
     return null;
-};
+});
 // collectObjects collects all file and package objects and inserts them
 // into their respective scopes. It also performs imports and associates
 // methods with receiver base type names.
-Checker.prototype.collectObjects = function collectObjects() {
+registerCheckerMethod("collectObjects", function collectObjects() {
     const pkg = this.pkg;
     // pkgImports is the set of packages already imported by any package file seen
     // so far. Used to avoid duplicate entries in pkg.imports. Allocate and populate
@@ -248,12 +248,12 @@ Checker.prototype.collectObjects = function collectObjects() {
         this.version = asGoVersion(this.versions?.get(file) ?? "");
         // The package identifier denotes the current package,
         // but there is no corresponding package object.
-        this.recordDef(file.Name, null);
+        this.recordDef(fileName(file), null);
         // Use the actual source file extent rather than *ast.File extent since the
         // latter doesn't include comments which appear at the start or end of the file.
         // Be conservative and use the *ast.File extent if we don't have a *token.File.
-        const pos = file.Pos?.() ?? nopos;
-        const end = file.End?.() ?? nopos;
+        const pos = nodePos(file) || nopos;
+        const end = nodeEnd(file) || nopos;
         const fileScope = NewScope(pkg.scope, pos, end, this.filename(fileNo));
         fileScopes[fileNo] = fileScope;
         this.recordScope(file, fileScope);
@@ -261,14 +261,15 @@ Checker.prototype.collectObjects = function collectObjects() {
         // FileName may be "" (typically for tests) in which case
         // we get "." as the directory which is what we would want.
         const fileDir = dir("");
-        this.walkDecls(file.Decls ?? [], (d) => {
+        this.walkDecls(fileDecls(file), (d) => {
             const kind = d.kind;
             switch (kind) {
                 case "importDecl": {
                     const spec = d.spec;
-                    const [path, err] = validatedImportPath(spec.Path?.Value ?? "");
+                    const pathLit = specPath(spec);
+                    const [path, err] = validatedImportPath(basicLitValue(pathLit));
                     if (err !== null) {
-                        this.errorf(spec.Path, "BadImportPath", "invalid import path (%s)", err);
+                        this.errorf(pathLit, "BadImportPath", "invalid import path (%s)", err);
                         return;
                     }
                     const imp = this.importPackage(new atPos(pos), path, fileDir);
@@ -280,7 +281,8 @@ Checker.prototype.collectObjects = function collectObjects() {
                         pkgImports.set(impPkg, true);
                         pkg.imports.push(impPkg);
                     }
-                    const name = spec.Name?.Name ?? impPkg.name;
+                    const nameIdent = specName(spec);
+                    const name = identName(nameIdent) || impPkg.name;
                     const pkgName = NewPkgName(pos, pkg, name, impPkg);
                     this.imports = [...(this.imports ?? []), pkgName];
                     if (name === ".") {
@@ -292,53 +294,89 @@ Checker.prototype.collectObjects = function collectObjects() {
                         }
                     }
                     else if (name !== "_") {
-                        this.declare(fileScope, spec.Name ?? spec.Path, pkgName, pos);
+                        this.declare(fileScope, nameIdent ?? pathLit, pkgName, pos);
                     }
                     break;
                 }
-                case "constDecl":
-                case "varDecl":
-                case "typeDecl":
-                case "funcDecl":
-                    // The detailed declaration-object construction is in decl.go in the
-                    // original source. This pass records the file scope and leaves
-                    // declaration processing to the mechanically translated decl walker.
+                case "constDecl": {
+                    const cd = d;
+                    const names = specNames(cd.spec);
+                    for (let i = 0; i < names.length; i++) {
+                        const name = names[i];
+                        const obj = NewConst(nodePos(name) || pos, pkg, identName(name), null, cd.iota);
+                        const init = i < cd.init.length ? cd.init[i] : null;
+                        this.declarePkgObj(name, obj, new declInfo({ file: fileScope, version: this.version, vtyp: cd.typ, init, inherited: cd.inherited }));
+                    }
                     break;
+                }
+                case "varDecl": {
+                    const vd = d;
+                    const names = specNames(vd.spec);
+                    const values = specValues(vd.spec);
+                    const lhs = names.map((name) => NewVar(nodePos(name) || pos, pkg, identName(name), null));
+                    for (let i = 0; i < names.length; i++) {
+                        const init = values.length === 1 ? values[0] : (i < values.length ? values[i] : null);
+                        const sharedLhs = values.length === 1 ? lhs : null;
+                        this.declarePkgObj(names[i], lhs[i], new declInfo({ file: fileScope, version: this.version, lhs: sharedLhs, vtyp: specType(vd.spec), init }));
+                    }
+                    break;
+                }
+                case "typeDecl": {
+                    const td = d;
+                    const name = specName(td.spec);
+                    const obj = NewTypeName(nodePos(name) || pos, pkg, identName(name), null);
+                    this.declarePkgObj(name, obj, new declInfo({ file: fileScope, version: this.version, tdecl: td.spec }));
+                    break;
+                }
+                case "funcDecl": {
+                    const fd = d.decl;
+                    const name = funcDeclName(fd);
+                    const obj = NewFunc(nodePos(name) || pos, pkg, identName(name), null);
+                    const info = new declInfo({ file: fileScope, version: this.version, fdecl: fd });
+                    if (funcDeclRecv(fd) === null || funcDeclRecv(fd) === undefined) {
+                        this.declarePkgObj(name, obj, info);
+                    }
+                    else {
+                        this.objMap.set(obj, info);
+                    }
+                    void funcDeclBody(fd);
+                    break;
+                }
             }
         });
     }
-};
-Checker.prototype.sortObjects = function sortObjects() {
+});
+registerCheckerMethod("sortObjects", function sortObjects() {
     this.objList = Array.from(this.objMap.keys());
     this.objList.sort((a, b) => a.order() - b.order());
-};
-Checker.prototype.unpackRecv = function unpackRecv(rtyp, _unpackParams) {
+});
+registerCheckerMethod("unpackRecv", function unpackRecv(rtyp, _unpackParams) {
     const expr = rtyp;
     if (expr?.kind === "StarExpr") {
         return [true, expr.X, null];
     }
     return [false, rtyp, null];
-};
-Checker.prototype.resolveBaseTypeName = function resolveBaseTypeName(_ptr, recv) {
+});
+registerCheckerMethod("resolveBaseTypeName", function resolveBaseTypeName(_ptr, recv) {
     const id = recv;
     const obj = this.pkg.scope.Lookup(id.Name ?? "");
     return obj instanceof NewTypeName(nopos, null, "", null).constructor ? obj : null;
-};
-Checker.prototype.packageObjects = function packageObjects() {
+});
+registerCheckerMethod("packageObjects", function packageObjects() {
     for (const obj of this.objList) {
         this.objDecl(obj);
     }
-};
-Checker.prototype.unusedImports = function unusedImports() {
+});
+registerCheckerMethod("unusedImports", function unusedImports() {
     for (const obj of this.imports ?? []) {
         if (!this.usedPkgNames.has(obj) && obj.name !== "_" && obj.name !== ".") {
             this.errorUnusedPkg(obj);
         }
     }
-};
-Checker.prototype.errorUnusedPkg = function errorUnusedPkg(obj) {
+});
+registerCheckerMethod("errorUnusedPkg", function errorUnusedPkg(obj) {
     this.softErrorf(obj, "UnusedImport", "%s imported and not used", obj.Name());
-};
+});
 export function dir(path) {
     const i = path.lastIndexOf("/");
     if (i < 0) {

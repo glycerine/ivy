@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file.
 // This file implements typechecking of call and selector expressions.
 import { NewIdent, PosOf, Unparen } from "../../front/ast.js";
-import { Checker, atPos, debug, noposn } from "./check.js";
+import { atPos, debug, noposn, registerCheckerMethod } from "./check.js";
 import { invalidOp } from "./errors.js";
 import { newTarget } from "./expr.js";
 import { enableReverseTypeInference, isParameterized } from "./infer.js";
@@ -52,7 +52,7 @@ export const cgoPrefixes = [
 //
 // If an error (other than a version error) occurs in any case, it is reported
 // and x.mode is set to invalid.
-Checker.prototype.funcInst = function funcInst(T, pos, x, ix, infer) {
+registerCheckerMethod("funcInst", function funcInst(T, pos, x, ix, infer) {
     assert(T !== null || ix !== null);
     let instErrPos;
     if (ix !== null) {
@@ -143,8 +143,8 @@ Checker.prototype.funcInst = function funcInst(T, pos, x, ix, infer) {
     x.typ_ = sig;
     x.mode_ = value;
     return null;
-};
-Checker.prototype.instantiateSignature = function instantiateSignature(pos, expr, typ, targs, xlist) {
+});
+registerCheckerMethod("instantiateSignature", function instantiateSignature(pos, expr, typ, targs, xlist) {
     assert(this !== null);
     assert(targs.length === typ.TypeParams().Len());
     if (this.conf._Trace) {
@@ -186,8 +186,8 @@ Checker.prototype.instantiateSignature = function instantiateSignature(pos, expr
         }
     }
     return res;
-};
-Checker.prototype.callExpr = function callExpr(x, call0) {
+});
+registerCheckerMethod("callExpr", function callExpr(x, call0) {
     const call = call0;
     let ix = this.unpackIndexedExpr(call.fun);
     if (ix !== null) {
@@ -366,10 +366,10 @@ Checker.prototype.callExpr = function callExpr(x, call0) {
         x.invalidate();
     }
     return exprKind.statement;
-};
+});
 // exprList evaluates a list of expressions and returns the corresponding operands.
 // A single-element expression list may evaluate to multiple operands.
-Checker.prototype.exprList = function exprList(elist) {
+registerCheckerMethod("exprList", function exprList(elist) {
     let xlist = [];
     const n = elist.length;
     if (n === 1) {
@@ -386,7 +386,7 @@ Checker.prototype.exprList = function exprList(elist) {
         }
     }
     return xlist;
-};
+});
 // genericExprList is like exprList but result operands may be uninstantiated or partially
 // instantiated generic functions (where constraint information is insufficient to infer
 // the missing type arguments) for Go 1.21 and later.
@@ -394,7 +394,7 @@ Checker.prototype.exprList = function exprList(elist) {
 // elements do not exist (targsList is nil) or the elements are nil.
 // For each partially instantiated generic function operand, the corresponding
 // targsList elements are the operand's partial type arguments.
-Checker.prototype.genericExprList = function genericExprList(elist) {
+registerCheckerMethod("genericExprList", function genericExprList(elist) {
     let resList = [];
     let targsList = null;
     try {
@@ -492,7 +492,7 @@ Checker.prototype.genericExprList = function genericExprList(elist) {
         }
     }
     return [resList, targsList];
-};
+});
 // arguments type-checks arguments passed to a function call with the given signature.
 // The function and its arguments may be generic, and possibly partially instantiated.
 // targs and xlist are the function's type arguments (and corresponding expressions).
@@ -504,7 +504,7 @@ Checker.prototype.genericExprList = function genericExprList(elist) {
 // functions are instantiated as necessary.
 // The result signature is the (possibly adjusted and instantiated) function signature.
 // If an error occurred, the result signature is the incoming sig.
-Checker.prototype.arguments = function arguments_(call0, sig, targs0, xlist, args, atargs) {
+registerCheckerMethod("arguments", function arguments_(call0, sig, targs0, xlist, args, atargs) {
     const call = call0;
     let rsig = sig;
     let targs = targs0 ?? [];
@@ -697,8 +697,8 @@ Checker.prototype.arguments = function arguments_(call0, sig, targs0, xlist, arg
         }
     }
     return rsig;
-};
-Checker.prototype.selector = function selector(x, e0, wantType) {
+});
+registerCheckerMethod("selector", function selector(x, e0, wantType) {
     const e = e0;
     // these must be declared before the "goto Error" statements
     let obj = null;
@@ -957,22 +957,22 @@ Checker.prototype.selector = function selector(x, e0, wantType) {
     }
     // everything went well
     x.expr = e;
-};
+});
 // use type-checks each argument.
 // Useful to make sure expressions are evaluated
 // (and variables are "used") in the presence of
 // other errors. Arguments may be nil.
 // Reports if all arguments evaluated without error.
-Checker.prototype.use = function use(...args) {
+registerCheckerMethod("use", function use(...args) {
     return this.useN(args, false);
-};
+});
 // useLHS is like use, but doesn't "use" top-level identifiers.
 // It should be called instead of use if the arguments are
 // expressions on the lhs of an assignment.
-Checker.prototype.useLHS = function useLHS(...args) {
+registerCheckerMethod("useLHS", function useLHS(...args) {
     return this.useN(args, true);
-};
-Checker.prototype.useN = function useN(args, lhs) {
+});
+registerCheckerMethod("useN", function useN(args, lhs) {
     let ok = true;
     for (const e of args) {
         if (!this.use1(e, lhs)) {
@@ -980,8 +980,8 @@ Checker.prototype.useN = function useN(args, lhs) {
         }
     }
     return ok;
-};
-Checker.prototype.use1 = function use1(e, lhs) {
+});
+registerCheckerMethod("use1", function use1(e, lhs) {
     const x = new operand();
     x.mode_ = value; // anything but invalid
     const n = e === null || e === undefined ? null : Unparen(e);
@@ -1022,7 +1022,7 @@ Checker.prototype.use1 = function use1(e, lhs) {
             break;
     }
     return x.isValid();
-};
+});
 function hasDots(call) {
     return call.ellipsis;
 }

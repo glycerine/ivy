@@ -12,7 +12,7 @@ import type { Type } from "./type.js";
 import { NewArray } from "./array.js";
 import { Basic, Int, Invalid } from "./basic.js";
 import { Chan, ChanDir, NewChan } from "./chan.js";
-import { Checker, atPos } from "./check.js";
+import { Checker, atPos , registerCheckerMethod } from "./check.js";
 import { representableConst } from "./const.js";
 import { Interface } from "./interface.js";
 import { type genericType } from "./instantiate.js";
@@ -49,7 +49,7 @@ declare module "./check.js" {
 // ident type-checks identifier e and initializes x with the value or type of e.
 // If an error occurred, x.mode is set to invalid.
 // If wantType is set, the identifier e is expected to denote a type.
-Checker.prototype.ident = function ident(x: operand, e: unknown, wantType: boolean): void {
+registerCheckerMethod("ident", function ident(x: operand, e: unknown, wantType: boolean): void {
   const id = e as { name?: string };
   const name = id.name ?? "";
   x.invalidate();
@@ -175,26 +175,26 @@ Checker.prototype.ident = function ident(x: operand, e: unknown, wantType: boole
   }
 
   x.typ_ = typ;
-};
+});
 
 // typ type-checks the type expression e and returns its type, or Typ[Invalid].
 // The type must not be an (uninstantiated) generic type.
-Checker.prototype.typ = function typ(e: unknown): Type {
+registerCheckerMethod("typ", function typ(e: unknown): Type {
   return this.declaredType(e, null);
-};
+});
 
 // varType type-checks the type expression e and returns its type, or Typ[Invalid].
 // The type must not be an (uninstantiated) generic type and it must not be a
 // constraint interface.
-Checker.prototype.varType = function varType(e: unknown): Type {
+registerCheckerMethod("varType", function varType(e: unknown): Type {
   const typ = this.declaredType(e, null);
   this.validVarType?.(e, typ);
   return typ;
-};
+});
 
 // validVarType reports an error if typ is a constraint interface.
 // The expression e is used for error reporting, if any.
-Checker.prototype.validVarType = function validVarType(e: unknown, typ: Type | null): void {
+registerCheckerMethod("validVarType", function validVarType(e: unknown, typ: Type | null): void {
   if (typ === null) {
     return;
   }
@@ -219,13 +219,13 @@ Checker.prototype.validVarType = function validVarType(e: unknown, typ: Type | n
       }
     }
   }).describef(new atPos(PosOf(e as Expr)), "check var type %s", typ);
-};
+});
 
 // declaredType is like typ but also accepts a type name def.
 // If def != nil, e is the type specification for the [Alias] or [Named] type
 // named def, and def.typ.fromRHS will be set to the [Type] of e immediately
 // after its creation.
-Checker.prototype.declaredType = function declaredType(e: unknown, def: TypeName | null): Type {
+registerCheckerMethod("declaredType", function declaredType(e: unknown, def: TypeName | null): Type {
   let typ = this.typInternal(e, def);
   assert(isTyped(typ));
   if (isGeneric(typ)) {
@@ -234,7 +234,7 @@ Checker.prototype.declaredType = function declaredType(e: unknown, def: TypeName
   }
   this.recordTypeAndValue(e, typexpr, typ, null);
   return typ;
-};
+});
 
 // genericType is like typ but the type must be an (uninstantiated) generic
 // type. If cause is non-nil and the type expression was a valid type but not
@@ -243,7 +243,7 @@ Checker.prototype.declaredType = function declaredType(e: unknown, def: TypeName
 // Note: If the type expression was invalid and an error was reported before,
 // cause will not be populated; thus cause alone cannot be used to determine
 // if an error occurred.
-Checker.prototype.genericType = function genericType(e: unknown, cause: { value: string } | null): Type {
+registerCheckerMethod("genericType", function genericType(e: unknown, cause: { value: string } | null): Type {
   let typ = this.typInternal(e, null);
   assert(isTyped(typ));
   if (isValid(typ) && !isGeneric(typ)) {
@@ -255,7 +255,7 @@ Checker.prototype.genericType = function genericType(e: unknown, cause: { value:
   // TODO(gri) what is the correct call below?
   this.recordTypeAndValue(e, typexpr, typ, null);
   return typ;
-};
+});
 
 // goTypeName returns the Go type name for typ and
 // removes any occurrences of "types." from that name.
@@ -265,7 +265,7 @@ export function goTypeName(typ: Type): string {
 
 // typInternal drives type checking of types.
 // Must only be called by declaredType or genericType.
-Checker.prototype.typInternal = function typInternal(e0: unknown, def: TypeName | null): Type {
+registerCheckerMethod("typInternal", function typInternal(e0: unknown, def: TypeName | null): Type {
   if (this.conf._Trace) {
     this.trace?.(PosOf(e0 as Expr), "-- type %s", e0);
     this.indent++;
@@ -456,9 +456,9 @@ Checker.prototype.typInternal = function typInternal(e0: unknown, def: TypeName 
       }
     }
   }
-};
+});
 
-Checker.prototype.instantiatedType = function instantiatedType(ix: unknown): Type {
+registerCheckerMethod("instantiatedType", function instantiatedType(ix: unknown): Type {
   if (this.conf._Trace) {
     this.trace?.(PosOf((ix as { orig?: Expr }).orig), "-- instantiating type %s with %s", (ix as { x?: unknown }).x, (ix as { indices?: unknown[] }).indices);
     this.indent++;
@@ -532,12 +532,12 @@ Checker.prototype.instantiatedType = function instantiatedType(ix: unknown): Typ
       this.trace?.(PosOf((ix as { orig?: Expr }).orig), "=> %s", res);
     }
   }
-};
+});
 
 // arrayLength type-checks the array length expression e
 // and returns the constant length >= 0, or a value < 0
 // to indicate an error (and thus an unknown length).
-Checker.prototype.arrayLength = function arrayLength(e: unknown): number {
+registerCheckerMethod("arrayLength", function arrayLength(e: unknown): number {
   // If e is an identifier, the array declaration might be an
   // attempt at a parameterized type declaration with missing
   // constraint. Provide an error message that mentions array
@@ -583,11 +583,11 @@ Checker.prototype.arrayLength = function arrayLength(e: unknown): number {
   }
   this.errorf(x, "InvalidArrayLen", msg, x);
   return -1;
-};
+});
 
 // typeList provides the list of types corresponding to the incoming expression list.
 // If an error occurred, the result is nil, but all list elements were type-checked.
-Checker.prototype.typeList = function typeList(list: unknown[]): Type[] | null {
+registerCheckerMethod("typeList", function typeList(list: unknown[]): Type[] | null {
   let res: Type[] | null = new globalThis.Array<Type>(list.length); // res != nil even if len(list) == 0
   for (let i = 0; i < list.length; i++) {
     const t = varTypeOrInvalid(this, list[i]);
@@ -599,7 +599,7 @@ Checker.prototype.typeList = function typeList(list: unknown[]): Type[] | null {
     }
   }
   return res;
-};
+});
 
 function toInt(x: unknown): bigint | null {
   if (typeof x === "bigint") {

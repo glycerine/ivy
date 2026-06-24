@@ -6,7 +6,7 @@
 // This file implements typechecking of range statements.
 import { PosOf } from "../../front/ast.js";
 import { go1_22, go1_23 } from "./version.js";
-import { Checker } from "./check.js";
+import { registerCheckerMethod } from "./check.js";
 import { operand, constant_, value } from "./operand.js";
 import { arrayPtrDeref } from "./builtins.js";
 import { Array as ArrayType } from "./array.js";
@@ -28,7 +28,7 @@ import { LocalVar, newVar } from "./object.js";
 // variables are assigned to only (=) or whether there is a short variable
 // declaration (:=). If the latter and there are no variables, an error is
 // reported at noNewVarPos.
-Checker.prototype.rangeStmt = function rangeStmt(inner, rangeStmtNode, noNewVarPos, sKey, sValue, sExtra, rangeVar, isDef) {
+registerCheckerMethod("rangeStmt", function rangeStmt(inner, rangeStmtNode, noNewVarPos, sKey, sValue, sExtra, rangeVar, isDef) {
     // check expression to iterate over
     const x = new operand();
     // From the spec:
@@ -188,7 +188,7 @@ Checker.prototype.rangeStmt = function rangeStmt(inner, rangeStmtNode, noNewVarP
     finally {
         this.closeScope();
     }
-};
+});
 // rangeKeyVal returns the key and value type produced by a range clause
 // over an expression of type orig.
 // If allowVersion != nil, it is used to check the required language version.

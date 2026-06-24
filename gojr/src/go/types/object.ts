@@ -6,20 +6,133 @@
 // license that can be found in the LICENSE file.
 
 import type { Pos } from "./token.js";
-import { nopos, debug } from "./check.js";
+import { NoPos as nopos } from "./token.js";
 import type { Package } from "./package.js";
 import type { Scope } from "./scope.js";
 import type { Type } from "./type.js";
 import { assert } from "./util.js";
-import { Basic, BasicKind, Invalid } from "./basic.js";
-import { Typ, Unsafe, Universe, universeByte, universeRune, builtinId, predeclaredFuncs } from "./universe.js";
-import { samePkg, Identical } from "./predicates.js";
-import { Alias } from "./alias.js";
-import { Named } from "./named.js";
-import { TypeParam } from "./typeparam.js";
-import { Interface, emptyInterface } from "./interface.js";
-import { Signature } from "./signature.js";
-import { TypeString, type Qualifier, WriteSignature, WriteType } from "./typestring.js";
+import { Basic, BasicKind } from "./basic.js";
+
+const debug = false;
+
+type Qualifier = (pkg: Package) => string;
+
+type objectUniverseDeps = {
+  Typ: Basic[];
+  Universe: Scope;
+  universeByte: Type | null;
+  universeRune: Type | null;
+  predeclaredFuncs: Record<number, { name: string }>;
+};
+
+type objectUniverseGlobal = typeof globalThis & { __gojrObjectUniverseDeps?: objectUniverseDeps | null };
+
+type namedCtor = new (check: unknown, obj: TypeName, fromRHS: Type | null, methods: Func[] | null) => unknown;
+type signatureCtor = new (...args: unknown[]) => signatureLike;
+
+type objectRuntimeDeps = {
+  Named?: namedCtor;
+  Signature?: signatureCtor;
+  TypeString?: (typ: Type | null, qf: Qualifier | null) => string;
+  WriteSignature?: (buf: string[], sig: signatureLike, qf: Qualifier | null) => void;
+  WriteType?: (buf: string[], typ: Type | null, qf: Qualifier | null) => void;
+  Identical?: (x: Type | null, y: Type | null) => boolean;
+  emptyInterface?: Type | null;
+};
+
+type objectRuntimeGlobal = typeof globalThis & { __gojrObjectRuntimeDeps?: objectRuntimeDeps };
+
+interface signatureLike extends Type {
+  scope: Scope | null;
+  recv: Var | null;
+  Recv(): Var | null;
+  TypeParams(): unknown | null;
+}
+
+function objectRuntimeDeps(): objectRuntimeDeps {
+  const g = globalThis as objectRuntimeGlobal;
+  if (g.__gojrObjectRuntimeDeps === undefined) {
+    g.__gojrObjectRuntimeDeps = {};
+  }
+  return g.__gojrObjectRuntimeDeps;
+}
+
+export function setObjectNamedConstructor(ctor: namedCtor): void {
+  objectRuntimeDeps().Named = ctor;
+}
+
+export function setObjectSignatureConstructor(ctor: signatureCtor): void {
+  objectRuntimeDeps().Signature = ctor;
+}
+
+export function setObjectTypePrinters(printers: Pick<objectRuntimeDeps, "TypeString" | "WriteSignature" | "WriteType">): void {
+  Object.assign(objectRuntimeDeps(), printers);
+}
+
+export function setObjectIdentical(fn: (x: Type | null, y: Type | null) => boolean): void {
+  objectRuntimeDeps().Identical = fn;
+}
+
+export function setObjectEmptyInterface(typ: Type | null): void {
+  objectRuntimeDeps().emptyInterface = typ;
+}
+
+export function setObjectUniverseDeps(deps: objectUniverseDeps): void {
+  (globalThis as objectUniverseGlobal).__gojrObjectUniverseDeps = deps;
+}
+
+function objectUniverseDeps(): objectUniverseDeps | null {
+  return (globalThis as objectUniverseGlobal).__gojrObjectUniverseDeps ?? null;
+}
+
+function invalidType(): Type | null {
+  return objectUniverseDeps()?.Typ[BasicKind.Invalid] ?? null;
+}
+
+function untypedNilType(): Type | null {
+  return objectUniverseDeps()?.Typ[BasicKind.UntypedNil] ?? null;
+}
+
+function builtinName(id: number): string {
+  return objectUniverseDeps()?.predeclaredFuncs[id]?.name ?? `builtin(${id})`;
+}
+
+function samePackage(a: Package | null, b: Package | null): boolean {
+  if (a === null || b === null) {
+    return a === b;
+  }
+  return a.path === b.path;
+}
+
+function isTypeInstance(x: unknown, name: string): boolean {
+  return x !== null && x !== undefined && (x as { constructor?: { name?: string } }).constructor?.name === name;
+}
+
+function typeString(typ: Type | null, qf: Qualifier | null): string {
+  const fn = objectRuntimeDeps().TypeString;
+  if (fn !== undefined) {
+    return fn(typ, qf);
+  }
+  return typ?.String() ?? "<nil>";
+}
+
+function writeSignature(buf: string[], sig: signatureLike, qf: Qualifier | null): void {
+  const fn = objectRuntimeDeps().WriteSignature;
+  if (fn === undefined) {
+    buf.push("<signature>");
+    return;
+  }
+  fn(buf, sig, qf);
+}
+
+function writeType(buf: string[], typ: Type | null, qf: Qualifier | null): void {
+  const fn = objectRuntimeDeps().WriteType;
+  if (fn === undefined) {
+    buf.push(typeString(typ, qf));
+    return;
+  }
+  fn(buf, typ, qf);
+}
 
 // An Object is a named language entity.
 // An Object may be a constant ([Const]), type name ([TypeName]),
@@ -158,7 +271,7 @@ export class object_ implements Object {
       return true;
     }
     // not exported, so packages must be the same
-    return samePkg(this.pkg, pkg);
+    return samePackage(this.pkg, pkg);
   }
 
   // cmp reports whether object a is ordered before object b.
@@ -202,7 +315,7 @@ export class object_ implements Object {
 // PkgNames don't have a type.
 export class PkgName extends object_ {
   public constructor(pos: Pos, pkg: Package | null, name: string, public imported: Package) {
-    super(null, pos, pkg, name, Typ[Invalid]!, 0, nopos);
+    super(null, pos, pkg, name, invalidType(), 0, nopos);
   }
 
   // Imported returns the package that was imported.
@@ -255,7 +368,7 @@ export class TypeName extends object_ {
     }
     if (t instanceof Basic) {
       // unsafe.Pointer is not an alias.
-      if (this.pkg === Unsafe) {
+      if (this.pkg !== null && this.pkg.path === "unsafe" && this.pkg.name === "unsafe") {
         return false;
       }
       // Any user-defined type name for a basic type is an alias for a
@@ -264,15 +377,16 @@ export class TypeName extends object_ {
       // a different name than the name of the basic type it refers to.
       // Additionally, we need to look for "byte" and "rune" because they
       // are aliases but have the same names (for better error messages).
-      return this.pkg !== null || t.name !== this.name || t === universeByte || t === universeRune;
+      const deps = objectUniverseDeps();
+      return this.pkg !== null || t.name !== this.name || t === deps?.universeByte || t === deps?.universeRune;
     }
-    if (t instanceof Named) {
-      return this !== t.obj;
+    if (isTypeInstance(t, "Named")) {
+      return this !== (t as unknown as { obj: TypeName }).obj;
     }
-    if (t instanceof TypeParam) {
-      return this !== t.obj;
+    if (isTypeInstance(t, "TypeParam")) {
+      return this !== (t as unknown as { obj: TypeName }).obj;
     }
-    if (t instanceof Alias) {
+    if (isTypeInstance(t, "Alias")) {
       return true;
     }
     return true;
@@ -289,10 +403,14 @@ export function NewTypeName(pos: Pos, pkg: Package | null, name: string, typ: Ty
 
 // NewTypeNameLazy returns a new defined type like NewTypeName, but it
 // lazily calls unpack to finish constructing the Named object.
-export function _NewTypeNameLazy(pos: Pos, pkg: Package | null, name: string, load: (named: Named) => [TypeParam[] | null, Type | null, Func[] | null, (() => void)[] | null]): TypeName {
+export function _NewTypeNameLazy(pos: Pos, pkg: Package | null, name: string, load: (named: unknown) => [unknown[] | null, Type | null, Func[] | null, (() => void)[] | null]): TypeName {
   const obj = NewTypeName(pos, pkg, name, null);
-  const n = new Named(null, obj, null, null);
-  n.loader = load as Named["loader"];
+  const NamedCtor = objectRuntimeDeps().Named;
+  if (NamedCtor === undefined) {
+    throw new Error("go/types: Named constructor not initialized");
+  }
+  const n = new NamedCtor(null, obj, null, null) as { loader: unknown };
+  n.loader = load;
   return obj;
 }
 
@@ -417,7 +535,7 @@ export class Func extends object_ {
   public hasPtrRecv_ = false; // only valid for methods that don't have a type yet; use hasPtrRecv() to read
   public nointerface = false;
 
-  public constructor(pos: Pos, pkg: Package | null, name: string, sig: Signature | null) {
+  public constructor(pos: Pos, pkg: Package | null, name: string, sig: signatureLike | null) {
     let typ: Type | null = null;
     if (sig !== null) {
       typ = sig;
@@ -431,9 +549,9 @@ export class Func extends object_ {
   }
 
   // Signature returns the signature (type) of the function or method.
-  public Signature(): Signature {
-    if (this.typ instanceof Signature) {
-      return this.typ; // normal case
+  public Signature(): signatureLike {
+    if (isTypeInstance(this.typ, "Signature")) {
+      return this.typ as signatureLike; // normal case
     }
     // No signature: Signature was called either:
     // - within go/types, before a FuncDecl's initially
@@ -443,7 +561,11 @@ export class Func extends object_ {
     //   which is arguably a client bug, but we need a
     //   proposal to tighten NewFunc's precondition.
     // For now, return a trivial signature.
-    return new Signature();
+    const SignatureCtor = objectRuntimeDeps().Signature;
+    if (SignatureCtor === undefined) {
+      throw new Error("go/types: Signature constructor not initialized");
+    }
+    return new SignatureCtor();
   }
 
   // FullName returns the package- or receiver-type-qualified name of
@@ -480,8 +602,11 @@ export class Func extends object_ {
     // Caution: Checker.funcDecl (decl.go) marks a function by setting its type to an empty
     // signature. We may reach here before the signature is fully set up: we must explicitly
     // check if the receiver is set (we cannot just look for non-nil obj.typ).
-    if (this.typ instanceof Signature && this.typ.recv !== null) {
-      return TypeString(this.typ.recv.typ ?? Typ[Invalid]!, null).startsWith("*");
+    if (isTypeInstance(this.typ, "Signature")) {
+      const recv = (this.typ as signatureLike).recv;
+      if (recv !== null) {
+        return typeString(recv.typ ?? invalidType(), null).startsWith("*");
+      }
     }
 
     // If a method's type is not set it may be a method/function that is:
@@ -498,7 +623,7 @@ export class Func extends object_ {
 
 // NewFunc returns a new function with the given signature, representing
 // the function's type.
-export function NewFunc(pos: Pos, pkg: Package | null, name: string, sig: Signature | null): Func {
+export function NewFunc(pos: Pos, pkg: Package | null, name: string, sig: signatureLike | null): Func {
   return new Func(pos, pkg, name, sig);
 }
 
@@ -508,7 +633,7 @@ export class Label extends object_ {
   public used = false; // set if the label was used
 
   public constructor(pos: Pos, pkg: Package | null, name: string) {
-    super(null, pos, pkg, name, Typ[Invalid]!, 0, nopos);
+    super(null, pos, pkg, name, invalidType(), 0, nopos);
   }
 
   public String(): string { return ObjectString(this, null); }
@@ -522,21 +647,21 @@ export function NewLabel(pos: Pos, pkg: Package | null, name: string): Label {
 // A Builtin represents a built-in function.
 // Builtins don't have a valid type.
 export class Builtin extends object_ {
-  public constructor(public id: builtinId) {
-    super(null, nopos, null, predeclaredFuncs[id]!.name, Typ[Invalid]!, 0, nopos);
+  public constructor(public id: number) {
+    super(null, nopos, null, builtinName(id), invalidType(), 0, nopos);
   }
 
   public String(): string { return ObjectString(this, null); }
 }
 
-export function newBuiltin(id: builtinId): Builtin {
+export function newBuiltin(id: number): Builtin {
   return new Builtin(id);
 }
 
 // Nil represents the predeclared value nil.
 export class Nil extends object_ {
   public constructor() {
-    super(null, nopos, null, "nil", Typ[BasicKind.UntypedNil]!, 0, nopos);
+    super(null, nopos, null, "nil", untypedNilType(), 0, nopos);
   }
 
   public String(): string { return ObjectString(this, null); }
@@ -558,7 +683,7 @@ export function writeObject(buf: string[], obj: Object, qf: Qualifier | null): v
   } else if (obj instanceof TypeName) {
     tname = obj;
     buf.push("type");
-    if (typ instanceof TypeParam) {
+    if (isTypeInstance(typ, "TypeParam")) {
       buf.push(" parameter");
     }
   } else if (obj instanceof Var) {
@@ -570,8 +695,8 @@ export function writeObject(buf: string[], obj: Object, qf: Qualifier | null): v
   } else if (obj instanceof Func) {
     buf.push("func ");
     writeFuncName(buf, obj, qf);
-    if (typ instanceof Signature) {
-      WriteSignature(buf, typ, qf);
+    if (isTypeInstance(typ, "Signature")) {
+      writeSignature(buf, typ as signatureLike, qf);
     }
     return;
   } else if (obj instanceof Label) {
@@ -607,11 +732,11 @@ export function writeObject(buf: string[], obj: Object, qf: Qualifier | null): v
     }
     if (tname.IsAlias()) {
       buf.push(" =");
-      if (typ instanceof Alias) {
-        typ = typ.fromRHS;
+      if (isTypeInstance(typ, "Alias")) {
+        typ = (typ as unknown as { fromRHS: Type | null }).fromRHS;
       }
-    } else if (typ instanceof TypeParam) {
-      typ = typ.bound;
+    } else if (isTypeInstance(typ, "TypeParam")) {
+      typ = (typ as unknown as { bound: Type | null }).bound;
     } else {
       typ = typ.Underlying();
     }
@@ -620,13 +745,17 @@ export function writeObject(buf: string[], obj: Object, qf: Qualifier | null): v
   // Special handling for any: because WriteType will format 'any' as 'any',
   // resulting in the object string `type any = any` rather than `type any =
   // interface{}`. To avoid this, swap in a different empty interface.
-  if (obj.Name() === "any" && obj.Parent() === Universe) {
-    assert(Identical(typ, emptyInterface));
+  if (obj.Name() === "any" && obj.Parent() === objectUniverseDeps()?.Universe) {
+    const emptyInterface = objectRuntimeDeps().emptyInterface ?? null;
+    const identical = objectRuntimeDeps().Identical;
+    if (identical !== undefined) {
+      assert(identical(typ, emptyInterface));
+    }
     typ = emptyInterface;
   }
 
   buf.push(" ");
-  WriteType(buf, typ, qf);
+  writeType(buf, typ, qf);
 }
 
 export function packagePrefix(pkg: Package | null, qf: Qualifier | null): string {
@@ -655,19 +784,19 @@ export function ObjectString(obj: Object, qf: Qualifier | null): string {
 }
 
 export function writeFuncName(buf: string[], f: Func, qf: Qualifier | null): void {
-  if (f.typ instanceof Signature) {
-    const sig = f.typ;
+  if (isTypeInstance(f.typ, "Signature")) {
+    const sig = f.typ as signatureLike;
     const recv = sig.Recv();
     if (recv !== null) {
       buf.push("(");
-      if (recv.Type() instanceof Interface) {
+      if (isTypeInstance(recv.Type(), "Interface")) {
         // gcimporter creates abstract methods of
         // named interfaces using the interface type
         // (not the named type) as the receiver.
         // Don't print it in full.
         buf.push("interface");
       } else {
-        WriteType(buf, recv.Type(), qf);
+        writeType(buf, recv.Type(), qf);
       }
       buf.push(")");
       buf.push(".");
@@ -689,7 +818,7 @@ export function objectKind(obj: Object): string {
   if (obj instanceof TypeName) {
     if (obj.IsAlias()) {
       return "type alias";
-    } else if (obj.Type() instanceof TypeParam) {
+    } else if (isTypeInstance(obj.Type(), "TypeParam")) {
       return "type parameter";
     } else {
       return "defined type";

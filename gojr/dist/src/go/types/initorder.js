@@ -3,11 +3,11 @@
 // Copyright 2014 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-import { Checker } from "./check.js";
+import { registerCheckerMethod } from "./check.js";
 import { Initializer } from "./api.js";
 import { Const, Func, Var } from "./object.js";
 // initOrder computes the Info.InitOrder for package variables.
-Checker.prototype.initOrder = function initOrder() {
+registerCheckerMethod("initOrder", function initOrder() {
     // An InitOrder may already have been computed if a package is
     // built from several calls to (*Checker).Files. Clear it.
     this.Info.InitOrder = [];
@@ -42,7 +42,7 @@ Checker.prototype.initOrder = function initOrder() {
         const init = new Initializer(infoLhs, info.init);
         this.Info.InitOrder?.push(init);
     }
-};
+});
 // findPath returns the (reversed) list of objects []Object{to, ... from}
 // such that there is a path of object dependencies from 'from' to 'to'.
 // If there is no such path, the result is nil.
@@ -65,7 +65,7 @@ export function findPath(objMap, from, to, seen) {
     return null;
 }
 // reportCycle reports an error for the given cycle.
-Checker.prototype.reportCycle = function reportCycle(cycle) {
+registerCheckerMethod("reportCycle", function reportCycle(cycle) {
     let obj = cycle[0];
     if (cycle.length === 1) {
         this.errorf(obj, "InvalidInitCycle", "initialization cycle: %s refers to itself", obj.Name());
@@ -79,7 +79,7 @@ Checker.prototype.reportCycle = function reportCycle(cycle) {
         obj = next;
     }
     err.report();
-};
+});
 // A graphNode represents a node in the object dependency graph.
 export class graphNode {
     obj;

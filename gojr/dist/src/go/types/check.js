@@ -3,15 +3,33 @@
 // license that can be found in the LICENSE file.
 // This file implements the Check function, which drives type-checking.
 import { NoPos } from "./token.js";
-import { Unsafe } from "./universe.js";
-import { Named } from "./named.js";
-import { Alias } from "./alias.js";
-import { TypeParam } from "./typeparam.js";
-import { Interface } from "./interface.js";
-import { Config, Info } from "./api.js";
 import { asGoVersion, go_current, go1_21 } from "./version.js";
 import { assert } from "./util.js";
 import { NoPos as zeroPos } from "./token.js";
+import { fileGoVersion, fileName, identName, nodePos } from "./astcompat.js";
+function checkerMethodQueue() {
+    const g = globalThis;
+    if (g.__gojrPendingCheckerMethods === undefined) {
+        g.__gojrPendingCheckerMethods = [];
+    }
+    return g.__gojrPendingCheckerMethods;
+}
+export function registerCheckerMethod(name, fn) {
+    const g = globalThis;
+    if (g.__gojrCheckerCtor !== undefined) {
+        g.__gojrCheckerCtor.prototype[name] = fn;
+        return;
+    }
+    checkerMethodQueue().push([name, fn]);
+}
+function installPendingCheckerMethods(ctor) {
+    const g = globalThis;
+    g.__gojrCheckerCtor = ctor;
+    for (const [name, fn] of checkerMethodQueue()) {
+        ctor.prototype[name] = fn;
+    }
+    checkerMethodQueue().length = 0;
+}
 // atPos wraps a token.Pos to implement the positioner interface.
 export class atPos {
     s;
@@ -196,27 +214,6 @@ export class Checker extends environment {
         this.usedVars = new Map();
         this.usedPkgNames = new Map();
     }
-    newNamed(obj, underlying, methods) {
-        return new Named(this, obj, underlying, methods);
-    }
-    newAlias(obj, rhs) {
-        return new Alias(obj, rhs);
-    }
-    newTypeParam(obj, constraint) {
-        // Always increment lastID, even if it is not used.
-        this.nextID++;
-        const typ = new TypeParam(this, BigInt(this.nextID), obj, -1, constraint);
-        if (obj.typ === null) {
-            obj.typ = typ;
-        }
-        this.needsCleanup(typ);
-        return typ;
-    }
-    newInterface() {
-        const typ = new Interface(this);
-        this.needsCleanup(typ);
-        return typ;
-    }
     // addDeclDep adds the dependency edge (check.decl -> to) if check.decl exists
     addDeclDep(to) {
         const from = this.decl;
@@ -295,15 +292,15 @@ export class Checker extends environment {
         // determine package name and collect valid files
         const pkg = this.pkg;
         for (const file of files) {
-            const f = file;
-            const name = f.Name?.Name ?? "";
+            const nameIdent = fileName(file);
+            const name = identName(nameIdent);
             switch (pkg.name) {
                 case "":
                     if (name !== "_") {
                         pkg.name = name;
                     }
                     else {
-                        this.error(f.Name, "BlankPkgName", "invalid package name _");
+                        this.error(nameIdent, "BlankPkgName", "invalid package name _");
                     }
                     this.files = [...(this.files ?? []), file];
                     break;
@@ -311,7 +308,7 @@ export class Checker extends environment {
                     this.files = [...(this.files ?? []), file];
                     break;
                 default:
-                    this.errorf(new atPos(f.Package ?? nopos), "MismatchedPkgName", "package %s; expected package %s", name, pkg.name);
+                    this.errorf(new atPos(nodePos(nameIdent) || nopos), "MismatchedPkgName", "package %s; expected package %s", name, pkg.name);
                 // ignore this file
             }
         }
@@ -327,13 +324,13 @@ export class Checker extends environment {
         }
         // determine Go version for each file
         for (const file of this.files ?? []) {
-            const f = file;
+            const nameIdent = fileName(file);
             // use unaltered Config.GoVersion by default
             // (This version string may contain dot-release numbers as in go1.20.1,
             // unlike file versions which are Go language versions only, if valid.)
             let v = this.conf.GoVersion;
             // If the file specifies a version, use max(fileVersion, go1.21).
-            const fileVersion = asGoVersion(f.GoVersion ?? "");
+            const fileVersion = asGoVersion(fileGoVersion(file));
             if (fileVersion.isValid()) {
                 // Go 1.21 introduced the feature of setting the go.mod
                 // go line to an early version of Go and allowing //go:build lines
@@ -352,7 +349,7 @@ export class Checker extends environment {
                 if (fileVersion.cmp(go_current) > 0) {
                     // Use position of 'package [p]' for types/types2 consistency.
                     // (Ideally we would use the //build tag itself.)
-                    this.errorf(f.Name, "TooNew", "file requires newer Go version %v (application built with %v)", fileVersion, go_current);
+                    this.errorf(nameIdent, "TooNew", "file requires newer Go version %v (application built with %v)", fileVersion, go_current);
                 }
             }
             versions.set(file, v);
@@ -371,7 +368,7 @@ export class Checker extends environment {
     }
     // Files checks the provided files as part of the checker's package.
     Files(files) {
-        if (this.pkg === Unsafe) {
+        if (this.pkg.path === "unsafe" && this.pkg.name === "unsafe") {
             // Defensive handling for Unsafe, which cannot be type checked, and must
             // not be mutated. See https://go.dev/issue/61212 for an example of where
             // Unsafe is passed to NewChecker.
@@ -509,16 +506,17 @@ export class Checker extends environment {
         return true;
     }
 }
+installPendingCheckerMethods(Checker);
 // NewChecker returns a new [Checker] instance for a given package.
 // [Package] files may be added incrementally via checker.Files.
 export function NewChecker(conf, fset, pkg, info) {
     // make sure we have a configuration
     if (conf === null) {
-        conf = new Config();
+        conf = newDefaultConfig();
     }
     // make sure we have an info struct
     if (info === null) {
-        info = new Info();
+        info = newDefaultInfo();
     }
     // Note: clients may call NewChecker with the Unsafe package, which is
     // globally shared and must not be mutated. Therefore NewChecker must not
@@ -526,6 +524,84 @@ export function NewChecker(conf, fset, pkg, info) {
     //
     // (previously, pkg.goVersion was mutated here: go.dev/issue/61212)
     return new Checker(conf, fset, pkg, info);
+}
+function newDefaultConfig() {
+    return {
+        Context: null,
+        GoVersion: "",
+        IgnoreFuncBodies: false,
+        FakeImportC: false,
+        go115UsesCgo: false,
+        _Trace: false,
+        Error: null,
+        Importer: null,
+        Sizes: null,
+        DisableUnusedImportCheck: false,
+        _ErrorURL: "",
+        Check(path, fset, files, info) {
+            const pkg = thisPackage(path);
+            return [pkg, NewChecker(this, fset, pkg, info).Files(files)];
+        },
+        alignof(T) { return this.Sizes.Alignof(T); },
+        offsetsof(T) { return this.Sizes.Offsetsof(T.fields ?? []); },
+        offsetof(_T, _index) { return -1; },
+        sizeof(T) { return this.Sizes.Sizeof(T); }
+    };
+}
+function newDefaultInfo() {
+    return {
+        Types: null,
+        Instances: null,
+        Defs: null,
+        Uses: null,
+        Implicits: null,
+        Selections: null,
+        Scopes: null,
+        InitOrder: null,
+        FileVersions: null,
+        recordTypes() { return this.Types !== null; },
+        TypeOf(e) {
+            const t = this.Types?.get(e);
+            if (t !== undefined) {
+                return t.Type ?? null;
+            }
+            const obj = this.ObjectOf(e);
+            if (obj !== null) {
+                return obj.Type();
+            }
+            return null;
+        },
+        ObjectOf(id) {
+            const obj = this.Defs?.get(id);
+            if (obj !== undefined && obj !== null) {
+                return obj;
+            }
+            return this.Uses?.get(id) ?? null;
+        },
+        PkgNameOf(_imp) { return null; }
+    };
+}
+function thisPackage(path) {
+    return {
+        path,
+        name: "",
+        scope: null,
+        imports: [],
+        complete: false,
+        fake: false,
+        cgo: false,
+        goVersion: "",
+        Path() { return this.path; },
+        Name() { return this.name; },
+        SetName(name) { this.name = name; },
+        GoVersion() { return this.goVersion; },
+        Scope() { return this.scope; },
+        Complete() { return this.complete; },
+        MarkComplete() { this.complete = true; },
+        Imports() { return this.imports; },
+        SetImports(list) { this.imports = list; },
+        String() { return `package ${this.name} (${JSON.stringify(this.path)})`; }
+    };
 }
 export function versionMax(a, b) {
     if (a.cmp(b) < 0) {

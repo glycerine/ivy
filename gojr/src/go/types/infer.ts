@@ -12,7 +12,7 @@ import { Alias, Unalias } from "./alias.js";
 import { Array as ArrayType } from "./array.js";
 import { Basic } from "./basic.js";
 import { Chan } from "./chan.js";
-import { Checker, debug, nopos, type positioner } from "./check.js";
+import { Checker, debug, nopos, type positioner , registerCheckerMethod } from "./check.js";
 import { error_ } from "./errors.js";
 import { Interface } from "./interface.js";
 import { Map as MapType } from "./map.js";
@@ -201,7 +201,7 @@ export class cycleFinder {
 // If successful, infer returns the complete list of given and inferred type arguments, one for each
 // type parameter. Otherwise the result is nil. Errors are reported through the err parameter.
 // Note: infer may fail (return nil) due to invalid args operands without reporting additional errors.
-Checker.prototype.infer = function infer(posn: positioner, tparams: TypeParam[], targs0: (Type | null)[], params0: Tuple | null, args0: operand[] | null, reverse: boolean, err: error_): Type[] | null {
+registerCheckerMethod("infer", function infer(posn: positioner, tparams: TypeParam[], targs0: (Type | null)[], params0: Tuple | null, args0: operand[] | null, reverse: boolean, err: error_): Type[] | null {
   let inferred: (Type | null)[] | null = null;
 
   if (traceInference) {
@@ -639,7 +639,7 @@ Checker.prototype.infer = function infer(posn: positioner, tparams: TypeParam[],
       this.dump("=> %s ➞ %s\n", tparams, inferred);
     }
   }
-};
+});
 
 // renameTParams renames the type parameters in the given type such that each type
 // parameter is given a new identity. renameTParams returns the new type parameters
@@ -648,7 +648,7 @@ Checker.prototype.infer = function infer(posn: positioner, tparams: TypeParam[],
 // If typ is a generic function, type parameters held with typ are not changed and
 // must be updated separately if desired.
 // The positions is only used for debug traces.
-Checker.prototype.renameTParams = function renameTParams(pos: number, tparams: TypeParam[], typ: Type): [TypeParam[], Type] {
+registerCheckerMethod("renameTParams", function renameTParams(pos: number, tparams: TypeParam[], typ: Type): [TypeParam[], Type] {
   // For the purpose of type inference we must differentiate type parameters
   // occurring in explicit type or value function arguments from the type
   // parameters we are solving for via unification because they may be the
@@ -695,7 +695,7 @@ Checker.prototype.renameTParams = function renameTParams(pos: number, tparams: T
   }
 
   return [tparams2, this.subst(pos, typ, renameMap, null, this.context())!];
-};
+});
 
 // typeParamsString produces a string containing all the type parameter names
 // in list suitable for human consumption.

@@ -10,7 +10,7 @@ import { NewTuple, type Tuple } from "./tuple.js";
 import { TypeParam, type TypeParamList } from "./typeparam.js";
 import { Alias, Unalias } from "./alias.js";
 import { Basic, UnsafePointer } from "./basic.js";
-import { Checker, atPos, type positioner } from "./check.js";
+import { Checker, atPos, type positioner , registerCheckerMethod } from "./check.js";
 import { deref } from "./lookup.js";
 import { Interface } from "./interface.js";
 import { Named } from "./named.js";
@@ -24,7 +24,7 @@ import { Invalid } from "./basic.js";
 import { bindTParams } from "./typelists.js";
 import { go1_18 } from "./version.js";
 import { measure } from "./assignments.js";
-import { newVar, ParamVar, RecvVar, ResultVar, type TypeName, type Var, type VarKind } from "./object.js";
+import { newVar, ParamVar, RecvVar, ResultVar, setObjectSignatureConstructor, type TypeName, type Var, type VarKind } from "./object.js";
 
 declare module "./check.js" {
   interface Checker {
@@ -43,6 +43,10 @@ declare module "./check.js" {
 // A Signature represents a (non-builtin) function or method type.
 // The receiver is ignored when comparing signatures for identity.
 export class Signature implements Type {
+  static {
+    setObjectSignatureConstructor(Signature as unknown as new (...args: unknown[]) => never);
+  }
+
   // We need to keep the scope in Signature (rather than passing it around
   // and store it in the Func Object) because when type-checking a function
   // literal we call the general type checker which returns a general Type.
@@ -132,7 +136,7 @@ export function NewSignatureType(recv: Var | null, recvTypeParams: TypeParam[] |
 // Implementation
 
 // funcType type-checks a function or method type.
-Checker.prototype.funcType = function funcType(sig: Signature, recvPar: FieldList | undefined, ftyp: FuncType): void {
+registerCheckerMethod("funcType", function funcType(sig: Signature, recvPar: FieldList | undefined, ftyp: FuncType): void {
   this.openScope(ftyp, "function");
   this.scope!.isFunc = true;
   this.recordScope(ftyp, this.scope!);
@@ -180,12 +184,12 @@ Checker.prototype.funcType = function funcType(sig: Signature, recvPar: FieldLis
   } finally {
     this.closeScope();
   }
-};
+});
 
 // collectRecv extracts the method receiver and its type parameters (if any) from rparam.
 // It declares the type parameters (but not the receiver) in the current scope, and
 // returns the receiver variable and its type parameter list (if any).
-Checker.prototype.collectRecv = function collectRecv(rparam: Field, scopePos: number): [Var, TypeParamList | null] {
+registerCheckerMethod("collectRecv", function collectRecv(rparam: Field, scopePos: number): [Var, TypeParamList | null] {
   // Unpack the receiver parameter which is of the form
   //
   //	"(" [rfield] ["*"] rbase ["[" rtparams "]"] ")"
@@ -335,7 +339,7 @@ Checker.prototype.collectRecv = function collectRecv(rparam: Field, scopePos: nu
   }).describef(recv, "validRecv(%s)", recv);
 
   return [recv, recvTParamsList];
-};
+});
 
 export function unpointer(t: Type): Type {
   for (;;) {
@@ -357,7 +361,7 @@ export function unpointer(t: Type): Type {
 //	 *(T[P])         *T[P]
 //	  (T[P])          T[P]
 //	   T[P]           T[P]
-Checker.prototype.recordParenthesizedRecvTypes = function recordParenthesizedRecvTypes(expr: Expr, typ: Type): void {
+registerCheckerMethod("recordParenthesizedRecvTypes", function recordParenthesizedRecvTypes(expr: Expr, typ: Type): void {
   for (;;) {
     this.recordTypeAndValue(expr, typexpr, typ, null);
     switch (expr.kind) {
@@ -379,13 +383,13 @@ Checker.prototype.recordParenthesizedRecvTypes = function recordParenthesizedRec
         return; // cannot unpack any further
     }
   }
-};
+});
 
 // collectParams collects (but does not declare) all parameter/result
 // variables of list and returns the list of names and corresponding
 // variables, and whether the (parameter) list is variadic.
 // Anonymous parameters are recorded with nil names.
-Checker.prototype.collectParams = function collectParams(kind: VarKind, list: FieldList | undefined): [Array<Ident | null>, Var[], boolean] {
+registerCheckerMethod("collectParams", function collectParams(kind: VarKind, list: FieldList | undefined): [Array<Ident | null>, Var[], boolean] {
   const names: Array<Ident | null> = [];
   const params: Var[] = [];
   let variadic = false;
@@ -448,21 +452,21 @@ Checker.prototype.collectParams = function collectParams(kind: VarKind, list: Fi
   }
 
   return [names, params, variadic];
-};
+});
 
 // declareParams declares each named parameter in the current scope.
-Checker.prototype.declareParams = function declareParams(names: Array<Ident | null>, params: Var[], scopePos: number): void {
+registerCheckerMethod("declareParams", function declareParams(names: Array<Ident | null>, params: Var[], scopePos: number): void {
   for (let i = 0; i < names.length; i++) {
     const name = names[i] ?? null;
     if (name !== null && name.name !== "") {
       this.declare(this.scope!, name, params[i]!, scopePos);
     }
   }
-};
+});
 
 // validRecv verifies that the receiver satisfies its respective spec requirements
 // and reports an error otherwise.
-Checker.prototype.validRecv = function validRecv(pos: positioner, recv: Var): void {
+registerCheckerMethod("validRecv", function validRecv(pos: positioner, recv: Var): void {
   // spec: "The receiver type must be of the form T or *T where T is a type name."
   const [rtyp] = deref(recv.typ!);
   const unaliased = Unalias(rtyp) ?? rtyp;
@@ -497,7 +501,7 @@ Checker.prototype.validRecv = function validRecv(pos: positioner, recv: Var): vo
   } else {
     this.errorf(pos, "InvalidRecv", "invalid receiver type %s", recv.typ);
   }
-};
+});
 
 // isCGoTypeObj reports whether the given type name was created by cgo.
 export function isCGoTypeObj(fset: unknown, obj: TypeName): boolean {

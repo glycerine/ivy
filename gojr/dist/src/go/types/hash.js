@@ -121,15 +121,21 @@ export class hasher {
                 writeComparable(h, t.Variadic());
                 const tparams = t.TypeParams();
                 const n = tparams?.Len() ?? 0;
-                if (n > 0) {
-                    this.inGenericSig = true; // affects constraints, params, and results
-                    writeComparable(h, n);
-                    for (const tparam of tparams.list()) {
-                        this.hash(h, tparam.Constraint());
+                const savedInGenericSig = this.inGenericSig;
+                try {
+                    if (n > 0) {
+                        this.inGenericSig = true; // affects constraints, params, and results
+                        writeComparable(h, n);
+                        for (const tparam of tparams.list()) {
+                            this.hash(h, tparam.Constraint());
+                        }
                     }
+                    this.hashTuple(h, t.Params());
+                    this.hashTuple(h, t.Results());
                 }
-                this.hashTuple(h, t.Params());
-                this.hashTuple(h, t.Results());
+                finally {
+                    this.inGenericSig = savedInGenericSig;
+                }
                 break;
             }
             case t instanceof Slice:

@@ -7,14 +7,9 @@
 import { NoPos, type Pos } from "./token.js";
 import type { Type } from "./type.js";
 import { Basic } from "./basic.js";
-import type { Func, Object, PkgName, TypeName, Var } from "./object.js";
+import type { Object, PkgName, TypeName, Var } from "./object.js";
 import type { Package } from "./package.js";
-import { Unsafe } from "./universe.js";
-import { Named } from "./named.js";
-import { Alias } from "./alias.js";
-import { TypeParam } from "./typeparam.js";
-import { Interface } from "./interface.js";
-import { Config, Info } from "./api.js";
+import type { Config, Info } from "./api.js";
 import { asGoVersion, go_current, go1_21, type goVersion } from "./version.js";
 import { assert } from "./util.js";
 import type { Scope } from "./scope.js";
@@ -22,6 +17,39 @@ import type { Signature } from "./signature.js";
 import type { operandMode } from "./operand.js";
 import { NoPos as zeroPos } from "./token.js";
 import type { declInfo } from "./resolver.js";
+import { fileGoVersion, fileName, identName, nodePos } from "./astcompat.js";
+
+export type checkerMethod = (this: Checker, ...args: any[]) => any;
+
+type checkerCtor = { prototype: any };
+
+type checkerMethodRecord = [string, checkerMethod];
+
+function checkerMethodQueue(): checkerMethodRecord[] {
+  const g = globalThis as typeof globalThis & { __gojrPendingCheckerMethods?: checkerMethodRecord[] };
+  if (g.__gojrPendingCheckerMethods === undefined) {
+    g.__gojrPendingCheckerMethods = [];
+  }
+  return g.__gojrPendingCheckerMethods;
+}
+
+export function registerCheckerMethod(name: string, fn: checkerMethod): void {
+  const g = globalThis as typeof globalThis & { __gojrCheckerCtor?: checkerCtor };
+  if (g.__gojrCheckerCtor !== undefined) {
+    g.__gojrCheckerCtor.prototype[name] = fn;
+    return;
+  }
+  checkerMethodQueue().push([name, fn]);
+}
+
+function installPendingCheckerMethods(ctor: checkerCtor): void {
+  const g = globalThis as typeof globalThis & { __gojrCheckerCtor?: checkerCtor };
+  g.__gojrCheckerCtor = ctor;
+  for (const [name, fn] of checkerMethodQueue()) {
+    ctor.prototype[name] = fn;
+  }
+  checkerMethodQueue().length = 0;
+}
 
 export interface positioner {
   Pos(): Pos;
@@ -210,31 +238,6 @@ export class Checker extends environment {
     this.usedPkgNames = new Map();
   }
 
-  public newNamed(obj: TypeName, underlying: Type | null, methods: Func[] | null): Named {
-    return new Named(this, obj, underlying, methods);
-  }
-
-  public newAlias(obj: TypeName, rhs: Type | null): Alias {
-    return new Alias(obj, rhs);
-  }
-
-  public newTypeParam(obj: TypeName, constraint: Type | null): TypeParam {
-    // Always increment lastID, even if it is not used.
-    this.nextID++;
-    const typ = new TypeParam(this, BigInt(this.nextID), obj, -1, constraint);
-    if (obj.typ === null) {
-      obj.typ = typ;
-    }
-    this.needsCleanup(typ);
-    return typ;
-  }
-
-  public newInterface(): Interface {
-    const typ = new Interface(this);
-    this.needsCleanup(typ);
-    return typ;
-  }
-
   // addDeclDep adds the dependency edge (check.decl -> to) if check.decl exists
   public addDeclDep(to: Object): void {
     const from = this.decl;
@@ -322,14 +325,14 @@ export class Checker extends environment {
     // determine package name and collect valid files
     const pkg = this.pkg;
     for (const file of files) {
-      const f = file as { Name?: { Name?: string }; Package?: Pos };
-      const name = f.Name?.Name ?? "";
+      const nameIdent = fileName(file);
+      const name = identName(nameIdent);
       switch (pkg.name) {
         case "":
           if (name !== "_") {
             pkg.name = name;
           } else {
-            (this as unknown as { error: (at: unknown, code: unknown, msg: string) => void }).error(f.Name, "BlankPkgName", "invalid package name _");
+            (this as unknown as { error: (at: unknown, code: unknown, msg: string) => void }).error(nameIdent, "BlankPkgName", "invalid package name _");
           }
           this.files = [...(this.files ?? []), file];
           break;
@@ -339,7 +342,7 @@ export class Checker extends environment {
           break;
 
         default:
-          (this as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(new atPos(f.Package ?? nopos), "MismatchedPkgName", "package %s; expected package %s", name, pkg.name);
+          (this as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(new atPos(nodePos(nameIdent) || nopos), "MismatchedPkgName", "package %s; expected package %s", name, pkg.name);
           // ignore this file
       }
     }
@@ -359,14 +362,14 @@ export class Checker extends environment {
 
     // determine Go version for each file
     for (const file of this.files ?? []) {
-      const f = file as { GoVersion?: string; Name?: unknown };
+      const nameIdent = fileName(file);
       // use unaltered Config.GoVersion by default
       // (This version string may contain dot-release numbers as in go1.20.1,
       // unlike file versions which are Go language versions only, if valid.)
       let v = this.conf.GoVersion;
 
       // If the file specifies a version, use max(fileVersion, go1.21).
-      const fileVersion = asGoVersion(f.GoVersion ?? "");
+      const fileVersion = asGoVersion(fileGoVersion(file));
       if (fileVersion.isValid()) {
         // Go 1.21 introduced the feature of setting the go.mod
         // go line to an early version of Go and allowing //go:build lines
@@ -386,7 +389,7 @@ export class Checker extends environment {
         if (fileVersion.cmp(go_current) > 0) {
           // Use position of 'package [p]' for types/types2 consistency.
           // (Ideally we would use the //build tag itself.)
-          (this as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(f.Name, "TooNew", "file requires newer Go version %v (application built with %v)", fileVersion, go_current);
+          (this as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(nameIdent, "TooNew", "file requires newer Go version %v (application built with %v)", fileVersion, go_current);
         }
       }
       versions.set(file, v);
@@ -409,7 +412,7 @@ export class Checker extends environment {
 
   // Files checks the provided files as part of the checker's package.
   public Files(files: unknown[]): unknown {
-    if (this.pkg === Unsafe) {
+    if (this.pkg.path === "unsafe" && this.pkg.name === "unsafe") {
       // Defensive handling for Unsafe, which cannot be type checked, and must
       // not be mutated. See https://go.dev/issue/61212 for an example of where
       // Unsafe is passed to NewChecker.
@@ -569,17 +572,19 @@ export class Checker extends environment {
   }
 }
 
+installPendingCheckerMethods(Checker);
+
 // NewChecker returns a new [Checker] instance for a given package.
 // [Package] files may be added incrementally via checker.Files.
 export function NewChecker(conf: Config | null, fset: unknown, pkg: Package, info: Info | null): Checker {
   // make sure we have a configuration
   if (conf === null) {
-    conf = new Config();
+    conf = newDefaultConfig();
   }
 
   // make sure we have an info struct
   if (info === null) {
-    info = new Info();
+    info = newDefaultInfo();
   }
 
   // Note: clients may call NewChecker with the Unsafe package, which is
@@ -589,6 +594,87 @@ export function NewChecker(conf: Config | null, fset: unknown, pkg: Package, inf
   // (previously, pkg.goVersion was mutated here: go.dev/issue/61212)
 
   return new Checker(conf, fset, pkg, info);
+}
+
+function newDefaultConfig(): Config {
+  return {
+    Context: null,
+    GoVersion: "",
+    IgnoreFuncBodies: false,
+    FakeImportC: false,
+    go115UsesCgo: false,
+    _Trace: false,
+    Error: null,
+    Importer: null,
+    Sizes: null,
+    DisableUnusedImportCheck: false,
+    _ErrorURL: "",
+    Check(path: string, fset: unknown, files: unknown[], info: Info | null): [Package, unknown] {
+      const pkg = thisPackage(path);
+      return [pkg, NewChecker(this, fset, pkg, info).Files(files)];
+    },
+    alignof(T: Type): number { return this.Sizes!.Alignof(T); },
+    offsetsof(T: import("./struct.js").Struct): number[] { return this.Sizes!.Offsetsof(T.fields ?? []); },
+    offsetof(_T: Type, _index: number[]): number { return -1; },
+    sizeof(T: Type): number { return this.Sizes!.Sizeof(T); }
+  } as Config;
+}
+
+function newDefaultInfo(): Info {
+  return {
+    Types: null,
+    Instances: null,
+    Defs: null,
+    Uses: null,
+    Implicits: null,
+    Selections: null,
+    Scopes: null,
+    InitOrder: null,
+    FileVersions: null,
+    recordTypes(): boolean { return this.Types !== null; },
+    TypeOf(e: unknown): Type | null {
+      const t = this.Types?.get(e) as { Type?: Type | null } | undefined;
+      if (t !== undefined) {
+        return t.Type ?? null;
+      }
+      const obj = this.ObjectOf(e);
+      if (obj !== null) {
+        return obj.Type();
+      }
+      return null;
+    },
+    ObjectOf(id: unknown): Object | null {
+      const obj = this.Defs?.get(id);
+      if (obj !== undefined && obj !== null) {
+        return obj;
+      }
+      return this.Uses?.get(id) ?? null;
+    },
+    PkgNameOf(_imp: unknown): PkgName | null { return null; }
+  } as Info;
+}
+
+function thisPackage(path: string): Package {
+  return {
+    path,
+    name: "",
+    scope: null as never,
+    imports: [],
+    complete: false,
+    fake: false,
+    cgo: false,
+    goVersion: "",
+    Path(): string { return this.path; },
+    Name(): string { return this.name; },
+    SetName(name: string): void { this.name = name; },
+    GoVersion(): string { return this.goVersion; },
+    Scope(): Scope { return this.scope; },
+    Complete(): boolean { return this.complete; },
+    MarkComplete(): void { this.complete = true; },
+    Imports(): Package[] { return this.imports; },
+    SetImports(list: Package[]): void { this.imports = list; },
+    String(): string { return `package ${this.name} (${JSON.stringify(this.path)})`; }
+  } as Package;
 }
 
 export function versionMax(a: goVersion, b: goVersion): goVersion {

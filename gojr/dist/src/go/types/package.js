@@ -3,9 +3,8 @@
 // Copyright 2013 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-import { nopos } from "./check.js";
-import { NewScope } from "./scope.js";
-import { Universe } from "./universe.js";
+import { NoPos as nopos } from "./token.js";
+import { NewScope, scopeUniverse } from "./scope.js";
 // A Package describes a Go package.
 export class Package {
     path;
@@ -72,6 +71,6 @@ export class Package {
 // NewPackage returns a new Package for the given package path and name.
 // The package is not complete and contains no explicit imports.
 export function NewPackage(path, name) {
-    const scope = NewScope(Universe, nopos, nopos, `package ${JSON.stringify(path)}`);
+    const scope = NewScope(scopeUniverse(), nopos, nopos, `package ${JSON.stringify(path)}`);
     return new Package(path, name, scope);
 }

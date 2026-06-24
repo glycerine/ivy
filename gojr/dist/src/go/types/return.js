@@ -4,11 +4,11 @@
 // This file implements isTerminating.
 import { Unparen } from "../../front/ast.js";
 import { TokenKind } from "../../front/token.js";
-import { Checker } from "./check.js";
+import { registerCheckerMethod } from "./check.js";
 // isTerminating reports if s is a terminating statement.
 // If s is labeled, label is the label name; otherwise s
 // is "".
-Checker.prototype.isTerminating = function isTerminating(s, label) {
+registerCheckerMethod("isTerminating", function isTerminating(s, label) {
     switch (s.kind) {
         default:
             throw new Error("unreachable");
@@ -73,8 +73,8 @@ Checker.prototype.isTerminating = function isTerminating(s, label) {
             break;
     }
     return false;
-};
-Checker.prototype.isTerminatingList = function isTerminatingList(list, label) {
+});
+registerCheckerMethod("isTerminatingList", function isTerminatingList(list, label) {
     // trailing empty statements are permitted - skip them
     for (let i = list.length - 1; i >= 0; i--) {
         if (list[i].kind !== "EmptyStmt") {
@@ -82,8 +82,8 @@ Checker.prototype.isTerminatingList = function isTerminatingList(list, label) {
         }
     }
     return false; // all statements are empty
-};
-Checker.prototype.isTerminatingSwitch = function isTerminatingSwitch(body, label) {
+});
+registerCheckerMethod("isTerminatingSwitch", function isTerminatingSwitch(body, label) {
     let hasDefault = false;
     for (const s of body) {
         const cc = s;
@@ -95,7 +95,7 @@ Checker.prototype.isTerminatingSwitch = function isTerminatingSwitch(body, label
         }
     }
     return hasDefault;
-};
+});
 // TODO(gri) For nested breakable statements, the current implementation of hasBreak
 // will traverse the same subtree repeatedly, once for each label. Replace
 // with a single-pass label/break matching phase.

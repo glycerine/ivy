@@ -10,7 +10,7 @@
 
 import type { Pos } from "./token.js";
 import type { Type } from "./type.js";
-import { Checker, atPos, nopos } from "./check.js";
+import { Checker, atPos, nopos , registerCheckerMethod } from "./check.js";
 import type { Context } from "./context.js";
 import { NewContext } from "./context.js";
 import { TypeParam } from "./typeparam.js";
@@ -78,9 +78,9 @@ declare module "./check.js" {
   }
 }
 
-Checker.prototype.instance = function instanceMethod(pos: Pos, orig: genericType, targs: Type[], expanding: Named | null, ctxt: Context | null): Type {
+registerCheckerMethod("instance", function instanceMethod(pos: Pos, orig: genericType, targs: Type[], expanding: Named | null, ctxt: Context | null): Type {
   return instance(this, pos, orig, targs, expanding, ctxt);
-};
+});
 
 // instance instantiates the given original (generic) function or type with the
 // provided type arguments and returns the resulting instance.
@@ -180,9 +180,9 @@ function instance(check: Checker | null, pos: Pos, orig: genericType, targs: Typ
   return updateContexts(res);
 }
 
-Checker.prototype.validateTArgLen = function validateTArgLenMethod(pos: Pos, name: string, want: number, got: number): boolean {
+registerCheckerMethod("validateTArgLen", function validateTArgLenMethod(pos: Pos, name: string, want: number, got: number): boolean {
   return validateTArgLen(this, pos, name, want, got);
-};
+});
 
 // validateTArgLen checks that the number of type arguments (got) matches the
 // number of type parameters (want); if they don't match an error is reported.
@@ -209,9 +209,9 @@ export function validateTArgLen(check: Checker | null, pos: Pos, name: string, w
   throw new Error(`${pos}: ${msg}`);
 }
 
-Checker.prototype.verify = function verifyMethod(pos: Pos, tparams: TypeParam[], targs: Type[], ctxt: Context): [number, Error | null] {
+registerCheckerMethod("verify", function verifyMethod(pos: Pos, tparams: TypeParam[], targs: Type[], ctxt: Context): [number, Error | null] {
   return verify(this, pos, tparams, targs, ctxt);
-};
+});
 
 // check may be nil; pos is used only if check is non-nil.
 export function verify(check: Checker | null, pos: Pos, tparams: TypeParam[], targs: Type[], ctxt: Context): [number, Error | null] {
@@ -233,9 +233,9 @@ export function verify(check: Checker | null, pos: Pos, tparams: TypeParam[], ta
   return [-1, null];
 }
 
-Checker.prototype.implements = function implementsMethod(V: Type, T: Type, constraint: boolean, cause: Cause | null): boolean {
+registerCheckerMethod("implements", function implementsMethod(V: Type, T: Type, constraint: boolean, cause: Cause | null): boolean {
   return implements_(this, V, T, constraint, cause);
-};
+});
 
 // implements checks if V implements T. The receiver may be nil if implements
 // is called through an exported API call such as AssignableTo. If constraint

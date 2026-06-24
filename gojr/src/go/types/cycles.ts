@@ -5,7 +5,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import { Checker, debug } from "./check.js";
+import { Checker, debug , registerCheckerMethod } from "./check.js";
 import type { Type } from "./type.js";
 import { Alias } from "./alias.js";
 import { Named } from "./named.js";
@@ -25,17 +25,17 @@ declare module "./check.js" {
 
 // directCycles searches for direct cycles among package level type declarations.
 // See directCycle for details.
-Checker.prototype.directCycles = function directCycles(): void {
+registerCheckerMethod("directCycles", function directCycles(): void {
   const pathIdx = new Map<TypeName, number>();
   for (const obj of this.objList) {
     if (obj instanceof TypeName) {
       this.directCycle(obj, pathIdx);
     }
   }
-};
+});
 
 // directCycle checks if the declaration of the type given by tname contains a direct cycle.
-Checker.prototype.directCycle = function directCycle(tname: TypeName, pathIdx: Map<TypeName, number>): void {
+registerCheckerMethod("directCycle", function directCycle(tname: TypeName, pathIdx: Map<TypeName, number>): void {
   if (debug && this.conf._Trace) {
     this.trace(tname.Pos(), "-- check direct cycle for %s", tname);
   }
@@ -85,11 +85,11 @@ Checker.prototype.directCycle = function directCycle(tname: TypeName, pathIdx: M
       assert(i < 0);
     }
   }
-};
+});
 
 // isComplete returns whether a type is complete (i.e. up to having an underlying type).
 // Incomplete types will panic if [Type.Underlying] is called on them.
-Checker.prototype.isComplete = function isComplete(t: Type | null): boolean {
+registerCheckerMethod("isComplete", function isComplete(t: Type | null): boolean {
   let obj: Object | null = null;
   let rhs: Type | null = null;
   if (t instanceof Alias) {
@@ -112,4 +112,4 @@ Checker.prototype.isComplete = function isComplete(t: Type | null): boolean {
   }
 
   return this.isComplete(rhs);
-};
+});

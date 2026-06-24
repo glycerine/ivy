@@ -6,24 +6,61 @@
 // license that can be found in the LICENSE file.
 
 import type { Pos } from "./token.js";
-import { Checker, debug } from "./check.js";
+import { debug, registerCheckerMethod, type Checker } from "./check.js";
 import type { Type } from "./type.js";
-import { TypeString } from "./typestring.js";
-import { Func, NewTypeName, type TypeName } from "./object.js";
+import { Func, NewTypeName, setObjectNamedConstructor, type TypeName } from "./object.js";
 import { TypeList, TypeParamList, bindTParams, newTypeList } from "./typelists.js";
 import { TypeParam } from "./typeparam.js";
 import { assert } from "./util.js";
 import { Alias, asNamed, unalias } from "./alias.js";
 import { NewContext, type Context } from "./context.js";
-import { makeSubstMap, replaceRecvType, subst as substType, cloneFunc, cloneVar } from "./subst.js";
-import { Signature } from "./signature.js";
+import type { substMap } from "./subst.js";
+import type { Signature } from "./signature.js";
 import { NewPointer } from "./pointer.js";
-import { Typ } from "./universe.js";
-import { BasicKind } from "./basic.js";
-import { Interface } from "./interface.js";
+import { Basic, BasicKind } from "./basic.js";
+import type { Interface } from "./interface.js";
+
+type namedRuntimeDeps = {
+  makeSubstMap?: (tpars: TypeParam[], targs: Type[]) => substMap;
+  substType?: (check: Checker | null, pos: Pos, typ: Type | null, smap: substMap, expanding: Named | null, ctxt: Context | null) => Type | null;
+  replaceRecvType?: (methods: Func[], old: Type, typ: Type) => [Func[], boolean];
+  cloneFunc?: (orig: Func, typ: Signature) => Func;
+  cloneVar?: (orig: import("./object.js").Var, typ: Type) => import("./object.js").Var;
+  Interface?: new (check?: Checker | null) => Interface;
+};
+
+type namedRuntimeGlobal = typeof globalThis & { __gojrNamedRuntimeDeps?: namedRuntimeDeps };
+
+function namedRuntimeDeps(): namedRuntimeDeps {
+  const g = globalThis as namedRuntimeGlobal;
+  if (g.__gojrNamedRuntimeDeps === undefined) {
+    g.__gojrNamedRuntimeDeps = {};
+  }
+  return g.__gojrNamedRuntimeDeps;
+}
+
+export function setNamedSubstRuntime(deps: Pick<namedRuntimeDeps, "makeSubstMap" | "substType" | "replaceRecvType" | "cloneFunc" | "cloneVar">): void {
+  Object.assign(namedRuntimeDeps(), deps);
+}
+
+export function setNamedInterfaceConstructor(ctor: new (check?: Checker | null) => Interface): void {
+  namedRuntimeDeps().Interface = ctor;
+}
+
+function namedSubstRuntime(): Required<Pick<namedRuntimeDeps, "makeSubstMap" | "substType" | "replaceRecvType" | "cloneFunc" | "cloneVar">> {
+  const deps = namedRuntimeDeps();
+  if (deps.makeSubstMap === undefined || deps.substType === undefined || deps.replaceRecvType === undefined || deps.cloneFunc === undefined || deps.cloneVar === undefined) {
+    throw new Error("go/types: named substitution runtime not initialized");
+  }
+  return deps as Required<Pick<namedRuntimeDeps, "makeSubstMap" | "substType" | "replaceRecvType" | "cloneFunc" | "cloneVar">>;
+}
 
 // A Named represents a named (defined) type.
 export class Named implements Type {
+  static {
+    setObjectNamedConstructor(Named as unknown as new (check: unknown, obj: TypeName, fromRHS: Type | null, methods: Func[] | null) => unknown);
+  }
+
   public check: Checker | null; // non-nil during type-checking; nil otherwise
   public obj: TypeName; // corresponding declared object for declared types; see above for instantiated types
 
@@ -263,12 +300,13 @@ export class Named implements Type {
     // code.
     let newSig = oldSig;
     if (rtpars.length === rtargs.length) {
-      const smap = makeSubstMap(rtpars, rtargs);
+      const deps = namedSubstRuntime();
+      const smap = deps.makeSubstMap(rtpars, rtargs);
       let ctxt: Context | null = null;
       if (check !== null) {
         ctxt = check.context();
       }
-      newSig = substType(check, orig.pos, oldSig, smap, this, ctxt) as Signature;
+      newSig = deps.substType(check, orig.pos, oldSig, smap, this, ctxt) as Signature;
     }
 
     if (newSig === oldSig) {
@@ -284,10 +322,11 @@ export class Named implements Type {
       rtyp = this;
     }
 
-    newSig.recv = cloneVar(oldSig.recv!, rtyp);
+    const deps = namedSubstRuntime();
+    newSig.recv = deps.cloneVar(oldSig.recv!, rtyp);
     newSig.rparams = null;
 
-    return cloneFunc(orig, newSig);
+    return deps.cloneFunc(orig, newSig);
   }
 
   // SetUnderlying sets the underlying type and marks t as complete.
@@ -375,7 +414,7 @@ export class Named implements Type {
     return this.underlying!;
   }
 
-  public String(): string { return TypeString(this, null); }
+  public String(): string { return this.obj.name; }
 
   // resolveUnderlying computes the underlying type of n. If n already has an
   // underlying type, nothing happens.
@@ -474,33 +513,38 @@ export class Named implements Type {
     const tpars = orig.tparams;
 
     if ((targs?.Len() ?? 0) !== (tpars?.Len() ?? 0)) {
-      return Typ[BasicKind.Invalid]!;
+      return new Basic(BasicKind.Invalid, 0, "invalid type");
     }
 
     const h = ctxt.instanceHash(orig, targs!.list());
     const u = ctxt.update(h, orig, targs!.list(), this); // block fixed point infinite instantiation
     assert(this === u);
 
-    const m = makeSubstMap(tpars!.list(), targs!.list());
+    const deps = namedSubstRuntime();
+    const m = deps.makeSubstMap(tpars!.list(), targs!.list());
     if (check !== null) {
       ctxt = check.context();
     }
 
-    let rhs = substType(check, this.obj.pos, orig.rhs(), m, this, ctxt)!;
+    let rhs = deps.substType(check, this.obj.pos, orig.rhs(), m, this, ctxt)!;
 
     // TODO(markfreeman): Can we handle this in substitution?
     // If the RHS is an interface, we must set the receiver of interface methods
     // to the named type.
-    if (rhs instanceof Interface) {
-      let iface = rhs;
-      const [methods, copied] = replaceRecvType(iface.methods, orig, this);
+    if ((rhs as { constructor?: { name?: string } }).constructor?.name === "Interface") {
+      let iface = rhs as Interface;
+      const [methods, copied] = deps.replaceRecvType(iface.methods, orig, this);
       if (copied) {
         // If the RHS doesn't use type parameters, it may not have been
         // substituted; we need to craft a new interface first.
         if (iface === orig.rhs()) {
           assert(iface.complete); // otherwise we are copying incomplete data
 
-          const crafted = check?.newInterface() ?? new Interface(null);
+          const InterfaceCtor = namedRuntimeDeps().Interface;
+          const crafted = check?.newInterface() ?? (InterfaceCtor !== undefined ? new InterfaceCtor(null) : null);
+          if (crafted === null) {
+            throw new Error("go/types: Interface constructor not initialized");
+          }
           crafted.complete = true;
           crafted.implicit = false;
           crafted.embeddeds = iface.embeddeds;
@@ -568,9 +612,9 @@ declare module "./check.js" {
   }
 }
 
-Checker.prototype.newNamed = function newNamedMethod(obj: TypeName, fromRHS: Type | null, methods: Func[] | null): Named {
+registerCheckerMethod("newNamed", function newNamedMethod(obj: TypeName, fromRHS: Type | null, methods: Func[] | null): Named {
   return newNamed(this, obj, fromRHS, methods);
-};
+});
 
 // newNamed is like NewNamed but with a *Checker receiver.
 export function newNamed(check: Checker | null, obj: TypeName, fromRHS: Type | null, methods: Func[] | null): Named {
@@ -585,9 +629,9 @@ export function newNamed(check: Checker | null, obj: TypeName, fromRHS: Type | n
   return typ;
 }
 
-Checker.prototype.newNamedInstance = function newNamedInstanceMethod(pos: Pos, orig: Named, targs: Type[], expanding: Named | null): Named {
+registerCheckerMethod("newNamedInstance", function newNamedInstanceMethod(pos: Pos, orig: Named, targs: Type[], expanding: Named | null): Named {
   return newNamedInstance(this, pos, orig, targs, expanding);
-};
+});
 
 // newNamedInstance creates a new named instance for the given origin and type
 // arguments, recording pos as the position of its synthetic object (for error
@@ -617,12 +661,12 @@ export function newNamedInstance(check: Checker | null, pos: Pos, orig: Named, t
 }
 
 // context returns the type-checker context.
-Checker.prototype.context = function context(): Context {
+registerCheckerMethod("context", function context(): Context {
   if (this.ctxt === null) {
     this.ctxt = NewContext();
   }
   return this.ctxt;
-};
+});
 
 // safeUnderlying returns the underlying type of typ without expanding
 // instances, to avoid infinite recursion.

@@ -4,7 +4,7 @@
 
 // This file implements (error and trace) message formatting support.
 
-import { Checker } from "./check.js";
+import { Checker , registerCheckerMethod } from "./check.js";
 import type { Package } from "./package.js";
 import type { Qualifier } from "./typestring.js";
 import { TypeString } from "./typestring.js";
@@ -81,7 +81,7 @@ declare module "./check.js" {
   }
 }
 
-Checker.prototype.sprintf = function sprintfMethod(format: string, ...args: unknown[]): string {
+registerCheckerMethod("sprintf", function sprintfMethod(format: string, ...args: unknown[]): string {
   let fset: unknown = null;
   let qf: Qualifier | null = null;
   if (this !== null) {
@@ -89,11 +89,11 @@ Checker.prototype.sprintf = function sprintfMethod(format: string, ...args: unkn
     qf = (pkg: unknown) => this.qualifier(pkg as Package);
   }
   return sprintf(fset, qf, false, format, ...args);
-};
+});
 
-Checker.prototype.trace = function trace(_pos: number, format: string, ...args: unknown[]): void {
+registerCheckerMethod("trace", function trace(_pos: number, format: string, ...args: unknown[]): void {
   console.log(`${".  ".repeat(this.indent)}${sprintf(this.fset, (pkg: unknown) => this.qualifier(pkg as Package), true, format, ...args)}`);
-};
+});
 
 // ndigits returns the number of decimal digits in x.
 // For x < 10, the result is always 1.
@@ -110,11 +110,11 @@ export function ndigits(x: number): number {
 }
 
 // dump is only needed for debugging
-Checker.prototype.dump = function dump(format: string, ...args: unknown[]): void {
+registerCheckerMethod("dump", function dump(format: string, ...args: unknown[]): void {
   console.log(sprintf(this.fset, (pkg: unknown) => this.qualifier(pkg as Package), true, format, ...args));
-};
+});
 
-Checker.prototype.qualifier = function qualifier(pkg: Package): string {
+registerCheckerMethod("qualifier", function qualifier(pkg: Package): string {
   // Qualify the package unless it's the package being type-checked.
   if (pkg !== this.pkg) {
     if (this.pkgPathMap === null) {
@@ -129,11 +129,11 @@ Checker.prototype.qualifier = function qualifier(pkg: Package): string {
     return pkg.name;
   }
   return "";
-};
+});
 
 // markImports recursively walks pkg and its imports, to record unique import
 // paths in pkgPathMap.
-Checker.prototype.markImports = function markImports(pkg: Package): void {
+registerCheckerMethod("markImports", function markImports(pkg: Package): void {
   if (this.seenPkgMap?.get(pkg)) {
     return;
   }
@@ -149,7 +149,7 @@ Checker.prototype.markImports = function markImports(pkg: Package): void {
   for (const imp of pkg.imports) {
     this.markImports(imp);
   }
-};
+});
 
 // stripAnnotations removes internal (type) annotations from s.
 export function stripAnnotations(s: string): string {

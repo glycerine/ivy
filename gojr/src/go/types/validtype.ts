@@ -8,7 +8,7 @@
 import type { Pos } from "./token.js";
 import type { Type } from "./type.js";
 import { Array } from "./array.js";
-import { Checker, debug, nopos } from "./check.js";
+import { Checker, debug, nopos , registerCheckerMethod } from "./check.js";
 import { pathString } from "./decl.js";
 import { Interface } from "./interface.js";
 import { Named } from "./named.js";
@@ -33,9 +33,9 @@ declare module "./check.js" {
 // producing a cycle in the type graph.
 // (Cycles involving alias types, as in "type A = [10]A" are detected
 // earlier, via the objDecl cycle detection mechanism.)
-Checker.prototype.validType = function validType(typ: Named): void {
+registerCheckerMethod("validType", function validType(typ: Named): void {
   this.validType0(nopos, typ, null, null);
-};
+});
 
 // validType0 checks if the given type is valid. If typ is a type parameter
 // its value is looked up in the type argument list of the instantiated
@@ -47,7 +47,7 @@ Checker.prototype.validType = function validType(typ: Named): void {
 // of) F in S, leading to the nest S->F. If a type appears in its own nest
 // (say S->F->S) we have an invalid recursive type. The path list is the full
 // path of named types in a cycle, it is only needed for error reporting.
-Checker.prototype.validType0 = function validType0(pos: Pos, typ0: Type | null, nest0: Named[] | null, path0: Named[] | null): boolean {
+registerCheckerMethod("validType0", function validType0(pos: Pos, typ0: Type | null, nest0: Named[] | null, path0: Named[] | null): boolean {
   const typ = Unalias(typ0);
   let nest = nest0 ?? [];
   let path = path0 ?? [];
@@ -66,7 +66,7 @@ Checker.prototype.validType0 = function validType0(pos: Pos, typ0: Type | null, 
   }
 
   return this.validType0Body(pos, typ, nest, path);
-};
+});
 
 declare module "./check.js" {
   interface Checker {
@@ -74,7 +74,7 @@ declare module "./check.js" {
   }
 }
 
-Checker.prototype.validType0Body = function validType0Body(pos: Pos, typ: Type | null, nest: Named[], path: Named[]): boolean {
+registerCheckerMethod("validType0Body", function validType0Body(pos: Pos, typ: Type | null, nest: Named[], path: Named[]): boolean {
   switch (true) {
     case typ === null:
       // We should never see a nil type but be conservative and panic
@@ -232,7 +232,7 @@ Checker.prototype.validType0Body = function validType0Body(pos: Pos, typ: Type |
   }
 
   return true;
-};
+});
 
 // makeObjList returns the list of type name objects for the given
 // list of named types.

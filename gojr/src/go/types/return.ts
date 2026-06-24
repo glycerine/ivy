@@ -6,7 +6,7 @@
 
 import { Unparen, type BlockStmt, type CaseClause, type CommClause, type Stmt } from "../../front/ast.js";
 import { TokenKind } from "../../front/token.js";
-import { Checker } from "./check.js";
+import { Checker , registerCheckerMethod } from "./check.js";
 
 declare module "./check.js" {
   interface Checker {
@@ -19,7 +19,7 @@ declare module "./check.js" {
 // isTerminating reports if s is a terminating statement.
 // If s is labeled, label is the label name; otherwise s
 // is "".
-Checker.prototype.isTerminating = function isTerminating(s: Stmt, label: string): boolean {
+registerCheckerMethod("isTerminating", function isTerminating(s: Stmt, label: string): boolean {
   switch (s.kind) {
     default:
       throw new Error("unreachable");
@@ -97,9 +97,9 @@ Checker.prototype.isTerminating = function isTerminating(s: Stmt, label: string)
   }
 
   return false;
-};
+});
 
-Checker.prototype.isTerminatingList = function isTerminatingList(list: Stmt[], label: string): boolean {
+registerCheckerMethod("isTerminatingList", function isTerminatingList(list: Stmt[], label: string): boolean {
   // trailing empty statements are permitted - skip them
   for (let i = list.length - 1; i >= 0; i--) {
     if (list[i]!.kind !== "EmptyStmt") {
@@ -107,9 +107,9 @@ Checker.prototype.isTerminatingList = function isTerminatingList(list: Stmt[], l
     }
   }
   return false; // all statements are empty
-};
+});
 
-Checker.prototype.isTerminatingSwitch = function isTerminatingSwitch(body: CaseClause[], label: string): boolean {
+registerCheckerMethod("isTerminatingSwitch", function isTerminatingSwitch(body: CaseClause[], label: string): boolean {
   let hasDefault = false;
   for (const s of body) {
     const cc = s;
@@ -121,7 +121,7 @@ Checker.prototype.isTerminatingSwitch = function isTerminatingSwitch(body: CaseC
     }
   }
   return hasDefault;
-};
+});
 
 // TODO(gri) For nested breakable statements, the current implementation of hasBreak
 // will traverse the same subtree repeatedly, once for each label. Replace

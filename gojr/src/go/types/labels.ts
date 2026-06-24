@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import { Checker, debug } from "./check.js";
+import { Checker, debug , registerCheckerMethod } from "./check.js";
 import { NewLabel } from "./object.js";
 import { NewScope, type Scope, resolve } from "./scope.js";
 import { assert } from "./util.js";
@@ -15,7 +15,7 @@ declare module "./check.js" {
 }
 
 // labels checks correct label use in body.
-Checker.prototype.labels = function labels(body: unknown): void {
+registerCheckerMethod("labels", function labels(body: unknown): void {
   const b = body as { Pos?: () => number; End?: () => number; List?: unknown[] };
   const all = NewScope(null, b.Pos?.() ?? 0, b.End?.() ?? 0, "label");
 
@@ -45,7 +45,7 @@ Checker.prototype.labels = function labels(body: unknown): void {
       this.softErrorf(lbl, "UnusedLabel", "label %s declared and not used", lbl.name);
     }
   }
-};
+});
 
 // A block tracks label declarations in a block and its enclosing blocks.
 export class block {
@@ -96,7 +96,7 @@ export class block {
 }
 
 // blockBranches processes a block's statement list and returns the set of outgoing forward jumps.
-Checker.prototype.blockBranches = function blockBranches(all: Scope, parent: block | null, lstmt: unknown, list: unknown[]): unknown[] {
+registerCheckerMethod("blockBranches", function blockBranches(all: Scope, parent: block | null, lstmt: unknown, list: unknown[]): unknown[] {
   const b = new block(parent, lstmt);
   const fwdJumps: unknown[] = [];
 
@@ -160,4 +160,4 @@ Checker.prototype.blockBranches = function blockBranches(all: Scope, parent: blo
   }
 
   return fwdJumps;
-};
+});

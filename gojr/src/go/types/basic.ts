@@ -8,7 +8,6 @@
 // Mechanical TypeScript transliteration of go/types/basic.go.
 
 import type { Type } from "./type.js";
-import { TypeString } from "./typestring.js";
 
 // BasicKind describes the kind of basic type.
 export enum BasicKind {
@@ -107,5 +106,10 @@ export class Basic implements Type {
   public Name(): string { return this.name; }
 
   public Underlying(): Type { return this; }
-  public String(): string { return TypeString(this, null); }
+  public String(): string {
+    if (this.kind === BasicKind.UnsafePointer) {
+      return "unsafe.Pointer";
+    }
+    return this.name;
+  }
 }

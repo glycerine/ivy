@@ -7,8 +7,7 @@
 
 import { cmpPos } from "./check.js";
 import type { Object } from "./object.js";
-import { Scope } from "./scope.js";
-import { Universe } from "./universe.js";
+import { Scope, scopeUniverse } from "./scope.js";
 import type { Pos } from "./token.js";
 
 declare module "./scope.js" {
@@ -65,7 +64,7 @@ Scope.prototype.Contains = function Contains(pos: Pos): boolean {
 Scope.prototype.Innermost = function Innermost(pos: Pos): Scope | null {
   // Package scopes do not have extents since they may be
   // discontiguous, so iterate over the package's files.
-  if (this.parent === Universe) {
+  if (this.parent === scopeUniverse()) {
     for (const s of this.children) {
       const inner = s.Innermost(pos);
       if (inner !== null) {
@@ -84,4 +83,3 @@ Scope.prototype.Innermost = function Innermost(pos: Pos): Scope | null {
   }
   return null;
 };
-

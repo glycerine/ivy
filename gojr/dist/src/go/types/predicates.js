@@ -20,6 +20,8 @@ import { debug, nopos } from "./check.js";
 import { NewContext } from "./context.js";
 import { makeSubstMap, subst as substType } from "./subst.js";
 import { assertSortedMethods, computeUnionTypeSet } from "./typeset.js";
+import { setObjectIdentical } from "./object.js";
+import { setIdenticalForTypeTerms } from "./typeterm.js";
 // isValid reports whether t is a valid type.
 export function isValid(t) { return Unalias(t) !== Typ[BasicKind.Invalid]; }
 // The isX predicates below report whether t is an X.
@@ -565,3 +567,5 @@ export function Identical(x, y) {
     const c = new comparer();
     return c.identical(x, y, null);
 }
+setIdenticalForTypeTerms(Identical);
+setObjectIdentical(Identical);

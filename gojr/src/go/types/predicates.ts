@@ -27,6 +27,8 @@ import { debug, nopos } from "./check.js";
 import { NewContext } from "./context.js";
 import { makeSubstMap, subst as substType } from "./subst.js";
 import { assertSortedMethods, computeUnionTypeSet } from "./typeset.js";
+import { setObjectIdentical } from "./object.js";
+import { setIdenticalForTypeTerms } from "./typeterm.js";
 import { assert } from "./util.js";
 
 // isValid reports whether t is a valid type.
@@ -599,3 +601,6 @@ export function Identical(x: Type | null, y: Type | null): boolean {
   const c = new comparer();
   return c.identical(x, y, null);
 }
+
+setIdenticalForTypeTerms(Identical);
+setObjectIdentical(Identical);

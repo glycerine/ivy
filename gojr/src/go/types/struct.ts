@@ -8,7 +8,7 @@
 import { NewIdent, PosOf, type BasicLit, type Expr, type Ident, type StructType } from "../../front/ast.js";
 import { TokenKind } from "../../front/token.js";
 import { Basic, Invalid, UnsafePointer } from "./basic.js";
-import { Checker, atPos } from "./check.js";
+import { Checker, atPos , registerCheckerMethod } from "./check.js";
 import { deref } from "./lookup.js";
 import { Interface } from "./interface.js";
 import { Pointer } from "./pointer.js";
@@ -83,7 +83,7 @@ export function NewStruct(fields: Var[], tags: string[] | null): Struct {
   return s;
 }
 
-Checker.prototype.structType = function structType(styp: Struct, e: StructType): void {
+registerCheckerMethod("structType", function structType(styp: Struct, e: StructType): void {
   const list = e.fields;
   if (list === undefined || list.fields.length === 0) {
     styp.markComplete();
@@ -195,7 +195,7 @@ Checker.prototype.structType = function structType(styp: Struct, e: StructType):
   styp.fields = fields;
   styp.tags = tags;
   styp.markComplete();
-};
+});
 
 export function embeddedFieldIdent(e: Expr): Ident | null {
   switch (e.kind) {
@@ -217,7 +217,7 @@ export function embeddedFieldIdent(e: Expr): Ident | null {
   return null; // invalid embedded field
 }
 
-Checker.prototype.declareInSet = function declareInSet(oset: objset, pos: number, obj: Object): boolean {
+registerCheckerMethod("declareInSet", function declareInSet(oset: objset, pos: number, obj: Object): boolean {
   const alt = oset.insert(obj);
   if (alt !== null) {
     const err = this.newError("DuplicateDecl");
@@ -227,9 +227,9 @@ Checker.prototype.declareInSet = function declareInSet(oset: objset, pos: number
     return false;
   }
   return true;
-};
+});
 
-Checker.prototype.tag = function tag(t: BasicLit | undefined): string {
+registerCheckerMethod("tag", function tag(t: BasicLit | undefined): string {
   if (t !== undefined) {
     if (t.token === TokenKind.StringLiteral) {
       const val = makeFromLiteral(t.value, t.token);
@@ -240,4 +240,4 @@ Checker.prototype.tag = function tag(t: BasicLit | undefined): string {
     this.errorf(new atPos(PosOf(t)), "InvalidSyntaxTree", "incorrect tag syntax: %q", t.value);
   }
   return "";
-};
+});

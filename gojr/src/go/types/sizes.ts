@@ -8,7 +8,6 @@
 // This file implements Sizes.
 
 import type { Type } from "./type.js";
-import { Config } from "./api.js";
 import { Array } from "./array.js";
 import { Basic, Bool, Complex128, Complex64, Float32, Float64, Int16, Int32, Int64, Int8, IsString, String as StringKind, Uint16, Uint32, Uint64, Uint8 } from "./basic.js";
 import { Slice } from "./slice.js";
@@ -28,6 +27,35 @@ declare module "./api.js" {
     offsetof(T: Type, index: number[]): number;
     sizeof(T: Type): number;
   }
+}
+
+interface configSizingReceiver {
+  Sizes: Sizes | null;
+  alignof(T: Type): number;
+  offsetsof(T: Struct): number[];
+  offsetof(T: Type, index: number[]): number;
+  sizeof(T: Type): number;
+}
+
+type configMethod = (this: configSizingReceiver, ...args: any[]) => any;
+type configCtor = { prototype: any };
+type configMethodRecord = [string, configMethod];
+
+function configMethodQueue(): configMethodRecord[] {
+  const g = globalThis as typeof globalThis & { __gojrPendingConfigMethods?: configMethodRecord[] };
+  if (g.__gojrPendingConfigMethods === undefined) {
+    g.__gojrPendingConfigMethods = [];
+  }
+  return g.__gojrPendingConfigMethods;
+}
+
+function registerConfigMethod(name: string, fn: configMethod): void {
+  const g = globalThis as typeof globalThis & { __gojrConfigCtor?: configCtor };
+  if (g.__gojrConfigCtor !== undefined) {
+    g.__gojrConfigCtor.prototype[name] = fn;
+    return;
+  }
+  configMethodQueue().push([name, fn]);
 }
 
 // Sizes defines the sizing functions for package unsafe.
@@ -411,7 +439,7 @@ export function SizesFor(compiler: string, arch: string): Sizes | null {
 // stdSizes is used if Config.Sizes == nil.
 export const stdSizes = SizesFor("gc", "amd64")!;
 
-Config.prototype.alignof = function alignof(T: Type): number {
+registerConfigMethod("alignof", function alignof(T: Type): number {
   let f = stdSizes.Alignof.bind(stdSizes);
   if (this.Sizes !== null) {
     f = this.Sizes.Alignof.bind(this.Sizes);
@@ -421,9 +449,9 @@ Config.prototype.alignof = function alignof(T: Type): number {
     return a;
   }
   throw new Error("implementation of alignof returned an alignment < 1");
-};
+});
 
-Config.prototype.offsetsof = function offsetsof(T: Struct): number[] {
+registerConfigMethod("offsetsof", function offsetsof(T: Struct): number[] {
   let offsets: number[] = [];
   if (T.NumFields() > 0) {
     // compute offsets on demand
@@ -438,14 +466,14 @@ Config.prototype.offsetsof = function offsetsof(T: Struct): number[] {
     }
   }
   return offsets;
-};
+});
 
 // offsetof returns the offset of the field specified via
 // the index sequence relative to T. All embedded fields
 // must be structs (rather than pointers to structs).
 // If the offset is too large (because T is too large),
 // the result is negative.
-Config.prototype.offsetof = function offsetof(T: Type, index: number[]): number {
+registerConfigMethod("offsetof", function offsetof(T: Type, index: number[]): number {
   let offs = 0;
   for (const i of index) {
     const s = T.Underlying() as Struct;
@@ -460,17 +488,17 @@ Config.prototype.offsetof = function offsetof(T: Type, index: number[]): number 
     T = s.fields![i]!.typ!;
   }
   return offs;
-};
+});
 
 // sizeof returns the size of T.
 // If T is too large, the result is negative.
-Config.prototype.sizeof = function sizeof(T: Type): number {
+registerConfigMethod("sizeof", function sizeof(T: Type): number {
   let f = stdSizes.Sizeof.bind(stdSizes);
   if (this.Sizes !== null) {
     f = this.Sizes.Sizeof.bind(this.Sizes);
   }
   return f(T);
-};
+});
 
 // align returns the smallest y >= x such that y % a == 0.
 // a must be within 1 and 8 and it must be a power of 2.

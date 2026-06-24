@@ -9,7 +9,7 @@
 
 import type { Pos } from "./token.js";
 import type { Type } from "./type.js";
-import { Checker } from "./check.js";
+import { Checker , registerCheckerMethod } from "./check.js";
 import { assert } from "./util.js";
 import { Basic, BasicKind } from "./basic.js";
 import { TypeParam } from "./typeparam.js";
@@ -24,12 +24,20 @@ import { Union, Term, NewTerm } from "./union.js";
 import { Interface } from "./interface.js";
 import { Map as MapType } from "./map.js";
 import { Chan } from "./chan.js";
-import { Named } from "./named.js";
+import { Named, setNamedSubstRuntime } from "./named.js";
 import { TypeList, TypeParamList, newTypeList } from "./typelists.js";
 import { NewTypeName, Func, Var } from "./object.js";
 import { Typ } from "./universe.js";
 import type { Context } from "./context.js";
 import { debug } from "./check.js";
+
+setNamedSubstRuntime({
+  makeSubstMap,
+  substType: subst,
+  replaceRecvType,
+  cloneFunc,
+  cloneVar
+});
 
 export class substMap extends Map<TypeParam, Type> {
   public empty(): boolean {
@@ -73,9 +81,9 @@ declare module "./check.js" {
   }
 }
 
-Checker.prototype.subst = function substMethod(pos: Pos, typ: Type | null, smap: substMap, expanding: Named | null, ctxt: Context | null): Type | null {
+registerCheckerMethod("subst", function substMethod(pos: Pos, typ: Type | null, smap: substMap, expanding: Named | null, ctxt: Context | null): Type | null {
   return subst(this, pos, typ, smap, expanding, ctxt);
-};
+});
 
 // subst returns the type typ with its type parameters tpars replaced by the
 // corresponding type arguments targs, recursively. subst doesn't modify the

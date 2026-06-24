@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 // This file implements error reporting.
-import { Checker, bailout, nopos, noposn } from "./check.js";
+import { bailout, nopos, noposn, registerCheckerMethod } from "./check.js";
 import { Error as TypesError } from "./api.js";
 import { operand } from "./operand.js";
 import { stripAnnotations } from "./format.js";
@@ -117,14 +117,14 @@ export class error_ {
     }
 }
 // newError returns a new error_ with the given error code.
-Checker.prototype.newError = function newError(code) {
+registerCheckerMethod("newError", function newError(code) {
     if (code === 0 || code === null || code === undefined) {
         throw new Error("error code must not be 0");
     }
     return new error_(this, code);
-};
+});
 // handleError should only be called by error_.report.
-Checker.prototype.handleError = function handleError(index, posn, code, msg, soft) {
+registerCheckerMethod("handleError", function handleError(index, posn, code, msg, soft) {
     assert(code !== 0);
     if (index === 0) {
         if (this.errpos !== null && this.errpos.Pos() !== nopos) {
@@ -164,31 +164,31 @@ Checker.prototype.handleError = function handleError(index, posn, code, msg, sof
         throw new bailout(); // record first error and exit
     }
     f(e);
-};
+});
 export const invalidArg = "invalid argument: ";
 export const invalidOp = "invalid operation: ";
-Checker.prototype.error = function error(at, code, msg) {
+registerCheckerMethod("error", function error(at, code, msg) {
     const err = this.newError(code);
     err.addf(at, "%s", msg);
     err.report();
-};
-Checker.prototype.errorf = function errorf(at, code, format, ...args) {
+});
+registerCheckerMethod("errorf", function errorf(at, code, format, ...args) {
     const err = this.newError(code);
     err.addf(at, format, ...args);
     err.report();
-};
-Checker.prototype.softErrorf = function softErrorf(at, code, format, ...args) {
+});
+registerCheckerMethod("softErrorf", function softErrorf(at, code, format, ...args) {
     const err = this.newError(code);
     err.addf(at, format, ...args);
     err.soft = true;
     err.report();
-};
-Checker.prototype.versionErrorf = function versionErrorf(at, v, format, ...args) {
+});
+registerCheckerMethod("versionErrorf", function versionErrorf(at, v, format, ...args) {
     const msg = this.sprintf(format, ...args);
     const err = this.newError("UnsupportedFeature");
     err.addf(at, "%s requires %s or later", msg, v);
     err.report();
-};
+});
 // posSpan holds a position range along with a highlighted position within that
 // range. This is used for positioning errors, with pos by convention being the
 // first position in the source where the error is known to exist, and start

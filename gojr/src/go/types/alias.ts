@@ -6,12 +6,18 @@
 // license that can be found in the LICENSE file.
 
 import type { Type } from "./type.js";
-import { TypeString } from "./typestring.js";
+import { registerCheckerMethod } from "./check.js";
 import type { TypeName } from "./object.js";
 import type { TypeList, TypeParamList } from "./typelists.js";
 import { bindTParams } from "./typelists.js";
-import { Named } from "./named.js";
+import type { Named } from "./named.js";
 import type { TypeParam } from "./typeparam.js";
+
+declare module "./check.js" {
+  interface Checker {
+    newAlias(obj: TypeName, rhs: Type | null): Alias;
+  }
+}
 
 // An Alias represents an alias type.
 export class Alias implements Type {
@@ -35,7 +41,7 @@ export class Alias implements Type {
   // For instantiated types, this is same as the type name of the origin type.
   public Obj(): TypeName { return this.orig.obj; }
 
-  public String(): string { return TypeString(this, null); }
+  public String(): string { return this.obj.name; }
 
   // Underlying returns the [underlying type] of the alias type a, which is the
   // underlying type of the aliased type. Underlying types are never Named,
@@ -81,14 +87,18 @@ export function NewAlias(obj: TypeName, rhs: Type | null): Alias {
   return alias;
 }
 
+registerCheckerMethod("newAlias", function newAliasMethod(obj: TypeName, rhs: Type | null): Alias {
+  return new Alias(obj, rhs);
+});
+
 // Unalias returns t if it is not an alias type;
 // otherwise it follows t's alias chain until it
 // reaches a non-alias type which is then returned.
 // Consequently, the result is never an alias type.
 // Returns nil if the alias is incomplete.
 export function Unalias(t: Type | null): Type | null {
-  if (t instanceof Alias) {
-    return unalias(t);
+  if (isAlias(t)) {
+    return unalias(t as Alias);
   }
   return t;
 }
@@ -98,7 +108,7 @@ export function unalias(a0: Alias): Type | null {
     return a0.actual;
   }
   let t: Type | null = null;
-  for (let a: Alias | null = a0; a !== null; a = t instanceof Alias ? t : null) {
+  for (let a: Alias | null = a0; a !== null; a = isAlias(t) ? t as Alias : null) {
     t = a.fromRHS;
   }
   // It's fine to memoize nil types since it's the zero value for actual.
@@ -111,5 +121,9 @@ export function unalias(a0: Alias): Type | null {
 // actual type. It returns nil otherwise.
 export function asNamed(t: Type | null): Named | null {
   const n = Unalias(t);
-  return n instanceof Named ? n : null;
+  return n !== null && (n as { constructor?: { name?: string } }).constructor?.name === "Named" ? n as Named : null;
+}
+
+function isAlias(t: Type | null): boolean {
+  return t !== null && (t as { constructor?: { name?: string } }).constructor?.name === "Alias";
 }

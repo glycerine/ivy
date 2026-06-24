@@ -7,7 +7,7 @@ import { NewTuple } from "./tuple.js";
 import { TypeParam } from "./typeparam.js";
 import { Alias, Unalias } from "./alias.js";
 import { Basic, UnsafePointer } from "./basic.js";
-import { Checker, atPos } from "./check.js";
+import { atPos, registerCheckerMethod } from "./check.js";
 import { deref } from "./lookup.js";
 import { Interface } from "./interface.js";
 import { Named } from "./named.js";
@@ -21,12 +21,15 @@ import { Invalid } from "./basic.js";
 import { bindTParams } from "./typelists.js";
 import { go1_18 } from "./version.js";
 import { measure } from "./assignments.js";
-import { newVar, ParamVar, RecvVar, ResultVar } from "./object.js";
+import { newVar, ParamVar, RecvVar, ResultVar, setObjectSignatureConstructor } from "./object.js";
 // ----------------------------------------------------------------------------
 // API
 // A Signature represents a (non-builtin) function or method type.
 // The receiver is ignored when comparing signatures for identity.
 export class Signature {
+    static {
+        setObjectSignatureConstructor(Signature);
+    }
     // We need to keep the scope in Signature (rather than passing it around
     // and store it in the Func Object) because when type-checking a function
     // literal we call the general type checker which returns a general Type.
@@ -103,7 +106,7 @@ export function NewSignatureType(recv, recvTypeParams, typeParams, params, resul
 // ----------------------------------------------------------------------------
 // Implementation
 // funcType type-checks a function or method type.
-Checker.prototype.funcType = function funcType(sig, recvPar, ftyp) {
+registerCheckerMethod("funcType", function funcType(sig, recvPar, ftyp) {
     this.openScope(ftyp, "function");
     this.scope.isFunc = true;
     this.recordScope(ftyp, this.scope);
@@ -148,11 +151,11 @@ Checker.prototype.funcType = function funcType(sig, recvPar, ftyp) {
     finally {
         this.closeScope();
     }
-};
+});
 // collectRecv extracts the method receiver and its type parameters (if any) from rparam.
 // It declares the type parameters (but not the receiver) in the current scope, and
 // returns the receiver variable and its type parameter list (if any).
-Checker.prototype.collectRecv = function collectRecv(rparam, scopePos) {
+registerCheckerMethod("collectRecv", function collectRecv(rparam, scopePos) {
     // Unpack the receiver parameter which is of the form
     //
     //	"(" [rfield] ["*"] rbase ["[" rtparams "]"] ")"
@@ -298,7 +301,7 @@ Checker.prototype.collectRecv = function collectRecv(rparam, scopePos) {
         this.validRecv(new atPos(PosOf(rbase)), recv);
     }).describef(recv, "validRecv(%s)", recv);
     return [recv, recvTParamsList];
-};
+});
 export function unpointer(t) {
     for (;;) {
         const p = t instanceof Pointer ? t : null;
@@ -318,7 +321,7 @@ export function unpointer(t) {
 //	 *(T[P])         *T[P]
 //	  (T[P])          T[P]
 //	   T[P]           T[P]
-Checker.prototype.recordParenthesizedRecvTypes = function recordParenthesizedRecvTypes(expr, typ) {
+registerCheckerMethod("recordParenthesizedRecvTypes", function recordParenthesizedRecvTypes(expr, typ) {
     for (;;) {
         this.recordTypeAndValue(expr, typexpr, typ, null);
         switch (expr.kind) {
@@ -340,12 +343,12 @@ Checker.prototype.recordParenthesizedRecvTypes = function recordParenthesizedRec
                 return; // cannot unpack any further
         }
     }
-};
+});
 // collectParams collects (but does not declare) all parameter/result
 // variables of list and returns the list of names and corresponding
 // variables, and whether the (parameter) list is variadic.
 // Anonymous parameters are recorded with nil names.
-Checker.prototype.collectParams = function collectParams(kind, list) {
+registerCheckerMethod("collectParams", function collectParams(kind, list) {
     const names = [];
     const params = [];
     let variadic = false;
@@ -406,19 +409,19 @@ Checker.prototype.collectParams = function collectParams(kind, list) {
         this.recordTypeAndValue(list.fields[list.fields.length - 1].type, typexpr, last.typ, null);
     }
     return [names, params, variadic];
-};
+});
 // declareParams declares each named parameter in the current scope.
-Checker.prototype.declareParams = function declareParams(names, params, scopePos) {
+registerCheckerMethod("declareParams", function declareParams(names, params, scopePos) {
     for (let i = 0; i < names.length; i++) {
         const name = names[i] ?? null;
         if (name !== null && name.name !== "") {
             this.declare(this.scope, name, params[i], scopePos);
         }
     }
-};
+});
 // validRecv verifies that the receiver satisfies its respective spec requirements
 // and reports an error otherwise.
-Checker.prototype.validRecv = function validRecv(pos, recv) {
+registerCheckerMethod("validRecv", function validRecv(pos, recv) {
     // spec: "The receiver type must be of the form T or *T where T is a type name."
     const [rtyp] = deref(recv.typ);
     const unaliased = Unalias(rtyp) ?? rtyp;
@@ -457,7 +460,7 @@ Checker.prototype.validRecv = function validRecv(pos, recv) {
     else {
         this.errorf(pos, "InvalidRecv", "invalid receiver type %s", recv.typ);
     }
-};
+});
 // isCGoTypeObj reports whether the given type name was created by cgo.
 export function isCGoTypeObj(fset, obj) {
     const filename = fileNameForPos(fset, obj.pos);

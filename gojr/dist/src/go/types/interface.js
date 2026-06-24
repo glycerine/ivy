@@ -1,10 +1,13 @@
 // Copyright 2021 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+// ----------------------------------------------------------------------------
+// API
+import { registerCheckerMethod } from "./check.js";
 import { TypeString } from "./typestring.js";
-import { Named } from "./named.js";
+import { Named, setNamedInterfaceConstructor } from "./named.js";
 import { Signature } from "./signature.js";
-import { newVar, VarKind } from "./object.js";
+import { newVar, setObjectEmptyInterface, VarKind } from "./object.js";
 import { _TypeSet, topTypeSet, computeInterfaceTypeSet, sortMethods } from "./typeset.js";
 // An Interface represents an interface type.
 export class Interface {
@@ -80,10 +83,17 @@ export class Interface {
         this.embedPos = null;
     }
 }
+setNamedInterfaceConstructor(Interface);
+registerCheckerMethod("newInterface", function newInterfaceMethod() {
+    const typ = new Interface(this);
+    this.needsCleanup(typ);
+    return typ;
+});
 // emptyInterface represents the empty (completed) interface
 export const emptyInterface = new Interface(null);
 emptyInterface.complete = true;
 emptyInterface.tset = topTypeSet;
+setObjectEmptyInterface(emptyInterface);
 // NewInterface returns a new interface for the given methods and embedded types.
 // NewInterface takes ownership of the provided methods and may modify their types
 // by setting missing receivers.

@@ -5,13 +5,19 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import type { Checker } from "./check.js";
+import { registerCheckerMethod, type Checker } from "./check.js";
 import type { Type } from "./type.js";
 import { TypeString } from "./typestring.js";
 import type { TypeName } from "./object.js";
 import { Interface, emptyInterface, NewInterfaceType } from "./interface.js";
 import { Basic } from "./basic.js";
 import type { term } from "./typeterm.js";
+
+declare module "./check.js" {
+  interface Checker {
+    newTypeParam(obj: TypeName, constraint: Type | null): TypeParam;
+  }
+}
 
 // Note: This is a uint32 rather than a uint64 because the
 // respective 64 bit atomic instructions are not available
@@ -130,5 +136,15 @@ export function NewTypeParam(obj: TypeName, constraint: Type | null): TypeParam 
   }
   return typ;
 }
+
+registerCheckerMethod("newTypeParam", function newTypeParamMethod(obj: TypeName, constraint: Type | null): TypeParam {
+  this.nextID++;
+  const typ = new TypeParam(this, BigInt(this.nextID), obj, -1, constraint);
+  if (obj.typ === null) {
+    obj.typ = typ;
+  }
+  this.needsCleanup(typ);
+  return typ;
+});
 
 export { TypeParamList } from "./typelists.js";

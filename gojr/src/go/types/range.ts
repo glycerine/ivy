@@ -10,7 +10,7 @@
 import { PosOf, type Expr, type RangeStmt } from "../../front/ast.js";
 import type { Type } from "./type.js";
 import { type goVersion, go1_22, go1_23 } from "./version.js";
-import { Checker, type positioner } from "./check.js";
+import { Checker, type positioner , registerCheckerMethod } from "./check.js";
 import { operand, constant_, value } from "./operand.js";
 import { arrayPtrDeref } from "./builtins.js";
 import { Array as ArrayType } from "./array.js";
@@ -46,7 +46,7 @@ type stmtContext = number;
 // variables are assigned to only (=) or whether there is a short variable
 // declaration (:=). If the latter and there are no variables, an error is
 // reported at noNewVarPos.
-Checker.prototype.rangeStmt = function rangeStmt(inner: stmtContext, rangeStmtNode: RangeStmt, noNewVarPos: positioner, sKey: Expr | null, sValue: Expr | null, sExtra: Expr | null, rangeVar: Expr, isDef: boolean): void {
+registerCheckerMethod("rangeStmt", function rangeStmt(inner: stmtContext, rangeStmtNode: RangeStmt, noNewVarPos: positioner, sKey: Expr | null, sValue: Expr | null, sExtra: Expr | null, rangeVar: Expr, isDef: boolean): void {
   // check expression to iterate over
   const x = new operand();
 
@@ -214,7 +214,7 @@ Checker.prototype.rangeStmt = function rangeStmt(inner: stmtContext, rangeStmtNo
   } finally {
     this.closeScope();
   }
-};
+});
 
 // rangeKeyVal returns the key and value type produced by a range clause
 // over an expression of type orig.

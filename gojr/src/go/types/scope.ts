@@ -8,11 +8,25 @@
 // This file implements Scopes.
 
 import type { Pos } from "./token.js";
-import { Universe } from "./universe.js";
-import { isExported, type Object } from "./object.js";
+import type { Object } from "./object.js";
 
 export interface Writer {
   write(s: string): unknown;
+}
+
+function scopeIsExported(name: string): boolean {
+  const ch = Array.from(name)[0] ?? "";
+  return ch.toLocaleUpperCase() === ch && ch.toLocaleLowerCase() !== ch;
+}
+
+type scopeUniverseGlobal = typeof globalThis & { __gojrScopeUniverse?: Scope | null };
+
+export function setScopeUniverse(scope: Scope): void {
+  (globalThis as scopeUniverseGlobal).__gojrScopeUniverse = scope;
+}
+
+export function scopeUniverse(): Scope | null {
+  return (globalThis as scopeUniverseGlobal).__gojrScopeUniverse ?? null;
 }
 
 // A Scope maintains a set of objects and links to its containing
@@ -69,7 +83,7 @@ export class Scope {
   public lookupIgnoringCase(name: string, exported: boolean): Object[] {
     const matches: Object[] = [];
     for (const n of this.Names()) {
-      if ((!exported || isExported(n)) && n.toLocaleLowerCase() === name.toLocaleLowerCase()) {
+      if ((!exported || scopeIsExported(n)) && n.toLocaleLowerCase() === name.toLocaleLowerCase()) {
         const obj = this.Lookup(n);
         if (obj !== null) {
           matches.push(obj);
@@ -159,7 +173,7 @@ export class Scope {
 export function NewScope(parent: Scope | null, pos: Pos, end: Pos, comment: string): Scope {
   const s = new Scope(parent, null, 0, null, pos, end, comment, false);
   // don't add children to Universe scope!
-  if (parent !== null && parent !== Universe) {
+  if (parent !== null && parent !== scopeUniverse()) {
     parent.children.push(s);
     s.number = parent.children.length;
   }

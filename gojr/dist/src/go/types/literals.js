@@ -8,7 +8,7 @@ import { EndOf, PosOf } from "../../front/ast.js";
 import { TokenKind } from "../../front/token.js";
 import { Array as ArrayType } from "./array.js";
 import { go1_13, go1_27 } from "./version.js";
-import { Checker, atPos } from "./check.js";
+import { atPos, registerCheckerMethod } from "./check.js";
 import { commonUnder } from "./under.js";
 import { Typ } from "./universe.js";
 import { BasicKind } from "./basic.js";
@@ -24,7 +24,7 @@ import { Identical, isNonTypeParamInterface, isValid } from "./predicates.js";
 import { keyVal, opPos } from "./expr.js";
 // langCompat reports an error if the representation of a numeric
 // literal is not compatible with the current language version.
-Checker.prototype.langCompat = function langCompat(lit) {
+registerCheckerMethod("langCompat", function langCompat(lit) {
     const s = lit.value;
     if (s.length <= 2 || this.allowVersion(go1_13)) {
         return;
@@ -49,8 +49,8 @@ Checker.prototype.langCompat = function langCompat(lit) {
     if (lit.token !== TokenKind.IntLiteral && (radix === "x" || radix === "X")) {
         this.versionErrorf(atNode(lit), go1_13, "hexadecimal floating-point literal");
     }
-};
-Checker.prototype.basicLit = function basicLit(x, e) {
+});
+registerCheckerMethod("basicLit", function basicLit(x, e) {
     switch (e.token) {
         case TokenKind.IntLiteral:
         case TokenKind.FloatLiteral:
@@ -88,8 +88,8 @@ Checker.prototype.basicLit = function basicLit(x, e) {
     // Ensure that integer values don't overflow (go.dev/issue/54280).
     x.expr = e; // make sure that check.overflow below has an error position
     this.overflow(x, opPos(x.expr));
-};
-Checker.prototype.funcLit = function funcLit(x, e) {
+});
+registerCheckerMethod("funcLit", function funcLit(x, e) {
     const typ = this.typ(e.type);
     if (typ instanceof Signature) {
         const sig = typ;
@@ -120,8 +120,8 @@ Checker.prototype.funcLit = function funcLit(x, e) {
         this.errorf(atNode(e), "InvalidSyntaxTree", "invalid function literal %v", e);
         x.invalidate();
     }
-};
-Checker.prototype.compositeLit = function compositeLit(x, e, hint) {
+});
+registerCheckerMethod("compositeLit", function compositeLit(x, e, hint) {
     let typ;
     let base;
     let isElem = false; // true if composite literal is an element of an enclosing composite literal
@@ -371,12 +371,12 @@ Checker.prototype.compositeLit = function compositeLit(x, e, hint) {
     }
     x.mode_ = value;
     x.typ_ = typ;
-};
+});
 // indexedElts checks the elements (elts) of an array or slice composite literal
 // against the literal's element type (typ), and the element indices against
 // the literal length if known (length >= 0). It returns the length of the
 // literal (maximum index value + 1).
-Checker.prototype.indexedElts = function indexedElts(elts, typ, length) {
+registerCheckerMethod("indexedElts", function indexedElts(elts, typ, length) {
     const visited = new Map();
     let index = 0;
     let max = 0;
@@ -421,7 +421,7 @@ Checker.prototype.indexedElts = function indexedElts(elts, typ, length) {
         this.assignment(elem, typ, "array or slice literal");
     }
     return max;
-};
+});
 function atNode(node) {
     return new atPos(PosOf(node));
 }

@@ -9,7 +9,7 @@
 
 import type { Type } from "./type.js";
 import { Basic, Bool, Complex128, Complex64, Float32, Float64, Int, Int16, Int32, Int64, Int8, String as StringKind, Uint, Uint16, Uint32, Uint64, Uint8, Uintptr, UntypedComplex, UntypedFloat, UntypedInt } from "./basic.js";
-import { Checker, atPos } from "./check.js";
+import { Checker, atPos , registerCheckerMethod } from "./check.js";
 import { constant_, operand } from "./operand.js";
 import { isBoolean, isComplex, isInteger, isFloat, isNumeric, isString, isTyped, isTypeParam } from "./predicates.js";
 import { stdSizes } from "./sizes.js";
@@ -35,7 +35,7 @@ type complexValue = { re: unknown; im: unknown } | { real: unknown; imag: unknow
 // overflow checks that the constant x is representable by its type.
 // For untyped constants, it checks that the value doesn't become
 // arbitrarily large.
-Checker.prototype.overflow = function overflow(x: operand, opPos: number): void {
+registerCheckerMethod("overflow", function overflow(x: operand, opPos: number): void {
   assert(x.mode() === constant_);
 
   if (constantKindOf(x.val) === "unknown") {
@@ -77,7 +77,7 @@ Checker.prototype.overflow = function overflow(x: operand, opPos: number): void 
       return;
     }
   }
-};
+});
 
 // representableConst reports whether x can be represented as
 // value of the given basic type and for the configuration
@@ -293,7 +293,7 @@ export function roundFloat64(x: unknown): unknown {
 
 // representable checks that a constant operand is representable in the given
 // basic type.
-Checker.prototype.representable = function representable(x: operand, typ: Basic): void {
+registerCheckerMethod("representable", function representable(x: operand, typ: Basic): void {
   const [v, code] = this.representation(x, typ);
   if (code !== 0) {
     this.invalidConversion(code, x, typ);
@@ -302,13 +302,13 @@ Checker.prototype.representable = function representable(x: operand, typ: Basic)
   }
   assert(v !== null && v !== undefined);
   x.val = v;
-};
+});
 
 // representation returns the representation of the constant operand x as the
 // basic type typ.
 //
 // If no such representation is possible, it returns a non-zero error code.
-Checker.prototype.representation = function representation(x: operand, typ: Basic): [unknown, unknown] {
+registerCheckerMethod("representation", function representation(x: operand, typ: Basic): [unknown, unknown] {
   assert(x.mode() === constant_);
   const v = { value: x.val };
   if (!representableConst(x.val, this, typ, v)) {
@@ -329,9 +329,9 @@ Checker.prototype.representation = function representation(x: operand, typ: Basi
     return [null, "InvalidConstVal"];
   }
   return [v.value, 0];
-};
+});
 
-Checker.prototype.invalidConversion = function invalidConversion(code: unknown, x: operand, target: Type): void {
+registerCheckerMethod("invalidConversion", function invalidConversion(code: unknown, x: operand, target: Type): void {
   let msg = "cannot convert %s to type %s";
   switch (code) {
     case "TruncatedFloat":
@@ -342,10 +342,10 @@ Checker.prototype.invalidConversion = function invalidConversion(code: unknown, 
       break;
   }
   this.errorf(x, code, msg, x, target);
-};
+});
 
 // convertUntyped attempts to set the type of an untyped value to the target type.
-Checker.prototype.convertUntyped = function convertUntyped(x: operand, target: Type): void {
+registerCheckerMethod("convertUntyped", function convertUntyped(x: operand, target: Type): void {
   let [newType, val, code] = this.implicitTypeAndValue(x, target);
   if (code !== 0) {
     let t = target;
@@ -364,7 +364,7 @@ Checker.prototype.convertUntyped = function convertUntyped(x: operand, target: T
     x.typ_ = newType;
     this.updateExprType?.(x.expr, newType!, false);
   }
-};
+});
 
 export function constantKindOf(x: unknown): constantKind {
   if (x === null || x === undefined) {

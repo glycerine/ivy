@@ -7,7 +7,7 @@
 
 // This file implements support functions for error messages.
 
-import { Checker } from "./check.js";
+import { Checker , registerCheckerMethod } from "./check.js";
 import type { Type } from "./type.js";
 import { Func, isExported, type Object, Var } from "./object.js";
 
@@ -20,7 +20,7 @@ declare module "./check.js" {
 // lookupError returns a case-specific error when a lookup of selector sel in the
 // given type fails but an object with alternative spelling (case folding) is found.
 // If structLit is set, the error message is specifically for struct literal fields.
-Checker.prototype.lookupError = function lookupError(typ: Type, sel: string, obj: Object | null, structLit: boolean): string {
+registerCheckerMethod("lookupError", function lookupError(typ: Type, sel: string, obj: Object | null, structLit: boolean): string {
   const ok = 0;
   const missing = 1; // no object found
   const misspelled = 2; // found object with different spelling
@@ -87,7 +87,7 @@ Checker.prototype.lookupError = function lookupError(typ: Type, sel: string, obj
   }
 
   throw new Error("unreachable");
-};
+});
 
 // tail returns the string s without its first (UTF-8) character.
 // If len(s) == 0, the result is s.

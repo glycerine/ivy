@@ -5,14 +5,20 @@
 // ----------------------------------------------------------------------------
 // API
 
-import type { Checker } from "./check.js";
+import { registerCheckerMethod, type Checker } from "./check.js";
 import type { Pos } from "./token.js";
 import type { Type } from "./type.js";
 import { TypeString } from "./typestring.js";
-import { Named } from "./named.js";
+import { Named, setNamedInterfaceConstructor } from "./named.js";
 import { Signature } from "./signature.js";
-import { newVar, VarKind, type Func } from "./object.js";
+import { newVar, setObjectEmptyInterface, VarKind, type Func } from "./object.js";
 import { _TypeSet, topTypeSet, computeInterfaceTypeSet, sortMethods } from "./typeset.js";
+
+declare module "./check.js" {
+  interface Checker {
+    newInterface(): Interface;
+  }
+}
 
 // An Interface represents an interface type.
 export class Interface implements Type {
@@ -106,10 +112,19 @@ export class Interface implements Type {
   }
 }
 
+setNamedInterfaceConstructor(Interface);
+
+registerCheckerMethod("newInterface", function newInterfaceMethod(): Interface {
+  const typ = new Interface(this);
+  this.needsCleanup(typ);
+  return typ;
+});
+
 // emptyInterface represents the empty (completed) interface
 export const emptyInterface = new Interface(null);
 emptyInterface.complete = true;
 emptyInterface.tset = topTypeSet;
+setObjectEmptyInterface(emptyInterface);
 
 // NewInterface returns a new interface for the given methods and embedded types.
 // NewInterface takes ownership of the provided methods and may modify their types

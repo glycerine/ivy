@@ -15,7 +15,7 @@ import type { Context } from "./context.js";
 import { Interface } from "./interface.js";
 import { Map as MapType } from "./map.js";
 import { Named } from "./named.js";
-import { isExported, packagePrefix, TypeName } from "./object.js";
+import { isExported, packagePrefix, setObjectTypePrinters, TypeName } from "./object.js";
 import { Pointer } from "./pointer.js";
 import { Signature } from "./signature.js";
 import { Slice } from "./slice.js";
@@ -79,6 +79,12 @@ export function WriteType(buf: string[], typ: Type | null, qf: Qualifier | null 
 export function WriteSignature(buf: string[], sig: Signature, qf: Qualifier | null = null): void {
   newTypeWriter(buf, qf).signature(sig);
 }
+
+setObjectTypePrinters({
+  TypeString: TypeString as (typ: Type | null, qf: Qualifier | null) => string,
+  WriteSignature: WriteSignature as unknown as (buf: string[], sig: any, qf: Qualifier | null) => void,
+  WriteType: WriteType as (buf: string[], typ: Type | null, qf: Qualifier | null) => void
+});
 
 export class typeWriter {
   public constructor(
@@ -541,37 +547,41 @@ export class typeWriter {
   }
 
   public signature(sig: Signature): void {
+    let restoreTParams = false;
     if ((sig.TypeParams()?.Len() ?? 0) !== 0) {
       if (this.ctxt !== null) {
         assert(this.tparams === null);
         this.tparams = sig.TypeParams();
-        try {
-          this.tParamList(sig.TypeParams()?.list() ?? []);
-        } finally {
-          this.tparams = null;
-        }
+        restoreTParams = true;
+        this.tParamList(sig.TypeParams()?.list() ?? []);
       } else {
         this.tParamList(sig.TypeParams()?.list() ?? []);
       }
     }
 
-    this.tuple(sig.params, sig.variadic);
+    try {
+      this.tuple(sig.params, sig.variadic);
 
-    const n = sig.results?.Len() ?? 0;
-    if (n === 0) {
-      // no result
-      return;
+      const n = sig.results?.Len() ?? 0;
+      if (n === 0) {
+        // no result
+        return;
+      }
+
+      this.byte(" ");
+      if (n === 1 && (this.ctxt !== null || sig.results!.vars[0]!.name === "")) {
+        // single unnamed result (if type hashing, name must be ignored)
+        this.typ(sig.results!.vars[0]!.typ);
+        return;
+      }
+
+      // multiple or named result(s)
+      this.tuple(sig.results, false);
+    } finally {
+      if (restoreTParams) {
+        this.tparams = null;
+      }
     }
-
-    this.byte(" ");
-    if (n === 1 && (this.ctxt !== null || sig.results!.vars[0]!.name === "")) {
-      // single unnamed result (if type hashing, name must be ignored)
-      this.typ(sig.results!.vars[0]!.typ);
-      return;
-    }
-
-    // multiple or named result(s)
-    this.tuple(sig.results, false);
   }
 }
 

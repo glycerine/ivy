@@ -4,7 +4,7 @@
 
 // This file implements error reporting.
 
-import { Checker, bailout, nopos, noposn, type positioner } from "./check.js";
+import { Checker, bailout, nopos, noposn, type positioner , registerCheckerMethod } from "./check.js";
 import { Error as TypesError } from "./api.js";
 import type { Object } from "./object.js";
 import { operand } from "./operand.js";
@@ -144,15 +144,15 @@ declare module "./check.js" {
 }
 
 // newError returns a new error_ with the given error code.
-Checker.prototype.newError = function newError(code: unknown): error_ {
+registerCheckerMethod("newError", function newError(code: unknown): error_ {
   if (code === 0 || code === null || code === undefined) {
     throw new Error("error code must not be 0");
   }
   return new error_(this, code);
-};
+});
 
 // handleError should only be called by error_.report.
-Checker.prototype.handleError = function handleError(index: number, posn: positioner, code: unknown, msg: string, soft: boolean): void {
+registerCheckerMethod("handleError", function handleError(index: number, posn: positioner, code: unknown, msg: string, soft: boolean): void {
   assert(code !== 0);
 
   if (index === 0) {
@@ -205,36 +205,36 @@ Checker.prototype.handleError = function handleError(index: number, posn: positi
     throw new bailout(); // record first error and exit
   }
   f(e);
-};
+});
 
 export const invalidArg = "invalid argument: ";
 export const invalidOp = "invalid operation: ";
 
-Checker.prototype.error = function error(at: positioner | Object | unknown, code: unknown, msg: string): void {
+registerCheckerMethod("error", function error(at: positioner | Object | unknown, code: unknown, msg: string): void {
   const err = this.newError(code);
   err.addf(at, "%s", msg);
   err.report();
-};
+});
 
-Checker.prototype.errorf = function errorf(at: positioner | Object | unknown, code: unknown, format: string, ...args: unknown[]): void {
+registerCheckerMethod("errorf", function errorf(at: positioner | Object | unknown, code: unknown, format: string, ...args: unknown[]): void {
   const err = this.newError(code);
   err.addf(at, format, ...args);
   err.report();
-};
+});
 
-Checker.prototype.softErrorf = function softErrorf(at: positioner | Object | unknown, code: unknown, format: string, ...args: unknown[]): void {
+registerCheckerMethod("softErrorf", function softErrorf(at: positioner | Object | unknown, code: unknown, format: string, ...args: unknown[]): void {
   const err = this.newError(code);
   err.addf(at, format, ...args);
   err.soft = true;
   err.report();
-};
+});
 
-Checker.prototype.versionErrorf = function versionErrorf(at: positioner | Object | unknown, v: goVersion, format: string, ...args: unknown[]): void {
+registerCheckerMethod("versionErrorf", function versionErrorf(at: positioner | Object | unknown, v: goVersion, format: string, ...args: unknown[]): void {
   const msg = this.sprintf(format, ...args);
   const err = this.newError("UnsupportedFeature");
   err.addf(at, "%s requires %s or later", msg, v);
   err.report();
-};
+});
 
 // posSpan holds a position range along with a highlighted position within that
 // range. This is used for positioning errors, with pos by convention being the

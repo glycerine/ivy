@@ -9,7 +9,7 @@
 
 import { NewIdent, PosOf, Unparen, type CallExpr, type Expr, type SelectorExpr } from "../../front/ast.js";
 import type { Type } from "./type.js";
-import { Checker, atPos, debug, noposn, type positioner } from "./check.js";
+import { Checker, atPos, debug, noposn, type positioner , registerCheckerMethod } from "./check.js";
 import { invalidOp } from "./errors.js";
 import { newTarget, type target } from "./expr.js";
 import type { indexedExpr } from "./index_expr.js";
@@ -83,7 +83,7 @@ declare module "./check.js" {
 //
 // If an error (other than a version error) occurs in any case, it is reported
 // and x.mode is set to invalid.
-Checker.prototype.funcInst = function funcInst(T: target | null, pos: number, x: operand, ix: indexedExpr | null, infer: boolean): Type[] | null {
+registerCheckerMethod("funcInst", function funcInst(T: target | null, pos: number, x: operand, ix: indexedExpr | null, infer: boolean): Type[] | null {
   assert(T !== null || ix !== null);
 
   let instErrPos: positioner;
@@ -180,9 +180,9 @@ Checker.prototype.funcInst = function funcInst(T: target | null, pos: number, x:
   x.typ_ = sig;
   x.mode_ = value;
   return null;
-};
+});
 
-Checker.prototype.instantiateSignature = function instantiateSignature(pos: number, expr: unknown, typ: Signature, targs: Type[], xlist: unknown[] | null): Signature {
+registerCheckerMethod("instantiateSignature", function instantiateSignature(pos: number, expr: unknown, typ: Signature, targs: Type[], xlist: unknown[] | null): Signature {
   assert(this !== null);
   assert(targs.length === typ.TypeParams()!.Len());
 
@@ -226,9 +226,9 @@ Checker.prototype.instantiateSignature = function instantiateSignature(pos: numb
   }
 
   return res!;
-};
+});
 
-Checker.prototype.callExpr = function callExpr(x: operand, call0: unknown): exprKind {
+registerCheckerMethod("callExpr", function callExpr(x: operand, call0: unknown): exprKind {
   const call = call0 as CallExpr;
   let ix = this.unpackIndexedExpr(call.fun);
   if (ix !== null) {
@@ -418,11 +418,11 @@ Checker.prototype.callExpr = function callExpr(x: operand, call0: unknown): expr
   }
 
   return exprKind.statement;
-};
+});
 
 // exprList evaluates a list of expressions and returns the corresponding operands.
 // A single-element expression list may evaluate to multiple operands.
-Checker.prototype.exprList = function exprList(elist: unknown[]): operand[] {
+registerCheckerMethod("exprList", function exprList(elist: unknown[]): operand[] {
   let xlist: operand[] = [];
   const n = elist.length;
   if (n === 1) {
@@ -438,7 +438,7 @@ Checker.prototype.exprList = function exprList(elist: unknown[]): operand[] {
     }
   }
   return xlist;
-};
+});
 
 // genericExprList is like exprList but result operands may be uninstantiated or partially
 // instantiated generic functions (where constraint information is insufficient to infer
@@ -447,7 +447,7 @@ Checker.prototype.exprList = function exprList(elist: unknown[]): operand[] {
 // elements do not exist (targsList is nil) or the elements are nil.
 // For each partially instantiated generic function operand, the corresponding
 // targsList elements are the operand's partial type arguments.
-Checker.prototype.genericExprList = function genericExprList(elist: unknown[]): [operand[], Type[][] | null] {
+registerCheckerMethod("genericExprList", function genericExprList(elist: unknown[]): [operand[], Type[][] | null] {
   let resList: operand[] = [];
   let targsList: Type[][] | null = null;
   try {
@@ -540,7 +540,7 @@ Checker.prototype.genericExprList = function genericExprList(elist: unknown[]): 
   }
 
   return [resList, targsList];
-};
+});
 
 // arguments type-checks arguments passed to a function call with the given signature.
 // The function and its arguments may be generic, and possibly partially instantiated.
@@ -553,7 +553,7 @@ Checker.prototype.genericExprList = function genericExprList(elist: unknown[]): 
 // functions are instantiated as necessary.
 // The result signature is the (possibly adjusted and instantiated) function signature.
 // If an error occurred, the result signature is the incoming sig.
-Checker.prototype.arguments = function arguments_(call0: unknown, sig: Signature, targs0: Type[] | null, xlist: unknown[] | null, args: operand[], atargs: Type[][] | null): Signature {
+registerCheckerMethod("arguments", function arguments_(call0: unknown, sig: Signature, targs0: Type[] | null, xlist: unknown[] | null, args: operand[], atargs: Type[][] | null): Signature {
   const call = call0 as CallExpr;
   let rsig = sig;
   let targs: (Type | null)[] = targs0 ?? [];
@@ -754,9 +754,9 @@ Checker.prototype.arguments = function arguments_(call0: unknown, sig: Signature
   }
 
   return rsig;
-};
+});
 
-Checker.prototype.selector = function selector(x: operand, e0: unknown, wantType: boolean): void {
+registerCheckerMethod("selector", function selector(x: operand, e0: unknown, wantType: boolean): void {
   const e = e0 as SelectorExpr;
   // these must be declared before the "goto Error" statements
   let obj: Object | null = null;
@@ -1021,25 +1021,25 @@ Checker.prototype.selector = function selector(x: operand, e0: unknown, wantType
 
   // everything went well
   x.expr = e;
-};
+});
 
 // use type-checks each argument.
 // Useful to make sure expressions are evaluated
 // (and variables are "used") in the presence of
 // other errors. Arguments may be nil.
 // Reports if all arguments evaluated without error.
-Checker.prototype.use = function use(...args: unknown[]): boolean {
+registerCheckerMethod("use", function use(...args: unknown[]): boolean {
   return this.useN(args, false);
-};
+});
 
 // useLHS is like use, but doesn't "use" top-level identifiers.
 // It should be called instead of use if the arguments are
 // expressions on the lhs of an assignment.
-Checker.prototype.useLHS = function useLHS(...args: unknown[]): boolean {
+registerCheckerMethod("useLHS", function useLHS(...args: unknown[]): boolean {
   return this.useN(args, true);
-};
+});
 
-Checker.prototype.useN = function useN(args: unknown[], lhs: boolean): boolean {
+registerCheckerMethod("useN", function useN(args: unknown[], lhs: boolean): boolean {
   let ok = true;
   for (const e of args) {
     if (!this.use1(e, lhs)) {
@@ -1047,9 +1047,9 @@ Checker.prototype.useN = function useN(args: unknown[], lhs: boolean): boolean {
     }
   }
   return ok;
-};
+});
 
-Checker.prototype.use1 = function use1(e: unknown, lhs: boolean): boolean {
+registerCheckerMethod("use1", function use1(e: unknown, lhs: boolean): boolean {
   const x = new operand();
   x.mode_ = value; // anything but invalid
   const n = e === null || e === undefined ? null : Unparen(e as Expr);
@@ -1090,7 +1090,7 @@ Checker.prototype.use1 = function use1(e: unknown, lhs: boolean): boolean {
       break;
   }
   return x.isValid();
-};
+});
 
 function hasDots(call: CallExpr): boolean {
   return call.ellipsis;

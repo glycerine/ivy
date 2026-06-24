@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import { Checker, atPos, debug, nopos, tracePos, environment, type positioner } from "./check.js";
+import { Checker, atPos, debug, nopos, tracePos, environment, type positioner , registerCheckerMethod } from "./check.js";
 import type { Object } from "./object.js";
 import { Builtin, Const, FieldVar, Func, Label, LocalVar, NewConst, NewTypeName, NewVar, TypeName, Var, newVar, packagePrefix } from "./object.js";
 import { Typ } from "./universe.js";
@@ -23,6 +23,7 @@ import { declInfo } from "./resolver.js";
 import type { Scope } from "./scope.js";
 import { go1_18, go1_23, go1_9 } from "./version.js";
 import { operand } from "./operand.js";
+import { fieldListNumFields, funcDeclBody, funcDeclName, funcDeclRecv, funcDeclType, genDeclSpecs, genDeclTok, identName, nodeEnd, nodeKind, nodePos, specName, specNames, specType, specValues } from "./astcompat.js";
 import { TypeString } from "./typestring.js";
 
 declare module "./check.js" {
@@ -47,7 +48,7 @@ declare module "./check.js" {
   }
 }
 
-Checker.prototype.declare = function declare(scope: Scope, id: unknown, obj: Object, pos: number): void {
+registerCheckerMethod("declare", function declare(scope: Scope, id: unknown, obj: Object, pos: number): void {
   // spec: "The blank identifier, represented by the underscore
   // character _, may be used in a declaration like any other
   // identifier but the declaration does not introduce a new
@@ -66,7 +67,7 @@ Checker.prototype.declare = function declare(scope: Scope, id: unknown, obj: Obj
   if (id !== null && id !== undefined) {
     (this as unknown as { recordDef: (id: unknown, obj: Object) => void }).recordDef(id, obj);
   }
-};
+});
 
 // pathString returns a string of the form a->b-> ... ->g for a path [a, b, ... g].
 export function pathString(path: Object[]): string {
@@ -82,7 +83,7 @@ export function pathString(path: Object[]): string {
 }
 
 // objDecl type-checks the declaration of obj in its respective (file) environment.
-Checker.prototype.objDecl = function objDecl(obj: Object): void {
+registerCheckerMethod("objDecl", function objDecl(obj: Object): void {
   if (tracePos) {
     this.pushPos(new atPos(obj.Pos()));
   }
@@ -179,11 +180,11 @@ Checker.prototype.objDecl = function objDecl(obj: Object): void {
       this.popPos();
     }
   }
-};
+});
 
 // validCycle checks if the cycle starting with obj is valid and
 // reports an error if it is not.
-Checker.prototype.validCycle = function validCycle(obj: Object): boolean {
+registerCheckerMethod("validCycle", function validCycle(obj: Object): boolean {
   const start = this.objPathIdx?.get(obj);
   assert(start !== undefined);
   const cycle = this.objPath.slice(start).filter((x): x is Object => x !== null);
@@ -238,10 +239,10 @@ Checker.prototype.validCycle = function validCycle(obj: Object): boolean {
 
   this.cycleError(cycle, firstInSrc(cycle));
   return false;
-};
+});
 
 // cycleError reports a declaration cycle starting with the object at cycle[start].
-Checker.prototype.cycleError = function cycleError(cycle: Object[], start: number): void {
+registerCheckerMethod("cycleError", function cycleError(cycle: Object[], start: number): void {
   // name returns the (possibly qualified) object name.
   // This is needed because with generic types, cycles
   // may refer to imported types. See go.dev/issue/50788.
@@ -287,7 +288,7 @@ Checker.prototype.cycleError = function cycleError(cycle: Object[], start: numbe
     obj = next;
   }
   err.report();
-};
+});
 
 // firstInSrc reports the index of the object with the "smallest"
 // source position in path. path must not be empty.
@@ -342,34 +343,33 @@ export class funcDecl implements decl {
   public node(): unknown { return this.decl; }
 }
 
-Checker.prototype.walkDecls = function walkDecls(decls: unknown[], f: (d: decl) => void): void {
+registerCheckerMethod("walkDecls", function walkDecls(decls: unknown[], f: (d: decl) => void): void {
   for (const d of decls) {
     this.walkDecl(d, f);
   }
-};
+});
 
-Checker.prototype.walkDecl = function walkDecl(d: unknown, f: (d: decl) => void): void {
-  const declNode = d as { kind?: string; Tok?: string; Specs?: unknown[]; Name?: unknown };
-  switch (declNode.kind) {
+registerCheckerMethod("walkDecl", function walkDecl(d: unknown, f: (d: decl) => void): void {
+  switch (nodeKind(d)) {
     case "BadDecl":
       // ignore
       break;
     case "GenDecl": {
-      let last: ({ Type?: unknown; Values?: unknown[] } | null) = null; // last ValueSpec with type or init exprs seen
-      const specs = declNode.Specs ?? [];
+      let last: unknown | null = null; // last ValueSpec with type or init exprs seen
+      const specs = genDeclSpecs(d);
       for (let iota = 0; iota < specs.length; iota++) {
-        const s = specs[iota] as { kind?: string; Type?: unknown; Values?: unknown[]; Names?: unknown[] };
-        switch (s.kind) {
+        const s = specs[iota];
+        switch (nodeKind(s)) {
           case "ImportSpec":
             f(new importDecl(s));
             break;
           case "ValueSpec":
-            switch (declNode.Tok) {
+            switch (genDeclTok(d)) {
               case "CONST": {
                 // determine which initialization expressions to use
                 let inherited = true;
                 switch (true) {
-                  case s.Type !== null && s.Type !== undefined || (s.Values?.length ?? 0) > 0:
+                  case specType(s) !== null && specType(s) !== undefined || specValues(s).length > 0:
                     last = s;
                     inherited = false;
                     break;
@@ -379,7 +379,7 @@ Checker.prototype.walkDecl = function walkDecl(d: unknown, f: (d: decl) => void)
                     break;
                 }
                 this.arityMatch(s, last);
-                f(new constDecl(s, iota, last?.Type ?? null, last?.Values ?? [], inherited));
+                f(new constDecl(s, iota, specType(last), specValues(last), inherited));
                 break;
               }
               case "VAR":
@@ -387,7 +387,7 @@ Checker.prototype.walkDecl = function walkDecl(d: unknown, f: (d: decl) => void)
                 f(new varDecl(s));
                 break;
               default:
-                (this as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(s, "InvalidSyntaxTree", "invalid token %s", declNode.Tok);
+                (this as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(s, "InvalidSyntaxTree", "invalid token %s", genDeclTok(d));
             }
             break;
           case "TypeSpec":
@@ -405,9 +405,9 @@ Checker.prototype.walkDecl = function walkDecl(d: unknown, f: (d: decl) => void)
     default:
       (this as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(d, "InvalidSyntaxTree", "unknown ast.Decl node %T", d);
   }
-};
+});
 
-Checker.prototype.constDecl = function constDeclMethod(obj: Const, typ: unknown, init: unknown, inherited: boolean): void {
+registerCheckerMethod("constDecl", function constDeclMethod(obj: Const, typ: unknown, init: unknown, inherited: boolean): void {
   assert(obj.typ === null);
 
   // use the correct value of iota
@@ -446,9 +446,9 @@ Checker.prototype.constDecl = function constDeclMethod(obj: Const, typ: unknown,
     this.iota = savedIota;
     this.errpos = savedErrpos;
   }
-};
+});
 
-Checker.prototype.varDecl = function varDeclMethod(obj: Var, lhs: Var[] | null, typ: unknown, init: unknown): void {
+registerCheckerMethod("varDecl", function varDeclMethod(obj: Var, lhs: Var[] | null, typ: unknown, init: unknown): void {
   assert(obj.typ === null);
 
   // determine type, if any
@@ -485,19 +485,19 @@ Checker.prototype.varDecl = function varDeclMethod(obj: Var, lhs: Var[] | null, 
   }
 
   (this as unknown as { initVars: (lhs: Var[], init: unknown[], context: unknown) => void }).initVars(lhs, [init], null);
-};
+});
 
 // isImportedConstraint reports whether typ is an imported type constraint.
-Checker.prototype.isImportedConstraint = function isImportedConstraint(typ: Type): boolean {
+registerCheckerMethod("isImportedConstraint", function isImportedConstraint(typ: Type): boolean {
   const named = asNamed(typ);
   if (named === null || named.obj.pkg === this.pkg || named.obj.pkg === null) {
     return false;
   }
   const u = named.Underlying();
   return u instanceof Interface && !u.IsMethodSet();
-};
+});
 
-Checker.prototype.typeDecl = function typeDeclMethod(obj: TypeName, tdecl: unknown): void {
+registerCheckerMethod("typeDecl", function typeDeclMethod(obj: TypeName, tdecl: unknown): void {
   assert(obj.typ === null);
 
   let versionErr = false;
@@ -580,9 +580,9 @@ Checker.prototype.typeDecl = function typeDeclMethod(obj: TypeName, tdecl: unkno
     (this as unknown as { error: (at: unknown, code: unknown, msg: string) => void }).error(td.Type, "MisplacedTypeParam", "cannot use a type parameter as RHS in type declaration");
     named.fromRHS = Typ[Invalid]!;
   }
-};
+});
 
-Checker.prototype.collectTypeParams = function collectTypeParams(dst: { value: TypeParamList | null }, list: unknown): void {
+registerCheckerMethod("collectTypeParams", function collectTypeParams(dst: { value: TypeParamList | null }, list: unknown): void {
   const tparams: TypeParam[] = [];
   const fields = (list as { Pos?: () => number; List?: unknown[] }).List ?? [];
   const scopePos = (list as { Pos?: () => number }).Pos?.() ?? nopos;
@@ -618,9 +618,9 @@ Checker.prototype.collectTypeParams = function collectTypeParams(dst: { value: T
   } finally {
     this.inTParamList = false;
   }
-};
+});
 
-Checker.prototype.bound = function bound(x: unknown): Type {
+registerCheckerMethod("bound", function bound(x: unknown): Type {
   let wrap = false;
   const expr = x as { kind?: string; Op?: string };
   switch (expr.kind) {
@@ -639,17 +639,17 @@ Checker.prototype.bound = function bound(x: unknown): Type {
     return t;
   }
   return (this as unknown as { typ: (x: unknown) => Type }).typ(x);
-};
+});
 
-Checker.prototype.declareTypeParam = function declareTypeParam(name: unknown, scopePos: number): TypeParam {
+registerCheckerMethod("declareTypeParam", function declareTypeParam(name: unknown, scopePos: number): TypeParam {
   const ident = name as { Pos?: () => number; Name?: string };
   const tname = NewTypeName(ident.Pos?.() ?? nopos, this.pkg, ident.Name ?? "", null);
   const tpar = this.newTypeParam(tname, Typ[Invalid]!); // assigns type to tname as a side-effect
   this.declare(this.scope!, name, tname, scopePos);
   return tpar;
-};
+});
 
-Checker.prototype.collectMethods = function collectMethods(obj: TypeName): void {
+registerCheckerMethod("collectMethods", function collectMethods(obj: TypeName): void {
   const methods = this.methods?.get(obj);
   if (methods === undefined) {
     return;
@@ -682,9 +682,9 @@ Checker.prototype.collectMethods = function collectMethods(obj: TypeName): void 
       base.AddMethod(m);
     }
   }
-};
+});
 
-Checker.prototype.checkFieldUniqueness = function checkFieldUniqueness(base: Named): void {
+registerCheckerMethod("checkFieldUniqueness", function checkFieldUniqueness(base: Named): void {
   const t = base.Underlying();
   if (t instanceof Struct) {
     const mset = new objset();
@@ -706,46 +706,50 @@ Checker.prototype.checkFieldUniqueness = function checkFieldUniqueness(base: Nam
       }
     }
   }
-};
+});
 
-Checker.prototype.funcDecl = function funcDeclMethod(obj: Func, decl: declInfo): void {
+registerCheckerMethod("funcDecl", function funcDeclMethod(obj: Func, decl: declInfo): void {
   assert(obj.typ === null);
   assert(this.iota === null);
 
   const sig = new Signature();
   obj.typ = sig; // guard against cycles
 
-  const fdecl = decl.fdecl as { Recv?: unknown; Type?: { TypeParams?: { NumFields?: () => number } }; Body?: unknown; Name?: unknown; Pos?: () => number; End?: () => number };
-  (this as unknown as { funcType: (sig: Signature, recv: unknown, typ: unknown) => void }).funcType(sig, fdecl.Recv, fdecl.Type);
+  const fdecl = decl.fdecl;
+  const recv = funcDeclRecv(fdecl);
+  const ftyp = funcDeclType(fdecl);
+  const body = funcDeclBody(fdecl);
+  (this as unknown as { funcType: (sig: Signature, recv: unknown, typ: unknown) => void }).funcType(sig, recv, ftyp);
 
   if (sig.scope !== null) {
-    sig.scope.pos = fdecl.Pos?.() ?? nopos;
-    sig.scope.end = fdecl.End?.() ?? nopos;
+    sig.scope.pos = nodePos(fdecl) || nopos;
+    sig.scope.end = nodeEnd(fdecl) || nopos;
   }
 
-  if ((fdecl.Type?.TypeParams?.NumFields?.() ?? 0) > 0 && (fdecl.Body === null || fdecl.Body === undefined)) {
-    (this as unknown as { softErrorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).softErrorf(fdecl.Name, "BadDecl", "generic function is missing function body");
+  const typeParams = (ftyp as { TypeParams?: unknown; typeParams?: unknown } | null)?.TypeParams ?? (ftyp as { TypeParams?: unknown; typeParams?: unknown } | null)?.typeParams;
+  if (fieldListNumFields(typeParams) > 0 && (body === null || body === undefined)) {
+    (this as unknown as { softErrorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).softErrorf(funcDeclName(fdecl), "BadDecl", "generic function is missing function body");
   }
 
-  if (!this.conf.IgnoreFuncBodies && fdecl.Body !== null && fdecl.Body !== undefined) {
+  if (!this.conf.IgnoreFuncBodies && body !== null && body !== undefined) {
     this.later(() => {
-      (this as unknown as { funcBody: (decl: declInfo, name: string, sig: Signature, body: unknown, iota: unknown) => void }).funcBody(decl, obj.name, sig, fdecl.Body, null);
+      (this as unknown as { funcBody: (decl: declInfo, name: string, sig: Signature, body: unknown, iota: unknown) => void }).funcBody(decl, obj.name, sig, body, null);
     }).describef(obj, "func %s", obj.name);
   }
-};
+});
 
-Checker.prototype.declStmt = function declStmt(d: unknown): void {
+registerCheckerMethod("declStmt", function declStmt(d: unknown): void {
   const pkg = this.pkg;
 
   this.walkDecl(d, (d: decl) => {
     if (d instanceof constDecl) {
       const top = this.delayed.length;
 
-      const names = (d.spec as { Names?: unknown[] }).Names ?? [];
+      const names = specNames(d.spec);
       const lhs: Const[] = new Array(names.length);
       for (let i = 0; i < names.length; i++) {
-        const name = names[i] as { Pos?: () => number; Name?: string };
-        const obj = NewConst(name.Pos?.() ?? nopos, pkg, name.Name ?? "", null, d.iota);
+        const name = names[i];
+        const obj = NewConst(nodePos(name) || nopos, pkg, identName(name), null, d.iota);
         lhs[i] = obj;
 
         let init: unknown = null;
@@ -758,18 +762,18 @@ Checker.prototype.declStmt = function declStmt(d: unknown): void {
 
       this.processDelayed(top);
 
-      const scopePos = (d.spec as { End?: () => number }).End?.() ?? nopos;
+      const scopePos = nodeEnd(d.spec) || nopos;
       for (let i = 0; i < names.length; i++) {
         this.declare(this.scope!, names[i], lhs[i]!, scopePos);
       }
     } else if (d instanceof varDecl) {
       const top = this.delayed.length;
-      const names = (d.spec as { Names?: unknown[]; Values?: unknown[]; Type?: unknown; End?: () => number }).Names ?? [];
-      const values = (d.spec as { Values?: unknown[] }).Values ?? [];
+      const names = specNames(d.spec);
+      const values = specValues(d.spec);
       const lhs0: Var[] = new Array(names.length);
       for (let i = 0; i < names.length; i++) {
-        const name = names[i] as { Pos?: () => number; Name?: string };
-        lhs0[i] = newVar(LocalVar, name.Pos?.() ?? nopos, pkg, name.Name ?? "", null);
+        const name = names[i];
+        lhs0[i] = newVar(LocalVar, nodePos(name) || nopos, pkg, identName(name), null);
       }
 
       for (let i = 0; i < lhs0.length; i++) {
@@ -789,7 +793,7 @@ Checker.prototype.declStmt = function declStmt(d: unknown): void {
               init = values[i];
             }
         }
-        this.varDecl(obj, lhs, (d.spec as { Type?: unknown }).Type, init);
+        this.varDecl(obj, lhs, specType(d.spec), init);
         if (values.length === 1) {
           break;
         }
@@ -797,15 +801,15 @@ Checker.prototype.declStmt = function declStmt(d: unknown): void {
 
       this.processDelayed(top);
 
-      const scopePos = (d.spec as { End?: () => number }).End?.() ?? nopos;
+      const scopePos = nodeEnd(d.spec) || nopos;
       for (let i = 0; i < names.length; i++) {
         this.declare(this.scope!, names[i], lhs0[i]!, scopePos);
       }
     } else if (d instanceof typeDecl) {
-      const spec = d.spec as { Name?: { Pos?: () => number; Name?: string } };
-      const obj = NewTypeName(spec.Name?.Pos?.() ?? nopos, pkg, spec.Name?.Name ?? "", null);
-      const scopePos = spec.Name?.Pos?.() ?? nopos;
-      this.declare(this.scope!, spec.Name, obj, scopePos);
+      const name = specName(d.spec);
+      const obj = NewTypeName(nodePos(name) || nopos, pkg, identName(name), null);
+      const scopePos = nodePos(name) || nopos;
+      this.declare(this.scope!, name, obj, scopePos);
       this.push(obj); // mark as grey
       this.typeDecl(obj, d.spec);
       this.pop();
@@ -813,7 +817,7 @@ Checker.prototype.declStmt = function declStmt(d: unknown): void {
       (this as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(d.node(), "InvalidSyntaxTree", "unknown ast.Decl node %T", d.node());
     }
   });
-};
+});
 
 function isGeneric(t: Type | null): boolean {
   return t instanceof Named && t.TypeParams() !== null && t.TypeParams()!.Len() > 0;

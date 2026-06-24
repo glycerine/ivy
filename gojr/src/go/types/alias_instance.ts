@@ -7,7 +7,7 @@
 
 import type { Pos } from "./token.js";
 import type { Type } from "./type.js";
-import { Checker } from "./check.js";
+import { Checker , registerCheckerMethod } from "./check.js";
 import { Alias } from "./alias.js";
 import { Named } from "./named.js";
 import type { Context } from "./context.js";
@@ -25,7 +25,7 @@ declare module "./check.js" {
 // newAliasInstance creates a new alias instance for the given origin and type
 // arguments, recording pos as the position of its synthetic object (for error
 // reporting).
-Checker.prototype.newAliasInstance = function newAliasInstance(pos: Pos, orig: Alias, targs: Type[], expanding: Named | null, ctxt: Context | null): Alias {
+registerCheckerMethod("newAliasInstance", function newAliasInstance(pos: Pos, orig: Alias, targs: Type[], expanding: Named | null, ctxt: Context | null): Alias {
   assert(targs.length > 0);
   const obj = NewTypeName(pos, orig.obj.pkg, orig.obj.name, null);
   const rhs = this.subst(pos, orig.fromRHS, makeSubstMap(orig.TypeParams()!.list(), targs), expanding, ctxt);
@@ -34,5 +34,5 @@ Checker.prototype.newAliasInstance = function newAliasInstance(pos: Pos, orig: A
   res.tparams = orig.tparams;
   res.targs = newTypeList(targs);
   return res;
-};
+});
 
