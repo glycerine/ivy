@@ -315,6 +315,7 @@ interface EvaluationSharedState {
   interfaces: Map<string, InterfaceTypeDef>;
   aliases: Map<string, string>;
   methods: Map<string, MethodDef>;
+  importPathsByLocalName: Map<string, string>;
   maxLoopIterations: number;
   stdout?: (text: string) => void;
   random: DeterministicPrng;
@@ -348,6 +349,7 @@ export class EvaluationContext {
       interfaces: new Map(),
       aliases: new Map(),
       methods: new Map(),
+      importPathsByLocalName: new Map(),
       maxLoopIterations: options.maxLoopIterations ?? 100_000,
       ...(options.stdout ? { stdout: options.stdout } : {}),
       random: new DeterministicPrng(options.randomSeed),
@@ -615,6 +617,10 @@ export class EvaluationContext {
     return this.options.packages ?? {};
   }
 
+  public packageInfo(importPath: string): GoTypesPackage | undefined {
+    return this.options.packageInfos?.[importPath];
+  }
+
   public currentSheetName(): string {
     return this.options.currentSheetName ?? "sheet";
   }
@@ -625,18 +631,27 @@ export class EvaluationContext {
   }
 
   public registerType(spec: TypeSpec): void {
-    this.shared.aliases.set(spec.name, spec.type.text);
+    this.shared.aliases.set(spec.name, this.resolveImportedTypeText(spec.type.text));
     if (spec.structFields) {
       this.shared.types.set(spec.name, {
         name: spec.name,
-        fields: spec.structFields
+        fields: spec.structFields.map((field) => ({
+          ...field,
+          type: { text: this.resolveImportedTypeText(field.type.text) }
+        }))
       });
     }
     if (spec.interfaceMethods || spec.interfaceEmbeds) {
       this.shared.interfaces.set(spec.name, {
         name: spec.name,
-        methods: this.flattenInterfaceMethods(spec.interfaceMethods ?? [], spec.interfaceEmbeds ?? []),
-        embeds: spec.interfaceEmbeds ?? []
+        methods: this.flattenInterfaceMethods(
+          (spec.interfaceMethods ?? []).map((method) => ({
+            ...method,
+            signature: resolveRuntimeSignatureTypeImports(method.signature, this)
+          })),
+          (spec.interfaceEmbeds ?? []).map((embed) => ({ text: this.resolveImportedTypeText(embed.text) }))
+        ),
+        embeds: (spec.interfaceEmbeds ?? []).map((embed) => ({ text: this.resolveImportedTypeText(embed.text) }))
       });
     }
   }
@@ -674,19 +689,20 @@ export class EvaluationContext {
 
   public registerMethod(declaration: FunctionDecl): void {
     if (!declaration.receiver) return;
-    const receiver = normalizeReceiverType(declaration.receiver.type.text);
-    this.shared.methods.set(methodKey(receiver.baseType, declaration.name), {
-      declaration,
+    const resolved = resolveRuntimeFunctionDeclarationTypeImports(declaration, this);
+    const receiver = normalizeReceiverType(resolved.receiver?.type.text ?? declaration.receiver.type.text);
+    this.shared.methods.set(methodKey(receiver.baseType, resolved.name), {
+      declaration: resolved,
       receiverType: receiver.baseType,
       pointerReceiver: receiver.pointer,
       closureScope: this.captureScope()
     });
   }
 
-  public importPackageMethods(packageName: string, source: EvaluationContext): void {
+  public importPackageMethods(importPath: string, source: EvaluationContext): void {
     for (const method of source.shared.methods.values()) {
-      const receiverType = qualifyLocalRuntimeTypeName(method.receiverType, packageName);
-      const declaration = qualifyRuntimeMethodDeclaration(method.declaration, packageName);
+      const receiverType = qualifyLocalRuntimeTypeName(method.receiverType, importPath);
+      const declaration = qualifyRuntimeMethodDeclaration(method.declaration, importPath);
       this.shared.methods.set(methodKey(receiverType, method.declaration.name), {
         declaration,
         receiverType,
@@ -696,36 +712,45 @@ export class EvaluationContext {
     }
   }
 
-  public importPackageDefinitions(packageName: string, source: EvaluationContext): void {
+  public importPackageDefinitions(importPath: string, source: EvaluationContext): void {
     for (const [name, target] of source.shared.aliases.entries()) {
       this.shared.aliases.set(
-        qualifyLocalRuntimeTypeName(name, packageName),
-        qualifyLocalRuntimeTypeName(target, packageName)
+        qualifyLocalRuntimeTypeName(name, importPath),
+        qualifyLocalRuntimeTypeName(target, importPath)
       );
     }
     for (const [name, typeDef] of source.shared.types.entries()) {
-      this.shared.types.set(qualifyLocalRuntimeTypeName(name, packageName), {
-        name: qualifyLocalRuntimeTypeName(typeDef.name, packageName),
+      this.shared.types.set(qualifyLocalRuntimeTypeName(name, importPath), {
+        name: qualifyLocalRuntimeTypeName(typeDef.name, importPath),
         fields: typeDef.fields.map((field) => ({
           ...field,
-          type: { text: qualifyLocalRuntimeTypeName(field.type.text, packageName) }
+          type: { text: qualifyLocalRuntimeTypeName(field.type.text, importPath) }
         }))
       });
     }
     for (const [name, interfaceDef] of source.shared.interfaces.entries()) {
-      this.shared.interfaces.set(qualifyLocalRuntimeTypeName(name, packageName), {
-        name: qualifyLocalRuntimeTypeName(interfaceDef.name, packageName),
+      this.shared.interfaces.set(qualifyLocalRuntimeTypeName(name, importPath), {
+        name: qualifyLocalRuntimeTypeName(interfaceDef.name, importPath),
         methods: interfaceDef.methods.map((method) => ({
           ...method,
-          signature: qualifyRuntimeSignature(method.signature, packageName)
+          signature: qualifyRuntimeSignature(method.signature, importPath)
         })),
-        embeds: interfaceDef.embeds.map((embed) => ({ text: qualifyLocalRuntimeTypeName(embed.text, packageName) }))
+        embeds: interfaceDef.embeds.map((embed) => ({ text: qualifyLocalRuntimeTypeName(embed.text, importPath) }))
       });
     }
   }
 
-  public packageContext(importPath: string, defaultName: string): EvaluationContext | undefined {
-    return this.options.packageContexts?.[importPath] ?? this.options.packageContexts?.[defaultName];
+  public packageContext(importPath: string): EvaluationContext | undefined {
+    return this.options.packageContexts?.[importPath];
+  }
+
+  public registerImportBinding(localName: string, importPath: string): void {
+    if (localName === "_" || localName === ".") return;
+    this.shared.importPathsByLocalName.set(localName, importPath);
+  }
+
+  public resolveImportedTypeText(typeText: string): string {
+    return rewriteRuntimeTypeText(typeText, (qualifier) => this.shared.importPathsByLocalName.get(qualifier));
   }
 
   public methodFor(typeName: string, methodName: string): MethodDef | undefined {
@@ -1128,7 +1153,7 @@ export async function evaluatePackageSourceFiles(files: SourceFile[], options: P
       expectNormalCompletion(declarationCompletion, "package declarations");
       await executePackageVarInitializers(declarations, checked.info.InitOrder, context);
       await runInitFunctions(ast.functions, context);
-      return exportedRuntimePackageObject(packageScopeObjects(checked.pkg), context, packageName);
+      return exportedRuntimePackageObject(packageScopeObjects(checked.pkg), context, options.importPath ?? packageName);
     });
     return {
       diagnostics: checked.diagnostics,
@@ -1288,10 +1313,6 @@ class SourcePackageGraphEvaluator {
 
     const pkg = result.package ?? {};
     this.packages[importPath] = pkg;
-    const defaultName = sourcePackageDefaultName(importPath);
-    if (this.packages[defaultName] === undefined) {
-      this.packages[defaultName] = pkg;
-    }
     if (result.packageInfo) {
       this.packageInfos[importPath] = result.packageInfo;
     }
@@ -1320,10 +1341,6 @@ class SourcePackageGraphEvaluator {
 
 function uniqueSortedSourceImports(values: string[]): string[] {
   return [...new Set(values)].sort();
-}
-
-function sourcePackageDefaultName(importPath: string): string {
-  return importPath.split("/").filter(Boolean).at(-1) ?? importPath;
 }
 
 function packageGraphDiagnostic(filename: string, message: string): Diagnostic {
@@ -1506,12 +1523,12 @@ export async function evaluateProgram(ast: ProgramAst, options: EvaluationOption
   }
 }
 
-function exportedRuntimePackageObject(objects: GoTypesObject[], context: EvaluationContext, packageName: string): RuntimeObject {
+function exportedRuntimePackageObject(objects: GoTypesObject[], context: EvaluationContext, importPath: string): RuntimeObject {
   const pkg: RuntimeObject = {};
   for (const object of objects) {
     if (!object.Exported()) continue;
     try {
-      pkg[object.Name()] = externalizePackageRuntimeValue(context.lookup(object.Name()), packageName);
+      pkg[object.Name()] = externalizePackageRuntimeValue(context.lookup(object.Name()), importPath);
     } catch {
       // Type-only exports have no runtime value in the interpreter package object.
     }
@@ -1912,11 +1929,10 @@ export class GoJuniorSession {
 
   private persistCheckerImports(ast: ProgramAst): void {
     for (const imported of ast.imports) {
-      const name = importBindingName(imported);
+      const name = importBindingName(imported, this.context);
       if (name === "_" || name === ".") continue;
       if (this.checkerPackage.Scope().Lookup(name) !== null) continue;
       const pkg = this.options.packageInfos?.[imported.path]
-        ?? this.options.packageInfos?.[importDefaultName(imported.path)]
         ?? standardTypePackage(imported.path);
       if (pkg !== undefined) {
         this.checkerPackage.Scope().Insert(NewPkgName(NoPos, this.checkerPackage, name, pkg));
@@ -2132,16 +2148,16 @@ function installSheets(context: EvaluationContext, options: EvaluationOptions): 
 function installImports(context: EvaluationContext, ast: ProgramAst): void {
   const packages = availablePackages(context);
   for (const imported of ast.imports) {
-    const defaultName = importDefaultName(imported.path);
-    const name = importBindingName(imported);
-    const pkg = packages[imported.path] ?? packages[defaultName];
+    const name = importBindingName(imported, context);
+    const pkg = packages[imported.path];
     if (!pkg) {
       throw new GoJuniorRuntimeError(`package ${imported.path} is not available`);
     }
-    const importedContext = context.packageContext(imported.path, defaultName);
+    context.registerImportBinding(name, imported.path);
+    const importedContext = context.packageContext(imported.path);
     if (importedContext) {
-      context.importPackageDefinitions(defaultName, importedContext);
-      context.importPackageMethods(defaultName, importedContext);
+      context.importPackageDefinitions(imported.path, importedContext);
+      context.importPackageMethods(imported.path, importedContext);
     }
     if (name === "_") continue;
     if (name === ".") {
@@ -2158,27 +2174,32 @@ function importDefaultName(path: string): string {
   return path.split("/").filter(Boolean).at(-1) ?? path;
 }
 
-function importBindingName(imported: { path: string; alias?: string }): string {
-  return imported.alias ?? importDefaultName(imported.path);
+function importBindingName(imported: { path: string; alias?: string }, context?: EvaluationContext): string {
+  return imported.alias
+    ?? context?.packageInfo(imported.path)?.Name()
+    ?? standardTypePackage(imported.path)?.Name()
+    ?? importDefaultName(imported.path);
 }
 
 function installFunctionDeclaration(context: EvaluationContext, declaration: FunctionDecl): void {
   if (declaration.receiver) {
-    context.registerMethod(declaration);
+    context.registerMethod(resolveRuntimeFunctionDeclarationTypeImports(declaration, context));
     return;
   }
-  context.declareOrAssignRoot(declaration.name, functionValue(declaration), true);
+  const resolved = resolveRuntimeFunctionDeclarationTypeImports(declaration, context);
+  context.declareOrAssignRoot(resolved.name, functionValue(resolved), true);
 }
 
 function installPackageFunctionDeclaration(context: EvaluationContext, declaration: FunctionDecl): void {
+  const resolved = resolveRuntimeFunctionDeclarationTypeImports(declaration, context);
   if (declaration.receiver) {
-    context.registerMethod(declaration);
+    context.registerMethod(resolved);
     return;
   }
-  const intrinsic = bodylessPackageFunctionIntrinsic(declaration);
+  const intrinsic = bodylessPackageFunctionIntrinsic(resolved);
   context.declareOrAssignRoot(
-    declaration.name,
-    intrinsic ?? goJuniorFunctionValue(declaration.name, declaration.signature, declaration.body, context.captureScope(), declaration, undefined, undefined, context),
+    resolved.name,
+    intrinsic ?? goJuniorFunctionValue(resolved.name, resolved.signature, resolved.body, context.captureScope(), resolved, undefined, undefined, context),
     true
   );
 }
@@ -3104,7 +3125,7 @@ function functionValue(declaration: FunctionDecl): GoJuniorFunction {
 }
 
 function functionLiteralValue(expression: FunctionLiteralExpression, context: EvaluationContext): GoJuniorFunction {
-  return goJuniorFunctionValue("<closure>", expression.signature, expression.body, context.captureScope(), undefined, undefined, expression.source);
+  return goJuniorFunctionValue("<closure>", resolveRuntimeSignatureTypeImports(expression.signature, context), expression.body, context.captureScope(), undefined, undefined, expression.source);
 }
 
 function splitTopLevelDeclarations(statements: Statement[]): { declarations: Statement[]; statements: Statement[] } {
@@ -4231,16 +4252,17 @@ async function evaluateCallArguments(
 }
 
 async function evaluateArrayLiteral(expression: ArrayLiteralExpression, context: EvaluationContext): Promise<RuntimeValue[]> {
-  const type = parseArrayOrSliceTypeText(expression.type.text, context);
+  const typeText = context.resolveImportedTypeText(expression.type.text);
+  const type = parseArrayOrSliceTypeText(typeText, context);
   if (!type) {
-    throw new GoJuniorRuntimeError(`${expression.type.text} is not an array or slice literal type`);
+    throw new GoJuniorRuntimeError(`${typeText} is not an array or slice literal type`);
   }
   const values = await evaluateArrayLiteralEntries(
     expression.elements,
     type.elementType,
     type.length,
     Boolean(type.inferLength),
-    expression.type.text,
+    typeText,
     context
   );
   markArrayType(values, type.typeText);
@@ -4292,8 +4314,9 @@ function makeRuntimeSlice(elementType: string, length: number, capacity: number,
 }
 
 async function evaluateStructLiteral(expression: StructLiteralExpression, context: EvaluationContext): Promise<RuntimeValue> {
-  const pointerTarget = normalizeTypeText(expression.typeName).startsWith("*")
-    ? normalizeTypeText(expression.typeName).slice(1)
+  const typeName = context.resolveImportedTypeText(expression.typeName);
+  const pointerTarget = normalizeTypeText(typeName).startsWith("*")
+    ? normalizeTypeText(typeName).slice(1)
     : undefined;
   if (pointerTarget) {
     let value = await evaluateStructLiteral({ ...expression, typeName: pointerTarget }, context);
@@ -4302,22 +4325,23 @@ async function evaluateStructLiteral(expression: StructLiteralExpression, contex
     });
   }
 
-  const intrinsic = await evaluateIntrinsicNamedStructLiteral(expression, context);
+  const resolvedExpression = { ...expression, typeName };
+  const intrinsic = await evaluateIntrinsicNamedStructLiteral(resolvedExpression, context);
   if (intrinsic) return intrinsic;
 
-  const typeDef = context.typeDef(expression.typeName) ?? parseAnonymousStructTypeText(expression.typeName);
+  const typeDef = context.typeDef(typeName) ?? parseAnonymousStructTypeText(typeName);
   if (!typeDef) {
-    const alias = context.aliasType(expression.typeName);
+    const alias = context.aliasType(typeName);
     const arrayType = alias ? parseArrayOrSliceTypeText(alias, context) : undefined;
     if (arrayType) {
-      const values = await evaluateArrayLiteralFields(expression, arrayType, context);
-      return new RuntimeNamedValue(expression.typeName, values);
+      const values = await evaluateArrayLiteralFields(resolvedExpression, arrayType, context);
+      return new RuntimeNamedValue(typeName, values);
     }
     const mapType = alias ? parseMapTypeText(alias) : undefined;
   if (mapType) {
-      return new RuntimeNamedValue(expression.typeName, await evaluateNamedMapLiteralFields(expression, mapType, context));
+      return new RuntimeNamedValue(typeName, await evaluateNamedMapLiteralFields(resolvedExpression, mapType, context));
     }
-    throw new GoJuniorRuntimeError(`${expression.typeName} is not a declared struct type`);
+    throw new GoJuniorRuntimeError(`${typeName} is not a declared struct type`);
   }
 
   const struct = new RuntimeStruct(typeDef.name);
@@ -4330,8 +4354,8 @@ async function evaluateStructLiteral(expression: StructLiteralExpression, contex
       : typeDef.fields[index];
     if (!declared) {
       throw new GoJuniorRuntimeError(field.name
-        ? `${expression.typeName} has no field ${field.name}`
-        : `${expression.typeName} literal has too many values`);
+        ? `${typeName} has no field ${field.name}`
+        : `${typeName} literal has too many values`);
     }
     const value = await evaluateExpression(field.value, context);
     struct.set(declared.name, prepareAssignableToType(value, declared.type.text, `field ${field.name ?? declared.name}`, context));
@@ -4384,7 +4408,11 @@ async function evaluateNamedMapLiteralFields(
 }
 
 async function evaluateMapLiteral(expression: MapLiteralExpression, context: EvaluationContext): Promise<RuntimeMap> {
-  const map = new RuntimeMap(expression.keyType.text, expression.valueType.text, context);
+  const map = new RuntimeMap(
+    context.resolveImportedTypeText(expression.keyType.text),
+    context.resolveImportedTypeText(expression.valueType.text),
+    context
+  );
   for (const entry of expression.entries) {
     map.set(await evaluateExpression(entry.key, context), await evaluateExpression(entry.value, context));
   }
@@ -5198,10 +5226,11 @@ function defaultValueForDeclarationType(type: TypeNode | undefined, context?: Ev
 }
 
 function defaultValueForTypeText(typeText: string, context?: EvaluationContext): RuntimeValue {
-  const mapType = parseMapTypeText(typeText);
+  const resolvedTypeText = context?.resolveImportedTypeText(typeText) ?? typeText;
+  const mapType = parseMapTypeText(resolvedTypeText);
   if (mapType) return new RuntimeMap(mapType.keyType, mapType.valueType, context);
-  if (parseChanTypeText(typeText)) return null;
-  const arrayType = parseArrayOrSliceTypeText(typeText, context);
+  if (parseChanTypeText(resolvedTypeText)) return null;
+  const arrayType = parseArrayOrSliceTypeText(resolvedTypeText, context);
   if (arrayType) {
     if (arrayType.length === undefined && !arrayType.inferLength) return new RuntimeTypedNilValue(arrayType.typeText);
     const values = arrayType.length === undefined || arrayType.inferLength
@@ -5210,14 +5239,14 @@ function defaultValueForTypeText(typeText: string, context?: EvaluationContext):
     markArrayType(values, arrayType.typeText);
     return values;
   }
-  const type = normalizeTypeText(typeText);
+  const type = normalizeTypeText(resolvedTypeText);
   const intrinsic = defaultIntrinsicNamedValue(type, context);
   if (intrinsic) return intrinsic;
   const interfaceType = interfaceTarget(type, context);
   if (interfaceType) return new RuntimeInterfaceValue(type, null);
   if (isUnsafePointerType(type)) return new RuntimeTypedNilValue(type);
   if (type.startsWith("*")) return new RuntimeTypedNilValue(type);
-  const anonymousStruct = parseAnonymousStructTypeText(typeText);
+  const anonymousStruct = parseAnonymousStructTypeText(resolvedTypeText);
   if (anonymousStruct) {
     const struct = new RuntimeStruct(anonymousStruct.name);
     for (const field of anonymousStruct.fields) {
@@ -5238,7 +5267,7 @@ function defaultValueForTypeText(typeText: string, context?: EvaluationContext):
     const base = defaultValueForTypeText(alias, context);
     return new RuntimeNamedValue(type, base);
   }
-  return zeroValueForMapValue(typeText);
+  return zeroValueForMapValue(type);
 }
 
 function defaultIntrinsicNamedValue(type: string, context?: EvaluationContext): RuntimeValue | undefined {
@@ -5438,15 +5467,16 @@ function convertValueToType(
   context: EvaluationContext,
   sourceTypeText?: string
 ): RuntimeValue {
-  const type = normalizeTypeText(typeText);
+  const type = normalizeTypeText(context.resolveImportedTypeText(typeText));
+  const sourceType = sourceTypeText ? context.resolveImportedTypeText(sourceTypeText) : undefined;
   const targetInterface = interfaceTarget(type, context);
-  if (targetInterface) return prepareInterfaceAssignment(value, type, targetInterface, "conversion", context, sourceTypeText);
+  if (targetInterface) return prepareInterfaceAssignment(value, type, targetInterface, "conversion", context, sourceType);
   const alias = context.aliasType(type);
   if (alias && alias !== type) {
     return new RuntimeNamedValue(type, convertValueToType(value, alias, context, sourceTypeText));
   }
   const sourceIsUnsafePointer = value instanceof RuntimeNamedValue && isUnsafePointerType(value.typeName) ||
-    Boolean(sourceTypeText && isUnsafePointerType(sourceTypeText));
+    Boolean(sourceType && isUnsafePointerType(sourceType));
   const actual = unwrapNamed(value);
   if (isUnsafePointerType(type)) {
     if (actual === null) return new RuntimeTypedNilValue(type);
@@ -5493,7 +5523,7 @@ function convertValueToType(
     if (isRuntimeString(actual)) return ensureRuntimeGoString(actual);
     if (typeof actual === "bigint") return goStringFromRune(actual);
     if (Array.isArray(actual)) {
-      return stringFromIntegerArray(actual, sourceTypeText, context);
+      return stringFromIntegerArray(actual, sourceType, context);
     }
     throwTypeError(actual, type, "conversion");
   }
@@ -5846,7 +5876,7 @@ function isNumericTypeText(typeText: string, context?: EvaluationContext): boole
 }
 
 function numericAliasBaseType(typeText: string, context?: EvaluationContext): string {
-  let type = normalizeTypeText(typeText);
+  let type = normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
   const seen = new Set<string>();
   while (context?.aliasType(type) && !seen.has(type)) {
     seen.add(type);
@@ -5911,7 +5941,7 @@ function inferredConcreteDynamicType(value: RuntimeValue | undefined): string | 
 }
 
 function prepareAssignableToType(value: RuntimeValue, typeText: string, role: string, context?: EvaluationContext): RuntimeValue {
-  const type = normalizeTypeText(typeText);
+  const type = normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
   if (!type || type === "<missing>") return value;
   const interfaceType = interfaceTarget(type, context);
   if (interfaceType) return prepareInterfaceAssignment(value, type, interfaceType, role, context);
@@ -6111,7 +6141,7 @@ function signaturesCompatible(actual: FunctionDecl["signature"], expected: Funct
 }
 
 function runtimeValueMatchesType(value: RuntimeValue, typeText: string, context?: EvaluationContext): boolean {
-  const type = normalizeTypeText(typeText);
+  const type = normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
   if (value instanceof RuntimeInterfaceValue) {
     if (type === "nil") return value.value === null;
     if (value.value === null) return false;
@@ -6849,6 +6879,14 @@ function externalizeRuntimeValue(value: RuntimeValue): RuntimeValue {
 
 function externalizePackageRuntimeValue(value: RuntimeValue, packageName: string): RuntimeValue {
   if (value instanceof RuntimeGoString) return value.text();
+  if (isGoJuniorFunction(value)) {
+    return {
+      ...value,
+      async call(args, context) {
+        return externalizePackageRuntimeValue(await value.call(args, context), packageName);
+      }
+    };
+  }
   if (value instanceof RuntimeNamedValue) {
     return new RuntimeNamedValue(
       qualifyLocalRuntimeTypeName(value.typeName, packageName),
@@ -6875,6 +6913,107 @@ function externalizePackageRuntimeValue(value: RuntimeValue, packageName: string
     return struct;
   }
   return value;
+}
+
+function resolveRuntimeFunctionDeclarationTypeImports(declaration: FunctionDecl, context: EvaluationContext): FunctionDecl {
+  return {
+    ...declaration,
+    signature: resolveRuntimeSignatureTypeImports(declaration.signature, context),
+    ...(declaration.receiver ? {
+      receiver: {
+        ...declaration.receiver,
+        type: resolveRuntimeTypeNodeImports(declaration.receiver.type, context)
+      }
+    } : {})
+  };
+}
+
+function resolveRuntimeSignatureTypeImports(
+  signature: FunctionDecl["signature"],
+  context: EvaluationContext
+): FunctionDecl["signature"] {
+  return {
+    parameters: signature.parameters.map((parameter) => ({
+      ...parameter,
+      type: resolveRuntimeTypeNodeImports(parameter.type, context)
+    })),
+    results: signature.results.map((result) => ({
+      ...result,
+      type: resolveRuntimeTypeNodeImports(result.type, context)
+    }))
+  };
+}
+
+function resolveRuntimeTypeNodeImports(type: TypeNode, context: EvaluationContext): TypeNode {
+  return { text: context.resolveImportedTypeText(type.text) };
+}
+
+function rewriteRuntimeTypeText(typeText: string, resolveQualifier: (qualifier: string) => string | undefined): string {
+  let output = "";
+  let index = 0;
+  while (index < typeText.length) {
+    const char = typeText[index] ?? "";
+    if (char === "[" && !isRuntimeTypePathOrIdentifierChar(typeText[index - 1] ?? "")) {
+      const close = matchingSquareBracket(typeText, index);
+      if (close > index) {
+        output += typeText.slice(index, close + 1);
+        index = close + 1;
+        continue;
+      }
+    }
+    if (isRuntimeTypeIdentifierStart(char) && !isRuntimeTypePathOrIdentifierChar(typeText[index - 1] ?? "")) {
+      const qualifierStart = index;
+      index += 1;
+      while (index < typeText.length && isRuntimeTypeIdentifierPart(typeText[index] ?? "")) index += 1;
+      const qualifier = typeText.slice(qualifierStart, index);
+      if (
+        typeText[index] === "." &&
+        isRuntimeTypeIdentifierStart(typeText[index + 1] ?? "")
+      ) {
+        const nameStart = index + 1;
+        let nameEnd = nameStart + 1;
+        while (nameEnd < typeText.length && isRuntimeTypeIdentifierPart(typeText[nameEnd] ?? "")) nameEnd += 1;
+        if (typeText[nameEnd] !== "/") {
+          const importPath = resolveQualifier(qualifier);
+          if (importPath) {
+            output += `${importPath}.${typeText.slice(nameStart, nameEnd)}`;
+            index = nameEnd;
+            continue;
+          }
+        }
+      }
+      output += qualifier;
+      continue;
+    }
+    output += char;
+    index += 1;
+  }
+  return output;
+}
+
+function matchingSquareBracket(text: string, openIndex: number): number {
+  let depth = 0;
+  for (let index = openIndex; index < text.length; index++) {
+    const char = text[index] ?? "";
+    if (char === "[") depth++;
+    if (char === "]") {
+      depth--;
+      if (depth === 0) return index;
+    }
+  }
+  return -1;
+}
+
+function isRuntimeTypeIdentifierStart(char: string): boolean {
+  return /[A-Za-z_]/.test(char);
+}
+
+function isRuntimeTypeIdentifierPart(char: string): boolean {
+  return /[A-Za-z0-9_]/.test(char);
+}
+
+function isRuntimeTypePathOrIdentifierChar(char: string): boolean {
+  return /[A-Za-z0-9_/.]/.test(char);
 }
 
 function qualifyLocalRuntimeTypeName(typeName: string, packageName: string): string {

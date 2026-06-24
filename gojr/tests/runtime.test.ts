@@ -794,6 +794,92 @@ return counter.Next()
     expect(second.value).toBe(42n);
   });
 
+  test("keys runtime packages and type identity by full import path when package names collide", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/leftpkg",
+        files: [{
+          filename: "/workspace/left/left.go",
+          source: `package dup
+
+type T struct { N int }
+
+func New(n int) *T { return &T{N: n} }
+
+func (t *T) Value() int { return t.N }
+`
+        }]
+      },
+      {
+        importPath: "example.org/rightpkg",
+        files: [{
+          filename: "/workspace/right/right.go",
+          source: `package dup
+
+type T struct { S string }
+
+func New(s string) *T { return &T{S: s} }
+
+func (t *T) Value() string { return t.S }
+`
+        }]
+      },
+      {
+        importPath: "example.net/app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import (
+  left "example.com/leftpkg"
+  right "example.org/rightpkg"
+)
+
+type Holder struct {
+  L *left.T
+  R *right.T
+}
+
+var H = Holder{L: left.New(7), R: right.New("ok")}
+
+func Values() (int, string) {
+  return H.L.Value(), H.R.Value()
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages.dup).toBeUndefined();
+    expect(Object.keys(graph.packages).sort()).toEqual([
+      "example.com/leftpkg",
+      "example.net/app",
+      "example.org/rightpkg"
+    ]);
+
+    const app = await expectRuns(`
+import app "example.net/app"
+x, y := app.Values()
+return x, y
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+    expect(app.values).toEqual([7n, "ok"]);
+
+    const packageClauseBinding = await expectRuns(`
+import "example.com/leftpkg"
+return dup.New(3).Value()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+    expect(packageClauseBinding.value).toBe(3n);
+  });
+
   test("runs multiple package init functions in source file sequence order", async () => {
     const pkg = await evaluatePackageSourceFiles([
       {
