@@ -2,7 +2,7 @@ import { REPL_FILENAME } from "./diagnostics.js";
 import { checkGoJuniorSourceFiles, GOJR_SYNTHETIC_CHECK_PREFIX, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import { Const as GoTypesConst, ensureUniverseInitialized, NewPackage, NewPkgName, NoPos } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
-import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
+import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
 import { DeterministicPrng } from "./prng.js";
 import { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
 import { cellDependency, rangeDependency } from "./spreadsheet.js";
@@ -862,7 +862,7 @@ class SourcePackageGraphEvaluator {
         const imports = uniqueSortedSourceImports(parsed.ast?.imports.map((imported) => imported.path) ?? []);
         this.importsByPath.set(importPath, imports);
         for (const dependency of imports) {
-            if (isIntrinsicPackageImport(dependency))
+            if (isHostResolvedSourceImport(dependency))
                 continue;
             if (this.packages[dependency])
                 continue;

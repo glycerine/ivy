@@ -30,7 +30,7 @@ import {
   runSpreadsheetFixture,
   type SpreadsheetFixtureRunResult
 } from "./fixture.js";
-import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
+import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
 import { stubSourcePackageFiles } from "./stubPackages.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
 import {
@@ -575,7 +575,7 @@ function compileSourcePackagesForRootFilesOnNode(
 }
 
 function isAmbientSourceImport(importPath: string): boolean {
-  return isIntrinsicPackageImport(importPath);
+  return isHostResolvedSourceImport(importPath);
 }
 
 function rootSourceFilesFromRequest(request: NodeSourcePackageRequest): SourceFile[] {

@@ -55,7 +55,7 @@ import {
   type Package as GoTypesPackage
 } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
-import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
+import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
 import { DeterministicPrng } from "./prng.js";
 import {
   AsyncGoChannel,
@@ -1173,7 +1173,7 @@ class SourcePackageGraphEvaluator {
     const imports = uniqueSortedSourceImports(parsed.ast?.imports.map((imported) => imported.path) ?? []);
     this.importsByPath.set(importPath, imports);
     for (const dependency of imports) {
-      if (isIntrinsicPackageImport(dependency)) continue;
+      if (isHostResolvedSourceImport(dependency)) continue;
       if (this.packages[dependency]) continue;
       if (!this.specsByPath.has(dependency)) {
         let loaded: SourceFile[] | undefined;

@@ -5,7 +5,7 @@ import { buildTagSetForContext, buildPackages, collectSourceImportPaths, GOJR_GO
 import { hasErrorDiagnostics, REPL_FILENAME } from "./diagnostics.js";
 import { compilePackageSourceFiles, compileSourceFiles } from "./compile.js";
 import { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture } from "./fixture.js";
-import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
+import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
 import { stubSourcePackageFiles } from "./stubPackages.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
 import { evaluateSource, evaluateSourceFiles, evaluateSourcePackageGraph, testSourceFiles } from "./runtime.js";
@@ -452,7 +452,7 @@ function compileSourcePackagesForRootFilesOnNode(rootFiles, specs = [], baseOpti
     return { packageInfos, diagnostics };
 }
 function isAmbientSourceImport(importPath) {
-    return isIntrinsicPackageImport(importPath);
+    return isHostResolvedSourceImport(importPath);
 }
 function rootSourceFilesFromRequest(request) {
     if (request.files && request.files.length > 0)
