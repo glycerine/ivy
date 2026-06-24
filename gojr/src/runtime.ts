@@ -828,8 +828,7 @@ export class EvaluationContext {
       }
     };
     addType(typeName);
-    const aliasType = resolveRuntimeAliasTypeText(typeName, this);
-    if (aliasType !== normalizeTypeText(typeName)) addType(aliasType);
+    for (const aliasType of runtimeAliasTypeChain(typeName, this)) addType(aliasType);
     for (const candidate of candidates) {
       const method = this.shared.methods.get(methodKey(candidate, methodName));
       if (method) return method;
@@ -7524,13 +7523,19 @@ function signatureTypeCompatible(actual: string, expected: string, context?: Eva
 }
 
 function resolveRuntimeAliasTypeText(typeText: string, context?: EvaluationContext): string {
+  return runtimeAliasTypeChain(typeText, context).at(-1) ?? normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
+}
+
+function runtimeAliasTypeChain(typeText: string, context?: EvaluationContext): string[] {
+  const chain: string[] = [];
   let type = normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
   const seen = new Set<string>();
   while (context?.aliasType(type) && !seen.has(type)) {
     seen.add(type);
     type = normalizeTypeText(context.resolveImportedTypeText(context.aliasType(type) ?? type));
+    chain.push(type);
   }
-  return type;
+  return chain;
 }
 
 function resolveRuntimeCompositeAliases(typeText: string, context?: EvaluationContext): string {
