@@ -149,6 +149,7 @@ export interface EvaluationOptions {
   filename?: string;
   packages?: Record<string, RuntimeObject>;
   packageInfos?: Record<string, GoTypesPackage>;
+  packageContexts?: Record<string, EvaluationContext>;
   env?: Record<string, string>;
   sheet?: SheetData;
   sheets?: Record<string, SheetData>;
@@ -212,7 +213,7 @@ export interface MainPackageRunOptions extends SourcePackageGraphOptions {
 
 type Completion =
   | { kind: "normal"; value?: RuntimeValue }
-  | { kind: "return"; values: RuntimeValue[] }
+  | { kind: "return"; values: RuntimeValue[]; sources?: Expression[] }
   | { kind: "break"; label?: string }
   | { kind: "continue"; label?: string }
   | { kind: "fallthrough" }
@@ -677,6 +678,20 @@ export class EvaluationContext {
     });
   }
 
+  public importPackageMethods(packageName: string, source: EvaluationContext): void {
+    for (const method of source.shared.methods.values()) {
+      const receiverType = qualifyLocalRuntimeTypeName(method.receiverType, packageName);
+      this.shared.methods.set(methodKey(receiverType, method.declaration.name), {
+        ...method,
+        receiverType
+      });
+    }
+  }
+
+  public packageContext(importPath: string, defaultName: string): EvaluationContext | undefined {
+    return this.options.packageContexts?.[importPath] ?? this.options.packageContexts?.[defaultName];
+  }
+
   public methodFor(typeName: string, methodName: string): MethodDef | undefined {
     return this.shared.methods.get(methodKey(typeName, methodName)) ??
       this.shared.methods.get(methodKey(genericBaseTypeName(typeName), methodName));
@@ -1077,7 +1092,7 @@ export async function evaluatePackageSourceFiles(files: SourceFile[], options: P
       expectNormalCompletion(declarationCompletion, "package declarations");
       await executePackageVarInitializers(declarations, checked.info.InitOrder, context);
       await runInitFunctions(ast.functions, context);
-      return exportedRuntimePackageObject(packageScopeObjects(checked.pkg), context);
+      return exportedRuntimePackageObject(packageScopeObjects(checked.pkg), context, packageName);
     });
     return {
       diagnostics: checked.diagnostics,
@@ -1228,7 +1243,8 @@ class SourcePackageGraphEvaluator {
       importPath,
       ...(spec.packageName ? { packageName: spec.packageName } : {}),
       packages: this.packages,
-      packageInfos: this.packageInfos
+      packageInfos: this.packageInfos,
+      packageContexts: this.packageContexts
     });
     this.output.push(...result.output);
     this.diagnostics.push(...result.diagnostics);
@@ -1458,12 +1474,12 @@ export async function evaluateProgram(ast: ProgramAst, options: EvaluationOption
   }
 }
 
-function exportedRuntimePackageObject(objects: GoTypesObject[], context: EvaluationContext): RuntimeObject {
+function exportedRuntimePackageObject(objects: GoTypesObject[], context: EvaluationContext, packageName: string): RuntimeObject {
   const pkg: RuntimeObject = {};
   for (const object of objects) {
     if (!object.Exported()) continue;
     try {
-      pkg[object.Name()] = context.lookup(object.Name());
+      pkg[object.Name()] = externalizePackageRuntimeValue(context.lookup(object.Name()), packageName);
     } catch {
       // Type-only exports have no runtime value in the interpreter package object.
     }
@@ -2090,6 +2106,8 @@ function installImports(context: EvaluationContext, ast: ProgramAst): void {
     if (!pkg) {
       throw new GoJuniorRuntimeError(`package ${imported.path} is not available`);
     }
+    const importedContext = context.packageContext(imported.path, defaultName);
+    if (importedContext) context.importPackageMethods(defaultName, importedContext);
     if (name === "_") continue;
     if (name === ".") {
       for (const [exportName, value] of Object.entries(pkg)) {
@@ -3191,9 +3209,10 @@ function goJuniorFunctionValue(
           ? { kind: "return", values: namedReturnValuesOrZero(signature, context) } satisfies Completion
           : outcome;
         if (completion.kind === "return") {
-          const values = completion.values.length === 0
+          const rawValues = completion.values.length === 0
             ? namedReturnValues(signature, context)
             : completion.values;
+          const values = prepareFunctionReturnValues(signature, rawValues, completion.sources, context);
           return values.length === 1 ? values[0] ?? null : values;
         }
         return null;
@@ -3201,6 +3220,20 @@ function goJuniorFunctionValue(
       return closureScope ? context.withScopeAsync(closureScope, invoke) : invoke();
     }
   };
+}
+
+function prepareFunctionReturnValues(
+  signature: FunctionDecl["signature"],
+  values: RuntimeValue[],
+  sources: Expression[] | undefined,
+  context: EvaluationContext
+): RuntimeValue[] {
+  if (signature.results.length === 0) return values;
+  return values.map((value, index) => {
+    const result = signature.results[index];
+    if (!result) return value;
+    return prepareValueForTargetType(value, result.type.text, sources?.[index], context, "return value");
+  });
 }
 
 function namedReturnValues(signature: FunctionDecl["signature"], context: EvaluationContext): RuntimeValue[] {
@@ -3431,7 +3464,8 @@ async function executeStatement(statement: Statement, context: EvaluationContext
     case "ReturnStatement":
       return {
         kind: "return",
-        values: await evaluateExpressionList(statement.values, context)
+        values: await evaluateExpressionList(statement.values, context),
+        sources: statement.values
       };
 
     case "IfStatement":
@@ -5779,6 +5813,10 @@ function prepareInterfaceAssignment(
   if (value instanceof RuntimeInterfaceValue) {
     const dynamicValue = value.value;
     if (dynamicValue === null) return new RuntimeInterfaceValue(type, null);
+    const sourceInterface = interfaceTarget(value.interfaceType, context);
+    if (sourceInterface && interfaceDefinitionImplementsInterface(sourceInterface, interfaceType)) {
+      return new RuntimeInterfaceValue(type, dynamicValue);
+    }
     if (context && !valueImplementsInterface(dynamicValue, interfaceType, context)) throwTypeError(value, type, role);
     return new RuntimeInterfaceValue(type, dynamicValue);
   }
@@ -5786,6 +5824,14 @@ function prepareInterfaceAssignment(
   const dynamicValue = boxDynamicInterfaceValue(value, dynamicType);
   if (context && !valueImplementsInterface(dynamicValue, interfaceType, context)) throwTypeError(value, type, role);
   return new RuntimeInterfaceValue(type, dynamicValue);
+}
+
+function interfaceDefinitionImplementsInterface(source: InterfaceTypeDef, target: InterfaceTypeDef): boolean {
+  for (const method of target.methods) {
+    const candidate = source.methods.find((sourceMethod) => sourceMethod.name === method.name);
+    if (!candidate || !signaturesCompatible(candidate.signature, method.signature)) return false;
+  }
+  return true;
 }
 
 function boxDynamicInterfaceValue(value: RuntimeValue, dynamicType: string | undefined): RuntimeValue {

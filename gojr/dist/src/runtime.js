@@ -2731,9 +2731,10 @@ function goJuniorFunctionValue(name, signature, body, closureScope, declaration,
                     ? { kind: "return", values: namedReturnValuesOrZero(signature, context) }
                     : outcome;
                 if (completion.kind === "return") {
-                    const values = completion.values.length === 0
+                    const rawValues = completion.values.length === 0
                         ? namedReturnValues(signature, context)
                         : completion.values;
+                    const values = prepareFunctionReturnValues(signature, rawValues, completion.sources, context);
                     return values.length === 1 ? values[0] ?? null : values;
                 }
                 return null;
@@ -2741,6 +2742,16 @@ function goJuniorFunctionValue(name, signature, body, closureScope, declaration,
             return closureScope ? context.withScopeAsync(closureScope, invoke) : invoke();
         }
     };
+}
+function prepareFunctionReturnValues(signature, values, sources, context) {
+    if (signature.results.length === 0)
+        return values;
+    return values.map((value, index) => {
+        const result = signature.results[index];
+        if (!result)
+            return value;
+        return prepareValueForTargetType(value, result.type.text, sources?.[index], context, "return value");
+    });
 }
 function namedReturnValues(signature, context) {
     const namedResults = signature.results.filter((result) => result.name);
@@ -2940,7 +2951,8 @@ async function executeStatement(statement, context) {
         case "ReturnStatement":
             return {
                 kind: "return",
-                values: await evaluateExpressionList(statement.values, context)
+                values: await evaluateExpressionList(statement.values, context),
+                sources: statement.values
             };
         case "IfStatement":
             return executeIf(statement, context);
@@ -5246,6 +5258,10 @@ function prepareInterfaceAssignment(value, type, interfaceType, role, context, d
         const dynamicValue = value.value;
         if (dynamicValue === null)
             return new RuntimeInterfaceValue(type, null);
+        const sourceInterface = interfaceTarget(value.interfaceType, context);
+        if (sourceInterface && interfaceDefinitionImplementsInterface(sourceInterface, interfaceType)) {
+            return new RuntimeInterfaceValue(type, dynamicValue);
+        }
         if (context && !valueImplementsInterface(dynamicValue, interfaceType, context))
             throwTypeError(value, type, role);
         return new RuntimeInterfaceValue(type, dynamicValue);
@@ -5256,6 +5272,14 @@ function prepareInterfaceAssignment(value, type, interfaceType, role, context, d
     if (context && !valueImplementsInterface(dynamicValue, interfaceType, context))
         throwTypeError(value, type, role);
     return new RuntimeInterfaceValue(type, dynamicValue);
+}
+function interfaceDefinitionImplementsInterface(source, target) {
+    for (const method of target.methods) {
+        const candidate = source.methods.find((sourceMethod) => sourceMethod.name === method.name);
+        if (!candidate || !signaturesCompatible(candidate.signature, method.signature))
+            return false;
+    }
+    return true;
 }
 function boxDynamicInterfaceValue(value, dynamicType) {
     if (!dynamicType || value instanceof RuntimeNamedValue || value instanceof RuntimeTypedNilValue)

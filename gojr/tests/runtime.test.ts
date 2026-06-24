@@ -1955,6 +1955,43 @@ func (e Errno) Error() string { return "try again" }
     expect(graph.diagnostics).toEqual([]);
   });
 
+  test("assigns imported error interface values to error fields without rechecking unexported concrete methods", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "errors",
+        files: [{
+          filename: "/usr/local/go/src/errors/errors.go",
+          source: `package errors
+
+func New(text string) error { return &errorString{s: text} }
+
+type errorString struct { s string }
+
+func (e *errorString) Error() string { return e.s }
+`
+        }]
+      },
+      {
+        importPath: "example.com/hpack",
+        files: [{
+          filename: "/workspace/hpack/hpack.go",
+          source: `package hpack
+
+import "errors"
+
+type DecodingError struct {
+  Err error
+}
+
+var ErrVarintOverflow = DecodingError{errors.New("varint integer overflow")}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+  });
+
   test("represents interfaces as typed runtime values with dynamic nil state", async () => {
     const nilInterface = await expectRuns(`
 type I interface {
