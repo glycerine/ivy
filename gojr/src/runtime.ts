@@ -1163,19 +1163,24 @@ class SourcePackageGraphEvaluator {
     const imports = uniqueSortedSourceImports(parsed.ast?.imports.map((imported) => imported.path) ?? []);
     this.importsByPath.set(importPath, imports);
     for (const dependency of imports) {
-      if (isRuntimeBuiltinImport(dependency) || this.packages[dependency]) continue;
+      if (this.packages[dependency]) continue;
       if (!this.specsByPath.has(dependency)) {
-        const loaded = this.options.sourcePackageProvider?.load(dependency);
-        if (loaded) {
-          this.specsByPath.set(dependency, { importPath: dependency, files: loaded });
-        } else {
+        let loaded: SourceFile[] | undefined;
+        try {
+          loaded = this.options.sourcePackageProvider?.load(dependency);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
           this.diagnostics.push(packageGraphDiagnostic(
             spec.files[0]?.filename ?? REPL_FILENAME,
-            `package ${dependency} is not available to gojr package initialization; provide it as a source package`
+            `could not load package ${dependency}: ${message}`
           ));
           return;
         }
+        if (loaded) {
+          this.specsByPath.set(dependency, { importPath: dependency, files: loaded });
+        }
       }
+      if (!this.specsByPath.has(dependency)) continue;
       this.discoverOne(dependency, [...stack, importPath]);
       if (this.hasErrors()) return;
     }
@@ -1229,16 +1234,6 @@ function uniqueSortedSourceImports(values: string[]): string[] {
 
 function sourcePackageDefaultName(importPath: string): string {
   return importPath.split("/").filter(Boolean).at(-1) ?? importPath;
-}
-
-function isRuntimeBuiltinImport(importPath: string): boolean {
-  return importPath === "cmp" ||
-    importPath === "fmt" ||
-    importPath === "testing" ||
-    importPath === "unsafe" ||
-    importPath === "math" ||
-    importPath === "strconv" ||
-    importPath === "os";
 }
 
 function packageGraphDiagnostic(filename: string, message: string): Diagnostic {

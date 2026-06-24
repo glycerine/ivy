@@ -297,192 +297,6 @@ function gojrEvaluationJSON(result, extraOutput = []) {
   });
 }
 
-function gojrPackageDefaultName(importPath) {
-  const parts = String(importPath || "").split("/").filter(Boolean);
-  return parts.length ? parts[parts.length - 1] : String(importPath || "");
-}
-
-function gojrRuntimeDiagnostic(filename, code, message) {
-  return {
-    filename: filename || "gojr-repl.go",
-    code,
-    severity: "error",
-    message
-  };
-}
-
-function gojrPackageSourceFilename(spec) {
-  return spec && Array.isArray(spec.files) && spec.files[0] && spec.files[0].filename
-    ? spec.files[0].filename
-    : "gojr-repl.go";
-}
-
-  function gojrRuntimeBuiltinImport(importPath) {
-    return importPath === "cmp" ||
-      importPath === "fmt" ||
-      importPath === "testing" ||
-      importPath === "unsafe" ||
-      importPath === "math" ||
-    importPath === "strconv" ||
-    importPath === "os";
-}
-
-function gojrEvalSourceFilesForImportScan(request) {
-  if (Array.isArray(request.files) && request.files.length > 0) return request.files;
-  return [{ filename: "gojr-repl.go", source: request.source || "" }];
-}
-
-async function gojrLoadSourcePackagesForSources(rootFiles, specs, baseOptions = {}, sourceRoots = []) {
-  const diagnostics = [];
-  const explicit = new Map();
-  const initialSpecs = [];
-  for (const spec of specs || []) {
-    if (spec && spec.importPath) {
-      explicit.set(spec.importPath, spec);
-      initialSpecs.push(spec);
-    }
-  }
-  const provider = gojrNodeSourcePackageProvider(sourceRoots || []);
-  const rootImports = gojrModule.collectSourceImportPaths(rootFiles || []);
-  diagnostics.push(...(rootImports.diagnostics || []));
-  if (!diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-    for (const importPath of rootImports.imports || []) {
-      if (gojrRuntimeBuiltinImport(importPath) || explicit.has(importPath)) continue;
-      try {
-        const files = provider && provider.load(importPath);
-        if (files) {
-          const spec = { importPath, files };
-          explicit.set(importPath, spec);
-          initialSpecs.push(spec);
-        } else {
-          diagnostics.push(gojrRuntimeDiagnostic(
-            (rootFiles && rootFiles[0] && rootFiles[0].filename) || "gojr-repl.go",
-            "GOJR_BUILD001",
-            `package ${importPath} is not available to gojr runtime; provide it with --pkg or --srcroot`
-          ));
-        }
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        diagnostics.push(gojrRuntimeDiagnostic(
-          (rootFiles && rootFiles[0] && rootFiles[0].filename) || "gojr-repl.go",
-          "GOJR_BUILD001",
-          `could not load package ${importPath}: ${message}`
-        ));
-      }
-    }
-  }
-  if (diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-    return { packages: {}, packageInfos: {}, diagnostics, output: [] };
-  }
-  const result = await gojrModule.evaluateSourcePackageGraph(initialSpecs, gojrRuntimeOptions({
-    ...baseOptions,
-    sourcePackageProvider: provider
-  }));
-  return {
-    packages: result.packages || {},
-    packageInfos: result.packageInfos || {},
-    diagnostics: [...diagnostics, ...(result.diagnostics || [])],
-    output: result.output || []
-  };
-}
-
-async function gojrLoadSourcePackages(specs, baseOptions = {}) {
-  const packages = {};
-  const diagnostics = [];
-  const output = [];
-  for (const spec of specs || []) {
-    const options = gojrRuntimeOptions({
-      ...baseOptions,
-      packages,
-      importPath: spec.importPath,
-      packageName: spec.packageName
-    });
-    const result = await gojrModule.evaluatePackageSourceFiles(spec.files || [], options);
-    output.push(...(result.output || []));
-    diagnostics.push(...(result.diagnostics || []));
-    if (diagnostics.some((diagnostic) => diagnostic.severity === "error")) break;
-    const pkg = result.package || {};
-    packages[spec.importPath] = pkg;
-    packages[gojrPackageDefaultName(spec.importPath)] = pkg;
-  }
-  return { packages, diagnostics, output };
-}
-
-function gojrCompileSourcePackagesForSources(rootFiles, specs, baseOptions = {}, sourceRoots = []) {
-  const packageInfos = {};
-  const diagnostics = [];
-  const explicit = new Map();
-  for (const spec of specs || []) {
-    if (spec && spec.importPath) explicit.set(spec.importPath, spec);
-  }
-  const provider = gojrNodeSourcePackageProvider(sourceRoots || []);
-  const loading = new Set();
-  const loaded = new Set();
-
-  function loadImport(importPath, requestedFrom) {
-    if (importPath === "fmt" || importPath === "testing") return;
-    if (loaded.has(importPath) || diagnostics.some((diagnostic) => diagnostic.severity === "error")) return;
-    if (loading.has(importPath)) {
-      diagnostics.push(gojrRuntimeDiagnostic(requestedFrom, "GOJR_BUILD001", `package import cycle detected: ${[...loading, importPath].join(" -> ")}`));
-      return;
-    }
-
-    let spec = explicit.get(importPath);
-    if (!spec && provider) {
-      try {
-        const files = provider.load(importPath);
-        if (files) {
-          spec = { importPath, files };
-          explicit.set(importPath, spec);
-        }
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        diagnostics.push(gojrRuntimeDiagnostic(requestedFrom, "GOJR_BUILD001", `could not load package ${importPath}: ${message}`));
-        return;
-      }
-    }
-    if (!spec) {
-      diagnostics.push(gojrRuntimeDiagnostic(requestedFrom, "GOJR_BUILD001", `package ${importPath} is not available to gojr compile; provide it with --pkg or --srcroot`));
-      return;
-    }
-
-    loading.add(importPath);
-    const imports = gojrModule.collectSourceImportPaths(spec.files || []);
-    diagnostics.push(...(imports.diagnostics || []));
-    if (!diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-      for (const dependencyPath of imports.imports || []) {
-        loadImport(dependencyPath, gojrPackageSourceFilename(spec));
-      }
-    }
-    if (!diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-      const result = gojrModule.compilePackageSourceFiles(spec.files || [], gojrRuntimeOptions({
-        ...baseOptions,
-        packageInfos,
-        importPath: spec.importPath,
-        packageName: spec.packageName
-      }));
-      diagnostics.push(...(result.diagnostics || []));
-      if (!diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-        if (result.packageInfo) packageInfos[spec.importPath] = result.packageInfo;
-        loaded.add(importPath);
-      }
-    }
-    loading.delete(importPath);
-  }
-
-  for (const spec of specs || []) {
-    if (spec && spec.importPath) loadImport(spec.importPath, gojrPackageSourceFilename(spec));
-  }
-  const rootImports = gojrModule.collectSourceImportPaths(rootFiles || []);
-  diagnostics.push(...(rootImports.diagnostics || []));
-  if (!diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-    for (const importPath of rootImports.imports || []) {
-      loadImport(importPath, (rootFiles && rootFiles[0] && rootFiles[0].filename) || "gojr-repl.go");
-    }
-  }
-  return { packageInfos, diagnostics };
-}
-
 function gojrSpreadsheetDiagnosticString(diagnostic) {
   const cell = diagnostic && diagnostic.cell
     ? `${diagnostic.cell.sheet}!${diagnostic.cell.cell}`
@@ -512,70 +326,22 @@ globalThis.__gojrEvalFiles = async function(json) {
 };
 
 globalThis.__gojrEvalWithPackages = async function(json) {
-  const request = JSON.parse(json);
-  const baseOptions = {};
-  if (request.sheetJSON) baseOptions.sheet = gojrModule.parseSheetJson(request.sheetJSON);
-  const rootFiles = gojrEvalSourceFilesForImportScan(request);
-  const loaded = await gojrLoadSourcePackagesForSources(rootFiles, request.packages || [], baseOptions, request.sourceRoots || []);
-  if (loaded.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-    return gojrEvaluationJSON({ diagnostics: loaded.diagnostics, output: [] }, loaded.output);
-  }
-  const result = await gojrModule.evaluateSource(request.source || "", gojrRuntimeOptions({
-    ...baseOptions,
-    packages: loaded.packages
-  }));
-  return gojrEvaluationJSON(result, loaded.output);
+  const result = await gojrModule.evaluateSourceWithPackagesOnNode(JSON.parse(json));
+  return gojrEvaluationJSON(result, result.packageOutput || []);
 };
 
 globalThis.__gojrEvalFilesWithPackages = async function(json) {
-  const request = JSON.parse(json);
-  const baseOptions = {};
-  if (request.sheetJSON) baseOptions.sheet = gojrModule.parseSheetJson(request.sheetJSON);
-  const rootFiles = gojrEvalSourceFilesForImportScan(request);
-  const loaded = await gojrLoadSourcePackagesForSources(rootFiles, request.packages || [], baseOptions, request.sourceRoots || []);
-  if (loaded.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-    return gojrEvaluationJSON({ diagnostics: loaded.diagnostics, output: [] }, loaded.output);
-  }
-  const result = await gojrModule.evaluateSourceFiles(request.files || [], gojrRuntimeOptions({
-    ...baseOptions,
-    packages: loaded.packages
-  }));
-  return gojrEvaluationJSON(result, loaded.output);
+  const result = await gojrModule.evaluateSourceFilesWithPackagesOnNode(JSON.parse(json));
+  return gojrEvaluationJSON(result, result.packageOutput || []);
 };
 
 globalThis.__gojrTestFilesWithPackages = async function(json) {
-  const request = JSON.parse(json);
-  const baseOptions = {};
-  const rootFiles = gojrEvalSourceFilesForImportScan(request);
-  const loaded = await gojrLoadSourcePackagesForSources(rootFiles, request.packages || [], baseOptions, request.sourceRoots || []);
-  if (loaded.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-    return gojrEvaluationJSON({ diagnostics: loaded.diagnostics, output: [] }, loaded.output);
-  }
-  const result = await gojrModule.testSourceFiles(request.files || [], gojrRuntimeOptions({
-    ...baseOptions,
-    packages: loaded.packages,
-    packageInfos: loaded.packageInfos
-  }));
-  return gojrEvaluationJSON(result, loaded.output);
+  const result = await gojrModule.testSourceFilesWithPackagesOnNode(JSON.parse(json));
+  return gojrEvaluationJSON(result, result.packageOutput || []);
 };
 
 globalThis.__gojrCompile = function(json) {
-  const request = JSON.parse(json);
-  const options = gojrRuntimeOptions();
-  if (request.sheetJSON) options.sheet = gojrModule.parseSheetJson(request.sheetJSON);
-  if (request.sheetsJSON) options.sheets = gojrModule.parseSheetsJson(request.sheetsJSON);
-  const loaded = (request.packages && request.packages.length) || (request.sourceRoots && request.sourceRoots.length)
-    ? gojrCompileSourcePackagesForSources(request.files || [], request.packages || [], options, request.sourceRoots || [])
-    : { diagnostics: [], packageInfos: {} };
-  if (loaded.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-    return JSON.stringify({
-      ok: false,
-      diagnostics: loaded.diagnostics.map(gojrDiagnosticString),
-      output: ""
-    });
-  }
-  if (Object.keys(loaded.packageInfos || {}).length > 0) options.packageInfos = loaded.packageInfos;
-  const result = gojrModule.compileSourceFiles(request.files || [], options);
+  const result = gojrModule.compileSourceFilesWithPackagesOnNode(JSON.parse(json));
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
@@ -619,14 +385,6 @@ globalThis.__gojrSetSheet = function(json) {
 
 function gojrDefaultPackageCacheParent() {
   return gojrModule.defaultPackageCacheParent();
-}
-
-function gojrNodeArtifactStore() {
-  return gojrModule.createNodeArtifactStore();
-}
-
-function gojrNodeSourcePackageProvider(sourceRoots) {
-  return gojrModule.createNodeSourcePackageProvider(sourceRoots || []);
 }
 
 globalThis.__gojrBuild = function(json) {
@@ -679,24 +437,18 @@ globalThis.__gojrRunFixture = async function(json) {
 };
 
 globalThis.__gojrRunFixtureWithPackages = async function(json) {
-  const request = JSON.parse(json);
-  const fixture = gojrModule.parseSpreadsheetFixtureJson(request.fixtureJSON || "{}");
-  const rootFiles = gojrModule.collectSpreadsheetFixtureFormulaSourceFiles(fixture);
-  const loaded = await gojrLoadSourcePackagesForSources(rootFiles, request.packages || [], {}, request.sourceRoots || []);
-  if (loaded.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+  const result = await gojrModule.runSpreadsheetFixtureWithPackagesOnNode(JSON.parse(json));
+  const packageDiagnostics = result.packageDiagnostics || [];
+  if (packageDiagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     return JSON.stringify({
       ok: false,
       unstable: false,
-      diagnostics: loaded.diagnostics.map(gojrDiagnosticString),
+      diagnostics: packageDiagnostics.map(gojrDiagnosticString),
       evaluated: [],
       sheets: {},
       observedDeps: {}
     });
   }
-  const result = await gojrModule.runSpreadsheetFixture(fixture, gojrRuntimeOptions({
-    packages: loaded.packages,
-    packageInfos: loaded.packageInfos
-  }));
   const diagnostics = result.diagnostics || [];
   return JSON.stringify({
     ok: result.ok === true && !diagnostics.length,

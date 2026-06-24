@@ -44,9 +44,15 @@ export {
   createNodeArtifactStore,
   createNodeSourcePackageProvider,
   defaultPackageCacheParent,
+  evaluateSourceFilesWithPackagesOnNode,
+  evaluateSourceWithPackagesOnNode,
+  compileSourceFilesWithPackagesOnNode,
   inspectPackageJavaScriptOnNode,
   listPackageArtifactCache,
-  packageCacheOnNode
+  loadSourcePackagesForRootFilesOnNode,
+  packageCacheOnNode,
+  runSpreadsheetFixtureWithPackagesOnNode,
+  testSourceFilesWithPackagesOnNode
 } from "./nodeHost.js";
 export {
   compilePackageSourceFiles,

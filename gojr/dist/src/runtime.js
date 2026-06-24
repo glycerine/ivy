@@ -857,18 +857,24 @@ class SourcePackageGraphEvaluator {
         const imports = uniqueSortedSourceImports(parsed.ast?.imports.map((imported) => imported.path) ?? []);
         this.importsByPath.set(importPath, imports);
         for (const dependency of imports) {
-            if (isRuntimeBuiltinImport(dependency) || this.packages[dependency])
+            if (this.packages[dependency])
                 continue;
             if (!this.specsByPath.has(dependency)) {
-                const loaded = this.options.sourcePackageProvider?.load(dependency);
+                let loaded;
+                try {
+                    loaded = this.options.sourcePackageProvider?.load(dependency);
+                }
+                catch (error) {
+                    const message = error instanceof Error ? error.message : String(error);
+                    this.diagnostics.push(packageGraphDiagnostic(spec.files[0]?.filename ?? REPL_FILENAME, `could not load package ${dependency}: ${message}`));
+                    return;
+                }
                 if (loaded) {
                     this.specsByPath.set(dependency, { importPath: dependency, files: loaded });
                 }
-                else {
-                    this.diagnostics.push(packageGraphDiagnostic(spec.files[0]?.filename ?? REPL_FILENAME, `package ${dependency} is not available to gojr package initialization; provide it as a source package`));
-                    return;
-                }
             }
+            if (!this.specsByPath.has(dependency))
+                continue;
             this.discoverOne(dependency, [...stack, importPath]);
             if (this.hasErrors())
                 return;
@@ -919,15 +925,6 @@ function uniqueSortedSourceImports(values) {
 }
 function sourcePackageDefaultName(importPath) {
     return importPath.split("/").filter(Boolean).at(-1) ?? importPath;
-}
-function isRuntimeBuiltinImport(importPath) {
-    return importPath === "cmp" ||
-        importPath === "fmt" ||
-        importPath === "testing" ||
-        importPath === "unsafe" ||
-        importPath === "math" ||
-        importPath === "strconv" ||
-        importPath === "os";
 }
 function packageGraphDiagnostic(filename, message) {
     return {

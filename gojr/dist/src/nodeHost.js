@@ -1,7 +1,12 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { homedir } from "node:os";
-import { buildPackages, inspectPackageJavaScript, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
+import { buildPackages, collectSourceImportPaths, inspectPackageJavaScript, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
+import { REPL_FILENAME } from "./diagnostics.js";
+import { compilePackageSourceFiles, compileSourceFiles } from "./compile.js";
+import { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture } from "./fixture.js";
+import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
+import { evaluateSource, evaluateSourceFiles, evaluateSourcePackageGraph, testSourceFiles } from "./runtime.js";
 export function defaultPackageCacheParent() {
     return join(homedir(), "go", "pkg");
 }
@@ -78,6 +83,152 @@ export function buildPackagesOnNode(request) {
 export function inspectPackageJavaScriptOnNode(request) {
     return inspectPackageJavaScript(normalizeNodeBuildRequest(request));
 }
+export async function evaluateSourceWithPackagesOnNode(request) {
+    const options = evaluationOptionsFromNodeRequest(request);
+    const rootFiles = rootSourceFilesFromRequest(request);
+    const loaded = await loadSourcePackagesForRootFilesOnNode(rootFiles, request.packages ?? [], options, request.sourceRoots ?? []);
+    if (hasErrorDiagnostics(loaded.diagnostics)) {
+        return {
+            diagnostics: loaded.diagnostics,
+            output: [],
+            packageOutput: loaded.output
+        };
+    }
+    const result = await evaluateSource(request.source ?? "", {
+        ...options,
+        packages: loaded.packages,
+        packageInfos: loaded.packageInfos
+    });
+    return {
+        ...result,
+        packageOutput: loaded.output
+    };
+}
+export async function evaluateSourceFilesWithPackagesOnNode(request) {
+    const options = evaluationOptionsFromNodeRequest(request);
+    const rootFiles = rootSourceFilesFromRequest(request);
+    const loaded = await loadSourcePackagesForRootFilesOnNode(rootFiles, request.packages ?? [], options, request.sourceRoots ?? []);
+    if (hasErrorDiagnostics(loaded.diagnostics)) {
+        return {
+            diagnostics: loaded.diagnostics,
+            output: [],
+            packageOutput: loaded.output
+        };
+    }
+    const result = await evaluateSourceFiles(request.files ?? [], {
+        ...options,
+        packages: loaded.packages,
+        packageInfos: loaded.packageInfos
+    });
+    return {
+        ...result,
+        packageOutput: loaded.output
+    };
+}
+export async function testSourceFilesWithPackagesOnNode(request) {
+    const rootFiles = rootSourceFilesFromRequest(request);
+    const loaded = await loadSourcePackagesForRootFilesOnNode(rootFiles, request.packages ?? [], {}, request.sourceRoots ?? []);
+    if (hasErrorDiagnostics(loaded.diagnostics)) {
+        return {
+            diagnostics: loaded.diagnostics,
+            output: [],
+            packageOutput: loaded.output
+        };
+    }
+    const result = await testSourceFiles(request.files ?? [], {
+        packages: loaded.packages,
+        packageInfos: loaded.packageInfos
+    });
+    return {
+        ...result,
+        packageOutput: loaded.output
+    };
+}
+export function compileSourceFilesWithPackagesOnNode(request) {
+    const options = evaluationOptionsFromNodeRequest(request);
+    const rootFiles = rootSourceFilesFromRequest(request);
+    const loaded = compileSourcePackagesForRootFilesOnNode(rootFiles, request.packages ?? [], options, request.sourceRoots ?? []);
+    if (hasErrorDiagnostics(loaded.diagnostics)) {
+        const checked = compileSourceFiles([], options).checked;
+        return {
+            diagnostics: loaded.diagnostics,
+            checked,
+            packageOutput: []
+        };
+    }
+    const result = compileSourceFiles(request.files ?? [], {
+        ...options,
+        packageInfos: loaded.packageInfos
+    });
+    return {
+        ...result,
+        packageOutput: []
+    };
+}
+export async function runSpreadsheetFixtureWithPackagesOnNode(request) {
+    const fixture = parseSpreadsheetFixtureJson(request.fixtureJSON ?? "{}");
+    const rootFiles = collectSpreadsheetFixtureFormulaSourceFiles(fixture);
+    const loaded = await loadSourcePackagesForRootFilesOnNode(rootFiles, request.packages ?? [], {}, request.sourceRoots ?? []);
+    if (hasErrorDiagnostics(loaded.diagnostics)) {
+        return {
+            ok: false,
+            unstable: false,
+            diagnostics: [],
+            evaluated: [],
+            sheets: {},
+            observedDeps: {},
+            packageOutput: loaded.output,
+            packageDiagnostics: loaded.diagnostics
+        };
+    }
+    const result = await runSpreadsheetFixture(fixture, {
+        packages: loaded.packages,
+        packageInfos: loaded.packageInfos
+    });
+    return {
+        ...result,
+        packageOutput: loaded.output
+    };
+}
+export async function loadSourcePackagesForRootFilesOnNode(rootFiles, specs = [], baseOptions = {}, sourceRoots = []) {
+    const diagnostics = [];
+    const explicit = new Map();
+    const initialSpecs = [];
+    for (const spec of specs) {
+        if (!spec?.importPath)
+            continue;
+        explicit.set(spec.importPath, spec);
+        initialSpecs.push(spec);
+    }
+    const provider = createNodeSourcePackageProvider(sourceRoots);
+    const rootImports = collectSourceImportPaths(rootFiles);
+    diagnostics.push(...rootImports.diagnostics);
+    if (!hasErrorDiagnostics(diagnostics)) {
+        for (const importPath of rootImports.imports) {
+            if (explicit.has(importPath))
+                continue;
+            const files = loadSourcePackageFromProvider(provider, importPath, rootFiles[0]?.filename ?? REPL_FILENAME, diagnostics);
+            if (!files)
+                continue;
+            const spec = { importPath, files };
+            explicit.set(importPath, spec);
+            initialSpecs.push(spec);
+        }
+    }
+    if (hasErrorDiagnostics(diagnostics)) {
+        return { packages: {}, packageInfos: {}, diagnostics, output: [] };
+    }
+    const graphOptions = { ...baseOptions };
+    if (provider)
+        graphOptions.sourcePackageProvider = provider;
+    const result = await evaluateSourcePackageGraph(initialSpecs, graphOptions);
+    return {
+        packages: result.packages,
+        packageInfos: result.packageInfos,
+        diagnostics: [...diagnostics, ...result.diagnostics],
+        output: result.output
+    };
+}
 export function packageCacheOnNode(request) {
     try {
         const root = resolveNodeArtifactRoot(request);
@@ -147,6 +298,112 @@ export function clearPackageArtifactCache(root) {
         return [];
     rmSync(root, { recursive: true, force: true });
     return entries.map((entry) => entry.path);
+}
+function compileSourcePackagesForRootFilesOnNode(rootFiles, specs = [], baseOptions = {}, sourceRoots = []) {
+    const diagnostics = [];
+    const packageInfos = {};
+    const explicit = new Map();
+    for (const spec of specs) {
+        if (spec?.importPath)
+            explicit.set(spec.importPath, spec);
+    }
+    const provider = createNodeSourcePackageProvider(sourceRoots);
+    const loading = [];
+    const loaded = new Set();
+    const loadImport = (importPath, requestedFrom) => {
+        if (loaded.has(importPath) || hasErrorDiagnostics(diagnostics))
+            return;
+        if (loading.includes(importPath)) {
+            diagnostics.push(nodeDiagnostic(requestedFrom, "GOJR_BUILD001", `package import cycle detected: ${[...loading, importPath].join(" -> ")}`));
+            return;
+        }
+        let spec = explicit.get(importPath);
+        if (!spec) {
+            const files = loadSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics);
+            if (files) {
+                spec = { importPath, files };
+                explicit.set(importPath, spec);
+            }
+        }
+        if (!spec)
+            return;
+        loading.push(importPath);
+        const imports = collectSourceImportPaths(spec.files);
+        diagnostics.push(...imports.diagnostics);
+        if (!hasErrorDiagnostics(diagnostics)) {
+            for (const dependencyPath of imports.imports) {
+                loadImport(dependencyPath, sourcePackageFilename(spec));
+            }
+        }
+        if (!hasErrorDiagnostics(diagnostics)) {
+            const result = compilePackageSourceFiles(spec.files, {
+                ...baseOptions,
+                packageInfos,
+                importPath: spec.importPath,
+                ...(spec.packageName ? { packageName: spec.packageName } : {})
+            });
+            diagnostics.push(...result.diagnostics);
+            if (!hasErrorDiagnostics(diagnostics)) {
+                packageInfos[spec.importPath] = result.packageInfo;
+                loaded.add(importPath);
+            }
+        }
+        loading.pop();
+    };
+    for (const spec of specs) {
+        if (spec?.importPath)
+            loadImport(spec.importPath, sourcePackageFilename(spec));
+    }
+    const rootImports = collectSourceImportPaths(rootFiles);
+    diagnostics.push(...rootImports.diagnostics);
+    if (!hasErrorDiagnostics(diagnostics)) {
+        for (const importPath of rootImports.imports) {
+            loadImport(importPath, rootFiles[0]?.filename ?? REPL_FILENAME);
+        }
+    }
+    return { packageInfos, diagnostics };
+}
+function rootSourceFilesFromRequest(request) {
+    if (request.files && request.files.length > 0)
+        return request.files;
+    return [{
+            filename: REPL_FILENAME,
+            source: request.source ?? ""
+        }];
+}
+function evaluationOptionsFromNodeRequest(request) {
+    const options = {};
+    if (request.sheetJSON)
+        options.sheet = parseSheetJson(request.sheetJSON);
+    if (request.sheetsJSON)
+        options.sheets = parseSheetsJson(request.sheetsJSON);
+    return options;
+}
+function loadSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics) {
+    if (!provider)
+        return undefined;
+    try {
+        return provider.load(importPath);
+    }
+    catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        diagnostics.push(nodeDiagnostic(requestedFrom, "GOJR_BUILD001", `could not load package ${importPath}: ${message}`));
+        return undefined;
+    }
+}
+function sourcePackageFilename(spec) {
+    return spec.files[0]?.filename ?? REPL_FILENAME;
+}
+function nodeDiagnostic(filename, code, message) {
+    return {
+        filename,
+        code,
+        severity: "error",
+        message
+    };
+}
+function hasErrorDiagnostics(diagnostics) {
+    return diagnostics.some((diagnostic) => diagnostic.severity === "error");
 }
 function normalizeNodeBuildRequest(request) {
     const normalized = { ...request };
