@@ -354,6 +354,7 @@ export function standardTypePackage(path: string): GoTypesPackage | undefined {
   if (path === "fmt") return fmtPackage();
   if (path === "math") return mathPackage();
   if (path === "runtime") return runtimePackage();
+  if (path === "runtime/pprof") return runtimePprofPackage();
   if (path === "testing") return testingPackage();
   if (path === "unsafe") return Unsafe;
   return undefined;
@@ -534,6 +535,7 @@ function runtimePackage(): GoTypesPackage {
   if (pkg.Scope().Lookup("GOOS") !== null) return pkg;
   const intType = Typ[Int]!;
   const boolType = Typ[Bool]!;
+  const int64Type = Typ[Int64]!;
   const stringType = Typ[GoString]!;
   const uintptrType = Typ[Uintptr]!;
   const uint32Type = Typ[Uint32]!;
@@ -603,6 +605,66 @@ function runtimePackage(): GoTypesPackage {
     NewTuple(NewVar(NoPos, pkg, "frame", frameType), NewVar(NoPos, pkg, "more", boolType)),
     false
   )));
+
+  const stackRecordName = NewTypeName(NoPos, pkg, "StackRecord", null);
+  const stackRecordType = NewNamed(stackRecordName, NewStruct([
+    NewField(NoPos, pkg, "Stack0", NewArray(uintptrType, 32), false)
+  ], null), null);
+  stackRecordName.setType(stackRecordType);
+  pkg.Scope().Insert(stackRecordName);
+  stackRecordType.AddMethod(NewFunc(NoPos, pkg, "Stack", NewSignatureType(
+    NewVar(NoPos, pkg, "r", NewPointer(stackRecordType)),
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "", uintptrSliceType)),
+    false
+  )));
+
+  const memProfileRecordName = NewTypeName(NoPos, pkg, "MemProfileRecord", null);
+  const memProfileRecordType = NewNamed(memProfileRecordName, NewStruct([
+    NewField(NoPos, pkg, "AllocBytes", int64Type, false),
+    NewField(NoPos, pkg, "FreeBytes", int64Type, false),
+    NewField(NoPos, pkg, "AllocObjects", int64Type, false),
+    NewField(NoPos, pkg, "FreeObjects", int64Type, false),
+    NewField(NoPos, pkg, "Stack0", NewArray(uintptrType, 32), false)
+  ], null), null);
+  memProfileRecordName.setType(memProfileRecordType);
+  pkg.Scope().Insert(memProfileRecordName);
+  const memProfileRecordRecv = NewVar(NoPos, pkg, "r", NewPointer(memProfileRecordType));
+  memProfileRecordType.AddMethod(NewFunc(NoPos, pkg, "InUseBytes", NewSignatureType(
+    memProfileRecordRecv,
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "", int64Type)),
+    false
+  )));
+  memProfileRecordType.AddMethod(NewFunc(NoPos, pkg, "InUseObjects", NewSignatureType(
+    memProfileRecordRecv,
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "", int64Type)),
+    false
+  )));
+  memProfileRecordType.AddMethod(NewFunc(NoPos, pkg, "Stack", NewSignatureType(
+    memProfileRecordRecv,
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "", uintptrSliceType)),
+    false
+  )));
+
+  const blockProfileRecordName = NewTypeName(NoPos, pkg, "BlockProfileRecord", null);
+  const blockProfileRecordType = NewNamed(blockProfileRecordName, NewStruct([
+    NewField(NoPos, pkg, "Count", int64Type, false),
+    NewField(NoPos, pkg, "Cycles", int64Type, false),
+    NewField(NoPos, pkg, "StackRecord", stackRecordType, true)
+  ], null), null);
+  blockProfileRecordName.setType(blockProfileRecordType);
+  pkg.Scope().Insert(blockProfileRecordName);
 
   const errorObject = UniverseLookup("error");
   const errorType = errorObject?.Type?.() ?? null;
@@ -718,6 +780,14 @@ function runtimePackage(): GoTypesPackage {
     NewTuple(NewVar(NoPos, pkg, "", NewPointer(funcType))),
     false
   )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "BlockProfile", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "p", NewSlice(blockProfileRecordType))),
+    NewTuple(NewVar(NoPos, pkg, "n", intType), NewVar(NoPos, pkg, "ok", boolType)),
+    false
+  )));
   const cleanupT = NewTypeParam(NewTypeName(NoPos, pkg, "T", null), emptyInterface);
   const cleanupS = NewTypeParam(NewTypeName(NoPos, pkg, "S", null), emptyInterface);
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "AddCleanup", NewSignatureType(
@@ -771,6 +841,14 @@ function runtimePackage(): GoTypesPackage {
     null,
     false
   )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "GoroutineProfile", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "p", NewSlice(stackRecordType))),
+    NewTuple(NewVar(NoPos, pkg, "n", intType), NewVar(NoPos, pkg, "ok", boolType)),
+    false
+  )));
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "Gosched", NewSignatureType(
     null,
     null,
@@ -785,6 +863,22 @@ function runtimePackage(): GoTypesPackage {
     null,
     NewTuple(NewVar(NoPos, pkg, "x", emptyInterface)),
     null,
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "MemProfile", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "p", NewSlice(memProfileRecordType)), NewVar(NoPos, pkg, "inuseZero", boolType)),
+    NewTuple(NewVar(NoPos, pkg, "n", intType), NewVar(NoPos, pkg, "ok", boolType)),
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "MutexProfile", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "p", NewSlice(blockProfileRecordType))),
+    NewTuple(NewVar(NoPos, pkg, "n", intType), NewVar(NoPos, pkg, "ok", boolType)),
     false
   )));
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "NumCPU", NewSignatureType(
@@ -816,6 +910,14 @@ function runtimePackage(): GoTypesPackage {
     null,
     null,
     NewTuple(NewVar(NoPos, pkg, "rate", intType)),
+    null,
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "SetCPUProfileRate", NewSignatureType(
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "hz", intType)),
     null,
     false
   )));
