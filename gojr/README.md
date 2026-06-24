@@ -46,9 +46,9 @@ spreadsheet cells.
 writes a Go-like `.a` package archive. The first archive member is `__.PKGDEF`
 and contains Go-junior indexed export data for fast importer cache hits; the
 generated JavaScript payload lives in a later archive member. By default
-artifacts go under `~/go/pkg/gojr_js/<import/path>.a`, mirroring Go's
+artifacts go under `~/go/pkg/js_gojr/<import/path>.a`, mirroring Go's
 `~/go/pkg/<goos>_<goarch>/` layout. Use `-pkgdir DIR` to supply a package-cache
-parent where `gojr_js` is appended, or `-artifact-root DIR` to supply the exact
+parent where `js_gojr` is appended, or `-artifact-root DIR` to supply the exact
 artifact root.
 
 Implemented in this first runtime slice:

@@ -1570,7 +1570,7 @@ package sources
 
 The package artifact cache has two durable targets:
 
-- Node/CLI: `~/go/pkg/gojr_js/` by default. This mirrors Go's compiled package
+- Node/CLI: `~/go/pkg/js_gojr/` by default. This mirrors Go's compiled package
   cache layout under directories such as `~/go/pkg/darwin_amd64/`, except the
   package artifacts are Go-junior `.a` archives containing `__.PKGDEF` export
   data and a `_gojr.js` generated JavaScript member.
@@ -1585,8 +1585,8 @@ Node runtimes.
 CLI artifact examples:
 
 ```text
-~/go/pkg/gojr_js/golang.org/x/crypto/scrypt.a
-~/go/pkg/gojr_js/github.com/user/project/pkg/name.a
+~/go/pkg/js_gojr/golang.org/x/crypto/scrypt.a
+~/go/pkg/js_gojr/github.com/user/project/pkg/name.a
 ```
 
 Cache keys must include:
@@ -1615,10 +1615,10 @@ Cached artifacts should include:
 CLI `gojr build` artifact layout:
 
 - `gojr build <pkg>` compiles the package and any stale dependencies into
-  `~/go/pkg/gojr_js/` by default.
+  `~/go/pkg/js_gojr/` by default.
 - Tests and explicit developer workflows may override either the package-cache
   parent directory, such as `~/go/pkg`, or the exact artifact root. If a
-  package-cache parent is supplied, append `gojr_js`; if an exact artifact root
+  package-cache parent is supplied, append `js_gojr`; if an exact artifact root
   is supplied, use it directly.
 - The output path is derived from the package import path, preserving the
   package namespace directory layout and ending in `.a`.
@@ -1715,7 +1715,7 @@ Current source-package execution note:
   JavaScript package artifact path.
 - The full package build/link path still needs generated package slots,
   exported ABI/effect metadata, dependency graph loading, artifact validation,
-  and durable package artifact reuse from `~/go/pkg/gojr_js/` or OPFS.
+  and durable package artifact reuse from `~/go/pkg/js_gojr/` or OPFS.
 
 Current package build graph note:
 
@@ -2656,7 +2656,7 @@ Implementation tasks:
   formulas.
 - Link formulas to package exports through generated package slots.
 - Persist compiled package artifacts in OPFS for browser runtimes and under
-  `~/go/pkg/gojr_js/` for Node/CLI builds by default.
+  `~/go/pkg/js_gojr/` for Node/CLI builds by default.
 - Invalidate package artifacts when source, transitive dependency, compiler
   version, backend, ABI version, host spec, or capability policy changes.
 - Keep compiled package artifacts separate from runtime package variable state.
@@ -2894,7 +2894,7 @@ Implementation tasks:
 - Include package artifact keys for formulas that link source packages.
 - Include transitive package dependency keys for compiled package artifacts.
 - Store formula function artifacts in the worker memory cache.
-- Store Node/CLI package artifacts under `~/go/pkg/gojr_js/` by default, using
+- Store Node/CLI package artifacts under `~/go/pkg/js_gojr/` by default, using
   import-path directory layout and `.a` archive suffixes.
 - Support a package-cache parent override and an exact package artifact root
   override for tests, CI, and explicit CLI workflows.
@@ -2919,9 +2919,9 @@ Tests:
 - Compiler version changes invalidate cache.
 - Formula cache misses when a linked package artifact changes.
 - Node package artifacts write to
-  `~/go/pkg/gojr_js/<import/path>.a` by default.
+  `~/go/pkg/js_gojr/<import/path>.a` by default.
 - Node package-cache parent override writes to a temp fake GOPATH/pkg root plus
-  `gojr_js` in tests.
+  `js_gojr` in tests.
 - Node package artifacts use atomic write/rename and never leave a partial
   `.a` file visible after a simulated failure.
 - `gojr build <pkg>` builds the requested package and stale dependencies into
@@ -3062,7 +3062,7 @@ Implementation tasks:
   - `eval`: evaluate one formula with JSON-provided cells and packages
   - `compile`: compile formula or package and print diagnostics
   - `build`: compile a package graph into the artifact cache root, defaulting
-    to `~/go/pkg/gojr_js/`
+    to `~/go/pkg/js_gojr/`
   - `test`: run Go-junior tests for a file or package path, equivalent in
     spirit to `go test`
   - `run-fixture`: run a spreadsheet/recalculation fixture
@@ -3070,7 +3070,7 @@ Implementation tasks:
   - `cache`: inspect, clear, or warm package cache entries
 - `gojr build` should accept an override for the package-cache parent or exact
   package artifact root so tests can use a temp directory instead of the real
-  `~/go/pkg/gojr_js/`.
+  `~/go/pkg/js_gojr/`.
 - Keep CLI output machine-readable with a JSON mode and human-readable by
   default.
 
@@ -3107,7 +3107,7 @@ Current implementation note:
 - `cache path`, `cache list`, and guarded `cache clear --yes` are implemented
   in the Go CLI as filesystem operations over the resolved package artifact
   root. `clear` requires explicit confirmation to avoid accidental deletion of
-  `~/go/pkg/gojr_js`.
+  `~/go/pkg/js_gojr`.
 - `cache list --json` now parses generated package artifact envelopes and
   includes artifact metadata, dependency edges, dependency cache keys, and
   exports in the returned entries.
@@ -3142,13 +3142,13 @@ Tests:
 - CLI `build` invokes the JavaScript `buildPackage`/`buildPackages` API through
   embedded Node/V8.
 - CLI `build` writes generated package artifacts under
-  `<fake-gopath-pkg>/gojr_js/<import/path>.a` when a test package-cache parent
+  `<fake-gopath-pkg>/js_gojr/<import/path>.a` when a test package-cache parent
   override is supplied.
 - CLI `build` writes generated package artifacts under
   `<artifact-root>/<import/path>.a` when an exact artifact root override is
   supplied.
 - CLI `build` writes generated package artifacts under
-  `~/go/pkg/gojr_js/<import/path>.a` by default.
+  `~/go/pkg/js_gojr/<import/path>.a` by default.
 - CLI `build` emits a build report with built packages, skipped packages,
   artifact paths, cache keys, dependency edges, and diagnostics.
 - CLI `build` leaves mutable package state out of generated artifacts.
@@ -3549,7 +3549,7 @@ Tests and benchmarks:
 - The same workbook package graph links from OPFS package artifact cache within
   budget after worker restart.
 - The same workbook package graph links from Node/CLI
-  `~/go/pkg/gojr_js/` filesystem cache within target budget after process
+  `~/go/pkg/js_gojr/` filesystem cache within target budget after process
   restart.
 - The Go `gojr` CLI can run representative fixtures fast enough for ordinary
   unit-test loops.
@@ -3672,7 +3672,7 @@ typecheck, and execute representative Go files that use goroutines, channels,
 8. JavaScript async/await copy-and-patch emitter that can run the scheduler
    tests and direct formula tests.
 9. One representative Go source package compiled by `gojr build` through the
-   JavaScript build API into `~/go/pkg/gojr_js/`, then called from a formula,
+   JavaScript build API into `~/go/pkg/js_gojr/`, then called from a formula,
    including mutable package state and a channel/goroutine smoke path.
 10. Runtime tests that evaluate formulas against a fake spreadsheet context in
     Node and package tests against named source files.
@@ -3836,23 +3836,23 @@ uses a different public artifact layout for JavaScript output.
 Go-junior package artifacts use an old-school GOPATH-style import-path tree:
 
 ```text
-$GOPATH/pkg/gojr_js/encoding/binary.a
-$GOPATH/pkg/gojr_js/io.a
-$GOPATH/pkg/gojr_js/github.com/user/project/pkg.a
+$GOPATH/pkg/js_gojr/encoding/binary.a
+$GOPATH/pkg/js_gojr/io.a
+$GOPATH/pkg/js_gojr/github.com/user/project/pkg.a
 ```
 
 The conceptual target tuple for these artifacts is:
 
 ```text
-GOOS=gojr
-GOARCH=js
+GOOS=js
+GOARCH=gojr
 ```
 
 Browser persistence mirrors the same logical tree in OPFS, so a browser cache
 path corresponds directly to the local-disk path shape:
 
 ```text
-/opfs/go/pkg/gojr_js/encoding/binary.a
+/opfs/go/pkg/js_gojr/encoding/binary.a
 ```
 
 The import-path layout is the stable public index: resolving
@@ -3867,7 +3867,7 @@ it is fresh before reusing it:
 - artifact layout version
 - Go-junior compiler version
 - backend/lowering version
-- `GOOS=gojr` and `GOARCH=js`
+- `GOOS=js` and `GOARCH=gojr`
 - source hash
 - build tags / target constraints used to select files
 - host capability policy version
@@ -3882,7 +3882,7 @@ Reasons for this policy:
 
 - It preserves the simple GOPATH mental model: source under `GOROOT/src` or a
   workspace source root, compiled Go-junior JavaScript under
-  `$GOPATH/pkg/gojr_js`.
+  `$GOPATH/pkg/js_gojr`.
 - It makes failures easy to debug because `encoding/binary` has exactly one
   obvious public artifact path.
 - It maps cleanly to OPFS without reproducing Go's private native build-cache
@@ -3900,7 +3900,7 @@ Tradeoffs:
 - Old artifacts may accumulate and should be clearable through `gojr cache`.
 
 The standard library is compiled from `GOROOT/src` into the same
-`$GOPATH/pkg/gojr_js` cache as user packages. The first priority standard
+`$GOPATH/pkg/js_gojr` cache as user packages. The first priority standard
 library package for this policy is `encoding/binary`, including its selected
 non-test source files and its translated upstream tests.
 
@@ -3914,7 +3914,7 @@ prove that the package artifact is already newer than its inputs.
 The first and hottest cache check is timestamp based:
 
 - If every selected source input for package `P` is older than
-  `$GOPATH/pkg/gojr_js/<import/path>.a`, aggressively assume `P`'s own source is
+  `$GOPATH/pkg/js_gojr/<import/path>.a`, aggressively assume `P`'s own source is
   up to date.
 - For dependency correctness, a dependency artifact is also an input. `P` is
   timestamp-fresh only if every dependency artifact that `P` records is older

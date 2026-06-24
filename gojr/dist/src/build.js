@@ -504,8 +504,8 @@ export function resolveArtifactRoot(request) {
     if (request.artifactRoot && request.artifactRoot.trim() !== "")
         return trimTrailingSlash(request.artifactRoot);
     if (request.packageCacheParent && request.packageCacheParent.trim() !== "")
-        return joinSlash(request.packageCacheParent, "gojr_js");
-    return "~/go/pkg/gojr_js";
+        return joinSlash(request.packageCacheParent, "js_gojr");
+    return "~/go/pkg/js_gojr";
 }
 function resolvedBuildTags(request) {
     return [...buildTagSet(request.goos ?? GOJR_GOOS, request.goarch ?? GOJR_GOARCH, request.buildTags)].sort();

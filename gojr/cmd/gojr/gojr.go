@@ -402,8 +402,8 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 	sheetJSON := flags.String("sheet-json", "", "current sheet data as JSON")
 	seed := flags.String("seed", "", "deterministic scheduler/random seed; must appear before Node starts")
 	randomSeed := flags.String("random-seed", "", "deterministic scheduler/random seed; alias for --seed")
-	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; gojr_js is appended")
-	artifactRoot := flags.String("artifact-root", "", "exact gojr_js artifact root directory")
+	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; js_gojr is appended")
+	artifactRoot := flags.String("artifact-root", "", "exact js_gojr artifact root directory")
 	jsonMode := flags.Bool("json", false, "print a machine-readable JSON result")
 	var packageFlags packageFlag
 	flags.Var(&packageFlags, "pkg", "Go-junior source package, import/path=DIR; may be repeated")
@@ -587,8 +587,8 @@ func runBuild(rt *nodeRuntime, args []string) (bool, error) {
 	flags := flag.NewFlagSet("gojr build", flag.ContinueOnError)
 	flags.SetOutput(os.Stderr)
 	importPath := flags.String("importpath", "", "package import path for the generated artifact")
-	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; gojr_js is appended")
-	artifactRoot := flags.String("artifact-root", "", "exact gojr_js artifact root directory")
+	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; js_gojr is appended")
+	artifactRoot := flags.String("artifact-root", "", "exact js_gojr artifact root directory")
 	jsonMode := flags.Bool("json", false, "print a machine-readable JSON build report")
 	var packageFlags packageFlag
 	flags.Var(&packageFlags, "pkg", "Go-junior source package dependency, import/path=DIR; may be repeated")
@@ -633,8 +633,8 @@ func runInspectJS(rt *nodeRuntime, args []string) (bool, error) {
 	flags := flag.NewFlagSet("gojr inspect-js", flag.ContinueOnError)
 	flags.SetOutput(os.Stderr)
 	importPath := flags.String("importpath", "", "package import path for the generated artifact")
-	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; gojr_js is appended")
-	artifactRoot := flags.String("artifact-root", "", "exact gojr_js artifact root directory")
+	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; js_gojr is appended")
+	artifactRoot := flags.String("artifact-root", "", "exact js_gojr artifact root directory")
 	jsonMode := flags.Bool("json", false, "print a machine-readable JSON inspect report")
 	var packageFlags packageFlag
 	flags.Var(&packageFlags, "pkg", "Go-junior source package dependency, import/path=DIR; may be repeated")
@@ -681,8 +681,8 @@ func runCache(rt *nodeRuntime, args []string) (bool, error) {
 	action := args[0]
 	flags := flag.NewFlagSet("gojr cache "+action, flag.ContinueOnError)
 	flags.SetOutput(os.Stderr)
-	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; gojr_js is appended")
-	artifactRoot := flags.String("artifact-root", "", "exact gojr_js artifact root directory")
+	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; js_gojr is appended")
+	artifactRoot := flags.String("artifact-root", "", "exact js_gojr artifact root directory")
 	jsonMode := flags.Bool("json", false, "print a machine-readable JSON cache report")
 	yes := flags.Bool("yes", false, "confirm destructive cache clear")
 	if err := flags.Parse(args[1:]); err != nil {
@@ -784,7 +784,7 @@ gojr cache path|list|clear [--json] [-pkgdir DIR|-artifact-root DIR] [--yes]
 gojr run-fixture [--json] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] FIXTURE.json|-
   run a spreadsheet fixture whose formula cells contain Go-junior source
 
-By default build artifacts are written under ~/go/pkg/gojr_js/.
+By default build artifacts are written under ~/go/pkg/js_gojr/.
 JSON strings are always strings. JSON integers become exact integer values.
 JSON numbers with a decimal point or exponent become float64 values.`)
 }

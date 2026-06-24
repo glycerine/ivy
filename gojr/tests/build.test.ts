@@ -105,7 +105,7 @@ function testHostGOARCH(): string {
 }
 
 describe("Go-junior package build artifacts", () => {
-  test("maps import paths to gojr_js package artifacts under a package-cache parent", () => {
+  test("maps import paths to js_gojr package artifacts under a package-cache parent", () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
       importPath: "example.com/demo/math",
@@ -138,9 +138,9 @@ func hidden() {}
     expect(result.diagnostics).toEqual([]);
     expect(result.ok).toBe(true);
     expect(result.artifacts).toHaveLength(2);
-    expect(result.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/fmt.a");
+    expect(result.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/js_gojr/fmt.a");
     expect(result.artifacts[0]?.dependencies).toEqual([]);
-    expect(result.artifacts[1]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a");
+    expect(result.artifacts[1]?.artifactPath).toBe("/tmp/gopath/pkg/js_gojr/example.com/demo/math.a");
     expect(result.artifacts[1]?.dependencies).toEqual(["fmt"]);
     expect(result.artifacts[1]?.dependencyCacheKeys).toEqual([`fmt:${result.artifacts[0]?.cacheKey}`]);
     expect(result.artifacts[1]?.exports).toEqual([
@@ -151,10 +151,10 @@ func hidden() {}
       { name: "Identity", kind: "func", typeText: "func[T any](value T) T" },
       { name: "Point", kind: "type", typeText: "Point", underlyingTypeText: "struct{X int}" }
     ]);
-    expect(store.writes.has("/tmp/gopath/pkg/gojr_js/fmt.a")).toBe(true);
-    expect(store.writes.has("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a")).toBe(true);
-    expect((store.writes.get("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a") ?? "").slice(8, 24).trim()).toBe("__.PKGDEF");
-    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a") ?? "");
+    expect(store.writes.has("/tmp/gopath/pkg/js_gojr/fmt.a")).toBe(true);
+    expect(store.writes.has("/tmp/gopath/pkg/js_gojr/example.com/demo/math.a")).toBe(true);
+    expect((store.writes.get("/tmp/gopath/pkg/js_gojr/example.com/demo/math.a") ?? "").slice(8, 24).trim()).toBe("__.PKGDEF");
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gopath/pkg/js_gojr/example.com/demo/math.a") ?? "");
     expect(archive?.members.map((member) => member.name)).toEqual(["__.PKGDEF", "_gojr.js"]);
     const pkgdefMember = archive?.members.find((member) => member.name === "__.PKGDEF")?.data ?? "";
     const javascriptMember = archive?.members.find((member) => member.name === "_gojr.js")?.data ?? "";
@@ -222,12 +222,12 @@ func hidden() {}
   });
 
   test("documents artifact root helpers", () => {
-    expect(resolveArtifactRoot({ packageCacheParent: "/home/me/go/pkg" })).toBe("/home/me/go/pkg/gojr_js");
-    expect(resolveArtifactRoot({ artifactRoot: "/tmp/gojr_js" })).toBe("/tmp/gojr_js");
-    expect(artifactPathForImportPath("/home/me/go/pkg/gojr_js", "github.com/u/p")).toBe("/home/me/go/pkg/gojr_js/github.com/u/p.a");
+    expect(resolveArtifactRoot({ packageCacheParent: "/home/me/go/pkg" })).toBe("/home/me/go/pkg/js_gojr");
+    expect(resolveArtifactRoot({ artifactRoot: "/tmp/js_gojr" })).toBe("/tmp/js_gojr");
+    expect(artifactPathForImportPath("/home/me/go/pkg/js_gojr", "github.com/u/p")).toBe("/home/me/go/pkg/js_gojr/github.com/u/p.a");
   });
 
-  test("builds leaf standard-library packages into the GOPATH-style gojr_js cache", () => {
+  test("builds leaf standard-library packages into the GOPATH-style js_gojr cache", () => {
     const goSourceRoot = "/usr/local/go1.27rc1/src";
     expect(fs.existsSync(path.join(goSourceRoot, "cmp"))).toBe(true);
     expect(fs.existsSync(path.join(goSourceRoot, "unsafe"))).toBe(true);
@@ -278,19 +278,19 @@ func hidden() {}
     expect(cmpFirst.diagnostics).toEqual([]);
     expect(cmpFirst.ok).toBe(true);
     expect(cmpFirst.artifacts).toHaveLength(1);
-    expect(cmpFirst.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/cmp.a");
+    expect(cmpFirst.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/js_gojr/cmp.a");
     expect(cmpFirst.artifacts[0]?.dependencies).toEqual([]);
     expect(cmpFirst.artifacts[0]?.exports.map((item) => item.name)).toEqual(["Compare", "Less", "Or", "Ordered"]);
     expect(unsafeFirst.diagnostics).toEqual([]);
     expect(unsafeFirst.ok).toBe(true);
-    expect(unsafeFirst.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/unsafe.a");
+    expect(unsafeFirst.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/js_gojr/unsafe.a");
     expect(unsafeFirst.artifacts[0]?.exports.map((item) => item.name)).toContain("Pointer");
     expect(unsafeFirst.artifacts[0]?.exports.map((item) => item.name)).toContain("Sizeof");
     expect(cmpSecond.artifacts[0]?.action).toBe("skipped");
     expect(unsafeSecond.artifacts[0]?.action).toBe("skipped");
     expect(store.writeCount).toBe(2);
 
-    const artifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/gojr_js/cmp.a"));
+    const artifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/js_gojr/cmp.a"));
     expect(artifact.goos).toBe("gojr");
     expect(artifact.goarch).toBe("js");
     expect(artifact.importPath).toBe("cmp");
@@ -303,7 +303,7 @@ func hidden() {}
       }
     ]);
 
-    const unsafeArtifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/gojr_js/unsafe.a"));
+    const unsafeArtifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/js_gojr/unsafe.a"));
     expect(unsafeArtifact.goos).toBe("gojr");
     expect(unsafeArtifact.goarch).toBe("js");
     expect(unsafeArtifact.importPath).toBe("unsafe");
@@ -855,7 +855,7 @@ func F() { _ = pprof.Lookup("heap") }
       "//go:build unix\n\npackage bytealg\n\nfunc UnixTag() int { return 3 }\n"
     );
     fs.writeFileSync(
-      path.join(depDir, "target_gojr_js.go"),
+      path.join(depDir, "target_js_gojr.go"),
       "package bytealg\n\nfunc TargetTag() int { return 2 }\n"
     );
     fs.writeFileSync(

@@ -245,8 +245,8 @@ func assertNodeRuntimeCacheRootListAndClear(t *testing.T, rt *nodeRuntime) {
 		t.Fatalf("Cache(path) error = %v", err)
 	}
 	root := pathResult.Root
-	if root != filepath.Join(parent, "gojr_js") {
-		t.Fatalf("Cache(path).Root = %q, want gojr_js child", root)
+	if root != filepath.Join(parent, "js_gojr") {
+		t.Fatalf("Cache(path).Root = %q, want js_gojr child", root)
 	}
 	if ok, err := runCache(rt, []string{"path", "-pkgdir", parent, "-artifact-root", filepath.Join(parent, "exact")}); err == nil || ok {
 		t.Fatalf("runCache(path with both roots) ok=%v err=%v, want error", ok, err)
@@ -461,10 +461,10 @@ func main() {
 	if ok, err := runSource(rt, []string{"-pkgdir", runCacheParent, cmdDir}); err != nil || !ok {
 		t.Fatalf("runSource(dir) ok=%v err=%v, want success", ok, err)
 	}
-	if _, err := os.Stat(filepath.Join(runCacheParent, "gojr_js", "example.com", "runmod", "msg.a")); err != nil {
+	if _, err := os.Stat(filepath.Join(runCacheParent, "js_gojr", "example.com", "runmod", "msg.a")); err != nil {
 		t.Fatalf("runSource package main missing dependency artifact: %v", err)
 	}
-	if _, err := os.Stat(filepath.Join(runCacheParent, "gojr_js", "example.com", "runmod", "cmd", "hello.a")); err != nil {
+	if _, err := os.Stat(filepath.Join(runCacheParent, "js_gojr", "example.com", "runmod", "cmd", "hello.a")); err != nil {
 		t.Fatalf("runSource package main missing main artifact: %v", err)
 	}
 
