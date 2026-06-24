@@ -9,12 +9,12 @@
 
 import { EndOf, PosOf, Unparen, type Expr, type Stmt } from "../../front/ast.js";
 import type { Type } from "./type.js";
-import { Basic, UntypedBool, UntypedComplex, UntypedFloat, UntypedInt, UntypedNil, UntypedRune, UntypedString } from "./basic.js";
+import { Basic, IsConstType, UntypedBool, UntypedComplex, UntypedFloat, UntypedInt, UntypedNil, UntypedRune, UntypedString } from "./basic.js";
 import { Checker, noposn, type positioner , registerCheckerMethod } from "./check.js";
 import { operand, invalid, constant_, variable, mapindex, value, commaok, commaerr, nilvalue } from "./operand.js";
 import * as universeTypes from "./universe.js";
 import { Invalid } from "./basic.js";
-import { Default, hasNil, isBoolean, isNonTypeParamInterface, isNumeric, isString, isTyped, isTypeParam, isUntyped, isValid, maxType } from "./predicates.js";
+import { Default, allBasic, hasNil, isBoolean, isNonTypeParamInterface, isNumeric, isString, isTyped, isTypeParam, isUntyped, isValid, maxType } from "./predicates.js";
 import { underIs } from "./under.js";
 import * as objectTypes from "./object.js";
 import type { Object } from "./object.js";
@@ -781,7 +781,7 @@ function isTypeParamLocal(t: Type): boolean {
 }
 
 function isConstTypeLocal(t: Type): boolean {
-  return t instanceof Basic;
+  return allBasic(t, IsConstType);
 }
 
 function endPos(x: Expr): number {

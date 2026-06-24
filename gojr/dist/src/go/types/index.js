@@ -8817,7 +8817,7 @@ var go_types_assignments;
         return go_types_predicates.isTypeParam(t);
     }
     function isConstTypeLocal(t) {
-        return t instanceof go_types_basic.Basic;
+        return go_types_predicates.allBasic(t, go_types_basic.IsConstType);
     }
     function endPos(x) {
         return EndOf(x);
@@ -19305,7 +19305,7 @@ var go_types_index_expr;
                 let elem = null; // key != nil: we must have all maps
                 let mode = go_types_operand.variable; // non-maps result mode
                 // TODO(gri) factor out closure and use it for non-typeparam cases as well
-                if (!go_types_under.underIs(x.typ(), (u) => {
+                if (go_types_under.underIs(x.typ(), (u) => {
                     let l = -1; // valid if >= 0
                     let k = null;
                     let ee = null; // k is only set for maps
@@ -21554,7 +21554,7 @@ var go_types_recording;
         return typ !== go_types_universe.Typ[go_types_basic.Invalid];
     }
     function allBasic(typ, info) {
-        return typ instanceof go_types_basic.Basic && (typ.info & info) !== 0;
+        return go_types_predicates.allBasic(typ, info);
     }
     function allBoolean(typ) {
         return typ instanceof go_types_basic.Basic && typ.name === "bool";

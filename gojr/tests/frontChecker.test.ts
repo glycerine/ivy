@@ -24,6 +24,19 @@ describe("Go-junior TypeScript go/types checker", () => {
     expect(result.diagnostics).toEqual([]);
   });
 
+  test("records named-type constant declarations", () => {
+    const result = check(`
+package constants
+
+type MyInt int
+
+const X MyInt = 1
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.pkg.Scope().Lookup("X")?.Type()?.String()).toBe("MyInt");
+  });
+
   test("scopes generic type parameters for functions and type declarations", () => {
     const result = check(`
 package generic
@@ -72,6 +85,22 @@ func Bad[T any](left, right T) T {
 `);
 
     expect(result.diagnostics.map((diagnostic) => diagnostic.message)).toContain("invalid operation: operator Plus not defined on T");
+  });
+
+  test("indexes type parameters constrained to strings and byte slices", () => {
+    const result = check(`
+package generic
+
+func HashStr[T string | []byte](sep T) uint32 {
+  hash := uint32(0)
+  for i := 0; i < len(sep); i++ {
+    hash = hash*16777619 + uint32(sep[i])
+  }
+  return hash
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
   });
 
   test("rejects generic function instantiation with non-type arguments", () => {

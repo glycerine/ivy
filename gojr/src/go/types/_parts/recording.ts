@@ -19,6 +19,7 @@ import { Instance, TypeAndValue } from "./api.js";
 import { Func, LocalVar, newVar, type Object } from "./object.js";
 import { methodExprSentinel, Signature } from "./signature.js";
 import { operand, operandMode, invalid, novalue, constant_, builtin } from "./operand.js";
+import { allBasic as predicateAllBasic } from "./predicates.js";
 import type { Scope } from "./scope.js";
 import { assert } from "./util.js";
 
@@ -226,7 +227,7 @@ function isValid(typ: Type): boolean {
 }
 
 function allBasic(typ: Type, info: number): boolean {
-  return typ instanceof Basic && (typ.info & info) !== 0;
+  return predicateAllBasic(typ, info);
 }
 
 function allBoolean(typ: Type): boolean {

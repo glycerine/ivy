@@ -1,11 +1,12 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
-import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import { basename, delimiter, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { homedir } from "node:os";
-import { buildPackages, collectSourceImportPaths, inspectPackageJavaScript, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
+import { buildTagSetForContext, buildPackages, collectSourceImportPaths, GOJR_GOARCH, GOJR_GOOS, goSourceFileMatchesBuildContext, inspectPackageJavaScript, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
 import { hasErrorDiagnostics, REPL_FILENAME } from "./diagnostics.js";
 import { compilePackageSourceFiles, compileSourceFiles } from "./compile.js";
 import { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture } from "./fixture.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
+import { standardTypePackage } from "./typecheck.js";
 import { evaluateSource, evaluateSourceFiles, evaluateSourcePackageGraph, testSourceFiles } from "./runtime.js";
 export function defaultPackageCacheParent() {
     return join(homedir(), "go", "pkg");
@@ -32,10 +33,7 @@ export function createNodeArtifactStore() {
     };
 }
 export function createNodeSourcePackageProvider(sourceRoots = []) {
-    const roots = [...new Set(sourceRoots
-            .map((root) => String(root || "").trim())
-            .filter((root) => root !== "")
-            .map((root) => resolve(expandHome(root))))];
+    const roots = nodeSourceRoots(sourceRoots);
     if (roots.length === 0)
         return undefined;
     return {
@@ -45,8 +43,8 @@ export function createNodeSourcePackageProvider(sourceRoots = []) {
                 throw new Error(`invalid import path: ${importPath}`);
             }
             for (const root of roots) {
-                const dir = resolve(root, ...parts);
-                const rel = relative(root, dir);
+                const dir = resolve(root.path, ...parts);
+                const rel = relative(root.path, dir);
                 if (rel === "" || rel.startsWith("..") || isAbsolute(rel))
                     continue;
                 let stat;
@@ -61,21 +59,104 @@ export function createNodeSourcePackageProvider(sourceRoots = []) {
                 if (!stat.isDirectory())
                     throw new Error(`${dir} is not a directory`);
                 const names = readdirSync(dir)
-                    .filter((name) => !name.startsWith(".") && name.endsWith(".go") && !name.endsWith("_test.go"))
+                    .filter((name) => !name.startsWith(".") && !name.startsWith("_") && name.endsWith(".go") && !name.endsWith("_test.go"))
                     .sort();
-                if (names.length === 0)
-                    throw new Error(`${dir} contains no non-test .go files`);
-                return names.map((name) => {
+                const loaded = names.flatMap((name) => {
                     const filename = join(dir, name);
+                    const source = readFileSync(filename, "utf8");
+                    if (!goSourceFileMatchesBuildContext(name, source, root.goos, root.goarch, root.tags))
+                        return [];
                     return {
                         filename,
-                        source: readFileSync(filename, "utf8")
+                        source
                     };
                 });
+                if (loaded.length === 0)
+                    throw new Error(`${dir} contains no Go source files matching GOOS=${root.goos} GOARCH=${root.goarch}`);
+                return loaded;
             }
             return undefined;
+        },
+        isStandardLibraryPackage(importPath) {
+            const parts = String(importPath || "").split("/").filter(Boolean);
+            if (parts.length === 0 || parts.some((part) => part === "." || part === ".." || part.includes(sep)))
+                return false;
+            return roots.some((root) => {
+                if (!root.standardLibrary)
+                    return false;
+                const dir = resolve(root.path, ...parts);
+                const rel = relative(root.path, dir);
+                if (rel === "" || rel.startsWith("..") || isAbsolute(rel))
+                    return false;
+                try {
+                    return statSync(dir).isDirectory();
+                }
+                catch {
+                    return false;
+                }
+            });
         }
     };
+}
+function nodeSourceRoots(sourceRoots) {
+    const roots = [];
+    const seen = new Map();
+    const add = (root, standardLibrary) => {
+        const text = String(root || "").trim();
+        if (text === "")
+            return;
+        const path = resolve(expandHome(text));
+        if (!existsSync(path))
+            return;
+        const existing = seen.get(path);
+        if (existing) {
+            if (standardLibrary && !existing.standardLibrary) {
+                existing.standardLibrary = true;
+                existing.goos = "js";
+                existing.goarch = "wasm";
+                existing.tags = buildTagSetForContext(existing.goos, existing.goarch, []);
+            }
+            return;
+        }
+        const goos = standardLibrary ? "js" : GOJR_GOOS;
+        const goarch = standardLibrary ? "wasm" : GOJR_GOARCH;
+        const entry = {
+            path,
+            standardLibrary,
+            goos,
+            goarch,
+            tags: buildTagSetForContext(goos, goarch, [])
+        };
+        seen.set(path, entry);
+        roots.push(entry);
+    };
+    for (const root of sourceRoots)
+        add(root, false);
+    for (const root of candidateGOROOTSourceRoots())
+        add(root, true);
+    for (const root of candidateGOPATHSourceRoots())
+        add(root, false);
+    return roots;
+}
+function candidateGOROOTSourceRoots() {
+    const roots = [];
+    const addGOROOT = (root) => {
+        const text = String(root || "").trim();
+        if (text === "")
+            return;
+        roots.push(join(expandHome(text), "src"));
+    };
+    addGOROOT(process.env.GOROOT);
+    roots.push("/usr/local/go1.27rc1/src", "/usr/local/go1.26.4/src", "/usr/local/go/src", "/opt/homebrew/opt/go/libexec/src");
+    return roots;
+}
+function candidateGOPATHSourceRoots() {
+    const gopath = String(process.env.GOPATH || "").trim();
+    const roots = gopath === "" ? [join(homedir(), "go")] : gopath.split(delimiter);
+    return roots
+        .map((root) => String(root || "").trim())
+        .filter((root) => root !== "")
+        .map((root) => join(expandHome(root), "src"));
 }
 export function buildPackagesOnNode(request) {
     return buildPackages(normalizeNodeBuildRequest(request), createNodeArtifactStore());
@@ -207,6 +288,8 @@ export async function loadSourcePackagesForRootFilesOnNode(rootFiles, specs = []
         for (const importPath of rootImports.imports) {
             if (explicit.has(importPath))
                 continue;
+            if (isAmbientSourceImport(importPath))
+                continue;
             const files = loadSourcePackageFromProvider(provider, importPath, rootFiles[0]?.filename ?? REPL_FILENAME, diagnostics);
             if (!files)
                 continue;
@@ -319,6 +402,10 @@ function compileSourcePackagesForRootFilesOnNode(rootFiles, specs = [], baseOpti
         }
         let spec = explicit.get(importPath);
         if (!spec) {
+            if (isAmbientSourceImport(importPath)) {
+                loaded.add(importPath);
+                return;
+            }
             const files = loadSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics);
             if (files) {
                 spec = { importPath, files };
@@ -362,6 +449,9 @@ function compileSourcePackagesForRootFilesOnNode(rootFiles, specs = [], baseOpti
         }
     }
     return { packageInfos, diagnostics };
+}
+function isAmbientSourceImport(importPath) {
+    return standardTypePackage(importPath) !== undefined;
 }
 function rootSourceFilesFromRequest(request) {
     if (request.files && request.files.length > 0)

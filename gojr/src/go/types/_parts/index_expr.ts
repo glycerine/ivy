@@ -154,7 +154,7 @@ registerCheckerMethod("indexExpr", function indexExpr(x: operand, e: indexedExpr
       let elem: Type | null = null; // key != nil: we must have all maps
       let mode = variable; // non-maps result mode
       // TODO(gri) factor out closure and use it for non-typeparam cases as well
-      if (!underIs(x.typ()!, (u: Type | null) => {
+      if (underIs(x.typ()!, (u: Type | null) => {
         let l = -1; // valid if >= 0
         let k: Type | null = null;
         let ee: Type | null = null; // k is only set for maps

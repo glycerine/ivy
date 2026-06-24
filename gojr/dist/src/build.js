@@ -1,6 +1,6 @@
 import { REPL_FILENAME } from "./diagnostics.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
-import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName } from "./typecheck.js";
+import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import { Builtin as GoTypesBuiltin, Const as GoTypesConst, Func as GoTypesFunc, TypeName as GoTypesTypeName, Unsafe as GoTypesUnsafe, Var as GoTypesVar } from "./go/types/index.js";
 const ARTIFACT_LAYOUT_VERSION = "gojr-js-v2";
 export const GOJR_GOOS = "gojr";
@@ -65,7 +65,7 @@ export function createStandardLibrarySourcePackageProvider(options) {
             for (const name of names) {
                 const filename = joinSlash(dir, name);
                 const source = options.host.readFile(filename);
-                if (goSourceMatchesBuildConstraints(source, tags)) {
+                if (goSourceFileMatchesBuildContext(name, source, goos, goarch, tags)) {
                     files.push({ filename, source });
                 }
             }
@@ -172,11 +172,11 @@ class PackageGraphBuilder {
         const dependencies = uniqueSorted(parsed.files.flatMap((file) => file.imports.map(importPathFromSpec)));
         const sourceDependencies = [];
         for (const dependencyPath of dependencies) {
-            if (isStandardBuildImport(dependencyPath) && !this.packageSources.has(dependencyPath))
-                continue;
             const dependencyFiles = this.sourceFilesForImport(dependencyPath, files[0]?.filename ?? REPL_FILENAME);
             if (!dependencyFiles) {
-                if (!isStandardBuildImport(dependencyPath) && !this.failedPackageLoads.has(dependencyPath)) {
+                if (isAmbientBuildImport(dependencyPath))
+                    continue;
+                if (!this.failedPackageLoads.has(dependencyPath)) {
                     this.diagnostics.push(buildDiagnostic(files[0]?.filename ?? REPL_FILENAME, `package ${dependencyPath} is not available to gojr build; provide it with packageSources or --pkg`));
                 }
                 continue;
@@ -370,6 +370,12 @@ function buildTagSet(goos, goarch, extra) {
     }
     return tags;
 }
+export function goSourceFileMatchesBuildContext(filename, source, goos, goarch, tags) {
+    return goSourceFileNameMatchesBuildContext(filename, goos, goarch) && goSourceMatchesBuildConstraints(source, tags);
+}
+export function buildTagSetForContext(goos, goarch, extra) {
+    return buildTagSet(goos, goarch, extra);
+}
 function goSourceMatchesBuildConstraints(source, tags) {
     const lines = leadingCommentAndBlankLines(source);
     const goBuild = lines
@@ -468,8 +474,35 @@ function packageDiagnostics(files, sourceFiles) {
     }
     return diagnostics;
 }
-function isStandardBuildImport(path) {
-    return path === "fmt" || path === "testing";
+function goSourceFileNameMatchesBuildContext(filename, goos, goarch) {
+    const name = filename.split("/").pop()?.replace(/\.go$/, "") ?? filename.replace(/\.go$/, "");
+    const parts = name.split("_");
+    if (parts.length < 2)
+        return true;
+    const last = parts[parts.length - 1] ?? "";
+    const prev = parts[parts.length - 2] ?? "";
+    if (knownGOOS.has(prev) && knownGOARCH.has(last)) {
+        return prev === goos && last === goarch;
+    }
+    if (knownGOOS.has(last))
+        return last === goos;
+    if (knownGOARCH.has(last))
+        return last === goarch;
+    return true;
+}
+const knownGOOS = new Set([
+    "aix", "android", "darwin", "dragonfly", "freebsd", "hurd", "illumos", "ios",
+    "js", "linux", "netbsd", "openbsd", "plan9", "solaris", "wasip1", "windows",
+    GOJR_GOOS
+]);
+const knownGOARCH = new Set([
+    "386", "amd64", "amd64p32", "arm", "arm64", "arm64be", "loong64", "mips",
+    "mipsle", "mips64", "mips64le", "mips64p32", "mips64p32le", "ppc", "ppc64",
+    "ppc64le", "riscv", "riscv64", "s390", "s390x", "sparc", "sparc64", "wasm",
+    GOJR_GOARCH
+]);
+function isAmbientBuildImport(path) {
+    return standardTypePackage(path) !== undefined;
 }
 function buildDiagnostic(filename, message, span) {
     return {

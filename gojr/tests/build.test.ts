@@ -7,6 +7,7 @@ import {
   buildStandardLibraryPackage,
   BuildArtifactStore,
   collectSourceImportPaths,
+  createNodeSourcePackageProvider,
   createStandardLibrarySourcePackageProvider,
   inspectPackageJavaScript,
   parseGoJuniorPackageArchive,
@@ -447,6 +448,56 @@ func Two() int { return lib.One() + 1 }
       "/tmp/gojr-provider/example.com/lib.a",
       "/tmp/gojr-provider/example.com/app.a"
     ]);
+  });
+
+  test("builds provider-supplied ambient packages before the root", () => {
+    const store = new MemoryArtifactStore();
+    const loaded: string[] = [];
+    const result = buildPackages({
+      importPath: "example.com/app",
+      artifactRoot: "/tmp/gojr-provider",
+      sourcePackageProvider: {
+        load(importPath) {
+          loaded.push(importPath);
+          if (importPath !== "fmt") return undefined;
+          return [{
+            filename: "/workspace/fmt/print.go",
+            source: "package fmt\n\nfunc Println(s string) {}\n"
+          }];
+        }
+      },
+      files: [{
+        filename: "/workspace/example.com/app/app.go",
+        source: `package app
+
+import "fmt"
+
+func F() { fmt.Println("hi") }
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    expect(loaded).toEqual(["fmt"]);
+    expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual(["fmt", "example.com/app"]);
+    expect([...store.writes.keys()]).toEqual([
+      "/tmp/gojr-provider/fmt.a",
+      "/tmp/gojr-provider/example.com/app.a"
+    ]);
+  });
+
+  test("node source provider filters files excluded by build constraints", () => {
+    const root = fs.mkdtempSync(path.join("/tmp", "gojr-srcroot-"));
+    const depDir = path.join(root, "example.com", "dep");
+    fs.mkdirSync(depDir, { recursive: true });
+    fs.writeFileSync(path.join(depDir, "dep.go"), "package dep\n\nfunc One() int { return 1 }\n");
+    fs.writeFileSync(path.join(depDir, "tools.go"), "// +build tools\n\npackage dep\n\nimport _ \"example.com/missing\"\n");
+
+    const provider = createNodeSourcePackageProvider([root]);
+    const files = provider?.load("example.com/dep") ?? [];
+
+    expect(files.map((file) => path.basename(file.filename))).toEqual(["dep.go"]);
   });
 
   test("reports source package provider failures as build diagnostics", () => {
