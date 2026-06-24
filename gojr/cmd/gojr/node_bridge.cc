@@ -92,7 +92,7 @@ bool settle_promise(
     }
     isolate->PerformMicrotaskCheckpoint();
     if (promise->State() == v8::Promise::kPending) {
-      *error = std::string(function_name) + " returned a Promise that did not settle";
+      *error = "Go-junior operation did not complete";
       return false;
     }
   }

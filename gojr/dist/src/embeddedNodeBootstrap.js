@@ -65,7 +65,7 @@
             const names = exportList(exportsList);
             if (names.length === 0)
                 return "";
-            return `Object.assign(exports, { ${names.map(([sourceName, exportName]) => `${JSON.stringify(exportName)}: ${sourceName}`).join(", ")} });`;
+            return `globalThis.Object.assign(exports, { ${names.map(([sourceName, exportName]) => `${JSON.stringify(exportName)}: ${sourceName}`).join(", ")} });`;
         });
         source = source.replace(/^export\s+(async\s+)?function(\*)?\s+([A-Za-z_$][\w$]*)/gm, (_match, asyncPrefix, generatorMarker, name) => {
             exportedNames.push(name);
@@ -80,7 +80,7 @@
             return `${kind} ${name}`;
         });
         if (exportedNames.length > 0) {
-            source += `\nObject.assign(exports, { ${[...new Set(exportedNames)].join(", ")} });\n`;
+            source += `\nglobalThis.Object.assign(exports, { ${[...new Set(exportedNames)].join(", ")} });\n`;
         }
         if (earlyFunctionExports.length > 0) {
             source = `${[...new Set(earlyFunctionExports)].map((name) => `exports[${JSON.stringify(name)}] = ${name};`).join("\n")}\n${source}`;
@@ -117,10 +117,15 @@
         }
         function embeddedRequire(specifier, parent = "/src/index.js") {
             if (!specifier.startsWith(".") && !specifier.startsWith("/")) {
-                if (typeof root.require !== "function") {
+                const hostRequire = typeof root.require === "function"
+                    ? root.require
+                    : typeof require === "function"
+                        ? require
+                        : undefined;
+                if (hostRequire === undefined) {
                     throw new Error(`host module require is not available for ${specifier}`);
                 }
-                return root.require(specifier);
+                return hostRequire(specifier);
             }
             const filename = resolveModule(specifier, parent);
             const cached = embeddedCache.get(filename);
