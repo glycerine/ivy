@@ -18,6 +18,12 @@ function check(source: string, config: GoJuniorCheckConfig = {}) {
 }
 
 describe("Go-junior TypeScript go/types checker", () => {
+  test("imports cmp through the static checker", () => {
+    const result = check(`import "cmp"\n`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
   test("scopes generic type parameters for functions and type declarations", () => {
     const result = check(`
 package generic

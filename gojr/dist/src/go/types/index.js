@@ -9555,6 +9555,11 @@ var go_types_universe;
         return typ;
     }
     go_types_universe.UniverseAnyType = UniverseAnyType;
+    function UniverseLookup(name) {
+        ensureUniverseInitialized();
+        return go_types_universe.Universe.Lookup(name);
+    }
+    go_types_universe.UniverseLookup = UniverseLookup;
     // Objects with names containing blanks are internal and not entered into
     // a scope. Objects with exported names are inserted in the unsafe package
     // scope; other objects are inserted in the universe scope.
@@ -24001,6 +24006,7 @@ export var Union = go_types_union.Union;
 export var Universe = go_types_universe.Universe;
 export var universeAny = go_types_universe.universeAny;
 export var UniverseAnyType = go_types_universe.UniverseAnyType;
+export var UniverseLookup = go_types_universe.UniverseLookup;
 export var universeBool = go_types_universe.universeBool;
 export var universeByte = go_types_universe.universeByte;
 export var universeComparable = go_types_universe.universeComparable;

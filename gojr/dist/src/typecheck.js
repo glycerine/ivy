@@ -1,7 +1,7 @@
 import { REPL_FILENAME, diagnosticFilename } from "./diagnostics.js";
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
-import { Config, Info, Int, Int8, Int16, Int32, Int64, Uint, Uint8, Uint16, Uint32, Uint64, Uintptr, Float32, Float64, Bool, NewChecker, NewFunc, NewInterfaceType, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTerm, NewTypeName, NewTypeParam, NewTuple, NewUnion, NewVar, NoPos, String as GoString, Typ, emptyInterface, ensureUniverseInitialized, universeComparable, Unsafe } from "./go/types/index.js";
+import { Config, Info, Int, Int8, Int16, Int32, Int64, Uint, Uint8, Uint16, Uint32, Uint64, Uintptr, Float32, Float64, Bool, NewChecker, NewFunc, NewInterfaceType, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTerm, NewTypeName, NewTypeParam, NewTuple, NewUnion, NewVar, NoPos, String as GoString, Typ, emptyInterface, ensureUniverseInitialized, UniverseLookup, Unsafe } from "./go/types/index.js";
 export const GOJR_SYNTHETIC_CHECK_PREFIX = "__gojr_check_statements";
 export function isGoJuniorSyntheticCheckName(name) {
     return name === GOJR_SYNTHETIC_CHECK_PREFIX || name.startsWith(`${GOJR_SYNTHETIC_CHECK_PREFIX}_`);
@@ -36,7 +36,7 @@ export function checkGoJuniorFiles(files, statements = [], parserDiagnostics = [
     const conf = new Config();
     conf.Importer = {
         Import(path) {
-            const imported = config.importer?.import(path) ?? standardPackage(path);
+            const imported = config.importer?.import(path) ?? standardTypePackage(path);
             if (imported === undefined)
                 return [null, new Error(`package ${path} is not available`)];
             return [imported, null];
@@ -239,7 +239,7 @@ function seedPackageScope(pkg, config) {
             pkg.Scope().Insert(object);
     }
 }
-function standardPackage(path) {
+export function standardTypePackage(path) {
     if (path === "cmp")
         return cmpPackage();
     if (path === "fmt")
@@ -279,7 +279,14 @@ function cmpPackage() {
     orderedName.setType(orderedType);
     pkg.Scope().Insert(orderedName);
     const orderedTypeParam = () => NewTypeParam(NewTypeName(NoPos, pkg, "T", null), orderedType);
-    const comparableTypeParam = () => NewTypeParam(NewTypeName(NoPos, pkg, "T", null), universeComparable.Type());
+    const comparableTypeParam = () => {
+        const comparable = UniverseLookup("comparable");
+        const comparableType = comparable?.Type?.() ?? null;
+        if (comparableType === null) {
+            throw new Error("go/types: predeclared comparable is not initialized");
+        }
+        return NewTypeParam(NewTypeName(NoPos, pkg, "T", null), comparableType);
+    };
     const compareT = orderedTypeParam();
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Compare", NewSignatureType(null, null, [compareT], NewTuple(NewVar(NoPos, pkg, "x", compareT), NewVar(NoPos, pkg, "y", compareT)), NewTuple(NewVar(NoPos, pkg, "", intType)), false)));
     const lessT = orderedTypeParam();

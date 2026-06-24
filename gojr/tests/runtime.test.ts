@@ -1891,6 +1891,10 @@ return abit, amask, bbit, bmask
 
     expect((await session.evaluate(`import "fmt"`)).diagnostics).toEqual([]);
     expect((await session.evaluate(`fmt.Printf("hi")`)).output).toEqual(["hi"]);
+    expect((await session.evaluate(`import "cmp"`)).diagnostics).toEqual([]);
+    const compare = await session.evaluate(`cmp.Compare(1, 2)`);
+    expect(compare.diagnostics).toEqual([]);
+    expect(compare.value).toBe(-1n);
     expect((await session.evaluate("a := 1")).output).toEqual([]);
   });
 

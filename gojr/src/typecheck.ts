@@ -40,7 +40,7 @@ import {
   Typ,
   emptyInterface,
   ensureUniverseInitialized,
-  universeComparable,
+  UniverseLookup,
   Unsafe,
   type GoJuniorSheetNamespace,
   type Object as GoTypesObject,
@@ -118,7 +118,7 @@ export function checkGoJuniorFiles(
   const conf = new Config();
   conf.Importer = {
     Import(path: string): [GoTypesPackage | null, unknown] {
-      const imported = config.importer?.import(path) ?? standardPackage(path);
+      const imported = config.importer?.import(path) ?? standardTypePackage(path);
       if (imported === undefined) return [null, new Error(`package ${path} is not available`)];
       return [imported, null];
     }
@@ -345,7 +345,7 @@ function seedPackageScope(pkg: GoTypesPackage, config: GoJuniorCheckConfig): voi
   }
 }
 
-function standardPackage(path: string): GoTypesPackage | undefined {
+export function standardTypePackage(path: string): GoTypesPackage | undefined {
   if (path === "cmp") return cmpPackage();
   if (path === "fmt") return fmtPackage();
   if (path === "math") return mathPackage();
@@ -381,8 +381,14 @@ function cmpPackage(): GoTypesPackage {
   pkg.Scope().Insert(orderedName);
   const orderedTypeParam = (): ReturnType<typeof NewTypeParam> =>
     NewTypeParam(NewTypeName(NoPos, pkg, "T", null), orderedType);
-  const comparableTypeParam = (): ReturnType<typeof NewTypeParam> =>
-    NewTypeParam(NewTypeName(NoPos, pkg, "T", null), universeComparable.Type());
+  const comparableTypeParam = (): ReturnType<typeof NewTypeParam> => {
+    const comparable = UniverseLookup("comparable");
+    const comparableType = comparable?.Type?.() ?? null;
+    if (comparableType === null) {
+      throw new Error("go/types: predeclared comparable is not initialized");
+    }
+    return NewTypeParam(NewTypeName(NoPos, pkg, "T", null), comparableType);
+  };
   const compareT = orderedTypeParam();
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "Compare", NewSignatureType(
     null,

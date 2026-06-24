@@ -1,6 +1,6 @@
 import { REPL_FILENAME } from "./diagnostics.js";
-import { checkGoJuniorSourceFiles, GOJR_SYNTHETIC_CHECK_PREFIX, isGoJuniorSyntheticCheckName } from "./typecheck.js";
-import { ensureUniverseInitialized, NewPackage } from "./go/types/index.js";
+import { checkGoJuniorSourceFiles, GOJR_SYNTHETIC_CHECK_PREFIX, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
+import { ensureUniverseInitialized, NewPackage, NewPkgName, NoPos } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
 import { DeterministicPrng } from "./prng.js";
 import { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
@@ -1350,6 +1350,7 @@ export class GoJuniorSession {
             const { declarations, statements } = splitTopLevelDeclarations(ast.body);
             const declarationCompletion = await this.context.scheduler().runRoot(async () => {
                 installImports(this.context, ast);
+                this.persistCheckerImports(ast);
                 for (const declaration of ast.functions) {
                     installFunctionDeclaration(this.context, declaration);
                 }
@@ -1399,6 +1400,21 @@ export class GoJuniorSession {
         // The session owns a persistent go/types.Package, so successful checks have
         // already extended its package scope. Keeping this hook makes the call sites
         // spell out when checked declarations become visible to later evaluations.
+    }
+    persistCheckerImports(ast) {
+        for (const imported of ast.imports) {
+            const name = importBindingName(imported);
+            if (name === "_" || name === ".")
+                continue;
+            if (this.checkerPackage.Scope().Lookup(name) !== null)
+                continue;
+            const pkg = this.options.packageInfos?.[imported.path]
+                ?? this.options.packageInfos?.[importDefaultName(imported.path)]
+                ?? standardTypePackage(imported.path);
+            if (pkg !== undefined) {
+                this.checkerPackage.Scope().Insert(NewPkgName(NoPos, this.checkerPackage, name, pkg));
+            }
+        }
     }
     prepareFunctionRedeclarations(ast, filename) {
         const diagnostics = [];
@@ -1599,8 +1615,8 @@ function installSheets(context, options) {
 function installImports(context, ast) {
     const packages = availablePackages(context);
     for (const imported of ast.imports) {
-        const defaultName = imported.path.split("/").filter(Boolean).at(-1) ?? imported.path;
-        const name = imported.alias ?? defaultName;
+        const defaultName = importDefaultName(imported.path);
+        const name = importBindingName(imported);
         const pkg = packages[imported.path] ?? packages[defaultName];
         if (!pkg) {
             throw new GoJuniorRuntimeError(`package ${imported.path} is not available`);
@@ -1615,6 +1631,12 @@ function installImports(context, ast) {
         }
         context.declareOrAssignRoot(name, pkg, true);
     }
+}
+function importDefaultName(path) {
+    return path.split("/").filter(Boolean).at(-1) ?? path;
+}
+function importBindingName(imported) {
+    return imported.alias ?? importDefaultName(imported.path);
 }
 function installFunctionDeclaration(context, declaration) {
     if (declaration.receiver) {

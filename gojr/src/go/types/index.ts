@@ -10304,6 +10304,11 @@ namespace go_types_universe {
     return typ;
   }
 
+  export function UniverseLookup(name: string): go_types_object.Object | null {
+    ensureUniverseInitialized();
+    return Universe.Lookup(name);
+  }
+
   // Objects with names containing blanks are internal and not entered into
   // a scope. Objects with exported names are inserted in the unsafe package
   // scope; other objects are inserted in the universe scope.
@@ -25731,6 +25736,7 @@ export import Union = go_types_union.Union;
 export import Universe = go_types_universe.Universe;
 export import universeAny = go_types_universe.universeAny;
 export import UniverseAnyType = go_types_universe.UniverseAnyType;
+export import UniverseLookup = go_types_universe.UniverseLookup;
 export import universeBool = go_types_universe.universeBool;
 export import universeByte = go_types_universe.universeByte;
 export import universeComparable = go_types_universe.universeComparable;

@@ -302,6 +302,11 @@ export function UniverseAnyType(): Type {
   return typ;
 }
 
+export function UniverseLookup(name: string): Object | null {
+  ensureUniverseInitialized();
+  return Universe.Lookup(name);
+}
+
 // Objects with names containing blanks are internal and not entered into
 // a scope. Objects with exported names are inserted in the unsafe package
 // scope; other objects are inserted in the universe scope.

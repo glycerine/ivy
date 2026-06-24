@@ -39,12 +39,15 @@ import {
   checkGoJuniorSourceFiles,
   GOJR_SYNTHETIC_CHECK_PREFIX,
   isGoJuniorSyntheticCheckName,
+  standardTypePackage,
   type GoJuniorCheckConfig,
   type GoJuniorCheckResult
 } from "./typecheck.js";
 import {
   ensureUniverseInitialized,
   NewPackage,
+  NewPkgName,
+  NoPos,
   type GoJuniorSheetNamespace,
   type Object as GoTypesObject,
   type Package as GoTypesPackage
@@ -1684,6 +1687,7 @@ export class GoJuniorSession {
       const { declarations, statements } = splitTopLevelDeclarations(ast.body);
       const declarationCompletion = await this.context.scheduler().runRoot(async () => {
         installImports(this.context, ast);
+        this.persistCheckerImports(ast);
 
         for (const declaration of ast.functions) {
           installFunctionDeclaration(this.context, declaration);
@@ -1738,6 +1742,20 @@ export class GoJuniorSession {
     // The session owns a persistent go/types.Package, so successful checks have
     // already extended its package scope. Keeping this hook makes the call sites
     // spell out when checked declarations become visible to later evaluations.
+  }
+
+  private persistCheckerImports(ast: ProgramAst): void {
+    for (const imported of ast.imports) {
+      const name = importBindingName(imported);
+      if (name === "_" || name === ".") continue;
+      if (this.checkerPackage.Scope().Lookup(name) !== null) continue;
+      const pkg = this.options.packageInfos?.[imported.path]
+        ?? this.options.packageInfos?.[importDefaultName(imported.path)]
+        ?? standardTypePackage(imported.path);
+      if (pkg !== undefined) {
+        this.checkerPackage.Scope().Insert(NewPkgName(NoPos, this.checkerPackage, name, pkg));
+      }
+    }
   }
 
   private prepareFunctionRedeclarations(ast: ProgramAst, filename: string): { diagnostics: Diagnostic[]; replacements: PackageScopeReplacement[] } {
@@ -1948,8 +1966,8 @@ function installSheets(context: EvaluationContext, options: EvaluationOptions): 
 function installImports(context: EvaluationContext, ast: ProgramAst): void {
   const packages = availablePackages(context);
   for (const imported of ast.imports) {
-    const defaultName = imported.path.split("/").filter(Boolean).at(-1) ?? imported.path;
-    const name = imported.alias ?? defaultName;
+    const defaultName = importDefaultName(imported.path);
+    const name = importBindingName(imported);
     const pkg = packages[imported.path] ?? packages[defaultName];
     if (!pkg) {
       throw new GoJuniorRuntimeError(`package ${imported.path} is not available`);
@@ -1963,6 +1981,14 @@ function installImports(context: EvaluationContext, ast: ProgramAst): void {
     }
     context.declareOrAssignRoot(name, pkg, true);
   }
+}
+
+function importDefaultName(path: string): string {
+  return path.split("/").filter(Boolean).at(-1) ?? path;
+}
+
+function importBindingName(imported: { path: string; alias?: string }): string {
+  return imported.alias ?? importDefaultName(imported.path);
 }
 
 function installFunctionDeclaration(context: EvaluationContext, declaration: FunctionDecl): void {
