@@ -4,7 +4,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Test that a binary with a large data section can load. This failed on wasm.
+// Test that a binary with a large data section can load. This failed on non_gojr_arch.
 
 package main
 

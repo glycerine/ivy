@@ -485,7 +485,7 @@ var errorType = reflectlite.TypeOf((*error)(nil)).Elem()
     expect(Object.keys(graph.packages.errors ?? {})).toContain("New");
   });
 
-  test("supports host-resolved syscall/js without running wasm package source", async () => {
+  test("supports host-resolved syscall/js without running source package files", async () => {
     const script = await expectRuns(`
 import "syscall/js"
 
@@ -1080,6 +1080,48 @@ return sec, nsec, mono
     expect(script.values).toEqual([0n, 0n, 1n]);
   });
 
+  test("supports bodyless internal bytealg intrinsics selected by native standard-library files", async () => {
+    const result = await evaluateSourcePackageGraph([{
+      importPath: "internal/bytealg",
+      files: [{
+        filename: "bytealg.go",
+        source: `package bytealg
+
+func IndexByte(b []byte, c byte) int
+func IndexByteString(s string, c byte) int
+func Index(a, b []byte) int
+func IndexString(a, b string) int
+func Count(b []byte, c byte) int
+func CountString(s string, c byte) int
+func Compare(a, b []byte) int
+func abigen_runtime_cmpstring(a, b string) int
+func MakeNoZero(n int) []byte
+
+func CompareString(a, b string) int {
+  return abigen_runtime_cmpstring(a, b)
+}
+
+var Results = []int{
+  IndexByte([]byte("abc"), 'b'),
+  IndexByteString("abc", 'c'),
+  Index([]byte("banana"), []byte("na")),
+  IndexString("banana", "nan"),
+  Count([]byte("banana"), 'a'),
+  CountString("banana", 'n'),
+  Compare([]byte("a"), []byte("b")),
+  CompareString("b", "a"),
+  len(MakeNoZero(3)),
+}
+`
+      }]
+    }]);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.packages["internal/bytealg"]?.Results).toEqual([
+      1n, 2n, 2n, 2n, 3n, 2n, -1n, 1n, 3n
+    ]);
+  });
+
   test("package methods capture sibling package functions", async () => {
     const result = await evaluatePackageSourceFiles([{
       filename: "/workspace/p/p.go",
@@ -1101,6 +1143,60 @@ var Out = T{}.M()
 
     expect(result.diagnostics).toEqual([]);
     expect(result.package?.Out).toBe(7n);
+  });
+
+  test("imported package methods externalize private helper return types", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/base",
+        files: [{
+          filename: "/workspace/base/base.go",
+          source: `package base
+
+type hidden struct { X int }
+
+type T struct { h *hidden }
+
+func New() *T { return &T{} }
+
+func lookup() *hidden { return &hidden{X: 9} }
+
+func (t *T) Init() { t.h = lookup() }
+
+func (t *T) Value() int { return t.h.X }
+`
+        }]
+      },
+      {
+        importPath: "example.com/wrap",
+        files: [{
+          filename: "/workspace/wrap/wrap.go",
+          source: `package wrap
+
+import "example.com/base"
+
+var V = base.New()
+
+func init() { V.Init() }
+
+func Value() int { return V.Value() }
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/wrap"
+return wrap.Value()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe(9n);
   });
 
   test("typechecks and evaluates source packages that import other source packages", async () => {
@@ -2401,6 +2497,49 @@ return len(a), a[0], a[3]
 `);
 
     expect(result.values).toEqual([4n, 1n, 4n]);
+  });
+
+  test("resolves imported constants in array lengths without path-qualifying the expression", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/abi",
+        files: [{
+          filename: "/usr/local/go/src/internal/abi/runtime.go",
+          source: `package abi
+
+type Word uintptr
+
+const ZeroValSize = 4
+`
+        }]
+      },
+      {
+        importPath: "internal/runtime/maps",
+        files: [{
+          filename: "/usr/local/go/src/internal/runtime/maps/runtime.go",
+          source: `package maps
+
+import "internal/abi"
+
+var zeroVal [abi.ZeroValSize]abi.Word
+
+func Len() int { return len(zeroVal) }
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import maps "internal/runtime/maps"
+return maps.Len()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+    expect(result.value).toBe(4n);
   });
 
   test("reports typed array and slice literal element mismatches", async () => {

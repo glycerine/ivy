@@ -5594,8 +5594,7 @@ var go_types_sizes;
         "ppc64le": new gcSizes(8, 8),
         "riscv64": new gcSizes(8, 8),
         "s390x": new gcSizes(8, 8),
-        "sparc64": new gcSizes(8, 8),
-        "wasm": new gcSizes(8, 8)
+        "sparc64": new gcSizes(8, 8)
     };
     go_types_sizes.gccgoArchSizes = {
         "386": new StdSizes(4, 4),
@@ -5605,8 +5604,7 @@ var go_types_sizes;
         "arm": new StdSizes(4, 8),
         "armbe": new StdSizes(4, 8),
         "arm64": new StdSizes(8, 8),
-        "arm64be": new StdSizes(8, 8),
-        "wasm": new StdSizes(8, 8)
+        "arm64be": new StdSizes(8, 8)
     };
     function SizesFor(compiler, arch) {
         switch (compiler) {

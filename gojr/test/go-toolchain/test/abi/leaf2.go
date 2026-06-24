@@ -1,12 +1,12 @@
 // run
 
-//go:build !wasm
+//go:build !non_gojr_arch
 
 // Copyright 2021 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// wasm is excluded because the compiler chatter about register abi pragma ends up
+// non_gojr_arch is excluded because the compiler chatter about register abi pragma ends up
 // on stdout, and causes the expected output to not match.
 
 package main

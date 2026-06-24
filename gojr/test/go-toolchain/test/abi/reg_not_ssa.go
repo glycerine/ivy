@@ -1,6 +1,6 @@
 // run
 
-//go:build !wasm
+//go:build !non_gojr_arch
 
 // Copyright 2023 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style

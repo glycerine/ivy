@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { basename, delimiter, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
-import { homedir } from "node:os";
+import { arch as nodeArch, homedir, platform as nodePlatform } from "node:os";
 import {
   buildTagSetForContext,
   buildPackages,
@@ -213,15 +213,17 @@ function nodeSourceRoots(sourceRoots: string[]): NodeSourceRoot[] {
     const existing = seen.get(path);
     if (existing) {
       if (standardLibrary && !existing.standardLibrary) {
+        const native = nativeStandardLibraryBuildContext();
         existing.standardLibrary = true;
-        existing.goos = "js";
-        existing.goarch = "wasm";
+        existing.goos = native.goos;
+        existing.goarch = native.goarch;
         existing.tags = buildTagSetForContext(existing.goos, existing.goarch, []);
       }
       return;
     }
-    const goos = standardLibrary ? "js" : GOJR_GOOS;
-    const goarch = standardLibrary ? "wasm" : GOJR_GOARCH;
+    const native = standardLibrary ? nativeStandardLibraryBuildContext() : undefined;
+    const goos = native?.goos ?? GOJR_GOOS;
+    const goarch = native?.goarch ?? GOJR_GOARCH;
     const entry = {
       path,
       standardLibrary,
@@ -238,6 +240,30 @@ function nodeSourceRoots(sourceRoots: string[]): NodeSourceRoot[] {
   for (const root of candidateGOROOTSourceRoots()) add(root, true);
   for (const root of candidateGOPATHSourceRoots()) add(root, false);
   return roots;
+}
+
+function nativeStandardLibraryBuildContext(): { goos: string; goarch: string } {
+  return {
+    goos: nativeGOOS(),
+    goarch: nativeGOARCH()
+  };
+}
+
+function nativeGOOS(): string {
+  switch (nodePlatform()) {
+    case "win32": return "windows";
+    case "sunos": return "solaris";
+    default: return nodePlatform();
+  }
+}
+
+function nativeGOARCH(): string {
+  switch (nodeArch()) {
+    case "x64": return "amd64";
+    case "ia32": return "386";
+    case "mipsel": return "mipsle";
+    default: return nodeArch();
+  }
 }
 
 function nodeSourcePackageDir(root: NodeSourceRoot, importPath: string, parts: string[]): string | undefined {

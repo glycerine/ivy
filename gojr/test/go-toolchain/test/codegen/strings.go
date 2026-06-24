@@ -42,7 +42,7 @@ func ConstantLoad() {
 	//   arm:`MOVW \$48`,`MOVW \$49`,`MOVW \$50`
 	// arm64:`MOVD \$12592`,`MOVD \$50`
 	// loong64:`MOVV \$12592`,`MOVV \$50`
-	//  wasm:`I64Const \$12592`,`I64Store16 \$0`,`I64Const \$50`,`I64Store8 \$2`
+	//  non_gojr_arch:`I64Const \$12592`,`I64Store16 \$0`,`I64Const \$50`,`I64Store8 \$2`
 	// mips64:`MOVV \$48`,`MOVV \$49`,`MOVV \$50`
 	bsink = []byte("012")
 
@@ -52,7 +52,7 @@ func ConstantLoad() {
 	//   386:`MOVL \$858927408`,`MOVW \$13620, 4\(`
 	// arm64:`MOVD \$858927408`,`MOVD \$13620`
 	// loong64:`MOVV \$858927408`,`MOVV \$13620`
-	//  wasm:`I64Const \$858927408`,`I64Store32 \$0`,`I64Const \$13620`,`I64Store16 \$4`
+	//  non_gojr_arch:`I64Const \$858927408`,`I64Store32 \$0`,`I64Const \$13620`,`I64Store16 \$4`
 	bsink = []byte("012345")
 
 	// 3978425819141910832 = 0x3736353433323130
@@ -61,7 +61,7 @@ func ConstantLoad() {
 	//   386:`MOVL \$858927408, \(`,`DUFFCOPY`
 	// arm64:`MOVD \$3978425819141910832`,`MOVD \$7306073769690871863`,`MOVD \$15`
 	// loong64:`MOVV \$3978425819141910832`,`MOVV \$7306073769690871863`,`MOVV \$15`
-	//  wasm:`I64Const \$3978425819141910832`,`I64Store \$0`,`I64Const \$7306073769690871863`,`I64Store \$7`
+	//  non_gojr_arch:`I64Const \$3978425819141910832`,`I64Store \$0`,`I64Const \$7306073769690871863`,`I64Store \$7`
 	bsink = []byte("0123456789abcde")
 
 	// 56 = 0x38

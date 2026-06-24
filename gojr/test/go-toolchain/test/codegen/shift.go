@@ -318,7 +318,7 @@ func lshGuarded64(v int64, s uint) int64 {
 	if s < 64 {
 		// riscv64:"SLL" -"AND" -"SLTIU"
 		// s390x:-"RISBGZ" -"AND" -"LOCGR"
-		// wasm:-"Select" -".*LtU"
+		// non_gojr_arch:-"Select" -".*LtU"
 		// arm64:"LSL" -"CSEL"
 		return v << s
 	}
@@ -329,7 +329,7 @@ func rshGuarded64U(v uint64, s uint) uint64 {
 	if s < 64 {
 		// riscv64:"SRL " -"AND" -"SLTIU"
 		// s390x:-"RISBGZ" -"AND" -"LOCGR"
-		// wasm:-"Select" -".*LtU"
+		// non_gojr_arch:-"Select" -".*LtU"
 		// arm64:"LSR" -"CSEL"
 		return v >> s
 	}
@@ -340,7 +340,7 @@ func rshGuarded64(v int64, s uint) int64 {
 	if s < 64 {
 		// riscv64:"SRA " -"OR" -"SLTIU"
 		// s390x:-"RISBGZ" -"AND" -"LOCGR"
-		// wasm:-"Select" -".*LtU"
+		// non_gojr_arch:-"Select" -".*LtU"
 		// arm64:"ASR" -"CSEL"
 		return v >> s
 	}

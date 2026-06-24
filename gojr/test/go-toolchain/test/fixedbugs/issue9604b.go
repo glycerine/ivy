@@ -4,8 +4,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// terribly slow on wasm
-//go:build !wasm
+// terribly slow on non_gojr_arch
+//go:build !non_gojr_arch
 
 package main
 

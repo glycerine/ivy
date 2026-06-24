@@ -10,12 +10,12 @@
 // delivers signals based on the current PC, and that current PC
 // doesn't go into the Go runtime.
 
-// wasm does not work, because the linear memory is not executable.
+// non_gojr_arch does not work, because the linear memory is not executable.
 
 // This test doesn't work on gccgo/GoLLVM, because they will not find
 // any unwind information for the artificial function, and will not be
 // able to unwind past that point.
 
-//go:build !windows && !wasm && !gccgo
+//go:build !windows && !non_gojr_arch && !gccgo
 
 package ignored

@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { basename, delimiter, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
-import { homedir } from "node:os";
+import { arch as nodeArch, homedir, platform as nodePlatform } from "node:os";
 import { buildTagSetForContext, buildPackages, collectSourceImportPaths, GOJR_GOARCH, GOJR_GOOS, goSourceFileMatchesBuildContext, inspectPackageJavaScript, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
 import { hasErrorDiagnostics, REPL_FILENAME } from "./diagnostics.js";
 import { compilePackageSourceFiles, compileSourceFiles } from "./compile.js";
@@ -110,15 +110,17 @@ function nodeSourceRoots(sourceRoots) {
         const existing = seen.get(path);
         if (existing) {
             if (standardLibrary && !existing.standardLibrary) {
+                const native = nativeStandardLibraryBuildContext();
                 existing.standardLibrary = true;
-                existing.goos = "js";
-                existing.goarch = "wasm";
+                existing.goos = native.goos;
+                existing.goarch = native.goarch;
                 existing.tags = buildTagSetForContext(existing.goos, existing.goarch, []);
             }
             return;
         }
-        const goos = standardLibrary ? "js" : GOJR_GOOS;
-        const goarch = standardLibrary ? "wasm" : GOJR_GOARCH;
+        const native = standardLibrary ? nativeStandardLibraryBuildContext() : undefined;
+        const goos = native?.goos ?? GOJR_GOOS;
+        const goarch = native?.goarch ?? GOJR_GOARCH;
         const entry = {
             path,
             standardLibrary,
@@ -137,6 +139,27 @@ function nodeSourceRoots(sourceRoots) {
     for (const root of candidateGOPATHSourceRoots())
         add(root, false);
     return roots;
+}
+function nativeStandardLibraryBuildContext() {
+    return {
+        goos: nativeGOOS(),
+        goarch: nativeGOARCH()
+    };
+}
+function nativeGOOS() {
+    switch (nodePlatform()) {
+        case "win32": return "windows";
+        case "sunos": return "solaris";
+        default: return nodePlatform();
+    }
+}
+function nativeGOARCH() {
+    switch (nodeArch()) {
+        case "x64": return "amd64";
+        case "ia32": return "386";
+        case "mipsel": return "mipsle";
+        default: return nodeArch();
+    }
 }
 function nodeSourcePackageDir(root, importPath, parts) {
     if (root.modulePath) {

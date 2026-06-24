@@ -1,5 +1,6 @@
 import { describe, expect, test } from "./testHarness.js";
 import fs from "node:fs";
+import { arch as nodeArch, platform as nodePlatform } from "node:os";
 import path from "node:path";
 import {
   artifactPathForImportPath,
@@ -83,6 +84,23 @@ const nodeSourceHost = {
     return fs.readFileSync(filename, "utf8");
   }
 };
+
+function testHostGOOS(): string {
+  switch (nodePlatform()) {
+    case "win32": return "windows";
+    case "sunos": return "solaris";
+    default: return nodePlatform();
+  }
+}
+
+function testHostGOARCH(): string {
+  switch (nodeArch()) {
+    case "x64": return "amd64";
+    case "ia32": return "386";
+    case "mipsel": return "mipsle";
+    default: return nodeArch();
+  }
+}
 
 describe("Go-junior package build artifacts", () => {
   test("maps import paths to gojr_js package artifacts under a package-cache parent", () => {
@@ -768,6 +786,45 @@ func F() { _ = pprof.Lookup("heap") }
     const files = provider?.load("example.com/dep") ?? [];
 
     expect(files.map((file) => path.basename(file.filename))).toEqual(["dep.go"]);
+  });
+
+  test("node standard-library provider uses native host build tags, not the GoJr output target", () => {
+    const goroot = fs.mkdtempSync(path.join("/tmp", "gojr-goroot-"));
+    const depDir = path.join(goroot, "src", "internal", "bytealg");
+    fs.mkdirSync(depDir, { recursive: true });
+    fs.writeFileSync(path.join(depDir, "bytealg.go"), "package bytealg\n");
+    const hostGOOS = testHostGOOS();
+    const hostGOARCH = testHostGOARCH();
+    fs.writeFileSync(
+      path.join(depDir, "native.go"),
+      `//go:build ${hostGOOS} && ${hostGOARCH}\n\npackage bytealg\n\nfunc NativeTag() int { return 1 }\n`
+    );
+    fs.writeFileSync(
+      path.join(depDir, "unix.go"),
+      "//go:build unix\n\npackage bytealg\n\nfunc UnixTag() int { return 3 }\n"
+    );
+    fs.writeFileSync(
+      path.join(depDir, "target_gojr_js.go"),
+      "package bytealg\n\nfunc TargetTag() int { return 2 }\n"
+    );
+
+    const previousGOROOT = process.env.GOROOT;
+    process.env.GOROOT = goroot;
+    try {
+      const provider = createNodeSourcePackageProvider([]);
+      const files = provider?.load("internal/bytealg") ?? [];
+      expect(files.map((file) => path.basename(file.filename)).sort()).toEqual([
+        "bytealg.go",
+        "native.go",
+        "unix.go"
+      ]);
+    } finally {
+      if (previousGOROOT === undefined) {
+        delete process.env.GOROOT;
+      } else {
+        process.env.GOROOT = previousGOROOT;
+      }
+    }
   });
 
   test("package names come from parsed package clauses, not package comments", async () => {

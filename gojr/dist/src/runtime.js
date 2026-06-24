@@ -49,9 +49,11 @@ const errorInterfaceType = {
 };
 const fmtErrorStringType = "fmt.errorString";
 export class GoJuniorRuntimeError extends Error {
-    constructor(message) {
+    span;
+    constructor(message, span) {
         super(message);
         this.name = "GoJuniorRuntimeError";
+        this.span = span;
     }
 }
 export class GoJuniorDeadlockError extends Error {
@@ -351,6 +353,9 @@ export class EvaluationContext {
     packageInfo(importPath) {
         return this.options.packageInfos?.[importPath];
     }
+    importPath() {
+        return this.options.importPath;
+    }
     currentSheetName() {
         return this.options.currentSheetName ?? "sheet";
     }
@@ -600,6 +605,31 @@ export class RuntimeStruct {
     }
     orderedFields() {
         return [...this.fields.entries()];
+    }
+}
+class RuntimeExternalizedStruct extends RuntimeStruct {
+    source;
+    packageName;
+    constructor(source, packageName) {
+        super(qualifyLocalRuntimeTypeName(source.typeName, packageName));
+        this.source = source;
+        this.packageName = packageName;
+    }
+    get(field) {
+        const value = this.source.get(field);
+        return value === undefined ? undefined : externalizePackageRuntimeValue(value, this.packageName);
+    }
+    set(field, value) {
+        this.source.set(field, value);
+    }
+    clone() {
+        return new RuntimeStruct(this.typeName, this.orderedFields());
+    }
+    orderedFields() {
+        return this.source.orderedFields().map(([name, value]) => [
+            name,
+            externalizePackageRuntimeValue(value, this.packageName)
+        ]);
     }
 }
 export class RuntimePointer {
@@ -1302,7 +1332,9 @@ function testDiagnostic(declaration, message) {
     };
 }
 function runtimeDiagnostic(ast, code, message, error) {
-    const span = firstProgramSpan(ast);
+    const span = error instanceof GoJuniorRuntimeError && error.span
+        ? error.span
+        : firstProgramSpan(ast);
     return {
         filename: span?.filename ?? REPL_FILENAME,
         code,
@@ -1804,13 +1836,14 @@ function installPackageFunctionDeclaration(context, declaration) {
         context.registerMethod(resolved);
         return;
     }
-    const intrinsic = bodylessPackageFunctionIntrinsic(resolved);
+    const intrinsic = bodylessPackageFunctionIntrinsic(resolved, context.importPath());
     context.declareOrAssignRoot(resolved.name, intrinsic ?? goJuniorFunctionValue(resolved.name, resolved.signature, resolved.body, context.captureScope(), resolved, undefined, undefined, context), true);
 }
-function bodylessPackageFunctionIntrinsic(declaration) {
+function bodylessPackageFunctionIntrinsic(declaration, importPath) {
     if (!isBodylessFunctionDeclaration(declaration))
         return undefined;
-    const intrinsic = bodylessRuntimeIntrinsic(declaration.name, declaration.signature);
+    const intrinsic = bodylessBytealgIntrinsic(importPath, declaration.name, declaration.signature) ??
+        bodylessRuntimeIntrinsic(declaration.name, declaration.signature);
     return intrinsic
         ? {
             ...intrinsic,
@@ -1849,6 +1882,102 @@ function bodylessRuntimeIntrinsic(name, signature) {
         default:
             return undefined;
     }
+}
+function bodylessBytealgIntrinsic(importPath, name, signature) {
+    if (importPath !== "internal/bytealg")
+        return undefined;
+    const functionValue = (call) => ({
+        kind: "GoJuniorFunction",
+        name: `${importPath}.${name}`,
+        signature,
+        async call(args, context) {
+            return call(args, context);
+        }
+    });
+    switch (name) {
+        case "IndexByte":
+        case "IndexByteString":
+            return functionValue((args) => BigInt(byteIndex(bytealgBytes(args[0] ?? null), bytealgByte(args[1] ?? 0n))));
+        case "Index":
+        case "IndexString":
+            return functionValue((args) => BigInt(byteSequenceIndex(bytealgBytes(args[0] ?? null), bytealgBytes(args[1] ?? null))));
+        case "Count":
+        case "CountString":
+            return functionValue((args) => BigInt(byteCount(bytealgBytes(args[0] ?? null), bytealgByte(args[1] ?? 0n))));
+        case "Compare":
+        case "CompareString":
+        case "abigen_runtime_cmpstring":
+            return functionValue((args) => BigInt(byteSequenceCompare(bytealgBytes(args[0] ?? null), bytealgBytes(args[1] ?? null))));
+        case "MakeNoZero":
+            return functionValue((args, context) => {
+                const length = toNonNegativeLength(args[0] ?? 0n, "internal/bytealg.MakeNoZero length");
+                return makeRuntimeSlice("byte", length, length, context, "[]byte");
+            });
+        case "abigen_runtime_memequal":
+            return functionValue((args) => toBigInt(args[2] ?? 0n) === 0n || valueEqual(args[0] ?? null, args[1] ?? null));
+        case "abigen_runtime_memequal_varlen":
+            return functionValue((args) => valueEqual(args[0] ?? null, args[1] ?? null));
+        default:
+            return undefined;
+    }
+}
+function bytealgBytes(value) {
+    value = unwrapNamed(value);
+    if (isRuntimeString(value))
+        return goStringBytes(value);
+    if (value instanceof RuntimeTypedNilValue && parseArrayOrSliceTypeText(value.typeName))
+        return new Uint8Array();
+    if (Array.isArray(value)) {
+        return Uint8Array.from(value.map((item) => Number(BigInt.asUintN(8, toBigInt(item)))));
+    }
+    throwTypeError(value, "string or []byte", "internal/bytealg argument");
+}
+function bytealgByte(value) {
+    return Number(BigInt.asUintN(8, toBigInt(value)));
+}
+function byteIndex(values, needle) {
+    for (let index = 0; index < values.length; index += 1) {
+        if (values[index] === needle)
+            return index;
+    }
+    return -1;
+}
+function byteCount(values, needle) {
+    let count = 0;
+    for (const value of values) {
+        if (value === needle)
+            count += 1;
+    }
+    return count;
+}
+function byteSequenceIndex(values, needle) {
+    if (needle.length === 0)
+        return 0;
+    if (needle.length > values.length)
+        return -1;
+    const lastStart = values.length - needle.length;
+    for (let start = 0; start <= lastStart; start += 1) {
+        let matched = true;
+        for (let offset = 0; offset < needle.length; offset += 1) {
+            if (values[start + offset] !== needle[offset]) {
+                matched = false;
+                break;
+            }
+        }
+        if (matched)
+            return start;
+    }
+    return -1;
+}
+function byteSequenceCompare(left, right) {
+    const count = Math.min(left.length, right.length);
+    for (let index = 0; index < count; index += 1) {
+        const leftByte = left[index] ?? 0;
+        const rightByte = right[index] ?? 0;
+        if (leftByte !== rightByte)
+            return leftByte < rightByte ? -1 : 1;
+    }
+    return left.length === right.length ? 0 : left.length < right.length ? -1 : 1;
 }
 function installedFunctionValue(context, declaration) {
     return declaration.receiver ? functionValue(declaration) : context.lookup(declaration.name);
@@ -2878,7 +3007,11 @@ function goJuniorFunctionValue(name, signature, body, closureScope, declaration,
                         ? namedReturnValues(signature, context)
                         : completion.values;
                     const values = prepareFunctionReturnValues(signature, rawValues, completion.sources, context);
-                    return values.length === 1 ? values[0] ?? null : values;
+                    const result = values.length === 1 ? values[0] ?? null : values;
+                    if (closureContext && closureContext !== parentContext && closureContext.importPath()) {
+                        return externalizePackageRuntimeValue(result, closureContext.importPath());
+                    }
+                    return result;
                 }
                 return null;
             }));
@@ -3662,21 +3795,27 @@ async function evaluateCallArguments(callee, expressions, spreadLast, context) {
     if (!isGoJuniorFunction(callee) || !callee.signature)
         return args;
     const prepared = [...args];
+    const calleeName = runtimeCallableName(callee);
     for (const [index, parameter] of callee.signature.parameters.entries()) {
         if (parameter.variadic) {
             for (let argIndex = index; argIndex < prepared.length; argIndex += 1) {
                 const expression = spreadLast && argIndex >= expressions.length - 1
                     ? expressions[expressions.length - 1]
                     : expressions[argIndex];
-                prepared[argIndex] = prepareValueForParameterType(prepared[argIndex] ?? null, parameter.type.text, expression, context, `argument ${argIndex + 1}`);
+                prepared[argIndex] = prepareValueForParameterType(prepared[argIndex] ?? null, parameter.type.text, expression, context, `argument ${argIndex + 1} to ${calleeName}`);
             }
             break;
         }
         if (index >= prepared.length)
             break;
-        prepared[index] = prepareValueForParameterType(prepared[index] ?? null, parameter.type.text, expressions[index], context, `argument ${index + 1}`);
+        prepared[index] = prepareValueForParameterType(prepared[index] ?? null, parameter.type.text, expressions[index], context, `argument ${index + 1} to ${calleeName}`);
     }
     return prepared;
+}
+function runtimeCallableName(callee) {
+    if (isGoJuniorFunction(callee) || isRuntimeCallable(callee))
+        return callee.name;
+    return "call";
 }
 async function evaluateArrayLiteral(expression, context) {
     const typeText = context.resolveImportedTypeText(expression.type.text);
@@ -3851,41 +3990,49 @@ async function evaluateBinary(expression, context) {
     }
     const left = await evaluateExpression(expression.left, context);
     const right = await evaluateExpression(expression.right, context);
-    switch (expression.operator) {
-        case "==":
-            return valueEqual(left, right);
-        case "!=":
-            return !valueEqual(left, right);
-        case "<":
-            return compareValues(left, right) < 0;
-        case "<=":
-            return compareValues(left, right) <= 0;
-        case ">":
-            return compareValues(left, right) > 0;
-        case ">=":
-            return compareValues(left, right) >= 0;
-        case "+":
-            return materializeValueForExpressionType(addValues(left, right), expression, context);
-        case "-":
-            return materializeValueForExpressionType(subtractNumbers(left, right), expression, context);
-        case "*":
-            return materializeValueForExpressionType(multiplyNumbers(left, right), expression, context);
-        case "/":
-            return materializeValueForExpressionType(divideNumbers(left, right), expression, context);
-        case "%":
-            return materializeValueForExpressionType(moduloNumbers(left, right), expression, context);
-        case "|":
-            return materializeValueForExpressionType(bitwiseOr(left, right), expression, context);
-        case "^":
-            return materializeValueForExpressionType(bitwiseXor(left, right), expression, context);
-        case "&":
-            return materializeValueForExpressionType(bitwiseAnd(left, right), expression, context);
-        case "&^":
-            return materializeValueForExpressionType(bitClear(left, right), expression, context);
-        case "<<":
-            return materializeValueForExpressionType(shiftLeft(left, right), expression, context);
-        case ">>":
-            return materializeValueForExpressionType(shiftRight(left, right), expression, context);
+    try {
+        switch (expression.operator) {
+            case "==":
+                return valueEqual(left, right);
+            case "!=":
+                return !valueEqual(left, right);
+            case "<":
+                return compareValues(left, right) < 0;
+            case "<=":
+                return compareValues(left, right) <= 0;
+            case ">":
+                return compareValues(left, right) > 0;
+            case ">=":
+                return compareValues(left, right) >= 0;
+            case "+":
+                return materializeValueForExpressionType(addValues(left, right), expression, context);
+            case "-":
+                return materializeValueForExpressionType(subtractNumbers(left, right), expression, context);
+            case "*":
+                return materializeValueForExpressionType(multiplyNumbers(left, right), expression, context);
+            case "/":
+                return materializeValueForExpressionType(divideNumbers(left, right), expression, context);
+            case "%":
+                return materializeValueForExpressionType(moduloNumbers(left, right), expression, context);
+            case "|":
+                return materializeValueForExpressionType(bitwiseOr(left, right), expression, context);
+            case "^":
+                return materializeValueForExpressionType(bitwiseXor(left, right), expression, context);
+            case "&":
+                return materializeValueForExpressionType(bitwiseAnd(left, right), expression, context);
+            case "&^":
+                return materializeValueForExpressionType(bitClear(left, right), expression, context);
+            case "<<":
+                return materializeValueForExpressionType(shiftLeft(left, right), expression, context);
+            case ">>":
+                return materializeValueForExpressionType(shiftRight(left, right), expression, context);
+        }
+    }
+    catch (error) {
+        if (error instanceof GoJuniorRuntimeError && error.span === undefined && expression.span) {
+            throw new GoJuniorRuntimeError(error.message, expression.span);
+        }
+        throw error;
     }
 }
 async function evaluateTypeAssertion(expression, context) {
@@ -6383,10 +6530,7 @@ function externalizePackageRuntimeValue(value, packageName) {
     if (Array.isArray(value))
         return value.map((item) => externalizePackageRuntimeValue(item, packageName));
     if (value instanceof RuntimeStruct) {
-        const struct = new RuntimeStruct(qualifyLocalRuntimeTypeName(value.typeName, packageName));
-        for (const [name, item] of value.orderedFields())
-            struct.set(name, externalizePackageRuntimeValue(item, packageName));
-        return struct;
+        return new RuntimeExternalizedStruct(value, packageName);
     }
     return value;
 }
@@ -6422,6 +6566,14 @@ function rewriteRuntimeTypeText(typeText, resolveQualifier) {
     let index = 0;
     while (index < typeText.length) {
         const char = typeText[index] ?? "";
+        if (char === "[" && !isRuntimeTypePathOrIdentifierChar(typeText[index - 1] ?? "")) {
+            const close = matchingSquareBracket(typeText, index);
+            if (close > index) {
+                output += typeText.slice(index, close + 1);
+                index = close + 1;
+                continue;
+            }
+        }
         if (isRuntimeTypeIdentifierStart(char) && !isRuntimeTypePathOrIdentifierChar(typeText[index - 1] ?? "")) {
             const qualifierStart = index;
             index += 1;
@@ -6450,6 +6602,20 @@ function rewriteRuntimeTypeText(typeText, resolveQualifier) {
         index += 1;
     }
     return output;
+}
+function matchingSquareBracket(text, openIndex) {
+    let depth = 0;
+    for (let index = openIndex; index < text.length; index++) {
+        const char = text[index] ?? "";
+        if (char === "[")
+            depth++;
+        if (char === "]") {
+            depth--;
+            if (depth === 0)
+                return index;
+        }
+    }
+    return -1;
 }
 function isRuntimeTypeIdentifierStart(char) {
     return /[A-Za-z_]/.test(char);

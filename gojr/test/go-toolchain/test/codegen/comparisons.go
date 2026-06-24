@@ -271,30 +271,30 @@ func CmpToZero(a, b, d int32, e, f int64, deOptC0, deOptC1 bool) int32 {
 func CmpLogicalToZero(a, b, c uint32, d, e, f, g uint64) uint64 {
 
 	// ppc64x:"ANDCC" -"CMPW"
-	// wasm:"I64Eqz" -"I32Eqz" -"I64ExtendI32U" -"I32WrapI64"
+	// non_gojr_arch:"I64Eqz" -"I32Eqz" -"I64ExtendI32U" -"I32WrapI64"
 	if a&63 == 0 {
 		return 1
 	}
 
 	// ppc64x:"ANDCC" -"CMP"
-	// wasm:"I64Eqz" -"I32Eqz" -"I64ExtendI32U" -"I32WrapI64"
+	// non_gojr_arch:"I64Eqz" -"I32Eqz" -"I64ExtendI32U" -"I32WrapI64"
 	if d&255 == 0 {
 		return 1
 	}
 
 	// ppc64x:"ANDCC" -"CMP"
-	// wasm:"I64Eqz" -"I32Eqz" -"I64ExtendI32U" -"I32WrapI64"
+	// non_gojr_arch:"I64Eqz" -"I32Eqz" -"I64ExtendI32U" -"I32WrapI64"
 	if d&e == 0 {
 		return 1
 	}
 	// ppc64x:"ORCC" -"CMP"
-	// wasm:"I64Eqz" -"I32Eqz" -"I64ExtendI32U" -"I32WrapI64"
+	// non_gojr_arch:"I64Eqz" -"I32Eqz" -"I64ExtendI32U" -"I32WrapI64"
 	if f|g == 0 {
 		return 1
 	}
 
 	// ppc64x:"XORCC" -"CMP"
-	// wasm:"I64Eqz" "I32Eqz" -"I64ExtendI32U" -"I32WrapI64"
+	// non_gojr_arch:"I64Eqz" "I32Eqz" -"I64ExtendI32U" -"I32WrapI64"
 	if e^d == 0 {
 		return 1
 	}
@@ -511,19 +511,19 @@ func UintGeqOne(a uint8, b uint16, c uint32, d uint64) int {
 }
 
 func CmpToZeroU_ex1(a uint8, b uint16, c uint32, d uint64) int {
-	// wasm:"I64Eqz"-"I64LtU"
+	// non_gojr_arch:"I64Eqz"-"I64LtU"
 	if 0 < a {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LtU"
+	// non_gojr_arch:"I64Eqz"-"I64LtU"
 	if 0 < b {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LtU"
+	// non_gojr_arch:"I64Eqz"-"I64LtU"
 	if 0 < c {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LtU"
+	// non_gojr_arch:"I64Eqz"-"I64LtU"
 	if 0 < d {
 		return 1
 	}
@@ -531,19 +531,19 @@ func CmpToZeroU_ex1(a uint8, b uint16, c uint32, d uint64) int {
 }
 
 func CmpToZeroU_ex2(a uint8, b uint16, c uint32, d uint64) int {
-	// wasm:"I64Eqz"-"I64LeU"
+	// non_gojr_arch:"I64Eqz"-"I64LeU"
 	if a <= 0 {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LeU"
+	// non_gojr_arch:"I64Eqz"-"I64LeU"
 	if b <= 0 {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LeU"
+	// non_gojr_arch:"I64Eqz"-"I64LeU"
 	if c <= 0 {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LeU"
+	// non_gojr_arch:"I64Eqz"-"I64LeU"
 	if d <= 0 {
 		return 1
 	}
@@ -551,19 +551,19 @@ func CmpToZeroU_ex2(a uint8, b uint16, c uint32, d uint64) int {
 }
 
 func CmpToOneU_ex1(a uint8, b uint16, c uint32, d uint64) int {
-	// wasm:"I64Eqz"-"I64LtU"
+	// non_gojr_arch:"I64Eqz"-"I64LtU"
 	if a < 1 {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LtU"
+	// non_gojr_arch:"I64Eqz"-"I64LtU"
 	if b < 1 {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LtU"
+	// non_gojr_arch:"I64Eqz"-"I64LtU"
 	if c < 1 {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LtU"
+	// non_gojr_arch:"I64Eqz"-"I64LtU"
 	if d < 1 {
 		return 1
 	}
@@ -571,19 +571,19 @@ func CmpToOneU_ex1(a uint8, b uint16, c uint32, d uint64) int {
 }
 
 func CmpToOneU_ex2(a uint8, b uint16, c uint32, d uint64) int {
-	// wasm:"I64Eqz"-"I64LeU"
+	// non_gojr_arch:"I64Eqz"-"I64LeU"
 	if 1 <= a {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LeU"
+	// non_gojr_arch:"I64Eqz"-"I64LeU"
 	if 1 <= b {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LeU"
+	// non_gojr_arch:"I64Eqz"-"I64LeU"
 	if 1 <= c {
 		return 1
 	}
-	// wasm:"I64Eqz"-"I64LeU"
+	// non_gojr_arch:"I64Eqz"-"I64LeU"
 	if 1 <= d {
 		return 1
 	}

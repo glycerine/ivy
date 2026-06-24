@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file.
 
 // Issue 27961: some optimizations generate OffPtr with wrong
-// types, which causes invalid bytecode on Wasm.
+// types, which causes invalid bytecode on non_gojr_arch.
 
 package main
 

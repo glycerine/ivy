@@ -4,9 +4,9 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-//go:build !wasm && !386 && !arm && !mips && !mipsle
+//go:build !non_gojr_arch && !386 && !arm && !mips && !mipsle
 
-// TODO fix this to work for wasm and 32-bit architectures.
+// TODO fix this to work for non_gojr_arch and 32-bit architectures.
 // Doing more than this, however, expands the change.
 
 package main

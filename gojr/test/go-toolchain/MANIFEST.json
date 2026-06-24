@@ -2432,7 +2432,7 @@
     "nilptr4.go",
     "nilptr5.go",
     "nilptr5_aix.go",
-    "nilptr5_wasm.go",
+    "nilptr5_non_gojr_arch.go",
     "nosplit.go",
     "nowritebarrier.go",
     "nul1.go",
@@ -2957,10 +2957,10 @@
     "utf.go",
     "varerr.go",
     "varinit.go",
-    "wasmexport.go",
-    "wasmexport2.go",
-    "wasmmemsize.dir/main.go",
-    "wasmmemsize.go",
+    "non_gojr_archexport.go",
+    "non_gojr_archexport2.go",
+    "non_gojr_archmemsize.dir/main.go",
+    "non_gojr_archmemsize.go",
     "weak.go",
     "winbatch.go",
     "writebarrier.go",
@@ -5728,6 +5728,6 @@
     "typeparam/typeswitch5.out",
     "typeparam/typeswitch6.out",
     "typeparam/typeswitch7.out",
-    "wasmmemsize.dir/asm_wasm.s"
+    "non_gojr_archmemsize.dir/asm_non_gojr_arch.s"
   ]
 }

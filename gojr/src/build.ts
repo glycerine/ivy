@@ -631,6 +631,7 @@ function buildTagSet(goos: string, goarch: string, extra: string[] | undefined):
   const tags = new Set<string>();
   tags.add(goos);
   tags.add(goarch);
+  if (isUnixGOOS(goos)) tags.add("unix");
   for (let minor = 1; minor <= 27; minor += 1) {
     tags.add(`go1.${minor}`);
   }
@@ -639,6 +640,13 @@ function buildTagSet(goos: string, goarch: string, extra: string[] | undefined):
     if (text !== "") tags.add(text);
   }
   return tags;
+}
+
+function isUnixGOOS(goos: string): boolean {
+  return new Set([
+    "aix", "android", "darwin", "dragonfly", "freebsd", "hurd", "illumos",
+    "ios", "linux", "netbsd", "openbsd", "solaris"
+  ]).has(goos);
 }
 
 export function goSourceFileMatchesBuildContext(filename: string, source: string, goos: string, goarch: string, tags: Set<string>): boolean {
@@ -782,7 +790,7 @@ const knownGOOS = new Set([
 const knownGOARCH = new Set([
   "386", "amd64", "amd64p32", "arm", "arm64", "arm64be", "loong64", "mips",
   "mipsle", "mips64", "mips64le", "mips64p32", "mips64p32le", "ppc", "ppc64",
-  "ppc64le", "riscv", "riscv64", "s390", "s390x", "sparc", "sparc64", "wasm",
+  "ppc64le", "riscv", "riscv64", "s390", "s390x", "sparc", "sparc64",
   GOJR_GOARCH
 ]);
 
