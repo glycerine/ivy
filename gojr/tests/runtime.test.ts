@@ -382,6 +382,40 @@ return runtime.GOOS, runtime.GOARCH, n > 0, pc, file, line, ok, calls, frame.Fun
     expect(script.values).toEqual(["gojr", "js", true, 0n, "", 0n, false, 0n, "", false, ""]);
   });
 
+  test("supports intrinsic internal/reflectlite for standard-library error initialization", async () => {
+    const script = await expectRuns(`
+import "internal/reflectlite"
+
+t := reflectlite.TypeOf((*error)(nil)).Elem()
+return t.Kind() == reflectlite.Interface, t.Comparable()
+`);
+
+    expect(script.values).toEqual([true, true]);
+
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "errors",
+      files: [{
+        filename: "/usr/local/go/src/errors/errors.go",
+        source: `package errors
+
+import "internal/reflectlite"
+
+func New(text string) error { return &errorString{text} }
+
+type errorString struct { s string }
+
+func (e *errorString) Error() string { return e.s }
+
+var errorType = reflectlite.TypeOf((*error)(nil)).Elem()
+`
+      }]
+    }]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.initializedImportPaths).toEqual(["errors"]);
+    expect(Object.keys(graph.packages.errors ?? {})).toContain("New");
+  });
+
   test("supports runtime cleanup handles as no-op host values", async () => {
     const script = await expectRuns(`
 import "runtime"

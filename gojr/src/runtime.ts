@@ -2424,7 +2424,7 @@ function reflectliteValue(value: RuntimeValue, context: EvaluationContext, set?:
   object[REFLECTLITE_VALUE_INFO] = info;
   object.Type = hostCallable("internal/reflectlite.Value.Type", () => info.type);
   object.Kind = hostCallable("internal/reflectlite.Value.Kind", () => reflectliteTypeInfo(info.type)?.kind ?? reflectliteKind.Invalid);
-  object.IsNil = hostCallable("internal/reflectlite.Value.IsNil", () => isRuntimeNil(info.value));
+  object.IsNil = hostCallable("internal/reflectlite.Value.IsNil", () => reflectliteIsNil(info.value));
   object.Elem = hostCallable("internal/reflectlite.Value.Elem", () => {
     const actual = info.value instanceof RuntimeInterfaceValue && info.value.value !== null ? info.value.value : info.value;
     if (actual instanceof RuntimePointer) {
@@ -2465,6 +2465,13 @@ function reflectliteAssignableTo(source: ReflectliteTypeInfo, target: Reflectlit
   if (target.typeText === "error") return true;
   const targetInterface = interfaceTarget(target.typeText, context);
   if (targetInterface) return true;
+  return false;
+}
+
+function reflectliteIsNil(value: RuntimeValue): boolean {
+  if (value === null) return true;
+  if (value instanceof RuntimeTypedNilValue) return true;
+  if (value instanceof RuntimeInterfaceValue) return value.value === null;
   return false;
 }
 
