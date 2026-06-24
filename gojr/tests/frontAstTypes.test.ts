@@ -40,8 +40,9 @@ import {
   type File
 } from "../src/front/ast.js";
 import {
-  AssignableTo,
-  Builtin,
+	  AssignableTo,
+	  Byte,
+	  Builtin,
   ChanDir,
   Const,
   Func as GoTypesFunc,
@@ -59,10 +60,13 @@ import {
   NewScope as NewGoTypesScope,
   NewSignatureType,
   NewSlice,
-  NewStruct,
-  NewTuple,
-  NewTypeName,
-  NewVar,
+	  NewStruct,
+	  NewTerm,
+	  NewTuple,
+	  NewTypeParam,
+	  NewTypeName,
+	  NewUnion,
+	  NewVar,
   Nil,
   NoPos,
   String as GoTypesString,
@@ -524,7 +528,7 @@ describe("Go-junior Go-style AST", () => {
     expect(child.LookupParent("string", NoPos)[1]?.constructor.name).toBe("TypeName");
   });
 
-  test("formats signatures and compound types", () => {
+	  test("formats signatures and compound types", () => {
     ensureUniverseInitialized();
     const signature = NewSignatureType(
       null,
@@ -539,10 +543,41 @@ describe("Go-junior Go-style AST", () => {
     expect(NewMap(Typ[GoTypesString]!, Typ[Int64]!).String()).toBe("map[string]int64");
     expect(NewChan(ChanDir.SendRecv, Typ[Int64]!).String()).toBe("chan int64");
     expect(NewChan(ChanDir.SendOnly, Typ[GoTypesString]!).String()).toBe("chan<- string");
-    expect(NewChan(ChanDir.RecvOnly, Typ[Float64]!).String()).toBe("<-chan float64");
-  });
+	    expect(NewChan(ChanDir.RecvOnly, Typ[Float64]!).String()).toBe("<-chan float64");
+	  });
 
-  test("checks assignability for untyped constants, nil, named types, and method-set interfaces", () => {
+	  test("validates variadic signatures over type parameter type sets", () => {
+	    ensureUniverseInitialized();
+	    const pkg = NewGoTypesPackage("workbook/generic", "generic");
+	    const stringOrBytes = NewInterfaceType(null, [
+	      NewUnion([
+	        NewTerm(false, Typ[GoTypesString]!),
+	        NewTerm(false, NewSlice(Typ[Byte]!))
+	      ])
+	    ]).Complete();
+	    const t = NewTypeParam(NewTypeName(NoPos, pkg, "T", null), stringOrBytes);
+
+	    expect(() => NewSignatureType(
+	      null,
+	      null,
+	      [t],
+	      NewTuple(NewVar(NoPos, pkg, "x", t)),
+	      null,
+	      true
+	    )).not.toThrow();
+
+	    const intParam = NewTypeParam(NewTypeName(NoPos, pkg, "I", null), Typ[Int64]!);
+	    expect(() => NewSignatureType(
+	      null,
+	      null,
+	      [intParam],
+	      NewTuple(NewVar(NoPos, pkg, "x", intParam)),
+	      null,
+	      true
+	    )).toThrow(/variadic parameter of slice or string type/);
+	  });
+
+	  test("checks assignability for untyped constants, nil, named types, and method-set interfaces", () => {
     ensureUniverseInitialized();
     const pkg = NewGoTypesPackage("workbook/geom", "geom");
     const pointName = NewTypeName(NoPos, pkg, "Point", null);

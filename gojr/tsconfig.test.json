@@ -4,6 +4,5 @@
     "rootDir": ".",
     "outDir": "/tmp/gojr-test-dist"
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
-  "exclude": ["src/go/types/_parts/**/*.ts"]
+  "include": ["src/**/*.ts", "tests/**/*.ts"]
 }

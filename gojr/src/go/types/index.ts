@@ -2244,9 +2244,16 @@ namespace go_types_typeparam {
       let ityp: go_types_interface.Interface | null = null;
       const u = bound.Underlying();
       if (u instanceof go_types_basic.Basic) {
-        return go_types_interface.emptyInterface;
+        if (!go_types_predicates.isValid(u)) {
+          // error is reported elsewhere
+          return go_types_interface.emptyInterface;
+        }
       }
       if (u instanceof go_types_interface.Interface) {
+        if (go_types_predicates.isTypeParam(bound)) {
+          // error is reported in Checker.collectTypeParams
+          return go_types_interface.emptyInterface;
+        }
         ityp = u;
       }
 
@@ -4293,11 +4300,21 @@ namespace go_types_conversions {
   export function conversion(check: go_types_check.Checker, x: go_types_operand.operand, T: go_types_type.Type): void {
     const constArg = x.mode() === go_types_operand.constant_;
 
-    const constConvertibleTo = (T: go_types_type.Type, _val: { value: unknown } | null): boolean => {
+    const constConvertibleTo = (T: go_types_type.Type, val: { value: unknown } | null): boolean => {
       const t = T.Underlying();
       if (!(t instanceof go_types_basic.Basic)) {
         // nothing to do
-      } else {
+      } else if (go_types_const.representableConst(x.val, check, t, val)) {
+        return true;
+      } else if (go_types_predicates.isInteger(x.typ()!) && go_types_predicates.isString(t)) {
+        let codepoint = 0xfffd; // unicode.ReplacementChar
+        const i = go_types_const.toInt(x.val);
+        if (i !== null && 0n <= i && i <= 0x10ffffn) { // unicode.MaxRune
+          codepoint = Number(i);
+        }
+        if (val !== null) {
+          val.value = String.fromCodePoint(codepoint);
+        }
         return true;
       }
       return false;
@@ -4308,12 +4325,26 @@ namespace go_types_conversions {
     switch (true) {
       case constArg && go_types_predicates.isConstType(T):
         // constant conversion
-        ok = constConvertibleTo(T, { value: x.val });
+        {
+          const val = { value: x.val };
+          ok = constConvertibleTo(T, val);
+          if (ok) {
+            x.val = val.value;
+          }
+        }
+        // A conversion from an integer constant to an integer type
+        // can only fail if there's overflow. Give a concise error.
+        // (go.dev/issue/63563)
+        if (!ok && go_types_predicates.isInteger(x.typ()!) && go_types_predicates.isInteger(T)) {
+          check.errorf(x, "InvalidConversion", "constant %s overflows %s", x.val, T);
+          x.invalidate();
+          return;
+        }
         break;
       case constArg && go_types_predicates.isTypeParam(T):
         // x is convertible to T if it is convertible
         // to each specific type in the type set of T.
-        ok = (T as go_types_typeparam.TypeParam).typeset((_t, u) => {
+        ok = go_types_under.underIs(T, (u) => {
           // u is nil if there are no specific type terms
           if (u === null) {
             cause.value = check.sprintf("%s does not contain specific types", T);
@@ -4323,7 +4354,12 @@ namespace go_types_conversions {
             return true;
           }
           if (!constConvertibleTo(u, null)) {
-            cause.value = check.sprintf("cannot convert %s to type %s (in %s)", x, u, T);
+            if (go_types_predicates.isInteger(x.typ()!) && go_types_predicates.isInteger(u)) {
+              // see comment above on constant conversion
+              cause.value = check.sprintf("constant %s overflows %s (in %s)", x.val, u, T);
+            } else {
+              cause.value = check.sprintf("cannot convert %s to type %s (in %s)", x, u, T);
+            }
             return false;
           }
           return true;
@@ -4383,7 +4419,7 @@ namespace go_types_conversions {
 
     // "V and T have identical underlying types if tags are ignored
     // and V and T are not type parameters"
-    if (go_types_predicates.Identical(Vu, Tu) && Vp === null && Tp === null) {
+    if (go_types_api_predicates.IdenticalIgnoreTags(Vu, Tu) && Vp === null && Tp === null) {
       return true;
     }
 
@@ -4392,7 +4428,7 @@ namespace go_types_conversions {
     // and their pointer base types are not type parameters"
     if (V instanceof go_types_pointer.Pointer) {
       if (T instanceof go_types_pointer.Pointer) {
-        if (go_types_predicates.Identical(V.base.Underlying(), T.base.Underlying()) && !go_types_predicates.isTypeParam(V.base) && !go_types_predicates.isTypeParam(T.base)) {
+        if (go_types_api_predicates.IdenticalIgnoreTags(V.base.Underlying(), T.base.Underlying()) && !go_types_predicates.isTypeParam(V.base) && !go_types_predicates.isTypeParam(T.base)) {
           return true;
         }
       }
@@ -8073,7 +8109,7 @@ namespace go_types_expr {
     if (what !== "") {
       this.errorf(x.expr, "WrongTypeArgCount", "cannot use generic %s %s without instantiation", what, x.expr);
       x.invalidate();
-      x.typ_ = go_types_universe.Typ[0]!;
+      x.typ_ = go_types_universe.Typ[go_types_basic.Invalid]!;
     }
   });
 
@@ -8084,7 +8120,7 @@ namespace go_types_expr {
     // make sure x has a valid state in case of bailout
     // (was go.dev/issue/5770)
     x.invalidate();
-    x.typ_ = go_types_universe.Typ[0]!;
+    x.typ_ = go_types_universe.Typ[go_types_basic.Invalid]!;
 
     const node = e as Expr | null;
     switch (node?.kind) {
@@ -8198,7 +8234,7 @@ namespace go_types_expr {
         }
         {
           const TT = this.varType?.(node.type);
-          if (TT === null || TT === undefined || TT === go_types_universe.Typ[0]) {
+        if (TT === null || TT === undefined || TT === go_types_universe.Typ[go_types_basic.Invalid]) {
             return errorExpr(x, e);
           }
           // We cannot assert to an incomplete type; make sure it's complete.
@@ -8281,7 +8317,7 @@ namespace go_types_expr {
       case "MapType":
       case "ChanType":
         x.mode_ = go_types_operand.typexpr;
-        x.typ_ = this.typ?.(node) ?? go_types_universe.Typ[0]!;
+      x.typ_ = this.typ?.(node) ?? go_types_universe.Typ[go_types_basic.Invalid]!;
         // Note: rawExpr (caller of exprInternal) will call check.recordTypeAndValue
         // even though check.typ has already called it. This is fine as both
         // times the same expression and type are recorded. It is also not a
@@ -8415,7 +8451,7 @@ namespace go_types_expr {
     let commaOk = false;
     if (allowCommaOk && (x.mode() === go_types_operand.mapindex || x.mode() === go_types_operand.commaok || x.mode() === go_types_operand.commaerr)) {
       let what = "ok value of (comma, ok) expression";
-      let typ: go_types_type.Type = go_types_universe.Typ[20]!;
+      let typ: go_types_type.Type = go_types_universe.Typ[go_types_basic.UntypedBool]!;
       if (x.mode() === go_types_operand.commaerr) {
         what = "err value of (comma, err) expression";
         typ = go_types_universe.universeError;
@@ -9584,6 +9620,29 @@ namespace go_types_signature {
       const n = params?.Len() ?? 0;
       if (n === 0) {
         throw new globalThis.Error("variadic function must have at least one parameter");
+      }
+      const last = params!.At(n - 1).typ!;
+      let S: go_types_slice.Slice | null = null;
+      for (const [t] of go_types_under.typeset(last)) {
+        if (t === null) {
+          break;
+        }
+        let s: go_types_slice.Slice | null = null;
+        if (go_types_predicates.isString(t)) {
+          s = go_types_slice.NewSlice(go_types_universe.universeByte);
+        } else {
+          const u = t.Underlying();
+          s = u instanceof go_types_slice.Slice ? u : null;
+        }
+        if (S === null) {
+          S = s;
+        } else if (s === null || !go_types_predicates.Identical(S, s)) {
+          S = null;
+          break;
+        }
+      }
+      if (S === null) {
+        throw new globalThis.Error(`got ${last}, want variadic parameter of slice or string type`);
       }
     }
     const sig = new Signature(recv, params, results, variadic);
@@ -12811,7 +12870,7 @@ namespace go_types_interface {
 
       const typ = this.typ(typExpr);
       if (!(typ instanceof go_types_signature.Signature)) {
-        if ((typ as go_types_type.Type).String() !== "invalid type") {
+        if (go_types_predicates.isValid(typ)) {
           this.errorf(typExpr, "InvalidSyntaxTree", "%s is not a method signature", typ);
         }
         continue;
@@ -18051,7 +18110,7 @@ namespace go_types_call {
 
   function selectorError(check: go_types_check.Checker, x: go_types_operand.operand, e: SelectorExpr): void {
     x.invalidate();
-    x.typ_ = go_types_universe.Typ[0]!;
+    x.typ_ = go_types_universe.Typ[go_types_basic.Invalid]!;
     x.expr = e;
   }
 }
@@ -20560,7 +20619,7 @@ namespace go_types_index_expr {
         // type instantiation
         x.invalidate();
         // TODO(gri) here we re-evaluate e.X - try to avoid this
-        x.typ_ = this.varType?.(e.orig) ?? go_types_universe.Typ[0]!;
+        x.typ_ = this.varType?.(e.orig) ?? go_types_universe.Typ[go_types_basic.Invalid]!;
         if (go_types_predicates.isValid(x.typ())) {
           x.mode_ = go_types_operand.typexpr;
         }
@@ -20755,7 +20814,7 @@ namespace go_types_index_expr {
     // the element type may be accessed before it's set. Make sure we have
     // a valid type.
     if (x.typ() === null) {
-      x.typ_ = go_types_universe.Typ[0]!;
+      x.typ_ = go_types_universe.Typ[go_types_basic.Invalid]!;
     }
 
     this.index(index, length);
@@ -20952,7 +21011,7 @@ namespace go_types_index_expr {
   // If the result typ is != Typ[Invalid], index is valid and typ is its (possibly named) integer type.
   // If the result val >= 0, index is valid and val is its constant int value.
   go_types_check.registerCheckerMethod("index", function index(index: unknown, max: number): [go_types_type.Type, number] {
-    let typ: go_types_type.Type = go_types_universe.Typ[0]!;
+    let typ: go_types_type.Type = go_types_universe.Typ[go_types_basic.Invalid]!;
     let val = -1;
 
     const x = new go_types_operand.operand();

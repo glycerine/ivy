@@ -4,5 +4,5 @@
     "rootDir": "."
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["tests/**/*.ts", "src/go/types/_parts/**/*.ts"]
+  "exclude": ["tests/**/*.ts"]
 }

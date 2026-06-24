@@ -11,6 +11,5 @@
     "outDir": "dist",
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
-  "exclude": ["src/go/types/_parts/**/*.ts"]
+  "include": ["src/**/*.ts", "tests/**/*.ts"]
 }

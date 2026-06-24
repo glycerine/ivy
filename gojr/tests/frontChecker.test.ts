@@ -103,6 +103,70 @@ func HashStr[T string | []byte](sep T) uint32 {
     expect(result.diagnostics).toEqual([]);
   });
 
+  test("allows conversions between struct types that differ only by tags", () => {
+    const result = check(`
+package conversions
+
+type A struct { X int \`json:"x"\` }
+type B struct { X int \`xml:"x"\` }
+
+var _ = A(B{})
+var _ = (*A)(new(B))
+`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
+  test("checks constant conversions for representability", () => {
+    const result = check(`
+package conversions
+
+var _ = int8(1000)
+var _ = bool(1)
+`);
+
+    const messages = result.diagnostics.map((diagnostic) => diagnostic.message);
+    expect(messages.some((message) => message.includes("constant 1000 overflows int8"))).toBe(true);
+    expect(messages.some((message) => message.includes("cannot convert") && message.includes("type bool"))).toBe(true);
+  });
+
+  test("keeps single basic type parameter constraints precise", () => {
+    const good = check(`
+package generic
+
+func Inc[T int](x T) T {
+  return x + 1
+}
+`);
+    expect(good.diagnostics).toEqual([]);
+
+    const bad = check(`
+package generic
+
+func Bad[T int](x T) T {
+  return x + "no"
+}
+`);
+    expect(bad.diagnostics.map((diagnostic) => diagnostic.message).some((message) => message.includes("mismatched types"))).toBe(true);
+  });
+
+  test("records comma-ok map index expressions", () => {
+    const result = check(`
+package maps
+
+var M map[int]int
+
+func Has(k int) bool {
+  if _, ok := M[k]; ok {
+    return true
+  }
+  return false
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
   test("rejects generic function instantiation with non-type arguments", () => {
     const result = check(`
 package generic
