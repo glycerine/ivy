@@ -15,7 +15,7 @@ export * as GoTypes from "./go/types/index.js";
 export { TokenKind } from "./front/token.js";
 export { Node as formatGoNode, Source as formatGoSource } from "./go/format.js";
 export { parseRuntimeJson, parseSheetJson, parseSheetsJson } from "./jsonInput.js";
-export { evaluateProgram, evaluateSource, formatReplValue, formatValue, GoJuniorSession, GoJuniorDeadlockError, GoJuniorPanic, GoJuniorRuntimeError, RuntimeMap, RuntimeChannel, evaluatePackageSourceFiles, evaluateSourceFiles, testSource, testSourceFiles, typeCheckConfig } from "./runtime.js";
+export { evaluateProgram, evaluateSource, formatReplValue, formatValue, GoJuniorSession, GoJuniorDeadlockError, GoJuniorPanic, GoJuniorRuntimeError, RuntimeMap, RuntimeChannel, evaluatePackageSourceFiles, evaluateSourcePackageGraph, evaluateSourceFiles, testSource, testSourceFiles, typeCheckConfig } from "./runtime.js";
 export function parseProgram(source, filename) {
     const result = frontSourceToAst(source, filename);
     return {

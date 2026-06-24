@@ -317,92 +317,72 @@ function gojrPackageSourceFilename(spec) {
     : "gojr-repl.go";
 }
 
+function gojrRuntimeBuiltinImport(importPath) {
+  return importPath === "fmt" ||
+    importPath === "testing" ||
+    importPath === "unsafe" ||
+    importPath === "math" ||
+    importPath === "strconv" ||
+    importPath === "os";
+}
+
 function gojrEvalSourceFilesForImportScan(request) {
   if (Array.isArray(request.files) && request.files.length > 0) return request.files;
   return [{ filename: "gojr-repl.go", source: request.source || "" }];
 }
 
 async function gojrLoadSourcePackagesForSources(rootFiles, specs, baseOptions = {}, sourceRoots = []) {
-  const packages = {};
-  const packageInfos = {};
   const diagnostics = [];
-  const output = [];
   const explicit = new Map();
+  const initialSpecs = [];
   for (const spec of specs || []) {
-    if (spec && spec.importPath) explicit.set(spec.importPath, spec);
+    if (spec && spec.importPath) {
+      explicit.set(spec.importPath, spec);
+      initialSpecs.push(spec);
+    }
   }
   const provider = gojrNodeSourcePackageProvider(sourceRoots || []);
-  const loading = new Set();
-  const loaded = new Set();
-
-  async function loadImport(importPath, requestedFrom) {
-    if (importPath === "fmt" || importPath === "testing") return;
-    if (loaded.has(importPath) || diagnostics.some((diagnostic) => diagnostic.severity === "error")) return;
-    if (loading.has(importPath)) {
-      diagnostics.push(gojrRuntimeDiagnostic(requestedFrom, "GOJR_BUILD001", `package import cycle detected: ${[...loading, importPath].join(" -> ")}`));
-      return;
-    }
-
-    let spec = explicit.get(importPath);
-    if (!spec && provider) {
-      try {
-        const files = provider.load(importPath);
-        if (files) {
-          spec = { importPath, files };
-          explicit.set(importPath, spec);
-        }
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        diagnostics.push(gojrRuntimeDiagnostic(requestedFrom, "GOJR_BUILD001", `could not load package ${importPath}: ${message}`));
-        return;
-      }
-    }
-    if (!spec) {
-      diagnostics.push(gojrRuntimeDiagnostic(requestedFrom, "GOJR_BUILD001", `package ${importPath} is not available to gojr runtime; provide it with --pkg or --srcroot`));
-      return;
-    }
-
-    loading.add(importPath);
-    const imports = gojrModule.collectSourceImportPaths(spec.files || []);
-    diagnostics.push(...(imports.diagnostics || []));
-    if (!diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-      for (const dependencyPath of imports.imports || []) {
-        await loadImport(dependencyPath, gojrPackageSourceFilename(spec));
-      }
-    }
-    if (!diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-      const options = gojrRuntimeOptions({
-        ...baseOptions,
-        packages,
-        packageInfos,
-        importPath: spec.importPath,
-        packageName: spec.packageName
-      });
-      const result = await gojrModule.evaluatePackageSourceFiles(spec.files || [], options);
-      output.push(...(result.output || []));
-      diagnostics.push(...(result.diagnostics || []));
-      if (!diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-        const pkg = result.package || {};
-        packages[spec.importPath] = pkg;
-        packages[gojrPackageDefaultName(spec.importPath)] = pkg;
-        if (result.packageInfo) packageInfos[spec.importPath] = result.packageInfo;
-        loaded.add(importPath);
-      }
-    }
-    loading.delete(importPath);
-  }
-
-  for (const spec of specs || []) {
-    if (spec && spec.importPath) await loadImport(spec.importPath, gojrPackageSourceFilename(spec));
-  }
   const rootImports = gojrModule.collectSourceImportPaths(rootFiles || []);
   diagnostics.push(...(rootImports.diagnostics || []));
   if (!diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     for (const importPath of rootImports.imports || []) {
-      await loadImport(importPath, (rootFiles && rootFiles[0] && rootFiles[0].filename) || "gojr-repl.go");
+      if (gojrRuntimeBuiltinImport(importPath) || explicit.has(importPath)) continue;
+      try {
+        const files = provider && provider.load(importPath);
+        if (files) {
+          const spec = { importPath, files };
+          explicit.set(importPath, spec);
+          initialSpecs.push(spec);
+        } else {
+          diagnostics.push(gojrRuntimeDiagnostic(
+            (rootFiles && rootFiles[0] && rootFiles[0].filename) || "gojr-repl.go",
+            "GOJR_BUILD001",
+            `package ${importPath} is not available to gojr runtime; provide it with --pkg or --srcroot`
+          ));
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        diagnostics.push(gojrRuntimeDiagnostic(
+          (rootFiles && rootFiles[0] && rootFiles[0].filename) || "gojr-repl.go",
+          "GOJR_BUILD001",
+          `could not load package ${importPath}: ${message}`
+        ));
+      }
     }
   }
-  return { packages, packageInfos, diagnostics, output };
+  if (diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+    return { packages: {}, packageInfos: {}, diagnostics, output: [] };
+  }
+  const result = await gojrModule.evaluateSourcePackageGraph(initialSpecs, gojrRuntimeOptions({
+    ...baseOptions,
+    sourcePackageProvider: provider
+  }));
+  return {
+    packages: result.packages || {},
+    packageInfos: result.packageInfos || {},
+    diagnostics: [...diagnostics, ...(result.diagnostics || [])],
+    output: result.output || []
+  };
 }
 
 async function gojrLoadSourcePackages(specs, baseOptions = {}) {

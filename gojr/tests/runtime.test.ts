@@ -4,6 +4,7 @@ import {
   evaluatePackageSourceFiles,
   evaluateSource,
   evaluateSourceFiles,
+  evaluateSourcePackageGraph,
   formatGoNode,
   formatGoSource,
   formatReplValue,
@@ -491,6 +492,173 @@ return counter.Next()
     expect(second.value).toBe(42n);
   });
 
+  test("runs multiple package init functions in source file sequence order", async () => {
+    const pkg = await evaluatePackageSourceFiles([
+      {
+        filename: "a.go",
+        source: `package initseq
+
+var Events []string
+
+func init() {
+  Events = append(Events, "a1")
+}
+
+func init() {
+  Events = append(Events, "a2")
+}
+`
+      },
+      {
+        filename: "b.go",
+        source: `package initseq
+
+func init() {
+  Events = append(Events, "b1")
+}
+`
+      }
+    ], { importPath: "example.com/initseq" });
+
+    expect(pkg.diagnostics).toEqual([]);
+    expect(formatReplValue(pkg.package?.Events ?? null)).toBe(`["a1" "a2" "b1"]`);
+
+    const result = await expectRuns(`
+import initseq "example.com/initseq"
+return initseq.Events
+`, {
+      packages: {
+        "example.com/initseq": pkg.package ?? {}
+      },
+      packageInfos: {
+        "example.com/initseq": pkg.packageInfo!
+      }
+    });
+
+    expect(formatReplValue(result.value ?? null)).toBe(`["a1" "a2" "b1"]`);
+  });
+
+  test("initializes source package graph in Go spec order and initializes shared imports only once", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/right",
+        files: [{
+          filename: "right.go",
+          source: `package right
+
+import (
+  shared "example.com/shared"
+  trace "example.com/trace"
+)
+
+var Value = shared.Value + 2
+
+func init() {
+  _ = shared.Value
+  trace.Add("right")
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/app",
+        files: [{
+          filename: "app.go",
+          source: `package app
+
+import (
+  left "example.com/left"
+  right "example.com/right"
+  trace "example.com/trace"
+)
+
+func init() {
+  _ = left.Value
+  _ = right.Value
+  trace.Add("app")
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/trace",
+        files: [{
+          filename: "trace.go",
+          source: `package trace
+
+var Events []string
+
+func init() {
+  Events = append(Events, "trace")
+}
+
+func Add(event string) {
+  Events = append(Events, event)
+}
+
+func Snapshot() []string {
+  return Events
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/left",
+        files: [{
+          filename: "left.go",
+          source: `package left
+
+import (
+  shared "example.com/shared"
+  trace "example.com/trace"
+)
+
+var Value = shared.Value + 1
+
+func init() {
+  trace.Add("left")
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/shared",
+        files: [{
+          filename: "shared.go",
+          source: `package shared
+
+import trace "example.com/trace"
+
+var Value = 40
+
+func init() {
+  trace.Add("shared")
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.initializedImportPaths).toEqual([
+      "example.com/trace",
+      "example.com/shared",
+      "example.com/left",
+      "example.com/right",
+      "example.com/app"
+    ]);
+
+    const result = await expectRuns(`
+import trace "example.com/trace"
+return trace.Snapshot()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos
+    });
+
+    expect(formatReplValue(result.value ?? null)).toBe(`["trace" "shared" "left" "right" "app"]`);
+  });
+
   test("typechecks and evaluates source packages that import other source packages", async () => {
     const lib = await evaluatePackageSourceFiles([{
       filename: "lib.go",
@@ -790,7 +958,7 @@ return d + a
     const mixed = await session.evaluate("d + a");
     expect(mixed.diagnostics).toHaveLength(1);
     expect(mixed.diagnostics[0]?.code).toBe("GOJR_TYPE001");
-    expect(mixed.diagnostics[0]?.message).toContain("invalid operation: string + int64");
+    expect(mixed.diagnostics[0]?.message).toContain("mismatched types string and int");
 
     const strings = await expectRuns(`
 s := "hi"
@@ -1740,7 +1908,7 @@ func sum(vals ...int) int {
     expect(direct.diagnostics).toEqual([]);
     expect(direct.value).toBe(6n);
 
-    const spread = await session.evaluate("sum(sheet.A1.([]int64)...)");
+    const spread = await session.evaluate("sum(sheet.A1.([]int)...)");
     expect(spread.diagnostics).toEqual([]);
     expect(spread.value).toBe(15n);
   });
@@ -1858,7 +2026,7 @@ sum := func(vals ...int) int {
     expect(direct.diagnostics).toEqual([]);
     expect(direct.value).toBe(6n);
 
-    const spread = await session.evaluate("sum(sheet.A1.([]int64)...)");
+    const spread = await session.evaluate("sum(sheet.A1.([]int)...)");
     expect(spread.diagnostics).toEqual([]);
     expect(spread.value).toBe(24n);
   });

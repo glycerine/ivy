@@ -763,10 +763,13 @@ registerCheckerMethod("funcDecl", function funcDeclMethod(obj: Func, decl: declI
   const fdecl = decl.fdecl;
   const recv = funcDeclRecv(fdecl);
   const ftyp = funcDeclType(fdecl);
-  const body = funcDeclBody(fdecl);
-  (this as unknown as { funcType: (sig: Signature, recv: unknown, typ: unknown) => void }).funcType(sig, recv, ftyp);
+	  const body = funcDeclBody(fdecl);
+	  (this as unknown as { funcType: (sig: Signature, recv: unknown, typ: unknown) => void }).funcType(sig, recv, ftyp);
+	  if (recv !== null && recv !== undefined) {
+	    attachMethodToCompletedReceiver(this as Checker, obj);
+	  }
 
-  if (sig.scope !== null) {
+	  if (sig.scope !== null) {
     sig.scope.pos = nodePos(fdecl) || nopos;
     sig.scope.end = nodeEnd(fdecl) || nopos;
   }
@@ -780,8 +783,43 @@ registerCheckerMethod("funcDecl", function funcDeclMethod(obj: Func, decl: declI
     this.later(() => {
       (this as unknown as { funcBody: (decl: declInfo, name: string, sig: Signature, body: unknown, iota: unknown) => void }).funcBody(decl, obj.name, sig, body, null);
     }).describef(obj, "func %s", obj.name);
+	  }
+	});
+
+function attachMethodToCompletedReceiver(check: Checker, obj: Func): void {
+  const pending = check.methods;
+  if (pending === null) {
+    return;
   }
-});
+  for (const [receiver, methods] of pending.entries()) {
+    if (!methods.includes(obj)) {
+      continue;
+    }
+    if (receiver.Type() === null) {
+      return;
+    }
+    const base = asNamed(receiver.Type());
+    if (base === null) {
+      return;
+    }
+
+    const mset = new objset();
+    for (let i = 0; i < base.NumMethods(); i++) {
+      const m = base.Method(i);
+      assert(m.name !== "_");
+      assert(mset.insert(m) === null);
+    }
+
+    const alt = mset.insert(obj);
+    if (alt !== null) {
+      (check as unknown as { errorf: (at: unknown, code: unknown, format: string, ...args: unknown[]) => void }).errorf(obj, "DuplicateMethod", "method %s.%s already declared", receiver.Name(), obj.name);
+      return;
+    }
+    base.AddMethod(obj);
+    pending.set(receiver, methods.filter((method) => method !== obj));
+    return;
+  }
+}
 
 registerCheckerMethod("declStmt", function declStmt(d: unknown): void {
   const pkg = this.pkg;

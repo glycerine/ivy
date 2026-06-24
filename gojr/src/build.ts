@@ -1,7 +1,7 @@
 import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan } from "./diagnostics.js";
 import { File, ImportSpec } from "./front/ast.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
-import { checkGoJuniorFiles } from "./typecheck.js";
+import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName } from "./typecheck.js";
 import {
   Builtin as GoTypesBuiltin,
   Const as GoTypesConst,
@@ -671,7 +671,7 @@ function importPathFromSpec(spec: ImportSpec): string {
 
 function packageScopeObjects(pkg: GoTypesPackage): GoTypesObject[] {
   return pkg.Scope().Names().flatMap((name) => {
-    if (name === "__gojr_check_statements" || name === "fmt") return [];
+    if (isGoJuniorSyntheticCheckName(name) || name === "fmt") return [];
     const object = pkg.Scope().Lookup(name);
     if (object === null || object.constructor.name === "PkgName") return [];
     if (object.Pkg() !== pkg && !(pkg.Path() === "unsafe" && object instanceof GoTypesBuiltin)) return [];

@@ -70,7 +70,7 @@ import {
   Universe,
   UntypedInt,
   UntypedNil,
-  init as initGoTypesUniverse,
+  ensureUniverseInitialized,
   type Type
 } from "../src/go/types/index.js";
 import { TokenKind } from "../src/front/token.js";
@@ -500,9 +500,9 @@ describe("Go-junior Go-style AST", () => {
   });
 });
 
-describe("Go-junior Go-style types", () => {
-  test("builds a universe scope with predeclared types, constants, nil, and builtins", () => {
-    initGoTypesUniverse();
+  describe("Go-junior Go-style types", () => {
+    test("builds a universe scope with predeclared types, constants, nil, and builtins", () => {
+    ensureUniverseInitialized();
 
     expect(Universe.Lookup("int64")?.constructor.name).toBe("TypeName");
     expect(Universe.Lookup("true")).toBeInstanceOf(Const);
@@ -513,7 +513,7 @@ describe("Go-junior Go-style types", () => {
   });
 
   test("supports nested scopes and duplicate detection", () => {
-    initGoTypesUniverse();
+    ensureUniverseInitialized();
     const child = NewGoTypesScope(Universe, NoPos, NoPos, "function");
     const first = NewVar(NoPos, null, "x", Typ[Int64]!);
     const duplicate = NewVar(NoPos, null, "x", Typ[GoTypesString]!);
@@ -525,7 +525,7 @@ describe("Go-junior Go-style types", () => {
   });
 
   test("formats signatures and compound types", () => {
-    initGoTypesUniverse();
+    ensureUniverseInitialized();
     const signature = NewSignatureType(
       null,
       null,
@@ -543,7 +543,7 @@ describe("Go-junior Go-style types", () => {
   });
 
   test("checks assignability for untyped constants, nil, named types, and method-set interfaces", () => {
-    initGoTypesUniverse();
+    ensureUniverseInitialized();
     const pkg = NewGoTypesPackage("workbook/geom", "geom");
     const pointName = NewTypeName(NoPos, pkg, "Point", null);
     const point = NewNamed(pointName, NewStruct([

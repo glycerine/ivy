@@ -2,12 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 import { atPos, importKey, nopos, registerCheckerMethod } from "./check.js";
-import { asGoVersion } from "./version.js";
+import { asGoVersion, go1_18, go1_27 } from "./version.js";
 import { NewPackage } from "./package.js";
 import { NewScope } from "./scope.js";
 import { NewConst, NewFunc, NewPkgName, NewTypeName, NewVar } from "./object.js";
 import { assert } from "./util.js";
-import { basicLitValue, fileDecls, fileName, funcDeclBody, funcDeclName, funcDeclRecv, identName, nodeEnd, nodePos, specName, specNames, specPath, specType, specValues } from "./astcompat.js";
+import { basicLitValue, fieldListNumFields, fileDecls, fileName, funcDeclBody, funcDeclName, funcDeclRecv, funcDeclType, identName, nodeEnd, nodePos, specName, specNames, specPath, specType, specValues } from "./astcompat.js";
 // A declInfo describes a package-level const, type, var, or func declaration.
 export class declInfo {
     file = null; // scope of file containing this declaration
@@ -331,11 +331,45 @@ registerCheckerMethod("collectObjects", function collectObjects() {
                 case "funcDecl": {
                     const fd = d.decl;
                     const name = funcDeclName(fd);
+                    const nameText = identName(name);
                     const obj = NewFunc(nodePos(name) || pos, pkg, identName(name), null);
                     const info = new declInfo({ file: fileScope, version: this.version, fdecl: fd });
                     const recvList = funcDeclRecv(fd);
-                    if (recvList === null || recvList === undefined) {
-                        this.declarePkgObj(name, obj, info);
+                    const ftyp = funcDeclType(fd);
+                    const typeParams = ftyp?.TypeParams ?? ftyp?.typeParams;
+                    const tparam0 = fieldListNumFields(typeParams) > 0 ? fieldListFields(typeParams)[0] : null;
+                    const recvCount = fieldListNumFields(recvList);
+                    if (recvList === null || recvList === undefined || recvCount === 0) {
+                        // regular function
+                        if (recvList !== null && recvList !== undefined) {
+                            this.error(recvList, "BadRecv", "method has no receiver");
+                        }
+                        if (nameText === "init" || (nameText === "main" && pkg.name === "main")) {
+                            // init and main functions must not declare type and ordinary parameters or results.
+                            const code = nameText === "main" ? "InvalidMainDecl" : "InvalidInitDecl";
+                            if (tparam0 !== null && tparam0 !== undefined) {
+                                this.softErrorf(tparam0, code, "func %s must have no type parameters", nameText);
+                            }
+                            const params = ftyp?.Params ?? ftyp?.params;
+                            const results = ftyp?.Results ?? ftyp?.results;
+                            if (fieldListNumFields(params) !== 0 || fieldListNumFields(results) !== 0) {
+                                this.softErrorf(name, code, "func %s must have no arguments and no return values", nameText);
+                            }
+                        }
+                        else {
+                            void (tparam0 !== null && tparam0 !== undefined && this.verifyVersionf(tparam0, go1_18, "type parameter"));
+                        }
+                        if (nameText === "init") {
+                            // Don't declare init functions in the package scope: they are invisible.
+                            obj.parent = pkg.scope;
+                            this.recordDef(name, obj);
+                            if (funcDeclBody(fd) === null || funcDeclBody(fd) === undefined) {
+                                this.softErrorf(obj, "MissingInitBody", "func init must have a body");
+                            }
+                        }
+                        else {
+                            this.declare(pkg.scope, name, obj, nopos);
+                        }
                     }
                     else {
                         const recvField = fieldListFields(recvList)[0];
@@ -343,10 +377,11 @@ registerCheckerMethod("collectObjects", function collectObjects() {
                         if (isIdentNode(base) && identName(name) !== "_") {
                             methods.push(new methodInfo(obj, ptr, base));
                         }
+                        void (tparam0 !== null && tparam0 !== undefined && this.verifyVersionf(tparam0, go1_27, "generic method"));
                         this.recordDef(name, obj);
-                        this.objMap.set(obj, info);
-                        obj.setOrder(this.objMap.size);
                     }
+                    this.objMap.set(obj, info);
+                    obj.setOrder(this.objMap.size);
                     void funcDeclBody(fd);
                     break;
                 }

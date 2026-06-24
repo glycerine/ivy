@@ -226,7 +226,9 @@ export function initCore() {
     };
     setObjectUniverseDeps(objectDeps);
 }
-export function init() {
+// ensureUniverseInitialized populates the compiler/type-checker universe scope
+// with Go's predeclared identifiers. It is not related to user Go func init.
+export function ensureUniverseInitialized() {
     initCore();
     if (universePopulated) {
         return;
@@ -247,7 +249,7 @@ export function init() {
     universeComparable = Universe.Lookup("comparable");
 }
 export function UniverseAnyType() {
-    init();
+    ensureUniverseInitialized();
     const typ = universeAny?.Type?.() ?? null;
     if (typ === null) {
         throw new Error("go/types: predeclared any is not initialized");

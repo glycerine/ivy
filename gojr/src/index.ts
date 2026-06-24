@@ -186,6 +186,7 @@ export {
   RuntimeMap,
   RuntimeChannel,
   evaluatePackageSourceFiles,
+  evaluateSourcePackageGraph,
   evaluateSourceFiles,
   testSource,
   testSourceFiles,
@@ -200,6 +201,10 @@ export type {
   RuntimeCallable,
   RuntimeObject,
   RuntimeValue,
+  SourcePackageGraphEvaluationResult,
+  SourcePackageGraphOptions,
+  SourcePackageProvider,
+  SourcePackageSpec,
   SheetData
 } from "./runtime.js";
 

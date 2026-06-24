@@ -23,7 +23,7 @@ import {
   String as GoString,
   Typ,
   emptyInterface,
-  init as initGoTypesUniverse,
+  ensureUniverseInitialized,
   Unsafe,
   type GoJuniorSheetNamespace,
   type Object as GoTypesObject,
@@ -38,11 +38,13 @@ export interface GoJuniorImporter {
 export interface GoJuniorCheckConfig {
   packagePath?: string;
   packageName?: string;
+  packageInstance?: GoTypesPackage;
   importer?: GoJuniorImporter;
   sheetNamespaces?: Record<string, GoJuniorSheetNamespace>;
   predeclaredPackageObjects?: GoTypesObject[];
   autoImportFmt?: boolean;
   disableUnusedImportCheck?: boolean;
+  syntheticFunctionName?: string;
 }
 
 export interface GoJuniorCheckResult {
@@ -51,6 +53,12 @@ export interface GoJuniorCheckResult {
   diagnostics: Diagnostic[];
   files: File[];
   statements: Stmt[];
+}
+
+export const GOJR_SYNTHETIC_CHECK_PREFIX = "__gojr_check_statements";
+
+export function isGoJuniorSyntheticCheckName(name: string): boolean {
+  return name === GOJR_SYNTHETIC_CHECK_PREFIX || name.startsWith(`${GOJR_SYNTHETIC_CHECK_PREFIX}_`);
 }
 
 export function checkGoJuniorSource(source: string, filename: string, config: GoJuniorCheckConfig = {}): GoJuniorCheckResult & { file?: File } {
@@ -73,10 +81,10 @@ export function checkGoJuniorFiles(
   parserDiagnostics: Diagnostic[] = [],
   config: GoJuniorCheckConfig = {}
 ): GoJuniorCheckResult {
-  initGoTypesUniverse();
+  ensureUniverseInitialized();
 
-  const packageName = config.packageName ?? files.find((file) => file.name)?.name?.name ?? "main";
-  const packagePath = config.packagePath ?? packageName;
+  const packageName = config.packageInstance?.Name() ?? config.packageName ?? files.find((file) => file.name)?.name?.name ?? "main";
+  const packagePath = config.packageInstance?.Path() ?? config.packagePath ?? packageName;
   const diagnostics = [...parserDiagnostics];
   const fset = new FrontFileSet(files);
   const info = new Info();
@@ -86,8 +94,8 @@ export function checkGoJuniorFiles(
   info.Scopes = new Map();
   info.Selections = new Map();
 
-  const checkFiles = filesForChecking(files, statements, packageName);
-  const pkg = NewPackage(packagePath, packageName);
+  const checkFiles = filesForChecking(files, statements, packageName, config.syntheticFunctionName);
+  const pkg = config.packageInstance ?? NewPackage(packagePath, packageName);
   seedPackageScope(pkg, config);
 
   const conf = new Config();
@@ -158,14 +166,14 @@ class FrontFileSet {
   }
 }
 
-function filesForChecking(files: File[], statements: Stmt[], packageName: string): File[] {
+function filesForChecking(files: File[], statements: Stmt[], packageName: string, syntheticFunctionName = GOJR_SYNTHETIC_CHECK_PREFIX): File[] {
   const hasPackageClause = files.some((file) => file.name);
   if (statements.length === 0) {
     if (hasPackageClause) return files;
     return [syntheticPackageFile(files, statements, packageName, true)];
   }
   const promoted = promoteTopLevelShortDeclarations(statements);
-  const synthetic = syntheticPackageFile(files, promoted.statements, packageName, !hasPackageClause, promoted.declarations);
+  const synthetic = syntheticPackageFile(files, promoted.statements, packageName, !hasPackageClause, promoted.declarations, syntheticFunctionName);
   return hasPackageClause ? [...files, synthetic] : [synthetic];
 }
 
@@ -174,7 +182,8 @@ function syntheticPackageFile(
   statements: Stmt[],
   packageName: string,
   includeDeclarations: boolean,
-  extraDeclarations: Decl[] = []
+  extraDeclarations: Decl[] = [],
+  syntheticFunctionName = GOJR_SYNTHETIC_CHECK_PREFIX
 ): File {
   const first = files[0];
   const name = first?.name ?? ident(packageName, first?.span);
@@ -182,7 +191,7 @@ function syntheticPackageFile(
   const declarations: Decl[] = includeDeclarations ? files.flatMap((file) => file.declarations) : importDeclarations(files);
   declarations.push(...extraDeclarations);
   if (statements.length > 0) {
-    declarations.push(syntheticFunctionDecl(statements, start));
+    declarations.push(syntheticFunctionDecl(statements, start, syntheticFunctionName));
   }
   return {
     kind: "File",
@@ -229,7 +238,7 @@ function shortDeclarationAsVar(statement: AssignStmt, names: Ident[]): GenDecl {
   };
 }
 
-function syntheticFunctionDecl(statements: Stmt[], span: SourceSpan | undefined): FuncDecl {
+function syntheticFunctionDecl(statements: Stmt[], span: SourceSpan | undefined, name = GOJR_SYNTHETIC_CHECK_PREFIX): FuncDecl {
   const resultCount = maxReturnValueCount(statements);
   const type: FuncType = {
     kind: "FuncType",
@@ -239,13 +248,21 @@ function syntheticFunctionDecl(statements: Stmt[], span: SourceSpan | undefined)
   };
   return {
     kind: "FuncDecl",
-    name: ident("__gojr_check_statements", span),
+    name: ident(name, span),
     type,
     body: {
       kind: "BlockStmt",
-      statements,
+      statements: resultCount > 0 ? [...statements, syntheticNilReturn(resultCount, span)] : statements,
       ...(span ? { span } : {})
     },
+    ...(span ? { span } : {})
+  };
+}
+
+function syntheticNilReturn(count: number, span: SourceSpan | undefined): Stmt {
+  return {
+    kind: "ReturnStmt",
+    results: globalThis.Array.from({ length: count }, () => ident("nil", span)),
     ...(span ? { span } : {})
   };
 }

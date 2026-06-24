@@ -696,6 +696,9 @@ registerCheckerMethod("funcDecl", function funcDeclMethod(obj, decl) {
     const ftyp = funcDeclType(fdecl);
     const body = funcDeclBody(fdecl);
     this.funcType(sig, recv, ftyp);
+    if (recv !== null && recv !== undefined) {
+        attachMethodToCompletedReceiver(this, obj);
+    }
     if (sig.scope !== null) {
         sig.scope.pos = nodePos(fdecl) || nopos;
         sig.scope.end = nodeEnd(fdecl) || nopos;
@@ -710,6 +713,38 @@ registerCheckerMethod("funcDecl", function funcDeclMethod(obj, decl) {
         }).describef(obj, "func %s", obj.name);
     }
 });
+function attachMethodToCompletedReceiver(check, obj) {
+    const pending = check.methods;
+    if (pending === null) {
+        return;
+    }
+    for (const [receiver, methods] of pending.entries()) {
+        if (!methods.includes(obj)) {
+            continue;
+        }
+        if (receiver.Type() === null) {
+            return;
+        }
+        const base = asNamed(receiver.Type());
+        if (base === null) {
+            return;
+        }
+        const mset = new objset();
+        for (let i = 0; i < base.NumMethods(); i++) {
+            const m = base.Method(i);
+            assert(m.name !== "_");
+            assert(mset.insert(m) === null);
+        }
+        const alt = mset.insert(obj);
+        if (alt !== null) {
+            check.errorf(obj, "DuplicateMethod", "method %s.%s already declared", receiver.Name(), obj.name);
+            return;
+        }
+        base.AddMethod(obj);
+        pending.set(receiver, methods.filter((method) => method !== obj));
+        return;
+    }
+}
 registerCheckerMethod("declStmt", function declStmt(d) {
     const pkg = this.pkg;
     this.walkDecl(d, (d) => {

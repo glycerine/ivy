@@ -1,5 +1,6 @@
 import { REPL_FILENAME } from "./diagnostics.js";
-import { checkGoJuniorSourceFiles } from "./typecheck.js";
+import { checkGoJuniorSourceFiles, GOJR_SYNTHETIC_CHECK_PREFIX, isGoJuniorSyntheticCheckName } from "./typecheck.js";
+import { ensureUniverseInitialized, NewPackage } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
 import { DeterministicPrng } from "./prng.js";
 import { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
@@ -774,6 +775,167 @@ export async function evaluatePackageSourceFiles(files, options = {}) {
         };
     }
 }
+export async function evaluateSourcePackageGraph(specs, options = {}) {
+    const evaluator = new SourcePackageGraphEvaluator(specs, options);
+    return evaluator.evaluate();
+}
+class SourcePackageGraphEvaluator {
+    options;
+    specsByPath = new Map();
+    importsByPath = new Map();
+    diagnostics = [];
+    output = [];
+    packages;
+    packageInfos;
+    initialized = new Set();
+    initializedImportPaths = [];
+    constructor(specs, options) {
+        this.options = options;
+        this.packages = { ...(options.packages ?? {}) };
+        this.packageInfos = { ...(options.packageInfos ?? {}) };
+        for (const spec of specs) {
+            if (!spec.importPath) {
+                this.diagnostics.push(packageGraphDiagnostic(REPL_FILENAME, "source package spec is missing importPath"));
+                continue;
+            }
+            if (this.specsByPath.has(spec.importPath)) {
+                this.diagnostics.push(packageGraphDiagnostic(spec.files[0]?.filename ?? REPL_FILENAME, `duplicate source package spec for ${spec.importPath}`));
+                continue;
+            }
+            this.specsByPath.set(spec.importPath, spec);
+        }
+    }
+    async evaluate() {
+        this.discoverSourcePackages();
+        if (this.hasErrors())
+            return this.result();
+        const sortedImportPaths = () => [...this.specsByPath.keys()].sort();
+        while (this.initialized.size < this.specsByPath.size) {
+            let progressed = false;
+            for (const importPath of sortedImportPaths()) {
+                if (this.initialized.has(importPath))
+                    continue;
+                const imports = this.importsByPath.get(importPath) ?? [];
+                const pendingSourceImports = imports.filter((dependency) => this.specsByPath.has(dependency) && !this.initialized.has(dependency));
+                if (pendingSourceImports.length > 0)
+                    continue;
+                await this.initializePackage(importPath);
+                progressed = true;
+                break;
+            }
+            if (this.hasErrors())
+                return this.result();
+            if (!progressed) {
+                const remaining = sortedImportPaths().filter((importPath) => !this.initialized.has(importPath));
+                this.diagnostics.push(packageGraphDiagnostic(this.specsByPath.get(remaining[0] ?? "")?.files[0]?.filename ?? REPL_FILENAME, `package initialization cycle detected among source packages: ${remaining.join(", ")}`));
+                return this.result();
+            }
+        }
+        return this.result();
+    }
+    discoverSourcePackages() {
+        for (const importPath of [...this.specsByPath.keys()].sort()) {
+            this.discoverOne(importPath, []);
+            if (this.hasErrors())
+                return;
+        }
+    }
+    discoverOne(importPath, stack) {
+        if (this.importsByPath.has(importPath) || this.hasErrors())
+            return;
+        if (stack.includes(importPath)) {
+            this.diagnostics.push(packageGraphDiagnostic(this.specsByPath.get(importPath)?.files[0]?.filename ?? REPL_FILENAME, `package import cycle detected: ${[...stack, importPath].join(" -> ")}`));
+            return;
+        }
+        const spec = this.specsByPath.get(importPath);
+        if (!spec)
+            return;
+        const parsed = frontSourceFilesToAst(spec.files);
+        this.diagnostics.push(...parsed.diagnostics);
+        if (this.hasErrors())
+            return;
+        const imports = uniqueSortedSourceImports(parsed.ast?.imports.map((imported) => imported.path) ?? []);
+        this.importsByPath.set(importPath, imports);
+        for (const dependency of imports) {
+            if (isRuntimeBuiltinImport(dependency) || this.packages[dependency])
+                continue;
+            if (!this.specsByPath.has(dependency)) {
+                const loaded = this.options.sourcePackageProvider?.load(dependency);
+                if (loaded) {
+                    this.specsByPath.set(dependency, { importPath: dependency, files: loaded });
+                }
+                else {
+                    this.diagnostics.push(packageGraphDiagnostic(spec.files[0]?.filename ?? REPL_FILENAME, `package ${dependency} is not available to gojr package initialization; provide it as a source package`));
+                    return;
+                }
+            }
+            this.discoverOne(dependency, [...stack, importPath]);
+            if (this.hasErrors())
+                return;
+        }
+    }
+    async initializePackage(importPath) {
+        const spec = this.specsByPath.get(importPath);
+        if (!spec)
+            return;
+        const result = await evaluatePackageSourceFiles(spec.files, {
+            ...this.options,
+            importPath,
+            ...(spec.packageName ? { packageName: spec.packageName } : {}),
+            packages: this.packages,
+            packageInfos: this.packageInfos
+        });
+        this.output.push(...result.output);
+        this.diagnostics.push(...result.diagnostics);
+        if (this.hasErrors())
+            return;
+        const pkg = result.package ?? {};
+        this.packages[importPath] = pkg;
+        const defaultName = sourcePackageDefaultName(importPath);
+        if (this.packages[defaultName] === undefined) {
+            this.packages[defaultName] = pkg;
+        }
+        if (result.packageInfo) {
+            this.packageInfos[importPath] = result.packageInfo;
+        }
+        this.initialized.add(importPath);
+        this.initializedImportPaths.push(importPath);
+    }
+    hasErrors() {
+        return this.diagnostics.some((diagnostic) => diagnostic.severity === "error");
+    }
+    result() {
+        return {
+            diagnostics: this.diagnostics,
+            output: this.output,
+            packages: this.packages,
+            packageInfos: this.packageInfos,
+            initializedImportPaths: this.initializedImportPaths
+        };
+    }
+}
+function uniqueSortedSourceImports(values) {
+    return [...new Set(values)].sort();
+}
+function sourcePackageDefaultName(importPath) {
+    return importPath.split("/").filter(Boolean).at(-1) ?? importPath;
+}
+function isRuntimeBuiltinImport(importPath) {
+    return importPath === "fmt" ||
+        importPath === "testing" ||
+        importPath === "unsafe" ||
+        importPath === "math" ||
+        importPath === "strconv" ||
+        importPath === "os";
+}
+function packageGraphDiagnostic(filename, message) {
+    return {
+        filename,
+        code: "GOJR_RUNTIME001",
+        severity: "error",
+        message
+    };
+}
 export async function testSource(source, options = {}) {
     return testSourceFiles([sourceFileFromSource(source, options)], options);
 }
@@ -874,7 +1036,7 @@ function exportedRuntimePackageObject(objects, context) {
 }
 function packageScopeObjects(pkg) {
     return pkg.Scope().Names().flatMap((name) => {
-        if (name === "__gojr_check_statements" || name === "fmt")
+        if (isGoJuniorSyntheticCheckName(name) || name === "fmt")
             return [];
         const object = pkg.Scope().Lookup(name);
         if (object === null || object.constructor.name === "PkgName")
@@ -1122,13 +1284,16 @@ function indentTestingLog(text) {
 export class GoJuniorSession {
     options;
     context;
-    acceptedPackageObjects = [];
+    checkerPackage;
     sessionSheet;
     sessionSheets;
+    checkSequence = 0;
     constructor(options = {}) {
         this.options = options;
         this.sessionSheet = options.sheet;
         this.sessionSheets = options.sheets ? { ...options.sheets } : undefined;
+        ensureUniverseInitialized();
+        this.checkerPackage = NewPackage("main", "main");
         this.context = new EvaluationContext(options);
         installSheets(this.context, options);
     }
@@ -1165,8 +1330,17 @@ export class GoJuniorSession {
                 output: []
             }, this.context);
         }
+        const preparedRedeclarations = this.prepareFunctionRedeclarations(ast, sourceFile.filename);
+        if (preparedRedeclarations.diagnostics.length > 0) {
+            return withObservedDeps({
+                diagnostics: preparedRedeclarations.diagnostics,
+                output: [],
+                ast
+            }, this.context);
+        }
         const checked = this.checkSource(sourceFile);
         if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+            this.restoreFunctionRedeclarations(preparedRedeclarations.replacements);
             return withObservedDeps({
                 diagnostics: checked.diagnostics,
                 output: [],
@@ -1218,12 +1392,52 @@ export class GoJuniorSession {
     checkSource(source) {
         const checked = checkGoJuniorSourceFiles([ensureTrailingNewlineSourceFile(source)], {
             ...typeCheckConfig(this.currentOptions()),
-            predeclaredPackageObjects: this.acceptedPackageObjects
+            packageInstance: this.checkerPackage,
+            syntheticFunctionName: `${GOJR_SYNTHETIC_CHECK_PREFIX}_${++this.checkSequence}`
         });
         return checked;
     }
-    acceptTypeInfo(checked) {
-        this.acceptedPackageObjects = packageScopeObjects(checked.pkg);
+    acceptTypeInfo(_checked) {
+        // The session owns a persistent go/types.Package, so successful checks have
+        // already extended its package scope. Keeping this hook makes the call sites
+        // spell out when checked declarations become visible to later evaluations.
+    }
+    prepareFunctionRedeclarations(ast, filename) {
+        const diagnostics = [];
+        const replacements = [];
+        const scope = this.checkerPackage.Scope();
+        for (const declaration of ast.functions) {
+            if (declaration.receiver || declaration.name === "init")
+                continue;
+            const existingObject = scope.Lookup(declaration.name);
+            if (existingObject === null)
+                continue;
+            const existingValue = this.context.hasBinding(declaration.name) ? this.context.lookup(declaration.name) : undefined;
+            if (existingValue === undefined ||
+                !isGoJuniorFunction(existingValue) ||
+                existingValue.signature === undefined ||
+                !signaturesCompatible(existingValue.signature, declaration.signature)) {
+                diagnostics.push({
+                    filename,
+                    code: "GOJR_TYPE001",
+                    severity: "error",
+                    message: `cannot redeclare ${declaration.name} with different signature`,
+                    ...(declaration.span ? { span: declaration.span } : {})
+                });
+                continue;
+            }
+            scope.elems.delete(declaration.name);
+            replacements.push({ name: declaration.name, object: existingObject });
+        }
+        return { diagnostics, replacements };
+    }
+    restoreFunctionRedeclarations(replacements) {
+        const scope = this.checkerPackage.Scope();
+        for (const replacement of replacements) {
+            if (scope.Lookup(replacement.name) === null) {
+                scope.insert(replacement.name, replacement.object);
+            }
+        }
     }
     currentOptions() {
         return {

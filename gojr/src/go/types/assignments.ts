@@ -12,17 +12,18 @@ import type { Type } from "./type.js";
 import { Basic, UntypedBool, UntypedComplex, UntypedFloat, UntypedInt, UntypedNil, UntypedRune, UntypedString } from "./basic.js";
 import { Checker, noposn, type positioner , registerCheckerMethod } from "./check.js";
 import { operand, invalid, constant_, variable, mapindex, value, commaok, commaerr, nilvalue } from "./operand.js";
-import { Typ } from "./universe.js";
+import * as universeTypes from "./universe.js";
 import { Invalid } from "./basic.js";
 import { Default, hasNil, isBoolean, isNonTypeParamInterface, isNumeric, isString, isTyped, isTypeParam, isUntyped, isValid, maxType } from "./predicates.js";
 import { underIs } from "./under.js";
-import { Const, LocalVar, newVar, Var, type Object } from "./object.js";
-import { Signature } from "./signature.js";
-import { Slice } from "./slice.js";
-import { Interface } from "./interface.js";
-import { Pointer } from "./pointer.js";
-import { Map as MapType } from "./map.js";
-import { Chan } from "./chan.js";
+import * as objectTypes from "./object.js";
+import type { Object } from "./object.js";
+import * as signatureTypes from "./signature.js";
+import * as sliceTypes from "./slice.js";
+import * as interfaceTypes from "./interface.js";
+import * as pointerTypes from "./pointer.js";
+import * as mapTypes from "./map.js";
+import * as chanTypes from "./chan.js";
 import { ExprString } from "./exprstring.js";
 import { newTarget, type target } from "./expr.js";
 import { assert } from "./util.js";
@@ -40,14 +41,14 @@ declare module "./check.js" {
     exprList(exprs: unknown[]): operand[];
     multiExpr(e: unknown, allowCommaOk: boolean): [operand[], boolean];
     assignment(x: operand, T: Type | null, context: string): void;
-    initConst(lhs: Const, x: operand): void;
-    initVar(lhs: Var, x: operand, context: string): void;
+    initConst(lhs: objectTypes.Const, x: operand): void;
+    initVar(lhs: objectTypes.Var, x: operand, context: string): void;
     lhsVar(lhs: Expr): Type | null;
     assignVar(lhs: Expr, rhs: Expr | null, x: operand | null, context: string): void;
     typesSummary(list: Type[], variadic: boolean, hasDots: boolean): string;
     assignError(rhs: Expr[], l: number, r: number): void;
-    returnError(at: positioner, lhs: Var[], rhs: operand[]): void;
-    initVars(lhs: Var[], orig_rhs: Expr[], returnStmt: Stmt | null): void;
+    returnError(at: positioner, lhs: objectTypes.Var[], rhs: operand[]): void;
+    initVars(lhs: objectTypes.Var[], orig_rhs: Expr[], returnStmt: Stmt | null): void;
     assignVars(lhs: Expr[], orig_rhs: Expr[]): void;
     shortVarDecl(pos: positioner, lhs: Expr[], rhs: Expr[]): void;
   }
@@ -115,11 +116,11 @@ registerCheckerMethod("implicitTypeAndValue", function implicitTypeAndValue(x: o
           return [null, null, "InvalidUntypedConversion"];
         }
         // Preserve the type of nil as UntypedNil: see go.dev/issue/13061.
-        return [Typ[UntypedNil]!, null, 0];
+        return [universeTypes.Typ[UntypedNil]!, null, 0];
       default:
         return [null, null, "InvalidUntypedConversion"];
     }
-  } else if (u instanceof Interface) {
+  } else if (u instanceof interfaceTypes.Interface) {
     if (isTypeParamLocal(target)) {
       if (!underIs(target, (u2: Type | null) => {
         if (u2 === null) {
@@ -132,7 +133,7 @@ registerCheckerMethod("implicitTypeAndValue", function implicitTypeAndValue(x: o
       }
       // keep nil untyped (was bug go.dev/issue/39755)
       if (x.isNil()) {
-        return [Typ[UntypedNil]!, null, 0];
+          return [universeTypes.Typ[UntypedNil]!, null, 0];
       }
     } else {
       // Values must have concrete dynamic types. If the value is nil,
@@ -140,7 +141,7 @@ registerCheckerMethod("implicitTypeAndValue", function implicitTypeAndValue(x: o
       // need the dynamic type for argument checking of say, print
       // functions)
       if (x.isNil()) {
-        return [Typ[UntypedNil]!, null, 0];
+        return [universeTypes.Typ[UntypedNil]!, null, 0];
       }
       // cannot assign untyped values to non-empty interfaces
       if (!u.Empty()) {
@@ -148,12 +149,12 @@ registerCheckerMethod("implicitTypeAndValue", function implicitTypeAndValue(x: o
       }
       return [Default(x.typ()!), null, 0];
     }
-  } else if (u instanceof Pointer || u instanceof Signature || u instanceof Slice || u instanceof MapType || u instanceof Chan) {
+  } else if (u instanceof pointerTypes.Pointer || u instanceof signatureTypes.Signature || u instanceof sliceTypes.Slice || u instanceof mapTypes.Map || u instanceof chanTypes.Chan) {
     if (!x.isNil()) {
       return [null, null, "InvalidUntypedConversion"];
     }
     // Keep nil untyped - see comment for interfaces, above.
-    return [Typ[UntypedNil]!, null, 0];
+    return [universeTypes.Typ[UntypedNil]!, null, 0];
   } else {
     return [null, null, "InvalidUntypedConversion"];
   }
@@ -199,7 +200,7 @@ registerCheckerMethod("assignment", function assignment(x: operand, T: Type | nu
     // on whether the value is a boolean, rune, integer, floating-point,
     // complex, or string constant."
     if (T === null || isNonTypeParamInterface(T)) {
-      if (T === null && x.typ() === Typ[UntypedNil]) {
+      if (T === null && x.typ() === universeTypes.Typ[UntypedNil]) {
         this.errorf(x, "UntypedNilUse", "use of untyped nil in %s", context);
         x.invalidate();
         return;
@@ -260,10 +261,10 @@ registerCheckerMethod("assignment", function assignment(x: operand, T: Type | nu
   }
 });
 
-registerCheckerMethod("initConst", function initConst(lhs: Const, x: operand): void {
+registerCheckerMethod("initConst", function initConst(lhs: objectTypes.Const, x: operand): void {
   if (!x.isValid() || !isValid(x.typ()) || !isValid(lhs.typ)) {
     if (lhs.typ === null) {
-      lhs.typ = Typ[Invalid]!;
+      lhs.typ = universeTypes.Typ[Invalid]!;
     }
     return;
   }
@@ -272,7 +273,7 @@ registerCheckerMethod("initConst", function initConst(lhs: Const, x: operand): v
   if (x.mode() !== constant_) {
     this.errorf(x, "InvalidConstInit", "%s is not constant", x);
     if (lhs.typ === null) {
-      lhs.typ = Typ[Invalid]!;
+      lhs.typ = universeTypes.Typ[Invalid]!;
     }
     return;
   }
@@ -295,10 +296,10 @@ registerCheckerMethod("initConst", function initConst(lhs: Const, x: operand): v
 // If lhs doesn't have a type yet, it is given the type of x,
 // or Typ[Invalid] in case of an error.
 // If the initialization check fails, x.mode is set to invalid.
-registerCheckerMethod("initVar", function initVar(lhs: Var, x: operand, context: string): void {
+registerCheckerMethod("initVar", function initVar(lhs: objectTypes.Var, x: operand, context: string): void {
   if (!x.isValid() || !isValid(x.typ()) || !isValid(lhs.typ)) {
     if (lhs.typ === null) {
-      lhs.typ = Typ[Invalid]!;
+      lhs.typ = universeTypes.Typ[Invalid]!;
     }
     x.invalidate();
     return;
@@ -309,9 +310,9 @@ registerCheckerMethod("initVar", function initVar(lhs: Var, x: operand, context:
     let typ = x.typ()!;
     if (isUntyped(typ)) {
       // convert untyped types to default types
-      if (typ === Typ[UntypedNil]) {
+      if (typ === universeTypes.Typ[UntypedNil]) {
         this.errorf(x, "UntypedNilUse", "use of untyped nil in %s", context);
-        lhs.typ = Typ[Invalid]!;
+        lhs.typ = universeTypes.Typ[Invalid]!;
         x.invalidate();
         return;
       }
@@ -341,7 +342,7 @@ registerCheckerMethod("lhsVar", function lhsVar(lhs: Expr): Type | null {
   // If the lhs is an identifier denoting a variable v, this reference
   // is not a 'use' of v. Remember current value of v.used and restore
   // after evaluating the lhs via check.expr.
-  let v: Var | null = null;
+  let v: objectTypes.Var | null = null;
   let v_used = false;
   if (ident !== null) {
     const obj = this.lookup(ident.name);
@@ -349,7 +350,7 @@ registerCheckerMethod("lhsVar", function lhsVar(lhs: Expr): Type | null {
       // It's ok to mark non-local variables, but ignore variables
       // from other packages to avoid potential race conditions with
       // dot-imported variables.
-      if (obj instanceof Var && obj.pkg === this.pkg) {
+      if (obj instanceof objectTypes.Var && obj.pkg === this.pkg) {
         v = obj;
         v_used = this.usedVars.get(v) ?? false;
       }
@@ -364,14 +365,14 @@ registerCheckerMethod("lhsVar", function lhsVar(lhs: Expr): Type | null {
   }
 
   if (!x.isValid() || !isValid(x.typ())) {
-    return Typ[Invalid]!;
+    return universeTypes.Typ[Invalid]!;
   }
 
   // spec: "Each left-hand side operand must be addressable, a map index
   // expression, or the blank identifier. Operands may be parenthesized."
   switch (x.mode()) {
     case invalid:
-      return Typ[Invalid]!;
+      return universeTypes.Typ[Invalid]!;
     case variable:
     case mapindex:
       // ok
@@ -383,11 +384,11 @@ registerCheckerMethod("lhsVar", function lhsVar(lhs: Expr): Type | null {
         this.expr(null, op, sel.object);
         if (op.mode() === mapindex) {
           this.errorf(x, "UnaddressableFieldAssign", "cannot assign to struct field %s in map", ExprString(x.expr));
-          return Typ[Invalid]!;
+          return universeTypes.Typ[Invalid]!;
         }
       }
       this.errorf(x, "UnassignableOperand", "cannot assign to %s (neither addressable nor a map index expression)", x.expr);
-      return Typ[Invalid]!;
+      return universeTypes.Typ[Invalid]!;
     }
   }
 
@@ -412,7 +413,7 @@ registerCheckerMethod("assignVar", function assignVar(lhs: Expr, rhs: Expr | nul
     let target: target | null = null;
     // avoid calling ExprString if not needed
     if (T !== null) {
-      if (T.Underlying() instanceof Signature) {
+      if (T.Underlying() instanceof signatureTypes.Signature) {
         target = newTarget(T, ExprString(lhs));
       }
     }
@@ -436,7 +437,7 @@ export function operandTypes(list: operand[]): Type[] {
 }
 
 // varTypes returns the list of types for the given variables.
-export function varTypes(list: Var[]): Type[] {
+export function varTypes(list: objectTypes.Var[]): Type[] {
   const res: Type[] = [];
   for (const x of list) {
     res.push(x.typ!);
@@ -485,7 +486,7 @@ registerCheckerMethod("typesSummary", function typesSummary(list: Type[], variad
       switch (true) {
         case variadic:
           // In correct code, the parameter type is a slice, but be careful.
-          if (t instanceof Slice) {
+          if (t instanceof sliceTypes.Slice) {
             s = this.sprintf("%s", t.elem);
           }
           s = "..." + s;
@@ -522,7 +523,7 @@ registerCheckerMethod("assignError", function assignError(rhs: Expr[], l: number
   this.errorf(rhs0, "WrongAssignCount", "assignment mismatch: %s but %s", vars, vals);
 });
 
-registerCheckerMethod("returnError", function returnError(at: positioner, lhs: Var[], rhs: operand[]): void {
+registerCheckerMethod("returnError", function returnError(at: positioner, lhs: objectTypes.Var[], rhs: operand[]): void {
   const l = lhs.length;
   const r = rhs.length;
   let qualifier = "not enough";
@@ -543,7 +544,7 @@ registerCheckerMethod("returnError", function returnError(at: positioner, lhs: V
 // to variables lhs.
 // If returnStmt is non-nil, initVars type-checks the implicit assignment
 // of result expressions orig_rhs to function result parameters lhs.
-registerCheckerMethod("initVars", function initVars(lhs: Var[], orig_rhs: Expr[], returnStmt: Stmt | null): void {
+registerCheckerMethod("initVars", function initVars(lhs: objectTypes.Var[], orig_rhs: Expr[], returnStmt: Stmt | null): void {
   const l = lhs.length;
   let r = orig_rhs.length;
 
@@ -592,7 +593,7 @@ registerCheckerMethod("initVars", function initVars(lhs: Var[], orig_rhs: Expr[]
     // ensure that LHS variables have a type
     for (const v of lhs) {
       if (v.typ === null) {
-        v.typ = Typ[Invalid]!;
+        v.typ = universeTypes.Typ[Invalid]!;
       }
     }
     return;
@@ -624,7 +625,7 @@ registerCheckerMethod("initVars", function initVars(lhs: Var[], orig_rhs: Expr[]
   // ensure that LHS variables have a type
   for (const v of lhs) {
     if (v.typ === null) {
-      v.typ = Typ[Invalid]!;
+      v.typ = universeTypes.Typ[Invalid]!;
     }
   }
   // orig_rhs[0] was already evaluated
@@ -697,8 +698,8 @@ registerCheckerMethod("shortVarDecl", function shortVarDecl(pos: positioner, lhs
 
   // collect lhs variables
   const seen = new Map<string, boolean>();
-  const lhsVars = new globalThis.Array<Var | null>(lhs.length).fill(null);
-  const newVars: Var[] = [];
+  const lhsVars = new globalThis.Array<objectTypes.Var | null>(lhs.length).fill(null);
+  const newVars: objectTypes.Var[] = [];
   let hasErr = false;
   for (let i = 0; i < lhs.length; i++) {
     const lhs_i = lhs[i]!;
@@ -729,7 +730,7 @@ registerCheckerMethod("shortVarDecl", function shortVarDecl(pos: positioner, lhs
     if (alt !== null) {
       this.recordUse(ident, alt);
       // redeclared object must be a variable
-      if (alt instanceof Var) {
+      if (alt instanceof objectTypes.Var) {
         lhsVars[i] = alt;
       } else {
         this.errorf(lhs_i, "UnassignableOperand", "cannot assign to %s", lhs_i);
@@ -739,7 +740,7 @@ registerCheckerMethod("shortVarDecl", function shortVarDecl(pos: positioner, lhs
     }
 
     // declare new variable
-    const obj = newVar(LocalVar, PosOf(ident), this.pkg, name, null);
+    const obj = objectTypes.newVar(objectTypes.LocalVar, PosOf(ident), this.pkg, name, null);
     lhsVars[i] = obj;
     if (name !== "_") {
       newVars.push(obj);
@@ -750,11 +751,11 @@ registerCheckerMethod("shortVarDecl", function shortVarDecl(pos: positioner, lhs
   // create dummy variables where the lhs is invalid
   for (let i = 0; i < lhsVars.length; i++) {
     if (lhsVars[i] === null) {
-      lhsVars[i] = newVar(LocalVar, PosOf(lhs[i]), this.pkg, "_", null);
+      lhsVars[i] = objectTypes.newVar(objectTypes.LocalVar, PosOf(lhs[i]), this.pkg, "_", null);
     }
   }
 
-  this.initVars(lhsVars as Var[], rhs, null);
+  this.initVars(lhsVars as objectTypes.Var[], rhs, null);
 
   // process function literals in rhs expressions before scope changes
   this.processDelayed(top);

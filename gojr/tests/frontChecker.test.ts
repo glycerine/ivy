@@ -166,6 +166,26 @@ func Echo(v any) any {
     expect(result.pkg.Scope().Lookup("Echo")?.Type()?.String()).toBe("func(v any) any");
   });
 
+  test("accepts Go init functions without declaring them in package scope", () => {
+    const result = check(`
+package initpkg
+
+var x int
+
+func init() {
+  x = 1
+}
+
+func Value() int {
+  return x
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.pkg.Scope().Lookup("init")).toBeNull();
+    expect(result.pkg.Scope().Lookup("Value")?.Type()?.String()).toBe("func() int");
+  });
+
   test("scopes range variables to the for statement and preserves integer range key types", () => {
     const result = check(`
 package rangescope

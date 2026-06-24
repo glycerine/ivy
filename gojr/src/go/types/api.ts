@@ -9,7 +9,7 @@ import type { Object, PkgName, Var } from "./object.js";
 import type { Scope } from "./scope.js";
 import type { Selection } from "./selection.js";
 import type { TypeList } from "./typelists.js";
-import { init as initUniverse, Typ } from "./universe.js";
+import { ensureUniverseInitialized, Typ } from "./universe.js";
 import { UntypedNil } from "./basic.js";
 import { operandMode, novalue, typexpr, builtin, constant_, variable, mapindex, value, commaok, commaerr } from "./operand.js";
 import type { Sizes } from "./sizes.js";
@@ -111,7 +111,7 @@ export class Config {
   // the first error if any. Additionally, if info != nil, Check populates each
   // of the non-nil maps in the [Info] struct.
   public Check(path: string, fset: unknown, files: unknown[], info: Info | null): [Package, unknown] {
-    initUniverse();
+    ensureUniverseInitialized();
     const pkg = NewPackage(path, "");
     return [pkg, NewChecker(this, fset, pkg, info).Files(files)];
   }

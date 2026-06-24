@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 import { NewPackage } from "./package.js";
-import { init as initUniverse, Typ } from "./universe.js";
+import { ensureUniverseInitialized, Typ } from "./universe.js";
 import { UntypedNil } from "./basic.js";
 import { novalue, typexpr, builtin, constant_, variable, mapindex, value, commaok, commaerr } from "./operand.js";
 import { NewChecker } from "./check.js";
@@ -78,7 +78,7 @@ export class Config {
     // the first error if any. Additionally, if info != nil, Check populates each
     // of the non-nil maps in the [Info] struct.
     Check(path, fset, files, info) {
-        initUniverse();
+        ensureUniverseInitialized();
         const pkg = NewPackage(path, "");
         return [pkg, NewChecker(this, fset, pkg, info).Files(files)];
     }

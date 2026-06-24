@@ -15,7 +15,7 @@ import * as structTypes from "./struct.js";
 import * as tupleTypes from "./tuple.js";
 import * as typeparamTypes from "./typeparam.js";
 import * as unionTypes from "./union.js";
-import { Identical, hasName, isUntyped, isValid } from "./predicates.js";
+import { Identical, hasName, hasNil, isUntyped, isValid } from "./predicates.js";
 import { Unalias } from "./alias.js";
 import { isInterfacePtr } from "./lookup.js";
 import { implements_ } from "./instantiate.js";
@@ -343,7 +343,7 @@ function implicitTypeAndValue(check, x, target) {
         return fn.implicitTypeAndValue(x, target);
     }
     if (x.typ() === universeTypes.Typ[BasicKind.UntypedNil]) {
-        return [null, null, "UntypedNilUse"];
+        return hasNil(target) ? [universeTypes.Typ[BasicKind.UntypedNil], null, 0] : [null, null, "InvalidUntypedConversion"];
     }
     return [target, x.val, 0];
 }

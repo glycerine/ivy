@@ -1,6 +1,6 @@
 import { REPL_FILENAME } from "./diagnostics.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
-import { checkGoJuniorFiles } from "./typecheck.js";
+import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName } from "./typecheck.js";
 import { Builtin as GoTypesBuiltin, Const as GoTypesConst, Func as GoTypesFunc, TypeName as GoTypesTypeName, Unsafe as GoTypesUnsafe, Var as GoTypesVar } from "./go/types/index.js";
 const ARTIFACT_LAYOUT_VERSION = "gojr-js-v2";
 export const GOJR_GOOS = "gojr";
@@ -500,7 +500,7 @@ function importPathFromSpec(spec) {
 }
 function packageScopeObjects(pkg) {
     return pkg.Scope().Names().flatMap((name) => {
-        if (name === "__gojr_check_statements" || name === "fmt")
+        if (isGoJuniorSyntheticCheckName(name) || name === "fmt")
             return [];
         const object = pkg.Scope().Lookup(name);
         if (object === null || object.constructor.name === "PkgName")
