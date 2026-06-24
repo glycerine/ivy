@@ -408,7 +408,7 @@ func runSource(rt *nodeRuntime, args []string) (bool, error) {
 	_ = seed
 	_ = randomSeed
 	if flags.NArg() > 1 {
-		return false, fmt.Errorf("usage: gojr run [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] [FILE|-]")
+		return false, fmt.Errorf("usage: gojr run [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] [FILE|DIR|-]")
 	}
 	sourcePath := optionalArg(flags.Args())
 	target, err := readRunTarget(sourcePath)
@@ -735,8 +735,8 @@ func printTopLevelUsage() {
 gojr eval [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] SOURCE
   evaluate one Go-junior expression or statement list
 
-gojr run [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] [FILE|-]
-  run a Go-junior source file or stdin
+gojr run [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] [FILE|DIR|-]
+  run a Go-junior source file, package directory, or stdin
 
 gojr compile [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--expr SOURCE] [FILE|DIR|-]
   parse and typecheck Go-junior source without executing it
