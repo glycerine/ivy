@@ -13,6 +13,7 @@ import { Typ, universeComparable } from "./universe.js";
 import { BasicKind } from "./basic.js";
 import type { Pos } from "./token.js";
 import { typexpr } from "./operand.js";
+import { TokenKind } from "../../front/token.js";
 
 // A Union represents a union of terms embedded in an interface.
 export class Union implements Type {
@@ -149,9 +150,9 @@ export function parseUnion(check: Checker, uexpr: unknown): Type {
 export function parseTilde(check: Checker, tx: unknown): Term {
   let x = tx;
   let tilde = false;
-  const op = x as { Op?: unknown; X?: unknown } | null;
-  if (op !== null && op !== undefined && op.Op === "~") {
-    x = op.X;
+  const op = x as { Op?: unknown; op?: unknown; X?: unknown; expr?: unknown } | null;
+  if (op !== null && op !== undefined && (op.Op === "~" || op.op === TokenKind.Tilde)) {
+    x = op.X ?? op.expr;
     tilde = true;
   }
   let typ = (check as unknown as { typ: (x: unknown) => Type }).typ(x);
@@ -205,11 +206,11 @@ export function overlappingTerm(terms: Term[], y: Term): number {
 export function flattenUnion(list: unknown[], x: unknown): [unknown[], unknown[]] {
   let blist: unknown[] = [];
   let tlist: unknown[] = list;
-  const o = x as { Op?: unknown; X?: unknown; Y?: unknown } | null;
-  if (o !== null && o !== undefined && o.Op === "|") {
-    [blist, tlist] = flattenUnion(list, o.X);
+  const o = x as { Op?: unknown; op?: unknown; X?: unknown; Y?: unknown; left?: unknown; right?: unknown } | null;
+  if (o !== null && o !== undefined && (o.Op === "|" || o.op === TokenKind.Or)) {
+    [blist, tlist] = flattenUnion(list, o.X ?? o.left);
     blist.push(o);
-    x = o.Y;
+    x = o.Y ?? o.right;
   }
   tlist.push(x);
   return [blist, tlist];

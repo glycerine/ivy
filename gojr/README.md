@@ -42,10 +42,13 @@ use `.clear` to discard pending input and `.sheet {"A1":40}` to seed
 spreadsheet cells.
 
 `gojr build` compiles a package through the embedded JavaScript build API and
-writes a generated `.js` package artifact. By default artifacts go under
-`~/go/pkg/gojr_js/<import/path>.js`, mirroring Go's `~/go/pkg/<goos>_<goarch>/`
-layout. Use `-pkgdir DIR` to supply a package-cache parent where `gojr_js` is
-appended, or `-artifact-root DIR` to supply the exact artifact root.
+writes a Go-like `.a` package archive. The first archive member is `__.PKGDEF`
+and contains Go-junior indexed export data for fast importer cache hits; the
+generated JavaScript payload lives in a later archive member. By default
+artifacts go under `~/go/pkg/gojr_js/<import/path>.a`, mirroring Go's
+`~/go/pkg/<goos>_<goarch>/` layout. Use `-pkgdir DIR` to supply a package-cache
+parent where `gojr_js` is appended, or `-artifact-root DIR` to supply the exact
+artifact root.
 
 Implemented in this first runtime slice:
 

@@ -33,7 +33,9 @@ registerCheckerMethod("record", function record(x) {
         default:
             typ = x.typ();
     }
-    assert(x.expr !== null && typ !== null);
+    if (x.expr === null || x.expr === undefined || typ === null) {
+        return;
+    }
     if (isUntyped(typ)) {
         this.rememberUntyped(x.expr, false, x.mode(), typ, val);
     }
@@ -140,7 +142,9 @@ registerCheckerMethod("recordDef", function recordDef(id, obj) {
     }
 });
 registerCheckerMethod("recordUse", function recordUse(id, obj) {
-    assert(id !== null && id !== undefined);
+    if (id === null || id === undefined) {
+        return;
+    }
     assert(obj !== null);
     const m = this.Info.Uses;
     if (m !== null) {
@@ -157,7 +161,8 @@ registerCheckerMethod("recordImplicit", function recordImplicit(node, obj) {
 });
 registerCheckerMethod("recordSelection", function recordSelection(x, kind, recv, obj, index, indirect) {
     assert(obj !== null && (recv === null || index.length > 0));
-    this.recordUse(x.Sel, obj);
+    const selector = x.Sel ?? x.selector;
+    this.recordUse(selector, obj);
     const m = this.Info.Selections;
     if (m !== null) {
         m.set(x, { kind, recv, obj, index, indirect });

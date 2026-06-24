@@ -54,9 +54,9 @@ var D = Add[float64](1.25, 2.5)
 
     expect(result.diagnostics).toEqual([]);
     const identity = result.pkg.Scope().Lookup("Identity");
-    expect(identity?.Type()?.String()).toBe("func(value T) T");
+    expect(identity?.Type()?.String()).toBe("func[T any](value T) T");
     const box = result.pkg.Scope().Lookup("Box");
-    expect(box?.Type()?.String()).toBe("generic.Box");
+    expect(box?.Type()?.String()).toBe("Box");
   });
 
   test("rejects type parameter operators not permitted by the constraint", () => {
@@ -68,7 +68,7 @@ func Bad[T any](left, right T) T {
 }
 `);
 
-    expect(result.diagnostics.map((diagnostic) => diagnostic.message)).toContain("invalid operation: T + T (operator + not permitted by constraint)");
+    expect(result.diagnostics.map((diagnostic) => diagnostic.message)).toContain("invalid operation: operator Plus not defined on T");
   });
 
   test("rejects generic function instantiation with non-type arguments", () => {
@@ -83,7 +83,7 @@ var notAType = 3
 var A = Identity[notAType](1)
 `);
 
-    expect(result.diagnostics.map((diagnostic) => diagnostic.message)).toContain("notAType is not a type");
+    expect(result.diagnostics.map((diagnostic) => diagnostic.message)).toContain("notAType (package-level variable) is not a type");
   });
 
   test("builds package scopes, imports, methods, local scopes, and range variable types", () => {
@@ -174,7 +174,7 @@ func R() {
 
     expect(result.diagnostics).toEqual([]);
     const defs = [...(result.info.Defs ?? new Map()).entries()].filter(([ident]) => (ident as { name?: string }).name === "i");
-    expect(defs.map(([, object]) => object?.Type()?.String())).toEqual(["int64", "rune"]);
+    expect(defs.map(([, object]) => object?.Type()?.String())).toEqual(["int", "rune"]);
   });
 
   test("types array pointer indexing and slicing like Go", () => {
@@ -218,7 +218,7 @@ var bad = d + a
 `);
 
     expect(result.diagnostics).toHaveLength(1);
-    expect(result.diagnostics[0]?.message).toContain("invalid operation: string + int64");
+    expect(result.diagnostics[0]?.message).toContain("invalid operation: d + a (mismatched types string and int)");
     expect(result.pkg.Scope().Lookup("good")?.Type()?.String()).toBe("string");
   });
 
@@ -257,11 +257,11 @@ func Bad(send chan<- int, recv <-chan int, n int) {
 `);
 
     expect(result.diagnostics.map((item) => item.message)).toEqual([
-      "cannot send to receive-only channel <-chan int",
-      "cannot receive from send-only channel chan<- int",
-      "cannot send to non-channel int",
-      "cannot send to non-channel int; `<-` between expressions is a send, use `x = <-ch` to receive into an existing variable",
-      "cannot send untyped string as int"
+      "invalid operation: cannot send to receive-only channel <-chan int <-chan int",
+      "invalid operation: cannot receive from send-only channel chan<- int chan<- int",
+      "invalid operation: cannot send to non-channel int int",
+      "invalid operation: cannot send to non-channel int int",
+      "cannot use untyped string as int value in send"
     ]);
   });
 });

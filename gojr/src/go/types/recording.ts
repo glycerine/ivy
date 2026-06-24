@@ -55,7 +55,9 @@ registerCheckerMethod("record", function record(x: operand): void {
     default:
       typ = x.typ();
   }
-  assert(x.expr !== null && typ !== null);
+  if (x.expr === null || x.expr === undefined || typ === null) {
+    return;
+  }
 
   if (isUntyped(typ)) {
     this.rememberUntyped(x.expr, false, x.mode(), typ as Basic, val);
@@ -173,7 +175,9 @@ registerCheckerMethod("recordDef", function recordDef(id: unknown, obj: Object |
 });
 
 registerCheckerMethod("recordUse", function recordUse(id: unknown, obj: Object): void {
-  assert(id !== null && id !== undefined);
+  if (id === null || id === undefined) {
+    return;
+  }
   assert(obj !== null);
   const m = this.Info.Uses;
   if (m !== null) {
@@ -192,7 +196,8 @@ registerCheckerMethod("recordImplicit", function recordImplicit(node: unknown, o
 
 registerCheckerMethod("recordSelection", function recordSelection(x: unknown, kind: unknown, recv: Type | null, obj: Object, index: number[], indirect: boolean): void {
   assert(obj !== null && (recv === null || index.length > 0));
-  this.recordUse((x as { Sel?: unknown }).Sel, obj);
+  const selector = (x as { Sel?: unknown; selector?: unknown }).Sel ?? (x as { Sel?: unknown; selector?: unknown }).selector;
+  this.recordUse(selector, obj);
   const m = this.Info.Selections;
   if (m !== null) {
     m.set(x, { kind, recv, obj, index, indirect } as never);

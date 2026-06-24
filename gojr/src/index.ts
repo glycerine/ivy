@@ -35,6 +35,7 @@ export {
   GOJR_GOARCH,
   GOJR_GOOS,
   inspectPackageJavaScript,
+  parseGoJuniorPackageArchive,
   resolveArtifactRoot
 } from "./build.js";
 export {
@@ -73,6 +74,9 @@ export type {
   BuildArtifactReport,
   BuildArtifactStore,
   BuildExport,
+  GoJuniorPackageArchive,
+  GoJuniorPackageExportData,
+  GoJuniorPackageExportIndexEntry,
   BuildPackageReport,
   BuildStandardLibraryPackageRequest,
   BuildSourcePackageProvider,

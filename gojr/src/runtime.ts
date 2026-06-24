@@ -1158,6 +1158,7 @@ function packageScopeObjects(pkg: GoTypesPackage): GoTypesObject[] {
     if (name === "__gojr_check_statements" || name === "fmt") return [];
     const object = pkg.Scope().Lookup(name);
     if (object === null || object.constructor.name === "PkgName") return [];
+    if (object.Pkg() !== pkg) return [];
     return [object];
   });
 }

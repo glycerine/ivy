@@ -10,6 +10,7 @@ import { Interface } from "./interface.js";
 import { Typ, universeComparable } from "./universe.js";
 import { BasicKind } from "./basic.js";
 import { typexpr } from "./operand.js";
+import { TokenKind } from "../../front/token.js";
 // A Union represents a union of terms embedded in an interface.
 export class Union {
     terms;
@@ -130,8 +131,8 @@ export function parseTilde(check, tx) {
     let x = tx;
     let tilde = false;
     const op = x;
-    if (op !== null && op !== undefined && op.Op === "~") {
-        x = op.X;
+    if (op !== null && op !== undefined && (op.Op === "~" || op.op === TokenKind.Tilde)) {
+        x = op.X ?? op.expr;
         tilde = true;
     }
     let typ = check.typ(x);
@@ -185,10 +186,10 @@ export function flattenUnion(list, x) {
     let blist = [];
     let tlist = list;
     const o = x;
-    if (o !== null && o !== undefined && o.Op === "|") {
-        [blist, tlist] = flattenUnion(list, o.X);
+    if (o !== null && o !== undefined && (o.Op === "|" || o.op === TokenKind.Or)) {
+        [blist, tlist] = flattenUnion(list, o.X ?? o.left);
         blist.push(o);
-        x = o.Y;
+        x = o.Y ?? o.right;
     }
     tlist.push(x);
     return [blist, tlist];

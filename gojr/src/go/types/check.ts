@@ -688,25 +688,25 @@ export function versionMax(a: goVersion, b: goVersion): goVersion {
 // Helper function for recordInstance in recording.go.
 export function instantiatedIdent(expr: unknown): unknown {
   let selOrIdent: unknown = null;
-  const e = expr as { kind?: string; X?: unknown; Sel?: unknown };
+  const e = expr as { kind?: string; X?: unknown; Sel?: unknown; object?: unknown; selector?: unknown };
   switch (e.kind) {
     case "IndexExpr":
-      selOrIdent = e.X;
+      selOrIdent = e.X ?? e.object;
       break;
     case "IndexListExpr": // only exists in go/ast, not syntax
-      selOrIdent = e.X;
+      selOrIdent = e.X ?? e.object;
       break;
     case "SelectorExpr":
     case "Ident":
       selOrIdent = e;
       break;
   }
-  const x = selOrIdent as { kind?: string; Sel?: unknown };
+  const x = selOrIdent as { kind?: string; Sel?: unknown; selector?: unknown };
   switch (x?.kind) {
     case "Ident":
       return x;
     case "SelectorExpr":
-      return x.Sel;
+      return x.Sel ?? x.selector;
   }
 
   // extra debugging of go.dev/issue/63933

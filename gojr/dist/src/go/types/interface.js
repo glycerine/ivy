@@ -3,12 +3,15 @@
 // license that can be found in the LICENSE file.
 // ----------------------------------------------------------------------------
 // API
+import { PosOf } from "../../front/ast.js";
 import { registerCheckerMethod } from "./check.js";
 import { TypeString } from "./typestring.js";
+import { asNamed } from "./alias.js";
 import { Named, setNamedInterfaceConstructor } from "./named.js";
 import { Signature } from "./signature.js";
-import { newVar, setObjectEmptyInterface, VarKind } from "./object.js";
+import { NewFunc, newVar, setObjectEmptyInterface, VarKind } from "./object.js";
 import { _TypeSet, topTypeSet, computeInterfaceTypeSet, sortMethods } from "./typeset.js";
+import { parseUnion } from "./union.js";
 // An Interface represents an interface type.
 export class Interface {
     check;
@@ -89,6 +92,59 @@ registerCheckerMethod("newInterface", function newInterfaceMethod() {
     this.needsCleanup(typ);
     return typ;
 });
+registerCheckerMethod("interfaceType", function interfaceType(ityp, iface, def) {
+    const addEmbedded = (pos, typ) => {
+        ityp.embeddeds.push(typ);
+        if (ityp.embedPos === null) {
+            ityp.embedPos = [];
+        }
+        ityp.embedPos.push(pos);
+    };
+    for (const f of interfaceFields(iface)) {
+        const names = fieldNames(f);
+        const typExpr = fieldType(f);
+        if (names.length === 0) {
+            addEmbedded(PosOf(typExpr), parseUnion(this, typExpr));
+            continue;
+        }
+        const name = names[0];
+        const nameText = identName(name);
+        if (nameText === "_") {
+            this.error(name, "BlankIfaceMethod", "methods must have a unique non-blank name");
+            continue;
+        }
+        const typ = this.typ(typExpr);
+        if (!(typ instanceof Signature)) {
+            if (typ.String() !== "invalid type") {
+                this.errorf(typExpr, "InvalidSyntaxTree", "%s is not a method signature", typ);
+            }
+            continue;
+        }
+        if (typ.tparams !== null) {
+            this.error(typExpr, "InvalidSyntaxTree", "interface methods cannot have type parameters");
+        }
+        let recvTyp = ityp;
+        if (def !== null) {
+            const named = asNamed(def.typ);
+            if (named !== null) {
+                recvTyp = named;
+            }
+        }
+        typ.recv = newVar(VarKind.RecvVar, PosOf(name), this.pkg, "", recvTyp);
+        const m = NewFunc(PosOf(name), this.pkg, nameText, typ);
+        this.recordDef(name, m);
+        ityp.methods.push(m);
+    }
+    ityp.complete = true;
+    if (ityp.methods.length === 0 && ityp.embeddeds.length === 0) {
+        ityp.tset = topTypeSet;
+        return;
+    }
+    sortMethods(ityp.methods);
+    this.later(() => {
+        computeInterfaceTypeSet(this, PosOf(iface), ityp);
+    }).describef(iface, "compute type set for %s", ityp);
+});
 // emptyInterface represents the empty (completed) interface
 export const emptyInterface = new Interface(null);
 emptyInterface.complete = true;
@@ -128,3 +184,23 @@ export function NewInterfaceType(methods, embeddeds) {
     return typ;
 }
 export { _TypeSet, topTypeSet, computeInterfaceTypeSet, sortMethods };
+function interfaceFields(iface) {
+    const i = iface;
+    return i?.Methods?.List ?? i?.MethodList ?? i?.methods?.fields ?? [];
+}
+function fieldNames(field) {
+    const f = field;
+    if (f?.Names !== undefined)
+        return f.Names;
+    if (f?.Name !== undefined && f.Name !== null)
+        return [f.Name];
+    return f?.names ?? [];
+}
+function fieldType(field) {
+    const f = field;
+    return f?.Type ?? f?.type ?? null;
+}
+function identName(ident) {
+    const id = ident;
+    return id?.Name ?? id?.Value ?? id?.name ?? "";
+}

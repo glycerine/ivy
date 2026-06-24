@@ -9,6 +9,7 @@ import {
   collectSourceImportPaths,
   createStandardLibrarySourcePackageProvider,
   inspectPackageJavaScript,
+  parseGoJuniorPackageArchive,
   resolveArtifactRoot
 } from "../src/index.js";
 
@@ -27,6 +28,8 @@ class MemoryArtifactStore implements BuildArtifactStore {
 }
 
 function artifactJSON(source: string | undefined): Record<string, unknown> {
+  const archive = parseGoJuniorPackageArchive(source ?? "");
+  if (archive) return archive.pkgdef as unknown as Record<string, unknown>;
   const match = /export const gojrPackageArtifact = ([\s\S]*);\s*$/.exec(source ?? "");
   if (!match?.[1]) throw new Error("missing gojrPackageArtifact envelope");
   return JSON.parse(match[1]) as Record<string, unknown>;
@@ -72,18 +75,18 @@ func hidden() {}
     expect(result.diagnostics).toEqual([]);
     expect(result.ok).toBe(true);
     expect(result.artifacts).toHaveLength(1);
-    expect(result.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/example.com/demo/math.js");
+    expect(result.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a");
     expect(result.artifacts[0]?.dependencies).toEqual(["fmt"]);
     expect(result.artifacts[0]?.exports).toEqual([
       { name: "Add", kind: "func", typeText: "func(a int, b int) int" },
       { name: "Answer", kind: "const", typeText: "untyped int" },
-      { name: "Box", kind: "type", typeText: "math.Box", underlyingTypeText: "struct{Value T}" },
+      { name: "Box", kind: "type", typeText: "Box", underlyingTypeText: "struct{Value T}" },
       { name: "Count", kind: "var", typeText: "int" },
-      { name: "Identity", kind: "func", typeText: "func(value T) T" },
-      { name: "Point", kind: "type", typeText: "math.Point", underlyingTypeText: "struct{X int}" }
+      { name: "Identity", kind: "func", typeText: "func[T any](value T) T" },
+      { name: "Point", kind: "type", typeText: "Point", underlyingTypeText: "struct{X int}" }
     ]);
-    expect(store.writes.has("/tmp/gopath/pkg/gojr_js/example.com/demo/math.js")).toBe(true);
-    expect(store.writes.get("/tmp/gopath/pkg/gojr_js/example.com/demo/math.js")).toContain("gojrPackageArtifact");
+    expect(store.writes.has("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a")).toBe(true);
+    expect(parseGoJuniorPackageArchive(store.writes.get("/tmp/gopath/pkg/gojr_js/example.com/demo/math.a") ?? "")?.members[0]?.name).toBe("__.PKGDEF");
   });
 
   test("uses an exact artifact root override directly", () => {
@@ -95,8 +98,8 @@ func hidden() {}
     }, store);
 
     expect(result.diagnostics).toEqual([]);
-    expect(result.artifacts[0]?.artifactPath).toBe("/tmp/custom-cache/example.com/demo.js");
-    expect([...store.writes.keys()]).toEqual(["/tmp/custom-cache/example.com/demo.js"]);
+    expect(result.artifacts[0]?.artifactPath).toBe("/tmp/custom-cache/example.com/demo.a");
+    expect([...store.writes.keys()]).toEqual(["/tmp/custom-cache/example.com/demo.a"]);
   });
 
   test("rejects mixed package names before writing artifacts", () => {
@@ -121,7 +124,7 @@ func hidden() {}
   test("documents artifact root helpers", () => {
     expect(resolveArtifactRoot({ packageCacheParent: "/home/me/go/pkg" })).toBe("/home/me/go/pkg/gojr_js");
     expect(resolveArtifactRoot({ artifactRoot: "/tmp/gojr_js" })).toBe("/tmp/gojr_js");
-    expect(artifactPathForImportPath("/home/me/go/pkg/gojr_js", "github.com/u/p")).toBe("/home/me/go/pkg/gojr_js/github.com/u/p.js");
+    expect(artifactPathForImportPath("/home/me/go/pkg/gojr_js", "github.com/u/p")).toBe("/home/me/go/pkg/gojr_js/github.com/u/p.a");
   });
 
   test("builds leaf standard-library packages into the GOPATH-style gojr_js cache", () => {
@@ -175,19 +178,19 @@ func hidden() {}
     expect(cmpFirst.diagnostics).toEqual([]);
     expect(cmpFirst.ok).toBe(true);
     expect(cmpFirst.artifacts).toHaveLength(1);
-    expect(cmpFirst.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/cmp.js");
+    expect(cmpFirst.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/cmp.a");
     expect(cmpFirst.artifacts[0]?.dependencies).toEqual([]);
     expect(cmpFirst.artifacts[0]?.exports.map((item) => item.name)).toEqual(["Compare", "Less", "Or", "Ordered"]);
     expect(unsafeFirst.diagnostics).toEqual([]);
     expect(unsafeFirst.ok).toBe(true);
-    expect(unsafeFirst.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/unsafe.js");
+    expect(unsafeFirst.artifacts[0]?.artifactPath).toBe("/tmp/gopath/pkg/gojr_js/unsafe.a");
     expect(unsafeFirst.artifacts[0]?.exports.map((item) => item.name)).toContain("Pointer");
     expect(unsafeFirst.artifacts[0]?.exports.map((item) => item.name)).toContain("Sizeof");
     expect(cmpSecond.artifacts[0]?.action).toBe("skipped");
     expect(unsafeSecond.artifacts[0]?.action).toBe("skipped");
     expect(store.writeCount).toBe(2);
 
-    const artifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/gojr_js/cmp.js"));
+    const artifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/gojr_js/cmp.a"));
     expect(artifact.goos).toBe("gojr");
     expect(artifact.goarch).toBe("js");
     expect(artifact.importPath).toBe("cmp");
@@ -200,7 +203,7 @@ func hidden() {}
       }
     ]);
 
-    const unsafeArtifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/gojr_js/unsafe.js"));
+    const unsafeArtifact = artifactJSON(store.writes.get("/tmp/gopath/pkg/gojr_js/unsafe.a"));
     expect(unsafeArtifact.goos).toBe("gojr");
     expect(unsafeArtifact.goarch).toBe("js");
     expect(unsafeArtifact.importPath).toBe("unsafe");
@@ -221,7 +224,7 @@ func hidden() {}
     });
 
     expect(result.ok).toBe(true);
-    expect(result.built).toEqual(["/tmp/gojr-inspect/example.com/inspect.js"]);
+    expect(result.built).toEqual(["/tmp/gojr-inspect/example.com/inspect.a"]);
     expect(result.source).toContain("export const gojrPackageArtifact =");
     expect(result.source).toContain("\"importPath\": \"example.com/inspect\"");
     expect(result.source).toContain("\"name\": \"Answer\"");
@@ -242,9 +245,9 @@ func hidden() {}
     expect(second.ok).toBe(true);
     expect(first.artifacts[0]?.action).toBe("built");
     expect(second.artifacts[0]?.action).toBe("skipped");
-    expect(first.built).toEqual(["/tmp/gojr-cache/example.com/cache.js"]);
+    expect(first.built).toEqual(["/tmp/gojr-cache/example.com/cache.a"]);
     expect(second.built).toEqual([]);
-    expect(second.skipped).toEqual(["/tmp/gojr-cache/example.com/cache.js"]);
+    expect(second.skipped).toEqual(["/tmp/gojr-cache/example.com/cache.a"]);
     expect(store.writeCount).toBe(1);
     expect(first.artifacts[0]?.cacheKey).toBe(second.artifacts[0]?.cacheKey);
   });
@@ -282,7 +285,7 @@ func hidden() {}
       ...request,
       files: [{ filename: "cache.go", source: "package cache\nfunc F() int { return 2 }\n" }]
     }, store);
-    store.writes.set("/tmp/gojr-cache/example.com/cache.js", "not a gojr artifact");
+    store.writes.set("/tmp/gojr-cache/example.com/cache.a", "not a gojr artifact");
     const invalidCache = buildPackages(request, store);
 
     expect(first.artifacts[0]?.action).toBe("built");
@@ -330,8 +333,8 @@ func Two() int { return lib.One() + 1 }
     expect(first.ok).toBe(true);
     expect(first.artifacts.map((artifact) => artifact.importPath)).toEqual(["example.com/lib", "example.com/app"]);
     expect(first.built).toEqual([
-      "/tmp/gojr-graph/example.com/lib.js",
-      "/tmp/gojr-graph/example.com/app.js"
+      "/tmp/gojr-graph/example.com/lib.a",
+      "/tmp/gojr-graph/example.com/app.a"
     ]);
     expect(first.artifacts[1]?.dependencies).toEqual(["example.com/lib"]);
     expect(first.artifacts[1]?.dependencyCacheKeys).toEqual([`example.com/lib:${first.artifacts[0]?.cacheKey}`]);
@@ -342,8 +345,8 @@ func Two() int { return lib.One() + 1 }
     expect(second.artifacts.map((artifact) => artifact.action)).toEqual(["skipped", "skipped"]);
     expect(second.built).toEqual([]);
     expect(second.skipped).toEqual([
-      "/tmp/gojr-graph/example.com/lib.js",
-      "/tmp/gojr-graph/example.com/app.js"
+      "/tmp/gojr-graph/example.com/lib.a",
+      "/tmp/gojr-graph/example.com/app.a"
     ]);
 
     expect(changedDependency.artifacts.map((artifact) => artifact.action)).toEqual(["built", "built"]);
@@ -441,8 +444,8 @@ func Two() int { return lib.One() + 1 }
     expect(loaded).toEqual(["example.com/lib"]);
     expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual(["example.com/lib", "example.com/app"]);
     expect([...store.writes.keys()]).toEqual([
-      "/tmp/gojr-provider/example.com/lib.js",
-      "/tmp/gojr-provider/example.com/app.js"
+      "/tmp/gojr-provider/example.com/lib.a",
+      "/tmp/gojr-provider/example.com/app.a"
     ]);
   });
 

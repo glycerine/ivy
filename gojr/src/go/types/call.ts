@@ -196,7 +196,7 @@ registerCheckerMethod("instantiateSignature", function instantiateSignature(pos:
     // count is correct at this point (see assertion above); hence the type assertion
     // to *Signature will always succeed.
     const inst = this.instance(pos, typ as genericType, targs, null, this.context()) as Signature;
-    assert(inst.TypeParams()!.Len() === 0); // signature is not generic anymore
+    assert((inst.TypeParams()?.Len() ?? 0) === 0); // signature is not generic anymore
     this.recordInstance(expr, targs, inst);
     assert((xlist?.length ?? 0) <= targs.length);
 
@@ -213,7 +213,7 @@ registerCheckerMethod("instantiateSignature", function instantiateSignature(pos:
         }
         this.softErrorf(new atPos(pos2), "InvalidTypeArg", "%s", err);
       } else {
-        (this.mono as { recordInstance(pkg: unknown, pos: number, tparams: TypeParam[], targs: Type[], xlist: unknown[]): void }).recordInstance(this.pkg, pos, tparams, targs, xlist ?? []);
+        (this.mono as { recordInstance?: (pkg: unknown, pos: number, tparams: TypeParam[], targs: Type[], xlist: unknown[]) => void } | null)?.recordInstance?.(this.pkg, pos, tparams, targs, xlist ?? []);
       }
     }).describef(new atPos(pos), "verify instantiation");
 

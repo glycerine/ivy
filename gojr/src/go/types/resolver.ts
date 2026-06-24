@@ -371,16 +371,37 @@ registerCheckerMethod("collectObjects", function collectObjects(): void {
           const name = funcDeclName(fd);
           const obj = NewFunc(nodePos(name) || pos, pkg, identName(name), null);
           const info = new declInfo({ file: fileScope, version: this.version, fdecl: fd });
-          if (funcDeclRecv(fd) === null || funcDeclRecv(fd) === undefined) {
+          const recvList = funcDeclRecv(fd);
+          if (recvList === null || recvList === undefined) {
             this.declarePkgObj(name, obj, info);
           } else {
+            const recvField = fieldListFields(recvList)[0];
+            const [ptr, base] = this.unpackRecv(fieldType(recvField), false);
+            if (isIdentNode(base) && identName(name) !== "_") {
+              methods.push(new methodInfo(obj, ptr, base));
+            }
+            this.recordDef(name, obj);
             this.objMap.set(obj, info);
+            obj.setOrder(this.objMap.size);
           }
           void funcDeclBody(fd);
           break;
         }
       }
     });
+  }
+
+  if (methods.length > 0) {
+    this.methods = new Map();
+    for (const m of methods) {
+      const base = this.resolveBaseTypeName(m.ptr, m.recv);
+      if (base !== null) {
+        m.obj.hasPtrRecv_ = m.ptr;
+        const list = this.methods.get(base) ?? [];
+        list.push(m.obj);
+        this.methods.set(base, list);
+      }
+    }
   }
 });
 
@@ -390,16 +411,16 @@ registerCheckerMethod("sortObjects", function sortObjects(): void {
 });
 
 registerCheckerMethod("unpackRecv", function unpackRecv(rtyp: unknown, _unpackParams: boolean): [boolean, unknown, unknown] {
-  const expr = rtyp as { kind?: string; X?: unknown };
+  const expr = rtyp as { kind?: string; X?: unknown; expr?: unknown };
   if (expr?.kind === "StarExpr") {
-    return [true, expr.X, null];
+    return [true, expr.X ?? expr.expr, null];
   }
   return [false, rtyp, null];
 });
 
 registerCheckerMethod("resolveBaseTypeName", function resolveBaseTypeName(_ptr: boolean, recv: unknown): TypeName | null {
-  const id = recv as { Name?: string };
-  const obj = this.pkg.scope.Lookup(id.Name ?? "");
+  const id = recv as { Name?: string; Value?: string; name?: string };
+  const obj = this.pkg.scope.Lookup(id.Name ?? id.Value ?? id.name ?? "");
   return obj instanceof NewTypeName(nopos, null, "", null).constructor ? obj as TypeName : null;
 });
 
@@ -430,4 +451,19 @@ export function dir(path: string): string {
     return "/";
   }
   return path.slice(0, i);
+}
+
+function fieldListFields(list: unknown): unknown[] {
+  const l = list as { List?: unknown[]; fields?: unknown[] } | null;
+  return l?.List ?? l?.fields ?? [];
+}
+
+function fieldType(field: unknown): unknown {
+  const f = field as { Type?: unknown; type?: unknown } | null;
+  return f?.Type ?? f?.type ?? null;
+}
+
+function isIdentNode(node: unknown): boolean {
+  const n = node as { kind?: string; Name?: unknown; Value?: unknown; name?: unknown } | null;
+  return n?.kind === "Ident" || n?.Name !== undefined || n?.Value !== undefined || n?.name !== undefined;
 }

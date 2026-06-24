@@ -5,18 +5,26 @@
 // ----------------------------------------------------------------------------
 // API
 
+import { PosOf } from "../../front/ast.js";
 import { registerCheckerMethod, type Checker } from "./check.js";
 import type { Pos } from "./token.js";
 import type { Type } from "./type.js";
 import { TypeString } from "./typestring.js";
+import { asNamed } from "./alias.js";
 import { Named, setNamedInterfaceConstructor } from "./named.js";
 import { Signature } from "./signature.js";
-import { newVar, setObjectEmptyInterface, VarKind, type Func } from "./object.js";
+import { NewFunc, newVar, setObjectEmptyInterface, TypeName, VarKind, type Func } from "./object.js";
 import { _TypeSet, topTypeSet, computeInterfaceTypeSet, sortMethods } from "./typeset.js";
+import { parseUnion } from "./union.js";
 
 declare module "./check.js" {
   interface Checker {
     newInterface(): Interface;
+    interfaceType(ityp: Interface, iface: unknown, def: TypeName | null): void;
+    typ(e: unknown): Type;
+    error(at: unknown, code: unknown, msg: string): void;
+    errorf(at: unknown, code: unknown, format: string, ...args: unknown[]): void;
+    recordDef(id: unknown, obj: Func): void;
   }
 }
 
@@ -120,6 +128,70 @@ registerCheckerMethod("newInterface", function newInterfaceMethod(): Interface {
   return typ;
 });
 
+registerCheckerMethod("interfaceType", function interfaceType(ityp: Interface, iface: unknown, def: TypeName | null): void {
+  const addEmbedded = (pos: Pos, typ: Type): void => {
+    ityp.embeddeds.push(typ);
+    if (ityp.embedPos === null) {
+      ityp.embedPos = [];
+    }
+    ityp.embedPos.push(pos);
+  };
+
+  for (const f of interfaceFields(iface)) {
+    const names = fieldNames(f);
+    const typExpr = fieldType(f);
+    if (names.length === 0) {
+      addEmbedded(PosOf(typExpr as never), parseUnion(this, typExpr));
+      continue;
+    }
+
+    const name = names[0]!;
+    const nameText = identName(name);
+    if (nameText === "_") {
+      this.error(name, "BlankIfaceMethod", "methods must have a unique non-blank name");
+      continue;
+    }
+
+    const typ = this.typ(typExpr);
+    if (!(typ instanceof Signature)) {
+      if ((typ as Type).String() !== "invalid type") {
+        this.errorf(typExpr, "InvalidSyntaxTree", "%s is not a method signature", typ);
+      }
+      continue;
+    }
+
+    if (typ.tparams !== null) {
+      this.error(typExpr, "InvalidSyntaxTree", "interface methods cannot have type parameters");
+    }
+
+    let recvTyp: Type = ityp;
+    if (def !== null) {
+      const named = asNamed(def.typ);
+      if (named !== null) {
+        recvTyp = named;
+      }
+    }
+    typ.recv = newVar(VarKind.RecvVar, PosOf(name as never), this.pkg, "", recvTyp);
+
+    const m = NewFunc(PosOf(name as never), this.pkg, nameText, typ);
+    this.recordDef(name, m);
+    ityp.methods.push(m);
+  }
+
+  ityp.complete = true;
+
+  if (ityp.methods.length === 0 && ityp.embeddeds.length === 0) {
+    ityp.tset = topTypeSet;
+    return;
+  }
+
+  sortMethods(ityp.methods);
+
+  this.later(() => {
+    computeInterfaceTypeSet(this, PosOf(iface as never), ityp);
+  }).describef(iface as never, "compute type set for %s", ityp);
+});
+
 // emptyInterface represents the empty (completed) interface
 export const emptyInterface = new Interface(null);
 emptyInterface.complete = true;
@@ -166,3 +238,25 @@ export function NewInterfaceType(methods: Func[] | null, embeddeds: Type[] | nul
 }
 
 export { _TypeSet, topTypeSet, computeInterfaceTypeSet, sortMethods };
+
+function interfaceFields(iface: unknown): unknown[] {
+  const i = iface as { Methods?: { List?: unknown[] }; MethodList?: unknown[]; methods?: { fields?: unknown[] } } | null;
+  return i?.Methods?.List ?? i?.MethodList ?? i?.methods?.fields ?? [];
+}
+
+function fieldNames(field: unknown): unknown[] {
+  const f = field as { Names?: unknown[]; Name?: unknown; names?: unknown[] } | null;
+  if (f?.Names !== undefined) return f.Names;
+  if (f?.Name !== undefined && f.Name !== null) return [f.Name];
+  return f?.names ?? [];
+}
+
+function fieldType(field: unknown): unknown {
+  const f = field as { Type?: unknown; type?: unknown } | null;
+  return f?.Type ?? f?.type ?? null;
+}
+
+function identName(ident: unknown): string {
+  const id = ident as { Name?: string; Value?: string; name?: string } | null;
+  return id?.Name ?? id?.Value ?? id?.name ?? "";
+}

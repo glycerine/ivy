@@ -333,17 +333,37 @@ registerCheckerMethod("collectObjects", function collectObjects() {
                     const name = funcDeclName(fd);
                     const obj = NewFunc(nodePos(name) || pos, pkg, identName(name), null);
                     const info = new declInfo({ file: fileScope, version: this.version, fdecl: fd });
-                    if (funcDeclRecv(fd) === null || funcDeclRecv(fd) === undefined) {
+                    const recvList = funcDeclRecv(fd);
+                    if (recvList === null || recvList === undefined) {
                         this.declarePkgObj(name, obj, info);
                     }
                     else {
+                        const recvField = fieldListFields(recvList)[0];
+                        const [ptr, base] = this.unpackRecv(fieldType(recvField), false);
+                        if (isIdentNode(base) && identName(name) !== "_") {
+                            methods.push(new methodInfo(obj, ptr, base));
+                        }
+                        this.recordDef(name, obj);
                         this.objMap.set(obj, info);
+                        obj.setOrder(this.objMap.size);
                     }
                     void funcDeclBody(fd);
                     break;
                 }
             }
         });
+    }
+    if (methods.length > 0) {
+        this.methods = new Map();
+        for (const m of methods) {
+            const base = this.resolveBaseTypeName(m.ptr, m.recv);
+            if (base !== null) {
+                m.obj.hasPtrRecv_ = m.ptr;
+                const list = this.methods.get(base) ?? [];
+                list.push(m.obj);
+                this.methods.set(base, list);
+            }
+        }
     }
 });
 registerCheckerMethod("sortObjects", function sortObjects() {
@@ -353,13 +373,13 @@ registerCheckerMethod("sortObjects", function sortObjects() {
 registerCheckerMethod("unpackRecv", function unpackRecv(rtyp, _unpackParams) {
     const expr = rtyp;
     if (expr?.kind === "StarExpr") {
-        return [true, expr.X, null];
+        return [true, expr.X ?? expr.expr, null];
     }
     return [false, rtyp, null];
 });
 registerCheckerMethod("resolveBaseTypeName", function resolveBaseTypeName(_ptr, recv) {
     const id = recv;
-    const obj = this.pkg.scope.Lookup(id.Name ?? "");
+    const obj = this.pkg.scope.Lookup(id.Name ?? id.Value ?? id.name ?? "");
     return obj instanceof NewTypeName(nopos, null, "", null).constructor ? obj : null;
 });
 registerCheckerMethod("packageObjects", function packageObjects() {
@@ -386,4 +406,16 @@ export function dir(path) {
         return "/";
     }
     return path.slice(0, i);
+}
+function fieldListFields(list) {
+    const l = list;
+    return l?.List ?? l?.fields ?? [];
+}
+function fieldType(field) {
+    const f = field;
+    return f?.Type ?? f?.type ?? null;
+}
+function isIdentNode(node) {
+    const n = node;
+    return n?.kind === "Ident" || n?.Name !== undefined || n?.Value !== undefined || n?.name !== undefined;
 }

@@ -616,10 +616,10 @@ export function instantiatedIdent(expr) {
     const e = expr;
     switch (e.kind) {
         case "IndexExpr":
-            selOrIdent = e.X;
+            selOrIdent = e.X ?? e.object;
             break;
         case "IndexListExpr": // only exists in go/ast, not syntax
-            selOrIdent = e.X;
+            selOrIdent = e.X ?? e.object;
             break;
         case "SelectorExpr":
         case "Ident":
@@ -631,7 +631,7 @@ export function instantiatedIdent(expr) {
         case "Ident":
             return x;
         case "SelectorExpr":
-            return x.Sel;
+            return x.Sel ?? x.selector;
     }
     // extra debugging of go.dev/issue/63933
     throw new Error(`instantiated ident not found; please report: ${String(expr)}`);

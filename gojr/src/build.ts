@@ -3,9 +3,11 @@ import { File, ImportSpec } from "./front/ast.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
 import { checkGoJuniorFiles } from "./typecheck.js";
 import {
+  Builtin as GoTypesBuiltin,
   Const as GoTypesConst,
   Func as GoTypesFunc,
   TypeName as GoTypesTypeName,
+  Unsafe as GoTypesUnsafe,
   Var as GoTypesVar,
   type Object as GoTypesObject,
   type Package as GoTypesPackage
@@ -43,6 +45,42 @@ export interface BuildExport {
   kind: "const" | "func" | "type" | "var";
   typeText: string;
   underlyingTypeText?: string;
+}
+
+export interface GoJuniorPackageExportIndexEntry {
+  exportIndex: number;
+  kind: BuildExport["kind"];
+  typeText: string;
+  underlyingTypeText?: string;
+}
+
+export interface GoJuniorPackageExportData {
+  exportFormat: "gojr-iexport";
+  exportVersion: 1;
+  exportIndex: Record<string, GoJuniorPackageExportIndexEntry>;
+  layoutVersion: string;
+  compilerVersion: string;
+  backend: string;
+  hostSpecVersion: string;
+  capabilityPolicy: string;
+  goos: string;
+  goarch: string;
+  buildTags: string[];
+  standardLibrary: boolean;
+  importPath: string;
+  packageName: string;
+  sourceHash: string;
+  cacheKey: string;
+  dependencies: string[];
+  dependencyCacheKeys: string[];
+  exports: BuildExport[];
+  sources: Array<{ filename: string; hash: string }>;
+}
+
+export interface GoJuniorPackageArchive {
+  pkgdef: GoJuniorPackageExportData;
+  javascript: string;
+  members: Array<{ name: string; data: string }>;
 }
 
 export interface BuildArtifactReport {
@@ -99,6 +137,10 @@ const DEFAULT_COMPILER_VERSION = "gojr-dev";
 const DEFAULT_BACKEND = "js-source-envelope";
 const DEFAULT_HOST_SPEC_VERSION = "host-v0";
 const DEFAULT_CAPABILITY_POLICY = "default";
+const AR_MAGIC = "!<arch>\n";
+const PKGDEF_MEMBER = "__.PKGDEF";
+const JAVASCRIPT_MEMBER = "_gojr.js";
+const GOJR_EXPORT_MAGIC = "$$gojr iexport v1\n";
 
 export function buildPackage(request: BuildPackageRequest, store?: BuildArtifactStore): BuildPackageReport {
   return buildPackages(request, store);
@@ -176,7 +218,7 @@ export function inspectPackageJavaScript(request: BuildPackageRequest): InspectP
       return undefined;
     },
     writeAtomic(_path, nextSource) {
-      source = nextSource;
+      source = parseGoJuniorPackageArchive(nextSource)?.javascript ?? nextSource;
     }
   });
   return {
@@ -297,13 +339,15 @@ class PackageGraphBuilder {
     }
 
     if (!this.hasErrors()) {
-      const checked = checkGoJuniorFiles(parsed.files, parsed.statements, [], {
-        packageName,
-        packagePath: importPath,
-        importer: {
-          import: (path) => this.packageInfos.get(path)
-        }
-      });
+      const checked = importPath === "unsafe"
+        ? { diagnostics: [], pkg: GoTypesUnsafe }
+        : checkGoJuniorFiles(parsed.files, parsed.statements, [], {
+          packageName,
+          packagePath: importPath,
+          importer: {
+            import: (path) => this.packageInfos.get(path)
+          }
+        });
       this.diagnostics.push(...checked.diagnostics);
       if (!this.hasErrors()) {
         const goos = this.request.goos ?? GOJR_GOOS;
@@ -329,7 +373,7 @@ class PackageGraphBuilder {
           dependencyCacheKeys.join("\n")
         ].join("\0"));
         const artifactPath = artifactPathForImportPath(resolveArtifactRoot(this.request), importPath);
-        const artifact = {
+        const pkgdef = packageExportData({
           layoutVersion: ARTIFACT_LAYOUT_VERSION,
           compilerVersion: this.request.compilerVersion ?? DEFAULT_COMPILER_VERSION,
           backend: this.request.backend ?? DEFAULT_BACKEND,
@@ -350,7 +394,7 @@ class PackageGraphBuilder {
             filename: file.filename,
             hash: stableHash(file.source)
           }))
-        };
+        });
         const node: PackageBuildNode = {
           importPath,
           packageName,
@@ -361,7 +405,7 @@ class PackageGraphBuilder {
           dependencyCacheKeys,
           exports,
           artifactPath,
-          artifactSource: generatedArtifactSource(artifact)
+          artifactSource: generatedArtifactSource(pkgdef)
         };
         this.nodes.set(importPath, node);
         this.packageInfos.set(importPath, checked.pkg);
@@ -428,6 +472,13 @@ class PackageGraphBuilder {
 }
 
 function parseGeneratedArtifactSource(source: string): { layoutVersion?: string; cacheKey?: string } | undefined {
+  const archive = parseGoJuniorPackageArchive(source);
+  if (archive) {
+    return {
+      layoutVersion: archive.pkgdef.layoutVersion,
+      cacheKey: archive.pkgdef.cacheKey
+    };
+  }
   const match = /export const gojrPackageArtifact = ([\s\S]*);\s*$/.exec(source);
   if (!match?.[1]) return undefined;
   try {
@@ -446,7 +497,7 @@ export function artifactPathForImportPath(artifactRoot: string, importPath: stri
   if (!parts) {
     throw new Error(`invalid import path: ${importPath}`);
   }
-  return joinSlash(artifactRoot, ...parts) + ".js";
+  return joinSlash(artifactRoot, ...parts) + ".a";
 }
 
 export function resolveArtifactRoot(request: Pick<BuildPackageRequest, "artifactRoot" | "packageCacheParent">): string {
@@ -620,8 +671,11 @@ function importPathFromSpec(spec: ImportSpec): string {
 
 function packageScopeObjects(pkg: GoTypesPackage): GoTypesObject[] {
   return pkg.Scope().Names().flatMap((name) => {
+    if (name === "__gojr_check_statements" || name === "fmt") return [];
     const object = pkg.Scope().Lookup(name);
-    return object === null ? [] : [object];
+    if (object === null || object.constructor.name === "PkgName") return [];
+    if (object.Pkg() !== pkg && !(pkg.Path() === "unsafe" && object instanceof GoTypesBuiltin)) return [];
+    return [object];
   });
 }
 
@@ -649,16 +703,105 @@ function exportKindForObject(object: GoTypesObject): BuildExport["kind"] | undef
   if (object instanceof GoTypesFunc) return "func";
   if (object instanceof GoTypesTypeName) return "type";
   if (object instanceof GoTypesVar) return "var";
+  if (object instanceof GoTypesBuiltin) return "func";
   return undefined;
 }
 
-function generatedArtifactSource(artifact: unknown): string {
+function packageExportData(data: Omit<GoJuniorPackageExportData, "exportFormat" | "exportVersion" | "exportIndex">): GoJuniorPackageExportData {
+  const exportIndex: Record<string, GoJuniorPackageExportIndexEntry> = {};
+  data.exports.forEach((item, exportIndexNumber) => {
+    exportIndex[item.name] = {
+      exportIndex: exportIndexNumber,
+      kind: item.kind,
+      typeText: item.typeText,
+      ...(item.underlyingTypeText ? { underlyingTypeText: item.underlyingTypeText } : {})
+    };
+  });
+  return {
+    exportFormat: "gojr-iexport",
+    exportVersion: 1,
+    exportIndex,
+    ...data
+  };
+}
+
+function generatedArtifactSource(pkgdef: GoJuniorPackageExportData): string {
+  const javascript = generatedArtifactJavaScript(pkgdef);
+  return writeArArchive([
+    { name: PKGDEF_MEMBER, data: GOJR_EXPORT_MAGIC + JSON.stringify(pkgdef, null, 2) + "\n" },
+    { name: JAVASCRIPT_MEMBER, data: javascript }
+  ]);
+}
+
+function generatedArtifactJavaScript(artifact: GoJuniorPackageExportData): string {
   return [
     "// Code generated by gojr build; DO NOT EDIT.",
-    "// This envelope is the package artifact cache format used before full JS lowering.",
+    "// This member is the generated JavaScript payload inside the Go-junior package archive.",
     `export const gojrPackageArtifact = ${JSON.stringify(artifact, null, 2)};`,
     ""
   ].join("\n");
+}
+
+export function parseGoJuniorPackageArchive(source: string): GoJuniorPackageArchive | undefined {
+  const members = readArArchive(source);
+  if (!members) return undefined;
+  const pkgdefMember = members[0];
+  if (pkgdefMember?.name !== PKGDEF_MEMBER || !pkgdefMember.data.startsWith(GOJR_EXPORT_MAGIC)) return undefined;
+  const javascript = members.find((member) => member.name === JAVASCRIPT_MEMBER)?.data ?? "";
+  try {
+    const pkgdef = JSON.parse(pkgdefMember.data.slice(GOJR_EXPORT_MAGIC.length)) as GoJuniorPackageExportData;
+    if (pkgdef.exportFormat !== "gojr-iexport" || pkgdef.exportVersion !== 1) return undefined;
+    return {
+      pkgdef,
+      javascript,
+      members
+    };
+  } catch {
+    return undefined;
+  }
+}
+
+function writeArArchive(members: Array<{ name: string; data: string }>): string {
+  return AR_MAGIC + members.map((member) => writeArMember(member.name, member.data)).join("");
+}
+
+function writeArMember(name: string, data: string): string {
+  const arName = name.endsWith("/") ? name : `${name}/`;
+  if (arName.length > 16) throw new Error(`ar member name is too long: ${name}`);
+  const header = [
+    arName.padEnd(16, " "),
+    "0".padEnd(12, " "),
+    "0".padEnd(6, " "),
+    "0".padEnd(6, " "),
+    "100644".padEnd(8, " "),
+    String(data.length).padEnd(10, " "),
+    "`\n"
+  ].join("");
+  return header + data + (data.length % 2 === 1 ? "\n" : "");
+}
+
+function readArArchive(source: string): Array<{ name: string; data: string }> | undefined {
+  if (!source.startsWith(AR_MAGIC)) return undefined;
+  const members: Array<{ name: string; data: string }> = [];
+  let offset = AR_MAGIC.length;
+  while (offset < source.length) {
+    if (offset + 60 > source.length) return undefined;
+    const header = source.slice(offset, offset + 60);
+    if (header.slice(58, 60) !== "`\n") return undefined;
+    const rawName = header.slice(0, 16).trim();
+    const sizeText = header.slice(48, 58).trim();
+    const size = Number.parseInt(sizeText, 10);
+    if (!Number.isFinite(size) || size < 0) return undefined;
+    const dataStart = offset + 60;
+    const dataEnd = dataStart + size;
+    if (dataEnd > source.length) return undefined;
+    members.push({
+      name: rawName.endsWith("/") ? rawName.slice(0, -1) : rawName,
+      data: source.slice(dataStart, dataEnd)
+    });
+    offset = dataEnd + (size % 2);
+  }
+  return members;
 }
 
 function hashSourceFiles(files: SourceFile[]): string {
