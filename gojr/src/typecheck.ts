@@ -669,6 +669,8 @@ function runtimePackage(): GoTypesPackage {
     NewField(NoPos, pkg, "NextGC", uint64Type, false),
     NewField(NoPos, pkg, "LastGC", uint64Type, false),
     NewField(NoPos, pkg, "PauseTotalNs", uint64Type, false),
+    NewField(NoPos, pkg, "PauseNs", NewArray(uint64Type, 256), false),
+    NewField(NoPos, pkg, "PauseEnd", NewArray(uint64Type, 256), false),
     NewField(NoPos, pkg, "NumGC", uint32Type, false),
     NewField(NoPos, pkg, "NumForcedGC", uint32Type, false),
     NewField(NoPos, pkg, "GCCPUFraction", float64Type, false),

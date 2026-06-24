@@ -34,6 +34,9 @@ func Use(e any) bool {
   _, ok := e.(runtime.Error)
   value := ""
   runtime.AddCleanup(&value, func(name string) {}, value).Stop()
+  const maxPause = len(((*runtime.MemStats)(nil)).PauseNs)
+  var stats runtime.MemStats
+  _ = stats.PauseEnd[maxPause-1]
   return ok
 }
 `);
