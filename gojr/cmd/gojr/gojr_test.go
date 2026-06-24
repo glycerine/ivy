@@ -270,11 +270,15 @@ func assertNodeRuntimeCacheRootListAndClear(t *testing.T, rt *nodeRuntime) {
 
 func TestNodeRuntimeUsesEnvironmentRandomSeed(t *testing.T) {
 	t.Setenv("GOJR_RANDOM_SEED", "gojr-select-seed")
+	bootstrapSource, err := runtimeBootstrapSource()
+	if err != nil {
+		t.Fatalf("runtimeBootstrapSource() error = %v", err)
+	}
 	moduleBundle, err := runtimeModuleBundle()
 	if err != nil {
 		t.Fatalf("runtimeModuleBundle() error = %v", err)
 	}
-	rt, err := newNodeRuntime(moduleBundle)
+	rt, err := newNodeRuntime(bootstrapSource, moduleBundle)
 	if err != nil {
 		t.Fatalf("newNodeRuntime() error = %v", err)
 	}

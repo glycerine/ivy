@@ -32,3 +32,13 @@ that needs doing as a dependency, pause the current task and implement
 the dependency, then return to the current task. Otherwise we risk
 difficult to detect heisenbugs from quietly missing functionality.
 Do not create new TODOs, rather work on them immediately.
+
+## cmd/gojr boundary
+
+No JavaScript source or JavaScript implementation logic belongs under
+cmd/gojr. cmd/gojr is a native wrapper only: it may load opaque JavaScript
+bytes produced from src/, pass Go source/options into V8/Node, and call
+named runtime entry points. Parsing, module loading, transforms, package
+resolution, formatting policy, and runtime behavior live in shared
+TypeScript/JavaScript under src/ so the browser and native REPL exercise
+one implementation path.

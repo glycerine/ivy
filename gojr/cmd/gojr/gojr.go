@@ -231,12 +231,16 @@ func main() {
 		}
 	}
 
+	bootstrapSource, err := runtimeBootstrapSource()
+	if err != nil {
+		fatal(err)
+	}
 	moduleBundle, err := runtimeModuleBundle()
 	if err != nil {
 		fatal(err)
 	}
 
-	rt, err := newNodeRuntime(moduleBundle)
+	rt, err := newNodeRuntime(bootstrapSource, moduleBundle)
 	if err != nil {
 		fatal(err)
 	}
@@ -1581,12 +1585,14 @@ func shouldPrintValue(result evalResult) bool {
 	return result.Value != "" && !result.ValueIsNil
 }
 
-func newNodeRuntime(moduleBundleJSON string) (*nodeRuntime, error) {
+func newNodeRuntime(bootstrapSource string, moduleBundleJSON string) (*nodeRuntime, error) {
+	cBootstrapSource := C.CString(bootstrapSource)
+	defer C.free(unsafe.Pointer(cBootstrapSource))
 	cModuleBundle := C.CString(moduleBundleJSON)
 	defer C.free(unsafe.Pointer(cModuleBundle))
 
 	var cErr *C.char
-	ptr := C.gojr_node_new(cModuleBundle, &cErr)
+	ptr := C.gojr_node_new(cBootstrapSource, cModuleBundle, &cErr)
 	if cErr != nil {
 		defer C.gojr_string_free(cErr)
 		return nil, errors.New(C.GoString(cErr))
@@ -1904,7 +1910,7 @@ func runtimeModuleBundle() (string, error) {
 		if err != nil {
 			return err
 		}
-		if entry.IsDir() || !strings.HasSuffix(path, ".js") {
+		if entry.IsDir() || !strings.HasSuffix(path, ".js") || path == "dist/src/embeddedNodeBootstrap.js" {
 			return nil
 		}
 		data, err := gojr.EmbeddedDist.ReadFile(path)
@@ -1930,6 +1936,17 @@ func runtimeModuleBundle() (string, error) {
 		return "", err
 	}
 	return string(bundle), nil
+}
+
+func runtimeBootstrapSource() (string, error) {
+	data, err := gojr.EmbeddedDist.ReadFile("dist/src/embeddedNodeBootstrap.js")
+	if err != nil {
+		return "", fmt.Errorf("embedded Go-junior bootstrap not found; run `make` from ~/ivy/gojr to rebuild: %w", err)
+	}
+	if len(data) == 0 {
+		return "", errors.New("embedded Go-junior bootstrap is empty; run `make` from ~/ivy/gojr to rebuild")
+	}
+	return string(data), nil
 }
 
 func fatal(err error) {
