@@ -100,6 +100,7 @@ export class EvaluationContext {
             types: new Map(),
             interfaces: new Map(),
             aliases: new Map(),
+            trueAliases: new Map(),
             methods: new Map(),
             importPathsByLocalName: new Map(),
             maxLoopIterations: options.maxLoopIterations ?? 100_000,
@@ -369,7 +370,10 @@ export class EvaluationContext {
         return this.options.sheets?.[name] ?? {};
     }
     registerType(spec) {
-        this.shared.aliases.set(spec.name, this.resolveImportedTypeText(spec.type.text));
+        const target = this.resolveImportedTypeText(spec.type.text);
+        this.shared.aliases.set(spec.name, target);
+        if (spec.alias)
+            this.shared.trueAliases.set(spec.name, target);
         if (spec.structFields) {
             this.shared.types.set(spec.name, {
                 name: spec.name,
@@ -414,6 +418,10 @@ export class EvaluationContext {
             this.currentScope.lookupTypeAlias(genericBaseTypeName(name)) ??
             this.shared.aliases.get(name) ??
             this.shared.aliases.get(genericBaseTypeName(name));
+    }
+    trueAliasType(name) {
+        return this.shared.trueAliases.get(name) ??
+            this.shared.trueAliases.get(genericBaseTypeName(name));
     }
     scopedAliasType(name) {
         return this.currentScope.lookupTypeAlias(name) ?? this.currentScope.lookupTypeAlias(genericBaseTypeName(name));
@@ -482,6 +490,9 @@ export class EvaluationContext {
         for (const [name, target] of source.shared.aliases.entries()) {
             this.shared.aliases.set(qualifyLocalRuntimeTypeName(name, importPath), qualifyLocalRuntimeTypeName(target, importPath));
         }
+        for (const [name, target] of source.shared.trueAliases.entries()) {
+            this.shared.trueAliases.set(qualifyLocalRuntimeTypeName(name, importPath), qualifyLocalRuntimeTypeName(target, importPath));
+        }
         for (const [name, typeDef] of source.shared.types.entries()) {
             this.shared.types.set(qualifyLocalRuntimeTypeName(name, importPath), {
                 name: qualifyLocalRuntimeTypeName(typeDef.name, importPath),
@@ -531,7 +542,7 @@ export class EvaluationContext {
             }
         };
         addType(typeName);
-        for (const aliasType of runtimeAliasTypeChain(typeName, this))
+        for (const aliasType of runtimeTrueAliasTypeChain(typeName, this))
             addType(aliasType);
         for (const candidate of candidates) {
             const method = this.shared.methods.get(methodKey(candidate, methodName));
@@ -6840,7 +6851,7 @@ function signaturesCompatible(actual, expected, context) {
     });
 }
 function signatureTypeCompatible(actual, expected, context) {
-    return runtimeTypeAssignableMatch(resolveRuntimeAliasTypeText(actual, context), resolveRuntimeAliasTypeText(expected, context));
+    return runtimeTypeAssignableMatch(resolveRuntimeSignatureAliasTypeText(actual, context), resolveRuntimeSignatureAliasTypeText(expected, context));
 }
 function resolveRuntimeAliasTypeText(typeText, context) {
     return runtimeAliasTypeChain(typeText, context).at(-1) ?? normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
@@ -6852,6 +6863,52 @@ function runtimeAliasTypeChain(typeText, context) {
     while (context?.aliasType(type) && !seen.has(type)) {
         seen.add(type);
         type = normalizeTypeText(context.resolveImportedTypeText(context.aliasType(type) ?? type));
+        chain.push(type);
+    }
+    return chain;
+}
+function resolveRuntimeSignatureAliasTypeText(typeText, context) {
+    const raw = context?.resolveImportedTypeText(typeText) ?? typeText;
+    if (/^\s*(?:struct|interface)\s*\{/.test(raw) || /^\s*func\s*\(/.test(raw))
+        return raw.trim();
+    const type = normalizeTypeText(raw);
+    const aliasChain = runtimeTrueAliasTypeChain(type, context);
+    if (aliasChain.length > 0)
+        return resolveRuntimeSignatureAliasTypeText(aliasChain[aliasChain.length - 1], context);
+    if (type.startsWith("*"))
+        return `*${resolveRuntimeSignatureAliasTypeText(type.slice(1), context)}`;
+    if (type.startsWith("[]"))
+        return `[]${resolveRuntimeSignatureAliasTypeText(type.slice(2), context)}`;
+    const arrayType = parseArrayOrSliceTypeText(type, context);
+    if (arrayType?.length !== undefined && !arrayType.inferLength) {
+        return `[${arrayType.length}]${resolveRuntimeSignatureAliasTypeText(arrayType.elementType, context)}`;
+    }
+    const mapType = parseMapTypeText(type);
+    if (mapType) {
+        return `map[${resolveRuntimeSignatureAliasTypeText(mapType.keyType, context)}]${resolveRuntimeSignatureAliasTypeText(mapType.valueType, context)}`;
+    }
+    const chanType = parseChanTypeText(type);
+    if (chanType) {
+        const value = resolveRuntimeSignatureAliasTypeText(chanType.elementType, context);
+        if (chanType.direction === "receive")
+            return `<-chan ${value}`;
+        if (chanType.direction === "send")
+            return `chan<- ${value}`;
+        return `chan ${value}`;
+    }
+    const generic = genericTypeArguments(type);
+    if (generic) {
+        return `${resolveRuntimeSignatureAliasTypeText(generic.base, context)}[${generic.args.map((arg) => resolveRuntimeSignatureAliasTypeText(arg, context)).join(", ")}]`;
+    }
+    return type;
+}
+function runtimeTrueAliasTypeChain(typeText, context) {
+    const chain = [];
+    let type = normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
+    const seen = new Set();
+    while (context?.trueAliasType(type) && !seen.has(type)) {
+        seen.add(type);
+        type = normalizeTypeText(context.resolveImportedTypeText(context.trueAliasType(type) ?? type));
         chain.push(type);
     }
     return chain;

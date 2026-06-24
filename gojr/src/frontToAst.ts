@@ -178,6 +178,7 @@ function typeSpecToAst(spec: Spec): TypeSpec[] {
   const typeParameters = typeSpecTypeParameterNames(spec);
   return [{
     name: spec.name.name,
+    ...(spec.alias ? { alias: true } : {}),
     ...(typeParameters.length > 0 ? { typeParameters } : {}),
     type: typeNode(spec.type),
     ...structFieldsFromType(spec),

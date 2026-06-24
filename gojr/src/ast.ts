@@ -105,6 +105,7 @@ export interface VarDeclStatement {
 
 export interface TypeSpec {
   name: string;
+  alias?: boolean;
   typeParameters?: string[];
   type: TypeNode;
   structFields?: StructFieldDecl[];
