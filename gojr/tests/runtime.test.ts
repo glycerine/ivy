@@ -483,24 +483,55 @@ return s, round, empty
   });
 
   test("supports unsafe pointer reinterpretation used by reflect headers", async () => {
-    const script = await expectRuns(`
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/unsafeheaders/main.go",
+      source: `package main
+
+import "reflect"
 import "unsafe"
 
-type emptyInterface struct {
-  Type unsafe.Pointer
-  Data unsafe.Pointer
+type unsafeIntf struct {
+  typ unsafe.Pointer
+  ptr unsafe.Pointer
 }
 
-func header(a any) emptyInterface {
-  eface := *(*emptyInterface)(unsafe.Pointer(&a))
+type unsafeReflectValue struct {
+  unsafeIntf
+  flag uintptr
+}
+
+func header(a any) unsafeIntf {
+  eface := *(*unsafeIntf)(unsafe.Pointer(&a))
   return eface
 }
 
-h := header(12)
-return h.Type == nil, h.Data == nil
-`);
+func rv4iptr(i any) (v reflect.Value) {
+  uv := (*unsafeReflectValue)(unsafe.Pointer(&v))
+  uv.unsafeIntf = *(*unsafeIntf)(unsafe.Pointer(&i))
+  uv.flag = uintptr(reflect.Ptr)
+  return
+}
 
-    expect(script.values).toEqual([true, true]);
+func main() {
+  var a int = 12
+  h := header(&a)
+  v := rv4iptr(&a).Elem()
+  if h.typ == nil { panic("nil interface type") }
+  if h.ptr == nil { panic("nil interface data") }
+  if v.Kind().String() != "int" { panic("bad reflect kind") }
+  if v.Int() != 12 { panic("bad reflect int") }
+  print("ok\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["ok\n"]);
   });
 
   test("supports importing runtime and evaluating stack/caller helpers", async () => {

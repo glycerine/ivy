@@ -3882,7 +3882,8 @@ function reflectValueInfoFromFields(struct: RuntimeStruct): ReflectValueRuntimeI
   const flag = struct.get("flag");
   const kind = typeof flag === "bigint" ? flag & 31n : 0n;
   const typ = struct.get("typ_");
-  const descriptor = typ instanceof RuntimePointer ? structFromValue(typ.get()) : structFromValue(typ ?? null);
+  const typPayload = unsafePointerPayload(typ ?? null);
+  const descriptor = typPayload instanceof RuntimePointer ? structFromValue(typPayload.get()) : structFromValue(typPayload);
   const typeText = descriptor ? runtimeDescriptorText(descriptor, "GoJrTypeText") : "";
   if (kind === 0n && !typeText) return { value: null, typeText: "", kind: 0n };
   const ptr = struct.get("ptr");
@@ -9812,6 +9813,12 @@ function reinterpretUnsafePointer(pointer: RuntimePointer, targetType: string, c
   const descriptorOverlayView = reinterpretRuntimeTypeDescriptorOverlay(pointer, targetType, context);
   if (descriptorOverlayView) return descriptorOverlayView;
 
+  const reflectValueHeaderView = reinterpretReflectValueHeader(pointer, targetType, context);
+  if (reflectValueHeaderView) return reflectValueHeaderView;
+
+  const interfaceHeaderView = reinterpretInterfaceHeader(pointer, targetType, context);
+  if (interfaceHeaderView) return interfaceHeaderView;
+
   let fallback: RuntimeValue | undefined;
   const currentValue = (): RuntimeValue => {
     const value = pointer.get();
@@ -9822,6 +9829,266 @@ function reinterpretUnsafePointer(pointer: RuntimePointer, targetType: string, c
   return new RuntimePointer(targetType, currentValue, (next) => {
     fallback = prepareAssignableToType(next, targetType, `*${targetType}`, context);
   }, runtimePointerIdentityKey(pointer), pointer.sequenceInfo());
+}
+
+interface RuntimeInterfaceHeaderLayout {
+  typeField: string;
+  dataField: string;
+}
+
+interface RuntimeReflectValueHeaderLayout {
+  embeddedField: string;
+  flagField: string;
+  interfaceLayout: RuntimeInterfaceHeaderLayout;
+}
+
+class RuntimeInterfaceHeaderViewStruct extends RuntimeStruct {
+  private typeWordOverride: RuntimeValue | undefined;
+  private dataWordOverride: RuntimeValue | undefined;
+
+  public constructor(
+    typeName: string,
+    private readonly layout: RuntimeInterfaceHeaderLayout,
+    private readonly sourcePointer: RuntimePointer,
+    private readonly context: EvaluationContext
+  ) {
+    super(typeName);
+  }
+
+  public override get(field: string): RuntimeValue | undefined {
+    if (field === this.layout.typeField) return this.typeWordOverride ?? this.currentTypeWord();
+    if (field === this.layout.dataField) return this.dataWordOverride ?? this.currentDataWord();
+    return super.get(field);
+  }
+
+  public override set(field: string, value: RuntimeValue): void {
+    if (field === this.layout.typeField) {
+      this.typeWordOverride = value;
+      return;
+    }
+    if (field === this.layout.dataField) {
+      this.dataWordOverride = value;
+      return;
+    }
+    super.set(field, value);
+  }
+
+  public override orderedFields(): Array<[string, RuntimeValue]> {
+    return [
+      [this.layout.typeField, this.get(this.layout.typeField) ?? new RuntimeTypedNilValue("unsafe.Pointer")],
+      [this.layout.dataField, this.get(this.layout.dataField) ?? new RuntimeTypedNilValue("unsafe.Pointer")]
+    ];
+  }
+
+  private currentTypeWord(): RuntimeValue {
+    const typeText = interfaceHeaderDynamicTypeText(this.sourcePointer.get(), this.context);
+    if (!typeText) return new RuntimeTypedNilValue("unsafe.Pointer");
+    return new RuntimeNamedValue("unsafe.Pointer", internalAbiTypeDescriptor(typeText, this.context));
+  }
+
+  private currentDataWord(): RuntimeValue {
+    const value = interfaceHeaderDynamicValue(this.sourcePointer.get());
+    if (value === null) return new RuntimeTypedNilValue("unsafe.Pointer");
+    if (value instanceof RuntimePointer) return new RuntimeNamedValue("unsafe.Pointer", value);
+    const typeText = interfaceHeaderDynamicTypeText(this.sourcePointer.get(), this.context) ?? pointerTypeName(value);
+    const pointer = new RuntimePointer(typeText, () => interfaceHeaderDynamicValue(this.sourcePointer.get()), (next) => {
+      setInterfaceHeaderDynamicValue(this.sourcePointer, next, typeText, this.context);
+    }, `interface.data:${runtimePointerIdentityKey(this.sourcePointer) ?? objectIdentityId(this.sourcePointer)}`);
+    return new RuntimeNamedValue("unsafe.Pointer", pointer);
+  }
+}
+
+class RuntimeReflectValueHeaderViewStruct extends RuntimeStruct {
+  public constructor(
+    typeName: string,
+    private readonly layout: RuntimeReflectValueHeaderLayout,
+    private readonly sourceStruct: RuntimeStruct,
+    private readonly context: EvaluationContext
+  ) {
+    super(typeName);
+  }
+
+  public override get(field: string): RuntimeValue | undefined {
+    if (field === this.layout.embeddedField) return reflectValueInterfaceHeaderStruct(this.sourceStruct, this.layout.interfaceLayout);
+    if (field === this.layout.flagField) return this.sourceStruct.get("flag") ?? 0n;
+    return super.get(field);
+  }
+
+  public override set(field: string, value: RuntimeValue): void {
+    if (field === this.layout.embeddedField) {
+      assignReflectValueInterfaceHeader(this.sourceStruct, this.layout.interfaceLayout, value, this.context);
+      return;
+    }
+    if (field === this.layout.flagField) {
+      this.sourceStruct.set("flag", toBigInt(value));
+      refreshReflectValueInfoFromFields(this.sourceStruct);
+      return;
+    }
+    super.set(field, value);
+  }
+
+  public override orderedFields(): Array<[string, RuntimeValue]> {
+    return [
+      [this.layout.embeddedField, this.get(this.layout.embeddedField) ?? new RuntimeStruct(this.layout.embeddedField)],
+      [this.layout.flagField, this.get(this.layout.flagField) ?? 0n]
+    ];
+  }
+}
+
+function reinterpretInterfaceHeader(
+  pointer: RuntimePointer,
+  targetType: string,
+  context: EvaluationContext
+): RuntimePointer | undefined {
+  const layout = runtimeInterfaceHeaderLayout(targetType, context);
+  if (!layout) return undefined;
+  let view: RuntimeInterfaceHeaderViewStruct | undefined;
+  const currentValue = (): RuntimeValue => {
+    if (!view) view = new RuntimeInterfaceHeaderViewStruct(targetType, layout, pointer, context);
+    return view;
+  };
+  return new RuntimePointer(targetType, currentValue, (next) => {
+    const struct = structFromValue(next);
+    if (!struct) throwTypeError(next, targetType, `*${targetType}`);
+    if (!view) view = new RuntimeInterfaceHeaderViewStruct(targetType, layout, pointer, context);
+    for (const [field, value] of struct.orderedFields()) view.set(field, value);
+  }, `interface.header:${targetType}:${runtimePointerIdentityKey(pointer) ?? objectIdentityId(pointer)}`);
+}
+
+function reinterpretReflectValueHeader(
+  pointer: RuntimePointer,
+  targetType: string,
+  context: EvaluationContext
+): RuntimePointer | undefined {
+  const layout = runtimeReflectValueHeaderLayout(targetType, context);
+  if (!layout) return undefined;
+  let view: RuntimeReflectValueHeaderViewStruct | undefined;
+  const currentValue = (): RuntimeValue => {
+    const sourceStruct = structFromValue(pointer.get());
+    if (!sourceStruct || !runtimeReflectValueStructLayout(sourceStruct, context)) return defaultValueForTypeText(targetType, context);
+    if (!view) {
+      view = new RuntimeReflectValueHeaderViewStruct(targetType, layout, sourceStruct, context);
+    }
+    return view;
+  };
+  return new RuntimePointer(targetType, currentValue, (next) => {
+    const sourceStruct = structFromValue(pointer.get());
+    if (!sourceStruct || !runtimeReflectValueStructLayout(sourceStruct, context)) {
+      throwTypeError(next, targetType, `*${targetType}`);
+    }
+    const struct = structFromValue(next);
+    if (!struct) throwTypeError(next, targetType, `*${targetType}`);
+    for (const [field, value] of struct.orderedFields()) {
+      if (!view) view = new RuntimeReflectValueHeaderViewStruct(targetType, layout, sourceStruct, context);
+      view.set(field, value);
+    }
+  }, `reflect.value.header:${targetType}:${runtimePointerIdentityKey(pointer) ?? objectIdentityId(pointer)}`);
+}
+
+function interfaceHeaderDynamicValue(value: RuntimeValue): RuntimeValue {
+  if (value instanceof RuntimeInterfaceValue) return value.value;
+  return value;
+}
+
+function interfaceHeaderDynamicTypeText(value: RuntimeValue, context: EvaluationContext): string | undefined {
+  const dynamic = interfaceHeaderDynamicValue(value);
+  if (dynamic === null) return undefined;
+  return reflectliteTypeTextOfValue(dynamic) ?? inferredConcreteDynamicType(dynamic) ?? pointerTypeName(dynamic);
+}
+
+function setInterfaceHeaderDynamicValue(
+  sourcePointer: RuntimePointer,
+  value: RuntimeValue,
+  typeText: string,
+  context: EvaluationContext
+): void {
+  const source = sourcePointer.get();
+  const next = prepareAssignableToType(value, typeText, "interface header data", context);
+  if (source instanceof RuntimeInterfaceValue) {
+    sourcePointer.set(new RuntimeInterfaceValue(source.interfaceType, next, source.methodContext));
+    return;
+  }
+  sourcePointer.set(next);
+}
+
+function runtimeInterfaceHeaderLayout(typeText: string, context: EvaluationContext): RuntimeInterfaceHeaderLayout | undefined {
+  const typeDef = runtimeStructTypeDefForTypeText(typeText, context);
+  if (!typeDef) return undefined;
+  const fields = instantiateStructFields(typeDef, typeText);
+  if (fields.length !== 2) return undefined;
+  const unsafePointerFields = fields.filter((field) => runtimeTypeIdentityMatchInContext(field.type.text, "unsafe.Pointer", context));
+  if (unsafePointerFields.length !== 2) return undefined;
+  const typeField = fields.find((field) => field.name === "typ" || field.name === "Type");
+  const dataField = fields.find((field) => field.name === "ptr" || field.name === "Data");
+  if (!typeField || !dataField || typeField.name === dataField.name) return undefined;
+  return { typeField: typeField.name, dataField: dataField.name };
+}
+
+function runtimeReflectValueHeaderLayout(typeText: string, context: EvaluationContext): RuntimeReflectValueHeaderLayout | undefined {
+  const typeDef = runtimeStructTypeDefForTypeText(typeText, context);
+  if (!typeDef) return undefined;
+  const fields = instantiateStructFields(typeDef, typeText);
+  const embedded = fields.find((field) => field.embedded && runtimeInterfaceHeaderLayout(field.type.text, context));
+  const flag = fields.find((field) => field.name === "flag" && runtimeTypeIdentityMatchInContext(field.type.text, "uintptr", context));
+  const interfaceLayout = embedded ? runtimeInterfaceHeaderLayout(embedded.type.text, context) : undefined;
+  if (!embedded || !flag || !interfaceLayout) return undefined;
+  return { embeddedField: embedded.name, flagField: flag.name, interfaceLayout };
+}
+
+function runtimeReflectValueStructLayout(struct: RuntimeStruct, context: EvaluationContext): boolean {
+  const typeDef = structTypeDefFor(struct, context);
+  const fields = typeDef ? instantiateStructFields(typeDef, struct.typeName) : runtimeStructFieldsFromValue(struct);
+  return fields.some((field) => field.name === "typ_") &&
+    fields.some((field) => field.name === "ptr") &&
+    fields.some((field) => field.name === "flag");
+}
+
+function runtimeStructTypeDefForTypeText(typeText: string, context: EvaluationContext): StructTypeDef | undefined {
+  const type = normalizeTypeText(context.resolveImportedTypeText(typeText));
+  return context.typeDef(type) ?? parseAnonymousStructTypeText(type);
+}
+
+function reflectValueInterfaceHeaderStruct(
+  sourceStruct: RuntimeStruct,
+  layout: RuntimeInterfaceHeaderLayout
+): RuntimeStruct {
+  const header = new RuntimeStruct("interfaceHeader");
+  const typ = sourceStruct.get("typ_");
+  const ptr = sourceStruct.get("ptr");
+  header.set(layout.typeField, typ === undefined ? new RuntimeTypedNilValue("unsafe.Pointer") : new RuntimeNamedValue("unsafe.Pointer", typ));
+  header.set(layout.dataField, ptr === undefined ? new RuntimeTypedNilValue("unsafe.Pointer") : new RuntimeNamedValue("unsafe.Pointer", ptr));
+  return header;
+}
+
+function assignReflectValueInterfaceHeader(
+  sourceStruct: RuntimeStruct,
+  layout: RuntimeInterfaceHeaderLayout,
+  value: RuntimeValue,
+  context: EvaluationContext
+): void {
+  const header = structFromValue(value);
+  if (!header) throwTypeError(value, "interface header", "reflect.Value interface header");
+  const typeWord = unsafePointerPayload(header.get(layout.typeField) ?? null);
+  const dataWord = unsafePointerPayload(header.get(layout.dataField) ?? null);
+  if (typeWord instanceof RuntimePointer) {
+    sourceStruct.set("typ_", typeWord);
+  } else if (typeWord === null || typeWord instanceof RuntimeTypedNilValue) {
+    sourceStruct.set("typ_", new RuntimeTypedNilValue("*internal/abi.Type"));
+  } else {
+    throwTypeError(typeWord, "unsafe.Pointer", "reflect.Value interface type word");
+  }
+  if (dataWord instanceof RuntimePointer || dataWord instanceof RuntimeTypedNilValue || dataWord === null) {
+    sourceStruct.set("ptr", dataWord ?? new RuntimeTypedNilValue("unsafe.Pointer"));
+  } else {
+    throwTypeError(dataWord, "unsafe.Pointer", "reflect.Value interface data word");
+  }
+  refreshReflectValueInfoFromFields(sourceStruct);
+  void context;
+}
+
+function refreshReflectValueInfoFromFields(struct: RuntimeStruct): void {
+  const info = reflectValueInfoFromFields(struct);
+  if (info) reflectValueInfos.set(struct, info);
 }
 
 function reinterpretRuntimeTypeDescriptorOverlay(
