@@ -117,6 +117,8 @@ export class EvaluationContext {
             trueAliases: new Map(),
             methods: new Map(),
             importPathsByLocalName: new Map(),
+            ambiguousImportLocalNames: new Set(),
+            importPathsByFileAndLocalName: new Map(),
             maxLoopIterations: options.maxLoopIterations ?? 100_000,
             ...(options.stdout ? { stdout: options.stdout } : {}),
             random: new DeterministicPrng(options.randomSeed),
@@ -142,16 +144,16 @@ export class EvaluationContext {
     declare(name, value, mutable = true, type) {
         if (name === "_")
             return;
-        const typeText = bindingTypeText(type);
+        const typeText = resolvedBindingTypeText(type, this);
         const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, this) : value;
-        this.currentScope.declare(name, stored, mutable, typeText ? resolvedDeclaredTypeText(typeText, this) : undefined);
+        this.currentScope.declare(name, stored, mutable, typeText);
     }
     declareRoot(name, value, mutable = true, type) {
         if (name === "_")
             return;
-        const typeText = bindingTypeText(type);
+        const typeText = resolvedBindingTypeText(type, this);
         const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, this) : value;
-        this.shared.rootScope.declare(name, stored, mutable, typeText ? resolvedDeclaredTypeText(typeText, this) : undefined);
+        this.shared.rootScope.declare(name, stored, mutable, typeText);
     }
     declareOrAssignRoot(name, value, mutable = true, type) {
         if (this.shared.rootScope.hasLocal(name)) {
@@ -397,7 +399,7 @@ export class EvaluationContext {
         return this.options.sheets?.[name] ?? {};
     }
     registerType(spec) {
-        const target = this.resolveImportedTypeText(spec.type.text);
+        const target = this.resolveImportedTypeText(spec.type.text, spec.type.span?.filename);
         this.shared.aliases.set(spec.name, target);
         if (spec.alias)
             this.shared.trueAliases.set(spec.name, target);
@@ -408,7 +410,7 @@ export class EvaluationContext {
                 declaringContext: this,
                 fields: spec.structFields.map((field) => ({
                     ...field,
-                    type: { text: this.resolveImportedTypeText(field.type.text) }
+                    type: { text: this.resolveImportedTypeText(field.type.text, field.type.span?.filename) }
                 }))
             });
         }
@@ -418,8 +420,8 @@ export class EvaluationContext {
                 methods: this.flattenInterfaceMethods((spec.interfaceMethods ?? []).map((method) => ({
                     ...method,
                     signature: resolveRuntimeSignatureTypeImports(method.signature, this)
-                })), (spec.interfaceEmbeds ?? []).map((embed) => ({ text: this.resolveImportedTypeText(embed.text) }))),
-                embeds: (spec.interfaceEmbeds ?? []).map((embed) => ({ text: this.resolveImportedTypeText(embed.text) }))
+                })), (spec.interfaceEmbeds ?? []).map((embed) => ({ text: this.resolveImportedTypeText(embed.text, embed.span?.filename) }))),
+                embeds: (spec.interfaceEmbeds ?? []).map((embed) => ({ text: this.resolveImportedTypeText(embed.text, embed.span?.filename) }))
             });
         }
     }
@@ -613,13 +615,37 @@ export class EvaluationContext {
     packageContext(importPath) {
         return this.options.packageContexts?.[importPath];
     }
-    registerImportBinding(localName, importPath) {
+    registerImportBinding(localName, importPath, filename) {
         if (localName === "_" || localName === ".")
             return;
-        this.shared.importPathsByLocalName.set(localName, importPath);
+        if (filename) {
+            this.shared.importPathsByFileAndLocalName.set(importBindingFileKey(filename, localName), importPath);
+        }
+        const existing = this.shared.importPathsByLocalName.get(localName);
+        if (existing === undefined && !this.shared.ambiguousImportLocalNames.has(localName)) {
+            this.shared.importPathsByLocalName.set(localName, importPath);
+        }
+        else if (existing !== importPath) {
+            this.shared.importPathsByLocalName.delete(localName);
+            this.shared.ambiguousImportLocalNames.add(localName);
+        }
     }
-    resolveImportedTypeText(typeText) {
-        return rewriteRuntimeTypeText(typeText, (qualifier) => this.shared.importPathsByLocalName.get(qualifier));
+    importPathForLocalName(localName, filename) {
+        if (filename) {
+            const scoped = this.shared.importPathsByFileAndLocalName.get(importBindingFileKey(filename, localName));
+            if (scoped !== undefined)
+                return scoped;
+        }
+        return this.shared.importPathsByLocalName.get(localName);
+    }
+    importedPackageValue(localName, filename) {
+        const importPath = this.importPathForLocalName(localName, filename);
+        if (!importPath)
+            return undefined;
+        return availablePackages(this)[importPath];
+    }
+    resolveImportedTypeText(typeText, filename) {
+        return rewriteRuntimeTypeText(typeText, (qualifier) => this.importPathForLocalName(qualifier, filename));
     }
     methodFor(typeName, methodName) {
         const candidates = [];
@@ -2313,7 +2339,7 @@ function installImports(context, ast) {
         if (!pkg) {
             throw new GoJuniorRuntimeError(`package ${imported.path} is not available`);
         }
-        context.registerImportBinding(name, imported.path);
+        context.registerImportBinding(name, imported.path, imported.span?.filename);
         const importedContext = context.packageContext(imported.path);
         if (importedContext) {
             context.importPackageDefinitions(imported.path, importedContext);
@@ -2327,12 +2353,13 @@ function installImports(context, ast) {
             }
             continue;
         }
-        markRuntimePackageObject(pkg, imported.path, context.packageInfo(imported.path) ?? standardTypePackage(imported.path));
-        context.declareOrAssignRoot(name, pkg, true);
     }
 }
 function importDefaultName(path) {
     return path.split("/").filter(Boolean).at(-1) ?? path;
+}
+function importBindingFileKey(filename, localName) {
+    return `${filename}\0${localName}`;
 }
 function importBindingName(imported, context) {
     return imported.alias
@@ -2371,6 +2398,12 @@ function packageFunctionIntrinsic(declaration, importPath) {
     }
     if (importPath === "reflect" && declaration.name === "New") {
         intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => reflectNewValue(args[0] ?? null, context));
+    }
+    if (importPath === "reflect" && declaration.name === "MakeSlice") {
+        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => reflectMakeSlice(args[0] ?? null, args[1] ?? 0n, args[2] ?? 0n, context));
+    }
+    if (importPath === "reflect" && declaration.name === "Append") {
+        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => reflectAppend(args, context));
     }
     if (importPath === "os" && declaration.name === "Exit") {
         intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => {
@@ -2482,6 +2515,10 @@ function packageMethodIntrinsic(declaration, importPath) {
                 return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => reflectValueLen(args[0] ?? null));
             case "Index":
                 return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => reflectValueIndex(args[0] ?? null, args[1] ?? 0n, context));
+            case "Field":
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => reflectValueField(args[0] ?? null, args[1] ?? 0n, context));
+            case "Addr":
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => reflectValueAddr(args[0] ?? null, context));
             case "Bool":
                 return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => reflectValueBool(args[0] ?? null));
             case "Int":
@@ -2498,6 +2535,20 @@ function packageMethodIntrinsic(declaration, importPath) {
                 return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => Boolean(reflectValueInfo(args[0] ?? null)?.set));
             case "Set":
                 return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => reflectValueSet(args[0] ?? null, args[1] ?? null));
+            case "SetBool":
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => reflectValueSetScalar(args[0] ?? null, toBool(args[1] ?? false), "SetBool"));
+            case "SetInt":
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => reflectValueSetScalar(args[0] ?? null, toBigInt(args[1] ?? 0n), "SetInt"));
+            case "SetUint":
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => reflectValueSetScalar(args[0] ?? null, BigInt.asUintN(64, toBigInt(args[1] ?? 0n)), "SetUint"));
+            case "SetFloat":
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => reflectValueSetScalar(args[0] ?? null, toFloat(args[1] ?? 0), "SetFloat"));
+            case "SetComplex":
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => reflectValueSetScalar(args[0] ?? null, toComplex(args[1] ?? complexValue(0, 0)), "SetComplex"));
+            case "SetString":
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => reflectValueSetScalar(args[0] ?? null, RuntimeGoString.fromUtf8Text(toStringValue(args[1] ?? "")), "SetString"));
+            case "SetBytes":
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => reflectValueSetScalar(args[0] ?? null, args[1] ?? [], "SetBytes"));
             default:
                 return undefined;
         }
@@ -3052,7 +3103,7 @@ function reflectValueStruct(value, context, typeText = reflectliteTypeTextOfValu
         ["ptr", reflectValuePointerPayload(value, typeText, context, set)],
         ["flag", kind]
     ]);
-    reflectValueInfos.set(struct, { value, typeText, kind, ...(set ? { set } : {}) });
+    reflectValueInfos.set(struct, { value, typeText, kind, context, ...(set ? { set } : {}) });
     return struct;
 }
 function reflectZeroValue(context) {
@@ -3061,7 +3112,7 @@ function reflectZeroValue(context) {
         ["ptr", new RuntimeTypedNilValue("unsafe.Pointer")],
         ["flag", 0n]
     ]);
-    reflectValueInfos.set(struct, { value: null, typeText: "", kind: 0n });
+    reflectValueInfos.set(struct, { value: null, typeText: "", kind: 0n, context });
     return struct;
 }
 function reflectValueRuntimeTypeName(context) {
@@ -3084,6 +3135,39 @@ function reflectNewValue(typeValue, context) {
         value = prepareAssignableToType(next, typeText, "reflect.New value", context);
     }, `reflect.New:${typeText}:${nextObjectMapKeyId++}`);
     return reflectValueStruct(pointer, context, `*${typeText}`);
+}
+function reflectMakeSlice(typeValue, lengthValue, capacityValue, context) {
+    const typeText = reflectRtypeRuntimeTypeText(typeValue);
+    const sliceType = parseArrayOrSliceTypeText(internalAbiUnderlyingTypeText(typeText, context), context);
+    if (!sliceType || sliceType.length !== undefined || sliceType.inferLength) {
+        throw new GoJuniorPanic("panic: reflect.MakeSlice of non-slice type");
+    }
+    const length = toNumber(lengthValue);
+    const capacity = toNumber(capacityValue);
+    if (length < 0)
+        throw new GoJuniorPanic("panic: reflect.MakeSlice: negative len");
+    if (capacity < 0)
+        throw new GoJuniorPanic("panic: reflect.MakeSlice: negative cap");
+    if (length > capacity)
+        throw new GoJuniorPanic("panic: reflect.MakeSlice: len > cap");
+    const values = makeRuntimeSlice(sliceType.elementType, length, capacity, context, typeText);
+    markArrayType(values, typeText);
+    return reflectValueStruct(values, context, typeText);
+}
+function reflectAppend(args, context) {
+    const target = args[0] ?? null;
+    const info = requiredReflectValueInfo(target, "Append");
+    const valueContext = info.context ?? context;
+    if (info.kind !== 23n)
+        throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Append Kind:${info.kind}}`);
+    const sliceType = parseArrayOrSliceTypeText(internalAbiUnderlyingTypeText(info.typeText, valueContext), valueContext);
+    if (!sliceType || sliceType.length !== undefined || sliceType.inferLength) {
+        throw new GoJuniorPanic("panic: reflect.Append of non-slice Value");
+    }
+    const values = args.slice(1).map((value, index) => prepareAssignableToType(reflectValuePayload(value), sliceType.elementType, `reflect.Append argument ${index + 1}`, valueContext));
+    const appended = appendValues(info.value, values);
+    markArrayType(appended, info.typeText);
+    return reflectValueStruct(appended, valueContext, info.typeText);
 }
 function reflectValuePointerPayload(value, typeText, context, set) {
     const actual = unwrapNamed(value);
@@ -3111,7 +3195,18 @@ function reflectValueInfoFromFields(struct) {
     if (kind === 0n && !typeText)
         return { value: null, typeText: "", kind: 0n };
     const ptr = struct.get("ptr");
-    return { value: ptr ?? null, typeText, kind };
+    return { value: reflectValueStoredPayload(ptr ?? null, typeText, kind), typeText, kind };
+}
+function reflectValueStoredPayload(ptr, typeText, kind) {
+    if (ptr instanceof RuntimePointer && reflectValueStoresIndirectPayload(typeText, kind)) {
+        return ptr.get();
+    }
+    return ptr;
+}
+function reflectValueStoresIndirectPayload(typeText, kind) {
+    if (kind === 22n || kind === 26n)
+        return false;
+    return !isUnsafePointerType(typeText);
 }
 function reflectValueKind(value) {
     return reflectValueInfo(value)?.kind ?? 0n;
@@ -3124,7 +3219,7 @@ function reflectValueType(value, context) {
     if (!info || info.kind === 0n || !info.typeText) {
         throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Type on zero Value");
     }
-    return reflectTypeInterfaceForTypeText(info.typeText, context);
+    return reflectTypeInterfaceForTypeText(info.typeText, info.context ?? context);
 }
 function reflectValuePointer(value) {
     const info = reflectValueInfo(value);
@@ -3149,17 +3244,19 @@ function reflectValueElem(value, context) {
     if (!info || info.kind === 0n) {
         throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Elem on zero Value");
     }
+    const valueContext = info.context ?? context;
     const actual = unwrapNamed(info.value);
     if (info.kind === 22n) {
         if (actual instanceof RuntimeTypedNilValue)
             return reflectZeroValue(context);
         if (actual instanceof RuntimePointer) {
-            return reflectValueStruct(actual.get(), context, reflectElemTypeText(info.typeText, context), (next) => actual.set(next));
+            const elementType = reflectElemTypeText(info.typeText, valueContext);
+            return reflectValueStruct(actual.get(), valueContext, elementType, (next) => actual.set(prepareAssignableToType(next, elementType, `*${elementType}`, valueContext)));
         }
     }
     if (info.kind === 20n) {
         const dynamic = reflectDynamicValue(info.value);
-        return dynamic === null ? reflectZeroValue(context) : reflectValueStruct(dynamic, context);
+        return dynamic === null ? reflectZeroValue(valueContext) : reflectValueStruct(dynamic, valueContext);
     }
     throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Value.Elem Kind:${info.kind}}`);
 }
@@ -3189,15 +3286,16 @@ function reflectValueIndex(value, indexValue, context) {
     if (!info || info.kind === 0n) {
         throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Index on zero Value");
     }
+    const valueContext = info.context ?? context;
     const index = toNumber(indexValue);
     const actual = unwrapNamed(info.value);
     if (info.kind === 24n && isRuntimeString(actual)) {
         if (index < 0 || index >= ensureRuntimeGoString(actual).byteLength()) {
             throw new GoJuniorPanic("panic: reflect: string index out of range");
         }
-        return reflectValueStruct(goStringByteAt(actual, index), context, "uint8");
+        return reflectValueStruct(goStringByteAt(actual, index), valueContext, "uint8");
     }
-    const arrayType = parseArrayOrSliceTypeText(internalAbiUnderlyingTypeText(info.typeText, context), context);
+    const arrayType = parseArrayOrSliceTypeText(internalAbiUnderlyingTypeText(info.typeText, valueContext), valueContext);
     if ((info.kind === 17n || info.kind === 23n) && Array.isArray(actual) && arrayType) {
         if (index < 0 || index >= actual.length) {
             throw new GoJuniorPanic(info.kind === 17n
@@ -3206,9 +3304,9 @@ function reflectValueIndex(value, indexValue, context) {
         }
         const elementType = arrayType.elementType;
         const setter = info.kind === 23n || info.set
-            ? (next) => setArrayElement(actual, index, prepareAssignableToType(next, elementType, "reflect.Value.Index", context))
+            ? (next) => setArrayElement(actual, index, prepareAssignableToType(next, elementType, "reflect.Value.Index", valueContext))
             : undefined;
-        return reflectValueStruct(getArrayElement(actual, index), context, elementType, setter);
+        return reflectValueStruct(getArrayElement(actual, index), valueContext, elementType, setter);
     }
     if ((info.kind === 17n || info.kind === 23n) && actual instanceof RuntimeTypedNilValue) {
         throw new GoJuniorPanic(info.kind === 17n
@@ -3216,6 +3314,58 @@ function reflectValueIndex(value, indexValue, context) {
             : "panic: reflect: slice index out of range");
     }
     throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Value.Index Kind:${info.kind}}`);
+}
+function reflectValueField(value, indexValue, context) {
+    const info = reflectValueInfo(value);
+    if (!info || info.kind === 0n) {
+        throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Field on zero Value");
+    }
+    const valueContext = info.context ?? context;
+    if (info.kind !== 25n) {
+        throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Value.Field Kind:${info.kind}}`);
+    }
+    const index = toNumber(indexValue);
+    const struct = structFromValue(info.value);
+    if (!struct)
+        throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Value.Field Kind:${info.kind}}`);
+    const typeDef = structTypeDefFor(struct, valueContext);
+    const fields = typeDef ? instantiateStructFields(typeDef, info.typeText) : runtimeStructFieldsFromValue(struct);
+    const field = fields[index];
+    if (!field)
+        throw new GoJuniorPanic("panic: reflect: Field index out of range");
+    const accessor = structFieldAccessor(struct, field.name, valueContext) ?? directRuntimeStructFieldAccessor(struct, field);
+    const fieldValue = accessor.get() ?? defaultValueForDeclarationType(accessor.type.type, valueContext);
+    const setter = info.set
+        ? (next) => accessor.set(prepareAssignableToType(next, accessor.type.type.text, `reflect.Value.Field(${index})`, valueContext))
+        : undefined;
+    return reflectValueStruct(fieldValue, valueContext, accessor.type.type.text, setter);
+}
+function reflectValueAddr(value, context) {
+    const info = reflectValueInfo(value);
+    if (!info || info.kind === 0n) {
+        throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Addr on zero Value");
+    }
+    const valueContext = info.context ?? context;
+    if (!info.set)
+        throw new GoJuniorPanic("panic: reflect.Value.Addr of unaddressable value");
+    const typeText = normalizeTypeText(info.typeText || pointerTypeName(info.value));
+    const pointer = new RuntimePointer(typeText, () => info.value, (next) => {
+        info.set?.(prepareAssignableToType(next, typeText, `*${typeText}`, valueContext));
+    }, `reflect.Value.Addr:${runtimeUintptrForValue(info.value)}:${typeText}`);
+    return reflectValueStruct(pointer, valueContext, `*${typeText}`);
+}
+function runtimeStructFieldsFromValue(struct) {
+    return struct.orderedFields().map(([name, value]) => ({
+        name,
+        type: { text: pointerTypeName(value) }
+    }));
+}
+function directRuntimeStructFieldAccessor(struct, field) {
+    return {
+        type: field,
+        get: () => struct.get(field.name),
+        set: (value) => struct.set(field.name, value)
+    };
 }
 function reflectValueBool(value) {
     const info = requiredReflectValueInfo(value, "Bool");
@@ -3270,6 +3420,13 @@ function reflectValueSet(target, source) {
     if (!info || !info.set)
         throw new GoJuniorPanic("panic: reflect: reflect.Value.Set using unaddressable value");
     info.set(reflectValuePayload(source));
+    return null;
+}
+function reflectValueSetScalar(target, source, method) {
+    const info = reflectValueInfo(target);
+    if (!info || !info.set)
+        throw new GoJuniorPanic(`panic: reflect: reflect.Value.${method} using unaddressable value`);
+    info.set(source);
     return null;
 }
 function reflectValuePayload(value) {
@@ -3724,8 +3881,15 @@ function bindingTypeText(type) {
     const normalized = text ? normalizeTypeText(text) : "";
     return normalized && normalized !== "<missing>" ? normalized : undefined;
 }
-function resolvedDeclaredTypeText(typeText, context) {
-    const resolved = context.resolveImportedTypeText(typeText);
+function resolvedBindingTypeText(type, context) {
+    const typeText = bindingTypeText(type);
+    if (!typeText)
+        return undefined;
+    const filename = !type || typeof type === "string" ? undefined : type.span?.filename;
+    return resolvedDeclaredTypeText(typeText, context, filename);
+}
+function resolvedDeclaredTypeText(typeText, context, filename) {
+    const resolved = context.resolveImportedTypeText(typeText, filename);
     return parseArrayOrSliceTypeText(resolved, context)?.typeText ?? resolved;
 }
 function installAutomaticImports(context) {
@@ -5458,6 +5622,39 @@ function intrinsicMethodDef(typeName, methodName) {
                 return intrinsicMethod(type, methodName, [], ["bool"], (args) => Boolean(reflectValueInfo(args[0] ?? null)?.set));
             case "Set":
                 return intrinsicMethod(type, methodName, ["reflect.Value"], [], (args) => reflectValueSet(args[0] ?? null, args[1] ?? null));
+            case "SetBool":
+                return intrinsicMethod(type, methodName, ["bool"], [], (args) => reflectValueSetScalar(args[0] ?? null, toBool(args[1] ?? false), methodName));
+            case "SetInt":
+                return intrinsicMethod(type, methodName, ["int64"], [], (args) => reflectValueSetScalar(args[0] ?? null, toBigInt(args[1] ?? 0n), methodName));
+            case "SetUint":
+                return intrinsicMethod(type, methodName, ["uint64"], [], (args) => reflectValueSetScalar(args[0] ?? null, BigInt.asUintN(64, toBigInt(args[1] ?? 0n)), methodName));
+            case "SetFloat":
+                return intrinsicMethod(type, methodName, ["float64"], [], (args) => reflectValueSetScalar(args[0] ?? null, toFloat(args[1] ?? 0), methodName));
+            case "SetComplex":
+                return intrinsicMethod(type, methodName, ["complex128"], [], (args) => reflectValueSetScalar(args[0] ?? null, toComplex(args[1] ?? complexValue(0, 0)), methodName));
+            case "SetString":
+                return intrinsicMethod(type, methodName, ["string"], [], (args) => reflectValueSetScalar(args[0] ?? null, RuntimeGoString.fromUtf8Text(toStringValue(args[1] ?? "")), methodName));
+            case "SetBytes":
+                return intrinsicMethod(type, methodName, ["[]byte"], [], (args) => reflectValueSetScalar(args[0] ?? null, args[1] ?? [], methodName));
+            default:
+                return undefined;
+        }
+    }
+    const receiver = normalizeReceiverType(type);
+    if (receiver.baseType === "reflect.rtype" || receiver.baseType === "rtype") {
+        switch (methodName) {
+            case "Kind":
+                return intrinsicMethod(type, methodName, [], ["reflect.Kind"], (args, context) => reflectRtypeKind(args[0] ?? null, context));
+            case "Name":
+                return intrinsicMethod(type, methodName, [], ["string"], (args) => RuntimeGoString.fromUtf8Text(reflectRtypeDescriptorText(args[0] ?? null, "GoJrName")));
+            case "String":
+                return intrinsicMethod(type, methodName, [], ["string"], (args) => RuntimeGoString.fromUtf8Text(reflectRtypeDescriptorText(args[0] ?? null, "GoJrString")));
+            case "PkgPath":
+                return intrinsicMethod(type, methodName, [], ["string"], (args) => RuntimeGoString.fromUtf8Text(reflectRtypeDescriptorText(args[0] ?? null, "GoJrPkgPath")));
+            case "Implements":
+                return intrinsicMethod(type, methodName, ["reflect.Type"], ["bool"], (args, context) => reflectRtypeImplements(args[0] ?? null, args[1] ?? null, context));
+            case "Elem":
+                return intrinsicMethod(type, methodName, [], ["reflect.Type"], (args, context) => reflectRtypeElem(args[0] ?? null, context));
             default:
                 return undefined;
         }
@@ -5730,7 +5927,7 @@ function prepareReceiverBinding(receiverTypeText, receiver) {
 function pointerToReceiver(receiver, typeName) {
     if (receiver instanceof RuntimePointer)
         return receiver;
-    if (receiver instanceof RuntimeTypedNilValue && runtimeTypeAssignableMatch(receiver.typeName, `*${typeName}`))
+    if (receiver instanceof RuntimeTypedNilValue && typedNilPointerReceiverMatches(receiver.typeName, typeName))
         return receiver;
     const receiverType = receiver instanceof RuntimeNamedValue
         ? receiver.typeName
@@ -5755,6 +5952,16 @@ function pointerToReceiver(receiver, typeName) {
         }, `struct:${objectIdentityId(receiverStruct)}`);
     }
     throw new GoJuniorRuntimeError(`${formatValue(receiver)} is not addressable as *${typeName}`);
+}
+function typedNilPointerReceiverMatches(actualPointerType, receiverType) {
+    if (runtimeTypeAssignableMatch(actualPointerType, `*${receiverType}`))
+        return true;
+    const actual = normalizeReceiverType(actualPointerType).baseType;
+    const expected = normalizeReceiverType(receiverType).baseType;
+    return runtimeLocalTypeBaseName(actual) === runtimeLocalTypeBaseName(expected);
+}
+function runtimeLocalTypeBaseName(typeText) {
+    return genericBaseTypeName(normalizeTypeText(typeText)).split(".").at(-1) ?? typeText;
 }
 async function executeStatements(statements, context) {
     const labels = statementLabels(statements);
@@ -6007,7 +6214,7 @@ async function executeTypeSwitch(statement, context, label) {
             if (statement.typeSwitch?.name) {
                 const bindingValue = typeSwitchBindingValue(switchValue, clause, context);
                 if (statement.typeSwitch.define) {
-                    context.declare(statement.typeSwitch.name, bindingValue, true);
+                    context.declare(statement.typeSwitch.name, bindingValue, true, typeSwitchBindingType(clause));
                 }
                 else {
                     context.assign(statement.typeSwitch.name, bindingValue);
@@ -6045,6 +6252,12 @@ function typeSwitchBindingValue(switchValue, clause, context) {
     if (normalizeTypeText(typeText) === "nil")
         return null;
     return assertedRuntimeValue(switchValue, typeText, context);
+}
+function typeSwitchBindingType(clause) {
+    if (clause.default || (clause.typeValues?.length ?? 0) !== 1)
+        return undefined;
+    const type = clause.typeValues?.[0];
+    return type && normalizeTypeText(type.text) !== "nil" ? type : undefined;
 }
 async function executeFor(statement, context, label) {
     if (statement.range) {
@@ -6283,8 +6496,10 @@ async function executeAssign(statement, context) {
                 let value = prepareValueForAssignmentTarget(values[index] ?? null, target, source, context);
                 if (statement.operator && statement.operator !== "=") {
                     const current = await evaluateExpression(target, context);
-                    const compound = applyCompoundAssignment(statement.operator, current, value);
-                    await assignExpressionTarget(target, materializeValueForType(compound, assignmentTargetExpectedTypeText(target, context), context), context);
+                    const targetType = assignmentTargetExpectedTypeText(target, context);
+                    const [left, right] = prepareCompoundAssignmentOperands(statement.operator, current, value, targetType, context);
+                    const compound = applyCompoundAssignment(statement.operator, left, right);
+                    await assignExpressionTarget(target, materializeValueForType(compound, targetType, context), context);
                 }
                 else {
                     await assignExpressionTarget(target, value, context, source);
@@ -6484,6 +6699,15 @@ function applyCompoundAssignment(operator, left, right) {
         case ">>=": return shiftRight(left, right);
         default: return right;
     }
+}
+function prepareCompoundAssignmentOperands(operator, left, right, targetTypeText, context) {
+    const leftValue = materializeValueForType(left, targetTypeText, context);
+    if (operator === "<<=" || operator === ">>=")
+        return [leftValue, right];
+    if (targetTypeText && isNumericTypeText(targetTypeText, context)) {
+        return [leftValue, materializeValueForType(right, targetTypeText, context)];
+    }
+    return [leftValue, right];
 }
 async function evaluateMapLookupWithPresence(expression, context) {
     const object = unwrapNamed(await evaluateExpression(expression.object, context));
@@ -6721,8 +6945,9 @@ function runtimeCallableName(callee) {
     return "call";
 }
 async function evaluateArrayLiteral(expression, context, expectedTypeText, expectedRole) {
-    const typeText = resolveRuntimeCompositeAliases(context.resolveImportedTypeText(expectedTypeText ?? expression.type.text), context);
-    const type = parseArrayOrSliceTypeText(typeText, context);
+    const filename = expression.type.span?.filename ?? expression.span?.filename;
+    const typeText = resolveRuntimeCompositeAliases(context.resolveImportedTypeText(expectedTypeText ?? expression.type.text, filename), context);
+    const type = parseArrayOrSliceTypeText(typeText, context, filename);
     if (!type) {
         throw new GoJuniorRuntimeError(`${typeText} is not an array or slice literal type`);
     }
@@ -6864,7 +7089,12 @@ async function evaluateMapLiteral(expression, context) {
 function evaluateIdentifier(expression, context) {
     if (expression.name === "nil")
         return null;
-    return context.lookup(expression.name);
+    return identifierRuntimeValue(expression, context);
+}
+function identifierRuntimeValue(expression, context) {
+    if (context.hasBinding(expression.name))
+        return context.lookup(expression.name);
+    return context.importedPackageValue(expression.name, expression.span?.filename) ?? context.lookup(expression.name);
 }
 async function evaluateUnary(expression, context) {
     let value;
@@ -6902,8 +7132,9 @@ async function evaluateBinary(expression, context) {
     if (expression.operator === "||") {
         return toBool(await evaluateExpression(expression.left, context)) || toBool(await evaluateExpression(expression.right, context));
     }
-    const left = await evaluateExpression(expression.left, context);
-    const right = await evaluateExpression(expression.right, context);
+    let left = await evaluateExpression(expression.left, context);
+    let right = await evaluateExpression(expression.right, context);
+    [left, right] = prepareBinaryOperatorOperands(expression.operator, expression, left, right, context);
     try {
         switch (expression.operator) {
             case "==":
@@ -6949,6 +7180,27 @@ async function evaluateBinary(expression, context) {
         throw error;
     }
 }
+function prepareBinaryOperatorOperands(operator, expression, left, right, context) {
+    const leftType = expressionDeclaredTypeText(expression.left, context, left);
+    const rightType = expressionDeclaredTypeText(expression.right, context, right);
+    const leftUntyped = isUntypedConstantExpression(expression.left);
+    const rightUntyped = isUntypedConstantExpression(expression.right);
+    if (operator === "<<" || operator === ">>") {
+        return [materializeValueForType(left, leftType, context), right];
+    }
+    if (leftType && rightUntyped && isNumericTypeText(leftType, context)) {
+        right = materializeValueForType(right, leftType, context);
+    }
+    if (rightType && leftUntyped && isNumericTypeText(rightType, context)) {
+        left = materializeValueForType(left, rightType, context);
+    }
+    const resultType = binaryExpressionTypeText(expression, context);
+    if (resultType && isNumericTypeText(resultType, context)) {
+        left = materializeValueForType(left, resultType, context);
+        right = materializeValueForType(right, resultType, context);
+    }
+    return [left, right];
+}
 async function evaluateTypeAssertion(expression, context) {
     const value = await evaluateExpression(expression.expression, context);
     if (!runtimeValueMatchesType(value, expression.type.text, context)) {
@@ -6969,7 +7221,7 @@ function assertedRuntimeValue(value, typeText, context) {
     const targetInterface = interfaceTarget(type, context);
     if (targetInterface)
         return prepareInterfaceAssignment(dynamicValue, type, targetInterface, "type assertion", context);
-    return dynamicValue;
+    return prepareAssignableToType(dynamicValue, type, "type assertion", context);
 }
 async function evaluateCall(expression, context) {
     if (expression.callee.kind === "Identifier" && expression.callee.name === "make" && !context.hasBinding("make")) {
@@ -7534,7 +7786,13 @@ async function setIndex(expression, value, context) {
 async function pointerToExpression(expression, context) {
     if (expression.kind === "StructLiteralExpression" || expression.kind === "ArrayLiteralExpression" || expression.kind === "MapLiteralExpression") {
         let value = await evaluateExpression(expression, context);
-        return new RuntimePointer(pointerTypeName(value), () => value, (next) => {
+        const declared = expression.kind === "StructLiteralExpression"
+            ? undefined
+            : expressionDeclaredTypeText(expression, context, value);
+        const typeName = declared
+            ? resolveRuntimeCompositeAliases(declared, context)
+            : pointerTypeName(value);
+        return new RuntimePointer(typeName, () => value, (next) => {
             value = next;
         });
     }
@@ -7656,7 +7914,7 @@ function methodForValue(value, methodName, context) {
     const addressable = value instanceof RuntimePointer;
     const declaredReceiverType = receiverTypeName(value);
     if (declaredReceiverType) {
-        const direct = context.methodFor(declaredReceiverType, methodName);
+        const direct = methodDefForRuntimeReceiver(context, declaredReceiverType, methodName);
         if (direct)
             return { method: direct, receiver: value };
     }
@@ -7670,13 +7928,16 @@ function methodForValue(value, methodName, context) {
                 ? nilReceiverTypeName(actual)
                 : undefined;
     if (receiverType && receiverType !== declaredReceiverType) {
-        const direct = context.methodFor(receiverType, methodName);
+        const direct = methodDefForRuntimeReceiver(context, receiverType, methodName);
         if (direct)
             return { method: direct, receiver: value };
     }
     if (actual instanceof RuntimeStruct)
         return promotedMethodForStruct(actual, methodName, context, addressable);
     return undefined;
+}
+function methodDefForRuntimeReceiver(context, receiverType, methodName) {
+    return context.methodFor(receiverType, methodName) ?? intrinsicMethodDef(receiverType, methodName);
 }
 function promotedMethodForStruct(struct, methodName, context, addressable = false, seen = new Set()) {
     if (seen.has(struct.typeName))
@@ -7713,7 +7974,7 @@ function promotedMethodForStruct(struct, methodName, context, addressable = fals
         }
         const receiverType = receiverTypeName(receiver) ?? embeddedReceiver.baseType;
         if (receiverType) {
-            const direct = context.methodFor(receiverType, methodName);
+            const direct = methodDefForRuntimeReceiver(context, receiverType, methodName);
             if (direct) {
                 if (!direct.pointerReceiver || receiver instanceof RuntimePointer || isTypedNilPointer(receiver)) {
                     matches.push({ method: direct, receiver });
@@ -8998,7 +9259,7 @@ function escapeRegExp(text) {
 function staticCalleeRuntimeValue(expression, context) {
     try {
         if (expression.kind === "Identifier")
-            return context.lookup(expression.name);
+            return identifierRuntimeValue(expression, context);
         if (expression.kind === "IndexExpression")
             return staticCalleeRuntimeValue(expression.object, context);
         if (expression.kind === "SelectorExpression") {
@@ -9727,6 +9988,9 @@ function valueLength(value) {
         if (arrayType?.length !== undefined && !arrayType.inferLength)
             return arrayType.length;
     }
+    const headerLength = runtimeHeaderLength(value);
+    if (headerLength !== undefined)
+        return headerLength;
     if (isRuntimeString(value))
         return ensureRuntimeGoString(value).byteLength();
     if (Array.isArray(value))
@@ -9756,11 +10020,43 @@ function valueCapacity(value) {
         if (arrayType?.length !== undefined && !arrayType.inferLength)
             return arrayType.length;
     }
+    const headerCapacity = runtimeHeaderCapacity(value);
+    if (headerCapacity !== undefined)
+        return headerCapacity;
     if (Array.isArray(value))
         return sliceCapacity(value);
     if (value instanceof RuntimeChannel)
         return value.cap();
     throw new GoJuniorRuntimeError(`${formatValue(value)} has no cap`);
+}
+function runtimeHeaderLength(value) {
+    const struct = structFromValue(value);
+    if (!struct || !isRuntimeSliceOrStringHeaderStruct(struct))
+        return undefined;
+    return runtimeHeaderIntegerField(struct, "Len");
+}
+function runtimeHeaderCapacity(value) {
+    const struct = structFromValue(value);
+    if (!struct || !isRuntimeSliceHeaderStruct(struct))
+        return undefined;
+    return runtimeHeaderIntegerField(struct, "Cap");
+}
+function isRuntimeSliceOrStringHeaderStruct(struct) {
+    return isRuntimeSliceHeaderStruct(struct) || isRuntimeStringHeaderStruct(struct);
+}
+function isRuntimeSliceHeaderStruct(struct) {
+    const type = normalizeTypeText(struct.typeName);
+    return type === "internal/unsafeheader.Slice" || type === "reflect.SliceHeader";
+}
+function isRuntimeStringHeaderStruct(struct) {
+    const type = normalizeTypeText(struct.typeName);
+    return type === "internal/unsafeheader.String" || type === "reflect.StringHeader";
+}
+function runtimeHeaderIntegerField(struct, fieldName) {
+    const value = struct.get(fieldName);
+    if (typeof value === "bigint" || typeof value === "number")
+        return toNumber(value);
+    return undefined;
 }
 function sliceCapacity(value) {
     return arrayCapacities.get(value) ?? value.length;
@@ -9867,7 +10163,7 @@ function parseChanTypeText(typeText) {
     }
     return undefined;
 }
-function parseArrayOrSliceTypeText(typeText, context) {
+function parseArrayOrSliceTypeText(typeText, context, filename) {
     const type = normalizeTypeText(typeText);
     if (!type.startsWith("["))
         return undefined;
@@ -9884,21 +10180,21 @@ function parseArrayOrSliceTypeText(typeText, context) {
     if (lengthText === "...") {
         return { elementType, inferLength: true, typeText: `[...]${elementType}` };
     }
-    const length = resolveArrayLengthText(lengthText, context);
+    const length = resolveArrayLengthText(lengthText, context, filename);
     if (length === undefined)
         return undefined;
     return { elementType, length, inferLength: false, typeText: `[${length}]${elementType}` };
 }
-function resolveArrayLengthText(lengthText, context) {
-    const constant = evaluateArrayLengthConstant(lengthText, context);
+function resolveArrayLengthText(lengthText, context, filename) {
+    const constant = evaluateArrayLengthConstant(lengthText, context, filename);
     if (constant === undefined)
         return undefined;
     if (constant < 0n || constant > BigInt(Number.MAX_SAFE_INTEGER))
         return undefined;
     return Number(constant);
 }
-function evaluateArrayLengthConstant(text, context) {
-    const parser = new ArrayLengthConstantParser(text, context);
+function evaluateArrayLengthConstant(text, context, filename) {
+    const parser = new ArrayLengthConstantParser(text, context, filename);
     try {
         return parser.parse();
     }
@@ -9909,10 +10205,12 @@ function evaluateArrayLengthConstant(text, context) {
 class ArrayLengthConstantParser {
     text;
     context;
+    filename;
     offset = 0;
-    constructor(text, context) {
+    constructor(text, context, filename) {
         this.text = text;
         this.context = context;
+        this.filename = filename;
     }
     parse() {
         const value = this.expression(1);
@@ -9971,8 +10269,15 @@ class ArrayLengthConstantParser {
     lookupIdentifier(name) {
         if (!this.context)
             return undefined;
-        let value = unwrapNamed(this.context.lookup(name.split(".")[0] ?? name));
-        for (const part of name.split(".").slice(1)) {
+        const parts = name.split(".");
+        const root = parts[0] ?? name;
+        let value = this.context.hasBinding(root)
+            ? this.context.lookup(root)
+            : this.context.importedPackageValue(root, this.filename);
+        if (value === undefined)
+            return undefined;
+        value = unwrapNamed(value);
+        for (const part of parts.slice(1)) {
             if (!isRuntimeObject(value))
                 return undefined;
             value = unwrapNamed(value[part] ?? null);
@@ -10585,6 +10890,7 @@ function externalizePackageRuntimeValue(value, packageName) {
         if (cached !== undefined)
             return cached;
         const wrapped = new RuntimeExternalizedStruct(value, packageName);
+        copyRuntimeStructMetadata(value, wrapped);
         rememberPackageRuntimeValue(externalizedPackageValueCache, value, packageName, wrapped);
         markPackageRuntimeWrapper(wrapped, packageName, "externalized", value);
         return wrapped;
@@ -10670,6 +10976,7 @@ function internalizePackageRuntimeValue(value, packageName) {
         if (cached !== undefined)
             return cached;
         const wrapped = new RuntimeInternalizedStruct(value, packageName);
+        copyRuntimeStructMetadata(value, wrapped);
         rememberPackageRuntimeValue(internalizedPackageValueCache, value, packageName, wrapped);
         markPackageRuntimeWrapper(wrapped, packageName, "internalized", value);
         return wrapped;
@@ -10729,7 +11036,7 @@ function resolveRuntimeSignatureTypeImports(signature, context) {
     };
 }
 function resolveRuntimeTypeNodeImports(type, context) {
-    return { text: context.resolveImportedTypeText(type.text) };
+    return { text: context.resolveImportedTypeText(type.text, type.span?.filename) };
 }
 function rewriteRuntimeTypeText(typeText, resolveQualifier) {
     let output = "";
@@ -10801,7 +11108,7 @@ function qualifyLocalRuntimeTypeName(typeName, packageName, localTypeParameters 
     if (localTypeParameters.has(type))
         return type;
     const generic = genericTypeArguments(type);
-    if (!type || !packageName || isPredeclaredType(type) || (!generic && /^[A-Za-z_]\w*\.[A-Za-z_]\w*$/.test(type)))
+    if (!type || !packageName || isPredeclaredType(type) || (!generic && isQualifiedRuntimeTypeName(type)))
         return type;
     if (type.startsWith("*"))
         return `*${qualifyLocalRuntimeTypeName(type.slice(1), packageName, localTypeParameters)}`;
@@ -10825,6 +11132,9 @@ function qualifyLocalRuntimeTypeName(typeName, packageName, localTypeParameters 
     if (type.startsWith("func(") || type.startsWith("interface{") || type.startsWith("struct{"))
         return type;
     return /^[A-Za-z_]\w*$/.test(type) ? `${packageName}.${type}` : type;
+}
+function isQualifiedRuntimeTypeName(type) {
+    return /^[$A-Za-z_][\w]*(?:\/[$A-Za-z_][\w]*)*\.[A-Za-z_]\w*$/.test(type);
 }
 function unqualifyLocalRuntimeTypeName(typeName, packageName) {
     const type = normalizeTypeText(typeName);

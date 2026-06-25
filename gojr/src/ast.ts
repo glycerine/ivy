@@ -3,6 +3,7 @@ import { Diagnostic, SourceSpan } from "./diagnostics.js";
 export interface ImportDecl {
   path: string;
   alias?: string;
+  span?: SourceSpan;
 }
 
 export type ProgramKind = "script" | "function";

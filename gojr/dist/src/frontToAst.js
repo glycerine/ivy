@@ -46,7 +46,8 @@ function importSpecToAst(spec) {
     const path = unquote(spec.path.value);
     return {
         path,
-        ...(spec.name ? { alias: spec.name.name } : {})
+        ...(spec.name ? { alias: spec.name.name } : {}),
+        ...(spec.span ? { span: spec.span } : {})
     };
 }
 function genDeclToStatement(declaration) {

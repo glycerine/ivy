@@ -1389,6 +1389,77 @@ return err.Op, err.Path, alias.Message()
     expect(result.values).toEqual(["open", "file", "open file"]);
   });
 
+  test("retags concrete type assertion results across package boundaries", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/internal/strconv",
+        files: [{
+          filename: "/workspace/example.com/internal/strconv/atoi.go",
+          source: `package strconv
+
+type NumError struct {
+  Num string
+}
+
+func (e *NumError) Error() string {
+  return e.Num
+}
+
+func ParseInt(s string) (int, error) {
+  return 0, &NumError{Num: s}
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/strconv",
+        files: [{
+          filename: "/workspace/example.com/strconv/atoi.go",
+          source: `package strconv
+
+import strconv "example.com/internal/strconv"
+
+func Check() string {
+  _, err := strconv.ParseInt("567")
+  e := err.(*strconv.NumError)
+  return e.Num
+}
+
+func CheckSwitch() string {
+  _, err := strconv.ParseInt("890")
+  switch e := err.(type) {
+  case *strconv.NumError:
+    return e.Num
+  default:
+    return "bad"
+  }
+}
+
+func CheckPresence() (string, bool) {
+  _, err := strconv.ParseInt("321")
+  e, ok := err.(*strconv.NumError)
+  return e.Num, ok
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/strconv"
+s, ok := strconv.CheckPresence()
+return strconv.Check(), strconv.CheckSwitch(), s, ok
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.values).toEqual(["567", "890", "321", true]);
+  });
+
   test("matches imported pointer receiver methods against interface alias result types", async () => {
     const graph = await evaluateSourcePackageGraph([
       {
@@ -2580,6 +2651,174 @@ func Twice(x int) int { return x * 2 }
     expect(graph.packages["example.com/app"]?.V).toBe(42n);
   });
 
+  test("keeps package import paths distinct when package clauses share a name", async () => {
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "example.com/app",
+      files: [{
+        filename: "/workspace/example.com/app/app.go",
+        source: `package app
+
+import "example.com/strconv"
+
+func Run() string {
+  return strconv.Unquote()
+}
+`
+      }]
+    }], {
+      sourcePackageProvider: {
+        load(importPath) {
+          if (importPath === "example.com/internal/strconv") {
+            return [{
+              filename: "/workspace/example.com/internal/strconv/strconv.go",
+              source: `package strconv
+
+type Error string
+
+func Atoi() string { return "internal" }
+`
+            }];
+          }
+          if (importPath === "example.com/strconv") {
+            return [{
+              filename: "/workspace/example.com/strconv/strconv.go",
+              source: `package strconv
+
+import "example.com/internal/strconv"
+
+type NumError struct {
+  Err strconv.Error
+}
+
+func Unquote() string { return "public" }
+`
+            }];
+          }
+          return undefined;
+        }
+      }
+    });
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/strconv"
+return strconv.Unquote()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+    expect(result.value).toBe("public");
+  });
+
+  test("keeps imports file scoped across same-package source files", async () => {
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "example.com/app",
+      files: [{
+        filename: "/workspace/example.com/app/public.go",
+        source: `package app
+
+import strconv "example.com/public/strconv"
+
+func Pub() string { return strconv.Unquote() }
+`
+      }, {
+        filename: "/workspace/example.com/app/internal.go",
+        source: `package app
+
+import strconv "example.com/internal/strconv"
+
+func Int() string { return strconv.Atoi() }
+`
+      }, {
+        filename: "/workspace/example.com/app/run.go",
+        source: `package app
+
+func Run() string { return Pub() + ":" + Int() }
+`
+      }]
+    }], {
+      sourcePackageProvider: {
+        load(importPath) {
+          if (importPath === "example.com/public/strconv") {
+            return [{
+              filename: "/workspace/example.com/public/strconv/strconv.go",
+              source: `package strconv
+
+func Unquote() string { return "public" }
+`
+            }];
+          }
+          if (importPath === "example.com/internal/strconv") {
+            return [{
+              filename: "/workspace/example.com/internal/strconv/strconv.go",
+              source: `package strconv
+
+func Atoi() string { return "internal" }
+`
+            }];
+          }
+          return undefined;
+        }
+      }
+    });
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/app"
+return app.Run()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+    expect(result.value).toBe("public:internal");
+  });
+
+  test("resolves imported constants in array literal lengths", async () => {
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "example.com/app",
+      files: [{
+        filename: "/workspace/example.com/app/app.go",
+        source: `package app
+
+import "example.com/lib"
+
+func Run() int {
+  xs := [lib.K]int{0: 7, 2: 9}
+  return len(xs)
+}
+`
+      }]
+    }], {
+      sourcePackageProvider: {
+        load(importPath) {
+          if (importPath === "example.com/lib") {
+            return [{
+              filename: "/workspace/example.com/lib/lib.go",
+              source: `package lib
+
+const K = 3
+`
+            }];
+          }
+          return undefined;
+        }
+      }
+    });
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/app"
+return app.Run()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+    expect(result.value).toBe(3n);
+  });
+
   test("runs source-built fmt string formatting through package graph", async () => {
     const sourcePackageProvider = createNodeSourcePackageProvider([]);
     if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
@@ -2729,6 +2968,244 @@ func main() {
 
     expect(result.diagnostics).toEqual([]);
     expect(result.output).toEqual(["int\n", "string\n", "float64\n", "interface\n", "uint8\n"]);
+  });
+
+  test("source-built reflect sees caller struct fields through any parameters", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "example.com/inspector",
+      files: [{
+        filename: "/workspace/inspector/inspector.go",
+        source: `package inspector
+
+import "reflect"
+
+func Inspect(v any) (int, string, string, string) {
+  typ := reflect.ValueOf(v).Elem().Type()
+  field := typ.Field(0)
+  return typ.NumField(), field.Name, string(field.Tag), field.Tag.Get("json")
+}
+`
+      }]
+    }, {
+      importPath: "example.com/app",
+      files: [{
+        filename: "/workspace/app/app.go",
+        source: `package app
+
+import "example.com/inspector"
+
+type Table struct {
+  Headers []string   ` + "`json:\"headers\" msg:\"headers\"`" + `
+  Rows    [][]string ` + "`json:\"rows\" msg:\"rows\"`" + `
+}
+
+func Run() (int, string, string, string) {
+  return inspector.Inspect(&Table{})
+}
+`
+      }]
+    }], {
+      sourcePackageProvider
+    });
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/app"
+return app.Run()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+    expect(result.value).toEqual([
+      2n,
+      "Headers",
+      `json:"headers" msg:"headers"`,
+      "headers"
+    ]);
+  });
+
+  test("source-built reflect field Addr Interface preserves field identity", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/reflfieldaddr/main.go",
+      source: `package main
+
+import "reflect"
+
+type Table struct {
+  Headers []string
+}
+
+func fill(v any) {
+  ptr := reflect.ValueOf(v).Elem().Field(0).Addr().Interface().(*[]string)
+  *ptr = []string{"wood", "metal"}
+}
+
+func main() {
+  table := &Table{}
+  fill(table)
+  print(table.Headers[0] + "," + table.Headers[1] + "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["wood,metal\n"]);
+  });
+
+  test("source-built reflect rtype methods dispatch after Value.Type", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/reflrtype/main.go",
+      source: `package main
+
+import "reflect"
+
+type Table struct {
+  Headers []string
+}
+
+func main() {
+  fieldType := reflect.ValueOf(&Table{}).Elem().Field(0).Type()
+  print(fieldType.Kind().String() + "," + fieldType.Elem().Kind().String() + "\\n")
+  ptrElem := reflect.TypeOf(&[]string{}).Elem()
+  print(ptrElem.Kind().String() + "," + ptrElem.Elem().Kind().String() + "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["slice,string\n", "slice,string\n"]);
+  });
+
+  test("source-built reflect MakeSlice Append and Set mutate slice fields", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/reflmakeslice/main.go",
+      source: `package main
+
+import "reflect"
+
+type Table struct {
+  Headers []string
+}
+
+func fill(v any) {
+  fld := reflect.ValueOf(v).Elem().Field(0)
+  slc := reflect.MakeSlice(fld.Type(), 0, 2)
+  elem := reflect.New(fld.Type().Elem())
+  elem.Elem().SetString("wood")
+  slc = reflect.Append(slc, elem.Elem())
+  elem = reflect.New(fld.Type().Elem())
+  elem.Elem().SetString("metal")
+  slc = reflect.Append(slc, elem.Elem())
+  fld.Set(slc)
+}
+
+func main() {
+  table := &Table{}
+  fill(table)
+  print(table.Headers[0] + "," + table.Headers[1] + "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["wood,metal\n"]);
+  });
+
+  test("source-built reflect sets embedded interface fields from concrete pointer values", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/reflinterfacefield/main.go",
+      source: `package main
+
+import "reflect"
+
+type Flyer interface {
+  Fly() string
+}
+
+type Plane struct {
+  Chld Flyer
+}
+
+type Snoopy struct {
+  Plane
+}
+
+type Hellcat struct {
+  Speed int
+}
+
+func (h *Hellcat) Fly() string {
+  return "hellcat"
+}
+
+func fill(target any) {
+  targVa := reflect.ValueOf(target)
+  fld := targVa.Elem().Field(0).Field(0)
+  ptrFld := fld.Addr()
+  factOutputVal := reflect.ValueOf(&Hellcat{Speed: 567})
+  ifacePtr := reflect.ValueOf(ptrFld.Interface())
+  if ifacePtr.Type().Elem().Kind() == reflect.Interface && factOutputVal.Type().Implements(ifacePtr.Type().Elem()) {
+    ifacePtr.Elem().Set(factOutputVal)
+  }
+}
+
+func main() {
+  var sn Snoopy
+  fill(&sn)
+  print(sn.Chld.Fly() + "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["hellcat\n"]);
+  });
+
+  test("calls nil-safe pointer receiver methods on typed nil arguments", async () => {
+    const result = await expectRuns(`
+type PrintState struct {
+  Indent int
+}
+
+func (ps *PrintState) GetIndent() int {
+  if ps == nil {
+    return 0
+  }
+  return ps.Indent
+}
+
+func show(ps *PrintState) int {
+  return ps.GetIndent()
+}
+
+return show(nil)
+`);
+
+    expect(result.values).toEqual([0n]);
   });
 
   test("uses source-built reflect Type identity as a map key", async () => {
@@ -6998,6 +7475,22 @@ return a, b, c, d
 `);
 
     expect(result.values).toEqual([0n, 0n, 0n, 255n]);
+  });
+
+  test("keeps exact untyped exponent constants in typed integer operations", async () => {
+    const result = await expectRuns(`
+func f(u uint64) (uint64, uint32, uint32) {
+  rem := uint32(u % 1e8)
+  u /= 1e8
+  x := uint32(u)
+  return u, x, rem
+}
+
+a, b, c := f(567000000)
+return a, b, c
+`);
+
+    expect(result.values).toEqual([5n, 5n, 67000000n]);
   });
 
   test("declares range values using array and slice element types", async () => {

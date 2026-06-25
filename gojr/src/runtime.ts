@@ -379,6 +379,8 @@ interface EvaluationSharedState {
   trueAliases: Map<string, string>;
   methods: Map<string, MethodDef>;
   importPathsByLocalName: Map<string, string>;
+  ambiguousImportLocalNames: Set<string>;
+  importPathsByFileAndLocalName: Map<string, string>;
   maxLoopIterations: number;
   stdout?: (text: string) => void;
   random: DeterministicPrng;
@@ -414,6 +416,8 @@ export class EvaluationContext {
       trueAliases: new Map(),
       methods: new Map(),
       importPathsByLocalName: new Map(),
+      ambiguousImportLocalNames: new Set(),
+      importPathsByFileAndLocalName: new Map(),
       maxLoopIterations: options.maxLoopIterations ?? 100_000,
       ...(options.stdout ? { stdout: options.stdout } : {}),
       random: new DeterministicPrng(options.randomSeed),
@@ -443,16 +447,16 @@ export class EvaluationContext {
 
   public declare(name: string, value: RuntimeValue, mutable = true, type?: TypeNode | string): void {
     if (name === "_") return;
-    const typeText = bindingTypeText(type);
+    const typeText = resolvedBindingTypeText(type, this);
     const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, this) : value;
-    this.currentScope.declare(name, stored, mutable, typeText ? resolvedDeclaredTypeText(typeText, this) : undefined);
+    this.currentScope.declare(name, stored, mutable, typeText);
   }
 
   public declareRoot(name: string, value: RuntimeValue, mutable = true, type?: TypeNode | string): void {
     if (name === "_") return;
-    const typeText = bindingTypeText(type);
+    const typeText = resolvedBindingTypeText(type, this);
     const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, this) : value;
-    this.shared.rootScope.declare(name, stored, mutable, typeText ? resolvedDeclaredTypeText(typeText, this) : undefined);
+    this.shared.rootScope.declare(name, stored, mutable, typeText);
   }
 
   public declareOrAssignRoot(name: string, value: RuntimeValue, mutable = true, type?: TypeNode | string): void {
@@ -726,7 +730,7 @@ export class EvaluationContext {
   }
 
   public registerType(spec: TypeSpec): void {
-    const target = this.resolveImportedTypeText(spec.type.text);
+    const target = this.resolveImportedTypeText(spec.type.text, spec.type.span?.filename);
     this.shared.aliases.set(spec.name, target);
     if (spec.alias) this.shared.trueAliases.set(spec.name, target);
     if (spec.structFields) {
@@ -736,7 +740,7 @@ export class EvaluationContext {
         declaringContext: this,
         fields: spec.structFields.map((field) => ({
           ...field,
-          type: { text: this.resolveImportedTypeText(field.type.text) }
+          type: { text: this.resolveImportedTypeText(field.type.text, field.type.span?.filename) }
         }))
       });
     }
@@ -748,9 +752,9 @@ export class EvaluationContext {
             ...method,
             signature: resolveRuntimeSignatureTypeImports(method.signature, this)
           })),
-          (spec.interfaceEmbeds ?? []).map((embed) => ({ text: this.resolveImportedTypeText(embed.text) }))
+          (spec.interfaceEmbeds ?? []).map((embed) => ({ text: this.resolveImportedTypeText(embed.text, embed.span?.filename) }))
         ),
-        embeds: (spec.interfaceEmbeds ?? []).map((embed) => ({ text: this.resolveImportedTypeText(embed.text) }))
+        embeds: (spec.interfaceEmbeds ?? []).map((embed) => ({ text: this.resolveImportedTypeText(embed.text, embed.span?.filename) }))
       });
     }
   }
@@ -952,13 +956,36 @@ export class EvaluationContext {
     return this.options.packageContexts?.[importPath];
   }
 
-  public registerImportBinding(localName: string, importPath: string): void {
+  public registerImportBinding(localName: string, importPath: string, filename?: string): void {
     if (localName === "_" || localName === ".") return;
-    this.shared.importPathsByLocalName.set(localName, importPath);
+    if (filename) {
+      this.shared.importPathsByFileAndLocalName.set(importBindingFileKey(filename, localName), importPath);
+    }
+    const existing = this.shared.importPathsByLocalName.get(localName);
+    if (existing === undefined && !this.shared.ambiguousImportLocalNames.has(localName)) {
+      this.shared.importPathsByLocalName.set(localName, importPath);
+    } else if (existing !== importPath) {
+      this.shared.importPathsByLocalName.delete(localName);
+      this.shared.ambiguousImportLocalNames.add(localName);
+    }
   }
 
-  public resolveImportedTypeText(typeText: string): string {
-    return rewriteRuntimeTypeText(typeText, (qualifier) => this.shared.importPathsByLocalName.get(qualifier));
+  public importPathForLocalName(localName: string, filename?: string): string | undefined {
+    if (filename) {
+      const scoped = this.shared.importPathsByFileAndLocalName.get(importBindingFileKey(filename, localName));
+      if (scoped !== undefined) return scoped;
+    }
+    return this.shared.importPathsByLocalName.get(localName);
+  }
+
+  public importedPackageValue(localName: string, filename?: string): RuntimeObject | undefined {
+    const importPath = this.importPathForLocalName(localName, filename);
+    if (!importPath) return undefined;
+    return availablePackages(this)[importPath];
+  }
+
+  public resolveImportedTypeText(typeText: string, filename?: string): string {
+    return rewriteRuntimeTypeText(typeText, (qualifier) => this.importPathForLocalName(qualifier, filename));
   }
 
   public methodFor(typeName: string, methodName: string): MethodDef | undefined {
@@ -2833,7 +2860,7 @@ function installImports(context: EvaluationContext, ast: ProgramAst): void {
     if (!pkg) {
       throw new GoJuniorRuntimeError(`package ${imported.path} is not available`);
     }
-    context.registerImportBinding(name, imported.path);
+    context.registerImportBinding(name, imported.path, imported.span?.filename);
     const importedContext = context.packageContext(imported.path);
     if (importedContext) {
       context.importPackageDefinitions(imported.path, importedContext);
@@ -2846,13 +2873,15 @@ function installImports(context: EvaluationContext, ast: ProgramAst): void {
       }
       continue;
     }
-    markRuntimePackageObject(pkg, imported.path, context.packageInfo(imported.path) ?? standardTypePackage(imported.path));
-    context.declareOrAssignRoot(name, pkg, true);
   }
 }
 
 function importDefaultName(path: string): string {
   return path.split("/").filter(Boolean).at(-1) ?? path;
+}
+
+function importBindingFileKey(filename: string, localName: string): string {
+  return `${filename}\0${localName}`;
 }
 
 function importBindingName(imported: { path: string; alias?: string }, context?: EvaluationContext): string {
@@ -2901,6 +2930,14 @@ function packageFunctionIntrinsic(declaration: FunctionDecl, importPath?: string
   if (importPath === "reflect" && declaration.name === "New") {
     intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
       reflectNewValue(args[0] ?? null, context));
+  }
+  if (importPath === "reflect" && declaration.name === "MakeSlice") {
+    intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
+      reflectMakeSlice(args[0] ?? null, args[1] ?? 0n, args[2] ?? 0n, context));
+  }
+  if (importPath === "reflect" && declaration.name === "Append") {
+    intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
+      reflectAppend(args, context));
   }
   if (importPath === "os" && declaration.name === "Exit") {
     intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => {
@@ -3026,6 +3063,12 @@ function packageMethodIntrinsic(declaration: FunctionDecl, importPath?: string):
       case "Index":
         return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
           reflectValueIndex(args[0] ?? null, args[1] ?? 0n, context));
+      case "Field":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
+          reflectValueField(args[0] ?? null, args[1] ?? 0n, context));
+      case "Addr":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
+          reflectValueAddr(args[0] ?? null, context));
       case "Bool":
         return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
           reflectValueBool(args[0] ?? null));
@@ -3050,6 +3093,27 @@ function packageMethodIntrinsic(declaration: FunctionDecl, importPath?: string):
       case "Set":
         return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
           reflectValueSet(args[0] ?? null, args[1] ?? null));
+      case "SetBool":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueSetScalar(args[0] ?? null, toBool(args[1] ?? false), "SetBool"));
+      case "SetInt":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueSetScalar(args[0] ?? null, toBigInt(args[1] ?? 0n), "SetInt"));
+      case "SetUint":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueSetScalar(args[0] ?? null, BigInt.asUintN(64, toBigInt(args[1] ?? 0n)), "SetUint"));
+      case "SetFloat":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueSetScalar(args[0] ?? null, toFloat(args[1] ?? 0), "SetFloat"));
+      case "SetComplex":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueSetScalar(args[0] ?? null, toComplex(args[1] ?? complexValue(0, 0)), "SetComplex"));
+      case "SetString":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueSetScalar(args[0] ?? null, RuntimeGoString.fromUtf8Text(toStringValue(args[1] ?? "")), "SetString"));
+      case "SetBytes":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueSetScalar(args[0] ?? null, args[1] ?? [], "SetBytes"));
       default:
         return undefined;
     }
@@ -3683,6 +3747,7 @@ interface ReflectValueRuntimeInfo {
   value: RuntimeValue;
   typeText: string;
   kind: bigint;
+  context?: EvaluationContext;
   set?: (value: RuntimeValue) => void;
 }
 
@@ -3722,7 +3787,7 @@ function reflectValueStruct(
     ["ptr", reflectValuePointerPayload(value, typeText, context, set)],
     ["flag", kind]
   ]);
-  reflectValueInfos.set(struct, { value, typeText, kind, ...(set ? { set } : {}) });
+  reflectValueInfos.set(struct, { value, typeText, kind, context, ...(set ? { set } : {}) });
   return struct;
 }
 
@@ -3732,7 +3797,7 @@ function reflectZeroValue(context: EvaluationContext): RuntimeStruct {
     ["ptr", new RuntimeTypedNilValue("unsafe.Pointer")],
     ["flag", 0n]
   ]);
-  reflectValueInfos.set(struct, { value: null, typeText: "", kind: 0n });
+  reflectValueInfos.set(struct, { value: null, typeText: "", kind: 0n, context });
   return struct;
 }
 
@@ -3758,6 +3823,38 @@ function reflectNewValue(typeValue: RuntimeValue, context: EvaluationContext): R
     value = prepareAssignableToType(next, typeText, "reflect.New value", context);
   }, `reflect.New:${typeText}:${nextObjectMapKeyId++}`);
   return reflectValueStruct(pointer, context, `*${typeText}`);
+}
+
+function reflectMakeSlice(typeValue: RuntimeValue, lengthValue: RuntimeValue, capacityValue: RuntimeValue, context: EvaluationContext): RuntimeStruct {
+  const typeText = reflectRtypeRuntimeTypeText(typeValue);
+  const sliceType = parseArrayOrSliceTypeText(internalAbiUnderlyingTypeText(typeText, context), context);
+  if (!sliceType || sliceType.length !== undefined || sliceType.inferLength) {
+    throw new GoJuniorPanic("panic: reflect.MakeSlice of non-slice type");
+  }
+  const length = toNumber(lengthValue);
+  const capacity = toNumber(capacityValue);
+  if (length < 0) throw new GoJuniorPanic("panic: reflect.MakeSlice: negative len");
+  if (capacity < 0) throw new GoJuniorPanic("panic: reflect.MakeSlice: negative cap");
+  if (length > capacity) throw new GoJuniorPanic("panic: reflect.MakeSlice: len > cap");
+  const values = makeRuntimeSlice(sliceType.elementType, length, capacity, context, typeText);
+  markArrayType(values, typeText);
+  return reflectValueStruct(values, context, typeText);
+}
+
+function reflectAppend(args: RuntimeValue[], context: EvaluationContext): RuntimeStruct {
+  const target = args[0] ?? null;
+  const info = requiredReflectValueInfo(target, "Append");
+  const valueContext = info.context ?? context;
+  if (info.kind !== 23n) throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Append Kind:${info.kind}}`);
+  const sliceType = parseArrayOrSliceTypeText(internalAbiUnderlyingTypeText(info.typeText, valueContext), valueContext);
+  if (!sliceType || sliceType.length !== undefined || sliceType.inferLength) {
+    throw new GoJuniorPanic("panic: reflect.Append of non-slice Value");
+  }
+  const values = args.slice(1).map((value, index) =>
+    prepareAssignableToType(reflectValuePayload(value), sliceType.elementType, `reflect.Append argument ${index + 1}`, valueContext));
+  const appended = appendValues(info.value, values);
+  markArrayType(appended, info.typeText);
+  return reflectValueStruct(appended, valueContext, info.typeText);
 }
 
 function reflectValuePointerPayload(
@@ -3789,7 +3886,19 @@ function reflectValueInfoFromFields(struct: RuntimeStruct): ReflectValueRuntimeI
   const typeText = descriptor ? runtimeDescriptorText(descriptor, "GoJrTypeText") : "";
   if (kind === 0n && !typeText) return { value: null, typeText: "", kind: 0n };
   const ptr = struct.get("ptr");
-  return { value: ptr ?? null, typeText, kind };
+  return { value: reflectValueStoredPayload(ptr ?? null, typeText, kind), typeText, kind };
+}
+
+function reflectValueStoredPayload(ptr: RuntimeValue, typeText: string, kind: bigint): RuntimeValue {
+  if (ptr instanceof RuntimePointer && reflectValueStoresIndirectPayload(typeText, kind)) {
+    return ptr.get();
+  }
+  return ptr;
+}
+
+function reflectValueStoresIndirectPayload(typeText: string, kind: bigint): boolean {
+  if (kind === 22n || kind === 26n) return false;
+  return !isUnsafePointerType(typeText);
 }
 
 function reflectValueKind(value: RuntimeValue): bigint {
@@ -3805,7 +3914,7 @@ function reflectValueType(value: RuntimeValue, context: EvaluationContext): Runt
   if (!info || info.kind === 0n || !info.typeText) {
     throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Type on zero Value");
   }
-  return reflectTypeInterfaceForTypeText(info.typeText, context);
+  return reflectTypeInterfaceForTypeText(info.typeText, info.context ?? context);
 }
 
 function reflectValuePointer(value: RuntimeValue): bigint {
@@ -3832,16 +3941,19 @@ function reflectValueElem(value: RuntimeValue, context: EvaluationContext): Runt
   if (!info || info.kind === 0n) {
     throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Elem on zero Value");
   }
+  const valueContext = info.context ?? context;
   const actual = unwrapNamed(info.value);
   if (info.kind === 22n) {
     if (actual instanceof RuntimeTypedNilValue) return reflectZeroValue(context);
     if (actual instanceof RuntimePointer) {
-      return reflectValueStruct(actual.get(), context, reflectElemTypeText(info.typeText, context), (next) => actual.set(next));
+      const elementType = reflectElemTypeText(info.typeText, valueContext);
+      return reflectValueStruct(actual.get(), valueContext, elementType, (next) =>
+        actual.set(prepareAssignableToType(next, elementType, `*${elementType}`, valueContext)));
     }
   }
   if (info.kind === 20n) {
     const dynamic = reflectDynamicValue(info.value);
-    return dynamic === null ? reflectZeroValue(context) : reflectValueStruct(dynamic, context);
+    return dynamic === null ? reflectZeroValue(valueContext) : reflectValueStruct(dynamic, valueContext);
   }
   throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Value.Elem Kind:${info.kind}}`);
 }
@@ -3875,15 +3987,16 @@ function reflectValueIndex(value: RuntimeValue, indexValue: RuntimeValue, contex
   if (!info || info.kind === 0n) {
     throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Index on zero Value");
   }
+  const valueContext = info.context ?? context;
   const index = toNumber(indexValue);
   const actual = unwrapNamed(info.value);
   if (info.kind === 24n && isRuntimeString(actual)) {
     if (index < 0 || index >= ensureRuntimeGoString(actual).byteLength()) {
       throw new GoJuniorPanic("panic: reflect: string index out of range");
     }
-    return reflectValueStruct(goStringByteAt(actual, index), context, "uint8");
+    return reflectValueStruct(goStringByteAt(actual, index), valueContext, "uint8");
   }
-  const arrayType = parseArrayOrSliceTypeText(internalAbiUnderlyingTypeText(info.typeText, context), context);
+  const arrayType = parseArrayOrSliceTypeText(internalAbiUnderlyingTypeText(info.typeText, valueContext), valueContext);
   if ((info.kind === 17n || info.kind === 23n) && Array.isArray(actual) && arrayType) {
     if (index < 0 || index >= actual.length) {
       throw new GoJuniorPanic(info.kind === 17n
@@ -3892,9 +4005,9 @@ function reflectValueIndex(value: RuntimeValue, indexValue: RuntimeValue, contex
     }
     const elementType = arrayType.elementType;
     const setter = info.kind === 23n || info.set
-      ? (next: RuntimeValue) => setArrayElement(actual, index, prepareAssignableToType(next, elementType, "reflect.Value.Index", context))
+      ? (next: RuntimeValue) => setArrayElement(actual, index, prepareAssignableToType(next, elementType, "reflect.Value.Index", valueContext))
       : undefined;
-    return reflectValueStruct(getArrayElement(actual, index), context, elementType, setter);
+    return reflectValueStruct(getArrayElement(actual, index), valueContext, elementType, setter);
   }
   if ((info.kind === 17n || info.kind === 23n) && actual instanceof RuntimeTypedNilValue) {
     throw new GoJuniorPanic(info.kind === 17n
@@ -3902,6 +4015,59 @@ function reflectValueIndex(value: RuntimeValue, indexValue: RuntimeValue, contex
       : "panic: reflect: slice index out of range");
   }
   throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Value.Index Kind:${info.kind}}`);
+}
+
+function reflectValueField(value: RuntimeValue, indexValue: RuntimeValue, context: EvaluationContext): RuntimeStruct {
+  const info = reflectValueInfo(value);
+  if (!info || info.kind === 0n) {
+    throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Field on zero Value");
+  }
+  const valueContext = info.context ?? context;
+  if (info.kind !== 25n) {
+    throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Value.Field Kind:${info.kind}}`);
+  }
+  const index = toNumber(indexValue);
+  const struct = structFromValue(info.value);
+  if (!struct) throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Value.Field Kind:${info.kind}}`);
+  const typeDef = structTypeDefFor(struct, valueContext);
+  const fields = typeDef ? instantiateStructFields(typeDef, info.typeText) : runtimeStructFieldsFromValue(struct);
+  const field = fields[index];
+  if (!field) throw new GoJuniorPanic("panic: reflect: Field index out of range");
+  const accessor = structFieldAccessor(struct, field.name, valueContext) ?? directRuntimeStructFieldAccessor(struct, field);
+  const fieldValue = accessor.get() ?? defaultValueForDeclarationType(accessor.type.type, valueContext);
+  const setter = info.set
+    ? (next: RuntimeValue) => accessor.set(prepareAssignableToType(next, accessor.type.type.text, `reflect.Value.Field(${index})`, valueContext))
+    : undefined;
+  return reflectValueStruct(fieldValue, valueContext, accessor.type.type.text, setter);
+}
+
+function reflectValueAddr(value: RuntimeValue, context: EvaluationContext): RuntimeStruct {
+  const info = reflectValueInfo(value);
+  if (!info || info.kind === 0n) {
+    throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Addr on zero Value");
+  }
+  const valueContext = info.context ?? context;
+  if (!info.set) throw new GoJuniorPanic("panic: reflect.Value.Addr of unaddressable value");
+  const typeText = normalizeTypeText(info.typeText || pointerTypeName(info.value));
+  const pointer = new RuntimePointer(typeText, () => info.value, (next) => {
+    info.set?.(prepareAssignableToType(next, typeText, `*${typeText}`, valueContext));
+  }, `reflect.Value.Addr:${runtimeUintptrForValue(info.value)}:${typeText}`);
+  return reflectValueStruct(pointer, valueContext, `*${typeText}`);
+}
+
+function runtimeStructFieldsFromValue(struct: RuntimeStruct): StructFieldDecl[] {
+  return struct.orderedFields().map(([name, value]) => ({
+    name,
+    type: { text: pointerTypeName(value) }
+  }));
+}
+
+function directRuntimeStructFieldAccessor(struct: RuntimeStruct, field: StructFieldDecl): StructFieldAccessor {
+  return {
+    type: field,
+    get: () => struct.get(field.name),
+    set: (value) => struct.set(field.name, value)
+  };
 }
 
 function reflectValueBool(value: RuntimeValue): boolean {
@@ -3962,6 +4128,13 @@ function reflectValueSet(target: RuntimeValue, source: RuntimeValue): RuntimeVal
   const info = reflectValueInfo(target);
   if (!info || !info.set) throw new GoJuniorPanic("panic: reflect: reflect.Value.Set using unaddressable value");
   info.set(reflectValuePayload(source));
+  return null;
+}
+
+function reflectValueSetScalar(target: RuntimeValue, source: RuntimeValue, method: string): RuntimeValue {
+  const info = reflectValueInfo(target);
+  if (!info || !info.set) throw new GoJuniorPanic(`panic: reflect: reflect.Value.${method} using unaddressable value`);
+  info.set(source);
   return null;
 }
 
@@ -4393,8 +4566,15 @@ function bindingTypeText(type: TypeNode | string | undefined): string | undefine
   return normalized && normalized !== "<missing>" ? normalized : undefined;
 }
 
-function resolvedDeclaredTypeText(typeText: string, context: EvaluationContext): string {
-  const resolved = context.resolveImportedTypeText(typeText);
+function resolvedBindingTypeText(type: TypeNode | string | undefined, context: EvaluationContext): string | undefined {
+  const typeText = bindingTypeText(type);
+  if (!typeText) return undefined;
+  const filename = !type || typeof type === "string" ? undefined : type.span?.filename;
+  return resolvedDeclaredTypeText(typeText, context, filename);
+}
+
+function resolvedDeclaredTypeText(typeText: string, context: EvaluationContext, filename?: string): string {
+  const resolved = context.resolveImportedTypeText(typeText, filename);
   return parseArrayOrSliceTypeText(resolved, context)?.typeText ?? resolved;
 }
 
@@ -6281,6 +6461,51 @@ function intrinsicMethodDef(typeName: string, methodName: string): MethodDef | u
         return intrinsicMethod(type, methodName, [], ["bool"], (args) => Boolean(reflectValueInfo(args[0] ?? null)?.set));
       case "Set":
         return intrinsicMethod(type, methodName, ["reflect.Value"], [], (args) => reflectValueSet(args[0] ?? null, args[1] ?? null));
+      case "SetBool":
+        return intrinsicMethod(type, methodName, ["bool"], [], (args) =>
+          reflectValueSetScalar(args[0] ?? null, toBool(args[1] ?? false), methodName));
+      case "SetInt":
+        return intrinsicMethod(type, methodName, ["int64"], [], (args) =>
+          reflectValueSetScalar(args[0] ?? null, toBigInt(args[1] ?? 0n), methodName));
+      case "SetUint":
+        return intrinsicMethod(type, methodName, ["uint64"], [], (args) =>
+          reflectValueSetScalar(args[0] ?? null, BigInt.asUintN(64, toBigInt(args[1] ?? 0n)), methodName));
+      case "SetFloat":
+        return intrinsicMethod(type, methodName, ["float64"], [], (args) =>
+          reflectValueSetScalar(args[0] ?? null, toFloat(args[1] ?? 0), methodName));
+      case "SetComplex":
+        return intrinsicMethod(type, methodName, ["complex128"], [], (args) =>
+          reflectValueSetScalar(args[0] ?? null, toComplex(args[1] ?? complexValue(0, 0)), methodName));
+      case "SetString":
+        return intrinsicMethod(type, methodName, ["string"], [], (args) =>
+          reflectValueSetScalar(args[0] ?? null, RuntimeGoString.fromUtf8Text(toStringValue(args[1] ?? "")), methodName));
+      case "SetBytes":
+        return intrinsicMethod(type, methodName, ["[]byte"], [], (args) =>
+          reflectValueSetScalar(args[0] ?? null, args[1] ?? [], methodName));
+      default:
+        return undefined;
+    }
+  }
+  const receiver = normalizeReceiverType(type);
+  if (receiver.baseType === "reflect.rtype" || receiver.baseType === "rtype") {
+    switch (methodName) {
+      case "Kind":
+        return intrinsicMethod(type, methodName, [], ["reflect.Kind"], (args, context) => reflectRtypeKind(args[0] ?? null, context));
+      case "Name":
+        return intrinsicMethod(type, methodName, [], ["string"], (args) =>
+          RuntimeGoString.fromUtf8Text(reflectRtypeDescriptorText(args[0] ?? null, "GoJrName")));
+      case "String":
+        return intrinsicMethod(type, methodName, [], ["string"], (args) =>
+          RuntimeGoString.fromUtf8Text(reflectRtypeDescriptorText(args[0] ?? null, "GoJrString")));
+      case "PkgPath":
+        return intrinsicMethod(type, methodName, [], ["string"], (args) =>
+          RuntimeGoString.fromUtf8Text(reflectRtypeDescriptorText(args[0] ?? null, "GoJrPkgPath")));
+      case "Implements":
+        return intrinsicMethod(type, methodName, ["reflect.Type"], ["bool"], (args, context) =>
+          reflectRtypeImplements(args[0] ?? null, args[1] ?? null, context));
+      case "Elem":
+        return intrinsicMethod(type, methodName, [], ["reflect.Type"], (args, context) =>
+          reflectRtypeElem(args[0] ?? null, context));
       default:
         return undefined;
     }
@@ -6590,7 +6815,7 @@ function prepareReceiverBinding(receiverTypeText: string, receiver: RuntimeValue
 
 function pointerToReceiver(receiver: RuntimeValue, typeName: string): RuntimeValue {
   if (receiver instanceof RuntimePointer) return receiver;
-  if (receiver instanceof RuntimeTypedNilValue && runtimeTypeAssignableMatch(receiver.typeName, `*${typeName}`)) return receiver;
+  if (receiver instanceof RuntimeTypedNilValue && typedNilPointerReceiverMatches(receiver.typeName, typeName)) return receiver;
   const receiverType = receiver instanceof RuntimeNamedValue
     ? receiver.typeName
     : receiver instanceof RuntimeStruct
@@ -6613,6 +6838,17 @@ function pointerToReceiver(receiver: RuntimeValue, typeName: string): RuntimeVal
     }, `struct:${objectIdentityId(receiverStruct)}`);
   }
   throw new GoJuniorRuntimeError(`${formatValue(receiver)} is not addressable as *${typeName}`);
+}
+
+function typedNilPointerReceiverMatches(actualPointerType: string, receiverType: string): boolean {
+  if (runtimeTypeAssignableMatch(actualPointerType, `*${receiverType}`)) return true;
+  const actual = normalizeReceiverType(actualPointerType).baseType;
+  const expected = normalizeReceiverType(receiverType).baseType;
+  return runtimeLocalTypeBaseName(actual) === runtimeLocalTypeBaseName(expected);
+}
+
+function runtimeLocalTypeBaseName(typeText: string): string {
+  return genericBaseTypeName(normalizeTypeText(typeText)).split(".").at(-1) ?? typeText;
 }
 
 async function executeStatements(statements: Statement[], context: EvaluationContext): Promise<Completion> {
@@ -6898,7 +7134,7 @@ async function executeTypeSwitch(statement: SwitchStatement, context: Evaluation
       if (statement.typeSwitch?.name) {
         const bindingValue = typeSwitchBindingValue(switchValue, clause, context);
         if (statement.typeSwitch.define) {
-          context.declare(statement.typeSwitch.name, bindingValue, true);
+          context.declare(statement.typeSwitch.name, bindingValue, true, typeSwitchBindingType(clause));
         } else {
           context.assign(statement.typeSwitch.name, bindingValue);
         }
@@ -6937,6 +7173,12 @@ function typeSwitchBindingValue(switchValue: RuntimeValue, clause: SwitchStateme
   if (!typeText) return switchValue;
   if (normalizeTypeText(typeText) === "nil") return null;
   return assertedRuntimeValue(switchValue, typeText, context);
+}
+
+function typeSwitchBindingType(clause: SwitchStatement["clauses"][number]): TypeNode | undefined {
+  if (clause.default || (clause.typeValues?.length ?? 0) !== 1) return undefined;
+  const type = clause.typeValues?.[0];
+  return type && normalizeTypeText(type.text) !== "nil" ? type : undefined;
 }
 
 async function executeFor(statement: ForStatement, context: EvaluationContext, label?: string): Promise<Completion> {
@@ -7180,8 +7422,10 @@ async function executeAssign(statement: AssignStatement, context: EvaluationCont
         let value = prepareValueForAssignmentTarget(values[index] ?? null, target, source, context);
         if (statement.operator && statement.operator !== "=") {
           const current = await evaluateExpression(target, context);
-          const compound = applyCompoundAssignment(statement.operator, current, value);
-          await assignExpressionTarget(target, materializeValueForType(compound, assignmentTargetExpectedTypeText(target, context), context), context);
+          const targetType = assignmentTargetExpectedTypeText(target, context);
+          const [left, right] = prepareCompoundAssignmentOperands(statement.operator, current, value, targetType, context);
+          const compound = applyCompoundAssignment(statement.operator, left, right);
+          await assignExpressionTarget(target, materializeValueForType(compound, targetType, context), context);
         } else {
           await assignExpressionTarget(target, value, context, source);
         }
@@ -7403,6 +7647,21 @@ function applyCompoundAssignment(operator: NonNullable<AssignStatement["operator
     case ">>=": return shiftRight(left, right);
     default: return right;
   }
+}
+
+function prepareCompoundAssignmentOperands(
+  operator: NonNullable<AssignStatement["operator"]>,
+  left: RuntimeValue,
+  right: RuntimeValue,
+  targetTypeText: string | undefined,
+  context: EvaluationContext
+): [RuntimeValue, RuntimeValue] {
+  const leftValue = materializeValueForType(left, targetTypeText, context);
+  if (operator === "<<=" || operator === ">>=") return [leftValue, right];
+  if (targetTypeText && isNumericTypeText(targetTypeText, context)) {
+    return [leftValue, materializeValueForType(right, targetTypeText, context)];
+  }
+  return [leftValue, right];
 }
 
 async function evaluateMapLookupWithPresence(expression: IndexExpression, context: EvaluationContext): Promise<RuntimeValue[] | undefined> {
@@ -7716,8 +7975,9 @@ async function evaluateArrayLiteral(
   expectedTypeText?: string,
   expectedRole?: string
 ): Promise<RuntimeValue[]> {
-  const typeText = resolveRuntimeCompositeAliases(context.resolveImportedTypeText(expectedTypeText ?? expression.type.text), context);
-  const type = parseArrayOrSliceTypeText(typeText, context);
+  const filename = expression.type.span?.filename ?? expression.span?.filename;
+  const typeText = resolveRuntimeCompositeAliases(context.resolveImportedTypeText(expectedTypeText ?? expression.type.text, filename), context);
+  const type = parseArrayOrSliceTypeText(typeText, context, filename);
   if (!type) {
     throw new GoJuniorRuntimeError(`${typeText} is not an array or slice literal type`);
   }
@@ -7909,7 +8169,12 @@ async function evaluateMapLiteral(expression: MapLiteralExpression, context: Eva
 
 function evaluateIdentifier(expression: IdentifierExpression, context: EvaluationContext): RuntimeValue {
   if (expression.name === "nil") return null;
-  return context.lookup(expression.name);
+  return identifierRuntimeValue(expression, context);
+}
+
+function identifierRuntimeValue(expression: IdentifierExpression, context: EvaluationContext): RuntimeValue {
+  if (context.hasBinding(expression.name)) return context.lookup(expression.name);
+  return context.importedPackageValue(expression.name, expression.span?.filename) ?? context.lookup(expression.name);
 }
 
 async function evaluateUnary(expression: UnaryExpression, context: EvaluationContext): Promise<RuntimeValue> {
@@ -7949,8 +8214,9 @@ async function evaluateBinary(expression: BinaryExpression, context: EvaluationC
     return toBool(await evaluateExpression(expression.left, context)) || toBool(await evaluateExpression(expression.right, context));
   }
 
-  const left = await evaluateExpression(expression.left, context);
-  const right = await evaluateExpression(expression.right, context);
+  let left = await evaluateExpression(expression.left, context);
+  let right = await evaluateExpression(expression.right, context);
+  [left, right] = prepareBinaryOperatorOperands(expression.operator, expression, left, right, context);
 
   try {
     switch (expression.operator) {
@@ -7997,6 +8263,35 @@ async function evaluateBinary(expression: BinaryExpression, context: EvaluationC
   }
 }
 
+function prepareBinaryOperatorOperands(
+  operator: BinaryExpression["operator"],
+  expression: BinaryExpression,
+  left: RuntimeValue,
+  right: RuntimeValue,
+  context: EvaluationContext
+): [RuntimeValue, RuntimeValue] {
+  const leftType = expressionDeclaredTypeText(expression.left, context, left);
+  const rightType = expressionDeclaredTypeText(expression.right, context, right);
+  const leftUntyped = isUntypedConstantExpression(expression.left);
+  const rightUntyped = isUntypedConstantExpression(expression.right);
+
+  if (operator === "<<" || operator === ">>") {
+    return [materializeValueForType(left, leftType, context), right];
+  }
+  if (leftType && rightUntyped && isNumericTypeText(leftType, context)) {
+    right = materializeValueForType(right, leftType, context);
+  }
+  if (rightType && leftUntyped && isNumericTypeText(rightType, context)) {
+    left = materializeValueForType(left, rightType, context);
+  }
+  const resultType = binaryExpressionTypeText(expression, context);
+  if (resultType && isNumericTypeText(resultType, context)) {
+    left = materializeValueForType(left, resultType, context);
+    right = materializeValueForType(right, resultType, context);
+  }
+  return [left, right];
+}
+
 async function evaluateTypeAssertion(expression: TypeAssertionExpression, context: EvaluationContext): Promise<RuntimeValue> {
   const value = await evaluateExpression(expression.expression, context);
   if (!runtimeValueMatchesType(value, expression.type.text, context)) {
@@ -8017,7 +8312,7 @@ function assertedRuntimeValue(value: RuntimeValue, typeText: string, context: Ev
   const dynamicValue = value instanceof RuntimeInterfaceValue ? value.value : value;
   const targetInterface = interfaceTarget(type, context);
   if (targetInterface) return prepareInterfaceAssignment(dynamicValue, type, targetInterface, "type assertion", context);
-  return dynamicValue;
+  return prepareAssignableToType(dynamicValue, type, "type assertion", context);
 }
 
 async function evaluateCall(expression: CallExpression, context: EvaluationContext): Promise<RuntimeValue> {
@@ -8603,7 +8898,13 @@ async function setIndex(expression: IndexExpression, value: RuntimeValue, contex
 async function pointerToExpression(expression: Expression, context: EvaluationContext): Promise<RuntimePointer> {
   if (expression.kind === "StructLiteralExpression" || expression.kind === "ArrayLiteralExpression" || expression.kind === "MapLiteralExpression") {
     let value = await evaluateExpression(expression, context);
-    return new RuntimePointer(pointerTypeName(value), () => value, (next) => {
+    const declared = expression.kind === "StructLiteralExpression"
+      ? undefined
+      : expressionDeclaredTypeText(expression, context, value);
+    const typeName = declared
+      ? resolveRuntimeCompositeAliases(declared, context)
+      : pointerTypeName(value);
+    return new RuntimePointer(typeName, () => value, (next) => {
       value = next;
     });
   }
@@ -8738,7 +9039,7 @@ function methodForValue(value: RuntimeValue, methodName: string, context: Evalua
   const addressable = value instanceof RuntimePointer;
   const declaredReceiverType = receiverTypeName(value);
   if (declaredReceiverType) {
-    const direct = context.methodFor(declaredReceiverType, methodName);
+    const direct = methodDefForRuntimeReceiver(context, declaredReceiverType, methodName);
     if (direct) return { method: direct, receiver: value };
   }
   const dereferenced = dereferenceIfPointer(value);
@@ -8751,11 +9052,19 @@ function methodForValue(value: RuntimeValue, methodName: string, context: Evalua
         ? nilReceiverTypeName(actual)
       : undefined;
   if (receiverType && receiverType !== declaredReceiverType) {
-    const direct = context.methodFor(receiverType, methodName);
+    const direct = methodDefForRuntimeReceiver(context, receiverType, methodName);
     if (direct) return { method: direct, receiver: value };
   }
   if (actual instanceof RuntimeStruct) return promotedMethodForStruct(actual, methodName, context, addressable);
   return undefined;
+}
+
+function methodDefForRuntimeReceiver(
+  context: EvaluationContext,
+  receiverType: string,
+  methodName: string
+): MethodDef | undefined {
+  return context.methodFor(receiverType, methodName) ?? intrinsicMethodDef(receiverType, methodName);
 }
 
 function promotedMethodForStruct(
@@ -8798,7 +9107,7 @@ function promotedMethodForStruct(
     }
     const receiverType = receiverTypeName(receiver) ?? embeddedReceiver.baseType;
     if (receiverType) {
-      const direct = context.methodFor(receiverType, methodName);
+      const direct = methodDefForRuntimeReceiver(context, receiverType, methodName);
       if (direct) {
         if (!direct.pointerReceiver || receiver instanceof RuntimePointer || isTypedNilPointer(receiver)) {
           matches.push({ method: direct, receiver });
@@ -10057,7 +10366,7 @@ function escapeRegExp(text: string): string {
 
 function staticCalleeRuntimeValue(expression: Expression, context: EvaluationContext): RuntimeValue | undefined {
   try {
-    if (expression.kind === "Identifier") return context.lookup(expression.name);
+    if (expression.kind === "Identifier") return identifierRuntimeValue(expression, context);
     if (expression.kind === "IndexExpression") return staticCalleeRuntimeValue(expression.object, context);
     if (expression.kind === "SelectorExpression") {
       const object = staticCalleeRuntimeValue(expression.object, context);
@@ -10728,6 +11037,8 @@ function valueLength(value: RuntimeValue): number {
     const arrayType = parseArrayOrSliceTypeText(value.typeName);
     if (arrayType?.length !== undefined && !arrayType.inferLength) return arrayType.length;
   }
+  const headerLength = runtimeHeaderLength(value);
+  if (headerLength !== undefined) return headerLength;
   if (isRuntimeString(value)) return ensureRuntimeGoString(value).byteLength();
   if (Array.isArray(value)) return value.length;
   if (value instanceof RuntimeMap) return value.size();
@@ -10750,9 +11061,43 @@ function valueCapacity(value: RuntimeValue): number {
     const arrayType = parseArrayOrSliceTypeText(value.typeName);
     if (arrayType?.length !== undefined && !arrayType.inferLength) return arrayType.length;
   }
+  const headerCapacity = runtimeHeaderCapacity(value);
+  if (headerCapacity !== undefined) return headerCapacity;
   if (Array.isArray(value)) return sliceCapacity(value);
   if (value instanceof RuntimeChannel) return value.cap();
   throw new GoJuniorRuntimeError(`${formatValue(value)} has no cap`);
+}
+
+function runtimeHeaderLength(value: RuntimeValue): number | undefined {
+  const struct = structFromValue(value);
+  if (!struct || !isRuntimeSliceOrStringHeaderStruct(struct)) return undefined;
+  return runtimeHeaderIntegerField(struct, "Len");
+}
+
+function runtimeHeaderCapacity(value: RuntimeValue): number | undefined {
+  const struct = structFromValue(value);
+  if (!struct || !isRuntimeSliceHeaderStruct(struct)) return undefined;
+  return runtimeHeaderIntegerField(struct, "Cap");
+}
+
+function isRuntimeSliceOrStringHeaderStruct(struct: RuntimeStruct): boolean {
+  return isRuntimeSliceHeaderStruct(struct) || isRuntimeStringHeaderStruct(struct);
+}
+
+function isRuntimeSliceHeaderStruct(struct: RuntimeStruct): boolean {
+  const type = normalizeTypeText(struct.typeName);
+  return type === "internal/unsafeheader.Slice" || type === "reflect.SliceHeader";
+}
+
+function isRuntimeStringHeaderStruct(struct: RuntimeStruct): boolean {
+  const type = normalizeTypeText(struct.typeName);
+  return type === "internal/unsafeheader.String" || type === "reflect.StringHeader";
+}
+
+function runtimeHeaderIntegerField(struct: RuntimeStruct, fieldName: "Len" | "Cap"): number | undefined {
+  const value = struct.get(fieldName);
+  if (typeof value === "bigint" || typeof value === "number") return toNumber(value);
+  return undefined;
 }
 
 function sliceCapacity(value: RuntimeValue[]): number {
@@ -10881,7 +11226,7 @@ interface ParsedArrayOrSliceType {
   typeText: string;
 }
 
-function parseArrayOrSliceTypeText(typeText: string, context?: EvaluationContext): ParsedArrayOrSliceType | undefined {
+function parseArrayOrSliceTypeText(typeText: string, context?: EvaluationContext, filename?: string): ParsedArrayOrSliceType | undefined {
   const type = normalizeTypeText(typeText);
   if (!type.startsWith("[")) return undefined;
 
@@ -10897,20 +11242,20 @@ function parseArrayOrSliceTypeText(typeText: string, context?: EvaluationContext
   if (lengthText === "...") {
     return { elementType, inferLength: true, typeText: `[...]${elementType}` };
   }
-  const length = resolveArrayLengthText(lengthText, context);
+  const length = resolveArrayLengthText(lengthText, context, filename);
   if (length === undefined) return undefined;
   return { elementType, length, inferLength: false, typeText: `[${length}]${elementType}` };
 }
 
-function resolveArrayLengthText(lengthText: string, context?: EvaluationContext): number | undefined {
-  const constant = evaluateArrayLengthConstant(lengthText, context);
+function resolveArrayLengthText(lengthText: string, context?: EvaluationContext, filename?: string): number | undefined {
+  const constant = evaluateArrayLengthConstant(lengthText, context, filename);
   if (constant === undefined) return undefined;
   if (constant < 0n || constant > BigInt(Number.MAX_SAFE_INTEGER)) return undefined;
   return Number(constant);
 }
 
-function evaluateArrayLengthConstant(text: string, context?: EvaluationContext): bigint | undefined {
-  const parser = new ArrayLengthConstantParser(text, context);
+function evaluateArrayLengthConstant(text: string, context?: EvaluationContext, filename?: string): bigint | undefined {
+  const parser = new ArrayLengthConstantParser(text, context, filename);
   try {
     return parser.parse();
   } catch {
@@ -10923,7 +11268,8 @@ class ArrayLengthConstantParser {
 
   public constructor(
     private readonly text: string,
-    private readonly context?: EvaluationContext
+    private readonly context?: EvaluationContext,
+    private readonly filename?: string
   ) {}
 
   public parse(): bigint | undefined {
@@ -10982,8 +11328,14 @@ class ArrayLengthConstantParser {
 
   private lookupIdentifier(name: string): bigint | undefined {
     if (!this.context) return undefined;
-    let value = unwrapNamed(this.context.lookup(name.split(".")[0] ?? name));
-    for (const part of name.split(".").slice(1)) {
+    const parts = name.split(".");
+    const root = parts[0] ?? name;
+    let value = this.context.hasBinding(root)
+      ? this.context.lookup(root)
+      : this.context.importedPackageValue(root, this.filename);
+    if (value === undefined) return undefined;
+    value = unwrapNamed(value);
+    for (const part of parts.slice(1)) {
       if (!isRuntimeObject(value)) return undefined;
       value = unwrapNamed(value[part] ?? null);
     }
@@ -11555,6 +11907,7 @@ function externalizePackageRuntimeValue(value: RuntimeValue, packageName: string
     const cached = cachedPackageRuntimeValue(externalizedPackageValueCache, value, packageName);
     if (cached !== undefined) return cached;
     const wrapped = new RuntimeExternalizedStruct(value, packageName);
+    copyRuntimeStructMetadata(value, wrapped);
     rememberPackageRuntimeValue(externalizedPackageValueCache, value, packageName, wrapped);
     markPackageRuntimeWrapper(wrapped, packageName, "externalized", value);
     return wrapped;
@@ -11637,6 +11990,7 @@ function internalizePackageRuntimeValue(value: RuntimeValue, packageName: string
     const cached = cachedPackageRuntimeValue(internalizedPackageValueCache, value, packageName);
     if (cached !== undefined) return cached;
     const wrapped = new RuntimeInternalizedStruct(value, packageName);
+    copyRuntimeStructMetadata(value, wrapped);
     rememberPackageRuntimeValue(internalizedPackageValueCache, value, packageName, wrapped);
     markPackageRuntimeWrapper(wrapped, packageName, "internalized", value);
     return wrapped;
@@ -11719,7 +12073,7 @@ function resolveRuntimeSignatureTypeImports(
 }
 
 function resolveRuntimeTypeNodeImports(type: TypeNode, context: EvaluationContext): TypeNode {
-  return { text: context.resolveImportedTypeText(type.text) };
+  return { text: context.resolveImportedTypeText(type.text, type.span?.filename) };
 }
 
 function rewriteRuntimeTypeText(typeText: string, resolveQualifier: (qualifier: string) => string | undefined): string {
@@ -11798,7 +12152,7 @@ function qualifyLocalRuntimeTypeName(
   const type = normalizeTypeText(typeName);
   if (localTypeParameters.has(type)) return type;
   const generic = genericTypeArguments(type);
-  if (!type || !packageName || isPredeclaredType(type) || (!generic && /^[A-Za-z_]\w*\.[A-Za-z_]\w*$/.test(type))) return type;
+  if (!type || !packageName || isPredeclaredType(type) || (!generic && isQualifiedRuntimeTypeName(type))) return type;
   if (type.startsWith("*")) return `*${qualifyLocalRuntimeTypeName(type.slice(1), packageName, localTypeParameters)}`;
   if (type.startsWith("[]")) return `[]${qualifyLocalRuntimeTypeName(type.slice(2), packageName, localTypeParameters)}`;
   const array = /^\[([0-9.]*)\]([\s\S]+)$/.exec(type);
@@ -11817,6 +12171,10 @@ function qualifyLocalRuntimeTypeName(
   }
   if (type.startsWith("func(") || type.startsWith("interface{") || type.startsWith("struct{")) return type;
   return /^[A-Za-z_]\w*$/.test(type) ? `${packageName}.${type}` : type;
+}
+
+function isQualifiedRuntimeTypeName(type: string): boolean {
+  return /^[$A-Za-z_][\w]*(?:\/[$A-Za-z_][\w]*)*\.[A-Za-z_]\w*$/.test(type);
 }
 
 function unqualifyLocalRuntimeTypeName(typeName: string, packageName: string): string {

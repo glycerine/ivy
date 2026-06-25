@@ -23,8 +23,16 @@ return stats.Mean(sheet.A1:A10)
 `);
 
     expect(result.ast?.imports).toEqual([
-      { alias: "f", path: "fmt" },
-      { alias: "stats", path: "workbook/stats" }
+      {
+        alias: "f",
+        path: "fmt",
+        span: { filename: TEST_FILENAME, offset: 12, length: 7, line: 3, column: 3 }
+      },
+      {
+        alias: "stats",
+        path: "workbook/stats",
+        span: { filename: TEST_FILENAME, offset: 22, length: 22, line: 4, column: 3 }
+      }
     ]);
   });
 
@@ -183,6 +191,9 @@ func Double(x float64) float64 {
 `);
 
     expect(result.ast?.kind).toBe("function");
-    expect(result.ast?.imports).toEqual([{ path: "fmt" }]);
+    expect(result.ast?.imports).toEqual([{
+      path: "fmt",
+      span: { filename: TEST_FILENAME, offset: 8, length: 5, line: 2, column: 8 }
+    }]);
   });
 });
