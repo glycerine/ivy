@@ -29,9 +29,11 @@ export function hostResultValueIsNil(result) {
 }
 export function evaluationResultToHostPayload(result, extraOutput = []) {
     const diagnostics = result.diagnostics || [];
+    const exitCode = result.exitCode ?? 0;
     return {
-        ok: !hasErrorDiagnostics(diagnostics),
+        ok: !hasErrorDiagnostics(diagnostics) && exitCode === 0,
         incomplete: result.incomplete === true,
+        ...(result.exitCode !== undefined ? { exitCode: result.exitCode } : {}),
         diagnostics: diagnostics.map(formatDiagnostic),
         output: [...extraOutput, ...(result.output || [])].join(""),
         value: hostFormatResult(result),

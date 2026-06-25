@@ -33,6 +33,9 @@ async function main(argv) {
     if (result.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
         return 1;
     }
+    if (result.exitCode !== undefined) {
+        return result.exitCode;
+    }
     if (options.command === "eval") {
         if (result.values) {
             console.log(result.values.map(formatReplValue).join(", "));

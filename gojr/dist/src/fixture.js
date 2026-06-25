@@ -84,6 +84,7 @@ async function evaluateFormulaCell(source, ref, engine, knownRefs, currentSheetN
         filename: `${ref.sheet}!${ref.cell}.gojr`,
         ...(options.packages ? { packages: options.packages } : {}),
         ...(options.packageInfos ? { packageInfos: options.packageInfos } : {}),
+        ...(options.packageContexts ? { packageContexts: options.packageContexts } : {}),
         ...(fixture.randomSeed !== undefined ? { randomSeed: fixture.randomSeed } : {}),
         ...(fixture.randomSeed === undefined && options.randomSeed !== undefined ? { randomSeed: options.randomSeed } : {})
     });

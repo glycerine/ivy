@@ -624,6 +624,19 @@ func Next() int {
 		t.Fatalf("runTest(-v) ok=%v err=%v, want success", ok, err)
 	}
 
+	cachedTestDir := t.TempDir()
+	writeTestFile(t, filepath.Join(cachedTestDir, "go.mod"), "module example.com/testcache\n\ngo 1.27\n")
+	writeTestFile(t, filepath.Join(cachedTestDir, "testcache.go"), "package testcache\n\nfunc Add(a, b int) int { return a + b }\n")
+	writeTestFile(t, filepath.Join(cachedTestDir, "testcache_test.go"), "package testcache\n\nimport \"testing\"\n\nfunc TestCache(t *testing.T) { if Add(4, 5) != 9 { t.Fatalf(\"bad add\") } }\n")
+	cacheParent := t.TempDir()
+	if ok, err := runTest(rt, []string{"-v", "-pkgdir", cacheParent, cachedTestDir}); err != nil || !ok {
+		t.Fatalf("runTest(-pkgdir) ok=%v err=%v, want success", ok, err)
+	}
+	testArtifact := filepath.Join(cacheParent, "js_gojr", "example.com", "testcache.test.a")
+	if _, err := os.Stat(testArtifact); err != nil {
+		t.Fatalf("runTest(-pkgdir) did not cache test package artifact %s: %v", testArtifact, err)
+	}
+
 	externalDir := t.TempDir()
 	writeTestFile(t, filepath.Join(externalDir, "go.mod"), "module example.com/xtest\n\ngo 1.27\n")
 	writeTestFile(t, filepath.Join(externalDir, "xtest.go"), "package xtest\n\nfunc Add(a, b int) int { return a + b }\n")

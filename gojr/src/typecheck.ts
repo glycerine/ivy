@@ -1527,6 +1527,14 @@ function runtimePackage(): GoTypesPackage {
     null,
     false
   )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "ReadTrace", NewSignatureType(
+    null,
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "buf", byteSliceType)),
+    false
+  )));
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "SetBlockProfileRate", NewSignatureType(
     null,
     null,
@@ -1557,6 +1565,22 @@ function runtimePackage(): GoTypesPackage {
     null,
     NewTuple(NewVar(NoPos, pkg, "rate", intType)),
     NewTuple(NewVar(NoPos, pkg, "", intType)),
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "StartTrace", NewSignatureType(
+    null,
+    null,
+    null,
+    null,
+    NewTuple(NewVar(NoPos, pkg, "", errorType)),
+    false
+  )));
+  pkg.Scope().Insert(NewFunc(NoPos, pkg, "StopTrace", NewSignatureType(
+    null,
+    null,
+    null,
+    null,
+    null,
     false
   )));
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "ThreadCreateProfile", NewSignatureType(
@@ -1595,29 +1619,60 @@ function testingPackage(): GoTypesPackage {
   const argsType = NewSlice(emptyInterface);
   const tName = NewTypeName(NoPos, pkg, "T", null);
   const tType = NewNamed(tName, NewStruct([], null), null);
+  tName.setType(tType);
   const tPtr = NewPointer(tType);
   const recv = NewVar(NoPos, pkg, "t", tPtr);
   pkg.Scope().Insert(tName);
-  const addMethod = (name: string, result: GoTypesType | null, parameters: ReturnType<typeof NewVar>[] = [], variadic = false): void => {
+  const addMethod = (targetType: ReturnType<typeof NewNamed>, receiver: ReturnType<typeof NewVar>, name: string, result: GoTypesType | null, parameters: ReturnType<typeof NewVar>[] = [], variadic = false): void => {
     const params = NewTuple(...parameters);
     const results = result === null ? null : NewTuple(NewVar(NoPos, pkg, "", result));
-    tType.AddMethod(NewFunc(NoPos, pkg, name, NewSignatureType(recv, null, null, params, results, variadic)));
+    targetType.AddMethod(NewFunc(NoPos, pkg, name, NewSignatureType(receiver, null, null, params, results, variadic)));
   };
-  addMethod("Fail", null);
-  addMethod("FailNow", null);
-  addMethod("Failed", boolType);
-  addMethod("Fatal", null, [NewVar(NoPos, pkg, "args", argsType)], true);
-  addMethod("Fatalf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
-  addMethod("Error", null, [NewVar(NoPos, pkg, "args", argsType)], true);
-  addMethod("Errorf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
-  addMethod("Log", null, [NewVar(NoPos, pkg, "args", argsType)], true);
-  addMethod("Logf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
-  addMethod("Name", stringType);
-  addMethod("Helper", null);
-  addMethod("Skip", null, [NewVar(NoPos, pkg, "args", argsType)], true);
-  addMethod("Skipf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
-  addMethod("SkipNow", null);
-  addMethod("Skipped", boolType);
+  const addCommonMethods = (targetType: ReturnType<typeof NewNamed>, receiver: ReturnType<typeof NewVar>, receiverPtrType: GoTypesType): void => {
+    addMethod(targetType, receiver, "Fail", null);
+    addMethod(targetType, receiver, "FailNow", null);
+    addMethod(targetType, receiver, "Failed", boolType);
+    addMethod(targetType, receiver, "Fatal", null, [NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod(targetType, receiver, "Fatalf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod(targetType, receiver, "Error", null, [NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod(targetType, receiver, "Errorf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod(targetType, receiver, "Log", null, [NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod(targetType, receiver, "Logf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod(targetType, receiver, "Name", stringType);
+    addMethod(targetType, receiver, "Helper", null);
+    addMethod(targetType, receiver, "Skip", null, [NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod(targetType, receiver, "Skipf", null, [NewVar(NoPos, pkg, "format", stringType), NewVar(NoPos, pkg, "args", argsType)], true);
+    addMethod(targetType, receiver, "SkipNow", null);
+    addMethod(targetType, receiver, "Skipped", boolType);
+    addMethod(targetType, receiver, "Cleanup", null, [NewVar(NoPos, pkg, "f", NewSignatureType(null, null, null, null, null, false))]);
+    addMethod(targetType, receiver, "Run", boolType, [
+      NewVar(NoPos, pkg, "name", stringType),
+      NewVar(NoPos, pkg, "f", NewSignatureType(
+        null,
+        null,
+        null,
+        NewTuple(NewVar(NoPos, pkg, "", receiverPtrType)),
+        null,
+        false
+      ))
+    ]);
+  };
+  addCommonMethods(tType, recv, tPtr);
+
+  const bName = NewTypeName(NoPos, pkg, "B", null);
+  const bType = NewNamed(bName, NewStruct([
+    NewField(NoPos, pkg, "N", Typ[Int]!, false)
+  ], null), null);
+  bName.setType(bType);
+  const bPtr = NewPointer(bType);
+  const bRecv = NewVar(NoPos, pkg, "b", bPtr);
+  pkg.Scope().Insert(bName);
+  addCommonMethods(bType, bRecv, bPtr);
+  addMethod(bType, bRecv, "ReportAllocs", null);
+  addMethod(bType, bRecv, "ResetTimer", null);
+  addMethod(bType, bRecv, "StartTimer", null);
+  addMethod(bType, bRecv, "StopTimer", null);
+  addMethod(bType, bRecv, "SetBytes", null, [NewVar(NoPos, pkg, "n", Typ[Int64]!)]);
   pkg.Scope().Insert(NewFunc(NoPos, pkg, "Short", NewSignatureType(
     null,
     null,

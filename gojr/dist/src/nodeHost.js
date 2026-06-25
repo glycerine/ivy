@@ -239,7 +239,8 @@ export async function evaluateSourceWithPackagesOnNode(request) {
     const result = await evaluateSource(request.source ?? "", {
         ...options,
         packages: loaded.packages,
-        packageInfos: loaded.packageInfos
+        packageInfos: loaded.packageInfos,
+        packageContexts: loaded.packageContexts
     });
     return {
         ...result,
@@ -260,7 +261,8 @@ export async function evaluateSourceFilesWithPackagesOnNode(request) {
     const result = await evaluateSourceFiles(request.files ?? [], {
         ...options,
         packages: loaded.packages,
-        packageInfos: loaded.packageInfos
+        packageInfos: loaded.packageInfos,
+        packageContexts: loaded.packageContexts
     });
     return {
         ...result,
@@ -270,6 +272,32 @@ export async function evaluateSourceFilesWithPackagesOnNode(request) {
 export async function testSourceFilesWithPackagesOnNode(request) {
     const options = evaluationOptionsFromNodeRequest(request);
     const rootFiles = rootSourceFilesFromRequest(request);
+    const packageSources = packageSourceMapFromSpecs(request.packages ?? []);
+    if (request.artifactRoot || request.packageCacheParent) {
+        const buildRequest = {
+            files: rootFiles,
+            sourceRoots: request.sourceRoots ?? []
+        };
+        if (request.importPath)
+            buildRequest.importPath = `${request.importPath}.test`;
+        if (packageSources)
+            buildRequest.packageSources = packageSources;
+        if (request.artifactRoot)
+            buildRequest.artifactRoot = request.artifactRoot;
+        if (request.packageCacheParent)
+            buildRequest.packageCacheParent = request.packageCacheParent;
+        if (request.compilerVersion)
+            buildRequest.compilerVersion = request.compilerVersion;
+        if (request.progress)
+            buildRequest.progress = request.progress;
+        const build = buildPackagesOnNode(buildRequest);
+        if (!build.ok || hasErrorDiagnostics(build.diagnostics)) {
+            return {
+                diagnostics: build.diagnostics,
+                output: []
+            };
+        }
+    }
     const loaded = await loadSourcePackagesForRootFilesOnNode(rootFiles, request.packages ?? [], options, request.sourceRoots ?? []);
     if (hasErrorDiagnostics(loaded.diagnostics)) {
         return {
@@ -280,8 +308,18 @@ export async function testSourceFilesWithPackagesOnNode(request) {
     }
     const result = await testSourceFiles(request.files ?? [], {
         ...options,
+        ...(request.importPath ? { importPath: request.importPath } : {}),
+        ...(request.packageName ? { packageName: request.packageName } : {}),
         packages: loaded.packages,
-        packageInfos: loaded.packageInfos
+        packageInfos: loaded.packageInfos,
+        packageContexts: loaded.packageContexts,
+        ...(request.progress ? {
+            onProgress(event) {
+                const line = formatEvaluationProgressEvent(event);
+                if (line)
+                    process.stderr.write(`${line}\n`);
+            }
+        } : {})
     });
     return {
         ...result,
@@ -382,7 +420,8 @@ export async function runSpreadsheetFixtureWithPackagesOnNode(request) {
     }
     const result = await runSpreadsheetFixture(fixture, {
         packages: loaded.packages,
-        packageInfos: loaded.packageInfos
+        packageInfos: loaded.packageInfos,
+        packageContexts: loaded.packageContexts
     });
     return {
         ...result,
@@ -417,7 +456,7 @@ export async function loadSourcePackagesForRootFilesOnNode(rootFiles, specs = []
         }
     }
     if (hasErrorDiagnostics(diagnostics)) {
-        return { packages: {}, packageInfos: {}, diagnostics, output: [] };
+        return { packages: {}, packageInfos: {}, packageContexts: {}, diagnostics, output: [] };
     }
     const graphOptions = { ...baseOptions };
     if (provider)
@@ -426,6 +465,7 @@ export async function loadSourcePackagesForRootFilesOnNode(rootFiles, specs = []
     return {
         packages: result.packages,
         packageInfos: result.packageInfos,
+        packageContexts: result.packageContexts,
         diagnostics: [...diagnostics, ...result.diagnostics],
         output: result.output
     };

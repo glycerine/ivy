@@ -13,7 +13,8 @@ import {
   rangeDependency,
   runMainSourcePackageFiles,
   testSource,
-  testSourceFiles
+  testSourceFiles,
+  testSourceFilesWithPackagesOnNode
 } from "../src/index.js";
 import { createNodeSourcePackageProvider } from "../src/nodeHost.js";
 
@@ -553,6 +554,45 @@ var errorType = reflectlite.TypeOf((*error)(nil)).Elem()
     expect(Object.keys(graph.packages.errors ?? {})).toContain("New");
   });
 
+  test("preserves imported package wrapper identity for cyclic structs", async () => {
+    const result = await runMainSourcePackageFiles([{
+      filename: "main.go",
+      source: `package main
+
+import "example.com/lib"
+
+func main() {
+  n := lib.New()
+  print(n)
+}
+`
+    }], {
+      sourcePackages: [{
+        importPath: "example.com/lib",
+        files: [{
+          filename: "lib.go",
+          source: `package lib
+
+type Node struct {
+  Next *Node
+  V int
+}
+
+func New() *Node {
+  n := &Node{V: 1}
+  n.Next = n
+  return n
+}
+`
+        }]
+      }]
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output.join("")).toContain("&example.com/lib.Node{");
+    expect(result.output.join("")).toContain("<cycle>");
+  });
+
   test("supports host-resolved syscall/js without running source package files", async () => {
     const script = await expectRuns(`
 import "syscall/js"
@@ -739,9 +779,8 @@ import "os"
 
 os.Exit(3)
 `);
-    expect(exit.diagnostics).toHaveLength(1);
-    expect(exit.diagnostics[0]?.code).toBe("GOJR_RUNTIME001");
-    expect(exit.diagnostics[0]?.message).toBe("os.Exit(3)");
+    expect(exit.diagnostics).toEqual([]);
+    expect(exit.exitCode).toBe(3);
   });
 
   test("supports explicit deterministic os.Getenv bindings", async () => {
@@ -920,6 +959,90 @@ return counter.Next()
 
     expect(first.value).toBe(41n);
     expect(second.value).toBe(42n);
+  });
+
+  test("source package graph resolves Go-junior host stubs before provider source", async () => {
+    const loaded: string[] = [];
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "example.com/app",
+      files: [{
+        filename: "/workspace/app/app.go",
+        source: `package app
+
+import "github.com/gopherjs/gopherjs/js"
+
+var Object = js.Global.Get("Object")
+var Keys = js.Keys(Object)
+`
+      }]
+    }], {
+      sourcePackageProvider: {
+        load(importPath: string) {
+          loaded.push(importPath);
+          if (importPath === "github.com/gopherjs/gopherjs/js") {
+            return [{
+              filename: "/workspace/gopherjs/js/js.go",
+              source: "package js\n\nconst _ = 1 / 0\n"
+            }];
+          }
+          return undefined;
+        }
+      }
+    });
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(loaded).toEqual([]);
+    expect(graph.packages["github.com/gopherjs/gopherjs/js"]).toBeDefined();
+    expect(graph.packages["example.com/app"]).toBeDefined();
+  });
+
+  test("zeroes cached imported time.Time values without package contexts", async () => {
+    const timePkg = await evaluatePackageSourceFiles([{
+      filename: "/workspace/time/time.go",
+      source: `package time
+
+type Location struct{}
+
+type Time struct {
+  wall uint64
+  ext int64
+  loc *Location
+}
+
+type Duration int64
+
+func (t Time) Unix() int64 { return 0 }
+func (t Time) UnixNano() int64 { return 0 }
+func (t Time) UTC() Time { return t }
+func (t Time) In(loc *Location) Time { return t }
+func (t Time) Sub(u Time) Duration { return 0 }
+func (t Time) Format(layout string) string { return "" }
+`
+    }], { importPath: "time" });
+    expect(timePkg.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "time"
+
+var T time.Time
+var Zero = time.Time{}
+var Ptr = new(time.Time)
+
+_ = Zero.Unix()
+_ = Zero.UnixNano()
+_ = Zero.UTC()
+_ = Zero.In(nil)
+_ = Zero.Sub(Zero)
+_ = Zero.Format("")
+_ = Ptr.Unix()
+
+return true
+`, {
+      packages: { time: timePkg.package ?? {} },
+      packageInfos: { time: timePkg.packageInfo! }
+    });
+
+    expect(result.values).toEqual([true]);
   });
 
   test("keys runtime packages and type identity by full import path when package names collide", async () => {
@@ -1108,6 +1231,57 @@ return rules.Entry()
     expect(result.value).toBe(11n);
   });
 
+  test("preserves caller-owned local types through imported generic callbacks", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/helper",
+        files: [{
+          filename: "/workspace/helper/helper.go",
+          source: `package helper
+
+func Visit[S ~[]E, E any](items S, fn func(E)) {
+  fn(items[0])
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "example.com/helper"
+
+type Flag struct { Name string }
+
+func Run() string {
+  items := []*Flag{{Name: "ok"}}
+  got := ""
+  helper.Visit(items, func(flag *Flag) {
+    got = flag.Name
+  })
+  return got
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/app"
+return app.Run()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe("ok");
+  });
+
   test("preserves imported uint64 tuple result types above int64 range", async () => {
     const graph = await evaluateSourcePackageGraph([
       {
@@ -1209,6 +1383,123 @@ return err.Op, err.Path, alias.Message()
     });
 
     expect(result.values).toEqual(["open", "file", "open file"]);
+  });
+
+  test("matches imported pointer receiver methods against interface alias result types", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/fs",
+        files: [{
+          filename: "/workspace/fs/fs.go",
+          source: `package fs
+
+type FileMode uint32
+
+type FileInfo interface {
+  Mode() FileMode
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/os",
+        files: [{
+          filename: "/workspace/os/os.go",
+          source: `package os
+
+import fs "example.com/fs"
+
+type FileMode = fs.FileMode
+type FileInfo = fs.FileInfo
+
+type fileStat struct {
+  mode FileMode
+}
+
+func (f *fileStat) Mode() FileMode {
+  return f.mode
+}
+
+func Stat() FileInfo {
+  fi := &fileStat{mode: 7}
+  return fi
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/os"
+fi := os.Stat()
+return fi.Mode()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe(7n);
+  });
+
+  test("matches package-info-only pointer receiver methods against interface alias result types", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/fs",
+        files: [{
+          filename: "/workspace/fs/fs.go",
+          source: `package fs
+
+type FileMode uint32
+
+type FileInfo interface {
+  Mode() FileMode
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/os",
+        files: [{
+          filename: "/workspace/os/os.go",
+          source: `package os
+
+import fs "example.com/fs"
+
+type FileMode = fs.FileMode
+type FileInfo = fs.FileInfo
+
+type fileStat struct {
+  mode FileMode
+}
+
+func (f *fileStat) Mode() FileMode {
+  return f.mode
+}
+
+func Stat() FileInfo {
+  fi := &fileStat{mode: 7}
+  return fi
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/os"
+fi := os.Stat()
+return fi.Mode()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos
+    });
+
+    expect(result.value).toBe(7n);
   });
 
   test("externalizes imported map element types without copying map identity", async () => {
@@ -1448,6 +1739,10 @@ func EscapeToResultNonString[T any](v T) T {
   EscapeNonString(v)
   return *new(T)
 }
+
+func Escape[T any](v T) T {
+  return v
+}
 `
         }]
       }
@@ -1461,14 +1756,94 @@ type detail struct {
   ok bool
 }
 value := abi.EscapeToResultNonString(detail{ok: true})
-return abi.Touch("ok"), value.ok
+escaped := abi.Escape(&value)
+return abi.Touch("ok"), value.ok, escaped.ok
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
       packageContexts: graph.packageContexts
     });
 
-    expect(result.values).toEqual(["ok", true]);
+    expect(result.values).toEqual(["ok", true, true]);
+  });
+
+  test("preserves caller type identity through internal abi generic result pointers", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/abi",
+        files: [{
+          filename: "/usr/local/go/src/internal/abi/escape.go",
+          source: `package abi
+
+func EscapeToResultNonString[T any](v T) T {
+  panic("intrinsic")
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/canon",
+        files: [{
+          filename: "/workspace/canon/canon.go",
+source: `package canon
+
+import (
+  abi "internal/abi"
+  "unsafe"
+)
+
+type canonMap[T comparable] struct{}
+type cloneSeq struct {
+  stringOffsets []uintptr
+}
+var singleStringClone = cloneSeq{stringOffsets: []uintptr{0}}
+
+func (m *canonMap[T]) Load(key T) *T {
+  return nil
+}
+
+func (m *canonMap[T]) LoadOrStore(key T) *T {
+  return &key
+}
+
+func clone[T comparable](value T) T {
+  for _, offset := range singleStringClone.stringOffsets {
+    ps := (*string)(unsafe.Pointer(uintptr(unsafe.Pointer(&value)) + offset))
+    *ps = *ps
+  }
+  return abi.EscapeToResultNonString(value)
+}
+
+func Make[T comparable](value T) *T {
+  m := &canonMap[T]{}
+  ptr := m.Load(value)
+  if ptr == nil {
+    ptr = m.LoadOrStore(clone(value))
+  }
+  return ptr
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/canon"
+type detail struct {
+  zone string
+}
+ptr := canon.Make(detail{zone: "z"})
+return ptr.zone
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.values).toEqual(["z"]);
   });
 
   test("intrinsicifies internal abi NoEscape as pointer identity", async () => {
@@ -1769,6 +2144,76 @@ var Results = []int{
     ]);
   });
 
+  test("time.LoadLocation uses deterministic loaded timezone package data", async () => {
+    const result = await evaluateSourcePackageGraph([{
+      importPath: "time",
+      files: [{
+        filename: "time.go",
+        source: `package time
+
+type Location struct {
+  name string
+}
+
+var UTC = &Location{name: "UTC"}
+var Local = UTC
+
+func LoadLocation(name string) (*Location, error) {
+  panic("compiled time.LoadLocation body should not run")
+}
+
+func (l *Location) String() string {
+  return l.name
+}
+`
+      }]
+    }, {
+      importPath: "4d63.com/tz",
+      files: [{
+        filename: "tz.go",
+        source: `package tz
+
+import "time"
+
+func LoadLocation(name string) (*time.Location, error) {
+  return time.UTC, nil
+}
+`
+      }]
+    }, {
+      importPath: "app",
+      files: [{
+        filename: "app.go",
+        source: `package app
+
+import "time"
+
+var Name string
+var UTCName string
+
+func init() {
+  loc, err := time.LoadLocation("America/New_York")
+  if err != nil {
+    Name = err.Error()
+    return
+  }
+  Name = loc.String()
+  loc, err = time.LoadLocation("UTC")
+  if err != nil {
+    UTCName = err.Error()
+    return
+  }
+  UTCName = loc.String()
+}
+`
+      }]
+    }]);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.packages.app?.Name).toBe("UTC");
+    expect(result.packages.app?.UTCName).toBe("UTC");
+  });
+
   test("package methods capture sibling package functions", async () => {
     const result = await evaluatePackageSourceFiles([{
       filename: "/workspace/p/p.go",
@@ -2005,6 +2450,49 @@ var Got = uniq.Make(detail{ok: true}).Value.ok
     expect(graph.packages["example.com/app"]?.Got).toBe(true);
   });
 
+  test("preserves imported slice metadata for string conversions", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/tzdata",
+        files: [{
+          filename: "/workspace/tzdata/tzdata.go",
+          source: `package tzdata
+
+type reader struct {
+  p []byte
+}
+
+func (r *reader) read(n int) []byte {
+  p := r.p[0:n]
+  r.p = r.p[n:]
+  return p
+}
+
+func Magic() []byte {
+  r := reader{p: []byte{'T', 'Z', 'i', 'f'}}
+  return r.read(4)
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "example.com/tzdata"
+
+var Got = string(tzdata.Magic())
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages["example.com/app"]?.Got).toBe("TZif");
+  });
+
   test("typechecks and evaluates source packages that import other source packages", async () => {
     const lib = await evaluatePackageSourceFiles([{
       filename: "lib.go",
@@ -2086,6 +2574,711 @@ func Twice(x int) int { return x * 2 }
     expect(loaded).toEqual(["math"]);
     expect(graph.initializedImportPaths).toEqual(["math", "example.com/app"]);
     expect(graph.packages["example.com/app"]?.V).toBe(42n);
+  });
+
+  test("runs source-built fmt string formatting through package graph", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/fmtmain/main.go",
+      source: `package main
+
+import "fmt"
+
+func main() {
+  print(fmt.Sprint("zygo") + "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["zygo\n"]);
+  });
+
+  test("runs source-built fmt printf through os stdout file writes", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/fmtprint/main.go",
+      source: `package main
+
+import "fmt"
+
+func main() {
+  fmt.Printf("hello %s!\\n", "gojr")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["hello gojr!\n"]);
+  });
+
+  test("runs source-built fmt sharp-v formatting over slices", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/fmtslice/main.go",
+      source: `package main
+
+import "fmt"
+
+func main() {
+  args := []string{"zygo", "-h"}
+  fmt.Printf("args=%#v\\n", args)
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual([`args=[]string{"zygo", "-h"}\n`]);
+  });
+
+  test("runs source-built fmt formatting through error interfaces", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/fmterror/main.go",
+      source: `package main
+
+import "fmt"
+
+type customError struct { msg string }
+func (e *customError) Error() string { return "ERR:" + e.msg }
+
+func main() {
+  var err error = &customError{msg:"boom"}
+  fmt.Printf("%v|%s\\n", err, err)
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["ERR:boom|ERR:boom\n"]);
+  });
+
+  test("runs source-built reflect.New for interface-held pointer values", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/refliface/main.go",
+      source: `package main
+
+import "reflect"
+
+type Value interface{ String() string }
+type stringValue string
+
+func (s *stringValue) String() string { return string(*s) }
+
+func main() {
+  var sv stringValue
+  var v Value = &sv
+  typ := reflect.TypeOf(v)
+  z := reflect.New(typ.Elem())
+  print(typ.Kind().String() + "," + typ.Elem().Kind().String() + "," + z.Type().Kind().String() + "\\n")
+  print(z.Interface().(Value).String() + "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["ptr,string,ptr\n", "\n"]);
+  });
+
+  test("runs source-built flag default printing through reflect.New", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/flagmain/main.go",
+      source: `package main
+
+import "flag"
+
+func main() {
+  fs := flag.NewFlagSet("x", flag.ContinueOnError)
+  fs.String("memprofile", "", "write mem profile to file")
+  fs.PrintDefaults()
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+  });
+
+  test("runs source-built flag ExitOnError help through os.Exit", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/flaghelp/main.go",
+      source: `package main
+
+import "flag"
+
+func main() {
+  fs := flag.NewFlagSet("zygo", flag.ExitOnError)
+  fs.String("memprofile", "", "write mem profile to file")
+  fs.Parse([]string{"-h"})
+  print("not reached\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.exitCode).toBe(0);
+    expect(result.output.join("")).toContain("Usage of zygo:");
+    expect(result.output.join("")).not.toContain("not reached");
+  });
+
+  test("runs source-built flag StringVar into struct fields", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/flagstringvar/main.go",
+      source: `package main
+
+import "flag"
+
+type Config struct {
+  Command string
+}
+
+func main() {
+  var cfg Config
+  fs := flag.NewFlagSet("zygo", flag.ContinueOnError)
+  fs.StringVar(&cfg.Command, "c", "", "expressions to evaluate")
+  err := fs.Parse([]string{"-c", "(+ 1 2)"})
+  if err != nil {
+    panic(err)
+  }
+  print(cfg.Command + "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output.join("")).toBe("(+ 1 2)\n");
+  });
+
+  test("writes through pointers to struct fields", async () => {
+    const result = await expectRuns(`
+type Config struct {
+  Command string
+}
+func set(p *string) { *p = "ok" }
+var cfg Config
+set(&cfg.Command)
+cfg.Command
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe("ok");
+  });
+
+  test("assigns converted pointers with named scalar receiver methods to interfaces", async () => {
+    const result = await expectRuns(`
+type Value interface {
+  Set(string) error
+  String() string
+}
+type stringValue string
+func (s *stringValue) Set(v string) error { *s = stringValue(v); return nil }
+func (s *stringValue) String() string { return string(*s) }
+var target string
+var v Value = (*stringValue)(&target)
+panicOn(v.Set("ok"))
+target
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe("ok");
+  });
+
+  test("formats source-level error interfaces with Error methods", async () => {
+    const result = await expectRuns(`
+import "fmt"
+
+type customError struct { msg string }
+func (e *customError) Error() string { return "ERR:" + e.msg }
+var err error = &customError{msg:"boom"}
+fmt.Printf("%v|%s\\n", err, err)
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["ERR:boom|ERR:boom\n"]);
+  });
+
+  test("asserts predeclared error from an any interface value", async () => {
+    const result = await expectRuns(`
+type customError struct { msg string }
+func (e *customError) Error() string { return "ERR:" + e.msg }
+var err error = &customError{msg:"boom"}
+var a any = err
+got, ok := a.(error)
+if !ok { panic("missing error assertion") }
+got.Error()
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe("ERR:boom");
+  });
+
+  test("mutates maps reached through interface slice type assertions", async () => {
+    const result = await expectRuns(`
+type Elem interface { IsElem() }
+type Value interface { Value() string }
+type Item struct { name string }
+func (i *Item) IsElem() {}
+func (i *Item) Value() string { return i.name }
+type Scope struct { Map map[int]Value }
+func (s *Scope) IsElem() {}
+type Stack struct { elements []Elem }
+func NewStack() *Stack { return &Stack{elements: make([]Elem, 0)} }
+func (s *Stack) Push(e Elem) { s.elements = append(s.elements, e) }
+type Env struct { stack *Stack }
+func NewEnv() *Env {
+  env := &Env{stack: NewStack()}
+  env.stack.Push(&Scope{Map: make(map[int]Value)})
+  return env
+}
+func (env *Env) Add(k int, v Value) {
+  env.stack.elements[0].(*Scope).Map[k] = v
+}
+env := NewEnv()
+env.Add(3, &Item{name:"ok"})
+env.stack.elements[0].(*Scope).Map[3].Value()
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe("ok");
+  });
+
+  test("mutates package-local global scope maps through constructor methods", async () => {
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/envbugmain/main.go",
+      source: `package main
+
+import "example.com/envbug"
+
+func main() {
+  print(envbug.Run() + "\\n")
+}
+`
+    }], {
+      sourcePackages: [{
+        importPath: "example.com/envbug",
+        files: [{
+          filename: "/workspace/envbug/envbug.go",
+          source: `package envbug
+
+type Elem interface { IsElem() }
+type Value interface { Value() string }
+type Item struct { name string }
+func (i *Item) IsElem() {}
+func (i *Item) Value() string { return i.name }
+type Scope struct { Map map[int]Value }
+func (s *Scope) IsElem() {}
+type Stack struct { tos int; elements []Elem }
+func NewStack() *Stack { return &Stack{tos: -1, elements: make([]Elem, 0)} }
+func (s *Stack) Push(e Elem) { s.tos++; s.elements = append(s.elements, e) }
+type Env struct { stack *Stack; symbols map[string]int; next int }
+func NewEnv() *Env {
+  env := new(Env)
+  env.stack = NewStack()
+  env.stack.Push(&Scope{Map: make(map[int]Value)})
+  env.symbols = make(map[string]int)
+  env.next = 1
+  env.Add("ok", &Item{name:"ok"})
+  return env
+}
+func (env *Env) Symbol(name string) int {
+  n, ok := env.symbols[name]
+  if ok { return n }
+  n = env.next
+  env.next++
+  env.symbols[name] = n
+  return n
+}
+func (env *Env) Add(name string, value Value) {
+  sym := env.Symbol(name)
+  env.stack.elements[0].(*Scope).Map[sym] = value
+}
+func (env *Env) Find(name string) (Value, bool) {
+  sym := env.Symbol(name)
+  v, ok := env.stack.elements[0].(*Scope).Map[sym]
+  return v, ok
+}
+func Run() string {
+  env := NewEnv()
+  v, ok := env.Find("ok")
+  if !ok { return "missing" }
+  return v.Value()
+}
+`
+        }]
+      }]
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["ok\n"]);
+  });
+
+  test("treats nil error results as nil after multi-return lookup", async () => {
+    const result = await expectRuns(`
+type Value interface { Value() string }
+type Item struct { name string }
+func (i *Item) Value() string { return i.name }
+type Scope struct{}
+func lookup() (Value, error, *Scope) {
+  return &Item{name:"ok"}, nil, &Scope{}
+}
+v, err, _ := lookup()
+if err != nil { return "bad-if" }
+switch err {
+case nil:
+  return v.Value()
+default:
+  return "bad-switch"
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe("ok");
+  });
+
+  test("finds map entries after interface-returning stack lookup type switches", async () => {
+    const result = await expectRuns(`
+type StackElem interface { IsStackElem() }
+type Sexp interface { SexpString() string }
+type Item struct { name string }
+func (i *Item) SexpString() string { return i.name }
+type Scope struct { Map map[int]Sexp }
+func (s Scope) IsStackElem() {}
+type Stack struct { tos int; elements []StackElem }
+func NewStack() *Stack { return &Stack{tos: -1, elements: make([]StackElem, 0)} }
+func (s *Stack) Push(e StackElem) { s.tos++; s.elements = append(s.elements, e) }
+func (s *Stack) Get(i int) (StackElem, error) { return s.elements[i], nil }
+func (s *Stack) Lookup(k int) (Sexp, error, *Scope) {
+  for i := 0; i <= s.tos; i++ {
+    elem, err := s.Get(i)
+    if err != nil { return nil, err, nil }
+    switch scope := elem.(type) {
+    case (*Scope):
+      value, ok := scope.Map[k]
+      if ok { return value, nil, scope }
+    }
+  }
+  return nil, fmt.Errorf("not found"), nil
+}
+stack := NewStack()
+stack.Push(&Scope{Map: make(map[int]Sexp)})
+stack.elements[0].(*Scope).Map[17] = &Item{name:"ok"}
+value, err, _ := stack.Lookup(17)
+if err != nil { return "missing" }
+return value.SexpString()
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe("ok");
+  });
+
+  test("keeps imported receiver map identity across exported method calls", async () => {
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/envboundarymain/main.go",
+      source: `package main
+
+import "example.com/envboundary"
+
+func main() {
+  env := envboundary.NewEnv()
+  env.Add("ok", envboundary.NewItem("ok"))
+  value, found := env.Find("ok")
+  if !found {
+    print("missing\\n")
+    return
+  }
+  print(value.SexpString() + "\\n")
+}
+`
+    }], {
+      sourcePackages: [{
+        importPath: "example.com/envboundary",
+        files: [{
+          filename: "/workspace/envboundary/envboundary.go",
+          source: `package envboundary
+
+import "fmt"
+
+type StackElem interface { IsStackElem() }
+type Sexp interface { SexpString() string }
+type Item struct { name string }
+func NewItem(name string) *Item { return &Item{name:name} }
+func (i *Item) SexpString() string { return i.name }
+type Scope struct { Map map[int]Sexp }
+func (s Scope) IsStackElem() {}
+type Stack struct { tos int; elements []StackElem }
+func NewStack() *Stack { return &Stack{tos: -1, elements: make([]StackElem, 0)} }
+func (s *Stack) Push(e StackElem) { s.tos++; s.elements = append(s.elements, e) }
+func (s *Stack) Get(i int) (StackElem, error) { return s.elements[i], nil }
+func (s *Stack) Lookup(k int) (Sexp, error, *Scope) {
+  for i := 0; i <= s.tos; i++ {
+    elem, err := s.Get(i)
+    if err != nil { return nil, err, nil }
+    switch scope := elem.(type) {
+    case (*Scope):
+      value, ok := scope.Map[k]
+      if ok { return value, nil, scope }
+    }
+  }
+  return nil, fmt.Errorf("not found"), nil
+}
+type Env struct { stack *Stack; symbols map[string]int; next int }
+func NewEnv() *Env {
+  env := &Env{stack: NewStack(), symbols: make(map[string]int), next: 1}
+  env.stack.Push(&Scope{Map: make(map[int]Sexp)})
+  return env
+}
+func (env *Env) Symbol(name string) int {
+  n, ok := env.symbols[name]
+  if ok { return n }
+  n = env.next
+  env.next++
+  env.symbols[name] = n
+  return n
+}
+func (env *Env) Add(name string, value Sexp) {
+  env.stack.elements[0].(*Scope).Map[env.Symbol(name)] = value
+}
+func (env *Env) Find(name string) (Sexp, bool) {
+  value, err, _ := env.stack.Lookup(env.Symbol(name))
+  if err != nil { return nil, false }
+  return value, true
+}
+`
+        }]
+      }]
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["ok\n"]);
+  });
+
+  test("passes imported package-owned pointers back into their methods without recursive wrappers", async () => {
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/wrapmain/main.go",
+      source: `package main
+
+import "example.com/wrap"
+
+func main() {
+  env := wrap.NewEnv()
+  env.Add("ok")
+  print(env.Last() + "\\n")
+}
+`
+    }], {
+      sourcePackages: [{
+        importPath: "example.com/wrap",
+        files: [{
+          filename: "/workspace/wrap/wrap.go",
+          source: `package wrap
+
+type Env struct { values []string }
+
+func NewEnv() *Env { return &Env{} }
+func (env *Env) Add(value string) { env.values = append(env.values, value) }
+func (env *Env) Last() string { return env.values[len(env.values)-1] }
+`
+        }]
+      }]
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["ok\n"]);
+  });
+
+  test("passes same-package pointer values to same-package interface parameters inside imported methods", async () => {
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/listifacemain/main.go",
+      source: `package main
+
+import "example.com/listiface"
+
+func main() {
+  env := listiface.NewEnv()
+  got := env.FilterList(&listiface.Pair{})
+  print(got + "\\n")
+}
+`
+    }], {
+      sourcePackages: [{
+        importPath: "example.com/listiface",
+        files: [{
+          filename: "/workspace/listiface/listiface.go",
+          source: `package listiface
+
+type PrintState struct{}
+type RegisteredType struct{}
+
+type Sexp interface {
+  SexpString(ps *PrintState) string
+  Type() *RegisteredType
+}
+
+type Pair struct {
+  Head Sexp
+  Tail Sexp
+}
+
+func (p *Pair) SexpString(ps *PrintState) string { return "pair" }
+func (p *Pair) Type() *RegisteredType { return nil }
+
+func ListToArray(expr Sexp) string {
+  return expr.SexpString(nil)
+}
+
+type Env struct{}
+func NewEnv() *Env { return &Env{} }
+func (env *Env) FilterList(h *Pair) string { return ListToArray(h) }
+`
+        }]
+      }]
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["pair\n"]);
+  });
+
+  test("type switches imported interface elements pushed through exported stacks", async () => {
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/stackboundarymain/main.go",
+      source: `package main
+
+import "example.com/stackboundary"
+
+func main() {
+  env := stackboundary.NewEnv()
+  stack := env.NewStack()
+  scope := env.NewNamedScope("probe")
+  sym := env.MakeSymbol("direct")
+  scope.Map[sym.Number()] = stackboundary.SexpNull
+  _, directOK := scope.Map[sym.Number()]
+  stack.Push(scope)
+  _, err, _ := stack.LookupSymbol(sym)
+  if !directOK {
+    print("direct-missing\\n")
+    return
+  }
+  if err != nil {
+    print("lookup-missing\\n")
+    return
+  }
+  print("ok\\n")
+}
+`
+    }], {
+      sourcePackages: [{
+        importPath: "example.com/stackboundary",
+        files: [{
+          filename: "/workspace/stackboundary/stackboundary.go",
+          source: `package stackboundary
+
+import "fmt"
+
+type StackElem interface { IsStackElem() }
+type Sexp interface { SexpString() string }
+type SexpSentinel struct{}
+func (s *SexpSentinel) SexpString() string { return "nil" }
+var SexpNull Sexp = &SexpSentinel{}
+type Symbol struct { name string; number int }
+func (s *Symbol) Number() int { return s.number }
+type Scope struct { Map map[int]Sexp; Name string }
+func (s Scope) IsStackElem() {}
+type Stack struct { tos int; elements []StackElem }
+func (s *Stack) Push(e StackElem) { s.tos++; s.elements = append(s.elements, e) }
+func (s *Stack) Get(i int) (StackElem, error) { return s.elements[i], nil }
+func (s *Stack) LookupSymbol(sym *Symbol) (Sexp, error, *Scope) {
+  for i := 0; i <= s.tos; i++ {
+    elem, err := s.Get(i)
+    if err != nil { return SexpNull, err, nil }
+    switch scope := elem.(type) {
+    case (*Scope):
+      value, ok := scope.Map[sym.number]
+      if ok { return value, nil, scope }
+    }
+  }
+  return SexpNull, fmt.Errorf("not found"), nil
+}
+type Env struct { symtable map[string]int; next int }
+func NewEnv() *Env { return &Env{symtable: make(map[string]int), next: 1} }
+func (env *Env) NewStack() *Stack { return &Stack{tos: -1, elements: make([]StackElem, 0)} }
+func (env *Env) NewNamedScope(name string) *Scope { return &Scope{Map: make(map[int]Sexp), Name: name} }
+func (env *Env) MakeSymbol(name string) *Symbol {
+  n, ok := env.symtable[name]
+  if !ok {
+    n = env.next
+    env.next++
+    env.symtable[name] = n
+  }
+  return &Symbol{name: name, number: n}
+}
+`
+        }]
+      }]
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["ok\n"]);
+  });
+
+  test("preserves imported source-built slice identity through bytes.Buffer", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/bytesmain/main.go",
+      source: `package main
+
+import "bytes"
+
+func main() {
+  var b bytes.Buffer
+  b.WriteString("ab")
+  print(b.String() + "\\n")
+  b.WriteByte('!')
+  print(b.String() + "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["ab\n", "ab!\n"]);
   });
 
   test("shares standard iter type identity across source-built maps and slices", async () => {
@@ -2184,6 +3377,82 @@ func TestTwo(t *testing.T) {
     expect(result.output.join("")).toContain("PASS");
   });
 
+  test("runs package tests with package-owned callback closure type context", async () => {
+    const result = await testSourceFilesWithPackagesOnNode({
+      importPath: "example.com/p",
+      packageName: "p",
+      files: [{
+        filename: "p_test.go",
+        source: `package p
+
+import (
+  invoker "example.com/invoker"
+  "testing"
+)
+
+type Local struct{}
+
+func TestImportedCallback(t *testing.T) {
+  invoker.Call(func() {
+    _ = &Local{}
+  })
+}
+`
+      }],
+      packages: [{
+        importPath: "example.com/invoker",
+        files: [{
+          filename: "invoker.go",
+          source: `package invoker
+
+func Call(fn func()) {
+  fn()
+}
+`
+        }]
+      }],
+      testVerbose: true
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output.join("")).toContain("PASS");
+  });
+
+  test("expands cached standard-library interface method tuple results in short declarations", async () => {
+    const result = await testSourceFilesWithPackagesOnNode({
+      importPath: "example.com/readrune",
+      packageName: "readrune",
+      files: [{
+        filename: "readrune_test.go",
+        source: `package readrune
+
+import (
+  "bytes"
+  "io"
+  "testing"
+)
+
+type Holder struct {
+  stream io.RuneScanner
+}
+
+func TestReadRuneTuple(t *testing.T) {
+  h := Holder{stream: bytes.NewBuffer([]byte("a"))}
+  r, _, err := h.stream.ReadRune()
+  if r != 97 || err != nil {
+    t.Fatalf("ReadRune() = %v, %v", r, err)
+  }
+}
+`
+      }],
+      packageCacheParent: "/private/tmp/gojr-runtime-test-cache",
+      testVerbose: true
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output.join("")).toContain("PASS");
+  });
+
   test("runs Go-junior tests with testing.T", async () => {
     const result = await testSource(`
 import "testing"
@@ -2207,6 +3476,50 @@ func TestNoArg() {}
     expect(result.output.join("")).toContain("--- PASS: TestAdd\n");
     expect(result.output.join("")).toContain("--- PASS: TestNoArg\n");
     expect(result.output.join("")).toContain("PASS\n");
+  });
+
+  test("runs testing subtests and cleanups", async () => {
+    const result = await testSource(`
+import "testing"
+
+var log string
+
+func TestSubtests(t *testing.T) {
+  t.Cleanup(func() { log += "cleanup;" })
+  if !t.Run("child", func(t *testing.T) {
+    t.Cleanup(func() { log += "child-cleanup;" })
+    log += "child;"
+  }) {
+    t.Fatalf("subtest failed")
+  }
+  log += "parent;"
+}
+
+func TestAfter(t *testing.T) {
+  if log != "child;child-cleanup;parent;cleanup;" {
+    t.Fatalf("bad log: %s", log)
+  }
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output.join("")).toContain("PASS\n");
+  });
+
+  test("typechecks testing benchmarks", async () => {
+    const result = await testSource(`
+import "testing"
+
+func BenchmarkThing(b *testing.B) {
+  b.ReportAllocs()
+  b.ResetTimer()
+  for i := 0; i < b.N; i++ {
+  }
+}
+`);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output.join("")).toContain("testing: warning: no tests to run\nPASS\n");
   });
 
   test("honors testing.Verbose from test options", async () => {
@@ -2299,6 +3612,80 @@ return a, ok
     expect(present.values).toEqual(["hi", true]);
   });
 
+  test("supports multi-result method calls in short declarations", async () => {
+    const result = await expectRuns(`
+type S struct{}
+func (s *S) bounds() (int, int, bool, error) { return 1, 2, true, nil }
+x := &S{}
+start, end, ok, err := x.bounds()
+return start, end, ok, err == nil
+`);
+    expect(result.values).toEqual([1n, 2n, true, true]);
+  });
+
+  test("supports imported multi-result functions and methods in short declarations", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/multis",
+        files: [{
+          filename: "/workspace/multis/multis.go",
+          source: `package multis
+
+type S struct{}
+
+func New() *S { return &S{} }
+func Pair() (int, int) { return 1, 2 }
+func (s *S) Triple() (int, int, int) { return 3, 4, 5 }
+`
+        }]
+      },
+      {
+        importPath: "example.com/app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "example.com/multis"
+
+func Run() (int, int, int, int, int) {
+  a, b := multis.Pair()
+  s := multis.New()
+  c, d, e := s.Triple()
+  return a, b, c, d, e
+}
+`
+        }]
+      }
+    ]);
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/app"
+a, b, c, d, e := app.Run()
+return a, b, c, d, e
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos
+    });
+    expect(result.values).toEqual([1n, 2n, 3n, 4n, 5n]);
+  });
+
+  test("supports named multi-result methods in short declarations", async () => {
+    const result = await expectRuns(`
+type S struct{}
+func (s *S) Lookup() (a int, b int, c bool) {
+  a = 6
+  b = 7
+  c = true
+  return
+}
+s := &S{}
+a, b, c := s.Lookup()
+return a, b, c
+`);
+    expect(result.values).toEqual([6n, 7n, true]);
+  });
+
   test("supports standard Go make for maps and slices", async () => {
     const mapResult = await expectRuns(`
 m := make(map[int]int)
@@ -2316,6 +3703,30 @@ slc2 := make([]string, 3)
 return len(slc), cap(slc), slc[0], slc[20], len(slc2), cap(slc2), slc2[0]
 `);
     expect(sliceResult.values).toEqual([21n, 50n, 0n, 7n, 3n, 3n, ""]);
+  });
+
+  test("zero-fills made byte slices through append and assignment", async () => {
+    const result = await expectRuns(`
+b := make([]byte, 3, 5)
+c := append(b, byte(7))
+var d []byte
+d = c
+return d[0], d[1], d[2], d[3], len(d), cap(d)
+`);
+    expect(result.values).toEqual([0n, 0n, 0n, 7n, 4n, 5n]);
+  });
+
+  test("externalizes sparse zero arrays with materialized zero elements", async () => {
+    const result = await expectRuns(`
+var b [2048]byte
+return b
+`);
+    const values = result.value as unknown[];
+    expect(Array.isArray(values)).toBe(true);
+    expect(values.length).toBe(2048);
+    expect(values[0]).toBe(0n);
+    expect(values[1024]).toBe(0n);
+    expect(values[2047]).toBe(0n);
   });
 
   test("supports standard Go make for named map slice and channel types", async () => {
@@ -2573,6 +3984,30 @@ return counts["a"] + counts["b"] + counts["missing"], out
 `);
 
     expect(result.values).toEqual([3n, "a:1;b:2;"]);
+  });
+
+  test("returns zero structs for missing struct-valued map keys", async () => {
+    const result = await expectRuns(`
+type charGroup struct {
+  sign int
+  class []rune
+}
+groups := map[string]charGroup{}
+g := groups["missing"]
+return g.sign, g.class == nil
+`);
+
+    expect(result.values).toEqual([0n, true]);
+  });
+
+  test("reports zero length for missing map and channel values", async () => {
+    const result = await expectRuns(`
+maps := map[string]map[int]int{}
+chans := map[string]chan int{}
+return len(maps["missing"]), len(chans["missing"]), cap(chans["missing"])
+`);
+
+    expect(result.values).toEqual([0n, 0n, 0n]);
   });
 
   test("evaluates named map composite literals", async () => {
@@ -3849,6 +5284,12 @@ func TypeFor[T any]() *abi.Type {
 type Local struct {
   X int
 }
+
+type Node struct {
+  Next *Node
+  Kids []*Node
+  Value any
+}
 `
         }]
       }
@@ -3867,13 +5308,16 @@ m := map[string]int{"x": 1}
 c := make(chan bool, 1)
 p := new(int)
 pt := r.TypeFor[*model.Local]()
+node := r.TypeFor[model.Node]()
+nodePtr := r.TypeFor[*model.Node]()
 
 return abi.TypeOf(s).Kind(), abi.TypeOf(s).Elem().Kind(),
   abi.TypeOf(a).Kind(), abi.TypeOf(a).Elem().Kind(), abi.TypeOf(a).Len(),
   abi.TypeOf(m).Kind(), abi.TypeOf(m).Key().Kind(), abi.TypeOf(m).Elem().Kind(),
   abi.TypeOf(c).Kind(), abi.TypeOf(c).Elem().Kind(), abi.TypeOf(c).ChanDir(),
   abi.TypeOf(p).Kind(), abi.TypeOf(p).Elem().Kind(),
-  r.TypeFor[model.Local]().Kind(), pt.Kind(), pt.Elem().Kind()
+  r.TypeFor[model.Local]().Kind(), pt.Kind(), pt.Elem().Kind(),
+  node.Kind(), nodePtr.Kind(), nodePtr.Elem().Kind()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
@@ -3886,6 +5330,7 @@ return abi.TypeOf(s).Kind(), abi.TypeOf(s).Elem().Kind(),
       21n, 24n, 2n,
       18n, 1n, 3n,
       22n, 2n,
+      25n, 22n, 25n,
       25n, 22n, 25n
     ]);
   });
@@ -4925,6 +6370,23 @@ return hi, lo, a, b
     expect(result.values).toEqual([7n, 10254876495507714224n, 7n, 10254876495507714224n]);
   });
 
+  test("infers tuple result slot types from method signatures", async () => {
+    const result = await expectRuns(`
+type reader struct{}
+
+func (reader) words() (uint64, bool) {
+  return uint64(18446744070991911616), true
+}
+
+r := reader{}
+n8, ok := r.words()
+n := int64(n8)
+return n8, ok, n
+`);
+
+    expect(result.values).toEqual([18446744070991911616n, true, -2717640000n]);
+  });
+
   test("expands a single multi-result call into another call argument list", async () => {
     const result = await expectRuns(`
 func pair() (int, int) {
@@ -5265,6 +6727,20 @@ return a, b, c, d, real(z), imag(z), 3i + 2i
     expect(result.values).toEqual([10n, 16n, 65n, 7n, 10, 2.5, { real: 0, imag: 5 }]);
   });
 
+  test("uses named bool values in control flow", async () => {
+    const result = await expectRuns(`
+type Truth bool
+
+var t Truth = true
+if t {
+  return "yes"
+}
+return "no"
+`);
+
+    expect(formatReplValue(result.value ?? null)).toBe(`"yes"`);
+  });
+
   test("rounds float32 assignments, conversions, and expression results like Go", async () => {
     const result = await expectRuns(`
 func f32(v float64) float32 { return float32(v) }
@@ -5372,6 +6848,18 @@ return string(bs), string(rs), string(p[0:])
     expect(result.values).toEqual(["\u1234", "a\u1234c", "xyz"]);
   });
 
+  test("converts nil byte and rune slices to empty strings", async () => {
+    const result = await expectRuns(`
+type Bytes []byte
+var bs []byte
+var rs []rune
+var named Bytes
+return string(bs), string(rs), string(named)
+`);
+
+    expect(result.values).toEqual(["", "", ""]);
+  });
+
   test("preserves package string constant byte escapes during var initialization", async () => {
     const result = await evaluatePackageSourceFiles([{
       filename: "p.go",
@@ -5435,16 +6923,58 @@ return bs, rs, string(bs), string(rs), string(nbs), string(nrs)
   test("supports append of strings into byte slices with spread", async () => {
     const result = await expectRuns(`
 type Bytes []byte
+type Buffer []byte
+func (b *Buffer) writeString(s string) {
+  *b = append(*b, s...)
+}
 b := []byte("go")
 b = append(b, "jr"...)
 named := Bytes("a")
 named = append(named, "ä"...)
 var nilBytes []byte
 nilBytes = append(nilBytes, "Type"...)
-return string(b), named, string(nilBytes)
+buffer := Buffer("fmt")
+buffer.writeString(" path")
+return string(b), named, string(nilBytes), string(buffer)
 `);
 
-    expect(result.values).toEqual(["gojr", [97n, 195n, 164n], "Type"]);
+    expect(result.values).toEqual(["gojr", [97n, 195n, 164n], "Type", "fmt path"]);
+  });
+
+  test("supports append of strings into imported package byte-slice aliases", async () => {
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "example.com/textbuf",
+      files: [{
+        filename: "textbuf/buf.go",
+        source: `package textbuf
+
+type buffer []byte
+
+func (b *buffer) writeString(s string) {
+  *b = append(*b, s...)
+}
+
+func Build(s string) string {
+  var b buffer
+  b.writeString(s)
+  return string(b)
+}
+`
+      }]
+    }]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import textbuf "example.com/textbuf"
+return textbuf.Build("zygo")
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe("zygo");
   });
 
   test("supports typed nil slice conversions with Go len and cap", async () => {
@@ -5456,6 +6986,17 @@ return len(s), cap(s), len(named), cap(named), fmt.Sprintf("%v", s), fmt.Sprintf
 `);
 
     expect(result.values).toEqual([0n, 0n, 0n, 0n, "<nil>", "Ints(nil)"]);
+  });
+
+  test("slices typed nil slices at zero bounds", async () => {
+    const result = await expectRuns(`
+var s []int
+t := s[:]
+u := s[:0:0]
+return len(t), cap(t), len(u), cap(u), t == nil, u == nil
+`);
+
+    expect(result.values).toEqual([0n, 0n, 0n, 0n, true, true]);
   });
 
   test("keeps inferred var declaration types for later conversions", async () => {
@@ -5503,6 +7044,17 @@ return n, buf, string(buf[:3])
 `);
 
     expect(result.values).toEqual([3n, [97n, 98n, 99n, 0n], "abc"]);
+  });
+
+  test("copy into a slice view mutates the backing slice", async () => {
+    const result = await expectRuns(`
+b := make([]byte, 2, 64)
+v := b[0:]
+n := copy(v, "ab")
+return string(b), string(v), n
+`);
+
+    expect(result.values).toEqual(["ab", "ab", 2n]);
   });
 
   test("supports bitwise, shift, unary complement, and compound assignment operators", async () => {
@@ -6805,6 +8357,56 @@ return a, ok, b, ok2, count
     expect(result.values).toEqual([1n, true, 0n, false, 1n]);
   });
 
+  test("keeps caller assignment scope across iter.Pull function fields", async () => {
+    const result = await expectRuns(`
+import "iter"
+
+type parser struct {
+  next func() (int, bool)
+  stop func()
+}
+
+func seq(yield func(int) bool) {
+  yield(3)
+  yield(5)
+}
+
+func (p *parser) run() int {
+  if p.next == nil {
+    p.next, p.stop = iter.Pull[int](seq)
+  }
+  defer p.stop()
+  var reply int
+  ok := true
+  for ok {
+    reply, ok = p.next()
+  }
+  return reply
+}
+
+p := &parser{}
+return p.run()
+`);
+
+    expect(result.value).toBe(0n);
+  });
+
+  test("converts ordinary functions to named function types", async () => {
+    const result = await expectRuns(`
+type completer func(line string, pos int) (head string, completions []string, tail string)
+
+func complete(line string, pos int) (string, []string, string) {
+  return line, []string{"a", "b"}, line[pos:]
+}
+
+c := completer(complete)
+head, choices, tail := c("hello", 2)
+return head, choices[1], tail
+`);
+
+    expect(result.values).toEqual(["hello", "b", "llo"]);
+  });
+
   test("supports keyed literals for embedded instantiated generic fields", async () => {
     const result = await expectRuns(`
 type node[K comparable, V any] struct {
@@ -6905,6 +8507,262 @@ return o.X, o.Double(), d.Double()
 `);
 
     expect(result.values).toEqual([4n, 8n, 8n]);
+  });
+
+  test("assigns promoted fields through imported embedded struct zero values", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/codec",
+        files: [{
+          filename: "/workspace/codec/codec.go",
+          source: `package codec
+
+type DecodeOptions struct {
+  MapType int
+}
+
+type BasicHandle struct {
+  DecodeOptions
+}
+
+type MsgpackHandle struct {
+  BasicHandle
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import codec "example.com/codec"
+
+var mh codec.MsgpackHandle
+mh.MapType = 7
+return mh.MapType
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe(7n);
+  });
+
+  test("assigns promoted fields through package-info-only imported embedded struct zero values", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/codec",
+        files: [{
+          filename: "/workspace/codec/codec.go",
+          source: `package codec
+
+type DecodeOptions struct {
+  MapType int
+}
+
+type BasicHandle struct {
+  DecodeOptions
+}
+
+type MsgpackHandle struct {
+  BasicHandle
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import codec "example.com/codec"
+
+var mh codec.MsgpackHandle
+mh.MapType = 7
+return mh.MapType
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos
+    });
+
+    expect(result.value).toBe(7n);
+  });
+
+  test("assigns local named slices to package-info-only imported interfaces", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "sort",
+        files: [{
+          filename: "/workspace/sort/sort.go",
+          source: `package sort
+
+type Interface interface {
+  Len() int
+  Less(i, j int) bool
+  Swap(i, j int)
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "sort"
+
+type Sorter []int
+
+func (s Sorter) Len() int { return len(s) }
+func (s Sorter) Less(i, j int) bool { return s[i] < s[j] }
+func (s Sorter) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+
+var s Sorter
+var x sort.Interface = s
+return x != nil
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos
+    });
+
+    expect(result.value).toBe(true);
+  });
+
+  test("preserves converted named slice method sets across interface package calls", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "sort",
+        files: [{
+          filename: "/workspace/sort/sort.go",
+          source: `package sort
+
+type Interface interface {
+  Len() int
+  Less(i, j int) bool
+  Swap(i, j int)
+}
+
+func Sort(data Interface) int {
+  return data.Len()
+}
+`
+        }]
+      },
+      {
+        importPath: "app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "sort"
+
+type Sorter []int
+
+func (s Sorter) Len() int { return len(s) }
+func (s Sorter) Less(i, j int) bool { return s[i] < s[j] }
+func (s Sorter) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+
+var Seen = sort.Sort(Sorter([]int{1, 2, 3}))
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages.app?.Seen).toBe(3n);
+  });
+
+  test("preserves REPL-local converted named slice method sets across interface package calls", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "sort",
+        files: [{
+          filename: "/workspace/sort/sort.go",
+          source: `package sort
+
+type Interface interface {
+  Len() int
+  Less(i, j int) bool
+  Swap(i, j int)
+}
+
+func Sort(data Interface) int {
+  return data.Len()
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "sort"
+
+type Sorter []int
+
+func (s Sorter) Len() int { return len(s) }
+func (s Sorter) Less(i, j int) bool { return s[i] < s[j] }
+func (s Sorter) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+
+return sort.Sort(Sorter([]int{1, 2, 3}))
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe(3n);
+  });
+
+  test("assigns imported pointer receiver values to package-info-only imported interfaces", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "io",
+        files: [{
+          filename: "/workspace/io/io.go",
+          source: `package io
+
+type Writer interface {
+  Write(p []byte) (n int, err error)
+}
+`
+        }]
+      },
+      {
+        importPath: "os",
+        files: [{
+          filename: "/workspace/os/os.go",
+          source: `package os
+
+type File struct{}
+
+var Stdout = &File{}
+
+func (f *File) Write(p []byte) (n int, err error) {
+  return len(p), nil
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "io"
+import "os"
+
+var w io.Writer = os.Stdout
+return w != nil
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos
+    });
+
+    expect(result.value).toBe(true);
   });
 
   test("prefers direct methods over deeper promoted fields", async () => {
@@ -7056,6 +8914,21 @@ return total
   });
 
   test("rejects invalid short declarations, for posts, fallthrough, and gotos over variables", async () => {
+    const repeatedSite = await evaluateSource(`
+i := 0
+sum := 0
+Loop:
+inst := i
+sum = sum + inst
+i++
+if i < 3 {
+	goto Loop
+}
+sum
+`);
+    expect(repeatedSite.diagnostics).toEqual([]);
+    expect(repeatedSite.value).toBe(3n);
+
     const noNew = await evaluateSource(`
 x := 1
 x := 2

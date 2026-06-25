@@ -46,6 +46,9 @@ async function main(argv: string[]): Promise<number> {
   if (result.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
     return 1;
   }
+  if (result.exitCode !== undefined) {
+    return result.exitCode;
+  }
 
   if (options.command === "eval") {
     if (result.values) {

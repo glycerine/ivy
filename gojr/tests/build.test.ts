@@ -689,7 +689,10 @@ func Capture(buf []byte) int {
       "Func",
       "GOARCH",
       "GOOS",
-      "Stack"
+      "ReadTrace",
+      "Stack",
+      "StartTrace",
+      "StopTrace"
     ]) {
       expect(runtimeExports).toContain(name);
     }
@@ -877,6 +880,127 @@ var HaveAVX2 = cpuid.CPU.Supports(cpuid.AVX2)
       "FeatureID",
       "UNKNOWN"
     ]);
+  });
+
+  test("builds gopherjs js from deterministic Go-junior host override", () => {
+    const store = new MemoryArtifactStore();
+    const loaded: string[] = [];
+    const result = buildPackages({
+      importPath: "example.com/app",
+      artifactRoot: "/tmp/gojr-gopherjs-js-stub",
+      sourcePackageProvider: {
+        load(importPath) {
+          loaded.push(importPath);
+          if (importPath === "github.com/gopherjs/gopherjs/js") {
+            return [{
+              filename: "/workspace/gopherjs/js/js.go",
+              source: "package js\n\nconst _ = 1 / 0\n"
+            }];
+          }
+          return undefined;
+        }
+      },
+      files: [{
+        filename: "/workspace/example.com/app/app.go",
+        source: `package app
+
+import "github.com/gopherjs/gopherjs/js"
+
+var Object = js.Global.Get("Object")
+var Keys = js.Keys(Object)
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    expect(loaded).toEqual([]);
+    expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual([
+      "github.com/gopherjs/gopherjs/js",
+      "example.com/app"
+    ]);
+    const js = artifactJSON(store.writes.get("/tmp/gojr-gopherjs-js-stub/github.com/gopherjs/gopherjs/js.a"));
+    expect(js.importPath).toBe("github.com/gopherjs/gopherjs/js");
+    expect(js.standardLibrary).toBe(false);
+    expect(js.sources).toEqual([{
+      filename: "gojr:stub/github.com/gopherjs/gopherjs/js/js.go",
+      hash: expect.any(String)
+    }]);
+    expect(result.artifacts.find((artifact) => artifact.importPath === "github.com/gopherjs/gopherjs/js")?.exports.map((item) => item.name)).toEqual([
+      "Debugger",
+      "Error",
+      "Global",
+      "InternalObject",
+      "Keys",
+      "M",
+      "MakeFullWrapper",
+      "MakeFunc",
+      "MakeWrapper",
+      "Module",
+      "NewArrayBuffer",
+      "Object",
+      "S",
+      "Undefined"
+    ]);
+  });
+
+  test("builds jtolds gls from deterministic Go-junior host override", () => {
+    const store = new MemoryArtifactStore();
+    const loaded: string[] = [];
+    const result = buildPackages({
+      importPath: "example.com/app",
+      artifactRoot: "/tmp/gojr-jtolds-gls-stub",
+      sourcePackageProvider: {
+        load(importPath) {
+          loaded.push(importPath);
+          if (importPath === "github.com/jtolds/gls") {
+            return [{
+              filename: "/workspace/gls/context.go",
+              source: "package gls\n\nconst _ = 1 / 0\n"
+            }];
+          }
+          return undefined;
+        }
+      },
+      files: [{
+        filename: "/workspace/example.com/app/app.go",
+        source: `package app
+
+import "github.com/jtolds/gls"
+
+var Manager = gls.NewContextManager()
+var Key = gls.GenSym()
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    expect(loaded).toEqual([]);
+    expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual([
+      "github.com/jtolds/gls",
+      "example.com/app"
+    ]);
+    const gls = artifactJSON(store.writes.get("/tmp/gojr-jtolds-gls-stub/github.com/jtolds/gls.a"));
+    expect(gls.importPath).toBe("github.com/jtolds/gls");
+    expect(gls.standardLibrary).toBe(false);
+    expect(gls.sources).toEqual([{
+      filename: "gojr:stub/github.com/jtolds/gls/gls.go",
+      hash: expect.any(String)
+    }]);
+    const exports = result.artifacts.find((artifact) => artifact.importPath === "github.com/jtolds/gls")?.exports.map((item) => item.name) ?? [];
+    for (const name of [
+      "ContextKey",
+      "ContextManager",
+      "EnsureGoroutineId",
+      "GenSym",
+      "GetGoroutineId",
+      "Go",
+      "NewContextManager",
+      "Values"
+    ]) {
+      expect(exports).toContain(name);
+    }
   });
 
   test("node source provider filters files excluded by build constraints", () => {

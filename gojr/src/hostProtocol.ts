@@ -8,6 +8,7 @@ import type { SpreadsheetDiagnostic, SpreadsheetValue } from "./spreadsheet.js";
 export interface HostEvaluationPayload {
   ok: boolean;
   incomplete: boolean;
+  exitCode?: number;
   diagnostics: string[];
   output: string;
   value: string;
@@ -83,9 +84,11 @@ export function evaluationResultToHostPayload(
   extraOutput: readonly string[] = []
 ): HostEvaluationPayload {
   const diagnostics = result.diagnostics || [];
+  const exitCode = result.exitCode ?? 0;
   return {
-    ok: !hasErrorDiagnostics(diagnostics),
+    ok: !hasErrorDiagnostics(diagnostics) && exitCode === 0,
     incomplete: result.incomplete === true,
+    ...(result.exitCode !== undefined ? { exitCode: result.exitCode } : {}),
     diagnostics: diagnostics.map(formatDiagnostic),
     output: [...extraOutput, ...(result.output || [])].join(""),
     value: hostFormatResult(result),
