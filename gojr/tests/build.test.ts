@@ -892,6 +892,23 @@ var HaveAVX2 = cpuid.CPU.Supports(cpuid.AVX2)
     expect(files.map((file) => path.basename(file.filename))).toEqual(["dep.go"]);
   });
 
+  test("node source provider selects ugorji codec portable safe files", () => {
+    const root = fs.mkdtempSync(path.join("/tmp", "gojr-codec-srcroot-"));
+    const depDir = path.join(root, "github.com", "ugorji", "go", "codec");
+    fs.mkdirSync(depDir, { recursive: true });
+    fs.writeFileSync(path.join(depDir, "plain.go"), "package codec\n\nfunc Plain() int { return 1 }\n");
+    fs.writeFileSync(path.join(depDir, "unsafe.go"), "//go:build !codec.safe\n\npackage codec\n\nfunc UnsafeMode() int { return 2 }\n");
+    fs.writeFileSync(path.join(depDir, "safe.go"), "//go:build codec.safe\n\npackage codec\n\nfunc SafeMode() int { return 3 }\n");
+
+    const provider = createNodeSourcePackageProvider([root]);
+    const files = provider?.load("github.com/ugorji/go/codec") ?? [];
+
+    expect(files.map((file) => path.basename(file.filename)).sort()).toEqual([
+      "plain.go",
+      "safe.go"
+    ]);
+  });
+
   test("node standard-library provider uses native host build tags, not the GoJr output target", () => {
     const goroot = fs.mkdtempSync(path.join("/tmp", "gojr-goroot-"));
     const depDir = path.join(goroot, "src", "internal", "bytealg");

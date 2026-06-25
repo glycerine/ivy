@@ -6482,6 +6482,48 @@ func init() {
     expect(graph.packages.app?.Seen).toBe(7n);
   });
 
+  test("passes caller concrete methods through imported interface parameters", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "sortlike",
+        files: [{
+          filename: "/workspace/sortlike/sortlike.go",
+          source: `package sortlike
+
+type Interface interface {
+  Len() int
+}
+
+func Sort(data Interface) int {
+  return data.Len()
+}
+`
+        }]
+      },
+      {
+        importPath: "app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "sortlike"
+
+type fastpathAslice struct{}
+
+func (fastpathAslice) Len() int {
+  return 56
+}
+
+var Seen = sortlike.Sort(fastpathAslice{})
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages.app?.Seen).toBe(56n);
+  });
+
   test("REPL checker accepts keyed generic struct literals", async () => {
     const session = new GoJuniorSession();
 

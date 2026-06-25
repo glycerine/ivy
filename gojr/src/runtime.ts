@@ -906,6 +906,16 @@ export class EvaluationContext {
     for (const candidate of candidates) {
       const method = this.shared.methods.get(methodKey(candidate, methodName));
       if (method) return method;
+      const qualified = packageQualifiedRuntimeTypeNameParts(candidate);
+      const packageContext = qualified ? this.options.packageContexts?.[qualified.importPath] : undefined;
+      const foreign = packageContext?.shared.methods.get(methodKey(qualified!.localName, methodName)) ??
+        packageContext?.shared.methods.get(methodKey(qualified!.baseName, methodName));
+      if (foreign && qualified) {
+        return {
+          ...foreign,
+          receiverType: qualifyLocalRuntimeTypeName(foreign.receiverType, qualified.importPath)
+        };
+      }
     }
     return undefined;
   }
@@ -1062,7 +1072,9 @@ export class RuntimeStruct {
   }
 
   public clone(): RuntimeStruct {
-    return new RuntimeStruct(this.typeName, this.fields.entries());
+    const clone = new RuntimeStruct(this.typeName, this.fields.entries());
+    copyRuntimeStructMetadata(this, clone);
+    return clone;
   }
 
   public orderedFields(): Array<[string, RuntimeValue]> {
@@ -1088,7 +1100,10 @@ class RuntimeExternalizedStruct extends RuntimeStruct {
   }
 
   public override clone(): RuntimeStruct {
-    return new RuntimeStruct(this.typeName, this.orderedFields());
+    const clone = new RuntimeStruct(this.typeName, this.orderedFields());
+    copyRuntimeStructMetadata(this.source, clone);
+    copyRuntimeStructMetadata(this, clone);
+    return clone;
   }
 
   public override orderedFields(): Array<[string, RuntimeValue]> {
@@ -1117,7 +1132,10 @@ class RuntimeInternalizedStruct extends RuntimeStruct {
   }
 
   public override clone(): RuntimeStruct {
-    return new RuntimeStruct(this.typeName, this.orderedFields());
+    const clone = new RuntimeStruct(this.typeName, this.orderedFields());
+    copyRuntimeStructMetadata(this.source, clone);
+    copyRuntimeStructMetadata(this, clone);
+    return clone;
   }
 
   public override orderedFields(): Array<[string, RuntimeValue]> {
@@ -1193,8 +1211,11 @@ const arrayViews = new WeakMap<RuntimeValue[], { source: RuntimeValue[]; offset:
 const sparseArrayDefaultElementTypes = new WeakMap<RuntimeValue[], string>();
 const tupleValues = new WeakSet<RuntimeValue[]>();
 const runtimePackageInspections = new WeakMap<RuntimeObject, RuntimePackageInspection>();
+const reflectValueInfos = new WeakMap<RuntimeStruct, ReflectValueRuntimeInfo>();
+const runtimeUintptrIds = new Map<string, bigint>();
 let nextObjectMapKeyId = 1;
 let nextNonReflexiveMapKeyId = 1;
+let nextRuntimeUintptrId = 1n;
 const SPARSE_ZERO_ARRAY_LENGTH = 1_000_000;
 
 function markTupleValues(values: RuntimeValue[]): RuntimeValue[] {
@@ -2608,6 +2629,10 @@ function installPackageFunctionDeclaration(context: EvaluationContext, declarati
 
 function packageFunctionIntrinsic(declaration: FunctionDecl, importPath?: string): GoJuniorFunction | undefined {
   let intrinsic: GoJuniorFunction | undefined;
+  if (importPath === "reflect" && declaration.name === "ValueOf") {
+    intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
+      reflectValueOf(args[0] ?? null, context));
+  }
   if (importPath === "reflect" && (declaration.name === "PointerTo" || declaration.name === "PtrTo")) {
     intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => {
       const sourceType = reflectRtypeRuntimeTypeText(args[0] ?? null);
@@ -2646,6 +2671,42 @@ function packageFunctionIntrinsic(declaration: FunctionDecl, importPath?: string
 function packageMethodIntrinsic(declaration: FunctionDecl, importPath?: string): GoJuniorFunction | undefined {
   if (!declaration.receiver) return undefined;
   const receiver = normalizeReceiverType(declaration.receiver.type.text);
+  if (importPath === "reflect" && (receiver.baseType === "Value" || receiver.baseType === "reflect.Value")) {
+    switch (declaration.name) {
+      case "Kind":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueKind(args[0] ?? null));
+      case "IsValid":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueIsValid(args[0] ?? null));
+      case "Type":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
+          reflectValueType(args[0] ?? null, context));
+      case "Pointer":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValuePointer(args[0] ?? null));
+      case "Elem":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) =>
+          reflectValueElem(args[0] ?? null, context));
+      case "Interface":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueInterface(args[0] ?? null));
+      case "IsNil":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueIsNil(args[0] ?? null));
+      case "Len":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueLen(args[0] ?? null));
+      case "CanAddr":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          Boolean(reflectValueInfo(args[0] ?? null)?.set));
+      case "Set":
+        return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) =>
+          reflectValueSet(args[0] ?? null, args[1] ?? null));
+      default:
+        return undefined;
+    }
+  }
   if (importPath === "reflect" && (receiver.baseType === "rtype" || receiver.baseType === "reflect.rtype")) {
     switch (declaration.name) {
       case "Name":
@@ -3201,6 +3262,238 @@ function reflectRtypeImplements(source: RuntimeValue, target: RuntimeValue, cont
   const targetInterface = interfaceTarget(targetType, context);
   if (!targetInterface) return false;
   return runtimeTypeTextImplementsInterface(sourceType, targetInterface, context);
+}
+
+interface ReflectValueRuntimeInfo {
+  value: RuntimeValue;
+  typeText: string;
+  kind: bigint;
+  set?: (value: RuntimeValue) => void;
+}
+
+function copyRuntimeStructMetadata(source: RuntimeStruct, target: RuntimeStruct): void {
+  const reflectInfo = reflectValueInfos.get(source);
+  if (reflectInfo) reflectValueInfos.set(target, reflectInfo);
+}
+
+function reflectTypeOf(value: RuntimeValue, context: EvaluationContext): RuntimeValue {
+  const actual = reflectDynamicValue(value);
+  if (actual === null) return new RuntimeInterfaceValue(reflectTypeInterfaceName(context), null);
+  return reflectTypeInterfaceForTypeText(reflectliteTypeTextOfValue(actual), context);
+}
+
+function reflectValueOf(value: RuntimeValue, context: EvaluationContext): RuntimeStruct {
+  const actual = reflectDynamicValue(value);
+  if (actual === null) return reflectZeroValue(context);
+  return reflectValueStruct(actual, context);
+}
+
+function reflectDynamicValue(value: RuntimeValue): RuntimeValue {
+  if (value instanceof RuntimeInterfaceValue) {
+    return value.value === null ? null : value.value;
+  }
+  return value;
+}
+
+function reflectValueStruct(
+  value: RuntimeValue,
+  context: EvaluationContext,
+  typeText = reflectliteTypeTextOfValue(value),
+  set?: (value: RuntimeValue) => void
+): RuntimeStruct {
+  const kind = internalAbiKindForType(typeText, context);
+  const struct = new RuntimeStruct(reflectValueRuntimeTypeName(context), [
+    ["typ_", internalAbiTypeDescriptor(typeText, context)],
+    ["ptr", reflectValuePointerPayload(value, typeText, context, set)],
+    ["flag", kind]
+  ]);
+  reflectValueInfos.set(struct, { value, typeText, kind, ...(set ? { set } : {}) });
+  return struct;
+}
+
+function reflectZeroValue(context: EvaluationContext): RuntimeStruct {
+  const struct = new RuntimeStruct(reflectValueRuntimeTypeName(context), [
+    ["typ_", new RuntimeTypedNilValue("*internal/abi.Type")],
+    ["ptr", new RuntimeTypedNilValue("unsafe.Pointer")],
+    ["flag", 0n]
+  ]);
+  reflectValueInfos.set(struct, { value: null, typeText: "", kind: 0n });
+  return struct;
+}
+
+function reflectValueRuntimeTypeName(context: EvaluationContext): string {
+  return context.importPath() === "reflect" ? "Value" : "reflect.Value";
+}
+
+function reflectTypeInterfaceName(context: EvaluationContext): string {
+  return context.importPath() === "reflect" ? "Type" : "reflect.Type";
+}
+
+function reflectTypeInterfaceForTypeText(typeText: string, context: EvaluationContext): RuntimeValue {
+  const interfaceName = reflectTypeInterfaceName(context);
+  const pointer = reflectRtypePointerForTypeText(typeText, context);
+  return new RuntimeInterfaceValue(interfaceName, pointer);
+}
+
+function reflectValuePointerPayload(
+  value: RuntimeValue,
+  typeText: string,
+  context: EvaluationContext,
+  set?: (value: RuntimeValue) => void
+): RuntimeValue {
+  const actual = unwrapNamed(value);
+  if (actual instanceof RuntimePointer || actual instanceof RuntimeTypedNilValue) return actual;
+  const pointerType = normalizeTypeText(typeText);
+  return new RuntimePointer(pointerType, () => value, (next) => {
+    if (!set) throw new GoJuniorRuntimeError("reflect.Value data is read-only");
+    set(prepareAssignableToType(next, pointerType, "reflect.Value data", context));
+  }, `reflect.Value:${runtimeUintptrForValue(value)}`);
+}
+
+function reflectValueInfo(value: RuntimeValue): ReflectValueRuntimeInfo | undefined {
+  const struct = structFromValue(value);
+  if (!struct) return undefined;
+  return reflectValueInfos.get(struct) ?? reflectValueInfoFromFields(struct);
+}
+
+function reflectValueInfoFromFields(struct: RuntimeStruct): ReflectValueRuntimeInfo | undefined {
+  const flag = struct.get("flag");
+  const kind = typeof flag === "bigint" ? flag & 31n : 0n;
+  const typ = struct.get("typ_");
+  const descriptor = typ instanceof RuntimePointer ? structFromValue(typ.get()) : structFromValue(typ ?? null);
+  const typeText = descriptor ? runtimeDescriptorText(descriptor, "GoJrTypeText") : "";
+  if (kind === 0n && !typeText) return { value: null, typeText: "", kind: 0n };
+  const ptr = struct.get("ptr");
+  return { value: ptr ?? null, typeText, kind };
+}
+
+function reflectValueKind(value: RuntimeValue): bigint {
+  return reflectValueInfo(value)?.kind ?? 0n;
+}
+
+function reflectValueIsValid(value: RuntimeValue): boolean {
+  return reflectValueKind(value) !== 0n;
+}
+
+function reflectValueType(value: RuntimeValue, context: EvaluationContext): RuntimeValue {
+  const info = reflectValueInfo(value);
+  if (!info || info.kind === 0n || !info.typeText) {
+    throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Type on zero Value");
+  }
+  return reflectTypeInterfaceForTypeText(info.typeText, context);
+}
+
+function reflectValuePointer(value: RuntimeValue): bigint {
+  const info = reflectValueInfo(value);
+  if (!info || info.kind === 0n) {
+    throw new GoJuniorPanic("panic: &ValueError{Method:reflect.Value.Pointer Kind:0}");
+  }
+  switch (info.kind) {
+    case 18n:
+    case 19n:
+    case 21n:
+    case 22n:
+    case 23n:
+    case 24n:
+    case 26n:
+      return runtimeUintptrForValue(info.value);
+    default:
+      throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Value.Pointer Kind:${info.kind}}`);
+  }
+}
+
+function reflectValueElem(value: RuntimeValue, context: EvaluationContext): RuntimeStruct {
+  const info = reflectValueInfo(value);
+  if (!info || info.kind === 0n) {
+    throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Elem on zero Value");
+  }
+  const actual = unwrapNamed(info.value);
+  if (info.kind === 22n) {
+    if (actual instanceof RuntimeTypedNilValue) return reflectZeroValue(context);
+    if (actual instanceof RuntimePointer) {
+      return reflectValueStruct(actual.get(), context, reflectElemTypeText(info.typeText, context), (next) => actual.set(next));
+    }
+  }
+  if (info.kind === 20n) {
+    const dynamic = reflectDynamicValue(info.value);
+    return dynamic === null ? reflectZeroValue(context) : reflectValueStruct(dynamic, context);
+  }
+  throw new GoJuniorPanic(`panic: &ValueError{Method:reflect.Value.Elem Kind:${info.kind}}`);
+}
+
+function reflectValueInterface(value: RuntimeValue): RuntimeValue {
+  const info = reflectValueInfo(value);
+  if (!info || info.kind === 0n) {
+    throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Interface on zero Value");
+  }
+  return info.value;
+}
+
+function reflectValueIsNil(value: RuntimeValue): boolean {
+  const info = reflectValueInfo(value);
+  if (!info || info.kind === 0n) {
+    throw new GoJuniorPanic("panic: reflect: call of reflect.Value.IsNil on zero Value");
+  }
+  return reflectliteIsNil(info.value);
+}
+
+function reflectValueLen(value: RuntimeValue): bigint {
+  const info = reflectValueInfo(value);
+  if (!info || info.kind === 0n) {
+    throw new GoJuniorPanic("panic: reflect: call of reflect.Value.Len on zero Value");
+  }
+  return BigInt(valueLength(info.value));
+}
+
+function reflectValueSet(target: RuntimeValue, source: RuntimeValue): RuntimeValue {
+  const info = reflectValueInfo(target);
+  if (!info || !info.set) throw new GoJuniorPanic("panic: reflect: reflect.Value.Set using unaddressable value");
+  info.set(reflectValuePayload(source));
+  return null;
+}
+
+function reflectValuePayload(value: RuntimeValue): RuntimeValue {
+  return reflectValueInfo(value)?.value ?? value;
+}
+
+function reflectElemTypeText(typeText: string, context: EvaluationContext): string {
+  const type = internalAbiUnderlyingTypeText(typeText, context);
+  if (type.startsWith("*")) return type.slice(1);
+  if (type.startsWith("[]")) return type.slice(2);
+  const array = parseArrayOrSliceTypeText(type, context);
+  if (array) return array.elementType;
+  const mapType = parseMapTypeText(type);
+  if (mapType) return mapType.valueType;
+  const chanType = parseChanTypeText(type);
+  if (chanType) return chanType.elementType;
+  return "interface{}";
+}
+
+function runtimeUintptrForValue(value: RuntimeValue): bigint {
+  const actual = unwrapNamed(value);
+  if (actual === null) return 0n;
+  if (actual instanceof RuntimeInterfaceValue) return actual.value === null ? 0n : runtimeUintptrForValue(actual.value);
+  if (actual instanceof RuntimeTypedNilValue) return 0n;
+  if (actual instanceof RuntimePointer) return runtimeUintptrForKey(`ptr:${runtimePointerIdentityKey(actual)}`);
+  if (Array.isArray(actual)) return runtimeUintptrForKey(`array:${objectIdentityId(actual)}`);
+  if (actual instanceof RuntimeGoString) return actual.byteLength() === 0 ? 0n : runtimeUintptrForKey(`gostring:${objectIdentityId(actual)}`);
+  if (actual instanceof RuntimeMap) return runtimeUintptrForKey(`map:${objectIdentityId(actual)}`);
+  if (actual instanceof RuntimeChannel) return runtimeUintptrForKey(`chan:${objectIdentityId(actual)}`);
+  if (actual instanceof RuntimeStruct) return runtimeUintptrForKey(`struct:${objectIdentityId(actual)}`);
+  if (isGoJuniorFunction(actual) || isRuntimeCallable(actual)) return runtimeUintptrForKey(`func:${objectIdentityId(actual)}`);
+  if (typeof actual === "object") return runtimeUintptrForKey(`object:${objectIdentityId(actual)}`);
+  if (typeof actual === "string") return actual.length === 0 ? 0n : runtimeUintptrForKey(`string:${actual}`);
+  if (typeof actual === "bigint") return BigInt.asUintN(64, actual);
+  if (typeof actual === "number") return BigInt.asUintN(64, BigInt(Math.trunc(actual)));
+  return runtimeUintptrForKey(`primitive:${String(actual)}`);
+}
+
+function runtimeUintptrForKey(key: string): bigint {
+  const existing = runtimeUintptrIds.get(key);
+  if (existing !== undefined) return existing;
+  const next = nextRuntimeUintptrId++;
+  runtimeUintptrIds.set(key, next);
+  return next;
 }
 
 function internalAbiTypeFlag(value: RuntimeValue): bigint {
@@ -4864,11 +5157,12 @@ function goJuniorFunctionValue(
           arg,
           parameterTypeForArgument(boundarySignature, index),
           packageName,
-          parentContext.importPath()
+          parentContext.importPath(),
+          context
         ))
         : args;
       const callReceiver = crossesPackageBoundary
-        ? packageBoundaryArgumentValue(boundReceiver ?? null, boundaryReceiverType?.text, packageName, parentContext.importPath())
+        ? packageBoundaryArgumentValue(boundReceiver ?? null, boundaryReceiverType?.text, packageName, parentContext.importPath(), context)
         : boundReceiver;
       const invoke = () => context.functionCallAsync(() => context.childScopeAsync(async () => {
         const activeTypeArgumentBindings = bindFunctionTypeParameters(declaration, signature, callArgs, context, typeArguments, typeArgumentBindings);
@@ -4908,7 +5202,8 @@ function goJuniorFunctionValue(
               value ?? null,
               activeSignature.results[index]?.type.text,
               closureContext.importPath()!,
-              parentContext.importPath()
+              parentContext.importPath(),
+              context
             ));
             return resultValues.length === 0 ? null : resultValues.length === 1 ? resultValues[0] ?? null : markTupleValues(resultValues);
           }
@@ -4959,16 +5254,18 @@ function packageBoundaryArgumentValue(
   value: RuntimeValue,
   typeText: string | undefined,
   calleePackageName: string,
-  callerPackageName: string | undefined
+  callerPackageName: string | undefined,
+  calleeContext?: EvaluationContext
 ): RuntimeValue {
+  const interfaceBoundary = isDynamicInterfaceBoundaryType(typeText, calleeContext);
   const owner = typeText ? runtimeTypeOwnerPackagePath(typeText) : undefined;
   const genericOwner = !owner && callerPackageName && callerPackageName !== calleePackageName
     ? runtimeTypeOwnerPackagePath(qualifyBareGenericRuntimeTypeArguments(typeText, callerPackageName))
     : undefined;
-  const dynamicOwner = isDynamicInterfaceBoundaryType(typeText)
-    ? runtimeValueOwnerPackagePath(value) ?? runtimeValueLocalOwnerFallback(value, callerPackageName)
+  const dynamicOwner = interfaceBoundary
+    ? runtimeDynamicValueOwnerPackagePath(value) ?? runtimeValueLocalOwnerFallback(value, callerPackageName)
     : undefined;
-  const effectiveOwner = owner ?? genericOwner ?? dynamicOwner;
+  const effectiveOwner = dynamicOwner ?? owner ?? genericOwner;
   return effectiveOwner && effectiveOwner !== calleePackageName
     ? externalizePackageRuntimeValue(value, effectiveOwner)
     : internalizePackageRuntimeValue(value, calleePackageName);
@@ -4992,18 +5289,26 @@ function packageBoundaryResultValue(
   value: RuntimeValue,
   typeText: string | undefined,
   calleePackageName: string,
-  callerPackageName: string | undefined
+  callerPackageName: string | undefined,
+  calleeContext?: EvaluationContext
 ): RuntimeValue {
+  const interfaceBoundary = isDynamicInterfaceBoundaryType(typeText, calleeContext);
   const owner = runtimeTypeOwnerPackagePath(typeText);
-  const dynamicOwner = isDynamicInterfaceBoundaryType(typeText) ? runtimeValueOwnerPackagePath(value) : undefined;
-  const effectiveOwner = owner ?? dynamicOwner;
+  const dynamicOwner = interfaceBoundary ? runtimeDynamicValueOwnerPackagePath(value) : undefined;
+  const effectiveOwner = dynamicOwner ?? owner;
   if (effectiveOwner && callerPackageName === effectiveOwner) return internalizePackageRuntimeValue(value, effectiveOwner);
   return externalizePackageRuntimeValue(value, effectiveOwner ?? calleePackageName);
 }
 
-function isDynamicInterfaceBoundaryType(typeText: string | undefined): boolean {
+function isDynamicInterfaceBoundaryType(typeText: string | undefined, context?: EvaluationContext): boolean {
   const type = normalizeTypeText(typeText ?? "");
-  return type === "any" || type === "interface{}" || type.startsWith("interface{");
+  return type === "any" || type === "interface{}" || type.startsWith("interface{") ||
+    Boolean(type && context?.interfaceDef(type));
+}
+
+function runtimeDynamicValueOwnerPackagePath(value: RuntimeValue): string | undefined {
+  if (value instanceof RuntimeInterfaceValue) return value.value === null ? undefined : runtimeDynamicValueOwnerPackagePath(value.value);
+  return runtimeValueOwnerPackagePath(value);
 }
 
 function runtimeValueOwnerPackagePath(value: RuntimeValue): string | undefined {

@@ -9,6 +9,7 @@ import { Builtin as GoTypesBuiltin, Const as GoTypesConst, Func as GoTypesFunc, 
 const ARTIFACT_LAYOUT_VERSION = "gojr-js-v4";
 export const GOJR_GOOS = "js";
 export const GOJR_GOARCH = "gojr";
+const GOJR_DEFAULT_BUILD_TAGS = ["codec.safe"];
 const DEFAULT_COMPILER_VERSION = "gojr-dev";
 const DEFAULT_BACKEND = "js-source-envelope";
 const DEFAULT_HOST_SPEC_VERSION = "host-v0";
@@ -521,6 +522,8 @@ function buildTagSet(goos, goarch, extra) {
     const tags = new Set();
     tags.add(goos);
     tags.add(goarch);
+    for (const tag of GOJR_DEFAULT_BUILD_TAGS)
+        tags.add(tag);
     if (isUnixGOOS(goos))
         tags.add("unix");
     for (let minor = 1; minor <= 27; minor += 1) {
