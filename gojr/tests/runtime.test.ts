@@ -859,10 +859,13 @@ import "strconv"
 
 f32 := math.Float32frombits(1 << 31)
 f64 := math.Float64frombits(1 << 63)
-return strconv.Itoa(-12), strconv.Itoa(34), math.Float32bits(f32), math.Float64bits(f64), math.IsNaN(math.NaN()), math.MaxFloat32 > 1e38, math.MaxFloat64 > 1e300, math.MaxInt32, math.MaxUint16, math.MaxUint64
+quoted, quoteErr := strconv.Unquote(\`"hi\\n"\`)
+raw, rawErr := strconv.Unquote("\`there\`")
+_, badErr := strconv.Unquote("not quoted")
+return strconv.Itoa(-12), strconv.Itoa(34), quoted, quoteErr == nil, raw, rawErr == nil, badErr != nil, math.Float32bits(f32), math.Float64bits(f64), math.IsNaN(math.NaN()), math.MaxFloat32 > 1e38, math.MaxFloat64 > 1e300, math.MaxInt32, math.MaxUint16, math.MaxUint64
 `);
 
-    expect(script.values).toEqual(["-12", "34", 2147483648n, 9223372036854775808n, true, true, true, 2147483647n, 65535n, 18446744073709551615n]);
+    expect(script.values).toEqual(["-12", "34", "hi\n", true, "there", true, true, 2147483648n, 9223372036854775808n, true, true, true, 2147483647n, 65535n, 18446744073709551615n]);
   });
 
   test("matches Go float map-key semantics for signed zero and NaN", async () => {
@@ -6234,6 +6237,65 @@ func main() {
 
     expect(result.diagnostics).toEqual([]);
     expect(result.output).toEqual(["map[string]interface{}\n", "true", "\n"]);
+  });
+
+  test("gojr test root package types stay visible to source-built reflect", async () => {
+    const result = await testSourceFilesWithPackagesOnNode({
+      importPath: "example.com/p",
+      packageName: "p",
+      testVerbose: true,
+      testRun: "TestReflectFieldFromRootTestPackage",
+      files: [{
+        filename: "/workspace/p/table_test.go",
+        source: `package p
+
+import (
+  "reflect"
+  "testing"
+)
+
+type Table struct {
+  Headers []string \`json:"headers" msg:"headers"\`
+  Rows [][]string
+}
+
+type RegisteredType struct {
+  Factory func() (interface{}, error)
+}
+
+var R = &RegisteredType{Factory: func() (interface{}, error) {
+  return &Table{}, nil
+}}
+
+func TestReflectFieldFromRootTestPackage(t *testing.T) {
+  rs, err := R.Factory()
+  if err != nil {
+    t.Fatal(err)
+  }
+  tye := reflect.ValueOf(rs).Elem().Type()
+  if got := tye.Kind().String(); got != "struct" {
+    t.Fatalf("kind = %q", got)
+  }
+  if got := tye.NumField(); got != 2 {
+    t.Fatalf("NumField = %d", got)
+  }
+  fld := tye.Field(0)
+  if fld.Name != "Headers" {
+    t.Fatalf("field name = %q", fld.Name)
+  }
+  if got := string(fld.Tag); got != "json:\\"headers\\" msg:\\"headers\\"" {
+    t.Fatalf("field tag = %q", got)
+  }
+  if got := fld.Type.String(); got != "[]string" {
+    t.Fatalf("field type = %q", got)
+  }
+}
+`
+      }]
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toContain("--- PASS: TestReflectFieldFromRootTestPackage\n");
   });
 
   test("bodyless package functions return declared zero result values", async () => {

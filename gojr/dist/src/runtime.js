@@ -1501,7 +1501,13 @@ export async function testSourceFiles(files, options = {}) {
             output: []
         };
     }
-    const checked = checkGoJuniorSourceFiles(files, typeCheckConfig(testOptions));
+    const packageName = testOptions.packageName ?? packageNameFromParsedFiles(parsed.parsed.files) ?? "test";
+    const packagePath = testOptions.importPath ?? packageName;
+    const checked = checkGoJuniorSourceFiles(files, {
+        ...typeCheckConfig(testOptions),
+        packageName,
+        packagePath
+    });
     if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
         return {
             diagnostics: checked.diagnostics,
@@ -1509,7 +1515,11 @@ export async function testSourceFiles(files, options = {}) {
             ast
         };
     }
-    return testProgram(ast, checked.diagnostics, testOptions);
+    return testProgram(ast, checked.diagnostics, {
+        ...testOptions,
+        packageName,
+        importPath: packagePath
+    }, checked);
 }
 function sourceFileFromSource(source, options = {}) {
     return {
@@ -1612,8 +1622,16 @@ function packageScopeObjects(pkg) {
         return [object];
     });
 }
-async function testProgram(ast, baseDiagnostics, options) {
+async function testProgram(ast, baseDiagnostics, options, checked) {
+    if (checked && options.importPath) {
+        options.packageInfos ??= {};
+        options.packageContexts ??= {};
+        options.packageInfos[options.importPath] = checked.pkg;
+    }
     const context = new EvaluationContext(options);
+    if (checked && options.importPath && options.packageContexts) {
+        options.packageContexts[options.importPath] = context;
+    }
     context.clearObservedDeps();
     const diagnostics = [...baseDiagnostics];
     try {
@@ -1625,8 +1643,17 @@ async function testProgram(ast, baseDiagnostics, options) {
             }
             const { declarations, statements } = splitTopLevelDeclarations(ast.body);
             predeclareTopLevelTypes(declarations, context);
-            const declarationCompletion = await executeTopLevelStatements(declarations, context);
+            if (checked) {
+                predeclarePackageConstants(checked.pkg, declarations, context);
+                predeclarePackageVariables(declarations, checked.pkg, context);
+            }
+            const runtimeDeclarations = checked
+                ? declarations.filter((declaration) => declaration.kind === "TypeDecl")
+                : declarations;
+            const declarationCompletion = await executeTopLevelStatements(runtimeDeclarations, context);
             expectNormalCompletion(declarationCompletion, "top-level declarations");
+            if (checked)
+                await executePackageVarInitializers(declarations, checked.info.InitOrder, context);
             await runInitFunctions(ast.functions, context);
             const topLevelCompletion = await executeTopLevelStatements(statements, context);
             expectNormalCompletion(topLevelCompletion, "top-level statements");
@@ -3850,8 +3877,29 @@ function mathPackage() {
 }
 function strconvPackage() {
     return {
-        Itoa: hostCallable("strconv.Itoa", (args) => toBigInt(args[0] ?? 0n).toString())
+        Itoa: hostCallable("strconv.Itoa", (args) => toBigInt(args[0] ?? 0n).toString()),
+        Unquote: hostCallable("strconv.Unquote", (args) => strconvUnquote(args[0] ?? ""), {
+            tupleResult: true,
+            signature: hostSignature(["string"], ["string", "error"])
+        })
     };
+}
+function strconvUnquote(value) {
+    const text = toStringValue(value);
+    if (text.length < 2)
+        return [RuntimeGoString.fromUtf8Text(""), fmtErrorValue("invalid syntax")];
+    const quote = text[0];
+    if ((quote !== "\"" && quote !== "`" && quote !== "'") || text[text.length - 1] !== quote) {
+        return [RuntimeGoString.fromUtf8Text(""), fmtErrorValue("invalid syntax")];
+    }
+    if (quote === "'") {
+        const decoded = goStringFromLiteralRaw(`"${text.slice(1, -1).replace(/"/g, "\\\"")}"`);
+        const entries = goStringRuneEntries(decoded);
+        if (entries.length !== 1)
+            return [RuntimeGoString.fromUtf8Text(""), fmtErrorValue("invalid syntax")];
+        return [decoded, null];
+    }
+    return [goStringFromLiteralRaw(text), null];
 }
 function appendFormattedBytes(base, text) {
     const actual = unwrapNamed(base);
