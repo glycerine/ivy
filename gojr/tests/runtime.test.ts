@@ -4420,11 +4420,12 @@ return s + " there"
 const (
   chuge = 1 << 100
   chuge_1 = chuge - 1
+  c1 = chuge >> 100
 )
-return chuge > chuge_1, chuge == chuge_1, chuge_1 + 1 == chuge
+return chuge > chuge_1, chuge == chuge_1, chuge_1 + 1 == chuge, c1 == 1, c1
 `);
 
-    expect(result.values).toEqual([true, false, true]);
+    expect(result.values).toEqual([true, false, true, true, 1n]);
   });
 
   test("supports Go-style const groups with iota and repeated expressions", async () => {

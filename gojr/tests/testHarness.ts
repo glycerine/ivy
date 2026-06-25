@@ -1,7 +1,44 @@
 import { deepStrictEqual, fail, notDeepStrictEqual } from "node:assert/strict";
-import { describe, test } from "node:test";
+import { describe, test as nodeTest } from "node:test";
 
-export { describe, test };
+export { describe };
+
+type TestBody = (context: unknown) => unknown;
+
+export function test(name: string, fn: TestBody): ReturnType<typeof nodeTest>;
+export function test(name: string, options: object, fn: TestBody): ReturnType<typeof nodeTest>;
+export function test(name: string, optionsOrFn: object | TestBody, maybeFn?: TestBody): ReturnType<typeof nodeTest> {
+  const options = typeof optionsOrFn === "function" ? undefined : optionsOrFn;
+  const fn = typeof optionsOrFn === "function" ? optionsOrFn : maybeFn;
+  if (!fn) return options === undefined
+    ? nodeTest(name)
+    : nodeTest(name, options);
+
+  const wrapped = async (context: unknown) => {
+    if (process.env.GOJR_TEST_PROGRESS === "1") {
+      console.error(`gojr test: starting "${name}"`);
+    }
+    const heartbeatMs = Number(process.env.GOJR_TEST_HEARTBEAT_MS ?? "0");
+    const started = Date.now();
+    let heartbeat: ReturnType<typeof setInterval> | undefined;
+    if (Number.isFinite(heartbeatMs) && heartbeatMs > 0) {
+      heartbeat = setInterval(() => {
+        const elapsed = ((Date.now() - started) / 1000).toFixed(1);
+        console.error(`gojr test: still running "${name}" after ${elapsed}s`);
+      }, heartbeatMs);
+      (heartbeat as { unref?: () => void }).unref?.();
+    }
+    try {
+      return await fn(context);
+    } finally {
+      if (heartbeat) clearInterval(heartbeat);
+    }
+  };
+
+  return options === undefined
+    ? nodeTest(name, wrapped)
+    : nodeTest(name, options, wrapped);
+}
 
 type Constructor = Function & { readonly name: string };
 type ExpectedAny = { readonly kind: "ExpectedAny"; readonly constructor: Constructor };

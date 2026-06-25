@@ -8,7 +8,7 @@
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "run": "node dist/src/cli.js run",
-    "test": "rm -rf /tmp/gojr-test-dist && tsc -p tsconfig.test.json && node --test /tmp/gojr-test-dist/tests/*.test.js",
+    "test": "rm -rf /tmp/gojr-test-dist && tsc -p tsconfig.test.json && GOJR_TEST_PROGRESS=1 node --test /tmp/gojr-test-dist/tests/*.test.js",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "devDependencies": {
