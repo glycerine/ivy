@@ -5030,6 +5030,91 @@ return total, out, q, xs[0], neg, runeCount, last
     expect(result.values).toEqual([9n, "10:a;20:b;", 2n, 1n, 0n, 97n, 96n]);
   });
 
+  test("supports standard iter.Pull and iter.Pull2", async () => {
+    const result = await expectRuns(`
+import "iter"
+
+seq := func(yield func(int) bool) {
+  if !yield(7) {
+    return
+  }
+  yield(11)
+}
+
+next, stop := iter.Pull[int](seq)
+defer stop()
+a, okA := next()
+b, okB := next()
+c, okC := next()
+
+seq2 := func(yield func(string, int) bool) {
+  if !yield("a", 1) {
+    return
+  }
+  yield("b", 2)
+}
+
+next2, stop2 := iter.Pull2[string, int](seq2)
+defer stop2()
+k1, v1, ok1 := next2()
+k2, v2, ok2 := next2()
+k3, v3, ok3 := next2()
+
+return a, okA, b, okB, c, okC, k1, v1, ok1, k2, v2, ok2, k3, v3, ok3
+`);
+
+    expect(result.values).toEqual([
+      7n, true, 11n, true, 0n, false,
+      "a", 1n, true, "b", 2n, true, "", 0n, false
+    ]);
+  });
+
+  test("supports stopping standard iter.Pull producers early", async () => {
+    const result = await expectRuns(`
+import "iter"
+
+count := 0
+seq := func(yield func(int) bool) {
+  count++
+  if !yield(1) {
+    return
+  }
+  count += 10
+}
+
+next, stop := iter.Pull[int](seq)
+a, ok := next()
+stop()
+b, ok2 := next()
+return a, ok, b, ok2, count
+`);
+
+    expect(result.values).toEqual([1n, true, 0n, false, 1n]);
+  });
+
+  test("keeps standard iter intrinsic ahead of cached package payloads", async () => {
+    const result = await expectRuns(`
+import "iter"
+
+seq := func(yield func(int) bool) {
+  yield(3)
+}
+
+next, stop := iter.Pull[int](seq)
+defer stop()
+value, ok := next()
+return value, ok
+`, {
+      packages: {
+        iter: {
+          Pull: 123n
+        }
+      }
+    });
+
+    expect(result.values).toEqual([3n, true]);
+  });
+
   test("supports embedded fields, promoted methods, interface embedding, and struct tags", async () => {
     const result = await expectRuns(`
 type Inner struct {

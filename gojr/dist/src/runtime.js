@@ -2016,6 +2016,7 @@ function bodylessPackageFunctionIntrinsic(declaration, importPath) {
     const intrinsic = bodylessBytealgIntrinsic(importPath, declaration.name, declaration.signature) ??
         bodylessAtomicIntrinsic(importPath, declaration.name, declaration.signature) ??
         bodylessAbiIntrinsic(importPath, declaration.name, declaration.signature) ??
+        bodylessIterCoroutineIntrinsic(importPath, declaration.name, declaration.signature) ??
         bodylessRuntimeIntrinsic(declaration.name, declaration.signature);
     return intrinsic
         ? {
@@ -2055,6 +2056,15 @@ function bodylessRuntimeIntrinsic(name, signature) {
         default:
             return undefined;
     }
+}
+function bodylessIterCoroutineIntrinsic(importPath, name, signature) {
+    if (importPath !== "iter")
+        return undefined;
+    if (name !== "newcoro" && name !== "coroswitch")
+        return undefined;
+    return intrinsicGoJuniorFunction(`${importPath}.${name}`, signature, () => {
+        throw new GoJuniorPanic(`gojr error: ${importPath}.${name} not implemented`);
+    });
 }
 function bodylessAbiIntrinsic(importPath, name, signature) {
     if (importPath !== "internal/abi")
@@ -2499,19 +2509,21 @@ function installAutomaticImports(context) {
     context.declareRoot("fmt", availablePackages(context).fmt ?? fmtPackage(), true);
 }
 function availablePackages(context) {
+    const sourcePackages = context.packages();
     return {
         cmp: cmpPackage(),
         fmt: fmtPackage(),
-        "internal/reflectlite": reflectlitePackage(),
         math: mathPackage(),
         os: osPackage(context),
-        runtime: runtimePackage(),
         "runtime/pprof": runtimePprofPackage(),
         strconv: strconvPackage(),
-        "syscall/js": syscallJSPackage(),
         testing: testingPackage(context),
-        unsafe: unsafePackage(),
-        ...context.packages()
+        ...sourcePackages,
+        iter: iterPackage(),
+        "internal/reflectlite": reflectlitePackage(),
+        runtime: runtimePackage(),
+        "syscall/js": syscallJSPackage(),
+        unsafe: unsafePackage()
     };
 }
 function cmpPackage() {
@@ -2519,6 +2531,12 @@ function cmpPackage() {
         Compare: hostCallable("cmp.Compare", (args) => BigInt(cmpCompare(args[0] ?? null, args[1] ?? null))),
         Less: hostCallable("cmp.Less", (args) => cmpLess(args[0] ?? null, args[1] ?? null)),
         Or: hostCallable("cmp.Or", (args) => args.find((arg) => !isRuntimeZeroValue(arg)) ?? zeroValueLike(args[0] ?? null))
+    };
+}
+function iterPackage() {
+    return {
+        Pull: hostCallable("iter.Pull", (args, context, typeArguments) => iterPull(args[0] ?? null, context, 1, typeArguments), { tupleResult: true }),
+        Pull2: hostCallable("iter.Pull2", (args, context, typeArguments) => iterPull(args[0] ?? null, context, 2, typeArguments), { tupleResult: true })
     };
 }
 function fmtPackage() {
@@ -8689,6 +8707,116 @@ async function iteratorFunctionEntries(source, context) {
     });
     await callRuntime(source, [yieldFn], context);
     return entries;
+}
+function iterPull(seq, context, arity, typeArguments) {
+    const source = unwrapNamed(seq);
+    if (!isRuntimeCallable(source) && !isGoJuniorFunction(source)) {
+        throw new GoJuniorRuntimeError(`iter.Pull expects an iterator function, got ${formatValue(seq)}`);
+    }
+    const name = arity === 1 ? "iter.Pull" : "iter.Pull2";
+    const producerContext = context.fork();
+    let started = false;
+    let done = false;
+    let stopped = false;
+    let producer;
+    let producerError;
+    let waitingNext;
+    let resumeYield;
+    let lastYielded = [];
+    const doneValues = () => {
+        const values = Array.from({ length: arity }, (_item, index) => iterPullZeroValue(index, typeArguments, lastYielded, context));
+        values.push(false);
+        return values;
+    };
+    const finishDone = () => {
+        done = true;
+        const waiter = waitingNext;
+        waitingNext = undefined;
+        waiter?.resolve(doneValues());
+    };
+    const finishError = (error) => {
+        producerError = normalizeAsyncRuntimeError(error);
+        done = true;
+        const waiter = waitingNext;
+        waitingNext = undefined;
+        waiter?.reject(producerError);
+    };
+    const yieldFn = hostCallable(`${name}.yield`, async (args) => {
+        if (stopped || done)
+            return false;
+        const waiter = waitingNext;
+        if (!waiter) {
+            throw new GoJuniorPanic(`${name}: yield called before next`);
+        }
+        waitingNext = undefined;
+        lastYielded = args.slice(0, arity).map((arg) => arg ?? null);
+        waiter.resolve([...lastYielded, true]);
+        return await new Promise((resolve) => {
+            resumeYield = resolve;
+        });
+    });
+    const runProducer = async () => {
+        try {
+            await callRuntime(source, [yieldFn], producerContext);
+            finishDone();
+        }
+        catch (error) {
+            finishError(error);
+        }
+    };
+    const next = hostCallable(`${name}.next`, async () => {
+        if (producerError)
+            throw producerError;
+        if (done || stopped)
+            return doneValues();
+        if (waitingNext) {
+            throw new GoJuniorPanic(`${name}: next called before previous next returned`);
+        }
+        const result = new Promise((resolve, reject) => {
+            waitingNext = { resolve, reject };
+        });
+        if (!started) {
+            started = true;
+            producer = runProducer();
+        }
+        else if (resumeYield) {
+            const resume = resumeYield;
+            resumeYield = undefined;
+            resume(true);
+        }
+        return await result;
+    }, { tupleResult: true });
+    const stop = hostCallable(`${name}.stop`, async () => {
+        if (producerError)
+            throw producerError;
+        if (done || stopped)
+            return null;
+        stopped = true;
+        const waiter = waitingNext;
+        waitingNext = undefined;
+        waiter?.resolve(doneValues());
+        if (resumeYield) {
+            const resume = resumeYield;
+            resumeYield = undefined;
+            resume(false);
+        }
+        if (producer) {
+            await producer;
+            if (producerError)
+                throw producerError;
+        }
+        else {
+            done = true;
+        }
+        return null;
+    });
+    return [next, stop];
+}
+function iterPullZeroValue(index, typeArguments, lastYielded, context) {
+    const typeText = typeArguments?.[index];
+    if (typeText)
+        return defaultValueForTypeText(typeText, context);
+    return zeroValueLike(lastYielded[index] ?? null);
 }
 function sprintf(format, args) {
     let argIndex = 0;

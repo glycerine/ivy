@@ -247,6 +247,8 @@ export function standardTypePackage(path) {
         return fmtPackage();
     if (path === "internal/reflectlite")
         return reflectlitePackage();
+    if (path === "iter")
+        return iterPackage();
     if (path === "math")
         return mathPackage();
     if (path === "runtime")
@@ -300,6 +302,40 @@ function cmpPackage() {
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Less", NewSignatureType(null, null, [lessT], NewTuple(NewVar(NoPos, pkg, "x", lessT), NewVar(NoPos, pkg, "y", lessT)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false)));
     const orT = comparableTypeParam();
     pkg.Scope().Insert(NewFunc(NoPos, pkg, "Or", NewSignatureType(null, null, [orT], NewTuple(NewVar(NoPos, pkg, "vals", NewSlice(orT))), NewTuple(NewVar(NoPos, pkg, "", orT)), true)));
+    pkg.MarkComplete();
+    return pkg;
+}
+function iterPackage() {
+    const pkg = NewPackage("iter", "iter");
+    if (pkg.Scope().Lookup("Pull") !== null)
+        return pkg;
+    const boolType = Typ[Bool];
+    const seqV = NewTypeParam(NewTypeName(NoPos, pkg, "V", null), emptyInterface);
+    const seqYield = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "value", seqV)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false);
+    const seqName = NewTypeName(NoPos, pkg, "Seq", null);
+    const seqType = NewNamed(seqName, NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "yield", seqYield)), null, false), null);
+    seqType.SetTypeParams([seqV]);
+    seqName.setType(seqType);
+    pkg.Scope().Insert(seqName);
+    const seq2K = NewTypeParam(NewTypeName(NoPos, pkg, "K", null), emptyInterface);
+    const seq2V = NewTypeParam(NewTypeName(NoPos, pkg, "V", null), emptyInterface);
+    const seq2Yield = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "key", seq2K), NewVar(NoPos, pkg, "value", seq2V)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false);
+    const seq2Name = NewTypeName(NoPos, pkg, "Seq2", null);
+    const seq2Type = NewNamed(seq2Name, NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "yield", seq2Yield)), null, false), null);
+    seq2Type.SetTypeParams([seq2K, seq2V]);
+    seq2Name.setType(seq2Type);
+    pkg.Scope().Insert(seq2Name);
+    const pullV = NewTypeParam(NewTypeName(NoPos, pkg, "V", null), emptyInterface);
+    const pullYield = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "value", pullV)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false);
+    const pullSeq = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "yield", pullYield)), null, false);
+    const pullNext = NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "value", pullV), NewVar(NoPos, pkg, "ok", boolType)), false);
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Pull", NewSignatureType(null, null, [pullV], NewTuple(NewVar(NoPos, pkg, "seq", pullSeq)), NewTuple(NewVar(NoPos, pkg, "next", pullNext), NewVar(NoPos, pkg, "stop", NewSignatureType(null, null, null, null, null, false))), false)));
+    const pull2K = NewTypeParam(NewTypeName(NoPos, pkg, "K", null), emptyInterface);
+    const pull2V = NewTypeParam(NewTypeName(NoPos, pkg, "V", null), emptyInterface);
+    const pull2Yield = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "key", pull2K), NewVar(NoPos, pkg, "value", pull2V)), NewTuple(NewVar(NoPos, pkg, "", boolType)), false);
+    const pull2Seq = NewSignatureType(null, null, null, NewTuple(NewVar(NoPos, pkg, "yield", pull2Yield)), null, false);
+    const pull2Next = NewSignatureType(null, null, null, null, NewTuple(NewVar(NoPos, pkg, "key", pull2K), NewVar(NoPos, pkg, "value", pull2V), NewVar(NoPos, pkg, "ok", boolType)), false);
+    pkg.Scope().Insert(NewFunc(NoPos, pkg, "Pull2", NewSignatureType(null, null, [pull2K, pull2V], NewTuple(NewVar(NoPos, pkg, "seq", pull2Seq)), NewTuple(NewVar(NoPos, pkg, "next", pull2Next), NewVar(NoPos, pkg, "stop", NewSignatureType(null, null, null, null, null, false))), false)));
     pkg.MarkComplete();
     return pkg;
 }
