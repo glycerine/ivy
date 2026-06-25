@@ -1345,6 +1345,46 @@ return constanttime.ByteEq(7, 7), constanttime.ByteEq(7, 8)
     expect(result.values).toEqual([1n, 0n]);
   });
 
+  test("intrinsicifies internal abi EscapeNonString as an escape-analysis no-op", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/abi",
+        files: [{
+          filename: "/usr/local/go/src/internal/abi/escape.go",
+          source: `package abi
+
+func Touch[T any](v T) T {
+  EscapeNonString(v)
+  return EscapeToResultNonString(v)
+}
+
+func EscapeNonString[T any](v T) {
+  panic("intrinsic")
+}
+
+func EscapeToResultNonString[T any](v T) T {
+  EscapeNonString(v)
+  return *new(T)
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import abi "internal/abi"
+return abi.Touch("ok")
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe("ok");
+  });
+
   test("runs multiple package init functions in source file sequence order", async () => {
     const pkg = await evaluatePackageSourceFiles([
       {

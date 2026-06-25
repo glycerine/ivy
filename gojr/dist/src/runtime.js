@@ -2051,6 +2051,12 @@ function packageFunctionIntrinsic(declaration, importPath) {
     if (importPath === "internal/abi" && declaration.name === "TypeFor") {
         intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (_args, context, typeArguments) => internalAbiTypeDescriptor(typeArguments?.[0] ?? "interface{}", context));
     }
+    if (importPath === "internal/abi" && declaration.name === "EscapeNonString") {
+        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, () => null);
+    }
+    if (importPath === "internal/abi" && declaration.name === "EscapeToResultNonString") {
+        intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => args[0] ?? null);
+    }
     if (importPath === "crypto/internal/constanttime" && declaration.name === "boolToUint8") {
         intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => toBool(args[0] ?? false) ? 1n : 0n);
     }
