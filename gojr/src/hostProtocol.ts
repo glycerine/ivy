@@ -145,6 +145,10 @@ export function formatBuildProgressEvent(event: BuildProgressEvent): string {
 }
 
 export function formatEvaluationProgressEvent(event: EvaluationProgressEvent): string {
+  if (event.action === "test-start" || event.action === "test-pass" || event.action === "test-fail" || event.action === "test-skip") {
+    const name = event.testName ? ` ${event.testName}` : "";
+    return `gojr: ${event.action} ${event.importPath}${name}`;
+  }
   const files = event.fileCount === undefined ? "" : ` files=${event.fileCount}`;
   const deps = event.dependencyCount === undefined ? "" : ` deps=${event.dependencyCount}`;
   return `gojr: ${event.action} ${event.importPath}${files}${deps}`;

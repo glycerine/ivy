@@ -181,13 +181,20 @@ export interface EvaluationOptions {
   onProgress?: EvaluationProgressSink;
 }
 
-export type EvaluationProgressAction = "initializing" | "initialized";
+export type EvaluationProgressAction =
+  | "initializing"
+  | "initialized"
+  | "test-start"
+  | "test-pass"
+  | "test-fail"
+  | "test-skip";
 
 export interface EvaluationProgressEvent {
   action: EvaluationProgressAction;
   importPath: string;
   fileCount?: number;
   dependencyCount?: number;
+  testName?: string;
 }
 
 export type EvaluationProgressSink = (event: EvaluationProgressEvent) => void;
@@ -2106,8 +2113,16 @@ async function testProgram(ast: ProgramAst, baseDiagnostics: Diagnostic[], optio
       }
 
       let failed = false;
+      const testImportPath = options.importPath ?? options.packageName ?? "test";
       for (const declaration of tests) {
-        const testFailed = await runOneTest(declaration, context, diagnostics, options.testVerbose ?? false);
+        const testFailed = await runOneTest(
+          declaration,
+          context,
+          diagnostics,
+          options.testVerbose ?? false,
+          testImportPath,
+          options.onProgress
+        );
         failed ||= testFailed;
       }
       context.write(failed ? "FAIL\n" : "PASS\n");
@@ -2139,13 +2154,22 @@ function isTestFunctionDecl(declaration: FunctionDecl): boolean {
   return !declaration.receiver && /^Test($|[^a-z])/.test(declaration.name);
 }
 
-async function runOneTest(declaration: FunctionDecl, context: EvaluationContext, diagnostics: Diagnostic[], verbose: boolean): Promise<boolean> {
+async function runOneTest(
+  declaration: FunctionDecl,
+  context: EvaluationContext,
+  diagnostics: Diagnostic[],
+  verbose: boolean,
+  importPath: string,
+  progress?: EvaluationProgressSink
+): Promise<boolean> {
+  emitEvaluationProgress(progress, { action: "test-start", importPath, testName: declaration.name });
   if (verbose) context.write(`=== RUN   ${declaration.name}\n`);
   const signatureError = testSignatureError(declaration);
   if (signatureError) {
     context.write(`    ${signatureError}\n`);
     context.write(`--- FAIL: ${declaration.name}\n`);
     diagnostics.push(testDiagnostic(declaration, `${declaration.name}: ${signatureError}`));
+    emitEvaluationProgress(progress, { action: "test-fail", importPath, testName: declaration.name });
     return true;
   }
 
@@ -2191,14 +2215,25 @@ async function runOneTest(declaration: FunctionDecl, context: EvaluationContext,
       runtimeFailure ? `${declaration.name}: ${runtimeFailure}` : `${declaration.name} failed`,
       runtimeFailureStack
     ));
+    emitEvaluationProgress(progress, { action: "test-fail", importPath, testName: declaration.name });
     return true;
   }
   if (state?.skipped) {
     context.write(`--- SKIP: ${declaration.name}\n`);
+    emitEvaluationProgress(progress, { action: "test-skip", importPath, testName: declaration.name });
     return false;
   }
   if (verbose) context.write(`--- PASS: ${declaration.name}\n`);
+  emitEvaluationProgress(progress, { action: "test-pass", importPath, testName: declaration.name });
   return false;
+}
+
+function emitEvaluationProgress(progress: EvaluationProgressSink | undefined, event: EvaluationProgressEvent): void {
+  try {
+    progress?.(event);
+  } catch {
+    // Progress sinks are observability hooks and must not affect runtime semantics.
+  }
 }
 
 function testSignatureError(declaration: FunctionDecl): string | undefined {

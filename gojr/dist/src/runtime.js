@@ -1636,8 +1636,9 @@ async function testProgram(ast, baseDiagnostics, options) {
                 return { diagnostics, output: context.output, ast };
             }
             let failed = false;
+            const testImportPath = options.importPath ?? options.packageName ?? "test";
             for (const declaration of tests) {
-                const testFailed = await runOneTest(declaration, context, diagnostics, options.testVerbose ?? false);
+                const testFailed = await runOneTest(declaration, context, diagnostics, options.testVerbose ?? false, testImportPath, options.onProgress);
                 failed ||= testFailed;
             }
             context.write(failed ? "FAIL\n" : "PASS\n");
@@ -1668,7 +1669,8 @@ async function testProgram(ast, baseDiagnostics, options) {
 function isTestFunctionDecl(declaration) {
     return !declaration.receiver && /^Test($|[^a-z])/.test(declaration.name);
 }
-async function runOneTest(declaration, context, diagnostics, verbose) {
+async function runOneTest(declaration, context, diagnostics, verbose, importPath, progress) {
+    emitEvaluationProgress(progress, { action: "test-start", importPath, testName: declaration.name });
     if (verbose)
         context.write(`=== RUN   ${declaration.name}\n`);
     const signatureError = testSignatureError(declaration);
@@ -1676,6 +1678,7 @@ async function runOneTest(declaration, context, diagnostics, verbose) {
         context.write(`    ${signatureError}\n`);
         context.write(`--- FAIL: ${declaration.name}\n`);
         diagnostics.push(testDiagnostic(declaration, `${declaration.name}: ${signatureError}`));
+        emitEvaluationProgress(progress, { action: "test-fail", importPath, testName: declaration.name });
         return true;
     }
     const testingT = declaration.signature.parameters.length === 0 ? undefined : makeTestingT(declaration.name);
@@ -1718,15 +1721,26 @@ async function runOneTest(declaration, context, diagnostics, verbose) {
     if (runtimeFailure || state?.failed) {
         context.write(`--- FAIL: ${declaration.name}\n`);
         diagnostics.push(testDiagnostic(declaration, runtimeFailure ? `${declaration.name}: ${runtimeFailure}` : `${declaration.name} failed`, runtimeFailureStack));
+        emitEvaluationProgress(progress, { action: "test-fail", importPath, testName: declaration.name });
         return true;
     }
     if (state?.skipped) {
         context.write(`--- SKIP: ${declaration.name}\n`);
+        emitEvaluationProgress(progress, { action: "test-skip", importPath, testName: declaration.name });
         return false;
     }
     if (verbose)
         context.write(`--- PASS: ${declaration.name}\n`);
+    emitEvaluationProgress(progress, { action: "test-pass", importPath, testName: declaration.name });
     return false;
+}
+function emitEvaluationProgress(progress, event) {
+    try {
+        progress?.(event);
+    }
+    catch {
+        // Progress sinks are observability hooks and must not affect runtime semantics.
+    }
 }
 function testSignatureError(declaration) {
     if (declaration.signature.results.length !== 0)
