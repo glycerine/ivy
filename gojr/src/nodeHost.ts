@@ -68,6 +68,7 @@ export interface NodeSourcePackageRequest {
   sheetJSON?: string;
   sheetsJSON?: string;
   testVerbose?: boolean;
+  testRun?: string;
 }
 
 export type NodeEvaluationWithPackagesResult = EvaluationResult & {
@@ -751,6 +752,7 @@ function evaluationOptionsFromNodeRequest(request: NodeSourcePackageRequest): Ev
   if (request.sheetsJSON) options.sheets = parseSheetsJson(request.sheetsJSON);
   if (request.argv) options.argv = request.argv;
   if (typeof request.testVerbose === "boolean") options.testVerbose = request.testVerbose;
+  if (typeof request.testRun === "string") options.testRun = request.testRun;
   return options;
 }
 

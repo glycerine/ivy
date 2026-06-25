@@ -1630,7 +1630,8 @@ async function testProgram(ast, baseDiagnostics, options) {
             await runInitFunctions(ast.functions, context);
             const topLevelCompletion = await executeTopLevelStatements(statements, context);
             expectNormalCompletion(topLevelCompletion, "top-level statements");
-            const tests = ast.functions.filter(isTestFunctionDecl);
+            const testFilter = testNameFilter(options.testRun, diagnostics, ast);
+            const tests = ast.functions.filter((declaration) => isTestFunctionDecl(declaration) && testFilter(declaration.name));
             if (tests.length === 0) {
                 context.write("testing: warning: no tests to run\nPASS\n");
                 return { diagnostics, output: context.output, ast };
@@ -1668,6 +1669,19 @@ async function testProgram(ast, baseDiagnostics, options) {
 }
 function isTestFunctionDecl(declaration) {
     return !declaration.receiver && /^Test($|[^a-z])/.test(declaration.name);
+}
+function testNameFilter(pattern, diagnostics, ast) {
+    if (!pattern)
+        return () => true;
+    try {
+        const regex = new RegExp(pattern);
+        return (name) => regex.test(name);
+    }
+    catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        diagnostics.push(runtimeDiagnostic(ast, "GOJR_TEST001", `invalid -run pattern ${JSON.stringify(pattern)}: ${message}`, error));
+        return () => false;
+    }
 }
 async function runOneTest(declaration, context, diagnostics, verbose, importPath, progress) {
     emitEvaluationProgress(progress, { action: "test-start", importPath, testName: declaration.name });
@@ -2463,6 +2477,8 @@ function packageMethodIntrinsic(declaration, importPath) {
     }
     if (importPath === "reflect" && (receiver.baseType === "rtype" || receiver.baseType === "reflect.rtype")) {
         switch (declaration.name) {
+            case "Kind":
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => reflectRtypeKind(args[0] ?? null, context));
             case "Name":
                 return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => RuntimeGoString.fromUtf8Text(reflectRtypeDescriptorText(args[0] ?? null, "GoJrName")));
             case "String":
@@ -2471,6 +2487,8 @@ function packageMethodIntrinsic(declaration, importPath) {
                 return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => RuntimeGoString.fromUtf8Text(reflectRtypeDescriptorText(args[0] ?? null, "GoJrPkgPath")));
             case "Implements":
                 return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => reflectRtypeImplements(args[0] ?? null, args[1] ?? null, context));
+            case "Elem":
+                return intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args, context) => reflectRtypeElem(args[0] ?? null, context));
             default:
                 return undefined;
         }
@@ -2628,6 +2646,7 @@ function internalAbiTypeDescriptor(typeText, context) {
     const type = canonicalRuntimeTypeName(normalizeTypeText(resolveRuntimeCompositeAliases(internalAbiCacheTypeText(typeText, context), context)));
     const names = internalAbiRuntimeTypeNames(context);
     const cacheKey = `${Object.values(names).join(":")}:${type}`;
+    const identityKey = `internal/abi.Type:${type}`;
     const cached = internalAbiTypeDescriptorCache.get(cacheKey);
     if (cached)
         return cached;
@@ -2638,7 +2657,7 @@ function internalAbiTypeDescriptor(typeText, context) {
             throwTypeError(next, names.type, `*${names.type}`);
         for (const [field, value] of struct.orderedFields())
             layout.set(field, value);
-    }, `internal/abi.Type:${cacheKey}`);
+    }, identityKey);
     internalAbiTypeDescriptorCache.set(cacheKey, pointer);
     layout = internalAbiDescriptorStruct(type, names, context);
     return pointer;
@@ -2929,6 +2948,35 @@ function reflectRtypeDescriptor(value) {
 function reflectRtypeRuntimeTypeText(value) {
     const descriptor = reflectRtypeDescriptor(value);
     return descriptor ? runtimeDescriptorText(descriptor, "GoJrTypeText") : "";
+}
+function reflectRtypeKind(value, context) {
+    const typeText = reflectRtypeRuntimeTypeText(value);
+    return typeText ? internalAbiKindForType(typeText, context) : 0n;
+}
+function reflectRtypeElem(value, context) {
+    const sourceType = reflectRtypeRuntimeTypeText(value);
+    const elementType = sourceType ? reflectRtypeElementTypeText(sourceType, context) : undefined;
+    if (!elementType) {
+        throw new GoJuniorPanic(`panic: reflect: Elem of invalid type ${reflectRtypeDescriptorText(value, "GoJrString")}`);
+    }
+    return reflectTypeInterfaceForTypeText(elementType, context);
+}
+function reflectRtypeElementTypeText(typeText, context) {
+    const type = internalAbiUnderlyingTypeText(typeText, context);
+    if (type.startsWith("*"))
+        return type.slice(1);
+    if (type.startsWith("[]"))
+        return type.slice(2);
+    const array = parseArrayOrSliceTypeText(type, context);
+    if (array)
+        return array.elementType;
+    const mapType = parseMapTypeText(type);
+    if (mapType)
+        return mapType.valueType;
+    const chanType = parseChanTypeText(type);
+    if (chanType)
+        return chanType.elementType;
+    return undefined;
 }
 function reflectRtypePointerForTypeText(typeText, context) {
     const abiPointer = internalAbiTypeDescriptor(typeText, context);
@@ -4037,24 +4085,50 @@ function reflectliteType(typeText, context) {
     if (type.startsWith("*")) {
         info.elem = reflectliteType(type.slice(1), context);
     }
+    object.Name = hostCallable("internal/reflectlite.Type.Name", () => RuntimeGoString.fromUtf8Text(reflectliteTypeName(type)), { signature: hostSignature([], ["string"]) });
+    object.PkgPath = hostCallable("internal/reflectlite.Type.PkgPath", () => RuntimeGoString.fromUtf8Text(reflectliteTypePkgPath(type)), { signature: hostSignature([], ["string"]) });
+    object.Size = hostCallable("internal/reflectlite.Type.Size", () => internalAbiSizeForType(type, context), { signature: hostSignature([], ["uintptr"]) });
     object[REFLECTLITE_TYPE_INFO] = info;
-    object.Kind = hostCallable("internal/reflectlite.Type.Kind", () => info.kind);
-    object.String = hostCallable("internal/reflectlite.Type.String", () => info.typeText);
+    object.Kind = hostCallable("internal/reflectlite.Type.Kind", () => info.kind, { signature: hostSignature([], ["internal/reflectlite.Kind"]) });
+    object.String = hostCallable("internal/reflectlite.Type.String", () => info.typeText, { signature: hostSignature([], ["string"]) });
     object.Elem = hostCallable("internal/reflectlite.Type.Elem", () => {
         if (!info.elem)
             throw new GoJuniorRuntimeError(`reflectlite: Elem of ${type}`);
         return info.elem;
-    });
-    object.Comparable = hostCallable("internal/reflectlite.Type.Comparable", () => true);
+    }, { signature: hostSignature([], ["internal/reflectlite.Type"]) });
+    object.Comparable = hostCallable("internal/reflectlite.Type.Comparable", () => true, { signature: hostSignature([], ["bool"]) });
     object.AssignableTo = hostCallable("internal/reflectlite.Type.AssignableTo", (args) => {
         const target = reflectliteTypeInfo(args[0] ?? null);
         return Boolean(target && reflectliteAssignableTo(info, target, context));
-    });
+    }, { signature: hostSignature(["internal/reflectlite.Type"], ["bool"]) });
     object.Implements = hostCallable("internal/reflectlite.Type.Implements", (args) => {
         const target = reflectliteTypeInfo(args[0] ?? null);
         return Boolean(target && reflectliteAssignableTo(info, target, context));
-    });
+    }, { signature: hostSignature(["internal/reflectlite.Type"], ["bool"]) });
+    object.common = hostCallable("internal/reflectlite.Type.common", () => null, { signature: hostSignature([], ["*internal/abi.Type"]) });
+    object.uncommon = hostCallable("internal/reflectlite.Type.uncommon", () => null, { signature: hostSignature([], ["*internal/abi.UncommonType"]) });
     return object;
+}
+function hostSignature(parameterTypes, resultTypes) {
+    return {
+        parameters: parameterTypes.map((text) => ({ type: { text }, variadic: false })),
+        results: resultTypes.map((text) => ({ type: { text }, variadic: false }))
+    };
+}
+function reflectliteTypeName(typeText) {
+    const type = normalizeTypeText(typeText);
+    if (type.startsWith("*"))
+        return "";
+    const qualified = packageQualifiedRuntimeTypeNameParts(type);
+    if (qualified)
+        return qualified.localName;
+    if (/^[A-Za-z_]\w*$/.test(type))
+        return type;
+    return "";
+}
+function reflectliteTypePkgPath(typeText) {
+    const qualified = packageQualifiedRuntimeTypeNameParts(normalizeTypeText(typeText));
+    return qualified?.importPath ?? "";
 }
 function reflectliteValue(value, context, set) {
     const type = reflectliteType(reflectliteTypeTextOfValue(value), context);
@@ -4570,6 +4644,7 @@ function hostCallable(name, call, options = {}) {
     return {
         kind: "HostCallable",
         name,
+        ...(options.signature ? { signature: options.signature } : {}),
         ...(options.tupleResult ? { tupleResult: true } : {}),
         call
     };
@@ -4680,7 +4755,7 @@ function predeclarePackageVariables(declarations, pkg, context) {
         for (const declaration of statement.declarations) {
             if (declaration.name === "_")
                 continue;
-            const checkedType = declaration.type ? varsByName.get(declaration.name)?.Type() : null;
+            const checkedType = varsByName.get(declaration.name)?.Type();
             const typeText = checkedType
                 ? GoTypesTypeString(checkedType, GoTypesRelativeTo(pkg))
                 : declaration.type?.text;
@@ -4945,7 +5020,9 @@ function qualifyBareGenericRuntimeTypeArguments(typeText, packageName) {
 function packageBoundaryResultValue(value, typeText, calleePackageName, callerPackageName, calleeContext) {
     const interfaceBoundary = isDynamicInterfaceBoundaryType(typeText, calleeContext);
     const owner = runtimeTypeOwnerPackagePath(typeText, calleeContext);
-    const dynamicOwner = interfaceBoundary ? runtimeDynamicValueOwnerPackagePath(value) : undefined;
+    const dynamicOwner = interfaceBoundary
+        ? runtimeDynamicValueOwnerPackagePath(value) ?? runtimeValueLocalOwnerFallback(value, calleePackageName)
+        : undefined;
     const effectiveOwner = dynamicOwner ?? owner;
     if (effectiveOwner && callerPackageName === effectiveOwner)
         return internalizePackageRuntimeValue(value, effectiveOwner);
@@ -5924,14 +6001,14 @@ function typeSwitchBindingValue(switchValue, clause, context) {
 async function executeFor(statement, context, label) {
     if (statement.range) {
         const source = await evaluateExpression(statement.range.source, context);
-        const keyTypeText = integerRangeKeyTypeText(statement.range.source, source, context);
+        const rangeTypes = rangeIterationTypeTexts(statement.range.source, source, context);
         const entries = await rangeEntries(source, context);
         for (const [index, value] of entries) {
             const completion = await context.childScopeAsync(async () => {
                 if (statement.range?.keyName) {
                     if (statement.range.keyName !== "_") {
                         if (statement.range.define)
-                            context.declare(statement.range.keyName, index, true, keyTypeText ?? inferredTypeText(index));
+                            context.declare(statement.range.keyName, index, true, rangeTypes.key ?? inferredTypeText(index));
                         else
                             context.assign(statement.range.keyName, index);
                     }
@@ -5942,7 +6019,7 @@ async function executeFor(statement, context, label) {
                 if (statement.range?.valueName) {
                     if (statement.range.valueName !== "_") {
                         if (statement.range.define)
-                            context.declare(statement.range.valueName, value, true, inferredTypeText(value));
+                            context.declare(statement.range.valueName, value, true, rangeTypes.value ?? inferredTypeText(value));
                         else
                             context.assign(statement.range.valueName, value);
                     }
@@ -6158,7 +6235,8 @@ async function executeAssign(statement, context) {
                 let value = prepareValueForAssignmentTarget(values[index] ?? null, target, source, context);
                 if (statement.operator && statement.operator !== "=") {
                     const current = await evaluateExpression(target, context);
-                    await assignExpressionTarget(target, applyCompoundAssignment(statement.operator, current, value), context);
+                    const compound = applyCompoundAssignment(statement.operator, current, value);
+                    await assignExpressionTarget(target, materializeValueForType(compound, assignmentTargetExpectedTypeText(target, context), context), context);
                 }
                 else {
                     await assignExpressionTarget(target, value, context, source);
@@ -6372,7 +6450,7 @@ async function executeIncDec(statement, context) {
     const next = statement.operator === "++"
         ? addNumbers(current, 1n)
         : subtractNumbers(current, 1n);
-    await assignExpressionTarget(statement.target, next, context);
+    await assignExpressionTarget(statement.target, materializeValueForType(next, assignmentTargetExpectedTypeText(statement.target, context), context), context);
 }
 async function assignExpressionTarget(target, value, context, source) {
     if (target.kind === "Identifier") {
@@ -9055,6 +9133,9 @@ function prepareAssignableToType(value, typeText, role, context) {
     if (value instanceof RuntimeNamedValue) {
         if (value.typeName === type)
             return value;
+        if (runtimeTypeAssignableMatchInContext(value.typeName, type, context)) {
+            return value.typeName === type ? value : new RuntimeNamedValue(type, value.value);
+        }
         value = value.value;
     }
     const alias = context?.aliasType(type);
@@ -9234,6 +9315,8 @@ function valueImplementsInterface(value, interfaceType, context) {
             method.signature.results.length === 1 &&
             normalizeTypeText(method.signature.results[0]?.type.text ?? "") === "string");
     }
+    if (isRuntimeObject(value) && runtimeObjectImplementsInterface(value, interfaceType, context))
+        return true;
     const receiver = dereferenceIfPointer(value);
     const receiverType = value instanceof RuntimePointer
         ? value.typeName
@@ -9255,6 +9338,19 @@ function valueImplementsInterface(value, interfaceType, context) {
             !isTypedNilPointer(candidate.receiver))
             return false;
         if (!signaturesCompatible(candidate.method.declaration.signature, method.signature, context))
+            return false;
+    }
+    return true;
+}
+function runtimeObjectImplementsInterface(value, interfaceType, context) {
+    for (const method of interfaceType.methods) {
+        const candidate = value[method.name];
+        if (candidate === undefined)
+            return false;
+        if (!isRuntimeCallable(candidate) && !isGoJuniorFunction(candidate))
+            return false;
+        const signature = candidate.signature;
+        if (signature && !signaturesCompatible(signature, method.signature, context))
             return false;
     }
     return true;
@@ -10392,6 +10488,9 @@ function externalizePackageRuntimeValue(value, packageName) {
         markPackageRuntimeWrapper(wrapped, packageName, "externalized", value);
         wrapped.value = value.value === null ? null : externalizePackageRuntimeValue(value.value, packageName);
         return wrapped;
+    }
+    if (value instanceof RuntimeTypedNilValue) {
+        return new RuntimeTypedNilValue(qualifyLocalRuntimeTypeName(value.typeName, packageName));
     }
     if (value instanceof RuntimePointer) {
         const cached = cachedPackageRuntimeValue(externalizedPackageValueCache, value, packageName);
@@ -11656,6 +11755,20 @@ async function rangeEntries(source, context) {
         return Object.entries(source).map(([key, value]) => [key, value]);
     }
     throw new GoJuniorRuntimeError(`${formatValue(source)} is not rangeable`);
+}
+function rangeIterationTypeTexts(sourceExpression, source, context) {
+    const sourceType = expressionDeclaredTypeText(sourceExpression, context, source);
+    const normalized = normalizeTypeText(sourceType ?? "");
+    if (normalized === "string")
+        return { key: "int", value: "rune" };
+    const mapType = parseMapTypeText(normalized);
+    if (mapType)
+        return { key: mapType.keyType, value: mapType.valueType };
+    const arrayType = parseArrayOrSliceTypeText(normalized, context);
+    if (arrayType)
+        return { key: "int", value: arrayType.elementType };
+    const integerType = integerRangeKeyTypeText(sourceExpression, source, context);
+    return integerType ? { key: integerType, value: integerType } : {};
 }
 function integerRangeKeyTypeText(sourceExpression, source, context) {
     const actual = unwrapNamed(source);

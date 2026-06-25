@@ -629,6 +629,8 @@ function evaluationOptionsFromNodeRequest(request) {
         options.argv = request.argv;
     if (typeof request.testVerbose === "boolean")
         options.testVerbose = request.testVerbose;
+    if (typeof request.testRun === "string")
+        options.testRun = request.testRun;
     return options;
 }
 function loadSourcePackageFromProvider(provider, importPath, requestedFrom, diagnostics) {

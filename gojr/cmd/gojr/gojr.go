@@ -102,6 +102,7 @@ type evalWithPackagesRequest struct {
 	Progress           bool                 `json:"progress,omitempty"`
 	Argv               []string             `json:"argv,omitempty"`
 	TestVerbose        bool                 `json:"testVerbose"`
+	TestRun            string               `json:"testRun,omitempty"`
 }
 
 type runtimePackageSpec struct {
@@ -588,6 +589,7 @@ func runTest(rt *nodeRuntime, args []string) (bool, error) {
 	randomSeed := flags.String("random-seed", "", "deterministic scheduler/random seed; alias for --seed")
 	jsonMode := flags.Bool("json", false, "print a machine-readable JSON result")
 	verbose := flags.Bool("v", false, "verbose test output")
+	testRun := flags.String("run", "", "regular expression selecting tests to run")
 	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; js_gojr is appended")
 	artifactRoot := flags.String("artifact-root", "", "exact js_gojr artifact root directory")
 	var packageFlags packageFlag
@@ -600,7 +602,7 @@ func runTest(rt *nodeRuntime, args []string) (bool, error) {
 	_ = seed
 	_ = randomSeed
 	if flags.NArg() != 1 {
-		return false, fmt.Errorf("usage: gojr test [-v] [--json] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] PATH")
+		return false, fmt.Errorf("usage: gojr test [-v] [-run REGEXP] [--json] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] PATH")
 	}
 	target := flags.Arg(0)
 	targets, err := readGoTestTargets(target)
@@ -615,7 +617,7 @@ func runTest(rt *nodeRuntime, args []string) (bool, error) {
 	results := make([]evalResult, 0, len(targets)*2)
 	ok := true
 	for _, testTarget := range targets {
-		targetResults, err := runOneGoTestTarget(rt, testTarget, packages, sourceRootFlags, *verbose, !*jsonMode, strings.TrimSpace(*packageCacheParent), strings.TrimSpace(*artifactRoot))
+		targetResults, err := runOneGoTestTarget(rt, testTarget, packages, sourceRootFlags, *verbose, strings.TrimSpace(*testRun), !*jsonMode, strings.TrimSpace(*packageCacheParent), strings.TrimSpace(*artifactRoot))
 		if err != nil {
 			return false, err
 		}
@@ -827,7 +829,7 @@ gojr run [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [-pkgdi
 gojr compile [--json] [--sheet-json JSON] [--pkg import=DIR] [--srcroot DIR] [--expr SOURCE] [FILE|DIR|-]
   parse and typecheck Go-junior source without executing it
 
-gojr test [--json] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] PATH
+gojr test [--json] [-run REGEXP] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] [--seed SEED] PATH
   run Go-junior tests from a .go file or package directory
 
 gojr build [--json] [-importpath PATH] [--pkg import=DIR] [--srcroot DIR] [-pkgdir DIR|-artifact-root DIR] TARGET
@@ -980,7 +982,7 @@ func testLoadedSourceFiles(rt *nodeRuntime, pending *strings.Builder, targets []
 		return fmt.Errorf("cannot run tests while multi-line input is pending; use .clear first")
 	}
 	for _, target := range targets {
-		results, err := runOneGoTestTarget(rt, target, nil, nil, true, true, "", "")
+		results, err := runOneGoTestTarget(rt, target, nil, nil, true, "", true, "", "")
 		if err != nil {
 			return err
 		}
@@ -1432,7 +1434,7 @@ func readGoTestPackageDir(dir string, onlyFile string) (testPackageTarget, error
 	return target, nil
 }
 
-func runOneGoTestTarget(rt *nodeRuntime, target testPackageTarget, packageSpecs []runtimePackageSpec, explicitRoots []string, verbose bool, progress bool, packageCacheParent string, artifactRoot string) ([]evalResult, error) {
+func runOneGoTestTarget(rt *nodeRuntime, target testPackageTarget, packageSpecs []runtimePackageSpec, explicitRoots []string, verbose bool, testRun string, progress bool, packageCacheParent string, artifactRoot string) ([]evalResult, error) {
 	sourceRoots := buildSourceRoots(target.Dir, target.ImportPath, explicitRoots)
 	var results []evalResult
 	if len(target.InternalTestFiles) > 0 || len(target.ExternalTestFiles) == 0 {
@@ -1449,6 +1451,7 @@ func runOneGoTestTarget(rt *nodeRuntime, target testPackageTarget, packageSpecs 
 			CompilerVersion:    toolchainCompilerVersion(),
 			Progress:           progress,
 			TestVerbose:        verbose,
+			TestRun:            testRun,
 		})
 		if err != nil {
 			return nil, err
@@ -1473,6 +1476,7 @@ func runOneGoTestTarget(rt *nodeRuntime, target testPackageTarget, packageSpecs 
 			CompilerVersion:    toolchainCompilerVersion(),
 			Progress:           progress,
 			TestVerbose:        verbose,
+			TestRun:            testRun,
 		})
 		if err != nil {
 			return nil, err

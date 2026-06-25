@@ -3,6 +3,7 @@ import {
   cellDependency,
   evaluatePackageSourceFiles,
   evaluateSource,
+  evaluateSourceFilesWithPackagesOnNode,
   evaluateSourceFiles,
   evaluateSourcePackageGraph,
   formatGoNode,
@@ -2701,6 +2702,67 @@ func main() {
     expect(result.output).toEqual(["ptr,string,ptr\n", "\n"]);
   });
 
+  test("runs source-built reflect Type Elem through runtime descriptors", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/reflelem/main.go",
+      source: `package main
+
+import "reflect"
+
+func main() {
+  print(reflect.TypeOf(map[string]int{}).Elem().Kind().String() + "\\n")
+  print(reflect.TypeOf([2]string{}).Elem().Kind().String() + "\\n")
+  print(reflect.TypeOf([]float64{}).Elem().Kind().String() + "\\n")
+  print(reflect.TypeOf((*error)(nil)).Elem().Kind().String() + "\\n")
+  print(reflect.TypeOf(make(chan byte)).Elem().Kind().String() + "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["int\n", "string\n", "float64\n", "interface\n", "uint8\n"]);
+  });
+
+  test("uses source-built reflect Type identity as a map key", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/refltypemap/main.go",
+      source: `package main
+
+import "reflect"
+
+type wireType struct {
+  A *int
+}
+
+func main() {
+  a := reflect.TypeFor[wireType]()
+  b := reflect.TypeFor[wireType]()
+  c := reflect.TypeOf((*wireType)(nil)).Elem()
+  m := make(map[reflect.Type]int)
+  m[a] = 11
+  firstB := m[b]
+  firstC := m[c]
+  m[b] = 12
+  m[c] = 13
+  print(len(m), ":", firstB, ":", firstC, ":", m[a], ":", m[b], ":", m[c], "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output.join("")).toEqual("1:11:11:13:13:13\n");
+  });
+
   test("runs source-built flag default printing through reflect.New", async () => {
     const sourcePackageProvider = createNodeSourcePackageProvider([]);
     if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
@@ -4768,6 +4830,63 @@ var ErrVarintOverflow = DecodingError{errors.New("varint integer overflow")}
     expect(graph.diagnostics).toEqual([]);
   });
 
+  test("keeps callee-owned concrete methods for imported interface returns", async () => {
+    const result = await evaluateSourceFilesWithPackagesOnNode({
+      importPath: "example.com/main",
+      packageName: "main",
+      files: [{
+        filename: "main.go",
+        source: `package main
+
+import "example.com/dep"
+
+h := dep.New()
+n, err := h.Write([]byte{1, 2, 3})
+if err != nil { return -1 }
+return n
+`
+      }],
+      packages: [
+        {
+          importPath: "example.com/hashlike",
+          files: [{
+            filename: "hashlike.go",
+            source: `package hashlike
+
+type Writer interface {
+  Write([]byte) (int, error)
+}
+`
+          }]
+        },
+        {
+          importPath: "example.com/dep",
+          files: [{
+            filename: "dep.go",
+            source: `package dep
+
+import "example.com/hashlike"
+
+type digest struct { total int }
+
+func (d *digest) Write(p []byte) (int, error) {
+  d.total += len(p)
+  return d.total, nil
+}
+
+func New() hashlike.Writer {
+  return &digest{}
+}
+`
+          }]
+        }
+      ]
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.value).toBe(3n);
+  });
+
   test("assigns imported named integer constants to local interfaces", async () => {
     const graph = await evaluateSourcePackageGraph([
       {
@@ -6788,6 +6907,80 @@ return u0
     expect(result.value).toBe(2251799813685249n);
   });
 
+  test("infers short var uint64 types from package array element indexes", async () => {
+    const result = await expectRuns(`
+var iv = [2]uint64{1, 13503953896175478587}
+
+func grab() uint64 {
+  v9 := iv[1]
+  return v9
+}
+
+return grab()
+`);
+
+    expect(result.value).toBe(13503953896175478587n);
+  });
+
+  test("wraps typed unsigned compound assignment and incdec like Go", async () => {
+    const result = await expectRuns(`
+var a uint64 = 18446744073709551615
+a += 1
+var b uint64 = 1
+b <<= 64
+var c uint8 = 255
+c++
+var d uint8
+d--
+return a, b, c, d
+`);
+
+    expect(result.values).toEqual([0n, 0n, 0n, 255n]);
+  });
+
+  test("declares range values using array and slice element types", async () => {
+    const result = await expectRuns(`
+var words = [2]uint64{1, 10231371594470170519}
+var got uint64
+for _, s := range words[:] {
+  got = s
+}
+return got
+`);
+
+    expect(result.value).toBe(10231371594470170519n);
+  });
+
+  test("predeclares package variables with inferred checked types across source files", async () => {
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "example.com/u64",
+      files: [
+        {
+          filename: "/workspace/u64/data.go",
+          source: `package u64
+
+var iv = [2]uint64{1, 13503953896175478587}
+`
+        },
+        {
+          filename: "/workspace/u64/grab.go",
+          source: `package u64
+
+func Grab() uint64 {
+  v9 := iv[1]
+  return v9
+}
+
+var Got = Grab()
+`
+        }
+      ]
+    }]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages["example.com/u64"]?.Got).toBe(13503953896175478587n);
+  });
+
   test("infers short var types from single-result function signatures", async () => {
     const result = await expectRuns(`
 func mask64Bits(cond int) uint64 {
@@ -8389,6 +8582,41 @@ return p.run()
 `);
 
     expect(result.value).toBe(0n);
+  });
+
+  test("keeps iter.Pull pointer results ordered with ok through function fields", async () => {
+    const result = await expectRuns(`
+import "iter"
+
+type reply struct {
+  n int
+}
+
+type parser struct {
+  next func() (*reply, bool)
+  stop func()
+}
+
+func seq(yield func(*reply) bool) {
+  yield(&reply{n: 2595})
+}
+
+func (p *parser) run() (int, bool, bool) {
+  if p.next == nil {
+    p.next, p.stop = iter.Pull[*reply](seq)
+  }
+  defer p.stop()
+  got, ok := p.next()
+  empty, ok2 := p.next()
+  return got.n, ok, empty == nil && !ok2
+}
+
+p := &parser{}
+a, b, c := p.run()
+return a, b, c
+`);
+
+    expect(result.values).toEqual([2595n, true, true]);
   });
 
   test("converts ordinary functions to named function types", async () => {
