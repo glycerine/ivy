@@ -2502,6 +2502,9 @@ function packageFunctionIntrinsic(declaration: FunctionDecl, importPath?: string
     intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (_args, context, typeArguments) =>
       internalAbiTypeDescriptor(typeArguments?.[0] ?? "interface{}", context));
   }
+  if (importPath === "internal/abi" && declaration.name === "EscapeNonString") {
+    intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, () => null);
+  }
   if (importPath === "crypto/internal/constanttime" && declaration.name === "boolToUint8") {
     intrinsic = intrinsicGoJuniorFunction(declaration.name, declaration.signature, (args) => toBool(args[0] ?? false) ? 1n : 0n);
   }
@@ -4686,11 +4689,12 @@ function goJuniorFunctionValue(
         ? args.map((arg, index) => packageBoundaryArgumentValue(
           arg,
           parameterTypeForArgument(boundarySignature, index),
-          packageName
+          packageName,
+          parentContext.importPath()
         ))
         : args;
       const callReceiver = crossesPackageBoundary
-        ? packageBoundaryArgumentValue(boundReceiver ?? null, boundaryReceiverType?.text, packageName)
+        ? packageBoundaryArgumentValue(boundReceiver ?? null, boundaryReceiverType?.text, packageName, parentContext.importPath())
         : boundReceiver;
       const invoke = () => context.functionCallAsync(() => context.childScopeAsync(async () => {
         const activeTypeArgumentBindings = bindFunctionTypeParameters(declaration, signature, callArgs, context, typeArguments, typeArgumentBindings);
@@ -4777,10 +4781,19 @@ function parameterTypeForArgument(signature: FunctionDecl["signature"], index: n
   return parameter?.type.text;
 }
 
-function packageBoundaryArgumentValue(value: RuntimeValue, typeText: string | undefined, calleePackageName: string): RuntimeValue {
+function packageBoundaryArgumentValue(
+  value: RuntimeValue,
+  typeText: string | undefined,
+  calleePackageName: string,
+  callerPackageName: string | undefined
+): RuntimeValue {
   const owner = typeText ? runtimeTypeOwnerPackagePath(typeText) : undefined;
-  return owner && owner !== calleePackageName
-    ? externalizePackageRuntimeValue(value, owner)
+  const dynamicOwner = isDynamicInterfaceBoundaryType(typeText)
+    ? runtimeValueOwnerPackagePath(value) ?? runtimeValueLocalOwnerFallback(value, callerPackageName)
+    : undefined;
+  const effectiveOwner = owner ?? dynamicOwner;
+  return effectiveOwner && effectiveOwner !== calleePackageName
+    ? externalizePackageRuntimeValue(value, effectiveOwner)
     : internalizePackageRuntimeValue(value, calleePackageName);
 }
 
@@ -4791,8 +4804,65 @@ function packageBoundaryResultValue(
   callerPackageName: string | undefined
 ): RuntimeValue {
   const owner = runtimeTypeOwnerPackagePath(typeText);
-  if (owner && callerPackageName === owner) return internalizePackageRuntimeValue(value, owner);
-  return externalizePackageRuntimeValue(value, owner ?? calleePackageName);
+  const dynamicOwner = isDynamicInterfaceBoundaryType(typeText) ? runtimeValueOwnerPackagePath(value) : undefined;
+  const effectiveOwner = owner ?? dynamicOwner;
+  if (effectiveOwner && callerPackageName === effectiveOwner) return internalizePackageRuntimeValue(value, effectiveOwner);
+  return externalizePackageRuntimeValue(value, effectiveOwner ?? calleePackageName);
+}
+
+function isDynamicInterfaceBoundaryType(typeText: string | undefined): boolean {
+  const type = normalizeTypeText(typeText ?? "");
+  return type === "any" || type === "interface{}" || type.startsWith("interface{");
+}
+
+function runtimeValueOwnerPackagePath(value: RuntimeValue): string | undefined {
+  if (value instanceof RuntimeInterfaceValue) {
+    return runtimeValueOwnerPackagePath(value.value) ?? runtimeTypeOwnerPackagePath(value.interfaceType);
+  }
+  if (value instanceof RuntimeNamedValue) {
+    return runtimeTypeOwnerPackagePath(value.typeName) ?? runtimeValueOwnerPackagePath(value.value);
+  }
+  if (value instanceof RuntimeTypedNilValue) return runtimeTypeOwnerPackagePath(value.typeName);
+  if (value instanceof RuntimePointer) return runtimeTypeOwnerPackagePath(value.typeName) ?? runtimeValueOwnerPackagePath(value.get());
+  if (value instanceof RuntimeStruct) return runtimeTypeOwnerPackagePath(value.typeName);
+  if (value instanceof RuntimeMap) return runtimeTypeOwnerPackagePath(`map[${value.keyType}]${value.valueType}`);
+  if (value instanceof RuntimeChannel) return runtimeTypeOwnerPackagePath(`chan ${value.elementType}`);
+  return undefined;
+}
+
+function runtimeValueLocalOwnerFallback(value: RuntimeValue, callerPackageName: string | undefined): string | undefined {
+  if (!callerPackageName) return undefined;
+  const type = runtimeValueConcreteTypeText(value);
+  return type && runtimeTypeNeedsPackageOwner(type) ? callerPackageName : undefined;
+}
+
+function runtimeValueConcreteTypeText(value: RuntimeValue): string | undefined {
+  if (value instanceof RuntimeInterfaceValue) return runtimeValueConcreteTypeText(value.value);
+  if (value instanceof RuntimeNamedValue) return value.typeName;
+  if (value instanceof RuntimeTypedNilValue) return value.typeName;
+  if (value instanceof RuntimePointer) return `*${value.typeName}`;
+  if (value instanceof RuntimeStruct) return value.typeName;
+  if (value instanceof RuntimeMap) return `map[${value.keyType}]${value.valueType}`;
+  if (value instanceof RuntimeChannel) return `chan ${value.elementType}`;
+  if (Array.isArray(value)) return arrayTypeTexts.get(value);
+  return undefined;
+}
+
+function runtimeTypeNeedsPackageOwner(typeText: string): boolean {
+  const type = normalizeTypeText(typeText);
+  if (!type || runtimeTypeOwnerPackagePath(type)) return false;
+  if (isPredeclaredType(type) || isUnsafePointerType(type)) return false;
+  if (type.startsWith("*")) return runtimeTypeNeedsPackageOwner(type.slice(1));
+  if (type.startsWith("[]")) return runtimeTypeNeedsPackageOwner(type.slice(2));
+  const arrayType = parseArrayOrSliceTypeText(type);
+  if (arrayType) return runtimeTypeNeedsPackageOwner(arrayType.elementType);
+  const mapType = parseMapTypeText(type);
+  if (mapType) return runtimeTypeNeedsPackageOwner(mapType.keyType) || runtimeTypeNeedsPackageOwner(mapType.valueType);
+  const chanType = parseChanTypeText(type);
+  if (chanType) return runtimeTypeNeedsPackageOwner(chanType.elementType);
+  const generic = genericTypeArguments(type);
+  if (generic) return runtimeTypeNeedsPackageOwner(generic.base) || generic.args.some(runtimeTypeNeedsPackageOwner);
+  return /^[A-Za-z_]\w*$/.test(type);
 }
 
 function expandFunctionReturnValues(signature: FunctionDecl["signature"], values: RuntimeValue[]): RuntimeValue[] {
@@ -7161,11 +7231,12 @@ function methodForValue(value: RuntimeValue, methodName: string, context: Evalua
     const direct = context.methodFor(declaredReceiverType, methodName);
     if (direct) return { method: direct, receiver: value };
   }
-  const actual = dereferenceIfPointer(value);
-  const receiverType = actual instanceof RuntimeStruct
+  const dereferenced = dereferenceIfPointer(value);
+  const actual = unwrapNamed(dereferenced);
+  const receiverType = dereferenced instanceof RuntimeNamedValue
+    ? dereferenced.typeName
+    : actual instanceof RuntimeStruct
     ? actual.typeName
-    : actual instanceof RuntimeNamedValue
-      ? actual.typeName
       : actual instanceof RuntimeTypedNilValue
         ? nilReceiverTypeName(actual)
       : undefined;
@@ -8593,7 +8664,7 @@ function resolveRuntimeCompositeAliases(typeText: string, context?: EvaluationCo
 }
 
 function runtimeValueMatchesType(value: RuntimeValue, typeText: string, context?: EvaluationContext): boolean {
-  const type = normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
+  const type = resolveRuntimeTrueAliases(resolveRuntimeCompositeAliases(context?.resolveImportedTypeText(typeText) ?? typeText, context), context);
   if (value instanceof RuntimeInterfaceValue) {
     if (type === "nil") return value.value === null;
     if (value.value === null) return false;
@@ -8606,11 +8677,11 @@ function runtimeValueMatchesType(value: RuntimeValue, typeText: string, context?
   const interfaceType = context?.interfaceDef(type);
   if (interfaceType && context) return valueImplementsInterface(value, interfaceType, context);
   if (value instanceof RuntimeNamedValue) {
-    return canonicalRuntimeTypeName(normalizeTypeText(value.typeName)) === canonicalRuntimeTypeName(type);
+    return runtimeTypeIdentityMatchInContext(value.typeName, type, context);
   }
   if (value instanceof RuntimeTypedNilValue) {
     if (isUnsafePointerType(type)) return isUnsafePointerType(value.typeName) || value.typeName.startsWith("*");
-    if (type.startsWith("*")) return runtimeTypeAssignableMatch(value.typeName, type);
+    if (type.startsWith("*")) return runtimeTypeIdentityMatchInContext(value.typeName, type, context);
   }
   if (isUnsafePointerType(type)) return value instanceof RuntimeNamedValue && isUnsafePointerType(value.typeName);
   if (type === "string") return isRuntimeString(value);
@@ -8618,17 +8689,17 @@ function runtimeValueMatchesType(value: RuntimeValue, typeText: string, context?
   if (isIntegerType(type)) return type === "int64" && typeof value === "bigint" && integerInRange(value, type);
   if (isFloatType(type)) return typeof value === "number";
   if (isComplexType(type)) return isComplexValue(value);
-  if (type.startsWith("*")) return value instanceof RuntimePointer && runtimeTypeAssignableMatch(value.typeName, type.slice(1));
-  if (value instanceof RuntimeStruct) return value.typeName === type;
+  if (type.startsWith("*")) return value instanceof RuntimePointer && runtimeTypeIdentityMatchInContext(value.typeName, type.slice(1), context);
+  if (value instanceof RuntimeStruct) return runtimeTypeIdentityMatchInContext(value.typeName, type, context);
   if (value instanceof RuntimeMap) {
     const mapType = parseMapTypeText(type);
     return Boolean(mapType &&
-      runtimeTypeAssignableMatch(value.keyType, mapType.keyType) &&
-      runtimeTypeAssignableMatch(value.valueType, mapType.valueType));
+      runtimeTypeIdentityMatchInContext(value.keyType, mapType.keyType, context) &&
+      runtimeTypeIdentityMatchInContext(value.valueType, mapType.valueType, context));
   }
   if (value instanceof RuntimeChannel) {
     const chanType = parseChanTypeText(type);
-    return Boolean(chanType && runtimeTypeAssignableMatch(value.elementType, chanType.elementType));
+    return Boolean(chanType && runtimeTypeIdentityMatchInContext(value.elementType, chanType.elementType, context));
   }
   if (type.startsWith("[]") || /^\[[0-9]*\]/.test(type)) return Array.isArray(value);
   if (type.startsWith("func(")) return isRuntimeCallable(value) || isGoJuniorFunction(value);
@@ -8677,6 +8748,11 @@ function runtimeTypeAssignableMatchInContext(actual: string, expected: string, c
     runtimeTypeNameInContext(actual, context),
     runtimeTypeNameInContext(expected, context)
   );
+}
+
+function runtimeTypeIdentityMatchInContext(actual: string, expected: string, context?: EvaluationContext): boolean {
+  return canonicalRuntimeTypeName(runtimeTypeNameInContext(actual, context)) ===
+    canonicalRuntimeTypeName(runtimeTypeNameInContext(expected, context));
 }
 
 function retagRuntimePointer(pointer: RuntimePointer, typeName: string): RuntimePointer {
@@ -9445,7 +9521,8 @@ function externalizePackageRuntimeValue(value: RuntimeValue, packageName: string
       ...value,
       ...(signature ? { signature } : {}),
       async call(args, context, typeArguments) {
-        return externalizePackageRuntimeValue(await value.call(args, context, typeArguments), packageName);
+        const result = await value.call(args, context, typeArguments);
+        return value.callContext ? result : externalizePackageRuntimeValue(result, packageName);
       }
     };
   }

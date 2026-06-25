@@ -6105,6 +6105,47 @@ func init() {
     expect(graph.packages.app?.Seen).toBe(1n);
   });
 
+  test("preserves interface dynamic package identity across imported calls", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "box",
+        files: [{
+          filename: "/workspace/box/box.go",
+          source: `package box
+
+func RoundTrip(v any) any {
+  return v
+}
+`
+        }]
+      },
+      {
+        importPath: "app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "box"
+
+type hidden struct {
+  value int
+}
+
+var Seen int
+
+func init() {
+  h := &hidden{value: 7}
+  Seen = box.RoundTrip(h).(*hidden).value
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages.app?.Seen).toBe(7n);
+  });
+
   test("REPL checker accepts keyed generic struct literals", async () => {
     const session = new GoJuniorSession();
 
@@ -6377,6 +6418,31 @@ x := newIndirect[int, string](nil)
 return x.node.isEntry, x.parent == nil
 `);
     expect(result.values).toEqual([false, true]);
+  });
+
+  test("promotes methods from embedded instantiated pointer fields after any round trips", async () => {
+    const result = await expectRuns(`
+type canonMap[T comparable] struct {
+  value T
+}
+
+func (m *canonMap[T]) Load(key T) *T {
+  return &m.value
+}
+
+type uniqueMap[T comparable] struct {
+  *canonMap[T]
+}
+
+func round(v any) any {
+  return v
+}
+
+u := &uniqueMap[int]{canonMap: &canonMap[int]{value: 7}}
+m := round(u).(*uniqueMap[int])
+return *m.Load(1)
+`);
+    expect(result.value).toBe(7n);
   });
 
   test("keeps standard iter intrinsic ahead of cached package payloads", async () => {
