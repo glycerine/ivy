@@ -3,6 +3,7 @@ import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
 import { Config, Info, Int, Int8, Int16, Int32, Int64, UntypedInt, Uint, Uint8, Uint16, Uint32, Uint64, Uintptr, Float32, Float64, Bool, NewArray, NewChecker, NewConst, NewField, NewFunc, NewInterfaceType, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTerm, NewTypeName, NewTypeParam, NewTuple, NewUnion, NewVar, NoPos, String as GoString, Typ, emptyInterface, ensureUniverseInitialized, UniverseLookup, Unsafe } from "./go/types/index.js";
 export const GOJR_SYNTHETIC_CHECK_PREFIX = "__gojr_check_statements";
+const standardTypePackageCache = new Map();
 export function isGoJuniorSyntheticCheckName(name) {
     return name === GOJR_SYNTHETIC_CHECK_PREFIX || name.startsWith(`${GOJR_SYNTHETIC_CHECK_PREFIX}_`);
 }
@@ -237,7 +238,7 @@ function importDeclarations(files) {
 }
 function seedPackageScope(pkg, config) {
     if (config.autoImportFmt ?? true) {
-        pkg.Scope().Insert(NewPkgName(NoPos, pkg, "fmt", fmtPackage()));
+        pkg.Scope().Insert(NewPkgName(NoPos, pkg, "fmt", standardTypePackage("fmt") ?? fmtPackage()));
     }
     for (const object of config.predeclaredPackageObjects ?? []) {
         if (object.Pkg() !== pkg)
@@ -248,25 +249,31 @@ function seedPackageScope(pkg, config) {
 }
 export function standardTypePackage(path) {
     ensureUniverseInitialized();
+    const cached = standardTypePackageCache.get(path);
+    if (cached)
+        return cached;
+    let pkg;
     if (path === "cmp")
-        return cmpPackage();
-    if (path === "fmt")
-        return fmtPackage();
-    if (path === "internal/reflectlite")
-        return reflectlitePackage();
-    if (path === "iter")
-        return iterPackage();
-    if (path === "math")
-        return mathPackage();
-    if (path === "runtime")
-        return runtimePackage();
-    if (path === "syscall/js")
-        return syscallJSPackage();
-    if (path === "testing")
-        return testingPackage();
-    if (path === "unsafe")
-        return Unsafe;
-    return undefined;
+        pkg = cmpPackage();
+    else if (path === "fmt")
+        pkg = fmtPackage();
+    else if (path === "internal/reflectlite")
+        pkg = reflectlitePackage();
+    else if (path === "iter")
+        pkg = iterPackage();
+    else if (path === "math")
+        pkg = mathPackage();
+    else if (path === "runtime")
+        pkg = runtimePackage();
+    else if (path === "syscall/js")
+        pkg = syscallJSPackage();
+    else if (path === "testing")
+        pkg = testingPackage();
+    else if (path === "unsafe")
+        pkg = Unsafe;
+    if (pkg)
+        standardTypePackageCache.set(path, pkg);
+    return pkg;
 }
 function cmpPackage() {
     const pkg = NewPackage("cmp", "cmp");

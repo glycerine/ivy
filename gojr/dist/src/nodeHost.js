@@ -3,7 +3,7 @@ import { basename, delimiter, dirname, isAbsolute, join, relative, resolve, sep 
 import { arch as nodeArch, homedir, platform as nodePlatform } from "node:os";
 import { buildTagSetForContext, buildPackages, collectSourceImportPaths, GOJR_GOARCH, GOJR_GOOS, goSourceFileMatchesBuildContext, inspectPackageJavaScript, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
 import { hasErrorDiagnostics, REPL_FILENAME } from "./diagnostics.js";
-import { formatBuildProgressEvent } from "./hostProtocol.js";
+import { formatBuildProgressEvent, formatEvaluationProgressEvent } from "./hostProtocol.js";
 import { compilePackageSourceFiles, compileSourceFiles } from "./compile.js";
 import { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture } from "./fixture.js";
 import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
@@ -321,7 +321,14 @@ export async function runMainSourceFilesWithPackagesOnNode(request) {
         ...(request.importPath ? { importPath: request.importPath } : {}),
         ...(request.packageName ? { packageName: request.packageName } : {}),
         sourcePackages: request.packages ?? [],
-        ...(provider ? { sourcePackageProvider: provider } : {})
+        ...(provider ? { sourcePackageProvider: provider } : {}),
+        ...(request.progress ? {
+            onProgress(event) {
+                const line = formatEvaluationProgressEvent(event);
+                if (line)
+                    process.stderr.write(`${line}\n`);
+            }
+        } : {})
     });
     return result;
 }

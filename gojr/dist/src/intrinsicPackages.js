@@ -7,8 +7,5 @@ export function isIntrinsicPackageImport(importPath) {
 }
 export function isHostResolvedSourceImport(importPath) {
     return isIntrinsicPackageImport(importPath) ||
-        importPath === "cmp" ||
-        importPath === "fmt" ||
-        importPath === "math" ||
         importPath === "testing";
 }

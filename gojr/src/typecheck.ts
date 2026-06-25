@@ -78,6 +78,7 @@ export interface GoJuniorCheckResult {
 }
 
 export const GOJR_SYNTHETIC_CHECK_PREFIX = "__gojr_check_statements";
+const standardTypePackageCache = new Map<string, GoTypesPackage>();
 
 export function isGoJuniorSyntheticCheckName(name: string): boolean {
   return name === GOJR_SYNTHETIC_CHECK_PREFIX || name.startsWith(`${GOJR_SYNTHETIC_CHECK_PREFIX}_`);
@@ -355,7 +356,7 @@ function importDeclarations(files: File[]): GenDecl[] {
 
 function seedPackageScope(pkg: GoTypesPackage, config: GoJuniorCheckConfig): void {
   if (config.autoImportFmt ?? true) {
-    pkg.Scope().Insert(NewPkgName(NoPos, pkg, "fmt", fmtPackage()));
+    pkg.Scope().Insert(NewPkgName(NoPos, pkg, "fmt", standardTypePackage("fmt") ?? fmtPackage()));
   }
   for (const object of config.predeclaredPackageObjects ?? []) {
     if (object.Pkg() !== pkg) continue;
@@ -365,16 +366,20 @@ function seedPackageScope(pkg: GoTypesPackage, config: GoJuniorCheckConfig): voi
 
 export function standardTypePackage(path: string): GoTypesPackage | undefined {
   ensureUniverseInitialized();
-  if (path === "cmp") return cmpPackage();
-  if (path === "fmt") return fmtPackage();
-  if (path === "internal/reflectlite") return reflectlitePackage();
-  if (path === "iter") return iterPackage();
-  if (path === "math") return mathPackage();
-  if (path === "runtime") return runtimePackage();
-  if (path === "syscall/js") return syscallJSPackage();
-  if (path === "testing") return testingPackage();
-  if (path === "unsafe") return Unsafe;
-  return undefined;
+  const cached = standardTypePackageCache.get(path);
+  if (cached) return cached;
+  let pkg: GoTypesPackage | undefined;
+  if (path === "cmp") pkg = cmpPackage();
+  else if (path === "fmt") pkg = fmtPackage();
+  else if (path === "internal/reflectlite") pkg = reflectlitePackage();
+  else if (path === "iter") pkg = iterPackage();
+  else if (path === "math") pkg = mathPackage();
+  else if (path === "runtime") pkg = runtimePackage();
+  else if (path === "syscall/js") pkg = syscallJSPackage();
+  else if (path === "testing") pkg = testingPackage();
+  else if (path === "unsafe") pkg = Unsafe;
+  if (pkg) standardTypePackageCache.set(path, pkg);
+  return pkg;
 }
 
 function cmpPackage(): GoTypesPackage {

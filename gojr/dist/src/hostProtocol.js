@@ -80,6 +80,11 @@ export function formatBuildProgressEvent(event) {
     const deps = event.dependencyCount === undefined ? "" : ` deps=${event.dependencyCount}`;
     return `gojr: ${prefix}${stdlib} ${event.importPath}${detail}${files}${deps}`;
 }
+export function formatEvaluationProgressEvent(event) {
+    const files = event.fileCount === undefined ? "" : ` files=${event.fileCount}`;
+    const deps = event.dependencyCount === undefined ? "" : ` deps=${event.dependencyCount}`;
+    return `gojr: ${event.action} ${event.importPath}${files}${deps}`;
+}
 export function inspectPackageJavaScriptReportToHostPayload(result) {
     return {
         ...buildReportToHostPayload(result),

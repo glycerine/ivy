@@ -19,7 +19,7 @@ import {
   type InspectPackageJavaScriptReport
 } from "./build.js";
 import { hasErrorDiagnostics, REPL_FILENAME, type Diagnostic, type SourceFile } from "./diagnostics.js";
-import { formatBuildProgressEvent } from "./hostProtocol.js";
+import { formatBuildProgressEvent, formatEvaluationProgressEvent } from "./hostProtocol.js";
 import {
   compilePackageSourceFiles,
   compileSourceFiles,
@@ -439,7 +439,13 @@ export async function runMainSourceFilesWithPackagesOnNode(request: NodeSourcePa
     ...(request.importPath ? { importPath: request.importPath } : {}),
     ...(request.packageName ? { packageName: request.packageName } : {}),
     sourcePackages: request.packages ?? [],
-    ...(provider ? { sourcePackageProvider: provider } : {})
+    ...(provider ? { sourcePackageProvider: provider } : {}),
+    ...(request.progress ? {
+      onProgress(event) {
+        const line = formatEvaluationProgressEvent(event);
+        if (line) process.stderr.write(`${line}\n`);
+      }
+    } : {})
   });
   return result;
 }

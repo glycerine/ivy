@@ -15,6 +15,7 @@ import {
   testSource,
   testSourceFiles
 } from "../src/index.js";
+import { createNodeSourcePackageProvider } from "../src/nodeHost.js";
 
 async function expectRuns(source: string, options = {}) {
   const result = await evaluateSource(source, options);
@@ -1782,6 +1783,46 @@ return wrap.Value()
     expect(result.value).toBe(9n);
   });
 
+  test("infers imported generic function parameters from caller-private struct arguments", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/uniq",
+        files: [{
+          filename: "/workspace/uniq/uniq.go",
+          source: `package uniq
+
+type Handle[T comparable] struct {
+  Value T
+}
+
+func Make[T comparable](value T) Handle[T] {
+  return Handle[T]{Value: value}
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import "example.com/uniq"
+
+type detail struct {
+  ok bool
+}
+
+var Got = uniq.Make(detail{ok: true}).Value.ok
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages["example.com/app"]?.Got).toBe(true);
+  });
+
   test("typechecks and evaluates source packages that import other source packages", async () => {
     const lib = await evaluatePackageSourceFiles([{
       filename: "lib.go",
@@ -1828,6 +1869,68 @@ return app.Two()
       }
     });
     expect(result.value).toBe(2n);
+  });
+
+  test("loads provider-supplied standard source packages instead of ambient fallbacks", async () => {
+    const loaded: string[] = [];
+    const graph = await evaluateSourcePackageGraph([{
+      importPath: "example.com/app",
+      files: [{
+        filename: "/workspace/example.com/app/app.go",
+        source: `package app
+
+import "math"
+
+var V = math.Twice(21)
+`
+      }]
+    }], {
+      sourcePackageProvider: {
+        load(importPath) {
+          loaded.push(importPath);
+          if (importPath !== "math") return undefined;
+          return [{
+            filename: "/workspace/math/math.go",
+            source: `package math
+
+func Twice(x int) int { return x * 2 }
+`
+          }];
+        }
+      }
+    });
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(loaded).toEqual(["math"]);
+    expect(graph.initializedImportPaths).toEqual(["math", "example.com/app"]);
+    expect(graph.packages["example.com/app"]?.V).toBe(42n);
+  });
+
+  test("shares standard iter type identity across source-built maps and slices", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/mapslices/main.go",
+      source: `package main
+
+import (
+  "maps"
+  "slices"
+)
+
+func main() {
+  param := map[string]string{"b": "2", "a": "1"}
+  keys := slices.Sorted(maps.Keys(param))
+  print(keys[0] + "," + keys[1] + "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["a,b\n"]);
   });
 
   test("runs Go-junior tests that import source package metadata", async () => {
@@ -2003,6 +2106,30 @@ slc2 := make([]string, 3)
 return len(slc), cap(slc), slc[0], slc[20], len(slc2), cap(slc2), slc2[0]
 `);
     expect(sliceResult.values).toEqual([21n, 50n, 0n, 7n, 3n, 3n, ""]);
+  });
+
+  test("supports standard Go make for named map slice and channel types", async () => {
+    const result = await expectRuns(`
+type Bytes []byte
+type Counts map[string]int
+type Ints chan int
+b := make(Bytes, 2, 4)
+b[1] = 7
+m := make(Counts)
+m["x"] = 9
+ch := make(Ints, 1)
+ch <- 11
+return len(b), cap(b), b[0], b[1], m["x"], <-ch
+`);
+    expect(result.values).toEqual([2n, 4n, 0n, 7n, 9n, 11n]);
+  });
+
+  test("respects ordinary shadowing of predeclared make", async () => {
+    const result = await expectRuns(`
+make := func(x int) int { return x + 1 }
+return make(10)
+`);
+    expect(result.value).toBe(11n);
   });
 
   test("reports ordinary runtime failures with GoJr-prefixed diagnostic codes", async () => {
@@ -3196,6 +3323,60 @@ return len(a), a[0], a[3]
     expect(result.values).toEqual([4n, 1n, 4n]);
   });
 
+  test("initializes large scalar arrays sparsely with zero values", async () => {
+    const result = await expectRuns(`
+type ScratchBuffer [1 << 25]byte
+var memory ScratchBuffer
+memory[7] = 3
+return len(memory), memory[0], memory[7], memory[(1<<25)-1]
+`);
+
+    expect(result.values).toEqual([33554432n, 0n, 3n, 0n]);
+  });
+
+  test("predeclares package arrays with unexported constant lengths", async () => {
+    const pkg = await evaluatePackageSourceFiles([{
+      filename: "/workspace/jump/jump.go",
+      source: `package jump
+
+type Type int
+
+const (
+  InvalidType Type = iota
+  StrType
+  _maxtype
+)
+
+type writer interface { Write([]byte) (int, error) }
+type Reader struct{}
+
+var defuns [_maxtype]func(writer, *Reader) (int, error)
+
+func noop(writer, *Reader) (int, error) { return 0, nil }
+
+func init() {
+  defuns = [_maxtype]func(writer, *Reader) (int, error){
+    StrType: noop,
+  }
+}
+
+func Len() int { return len(defuns) }
+`
+    }], { importPath: "example.com/jump" });
+
+    expect(pkg.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/jump"
+return jump.Len()
+`, {
+      packages: { "example.com/jump": pkg.package ?? {} },
+      packageInfos: { "example.com/jump": pkg.packageInfo! }
+    });
+
+    expect(result.value).toBe(2n);
+  });
+
   test("resolves imported constants in array lengths without path-qualifying the expression", async () => {
     const graph = await evaluateSourcePackageGraph([
       {
@@ -3622,6 +3803,618 @@ return int(t.Kind()), int(t.Elem().Kind()), int(g.EncoderKind)
     });
 
     expect(result.values).toEqual([22n, 20n, 20n]);
+  });
+
+  test("uses stable reflect Type identity as a map key", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/abi",
+        files: [{
+          filename: "/usr/local/go/src/internal/abi/type.go",
+          source: `package abi
+
+import "unsafe"
+
+type Kind uint8
+
+const (
+  Invalid Kind = iota
+  Bool
+  Int
+  Int8
+  Int16
+  Int32
+  Int64
+  Uint
+  Uint8
+  Uint16
+  Uint32
+  Uint64
+  Uintptr
+  Float32
+  Float64
+  Complex64
+  Complex128
+  Array
+  Chan
+  Func
+  Interface
+  Map
+  Pointer
+  Slice
+  String
+  Struct
+  UnsafePointer
+)
+
+type Type struct {
+  Kind_ Kind
+}
+
+type PtrType struct {
+  Type
+  Elem *Type
+}
+
+func TypeOf(a any) *Type
+func TypeFor[T any]() *Type { return nil }
+func (t *Type) Kind() Kind { return t.Kind_ }
+func (t *Type) Elem() *Type {
+  if t.Kind() == Pointer {
+    return (*PtrType)(unsafe.Pointer(t)).Elem
+  }
+  return nil
+}
+`
+        }]
+      },
+      {
+        importPath: "reflect",
+        files: [{
+          filename: "/usr/local/go/src/reflect/type.go",
+          source: `package reflect
+
+import (
+  "internal/abi"
+  "unsafe"
+)
+
+type Kind = abi.Kind
+
+const (
+  Invalid = abi.Invalid
+  Pointer = abi.Pointer
+)
+
+type Type interface {
+  Kind() Kind
+  Elem() Type
+}
+
+type rtype struct {
+  t abi.Type
+}
+
+func (t *rtype) common() *abi.Type { return &t.t }
+func toRType(t *abi.Type) *rtype { return (*rtype)(unsafe.Pointer(t)) }
+func toType(t *abi.Type) Type {
+  if t == nil {
+    return nil
+  }
+  return toRType(t)
+}
+func (t *rtype) Kind() Kind { return Kind(t.t.Kind()) }
+func (t *rtype) Elem() Type { return toType(t.common().Elem()) }
+func TypeOf(i any) Type { return toType(abi.TypeOf(i)) }
+func TypeFor[T any]() Type { return toRType(abi.TypeFor[T]()) }
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "reflect"
+
+type wireType struct {
+  A *int
+}
+
+a := reflect.TypeFor[wireType]()
+b := reflect.TypeFor[wireType]()
+c := reflect.TypeOf((*wireType)(nil)).Elem()
+m := make(map[reflect.Type]int)
+m[a] = 11
+firstB := m[b]
+firstC := m[c]
+m[b] = 12
+m[c] = 13
+return firstB, firstC, len(m), m[a], m[b], m[c]
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.values).toEqual([11n, 11n, 1n, 13n, 13n, 13n]);
+  });
+
+  test("reflect descriptors preserve named underlying scalar and slice kinds", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/abi",
+        files: [{
+          filename: "/usr/local/go/src/internal/abi/type.go",
+          source: `package abi
+
+import "unsafe"
+
+type Kind uint8
+
+const (
+  Invalid Kind = iota
+  Bool
+  Int
+  Int8
+  Int16
+  Int32
+  Int64
+  Uint
+  Uint8
+  Uint16
+  Uint32
+  Uint64
+  Uintptr
+  Float32
+  Float64
+  Complex64
+  Complex128
+  Array
+  Chan
+  Func
+  Interface
+  Map
+  Pointer
+  Slice
+  String
+  Struct
+  UnsafePointer
+)
+
+type Type struct {
+  Kind_ Kind
+}
+
+type SliceType struct {
+  Type
+  Elem *Type
+}
+
+func TypeFor[T any]() *Type { return nil }
+func TypeOf(a any) *Type { return nil }
+func (t *Type) Kind() Kind { return t.Kind_ }
+func (t *Type) Elem() *Type {
+  if t.Kind() == Slice {
+    return (*SliceType)(unsafe.Pointer(t)).Elem
+  }
+  return nil
+}
+func (t *Type) HasName() bool { return false }
+`
+        }]
+      },
+      {
+        importPath: "reflect",
+        files: [{
+          filename: "/usr/local/go/src/reflect/type.go",
+          source: `package reflect
+
+import (
+  "internal/abi"
+  "unsafe"
+)
+
+type Kind = abi.Kind
+
+const (
+  Invalid = abi.Invalid
+  Slice = abi.Slice
+)
+
+type Type interface {
+  Kind() Kind
+  Name() string
+  String() string
+  Elem() Type
+}
+
+type rtype struct {
+  t abi.Type
+}
+
+func (t *rtype) common() *abi.Type { return &t.t }
+func toRType(t *abi.Type) *rtype { return (*rtype)(unsafe.Pointer(t)) }
+func toType(t *abi.Type) Type {
+  if t == nil {
+    return nil
+  }
+  return toRType(t)
+}
+func (t *rtype) Kind() Kind { return Kind(t.t.Kind()) }
+func (t *rtype) Name() string { return "" }
+func (t *rtype) String() string { return "" }
+func (t *rtype) Elem() Type { return toType(t.common().Elem()) }
+func TypeFor[T any]() Type { return toRType(abi.TypeFor[T]()) }
+`
+        }]
+      },
+      {
+        importPath: "example.com/named",
+        files: [{
+          filename: "/workspace/named/named.go",
+          source: `package named
+
+import "reflect"
+
+type typeId int32
+type idSlice []typeId
+
+func Inspect() (reflect.Kind, string, string, reflect.Kind, string, string, reflect.Kind, string, string) {
+  tid := reflect.TypeFor[typeId]()
+  sid := reflect.TypeFor[idSlice]()
+  elem := sid.Elem()
+  return tid.Kind(), tid.Name(), tid.String(), sid.Kind(), sid.Name(), sid.String(), elem.Kind(), elem.Name(), elem.String()
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import n "example.com/named"
+
+tidKind, tidName, tidText, sidKind, sidName, sidText, elemKind, elemName, elemText := n.Inspect()
+return int(tidKind), tidName, tidText, int(sidKind), sidName, sidText, int(elemKind), elemName, elemText
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.values).toEqual([5n, "typeId", "named.typeId", 23n, "idSlice", "named.idSlice", 5n, "typeId", "named.typeId"]);
+  });
+
+  test("exposes runtime abi struct fields through reflect Type", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/abi",
+        files: [{
+          filename: "/usr/local/go/src/internal/abi/type.go",
+          source: `package abi
+
+import "unsafe"
+
+type Kind uint8
+
+const (
+  Invalid Kind = iota
+  Bool
+  Int
+  Int8
+  Int16
+  Int32
+  Int64
+  Uint
+  Uint8
+  Uint16
+  Uint32
+  Uint64
+  Uintptr
+  Float32
+  Float64
+  Complex64
+  Complex128
+  Array
+  Chan
+  Func
+  Interface
+  Map
+  Pointer
+  Slice
+  String
+  Struct
+  UnsafePointer
+)
+
+type Type struct {
+  Kind_ Kind
+}
+
+type Name struct {
+  Bytes *byte
+}
+
+type StructField struct {
+  Name Name
+  Typ *Type
+  Offset uintptr
+}
+
+type ArrayType struct {
+  Type
+  Elem *Type
+  Slice *Type
+  Len uintptr
+}
+
+type MapType struct {
+  Type
+  Key *Type
+  Elem *Type
+}
+
+type SliceType struct {
+  Type
+  Elem *Type
+}
+
+type PtrType struct {
+  Type
+  Elem *Type
+}
+
+type StructType struct {
+  Type
+  PkgPath Name
+  Fields []StructField
+}
+
+func TypeFor[T any]() *Type { return nil }
+func TypeOf(a any) *Type { return nil }
+func (t *Type) Kind() Kind { return t.Kind_ }
+func (t *Type) Elem() *Type {
+  switch t.Kind() {
+  case Array:
+    return (*ArrayType)(unsafe.Pointer(t)).Elem
+  case Map:
+    return (*MapType)(unsafe.Pointer(t)).Elem
+  case Pointer:
+    return (*PtrType)(unsafe.Pointer(t)).Elem
+  case Slice:
+    return (*SliceType)(unsafe.Pointer(t)).Elem
+  }
+  return nil
+}
+func (t *Type) Key() *Type {
+  if t.Kind() == Map {
+    return (*MapType)(unsafe.Pointer(t)).Key
+  }
+  return nil
+}
+func (t *Type) Len() int {
+  if t.Kind() == Array {
+    return int((*ArrayType)(unsafe.Pointer(t)).Len)
+  }
+  return 0
+}
+func (n Name) Name() string { return "" }
+func (n Name) Tag() string { return "" }
+func (n Name) IsExported() bool { return false }
+func (n Name) IsEmbedded() bool { return false }
+func (f *StructField) Embedded() bool { return f.Name.IsEmbedded() }
+
+var _ unsafe.Pointer
+`
+        }]
+      },
+      {
+        importPath: "reflect",
+        files: [{
+          filename: "/usr/local/go/src/reflect/type.go",
+          source: `package reflect
+
+import (
+  "internal/abi"
+  "unsafe"
+)
+
+type Kind = abi.Kind
+
+const (
+  Invalid = abi.Invalid
+  Int = abi.Int
+  Int32 = abi.Int32
+  Array = abi.Array
+  Map = abi.Map
+  Pointer = abi.Pointer
+  Struct = abi.Struct
+  Slice = abi.Slice
+  String = abi.String
+)
+
+type Type interface {
+  Kind() Kind
+  Elem() Type
+  Key() Type
+  Len() int
+  Name() string
+  String() string
+  PkgPath() string
+  NumField() int
+  Field(int) StructField
+}
+
+type StructTag string
+
+type StructField struct {
+  Name string
+  Type Type
+  Tag StructTag
+  Offset uintptr
+  Index []int
+  Anonymous bool
+}
+
+type rtype struct {
+  t abi.Type
+}
+
+type structField = abi.StructField
+
+type structType struct {
+  abi.StructType
+}
+
+func toRType(t *abi.Type) *rtype { return (*rtype)(unsafe.Pointer(t)) }
+func toType(t *abi.Type) Type {
+  if t == nil {
+    return nil
+  }
+  return toRType(t)
+}
+func (t *rtype) Kind() Kind { return Kind(t.t.Kind()) }
+func (t *rtype) Elem() Type { return toType(t.t.Elem()) }
+func (t *rtype) Key() Type { return toType(t.t.Key()) }
+func (t *rtype) Len() int { return t.t.Len() }
+func (t *rtype) Name() string { return "" }
+func (t *rtype) String() string { return "" }
+func (t *rtype) PkgPath() string { return "" }
+func (t *rtype) NumField() int {
+  if t.Kind() != Struct {
+    panic("NumField of non-struct")
+  }
+  tt := (*structType)(unsafe.Pointer(t))
+  return len(tt.Fields)
+}
+func (t *rtype) Field(i int) StructField {
+  if t.Kind() != Struct {
+    panic("Field of non-struct")
+  }
+  tt := (*structType)(unsafe.Pointer(t))
+  return tt.Field(i)
+}
+func (t *structType) Field(i int) (f StructField) {
+  p := &t.Fields[i]
+  f.Type = toType(p.Typ)
+  f.Name = p.Name.Name()
+  f.Anonymous = p.Embedded()
+  if tag := p.Name.Tag(); tag != "" {
+    f.Tag = StructTag(tag)
+  }
+  f.Offset = p.Offset
+  f.Index = []int{i}
+  return
+}
+func TypeFor[T any]() Type { return toRType(abi.TypeFor[T]()) }
+func TypeOf(i any) Type { return toType(abi.TypeOf(i)) }
+`
+        }]
+      },
+      {
+        importPath: "example.com/goblike",
+        files: [{
+          filename: "/workspace/goblike/type.go",
+          source: `package goblike
+
+import "reflect"
+
+type fieldType struct {
+  Name string
+  Id int32
+}
+
+type structType struct {
+  CommonType
+  Field []fieldType
+}
+
+type CommonType struct {
+  Name string
+}
+
+func Inspect() (int, string, bool, string, reflect.Kind, reflect.Kind, string, string, string) {
+  t := reflect.TypeFor[structType]()
+  f0 := t.Field(0)
+  f1 := t.Field(1)
+  return t.NumField(), f0.Name, f0.Anonymous, f1.Name, f1.Type.Kind(), f1.Type.Elem().Kind(), t.Name(), t.String(), t.PkgPath()
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/other",
+        files: [{
+          filename: "/workspace/other/type.go",
+          source: `package other
+
+import "reflect"
+
+type structType struct {
+  Only int
+}
+
+func Inspect() (int, string, string, string) {
+  t := reflect.TypeFor[structType]()
+  f := t.Field(0)
+  return t.NumField(), f.Name, t.Name(), t.PkgPath()
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import g "example.com/goblike"
+import o "example.com/other"
+
+n, first, anonymous, second, kind, elemKind, name, text, pkgPath := g.Inspect()
+otherN, otherFirst, otherName, otherPkgPath := o.Inspect()
+return n, first, anonymous, second, int(kind), int(elemKind), name, text, pkgPath, otherN, otherFirst, otherName, otherPkgPath
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.values).toEqual([
+      2n,
+      "CommonType",
+      true,
+      "Field",
+      23n,
+      25n,
+      "structType",
+      "goblike.structType",
+      "example.com/goblike",
+      1n,
+      "Only",
+      "structType",
+      "example.com/other"
+    ]);
+  });
+
+  test("initializes standard encoding/gob bootstrap descriptors", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/gobmain/main.go",
+      source: `package main
+
+import _ "encoding/gob"
+
+func main() {}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
   });
 
   test("bodyless package functions return declared zero result values", async () => {

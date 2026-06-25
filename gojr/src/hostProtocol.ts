@@ -2,7 +2,7 @@ import type { BuildPackageReport, BuildProgressEvent, InspectPackageJavaScriptRe
 import type { CompileResult } from "./compile.js";
 import { formatDiagnostic, hasErrorDiagnostics, type Diagnostic } from "./diagnostics.js";
 import type { SpreadsheetFixtureRunResult } from "./fixture.js";
-import { formatReplValue, type EvaluationOptions, type EvaluationResult, type RuntimeValue } from "./runtime.js";
+import { formatReplValue, type EvaluationOptions, type EvaluationProgressEvent, type EvaluationResult, type RuntimeValue } from "./runtime.js";
 import type { SpreadsheetDiagnostic, SpreadsheetValue } from "./spreadsheet.js";
 
 export interface HostEvaluationPayload {
@@ -139,6 +139,12 @@ export function formatBuildProgressEvent(event: BuildProgressEvent): string {
   const files = event.fileCount === undefined ? "" : ` files=${event.fileCount}`;
   const deps = event.dependencyCount === undefined ? "" : ` deps=${event.dependencyCount}`;
   return `gojr: ${prefix}${stdlib} ${event.importPath}${detail}${files}${deps}`;
+}
+
+export function formatEvaluationProgressEvent(event: EvaluationProgressEvent): string {
+  const files = event.fileCount === undefined ? "" : ` files=${event.fileCount}`;
+  const deps = event.dependencyCount === undefined ? "" : ` deps=${event.dependencyCount}`;
+  return `gojr: ${event.action} ${event.importPath}${files}${deps}`;
 }
 
 export function inspectPackageJavaScriptReportToHostPayload(result: InspectPackageJavaScriptReport): HostInspectJavaScriptPayload {

@@ -38,7 +38,8 @@ export function compilePackageSourceFiles(files: SourceFile[], options: CompileP
   const checked = checkGoJuniorSourceFiles(files, {
     ...typeCheckConfig(options),
     packageName,
-    packagePath: options.importPath ?? packageName
+    packagePath: options.importPath ?? packageName,
+    autoImportFmt: false
   });
   return {
     diagnostics: checked.diagnostics,

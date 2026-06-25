@@ -8,8 +8,5 @@ export function isIntrinsicPackageImport(importPath: string): boolean {
 
 export function isHostResolvedSourceImport(importPath: string): boolean {
   return isIntrinsicPackageImport(importPath) ||
-    importPath === "cmp" ||
-    importPath === "fmt" ||
-    importPath === "math" ||
     importPath === "testing";
 }
