@@ -274,6 +274,23 @@ return fmt.Sprint("signed ", 1),
     expect(result.values).toEqual(["signed 1", "1 2", "ab", "1a2", "a 1 b\n", "x=1", "n=2", "a 1\n"]);
   });
 
+  test("formats cyclic values without unbounded recursion", async () => {
+    const result = await expectRuns(`
+type Node struct {
+  Next *Node
+  Label string
+}
+
+n := &Node{Label: "root"}
+n.Next = n
+return fmt.Sprint(n), fmt.Sprintf("%#v", n), n
+`);
+
+    expect(result.values?.[0]).toBe(`&Node{Next:<cycle> Label:root}`);
+    expect(result.values?.[1]).toBe(`&Node{Next: <cycle>, Label: string("root")}`);
+    expect(formatReplValue(result.values?.[2] ?? null)).toBe(`&Node{Next:<cycle>, Label:"root"}`);
+  });
+
   test("formats fmt.Fprintf to io.Writer-shaped values", async () => {
     const result = await expectRuns(`
 type writer struct {
@@ -442,6 +459,22 @@ return unsafe.Sizeof(x), unsafe.Alignof(x), p != nil, roundTrip.x, uintptr(zero)
 `);
 
     expect(script.values).toEqual([8n, 8n, true, 7n, 0n, true, 0n, true, true]);
+  });
+
+  test("supports unsafe string and byte-slice pointer intrinsics", async () => {
+    const script = await expectRuns(`
+import "unsafe"
+
+buf := []byte{103, 111, 106, 114}
+s := unsafe.String(&buf[0], len(buf))
+p := unsafe.StringData("gojr")
+round := unsafe.String(p, 4)
+var nilByte *byte
+empty := unsafe.String(nilByte, 0)
+return s, round, empty
+`);
+
+    expect(script.values?.map(formatReplValue)).toEqual([`"gojr"`, `"gojr"`, `""`]);
   });
 
   test("supports unsafe pointer reinterpretation used by reflect headers", async () => {
@@ -1178,6 +1211,55 @@ return err.Op, err.Path, alias.Message()
     expect(result.values).toEqual(["open", "file", "open file"]);
   });
 
+  test("externalizes imported map element types without copying map identity", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "example.com/tree",
+        files: [{
+          filename: "/workspace/tree/tree.go",
+          source: `package tree
+
+type Tree struct {
+  Name string
+}
+
+var Saved map[string]*Tree
+
+func Make() map[string]*Tree {
+  Saved = map[string]*Tree{"one": &Tree{Name: "one"}}
+  return Saved
+}
+
+func Count() int {
+  return len(Saved)
+}
+
+func Lookup(name string) *Tree {
+  return Saved[name]
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "example.com/tree"
+
+var trees map[string]*tree.Tree
+trees = tree.Make()
+trees["two"] = &tree.Tree{Name: "two"}
+return trees["one"].Name, trees["two"].Name, tree.Count(), tree.Lookup("two").Name
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.values).toEqual(["one", "two", 2n, "two"]);
+  });
+
   test("keeps named array pointer types for same-package calls", async () => {
     const graph = await evaluateSourcePackageGraph([
       {
@@ -1375,14 +1457,74 @@ func EscapeToResultNonString[T any](v T) T {
 
     const result = await expectRuns(`
 import abi "internal/abi"
-return abi.Touch("ok")
+type detail struct {
+  ok bool
+}
+value := abi.EscapeToResultNonString(detail{ok: true})
+return abi.Touch("ok"), value.ok
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
       packageContexts: graph.packageContexts
     });
 
-    expect(result.value).toBe("ok");
+    expect(result.values).toEqual(["ok", true]);
+  });
+
+  test("intrinsicifies internal abi NoEscape as pointer identity", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/abi",
+        files: [{
+          filename: "/usr/local/go/src/internal/abi/escape.go",
+          source: `package abi
+
+import "unsafe"
+
+func NoEscape(p unsafe.Pointer) unsafe.Pointer {
+  x := uintptr(p)
+  return unsafe.Pointer(x ^ 0)
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import abi "internal/abi"
+import "unsafe"
+
+type Builder struct {
+  addr *Builder
+  buf []byte
+}
+
+func (b *Builder) copyCheck() {
+  if b.addr == nil {
+    b.addr = (*Builder)(abi.NoEscape(unsafe.Pointer(b)))
+  } else if b.addr != b {
+    panic("copied")
+  }
+}
+
+func (b *Builder) WriteByte(c byte) {
+  b.copyCheck()
+  b.buf = append(b.buf, c)
+}
+
+var b Builder
+b.WriteByte(1)
+b.WriteByte(2)
+return len(b.buf)
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.value).toBe(2n);
   });
 
   test("runs multiple package init functions in source file sequence order", async () => {
@@ -1973,6 +2115,34 @@ func main() {
     expect(result.output).toEqual(["a,b\n"]);
   });
 
+  test("runs standard unique.Make through source-built hashtriemap dependencies", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/uniquemain/main.go",
+      source: `package main
+
+import "unique"
+
+type detail struct {
+  isV6 bool
+  zoneV6 string
+}
+
+func main() {
+  h := unique.Make(detail{isV6: true, zoneV6: "z"})
+  print(h.Value().zoneV6 + "\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["z\n"]);
+  });
+
   test("runs Go-junior tests that import source package metadata", async () => {
     const app = await evaluatePackageSourceFiles([{
       filename: "app.go",
@@ -2497,6 +2667,23 @@ return rows[0].Name, rows[1].Pos.Y, lookup[Point{X: 1}].Y, ptrs[0].X, ptrs[1].X
 `);
 
     expect(result.values).toEqual(["a", 4n, 2n, 7n, 0n]);
+  });
+
+  test("evaluates elided composite literals in named slice aliases", async () => {
+    const result = await expectRuns(`
+type Entry struct {
+  X int
+}
+type Table []Entry
+
+items := Table{
+  {X: 1},
+  {X: 2},
+}
+return items[0].X, items[1].X
+`);
+
+    expect(result.values).toEqual([1n, 2n]);
   });
 
   test("supports value and pointer receiver methods with Go selector syntax", async () => {
@@ -5217,6 +5404,21 @@ return bs, rs, string(bs), string(rs), string(nbs), string(nrs)
     ]);
   });
 
+  test("supports append of strings into byte slices with spread", async () => {
+    const result = await expectRuns(`
+type Bytes []byte
+b := []byte("go")
+b = append(b, "jr"...)
+named := Bytes("a")
+named = append(named, "ä"...)
+var nilBytes []byte
+nilBytes = append(nilBytes, "Type"...)
+return string(b), named, string(nilBytes)
+`);
+
+    expect(result.values).toEqual(["gojr", [97n, 195n, 164n], "Type"]);
+  });
+
   test("supports typed nil slice conversions with Go len and cap", async () => {
     const result = await expectRuns(`
 type Ints []int
@@ -6145,6 +6347,100 @@ func init() {
     expect(graph.packages.app?.Seen).toBe(1n);
   });
 
+  test("initializes imported generic hashtrie zero values with instantiated array fields", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "sync/atomic",
+        files: [{
+          filename: "/usr/local/go/src/sync/atomic/type.go",
+          source: `package atomic
+
+import "unsafe"
+
+type Pointer[T any] struct {
+  _ [0]*T
+  v unsafe.Pointer
+}
+
+func LoadPointer(addr *unsafe.Pointer) unsafe.Pointer
+func StorePointer(addr *unsafe.Pointer, val unsafe.Pointer)
+
+func (x *Pointer[T]) Load() *T {
+  return (*T)(LoadPointer(&x.v))
+}
+
+func (x *Pointer[T]) Store(val *T) {
+  StorePointer(&x.v, unsafe.Pointer(val))
+}
+`
+        }]
+      },
+      {
+        importPath: "internal/sync",
+        files: [{
+          filename: "/usr/local/go/src/internal/sync/hashtriemap.go",
+          source: `package sync
+
+import "sync/atomic"
+
+const (
+  nChildrenLog2 = 4
+  nChildren = 1 << nChildrenLog2
+)
+
+type node[K comparable, V any] struct {
+  isEntry bool
+}
+
+type indirect[K comparable, V any] struct {
+  node[K, V]
+  children [nChildren]atomic.Pointer[node[K, V]]
+}
+
+type HashTrieMap[K comparable, V any] struct {
+  root atomic.Pointer[indirect[K, V]]
+}
+
+func newIndirectNode[K comparable, V any]() *indirect[K, V] {
+  return &indirect[K, V]{node: node[K, V]{isEntry: false}}
+}
+
+func (h *HashTrieMap[K, V]) Init() {
+  h.root.Store(newIndirectNode[K, V]())
+}
+
+func (h *HashTrieMap[K, V]) EmptySlot() bool {
+  h.Init()
+  i := h.root.Load()
+  n := i.children[0].Load()
+  return n == nil
+}
+`
+        }]
+      },
+      {
+        importPath: "app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import isync "internal/sync"
+
+var Seen bool
+
+func init() {
+  var h isync.HashTrieMap[int, string]
+  Seen = h.EmptySlot()
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages.app?.Seen).toBe(true);
+  });
+
   test("preserves interface dynamic package identity across imported calls", async () => {
     const graph = await evaluateSourcePackageGraph([
       {
@@ -6539,6 +6835,72 @@ return o.X, o.Double(), d.Double()
 `);
 
     expect(result.values).toEqual([4n, 8n, 8n]);
+  });
+
+  test("prefers direct methods over deeper promoted fields", async () => {
+    const result = await expectRuns(`
+type Tree struct {
+  Name string
+}
+
+type Template struct {
+  *Tree
+}
+
+func (t *Template) Name() string {
+  return "method:" + t.Tree.Name
+}
+
+t := &Template{Tree: &Tree{Name: "field"}}
+return t.Name()
+`);
+
+    expect(result.value).toBe("method:field");
+  });
+
+  test("promotes methods from embedded interface fields when satisfying broader interfaces", async () => {
+    const result = await expectRuns(`
+type Reader interface {
+  Read([]byte) (int, error)
+}
+
+type Closer interface {
+  Close() error
+}
+
+type ReadCloser interface {
+  Reader
+  Closer
+}
+
+type nopCloser struct {
+  Reader
+}
+
+func (nopCloser) Close() error {
+  return nil
+}
+
+type bytesReader struct{}
+
+func (bytesReader) Read([]byte) (int, error) {
+  return 7, nil
+}
+
+func makeReadCloser(r Reader) ReadCloser {
+  return nopCloser{r}
+}
+
+rc := makeReadCloser(bytesReader{})
+n, readErr := rc.Read(nil)
+closeErr := rc.Close()
+var nilReader Reader
+nilRC := makeReadCloser(nilReader)
+nilCloseErr := nilRC.Close()
+return n, readErr == nil, closeErr == nil, nilCloseErr == nil
+`);
+
+    expect(result.values).toEqual([7n, true, true, true]);
   });
 
   test("supports pointer receivers on named scalar types", async () => {
