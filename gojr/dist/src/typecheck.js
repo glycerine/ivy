@@ -60,7 +60,7 @@ export function checkGoJuniorFiles(files, statements = [], parserDiagnostics = [
             ...(error instanceof Error && error.stack ? { stack: error.stack } : {})
         });
     }
-    filterTopLevelExpressionUnusedDiagnostics(diagnostics, statements);
+    filterTopLevelExpressionConvenienceDiagnostics(diagnostics, statements, config);
     return {
         pkg,
         info,
@@ -69,16 +69,23 @@ export function checkGoJuniorFiles(files, statements = [], parserDiagnostics = [
         statements
     };
 }
-function filterTopLevelExpressionUnusedDiagnostics(diagnostics, statements) {
+function filterTopLevelExpressionConvenienceDiagnostics(diagnostics, statements, config) {
     const expressionOffsets = new Set(statements
         .filter((statement) => statement.kind === "ExprStmt" && statement.span !== undefined)
         .map((statement) => statement.span.offset));
     if (expressionOffsets.size === 0)
         return;
+    const packageInspectionOffsets = new Set((config.allowPackageInspection ? statements : [])
+        .filter((statement) => statement.kind === "ExprStmt" && statement.expr.kind === "Ident" && statement.span !== undefined)
+        .map((statement) => statement.span.offset));
     const kept = diagnostics.filter((diagnostic) => !(diagnostic.code === "GOJR_TYPE001" &&
         / is not used$/.test(diagnostic.message) &&
         diagnostic.span !== undefined &&
-        expressionOffsets.has(diagnostic.span.offset)));
+        expressionOffsets.has(diagnostic.span.offset)) &&
+        !(diagnostic.code === "GOJR_TYPE001" &&
+            /^use of package .+ not in selector$/.test(diagnostic.message) &&
+            diagnostic.span !== undefined &&
+            packageInspectionOffsets.has(diagnostic.span.offset)));
     diagnostics.splice(0, diagnostics.length, ...kept);
 }
 class FrontFileSet {

@@ -407,6 +407,20 @@ return cmp.Compare([]int{1}, []int{2})
     )).toBe(true);
   });
 
+  test("REPL mode inspects imported package signatures", async () => {
+    const session = new GoJuniorSession();
+    const imported = await session.evaluate(`import "iter"`);
+    expect(imported.diagnostics).toEqual([]);
+
+    const inspected = await session.evaluate("iter");
+    expect(inspected.diagnostics).toEqual([]);
+    const text = formatReplValue(inspected.value ?? null);
+    expect(text).toContain("package iter");
+    expect(text).toContain("type Seq");
+    expect(text).toContain("func Pull");
+    expect(text).toContain("func Pull2");
+  });
+
   test("supports importing unsafe and evaluating size/alignment helpers", async () => {
     const script = await expectRuns(`
 import "unsafe"
@@ -3268,6 +3282,348 @@ return trap.P0 != 0, trap.P1 != 0
     expect(result.values).toEqual([true, true]);
   });
 
+  test("synthesizes internal abi composite type descriptors with element metadata", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/abi",
+        files: [{
+          filename: "/usr/local/go/src/internal/abi/type.go",
+          source: `package abi
+
+import "unsafe"
+
+type Kind uint8
+
+const (
+  Invalid Kind = iota
+  Bool
+  Int
+  Int8
+  Int16
+  Int32
+  Int64
+  Uint
+  Uint8
+  Uint16
+  Uint32
+  Uint64
+  Uintptr
+  Float32
+  Float64
+  Complex64
+  Complex128
+  Array
+  Chan
+  Func
+  Interface
+  Map
+  Pointer
+  Slice
+  String
+  Struct
+  UnsafePointer
+)
+
+type Type struct {
+  Kind_ Kind
+}
+
+func TypeOf(a any) *Type
+func TypeFor[T any]() *Type { return nil }
+
+type ArrayType struct {
+  Type
+  Elem *Type
+  Slice *Type
+  Len uintptr
+}
+
+type ChanDir int
+
+const (
+  RecvDir ChanDir = 1 << iota
+  SendDir
+  BothDir = RecvDir | SendDir
+)
+
+type ChanType struct {
+  Type
+  Elem *Type
+  Dir ChanDir
+}
+
+type MapType struct {
+  Type
+  Key *Type
+  Elem *Type
+  Group *Type
+  Hasher func(unsafe.Pointer, uintptr) uintptr
+  GroupSize uintptr
+  KeysOff uintptr
+  KeyStride uintptr
+  ElemsOff uintptr
+  ElemStride uintptr
+  ElemOff uintptr
+  Flags uint32
+}
+
+type SliceType struct {
+  Type
+  Elem *Type
+}
+
+type PtrType struct {
+  Type
+  Elem *Type
+}
+
+func (t *Type) Kind() Kind { return t.Kind_ }
+
+func (t *Type) Elem() *Type {
+  switch t.Kind() {
+  case Array:
+    return (*ArrayType)(unsafe.Pointer(t)).Elem
+  case Chan:
+    return (*ChanType)(unsafe.Pointer(t)).Elem
+  case Map:
+    return (*MapType)(unsafe.Pointer(t)).Elem
+  case Pointer:
+    return (*PtrType)(unsafe.Pointer(t)).Elem
+  case Slice:
+    return (*SliceType)(unsafe.Pointer(t)).Elem
+  }
+  return nil
+}
+
+func (t *Type) Key() *Type {
+  if t.Kind() == Map {
+    return (*MapType)(unsafe.Pointer(t)).Key
+  }
+  return nil
+}
+
+func (t *Type) Len() int {
+  if t.Kind() == Array {
+    return int((*ArrayType)(unsafe.Pointer(t)).Len)
+  }
+  return 0
+}
+
+func (t *Type) ChanDir() ChanDir {
+  if t.Kind() == Chan {
+    return (*ChanType)(unsafe.Pointer(t)).Dir
+  }
+  return 0
+}
+`
+        }]
+      },
+      {
+        importPath: "reflect",
+        files: [{
+          filename: "/usr/local/go/src/reflect/type.go",
+          source: `package reflect
+
+import "internal/abi"
+
+func TypeFor[T any]() *abi.Type {
+  return abi.TypeFor[T]()
+}
+`
+        }]
+      },
+      {
+        importPath: "example.com/model",
+        files: [{
+          filename: "/workspace/model/model.go",
+          source: `package model
+
+type Local struct {
+  X int
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "internal/abi"
+import r "reflect"
+import "example.com/model"
+
+s := []int{1}
+a := [2]string{"x", "y"}
+m := map[string]int{"x": 1}
+c := make(chan bool, 1)
+p := new(int)
+pt := r.TypeFor[*model.Local]()
+
+return abi.TypeOf(s).Kind(), abi.TypeOf(s).Elem().Kind(),
+  abi.TypeOf(a).Kind(), abi.TypeOf(a).Elem().Kind(), abi.TypeOf(a).Len(),
+  abi.TypeOf(m).Kind(), abi.TypeOf(m).Key().Kind(), abi.TypeOf(m).Elem().Kind(),
+  abi.TypeOf(c).Kind(), abi.TypeOf(c).Elem().Kind(), abi.TypeOf(c).ChanDir(),
+  abi.TypeOf(p).Kind(), abi.TypeOf(p).Elem().Kind(),
+  r.TypeFor[model.Local]().Kind(), pt.Kind(), pt.Elem().Kind()
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.values).toEqual([
+      23n, 2n,
+      17n, 24n, 2n,
+      21n, 24n, 2n,
+      18n, 1n, 3n,
+      22n, 2n,
+      25n, 22n, 25n
+    ]);
+  });
+
+  test("preserves abi descriptor metadata through reflect rtype reinterpretation", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "internal/abi",
+        files: [{
+          filename: "/usr/local/go/src/internal/abi/type.go",
+          source: `package abi
+
+import "unsafe"
+
+type Kind uint8
+
+const (
+  Invalid Kind = iota
+  Bool
+  Int
+  Int8
+  Int16
+  Int32
+  Int64
+  Uint
+  Uint8
+  Uint16
+  Uint32
+  Uint64
+  Uintptr
+  Float32
+  Float64
+  Complex64
+  Complex128
+  Array
+  Chan
+  Func
+  Interface
+  Map
+  Pointer
+  Slice
+  String
+  Struct
+  UnsafePointer
+)
+
+type Type struct {
+  Kind_ Kind
+}
+
+type PtrType struct {
+  Type
+  Elem *Type
+}
+
+func TypeOf(a any) *Type
+func TypeFor[T any]() *Type { return nil }
+func (t *Type) Kind() Kind { return t.Kind_ }
+func (t *Type) Elem() *Type {
+  if t.Kind() == Pointer {
+    return (*PtrType)(unsafe.Pointer(t)).Elem
+  }
+  return nil
+}
+`
+        }]
+      },
+      {
+        importPath: "reflect",
+        files: [{
+          filename: "/usr/local/go/src/reflect/type.go",
+          source: `package reflect
+
+import (
+  "internal/abi"
+  "unsafe"
+)
+
+type Kind = abi.Kind
+
+const (
+  Invalid = abi.Invalid
+  Interface = abi.Interface
+  Pointer = abi.Pointer
+)
+
+type Type interface {
+  Kind() Kind
+  Elem() Type
+}
+
+type rtype struct {
+  t abi.Type
+}
+
+func (t *rtype) common() *abi.Type { return &t.t }
+func toRType(t *abi.Type) *rtype { return (*rtype)(unsafe.Pointer(t)) }
+func toType(t *abi.Type) Type {
+  if t == nil {
+    return nil
+  }
+  return toRType(t)
+}
+func (t *rtype) Kind() Kind { return Kind(t.t.Kind()) }
+func (t *rtype) Elem() Type { return toType(t.common().Elem()) }
+func TypeOf(i any) Type { return toType(abi.TypeOf(i)) }
+func TypeFor[T any]() Type { return toRType(abi.TypeFor[T]()) }
+`
+        }]
+      },
+      {
+        importPath: "example.com/goblike",
+        files: [{
+          filename: "/workspace/goblike/type.go",
+          source: `package goblike
+
+import "reflect"
+
+type GobEncoder interface {
+  GobEncode() ([]byte, error)
+}
+
+var EncoderType = reflect.TypeFor[GobEncoder]()
+var EncoderKind = EncoderType.Kind()
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+
+    const result = await expectRuns(`
+import "reflect"
+import g "example.com/goblike"
+
+t := reflect.TypeOf((*error)(nil))
+return int(t.Kind()), int(t.Elem().Kind()), int(g.EncoderKind)
+`, {
+      packages: graph.packages,
+      packageInfos: graph.packageInfos,
+      packageContexts: graph.packageContexts
+    });
+
+    expect(result.values).toEqual([22n, 20n, 20n]);
+  });
+
   test("bodyless package functions return declared zero result values", async () => {
     const graph = await evaluateSourcePackageGraph([
       {
@@ -3488,6 +3844,23 @@ return q, r, onlyR
 `);
 
     expect(result.values).toEqual([3n, 2n, 4n]);
+  });
+
+  test("expands a single multi-result call in return statements", async () => {
+    const result = await expectRuns(`
+func pair() (int, error) {
+  return 7, nil
+}
+
+func forward() (int, error) {
+  return pair()
+}
+
+v, err := forward()
+return v, err == nil
+`);
+
+    expect(result.values).toEqual([7n, true]);
   });
 
   test("infers tuple result slot types for short and var declarations", async () => {

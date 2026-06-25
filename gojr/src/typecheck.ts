@@ -65,6 +65,7 @@ export interface GoJuniorCheckConfig {
   predeclaredPackageObjects?: GoTypesObject[];
   autoImportFmt?: boolean;
   disableUnusedImportCheck?: boolean;
+  allowPackageInspection?: boolean;
   syntheticFunctionName?: string;
 }
 
@@ -145,7 +146,7 @@ export function checkGoJuniorFiles(
       ...(error instanceof Error && error.stack ? { stack: error.stack } : {})
     });
   }
-  filterTopLevelExpressionUnusedDiagnostics(diagnostics, statements);
+  filterTopLevelExpressionConvenienceDiagnostics(diagnostics, statements, config);
 
   return {
     pkg,
@@ -156,18 +157,31 @@ export function checkGoJuniorFiles(
   };
 }
 
-function filterTopLevelExpressionUnusedDiagnostics(diagnostics: Diagnostic[], statements: Stmt[]): void {
+function filterTopLevelExpressionConvenienceDiagnostics(
+  diagnostics: Diagnostic[],
+  statements: Stmt[],
+  config: GoJuniorCheckConfig
+): void {
   const expressionOffsets = new Set(
     statements
       .filter((statement) => statement.kind === "ExprStmt" && statement.span !== undefined)
       .map((statement) => statement.span!.offset)
   );
   if (expressionOffsets.size === 0) return;
+  const packageInspectionOffsets = new Set(
+    (config.allowPackageInspection ? statements : [])
+      .filter((statement) => statement.kind === "ExprStmt" && statement.expr.kind === "Ident" && statement.span !== undefined)
+      .map((statement) => statement.span!.offset)
+  );
   const kept = diagnostics.filter((diagnostic) =>
     !(diagnostic.code === "GOJR_TYPE001" &&
       / is not used$/.test(diagnostic.message) &&
       diagnostic.span !== undefined &&
-      expressionOffsets.has(diagnostic.span.offset))
+      expressionOffsets.has(diagnostic.span.offset)) &&
+    !(diagnostic.code === "GOJR_TYPE001" &&
+      /^use of package .+ not in selector$/.test(diagnostic.message) &&
+      diagnostic.span !== undefined &&
+      packageInspectionOffsets.has(diagnostic.span.offset))
   );
   diagnostics.splice(0, diagnostics.length, ...kept);
 }

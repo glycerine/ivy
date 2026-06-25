@@ -28,6 +28,18 @@ return a + s
     expect(result.diagnostics[0]?.message).toContain("mismatched types int and string");
   });
 
+  test("keeps bare package identifiers illegal outside REPL mode", () => {
+    const result = compileSource(`
+import "iter"
+
+iter
+`);
+
+    expect(result.diagnostics.some((diagnostic) =>
+      diagnostic.code === "GOJR_TYPE001" && diagnostic.message.includes("use of package iter not in selector")
+    )).toBe(true);
+  });
+
   test("typechecks package source files", () => {
     const result = compileSourceFiles([{
       filename: "calc.go",

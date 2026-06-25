@@ -404,25 +404,46 @@ export class EvaluationContext {
         const localName = this.options.importPath
             ? unqualifyLocalRuntimeTypeName(name, this.options.importPath)
             : name;
-        return this.shared.types.get(name) ??
+        const local = this.shared.types.get(name) ??
             this.shared.types.get(genericBaseTypeName(name)) ??
             this.shared.types.get(localName) ??
             this.shared.types.get(genericBaseTypeName(localName));
+        if (local)
+            return local;
+        const qualified = packageQualifiedRuntimeTypeNameParts(name);
+        const packageContext = qualified ? this.options.packageContexts?.[qualified.importPath] : undefined;
+        const foreign = packageContext?.shared.types.get(qualified.localName) ??
+            packageContext?.shared.types.get(qualified.baseName);
+        return foreign && qualified ? qualifyRuntimeStructTypeDef(foreign, qualified.importPath) : undefined;
     }
     interfaceDef(name) {
         const localName = this.options.importPath
             ? unqualifyLocalRuntimeTypeName(name, this.options.importPath)
             : name;
-        return this.shared.interfaces.get(name) ??
+        const local = this.shared.interfaces.get(name) ??
             this.shared.interfaces.get(genericBaseTypeName(name)) ??
             this.shared.interfaces.get(localName) ??
             this.shared.interfaces.get(genericBaseTypeName(localName));
+        if (local)
+            return local;
+        const qualified = packageQualifiedRuntimeTypeNameParts(name);
+        const packageContext = qualified ? this.options.packageContexts?.[qualified.importPath] : undefined;
+        const foreign = packageContext?.shared.interfaces.get(qualified.localName) ??
+            packageContext?.shared.interfaces.get(qualified.baseName);
+        return foreign && qualified ? qualifyRuntimeInterfaceDef(foreign, qualified.importPath) : undefined;
     }
     aliasType(name) {
-        return this.currentScope.lookupTypeAlias(name) ??
+        const local = this.currentScope.lookupTypeAlias(name) ??
             this.currentScope.lookupTypeAlias(genericBaseTypeName(name)) ??
             this.shared.aliases.get(name) ??
             this.shared.aliases.get(genericBaseTypeName(name));
+        if (local)
+            return local;
+        const qualified = packageQualifiedRuntimeTypeNameParts(name);
+        const packageContext = qualified ? this.options.packageContexts?.[qualified.importPath] : undefined;
+        const foreign = packageContext?.shared.aliases.get(qualified.localName) ??
+            packageContext?.shared.aliases.get(qualified.baseName);
+        return foreign && qualified ? qualifyLocalRuntimeTypeName(foreign, qualified.importPath) : undefined;
     }
     trueAliasType(name) {
         return this.shared.trueAliases.get(name) ??
@@ -790,6 +811,7 @@ const arrayCapacities = new WeakMap();
 const arrayTypeTexts = new WeakMap();
 const arrayViews = new WeakMap();
 const tupleValues = new WeakSet();
+const runtimePackageInspections = new WeakMap();
 let nextObjectMapKeyId = 1;
 let nextNonReflexiveMapKeyId = 1;
 function markTupleValues(values) {
@@ -965,6 +987,9 @@ export async function evaluatePackageSourceFiles(files, options = {}) {
         };
     }
     const context = new EvaluationContext(options);
+    if (options.importPath && options.packageContexts) {
+        options.packageContexts[options.importPath] = context;
+    }
     try {
         const pkg = await context.scheduler().runRoot(async () => {
             installImports(context, ast);
@@ -1773,6 +1798,7 @@ export class GoJuniorSession {
     currentOptions() {
         return {
             ...this.options,
+            replMode: this.options.replMode ?? true,
             ...(this.sessionSheet ? { sheet: this.sessionSheet } : {}),
             ...(this.sessionSheets ? { sheets: this.sessionSheets } : {})
         };
@@ -1790,6 +1816,7 @@ function ensureTrailingNewlineSourceFile(file) {
 export function typeCheckConfig(options) {
     return {
         sheetNamespaces: sheetNamespacesForOptions(options),
+        ...(options.replMode ? { allowPackageInspection: true } : {}),
         ...(options.packageInfos ? {
             importer: {
                 import: (path) => options.packageInfos?.[path]
@@ -1951,6 +1978,7 @@ function installImports(context, ast) {
             }
             continue;
         }
+        markRuntimePackageObject(pkg, imported.path, context.packageInfo(imported.path) ?? standardTypePackage(imported.path));
         context.declareOrAssignRoot(name, pkg, true);
     }
 }
@@ -2096,32 +2124,103 @@ function internalAbiTypeOf(value, context) {
         return null;
     return internalAbiTypeDescriptor(reflectliteTypeTextOfValue(value), context);
 }
+function isInternalAbiTypePointer(value, context) {
+    const type = normalizeTypeText(value.typeName);
+    return type === "internal/abi.Type" || (type === "Type" && context.importPath() === "internal/abi");
+}
 function internalAbiTypeDescriptor(typeText, context) {
-    const type = normalizeTypeText(context.resolveImportedTypeText(typeText));
-    const typeName = internalAbiRuntimeTypeName("Type", context);
-    const ptrTypeName = internalAbiRuntimeTypeName("PtrType", context);
-    const cacheKey = `${typeName}:${ptrTypeName}:${type}`;
+    const type = normalizeTypeText(resolveRuntimeCompositeAliases(context.resolveImportedTypeText(typeText), context));
+    const names = internalAbiRuntimeTypeNames(context);
+    const cacheKey = `${Object.values(names).join(":")}:${type}`;
     const cached = internalAbiTypeDescriptorCache.get(cacheKey);
     if (cached)
         return cached;
-    const layout = type.startsWith("*")
-        ? internalAbiPtrTypeStruct(type, typeName, ptrTypeName, context)
-        : internalAbiTypeStruct(type, typeName, context);
-    const pointer = new RuntimePointer(typeName, () => layout, (next) => {
+    const layout = internalAbiDescriptorStruct(type, names, context);
+    const pointer = new RuntimePointer(names.type, () => layout, (next) => {
         const struct = structFromValue(next);
         if (!struct)
-            throwTypeError(next, typeName, `*${typeName}`);
+            throwTypeError(next, names.type, `*${names.type}`);
         for (const [field, value] of struct.orderedFields())
             layout.set(field, value);
     });
     internalAbiTypeDescriptorCache.set(cacheKey, pointer);
     return pointer;
 }
-function internalAbiPtrTypeStruct(typeText, typeName, ptrTypeName, context) {
-    const struct = new RuntimeStruct(ptrTypeName);
-    const base = internalAbiTypeStruct(typeText, typeName, context);
+function internalAbiRuntimeTypeNames(context) {
+    return {
+        type: internalAbiRuntimeTypeName("Type", context),
+        arrayType: internalAbiRuntimeTypeName("ArrayType", context),
+        chanType: internalAbiRuntimeTypeName("ChanType", context),
+        mapType: internalAbiRuntimeTypeName("MapType", context),
+        ptrType: internalAbiRuntimeTypeName("PtrType", context),
+        sliceType: internalAbiRuntimeTypeName("SliceType", context)
+    };
+}
+function internalAbiDescriptorStruct(typeText, names, context) {
+    const arrayType = parseArrayOrSliceTypeText(typeText, context);
+    if (arrayType) {
+        return arrayType.length === undefined || arrayType.inferLength
+            ? internalAbiSliceTypeStruct(typeText, arrayType.elementType, names, context)
+            : internalAbiArrayTypeStruct(typeText, arrayType.elementType, arrayType.length, names, context);
+    }
+    const mapType = parseMapTypeText(typeText);
+    if (mapType)
+        return internalAbiMapTypeStruct(typeText, mapType.keyType, mapType.valueType, names, context);
+    const chanType = parseChanTypeText(typeText);
+    if (chanType)
+        return internalAbiChanTypeStruct(typeText, chanType.elementType, chanType.direction, names, context);
+    if (typeText.startsWith("*"))
+        return internalAbiPtrTypeStruct(typeText, names, context);
+    return internalAbiTypeStruct(typeText, names.type, context);
+}
+function internalAbiArrayTypeStruct(typeText, elementType, length, names, context) {
+    const struct = new RuntimeStruct(names.arrayType);
+    const base = internalAbiTypeStruct(typeText, names.type, context);
+    struct.set("Type", base);
+    struct.set("Elem", internalAbiTypeDescriptor(elementType, context));
+    struct.set("Slice", internalAbiTypeDescriptor(`[]${elementType}`, context));
+    struct.set("Len", BigInt(length));
+    return struct;
+}
+function internalAbiChanTypeStruct(typeText, elementType, direction, names, context) {
+    const struct = new RuntimeStruct(names.chanType);
+    const base = internalAbiTypeStruct(typeText, names.type, context);
+    struct.set("Type", base);
+    struct.set("Elem", internalAbiTypeDescriptor(elementType, context));
+    struct.set("Dir", direction === "receive" ? 1n : direction === "send" ? 2n : 3n);
+    return struct;
+}
+function internalAbiMapTypeStruct(typeText, keyType, valueType, names, context) {
+    const struct = new RuntimeStruct(names.mapType);
+    const base = internalAbiTypeStruct(typeText, names.type, context);
+    const keySize = internalAbiSizeForType(keyType, context);
+    const valueSize = internalAbiSizeForType(valueType, context);
+    struct.set("Type", base);
+    struct.set("Key", internalAbiTypeDescriptor(keyType, context));
+    struct.set("Elem", internalAbiTypeDescriptor(valueType, context));
+    struct.set("Group", internalAbiTypeDescriptor("struct{}", context));
+    struct.set("Hasher", hostCallable("internal/abi.MapType.Hasher", (args) => BigInt(internalAbiTypeHash(`${keyType}:${formatValue(args[0] ?? null)}:${String(args[1] ?? 0n)}`))));
+    struct.set("GroupSize", 0n);
+    struct.set("KeysOff", 0n);
+    struct.set("KeyStride", keySize);
+    struct.set("ElemsOff", 0n);
+    struct.set("ElemStride", valueSize);
+    struct.set("ElemOff", 0n);
+    struct.set("Flags", (keySize > 128n ? 4n : 0n) | (valueSize > 128n ? 8n : 0n));
+    return struct;
+}
+function internalAbiPtrTypeStruct(typeText, names, context) {
+    const struct = new RuntimeStruct(names.ptrType);
+    const base = internalAbiTypeStruct(typeText, names.type, context);
     struct.set("Type", base);
     struct.set("Elem", internalAbiTypeDescriptor(typeText.slice(1), context));
+    return struct;
+}
+function internalAbiSliceTypeStruct(typeText, elementType, names, context) {
+    const struct = new RuntimeStruct(names.sliceType);
+    const base = internalAbiTypeStruct(typeText, names.type, context);
+    struct.set("Type", base);
+    struct.set("Elem", internalAbiTypeDescriptor(elementType, context));
     return struct;
 }
 function internalAbiTypeStruct(typeText, typeName, context) {
@@ -2186,20 +2285,20 @@ function internalAbiKindForType(typeText, context) {
         return 15n;
     if (type === "complex128")
         return 16n;
-    if (/^\[[0-9.]*\]/.test(type))
+    if (type.startsWith("[]"))
+        return 23n;
+    if (/^\[(?:[0-9.]+|\.\.\.)\]/.test(type))
         return 17n;
     if (parseChanTypeText(type))
         return 18n;
     if (type.startsWith("func("))
         return 19n;
-    if (type === "any" || type === "interface{}" || context?.interfaceDef(type) || parseAnonymousInterfaceTypeText(type))
+    if (type === "error" || type === "any" || type === "interface{}" || context?.interfaceDef(type) || parseAnonymousInterfaceTypeText(type))
         return 20n;
     if (type.startsWith("map["))
         return 21n;
     if (type.startsWith("*"))
         return 22n;
-    if (type.startsWith("[]"))
-        return 23n;
     if (type === "string")
         return 24n;
     if (context?.typeDef(type) || parseAnonymousStructTypeText(type))
@@ -2220,7 +2319,7 @@ function internalAbiSizeForType(typeText, context) {
         return 8n;
     if (type === "complex128")
         return 16n;
-    if (type === "string" || type === "any" || type === "interface{}" || context?.interfaceDef(type))
+    if (type === "string" || type === "error" || type === "any" || type === "interface{}" || context?.interfaceDef(type))
         return 16n;
     if (type.startsWith("[]"))
         return 24n;
@@ -2510,7 +2609,7 @@ function installAutomaticImports(context) {
 }
 function availablePackages(context) {
     const sourcePackages = context.packages();
-    return {
+    const packages = {
         cmp: cmpPackage(),
         fmt: fmtPackage(),
         math: mathPackage(),
@@ -2525,6 +2624,10 @@ function availablePackages(context) {
         "syscall/js": syscallJSPackage(),
         unsafe: unsafePackage()
     };
+    for (const [path, pkg] of Object.entries(packages)) {
+        markRuntimePackageObject(pkg, path, context.packageInfo(path) ?? standardTypePackage(path));
+    }
+    return packages;
 }
 function cmpPackage() {
     return {
@@ -3643,7 +3746,7 @@ function goJuniorFunctionValue(name, signature, body, closureScope, declaration,
                     const rawValues = completion.values.length === 0
                         ? namedReturnValues(activeSignature, context)
                         : completion.values;
-                    const values = prepareFunctionReturnValues(activeSignature, rawValues, completion.sources, context);
+                    const values = prepareFunctionReturnValues(activeSignature, expandFunctionReturnValues(activeSignature, rawValues), completion.sources, context);
                     const result = values.length === 0 ? null : values.length === 1 ? values[0] ?? null : markTupleValues(values);
                     if (closureContext && closureContext !== parentContext && closureContext.importPath()) {
                         return externalizePackageRuntimeValue(result, closureContext.importPath());
@@ -3655,6 +3758,12 @@ function goJuniorFunctionValue(name, signature, body, closureScope, declaration,
             return closureScope ? context.withScopeAsync(closureScope, invoke) : invoke();
         }
     };
+}
+function expandFunctionReturnValues(signature, values) {
+    if (values.length !== 1 || signature.results.length <= 1)
+        return values;
+    const first = values[0];
+    return first !== undefined && isTupleValues(first) ? first : values;
 }
 function bindFunctionTypeParameters(declaration, signature, args, context, explicitTypeArguments, seedBindings) {
     const names = declaration?.typeParameters ?? [];
@@ -4668,7 +4777,7 @@ async function evaluateExpression(expression, context) {
             return evaluateCall(expression, context);
         case "IndexExpression": {
             const object = await evaluateExpression(expression.object, context);
-            if ((isRuntimeCallable(object) || isGoJuniorFunction(object)) && isTypeArgumentExpression(expression.index, context)) {
+            if ((isRuntimeCallable(object) || isGoJuniorFunction(object)) && isTypeArgumentExpression(expression.index, context, true)) {
                 return object;
             }
             return getIndex(object, await evaluateExpression(expression.index, context));
@@ -5057,12 +5166,16 @@ async function evaluateCall(expression, context) {
     return callRuntime(callee, args, context, typeArguments);
 }
 function callTypeArguments(callee, context) {
-    if (callee.kind !== "IndexExpression" || !isTypeArgumentExpression(callee.index, context))
+    if (callee.kind !== "IndexExpression" || !isTypeArgumentExpression(callee.index, context, true))
         return undefined;
-    const typeText = typeArgumentText(callee.index);
+    const typeText = typeArgumentText(callee.index, true);
     if (typeText === undefined)
         return undefined;
-    return splitTopLevelTypeArguments(typeText).map((type) => context.resolveImportedTypeText(type));
+    return splitTopLevelTypeArguments(typeText).map((type) => {
+        const resolved = resolveRuntimeCompositeAliases(context.resolveImportedTypeText(type), context);
+        const importPath = context.importPath();
+        return importPath ? qualifyLocalRuntimeTypeName(resolved, importPath) : resolved;
+    });
 }
 function conversionTargetType(callee, context) {
     const typeText = conversionTargetTypeText(callee, context);
@@ -5278,6 +5391,11 @@ async function getSelector(expression, context) {
     const syscallJSTypeMethod = syscallJSTypeSelector(object, expression.field);
     if (syscallJSTypeMethod)
         return syscallJSTypeMethod;
+    if (object instanceof RuntimePointer && isInternalAbiTypePointer(object, context)) {
+        const method = methodForValue(object, expression.field, context);
+        if (method)
+            return boundMethodValue(method.method, method.receiver, context);
+    }
     const struct = structFromValue(object);
     if (struct) {
         const fieldValue = struct.get(expression.field);
@@ -6222,6 +6340,9 @@ function uintptrFromUnsafePointer(value) {
     throwTypeError(value, "uintptr", "conversion");
 }
 function reinterpretUnsafePointer(pointer, targetType, context) {
+    const abiReflectView = reinterpretInternalAbiTypeAsReflectRtype(pointer, targetType, context);
+    if (abiReflectView)
+        return abiReflectView;
     let fallback;
     const currentValue = () => {
         const value = pointer.get();
@@ -6234,6 +6355,32 @@ function reinterpretUnsafePointer(pointer, targetType, context) {
     return new RuntimePointer(targetType, currentValue, (next) => {
         fallback = prepareAssignableToType(next, targetType, `*${targetType}`, context);
     });
+}
+function reinterpretInternalAbiTypeAsReflectRtype(pointer, targetType, context) {
+    if (!isInternalAbiTypePointer(pointer, context) || !isReflectRtypeName(targetType, context))
+        return undefined;
+    let rtypeStruct;
+    const currentValue = () => {
+        const descriptor = pointer.get();
+        if (!rtypeStruct) {
+            rtypeStruct = new RuntimeStruct(targetType);
+        }
+        rtypeStruct.set("t", descriptor);
+        return rtypeStruct;
+    };
+    return new RuntimePointer(targetType, currentValue, (next) => {
+        const struct = structFromValue(next);
+        if (!struct)
+            throwTypeError(next, targetType, `*${targetType}`);
+        const descriptor = struct.get("t");
+        if (descriptor !== undefined)
+            pointer.set(descriptor);
+        rtypeStruct = struct;
+    });
+}
+function isReflectRtypeName(typeText, context) {
+    const type = normalizeTypeText(typeText);
+    return type === "reflect.rtype" || (type === "rtype" && context.importPath() === "reflect");
 }
 function opaqueUnsafeAddressPointer(targetType, context) {
     let value = defaultValueForTypeText(targetType, context);
@@ -7806,8 +7953,10 @@ function externalizePackageRuntimeValue(value, packageName) {
     if (value instanceof RuntimeGoString)
         return value.text();
     if (isGoJuniorFunction(value)) {
+        const signature = value.signature ? qualifyRuntimeSignature(value.signature, packageName) : undefined;
         return {
             ...value,
+            ...(signature ? { signature } : {}),
             async call(args, context, typeArguments) {
                 return externalizePackageRuntimeValue(await value.call(args, context, typeArguments), packageName);
             }
@@ -8030,6 +8179,26 @@ function qualifyRuntimeSignature(signature, packageName) {
         }))
     };
 }
+function qualifyRuntimeStructTypeDef(typeDef, packageName) {
+    return {
+        name: qualifyLocalRuntimeTypeName(typeDef.name, packageName),
+        ...(typeDef.typeParameters ? { typeParameters: typeDef.typeParameters } : {}),
+        fields: typeDef.fields.map((field) => ({
+            ...field,
+            type: { text: qualifyLocalRuntimeTypeName(field.type.text, packageName) }
+        }))
+    };
+}
+function qualifyRuntimeInterfaceDef(interfaceDef, packageName) {
+    return {
+        name: qualifyLocalRuntimeTypeName(interfaceDef.name, packageName),
+        methods: interfaceDef.methods.map((method) => ({
+            ...method,
+            signature: qualifyRuntimeSignature(method.signature, packageName)
+        })),
+        embeds: interfaceDef.embeds.map((embed) => ({ text: qualifyLocalRuntimeTypeName(embed.text, packageName) }))
+    };
+}
 function qualifyRuntimeMethodDeclaration(declaration, packageName) {
     return {
         ...declaration,
@@ -8049,8 +8218,19 @@ function genericBaseTypeName(typeText) {
     const bracket = type.indexOf("[");
     return bracket > 0 ? type.slice(0, bracket) : type;
 }
-function isTypeArgumentExpression(expression, context) {
-    const typeText = typeArgumentText(expression);
+function packageQualifiedRuntimeTypeNameParts(typeText) {
+    const baseName = genericBaseTypeName(typeText);
+    const dot = baseName.lastIndexOf(".");
+    if (dot <= 0 || dot === baseName.length - 1)
+        return undefined;
+    return {
+        importPath: baseName.slice(0, dot),
+        localName: baseName.slice(dot + 1),
+        baseName
+    };
+}
+function isTypeArgumentExpression(expression, context, allowPointer = false) {
+    const typeText = typeArgumentText(expression, allowPointer);
     if (typeText === undefined)
         return false;
     const parts = splitTopLevelTypeArguments(typeText);
@@ -8076,20 +8256,26 @@ function splitTopLevelTypeArguments(typeText) {
     parts.push(typeText.slice(start).trim());
     return parts.filter((part) => part.length > 0);
 }
-function typeArgumentText(expression) {
+function typeArgumentText(expression, allowPointer = false) {
     switch (expression.kind) {
         case "TypeExpression":
             return expression.type.text;
         case "Identifier":
             return expression.name;
         case "SelectorExpression": {
-            const object = typeArgumentText(expression.object);
+            const object = typeArgumentText(expression.object, allowPointer);
             return object ? `${object}.${expression.field}` : undefined;
         }
         case "IndexExpression": {
-            const object = typeArgumentText(expression.object);
-            const index = typeArgumentText(expression.index);
+            const object = typeArgumentText(expression.object, allowPointer);
+            const index = typeArgumentText(expression.index, allowPointer);
             return object && index ? `${object}[${index}]` : undefined;
+        }
+        case "UnaryExpression": {
+            if (!allowPointer || expression.operator !== "*")
+                return undefined;
+            const operand = typeArgumentText(expression.operand, allowPointer);
+            return operand ? `*${operand}` : undefined;
         }
         default:
             return undefined;
@@ -8818,6 +9004,94 @@ function iterPullZeroValue(index, typeArguments, lastYielded, context) {
         return defaultValueForTypeText(typeText, context);
     return zeroValueLike(lastYielded[index] ?? null);
 }
+function markRuntimePackageObject(value, importPath, packageInfo) {
+    runtimePackageInspections.set(value, {
+        importPath,
+        ...(packageInfo ? { packageInfo } : {})
+    });
+}
+function formatRuntimePackageObject(value) {
+    const inspection = runtimePackageInspections.get(value);
+    if (!inspection)
+        return undefined;
+    const packageName = inspection.packageInfo?.Name() ?? importDefaultName(inspection.importPath);
+    const lines = [`package ${packageName}`];
+    const signatures = inspection.packageInfo
+        ? packageInspectionSignatures(inspection.packageInfo)
+        : runtimeObjectInspectionSignatures(value);
+    if (signatures.length > 0)
+        lines.push(...signatures);
+    return lines.join("\n");
+}
+function packageInspectionSignatures(pkg) {
+    return pkg.Scope().Names()
+        .flatMap((name) => {
+        const object = pkg.Scope().Lookup(name);
+        if (object === null || object.constructor.name === "PkgName" || !object.Exported())
+            return [];
+        const signature = packageObjectSignature(object, pkg);
+        return signature ? [signature] : [];
+    });
+}
+function packageObjectSignature(object, pkg) {
+    const name = object.Name();
+    const typeText = goTypesObjectTypeText(object, pkg);
+    switch (object.constructor.name) {
+        case "Func":
+            return formatPackageFunctionSignature(name, typeText);
+        case "TypeName":
+            return formatPackageTypeSignature(name, typeText, object, pkg);
+        case "Const":
+            return typeText ? `const ${name} ${typeText}` : `const ${name}`;
+        case "Var":
+            return typeText ? `var ${name} ${typeText}` : `var ${name}`;
+        default:
+            return undefined;
+    }
+}
+function formatPackageFunctionSignature(name, typeText) {
+    if (!typeText)
+        return `func ${name}`;
+    return typeText.startsWith("func")
+        ? `func ${name}${typeText.slice("func".length)}`
+        : `func ${name} ${typeText}`;
+}
+function formatPackageTypeSignature(name, typeText, object, pkg) {
+    const header = typeText ?? name;
+    const underlying = goTypesObjectUnderlyingTypeText(object, pkg);
+    return underlying && underlying !== header
+        ? `type ${header} ${underlying}`
+        : `type ${header}`;
+}
+function goTypesObjectTypeText(object, pkg) {
+    const type = object.Type();
+    if (type === null)
+        return undefined;
+    return GoTypesTypeString(type, GoTypesRelativeTo(pkg));
+}
+function goTypesObjectUnderlyingTypeText(object, pkg) {
+    const type = object.Type();
+    const underlying = type?.Underlying?.();
+    if (underlying === undefined || underlying === null || underlying === type)
+        return undefined;
+    return GoTypesTypeString(underlying, GoTypesRelativeTo(pkg));
+}
+function runtimeObjectInspectionSignatures(value) {
+    return Object.entries(value)
+        .filter(([name]) => isExportedRuntimeName(name))
+        .map(([name, item]) => runtimeObjectMemberSignature(name, item));
+}
+function runtimeObjectMemberSignature(name, value) {
+    if (isGoJuniorFunction(value) && value.signature)
+        return formatPackageFunctionSignature(name, signatureTypeText(value.signature));
+    if (isRuntimeCallable(value))
+        return `func ${name}`;
+    return `var ${name} ${runtimeTypeText(value)}`;
+}
+function isExportedRuntimeName(name) {
+    const first = name.codePointAt(0);
+    return first !== undefined && first >= 65 && first <= 90;
+}
 function sprintf(format, args) {
     let argIndex = 0;
     return format.replace(/%(#)?[%vdsft]/g, (match, alternate) => {
@@ -8973,6 +9247,9 @@ export function formatValue(value) {
         return `<func ${value.name}>`;
     if (value instanceof SheetBinding)
         return `<sheet ${value.name}>`;
+    const packageText = formatRuntimePackageObject(value);
+    if (packageText !== undefined)
+        return packageText;
     return `{${Object.entries(value).map(([key, item]) => `${key}:${formatValue(item)}`).join(" ")}}`;
 }
 export function formatReplValue(value) {
@@ -9009,6 +9286,9 @@ export function formatReplValue(value) {
         return `<func ${value.name}>`;
     if (value instanceof SheetBinding)
         return `<sheet ${value.name}>`;
+    const packageText = formatRuntimePackageObject(value);
+    if (packageText !== undefined)
+        return packageText;
     return `{${Object.entries(value).map(([key, item]) => `${key}:${formatReplValue(item)}`).join(" ")}}`;
 }
 function formatGoSyntaxValue(value) {
