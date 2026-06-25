@@ -6005,6 +6005,106 @@ func init() {
     expect(graph.packages.app?.Seen).toBe("ok");
   });
 
+  test("preserves caller package identity through imported generic atomic pointer loads", async () => {
+    const graph = await evaluateSourcePackageGraph([
+      {
+        importPath: "sync/atomic",
+        files: [{
+          filename: "/usr/local/go/src/sync/atomic/type.go",
+          source: `package atomic
+
+import "unsafe"
+
+type Pointer[T any] struct {
+  _ [0]*T
+  v unsafe.Pointer
+}
+
+func LoadPointer(addr *unsafe.Pointer) unsafe.Pointer
+func StorePointer(addr *unsafe.Pointer, val unsafe.Pointer)
+
+func (x *Pointer[T]) Load() *T {
+  return (*T)(LoadPointer(&x.v))
+}
+
+func (x *Pointer[T]) Store(val *T) {
+  StorePointer(&x.v, unsafe.Pointer(val))
+}
+`
+        }]
+      },
+      {
+        importPath: "internal/sync",
+        files: [{
+          filename: "/usr/local/go/src/internal/sync/hashtriemap.go",
+          source: `package sync
+
+import "sync/atomic"
+
+type Mutex struct {
+  state int32
+  sema uint32
+}
+
+func (m *Mutex) Lock() {
+  m.state = 1
+}
+
+type node[K comparable, V any] struct {
+  isEntry bool
+}
+
+type indirect[K comparable, V any] struct {
+  node[K, V]
+  mu atomiclessMutex
+}
+
+type atomiclessMutex = Mutex
+
+type HashTrieMap[K comparable, V any] struct {
+  root atomic.Pointer[indirect[K, V]]
+}
+
+func newIndirectNode[K comparable, V any]() *indirect[K, V] {
+  return &indirect[K, V]{node: node[K, V]{isEntry: false}}
+}
+
+func (h *HashTrieMap[K, V]) Init() {
+  h.root.Store(newIndirectNode[K, V]())
+}
+
+func (h *HashTrieMap[K, V]) Use() int32 {
+  h.Init()
+  i := h.root.Load()
+  i.mu.Lock()
+  return i.mu.state
+}
+`
+        }]
+      },
+      {
+        importPath: "app",
+        files: [{
+          filename: "/workspace/app/app.go",
+          source: `package app
+
+import isync "internal/sync"
+
+var Seen int32
+
+func init() {
+  var h isync.HashTrieMap[int, string]
+  Seen = h.Use()
+}
+`
+        }]
+      }
+    ]);
+
+    expect(graph.diagnostics).toEqual([]);
+    expect(graph.packages.app?.Seen).toBe(1n);
+  });
+
   test("REPL checker accepts keyed generic struct literals", async () => {
     const session = new GoJuniorSession();
 
@@ -6256,6 +6356,27 @@ return a, ok, b, ok2, count
 `);
 
     expect(result.values).toEqual([1n, true, 0n, false, 1n]);
+  });
+
+  test("supports keyed literals for embedded instantiated generic fields", async () => {
+    const result = await expectRuns(`
+type node[K comparable, V any] struct {
+  isEntry bool
+}
+
+type indirect[K comparable, V any] struct {
+  node[K, V]
+  parent *indirect[K, V]
+}
+
+func newIndirect[K comparable, V any](parent *indirect[K, V]) *indirect[K, V] {
+  return &indirect[K, V]{node: node[K, V]{isEntry: false}, parent: parent}
+}
+
+x := newIndirect[int, string](nil)
+return x.node.isEntry, x.parent == nil
+`);
+    expect(result.values).toEqual([false, true]);
   });
 
   test("keeps standard iter intrinsic ahead of cached package payloads", async () => {

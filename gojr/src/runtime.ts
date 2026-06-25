@@ -4670,11 +4670,27 @@ function goJuniorFunctionValue(
       const context = closureContext ?? parentContext;
       const packageName = closureContext?.importPath();
       const crossesPackageBoundary = packageName !== undefined && packageName !== parentContext.importPath();
+      const boundaryTypeArgumentBindings = preliminaryFunctionTypeArgumentBindings(
+        declaration,
+        signature,
+        args,
+        context,
+        typeArguments,
+        typeArgumentBindings
+      );
+      const boundarySignature = instantiateRuntimeSignatureTypeArguments(signature, boundaryTypeArgumentBindings);
+      const boundaryReceiverType = declaration?.receiver
+        ? instantiateRuntimeTypeNodeTypeArguments(declaration.receiver.type, boundaryTypeArgumentBindings)
+        : undefined;
       const callArgs = crossesPackageBoundary
-        ? args.map((arg) => internalizePackageRuntimeValue(arg, packageName))
+        ? args.map((arg, index) => packageBoundaryArgumentValue(
+          arg,
+          parameterTypeForArgument(boundarySignature, index),
+          packageName
+        ))
         : args;
       const callReceiver = crossesPackageBoundary
-        ? internalizePackageRuntimeValue(boundReceiver ?? null, packageName)
+        ? packageBoundaryArgumentValue(boundReceiver ?? null, boundaryReceiverType?.text, packageName)
         : boundReceiver;
       const invoke = () => context.functionCallAsync(() => context.childScopeAsync(async () => {
         const activeTypeArgumentBindings = bindFunctionTypeParameters(declaration, signature, callArgs, context, typeArguments, typeArgumentBindings);
@@ -4709,10 +4725,16 @@ function goJuniorFunctionValue(
             ? namedReturnValues(activeSignature, context)
             : completion.values;
           const values = prepareFunctionReturnValues(activeSignature, expandFunctionReturnValues(activeSignature, rawValues), completion.sources, context);
-          const result = values.length === 0 ? null : values.length === 1 ? values[0] ?? null : markTupleValues(values);
           if (closureContext && closureContext !== parentContext && closureContext.importPath()) {
-            return externalizePackageRuntimeValue(result, closureContext.importPath()!);
+            const resultValues = values.map((value, index) => packageBoundaryResultValue(
+              value ?? null,
+              activeSignature.results[index]?.type.text,
+              closureContext.importPath()!,
+              parentContext.importPath()
+            ));
+            return resultValues.length === 0 ? null : resultValues.length === 1 ? resultValues[0] ?? null : markTupleValues(resultValues);
           }
+          const result = values.length === 0 ? null : values.length === 1 ? values[0] ?? null : markTupleValues(values);
           return result;
         }
         return null;
@@ -4720,6 +4742,57 @@ function goJuniorFunctionValue(
       return closureScope ? context.withScopeAsync(closureScope, invoke) : invoke();
     }
   };
+}
+
+function preliminaryFunctionTypeArgumentBindings(
+  declaration: FunctionDecl | undefined,
+  signature: FunctionDecl["signature"],
+  args: RuntimeValue[],
+  context: EvaluationContext,
+  explicitTypeArguments?: string[],
+  seedBindings?: Record<string, string>
+): Record<string, string> | undefined {
+  const names = declaration?.typeParameters ?? [];
+  if (names.length === 0) return seedBindings;
+  const inferred = inferFunctionTypeArguments(names, signature, args, explicitTypeArguments, context, seedBindings);
+  const bindings: Record<string, string> = { ...(seedBindings ?? {}) };
+  const importPath = context.importPath();
+  for (const name of names) {
+    const type = inferred.get(name) ?? seedBindings?.[name];
+    if (!type) continue;
+    bindings[name] = type;
+    if (importPath) bindings[`${importPath}.${name}`] = type;
+  }
+  return Object.keys(bindings).length > 0 ? bindings : undefined;
+}
+
+function parameterTypeForArgument(signature: FunctionDecl["signature"], index: number): string | undefined {
+  const parameter = signature.parameters[index] ?? (() => {
+    for (let candidateIndex = signature.parameters.length - 1; candidateIndex >= 0; candidateIndex -= 1) {
+      const candidate = signature.parameters[candidateIndex];
+      if (candidate?.variadic && index >= candidateIndex) return candidate;
+    }
+    return undefined;
+  })();
+  return parameter?.type.text;
+}
+
+function packageBoundaryArgumentValue(value: RuntimeValue, typeText: string | undefined, calleePackageName: string): RuntimeValue {
+  const owner = typeText ? runtimeTypeOwnerPackagePath(typeText) : undefined;
+  return owner && owner !== calleePackageName
+    ? externalizePackageRuntimeValue(value, owner)
+    : internalizePackageRuntimeValue(value, calleePackageName);
+}
+
+function packageBoundaryResultValue(
+  value: RuntimeValue,
+  typeText: string | undefined,
+  calleePackageName: string,
+  callerPackageName: string | undefined
+): RuntimeValue {
+  const owner = runtimeTypeOwnerPackagePath(typeText);
+  if (owner && callerPackageName === owner) return internalizePackageRuntimeValue(value, owner);
+  return externalizePackageRuntimeValue(value, owner ?? calleePackageName);
 }
 
 function expandFunctionReturnValues(signature: FunctionDecl["signature"], values: RuntimeValue[]): RuntimeValue[] {
@@ -7360,6 +7433,23 @@ function runtimeQualifiedTypePackagePath(typeName: string): string | undefined {
   return base.slice(0, dot);
 }
 
+function runtimeTypeOwnerPackagePath(typeText: string | undefined): string | undefined {
+  const type = normalizeTypeText(typeText ?? "");
+  if (!type) return undefined;
+  if (type.startsWith("*")) return runtimeTypeOwnerPackagePath(type.slice(1));
+  if (type.startsWith("[]")) return runtimeTypeOwnerPackagePath(type.slice(2));
+  const arrayType = parseArrayOrSliceTypeText(type);
+  if (arrayType) return runtimeTypeOwnerPackagePath(arrayType.elementType);
+  const chanType = parseChanTypeText(type);
+  if (chanType) return runtimeTypeOwnerPackagePath(chanType.elementType);
+  const mapType = parseMapTypeText(type);
+  if (mapType) return runtimeTypeOwnerPackagePath(mapType.valueType) ?? runtimeTypeOwnerPackagePath(mapType.keyType);
+  const owner = runtimeQualifiedTypePackagePath(type);
+  if (owner) return owner;
+  const generic = genericTypeArguments(type);
+  return generic?.args.map(runtimeTypeOwnerPackagePath).find((candidate): candidate is string => Boolean(candidate));
+}
+
 function prefersCompiledZeroValue(type: string): boolean {
   return type === "sync.Once" ||
     type === "sync.Mutex" ||
@@ -7384,7 +7474,7 @@ function defaultIntrinsicNamedValue(type: string, context?: EvaluationContext): 
   if (type === "atomic.Int32" || type === "sync/atomic.Int32") return new RuntimeNamedValue(type, atomicInt32Value());
   if (type === "atomic.Uint64" || type === "sync/atomic.Uint64") return new RuntimeNamedValue(type, atomicUint64Value());
   const atomicPointer = /^(?:atomic|sync\/atomic)\.Pointer(?:\[[\s\S]*\])?$/.exec(type);
-  if (atomicPointer) return new RuntimeNamedValue(type, atomicPointerValue());
+  if (atomicPointer) return new RuntimeNamedValue(type, atomicPointerValue(atomicPointerElementType(type)));
   return undefined;
 }
 
@@ -7463,22 +7553,33 @@ function syncMutexValue(name: string): RuntimeObject {
   };
 }
 
-function atomicPointerValue(): RuntimeObject {
+function atomicPointerElementType(type: string): string | undefined {
+  const generic = genericTypeArguments(type);
+  return generic?.args[0];
+}
+
+function atomicPointerValue(elementType?: string): RuntimeObject {
   let value: RuntimeValue = null;
+  const pointerType = elementType ? `*${elementType}` : undefined;
+  const prepare = (next: RuntimeValue, context: EvaluationContext, role: string): RuntimeValue =>
+    pointerType ? prepareAssignableToType(next, pointerType, role, context) : next;
+  const load = (context: EvaluationContext): RuntimeValue =>
+    value === null ? null : prepare(value, context, "sync/atomic.Pointer.Load result");
   return {
-    Load: hostCallable("sync/atomic.Pointer.Load", () => value),
-    Store: hostCallable("sync/atomic.Pointer.Store", (args) => {
-      value = args[0] ?? null;
+    Load: hostCallable("sync/atomic.Pointer.Load", (_args, context) => load(context)),
+    Store: hostCallable("sync/atomic.Pointer.Store", (args, context) => {
+      value = prepare(args[0] ?? null, context, "sync/atomic.Pointer.Store argument");
       return null;
     }),
-    Swap: hostCallable("sync/atomic.Pointer.Swap", (args) => {
-      const previous = value;
-      value = args[0] ?? null;
+    Swap: hostCallable("sync/atomic.Pointer.Swap", (args, context) => {
+      const previous = load(context);
+      value = prepare(args[0] ?? null, context, "sync/atomic.Pointer.Swap argument");
       return previous;
     }),
-    CompareAndSwap: hostCallable("sync/atomic.Pointer.CompareAndSwap", (args) => {
-      if (valueEqual(value, args[0] ?? null)) {
-        value = args[1] ?? null;
+    CompareAndSwap: hostCallable("sync/atomic.Pointer.CompareAndSwap", (args, context) => {
+      const oldValue = prepare(args[0] ?? null, context, "sync/atomic.Pointer.CompareAndSwap old argument");
+      if (valueEqual(load(context), oldValue)) {
+        value = prepare(args[1] ?? null, context, "sync/atomic.Pointer.CompareAndSwap new argument");
         return true;
       }
       return false;
@@ -8587,9 +8688,44 @@ function retagRuntimeStruct(struct: RuntimeStruct, typeName: string): RuntimeStr
 }
 
 function runtimeTypeNameInContext(typeText: string, context?: EvaluationContext): string {
-  const resolved = resolveRuntimeCompositeAliases(typeText, context);
+  const resolved = resolveRuntimeTrueAliases(resolveRuntimeCompositeAliases(typeText, context), context);
   const importPath = context?.importPath();
-  return importPath ? unqualifyLocalRuntimeTypeName(resolved, importPath) : resolved;
+  const localized = importPath ? unqualifyLocalRuntimeTypeName(resolved, importPath) : resolved;
+  return resolveRuntimeTrueAliases(localized, context);
+}
+
+function resolveRuntimeTrueAliases(typeText: string, context?: EvaluationContext, seen = new Set<string>()): string {
+  const type = normalizeTypeText(typeText);
+  if (!type || !context) return type;
+  if (seen.has(type)) return type;
+  seen.add(type);
+  const alias = context.trueAliasType(type);
+  if (alias && alias !== type) {
+    return resolveRuntimeTrueAliases(context.resolveImportedTypeText(alias), context, seen);
+  }
+  if (type.startsWith("*")) return `*${resolveRuntimeTrueAliases(type.slice(1), context, new Set(seen))}`;
+  if (type.startsWith("[]")) return `[]${resolveRuntimeTrueAliases(type.slice(2), context, new Set(seen))}`;
+  const arrayType = parseArrayOrSliceTypeText(type);
+  if (arrayType) {
+    const element = resolveRuntimeTrueAliases(arrayType.elementType, context, new Set(seen));
+    return arrayType.length === undefined || arrayType.inferLength ? `[]${element}` : `[${arrayType.length}]${element}`;
+  }
+  const mapType = parseMapTypeText(type);
+  if (mapType) {
+    return `map[${resolveRuntimeTrueAliases(mapType.keyType, context, new Set(seen))}]${resolveRuntimeTrueAliases(mapType.valueType, context, new Set(seen))}`;
+  }
+  const chanType = parseChanTypeText(type);
+  if (chanType) {
+    const element = resolveRuntimeTrueAliases(chanType.elementType, context, new Set(seen));
+    if (chanType.direction === "receive") return `<-chan ${element}`;
+    if (chanType.direction === "send") return `chan<- ${element}`;
+    return `chan ${element}`;
+  }
+  const generic = genericTypeArguments(type);
+  if (generic) {
+    return `${resolveRuntimeTrueAliases(generic.base, context, new Set(seen))}[${generic.args.map((arg) => resolveRuntimeTrueAliases(arg, context, new Set(seen))).join(", ")}]`;
+  }
+  return type;
 }
 
 function assignmentRuntimeTypeName(type: string): string {
@@ -9131,8 +9267,10 @@ function splitTopLevel(text: string, delimiter: string): string[] {
 function embeddedFieldNameFromTypeText(typeText: string): string {
   const normalized = normalizeTypeText(typeText);
   const base = normalized.startsWith("*") ? normalized.slice(1) : normalized;
-  const selector = base.lastIndexOf(".");
-  return selector >= 0 ? base.slice(selector + 1) : base;
+  const generic = genericTypeArguments(base);
+  const named = generic?.base ?? base;
+  const selector = named.lastIndexOf(".");
+  return selector >= 0 ? named.slice(selector + 1) : named;
 }
 
 function normalizeTypeText(typeText: string): string {

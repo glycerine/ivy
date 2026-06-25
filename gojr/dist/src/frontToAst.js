@@ -827,6 +827,10 @@ function embeddedFieldName(expr) {
         return expr.name;
     if (expr.kind === "SelectorExpr")
         return expr.selector.name;
+    if (expr.kind === "IndexExpr")
+        return embeddedFieldName(expr.object);
+    if (expr.kind === "IndexListExpr")
+        return embeddedFieldName(expr.object);
     if (expr.kind === "StarExpr")
         return embeddedFieldName(expr.expr);
     return "";
