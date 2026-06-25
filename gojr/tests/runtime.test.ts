@@ -4644,6 +4644,34 @@ func main() {}
     expect(result.diagnostics).toEqual([]);
   });
 
+  test("source-built reflect preserves TypeOf for typed nil maps", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/reflectmap/main.go",
+      source: `package main
+
+import "reflect"
+
+func main() {
+  t := reflect.TypeOf(map[string]interface{}(nil))
+  if t == nil {
+    panic("typed nil map lost its reflect type")
+  }
+  print(t.String() + "\\n")
+  print(reflect.ValueOf(t).Pointer() != 0)
+  print("\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["map[string]interface{}\n", "true", "\n"]);
+  });
+
   test("bodyless package functions return declared zero result values", async () => {
     const graph = await evaluateSourcePackageGraph([
       {

@@ -7476,6 +7476,18 @@ function convertValueToType(value, typeText, context, sourceTypeText) {
         markArrayType(actual, arrayType.typeText);
         return actual;
     }
+    const mapType = parseMapTypeText(type);
+    if (mapType) {
+        if (actual === null)
+            return new RuntimeTypedNilValue(type);
+        if (!(actual instanceof RuntimeMap))
+            throwTypeError(actual, type, "conversion");
+        if (!runtimeTypeAssignableMatchInContext(actual.keyType, mapType.keyType, context) ||
+            !runtimeTypeAssignableMatchInContext(actual.valueType, mapType.valueType, context)) {
+            throwTypeError(actual, type, "conversion");
+        }
+        return actual;
+    }
     if (context.typeDef(type) && actual instanceof RuntimeStruct && actual.typeName === type)
         return actual;
     if (type.startsWith("*")) {
