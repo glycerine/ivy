@@ -1,3 +1,6 @@
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, test } from "./testHarness.js";
 import {
   cellDependency,
@@ -3961,12 +3964,14 @@ func Call(fn func()) {
   });
 
   test("expands cached standard-library interface method tuple results in short declarations", async () => {
-    const result = await testSourceFilesWithPackagesOnNode({
-      importPath: "example.com/readrune",
-      packageName: "readrune",
-      files: [{
-        filename: "readrune_test.go",
-        source: `package readrune
+    const packageCacheParent = mkdtempSync(join(tmpdir(), "gojr-runtime-test-cache-"));
+    try {
+      const result = await testSourceFilesWithPackagesOnNode({
+        importPath: "example.com/readrune",
+        packageName: "readrune",
+        files: [{
+          filename: "readrune_test.go",
+          source: `package readrune
 
 import (
   "bytes"
@@ -3986,13 +3991,16 @@ func TestReadRuneTuple(t *testing.T) {
   }
 }
 `
-      }],
-      packageCacheParent: "/private/tmp/gojr-runtime-test-cache",
-      testVerbose: true
-    });
+        }],
+        packageCacheParent,
+        testVerbose: true
+      });
 
-    expect(result.diagnostics).toEqual([]);
-    expect(result.output.join("")).toContain("PASS");
+      expect(result.diagnostics).toEqual([]);
+      expect(result.output.join("")).toContain("PASS");
+    } finally {
+      rmSync(packageCacheParent, { recursive: true, force: true });
+    }
   });
 
   test("runs Go-junior tests with testing.T", async () => {

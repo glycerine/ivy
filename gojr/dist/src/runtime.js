@@ -7183,15 +7183,15 @@ async function evaluateBinary(expression, context) {
 function prepareBinaryOperatorOperands(operator, expression, left, right, context) {
     const leftType = expressionDeclaredTypeText(expression.left, context, left);
     const rightType = expressionDeclaredTypeText(expression.right, context, right);
-    const leftUntyped = isUntypedConstantExpression(expression.left);
-    const rightUntyped = isUntypedConstantExpression(expression.right);
+    const leftUntyped = isUntypedConstantExpression(expression.left, context);
+    const rightUntyped = isUntypedConstantExpression(expression.right, context);
     if (operator === "<<" || operator === ">>") {
-        return [materializeValueForType(left, leftType, context), right];
+        return [leftUntyped ? left : materializeValueForType(left, leftType, context), right];
     }
-    if (leftType && rightUntyped && isNumericTypeText(leftType, context)) {
+    if (leftType && !leftUntyped && rightUntyped && isNumericTypeText(leftType, context)) {
         right = materializeValueForType(right, leftType, context);
     }
-    if (rightType && leftUntyped && isNumericTypeText(rightType, context)) {
+    if (rightType && !rightUntyped && leftUntyped && isNumericTypeText(rightType, context)) {
         left = materializeValueForType(left, rightType, context);
     }
     const resultType = binaryExpressionTypeText(expression, context);
@@ -9277,7 +9277,7 @@ function staticCalleeRuntimeValue(expression, context) {
     return undefined;
 }
 function materializeValueForExpressionType(value, expression, context) {
-    if (isUntypedConstantExpression(expression))
+    if (isUntypedConstantExpression(expression, context))
         return value;
     return materializeValueForType(value, expressionDeclaredTypeText(expression, context, value), context);
 }
@@ -9317,8 +9317,8 @@ function binaryExpressionTypeText(expression, context, value) {
         return "bool";
     const leftType = expressionDeclaredTypeText(expression.left, context);
     const rightType = expressionDeclaredTypeText(expression.right, context);
-    const leftUntyped = isUntypedConstantExpression(expression.left);
-    const rightUntyped = isUntypedConstantExpression(expression.right);
+    const leftUntyped = isUntypedConstantExpression(expression.left, context);
+    const rightUntyped = isUntypedConstantExpression(expression.right, context);
     if (leftUntyped && rightUntyped)
         return undefined;
     if (expression.operator === "<<" || expression.operator === ">>")
@@ -9332,15 +9332,17 @@ function binaryExpressionTypeText(expression, context, value) {
     return undefined;
 }
 const comparisonOperators = new Set(["==", "!=", "<", "<=", ">", ">="]);
-function isUntypedConstantExpression(expression) {
+function isUntypedConstantExpression(expression, context) {
     switch (expression.kind) {
+        case "Identifier":
+            return context?.isUntypedConstant(expression.name) ?? false;
         case "Literal":
             return expression.literalKind !== "string" || expression.raw.startsWith("\"") || expression.raw.startsWith("`");
         case "UnaryExpression":
             return expression.operator !== "<-" && expression.operator !== "&" && expression.operator !== "*" &&
-                isUntypedConstantExpression(expression.operand);
+                isUntypedConstantExpression(expression.operand, context);
         case "BinaryExpression":
-            return isUntypedConstantExpression(expression.left) && isUntypedConstantExpression(expression.right);
+            return isUntypedConstantExpression(expression.left, context) && isUntypedConstantExpression(expression.right, context);
         default:
             return false;
     }
