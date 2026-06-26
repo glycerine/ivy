@@ -994,6 +994,43 @@ func AssertThingCall() (string, bool) { return AssertThing(Thing{Name: "ok"}) }
     expect(await (pkg.AssertThingCall as () => Promise<[string, boolean]>)()).toEqual(["ok", true]);
   });
 
+  test("lowers method calls on dereferenced pointer selector receivers", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6ptrselector",
+      artifactRoot: "/tmp/gojr-stage6ptrselector",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6ptrselector.go",
+        source: `package stage6ptrselector
+
+type node struct {
+	v int
+	right *node
+}
+
+func (x *node) next() *node {
+	return x.right
+}
+
+func Call() int {
+	root := &node{right: &node{v: 7}}
+	pos := &root
+	return (*pos).next().v
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6ptrselector/example.com/stage6ptrselector.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Call as () => Promise<bigint>)()).toBe(7n);
+  });
+
   test("generates package-local type descriptors for reflect-style metadata", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({

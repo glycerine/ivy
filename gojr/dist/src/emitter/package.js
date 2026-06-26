@@ -2613,13 +2613,42 @@ function conversionCalleeTypeText(callee, env) {
             return callee.name;
         return undefined;
     }
-    const typeText = typeArgumentExpressionText(callee);
+    const typeText = conversionTypeExpressionText(callee, env);
     if (!typeText)
         return undefined;
     const base = genericBaseTypeText(typeText);
     if (isCompositeTypeText(typeText) || env.facts.typeUnderlyings.has(base) || typeText === "unsafe.Pointer")
         return typeText;
     return undefined;
+}
+function conversionTypeExpressionText(expression, env) {
+    switch (expression.kind) {
+        case "TypeExpression":
+            return expression.type.text;
+        case "Identifier":
+            if (env.locals.has(expression.name))
+                return undefined;
+            return primitiveTypeNames.has(expression.name) || env.facts.typeUnderlyings.has(expression.name)
+                ? expression.name
+                : undefined;
+        case "SelectorExpression":
+            if (expression.object.kind !== "Identifier" || !env.facts.imports.has(expression.object.name))
+                return undefined;
+            return `${expression.object.name}.${expression.field}`;
+        case "IndexExpression": {
+            const object = conversionTypeExpressionText(expression.object, env);
+            const index = typeArgumentExpressionText(expression.index);
+            return object && index ? `${object}[${index}]` : undefined;
+        }
+        case "UnaryExpression": {
+            if (expression.operator !== "*")
+                return undefined;
+            const operand = conversionTypeExpressionText(expression.operand, env);
+            return operand ? `*${operand}` : undefined;
+        }
+        default:
+            return undefined;
+    }
 }
 function renderCallArgs(ctx, args, env, targetTypes = [], spreadLast = false) {
     const rendered = [];
