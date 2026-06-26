@@ -92,6 +92,8 @@
         if (names.length === 0) return "";
         return `globalThis.Object.assign(exports, { ${names.map(([sourceName, exportName]) => `${JSON.stringify(exportName)}: ${sourceName}`).join(", ")} });`;
       });
+    source = source.replace(/^export\s+default\s+(.+);\s*$/gm,
+      (_match: string, expression: string) => `exports.default = ${expression};`);
     source = source.replace(/^export\s+(async\s+)?function(\*)?\s+([A-Za-z_$][\w$]*)/gm,
       (_match: string, asyncPrefix: string | undefined, generatorMarker: string | undefined, name: string) => {
         exportedNames.push(name);

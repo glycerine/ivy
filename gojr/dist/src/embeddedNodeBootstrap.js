@@ -67,6 +67,7 @@
                 return "";
             return `globalThis.Object.assign(exports, { ${names.map(([sourceName, exportName]) => `${JSON.stringify(exportName)}: ${sourceName}`).join(", ")} });`;
         });
+        source = source.replace(/^export\s+default\s+(.+);\s*$/gm, (_match, expression) => `exports.default = ${expression};`);
         source = source.replace(/^export\s+(async\s+)?function(\*)?\s+([A-Za-z_$][\w$]*)/gm, (_match, asyncPrefix, generatorMarker, name) => {
             exportedNames.push(name);
             return `exports[${JSON.stringify(name)}] = ${name};\n${asyncPrefix || ""}function${generatorMarker || ""} ${name}`;
