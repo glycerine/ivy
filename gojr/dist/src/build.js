@@ -983,10 +983,11 @@ function packageRuntimePlan(importPath, packageName, pkg, initOrder) {
             if (!(object instanceof GoTypesConst))
                 return [];
             const type = object.Type();
+            const typeText = type ? checkedConstantBuildTypeText(type, pkg) : undefined;
             return [{
                     name: object.Name(),
                     value: object.Val(),
-                    ...(type ? { typeText: checkedConstantBuildTypeText(type, pkg) } : {})
+                    ...(typeText ? { typeText } : {})
                 }];
         }).sort((left, right) => left.name.localeCompare(right.name)),
         variables: objects.flatMap((object) => {
