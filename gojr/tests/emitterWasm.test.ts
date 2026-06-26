@@ -1155,6 +1155,79 @@ func IntrinsicLen() int {
     expect(await (instantiated.package.IntrinsicLen as () => Promise<bigint>)()).toBe(2n);
   });
 
+  test("generated pointer uintptr conversions preserve pointer cells through xor zero", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6ptruintptr",
+      artifactRoot: "/tmp/gojr-stage6ptruintptr",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6ptruintptr.go",
+        source: `package stage6ptruintptr
+
+import "unsafe"
+
+func NoEscape(p unsafe.Pointer) unsafe.Pointer {
+	x := uintptr(p)
+	return unsafe.Pointer(x ^ 0)
+}
+
+func RoundTrip() int {
+	var v int
+	p := unsafe.Pointer(&v)
+	q := (*int)(NoEscape(p))
+	*q = 42
+	return v
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6ptruintptr/example.com/stage6ptruintptr.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.RoundTrip as () => Promise<bigint>)()).toBe(42n);
+  });
+
+  test("generated uintptr arguments preserve pointer tokens", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6uintptrarg",
+      artifactRoot: "/tmp/gojr-stage6uintptrarg",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6uintptrarg.go",
+        source: `package stage6uintptrarg
+
+import "unsafe"
+
+func Take(x uintptr) unsafe.Pointer {
+	return unsafe.Pointer(x)
+}
+
+func RoundTrip() int {
+	var v int
+	p := Take(uintptr(unsafe.Pointer(&v)))
+	q := (*int)(p)
+	*q = 99
+	return v
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6uintptrarg/example.com/stage6uintptrarg.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.RoundTrip as () => Promise<bigint>)()).toBe(99n);
+  });
+
   test("generated package globals zero anonymous struct values", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
@@ -1230,6 +1303,285 @@ func Values() (int, int, int) {
     const instantiated = await module.instantiateGoJrPackage();
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (instantiated.package.Values as () => Promise<[bigint, bigint, bigint]>)()).toEqual([1n, 12n, 15n]);
+  });
+
+  test("generated package declarations initialize in dependency order", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6declorder",
+      artifactRoot: "/tmp/gojr-stage6declorder",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6declorder.go",
+        source: `package stage6declorder
+
+const A = 1 + B
+const C = A + B
+const B = 2
+
+var X = Y + 3
+var Y = C
+
+func Values() (int, int, int, int, int) {
+	return A, B, C, X, Y
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6declorder/example.com/stage6declorder.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Values as () => Promise<[bigint, bigint, bigint, bigint, bigint]>)()).toEqual([3n, 2n, 5n, 8n, 5n]);
+  });
+
+  test("generated package declaration order includes globals referenced through called functions", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6declfuncdeps",
+      artifactRoot: "/tmp/gojr-stage6declfuncdeps",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6declfuncdeps.go",
+        source: `package stage6declfuncdeps
+
+var ready = alignOf(0)
+
+func alignOf(n int) int {
+	align := sizeofPtr
+	if n == 0 {
+		return align
+	}
+	return n + align
+}
+
+const sizeofPtr = 8
+
+func Ready() int {
+	return ready
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6declfuncdeps/example.com/stage6declfuncdeps.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Ready as () => Promise<bigint>)()).toBe(8n);
+  });
+
+  test("generated float constants render integer literals as numbers", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6floatconst",
+      artifactRoot: "/tmp/gojr-stage6floatconst",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6floatconst.go",
+        source: `package stage6floatconst
+
+const Ln2 = 0.5
+const Log2E = 1 / Ln2
+const Max = 2 * (1 + (1 - 0.25))
+
+func Values() (float64, float64) {
+	return Log2E, Max
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6floatconst/example.com/stage6floatconst.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Values as () => Promise<[number, number]>)()).toEqual([2, 3.5]);
+  });
+
+  test("generated typed integer constants normalize float-containing initializers", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6intfloatconst",
+      artifactRoot: "/tmp/gojr-stage6intfloatconst",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6intfloatconst.go",
+        source: `package stage6intfloatconst
+
+const (
+	base = 4
+	scale = 10
+	mixed int64 = (base*1.5 + 2) * scale
+)
+
+func Value() int64 {
+	return mixed
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6intfloatconst/example.com/stage6intfloatconst.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Value as () => Promise<bigint>)()).toBe(80n);
+  });
+
+  test("generated functions rename JavaScript reserved parameter names", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6reserved",
+      artifactRoot: "/tmp/gojr-stage6reserved",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6reserved.go",
+        source: `package stage6reserved
+
+func Swap(old, new int) int {
+	return old + new
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6reserved/example.com/stage6reserved.a") ?? "");
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.Swap as (oldValue: bigint, newValue: bigint) => Promise<bigint>)(2n, 5n)).toBe(7n);
+  });
+
+  test("generated zero values use exact package paths for aliased imported fields", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/sync",
+      artifactRoot: "/tmp/gojr-stage6pkgpath-zero",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        "example.com/internal/sync": [{
+          filename: "internal_sync.go",
+          source: `package sync
+
+type Mutex struct {
+	State int
+}
+`
+        }]
+      },
+      files: [{
+        filename: "sync.go",
+        source: `package sync
+
+import isync "example.com/internal/sync"
+
+type Mutex struct {
+	mu isync.Mutex
+}
+
+var M Mutex
+
+func State() int {
+	return M.mu.State
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const internalArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6pkgpath-zero/example.com/internal/sync.a") ?? "");
+    const rootArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6pkgpath-zero/example.com/sync.a") ?? "");
+    const internalModule = await importArtifactJavaScript(internalArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const rootModule = await importArtifactJavaScript(rootArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const importsByPath: Record<string, unknown> = {};
+    const internalInstantiated = await internalModule.instantiateGoJrPackage({}, { importsByPath });
+    expect(internalInstantiated.diagnostics).toEqual([]);
+    importsByPath["example.com/internal/sync"] = internalInstantiated.package;
+    const rootInstantiated = await rootModule.instantiateGoJrPackage({}, { importsByPath });
+    expect(rootInstantiated.diagnostics).toEqual([]);
+    importsByPath["example.com/sync"] = rootInstantiated.package;
+    expect(await (rootInstantiated.package.State as () => Promise<bigint>)()).toBe(0n);
+    const currentMutex = rootInstantiated.package.M as { mu?: { State?: bigint } };
+    expect(Boolean(currentMutex.mu)).toBe(true);
+    expect(currentMutex.mu?.State).toBe(0n);
+    expect(Object.getOwnPropertyDescriptor(currentMutex.mu, "__gojrPkgPath")?.value).toBe("example.com/internal/sync");
+  });
+
+  test("generated imported struct literals dispatch methods through receiver package paths", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/root",
+      artifactRoot: "/tmp/gojr-stage6-imported-method",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        "example.com/internal/poll": [{
+          filename: "fd.go",
+          source: `package poll
+
+type FD struct {
+	Sysfd int
+	IsStream bool
+}
+
+func (fd *FD) Init(name string, pollable bool) error {
+	if pollable {
+		fd.Sysfd = 7
+	}
+	return nil
+}
+`
+        }]
+      },
+      files: [{
+        filename: "root.go",
+        source: `package root
+
+import "example.com/internal/poll"
+
+type file struct {
+	pfd poll.FD
+}
+
+type File struct {
+	*file
+}
+
+var F = &File{file: &file{pfd: poll.FD{Sysfd: 1, IsStream: true}}}
+
+func Run() int {
+	F.pfd.Init("file", true)
+	return F.pfd.Sysfd
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const depArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6-imported-method/example.com/internal/poll.a") ?? "");
+    const rootArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6-imported-method/example.com/root.a") ?? "");
+    const depModule = await importArtifactJavaScript(depArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const rootModule = await importArtifactJavaScript(rootArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const importsByPath: Record<string, unknown> = {};
+    const dep = await depModule.instantiateGoJrPackage({}, { importsByPath });
+    expect(dep.diagnostics).toEqual([]);
+    importsByPath["example.com/internal/poll"] = dep.package;
+    const root = await rootModule.instantiateGoJrPackage({}, { importsByPath });
+    expect(root.diagnostics).toEqual([]);
+    expect(await (root.package.Run as () => Promise<bigint>)()).toBe(7n);
   });
 
   test("resolves imported package type descriptors for reflect-style metadata", async () => {

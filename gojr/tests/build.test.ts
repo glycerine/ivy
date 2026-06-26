@@ -687,34 +687,40 @@ func Two() int { return lib.One() + 1 }
     ]);
   });
 
-  test("builds ambient standard runtime imports as cached dependency artifacts", () => {
+  test("builds packages with runtime and os imports without consulting source packages", async () => {
     const store = new MemoryArtifactStore();
+    const loaded: string[] = [];
     const result = buildPackages({
       importPath: "example.com/app",
       artifactRoot: "/tmp/gojr-stdlib",
       sourcePackageProvider: {
         load(importPath) {
-          if (importPath !== "runtime") return undefined;
+          loaded.push(importPath);
+          if (importPath !== "runtime" && importPath !== "os") return undefined;
           return [{
-            filename: "/usr/local/go/src/runtime/alg.go",
-            source: "package runtime\nconst _ = 1 / 0\n"
+            filename: `/usr/local/go/src/${importPath}/bad.go`,
+            source: `package ${importPath}\nconst _ = 1 / 0\n`
           }];
         },
         isStandardLibraryPackage(importPath) {
-          return importPath === "runtime";
+          return importPath === "runtime" || importPath === "os";
         }
       },
       files: [{
         filename: "/workspace/example.com/app/app.go",
         source: `package app
 
+import "os"
 import "runtime"
 
 var OS = runtime.GOOS
 var Arch = runtime.GOARCH
+var Args = os.Args
 
 func Capture(buf []byte) int {
   pc, file, line, ok := runtime.Caller(0)
+  runtime.SetFinalizer(os.Stdout, nil)
+  _, _ = os.Stdout.Write(buf)
   if ok && pc > 0 && line > 0 && file != "" {
     return runtime.Stack(buf, false) + runtime.Callers(0, []uintptr{pc})
   }
@@ -730,36 +736,27 @@ func Capture(buf []byte) int {
 
     expect(result.diagnostics).toEqual([]);
     expect(result.ok).toBe(true);
-    expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual(["runtime", "example.com/app"]);
-    expect(result.artifacts[0]?.artifactPath).toBe("/tmp/gojr-stdlib/runtime.a");
+    expect(loaded).toEqual([]);
+    expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual(["example.com/app"]);
     expect(result.artifacts[0]?.dependencies).toEqual([]);
-    const runtimeExports = result.artifacts[0]?.exports.map((item) => item.name) ?? [];
-    for (const name of [
-      "AddCleanup",
-      "Caller",
-      "Callers",
-      "CallersFrames",
-      "Cleanup",
-      "Error",
-      "Frame",
-      "Frames",
-      "FuncForPC",
-      "Func",
-      "GOARCH",
-      "GOOS",
-      "ReadTrace",
-      "Stack",
-      "StartTrace",
-      "StopTrace"
-    ]) {
-      expect(runtimeExports).toContain(name);
-    }
-    expect(result.artifacts[1]?.dependencies).toEqual(["runtime"]);
-    expect(result.artifacts[1]?.dependencyCacheKeys).toEqual([`runtime:${result.artifacts[0]?.cacheKey}`]);
+    expect(result.artifacts[0]?.dependencyCacheKeys).toEqual([]);
     expect([...store.writes.keys()]).toEqual([
-      "/tmp/gojr-stdlib/runtime.a",
       "/tmp/gojr-stdlib/example.com/app.a"
     ]);
+
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stdlib/example.com/app.a") ?? "");
+    if (!archive) throw new Error("missing app archive");
+    const module = await importArtifactJavaScript(archive.javascript);
+    const output: string[] = [];
+    const instantiated = await module.instantiateGoJrPackage({}, {
+      argv: ["app", "-test"],
+      stdout: (text: string) => output.push(text)
+    });
+    expect(instantiated.diagnostics).toEqual([]);
+    const capture = instantiated.package.Capture as (buf: bigint[]) => Promise<bigint>;
+    const value = await capture([65n, 10n]);
+    expect(typeof value).toBe("bigint");
+    expect(output.join("")).toBe("A\n");
   });
 
   test("builds source packages without auto-importing fmt into package scope", () => {

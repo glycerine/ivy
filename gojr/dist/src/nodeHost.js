@@ -492,6 +492,8 @@ function packageSourceMapFromSpecs(specs) {
     for (const spec of specs) {
         if (!spec?.importPath)
             continue;
+        if (isIntrinsicPackageImport(spec.importPath))
+            continue;
         sources[spec.importPath] = spec.files ?? [];
     }
     return Object.keys(sources).length === 0 ? undefined : sources;

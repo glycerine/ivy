@@ -60,7 +60,6 @@ std::string exception_to_string(v8::Isolate* isolate, v8::TryCatch& try_catch) {
 }
 
 std::string value_exception_to_string(v8::Isolate* isolate, v8::Local<v8::Value> value) {
-  if (value->IsNativeError()) return v8_to_string(isolate, value);
   if (value->IsObject()) {
     v8::Local<v8::Context> context = isolate->GetCurrentContext();
     v8::Local<v8::String> stack_name = v8::String::NewFromUtf8Literal(isolate, "stack");
@@ -69,6 +68,7 @@ std::string value_exception_to_string(v8::Isolate* isolate, v8::Local<v8::Value>
       return v8_to_string(isolate, stack);
     }
   }
+  if (value->IsNativeError()) return v8_to_string(isolate, value);
   return v8_to_string(isolate, value);
 }
 

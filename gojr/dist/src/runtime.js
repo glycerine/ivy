@@ -1694,6 +1694,12 @@ class SourcePackageGraphEvaluator {
                 this.diagnostics.push(packageGraphDiagnostic(REPL_FILENAME, "source package spec is missing importPath"));
                 continue;
             }
+            if (isIntrinsicPackageImport(spec.importPath)) {
+                const pkg = standardTypePackage(spec.importPath);
+                if (pkg)
+                    this.packageInfos[spec.importPath] = pkg;
+                continue;
+            }
             if (this.specsByPath.has(spec.importPath)) {
                 this.diagnostics.push(packageGraphDiagnostic(spec.files[0]?.filename ?? REPL_FILENAME, `duplicate source package spec for ${spec.importPath}`));
                 continue;
@@ -4721,7 +4727,6 @@ function availablePackages(context) {
         cmp: cmpPackage(),
         fmt: fmtPackage(),
         math: mathPackage(),
-        os: osPackage(context),
         "runtime/pprof": runtimePprofPackage(),
         strconv: strconvPackage(),
         testing: testingPackage(context),
@@ -4729,6 +4734,7 @@ function availablePackages(context) {
         ...sourcePackages,
         iter: iterPackage(),
         "internal/reflectlite": reflectlitePackage(),
+        os: osPackage(context),
         runtime: runtimePackage(),
         "syscall/js": syscallJSPackage(),
         unsafe: unsafePackage()
@@ -5262,14 +5268,95 @@ function reflectliteValuePayload(value) {
 function osPackage(context) {
     return {
         Args: runtimeStringSlice(context?.argv() ?? ["gojr"]),
+        Stdin: runtimeOsFile(0, "/dev/stdin"),
+        Stdout: runtimeOsFile(1, "/dev/stdout"),
+        Stderr: runtimeOsFile(2, "/dev/stderr"),
         Exit: hostCallable("os.Exit", (args) => {
             const code = toNumber(args[0] ?? 0);
             throw new GoJuniorExit(code);
         }),
         Getenv: hostCallable("os.Getenv", (args, context) => {
             return context.getenv(toStringValue(args[0] ?? ""));
-        })
+        }),
+        LookupEnv: hostCallable("os.LookupEnv", (args, context) => {
+            const key = toStringValue(args[0] ?? "");
+            const value = context.getenv(key);
+            return [value, value !== ""];
+        }, { tupleResult: true }),
+        Environ: hostCallable("os.Environ", () => runtimeStringSlice([])),
+        TempDir: hostCallable("os.TempDir", () => "/tmp"),
+        Getwd: hostCallable("os.Getwd", () => ["/", null], { tupleResult: true }),
+        Hostname: hostCallable("os.Hostname", () => ["gojr", null], { tupleResult: true }),
+        Executable: hostCallable("os.Executable", () => ["gojr", null], { tupleResult: true }),
+        UserCacheDir: hostCallable("os.UserCacheDir", () => ["/tmp", null], { tupleResult: true }),
+        UserConfigDir: hostCallable("os.UserConfigDir", () => ["/tmp", null], { tupleResult: true }),
+        UserHomeDir: hostCallable("os.UserHomeDir", () => ["/", null], { tupleResult: true }),
+        NewFile: hostCallable("os.NewFile", (args) => runtimeOsFile(toNumber(args[0] ?? 0), toStringValue(args[1] ?? ""))),
+        Open: hostCallable("os.Open", (args) => [runtimeOsFile(-1, toStringValue(args[0] ?? "")), null], { tupleResult: true }),
+        OpenFile: hostCallable("os.OpenFile", (args) => [runtimeOsFile(-1, toStringValue(args[0] ?? "")), null], { tupleResult: true }),
+        Create: hostCallable("os.Create", (args) => [runtimeOsFile(-1, toStringValue(args[0] ?? "")), null], { tupleResult: true }),
+        ReadFile: hostCallable("os.ReadFile", () => [markRuntimeByteSlice([]), fmtErrorValue("gojr error: os.ReadFile not implemented")], { tupleResult: true }),
+        WriteFile: hostCallable("os.WriteFile", () => null),
+        IsExist: hostCallable("os.IsExist", () => false),
+        IsNotExist: hostCallable("os.IsNotExist", () => false),
+        IsPermission: hostCallable("os.IsPermission", () => false),
+        IsTimeout: hostCallable("os.IsTimeout", () => false),
+        IsPathSeparator: hostCallable("os.IsPathSeparator", (args) => toNumber(args[0] ?? 0) === 47)
     };
+}
+function runtimeOsFile(fd, name) {
+    const file = new RuntimeStruct("os.File", [
+        ["fd", BigInt(fd)],
+        ["name", RuntimeGoString.fromUtf8Text(name)]
+    ]);
+    return new RuntimePointer("os.File", () => file, (next) => {
+        const value = unwrapNamed(next);
+        if (value instanceof RuntimeStruct) {
+            file.fields.clear();
+            for (const [field, item] of value.orderedFields())
+                file.set(field, item);
+        }
+    }, `os.File:${fd}:${name}`);
+}
+function runtimeOsFileStruct(receiver) {
+    const value = unwrapNamed(dereferenceIfPointer(receiver));
+    if (value instanceof RuntimeStruct)
+        return value;
+    throw new GoJuniorRuntimeError(`${formatValue(receiver)} is not an os.File`);
+}
+function runtimeOsFileFd(receiver) {
+    const fd = runtimeOsFileStruct(receiver).get("fd") ?? 0n;
+    return toNumber(fd);
+}
+function runtimeOsFileName(receiver) {
+    const name = runtimeOsFileStruct(receiver).get("name") ?? "";
+    return toStringValue(name);
+}
+function runtimeOsFileRead(receiver, bufferValue) {
+    const buffer = unwrapNamed(bufferValue);
+    if (!Array.isArray(buffer))
+        throwTypeError(bufferValue, "[]byte", "os.File.Read buffer");
+    const bytes = new Uint8Array(buffer.length);
+    const count = hostReadSync(runtimeOsFileFd(receiver), bytes, 0, bytes.length, null);
+    copyBytesToRuntimeSlice(buffer, bytes, count);
+    return [BigInt(count), null];
+}
+function runtimeOsFileWrite(receiver, bufferValue) {
+    const buffer = unwrapNamed(bufferValue);
+    const bytes = Array.isArray(buffer)
+        ? bytealgBytes(buffer)
+        : new TextEncoder().encode(toStringValue(bufferValue));
+    const count = hostWriteSync(runtimeOsFileFd(receiver), bytes, 0, bytes.length, null);
+    return [BigInt(count), null];
+}
+function runtimeOsFileWriteString(receiver, value) {
+    const bytes = new TextEncoder().encode(toStringValue(value));
+    const count = hostWriteSync(runtimeOsFileFd(receiver), bytes, 0, bytes.length, null);
+    return [BigInt(count), null];
+}
+function markRuntimeByteSlice(values) {
+    markArrayType(values, "[]byte");
+    return values;
 }
 const SYSCALL_JS_VALUE_INFO = Symbol("gojr syscall/js value");
 const syscallJSTypeNames = [
@@ -6476,6 +6563,48 @@ function methodKey(typeName, methodName) {
 }
 function intrinsicMethodDef(typeName, methodName) {
     const type = normalizeTypeText(typeName);
+    if (type === "*os.File" || type === "os.File") {
+        switch (methodName) {
+            case "Chdir":
+            case "Chmod":
+            case "Chown":
+            case "Close":
+            case "SetDeadline":
+            case "SetReadDeadline":
+            case "SetWriteDeadline":
+            case "Sync":
+            case "Truncate":
+                return intrinsicMethod(type, methodName, [], ["error"], () => null);
+            case "Fd":
+                return intrinsicMethod(type, methodName, [], ["uintptr"], (args) => BigInt(runtimeOsFileFd(args[0] ?? null)));
+            case "Name":
+                return intrinsicMethod(type, methodName, [], ["string"], (args) => runtimeOsFileName(args[0] ?? null));
+            case "Read":
+                return intrinsicMethod(type, methodName, ["[]byte"], ["int", "error"], (args) => runtimeOsFileRead(args[0] ?? null, args[1] ?? null));
+            case "ReadAt":
+                return intrinsicMethod(type, methodName, ["[]byte", "int64"], ["int", "error"], (args) => runtimeOsFileRead(args[0] ?? null, args[1] ?? null));
+            case "ReadDir":
+                return intrinsicMethod(type, methodName, ["int"], ["[]os.DirEntry", "error"], () => [[], null]);
+            case "Readdir":
+                return intrinsicMethod(type, methodName, ["int"], ["[]os.FileInfo", "error"], () => [[], null]);
+            case "Readdirnames":
+                return intrinsicMethod(type, methodName, ["int"], ["[]string", "error"], () => [runtimeStringSlice([]), null]);
+            case "Seek":
+                return intrinsicMethod(type, methodName, ["int64", "int"], ["int64", "error"], () => [0n, null]);
+            case "Stat":
+                return intrinsicMethod(type, methodName, [], ["os.FileInfo", "error"], () => [null, null]);
+            case "SyscallConn":
+                return intrinsicMethod(type, methodName, [], ["any", "error"], () => [null, null]);
+            case "Write":
+                return intrinsicMethod(type, methodName, ["[]byte"], ["int", "error"], (args) => runtimeOsFileWrite(args[0] ?? null, args[1] ?? null));
+            case "WriteAt":
+                return intrinsicMethod(type, methodName, ["[]byte", "int64"], ["int", "error"], (args) => runtimeOsFileWrite(args[0] ?? null, args[1] ?? null));
+            case "WriteString":
+                return intrinsicMethod(type, methodName, ["string"], ["int", "error"], (args) => runtimeOsFileWriteString(args[0] ?? null, args[1] ?? ""));
+            default:
+                return undefined;
+        }
+    }
     if (type === "reflect.Value" || type === "Value") {
         switch (methodName) {
             case "Kind":

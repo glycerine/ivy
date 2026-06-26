@@ -22,6 +22,11 @@ export function stubSourcePackageFiles(importPath: string): SourceFile[] | undef
         filename: "gojr:stub/runtime/pprof/pprof.go",
         source: runtimePprofStubSource
       }];
+    case "sync":
+      return [{
+        filename: "gojr:stub/sync/sync.go",
+        source: syncStubSource
+      }];
     default:
       return undefined;
   }
@@ -32,7 +37,7 @@ export function isStubSourcePackageImport(importPath: string): boolean {
 }
 
 export function isStubSourcePackageStandardLibrary(importPath: string): boolean {
-  return importPath === "runtime/pprof";
+  return importPath === "runtime/pprof" || importPath === "sync";
 }
 
 const klauspostCpuidV2StubSource = `package cpuid
@@ -287,5 +292,166 @@ func SetGoroutineLabels(ctx context.Context) {
 
 func Do(ctx context.Context, labels LabelSet, f func(context.Context)) {
   panic("gojr error: runtime/pprof.Do not implemented")
+}
+`;
+
+const syncStubSource = `package sync
+
+type Locker interface {
+  Lock()
+  Unlock()
+}
+
+type Mutex struct{}
+
+func (m *Mutex) Lock() {}
+func (m *Mutex) TryLock() bool { return true }
+func (m *Mutex) Unlock() {}
+
+type RWMutex struct{}
+
+func (rw *RWMutex) Lock() {}
+func (rw *RWMutex) TryLock() bool { return true }
+func (rw *RWMutex) Unlock() {}
+func (rw *RWMutex) RLock() {}
+func (rw *RWMutex) TryRLock() bool { return true }
+func (rw *RWMutex) RUnlock() {}
+func (rw *RWMutex) RLocker() Locker { return (*rlocker)(rw) }
+
+type rlocker RWMutex
+
+func (r *rlocker) Lock() { (*RWMutex)(r).RLock() }
+func (r *rlocker) Unlock() { (*RWMutex)(r).RUnlock() }
+
+type Once struct {
+  done bool
+}
+
+func (o *Once) Do(f func()) {
+  if o.done {
+    return
+  }
+  o.done = true
+  f()
+}
+
+type Pool struct {
+  New func() any
+  items []any
+}
+
+func (p *Pool) Put(x any) {
+  if x == nil {
+    return
+  }
+  p.items = append(p.items, x)
+}
+
+func (p *Pool) Get() any {
+  n := len(p.items)
+  if n > 0 {
+    x := p.items[n-1]
+    p.items = p.items[:n-1]
+    return x
+  }
+  newValue := p.New
+  if newValue != nil {
+    return newValue()
+  }
+  return nil
+}
+
+type WaitGroup struct {
+  n int
+}
+
+func (wg *WaitGroup) Add(delta int) { wg.n += delta }
+func (wg *WaitGroup) Done() { wg.Add(-1) }
+func (wg *WaitGroup) Wait() {}
+
+type Cond struct {
+  L Locker
+}
+
+func NewCond(l Locker) *Cond { return &Cond{L: l} }
+func (c *Cond) Broadcast() {}
+func (c *Cond) Signal() {}
+func (c *Cond) Wait() {}
+
+type Map struct {
+  m map[any]any
+}
+
+func (m *Map) ensure() {
+  if m.m == nil {
+    m.m = make(map[any]any)
+  }
+}
+
+func (m *Map) Clear() {
+  m.m = make(map[any]any)
+}
+
+func (m *Map) CompareAndDelete(key, old any) (deleted bool) {
+  if current, ok := m.m[key]; ok && current == old {
+    delete(m.m, key)
+    return true
+  }
+  return false
+}
+
+func (m *Map) CompareAndSwap(key, old, new any) bool {
+  m.ensure()
+  if current, ok := m.m[key]; ok && current == old {
+    m.m[key] = new
+    return true
+  }
+  return false
+}
+
+func (m *Map) Delete(key any) {
+  delete(m.m, key)
+}
+
+func (m *Map) Load(key any) (value any, ok bool) {
+  value, ok = m.m[key]
+  return value, ok
+}
+
+func (m *Map) LoadAndDelete(key any) (value any, loaded bool) {
+  value, loaded = m.m[key]
+  if loaded {
+    delete(m.m, key)
+  }
+  return value, loaded
+}
+
+func (m *Map) LoadOrStore(key, value any) (actual any, loaded bool) {
+  m.ensure()
+  if actual, loaded = m.m[key]; loaded {
+    return actual, true
+  }
+  m.m[key] = value
+  return value, false
+}
+
+func (m *Map) Range(f func(key, value any) bool) {
+  for key, value := range m.m {
+    if !f(key, value) {
+      return
+    }
+  }
+}
+
+func (m *Map) Store(key, value any) {
+  m.ensure()
+  m.m[key] = value
+}
+
+func (m *Map) Swap(key, value any) (previous any, loaded bool) {
+  m.ensure()
+  previous, loaded = m.m[key]
+  m.m[key] = value
+  return previous, loaded
 }
 `;

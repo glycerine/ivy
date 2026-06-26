@@ -1,5 +1,6 @@
 export const RESERVED_INTRINSIC_PACKAGE_IMPORTS = [
     "iter",
+    "os",
     "runtime",
     "syscall/js",
     "unsafe",

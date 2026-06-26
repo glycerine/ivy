@@ -377,31 +377,24 @@ class PackageGraphBuilder {
             this.packageSources.set(importPath, files);
         }
         this.visiting.add(importPath);
-        const dependencies = uniqueSorted(parsed.files.flatMap((file) => file.imports.map(importPathFromSpec)));
+        const allDependencies = uniqueSorted(parsed.files.flatMap((file) => file.imports.map(importPathFromSpec)));
+        const dependencies = allDependencies.filter((dependencyPath) => !isIntrinsicPackageImport(dependencyPath));
         this.progress({
             action: "checking",
             importPath,
             packageName,
-            dependencyCount: dependencies.length,
+            dependencyCount: allDependencies.length,
             fileCount: files.length,
             standardLibrary: this.standardLibraryPackages.has(importPath)
         });
         const sourceDependencies = [];
-        for (const dependencyPath of dependencies) {
-            if (preferAmbientBuildImport(dependencyPath)) {
-                const dependency = this.buildAmbientStandardPackage(dependencyPath);
-                if (dependency)
-                    sourceDependencies.push(dependency);
+        for (const dependencyPath of allDependencies) {
+            if (isIntrinsicPackageImport(dependencyPath)) {
+                this.registerIntrinsicPackage(dependencyPath);
                 continue;
             }
             const dependencyFiles = this.sourceFilesForImport(dependencyPath, files[0]?.filename ?? REPL_FILENAME);
             if (!dependencyFiles) {
-                if (isAmbientBuildImport(dependencyPath)) {
-                    const dependency = this.buildAmbientStandardPackage(dependencyPath);
-                    if (dependency)
-                        sourceDependencies.push(dependency);
-                    continue;
-                }
                 if (!this.failedPackageLoads.has(dependencyPath)) {
                     this.diagnostics.push(buildDiagnostic(files[0]?.filename ?? REPL_FILENAME, `package ${dependencyPath} is not available to gojr build; provide it with packageSources or --pkg`));
                 }
@@ -498,105 +491,13 @@ class PackageGraphBuilder {
         this.visiting.delete(importPath);
         return this.nodes.get(importPath);
     }
-    buildAmbientStandardPackage(importPath) {
-        const existing = this.nodes.get(importPath);
-        if (existing)
-            return existing;
+    registerIntrinsicPackage(importPath) {
         const pkg = standardTypePackage(importPath);
         if (!pkg)
-            return undefined;
+            return false;
         this.standardLibraryPackages.add(importPath);
         this.codebase.SetPackageInfo(this.requireActiveTxn(), importPath, pkg);
-        const packageName = pkg.Name();
-        const goos = this.request.goos ?? GOJR_GOOS;
-        const goarch = this.request.goarch ?? GOJR_GOARCH;
-        const buildTags = resolvedBuildTags(this.request);
-        const dependencies = [];
-        this.progress({
-            action: "checking",
-            importPath,
-            packageName,
-            dependencyCount: dependencies.length,
-            fileCount: 1,
-            standardLibrary: true
-        });
-        const dependencyCacheKeys = [];
-        const exports = uniqueExports(packageScopeObjects(pkg));
-        const sourceHash = stableHash([
-            "ambient-stdlib",
-            importPath,
-            packageName,
-            JSON.stringify(exports)
-        ].join("\0"));
-        const cacheKey = stableHash([
-            ARTIFACT_LAYOUT_VERSION,
-            this.request.compilerVersion ?? DEFAULT_COMPILER_VERSION,
-            this.request.backend ?? DEFAULT_BACKEND,
-            this.request.hostSpecVersion ?? DEFAULT_HOST_SPEC_VERSION,
-            this.request.capabilityPolicy ?? DEFAULT_CAPABILITY_POLICY,
-            goos,
-            goarch,
-            buildTags.join("\n"),
-            "stdlib",
-            importPath,
-            sourceHash,
-            "",
-            ""
-        ].join("\0"));
-        const artifactPath = artifactPathForImportPath(resolveArtifactRoot(this.request), importPath);
-        const syntheticFile = {
-            filename: `gojr:stdlib/${importPath}`,
-            source: `package ${packageName}\n`
-        };
-        const pkgdef = packageExportData({
-            layoutVersion: ARTIFACT_LAYOUT_VERSION,
-            compilerVersion: this.request.compilerVersion ?? DEFAULT_COMPILER_VERSION,
-            backend: this.request.backend ?? DEFAULT_BACKEND,
-            hostSpecVersion: this.request.hostSpecVersion ?? DEFAULT_HOST_SPEC_VERSION,
-            capabilityPolicy: this.request.capabilityPolicy ?? DEFAULT_CAPABILITY_POLICY,
-            goos,
-            goarch,
-            buildTags,
-            standardLibrary: true,
-            importPath,
-            packageName,
-            sourceHash,
-            cacheKey,
-            dependencies,
-            dependencyCacheKeys,
-            exports,
-            sources: [{
-                    filename: syntheticFile.filename,
-                    hash: stableHash(syntheticFile.source)
-                }]
-        });
-        const parsedSynthetic = parseFrontSourceFiles([syntheticFile]);
-        const syntheticAst = frontFilesToProgramAst(parsedSynthetic.files, [], []);
-        const backend = this.request.backend ?? DEFAULT_BACKEND;
-        const artifactSource = backend === GOJR_STAGE1_BACKEND
-            ? this.stage1ArtifactSource(pkgdef, syntheticAst)
-            : generatedArtifactSource(pkgdef, [syntheticFile], syntheticAst, {
-                importPath,
-                packageName,
-                exportedNames: exports.map((item) => item.name).sort(),
-                constants: [],
-                variables: [],
-                varInitOrder: []
-            });
-        const node = {
-            importPath,
-            packageName,
-            files: [syntheticFile],
-            sourceHash,
-            cacheKey,
-            dependencies,
-            dependencyCacheKeys,
-            exports,
-            artifactPath,
-            artifactSource
-        };
-        this.nodes.set(importPath, node);
-        return node;
+        return true;
     }
     ambientCheckedPackage(importPath, pkg) {
         this.codebase.SetPackageInfo(this.requireActiveTxn(), importPath, pkg);
@@ -617,6 +518,10 @@ class PackageGraphBuilder {
         }
     }
     sourceFilesForImport(importPath, filename) {
+        if (isIntrinsicPackageImport(importPath)) {
+            this.registerIntrinsicPackage(importPath);
+            return undefined;
+        }
         const explicit = this.packageSources.get(importPath);
         if (explicit)
             return explicit;
@@ -905,9 +810,6 @@ const knownGOARCH = new Set([
     GOJR_GOARCH
 ]);
 function isAmbientBuildImport(path) {
-    return isIntrinsicPackageImport(path);
-}
-function preferAmbientBuildImport(path) {
     return isIntrinsicPackageImport(path);
 }
 function buildDiagnostic(filename, message, span) {

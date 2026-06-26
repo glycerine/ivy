@@ -399,12 +399,234 @@ export function standardTypePackage(path: string): GoTypesPackage | undefined {
   else if (path === "internal/reflectlite") pkg = reflectlitePackage();
   else if (path === "iter") pkg = iterPackage();
   else if (path === "math") pkg = mathPackage();
+  else if (path === "os") pkg = osPackage();
   else if (path === "runtime") pkg = runtimePackage();
   else if (path === "syscall/js") pkg = syscallJSPackage();
   else if (path === "testing") pkg = testingPackage();
   else if (path === "unsafe") pkg = Unsafe;
   if (pkg) standardTypePackageCache.set(path, pkg);
   return pkg;
+}
+
+function checkedSyntheticStandardPackage(path: string, source: string): GoTypesPackage {
+  const parsed = parseFrontSourceFiles([{ filename: `gojr:intrinsic/${path}`, source }]);
+  const packageName = parsed.files.find((file) => file.name)?.name?.name ?? path.split("/").filter(Boolean).at(-1) ?? path;
+  const result = checkGoJuniorFiles(parsed.files, parsed.statements, parsed.diagnostics, {
+    packageName,
+    packagePath: path,
+    autoImportFmt: false,
+    disableUnusedImportCheck: true
+  }, [{ filename: `gojr:intrinsic/${path}`, source }]);
+  const errors = result.diagnostics.filter((diagnostic) => diagnostic.severity === "error");
+  if (errors.length > 0) {
+    throw new Error(`could not initialize intrinsic ${path}: ${errors.map((diagnostic) => diagnostic.message).join("; ")}`);
+  }
+  return result.pkg;
+}
+
+function osPackage(): GoTypesPackage {
+  return checkedSyntheticStandardPackage("os", `package os
+
+type File struct{}
+type FileMode uint32
+
+const (
+  O_RDONLY int = 0
+  O_WRONLY int = 1
+  O_RDWR int = 2
+  O_APPEND int = 8
+  O_CREATE int = 512
+  O_EXCL int = 2048
+  O_SYNC int = 128
+  O_TRUNC int = 1024
+
+  ModeDir FileMode = 2147483648
+  ModeAppend FileMode = 1073741824
+  ModeExclusive FileMode = 536870912
+  ModeTemporary FileMode = 268435456
+  ModeSymlink FileMode = 134217728
+  ModeDevice FileMode = 67108864
+  ModeNamedPipe FileMode = 33554432
+  ModeSocket FileMode = 16777216
+  ModeSetuid FileMode = 8388608
+  ModeSetgid FileMode = 4194304
+  ModeCharDevice FileMode = 2097152
+  ModeSticky FileMode = 1048576
+  ModeIrregular FileMode = 524288
+  ModeType FileMode = 2399666176
+  ModePerm FileMode = 511
+)
+
+var Args []string
+var Stdin *File
+var Stdout *File
+var Stderr *File
+var ErrInvalid error
+var ErrPermission error
+var ErrExist error
+var ErrNotExist error
+var ErrClosed error
+var ErrDeadlineExceeded error
+var ErrNoDeadline error
+
+type FileInfo interface {
+  Name() string
+  Size() int64
+  Mode() FileMode
+  ModTime() any
+  IsDir() bool
+  Sys() any
+}
+
+type DirEntry interface {
+  Name() string
+  IsDir() bool
+  Type() FileMode
+  Info() (FileInfo, error)
+}
+
+type PathError struct {
+  Op string
+  Path string
+  Err error
+}
+
+func (e *PathError) Error() string { return "" }
+func (e *PathError) Unwrap() error { return e.Err }
+
+type LinkError struct {
+  Op string
+  Old string
+  New string
+  Err error
+}
+
+func (e *LinkError) Error() string { return "" }
+func (e *LinkError) Unwrap() error { return e.Err }
+
+type SyscallError struct {
+  Syscall string
+  Err error
+}
+
+func (e *SyscallError) Error() string { return "" }
+func (e *SyscallError) Unwrap() error { return e.Err }
+func NewSyscallError(syscall string, err error) error { return err }
+
+type ProcAttr struct {
+  Dir string
+  Env []string
+  Files []*File
+  Sys any
+}
+
+type Process struct{}
+type ProcessState struct{}
+func (p *Process) Kill() error { return nil }
+func (p *Process) Release() error { return nil }
+func (p *Process) Signal(sig Signal) error { return nil }
+func (p *Process) Wait() (*ProcessState, error) { return nil, nil }
+func (p *ProcessState) Exited() bool { return false }
+func (p *ProcessState) ExitCode() int { return 0 }
+func (p *ProcessState) String() string { return "" }
+func (p *ProcessState) Success() bool { return false }
+func (p *ProcessState) Sys() any { return nil }
+func (p *ProcessState) SysUsage() any { return nil }
+
+type Signal interface {
+  String() string
+  Signal()
+}
+
+func (m FileMode) IsDir() bool { return false }
+func (m FileMode) IsRegular() bool { return false }
+func (m FileMode) Perm() FileMode { return m }
+func (m FileMode) String() string { return "" }
+func (m FileMode) Type() FileMode { return m }
+
+func (f *File) Chdir() error { return nil }
+func (f *File) Chmod(mode FileMode) error { return nil }
+func (f *File) Chown(uid, gid int) error { return nil }
+func (f *File) Close() error { return nil }
+func (f *File) Fd() uintptr { return 0 }
+func (f *File) Name() string { return "" }
+func (f *File) Read(b []byte) (n int, err error) { return 0, nil }
+func (f *File) ReadAt(b []byte, off int64) (n int, err error) { return 0, nil }
+func (f *File) ReadDir(n int) ([]DirEntry, error) { return nil, nil }
+func (f *File) Readdir(n int) ([]FileInfo, error) { return nil, nil }
+func (f *File) Readdirnames(n int) (names []string, err error) { return nil, nil }
+func (f *File) Seek(offset int64, whence int) (ret int64, err error) { return 0, nil }
+func (f *File) SetDeadline(t any) error { return nil }
+func (f *File) SetReadDeadline(t any) error { return nil }
+func (f *File) SetWriteDeadline(t any) error { return nil }
+func (f *File) Stat() (FileInfo, error) { return nil, nil }
+func (f *File) Sync() error { return nil }
+func (f *File) SyscallConn() (any, error) { return nil, nil }
+func (f *File) Truncate(size int64) error { return nil }
+func (f *File) Write(b []byte) (n int, err error) { return len(b), nil }
+func (f *File) WriteAt(b []byte, off int64) (n int, err error) { return len(b), nil }
+func (f *File) WriteString(s string) (n int, err error) { return len(s), nil }
+
+func Chdir(dir string) error { return nil }
+func Chmod(name string, mode FileMode) error { return nil }
+func Chown(name string, uid, gid int) error { return nil }
+func Chtimes(name string, atime any, mtime any) error { return nil }
+func Clearenv() {}
+func Create(name string) (*File, error) { return nil, nil }
+func CreateTemp(dir, pattern string) (*File, error) { return nil, nil }
+func DirFS(dir string) any { return nil }
+func Environ() []string { return nil }
+func Executable() (string, error) { return "", nil }
+func Exit(code int) {}
+func Expand(s string, mapping func(string) string) string { return "" }
+func ExpandEnv(s string) string { return "" }
+func FindProcess(pid int) (*Process, error) { return nil, nil }
+func Getegid() int { return 0 }
+func Getenv(key string) string { return "" }
+func Geteuid() int { return 0 }
+func Getgid() int { return 0 }
+func Getgroups() ([]int, error) { return nil, nil }
+func Getpagesize() int { return 4096 }
+func Getpid() int { return 1 }
+func Getppid() int { return 0 }
+func Getuid() int { return 0 }
+func Getwd() (dir string, err error) { return "", nil }
+func Hostname() (name string, err error) { return "", nil }
+func IsExist(err error) bool { return false }
+func IsNotExist(err error) bool { return false }
+func IsPathSeparator(c uint8) bool { return false }
+func IsPermission(err error) bool { return false }
+func IsTimeout(err error) bool { return false }
+func Lchown(name string, uid, gid int) error { return nil }
+func Link(oldname, newname string) error { return nil }
+func LookupEnv(key string) (string, bool) { return "", false }
+func Lstat(name string) (FileInfo, error) { return nil, nil }
+func Mkdir(name string, perm FileMode) error { return nil }
+func MkdirAll(path string, perm FileMode) error { return nil }
+func MkdirTemp(dir, pattern string) (string, error) { return "", nil }
+func NewFile(fd uintptr, name string) *File { return nil }
+func Open(name string) (*File, error) { return nil, nil }
+func OpenFile(name string, flag int, perm FileMode) (*File, error) { return nil, nil }
+func Pipe() (r *File, w *File, err error) { return nil, nil, nil }
+func ReadDir(name string) ([]DirEntry, error) { return nil, nil }
+func ReadFile(name string) ([]byte, error) { return nil, nil }
+func Readlink(name string) (string, error) { return "", nil }
+func Remove(name string) error { return nil }
+func RemoveAll(path string) error { return nil }
+func Rename(oldpath, newpath string) error { return nil }
+func SameFile(fi1, fi2 FileInfo) bool { return false }
+func Setenv(key, value string) error { return nil }
+func StartProcess(name string, argv []string, attr *ProcAttr) (*Process, error) { return nil, nil }
+func Stat(name string) (FileInfo, error) { return nil, nil }
+func Symlink(oldname, newname string) error { return nil }
+func TempDir() string { return "" }
+func Truncate(name string, size int64) error { return nil }
+func Unsetenv(key string) error { return nil }
+func UserCacheDir() (string, error) { return "", nil }
+func UserConfigDir() (string, error) { return "", nil }
+func UserHomeDir() (string, error) { return "", nil }
+func WriteFile(name string, data []byte, perm FileMode) error { return nil }
+`);
 }
 
 function cmpPackage(): GoTypesPackage {
