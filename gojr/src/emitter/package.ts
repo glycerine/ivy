@@ -2973,6 +2973,7 @@ function conversionCallToJs(ctx: EmitterContext, typeText: string, args: Express
   if (!value) return undefined;
   const sourceType = expressionTypeText(args[0], env);
   const resolvedType = resolveUnderlyingTypeText(typeText, env.facts);
+  if (isInterfaceTypeText(typeText, env.facts)) return valueForTargetType(value, typeText, sourceType, env);
   if (isByteSliceType(resolvedType)) return `__gojrBytesFrom(${value})`;
   if (typeText.trim() === "unsafe.Pointer" || resolvedType.trim() === "unsafe.Pointer") return `__gojrConvertPointer(${JSON.stringify(typeText)}, ${value})`;
   if (resolvedType === "uintptr" && isPointerLikeTypeText(sourceType)) return `__gojrPointerToUintptr(${value})`;

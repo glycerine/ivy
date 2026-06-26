@@ -389,6 +389,10 @@ func StringFromDynamicByte(b byte) string { return string([]byte{b}) }
 func ErrText(s string) string { return (&errString{s}).s }
 func AssertInt(x any) int64 { return x.(int64) }
 func AssertIntOk(x any) (int64, bool) { v, ok := x.(int64); return v, ok }
+func InterfaceConvert() string {
+	x := interface{}(P)
+	return x.(Point).Name
+}
 func BuiltinSliceOps() (int, int, int64) {
 	xs := []int64{1, 2}
 	xs = append(xs, 3, 4)
@@ -459,6 +463,7 @@ func MethodValue() func(int64) int64 { return P.Sum }
     expect(await (pkg.AssertInt as (x: unknown) => Promise<bigint>)(42n)).toBe(42n);
     expect(await (pkg.AssertIntOk as (x: unknown) => Promise<[bigint, boolean]>)(42n)).toEqual([42n, true]);
     expect(await (pkg.AssertIntOk as (x: unknown) => Promise<[bigint, boolean]>)("nope")).toEqual([0n, false]);
+    expect(await (pkg.InterfaceConvert as () => Promise<string>)()).toBe("ada");
     expect(await (pkg.BuiltinSliceOps as () => Promise<[bigint, bigint, bigint]>)()).toEqual([4n, 4n, 3n]);
     expect(await (pkg.BuiltinCopyDelete as () => Promise<[bigint, boolean, bigint]>)()).toEqual([2n, false, 8n]);
     expect(await (pkg.KeyedSlice as () => Promise<[bigint, string, string]>)()).toEqual([5n, "", "four"]);

@@ -2938,6 +2938,8 @@ function conversionCallToJs(ctx, typeText, args, env) {
         return undefined;
     const sourceType = expressionTypeText(args[0], env);
     const resolvedType = resolveUnderlyingTypeText(typeText, env.facts);
+    if (isInterfaceTypeText(typeText, env.facts))
+        return valueForTargetType(value, typeText, sourceType, env);
     if (isByteSliceType(resolvedType))
         return `__gojrBytesFrom(${value})`;
     if (typeText.trim() === "unsafe.Pointer" || resolvedType.trim() === "unsafe.Pointer")
