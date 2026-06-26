@@ -18,8 +18,9 @@ describe("Go-junior host protocol", () => {
         filename: "actual.go",
         line: 7,
         column: 3
-      }
-    })).toBe("actual.go:7:3: error GOJR_TEST001: badness\nstack line");
+      },
+      sourceLine: "  badness()"
+    })).toBe("actual.go:7:3: error GOJR_TEST001: badness\n  badness()\n  ^\nstack line");
   });
 
   test("formats evaluation results for native and browser hosts", () => {

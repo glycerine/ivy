@@ -1,4 +1,4 @@
-import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan, diagnosticFilename } from "./diagnostics.js";
+import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan, diagnosticFilename, withDiagnosticSourceContext } from "./diagnostics.js";
 import { AssignStmt, Decl, Expr, Field, File, FuncDecl, FuncType, GenDecl, Ident, Stmt } from "./front/ast.js";
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
@@ -85,8 +85,9 @@ export function isGoJuniorSyntheticCheckName(name: string): boolean {
 }
 
 export function checkGoJuniorSource(source: string, filename: string, config: GoJuniorCheckConfig = {}): GoJuniorCheckResult & { file?: File } {
+  const sourceFile = { filename, source };
   const parsed = parseFrontSource(source, filename);
-  const result = checkGoJuniorFiles(parsed.file ? [parsed.file] : [], parsed.statements, parsed.diagnostics, config);
+  const result = checkGoJuniorFiles(parsed.file ? [parsed.file] : [], parsed.statements, parsed.diagnostics, config, [sourceFile]);
   return {
     ...result,
     ...(parsed.file ? { file: parsed.file } : {})
@@ -95,21 +96,22 @@ export function checkGoJuniorSource(source: string, filename: string, config: Go
 
 export function checkGoJuniorSourceFiles(sourceFiles: SourceFile[], config: GoJuniorCheckConfig = {}): GoJuniorCheckResult {
   const parsed = parseFrontSourceFiles(sourceFiles);
-  return checkGoJuniorFiles(parsed.files, parsed.statements, parsed.diagnostics, config);
+  return checkGoJuniorFiles(parsed.files, parsed.statements, parsed.diagnostics, config, sourceFiles);
 }
 
 export function checkGoJuniorFiles(
   files: File[],
   statements: Stmt[] = [],
   parserDiagnostics: Diagnostic[] = [],
-  config: GoJuniorCheckConfig = {}
+  config: GoJuniorCheckConfig = {},
+  sourceFiles: SourceFile[] = []
 ): GoJuniorCheckResult {
   ensureUniverseInitialized();
 
   const packageName = config.packageInstance?.Name() ?? config.packageName ?? files.find((file) => file.name)?.name?.name ?? "main";
   const packagePath = config.packageInstance?.Path() ?? config.packagePath ?? packageName;
   const diagnostics = [...parserDiagnostics];
-  const fset = new FrontFileSet(files);
+  const fset = new FrontFileSet(files, sourceFiles);
   const info = new Info();
   info.Types = new Map();
   info.Defs = new Map();
@@ -149,10 +151,14 @@ export function checkGoJuniorFiles(
   }
   filterTopLevelExpressionConvenienceDiagnostics(diagnostics, statements, config);
 
+  const resultDiagnostics = sourceFiles.length > 0
+    ? withDiagnosticSourceContext(diagnostics, sourceFiles)
+    : diagnostics;
+
   return {
     pkg,
     info,
-    diagnostics,
+    diagnostics: resultDiagnostics,
     files,
     statements
   };
@@ -188,7 +194,10 @@ function filterTopLevelExpressionConvenienceDiagnostics(
 }
 
 class FrontFileSet {
-  public constructor(private readonly files: File[]) {}
+  public constructor(
+    private readonly files: File[],
+    private readonly sourceFiles: SourceFile[] = []
+  ) {}
 
   public Position(pos: unknown): string {
     const span = this.span(pos);
@@ -198,7 +207,9 @@ class FrontFileSet {
   public span(pos: unknown): SourceSpan {
     const offset = positionOffset(pos);
     const file = fileForOffset(this.files, offset);
-    return spanFromOffset(file?.span?.filename ?? firstFilename(this.files), offset);
+    const filename = file?.span?.filename ?? firstFilename(this.files);
+    const source = this.sourceFiles.find((candidate) => candidate.filename === filename)?.source;
+    return spanFromOffset(filename, offset, source);
   }
 }
 
@@ -1721,7 +1732,7 @@ function ident(name: string, span?: SourceSpan): Ident {
 
 function positionOffset(pos: unknown): number {
   const n = typeof pos === "number" ? pos : Number(pos);
-  return Number.isFinite(n) && n > 0 ? n - 1 : 0;
+  return Number.isFinite(n) && n >= 0 ? n : 0;
 }
 
 function fileForOffset(files: File[], offset: number): File | undefined {
@@ -1737,12 +1748,31 @@ function firstFilename(files: File[]): string {
   return files[0]?.span?.filename ?? REPL_FILENAME;
 }
 
-function spanFromOffset(filename: string, offset: number): SourceSpan {
+function spanFromOffset(filename: string, offset: number, source?: string): SourceSpan {
+  const location = source === undefined
+    ? { line: 1, column: offset + 1 }
+    : lineColumnFromOffset(source, offset);
   return {
     filename,
     offset,
     length: 1,
-    line: 1,
-    column: offset + 1
+    line: location.line,
+    column: location.column
+  };
+}
+
+function lineColumnFromOffset(source: string, offset: number): { line: number; column: number } {
+  const target = Math.max(0, Math.min(offset, source.length));
+  let line = 1;
+  let lineStart = 0;
+  for (let index = 0; index < target; index += 1) {
+    if (source.charCodeAt(index) === 10) {
+      line += 1;
+      lineStart = index + 1;
+    }
+  }
+  return {
+    line,
+    column: target - lineStart + 1
   };
 }

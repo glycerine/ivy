@@ -1,4 +1,4 @@
-import { REPL_FILENAME } from "./diagnostics.js";
+import { REPL_FILENAME, withDiagnosticSourceContext } from "./diagnostics.js";
 import { blake3RawBytes } from "./blake3.js";
 import { checkGoJuniorSourceFiles, GOJR_SYNTHETIC_CHECK_PREFIX, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import { Const as GoTypesConst, Var as GoTypesVar, ensureUniverseInitialized, NewPackage, NewPkgName, NoPos, RelativeTo as GoTypesRelativeTo, TypeString as GoTypesTypeString } from "./go/types/index.js";
@@ -2426,7 +2426,7 @@ export class GoJuniorSession {
         const hasError = parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error");
         if (hasError) {
             return withObservedDeps({
-                diagnostics: parsed.diagnostics,
+                diagnostics: withDiagnosticSourceContext(parsed.diagnostics, [sourceFile]),
                 output: [],
                 incomplete: diagnosticsLookIncomplete(parsed.diagnostics),
                 ...(ast ? { ast } : {})
@@ -2434,7 +2434,7 @@ export class GoJuniorSession {
         }
         if (!ast) {
             return withObservedDeps({
-                diagnostics: parsed.diagnostics,
+                diagnostics: withDiagnosticSourceContext(parsed.diagnostics, [sourceFile]),
                 output: []
             }, this.context);
         }
@@ -2443,7 +2443,7 @@ export class GoJuniorSession {
         if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
             checkedTransaction.transaction.Rollback();
             return withObservedDeps({
-                diagnostics: checked.diagnostics,
+                diagnostics: withDiagnosticSourceContext(checked.diagnostics, [sourceFile]),
                 output: [],
                 ast
             }, this.context);
@@ -2496,10 +2496,10 @@ export class GoJuniorSession {
                 checkedTransaction.transaction.Rollback();
             const message = error instanceof Error ? error.message : String(error);
             return withObservedDeps({
-                diagnostics: [
+                diagnostics: withDiagnosticSourceContext([
                     ...ast.diagnostics,
                     runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
-                ],
+                ], [sourceFile]),
                 output: this.context.outputFrom(outputStart),
                 ast
             }, this.context);

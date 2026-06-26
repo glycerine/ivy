@@ -1,4 +1,4 @@
-import { REPL_FILENAME, diagnosticFilename } from "./diagnostics.js";
+import { REPL_FILENAME, diagnosticFilename, withDiagnosticSourceContext } from "./diagnostics.js";
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
 import { Config, Info, Int, Int8, Int16, Int32, Int64, UntypedInt, Uint, Uint8, Uint16, Uint32, Uint64, Uintptr, Float32, Float64, Bool, NewArray, NewChecker, NewConst, NewField, NewFunc, NewInterfaceType, NewNamed, NewPackage, NewPointer, NewPkgName, NewSignatureType, NewSlice, NewStruct, NewTerm, NewTypeName, NewTypeParam, NewTuple, NewUnion, NewVar, NoPos, String as GoString, Typ, emptyInterface, ensureUniverseInitialized, UniverseLookup, Unsafe } from "./go/types/index.js";
@@ -8,8 +8,9 @@ export function isGoJuniorSyntheticCheckName(name) {
     return name === GOJR_SYNTHETIC_CHECK_PREFIX || name.startsWith(`${GOJR_SYNTHETIC_CHECK_PREFIX}_`);
 }
 export function checkGoJuniorSource(source, filename, config = {}) {
+    const sourceFile = { filename, source };
     const parsed = parseFrontSource(source, filename);
-    const result = checkGoJuniorFiles(parsed.file ? [parsed.file] : [], parsed.statements, parsed.diagnostics, config);
+    const result = checkGoJuniorFiles(parsed.file ? [parsed.file] : [], parsed.statements, parsed.diagnostics, config, [sourceFile]);
     return {
         ...result,
         ...(parsed.file ? { file: parsed.file } : {})
@@ -17,9 +18,9 @@ export function checkGoJuniorSource(source, filename, config = {}) {
 }
 export function checkGoJuniorSourceFiles(sourceFiles, config = {}) {
     const parsed = parseFrontSourceFiles(sourceFiles);
-    return checkGoJuniorFiles(parsed.files, parsed.statements, parsed.diagnostics, config);
+    return checkGoJuniorFiles(parsed.files, parsed.statements, parsed.diagnostics, config, sourceFiles);
 }
-export function checkGoJuniorFiles(files, statements = [], parserDiagnostics = [], config = {}) {
+export function checkGoJuniorFiles(files, statements = [], parserDiagnostics = [], config = {}, sourceFiles = []) {
     ensureUniverseInitialized();
     const packageName = config.packageInstance?.Name() ?? config.packageName ?? files.find((file) => file.name)?.name?.name ?? "main";
     const packagePath = config.packageInstance?.Path() ?? config.packagePath ?? packageName;
@@ -62,10 +63,13 @@ export function checkGoJuniorFiles(files, statements = [], parserDiagnostics = [
         });
     }
     filterTopLevelExpressionConvenienceDiagnostics(diagnostics, statements, config);
+    const resultDiagnostics = sourceFiles.length > 0
+        ? withDiagnosticSourceContext(diagnostics, sourceFiles)
+        : diagnostics;
     return {
         pkg,
         info,
-        diagnostics,
+        diagnostics: resultDiagnostics,
         files,
         statements
     };

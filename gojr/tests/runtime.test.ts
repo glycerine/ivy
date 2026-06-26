@@ -5,6 +5,7 @@ import { describe, expect, test } from "./testHarness.js";
 import {
   cellDependency,
   evaluatePackageSourceFiles,
+  evaluationResultToHostPayload,
   evaluateSource,
   evaluateSourceFilesWithPackagesOnNode,
   evaluateSourceFiles,
@@ -8222,6 +8223,22 @@ return a, b, ok, c, ok2, len(ch), cap(ch)
     const result = await session.evaluate("v");
     expect(result.diagnostics).toEqual([]);
     expect(result.value).toBe(0n);
+  });
+
+  test("REPL type errors render source line context in shared host diagnostics", async () => {
+    const session = new GoJuniorSession();
+    const source = `func f() { a := 10; var a string = "hi"; println(a) }`;
+
+    const result = await session.evaluate(source);
+    expect(result.diagnostics).toHaveLength(2);
+    expect(result.diagnostics[0]?.sourceLine).toBe(source);
+    expect(result.diagnostics[1]?.sourceLine).toBe(source);
+
+    const payload = evaluationResultToHostPayload(result);
+    expect(payload.diagnostics[0]).toContain(`a redeclared in this block\n${source}\n`);
+    expect(payload.diagnostics[0]).toContain("^");
+    expect(payload.diagnostics[1]).toContain(`other declaration of a\n${source}\n`);
+    expect(payload.diagnostics[1]).toContain("^");
   });
 
   test("failed REPL runtime execution rolls back top-level declarations", async () => {

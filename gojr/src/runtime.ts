@@ -36,7 +36,7 @@ import {
   TypeSpec,
   UnaryExpression
 } from "./ast.js";
-import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan } from "./diagnostics.js";
+import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan, withDiagnosticSourceContext } from "./diagnostics.js";
 import { blake3RawBytes } from "./blake3.js";
 import {
   checkGoJuniorSourceFiles,
@@ -3090,7 +3090,7 @@ export class GoJuniorSession {
     const hasError = parsed.diagnostics.some((diagnostic) => diagnostic.severity === "error");
     if (hasError) {
       return withObservedDeps({
-        diagnostics: parsed.diagnostics,
+        diagnostics: withDiagnosticSourceContext(parsed.diagnostics, [sourceFile]),
         output: [],
         incomplete: diagnosticsLookIncomplete(parsed.diagnostics),
         ...(ast ? { ast } : {})
@@ -3098,7 +3098,7 @@ export class GoJuniorSession {
     }
     if (!ast) {
       return withObservedDeps({
-        diagnostics: parsed.diagnostics,
+        diagnostics: withDiagnosticSourceContext(parsed.diagnostics, [sourceFile]),
         output: []
       }, this.context);
     }
@@ -3108,7 +3108,7 @@ export class GoJuniorSession {
     if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
       checkedTransaction.transaction.Rollback();
       return withObservedDeps({
-        diagnostics: checked.diagnostics,
+        diagnostics: withDiagnosticSourceContext(checked.diagnostics, [sourceFile]),
         output: [],
         ast
       }, this.context);
@@ -3163,10 +3163,10 @@ export class GoJuniorSession {
       if (!typeInfoAccepted) checkedTransaction.transaction.Rollback();
       const message = error instanceof Error ? error.message : String(error);
       return withObservedDeps({
-        diagnostics: [
+        diagnostics: withDiagnosticSourceContext([
           ...ast.diagnostics,
           runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
-        ],
+        ], [sourceFile]),
         output: this.context.outputFrom(outputStart),
         ast
       }, this.context);
