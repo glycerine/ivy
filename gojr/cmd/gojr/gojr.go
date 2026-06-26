@@ -96,6 +96,9 @@ type benchmarkRequest struct {
 	CacheMode          string         `json:"cacheMode,omitempty"`
 	PhaseSet           string         `json:"phaseSet,omitempty"`
 	CPUProfilePath     string         `json:"cpuProfilePath,omitempty"`
+	WasmPoc            bool           `json:"wasmPoc,omitempty"`
+	WasmWorkItems      int            `json:"wasmWorkItems,omitempty"`
+	WasmFuel           int            `json:"wasmFuel,omitempty"`
 }
 
 type compileRequest struct {
@@ -822,6 +825,9 @@ func runBench(rt *nodeRuntime, args []string) (bool, error) {
 	cacheMode := flags.String("cache", "cold", "artifact cache mode: cold or warm")
 	phaseSet := flags.String("phase", "front-end-and-build", "phase set: front-end, package-build, or front-end-and-build")
 	cpuProfilePath := flags.String("cpuprofile", "", "write a V8 .cpuprofile for the benchmark run")
+	wasmPoc := flags.Bool("wasm-poc", false, "run the Wasm-first copy-and-patch proof-of-concept benchmark")
+	wasmWorkItems := flags.Int("work", 100000, "work items for the Wasm POC benchmark")
+	wasmFuel := flags.Int("fuel", 8192, "loop fuel per Wasm POC chunk")
 	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; js_gojr is appended")
 	artifactRoot := flags.String("artifact-root", "", "exact js_gojr artifact root directory")
 	jsonMode := flags.Bool("json", false, "print a machine-readable JSON benchmark report")
@@ -848,6 +854,12 @@ func runBench(rt *nodeRuntime, args []string) (bool, error) {
 	}
 	if *phaseSet != "front-end" && *phaseSet != "package-build" && *phaseSet != "front-end-and-build" {
 		return false, fmt.Errorf("-phase expects front-end, package-build, or front-end-and-build")
+	}
+	if *wasmWorkItems <= 0 {
+		return false, fmt.Errorf("-work expects a positive integer")
+	}
+	if *wasmFuel <= 0 {
+		return false, fmt.Errorf("-fuel expects a positive integer")
 	}
 
 	target := optionalArg(flags.Args())
@@ -885,6 +897,9 @@ func runBench(rt *nodeRuntime, args []string) (bool, error) {
 		CacheMode:          *cacheMode,
 		PhaseSet:           *phaseSet,
 		CPUProfilePath:     strings.TrimSpace(*cpuProfilePath),
+		WasmPoc:            *wasmPoc,
+		WasmWorkItems:      *wasmWorkItems,
+		WasmFuel:           *wasmFuel,
 	})
 	if err != nil {
 		return false, err
@@ -963,7 +978,7 @@ gojr inspect-js [--json] [-importpath PATH] [--pkg import=DIR] [--srcroot DIR] [
 gojr cache path|list|clear [--json] [-pkgdir DIR|-artifact-root DIR] [--yes]
   inspect or clear the Go-junior package artifact cache
 
-gojr bench [--json] [-n N] [-warmup N] [-case NAME] [-cache cold|warm] [-phase front-end|package-build|front-end-and-build] [-cpuprofile PATH] [-pkgdir DIR|-artifact-root DIR] [TARGET]
+gojr bench [--json] [-n N] [-warmup N] [-case NAME] [-cache cold|warm] [-phase front-end|package-build|front-end-and-build] [-wasm-poc] [-work N] [-fuel N] [-cpuprofile PATH] [-pkgdir DIR|-artifact-root DIR] [TARGET]
   run shared JavaScript/V8 compiler benchmarks; defaults to built-in microbenchmarks
 
 gojr run-fixture [--json] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] FIXTURE.json|-

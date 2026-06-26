@@ -43,27 +43,36 @@ That means cached package load still depends on an interpreter-shaped payload.
 
 ## Decision
 
-Copy-and-patch source emission is the primary GoJr backend architecture.
+Copy-and-patch remains the primary GoJr backend architecture, but the primary hot-code target is now WebAssembly, not JavaScript source text.
 
-For GoJr, "copy-and-patch" means JavaScript source stencils rather than binary machine-code stencils. The core idea remains the same:
+The revised architecture is Wasm-first and JavaScript-hosted:
 
-- maintain a stencil library of prewritten source fragments;
+- JavaScript remains the package loader, spreadsheet graph orchestrator, dynamic host-binding layer, browser/DOM/chart integration layer, and fallback path for highly dynamic Go semantics.
+- Wasm is the preferred target for hot straight-line numeric code, dense slice/array loops, fixed-layout structs, and spreadsheet kernels where CPU cost dominates.
+- Copy-and-patch stencils should therefore be binary Wasm stencils first, with JavaScript stencils kept for orchestration and dynamic glue.
+
+For GoJr, "copy-and-patch" now means:
+
+- maintain a stencil library of prewritten Wasm binary fragments and JS host fragments;
 - select stencil variants from typed AST and effect information;
-- copy the selected stencil;
-- patch holes with validated identifiers, literals, type descriptors, branch labels, import paths, and generated sub-fragments;
-- use supernode stencils for common high-value shapes such as giant `map[string][]byte` literals.
+- copy the selected Wasm or JS stencil;
+- patch holes with validated function indices, type indices, LEB128 immediates, memory offsets, branch depths, import paths, type descriptors, and generated sub-fragments;
+- use supernode stencils for common high-value shapes such as giant `map[string][]byte` literals and dense numeric loops.
 
 The artifact boundary must become:
 
 ```text
 package.a
 ├── __.PKGDEF   export/type/cache metadata only
-└── _gojr.js    package-local executable JavaScript only
+├── _gojr.js    package-local JavaScript host/orchestration code
+└── _gojr.wasm  package-local executable Wasm code, when generated
 ```
 
 `__.PKGDEF` must never contain executable AST, runtime plans, full source text, dependency payloads, or JavaScript bodies.
 
-`_gojr.js` must contain executable package-local JavaScript. It may contain compact package-local metadata needed for runtime execution, but not a serialized AST interpreter payload.
+`_gojr.js` must contain executable package-local JavaScript host code. It may contain compact package-local metadata needed for runtime execution, but not a serialized AST interpreter payload.
+
+`_gojr.wasm` must contain package-local Wasm code. The JavaScript host should instantiate it, wire imports, pass pointers/state/fuel, and expose package functions through the normal package object.
 
 ## Paper Takeaways Applied To GoJr
 
@@ -74,11 +83,12 @@ The copy-and-patch paper matters to GoJr in four concrete ways:
 3. Supernodes are essential. We should not emit a node per byte for giant literals; we should emit a single compact literal-data stencil.
 4. Compilation should be cheaper than AST construction where possible. The emitter should avoid building a second large IR when a typed traversal can select and patch stencils directly.
 
-The binary paper uses CPS and register/stack stencil variants. In JavaScript source, the equivalent design pressure is different:
+The binary paper uses CPS and register/stack stencil variants. In GoJr, the equivalent design pressure is:
 
-- use ordinary structured JS control flow where it is clearer and easier for V8;
-- use `async` functions universally because goroutines/channels/select need suspension;
-- use local JS variables for direct values;
+- use Wasm for hot numeric kernels so `i64`, `f64`, dense memory, and predictable control flow map naturally;
+- use JavaScript for orchestration, dynamic spreadsheet references, package loading, host APIs, async scheduling, and browser integration;
+- avoid high-frequency JS-to-Wasm micro-calls by batching loops/kernels inside Wasm;
+- insert cooperative preemption at JS-owned chunk boundaries rather than calling out from Wasm on every loop iteration;
 - box only address-taken or captured variables;
 - select stencils based on static type/effect facts rather than doing broad runtime type checks.
 
@@ -113,13 +123,14 @@ Go source files
   -> front parser producing Go-shaped AST
   -> go/types checker producing Info.Types, Info.Defs, Info.Uses, Info.Selections, Info.InitOrder
   -> copy-and-patch typed lowering
-  -> executable _gojr.js
+  -> executable _gojr.wasm for hot/static kernels
+  -> executable _gojr.js for host/orchestration/dynamic glue
   -> thin __.PKGDEF
 ```
 
 The typed lowering should prefer the Go-shaped front AST plus `go/types.Info`. The simplified `ProgramAst` can remain for REPL/interpreter compatibility during transition, but it must not be the long-term artifact payload.
 
-## Generated `_gojr.js` Shape
+## Generated `_gojr.js` / `_gojr.wasm` Shape
 
 Each generated package module should look conceptually like:
 
@@ -140,9 +151,11 @@ export async function instantiateGoJrPackage(runtime, options = {}) {
   const ctx = runtime.createPackageContext(gojrPackageArtifact, options);
   const pkg = ctx.package;
   const imports = ctx.imports;
+  const wasm = await runtime.instantiatePackageWasm(ctx, gojrPackageWasmBytes, imports);
 
   // type descriptors and package variables
-  // functions and methods
+  // JS host wrappers around Wasm functions
+  // JS fallback functions and dynamic methods
   // package variable initialization in go/types InitOrder
   // init functions in file/source order
 
@@ -154,6 +167,16 @@ export default { artifact: gojrPackageArtifact, instantiateGoJrPackage };
 
 There should be no `runtime.ast` and no call to `evaluatePackageArtifact` in production generated package artifacts.
 
+For tiny inline modules, the JS host may use synchronous `new WebAssembly.Module(bytes)` where browser limits allow it. The async instantiation path must also exist for larger modules and conservative browser environments. The benchmark harness must measure both once the real emitter reaches that point.
+
+Loop preemption policy:
+
+- Wasm loops should be emitted as chunkable kernels when they can run long enough to affect browser responsiveness.
+- JS owns the outer loop and calls Wasm with a fuel budget.
+- Wasm runs up to `fuel` iterations or until complete, stores resumable state, and returns.
+- JS measures elapsed time and yields to the scheduler/event loop when the configured budget is exceeded, initially targeting about 10 ms.
+- Do not call JS time/preemption helpers from every Wasm loop iteration.
+
 ## Generated-Code Runtime API
 
 The existing `runtime.ts` already has much of the semantic machinery, but it is interpreter-internal. We need a narrow compiler-facing API.
@@ -163,6 +186,8 @@ The API should be explicit and boring:
 ```ts
 createPackageContext(artifact, options)
 finishPackage(ctx)
+instantiatePackageWasm(ctx, wasmBytes, imports)
+callWasmKernel(ctx, kernel, state, fuel)
 declareType(ctx, name, descriptor)
 declarePackageVar(ctx, name, initial, typeDescriptor)
 makeMap(ctx, keyType, valueType, entries?)
@@ -591,9 +616,10 @@ Deliverables:
 
 - Create `src/emitter/` scaffold.
 - Define `Stencil`, `SlotKind`, `ExprFragment`, `StmtFragment`, `EmitterContext`.
-- Create a minimal package module emitter.
+- Create a minimal package JS host emitter and Wasm binary emitter.
 - Remove runtime payload from `__.PKGDEF` in the new layout.
 - Make generated `_gojr.js` instantiate without `evaluatePackageArtifact` for supported packages.
+- Add `_gojr.wasm` archive member for packages that generate Wasm kernels.
 
 Initial supported constructs:
 
@@ -601,6 +627,8 @@ Initial supported constructs:
 - imports binding by full import path;
 - top-level constants with literal values;
 - top-level vars with literal or zero values;
+- one exported numeric function lowered to Wasm;
+- one fuel-chunked numeric loop lowered to Wasm with JS orchestration;
 - `[]string`;
 - `[]byte`;
 - `map[string][]byte`;
@@ -610,13 +638,16 @@ Tests:
 
 - Build a tiny package and assert `__.PKGDEF` has no `runtime`, `ast`, `source`, or function body text.
 - Assert `_gojr.js` has `instantiateGoJrPackage` and does not call `evaluatePackageArtifact`.
+- Assert `_gojr.wasm` is present for a package with a supported numeric kernel.
 - Import generated `_gojr.js` in Node and execute a simple exported function.
+- Execute a generated Wasm numeric function through the JS host wrapper.
+- Execute a generated fuel-chunked Wasm loop through the JS host wrapper.
 - Build the `4d63.com/tz` data shape fixture and assert artifact size is proportional to source size.
 - Assert `__.PKGDEF` for the data fixture is below a small threshold, for example 128 KB.
 
 Template Expansion Pass:
 
-- Add the initial package, function, variable, zero-value, `[]string`, `[]byte`, and `map[string][]byte` stencils.
+- Add the initial package, JS host wrapper, Wasm function, Wasm memory, Wasm loop chunk, variable, zero-value, `[]string`, `[]byte`, and `map[string][]byte` stencils.
 - Add size snapshot tests proving literal supernodes beat serialized AST size.
 - Record any fallback helper calls emitted by Stage 1 and classify them as deliberate runtime semantics or future stencil candidates.
 
@@ -877,6 +908,28 @@ The first built-in benchmark cases are deliberately small and diagnostic:
 - `loop-and-branch`: common statement lowering pressure.
 - `byte-literal-4k`: literal bloat pressure and a small stand-in for the `4d63.com/tz` explosion.
 
+The Wasm-first proof-of-concept benchmark is available as `gojr bench -wasm-poc`.
+
+It measures:
+
+- binary Wasm byte generation for tiny `i64`, `f64` memory, and fuel-chunked `f64` memory modules;
+- synchronous `WebAssembly.Module` compile cost;
+- synchronous `WebAssembly.Instance` instantiate cost;
+- JS `number` loop execution;
+- JS `BigInt` loop execution;
+- whole-call Wasm `i64` loop execution;
+- JS `Float64Array` loop execution;
+- whole-call Wasm `Float64Array` memory loop execution;
+- fuel-chunked Wasm `Float64Array` loop execution with JS-owned loop orchestration.
+
+The current POC lives in:
+
+```text
+gojr/src/wasmPoc.ts
+```
+
+It is intentionally small and hand-emits Wasm binary bytes so we can validate the copy-and-patch target without committing to a large emitter design too early.
+
 Usage:
 
 ```bash
@@ -890,6 +943,8 @@ gojr bench -n 5 -warmup 2 -phase front-end
 gojr bench -n 3 -cpuprofile /tmp/gojr-copy-patch.cpuprofile
 gojr bench -n 1 ./path/to/package
 gojr bench --json -n 1 -case tiny-function
+gojr bench -wasm-poc -n 3 -warmup 1 -work 100000 -fuel 8192
+gojr bench -wasm-poc -n 3 -cpuprofile /tmp/gojr-wasm-poc.cpuprofile
 ```
 
 For fast JavaScript-only development without rebuilding the native wrapper:
@@ -899,6 +954,7 @@ cd ~/ivy/gojr
 npm run build
 node dist/src/cli.js bench -n 10
 node dist/src/cli.js bench -n 3 -case byte-literal-4k --cpuprofile /tmp/gojr-node.cpuprofile
+node dist/src/cli.js bench -wasm-poc -n 3 -warmup 1 -work 100000 -fuel 8192
 ```
 
 Profile workflow:
@@ -915,6 +971,8 @@ Benchmark policy:
 - `byte-literal-4k` should trend sharply down once literal supernodes replace serialized AST payloads.
 - A package target benchmark should be used before and after changing package-cache loading so we can distinguish cold compile cost from warm cache-hit startup cost.
 - Do not optimize against the current interpreter-shaped artifact as if it were the final design; use the bloat counters to prove that `runtime_ast_json_bytes_max` is disappearing.
+- Wasm POC results should guide batching decisions. If a shape only wins when control stays inside Wasm, lower it as a kernel/chunk rather than as a high-frequency JS-to-Wasm micro-call.
+- Fuel should be tuned by elapsed time in the JS host. The POC uses fixed fuel to expose the mechanism; the real scheduler should adapt fuel toward the browser responsiveness target.
 
 ## Hardest Areas
 
@@ -936,6 +994,8 @@ Each of these should receive focused tests before broad standard-library cutover
 - Keep the interpreter for the REPL and as a development oracle until compiled packages are ready, but do not write interpreter payloads into package cache artifacts as the final design.
 - The native Go wrapper should not know about emitter details.
 - Browser and native package loading must share the same JavaScript path.
+- JavaScript remains the host/orchestration layer even when hot kernels are emitted to Wasm.
+- Long-running Wasm kernels must support JS-owned fuel/preemption boundaries so browser main-thread execution can yield.
 - The cache loader must never key packages by short package name.
 - The output target remains `GOOS=js`, `GOARCH=gojr`.
 - Standard library source selection still uses the native host GOOS/GOARCH/build tags for reading Go source, as already decided.
@@ -944,9 +1004,11 @@ Each of these should receive focused tests before broad standard-library cutover
 
 This architecture is complete when:
 
-- `gojr build` writes thin `__.PKGDEF` plus executable `_gojr.js`.
+- `gojr build` writes thin `__.PKGDEF` plus executable `_gojr.js` and `_gojr.wasm` when Wasm kernels are generated.
 - Cached package load does not parse source or typecheck source for cache hits.
 - Cached package load does not deserialize executable AST.
+- Hot numeric loops can be executed from generated Wasm through JS host wrappers.
+- Long-running generated Wasm loops can be chunked and preempted from JS.
 - `gojr run cmd/zygo` works from compiled cached artifacts.
 - A second cached `gojr run cmd/zygo` is fast enough for interactive use.
 - `4d63.com/tz.a` is no longer hundreds of MB.

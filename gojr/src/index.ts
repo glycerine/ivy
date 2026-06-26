@@ -83,6 +83,15 @@ export type {
   GoJuniorBenchmarkReport
 } from "./bench.js";
 export {
+  formatGoJuniorWasmPocReport,
+  runGoJuniorWasmPocBenchmark
+} from "./wasmPoc.js";
+export type {
+  GoJuniorWasmPocMetrics,
+  GoJuniorWasmPocOptions,
+  GoJuniorWasmPocReport
+} from "./wasmPoc.js";
+export {
   benchmarkGoJuniorOnNode,
   benchmarkGoJuniorOnNodeHostJSON,
   benchmarkGoJuniorOnNodeHostPayload,

@@ -3,6 +3,7 @@ import { formatDiagnostic, hasErrorDiagnostics, REPL_FILENAME } from "./diagnost
 import { parseFrontSourceFiles } from "./front/parser.js";
 import { frontFilesToProgramAst } from "./frontToAst.js";
 import { checkGoJuniorFiles } from "./typecheck.js";
+import { formatGoJuniorWasmPocReport, runGoJuniorWasmPocBenchmark } from "./wasmPoc.js";
 class BenchmarkMemoryArtifactStore {
     writes = new Map();
     mtimes = new Map();
@@ -44,32 +45,44 @@ class PhaseAccumulator {
     }
 }
 export async function runGoJuniorBenchmark(inputCases, options = {}) {
-    const selectedCases = benchmarkCases(inputCases, options.caseNames);
     const iterations = positiveInteger(options.iterations, 1);
     const warmupIterations = nonNegativeInteger(options.warmupIterations, 0);
     const cacheMode = options.cacheMode ?? "cold";
     const phaseSet = options.phaseSet ?? "front-end-and-build";
     const diagnostics = [];
     const cases = [];
-    for (const benchmarkCase of selectedCases) {
-        const report = await runOneBenchmarkCase(benchmarkCase, {
-            ...options,
+    let wasmPoc;
+    if (options.wasmPoc) {
+        wasmPoc = await runGoJuniorWasmPocBenchmark({
             iterations,
             warmupIterations,
-            cacheMode,
-            phaseSet
+            ...(options.wasmWorkItems !== undefined ? { workItems: options.wasmWorkItems } : {}),
+            ...(options.wasmFuel !== undefined ? { fuel: options.wasmFuel } : {})
         });
-        diagnostics.push(...report.diagnostics);
-        cases.push(report);
+    }
+    else {
+        const selectedCases = benchmarkCases(inputCases, options.caseNames);
+        for (const benchmarkCase of selectedCases) {
+            const report = await runOneBenchmarkCase(benchmarkCase, {
+                ...options,
+                iterations,
+                warmupIterations,
+                cacheMode,
+                phaseSet
+            });
+            diagnostics.push(...report.diagnostics);
+            cases.push(report);
+        }
     }
     return {
-        ok: cases.every((item) => item.ok) && !hasErrorDiagnostics(diagnostics),
+        ok: cases.every((item) => item.ok) && wasmPoc?.ok !== false && !hasErrorDiagnostics(diagnostics),
         iterations,
         warmupIterations,
         cacheMode,
         phaseSet,
         diagnostics,
-        cases
+        cases,
+        ...(wasmPoc ? { wasmPoc } : {})
     };
 }
 function benchmarkCases(inputCases, caseNames) {
@@ -256,6 +269,9 @@ export function formatGoJuniorBenchmarkReport(report) {
     lines.push(`gojr bench: iterations=${report.iterations} warmup=${report.warmupIterations} cache=${report.cacheMode} phase=${report.phaseSet} ok=${report.ok}`);
     if (report.profilePath)
         lines.push(`gojr bench: cpu profile ${report.profilePath}`);
+    if (report.wasmPoc) {
+        lines.push(formatGoJuniorWasmPocReport(report.wasmPoc).trimEnd());
+    }
     for (const benchmarkCase of report.cases) {
         lines.push(`case ${benchmarkCase.name}: files=${benchmarkCase.fileCount} source_bytes=${benchmarkCase.sourceBytes} ok=${benchmarkCase.ok}`);
         if (benchmarkCase.metrics.artifactBytesMax > 0) {

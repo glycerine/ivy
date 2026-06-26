@@ -19,7 +19,10 @@ async function main(argv) {
             ...(options.caseNames ? { caseNames: options.caseNames } : {}),
             ...(options.cacheMode ? { cacheMode: options.cacheMode } : {}),
             ...(options.phaseSet ? { phaseSet: options.phaseSet } : {}),
-            ...(options.cpuProfilePath ? { cpuProfilePath: options.cpuProfilePath } : {})
+            ...(options.cpuProfilePath ? { cpuProfilePath: options.cpuProfilePath } : {}),
+            ...(options.wasmPoc ? { wasmPoc: true } : {}),
+            ...(options.wasmWorkItems !== undefined ? { wasmWorkItems: options.wasmWorkItems } : {}),
+            ...(options.wasmFuel !== undefined ? { wasmFuel: options.wasmFuel } : {})
         });
         if (options.json) {
             console.log(JSON.stringify(report, jsonReplacer, 2));
@@ -135,6 +138,18 @@ function parseArgs(argv) {
             options.cpuProfilePath = path;
             continue;
         }
+        if (command === "bench" && (arg === "--wasm-poc" || arg === "-wasm-poc")) {
+            options.wasmPoc = true;
+            continue;
+        }
+        if (command === "bench" && (arg === "--work" || arg === "-work")) {
+            options.wasmWorkItems = parsePositiveInt(args.shift(), arg);
+            continue;
+        }
+        if (command === "bench" && (arg === "--fuel" || arg === "-fuel")) {
+            options.wasmFuel = parsePositiveInt(args.shift(), arg);
+            continue;
+        }
         if (arg.startsWith("--")) {
             throw new Error(`unknown option: ${arg}`);
         }
@@ -186,7 +201,7 @@ function printUsage() {
     console.log(`gojr parse [file]
 gojr run [file] [--sheet-json '{"A1":1}'] [--seed replay-seed]
 gojr eval <source> [--sheet-json '{"A1":1}'] [--seed replay-seed]
-gojr bench [-n N] [--warmup N] [--case NAME] [--cache cold|warm] [--phase front-end|package-build|front-end-and-build] [--cpuprofile PATH] [file|dir]
+gojr bench [-n N] [--warmup N] [--case NAME] [--cache cold|warm] [--phase front-end|package-build|front-end-and-build] [--wasm-poc] [--work N] [--fuel N] [--cpuprofile PATH] [file|dir]
 
 Use "-" or omit file to read from stdin. JSON strings are always strings.
 JSON integers become exact integer values. JSON numbers with a decimal point
