@@ -25,7 +25,7 @@ export function checkGoJuniorFiles(files, statements = [], parserDiagnostics = [
     const packageName = config.packageInstance?.Name() ?? config.packageName ?? files.find((file) => file.name)?.name?.name ?? "main";
     const packagePath = config.packageInstance?.Path() ?? config.packagePath ?? packageName;
     const diagnostics = [...parserDiagnostics];
-    const fset = new FrontFileSet(files);
+    const fset = new FrontFileSet(files, sourceFiles);
     const info = new Info();
     info.Types = new Map();
     info.Defs = new Map();
@@ -95,8 +95,10 @@ function filterTopLevelExpressionConvenienceDiagnostics(diagnostics, statements,
 }
 class FrontFileSet {
     files;
-    constructor(files) {
+    sourceFiles;
+    constructor(files, sourceFiles = []) {
         this.files = files;
+        this.sourceFiles = sourceFiles;
     }
     Position(pos) {
         const span = this.span(pos);
@@ -105,7 +107,9 @@ class FrontFileSet {
     span(pos) {
         const offset = positionOffset(pos);
         const file = fileForOffset(this.files, offset);
-        return spanFromOffset(file?.span?.filename ?? firstFilename(this.files), offset);
+        const filename = file?.span?.filename ?? firstFilename(this.files);
+        const source = this.sourceFiles.find((candidate) => candidate.filename === filename)?.source;
+        return spanFromOffset(filename, offset, source);
     }
 }
 function filesForChecking(files, statements, packageName, syntheticFunctionName = GOJR_SYNTHETIC_CHECK_PREFIX) {
@@ -813,7 +817,7 @@ function ident(name, span) {
 }
 function positionOffset(pos) {
     const n = typeof pos === "number" ? pos : Number(pos);
-    return Number.isFinite(n) && n > 0 ? n - 1 : 0;
+    return Number.isFinite(n) && n >= 0 ? n : 0;
 }
 function fileForOffset(files, offset) {
     for (const file of files) {
@@ -827,12 +831,30 @@ function fileForOffset(files, offset) {
 function firstFilename(files) {
     return files[0]?.span?.filename ?? REPL_FILENAME;
 }
-function spanFromOffset(filename, offset) {
+function spanFromOffset(filename, offset, source) {
+    const location = source === undefined
+        ? { line: 1, column: offset + 1 }
+        : lineColumnFromOffset(source, offset);
     return {
         filename,
         offset,
         length: 1,
-        line: 1,
-        column: offset + 1
+        line: location.line,
+        column: location.column
+    };
+}
+function lineColumnFromOffset(source, offset) {
+    const target = Math.max(0, Math.min(offset, source.length));
+    let line = 1;
+    let lineStart = 0;
+    for (let index = 0; index < target; index += 1) {
+        if (source.charCodeAt(index) === 10) {
+            line += 1;
+            lineStart = index + 1;
+        }
+    }
+    return {
+        line,
+        column: target - lineStart + 1
     };
 }

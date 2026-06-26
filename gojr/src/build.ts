@@ -6,8 +6,9 @@ import { parseFrontSourceFiles } from "./front/parser.js";
 import { frontFilesToProgramAst } from "./frontToAst.js";
 import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { isStubSourcePackageStandardLibrary, stubSourcePackageFiles } from "./stubPackages.js";
-import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
+import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage, type GoJuniorCheckResult } from "./typecheck.js";
 import { emitStage1Package, GOJR_STAGE1_BACKEND } from "./emitter/package.js";
+import { Codebase, type CodebaseUpdateTxn } from "./codebase.js";
 import {
   Builtin as GoTypesBuiltin,
   Const as GoTypesConst,
@@ -311,12 +312,13 @@ interface PackageBuildNode {
 
 class PackageGraphBuilder {
   private readonly packageSources = new Map<string, SourceFile[]>();
-  private readonly packageInfos = new Map<string, GoTypesPackage>();
+  private readonly codebase = new Codebase();
   private readonly nodes = new Map<string, PackageBuildNode>();
   private readonly visiting = new Set<string>();
   private readonly failedPackageLoads = new Set<string>();
   private readonly standardLibraryPackages = new Set<string>();
   private readonly diagnostics: Diagnostic[] = [];
+  private activeTxn: CodebaseUpdateTxn | undefined;
 
   public constructor(
     private readonly request: BuildPackageRequest,
@@ -334,8 +336,16 @@ class PackageGraphBuilder {
     const cached = this.buildFromFreshArtifacts();
     if (cached) return cached;
 
+    const txn = this.codebase.NewUpdateTxn();
+    this.activeTxn = txn;
     const root = this.buildOne(this.request.importPath, this.request.files, []);
-    if (this.hasErrors() || !root) return emptyBuildReport(this.diagnostics);
+    if (this.hasErrors() || !root) {
+      if (!txn.IsClosed()) txn.Rollback();
+      this.activeTxn = undefined;
+      return emptyBuildReport(this.diagnostics);
+    }
+    txn.Commit();
+    this.activeTxn = undefined;
 
     const artifacts: BuildArtifactReport[] = [];
     const built: string[] = [];
@@ -603,15 +613,13 @@ class PackageGraphBuilder {
     }
 
     if (!this.hasErrors()) {
-      const checked = importPath === "unsafe"
-        ? { diagnostics: [], pkg: GoTypesUnsafe }
+      const checked: Pick<GoJuniorCheckResult, "diagnostics" | "pkg"> & Partial<Pick<GoJuniorCheckResult, "info">> = importPath === "unsafe"
+        ? this.ambientCheckedPackage(importPath, GoTypesUnsafe)
         : checkGoJuniorFiles(parsed.files, parsed.statements, [], {
           packageName,
           packagePath: importPath,
           autoImportFmt: false,
-          importer: {
-            import: (path) => this.packageInfos.get(path)
-          }
+          codebaseTxn: this.requireActiveTxn()
         });
       this.diagnostics.push(...checked.diagnostics);
       if (!this.hasErrors()) {
@@ -688,7 +696,6 @@ class PackageGraphBuilder {
           artifactSource
         };
         this.nodes.set(importPath, node);
-        this.packageInfos.set(importPath, checked.pkg);
       }
     }
 
@@ -702,7 +709,7 @@ class PackageGraphBuilder {
     const pkg = standardTypePackage(importPath);
     if (!pkg) return undefined;
     this.standardLibraryPackages.add(importPath);
-    this.packageInfos.set(importPath, pkg);
+    this.codebase.SetPackageInfo(this.requireActiveTxn(), importPath, pkg);
 
     const packageName = pkg.Name();
     const goos = this.request.goos ?? GOJR_GOOS;
@@ -794,6 +801,18 @@ class PackageGraphBuilder {
     };
     this.nodes.set(importPath, node);
     return node;
+  }
+
+  private ambientCheckedPackage(importPath: string, pkg: GoTypesPackage): { diagnostics: Diagnostic[]; pkg: GoTypesPackage } {
+    this.codebase.SetPackageInfo(this.requireActiveTxn(), importPath, pkg);
+    return { diagnostics: [], pkg };
+  }
+
+  private requireActiveTxn(): CodebaseUpdateTxn {
+    if (!this.activeTxn || this.activeTxn.IsClosed()) {
+      throw new Error("internal error: build package graph has no active Codebase transaction");
+    }
+    return this.activeTxn;
   }
 
   private progress(event: BuildProgressEvent): void {

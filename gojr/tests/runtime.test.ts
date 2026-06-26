@@ -8233,12 +8233,14 @@ return a, b, ok, c, ok2, len(ch), cap(ch)
     expect(result.diagnostics).toHaveLength(2);
     expect(result.diagnostics[0]?.sourceLine).toBe(source);
     expect(result.diagnostics[1]?.sourceLine).toBe(source);
+    expect(result.diagnostics[0]?.span?.column).toBe(25);
+    expect(result.diagnostics[1]?.span?.column).toBe(12);
 
     const payload = evaluationResultToHostPayload(result);
     expect(payload.diagnostics[0]).toContain(`a redeclared in this block\n${source}\n`);
-    expect(payload.diagnostics[0]).toContain("^");
+    expect(payload.diagnostics[0]).toContain(`${" ".repeat(24)}^`);
     expect(payload.diagnostics[1]).toContain(`other declaration of a\n${source}\n`);
-    expect(payload.diagnostics[1]).toContain("^");
+    expect(payload.diagnostics[1]).toContain(`${" ".repeat(11)}^`);
   });
 
   test("failed REPL runtime execution rolls back top-level declarations", async () => {

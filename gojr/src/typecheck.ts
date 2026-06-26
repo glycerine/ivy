@@ -2,6 +2,7 @@ import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan, diagnosticFilename, 
 import { AssignStmt, Decl, Expr, Field, File, FuncDecl, FuncType, GenDecl, Ident, Stmt } from "./front/ast.js";
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
+import type { CodebaseTxn, CodebaseUpdateTxn } from "./codebase.js";
 import {
   Config,
   Info,
@@ -60,6 +61,7 @@ export interface GoJuniorCheckConfig {
   packagePath?: string;
   packageName?: string;
   packageInstance?: GoTypesPackage;
+  codebaseTxn?: CodebaseTxn;
   importer?: GoJuniorImporter;
   sheetNamespaces?: Record<string, GoJuniorSheetNamespace>;
   predeclaredPackageObjects?: GoTypesObject[];
@@ -108,8 +110,10 @@ export function checkGoJuniorFiles(
 ): GoJuniorCheckResult {
   ensureUniverseInitialized();
 
-  const packageName = config.packageInstance?.Name() ?? config.packageName ?? files.find((file) => file.name)?.name?.name ?? "main";
-  const packagePath = config.packageInstance?.Path() ?? config.packagePath ?? packageName;
+  const inferredPackageName = config.packageName ?? files.find((file) => file.name)?.name?.name ?? "main";
+  const packagePath = config.packageInstance?.Path() ?? config.packagePath ?? inferredPackageName;
+  const existingCodebasePackage = config.codebaseTxn?.PackageInfo(packagePath);
+  const packageName = config.packageInstance?.Name() ?? existingCodebasePackage?.Name() ?? inferredPackageName;
   const diagnostics = [...parserDiagnostics];
   const fset = new FrontFileSet(files, sourceFiles);
   const info = new Info();
@@ -120,13 +124,13 @@ export function checkGoJuniorFiles(
   info.Selections = new Map();
 
   const checkFiles = filesForChecking(files, statements, packageName, config.syntheticFunctionName);
-  const pkg = config.packageInstance ?? NewPackage(packagePath, packageName);
+  const pkg = config.packageInstance ?? packageForChecking(config, packagePath, packageName);
   seedPackageScope(pkg, config);
 
   const conf = new Config();
   conf.Importer = {
     Import(path: string): [GoTypesPackage | null, unknown] {
-      const imported = config.importer?.import(path) ?? standardTypePackage(path);
+      const imported = config.importer?.import(path) ?? config.codebaseTxn?.PackageInfo(path) ?? standardTypePackage(path);
       if (imported === undefined) return [null, new Error(`package ${path} is not available`)];
       return [imported, null];
     }
@@ -154,6 +158,7 @@ export function checkGoJuniorFiles(
   const resultDiagnostics = sourceFiles.length > 0
     ? withDiagnosticSourceContext(diagnostics, sourceFiles)
     : diagnostics;
+  config.codebaseTxn?.Codebase().RollbackOnErrors(config.codebaseTxn, resultDiagnostics);
 
   return {
     pkg,
@@ -162,6 +167,13 @@ export function checkGoJuniorFiles(
     files,
     statements
   };
+}
+
+function packageForChecking(config: GoJuniorCheckConfig, packagePath: string, packageName: string): GoTypesPackage {
+  if (config.codebaseTxn?.Kind() === "update") {
+    return config.codebaseTxn.Codebase().BeginPackageUpdate(config.codebaseTxn as CodebaseUpdateTxn, packagePath, packageName);
+  }
+  return NewPackage(packagePath, packageName);
 }
 
 function filterTopLevelExpressionConvenienceDiagnostics(

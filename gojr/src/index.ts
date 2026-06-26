@@ -290,6 +290,15 @@ export type { Diagnostic, SourceFile, SourceSpan } from "./diagnostics.js";
 export type { ImportDecl, ProgramAst, ProgramKind } from "./ast.js";
 export { childNodes, ident, parseCellAddress, walk } from "./front/ast.js";
 export {
+  Codebase,
+  CodebaseTxn,
+  CodebaseUpdateTxn,
+  CodebaseViewTxn
+} from "./codebase.js";
+export type {
+  CodebaseTxnKind
+} from "./codebase.js";
+export {
   checkGoJuniorFiles,
   checkGoJuniorSource,
   checkGoJuniorSourceFiles
