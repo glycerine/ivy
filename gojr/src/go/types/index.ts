@@ -7334,8 +7334,20 @@ namespace go_types_predicates {
 
   // identicalOrigin reports whether x and y originated in the same declaration.
   export function identicalOrigin(x: go_types_named.Named, y: go_types_named.Named): boolean {
-    // TODO(gri) is this correct?
-    return x.Origin().obj === y.Origin().obj;
+    const xobj = x.Origin().obj;
+    const yobj = y.Origin().obj;
+    if (xobj === yobj) {
+      return true;
+    }
+    const xpkg = xobj.Pkg();
+    const ypkg = yobj.Pkg();
+    // GoJr can compare named types rehydrated from cached package artifacts or
+    // intrinsic fallbacks. Those package objects are not pointer-identical, but
+    // the exported type identity is still the import path plus declared name.
+    return xpkg !== null &&
+      ypkg !== null &&
+      xobj.Name() === yobj.Name() &&
+      xpkg.Path() === ypkg.Path();
   }
 
   // identicalInstance reports if two type instantiations are identical.
