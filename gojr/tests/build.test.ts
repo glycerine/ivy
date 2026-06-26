@@ -11,6 +11,7 @@ import {
   collectSourceImportPaths,
   createNodeSourcePackageProvider,
   createStandardLibrarySourcePackageProvider,
+  evaluatePackageArtifact,
   evaluatePackageSourceFiles,
   formatBuildProgressEvent,
   inspectPackageJavaScript,
@@ -73,7 +74,7 @@ function arMemberHeaderSize(source: string | undefined, name: string): number {
 interface ExecutablePackageArtifactModule {
   gojrCompiledFunctionBodies: Record<string, unknown>;
   instantiateGoJrPackage(
-    runtime: { evaluatePackageSourceFiles: typeof evaluatePackageSourceFiles },
+    runtime: { evaluatePackageArtifact: typeof evaluatePackageArtifact },
     options?: Record<string, unknown>
   ): Promise<{
     diagnostics: unknown[];
@@ -367,7 +368,7 @@ func hidden() {}
 
     const artifactModule = await importArtifactJavaScript(archive?.javascript ?? "");
     expect(Object.keys(artifactModule.gojrCompiledFunctionBodies)).toEqual(["Hello"]);
-    const instantiated = await artifactModule.instantiateGoJrPackage({ evaluatePackageSourceFiles });
+    const instantiated = await artifactModule.instantiateGoJrPackage({ evaluatePackageArtifact });
     expect(instantiated.diagnostics).toEqual([]);
     await instantiated.compiledFunctions.Hello?.();
     expect(instantiated.output.join("")).toBe("hello gorj!\n");

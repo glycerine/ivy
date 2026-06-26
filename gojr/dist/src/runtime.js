@@ -1252,6 +1252,55 @@ export async function evaluatePackageSourceFiles(files, options = {}) {
         };
     }
 }
+export async function evaluatePackageArtifact(ast, plan, options = {}) {
+    const importPath = options.importPath ?? plan.importPath;
+    const packageName = options.packageName ?? plan.packageName;
+    const evalOptions = {
+        ...options,
+        importPath,
+        packageName
+    };
+    evalOptions.packageInfos ??= {};
+    evalOptions.packageInfos[importPath] ??= NewPackage(importPath, packageName);
+    const context = new EvaluationContext(evalOptions);
+    if (evalOptions.packageContexts)
+        evalOptions.packageContexts[importPath] = context;
+    try {
+        const pkg = await context.scheduler().runRoot(async () => {
+            installImports(context, ast);
+            for (const declaration of ast.functions)
+                installPackageFunctionDeclaration(context, declaration);
+            const { declarations, statements } = splitTopLevelDeclarations(ast.body);
+            if (statements.length > 0) {
+                throw new GoJuniorRuntimeError("package artifact cannot contain top-level executable statements");
+            }
+            predeclareTopLevelTypes(declarations, context);
+            const constCompletion = await executeTopLevelStatements(declarations.filter((declaration) => declaration.kind === "ConstDecl"), context);
+            expectNormalCompletion(constCompletion, "package constants");
+            predeclareArtifactPackageVariables(plan.variables, context);
+            await executePackageVarInitializersByName(declarations, plan.varInitOrder, context);
+            await runInitFunctions(ast.functions, context);
+            return exportedRuntimePackageObjectByNames(plan.exportedNames, context, importPath);
+        });
+        return {
+            diagnostics: ast.diagnostics,
+            output: context.output,
+            package: pkg,
+            packageInfo: evalOptions.packageInfos[importPath],
+            context
+        };
+    }
+    catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        return {
+            diagnostics: [
+                ...ast.diagnostics,
+                runtimeDiagnostic(ast, runtimeDiagnosticCode(error), message, error)
+            ],
+            output: context.output
+        };
+    }
+}
 export async function evaluateSourcePackageGraph(specs, options = {}) {
     const evaluator = new SourcePackageGraphEvaluator(specs, options);
     return evaluator.evaluate();
@@ -1509,6 +1558,53 @@ export async function runMainSourcePackageFiles(files, options = {}) {
         };
     }
 }
+export async function runLoadedMainPackage(importPath, graph, options = {}, ast) {
+    const context = graph.packageContexts[importPath];
+    if (!context) {
+        return {
+            diagnostics: [packageGraphDiagnostic(REPL_FILENAME, `package ${importPath} did not produce a runtime context`)],
+            output: graph.output,
+            ...(ast ? { ast } : {})
+        };
+    }
+    try {
+        installMainProgramArgs(graph, options, importPath);
+        const main = context.lookup("main");
+        await context.scheduler().runRoot(async () => {
+            await callRuntime(main, [], context);
+        });
+        return {
+            diagnostics: graph.diagnostics,
+            output: graph.output,
+            ...(ast ? { ast } : {})
+        };
+    }
+    catch (error) {
+        if (error instanceof GoJuniorExit) {
+            return {
+                diagnostics: graph.diagnostics,
+                output: graph.output,
+                ...(ast ? { ast } : {}),
+                exitCode: error.code
+            };
+        }
+        const message = error instanceof Error ? error.message : String(error);
+        return {
+            diagnostics: [
+                ...graph.diagnostics,
+                runtimeDiagnostic(ast ?? {
+                    kind: "script",
+                    imports: [],
+                    diagnostics: [],
+                    body: [],
+                    functions: []
+                }, runtimeDiagnosticCode(error), message, error)
+            ],
+            output: graph.output,
+            ...(ast ? { ast } : {})
+        };
+    }
+}
 export async function testSource(source, options = {}) {
     return testSourceFiles([sourceFileFromSource(source, options)], options);
 }
@@ -1614,6 +1710,18 @@ function exportedRuntimePackageObject(objects, context, importPath) {
             continue;
         try {
             pkg[object.Name()] = externalizePackageRuntimeValue(context.lookup(object.Name()), importPath);
+        }
+        catch {
+            // Type-only exports have no runtime value in the interpreter package object.
+        }
+    }
+    return pkg;
+}
+function exportedRuntimePackageObjectByNames(names, context, importPath) {
+    const pkg = {};
+    for (const name of [...new Set(names)].sort()) {
+        try {
+            pkg[name] = externalizePackageRuntimeValue(context.lookup(name), importPath);
         }
         catch {
             // Type-only exports have no runtime value in the interpreter package object.
@@ -5200,6 +5308,13 @@ function predeclarePackageVariables(declarations, pkg, context) {
         }
     }
 }
+function predeclareArtifactPackageVariables(variables, context) {
+    for (const variable of variables) {
+        if (variable.name === "_")
+            continue;
+        context.declareRoot(variable.name, variable.typeText ? defaultValueForTypeText(variable.typeText, context) : null, true, variable.typeText);
+    }
+}
 function runtimeValueFromCheckedConstant(value) {
     if (value === null ||
         typeof value === "boolean" ||
@@ -5211,6 +5326,9 @@ function runtimeValueFromCheckedConstant(value) {
     return value;
 }
 async function executePackageVarInitializers(declarations, initOrder, context) {
+    await executePackageVarInitializersByName(declarations, (initOrder ?? []).map((initializer) => initializer.Lhs.map((object) => object.Name()).filter((name) => name !== "_")), context);
+}
+async function executePackageVarInitializersByName(declarations, initOrder, context) {
     const groups = packageVarDeclarationGroups(declarations);
     const groupsByName = new Map();
     for (const group of groups) {
@@ -5220,8 +5338,7 @@ async function executePackageVarInitializers(declarations, initOrder, context) {
         }
     }
     const initialized = new Set();
-    for (const initializer of initOrder ?? []) {
-        const names = initializer.Lhs.map((object) => object.Name()).filter((name) => name !== "_");
+    for (const names of initOrder) {
         for (const name of names) {
             const group = groupsByName.get(name);
             if (!group || initialized.has(group))

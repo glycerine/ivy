@@ -6,10 +6,10 @@ import { hasErrorDiagnostics, REPL_FILENAME } from "./diagnostics.js";
 import { formatBuildProgressEvent, formatEvaluationProgressEvent } from "./hostProtocol.js";
 import { compilePackageSourceFiles, compileSourceFiles } from "./compile.js";
 import { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJson, runSpreadsheetFixture } from "./fixture.js";
-import { isHostResolvedSourceImport } from "./intrinsicPackages.js";
+import { isHostResolvedSourceImport, isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { stubSourcePackageFiles } from "./stubPackages.js";
 import { parseSheetJson, parseSheetsJson } from "./jsonInput.js";
-import { evaluateSource, evaluateSourceFiles, evaluateSourcePackageGraph, runMainSourcePackageFiles, testSourceFiles } from "./runtime.js";
+import { evaluateSource, evaluateSourceFiles, evaluatePackageArtifact, evaluateSourcePackageGraph, runLoadedMainPackage, testSourceFiles } from "./runtime.js";
 export function defaultPackageCacheParent() {
     return join(homedir(), "go", "pkg");
 }
@@ -363,22 +363,112 @@ export async function runMainSourceFilesWithPackagesOnNode(request) {
             output: []
         };
     }
-    const provider = createNodeSourcePackageProvider(request.sourceRoots ?? []);
-    const result = await runMainSourcePackageFiles(rootFiles, {
+    const loaded = await loadPackageArtifactsFromBuildOnNode(build, options);
+    if (hasErrorDiagnostics(loaded.diagnostics)) {
+        return {
+            diagnostics: loaded.diagnostics,
+            output: loaded.output,
+            packageOutput: loaded.output
+        };
+    }
+    const result = await runLoadedMainPackage(request.importPath ?? "main", {
+        diagnostics: loaded.diagnostics,
+        output: loaded.output,
+        packages: loaded.packages,
+        packageInfos: loaded.packageInfos,
+        packageContexts: loaded.packageContexts,
+        initializedImportPaths: Object.keys(loaded.packageContexts)
+    }, {
         ...options,
         ...(request.importPath ? { importPath: request.importPath } : {}),
         ...(request.packageName ? { packageName: request.packageName } : {}),
-        sourcePackages: request.packages ?? [],
-        ...(provider ? { sourcePackageProvider: provider } : {}),
-        ...(request.progress ? {
-            onProgress(event) {
-                const line = formatEvaluationProgressEvent(event);
-                if (line)
-                    process.stderr.write(`${line}\n`);
-            }
-        } : {})
+        sourcePackages: request.packages ?? []
     });
     return result;
+}
+async function loadPackageArtifactsFromBuildOnNode(build, baseOptions) {
+    const diagnostics = [...build.diagnostics];
+    const output = [];
+    const packages = {};
+    const packageInfos = {};
+    const packageContexts = {};
+    const baseStdout = baseOptions.stdout;
+    const writeOutput = (text) => {
+        output.push(text);
+        baseStdout?.(text);
+    };
+    for (const artifact of build.artifacts) {
+        let archive;
+        try {
+            archive = parseGoJuniorPackageArchive(readFileSync(artifact.artifactPath, "utf8"));
+        }
+        catch (error) {
+            diagnostics.push(nodeArtifactDiagnostic(artifact.artifactPath, `could not read package artifact ${artifact.artifactPath}: ${error instanceof Error ? error.message : String(error)}`));
+            break;
+        }
+        if (!archive) {
+            diagnostics.push(nodeArtifactDiagnostic(artifact.artifactPath, `invalid package artifact ${artifact.artifactPath}`));
+            break;
+        }
+        const importPath = archive.pkgdef.importPath;
+        if (isSyntheticIntrinsicArtifact(importPath, archive.pkgdef.sources))
+            continue;
+        let artifactModule;
+        try {
+            artifactModule = await importPackageArtifactJavaScript(archive.javascript);
+        }
+        catch (error) {
+            diagnostics.push(nodeArtifactDiagnostic(artifact.artifactPath, `could not load package artifact ${artifact.artifactPath}: ${error instanceof Error ? error.message : String(error)}`, error));
+            break;
+        }
+        const result = await artifactModule.instantiateGoJrPackage({ evaluatePackageArtifact }, {
+            ...baseOptions,
+            importPath,
+            packageName: archive.pkgdef.packageName,
+            packages,
+            packageInfos,
+            packageContexts,
+            stdout: writeOutput
+        });
+        diagnostics.push(...result.diagnostics);
+        if (hasErrorDiagnostics(diagnostics))
+            break;
+        if (result.package)
+            packages[importPath] = result.package;
+        if (result.packageInfo)
+            packageInfos[importPath] = result.packageInfo;
+        if (result.context)
+            packageContexts[importPath] = result.context;
+    }
+    return {
+        packages,
+        packageInfos,
+        packageContexts,
+        diagnostics,
+        output
+    };
+}
+async function importPackageArtifactJavaScript(source) {
+    const embeddedLoaderFactory = globalThis.__gojrCreateEmbeddedModuleLoader;
+    if (typeof embeddedLoaderFactory === "function") {
+        const modulePath = "/gojr-package-artifact.js";
+        const requireArtifact = embeddedLoaderFactory(JSON.stringify({ modules: [{ path: modulePath, source }] }));
+        return requireArtifact(modulePath);
+    }
+    const url = `data:text/javascript;base64,${Buffer.from(source, "utf8").toString("base64")}`;
+    return await import(url);
+}
+function isSyntheticIntrinsicArtifact(importPath, sources) {
+    return isIntrinsicPackageImport(importPath) && sources.every((source) => source.filename.startsWith("gojr:"));
+}
+function nodeArtifactDiagnostic(filename, message, error) {
+    return {
+        filename,
+        code: "GOJR_RUNTIME001",
+        severity: "error",
+        message,
+        ...(error instanceof Error && error.stack ? { stack: error.stack } : {})
+    };
 }
 function packageSourceMapFromSpecs(specs) {
     if (specs.length === 0)

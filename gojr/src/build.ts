@@ -1,5 +1,5 @@
 import { Diagnostic, REPL_FILENAME, SourceFile, SourceSpan } from "./diagnostics.js";
-import type { FunctionDecl } from "./ast.js";
+import type { FunctionDecl, ProgramAst } from "./ast.js";
 import { blake3HashString } from "./blake3.js";
 import { File, ImportSpec } from "./front/ast.js";
 import { parseFrontSourceFiles } from "./front/parser.js";
@@ -11,7 +11,9 @@ import {
   Builtin as GoTypesBuiltin,
   Const as GoTypesConst,
   Func as GoTypesFunc,
+  RelativeTo as GoTypesRelativeTo,
   TypeName as GoTypesTypeName,
+  TypeString as GoTypesTypeString,
   Unsafe as GoTypesUnsafe,
   Var as GoTypesVar,
   type Object as GoTypesObject,
@@ -108,6 +110,19 @@ export interface GoJuniorPackageSourcePayload {
   filename: string;
   hash: string;
   source: string;
+}
+
+export interface GoJuniorPackageRuntimeVariable {
+  name: string;
+  typeText?: string;
+}
+
+export interface GoJuniorPackageRuntimePlan {
+  importPath: string;
+  packageName: string;
+  exportedNames: string[];
+  variables: GoJuniorPackageRuntimeVariable[];
+  varInitOrder: string[][];
 }
 
 export interface BuildArtifactReport {
@@ -627,7 +642,13 @@ class PackageGraphBuilder {
             hash: stableHash(file.source)
           }))
         });
-        const functions = frontFilesToProgramAst(parsed.files, [], []).functions;
+        const ast = frontFilesToProgramAst(parsed.files, [], []);
+        const runtimePlan = packageRuntimePlan(
+          importPath,
+          packageName,
+          checked.pkg,
+          "info" in checked ? checked.info.InitOrder ?? [] : []
+        );
         const node: PackageBuildNode = {
           importPath,
           packageName,
@@ -638,7 +659,7 @@ class PackageGraphBuilder {
           dependencyCacheKeys,
           exports,
           artifactPath,
-          artifactSource: generatedArtifactSource(pkgdef, files, functions)
+          artifactSource: generatedArtifactSource(pkgdef, files, ast, runtimePlan)
         };
         this.nodes.set(importPath, node);
         this.packageInfos.set(importPath, checked.pkg);
@@ -720,6 +741,8 @@ class PackageGraphBuilder {
         hash: stableHash(syntheticFile.source)
       }]
     });
+    const parsedSynthetic = parseFrontSourceFiles([syntheticFile]);
+    const syntheticAst = frontFilesToProgramAst(parsedSynthetic.files, [], []);
     const node: PackageBuildNode = {
       importPath,
       packageName,
@@ -730,7 +753,13 @@ class PackageGraphBuilder {
       dependencyCacheKeys,
       exports,
       artifactPath,
-      artifactSource: generatedArtifactSource(pkgdef, [syntheticFile], [])
+      artifactSource: generatedArtifactSource(pkgdef, [syntheticFile], syntheticAst, {
+        importPath,
+        packageName,
+        exportedNames: exports.map((item) => item.name).sort(),
+        variables: [],
+        varInitOrder: []
+      })
     };
     this.nodes.set(importPath, node);
     return node;
@@ -1153,32 +1182,65 @@ function packageExportData(data: Omit<GoJuniorPackageExportData, "exportFormat" 
   };
 }
 
-function generatedArtifactSource(pkgdef: GoJuniorPackageExportData, files: SourceFile[], functions: FunctionDecl[]): string {
-  const javascript = generatedArtifactJavaScript(pkgdef, files, functions);
+function packageRuntimePlan(
+  importPath: string,
+  packageName: string,
+  pkg: GoTypesPackage,
+  initOrder: Array<{ Lhs: Array<{ Name(): string }> }>
+): GoJuniorPackageRuntimePlan {
+  const objects = packageScopeObjects(pkg);
+  return {
+    importPath,
+    packageName,
+    exportedNames: objects.filter((object) => object.Exported()).map((object) => object.Name()).sort(),
+    variables: objects.flatMap((object): GoJuniorPackageRuntimeVariable[] => {
+      if (!(object instanceof GoTypesVar)) return [];
+      const type = object.Type();
+      return [{
+        name: object.Name(),
+        ...(type ? { typeText: GoTypesTypeString(type, GoTypesRelativeTo(pkg)) } : {})
+      }];
+    }).sort((left, right) => left.name.localeCompare(right.name)),
+    varInitOrder: initOrder.map((initializer) =>
+      initializer.Lhs.map((object) => object.Name()).filter((name) => name !== "_")
+    )
+  };
+}
+
+function generatedArtifactSource(pkgdef: GoJuniorPackageExportData, files: SourceFile[], ast: ProgramAst, runtimePlan: GoJuniorPackageRuntimePlan): string {
+  const javascript = generatedArtifactJavaScript(pkgdef, files, ast, runtimePlan);
   return writeArArchive([
     { name: PKGDEF_MEMBER, data: GOJR_EXPORT_MAGIC + JSON.stringify(pkgdef, null, 2) + "\n" },
     { name: JAVASCRIPT_MEMBER, data: javascript }
   ]);
 }
 
-function generatedArtifactJavaScript(artifact: GoJuniorPackageExportData, files: SourceFile[], functions: FunctionDecl[]): string {
+function generatedArtifactJavaScript(
+  artifact: GoJuniorPackageExportData,
+  files: SourceFile[],
+  ast: ProgramAst,
+  runtimePlan: GoJuniorPackageRuntimePlan
+): string {
   const sources: GoJuniorPackageSourcePayload[] = files.map((file) => ({
     filename: file.filename,
     hash: stableHash(file.source),
     source: file.source
   }));
-  const compiledFunctions = generatedCompiledFunctionBodyLines(functions);
+  const compiledFunctions = generatedCompiledFunctionBodyLines(ast.functions);
   return [
     "// Code generated by gojr build; DO NOT EDIT.",
     "// This member is the generated JavaScript payload inside the Go-junior package archive.",
-    "// __.PKGDEF carries export metadata; this module carries executable package input.",
+    "// __.PKGDEF carries export metadata; this module carries runtime-ready package input.",
+    reviveArtifactValueFunctionSource(),
     `export const gojrPackageArtifact = ${JSON.stringify(artifact, null, 2)};`,
     `export const gojrPackageSources = ${JSON.stringify(sources, null, 2)};`,
+    `export const gojrPackageAst = __gojrReviveArtifactValue(${artifactJSONString(ast)});`,
+    `export const gojrPackageRuntimePlan = __gojrReviveArtifactValue(${artifactJSONString(runtimePlan)});`,
     "export async function instantiateGoJrPackage(runtime, options = {}) {",
-    "  if (!runtime || typeof runtime.evaluatePackageSourceFiles !== \"function\") {",
-    "    throw new Error(\"gojr package artifact requires runtime.evaluatePackageSourceFiles\");",
+    "  if (!runtime || typeof runtime.evaluatePackageArtifact !== \"function\") {",
+    "    throw new Error(\"gojr package artifact requires runtime.evaluatePackageArtifact\");",
     "  }",
-    "  const __gojrPackageResult = await runtime.evaluatePackageSourceFiles(gojrPackageSources, {",
+    "  const __gojrPackageResult = await runtime.evaluatePackageArtifact(gojrPackageAst, gojrPackageRuntimePlan, {",
     "    ...options,",
     "    importPath: gojrPackageArtifact.importPath,",
     "    packageName: gojrPackageArtifact.packageName",
@@ -1189,13 +1251,38 @@ function generatedArtifactJavaScript(artifact: GoJuniorPackageExportData, files:
     "  };",
     "}",
     ...compiledFunctions,
-    "export default {",
+    "const gojrPackageDefault = {",
     "  artifact: gojrPackageArtifact,",
     "  sources: gojrPackageSources,",
+    "  ast: gojrPackageAst,",
+    "  runtimePlan: gojrPackageRuntimePlan,",
     "  compiledFunctions: gojrCompiledFunctionBodies,",
     "  instantiateGoJrPackage",
     "};",
+    "export { gojrPackageDefault as default };",
     ""
+  ].join("\n");
+}
+
+function artifactJSONString(value: unknown): string {
+  return JSON.stringify(value, (_key, item) => {
+    if (typeof item === "bigint") return { __gojrBigInt: item.toString() };
+    return item;
+  }, 2);
+}
+
+function reviveArtifactValueFunctionSource(): string {
+  return [
+    "function __gojrReviveArtifactValue(value) {",
+    "  if (Array.isArray(value)) return value.map((item) => __gojrReviveArtifactValue(item));",
+    "  if (value && typeof value === \"object\") {",
+    "    if (typeof value.__gojrBigInt === \"string\") return BigInt(value.__gojrBigInt);",
+    "    const out = {};",
+    "    for (const [key, item] of Object.entries(value)) out[key] = __gojrReviveArtifactValue(item);",
+    "    return out;",
+    "  }",
+    "  return value;",
+    "}"
   ].join("\n");
 }
 
