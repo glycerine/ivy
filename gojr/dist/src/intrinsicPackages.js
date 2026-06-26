@@ -1,7 +1,10 @@
 export const RESERVED_INTRINSIC_PACKAGE_IMPORTS = [
     "iter",
+    "io/fs",
     "os",
     "runtime",
+    "sync",
+    "sync/atomic",
     "syscall/js",
     "unsafe",
     "internal/reflectlite"

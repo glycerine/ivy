@@ -20,11 +20,6 @@ export function stubSourcePackageFiles(importPath) {
                     filename: "gojr:stub/runtime/pprof/pprof.go",
                     source: runtimePprofStubSource
                 }];
-        case "sync":
-            return [{
-                    filename: "gojr:stub/sync/sync.go",
-                    source: syncStubSource
-                }];
         default:
             return undefined;
     }
@@ -33,7 +28,7 @@ export function isStubSourcePackageImport(importPath) {
     return stubSourcePackageFiles(importPath) !== undefined;
 }
 export function isStubSourcePackageStandardLibrary(importPath) {
-    return importPath === "runtime/pprof" || importPath === "sync";
+    return importPath === "runtime/pprof";
 }
 const klauspostCpuidV2StubSource = `package cpuid
 
@@ -286,7 +281,7 @@ func Do(ctx context.Context, labels LabelSet, f func(context.Context)) {
   panic("gojr error: runtime/pprof.Do not implemented")
 }
 `;
-const syncStubSource = `package sync
+export const syncIntrinsicSource = `package sync
 
 type Locker interface {
   Lock()
@@ -324,6 +319,36 @@ func (o *Once) Do(f func()) {
   }
   o.done = true
   f()
+}
+
+func OnceFunc(f func()) func() {
+  var once Once
+  return func() {
+    once.Do(f)
+  }
+}
+
+func OnceValue[T any](f func() T) func() T {
+  var once Once
+  var value T
+  return func() T {
+    once.Do(func() {
+      value = f()
+    })
+    return value
+  }
+}
+
+func OnceValues[T1, T2 any](f func() (T1, T2)) func() (T1, T2) {
+  var once Once
+  var value1 T1
+  var value2 T2
+  return func() (T1, T2) {
+    once.Do(func() {
+      value1, value2 = f()
+    })
+    return value1, value2
+  }
 }
 
 type Pool struct {

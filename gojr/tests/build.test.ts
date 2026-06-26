@@ -759,6 +759,169 @@ func Capture(buf []byte) int {
     expect(output.join("")).toBe("A\n");
   });
 
+  test("builds packages with intrinsic sync/atomic without consulting source packages", async () => {
+    const store = new MemoryArtifactStore();
+    const loaded: string[] = [];
+    const result = buildPackages({
+      importPath: "example.com/atomicapp",
+      artifactRoot: "/tmp/gojr-atomic-intrinsic",
+      sourcePackageProvider: {
+        load(importPath) {
+          loaded.push(importPath);
+          if (importPath !== "sync/atomic") return undefined;
+          return [{
+            filename: "/usr/local/go/src/sync/atomic/bad.go",
+            source: "package atomic\nconst _ = 1 / 0\n"
+          }];
+        },
+        isStandardLibraryPackage(importPath) {
+          return importPath === "sync/atomic";
+        }
+      },
+      files: [{
+        filename: "/workspace/example.com/atomicapp/app.go",
+        source: `package atomicapp
+
+import "sync/atomic"
+
+var hits atomic.Uint64
+var flag atomic.Bool
+
+func UseTyped() (uint64, bool) {
+	hits.Store(41)
+	next := hits.Add(1)
+	flag.Store(true)
+	return next, flag.Load()
+}
+
+func UseFuncs() uint32 {
+	var x uint32
+	atomic.StoreUint32(&x, 4)
+	return atomic.AddUint32(&x, 2)
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    expect(loaded).toEqual([]);
+    expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual(["example.com/atomicapp"]);
+    expect(result.artifacts[0]?.dependencies).toEqual([]);
+    expect([...store.writes.keys()]).toEqual([
+      "/tmp/gojr-atomic-intrinsic/example.com/atomicapp.a"
+    ]);
+
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-atomic-intrinsic/example.com/atomicapp.a") ?? "");
+    if (!archive) throw new Error("missing atomicapp archive");
+    const module = await importArtifactJavaScript(archive.javascript);
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (instantiated.package.UseTyped as () => Promise<[bigint, boolean]>)()).toEqual([42n, true]);
+    expect(await (instantiated.package.UseFuncs as () => Promise<bigint>)()).toBe(6n);
+  });
+
+  test("builds packages with intrinsic sync without consulting source packages", async () => {
+    const store = new MemoryArtifactStore();
+    const loaded: string[] = [];
+    const result = buildPackages({
+      importPath: "example.com/syncapp",
+      artifactRoot: "/tmp/gojr-sync-intrinsic",
+      sourcePackageProvider: {
+        load(importPath) {
+          loaded.push(importPath);
+          if (importPath !== "sync") return undefined;
+          return [{
+            filename: "/usr/local/go/src/sync/bad.go",
+            source: "package sync\nconst _ = 1 / 0\n"
+          }];
+        },
+        isStandardLibraryPackage(importPath) {
+          return importPath === "sync";
+        }
+      },
+      files: [{
+        filename: "/workspace/example.com/syncapp/app.go",
+        source: `package syncapp
+
+import "sync"
+
+var once sync.Once
+var values sync.Map
+var pool = sync.Pool{New: func() any { return 9 }}
+var memo = sync.OnceValue(func() int { return 5 })
+
+func Use() (any, bool, any, any, int) {
+	count := 0
+	once.Do(func() { count++ })
+	once.Do(func() { count++ })
+	values.Store("x", count)
+	value, ok := values.Load("x")
+	pool.Put(7)
+	first := pool.Get()
+	second := pool.Get()
+	return value, ok, first, second, memo() + memo()
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    expect(loaded).toEqual([]);
+    expect(result.artifacts.map((artifact) => artifact.importPath)).toEqual(["example.com/syncapp"]);
+    expect(result.artifacts[0]?.dependencies).toEqual([]);
+    expect([...store.writes.keys()]).toEqual([
+      "/tmp/gojr-sync-intrinsic/example.com/syncapp.a"
+    ]);
+
+    const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-sync-intrinsic/example.com/syncapp.a") ?? "");
+    if (!archive) throw new Error("missing syncapp archive");
+    const module = await importArtifactJavaScript(archive.javascript);
+    const instantiated = await module.instantiateGoJrPackage();
+    expect(instantiated.diagnostics).toEqual([]);
+    const [value, ok, first, second, total] = await (instantiated.package.Use as () => Promise<[unknown, boolean, unknown, unknown, bigint]>)();
+    expect(value).toMatchObject({ __gojrInterface: true, interfaceType: "any", value: 1n });
+    expect(ok).toBe(true);
+    expect(first).toMatchObject({ __gojrInterface: true, interfaceType: "any", value: 7n });
+    expect(second).toMatchObject({ __gojrInterface: true, interfaceType: "any", value: 9n });
+    expect(total).toBe(10n);
+  });
+
+  test("reports dependency errors without closing the build graph transaction before intrinsic imports", () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/root",
+      artifactRoot: "/tmp/gojr-txn-intrinsic",
+      packageSources: {
+        "example.com/bad": [{
+          filename: "/workspace/example.com/bad/bad.go",
+          source: `package bad
+
+func F() int {
+	return "not an int"
+}
+`
+        }]
+      },
+      files: [{
+        filename: "/workspace/example.com/root/root.go",
+        source: `package root
+
+import _ "example.com/bad"
+import _ "sync/atomic"
+
+func Root() {}
+`
+      }]
+    }, store);
+
+    expect(result.ok).toBe(false);
+    expect(result.diagnostics.some((diagnostic) => diagnostic.message.includes("cannot use"))).toBe(true);
+    expect(result.diagnostics.map((diagnostic) => diagnostic.message).join("\n")).not.toContain("build package graph has no active Codebase transaction");
+    expect([...store.writes.keys()]).toEqual([]);
+  });
+
   test("builds source packages without auto-importing fmt into package scope", () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({

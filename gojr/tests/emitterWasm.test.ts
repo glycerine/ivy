@@ -689,6 +689,25 @@ func LocalForwardGoto(n int64) int64 {
 	}
 	return sum
 }
+
+func NestedBackwardGoto(n int64) int64 {
+	sum := int64(0)
+	for i := int64(0); i < n; i++ {
+		j := int64(0)
+		goto Skip
+	CheckAndLoop:
+		if j >= 3 {
+			continue
+		}
+		sum += j
+		j++
+		goto CheckAndLoop
+	Skip:
+		j++
+		goto CheckAndLoop
+	}
+	return sum
+}
 `
       }]
     }, store);
@@ -735,6 +754,7 @@ func LocalForwardGoto(n int64) int64 {
     expect(await (pkg.TypeSwitch as (x: unknown) => Promise<string>)(true)).toBe("other");
     expect(await (pkg.GotoSum as () => Promise<bigint>)()).toBe(6n);
     expect(await (pkg.LocalForwardGoto as (n: bigint) => Promise<bigint>)(3n)).toBe(33n);
+    expect(await (pkg.NestedBackwardGoto as (n: bigint) => Promise<bigint>)(2n)).toBe(6n);
   });
 
   test("runs generated init functions after package variable initialization in source order", async () => {

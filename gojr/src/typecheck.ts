@@ -3,6 +3,7 @@ import { AssignStmt, Decl, Expr, Field, File, FuncDecl, FuncType, GenDecl, Ident
 import { parseFrontSource, parseFrontSourceFiles } from "./front/parser.js";
 import { TokenKind } from "./front/token.js";
 import type { CodebaseTxn, CodebaseUpdateTxn } from "./codebase.js";
+import { syncIntrinsicSource } from "./stubPackages.js";
 import {
   Config,
   Info,
@@ -70,6 +71,7 @@ export interface GoJuniorCheckConfig {
   disableUnusedImportCheck?: boolean;
   allowPackageInspection?: boolean;
   syntheticFunctionName?: string;
+  rollbackOnErrors?: boolean;
 }
 
 export interface GoJuniorCheckResult {
@@ -160,7 +162,9 @@ export function checkGoJuniorFiles(
   const resultDiagnostics = sourceFiles.length > 0
     ? withDiagnosticSourceContext(diagnostics, sourceFiles)
     : diagnostics;
-  config.codebaseTxn?.Codebase().RollbackOnErrors(config.codebaseTxn, resultDiagnostics);
+  if (config.rollbackOnErrors !== false) {
+    config.codebaseTxn?.Codebase().RollbackOnErrors(config.codebaseTxn, resultDiagnostics);
+  }
 
   return {
     pkg,
@@ -398,14 +402,137 @@ export function standardTypePackage(path: string): GoTypesPackage | undefined {
   else if (path === "fmt") pkg = fmtPackage();
   else if (path === "internal/reflectlite") pkg = reflectlitePackage();
   else if (path === "iter") pkg = iterPackage();
+  else if (path === "io/fs") pkg = ioFsPackage();
   else if (path === "math") pkg = mathPackage();
   else if (path === "os") pkg = osPackage();
   else if (path === "runtime") pkg = runtimePackage();
+  else if (path === "sync") pkg = syncPackage();
+  else if (path === "sync/atomic") pkg = syncAtomicPackage();
   else if (path === "syscall/js") pkg = syscallJSPackage();
   else if (path === "testing") pkg = testingPackage();
+  else if (path === "time") pkg = timePackage();
   else if (path === "unsafe") pkg = Unsafe;
   if (pkg) standardTypePackageCache.set(path, pkg);
   return pkg;
+}
+
+function ioFsPackage(): GoTypesPackage {
+  return checkedSyntheticStandardPackage("io/fs", `package fs
+
+import "time"
+
+type FileMode uint32
+
+func (m FileMode) IsDir() bool { return false }
+func (m FileMode) IsRegular() bool { return false }
+func (m FileMode) Perm() FileMode { return m }
+func (m FileMode) String() string { return "" }
+func (m FileMode) Type() FileMode { return m }
+
+const (
+  ModeDir FileMode = 2147483648
+  ModeAppend FileMode = 1073741824
+  ModeExclusive FileMode = 536870912
+  ModeTemporary FileMode = 268435456
+  ModeSymlink FileMode = 134217728
+  ModeDevice FileMode = 67108864
+  ModeNamedPipe FileMode = 33554432
+  ModeSocket FileMode = 16777216
+  ModeSetuid FileMode = 8388608
+  ModeSetgid FileMode = 4194304
+  ModeCharDevice FileMode = 2097152
+  ModeSticky FileMode = 1048576
+  ModeIrregular FileMode = 524288
+  ModeType FileMode = 2399666176
+  ModePerm FileMode = 511
+)
+
+var ErrInvalid error
+var ErrPermission error
+var ErrExist error
+var ErrNotExist error
+var ErrClosed error
+var SkipDir error
+var SkipAll error
+
+type FileInfo interface {
+  Name() string
+  Size() int64
+  Mode() FileMode
+  ModTime() time.Time
+  IsDir() bool
+  Sys() any
+}
+
+type DirEntry interface {
+  Name() string
+  IsDir() bool
+  Type() FileMode
+  Info() (FileInfo, error)
+}
+
+type FS interface {
+  Open(name string) (File, error)
+}
+
+type File interface {
+  Stat() (FileInfo, error)
+  Read([]byte) (int, error)
+  Close() error
+}
+
+type ReadDirFile interface {
+  File
+  ReadDir(n int) ([]DirEntry, error)
+}
+
+type ReadFileFS interface {
+  FS
+  ReadFile(name string) ([]byte, error)
+}
+
+type ReadDirFS interface {
+  FS
+  ReadDir(name string) ([]DirEntry, error)
+}
+
+type StatFS interface {
+  FS
+  Stat(name string) (FileInfo, error)
+}
+
+type GlobFS interface {
+  FS
+  Glob(pattern string) ([]string, error)
+}
+
+type SubFS interface {
+  FS
+  Sub(dir string) (FS, error)
+}
+
+type PathError struct {
+  Op string
+  Path string
+  Err error
+}
+
+func (e *PathError) Error() string { return "" }
+func (e *PathError) Unwrap() error { return e.Err }
+
+type WalkDirFunc func(path string, d DirEntry, err error) error
+
+func FormatDirEntry(dir DirEntry) string { return "" }
+func FormatFileInfo(info FileInfo) string { return "" }
+func Glob(fsys FS, pattern string) ([]string, error) { return nil, nil }
+func ReadDir(fsys FS, name string) ([]DirEntry, error) { return nil, nil }
+func ReadFile(fsys FS, name string) ([]byte, error) { return nil, nil }
+func Stat(fsys FS, name string) (FileInfo, error) { return nil, nil }
+func Sub(fsys FS, dir string) (FS, error) { return nil, nil }
+func ValidPath(name string) bool { return true }
+func WalkDir(fsys FS, root string, fn WalkDirFunc) error { return nil }
+func FileInfoToDirEntry(info FileInfo) DirEntry { return nil }
+`);
 }
 
 function checkedSyntheticStandardPackage(path: string, source: string): GoTypesPackage {
@@ -424,11 +551,86 @@ function checkedSyntheticStandardPackage(path: string, source: string): GoTypesP
   return result.pkg;
 }
 
+function timePackage(): GoTypesPackage {
+  return checkedSyntheticStandardPackage("time", `package time
+
+type Time struct{}
+type Duration int64
+type Month int
+type Weekday int
+type Location struct{}
+type Timer struct{}
+type Ticker struct{}
+
+const (
+  Nanosecond Duration = 1
+  Microsecond Duration = 1000
+  Millisecond Duration = 1000000
+  Second Duration = 1000000000
+  Minute Duration = 60000000000
+  Hour Duration = 3600000000000
+)
+
+var UTC *Location
+var Local *Location
+
+func Now() Time { return Time{} }
+func Unix(sec int64, nsec int64) Time { return Time{} }
+func Since(t Time) Duration { return 0 }
+func Until(t Time) Duration { return 0 }
+func Sleep(d Duration) {}
+func Parse(layout, value string) (Time, error) { return Time{}, nil }
+func ParseInLocation(layout, value string, loc *Location) (Time, error) { return Time{}, nil }
+func LoadLocation(name string) (*Location, error) { return nil, nil }
+func FixedZone(name string, offset int) *Location { return nil }
+
+func (t Time) Add(d Duration) Time { return t }
+func (t Time) AddDate(years int, months int, days int) Time { return t }
+func (t Time) After(u Time) bool { return false }
+func (t Time) Before(u Time) bool { return false }
+func (t Time) Equal(u Time) bool { return true }
+func (t Time) IsZero() bool { return true }
+func (t Time) String() string { return "" }
+func (t Time) Format(layout string) string { return "" }
+func (t Time) Sub(u Time) Duration { return 0 }
+func (t Time) Unix() int64 { return 0 }
+func (t Time) UnixNano() int64 { return 0 }
+func (t Time) Location() *Location { return nil }
+func (t Time) In(loc *Location) Time { return t }
+func (t Time) Local() Time { return t }
+func (t Time) UTC() Time { return t }
+func (t Time) Date() (year int, month Month, day int) { return 0, 0, 0 }
+func (t Time) Clock() (hour int, min int, sec int) { return 0, 0, 0 }
+func (t Time) Year() int { return 0 }
+func (t Time) Month() Month { return 0 }
+func (t Time) Day() int { return 0 }
+func (t Time) Hour() int { return 0 }
+func (t Time) Minute() int { return 0 }
+func (t Time) Second() int { return 0 }
+func (t Time) Nanosecond() int { return 0 }
+func (t Time) Weekday() Weekday { return 0 }
+func (t Time) MarshalText() ([]byte, error) { return nil, nil }
+func (t *Time) UnmarshalText(data []byte) error { return nil }
+
+func (d Duration) String() string { return "" }
+func (d Duration) Nanoseconds() int64 { return int64(d) }
+func (d Duration) Microseconds() int64 { return int64(d) / 1000 }
+func (d Duration) Milliseconds() int64 { return int64(d) / 1000000 }
+func (d Duration) Seconds() float64 { return 0 }
+func (d Duration) Minutes() float64 { return 0 }
+func (d Duration) Hours() float64 { return 0 }
+`);
+}
+
 function osPackage(): GoTypesPackage {
   return checkedSyntheticStandardPackage("os", `package os
 
+import "io/fs"
+
 type File struct{}
-type FileMode uint32
+type FileMode = fs.FileMode
+type FileInfo = fs.FileInfo
+type DirEntry = fs.DirEntry
 
 const (
   O_RDONLY int = 0
@@ -455,6 +657,9 @@ const (
   ModeIrregular FileMode = 524288
   ModeType FileMode = 2399666176
   ModePerm FileMode = 511
+
+  PathSeparator = '/'
+  PathListSeparator = ':'
 )
 
 var Args []string
@@ -468,22 +673,6 @@ var ErrNotExist error
 var ErrClosed error
 var ErrDeadlineExceeded error
 var ErrNoDeadline error
-
-type FileInfo interface {
-  Name() string
-  Size() int64
-  Mode() FileMode
-  ModTime() any
-  IsDir() bool
-  Sys() any
-}
-
-type DirEntry interface {
-  Name() string
-  IsDir() bool
-  Type() FileMode
-  Info() (FileInfo, error)
-}
 
 type PathError struct {
   Op string
@@ -537,12 +726,6 @@ type Signal interface {
   String() string
   Signal()
 }
-
-func (m FileMode) IsDir() bool { return false }
-func (m FileMode) IsRegular() bool { return false }
-func (m FileMode) Perm() FileMode { return m }
-func (m FileMode) String() string { return "" }
-func (m FileMode) Type() FileMode { return m }
 
 func (f *File) Chdir() error { return nil }
 func (f *File) Chmod(mode FileMode) error { return nil }
@@ -626,6 +809,120 @@ func UserCacheDir() (string, error) { return "", nil }
 func UserConfigDir() (string, error) { return "", nil }
 func UserHomeDir() (string, error) { return "", nil }
 func WriteFile(name string, data []byte, perm FileMode) error { return nil }
+`);
+}
+
+function syncPackage(): GoTypesPackage {
+  return checkedSyntheticStandardPackage("sync", syncIntrinsicSource);
+}
+
+function syncAtomicPackage(): GoTypesPackage {
+  return checkedSyntheticStandardPackage("sync/atomic", `package atomic
+
+import "unsafe"
+
+type Bool struct{}
+func (x *Bool) CompareAndSwap(old, next bool) bool { return false }
+func (x *Bool) Load() bool { return false }
+func (x *Bool) Store(val bool) {}
+func (x *Bool) Swap(next bool) bool { return false }
+
+type Int32 struct{}
+func (x *Int32) Add(delta int32) int32 { return 0 }
+func (x *Int32) And(mask int32) int32 { return 0 }
+func (x *Int32) CompareAndSwap(old, next int32) bool { return false }
+func (x *Int32) Load() int32 { return 0 }
+func (x *Int32) Or(mask int32) int32 { return 0 }
+func (x *Int32) Store(val int32) {}
+func (x *Int32) Swap(next int32) int32 { return 0 }
+
+type Int64 struct{}
+func (x *Int64) Add(delta int64) int64 { return 0 }
+func (x *Int64) And(mask int64) int64 { return 0 }
+func (x *Int64) CompareAndSwap(old, next int64) bool { return false }
+func (x *Int64) Load() int64 { return 0 }
+func (x *Int64) Or(mask int64) int64 { return 0 }
+func (x *Int64) Store(val int64) {}
+func (x *Int64) Swap(next int64) int64 { return 0 }
+
+type Uint32 struct{}
+func (x *Uint32) Add(delta uint32) uint32 { return 0 }
+func (x *Uint32) And(mask uint32) uint32 { return 0 }
+func (x *Uint32) CompareAndSwap(old, next uint32) bool { return false }
+func (x *Uint32) Load() uint32 { return 0 }
+func (x *Uint32) Or(mask uint32) uint32 { return 0 }
+func (x *Uint32) Store(val uint32) {}
+func (x *Uint32) Swap(next uint32) uint32 { return 0 }
+
+type Uint64 struct{}
+func (x *Uint64) Add(delta uint64) uint64 { return 0 }
+func (x *Uint64) And(mask uint64) uint64 { return 0 }
+func (x *Uint64) CompareAndSwap(old, next uint64) bool { return false }
+func (x *Uint64) Load() uint64 { return 0 }
+func (x *Uint64) Or(mask uint64) uint64 { return 0 }
+func (x *Uint64) Store(val uint64) {}
+func (x *Uint64) Swap(next uint64) uint64 { return 0 }
+
+type Uintptr struct{}
+func (x *Uintptr) Add(delta uintptr) uintptr { return 0 }
+func (x *Uintptr) And(mask uintptr) uintptr { return 0 }
+func (x *Uintptr) CompareAndSwap(old, next uintptr) bool { return false }
+func (x *Uintptr) Load() uintptr { return 0 }
+func (x *Uintptr) Or(mask uintptr) uintptr { return 0 }
+func (x *Uintptr) Store(val uintptr) {}
+func (x *Uintptr) Swap(next uintptr) uintptr { return 0 }
+
+type Pointer[T any] struct{}
+func (x *Pointer[T]) CompareAndSwap(old, next *T) bool { return false }
+func (x *Pointer[T]) Load() *T { return nil }
+func (x *Pointer[T]) Store(val *T) {}
+func (x *Pointer[T]) Swap(next *T) *T { return nil }
+
+type Value struct{}
+func (v *Value) CompareAndSwap(old, next any) bool { return false }
+func (v *Value) Load() any { return nil }
+func (v *Value) Store(val any) {}
+func (v *Value) Swap(next any) any { return nil }
+
+func LoadInt32(addr *int32) int32 { return 0 }
+func LoadInt64(addr *int64) int64 { return 0 }
+func LoadUint32(addr *uint32) uint32 { return 0 }
+func LoadUint64(addr *uint64) uint64 { return 0 }
+func LoadUintptr(addr *uintptr) uintptr { return 0 }
+func StoreInt32(addr *int32, val int32) {}
+func StoreInt64(addr *int64, val int64) {}
+func StoreUint32(addr *uint32, val uint32) {}
+func StoreUint64(addr *uint64, val uint64) {}
+func StoreUintptr(addr *uintptr, val uintptr) {}
+func SwapInt32(addr *int32, next int32) int32 { return 0 }
+func SwapInt64(addr *int64, next int64) int64 { return 0 }
+func SwapUint32(addr *uint32, next uint32) uint32 { return 0 }
+func SwapUint64(addr *uint64, next uint64) uint64 { return 0 }
+func SwapUintptr(addr *uintptr, next uintptr) uintptr { return 0 }
+func CompareAndSwapInt32(addr *int32, old, next int32) bool { return false }
+func CompareAndSwapInt64(addr *int64, old, next int64) bool { return false }
+func CompareAndSwapUint32(addr *uint32, old, next uint32) bool { return false }
+func CompareAndSwapUint64(addr *uint64, old, next uint64) bool { return false }
+func CompareAndSwapUintptr(addr *uintptr, old, next uintptr) bool { return false }
+func AddInt32(addr *int32, delta int32) int32 { return 0 }
+func AddInt64(addr *int64, delta int64) int64 { return 0 }
+func AddUint32(addr *uint32, delta uint32) uint32 { return 0 }
+func AddUint64(addr *uint64, delta uint64) uint64 { return 0 }
+func AddUintptr(addr *uintptr, delta uintptr) uintptr { return 0 }
+func AndInt32(addr *int32, mask int32) int32 { return 0 }
+func AndInt64(addr *int64, mask int64) int64 { return 0 }
+func AndUint32(addr *uint32, mask uint32) uint32 { return 0 }
+func AndUint64(addr *uint64, mask uint64) uint64 { return 0 }
+func AndUintptr(addr *uintptr, mask uintptr) uintptr { return 0 }
+func OrInt32(addr *int32, mask int32) int32 { return 0 }
+func OrInt64(addr *int64, mask int64) int64 { return 0 }
+func OrUint32(addr *uint32, mask uint32) uint32 { return 0 }
+func OrUint64(addr *uint64, mask uint64) uint64 { return 0 }
+func OrUintptr(addr *uintptr, mask uintptr) uintptr { return 0 }
+func LoadPointer(addr *unsafe.Pointer) unsafe.Pointer { return nil }
+func StorePointer(addr *unsafe.Pointer, val unsafe.Pointer) {}
+func SwapPointer(addr *unsafe.Pointer, next unsafe.Pointer) unsafe.Pointer { return nil }
+func CompareAndSwapPointer(addr *unsafe.Pointer, old, next unsafe.Pointer) bool { return false }
 `);
 }
 

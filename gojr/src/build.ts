@@ -606,6 +606,7 @@ class PackageGraphBuilder {
       }
       const dependency = this.buildOne(dependencyPath, dependencyFiles, [...stack, importPath]);
       if (dependency) sourceDependencies.push(dependency);
+      if (this.hasErrors()) break;
     }
 
     if (!this.hasErrors()) {
@@ -618,7 +619,8 @@ class PackageGraphBuilder {
           packageName,
           packagePath: importPath,
           autoImportFmt: false,
-          codebaseTxn: this.requireActiveTxn()
+          codebaseTxn: this.requireActiveTxn(),
+          rollbackOnErrors: false
         });
       this.diagnostics.push(...checked.diagnostics);
       if (!this.hasErrors()) {
