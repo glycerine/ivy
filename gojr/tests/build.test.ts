@@ -20,15 +20,27 @@ import {
 
 class MemoryArtifactStore implements BuildArtifactStore {
   public readonly writes = new Map<string, string>();
+  public readonly mtimes = new Map<string, number>();
   public writeCount = 0;
+  private clock = 1000;
 
   public read(path: string): string | undefined {
     return this.writes.get(path);
   }
 
+  public mtimeMs(path: string): number | undefined {
+    return this.mtimes.get(path);
+  }
+
+  public setMtime(path: string, mtime: number): void {
+    this.mtimes.set(path, mtime);
+  }
+
   public writeAtomic(path: string, source: string): void {
     this.writeCount++;
     this.writes.set(path, source);
+    this.clock += 1000;
+    this.mtimes.set(path, this.clock);
   }
 }
 
@@ -381,6 +393,58 @@ func hidden() {}
     expect(second.skipped).toEqual(["/tmp/gojr-cache/example.com/cache.a"]);
     expect(store.writeCount).toBe(1);
     expect(first.artifacts[0]?.cacheKey).toBe(second.artifacts[0]?.cacheKey);
+  });
+
+  test("trusts fresh artifact mtimes without reopening dependency source packages", () => {
+    const store = new MemoryArtifactStore();
+    store.setMtime("/src/lib", 1);
+    store.setMtime("/src/lib/lib.go", 1);
+    const first = buildPackages({
+      importPath: "example.com/app",
+      artifactRoot: "/tmp/gojr-mtime",
+      packageSources: {
+        "example.com/lib": [{
+          filename: "/src/lib/lib.go",
+          source: "package lib\n\nfunc One() int { return 1 }\n"
+        }]
+      },
+      files: [{
+        filename: "/src/app/app.go",
+        source: `package app
+
+import lib "example.com/lib"
+
+func Two() int { return lib.One() + 1 }
+`
+      }]
+    }, store);
+    const second = buildPackages({
+      importPath: "example.com/app",
+      artifactRoot: "/tmp/gojr-mtime",
+      sourcePackageProvider: {
+        load(importPath: string) {
+          throw new Error(`unexpected source load for ${importPath}`);
+        }
+      },
+      files: [{
+        filename: "/src/app/app.go",
+        source: `package app
+
+import lib "example.com/lib"
+
+func Two() int { return lib.One() + 1 }
+`
+      }]
+    }, store);
+
+    expect(first.ok).toBe(true);
+    expect(second.ok).toBe(true);
+    expect(second.built).toEqual([]);
+    expect(second.skipped.sort()).toEqual([
+      "/tmp/gojr-mtime/example.com/app.a",
+      "/tmp/gojr-mtime/example.com/lib.a"
+    ]);
+    expect(store.writeCount).toBe(2);
   });
 
   test("rebuilds package artifacts when cache key inputs change", () => {

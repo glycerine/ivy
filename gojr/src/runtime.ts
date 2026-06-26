@@ -7430,7 +7430,7 @@ async function executeFor(statement: ForStatement, context: EvaluationContext, l
   if (statement.range) {
     const source = await evaluateExpression(statement.range.source, context);
     const rangeTypes = rangeIterationTypeTexts(statement.range.source, source, context);
-    const entries = await rangeEntries(source, context);
+    const entries = await rangeEntries(source, context, rangeTypes.source);
     for (const [index, value] of entries) {
       const completion = await context.childScopeAsync(async () => {
         if (statement.range?.keyName) {
@@ -8084,7 +8084,14 @@ async function evaluateCallArguments(
   );
   const calleeName = runtimeCallableName(callee);
   const args = spreadLast
-    ? spreadLastArgument(raw, context, calleeName, expressions.at(-1)?.span, expressionDeclaredTypeText(expressions[0], context))
+    ? spreadLastArgument(
+      raw,
+      context,
+      calleeName,
+      expressions.at(-1)?.span,
+      expressionDeclaredTypeText(expressions.at(-1), context),
+      expressionDeclaredTypeText(expressions[0], context)
+    )
     : raw;
   if (!isGoJuniorFunction(callee) || !callee.signature) return args;
 
@@ -8781,11 +8788,15 @@ function spreadLastArgument(
   context: EvaluationContext,
   calleeName: string,
   span?: SourceSpan,
+  spreadSourceType?: string,
   appendTargetType?: string
 ): RuntimeValue[] {
   if (args.length === 0) return args;
   const last = args[args.length - 1] ?? null;
   const spreadValue = unwrapNamed(last);
+  if (spreadValue === null && spreadSourceType && parseArrayOrSliceTypeText(makeUnderlyingTypeText(spreadSourceType, context), context)) {
+    return args.slice(0, -1);
+  }
   if (spreadValue instanceof RuntimeTypedNilValue && parseArrayOrSliceTypeText(spreadValue.typeName)) {
     return args.slice(0, -1);
   }
@@ -13812,11 +13823,12 @@ function interfaceAwareEqual(left: RuntimeValue, right: RuntimeValue): boolean {
   return false;
 }
 
-async function rangeEntries(source: RuntimeValue, context: EvaluationContext): Promise<Array<[RuntimeValue, RuntimeValue]>> {
+async function rangeEntries(source: RuntimeValue, context: EvaluationContext, sourceType?: string): Promise<Array<[RuntimeValue, RuntimeValue]>> {
   source = unwrapNamed(source);
   if (source instanceof RuntimeTypedNilValue) {
     if (parseArrayOrSliceTypeText(source.typeName, context) || parseMapTypeText(source.typeName)) return [];
   }
+  if (source === null && sourceType && isRangeableNilType(sourceType, context)) return [];
   if (typeof source === "bigint" || typeof source === "number") {
     if (source < 0) return [];
     const count = toNonNegativeLength(source, "range count");
@@ -13840,16 +13852,21 @@ async function rangeEntries(source: RuntimeValue, context: EvaluationContext): P
   throw new GoJuniorRuntimeError(`${formatValue(source)} is not rangeable`);
 }
 
-function rangeIterationTypeTexts(sourceExpression: Expression, source: RuntimeValue, context: EvaluationContext): { key?: string; value?: string } {
+function rangeIterationTypeTexts(sourceExpression: Expression, source: RuntimeValue, context: EvaluationContext): { source?: string; key?: string; value?: string } {
   const sourceType = expressionDeclaredTypeText(sourceExpression, context, source);
   const normalized = normalizeTypeText(sourceType ?? "");
-  if (normalized === "string") return { key: "int", value: "rune" };
+  if (normalized === "string") return { source: normalized, key: "int", value: "rune" };
   const mapType = parseMapTypeText(normalized);
-  if (mapType) return { key: mapType.keyType, value: mapType.valueType };
+  if (mapType) return { source: normalized, key: mapType.keyType, value: mapType.valueType };
   const arrayType = parseArrayOrSliceTypeText(normalized, context);
-  if (arrayType) return { key: "int", value: arrayType.elementType };
+  if (arrayType) return { source: normalized, key: "int", value: arrayType.elementType };
   const integerType = integerRangeKeyTypeText(sourceExpression, source, context);
-  return integerType ? { key: integerType, value: integerType } : {};
+  return integerType ? { source: normalized, key: integerType, value: integerType } : {};
+}
+
+function isRangeableNilType(typeText: string, context: EvaluationContext): boolean {
+  const normalized = normalizeTypeText(typeText);
+  return Boolean(parseArrayOrSliceTypeText(normalized, context) || parseMapTypeText(normalized));
 }
 
 function integerRangeKeyTypeText(sourceExpression: Expression, source: RuntimeValue, context: EvaluationContext): string | undefined {

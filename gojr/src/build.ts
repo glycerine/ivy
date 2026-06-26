@@ -57,6 +57,7 @@ export type BuildProgressSink = (event: BuildProgressEvent) => void;
 
 export interface BuildArtifactStore {
   read?(path: string): string | undefined;
+  mtimeMs?(path: string): number | undefined;
   writeAtomic(path: string, source: string): void;
 }
 
@@ -399,12 +400,20 @@ class PackageGraphBuilder {
     const archive = parseGoJuniorPackageArchive(source);
     if (!archive || !this.artifactMetadataMatchesRequest(archive.pkgdef, importPath)) return undefined;
 
-    const artifactFiles = files ?? this.freshArtifactSourceFiles(importPath, archive.pkgdef);
-    if (!artifactFiles) return undefined;
-    const sourceHash = archive.pkgdef.standardLibrary && isAmbientBuildImport(importPath)
-      ? archive.pkgdef.sourceHash
-      : hashSourceFiles(artifactFiles);
-    if (sourceHash !== archive.pkgdef.sourceHash) return undefined;
+    let artifactFiles: SourceFile[] | undefined;
+    if (files) {
+      artifactFiles = files;
+      if (hashSourceFiles(artifactFiles) !== archive.pkgdef.sourceHash) return undefined;
+    } else if (this.artifactSourcesOlderThanArtifact(artifactPath, archive.pkgdef)) {
+      artifactFiles = sourceFilesFromPkgdef(archive.pkgdef);
+    } else {
+      artifactFiles = this.freshArtifactSourceFiles(importPath, archive.pkgdef);
+      if (!artifactFiles) return undefined;
+      const sourceHash = archive.pkgdef.standardLibrary && isAmbientBuildImport(importPath)
+        ? archive.pkgdef.sourceHash
+        : hashSourceFiles(artifactFiles);
+      if (sourceHash !== archive.pkgdef.sourceHash) return undefined;
+    }
 
     visiting.add(importPath);
     const dependencies = [...archive.pkgdef.dependencies].sort();
@@ -453,15 +462,31 @@ class PackageGraphBuilder {
 
   private freshArtifactSourceFiles(importPath: string, pkgdef: GoJuniorPackageExportData): SourceFile[] | undefined {
     if (pkgdef.standardLibrary && isAmbientBuildImport(importPath)) {
-      return pkgdef.sources.map((source) => ({
-        filename: source.filename,
-        source: ""
-      }));
+      return sourceFilesFromPkgdef(pkgdef);
     }
 
     const files = this.sourceFilesForImportFast(importPath);
     if (!files) return undefined;
     return files.length === pkgdef.sources.length ? files : undefined;
+  }
+
+  private artifactSourcesOlderThanArtifact(artifactPath: string, pkgdef: GoJuniorPackageExportData): boolean {
+    if (!this.store?.mtimeMs) return false;
+    const artifactMtime = this.store.mtimeMs(artifactPath);
+    if (!isFiniteMtime(artifactMtime)) return false;
+    const directories = new Set<string>();
+    for (const source of pkgdef.sources) {
+      if (isSyntheticSourceFilename(source.filename)) continue;
+      const sourceMtime = this.store.mtimeMs(source.filename);
+      if (!isFiniteMtime(sourceMtime) || sourceMtime > artifactMtime) return false;
+      const dir = sourceFilenameDirectory(source.filename);
+      if (dir) directories.add(dir);
+    }
+    for (const dir of directories) {
+      const dirMtime = this.store.mtimeMs(dir);
+      if (!isFiniteMtime(dirMtime) || dirMtime > artifactMtime) return false;
+    }
+    return true;
   }
 
   private sourceFilesForImportFast(importPath: string): SourceFile[] | undefined {
@@ -1035,6 +1060,27 @@ function ensureSourceFile(file: SourceFile): SourceFile {
     filename: file.filename || REPL_FILENAME,
     source: file.source ?? ""
   };
+}
+
+function sourceFilesFromPkgdef(pkgdef: GoJuniorPackageExportData): SourceFile[] {
+  return pkgdef.sources.map((source) => ({
+    filename: source.filename,
+    source: ""
+  }));
+}
+
+function isFiniteMtime(value: number | undefined): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
+
+function isSyntheticSourceFilename(filename: string): boolean {
+  return filename.startsWith("gojr:");
+}
+
+function sourceFilenameDirectory(filename: string): string | undefined {
+  const slash = Math.max(filename.lastIndexOf("/"), filename.lastIndexOf("\\"));
+  if (slash <= 0) return undefined;
+  return filename.slice(0, slash);
 }
 
 function emptyBuildReport(diagnostics: Diagnostic[]): BuildPackageReport {

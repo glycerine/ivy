@@ -25,6 +25,16 @@ export function createNodeArtifactStore() {
                 throw error;
             }
         },
+        mtimeMs(path) {
+            try {
+                return statSync(path).mtimeMs;
+            }
+            catch (error) {
+                if (isNodeErrorCode(error, "ENOENT"))
+                    return undefined;
+                throw error;
+            }
+        },
         writeAtomic(artifactPath, source) {
             const dir = dirname(artifactPath);
             mkdirSync(dir, { recursive: true });

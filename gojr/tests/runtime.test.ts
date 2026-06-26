@@ -7113,6 +7113,18 @@ func sum(vals ...int) int {
     expect(spread.value).toBe(15n);
   });
 
+  test("spreads typed nil slices as zero variadic arguments", async () => {
+    const result = await expectRuns(`
+func count(vals ...int) int {
+  return len(vals)
+}
+var xs []int
+return count(xs...), count(99, xs...)
+`);
+
+    expect(result.values).toEqual([0n, 1n]);
+  });
+
   test("supports multiple short declarations and assignments", async () => {
     const result = await expectRuns(`
 a, b := 1, 2

@@ -6488,7 +6488,7 @@ async function executeFor(statement, context, label) {
     if (statement.range) {
         const source = await evaluateExpression(statement.range.source, context);
         const rangeTypes = rangeIterationTypeTexts(statement.range.source, source, context);
-        const entries = await rangeEntries(source, context);
+        const entries = await rangeEntries(source, context, rangeTypes.source);
         for (const [index, value] of entries) {
             const completion = await context.childScopeAsync(async () => {
                 if (statement.range?.keyName) {
@@ -7068,7 +7068,7 @@ async function evaluateCallArguments(callee, expressions, spreadLast, context, t
     const raw = expandSingleMultiReturnCallArgument(await evaluateExpressionList(expressions, context), expressions, callee, spreadLast);
     const calleeName = runtimeCallableName(callee);
     const args = spreadLast
-        ? spreadLastArgument(raw, context, calleeName, expressions.at(-1)?.span, expressionDeclaredTypeText(expressions[0], context))
+        ? spreadLastArgument(raw, context, calleeName, expressions.at(-1)?.span, expressionDeclaredTypeText(expressions.at(-1), context), expressionDeclaredTypeText(expressions[0], context))
         : raw;
     if (!isGoJuniorFunction(callee) || !callee.signature)
         return args;
@@ -7658,11 +7658,14 @@ function makeUnderlyingTypeText(typeText, context) {
     const alias = context.aliasType(imported);
     return resolveRuntimeCompositeAliases(alias && alias !== imported ? alias : imported, context);
 }
-function spreadLastArgument(args, context, calleeName, span, appendTargetType) {
+function spreadLastArgument(args, context, calleeName, span, spreadSourceType, appendTargetType) {
     if (args.length === 0)
         return args;
     const last = args[args.length - 1] ?? null;
     const spreadValue = unwrapNamed(last);
+    if (spreadValue === null && spreadSourceType && parseArrayOrSliceTypeText(makeUnderlyingTypeText(spreadSourceType, context), context)) {
+        return args.slice(0, -1);
+    }
     if (spreadValue instanceof RuntimeTypedNilValue && parseArrayOrSliceTypeText(spreadValue.typeName)) {
         return args.slice(0, -1);
     }
@@ -12623,12 +12626,14 @@ function interfaceAwareEqual(left, right) {
     }
     return false;
 }
-async function rangeEntries(source, context) {
+async function rangeEntries(source, context, sourceType) {
     source = unwrapNamed(source);
     if (source instanceof RuntimeTypedNilValue) {
         if (parseArrayOrSliceTypeText(source.typeName, context) || parseMapTypeText(source.typeName))
             return [];
     }
+    if (source === null && sourceType && isRangeableNilType(sourceType, context))
+        return [];
     if (typeof source === "bigint" || typeof source === "number") {
         if (source < 0)
             return [];
@@ -12656,15 +12661,19 @@ function rangeIterationTypeTexts(sourceExpression, source, context) {
     const sourceType = expressionDeclaredTypeText(sourceExpression, context, source);
     const normalized = normalizeTypeText(sourceType ?? "");
     if (normalized === "string")
-        return { key: "int", value: "rune" };
+        return { source: normalized, key: "int", value: "rune" };
     const mapType = parseMapTypeText(normalized);
     if (mapType)
-        return { key: mapType.keyType, value: mapType.valueType };
+        return { source: normalized, key: mapType.keyType, value: mapType.valueType };
     const arrayType = parseArrayOrSliceTypeText(normalized, context);
     if (arrayType)
-        return { key: "int", value: arrayType.elementType };
+        return { source: normalized, key: "int", value: arrayType.elementType };
     const integerType = integerRangeKeyTypeText(sourceExpression, source, context);
-    return integerType ? { key: integerType, value: integerType } : {};
+    return integerType ? { source: normalized, key: integerType, value: integerType } : {};
+}
+function isRangeableNilType(typeText, context) {
+    const normalized = normalizeTypeText(typeText);
+    return Boolean(parseArrayOrSliceTypeText(normalized, context) || parseMapTypeText(normalized));
 }
 function integerRangeKeyTypeText(sourceExpression, source, context) {
     const actual = unwrapNamed(source);

@@ -141,6 +141,14 @@ export function createNodeArtifactStore(): BuildArtifactStore {
         throw error;
       }
     },
+    mtimeMs(path: string): number | undefined {
+      try {
+        return statSync(path).mtimeMs;
+      } catch (error) {
+        if (isNodeErrorCode(error, "ENOENT")) return undefined;
+        throw error;
+      }
+    },
     writeAtomic(artifactPath: string, source: string): void {
       const dir = dirname(artifactPath);
       mkdirSync(dir, { recursive: true });

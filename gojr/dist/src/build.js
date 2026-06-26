@@ -220,14 +220,25 @@ class PackageGraphBuilder {
         const archive = parseGoJuniorPackageArchive(source);
         if (!archive || !this.artifactMetadataMatchesRequest(archive.pkgdef, importPath))
             return undefined;
-        const artifactFiles = files ?? this.freshArtifactSourceFiles(importPath, archive.pkgdef);
-        if (!artifactFiles)
-            return undefined;
-        const sourceHash = archive.pkgdef.standardLibrary && isAmbientBuildImport(importPath)
-            ? archive.pkgdef.sourceHash
-            : hashSourceFiles(artifactFiles);
-        if (sourceHash !== archive.pkgdef.sourceHash)
-            return undefined;
+        let artifactFiles;
+        if (files) {
+            artifactFiles = files;
+            if (hashSourceFiles(artifactFiles) !== archive.pkgdef.sourceHash)
+                return undefined;
+        }
+        else if (this.artifactSourcesOlderThanArtifact(artifactPath, archive.pkgdef)) {
+            artifactFiles = sourceFilesFromPkgdef(archive.pkgdef);
+        }
+        else {
+            artifactFiles = this.freshArtifactSourceFiles(importPath, archive.pkgdef);
+            if (!artifactFiles)
+                return undefined;
+            const sourceHash = archive.pkgdef.standardLibrary && isAmbientBuildImport(importPath)
+                ? archive.pkgdef.sourceHash
+                : hashSourceFiles(artifactFiles);
+            if (sourceHash !== archive.pkgdef.sourceHash)
+                return undefined;
+        }
         visiting.add(importPath);
         const dependencies = [...archive.pkgdef.dependencies].sort();
         const dependencyCacheKeys = [];
@@ -273,15 +284,36 @@ class PackageGraphBuilder {
     }
     freshArtifactSourceFiles(importPath, pkgdef) {
         if (pkgdef.standardLibrary && isAmbientBuildImport(importPath)) {
-            return pkgdef.sources.map((source) => ({
-                filename: source.filename,
-                source: ""
-            }));
+            return sourceFilesFromPkgdef(pkgdef);
         }
         const files = this.sourceFilesForImportFast(importPath);
         if (!files)
             return undefined;
         return files.length === pkgdef.sources.length ? files : undefined;
+    }
+    artifactSourcesOlderThanArtifact(artifactPath, pkgdef) {
+        if (!this.store?.mtimeMs)
+            return false;
+        const artifactMtime = this.store.mtimeMs(artifactPath);
+        if (!isFiniteMtime(artifactMtime))
+            return false;
+        const directories = new Set();
+        for (const source of pkgdef.sources) {
+            if (isSyntheticSourceFilename(source.filename))
+                continue;
+            const sourceMtime = this.store.mtimeMs(source.filename);
+            if (!isFiniteMtime(sourceMtime) || sourceMtime > artifactMtime)
+                return false;
+            const dir = sourceFilenameDirectory(source.filename);
+            if (dir)
+                directories.add(dir);
+        }
+        for (const dir of directories) {
+            const dirMtime = this.store.mtimeMs(dir);
+            if (!isFiniteMtime(dirMtime) || dirMtime > artifactMtime)
+                return false;
+        }
+        return true;
     }
     sourceFilesForImportFast(importPath) {
         const explicit = this.packageSources.get(importPath);
@@ -839,6 +871,24 @@ function ensureSourceFile(file) {
         filename: file.filename || REPL_FILENAME,
         source: file.source ?? ""
     };
+}
+function sourceFilesFromPkgdef(pkgdef) {
+    return pkgdef.sources.map((source) => ({
+        filename: source.filename,
+        source: ""
+    }));
+}
+function isFiniteMtime(value) {
+    return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
+function isSyntheticSourceFilename(filename) {
+    return filename.startsWith("gojr:");
+}
+function sourceFilenameDirectory(filename) {
+    const slash = Math.max(filename.lastIndexOf("/"), filename.lastIndexOf("\\"));
+    if (slash <= 0)
+        return undefined;
+    return filename.slice(0, slash);
 }
 function emptyBuildReport(diagnostics) {
     return {
