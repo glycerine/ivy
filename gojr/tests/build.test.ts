@@ -716,6 +716,8 @@ import "runtime"
 var OS = runtime.GOOS
 var Arch = runtime.GOARCH
 var Args = os.Args
+var DevNull = os.DevNull
+var Done = os.ErrProcessDone
 
 func Capture(buf []byte) int {
   pc, file, line, ok := runtime.Caller(0)
@@ -753,6 +755,8 @@ func Capture(buf []byte) int {
       stdout: (text: string) => output.push(text)
     });
     expect(instantiated.diagnostics).toEqual([]);
+    expect(instantiated.package.DevNull).toBe("/dev/null");
+    expect(Boolean(instantiated.package.Done)).toBe(true);
     const capture = instantiated.package.Capture as (buf: bigint[]) => Promise<bigint>;
     const value = await capture([65n, 10n]);
     expect(typeof value).toBe("bigint");

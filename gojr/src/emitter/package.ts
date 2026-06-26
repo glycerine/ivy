@@ -2836,13 +2836,22 @@ function dynamicMethodCallToJs(ctx: EmitterContext, expression: CallExpression, 
 function newCallToJs(ctx: EmitterContext, expression: CallExpression, env: ExpressionEmitEnv): string | undefined {
   const typeArg = expression.args[0];
   const typeText = typeArg ? typeArgumentExpressionText(typeArg) : undefined;
-  if (!typeText) {
-    ctx.emitError("unsupported Stage 4 new without type argument");
-    return undefined;
-  }
   if (expression.args.length !== 1) {
     ctx.emitError("unsupported Stage 4 new arity");
     return undefined;
+  }
+  if (!typeText) {
+    if (!typeArg) {
+      ctx.emitError("unsupported Stage 4 new without argument");
+      return undefined;
+    }
+    const value = expressionToJs(ctx, typeArg, env);
+    const valueType = expressionTypeText(typeArg, env);
+    if (!value || !valueType) {
+      ctx.emitError("unsupported Stage 4 new without type argument");
+      return undefined;
+    }
+    return `__gojrPointerValue(${JSON.stringify(valueType)}, ${valueForTargetType(value, valueType, valueType, env)})`;
   }
   return `__gojrPointerValue(${JSON.stringify(typeText)}, ${zeroValueForTypeInEnv(typeText, env) ?? `__gojrZero(${JSON.stringify(typeText)})`})`;
 }
@@ -2872,8 +2881,16 @@ function makeCallToJs(ctx: EmitterContext, expression: CallExpression, env: Expr
   const slice = parseArrayOrSliceTypeText(resolvedTypeText);
   if (slice && resolvedTypeText.startsWith("[]")) {
     const length = expression.args[1] ? expressionToJs(ctx, expression.args[1], env) : "0n";
+    const capacity = expression.args[2] ? expressionToJs(ctx, expression.args[2], env) : length;
+    if (!length || !capacity) return undefined;
+    return `__gojrMake(${JSON.stringify(typeText)}, Number(${length}), Number(${capacity}))`;
+  }
+  if (typeText !== resolvedTypeText || typeText.includes(".")) {
+    const length = expression.args[1] ? expressionToJs(ctx, expression.args[1], env) : "0n";
+    const capacity = expression.args[2] ? expressionToJs(ctx, expression.args[2], env) : length;
     if (!length) return undefined;
-    return `Array.from({ length: Number(${length}) }, () => ${zeroValueForTypeInEnv(slice.elementType, env) ?? "null"})`;
+    if (!capacity) return undefined;
+    return `__gojrMake(${JSON.stringify(typeText)}, Number(${length}), Number(${capacity}))`;
   }
   ctx.emitError(`unsupported Stage 4 make(${typeText})`);
   return undefined;
@@ -4135,9 +4152,11 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "    ErrClosed: __gojrError(\"file already closed\"),",
     "    ErrDeadlineExceeded: __gojrError(\"i/o timeout\"),",
     "    ErrNoDeadline: __gojrError(\"file type does not support deadline\"),",
+    "    ErrProcessDone: __gojrError(\"os: process already finished\"),",
     "    O_RDONLY: 0n, O_WRONLY: 1n, O_RDWR: 2n, O_APPEND: 8n, O_CREATE: 512n, O_EXCL: 2048n, O_SYNC: 128n, O_TRUNC: 1024n,",
     "    ModeDir: 2147483648n, ModeAppend: 1073741824n, ModeExclusive: 536870912n, ModeTemporary: 268435456n, ModeSymlink: 134217728n, ModeDevice: 67108864n, ModeNamedPipe: 33554432n, ModeSocket: 16777216n, ModeSetuid: 8388608n, ModeSetgid: 4194304n, ModeCharDevice: 2097152n, ModeSticky: 1048576n, ModeIrregular: 524288n, ModeType: 2399666176n, ModePerm: 511n,",
     "    PathSeparator: 47n, PathListSeparator: 58n,",
+    "    DevNull: \"/dev/null\",",
     "    Exit: async (code) => { const error = new Error(`os.Exit(${Number(code || 0)})`); error.__gojrExitCode = Number(code || 0); throw error; },",
     "    Getenv: async (key) => __gojrOsGetenv(String(key ?? \"\")),",
     "    LookupEnv: async (key) => { const name = String(key ?? \"\"); const value = __gojrOsGetenv(name); return __gojrTuple([value, __gojrOsHasEnv(name)]); },",

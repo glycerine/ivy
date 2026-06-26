@@ -660,6 +660,7 @@ const (
 
   PathSeparator = '/'
   PathListSeparator = ':'
+  DevNull = "/dev/null"
 )
 
 var Args []string
@@ -673,6 +674,7 @@ var ErrNotExist error
 var ErrClosed error
 var ErrDeadlineExceeded error
 var ErrNoDeadline error
+var ErrProcessDone error
 
 type PathError struct {
   Op string

@@ -1641,6 +1641,51 @@ func Run() int {
     expect(await (root.package.Run as () => Promise<bigint>)()).toBe(7n);
   });
 
+  test("generates make for imported named slice types through package descriptors", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/root",
+      artifactRoot: "/tmp/gojr-stage6-imported-make-slice",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        "example.com/net": [{
+          filename: "ip.go",
+          source: `package net
+
+type IP []byte
+`
+        }]
+      },
+      files: [{
+        filename: "root.go",
+        source: `package root
+
+import "example.com/net"
+
+func MakeIP() int {
+	ip := make(net.IP, 4)
+	ip[0] = 12
+	return int(ip[0]) + len(ip)
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const depArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6-imported-make-slice/example.com/net.a") ?? "");
+    const rootArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage6-imported-make-slice/example.com/root.a") ?? "");
+    const depModule = await importArtifactJavaScript(depArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const rootModule = await importArtifactJavaScript(rootArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const importsByPath: Record<string, unknown> = {};
+    const dep = await depModule.instantiateGoJrPackage({}, { importsByPath });
+    expect(dep.diagnostics).toEqual([]);
+    importsByPath["example.com/net"] = dep.package;
+    const root = await rootModule.instantiateGoJrPackage({}, { importsByPath });
+    expect(root.diagnostics).toEqual([]);
+    expect(await (root.package.MakeIP as () => Promise<bigint>)()).toBe(16n);
+  });
+
   test("resolves imported package type descriptors for reflect-style metadata", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
@@ -2040,7 +2085,7 @@ func (p *Point) Bump(delta int64) {
 	p.X += delta
 }
 
-func PointerBasics() (int64, string, int64, string, int64, bool) {
+func PointerBasics() (int64, string, int64, string, int64, bool, string) {
 	p := new(Point)
 	(*p).X = 7
 	q := &Point{X: 9, Name: "ok"}
@@ -2049,7 +2094,8 @@ func PointerBasics() (int64, string, int64, string, int64, bool) {
 	*field += 2
 	v := Point{X: 3}
 	v.Bump(4)
-	return p.X, p.Name, q.X, q.Name, v.X, p != q
+	key := new("marker")
+	return p.X, p.Name, q.X, q.Name, v.X, p != q, *key
 }
 `
       }]
@@ -2063,13 +2109,14 @@ func PointerBasics() (int64, string, int64, string, int64, bool) {
     const instantiated = await module.instantiateGoJrPackage();
     const pkg = instantiated.package;
     expect(instantiated.diagnostics).toEqual([]);
-    expect(await (pkg.PointerBasics as () => Promise<[bigint, string, bigint, string, bigint, boolean]>)()).toEqual([
+    expect(await (pkg.PointerBasics as () => Promise<[bigint, string, bigint, string, bigint, boolean, string]>)()).toEqual([
       7n,
       "",
       12n,
       "ok!",
       7n,
-      true
+      true,
+      "marker"
     ]);
   });
 
