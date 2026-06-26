@@ -1381,6 +1381,58 @@ func NilMapWrite() {
     expect(String(error)).toContain("assignment to entry in nil map");
   });
 
+  test("generates real pointer cells for new address-of dereference and pointer receivers", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage7pointers",
+      artifactRoot: "/tmp/gojr-stage7pointers",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "pointers.go",
+        source: `package stage7pointers
+
+type Point struct {
+	X int64
+	Name string
+}
+
+func (p *Point) Bump(delta int64) {
+	p.X += delta
+}
+
+func PointerBasics() (int64, string, int64, string, int64, bool) {
+	p := new(Point)
+	(*p).X = 7
+	q := &Point{X: 9, Name: "ok"}
+	*q = Point{X: (*q).X + 1, Name: q.Name + "!"}
+	field := &q.X
+	*field += 2
+	v := Point{X: 3}
+	v.Bump(4)
+	return p.X, p.Name, q.X, q.Name, v.X, p != q
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage7pointers/example.com/stage7pointers.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.PointerBasics as () => Promise<[bigint, string, bigint, string, bigint, boolean]>)()).toEqual([
+      7n,
+      "",
+      12n,
+      "ok!",
+      7n,
+      true
+    ]);
+  });
+
   test("generates reflect.Value host methods for basic generated values", async () => {
     const store = new MemoryArtifactStore();
     const result = buildPackages({
@@ -1523,8 +1575,17 @@ func ReflectValueBasics() (bool, bool, bool, string, int64, bool, string, bool) 
 
 func Identity[T any](x T) T { return x }
 func Choose[A, B any](a A, b B) B { return b }
+func First[T any](xs []T) T { return xs[0] }
+func PtrValue[T any](p *T) T { return *p }
 func GenericInt() int64 { return Identity[int64](42) }
 func GenericString() string { return Choose[int64, string](7, "seven") }
+func GenericInferredInt() int64 { return Identity(int64(43)) }
+func GenericInferredString() string { return Choose(int64(8), "eight") }
+func GenericInferredSlice() string { return First([]string{"alpha", "beta"}) }
+func GenericInferredPointer() int64 {
+	x := int64(11)
+	return PtrValue(&x)
+}
 `
       }]
     }, store);
@@ -1542,6 +1603,10 @@ func GenericString() string { return Choose[int64, string](7, "seven") }
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (pkg.GenericInt as () => Promise<bigint>)()).toBe(42n);
     expect(await (pkg.GenericString as () => Promise<string>)()).toBe("seven");
+    expect(await (pkg.GenericInferredInt as () => Promise<bigint>)()).toBe(43n);
+    expect(await (pkg.GenericInferredString as () => Promise<string>)()).toBe("eight");
+    expect(await (pkg.GenericInferredSlice as () => Promise<string>)()).toBe("alpha");
+    expect(await (pkg.GenericInferredPointer as () => Promise<bigint>)()).toBe(11n);
   });
 
   test("lowers generated generic named type methods by generic receiver base", async () => {
@@ -1571,6 +1636,12 @@ func GenericBox() (int64, string, int64, string) {
 	bi.Set(9)
 	return bi.Get(), bs.Get(), bi.Zero(), bs.Zero()
 }
+
+func GenericNamedZero() (int64, string) {
+	var bi Box[int64]
+	var bs Box[string]
+	return bi.Value, bs.Value
+}
 `
       }]
     }, store);
@@ -1586,6 +1657,7 @@ func GenericBox() (int64, string, int64, string) {
     const pkg = instantiated.package;
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (pkg.GenericBox as () => Promise<[bigint, string, bigint, string]>)()).toEqual([9n, "ok", 0n, ""]);
+    expect(await (pkg.GenericNamedZero as () => Promise<[bigint, string]>)()).toEqual([0n, ""]);
   });
 
   test("passes generated generic function type dictionaries for zero values", async () => {

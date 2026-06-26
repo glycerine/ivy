@@ -960,6 +960,7 @@ Implemented and covered by focused tests:
 - Thin `__.PKGDEF` plus executable `_gojr.js`, with `_gojr.wasm` when an `int64` add kernel is selected.
 - Checked-in Clang-produced Wasm stencil extraction and mixed JS/Wasm fixture execution.
 - Direct generated package functions, methods, package vars, constants, imports by full import path, and source-order `init` calls.
+- `gojr build` / `buildPackages()` default to the executable `copy-patch-wasm-stage1` backend rather than the old source-envelope backend; ordinary and ambient dependency artifacts now use the resolved backend consistently.
 - Stage 3 expression lowering for literals, selectors, indexing, slicing, concrete arithmetic/string/bool/complex expressions, calls, conversions, method values, method calls, type assertions, map/slice/string indexing, and tuple returns.
 - Stage 4 statement lowering for blocks, declarations, returns, if/else, switch/fallthrough, type switch, for, range, select, assignment, short declaration, inc/dec, labels, simple goto state machines, defer, goroutines, sends, receives, and named returns.
 - Function literals, lexical captures, recursive and mutually recursive functions.
@@ -972,27 +973,32 @@ Implemented and covered by focused tests:
 - Package-qualified struct field descriptors, including ambiguous same-named imported field types from multiple packages.
 - First-pass generated `reflect.Value` host support for `ValueOf`, `IsValid`, `IsNil`, `Kind`, `Type`, `Field`, `Interface`, `String`, `Int`, and `Bool`.
 - First-pass generic function instantiation erasure for simple generic functions.
+- First-pass inferred generic function calls for direct identifier calls, with type dictionaries inferred from parameter-to-argument patterns including `T`, `[]T`, `*T`, `map[K]V`, and instantiated named type arguments.
 - First-pass generic named type method lowering by generic receiver base, covering instantiated values such as `Box[int64]` calling methods declared on `Box[T]` and `*Box[T]`.
+- First-pass generated descriptor substitution for instantiated generic named struct zero values, so `var b Box[int64]` constructs a typed `Box[int64]` value with `T` fields zeroed as `int64`.
 - First-pass generic function type-argument dictionaries for runtime type-sensitive lowering, currently covering zero values of `T` and `make([]T, n)` element initialization.
 - First-pass generic receiver method dictionaries inferred from receiver runtime type names such as `Box[int64]`, covering method bodies that need zero values of receiver type parameters.
+- First-pass generated pointer/addressability cells for `new(T)`, address-of locals, package variables, struct fields, array/slice elements, composite literals, dereference reads/writes, pointer field selectors, and pointer-receiver calls on addressable values.
+- Descriptor-backed named struct zero values in generated code, so `var s S` and `new(S)` construct Go-correct zeroed structs rather than `null`.
+- Generated `make` resolves named underlying map, slice, and channel types such as `make(Values)` where `type Values map[interface{}]interface{}`.
 - Literal supernodes for large `[]byte{...}` and `map[string][]byte{...}` data, using base64 payloads instead of huge element-by-element JavaScript.
 - Narrow generated helpers for common builtins: `len`, `cap`, `append`, `copy`, `delete`, and `panic`.
 
 Current focused scoreboard:
 
 ```text
-emitterWasm.test.ts: 23 pass
+emitterWasm.test.ts: 24 pass
 targeted runtime nil-map compatibility slice: 6 pass
-adjacent build/bench/generated-runtime/Wasm POC suites: 66 pass
+adjacent build/bench/generated-runtime/Wasm POC suites: 67 pass
 ```
 
 Still incomplete:
 
 - The backend still lowers from `ProgramAst`; the long-term target remains direct Go-shaped AST plus `go/types.Info`.
 - Type descriptors are not yet complete enough for imported private/helper types or full `reflect.Value` parity.
-- Generic constraints, inference-heavy generic calls, generic type descriptors for instantiated types, dictionary use beyond zero-value construction, and specialization are only smoke-tested.
-- Pointer/addressability semantics are still shallow; address-taken locals, struct fields, slice elements, and `new(T)` need the planned box/pointer stencils.
-- Package artifacts are executable for the supported subset, but the old interpreter-compatible path still exists elsewhere and must be removed when compiled artifacts become authoritative.
+- Generic constraints, inference-heavy contextual return inference, full generic type descriptors for reflection, dictionary use beyond zero-value construction, and specialization are only smoke-tested.
+- Pointer/addressability now has first-pass generated cells, but still needs broader coverage for unsafe pointer conversions, pointer-shaped imported descriptors, pointer receiver copy-vs-address subtleties, addressability diagnostics, and Wasm linear-memory lowering.
+- Package artifacts are executable by default for the supported subset, but the explicit legacy source-envelope backend and runtime evaluator still exist elsewhere and must be removed when compiled artifacts become fully authoritative.
 - Standard-library and `zygo` cutover still need broader lowering coverage and warm-cache startup work.
 
 ## Test Plan By Concern

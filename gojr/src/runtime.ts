@@ -10040,7 +10040,10 @@ function defaultValueForDeclarationType(type: TypeNode | undefined, context?: Ev
 }
 
 function defaultValueForTypeText(typeText: string, context?: EvaluationContext): RuntimeValue {
-  const declaredTypeText = normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
+  const importedTypeText = context?.resolveImportedTypeText(typeText) ?? typeText;
+  const directAnonymousStruct = parseAnonymousStructTypeText(importedTypeText);
+  if (directAnonymousStruct) return defaultAnonymousStructValue(directAnonymousStruct, context);
+  const declaredTypeText = normalizeTypeText(importedTypeText);
   const resolvedTypeText = resolveRuntimeCompositeAliases(declaredTypeText, context);
   const mapType = parseMapTypeText(resolvedTypeText);
   if (mapType) return new RuntimeTypedNilValue(declaredTypeText || resolvedTypeText);
@@ -10070,13 +10073,7 @@ function defaultValueForTypeText(typeText: string, context?: EvaluationContext):
   if (isUnsafePointerType(type)) return new RuntimeTypedNilValue(type);
   if (type.startsWith("*")) return new RuntimeTypedNilValue(type);
   const anonymousStruct = parseAnonymousStructTypeText(resolvedTypeText);
-  if (anonymousStruct) {
-    const struct = new RuntimeStruct(anonymousStruct.name);
-    for (const field of anonymousStruct.fields) {
-      struct.set(field.name, defaultValueForTypeText(field.type.text, context));
-    }
-    return struct;
-  }
+  if (anonymousStruct) return defaultAnonymousStructValue(anonymousStruct, context);
   if (typeDef) {
     const struct = defaultStructValueForTypeDef(typeDef, context, type);
     return type !== typeDef.name ? new RuntimeNamedValue(type, struct) : struct;
@@ -10424,7 +10421,10 @@ function atomicUint64Value(): RuntimeObject {
 }
 
 function zeroValueForMapValue(typeText: string, context?: EvaluationContext): RuntimeValue {
-  const declaredTypeText = normalizeTypeText(context?.resolveImportedTypeText(typeText) ?? typeText);
+  const importedTypeText = context?.resolveImportedTypeText(typeText) ?? typeText;
+  const directAnonymousStruct = parseAnonymousStructTypeText(importedTypeText);
+  if (directAnonymousStruct) return zeroAnonymousStructMapValue(directAnonymousStruct, context);
+  const declaredTypeText = normalizeTypeText(importedTypeText);
   const resolvedTypeText = resolveRuntimeCompositeAliases(declaredTypeText, context);
   const mapType = parseMapTypeText(resolvedTypeText);
   if (mapType) return new RuntimeTypedNilValue(declaredTypeText || resolvedTypeText);
@@ -10448,18 +10448,28 @@ function zeroValueForMapValue(typeText: string, context?: EvaluationContext): Ru
   if (interfaceTarget(type, context)) return new RuntimeInterfaceValue(type, null);
   if (isUnsafePointerType(type) || type.startsWith("*")) return new RuntimeTypedNilValue(type);
   const anonymousStruct = parseAnonymousStructTypeText(resolvedTypeText);
-  if (anonymousStruct) {
-    const struct = new RuntimeStruct(anonymousStruct.name);
-    for (const field of anonymousStruct.fields) {
-      struct.set(field.name, zeroValueForMapValue(field.type.text, context));
-    }
-    return struct;
-  }
+  if (anonymousStruct) return zeroAnonymousStructMapValue(anonymousStruct, context);
   const scopedAlias = context?.scopedAliasType(type);
   if (scopedAlias && scopedAlias !== type) return zeroValueForMapValue(scopedAlias, context);
   const alias = context?.aliasType(type);
   if (alias && alias !== type) return new RuntimeNamedValue(type, zeroValueForMapValue(alias, context));
   return primitiveZeroValueForType(type);
+}
+
+function defaultAnonymousStructValue(typeDef: StructTypeDef, context?: EvaluationContext): RuntimeStruct {
+  const struct = new RuntimeStruct(typeDef.name);
+  for (const field of typeDef.fields) {
+    struct.set(field.name, defaultValueForTypeText(field.type.text, context));
+  }
+  return struct;
+}
+
+function zeroAnonymousStructMapValue(typeDef: StructTypeDef, context?: EvaluationContext): RuntimeStruct {
+  const struct = new RuntimeStruct(typeDef.name);
+  for (const field of typeDef.fields) {
+    struct.set(field.name, zeroValueForMapValue(field.type.text, context));
+  }
+  return struct;
 }
 
 function primitiveZeroValueForType(typeText: string): RuntimeValue {

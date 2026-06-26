@@ -7221,9 +7221,16 @@ function prepareCompoundAssignmentOperands(operator, left, right, targetTypeText
 }
 async function evaluateMapLookupWithPresence(expression, context) {
     const object = unwrapNamed(await evaluateExpression(expression.object, context));
-    if (!(object instanceof RuntimeMap))
+    const nilMapType = object instanceof RuntimeTypedNilValue ? typedNilMapType(object, context) : undefined;
+    if (!(object instanceof RuntimeMap) && !nilMapType)
         return undefined;
     const index = await evaluateExpression(expression.index, context);
+    if (nilMapType) {
+        prepareAssignableToType(index, nilMapType.keyType, "map key", context);
+        return [defaultValueForTypeText(nilMapType.valueType, context), false];
+    }
+    if (!(object instanceof RuntimeMap))
+        return undefined;
     const [value, ok] = object.getWithPresence(index);
     return [value, ok];
 }
@@ -7268,10 +7275,10 @@ async function prepareAssignmentTarget(target, context) {
         return {
             expression: target,
             async get() {
-                return getIndex(object, index);
+                return getIndex(object, index, context);
             },
             async set(value) {
-                setEvaluatedIndex(target, object, index, value);
+                setEvaluatedIndex(target, object, index, value, context);
             }
         };
     }
@@ -7329,7 +7336,7 @@ async function evaluateExpression(expression, context) {
             if ((isRuntimeCallable(object) || isGoJuniorFunction(object)) && isTypeArgumentExpression(expression.index, context, true)) {
                 return object;
             }
-            return getIndex(object, await evaluateExpression(expression.index, context));
+            return getIndex(object, await evaluateExpression(expression.index, context), context);
         }
         case "SliceExpression":
             return getSlice(await evaluateExpression(expression.object, context), expression.start ? await evaluateExpression(expression.start, context) : undefined, expression.end ? await evaluateExpression(expression.end, context) : undefined, expression.max ? await evaluateExpression(expression.max, context) : undefined);
@@ -7937,6 +7944,9 @@ function makeUnderlyingTypeText(typeText, context) {
     const alias = context.aliasType(imported);
     return resolveRuntimeCompositeAliases(alias && alias !== imported ? alias : imported, context);
 }
+function typedNilMapType(value, context) {
+    return parseMapTypeText(makeUnderlyingTypeText(value.typeName, context));
+}
 function spreadLastArgument(args, context, calleeName, span, spreadSourceType, appendTargetType) {
     if (args.length === 0)
         return args;
@@ -8315,10 +8325,17 @@ async function getSpreadsheetRange(expression, context) {
     context.recordSheetRangeRead(sheet.name, expression.start.field, expression.endCell);
     return sheet.range(expression.start.field, expression.endCell);
 }
-function getIndex(object, index) {
+function getIndex(object, index, context) {
     object = unwrapNamed(object);
     if (object instanceof RuntimeMap)
         return object.get(index);
+    if (object instanceof RuntimeTypedNilValue) {
+        const mapType = typedNilMapType(object, context);
+        if (mapType) {
+            prepareAssignableToType(index, mapType.keyType, "map key", context);
+            return defaultValueForTypeText(mapType.valueType, context);
+        }
+    }
     const numericIndex = toNumber(index);
     if (isRuntimeString(object))
         return goStringByteAt(object, numericIndex);
@@ -8336,13 +8353,16 @@ function getIndex(object, index) {
 async function setIndex(expression, value, context) {
     let object = await evaluateExpression(expression.object, context);
     const index = await evaluateExpression(expression.index, context);
-    setEvaluatedIndex(expression, object, index, value);
+    setEvaluatedIndex(expression, object, index, value, context);
 }
-function setEvaluatedIndex(expression, object, index, value) {
+function setEvaluatedIndex(expression, object, index, value, context) {
     object = unwrapNamed(object);
     if (object instanceof RuntimeMap) {
         object.set(index, value);
         return;
+    }
+    if (object instanceof RuntimeTypedNilValue && typedNilMapType(object, context)) {
+        throw new GoJuniorRuntimeError("assignment to entry in nil map", expression.span);
     }
     if (isRuntimeObject(object)) {
         object[String(index)] = value;
@@ -8707,10 +8727,15 @@ function defaultValueForDeclarationType(type, context) {
     return defaultValueForTypeText(type?.text ?? "", context);
 }
 function defaultValueForTypeText(typeText, context) {
-    const resolvedTypeText = resolveRuntimeCompositeAliases(context?.resolveImportedTypeText(typeText) ?? typeText, context);
+    const importedTypeText = context?.resolveImportedTypeText(typeText) ?? typeText;
+    const directAnonymousStruct = parseAnonymousStructTypeText(importedTypeText);
+    if (directAnonymousStruct)
+        return defaultAnonymousStructValue(directAnonymousStruct, context);
+    const declaredTypeText = normalizeTypeText(importedTypeText);
+    const resolvedTypeText = resolveRuntimeCompositeAliases(declaredTypeText, context);
     const mapType = parseMapTypeText(resolvedTypeText);
     if (mapType)
-        return new RuntimeMap(mapType.keyType, mapType.valueType, context);
+        return new RuntimeTypedNilValue(declaredTypeText || resolvedTypeText);
     if (parseChanTypeText(resolvedTypeText))
         return null;
     const arrayType = parseArrayOrSliceTypeText(resolvedTypeText, context);
@@ -8743,13 +8768,8 @@ function defaultValueForTypeText(typeText, context) {
     if (type.startsWith("*"))
         return new RuntimeTypedNilValue(type);
     const anonymousStruct = parseAnonymousStructTypeText(resolvedTypeText);
-    if (anonymousStruct) {
-        const struct = new RuntimeStruct(anonymousStruct.name);
-        for (const field of anonymousStruct.fields) {
-            struct.set(field.name, defaultValueForTypeText(field.type.text, context));
-        }
-        return struct;
-    }
+    if (anonymousStruct)
+        return defaultAnonymousStructValue(anonymousStruct, context);
     if (typeDef) {
         const struct = defaultStructValueForTypeDef(typeDef, context, type);
         return type !== typeDef.name ? new RuntimeNamedValue(type, struct) : struct;
@@ -9108,10 +9128,15 @@ function atomicUint64Value() {
     };
 }
 function zeroValueForMapValue(typeText, context) {
-    const resolvedTypeText = resolveRuntimeCompositeAliases(context?.resolveImportedTypeText(typeText) ?? typeText, context);
+    const importedTypeText = context?.resolveImportedTypeText(typeText) ?? typeText;
+    const directAnonymousStruct = parseAnonymousStructTypeText(importedTypeText);
+    if (directAnonymousStruct)
+        return zeroAnonymousStructMapValue(directAnonymousStruct, context);
+    const declaredTypeText = normalizeTypeText(importedTypeText);
+    const resolvedTypeText = resolveRuntimeCompositeAliases(declaredTypeText, context);
     const mapType = parseMapTypeText(resolvedTypeText);
     if (mapType)
-        return null;
+        return new RuntimeTypedNilValue(declaredTypeText || resolvedTypeText);
     if (parseChanTypeText(resolvedTypeText))
         return null;
     const arrayType = parseArrayOrSliceTypeText(resolvedTypeText, context);
@@ -9138,13 +9163,8 @@ function zeroValueForMapValue(typeText, context) {
     if (isUnsafePointerType(type) || type.startsWith("*"))
         return new RuntimeTypedNilValue(type);
     const anonymousStruct = parseAnonymousStructTypeText(resolvedTypeText);
-    if (anonymousStruct) {
-        const struct = new RuntimeStruct(anonymousStruct.name);
-        for (const field of anonymousStruct.fields) {
-            struct.set(field.name, zeroValueForMapValue(field.type.text, context));
-        }
-        return struct;
-    }
+    if (anonymousStruct)
+        return zeroAnonymousStructMapValue(anonymousStruct, context);
     const scopedAlias = context?.scopedAliasType(type);
     if (scopedAlias && scopedAlias !== type)
         return zeroValueForMapValue(scopedAlias, context);
@@ -9152,6 +9172,20 @@ function zeroValueForMapValue(typeText, context) {
     if (alias && alias !== type)
         return new RuntimeNamedValue(type, zeroValueForMapValue(alias, context));
     return primitiveZeroValueForType(type);
+}
+function defaultAnonymousStructValue(typeDef, context) {
+    const struct = new RuntimeStruct(typeDef.name);
+    for (const field of typeDef.fields) {
+        struct.set(field.name, defaultValueForTypeText(field.type.text, context));
+    }
+    return struct;
+}
+function zeroAnonymousStructMapValue(typeDef, context) {
+    const struct = new RuntimeStruct(typeDef.name);
+    for (const field of typeDef.fields) {
+        struct.set(field.name, zeroValueForMapValue(field.type.text, context));
+    }
+    return struct;
 }
 function primitiveZeroValueForType(typeText) {
     const type = normalizeTypeText(typeText);

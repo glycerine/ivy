@@ -11,7 +11,6 @@ import {
   collectSourceImportPaths,
   createNodeSourcePackageProvider,
   createStandardLibrarySourcePackageProvider,
-  evaluatePackageArtifact,
   evaluatePackageSourceFiles,
   formatBuildProgressEvent,
   inspectPackageJavaScript,
@@ -72,14 +71,13 @@ function arMemberHeaderSize(source: string | undefined, name: string): number {
 }
 
 interface ExecutablePackageArtifactModule {
-  gojrCompiledFunctionBodies: Record<string, unknown>;
   instantiateGoJrPackage(
-    runtime: { evaluatePackageArtifact: typeof evaluatePackageArtifact },
+    runtime?: Record<string, unknown>,
     options?: Record<string, unknown>
   ): Promise<{
     diagnostics: unknown[];
     output: string[];
-    compiledFunctions: Record<string, (...args: unknown[]) => Promise<unknown>>;
+    package: Record<string, unknown>;
   }>;
 }
 
@@ -169,15 +167,14 @@ func hidden() {}
     expect((store.writes.get("/tmp/gopath/pkg/js_gojr/example.com/demo/math.a") ?? "").slice(8, 24).trim()).toBe("__.PKGDEF");
     const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gopath/pkg/js_gojr/example.com/demo/math.a") ?? "");
     expect(archive?.members.map((member) => member.name)).toEqual(["__.PKGDEF", "_gojr.js"]);
-    expect(archive?.pkgdef.runtime?.runtimePlan.importPath).toBe("example.com/demo/math");
+    expect(archive?.pkgdef.runtime).toBeUndefined();
     const pkgdefMember = archive?.members.find((member) => member.name === "__.PKGDEF")?.data ?? "";
     const javascriptMember = archive?.members.find((member) => member.name === "_gojr.js")?.data ?? "";
     expect(javascriptMember).not.toBe(pkgdefMember);
-    expect(javascriptMember).toContain("export const gojrPackageSources =");
     expect(javascriptMember).toContain("export async function instantiateGoJrPackage");
-    expect(javascriptMember).toContain("export const gojrCompiledFunctionBodies =");
-    expect(javascriptMember).toContain("async function gojr$Add");
-    expect(javascriptMember).toContain("func Add(a, b int) int");
+    expect(javascriptMember).not.toContain("evaluatePackageArtifact");
+    expect(javascriptMember).not.toContain("runtime.ast");
+    expect(javascriptMember).toContain("pkg[\"Add\"]");
   });
 
   test("writes ar member sizes as UTF-8 byte counts for Unicode package source", () => {
@@ -194,10 +191,9 @@ func hidden() {}
     const artifactSource = store.writes.get("/tmp/gojr-unicode/example.com/unicodepkg.a");
     const archive = parseGoJuniorPackageArchive(artifactSource ?? "");
     const javascriptMember = archive?.javascript ?? "";
-    expect(javascriptMember).toContain("func Message() string");
     expect(javascriptMember).toContain("hello, λ");
     expect(javascriptMember).toContain("instantiateGoJrPackage");
-    expect(javascriptMember).toContain("async function gojr$Message");
+    expect(javascriptMember).toContain("pkg[\"Message\"]");
     expect(javascriptMember.trimEnd().endsWith("};")).toBe(true);
     expect(arMemberHeaderSize(artifactSource, "_gojr.js")).toBe(Buffer.byteLength(javascriptMember, "utf8"));
     expect(Buffer.byteLength(javascriptMember, "utf8")).toBeGreaterThan(javascriptMember.length);
@@ -340,13 +336,12 @@ func hidden() {}
     expect(result.ok).toBe(true);
     expect(result.built).toEqual(["/tmp/gojr-inspect/example.com/inspect.a"]);
     expect(result.source).toContain("export const gojrPackageArtifact =");
-    expect(result.source).toContain("export const gojrPackageSources =");
-    expect(result.source).toContain("export const gojrCompiledFunctionBodies =");
     expect(result.source).toContain("export async function instantiateGoJrPackage");
     expect(result.source).toContain("\"importPath\": \"example.com/inspect\"");
     expect(result.source).toContain("\"name\": \"Answer\"");
-    expect(result.source).toContain("async function gojr$Answer");
-    expect(result.source).toContain("func Answer() int { return 42 }");
+    expect(result.source).toContain("pkg[\"Answer\"]");
+    expect(result.source).not.toContain("evaluatePackageArtifact");
+    expect(result.source).not.toContain("runtime.ast");
   });
 
   test("reads a package archive back and executes its JavaScript function body", async () => {
@@ -356,7 +351,7 @@ func hidden() {}
       artifactRoot: "/tmp/gojr-hello",
       files: [{
         filename: "hello.go",
-        source: "package hello\n\nfunc Hello() { print(\"hello gorj!\\n\") }\n"
+        source: "package hello\n\nfunc Hello() string { return \"hello gorj!\" }\n"
       }]
     }, store);
 
@@ -365,16 +360,14 @@ func hidden() {}
     const artifact = store.writes.get("/tmp/gojr-hello/example.com/hello.a");
     const archive = parseGoJuniorPackageArchive(artifact ?? "");
     expect(archive?.pkgdef.importPath).toBe("example.com/hello");
-    expect(archive?.javascript).toContain("async function gojr$Hello");
+    expect(archive?.pkgdef.runtime).toBeUndefined();
+    expect(archive?.javascript).toContain("pkg[\"Hello\"]");
+    expect(archive?.javascript).not.toContain("evaluatePackageArtifact");
 
     const artifactModule = await importArtifactJavaScript(archive?.javascript ?? "");
-    expect(Object.keys(artifactModule.gojrCompiledFunctionBodies)).toEqual(["Hello"]);
-    const instantiated = await artifactModule.instantiateGoJrPackage({ evaluatePackageArtifact }, {
-      runtimePayload: archive?.pkgdef.runtime
-    });
+    const instantiated = await artifactModule.instantiateGoJrPackage();
     expect(instantiated.diagnostics).toEqual([]);
-    await instantiated.compiledFunctions.Hello?.();
-    expect(instantiated.output.join("")).toBe("hello gorj!\n");
+    expect(await (instantiated.package.Hello as () => Promise<string>)()).toBe("hello gorj!");
   });
 
   test("skips fresh package artifacts with the same cache key", () => {

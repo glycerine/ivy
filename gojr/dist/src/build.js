@@ -12,7 +12,7 @@ export const GOJR_GOOS = "js";
 export const GOJR_GOARCH = "gojr";
 const GOJR_DEFAULT_BUILD_TAGS = ["codec.safe"];
 const DEFAULT_COMPILER_VERSION = "gojr-dev";
-const DEFAULT_BACKEND = "js-source-envelope";
+const DEFAULT_BACKEND = GOJR_STAGE1_BACKEND;
 const DEFAULT_HOST_SPEC_VERSION = "host-v0";
 const DEFAULT_CAPABILITY_POLICY = "default";
 const AR_MAGIC = "!<arch>\n";
@@ -459,7 +459,8 @@ class PackageGraphBuilder {
                 });
                 const ast = frontFilesToProgramAst(parsed.files, [], [], "info" in checked ? checked.info : undefined);
                 const runtimePlan = packageRuntimePlan(importPath, packageName, checked.pkg, "info" in checked ? checked.info.InitOrder ?? [] : []);
-                const artifactSource = this.request.backend === GOJR_STAGE1_BACKEND
+                const backend = this.request.backend ?? DEFAULT_BACKEND;
+                const artifactSource = backend === GOJR_STAGE1_BACKEND
                     ? this.stage1ArtifactSource(pkgdef, ast)
                     : generatedArtifactSource(pkgdef, files, ast, runtimePlan);
                 if (this.hasErrors()) {
@@ -559,6 +560,17 @@ class PackageGraphBuilder {
         });
         const parsedSynthetic = parseFrontSourceFiles([syntheticFile]);
         const syntheticAst = frontFilesToProgramAst(parsedSynthetic.files, [], []);
+        const backend = this.request.backend ?? DEFAULT_BACKEND;
+        const artifactSource = backend === GOJR_STAGE1_BACKEND
+            ? this.stage1ArtifactSource(pkgdef, syntheticAst)
+            : generatedArtifactSource(pkgdef, [syntheticFile], syntheticAst, {
+                importPath,
+                packageName,
+                exportedNames: exports.map((item) => item.name).sort(),
+                constants: [],
+                variables: [],
+                varInitOrder: []
+            });
         const node = {
             importPath,
             packageName,
@@ -569,14 +581,7 @@ class PackageGraphBuilder {
             dependencyCacheKeys,
             exports,
             artifactPath,
-            artifactSource: generatedArtifactSource(pkgdef, [syntheticFile], syntheticAst, {
-                importPath,
-                packageName,
-                exportedNames: exports.map((item) => item.name).sort(),
-                constants: [],
-                variables: [],
-                varInitOrder: []
-            })
+            artifactSource
         };
         this.nodes.set(importPath, node);
         return node;
