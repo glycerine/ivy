@@ -3046,6 +3046,29 @@ func main() {
     expect(result.output).toEqual(["ERR:boom|ERR:boom\n"]);
   });
 
+  test("initializes source-built base64 byte-string constants", async () => {
+    const sourcePackageProvider = createNodeSourcePackageProvider([]);
+    if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");
+
+    const result = await runMainSourcePackageFiles([{
+      filename: "/workspace/base64main/main.go",
+      source: `package main
+
+import "encoding/base64"
+
+func main() {
+  _ = base64.StdEncoding
+  print("base64 ok\\n")
+}
+`
+    }], {
+      sourcePackageProvider
+    });
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.output).toEqual(["base64 ok\n"]);
+  });
+
   test("runs source-built reflect.New for interface-held pointer values", async () => {
     const sourcePackageProvider = createNodeSourcePackageProvider([]);
     if (!sourcePackageProvider) throw new Error("node source package provider is unavailable");

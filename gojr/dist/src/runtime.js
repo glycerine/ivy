@@ -1275,7 +1275,7 @@ export async function evaluatePackageArtifact(ast, plan, options = {}) {
                 throw new GoJuniorRuntimeError("package artifact cannot contain top-level executable statements");
             }
             predeclareTopLevelTypes(declarations, context);
-            predeclareArtifactPackageConstants(plan.constants, context);
+            predeclareArtifactPackageConstants(plan.constants, context, sourceStringConstantValues(declarations));
             predeclareArtifactPackageVariables(plan.variables, context);
             await executePackageVarInitializersByName(declarations, plan.varInitOrder, context);
             await runInitFunctions(ast.functions, context);
@@ -5307,11 +5307,11 @@ function predeclarePackageVariables(declarations, pkg, context) {
         }
     }
 }
-function predeclareArtifactPackageConstants(constants, context) {
+function predeclareArtifactPackageConstants(constants, context, sourceStringConstants) {
     for (const constant of constants) {
         if (constant.name === "_")
             continue;
-        context.declareRoot(constant.name, typedCheckedConstantValue(constant.value, constant.typeText, context), false, constant.typeText);
+        context.declareRoot(constant.name, typedCheckedConstantValue(constant.value, constant.typeText, context, sourceStringConstants.get(constant.name)), false, constant.typeText);
     }
 }
 function predeclareArtifactPackageVariables(variables, context) {
