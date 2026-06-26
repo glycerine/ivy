@@ -276,6 +276,15 @@ func Lookup() int64 { return Labels["a"] }
 func Missing() int64 { return Labels["missing"] }
 func Field() string { return P.Name }
 func Convert(a int64) float64 { return float64(a) + 0.5 }
+func Pair(a, b int64) (int64, int64) { return a, b }
+func ComplexOps() complex128 { return complex(1, 2) * complex(3, 4) + 5i }
+func RealPart() float64 { return real(ComplexOps()) }
+func ImagPart() float64 { return imag(ComplexOps()) }
+func AssertInt(x any) int64 { return x.(int64) }
+func AssertIntOk(x any) (int64, bool) { v, ok := x.(int64); return v, ok }
+func (p Point) Sum(delta int64) int64 { return p.X + delta }
+func MethodCall(delta int64) int64 { return P.Sum(delta) }
+func MethodValue() func(int64) int64 { return P.Sum }
 `
       }]
     }, store);
@@ -288,7 +297,7 @@ func Convert(a int64) float64 { return float64(a) + 0.5 }
     expect(archive?.javascript).not.toContain("evaluatePackageArtifact");
     expect(archive?.javascript).not.toContain("runtime.ast");
     expect(archive?.javascript).not.toContain("runtime.binary");
-    expect(archive?.javascript).toContain("=> ((");
+    expect(archive?.javascript).toContain("pkg[\"Mul\"] = async");
 
     const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
     const instantiated = await module.instantiateGoJrPackage();
@@ -304,6 +313,470 @@ func Convert(a int64) float64 { return float64(a) + 0.5 }
     expect(await (pkg.Missing as () => Promise<bigint>)()).toBe(0n);
     expect(await (pkg.Field as () => Promise<string>)()).toBe("ada");
     expect(await (pkg.Convert as (a: bigint) => Promise<number>)(4n)).toBe(4.5);
+    expect(await (pkg.Pair as (a: bigint, b: bigint) => Promise<[bigint, bigint]>)(7n, 9n)).toEqual([7n, 9n]);
+    expect(await (pkg.ComplexOps as () => Promise<{ real: number; imag: number }>)()).toEqual({ real: -5, imag: 15 });
+    expect(await (pkg.RealPart as () => Promise<number>)()).toBe(-5);
+    expect(await (pkg.ImagPart as () => Promise<number>)()).toBe(15);
+    expect(await (pkg.AssertInt as (x: unknown) => Promise<bigint>)(42n)).toBe(42n);
+    expect(await (pkg.AssertIntOk as (x: unknown) => Promise<[bigint, boolean]>)(42n)).toEqual([42n, true]);
+    expect(await (pkg.AssertIntOk as (x: unknown) => Promise<[bigint, boolean]>)("nope")).toEqual([0n, false]);
+    expect(await (pkg["Point.Sum"] as (p: { X: bigint; Name: string }, delta: bigint) => Promise<bigint>)(pkg.P as { X: bigint; Name: string }, 4n)).toBe(11n);
+    expect(await (pkg.MethodCall as (delta: bigint) => Promise<bigint>)(5n)).toBe(12n);
+    const methodValue = await (pkg.MethodValue as () => Promise<(delta: bigint) => Promise<bigint>>)();
+    expect(await methodValue(8n)).toBe(15n);
+  });
+
+  test("lowers Stage 4 structured statements without interpreter statement calls", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage4stmt",
+      artifactRoot: "/tmp/gojr-stage4stmt",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage4stmt.go",
+        source: `package stage4stmt
+
+var Labels = map[string]int64{"a": 11, "b": 31}
+var Log string
+
+func Pair(a, b int64) (int64, int64) { return a, b }
+func note(s string) { Log += s }
+func sendValue(c chan int64, v int64) { c <- v }
+
+func Control(n int64) int64 {
+	sum := int64(0)
+	for i := int64(0); i < n; i++ {
+		if i == 2 {
+			continue
+		}
+		sum += i
+	}
+	return sum
+}
+
+func RangeSlice() int64 {
+	sum := int64(0)
+	for _, v := range []int64{1, 2, 3} {
+		sum += v
+	}
+	return sum
+}
+
+func RangeMap() int64 {
+	sum := int64(0)
+	for _, v := range Labels {
+		sum += v
+	}
+	return sum
+}
+
+func SwitchIt(x int64) string {
+	switch x {
+	case 1:
+		return "one"
+	case 2:
+		fallthrough
+	case 3:
+		return "few"
+	default:
+		return "many"
+	}
+}
+
+func MapOk(key string) (int64, bool) {
+	v, ok := Labels[key]
+	return v, ok
+}
+
+func TupleUse() int64 {
+	a, b := Pair(2, 3)
+	return a + b
+}
+
+func AssignSwap() int64 {
+	a, b := int64(1), int64(2)
+	a, b = b, a
+	return a*10 + b
+}
+
+func IfInit(x int64) string {
+	if y := x + 1; y > 4 {
+		return "big"
+	} else if y == 4 {
+		return "four"
+	}
+	return "small"
+}
+
+func Named() (a, b int64) {
+	a = 5
+	b = 7
+	return
+}
+
+func Labeled() int64 {
+	sum := int64(0)
+outer:
+	for i := int64(0); i < 3; i++ {
+		for j := int64(0); j < 3; j++ {
+			if i == 1 && j == 1 {
+				break outer
+			}
+			if j == 0 {
+				continue
+			}
+			sum += i + j
+		}
+	}
+	return sum
+}
+
+func DeferOrder() string {
+	Log = ""
+	defer note("a")
+	defer note("b")
+	return "body"
+}
+
+func ChannelBuffered() int64 {
+	c := make(chan int64, 1)
+	c <- 42
+	return <-c
+}
+
+func ChannelGo() int64 {
+	c := make(chan int64)
+	go sendValue(c, 9)
+	v, ok := <-c
+	if ok {
+		return v
+	}
+	return 0
+}
+
+func SelectDefault() int64 {
+	c := make(chan int64)
+	out := int64(0)
+	select {
+	case out = <-c:
+	default:
+		out = 7
+	}
+	return out
+}
+
+func SelectRecv() int64 {
+	c := make(chan int64, 1)
+	c <- 5
+	out := int64(0)
+	select {
+	case out = <-c:
+	default:
+		out = 7
+	}
+	return out
+}
+
+func SelectSend() int64 {
+	c := make(chan int64, 1)
+	select {
+	case c <- 6:
+	default:
+	}
+	return <-c
+}
+
+func TypeSwitch(x any) string {
+	switch v := x.(type) {
+	case int64:
+		return "int"
+	case string:
+		return v
+	default:
+		return "other"
+	}
+}
+
+func GotoSum() int64 {
+	i := int64(0)
+	sum := int64(0)
+loop:
+	if i >= 4 {
+		goto done
+	}
+	sum += i
+	i++
+	goto loop
+done:
+	return sum
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage4stmt/example.com/stage4stmt.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.members.map((member) => member.name)).toEqual(["__.PKGDEF", "_gojr.js"]);
+    expect(archive?.javascript).not.toContain("evaluatePackageArtifact");
+    expect(archive?.javascript).not.toContain("runtime.ast");
+    expect(archive?.javascript).not.toContain("executeStatement");
+    expect(archive?.javascript).not.toContain("evaluateExpression");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.Control as (n: bigint) => Promise<bigint>)(5n)).toBe(8n);
+    expect(await (pkg.RangeSlice as () => Promise<bigint>)()).toBe(6n);
+    expect(await (pkg.RangeMap as () => Promise<bigint>)()).toBe(42n);
+    expect(await (pkg.SwitchIt as (x: bigint) => Promise<string>)(1n)).toBe("one");
+    expect(await (pkg.SwitchIt as (x: bigint) => Promise<string>)(2n)).toBe("few");
+    expect(await (pkg.SwitchIt as (x: bigint) => Promise<string>)(9n)).toBe("many");
+    expect(await (pkg.MapOk as (key: string) => Promise<[bigint, boolean]>)("a")).toEqual([11n, true]);
+    expect(await (pkg.MapOk as (key: string) => Promise<[bigint, boolean]>)("missing")).toEqual([0n, false]);
+    expect(await (pkg.TupleUse as () => Promise<bigint>)()).toBe(5n);
+    expect(await (pkg.AssignSwap as () => Promise<bigint>)()).toBe(21n);
+    expect(await (pkg.IfInit as (x: bigint) => Promise<string>)(3n)).toBe("four");
+    expect(await (pkg.IfInit as (x: bigint) => Promise<string>)(4n)).toBe("big");
+    expect(await (pkg.IfInit as (x: bigint) => Promise<string>)(1n)).toBe("small");
+    expect(await (pkg.Named as () => Promise<[bigint, bigint]>)()).toEqual([5n, 7n]);
+    expect(await (pkg.Labeled as () => Promise<bigint>)()).toBe(3n);
+    expect(await (pkg.DeferOrder as () => Promise<string>)()).toBe("body");
+    expect(pkg.Log).toBe("ba");
+    expect(await (pkg.ChannelBuffered as () => Promise<bigint>)()).toBe(42n);
+    expect(await (pkg.ChannelGo as () => Promise<bigint>)()).toBe(9n);
+    expect(await (pkg.SelectDefault as () => Promise<bigint>)()).toBe(7n);
+    expect(await (pkg.SelectRecv as () => Promise<bigint>)()).toBe(5n);
+    expect(await (pkg.SelectSend as () => Promise<bigint>)()).toBe(6n);
+    expect(await (pkg.TypeSwitch as (x: unknown) => Promise<string>)(3n)).toBe("int");
+    expect(await (pkg.TypeSwitch as (x: unknown) => Promise<string>)("hi")).toBe("hi");
+    expect(await (pkg.TypeSwitch as (x: unknown) => Promise<string>)(true)).toBe("other");
+    expect(await (pkg.GotoSum as () => Promise<bigint>)()).toBe(6n);
+  });
+
+  test("runs generated init functions after package variable initialization in source order", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage5init",
+      artifactRoot: "/tmp/gojr-stage5init",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage5init.go",
+        source: `package stage5init
+
+var Log = seed()
+
+func seed() string { return "seed" }
+func init() { Log += ":a" }
+func init() { Log += ":b" }
+func Value() string { return Log }
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage5init/example.com/stage5init.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.javascript).not.toContain("pkg[\"init\"]");
+    expect(archive?.javascript).not.toContain("evaluatePackageArtifact");
+    expect(archive?.javascript).not.toContain("runtime.ast");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(pkg.Log).toBe("seed:a:b");
+    expect(await (pkg.Value as () => Promise<string>)()).toBe("seed:a:b");
+  });
+
+  test("lowers generated function literals with lexical captures", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage5closures",
+      artifactRoot: "/tmp/gojr-stage5closures",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage5closures.go",
+        source: `package stage5closures
+
+var PackageBase int64 = 100
+
+func ClosureSum() int64 {
+	base := int64(10)
+	add := func(x int64) int64 {
+		base += x
+		return base
+	}
+	return add(5) + add(1)
+}
+
+func ReturnClosure() func(int64) int64 {
+	base := int64(3)
+	return func(x int64) int64 {
+		return PackageBase + base + x
+	}
+}
+
+func Fact(n int64) int64 {
+	if n <= 1 {
+		return 1
+	}
+	return n * Fact(n-1)
+}
+
+func Even(n int64) bool {
+	if n == 0 {
+		return true
+	}
+	return Odd(n - 1)
+}
+
+func Odd(n int64) bool {
+	if n == 0 {
+		return false
+	}
+	return Even(n - 1)
+}
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage5closures/example.com/stage5closures.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.javascript).not.toContain("evaluatePackageArtifact");
+    expect(archive?.javascript).not.toContain("runtime.ast");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.ClosureSum as () => Promise<bigint>)()).toBe(31n);
+    const closure = await (pkg.ReturnClosure as () => Promise<(x: bigint) => Promise<bigint>>)();
+    expect(await closure(4n)).toBe(107n);
+    expect(await (pkg.Fact as (n: bigint) => Promise<bigint>)(5n)).toBe(120n);
+    expect(await (pkg.Even as (n: bigint) => Promise<boolean>)(8n)).toBe(true);
+    expect(await (pkg.Odd as (n: bigint) => Promise<boolean>)(8n)).toBe(false);
+  });
+
+  test("calls generated dependency packages through importsByPath", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/root",
+      artifactRoot: "/tmp/gojr-stage5imports",
+      backend: GOJR_STAGE1_BACKEND,
+      packageSources: {
+        "example.com/dep": [{
+          filename: "dep.go",
+          source: `package dep
+
+var Count int64
+
+func init() { Count = 40 }
+func Value(delta int64) int64 { return Count + delta }
+`
+        }]
+      },
+      files: [{
+        filename: "root.go",
+        source: `package root
+
+import d "example.com/dep"
+
+func Call() int64 { return d.Value(2) }
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const depArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage5imports/example.com/dep.a") ?? "");
+    const rootArchive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gojr-stage5imports/example.com/root.a") ?? "");
+    expect(rootArchive?.javascript).not.toContain("evaluatePackageArtifact");
+    expect(rootArchive?.javascript).not.toContain("runtime.ast");
+
+    const depModule = await importArtifactJavaScript(depArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const dep = await depModule.instantiateGoJrPackage();
+    const rootModule = await importArtifactJavaScript(rootArchive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const root = await rootModule.instantiateGoJrPackage({}, { importsByPath: { "example.com/dep": dep.package } });
+    expect(dep.package.Count).toBe(40n);
+    expect(await (root.package.Call as () => Promise<bigint>)()).toBe(42n);
+  });
+
+  test("dispatches generated interface method calls through concrete type descriptors", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage6iface",
+      artifactRoot: "/tmp/gojr-stage6iface",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage6iface.go",
+        source: `package stage6iface
+
+type Stringer interface {
+	String() string
+}
+
+type Thing struct {
+	Name string
+}
+
+func (t Thing) String() string { return "thing:" + t.Name }
+func Use(s Stringer) string { return s.String() }
+func InterfaceCall() string { return Use(Thing{Name: "ivy"}) }
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage6iface/example.com/stage6iface.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.javascript).not.toContain("evaluatePackageArtifact");
+    expect(archive?.javascript).not.toContain("runtime.ast");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.InterfaceCall as () => Promise<string>)()).toBe("thing:ivy");
+  });
+
+  test("erases generated generic function instantiations to reusable functions", async () => {
+    const store = new MemoryArtifactStore();
+    const result = buildPackages({
+      importPath: "example.com/stage7generic",
+      artifactRoot: "/tmp/gojr-stage7generic",
+      backend: GOJR_STAGE1_BACKEND,
+      files: [{
+        filename: "stage7generic.go",
+        source: `package stage7generic
+
+func Identity[T any](x T) T { return x }
+func Choose[A, B any](a A, b B) B { return b }
+func GenericInt() int64 { return Identity[int64](42) }
+func GenericString() string { return Choose[int64, string](7, "seven") }
+`
+      }]
+    }, store);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(result.ok).toBe(true);
+    const source = store.writes.get("/tmp/gojr-stage7generic/example.com/stage7generic.a") ?? "";
+    const archive = parseGoJuniorPackageArchive(source);
+    expect(archive?.javascript).not.toContain("evaluatePackageArtifact");
+    expect(archive?.javascript).not.toContain("runtime.ast");
+
+    const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
+    const instantiated = await module.instantiateGoJrPackage();
+    const pkg = instantiated.package;
+    expect(instantiated.diagnostics).toEqual([]);
+    expect(await (pkg.GenericInt as () => Promise<bigint>)()).toBe(42n);
+    expect(await (pkg.GenericString as () => Promise<string>)()).toBe("seven");
   });
 
   test("reports unsupported Stage 1 lowering as GOJR_EMIT001", () => {
