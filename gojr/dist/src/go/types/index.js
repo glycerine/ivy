@@ -8,6 +8,13 @@ import { TokenKind } from "../../front/token.js";
 import { Token as GoToken } from "../token/index.js";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
+function isSameCheckerPackage(left, right) {
+    if (left === right)
+        return true;
+    if (left === null || left === undefined || right === null || right === undefined)
+        return false;
+    return left.path !== "" && left.path === right.path;
+}
 // ---- token.ts ----
 var go_types_token;
 (function (go_types_token) {
@@ -8667,7 +8674,7 @@ var go_types_assignments;
                 // It's ok to mark non-local variables, but ignore variables
                 // from other packages to avoid potential race conditions with
                 // dot-imported variables.
-                if (obj instanceof go_types_object.Var && obj.pkg === this.pkg) {
+                if (obj instanceof go_types_object.Var && isSameCheckerPackage(obj.pkg, this.pkg)) {
                     v = obj;
                     v_used = this.usedVars.get(v) ?? false;
                 }
@@ -9519,7 +9526,7 @@ var go_types_signature;
         // as the method."
         if (unaliased instanceof go_types_named.Named) {
             const T = unaliased;
-            if (T.obj.pkg !== this.pkg || isCGoTypeObj(this.fset, T.obj)) {
+            if (!isSameCheckerPackage(T.obj.pkg, this.pkg) || isCGoTypeObj(this.fset, T.obj)) {
                 this.errorf(pos, "InvalidRecv", "cannot define new methods on non-local type %s", rtyp);
             }
             let cause = "";
@@ -9554,6 +9561,13 @@ var go_types_signature;
             filename.split(/[\\/]/).pop()?.startsWith("_cgo_") === true;
     }
     go_types_signature.isCGoTypeObj = isCGoTypeObj;
+    function isSameCheckerPackage(left, right) {
+        if (left === right)
+            return true;
+        if (left === null || left === undefined || right === null || right === undefined)
+            return false;
+        return left.path !== "" && left.path === right.path;
+    }
     function unpackRecv(rtyp, unpackParams) {
         let e = Unparen(rtyp);
         let ptr = false;
@@ -13190,7 +13204,7 @@ var go_types_format;
     });
     go_types_check.registerCheckerMethod("qualifier", function qualifier(pkg) {
         // Qualify the package unless it's the package being type-checked.
-        if (pkg !== this.pkg) {
+        if (!isSameCheckerPackage(pkg, this.pkg)) {
             if (this.pkgPathMap === null) {
                 this.pkgPathMap = new globalThis.Map();
                 this.seenPkgMap = new globalThis.Map();
@@ -16776,7 +16790,7 @@ var go_types_call;
             const looked = this.lookup(e.object.name);
             const pname = looked instanceof go_types_object.PkgName ? looked : null;
             if (pname !== null) {
-                go_types_util.assert(pname.pkg === this.pkg);
+                go_types_util.assert(isSameCheckerPackage(pname.pkg, this.pkg));
                 this.recordUse(e.object, pname);
                 this.usedPkgNames.set(pname, true);
                 const pkg = pname.imported;
@@ -17068,7 +17082,7 @@ var go_types_call;
                         // It's ok to mark non-local variables, but ignore variables
                         // from other packages to avoid potential race conditions with
                         // dot-imported variables.
-                        if (obj instanceof go_types_object.Var && obj.pkg === this.pkg) {
+                        if (obj instanceof go_types_object.Var && isSameCheckerPackage(obj.pkg, this.pkg)) {
                             v = obj;
                             v_used = this.usedVars.get(v) ?? false;
                         }
@@ -18082,7 +18096,7 @@ var go_types_decl;
     // isImportedConstraint reports whether typ is an imported type constraint.
     go_types_check.registerCheckerMethod("isImportedConstraint", function isImportedConstraint(typ) {
         const named = go_types_alias.asNamed(typ);
-        if (named === null || named.obj.pkg === this.pkg || named.obj.pkg === null) {
+        if (named === null || isSameCheckerPackage(named.obj.pkg, this.pkg) || named.obj.pkg === null) {
             return false;
         }
         const u = named.Underlying();
@@ -18576,7 +18590,7 @@ var go_types_errsupport;
         let alt = ""; // alternative spelling of selector; if any
         if (obj !== null) {
             alt = obj.Name();
-            if (obj.Pkg() === this.pkg) {
+            if (isSameCheckerPackage(obj.Pkg(), this.pkg)) {
                 if (alt === sel) {
                     throw new globalThis.Error("assertion failed");
                 }
@@ -21254,7 +21268,7 @@ var go_types_literals;
                         }
                         // i < len(fields)
                         const fld = fields[i];
-                        if (!fld.Exported() && fld.pkg !== this.pkg) {
+                        if (!fld.Exported() && !isSameCheckerPackage(fld.pkg, this.pkg)) {
                             this.errorf(x, "UnexportedLitField", "implicit assignment to unexported field %s in struct literal of type %s", fld.name, base);
                             continue;
                         }
@@ -21264,7 +21278,7 @@ var go_types_literals;
                     if (e.elements.length < fields.length) {
                         let hintText = "";
                         for (const fld of fields) {
-                            if (!fld.Exported() && fld.pkg !== this.pkg) {
+                            if (!fld.Exported() && !isSameCheckerPackage(fld.pkg, this.pkg)) {
                                 hintText = " (type has unexported fields - use key:value pairs)";
                                 break;
                             }
@@ -23227,7 +23241,7 @@ var go_types_typexpr;
             this.errorf(e, "NotAType", "%s (%s) is not a type", obj.Name(), go_types_object.objectKind(obj));
             // avoid "declared but not used" errors
             // (don't use Checker.use - we don't want to evaluate too much)
-            if (obj instanceof go_types_object.Var && obj.pkg === this.pkg /* see Checker.use1 */) {
+            if (obj instanceof go_types_object.Var && isSameCheckerPackage(obj.pkg, this.pkg) /* see Checker.use1 */) {
                 this.usedVars.set(obj, true);
             }
             return;
@@ -23244,7 +23258,7 @@ var go_types_typexpr;
         // Note that it is important to avoid calling objDecl on objects from other
         // packages, to avoid races: see issue #69912.
         let typ = obj.Type();
-        if (typ === null || (gotType && wantType && obj.Pkg() === this.pkg)) {
+        if (typ === null || (gotType && wantType && isSameCheckerPackage(obj.Pkg(), this.pkg))) {
             this.objDecl(obj);
             typ = obj.Type(); // type must have been assigned by Checker.objDecl
         }
@@ -23288,7 +23302,7 @@ var go_types_typexpr;
                 // It's ok to mark non-local variables, but ignore variables
                 // from other packages to avoid potential race conditions with
                 // dot-imported variables.
-                if (obj.pkg === this.pkg) {
+                if (isSameCheckerPackage(obj.pkg, this.pkg)) {
                     this.usedVars.set(obj, true);
                 }
                 this.addDeclDep(obj);
@@ -23850,8 +23864,8 @@ var go_types_validtype;
                         // Therefore it is safe to change their underlying types; there is
                         // no chance for a race condition (the types of the current package
                         // are not yet available to other goroutines).
-                        go_types_util.assert(t.obj.pkg === this.pkg);
-                        go_types_util.assert(t.Origin().obj.pkg === this.pkg);
+                        go_types_util.assert(isSameCheckerPackage(t.obj.pkg, this.pkg));
+                        go_types_util.assert(isSameCheckerPackage(t.Origin().obj.pkg, this.pkg));
                         // let t become invalid when it is unpacked
                         t.Origin().fromRHS = go_types_universe.Typ[go_types_basic.Invalid];
                         // Find the starting point of the cycle and report it.

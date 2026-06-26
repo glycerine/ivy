@@ -21,7 +21,7 @@ describe("GoJr generated-code runtime API", () => {
     expect((ctx.package.Name as { text(): string }).text()).toBe("ivy");
     expect(finished.diagnostics).toEqual([]);
     expect(finished.package).toBe(ctx.package);
-    expect(finished.context).toBe(ctx.context);
+    expect(finished.runtime).toBe(ctx.runtime);
   });
 
   test("wraps map helpers around the shared RuntimeMap implementation", () => {

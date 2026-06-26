@@ -1,5 +1,6 @@
 import { REPL_FILENAME, withDiagnosticSourceContext } from "./diagnostics.js";
 import { blake3RawBytes } from "./blake3.js";
+import { Codebase } from "./codebase.js";
 import { checkGoJuniorSourceFiles, GOJR_SYNTHETIC_CHECK_PREFIX, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import { Const as GoTypesConst, Var as GoTypesVar, ensureUniverseInitialized, NewPackage, NewPkgName, NoPos, RelativeTo as GoTypesRelativeTo, TypeString as GoTypesTypeString } from "./go/types/index.js";
 import { frontSourceFilesToAst, frontSourceToAst } from "./frontToAst.js";
@@ -92,6 +93,52 @@ class GoJuniorTestStop extends Error {
         this.name = "GoJuniorTestStop";
     }
 }
+function createEvaluationSharedState(options = {}) {
+    return {
+        output: [],
+        rootScope: new Scope(),
+        types: new Map(),
+        interfaces: new Map(),
+        aliases: new Map(),
+        trueAliases: new Map(),
+        methods: new Map(),
+        importPathsByLocalName: new Map(),
+        ambiguousImportLocalNames: new Set(),
+        importPathsByFileAndLocalName: new Map(),
+        maxLoopIterations: options.maxLoopIterations ?? 100_000,
+        ...(options.stdout ? { stdout: options.stdout } : {}),
+        random: new DeterministicPrng(options.randomSeed),
+        scheduler: new AsyncGoScheduler(options.randomSeed === undefined ? {} : { randomSeed: options.randomSeed }),
+        observedDeps: new Map()
+    };
+}
+export class PackageRuntime {
+    importPath;
+    packageName;
+    shared;
+    package;
+    builtinsInstalled = false;
+    constructor(importPath, packageName, shared = createEvaluationSharedState()) {
+        this.importPath = importPath;
+        this.packageName = packageName;
+        this.shared = shared;
+    }
+    createContext(options = {}) {
+        return new EvaluationContext({
+            ...options,
+            importPath: options.importPath ?? this.importPath,
+            packageName: options.packageName ?? this.packageName,
+            packageRuntime: this
+        });
+    }
+    ensureBuiltins(context) {
+        if (this.builtinsInstalled)
+            return;
+        installBuiltins(context);
+        installAutomaticImports(context);
+        this.builtinsInstalled = true;
+    }
+}
 class EvaluationRootTransaction {
     commit_;
     rollback_;
@@ -131,23 +178,13 @@ export class EvaluationContext {
             this.currentScope = currentScope ?? shared.rootScope;
             return;
         }
-        this.shared = {
-            output: [],
-            rootScope: new Scope(),
-            types: new Map(),
-            interfaces: new Map(),
-            aliases: new Map(),
-            trueAliases: new Map(),
-            methods: new Map(),
-            importPathsByLocalName: new Map(),
-            ambiguousImportLocalNames: new Set(),
-            importPathsByFileAndLocalName: new Map(),
-            maxLoopIterations: options.maxLoopIterations ?? 100_000,
-            ...(options.stdout ? { stdout: options.stdout } : {}),
-            random: new DeterministicPrng(options.randomSeed),
-            scheduler: new AsyncGoScheduler(options.randomSeed === undefined ? {} : { randomSeed: options.randomSeed }),
-            observedDeps: new Map()
-        };
+        if (options.packageRuntime) {
+            this.shared = options.packageRuntime.shared;
+            this.currentScope = this.shared.rootScope;
+            options.packageRuntime.ensureBuiltins(this);
+            return;
+        }
+        this.shared = createEvaluationSharedState(options);
         this.currentScope = this.shared.rootScope;
         installBuiltins(this);
         installAutomaticImports(this);
@@ -418,7 +455,34 @@ export class EvaluationContext {
     packages() {
         return this.options.packages ?? {};
     }
+    packageRuntimes() {
+        if (this.options.codebase && this.options.codebaseTxn && !this.options.codebaseTxn.IsClosed()) {
+            return this.options.codebase.PackageRuntimesRecord(this.options.codebaseTxn);
+        }
+        if (this.options.codebase) {
+            const txn = this.options.codebase.NewViewTxn();
+            try {
+                return this.options.codebase.PackageRuntimesRecord(txn);
+            }
+            finally {
+                txn.Rollback();
+            }
+        }
+        return this.options.packageRuntimes ?? {};
+    }
     packageInfo(importPath) {
+        if (this.options.codebase && this.options.codebaseTxn && !this.options.codebaseTxn.IsClosed()) {
+            return this.options.codebase.PackageInfo(this.options.codebaseTxn, importPath);
+        }
+        if (this.options.codebase) {
+            const txn = this.options.codebase.NewViewTxn();
+            try {
+                return this.options.codebase.PackageInfo(txn, importPath);
+            }
+            finally {
+                txn.Rollback();
+            }
+        }
         return this.options.packageInfos?.[importPath];
     }
     importPath() {
@@ -473,9 +537,9 @@ export class EvaluationContext {
         if (local)
             return local;
         const qualified = packageQualifiedRuntimeTypeNameParts(name);
-        const packageContext = qualified ? this.options.packageContexts?.[qualified.importPath] : undefined;
-        const foreign = packageContext?.shared.types.get(qualified.localName) ??
-            packageContext?.shared.types.get(qualified.baseName);
+        const packageRuntime = qualified ? this.packageRuntime(qualified.importPath) : undefined;
+        const foreign = packageRuntime?.shared.types.get(qualified.localName) ??
+            packageRuntime?.shared.types.get(qualified.baseName);
         if (foreign && qualified)
             return qualifyRuntimeStructTypeDef(foreign, qualified.importPath);
         const exported = this.packageInfoStructTypeDef(name);
@@ -494,9 +558,9 @@ export class EvaluationContext {
         if (local)
             return local;
         const qualified = packageQualifiedRuntimeTypeNameParts(name);
-        const packageContext = qualified ? this.options.packageContexts?.[qualified.importPath] : undefined;
-        const foreign = packageContext?.shared.interfaces.get(qualified.localName) ??
-            packageContext?.shared.interfaces.get(qualified.baseName);
+        const packageRuntime = qualified ? this.packageRuntime(qualified.importPath) : undefined;
+        const foreign = packageRuntime?.shared.interfaces.get(qualified.localName) ??
+            packageRuntime?.shared.interfaces.get(qualified.baseName);
         if (foreign && qualified)
             return qualifyRuntimeInterfaceDef(foreign, qualified.importPath);
         return this.packageInfoInterfaceDef(name);
@@ -509,9 +573,9 @@ export class EvaluationContext {
         if (local)
             return local;
         const qualified = packageQualifiedRuntimeTypeNameParts(name);
-        const packageContext = qualified ? this.options.packageContexts?.[qualified.importPath] : undefined;
-        const foreign = packageContext?.shared.aliases.get(qualified.localName) ??
-            packageContext?.shared.aliases.get(qualified.baseName);
+        const packageRuntime = qualified ? this.packageRuntime(qualified.importPath) : undefined;
+        const foreign = packageRuntime?.shared.aliases.get(qualified.localName) ??
+            packageRuntime?.shared.aliases.get(qualified.baseName);
         if (foreign && qualified)
             return qualifyLocalRuntimeTypeName(foreign, qualified.importPath);
         const exported = this.packageInfoAliasType(name);
@@ -649,8 +713,20 @@ export class EvaluationContext {
             });
         }
     }
-    packageContext(importPath) {
-        return this.options.packageContexts?.[importPath];
+    packageRuntime(importPath) {
+        if (this.options.codebase && this.options.codebaseTxn && !this.options.codebaseTxn.IsClosed()) {
+            return this.options.codebase.PackageRuntime(this.options.codebaseTxn, importPath);
+        }
+        if (this.options.codebase) {
+            const txn = this.options.codebase.NewViewTxn();
+            try {
+                return this.options.codebase.PackageRuntime(txn, importPath);
+            }
+            finally {
+                txn.Rollback();
+            }
+        }
+        return this.options.packageRuntimes?.[importPath];
     }
     registerImportBinding(localName, importPath, filename) {
         if (localName === "_" || localName === ".")
@@ -708,9 +784,9 @@ export class EvaluationContext {
             if (method)
                 return method;
             const qualified = packageQualifiedRuntimeTypeNameParts(candidate);
-            const packageContext = qualified ? this.options.packageContexts?.[qualified.importPath] : undefined;
-            const foreign = packageContext?.shared.methods.get(methodKey(qualified.localName, methodName)) ??
-                packageContext?.shared.methods.get(methodKey(qualified.baseName, methodName));
+            const packageRuntime = qualified ? this.packageRuntime(qualified.importPath) : undefined;
+            const foreign = packageRuntime?.shared.methods.get(methodKey(qualified.localName, methodName)) ??
+                packageRuntime?.shared.methods.get(methodKey(qualified.baseName, methodName));
             if (foreign && qualified) {
                 return {
                     ...foreign,
@@ -839,6 +915,12 @@ class Scope {
         if (this.parent)
             return this.parent.lookup(name);
         throw new GoJuniorRuntimeError(`${name} is not declared`);
+    }
+    lookupOptional(name) {
+        const binding = this.bindings.get(name);
+        if (binding)
+            return binding.value;
+        return this.parent?.lookupOptional(name);
     }
     lookupTypeText(name) {
         const binding = this.bindings.get(name);
@@ -1287,21 +1369,25 @@ function createGeneratedPackageContext(artifact, options = {}) {
         evaluationOptions.importPath = artifact.importPath;
     if (artifact.packageName !== undefined)
         evaluationOptions.packageName = artifact.packageName;
-    const context = providedContext ?? new EvaluationContext(evaluationOptions);
+    const runtime = evaluationOptions.packageRuntime ??
+        new PackageRuntime(evaluationOptions.importPath ?? "main", evaluationOptions.packageName ?? "main", createEvaluationSharedState(evaluationOptions));
+    const context = providedContext ?? runtime.createContext(evaluationOptions);
     return {
         artifact,
         package: Object.create(null),
         importsByPath,
         output: context.output,
+        runtime,
         context
     };
 }
 function finishGeneratedPackage(ctx) {
+    ctx.runtime.package = ctx.package;
     return {
         diagnostics: [],
         output: ctx.output,
         package: ctx.package,
-        context: ctx.context
+        runtime: ctx.runtime
     };
 }
 function declareGeneratedPackageVar(ctx, name, value, typeText) {
@@ -1443,22 +1529,33 @@ export async function evaluatePackageSourceFiles(files, options = {}) {
         };
     }
     const packageName = options.packageName ?? packageNameFromParsedFiles(parsed.parsed.files) ?? "main";
+    const importPath = options.importPath ?? packageName;
+    const codebase = codebaseForOptions(options);
+    const codebaseTxn = codebase.NewUpdateTxn();
     const checked = checkGoJuniorSourceFiles(files, {
         ...typeCheckConfig(options),
         packageName,
-        packagePath: options.importPath ?? packageName,
+        packagePath: importPath,
+        codebaseTxn,
         autoImportFmt: false
     });
     if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
+        if (!codebaseTxn.IsClosed())
+            codebaseTxn.Rollback();
         return {
             diagnostics: checked.diagnostics,
             output: []
         };
     }
-    const context = new EvaluationContext(options);
-    if (options.importPath && options.packageContexts) {
-        options.packageContexts[options.importPath] = context;
-    }
+    const packageRuntime = new PackageRuntime(importPath, packageName, createEvaluationSharedState(options));
+    codebase.SetPackageRuntime(codebaseTxn, importPath, packageRuntime);
+    const context = packageRuntime.createContext({
+        ...options,
+        codebase,
+        codebaseTxn,
+        packageInfos: codebase.PackageInfosRecord(codebaseTxn),
+        packageRuntimes: codebase.PackageRuntimesRecord(codebaseTxn)
+    });
     try {
         const pkg = await context.scheduler().runRoot(async () => {
             installImports(context, ast);
@@ -1476,17 +1573,23 @@ export async function evaluatePackageSourceFiles(files, options = {}) {
             expectNormalCompletion(declarationCompletion, "package declarations");
             await executePackageVarInitializers(declarations, checked.info.InitOrder, context);
             await runInitFunctions(ast.functions, context);
-            return exportedRuntimePackageObject(packageScopeObjects(checked.pkg), context, options.importPath ?? packageName);
+            return exportedRuntimePackageObject(packageScopeObjects(checked.pkg), context, importPath);
         });
+        packageRuntime.package = pkg;
+        codebaseTxn.Commit();
+        const packageInfo = codebasePackageInfo(codebase, importPath) ?? checked.pkg;
+        syncLegacyCodebaseRecords(options, codebase);
         return {
             diagnostics: checked.diagnostics,
             output: context.output,
             package: pkg,
-            packageInfo: checked.pkg,
-            context
+            packageInfo,
+            runtime: packageRuntime
         };
     }
     catch (error) {
+        if (!codebaseTxn.IsClosed())
+            codebaseTxn.Rollback();
         const message = error instanceof Error ? error.message : String(error);
         return {
             diagnostics: [
@@ -1505,11 +1608,20 @@ export async function evaluatePackageArtifact(ast, plan, options = {}) {
         importPath,
         packageName
     };
-    evalOptions.packageInfos ??= {};
-    evalOptions.packageInfos[importPath] ??= NewPackage(importPath, packageName);
-    const context = new EvaluationContext(evalOptions);
-    if (evalOptions.packageContexts)
-        evalOptions.packageContexts[importPath] = context;
+    const codebase = codebaseForOptions(evalOptions);
+    const codebaseTxn = codebase.NewUpdateTxn();
+    if (!codebase.PackageInfo(codebaseTxn, importPath)) {
+        codebase.SetPackageInfo(codebaseTxn, importPath, NewPackage(importPath, packageName));
+    }
+    const packageRuntime = new PackageRuntime(importPath, packageName, createEvaluationSharedState(evalOptions));
+    codebase.SetPackageRuntime(codebaseTxn, importPath, packageRuntime);
+    const context = packageRuntime.createContext({
+        ...evalOptions,
+        codebase,
+        codebaseTxn,
+        packageInfos: codebase.PackageInfosRecord(codebaseTxn),
+        packageRuntimes: codebase.PackageRuntimesRecord(codebaseTxn)
+    });
     try {
         const pkg = await context.scheduler().runRoot(async () => {
             installImports(context, ast);
@@ -1526,15 +1638,21 @@ export async function evaluatePackageArtifact(ast, plan, options = {}) {
             await runInitFunctions(ast.functions, context);
             return exportedRuntimePackageObjectByNames(plan.exportedNames, context, importPath);
         });
+        packageRuntime.package = pkg;
+        codebaseTxn.Commit();
+        syncLegacyCodebaseRecords(evalOptions, codebase);
+        const packageInfo = codebasePackageInfo(codebase, importPath);
         return {
             diagnostics: ast.diagnostics,
             output: context.output,
             package: pkg,
-            packageInfo: evalOptions.packageInfos[importPath],
-            context
+            ...(packageInfo ? { packageInfo } : {}),
+            runtime: packageRuntime
         };
     }
     catch (error) {
+        if (!codebaseTxn.IsClosed())
+            codebaseTxn.Rollback();
         const message = error instanceof Error ? error.message : String(error);
         return {
             diagnostics: [
@@ -1556,8 +1674,9 @@ class SourcePackageGraphEvaluator {
     diagnostics = [];
     output = [];
     packages;
+    codebase;
     packageInfos;
-    packageContexts = {};
+    packageRuntimes;
     initialized = new Set();
     initializedImportPaths = [];
     writeOutput = (text) => {
@@ -1567,7 +1686,9 @@ class SourcePackageGraphEvaluator {
     constructor(specs, options) {
         this.options = options;
         this.packages = { ...(options.packages ?? {}) };
-        this.packageInfos = { ...(options.packageInfos ?? {}) };
+        this.codebase = codebaseForOptions(options);
+        this.packageInfos = codebasePackageInfosRecord(this.codebase);
+        this.packageRuntimes = codebasePackageRuntimesRecord(this.codebase);
         for (const spec of specs) {
             if (!spec.importPath) {
                 this.diagnostics.push(packageGraphDiagnostic(REPL_FILENAME, "source package spec is missing importPath"));
@@ -1672,8 +1793,9 @@ class SourcePackageGraphEvaluator {
             importPath,
             ...(spec.packageName ? { packageName: spec.packageName } : {}),
             packages: this.packages,
+            codebase: this.codebase,
             packageInfos: this.packageInfos,
-            packageContexts: this.packageContexts,
+            packageRuntimes: this.packageRuntimes,
             stdout: this.writeOutput
         });
         this.diagnostics.push(...result.diagnostics);
@@ -1684,9 +1806,10 @@ class SourcePackageGraphEvaluator {
         if (result.packageInfo) {
             this.packageInfos[importPath] = result.packageInfo;
         }
-        if (result.context) {
-            this.packageContexts[importPath] = result.context;
+        if (result.runtime) {
+            this.packageRuntimes[importPath] = result.runtime;
         }
+        this.refreshCodebaseRecords();
         this.initialized.add(importPath);
         this.initializedImportPaths.push(importPath);
         this.progress({
@@ -1703,14 +1826,19 @@ class SourcePackageGraphEvaluator {
         return this.diagnostics.some((diagnostic) => diagnostic.severity === "error");
     }
     result() {
+        this.refreshCodebaseRecords();
         return {
             diagnostics: this.diagnostics,
             output: this.output,
             packages: this.packages,
             packageInfos: this.packageInfos,
-            packageContexts: this.packageContexts,
+            packageRuntimes: this.packageRuntimes,
             initializedImportPaths: this.initializedImportPaths
         };
+    }
+    refreshCodebaseRecords() {
+        replaceRecord(this.packageInfos, codebasePackageInfosRecord(this.codebase));
+        replaceRecord(this.packageRuntimes, codebasePackageRuntimesRecord(this.codebase));
     }
 }
 function uniqueSortedSourceImports(values) {
@@ -1762,14 +1890,15 @@ export async function runMainSourcePackageFiles(files, options = {}) {
             ast
         };
     }
-    const context = graph.packageContexts[importPath];
-    if (!context) {
+    const runtime = graph.packageRuntimes[importPath];
+    if (!runtime) {
         return {
-            diagnostics: [packageGraphDiagnostic(files[0]?.filename ?? REPL_FILENAME, `package ${importPath} did not produce a runtime context`)],
+            diagnostics: [packageGraphDiagnostic(files[0]?.filename ?? REPL_FILENAME, `package ${importPath} did not produce a package runtime`)],
             output: graph.output,
             ast
         };
     }
+    const context = runtime.createContext({ ...options, packages: graph.packages, packageInfos: graph.packageInfos, packageRuntimes: graph.packageRuntimes });
     try {
         installMainProgramArgs(graph, options, importPath);
         const main = context.lookup("main");
@@ -1803,8 +1932,8 @@ export async function runMainSourcePackageFiles(files, options = {}) {
     }
 }
 export async function runLoadedMainPackage(importPath, graph, options = {}, ast) {
-    const context = graph.packageContexts[importPath];
-    if (!context) {
+    const runtime = graph.packageRuntimes[importPath];
+    if (!runtime) {
         const generatedMain = graph.packages[importPath]?.main;
         if (typeof generatedMain === "function") {
             try {
@@ -1843,11 +1972,12 @@ export async function runLoadedMainPackage(importPath, graph, options = {}, ast)
             }
         }
         return {
-            diagnostics: [packageGraphDiagnostic(REPL_FILENAME, `package ${importPath} did not produce a runtime context`)],
+            diagnostics: [packageGraphDiagnostic(REPL_FILENAME, `package ${importPath} did not produce a package runtime`)],
             output: graph.output,
             ...(ast ? { ast } : {})
         };
     }
+    const context = runtime.createContext({ ...options, packages: graph.packages, packageInfos: graph.packageInfos, packageRuntimes: graph.packageRuntimes });
     try {
         installMainProgramArgs(graph, options, importPath);
         const main = context.lookup("main");
@@ -1935,6 +2065,63 @@ function sourceFileFromSource(source, options = {}) {
 function packageNameFromParsedFiles(files) {
     return files.find((file) => file.name)?.name?.name;
 }
+function codebaseForOptions(options) {
+    const codebase = options.codebase ?? new Codebase();
+    const txn = codebase.NewUpdateTxn();
+    for (const [importPath, pkg] of Object.entries(options.packageInfos ?? {})) {
+        if (!codebase.PackageInfo(txn, importPath))
+            codebase.SetPackageInfo(txn, importPath, pkg);
+    }
+    for (const [importPath, runtime] of Object.entries(options.packageRuntimes ?? {})) {
+        if (!codebase.PackageRuntime(txn, importPath))
+            codebase.SetPackageRuntime(txn, importPath, runtime);
+    }
+    txn.Commit();
+    return codebase;
+}
+function codebasePackageInfo(codebase, importPath) {
+    const txn = codebase.NewViewTxn();
+    try {
+        return codebase.PackageInfo(txn, importPath);
+    }
+    finally {
+        txn.Rollback();
+    }
+}
+function codebasePackageInfosRecord(codebase, txn) {
+    if (txn)
+        return codebase.PackageInfosRecord(txn);
+    const viewTxn = codebase.NewViewTxn();
+    try {
+        return codebase.PackageInfosRecord(viewTxn);
+    }
+    finally {
+        viewTxn.Rollback();
+    }
+}
+function codebasePackageRuntimesRecord(codebase, txn) {
+    if (txn)
+        return codebase.PackageRuntimesRecord(txn);
+    const viewTxn = codebase.NewViewTxn();
+    try {
+        return codebase.PackageRuntimesRecord(viewTxn);
+    }
+    finally {
+        viewTxn.Rollback();
+    }
+}
+function syncLegacyCodebaseRecords(options, codebase) {
+    if (options.packageInfos)
+        replaceRecord(options.packageInfos, codebasePackageInfosRecord(codebase));
+    if (options.packageRuntimes)
+        replaceRecord(options.packageRuntimes, codebasePackageRuntimesRecord(codebase));
+}
+function replaceRecord(target, source) {
+    for (const key of Object.keys(target))
+        delete target[key];
+    for (const [key, value] of Object.entries(source))
+        target[key] = value;
+}
 export async function evaluateProgram(ast, options = {}) {
     const context = new EvaluationContext(options);
     context.clearObservedDeps();
@@ -2013,9 +2200,9 @@ function exportedRuntimePackageObjectByNames(names, context, importPath) {
 function installMainProgramArgs(graph, options, mainImportPath) {
     const argv = runtimeArgv(options, mainImportPath);
     const args = runtimeStringSlice(argv);
-    const osContext = graph.packageContexts.os;
-    if (osContext)
-        osContext.declareOrAssignRoot("Args", args, true, "[]string");
+    const osRuntime = graph.packageRuntimes.os;
+    if (osRuntime)
+        osRuntime.createContext({ ...options, packages: graph.packages, packageInfos: graph.packageInfos, packageRuntimes: graph.packageRuntimes }).declareOrAssignRoot("Args", args, true, "[]string");
     const osPackageObject = graph.packages.os;
     if (osPackageObject)
         osPackageObject.Args = [...argv];
@@ -2041,15 +2228,16 @@ function packageScopeObjects(pkg) {
     });
 }
 async function testProgram(ast, baseDiagnostics, options, checked) {
+    let packageRuntime;
     if (checked && options.importPath) {
         options.packageInfos ??= {};
-        options.packageContexts ??= {};
+        options.packageRuntimes ??= {};
         options.packageInfos[options.importPath] = checked.pkg;
+        packageRuntime = new PackageRuntime(options.importPath, options.packageName ?? options.importPath, createEvaluationSharedState(options));
+        options.packageRuntimes[options.importPath] = packageRuntime;
+        options.packageRuntime = packageRuntime;
     }
     const context = new EvaluationContext(options);
-    if (checked && options.importPath && options.packageContexts) {
-        options.packageContexts[options.importPath] = context;
-    }
     context.clearObservedDeps();
     const diagnostics = [...baseDiagnostics];
     try {
@@ -2392,6 +2580,7 @@ function indentTestingLog(text) {
 export class GoJuniorSession {
     options;
     context;
+    codebase;
     checkerPackage;
     sessionSheet;
     sessionSheets;
@@ -2401,7 +2590,16 @@ export class GoJuniorSession {
         this.sessionSheet = options.sheet;
         this.sessionSheets = options.sheets ? { ...options.sheets } : undefined;
         ensureUniverseInitialized();
-        this.checkerPackage = NewPackage("main", "main");
+        this.codebase = options.codebase ?? new Codebase();
+        const seedTxn = this.codebase.NewUpdateTxn();
+        for (const [importPath, pkg] of Object.entries(options.packageInfos ?? {})) {
+            if (!this.codebase.PackageInfo(seedTxn, importPath)) {
+                this.codebase.SetPackageInfo(seedTxn, importPath, pkg);
+            }
+        }
+        this.checkerPackage = this.codebase.PackageInfo(seedTxn, "main") ?? NewPackage("main", "main");
+        this.codebase.SetPackageInfo(seedTxn, "main", this.checkerPackage);
+        seedTxn.Commit();
         this.context = new EvaluationContext({ ...options, replMode: options.replMode ?? true });
         installSheets(this.context, options);
     }
@@ -2441,7 +2639,8 @@ export class GoJuniorSession {
         const checkedTransaction = this.checkSource(sourceFile);
         const checked = checkedTransaction.checked;
         if (checked.diagnostics.some((diagnostic) => diagnostic.severity === "error")) {
-            checkedTransaction.transaction.Rollback();
+            if (!checkedTransaction.transaction.IsClosed())
+                checkedTransaction.transaction.Rollback();
             return withObservedDeps({
                 diagnostics: withDiagnosticSourceContext(checked.diagnostics, [sourceFile]),
                 output: [],
@@ -2465,9 +2664,9 @@ export class GoJuniorSession {
             expectNormalCompletion(declarationCompletion, "top-level declarations");
             if (ast.kind === "function" && ast.functions[0] && ast.body.length === 0) {
                 const value = installedFunctionValue(this.context, ast.functions[0]);
+                this.persistCheckerImports(ast, checkedTransaction.transaction);
                 this.acceptTypeInfo(checkedTransaction);
                 typeInfoAccepted = true;
-                this.persistCheckerImports(ast);
                 runtimeTransaction.Commit();
                 runtimeAccepted = true;
                 return withObservedDeps({
@@ -2482,9 +2681,9 @@ export class GoJuniorSession {
                 return executeTopLevelStatements(statements, this.context);
             });
             const result = withObservedDeps(resultFromCompletion(ast, this.context.outputFrom(outputStart), completion), this.context);
+            this.persistCheckerImports(ast, checkedTransaction.transaction);
             this.acceptTypeInfo(checkedTransaction);
             typeInfoAccepted = true;
-            this.persistCheckerImports(ast);
             runtimeTransaction.Commit();
             runtimeAccepted = true;
             return result;
@@ -2492,7 +2691,7 @@ export class GoJuniorSession {
         catch (error) {
             if (!runtimeAccepted)
                 runtimeTransaction.Rollback();
-            if (!typeInfoAccepted)
+            if (!typeInfoAccepted && !checkedTransaction.transaction.IsClosed())
                 checkedTransaction.transaction.Rollback();
             const message = error instanceof Error ? error.message : String(error);
             return withObservedDeps({
@@ -2506,30 +2705,33 @@ export class GoJuniorSession {
         }
     }
     checkSource(source) {
-        const transaction = this.checkerPackage.Scope().BeginTransaction();
-        const candidatePackage = NewPackage(this.checkerPackage.Path(), this.checkerPackage.Name());
-        candidatePackage.scope = transaction.Scope();
+        const transaction = this.codebase.NewUpdateTxn();
         const checked = checkGoJuniorSourceFiles([ensureTrailingNewlineSourceFile(source)], {
             ...typeCheckConfig(this.currentOptions()),
-            packageInstance: candidatePackage,
+            codebaseTxn: transaction,
+            packagePath: this.checkerPackage.Path(),
+            packageName: this.checkerPackage.Name(),
             syntheticFunctionName: `${GOJR_SYNTHETIC_CHECK_PREFIX}_${++this.checkSequence}`
         });
         return { checked, transaction };
     }
     acceptTypeInfo(checked) {
-        checked.transaction.Commit();
+        if (!checked.transaction.IsClosed())
+            checked.transaction.Commit();
     }
-    persistCheckerImports(ast) {
+    persistCheckerImports(ast, transaction) {
+        const checkerPackage = this.codebase.PackageInfo(transaction, this.checkerPackage.Path()) ?? this.checkerPackage;
         for (const imported of ast.imports) {
             const name = importBindingName(imported, this.context);
             if (name === "_" || name === ".")
                 continue;
-            if (this.checkerPackage.Scope().Lookup(name) !== null)
+            if (checkerPackage.Scope().Lookup(name) !== null)
                 continue;
-            const pkg = this.options.packageInfos?.[imported.path]
+            const pkg = this.codebase.PackageInfo(transaction, imported.path)
+                ?? this.options.packageInfos?.[imported.path]
                 ?? standardTypePackage(imported.path);
             if (pkg !== undefined) {
-                this.checkerPackage.Scope().Insert(NewPkgName(NoPos, this.checkerPackage, name, pkg));
+                checkerPackage.Scope().Insert(NewPkgName(NoPos, checkerPackage, name, pkg));
             }
         }
     }
@@ -2703,10 +2905,10 @@ function installImports(context, ast) {
             throw new GoJuniorRuntimeError(`package ${imported.path} is not available`);
         }
         context.registerImportBinding(name, imported.path, imported.span?.filename);
-        const importedContext = context.packageContext(imported.path);
-        if (importedContext) {
-            context.importPackageDefinitions(imported.path, importedContext);
-            context.importPackageMethods(imported.path, importedContext);
+        const importedRuntime = context.packageRuntime(imported.path);
+        if (importedRuntime) {
+            context.importPackageDefinitions(imported.path, importedRuntime);
+            context.importPackageMethods(imported.path, importedRuntime);
         }
         if (name === "_")
             continue;
@@ -2846,9 +3048,10 @@ function runtimePackageExport(context, importPath, name) {
     const pkg = context.packages()[importPath];
     if (pkg && Object.prototype.hasOwnProperty.call(pkg, name))
         return pkg[name] ?? null;
-    const packageContext = context.packageContext(importPath);
-    if (packageContext?.hasBinding(name))
-        return packageContext.lookup(name);
+    const packageRuntime = context.packageRuntime(importPath);
+    const binding = packageRuntime?.shared.rootScope.lookupOptional(name);
+    if (binding !== undefined)
+        return binding;
     if (context.importPath() === importPath && context.hasBinding(name))
         return context.lookup(name);
     return undefined;
@@ -4430,6 +4633,7 @@ function installAutomaticImports(context) {
 }
 function availablePackages(context) {
     const sourcePackages = context.packages();
+    const runtimePackages = Object.fromEntries(Object.entries(context.packageRuntimes()).flatMap(([importPath, runtime]) => runtime.package ? [[importPath, runtime.package]] : []));
     const packages = {
         cmp: cmpPackage(),
         fmt: fmtPackage(),
@@ -4438,6 +4642,7 @@ function availablePackages(context) {
         "runtime/pprof": runtimePprofPackage(),
         strconv: strconvPackage(),
         testing: testingPackage(context),
+        ...runtimePackages,
         ...sourcePackages,
         iter: iterPackage(),
         "internal/reflectlite": reflectlitePackage(),

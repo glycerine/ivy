@@ -19,6 +19,7 @@ export { collectSpreadsheetFixtureFormulaSourceFiles, parseSpreadsheetFixtureJso
 export { buildReportToHostJSON, buildReportToHostPayload, compileResultToHostJSON, compileResultToHostPayload, evaluationResultToHostJSON, evaluationResultToHostPayload, formatBuildProgressEvent, formatFixtureSheets, hostFormatResult, hostFormatValue, hostResultValueIsNil, inspectPackageJavaScriptReportToHostJSON, inspectPackageJavaScriptReportToHostPayload, runtimeOptionsFromEnvironment, spreadsheetDiagnosticToHostString, spreadsheetFixtureResultToHostJSON, spreadsheetFixtureResultToHostPayload } from "./hostProtocol.js";
 export { SpreadsheetEngine, SpreadsheetFormulaCompilerCache, cellDependency, rangeDependency, spreadsheetFormulaCacheKey, spreadsheetFormulaEvaluation, spreadsheetError } from "./spreadsheet.js";
 export { childNodes, ident, parseCellAddress, walk } from "./front/ast.js";
+export { Codebase, CodebaseTxn, CodebaseUpdateTxn, CodebaseViewTxn } from "./codebase.js";
 export { checkGoJuniorFiles, checkGoJuniorSource, checkGoJuniorSourceFiles } from "./typecheck.js";
 export { parseFrontSource } from "./front/parser.js";
 export { frontSourceToAst, frontToProgramAst } from "./frontToAst.js";

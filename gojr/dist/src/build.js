@@ -6,6 +6,7 @@ import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { isStubSourcePackageStandardLibrary, stubSourcePackageFiles } from "./stubPackages.js";
 import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
 import { emitStage1Package, GOJR_STAGE1_BACKEND } from "./emitter/package.js";
+import { Codebase } from "./codebase.js";
 import { Builtin as GoTypesBuiltin, Const as GoTypesConst, Func as GoTypesFunc, RelativeTo as GoTypesRelativeTo, TypeName as GoTypesTypeName, TypeString as GoTypesTypeString, Unsafe as GoTypesUnsafe, Var as GoTypesVar } from "./go/types/index.js";
 const ARTIFACT_LAYOUT_VERSION = "gojr-js-v4";
 export const GOJR_GOOS = "js";
@@ -111,12 +112,13 @@ class PackageGraphBuilder {
     request;
     store;
     packageSources = new Map();
-    packageInfos = new Map();
+    codebase = new Codebase();
     nodes = new Map();
     visiting = new Set();
     failedPackageLoads = new Set();
     standardLibraryPackages = new Set();
     diagnostics = [];
+    activeTxn;
     constructor(request, store) {
         this.request = request;
         this.store = store;
@@ -131,9 +133,17 @@ class PackageGraphBuilder {
         const cached = this.buildFromFreshArtifacts();
         if (cached)
             return cached;
+        const txn = this.codebase.NewUpdateTxn();
+        this.activeTxn = txn;
         const root = this.buildOne(this.request.importPath, this.request.files, []);
-        if (this.hasErrors() || !root)
+        if (this.hasErrors() || !root) {
+            if (!txn.IsClosed())
+                txn.Rollback();
+            this.activeTxn = undefined;
             return emptyBuildReport(this.diagnostics);
+        }
+        txn.Commit();
+        this.activeTxn = undefined;
         const artifacts = [];
         const built = [];
         const skipped = [];
@@ -401,14 +411,12 @@ class PackageGraphBuilder {
         }
         if (!this.hasErrors()) {
             const checked = importPath === "unsafe"
-                ? { diagnostics: [], pkg: GoTypesUnsafe }
+                ? this.ambientCheckedPackage(importPath, GoTypesUnsafe)
                 : checkGoJuniorFiles(parsed.files, parsed.statements, [], {
                     packageName,
                     packagePath: importPath,
                     autoImportFmt: false,
-                    importer: {
-                        import: (path) => this.packageInfos.get(path)
-                    }
+                    codebaseTxn: this.requireActiveTxn()
                 });
             this.diagnostics.push(...checked.diagnostics);
             if (!this.hasErrors()) {
@@ -480,7 +488,6 @@ class PackageGraphBuilder {
                     artifactSource
                 };
                 this.nodes.set(importPath, node);
-                this.packageInfos.set(importPath, checked.pkg);
             }
         }
         this.visiting.delete(importPath);
@@ -494,7 +501,7 @@ class PackageGraphBuilder {
         if (!pkg)
             return undefined;
         this.standardLibraryPackages.add(importPath);
-        this.packageInfos.set(importPath, pkg);
+        this.codebase.SetPackageInfo(this.requireActiveTxn(), importPath, pkg);
         const packageName = pkg.Name();
         const goos = this.request.goos ?? GOJR_GOOS;
         const goarch = this.request.goarch ?? GOJR_GOARCH;
@@ -585,6 +592,16 @@ class PackageGraphBuilder {
         };
         this.nodes.set(importPath, node);
         return node;
+    }
+    ambientCheckedPackage(importPath, pkg) {
+        this.codebase.SetPackageInfo(this.requireActiveTxn(), importPath, pkg);
+        return { diagnostics: [], pkg };
+    }
+    requireActiveTxn() {
+        if (!this.activeTxn || this.activeTxn.IsClosed()) {
+            throw new Error("internal error: build package graph has no active Codebase transaction");
+        }
+        return this.activeTxn;
     }
     progress(event) {
         try {

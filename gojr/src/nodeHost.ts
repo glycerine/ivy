@@ -44,6 +44,7 @@ import {
   type EvaluationContext,
   type EvaluationOptions,
   type EvaluationResult,
+  type PackageRuntime,
   type RuntimeObject,
   type SourcePackageSpec
 } from "./runtime.js";
@@ -80,7 +81,7 @@ export type NodeEvaluationWithPackagesResult = EvaluationResult & {
 export interface NodeLoadedSourcePackages {
   packages: Record<string, RuntimeObject>;
   packageInfos: Record<string, GoTypesPackage>;
-  packageContexts: Record<string, EvaluationContext>;
+  packageRuntimes: Record<string, PackageRuntime>;
   diagnostics: Diagnostic[];
   output: string[];
 }
@@ -94,7 +95,7 @@ interface PackageArtifactJavaScriptModule {
     output: string[];
     package?: RuntimeObject;
     packageInfo?: GoTypesPackage;
-    context?: EvaluationContext;
+    runtime?: PackageRuntime;
   }>;
 }
 
@@ -387,7 +388,7 @@ export async function evaluateSourceWithPackagesOnNode(request: NodeSourcePackag
     ...options,
     packages: loaded.packages,
     packageInfos: loaded.packageInfos,
-    packageContexts: loaded.packageContexts
+    packageRuntimes: loaded.packageRuntimes
   });
   return {
     ...result,
@@ -410,7 +411,7 @@ export async function evaluateSourceFilesWithPackagesOnNode(request: NodeSourceP
     ...options,
     packages: loaded.packages,
     packageInfos: loaded.packageInfos,
-    packageContexts: loaded.packageContexts
+    packageRuntimes: loaded.packageRuntimes
   });
   return {
     ...result,
@@ -455,7 +456,7 @@ export async function testSourceFilesWithPackagesOnNode(request: NodeSourcePacka
     ...(request.packageName ? { packageName: request.packageName } : {}),
     packages: loaded.packages,
     packageInfos: loaded.packageInfos,
-    packageContexts: loaded.packageContexts,
+    packageRuntimes: loaded.packageRuntimes,
     ...(request.progress ? {
       onProgress(event) {
         const line = formatEvaluationProgressEvent(event);
@@ -503,8 +504,8 @@ export async function runMainSourceFilesWithPackagesOnNode(request: NodeSourcePa
     output: loaded.output,
     packages: loaded.packages,
     packageInfos: loaded.packageInfos,
-    packageContexts: loaded.packageContexts,
-    initializedImportPaths: Object.keys(loaded.packageContexts)
+    packageRuntimes: loaded.packageRuntimes,
+    initializedImportPaths: Object.keys(loaded.packageRuntimes)
   }, {
     ...options,
     ...(request.importPath ? { importPath: request.importPath } : {}),
@@ -522,7 +523,7 @@ async function loadPackageArtifactsFromBuildOnNode(
   const output: string[] = [];
   const packages: Record<string, RuntimeObject> = {};
   const packageInfos: Record<string, GoTypesPackage> = {};
-  const packageContexts: Record<string, EvaluationContext> = {};
+  const packageRuntimes: Record<string, PackageRuntime> = {};
   const baseStdout = baseOptions.stdout;
   const writeOutput = (text: string): void => {
     output.push(text);
@@ -554,7 +555,7 @@ async function loadPackageArtifactsFromBuildOnNode(
         packageName: archive.pkgdef.packageName,
         packages,
         packageInfos,
-        packageContexts,
+        packageRuntimes,
         stdout: writeOutput
       })
       : await instantiatePackageArtifactJavaScript(archive.javascript, {
@@ -563,7 +564,7 @@ async function loadPackageArtifactsFromBuildOnNode(
         packageName: archive.pkgdef.packageName,
         packages,
         packageInfos,
-        packageContexts,
+        packageRuntimes,
         stdout: writeOutput
       }, artifact.artifactPath, diagnostics);
     if (!result) break;
@@ -571,13 +572,13 @@ async function loadPackageArtifactsFromBuildOnNode(
     if (hasErrorDiagnostics(diagnostics)) break;
     if (result.package) packages[importPath] = result.package;
     if (result.packageInfo) packageInfos[importPath] = result.packageInfo;
-    if (result.context) packageContexts[importPath] = result.context;
+    if (result.runtime) packageRuntimes[importPath] = result.runtime;
   }
 
   return {
     packages,
     packageInfos,
-    packageContexts,
+    packageRuntimes,
     diagnostics,
     output
   };
@@ -590,7 +591,7 @@ async function instantiatePackageArtifactJavaScript(
     packageName: string;
     packages: Record<string, RuntimeObject>;
     packageInfos: Record<string, GoTypesPackage>;
-    packageContexts: Record<string, EvaluationContext>;
+    packageRuntimes: Record<string, PackageRuntime>;
   },
   artifactPath: string,
   diagnostics: Diagnostic[]
@@ -599,7 +600,7 @@ async function instantiatePackageArtifactJavaScript(
   output: string[];
   package?: RuntimeObject;
   packageInfo?: GoTypesPackage;
-  context?: EvaluationContext;
+  runtime?: PackageRuntime;
 } | undefined> {
   let artifactModule: PackageArtifactJavaScriptModule;
   try {
@@ -695,7 +696,7 @@ export async function runSpreadsheetFixtureWithPackagesOnNode(
   const result = await runSpreadsheetFixture(fixture, {
     packages: loaded.packages,
     packageInfos: loaded.packageInfos,
-    packageContexts: loaded.packageContexts
+    packageRuntimes: loaded.packageRuntimes
   });
   return {
     ...result,
@@ -734,7 +735,7 @@ export async function loadSourcePackagesForRootFilesOnNode(
   }
 
   if (hasErrorDiagnostics(diagnostics)) {
-    return { packages: {}, packageInfos: {}, packageContexts: {}, diagnostics, output: [] };
+    return { packages: {}, packageInfos: {}, packageRuntimes: {}, diagnostics, output: [] };
   }
 
   const graphOptions: EvaluationOptions & { sourcePackageProvider?: BuildSourcePackageProvider } = { ...baseOptions };
@@ -743,7 +744,7 @@ export async function loadSourcePackagesForRootFilesOnNode(
   return {
     packages: result.packages,
     packageInfos: result.packageInfos,
-    packageContexts: result.packageContexts,
+    packageRuntimes: result.packageRuntimes,
     diagnostics: [...diagnostics, ...result.diagnostics],
     output: result.output
   };

@@ -1255,7 +1255,7 @@ return x, y
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
     expect(app.values).toEqual([7n, "ok"]);
 
@@ -1265,7 +1265,7 @@ return dup.New(3).Value()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
     expect(packageClauseBinding.value).toBe(3n);
   });
@@ -1316,7 +1316,7 @@ return osish.Read()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe(5n);
@@ -1364,7 +1364,7 @@ return rules.Entry()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe(11n);
@@ -1415,7 +1415,7 @@ return app.Run()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe("ok");
@@ -1461,7 +1461,7 @@ return hi, lo
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.values).toEqual([128n, 10254876495507714224n]);
@@ -1518,7 +1518,7 @@ return err.Op, err.Path, alias.Message()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.values).toEqual(["open", "file", "open file"]);
@@ -1589,7 +1589,7 @@ return strconv.Check(), strconv.CheckSwitch(), s, ok
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.values).toEqual(["567", "890", "321", true]);
@@ -1648,7 +1648,7 @@ return fi.Mode()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe(7n);
@@ -1755,7 +1755,7 @@ return trees["one"].Name, trees["two"].Name, tree.Count(), tree.Lookup("two").Na
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.values).toEqual(["one", "two", 2n, "two"]);
@@ -1793,7 +1793,7 @@ return namedarray.Make()[2]
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe(7n);
@@ -1842,7 +1842,7 @@ return app.Value()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe(1n);
@@ -1888,7 +1888,7 @@ return initvars.Value()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe(42n);
@@ -1922,7 +1922,7 @@ return constanttime.ByteEq(7, 7), constanttime.ByteEq(7, 8)
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.values).toEqual([1n, 0n]);
@@ -1971,7 +1971,7 @@ return abi.Touch("ok"), value.ok, escaped.ok
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.values).toEqual(["ok", true, true]);
@@ -2049,7 +2049,7 @@ return ptr.zone
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.diagnostics).toEqual([]);
@@ -2106,7 +2106,7 @@ return len(b.buf)
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe(2n);
@@ -2490,7 +2490,7 @@ return f(), f()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
     expect(result.values).toEqual([9n, 9n]);
   });
@@ -2561,7 +2561,7 @@ return hits
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
     expect(result.value).toBe(1n);
   });
@@ -2614,7 +2614,7 @@ return wrap.Value()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe(9n);
@@ -2841,7 +2841,7 @@ return strconv.Unquote()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
     expect(result.value).toBe("public");
   });
@@ -2905,7 +2905,7 @@ return app.Run()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
     expect(result.value).toBe("public:internal");
   });
@@ -2949,7 +2949,7 @@ return app.Run()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
     expect(result.value).toBe(3n);
   });
@@ -3176,7 +3176,7 @@ return app.Run()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
     expect(result.value).toEqual([
       2n,
@@ -5857,7 +5857,7 @@ return maps.Len()
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
     expect(result.value).toBe(4n);
   });
@@ -5900,7 +5900,7 @@ return trap.P0 != 0, trap.P1 != 0
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
     expect(result.values).toEqual([true, true]);
   });
@@ -6101,7 +6101,7 @@ return abi.TypeOf(s).Kind(), abi.TypeOf(s).Elem().Kind(),
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.values).toEqual([
@@ -6251,7 +6251,7 @@ return int(t.Kind()), int(t.Elem().Kind()), int(g.EncoderKind)
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.values).toEqual([22n, 20n, 20n]);
@@ -6386,7 +6386,7 @@ return firstB, firstC, len(m), m[a], m[b], m[c]
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.values).toEqual([11n, 11n, 1n, 13n, 13n, 13n]);
@@ -6533,7 +6533,7 @@ return int(tidKind), tidName, tidText, int(sidKind), sidName, sidText, int(elemK
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.values).toEqual([5n, "typeId", "named.typeId", 23n, "idSlice", "named.idSlice", 5n, "typeId", "named.typeId"]);
@@ -6830,7 +6830,7 @@ return n, first, anonymous, second, int(kind), int(elemKind), name, text, pkgPat
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.values).toEqual([
@@ -6985,7 +6985,7 @@ return r1, r2, uintptr(err), err == 0
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
     expect(result.values).toEqual([0n, 0n, 0n, true]);
   });
@@ -7912,7 +7912,7 @@ return textbuf.Build("zygo")
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe("zygo");
@@ -9605,7 +9605,7 @@ return mh.MapType
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe(7n);
@@ -9772,7 +9772,7 @@ return sort.Sort(Sorter([]int{1, 2, 3}))
 `, {
       packages: graph.packages,
       packageInfos: graph.packageInfos,
-      packageContexts: graph.packageContexts
+      packageRuntimes: graph.packageRuntimes
     });
 
     expect(result.value).toBe(3n);

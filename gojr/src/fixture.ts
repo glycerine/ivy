@@ -3,7 +3,7 @@ import type { Package as GoTypesPackage } from "./go/types/index.js";
 import { parseRuntimeJson } from "./jsonInput.js";
 import {
   GoJuniorSession,
-  type EvaluationContext,
+  type PackageRuntime,
   RuntimeObject,
   RuntimeValue,
   SheetData
@@ -43,7 +43,7 @@ export interface SpreadsheetFixtureRunOptions {
   readonly randomSeed?: number | string | bigint;
   readonly packages?: Record<string, RuntimeObject>;
   readonly packageInfos?: Record<string, GoTypesPackage>;
-  readonly packageContexts?: Record<string, EvaluationContext>;
+  readonly packageRuntimes?: Record<string, PackageRuntime>;
 }
 
 export interface SpreadsheetFixtureRunResult {
@@ -156,7 +156,7 @@ async function evaluateFormulaCell(
     filename: `${ref.sheet}!${ref.cell}.gojr`,
     ...(options.packages ? { packages: options.packages } : {}),
     ...(options.packageInfos ? { packageInfos: options.packageInfos } : {}),
-    ...(options.packageContexts ? { packageContexts: options.packageContexts } : {}),
+    ...(options.packageRuntimes ? { packageRuntimes: options.packageRuntimes } : {}),
     ...(fixture.randomSeed !== undefined ? { randomSeed: fixture.randomSeed } : {}),
     ...(fixture.randomSeed === undefined && options.randomSeed !== undefined ? { randomSeed: options.randomSeed } : {})
   });

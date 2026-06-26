@@ -250,7 +250,7 @@ export async function evaluateSourceWithPackagesOnNode(request) {
         ...options,
         packages: loaded.packages,
         packageInfos: loaded.packageInfos,
-        packageContexts: loaded.packageContexts
+        packageRuntimes: loaded.packageRuntimes
     });
     return {
         ...result,
@@ -272,7 +272,7 @@ export async function evaluateSourceFilesWithPackagesOnNode(request) {
         ...options,
         packages: loaded.packages,
         packageInfos: loaded.packageInfos,
-        packageContexts: loaded.packageContexts
+        packageRuntimes: loaded.packageRuntimes
     });
     return {
         ...result,
@@ -322,7 +322,7 @@ export async function testSourceFilesWithPackagesOnNode(request) {
         ...(request.packageName ? { packageName: request.packageName } : {}),
         packages: loaded.packages,
         packageInfos: loaded.packageInfos,
-        packageContexts: loaded.packageContexts,
+        packageRuntimes: loaded.packageRuntimes,
         ...(request.progress ? {
             onProgress(event) {
                 const line = formatEvaluationProgressEvent(event);
@@ -376,8 +376,8 @@ export async function runMainSourceFilesWithPackagesOnNode(request) {
         output: loaded.output,
         packages: loaded.packages,
         packageInfos: loaded.packageInfos,
-        packageContexts: loaded.packageContexts,
-        initializedImportPaths: Object.keys(loaded.packageContexts)
+        packageRuntimes: loaded.packageRuntimes,
+        initializedImportPaths: Object.keys(loaded.packageRuntimes)
     }, {
         ...options,
         ...(request.importPath ? { importPath: request.importPath } : {}),
@@ -391,7 +391,7 @@ async function loadPackageArtifactsFromBuildOnNode(build, baseOptions) {
     const output = [];
     const packages = {};
     const packageInfos = {};
-    const packageContexts = {};
+    const packageRuntimes = {};
     const baseStdout = baseOptions.stdout;
     const writeOutput = (text) => {
         output.push(text);
@@ -420,7 +420,7 @@ async function loadPackageArtifactsFromBuildOnNode(build, baseOptions) {
                 packageName: archive.pkgdef.packageName,
                 packages,
                 packageInfos,
-                packageContexts,
+                packageRuntimes,
                 stdout: writeOutput
             })
             : await instantiatePackageArtifactJavaScript(archive.javascript, {
@@ -429,7 +429,7 @@ async function loadPackageArtifactsFromBuildOnNode(build, baseOptions) {
                 packageName: archive.pkgdef.packageName,
                 packages,
                 packageInfos,
-                packageContexts,
+                packageRuntimes,
                 stdout: writeOutput
             }, artifact.artifactPath, diagnostics);
         if (!result)
@@ -441,13 +441,13 @@ async function loadPackageArtifactsFromBuildOnNode(build, baseOptions) {
             packages[importPath] = result.package;
         if (result.packageInfo)
             packageInfos[importPath] = result.packageInfo;
-        if (result.context)
-            packageContexts[importPath] = result.context;
+        if (result.runtime)
+            packageRuntimes[importPath] = result.runtime;
     }
     return {
         packages,
         packageInfos,
-        packageContexts,
+        packageRuntimes,
         diagnostics,
         output
     };
@@ -536,7 +536,7 @@ export async function runSpreadsheetFixtureWithPackagesOnNode(request) {
     const result = await runSpreadsheetFixture(fixture, {
         packages: loaded.packages,
         packageInfos: loaded.packageInfos,
-        packageContexts: loaded.packageContexts
+        packageRuntimes: loaded.packageRuntimes
     });
     return {
         ...result,
@@ -571,7 +571,7 @@ export async function loadSourcePackagesForRootFilesOnNode(rootFiles, specs = []
         }
     }
     if (hasErrorDiagnostics(diagnostics)) {
-        return { packages: {}, packageInfos: {}, packageContexts: {}, diagnostics, output: [] };
+        return { packages: {}, packageInfos: {}, packageRuntimes: {}, diagnostics, output: [] };
     }
     const graphOptions = { ...baseOptions };
     if (provider)
@@ -580,7 +580,7 @@ export async function loadSourcePackagesForRootFilesOnNode(rootFiles, specs = []
     return {
         packages: result.packages,
         packageInfos: result.packageInfos,
-        packageContexts: result.packageContexts,
+        packageRuntimes: result.packageRuntimes,
         diagnostics: [...diagnostics, ...result.diagnostics],
         output: result.output
     };
