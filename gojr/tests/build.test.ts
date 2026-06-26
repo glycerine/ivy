@@ -169,6 +169,7 @@ func hidden() {}
     expect((store.writes.get("/tmp/gopath/pkg/js_gojr/example.com/demo/math.a") ?? "").slice(8, 24).trim()).toBe("__.PKGDEF");
     const archive = parseGoJuniorPackageArchive(store.writes.get("/tmp/gopath/pkg/js_gojr/example.com/demo/math.a") ?? "");
     expect(archive?.members.map((member) => member.name)).toEqual(["__.PKGDEF", "_gojr.js"]);
+    expect(archive?.pkgdef.runtime?.runtimePlan.importPath).toBe("example.com/demo/math");
     const pkgdefMember = archive?.members.find((member) => member.name === "__.PKGDEF")?.data ?? "";
     const javascriptMember = archive?.members.find((member) => member.name === "_gojr.js")?.data ?? "";
     expect(javascriptMember).not.toBe(pkgdefMember);
@@ -368,7 +369,9 @@ func hidden() {}
 
     const artifactModule = await importArtifactJavaScript(archive?.javascript ?? "");
     expect(Object.keys(artifactModule.gojrCompiledFunctionBodies)).toEqual(["Hello"]);
-    const instantiated = await artifactModule.instantiateGoJrPackage({ evaluatePackageArtifact });
+    const instantiated = await artifactModule.instantiateGoJrPackage({ evaluatePackageArtifact }, {
+      runtimePayload: archive?.pkgdef.runtime
+    });
     expect(instantiated.diagnostics).toEqual([]);
     await instantiated.compiledFunctions.Hello?.();
     expect(instantiated.output.join("")).toBe("hello gorj!\n");

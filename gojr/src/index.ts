@@ -252,6 +252,7 @@ export type {
   PackageEvaluationOptions,
   PackageEvaluationResult,
   PackageRuntimePlan,
+  PackageRuntimePlanConstant,
   PackageRuntimePlanVariable,
   MainPackageRunOptions,
   RuntimeCallable,

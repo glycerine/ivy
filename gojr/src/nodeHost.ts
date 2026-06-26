@@ -88,7 +88,7 @@ export interface NodeLoadedSourcePackages {
 interface PackageArtifactJavaScriptModule {
   instantiateGoJrPackage(
     runtime: { evaluatePackageArtifact: typeof evaluatePackageArtifact },
-    options?: Record<string, unknown>
+    options?: unknown
   ): Promise<{
     diagnostics: Diagnostic[];
     output: string[];
@@ -547,27 +547,26 @@ async function loadPackageArtifactsFromBuildOnNode(
     const importPath = archive.pkgdef.importPath;
     if (isSyntheticIntrinsicArtifact(importPath, archive.pkgdef.sources)) continue;
 
-    let artifactModule: PackageArtifactJavaScriptModule;
-    try {
-      artifactModule = await importPackageArtifactJavaScript(archive.javascript);
-    } catch (error) {
-      diagnostics.push(nodeArtifactDiagnostic(
-        artifact.artifactPath,
-        `could not load package artifact ${artifact.artifactPath}: ${error instanceof Error ? error.message : String(error)}`,
-        error
-      ));
-      break;
-    }
-
-    const result = await artifactModule.instantiateGoJrPackage({ evaluatePackageArtifact }, {
-      ...baseOptions,
-      importPath,
-      packageName: archive.pkgdef.packageName,
-      packages,
-      packageInfos,
-      packageContexts,
-      stdout: writeOutput
-    });
+    const result = archive.runtime
+      ? await evaluatePackageArtifact(archive.runtime.ast, archive.runtime.runtimePlan, {
+        ...baseOptions,
+        importPath,
+        packageName: archive.pkgdef.packageName,
+        packages,
+        packageInfos,
+        packageContexts,
+        stdout: writeOutput
+      })
+      : await instantiatePackageArtifactJavaScript(archive.javascript, {
+        ...baseOptions,
+        importPath,
+        packageName: archive.pkgdef.packageName,
+        packages,
+        packageInfos,
+        packageContexts,
+        stdout: writeOutput
+      }, artifact.artifactPath, diagnostics);
+    if (!result) break;
     diagnostics.push(...result.diagnostics);
     if (hasErrorDiagnostics(diagnostics)) break;
     if (result.package) packages[importPath] = result.package;
@@ -582,6 +581,38 @@ async function loadPackageArtifactsFromBuildOnNode(
     diagnostics,
     output
   };
+}
+
+async function instantiatePackageArtifactJavaScript(
+  source: string,
+  options: EvaluationOptions & {
+    importPath: string;
+    packageName: string;
+    packages: Record<string, RuntimeObject>;
+    packageInfos: Record<string, GoTypesPackage>;
+    packageContexts: Record<string, EvaluationContext>;
+  },
+  artifactPath: string,
+  diagnostics: Diagnostic[]
+): Promise<{
+  diagnostics: Diagnostic[];
+  output: string[];
+  package?: RuntimeObject;
+  packageInfo?: GoTypesPackage;
+  context?: EvaluationContext;
+} | undefined> {
+  let artifactModule: PackageArtifactJavaScriptModule;
+  try {
+    artifactModule = await importPackageArtifactJavaScript(source);
+  } catch (error) {
+    diagnostics.push(nodeArtifactDiagnostic(
+      artifactPath,
+      `could not load package artifact ${artifactPath}: ${error instanceof Error ? error.message : String(error)}`,
+      error
+    ));
+    return undefined;
+  }
+  return artifactModule.instantiateGoJrPackage({ evaluatePackageArtifact }, options);
 }
 
 async function importPackageArtifactJavaScript(source: string): Promise<PackageArtifactJavaScriptModule> {
