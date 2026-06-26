@@ -237,7 +237,20 @@
             }
         }
         if (typeof root.__gojrReadSync !== "function" && typeof fs.readSync === "function") {
-            root.__gojrReadSync = (fd, buffer, offset, length, position) => fs.readSync(fd, buffer, offset, length, position);
+            let stdinIsTTY = false;
+            try {
+                const tty = embeddedRequire("node:tty");
+                stdinIsTTY = typeof tty.isatty === "function" && tty.isatty(0) === true;
+            }
+            catch {
+                stdinIsTTY = false;
+            }
+            root.__gojrReadSync = (fd, buffer, offset, length, position) => {
+                const count = fs.readSync(fd, buffer, offset, length, position);
+                if (fd === 0 && stdinIsTTY && count === 1 && buffer[offset] === 4)
+                    return 0;
+                return count;
+            };
         }
         if (typeof root.__gojrWriteSync !== "function" && typeof fs.writeSync === "function") {
             root.__gojrWriteSync = (fd, buffer, offset, length, position) => fs.writeSync(fd, buffer, offset, length, position);
