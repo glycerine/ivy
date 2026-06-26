@@ -669,7 +669,6 @@ function emitRangeStatement(ctx: EmitterContext, statement: ForStatement, env: E
   if (!statement.range) return undefined;
   const source = expressionToJs(ctx, statement.range.source, env);
   if (!source) return undefined;
-  const range = ctx.symbol("range");
   const key = ctx.symbol("key");
   const value = ctx.symbol("value");
   const loopEnv = cloneExpressionEnv(env);
@@ -702,8 +701,7 @@ function emitRangeStatement(ctx: EmitterContext, statement: ForStatement, env: E
   const body = emitStatements(ctx, statement.body.statements, cloneExpressionEnv(loopEnv), `${indent}  `);
   if (!body) return undefined;
   return [
-    `${indent}const ${range} = ${source};`,
-    `${indent}for (const [${key}, ${value}] of __gojrRangeEntries(${range})) {`,
+    `${indent}for (const [${key}, ${value}] of __gojrRangeEntries(${source})) {`,
     ...bindLines,
     ...body,
     `${indent}}`
@@ -2103,6 +2101,10 @@ function complexBinaryExpressionToJs(ctx: EmitterContext, expression: BinaryExpr
 }
 
 function selectorExpressionToJs(ctx: EmitterContext, expression: SelectorExpression, env: ExpressionEmitEnv): string | undefined {
+  if (isImportedPackageSelector(expression, env) && expression.object.kind === "Identifier") {
+    const importPath = env.facts.imports.get(expression.object.name);
+    return `__gojrPackageSelector(${JSON.stringify(importPath)}, ${JSON.stringify(expression.field)})`;
+  }
   const methodKey = methodPackageKeyForSelector(expression, env);
   if (methodKey) {
     const receiver = methodReceiverToJs(ctx, expression, methodKey, env);
@@ -2182,6 +2184,12 @@ function callExpressionToJs(ctx: EmitterContext, expression: CallExpression, env
   if (expression.callee.kind === "SelectorExpression") {
     const methodKey = methodPackageKeyForSelector(expression.callee, env);
     if (methodKey) return methodCallToJs(ctx, expression, env, methodKey);
+    if (isImportedPackageSelector(expression.callee, env) && expression.callee.object.kind === "Identifier") {
+      const importPath = env.facts.imports.get(expression.callee.object.name);
+      const renderedArgs = renderCallArgs(ctx, expression.args, env, [], expression.spreadLast);
+      if (!renderedArgs) return undefined;
+      return `(await (__gojrPackageCallableSelector(${JSON.stringify(importPath)}, ${JSON.stringify(expression.callee.field)}))(${renderedArgs.join(", ")}))`;
+    }
     if (!isImportedPackageSelector(expression.callee, env)) return dynamicMethodCallToJs(ctx, expression, env);
   }
   const instantiatedName = instantiatedFunctionName(expression.callee);
@@ -2440,6 +2448,10 @@ function builtinCallToJs(ctx: EmitterContext, expression: CallExpression, env: E
         return undefined;
       }
       return `__gojrPanic(${renderedArgs[0]})`;
+    case "print":
+      return `__gojrPrint(__gojrStdout${renderedArgs.length > 0 ? `, ${renderedArgs.join(", ")}` : ""})`;
+    case "println":
+      return `__gojrPrintln(__gojrStdout${renderedArgs.length > 0 ? `, ${renderedArgs.join(", ")}` : ""})`;
     case "complex":
       if (renderedArgs.length !== 2) {
         ctx.emitError("unsupported Stage 3 complex call arity");
@@ -2809,12 +2821,15 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     ...typeDescriptorLines,
     "export async function instantiateGoJrPackage(runtime = {}, options = {}) {",
     "  const pkg = Object.create(null);",
-    "  const importsByPath = options.importsByPath || runtime.importsByPath || {};",
+    "  const importsByPath = options.importsByPath || runtime.importsByPath || options.packages || runtime.packages || {};",
+    "  const __gojrStdout = options.stdout || runtime.stdout || (() => {});",
     "  const __gojrImport = (path) => {",
     "    const imported = importsByPath[path];",
     "    if (imported && typeof imported === \"object\" && \"package\" in imported) return imported.package;",
     "    return imported || __gojrBuiltinImport(path, importsByPath) || {};",
     "  };",
+    "  const __gojrPackageSelector = (path, field) => __gojrSelectPackageField(importsByPath, path, field);",
+    "  const __gojrPackageCallableSelector = (path, field) => __gojrSelectPackageCallableField(importsByPath, path, field);",
     usesWasm ? "  const wasmBase64 = options.wasmBase64 || runtime.wasmBase64;" : "",
     usesWasm ? "  if (typeof wasmBase64 !== \"string\" || wasmBase64.length === 0) throw new Error(\"gojr Stage 1 package requires options.wasmBase64 from _gojr.wasm\");" : "",
     usesWasm ? "  const __gojrWasmModule = new WebAssembly.Module(__gojrDecodeBase64(wasmBase64));" : "",
@@ -3035,14 +3050,46 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "function __gojrPanic(value) {",
     "  throw value instanceof Error ? value : new Error(`panic: ${String(value)}`);",
     "}",
+    "function __gojrPrint(stdout, ...values) {",
+    "  stdout(values.map((value) => String(value)).join(\"\"));",
+    "  return null;",
+    "}",
+    "function __gojrPrintln(stdout, ...values) {",
+    "  stdout(`${values.map((value) => String(value)).join(\" \")}\\n`);",
+    "  return null;",
+    "}",
     "function __gojrIndex(object, index, integerResult) {",
     "  const value = object[index];",
     "  if (integerResult || object instanceof Uint8Array || object instanceof Uint8ClampedArray || object instanceof Int8Array || object instanceof Uint16Array || object instanceof Int16Array || object instanceof Uint32Array || object instanceof Int32Array || object instanceof BigInt64Array || object instanceof BigUint64Array) return BigInt(value);",
     "  return value;",
     "}",
+    "function __gojrSelectPackageField(importsByPath, path, field) {",
+    "  const imported = importsByPath[path];",
+    "  const packageObject = imported && typeof imported === \"object\" && \"package\" in imported ? imported.package : imported;",
+    "  if (packageObject && typeof packageObject === \"object\" && field in packageObject) return packageObject[field];",
+    "  const builtin = __gojrBuiltinImport(path, importsByPath);",
+    "  if (builtin && typeof builtin === \"object\" && field in builtin) return builtin[field];",
+    "  return packageObject && typeof packageObject === \"object\" ? packageObject[field] : undefined;",
+    "}",
+    "function __gojrSelectPackageCallableField(importsByPath, path, field) {",
+    "  const selected = __gojrSelectPackageField(importsByPath, path, field);",
+    "  if (typeof selected === \"function\") return selected;",
+    "  const builtin = __gojrBuiltinImport(path, importsByPath);",
+    "  if (builtin && typeof builtin[field] === \"function\") return builtin[field];",
+    "  throw new TypeError(`${path}.${field} is not a function`);",
+    "}",
     "function __gojrBuiltinImport(path, importsByPath) {",
+    "  if (path === \"internal/reflectlite\") return __gojrReflectlitePackage(importsByPath);",
     "  if (path === \"reflect\") return __gojrReflectPackage(importsByPath);",
     "  return undefined;",
+    "}",
+    "function __gojrReflectlitePackage(importsByPath = {}) {",
+    "  return {",
+    "    Invalid: 0n, Interface: 20n, Ptr: 22n,",
+    "    TypeOf: async (value) => __gojrReflectTypeOf(value, importsByPath),",
+    "    ValueOf: async (value) => __gojrReflectValueOf(value, importsByPath),",
+    "    Swapper: async (value) => __gojrReflectliteSwapper(value)",
+    "  };",
     "}",
     "function __gojrReflectPackage(importsByPath = {}) {",
     "  return {",
@@ -3140,8 +3187,22 @@ function stage1JavaScript(artifact: GoJuniorPackageExportData, usesWasm: boolean
     "    if (!typeName) throw new RangeError(\"reflect: Out index out of range\");",
     "    return __gojrReflectTypeForTypeName(typeName, self.__gojrImportsByPath);",
     "  },",
+    "  Comparable: async () => true,",
+    "  AssignableTo: async () => true,",
     "  Implements: async () => true",
     "};",
+    "function __gojrReflectliteSwapper(value) {",
+    "  const actual = value && value.__gojrInterface === true ? value.value : value;",
+    "  if (!Array.isArray(actual) && !ArrayBuffer.isView(actual)) throw new TypeError(\"reflectlite.Swapper expects a slice or array\");",
+    "  return async (i, j) => {",
+    "    const left = Number(i);",
+    "    const right = Number(j);",
+    "    const tmp = actual[left];",
+    "    actual[left] = actual[right];",
+    "    actual[right] = tmp;",
+    "    return null;",
+    "  };",
+    "}",
     "function __gojrReflectValueOf(value, importsByPath = {}) {",
     "  const actual = value && value.__gojrInterface === true ? value.value : value;",
     "  if (actual === null || actual === undefined) return { __gojrReflectValue: true, __gojrValid: false, __gojrValue: undefined, __gojrImportsByPath: importsByPath, __gojrMethods: __gojrReflectValueMethods };",

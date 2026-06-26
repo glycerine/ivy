@@ -2313,6 +2313,42 @@ export async function runLoadedMainPackage(
 ): Promise<EvaluationResult> {
   const context = graph.packageContexts[importPath];
   if (!context) {
+    const generatedMain = (graph.packages[importPath] as Record<string, unknown> | undefined)?.main;
+    if (typeof generatedMain === "function") {
+      try {
+        installMainProgramArgs(graph, options, importPath);
+        await generatedMain();
+        return {
+          diagnostics: graph.diagnostics,
+          output: graph.output,
+          ...(ast ? { ast } : {})
+        };
+      } catch (error) {
+        if (error instanceof GoJuniorExit) {
+          return {
+            diagnostics: graph.diagnostics,
+            output: graph.output,
+            ...(ast ? { ast } : {}),
+            exitCode: error.code
+          };
+        }
+        const message = error instanceof Error ? error.message : String(error);
+        return {
+          diagnostics: [
+            ...graph.diagnostics,
+            runtimeDiagnostic(ast ?? {
+              kind: "script",
+              imports: [],
+              diagnostics: [],
+              body: [],
+              functions: []
+            }, runtimeDiagnosticCode(error), message, error)
+          ],
+          output: graph.output,
+          ...(ast ? { ast } : {})
+        };
+      }
+    }
     return {
       diagnostics: [packageGraphDiagnostic(REPL_FILENAME, `package ${importPath} did not produce a runtime context`)],
       output: graph.output,
@@ -2496,11 +2532,12 @@ function installMainProgramArgs(
   options: MainPackageRunOptions,
   mainImportPath: string
 ): void {
-  const args = runtimeStringSlice(runtimeArgv(options, mainImportPath));
+  const argv = runtimeArgv(options, mainImportPath);
+  const args = runtimeStringSlice(argv);
   const osContext = graph.packageContexts.os;
   if (osContext) osContext.declareOrAssignRoot("Args", args, true, "[]string");
   const osPackageObject = graph.packages.os;
-  if (osPackageObject) osPackageObject.Args = args;
+  if (osPackageObject) osPackageObject.Args = [...argv];
 }
 
 function runtimeArgv(options: EvaluationOptions, defaultName = "gojr"): string[] {

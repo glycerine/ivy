@@ -1716,6 +1716,43 @@ export async function runMainSourcePackageFiles(files, options = {}) {
 export async function runLoadedMainPackage(importPath, graph, options = {}, ast) {
     const context = graph.packageContexts[importPath];
     if (!context) {
+        const generatedMain = graph.packages[importPath]?.main;
+        if (typeof generatedMain === "function") {
+            try {
+                installMainProgramArgs(graph, options, importPath);
+                await generatedMain();
+                return {
+                    diagnostics: graph.diagnostics,
+                    output: graph.output,
+                    ...(ast ? { ast } : {})
+                };
+            }
+            catch (error) {
+                if (error instanceof GoJuniorExit) {
+                    return {
+                        diagnostics: graph.diagnostics,
+                        output: graph.output,
+                        ...(ast ? { ast } : {}),
+                        exitCode: error.code
+                    };
+                }
+                const message = error instanceof Error ? error.message : String(error);
+                return {
+                    diagnostics: [
+                        ...graph.diagnostics,
+                        runtimeDiagnostic(ast ?? {
+                            kind: "script",
+                            imports: [],
+                            diagnostics: [],
+                            body: [],
+                            functions: []
+                        }, runtimeDiagnosticCode(error), message, error)
+                    ],
+                    output: graph.output,
+                    ...(ast ? { ast } : {})
+                };
+            }
+        }
         return {
             diagnostics: [packageGraphDiagnostic(REPL_FILENAME, `package ${importPath} did not produce a runtime context`)],
             output: graph.output,
@@ -1885,13 +1922,14 @@ function exportedRuntimePackageObjectByNames(names, context, importPath) {
     return pkg;
 }
 function installMainProgramArgs(graph, options, mainImportPath) {
-    const args = runtimeStringSlice(runtimeArgv(options, mainImportPath));
+    const argv = runtimeArgv(options, mainImportPath);
+    const args = runtimeStringSlice(argv);
     const osContext = graph.packageContexts.os;
     if (osContext)
         osContext.declareOrAssignRoot("Args", args, true, "[]string");
     const osPackageObject = graph.packages.os;
     if (osPackageObject)
-        osPackageObject.Args = args;
+        osPackageObject.Args = [...argv];
 }
 function runtimeArgv(options, defaultName = "gojr") {
     return options.argv && options.argv.length > 0 ? options.argv.map(String) : [defaultName];
