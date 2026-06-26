@@ -17,9 +17,14 @@ const emptyExpressionEnv = { locals: new Map(), localTypes: new Map(), facts: em
 export function emitStage1Package(artifact, ast) {
     const ctx = new EmitterContext({ artifact });
     const facts = packageEmitFacts(ast, artifact);
-    const wasmFunctions = ast.functions.filter(isI64AddFunction);
-    const usesWasm = wasmFunctions.length > 0;
-    const wasmBase64 = usesWasm ? checkedInWasmStencil("i64.add.kernel").wasmBase64 : undefined;
+    const wasmLowerings = new Map();
+    for (const fn of ast.functions) {
+        const lowering = wasmScalarLoweringForFunction(fn);
+        if (lowering)
+            wasmLowerings.set(fn, lowering);
+    }
+    const usesWasm = wasmLowerings.size > 0;
+    const wasmBase64 = usesWasm ? checkedInWasmStencil("i64.scalar.add").wasmBase64 : undefined;
     const declarationLines = [];
     const functionLines = [];
     const initNames = [];
@@ -44,7 +49,8 @@ export function emitStage1Package(artifact, ast) {
             functionLines.push(...emitFunction(ctx, fn, facts, { localName: initName }));
             continue;
         }
-        functionLines.push(...emitFunction(ctx, fn, facts));
+        const wasmLowering = wasmLowerings.get(fn);
+        functionLines.push(...emitFunction(ctx, fn, facts, wasmLowering ? { wasmLowering } : {}));
     }
     const bodyLines = [
         ...functionLines,
@@ -65,26 +71,30 @@ function emitVarDecl(ctx, statement, facts) {
     return statement.declarations.flatMap((declaration) => emitDeclaration(ctx, "var", declaration, facts));
 }
 function emitDeclaration(ctx, _kind, declaration, facts) {
+    const env = { ...emptyExpressionEnv, facts };
     const rawValue = declaration.value
-        ? expressionToJs(ctx, declaration.value)
+        ? expressionToJs(ctx, declaration.value, env)
         : zeroValueForType(declaration.type?.text, facts);
     if (!rawValue) {
         ctx.emitError(`unsupported Stage 1 declaration for ${declaration.name}`);
         return [];
     }
     const targetType = declarationTypeText(declaration);
-    const value = valueForTargetType(rawValue, targetType, expressionTypeText(declaration.value, emptyExpressionEnv), { ...emptyExpressionEnv, facts });
+    const value = valueForTargetType(rawValue, targetType, expressionTypeText(declaration.value, env), env);
     return [`  pkg[${JSON.stringify(declaration.name)}] = ${value};`];
 }
 function emitFunction(ctx, fn, facts, options = {}) {
-    if (isI64AddFunction(fn)) {
+    if (options.wasmLowering) {
+        const parameters = functionParameterBindings(fn, facts);
+        const wasmCall = `__gojrWasmExports.${options.wasmLowering.exportName}(BigInt(${parameters.params[0]}), BigInt(${parameters.params[1]}))`;
+        const result = options.wasmLowering.resultType === "bool" ? `Boolean(${wasmCall})` : wasmCall;
         if (options.localName) {
             return [
-                `  const ${options.localName} = async (a, b) => __gojrWasmExports.add_i64(BigInt(a), BigInt(b));`
+                `  const ${options.localName} = async (${parameters.params.join(", ")}) => ${result};`
             ];
         }
         return [
-            `  pkg[${JSON.stringify(functionPackageKey(fn))}] = async (a, b) => __gojrWasmExports.add_i64(BigInt(a), BigInt(b));`
+            `  pkg[${JSON.stringify(functionPackageKey(fn))}] = async (${parameters.params.join(", ")}) => ${result};`
         ];
     }
     const parameters = functionParameterBindings(fn, facts);
@@ -94,7 +104,7 @@ function emitFunction(ctx, fn, facts, options = {}) {
     if (hasDefer)
         bodyEnv.deferName = ctx.symbol("defer");
     const resultLines = emitNamedResultDeclarations(fn, bodyEnv);
-    const statementLines = statementsContainGoto(fn.body.statements)
+    const statementLines = statementsRequireGotoStateMachine(fn.body.statements)
         ? emitGotoStateMachineStatements(ctx, fn, bodyEnv, "    ")
         : emitStatements(ctx, fn.body.statements, bodyEnv, "    ");
     if (!statementLines)
@@ -200,6 +210,9 @@ function statementContainsDeferInIf(statement) {
 function statementsContainGoto(statements) {
     return statements.some(statementContainsGoto);
 }
+function statementsRequireGotoStateMachine(statements) {
+    return statementsContainGoto(statements) && statements.some((statement) => statement.kind === "LabeledStatement");
+}
 function statementContainsGoto(statement) {
     switch (statement.kind) {
         case "BranchStatement":
@@ -224,6 +237,34 @@ function statementContainsGoto(statement) {
         default:
             return false;
     }
+}
+function statementContainsGotoTo(statement, label) {
+    switch (statement.kind) {
+        case "BranchStatement":
+            return statement.branch === "goto" && statement.label === label;
+        case "BlockStatement":
+            return statementsContainGotoTo(statement.statements, label);
+        case "LabeledStatement":
+            return statement.statement ? statementContainsGotoTo(statement.statement, label) : false;
+        case "IfStatement":
+            return statementContainsGotoTo(statement.thenBlock, label) ||
+                (statement.elseBranch ? statementContainsGotoTo(statement.elseBranch, label) : false) ||
+                (statement.init ? statementContainsGotoTo(statement.init, label) : false);
+        case "SwitchStatement":
+            return statement.clauses.some((clause) => statementsContainGotoTo(clause.statements, label)) ||
+                (statement.init ? statementContainsGotoTo(statement.init, label) : false);
+        case "SelectStatement":
+            return statement.clauses.some((clause) => statementsContainGotoTo(clause.statements, label) || (clause.comm ? statementContainsGotoTo(clause.comm, label) : false));
+        case "ForStatement":
+            return statementsContainGotoTo(statement.body.statements, label) ||
+                (statement.init ? statementContainsGotoTo(statement.init, label) : false) ||
+                (statement.post ? statementContainsGotoTo(statement.post, label) : false);
+        default:
+            return false;
+    }
+}
+function statementsContainGotoTo(statements, label) {
+    return statements.some((statement) => statementContainsGotoTo(statement, label));
 }
 function emitGotoStateMachineStatements(ctx, fn, env, indent) {
     const labels = new Map();
@@ -297,10 +338,14 @@ function cloneExpressionEnv(env) {
         ...(env.typeParameters ? { typeParameters: new Set(env.typeParameters) } : {}),
         ...(env.deferName ? { deferName: env.deferName } : {}),
         ...(env.gotoLabels ? { gotoLabels: env.gotoLabels } : {}),
-        ...(env.gotoPcName ? { gotoPcName: env.gotoPcName } : {})
+        ...(env.gotoPcName ? { gotoPcName: env.gotoPcName } : {}),
+        ...(env.gotoBreakLabels ? { gotoBreakLabels: new Map(env.gotoBreakLabels) } : {})
     };
 }
 function emitStatements(ctx, statements, env, indent) {
+    const localForward = findLocalForwardGoto(statements);
+    if (localForward)
+        return emitLocalForwardGotoStatements(ctx, statements, env, indent, localForward);
     const lines = [];
     for (const statement of statements) {
         const emitted = emitStatement(ctx, statement, env, indent);
@@ -309,6 +354,39 @@ function emitStatements(ctx, statements, env, indent) {
         lines.push(...emitted);
     }
     return lines;
+}
+function findLocalForwardGoto(statements) {
+    for (const [index, statement] of statements.entries()) {
+        if (statement.kind !== "LabeledStatement")
+            continue;
+        const prior = statements.slice(0, index);
+        if (statementsContainGotoTo(prior, statement.label))
+            return { label: statement.label, index };
+    }
+    return undefined;
+}
+function emitLocalForwardGotoStatements(ctx, statements, env, indent, target) {
+    const jsLabel = ctx.symbol(`label_${target.label}`);
+    const beforeEnv = cloneExpressionEnv(env);
+    beforeEnv.gotoBreakLabels = new Map(beforeEnv.gotoBreakLabels);
+    beforeEnv.gotoBreakLabels.set(target.label, jsLabel);
+    const before = emitStatements(ctx, statements.slice(0, target.index), beforeEnv, `${indent}  `);
+    if (!before)
+        return undefined;
+    const labeled = statements[target.index];
+    const labelStatement = labeled.statement ? emitStatement(ctx, labeled.statement, env, indent) : [];
+    if (!labelStatement)
+        return undefined;
+    const after = emitStatements(ctx, statements.slice(target.index + 1), env, indent);
+    if (!after)
+        return undefined;
+    return [
+        `${indent}${jsLabel}: {`,
+        ...before,
+        `${indent}}`,
+        ...labelStatement,
+        ...after
+    ];
 }
 function emitStatement(ctx, statement, env, indent) {
     switch (statement.kind) {
@@ -645,6 +723,9 @@ function emitTypeSwitchBinding(statement, clause, env, switchValue, indent) {
 }
 function emitBranchStatement(ctx, statement, env, indent) {
     if (statement.branch === "goto") {
+        const breakLabel = statement.label ? env.gotoBreakLabels?.get(statement.label) : undefined;
+        if (breakLabel)
+            return [`${indent}break ${breakLabel};`];
         const target = statement.label ? env.gotoLabels?.get(statement.label) : undefined;
         if (!env.gotoPcName || target === undefined) {
             ctx.emitError(`unsupported Stage 4 unresolved goto ${statement.label ?? "<missing>"}`);
@@ -903,36 +984,95 @@ function emitForHeaderStatement(ctx, statement, env, position) {
                 ctx.emitError("short variable declaration is not allowed in a for post statement");
                 return undefined;
             }
-            if (statement.names.length !== 1 || statement.values.length !== 1 || statement.names[0] === "_") {
+            if (statement.names.some((name) => name === "_")) {
                 ctx.emitError("unsupported Stage 4 for init short declaration");
                 return undefined;
             }
             {
-                const goName = statement.names[0];
-                const expression = statement.values[0];
-                if (!goName || !expression)
+                if (statement.values.length === 1 && statement.names.length > 1) {
+                    const source = statement.values[0];
+                    if (!source)
+                        return undefined;
+                    const tuple = tupleSourceExpressionToJs(ctx, source, statement.names.length, env);
+                    if (!tuple) {
+                        ctx.emitError("unsupported Stage 4 for init short declaration");
+                        return undefined;
+                    }
+                    const names = statement.names.map((goName, index) => {
+                        const name = safeLocalName(goName, index);
+                        env.locals.set(goName, name);
+                        return name;
+                    });
+                    const sourceTypes = tupleSourceTypeTexts(source, statement.names.length, env);
+                    for (const [index, goName] of statement.names.entries()) {
+                        const sourceType = sourceTypes[index];
+                        if (sourceType)
+                            env.localTypes.set(goName, sourceType);
+                    }
+                    return `let [${names.join(", ")}] = ${tuple}`;
+                }
+                if (statement.names.length !== statement.values.length) {
+                    ctx.emitError("unsupported Stage 4 for init short declaration");
                     return undefined;
-                const value = expressionToJs(ctx, expression, env);
-                if (!value)
-                    return undefined;
-                const name = safeLocalName(goName, 0);
-                env.locals.set(goName, name);
-                return `let ${name} = ${value}`;
+                }
+                const declarations = [];
+                for (const [index, goName] of statement.names.entries()) {
+                    const expression = statement.values[index];
+                    if (!goName || !expression)
+                        return undefined;
+                    const value = expressionToJs(ctx, expression, env);
+                    if (!value)
+                        return undefined;
+                    const name = safeLocalName(goName, index);
+                    env.locals.set(goName, name);
+                    const typeText = expressionTypeText(expression, env);
+                    if (typeText)
+                        env.localTypes.set(goName, typeText);
+                    declarations.push(`${name} = ${value}`);
+                }
+                return `let ${declarations.join(", ")}`;
             }
         case "AssignStatement":
-            if (statement.targets.length !== 1 || statement.values.length !== 1) {
+            if (statement.values.length === 1 && statement.targets.length > 1) {
+                const source = statement.values[0];
+                if (!source)
+                    return undefined;
+                const tuple = tupleSourceExpressionToJs(ctx, source, statement.targets.length, env);
+                if (!tuple) {
+                    ctx.emitError("unsupported Stage 4 for header assignment");
+                    return undefined;
+                }
+                const targets = statement.targets.map((target) => expressionToJs(ctx, target, env));
+                if (targets.some((target) => target === undefined))
+                    return undefined;
+                return `([${targets.filter((target) => target !== undefined).join(", ")}] = ${tuple})`;
+            }
+            if (statement.targets.length !== statement.values.length) {
                 ctx.emitError("unsupported Stage 4 for header assignment");
                 return undefined;
             }
             {
-                const target = expressionToJs(ctx, statement.targets[0], env);
-                const value = expressionToJs(ctx, statement.values[0], env);
-                if (!target || !value)
-                    return undefined;
-                if (statement.operator === "=")
-                    return `${target} = ${value}`;
-                const compound = compoundAssignmentExpression(ctx, statement.operator, target, value);
-                return compound ? `${target} = ${compound}` : undefined;
+                const parts = [];
+                for (const [index, targetExpression] of statement.targets.entries()) {
+                    const target = expressionToJs(ctx, targetExpression, env);
+                    const valueExpression = statement.values[index];
+                    const value = valueExpression ? expressionToJs(ctx, valueExpression, env) : undefined;
+                    if (!target || !value)
+                        return undefined;
+                    if (statement.operator === "=") {
+                        parts.push(`${target} = ${value}`);
+                        continue;
+                    }
+                    if (statement.targets.length !== 1) {
+                        ctx.emitError("unsupported Stage 4 compound multi-assignment in for header");
+                        return undefined;
+                    }
+                    const compound = compoundAssignmentExpression(ctx, statement.operator, target, value);
+                    if (!compound)
+                        return undefined;
+                    parts.push(`${target} = ${compound}`);
+                }
+                return parts.join(", ");
             }
         case "IncDecStatement":
             {
@@ -1080,22 +1220,50 @@ function functionParameterBindings(fn, facts) {
     }));
     return { params, env: { locals, localTypes, facts, ...(typeParameters ? { typeParameters } : {}) } };
 }
-function isI64AddFunction(fn) {
+function wasmScalarLoweringForFunction(fn) {
+    if (fn.receiver)
+        return undefined;
+    if (fn.typeParameters && fn.typeParameters.length > 0)
+        return undefined;
     if (fn.signature.parameters.length !== 2 || fn.signature.results.length !== 1)
-        return false;
-    if (!fn.signature.parameters.every((param) => param.type.text === "int64"))
-        return false;
-    if (fn.signature.results[0]?.type.text !== "int64")
-        return false;
+        return undefined;
+    if (!fn.signature.parameters.every((param) => param.name && param.type.text === "int64"))
+        return undefined;
     const statement = onlyReturn(fn.body);
     if (!statement || statement.values.length !== 1)
-        return false;
+        return undefined;
     const value = statement.values[0];
-    if (!value || value.kind !== "BinaryExpression" || value.operator !== "+")
-        return false;
-    return isIdentifier(value.left, fn.signature.parameters[0]?.name) &&
-        isIdentifier(value.right, fn.signature.parameters[1]?.name);
+    if (!value || value.kind !== "BinaryExpression")
+        return undefined;
+    if (!isIdentifier(value.left, fn.signature.parameters[0]?.name))
+        return undefined;
+    if (!isIdentifier(value.right, fn.signature.parameters[1]?.name))
+        return undefined;
+    const resultType = fn.signature.results[0]?.type.text;
+    const lowering = i64ScalarLowerings[value.operator];
+    if (!lowering || lowering.resultType !== resultType)
+        return undefined;
+    return lowering;
 }
+const i64ScalarLowerings = {
+    "+": { exportName: "gojr_i64_add", resultType: "int64" },
+    "-": { exportName: "gojr_i64_sub", resultType: "int64" },
+    "*": { exportName: "gojr_i64_mul", resultType: "int64" },
+    "/": { exportName: "gojr_i64_div", resultType: "int64" },
+    "%": { exportName: "gojr_i64_rem", resultType: "int64" },
+    "&": { exportName: "gojr_i64_and", resultType: "int64" },
+    "|": { exportName: "gojr_i64_or", resultType: "int64" },
+    "^": { exportName: "gojr_i64_xor", resultType: "int64" },
+    "&^": { exportName: "gojr_i64_bitclear", resultType: "int64" },
+    "<<": { exportName: "gojr_i64_shl", resultType: "int64" },
+    ">>": { exportName: "gojr_i64_shr", resultType: "int64" },
+    "==": { exportName: "gojr_i64_eq", resultType: "bool" },
+    "!=": { exportName: "gojr_i64_ne", resultType: "bool" },
+    "<": { exportName: "gojr_i64_lt", resultType: "bool" },
+    "<=": { exportName: "gojr_i64_le", resultType: "bool" },
+    ">": { exportName: "gojr_i64_gt", resultType: "bool" },
+    ">=": { exportName: "gojr_i64_ge", resultType: "bool" }
+};
 function onlyReturn(body) {
     return body.statements.length === 1 && body.statements[0]?.kind === "ReturnStatement"
         ? body.statements[0]
@@ -1649,19 +1817,33 @@ function literalToJs(expression) {
     }
 }
 function arrayLiteralToJs(ctx, expression, env) {
+    const arrayType = parseArrayOrSliceTypeText(expression.type.text);
     if (expression.elements.some((element) => element.key !== undefined)) {
-        ctx.emitError("unsupported Stage 3 keyed array literal");
-        return undefined;
+        if (!arrayType) {
+            ctx.emitError(`unsupported Stage 3 keyed array literal ${expression.type.text}`);
+            return undefined;
+        }
+        const entries = [];
+        for (const element of expression.elements) {
+            const key = element.key ? expressionToJs(ctx, element.key, env) : "null";
+            const value = expressionToJs(ctx, element.value, env);
+            if (!key || !value)
+                return undefined;
+            entries.push(`[${key}, ${value}]`);
+        }
+        return `__gojrArrayLiteral(${JSON.stringify(expression.type.text)}, ${JSON.stringify(arrayType.elementType)}, [${entries.join(", ")}])`;
     }
     if (isByteSliceType(expression.type.text)) {
         const bytes = bytesFromArrayLiteral(expression);
-        if (!bytes) {
-            ctx.emitError(`unsupported Stage 1 []byte literal element`);
-            return undefined;
+        if (bytes) {
+            if (bytes.length > 64)
+                return `__gojrBytesBase64(${JSON.stringify(bytesToBase64(bytes))})`;
+            return `new Uint8Array([${bytes.join(", ")}])`;
         }
-        if (bytes.length > 64)
-            return `__gojrBytesBase64(${JSON.stringify(bytesToBase64(bytes))})`;
-        return `new Uint8Array([${bytes.join(", ")}])`;
+        const values = expression.elements.map((element) => expressionToJs(ctx, element.value, env));
+        if (values.some((value) => value === undefined))
+            return undefined;
+        return `Uint8Array.from([${values.filter((value) => value !== undefined).join(", ")}], (item) => Number(item) & 255)`;
     }
     const values = expression.elements.map((element) => expressionToJs(ctx, element.value, env));
     if (values.some((value) => value === undefined))
@@ -1670,12 +1852,39 @@ function arrayLiteralToJs(ctx, expression, env) {
     return `[${rendered.join(", ")}]`;
 }
 function structLiteralToJs(ctx, expression, env) {
+    const underlying = resolveUnderlyingTypeText(expression.typeName, env.facts);
+    const arrayType = parseArrayOrSliceTypeText(underlying);
+    if (arrayType) {
+        const entries = [];
+        for (const field of expression.fields) {
+            if (field.name) {
+                ctx.emitError(`unsupported Stage 3 named array or slice literal field ${field.name}`);
+                return undefined;
+            }
+            const key = field.key ? expressionToJs(ctx, field.key, env) : "null";
+            const value = expressionToJs(ctx, field.value, env);
+            if (!key || !value)
+                return undefined;
+            entries.push(`[${key}, ${value}]`);
+        }
+        return `__gojrArrayLiteral(${JSON.stringify(underlying)}, ${JSON.stringify(arrayType.elementType)}, [${entries.join(", ")}])`;
+    }
+    if (expression.fields.some((field) => !field.name)) {
+        const values = [];
+        for (const field of expression.fields) {
+            if (field.name) {
+                ctx.emitError(`unsupported Stage 3 mixed keyed and unkeyed struct literal ${expression.typeName}`);
+                return undefined;
+            }
+            const value = expressionToJs(ctx, field.value, env);
+            if (!value)
+                return undefined;
+            values.push(value);
+        }
+        return `__gojrStructFromValues(${JSON.stringify(expression.typeName)}, [${values.join(", ")}])`;
+    }
     const fields = [];
     for (const field of expression.fields) {
-        if (!field.name) {
-            ctx.emitError(`unsupported Stage 3 unkeyed struct literal ${expression.typeName}`);
-            return undefined;
-        }
         const value = expressionToJs(ctx, field.value, env);
         if (!value)
             return undefined;
@@ -1927,14 +2136,16 @@ function callExpressionToJs(ctx, expression, env) {
     if (expression.callee.kind === "Identifier" && expression.callee.name === "make" && !env.locals.has("make")) {
         return makeCallToJs(ctx, expression, env);
     }
-    if (expression.callee.kind === "TypeExpression")
-        return conversionCallToJs(ctx, expression.callee.type.text, expression.args, env);
-    if (expression.callee.kind === "Identifier" && primitiveTypeNames.has(expression.callee.name) && !env.locals.has(expression.callee.name)) {
-        return conversionCallToJs(ctx, expression.callee.name, expression.args, env);
+    const conversionType = conversionCalleeTypeText(expression.callee, env);
+    if (conversionType) {
+        return conversionCallToJs(ctx, conversionType, expression.args, env);
     }
     const builtin = builtinCallToJs(ctx, expression, env);
     if (builtin)
         return builtin;
+    const instantiatedSelectorCall = instantiatedImportedSelectorCallToJs(ctx, expression, env);
+    if (instantiatedSelectorCall)
+        return instantiatedSelectorCall;
     if (expression.callee.kind === "SelectorExpression") {
         const methodKey = methodPackageKeyForSelector(expression.callee, env);
         if (methodKey)
@@ -1964,6 +2175,48 @@ function callExpressionToJs(ctx, expression, env) {
     if (!renderedArgs)
         return undefined;
     return `(await (${callee})(${renderedArgs.join(", ")}))`;
+}
+function instantiatedImportedSelectorCallToJs(ctx, expression, env) {
+    if (expression.callee.kind !== "IndexExpression")
+        return undefined;
+    const selector = expression.callee.object;
+    if (selector.kind !== "SelectorExpression" || selector.object.kind !== "Identifier")
+        return undefined;
+    const importPath = env.facts.imports.get(selector.object.name);
+    if (!importPath)
+        return undefined;
+    const typeArgText = typeArgumentExpressionText(expression.callee.index);
+    if (!typeArgText)
+        return undefined;
+    const args = renderCallArgs(ctx, expression.args, env, [], expression.spreadLast);
+    if (!args)
+        return undefined;
+    const imported = `__gojrImport(${JSON.stringify(importPath)})`;
+    const typeArgs = `__gojrImportedTypeArgs(${imported}, ${JSON.stringify(selector.field)}, [${splitTopLevelTypes(typeArgText).map((typeArg) => JSON.stringify(typeArg)).join(", ")}])`;
+    return `(await (__gojrGetField(${imported}, ${JSON.stringify(selector.field)}))(${[typeArgs, ...args].join(", ")}))`;
+}
+function conversionCalleeTypeText(callee, env) {
+    if (callee.kind === "IndexExpression" &&
+        callee.object.kind === "SelectorExpression" &&
+        isImportedPackageSelector(callee.object, env)) {
+        return undefined;
+    }
+    if (callee.kind === "TypeExpression")
+        return callee.type.text;
+    if (callee.kind === "Identifier") {
+        if (env.locals.has(callee.name))
+            return undefined;
+        if (primitiveTypeNames.has(callee.name) || env.facts.typeUnderlyings.has(callee.name))
+            return callee.name;
+        return undefined;
+    }
+    const typeText = typeArgumentExpressionText(callee);
+    if (!typeText)
+        return undefined;
+    const base = genericBaseTypeText(typeText);
+    if (isCompositeTypeText(typeText) || env.facts.typeUnderlyings.has(base) || typeText === "unsafe.Pointer")
+        return typeText;
+    return undefined;
 }
 function renderCallArgs(ctx, args, env, targetTypes = [], spreadLast = false) {
     const rendered = [];
@@ -2105,6 +2358,13 @@ function makeCallToJs(ctx, expression, env) {
         ctx.emitError("unsupported Stage 4 make without type argument");
         return undefined;
     }
+    if (env.typeParameters?.has(typeText)) {
+        const length = expression.args[1] ? expressionToJs(ctx, expression.args[1], env) : "0n";
+        const capacity = expression.args[2] ? expressionToJs(ctx, expression.args[2], env) : length;
+        if (!length || !capacity)
+            return undefined;
+        return `__gojrMake(__gojrTypeArg(__gojrTypeArgs, ${JSON.stringify(typeText)}), Number(${length}), Number(${capacity}))`;
+    }
     const resolvedTypeText = resolveUnderlyingTypeText(typeText, env.facts);
     if (chanElementTypeText(resolvedTypeText)) {
         const capacity = expression.args[1] ? expressionToJs(ctx, expression.args[1], env) : "0n";
@@ -2198,18 +2458,45 @@ function conversionCallToJs(ctx, typeText, args, env) {
     const value = expressionToJs(ctx, args[0], env);
     if (!value)
         return undefined;
-    if (isIntegerType(typeText))
+    const resolvedType = resolveUnderlyingTypeText(typeText, env.facts);
+    if (isByteSliceType(resolvedType))
+        return `__gojrBytesFrom(${value})`;
+    if (isIntegerType(resolvedType))
         return `BigInt(${value})`;
-    if (isFloatType(typeText))
+    if (isFloatType(resolvedType))
         return `Number(${value})`;
-    if (isComplexType(typeText))
+    if (isComplexType(resolvedType))
         return `__gojrToComplex(${value})`;
-    if (typeText === "string")
-        return `String(${value})`;
+    if (resolvedType === "bool")
+        return `Boolean(${value})`;
+    if (resolvedType === "string")
+        return `__gojrStringFrom(${value})`;
+    {
+        const arrayTarget = parseArrayOrSliceTypeText(resolvedType);
+        if (arrayTarget && !resolvedType.startsWith("[]"))
+            return `__gojrConvertArray(${JSON.stringify(typeText)}, ${JSON.stringify(arrayTarget.elementType)}, ${value})`;
+    }
+    if (resolvedType.startsWith("[]"))
+        return `__gojrConvertSlice(${JSON.stringify(typeText)}, ${value})`;
+    if (resolvedType.startsWith("map["))
+        return `__gojrConvertNilable(${JSON.stringify(typeText)}, ${value})`;
+    if (resolvedType.startsWith("chan ") || resolvedType.startsWith("<-chan") || resolvedType.startsWith("chan<-"))
+        return `__gojrConvertNilable(${JSON.stringify(typeText)}, ${value})`;
+    if (resolvedType.startsWith("func("))
+        return `__gojrConvertNilable(${JSON.stringify(typeText)}, ${value})`;
+    if (typeText.trim().startsWith("*") || resolvedType.trim().startsWith("*"))
+        return `__gojrConvertPointer(${JSON.stringify(typeText)}, ${value})`;
+    if (typeText.trim() === "unsafe.Pointer" || resolvedType.trim() === "unsafe.Pointer")
+        return `__gojrConvertPointer(${JSON.stringify(typeText)}, ${value})`;
+    if (env.facts.typeUnderlyings.has(typeText))
+        return value;
     ctx.emitError(`unsupported Stage 3 conversion to ${typeText}`);
     return undefined;
 }
 function indexExpressionToJs(ctx, expression, env) {
+    const instantiated = instantiatedImportedSelectorValueToJs(ctx, expression, env);
+    if (instantiated)
+        return instantiated;
     const object = expressionToJs(ctx, expression.object, env);
     const index = expressionToJs(ctx, expression.index, env);
     if (!object || !index)
@@ -2225,21 +2512,28 @@ function indexExpressionToJs(ctx, expression, env) {
     const elementType = expression.typeText ?? parseArrayOrSliceTypeText(resolvedObjectType)?.elementType;
     return `__gojrIndex(${object}, Number(${index}), ${isIntegerType(elementType ?? "") ? "true" : "false"})`;
 }
-function sliceExpressionToJs(ctx, expression, env) {
-    if (expression.max) {
-        ctx.emitError("unsupported Stage 3 three-index slice");
+function instantiatedImportedSelectorValueToJs(_ctx, expression, env) {
+    const selector = expression.object;
+    if (selector.kind !== "SelectorExpression" || selector.object.kind !== "Identifier")
         return undefined;
-    }
+    const importPath = env.facts.imports.get(selector.object.name);
+    if (!importPath)
+        return undefined;
+    const typeArgText = typeArgumentExpressionText(expression.index);
+    if (!typeArgText)
+        return undefined;
+    const imported = `__gojrImport(${JSON.stringify(importPath)})`;
+    const typeArgs = `__gojrImportedTypeArgs(${imported}, ${JSON.stringify(selector.field)}, [${splitTopLevelTypes(typeArgText).map((typeArg) => JSON.stringify(typeArg)).join(", ")}])`;
+    return `(async (...__gojrGenericArgs) => await (__gojrGetField(${imported}, ${JSON.stringify(selector.field)}))(${typeArgs}, ...__gojrGenericArgs))`;
+}
+function sliceExpressionToJs(ctx, expression, env) {
     const object = expressionToJs(ctx, expression.object, env);
     const start = expression.start ? expressionToJs(ctx, expression.start, env) : undefined;
     const end = expression.end ? expressionToJs(ctx, expression.end, env) : undefined;
-    if (!object || (expression.start && !start) || (expression.end && !end))
+    const max = expression.max ? expressionToJs(ctx, expression.max, env) : undefined;
+    if (!object || (expression.start && !start) || (expression.end && !end) || (expression.max && !max))
         return undefined;
-    if (!start && !end)
-        return `(${object}).slice()`;
-    if (!end)
-        return `(${object}).slice(Number(${start}))`;
-    return `(${object}).slice(${start ? `Number(${start})` : "undefined"}, Number(${end}))`;
+    return `__gojrSlice(${object}, ${start ? `Number(${start})` : "null"}, ${end ? `Number(${end})` : "null"}, ${max ? `Number(${max})` : "null"})`;
 }
 function typeAssertionExpressionToJs(ctx, expression, env = emptyExpressionEnv) {
     if (expression.kind !== "TypeAssertionExpression") {
@@ -2321,11 +2615,13 @@ function zeroValueForType(typeText, facts = emptyPackageEmitFacts) {
     }
     switch (valueType) {
         case "int":
+        case "rune":
         case "int8":
         case "int16":
         case "int32":
         case "int64":
         case "uint":
+        case "byte":
         case "uint8":
         case "uint16":
         case "uint32":
@@ -2373,6 +2669,19 @@ function isNilAssignableConcreteTypeText(typeText) {
         typeText.startsWith("<-chan") ||
         typeText.startsWith("chan<-") ||
         typeText.startsWith("func(");
+}
+function isCompositeTypeText(typeText) {
+    const trimmed = typeText.trim();
+    return trimmed.startsWith("*") ||
+        trimmed.startsWith("[") ||
+        trimmed.startsWith("[]") ||
+        trimmed.startsWith("map[") ||
+        trimmed.startsWith("chan ") ||
+        trimmed.startsWith("<-chan") ||
+        trimmed.startsWith("chan<-") ||
+        trimmed.startsWith("func(") ||
+        trimmed.startsWith("struct{") ||
+        trimmed.startsWith("interface{");
 }
 function mapValueTypeText(typeText, facts = emptyPackageEmitFacts) {
     if (!typeText)
@@ -2443,6 +2752,8 @@ const primitiveTypeNames = new Set([
 ]);
 function isIntegerType(typeText) {
     return typeText === "int" ||
+        typeText === "byte" ||
+        typeText === "rune" ||
         typeText === "int8" ||
         typeText === "int16" ||
         typeText === "int32" ||
@@ -2517,12 +2828,19 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         usesWasm ? "  const __gojrWasmExports = __gojrWasmInstance.exports;" : "  const __gojrWasmExports = {};",
         ...bodyLines,
         "  Object.defineProperty(pkg, \"__gojrTypeDescriptors\", { value: __gojrTypeDescriptors });",
+        "  Object.defineProperty(pkg, \"__gojrExportIndex\", { value: gojrPackageArtifact.exportIndex });",
         "  return { diagnostics: [], output: [], package: pkg, wasm: __gojrWasmExports };",
         "}",
         "function __gojrStringByteAt(value, index) {",
         "  const bytes = new TextEncoder().encode(String(value));",
         "  if (index < 0 || index >= bytes.length) throw new RangeError(\"string index out of range\");",
         "  return bytes[index];",
+        "}",
+        "function __gojrStringFrom(value) {",
+        "  if (value instanceof Uint8Array) return new TextDecoder().decode(value);",
+        "  if (ArrayBuffer.isView(value)) return new TextDecoder().decode(new Uint8Array(value.buffer, value.byteOffset, value.byteLength));",
+        "  if (Array.isArray(value)) return new TextDecoder().decode(Uint8Array.from(value, (item) => Number(item) & 255));",
+        "  return String(value);",
         "}",
         "function __gojrTuple(values) {",
         "  Object.defineProperty(values, \"__gojrTuple\", { value: true });",
@@ -2563,6 +2881,16 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "function __gojrBytesBase64(base64) {",
         "  return __gojrDecodeBase64(base64);",
         "}",
+        "function __gojrBytesFrom(value) {",
+        "  if (typeof value === \"string\") return new TextEncoder().encode(value);",
+        "  if (value instanceof Uint8Array) return new Uint8Array(value);",
+        "  if (ArrayBuffer.isView(value)) return new Uint8Array(value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength));",
+        "  if (Array.isArray(value)) return Uint8Array.from(value, (item) => Number(item) & 255);",
+        "  return new Uint8Array();",
+        "}",
+        "function __gojrIsByteSliceTypeName(typeName) {",
+        "  return typeName === \"[]byte\" || typeName === \"[]uint8\";",
+        "}",
         "function __gojrMapStringBytesBase64(entries) {",
         "  const map = new Map();",
         "  for (const [key, base64] of entries) map.set(key, __gojrBytesBase64(base64));",
@@ -2577,9 +2905,111 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "}",
         "function __gojrCap(value) {",
         "  if (value == null) return 0;",
+        "  if (typeof value.__gojrCap === \"number\") return value.__gojrCap;",
         "  if (Array.isArray(value) || ArrayBuffer.isView(value)) return value.length;",
         "  if (value.__gojrChannel === true) return value.capacity;",
         "  return __gojrLen(value);",
+        "}",
+        "function __gojrSetCap(value, capacity) {",
+        "  try { Object.defineProperty(value, \"__gojrCap\", { value: Math.max(0, Number(capacity)), configurable: true }); } catch { }",
+        "  return value;",
+        "}",
+        "function __gojrArrayLiteral(typeName, elemType, entries) {",
+        "  const resolved = [];",
+        "  let nextIndex = 0;",
+        "  let length = __gojrFixedArrayLength(typeName) ?? 0;",
+        "  for (const [rawKey, value] of entries) {",
+        "    const index = rawKey === null || rawKey === undefined ? nextIndex : Number(rawKey);",
+        "    resolved.push([index, value]);",
+        "    nextIndex = index + 1;",
+        "    if (index + 1 > length) length = index + 1;",
+        "  }",
+        "  if (__gojrIsByteSliceTypeName(typeName)) {",
+        "    const out = new Uint8Array(length);",
+        "    for (const [index, value] of resolved) out[index] = Number(value) & 255;",
+        "    return __gojrSetCap(out, length);",
+        "  }",
+        "  const out = Array.from({ length }, () => __gojrZero(elemType));",
+        "  for (const [index, value] of resolved) out[index] = value;",
+        "  return __gojrSetCap(out, length);",
+        "}",
+        "function __gojrConvertArray(typeName, elemType, value) {",
+        "  const length = __gojrFixedArrayLength(typeName) ?? __gojrLen(value);",
+        "  if (__gojrIsByteSliceTypeName(`[]${elemType}`) || elemType === \"byte\" || elemType === \"uint8\") {",
+        "    const out = new Uint8Array(length);",
+        "    const source = value == null ? [] : value;",
+        "    for (let index = 0; index < length && index < __gojrLen(source); index += 1) out[index] = Number(source[index]) & 255;",
+        "    return __gojrSetCap(out, length);",
+        "  }",
+        "  const out = Array.from({ length }, () => __gojrZero(elemType));",
+        "  const source = value == null ? [] : value;",
+        "  for (let index = 0; index < length && index < __gojrLen(source); index += 1) out[index] = __gojrConvertArrayElement(elemType, source[index]);",
+        "  return __gojrSetCap(out, length);",
+        "}",
+        "function __gojrConvertArrayElement(elemType, value) {",
+        "  if (__gojrIntegerTypeName(elemType) && value !== null && value !== undefined) return BigInt(value);",
+        "  return value;",
+        "}",
+        "function __gojrIntegerTypeName(typeName) {",
+        "  switch (String(typeName || \"\")) {",
+        "    case \"byte\": case \"rune\": case \"int\": case \"int8\": case \"int16\": case \"int32\": case \"int64\": case \"uint\": case \"uint8\": case \"uint16\": case \"uint32\": case \"uint64\": case \"uintptr\": return true;",
+        "    default: return false;",
+        "  }",
+        "}",
+        "function __gojrFixedArrayLength(typeName) {",
+        "  const match = /^\\[(\\d+)\\]/.exec(String(typeName || \"\"));",
+        "  if (!match) return undefined;",
+        "  const length = Number(match[1]);",
+        "  return Number.isSafeInteger(length) ? length : undefined;",
+        "}",
+        "function __gojrSlice(object, start, end, max) {",
+        "  const length = __gojrLen(object);",
+        "  const low = start === null || start === undefined ? 0 : Number(start);",
+        "  const high = end === null || end === undefined ? length : Number(end);",
+        "  const capHigh = max === null || max === undefined ? __gojrCap(object) : Number(max);",
+        "  const sliced = typeof object === \"string\" ? object.slice(low, high) : (object ?? []).slice(low, high);",
+        "  return typeof sliced === \"string\" ? sliced : __gojrSetCap(sliced, capHigh - low);",
+        "}",
+        "function __gojrConvertSlice(typeName, value) {",
+        "  if (value === null || value === undefined) return __gojrTypedNil(typeName);",
+        "  if (value && value.__gojrTypedNil === true) return __gojrTypedNil(typeName);",
+        "  return value;",
+        "}",
+        "function __gojrConvertNilable(typeName, value) {",
+        "  if (value === null || value === undefined) return __gojrTypedNil(typeName);",
+        "  if (value && value.__gojrTypedNil === true) return __gojrTypedNil(typeName);",
+        "  return value;",
+        "}",
+        "function __gojrMake(typeName, length = 0, capacity = length) {",
+        "  const text = String(typeName || \"\").trim();",
+        "  if (text.startsWith(\"map[\")) return __gojrMap(new Map(), __gojrZero(__gojrMapValueType(text) || \"any\"));",
+        "  if (text.startsWith(\"chan \")) return __gojrMakeChan(text.slice(5).trim(), capacity);",
+        "  if (text.startsWith(\"chan<-\")) return __gojrMakeChan(text.slice(6).trim(), capacity);",
+        "  if (text.startsWith(\"<-chan\")) return __gojrMakeChan(text.slice(6).trim(), capacity);",
+        "  const elem = __gojrSliceElementType(text);",
+        "  if (elem !== undefined) return __gojrSetCap(Array.from({ length }, () => __gojrZero(elem)), capacity);",
+        "  const descriptor = __gojrDescriptorForTypeName(text);",
+        "  if (descriptor && descriptor.kind === \"slice\") return __gojrSetCap(Array.from({ length }, () => __gojrZero(descriptor.elem || \"any\")), capacity);",
+        "  if (descriptor && descriptor.kind === \"map\") return __gojrMap(new Map(), __gojrZero(descriptor.elem || \"any\"));",
+        "  if (descriptor && descriptor.kind === \"chan\") return __gojrMakeChan(descriptor.elem || \"any\", capacity);",
+        "  throw new Error(`GOJR_RUNTIME001: cannot make ${text}`);",
+        "}",
+        "function __gojrSliceElementType(typeName) {",
+        "  return String(typeName || \"\").startsWith(\"[]\") ? String(typeName).slice(2).trim() : undefined;",
+        "}",
+        "function __gojrMapValueType(typeName) {",
+        "  const text = String(typeName || \"\");",
+        "  if (!text.startsWith(\"map[\")) return undefined;",
+        "  let depth = 0;",
+        "  for (let index = 4; index < text.length; index += 1) {",
+        "    const char = text[index];",
+        "    if (char === \"[\") depth += 1;",
+        "    if (char === \"]\") {",
+        "      if (depth === 0) return text.slice(index + 1).trim();",
+        "      depth -= 1;",
+        "    }",
+        "  }",
+        "  return undefined;",
         "}",
         "function __gojrAppend(slice, ...values) {",
         "  if (slice instanceof Uint8Array) {",
@@ -2794,12 +3224,31 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  Object.defineProperty(value, \"__gojrPkgPath\", { value: gojrPackageArtifact.importPath });",
         "  return value;",
         "}",
+        "function __gojrStructFromValues(typeName, values) {",
+        "  const descriptor = __gojrDescriptorForTypeName(typeName);",
+        "  const fields = descriptor && Array.isArray(descriptor.fields) ? descriptor.fields : [];",
+        "  const out = {};",
+        "  for (let index = 0; index < fields.length; index += 1) {",
+        "    const field = fields[index];",
+        "    out[field.name] = index < values.length ? values[index] : __gojrZero(field.type);",
+        "  }",
+        "  return __gojrStruct(typeName, out);",
+        "}",
         "function __gojrPointer(typeName, get, set) {",
         "  return { __gojrPointer: true, __gojrType: `*${typeName}`, __gojrElemType: typeName, __gojrPkgPath: gojrPackageArtifact.importPath, __gojrGet: get, __gojrSet: set };",
         "}",
         "function __gojrPointerValue(typeName, value) {",
         "  let cell = value;",
         "  return __gojrPointer(typeName, () => cell, (next) => { cell = next; });",
+        "}",
+        "function __gojrConvertPointer(typeName, value) {",
+        "  if (value === null || value === undefined) return __gojrTypedNil(typeName);",
+        "  if (value && value.__gojrTypedNil === true) return __gojrTypedNil(typeName);",
+        "  if (value && value.__gojrPointer === true) {",
+        "    const elemType = String(typeName).startsWith(\"*\") ? String(typeName).slice(1).trim() : String(typeName);",
+        "    return __gojrPointer(elemType, value.__gojrGet, value.__gojrSet);",
+        "  }",
+        "  return value;",
         "}",
         "function __gojrNilPointerError() {",
         "  return new Error(\"GOJR_RUNTIME001: invalid memory address or nil pointer dereference\");",
@@ -3061,6 +3510,48 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "  for (let index = 0; index < names.length; index += 1) out[names[index]] = args[index] || \"any\";",
         "  return out;",
         "}",
+        "function __gojrImportedTypeArgs(importedPackage, functionName, typeArgs) {",
+        "  const typeText = importedPackage && importedPackage.__gojrExportIndex && importedPackage.__gojrExportIndex[functionName] && importedPackage.__gojrExportIndex[functionName].typeText;",
+        "  const names = __gojrFunctionTypeParameterNames(typeText);",
+        "  const out = __gojrPositionalTypeArgs(typeArgs);",
+        "  for (let index = 0; index < names.length; index += 1) out[names[index]] = typeArgs[index] || \"any\";",
+        "  return out;",
+        "}",
+        "function __gojrFunctionTypeParameterNames(typeText) {",
+        "  const text = String(typeText || \"\");",
+        "  if (!text.startsWith(\"func[\")) return [];",
+        "  const close = __gojrMatchingBracket(text, 4);",
+        "  if (close < 0) return [];",
+        "  const names = [];",
+        "  for (const part of __gojrSplitTopLevelTypes(text.slice(5, close))) {",
+        "    const trimmed = part.trim();",
+        "    if (!trimmed) continue;",
+        "    const name = /^[_\\p{L}][_$\\p{L}\\p{N}]*/u.exec(trimmed)?.[0];",
+        "    if (name) names.push(name);",
+        "  }",
+        "  return names;",
+        "}",
+        "function __gojrMatchingBracket(text, open) {",
+        "  let depth = 0;",
+        "  for (let index = open; index < text.length; index += 1) {",
+        "    const char = text[index];",
+        "    if (char === \"[\") depth += 1;",
+        "    if (char === \"]\") {",
+        "      depth -= 1;",
+        "      if (depth === 0) return index;",
+        "    }",
+        "  }",
+        "  return -1;",
+        "}",
+        "function __gojrPositionalTypeArgs(typeArgs) {",
+        "  const out = {};",
+        "  const aliases = [[\"T\", \"K\", \"E\", \"A\", \"T0\"], [\"U\", \"V\", \"B\", \"T1\"], [\"W\", \"C\", \"T2\"], [\"X\", \"D\", \"T3\"]];",
+        "  for (let index = 0; index < typeArgs.length; index += 1) {",
+        "    out[`T${index}`] = typeArgs[index] || \"any\";",
+        "    for (const name of aliases[index] || []) out[name] = typeArgs[index] || \"any\";",
+        "  }",
+        "  return out;",
+        "}",
         "function __gojrGenericArgsFromTypeName(typeName) {",
         "  const text = String(typeName || \"\").trim();",
         "  const open = text.indexOf(\"[\");",
@@ -3113,7 +3604,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "}",
         "function __gojrZero(typeText) {",
         "  switch (typeText) {",
-        "    case \"int\": case \"int8\": case \"int16\": case \"int32\": case \"int64\": case \"uint\": case \"uint8\": case \"uint16\": case \"uint32\": case \"uint64\": case \"uintptr\": return 0n;",
+        "    case \"byte\": case \"rune\": case \"int\": case \"int8\": case \"int16\": case \"int32\": case \"int64\": case \"uint\": case \"uint8\": case \"uint16\": case \"uint32\": case \"uint64\": case \"uintptr\": return 0n;",
         "    case \"float32\": case \"float64\": return 0;",
         "    case \"string\": return \"\";",
         "    case \"bool\": return false;",
@@ -3122,7 +3613,7 @@ function stage1JavaScript(artifact, usesWasm, bodyLines, typeDescriptorLines) {
         "      const descriptor = __gojrDescriptorForTypeName(typeText);",
         "      const kind = descriptor && descriptor.kind;",
         "      switch (kind) {",
-        "        case \"int\": case \"int8\": case \"int16\": case \"int32\": case \"int64\": case \"uint\": case \"uint8\": case \"uint16\": case \"uint32\": case \"uint64\": case \"uintptr\": return 0n;",
+        "        case \"byte\": case \"rune\": case \"int\": case \"int8\": case \"int16\": case \"int32\": case \"int64\": case \"uint\": case \"uint8\": case \"uint16\": case \"uint32\": case \"uint64\": case \"uintptr\": return 0n;",
         "        case \"float32\": case \"float64\": return 0;",
         "        case \"string\": return \"\";",
         "        case \"bool\": return false;",

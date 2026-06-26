@@ -83,6 +83,7 @@ The copy-and-patch paper matters to GoJr in four concrete ways:
 2. Variant selection is the optimization. The emitter should choose direct stencils for known concrete typed operations and helper stencils only for genuinely dynamic Go semantics.
 3. Supernodes are essential. We should not emit a node per byte for giant literals; we should emit a single compact literal-data stencil.
 4. Compilation should be cheaper than AST construction where possible. The emitter should avoid building a second large IR when a typed traversal can select and patch stencils directly.
+5. `_gojr.wasm` is never a placeholder. A package may only record a Wasm member when at least one real typed source shape lowered to executable Wasm, and generated JavaScript must call that Wasm for the lowered source semantics.
 
 The binary paper uses CPS and register/stack stencil variants. In GoJr, the equivalent design pressure is:
 
@@ -733,6 +734,8 @@ not silently write an interpreter artifact.
 
 Every implementation stage ends with a template expansion pass. This is not optional cleanup. It is the mechanism that keeps copy-and-patch from quietly degenerating into generic helper calls. Each pass should inspect the code just implemented, identify shapes that are common, bloated, or paying unnecessary dynamic/runtime cost, and promote those shapes into explicit stencils or supernodes with tests.
 
+The long-term invariant is that every compiled package should use at least one real Wasm stencil. Do not satisfy this by adding bootstrap or marker functions. If a package would otherwise be JS-only, expand the stencil collection until some real package semantics lower to Wasm: numeric scalar functions, dense loops, typed memory moves, byte/string transforms, zeroing, hashing, comparisons, bounds-checked indexing, or other typed operations that the source actually performs.
+
 ### Pre-Implementation Build Steps
 
 Before Stage 1 proper, build the narrow infrastructure slice that removes the remaining unknowns:
@@ -957,7 +960,8 @@ As of June 26, 2026, the `copy-patch-wasm-stage1` backend has moved past the ini
 
 Implemented and covered by focused tests:
 
-- Thin `__.PKGDEF` plus executable `_gojr.js`, with `_gojr.wasm` when an `int64` add kernel is selected.
+- Thin `__.PKGDEF` plus executable `_gojr.js`, with `_gojr.wasm` when real source semantics lower to a Wasm stencil.
+- A first scalar stencil bundle with package-lowerable `int64` add, subtract, multiply, divide, remainder, bitwise and/or/xor, bit-clear, shifts, and signed comparisons.
 - Checked-in Clang-produced Wasm stencil extraction and mixed JS/Wasm fixture execution.
 - Direct generated package functions, methods, package vars, constants, imports by full import path, and source-order `init` calls.
 - `gojr build` / `buildPackages()` default to the executable `copy-patch-wasm-stage1` backend rather than the old source-envelope backend; ordinary and ambient dependency artifacts now use the resolved backend consistently.

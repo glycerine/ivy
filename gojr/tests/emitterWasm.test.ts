@@ -87,6 +87,33 @@ describe("GoJr copy-and-patch Wasm emitter infrastructure", () => {
     const instance = new WebAssembly.Instance(module);
     const add = instance.exports.add_i64 as (a: bigint, b: bigint) => bigint;
     expect(add(40n, 2n)).toBe(42n);
+
+    const scalar = checkedInWasmStencil("i64.scalar.add");
+    const scalarModule = new WebAssembly.Module(wasmBufferSource(scalar.wasmBytes));
+    const scalarInstance = new WebAssembly.Instance(scalarModule);
+    const scalarExports = scalarInstance.exports as Record<string, (...args: bigint[]) => bigint | number>;
+    expect(Object.keys(scalarExports).sort()).toEqual([
+      "gojr_i64_add",
+      "gojr_i64_and",
+      "gojr_i64_bitclear",
+      "gojr_i64_div",
+      "gojr_i64_eq",
+      "gojr_i64_ge",
+      "gojr_i64_gt",
+      "gojr_i64_le",
+      "gojr_i64_lt",
+      "gojr_i64_mul",
+      "gojr_i64_ne",
+      "gojr_i64_or",
+      "gojr_i64_rem",
+      "gojr_i64_shl",
+      "gojr_i64_shr",
+      "gojr_i64_sub",
+      "gojr_i64_xor"
+    ]);
+    expect(scalarExports.gojr_i64_add!(40n, 2n)).toBe(42n);
+    expect(scalarExports.gojr_i64_mul!(6n, 7n)).toBe(42n);
+    expect(scalarExports.gojr_i64_lt!(2n, 9n)).toBe(1);
   });
 
   test("extracts checked-in Clang imported-memory Wasm stencils", () => {
@@ -217,6 +244,22 @@ var Data = []byte{1, 2, 3}
 var Files = map[string][]byte{"a": []byte{4, 5}}
 
 func Add(a, b int64) int64 { return a + b }
+func Sub(a, b int64) int64 { return a - b }
+func Mul(a, b int64) int64 { return a * b }
+func Div(a, b int64) int64 { return a / b }
+func Rem(a, b int64) int64 { return a % b }
+func And(a, b int64) int64 { return a & b }
+func Or(a, b int64) int64 { return a | b }
+func Xor(a, b int64) int64 { return a ^ b }
+func Bitclear(a, b int64) int64 { return a &^ b }
+func Shl(a, b int64) int64 { return a << b }
+func Shr(a, b int64) int64 { return a >> b }
+func Eq(a, b int64) bool { return a == b }
+func Ne(a, b int64) bool { return a != b }
+func Lt(a, b int64) bool { return a < b }
+func Le(a, b int64) bool { return a <= b }
+func Gt(a, b int64) bool { return a > b }
+func Ge(a, b int64) bool { return a >= b }
 func Answer() int64 { return 42 }
 func Noop() {}
 `
@@ -243,6 +286,22 @@ func Noop() {}
     expect(Array.from(pkg.Data as Uint8Array)).toEqual([1, 2, 3]);
     expect(Array.from((pkg.Files as Map<string, Uint8Array>).get("a") ?? [])).toEqual([4, 5]);
     expect(await (pkg.Add as (a: bigint, b: bigint) => Promise<bigint>)(40n, 2n)).toBe(42n);
+    expect(await (pkg.Sub as (a: bigint, b: bigint) => Promise<bigint>)(40n, 2n)).toBe(38n);
+    expect(await (pkg.Mul as (a: bigint, b: bigint) => Promise<bigint>)(6n, 7n)).toBe(42n);
+    expect(await (pkg.Div as (a: bigint, b: bigint) => Promise<bigint>)(40n, 5n)).toBe(8n);
+    expect(await (pkg.Rem as (a: bigint, b: bigint) => Promise<bigint>)(40n, 6n)).toBe(4n);
+    expect(await (pkg.And as (a: bigint, b: bigint) => Promise<bigint>)(6n, 3n)).toBe(2n);
+    expect(await (pkg.Or as (a: bigint, b: bigint) => Promise<bigint>)(4n, 1n)).toBe(5n);
+    expect(await (pkg.Xor as (a: bigint, b: bigint) => Promise<bigint>)(6n, 3n)).toBe(5n);
+    expect(await (pkg.Bitclear as (a: bigint, b: bigint) => Promise<bigint>)(7n, 3n)).toBe(4n);
+    expect(await (pkg.Shl as (a: bigint, b: bigint) => Promise<bigint>)(3n, 2n)).toBe(12n);
+    expect(await (pkg.Shr as (a: bigint, b: bigint) => Promise<bigint>)(8n, 1n)).toBe(4n);
+    expect(await (pkg.Eq as (a: bigint, b: bigint) => Promise<boolean>)(3n, 3n)).toBe(true);
+    expect(await (pkg.Ne as (a: bigint, b: bigint) => Promise<boolean>)(3n, 4n)).toBe(true);
+    expect(await (pkg.Lt as (a: bigint, b: bigint) => Promise<boolean>)(3n, 4n)).toBe(true);
+    expect(await (pkg.Le as (a: bigint, b: bigint) => Promise<boolean>)(4n, 4n)).toBe(true);
+    expect(await (pkg.Gt as (a: bigint, b: bigint) => Promise<boolean>)(5n, 4n)).toBe(true);
+    expect(await (pkg.Ge as (a: bigint, b: bigint) => Promise<boolean>)(5n, 5n)).toBe(true);
     expect(await (pkg.Answer as () => Promise<bigint>)()).toBe(42n);
     expect(await (pkg.Noop as () => Promise<null>)()).toBeNull();
   });
@@ -304,6 +363,7 @@ type Point struct {
 type errString struct {
 	s string
 }
+type MyInts []int64
 
 var Numbers = []int64{4, 5, 6}
 var Labels = map[string]int64{"a": 11}
@@ -325,6 +385,7 @@ func RealPart() float64 { return real(ComplexOps()) }
 func ImagPart() float64 { return imag(ComplexOps()) }
 func Bytes(s string) []byte { return []byte(s) }
 func StringFromBytes() string { return string([]byte{104, 105}) }
+func StringFromDynamicByte(b byte) string { return string([]byte{b}) }
 func ErrText(s string) string { return (&errString{s}).s }
 func AssertInt(x any) int64 { return x.(int64) }
 func AssertIntOk(x any) (int64, bool) { v, ok := x.(int64); return v, ok }
@@ -345,6 +406,10 @@ func KeyedSlice() (int, string, string) {
 	xs := []string{2: "two", 4: "four"}
 	return len(xs), xs[0], xs[4]
 }
+func ConvertNamedSlice() []int64 {
+	xs := MyInts{8, 9}
+	return []int64(xs)
+}
 func ThreeIndexCap() (int, int) {
 	xs := []int64{1, 2, 3, 4, 5}
 	ys := xs[1:3:4]
@@ -362,14 +427,15 @@ func MethodValue() func(int64) int64 { return P.Sum }
     expect(result.ok).toBe(true);
     const source = store.writes.get("/tmp/gojr-stage3expr/example.com/stage3expr.a") ?? "";
     const archive = parseGoJuniorPackageArchive(source);
-    expect(archive?.members.map((member) => member.name)).toEqual(["__.PKGDEF", "_gojr.js"]);
+    expect(archive?.members.map((member) => member.name)).toEqual(["__.PKGDEF", "_gojr.js", "_gojr.wasm"]);
     expect(archive?.javascript).not.toContain("evaluatePackageArtifact");
     expect(archive?.javascript).not.toContain("runtime.ast");
     expect(archive?.javascript).not.toContain("runtime.binary");
     expect(archive?.javascript).toContain("pkg[\"Mul\"] = async");
+    expect(archive?.javascript).toContain("gojr_i64_mul");
 
     const module = await importArtifactJavaScript(archive?.javascript ?? "") as unknown as Stage1ArtifactModule;
-    const instantiated = await module.instantiateGoJrPackage();
+    const instantiated = await module.instantiateGoJrPackage({}, { wasmBase64: archive?.wasmBase64 });
     const pkg = instantiated.package;
     expect(instantiated.diagnostics).toEqual([]);
     expect(await (pkg.Mul as (a: bigint, b: bigint) => Promise<bigint>)(6n, 7n)).toBe(42n);
@@ -388,6 +454,7 @@ func MethodValue() func(int64) int64 { return P.Sum }
     expect(await (pkg.ImagPart as () => Promise<number>)()).toBe(15);
     expect(Array.from(await (pkg.Bytes as (s: string) => Promise<Uint8Array>)("Aπ"))).toEqual([65, 207, 128]);
     expect(await (pkg.StringFromBytes as () => Promise<string>)()).toBe("hi");
+    expect(await (pkg.StringFromDynamicByte as (b: bigint) => Promise<string>)(33n)).toBe("!");
     expect(await (pkg.ErrText as (s: string) => Promise<string>)("boom")).toBe("boom");
     expect(await (pkg.AssertInt as (x: unknown) => Promise<bigint>)(42n)).toBe(42n);
     expect(await (pkg.AssertIntOk as (x: unknown) => Promise<[bigint, boolean]>)(42n)).toEqual([42n, true]);
@@ -395,6 +462,7 @@ func MethodValue() func(int64) int64 { return P.Sum }
     expect(await (pkg.BuiltinSliceOps as () => Promise<[bigint, bigint, bigint]>)()).toEqual([4n, 4n, 3n]);
     expect(await (pkg.BuiltinCopyDelete as () => Promise<[bigint, boolean, bigint]>)()).toEqual([2n, false, 8n]);
     expect(await (pkg.KeyedSlice as () => Promise<[bigint, string, string]>)()).toEqual([5n, "", "four"]);
+    expect(await (pkg.ConvertNamedSlice as () => Promise<bigint[]>)()).toEqual([8n, 9n]);
     expect(await (pkg.ThreeIndexCap as () => Promise<[bigint, bigint]>)()).toEqual([2n, 3n]);
     let panicMessage = "";
     try {
@@ -480,6 +548,18 @@ func AssignSwap() int64 {
 	a, b := int64(1), int64(2)
 	a, b = b, a
 	return a*10 + b
+}
+
+type Flag bool
+
+func ForInitMultiAndBool() int64 {
+	sum := int64(0)
+	for i, j := int64(0), int64(2); i < 3; i++ {
+		if bool(Flag(i < j)) {
+			sum += j
+		}
+	}
+	return sum
 }
 
 func IfInit(x int64) string {
@@ -593,6 +673,22 @@ loop:
 done:
 	return sum
 }
+
+func LocalForwardGoto(n int64) int64 {
+	sum := int64(0)
+	for i := int64(0); i < n; i++ {
+		for j := int64(0); j < 3; j++ {
+			if j == 1 {
+				goto next
+			}
+			sum += 10
+		}
+		sum += 100
+	next:
+		sum += i
+	}
+	return sum
+}
 `
       }]
     }, store);
@@ -621,6 +717,7 @@ done:
     expect(await (pkg.MapOk as (key: string) => Promise<[bigint, boolean]>)("missing")).toEqual([0n, false]);
     expect(await (pkg.TupleUse as () => Promise<bigint>)()).toBe(5n);
     expect(await (pkg.AssignSwap as () => Promise<bigint>)()).toBe(21n);
+    expect(await (pkg.ForInitMultiAndBool as () => Promise<bigint>)()).toBe(4n);
     expect(await (pkg.IfInit as (x: bigint) => Promise<string>)(3n)).toBe("four");
     expect(await (pkg.IfInit as (x: bigint) => Promise<string>)(4n)).toBe("big");
     expect(await (pkg.IfInit as (x: bigint) => Promise<string>)(1n)).toBe("small");
@@ -637,6 +734,7 @@ done:
     expect(await (pkg.TypeSwitch as (x: unknown) => Promise<string>)("hi")).toBe("hi");
     expect(await (pkg.TypeSwitch as (x: unknown) => Promise<string>)(true)).toBe("other");
     expect(await (pkg.GotoSum as () => Promise<bigint>)()).toBe(6n);
+    expect(await (pkg.LocalForwardGoto as (n: bigint) => Promise<bigint>)(3n)).toBe(33n);
   });
 
   test("runs generated init functions after package variable initialization in source order", async () => {
@@ -1729,7 +1827,7 @@ func GenericDefaults() (int64, string, int64, string) {
       backend: GOJR_STAGE1_BACKEND,
       files: [{
         filename: "bad.go",
-        source: "package stage1bad\n\nfunc Hard(a []int64) []int64 { return a[0:1:1] }\n"
+        source: "package stage1bad\n\nfunc Hard(f func(...int64), xs []int64) { defer f(xs...) }\n"
       }]
     }, new MemoryArtifactStore());
 

@@ -15,6 +15,38 @@ export interface ResolvedWasmStencil extends CheckedInWasmStencil {
   extracted: ExtractedWasmFunction;
 }
 
+const I64_SCALAR_KERNELS_BASE64 = "AGFzbQEAAAABDQJgAn5+AX5gAn5+AX8DEhEAAAAAAAAAAAAAAAEBAQEBAQf+AREMZ29qcl9pNjRfYWRkAAAMZ29qcl9pNjRfc3ViAAEMZ29qcl9pNjRfbXVsAAIMZ29qcl9pNjRfZGl2AAMMZ29qcl9pNjRfcmVtAAQMZ29qcl9pNjRfYW5kAAULZ29qcl9pNjRfb3IABgxnb2pyX2k2NF94b3IABxFnb2pyX2k2NF9iaXRjbGVhcgAIDGdvanJfaTY0X3NobAAJDGdvanJfaTY0X3NocgAKC2dvanJfaTY0X2VxAAsLZ29qcl9pNjRfbmUADAtnb2pyX2k2NF9sdAANC2dvanJfaTY0X2xlAA4LZ29qcl9pNjRfZ3QADwtnb2pyX2k2NF9nZQAQCowBEQcAIAAgAXwLBwAgACABfQsHACAAIAF+CwcAIAAgAX8LBwAgACABgQsHACAAIAGDCwcAIAAgAYQLBwAgACABhQsKACAAIAFCf4WDCwcAIAAgAYYLBwAgACABhwsHACAAIAFRCwcAIAAgAVILBwAgACABUwsHACAAIAFXCwcAIAAgAVULBwAgACABWQs=";
+
+const i64ScalarStencilSpecs = [
+  ["i64.scalar.add", "gojr_i64_add", "a + b"],
+  ["i64.scalar.sub", "gojr_i64_sub", "a - b"],
+  ["i64.scalar.mul", "gojr_i64_mul", "a * b"],
+  ["i64.scalar.div", "gojr_i64_div", "a / b"],
+  ["i64.scalar.rem", "gojr_i64_rem", "a % b"],
+  ["i64.scalar.and", "gojr_i64_and", "a & b"],
+  ["i64.scalar.or", "gojr_i64_or", "a | b"],
+  ["i64.scalar.xor", "gojr_i64_xor", "a ^ b"],
+  ["i64.scalar.bitclear", "gojr_i64_bitclear", "a &^ b"],
+  ["i64.scalar.shl", "gojr_i64_shl", "a << b"],
+  ["i64.scalar.shr", "gojr_i64_shr", "a >> b"],
+  ["i64.scalar.eq", "gojr_i64_eq", "a == b"],
+  ["i64.scalar.ne", "gojr_i64_ne", "a != b"],
+  ["i64.scalar.lt", "gojr_i64_lt", "a < b"],
+  ["i64.scalar.le", "gojr_i64_le", "a <= b"],
+  ["i64.scalar.gt", "gojr_i64_gt", "a > b"],
+  ["i64.scalar.ge", "gojr_i64_ge", "a >= b"]
+] as const;
+
+const i64ScalarStencilEntries: CheckedInWasmStencil[] = i64ScalarStencilSpecs.map(([name, exportName, operation]) => ({
+  name,
+  exportName,
+  sourceLanguage: "c",
+  importMemory: false,
+  description: `Package-lowerable scalar int64 kernel for ${operation}.`,
+  cSource: `// Extracted from the checked-in scalar kernel bundle: ${operation}\n`,
+  wasmBase64: I64_SCALAR_KERNELS_BASE64
+}));
+
 export const CHECKED_IN_WASM_STENCILS: CheckedInWasmStencil[] = [
   {
     name: "i64.add.kernel",
@@ -25,6 +57,7 @@ export const CHECKED_IN_WASM_STENCILS: CheckedInWasmStencil[] = [
     cSource: "__attribute__((visibility(\"default\"))) long long add_i64(long long a, long long b) { return a + b; }\n",
     wasmBase64: "AGFzbQEAAAABBwFgAn5+AX4DAgEABwsBB2FkZF9pNjQAAAoJAQcAIAAgAXwLAC8JcHJvZHVjZXJzAQxwcm9jZXNzZWQtYnkBDkhvbWVicmV3IGNsYW5nBjIxLjEuNACUAQ90YXJnZXRfZmVhdHVyZXMIKw9tdXRhYmxlLWdsb2JhbHMrE25vbnRyYXBwaW5nLWZwdG9pbnQrC2J1bGstbWVtb3J5KwhzaWduLWV4dCsPcmVmZXJlbmNlLXR5cGVzKwptdWx0aXZhbHVlKw9idWxrLW1lbW9yeS1vcHQrFmNhbGwtaW5kaXJlY3Qtb3Zlcmxvbmc="
   },
+  ...i64ScalarStencilEntries,
   {
     name: "f64.slice.sum.kernel",
     exportName: "sum_f64",
