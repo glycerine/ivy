@@ -230,10 +230,17 @@ export interface PackageRuntimePlanVariable {
   typeText?: string;
 }
 
+export interface PackageRuntimePlanConstant {
+  name: string;
+  typeText?: string;
+  value: unknown;
+}
+
 export interface PackageRuntimePlan {
   importPath: string;
   packageName: string;
   exportedNames: string[];
+  constants: PackageRuntimePlanConstant[];
   variables: PackageRuntimePlanVariable[];
   varInitOrder: string[][];
 }
@@ -1723,8 +1730,7 @@ export async function evaluatePackageArtifact(
         throw new GoJuniorRuntimeError("package artifact cannot contain top-level executable statements");
       }
       predeclareTopLevelTypes(declarations, context);
-      const constCompletion = await executeTopLevelStatements(declarations.filter((declaration) => declaration.kind === "ConstDecl"), context);
-      expectNormalCompletion(constCompletion, "package constants");
+      predeclareArtifactPackageConstants(plan.constants, context);
       predeclareArtifactPackageVariables(plan.variables, context);
       await executePackageVarInitializersByName(declarations, plan.varInitOrder, context);
       await runInitFunctions(ast.functions, context);
@@ -6085,6 +6091,18 @@ function predeclarePackageVariables(declarations: Statement[], pkg: GoTypesPacka
         typeText
       );
     }
+  }
+}
+
+function predeclareArtifactPackageConstants(constants: PackageRuntimePlanConstant[], context: EvaluationContext): void {
+  for (const constant of constants) {
+    if (constant.name === "_") continue;
+    context.declareRoot(
+      constant.name,
+      typedCheckedConstantValue(constant.value, constant.typeText, context),
+      false,
+      constant.typeText
+    );
   }
 }
 

@@ -17,7 +17,8 @@ import {
   Unsafe as GoTypesUnsafe,
   Var as GoTypesVar,
   type Object as GoTypesObject,
-  type Package as GoTypesPackage
+  type Package as GoTypesPackage,
+  type Type as GoTypesType
 } from "./go/types/index.js";
 
 export interface BuildPackageRequest {
@@ -117,10 +118,17 @@ export interface GoJuniorPackageRuntimeVariable {
   typeText?: string;
 }
 
+export interface GoJuniorPackageRuntimeConstant {
+  name: string;
+  typeText?: string;
+  value: unknown;
+}
+
 export interface GoJuniorPackageRuntimePlan {
   importPath: string;
   packageName: string;
   exportedNames: string[];
+  constants: GoJuniorPackageRuntimeConstant[];
   variables: GoJuniorPackageRuntimeVariable[];
   varInitOrder: string[][];
 }
@@ -757,6 +765,7 @@ class PackageGraphBuilder {
         importPath,
         packageName,
         exportedNames: exports.map((item) => item.name).sort(),
+        constants: [],
         variables: [],
         varInitOrder: []
       })
@@ -1193,6 +1202,15 @@ function packageRuntimePlan(
     importPath,
     packageName,
     exportedNames: objects.filter((object) => object.Exported()).map((object) => object.Name()).sort(),
+    constants: objects.flatMap((object): GoJuniorPackageRuntimeConstant[] => {
+      if (!(object instanceof GoTypesConst)) return [];
+      const type = object.Type();
+      return [{
+        name: object.Name(),
+        value: object.Val(),
+        ...(type ? { typeText: checkedConstantBuildTypeText(type, pkg) } : {})
+      }];
+    }).sort((left, right) => left.name.localeCompare(right.name)),
     variables: objects.flatMap((object): GoJuniorPackageRuntimeVariable[] => {
       if (!(object instanceof GoTypesVar)) return [];
       const type = object.Type();
@@ -1205,6 +1223,11 @@ function packageRuntimePlan(
       initializer.Lhs.map((object) => object.Name()).filter((name) => name !== "_")
     )
   };
+}
+
+function checkedConstantBuildTypeText(type: GoTypesType, pkg: GoTypesPackage): string | undefined {
+  const text = GoTypesTypeString(type, GoTypesRelativeTo(pkg));
+  return text.startsWith("untyped ") ? undefined : text;
 }
 
 function generatedArtifactSource(pkgdef: GoJuniorPackageExportData, files: SourceFile[], ast: ProgramAst, runtimePlan: GoJuniorPackageRuntimePlan): string {

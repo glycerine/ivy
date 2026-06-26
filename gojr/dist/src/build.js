@@ -564,6 +564,7 @@ class PackageGraphBuilder {
                 importPath,
                 packageName,
                 exportedNames: exports.map((item) => item.name).sort(),
+                constants: [],
                 variables: [],
                 varInitOrder: []
             })
@@ -978,6 +979,16 @@ function packageRuntimePlan(importPath, packageName, pkg, initOrder) {
         importPath,
         packageName,
         exportedNames: objects.filter((object) => object.Exported()).map((object) => object.Name()).sort(),
+        constants: objects.flatMap((object) => {
+            if (!(object instanceof GoTypesConst))
+                return [];
+            const type = object.Type();
+            return [{
+                    name: object.Name(),
+                    value: object.Val(),
+                    ...(type ? { typeText: checkedConstantBuildTypeText(type, pkg) } : {})
+                }];
+        }).sort((left, right) => left.name.localeCompare(right.name)),
         variables: objects.flatMap((object) => {
             if (!(object instanceof GoTypesVar))
                 return [];
@@ -989,6 +1000,10 @@ function packageRuntimePlan(importPath, packageName, pkg, initOrder) {
         }).sort((left, right) => left.name.localeCompare(right.name)),
         varInitOrder: initOrder.map((initializer) => initializer.Lhs.map((object) => object.Name()).filter((name) => name !== "_"))
     };
+}
+function checkedConstantBuildTypeText(type, pkg) {
+    const text = GoTypesTypeString(type, GoTypesRelativeTo(pkg));
+    return text.startsWith("untyped ") ? undefined : text;
 }
 function generatedArtifactSource(pkgdef, files, ast, runtimePlan) {
     const javascript = generatedArtifactJavaScript(pkgdef, files, ast, runtimePlan);
