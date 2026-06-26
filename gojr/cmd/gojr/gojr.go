@@ -80,6 +80,24 @@ type cacheRequest struct {
 	Yes                bool   `json:"yes,omitempty"`
 }
 
+type benchmarkRequest struct {
+	Files              []sourceFile   `json:"files,omitempty"`
+	Name               string         `json:"name,omitempty"`
+	ImportPath         string         `json:"importPath,omitempty"`
+	PackageName        string         `json:"packageName,omitempty"`
+	PackageSources     packageSources `json:"packageSources,omitempty"`
+	SourceRoots        []string       `json:"sourceRoots,omitempty"`
+	ArtifactRoot       string         `json:"artifactRoot,omitempty"`
+	PackageCacheParent string         `json:"packageCacheParent,omitempty"`
+	CompilerVersion    string         `json:"compilerVersion,omitempty"`
+	Iterations         int            `json:"iterations,omitempty"`
+	WarmupIterations   int            `json:"warmupIterations,omitempty"`
+	CaseNames          []string       `json:"caseNames,omitempty"`
+	CacheMode          string         `json:"cacheMode,omitempty"`
+	PhaseSet           string         `json:"phaseSet,omitempty"`
+	CPUProfilePath     string         `json:"cpuProfilePath,omitempty"`
+}
+
 type compileRequest struct {
 	Files       []sourceFile         `json:"files"`
 	SheetJSON   string               `json:"sheetJSON,omitempty"`
@@ -161,6 +179,14 @@ type cacheEntry struct {
 	Dependencies        []string      `json:"dependencies,omitempty"`
 	DependencyCacheKeys []string      `json:"dependencyCacheKeys,omitempty"`
 	Exports             []buildExport `json:"exports,omitempty"`
+}
+
+type benchmarkResult struct {
+	OK          bool            `json:"ok"`
+	Diagnostics []string        `json:"diagnostics"`
+	Output      string          `json:"output"`
+	ProfilePath string          `json:"profilePath,omitempty"`
+	Report      json.RawMessage `json:"report,omitempty"`
 }
 
 type fixtureResult struct {
@@ -360,6 +386,15 @@ func main() {
 			return
 		case "cache":
 			ok, err := runCache(rt, os.Args[2:])
+			if err != nil {
+				fatal(err)
+			}
+			if !ok {
+				os.Exit(1)
+			}
+			return
+		case "bench":
+			ok, err := runBench(rt, os.Args[2:])
 			if err != nil {
 				fatal(err)
 			}
@@ -778,6 +813,86 @@ func runCache(rt *nodeRuntime, args []string) (bool, error) {
 	return result.OK, nil
 }
 
+func runBench(rt *nodeRuntime, args []string) (bool, error) {
+	flags := flag.NewFlagSet("gojr bench", flag.ContinueOnError)
+	flags.SetOutput(os.Stderr)
+	importPath := flags.String("importpath", "", "package import path for a source target")
+	iterations := flags.Int("n", 1, "measured benchmark iterations")
+	warmupIterations := flags.Int("warmup", 0, "warmup iterations before measurement")
+	cacheMode := flags.String("cache", "cold", "artifact cache mode: cold or warm")
+	phaseSet := flags.String("phase", "front-end-and-build", "phase set: front-end, package-build, or front-end-and-build")
+	cpuProfilePath := flags.String("cpuprofile", "", "write a V8 .cpuprofile for the benchmark run")
+	packageCacheParent := flags.String("pkgdir", "", "package-cache parent directory; js_gojr is appended")
+	artifactRoot := flags.String("artifact-root", "", "exact js_gojr artifact root directory")
+	jsonMode := flags.Bool("json", false, "print a machine-readable JSON benchmark report")
+	var caseFlags packageFlag
+	flags.Var(&caseFlags, "case", "built-in benchmark case name; may be repeated")
+	var packageFlags packageFlag
+	flags.Var(&packageFlags, "pkg", "Go-junior source package dependency, import/path=DIR; may be repeated")
+	var sourceRootFlags packageFlag
+	flags.Var(&sourceRootFlags, "srcroot", "filesystem source root for resolving imported Go-junior packages; may be repeated")
+	if err := flags.Parse(args); err != nil {
+		return false, err
+	}
+	if flags.NArg() > 1 {
+		return false, fmt.Errorf("usage: gojr bench [-n N] [-warmup N] [-case NAME] [-cache cold|warm] [-phase front-end|package-build|front-end-and-build] [-cpuprofile PATH] [-pkgdir DIR|-artifact-root DIR] [TARGET]")
+	}
+	if *iterations <= 0 {
+		return false, fmt.Errorf("-n expects a positive integer")
+	}
+	if *warmupIterations < 0 {
+		return false, fmt.Errorf("-warmup expects a non-negative integer")
+	}
+	if *cacheMode != "cold" && *cacheMode != "warm" {
+		return false, fmt.Errorf("-cache expects cold or warm")
+	}
+	if *phaseSet != "front-end" && *phaseSet != "package-build" && *phaseSet != "front-end-and-build" {
+		return false, fmt.Errorf("-phase expects front-end, package-build, or front-end-and-build")
+	}
+
+	target := optionalArg(flags.Args())
+	var files []sourceFile
+	packageName := ""
+	resolvedImportPath := strings.TrimSpace(*importPath)
+	if target != "" {
+		var err error
+		files, err = readBuildTarget(target)
+		if err != nil {
+			return false, err
+		}
+		packageName = packageNameFromSourceFiles(files)
+		if resolvedImportPath == "" {
+			resolvedImportPath = deriveBuildImportPath(target, packageName)
+		}
+	}
+	packages, err := readRuntimePackageSpecs(packageFlags)
+	if err != nil {
+		return false, err
+	}
+	result, err := rt.Bench(benchmarkRequest{
+		Files:              files,
+		Name:               resolvedImportPath,
+		ImportPath:         resolvedImportPath,
+		PackageName:        packageName,
+		PackageSources:     packageSourceMap(packages),
+		SourceRoots:        buildSourceRoots(target, resolvedImportPath, sourceRootFlags),
+		ArtifactRoot:       strings.TrimSpace(*artifactRoot),
+		PackageCacheParent: strings.TrimSpace(*packageCacheParent),
+		CompilerVersion:    toolchainCompilerVersion(),
+		Iterations:         *iterations,
+		WarmupIterations:   *warmupIterations,
+		CaseNames:          []string(caseFlags),
+		CacheMode:          *cacheMode,
+		PhaseSet:           *phaseSet,
+		CPUProfilePath:     strings.TrimSpace(*cpuProfilePath),
+	})
+	if err != nil {
+		return false, err
+	}
+	printBenchmarkResult(result, *jsonMode)
+	return result.OK, nil
+}
+
 func runFixture(rt *nodeRuntime, args []string) (bool, error) {
 	flags := flag.NewFlagSet("gojr run-fixture", flag.ContinueOnError)
 	flags.SetOutput(os.Stderr)
@@ -847,6 +962,9 @@ gojr inspect-js [--json] [-importpath PATH] [--pkg import=DIR] [--srcroot DIR] [
 
 gojr cache path|list|clear [--json] [-pkgdir DIR|-artifact-root DIR] [--yes]
   inspect or clear the Go-junior package artifact cache
+
+gojr bench [--json] [-n N] [-warmup N] [-case NAME] [-cache cold|warm] [-phase front-end|package-build|front-end-and-build] [-cpuprofile PATH] [-pkgdir DIR|-artifact-root DIR] [TARGET]
+  run shared JavaScript/V8 compiler benchmarks; defaults to built-in microbenchmarks
 
 gojr run-fixture [--json] [--pkg import=DIR] [--srcroot DIR] [--seed SEED] FIXTURE.json|-
   run a spreadsheet fixture whose formula cells contain Go-junior source
@@ -1944,6 +2062,23 @@ func printCacheResult(result cacheResult, jsonMode bool) {
 	}
 }
 
+func printBenchmarkResult(result benchmarkResult, jsonMode bool) {
+	if jsonMode {
+		printJSON(result)
+		return
+	}
+	for _, diagnostic := range result.Diagnostics {
+		if result.OK {
+			fmt.Println(diagnostic)
+		} else {
+			fmt.Fprintln(os.Stderr, diagnostic)
+		}
+	}
+	if result.Output != "" {
+		fmt.Print(result.Output)
+	}
+}
+
 func printFixtureResult(result fixtureResult, jsonMode bool) {
 	if jsonMode {
 		printJSON(result)
@@ -2236,6 +2371,32 @@ func (rt *nodeRuntime) Cache(request cacheRequest) (cacheResult, error) {
 	var result cacheResult
 	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
 		return cacheResult{}, err
+	}
+	return result, nil
+}
+
+func (rt *nodeRuntime) Bench(request benchmarkRequest) (benchmarkResult, error) {
+	data, err := json.Marshal(request)
+	if err != nil {
+		return benchmarkResult{}, err
+	}
+	cInput := C.CString(string(data))
+	defer C.free(unsafe.Pointer(cInput))
+
+	var cErr *C.char
+	cResult := C.gojr_node_bench(rt.ptr, cInput, &cErr)
+	if cErr != nil {
+		defer C.gojr_string_free(cErr)
+		return benchmarkResult{}, errors.New(C.GoString(cErr))
+	}
+	if cResult == nil {
+		return benchmarkResult{}, errors.New("embedded Node benchmark returned nil")
+	}
+	defer C.gojr_string_free(cResult)
+
+	var result benchmarkResult
+	if err := json.Unmarshal([]byte(C.GoString(cResult)), &result); err != nil {
+		return benchmarkResult{}, err
 	}
 	return result, nil
 }

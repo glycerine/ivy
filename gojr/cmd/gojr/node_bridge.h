@@ -21,6 +21,7 @@ char* gojr_node_set_sheet(gojr_node_runtime* runtime, const char* json, char** e
 char* gojr_node_build(gojr_node_runtime* runtime, const char* json, char** error_out);
 char* gojr_node_inspect_js(gojr_node_runtime* runtime, const char* json, char** error_out);
 char* gojr_node_cache(gojr_node_runtime* runtime, const char* json, char** error_out);
+char* gojr_node_bench(gojr_node_runtime* runtime, const char* json, char** error_out);
 char* gojr_node_run_fixture(gojr_node_runtime* runtime, const char* json, char** error_out);
 char* gojr_node_run_fixture_with_packages(gojr_node_runtime* runtime, const char* json, char** error_out);
 void gojr_node_free(gojr_node_runtime* runtime);

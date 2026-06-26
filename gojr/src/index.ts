@@ -68,6 +68,33 @@ export {
   testSourceFilesWithPackagesOnNode
 } from "./nodeHost.js";
 export {
+  defaultGoJuniorBenchmarkCases,
+  formatGoJuniorBenchmarkReport,
+  runGoJuniorBenchmark
+} from "./bench.js";
+export type {
+  GoJuniorBenchmarkCacheMode,
+  GoJuniorBenchmarkCase,
+  GoJuniorBenchmarkCaseReport,
+  GoJuniorBenchmarkMetrics,
+  GoJuniorBenchmarkOptions,
+  GoJuniorBenchmarkPhaseSet,
+  GoJuniorBenchmarkPhaseSummary,
+  GoJuniorBenchmarkReport
+} from "./bench.js";
+export {
+  benchmarkGoJuniorOnNode,
+  benchmarkGoJuniorOnNodeHostJSON,
+  benchmarkGoJuniorOnNodeHostPayload,
+  defaultCpuProfilePath,
+  normalizeBenchmarkCacheMode,
+  normalizeBenchmarkPhaseSet
+} from "./nodeBench.js";
+export type {
+  NodeBenchmarkHostPayload,
+  NodeBenchmarkRequest
+} from "./nodeBench.js";
+export {
   compilePackageSourceFiles,
   compileSource,
   compileSourceFiles

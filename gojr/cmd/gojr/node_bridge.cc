@@ -307,6 +307,10 @@ extern "C" char* gojr_node_cache(gojr_node_runtime* runtime, const char* json, c
   return call_global_string_function(runtime, "__gojrCache", json, error_out);
 }
 
+extern "C" char* gojr_node_bench(gojr_node_runtime* runtime, const char* json, char** error_out) {
+  return call_global_string_function(runtime, "__gojrBench", json, error_out);
+}
+
 extern "C" char* gojr_node_run_fixture(gojr_node_runtime* runtime, const char* json, char** error_out) {
   return call_global_string_function(runtime, "__gojrRunFixture", json, error_out);
 }

@@ -583,6 +583,8 @@ not silently write an interpreter artifact.
 
 ## Implementation Stages
 
+Every implementation stage ends with a template expansion pass. This is not optional cleanup. It is the mechanism that keeps copy-and-patch from quietly degenerating into generic helper calls. Each pass should inspect the code just implemented, identify shapes that are common, bloated, or paying unnecessary dynamic/runtime cost, and promote those shapes into explicit stencils or supernodes with tests.
+
 ### Stage 1: Emitter Scaffold And Artifact Boundary
 
 Deliverables:
@@ -612,6 +614,12 @@ Tests:
 - Build the `4d63.com/tz` data shape fixture and assert artifact size is proportional to source size.
 - Assert `__.PKGDEF` for the data fixture is below a small threshold, for example 128 KB.
 
+Template Expansion Pass:
+
+- Add the initial package, function, variable, zero-value, `[]string`, `[]byte`, and `map[string][]byte` stencils.
+- Add size snapshot tests proving literal supernodes beat serialized AST size.
+- Record any fallback helper calls emitted by Stage 1 and classify them as deliberate runtime semantics or future stencil candidates.
+
 ### Stage 2: Runtime Helper Facade
 
 Deliverables:
@@ -628,6 +636,12 @@ Tests:
 - Interface boxing and type assertion.
 - Channel send/receive/select with deterministic PRNG.
 - Defer/panic/recover ordering.
+
+Template Expansion Pass:
+
+- For each helper introduced, decide whether it should remain a helper or become a type-directed stencil in later stages.
+- Add direct construction stencils for helper-backed values that are common and cheap to emit, such as byte slices, dense 64-bit typed arrays, empty maps, empty slices, and nil-able zero values.
+- Add tests that generated code calls narrow helpers, not broad interpreter-shaped helpers.
 
 ### Stage 3: Expression Lowering
 
@@ -648,6 +662,12 @@ Tests:
 - Type assertions and comma-ok assertions.
 - Compile output snapshot tests for key stencils.
 
+Template Expansion Pass:
+
+- Add stencil variants for each high-frequency typed expression shape found while implementing expression lowering: integer arithmetic, float arithmetic, string concatenation, bool comparisons, nil checks, direct selector loads, direct index loads, and tuple-producing expressions.
+- Add supernodes for constant-foldable expression patterns and compact literal expression trees.
+- Audit generated JS for generic `runtime.binary`, `runtime.assign`, or `runtime.evaluate*` style calls; replace all statically proven cases with direct typed stencils.
+
 ### Stage 4: Statement Lowering
 
 Deliverables:
@@ -664,6 +684,12 @@ Tests:
 - Select with nil/default/ready cases and deterministic PRNG.
 - Defer LIFO and panic/recover behavior.
 - Named returns with defers.
+
+Template Expansion Pass:
+
+- Add statement stencils for common structured control-flow shapes: simple `if`, `if/else`, counted `for`, `for range` over slices, `for range` over maps, direct `return`, short declaration from tuple, map comma-ok assignment, and receive comma-ok assignment.
+- Add state-machine stencils only for functions that need hard `goto`; keep normal structured code on structured JS stencils.
+- Add output tests proving common control flow does not lower through a generic statement interpreter.
 
 ### Stage 5: Functions, Methods, Closures, And Packages
 
@@ -686,6 +712,12 @@ Tests:
 - Mutually recursive functions.
 - Package variable initialization dependencies from `Info.InitOrder`.
 
+Template Expansion Pass:
+
+- Add function stencils for common effect classes: no-await/no-defer, await-capable, defer-capable, named-return, method with value receiver, method with pointer receiver, closure with captures, and init function.
+- Add capture stencils that box only captured or address-taken variables, not every local.
+- Add package-init supernodes for common init-order shapes, including pure constant/package var initialization and multiple init functions in source order.
+
 ### Stage 6: Type Descriptors, Interfaces, And Reflection
 
 Deliverables:
@@ -703,6 +735,12 @@ Tests:
 - `reflect.Value` operations already covered by zygo dependencies.
 - Imported private/helper types crossing package boundaries.
 
+Template Expansion Pass:
+
+- Add descriptor stencils for named types, structs, interfaces, pointers, slices, arrays, maps, chans, and functions.
+- Add interface stencils for concrete-to-interface boxing, nil interface values, typed nil interface values, method dispatch, and type switch dispatch.
+- Add reflection descriptor deduplication tests so repeated type uses patch references to shared descriptors instead of duplicating descriptor source.
+
 ### Stage 7: Generics
 
 Deliverables:
@@ -718,6 +756,12 @@ Tests:
 - Constraints involving `~`, unions, comparable, byte slices, strings.
 - Generic callbacks crossing package boundaries.
 - Current Go 1.27rc1 generic-method cases that motivated the latest parser/typechecker update.
+
+Template Expansion Pass:
+
+- Add generic function stencils for dictionary/type-descriptor passing, generic method receivers, and generic type constructors.
+- Add specialization stencils only after measuring common instantiated shapes; do not preemptively explode the template library.
+- Add tests comparing generic emitted source size for reusable dictionary lowering versus specialized lowering.
 
 ### Stage 8: Standard Library And Real Project Cutover
 
@@ -735,6 +779,13 @@ Tests:
 - `gojr run cmd/zygo` second run loads cached artifacts without source recompile.
 - Cache size remains reasonable, target under 150 MB for the current zygo dependency closure unless source/data size justifies more.
 - Second cached zygo start target: initially under 5 seconds, later under 1 second.
+
+Template Expansion Pass:
+
+- Use the standard-library and zygo dependency closure as the first real template expansion corpus.
+- Rank emitted helper calls and large emitted fragments by frequency, size, and startup cost.
+- Promote the highest-payoff shapes into new stencils or supernodes before declaring the stage complete.
+- Add regression tests for every promoted stencil so later work does not collapse back to generic helper-heavy output.
 
 ## Test Plan By Concern
 
@@ -796,6 +847,74 @@ Expose them in progress output when requested, without changing normal user outp
 Keep `gojr test: starting ...` visibility.
 
 The immediate priority is to eliminate interpreter-shaped artifacts before optimizing around them.
+
+### Implemented Benchmark Harness
+
+The initial V8/JavaScript benchmark harness now exists and should be kept as the scoreboard for copy-and-patch work.
+
+Mechanism of action:
+
+- `gojr/src/bench.ts` is the runtime-neutral benchmark core.
+- `gojr/src/nodeBench.ts` is the Node/V8 host layer.
+- The native `gojr` binary exposes the same JavaScript implementation through `gojr bench`; the Go side only reads local source files and passes JSON into the embedded runtime.
+- The npm-facing CLI also exposes `node dist/src/cli.js bench`.
+- The embedded runtime installs `__gojrBench`, which calls `benchmarkGoJuniorOnNode` and returns a host JSON payload.
+- Optional V8 CPU profiles are captured through Node's `inspector.Session` and written as Chrome DevTools-compatible `.cpuprofile` files.
+- The harness measures phases independently enough to show where time moves as the emitter changes:
+  - `parse`
+  - `ast-lower`
+  - `typecheck`
+  - `package-build`
+- The harness also records artifact bloat counters:
+  - `artifact_bytes_max`
+  - `pkgdef_bytes_max`
+  - `js_bytes_max`
+  - `runtime_ast_json_bytes_max`
+
+The first built-in benchmark cases are deliberately small and diagnostic:
+
+- `tiny-function`: minimal function/package overhead.
+- `loop-and-branch`: common statement lowering pressure.
+- `byte-literal-4k`: literal bloat pressure and a small stand-in for the `4d63.com/tz` explosion.
+
+Usage:
+
+```bash
+cd ~/ivy/gojr
+make
+gojr bench -n 10
+gojr bench -n 10 -case tiny-function
+gojr bench -n 10 -case byte-literal-4k
+gojr bench -n 10 -cache warm -case tiny-function
+gojr bench -n 5 -warmup 2 -phase front-end
+gojr bench -n 3 -cpuprofile /tmp/gojr-copy-patch.cpuprofile
+gojr bench -n 1 ./path/to/package
+gojr bench --json -n 1 -case tiny-function
+```
+
+For fast JavaScript-only development without rebuilding the native wrapper:
+
+```bash
+cd ~/ivy/gojr
+npm run build
+node dist/src/cli.js bench -n 10
+node dist/src/cli.js bench -n 3 -case byte-literal-4k --cpuprofile /tmp/gojr-node.cpuprofile
+```
+
+Profile workflow:
+
+1. Run a representative benchmark with `-cpuprofile /tmp/name.cpuprofile`.
+2. Open Chrome or Chromium DevTools.
+3. Load the `.cpuprofile` in the Performance/JavaScript profiler view.
+4. Compare parse/typecheck/emit/build costs before and after each template expansion pass.
+
+Benchmark policy:
+
+- Every copy-and-patch stage must add or update at least one benchmark case when it introduces a new lowering family.
+- Every template expansion pass must be justified by benchmark data or a size snapshot.
+- `byte-literal-4k` should trend sharply down once literal supernodes replace serialized AST payloads.
+- A package target benchmark should be used before and after changing package-cache loading so we can distinguish cold compile cost from warm cache-hit startup cost.
+- Do not optimize against the current interpreter-shaped artifact as if it were the final design; use the bloat counters to prove that `runtime_ast_json_bytes_max` is disappearing.
 
 ## Hardest Areas
 

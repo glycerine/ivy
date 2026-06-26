@@ -212,6 +212,10 @@
             const result = gojrModule.packageCacheOnNode(JSON.parse(json));
             return JSON.stringify(result);
         };
+        root.__gojrBench = async function (json) {
+            const result = await gojrModule.benchmarkGoJuniorOnNode(JSON.parse(json));
+            return gojrModule.benchmarkGoJuniorOnNodeHostJSON(result);
+        };
         root.__gojrRunFixture = async function (json) {
             const result = await gojrModule.runSpreadsheetFixtureJson(json, runtimeOptions());
             return gojrModule.spreadsheetFixtureResultToHostJSON(result);
