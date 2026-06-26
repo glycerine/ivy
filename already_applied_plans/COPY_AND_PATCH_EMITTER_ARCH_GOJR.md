@@ -50,6 +50,7 @@ The revised architecture is Wasm-first and JavaScript-hosted:
 - JavaScript remains the package loader, spreadsheet graph orchestrator, dynamic host-binding layer, browser/DOM/chart integration layer, and fallback path for highly dynamic Go semantics.
 - Wasm is the preferred target for hot straight-line numeric code, dense slice/array loops, fixed-layout structs, and spreadsheet kernels where CPU cost dominates.
 - Copy-and-patch stencils should therefore be binary Wasm stencils first, with JavaScript stencils kept for orchestration and dynamic glue.
+- C compiled to Wasm with Clang/LLVM is the default stencil generation pipeline. Other sources may be used for research, but checked-in production stencils should be small, deterministic, runtime-free Wasm fragments extracted from Clang output.
 
 For GoJr, "copy-and-patch" now means:
 
@@ -88,7 +89,9 @@ The binary paper uses CPS and register/stack stencil variants. In GoJr, the equi
 - use Wasm for hot numeric kernels so `i64`, `f64`, dense memory, and predictable control flow map naturally;
 - use JavaScript for orchestration, dynamic spreadsheet references, package loading, host APIs, async scheduling, and browser integration;
 - avoid high-frequency JS-to-Wasm micro-calls by batching loops/kernels inside Wasm;
+- avoid Wasm helper calls for individual arithmetic operations; compile whole kernels/chunks so JS-to-Wasm crossings amortize over meaningful work;
 - insert cooperative preemption at JS-owned chunk boundaries rather than calling out from Wasm on every loop iteration;
+- keep allocation and lifetime policy in JavaScript/GoJr runtime code; Wasm kernels receive integer offsets into GoJr-managed linear memory, not pointers to ordinary JavaScript objects;
 - box only address-taken or captured variables;
 - select stencils based on static type/effect facts rather than doing broad runtime type checks.
 
@@ -102,6 +105,10 @@ The binary paper uses CPS and register/stack stencil variants. In GoJr, the equi
 6. The Go wrapper remains thin. Browser and native `gojr` use the same JavaScript compiler/runtime implementation.
 7. All package cache keys include the GoJr compiler/toolchain version and artifact layout version.
 8. Emitted output must be deterministic for the same source, build context, and toolchain version.
+9. Do not emit Wasm helper calls for individual arithmetic operations. Wasm calls should run whole kernels or fuel-bounded chunks.
+10. Wasm kernels do not own general allocation or garbage collection. JavaScript/GoJr owns allocation, lifetime, arenas, and view refresh after `WebAssembly.Memory.grow()`.
+11. Wasm-visible arrays and structs are passed as offsets into GoJr-managed linear memory. Ordinary JavaScript object arrays are not passed to Wasm kernels.
+12. The default Wasm stencil foundry is C to Wasm through Clang/LLVM with freestanding, no-standard-library output.
 
 ## Target Pipeline
 
@@ -255,12 +262,93 @@ package.ts       package module assembly
 runtimeApi.ts    names and contracts for generated-code runtime helpers
 ```
 
+### Stencil Generation Source
+
+The default stencil-generation source is C compiled directly to WebAssembly with Clang/LLVM.
+
+Rationale:
+
+- GoJr is lowering from a typed Go AST to Wasm. The source language used to manufacture reusable Wasm shapes does not have to be Go.
+- C is the cleanest stencil source for pure copy-and-patch simplicity. Small C functions can describe node behaviors, loop kernels, memory loads/stores, struct-field access, numeric conversions, and branch/control-flow shapes without pulling in a language runtime.
+- Clang can target Wasm directly. With flags such as `--target=wasm32`, `-ffreestanding`, and `-nostdlib`, the output can be kept to the literal Wasm instructions and relocations needed by the stencil, without libc, allocator, scheduler, or panic machinery.
+- The Wasm function-body boundary is parseable and deterministic: function bodies are length-delimited in the code section, and object/export/symbol metadata can identify the function to extract. The stencil extractor must parse the Wasm object/module, locate the intended function body, record relocations and patch holes, strip names/debug/custom baggage that is not needed, and reject output that contains unexpected imports/runtime dependencies.
+- C is familiar enough that stencil behavior remains easy to review, but low-level enough that it maps closely to Wasm's `i32`, `i64`, `f32`, `f64`, locals, branches, and linear-memory operations.
+
+The C/Clang pipeline should be a development-time stencil foundry, not a runtime dependency for ordinary `gojr build`. The checked-in or generated stencil artifact is what matters:
+
+```text
+stencil.c
+  -> clang --target=wasm32 -ffreestanding -nostdlib ...
+  -> parse Wasm object/module
+  -> extract validated function bodies/data fragments
+  -> record patch sites, type signatures, imports, memory assumptions, and benchmark metadata
+  -> emit deterministic GoJr stencil table
+```
+
+Other stencil sources remain acceptable for investigation:
+
+- handwritten WAT or hand-emitted binary Wasm for tiny primitives and tests;
+- Rust `no_std` for comparison when it produces cleaner Wasm than C;
+- TinyGo as a semantic oracle for Go-shaped kernels;
+- the standard Go Wasm compiler as a whole-program reference, not as the normal stencil source.
+
+None of these alternatives should add a required runtime dependency to normal package compilation unless benchmarks and artifact-size checks prove that the dependency buys enough value to justify it.
+
 ### Stencil Representation
 
-A stencil should be structured enough to prevent unsafe string pasting:
+The emitter needs two stencil families:
+
+1. Binary Wasm stencils for hot kernels, memory operations, and low-level typed fragments.
+2. JavaScript host stencils for package orchestration, dynamic semantics, runtime helper calls, imports, init sequencing, and browser/spreadsheet integration.
+
+The Wasm stencil representation is primary for compiled kernels:
 
 ```ts
-interface Stencil {
+interface WasmStencil {
+  name: string;
+  signature: WasmFunctionSignature;
+  locals: WasmLocalDecl[];
+  bodyBytes: Uint8Array;
+  holes: WasmPatchHole[];
+  imports: WasmImportRequirement[];
+  memory: WasmMemoryRequirement;
+  metadata: WasmStencilMetadata;
+}
+
+type WasmPatchHoleKind =
+  | "typeIndex"
+  | "functionIndex"
+  | "localIndex"
+  | "globalIndex"
+  | "branchDepth"
+  | "lebI32"
+  | "lebI64"
+  | "memoryOffset"
+  | "dataOffset"
+  | "callTarget";
+
+interface WasmPatchHole {
+  kind: WasmPatchHoleKind;
+  offset: number;
+  width: number;
+  signed: boolean;
+  semanticName: string;
+}
+```
+
+Wasm patching must validate every hole before writing bytes:
+
+- patched LEB128 values fit the reserved width or trigger a controlled re-emit with a larger variant;
+- branch depths target valid blocks/loops;
+- function/type/local/global indices refer to the assembled module tables;
+- memory offsets match GoJr layout descriptors;
+- imports match the declared JS host ABI;
+- extracted Clang output contains no unexpected runtime imports or allocator dependencies.
+
+JavaScript stencils should still be structured enough to prevent unsafe string pasting:
+
+```ts
+interface JsStencil {
   name: string;
   template: string;
   slots: Record<string, SlotKind>;
@@ -280,7 +368,7 @@ type SlotKind =
 
 Every patch slot must validate or escape according to its kind.
 
-Do not use ad hoc string concatenation for semantic code. Raw JS should be allowed only for already-emitted trusted fragments.
+Do not use ad hoc string concatenation for semantic code. Raw JS should be allowed only for already-emitted trusted fragments. Do not represent Wasm stencils as strings except in test fixtures or human-readable WAT diagnostics.
 
 ### Fragment Metadata
 
@@ -382,6 +470,41 @@ BigUint64Array  dense []uint64 storage
 ```
 
 JavaScript scalar reads from these arrays are still `bigint`, but the storage is exact 8-byte signed/unsigned integer storage. The emitter should use these for dense `[]int64`, `[]uint64`, `[N]int64`, `[N]uint64`, and large literal tables when Go slice/array semantics allow it.
+
+### Wasm Linear Memory And Allocation
+
+Browsers garbage collect JavaScript-visible Wasm objects such as modules, instances, functions, memories, typed-array views, and ordinary JavaScript wrappers. They do not garbage collect arbitrary objects allocated inside Wasm linear memory. A `WebAssembly.Memory` backing store is reclaimed only when the memory object becomes unreachable; while it is reachable, allocations inside it are GoJr's responsibility.
+
+Therefore GoJr allocation policy lives in JavaScript/GoJr runtime code:
+
+- JavaScript/GoJr owns arenas, free lists, slice growth, object lifetime, and temporary-kernel scratch allocation.
+- Wasm kernels receive `i32` offsets into GoJr-managed linear memory plus lengths, capacities, strides, or descriptor pointers.
+- Wasm kernels should allocate little or nothing. Temporary allocations should come from a JS-owned arena that can be reset at the orchestration boundary.
+- Hot Wasm-visible data should live in `WebAssembly.Memory`, not ordinary JavaScript object arrays.
+- Host-only values may still use ordinary JavaScript arrays or objects when they are never passed into a Wasm kernel.
+- If `WebAssembly.Memory.grow()` occurs, JavaScript must refresh affected `DataView`, `Uint8Array`, `Float64Array`, `BigInt64Array`, and `BigUint64Array` views because the backing buffer can change.
+
+For a Go struct slice:
+
+```go
+type Point struct {
+    X float64
+    Y float64
+    N int64
+}
+```
+
+the Wasm-visible representation should be canonical GoJr-layout bytes:
+
+```text
+Point.X offset 0
+Point.Y offset 8
+Point.N offset 16
+sizeof(Point) = 24
+[]Point = { dataPtr, len, cap }
+```
+
+JavaScript writes or aliases the records through `DataView` or generated typed accessors, then calls a kernel with either `(dataPtr, len)` or a pointer to the slice descriptor. Wasm sees only integer offsets into linear memory. It never receives a pointer to an ordinary JavaScript object array.
 
 ### Pointers And Addressability
 
@@ -609,6 +732,16 @@ not silently write an interpreter artifact.
 ## Implementation Stages
 
 Every implementation stage ends with a template expansion pass. This is not optional cleanup. It is the mechanism that keeps copy-and-patch from quietly degenerating into generic helper calls. Each pass should inspect the code just implemented, identify shapes that are common, bloated, or paying unnecessary dynamic/runtime cost, and promote those shapes into explicit stencils or supernodes with tests.
+
+### Pre-Implementation Build Steps
+
+Before Stage 1 proper, build the narrow infrastructure slice that removes the remaining unknowns:
+
+1. Add `src/emitter/wasm/` with a small Wasm binary parser/extractor for Clang-produced Wasm modules. It must parse enough of the module format to find type/import/function/export/code/custom sections, extract function bodies by export name, decode local declarations, identify imported memory, and reject unexpected imports or malformed bodies.
+2. Add Clang discovery/configuration for stencil generation. Discovery order: `GOJR_CLANG`, known LLVM/Homebrew paths such as `/usr/local/opt/llvm/bin/clang` and `/opt/homebrew/opt/llvm/bin/clang`, then `clang` only if it can actually compile `--target=wasm32`. Apple `/usr/bin/clang` must not be accepted merely because it exists.
+3. Add a checked-in/generated stencil table so ordinary `gojr build` does not require Clang. Clang is a development-time stencil foundry; normal package compilation consumes deterministic TypeScript stencil bytes and metadata.
+4. Add the first mixed JS/Wasm package artifact fixture: thin `__.PKGDEF`, executable `_gojr.js` host, executable `_gojr.wasm` kernel, and a Node test that imports the JS host, instantiates the Wasm, and executes the kernel.
+5. Add benchmark/size regression tests for this first artifact shape so the implementation cannot regress to serialized AST or interpreter payloads.
 
 ### Stage 1: Emitter Scaffold And Artifact Boundary
 

@@ -7,6 +7,7 @@ import { frontFilesToProgramAst } from "./frontToAst.js";
 import { isIntrinsicPackageImport } from "./intrinsicPackages.js";
 import { isStubSourcePackageStandardLibrary, stubSourcePackageFiles } from "./stubPackages.js";
 import { checkGoJuniorFiles, isGoJuniorSyntheticCheckName, standardTypePackage } from "./typecheck.js";
+import { emitStage1Package, GOJR_STAGE1_BACKEND } from "./emitter/package.js";
 import {
   Builtin as GoTypesBuiltin,
   Const as GoTypesConst,
@@ -105,6 +106,7 @@ export interface GoJuniorPackageExportData {
 export interface GoJuniorPackageArchive {
   pkgdef: GoJuniorPackageExportData;
   javascript: string;
+  wasmBase64?: string;
   runtime?: GoJuniorPackageRuntimePayload;
   members: Array<{ name: string; data: string }>;
 }
@@ -198,6 +200,7 @@ const DEFAULT_CAPABILITY_POLICY = "default";
 const AR_MAGIC = "!<arch>\n";
 const PKGDEF_MEMBER = "__.PKGDEF";
 const JAVASCRIPT_MEMBER = "_gojr.js";
+const WASM_MEMBER = "_gojr.wasm";
 const GOJR_EXPORT_MAGIC = "$$gojr iexport v1\n";
 
 export function buildPackage(request: BuildPackageRequest, store?: BuildArtifactStore): BuildPackageReport {
@@ -664,6 +667,13 @@ class PackageGraphBuilder {
           checked.pkg,
           "info" in checked ? checked.info.InitOrder ?? [] : []
         );
+        const artifactSource = this.request.backend === GOJR_STAGE1_BACKEND
+          ? this.stage1ArtifactSource(pkgdef, ast)
+          : generatedArtifactSource(pkgdef, files, ast, runtimePlan);
+        if (this.hasErrors()) {
+          this.visiting.delete(importPath);
+          return undefined;
+        }
         const node: PackageBuildNode = {
           importPath,
           packageName,
@@ -674,7 +684,7 @@ class PackageGraphBuilder {
           dependencyCacheKeys,
           exports,
           artifactPath,
-          artifactSource: generatedArtifactSource(pkgdef, files, ast, runtimePlan)
+          artifactSource
         };
         this.nodes.set(importPath, node);
         this.packageInfos.set(importPath, checked.pkg);
@@ -838,6 +848,13 @@ class PackageGraphBuilder {
 
   private hasErrors(): boolean {
     return this.diagnostics.some((diagnostic) => diagnostic.severity === "error");
+  }
+
+  private stage1ArtifactSource(pkgdef: GoJuniorPackageExportData, ast: ProgramAst): string {
+    const emitted = emitStage1Package(pkgdef, ast);
+    this.diagnostics.push(...emitted.diagnostics);
+    if (this.hasErrors()) return "";
+    return generatedCompiledPackageArtifactSource(pkgdef, emitted.javascript, emitted.wasmBase64);
   }
 }
 
@@ -1253,6 +1270,21 @@ function generatedArtifactSource(pkgdef: GoJuniorPackageExportData, files: Sourc
   ]);
 }
 
+export function generatedMixedWasmArtifactSource(pkgdef: GoJuniorPackageExportData, javascript: string, wasmBase64: string): string {
+  return generatedCompiledPackageArtifactSource(pkgdef, javascript, wasmBase64);
+}
+
+export function generatedCompiledPackageArtifactSource(pkgdef: GoJuniorPackageExportData, javascript: string, wasmBase64?: string): string {
+  const members = [
+    { name: PKGDEF_MEMBER, data: GOJR_EXPORT_MAGIC + artifactJSONString(pkgdef) + "\n" },
+    { name: JAVASCRIPT_MEMBER, data: javascript }
+  ];
+  if (wasmBase64 !== undefined) members.push({ name: WASM_MEMBER, data: wasmBase64 });
+  return writeArArchive([
+    ...members
+  ]);
+}
+
 function generatedArtifactJavaScript(
   artifact: GoJuniorPackageExportData,
   files: SourceFile[],
@@ -1397,12 +1429,14 @@ export function parseGoJuniorPackageArchive(source: string): GoJuniorPackageArch
   const pkgdefMember = members[0];
   if (pkgdefMember?.name !== PKGDEF_MEMBER || !pkgdefMember.data.startsWith(GOJR_EXPORT_MAGIC)) return undefined;
   const javascript = members.find((member) => member.name === JAVASCRIPT_MEMBER)?.data ?? "";
+  const wasmBase64 = members.find((member) => member.name === WASM_MEMBER)?.data;
   try {
     const pkgdef = reviveArtifactValue(JSON.parse(pkgdefMember.data.slice(GOJR_EXPORT_MAGIC.length))) as GoJuniorPackageExportData;
     if (pkgdef.exportFormat !== "gojr-iexport" || pkgdef.exportVersion !== 1) return undefined;
     return {
       pkgdef,
       javascript,
+      ...(wasmBase64 !== undefined ? { wasmBase64 } : {}),
       ...(pkgdef.runtime ? { runtime: pkgdef.runtime } : {}),
       members
     };

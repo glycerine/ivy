@@ -3,7 +3,13 @@ export { formatDiagnostic, hasErrorDiagnostics, diagnosticFilename, spanFromToke
 export { analyzeEffects, functionEffectKey } from "./effects.js";
 export { AsyncGoChannel, AsyncGoDeadlockError, AsyncGoPanic, AsyncGoScheduler, asyncSelect } from "./asyncRuntime.js";
 export { blake3HashBytes, blake3HashString, blake3RawBytes } from "./blake3.js";
-export { artifactPathForImportPath, buildPackage, buildPackages, buildStandardLibraryPackage, collectSourceImportPaths, createStandardLibrarySourcePackageProvider, GOJR_GOARCH, GOJR_GOOS, inspectPackageJavaScript, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
+export { artifactPathForImportPath, buildPackage, buildPackages, buildStandardLibraryPackage, collectSourceImportPaths, createStandardLibrarySourcePackageProvider, GOJR_GOARCH, GOJR_GOOS, generatedCompiledPackageArtifactSource, inspectPackageJavaScript, generatedMixedWasmArtifactSource, parseGoJuniorPackageArchive, resolveArtifactRoot } from "./build.js";
+export { GOJR_STAGE1_BACKEND, emitStage1Package } from "./emitter/package.js";
+export { EmitterContext } from "./emitter/context.js";
+export { createChunkedMixedWasmArtifactFixture, createMixedWasmArtifactFixture } from "./emitter/mixedArtifact.js";
+export { CHECKED_IN_WASM_STENCILS, checkedInWasmStencil, decodeBase64, encodeBase64 } from "./emitter/stencils.js";
+export { clangCandidates, compileCToWasm, discoverClangForWasm, probeClangSupportsWasm } from "./emitter/wasm/clang.js";
+export { extractWasmFunction, parseWasmModule } from "./emitter/wasm/module.js";
 export { buildPackagesOnNode, clearPackageArtifactCache, createNodeArtifactStore, createNodeSourcePackageProvider, defaultPackageCacheParent, evaluateSourceFilesWithPackagesOnNode, evaluateSourceWithPackagesOnNode, compileSourceFilesWithPackagesOnNode, inspectPackageJavaScriptOnNode, listPackageArtifactCache, loadSourcePackagesForRootFilesOnNode, packageCacheOnNode, runMainSourceFilesWithPackagesOnNode, runSpreadsheetFixtureWithPackagesOnNode, testSourceFilesWithPackagesOnNode } from "./nodeHost.js";
 export { defaultGoJuniorBenchmarkCases, formatGoJuniorBenchmarkReport, runGoJuniorBenchmark } from "./bench.js";
 export { formatGoJuniorWasmPocReport, runGoJuniorWasmPocBenchmark } from "./wasmPoc.js";

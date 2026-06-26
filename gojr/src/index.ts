@@ -46,10 +46,84 @@ export {
   createStandardLibrarySourcePackageProvider,
   GOJR_GOARCH,
   GOJR_GOOS,
+  generatedCompiledPackageArtifactSource,
   inspectPackageJavaScript,
+  generatedMixedWasmArtifactSource,
   parseGoJuniorPackageArchive,
   resolveArtifactRoot
 } from "./build.js";
+export {
+  GOJR_STAGE1_BACKEND,
+  emitStage1Package
+} from "./emitter/package.js";
+export type {
+  Stage1PackageEmitResult
+} from "./emitter/package.js";
+export type {
+  EmitterContextOptions
+} from "./emitter/context.js";
+export {
+  EmitterContext
+} from "./emitter/context.js";
+export type {
+  JsStencil,
+  SlotKind,
+  WasmFunctionSignature,
+  WasmMemoryRequirement,
+  WasmPatchHole,
+  WasmPatchHoleKind,
+  WasmStencil,
+  WasmStencilMetadata
+} from "./emitter/stencil.js";
+export {
+  createChunkedMixedWasmArtifactFixture,
+  createMixedWasmArtifactFixture
+} from "./emitter/mixedArtifact.js";
+export type {
+  MixedWasmArtifactFixture
+} from "./emitter/mixedArtifact.js";
+export {
+  CHECKED_IN_WASM_STENCILS,
+  checkedInWasmStencil,
+  decodeBase64,
+  encodeBase64
+} from "./emitter/stencils.js";
+export type {
+  CheckedInWasmStencil,
+  ResolvedWasmStencil
+} from "./emitter/stencils.js";
+export {
+  clangCandidates,
+  compileCToWasm,
+  discoverClangForWasm,
+  probeClangSupportsWasm
+} from "./emitter/wasm/clang.js";
+export type {
+  ClangDiscoveryOptions,
+  ClangDiscoveryResult,
+  ClangProbeResult,
+  CompileCToWasmOptions
+} from "./emitter/wasm/clang.js";
+export {
+  extractWasmFunction,
+  parseWasmModule
+} from "./emitter/wasm/module.js";
+export type {
+  ExtractedWasmFunction,
+  ExtractWasmFunctionOptions,
+  WasmCodeBody,
+  WasmCustomSection,
+  WasmExport,
+  WasmExportKind,
+  WasmFunctionType,
+  WasmImport,
+  WasmImportKind,
+  WasmLimits,
+  WasmLocalDecl,
+  WasmModuleInfo,
+  WasmSection,
+  WasmValueType
+} from "./emitter/wasm/module.js";
 export {
   buildPackagesOnNode,
   clearPackageArtifactCache,
@@ -213,6 +287,27 @@ export type {
   SpreadsheetValue
 } from "./spreadsheet.js";
 export type { Diagnostic, SourceFile, SourceSpan } from "./diagnostics.js";
+export {
+  EvaluationContext,
+  GoJuniorPanic,
+  GoJuniorRuntimeError,
+  RuntimeChannel,
+  RuntimeInterfaceValue,
+  RuntimeMap,
+  RuntimeNamedValue,
+  RuntimePointer,
+  RuntimeStruct,
+  RuntimeTypedNilValue,
+  gojrGeneratedRuntimeApi
+} from "./runtime.js";
+export type {
+  GoJuniorGeneratedPackageArtifact,
+  GoJuniorGeneratedPackageContext,
+  GoJuniorGeneratedPackageContextOptions,
+  GoJuniorGeneratedRuntimeApi,
+  RuntimeObject,
+  RuntimeValue
+} from "./runtime.js";
 export type { ImportDecl, ProgramAst, ProgramKind } from "./ast.js";
 export { childNodes, ident, parseCellAddress, walk } from "./front/ast.js";
 export {

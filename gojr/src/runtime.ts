@@ -1610,6 +1610,267 @@ export class RuntimeChannel {
   }
 }
 
+export interface GoJuniorGeneratedPackageArtifact {
+  importPath?: string;
+  packageName?: string;
+}
+
+export interface GoJuniorGeneratedPackageContextOptions extends EvaluationOptions {
+  context?: EvaluationContext;
+  importsByPath?: Record<string, RuntimeObject>;
+}
+
+export interface GoJuniorGeneratedPackageContext {
+  artifact: GoJuniorGeneratedPackageArtifact;
+  package: RuntimeObject;
+  importsByPath: Record<string, RuntimeObject>;
+  output: string[];
+  context: EvaluationContext;
+}
+
+export interface GoJuniorGeneratedRuntimeApi {
+  createPackageContext(artifact: GoJuniorGeneratedPackageArtifact, options?: GoJuniorGeneratedPackageContextOptions): GoJuniorGeneratedPackageContext;
+  finishPackage(ctx: GoJuniorGeneratedPackageContext): PackageEvaluationResult;
+  declarePackageVar(ctx: GoJuniorGeneratedPackageContext, name: string, value: RuntimeValue, typeText?: string): RuntimeValue;
+  zeroValue(typeText: string, ctx?: GoJuniorGeneratedPackageContext | EvaluationContext): RuntimeValue;
+  makeMap(keyType: string, valueType: string, entries?: Array<[RuntimeValue, RuntimeValue]>, ctx?: GoJuniorGeneratedPackageContext | EvaluationContext): RuntimeMap;
+  mapGet(map: RuntimeMap, key: RuntimeValue): RuntimeValue;
+  mapGetOk(map: RuntimeMap, key: RuntimeValue): [RuntimeValue, boolean];
+  mapSet(map: RuntimeMap, key: RuntimeValue, value: RuntimeValue): void;
+  mapDelete(map: RuntimeMap, key: RuntimeValue): void;
+  makeSlice(elementType: string, length: number, capacity?: number, ctx?: GoJuniorGeneratedPackageContext | EvaluationContext): RuntimeValue[];
+  sliceGet(slice: RuntimeValue[], index: number): RuntimeValue;
+  sliceSet(slice: RuntimeValue[], index: number, value: RuntimeValue): void;
+  sliceRange(slice: RuntimeValue[], low?: number, high?: number, max?: number): RuntimeValue[];
+  append(slice: RuntimeValue, ...values: RuntimeValue[]): RuntimeValue[];
+  copy(dst: RuntimeValue, src: RuntimeValue): number;
+  newPointer(typeName: string, get: () => RuntimeValue, set: (value: RuntimeValue) => void, identity?: string): RuntimePointer;
+  makeChan(elementType: string, capacity?: number, ctx?: GoJuniorGeneratedPackageContext | EvaluationContext): RuntimeChannel;
+  chanSend(ctx: GoJuniorGeneratedPackageContext | EvaluationContext, channel: RuntimeChannel, value: RuntimeValue): Promise<void>;
+  chanRecv(ctx: GoJuniorGeneratedPackageContext | EvaluationContext, channel: RuntimeChannel): Promise<[RuntimeValue, boolean]>;
+  defer(ctx: GoJuniorGeneratedPackageContext | EvaluationContext, callback: () => MaybePromise<RuntimeValue>): void;
+  deferScope<T>(ctx: GoJuniorGeneratedPackageContext | EvaluationContext, body: () => Promise<T>): Promise<T | RecoveredPanic>;
+  panic(value: RuntimeValue): never;
+  recover(ctx: GoJuniorGeneratedPackageContext | EvaluationContext): RuntimeValue;
+  toInterface(value: RuntimeValue, interfaceType: string, ctx?: GoJuniorGeneratedPackageContext | EvaluationContext, dynamicType?: string): RuntimeInterfaceValue;
+}
+
+export const gojrGeneratedRuntimeApi: GoJuniorGeneratedRuntimeApi = {
+  createPackageContext: createGeneratedPackageContext,
+  finishPackage: finishGeneratedPackage,
+  declarePackageVar: declareGeneratedPackageVar,
+  zeroValue: generatedZeroValue,
+  makeMap: generatedMakeMap,
+  mapGet: generatedMapGet,
+  mapGetOk: generatedMapGetOk,
+  mapSet: generatedMapSet,
+  mapDelete: generatedMapDelete,
+  makeSlice: generatedMakeSlice,
+  sliceGet: generatedSliceGet,
+  sliceSet: generatedSliceSet,
+  sliceRange: generatedSliceRange,
+  append: generatedAppend,
+  copy: generatedCopy,
+  newPointer: generatedNewPointer,
+  makeChan: generatedMakeChan,
+  chanSend: generatedChanSend,
+  chanRecv: generatedChanRecv,
+  defer: generatedDefer,
+  deferScope: generatedDeferScope,
+  panic: generatedPanic,
+  recover: generatedRecover,
+  toInterface: generatedToInterface
+};
+
+function createGeneratedPackageContext(
+  artifact: GoJuniorGeneratedPackageArtifact,
+  options: GoJuniorGeneratedPackageContextOptions = {}
+): GoJuniorGeneratedPackageContext {
+  const { context: providedContext, importsByPath: providedImportsByPath, ...evaluationOptionsBase } = options;
+  const importsByPath = providedImportsByPath ?? evaluationOptionsBase.packages ?? {};
+  const evaluationOptions: EvaluationOptions = {
+    ...evaluationOptionsBase,
+    packages: importsByPath
+  };
+  if (artifact.importPath !== undefined) evaluationOptions.importPath = artifact.importPath;
+  if (artifact.packageName !== undefined) evaluationOptions.packageName = artifact.packageName;
+  const context = providedContext ?? new EvaluationContext(evaluationOptions);
+  return {
+    artifact,
+    package: Object.create(null) as RuntimeObject,
+    importsByPath,
+    output: context.output,
+    context
+  };
+}
+
+function finishGeneratedPackage(ctx: GoJuniorGeneratedPackageContext): PackageEvaluationResult {
+  return {
+    diagnostics: [],
+    output: ctx.output,
+    package: ctx.package,
+    context: ctx.context
+  };
+}
+
+function declareGeneratedPackageVar(
+  ctx: GoJuniorGeneratedPackageContext,
+  name: string,
+  value: RuntimeValue,
+  typeText?: string
+): RuntimeValue {
+  const stored = typeText ? prepareAssignableToType(value, typeText, `variable ${name}`, ctx.context) : value;
+  ctx.package[name] = stored;
+  return stored;
+}
+
+function generatedZeroValue(typeText: string, ctx?: GoJuniorGeneratedPackageContext | EvaluationContext): RuntimeValue {
+  return defaultValueForTypeText(typeText, generatedEvaluationContext(ctx));
+}
+
+function generatedMakeMap(
+  keyType: string,
+  valueType: string,
+  entries: Array<[RuntimeValue, RuntimeValue]> = [],
+  ctx?: GoJuniorGeneratedPackageContext | EvaluationContext
+): RuntimeMap {
+  const map = new RuntimeMap(keyType, valueType, generatedEvaluationContext(ctx));
+  for (const [key, value] of entries) map.set(key, value);
+  return map;
+}
+
+function generatedMapGet(map: RuntimeMap, key: RuntimeValue): RuntimeValue {
+  return map.get(key);
+}
+
+function generatedMapGetOk(map: RuntimeMap, key: RuntimeValue): [RuntimeValue, boolean] {
+  return map.getWithPresence(key);
+}
+
+function generatedMapSet(map: RuntimeMap, key: RuntimeValue, value: RuntimeValue): void {
+  map.set(key, value);
+}
+
+function generatedMapDelete(map: RuntimeMap, key: RuntimeValue): void {
+  map.delete(key);
+}
+
+function generatedMakeSlice(
+  elementType: string,
+  length: number,
+  capacity = length,
+  ctx?: GoJuniorGeneratedPackageContext | EvaluationContext
+): RuntimeValue[] {
+  if (!Number.isInteger(length) || length < 0) throw new GoJuniorRuntimeError("slice length must be non-negative");
+  if (!Number.isInteger(capacity) || capacity < length) throw new GoJuniorRuntimeError("slice capacity must be at least length");
+  const context = generatedEvaluationContext(ctx);
+  const values = Array.from({ length }, () => defaultValueForTypeText(elementType, context));
+  markArrayType(values, `[]${elementType}`);
+  arrayCapacities.set(values, capacity);
+  return values;
+}
+
+function generatedSliceGet(slice: RuntimeValue[], index: number): RuntimeValue {
+  return getArrayElement(slice, index);
+}
+
+function generatedSliceSet(slice: RuntimeValue[], index: number, value: RuntimeValue): void {
+  setArrayElement(slice, index, value);
+}
+
+function generatedSliceRange(slice: RuntimeValue[], low = 0, high = slice.length, max?: number): RuntimeValue[] {
+  if (!Number.isInteger(low) || !Number.isInteger(high) || low < 0 || high < low) {
+    throw new GoJuniorRuntimeError("invalid slice bounds");
+  }
+  const capacity = sliceCapacity(slice);
+  const upper = max ?? high;
+  if (!Number.isInteger(upper) || upper < high || upper > capacity) throw new GoJuniorRuntimeError("invalid slice capacity bound");
+  const out = Array.from({ length: high - low }, (_item, index) => getArrayElement(slice, low + index));
+  const typeText = arrayTypeTexts.get(slice);
+  if (typeText) markArrayType(out, typeText);
+  arrayCapacities.set(out, upper - low);
+  markArrayView(out, slice, low);
+  return out;
+}
+
+function generatedAppend(slice: RuntimeValue, ...values: RuntimeValue[]): RuntimeValue[] {
+  return appendValues(slice, values);
+}
+
+function generatedCopy(dst: RuntimeValue, src: RuntimeValue): number {
+  return copyValues(dst, src);
+}
+
+function generatedNewPointer(
+  typeName: string,
+  get: () => RuntimeValue,
+  set: (value: RuntimeValue) => void,
+  identity?: string
+): RuntimePointer {
+  return new RuntimePointer(typeName, get, set, identity);
+}
+
+function generatedMakeChan(
+  elementType: string,
+  capacity = 0,
+  ctx?: GoJuniorGeneratedPackageContext | EvaluationContext
+): RuntimeChannel {
+  return new RuntimeChannel(elementType, capacity, generatedEvaluationContext(ctx));
+}
+
+async function generatedChanSend(
+  _ctx: GoJuniorGeneratedPackageContext | EvaluationContext,
+  channel: RuntimeChannel,
+  value: RuntimeValue
+): Promise<void> {
+  await channel.sendAsync(value);
+}
+
+async function generatedChanRecv(
+  _ctx: GoJuniorGeneratedPackageContext | EvaluationContext,
+  channel: RuntimeChannel
+): Promise<[RuntimeValue, boolean]> {
+  return await channel.receiveAsync();
+}
+
+function generatedDefer(ctx: GoJuniorGeneratedPackageContext | EvaluationContext, callback: () => MaybePromise<RuntimeValue>): void {
+  generatedEvaluationContext(ctx).pushDefer(callback);
+}
+
+async function generatedDeferScope<T>(
+  ctx: GoJuniorGeneratedPackageContext | EvaluationContext,
+  body: () => Promise<T>
+): Promise<T | RecoveredPanic> {
+  return await generatedEvaluationContext(ctx).deferScopeAsync(body);
+}
+
+function generatedPanic(value: RuntimeValue): never {
+  throw new GoJuniorPanic(value);
+}
+
+function generatedRecover(ctx: GoJuniorGeneratedPackageContext | EvaluationContext): RuntimeValue {
+  return generatedEvaluationContext(ctx).recover();
+}
+
+function generatedToInterface(
+  value: RuntimeValue,
+  interfaceTypeText: string,
+  ctx?: GoJuniorGeneratedPackageContext | EvaluationContext,
+  dynamicType?: string
+): RuntimeInterfaceValue {
+  const context = generatedEvaluationContext(ctx);
+  const target = interfaceTarget(interfaceTypeText, context);
+  if (!target) throw new GoJuniorRuntimeError(`${interfaceTypeText} is not an interface type`);
+  return prepareInterfaceAssignment(value, interfaceTypeText, target, "interface assignment", context, dynamicType);
+}
+
+function generatedEvaluationContext(ctx: GoJuniorGeneratedPackageContext | EvaluationContext): EvaluationContext;
+function generatedEvaluationContext(ctx: GoJuniorGeneratedPackageContext | EvaluationContext | undefined): EvaluationContext | undefined;
+function generatedEvaluationContext(ctx: GoJuniorGeneratedPackageContext | EvaluationContext | undefined): EvaluationContext | undefined {
+  if (!ctx) return undefined;
+  return ctx instanceof EvaluationContext ? ctx : ctx.context;
+}
+
 export async function evaluateSource(source: string, options: EvaluationOptions = {}): Promise<EvaluationResult> {
   return evaluateSourceFiles([sourceFileFromSource(source, options)], options);
 }
